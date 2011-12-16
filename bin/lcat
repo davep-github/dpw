@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# cat a file using the value of LESSOPEN to interpret it.
+# LESSOPEN looks like this: |lesspipe-new.sh %s
+#
+args=$*
+
+set -- $LESSOPEN
+cmd=`echo $1 | sed 's/[|<>]//g' `
+
+$cmd $args

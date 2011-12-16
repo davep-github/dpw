@@ -1,0 +1,9 @@
+#!/bin/sh
+
+pid=$1
+prog=$2
+
+pids=$(findprog -d $prog)
+[[ -n "$pids" ]] && echo "$pids" | fgrep -q "/$pid/" && exit 0
+
+exit 1

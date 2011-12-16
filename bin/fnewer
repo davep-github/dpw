@@ -1,0 +1,121 @@
+#!/usr/bin/env perl
+# $Id: fnewer,v 1.1.1.1 2001/01/17 22:22:28 davep Exp $
+
+sub cleanup
+{
+    #print "cleanup: system(rm -f $ref_file)\n";
+    system("rm -f $ref_file") if (!$keep_file);
+}   
+
+sub usage
+{
+    $help = <<EOM
+fnewer [-d mmdd] [-l] [-f newer-than-file] [-x expr | -i expr] [dir...]
+    Find files modifed after a particular time.
+
+    -d mmdd    Select files modified on or after mmdd (defaults to today)
+    -l         Do not emit symlinks (which "inherit" the parent dir's
+               modification time).  Emitted symlinks are printed
+               as: symlink --> linked_to_file
+    -x expr
+    -i expr    Exclude (-x) or include (-i) files patching pattern expr,
+               a perl regexp
+    -f f       Use file f for determining newness.
+    dir...     0 or more directories to travers (recursively)
+               If no dir is given, traverse `.'
+EOM
+;
+
+    print $help;
+}
+
+while ($ARGV[0] =~ /^[\-]/)
+{
+    $_ = shift;
+   
+    if (/^[\/\-]d(.*)/)
+    {
+	$date = ($1 ? $1 : shift);
+    }
+    elsif (/^[\/\-]x(.*)/)
+    {
+	$inc_ex = 1;
+	$pattern = ($1 ? $1 : shift);
+    }
+    elsif (/^[\/\-]i(.*)/)
+    {
+	$inc_ex = 0;
+	$pattern = ($1 ? $1 : shift);
+    }
+    elsif (/^[\/\-]f(.*)/)
+    {
+	$keep_file = 1;
+	$ref_file = ($1 ? $1 : shift);
+	die ("fnewer: $ref_file does not exist.\n") if (! -e $ref_file);
+    }
+    elsif (/^[\/\-]l/)
+    {
+	$no_links = 1
+    }
+    elsif (/^[\/\-][hHxX\?]/)
+    {
+	&usage;
+	exit 0;
+    }
+}
+
+#
+# only do this if the user hasn't specified a file to use as
+# a reference
+#
+if (!$ref_file)
+{
+
+    if (!$date)
+    {
+	local($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = 
+	    localtime(time);
+	$date=sprintf("%02d%02d", $mon + 1, $mday);
+	print "def date>$date<\n";
+    }
+    # print "date>$date<\n";
+
+    $SIG{'INT'} = 'cleanup';
+    $ref_file="/tmp/fnewer.$$";
+
+    $touch_cmd = "touch -t ${date}0000.01 $ref_file";
+    $x = system("$touch_cmd") && die("$touch_cmd failed: $!, x>$x<\n");
+}
+
+$dirs = @ARGV ? join(' ', @ARGV) : '.';
+
+$find_cmd = "find $dirs \! -type d -newer $ref_file -print |";
+#print "find_cmd>$find_cmd<\n";
+open(FIND, $find_cmd)  ||
+    die("Cannot open find pipe: $!\n");
+
+while (<FIND>)
+{
+    chop;
+    if ($pattern)
+    {
+	$match = /$pattern/o != 0;
+	next if ($match == $inc_ex);
+    }
+
+    if (-l $_)
+    {
+	if (!$no_links)
+	{
+	    print "$_ -> ", readlink($_), "\n";
+	}
+    }
+    else
+    {
+	print "$_\n";
+    }
+}
+close(FIND);
+&cleanup;
+
+exit 0

@@ -1,0 +1,57 @@
+{
+    local($aliases, $name, @alist);
+
+    ($aliases) = $fields{'alias'} =~ /\s*(.+)\s*/;
+    ($name) = $fields{'name'} =~ /\s*(.+)\s*/;
+
+    # only process records with alias fields
+    @alist = split(/\|/, $aliases);
+    foreach $alias (@alist)
+    {
+	# loop thru all fields
+	for ($fi = 0; $fi < $fieldIndex; $fi += 2)
+	{
+	    # get the name and value.  Using this array preserves
+	    # the input order of the fields
+	    ($fieldName, $fieldValue) = @thisRec[$fi, $fi + 1];
+	    # strip leading and trailing WS
+	    ($fieldValue) = $fieldValue =~ /^\s*(.+)\s*$/;
+	    print "fieldName>$fieldName<\n" if ($trace);
+	    
+	    # allow multiple addresses like faxno-work, faxno-home
+	    # here we preseve any suffix after "faxno"
+	    # we only want to process fields whose names start with
+	    # "faxno"  That's why we save "faxno" in $dummy
+	    if (($dummy, $alias_suffix) = $fieldName =~ /^(faxno)(.*)$/)
+	    {
+		# make a corresponding emacs alias
+		# equal to the original alias + any email
+		#suffix found
+		print "$alias$suffix $fieldValue ";
+		print "$name"  if ($name);
+		if ($fields{'co'}) {
+		    print ", " if $name;
+		    print $fields{'co'}
+		}
+		print "\n";
+	    }
+	}
+    }
+}
+__END__
+#
+# This is a pdbx filter.  After a matching record from a pdb query is
+# collected, a routine like this is called if it is
+# specified on the command line.
+#
+# This routine is called with no parameters, but three global items 
+# are defined:
+# %fields, @thisRec and $fieldIndex
+# %fields is indexed directly by a field's name.  This variable does not
+#  preserve any kind of ordering from the original record in the database.
+# @thisRec contains pairs of strings.
+#  $thisRec[i] is the name of the field
+#  $thisRec[i+1] is the value of the field.
+# This variable preserves the order from the database; it is pretty much
+#  a copy of the record as it was in the file.
+# $fieldIndex is the index of the next slot to use in @thisRec.

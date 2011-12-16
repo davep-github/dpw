@@ -1,0 +1,21 @@
+#!/bin/sh
+
+: ${encoder:="--flac"}
+: ${rip_root:="/mvsik"}
+
+if [[ "$1" == [.-] ]]
+then
+    shift
+    echo staying here: $PWD
+else
+    cd $rip_root/incoming || exit 2
+fi
+
+rip "$encoder" --trayclose --tag --cddb --superlazy --verbose --paranoia \
+    --dev /dev/hdd \
+    --format '%N-%S' "$@"
+
+# They really mess with the terminal.
+stty sane
+dp-stty
+

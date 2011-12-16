@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# $Id: fix-artist,v 1.2 2003/05/02 07:30:10 davep Exp $
+#
+#set -x
+
+if [ "$1" = '-n' ]
+then
+    doit=echo
+else
+    doit=''
+fi
+
+for f in "$@"
+do
+    case "$f" in
+    /*) ;;
+    *) f="$PWD/$f";;
+    esac
+
+    d=`dirname "$f"`
+    p=`dirname "$d"`
+    p=`basename "$p"`
+
+    $doit id3tool -r "$p" "$f"
+done
+
+exit 0

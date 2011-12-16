@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if type -p beagle-ping > /dev/null && ! beagle-ping > /dev/null
+then
+    # ?!?! Sometimes I get two beagleds.
+    #echo "$(date): starting beagled"
+    beagled --replace > /dev/null || {
+        echo 1>&2 "$(date): failed to start beagled, rc: $?"
+    }
+fi
+

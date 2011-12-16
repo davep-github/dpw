@@ -1,0 +1,14 @@
+#!/bin/sh
+
+for d in "$@"
+do
+  set -- $( 
+      { 
+          df $d | tail -n1 
+      } 2>/dev/null
+  )
+  [ -n "$1" ] && echo $1
+done | sort | uniq
+
+exit 0
+

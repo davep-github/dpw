@@ -1,0 +1,116 @@
+#!/bin/sh
+
+. script-x
+. eexec
+
+prog=`basename $0`
+
+Usage()
+{
+   {
+       echo "${prog}: usage: [-$all_options]"
+   } 1>&2
+   
+   exit 1
+}
+
+: ${ciflags_def:="-am"}
+: ${ciflags:="$ciflags_def"}
+: ${tflags:=""}
+: ${gtflags:=""}
+: ${amper:="&"}
+: ${index_files:=TAGS cscope.*}
+: ${clean:=""}
+: ${real_paths:=}
+: ${no_gtags_p:=t}
+: ${ctags_p:=t}
+: ${etags_p:=t}
+. script-x
+
+# init optional vars to defaults here...
+VERBOSE=:
+DEBUG=:
+output_dir=
+MV=$(sp -1 mv) || {             # Avoid -i type aliaii
+    dpe_echo 1 "Cannot find \"mv\" in the path."
+}
+
+# see the man page of getopt for inadequacies.
+# No more!!! They've fixed it!
+
+std_options="nvd"
+option_str="c:t:g:CTkKVo:Gxe"   # <:add new options:>
+all_options="$option_str$std_options"
+
+# New style getopt... fixes ugly quoting problems.
+q=$(getopt -o "$all_options" -- "$@")
+[ $? != 0 ] && Usage
+eval set -- "$q" 
+unset q
+
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $prog: "; EExecVerbose;;
+      -V) cscope_indexer_verbose='-v';;
+      # -d is really just verbosity
+      -d) EExecVerbose; DEBUG="echo 1>&2 $prog: ";;
+      -t) tflags="$tflags $2"; shift;;
+      -t) if [[ "$2" =~ "^--?$" ]]; then 
+             gtflags=""
+          else
+             gtflags="$gtflags $2";
+          fi
+          shift;;
+      -c) ciflags="$ciflags $2"; shift;;
+      -T) tflags="";;
+      -D) ciflags="";;
+      -K) clean="";;
+      -k) clean=t;;
+      -G) no_gtags_p=t;;
+      -o) output_dir=$(realpath $2); shift;;
+      -x) ctags_p=$(invert_flag $ctags_p);;
+      -e) etags_p=$(invert_flag $etags_p);;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+: ${dirs:="$@"}
+: ${dirs:="$PWD"}
+
+[[ -n "$real_paths" ]] && {
+    ndirs=
+    for d in $dirs; do
+        ndirs="$ndirs $(realpath $d)"
+    done
+    dirs="$ndirs"
+}
+
+if [[ -n "$clean" ]]
+then
+    rm -f $index_files
+    exit                        # With rm's status
+fi
+
+gtagser=$(sp -1 gtags)
+[[ -z "$no_gtags_p" && -n "$gtagser" ]] && {
+    EExec eval gtagtree $gtflags $dirs $amper
+}
+
+# extagtree defaults to making etags compatible files.  -E inverts this.
+[ -n "$ctags_p" ] && EExec eval extagtree -E $tflags $dirs $amper
+[ -n "$etags_p" ] && EExec eval extagtree $tflags $dirs $amper
+EExec eval '( rm -f cscope.* && cscope-indexer $cscope_indexer_verbose -r $ciflags $dirs )'
+[ "$amper" = "&" ] && {
+    echo "waiting for procs to complete..."
+    wait
+}
+[[ -n "$output_dir" ]] && {
+    EExec $MV $index_files "$output_dir"
+}

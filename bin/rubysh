@@ -1,0 +1,4 @@
+#!/bin/sh
+
+#ruby ~/bin/eval.rb
+ruby /usr/local/lib/ruby/1.6/irb/irb.rb

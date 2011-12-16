@@ -1,0 +1,11 @@
+#!/bin/sh
+set -x
+#$Id: less-more,v 1.1 2003/04/18 17:23:42 davep Exp $
+#
+# give, what is to me, more traditional more behavior:
+# a pager w/no file contents interpretation.
+# less can do that.
+
+LESSOPEN=
+export LESSOPEN
+exec less "$@"

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+. script-x
+
+: ${browser:=midori}
+: ${browser_args:=--config=$HOME/.config/midori/dp-other-configs/pandora}
+
+PGREP_REGEXP="${browser}.*${browser_args}" run-iff $DP_SCRIPT_X_DEBUG_OPT \
+    ${browser} ${browser_args}
+
+#{
+#    exec ${browser} ${browser_args} &
+#} 1>/dev/null 2>/dev/null

@@ -1,0 +1,22 @@
+#!/bin/sh
+#set -x
+. eexec
+
+files="$@"
+for f in $files
+do
+  set -- $(echo "$f" | sed 's!.*(\(.*\)).*!\1!')
+  if [ "$f" == "$1" ]
+  then
+      num=NO-NUM
+  else
+      num=$1
+  fi
+  #echo "num>$num<"
+  [ ! -d "$num" ] && EExec mkdir "$num"
+  echo -n "."
+  EExec mv $f $num
+done
+
+echo
+

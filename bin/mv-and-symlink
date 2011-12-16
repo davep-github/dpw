@@ -1,0 +1,43 @@
+#!/bin/sh
+#set -x
+. script-x
+. eexec
+
+progname=$(basename $0)
+EXEC=echo
+
+Usage()
+{
+    echo 
+mv_and_symlink()
+{
+    sfile="$1"
+    shift
+    dst="$1"
+    full_dst="$dst/$sfile"
+    ddir=$(dirname "$full_dst")
+    [ -d "$ddir" ] || mkdir -p "$ddir"
+    
+    EExec mv "$sfile" "$dst"
+    EExec ln -s "$dst/$sfile" .
+}
+
+vunsetp "$*" && {
+    Usage 1>&2
+    exit 1
+}
+
+[[ "$1" =~ (-help|h) ]] && {
+    Usage
+    exit 0
+}
+
+dst="$1"
+shift
+EExec [ -d "$dst" ]
+
+for f in "$@"
+do
+  EExec mv_and_symlink "$f" "$dst"
+done
+    

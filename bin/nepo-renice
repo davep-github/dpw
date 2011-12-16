@@ -1,0 +1,16 @@
+#!/bin/sh
+
+source script-x
+
+: ${niceness:=19}
+: ${nepo_proc:=/usr/bin/nepomukservicestub}
+pgid=$(pgrep "$nepo_proc" | all-but 1 | awk '{print $5}' | sort | uniq)
+
+# There should be only one, but...
+args=
+for p in $pgid
+do
+  args="$args -g $p"
+done
+
+renice ${niceness} $args

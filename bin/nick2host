@@ -1,0 +1,4 @@
+#!/bin/sh
+#set -x
+
+qpydb.py -d host_info -f '^nick$' -v "^$1$" -F '^host$' -s

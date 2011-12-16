@@ -1,0 +1,13 @@
+#!/bin/sh
+
+ECHO=echo
+
+[[ "$1" == "-q" ]] && {
+    ECHO=echo
+    shift
+}
+
+u=$(svn-url "$@")
+$ECHO "$(basename $0): svn ls $u"
+svn ls $u
+

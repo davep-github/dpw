@@ -1,0 +1,158 @@
+#!/usr/bin/expect -f
+
+set PVM_CMD "pvm"
+set PVM_ARGS "avalanche/hostfile"
+set PVM_PROMPT "^pvm>"
+
+set TEST_PROG "LuDecomp"
+set TEST_CMD "spawn"
+# could be, e.g. -> to see output
+set TEST_CMD_ARGS ""
+
+set TID_CHAR {[0-9a-fA-F]}
+set TID_PAT "${TID_CHAR}+"
+
+set initial_check_count 9999
+set check_sleep_count 5
+set plist {}
+lappend plist {[ 	]*([^ 	]+)[ 	]+([0-9a-fA-F]+).*[ 	]+(}
+lappend plist "$TEST_PROG"
+lappend plist {)[ 	]*}
+lappend plist "\r\n"
+set PS_LINE_PAT [join $plist ""]
+puts "PS_LINE_PAT>$PS_LINE_PAT<\n"
+
+# ps command output with processes running;
+#pvm> ps
+#ps
+#                    HOST      TID   FLAG 0x COMMAND
+#      alpha7.crl.dec.com    400ad     6/c,f LuDecomp    
+#pvm> _
+#
+# run the avalanche test program
+
+set trace_on 0
+proc trace { msg } {
+    global trace_on
+    if { $trace_on != 0 } {
+	send_error $msg
+    }
+}
+
+set verbose_on 1
+proc verbose { msg } {
+    global verbose_on
+    if { $verbose_on != 0 } {
+	send_error $msg
+    }
+}
+
+proc kill_tids { tid_list } {
+    global PVM_PROMPT
+    set index 0
+    set lim [llength $tid_list]
+    while {$index < $lim} {
+	set tid [lindex $tid_list $index]
+	send "kill $tid\n"
+	expect {
+	    "kill $tid" {}
+	    $PVM_PROMPT {trace "$tid killed.\n"}
+	    timeout { abort 1 "No response from kill command" }
+	}
+	incr index
+    }
+}
+
+proc get_tids { } {
+    global PVM_PROMPT
+    global TID_PAT
+    global PS_LINE_PAT
+    set tids {}
+    send "ps\n"
+    expect { 
+	"COMMAND\r\n" { trace "Got COMMAND\n" }
+	timeout { abort 1 "No response from ps command" }
+    }
+    set done 0
+    set rc 0
+    #      alpha7.crl.dec.com    400ad     6/c,f LuDecomp    
+    while {$done == 0} {
+	expect {
+	    -re $PS_LINE_PAT {
+		trace "Found command $expect_out(3,string) in ps output\n"
+		trace "Found tid >$expect_out(2,string)<\n"
+		lappend tids $expect_out(2,string)
+	    }
+
+	    $PVM_PROMPT { 
+		trace "prompt seen\n" 
+		set done 1
+	    }
+
+	    timeout { abort 1 "Timeout reading ps response" }
+	}
+    }
+
+    trace "tids>$tids<\n"
+    return $tids
+}
+
+
+proc abort { rc msg } {
+    send_error "aborted: $msg\n"
+    exit $rc
+}
+
+
+set keep_trying 1
+spawn "$PVM_CMD" "$PVM_ARGS"
+
+expect {
+    "pvmd already running." {}
+    $PVM_PROMPT { trace "Connected\n" }
+    timeout { abort 1 "No response from $PVM_CMD" }
+}
+
+while { $keep_trying == 1 } {
+    
+    # start the app
+    send "$TEST_CMD $TEST_CMD_ARGS $TEST_PROG\n"
+    
+    expect { 
+	"successful\r\n" { trace "$TEST_CMD ok\n" }
+	timeout { abort 1 "No response from $TEST_CMD" }
+    }
+    
+    expect {
+	-re "t($TID_PAT)\r\n" { trace "Got tid\n" }
+	timeout { abort 1 "No TID response." }
+    }
+    trace "out>$expect_out(buffer)<\n"
+
+    set TID $expect_out(1,string)
+    verbose "TID>$TID<\n"
+
+    set keep_checking $initial_check_count
+    while {$keep_checking != 0} {
+	verbose "Sleeping a bit for command to finish...\n"
+	sleep $check_sleep_count
+	set tids [get_tids]
+	if {[llength $tids] == 0} break
+	incr keep_checking -1
+    }
+
+    if {[llength $tids] != 0 } {
+	kill_tids $tids
+	#	send "quit\n"
+	#	expect {
+	#	    "pvmd still running.\r\n" {verbose "Quiting.\n"}
+	#	    timeout { abort 1 "No reqponse from quit command." }
+	#	}
+	verbose "Sleeping a bit before next try...\n"
+	sleep 4
+    } else {
+	set keep_trying 0
+    }
+}
+
+exit 0

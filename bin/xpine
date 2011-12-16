@@ -1,0 +1,2 @@
+#!/bin/sh
+exec xx -n pine -g 80x43 pine

@@ -1,0 +1,121 @@
+#!/usr/local/bin/python
+#-*-Python-*-
+# $Id: xed,v 1.1.1.1 2001/01/17 22:22:31 davep Exp $
+
+import sys
+import getopt
+from Tkinter import *
+import string
+
+class fake_event:
+    def __init__(self, ch):
+	self.char = ch
+
+class Application(Frame):
+	def __init__(self, master=None):
+		Frame.__init__(self, master)
+		self.exit_req = 0
+		self.quitted = None
+		self.parse_args()
+		self.create_widgets()
+		self.pack()
+		for k in "xXqQ":
+		    self.bind_all("<Alt-%c>" % k,
+				  self.emit_and_exit_event)
+
+	def exit(self):
+		sys.exit(1)
+
+	def emit_selection(self):
+	    try:
+		print self.text.get('sel.first', 'sel.last')
+	    except TclError:
+		end = self.text.index(END)
+		[maxline, maxchar] = string.split(end, '.')
+		for i in range(1, string.atoi(maxline)):
+		    s = self.text.get('%d.0 linestart' % i,
+				      '%d.0 lineend' % i)
+		    print s
+
+	def emit_and_exit(self):
+		self.exit_req = 1
+		if not self.quitted:
+		    self.emit_selection()
+		self.exit()
+
+	def emit_and_exit_event(self, event):
+		if event.char in "qQ":
+			self.quitted = 'y'
+		self.emit_and_exit()
+
+	def title(self, title_anno=''):
+		self.master.title("xed " + title_anno)
+
+	def usage(self):
+	    sys.stderr.write('usage: xed')
+	    sys.exit(1)
+
+	def parse_args(self):
+		options, args = getopt.getopt(sys.argv[1:], '')
+		for opt, val in options:
+			#print 'opt', opt, 'val', val
+			if (opt == '-f'):
+			    blah
+			else:
+			    self.usage()
+
+	def fill_text(self):
+	    if not sys.stdin.isatty():
+		self.title("reading...")
+		while 1:
+		    line = sys.stdin.readline()
+		    if not line or self.exit_req:
+			break
+		    self.text.insert(END, line)
+		    self.text.update()
+		self.title("ready.")
+
+	def create_button_bar(self, b_list):
+	    bar = Frame(self)
+	    for text, func in b_list:
+		b = Button(bar, text=text, command=func)
+		b.pack(side=LEFT)
+	    return bar
+
+	def exit_button(self):
+	    self.emit_and_exit_event(fake_event('x'))
+
+	def quit_button(self):
+	    self.emit_and_exit_event(fake_event('q'))
+	    
+	def create_widgets(self):
+	    self.button_bar = self.create_button_bar(
+		(('Exit', self.exit_button),
+		('Quit', self.quit_button)))
+
+	    self.button_bar.pack(side=TOP)
+	    sb = self.textbox = Frame(self)
+	    sb.pack(side=TOP, expand=TRUE, fill=X)
+	    self.yscroll = Scrollbar(sb)
+	    self.yscroll['takefocus'] = 0
+	    self.xscroll = Scrollbar(self, orient='horizontal')
+	    self.xscroll['takefocus'] = 0
+	    self.text = Text(sb, 
+			     selectborderwidth=1,
+			     wrap='none',
+			     yscroll=self.yscroll.set,
+			     xscroll=self.xscroll.set)
+	    self.xscroll.pack(side=BOTTOM, fill=X, expand=TRUE)
+	    self.text.pack(side=LEFT, expand=TRUE, fill=X)
+	    self.yscroll.pack(side=LEFT, fill=Y)
+	    self.yscroll['command'] = self.text.yview
+	    self.xscroll['command'] = self.text.xview
+	    self.text.focus()
+	    self.text.pack()
+	    self.fill_text()
+#
+###################################
+#
+app = Application()
+app.mainloop()
+

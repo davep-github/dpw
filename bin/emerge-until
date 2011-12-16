@@ -1,0 +1,102 @@
+#!/bin/sh
+
+dolat=("$@")
+source script-x
+
+: ${def_ebuild:=world}
+
+for sig in INT QUIT ILL TRAP ABRT TERM
+  do
+  trap "echo 1>&2 caught SIG$sig; exit 1" $sig
+done
+
+#
+# Try to compensate for my inability to remember to add the world argument to
+# the end of the command-line.
+#
+# Just an idiotic check... does the last argument start with a `-' ?
+if [ "$#" -gt 0 ]
+then
+    last_arg=${dolat[${#dolat[@]}-1]}
+    case "$last_arg" in
+      -*) dolat=("${dolat[@]}" "$def_ebuild");;
+    esac
+else
+  dolat=("${dolat[@]}" "$def_ebuild")
+fi
+set -- "${dolat[@]}"
+
+num_fails=0
+skip_first_p=
+SEP="Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/Z/"
+fail_count_file=$(tempfile -d /tmp -s -emerge-until.out -p TMP-) || exit
+fail_count_file=$(realpath "$fail_count_file")
+echo 1>&2 "fail_count_file>$fail_count_file<"
+{
+    echo "Arguments: ${dolat[@]}"
+    echo  "$fail_count_file" "Each number is the count of failures
+  "
+} > $fail_count_file
+
+extra='--resume --skip-first'
+
+# The real meat...
+option_str="-s"
+std_options=
+source dp-getopt+.sh            # Runs when sourced.
+for i in "$@"; do
+    case "$1" in
+        -s) skip_first_p=t;;
+        --) shift; break;;
+    esac
+    shift
+done        
+
+# Have no args mean skip first and just keep trying.
+# It also means that the run can succeed because there is no initial failure.
+if vunsetp "$@"
+then
+    skip_first_p=t
+    num_fails=-1
+fi
+
+dolat=("$@")
+
+vsetp $skip_first_p || {
+    emerge "${dolat[@]}" && {
+        echo 1>&2 "$$First emerge did it all."
+        exit 0
+    }
+}
+: $((++num_fails))
+
+dolat=($extra "${dolat[@]}")
+
+# The first iteration should have no ", " prefix.
+{
+    echo "$fail_count_file"
+    echo -n "$num_fails" 
+} >> "$fail_count_file"
+
+# What the fuck was this???
+# if ! emerge                     # ????????????
+#     then
+#     echo 1>&2 "$SEP"
+#     echo 1>&2 ":-(:-(:-(:-(:-(:-(First emerge failed."
+# else
+#     echo 1>&2 "$$First emerge did it all."
+# fi
+
+while ! emerge "${dolat[@]}"; do
+    echo 1>&2 "$SEP"
+    num_fails=$((++num_fails))
+  # The rest should.
+    echo -n ", $num_fails" >> "$fail_count_file"
+    echo "Go on, do it again... You can't have your pudding if you can get it right."
+done
+
+echo 1>&2 "fail_count_file>$fail_count_file<"
+cat >2 "$fail_count_file"
+echo 1>&2 "fail_count_file>$fail_count_file<"
+
+exit $((num_fails == 0))

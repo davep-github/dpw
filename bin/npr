@@ -1,0 +1,12 @@
+#!/bin/sh
+
+source script-x
+
+URL=${DP_NPR_URL:-http://audio.wbur.org/stream/live_ogg.m3u}
+   
+ksystraycmd \
+   --hidden \
+   audacious --stop --name NPRn  \
+   "$URL" >/dev/null 2>&1       # &
+
+### ??? Do I like this? (sleep 13; audacious2 --stop) &

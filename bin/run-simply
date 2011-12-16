@@ -1,0 +1,23 @@
+#!/bin/sh
+
+source script-x
+
+# Running things without my environment getting in the way.
+# See also: run-and-cut, which does an ssh to a new machine in such a way as
+# to start up a clean, non-davep login.
+# If I do env - bash.
+# A make in <some-client>/src fails.
+# If I then do: export PATH
+# it works.
+# Before the export, there is still a PATH variable but it isn't, apparently,
+# exported. Ie you can echo $PATH and see something.
+# The PATH=$PATH is an attempt to make sure it's an environment var and not
+# just a shell variable.
+# DP_BYPASS_BASHRC=Yes makes my .bashrc exit very early.
+
+
+# pass an environment variable saying don't run bashrc.
+vunsetp "$@" && set -- $SHELL
+env -i DP_BYPASS_BASHRC=Yes \
+       PATH=$PATH \
+       "$@"

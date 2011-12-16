@@ -1,0 +1,18 @@
+#!/bin/sh
+
+dofix()
+{
+	egrep '^M|^begin|^end|`' $* | grep -v '^Message-ID:'
+}
+	
+if [ "$*" != "" ]
+then
+	for file in $*
+	do
+		dofix $file
+	done
+else
+	dofix
+fi
+	
+

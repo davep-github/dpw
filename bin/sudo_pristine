@@ -1,0 +1,43 @@
+#!/bin/sh
+source script-x
+
+SUDO=blah
+: ${nice_val:=19}
+: ${exec_cmd:=}
+
+#
+# Do I want to enforce this?
+# If exec_cmd is not set, the 1st arg will be the command.
+#
+# vunsetp "$exec_cmd" && {
+#     echo "The variable exec_cmd needs to have a value."
+#     exit 1
+# } 1>&2
+
+if [[ "$1" =~ ^-EE(-(careful|paranoid)|[cpCP])$ ]]; then
+    shift
+    #echo -n "Shouldn't you su - to root 
+    #for a clean environment before running this? 
+    # (env vars often collide) (y/N)? "
+    echo 1>&2 -n "Using with davep's bin... run in clean environment (Y/n/q)? "
+    read
+    # $REPLY holds as an exact representation of the input as possible,
+    # whitespace in particular.
+    case "$REPLY" in
+	 [qQxX]) exit 1;;
+	 [Nn0]) echo 1>&2 "Environment vars often collide.  Best of luck!" 
+		SUDO= ;;
+	 *) SUDO=sudo;;
+    esac
+else
+    SUDO=sudo
+fi
+if [ "$SUDO" != "" -a "$SUDO" != sudo ]; then
+    echo 1>&2 "SUDO is >$SUDO<; How did that happen?"
+    exit 1
+fi
+#set -x;
+exec_cmd="${SUDO} $exec_cmd $@"
+echo "Executing command in pristine root environment: $exec_cmd"
+set -x
+exec nice -$nice_val $exec_cmd

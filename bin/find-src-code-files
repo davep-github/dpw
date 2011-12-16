@@ -1,0 +1,133 @@
+#!/bin/sh
+
+source script-x
+
+args=("$@")
+add_foi_regexp()
+{
+    #echo 1>&2 "B:FOI>${FILES_OF_INTEREST[@]}<"
+    for pat in "$@"; do
+        FILES_OF_INTEREST[${#FILES_OF_INTEREST[@]}]="-e"
+        FILES_OF_INTEREST[${#FILES_OF_INTEREST[@]}]="$pat"
+    done
+    #echo 1>&2 "A: FOI>${FILES_OF_INTEREST[@]}<"
+}                  
+
+add_filter_regexp()
+{
+    #echo 1>&2 "B:FOI>${FILES_TO_FILTER[@]}<"
+    for pat in "$@"; do
+        FILES_TO_FILTER[${#FILES_OF_INTEREST[@]}]="-e"
+        FILES_TO_FILTER[${#FILES_OF_INTEREST[@]}]="$pat"
+    done
+    #echo 1>&2 "A: FOI>${FILES_TO_FILTER[@]}<"
+}                  
+
+# {gentoo|libranet}'s default sudo define SECURE_PATH and so our binaries
+# are inaccessible.
+if [[ "$PATH" != *yokel/sbin* ]]
+then
+    rcfile="$HOME/.bashrc"
+    [ -f $rcfile ] && . $rcfile
+fi
+
+: ${AUTOMAKE_REGEXP_DEF:="((\.am|\.ac|\.m4)$|^config.*)"}
+: ${AUTOMAKE_REGEXP:="$AUTOMAKE_REGEXP_DEF"}
+: ${FILES_FILE:=cscope.files}
+: ${EXCLUDED_FILES_FILE:="extagtree.excluded-files"}
+# .c .h .cxx .py .java etc.
+: ${INTERESTING_FILES:="\.([chly](xx|pp)?|cs|cc|hh|py|pm|pl|java)$"}
+: ${DEF_SYSTEM_INCLUDES:=/usr/include}
+SYSTEM_INCLUDES=
+FILES_OF_INTEREST=()
+FILES_TO_FILTER=()
+: ${v:=''}
+: ${EXCLUDE_PAT:='.*'}
+VC_EXCLUDES='-e /^.*\/?(\.svn|CVS|RCS|\.4D)\/?.*/d'
+: ${EXCLUDES:='-e /(doxygen|html|doc|dist-build)/d'}
+: ${files_to_cat=""}
+: ${only_cat_files=""}
+
+add_foi_regexp $INTERESTING_FILES
+
+if [ -n "$v" ]
+then
+    v_file="/dev/tty"
+else
+    v_file="/dev/null"
+fi
+v=
+
+set -- "${args[@]}"
+for i in "$@"
+do
+    case $1 in
+        -i) SYSTEM_INCLUDES=$DEF_SYSTEM_INCLUDES;;
+	-t) tag_args="$tag_args $2"; shift;;
+	-T) tag_args="$2 $tag_args"; shift;;
+        -p) EXCLUDE_PAT=$2; shift;;
+        -h) follow_sym_links="-h";;
+
+        -I) EXCLUDES="-e /\/include\//d $EXCLUDES";;  
+        -E) EXCLUDES="$2 $EXCLUDES"; shift;;
+        -foi|--foi) add_foi_regexp "$2"; shift;;
+        -f|--filter) add_filter_regexp "$2"; shift;;
+        -c) add_filter_regexp ".*\.[ch]$";;  # C language files only
+
+	--) shift ; break ;;
+	*) 
+            break ;;
+	    #echo 1>&2 "Unsupported option>$1<";
+	    #exit 1 ;;
+    esac
+    shift
+done
+
+if vunsetp "$@"
+    then
+    dirs="$PWD"
+else
+    dirs="$@"
+fi    
+
+# Put the system includes first so any collisions will be noticeable.
+dirs="$SYSTEM_INCLUDES $dirs"
+
+if [[ -n "$EXCLUDED_FILES_FILE" && "$EXCLUDED_FILES_FILE" == "-" ]]; then
+        EXCLUDED_FILES_FILE=""
+fi
+EXCLUDED_FILES_FILE_OPT=
+[[ -n "$EXCLUDED_FILES_FILE" ]] && {
+    EXCLUDED_FILES_FILE_OPT="-c $EXCLUDED_FILES_FILE"
+}
+
+x=/yokel/yokel/home/davep/work-is-play/investigation1/prop-sets/Makefile
+echo "$x" | egrep -i -e "$FILES_OF_INTEREST"
+[ -z "${FILES_TO_FILTER[@]}" ] && {
+    FILES_TO_FILTER=('.*')
+}
+echo 1>&2 "FtF>${FILES_TO_FILTER[@]}<"
+
+filter()
+{
+    tee /dev/null | \
+    egrep -e "${EXCLUDE_PAT}" | \
+    egrep -i "${FILES_OF_INTEREST[@]}" | \
+    sed -r "$VC_EXCLUDES" $EXCLUDES | \
+    egrep -i "${FILES_TO_FILTER[@]}" | \
+    tee /dev/null
+}
+
+{
+    [ -n "$files_to_cat" ] && {
+        cat $files_to_cat
+    }
+    [ -n "$only_cat_files" ] && exit 0
+
+set -x
+    ftreewalk.py -X NOTAG \
+       $EXCLUDED_FILES_FILE_OPT \
+       $follow_sym_links $dirs | \
+       tee /dev/null
+} | filter | tee $v_file
+

@@ -1,0 +1,22 @@
+#!/bin/sh
+
+case $1 in
+   -*) siggie=$1 ; shift ;;
+   *) ;;
+esac
+
+case $OSName in
+   HP-UX) ttyField=2 ; psOpt="-e" ;;
+   AIX) ttyField=2 ; psOpt=agx ;;
+	Solaris) ttyField=2 ; psOpt=agx ;;
+   *) echo "$0: unknown OS" 1>&2 ; exit 1 ;;
+esac
+
+for prog in $*
+do
+	uids=` ps $psOpt | awk '{if (\$'$ttyField' == "'$prog'") print \$1}' `
+	[ -z "$uids" ] || {
+		echo kill $siggie $uids
+		kill $siggie $uids
+	}
+done

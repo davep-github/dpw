@@ -1,0 +1,12 @@
+#!/bin/sh
+
+### No options yet.
+
+expr="-e $1"
+shift
+for name in "$@"; do
+    expr="$expr -e $name"
+done
+
+echo $expr    
+

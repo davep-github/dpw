@@ -1,0 +1,10 @@
+#!/bin/sh
+
+source script-x
+
+[ "$1" = '-x' ] && {
+    export P4DIFF=xxdiff
+    shift
+}
+
+p4 diff "$@"

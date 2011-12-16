@@ -1,0 +1,31 @@
+#!/bin/sh
+
+. script-x
+. $HOME/etc/vsdsrc
+. eexec
+
+EExec mkdir -p ${DP_VSDS_DIR}
+EExec mkdir -p ${DP_STEAM_GAMES}
+EExec mkdir -p ${DP_STEAM_BIN}
+
+updated_str="VSDS installation up to date"
+
+EExec cd ${DP_VSDS_DIR}
+sep=""
+echo -n "Updating ${DP_VSDS_GAME} dedicated server... "
+echo "  Checking for updates...  This may hang or take a long time..."
+echo "  WARNING: Using ^C can leave things b0rked."
+while :; do
+    echo -n "${sep}trying"
+    sep=", "
+    if ${DP_STEAM_BIN}/steam -command update \
+        -game ${DP_VSDS_HLDSUPDATETOOL_GAME_NAME} \
+        -dir . \
+        -retry \
+        | tee ${DP_SCRIPT_X_TEE_OUT} \
+        | fgrep -q "${updated_str}"; then
+        echo "."
+        echo ${updated_str}
+        break
+    fi
+done

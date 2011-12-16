@@ -1,0 +1,38 @@
+#!/bin/sh
+
+# Emit nth screen -ls screen name.
+# rc: 0: screen name or "" if eof
+# rc: 1: error.  At this time, index error.
+. script-x
+
+nth_screen()
+{
+    nth=$1
+    screens=($(dp-screen-screens))
+    vsetp $nth || {
+        for l in "${screens[@]}"; do
+            echo "$l"
+        done | cat -n 1>&2
+        [ -z "$nth" ] && {
+            echo
+            read -e -p "Which? " nth
+        } 1>&2
+    }
+    if vsetp $nth; then
+        nth=$(($nth - 1))           # Zero based index.
+        if (( nth >= 0 && nth < ${#screens[@]} )); then
+            screen=${screens[$nth]}
+            echo "$screen"
+        else
+            # Out of range: error.
+            # Provide the offending index
+            echo "$nth"
+            false
+        fi
+    else
+        # eof'd.  Success but no result.
+        true
+    fi
+}
+
+dp_ima_script && nth_screen "$@"

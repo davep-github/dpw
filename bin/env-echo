@@ -1,0 +1,14 @@
+#!/bin/sh
+
+. script-x
+
+if [ -n "$*" ]; then
+    for evn in "$@"; do
+        case "$evn" in
+            .|=|\?|\$\*) env;;
+            *) eval evv="\$$evn"; echo "$evn>$evv<";;
+        esac
+    done
+else
+    env
+fi

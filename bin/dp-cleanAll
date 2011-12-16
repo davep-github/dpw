@@ -1,0 +1,9 @@
+#!/bin/sh
+
+source script-x
+
+scriptdir=$HOME/work/main/src/tools/bin
+rsvpclient list |
+  grep $LOGNAME |
+  awk '{print $1}' |
+  xargs --no-run-if-empty $scriptdir/cleanAndRelease.pl "$@"

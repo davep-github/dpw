@@ -1,0 +1,30 @@
+#!/bin/sh
+
+tmpFile=/tmp/-fromdos-.$$
+prog=`basename $0`
+if [ -s "$tmpFile" ]
+then
+	echo $prog: temp file $tmpFile exists
+	exit 1
+fi
+
+for i in $*
+do
+	if [ ! -f "$i" ]
+	then
+		echo $prog: $i: no such regular file
+		continue
+	fi
+
+	if [ ! -w "$i" -o ! -r "$i" ]
+	then
+		echo $prog: $i: bad perms
+		continue
+	fi
+
+	tr '\015' '\012' < $i > $tmpFile
+	mv $tmpFile $i || {
+		echo "$prog: mv $tmpFile to $i failed."
+		exit 1
+	}
+done

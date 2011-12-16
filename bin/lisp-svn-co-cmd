@@ -1,0 +1,10 @@
+#!/bin/sh
+
+[ -z "$@" ] && set -- lisp
+   
+
+#original:
+#svn co file:///usr/yokel/svn/my-world/lisp "$@"
+
+svn co file:///usr/yokel/svn/my-world/lisp/lisp "$@"
+

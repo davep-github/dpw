@@ -1,0 +1,7 @@
+#!/bin/bash
+
+source script-x
+
+signum=$1
+
+builtin kill -l | sed -rn 's/(.*?)(((^|[[:space:]])('"$signum"'\) )))([^[:space:]]*)(.*)/\6/p'

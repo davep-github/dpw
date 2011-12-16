@@ -1,0 +1,49 @@
+#!/bin/sh
+
+. eexec 
+EExecEcho=echo
+
+status()
+{
+    echo ''
+    echo '==================================='
+    echo "$*"
+}
+
+tag_file='CVS/Tag'
+branch_tag=$1
+
+[ -z "$branch_tag" ] && {
+    [ -f $tag_file ] || {
+	echo "No branch tag specified and no $tag_file file."
+	exit 1
+    }
+    branch_tag=`cat $tag_file | cut -c2-`
+    echo "Using tag>$branch_tag<"
+}
+
+date=`date '+%Y.%m.%d:%H:%M`
+user=`id -u -n`
+commit_msg="trunk merge by $user on $date"
+merge_log="merge-${date}.log"
+
+status 'Commit current files...'
+EExec cvs commit -m "$commit_msg"
+
+status 'Move to trunk'
+EExec cvs update -A
+
+status 'Merge branch into trunk (conflicts may result)'
+EExec cvs update -j "$branch_tag" 2>&1 | tee "$merge_log"
+
+status "Move $branch_tag to current head of trunk"
+EExec cvs tag -F -b "$branch_tag"
+
+status "Move back onto branch $branch_tag"
+cvs update -r "$branch_tag"
+status ''
+
+echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+echo "Merge log is in $merge_log"
+echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+

@@ -1,0 +1,60 @@
+#!/bin/sh
+
+KARAMBA='superkaramba'
+
+theme="$1"
+[ -f  "$theme" ] && {
+  exec $KARAMBA "$theme" &
+  exit 1
+}
+
+ttry="$theme.theme"
+[ -f  "$ttry" ] && {
+  exec $KARAMBA "$ttry" &
+  exit 1
+}
+
+ttry="$theme/$theme"
+[ -f  "$ttry" ] && {
+  exec $KARAMBA "$ttry" &
+  exit 1
+}
+
+ttry="$theme/$theme.theme"
+[ -f  "$ttry" ] && {
+  exec $KARAMBA "$ttry" &
+  exit 1
+}
+
+ttry="$theme/$main.theme"
+[ -f  "$ttry" ] && {
+  exec $KARAMBA "$ttry" &
+  exit 1
+}
+
+DEF_PLACES="$HOME/.karamba"
+places="$DEF_PLACES"
+
+for dir in $places
+do
+    for ttry in `ls $dir/$theme/*.theme`
+    do
+	[ -f  "$ttry" ] && {
+	exec $KARAMBA "$ttry" &
+	exit 1
+	}
+    done
+done
+
+for dir in $places
+do
+    for ttry in `ls $dir/*.theme`
+    do
+	[ -f  "$ttry" ] && {
+	exec $KARAMBA "$ttry" &
+	exit 1
+	}
+    done
+done
+
+

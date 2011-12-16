@@ -1,0 +1,10 @@
+#!/bin/sh
+
+. script-x
+
+progname=$(basename "$0")
+XX_X=${1:-108}
+export SCREEN_NAME=${SCREEN_NAME:=${progname}-$$}
+export XX_GEOMETRY=${XX_GEOMETRY:--g +${XX_X}+0}
+xx ${XX_GEOMETRY} dp-screen
+

@@ -1,0 +1,72 @@
+#!/usr/bin/env perl
+
+($ProgName) = 
+    $0 =~ m!([^/]+$)!;
+
+if ($ARGV[0] =~ /^-(.*)/)
+{
+    $siggie = $1;
+    shift(@ARGV);
+}
+else
+{
+    if  ($ARGV[0] eq '--')
+    {
+	shift (@ARGV);
+    }
+    $siggie = "TERM";
+}
+
+$OSName = $ENV{'OSName'};
+
+#
+# display PGIDs
+# get us a display with the following fields:
+# PPID   PID  PGID   SID TTY TPGID  STAT   UID   TIME COMMAND
+#
+$psCmd = 'ps agxl';
+
+open(PS, $psCmd . " |") || die "canna open ps pipe, $!\n";
+
+@ps_list = <PS>;
+close(PS);
+
+foreach $arg (@ARGV)
+{
+    $pid_list{$arg} = $arg;
+    unshift(@kill_list, $arg);
+}
+
+$again = 1;
+while ($again != 0)
+{
+    $again = 0;
+    #
+    # walk thru the ps list
+    #
+    foreach $ps_line (@ps_list)
+    {
+        # snip out fields we are interested in
+	($pid, $ppid) = 
+	    $ps_line =~ /\d+\s+\d+\s+(\d+)\s+(\d+)/;
+
+	# if this guy's parent is in the kill list...
+	if (defined $pid_list{$ppid})
+	{
+	    if (!defined $pid_list{$pid})
+	    {
+		$pid_list{$pid} = $pid;
+		unshift(@kill_list, $pid);
+		$again = 1;
+	    }
+	}
+    }
+}
+
+if (@kill_list)
+{
+    #print "siggie>$siggie<, kill_list>@kill_list<\n";
+    print "kill ($siggie, @kill_list);\n";
+    $num = kill ($siggie, @kill_list);
+}
+exit $!

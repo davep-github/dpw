@@ -1,0 +1,5 @@
+#!/bin/sh
+pfile=/tmp/printlog
+date >> $pfile
+echo $* >> $pfile
+cat >> $pfile

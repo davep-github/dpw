@@ -1,0 +1,10 @@
+#!/bin/sh
+# $Id$
+# rdesktop to chicxulub
+
+: ${geometry:=1600x1200}
+: ${host:=cx}
+: ${desktop:=3}
+
+kstart --desktop ${desktop} --window 'rdesktop' rdesktop -g${geometry} ${host}
+

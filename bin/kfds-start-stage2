@@ -1,0 +1,48 @@
+#!/bin/sh
+
+. script-x
+
+sigint_ed()
+{
+    { echo; echo; } 1>&2
+    echo " - $(date): Caught SIGINT, exiting." | tee -a $LOG_FILE 1>&2
+    kill $ucc_pid
+    SLEEP_TIME=1 LOOP_MSG="Waiting for ucc-bin to die" buzzard ucc-bin
+    { echo; echo; } 1>&2
+    exit 99
+}
+trap sigint_ed SIGINT
+
+. $HOME/etc/kfdsrc
+. eexec
+LOG_FILE="$DP_KFDS_SYSDIR/crash.log"
+
+EExec cd "$DP_KFDS_SYSDIR"
+
+restart="$DP_RESTART_COMMAND $DP_RESTART_COMMAND_ARGS"
+echo "Loop command: exec $restart"
+
+server_args=${DP_KFDS_STARTING_MAP}${DP_KFDS_STARTING_ARGS}${DP_KFDS_EXTRA_ARGS}
+echo "./ucc-bin server ${server_args}"
+echo -n "Session: $(date)" | tee -a $LOG_FILE 1>&2
+./ucc-bin server ${server_args} &
+sleep 5
+#set -x
+# @todo Make this a loop waiting n seconds for the program to start up.
+ucc_pid=$(findprog "$UCC_BIN_REAL") || {
+    echo 1>&2 cannot find "$UCC_BIN_REAL's" PID
+    exit 1
+}
+sudo renice -19 $ucc_pid
+wait $ucc_pid
+
+# We exited by other than SIGINT
+echo " - $(date): Crashed again: $?." | tee -a $LOG_FILE 1>&2
+
+# Lupus so our players do not become sad.
+echo "Restarting: exec $restart" | tee -a $LOG_FILE 1>&2
+exec $restart
+
+echo "WFT?!?!? exec $restart failed: $?" | tee -a $LOG_FILE 1>&2
+exit 66
+

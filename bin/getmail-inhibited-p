@@ -1,0 +1,8 @@
+#!/bin/sh
+
+source script-x
+
+# Conditions under which I don't want to run getmail.
+# E.g. connected thru a VPN which allows no other network interfaces, eg LL's.
+
+vpn-connected-p

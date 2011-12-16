@@ -1,0 +1,6 @@
+#!/bin/sh
+old_clobber=$noclobber
+unset noclobber
+/usr/bin/man "$@"
+stat=$?
+exit $stat

@@ -1,0 +1,26 @@
+#!/bin/sh
+set -x
+progname=$(basename $0)
+
+. script-x
+[ -n "$DP_SCRIPT_X_DEBUG" ] && {
+    debug_opt="-d"
+    shift
+}
+
+LOG_DIR="$DP_LOG/${progname}.d"
+[ -d "$LOG_DIR" ] || mkdir "$LOG_DIR" || exit 3
+LOG_NAME="$LOG_DIR/$progname.log"
+ETC=${HOME}/etc
+CONF_d=$ETC
+STATE="$CONF_d/logrotate-daily.state"
+CONF="$CONF_d/logrotate-daily.conf"
+
+case "$(uname)" in
+    ##FreeBSD) newsyslog -f ${ETC}/newsyslog-daily.conf -r -v ;;
+    Linux) 
+        logrotate $debug_opt -v -s "$STATE" "$CONF"
+           ;;
+    *) FATAL 1 "Unsupported \$(uname) >$(uname)<"
+esac
+

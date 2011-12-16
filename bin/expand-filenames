@@ -1,0 +1,16 @@
+#!/bin/sh
+
+dot=$PWD
+files=
+
+for file in "$@"
+do
+    case "$file" in
+    /*) files="$files $file";;
+    *)  files="$files $dot/$file";;
+    esac
+done
+
+echo "$files"
+exit 0
+

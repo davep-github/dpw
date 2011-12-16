@@ -1,0 +1,51 @@
+#!/bin/sh
+
+source script-x
+source eexec
+# These are convenient for eexec
+: ${eexec_options='nvq'}
+
+doc_string='#
+# Make a dev branch for playing in a tmp sandbox. Also good more general
+# branching and moving to new branch for dev.  Defaults are aimed at personal
+# dev branches.
+#
+'
+
+: ${branch_name:=${USER}-private-dev-$(dp-std-timestamp)}
+: ${currrent_url:=$(svn-url)}
+
+option_str="b:c:"  # <:add new options:>
+all_options="${option_str}${eexec_args-}"
+q=$(getopt -o "$all_options" -- "$@")
+[ $? != 0 ] && Usage
+eval set -- "$q" 
+unset q
+
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -n) EExecDashN;;          # Don't actually execute stuff
+      -v) EExecVerbose;;        # Blah, blah, blah.
+      -q) EExecQuiet;;
+      -b) shift; branch_name="$1";;
+      -r) shift; repository="$1";;
+      -c) shift; currrent_url="$1";
+      -C) shift; comment="$1";;
+      -/) shift; num_components_to_remove="$1";;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+# Strip $num_components_to_remove off of the source url
+# e.g. when 2:
+# svn+ssh://dapanarx@10.230.25.200/home/share/svn/clix/trunk
+# becomes
+# svn+ssh://dapanarx@10.230.25.200/home/share/svn
+#

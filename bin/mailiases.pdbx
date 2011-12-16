@@ -1,0 +1,62 @@
+{
+    local($eof_ind) = @_;
+
+    require("$ENV{'HOME'}/bin/alias-list.pdbx");
+    
+    sub rs_format_value
+    {
+	local($alias_val, $lname);
+
+	$lname = $name ? "\\\"$name\\\" " : "";
+	$alias_val = "(define-mail-abbrev \"$alias_name\" " .
+	    "\"$lname<$fieldValue>\")";
+	print "$alias_val\n";
+	$alias_name;
+    }
+
+    sub rs_format_list
+    {
+        local($key, $val) = @_;
+
+	print "(define-mail-abbrev \"$key\" \"",
+	    join(",", &rs_expand_list('', $val)),
+	    "\")\n";
+    }
+
+    &rs_main($eof_ind);
+
+}
+__END__
+#
+# This is a pdbx filter.  After a matching record from a pdb query is
+# collected, a routine like this is called if it is
+# specified on the command line.
+#
+# This routine is called with no parameters, but three global items 
+# are defined:
+# %fields, @thisRec and $fieldIndex
+# %fields is indexed directly by a field's name.  This variable does not
+#  preserve any kind of ordering from the original record in the database.
+# @thisRec contains pairs of strings.
+#  $thisRec[i] is the name of the field
+#  $thisRec[i+1] is the value of the field.
+# This variable preserves the order from the database; it is pretty much
+#  a copy of the record as it was in the file.
+# $fieldIndex is the index of the next slot to use in @thisRec.
+#
+# In specific, this is a mail alias pdbx. The main alias filter,
+# alias-list.pdbx, is a generic filter designed to handle mail aliases
+# and alias lists.
+# Each pdb record which fits the profile: 
+# a field named alias.  Value can be a|b|c. All alternatives are looped thru
+#  with each alternaive put into $alias
+# a field named: (email)(.*)
+# (.*) is stuffed into $alias_suffix.
+# $alias_name is set to "$alias$alias_suffix"
+# lists have ',' in them and their expansion is deferred.
+# aliases are formatted via a call to rs_format_value.
+# this is stored in an array: $rs_aliases{$alias_name} for
+#  later use in expanding lists.
+# rs_format_value prints the alias value to the stdout and
+#  returns same as string to be added to @rs_aliases.
+# 

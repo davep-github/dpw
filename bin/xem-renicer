@@ -1,0 +1,23 @@
+#!/bin/sh
+
+source script-x
+
+: ${RUNNER:=""}
+: ${SLEEP_TIME:=10}
+
+[ "$1" = "-n" ] && {
+    RUNNER=echo
+    shift
+}
+
+: ${prog_name:="/usr/local/bin/xemacs"}
+pids=$(findprog "$prog_name")
+
+vsetp "$pids" && {
+    $RUNNER sudo renice -n -20 -p $pids
+    exit "$?"
+}
+
+echo 1>&2 "No pids found for $prog_name"
+exit 1
+

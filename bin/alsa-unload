@@ -1,0 +1,79 @@
+#!/bin/sh
+source script-x
+
+einfo()
+{
+    echo "einfo: $@"
+}
+
+vebegin()
+{
+    echo "vebegin: $@"
+}
+
+veend()
+{
+    echo "veend: $@"
+}
+
+unload_modules_24() {
+    einfo "in unload_modules_24()"
+
+	local LOADED_MODULES="$(lsmod | sed -n -e 's/^\(snd[^ ]*\) .*/\1/p')"
+	local MODULE
+	for MODULE in ${LOADED_MODULES} ; do
+	    rmmod "${MODULE}"
+	done
+	rmmod soundcore 2>/dev/null
+	rmmod gameport 2>/dev/null
+
+	lsmod | grep -vq '^snd'
+}
+
+unload_modules_recursive() {
+    einfo "in unload_modules_recursive($@)"
+
+	local revdeps="$(lsmod | sed -n -e "s/,/ /g" -e "s/^$1 *[0-9]* *[0-9]* \(.*\)/\1/p")"
+
+	for module in ${revdeps} ; do
+		unload_modules_recursive "${module}"
+	done
+
+	vebegin "Unloading: $1"
+	rmmod --wait "$1"
+	veend $?
+}
+
+unload_modules_26() {
+        einfo "in unload_modules_26()"
+
+	# First of all, remove the snd module and all the modules depending
+	# on it, this should remove already most of ALSA modules.
+	lsmod | grep -q "^snd[[:space:]]" && unload_modules_recursive snd
+
+	# Then find the remaining ones, and handle them too.
+	for module in $(lsmod | sed -n -e 's/^\(snd[^ ]*\) .*/\1/p'); do
+		unload_modules_recursive "${module}"
+	done
+
+	lsmod | grep -vq "^snd"
+}
+
+terminate() {
+	#
+	# Kill processes holding open sound devices
+	#
+	# DEVS=`find /dev/ -follow -type c -maxdepth 1 -print 2>/dev/null | xargs ls -dils | grep "1*1[46]," | cut -d: -f2 | cut -d" " -f2; echo /proc/asound/dev/*`
+	local ossdevs="/dev/admmidi* /dev/adsp* /dev/amidi* /dev/audio* /dev/dmfm* \
+			/dev/dmmidi* /dev/dsp* /dev/dspW* /dev/midi0* /dev/mixer* /dev/music \
+			/dev/patmgr* /dev/sequencer* /dev/sndstat"
+	local alsadevs="/proc/asound/dev/* /dev/sound/* /dev/snd/*"
+	fuser -k ${ossdevs} ${alsadevs} >/dev/null 2>/dev/null
+
+	# remove all sequencer connections if any
+	[ -f /proc/asound/seq/clients ] && type aconnect >/dev/null 2>/dev/null && aconnect --removeall
+}
+
+mod=${1:-snd}
+
+unload_modules_26 $mod

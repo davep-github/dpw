@@ -1,0 +1,6 @@
+#!/bin/sh
+
+dcop knotes KNotesIface newNote "$1" "$2"
+
+exit $?
+

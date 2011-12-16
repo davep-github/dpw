@@ -1,0 +1,57 @@
+{
+    my ($key);
+    my ($sep);
+
+    if (!$_topydb_pdbx_initted) {
+	$_topydb_pdbx_initted=1;
+	$x=<<EOF
+################################################################
+#
+# Converted by topypdb.pdbx
+#
+################################################################
+
+# import class defs for entries and databases
+import dbt
+db=dbt
+
+#
+# create the db.
+#
+DB = db.PythonDataBase()
+
+#
+# shorthand for var to construct and add new record to db
+#
+e = DB.add
+EOF
+    ;
+        print "$x";
+    }
+
+    $indent = '    ';
+    $sep = '';
+    print "e(\n${indent}dat={\n";
+    foreach $key (keys(%fields)) {
+ 	print "$sep$indent'$key': \"\"\"$fields{$key}\"\"\"";
+ 	$sep = ",\n";
+      }
+    print "\n${indent}})\n";
+}
+__END__
+#
+# This is a pdbx filter.  After a matching record from a pdb query is
+# collected, a routine like this is called if it is
+# specified on the command line.
+#
+# This routine is called with no parameters, but three global items 
+# are defined:
+# %fields, @thisRec and $fieldIndex
+# %fields is indexed directly by a field's name.  This variable does not
+#  preserve any kind of ordering from the original record in the database.
+# @thisRec contains pairs of strings.
+#  $thisRec[i] is the name of the field
+#  $thisRec[i+1] is the value of the field.
+# This variable preserves the order from the database; it is pretty much
+#  a copy of the record as it was in the file.
+# $fieldIndex is the index of the next slot to use in @thisRec.

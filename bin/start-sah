@@ -1,0 +1,9 @@
+#!/bin/sh
+set -x
+
+: ${hdir:=$HOME/yokel/setiathome}
+
+cd $hdir
+echo "Running setiathome in $PWD"
+sudo su setiathome -c setiathome -- -nice  20 -email > /dev/null 2>&1 &
+

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+browse-html http://192.168.123.254
+

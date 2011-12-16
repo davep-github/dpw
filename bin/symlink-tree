@@ -1,0 +1,113 @@
+#!/bin/sh
+#set -x
+
+## cmd dst src glob
+
+#!/bin/sh
+#
+# sh script template
+#
+
+prog=`basename $0`
+#echo $prog: "$@" 1>&2
+
+Usage()
+{
+   echo "${prog}: usage: [-$option_str]" 1>&2
+   exit 1
+}
+
+# init optional vars to defaults here...
+
+nada ()
+{
+    :
+}
+
+verbose ()
+{
+    echo "$prog: $@"
+}
+
+debug ()
+{
+    echo 1>&2 "+ $prog: $@"
+}
+
+dry_run ()
+{
+    echo "! $@"
+}
+
+
+VERBOSE=nada
+DEBUG=nada
+RUN=
+EKO=nada
+
+$VERBOSE "@>$@<"
+$EKO '$@:' "$@"
+
+. eexec
+
+# see the man page of getopt for inadequacies.
+# No more!!! They've fixed it!
+
+std_options="nvdDk"
+option_str="g:"
+
+q=$(getopt -o "$std_options$option_str" -- "$@")
+[ $? != 0 ] && Usage
+eval set -- "$q" 
+
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -n) export RUN=dry_run; EExecDashN;; # Don't actually execute stuff
+      -v) export VERBOSE=verbose; EExecVerbose;;
+      -d) export DEBUG=debug;;
+      -D) set -x;;
+      -k) EKO=eko;;
+      -g) glob_opt="-name '$2'"; $EKO "0:glob_opt:" $glob_opt; shift;;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+$EKO "1:glob_opt:" $glob_opt
+eval $EKO "glob_opt eval\'ed:" glob_opt $glob_opt
+
+src=$1
+shift
+dst=$1
+shift
+
+
+$DEBUG find $src -type f ${glob_opt}
+#eval eko find $src -type f ${glob_opt}
+eval find $src -type f ${glob_opt} | while read f 
+do
+  $DEBUG echo "f>$f<"
+  case "$f" in
+      /*) ;;
+      *) f="$PWD/$f";;
+  esac
+  dir_name=$(dirname $f)
+  file_name=$(basename $f)
+  final_dest="$dst$dir_name"
+  [ -d "$final_dest" ] || mkdir -p "$final_dest"
+
+  $DEBUG echo "final_dest>$final_dest<"
+  case "$f" in
+      /*) fp_fd=$final_dest;;
+      *) fp_fd="$PWD/$final_dest";;
+  esac
+  $VERBOSE "ln -s $f $fp_fd"
+  ($RUN cd $final_dest; $RUN ln -s $f .)
+done
+

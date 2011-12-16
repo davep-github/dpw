@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -x
+
+# cd to src dir
+# we want to add a new dir to the iso-archive.  We use the current date as a
+#  base. (Use timestamp ==> allows multiple per day, but not per second.
+#  date --iso-8601=seconds
+#
+timestamp=$(date --iso-8601=seconds)
+
+if [ "$1" = "-Z" ]
+then
+    shift
+    append=''
+    dvd_write_new_flag='-Z'
+else
+    append='y'
+    dvd_write_new_flag='-M'
+fi
+
+src_dir="$1"
+dst_dev="$2"
+
+# libranet's default sudo defines SECURE_PATH and so our binaries
+# are inaccessible.
+if [[ "$PATH" != *yokel/sbin* ]]
+then
+    rcfile="$HOME/.bashrc"
+    [ -f $rcfile ] && . $rcfile
+fi
+
+. eexec
+#EExecDashN
+
+# magic to determine if growisofs or {mkisofs | cdrecord} is needed.
+# growisofs does dvds, no cds
+# cdrecord does cds, no dvds
+# this method sucks.
+case "$dst_dev" in
+    *cdrom) dev=dvd;
+	    WRITER=dvd_write;;
+    *cdrom1) dev=cd;
+	     WRITER=cdr_write;;
+    *) FATAL 1 "Unknown dev >$dst_dev<";;
+esac
+
+case "$src_dir" in
+    */) slash='';;
+    *) slash='/';;
+esac
+
+graft="-graft-points $timestamp/$src_dir${slash}=$src_dir"
+
+dvd_write()
+{
+    EExec growisofs "$dvd_write_new_flag" $dst_dev -R $graft
+}
+
+$WRITER

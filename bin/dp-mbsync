@@ -1,0 +1,73 @@
+#!/bin/sh
+ 
+. script-x
+. eexec
+
+progname=$(basename $0)
+
+: ${RC_BASE:=$HOME/.rc/mbsyncrc}
+: ${CHANNEL:=main}
+: ${MBS_OPTS:="--verbose --debug"}
+: ${DP_LOG:="/home/davep/log"}
+: ${LOG_FILE:=$DP_LOG/$progname.log}
+
+progname=$(basename $0)
+
+: ${RC_BASE:=$HOME/.rc/mbsyncrc}
+: ${CHANNEL:=main}
+: ${MBS_OPTS:="--verbose --debug"}
+: ${LOG_FILE:=$DP_LOG/$progname.d/$progname.log}
+
+[ -d "$(dirname $LOG_FILE)" ] || mkdir $(dirname $LOG_FILE)
+
+[[ "$1" == "-n" ]] && {
+    shift
+    EExecDashN
+}
+
+[[ -z "$dp_mbsync_invoker" ]] && {
+   dp_mbsync_invoker=$(pgrep "$PPID")
+   dp_mbsync_invoker="Parent PID: ${PPID}:
+$dp_mbsync_invoker"
+}
+
+mbsync0()
+{
+    local rc_file="$1"
+    shift
+    local channel="$1"
+    echo "Looking to sync with rc_file[$rc_file] and channel[$channel]"
+    [[ -e "$rc_file" ]] && {
+        echo "Syncing $rc_file and $channel"
+        EExec mbsync --config "$rc_file" "$channel"
+    }
+}
+
+mbsyncer()
+{
+    local channel=$1
+    shift
+    local rc_base=$1
+    shift
+
+    for l in "$@"; do
+        [[ "$1" == "--" ]] && break
+        mbsync0 "$rc_base$l" "$channel"
+        shift
+    done
+    
+    shift
+    for l in "$@"; do
+        rc_file="$1"
+        shift
+        channel="$1"
+        mbsync0 "$rc_file" "$channel"
+    done
+}
+
+{
+    echo "$progname: ======= start: $(date) ======="
+    echo "Invoked by>$dp_mbsync_invoker<"
+    mbsyncer "$CHANNEL" "$RC_BASE" $locale_rcs "$@" 
+    echo "$progname: ======= finish: $(date) ======="
+} >> $LOG_FILE 2>&1

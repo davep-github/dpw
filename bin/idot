@@ -1,0 +1,24 @@
+#!/bin/sh
+
+idot()
+{
+    local d=${1:=.}
+
+    realpath "$d"
+    echo -------
+    ls -ld "$d"
+    echo -------
+    df -h "$d"
+    echo -------
+    stat "$d"
+}
+
+idots()
+{
+    [ -z "$*" ] && set -- .
+    for d in "$@"; do
+	idot "$d"
+    done
+}
+
+[ name_is___main__ ] && idots "$@"

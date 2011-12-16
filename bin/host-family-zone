@@ -1,0 +1,5 @@
+#!/bin/sh
+
+source script-x
+
+$HOST_INFO -n "$(domain-sans-TLD)" family_zone

@@ -1,0 +1,161 @@
+# -*-Shell-script-*-
+#set -x
+#true
+# script-x:
+# source this near (as in *very* near) the beginning of a shell script to add
+# very convenient and flexible debugging to the script. The primary action is
+# to do a `set -x' command to enable good old-fashioned tracing.
+# This code's activation can be done a variety of ways.
+# By default, using -x as the absolute very first leading and preceded by no
+# other option option enables some most excellent debugging facilities.
+# Other ways are:
+# -xq -- Set up everything, but don't do a set -x
+# -xl -- Also set up per-script logging.
+# -xlq|-xql -- Combinations of the above.
+# The setting of env variables in the child's environment is used a lot.
+# E.g.  DP_NO_LOG=t blah-script
+#
+# BUGS: Other than -x, it's often easier to edit the script, stick in plain
+# old debug stuff and then delete it, than to remember and
+# TYPE_IN_ALL_OF_THE_LONG_NAMES.
+# in *macs, M-/ (dabbrev-expand), relieves much of the burden.
+
+# !<@todo XXX Make a bunch of abbrevs that expand to "useful" vary-ables:
+# e.g. ndx expands to DP_NO_DASH_X
+
+
+# Pass this as an environment variable to debug our self.
+: ${DP_DEBUG_SCRIPT_X_ITSELF:=} # Make -u happy.
+[ -n "$DP_DEBUG_SCRIPT_X_ITSELF" ] && set -x
+
+DP_SCRIPT_X_PRISTINE_DOLLAR1="${1-}"
+DP_SCRIPT_X_PRISTINE_AT=("$@")
+DP_SCRIPT_X_PROGNAME=$(basename "$0")
+DP_SCRIPT_X_LOG_DIR="$HOME/log/script-x"
+DP_SCRIPT_X_PROG_LOG_DIR="${DP_SCRIPT_X_LOG_DIR}/${DP_SCRIPT_X_PROGNAME}"
+DP_SCRIPT_X_PROG_LOG_FILE="${DP_SCRIPT_X_PROG_LOG_DIR}/log"
+DP_SCRIPT_X_PROG_LOG_FILE_STDOUT="${DP_SCRIPT_X_PROG_LOG_DIR}/log.stdout"
+DP_SCRIPT_X_PROG_LOG_FILE_STDERR="${DP_SCRIPT_X_PROG_LOG_DIR}/log.stderr"
+DP_SCRIPT_X_PROG_LOG_FILE_STDALL="${DP_SCRIPT_X_PROG_LOG_DIR}/log.stdall"
+
+: ${DP_SETUP_ENV_ONLY:=""}
+: ${DP_NO_LOG:=""}
+# Set to ignore a leading -x and allow it to be
+# passed to the enclosing script as a parameter.
+: ${DP_NO_DASH_X:=}
+# Ditto for -xq.
+: ${DP_NO_DASH_XQ:=}
+# Or change these to something non-conflicting.
+: ${DP_SCRIPT_X_DASH_X_STR=-x}
+: ${DP_SCRIPT_X_DASH_XQ_STR=-xq}
+: ${DP_SCRIPT_X_DASH_X=}        # Or fire off by environment variable only
+: ${DP_SCRIPT_X_DASH_XQ=}       # Or fire off by environment variable only
+: ${DP_SCRIPT_X_EXTRA_ARGSES=}
+: ${DP_SCRIPT_XQ_EXTRA_ARGSES=}
+
+: ${DP_SCRIPT_X_DEBUG=}
+: ${DP_SCRIPT_X_DEBUG_PROPAGATOR=}
+: ${DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT=}
+: ${DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR=}
+: ${DP_SCRIPT_X_DEBUG_INITIATOR=}
+# Do this here for convenience since there are many cases,
+# e.g. from firefox, KDE's Add Application to Panel, etc.
+# that don't get my environment.
+. ~/.rc/func
+
+: ${SCRIPT_X_EXEC=}
+vsetp "$SCRIPT_X_EXEC" && {
+
+    # Change DP_NO_LOG=t to DP_NO_LOG="t"
+    DP_SETUP_ENV_ONLY="t-from-script-x" DP_NO_LOG="t-from-script-x" \
+        source run-with-dp-env
+
+    # Set this to have this code ignore a leading -x and allow it to be
+    # passed to the enclosing script as a parameter.
+    DP_NO_DASH_X=t
+    # Ditto for -xq.
+    DP_NO_DASH_XQ=t
+    # Or change these to something non-conflicting.
+    DP_SCRIPT_X_DASH_X_STR=-x
+    DP_SCRIPT_X_DASH_XQ_STR=-xq
+    DP_SCRIPT_X_DASH_X=         # Or fire off by environment variable only
+    DP_SCRIPT_X_DASH_XQ=        # Or fire off by environment variable only
+    DP_SCRIPT_X_EXTRA_ARGSES=
+    DP_SCRIPT_XQ_EXTRA_ARGSES=
+    DP_SCRIPT_X_DEBUG=y
+    DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT=":"
+    DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR=":"
+    DP_SCRIPT_X_echo_id=":"
+}
+
+DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT_func()
+{
+    echo 1>&2 "$@"
+}
+# These can be used to have -x enabled echo-ing, eg:
+# source script-x
+# ...
+# $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT "only seen if debugging is on."
+DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT=":"
+DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR=":"
+DP_SCRIPT_X_echo_id=":"
+
+# For now, force inheritance.  
+# !<@todo XXX Allow us to not inherit the debug state if we choose.
+# !<@todo XXX What else would it be useful to inherit, record, etc?
+# For now, a hack to ignore inheritance is to always unset
+# DP_SCRIPT_X_DEBUG_INITIATOR before sourcing this file.
+if vunsetp "$DP_NO_DASH_X" ; then
+    [ "${1-}" == -x ] || vsetp "$DP_SCRIPT_X_DEBUG_INITIATOR" && {
+        # -xq means to only activate the other, quiet, debug features.
+        # All this, simply for the following ~99% of the time.
+        set -x
+        if vunsetp "$DP_SCRIPT_X_DEBUG_INITIATOR"; then
+            # We've just activated the -x stuff
+            DP_SCRIPT_X_DEBUG_INITIATOR=()
+        fi
+        # Record initiating callers.
+        DP_SCRIPT_X_DEBUG_INITIATOR[${#DP_SCRIPT_X_DEBUG_INITIATOR[@]}]="$0"
+    }
+    DP_SCRIPT_X_DOLLAR1="$DP_SCRIPT_X_PRISTINE_DOLLAR1"
+    case "$DP_SCRIPT_X_DOLLAR1" in
+        -x*l*) mkdir -p "$DP_SCRIPT_X_PROG_LOG_DIR" || {
+               dp_die "$?" \
+                   "Could not make DP_SCRIPT_X_LOG_DIR>$DP_SCRIPT_X_LOG_DIR<"
+               } 
+               DP_SCRIPT_X_DOLLAR1=$(echo "$DP_SCRIPT_X_DOLLAR1" | sed 's/l//g');;
+    esac
+
+    # Set lots of stuff that does nothing if not in debug mode to things that
+    # do in debug mode.
+    if [ "$DP_SCRIPT_X_DOLLAR1" == "-xq" -o "$DP_SCRIPT_X_DOLLAR1" == "-x" ]; then
+        shift
+        DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT="echo"
+        DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR="DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT_func"
+        DP_SCRIPT_X_echo_id=echo_id
+	# These can be used by clients to do conditional stuff based on
+	# the -x/-xq state, eg:
+        # if vsetp $DP_SCRIPT_X_DEBUG; then
+        #    debug_only_stuff
+        #    ...
+        # fi
+        export DP_SCRIPT_X_DEBUG=y
+        export DP_SCRIPT_X_DEBUG_PROPAGATOR=-x  # We can use this to propagate -x'ing.
+        # Use these to turn on tracing in various places if we're -x'ing.
+        export DP_SCRIPT_X_DASH_X_ON="set -x"
+        export DP_SCRIPT_X_DASH_X_OFF="set +x"
+        # Can use this to propagate debugging...
+        export DP_SCRIPT_X_DEBUG_OPT="$DP_SCRIPT_X_PRISTINE_DOLLAR1"
+        # More advanced stuff...
+        [ -n "$DP_SCRIPT_X_EXTRA_ARGSES" ] && {
+            echo 1>&2 "DP_SCRIPT_X_EXTRA_ARGSES>$DP_SCRIPT_X_EXTRA_ARGSES<"
+            echo 1>&2 "NOTHING IMPLEMENTED YET"
+        }
+    fi
+fi
+
+if [ -n "$DP_SCRIPT_X_DEBUG" ]; then
+    DP_SCRIPT_X_TEE_OUT=/dev/tty
+else
+    DP_SCRIPT_X_TEE_OUT=/dev/null
+fi

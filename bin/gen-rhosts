@@ -1,0 +1,15 @@
+#!/usr/bin/env python
+
+import string, dppydb
+
+dppydb.prep()
+d = dppydb.load(pat='host_info', verbose=0)
+
+hosts = d.grep_fields('ctl', 'r')
+print '+'
+for h in hosts:
+    n =  h['host']
+    if string.find(n, ' ') >= 0:
+        continue
+    print n
+    

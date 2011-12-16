@@ -1,0 +1,55 @@
+#!/bin/sh
+
+source script-x
+some_good_asoundrc_entries='
+pcm.dmixer {
+    type dmix
+    ipc_key 1024
+    ipc_key_add_uid false
+    ipc_perm 0666
+    slave {
+        pcm "hw:0,0"
+        period_time 0
+        period_size 1024
+    buffer_size 8192
+    rate 44100
+    }
+    bindings {
+        0 0
+        1 1
+    }
+}
+pcm.softvol {
+   type softvol
+   slave.pcm "dmixer"
+   control {
+     name "MPD"
+     card 0
+   }
+}
+ctl.softvol {
+    type hw
+    card 0
+}
+pcm.dsp0 {
+    type plug
+    slave.pcm "softvol"
+}
+pcm.!default {
+    type plug
+    slave.pcm "softvol"
+}
+pcm.default {
+   type plug
+   slave.pcm "softvol"
+}
+'
+
+echo 'try speaker-test like:
+speaker-test -Dplug:softvol
+speaker-test -Ddefault
+speaker-test -Dplug:dmixer
+'
+
+echo look at amixer output
+echo try aplay

@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+#set -x
+get_cmd()
+{
+	echo $1
+}
+
+get_val()
+{
+	echo $2
+}
+
+split()
+{
+	oldIFS=$IFS
+	IFS=$1
+	shift
+	echo $*
+	IFS=$oldIFS
+}
+
+progname=$(basename $0)
+oldIFS=$IFS
+IFS='-'
+cmds=$(split '-' $progname)
+IFS=$oldIFS
+
+esc=""
+pcl="${esc}E"
+for tcmd in $cmds
+do
+#	echo "tcmd>$tcmd<"
+	case $tcmd in
+	*=*)
+		IFS='='
+		cmd=$(get_cmd $tcmd)
+		val=$(get_val $tcmd)
+		IFS=$oldIFS
+		[ "$cmd" = "" -o "$val" = "" ] && {
+			echo "$progname: bad valued command: $tcmd" 1>&2
+			exit 1
+		}
+		;;
+	*)
+		cmd=$tcmd
+		;;
+	esac
+
+	case $cmd in
+	'cond')
+		pcl="$pcl${esc}&k2S"
+		;;
+	'land')
+		pcl="$pcl${esc}&l1O"
+		;;
+	'port')
+		pcl="$pcl${esc}&l0O"
+		;;
+	'ls')
+		pcl="$pcl${esc}&l6D"
+		;;
+	'lpf')
+		;;
+	'lj5l')
+		;;
+	'tlen')
+		pcl="$pcl${esc}&l${val}F"
+		;;
+	'crlf')
+		pcl="$pcl${esc}&k2G"
+		;;
+	'legal')
+		pcl="$pcl${esc}&l3A"
+		;;
+		
+	'a4')
+		pcl="$pcl${esc}&l26A"
+		;;
+	*)
+		echo "$progname: bad cmd: $cmd" 1>&2
+		exit 1
+		;;
+	esac
+done
+
+echo -ne "$pcl"
+#/usr/libexec/lpr/lpf "$@" || exit $?
+echo -ne "${esc}E"
+exit 0
+
+
+

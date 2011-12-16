@@ -1,0 +1,26 @@
+#!/bin/sh
+# $Id: split-to-ps,v 1.1 2003/10/13 02:30:32 davep Exp $
+# 
+page_name_prefix=s
+font=Courier8
+input_files="$@"
+
+for file in $input_files
+do
+    for n in `num-range 10 1`
+    do
+	# can enscript detect empty files?
+	ofile=${page_name_prefix}$n.ps
+	enscript -o ${ofile} -r -f Courier8 --slice=$n ${file}
+
+	#          0  1     2      3      4   5  6     7     8
+	# -rw-r--r--  1 davep  wheel  11944 Jul 10 00:30 s9.ps
+	set -- `ls -l $ofile`
+	len=$4
+	if [ "$4" -le 11944 ]
+	then
+	    rm -f $ofile
+	fi
+    done
+done
+

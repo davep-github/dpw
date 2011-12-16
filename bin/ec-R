@@ -1,0 +1,9 @@
+#!/bin/sh
+# $Id$
+# pipe funky filenames (one at a time) to ec
+#
+
+while read
+do
+  echo "$REPLY" | ec -R
+done

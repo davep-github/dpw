@@ -1,0 +1,63 @@
+#!/bin/sh
+
+md5_ext='.md5'
+
+prog=`basename $0`
+# see the man page of getopt for inadequacies.
+
+set -- ` getopt 'x:e:' "$@" `
+
+[ $? != 0 ] && Usage
+
+for i in $*
+do
+    case $1 in
+	-e|-x) md5_ext=$2; shift;;
+	--) shift; break;;
+	*) 
+	    echo 1>&2 "Unsupported option>$1<";
+	    exit 1 ;;
+    esac
+    shift
+done
+
+#echo "$@"
+#exit 1
+
+get_md5 ()
+{
+    f=$1
+    os=`uname`
+    case $os in 
+    FreeBSD)
+	set -- `md5 $f`
+	sum=$4
+	;;
+    Linux)
+	set -- `md5 $f`
+	sum=$1
+	;;
+
+    *)
+	echo 1>&2 "Unknown os>$os<"
+	exit 1
+	;;
+    esac
+	    
+    echo $sum
+}
+
+for mdfile in "$@"
+do
+    basefile=`basename $mdfile $md5_ext`
+    computed=`get_md5 $basefile`
+    set -- `cat $mdfile`
+    saved=$1
+    if [ "$saved" != "$computed" ] 
+    then
+	echo 1>&2 "mismatch on $mdfile and $basefile"
+	echo 1>&2 " sv>$saved<, comp>$computed<"
+    else
+	echo 1>&2 "$basefile OK"
+    fi
+done

@@ -1,0 +1,8 @@
+#!/bin/sh
+set -x
+n=${1:-1}
+
+while [ $((x-- > 0)) ]; do
+    xx
+    break
+done

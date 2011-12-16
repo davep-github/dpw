@@ -1,0 +1,48 @@
+#!/bin/sh
+
+. script-x
+. $HOME/etc/vsdsrc
+mkdir -p ${DP_VSDS_DIR}
+mkdir -p ${DP_STEAM_GAMES}
+mkdir -p ${DP_STEAM_BIN}
+
+if [ -n "$DP_SCRIPT_X_DEBUG" ]; then
+    tee_out=/dev/tty
+else
+    tee_out=/dev/null
+fi
+
+cd ${DP_STEAM_BIN}
+
+if [ "$1" = "--wget" ]; then
+    WGET_OPT=--wget
+elif [ -f ${DP_HLDSUPDATETOOL} ]; then
+    WGET_OPT=
+else
+    WGET_OPT=--wget
+fi
+    
+[ "$WGET_OPT" = "--wget" ] && {
+    rm -f ${DP_HLDSUPDATETOOL}
+    wget ${DP_HLDSUPDATETOOL_URL} || exit
+    chmod +x ${DP_HLDSUPDATETOOL} || exit
+}
+
+cd ${DP_STEAM_BIN}
+echo yes | ${DP_HLDSUPDATETOOL} >/dev/null 2>&1
+cd ${DP_VSDS_DIR}
+
+sep=""
+echo -n "Running steam command... "
+while :; do
+    if ${DP_STEAM_BIN}/steam -retry 2>&1 | \
+        tee ${tee_out} | \
+        fgrep -q ' update: Install or update HLDS'; then
+	echo "."
+	echo "Updated."
+        break
+    fi
+    echo -n "${sep}retrying"
+    sep=", "
+done
+

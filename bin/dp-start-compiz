@@ -1,0 +1,24 @@
+#!/bin/sh
+set -x
+progname=$(basename $0)
+LOGFILE="$DP_LOG/X11/xlog.$USER.$progname"
+echo 1>&2 "============== $0: begins $(date) ======================="
+
+{
+    if [[ "$1" == -[kK] ]]
+    then
+        DTE=none
+    else
+        DTE=kde
+    fi
+    # Start screenletsd now, since there seems to be a race
+    # between this and the screenlet manager which uses it.
+    # But screenletsd complains about not being the right way
+    # to start.  I'll try moving to a session file.
+    #screenlets-manager
+    sudo modprobe fuse
+    fusermount -u $HOME/compiz
+    WM=dp-compiz-manager DTE=$DTE startx &
+#    waitfor-prog compiz
+#    sudo renice -4 -p $(findprog compiz)
+} >> $LOGFILE 2>&1

@@ -1,0 +1,27 @@
+#!/bin/sh
+set -x
+: ${dir:=./current}
+
+mk_it()
+{
+    cd ${dir}
+    modprobe agpgart           # make sure it's there... nvidia needs it.
+    # --opengl-headers
+    ./nvidia-installer --silent
+
+    [ "$1" != '-l' ] && modprobe nvidia
+
+    version=$(realpath . | sed -n 's/.*-\([0-9][0-9]*\)-pkg1/\1/p')
+    echo "PWD>$PWD<"
+    echo "cp -f /var/log/nvidia-installer.log nvidia-installer.log.${version}" \
+        >| cp-cmd.out
+    cp -f /var/log/nvidia-installer.log nvidia-installer.log.${version}
+}
+
+if [ "$(id -u)" = '0' -o "$MAKING_IT" == "$0" ]
+then
+    mk_it "$@"
+else
+    export MAKING_IT="$0"
+    sudo $0 "$@"
+fi

@@ -1,0 +1,42 @@
+#!/bin/sh
+
+source script-x
+source eexec
+
+: ${kwa_no_this=NOTAG}
+EExecVerbose
+
+std_options=""
+option_str="nvqt:"
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+      -t) shift; kwa_no_this="$1";;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+for dir in "$@"
+do
+  [ -d "$dir" ] || {
+      EExec mkdir -p "$dir"
+  }
+  touch_file="${dir}/${kwa_no_this}"
+  if [ -e "$touch_file" ]
+  then
+      echo "$touch_file already exists."
+  else
+      EExec touch "$touch_file"
+  fi
+done
+

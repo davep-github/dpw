@@ -1,0 +1,88 @@
+#!/bin/sh
+
+. script-x
+
+# Parse command line.
+# std_options has some "useful" options.
+# Set to "" or "-" to get nothing.  It's an error to call dp-getopt+.sh with
+# std_options unset.
+std_options=""
+#sorter=sorter_pid_sort          # e.g.
+sorter=cat
+
+sorter_sort()
+{
+    sort
+}
+
+
+# The real meat...
+#e.g.: option_str="fv:"        # !!!!!!! You probably want to set this !!!!!!!
+option_str="wr:R:pnsSdlHh"         # <:options:>
+
+Usage_synopsis='
+List useful info about screens.
+-w        --  All info sans white-space.
+-R <repl> --  sed(1) replacement expression.
+-r <el>   --  Add to replacement expression.
+-p        --  Print pid field.
+-n        --  Print name field.
+-s        --  Print status field.
+-d        --  Print the pid/name delimiter char.
+-l        --  Print <pid><delim><name>
+-S        --  Sort selected output.
+-g        --  "s" command flags.
+-z        --  Zap replacement expression.
+-[Hh]     --  Print this Help.
+
+Multiple fields can be specified and they will be output in the given order.
+E.g. -ndp          --> rscreen.29851
+     -pdn          --> 29851.rscreen
+     -p -r/ -n   --> 29851/rscreen
+NB: -r <el> args must be sed(1) legal constructs. "&" is used as the 
+    "s" command delimiter: s&regexp&repl&
+'
+
+: ${DP_SCREEN_LS_REPL:="\\0"}
+#                         leading sp      pid         sep   name           sep        status
+: ${DP_SCREEN_LS_REGEXP:=^([[:space:]]+)([[:digit:]]+)(\.)([^[:space:]]+)([[:space:]])(.*$)}
+#                         \1             \2           \3    \4             \5          \6
+
+: ${DP_SCREEN_LS_S_CMD_FLAGS:=p}
+: ${DP_SCREEN_LS_SED_ARGS:=-rn}
+source dp-getopt+.sh
+repl=()
+repl_index=0
+# Loop over your options.
+#eko "$@"
+for i in "$@"; do
+    #echo "i>$i<, 1>$1<"
+    case "$1" in
+        -z) repl=();;           # Zap replacement.
+        -w) repl=("\\2" "\\3" "\\4" "\\5" "\\6");;
+        -R) repl=("$2"); shift;; # Arbitrary replacement.
+        -r) repl[repl_index++]="$2"; shift;;
+        -p) repl[repl_index++]="\\2";; # pid
+        -n) repl[repl_index++]="\\4";; # name
+        -s) repl[repl_index++]="\\6";; # status
+        -d) repl[repl_index++]="\\3";;  # delimiter
+        -l) repl[repl_index++]="\\2\\3\\4";;
+        -S) sorter=sorter_sort;; # sorter
+        -[Hh]) Usage 0;;
+        # ...
+        --) shift; break;;
+        *) Usage 1 "Bad option>$1<
+";;
+        
+    esac
+    shift
+done
+if vsetp "${repl[*]}"; then
+    repl_exp=$(for e in "${repl[@]}"; do echo -n "$e"; done;)
+else
+    repl_exp=${DP_SCREEN_LS_REPL}
+fi
+screen -ls 2>/dev/null \
+    | sed ${DP_SCREEN_LS_SED_ARGS} "s&$DP_SCREEN_LS_REGEXP&$repl_exp&${DP_SCREEN_LS_S_CMD_FLAGS}" \
+    | $sorter
+

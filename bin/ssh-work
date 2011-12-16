@@ -1,0 +1,10 @@
+#!/bin/sh
+. script-x
+
+: ${long_rem_host:=$(host-info.py "work-ssh-host")}
+: ${rem_host:=$(short-host-name $long_rem_host)}
+B=$(host-info.py -h $rem_host xterm_bg)
+F=$(host-info.py -h $rem_host xterm_fg)
+
+xx -F "$F" -B "$B" ssh  $long_rem_host
+

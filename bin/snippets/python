@@ -1,0 +1,5 @@
+#!/usr/bin/env python
+
+log_file = '/home/davep/log/auto-rotate-c10-10K/' + \
+           os.path.basename(sys.argv[0]) + '.log'
+

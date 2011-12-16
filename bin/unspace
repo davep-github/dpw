@@ -1,0 +1,61 @@
+#!/bin/sh
+
+. script-x
+
+
+if [ "$1" = "-d" ]
+then
+    set -x
+    shift
+fi
+if [ "$1" = "-D" ]
+then
+    set -x
+    mv_d_opt='-d'
+    shift
+fi
+sed_repl='-'
+
+: ${VERBOSE:=}
+
+sed_sed_expr()
+{
+    [ -n "$VERBOSE" ] && echo 1>&2 ">>>>>>>"
+    read
+    echo "$REPLY" | sed -r "$sed_expr"
+    [ -n "$VERBOSE" ] && echo 1>&2 "<<<<<<<"
+}
+
+NONONONONONONONONONONOsed_rename()
+{
+    read
+    echo "$REPLY" | sed-rename "$@"
+}
+
+unspace()
+{
+    while read
+    do
+	[ -n "$VERBOSE" ] && echo 1>&2 ">>>$REPLY<<<
+action>$action<"
+	# [ -"$&-*;<>?-@]
+	# 's/[ -"$&-*;<>?-@]/'
+	echo "$REPLY" | \
+	    sed_expr='s/[ "$&*;<>?@]/'"$sed_repl"'/g' \
+            $action $action_opts $mv_d_opt
+    done
+}
+
+if [ "$*" = "-" ]; then
+    export action=sed_sed_expr
+else
+    export action=sed-rename
+    export action_opts="-n -z"       # Zip it. Shhh! STFU.
+fi
+
+if [ "$*" = "-" ]; then
+    cat
+else
+    ls -1 "$@"
+fi | unspace
+

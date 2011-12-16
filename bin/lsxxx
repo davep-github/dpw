@@ -1,0 +1,29 @@
+# $Id: ltl,v 1.2 2003/11/23 08:30:07 davep Exp $
+# ltl - ls -lt | less
+#
+
+source script-x
+progname=$(basename $0)
+
+# Sourcer sets at least one of:
+#: ${LSLXXX_COLOR:=--color=auto}
+#: ${LSLXXX_BLATHER:=}
+#: ${LSLXXX_SHOW_DATE:}
+#: ${LSLXXX_ARGS:=}
+
+LSLXXX_ARGS="${LSLXXX_ARGS} $@"
+#echo " LSLXXX_ARGS>$LSLXXX_ARGS<"
+
+#echo "lslxxx: LSLXXX_COLOR>$LSLXXX_COLOR< LSLXXX_BLATHER>$LSLXXX_BLATHER<
+#LSLXXX_SHOW_DATE>$LSLXXX_SHOW_DATE< LSLXXX_ARGS>$LSLXXX_ARGS<
+#@>$@<"
+
+[ -z "${LSL_COLOR}${LSL_BLATHER}${LSL_SHOW_DATE}${LSLXXX_ARGS}" ] && {
+       echo 1>&2 "This file shouldn't be executed, only sourced."
+       exit 1
+}
+{
+    [ -n "${LSLXXX_SHOW_DATE}" ] && echo "** Today: $(date)"
+    [ -n "${LSLXXX_BLATHER}" ] && echo "** argv: $@"
+    ls ${LSLXXX_ARGS}
+} | ${PAGER:-less}

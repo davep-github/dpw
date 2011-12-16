@@ -1,0 +1,47 @@
+#!/bin/sh
+# $Id: cvsdirty,v 1.1 2001/07/24 07:30:07 davep Exp $
+#set -x
+
+if [ "$1" = "-a" ]
+then
+    ignore_pat=''
+    all_pat='*'
+    shift
+else
+    ignore_pat='*/obj|*/talismon/src/datecode.c|*/talismon/include/datecode.h|*/modldargs.pl|*.sym'
+    ignore_pat='*/obj|*/talismon/src/datecode.c'
+    all_pat=''
+fi
+
+dir=${1:-$sb}
+dir=${dir:-/talisman/sb}
+
+cd $dir || {
+    echo "canna cd" 
+    exit 1
+}
+
+#
+# why use diff vs M from -n update ??
+# I seem to recall finding a case where -n update missed stuff
+#
+cvs diff 2>/dev/null | grep '^Index:'
+
+cvs -n update 2>/dev/null |
+while read line
+do
+    case "$line" in
+    $all_pat)
+	echo "$line"
+	;;
+    */obj|*/talismon/src/datecode.c|*/talismon/include/datecode.h|*/modldargs.pl|*.sym|*.pyc) 
+	;;
+    [AR]*)
+	echo "$line"
+	;;
+    \?*) 
+	echo "$line"
+	;;
+
+    esac
+done

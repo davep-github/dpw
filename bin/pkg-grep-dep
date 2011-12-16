@@ -1,0 +1,11 @@
+#!/bin/sh
+# $Id: pkg-grep-cont,v 1.5 2004/08/30 06:11:12 davep Exp $
+#
+# grep the contents of packages.
+# looks in $pkg/*/+CONTENTS
+# the pkg_glob can be specified.
+
+: ${FFILE:=+DEPEND}
+: ${LFILE:=DEPEND}
+
+FFILE=${FFILE} LFILE=${LFILE} exec pkg-grep-cont "$@"

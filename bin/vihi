@@ -1,0 +1,4 @@
+#!/bin/sh
+
+vi=${VI:-vi}
+$vi $pydb/host_info.py

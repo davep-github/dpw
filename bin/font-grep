@@ -1,0 +1,50 @@
+#!/bin/sh
+#set -x
+source script-x
+
+# font_path="
+# /usr/X11R6/lib/X11/fonts/TTF/
+# /usr/X11R6/lib/X11/fonts/webfonts/
+# $HOME/yokel/fonts/java/
+# $HOME/yokel/fonts/windwoes/
+# /usr/X11R6/lib/X11/fonts/local/
+# /usr/X11R6/lib/X11/fonts/local/sgi/
+# /usr/X11R6/lib/X11/fonts/misc/
+# /usr/X11R6/lib/X11/fonts/75dpi/:unscaled
+# /usr/X11R6/lib/X11/fonts/100dpi/:unscaled
+# /usr/X11R6/lib/X11/fonts/Speedo/
+# /usr/X11R6/lib/X11/fonts/75dpi/
+# /usr/X11R6/lib/X11/fonts/100dpi/
+# /usr/X11R6/lib/X11/fonts/freefont/
+# /usr/X11R6/lib/X11/fonts/lfpfonts-fix/
+# /usr/X11R6/lib/X11/fonts/lfpfonts-var/
+# /usr/X11R6/lib/X11/fonts/jmk/
+# /usr/X11R6/lib/X11/fonts/non-cjk/
+# /usr/X11R6/lib/X11/fonts/Type1/
+# /usr/X11R6/lib/X11/fonts/artwiz-fonts/
+# /usr/X11R6/lib/X11/fonts/nucleus/
+# /usr/local/share/urwfonts-ttf/
+# "
+
+#font_path=$(sed -n 's![^#]FontPath[^"#]*"\(.*\)"!\1!p' /etc/X11/XF86Config-4)
+
+font_path="/usr/share/fonts/default/ghostscript /usr/share/fonts/default/Type1 /usr/share/X11/fonts/75dpi /usr/share/X11/fonts/misc /usr/share/X11/fonts/Type"
+
+try_file()
+{
+    ffile="$1/$2"
+    shift; shift
+#set -x
+    [ -r $ffile ] && {
+	#echo "ffile>$ffile<"
+ 	#echo fgrep -- "$@" $ffile
+	grep "$@" $ffile /dev/null 
+    }
+}    
+for fdir in $font_path
+do
+    #echo "fdir>$fdir<"
+    try_file $fdir fonts.dir "$@"
+    try_file $fdir fonts.alias "$@"
+done
+

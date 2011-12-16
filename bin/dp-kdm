@@ -1,0 +1,15 @@
+#!/bin/sh
+
+source script-x
+
+vsetp "$DP_KDM" && exec "$DP_KDM"
+
+case "$DP_KDE_VER_MAJOR" in
+    4) exec dp-kdm4;;
+    3) exec dp-kdm3;;
+    *) echo 1>&2 "Cannot determine which KDM to run.";
+       exit 1;;
+esac
+
+echo 1>&2 "How the fuck did I get here?"
+exit 3

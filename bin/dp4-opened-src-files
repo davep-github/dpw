@@ -1,0 +1,5 @@
+#!/bin/sh
+
+source script-x
+
+p4 opened | sed -rn 's!^(//eng/albireo/src/)([^3]*)(#.*$)!\2!p'

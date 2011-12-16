@@ -1,0 +1,3 @@
+#!/bin/sh
+
+mpsmall -nosound -quiet "$@"

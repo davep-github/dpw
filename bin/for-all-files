@@ -1,0 +1,138 @@
+#!/bin/sh
+# $Id: fer-all-files,v 1.12 2004/12/03 09:20:04 davep Exp $
+#set -x
+
+source script-x
+
+#eko 1111 "$@"
+. script-x
+#eko 2222 "$@"
+
+# @todo make -m add mvsik dir to dirs ???
+# @todo share code w/fer-all-dirs ??
+
+option_str='nqd:g:D:p:P:sf:'
+qdat=($(getopt -o "$option_str" -- "$@"))
+[ $? != 0 ] && Usage
+# is eval needed? eval set -- "${qdat[@]}" NO!
+set -- "${qdat[@]}" 
+vsetp "$DP_SCRIPT_X_DEBUG" && {
+    echo '$DP_SCRIPT_X_DEBUG='"$DP_SCRIPT_X_DEBUG"
+    echo "Results from getopt -o:"
+    echo '${qdat[@]}:'
+    #eko 3333 "${qdat[@]}"
+    echo '$@:'
+    #eko 4444 "$@"
+    for i in "$@"; do echo "i>$i<"; done
+}
+
+dirs=
+type=f
+
+[ $? != 0 ] && Usage
+
+RUNNER=runnit
+RUNNER1="$RUNNER"
+RUNNER2="$RUNNER"
+#POTENTIAL_FINDERS="find-sans-svn find"
+# Finders in order of preference.  First one found wins.
+POTENTIAL_FINDERS="find"
+FINDER=$(find-bin $POTENTIAL_FINDERS)
+FIND_PRE_ARGS_a=()
+FIND_POST_ARGS_a=()
+PATS_a=()
+dirs_a=()
+pipe='|'
+FIND_PRINT0_OPT="-print0"
+XARGS_PRINT0_OPT="-0"
+: ${XARGS_OPTS=-r}
+show_cmd=
+
+for i in "$@"
+do
+    #eko 5555 "$i"
+    #echo "i>$i<"
+    #echo "1>$1<"
+    case $1 in
+	-v) set -x;;		# Lazy^H^H^H^HPoor man's verbosity.
+	-q) ECHO=":" ;;
+	-d) dirs_a[${#dirs_a[@]}]=$2; shift;;   # Save off dirs.
+	-g) PATS_a[${#PATS_a[@]}]=$2; shift;;   # Save off globs.
+	-D) file=d; shift;;
+        -p) FIND_PRE_ARGS_a[${#FIND_PRE_ARGS_a[@]}]="$2"; shift;;
+        -P) FIND_POST_ARGS_a[${#FIND_POST_ARGS_a[@]}]="$2"; shift;;
+        -s) FINDER=find;;
+        -f) FINDER=$2; shift;;
+        -n) show_cmd=t; RUNNER1=crappy_dash_n1; RUNNER2=crappy_dash_n2;;
+	--) shift ; break ;;
+	*) 
+	    echo 1>&2 "Unsupported option>$1<";
+	    exit 1 ;;
+    esac
+    shift
+done
+
+FIND_PRE_ARGS=${FIND_PRE_ARGS_a[@]}
+FIND_POST_ARGS=${FIND_POST_ARGS_a[@]}
+pats=${PATS_a[@]}
+
+##echo "3:"; eko "$@"; echo "3."
+[ -z "${dirs_a[*]}" ] && dirs_a=(.)
+if [ -n "$pats" ]
+then
+    name_arg=$(mk-find-list $pats)
+else
+    name_arg=
+fi
+
+vsetp $DP_SCRIPT_X_DEBUG && {
+    echo '$DP_SCRIPT_X_DEBUG='"$DP_SCRIPT_X_DEBUG"
+    #eko 6666 '$name_arg' $name_arg
+    #eko 7777 '"$name_arg"' "$name_arg"
+}
+
+set -- "$@" $XARGV
+#eko 8888 "$@"
+runnit_num=0
+#set -v
+runnit()
+{
+    vsetp $DP_SCRIPT_X_DEBUG && {
+	1>&2 echo '$DP_SCRIPT_X_DEBUG='"$DP_SCRIPT_X_DEBUG"
+	1>&2 echo -n "runnit:@>"
+	#eko 9999 "$@"
+	1>&2 echo "<runnit:@"
+	1>&2 echo "cmd>$@<"
+    } 1>&2
+    #set -v
+    #XX="$1"
+    #shift
+    #this right or below?"$XX" "$@"
+    #1>&2 echo "runnit_num>$runnit_num<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+    runnit_num=$((++runnit_num))
+    #eko aaaa "$@"
+    eval "$@"
+}
+
+#
+# Really, Really stupid way to do this, but I want -n to always show exactly
+# what would've been done. Yes, I'm assuming the '|' will always be in the
+# same place.
+crappy_dash_n1()
+{
+    echo -n 1>&2 "$@ | "
+}
+crappy_dash_n2()
+{
+    echo 1>&2 "$@"
+}
+
+#
+# NB!!! Any output to stdout after the pipe is set up will
+# screw up the input to xargs.
+echo "dirs_a>"${dirs_a[0]}"<"
+$RUNNER1 $FINDER $(echo ${dirs_a[@]}) $FIND_PRE_ARGS -type $type $name_arg \
+    $FIND_PRINT0_OPT $FIND_POST_ARGS \
+    | \
+    $RUNNER2 xargs $XARGS_OPTS $XARGS_PRINT0_OPT "$@"
+

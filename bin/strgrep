@@ -1,0 +1,17 @@
+#!/bin/sh
+# $Id: strgrep,v 1.1 2003/12/20 08:30:06 davep Exp $
+# strgrep -- string grep
+# grep strings in [binary] files.
+
+pat=$1
+shift
+
+for file in "$@"
+do
+    if strings "$file" | egrep -q "$pat"
+    then
+	echo "matches in $file"
+	strings "$file" | egrep "$pat"
+	echo "$file done."
+    fi
+done

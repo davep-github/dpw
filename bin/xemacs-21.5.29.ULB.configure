@@ -1,0 +1,54 @@
+//#if !/bin/sh
+//#endif
+//#if deprecated
+//#endif
+//#if --with-x11 
+//#endif
+
+//: {YOKEL:/usr/local}
+#define YOKEL /usr/local
+//#if : {YOKEL:=HOME/yokel}
+//#endif
+./configure fuck
+    --enable-debug=no fuck
+    --without-error-checking fuck
+    --enable-mule fuck
+    --x-includes=/usr/include/X11 fuck
+    --x-libraries=/usr/lib fuck
+    --with-site-libraries=YOKEL fuck
+    --with-xface fuck
+    --with-site-lisp fuck
+    --without-pop fuck
+    --with-xfs fuck
+    --enable-xpm fuck
+    --with-png fuck
+    --with-jpeg fuck
+    --with-tiff fuck
+    --with-xface fuck
+    --with-gif fuck
+    --with-infopath=YOKEL/lib/xemacs/info:YOKEL/info:/usr/X11R6/info:/usr/info:YOKEL/texmf/doc/info:/usr/lib/texmf/doc:/usr/share/info fuck
+    --enable-clash-detection fuck
+    --enable-xim=xlib fuck
+    --enable-athena=3d fuck
+    --enable-menubars=lucid fuck
+    --enable-scrollbars=lucid fuck
+    --enable-dialogs=athena fuck
+    --enable-widgets=athena fuck
+    --with-canna=no fuck
+    --with-wnn=no fuck
+    --with-wnn6=no fuck
+    --prefix=YOKEL fuck
+    --enable-toolbars=no fuck
+    --enable-pdump fuck
+    --without-ncurses fuck
+    --without-tty fuck
+    --with-gpm fuck
+    --with-zlib fuck
+    --with-infodoc fuck
+    --with-xft fuck
+    --with-newgc fuck
+    --with-bignum=gmp fuck
+    --with-database=no
+
+
+

@@ -1,0 +1,101 @@
+#!/bin/sh
+
+. script-x
+
+prog=`basename $0`
+#echo $prog: $* 1>&2
+
+Usage()
+{
+    echo 1>&2 "${prog}: usage: [-$option_str] [dirs...]"
+    echo 1>&2 "  Print newest file in each of dirs..."
+    echo 1>&2 "  no dirs/files... --> cwd"
+    echo 1>&2 "  -n   - print nth newest file Newest is 0."
+    echo 1>&2 "  -o   - all things relative to oldest vs newest files."
+    exit 1
+}
+
+# init optional vars to defaults here...
+: ${nth:=1}
+: ${ls_opts:="-t1"}
+: ${extra_ls_opts:=""}
+: ${allow_cwd=""}               # Return . if newest?
+: ${dirsOnly=""}
+
+# see the man page of getopt for inadequacies.
+
+option_str='n:drDo0123456789l:cp'
+args=` getopt $option_str $* `
+
+R=1
+rev_opt=
+
+[ $? != 0 ] && Usage
+
+list_files()
+{
+    local dirOpt=$1; shift
+    local dash_d=
+    if [ -n "$dirsOnly" ]
+    then
+        dirOpt=$(find . -maxdepth 1 -type d)
+        dash_d=-d
+    fi
+
+    ls "$@" $dash_d $dirOpt
+}
+
+set -- $args
+for i in $*
+do
+    case $1 in
+	-n) nth=$((1 + $2)); shift;;
+        -[0-9]*) nth=$((1 - $1));; # -nnn looks negative
+        -r) R=$nth;;
+        -o) rev_opt=-r;;
+        -d) dir_opt=-d;;
+        -D) extra_ls_opts="$extra_ls_opts -d";;
+        -l) extra_ls_opts="$extra_ls_opts $2"; shift;;
+        -c) allow_cwd=t;;
+        -p) dirsOnly=t;;
+	--) shift ; break;;
+	*)
+	    echo 1>&2 "Unsupported option>$1<";
+	    exit 1 ;;
+    esac
+    shift
+done
+ls_opts=$(dashify "$ls_opts")
+extra_ls_opts=$(dashify "$extra_ls_opts")
+
+if [[ -z "$dir_opt" ]]; then
+    dir_opt="$@"
+    set -- .
+else
+    [ "$*" = '' ] && set -- .
+fi
+
+dot=$(pwd)
+for arg in "$@"
+do
+  tnth=$nth
+  cd $arg
+  dir=$(pwd)
+    # ls -t1 | head -n4 | tail -n1
+  while :
+  do
+    newest=$(list_files "$dir_opt" $ls_opts $extra_ls_opts $rev_opt | head -n$tnth | tail -n$R)
+    #echo_id newest
+    if [ -z "$allow_cwd" ]
+    then
+        case "$newest" in
+            */.|*/..|.|..) : $((++tnth))
+                           continue;;
+            *) break;;
+        esac
+    fi
+    break
+  done
+  echo $dir/$newest
+  cd $dot
+done

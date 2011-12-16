@@ -1,0 +1,38 @@
+#!/bin/sh
+source script-x
+
+: ${commit_msg="Misc."}
+
+commit_msg_option=
+vsetp $commit_msg && {
+    commit_msg_option="-m $commit_msg"
+}
+
+test_op()
+{
+    echo "test_op, PWD>$PWD<, @>$@<"
+}
+
+op_loop()
+{
+    local op="$1"
+    shift
+    for d in "$@"
+    do
+      echo === $d ===
+      if [ -d "$d/.svn" ]
+          then 
+          (
+              cd $d
+              $op
+          )
+      else
+          echo "$d: not under svn"
+      fi
+    done
+}
+
+op="${1-test_op}"
+shift
+args="${@-*}"
+op_loop "$op" $args 

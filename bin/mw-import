@@ -1,0 +1,22 @@
+#!/bin/sh
+
+show=n
+[ "$1" = "-n" ] && {
+    show=y
+    shift
+}
+
+if [ "$1" = "" ]
+then
+    dir=/$(basename $PWD)
+else
+    dir="/$@"
+fi
+
+cmd="/usr/bin/svn import file://$HOME/yokel/svn/my-world${dir}"
+if [ "$show" = y ]
+then
+    echo $cmd
+else
+    eval $cmd
+fi

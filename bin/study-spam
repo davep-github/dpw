@@ -1,0 +1,71 @@
+#!/bin/sh
+# $Id: study-spam,v 1.6 2003/12/15 08:30:08 davep Exp $
+# teach spamassassin more spam rules.
+set -x
+
+prog=`basename $0`
+#echo $prog: $* 1>&2
+
+Usage()
+{
+   echo "${prog}: usage: [-$option_str]" 1>&2
+   exit 1
+}
+
+# init optional vars to defaults here...
+ECHO=
+ECHO="echo $prog: "
+
+# see the man page of getopt for inadequacies.
+
+HAM_OR_SPAM_SPAM='--spam'
+delete=y
+learn=y
+just_show=n
+ham_or_spam="$HAM_OR_SPAM_SPAM"
+option_str='nklhm:'
+spam_folder='UofSPAM'
+
+args=` getopt $option_str $* `
+
+[ $? != 0 ] && Usage
+
+set -- $args
+for i in $*
+do
+    case $1 in
+	-n) just_show=y;;
+	-k) delete=n;;		# keep spam around
+	-l) learn=n;;		# skip learning
+	-h) ham_or_spam='--ham'; delete=n;; # learn ham not spam
+	-m) spam_folder=$2; shift;;
+	--) shift ; break ;;
+	*) 
+	    echo 1>&2 "Unsupported option>$1<";
+	    exit 1 ;;
+    esac
+    shift
+done
+
+. eexec
+
+# save our ham
+if [ "$ham_or_spam" = "$HAM_OR_SPAM_SPAM" ]
+then
+    delete=n
+fi
+
+[ "$just_show" = 'y' ] && EExecDashN '+'
+
+SPAM_CAN="$HOME/`mhparam path`/$spam_folder"
+
+if [ "$learn" = 'y' ]
+then
+    EExec sa-learn $ham_or_spam $SPAM_CAN
+fi
+
+if [ "$delete" = 'y' ]
+then
+    EExec rm -f $SPAM_CAN/*
+    EExec rm -f $SPAM_CAN/.mew*
+fi

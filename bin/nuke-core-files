@@ -1,0 +1,46 @@
+#!/bin/sh
+
+source script-x
+source eexec
+
+: ${RM:=rm}
+: ${RM_FLAGS:=-f}
+: ${kwa_core_pat:="'*-p:[0-9]*,u:[0-9]*,s:[0-9]*,t:[0-9]*.CR'"}
+: ${kwa_age:=}                  # Or, say, "-atime +7"
+: ${PRINT=-print0}
+
+std_options=""
+option_str="nvqp:P:d:c"
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -n) EXEC=echo; EExecDashN; RM=echo; RM_FLAGS=; PRINT=-print;;
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+      -P) kwa_core_pat=$2; shift;;
+      -p) extra_pats="${extra_pats} -o -name '$2'";;
+      -c) extra_pats="${extra_pats} -o -name 'core.[0-9]*'";;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+# The following is needed only when non optional args are required.
+#[ "$@" = "" ] && Usage
+
+
+
+root=${1:-.}
+
+[ -n "${extra_pats}" ] && kwa_core_pat="${kwa_core_pat} ${extra_pats}"
+
+# <executable-name>-p:<pid>,u:<uid>,s:<signal>,t:<ugly but short time>.CR
+EExec -y find "$root" '\(' -name ${kwa_core_pat} '\)' ${cond} ${PRINT} \
+    | \
+    EExec -y xargs -0 "$RM" "$RM_FLAGS"

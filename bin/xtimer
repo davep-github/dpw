@@ -1,0 +1,83 @@
+#!/usr/local/bin/wish8.3 -f
+
+set ElapsedTimeString "00:00:00"
+set ElapsedTime 0
+set Interval 15000		;# millisecs
+set BaseTime 0
+set Service "CyberGate"
+set Title "TimerWidget"
+set ButtonText "Stop"
+set ButtonAction ""
+
+set argList [exec getopt "t:b:i:S:x:" $argv]
+#puts "argList: $argList"
+set optind 0
+while {$optind >= 0} {
+    # puts "optind: $optind"
+    set arg [lindex "$argList" $optind] 
+    incr optind
+    # puts "arg: $arg"
+    switch -- "$arg" {
+	"-t" {
+	    set Title [lindex "$argList" $optind]
+	    incr optind 
+	}
+	"-b" {
+	    set BaseTime [lindex "$argList" $optind]
+	    set BaseTime [expr $BaseTime * 1000]
+	    incr optind 
+	}
+	"-i" {
+	    # increment is in msec
+	    set Interval [lindex "$argList" $optind]
+	    incr optind 
+	}
+	"-S" {
+	    set ButtonText [lindex "$argList" $optind]
+	    incr optind 
+	}
+	"-x" {
+	    set ButtonAction [lindex "$argList" $optind]
+	    incr optind 
+	}		                
+	"--" {
+	    set optind -1 
+	}   
+    }   
+}
+
+proc ConvertTime { timeIn } {
+    set tmp [expr $timeIn / 1000]
+    return [format "%d:%02d:%02d" [expr $tmp / (60 * 60) ] \
+	    [expr ($tmp / 60) % 60] \
+	    [expr $tmp % 60]]
+}
+
+proc Tick { interval eTime } {
+    global ElapsedTimeString
+    set ElapsedTimeString [ConvertTime $eTime]
+    set eTime [expr $eTime + $interval]
+    #	puts "Time: $eTime, str: $ElapsedTimeString "
+    after $interval [list Tick $interval $eTime]
+}
+
+wm title . "DPTimer"
+#wm geometry . 100x50
+wm geometry . +0+0
+
+label .titleText -text $Title -relief groove -bd 3
+label .timerText -textvariable ElapsedTimeString
+button .stopButton -text $ButtonText
+
+pack .titleText -side top -fill x -ipadx 2 -ipady 1
+#pack .timerText -side top -fill x -ipadx 2 -ipady 2
+pack .timerText .stopButton -side top -ipadx 2 -ipady 1 -fill x
+
+bind .stopButton <ButtonRelease-1> {
+    if { $ButtonAction != "" } {
+	eval exec $ButtonAction
+    }
+    exit
+}
+
+set dummy [Tick $Interval $BaseTime]

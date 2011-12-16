@@ -1,0 +1,6 @@
+#!/bin/sh
+# $Id: loc-freebsd,v 1.2 2004/10/17 08:20:06 davep Exp $
+
+. $HOME/etc/archivedb.conf
+
+locate --database="$FREEBSD_ARCHIVEDB_DB" "$@"

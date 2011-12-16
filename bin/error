@@ -1,0 +1,7 @@
+#!/bin/sh
+
+ERROR()
+{
+	echo "$prog: ERROR: $*" 1>&2
+}
+

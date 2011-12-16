@@ -1,0 +1,73 @@
+#!/bin/sh
+
+args="$@"
+: ${yn:='n'}
+
+dest_dir=("$@")
+dest_dir=${dest_dir[$((${#dest_dir[*]}-1))]}
+                    
+ERROR()
+{
+    rc=$1
+    shift
+    echo 1>&2 "$@"
+    [[ "$rc" != 0 ]] && exit $rc
+}
+
+[ -d "$1" ] && {
+    echo -n 1>&2 "first parameter, $1, is a dir; continue using [y/N]? "
+    read ans
+    [ -z "$ans" ] && ans=n
+    [[ "$ans" != [yY] ]] && exit 1
+    echo -n 1>&2 "add *?"
+    read ans
+    [ -z "$ans" ] && ans=n
+    [[ "$ans" != [yY] ]] && exit 1
+    one=$1
+    shift
+    set -- $one/* "$@"
+}
+
+doomed_dir=$(dirname $1)
+
+[ -d "$dest_dir" ] || {
+    [ -e "$dest_dir" ] && ERROR 1 "destination, $dest_dir, is not a directory.
+file says: $(file $dest_dir)"
+        
+    echo -n 1>&2 "last parameter, $dest_dir, is not a dir; create[Y/n]? "
+    read ans
+    [[ "$ans" != [yY] && "$ans" != "" ]] && exit 1
+    mkdir -p $dest_dir || {
+        rc=$?
+        ERROR $? "Can't make dest dir, $dest_dir"
+        exit 99
+    }
+}
+
+#set -x
+echo "yes $yn | mv -i $@"
+yes $yn | mv -i "$@"
+
+doomed=("$@")                   # args
+# Rm final directory arg.
+doomed1=${doomed[*]:0:$((${#doomed[*]}-1))} # args[:-1]
+doomed_files="${doomed1[@]}"    # Make regular string.
+# See which files remain.
+doomed_files="$(ls -C $doomed_files 2>/dev/null)"
+echo "Remains:"
+echo "doomed_files>$doomed_files<"
+if [ -n "$doomed_files" ]
+then
+    echo -n 'Remove remaining files[Y/n]? '
+    read ans
+    [ -z "$ans" ] && ans=y
+    [[ "$ans" != [yY] ]] && exit 2
+    rm -f $doomed_files
+    doomed_files=
+fi
+## ?? Auto rmdir if no (more) doomed_files?
+echo -n 'Remove dir[Y/n]? '
+read ans
+[ -z "$ans" ] && ans=y
+[[ "$ans" != [yY] ]] && exit 2
+rmdir $doomed_dir 

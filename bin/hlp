@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# -x is ingrained as shell verbosity/debugging.
+if [[ "$1" == -[xv] ]]
+then
+    shift
+    set -x
+fi
+
+for cmd in "$@"
+do
+  
+  $cmd --help || man $cmd
+done

@@ -1,0 +1,40 @@
+#!/bin/sh
+
+progname=$(basename $0)
+
+Usage()
+{
+    {
+        echo "Usage: $progname: application hostname"
+        echo "Make a useful name for, say, an XTerm title given a (possibly) remote login."
+    } 1>&2
+}
+
+app=$1
+host=$2
+
+[[ -z "$app" && -z "$host" ]] && {
+    Usage
+    exit 1
+}
+
+case $app in
+    rlogin|*xterm|aterm|rxvt|-|\.)
+	app=$USER
+	;;
+esac
+
+case $host in
+    localhost|-|\.)
+	host=$HOST
+	;;
+esac
+
+if [ -z "$host" -o -z "$app" ]
+then
+    sep=''
+else
+    sep='@'
+fi
+
+echo "$app$sep$host"

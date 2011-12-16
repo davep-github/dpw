@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# while getpop | fgrep -qv '0 messages' ; do
+#     :
+# done
+
+[[ "$1" == "-q" ]] && {
+    quiet=t
+    shift
+}
+while getpop 2>&1 | fgrep -qv '0 messages' ; do
+    if read -t 5; then
+        echo 1>&2 "goosed"
+    else
+        if [[ -z "$quiet" ]]; then
+            echo 1>&2 -n "#"
+        fi
+    fi
+done
+
+

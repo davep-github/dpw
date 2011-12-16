@@ -1,0 +1,3 @@
+#!/bin/sh
+
+panel > /dev/ttyv0 2>&1 &

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for page in "$@"
+do
+    xkonq "info:/$page"
+done
+

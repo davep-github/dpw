@@ -1,0 +1,42 @@
+#!/bin/sh
+
+source script-x
+source eexec
+
+# Run perforce resolve.
+# First shelve everything for disaster recovery.
+
+shelveOpts=
+resolveOpts=
+
+EExecVerbose
+std_options=""
+option_str="anvqr:R:s:S:"
+DPGOP_args_required=t
+source dp-getopt+.sh || exit 1
+
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -a) EExecAsk=t;;
+      -n) DASHN=t; EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+      -r) resolveOpts="$resolveOpts $2"; shift;;
+      -R) resolveOpts="$2"; shift;;
+      -s) shelveOpts="$shelveOpts $2"; shift;;
+      -S) shelveOpts="$2"; shift;;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+EExec p4 shelve $shelveOpts
+
+EExec p4 resolve $resolveOpts
+

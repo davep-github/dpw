@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+#set -x
+#set -v
+
+prog=`basename $0`
+echo $prog: $* 1>&2
+
+. eexec
+
+add_foi_regexp()
+{
+    for pat in "$@"; do
+        FILES_OF_INTEREST[${#FILES_OF_INTEREST[@]}]="-e"
+        FILES_OF_INTEREST[${#FILES_OF_INTEREST[@]}]="$pat"
+    done
+}                  
+    
+tee_filter()
+{
+    tee /dev/tty
+}
+
+egrep_filter()
+{
+    egrep -i "${FILES_OF_INTEREST[@]}" | \
+      sed -r "$VC_EXCLUDES" $EXCLUDES | \
+      sort -n 
+}
+
+args="$@"                       # Preserve args across .bashrc execution.
+# {gentoo|libranet}'s default sudo define SECURE_PATH and so our binaries
+# are inaccessible.
+if [[ "$PATH" != *yokel/sbin* ]]
+then
+    rcfile="$HOME/.bashrc"
+    [ -f $rcfile ] && . $rcfile
+fi
+
+set -- $args
+#echo "args>$args<"
+: ${SUDO:=}
+: ${NOTAGFILE:=NOTAG}
+: ${show_files:=''}
+: ${EXCLUDED_FILES_FILE:="extagtree.excluded-files"}
+: ${EXCLUDED_FILES_FILE_OPT:=}
+: ${INTERESTING_FILES:="\.h|\.([chly](xx|pp)?|cs|cc|hh|py)$"}
+: ${filter:=egrep_filter}
+
+FILES_OF_INTEREST=()
+add_foi_regexp $INTERESTING_FILES
+
+VC_EXCLUDES='-e /^.*\/?(\.svn|CVS|RCS|\.4D)\/?.*/d'
+: ${EXCLUDES:=""}
+
+
+if [ -n "$show_files" ]
+then
+    v_file="/dev/tty"
+else
+    v_file="/dev/null"
+fi
+
+set -- $args
+for i in $*
+do
+    case $1 in
+         # Allow other patterns to be specified.
+         # Grow the egrep expression.  The -e act as if joined by |.
+        -foi|--foi) add_foi_regexp "$2"; shift;;
+        -n) EExecDashN;;
+        -v) EExecVerbose;;
+	-s) SUDO=sudo;;
+        -h) follow_sym_links="-h";;
+        -x) EXCLUDED_FILES_FILE=$2; shift;;
+        -X) EXCLUDED_FILES_FILE_OPT=$2; shift;;
+        -I) EXCLUDES="-e /\/include\//d $EXCLUDES";;  
+        -E) EXCLUDES="$2 $EXCLUDES"; shift;;
+        -s) just_show_find_output=t; filter=cat;;
+        -S) verbose_find=t; verbose_find_filter=tee_filter;;
+        # Need to make ftreewalk.py use these
+        -H) follow_symlinks_opt='';;
+        -L) follow_symlinks_opt='-L';;
+	--) shift ; break ;;
+	*) 
+            break ;;
+	    #echo 1>&2 "Unsupported option>$1<";
+	    #exit 1 ;;
+    esac
+    shift
+done
+
+dirs="$*"
+
+if [[ -n "$EXCLUDED_FILES_FILE" && "$EXCLUDED_FILES_FILE" == "-" ]]; then
+        EXCLUDED_FILES_FILE=""
+fi
+[[ -n "$EXCLUDED_FILES_FILE" ]] && {
+    EXCLUDED_FILES_FILE_OPT="-c $EXCLUDED_FILES_FILE"
+}
+
+argses="$@"
+: ${argses:="."}
+
+set -v
+ftreewalk.py -X NOTAG \
+    $EXCLUDED_FILES_FILE_OPT \
+    $follow_sym_links $dirs | \
+    $filter

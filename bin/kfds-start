@@ -1,0 +1,42 @@
+#!/bin/sh
+
+export DP_ORIGINAL_START_COMMAND="$0"
+export DP_ORIGINAL_START_COMMAND_ARGS="$@"
+export DP_RESTART_COMMAND="$0"
+export DP_RESTART_COMMAND_ARGS="$@"
+
+. script-x
+. $HOME/etc/kfdsrc
+. eexec
+
+[ "$1" == "-u" ] && {
+    update=t
+    shift
+}
+: ${start_browser:=}
+: ${browser:=opera}
+: ${update:=}
+: ${POST_CMDS:="$@"}
+: ${ignore_other_servers:=}
+{
+    pgrep ucc && {
+        echo 1>&2 "Looks like another server is running."
+        if [ -n "$ignore_other_servers" ]; then
+            echo 1>&2 "  Set ignore_other_servers to continue."
+            exit 1
+        else
+            echo 1>&2 "Continuing. Fools rush in..."
+        fi
+    }
+        
+    EExec cd "$DP_KFDS_DIR"
+    [ -n "$update" ] && {
+        EExec kfds-update $DP_SCRIPT_X_DEBUG_OPT
+        echo "Checking for updates...done."
+    }
+    [ -n "$start_browser" ] && (sleep 10; ${browser} localhost:8075)&
+    EExec cd "$DP_KFDS_SYSDIR"
+    EExec kfds-start-stage2 $DP_SCRIPT_X_DEBUG_OPT
+
+    [ -n "$POST_CMDS" ] && "$POST_CMDS"
+} | tee ${DP_SCRIPT_X_TEE_OUT} $DP_LOG/$(basename $0).log

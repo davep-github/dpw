@@ -1,0 +1,3 @@
+#!/bin/sh
+
+qpydb.py -f alias -e xfmail_aliases_pydb.py

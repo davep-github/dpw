@@ -1,0 +1,11 @@
+#!/bin/sh
+# $Id: newday,v 1.1.1.1 2001/01/17 22:22:28 davep Exp $
+# mp - morning protocol.  Set up things at the beginning of the day
+
+my_uid=$(id -u)
+
+# touch a file so that I can track changes I've make during they day
+touch /usr/tmp/home-work-sync
+
+# set the message number so cppop -n works ok
+echo -n "1" > /tmp/cppop.next.msg.$my_uid

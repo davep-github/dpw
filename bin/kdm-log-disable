@@ -1,0 +1,37 @@
+#!/bin/sh
+
+source script-x
+
+# Do our best to stop KDM consuming all disk space with log file data.
+# Can't figure out how to completely stop it, so I force it to point to
+# specific places and then make those immutable w/chattr.
+# ClientLogFallback=/tmp/KDM-0-log-fb
+# ClientLogFile=KDM-0-log
+# must be set, it seems, in order to prevent the startup code from trying to
+# generate a unique file name if the default file is unacceptable in any way.
+# FYI: -fb is the fallback file.
+# Some places:
+logs="/home/davep/KDM-0-log
+/home/davep/KDM-log-0
+/tmp/KDM-0-log-fb
+/tmp/KDM-0-log"
+
+for log in $logs
+do
+  [ -e "$log" ] && {
+      ls -l "$log"
+      lsattr "$log"
+      # Remove immutable attribute
+      sudo chattr -i "$log"
+      # and delete the file.
+      yes | rm "$log"
+      [ -e "$log" ] && {
+          echo "Log file >$log< could not be removed."
+          exit 1
+      } 1>&2
+  }
+
+  touch "$log"                  # Possibly create.
+  truncate --size=0 "$log"      # Shrinky dink.
+  sudo chattr +i "$log"
+done

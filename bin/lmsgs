@@ -1,0 +1,10 @@
+#!/bin/sh
+
+case "$1" in
+     [0-9]) suffix=.$1.gz
+	    PAGR=zless ;;
+     *) suffix=$1
+	PAGR=less ;;
+esac     
+     
+sudo $PAGR /var/log/messages$suffix

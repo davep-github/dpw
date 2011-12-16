@@ -1,0 +1,1 @@
+locate /usr*/fonts/*/fonts.dir >| ~/found-fonts

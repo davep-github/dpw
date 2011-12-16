@@ -1,0 +1,45 @@
+#!/bin/sh
+# $Id: ls-isoarchives,v 1.1 2004/05/05 08:20:10 davep Exp $
+# list ISO archives
+#set -x
+
+. eexec
+
+: ${apat:=*}
+: ${lsflags:='-1'}
+: ${list_contents:='n'}
+
+echo "archives>$archives<"
+
+# @todo allow archive name to be a param
+if [ "$1" = "-n" ]
+then
+    EExecDashN
+    shift
+fi
+
+. $HOME/etc/archivedb.conf
+
+# @todo
+# handle symlinks as alternate names for locdbs and use the link name instead
+# of the prefix file contents.
+
+sep=''
+pre=''
+suf=''
+
+if [ "$list_contents" = 'y' ]
+then
+    pre='==== '
+    suf=' ==='
+fi
+
+for db in ${ARCHIVEDB_DIR}/${apat}
+do
+    echo "$pre$db$post"
+    if [ "$list_contents" = 'y' ]
+    then
+	ls $lsflags $db
+    fi
+done
+

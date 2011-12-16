@@ -1,0 +1,13 @@
+#!/bin/sh
+
+ffox ()
+{
+    cd ~/tmp
+    while :
+    do
+      FIREFOX_DSP=alsa firefox -P KDE  "$@" && exit 0
+      rm -f firefox*.CR > /dev/null 2>&1
+    done
+}
+
+ffox "$@" &

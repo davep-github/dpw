@@ -1,0 +1,40 @@
+#!/bin/sh
+
+prog=$(basename $0)
+
+. script-x
+. eexec
+
+[ -z "$1" ] && EEdie 2 "No cmd given"
+    
+cmd=$1
+args="$@"
+
+cmd_path_as_name=$(namify-path "$1")
+log_file=$(dp-mk-tmp-file cmd+log-${cmd_path_as_name}.XXXXXXXX.log)
+{
+    echo "start: $(date)"
+    echo "$0 is running:"
+    echo "$@"
+    "$@" &
+} > $log_file 2>&1
+
+# wait for log file to appear
+if [ ! -f $log_file ]; then
+    echo -n "Waiting for $log_file to be created"
+    nl="\n"           # We've printed some informational text but no newline.
+    while [ ! -f $log_file ]; do
+        echo -n .
+    done
+fi
+
+echo "${nl}Running tail -f $log_file"
+# show status prefixed with log file name
+tail -f $log_file | while read; do
+    echo "$log_file: $REPLY"
+done
+
+wait                            # For background processes to complete.
+
+exit
+

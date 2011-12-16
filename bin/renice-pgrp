@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo 1>&2 "FINISH THIS"
+exit 1
+#sudo renice -n -20 -g $(pgrep '/bin/sh /usr/bin/swiftfox' | tail -n1 | awk '{print $3}')

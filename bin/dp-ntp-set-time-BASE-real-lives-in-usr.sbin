@@ -1,0 +1,41 @@
+#!/bin/sh
+#set -x
+
+. /etc/conf.d/ntp-client
+
+verbose_exec()
+{
+    prefix=$1
+    shift
+    echo "$prefix$@"
+    "$@"
+}
+ntpd_bin=$(type -p ntpd); rc=$?
+[ "$rc" = "0" ] && {
+    pid=$(/usr/bin/pgrep $(basename $ntpd_bin)); rc=$?
+    [ "$rc" = 0 ] && {
+	read -e -p "An instance of ntpd is already running.  Stop/kill it [y/n/Q]? "
+	case "$REPLY" in
+	    y) echo "killing pid $pid"
+		if /etc/init.d/ntpd stop; then
+		    echo "Stopped."
+		else
+		    echo 1>&2 "Stopping failed.  Trying to kill it."
+		    kill $pid
+		    sleep 2
+		    if /usr/bin/pgrep $ntp_bin > /dev/null; then
+			echo "Killed."
+		    else
+			echo 1>&2 "Could not kill pid $pid, exiting."
+			exit 1
+		    fi
+		fi
+		;;
+	    n) echo "Continuing...";;
+	    *) echo "Exiting (good idea)."; exit 2;;
+	esac
+    }
+}
+echo "Setting date and time:"
+verbose_exec "1. (coarse) " ntpdate $NTPCLIENT_OPTS && \
+    verbose_exec "2. (fine) " ntpd $NTPCLIENT_NTPD_OPTS

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+source script-x
+: ${kwa_uds:=${libuds}}
+
+vunsetp $kwa_uds && {
+    echo "WARNING: Cannot determine directory for libuds.*"
+    echo "Continuing, but the command will most likely fail."
+} 1>&2
+LD_LIBRARY_PATH="${kwa_uds}:${LD_LIBRARY_PATH}" exec "$@"

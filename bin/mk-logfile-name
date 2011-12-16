@@ -1,0 +1,42 @@
+#!/bin/sh
+set -u
+source script-x
+
+: ${kwa_logdir_def=$HOME/log/misc}
+: ${kwa_logdir=.}
+: ${kwa_logext=.log}
+: ${kwa_prefix=}
+: ${kwa_suffix=}
+: ${kwa_uniqname=t}
+
+vsetp $kwa_prefix && kwa_prefix="${kwa_prefix}-"
+vsetp $kwa_suffix && kwa_suffix="-${kwa_suffix}"
+
+[ "$#" -lt 1 ] && {
+    echo "I need a basename for the log file."
+    exit 1
+} 1>&2
+
+logfile_basename=$(basename "$1")
+logfile_timestamp=$(dp-std-timestamp)
+
+if [[ "$kwa_logdir" =~ (-|=|def|log) ]]
+then
+    # Let the above abbrevs imply the default logging dir but only if the one
+    # used does not refer to an existing directory.
+    [ -d "$kwa_logdir" ] || kwa_logdir=${kwa_logdir_def}
+elif [ "$kwa_logdir" = '+' ]
+then
+    kwa_logdir=$(uniqname ${logfile_basename})
+fi
+
+dolat=("$@")
+
+if [ -n "$kwa_uniqname" ]
+then
+    logfile_name=$(uniqname ${logfile_basename})
+else
+    logfile_name="${logfile_basename}-${logfile_timestamp}"
+fi
+echo "${kwa_logdir}/${kwa_prefix}${logfile_name}${kwa_suffix}${kwa_logext}"
+

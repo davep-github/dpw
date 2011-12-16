@@ -1,0 +1,106 @@
+#!/bin/sh
+
+source script-x
+# WARN more vigorously (require yes vs y?) 
+# when backup dirs are not present.
+read -e -p "Don't forget about any patches.  Continue [Y/n]? "
+case "$REPLY" in
+    ""|[Yy]) continue;;
+    *) exit 0;;
+esac
+
+. script-x
+: ${PREFIX:=$HOME/yokel}
+: ${LOCAL:=/usr/local}
+: ${DS_CONFIGURE:=./configure}
+# And I quote:
+# The configure script has been rebuilt with autoconf 2.63.  This
+# version fixed a bug which can cause the script to hang or fail
+# incorrectly.  Unfortunately, it also enables spurious warnings like:
+
+#     configure: WARNING: unrecognized options: --with-sound,
+#     --with-dialogs, --with-widgets, --with-mule, --with-xim,
+#     --with-png, --with-optimization, --with-dynamic
+
+# You can ignore this warning, or suppress it with
+
+#     ./configure --enable-option-checking=no ...
+
+: ${FUCKEDUP_CONFIG:='--enable-option-checking=no'}
+
+# defecated:
+#    --with-x11
+# gabillion errors:
+#     --without-debug
+#    --with-newgc 
+
+#     --without-debug             #  dp:experimental
+#     --with-optimization         #  dp:experimental
+#     --disable-kkcc              #  dp:experimental
+#     --with-newgc                #  dp:experimental
+
+
+
+${DS_CONFIGURE} \
+    ${FUCKEDUP_CONFIG} \
+    --without-debug             \
+    --with-error-checking=none  \
+    --with-optimization         \
+    --disable-kkcc              \
+    --without-newgc             \
+    --with-dlmalloc             \
+    --with-zlib                 \
+    --with-x11                  \
+    --with-database=none        \
+    --with-infodock  \
+    --with-mule  \
+    --with-canna=no  \
+    --with-wnn=no  \
+    --with-wnn6=no  \
+    --enable-toolbars=no  \
+    --prefix=$PREFIX  \
+    --with-site-lisp=yes  \
+    --with-site-modules=yes  \
+    --with-infopath=$PREFIX/lib/xemacs/info:$PREFIX/info:/usr/info/X11:/usr/info:$LOCAL/lib/texmf/doc/info:/usr/lib/texmf/doc:/usr/share/info  \
+    --enable-clash-detection  \
+    --enable-athena=3d  \
+    --enable-toolbars=no  \
+    --enable-pdump
+
+rc=$?
+echo "RC: $?"
+exit $rc
+
+# ./configure 
+#     --prefix=$PREFIX 
+#     --enable-debug 
+#     --disable-error-checking 
+#     --enable-mule 
+#     --x-includes=/usr/include/X11 
+#     --x-libraries=/usr/lib/X11 
+#     --with-site-libraries=$PREFIX/lib 
+#     --with-site-includes=/usr/include/X11 
+#     --with-xface 
+#     --enable-sound=native 
+#     --with-site-lisp 
+#     --with-pop 
+#     --with-xfs 
+#     --with-jpeg 
+#     --with-png 
+#     --with-gif 
+#     --with-tiff 
+#     --with-infopath=$PREFIX/lib/xemacs/info:$PREFIX/info:/usr/info/X11:/usr/info:$LOCAL/lib/texmf/doc/info:/usr/lib/texmf/doc:/usr/share/info 
+#     --enable-clash-detection 
+#     --enable-xim=xlib 
+#     --enable-athena=3d 
+#     --enable-menubars=lucid 
+#     --enable-scrollbars=lucid 
+#     --enable-dialogs=athena 
+#     --enable-widgets=athena 
+#     --with-canna=no 
+#     --with-wnn=no 
+#     --with-wnn6=no 
+#     --enable-toolbars=no 
+#     --enable-pdump 
+#     --without-ldap 
+#     --with-database=none

@@ -1,0 +1,36 @@
+#!/bin/sh
+
+source script-x
+source eexec
+
+: ${linux_link_name:="linux"}
+
+# we have:
+# linux --> x.y.z-r
+# and we're moving to some other, higher version.
+# Not necessarily +=1
+# Newest is p.q.s-t
+# Leaving a link to the previously build could be useful.
+# so, before-p.q.s-t-was-x.y.z-r
+# p.q.s-t is the one we're moving to, either newest or the one specified on
+# the command line.  It will be what the new `linux' link points to.
+# x.y.z-r is the value of the last `linux' link.
+
+if vsetp $1
+then
+    new_kernel="$1"
+else
+    new_kernel="$(ls -1d linux?* | tail -n1)"
+fi
+
+prev_kernel="$(readlink $linux_link_name)"
+
+###EExec rm -i "$linux_link_name"
+EExec mv "$linux_link_name" "$prev_kernel-was-before-$new_kernel"
+lth
+echo =====================================================================
+
+EExec ln -s "$new_kernel" "$linux_link_name"
+      ln -s "$new_kernel" "$linux_link_name"
+lth
+###EExec ln -s "$prev_kernel" "$prev_kernel-was-before-$new_kernel"

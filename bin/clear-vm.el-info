@@ -1,0 +1,5 @@
+#!/bin/sh
+
+rm -f ~/.vm.folders.db
+rm -f ~/eMail/vm.el/IMAP-cache/imap-cache-*
+rm -f ~/droppings/editors/xemacs/auto-saves.d/*imap-cache*

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+. script-x
+
+set -u
+
+# Handle as many SCM systems as possible.
+SCM_EXCLUDES="/(\.svn|CVS|RCS|\.git)(/|$)"
+
+terminator=""
+[ "${1-}" == "-*" ] && {
+    terminator="/"
+    shift
+}
+set -x
+find "$@" | egrep -v -e "$SCM_EXCLUDES"

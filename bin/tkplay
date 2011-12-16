@@ -1,0 +1,951 @@
+#!/usr/local/bin/wish -f
+# Program: tkplay
+# Tcl version: 7.3 (Tcl/Tk/XF)
+# Tk version: 3.6
+# XF version: 2.3
+#
+
+# module inclusion
+global env
+global xfLoadPath
+global xfLoadInfo
+set xfLoadInfo 0
+if {[info exists env(XF_LOAD_PATH)]} {
+  if {[string first $env(XF_LOAD_PATH) /usr/local/lib/] == -1} {
+    set xfLoadPath $env(XF_LOAD_PATH):/usr/local/lib/
+  } {
+    set xfLoadPath /usr/local/lib/
+  }
+} {
+  set xfLoadPath /usr/local/lib/
+}
+
+global argc
+global argv
+global tkVersion
+set tmpArgv ""
+for {set counter 0} {$counter < $argc} {incr counter 1} {
+  case [string tolower [lindex $argv $counter]] in {
+    {-xfloadpath} {
+      incr counter 1
+      set xfLoadPath "[lindex $argv $counter]:$xfLoadPath"
+    }
+    {-xfstartup} {
+      incr counter 1
+      source [lindex $argv $counter]
+    }
+    {-xfbindfile} {
+      incr counter 1
+      set env(XF_BIND_FILE) "[lindex $argv $counter]"
+    }
+    {-xfcolorfile} {
+      incr counter 1
+      set env(XF_COLOR_FILE) "[lindex $argv $counter]"
+    }
+    {-xfcursorfile} {
+      incr counter 1
+      set env(XF_CURSOR_FILE) "[lindex $argv $counter]"
+    }
+    {-xffontfile} {
+      incr counter 1
+      set env(XF_FONT_FILE) "[lindex $argv $counter]"
+    }
+    {-xfmodelmono} {
+      if {$tkVersion >= 3.0} {
+        tk colormodel . monochrome
+      }
+    }
+    {-xfmodelcolor} {
+      if {$tkVersion >= 3.0} {
+        tk colormodel . color
+      }
+    }
+    {-xfloading} {
+      set xfLoadInfo 1
+    }
+    {-xfnoloading} {
+      set xfLoadInfo 0
+    }
+    {default} {
+      lappend tmpArgv [lindex $argv $counter]
+    }
+  }
+}
+set argv $tmpArgv
+set argc [llength $tmpArgv]
+unset counter
+unset tmpArgv
+
+proc parse_args {argc argv} {
+  global file_var
+  global device_var
+  global type_var
+  for {set counter 0} {$counter < $argc} {incr counter 1} {
+    case [string tolower [lindex $argv $counter]] in {
+      {-afile} {
+        incr counter 1
+        set file_var "[lindex $argv $counter]"
+      }
+      {-dev} {
+        incr counter 1
+        set device_var "[lindex $argv $counter]"
+      }
+      {-type} {
+        incr counter 1
+        set type_var "[lindex $argv $counter]"
+      }
+    }
+  }
+}
+
+# procedure to show window .
+proc ShowWindow. {args} {# xf ignore me 7
+
+  # Window manager configurations
+  global tkVersion
+  wm positionfrom . user
+  wm sizefrom . ""
+  wm maxsize . 1024 768
+  wm title . {xf}
+
+
+  # build widget .button0
+  button .button0 \
+    -command {exec sox $file_var -t $type_var $device_var &} \
+    -text {Play}
+
+  # build widget .frame
+  frame .frame \
+    -relief {raised}
+
+  # build widget .frame.label4
+  label .frame.label4 \
+    -padx {2} \
+    -relief {raised} \
+    -text {Type}
+
+  # build widget .frame.entry5
+  entry .frame.entry5 \
+    -relief {raised} \
+    -textvariable {type_var}
+
+  # pack widget .frame
+  pack append .frame \
+    .frame.label4 {left frame center} \
+    .frame.entry5 {top frame center expand fill}
+
+  # build widget .frame1
+  frame .frame1 \
+    -relief {raised}
+
+  # build widget .frame1.label4
+  label .frame1.label4 \
+    -padx {2} \
+    -relief {raised} \
+    -text {Device}
+
+  # build widget .frame1.entry5
+  entry .frame1.entry5 \
+    -relief {raised} \
+    -textvariable {device_var}
+
+  # pack widget .frame1
+  pack append .frame1 \
+    .frame1.label4 {left frame center} \
+    .frame1.entry5 {top frame center expand fill}
+
+  # build widget .frame2
+  frame .frame2 \
+    -relief {raised}
+
+  # build widget .frame2.label4
+  label .frame2.label4 \
+    -padx {2} \
+    -relief {raised} \
+    -text {File}
+
+  # build widget .frame2.entry5
+  entry .frame2.entry5 \
+    -relief {raised} \
+    -textvariable {file_var}
+
+  # pack widget .frame2
+  pack append .frame2 \
+    .frame2.label4 {left frame center} \
+    .frame2.entry5 {top frame center expand fill}
+
+  # build widget .button3
+  button .button3 \
+    -command {fileselect} \
+    -text {Select File to Play}
+
+  # pack widget .
+  pack append . \
+    .button0 {top frame center fillx} \
+    .frame {top frame center fill} \
+    .frame1 {top frame center fill} \
+    .frame2 {top frame center fill} \
+    .button3 {top frame center fillx}
+
+  if {"[info procs XFEdit]" != ""} {
+    catch "XFMiscBindWidgetTree ."
+    after 2 "catch {XFEditSetShowWindows}"
+  }
+}
+
+
+# User defined procedures
+
+
+# Procedure: fileselect
+proc fileselect { {cmd "fileselect.default.cmd"} {purpose "Open file:"} {w ".fileSelectWindow"}} {
+# xf ignore me 5
+##########
+# Procedure: fileselect
+# Author: Mario Jorge Silva (msilva@cs.Berkeley.EDU)
+# Description: show file selection box
+# Arguments: cmd - the default command to execute
+#            purpose - the purpose of the selection box
+#            w - the toplevel widget path
+# Returns: None
+# Notes: names starting with "fileselect" are reserved by this
+#        module no other names used. The procedure passed as
+#        the first parameter get the file name as parameter. This
+#        procedure is evaluated when the OK button is pressed.
+##########
+
+    if {"[info commands XFDestroy]" != ""} {
+        catch {XFDestroy $w}
+    } {
+        catch {destroy $w}
+    }
+
+    toplevel $w
+    grab $w
+    wm title $w "Select File"
+
+
+    # path independent names for the widgets
+    global fileselect_entry fileselect_list  fileselect_ok fileselect_cancel fileselect_dirlabel
+
+    set fileselect_entry $w.file.eframe.entry
+    set fileselect_list $w.file.sframe.list
+    set fileselect_scroll $w.file.sframe.scroll
+    set fileselect_ok $w.bframe.okframe.ok
+    set fileselect_cancel $w.bframe.cancel
+    set fileselect_dirlabel $w.file.dirlabel
+
+    # widgets
+    frame $w.file -bd 10 
+    frame $w.bframe -bd 10
+    pack append $w  $w.file {left filly}  $w.bframe {left expand frame n}
+
+    frame $w.file.eframe
+    frame $w.file.sframe
+    label $w.file.dirlabel -anchor e -width 24 -text [exec pwd] 
+
+    pack append $w.file  $w.file.eframe {top frame w}  $w.file.sframe {top fillx}  $w.file.dirlabel {top frame w}
+
+
+    label $w.file.eframe.label -anchor w -width 24 -text $purpose
+    entry $w.file.eframe.entry -relief sunken 
+
+    pack append $w.file.eframe  $w.file.eframe.label {top expand frame w}  $w.file.eframe.entry {top fillx frame w}  
+    scrollbar $w.file.sframe.yscroll -relief sunken  -command "$w.file.sframe.list yview"
+    listbox $w.file.sframe.list -relief sunken  -yscroll "$w.file.sframe.yscroll set" 
+
+    pack append $w.file.sframe  $w.file.sframe.yscroll {right filly}  $w.file.sframe.list {left fill} 
+
+    # buttons
+    frame $w.bframe.okframe -borderwidth 2 -relief sunken
+ 
+    button $w.bframe.okframe.ok -text OK -relief raised -padx 10  -command "fileselect.ok.cmd $w $cmd"
+
+    button $w.bframe.cancel -text cancel -relief raised -padx 10  -command "fileselect.cancel.cmd $w"
+    pack append $w.bframe.okframe $w.bframe.okframe.ok {padx 10 pady 10}
+
+    pack append $w.bframe $w.bframe.okframe {expand padx 20 pady 20}  $w.bframe.cancel {top}
+
+    # Fill the listbox with a list of all the files in the directory (run
+    # the "ls" command to get that information).
+ 
+    foreach i [exec ls -a [exec pwd]] {
+        if {[string compare $i "."] != 0} {
+            $fileselect_list insert end $i
+        }
+    }
+
+    # Set up bindings for the browser.
+    bind $fileselect_entry <Return> {eval $fileselect_ok invoke}
+    bind $fileselect_entry <Control-c> {eval $fileselect_cancel invoke}
+
+    bind $w <Control-c> {eval $fileselect_cancel invoke}
+    bind $w <Return> {eval $fileselect_ok invoke}
+
+
+    tk_listboxSingleSelect $fileselect_list
+
+    bind $fileselect_list <ButtonRelease-1> {
+        # puts stderr "button 1"
+        %W select from [%W nearest %y]
+        %W select to [%W nearest %y]
+	eval $fileselect_entry delete 0 end
+	eval $fileselect_entry insert 0 [%W get [%W nearest %y]]
+    }
+
+    bind $fileselect_list <Button-1> {
+        # puts stderr "button 1 release"
+        %W select from [%W nearest %y]
+        %W select to [%W nearest %y]
+	eval $fileselect_entry delete 0 end
+	eval $fileselect_entry insert 0 [%W get [%W nearest %y]]
+    }
+
+    bind $fileselect_list <Key> {
+        %W select from [%W nearest %y]
+        %W select to [%W nearest %y]
+        eval $fileselect_entry delete 0 end
+	eval $fileselect_entry insert 0 [%W get [%W nearest %y]]
+    }
+
+    bind $fileselect_list <Double-ButtonPress-1> {
+        # puts stderr "double button 1"
+	eval $fileselect_ok invoke
+    }
+
+    bind $fileselect_list <Return> {
+        %W select from [%W nearest %y]
+        %W select to [%W nearest %y]
+	eval $fileselect_entry delete 0 end
+	eval $fileselect_entry insert 0 [%W get [%W nearest %y]]
+	eval $fileselect_ok invoke
+    }
+
+    # set kbd focus to entry widget
+
+    focus $fileselect_entry
+}
+
+
+# Procedure: fileselect.cancel.cmd
+proc fileselect.cancel.cmd { w} {
+# xf ignore me 6
+    # puts stderr "Cancel"
+    if {"[info commands XFDestroy]" != ""} {
+        catch {XFDestroy $w}
+    } {
+        catch {destroy $w}
+    }
+}
+
+
+# Procedure: fileselect.default.cmd
+proc fileselect.default.cmd { f} {
+# xf ignore me 5
+  global file_var
+  puts stderr "selected file $f"
+  set file_var $f
+}
+
+
+# Procedure: fileselect.ok.cmd
+proc fileselect.ok.cmd { w cmd} {
+# xf ignore me 6
+    global fileselect_entry fileselect_dirlabel fileselect_list 
+    set selected [$fileselect_entry get]
+
+    if {[file isdirectory $selected] != 0} {
+	cd $selected
+	set dir [exec pwd]
+	eval $fileselect_dirlabel configure -text $dir
+	eval $fileselect_entry delete 0 end
+	eval $fileselect_list delete 0 end
+	foreach i [exec ls -a $dir] {
+	    if {[string compare $i "."] != 0} {
+		eval $fileselect_list insert end $i
+	    }
+	}
+	return
+    }
+
+    if {"[info commands XFDestroy]" != ""} {
+        catch {XFDestroy $w}
+    } {
+        catch {destroy $w}
+    }
+    eval $cmd \"$selected\"
+}
+
+
+# Internal procedures
+
+
+# Procedure: Alias
+if {"[info procs Alias]" == ""} {
+proc Alias { args} {
+# xf ignore me 7
+##########
+# Procedure: Alias
+# Description: establish an alias for a procedure
+# Arguments: args - no argument means that a list of all aliases
+#                   is returned. Otherwise the first parameter is
+#                   the alias name, and the second parameter is
+#                   the procedure that is aliased.
+# Returns: nothing, the command that is bound to the alias or a
+#          list of all aliases - command pairs. 
+# Sideeffects: internalAliasList is updated, and the alias
+#              proc is inserted
+##########
+  global internalAliasList
+
+  if {[llength $args] == 0} {
+    return $internalAliasList
+  } {
+    if {[llength $args] == 1} {
+      set xfTmpIndex [lsearch $internalAliasList "[lindex $args 0] *"]
+      if {$xfTmpIndex != -1} {
+        return [lindex [lindex $internalAliasList $xfTmpIndex] 1]
+      }
+    } {
+      if {[llength $args] == 2} {
+        eval "proc [lindex $args 0] {args} {#xf ignore me 4
+return \[eval \"[lindex $args 1] \$args\"\]}"
+        set xfTmpIndex [lsearch $internalAliasList "[lindex $args 0] *"]
+        if {$xfTmpIndex != -1} {
+          set internalAliasList [lreplace $internalAliasList $xfTmpIndex $xfTmpIndex "[lindex $args 0] [lindex $args 1]"]
+        } {
+          lappend internalAliasList "[lindex $args 0] [lindex $args 1]"
+        }
+      } {
+        error "Alias: wrong number or args: $args"
+      }
+    }
+  }
+}
+}
+
+
+# Procedure: GetSelection
+if {"[info procs GetSelection]" == ""} {
+proc GetSelection {} {
+# xf ignore me 7
+##########
+# Procedure: GetSelection
+# Description: get current selection
+# Arguments: none
+# Returns: none
+# Sideeffects: none
+##########
+
+  # the save way
+  set xfSelection ""
+  catch "selection get" xfSelection
+  if {"$xfSelection" == "selection doesn't exist or form \"STRING\" not defined"} {
+    return ""
+  } {
+    return $xfSelection
+  }
+}
+}
+
+
+# Procedure: MenuPopupAdd
+if {"[info procs MenuPopupAdd]" == ""} {
+proc MenuPopupAdd { xfW xfButton xfMenu {xfModifier ""} {xfCanvasTag ""}} {
+# xf ignore me 7
+# the popup menu handling is from (I already gave up with popup handling :-):
+#
+# Copyright 1991,1992 by James Noble.
+# Everyone is granted permission to copy, modify and redistribute.
+# This notice must be preserved on all copies or derivates.
+#
+##########
+# Procedure: MenuPopupAdd
+# Description: attach a popup menu to widget
+# Arguments: xfW - the widget
+#            xfButton - the button we use
+#            xfMenu - the menu to attach
+#            {xfModifier} - a optional modifier
+#            {xfCanvasTag} - a canvas tagOrId
+# Returns: none
+# Sideeffects: none
+##########
+  global tk_popupPriv
+
+  set tk_popupPriv($xfMenu,focus) ""
+  set tk_popupPriv($xfMenu,grab) ""
+  if {"$xfModifier" != ""} {
+    set press "$xfModifier-"
+    set motion "$xfModifier-"
+    set release "Any-"
+  } {
+    set press ""
+    set motion ""
+    set release ""
+  }
+
+  bind $xfMenu "<${motion}B${xfButton}-Motion>"  "MenuPopupMotion $xfMenu %W %X %Y"
+  bind $xfMenu "<${release}ButtonRelease-${xfButton}>"  "MenuPopupRelease $xfMenu %W"
+  if {"$xfCanvasTag" == ""} {
+    bind $xfW "<${press}ButtonPress-${xfButton}>"  "MenuPopupPost $xfMenu %X %Y"
+    bind $xfW "<${release}ButtonRelease-${xfButton}>"  "MenuPopupRelease $xfMenu %W"
+  } {
+    $xfW bind $xfCanvasTag "<${press}ButtonPress-${xfButton}>"  "MenuPopupPost $xfMenu %X %Y"
+    $xfW bind $xfCanvasTag "<${release}ButtonRelease-${xfButton}>"  "MenuPopupRelease $xfMenu %W"
+  }
+}
+}
+
+
+# Procedure: MenuPopupMotion
+if {"[info procs MenuPopupMotion]" == ""} {
+proc MenuPopupMotion { xfMenu xfW xfX xfY} {
+# xf ignore me 7
+##########
+# Procedure: MenuPopupMotion
+# Description: handle the popup menu motion
+# Arguments: xfMenu - the topmost menu
+#            xfW - the menu
+#            xfX - the root x coordinate
+#            xfY - the root x coordinate
+# Returns: none
+# Sideeffects: none
+##########
+  global tk_popupPriv
+
+  if {"[info commands $xfW]" != "" && [winfo ismapped $xfW] &&
+      "[winfo class $xfW]" == "Menu" &&
+      [info exists tk_popupPriv($xfMenu,focus)] &&
+      "$tk_popupPriv($xfMenu,focus)" != "" &&
+      [info exists tk_popupPriv($xfMenu,grab)] &&
+      "$tk_popupPriv($xfMenu,grab)" != ""} {
+    set xfPopMinX [winfo rootx $xfW]
+    set xfPopMaxX [expr $xfPopMinX+[winfo width $xfW]]
+    if {$xfX >= $xfPopMinX && $xfX <= $xfPopMaxX} {
+      $xfW activate @[expr $xfY-[winfo rooty $xfW]]
+      if {![catch "$xfW entryconfig @[expr $xfY-[winfo rooty $xfW]] -menu" result]} {
+        if {"[lindex $result 4]" != ""} {
+          foreach binding [bind $xfMenu] {
+            bind [lindex $result 4] $binding [bind $xfMenu $binding]
+          }
+        }
+      }
+    } {
+      $xfW activate none
+    }
+  }
+}
+}
+
+
+# Procedure: MenuPopupPost
+if {"[info procs MenuPopupPost]" == ""} {
+proc MenuPopupPost { xfMenu xfX xfY} {
+# xf ignore me 7
+##########
+# Procedure: MenuPopupPost
+# Description: post the popup menu
+# Arguments: xfMenu - the menu
+#            xfX - the root x coordinate
+#            xfY - the root x coordinate
+# Returns: none
+# Sideeffects: none
+##########
+  global tk_popupPriv
+
+  if {"[info commands $xfMenu]" != ""} {
+    if {![info exists tk_popupPriv($xfMenu,focus)]} {
+      set tk_popupPriv($xfMenu,focus) [focus]
+    } {
+      if {"$tk_popupPriv($xfMenu,focus)" == ""} {
+        set tk_popupPriv($xfMenu,focus) [focus]
+      }
+    }
+    set tk_popupPriv($xfMenu,grab) $xfMenu
+
+    catch "$xfMenu activate none"
+    catch "$xfMenu post $xfX $xfY"
+    catch "focus $xfMenu"
+    catch "grab -global $xfMenu"
+  }
+}
+}
+
+
+# Procedure: MenuPopupRelease
+if {"[info procs MenuPopupRelease]" == ""} {
+proc MenuPopupRelease { xfMenu xfW} {
+# xf ignore me 7
+##########
+# Procedure: MenuPopupRelease
+# Description: remove the popup menu
+# Arguments: xfMenu - the topmost menu widget
+#            xfW - the menu widget
+# Returns: none
+# Sideeffects: none
+##########
+  global tk_popupPriv
+  global tkVersion
+
+  if {"[info commands $xfW]" != "" && [winfo ismapped $xfW] &&
+      "[winfo class $xfW]" == "Menu" &&
+      [info exists tk_popupPriv($xfMenu,focus)] &&
+      "$tk_popupPriv($xfMenu,focus)" != "" &&
+      [info exists tk_popupPriv($xfMenu,grab)] &&
+      "$tk_popupPriv($xfMenu,grab)" != ""} {
+    if {$tkVersion >= 3.0} {
+      catch "grab release $tk_popupPriv($xfMenu,grab)"
+    } {
+      catch "grab none"
+    }
+    catch "focus $tk_popupPriv($xfMenu,focus)"
+    set tk_popupPriv($xfMenu,focus) ""
+    set tk_popupPriv($xfMenu,grab) ""
+    if {"[$xfW index active]" != "none"} {
+      $xfW invoke active; catch "$xfMenu unpost"
+    }
+  }
+  catch "$xfMenu unpost"
+}
+}
+
+
+# Procedure: NoFunction
+if {"[info procs NoFunction]" == ""} {
+proc NoFunction { args} {
+# xf ignore me 7
+##########
+# Procedure: NoFunction
+# Description: do nothing (especially with scales and scrollbars)
+# Arguments: args - a number of ignored parameters
+# Returns: none
+# Sideeffects: none
+##########
+}
+}
+
+
+# Procedure: SN
+if {"[info procs SN]" == ""} {
+proc SN { {xfName ""}} {
+# xf ignore me 7
+##########
+# Procedure: SN
+# Description: map a symbolic name to the widget path
+# Arguments: xfName
+# Returns: the symbolic name
+# Sideeffects: none
+##########
+
+  SymbolicName $xfName
+}
+}
+
+
+# Procedure: SymbolicName
+if {"[info procs SymbolicName]" == ""} {
+proc SymbolicName { {xfName ""}} {
+# xf ignore me 7
+##########
+# Procedure: SymbolicName
+# Description: map a symbolic name to the widget path
+# Arguments: xfName
+# Returns: the symbolic name
+# Sideeffects: none
+##########
+
+  global symbolicName
+
+  if {"$xfName" != ""} {
+    set xfArrayName ""
+    append xfArrayName symbolicName ( $xfName )
+    if {![catch "set \"$xfArrayName\"" xfValue]} {
+      return $xfValue
+    } {
+      if {"[info commands XFProcError]" != ""} {
+        XFProcError "Unknown symbolic name:\n$xfName"
+      } {
+        puts stderr "XF error: unknown symbolic name:\n$xfName"
+      }
+    }
+  }
+  return ""
+}
+}
+
+
+# Procedure: Unalias
+if {"[info procs Unalias]" == ""} {
+proc Unalias { aliasName} {
+# xf ignore me 7
+##########
+# Procedure: Unalias
+# Description: remove an alias for a procedure
+# Arguments: aliasName - the alias name to remove
+# Returns: none
+# Sideeffects: internalAliasList is updated, and the alias
+#              proc is removed
+##########
+  global internalAliasList
+
+  set xfIndex [lsearch $internalAliasList "$aliasName *"]
+  if {$xfIndex != -1} {
+    rename $aliasName ""
+    set internalAliasList [lreplace $internalAliasList $xfIndex $xfIndex]
+  }
+}
+}
+
+
+
+# application parsing procedure
+proc XFLocalParseAppDefs {xfAppDefFile} {
+  global xfAppDefaults
+
+  # basically from: Michael Moore
+  if {[file exists $xfAppDefFile] &&
+      [file readable $xfAppDefFile] &&
+      "[file type $xfAppDefFile]" == "link"} {
+    catch "file type $xfAppDefFile" xfType
+    while {"$xfType" == "link"} {
+      if {[catch "file readlink $xfAppDefFile" xfAppDefFile]} {
+        return
+      }
+      catch "file type $xfAppDefFile" xfType
+    }
+  }
+  if {!("$xfAppDefFile" != "" &&
+        [file exists $xfAppDefFile] &&
+        [file readable $xfAppDefFile] &&
+        "[file type $xfAppDefFile]" == "file")} {
+    return
+  }
+  if {![catch "open $xfAppDefFile r" xfResult]} {
+    set xfAppFileContents [read $xfResult]
+    close $xfResult
+    foreach line [split $xfAppFileContents "\n"] {
+      # backup indicates how far to backup.  It applies to the
+      # situation where a resource name ends in . and when it
+      # ends in *.  In the second case you want to keep the *
+      # in the widget name for pattern matching, but you want
+      # to get rid of the . if it is the end of the name. 
+      set backup -2  
+      set line [string trim $line]
+      if {[string index $line 0] == "#" || "$line" == ""} {
+        # skip comments and empty lines
+        continue
+      }
+      set list [split $line ":"]
+      set resource [string trim [lindex $list 0]]
+      set i [string last "." $resource]
+      set j [string last "*" $resource]
+      if {$j > $i} { 
+        set i $j
+        set backup -1
+      }
+      incr i
+      set name [string range $resource $i end]
+      incr i $backup
+      set widname [string range $resource 0 $i]
+      set value [string trim [lindex $list 1]]
+      if {"$widname" != "" && "$widname" != "*"} {
+        # insert the widget and resourcename to the application
+        # defaults list.
+        if {![info exists xfAppDefaults]} {
+          set xfAppDefaults ""
+        }
+        lappend xfAppDefaults [list $widname [string tolower $name] $value]
+      }
+    }
+  }
+}
+
+# application loading procedure
+proc XFLocalLoadAppDefs {{xfClasses ""} {xfPriority "startupFile"} {xfAppDefFile ""}} {
+  global env
+
+  if {"$xfAppDefFile" == ""} {
+    set xfFileList ""
+    if {[info exists env(XUSERFILESEARCHPATH)]} {
+      append xfFileList [split $env(XUSERFILESEARCHPATH) :]
+    }
+    if {[info exists env(XAPPLRESDIR)]} {
+      append xfFileList [split $env(XAPPLRESDIR) :]
+    }
+    if {[info exists env(XFILESEARCHPATH)]} {
+      append xfFileList [split $env(XFILESEARCHPATH) :]
+    }
+    append xfFileList " /usr/lib/X11/app-defaults"
+    append xfFileList " /usr/X11/lib/X11/app-defaults"
+
+    foreach xfCounter1 $xfClasses {
+      foreach xfCounter2 $xfFileList {
+        set xfPathName $xfCounter2
+        if {[regsub -all "%N" "$xfPathName" "$xfCounter1" xfResult]} {
+          set xfPathName $xfResult
+        }
+        if {[regsub -all "%T" "$xfPathName" "app-defaults" xfResult]} {
+          set xfPathName $xfResult
+        }
+        if {[regsub -all "%S" "$xfPathName" "" xfResult]} {
+          set xfPathName $xfResult
+        }
+        if {[regsub -all "%C" "$xfPathName" "" xfResult]} {
+          set xfPathName $xfResult
+        }
+        if {[file exists $xfPathName] &&
+            [file readable $xfPathName] &&
+            ("[file type $xfPathName]" == "file" ||
+             "[file type $xfPathName]" == "link")} {
+          catch "option readfile $xfPathName $xfPriority"
+          if {"[info commands XFParseAppDefs]" != ""} {
+            XFParseAppDefs $xfPathName
+          } {
+            if {"[info commands XFLocalParseAppDefs]" != ""} {
+              XFLocalParseAppDefs $xfPathName
+            }
+          }
+        } {
+          if {[file exists $xfCounter2/$xfCounter1] &&
+              [file readable $xfCounter2/$xfCounter1] &&
+              ("[file type $xfCounter2/$xfCounter1]" == "file" ||
+               "[file type $xfCounter2/$xfCounter1]" == "link")} {
+            catch "option readfile $xfCounter2/$xfCounter1 $xfPriority"
+            if {"[info commands XFParseAppDefs]" != ""} {
+              XFParseAppDefs $xfCounter2/$xfCounter1
+            } {
+              if {"[info commands XFLocalParseAppDefs]" != ""} {
+                XFLocalParseAppDefs $xfCounter2/$xfCounter1
+              }
+            }
+          }
+        }
+      }
+    }
+  } {
+    # load a specific application defaults file
+    if {[file exists $xfAppDefFile] &&
+        [file readable $xfAppDefFile] &&
+        ("[file type $xfAppDefFile]" == "file" ||
+         "[file type $xfAppDefFile]" == "link")} {
+      catch "option readfile $xfAppDefFile $xfPriority"
+      if {"[info commands XFParseAppDefs]" != ""} {
+        XFParseAppDefs $xfAppDefFile
+      } {
+        if {"[info commands XFLocalParseAppDefs]" != ""} {
+          XFLocalParseAppDefs $xfAppDefFile
+        }
+      }
+    }
+  }
+}
+
+# application setting procedure
+proc XFLocalSetAppDefs {{xfWidgetPath "."}} {
+  global xfAppDefaults
+
+  if {![info exists xfAppDefaults]} {
+    return
+  }
+  foreach xfCounter $xfAppDefaults {
+    if {"$xfCounter" == ""} {
+      break
+    }
+    set widname [lindex $xfCounter 0]
+    if {[string match $widname ${xfWidgetPath}] ||
+        [string match "${xfWidgetPath}*" $widname]} {
+      set name [string tolower [lindex $xfCounter 1]]
+      set value [lindex $xfCounter 2]
+      # Now lets see how many tcl commands match the name
+      # pattern specified.
+      set widlist [info command $widname]
+      if {"$widlist" != ""} {
+        foreach widget $widlist {
+          # make sure this command is a widget.
+          if {![catch "winfo id $widget"] &&
+              [string match "${xfWidgetPath}*" $widget]} {
+            catch "$widget configure -$name $value" 
+          }
+        }
+      }
+    }
+  }
+}
+
+
+# prepare auto loading
+global auto_path
+global tk_library
+global xfLoadPath
+foreach xfElement [eval list [split $xfLoadPath :] $auto_path] {
+  if {[file exists $xfElement/tclIndex]} {
+    lappend auto_path $xfElement
+  }
+}
+catch "unset auto_index"
+
+catch "unset auto_oldpath"
+
+catch "unset auto_execs"
+
+
+# initialize global variables
+proc InitGlobals {} {
+  global {device_var}
+  set {device_var} {/dev/dsp}
+  global {file_var}
+  set {file_var} {}
+  global {fileselect_cancel}
+  set {fileselect_cancel} {.fileSelectWindow.bframe.cancel}
+  global {fileselect_dirlabel}
+  set {fileselect_dirlabel} {.fileSelectWindow.file.dirlabel}
+  global {fileselect_entry}
+  set {fileselect_entry} {.fileSelectWindow.file.eframe.entry}
+  global {fileselect_list}
+  set {fileselect_list} {.fileSelectWindow.file.sframe.list}
+  global {fileselect_ok}
+  set {fileselect_ok} {.fileSelectWindow.bframe.okframe.ok}
+  global {type_var}
+  set {type_var} {sbdsp}
+
+  # please don't modify the following
+  # variables. They are needed by xf.
+  global {autoLoadList}
+  set {autoLoadList(main.tcl)} {0}
+  set {autoLoadList(tkplay)} {0}
+  global {internalAliasList}
+  set {internalAliasList} {}
+  global {moduleList}
+  set {moduleList(tkplay)} {}
+  global {preloadList}
+  set {preloadList(xfInternal)} {}
+  global {symbolicName}
+  set {symbolicName(root)} {.}
+  global {xfWmSetPosition}
+  set {xfWmSetPosition} {}
+  global {xfWmSetSize}
+  set {xfWmSetSize} {}
+  global {xfAppDefToplevels}
+  set {xfAppDefToplevels} {}
+}
+
+# initialize global variables
+InitGlobals
+parse_args $argc $argv
+
+# display/remove toplevel windows.
+ShowWindow.
+
+# load default bindings.
+if {[info exists env(XF_BIND_FILE)] &&
+    "[info procs XFShowHelp]" == ""} {
+  source $env(XF_BIND_FILE)
+}
+
+# parse and apply application defaults.
+XFLocalLoadAppDefs Tkplay
+XFLocalSetAppDefs
+
+# eof
+#
+

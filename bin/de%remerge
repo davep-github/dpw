@@ -1,0 +1,131 @@
+#!/bin/sh
+
+source script-x
+progname=$(basename $0)
+pre="TMP-"
+dones=$(TMPDIR="$PWD" tempfile --prefix=$pre)
+num_failures=0
+: ${executor:=}
+
+#
+# Take a file of lines and unmerge and then merge each package mentioned in
+# the file.
+
+# Motivation:
+# These hoops are here because I've seen a problem where I've installed
+# packages which are not put in the world file. This results in stuff that can get quite stale wrt "world"
+# ??? I recall that revdep-rebuild does a "one shot" merge. This does not
+#     record things in the world file. So...
+# 1) Why one-shots? This can result in out-of-this-world packages.
+# 2) I use the world set as the emerge target. Is there a better alternative? 
+#    One that will get every installed package.
+
+# Dones file, etc.
+# A kind of idea is that the file can be processed iteratively.
+# Lines that are successfully processed are output as a comment of the
+# original input line.
+# Failed lines are output as the original line with a comment stating that
+# the process didn't complete. No reason is given.
+# So, conceivably, we can revisit the file until there is nothing left to do
+# / no failures
+# It doesn't work as well it seems.
+
+# /var/db/pkg/dev-perl/DateTime-Format-Mail-0.30/CONTENTS
+sanitize_pkg_name()
+{
+    local name="$1"
+    echo "$name" | sed -r 's|([[:space:]]*)(/var/db/pkg/)([^:# \t\n]*?)((/CONTENTS))(.*$)|\3|'
+}
+
+would_have()
+{
+    echo "would have: $@"
+}
+
+emerger()
+{
+    local dolAT=("#@")
+    
+    $executor emerge "$@"
+}
+
+deemerge()
+{
+    local dolAT=("#@")
+    emerger -C "$@" && emerger "$@"
+}
+
+do_f()
+{
+    echo "enter do_f >$@<"
+    local orig_name="$1"
+    local name=$(sanitize_pkg_name "$orig_name")
+    case "$name" in
+        # Report comments/blank lines, etc, verbatim.
+        '#'*|"") echo "$name" >> "$dones"; 
+                 echo "blank or comment, part>$part<"
+                 return;;
+    esac
+    # split into space separated tuple: package-name version revision.
+    # version and revision can be empty strings, ""
+    parts=$(port_pkg_split "$name")
+    set -- $parts
+    local pkg="$1"
+    if deemerge "$pkg"
+        then
+        echo "#done $name"
+        echo "#done $name" >> "$dones"
+        return 0
+    else
+        echo "$name #didn't"
+        echo "$name #didn't" >> "$dones"
+        : $((++num_failures))
+        return 1
+    fi
+    
+    echo 1>&2 "Heisenstat: process neither succeeded nor failed."
+    exit 2
+}
+
+
+case "$1" in
+    -n) executor=would_have; shift;;
+esac
+  
+for f in "$@"
+do
+  do_f "$f"
+done
+
+# Anything being sent in via stdin?
+# AAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHH!!!!!!!!!!!!!!!!
+# WTF?!?!?
+# This loop stops after reading a couple of lines.
+# But not if I change the emerge sequence above to, say, true or false.
+# I don't remember if the number was constant or if it seemed related to
+# success or failure or kind of failure.
+if ! tty -s
+then
+    while read
+    do
+      #echo "before>$REPLY<"
+      do_f "$REPLY"
+      #echo "after>$REPLY<"
+    done
+
+#echo "last>$REPLY<"
+#
+# what happens if I do this?
+cat
+# It should get EOF and exit?
+
+fi
+
+#echo "out>$REPLY<"
+
+echo_id dones
+if ((num_failures > 0))
+    then
+    echo 1>&2 "There were... failures."
+    exit 1
+fi

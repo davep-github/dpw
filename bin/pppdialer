@@ -1,0 +1,139 @@
+#!/usr/bin/env bash
+# $Header: $HOME/yokel/archive-cvsroot/davep/bin/pppdialer,v 1.1.1.1 2001/01/17 22:22:29 davep Exp $
+#set -x
+ProgName=$(basename $0)
+
+ERROR()
+{
+	echo "$ProgName: $*" 1>&2
+}
+
+SigInt()
+{
+	ERROR "signal received($$); killing pppd"
+	killppp
+	exit 1
+}
+
+CleanUp()
+{
+#	echo -e "\nInterrupted: terminating connection..."
+	killppp >/dev/null
+        # kill the pop daemon
+	# kill `cat /tmp/popm.$UID`
+	connEnd=$(date "+%s")
+	thisConnTotal=$[connEnd-connStart]
+	connTotal=$[prevConnTotal+thisConnTotal]
+	echo $connTotal >| $connTimeFile
+	#echo "This  connect: $(FormatTime $thisConnTotal)"
+	#echo "Total connect: $(FormatTime $connTotal)"
+	exit 0
+}
+
+FormatTime()
+{
+	time=$1
+	secs=$[time%60]
+	mins=$[(time/60)%60]
+	hours=$[time/(60*60)]
+	echo "${hours}:${mins}:${secs}   (time:$time)"
+}
+
+DisplayTime()
+{
+	timeStr=$(FormatTime $1)
+	echo -e "\r$timeStr              \c"
+}
+
+Connect()
+{
+	$connector
+	rc=$?
+	return $rc
+}
+
+Timeit()
+{
+	connTimeFile=$HOME/.ppp/$service.conn-time.$(date "+%b-%Y")
+	if [ -f "$connTimeFile" ]
+	then
+		eTime=$(cat $connTimeFile)
+	else
+		eTime=0
+	fi
+	connStart=$(date "+%s")
+	prevConnTotal=$eTime
+
+	if [ "$DISPLAY" != "" -a "$NO_TIMER" != "-n" ]
+	then
+		xtimer -t "Time For $service" -b $eTime -S "Hang Up"
+		return 0
+	else
+		return 1
+	fi
+}
+
+PostConnect()
+{
+	# day of week, 24hr time
+#	set -- `date "+%w %k"`
+#	if [ $(( $1 >= 1 && $1 <= 5 && $2 >= 8 && $2 <= 19 )) = '1' ]
+#	then
+#		ppp-info | mail davep@platsol.com
+#	fi
+	(sendmail -q) &
+	$ProgName $NO_TIMER $service post-connect & 
+}
+
+retry_args="$*"
+
+[ "$1" = "-n" ] && {
+	NO_TIMER=-n
+	shift
+}
+service=${1:-$PPP_SERVICE}
+if [ "$service" = "" ]
+then
+	ERROR "No service specified and \$PPP_SERVICE is not set."
+	exit 12
+fi
+
+function=${2:-connect}
+connector=$HOME/.ppp/$service.expect
+if [ ! -f "$connector" ]
+then
+	ERROR "No such service: $service"
+	exit 11
+fi
+
+if [ "$function" = "connect" ]
+then
+	trap "SigInt" 2 15
+	while ! Connect
+	do
+		rc=$?
+		ERROR "connect failed"
+		killppp
+		case $rc in
+			2)
+				ERROR "retrying...";;	
+			*)
+				exit $?;;
+		esac
+	done
+
+	# ckpop;
+	PostConnect;
+
+	exit 0
+fi
+
+if [ "$function" = "post-connect" ]
+then
+	if Timeit
+	then
+		CleanUp
+	fi
+fi
+
+exit 0

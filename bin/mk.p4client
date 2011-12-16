@@ -1,0 +1,59 @@
+#!/bin/sh
+source script-x
+source eexec
+
+redir_op='>|'
+
+# for shell scripting: Try for another convention to avoid parameter collisions:
+# kwa_<name>
+: ${kwa_p4config_file:=.p4config}
+# Let's have a convention:
+# Client name = $USER-$(basename $PWD)
+: ${kwa_p4client_name:=${USER}-$(basename "$PWD")}
+
+skip_create_p=
+std_options=
+option_str="nvc"
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -c) create_client_p=t;;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+# New idiom.
+: ${create_client_p:=${kwa_ccp=""}}
+
+[ -e "$kwa_p4config_file" ] && {
+    read -e -p "p4 client config file ($kwa_p4config_file) already exists. Overwrite (y/N/a)? "
+    case "$REPLY" in
+        [yY]) ;;
+        [Aa]) redir_op='>>';;
+        ""|[nN]) skip_create_p=t;;
+        *) exit 1;;
+    esac
+}
+
+vunsetp $skip_create_p && {
+    eval echo "P4CLIENT=$kwa_p4client_name" $redir_op "$kwa_p4config_file"
+}
+
+if vsetp $create_client_p
+then
+    echo 1>&2 "Creating client... check editor to edit spec."
+    EExec p4 client
+else
+    EExec true
+fi
+
+exit

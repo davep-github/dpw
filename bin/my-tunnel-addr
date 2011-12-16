@@ -1,0 +1,11 @@
+#!/bin/sh
+
+
+x=`ppp-info itn0` || {
+	echo 1>&2 'ppp-info failed.'
+	exit 1
+}
+
+set -- $x
+echo $1
+exit 0

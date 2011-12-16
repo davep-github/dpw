@@ -1,0 +1,29 @@
+#!/bin/sh
+# $Id: update-mp3db,v 1.3 2004/10/04 08:20:04 davep Exp $
+#set -x
+
+. eexec
+
+EExecVerbose
+
+. $HOME/etc/archivedb.conf
+
+if [ "$1" = "-n" ]
+then
+    EExecDashN
+    shift
+fi
+
+op=nice
+
+# this is for slocate's updatdb
+# --localpaths="$DEF_AUDIO_ROOT"
+# @todo make this smart!
+for d in $FREEBSD_ROOT/*
+do
+    dbase=`basename $d`
+    udir="$d"
+    EExec ${op} sudo ${UPDATER} -U "$udir" \
+        --output="$FREEBSD_ARCHIVEDB_DB.$dbase"
+    EExec sudo chown -R davep "$udir"
+done

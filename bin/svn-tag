@@ -1,0 +1,163 @@
+#!/usr/bin/env python
+
+import os, sys, re, time, string
+import dp_io, dp_svn_lib
+
+opath = os.path
+
+svn_root = os.environ.get("SVN_ROOT", "file:///usr/yokel/svn/my-world/")
+svn_root = string.rstrip(svn_root, " /")
+from dp_svn_lib import *
+from dp_oddities import *
+State = State_c()
+
+def mk_dashed_dest_base(url, tag_type="tags"):
+    return url + "-" + tag_type
+
+def mk_rooted_dest_base(url, tag_type="tags", root_url=svn_root):
+    """file:///usr/yokel/svn/my-world/a/b/c -->
+file:///usr/yokel/svn/my-world/<tag-type>/a/b/c/<tag-name>
+<tag-name> is actually added elsewhere."""
+    # Subtract root if it is a prefix.
+    if string.find(url, root_url) != 0:
+        State.oddity("root_url[%s] not found in url[%s]", root_url, url)
+        State.extend_oddity(" not changing svn_root.")
+        mod = ""
+    else:
+        mod = root_url[len(root_url)-1:]
+    return opath.join(root_url, tag_type, mod)
+    
+URL_map = {
+    "checkpoints": {os.path.abspath("/home/davep/lisp"): "lisp-checkpoints", },
+    "tags": {os.path.abspath("/home/davep/lisp"): "lisp-tags", },
+    "branches": {os.path.abspath("/home/davep/lisp"): "lisp-branches", },
+    }
+Checkpoint_URL_map = URL_map["checkpoints"]
+
+def get_checkpoint_dir(base_dir, default):
+    return Checkpoint_URL_map.get(base_dir, default)
+
+def convert_spaces(s, new_char='-'):
+    if s:
+        return string.replace(s, ' ', new_char)
+    return s
+
+# svn cp svn://g65svn/g65svn/projects/tsat/ngpr2/branches/mainline-plus-debug \
+# svn://g65svn/g65svn/projects/tsat/ngpr2/branches/mainline-plus-debug-davep
+
+# Get URL:
+# svn info
+# URL: svn://g65svn/g65svn/projects/davep/ttnt/pkt-gen/mainline
+
+
+def get_url():
+    f = os.popen("svn info")
+    ret = get_url_from_file(f)
+    f.close()
+    return ret
+
+def make_dest_name(url, new_dir="branches", tag='working',
+                   sub_tree=True, suffix=None):
+    if suffix == None:
+        suffix = time.strftime("%Y-%m-%d.%T")
+
+    if sub_tree is True:
+        sub_tree = opath.basename(opath.realpath(os.curdir))
+    
+    print "url>%s<, new_dir>%s<, tag>%s<, sub_tree>%s<, suffix>%s<" % (
+        url, new_dir, tag, sub_tree, suffix)
+    if suffix:
+        sep = '-'
+    else:
+        sep = ''
+    return opath.join(opath.dirname(url), new_dir, sub_tree, tag + sep + suffix)
+
+def svn_cp(src_url, dst_url, just_show=False, msg=None):
+    if msg is not None:
+        m_opt = "-m '%s'" % msg
+    else:
+        m_opt = ""
+    svn_cmd = "svn cp %s %s %s" % (m_opt, src_url, dst_url)
+    print "svn_cmd:", svn_cmd
+    if not just_show:
+        os.system(svn_cmd)
+
+def make_branch(new_dir="branches", tag="working", suffix=None,
+                just_show=False, msg=None, space_conversion_char='-',
+                url_parent_count=0):
+    tag = convert_spaces(tag, new_char=space_conversion_char)
+    suffix = convert_spaces(suffix)
+    src_url = get_url()
+#    src_url = dp_svn_lib.ups_in_url_space((url_parent_count, src_url))
+    u = dp_misc.dotdot_ify_url(src_url, url_parent_count, "")
+    dst_url = make_dest_name(u, new_dir=new_dir, tag=tag, suffix=suffix)
+
+    print "old_url>%s<" % src_url
+    print "dest_name>%s<" % dst_url
+    svn_cp(src_url, dst_url, just_show=just_show, msg=msg)
+
+if __name__ == "__main__":
+    import getopt
+
+    option_chars = 'd:t:s:cbT:nm:MS:U:pu:'
+    options, args = getopt.getopt(sys.argv[1:], option_chars)
+    new_dir = "checkpoints"
+    suffix = None
+    tag = "working"
+    def_tag = True
+    just_show = False
+    space_conversion_char = '-'
+    msg = 'tagged by: ' + (os.environ["USER"] or "unknown")
+    root_url = svn_root
+    url_parent_count = 0
+
+    for o, v in options:
+        if o == '-d':
+            new_dir = v
+            continue
+        if o == '-t':
+            tag = v
+            def_tag = False
+            new_dir = "tags"
+            continue
+        if o == '-s':
+            suffix = v
+            continue
+        if o == '-c':
+            new_dir = get_checkpoint_dir(os.path.abspath(os.path.curdir),
+                                         "checkpoints")
+            continue
+        if o == '-b':
+            new_dir = "branches"
+            continue
+        if o == '-T':
+            tag = v
+            suffix = ""
+            continue
+        if (o == '-n') or (o == '-p'):
+            just_show = True
+            continue
+        if o == '-m':
+            msg = v
+            continue
+        if o == '-M':
+            msg = None
+            continue
+        if o == '-S':
+            space_conversion_char = v
+            continue
+        if o == '-U':
+            root_url = v
+            continue
+        if o == '-u':
+            url_parent_count = eval(v)
+            continue
+    if len(args) > 0:
+        if not def_tag:
+            args = [tag] + args
+        tag = string.join(args)
+    
+    make_branch(new_dir=new_dir, tag=tag, suffix=suffix, just_show=just_show,
+                msg=msg, space_conversion_char=space_conversion_char,
+                url_parent_count=url_parent_count)
+

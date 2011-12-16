@@ -1,0 +1,46 @@
+#!/bin/sh
+source script-x
+# /dumps should be on another disk than one
+# holding by the backed up data.
+: ${dump_fses:=/yokel}
+: ${dump_dir:=/bfd2/dumps}
+: ${EZEC:=vezec}
+
+vezec()
+{
+    echo "$@"
+    sudo "$@"
+}
+[ "$1" = "-n" ] && {
+    shift
+    EZEC=echo
+}
+
+[ "$1" = "-q" ] && {
+    shift
+    EZEC=sudo
+}
+
+case "$@" in
+    [0-9-]*) lvl=${1:-0}; shift;;
+    *) lvl=0;;
+esac
+case "$lvl" in
+    -*) ;;
+    *) lvl="-$lvl";;
+esac
+
+# XXX ??? Override or (pre|ap)pend?
+vsetp $* && dump_fses="$@"
+for dump_fs in ${dump_fses}
+do
+    # Single /s and none @ end.
+  echo "======= Dumping: $dump_fs =============="
+  dump_fs=$(echo $dump_fs | sed -r -e 's,//*,/,g' -e 's,([^/])/*$,\1,')
+  case "$dump_fs" in
+      /|'') name=%;;
+	# There should only be one leading, but...
+      *) name=$(echo $dump_fs | sed -r -e 's,^//*,,' -e 's,/,%,g')
+  esac
+  ${EZEC} dump $lvl -f ${dump_dir}/${name}-on-$(dp-std-date).lvl${lvl}.dump -j7 -u ${dump_fs}
+done

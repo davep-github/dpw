@@ -1,0 +1,9 @@
+#!/bin/sh
+
+ ./configure --host=arm-none-linux-gnueabi --prefix=$HOME/xscale/vanuinc-xscale/ \
+     PKG_CONFIG_PATH=$HOME/xscale/lib/pkgconfig:$HOME/xscale/vanuinc-xscale/lib/pkgconfig \
+     CC=/home/steve/xscale/gcc/bin/arm-none-linux-gnueabi-gcc \
+     CXX=/home/steve/xscale/gcc/bin/arm-none-linux-gnueabi-g++ \
+     RANLIB=/home/steve/xscale/gcc/bin/arm-none-linux-gnueabi-ranlib \
+     --with-popt=$HOME/xscale
+

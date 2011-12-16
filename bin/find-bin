@@ -1,0 +1,9 @@
+#!/bin/sh
+
+for b in "$@"; do
+    if z=$(sp -1 "$b"); then
+        echo "$z"
+        exit 0
+    fi
+done
+exit 1

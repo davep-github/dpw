@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# $Id: isascreen,v 1.3 2003/11/14 08:30:17 davep Exp $
+#
+# exit w/TRUE if a screen is running here
+#set -x
+
+isascreen()
+{
+    [ -n "$1" ] && return 0
+    [ "$2" -gt 5 ] && return 0
+    return 1
+}
+
+if [ "$1" = "-q" ]
+then
+    shift
+    quiet=y
+fi
+
+# $IMASCREENINSTANCE $ignoreeof
+isascreen ${1:-""} ${2:-0}
+rc=$?
+
+case "$rc" in 
+    0) msg=yes;;
+    *) msg=no;;
+esac
+
+[ -z "$quiet" ] && echo "$msg"
+exit $rc

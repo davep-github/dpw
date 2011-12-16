@@ -1,0 +1,20 @@
+#!/bin/sh
+
+. script-x
+
+filter_pattern_default='^\?'
+filter_pattern="$filter_pattern_default"
+
+: ${pat:=""}
+[ -n "$pat" ] && filter_pattern="${filter_pattern}${pat}"
+
+: ${PAT:=""}
+[ -n "$PAT" ] && filter_pattern="$PAT"
+
+new_files=$(svn stat | grep "$filter_pattern" | awk '{print $2}')
+[ -z "$new_files" ] && {
+    echo 1>&2 "No files to add.  Check pattern?"
+    exit 1
+}
+
+echo "$new_files"

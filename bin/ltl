@@ -1,0 +1,25 @@
+#!/bin/sh
+source script-x
+
+: ${kwa_LTL_COLOR:=--color}
+: ${kwa_LTL_BLATHER:=}
+: ${kwa_LTL_SHOW_DATE:=t}
+: ${kwa_LTL_NUM_LINES:=-1}
+: ${kwa_LTL_LS_OPTS:=-Flt} # Why did I use -o before?
+{ 
+    [ -n "$kwa_LTL_SHOW_DATE" ] && {
+        echo "** Now: $(date)"
+        : $((--kwa_LTL_NUM_LINES))
+    }
+    [ -n "$kwa_LTL_BLATHER" ] && {
+        echo "** argv: $@"
+        : $((--kwa_LTL_NUM_LINES))
+    }
+    if [ $kwa_LTL_NUM_LINES -gt 0 ]
+        then
+        kwa_LTL_NUM_LINES="-n $kwa_LTL_NUM_LINES"
+    else
+        kwa_LTL_NUM_LINES=""
+    fi
+    ls ${kwa_LTL_LS_OPTS} ${kwa_LTL_COLOR} "$@"
+} | ${PAGER} ${kwa_LTL_NUM_LINES}

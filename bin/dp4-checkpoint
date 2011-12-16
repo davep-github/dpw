@@ -1,0 +1,49 @@
+#!/bin/sh
+
+source script-x
+source eexec
+
+# Put change list files on a shelf as a checkpoint during development.
+
+shelveOpts=
+resolveOpts=
+changelist=
+
+EExecVerbose
+std_options=""
+option_str="anvqc:"
+DPGOP_args_required=t
+source dp-getopt+.sh || exit 1
+
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -c) changelist=$2; shift;;
+      -a) EExecAsk=t;;
+      -n) DASHN=t; EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+[ -z "$changelist" ] && {
+    echo "No change list specified, select one..."
+    dp4-local-changes
+    read -e -p "Number? "
+    [ -z "$REPLY" ] && {
+        echo "No reply. Exiting."
+        exit 1
+    } 1>&2
+    changelist=$REPLY
+}
+
+EExec p4 shelve -d $changelist
+EExec p4 shelve $changelist
+

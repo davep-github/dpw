@@ -1,0 +1,5 @@
+#!/bin/sh
+
+. script-x
+
+svn add $(svn-show-new)

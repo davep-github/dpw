@@ -1,0 +1,19 @@
+debug: test 2 to debug-test
+debug[-1]: -1: this cdebug should be seen.
+debug[00]: 0: this cdebug should be seen.
+debug: test 2 to debug-test
+debug[-1]: -1: this cdebug should be seen.
+debug[00]: 0: this cdebug should be seen.
+debug[0x1]: 1: this fdebug should be seen.
+debug: test 2 to debug-test
+debug[-1]: -1: this cdebug should be seen.
+debug[00]: 0: this cdebug should be seen.
+debug[0x1]: 1: this fdebug should be seen.
+debug: test 2 to debug-test
+debug[-1]: -1: this cdebug should be seen.
+debug[00]: 0: this cdebug should be seen.
+debug[0x1]: 1: this fdebug should be seen.
+debug: test 2 to debug-test
+debug[-1]: -1: this cdebug should be seen.
+debug[00]: 0: this cdebug should be seen.
+debug[0x1]: 1: this fdebug should be seen.

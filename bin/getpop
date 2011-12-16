@@ -1,0 +1,36 @@
+#!/bin/sh
+# $Id: getpop,v 1.10 2005/04/26 08:20:10 davep Exp $
+# use getmail to retrieve mail
+#set -x
+
+. eexec
+EExecVerbose
+
+# {+}sudo /usr/bin/getmail -v -v -r /home/davep/yokel/etc/getmail/verizon.rc
+# getmail version 4.13.0
+# Copyright (C) 1998-2009 Charles Cazabon.  Licensed under the GNU GPL version 2.
+# MultidropPOP3Retriever:panariti@incoming.verizon.net:110:
+#   0 messages (0 bytes) retrieved, 0 skipped
+
+
+# Filtering for `FutureWarning's in earlier revisions.
+
+: ${getmail_dot_rc:=verizon}
+
+getmail_dot_rc="$HOME/yokel/etc/getmail/${getmail_dot_rc}.rc"
+
+# The LL VPN disables all other network connections, so we don't check and
+# end up w/tons of error messages.
+if ~davep/bin/getmail-inhibited-p
+then
+    exit 1                      # No can do, Jonny. We're VPN'd or something.
+else
+    EExec sudo /usr/bin/getmail -v -v -r "$getmail_dot_rc" "$@" \
+        | tee /dev/tty $log_file | egrep -q '^[[:space:]]+0 messages' && {
+        exit 2
+    }
+    exit 0
+fi
+
+echo 1>&2 "WHAT THE FUCK ARE WE DOING HERE?"
+exit 66

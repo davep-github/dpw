@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# TODO: make specific versions (e.g. .../pkg/DEPENDS,
+# or /usr/portage) that call this after setting the
+# various vars.
+: ${bglopts:=}
+: ${bglre:=/var/db/pkg/}
+# grep files for the beagle query by default
+: ${grepre:="$@"}
+
+bglq "$@" | egrep ${bglre} | xargs egrep "$grepre" /dev/null

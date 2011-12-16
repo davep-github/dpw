@@ -1,0 +1,136 @@
+#
+# Some subroutines to make alias list expansion easier and more
+# consistent.
+#
+# $Id: alias-list.pdbx,v 1.2 2001/03/16 21:47:31 davep Exp $
+
+$rs_0th_record = 1;
+
+sub rs_expand_list
+{
+    local($sep, $list) = @_;
+    local($x);
+    local(@ret) = ();
+    
+    foreach $name (split(',', $list))
+    {
+	#print "name>$name<\n";
+	# if there is a value for this name,
+	# add it to our return value
+	if ($x = "$rs_aliases{$name}")
+	{
+	    push (@ret, $x);
+	}
+	else
+	{
+	    #print "\nx is empty for $name\n";
+	    #print "new list: $rs_mail_lists{$name}\n";
+	    # otherwise, assume its another list reference.
+	    # if its not, then '' is passed in.  this results
+	    # in no ouput, as befits an undefined name 
+	    # -- OR -- is it good to have undefined names be emitted as
+	    # themselves to allow us to have lists of regular
+	    # user names?
+	    if ($x = $rs_mail_lists{$name}) {
+		push (@ret, &rs_expand_list($sep, $x));
+	    }
+	    else {
+		push (@ret, $name);
+	    }
+	}
+    }
+    @ret;
+}
+
+sub rs_main
+{
+
+    local($eof_ind) = @_;
+
+    if ($rs_0th_record == 1 && (defined(&rs_init)))
+    {
+	&rs_init;
+    }
+    $rs_0th_record = 0;
+
+    if ($eof_ind) {
+	# process all the lists now that its eof
+	foreach $key (keys(%rs_mail_lists))
+	{
+	    &rs_format_list($key, $rs_mail_lists{$key});
+	}
+
+	if (defined(&rs_fini))
+	{
+	    &rs_fini;
+	}
+
+	return;
+    }
+
+    local($aliases, $name, @alist, $isalist, $alias_name, $alias_val);
+
+    ($aliases) = $fields{'alias'} =~ /\s*(.+)\s*/;
+    ($name) = $fields{'name'} =~ /\s*(.+)\s*/;
+
+    # only process records with alias fields,
+    # and duplicate the value for each alternation in the alias field
+    @alist = split(/\|/, $aliases);
+    foreach $alias (@alist)
+    {
+	# loop thru all fields
+	# print and save all alias expansion, and
+	# save all alias lists in a hash for expansion after
+	# the entire alias file has been seen.
+	for ($fi = 0; $fi < $fieldIndex; $fi += 2)
+	{
+	    # get the name and value.  Using this array preserves
+	    # the input order of the fields
+	    ($fieldName, $fieldValue) = @thisRec[$fi, $fi + 1];
+	    # strip leading and trailing WS
+	    ($fieldValue) = $fieldValue =~ /^\s*(.+)\s*$/;
+	    print "fieldName>$fieldName<\n" if ($trace);
+	    
+	    # allow multiple addresses like email-work, email-home
+	    # here we preseve any suffix after "email"
+	    # we only want to process fields whose names start with
+	    # "email"  That's why we save "email" in $dummy
+	    if (($dummy, $alias_suffix) = $fieldName =~ /^(email)(.*)$/)
+	    {
+		$alias_name = "$alias$alias_suffix";
+		$isalist = $fieldValue =~ /\,/;
+		if ($isalist) {
+		    $rs_mail_lists{$alias_name} = $fieldValue;
+		    next;
+		}
+		# make a corresponding emacs alias
+		# equal to the original alias + any email
+		# suffix found
+
+		# format the alias, printing it and...
+		$alias_val = &rs_format_value;
+
+		# ...save the aliases for list expansion later
+		$rs_aliases{$alias_name} = $alias_val;
+	    }
+	}
+    }
+}
+1;
+__END__
+#
+# This is a pdbx filter.  After a matching record from a pdb query is
+# collected, a routine like this is called if it is
+# specified on the command line.
+#
+# This routine is called with no parameters, but three global items 
+# are defined:
+# %fields, @thisRec and $fieldIndex
+# %fields is indexed directly by a field's name.  This variable does not
+#  preserve any kind of ordering from the original record in the database.
+# @thisRec contains pairs of strings.
+#  $thisRec[i] is the name of the field
+#  $thisRec[i+1] is the value of the field.
+# This variable preserves the order from the database; it is pretty much
+#  a copy of the record as it was in the file.
+# $fieldIndex is the index of the next slot to use in @thisRec.

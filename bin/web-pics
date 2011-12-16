@@ -1,0 +1,14 @@
+#/bin/sh
+
+
+pic_dir = "/usr/local/www/data/daughter/pics"
+
+
+cd $pic_dir
+for i in *.jpg
+do 
+	djpeg -scale 1/8 $i | cjpeg >| thumbs/$i
+done
+
+# make the thumbnail dir page
+mk-html-thumbs.pl $pic_dir >| $pic_dir/thumbs.html

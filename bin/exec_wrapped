@@ -1,0 +1,19 @@
+#!/bin/sh
+
+: ${WRAPPED_LOG_FILE:="$DP_LOG/exec_wrapped/exec_wrapped.log"}
+{
+    echo "$(date): ==========================="
+    echo "incoming $(echo_id exec_cmd)"
+    echo '   incoming $@: '"$@"
+
+    [ vsetp "$exec_cmd" ] || {
+        exec_cmd="$1"
+        shift
+    }
+    echo "final $(echo_id exec_cmd)"
+    echo '   final $@: '"$@"
+    "$exec_cmd" $DP_SCRIPT_X_DEBUG_OPT "$@"
+    rc=$?
+    echo "   $(echo_id rc): "
+}  2>&1 | tee -a "$WRAPPED_LOG_FILE"
+

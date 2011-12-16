@@ -1,0 +1,3 @@
+#!/bin/sh
+
+killprog operamotifwrapper-2

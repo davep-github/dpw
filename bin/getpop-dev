@@ -1,0 +1,56 @@
+#!/bin/sh
+# $Id: getpop,v 1.10 2005/04/26 08:20:10 davep Exp $
+# use getmail to retrieve mail
+
+: ${TMP:=/tmp}
+log_file=$(dp-mk-tmp-file $TMP/getpop.log.XXXXXXXX)
+tmp_files="$log_file"
+
+cleanup()
+{
+    rm -f $tmp_files
+}
+
+exit_sig()
+{
+    rc=$1
+    cleanup
+    exit $rc
+}
+
+for sig in 2 3 4 5 6 7 8 15
+do
+  trap "echo; echo $0: Got sig $sig, exiting.; cleanup; exit $((128+$sig))" \
+      $sig
+done
+trap "exit_sig \$?" EXIT
+
+{
+    set -x
+    . eexec
+    EExecVerbose
+    
+    : ${getmail_rc:=verizon}
+    
+    getmail_rc="$HOME/yokel/etc/getmail/${getmail_rc}.rc"
+    
+# The LL VPN disables all other network connections, so we don't check and
+# end up w/tons of error messages.
+    if ! vpn-connected-p
+    then
+        EExec sudo /usr/bin/getmail -v -v -r "$getmail_rc" "$@"
+    fi
+    rc=$?
+    set +x
+} >| $log_file 2>&1
+
+if [[ "$rc" != 0 ]]
+then
+    {
+        echo "$0: Mistakes were made..."
+        echo "Log file: $log_file:"
+        cat $log_file
+    } 1>&2
+fi
+
+exit $rc

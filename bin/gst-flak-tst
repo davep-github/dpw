@@ -1,0 +1,12 @@
+#!/bin/sh
+set -x
+: dpaDEV=${dpaDEV:="hw:0"}
+LOK=${LOK:=/media/audio/lossless/music/flac/Queen/News_Of_The_World/08-Sleeping_On_The_Sidewalk.flac}
+[[ -z "$@" ]] && {
+    set -- $LOK
+}
+for loc in "$@"; do
+    gst-launch-0.10 filesrc \
+        location=$loc \! flacdec \! alsasink device=$dpaDEV
+done
+

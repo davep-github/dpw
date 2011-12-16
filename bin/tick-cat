@@ -1,0 +1,37 @@
+#!/usr/bin/env python
+
+import sys, os
+
+class Time_cat_t(object):
+    def __init__(self, tick_interval=1):
+        self.d_tick_interval = tick_interval
+        self.d_list_tick = 0
+        self.d_tick_format = "!!! %s\n"
+        self.d_line_format = "    %s\n"
+
+    def cat(self, line, ofile=sys.stdout):
+        if self.tick_time_p():
+            self.tick()
+        ofile.write(self.d_line_format % (line,))
+
+    
+            
+        
+        
+        
+
+def do_line
+
+def main(argv):
+    import getopt
+    opt_string = ""
+    opts, args = getopt.getopt(argv[1:], opt_string)
+    for o, v in opts:
+        if o == '-<option-letter>':
+            # Handle opt
+            continue
+
+if __name__ == "__main__":
+    main(sys.argv)
+
+

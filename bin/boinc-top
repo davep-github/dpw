@@ -1,0 +1,4 @@
+#!/bin/sh
+
+top $(pgrep boinc | awk '{print "-p", $2}')
+

@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+#set -x
+progname=$(basename "$0")
+. script-x
+qdat=($(getopt -o "$option_str" -- "$@"))
+
+# These must be set before sourcing dp-getopt+.sh
+std_options=""  # None. "" will not be replaced by default. Only unset will.
+option_str="v"
+: ${GREPPER:=egrep}
+
+getopt_args="-q" source dp-getopt+.sh
+
+Usage()
+{
+    "Usage: $progname [rcgrep-opts] [-- [egrep-opts]] egrep-regexp"
+    exit 1
+}
+
+option_str='v'
+[ $? != 0 ] && Usage
+eval set -- "${qdat[@]}" 
+vsetp "$DP_SCRIPT_X_DEBUG" && {
+    eko "${qdat[@]}"
+    eko "$@"
+}
+
+# We're ready to loop over our args (those preceeding the `--').  Consume
+# the `--' and pass the remaining command line to the grepper.
+# Eat up ours first, then present the argses after the `--' to the grepper.
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -v) VERBOSE="echo $prog: "; EExecVerbose;;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<
+** GREPPER [$GREPPER] args must be specified after the \`--'";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+dat=("$@")
+grep_opts="$@"
+rc_dir=${RC_DIR:-$HOME/.rc}
+rc_files="env alias func"
+rc_list="$HOME/.bash_profile $DP_RC_LIST_OTHERS"
+
+for i in $rc_files
+do
+    # check for non-specific files, too.
+    f=$rc_dir/$i
+    [ -r $f ] && rc_list="$rc_list $f"
+
+    # only look in the rc files used by this login... (set in .bash_profile)
+    for j in $locale_rcs
+    do
+	f2="$f$j"
+	[ -r "$f2" ] && {
+	    # $VERBOSE "$f2:"
+	    rc_list="$rc_list $f2"
+	}
+    done
+done	
+
+$VERBOSE "searching: $rc_list"
+$VERBOSE "---"
+
+$GREPPER -n "$@" $rc_list /dev/null
+
+#echo YOPP
+

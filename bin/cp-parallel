@@ -1,0 +1,55 @@
+#!/bin/sh
+
+source script-x
+source eexec
+
+dest=
+
+std_options=""
+option_str="nvqw"
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+      -w) dest=~/tmp/wtctts;;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+[ -z "$dest" ] && {
+    dest=$1
+    shift
+}
+
+case "$dest" in
+    */) dest=$(echo "$dest" | sed -rn 's!(.*)/$!\1!p');;
+    *)
+esac
+
+abs_is_dir()
+{
+    (cd "$1"; echo "$PWD")
+}
+
+for f in "$@"
+do
+  dname=$(dirname "$f")
+  fname=$(basename "$f")
+  dname=$(abs_is_dir "$dname")
+  tdest="$dest$dname"
+  EExec mkdir -p "$tdest"
+  # Passing a single - allows us to just make a parallel dir.
+  if [ "$f" != '-' ]
+  then
+      EExec cp "$f" "$tdest"
+  fi
+done

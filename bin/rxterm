@@ -1,0 +1,121 @@
+#!/bin/sh
+# conceived before xon was seen, but beginning to steal ideas from it.
+#set -x
+# rxterm [-n name] [host [prog [prog_args...]]]
+#echo $*
+source script-x
+args=("$@")
+: ${kwa_rem_shell:=bash}
+def_rem_shell=$kwa_rem_shell
+
+progname=`basename $0`
+if [ "$1" = '-n' ]
+then
+	name=$2;
+	shift; shift
+fi
+
+[ "$#" -ge 1 ] && {
+	host=$1
+	shift
+}
+[ "$#" -ge 1 ] && {
+	rprog=$1
+	shift
+}
+uprog_args="$@"
+display=$main_display
+rsh=ssh
+
+#
+# allow host abbrevs and host specific defaults to be specified.
+case $host in
+	*[bt][0-9][0-9]*) remote_xterm="/usr/X/bin/xterm";
+		num=`echo $host | perl -n -e 'print /([bt]\d+)/;'`
+		host=tncl${num}.la;
+		rem_sh=${def_rem_shell}
+		;;
+	*ls00*) remote_xterm="/usr/X/bin/xterm";
+		host=tncls00.la;
+		rem_sh=${def_rem_shell}
+		;;
+	darkstar|ds) remote_xterm="/usr/bin/X11/xterm";
+		host=darkstar;
+		rem_sh=${def_rem_shell}
+		;;
+	onez) remote_xterm="/usr/bin/X11/xterm";
+		host=onez;
+		rem_sh=${def_rem_shell}
+		;;
+	piano) remote_xterm="/usr/bin/X11/xterm";
+		host=piano.la;
+		rem_sh=${def_rem_shell}
+		;;
+	canopus) remote_xterm="/usr/bin/X11/xterm";
+		host=canopus;
+		rem_sh=sh
+		;;
+	l|\.|localhost)  remote_xterm="$DEFAULT_XTERM"
+		host=$HOST;
+		rsh=
+		rem_sh=
+		;;
+	*) remote_xterm=/usr/X11/bin/xterm;
+		rem_sh=${def_rem_shell}
+		;;
+esac
+
+if [ "$rprog" = "" ]
+then
+	rprog=$remote_xterm
+	prog_args="-ls"
+	title=$USER
+else
+	# want to see if we're an xterm and use any
+	# -e xxx 
+	# as the name of the window
+	case $rprog in
+		*xterm) title=$USER ;;
+		*) title=`basename $rprog`
+	esac
+fi
+rsh_args=
+
+case $name in
+	"") title_base="$title@$host"
+		;;
+	*@*) title_base=$name
+		;;
+	*) title_base="$name@$host"
+		;;
+esac
+title=${title_base}:`file-counter -c $HOME/tmp/${title_base}_serial_num`
+
+rsh_args="$host exec $rsh_args"
+prog_args="$rprog -name $title -display $display $prog_args"
+
+case $rprog in
+	*xterm) prog_args="$prog_args -T $title"
+		;;
+	*)
+		;;
+esac
+
+# echo $rsh $rsh_args
+case $rem_sh in
+	csh) redirect="</dev/null >&/dev/null & "
+		;;
+	sh|bash) redirect="</dev/null >/dev/null 2>&1 & "
+		;;
+	"") redirect=
+		rsh=
+		rsh_args=
+		;;
+	*) echo "unknown rem_sh>$rem_sh<" 1>&2
+		exit 1
+		;;
+esac
+
+echo "$rsh $rsh_args $prog_args $uprog_args $redirect &"
+$rsh $rsh_args $prog_args $uprog_args $redirect &
+

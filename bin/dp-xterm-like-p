@@ -1,0 +1,13 @@
+#!/bin/sh
+
+. script-x
+
+if [ "$DISPLAY" != "" ]
+then
+	case $TERM in
+	*xterm*|vt100|rxvt|screen) 
+		exit 0;;
+	esac
+fi
+
+exit 1

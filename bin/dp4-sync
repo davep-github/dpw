@@ -1,0 +1,53 @@
+#!/bin/sh
+source script-x
+source eexec
+
+# Use my teeker program which saves stdin into a file like tee, but simple
+# ticks off chars to stdout using tikker. Makes for a lot less output but
+# gives feedback that something is happening.
+teekerer()
+{
+    teeker $teekerOpts "$@"
+}
+
+teeer()
+{
+    tee "$@"
+}
+
+p4DashN=
+teeFunc=teekerer
+teekerOpts=
+std_options=""
+option_str="nvqtsk:"
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+      -t) teeFunc=teeer;;
+      -s) p4DashN=-n;;
+      -k) teekerOpts="$2"; shift;;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+: ${kwa_log_dir:=$(scsandbox -w $PWD)}
+: ${kwa_log_base:=p4-sync-}
+: ${kwa_log_name:=${kwa_log_dir}/${kwa_log_base}$(dp-std-timestamp)}
+
+# print log name before and after in case it is a long sync.
+echo "log file>${kwa_log_name}<"
+EExec p4 sync $p4DashN 2>&1 | $teeFunc "${kwa_log_name}"
+echo "log in>${kwa_log_name}<"
+# Let me know if anything needs merging.
+EExec p4 resolve -n | $teeFunc -a "${kwa_log_name}"
+exit 0

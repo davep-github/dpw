@@ -1,0 +1,75 @@
+#!/bin/bash
+# $Id: tal-import,v 1.1 2003/04/18 17:23:42 davep Exp $
+#
+# Import sources into repository.  Base import name on current
+# directory
+#
+#set -x
+
+prog=`basename $0`
+echo $prog: $* 1>&2
+opt_list='cn'
+
+Usage()
+{
+   echo "${prog}: usage: $prog [-$opt_list]" 1>&2
+   exit 1
+}
+
+# init optional vars to defaults here...
+ECHO="echo $prog: "
+
+set -- ` getopt $opt_list $* `
+
+[ $? != 0 ] && Usage
+
+ECHO=
+clean_dir=
+for i in $*
+do
+	case $1 in
+		-n) ECHO=":" ; just_show=y; ECHO=echo; shift ;;
+		-c) clean_dir=1; shift;;
+		--) shift ; break ;;
+		*) exit 1 ;;
+	esac
+done
+
+if [ "$clean_dir" == "1" ]
+then
+    $ECHO rm -f *~ || exit 1
+    $ECHO rm -rf obj || exit 1
+    $ECHO rm -f modldargs.pl || exit 1
+fi
+
+if [ "$1" != "" ]
+then
+	dir_name=$1
+else
+	# construct a name from the pwd, relative to Talisman
+	dir_name=$PWD
+
+	# first, make sure there is only one Talisman in the string
+	if echo $dir_name | grep -q 'Talisman.*Talisman'
+	then
+		echo 1>&2 "Too many Tailsman strings in cwd ($PWD)."
+		echo 1>&2 "Specify import dir by hand."
+		exit 1
+	fi
+
+	if ! echo $dir_name | grep -q '/Talisman/'
+	then
+		echo 1>&2 "No /Tailsman/ string in cwd ($PWD)."
+		echo 1>&2 "Specify import dir by hand."
+		exit 3
+	fi
+
+	dir_name=$(echo $dir_name | sed 's!.*/Talisman/!Talisman/!') || {
+		echo 1>&2 "sed failed on cwd ($PWD)."
+		echo 1>&2 "Specify import dir by hand."
+		exit 2
+	}
+	echo $dir_name
+fi
+
+$ECHO cvs import -m "Imported sources" $dir_name $USER initial

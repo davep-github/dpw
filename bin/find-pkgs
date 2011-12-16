@@ -1,0 +1,19 @@
+#!/bin/sh
+#set -x
+# $Id: find-pkgs,v 1.1 2003/10/13 02:30:32 davep Exp $
+
+# find to which packages the file in and under installed_dir belong.
+
+installed_dir=${1:-.}
+
+find $installed_dir -type f | while read file
+do
+    file=`basename $file`
+    if pkg-grep-cont $file | head -1 2>/dev/null
+    then
+	echo -n '.' >/dev/tty
+    else
+	echo -n 'x' >/dev/tty
+    fi
+    
+done | sort | uniq

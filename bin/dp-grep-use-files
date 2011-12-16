@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Early debug.
+# Put the check for this bizarre parameter first is a program requires a `-x'
+# as the first argument.
+if [[ "$1" == ---skip-x-debug-hack ]]; then
+    shift
+elif [[ "$1" == -x ]]; then
+    set -x
+    shift
+fi
+
+use_flag_dir="/usr/portage/profiles"
+use_flag_files="$use_flag_dir/use.*"
+: ${no_bound:=""}
+if [[ -z "$no_bound" ]]; then
+    bounding_prefix=":"
+    bounding_suffix=" - "
+else
+    bounding_prefix=""
+    bounding_suffix=""
+fi    
+
+for a in $@; do
+    regexp="$bounding_prefix$a$bounding_suffix"
+    egrep "$regexp" $use_flag_files /dev/null
+done
+    

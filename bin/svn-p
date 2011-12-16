@@ -1,0 +1,44 @@
+#!/bin/sh
+
+. script-x
+
+: ${SHOW_SVN_URL:=y}
+: ${ECHOER:=echo}
+
+# This script is for environments that can't (or won't) use functions.
+# Keep sunk w/function.
+src_controlled_p ()
+{
+    local svned=
+    local dir=$1
+    shift
+    local sc_name=$1
+    shift
+    if [ "$1" = "-q" ]
+    then
+	ECHOER=:
+    fi
+    [ -d "$dir" ] && {
+        svned=y
+        $ECHOER -n "$PWD is $sc_name'd @"
+    }
+    if ! cmd-p "$sc_name"
+    then
+	echo 1>&2 "
+*** sc cmd ($sc_name) for this dir ($PWD) isn't"
+    elif [ -n "$SHOW_SVN_URL" -a -n "$svned" ]; then
+        $ECHOER " URL: $(svn-url)"
+    fi
+    [ -d "$dir" ]
+}
+
+svn_p ()
+{
+    src_controlled_p "./.svn" svn "$@"
+}
+
+# I'd love to be able to detect a sourcing a shell script vs. an execution of it.
+# Like Python does with the value of __main__.
+# That gives us a lib/module as well as a runnable utility.
+svn_p "$@"
+

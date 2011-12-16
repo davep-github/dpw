@@ -1,0 +1,16 @@
+#!/bin/sh
+set -x
+
+[ "$#" != 1 ] && {
+    echo 1>&2 "usage: repository < dump-file"
+    exit 1
+}
+
+repos="$1"
+rm -rf "$repos"
+svnadmin create --fs-type fsfs "$repos"
+# bzcat ~/inb/svn-root.dump.bz2| svnadmin load svn-root/
+svnadmin load "$repos"
+
+exit $?
+

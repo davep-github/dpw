@@ -1,0 +1,53 @@
+#!/bin/sh
+# Do a p4 diff first as a paranoia check.
+source script-x
+source eexec
+
+EExecVerbose
+
+Usage_args_info=" files..."
+Usage_synopsis="Check each file for changes before reverting.
+
+   -n) Just show commands that would be executed.
+   -v) Show commands being executed.
+   -q) Be quiet.
+"
+std_options=""
+option_str="nvq"
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+      --) shift ; break ;;
+      *)  exit 1 ;;
+    esac
+    shift
+done
+
+for f in "$@"
+do
+  num=$(p4 diff "$f" | wc -l)
+  if [ "$num" -gt 1 ]
+  then
+      while :
+      do
+        echo "$f has changes."
+        read -e -p "Options:
+1|d) show diffs
+2|r) revert
+3|q) quit
+? "
+        case "$REPLY" in
+            [1d]) EExec -y p4 diff "$f"; continue;;
+            [2r]) break;;
+            [3qQxX]) echo 'Exiting.'; exit 0;;
+            *) echo "Unsupported option: $REPLY"; continue;;
+        esac
+      done
+  fi
+  EExec p4 revert "$f"
+done

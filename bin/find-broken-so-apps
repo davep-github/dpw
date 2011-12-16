@@ -1,0 +1,45 @@
+#!/bin/sh
+
+: ${verbose:=}
+
+[[ "$1" == -x ]] && {
+    shift
+    set -x
+}
+
+verbose ()
+{
+    [[ -n "$verbose" ]] && echo 1>&2 "$@"
+}
+
+find_em()
+{
+    local files="$@"
+
+    for f in $files; do
+        verbose 1>&2 "checking $f"
+	[[ -d $f || ! -x $f ]] && {
+	    verbose "skipping $f"
+	    continue
+	}
+        missing=$(ldd "$f" | fgrep 'not found')
+        if [[ -n "$missing" ]]; then
+	    verbose "$f: $missing"
+            echo -n "$(realpath $f)"
+	    if [[ -n "$verbose" ]]; then
+		echo " is missing shared objs:"
+		echo "    $missing"
+	    else
+		echo
+	    fi
+        fi
+    done
+}
+
+if [[ "$1" == -v ]]; then
+    verbose=t
+    shift
+fi
+
+find_em "$@"
+

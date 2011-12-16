@@ -1,0 +1,39 @@
+#!/bin/sh
+# $Id: rx-cis-mail,v 1.1.1.1 2001/01/17 22:22:29 davep Exp $
+
+# -n to get mail packet via telNet
+if [ "$1" = "-m" ]
+then
+	unpack_opt=""
+else
+	unpack_opt="-n"
+fi
+
+rx_file=/tmp/cisspool.$$
+
+if [ "$unpack_opt" = "-n" ]
+then
+	# telnet expect script
+	tn-cis-mail $rx_file
+	status=$?
+else
+	# xmodem... we're called from comm program
+	rx $rx_file
+	status=$?
+
+fi
+
+if [ $status != 0 ]
+then
+	exit 0
+fi
+
+
+mail_box=/var/spool/mail/$LOGNAME
+
+unpackCISMail $unpack_opt $rx_file $mail_box
+
+cat $rx_file >> ~/tmp/CisSpoolBak
+rm $rx_file
+
+exit 0

@@ -1,0 +1,20 @@
+#!/bin/sh
+
+source script-x
+
+EXEC=
+[ "$1" == "-n" ] && {
+    EXEC=echo
+    shift
+}
+
+
+files_to_nice="/usr/bin/virtuoso-t nepomukservices"
+for f in $files_to_nice
+do
+  pids=$(pgrep -p "$f")
+  if vsetp $pids
+      then
+      $EXEC renice -n 20 -p $pids
+  fi
+done

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+source script-x
+
+unset DISPLAY
+alsaplayer ${DP_NPR_URL:-http://audio.wbur.org/stream/live_ogg.m3u}

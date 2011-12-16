@@ -1,0 +1,33 @@
+#!/bin/sh
+
+. script-x
+. eexec
+. $HOME/etc/kfdsrc
+: ${WGET_p:=--wget}
+: ${CLEAN_p:=}
+: ${REALLY_CLEAN_p:=}
+
+for o in "$@"; do
+    case "$o" in
+        -n) WGET_p=;;
+        -c) CLEAN_p=t;;
+        -r) CLEAN_p=t; REALLY_CLEAN_p=t;;
+        *) echo 1>&2 "Unsupported option >$o<, exiting."; exit 1;;
+    esac
+done
+
+[ -n "$CLEAN_p" ] && {
+    EExec rm -rf ${DP_KF_DIR}
+    [ -n "${REALLY_CLEAN_p}" ] && {
+        EExec rm -rf ${DP_DOT_STEAM_DIR}
+    }
+}
+
+EExec mkdir -p ${DP_DOT_STEAM_DIR}
+EExec mkdir -p ${DP_KFDS_DIR}
+EExec mkdir -p ${DP_STEAM_GAMES}
+
+echo "Updating steam..."
+EExec steam-update ${DP_SCRIPT_X_DEBUG_OPT} ${WGET_p}
+echo "Updating KF dedicated server..."
+EExec kfds-update ${DP_SCRIPT_X_DEBUG_OPT}

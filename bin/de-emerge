@@ -1,0 +1,42 @@
+#!/bin/sh
+
+source script-x
+
+for sig in 2 3 4 5 6 7 8 15
+do
+	trap "exit $sig" $sig
+done
+
+de_emerge()
+{
+    local pkg="$1"
+    echo === $pkg ===
+    emerge -C "$pkg" && emerge "$pkg" || {
+        echo "emerge -C $pkg && emerge $pkg failed."
+        exit 1
+    }
+}
+
+de_emerge_stdin()
+{
+    while read
+      do 
+      de_emerge "$REPLY"
+    done
+}
+
+de_emerge_argv()
+{
+    for pkg in "$@"
+      do
+      de_emerge "$pkg"
+    done
+}
+
+if vsetp "$*" && tty -s
+then
+    de_emerge_argv "$@"
+else
+    de_emerge_stdin
+fi
+

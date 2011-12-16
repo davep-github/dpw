@@ -1,0 +1,8 @@
+#!/bin/sh
+set -x
+
+files=`expand-filenames "$@"`
+
+cd /$HOME/yokel/share/ArgoUML 
+javavm -jar argouml.jar $files
+

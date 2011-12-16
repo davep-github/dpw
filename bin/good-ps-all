@@ -1,0 +1,11 @@
+#!/bin/sh
+
+#
+# ps with a nice and useful set of output fields.
+source script-x
+
+PS_O_FMT="-o user,tty,pid,ppid,pgid,ni,pri,state,psr,policy,args"
+PS=ps
+PS_ARGS="-A -ww $PS_O_FMT"
+
+$PS $PS_ARGS

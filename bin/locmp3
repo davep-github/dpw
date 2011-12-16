@@ -1,0 +1,14 @@
+#!/bin/sh
+# $Id: locmp3,v 1.3 2005/04/11 08:20:12 davep Exp $
+. eexec
+
+if [ "$1" = '-v' ]
+then
+    EExecVerbose
+    EExecEchoPrefix="***search db: "
+fi
+
+. $HOME/etc/mp3db.conf
+
+EExec locate --database="$MP3DB" "$@"
+EExec locate --database="$FLACDB" "$@"

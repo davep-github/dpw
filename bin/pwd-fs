@@ -1,0 +1,16 @@
+#!/bin/sh
+
+dir=${1:-.}
+fs=$(df "$dir" | tail -n1 | awk '{print $1}')
+if sp realpath > /dev/null; then
+    rp=$(realpath $dir)
+    if [[ "$PWD" != "$rp" ]]; then
+	rp="[realpath $rp]"
+    else
+	rp=""
+    fi
+else
+    rp=""
+fi
+
+echo "$fs $PWD $rp"

@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+# $Id: myhost,v 1.5 2005/06/12 08:20:10 davep Exp $
+# myhost
+# Determine the host machine from which we are logged in.
+# Useful for things such as setting DISPLAY variable back to
+# your workstation
+#
+#set -x
+. script-x
+
+if ! tty -s
+then
+    #echo 1>&2 "tty_is_not_a_terminal"
+    exit 1
+fi
+
+case $OSName in
+OSF1)
+    mytty=$(tty | cut -f3- -d/) || {
+	stat=$?
+	echo 1>&2 "tty | cut failed."
+	exit $stat
+    }
+    line=$(who -M | fgrep "$mytty")
+    # davep       ttyp6       Oct 26 16:48            (a-69.tunnel.crl.dec.com)
+    set -- $line
+    host=$(echo $6 | sed 's/[()]//g')
+    ;;
+FreeBSD)
+    mytty=$(tty | cut -f3- -d/)
+    # set -- $(utmpdump /var/run/utmp 2>/dev/null | grep '\['$mytty'[ 	]*\]' | sed 's/[]\[]//g' `
+    set -- $(utmpdump /var/run/utmp 2>/dev/null | grep '\['$USER'[	 ]*\].*\['$mytty'[ 	]*\]' | sed 's/[]\[]//g' )
+    #echo 1>&2 "*>$*<"
+    host=$6
+    ;;
+Linux) set -- $(utmpdump /var/run/utmp 2>/dev/null | grep $(mytty) | cut -d '[' -f 7 | cut -d ']' -f 1 | fgrep $(hostname -d))
+    host="$1"
+    ;;
+*)
+    echo 1>&2 "Unsupported OSName>$OSName<"
+    exit 1
+    ;;
+
+esac
+
+echo "$host"
+
+exit 0

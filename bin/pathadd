@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+# $Id: pathadd,v 1.10 2005/12/19 08:11:33 davep Exp $
+# add element to path iff its not there already
+# default is to append
+# NB: null path elements will be converted to .s (dots)
+#set -x
+
+. script-x
+DEF_SEP=':'
+prepend=
+all_options='ps:S'
+#set -- `getopt 'ps:S' "$@"`
+# NEW! AND! IMPROVED getopt! Now with all new NMA!
+q=$(getopt $getopt_args -o "$all_options" -- "$@")
+[ $? != 0 ] && Usage
+eval set -- "$q"
+dolAT=("$@")
+for i in $*
+do
+    case $1 in
+	-p) prepend=y;;
+	-s) DEF_SEP=$2; shift;;
+        -S) DEF_SEP=' ';;       # can't use -s ' ' due to getopt mangling.
+	--) shift ; break ;;
+	*) echo 1>&1 "Unsupported option >$1<"; exit 1 ;;
+    esac
+    shift
+done
+    
+if [ -n "$prepend" ]
+then
+    cmd='$out$sep$path'		# command to prepend new dirs
+else
+    cmd='$path$sep$out'		# command to append new dirs
+fi
+
+path=$1				# save the original path
+shift
+newargs="$*"			# the dirs to add
+
+# add a trailing colon so an existing trailing colon is split into a
+# empty string by the set --.  This seems to be a bash bug, since on
+# FreeBSD, sh doesn't need this but on linux running bash as sh
+# it does, and so does bash run as bash.
+path="$path$DEF_SEP"			
+oldIFS="$IFS"
+IFS="$DEF_SEP"			# split path on DEF_SEP
+alist=''
+
+# split any new element args that happen to be paths themselves.
+for na in ${newargs}
+do
+    set -- ${newargs}
+    alist="$alist $na"
+done
+newargs="$alist"
+
+set -- ${path}
+IFS="$oldIFS"
+path= sep=
+for el in "$@"
+do
+    [ -n "$*" -a -z "$el" ] && el="."	# convert null entries to .s
+    # delete existing, prepended entries.
+    [ "$prepend" = 'y' ] && {
+	case " $newargs " in
+	    *\ $el\ *) el= ;;
+	esac
+    }
+    [ -n "$el" ] && {
+	path="$path$sep$el"
+	sep=$DEF_SEP
+    }
+done
+
+sep= out=
+#set -x
+for new_el in $newargs
+do
+    [ -z "$new_el" ] && new_el=. # fix null entry
+    case "$DEF_SEP$path$DEF_SEP" in
+	*$DEF_SEP$new_el$DEF_SEP*)		# element aleady is in path
+	    [ "$prepend" != "y" ] && new_el=
+	    ;;
+    esac
+    [ -n "$new_el" ] && {
+	out=$out$sep$new_el # not present, add to output string
+	sep=$DEF_SEP
+    }
+done
+
+sep=$DEF_SEP
+# echo "out>$out<, sep>$sep<, path>$path<"
+# no separator if path or out is empty, since that adds a null entry
+[ -z "$out" -o -z "$path" ] && sep=""
+eval echo $cmd

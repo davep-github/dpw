@@ -1,0 +1,11 @@
+#!/bin/sh
+
+uname -a | fgrep -q gentoo && {
+    echo "gentoo"
+    exit 0
+}
+[ -d /usr/portage ] && {
+    echo "gentoo"
+    exit 0
+}
+exit 1

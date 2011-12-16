@@ -1,0 +1,40 @@
+#!/bin/sh
+#set -x
+. script-x
+. eexec
+
+vsetp $eexec_dash_n && EExecDashN
+
+case "$1" in
+    -s) fox=swiftfox; shift;;
+    -f) fox=firefox; shift;;
+    -*) echo 1>&2 "Bad option: $1"; exit;;
+    
+esac
+arg=$1
+: ${fox:=${arg:=swiftfox}}
+: ${kwa_profs:=.*-P.*(KDE|dp2|zzz)}
+: ${proc_re:="(fucking-)?${fox}(-bin)?"}
+
+killprog ffox
+# tty is `?' if none.
+pids=$(pgrep ${proc_re} | \
+    sed -rn 's!^(.*(pts|tty|\?)/[0-9]+ +)([0-9]+)( .*)$!\3!p')
+
+if [ -n "$pids" ]
+then
+    kill $pids
+else
+    echo 1>&2 "No instances of ${proc_re} found."
+fi
+
+#
+# 0 if pgrep fails to find the program.
+pgrep fox
+rc="$?"
+if [ "$rc" != '0' ]
+then
+    exit 0
+else
+    exit $rc
+fi

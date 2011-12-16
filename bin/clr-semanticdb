@@ -1,0 +1,4 @@
+#!/bin/sh
+db=/home/davep/droppings/editors/xemacs/semanticdb.d
+rm -rf $db
+mkdir $db

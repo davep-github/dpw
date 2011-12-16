@@ -1,0 +1,51 @@
+#!/bin/sh
+
+. script-x
+
+. $HOME/etc/svn-home.rc
+
+dash_n=
+
+if [ "$1" = "-n" ]
+then
+    ECHO=echo
+    dash_n=t
+    shift
+else
+    ECHO=
+fi
+
+if [ -n "$*" ]
+then
+    commit_msg="svn-home:$*"
+else
+    commit_msg="periodic commit"
+fi
+
+svn_em()
+{
+    echo ""
+    msg="$1"
+    svn_dir="$2"
+    files="$3"
+    cd $svn_dir
+    [ -d "./.svn" ] || {
+        echo "SVN'ing $svn_dir $files"
+        echo 1>&2 "$PWD is not SVN'd"
+        return
+    }
+    vsetp $dash_n && pwd
+    $ECHO svn commit -m "$msg" $files
+}
+    
+for dir in $SVN_ABS_HOME_DIRS
+do
+    svn_em "$dir: $commit_msg" $dir .
+done
+
+for file in $SVN_ABS_HOME_FILES     # Files come from rc file.
+do
+    dir="$(dirname $file)"
+    svn_em "file: $commit_msg" "$dir" "$file"
+done
+

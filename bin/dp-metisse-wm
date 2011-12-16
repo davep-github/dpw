@@ -1,0 +1,12 @@
+#!/bin/sh
+set -x
+: ${progname:=$(basename $0)}
+: ${LOGFILE:="$DP_LOG/X11/xlog.$USER.$progname"}
+
+echo 1>&2 "============== $0: begins $(date) ======================="
+{
+    killprog Xmetisse
+    Xmetisse -ac -geometry 1600x1200 :1 >& $DP_X11_LOG/Xmetisse.log & \
+	metisse-start-fvwm >& $DP_X11_LOG/Metisse-Compositor.log & \
+	aterm
+} >> $LOGFILE 2>&1

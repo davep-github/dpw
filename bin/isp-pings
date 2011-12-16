@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+#
+# $Id: isp-pings,v 1.11 2005/05/01 08:20:10 davep Exp $
+# 
+# isp-pings: ping a list of sites to see where things are hosed.
+#set -x
+source script-x
+echo 1>&2 '!!!!!Save unique list of failed addresses @ dump before exit. In trap.'
+source ping-lib.sh
+
+
+: ${zzz:=0}
+[ -z "$ISP" ] && ISP=$($HOST_INFO -n verizon.net ISP)
+
+# hopefully increasing in distance
+# for verizon, 
+# incoming.$ISP, outgoing.$ISP, news.$ISP don't respond to pings.
+
+# (news|incoming). ISP==verizon doesn't respond to pings.
+other_places=(www.$ISP outgoing.$ISP
+	    www.mit.edu www.ucsd.edu www.yahoo.com 
+	    www.google.com
+	    www.buy.com)
+
+for sig in 2 3 4 5 6 7 8 15
+do
+    trap "echo ; echo $0: Got sig $sig, exiting.; exit $sig" $sig
+done
+
+num_failures=0
+prefix=
+
+num_loops=${1-${kwa_num_loops-"-1"}}
+
+do_pings ()
+{
+    if [ "$num_failures" -gt 0 ]
+    then
+        prefix='***'"[$num_failures]"'***'
+    fi
+    pingit 192.168.0.1 "$prefix(LAN-GW)" || {
+        num_failures=$(( $num_failures + 1 ))
+        prefix='***'"[$num_failures]"'***'
+    }
+
+    # !!! find verizon gateway (hopefully programmatically)
+    # pingit 66.92.73.1 '(ISP-GW) '
+    
+    for s in `find_nameservers` 
+    do
+        pingit "$s" "$prefix(NS)" || {
+            num_failures=$(( $num_failures + 1 ))
+            prefix='***'"[$num_failures]"'***'
+        }
+    done
+    
+    for s in ${other_places[@]}
+    do
+        pingit "$s" "$prefix" || {
+            num_failures=$(( $num_failures + 1 ))
+            prefix='***'"[$num_failures]"'***'
+        }
+    done
+}
+
+iter=0
+while [ "$num_loops" -ne 0 ]
+do
+    echo "iteration: $((++iter))"
+    do_pings
+    [ "$zzz" -gt 0 ] && echo "zzz($zzz)"
+    sleep "$zzz"
+    [ "$num_loops" -lt 0 ] || : $((--num_loops))
+done
+
+exit 0
+

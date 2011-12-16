@@ -1,0 +1,64 @@
+#!/bin/sh
+# $Id: update-isoarchivedb,v 1.4 2004/05/05 08:20:10 davep Exp $
+#set -x
+
+args="$@"
+
+. $HOME/yokel/bin/sudo-path-fix
+. $HOME/etc/archivedb.conf
+. eexec
+
+set -- $args
+
+if [ "$1" = "-n" ]
+then
+    EExecDashN
+    shift
+fi
+
+if [ "$#" -ne 2 ]
+then
+    echo 1>&2 "usage: update-isoarchivedb archive-dir id."
+    exit 1
+fi
+
+loc_path="$1"
+id=$(namify-path -n -c, "$2")
+
+. $HOME/etc/archivedb.conf
+
+# isoadir can be set on the command line preceeding the command
+# e.g. isoadir=/archivedb update-isoarchivedb /cdrom archived-src-files
+# now set/overriable in archivedb.conf
+#: ${ARCHIVEDB_DIR:=isoadir}
+dbdir="${ARCHIVEDB_DIR}/${id}"
+db="${dbdir}/locatedb"
+[ -d "$dbdir" ] && {
+    echo 1>&2 -n  "dbdir >$dbdir< exists; Overwrite? "
+    read ans
+    case "$ans" in
+	y|Y|1|t|t) ;;
+	*) FATAL 1 "Exiting because dbdir >$dbdir< exists.";;
+    esac
+}
+
+[ -d "$dbdir" ] || EExec mkdir -p "$dbdir"
+
+# we use EExec here so -n can turn the command execution off.
+# prefix is free to be different from the path
+EExec echo "$id" | EExec tee "${dbdir}/prefix"
+
+EExec echo "$loc_path" | EExec tee "${dbdir}/loc_path"
+
+# save df data to help when scanning for free archive space
+EExec df "$loc_path" | EExec tee "${dbdir}/df"
+EExec df -h "$loc_path" | EExec tee -a "${dbdir}/df"
+
+#fake_src="~/tmp/$id"
+#EExec ln -s "$loc_path" "$fake_src"
+
+EExecVerbose
+EExec ${UPDATER} --localpaths="$loc_path" --output="$db"
+
+#[ -h "$fake_src" ] && EExec rm -f "$fake_src"
+

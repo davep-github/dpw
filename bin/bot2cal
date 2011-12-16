@@ -1,0 +1,18 @@
+#!/usr/local/bin/perl
+# http://www.scifi.com/bin/schedulebot.cgi?wd=w&s=MST3000&ds=1&db=US%3AEastern&mon=12.97&t=off&x=71&y=31
+
+
+while (<>) {
+    #next if !/^(Sat|Fri)/;
+    next if !/^(Sat|Sun),/;
+
+    ($dayname, $mon, $day, $rest) = /^([^,]+),\s+(\S+)\s+(\d+)\s+(.*)$/;
+    # print "dayname>$dayname<\n";
+
+    $rest =~ s/\s+/ /g;
+    $rest =~ s/#/\\#/g;
+
+    ($mon) = $mon =~ /(...)/;
+
+    print "$mon $day $rest\n";
+}

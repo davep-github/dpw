@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# $Id: wpp.sh,v 1.2 2004/10/03 08:20:03 davep Exp $
+# make swag at number of words per page.
+#set -x
+# 
+
+LPP=66
+
+wpp()
+{
+    file=$1
+    set -- $(wc -l $file)
+    lpf=$1
+    set -- $(wc -w $file)
+    wpf=$1
+
+    wp=$(($wpf * $LPP / $lpf ))
+
+    echo $wp
+}
+
+for f in "$@"
+do
+    case "$f" in
+    *.gz) catter=gzcat;;
+    *)    catter=cat;;
+    esac
+    tfile=$(dp-mk-tmp-file /tmp/wppXXXXXXX)
+    $catter $f > $tfile
+    x=$(wpp $tfile)
+    rm -f $tfile
+    echo $x
+done
+

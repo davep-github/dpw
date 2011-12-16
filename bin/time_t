@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+
+import sys, os, time
+
+def main(argv):
+    import getopt
+    formatString = '%x'
+    prefix = ""
+    opt_string = "dxXfos:pP:w"
+    opts, args = getopt.getopt(argv[1:], opt_string)
+    for o, v in opts:
+        if o == '-d':
+            formatString = '%d'
+            continue
+        if o == '-x':
+            formatString = '%x'
+            continue
+        if o == '-X':
+            formatString = '%X'
+            continue
+        if o == '-f':
+            formatString = '%f'
+            continue
+        if o == '-o':
+            formatString = '%o'
+            continue
+        if o == '-s':
+            formatString = v
+            continue
+        if o == '-p':
+            prefix = '0x'
+            continue
+        if o == '-P':
+            prefix = v
+            continue
+        if o == '-w':
+            # Wait until the next second.
+            t0 = int(time.time())
+            t =  int(time.time())
+            while t <= t0:
+                time.sleep(0.25)
+                t =  int(time.time())
+            continue
+
+    formatString = prefix + formatString
+
+    print formatString % time.time()
+
+if __name__ == "__main__":
+    main(sys.argv)
+

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+[ -z "$DP_BASHRC_COMPLETE" -a -f .bash_profile ] && . $HOME/.bash_profile
+
+source script-x
+
+: ${DISPLAY:=:0.0}
+xx -B aquamarine1 orpie

@@ -1,0 +1,10 @@
+#!/usr/bin/perl
+
+while (<ARGV>)
+{
+    if (/\((.*)\)/)
+    {
+        print "$1\n";
+    }
+}
+

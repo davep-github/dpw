@@ -1,0 +1,17 @@
+#!/bin/sh
+
+archive=${1:-/dev/null}
+shift
+dir="$@"
+[ "$dir" = "" ] && dir=.
+
+exclude_patterns="*.o *.a *~ test *.core *,v *.tar *.tar.gz *.tgz .git .svn cscope* TAGS tags .#* *.bak"
+for i in $exclude_patterns
+do
+	excludes="$excludes --exclude $i"
+done
+
+echo tar -c -v -f $archive $excludes $dir
+tar -c -v -f $archive $excludes $dir
+
+exit 0

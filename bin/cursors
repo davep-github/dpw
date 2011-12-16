@@ -1,0 +1,66 @@
+#!/usr/bin/env python
+#-*-Python-*-
+# $Id: cursors,v 1.1.1.1 2001/01/17 22:22:27 davep Exp $
+
+import sys
+import regex
+import getopt
+from Tkinter import *
+ 
+class Application(Frame):
+	def __init__(self, master=None):
+		Frame.__init__(self, master)
+		self.file = '/usr/X11R6/include/X11/cursorfont.h'
+		self.parse_args()
+		self.create_widgets()
+		self.master.title("Strunza!")
+		self.pack()
+
+	def usage(self):
+	    sys.stderr.write('usage: ')
+	    sys.exit(1)
+
+	def parse_args(self):
+		options, args = getopt.getopt(sys.argv[1:], 'f:')
+		for opt, val in options:
+			#print 'opt', opt, 'val', val
+			if (opt == '-f'):
+			    self.file = val
+			else:
+			    self.usage()
+
+	def new_cursor(self, event):
+	    cursor = self.listbox.curselection()
+	    cursor = self.listbox.get(cursor)
+	    self.listbox['cursor'] = cursor
+
+	def create_widgets(self):
+	# #define XC_num_glyphs 154
+	    f = open(self.file, 'r')
+	    self.scrollbar = Scrollbar(self)
+	    self.listbox = Listbox(self, yscrollcommand=self.scrollbar.set)
+	    self.listbox.bind('<Double-1>', self.new_cursor)
+	    self.scrollbar['command'] = self.listbox.yview
+	    p = regex.compile('^#[ \t]*define[ \t]+\([^ \t]*\)[ \t]')
+	    while 1:
+		line = f.readline()
+		if not line:
+		    break
+		# print 'line', line
+		if (p.search(line) >= 0):
+		    cursor_name = p.group(1)
+		    # print 'cursor_name', cursor_name
+		    cursor_name = cursor_name[3:]
+		    self.listbox.insert(END, cursor_name)
+
+	    f.close()
+	    self.listbox.pack(side=LEFT, padx=3, fill=Y, expand=TRUE)
+	    self.scrollbar.pack(side=LEFT, fill=Y)
+
+		
+
+#
+###################################
+#
+app = Application()
+app.mainloop()

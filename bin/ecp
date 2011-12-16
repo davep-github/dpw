@@ -1,0 +1,6 @@
+#!/bin/sh
+# $Id: ecp,v 1.2 2003/12/02 08:30:06 davep Exp $
+# pipe args to be eval'd to ec
+#
+
+echo "$@" | ec -E

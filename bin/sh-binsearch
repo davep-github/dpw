@@ -1,0 +1,21 @@
+#!/bin/sh
+#set -x
+
+max=900000
+num=10000
+incr=1000
+
+xtest()
+{
+	#echo "$\*>$*<"
+	#echo $2
+	echo "avg kb/s: `expr $2 \* 2`"
+}
+
+while expr $num \< $max >/dev/null
+do
+	x=`xtest -U $num | grep '^avg'`
+	set -- $x
+	echo $3 '<--' $num
+	num=`expr $num + $incr`
+done

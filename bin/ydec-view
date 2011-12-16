@@ -1,0 +1,15 @@
+#!/bin/sh
+
+
+tfile=`dp-mk-tmp-file $HOME/tmp/ydec-view-tmp.XXXXXXXX`
+DISPLAY=`remote-disp`
+
+for f in $*
+do
+    yydecode -o $tfile $f
+    xli $tfile
+    rm -f $f
+done
+
+exit 0
+

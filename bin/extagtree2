@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+#set -x
+
+args="$@"
+# libranet's default sudo defines SECURE_PATH and so our binaries
+# are inaccessible.
+if [[ "$PATH" != *yokel/sbin* ]]
+then
+    rcfile="$HOME/.bashrc"
+    [ -f $rcfile ] && . $rcfile
+fi
+
+set -- $args
+
+#
+# specify some extra options for exuberant ctags
+#
+: ${EXCTAGS:=exctags}
+: ${TAGFILE:=TAGS}
+: ${SUDO:=}
+: ${NOTAGFILE:=NOTAG}
+: ${EC_ARGS:='--links=no'}
+: ${quiet:='n'}
+
+case "$quiet" in
+    [Yy1t]) ofile=/dev/null;;
+    *) ofile=/dev/tty;;
+esac
+
+[ "$1" = "-s" ] && {
+    SUDO=sudo
+    shift
+}
+
+# wha...
+for tag_prog in exctags ctags-exuberant exuberant-ctags etags ctags
+do
+    EXCTAGS=`sp $tag_prog | head -n 1`
+    [ -n "$EXCTAGS" ] && {
+	[[ "$EXCTAGS" = */ctags ]] && {
+	    echo 1>&2 "Falling back to ctags, which may be exctags."
+	}
+	break
+    }
+done
+
+if [ -z "$EXCTAGS" ]
+then
+    FATAL "Cannot find a tagger."
+    exit 1
+else
+    echo "Using executable \`$EXCTAGS'."
+fi
+
+#
+# tell tagger that .inl files are headers.
+if [ -r $HOME/.ctags -o -r $HOME/.exctags ]
+then
+    h_OPT=
+    langmap=
+    full_member_names=
+else
+    h_OPT='-h +.inl'
+    langmap='--langmap=c++:+.inl.tcc'
+    full_member_names='--extra=+q'
+fi
+
+argses="$@"
+: ${argses:="."}
+#echo $SUDO $EXCTAGS -e -R -o $TAGFILE $h_OPT $langmap $full_member_names "$@"
+
+ftreewalk.py -X NOTAG "$@" | tee ${ofile} | \
+    eval $SUDO $EXCTAGS -e -L - --links=no -o $TAGFILE \
+    $h_OPT $langmap $full_member_names
+
+[ -n "$SUDO" ] && exec $SUDO chown `id -u` $TAGFILE
+

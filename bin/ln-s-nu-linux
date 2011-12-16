@@ -1,0 +1,21 @@
+#!/bin/sh
+#set -x
+
+. set-x
+
+link_name=$1
+: ${link_name:=$(newest-file)}
+[ -e linux -a ! -L linux ] && {
+	echo 1>&2 "linux exists and is not a symlink."
+	exit 1
+}
+krnl=$(newest-file -D linux-*)
+echo -n "Link to these sources($krnl) [Y/n]? "
+read
+case "$REPLY" in
+    [nN0]) exit 1;;
+    [yY1t]|"") ;;
+    *) echo 1>&2 "Bad response [$REPLY]." && exit 2;;
+esac
+sudo rm -f linux
+sudo ln -s $krnl linux

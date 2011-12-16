@@ -1,0 +1,176 @@
+#!/bin/bash
+# 9 = kill -9
+#set -x
+. script-x
+
+#
+# This has a really crappy bad design.
+#
+
+
+USAGE_MODE=
+USAGE_IS_FOR=
+
+def_actions="SKs"               # stop kill start
+
+killprog=$(sp -1 killprog)
+: ${killprog:="$HOME/yokel/bin/killprog"}
+
+if [ -z "$1" ]; then
+    actions=$def_actions
+elif [[ "$1" =~ ^--?(i|ndx|index|(mk-?)?db|(mk-?)?data-?base)$ ]]; then
+    actions="SKD"
+    shift
+else
+    actions="$1"
+fi
+
+[[ "$@" =~ ^- ]] && {
+    echo 1>&2 "This is a (mostly) dash free command.  Just letters, please."
+    exit 1
+}
+
+op_grep()
+{
+    regexp="$1"
+    shift
+    ops=${*:-$operations}
+    echo "$ops" | egrep $regexp
+}
+
+action_error()
+{
+    echo "Bad action code>$*<"
+    Usage
+    exit 1
+}
+
+# Split words into separate chars.
+actions=$(echo $actions | sed 's/\(.\)/\1 /g')
+
+# Verify all command characters before doing anything.
+for a in $actions
+do
+  case "$a" in
+      x|s|k|K|S|h|9|D|T|z|r|R|O|N|i|d|h|H|g) ;;
+      *) action_error "verifying >$a<"
+  esac
+done
+
+func_zap()
+{
+    echo "z: ${USAGE_IS_FOR}Zapping server."
+    vsetp $USAGE_MODE && return
+    sudo /etc/init.d/mpd zap
+}
+func_Stop()
+{
+    echo "a|: ${USAGE_IS_FOR}Stopping."
+    vsetp $USAGE_MODE && return
+    sudo /etc/init.d/mpd stop
+    sleep 3 
+}
+func_start()
+{
+    echo "s: ${USAGE_IS_FOR}Starting."
+    vsetp $USAGE_MODE && return
+    sudo /etc/init.d/mpd start
+    sleep 3
+}
+func_Kill()
+{
+    echo "K: ${USAGE_IS_FOR}Killing."
+    vsetp $USAGE_MODE && return
+    sudo ${killprog} mpd
+    sleep 3
+}
+func_kill_dash_9()
+{
+    echo "9: ${USAGE_IS_FOR}Kill-9-ing."
+    vsetp $USAGE_MODE && return
+    sudo ${killprog} -9 mpd
+    sleep 3
+}
+func_Database()
+{
+    echo "D: ${USAGE_IS_FOR}Making db."
+    vsetp $USAGE_MODE && return
+    func_Stop
+    sudo rm -f /var/lib/mpd/mvsik.mpd-db
+    rm -f /home/davep/.config/QMPDClient/127.0.0.1_6600.cache
+    sudo /usr/bin/mpd --create-db --stdout --no-daemon --verbose
+}
+func_Test()
+{
+    echo "Testing action case."
+    vsetp $USAGE_MODE && return
+}
+
+func_stat()
+{
+    echo "Status of mpd procs."
+    vsetp $USAGE_MODE && return
+    pgrep mpd
+}
+
+Usage()
+{
+    USAGE_MODE=t
+    USAGE_IS_FOR="is for "
+    echo "mpd-ktl cmd-char[ ]?cmd-char[ ]?cmd-char...
+      $(func_zap)
+      $(func_Stop)
+      $(func_start)
+      $(func_Kill)
+      $(func_kill_dash_9)
+      $(func_Database)
+      $(func_Database) And $(func_start)
+      $(func_Test)
+      $(func_Stop func_start)
+      $(func_Stop func_Kill) And  $(func_start)
+      $(func_stat)
+"
+}
+
+operations=""
+for a in $actions
+do
+  case "$a" in
+      z) operations="$operations func_zap";;
+      [xSk]) operations="$operations func_Stop";;
+      s) operations="$operations func_start";;
+      K) operations="$operations func_Kill";;
+      9) operations="$operations func_kill_dash_9";;
+      D) operations="$operations func_Database";;
+      d) operations="$operations func_Database func_start";;
+      T) operations="$operations func_Test";;
+      r) operations="$operations func_Stop func_start";;
+      R) operations="$operations func_Stop func_Kill func_start";;
+      # Obliterate/Nuke.
+      O|N) operations="$operations func_Stop func_kill_dash_9 func_start";;
+      h|H) Usage; exit 0;;
+      i) confirm=confirm_func;;
+      g) operations="$operations func_stat";;
+      *) action_error $a;;
+  esac
+done
+
+echo "actions: $actions"
+echo "operations: $operations"
+for op in $operations; do
+    if [ -n "$confirm_func" ]; then
+        resp=$($confirm_func)
+        case $resp in
+            [Yy1tT]) ;;
+            [Nn0fF]) continue;;
+            [QqXx]) exit 100;;
+            *) echo 1>&2 "Unknown response>$resp<, exiting."; exit 3;;
+        esac
+    fi
+    $op "$operations" || {
+        rc=$?
+        echo "$op failed: $?"
+        exit $rc
+    }
+done
+

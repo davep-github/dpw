@@ -1,0 +1,4 @@
+#!/bin/sh
+. script-x
+LSL_MULTI=" -C" lsl ${DP_SCRIPT_X_DEBUG_OPT}
+

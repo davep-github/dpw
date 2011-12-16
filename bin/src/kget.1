@@ -1,0 +1,63 @@
+init-+-5*[agetty]
+     |-ahc_dv_0
+     |-apache2---8*[apache2]
+     |-3*[aterm---bash]
+     |-cron
+     |-cupsd
+     |-dnsmasq
+     |-events/0-+-aio/0
+     |          |-kacpid
+     |          |-kblockd/0
+     |          |-khelper
+     |          `-2*[pdflush]
+     |-famd
+     |-freshclam
+     |-kalarmd
+     |-kdeinit-+-artsd
+     |         |-firefox---firefox-bin-+-firefox-bin---2*[firefox-bin]
+     |         |                       `-netstat
+     |         |-3*[kdeinit]
+     |         `-kdeinit---2*[gs]
+     |-8*[kdeinit]
+     |-kdeinit---ksysguardd
+     |-kdm-+-X
+     |     `-kdm---kde-3.3.0_beta2---startkde---kwrapper
+     |-kget
+     |-khubd
+     |-5*[kjournald]
+     |-korgac
+     |-kseriod
+     |-ksoftirqd/0
+     |-kswapd0
+     |-kweatherservice
+     |-lisa
+     |-lockd
+     |-login---bash
+     |-master-+-pickup
+     |        `-qmgr
+     |-miniserv.pl
+     |-mount.smbfs
+     |-8*[nfsd]
+     |-nmbd
+     |-ntpd
+     |-portmap
+     |-rpc.mountd
+     |-rpc.statd
+     |-rpciod
+     |-2*[screen---bash---su---bash]
+     |-scsi_eh_0
+     |-setiwrapper---setiathome
+     |-smbd---4*[smbd]
+     |-smbiod
+     |-3*[smbmount]
+     |-sshd-+-sshd---sshd---bash
+     |      `-sshd---sshd---bash---screen
+     |-2*[superkaramba]
+     |-syslog-ng
+     |-udevd
+     |-xemacs-+-bash---pstree
+     |        |-gnuserv
+     |        `-ispell
+     |-xemacs-+-bash
+     |        `-ispell
+     `-xinetd

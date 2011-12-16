@@ -1,0 +1,281 @@
+#!/usr/bin/env python
+
+#THIS SERVICE WILL BE DISCONTINUED PERMANENTLY December 22. The machine it
+#runs on needs Y2K upgrades that are not cost effective to install, and the
+#funding to support this telnet service is gone. The web server at 
+#http://cirrus.sprl.umich.edu/wxnet wil continue, and another telnet service
+#is available from telnet rainmaker.wunderground.com 3000
+
+#
+# can also get more local current conditions:
+# http://weather.noaa.gov/cgi-bin/mgetmetar.pl?cccc=KBED
+# but need to parse it.
+# Also:
+# ftp://weather.noaa.gov/data/observations/metar/decoded/KBED.TXT
+# has metar info decoded.
+# Also, e.g.:
+# ftp://weather.noaa.gov/data/forecasts/city/ma/worcester.txt
+# Also:
+# ftp://weather.noaa.gov/data/forecasts/zone/ma
+# files: maznnn.txt (maz005 is worcester)
+#  has info like:
+#   SOUTHERN WORCESTER-WESTERN ESSEX-WESTERN MIDDLESEX-
+#   INCLUDING THE CITIES OF...LAWRENCE...LOWELL...WORCESTER
+#  --> easy grepping for cities
+# gweather has a location file.
+# can use:
+#
+from Tkinter import *
+import os, string, re, sys, getopt, tempfile
+from subprocess import *
+from stat import *
+import telnetlib, urllib, ConfigParser, types
+import dp_io, weather_lib
+
+mkstemp = tempfile.mkstemp
+#
+# Reading is closer to zone 014.
+# KBED is still nearest station.
+#
+
+class Application(Frame):
+    def __init__(self, master=None):
+	Frame.__init__(self, master)
+	self.picon_weather_root = "/home/davep/yokel/lib/picons/db/weather"
+        self.state = 'MA'
+        self.zone = None
+        self.just_zone_parse = None
+        self.just_zone_parse_file = None
+        self.condition_station = None
+	self.parse_args()
+        if self.just_zone_parse:
+            self.just_zone_parse_func()
+            
+	self.pack(fill=BOTH, expand=TRUE)
+	self.faces_cmd_name = ('wx-faces',)
+        self.faces_cmd_args = ('-alt', '-stdin', self.city)
+        self.faces_cmd = self.faces_cmd_name + self.faces_cmd_args
+
+	self.create_widgets()
+	if master:
+	    master.title('pyweather')
+        # ??? Why the after? Some timing bullshit?
+        self.after(1, self.fill_widgets)
+
+    def parse_args(self):
+        self.city = 'bedford'
+	options, args = getopt.getopt(sys.argv[1:], 'lc:s:Z:C:z:')
+	if ('-l', '') in options:
+	    self.use_cache = 1
+	else:
+	    self.use_cache = 0
+	for (o, v) in options:
+	    if o == '-c':
+                self.city = string.lower(v)
+            if o == '-s':
+                self.state = string.upper(v)
+            if o == '-Z':
+                self.zone = string.upper(v)
+            if o == '-C':
+                self.condition_station = string.upper(v)
+            if o == '-z':
+                self.just_zone_parse = 1
+                if len(v) == 1 and v in '-.=':
+                    self.just_zone_parse_file = '/tmp/zdata.txt'
+                else:
+                    self.just_zone_parse_file = v
+
+    def just_zone_parse_func(self):
+        if self.just_zone_parse_file == '<':
+            f = sys.stdin
+            opened=0
+        else:
+            f = open(self.just_zone_parse_file)
+            opened=1
+        data = f.read()
+        if opened:
+            f.close()
+        data = weather_lib.find_zone_data(data, self.state, self.zone)
+        print 'parsed zdata>%s<' % data
+        sys.exit(0)
+
+    def get_title(self):
+        title_string = None
+        for line in self.station_data_lines:
+            m = string.find(line, "Weather Conditions")
+            if m != -1:
+                title_string = line
+                break
+        if not title_string:
+            title_string = "Weather for station " + self.city
+	return (title_string)
+
+    def create_images(self):
+        self.image_frame = Frame(self)
+        self.image_frame.pack()
+        
+    def fill_images(self):
+	face_i = 0
+	self.images = []
+	for row in xrange(self.rows):
+	    f = Frame(self.image_frame)
+	    for col in xrange(self.cols):
+		i = PhotoImage(file=self.faces[face_i])
+		l = Label(f, image=i, relief="groove")
+		l.pack(side=LEFT)
+
+		# we must maintain a reference to the images
+		# or they are deleted.
+		self.images.append(i)
+		face_i = face_i + 1
+	    f.pack()
+            # self.update()
+
+    def show_status(self, txt):
+        self.title.configure(text=txt)
+	self.title.pack(fill=X)
+        self.update()
+
+    def fill_title(self):
+        self.title.configure(text=self.get_title())
+	self.title.pack(fill=X)
+        
+    def create_title(self):
+	self.title = Label(self, relief=RAISED,
+			   borderwidth=2,
+			   text='working...')
+	self.title.pack(fill=X)
+        self.update()
+
+    def scroll_text_up(self, event):
+	self.text.yview("scroll", -1, "units")
+
+    def scroll_text_down(self, event):
+	self.text.yview("scroll", 1, "units")
+
+    def quit(self, event):
+	raise SystemExit
+
+    def do_fill_report(self):
+	self.text.insert(END, self.station_data)
+
+    def fill_report(self):
+        txt = self.text
+        self.scroll['command'] = self.text.yview
+	self.do_fill_report()
+	txt.pack(side=LEFT, fill=BOTH, expand=TRUE)
+	self.scroll.pack(side=LEFT, fill=Y)
+	self.report.pack(fill=BOTH, expand=TRUE)
+	txt["state"] = 'disabled'
+	txt.focus()
+	txt.bind('<Up>', self.scroll_text_up)
+	txt.bind('<Down>', self.scroll_text_down)
+	txt.bind('<space>', self.scroll_text_down)
+	txt.yview('moveto', "0.0")
+	self.scroll.set(0,0)
+	txt.mark_set(INSERT, "1.0")
+	for k in ["q", "Q", "Meta-q", "Meta-Q", "x", "X", "Meta-x", \
+		  "Meta-X"]:
+	    txt.bind('<%s>' % k, self.quit)
+
+    def create_report(self):
+	self.report = Frame(self)
+        self.scroll = Scrollbar(self.report)
+	txt = self.text = Text(self.report,
+			       relief=GROOVE,
+			       yscrollcommand=self.scroll.set)
+	txt.pack(side=LEFT, fill=BOTH, expand=TRUE)
+
+    def create_widgets(self):
+	self.create_title()
+	self.create_images()
+	self.create_report()
+
+    def get_data(self):
+        self.show_status('get city info')
+        if self.condition_station == None or self.zone == None:
+            ret = weather_lib.process_city(self.state, self.city,
+                                           perror=1, do_exit=1)
+        cs, zone = ret
+        if self.condition_station == None:
+            self.condition_station = cs
+        if self.zone == None:
+            self.zone = zone
+            
+        self.show_status('get wx info')
+	self.get_wx_data()
+        self.show_status('get images')
+	self.get_faces()
+        
+    def fill_widgets(self):
+        self.get_data()
+	self.fill_title()
+	self.fill_images()
+	self.fill_report()
+
+    def get_faces(self):
+	self.faces = []
+	p = re.compile('.*Cols=(\d+).*Rows=(\d+)')
+        fuck_you = Popen(self.faces_cmd, stdout=PIPE, stdin=PIPE)
+        fuck, you = fuck_you.communicate(input=self.station_data)
+        lines = string.split(fuck, "\n")
+        i, n = 0, len(lines)
+        while i < n:
+            line = lines[i]
+            if not line:
+                raise EOFError, 'no cols in station_data\n>%s<' % self.station_data
+            i = i + 1
+            m = p.search(line)
+            if m:
+                (sc, sr) = m.group(1, 2)
+                self.rows = string.atoi(sr)
+                self.cols = string.atoi(sc)
+                break
+        while i < n:
+            line = lines[i]
+            if not line:
+                break
+            i = i + 1
+	    image, family = string.split(line)
+	    if (image == "unknown"):
+		family = "MISC"
+	    filename = '%s/%s/%s/face.gif' % \
+			      (self.picon_weather_root,
+			       family,
+			       image)
+	    if not os.path.exists(filename):
+		filename = '%s/%s/%s/face.gif' % \
+			   (self.picon_weather_root,
+			    'MISC',
+			    'unknown')
+	    self.faces.append(filename)
+
+    def get_wx_data(self):
+	if (self.use_cache):
+	    return
+        
+	if self.condition_station:
+	    cond = weather_lib.current_conditions(self.condition_station,
+                                                  self.show_status)
+        elif self.condition_station == None:
+            cond = 'No condition station found.'
+        else:
+            cond = 'Condition data not requested.'
+	
+        if self.zone:
+            fcast = weather_lib.get_forecast(self.state, self.zone,
+                                             self.show_status)
+            if fcast == None:
+                fcast = 'No zone data found.'
+        elif self.zone == None:
+            fcast = 'No zone found.'
+        else:
+            fcast = 'Zone data not requested.'
+
+        self.station_data = cond + '\n' + '\n'*2 + fcast
+        self.station_data_lines = string.split(self.station_data, "\n")
+#
+###################################
+#
+app = Application(Tk())
+app.mainloop()

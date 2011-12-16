@@ -1,0 +1,20 @@
+#!/bin/sh
+
+. script-x
+
+named_screen()
+{
+    local name="$1"
+    shift
+    SCREEN_NAME="$name" dp-screen $DP_SCRIPT_X_DEBUG_OPT "$@"
+}
+
+if name_is___main__; then
+    vsetp "$@" || {
+	echo "Usage: $(basename $0) <name>"
+        echo "Please specify a screen name."
+        exit 1
+    } 1>&2
+    named_screen "$@"
+fi
+

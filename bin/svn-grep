@@ -1,0 +1,24 @@
+#!/bin/sh
+
+script-x
+
+SVN_REV_LIST_OP_PRE()
+{
+    $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT "SVN_REV_LIST_OP_PRE, \$@>$@<"
+    # Input: $1: rev=none, 2: file, 3: rest of command line args.
+    rev=$1; shift
+    file=$1; shift            # Regular expression (extended)
+    egrep "$@" "$file"     # Start with current file.
+}
+SVN_REV_LIST_OP()
+{
+    $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT "SVN_REV_LIST_OP, \$@>$@<"
+    # Input: $1: rev, 2: file, 3: rest of command line args.
+    rev=$1; shift
+    file=$1; shift            # Regular expression (extended)
+
+set -x
+    svn -$rev cat "$file" | egrep "$@"
+}
+
+. svn-rev-list-op "$@"

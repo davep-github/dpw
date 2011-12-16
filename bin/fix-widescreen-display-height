@@ -1,0 +1,5 @@
+#!/bin/sh
+
+. script-x
+
+/usr/bin/systemsettings -caption "System Settings" -icon preferences-system

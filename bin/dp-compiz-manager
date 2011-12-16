@@ -1,0 +1,12 @@
+#!/bin/sh
+set -x
+# Can this be made non-executable,
+# or to barf from a command line?
+echo 1>&2 "======= Starting $(basename $0) @ $(date) ========="
+export LIBGL_ALWAYS_INDIRECT=1
+export LD_PRELOAD=/usr/lib/libGL.so
+
+fusermount -u $HOME/compiz
+compiz-manager &
+waitfor-prog compiz
+sudo renice -4 -p $(findprog compiz)

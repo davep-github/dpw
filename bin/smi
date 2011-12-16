@@ -1,0 +1,16 @@
+#!/bin/sh
+# smi --> sudo make install
+# useful shortcut, especially in the ports tree.
+#set -x
+
+. eexec 
+
+# let's see what's going on...
+EExecVerbose
+
+: && {
+    [ "$1" = "-c" ] && EExec sudo make clean
+
+    EExec sudo make install "$@"
+} 2>&1 | sudo tee smi-`dp-std-date`.log
+

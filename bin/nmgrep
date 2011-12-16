@@ -1,0 +1,67 @@
+#!/bin/sh
+
+source script-x
+
+: ${def_arm_nm:=/home/davep/hostel/xscale/gcc-xscale/bin/arm-none-linux-gnueabi-nm}
+: ${def_x86_nm:=nm}
+: ${grepper:=egrep}
+NM=
+grepper_args=
+nm_args=
+unset regexp
+
+# Parse command line.
+std_options=""
+option_str="ax8ig:N:A:e:n:"
+#source sh-script-template.sh
+source dp-getopt+.sh
+for i in "$@"; do
+    case "$1" in
+        -a) NM=$def_arm_nm;;
+        -[x8i]) NM=$def_x86_nm;;
+        -[NA]) NM=$2; shift;;
+        -g) grepper_args="$grepper_args $2"; shift;;
+        -n) nm_args="$nm_args $2"; shift;;
+        -e) regexp=$2; shift;;
+        --) shift; break;;
+        *) 
+        echo 1>&2 "Unsupported option>$1<"
+        Usage
+        exit 1 ;;
+    esac
+    shift
+done
+
+x86_file_glob="*x86*"
+arm_file_glob="*ARM*"
+
+guess_nm()
+{
+    local file="$1"
+    local file_says=$(file "$file")
+    case "$file_says" in
+        $arm_file_glob) echo $def_arm_nm;;
+        $x86_file_glob) echo $def_x86_nm;;
+        *) echo 1>&2 "Unsupported file type>$file_says<"
+        exit 1;;
+    esac
+}
+
+get_nm()
+{
+    if [[ -n "$NM" ]]; then
+        echo "$NM"
+    else
+        echo $(guess_nm "$1")
+    fi
+}
+
+: ${regexp=$1}                  # Set only if void.
+shift
+
+for file in "$@"; do
+#set -x
+    $(get_nm "$file") $nm_args $file | \
+     ${grepper} $grepper_args --label="$file" -H "$regexp"
+#set +x
+done

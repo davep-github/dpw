@@ -1,0 +1,13 @@
+#!/bin/sh
+
+. script-x
+#set -x; DP_SCRIPT_X_DEBUG_OPT=-x
+[[ "$1" =~ "^((--?(h|help))|)$" ]] && {
+    echo " Edit file in XEmacs via gnuserv with the ec utility and wait for
+ the edit to be completed.  Set up buffer for perforce forms editing."
+    exit 0
+}
+
+p4_mode_command='(setq dp-found-file-post-hook (quote dp-p4-emacs-client))'
+
+ec $DP_SCRIPT_X_DEBUG_OPT -1 -w -e "$p4_mode_command" "$@"

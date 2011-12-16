@@ -1,0 +1,29 @@
+#!/bin/sh
+
+: ${list_of_files:=$HOME/dp-simple-env.files}
+: ${pkg_dest:=$HOME/inb}
+: ${pkg_name:=dp-simple-env.tar.bz2}
+: ${davep_dir:=$HOME/davep}
+
+[ -e "$list_of_files" ] || {
+	echo "list_of_files>$list_of_files< must exist."
+	exit 1
+} 1>&2
+
+mkdir -p "$pkg_dest"
+pkg="$pkg_dest/$pkg_name"
+oem_dir="$davep_dir/oem"
+rm -rf "$oem_dir"
+mkdir -p "$oem_dir"
+cd $HOME
+#ick.
+for f in bashrc bash_profile profile
+do
+	src="$HOME/.$f"
+	[ -e "$src" ] || continue
+	dest="$oem_dir/DOT${f}.$HOST"
+	cp "$src" "$dest"
+done
+
+tar cvfj "$pkg" --files-from="$list_of_files"
+echo "Package is here: $pkg"

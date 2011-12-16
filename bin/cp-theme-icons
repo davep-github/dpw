@@ -1,0 +1,58 @@
+#!/bin/sh
+# $Id: cp-theme-icons,v 1.8 2004/10/06 08:20:03 davep Exp $
+#set -x
+
+
+LN_S_CMD='ln -si'
+CP_CMD='cp'
+
+####: ${CP_OP:="$CP_CMD"}
+: ${CP_OP:="$LN_S_CMD"}
+
+if [ "$1" = "-n" ]
+then
+    shift
+    exec=':'
+else
+    exec=''
+fi
+
+[ "$#" != '3' ] && {
+    echo "I need: src-dir dst-dir file-glob"
+    exit 1
+}
+
+srcd="$1"
+if [ "$CP_OP" == "$LN_S_CMD" ]
+then
+    # make absolute link
+    case "$srcd" in
+        /*) ;;
+        *) srcd="$PWD/$srcd";;
+    esac
+fi
+
+dstd="$2"
+file="$3"
+
+# allow things like this:
+# s2='s!vmware!window_list!' cp-theme-icons crystal dp-mix vmware.png
+# ln -si .../crystal/16x16/apps/vmware.png dp-mix/16x16/apps/window_list.png
+# ln -si .../crystal/32x32/apps/vmware.png dp-mix/32x32/apps/window_list.png
+# ln -si .../crystal/48x48/apps/vmware.png dp-mix/48x48/apps/window_list.png
+# ln -si .../crystal/64x64/apps/vmware.png dp-mix/64x64/apps/window_list.png
+# use vmware icon as window_list icon
+
+: ${s2:=''}
+
+for src in $(find $srcd -name "$file") 
+do   
+    dst=$(echo $src | sed "s!$srcd!$dstd!")
+    dst=$(echo $dst | sed "$s2")
+    ddir=$(dirname "$dst")
+    [ -d "$ddir" ] || mkdir -p "$ddir"
+    [ -d "$src" ] && continue
+    cp="$CP_OP $src $dst"
+    echo $cp
+    $exec $cp
+done

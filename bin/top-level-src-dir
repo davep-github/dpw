@@ -1,0 +1,18 @@
+#!/bin/sh
+
+source script-x
+
+top_level_src_dir()
+{
+    local dir=${1-$PWD}
+    echo "$dir" | sed -rn 's!^(/.*?/src)(/.*$|$)!\1!p'
+}
+
+if running_as_script
+then
+    top_level_src_dir "$@"
+    exit
+else
+    # "library" load.
+    exit 0
+fi

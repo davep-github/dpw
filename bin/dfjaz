@@ -1,0 +1,4 @@
+#!/bin/sh
+
+FS=/jaz
+sudo mount $FS; df -h $FS ; sudo umount $FS

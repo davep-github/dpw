@@ -1,0 +1,357 @@
+#!/usr/bin/env perl
+
+#
+# defaultses
+$printer="laserjet";
+#$duplexing = 1;
+$n_ups = 2;
+$tab_width = 3;
+# the below is useful for testing.
+# $page_separator = "12345678901234567890123456789012345678page34567890123456789012345678901234567890\n";
+$page_separator = "\f";
+$col_separator = " | ";
+$esc = "\033";
+$number_lines = 0;
+$do_footer = 1;
+$num_footer_lines = 2;
+$do_TOC = 0;
+$toc_max_dots = 50;
+$trace = 0;
+
+#
+# parse argses...
+while ($ARGV[0] =~ /^[\-]/)
+{
+   print "ARGV[0]>$ARGV[0]<\n" if ($trace);
+
+   $_ = shift;
+   
+   if (/^[\/\-]P(.*)/)
+   {
+      $printer = ($1 ? $1 : shift);
+   }
+   elsif (/^[\/\-]d(.*)/)
+   {
+       $duplexing = 0;
+   }
+   elsif (/^[\/\-]n(.*)/)
+   {
+      $n_ups = ($1 ? $1 : shift);
+   }
+   elsif (/^[\/\-]t(.*)/)
+   {
+      $tab_width = ($1 ? $1 : shift);
+   }
+   elsif (/^[\/\-]l(.*)/)
+   {
+       $number_lines = 1;
+   }
+   elsif (/^[\/\-]f(.*)/)
+   {
+       $do_footer = 0;
+       $num_footer_lines = 2;
+   }
+   elsif (/^[\/\-]T(.*)/)
+   {
+       $do_TOC = 1;
+   }
+   else
+   {
+       die "unknown option: $_\n";
+   }
+}
+
+# Put file args into a list.  Allow @xxx to specify a list of files with
+# the file xxx
+@myargv = ();
+foreach $_ (@ARGV)
+{
+   if (/^@(.*)$/)
+   {
+      open(FILE, $1) || die "canna open $1: $!\n";
+      while (<FILE>)
+      {
+         chop;
+         next if /^\s*$/;
+         next if /^#/;
+         push(myargv, $_);
+      }
+      close FILE;
+   }
+   else
+   {
+      push(myargv, $_);
+   }
+}          
+
+if ($printer =~ /^laserjet$/i)
+{
+    $lines_per_page = 89;
+    $n_cols = 176;
+
+    #
+    $printer_init="$esc&4H$esc&l1O$esc&k2S$esc(s4S$esc&l12D";
+}
+elsif ($printer =~ /^escp2$/i)
+{
+    $lines_per_page = 61;    ## check me!!!!!!
+    $n_cols = 160;
+
+    # condensed mode
+    $printer_init = "$esc@$esc!\005";
+}
+else
+{
+    die "unknown printer type: $printer\n";
+}
+
+#
+# compute derived values
+#
+$n_lines = $lines_per_page - $num_footer_lines;  # gotta count the footer line
+$up_width = int (($n_cols - (length($col_separator) * ($n_ups - 1))) / $n_ups);
+$empty_line = sprintf("%s", ' ' x $up_width);
+$ups_per_phys_page = 2 * (2 * $duplexing);
+
+#
+# current state vars...
+#
+sub ResetStateVars
+{
+    $curr_up = 0;
+    $curr_line = 0;
+    $curr_page_separator = '';
+    $curr_col_separator = '';
+    $page_num = 1;
+    $curr_file = '';
+}
+
+sub PrintStateVars
+{
+    print "curr_up>$curr_up<\n";
+    print "curr_line>$curr_line<\n";
+    print "curr_page_separator>$curr_page_separator<\n";
+    print "curr_col_separator>$curr_col_separator<\n";
+    print "page_num>$page_num<\n";
+    print "curr_file>$curr_file<\n";
+}
+
+
+#
+# page buffer
+#
+@page_buf = ();
+
+sub FooterLine
+{
+    local($hdr);
+    local($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+
+    pack("A$up_width", sprintf("Page: %5d, file: $curr_file, $mon/$mday/$year", $page_num));
+}
+
+sub UpdateTOC
+{
+   if ($toc_file ne $curr_file)
+   {
+      local($num_dots);
+      local($file) = $curr_file =~ m!([^/\\]*$)!;
+
+      $num_dots = $toc_max_dots - length($file);
+      $toc[$file_num++] = sprintf("$file %s%4d", '.' x $num_dots, $page_num);
+
+      $toc_file = $curr_file;
+   }
+}
+
+
+sub FlushPage {
+   print "FlushPage, cps>$curr_page_separator<\n" if ($trace);
+
+   print "$curr_page_separator";
+   $page_num = (int(($page_num - 1) / $n_ups) * $n_ups) + $n_ups + 1;
+
+   foreach $line (@page_buf)
+   {
+      print "$line\n";
+   }
+   @page_buf = ();
+   $curr_page_separator = $page_separator;
+}
+
+sub AddLine {
+   local($in_line) = @_;
+
+   print "AddLine: curr_line: $curr_line, line>$in_line<\n" if ($trace);
+
+   # pad line out to $up_width
+#    $line = sprintf("%-${up_width}s", $in_line);
+#    $line = pack("A$up_width", $in_line);
+
+    #
+    # reset line number when the 1st line is seen since lines are numbered
+    # before an up is completed.
+    $line_num = 1 if ($curr_line == $n_lines - 1);
+
+    #
+    # see if we wrapped off of this "page"
+   if ($curr_line >= $n_lines)
+   {
+      print "AddLine: wrap: $curr_line >= $n_lines\n" if ($trace);
+
+      $curr_line = 0;
+
+      #
+      # move to next up
+      #
+      $curr_up++;
+
+      #
+      # set the column separator, since we cannot be in the first up any more
+      #
+      $curr_col_separator = $col_separator;
+
+      #
+      # have we run out of ups?
+      #
+      if ($curr_up >= $n_ups)
+      {
+         &FlushPage();
+         # reset to first up
+         $curr_up = 0;
+         # and clear the col sep, since we only want it between ups
+         $curr_col_separator = '';
+      }
+      else
+      {
+         $page_num++;
+      }
+   }
+
+   #
+   # do some processing at the beginning of each new up...
+   if ($curr_line == 0)
+   {
+      # print the footer
+      if ($do_footer)
+      {
+         $page_buf[$lines_per_page - 2] .= $curr_col_separator . $empty_line;
+         $page_buf[$lines_per_page - 1] .= $curr_col_separator . &FooterLine();
+      }
+
+
+      # have to update the TOC here, since the previous page
+      # has not been flushed
+      # when the new file is opened.
+      &UpdateTOC() if ($do_TOC);
+   }
+#    $line = pack("A$up_width", $in_line);
+   $x = ($curr_up) * $up_width;
+   $tmp = pack("A$x", $page_buf[$curr_line]);
+   $page_buf[$curr_line++] = $tmp . $curr_col_separator . $in_line;
+}
+
+# init the printer...
+print $printer_init;
+
+sub FillUp
+{
+#    print "flushing up, $curr_line, $n_lines\n";
+   while ($curr_line < $n_lines)
+   {
+      &AddLine($empty_line);
+#     &AddLine("flushing up, $curr_line, $n_lines\n");
+   }
+}
+
+&ResetStateVars;
+foreach $file (@myargv)
+{
+   open(FILE, $file) || die "canna open $file, $!\n";
+
+   $curr_file = $file;
+   $line_num = 1;
+
+   # get a line                                       
+   # carve it into $up_width size chunks
+   # put these, padded, into the current page array,
+   # paging to i+1th up, or new page as required
+   while ($input_line = <FILE>)
+   {
+      chop($input_line);
+
+      $input_line = sprintf("%3d: %s", $line_num++, $input_line)
+         if ($number_lines);
+
+      # expand tabs
+      $input_line =~
+         s/(\t+)/' ' x (length($1) * $tab_width)/eg;
+
+      if ($input_line)
+      {
+         @list = split (/(\f)/, $input_line);
+      }
+      else
+      {
+         @list = ("$input_line");
+      }
+      while (@list)
+      {
+         $_ = shift(@list);
+         if ($_ || $_ eq $input_line)
+         {
+            do
+            {
+               #
+               # chop up the line in to $up_width sized chunks
+               #
+               $line = substr($_, 0, $up_width);
+               $_ = substr($_, $up_width);
+               &AddLine($line) if (!/^\n$/);
+            }
+            while ($_);
+         }
+         # fill page if we see a form feed
+         &FillUp if (shift(@list) eq "\f");
+      }
+    }
+
+    #fill last page in file
+    &FillUp();
+
+    close FILE;
+}
+
+&FlushPage();
+if ($do_TOC)
+{
+#    $trace = 1;
+#print "1:page_num>$page_num<\n";
+   while (($page_num - 1) % $ups_per_phys_page)
+   {
+#print "2:page_num>$page_num<\n";
+      &FlushPage();
+   }
+   print "$curr_page_separator";
+
+   &ResetStateVars;
+#  &PrintStateVars;
+   @tmptoc = @toc;
+   $do_footer = 0;
+   $toc_header = "Table of Contents";
+   $y = ($up_width - length($toc_header)) / 2;
+   $x = sprintf("%s", ' ' x $y);
+   &AddLine ("$x$toc_header$x");
+   &AddLine ("");
+   &AddLine ("");
+   &AddLine ("");
+   $file_header = "File name";
+   &AddLine (sprintf("%s%s%s", "$file_header", ' ' x ($toc_max_dots - length($file_header) + 1), "Page"));
+   foreach $line (@tmptoc)
+   {
+      &AddLine("$line");
+   }
+   &FlushPage();
+}
+
+exit(0);

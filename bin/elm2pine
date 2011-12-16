@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+
+while (<>)
+{
+    chop;
+    ($nlist, $full_name, $address) = split(/\s*=\s*/);
+    foreach $nick (split(/\s*,\s*/, $nlist))
+    {
+	print "$nick\t$full_name\t($address)\n";
+    }
+}
+	    
+

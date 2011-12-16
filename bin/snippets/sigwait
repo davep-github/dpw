@@ -1,0 +1,18 @@
+#!/bin/sh
+set -x
+timeout=${1:-600}
+
+for sig in 2 3 4 5 6 7 8 15
+do
+	trap "exit $sig" $sig
+done
+
+while test "$timeout" != 0
+do
+	sleep 1
+	timeout=$(($timeout - 1))
+done
+
+exit 999
+
+

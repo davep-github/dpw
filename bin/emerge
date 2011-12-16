@@ -1,0 +1,49 @@
+#!/bin/sh
+
+source script-x
+
+#dol_at=("$@")
+EMERGE_LOG_FILE="$DP_LOG/emerge/emerge.log"
+do_it()
+{
+    local exec_cmd=/usr/bin/emerge
+    echo "$(date): ==========================="
+    echo_id exec_cmd 
+    echo '   $@: '"$@"
+    exec_cmd="$exec_cmd" sudo_pristine $DP_SCRIPT_X_DEBUG_OPT --nospinner "$@"
+    local rc=$?
+    echo "exec_cmd rc  $(echo_id rc): "
+    return $rc
+}
+
+do_it "$@"
+exit
+
+if do_it "$@"
+then
+    RC=0
+else
+    RC=$?
+fi | exit-with-x 44
+rc="$?"
+echo "\$\? after if/else $(echo_id rc): "
+echo "RC after if/else $(echo_id RC): "
+echo FOAD
+exit 55
+
+echo "RC after if/else $(echo_id RC): "
+exit $rc
+
+exit 66
+
+#rc=FUCK
+{
+    do_it "$@" 
+    rc=$?
+    echo "do it rc, inside {}  $(echo_id rc): "
+    exit $rc
+} 2>&1 | tee -a "$EMERGE_LOG_FILE"
+rc2=$?
+echo "do_it saved rc, after {}  $(echo_id rc): "
+echo '$? '"after {} $(echo_id rc2): "
+exit $rc

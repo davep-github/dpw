@@ -1,0 +1,3 @@
+#!/bin/sh
+
+qpydb.py -f alias -e mailiases_pydb.py

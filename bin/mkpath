@@ -1,0 +1,36 @@
+#!/bin/sh
+set -x
+
+prog=`basename $0`
+. eexec
+args=$*
+rc=0
+for dst in "$@"
+do
+    echo "dst>$dst<"
+	[ -d "$dst" ] && {
+		rc=2
+		echo $prog: $dst exists 1>&2
+		continue
+	}
+
+	oldIFS=$IFS
+	IFS='/'
+	set -- $dst
+	IFS=$oldIFS
+	case $dst in
+		/*) path="/$1" ;;
+		*)  path="$1"  ;;
+	esac
+	shift
+	for i in "$@"
+	do
+		[ -d "$path" ] || EExec mkdir "$path"
+		path="$path/$i"
+	done
+
+	EExec mkdir "$path"
+
+done
+
+exit $rc

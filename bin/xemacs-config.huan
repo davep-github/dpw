@@ -1,0 +1,36 @@
+#!/bin/sh
+
+./configure \
+            --error-checking=none \
+            --with-x11 \
+            --with-mule \
+            --x-includes=/usr/X11R6/include \
+            --x-libraries=/usr/X11R6/lib \
+            --site-libraries=/usr/local/lib \
+            --site-includes=/usr/local/include \
+            --with-xface \
+            --with-sound=native \
+            --with-site-lisp \
+            --with-pop \
+            --with-xfs \
+            --with-jpeg \
+            --with-png \
+            --with-gif \
+            --without-ldap \
+            --infopath=/usr/local/lib/xemacs/info:/usr/local/info:/usr/share/doc/info:/usr/X11R6/info:/usr/info:/usr/local/lib/texmf/doc/info:/usr/lib/texmf/doc:/usr/share/info:/usr/lib/menu/info \
+            --with-clash-detection \
+            --with-database=no \
+            --with-xpm \
+            --with-xim=xlib \
+            --with-menubars=lucid \
+            --with-scrollbars=lucid \
+            --with-dialogs=lucid \
+            --with-widgets=lucid \
+            --with-canna=no \
+            --with-wnn=no \
+            --with-wnn6=no \
+            --x-libraries=/usr/X11R6/lib \
+            --x-includes=/usr/X11R6/include \
+            --prefix=/usr/local \
+            --with-toolbars=no \
+            --pdump

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# I have many utils that are wrappers around other programs, like *grep.
+# E.g. rcgrep.  This greps all of my currently active bash rc files.
+# 99+% of the time, options are for the grepper, esp -i.
+# I'd like to be able to specify args to the wrapper and to the wrapped.
+# My feeling is that most of the times the args are for the wrapped.
+# 
+dat=("$@")
+
+case "$@" in
+    *--*)

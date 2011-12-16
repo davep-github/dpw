@@ -1,0 +1,42 @@
+#!/bin/sh
+#set -x
+
+. eexec
+
+: ${archives:=*}
+
+echo "archives>$archives<"
+
+# @todo allow archive name to be a param
+if [ "$1" = "-n" ]
+then
+    EExecDashN
+    shift
+fi
+
+. $HOME/etc/archivedb.conf
+
+# @todo
+# handle symlinks as alternate names for locdbs and use the link name instead
+# of the prefix file contents.
+
+sep=''
+pre=''
+for db in ${ARCHIVEDB_DIR}/${archives}/locatedb
+do
+    # graft prefix onto each match.
+    arc_dir=$(dirname "$db")
+    pre_file="$arc_dir/prefix"
+    [ -f "$pre_file" ] && {
+	pre=$(cat "$pre_file")
+	pre="[$pre]:"
+    }
+    [ -n "$sep" ] && echo "$sep"
+    #echo "from: $db"
+    locate --database="$db" "$@" | while read m
+    do
+	echo "${pre}$m"
+	#sep="--"
+    done
+done
+

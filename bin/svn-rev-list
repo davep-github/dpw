@@ -1,0 +1,48 @@
+#!/bin/sh
+. script-x
+
+rev_list()
+{
+    echo 1>&2  'Do Not Use! Royally fucked up.'
+    exit 66
+
+    std_options=""
+    option_str="n:r:"       # !!!!!!! You probably want to set this !!!!!!!
+    long_options="revision:,rev:"
+source dp-getopt+.sh            # Runs when sourced.
+ #echo 1>&2 "2,post getopt:@>$@<"
+
+     n=NAN
+
+
+    # Loop over your options.
+    for i in "$@"; do
+        case "$1" in
+            -n) n=$2; shift;;
+            -r|--revision|--rev) n=$2; shift;;
+            --) shift; break;;
+        esac
+      shift
+    done        
+
+#    echo 1>&2 "3,pre files:@>$@<"
+   files="$@"
+   
+   [ "$n" = NAN ] && {
+       echo 1>&2 "I need a number of revisions; -r <num>"
+       exit 2
+   }
+   
+   vunset $files && {
+       echo 1>&2 "I need file-name upon which to operate."
+       exit 3
+   }
+       
+   for f in $files;
+     do
+     svn log $f | sed -rn 's/(^r[0-9]+)(.*)$/\1/p' | head -n $n
+   done
+}
+
+rev_list "$@"
+exit 0

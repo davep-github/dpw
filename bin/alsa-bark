@@ -1,0 +1,7 @@
+#!/bin/sh
+source script-x
+
+: ${tfile:=/usr/local/lib/xemacs/xemacs-packages/etc/sounds/bark.au}
+dev="$1"
+vsetp $dev && dev="-D $dev"
+aplay $dev "$tfile"

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+source script-x
+
+kstart --desktop 7 pidgin

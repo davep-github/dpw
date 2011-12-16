@@ -1,0 +1,28 @@
+#!/bin/sh
+
+. script-x
+. $HOME/etc/kfdsrc
+. eexec
+EExec mkdir -p ${DP_KFDS_DIR}
+EExec mkdir -p ${DP_STEAM_GAMES}
+EExec mkdir -p ${DP_STEAM_BIN}
+
+updated_str="HLDS installation up to date"
+
+EExec mkdir -p ${DP_KFDS_DIR}
+EExec cd ${DP_KFDS_DIR}
+sep=""
+echo -n "Updating KF dedicated server... "
+echo "  Checking for updates...  This may hang or take a long time..."
+echo "  WARNING: Using ^C can leave things b0rked."
+while :; do
+    echo -n "${sep}trying"
+    sep=", "
+    if ${DP_STEAM_BIN}/steam -command update -game killingfloor -dir . -retry | \
+        tee ${DP_SCRIPT_X_TEE_OUT} | \
+        fgrep -q "${updated_str}"; then
+        echo "."
+        echo ${updated_str}
+        break
+    fi
+done

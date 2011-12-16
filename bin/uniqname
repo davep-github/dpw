@@ -1,0 +1,26 @@
+#!/bin/sh
+
+source script-x
+
+set -u
+
+make_uniqname()
+{
+    [ -z "${1:-}" ] && {
+    echo "I need a name to start with."
+    exit 1
+    } 1>&2
+
+    local name="$1"; shift
+    name="${name}${kwa_sep}$(hostname -f)"
+    for t in "$@"
+    do
+      name="${name}${kwa_sep}$t"
+    done
+    name="$name${kwa_sep}$(dp-std-timestamp)"
+    echo "${name}"
+}
+
+: ${kwa_sep=,}
+make_uniqname "$@"
+

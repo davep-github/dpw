@@ -1,0 +1,146 @@
+#!/bin/sh
+
+. script-x
+
+progname=$(basename $0)
+progdir=$(realpath $(dirname $0))
+
+Usage()
+{
+   {
+       echo "${prog}: usage: [-$all_options]
+Must be run in the top level dir, e.g. same dir as bin, include, lib, share...
+    -n --> Just show what would be done.
+    -m --> Module we're working with.
+    -c --> Pass --checkout to autobuild.pl [$def_ab_checkout].
+    -a --> Pass --autogen  to autobuild.pl [$def_ab_autogen].
+    -s <dir> Checkout into dir [$def_src_dir]
+"
+   } 1>&2
+   
+   exit 1
+}
+
+. eexec
+
+AUTOBUILD="autobuild.pl"
+def_ab_module="Chiswick"
+ab_module="$def_ab_module"
+def_ab_checkout=""
+ab_checkout="$def_ab_checkout"
+def_ab_autogen=""
+ab_autogen="$def_ab_autogen"
+def_make_target=""
+make_target="$def_make_target"
+
+def_src_dir="./src"
+src_dir="$def_src_dir"
+def_build_dir="./build"
+build_dir="$def_build_dir"
+insanity_p=
+
+#
+# Options.
+#
+std_options="nvq"
+# Our options.
+option_str="cam:t:l:o:s:SbK"
+all_options="$option_str$std_options"
+
+# New style getopt... fixes ugly quoting problems.
+q=$(getopt -o "$all_options" -- "$@")
+[ $? != 0 ] && Usage
+eval set -- "$q" 
+unset q
+
+# Default is noisy.
+EExecVerbose
+
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -n) EExecDashN ">>> ";;   # Don't actually execute stuff
+      -v) EExecVerbose;;
+      -q) EExecQuiet;;
+      -c) ab_checkout="--checkout";;
+      -a) ab_autogen="--autogen";;
+      -m) ab_module="$2"; shift;;
+      -t) make_target=$2; shift;;
+      -l) EExecRCFile=$2; shift;;
+      -o) ab_options="$ab_options $2"; shift;;
+      -s) src_dir="$2"; shift;;
+      -S) insanity_p=t;;
+      -b|-K) no_build_p=t;;     # Konfigure
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+#CO# [[ -z "$insanity_p" ]] && {
+#CO#     # Sanity check
+#CO#     for d in ./lib/pkgconfig bin include lib share tools; do
+#CO#         [[ -d "$d" ]] || {
+#CO#             echo "******* Can't find $d, bailing.
+#CO# This dir [$PWD] 
+#CO# does not seem to be the correct directory 
+#CO# from which you should be running this program.
+#CO# I need to see the ./lib/pkgconfig dir."
+#CO#             exit 1
+#CO#         } 1>&2
+#CO#     done
+#CO# }
+
+ab_command=""
+: ${ab_options:="$ab_checkout $ab_autogen"}
+
+#CO# [[ "$ab_options" =~ ^' '*$ ]] || {
+#CO#     ab_command="$AUTOBUILD $ab_module $ab_options"
+#CO# }
+
+ab_command="$AUTOBUILD $ab_module $ab_options"
+
+: ${XARCH:=xscale}
+: ${XBASE:=$HOME/hostel/$XARCH}
+: ${XTOOLS_ARCH:=arm-none-linux-gnueabi}
+: ${XTOOLS:=$XBASE/gcc-xscale}
+: ${XTOOLS_BIN:=$XTOOLS/bin}
+: ${XTOOLS_PREFIX:=${XTOOLS_ARCH}}
+: ${XTOOLS_BIN_PREFIX:=$XTOOLS_BIN/$XTOOLS_PREFIX}
+: ${ARCH_LIBS:=$XBASE}
+: ${LIB_POPT_DIR:=$(basename $ARCH_LIBS/popt*)}
+
+: ${EExecRCFile:=$progdir/$progname.log}
+
+src_dir_pathname="$progdir/$src_dir"
+build_dir_pathname="$progdir/$build_dir"
+module_pathname=$src_dir_pathname/$ab_module
+PKG_CONFIG_PATH=$src_dir_pathname/lib/pkgconfig
+EExec [[ -d "$PKG_CONFIG_PATH" ]] || {
+    echo "******* Can't find the pkgconfig dir: $PKG_CONFIG_PATH, bailing."
+    exit 2        
+}
+
+EExec [ -d "$src_dir_pathname" ] || EExec mkdir -p "$src_dir_pathname"
+EExec cd "$src_dir_pathname"
+echo "cd'd to $(pwd)"
+
+[[ -z "$no_build_p" ]] && {
+    EExec $ab_command
+}
+
+EExec cd "$module_pathname"
+EExec ./configure \
+    --enable-maintainer-mode \
+    --host=$XTOOLS_ARCH \
+    --prefix=$build_dir_pathname \
+    PKG_CONFIG_PATH=$PKG_CONFIG_PATH \
+    CC=${XTOOLS_BIN_PREFIX}-gcc \
+    CXX=${XTOOLS_BIN_PREFIX}-g++ \
+    RANLIB=${XTOOLS_BIN_PREFIX}-ranlib \
+    --with-popt=$ARCH_LIBS/$LIB_POPT_DIR
+EExec make "$make_target"

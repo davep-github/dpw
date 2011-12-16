@@ -1,0 +1,17 @@
+#!/bin/sh
+
+DISPLAY_is_ssh_p()
+{
+    [[ -n "$1" ]] && {
+        if [[ "$1" == "-" ]]; then
+            # For testing.
+            DISPLAY=""
+        else
+            DISPLAY=$1
+        fi
+        shift
+    }
+}
+
+DISPLAY_is_ssh_p "$@"
+exit $?

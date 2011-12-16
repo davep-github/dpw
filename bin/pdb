@@ -1,0 +1,285 @@
+#!/usr/bin/env perl
+
+# A db is a file of records
+# A record is a list of fields ended by a non-field (I use a null field name)
+# A field is a colon, a fieldname, white space, the field value and a newline
+# e.g.:
+# :name Davep                    # fieldname is "name", value is "Davep"
+# :addr 185 Applegrove NE Apt B6
+# :email 74127.2045@compuserve.com
+# :email-work: davep@platsol.com
+# ::
+# Fields are continued until the next field, e.g. lines that DO NOT start  
+# with a colon are continuations of the preceding field.
+# Also, fields can be aliased with the `|' character, e.g.
+# :name|handle bubba
+# is the same as:
+# :name bubba
+# :handle bubba
+# Field values cannot begin with whitespace.
+# 
+# The basic search is as follows:
+# For each line's field name, see if it matches the field selector pattern
+# if so, see if the value matches the value pattern.
+# When the end of a record is found, see if the preceeding rec
+# matched anywhere.
+# if so, print all fields that match the fieldToPrint pattern
+#
+# OLD: usage: pdb fieldsToSearchPattern fieldValuePattern fieldsToPrintPattern < database
+# usage: pdb [-f fieldsToSearchPattern] [-p fieldsToPrintPattern] fieldValuePattern < database
+
+$field_start0 = '';
+$field_terminator = "\\s";
+$field_sep_print = " ";
+$cont_print = ' ';
+$rec_sep_print = "--\n";
+$num_matches = 0;
+
+# only enhance the line if we're printing to a terminal
+if ( -t STDOUT ) {
+    $os_name = $ENV{'OSName'};
+    if ($os_name eq 'FreeBSD') {
+	$field_start_print = `tput md`;
+	$field_end_print = `tput me`;
+    }
+    elsif ($os_name eq 'OSF1') {
+	$field_start_print = `tput bold`;
+	$field_end_print = `tput rmso`;
+    }
+}
+if (!$field_start_print) {
+    $field_start_print = ":";
+    $field_end_print = ":";
+}
+
+$trace = 0;
+undef $rec_sub;
+
+$fieldToSearch = '.*';
+$fieldToPrint = '.*';
+
+while ($ARGV[0] =~ /^[\-]/)
+{
+    $_ = shift;
+    #print "_>$_<\n";
+    
+    if (/^[\/\-]f(.*)/)
+    {
+	$fieldToSearch = ($1 ? $1 : shift);
+    }
+    elsif (/^[\/\-]p(.*)/)
+    {
+	$fieldToPrint = ($1 ? $1 : shift);
+    }
+    elsif (/^[\/\-]r(.*)/)
+    {
+	#print "\$1>$1<, \$ARGV[1]>$ARGV[1]<\n";
+	$rec_sub = ($1 ? $1 : shift);
+	if ($rec_sub =~ /^@(.*)/)
+	{
+	    $fil = $1;
+	    open(EXPR, "<$fil") || die "canna open expr file($fil).\n";
+	    # $rec_sub = join ("\n", <EXPR>);
+	    $rec_sub = join('', <EXPR>);
+	    # print "rec_sub>$rec_sub<\n";
+	    close(EXPR);
+	}
+    }
+    elsif (/^[\/\-]t(.*)/)
+    {
+	$trace = 1;
+    }
+    elsif (/^[\/\-]m(.*)/)
+    {
+	# only print those fields which match the given 
+	# field value patterns.
+	# by default the entire record of printed.
+	$print_matches = 1;
+    }
+    elsif (/^[\/\-]R(.*)/)
+    {
+	$rec_sep_print = "\n";
+    }
+    else
+    {
+	die "$0: Unknown option: $ARGV[0]\n";
+    }
+}
+
+sub print_rec
+{
+    local($fieldName, $fieldValue) = @_;
+
+    $fieldValue =~ s/\n/\n$cont_print/og;
+    print "$field_start_print$fieldName$field_end_print$field_sep_print$fieldValue\n";
+}
+
+if (!$rec_sub)
+{
+    print "setting default rec_sub\n" if $trace;
+    $rec_sub = <<'EOR'
+    {
+	$sep = '';
+	for ($fi = 0; $fi < $fieldIndex; $fi += 2)
+	{
+	    ($fieldName, $fieldValue) = @thisRec[$fi, $fi + 1];
+	    print "fieldName>$fieldName<\n" if ($trace);
+	    
+	    if ($fieldName =~ /$fieldToPrint/i)
+	    {
+		&print_rec($fieldName, $fieldValue);
+		$sep = $rec_sep_print;
+	    }
+	    elsif ($print_matches)
+	    {
+		if ($fieldName =~ /$fieldToSearch/oi && 
+		    $fieldValue =~ /$pat/oi)
+		{
+		    &print_rec($fieldName, $fieldValue);
+		    $sep = $rec_sep_print;
+		}
+	    }
+	}
+	print $sep;
+    }
+EOR
+}
+
+print "rec_sub>$rec_sub<\n" if $trace;
+eval("sub rec_sub $rec_sub");
+if ($@)
+{
+    die "Syntax error in rec_sub($rec_sub)\n";
+}
+
+$pat = shift(ARGV);
+$pat = '.*' if !$pat;
+
+#
+# verify the passed in patterns...
+#
+foreach $pattern ('fieldToSearch', 'pat', 'fieldToPrint')
+{
+    $program = "/\$$pattern/o;";
+    $rc = eval($program);
+    die "bad pattern: \$$pattern: ", eval("\$$pattern"), "\n"
+	if (!defined($rc));
+}
+
+print "field>$fieldToSearch<\n" if ($trace);
+print "pat>$pat<\n" if ($trace);
+
+undef @thisRec;
+$fieldIndex = 0;
+$doEmAll = ($pat eq ".*") && ($fieldToMatch eq ".*");
+print "doEmAll>$doEmAll<\n" if $trace;
+
+sub process_eor
+{
+    print "hit EOR, found>$found<\n" if ($trace);
+    # didna match a header line --> rec separator
+    if ($found)
+    {
+	print "hadda match\n" if ($trace);
+
+	print "running rec_sub\n" if $trace;
+	$num_matches++;
+	&rec_sub(0);
+    }
+    undef @thisRec;
+    $found = $doEmAll;
+    undef %fields;
+    $fieldIndex = 0;
+    $continuation = 0;
+}
+
+sub finalize_previous_field
+{
+    # is there a previous field?
+    if ($fieldIndex != 0)
+    {
+	if (!$found)
+	{
+	    #
+	    # if we've gotten a hit on this record, there is no sense in
+	    # wasting time searching, so we skip this part once a match is
+	    # made.  However, we do want to collect all fields of the record
+	    # until the EOR is found.
+	    #
+	    print "fpf: !found, \$_>$_<\n" if ($trace);
+	    if ($fieldName =~ /$fieldToSearch/oi && 
+		$thisRec[$fieldIndex - 1] =~ /$pat/oi)
+	    {
+		$found = 1;
+		if ($trace) {
+		    print "found\n";
+		    print "fieldName>$fieldName<\n";
+		    print "fieldToSearch>$fieldToSearch<\n"; 
+		    print "thisRec[$fieldIndex - 1]>$thisRec[$fieldIndex - 1]<\n";
+		    print "pat>$pat<\n";
+		}
+	    }
+	}
+
+	@fieldNames = split(/\|/, $fieldName);
+	foreach $name (@fieldNames)
+	{
+	    # save off the accumulated record.
+	    # print "fields{$name} = ", $thisRec[$fieldIndex - 1], "\n";
+
+	    $fields{$name} = $thisRec[$fieldIndex - 1];
+	}
+    }
+    $continuation = 0;
+}
+
+# if we gonna match everything anyway, don't bother doing any real comparisons
+$found = $doEmAll;
+
+while (<>)
+{
+    chop;
+    print "main loop: \$_>$_<, cont: $continuation\n" if ($trace);
+
+    next if /^#/;
+
+    # have we transitioned to a continuation?
+    ($continuation, $data) = /^(\+)(.*)$/;
+
+    if ($continuation)
+    {
+	# fieldName remains the same
+	# accumulate the field value
+	$thisRec[$fieldIndex - 1] .= "\n$data" if $fieldIndex > 0;
+    }
+    else
+    {
+	&finalize_previous_field;
+
+	# look for ^:xxx:yyy$
+	if (!(($fieldName, $fieldValue) = 
+	      /^$field_start0([^$field_terminator]+)$field_terminator(.*)$/o))
+	{
+	    &process_eor();
+	    next;
+	}
+	@thisRec[$fieldIndex, $fieldIndex + 1] = ($fieldName, $fieldValue);
+	print "fieldName>$fieldName<, fieldValue>$fieldValue<\n" if $trace;
+	$fieldIndex += 2;
+    }
+    if (eof) {
+	print "EOF on a file hit!!!!!!!!!\n" if ($trace);
+	&finalize_previous_field;
+	# ...and as a record separator
+	&process_eor(0);
+    }
+}
+
+# treat EOF as a field terminator...
+&finalize_previous_field;
+# ...and as a record separator
+&process_eor(0);
+
+&rec_sub(1);			# send eof to rec sub
+
+exit ($num_matches == 0);

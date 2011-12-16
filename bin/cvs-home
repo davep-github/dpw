@@ -1,0 +1,55 @@
+#!/bin/sh
+
+# remove reminder for my cvs --> svn change over.
+unset cvs
+type cvs > /dev/null 2>&1
+
+if [ "$1" = "-n" ]
+then
+    ECHO=echo
+    shift
+else
+    ECHO=
+fi
+
+if [ -n "$*" ]
+then
+    commit_msg="cvs-home:$*"
+else
+    commit_msg="periodic commit"
+fi
+
+
+cvs_em()
+{
+    msg="$1"
+    echo "CVS'ing $cvs_dir $files"
+    cvs_dir=$2
+    files=$3
+    cd $cvs_dir
+    [ -d "./CVS" ] || {
+        echo 1>&2 "$dir is not CVS'd"
+        return
+    }
+    if [ $files = '.' ]
+    then
+	cvs -n update 2>/dev/null | grep '^?'
+    fi
+    cvs commit -m "$msg" $files
+}
+    
+# all dirs relative to $HOME
+dirs=".sawfish"
+
+for dir in $dirs
+do
+    $ECHO cvs_em "$commit_msg" $HOME/$dir .
+done
+
+files=".cvsignore .symlinks diary diary-history xearth.markers Makefile"
+
+for file in $files
+do
+    dir="$HOME/`dirname $file`"
+    $ECHO cvs_em "$commit_msg" "$dir" "$file"
+done

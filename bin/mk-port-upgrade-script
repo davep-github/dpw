@@ -1,0 +1,21 @@
+#!/bin/sh
+
+up_ports=y
+if [ "$1" = "-u" ]
+then
+    shift
+    up_ports=n
+fi
+script=${1:-"/tmp/up.sh"}
+[ "$up_ports" = 'y' ] && {
+    sudo up-ports
+    #sudo portsdb -uU
+}
+
+sudo portupgrade -Oran | tee ~/tmp/upgrades-needed.txt | upgrades-needed.py > $script
+
+#sudo portversion -OvL= | awk '{if ($3 == "needs") print $1}' | build_upgrade_script.py > $script
+
+chmod +x $script
+
+exit 0

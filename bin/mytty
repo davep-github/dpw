@@ -1,0 +1,18 @@
+#!/bin/sh
+
+case $OSName in
+   HP-UX|Solaris|AIX|FreeBSD|OSF1|Linux) pidField=1 ; ttyField=2 ; psOpt="" ;;
+   *) echo "$0: unknown OS: $OSName" 1>&2 ; exit 1 ;;
+esac
+
+[ $OSName = "FreeBSD" ] && prefix=tty
+
+pid=$$
+
+#
+# we go thru these hoops since if we are redirected into then
+# /usr/bin/tty says "not a tty"
+#
+tty=` ps $psOpt | awk '{if (\$'$pidField' == "'$pid'") print \$'$ttyField'}' `
+echo $prefix$tty
+

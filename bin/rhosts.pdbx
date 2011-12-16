@@ -1,0 +1,52 @@
+{
+    # a record:
+    # host: tnclb03.la
+    # nick: lb03
+    # shell: csh
+    # users: davep
+    #
+
+    my @domains=('dec.com');
+    my ($local_net) = 'crl';
+
+    my ($host) = $fields{'host'} =~ /\s*(.+)\s*/;
+    my ($flags) = $fields{'ctl'} =~ /\s*(.+)\s*/;
+    my ($users) = $fields{'users'} =~ /\s*(.+)\s*/;
+    $users = $ENV{'USER'} if !$users;
+
+    # does this line's flags contain the requested cmd char?
+    return unless ($flags =~ /r/);
+
+    print "$host $users\n";	# full name
+
+    foreach $dom (@domains)
+    {
+	# subtract off domain
+	($h, $d) = $host =~ /(.*)(\.$dom$)/;
+	print "$h $users\n" if $d;
+
+	# subtract off any local net
+	if ($local_net) {
+	    ($h, $d) = $h =~ /(.*)(\.$local_net$)/;
+	    print "$h $users\n" if $d;
+	}
+    }
+}
+__END__
+# $Id: rhosts.pdbx,v 1.1.1.1 2001/01/17 22:22:29 davep Exp $
+#
+# This is a pdbx filter.  After a matching record from a pdb query is
+# collected, a routine like this is called if it is
+# specified on the command line.
+#
+# This routine is called with no parameters, but three global items 
+# are defined:
+# %fields, @thisRec and $fieldIndex
+# %fields is indexed directly by a field's name.  This variable does not
+#  preserve any kind of ordering from the original record in the database.
+# @thisRec contains pairs of strings.
+#  $thisRec[i] is the name of the field
+#  $thisRec[i+1] is the value of the field.
+# This variable preserves the order from the database; it is pretty much
+#  a copy of the record as it was in the file.
+# $fieldIndex is the index of the next slot to use in @thisRec.

@@ -1,0 +1,54 @@
+#!/usr/bin/env perl
+
+($ProgName) = 
+    $0 =~ m!([^/]+$)!;
+
+if ($ARGV[0] =~ /^-(.*)/)
+{
+    $siggie = $1;
+    shift(@ARGV);
+}
+else
+{
+    if  ($ARGV[0] eq '--')
+    {
+	shift (@ARGV);
+    }
+    $siggie = "TERM";
+}
+
+$OSName = $ENV{'OSName'};
+
+#
+# display PGIDs
+# get us a display with the following fields:
+# PPID   PID  PGID   SID TTY TPGID  STAT   UID   TIME COMMAND
+#
+$psCmd = 'ps j';
+
+open(PS, $psCmd . " |") || die "canna open ps pipe, $!\n";
+
+while ($line = <PS>)
+{
+    # snip out fields we are interested in
+    ($pid, $pgid) = 
+	$line =~ /\d+\s+(\d+)\s+(\d+)/;
+    # loop thru all progs specified on command line
+    foreach $kpid (@ARGV)
+    {
+	# check for exact match
+	if ($kpid eq $pgid)
+	{
+	    unshift(@pidList, $pid);
+	}
+    }
+}
+close(PS);
+
+if (@pidList)
+{
+    #print "siggie>$siggie<, pidList>@pidList<\n";
+    #print "kill ($siggie, @pidList);\n";
+    $num = kill ($siggie, @pidList);
+}
+exit $!

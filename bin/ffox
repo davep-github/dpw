@@ -1,0 +1,20 @@
+#!/bin/sh
+. script-x
+: ${ffprof:=$($HOST_INFO firefox-profile)}
+: ${ffbin:=$($HOST_INFO firefox-bin)}
+do_ffox ()
+{
+    if [ -n "$ffprof" ]; then
+        ffprof_opt="-P $ffprof"
+    else
+        ffprof_opt=""
+    fi
+    cd ~/tmp
+    while :
+    do
+      FIREFOX_DSP=alsa $ffbin ${ffprof_opt} "$@" && exit 0
+      rm -f ${ffbin}*.CR > /dev/null 2>&1
+    done
+}
+
+do_ffox "$@" &

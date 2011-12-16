@@ -1,0 +1,5 @@
+#!/bin/sh
+# $Id: kill-amarok,v 1.1 2005/01/05 09:20:04 davep Exp $
+#
+
+kill `pgrep -p amarok`

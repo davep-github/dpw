@@ -1,0 +1,18 @@
+#!/bin/sh
+#set -x
+
+ispppup || {
+	$HOME/.ppp/${PPP_SERVICE}.expect || {
+		echo "isp dial failed." 1>&2
+		exit 1
+	}
+
+	waitfornamed
+}
+
+sleep 3	#wait for mail
+sendmail -q -v
+
+killppp
+
+exit 0

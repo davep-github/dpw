@@ -1,0 +1,67 @@
+#!/bin/sh
+
+source script-x
+source eexec
+# These are convenient for eexec
+: ${eexec_options='nvq'}
+: ${dirs_list:='.'}
+
+doc_string='Determines which files of which svn is ignorant and lists
+them clearly and succinctly.'
+
+Usage()
+{
+    echo $doc_string
+}
+
+# Simple way to get the equivalent of keyword arguments:
+# This sets a default which can be overridden thus:
+# cheap_keyword_arg=not-blah some-program <other args>
+#: ${cheap_keyword_arg:=blah}
+
+option_str="d:D:"               # <:add new options:>
+all_options="${option_str}${eexec_options-}"
+q=$(getopt -o "$all_options" -- "$@")
+[ $? != 0 ] && Usage
+eval set -- "$q" 
+unset q
+
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -n) EExecDashN;;          # Don't actually execute stuff
+      -v) EExecVerbose;;        # Blah, blah, blah.
+      -q) EExecQuiet;;
+
+       # Set list to arg. With '' this can clear the list.
+      -D) shift; dirs_list="$1";; 
+      -d) shift; dirs_list="$dirs_list $1";;  # Add to the list
+
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+for dir in $dirs_list
+do
+  [ -d "$dir" ] || {
+      echo "$dir isn't a dir."
+      continue
+  } 1>&2
+  (
+      EExec cd $dir
+      if [ -d ".svn" ]
+      then
+          echo "=== $PWD ==="
+          EExec $SVN_BIN stat "$@" \
+        | EExec sed -rn 's/(^[?])([[:space:]]*(.*))/\3/p'
+      else
+          echo 1>&2 "$dir has no .svn dir."
+      fi
+  )
+done

@@ -1,0 +1,20 @@
+#!/bin/sh
+
+: ${awn_cleanse:=t}
+
+# ??? Why did I remove myself (mostly) from the path?
+# Given the unalias and my bin dir removals, I seem to have been
+# having problems with name clashes or other improper command
+# aliasing (not just using `alias', but also things like
+# ~/bin/ls running vs /bin/ls).
+if [[ "$awn_cleanse" == t ]]
+then
+    echo 1>&2 "Cleansing..."
+    unalias -a
+    PATH=$(echo ":$PATH:" \
+	| sed -r 's!(:(/usr/bree/|/home/davep/)[^:]*)!!g' \
+	| sed -r 's/^:(.*):$/\1/')
+else
+    echo 1>&2 "Did no cleansing..."
+fi
+avant-window-navigator

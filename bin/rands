@@ -1,0 +1,6 @@
+x=5
+while :
+do
+	x=`rand -s$x 9999`
+	echo $x
+done

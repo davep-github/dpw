@@ -1,0 +1,15 @@
+#!/bin/sh
+prog=$(basename $0)
+tmpfile=gunzipinplace.$$
+for file in $*
+do
+	gunzip -c $file > $tmpfile || {
+		echo "$prog: gunzip -c $i > $tmpfile" 1>&2
+		exit 1
+	}
+
+	mv $tmpfile $file || {
+		echo "$prog: mv $tmpfile $i failed" 1>&2
+		exit 1
+	}
+done

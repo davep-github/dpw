@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#
+#$Id: ftp-timer,v 1.4 2004/10/03 08:20:03 davep Exp $
+#
+# test time to establish ftp connection
+#set -x
+
+argv='-e -i -n -g -v'
+# yes bye | while : 
+while : 
+do
+    a=$SECONDS
+    echo 'open sybil
+bye' | ftp $argv
+    b=$SECONDS
+    d=$(($b - $a));
+    echo -n '.'
+    #echo "$d"
+    if [ "$d" -gt 10 ]
+    then
+	echo !!!
+	echo "extra long ftp conn time: $d"
+    fi
+done

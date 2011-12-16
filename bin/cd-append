@@ -1,0 +1,31 @@
+#!/bin/sh
+# $Id: cd-append,v 1.1 2004/03/02 07:29:39 davep Exp $
+#set -x
+: ${dev:='0,2,0'}
+echo "*>$*<"
+src="$1"
+echo "src>$src<"
+
+# libranet's default sudo defines SECURE_PATH and so our binaries
+# are inaccessible.
+if [[ "$PATH" != *yokel/sbin* ]]
+then
+    rcfile="$HOME/.bashrc"
+    [ -f $rcfile ] && . $rcfile
+fi
+echo "src>$src<"
+
+. eexec 
+#EExecDashN
+echo "src>$src<"
+
+. cdrw.conf
+echo "src>$src<"
+
+pre=$(date --iso-8601=seconds)
+graft="$pre/$src=$src"
+
+EExec mkisofs -R -C "$(cdrecord -msinfo dev=$dev)" \
+    -M "$dev" --graft-points $graft | \
+	EExec cdrecord -v $dummy $multi $data fs=$fs speed=$speed \
+	    dev="$dev" -

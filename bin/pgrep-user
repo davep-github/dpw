@@ -1,0 +1,10 @@
+#!/bin/sh
+
+user=$1
+shift
+
+if [ -z "$@" ]; then
+    set -- '.*'
+fi
+
+pgrep "^$user " | egrep "$@"

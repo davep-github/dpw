@@ -1,0 +1,12 @@
+#!/bin/sh
+
+source script-x
+
+source pocagent
+
+export FTCI_CLIENT_JID=${FTCI_JID}
+export FTCI_CLIENT_PASSWORD=${FTCI_PASSWORD}
+export FTCI_CLIENT_APP=${FTCI_APP}
+export FTCI_CLIENT_APP_VER=${FTCI_APP_VER}
+
+./ca

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+screen_id=$(screen -ls | sed -n 's!^[ \t][ \t]*\([^ \t]*\).*$!\1!p' | xlist)
+
+if [ -n "$screen_id" ]
+then
+    exec screen -dr "$screen_id"
+else
+    echo 1>&2 "No screen id selected."
+fi
+
+exit 1
+

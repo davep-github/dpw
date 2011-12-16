@@ -1,0 +1,8 @@
+#!/bin/sh
+# $Id: gzcat,v 1.1 2004/02/14 09:20:03 davep Exp $
+
+
+for f in "$@"
+do
+    gunzip -c "$f"
+done

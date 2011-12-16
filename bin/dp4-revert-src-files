@@ -1,0 +1,11 @@
+#!/bin/sh
+
+source script-x
+
+P4=echo
+
+dp4-opened-src-files | while read
+do
+  echo === $REPLY ===
+  $P4 revert $REPLY
+done

@@ -1,0 +1,15 @@
+#!/bin/sh
+#set -x
+
+host=${1:$(myhost)}
+
+#
+# screen(1) adds garbage after a colon to the hostname.
+# 
+case "$host" in
+    :*) echo "$host";;
+    *:*) disp=$(echo $host | cut -d : -f 1); echo "${disp}:0.0";;
+    *) echo "${host}:0.0";;
+esac
+
+exit 0

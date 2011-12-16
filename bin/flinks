@@ -1,0 +1,6 @@
+#!/bin/sh
+
+[ -z "$1" ] && set -- .
+
+find "$@" -type l -ls | awk '{print $11, $12, $13}'
+

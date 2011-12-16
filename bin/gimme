@@ -1,0 +1,25 @@
+#!/bin/sh
+####################################################
+# Script to add package names to package.keywords. #
+# Originally by Tekmanx, re-written by Hackeron    #
+####################################################
+
+source /sbin/functions.sh
+
+[ "$UID" -ne "0" ] && eerror "Must be root to run this script." && 
+      		exit
+
+[ -z "$1" ] && eerror "Please state a package name (eg. gimme <package-name>)" &&
+      	 exit
+
+[ -d /etc/portage ] || (einfo "Creating /etc/portage directory"
+    mkdir /etc/portage )
+
+if [ "$(grep "^$1 ~x86$" /etc/portage/package.keywords)" ]; then
+      ewarn "$1 already exists in package.keywords"
+else
+      einfo Adding $1 to package.keywords and emerging in 5 seconds.
+      sleep 5
+      echo $1 ~x86 >> /etc/portage/package.keywords
+      emerge $1
+fi

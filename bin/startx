@@ -1,0 +1,16 @@
+#!/bin/sh
+set -x
+cd ~
+
+startx="/usr/X11R6/bin/startx"
+startx_opts=`$HOST_INFO -n '' startx-opts`
+
+LOGFILE="$DP_LOG/X11/xlog.$USER.startx"
+#touch $LOGFILE
+(
+    echo "******* $(realpath $0) begins: $(date) =============================="
+    echo "startx>$startx<, startx_opts>$startx_opts<, @>$@<"
+    #######exec $startx $startx_opts "$@" 
+    $startx $startx_opts "$@"
+    echo "%%%%%%% $(realpath $0) finishes: $(date) ============================"
+) >> $LOGFILE 2>&1

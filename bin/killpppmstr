@@ -1,0 +1,9 @@
+#!/bin/sh
+set -x
+for proc in "/usr/local/bin/pppmstr cis" "/usr/local/bin/dialppp" "sleep 60" "expect -f /home/davep/.ppp/cis.expect"
+do
+	x=$(ps a | fgrep "$proc")
+	set -- $x
+	kill -9 $1
+done
+

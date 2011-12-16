@@ -1,0 +1,10 @@
+#!/bin/sh
+
+ypcat hosts | while read ypline
+do
+	set -- $ypline
+	name=$2
+	/etc/ping $name 64 1 2>&1 >/dev/null && {
+		/etc/arp -a | fgrep $name
+	}
+done

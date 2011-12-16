@@ -1,0 +1,13 @@
+#!/bin/sh
+
+LOG=/tmp/dp_logging_mv.log
+
+eko "$@"   >> $LOG
+stat "$@"  >> $LOG 2>&1
+echo 'before'
+ls -l "$@" >> $LOG 2>&1
+mv "$@"    >> $LOG 2>&1
+rc=$?
+echo 'after'
+ls -l "$@" >> $LOG 2>&1
+exit $?

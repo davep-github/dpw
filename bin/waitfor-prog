@@ -1,0 +1,14 @@
+#!/bin/bash
+
+source script-x
+
+: ${DP_WAITFOR_PROG_SLEEP_TIME:=2}
+
+for prog in "$@"; do
+  while :; do
+    findprog "$prog" >/dev/null 2>&1 && break
+    sleep $DP_WAITFOR_PROG_SLEEP_TIME
+  done    
+done
+
+exit 0

@@ -1,0 +1,98 @@
+#!/usr/bin/env python
+
+import sys, os, types
+opath = os.path
+
+# Provide the functionality of the Python range() function:
+# range([start,] stop[, step]) -> list of integers
+
+def usage(progname, ofile=sys.stdout):
+    ofile.write("%s: Usage [start] stop [step]\n  Generate a stream of numbers like the Python range() function.\n" % progname)
+
+def pbinary(number, print_base_p):
+    if print_base_p:
+        sys.stdout.write("0b")
+    sys.stdout.write("(0x)%x", number)
+        
+
+def main(argv):
+    progname = opath.basename(argv[0])
+    print_formats = {2: (pbinary, "0b"),
+                     8: ("%o", "0"),
+                     10: ("%d", ""),
+                     16: ("%x", "0x"),
+                     }
+    import getopt
+    opt_string = "b:pf:rsR:"
+    opts, args = getopt.getopt(argv[1:], opt_string)
+    base = 10
+    print_format = None
+    print_base_p = False
+    prefix = ""
+    rangeStream = None
+    closeStream = False
+    for o, v in opts:
+        #print "o:", o, "v:", v
+        if o == '-b':
+            base = eval(v)
+            continue
+        if o == '-p':
+            print_base_p = True
+            continue
+        if o == '-f':
+            print_format = v
+            continue
+        if o == '-r':
+            rangeStream = sys.stderr
+            continue
+        if o == '-s':
+            rangeStream = sys.stdout
+            continue
+        if o == '-R':
+            rangeStream = open(v)
+            closeStream = True
+            continue
+
+    #print "print_base_p:", print_base_p
+    if not print_format:
+        base_fmt, base_prefix = print_formats[base]
+        if not print_base_p:
+            base_prefix = ""
+        print_format = "%s%s" % (base_prefix, base_fmt)
+        #print "print_format>%s<" % print_format
+        
+    start = 0
+    step = 1
+    argc = len(args)
+    if argc == 1:
+        # stop
+        stop = eval(args[0])
+    elif argc == 2:
+        # start stop
+        start = eval(args[0])
+        stop = eval (args[1])
+    elif argc == 3:
+        # start stop step
+        start = eval(args[0])
+        stop = eval (args[1])
+        step = eval (args[2])
+    else:
+        usage(progname)
+        sys.exit(1)
+
+    if rangeStream:
+        rangeStream.write("start: %s, stop: %s, step: %s\n" %
+                          (start, stop, step))
+        if closeStream:
+            rangeStream.close()
+    for n in xrange(start, stop, step):
+        if (type(print_format) == types.StringType):
+            sys.stdout.write(print_format % n)
+        else:
+            print_format(n, print_base_p)
+        sys.stdout.write("\n")
+        
+if __name__ == "__main__":
+    main(sys.argv)
+
+

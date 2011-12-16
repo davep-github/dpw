@@ -1,0 +1,15 @@
+#!/bin/sh
+
+. eexec
+
+src=$1
+dst=$2
+
+[ -d $src ] || EEdie "src ($src) is not a dir"
+
+[ -d $dst ] || EExec mkdir -p $dst
+
+tar -cf - -C $src . | tar xpf - -C $dst
+
+exit $?
+

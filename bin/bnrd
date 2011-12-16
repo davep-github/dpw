@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+
+import sys, os, getopt
+
+verbose = False
+invert = False
+
+def been_accessed(f, verbose=False):
+    sinfo = os.stat(f)
+    atim = sinfo[7]
+    mtim = sinfo[8]
+    ctim = sinfo[9]
+    if verbose:
+        print "a:", atim, "m:", mtim, "c:", ctim
+    return atim > mtim and atim > ctim
+
+options, args = getopt.getopt(sys.argv[1:], 'vn')
+for opt, val in options:
+    if opt == '-v':
+        verbose = not verbose
+        break
+    if opt == '-n':
+        invert = not invert
+        break
+
+for f in args:
+    if been_accessed(f, verbose) ^ invert:
+        print f

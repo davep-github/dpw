@@ -1,0 +1,7 @@
+#!/bin/sh
+
+IFS=:
+for i in $PATH
+do
+	echo $i
+done | sort

@@ -1,0 +1,163 @@
+#!/usr/local/bin/wish -f
+
+proc get_title {} {
+    global station_data_file
+    global station
+
+    set title_str ""
+    set done 0
+    set f [open "$station_data_file" r]
+    while {[gets $f line] >= 0 && !$done} {
+	if {[string first "Weather Conditions" $line] != -1} {
+	    set title_str $line
+	    set done 1
+	}
+    }
+    close $f
+    if {$title_str != ""} {
+	return $title_str 
+    } else {
+	return "Weather for station $station"
+    }
+}
+
+proc build_title {} {
+    set title .title.text
+    frame .title -relief raised -borderwidth 2
+    label $title -text [get_title]
+    pack $title -in .title
+}
+
+proc get_faces {station_faces_file} {
+    set faces {}
+    set f [open $station_faces_file r]
+    while {[gets $f line] >= 0} {
+	lappend faces $line
+    }
+    close $f
+    return $faces
+}
+
+set use_last_report 0
+puts "argv>$argv<"
+set argList [exec getopt "l" [split $argv " "]]
+set optind 0
+set done 0
+while {!$done} {
+    set arg [lindex "$argList" $optind] 
+    incr optind
+    switch -- "$arg" {
+	"-l" {
+	    set use_last_report 1
+	}
+	--	{
+	    set done 1
+	}
+    }
+}
+
+if { $optind < [llength $argList] } {
+    set station [lindex $argList $optind]
+} else {
+    set station ""
+    catch {set station $env(WEATHER_CODE)}
+    if {$station == ""} {
+	set station "orh"
+    }
+}
+
+set station [string toupper $station]
+puts "station: $station"
+set station_data_file  "/tmp/tkweather.$station.wx"
+set station_faces_file  "/tmp/tkweather.$station.faces"
+set PICON_WEATHER_ROOT "/home/davep/yokel/lib/picons/db/weather"
+
+if {!$use_last_report } {
+    exec wx $station > $station_data_file
+}
+exec wx-faces -alt -stdin \
+	$station < $station_data_file > $station_faces_file
+
+build_title
+
+# read the faces file into a list
+set faces [get_faces $station_faces_file]
+
+frame .images -relief groove -borderwidth 2
+
+set cols 0
+set rows 0
+set done 0
+for {set face_i 0} {$face_i < [llength $faces] && !$done} {incr face_i} {
+    if {[string first "Cols=" [lindex $faces $face_i]] != -1} {
+	scan [lindex $faces 1] "Cols=%d Rows=%d" cols rows
+	set done 1
+    }
+}
+if {$cols == 0 || $rows == 0} {
+    puts stderr "tkweather: can't find number of rows and columns."
+    exit 1
+}
+
+#set face_i 2
+#incr face_i
+for {set row 0} {$row < $rows} {incr row} {
+    set this_row .images.image_row_$row
+    frame $this_row
+    for {set col 0} {$col < $cols} {incr col} {
+	scan [lindex $faces $face_i] "%s %s" face face_family
+	if {$face == "unknown"} {
+	    set face_family MISC
+	}
+	incr face_i
+	set img image_$row$col
+	image create photo $img
+	$img configure -file \
+		$PICON_WEATHER_ROOT/$face_family/$face/face.gif
+	set l $this_row.$img
+	label $l -image $img
+	pack $l -side left -in $this_row
+    }
+    pack $this_row -side top -in .images
+}
+
+frame .report -relief groove -borderwidth 2
+
+set text .report.text
+set scroll .report.scroll
+text .report.text -relief groove -borderwidth 2 \
+	-yscrollcommand "$scroll set"
+scrollbar .report.scroll -command "$text yview"
+pack $scroll -side right -fill y -in .report
+pack $text -side left -in .report
+
+$text delete 1.0 end
+
+set f [open $station_data_file]
+while {![eof $f]} {
+    $text insert end [read $f 1024]
+}
+close $f
+$text configure -state disabled
+
+focus $text
+bind $text <Up> {
+	$text yview scroll -1 units
+}
+bind $text <Down> {
+	$text yview scroll 1 units
+}
+set quit_list {"q" "Q" "Meta-q" "Meta-Q" "x" "X" "Meta-x" "Meta-X"}
+for {set i 0} {$i < [llength $quit_list]} {incr i} {
+	bind $text <[lindex $quit_list $i]> {
+		exit 0
+	}
+}
+
+$text yview moveto 0.0
+$scroll set 0 0
+$text mark set insert 1.0
+
+pack .title -side top -fill x
+pack .images -side top -fill x
+pack .report -side top -fill x

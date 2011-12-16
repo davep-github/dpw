@@ -1,0 +1,6 @@
+#!/bin/sh
+set -x
+for i in $*
+do
+    find /usr/src/linux-1.2.8 -name '*.c' -exec fgrep "$i" {} /dev/null \;
+done

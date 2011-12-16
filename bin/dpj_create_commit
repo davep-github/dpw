@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# $Id: dpj_create_commit,v 1.3 2004/10/03 08:20:03 davep Exp $
+#set -x
+
+progname=`basename $0`
+#
+# Create/commit monthly dpj note file
+#
+
+# get the notes dir. dpjgrep indexes the notes.
+DPJGREP_DIR=`$HOST_INFO -n $HOME/notes dpjgrep-dir`
+cd $DPJGREP_DIR || FATAL $? "Cannot cd to notes dir ($DPJGREP_DIR)"
+
+# touch this month's note file to ensure it exists, and then add it to
+# cvs
+date=$(date '+%Y-%m') 
+note_file="daily-$date.jxt"
+touch $note_file
+svn add $note_file || \
+	FATAL "$?" "Cannot add note file ($note_file in $DPJGREP_DIR)"
+
+svn commit -m 'automatic note-file creation/commit' $note_file || \
+	FATAL "$?" "Cannot commit note file ($note_file in $DPJGREP_DIR)"

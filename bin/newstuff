@@ -1,0 +1,48 @@
+#!/bin/sh
+#set -x
+progname=`basename $0`
+newer_file=/usr/tmp/newstuff.`id -u`
+xlist=xlist
+
+set -- ` getopt a $* `
+for i in $*
+do
+	case $1 in
+		-a) xlist=cat; shift;;
+		--) shift; break;;
+        esac
+done
+
+
+if [ $# -eq 0 ]
+then
+    [ -f $newer_file ] || {
+	echo "$progname: default date file ($newer_file) does not exist." 1>&2
+	echo "$progname: please specify a date or an existing file." 1>&2
+	exit 1
+    }
+    op="-f $newer_file"
+else
+    case $1 in
+	[0-9]*)
+	    op="-d $1"
+	    ;;
+	t|to|tod|toda|today)
+	    op="-d `date +%m%d`"
+	    ;;
+	*)
+	    [ -f "$1" ] || {
+		echo "$progname: date file ($1) does not exist." 1>&2
+		echo "$progname: please specify a date or an existing file." 1>&2
+		exit 1
+	    }
+	    op="-f $1"
+	    ;;
+    esac
+fi
+
+fnewer -l $op -x'/tmp/|/\.netscape/|\.bak$|~$|newsrc|whatis|\.core|\.o|\.elc|\.pyc|/MH/|/RCS/|pppd-pipe|/Mail/|/\.tin/|.bash_history|.fvwmrc|\.ppp/.*conn-time.*|.ncrecent' $HOME/yokel/ | $xlist | tar -c -v -z --block-compress -f /dev/rfd0 -T -
+
+touch $newer_file
+
+exit 0

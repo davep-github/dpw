@@ -1,0 +1,25 @@
+#!/bin/sh
+#set -x
+
+if [ "$1" = '-s' ] 
+then
+    fast=n
+else
+    fast=y
+fi
+
+cd /usr/ports
+find $PWD/ -type d -name work -print | while read port
+do
+	pdir=`dirname $port`
+	echo $pdir
+	cd $pdir
+	pwd
+	if [ "$fast" = 'y' ]
+	then
+	    rm -rf $pdir/work
+	else
+	    make clean
+	fi
+done
+	

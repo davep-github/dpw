@@ -1,0 +1,15 @@
+#!/bin/sh
+set -x
+
+vars=$1
+shift
+for i in $*
+do
+	vars="$vars|$i"
+done
+
+namename=govar
+nameval=$vars
+valname=goval
+
+qdb -r '{print "$fields{'goval'}\n";}' -f govar $vars

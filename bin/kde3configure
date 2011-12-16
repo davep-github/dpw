@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# $Id: kde3configure,v 1.1 2002/06/03 17:05:37 davep Exp $
+#
+# configure kde3 apps
+#
+set -x
+
+if [ -z "$1" ]
+then 
+    set -- ./configure
+fi
+
+LIBQT='-lqt-mt -pthread' KDEDIR=/usr/local "$@" --with-extra-includes=/usr/local/include --with-extra-libs=/usr/local/lib --with-extra-libs=/usr/X11R6/lib --with-qt-dir=/usr/X11R6

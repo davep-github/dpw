@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+# Move some stuff over there, and make links so that it still looks like it's
+# here.
+. script-x
+
+: ${mv_opts:="-i"}
+: ${ln_opts:=""}
+
+[ "$#" == 2 ] || {
+    echo "I need 2 args: src dst"
+    echo "(todo: handle options -m mv-opt -l in-opt)"
+    echo "(todo: ensure existence of all but last dir in dst)"
+    echo "(todo: Allow the equivalent: mv xxx /a/b/NEW; ln -s /a/b/NEW xxx)"
+    echo " src is mv'd to dst"
+    echo " and then ln -s dst ."
+    
+    exit 2
+} 1>&2
+
+src="$1"
+dst="$2"
+
+case "$dst" in
+    */) sep="" ;;
+    *) sep="/" ;;
+esac
+rs=$(realpath "$src")
+rd=$(realpath "$dst")
+if [ "$rs" == "$rd" ]; then
+    echo 1>&2 "realpath of src [$rs] is the same as dst [$rd]"
+    if [ -L "$src" ]; then
+        echo 1>&2 "src is already a link.  Senior moment?"
+    fi
+    exit 1
+fi
+
+if [ -L "$src" ]; then
+    echo -n "src is a link.  Is this what you really want[y/N]? "
+    read
+    case "$REPLY" in
+        [Yy]) ;;
+        *) echo 1>&2 "Exiting."; exit 1;;
+    esac
+fi
+
+mv ${mv_opts} "$src" "$dst" && \
+    ln -s ${ln_opts} "$dst$sep$src" .
+

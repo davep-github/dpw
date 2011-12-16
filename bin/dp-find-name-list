@@ -1,0 +1,34 @@
+#!/bin/sh
+
+### No options yet.
+#eko "$@" 1>&2
+source script-x
+
+mk_name_expr()
+{
+    {
+        echo "in mk_name_expr(), \$@" 
+        eko "$@"
+        local name="$1"
+        echo "mk_name_expr: name>$name<"
+        expr="-name $name"
+        echo "expr>$expr<"
+
+    } >/dev/null #1>&2
+    echo $expr
+}
+
+echo "1>$1<" 1>&2
+expr="$(mk_name_expr $1)"
+shift
+for name in "$@"; do
+    echo "main: name>$name<" 1>&2
+    expr="$expr -o $(mk_name_expr $name)"
+done
+
+expr="( $expr )"
+
+#eko $expr 1>&2
+#echo $expr 1>&2
+echo $expr
+

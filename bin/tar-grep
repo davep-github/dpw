@@ -1,0 +1,107 @@
+#!/bin/sh
+source script-x
+progname=$(basename "$0")
+#
+# invocation:
+Usage()
+{
+  echo "$progname grep-opts-and-args -- files"
+}
+
+# NB! This needs a late model LESSPIPE set.
+# I'm using sp lesspipe-new.sh
+# /permabit/user/davep/yokel/bin/lesspipe-new.sh
+
+: ${GREP:=egrep}
+: ${LESSPIPE:=lesspipe-new.sh}
+: ${MEMBER_GLOB:=*}
+
+i=0
+grep_args=()
+for a in "$@"
+do
+  shift
+  if [ "$a" == "--" ]
+    then
+      break
+  fi
+  grep_args[i++]="$a"
+done
+  
+files=("$@")
+
+vunsetp "$@" && {
+  echo 1>&2 "$progname: No file names specified. Please give some files to work on."
+  exit 1
+}
+
+decompress()
+{
+    local file_name="$1"
+    file_type=$(file "$file_name")
+
+    case `echo "$1" | tr '[:upper:]' '[:lower:]'` in
+      *.arj)
+             if [ -x "`which unarj`" ]; then unarj l "$1"
+             else echo "No unarj available"; fi ;;
+             
+      *.tar.bz2)
+                 if [ -x "`which bunzip2`" ]; then
+                   bunzip2 -dc "$1" | tar tvvf -
+                 else echo "No bunzip2 available"; fi ;;
+                 
+      *.bz)
+            if [ -x "`which bunzip`" ]; then bunzip -c "$1"
+            else echo "No bunzip available"; fi ;;
+            
+      *.bz2)
+             if [ -x "`which bunzip2`" ]; then bunzip2 -dc "$1"
+             else echo "No bunzip2 available"; fi ;;
+      *.gz|*.z|*.dz)
+                     gzip -dc "$1" ;;
+      *.7z)
+            if [ -x "`which 7za`" ]; then 7za l "$1";
+            else echo "No 7za available"; fi ;;
+            
+      *.zoo)
+             if [ -x "`which zoo`" ]; then zoo v "$1";
+             elif [ -x "`which unzoo`" ]; then unzoo -l "$1";
+             else echo "No unzoo or zoo available"; fi ;;
+      *.jar|*.war|*.ear|*.xpi|*.zip)
+           if [ -x "`which unzip`" ]; then unzip -v "$1";
+           elif [ -x "`which miniunzip`" ]; then miniunzip -l "$1";
+           elif [ -x "`which miniunz`" ]; then miniunz -l "$1";
+           else echo "No unzip, miniunzip or miniunz available"; fi ;;
+    esac
+}
+
+for archive in "$@"
+do
+  #
+  # LESSPIPE handles compression and returning TOC of tar ball
+  ${LESSPIPE} "$archive" | while read
+    do
+      ${DP_SCRIPT_X_echo_id} REPLY
+      ${DP_SCRIPT_X_echo_id} archive
+      case "$REPLY" in
+        *use*tar*:contained*) continue;;
+        d*) continue;;          # Skip directories
+        l*) continue;;          # Skip symbolic link
+      esac
+      set -- $REPLY
+      shift 5
+      member="$@"
+      ${DP_SCRIPT_X_echo_id} member
+      case "$member" in
+        ${MEMBER_GLOB});;       # Only allow these through
+        *) continue;;
+      esac
+
+      # lesspipe wants a : to refer to the member (archive:member)
+      # but we have :s in tons of file names. So...
+      # have $GREPper show the file name within the archive
+      label="$archive $member"     # separate with a space so $(set -- $x) works
+      # lesspipe uncompresses if need be, but gives us tar TOC.
+      decompress "$archive" | tar Oxf - $member | ${GREP} --label="${label}" --with-filename "${grep_args[@]}"
+    done
+done

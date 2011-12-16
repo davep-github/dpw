@@ -1,0 +1,3 @@
+#!/bin/sh
+#exec $DEFAULT_XTERM -sb -sl 500 -j -ls -fn 7x14 -e elm &
+exec xx elm

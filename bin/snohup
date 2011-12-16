@@ -1,0 +1,7 @@
+#!/bin/sh
+set -x
+
+#screen -d -m "$@"
+
+screen -d -m $SHELL -c '('"$@"'; '$SHELL')'
+

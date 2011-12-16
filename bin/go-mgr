@@ -1,0 +1,251 @@
+#!/usr/bin/env bash
+#set -x
+progname=$(basename $0)
+. script-x
+ENV_NAME_MIN_LEN=4
+flags='Ee'
+flags_set_p=
+GOPATH_WITH_SPACES=$(echo $GOPATH | sed 's/:/ /g')
+if [ -n "$FAMILY_ZONE" -a "$FAMILY_ZONE" != "none-default-family-zone" ]
+then
+    ext=".$FAMILY_ZONE"
+else
+    ext=.${GO_DOMAIN:-$HOST}	# default to current host's list
+fi
+
+maybe_fix_flags()
+{
+    local flags="$1"
+    local flags_set_p="$2"
+    local del_flags="$3"
+    local add_flags="$4"
+    if [[ -n "$flags_set_p" ]]; then
+	# Don't touch if they've already been set.
+        echo "$flags"
+    else
+	:
+	# Remove del flags
+	# Add add flags.
+    fi
+}        
+
+check_name_len()
+{
+    local name="$1"
+    local flags="$2"
+    if [[ "$name" =~ \| ]]; then
+        echo 1>&2 "Alternate in name [$name].  Not checking name len yet.
+@todo XXX split on | and loop over components."
+    else
+        if echo "$name" | egrep -q ".{$ENV_NAME_MIN_LEN,}"; then
+            :
+        else
+            read -p "Alias name [$name] is pretty short ("$(expr length "$name")") (<= $ENV_NAME_MIN_LEN); Nix making it an env var [y/N]? "
+            case "$REPLY" in
+                [Yy]) flags=$(echo "$flags" | sed 's/e//g');;
+            *);;
+            esac
+        fi
+    fi
+    echo $flags
+}
+    
+
+#
+# tack ext on to go file so we can specify
+# host specific things
+#
+go_file()
+{
+    echo $HOME/.go${ext}
+}
+
+grep_for_dirname()
+{
+    local pat=""
+    local sep=""
+    if [ -n "$1" ]; then
+        pat="$1"
+        sep="|"
+        shift
+        for p in "$@"; do
+            pat="$pat$sep$p"
+        done
+    else
+        shift
+        pat="$1"
+    fi
+    go2env -L | egrep "$pat" 
+}
+
+grep_for_pwdname()
+{
+    # Look for various versions of the current directory name.
+    grep_for_dirname "$PWD" "$(pwd)" 
+    pat="^($PWD|$(pwd)|$(realpath .))/? "
+    #echo "pat>$pat<"
+    grep_for_dirname "" "$pat"
+}
+
+delete_item()
+{
+    name=${2:?"$progname: no name specified"}
+    tmp=$(mktemp --tmpdir go-mgrXXXXX) || {
+	rc=$?
+	echo 1>&2 "Failed to make a temp file."
+	exit $rc
+    }
+
+    # why use sed like this? sed "/|${name}|/d" < $(go_file) > $tmp || exit
+    fgrep -v "|${name}|" < $(go_file) > $tmp || {
+	rc=$?
+	echo 1>&2 "Failed to fgrep |${name}| from $(go_file)."
+	exit $rc
+    }
+    mv $tmp $(go_file)
+}
+
+edit()
+{
+    if [ -z "$1" ]
+    then
+	if [ -n "$DISPLAY" ]
+	then
+	    ed=ec
+	else
+	    ed=vi
+	fi
+    else
+	ed=$1
+    fi
+
+    $ed $(go_file)
+}
+
+dump_go_files()
+{
+    sep2="$1"
+    for f in $GOPATH_WITH_SPACES
+    do
+        if [ -f $f ]
+	then
+            [ "$sep" != "" ] && echo $sep
+            echo $f":"
+	    cat $f
+	    sep="$sep2"
+	fi
+    done
+}
+
+#set -- ` getopt "x:a:d:lef:gG:E:" $* `
+# getopt done right!
+opts="x:a:d:lef:gG:E:h"
+q=$(getopt -o "$opts" -- "$@")
+[ $? != 0 ] && Usage
+eval set -- "$q" 
+
+for i in $*
+do
+    #echo "optloop, 1>$1<"
+    case $1 in 
+	--) 
+	    shift
+	    break
+	    ;;
+	-x)
+	    ext=${2:?"progname: no ext specified"}
+	    # override (use global table) if '-' is used
+	    [ "$ext" = "-" ] && ext=
+	    shift; shift
+	    ;;
+
+	-f)
+	    flags=${2:?"progname: no flags specified"}
+	    if [[ "$flags" == [-.] ]]; then
+                flags=
+            else
+                flags=$(echo "$flags" | sed "s/[xX]/E/g")
+            fi
+            flags_set_p=t
+	    shift; shift
+	    ;;
+
+	-a)
+	    # allow g -a xx     # to mean g -a xx `pwd`
+	    # and   g -a xx yy 
+	    # to be specified
+	    shift # consume -a
+	    # and (new!) g -a [.=/-] --> g -a $(basename $PWD) $PWD
+	    #dat=("$@")
+	    case "$1" in
+		.|=|/|-) shift; set -- $(basename $PWD) "$@";;
+	    esac
+	    name=${1:-"$progname: no name specified"}
+	    shift # consume name
+	    if [ "$1" = '--' -a -n "$2" ]
+	    then
+		    val=$2
+	    else
+		    val=$(pwd)/
+	    fi
+	    a=$(dogo "${name}" 2> /dev/null) && {
+                #echo_id a
+                go_file_name=$(dogo -l "${name}")
+                if [ "$(realpath $a)" = "$(realpath $val)" ]; then
+                    echo 1>&2 "Senior moment: ${name} is already in use for this dir in $go_file_name."
+                else
+                    echo 1>&2 "${name} is already in use as: ${a} in $go_file_name."
+                fi
+		exit 1
+	    }
+            [[ -n "$flags_set_p" ]] && {
+echo 1>&2 "Check len and offer to clear \`e' flag if too short."
+	    }
+            case "$flags" in
+                *e*) flags=$(check_name_len "$name" "$flags");;
+                *);;
+            esac
+	    name=$(echo "|$name|" | sed -r 's/\|+/\|/g')
+	    line="${flags}${name}       $val"
+	    echo "$line" >> $(go_file)
+	    echo "$line >> $(go_file)"
+	    ;;
+		    
+	-d)
+	    delete_item "$@" 
+	    shift; shift;;
+		    
+	-l)
+	    sep=''
+            dump_go_files --
+	    shift
+	    ;;
+	-E)
+	    edit "$2"
+	    shift; shift
+	    ;;
+
+	-e)	
+	    edit "$GEDITOR"
+	    shift
+	    ;;	
+
+	-g)
+	    go_file
+	    shift
+	    ;;
+
+        -h) shift; grep_for_pwdname;;
+
+	-G)
+            shift
+	    egrep "$@" $GOPATH_WITH_SPACES /dev/null
+	    exit $?
+	    ;;
+	*)
+	    echo $(basename $0)": unsupported request: $*" 1>&2
+	    exit 1
+	    ;;
+esac
+done
+exit 0

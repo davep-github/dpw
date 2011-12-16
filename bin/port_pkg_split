@@ -1,0 +1,108 @@
+#!/usr/bin/env python
+
+import sys, string, types
+import portage
+import dp_sequences
+
+class Pkg_name_components(object):
+    def __init__(self, full_pkg_name):
+        self.d_full_pkg_name = full_pkg_name
+        self.d_name_tuple = portage.versions.pkgsplit(full_pkg_name)
+        if not self.d_name_tuple:
+            self.d_name_tuple = (full_pkg_name, "", "")
+        self.d_pkg_name = self.d_name_tuple[0]
+        self.d_version = self.d_name_tuple[1]
+        self.d_revision = self.d_name_tuple[2]
+
+    def name(self):
+        return self.d_pkg_name
+    pkg_name = name
+
+    def version(self):
+        return self.d_version
+    pkg_version = version
+
+    def revision(self):
+        return self.d_revision
+    pkg_revision = revision
+
+    def __str__(self):
+        return string.join(self.d_name_tuple)
+    
+
+def split_pkg_name_components(pkg_name):
+    #print "pkg_name>%s<" % pkg_name
+    #spname = portage.versions.pkgsplit(pkg_name)
+    #print "%s>%s<" % ("SpNaMe", spname)
+    #for q in spname:
+	#print "before print spname"
+	#print "%s>%s<" % (q, q)
+	#print "after print spname"
+    #print "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"
+    return Pkg_name_components(pkg_name)
+
+def print_component_string(pkg_components):
+    print pkg_components
+
+def print_pkg_name(pkg_components):
+    print pkg_components.name()
+
+def print_pkg_version(pkg_components):
+    print pkg_components.version()
+
+def print_pkg_revision(pkg_components):
+    print pkg_components.revision()
+
+def print_components_separated(pkg_components, sep=", "):
+    print "%s%s%s%s%s" % (pkg_components.name(),
+                          sep,
+                          pkg_components.version(),
+                          sep,
+                          pkg_components.revision())
+def main(argv):
+    import getopt
+    operations = []
+    def_op = print_component_string
+    options, args = getopt.getopt(sys.argv[1:], 'npvra:s:')
+    for o, v in options:
+        if o == '-a':
+            operations.append((print_components_separated, (v,)))
+            continue
+        if o == '-s':
+            component_sep = v
+            continue
+        if o in ('-n', '-p'):
+            operations.append(print_pkg_name)
+            continue
+        if o == '-v':
+            operations.append(print_pkg_version)
+            continue
+        if o == '-r':
+            operations.append(print_pkg_revision)
+            continue
+
+    if not operations:
+        operations = (def_op,)
+        
+    if len(args) == 0:
+        f = sys.stdin
+    else:
+        f = args
+        
+    for pkg_name in f:                  # LOVE that polymorphism!
+        #print "pkg_name>%s<" % pkg_name
+        if pkg_name[-1] == '\n':
+            pkg_name = pkg_name[:-1]
+        pkg_components = Pkg_name_components(pkg_name)
+        #print "pkg_components>%s<" % pkg_components
+        for op in operations:
+            if dp_sequences.tuple_p(op):
+                op[0](pkg_components, *op[1])
+            else:
+                op(pkg_components)
+
+if __name__ == "__main__":
+    main(sys.argv)
+
+sys.exit(0)
+        

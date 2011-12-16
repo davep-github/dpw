@@ -1,0 +1,19 @@
+#!/usr/bin/env perl
+
+foreach $db (@ARGV)
+{
+    dbmopen(%DB, $db, 0666) || die "canna open $db: $!\n";
+    print "opened>", $db, "<\n";
+
+    while (($key, $val) = each %DB)
+    {
+	print "key>$key<, val>$val<\n";
+    }
+
+    dbmclose(DB);
+
+}
+
+exit (0);
+
+

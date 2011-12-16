@@ -1,0 +1,15 @@
+#!/bin/sh
+
+: ${DP_WAITFOR_PROG_SLEEP_TIME:=3}
+DP_WAITFOR_PROG_SLEEP_TIME="$DP_WAITFOR_PROG_SLEEP_TIME" waitfor-prog kicker
+exit 0
+#
+# e.g.
+#davep    ?        11535     1   0   0 TS  kicker [kdeinit]
+#
+#while ! pgrep kdeinit | fgrep -q 'kicker [kdeinit]' > /dev/null
+#do
+	#sleep $SLEEP_TIME
+#done
+
+#exit 0

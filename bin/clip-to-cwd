@@ -1,0 +1,12 @@
+#!/bin/sh
+
+source script-x
+
+#
+# Clip a directory name to a particular number of subdirs under $PWD.
+#
+# e.g. PWD = /a/b/c, path name = /a/b/c/d/e/f/g
+# clip 1 --> /a/b/c/d
+# clip 2 --> /a/b/c/d/e
+
+# use a regexp: "$PWD/([^/]*/){$N}"

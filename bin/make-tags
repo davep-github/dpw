@@ -1,0 +1,17 @@
+#!/bin/sh
+
+source script-x
+
+[ "$1" = "-q" ] && "to_dev_null=2>/dev/null"
+if make have_tags $to_dev_null | egrep "^yes I have tags$" >/dev/null 2>&1
+then
+    echo "Using \`make tags'"
+    make tags || make TAGS
+    echo "Used \`make tags'"
+else
+    echo "Using \`index-code'"
+    index-code
+    echo "Used \`index-code'"
+fi
+
+exit

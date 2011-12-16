@@ -1,0 +1,5 @@
+#!/bin/sh
+
+prog=$1
+shift
+exec sudo $(sp -1 $prog) "$@"

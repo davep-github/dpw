@@ -1,0 +1,7 @@
+#!/bin/sh
+#set -x
+
+# Can be used as an rcfile that also runs other commands.
+source $HOME/.bashrc
+
+lsl

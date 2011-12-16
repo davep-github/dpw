@@ -1,0 +1,6 @@
+#!/bin/sh
+# $Id$
+# shorter is better
+#
+chflags nodump "$@"
+

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if ( df | egrep -q "$@"); then
+    df | egrep "$@" | awk '{print $6}'
+    true
+else
+    false
+fi

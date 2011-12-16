@@ -1,0 +1,24 @@
+#!/usr/bin/env perl
+
+foreach $db (@ARGV)
+{
+    dbmopen(%DB, $db, 0666) || die "canna open $db: $!\n";
+    print "opened>", $db, "<\n";
+
+    while (($key, $val) = each %DB)
+    {
+	($mode, $dev) = unpack("II", $key);
+	$maj = ($dev & 0xff00) >> 8;
+	($val) = unpack("A99", $val);
+	$ms = sprintf("mode: 0x%x, maj: 0x%x", $mode, $maj);
+	#print $ms, ", val>$val<\n";
+	print "$maj\n";
+    }
+
+    dbmclose(DB);
+
+}
+
+exit (0);
+
+

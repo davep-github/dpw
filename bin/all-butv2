@@ -1,0 +1,12 @@
+#!/bin/sh
+source script-x
+
+# $Id: toss-lines,v 1.1 2005/03/20 09:20:12 davep Exp $
+# toss first n lines of stdin
+# exit w/1 if eof hit within first n lines.
+# Do my old all-but with new tail commands
+#
+# all-but 2 --> skip 1st 2 lines and give the rest. Ie begin at line 3.
+# tail -n +3 --> Begin at line 3. Ie skip the first 2 lines.
+
+tail -n +$((${1:-0} + 1))

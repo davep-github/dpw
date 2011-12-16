@@ -1,0 +1,33 @@
+#!/bin/sh
+
+LOG_FILE=$DP_LOG/vpn.log
+{
+    echo == $0: begin at $(date) ================= >> $LOG_FILE
+
+    set -x
+    
+    if [[ "$DP_VPN2LL_XX" == no ]]
+    then
+        :
+    elif [[ "$DP_VPN2LL_XX" == yes ]]
+    then
+        XX=xx
+        dash_dash='--'
+        cmd=$XX $dash_dash run-with-title '"VPN to Lincoln Lab"'
+    else
+        XX=
+        dash_dash=
+        [[ "$1" == -X ]] || {
+            export DP_VPN2LL_XX=yes
+            exec $0
+        }
+    fi
+
+    kill-ffox
+
+    sudo modprobe cisco_ipsec
+    eval $cmd sudo vpnclient connect lincoln
+    rc=$?
+    echo == $0: end at $(date), rc: $rc ========== >> $LOG_FILE
+    
+} 2>> $LOG_FILE

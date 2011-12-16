@@ -1,0 +1,5 @@
+#!/bin/sh
+
+./ucc-bin \
+    server \
+    'KF-BioticsLab.rom?game=KFmod.KFGameType?VACSecured=true?MaxPlayers=6?AdminName=dsadmin?AdminPassword=change-me'

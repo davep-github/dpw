@@ -1,0 +1,44 @@
+#!/bin/sh
+# $Id$
+
+option_str='d:p:feg'
+args=` getopt $option_str $* `
+dir=
+pats=
+GREPPER=egrep
+
+[ $? != 0 ] && Usage
+
+set -- $args
+for i in $*
+do
+    case $1 in
+	-n) EXEC=echo;;		# no parameter option
+	-v) set -x;;		# poor man's verbosity
+	-q) ECHO=":" ;;
+	-d) dir="$dir $2"; shift;;
+	-p) pats="$pats $2"; shift;;
+        -f) GREPPER=fgrep;;
+        -e) GREPPER=egrep;;
+        -g) GREPPER=grep;;
+	--) shift ; break ;;
+	*) 
+	    echo 1>&2 "Unsupported option>$1<";
+	    exit 1 ;;
+    esac
+    shift
+done
+
+[ -z "$dir" ] && dir=.
+if [ -n "$pats" ]
+then
+    pats=`mk-find-list $pats`
+else
+    pats="*"
+fi
+
+echo 1>&2 "dir>$dir<"
+echo 1>&2 "@>$@<"
+set -x
+echo "eval find $dir -type f -print0 | xargs -0 $GREPPER $*"
+eval find $dir -type f -print0 | xargs -0 $GREPPER "$@"

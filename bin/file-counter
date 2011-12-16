@@ -1,0 +1,59 @@
+#!/bin/sh
+#set -x
+progname=`basename $0`
+
+clean_up()
+{
+	trap '' $sig_list
+	[ ! -z "$*" ] && echo "$progname: clean_up: $*." 1>&2
+	rm $lock_file
+	echo $num
+	exit $rc
+}
+
+signalled()
+{
+	clean_up "signalled"
+}
+
+ERROR()
+{
+	echo "$*\n" 1>&2
+	exit 1
+}
+
+if [ "$1" = "-c" ]
+then
+	create=1
+	shift
+else
+	create=0
+fi
+
+file=$1
+lock_file=$file.lock
+num="-1"
+rc=1
+sig_list="2 3 4 5 6 7 8 15"
+
+if [ ! -f $file ]
+then
+	[ "$create" = "0" ] && clean_up "$file does not exist."
+	echo "0" > $file || clean_up "cannot create $file."
+fi
+
+until ln $file $lock_file >/dev/null 2>&1
+do
+#	echo "lock file exists." 1>&2
+	sleep 1
+done
+
+trap "signalled" $sig_list
+
+num=`cat $file`
+next=`expr $num + 1`
+rm $file && echo $next > $file
+rc=0
+clean_up
+
+exit 0

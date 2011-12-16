@@ -1,0 +1,39 @@
+#!/bin/sh
+
+source script-x
+
+dolat=("$@")
+
+# either: -r-<x> or -r -x
+# same arg or 2 sequential
+#neg_rev=$(echo "-r[[:space:]]*-[0-9]+"
+
+convert_to_rel()
+{
+    local n="$1"
+    case "$1" in
+        -r*) n=${n:2};;
+    esac
+    x=$(svn_rlist -p$n)
+
+
+newat=()
+indx=0
+rev_coming_p=
+for a in "$@"
+do
+  echo_id a
+  if vsetp $rev_coming_p
+      then
+      a=$(convert_to_rel "$a")
+  case "$a" in
+      -r-[0-9]*) echo "$a" looks negative.;;
+      -r) echo 'rev num coming up.'; rev_coming_p=t;
+      newat=("${newat[@]}" "$a");;
+      *) newat=("${newat[@]}" "$a");;
+  esac
+  echo "newat>${newat[@]}<"
+
+done
+
+echo "${newat[@]}"

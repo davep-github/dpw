@@ -1,0 +1,5 @@
+#!/bin/sh
+
+source script-x
+
+ez-named-screen "screen@$HOST"

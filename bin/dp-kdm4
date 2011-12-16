@@ -1,0 +1,104 @@
+#!/bin/sh
+. script-x
+progname=$(basename "$0")
+log_file_so=${DP_LOG:-$HOME/log}/kde/$progname.stdout
+log_file_se=${DP_LOG:-$HOME/log}/kde/$progname.stderr
+HOME_BASE="$HOME"
+: ${KDM_ARGS:=-error /dev/null}
+dash_n=
+
+EXEC()
+{
+    local dolat=("$@")
+    if vsetp $dash_n
+    then
+	echo 1>&2 "running w/-n: $@"
+    else
+	"$@"
+    fi
+}
+
+log_files="$HOME/.xsession-errors /tmp/xerr-davep-:0"
+
+dp_kdm4_inhibit_logfiles()
+{
+    # I can't find any way to disable logging short of hacking the session
+    # files.  I suppose I could write my own session file, but drift could
+    # kick me in the nuts. Hence the icky hack.
+    # Remove and recreate empty and immutable.
+    # Fuck fuck fuck. /tmp/xerr-davep-:0 is uniqueified.
+    for f in "$@" $log_files
+    do
+      [ -e "$f" ] && {
+          # Remove immutable attribute
+          sudo chattr -i "$f"
+          # and delete the file.
+          yes | rm "$f"
+          [ -e "$f" ] && {
+              echo "Log file >$f< could not be removed."
+              exit 1
+          } 1>&2
+      }
+      # Create an empty, immutable file to block logging.
+      # I'll need to do this until I find all of the alternates.
+      touch "$f"
+      sudo chattr +i "$f"
+    done
+}
+    
+
+dp_kdm4()
+{
+    if [ "$1" = "-n" ]
+    then
+	dash_n=t
+	shift
+    fi
+
+    ###dp_kdm4_inhibit_logfiles
+    
+    ###running_p=$(pgrep "/usr/kde/.*/bin/kdm")
+    KDM=$(sp -1 kdm)
+    running_p=$(pgrep "$KDM")
+    #echo 1>&2 "$(date): running_p>$running_p<"
+    [ -n "$running_p" ] && {
+	echo -n 1>&2 "$(date): Another kdm is running.  Kill it [Y/n]? "
+	read
+	case "$REPLY" in
+	    [yY]|"") echo 1>&2 "Killing kdm..."; EXEC kill-kdm -w;;
+	    *) echo 1>&2 "Not killing. Exiting."; exit 3;;
+	esac
+    }
+    ###kde_4_est=$(kde-4-est)
+    ###: ${kde_ver:=$(basename $kde_4_est)}
+    ###: ${kde_root:=/usr/kde/$kde_ver}
+    ###export KDEHOME=$HOME/.kde$kde_ver
+    ###[ -d "$KDEHOME" ] || {
+    ###    echo 1>&2 "$(date): KDEHOME ($KDEHOME) isn't a dir."
+    ###    exit 1
+    ###}
+
+    ###: ${KDM:=$kde_root/bin/kdm}
+    # I (they) fucked up something. I went from multi-versions
+    # -- /usr/kde/{3.5,4.2} -- to everything unversioned, e.g. in
+    # /usr/share, /usr/bin, etc.
+    # I like it neatly ensconced in its own dir tree.
+    # This needs fixed.
+    KDM=$(sp -1 kdm)
+    [ -x "$KDM" ] || {
+	echo 1>&2 "$(date): KDM ($KDM) executable, isn't."
+	exit 2
+    }
+    cd "$HOME_BASE" || {
+	echo 1>&2 "Can not cd to \`$HOME_BASE\', bailing."
+	exit 2
+    }
+
+    path -1
+    export DP_RUNNING_KDM="$KDM"
+    EXEC exec sudo $KDM $KDM_ARGS   # $kde_root/bin/kdm
+}
+
+running_as_script && {
+    dp_kdm4 "$@"
+} 2>&1 > $log_file_so | tee 1>&2 $log_file_se

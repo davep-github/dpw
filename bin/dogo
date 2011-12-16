@@ -1,0 +1,67 @@
+#!/bin/sh
+# $Id: dogo,v 1.4 2005/02/09 09:20:09 davep Exp $
+#set -x
+
+. script-x 
+
+SHIFT=shift
+[ "$1" = "-l" ] && {
+    shift
+    show_dir_opt="-l"
+    SHIFT=:
+}
+argWas="$1"
+two="$2"
+
+case "$two" in
+    ""|/*) ;;
+    */) two="/$two"
+esac
+
+fini()
+{
+    o_val="$*$two"
+    echo $o_val
+    [ "$o_val" = "$argWas" ] && exit 1
+    exit 0
+}
+
+case "$1" in
+    /*)  fini "$1"; exit 0;;
+    */*) c=$(echo "$1" | sed -n 's!^\([^/]*\).*$!\1!p')
+         cs=$(echo "$1" | sed -n 's!^[^/]*/*\(.*\)$!\1!p')
+         ;;
+    *) c="$1"; cs='';;
+esac
+
+# see if dest is set as an environment variable
+[ -z "$show_dir_opt" ] && eval y=\$$c 
+case "$y" in
+    ""|\$*)     # dest is not an envvar: look it up in the go database
+    case "$c" in
+        back|b) fini ${GoBack-$HOME} ;;
+        "") fini . ; exit ;;
+        *) gPath=${GOPATH-$HOME/.go}
+           oldIFS=$IFS
+           IFS=":"
+           for pathEl in $gPath # search all files in the GOPATH
+           do
+           [ -f "$pathEl" ] && {
+                IFS=$oldIFS
+                # tmp=`egrep "(^|[^#;])|$c|" $pathEl` && {
+                tmp=$(fgrep $show_dir_opt "|$c|" $pathEl) && {
+                    set -- $tmp
+                    $SHIFT
+                    eval fini "$*$cs"
+                    exit
+                }
+           }
+           done
+           IFS=$oldIFS
+           fini "$argWas"
+           ;;
+    esac ;;
+
+    *) eval fini "$y$cs" ; exit ;;
+esac
+

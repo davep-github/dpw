@@ -1,0 +1,16 @@
+#!/bin/sh
+#set -x
+
+. script-x
+
+: ${GREP:=egrep}
+
+pkg_dir="/var/db/pkg/"
+case "$OSName" in
+    FreeBSD) ${GREP} "$@" ${pkg_dir}/*/+DESC;;
+    Linux)
+    case "$(uname -r)" in
+        *gentoo*) pix "$@";; # Gentoo ID.  ??? Only builds from gentoo-sources???
+        *) apt-grep "$@";; # Debian doesn't ID itself in uname, but apt is common.
+    esac
+esac

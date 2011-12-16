@@ -1,0 +1,8 @@
+#!/bin/sh
+
+. script-x
+
+: ${DP_EMACS_MAIL_CLIENT:='(gnus)'}
+
+echo "${DP_EMACS_MAIL_CLIENT}" | ec -E "$@"
+

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+host=`hostname -s`
+domain=`hostname | sed 's/^'$host'\.//'`
+
+echo "$host $domain"
+
+exit 0
+

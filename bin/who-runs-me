@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# source this file and it will stick ps information into a file that may help
+# us to find the caller. Or at least when it runs.
+source script-x
+
+prog_name=$(basename $0) # Sadly, this is our first name, not the caller's.
+LOG_FILE="$DP_LOG_DIR/who-runs-me/$prog_name"
+now=$(date)
+{
+    echo start: === $now ===
+    echo "my pid: $$"
+    good-ps-all
+    pstree
+    echo end === $now... $(date) ===
+} >> $LOG_FILE

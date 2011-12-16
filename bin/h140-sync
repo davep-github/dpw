@@ -1,0 +1,35 @@
+#!/bin/sh
+# $Id: h140-sync,v 1.5 2004/10/08 08:20:03 davep Exp $
+set -x
+
+if [ "$1" = '-n' ]
+then
+    dash_n='-n'
+else
+    dash_n=''
+fi
+
+# bail with unset variables
+set -u
+
+. "$HOME/etc/media.rc"
+
+LOG=${H140_SYNC_LOG}
+
+# do da mvsik
+ sudo rsync -rtv ${dash_n} --delete --modify-window=1 \
+     --exclude='0*.m3u'     \
+     --temp-dir=/tmp "${MP3_MUSIC_DIR}/" "${H140_DEST_MP3}" 2>&1 | tee ${LOG}
+
+# und ze sprechen
+sudo rsync -rtv ${dash_n} --delete --modify-window=1 \
+    --exclude='0*.m3u'     \
+    --temp-dir=/tmp "${SPOKEN_DIR}/" "${H140_DEST_SPOKEN}" 2>&1 | \
+        tee -a ${LOG}
+
+
+if [ -z "$dash_n" ]
+then
+    # not needed with rsync, but may come in useful some day.
+    date >| ${H140_SYNC_FILE}
+fi

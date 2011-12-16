@@ -1,0 +1,4 @@
+#!/bin/sh
+
+exec mplayer -vo x11 -xy 320 -zoom -idx "$@"
+

@@ -1,0 +1,229 @@
+#!/usr/bin/env bash
+#set -x
+#set -v
+
+prog=`basename $0`
+echo $prog: $* 1>&2
+
+# xcscope/cscope, have been having problems with "File does not have the
+# expected format" errors. Not using -q has, at least once, in at least one
+# case, fixed this.
+##: ${DASH_Q=-q}
+: ${DASH_Q=}
+. script-x
+
+. eexec
+
+args=("$@")                     # Preserve args across .bashrc execution.
+
+tagtree()
+{
+    local files_file="$1"
+    eval $SUDO $EXCTAGS "$inheritance_opt" $etags_opt -L "$files_file" \
+      --links=no -o $TAGFILE \
+      $h_OPT $langmap $full_member_names "$py_props" "${EC_XARGS}"
+}
+
+cscope_tree()
+{
+    local files_file="$1"
+    cs=$(sp -1 cscope)
+    vunsetp $cs && cs=$(sp -1 dp-cscope)
+    if vunsetp $cs
+        then
+        echo 1>&2 "Cannot find a cscope program."
+    else
+        $cs $DASH_Q -b -i "$files_file" $cscope_flags
+    fi
+}
+
+# {gentoo|libranet}'s default sudo define SECURE_PATH and so our binaries
+# are inaccessible.
+if [[ "$PATH" != *yokel/sbin* ]]
+then
+    rcfile="$HOME/.bashrc"
+    [ -f $rcfile ] && . $rcfile
+fi
+
+#
+# specify some extra options for exuberant ctags
+#
+: ${EXCTAGS:=exctags}
+: ${EMACS_OPT:=-e}
+: ${SUDO:=}
+: ${NOTAGFILE:=NOTAG}
+: ${EC_ARGS:='--links=no'}
+: ${EC_XARGS:=''}
+: ${FPAT:='.*'}
+: ${v:=''}
+: ${FILES_FILE:=cscope.files}
+: ${ETAGS_P:=t}
+: ${ETAGFILE:=TAGS}
+: ${CTAGFILE:=tags}
+: ${EXCLUDED_FILES_FILE:="extagtree.excluded-files"}
+: ${DEF_SYSTEM_INCLUDES:="/usr/include"}
+: ${src_code_finder:=find-src-code-files}
+: ${use_id=t}
+: ${finder_opts=}
+
+SYSTEM_INCLUDES=
+###
+# This stuff is really now in ~/bin/find-src-code-files
+#: ${INTERESTING_FILES:="\.h|\.([chly](xx|pp)?|cs|cc|hh|py|pl|pm)$"}
+#: ${FILES_OF_INTEREST:=$INTERESTING_FILES}
+###
+
+filter()
+{
+    egrep -e "${FPAT}" | \
+    egrep -i -e "$FILES_OF_INTEREST"
+}
+
+inheritance_opt=
+
+if [ -n "$v" ]
+then
+    v_file="/dev/tty"
+else
+    v_file="/dev/null"
+fi
+v=
+
+set -- "${args[@]}"
+
+for i in $*
+do
+    case $1 in
+        -i) inheritance_opt="--fields=+i";;
+        -n) EExecDashN; finder_opts="$finder_opts $1";;
+        -v) EExecVerbose; finder_opts="$finder_opts $1";;
+	-s) SUDO=sudo;;
+	-t) tag_args="$tag_args $2"; shift;;
+	-T) tag_args="$2 $tag_args"; shift;;
+        -p) FPAT=$2; finder_opts="$finder_opts $1 $2"; shift;;
+        -h) follow_sym_links="-h"; finder_opts="$finder_opts $1";;
+        -E) ETAGS_P="";;
+        -I) SYSTEM_INCLUDES=$DEF_SYSTEM_INCLUDES;;
+        -f) finder_opts="$finder_opts $2"; shift;;
+	--) shift ; break ;;
+	*) 
+            break ;;
+	    #echo 1>&2 "Unsupported option>$1<";
+	    #exit 1 ;;
+    esac
+    shift
+done
+
+dirs="$@"
+# Put the system includes first so any collisions will be noticeable.
+dirs="$SYSTEM_INCLUDES $dirs"
+
+if true_p "$ETAGS_P"; then
+    etags_opt="-e"
+    TAGFILE=$ETAGFILE
+else
+    etags_opt=""
+    TAGFILE=$CTAGFILE
+fi
+
+#
+# specify some extra options for exuberant ctags
+#
+#why were these duped down here???# : ${EXCTAGS:=exctags}
+#why were these duped down here???# : ${TAGFILE:=TAGS}
+#why were these duped down here???# : ${SUDO:=}
+#why were these duped down here???# : ${NOTAGFILE:=NOTAG}
+
+if [[ -n "$EXCLUDED_FILES_FILE" && "$EXCLUDED_FILES_FILE" == "-" ]]; then
+        EXCLUDED_FILES_FILE=""
+fi
+EXCLUDED_FILES_FILE_OPT=
+[[ -n "$EXCLUDED_FILES_FILE" ]] && {
+    EXCLUDED_FILES_FILE_OPT="-c $EXCLUDED_FILES_FILE"
+}
+
+# wha...
+for tag_prog in exctags ctags-exuberant exuberant-ctags ctags dp-last-resort-ctags
+do
+    EXCTAGS=$(sp -1 $tag_prog)
+    [ -n "$EXCTAGS" ] && {
+	[[ "$EXCTAGS" = */ctags ]] && {
+	    echo 1>&2 "Falling back to ctags, which may be exctags"
+	}
+	break
+    }
+done
+
+if [ -z "$EXCTAGS" ]
+then
+    FATAL "cannot find exuberant ctags executable"
+    exit 1
+else
+    echo "tagger: \`$EXCTAGS'"
+fi
+
+#
+if [ -r $HOME/.ctags -o -r $HOME/.exctags ]
+then
+    h_OPT=
+    langmap=
+    full_member_names=
+else
+    # tell tagger that .inl files are headers.
+    h_OPT='-h +.inl'
+    langmap='--langmap=c++:+.inl.tcc'
+    full_member_names='--extra=+q'
+    py1="'--regex-python=/[ \t]*([_A-Za-z][_A-Za-z0-9]*)[ \t]*=[ \t]*property/\1/'"
+    py2="'--regex-python=/^([A-Z_][A-Z0-9_]).*=/\1/'"
+    py_props="$py1 $py2"
+fi
+
+argses="$@"
+: ${argses:="."}
+
+#CO# {
+#CO#     echo "EXCLUDED_FILES_FILE>$EXCLUDED_FILES_FILE<"
+#CO#     echo "EXCLUDED_FILES_FILE_OPT>$EXCLUDED_FILES_FILE_OPT<"
+#CO# } 1>&2
+
+# ftreewalk.py -X NOTAG \
+#     $EXCLUDED_FILES_FILE_OPT \
+#     $follow_sym_links $dirs | \
+#     filter | tee $v_file >| "$FILES_FILE"
+
+${src_code_finder} $finder_opts $argses | tee "$v_file" >| "$FILES_FILE"
+[ -s "$FILES_FILE" ] || {
+    echo "Cound not find any files. $FILES_FILE is empty."
+} 1>&2
+
+TAGFILES="$ETAGFILE $CTAGFILE"
+(
+    # subshell
+    etags_opt="-e"
+    TAGFILE="$ETAGFILE"
+    tagtree "$FILES_FILE"
+) &
+(
+    # subshell
+    etags_opt=""
+    TAGFILE="$CTAGFILE"
+    tagtree "$FILES_FILE"
+) &
+
+if [ -n "$use_id" ] && type mkid >/dev/null 2>&1
+then
+    prunes=$(untagged-dirs $argses)
+    #echo_id prunes
+    mkid $prunes &
+fi
+cscope_tree "$FILES_FILE" &
+
+echo "waiting for procs to complete..."
+wait
+
+if vsetp "$SUDO"
+then
+    exec $SUDO chown $(id -u) $TAGFILES
+else
+    true
+fi

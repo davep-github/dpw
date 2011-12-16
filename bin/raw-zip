@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+
+"""
+output raw compressed data
+"""
+
+import sys, os, string, zlib
+
+if len(sys.argv) > 1:
+    infile = sys.argv[1]
+    f = open(infile)
+else:
+    f = sys.stdin
+
+data = f.read()
+dlen = len(data)
+if dlen % 4:
+    print >>sys.stderr, 'WARNING: len of data is not a multiple of 4'
+
+zdata = zlib.compress(data, 9)
+
+sys.stdout.write(zdata)
+print >>sys.stderr, 'len of  data:', dlen
+print >>sys.stderr, 'len of zdata:', len(zdata)
+
+sys.exit(0)
+

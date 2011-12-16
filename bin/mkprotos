@@ -1,0 +1,63 @@
+#!/bin/sh
+
+#
+# $1: where to put proto files
+# $2: extension for files
+#
+# stdin is redirected to come from a ctags -x file with #defines filtered out
+#
+#
+path=${1:-protos/}
+ext=${2:-.c-p}
+allNames=
+case $OSName in
+	AIX) trPat1="[A-Z][a-z][0-9]"; trPat2="[_*]" ;;
+	Solaris) trPat1="A-Za-z0-9"; trPat2="_" ;;
+	*) echo unknown os: $OSName; exit 1 ;;
+esac
+
+while read line
+do
+	set -- `echo $line`
+	func=$1
+	fullName=$3
+	name=`basename $fullName .c`
+   lineNum=$2
+	protoName=${path}${name}${ext}
+
+	#
+	# maintain list of names and initialize file if seen for the 1st time
+	#
+	if echo "$allNames" | fgrep -e "$protoName" -x >/dev/null; then
+		created=">>"
+	else
+		created=">"
+		allNames="$protoName
+$allNames"
+
+		defName=`echo -n $protoName | tr "[a-z]" "[A-Z]"`
+		defName=`echo -n $defName | tr -c "$trPat1" "$trPat2"`
+	
+		#
+		# add cpp stuff to ensure only 1 inclusion
+		#
+		echo "#ifndef $defName" > $protoName
+		echo "#define $defName" >> $protoName
+		echo "" >> $protoName
+	
+	fi
+	echo "$func($fullName) $created $protoName"
+
+	pproto $lineNum < $fullName >> $protoName
+
+done
+
+
+tmpFile=${path}tmp$$
+
+
+for i in $allNames
+do
+	echo "" >> $i
+	echo "#endif" >> $i
+done

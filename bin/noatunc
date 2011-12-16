@@ -1,0 +1,8 @@
+#!/bin/sh
+set -x
+
+noatun=`dcop | fgrep noatun | sort -n`
+
+args=${1:-playpause}
+
+dcop $noatun Noatun $args

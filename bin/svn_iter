@@ -1,0 +1,12 @@
+#!/bin/sh
+
+source script-x
+
+iterate()
+{
+    for r in $(svn_rlist)
+    do
+      svn "$cmd" -r$r "$file"
+    done
+}
+

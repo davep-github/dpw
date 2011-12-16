@@ -1,0 +1,3 @@
+#!/bin/sh
+
+fer-all-files -- fgrep -h "(provide '" | sed -nr "s/(^\(provide ')([^)]*)(\))/\2/p" | sort | uniq

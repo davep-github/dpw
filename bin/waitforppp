@@ -1,0 +1,60 @@
+#!/bin/sh
+# $Header: /home/davep/yokel/archive-cvsroot/davep/bin/waitforppp,v 1.2 2004/01/28 04:15:22 davep Exp $
+#set -x
+sleep_time=2
+timeout_time=120
+total_time=0
+
+timer_exp()
+{
+    echo "Time expired waiting for ppp." 1>&2
+    exit 1
+}
+term()
+{
+    echo "terminated.  signal caught." 1>&2
+    exit 1
+}
+
+case "$(uname)" in
+    Linux) ppp_pat='P-t-P:';;
+    FreeBSD) ppp_pat='-->';;
+esac
+
+case $(uname) in
+#     Linux|FreeBSD)
+# 	trap 'timer_exp' 14
+# 	trap 'term' 2 15 28
+# 	# wait for ip-up script to write to fifo file
+# 	kill_me_later 14 $timeout_time $$ >/dev/null 2>&1 &
+# 	killer_pid=$!
+# 	trap 'kill $killer_pid >/dev/null' 0
+# 	ppp_stat=`cat /home/davep/yokel/etc/pppd-pipe`
+# 	trap '' 14
+# 	case $ppp_stat in
+# 		+*)
+# 			exit 0;;
+# 		-RETRY)
+# 			exit 2;;
+# 		*)
+# 			exit 1;;
+# 	esac
+
+# 	exit 0
+#	;;
+    *)
+	;;
+esac
+
+# for systems w/o fifos
+# sleep/wait for ppp interface to appear in ifconfig output
+interface=${1:-ppp0}
+
+until ifconfig $interface | egrep -q -- "$ppp_pat"
+do
+	[ $total_time -gt $timeout_time ] && exit 1
+	sleep $sleep_time
+	total_time=$(($total_time + $sleep_time))
+done
+
+exit 0

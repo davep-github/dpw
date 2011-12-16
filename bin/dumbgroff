@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# *roff a page w/output suitable for an emacs buffer
+
+groff $* | ul -t dumb
+
+

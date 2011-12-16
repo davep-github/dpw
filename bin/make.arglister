@@ -1,0 +1,6 @@
+#!/bin/sh
+
+
+echo 1>&2 "**********make: $PWD: " "$@"
+
+exec /usr/bin/make "$@"

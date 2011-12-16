@@ -1,0 +1,9 @@
+#!/bin/sh
+
+. script-x
+# echo "!!!!!!!!!!!!!!!!!xtitle: $*!!!!!!!!!!!!!!!!!!!!!" >/dev/tty
+if dp-xterm-like-p; then
+    echo -n ']2;'$*'' >/dev/tty
+    exit 0	# We got one!
+fi
+exit 1

@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+
+import sys
+
+def nsuniq_file(fil, seen_lines, uniq_lines, print_real_time=False):
+    for l in fil:
+        l = l[:-1]
+        if not seen_lines.get(l):
+            seen_lines[l] = 1
+            uniq_lines.append(uniq_lines)
+            if print_real_time:
+                print l
+
+def nsuniq_files(file_names, seen_lines, uniq_lines, print_real_time=False):
+    for f in files:
+        f = open(file_names, 'r')
+        nsuniq_file(f, seen_lines, uniq_lines, print_real_time=print_real_time)
+        f.close()
+
+
+if __name__ == "__main__":
+    Seen_lines = {}
+    Uniq_lines = []
+    if len(sys.argv) == 1:
+        nsuniq_file(sys.stdin, Seen_lines, Uniq_lines, print_real_time=True)
+    else:
+        nsuniq_files(sys.argv[1:], Seen_lines, Uniq_lines,
+                     print_real_time=True)

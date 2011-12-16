@@ -1,0 +1,11 @@
+#!/bin/sh
+
+for sig in 2 3 4 5 6 7 8 15
+do
+    trap "echo ; echo $0: Got sig $sig, exiting.; exit $sig" $sig
+done
+
+: ${vo:=sdl}
+
+set -x
+exec mplayer -fs -vo $vo -quiet $sopt -nosound -vf eq -idx "$@"

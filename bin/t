@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+case "$2" in
+     "127.0.0.1")  true ;;
+     *) echo "$2";;
+esac

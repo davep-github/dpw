@@ -1,0 +1,153 @@
+#!/usr/bin/env bash
+#set -x
+#set -v
+
+prog=`basename $0`
+echo $prog: $* 1>&2
+
+. eexec
+
+args="$@"                       # Preserve args across .bashrc execution.
+# {gentoo|libranet}'s default sudo define SECURE_PATH and so our binaries
+# are inaccessible.
+if [[ "$PATH" != *yokel/sbin* ]]
+then
+    rcfile="$HOME/.bashrc"
+    [ -f $rcfile ] && . $rcfile
+fi
+
+set -- $args
+#echo "args>$args<"
+#
+# specify some extra options for exuberant ctags
+#
+: ${EXCTAGS:=exctags}
+: ${SUDO:=}
+: ${NOTAGFILE:=NOTAG}
+: ${EC_ARGS:='--links=no'}
+: ${EC_XARGS:=''}
+: ${FPAT:='.'}
+: ${v:=''}
+: ${ETAGS_P:=t}
+: ${ETAGFILE:=TAGS}
+: ${CTAGFILE:=tags}
+: ${EXCLUDED_FILES_FILE:="extagtree.excluded-files"}
+
+inheritance_opt=
+
+if [ -n "$v" ]
+then
+    v_file="/dev/tty"
+else
+    v_file="/dev/null"
+fi
+
+set -- $args
+for i in $*
+do
+    case $1 in
+        -i) inheritance_opt="--fields=+i";;
+        -n) EExecDashN;;
+        -v) EExecVerbose;;
+	-s) SUDO=sudo;;
+	-t) tag_args="$tag_args $2"; shift;;
+	-T) tag_args="$2 $tag_args"; shift;;
+        -p) FPAT=$2; shift;;
+        -h) follow_sym_links="-h";;
+        -E) ETAGS_P="";;
+	--) shift ; break ;;
+	*) 
+            break ;;
+	    #echo 1>&2 "Unsupported option>$1<";
+	    #exit 1 ;;
+    esac
+    shift
+done
+
+dirs="$*"
+
+if true_p "$ETAGS_P"; then
+    etags_opt="-e"
+    TAGFILE=$ETAGFILE
+else
+    etags_opt=""
+    TAGFILE=$CTAGFILE
+fi
+
+
+#
+# specify some extra options for exuberant ctags
+#
+#why were these duped down here???# : ${EXCTAGS:=exctags}
+#why were these duped down here???# : ${TAGFILE:=TAGS}
+#why were these duped down here???# : ${SUDO:=}
+#why were these duped down here???# : ${NOTAGFILE:=NOTAG}
+
+if [[ -n "$EXCLUDED_FILES_FILE" && "$EXCLUDED_FILES_FILE" == "-" ]]; then
+        EXCLUDED_FILES_FILE=""
+fi
+EXCLUDED_FILES_FILE_OPT=
+[[ -n "$EXCLUDED_FILES_FILE" ]] && {
+    EXCLUDED_FILES_FILE_OPT="-X $EXCLUDED_FILES_FILE"
+}
+
+# wha...
+for tag_prog in exctags ctags-exuberant exuberant-ctags ctags
+do
+    EXCTAGS=$(sp -1 $tag_prog)
+    [ -n "$EXCTAGS" ] && {
+	[[ "$EXCTAGS" = */ctags ]] && {
+	    echo 1>&2 "Falling back to ctags, which may be exctags"
+	}
+	break
+    }
+done
+
+if [ -z "$EXCTAGS" ]
+then
+    FATAL "cannot find exuberant ctags executable"
+    exit 1
+else
+    echo "tagger: \`$EXCTAGS'"
+fi
+
+#
+if [ -r $HOME/.ctags -o -r $HOME/.exctags ]
+then
+    h_OPT=
+    langmap=
+    full_member_names=
+else
+    # tell tagger that .inl files are headers.
+    h_OPT='-h +.inl'
+    langmap='--langmap=c++:+.inl.tcc'
+    full_member_names='--extra=+q'
+    py1="'--regex-python=/[ \t]*([_A-Za-z][_A-Za-z0-9]*)[ \t]*=[ \t]*property/\1/'"
+    py2="'--regex-python=/^([A-Z_][A-Z0-9_]).*=/\1/'"
+    py_props="$py1 $py2"
+fi
+
+argses="$@"
+: ${argses:="."}
+
+#CO# {
+#CO#     echo "EXCLUDED_FILES_FILE>$EXCLUDED_FILES_FILE<"
+#CO#     echo "EXCLUDED_FILES_FILE_OPT>$EXCLUDED_FILES_FILE_OPT<"
+#CO# } 1>&2
+
+set -x
+#switching to following code# ftreewalk.py -X NOTAG \
+#switching to following code#     $EXCLUDED_FILES_FILE_OPT \
+#switching to following code#     $follow_sym_links $dirs | \
+#switching to following code#     egrep -e "${FPAT}" | tee $v_file | \
+list-src-files \
+    $EXCLUDED_FILES_FILE_OPT \
+    $follow_sym_links \
+    $dirs \
+    | \
+    cat
+#for a test#     eval $SUDO $EXCTAGS "$inheritance_opt" \
+#for a test#     $etags_opt -L - --links=no -o $TAGFILE \
+#for a test#     $h_OPT $langmap $full_member_names "$py_props" "${EC_XARGS}"
+
+[ -n "$SUDO" ] && exec $SUDO chown `id -u` $TAGFILE

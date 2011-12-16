@@ -1,0 +1,5 @@
+#!/bin/sh
+
+source script-x
+
+dvd-bak -C -k

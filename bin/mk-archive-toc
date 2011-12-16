@@ -1,0 +1,31 @@
+#!/bin/sh
+
+source script-x
+
+#
+# This separates the archive and member names and can be used by less (via
+# lesspipe-new.sh) to look at the member within the archive.
+# eg: less nightly-1.tar.gz%a-log-file-of-interest.log will look at the log
+# file in question.
+sep=${kwa_sep:=%}
+
+#
+# Find tables of contents of all the archives specified.
+#
+
+if vsetp "$@"
+then
+    # File names on command-line
+    ls -1t "$@"
+else
+    # Or file names via stdin.
+    cat
+fi | \
+while read
+do
+  ff="$PWD/$REPLY" 
+  # echo "$ff"
+  tar tf "$ff" | while read
+    do echo "$ff${sep}$REPLY"
+  done | tee ~/wrk/archive-tocs/${REPLY}.toc
+done | tee ~/wrk/archive-tocs/ALL.toc

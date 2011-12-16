@@ -1,0 +1,37 @@
+#!/bin/sh
+# $Id: killkdm,v 1.1 2004/12/17 09:20:04 davep Exp $
+. script-x
+
+: ${kwa_sig=}
+
+KDE_PROCESS_PATTERN='kde|plasma|dcop|nepomuk|akonadi'
+kill_kdm_func()
+{
+    # we only have simple switches for now.
+    for o in "$@"; do
+	case "$o" in
+	    -[0-9]*) kwa_sig=$o;;
+	    -w) wait=t;;
+	    -s) short=t;;
+	    *) echo 1>&2 "I don't know anything about >$o<"; 
+	       exit 1;;
+	esac
+	shift
+    done
+    KDM=$(sp -1 kdm)
+    [ -n "$short" ] && KDM=$(basename $KDM)
+    killprog=$(sp -1 killprog)
+    sudo $killprog ${kwa_sig} "$@" $KDM
+    if [ -n "$wait" ]; then
+	while findprog -s "$KDE_PROCESS_PATTERN"
+	do
+	    sleep 1
+	done
+    fi
+    killprog -9 kdeinit4:
+}
+
+if running_as_script; then
+    kill_kdm_func "$@"
+fi
+

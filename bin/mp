@@ -1,0 +1,5 @@
+#!/bin/sh
+
+my_uid=$(id -u)
+touch /usr/tmp/home-work-sync
+echo -n "1" > /tmp/cppop.next.msg.$my_uid

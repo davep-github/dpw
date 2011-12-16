@@ -1,0 +1,18 @@
+#!/bin/sh
+#set -x
+
+mon=${1:-""}
+year=${2:-""}
+
+set -- `date +"%m %y"`
+
+# nuke leading zeroes
+mon=`expr ${mon:-$1} + 0`
+year=`expr ${year:-$2} + 0`
+
+echo $mon $year
+
+url="http://www.scifi.com/bin/schedulebot.cgi?wd=w&s=MST3000&ds=1&db=US%3AEastern&mon=$mon.$year&t=off&x=128&y=31"
+
+echo $url
+lynx -dump -width=256 "$url"

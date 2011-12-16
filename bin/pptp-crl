@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+#
+# $Id: pptp-crl,v 1.4 2004/02/04 04:14:51 davep Exp $
+set -x
+
+case "$(uname)" in
+    FreeBSD)
+	while :
+	do
+	    echo "starting pptp @ `date`"
+	    sudo pptp tunnel-taylor.compaq.com taylor
+	    #add_nets
+	done
+	;;
+	
+    Linux) 
+	# remove debug and nodetach eventually
+	# ???  logfd 2 ???
+	while :
+	do
+	    sudo pon taylor debug nodetach 
+	done
+	;;
+esac    
+

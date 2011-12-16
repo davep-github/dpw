@@ -1,0 +1,40 @@
+#!/bin/sh
+
+. eexec
+
+#EExecShowOnly=y
+EExecEcho=echo
+
+if [ -z "$1" ] 
+then
+    echo 1>&2 "You must specify a floppy drive, e.g. fd0"
+    exit 1
+fi
+
+drv=$1
+rdrv=r$1
+dev=/dev/$drv
+rdev=/dev/$rdrv
+
+EExec newfs -T fd1440 $rdev
+EExec mount $dev /mnt
+EExec cd /mnt
+EExec chmod 777 .
+EExec mkdir -p boot/grub
+EExec cd boot/grub
+
+EExec cp /boot/grub/menu.lst .
+EExec cp /boot/grub/stage? .
+EExec cd /
+
+EExec umount /mnt
+
+root=$(df / | tail -1)
+set -- $root
+root=$1
+
+echo "Run grub and use root($drv) and setup($drv)"
+grub <<EOF
+root ($drv)
+setup ($drv)
+EOF

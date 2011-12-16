@@ -1,0 +1,64 @@
+#!/bin/sh
+
+source script-x
+source eexec
+
+# Command example:
+# p4v -cmd 'annotate //eng/albireo/src/perl/cliquetest/AlbireoTest/SmallComparison.pm'
+set -u 
+
+: ${p4v_prog:=p4v}
+: ${p4_server:=perforce}
+: ${p4_port:=1666}
+: ${user:=$USER}
+: ${client:=$(scsandbox -c .)}
+
+EExecVerbose
+option_str="nvqkc:p:s:u:"
+source dp-getopt+.sh || {
+    # We will have had our Usage called.
+    exit 1
+}
+
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      # Don't actually execute stuff just display them with eko.
+      -k) DASHN=t; EXEC=echo; EExecDashN -k;;
+      # Don't actually execute stuff just display them with echo.
+      -n) DASHN=t; EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+      -c) client=$2; shift;;
+      -p) p4_port=$2; shift;;
+      -s) p4_server=$2; shift;;
+      -u) user=$2; shift;;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+p4_server_spec="${p4_server}:${p4_port}"
+
+cmd="annotate"
+file=$1
+case "$file" in
+    /*) ;;
+    *) file="//eng/albireo/$(scsandbox -r)/$file";;
+esac
+command="$cmd $file"
+
+[ -z "$client" ] && {
+    client=$(scsandbox -c .)
+}
+
+# Yes, p4v wants the -cmd "...." in quotes like that.
+EExec ${p4v_prog} \
+      -p "${p4_server_spec}" \
+      -u "${user}" \
+      -c "${client}" \
+      -cmd "${command}"

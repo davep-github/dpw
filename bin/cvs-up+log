@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if [ -z "$1" ]
+then
+    args='up'
+    cmd='up'
+else
+    args="$*"
+    cmd=$1
+fi
+
+log_file=`dp-mk-tmp-file cvs-$cmd-log.XXXXXXXX`
+cvs $args > $log_file 2>&1 &
+sleep 1
+tail -f $log_file

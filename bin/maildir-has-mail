@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# REWRITE IN PYTHON!!!!!
+#
+#. eexec 
+
+: ${RUNDIR:=$HOME/run/maildir-has-mail}
+: ${LASTRUN:=$RUNDIR/last-run}
+: ${MAILDIR:=$HOME/Maildir}
+: ${NEWMAIL:=$MAILDIR/new}
+: ${NUM:=0}
+
+#[ -d "$RUNDIR" ] || EExec mkdir -p $RUNDIR
+
+# if LASTRUN is a "long time ago" reset things
+
+#
+
+curcount="$(ls -1 $NEWMAIL |wc -l)"
+
+# if mod(MAILDIR) newer than mod(last-count)
+#   if curcount == 0:
+#     echo "0" >| $LASTCOUNT
+#     exit 'cleared
+# lastcount=$(cat $LASTCOUNT)
+# if curcount > lastcount
+#   echo $newcount >| $LASTCOUNT
+#   exit 'newmail
+# if lastcount != 0 and curcount == 0
+#   exit cleared
+
+[ $curcount -gt $NUM ]
+rc=$?
+exit $rc

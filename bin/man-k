@@ -1,0 +1,50 @@
+#!/bin/sh
+
+std_options=
+option_str="s:e:cnvk"              # EExec options
+. dp-getopt+.sh
+
+sections_regexp=""
+regexp=""
+sections=""
+cmd_sections="128"
+default_sections="128"
+
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -s) sections="$sections"":""$2"; shift;;
+      -e) regexp="$2"; shift;;
+      -c) sections="$sections:$cmd_sections";;
+      -n) EExecDashN;;
+      -v) EExecVerbose;;
+      -k) EExecVerbose EExecStandardErr_eko;;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+# The following is used only if non optional args are required.
+#[ "$@" = "" ] && Usage
+
+re_sep=""
+if [[ -n "$sections" ]]; then
+    sections_regexp="[FIRSTONE"$(echo "$sections" | sed -r 's/://g')"]"
+    [[ -n "$regexp" ]] && {
+        re_sep="|"
+    }
+elif [[ -z "$regexp" ]]; then
+    sections_regexp="[$default_sections]"
+else
+    sections_regexp="[$default_sections]"
+fi
+
+[[ -n "$sections_regexp" ]] && sections_regexp="\\($sections_regexp\\)"
+#regexp="$regexp$re_sep$sections_regexp"
+
+EExec man -k "$@" \
+    | EExec egrep -e "$regexp$re_sep$sections_regexp"

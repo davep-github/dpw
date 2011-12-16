@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# $1 is disk + partition number
+for dp in "$@"; do
+    mount_point=$(df | fgrep "$dp" | awk '{print $6}')
+    echo "Open files on $dp, mounted on $mount_point"
+    sudo lsof +c 0 | fgrep "$mount_point" | while read; do
+        name=$(echo "$REPLY" | awk '{print $9}')
+        command=$(echo "$REPLY" | awk '{print $1}')
+        command=$(sp -1 $command)
+        [ -x "$command" ] && echo -n '*'
+        echo -n "$REPLY"
+        [ -x "$name" ] && echo -n '*'
+        echo
+    done
+done
+

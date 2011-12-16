@@ -1,0 +1,24 @@
+#!/bin/sh
+
+oldIFS=$IFS
+IFS='/'
+
+case "$1" in
+    /*) starts_at_root=y
+	path='/';;
+    *) starts_at_root=
+       path=
+       ;;
+esac
+
+set -x
+for comp in $1
+do
+    echo 1>&2 "comp>$comp<"
+    echo 1>&2 "b:path>$path<"
+    path="$path/$comp"
+    echo 1>&2 "a:path>$path<"
+    ls -dl "$path"
+done
+
+

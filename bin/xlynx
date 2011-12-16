@@ -1,0 +1,2 @@
+#!/bin/sh
+xx -B white -F black -t color_xterm lynx -term=xterm-color

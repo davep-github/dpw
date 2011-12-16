@@ -1,0 +1,44 @@
+#!/usr/local/bin/python
+#-*-Python-*-
+# $Id: tkinter.template,v 1.2 2001/07/16 07:30:09 davep Exp $
+
+import sys
+import getopt
+from Tkinter import *
+ 
+class Application(Frame):
+    def __init__(self, master=None):
+        Frame.__init__(self, master)
+        self.parse_args()
+        self.create_widgets()
+        self.master.title("Strunza!")
+        self.pack()
+
+    def usage(self):
+        sys.stderr.write('usage: ')
+        sys.exit(1)
+
+    def parse_args(self):
+        options, args = getopt.getopt(sys.argv[1:], '')
+        for opt, val in options:
+            #print 'opt', opt, 'val', val
+            if (opt == '-f'):
+                blah
+            else:
+                self.usage()
+
+    def create_widgets(self):
+	self.create_title()
+	self.create_date_entries()
+	self.create_day_entries()
+	
+    def create_title(self):
+	self.title = Label(self, relief=RAISED, borderwidth=2,
+			   text='Appointment Editor for PCal')
+	self.title.pack(fill=X)
+        self.update()
+#
+###################################
+#
+app = Application()
+app.mainloop()

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+source script-x
+
+# the vpnclient needs special, by hand, attention.
+packages=()   # ("cisco-vpnclient-3des")
+
+for pkg in "${packages[@]}"
+do
+  de-emerge "$pkg"
+done

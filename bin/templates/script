@@ -1,0 +1,58 @@
+#!/bin/sh
+#
+# sh script template
+#
+
+. script-x
+
+prog=`basename $0`
+#echo $prog: "$@" 1>&2
+
+Usage()
+{
+   {
+       echo "${prog}: usage: [-$all_options]"
+   } 1>&2
+   
+   exit 1
+}
+
+# init optional vars to defaults here...
+VERBOSE=:
+DEBUG=:
+
+. eexec
+
+# see the man page of getopt for inadequacies.
+# No more!!! They've fixed it!
+
+std_options="nvd"               # superseded by . script-x "D"
+option_str=""
+all_options="$option_str$std_options"
+
+# New style getopt... fixes ugly quoting problems.
+q=$(getopt -o "$all_options" -- "$@")
+[ $? != 0 ] && Usage
+eval set -- "$q" 
+unset q
+
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $prog: "; EExecVerbose;;
+      # -d is really just verbosity
+      -d) EExecVerbose; DEBUG="echo 1>&2 $prog: ";;
+      # superseded by . script-x# -D) set -x;;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+# only if non optional args required
+#[ "$@" = "" ] && Usage
+

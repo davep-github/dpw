@@ -1,0 +1,7 @@
+#!/bin/sh
+
+#
+# hg - handicapper general
+# convert all files to lowest-common-denominator ascii text
+#
+lesspipe-new.sh "$@" | ul -t dumb

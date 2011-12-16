@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# $Id: fix-album,v 1.1 2003/05/01 15:21:26 davep Exp $
+#
+#set -x
+
+if [ "$1" = '-n' ]
+then
+    doit=eko
+    shift
+else
+    doit=''
+fi
+
+for f in "$@"
+do
+    case "$f" in
+    /*) ;;
+    *) f="$PWD/$f";;
+    esac
+
+    d=`dirname "$f"`
+    p=`basename "$d"`
+
+    $doit id3tool -a "$p" "$f"
+done
+
+exit 0

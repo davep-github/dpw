@@ -1,0 +1,21 @@
+#!/bin/sh
+source script-x
+source eexec
+
+if [ "$1" = "-n" ]
+then
+    EExecDashN
+fi
+
+operations=(
+    "remerge-x-drivers"
+    "remerge-module-rebuild"
+    "remerge-kernel-dep-pkgs")
+    
+for op in "${operations[@]}"
+do
+    EExec "$op"
+done
+
+# !<@todo XXX filter out only the new kernel fini reminder lines.
+sudo truncate -s 0 /etc/motd

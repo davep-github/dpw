@@ -1,0 +1,33 @@
+#!/bin/sh
+#set -x
+# XXX !<@todo Make this use host-info stuff.
+host=$1
+ohost=$1
+case $host in
+    *[bt][0-9][0-9]*) 
+	num=`echo $host | perl -n -e 'print /([bt]\d+)/;'`
+	host=tncl${num}.la.platsol.com
+	;;
+    demo*) 
+	# of historical interest, only.
+	num=`echo $host | cut -c 5-`
+	host=tnc_demo${num}.bos.platsol.com
+	;;
+    work|vanu-ssh|vanu)
+        host="sentinels.vanu.com"
+        ;;
+    '') 
+	host=$HOST
+	;;
+    *) 
+	host=`nick2host $host`
+	if test -z $host
+	then
+	    host=$ohost
+	fi
+	;;
+esac
+
+echo $host
+exit 0
+	

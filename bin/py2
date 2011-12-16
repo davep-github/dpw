@@ -1,0 +1,45 @@
+#!/usr/local/bin/python
+#-*-Python-*-
+# $Id: py2,v 1.1.1.1 2001/01/17 22:22:29 davep Exp $
+
+import sys
+import getopt
+from Tkinter import *
+ 
+class Application(Frame):
+	def __init__(self, master=None):
+		Frame.__init__(self, master)
+		self.parse_args()
+		self.create_widgets()
+		self.master.title("Strunza!")
+		self.pack()
+
+	def usage(self):
+	    sys.stderr.write('usage: ')
+	    sys.exit(1)
+
+	def parse_args(self):
+		options, args = getopt.getopt(sys.argv[1:], 'f:t:xhH?')
+		for opt, val in options:
+			#print 'opt', opt, 'val', val
+			if (opt == '-f'):
+			    self.file = val
+			else:
+			    self.usage()
+
+	def create_widgets(self):
+		print image_types()
+		f = Frame(self)
+		self.i = PhotoImage(file="/home/davep/yokel/lib/picons/db/weather/temp/p070/face.gif",name="bubba")
+
+		#i = Image("bitmap", file="/home/davep/yokel/lib/picons/db/weather/temp/p070/face.xpm")
+		l = Label(f, image=self.i, bd=1, relief="sunken")
+		l.pack()
+		f.pack()
+
+
+#
+###################################
+#
+app = Application()
+app.mainloop()

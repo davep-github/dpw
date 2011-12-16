@@ -1,0 +1,33 @@
+#!/bin/sh
+# $Id: lmake,v 1.1 2003/08/04 20:04:31 davep Exp $
+# lmake - logging make
+#
+if [ "$1" = "-make" ]
+then
+    MAKE_PROG=$2
+    shift; shift
+else
+    MAKE_PROG='gmake'
+fi
+
+[ -z "$LMAKE_DIR" ] && LMAKE_DIR="."
+
+if ! [ -d "$LMAKE_DIR" ]
+then
+    echo 1>&2 "$LMAKE_DIR does not exist... using cwd."
+    LMAKE_DIR=.
+fi
+
+log_file="$LMAKE_DIR/lmake.$MAKE_PROG.`dp-std-date -s`.log"
+
+echo "logging to: $log_file" >> /dev/tty
+
+if ! tty -s 
+then
+    echo "tail -f $log_file
+can be used to follow the progress."
+fi
+
+$MAKE_PROG "$@" 2>&1 | tee $log_file
+
+

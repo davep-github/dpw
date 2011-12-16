@@ -1,0 +1,6 @@
+#!/bin/sh
+
+ofile=$1
+shift
+mencoder -oac copy -ovc copy -idx "$@" -o $ofile
+

@@ -1,0 +1,7 @@
+rm-dups-dev.py:5:import os, sys, string, stat, getopt, filecmp, sre
+rm-dups-dev2.py:5:import os, sys, string, stat, getopt, filecmp, sre
+rm-dups.py:5:import os, sys, string, stat, getopt, filecmp, sre
+rm-kpys:3:import os, sys, sre, string, filecmp
+rmv-nl.py:3:import os, sys, sre
+svn-mk-checkpoint.py:3:import os, sys, sre, string, getopt
+tikker:3:import os, sys, string, sre

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+killprog moused
+sleep 4
+moused -p /dev/ums0
+

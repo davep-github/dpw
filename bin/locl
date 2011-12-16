@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# $Id: locl,v 1.2 2003/10/30 08:30:35 davep Exp $
+#
+# locate piped to less
+#
+set -x
+locate "$@" | less

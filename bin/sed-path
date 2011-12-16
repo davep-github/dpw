@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# cd to a path that is some sed op on the current dir
+# e.g. 
+# PWD == /a/b/c/d
+# and we want to go to /a/b/c2/d
+# so: sed-path /c/ /c2/
+#
+
+if [ -z "$3" ]
+then
+    str="$PWD"
+else
+    str="$3"
+fi
+echo "$str" | sed "s!$1!$2!"
+exit 0
+

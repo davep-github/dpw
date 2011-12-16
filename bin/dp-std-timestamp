@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# MERGE this:
+#!/bin/sh
+
+date_str=$(date --iso-8601=seconds)
+
+if [ -z "$1" ]
+then
+    echo $date_str | sed 's!:!\.!g'
+else
+    echo $date_str
+fi
+#

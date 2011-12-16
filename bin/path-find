@@ -1,0 +1,15 @@
+#!/bin/sh
+
+source script-x 
+: ${GREPPER:=egrep}
+: ${GREPPETH:=$(sp -1 egrep)}
+: ${EXCLUDE_FILE_REGEXP:="\.svn|CVS"}
+
+grep_em()
+{
+    local IFS=":"
+    find $PATH -type f -print0 | $GREPPETH "$@"
+}
+
+grep_em "$@"
+

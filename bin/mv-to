@@ -1,0 +1,6 @@
+#!/bin/sh
+
+dest=$1
+shift
+
+mv "$@" "$dest"

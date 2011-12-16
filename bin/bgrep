@@ -1,0 +1,81 @@
+#!/usr/bin/env perl
+
+$to_stdout = 1;
+$debug = 0;
+
+if ($ARGV[0] =~ /-o/) {
+  $to_stdout = 0;
+  shift(ARGV);
+}
+
+$first = shift(ARGV);
+$second = shift(ARGV);
+$till_eof = 0;
+
+#print "f>$first<\n";
+#print "s>$second<\n";
+$state = "find-opening-regexp";
+$num = 0;
+$base = "out";
+$sep = "";
+
+$till_eof = 1 if ($second eq '$^' || $second eq '');
+
+while (<>)
+{
+  print STDOUT "state $state>$_<" if ($debug);
+  if ($state eq "find-opening-regexp")
+    {
+      if (/$first/o)
+	{
+	  #print "s0.0: $sep<";
+	  print "$sep";
+	  $state = "handle till-eof flag";
+	  if (!$to_stdout) {
+	    $oname = sprintf("%s%04d", $base, $num);
+	    $num++;
+	    print STDERR "using oname>$oname<\n" if ($debug);
+	    open (OUT0, ">$oname") || die "canna open $oname, $!";
+	    $OUT = \*OUT0;
+	  } else {
+	    print STDERR "using stdout\n" if ($debug);
+	    $OUT = \*STDOUT;
+	  }
+	  #print $OUT "s0.1: $_<";
+	  print $OUT "$_";
+	  next;
+	}
+    }
+  if ($state eq "handle till-eof flag")
+    {
+      #print $OUT "s1.0: $_<";
+      print $OUT "$_";
+      if ($till_eof)
+	{
+	  $sep = "###################################################\n\n";
+	  next
+	}
+      $state = "find-closing-regexp";
+    }
+  if ($state eq "find-closing-regexp")
+    {
+      #print $OUT "s2.0: $_<";
+      print $OUT "$_";
+      if (/$second/o)
+	{
+	  $state = "find-opening-regexp";
+	  close OUT0 if (!$to_stdout);
+	  next;
+	}
+    } 
+  if ($state == 3)
+    {
+      #print $OUT "s3.0: $_<";
+      print $OUT "$_";
+      if (/$second/o)
+	{
+	  $state = "find-opening-regexp";
+	  close OUT0 if (!$to_stdout);
+	}
+    } 
+}

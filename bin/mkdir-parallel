@@ -1,0 +1,9 @@
+#!/bin/sh
+
+source script-x
+source eexec
+
+for d in "$@"
+do
+  cp-parallel "$d" -
+done

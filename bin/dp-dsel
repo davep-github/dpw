@@ -1,0 +1,8 @@
+#!/bin/sh
+
+for f in /var/lib/dpkg/status/*
+do
+    echo "$f" | rcstreefile
+done
+
+dselect "$@"

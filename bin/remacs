@@ -1,0 +1,5 @@
+#!/bin/sh
+
+font=`$HOST_INFO -n '9x15' xem_font`
+host=$1
+ssh -X -f $host xemacs -font "$font"

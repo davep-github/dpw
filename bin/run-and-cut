@@ -1,0 +1,31 @@
+#!/bin/sh
+
+source script-x
+
+#
+# Run something on a remote machine in a clearly non-interactive manner.
+# My environment is colliding with stuff in Permabit's rsvpclient test
+# infrastructure -- one specific is pgrep. Mine has been around longer, and
+# is better, but works differently than the "real" one.
+# So I define a set of machines that do not get all of my environment
+# activated... in fact as little as possible. This is a front end to making
+# sure that no collisions occur.
+# at this time: 2010-08-19T09:51:12, it is just a pass through to ssh.
+#
+# Currently, this works because the code is running on the remote host as the
+# ssh command and isn't in an interactive shell. In my .bashrc, I abort
+# processing if the shell is non-interactive and the host name is in a
+# particular set of machines. The shell function `cut_and_run_host_p'
+# determines if the machine is one of the machines on which we don't want a
+# full interactive environment.
+
+# Another IDEA: from here, shear off all of my overly baroque environment and
+# then proceed. At least put my bin @ end of path. Can also env(1) to clean
+# up more... doing this in ~/bin/run-simply
+
+#
+# Some nice things: -d <dir> # cd here first. -d=, -d =, --> cwd
+# 
+host="$1"; shift
+ssh "$host" "$@"
+

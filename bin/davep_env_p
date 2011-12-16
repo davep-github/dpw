@@ -1,0 +1,4 @@
+#!/bin/sh
+
+[[ -n "$DAVEP_ENVIRONMENT_p" ]]
+

@@ -1,0 +1,25 @@
+#!/bin/sh
+
+. script-x
+
+: ${num_id_regexp:="8[0-9]{3}"}
+: ${field_sep:=":"}
+: ${field_num:="3"}
+: ${id_regexp:="(^|$field_sep)$num_id_regexp($field_sep|$)"}
+
+find_max_gid()
+{
+    file="$1
+  "
+    shift
+    max=$(egrep "$@" -e "$id_regexp" | \
+        sort -n -k "$field_num" -t "$field_sep" $file | \
+        tail -n 1)
+    echo $(( ++max ))
+}
+
+shift
+[[ -z "$@" ]] && set -- /etc/group
+
+find_max_gid "$@"
+

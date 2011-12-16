@@ -1,0 +1,10 @@
+#!/bin/sh
+
+srcdir=$1
+dstdir=$2
+
+cd $srcdir
+ls | while read file
+do
+    [ -f $dstdir/$file ] && echo $file
+done

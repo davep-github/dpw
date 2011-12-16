@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# $Id: save-proxima-config,v 1.1 2004/02/05 07:16:58 davep Exp $
+
+progname=`basename $0`
+
+META=$HOME/proxima-metadata/$(basename $PWD)
+
+# @todo allow conf to be an option (and a list)
+CONF=config.status
+
+[ -f "$CONF" ] || FATAL 1 "$CONF doesn't exist in this dir."
+
+mkdir $META
+cp -i $CONF $META
+

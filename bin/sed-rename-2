@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Front end to make sed-rename easier to use w/ icky file names.
+
+sed_expr="$1"
+shift
+
+/bin/ls "$@" | sed_expr="$sed_expr" sed-rename.sh $sed_args

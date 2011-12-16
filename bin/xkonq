@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+#$Id: xkonq,v 1.16 2005/03/24 09:20:11 davep Exp $
+#set -x
+
+url="$1"
+case "$url" in
+    http*://*|ftp://*|file://*) ;;
+    "") ;;
+    *) url="http://$url" ;;
+esac
+
+exec kfmclient openURL "$url"
+
+
+findprog -s kdeinit: || kdeinit
+
+LOG_FILE=/tmp/xkonq.$USER
+#LOG_FILE=/dev/null
+date >> $LOG_FILE
+echo "*>$*<" >> $LOG_FILE
+# e.g.:
+# 2533> dcop 
+# konqueror-1050
+# konqueror-1395
+# kded
+# kcookiejar
+# klauncher
+# http://www.yahoo.com
+# http://ars.userfriendly.org
+
+if [ "$1" = "--debug" ]
+then
+    shift
+#    export dpdbg_redir='>>'
+    export dpdbg_redir=''
+#    export dpdbg_ofile="$LOG_FILE"
+    export dpdbg_ofile=""
+    export dpdbg_enable='y'
+else
+    export dpdbg_enable=''
+fi
+
+# Programs like emacs, call us thus: xkonq cmd url
+cmd="$1"
+url="$2"
+shift; shift; args="$@"
+
+# grab the lowest numbered konqueror, if any.
+# this makes sure we work in the case that the original konq has been
+# closed but others are still open.
+##########konq=$(dcop | fgrep konqueror | sort -n +1.9 | head -1)
+konq=$(dcop 'konqueror*' | sort -n +1.9 | head -1)
+if [ -z "$konq" ]
+then
+    # none running, fire one up.
+    dpdbg_echo "kfmclient $cmd $url $args"
+    case "$url" in
+	http*://*|ftp://*|file://*) ;;
+	"") ;;
+	*) url="http://$url" ;;
+    esac
+    if [ -z "$cmd" ]
+    then
+	konqueror &
+    else
+	[ -z "$url" ] && {
+	    url="$cmd"
+	    cmd='openURL'
+	}
+	kfmclient $cmd $url $args
+    fi
+else
+    # If a konq is running, do not open another window.
+    # Instead, send an existing window a command
+
+    # command line usage tends to be xkonq url, so handle that case
+    [ -z "$url" ] && url=$cmd
+    # find a main window in the selected instance.
+    qt_objects="/tmp/xkonq.qt.objects.$$"
+    dcop "$konq" qt objects > "$qt_objects"
+    main=$(egrep 'mainwindow#[0-9]+$' "$qt_objects" | head -1)
+
+    dpdbg_echo "use existing, konq>$konq<, main>$main<"
+
+    # show & raise the window
+    dcop $konq $main showNormal
+    dcop $konq $main show
+    dcop $konq $main raise
+    # make a new tab
+    #dcop $konq $main/qt_top_dock/mainToolBar/toolbutton_newtab animateClick
+    dcop $konq qt/KXMLGUIClient-KActionCollection/newtab activate
+    if [ -n "$url" ]
+    then
+	# find the history combo box.  This works for both kde2x and kde3.
+	# They've re-rooted the toolbar in kde3
+	combo=$(grep "$main.*/locationToolBar/history combo/combo .*edit$" \
+		    "$qt_objects")
+
+	# stuff URL into the url entry
+	dcop "$konq" "$combo" setProperty text $url
+
+	# click the go to url button
+	# find the button... same comments as the combo, above
+	go=$(grep "$main.*/locationToolBar/toolbutton_go_url$" "$qt_objects")
+	dpdbg_echo "go>$go<"
+	dcop $konq $go animateClick
+    fi
+fi
+
+exit 0
+

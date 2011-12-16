@@ -1,0 +1,12 @@
+#!/bin/sh
+
+source script-x
+
+if [ -n "$n" ]
+then
+    nlines="$n"
+else
+    nlines="$((${LINES:-24} - 2))"
+fi
+
+head -n $nlines

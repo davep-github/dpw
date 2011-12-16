@@ -1,0 +1,12 @@
+
+: ${server:=chele.fx.intel.com}
+: ${resource:=fluent10}
+: ${FTCI_JID:=sa,,@${server}/${resource}}
+: ${FTCI_PASSWORD:=intel123}
+: ${FTCI_APP:=Fluent}
+: ${FTCI_APP_VER:=10}
+: ${FTCI_IP:=
+: ${anum:=01}
+
+anum=$(printf "%02d" "$anum")
+FTCI_JID=$(echo "$FTCI_JID" | sed -rn 's/,,/'"$anum"'/p')

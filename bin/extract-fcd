@@ -1,0 +1,34 @@
+#!/usr/bin/env perl
+
+$state = 0;
+$num = 0;
+
+$c_start = "/\\*.*:fcd:";
+$c_end = "\\*/";
+$f_end = "\\)";
+
+while (<>)
+{
+    if ($state == 0)
+    {
+	if (/$c_start/o)
+	{
+	    $state = 1;
+	}
+    }
+    if ($state == 1)
+    {
+	print;
+	if (/$c_end/o)
+	{
+	    $state = 2;
+	}
+    }
+    if ($state == 2) {
+	print;
+	if (/$f_end/o) {
+	    $state = 0;
+	    print "\f";
+	}
+    }
+}

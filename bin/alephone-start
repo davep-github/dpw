@@ -1,0 +1,3 @@
+#! /bin/sh
+export ALEPHONE_DATA=/usr/share/AlephOne:/usr/share/AlephOne_minf_demo
+alephone $*

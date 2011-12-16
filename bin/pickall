@@ -1,0 +1,22 @@
+#!/bin/sh
+#set -x
+if mh_dir=$(fgrep Path: $HOME/.mh_profile) 
+then
+	mh_dir=$(echo $mh_dir | cut -f2 -d\ )
+else
+	mh_dir=MH
+fi
+mh_dir=$HOME/$mh_dir
+for folder in $mh_dir/*
+do
+	[ -d $folder ] || continue
+	folder=+$(basename $folder)
+	resp=$(pick $folder "$@" 2>/dev/null)
+	case $resp in
+	[1-9]*)
+		;;
+	*)
+		continue;;
+	esac
+	echo $folder $resp
+done

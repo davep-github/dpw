@@ -1,0 +1,28 @@
+#!/usr/local/bin/expect -d -f
+set timeout 60
+set connected 0
+
+proc abort {reason} {
+        send_error "aborted: $reason\n"
+        exit 1
+}
+
+
+while { $connected == 0 } {
+	spawn telnet compuserve.com
+	expect {
+		") (" { set connected 1 }
+		"telnetd: All network ports in use." {}
+		timeout { abort "Unexpected response from spawn telnet" }
+	}
+}
+send "\r"
+expect "ame:"
+send "CIS\r"
+expect "OFF):"
+send "logon\r"
+expect "ID:"
+send "74127,2045\r"
+expect "ord:"
+send "repent-lever\r"
+interact

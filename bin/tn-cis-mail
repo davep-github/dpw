@@ -1,0 +1,96 @@
+#!/usr/local/bin/expect -f
+# it is CIS after all...
+set timeout 120		
+set connected 0
+
+log_user 1
+
+set spool_file [lindex "$argv" 0]
+
+proc abort {reason} {
+        send_error "aborted: $reason\n"
+        exit 1
+}
+
+while { $connected == 0 } {
+	spawn telnet compuserve.com
+	expect {
+		") (" {
+			set connected 1
+		}
+
+		"telnetd: All network ports in use." {}
+
+		"Host name lookup failure" {
+			abort "Host name lookup failure."
+		}
+
+		timeout {
+			abort "Unexpected response from spawn telnet"
+		}
+	}
+}
+
+send "\r"
+expect "ame:"
+send "CIS\r"
+expect "OFF):"
+send "logon\r"
+expect "ID:"
+send "74127,2045\r"
+expect "ord:"
+send "repent-lever\r"
+
+expect {
+	"You have Electronic Mail waiting"
+	{
+		set got_mail 1
+	}
+	"CompuServe   TOP"
+	{
+		set got_mail 0
+	}
+	"Table of Contents   TOP"
+	{
+		set got_mail 0
+	}
+	"What's New(FREE)"
+	{
+		set got_mail 0
+	}
+	"What's New on CompuServe(FREE)"
+	{
+		set got_mail 0
+	}
+	"MORE!"
+	{
+		set got_mail 0
+	}
+	timeout { abort "CIS is too fucking slow!" }
+}
+
+if { $got_mail == 0 } {
+	# should send "bye\r", but exiting is *much* faster
+	# since we are not giving CIS a chance to run a command
+	# that executes cycles at the user's expen$e.
+	exit 1
+}
+
+# expect "!"
+send "go mail\r"
+
+expect "SCAn, REAd, COMpose, ADDress or HELp!"
+set timeout -1
+log_file -a $spool_file
+send "down/protocol:capture all\r"
+
+# ...
+
+expect "SCAn, REAd, COMpose, ADDress or HELp!"
+log_file
+send "del all\r"
+
+expect "SCAn, REAd, COMpose, ADDress or HELp!"
+send "bye\r"
+
+exit 0

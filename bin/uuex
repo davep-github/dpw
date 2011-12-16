@@ -1,0 +1,33 @@
+#!/usr/bin/env perl
+
+$zeroth = chr(0);
+$last = chr(0xff);
+
+$num=1;
+$go = 0;
+
+while (<>)
+{
+    if (/^begin/) {
+	if ($num > 1) {
+		$num--;
+		next;
+	}
+	print;
+	$go = 1;
+	next;
+    }
+    next if !$go;
+
+    #printf("%d: %s", length($_), $_);
+    
+    #print if /[- ]|[a-]/;
+
+    last if /^end/;
+    #next if (length($_) != 62);
+    next unless /^M/;
+    #next if /[a-z]/;
+    next if /[- ]|[a-~]/;
+
+    print;
+}

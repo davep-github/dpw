@@ -1,0 +1,24 @@
+#!/bin/sh
+#set -x
+
+ispppup || {
+	$HOME/.ppp/${PPP_SERVICE}.expect || {
+		echo "isp dial failed." 1>&2
+		exit 1
+	}
+
+	waitfornamed
+}
+
+
+mail -s '-initiate-panux-callback-' davep@platsol.com < /dev/null
+sleep 3	#wait for mail
+while mailq | grep -v "Mail queue is empty" >/dev/null
+do
+	echo mailq not empty
+done
+
+killppp
+enable-mgetty-aa $MODEM_DEV
+
+exit 0

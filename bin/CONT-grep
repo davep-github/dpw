@@ -1,0 +1,8 @@
+#!/bin/sh
+. script-x
+: ${CONTENT_FILE:=CONTENTS}
+: ${GREPPER:=egrep}
+
+PKG_ROOT=/var/db/pkg/
+fer-all-files $DP_SCRIPT_X_DEBUG_OPT -d "${PKG_ROOT}" -g "${CONTENT_FILE}" \
+    -- ${GREPPER} "$@"

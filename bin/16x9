@@ -1,0 +1,36 @@
+#!/bin/sh
+
+gen()
+{
+    local width=$1
+    local height=$(($width * 9 / 16))
+    echo "${height}"
+}
+
+check()
+{
+    local width=$1
+    local height=$2
+    local genned=$(gen $width)
+    [ "$height" == "$genned" ]
+    return
+}
+
+wid=$1
+orig_ht=$2
+if [ -z "$2" ]; then
+    ht=$(gen $1)
+else
+    ht=$2
+fi
+
+rc=""
+if ! check "$wid" "$ht"; then
+    echo -n 1>&2 "*** Something is wrong with: "
+    rc=1
+fi
+echo "${wid}x${ht}"
+[ -n "$rc" ] && {
+    echo 1>&2 "    A width of $wid implies a height of $(gen wid)."
+}
+exit $rc

@@ -1,0 +1,4 @@
+#!/bin/sh
+name=$1
+[ -z "$name" ] || sep=":"
+echo ${name}${sep}`file-counter -c $HOME/tmp/${name}_serial_num`

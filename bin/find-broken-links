@@ -1,0 +1,6 @@
+#!/bin/sh
+#set -x
+
+[ -z "$@" ] && set -- .
+
+find -L "$@" -type l

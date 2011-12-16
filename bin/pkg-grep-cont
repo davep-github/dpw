@@ -1,0 +1,53 @@
+#!/bin/sh
+# $Id: pkg-grep-cont,v 1.5 2004/08/30 06:11:12 davep Exp $
+#
+# grep the contents of packages.
+# looks in $pkg/*/+CONTENTS
+# the pkg_glob can be specified.
+. script-x
+: ${GREPPER:=egrep}
+: ${LFILE:=CONTENTS}
+: ${FFILE:=+CONTENTS}
+
+: ${PKG_DIR:='/var/db/pkg/'}
+: ${PKG_GLOB:=''}
+
+: ${FINDERS:=()}                # from: {use_find, use_qfile}
+
+use_find()
+{
+    find -H ${PKG_DIR}${PKG_GLOB} -type f -name "${CONTENTS_FILE}" -print0 | xargs -0 ${GREPPER} "$@"
+}
+
+use_qfile()
+{
+    qfile "$@"
+}
+    
+uname=$(uname)
+case "$uname" in
+    FreeBSD)
+	if [ "$1" = "-p" ]
+	then
+	    pkg_glob=$2
+	    shift; shift
+	else
+	    pkg_glob='*'
+	fi
+        CONTENTS_FILE=$FFILE
+	#${GREPPER} "$@" ${PKG_DIR}/${pkg_glob}/${FFILE}
+        use_find "$@"
+	;;
+    Linux)
+	# debian !!! @todo find a way to differentiate linux distributions
+	#dpkg -S "$@"
+	# gentoo
+        CONTENTS_FILE=$LFILE
+        case "$(distro-name)" in 
+            gentoo) use_qfile "$@";;
+        esac
+	;;
+    *) echo 1>&2 "Bad uname>$uname<"; exit 1;;
+esac
+
+exit $?

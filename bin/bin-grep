@@ -1,0 +1,102 @@
+#!/bin/sh
+
+source script-x 
+
+: ${GREPPETH:=$(sp -1 egrep)}
+: ${EXCLUDE_REGEXP:="\.svn|CVS"}
+: ${INCLUDE_REGEXP:=.*}
+: ${INCLUDE_REGARDLESS_REGEXP:=""}
+# Accept INC_ONLY. Otherwise (INC && ! EXCLUDE)
+: ${user_only_p:=t}
+: ${ALL:=}
+
+vsetp $ALL && user_only_p=t
+
+vsetp $user_only_p && {
+    INCLUDE_REGEXP="$HOME|bree"
+}
+
+exclude_p()
+{
+    echo "$@" | egrep -q "${EXCLUDE_REGEXP}"
+}
+
+include_p()
+{
+    echo "$@" | egrep -q "${INCLUDE_REGEXP}"
+}
+
+include_regardless_p()
+{
+    if vsetp "${INCLUDE_REGARDLESS_REGEXP}"; then
+	echo "$@" | egrep -q "${INCLUDE_REGARDLESS_REGEXP}"
+    else
+	false
+    fi
+}
+
+accept_this_one_p()
+{
+    local this_one=("$@")
+    include_regardless_p "${this_one[@]}" || \
+	{ include_p "${this_one[@]}" &&  ! exclude_p "${this_one[@]}"; }
+}
+
+print_accepted()
+{
+    while read
+    do
+      accept_this_one_p "$REPLY" && echo "$REPLY"
+    done
+}
+
+filter_dirs()
+{
+    fsep=""
+    dirs=
+    path -1 | while read dir; do 
+        $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "testing>$dir<"
+	[ -d "$dir" ] && {
+            $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "isa dir: $dir"
+            accept_this_one_p "$dir" && {
+                $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "accepted: $dir"
+                # fucking while bodies as sub-processes and the inability to
+                # set values outside the loop
+                #${filtered_path[${#filtered_path[@]}]}="$dir"
+                echo -n "$dirs$fset$dir"
+                fset=" "
+                
+           }
+        }
+    done
+}
+filtered_path=($(filter_dirs))
+
+grepper()
+{
+    $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "@>$@<"
+    while read
+    do
+      $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "grepping file>$REPLY<"
+      $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "running>$GREPPETH >$@< >$REPLY<"
+      ## eko "$@" 1>&2 
+      $GREPPETH "$@" "$REPLY" /dev/null
+    done
+}
+$DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "filtered_path>""${filtered_path[@]}<"
+
+grep_em()
+{
+    for d in "${filtered_path[@]}"
+    do
+      $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "d>$d<"
+      find "$d" -type f -print | tee /dev/null | print_accepted | tee /dev/null | grepper "$@"
+    done
+    #find "${filtered_path[@]}" -type f -print0 | xargs -0 $GREPPETH "$@"
+#CO#     for dir in $PATH; do
+#CO#         egrep "$@" $PATH/* /dev/null
+#CO#     done
+}
+
+grep_em "$@"
+

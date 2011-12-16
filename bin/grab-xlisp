@@ -1,0 +1,10 @@
+#!/bin/sh
+
+rem_hosts=$@
+: ${rem_hosts:=tc-le4}
+
+for h in $rem_hosts; do
+    echo "scp $h":inb/From-"$h"\*
+    scp "$h":inb/From-"$h"\* ~/inb || exit 1
+done
+

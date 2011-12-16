@@ -1,0 +1,179 @@
+#!/bin/sh
+#set -x
+#set -e
+dollar_0="$0"
+dollar_at="$@"
+
+#source script-x
+
+std_options=""
+option_str="N:v:it:VnkPp:e:"      # <:options:>
+[[ "$1" =~ '--canned_args=(.*)' ]] && {
+    shift
+    set -- "$@" $(cat ${BASH_REMATCH[1]})
+}
+#source sh-script-template.sh
+source dp-getopt+.sh
+#echo "@>$@<"
+sub_tests=""
+valgrind_opts=
+run_id=
+tool=callgrind
+num_iters=1
+kcachegrind_it=
+# I found the options below being used by some Makefiles and scripts.
+# --separate-callers=<nn> causes problems with kcachegrind: I can't see any
+# trace info.
+vanu_dev_options="--dump-instr=yes --simulate-cache=yes --separate-callers=20"
+PROFILE_PATH="$PWD:$HOME:$PWD/profiles"
+mk_auto_grind_profile_name_p=t
+grind_profile_name=
+grind_profile_ext=""
+grinder_arg_file="grinder_args"
+
+Usage()
+{
+   {
+       echo "${progname}: usage: [-$all_options] test-prog-name sub-test-names..."
+   } 1>&2
+   
+   exit 1
+}
+
+mk_grind_profile_name()
+{
+    local t_prog_name=$1
+    shift
+    local t_test_name=$1
+    if [[ -n "$mk_auto_grind_profile_name_p" ]]; then
+        grind_profile_name="$t_prog_name$t_test_name$grind_profile_ext"
+    fi
+    echo $grind_profile_name
+}
+
+get_profile_opts()
+{
+    prof=$(mk_grind_profile_name "$@")
+    [[ -n "$prof" ]] && {
+        prof0="$prof"
+        prof=$(sp -1 -m r -P "$PROFILE_PATH" $prof);
+        rc=$?
+        #echo 2>&1 "rc>$rc<, prof>$prof<"
+        if [[ "$rc" != "0" ]]; then
+            : echo 1>&2 "Could not find profile named >$prof0<;  Continuing."
+        elif [[ -n "$prof" ]]; then
+            echo 1>&2 "Found profile named >$prof0<."
+            valgrind_opts="$valgrind_opts $(cat $prof)"
+            # Save a copy for re-creation purposes.
+            cp "$prof" "$data_dir/used-profile:$(basename $prof)"
+        else
+            echo 1>&2 "HTF did I get here.  BUG!"
+            exit 66
+        fi
+    }
+}
+
+get_def_profile_opts()
+{
+    get_profile_opts .vgrc ""
+}
+
+grindit()
+{
+    #ls -t1 >| $before_tmp
+    local tprog=$(realpath $test_prog)
+    # This dir muckage may not work... try the temp file and ls stuff if so.
+    dp_echo "data_dir: $data_dir"
+    vg_command="valgrind --tool=$tool ${valgrind_opts} $tprog $1"
+    dp_echo "command: $vg_command"
+    #echo "PUT running the command back!"
+    (echo "command: $vg_command"; cd $data_dir; $vg_command) 2>&1 | \
+        tee "$data_dir/command-stdout-and-stderr"
+}
+
+for i in "$@"
+do
+  case $1 in
+      # default std_options
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      # -d is really just verbosity
+      -d) EExecVerbose; DEBUG="echo 1>&2 $prog: ";;
+      # default std_options
+      -N) num_iters=$2; shift;;
+      -F) if [[ -r "$2" ]]; then
+             sub_tests="$sub_tests $(cat $2)"
+          else
+             dpe_error 1 "cannot read: $2."
+          fi;;
+      -v) valgrind_opts="$valgrind_opts $2"; shift;;
+      -i) run_id=$2; shift;;
+      -t) tool=$2; shift;;
+      -V) valgrind_opts="$valgrind_opts $vanu_dev_options";;
+      # Load up a profile based on the test name.
+      -P) mk_auto_grind_profile_name_p=;;
+      -p) grind_profile_name=$2; shift; mk_auto_grind_profile_name_p=;;
+      -k) kcachegrind_it=t;;
+      -e) grind_profile_ext=$2; shift;;
+      --) shift; break;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+# The following is used only if non optional args are required.
+[[ "$@" == "" ]] && Usage
+
+test_prog="$1"
+shift
+sub_tests="$sub_tests ""$@"
+#CO# if [[ -z "$sub_tests" ]]; then
+#CO#     sub_test_id=$(sed 's/  */./g')
+#CO# else
+#CO#     sub_test_id="{all}"
+#CO# fi
+# Make sure the executable exists.
+[[ -e "$test_prog" ]] || {
+    dpe_error 1 "Test program ($test_prog) doesn't exist."
+}
+[[ -x "$test_prog" ]] || {
+    dpe_error 1 "Test program ($test_prog) isn't executable."
+}
+
+test_prog_basename=$(basename $test_prog)
+[[ -z "$run_id" ]] && run_id="results/$tool/${test_prog_basename}/"'$st_id'"/$(date '+%Y-%m{%b}-%dT%H:%M:%S')"
+n=$num_iters
+#before_tmp="$PWD/btmp.XXXXXXX"
+#after_tmp="$PWD/atmp.XXXXXXX"
+
+get_def_profile_opts            # Snarf these once.
+
+while [[ $((n--)) -gt 0 ]]; do
+    if [[ "$sub_tests" =~ "^[ 	]*$" ]]; then
+        st_id="{all}"
+        eval data_dir="$PWD/$run_id"
+        [[ -d "$data_dir" ]] || mkdir -p "$data_dir"
+        echo "$dollar_0 $dollar_at" >| "$data_dir/$grinder_arg_file"
+        get_profile_opts "$test_prog_basename" ".$st_id"
+        grindit
+    else
+        for st in $sub_tests; do
+            st_id=$st
+            eval data_dir="$PWD/$run_id"
+            [[ -d "$data_dir" ]] || mkdir -p "$data_dir"
+            get_profile_opts "$test_prog_basename" ".$st_id"
+            echo 1>&2 "grinder_args file>$data_dir/$grinder_arg_file<"
+            echo "$dollar_0 $dollar_at" >| "$data_dir/$grinder_arg_file"
+            grindit "$st"
+        done
+    fi
+done        
+
+if [[ -n "$kcachegrind_it" ]]; then
+    cd $data_dir
+    kcachegrind callgrind.out.* &
+else
+    echo '{ g '$data_dir'; kcachegrind 'callgrind.out.*' & }'
+    echo '( cd '$data_dir'; kcachegrind 'callgrind.out.*' & )'
+fi

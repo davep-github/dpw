@@ -1,0 +1,26 @@
+#!/bin/sh
+
+: ${THEMES_DIR:=$HOME/.karamba-themes}
+: ${KARAMBA:=superkaramba}
+
+[ -d "$THEMES_DIR" ] || {
+    echo 2>&1 "Theme dir >$THEMES_DIR< isn't."
+    exit 1
+}
+
+karamba=`sp $KARAMBA | head -n1`
+
+[ -x "$karamba" ] || {
+    echo 2>&1 "Karamboidal executable >$KARAMBA< isn't."
+    exit 1
+}
+
+# one of these are hanging... liquid_weather is my guess.
+# start 'em separately and see which hangs.
+${KARAMBA} $THEMES_DIR/liquid_weather_plus/liquid_weather.theme \
+	   >/dev/null 2>&1 \
+	   &
+
+${KARAMBA} $THEMES_DIR/doomCpu-0.3/doomCpu.theme \
+	   >/dev/null 2>&1 \
+	   &

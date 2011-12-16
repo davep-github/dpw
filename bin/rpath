@@ -1,0 +1,13 @@
+#!/bin/sh
+
+OWD="$PWD"
+for f in "$@"
+do
+  cd $f
+  echo $PWD
+  cd $OWD
+done
+
+exit 0
+
+  

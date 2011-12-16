@@ -1,0 +1,54 @@
+#!/bin/sh
+set -x
+
+progname=$(basename $0)
+
+prefix=''
+
+set -- ` getopt "dvp:nl:" "$@" `
+
+for i in $*
+do
+    case $1 in
+	-v) vfile=/dev/tty; dash_v='-v';; # verbose
+        -p) prefix="$2"; shift;;
+	-n) dash_n='-n';;
+        -l) LOG_FILE="$2"; shift;;
+        -d) set -x;;
+	--) shift ; break ;;
+	*) 
+	    echo 1>&2 "Unsupported option>$1<";
+	    exit 1 ;;
+    esac
+    shift
+done
+
+
+: ${vfile:=/dev/null}
+: ${LOG_FILE:=$HOME/log/archive-home.log}
+
+(
+    echo "$progname: START: $(date)"
+
+    echo "${prefix}Find symlinks"
+    (cd $HOME; findlinks > $HOME/.symlinks)
+
+    echo
+    echo "${prefix}CVS home, start: $(date)"
+    cvs-home
+    echo "${prefix}CVS home, end: $(date)"
+
+    echo
+    echo "${prefix}SVN home, start: $(date)"
+    svn-home
+    echo "${prefix}SVN home, end: $(date)"
+
+    echo
+    echo "${prefix}RCS home, start: $(date)"
+    vfile="$vfile" rcs-home.sh
+    echo "${prefix}RCS home, end: $(date)"
+
+    echo "$progname: END: $(date)"
+
+) 2>&1 | tee "$vfile" >> "$LOG_FILE"
+

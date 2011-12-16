@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#Internet:
+#Destination        Gateway            Flags      Netif Expire
+#default            24.147.248.1       UGSc        7       13      dc0
+#16                 16.11.64.136       UGSc        1        0     itn0
+#16.11.64.136       16.11.64.137       UH          2        0     itn0
+#24.147.248/21      link#1             UC          0        0      dc0 =>
+#24.147.248.1       0:e0:fe:f3:18:0    UHLW        8        0      dc0   1194
+#127.0.0.1          127.0.0.1          UH          1      546      lo0
+
+netstat -rn | perl -ane 'print "$F[1]\n" if $F[1] =~ /^16.11./ && $F[0] =~ /^16.11./;'
+

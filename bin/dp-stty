@@ -1,0 +1,90 @@
+#!/bin/sh
+
+. script-x
+
+# emacs' shell mode, telnet mode, etc., work best with -echo
+# so by default, leave that setting alone
+
+${echo_flag:=}
+${settings_file:=}
+${all_flag:=}
+${settings_set_p:=}
+${force_erase_Ctl_h:=}
+${force_erase_DEL:=}
+${verbose:=}
+
+all_settings()
+{
+    all_flag=t
+    settings_file="$HOME/etc/stty-normal-settings-ALL"
+    settings_set_p=t
+    echo_flag=
+    shift
+}
+
+set_erase_DEL()
+{
+    local cap=${1-erase}
+    stty "$cap" '^?'
+}
+
+set_erase_Ctl_h()
+{
+    local cap=${1-erase}
+    stty "$cap" '^h'
+}
+normal_settings()
+{
+    settings_file="$HOME/etc/stty-normal-settings"
+    echo_flag=$(stty -a | sed -n -- 's/^.* \(-\{0,1\}echo\) .*$/\1/p')
+    settings_set_p=t
+}
+
+for opt in "$@"; do
+    case "$opt" in
+        -[Aa]) all_settings;;
+        -r) reset;;
+        -[zs]) stty sane;;
+        -n) normal_settings;;
+	-q) set_erase_DEL; force_erase_DEL=; force_erase_Ctl_h=;;
+	-h) set_erase_Ctl_h; force_erase_DEL=; force_erase_Ctl_h=;;
+	-v) verbose=t;;
+        *) echo 1>&2 "Bad option: $opt."; exit 1;;
+    esac
+done
+
+vunsetp "$settings_set_p" && normal_settings
+
+case $OSName in
+FreeBSD) 
+    vsetp $settings_file && stty $(cat $settings_file);;
+esac
+
+osname=$(uname)
+case "$osname" in
+    Linux) 
+	case "$TERM" in
+	    linux|screen) set_erase_DEL;;
+	    *);;
+	esac
+	;;
+    *) stty set_erase_Ctl_h;;
+esac
+
+vunsetp "$settings_set_p" && {
+    if vsetp $force_erase_Ctl_h
+    then
+	set_erase_Ctl_h
+    elif vsetp $force_erase_DEL
+    then
+	set_erase_DEL
+    fi
+}
+    
+if stty -a | grep -q erase2
+then
+    set_erase_Ctl_h erase2
+fi
+
+vsetp "$echo_flag" && stty $echo_flag
+vsetp $verbose && stty -a

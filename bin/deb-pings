@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+#
+# $Id: isp-pings,v 1.2 2004/01/28 04:15:22 davep Exp $
+# 
+# deb-pings: ping a list of deb (mirror) sites to see where things are hosed.
+#set -x
+
+. ping-lib.sh
+
+other_places="ftp.debian.org
+libranet.com
+libranetlinux.com
+non-us.debian.org
+security.debian.org
+snapshot.debian.net"
+
+for s in $other_places
+do
+    pingit $s
+done

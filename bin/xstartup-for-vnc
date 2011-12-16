@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Red Hat Linux VNC session startup script
+unset SESSION_MANAGER
+exec /etc/X11/xinit/xinitrc

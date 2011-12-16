@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# DEFS:
+# An arg is anything passed into a program.
+# All opts are args.
+# All args are not opts.
+# eg: grep -l ick file*
+# in grep -A 20, 20 is a value associated with the -A option.
+# WTF do we call it?  It's an arg, but needs must be associated with the -A.
+
+#
+# I have many utils that are wrappers around other programs, like *grep.
+# E.g. rcgrep.  This greps all of my currently active bash rc files.
+# 99+% of the time, options are for the grepper, eg: -i -l.
+# I'd like to be able to specify args to the wrapper and to the wrapped.
+# My feeling is that most of the times the args are for the wrapped.
+# So I'd like wrapper [opts] <args> to mean: run wrapper and pass opts to
+# wrapped. Like:  rcgrep -il blah...
+# But I want to be able to specify args to rcgrep itself.  Like, say, -v to
+# make rcgrep's operation (not the internal grepper's) verbose.
+# rcgrep -v blah...
+# Well now, what if the options collide.
+
+# A mechanism that says all args go to the wrapper and we must pass options to wrapped like so:  wrapper -o -i -o -l -o '-A 10' blah in order to get:
+grep -i -l -A 10 blah, sucks (but has miguidedly been done.)
+So, how about a -- style hack?
+wrapper [opts-to-X] -- [opts-to-Y]
+Which is best for X: wrapper or wrapped? 
+I like:
+wrapper opts-to-ER -- opts-for-ED
+but
+wrapper opts-to-ED.
+Is this, in man-speak: wrapper [opts-to-ER --] opts-to-ED?
+Or, look @ startx:
+STARTX(1)                                                            STARTX(1)
+NAME
+  startx - initialize an X session
+SYNOPSIS
+  startx  [  [ client ] options ... ] [ -- [ server ] [ display ] options ... ]
+This is parsed rather simplistically, and getopt isn't used.
+getopt throws in complications, too.
+It won't work like this: ER [ED-args] [-- ER-args]
+Since getopt needs to know before-hand what options to expect for ED.  Since a given ED's options are specific to the ED, then every script would need to enumerate all of the args up front, and, to make matters worse not all programs use the same conventions assumed by getopt.
+
+
+
+dat=("$@")
+
+case "$@" in
+    *--*)

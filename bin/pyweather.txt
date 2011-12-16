@@ -1,0 +1,19 @@
+Bedford, Hanscom Field, MA, United States (KBED) 42-28-06N 071-17-40W 50M
+Nov 16, 2000 - 06:56 PM EST / 2000.11.16 2356 UTC
+Wind: from the WSW (240 degrees) at 9 MPH (8 KT):0
+Visibility: 10 mile(s):0
+Sky conditions: overcast
+Temperature: 45.0 F (7.2 C)
+Dew Point: 27.0 F (-2.8 C)
+Relative Humidity: 48%
+Pressure (altimeter): 29.81 in. Hg (1009 hPa)
+Pressure tendency: 0.02 inches (0.8 hPa) lower than three hours ago
+ob: KBED 162356Z 24008KT 10SM OVC100 07/M03 A2981 RMK AO2 SLP108 T00721028 10089 20061 57008
+cycle: 0
+
+========================================================================
+ Weather Conditions at 07:54 PM EST on 16 Nov 2000 for Worcester, MA.
+Temp(F)    Humidity(%)    Wind(mph)    Pressure(in)    Weather
+========================================================================
+  39          56%            SW at 14       29.78      Overcast
+

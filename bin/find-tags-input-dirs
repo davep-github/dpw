@@ -1,0 +1,10 @@
+#!/bin/sh
+
+for dir in "$@"
+do
+    find $dir -type d | while read d
+    do
+        [ -e "$d/NOTAG" ] && continue
+        echo "$d"
+    done
+done | sort | uniq

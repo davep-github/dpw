@@ -1,0 +1,46 @@
+#!/bin/sh
+# $Id$
+set -x
+
+argWas="$1"
+c="$1"
+cs=''
+
+# case "$1" in
+#     /*)  echo "$1"; exit 0;;
+#     */*) c=$(echo "$1" | sed 's!^\([^/]*\).*$!\1!p')
+#          cs=$(echo "$1" | sed 's!^[^/]*\(.*\)$!\1!p')
+#          ;;
+#     *) c="$1"; cs='';;
+# esac
+
+
+eval y=\$$c     # see if dest is set as an environment variable
+case "$y" in
+    ""|\$*)     # dest is not an envvar: look it up in the go database
+    case "$c" in
+        back|b) echo ${GoBack-$HOME} ;;
+        "") echo . ; exit ;;
+        *) gPath=${GOPATH-$HOME/.go}
+           oldIFS=$IFS
+           IFS=":"
+           for pathEl in $gPath
+           do
+           [ -f "$pathEl" ] && {
+                IFS=$oldIFS
+                tmp=`fgrep "|$1|" $pathEl` && {
+                    set -- $tmp
+                    shift
+                    eval echo "$*"
+                    exit
+                }
+           }
+           done
+           IFS=$oldIFS
+           echo "$argWas"
+           ;;
+    esac ;;
+
+    *) eval echo $y ; exit ;;
+esac
+

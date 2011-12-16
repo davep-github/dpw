@@ -1,0 +1,1 @@
+ABORT BUSY ABORT 'NO CARRIER' '' 'AT&FE1L0M1S0=0S7=90S11=55S95=1' OK 'ATDT1-800-200-3264' 'CONNECT' '\r' '#' 'RAD$logon' 'ame>' 'davep' 'ocal>' 'set port ppp ipcp address enable compression enable' 'ocal>' 'connect ppp' 'Starting' ''

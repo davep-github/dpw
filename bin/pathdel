@@ -1,0 +1,14 @@
+#!/bin/sh
+
+path=$1
+shift
+
+for dir in $*
+do
+	path=`echo $path | sed 's/:'$dir'$//
+s/:'$dir':/:/
+s/^'$dir'://
+s/^'$dir'$//' `
+done
+
+echo $path

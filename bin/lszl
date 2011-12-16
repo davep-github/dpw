@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+
+source script-x
+
+: ${LSLXXX_COLOR:=--color=auto}
+: ${LSLXXX_BLATHER:=}
+: ${LSLXXX_SHOW_DATE:=t}
+: ${LSLXXX_ARGS:=-l --sort=size}
+
+#echo "lszl: LSLXXX_COLOR>$LSLXXX_COLOR< LSLXXX_BLATHER>$LSLXXX_BLATHER<
+#LSLXXX_SHOW_DATE>$LSLXXX_SHOW_DATE< LSLXXX_ARGS>$LSLXXX_ARGS<
+#@>$@<"
+
+source lsxxx
+

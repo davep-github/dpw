@@ -1,0 +1,171 @@
+#!/bin/sh
+
+progname=$(basename $0)
+. script-x
+. eexec
+. code-indexing.rc
+
+RC_FILE_NAME=./DOTindex-code.rc
+
+# rc file variables should be prefixed with rc_
+rc_dirs=
+
+[ -e "$RC_FILE_NAME"  ] && {
+    source "$RC_FILE_NAME" || {
+        echo "sourcing $RC_FILE_NAME failed: $?"
+        exit 1
+    }
+}
+
+# main_machine="excuses-and-accusations"
+# type -p realpath >/dev/null 2>&1 || {
+#     echo 1>&2 "$progname: realpath not found; indexing on $main_machine."
+#     ssh excuses-and-accusations "cd $PWD; $0 $@"
+#     exit
+# }
+
+prog=`basename $0`
+
+Usage()
+{
+   {
+       echo "${prog}: usage: [-$all_options]"
+   } 1>&2
+   
+   exit 1
+}
+
+AND_INDEX="and index"
+
+: ${ciflags_def:="-am"}
+: ${ciflags:="$ciflags_def"}
+: ${tflags:=""}
+: ${gtflags:=""}
+: ${amper:="&"}
+: ${clean:="$AND_INDEX"}
+: ${real_paths:=t}
+: ${no_gtags_p:=t}
+: ${ctags_p:=t}
+: ${etags_p:=t}
+: ${tree_tagger:=extagtree}
+: ${DEF_SYSTEM_INCLUDES:=/usr/include}
+: ${finder_opts:=}
+export finder_opts
+
+SYSTEM_INCLUDES=
+# init optional vars to defaults here...
+VERBOSE=:
+DEBUG=:
+output_dir=
+MV=$(sp -1 mv) || {             # Avoid -i type aliaii
+    dpe_echo 1 "Cannot find \"mv\" in the path."
+}
+
+option_str="nvdc:t:g:CTkKVo:Gxeiuf:"  # <:add new options:>
+all_options="$option_str$std_options"
+
+q=$(getopt -o "$all_options" -- "$@")
+[ $? != 0 ] && Usage
+eval set -- "$q" 
+unset q
+
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $prog: "; EExecVerbose;;
+      -V) cscope_indexer_verbose='-v';;
+      # -d is really just verbosity
+      -d) EExecVerbose; DEBUG="echo 1>&2 $prog: ";;
+      -t) tflags="$tflags $2"; shift;;
+      -t) if [[ "$2" =~ "^--?$" ]]; then 
+             gtflags=""
+          else
+             gtflags="$gtflags $2";
+          fi
+          shift;;
+      -c) ciflags="$ciflags $2"; shift;;
+      -T) tflags="";;
+      -D) ciflags="";;
+      -K) clean="$AND_INDEX";;
+      -k) clean=t;;
+      -G) no_gtags_p=t;;
+      -o) output_dir=$(realpath $2); shift;;
+      -x) ctags_p=$(invert_flag $ctags_p);;
+      -e) etags_p=$(invert_flag $etags_p);;
+      -i) SYSTEM_INCLUDES="$DEF_SYSTEM_INCLUDES";;
+      -u) export src_code_finder=uds-files;;
+      -f) finder_opts="$finder_opts $2"; shift;;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+: ${dirs:="$@"}
+: ${dirs:="$PWD"}
+
+# Put the system includes first so any collisions will be noticeable.
+dirs="$SYSTEM_INCLUDES $dirs $rc_dirs"
+
+vsetp "$real_paths" && {
+#     ndirs=
+#     for d in $dirs; do
+#         ndirs="$ndirs $(realpath $d)"
+#     done
+#     dirs="$ndirs"
+    dirs=$(for d in $dirs; do
+               realpath $d
+           done)
+}
+echo_id dirs 
+
+for d in $dirs
+do
+  [ -e "$d" ] || {
+      echo "$d does not exist."
+      exit 1
+  } 1>&2
+  [ -d "$d" ] || {
+      echo "$d is not a dir."
+      exit 1
+  } 1>&2
+done
+
+if [[ -n "$clean" ]]
+then
+    rm -f $index_files || {
+        echo "rc of index files>$index_files<, failed."
+        exit
+    } 1>&2
+    [ "$clean" = "$AND_INDEX" ] || {
+        exit 0
+    }
+fi
+
+gtagser=$(sp -1 gtags)
+[[ -z "$no_gtags_p" && -n "$gtagser" ]] && {
+    EExec eval gtagtree $gtflags $dirs $amper
+}
+
+# extagtree defaults to making etags compatible files.  -E inverts this.
+# [ -n "$ctags_p" ] && EExec eval ${tree_tagger} -E $tflags $dirs $amper
+# [ -n "$etags_p" ] && EExec eval ${tree_tagger} $tflags $dirs $amper
+# EExec eval '( rm -f cscope.* && cscope-indexer $cscope_indexer_verbose -r $ciflags $dirs )'
+# [ "$amper" = "&" ] && {
+#     echo "waiting for procs to complete..."
+#     wait
+# }
+
+echo 1>&2 "This ($(basename $0)), extagtree and cscope-indexer need to be reworked.
+    They should work off the same set of files."
+EExec eval ${tree_tagger} $DP_SCRIPT_X_DEBUG_OPT $tflags $dirs
+if vsetp "$output_dir"
+then
+    EExec $MV $index_files "$output_dir"
+fi
+
+echo "done."

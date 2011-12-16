@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+#
+# $Id: att-pings,v 1.4 2003/07/01 07:30:10 davep Exp $
+# 
+# att-pings: ping a list of sites to see where things are hosed.
+#set -x
+
+
+if [ "$1" = "-v" ]
+then
+    shift;
+    verbose=y; 
+    REDIR=
+    NEWLINE=
+else
+    verbose=
+    REDIR="> /dev/null"
+    NEWLINE='-n'
+fi
+
+
+pingit()
+{
+    s=$1
+    extra=$2
+    echo $NEWLINE "Pinging $extra$s"
+    if eval ping -c 2 $s $REDIR
+    then
+	if [ "$verbose" != 'y' ]
+	then
+	    echo " ...ok."
+	fi
+    else
+	echo " ...ping failed"
+    fi
+}
+
+find_nameservers ()
+{
+    servers=$(grep '^nameserver' /etc/resolv.conf | while read line
+		do
+		    #echo 1>&2 "line>$line<"
+		    set -- $line
+		    #echo 1>&2 "\$2>$2<"
+		    if [ "$2" != "127.0.0.1" ]
+		    then
+			echo $2
+		    fi
+		done)
+
+    #echo 1>&2 "out servers>$servers<"
+    echo "$servers"
+}
+
+# hopefully increasing in distance
+other_places="mail.comcast.net
+netnews.comcast.net
+www.mit.edu
+www.comcast.net
+www.ucsd.edu
+www.yahoo.com
+www.google.com
+www.buy.com"
+
+for s in `find_nameservers` 
+do
+    pingit $s "(NS) "
+done
+
+for s in $other_places
+do
+    pingit $s
+done
+
+	

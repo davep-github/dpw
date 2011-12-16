@@ -1,0 +1,18 @@
+#!/bin/sh
+
+. script-x
+
+: ${dirs_to_scan:=(~/.kde/ ~/.kde4/)}
+
+# A command line which produced the correct we're looking for.
+# fer-all-files  -d ~/.kde/ -d ~/.kde4 -- ls -1
+
+type $dirs_to_scan
+
+dts_a=()
+for d in "${dirs_to_scan[@]}"; do
+    ${dts_a[${#dts_a[@]}]}="-d $d "
+    echo "${dts_a[@]}"
+done
+fer-all-files "${dts_a[@]}" "$@"
+

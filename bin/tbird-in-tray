@@ -1,0 +1,20 @@
+#!/bin/sh
+
+source script-x
+
+: ${hidden:=--hidden}
+: ${prog:=thunderbird}
+: ${safe:=}
+
+vsetp $hidden && hidden="--hidden"
+vsetp $safe && safe="-safe-mode"
+
+
+#
+# This works except for the fact that the initial icon is the ? icon.
+# I like it 'cause we don't actually exec the program until needed, and I
+# like the concept of 'close-to-tray'
+#  ksystraycmd --startonshow --keeprunning --icon /bfd/opt/thunderbird/icons/mozicon16.xpm --ownicon /usr/bin/thunderbird &
+
+# So...
+exec ksystraycmd ${hidden} ${prog} ${safe}

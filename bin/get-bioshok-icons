@@ -1,0 +1,18 @@
+#!/bin/sh
+
+base_url="http://www.2kgames.com/cultofrapture/features/icons"
+
+icon_names="alarm cryo hack security securitysys inc decoy armor befriend electro insect static tele trap med melee research enrage field genehack clown booze blood"
+
+set -- "" 48 80
+
+for name in $icon_names; do
+    for size in "$@"; do
+        icon_file_name="$name$size.jpg"
+        url="$base_url/$icon_file_name"
+        [[ -e "$icon_file_name" ]] || {
+            wget "$url"
+        }
+    done
+done
+

@@ -1,0 +1,17 @@
+192296    0 lrwxr-xr-x    1 davep            wheel                  29 Jan 17 17:34 ./callwork -> /home/davep/.ppp/locus.expect
+192299    0 lrwxr-xr-x    1 davep            wheel                   5 Jan 17 17:34 ./cppop -> ckpop
+192300    0 lrwxr-xr-x    1 davep            wheel                  28 Jan 17 17:34 ./gen-elmaliases -> /home/davep/bin/gen-from-pdb
+192301    0 lrwxr-xr-x    1 davep            wheel                  12 Jan 17 17:34 ./gen-faxnrs -> gen-from-pdb
+192302    0 lrwxr-xr-x    1 davep            wheel                  28 Jan 17 17:34 ./gen-mailiases -> /home/davep/bin/gen-from-pdb
+192303    0 lrwxr-xr-x    1 davep            wheel                  12 Jan 17 17:34 ./gen-mh-aliases -> gen-from-pdb
+192304    0 lrwxr-xr-x    1 davep            wheel                  12 Jan 17 17:34 ./gen-mutt-aliases -> gen-from-pdb
+192305    0 lrwxr-xr-x    1 davep            wheel                  28 Jan 17 17:34 ./gen-rhosts -> /home/davep/bin/gen-from-pdb
+192306    0 lrwxr-xr-x    1 davep            wheel                  12 Jan 17 17:34 ./gen-xfmail-aliases -> gen-from-pdb
+192307    0 lrwxr-xr-x    1 davep            wheel                  28 Jan 17 17:34 ./gen-xhosts -> /home/davep/bin/gen-from-pdb
+192308    0 lrwxr-xr-x    1 davep            wheel                   5 Jan 17 17:34 ./getpop -> ckpop
+192309    0 lrwxr-xr-x    1 davep            wheel                   5 Jan 17 17:34 ./getpopd -> ckpop
+192310    0 lrwxr-xr-x    1 davep            wheel                   8 Jan 17 17:34 ./lpf-cond-land-ls -> lpf-lj5l
+192311    0 lrwxr-xr-x    1 davep            wheel                   8 Jan 17 17:34 ./lpf-cond-land-ls-tlen=88 -> lpf-lj5l
+192312    0 lrwxr-xr-x    1 davep            wheel                   9 Jan 17 17:34 ./mh-scan-all -> mh-xx-all
+192313    0 lrwxr-xr-x    1 davep            wheel                   9 Jan 17 17:34 ./mh-show-all -> mh-xx-all
+192314    0 lrwxr-xr-x    1 davep            wheel                   3 Jan 17 17:34 ./oxns -> xns

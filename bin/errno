@@ -1,0 +1,196 @@
+#!/bin/sh
+#set -x
+
+progname=$(basename "$0")
+
+errno_dat=("$@")	    # Pristine args.
+. script-x
+errno_dat_tarnished0=("$@")
+
+ERRNO_FILES='/usr/include/errno.h 
+/usr/include/asm-generic/errno.h
+/usr/include/asm-generic/errno-base.h'
+
+ws="[ 	][ 	]*"		# white space
+mws="[ 	]*"			# maybe some white space
+nws="[^ 	][^ 	]*"	# non-white space
+terse_p=t                       # Wha?
+newline_opt="-n"
+return_exit_code_p=""           # Exit with the first errno as our status.
+return_exit_code_index=         # Unset, don't use it. ^ implies `$1'
+#
+# This, overall, can throw one for a loop as it looks like an error has 
+# occurred as it should. But during debugging or if one isn't really paying 
+# attention (qv Namenda) it can result in an oh shit, WTF is b0rked?
+#
+terse()
+{
+    vunsetp $terse_p && echo -n "$@"
+}
+
+emit()
+{
+##     local newline_p="$1"
+##     local lnopt
+##     if [ "$newline_p" == "-" ]; then
+##         nlopt=
+##         shift
+##     elif vsetp $newline_p ; then
+##         nlopt="$newline_p"
+##     else
+##         nlopt="$newline_opt"
+##     fi
+    echo $newline_opt "$@"
+}
+
+errno_emit_name()
+{
+    terse "name: "
+    # Gets errno's name
+    # I am SOOOOO glad this works.
+    local newline_opt=""
+    emit $(echo "$@" | sed -rn 's/(.*#define[^A-Z]*)([A-Z]*)(.*)/\2/p')
+}
+
+errno_emit_name_no_newline()
+{
+    local newline_opt="-n"
+    terse "name: "
+    # Gets errno's name
+    # I am SOOOOO glad this works.
+    emit $(echo "$@" | sed -rn 's/(.*#define[^A-Z]*)([A-Z]*)(.*)/\2/p')
+}
+
+errno_emit_desc()
+{
+    terse "desc: "
+    emit $(echo "$@" | sed -rn 's!(.*?/\* )(.*)( \*/)!\2!p')
+}
+
+errno_emit_pristine_args()
+{
+    terse 'pristine input args: '
+    emit "${errno_dat[@]}"
+}
+
+errno_emit_verbose()
+{
+    # We can make this one more obvious.
+    # newline_opt == -n probably isn't very useful with this function,
+    # but, hey, it's your life.
+    #echo "Pristine args:"
+    errno_emit_pristine_args
+    #echo "==========================="
+    #echo "terse_p>$terse_p<"
+    #local orig_terse_p="$terse_p"
+    terse 'matching line from "errno.h:"'
+    #terse_p="$orig_terse_p"
+    #echo "==========================="
+    #echo "\$@:"
+    emit "$@"
+    #echo "==========================="
+    #echo name:
+    errno_emit_name "$@"
+    #echo "==========================="
+    echo desc:
+    errno_emit_desc "$@"
+}
+
+errno_emit_match()
+{
+    echo "$@"
+}
+
+errno_emit___not()
+{
+    :
+}
+
+# This matches the old/original behavior.
+# I don't know if anyone out there relies on this, though.
+# If not, then desc or name would be better.
+errno_emitter=errno_emit_match	
+
+# Set variable defaults that can be changed via command line options.
+# e.g.: flag=
+# e.g.: val=0
+
+# Parse command line.
+# std_options has some "useful" options.
+# Set to "" or "-" to get nothing.  It's an error to call dp-getopt+.sh with
+# std_options unset.
+std_options=""
+DPGOP_Usage_args_info=" errno..."
+DPGOP_Usage_synopsis="
+Display info about errno-s:
+-n name
+-d description
+-v be verbose (kinda for testing) 
+-t be terse (different that just non-verbose)
+-p echo back args verbatim as entered (debugging)
+"
+
+# The real meat...
+option_str="ntdvpNxX"
+#echo "0:DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT>$DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT<"
+$DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT "0:@>$@<"
+source dp-getopt+.sh            # Runs when sourced.
+# Loop over your options.
+#echo "1:DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT>$DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT<"
+$DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT "1:@>$@<"
+for i in "$@"; do
+    case "$1" in
+        -n) errno_emitter=errno_emit_name;;
+        -N) errno_emitter=errno_emit_name_no_newline;;
+	-d) errno_emitter=errno_emit_desc;;
+	-v) errno_emitter=errno_emit_verbose;;
+	-t) if vunsetp $terse_p; then terse_p=t; else terse_p=; fi ; ;;
+	-p) errno_emitter=errno_emit_pristine_args;;
+        -x) return_exit_code_p=t;
+            return_exit_code_index=1
+            errno_emitter=errno_emit___not;;
+        -X) return_exit_code_p=t;
+            return_exit_code_index=$2; shift
+            errno_emitter=errno_emit___not;;
+        --) shift; break;;
+    esac
+    shift
+done        
+[ -n "$*" ] || {
+    echo 1>&2 "I need some signal to find."
+    exit 1
+}
+
+set_exit_code()
+{
+    if vunsetp $return_exit_code_p; then
+        echo 0
+        return
+    fi
+    local index=0
+    if vsetp "$return_exit_code_index" ]; then
+        index=$((return_exit_code_index - 1))
+    fi
+    local arg_array=("$@")
+    echo "${arg_array[index]}"
+}
+    
+exit_code=$(set_exit_code "$@")
+
+for eno in "$@"; do
+    if [ "$eno" == "0" ]; then
+        echo 0
+        continue
+    fi
+    errno_line=$(egrep "${mws}#${mws}define${ws}${nws}${ws}$eno(${ws}|$|/)" \
+        $ERRNO_FILES)
+    rc=$?
+    [ "$rc" != 0 ] && {
+        #echo "couldn't find $eno in $ERRNO_FILES"
+        echo "errno:Cannot find errnum: $eno"
+        #exit 2
+    }
+    $errno_emitter "$errno_line"
+done
+
+exit $exit_code

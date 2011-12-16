@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd /usr/local/opera-6.10-20021029.1-static-qt.i386.freebsd
+if test $OPERA_DIR=''; then export OPERA_DIR=`pwd`; fi;
+./opera

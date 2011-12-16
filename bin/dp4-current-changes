@@ -1,0 +1,13 @@
+#!/bin/sh
+set -u
+source script-x
+
+: ${kwa_changeType:=pending}
+: ${kwa_p4Options:=}
+: ${kwa_client=$(dp4-get-client-name)}
+
+clientOpt=
+[ -n "$kwa_client" ] && {
+    clientOpt="-c $kwa_client"
+}
+p4 changes ${kwa_p4Options} "$@" -u${USER} -s${kwa_changeType} ${clientOpt}

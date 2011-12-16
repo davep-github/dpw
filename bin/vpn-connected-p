@@ -1,0 +1,18 @@
+#!/bin/sh
+#set -x
+# Simplistic check for determining VPN connectage...
+
+# ip addr show dev XX ==>
+#2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast qlen 1000
+#    link/ether 00:19:db:49:4d:41 brd ff:ff:ff:ff:ff:ff
+#    inet 192.168.0.77/24 brd 192.168.0.255 scope global eth0
+
+# The VPN adds its own i/f.
+if [[ "$1" == -v ]]
+then
+    Q=
+else
+    Q=-q
+fi
+ifconfig | grep $Q "cipsec[0-9]"
+exit $?

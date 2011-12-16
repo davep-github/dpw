@@ -1,0 +1,14 @@
+#!/bin/sh
+
+sudo apt-get update
+sudo apt-get -s dist-upgrade
+
+###### @todo run the output of dist-upgrade -s through a colorizer.
+echo -n "Upgrade now? "
+read x
+case "$x" in
+     [Yy]*) sudo apt-get dist-upgrade;;
+     *) echo "If you change your mind, run \`sudo apt-get dist-upgrade'' to upgrade.";;
+esac
+
+exit 0

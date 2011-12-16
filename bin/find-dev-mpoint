@@ -1,0 +1,78 @@
+#!/bin/sh
+
+# mount ==>
+# /dev/hdc3 on / type ext3 (rw,errors=remount-ro)
+# proc on /proc type proc (rw)
+# sysfs on /sys type sysfs (rw,nosuid,nodev,noexec)
+# udev on /dev type tmpfs (rw,nosuid)
+# devpts on /dev/pts type devpts (rw,nosuid,noexec)
+# /dev/sda1 on /yokel type ext3 (rw,user_xattr)
+# /dev/sda6 on /bfd type ext3 (rw)
+# /dev/hdb1 on /d2 type ext3 (rw,noatime)
+# /dev/hdc5 on /media type ext3 (rw,noatime)
+# none on /dev/shm type tmpfs (rw)
+# usbfs on /proc/bus/usb type usbfs (rw,noexec,nosuid,devmode=0664,devgid=85)
+# binfmt_misc on /proc/sys/fs/binfmt_misc type binfmt_misc (rw,noexec,nosuid,nodev)
+# /dev/sdc5 on /usb-audio2 type vfat (rw,noexec,nosuid,nodev,uid=8084)
+#-----------------
+# /dev/hdc3 on / type ext3 (rw,errors=remount-ro)
+# /dev/sda1 on /yokel type ext3 (rw,user_xattr)
+# $1        $2 $3     $4   $5   $6
+#################
+# cat /etc/fstab
+# dev        mp   fs    opts      fsck-info
+# /dev/da0c  /jaz ufs	rw,noauto 0  0
+# $1         $2   $3    $4        $5 $6
+#################
+# cat /etc/mtab
+# /dev/hdc3 /  ext3 rw,errors=remount-ro 0  0
+# $1        $2 $3   $4                   $5 $6
+# proc /proc proc rw 0 0
+# sysfs /sys sysfs rw,nosuid,nodev,noexec 0 0
+# udev /dev tmpfs rw,nosuid 0 0
+# devpts /dev/pts devpts rw,nosuid,noexec 0 0
+# /dev/sda1 /yokel ext3 rw,user_xattr 0 0
+# /dev/sda6 /bfd ext3 rw 0 0
+# /dev/hdb1 /d2 ext3 rw,noatime 0 0
+# /dev/hdc5 /media ext3 rw,noatime 0 0
+# none /dev/shm tmpfs rw 0 0
+# usbfs /proc/bus/usb usbfs rw,noexec,nosuid,devmode=0664,devgid=85 0 0
+# binfmt_misc /proc/sys/fs/binfmt_misc binfmt_misc rw,noexec,nosuid,nodev 0 0
+# /dev/sdc5 /usb-audio2 vfat rw,noexec,nosuid,nodev,uid=8084 0 0
+
+find_dev_mpoint()
+{
+    fs_file="$1"
+    dev="$2"
+    cat $fs_file | while read line
+    do
+	case "$line" in
+	    \#*) continue;;
+	esac
+	# dev        mp   fs    opts      fsck-info
+	# /dev/da0c  /jaz ufs	rw,noauto 0  0
+	# $1         $2   $3    $4        $5 $6
+	set -- $line
+	if [ "$1" = "$dev" ]
+	then
+	    echo $1
+	    return 0
+	fi
+    done
+
+    return 0
+}
+
+if [ "$1" = "-a" ]
+then
+    # Consider *ALL* possible file systems, not just those mounted.
+    shift
+    fs_file=/etc/fstab
+else
+    fs_file=/etc/mtab
+fi
+
+for dev in "$@"
+do
+  find_dev_mpoint "$fs_file" "$dev"
+done

@@ -1,0 +1,8 @@
+#!/bin/sh
+site=${1:-psi.com}
+echo "site: $site"
+while :
+do
+	ping -c 1 $site >/dev/null
+	sleep $((5 * 60))
+done

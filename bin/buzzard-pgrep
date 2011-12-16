@@ -1,0 +1,17 @@
+#!/bin/sh
+
+. script-x
+SLEEP_TIME=30
+
+while :
+do
+	pids=$(NO_HDR=t pgrep $DP_SCRIPT_X_DEBUG_OPT "$@" \
+            | tee /dev/tty | fgrep -v "$0")
+        echo "pids>$pids<"
+        echo "0>$0<"
+
+	[ -z "$pids" ] && break
+	sleep $SLEEP_TIME
+done
+
+exit 0

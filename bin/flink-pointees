@@ -1,0 +1,3 @@
+#!/bin/sh
+
+flinks | awk '{print $3}'

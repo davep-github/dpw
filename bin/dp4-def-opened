@@ -1,0 +1,5 @@
+#!/bin/sh
+
+source script-x
+
+p4 opened "$@" | fgrep "default change"

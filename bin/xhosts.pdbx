@@ -1,0 +1,29 @@
+{
+    # host: tnclb03.la
+    # nick: lb03
+    # shell: csh
+    # users: davep
+    #
+    my ($host) = $fields{'host'} =~ /\s*(.+)\s*/;
+    my ($flags) = $fields{'ctl'} =~ /\s*(.+)\s*/;
+
+    print "host>$host<, flags>$flags<\n" if ($trace);
+    print "$host\n" if (($flags =~ /x/) && $host);
+}
+__END__
+#
+# This is a pdbx filter.  After a matching record from a pdb query is
+# collected, a routine like this is called if it is
+# specified on the command line.
+#
+# This routine is called with no parameters, but three global items 
+# are defined:
+# %fields, @thisRec and $fieldIndex
+# %fields is indexed directly by a field's name.  This variable does not
+#  preserve any kind of ordering from the original record in the database.
+# @thisRec contains pairs of strings.
+#  $thisRec[i] is the name of the field
+#  $thisRec[i+1] is the value of the field.
+# This variable preserves the order from the database; it is pretty much
+#  a copy of the record as it was in the file.
+# $fieldIndex is the index of the next slot to use in @thisRec.

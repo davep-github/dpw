@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cd $HOME/.mplayer
+rm -f gui.history
+rm -f gui.pl
+rm -f gui.url

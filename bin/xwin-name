@@ -1,0 +1,5 @@
+#!/bin/sh
+
+export TYPE_VAR="^WM_NAME"
+xwin-type
+

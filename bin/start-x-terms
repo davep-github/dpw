@@ -1,0 +1,14 @@
+#!/bin/sh
+# $Id$
+set -x
+
+export XX_X=${1:-108}
+
+# Different types are for experimentation, until I settle on something
+# useful.  Restarting screens when starting KDE gives the odd impression of
+# terminals with undead contents.
+#SCREEN_NAME="General-Screen-1" start-xterm-screen
+SCREEN_NAME="General-Screen-1" xx -g +${XX_X}+0 dp-screen
+xx -g 80x24+93+401
+xx -g 80x24+0-0
+

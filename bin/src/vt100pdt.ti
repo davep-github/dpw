@@ -1,0 +1,8 @@
+#
+# vt100 without Underline support for pdtcp telnet vt100 terminal
+# emulator bug
+#
+vt100-pdt|pdtcp vt100,
+	sgr=\E[%?%p1%t;7%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1%;m
+	       %?%p9%t\E(0%e\E(B%;, use=vt100-am,
+

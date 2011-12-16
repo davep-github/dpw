@@ -1,0 +1,149 @@
+#!/bin/sh
+
+source script-x
+source eexec
+progname=$(basename $0)
+
+: ${kwa_work:=${work}}
+
+P4CONFIG_FILE=.p4config
+
+Usage_args_info=' [dirname]'
+Usage_synopsis="
+Give information about a source controlled sandbox (eg svn, cvs, perforce) dir.
+If dir isn't specified, use . (aka \$PWD, \$(pwd))."
+
+DPGOP_Usage_details="
+Options:
+  -c   Return full (perforce) client name.
+  -w   Qualify with work dir (env 'work' or 'kwa_work')
+  -p   Verify that dir is a sandbox. For perforce, this simply checks to see if dir
+       exists directly under the \$work directory.
+  -r   Emit relative directory by excluding the sandbox root.
+  -q   Don't complain if dirname is not found.
+
+Examples:
+Assume \$work == ~davep/work, z1 and z2 are sandboxes there-under, 
+and \$PWD is ~davep/work/z1:
+$progname --> z1
+$progname -w --> ~davep/work/z1
+$progname z2 --> z2
+$progname -w z2 --> ~davep/work/z2
+$progname qqqq --> error message and non-zero rc
+$progname -p qqqq  --> no error message and non-zero rc
+$progname -p z1 --> zero rc
+
+!<@todo XXX Make this use the correct source control system. Eg:
+[ -e .svn ] && sc=svn
+[ -e CVS ]  && sc=cvs
+[ -e <sandbox-root>/${P4CONFIG_FILE} ] && sc=perforce
+
+Then we'll probably want to call scsandbox.\$sc \"\$@\"
+Not all options may be universal, eg -c.
+We could perhaps source an sc specific shell file which defines needed
+primitives which generic code can use.
+"
+
+work_prefix=
+setWorkPrefix=
+verifyIsSandbox=
+returnPerforceClientName=
+relative_p=
+noErrors_p=
+
+EExecVerbose
+option_str="nvqkwpcrQq"
+source dp-getopt+.sh || {
+    # We will have had our Usage called.
+    exit 1
+}
+
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      # Don't actually execute stuff just display them with eko.
+      -k) DASHN=t; EXEC=echo; EExecDashN -k;;
+      # Don't actually execute stuff just display them with echo.
+      -n) DASHN=t; EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -Q) VERBOSE=":"; EExecQuiet;;
+      -w) setWorkPrefix=t;;     # Used for display only.
+      -p) verifyIsSandbox=t;;
+      -c) returnPerforceClientName=t;;
+      -r) relative_p=t;;
+      -q) noErrors_p=t;;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+[ -z "$*" ] && {
+    set -- $PWD
+}
+orig1=$1
+
+[ -z "$kwa_work" ] && {
+    echo '$kwa_work is not set.'
+    [ -z "$work" ] && {
+        echo '$work is not set'
+    }
+    exit 1
+} 1>&2
+
+case "$kwa_work" in
+ */) ;;
+ *) kwa_work="${kwa_work}/";;
+esac
+
+[ -n "$setWorkPrefix" ] && {
+    work_prefix=${kwa_work}
+}
+
+case "$@" in
+    "") dir="${kwa_work}";;
+    .) dir=$(pwd);;
+    *) dir="$@";;
+esac
+case "$dir" in
+    /*);;
+    *) dir="${kwa_work}${dir}";;
+esac
+
+#echo_id_err dir
+#echo_id_err kwa_work
+#echo_id_err orig1
+[ -n "$verifyIsSandbox" ] && {
+    # obviously a bit perforce-centric.
+    [ -d "$dir" ] # && [ -f .p4config ]
+    exit
+}
+
+sb=$(echo "$dir" | sed -rn 's!('"$kwa_work"')([^/]+)(/.*|$)!\2!p')
+
+[ -z "$sb" ] && {
+    vunsetp "$noErrors_p" && echo "Cannot find sandbox for $dir"
+    exit 1
+} 1>&2
+
+sb_path="${kwa_work}$sb"
+[ -d  "$sb_path" ] || {
+    vunsetp "$noErrors_p" && echo "sandbox path>$sb_path<, isn't"
+    exit 1
+} 1>&2
+
+if [ -n "$returnPerforceClientName" ]
+then
+    sed -rn 's/(P4CLIENT=)(.*)$/\2/p' "${sb_path}/${P4CONFIG_FILE}"
+elif [ -n "$relative_p" ]
+then
+    echo "$PWD" | sed -rn "s!(${sb_path}/)(.*)!\2!p"
+else
+    echo "${work_prefix}${sb}"
+    true
+fi
+exit

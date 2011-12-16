@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# How to mount by hand...
+# e.g. sshfs vilya:$(dp_get_vilya_mp3) mp3
+# e.g. sshfs vilya: davep
+# host[:dir] mount-point
+file_system_info="
+vilya: davep
+vilya:$(dp_get_vilya_mp3) mp3
+
+
+

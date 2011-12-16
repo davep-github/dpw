@@ -1,0 +1,32 @@
+#!/bin/sh
+
+. script-x
+: ${deep:=}
+: ${no_bounds:=""}
+: ${deep_use_flag_files:="$use_flag_dir"}
+: ${use_flag_dir:="/usr/portage/profiles"}
+
+find_regex='.*/[^.].*'	# ??? use *use* type regex vs .*?
+if [ -n "$deep" ]; then
+    max_depth_opt=
+else
+    max_depth_opt='-maxdepth 1'
+fi
+if [ -z "$no_bounds" ]; then
+    bounding_prefix=":"
+    bounding_suffix=" - "
+else
+    bounding_prefix=""
+    bounding_suffix=""
+fi    
+
+cd "$use_flag_dir" || {
+    echo 1>&2 "Cannot cd to $use_flag_dir: $?"
+    exit 1
+}
+for a in $@; do
+    regexp="$bounding_prefix$a$bounding_suffix"
+    find . $max_depth_opt -regex "$find_regex" \
+	| xargs \
+	egrep --color "$regexp"
+done

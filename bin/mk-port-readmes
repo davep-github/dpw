@@ -1,0 +1,25 @@
+#!/bin/sh
+
+
+base=/usr/ports
+find $base \( -name 'work' -prune \) -o -name Makefile | while read mf
+do
+    d=`dirname $mf`
+    echo -n "Making in $d..."
+
+    if [ "$mf" = "$base/Makefile" ]
+    then
+	echo 'NOT. a, skipping...'
+	continue
+    fi
+
+    cd $d
+    if [ ! -f pkg-descr ]
+    then
+	echo 'NOT. b, skipping...'
+	continue
+    fi
+    echo ''
+    sudo make readmes
+    cd $base
+done

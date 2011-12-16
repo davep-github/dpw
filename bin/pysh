@@ -1,0 +1,12 @@
+#!/bin/sh
+set -x
+#export PYTHONHOME=$HOME/yokel
+#PY=$PYTHONHOME/bin/python2.0
+PYTHONPATH=".:$PYTHONPATH"
+export PYTHONPATH
+PY=python
+
+#local_rc='./.pyshrc'
+#[ -f "$local_rc" ] || local_rc=''
+
+$PY -i $local_rc $HOME/pyshrc.py

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+source script-x
+
+#
+# uname -m --> i686 | x86_64
+# file /usr/bin/file: ?? | ELF 64-bit LSB executable, x86-64,
+#
+# Multiple ways to see if a kernel is 32 or 64 bit:
+# 32:
+# uname -m --> i686
+# file /usr/bin/file --> DO NOT SEE: 'ELF 64-bit LSB executable, x86-64'
+# /boot/config-$(uname -r)
+#   CONFIG_x86_32=y
+#   # CONFIG_x86_64 is not set
+#   # CONFIG_64BIT is not set
+# 64:
+# uname -m --> x86_64
+# file /usr/bin/file --> DO SEE: 'ELF 64-bit LSB executable, x86-64'
+# /boot/config-$(uname -r)
+#   # CONFIG_x86_32 is not set
+#   CONFIG_x86_64=y
+#   CONFIG_64BIT=y
+

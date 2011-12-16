@@ -1,0 +1,7 @@
+#!/bin/sh
+
+find . -name 'README.html' -print | while read fname
+do
+    echo $fname
+    perl -p -i.bak -e 's!pkg/DESCR!pkg-descr!g;' $fname
+done

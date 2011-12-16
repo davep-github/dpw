@@ -1,0 +1,8 @@
+#!/bin/sh
+# $Id: mvsafe,v 1.1 2003/07/05 07:30:08 davep Exp $
+#
+# move files without overwriting dest.
+# a little better than mv -n since we can see the unmoved files.
+
+yes n | mv -i "$@"
+exit $?

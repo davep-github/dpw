@@ -1,0 +1,20 @@
+#!/bin/sh
+
+###emerge sync && emerge -u --ask world
+
+echo 1>&2 "Add code to limit sync ops to 1/day"
+
+# prefix w/1 so that 0xx isn't parsed as octal.
+doy_now="1$(date +%j)"
+doy_then=$(cat last-emerge--sync)
+
+ 
+# if day-of-year(now) > day-of-year(last-emerge--sync)
+#   sync
+
+date >| last-emerge--sync && \
+    emerge --sync && \
+    date >| last-emerge && \
+    emerge -u --deep --ask world && \
+    dispatch-conf; \
+    date | tee last-emerge-done

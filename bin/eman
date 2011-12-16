@@ -1,0 +1,31 @@
+#!/bin/sh
+# $Id: eman,v 1.2 2002/04/02 08:30:05 davep Exp $
+#
+# Ask emacs to display manual pages
+#
+#set -x
+
+if [ "$1" = "-n" ]
+then
+    n_opt="$1"
+    shift
+else
+    n_opt=
+fi
+
+pages="$@"
+client=gnuclient
+nowait='-q'
+form='(progn'
+
+opts="$nowait"
+for page in $pages
+do
+    # send the manpage names to emacs
+    form="$form (manual-entry \"$page\") "
+done
+
+form="$form)"
+
+echo "$form" | ec $n_opt -E
+exit 0

@@ -1,0 +1,10 @@
+#!/bin/sh
+#set -x
+
+title=$1
+shift
+
+PS1="$title"
+xtitle "$title"
+$@
+

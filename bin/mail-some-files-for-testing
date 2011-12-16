@@ -1,0 +1,9 @@
+#!/bin/sh
+
+recip=$1
+shift
+for file in $*
+do
+	echo $file
+	mail -s "$file" $recip < $file
+done

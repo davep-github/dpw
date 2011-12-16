@@ -1,0 +1,9 @@
+#!/bin/sh
+
+source script-x
+
+[ -n "$XAUTHORITY" ] || {
+    export XAUTHORITY="$HOME/.Xauthority"
+}
+
+exec sudo "$@"

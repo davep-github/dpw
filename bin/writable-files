@@ -1,0 +1,5 @@
+#!/bin/sh
+
+source script-x
+
+ls -l "$@" | egrep -- '^-rw' | awk '{print $9}'

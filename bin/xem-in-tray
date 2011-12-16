@@ -1,0 +1,7 @@
+#!/bin/sh
+
+source script-x
+
+: ${xem_prog:=~/bin/xemhp}
+
+exec ksystraycmd -- $xem_prog -F

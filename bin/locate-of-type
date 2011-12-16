@@ -1,0 +1,8 @@
+#!/bin/sh
+
+: ${type_opt:="-d"}
+
+
+locate "$@" | while read; do 
+    [[ -d "$REPLY" ]] && echo "$REPLY" 
+done

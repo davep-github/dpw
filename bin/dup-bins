@@ -1,0 +1,30 @@
+#!/bin/sh
+#set -x
+#
+# Find binary files that exist in >1 places.
+# If the "source" bin is a symlink, then print its value
+# dup-bins files...
+#
+
+for file in $*
+do
+    if [ -x $file -a ! -d $file ]
+    then
+	link=
+	x=`sp $file`
+	nl=`echo $x | wc -w`
+	if [ "$nl" -gt 1 ]
+	then
+	    if [ -L $file ]
+	    then
+		set -- `ls -l $file`
+		shift 8
+		#echo $*
+		link="
+$*"
+	    fi
+	    echo "$x $link
+--"
+	fi
+    fi
+done

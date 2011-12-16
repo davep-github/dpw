@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+. script-x
+
+prog=$(basename $0)
+echo $prog: $* 1>&2
+
+. eexec
+
+args="$@"                       # Preserve args across .bashrc execution.
+# {gentoo|libranet}'s default sudo define SECURE_PATH and so our binaries
+# are inaccessible.
+if [[ "$PATH" != *yokel/sbin* ]]
+then
+    rcfile="$HOME/.bashrc"
+    [ -f $rcfile ] && . $rcfile
+fi
+
+set -- $args
+#echo "args>$args<"
+#
+# specify some extra options for exuberant ctags
+#
+: ${TAGGER:=gtags}
+: ${SUDO:=}
+: ${NODB_DIR:=NOTAG}
+: ${GT_ARGS:=''}
+: ${GT_XARGS:=''}
+: ${FPAT:='.'}
+: ${v:=''}
+: ${EXCLUDED_FILES_FILE:="gtagtree.excluded-files"}
+if [[ -n "$EXCLUDED_FILES_FILE" && "$EXCLUDED_FILES_FILE" == "-" ]]; then
+        EXCLUDED_FILES_FILE=""
+fi
+EXCLUDED_FILES_FILE_OPT=
+[[ -n "$EXCLUDED_FILES_FILE" ]] && {
+    EXCLUDED_FILES_FILE_OPT="-c $EXCLUDED_FILES_FILE"
+}
+
+inheritance_opt=
+
+if [ -n "$v" ]
+then
+    v_file="/dev/tty"
+else
+    v_file="/dev/null"
+fi
+
+BASE_DIR=$PWD
+
+set -- $args
+for i in $*
+do
+    case $1 in
+        -n) EExecDashN;;
+        -v) EExecVerbose;;
+	-s) SUDO=sudo;;
+	-t) tag_args="$tag_args $2"; shift;;
+	-T) tag_args="$2 $tag_args"; shift;;
+        -p) FPAT=$2; shift;;
+        -h) follow_sym_links="-h";;
+        -d) BASE_DIR=$2; shift;;
+	--) shift ; break ;;
+	*) 
+            break ;;
+	    #echo 1>&2 "Unsupported option>$1<";
+	    #exit 1 ;;
+    esac
+    shift
+done
+
+: ${DB_DIR:=$BASE_DIR}
+
+dirs="$*"
+
+#
+# specify some extra options for exuberant ctags
+#
+
+argses="$@"
+: ${argses:="."}
+
+ftreewalk.py -X NOTAG $follow_sym_links \
+    $EXCLUDED_FILES_FILE_OPT \
+    $dirs | \
+    egrep -e "${FPAT}" | tee $v_file | \
+    eval $SUDO "$TAGGER" $tag_args -f - --idutils $DB_DIR \
+    "${GT_ARGS}" "${GT_XARGS}"
+
+[ -n "$SUDO" ] && exec $SUDO chown $(id -u) $DB_DIR

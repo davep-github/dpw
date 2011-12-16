@@ -1,0 +1,5 @@
+#!/bin/sh
+
+source script-x
+
+CONTENT_FILE=DEPEND exec CONT-grep "$@"

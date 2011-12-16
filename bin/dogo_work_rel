@@ -1,0 +1,84 @@
+#!/bin/sh
+
+source script-x
+
+set -u
+# Go relative to a sandbox.
+# gr sub [sandbox]
+# IFF sub is not a subdir and sandbox is not provided and sub is a sandbox go
+# there.
+
+allArgs=("$@")
+potentialSandboxDest=
+currentSb=$(scsandbox -q $PWD)
+dest=
+errors=
+
+add_sep()
+{
+    local dir="$1"
+    case "$1" in
+        "");;
+        */);;
+        *) dir="$dir/";;
+    esac
+    echo "$dir"
+}
+
+finish()
+{
+    local rc=$1; shift
+    local dest=$1; shift
+    local errors="$@"
+    vsetp $dest && [ -d "$dest" ] && {
+        echo "$dest"
+        exit 0
+    }
+    echo "$errors" 1>&2
+    exit $rc
+}
+
+sub=${1-}
+sb=${2-}
+
+case "$sub" in
+    /*) finish 1 "$sub" "absolute sub>$sub< does not exist";;
+esac
+
+sandbox=
+if vsetp $sb
+then
+    scsandbox -p "$sb" || finish 1 "" "specified sb>$sb< is not a sandbox"
+    sandbox=$sb
+else
+    # This may not be set if we're not in a sandbox
+    sandbox=$currentSb
+fi
+
+# Expand sandbox if we have one.
+vsetp $sandbox && sandbox=$(scsandbox -w $sandbox)
+
+if vunsetp $sandbox 
+then
+    # No such sandbox. See if $1 is a sandbox itself.
+    dest=$(scsandbox -w $sub)
+    finish 1 "$dest" "sb not provided and cwd is not a sandbox"
+else
+    # See if sub is an alias first.
+    work_rel_name="work_${sub}_rel"
+    work_rel_result=$(dogo $work_rel_name)
+    if [ "$work_rel_result" == "$work_rel_name" ]
+    then
+        # sub is not an alias
+        # Maybe it's an actual subdir in the sandbox.
+        work_rel_result=$sub
+    fi
+    dest="$sandbox/$(add_sep $work_rel_result)"
+    # Redundant check so we can try sub as an sb
+    [ -d "$dest" ] && finish 0 "$dest" "WTF?"
+    dest=$(scsandbox -wq "$sub")
+    finish 1 "$dest" "provided sub>$sub< is neither a subdir nor a sandbox."
+fi
+
+finish 66 "" "Impossible results, sub>$sub<, sb>$sb<"
+exit 99

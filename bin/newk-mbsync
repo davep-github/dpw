@@ -1,0 +1,28 @@
+#!/bin/sh
+
+.  eexec 
+
+[[ "$1" == "-n" ]] && {
+    EExecDashN
+    shift
+}
+
+MDNAME=${1:-$MDNAME}
+: ${MDNAME:="Maildir"}
+
+
+MBSUNK=/home/davep/eMail/mbsunk
+WCNAME="working-copy"
+WC="$MBSUNK/$WCNAME"
+MD="$WC/$MDNAME"
+: ${repos:=exchange}
+repos=":$repos:"
+
+
+EExecVerboseEchoer=EExecStdoutEcho
+
+EExec cd ~
+EExec rm -rf ~/.mbsync/$repos*
+EExecVerboseEcho "$PWD"
+EExec rm -rf $MD
+EExec maildirmake "$MD"

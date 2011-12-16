@@ -1,0 +1,39 @@
+#!/bin/sh
+. script-x
+
+progname=$(basename "$0")
+
+# I've seen at least once a case where >1 utmp records had the same tty.
+#[8] [13144] [s/16] [davep   ] [pts/16      ] [                    ] [0.0.0.0        ] [Tue Oct 06 00:05:06 2009 EDT]
+#[7] [19186] [/16 ] [davep   ] [pts/16      ] [:0:S.1              ] [0.0.0.0        ] [Wed Oct 07 09:12:51 2009 EDT]
+#
+# However both PIDs were not alive.
+# HOPEFULLY, if we have >1 records, only one will belong to a living pid.
+#
+find_em()
+{
+    local tty=$1
+    shift
+    utmpdump /var/run/utmp 2>/dev/null | egrep "\[$tty[ \t]*\]" | while read; do
+        pid=$(echo "$REPLY" | sed -r 's/(\[.*?\][ \t]\[)([0-9]+)(.*)/\2/')
+        pgrep $pid >/dev/null 2>&1 && {
+            $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "REPLY>$REPLY<"
+            echo "$REPLY"
+        }
+    done
+}
+
+# There can be only ONE!
+seen_one=
+tty=$(mytty)
+find_em "$@" | while read; do
+    vsetp $seen_one && {
+        echo 1>&2 "$0: More than ONE utmp entry for tty>$tty<"
+        exit 1
+    }
+    echo "$REPLY"
+    seen_one=t
+done
+
+exit 0
+    

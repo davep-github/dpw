@@ -1,0 +1,17 @@
+#!/bin/sh
+
+. script-x
+
+[[ "$#" < 2 ]] && {
+    echo 1>&2 "Usage: <nth-revision-number-backwards> <file-name>"
+    exit 1
+}
+
+file=$2
+rev=$(echo "$1" | sed -nr 's/(r)?([-+]?[0-9]+$)/\2/p')
+
+if [[ "$rev" < 0 ]]; then
+    # Negative revision.  Define as |n| revsions before current.
+    rev=$(svn-rev-list $((rev - 1)) "$file" | tail -n 1)  
+fi
+echo $rev

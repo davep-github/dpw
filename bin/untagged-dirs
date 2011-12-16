@@ -1,0 +1,11 @@
+#!/bin/sh
+
+source script-x
+
+: ${magicFile:=NOTAG}
+
+find "$@" -name "${magicFile}" | \
+while read
+do 
+  echo $(dirname $REPLY)
+done

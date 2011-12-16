@@ -1,0 +1,30 @@
+#!/bin/sh
+
+source script-x
+
+mail_one()
+{
+    local to="$1"; shift
+    local n="$1"; shift
+    local of="$1"; shift
+    local date="$1"; shift
+    local sub="Random mail message $date ($n of $of)"
+    #echo_id sub
+    fortune | mail -s "$sub" "$to"
+}
+
+: ${recipients:=davep@meduseld.net}
+if vunsetp $@
+    then
+    set -- $recipients
+fi
+  
+of=$#
+n=1  
+# Use the same date on all messages so we can differentiate message groups.
+date=$(dp-std-timestamp)
+for r in "$@"
+do
+  mail_one "$r" "$n" "$of" "$date"
+  : $((++n))
+done

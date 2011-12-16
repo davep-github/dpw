@@ -1,0 +1,30 @@
+#!/bin/sh
+# $Id: update-mp3db,v 1.5 2005/04/11 08:20:12 davep Exp $
+#set -x
+
+. eexec
+
+EExecVerbose
+
+if [ "$1" = "-n" ]
+then
+    EExecDashN
+    op=''
+    shift
+else
+    op=nice
+fi
+
+. $HOME/etc/mp3db.conf
+
+# Do ALL of audio tree (CANNOT, due to updatedb not following symlinks).
+# this is for slocate's updatdb
+# --localpaths="$DEF_AUDIO_ROOT"
+# @todo make this smart!
+# -l 0 ==> make database unsecure.
+EExec ${op} sudo ${UPDATER} -l 0 -U "$DEF_AUDIO_ROOT" --output="$MP3DB"
+EExec sudo chown -R davep "$DEF_AUDIO_ROOT"
+
+# *^@%&# updatedb doesn't follow symlinks.
+EExec ${op} ${UPDATER} -l 0 -U "$DEF_FLAC_ROOT"  --output="$FLACDB"
+EExec sudo chown -R davep "$DEF_FLAC_ROOT"

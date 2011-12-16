@@ -1,0 +1,3 @@
+#!/bin/sh
+set -x
+/usr/bin/play /usr/lib/adminmenu/audio_test.wav

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+. ~davep/.rc/func
+
+dpFATAL "$@"
+

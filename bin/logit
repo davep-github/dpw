@@ -1,0 +1,13 @@
+#!/bin/sh
+
+log=/tmp/logit.log
+
+echo "--" >> $log
+date >> $log
+for i in "$@"
+do
+    echo "\"$i\"" >> $log
+done
+
+"$@"
+#cat >> $log

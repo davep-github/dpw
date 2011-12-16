@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+### Time-stamp: <08/08/04 07:49:57 davep>
+#############################################################################
+## @package substr -- For use on command line.
+##
+import sys, os
+import string
+
+#
+# substr [-s[0]] [-e[strlen(str)]] [strings...]
+# if no string, get it from stdin.
+#      |start   |end
+# abcdefghijklmnopqrstuvwxyz
+#
+
+def substr(start=None, end=None, strings=None):
+    start = start or 0
+    eval(start)
+    str = strings or [sys.stdin.read()]
+    ret = []
+    for str in strings:
+        str_len = len(string)
+        end = end or str_len
+        if end < 0:
+            end = str_len + end
+        if start < 0:
+            start = str_len + start
+        if end > start:
+            start, end = end, start
+        ret.append(str[start:end])
+    return ret
+
+def main(args, prog_name):
+    import getopt
+    start = None
+    end = None
+    strings = []
+    options, args = getopt.getopt(args, 's:e:S:')
+    for o, v in options:
+        if o == '-s':
+            start = eval(v)
+            continue
+        if o == '-e':
+            end = eval(v)
+            continue
+        if o == '-S':
+            strings.append(v)
+            continue
+        
+    for s in substr(start, end, strings):
+        print s

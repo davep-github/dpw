@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec spamassassin "$@" 2> /dev/null

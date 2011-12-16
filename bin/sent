@@ -1,0 +1,167 @@
+From davep Mon Aug 18 21:44:08 1997
+Message-ID: <19970818214408.62047@relayer.erols.com>
+Date: Mon, 18 Aug 1997 21:44:08 -0400
+From: "David A. Panariti" <davep@relayer.erols.com>
+To: davep@crl.dec.com
+Subject: chat
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+X-Mailer: Mutt 0.69
+Reply-To: davep@who.net
+X-Attribution: davep
+Status: RO
+
+
+#!/bin/sh
+
+/usr/sbin/pppd lock debug connect '/usr/bin/chat -v -f $HOME/bin/chat2.script' /dev/cuaa1 crtscts modem defaultroute 16.11.0.213: 57600
+
+
+ABORT BUSY ABORT 'NO CARRIER' '' 'AT&FE1L0M1S0=0S7=90S11=55S95=1' OK 'ATDT1-800-200-3264' 'CONNECT' '\r' '#' 'RAD$logon' 'ame>' 'davep' 'ocal>' 'set port ppp ipcp address enable compression enable' 'ocal>' 'connect ppp' 'Starting' ''
+-- 
+David Panariti                      /    I can't complain,
+davep@who.net                     <//>     but sometimes I still do.
+(see also http://www.four11.com)   /     -- Joe Walsh
+
+From davep@baloo.ne.mediaone.net Tue Sep  4 19:02:36 2001
+Date: Tue, 4 Sep 2001 19:02:36 -0400
+From: "David A. Panariti" <davep@baloo.ne.mediaone.net>
+To: cfj@akamai.com
+Subject: Resume?
+Message-ID: <20010904190236.A40680@baloo.ne.mediaone.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.2.5i
+X-Attribution: davep
+Status: RO
+Content-Length: 243
+Lines: 10
+
+Chris,
+
+Did you ever get my resume?  I sent it after we 
+had lunch.  But your extended silence plus the lack of any
+akamai addresses in my sendmail logs is leading me to think
+you never got it.
+
+Please let me know one way or the other.
+
+davep
+
+<<<<<<< .mine
+From davep@meduseld.net Sun Oct  5 10:27:40 2008
+Date: Sun, 5 Oct 2008 10:27:40 -0400
+From: davep@meduseld.net
+To: Scott Thayer <sthayer2001@earthlink.net>
+Subject: Re: r u up fer a call - you betca i am
+Message-ID: <20081005142740.GA24370@vilya>
+References: <48E7E785.6040806@earthlink.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <48E7E785.6040806@earthlink.net>
+X-Attribution: davep
+User-Agent: Mutt/1.5.16 (2007-06-09)
+Status: RO
+Content-Length: 563
+Lines: 18
+
+Yes.
+I was, but didn't read my email yesterday.
+Any time today is good, though.
+Give a ring anytime:
+1) Not here --> vmail (or try again.  I'm pretty slow and the cordless
+is in my office, at the end of the path of death.  Notice the lack of
+quotes here.
+2) Can't --> "Can't." said davep.
+3) Can --> chat.
+
+davep
+
+On Sat, Oct 04, 2008 at 06:00:37PM -0400, Scott Thayer wrote:
+
+-- 
+David Panariti                     /     I can't complain,
+davep@meduseld.net                (|)      but sometimes I still do.
+                                   /     -- Joe Walsh
+
+From davep@meduseld.net Thu Nov 13 09:36:31 2008
+Date: Thu, 13 Nov 2008 09:36:31 -0500
+From: davep@meduseld.net
+To: steve@vanu.com
+Cc: davep@withywindle.org
+Subject: W@H
+Message-ID: <20081113143631.GA29209@vilya>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Attribution: davep
+User-Agent: Mutt/1.5.16 (2007-06-09)
+Status: RO
+Content-Length: 823
+Lines: 22
+
+Steve,
+I have an appt here in Reading ~6pm.
+So, rather than come in and leave ~4:39:27
+(or so) in order to guarantee I'm here by 6pm so
+we can make the 90sec trip to sk00l (everything's 
+70 < t < 110 sec from our house: {YMCA for preK, K, 
+grammour school, middle school, high school and 
+playground.  My wife worked for years to find this
+(supra-prime mortgaged) house),
+I going to work from home.
+(did I lose (you) in all of those parens (i.e. [)(]))?
+
+davep
+
+(Place my domain name -- w/o Googling!! -- and I'll buy you a
+Starbuck's (not a store, just a cup of the world's favorite
+drug: caffeine, in a mixture with your fave flavs.)
+
+-- 
+David Panariti                     /     I can't complain,
+davep@meduseld.net                (|)      but sometimes I still do.
+                                   /     -- Joe Walsh
+
+From davep@meduseld.net Thu Nov 13 10:28:54 2008
+Date: Thu, 13 Nov 2008 10:28:54 -0500
+From: davep@meduseld.net
+To: Steve Muir <steve@vanu.com>
+Subject: Re: W@H
+Message-ID: <20081113152854.GA29639@vilya>
+References: <20081113143631.GA29209@vilya> <81E3CE250A05D24B84A799617E411EA62E0C4E@mail.vanu.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <81E3CE250A05D24B84A799617E411EA62E0C4E@mail.vanu.com>
+X-Attribution: davep
+User-Agent: Mutt/1.5.16 (2007-06-09)
+Status: RO
+Content-Length: 882
+Lines: 22
+
+Never thought of that.
+Actually, we {wife[0], self->personality[0]} are huge Tolkien Geeks.
+For daughter[0], we were going to leave her middle name
+blank so she could choose it later.  But the robo-nurses
+@ the hospital couldn't grok that and said we couldn't do
+it.  We were too tired to complain, so we went with the 
+fallback of Arwen, which isn't odd enough to cause trauma.
+Daughter[1] is SAMantha Rose.
+But bitch[0]'s name is Paw-Prints (90+ lb Golden Retriever) which
+is, of course, normal.
+
+Meduseld is the Golden Hall in Rohan.
+Withywindle is the river ~from which the queerness of the Old Forest
+comes~
+Crickhollow is the house Frodo pretended to move to.
+
+Perhaps I've said too much.
+
+-- 
+David Panariti                     /     I can't complain,
+davep@meduseld.net                (|)      but sometimes I still do.
+                                   /     -- Joe Walsh
+

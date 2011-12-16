@@ -1,0 +1,61 @@
+#!/usr/bin/env python
+
+import os, sys, re, string, filecmp
+
+COPY_PAT = re.compile("^(.*?)_copy_\d+(.*)$")
+
+def add_file(f, file_d):
+    m = COPY_PAT.search(f)
+    if m:
+        key = m.group(1) + m.group(2)
+        #print "key[%s] = %s" % (key, f)
+        try:
+            file_d[key].append(f)
+        except KeyError:
+            file_d[key] = [f]
+            
+
+def clean_up(file_d):
+    for k, fs in file_d.items():
+        for f in fs:
+            if f == k:
+                continue
+            if filecmp.cmp(f, k, shallow=0) == True:
+                print f
+
+
+def rm_kpys(args):
+    file_d = {}
+    for f in args:
+        add_file(f, file_d)
+    clean_up(file_d)
+
+if __name__ == "__main__":
+    for prompt in ["This program bites compared with rm-dupes.py.",
+                   "Are you sure?", "Really and truly?", "C'mon, reeealy?",
+                   "Are you shitting me?"]:
+        if len(prompt) > 38:
+            extra_nl = "\n"
+        else:
+            extra_nl = ""
+        print prompt, extra_nl, "Continue[N/Yes-I-want-to-continue.]? ",
+        ans = sys.stdin.readline()
+        print
+        ans = ans[:-1]
+        if ans == "Yes-I-want-to-continue.":
+            continue
+        if ans == "Yes-I-want-to-continue":
+            print "You must needs type the `.'."
+            continue
+        print "Excellent choice."
+        sys.exit(0)
+
+    print "Ok, ok.  I'll dance at your wake."
+    sys.exit(99)
+
+    rm_kpys(sys.argv[1:])
+        
+
+
+
+

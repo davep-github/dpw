@@ -1,0 +1,6 @@
+#!/bin/sh
+
+for f in "$@"
+do 
+   gst-launch-0.10 filesrc location="$f" \! flacdec \! alsasink
+done

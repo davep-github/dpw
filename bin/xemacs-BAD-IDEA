@@ -1,0 +1,12 @@
+#!/bin/sh
+
+. script-x
+
+[ -n "$ISNTTHISWHERE" ] && {
+    echo 1>&2 "We're loopin."
+    exit 66
+}
+
+export ISNTTHISWHERE=WECAMEIN
+
+xem "$@"

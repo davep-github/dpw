@@ -1,0 +1,17 @@
+#!/bin/sh
+
+findit()
+{
+	file=$1
+	x=`grep -l "/$file\$" /var/db/pkg/*/+CONTENTS`
+	if [ "$x" != "" ]
+	then
+		echo "$file:"
+		echo $x
+	fi
+}
+
+for file in $*
+do
+	findit $file
+done

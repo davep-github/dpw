@@ -1,0 +1,8 @@
+#!/bin/sh
+
+source script-x
+
+# Just a template... needs work.
+# sed -nr 's!^(//eng/albireo-releases/carl/)([^#]*)(#.*)$!\2!p'
+# Need to convert pwd to p4 depot name and use that for the prefix in the sed command.
+

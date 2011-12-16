@@ -1,0 +1,12 @@
+#!/bin/sh
+
+source script-x
+
+: ${client_prefix:=davep}
+: ${client_sep:=-}
+
+sb=$(scsandbox $PWD)
+echo "${client_prefix}${client_sep}${sb}"
+
+exit 0
+

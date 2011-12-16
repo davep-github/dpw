@@ -1,0 +1,12 @@
+#!/bin/sh
+
+. script-x
+
+svn_op()
+{
+    echo "Stat files in >$PWD<"
+    svn stat
+}
+export -f svn_op
+
+svn-op-immediate-subdirs svn_op "$@"

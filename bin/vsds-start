@@ -1,0 +1,48 @@
+#!/bin/sh
+
+
+export DP_ORIGINAL_START_COMMAND="$0"
+export DP_ORIGINAL_START_COMMAND_ARGS="$@"
+export DP_RESTART_COMMAND="$0"
+export DP_RESTART_COMMAND_ARGS="$@"
+
+. script-x
+. eexec
+
+
+
+# @todo, provided this from outside
+: ${VSDS_GAME_rc:=$HOME/etc/vsds-l4d.rc}
+. $HOME/etc/vsdsrc
+
+[ "$1" == "-u" ] && {
+    update=t
+    shift
+}
+: ${start_browser:=}
+: ${browser:=opera}
+: ${update:=}
+: ${POST_CMDS:="$@"}
+: ${ignore_other_servers:=}
+{
+    pgrep ucc && {
+        echo 1>&2 "Looks like another server is running."
+        if [ -n "$ignore_other_servers" ]; then
+            echo 1>&2 "  Set ignore_other_servers to continue."
+            exit 1
+        else
+            echo 1>&2 "Continuing. Fools rush in..."
+        fi
+    }
+        
+    EExec cd "$DP_VSDS_DIR"
+    [ -n "$update" ] && {
+        EExec vsds-update
+        echo "Checking for updates...done."
+    }
+    [ -n "$start_browser" ] && (sleep 10; ${browser} localhost:8075)&
+    EExec cd "$DP_VSDS_SYSDIR"
+    EExec vsds-start-stage2 $DP_SCRIPT_X_DEBUG_OPT
+
+    [ -n "$POST_CMDS" ] && "$POST_CMDS"
+} | tee ${DP_SCRIPT_X_TEE_OUT} $DP_LOG/$(basename $0).log

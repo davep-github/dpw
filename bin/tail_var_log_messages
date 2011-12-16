@@ -1,0 +1,15 @@
+#!/bin/sh
+
+[[ "$1" == "-n" ]] && {
+    dash_n="-n $2"
+    shift; shift
+}
+
+case "$1" in
+     [0-9]) suffix=.$1.gz
+	    TAILR=zcat ;;
+     *) suffix=$1
+	TAILR=cat ;;
+esac     
+     
+sudo $TAILR /var/log/messages$suffix | tail $dash_n

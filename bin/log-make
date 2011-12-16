@@ -1,0 +1,30 @@
+#!/bin/sh
+
+source script-x
+
+: ${kwa_id:=nodename}
+
+case "$kwa_id" in
+    full|all|verbose|detailed|v) kwa_id=$(hostname -s)-$(dp-std-timestamp);;
+    t|ts|time|timestamp) kwa_id=$(dp-std-timestamp);;
+    hostname|host|node|nodename|name) kwa_id=$(hostname -s);;
+    fqdn) kwa_id=$(hostname);;
+    *) ;;
+esac
+
+args=("$@")
+targets=
+for a in "${args[@]}"
+do
+  case "$a" in
+      -*) continue;;
+  esac
+  targets="${targets}_${a}"
+done
+
+log_base="make${targets}.${kwa_id}.std"
+oname=make
+  
+echo "make $@ > ${log_base}out 2> ${log_base}err"
+make "$@" > ${log_base}out 2> ${log_base}err
+

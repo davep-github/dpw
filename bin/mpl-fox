@@ -1,0 +1,4 @@
+#!/bin/sh
+
+echo "$@" > /tmp/mpg-at
+xx mplayer "$@" &

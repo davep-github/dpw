@@ -1,0 +1,36 @@
+#!/bin/sh
+
+source script-x
+
+: ${archiver_bin:=bzip2}
+: ${archiver_opt:=j}
+: ${archiver_ext:=bz2}
+
+mk_name()
+{
+    local dirname="$1"
+    echo "$dirname.tar.$archiver_ext"
+}   
+
+tar_dir()
+{
+    local dirname="$1"
+    local dst_path=${2:-.}
+    [ -e "$dirname" ] || {
+	echo 1>&2 "$dirname does not exist."
+	exit 1
+    }   
+    [ -d "$dirname" ] || {
+	echo 1>&2 "$dirname is not a directory."
+	exit 2
+    }
+    local archive_name="$dst_path/$(mk_name $dirname)"
+    tar "cvf$archiver_opt" "$archive_name" "$dirname"
+}
+
+src_dir="$1"
+shift
+dst_dir="$1"
+shift
+
+tar_dir "$src_dir" "$dst_dir"

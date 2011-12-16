@@ -1,0 +1,3 @@
+#!/bin/sh
+
+type_opt="-d" locate-of-type "$@"

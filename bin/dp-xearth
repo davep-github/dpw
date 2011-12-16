@@ -1,0 +1,9 @@
+#!/bin/sh
+
+date >| ~/tmp/dp-xearth.log
+echo ">$*<" >> ~/tmp/dp-xearth.log
+cmd="xearth -pos \"fixed 28.53 -81.36\" -night 23 -term 25 -bigstars 12 -nice 20 -grid -proj orth -markerfile $HOME/xearth.markers $*"
+echo "cmd>$cmd<" >> ~/tmp/dp-xearth.log
+eval $cmd
+
+# -markerfile xearth.markers

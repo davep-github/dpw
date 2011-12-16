@@ -1,0 +1,6 @@
+#!/bin/sh
+
+. script-x
+
+$DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT "uid $(id)"
+[ "$(id -u)" = "0" ]

@@ -1,0 +1,4 @@
+#!/bin/sh
+. script-x
+
+exec_cmd=/usr/bin/ebuild sudo_pristine $DP_SCRIPT_X_DEBUG_OPT "$@"

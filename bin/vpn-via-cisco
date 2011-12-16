@@ -1,0 +1,83 @@
+#!/bin/sh
+#set -x
+source script-x
+set -x -e
+: ${dest:=permabit}
+: ${dest_desc:=$dest}
+: ${kill_ffox:=}
+: ${try_to_be_smart=t}
+: ${log_it:=}
+: ${no_xx:=t}
+
+: {color_opts:="-B black -F DarkGoldenrod"}
+
+vsetp "$dest" || {
+    echo 1>&2 "We needs a destination precious."
+    exit 2;                     # Slinker + Stinker
+}
+case "$dest" in
+    pbit|pb|p) dest=permabit;;
+    *);;
+esac
+
+if [[ "$DP_VPNCISCO_XX" == yes ]]
+then
+    if vunsetp $DISPLAY
+    then
+	echo 1>&2 "DP_VPNCISCO_XX is set but there is no DISPLAY set."
+
+	if vsetp $try_to_be_smart
+	then
+	    DP_VPNCISCO_XX=no
+	    echo 1>&2 "Not starting dedicated xterm."
+	fi
+    fi
+fi
+    
+LOG_FILE=$DP_LOG/vpn-cisco.${dest}.log
+vpn_it()
+{
+    echo == $0: begin at $(date) ================= >> $LOG_FILE
+
+    if [[ "$DP_VPNCISCO_XX" != yes ]]
+    then
+        :
+    elif [[ "$DP_VPNCISCO_XX" == yes ]]
+    then
+	vsetp $DISPLAY || {
+	    echo 1>&2 "DISPLAY var not set."
+	    exit 1
+	}
+        XX=xx
+        dash_dash='--'
+        echo "$XX $color_opts"
+        cmd="$XX $color_opts"
+        exit 99
+    else
+        XX=
+        dash_dash=
+        [[ "$1" == -X ]] || {
+            export DP_VPNCISCO_XX=yes
+            exec $0
+        }
+    fi
+
+    vsetp $kill_ffox && kill-ffox
+
+    sudo /etc/init.d/vpnclient_init start || {
+        sudo /etc/init.d/vpnclient_init restart
+    }
+    
+    eval $cmd sudo vpnclient connect $dest
+    rc=$?
+    echo == $0: end at $(date), rc: $rc ========== >> $LOG_FILE
+    
+}
+
+if vsetp $logit
+then
+    vpn_it 2>> $LOG_FILE
+else
+    vpn_it
+fi
+

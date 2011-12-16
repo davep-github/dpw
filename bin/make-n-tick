@@ -1,0 +1,11 @@
+#!/bin/sh
+
+source script-x
+source eexec
+
+: ${tickOpts='-c. -i 30'}
+: ${makeOut=make.$(dp-std-timestamp).out}
+
+echo "log file \"$makeOut\""
+
+make "$@" | tikker $tickOpts "$makeOut"

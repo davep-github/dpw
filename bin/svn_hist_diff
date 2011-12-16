@@ -1,0 +1,68 @@
+#!/bin/sh
+
+source script-x
+
+# svn_hist_grep -p<first> -m<num> pat file
+p=0
+m=1
+
+help_msg="svn_hist_diff -p <first> -m<num> file...
+Historical svn diff.
+Run svn diff on previous revs of file...
+-p <first> How many revs back (0 == current). [$p].
+-m <num> grep this many revisions. [$m].
+-n <num> Same as -m
+"
+
+usage_err()
+{
+    {
+        if vsetp "$@"
+        then
+          echo "$@"
+        fi
+        echo "Usage:"
+        echo "$help_msg"
+    } 1>&2 
+    exit 1
+}
+
+
+if [ "$#" = 0 ]
+then
+    usage_err
+fi
+
+# Parse command line.
+# std_options has some "useful" options.
+# Set to "" or "-" to get nothing.  It's an error to call dp-getopt+.sh with
+# std_options unset.
+std_options=""
+
+# The real meat...
+option_str="p:c:h"       # !!!!!!! You probably want to set this !!!!!!!
+
+source dp-getopt+.sh            # Runs when sourced.
+# Loop over your options.
+for i in "$@"; do
+  case "$1" in
+    -p) p="$2"; shift;;
+    -c) m="$2"; shift;;
+    -h) echo "$help_msg"; exit 0;;
+    --) shift; break;;
+  esac
+  shift
+done
+
+if vunsetp "$@"
+then
+    usage_err "Missing file names."
+fi
+for file in "$@"
+do
+  rlist=$(svn_rlist -P$p -c$m $file)
+  for r in $rlist
+    do
+    svn diff -r$r $file
+  done
+done

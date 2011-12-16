@@ -1,0 +1,15 @@
+#!/bin/sh
+CMD=crl-on+route-kicker.sh
+
+if [ "$1" = "-x" ]
+then
+    DISPLAY=`remote-disp`; export DISPLAY
+fi
+
+if [ -n "$DISPLAY" ]
+then
+    geo='+468-1'
+    exec xterm -T 'CRL VPN' -font 5x7 -geometry $geo -e sudo $CMD &
+else
+    sudo $CMD
+fi

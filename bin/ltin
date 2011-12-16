@@ -1,0 +1,3 @@
+#!/bin/sh
+
+tin -f $HOME/.newsrc.$(hostname) "$@"

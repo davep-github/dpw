@@ -1,0 +1,5 @@
+#!/bin/sh
+
+locate "$@"
+
+loc-isoarchive "$@"

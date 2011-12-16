@@ -1,0 +1,37 @@
+#!/bin/sh
+# $Id: note-grep,v 1.4 2003/05/16 07:30:10 davep Exp $
+#set -x
+
+progname=`basename $0`
+
+CFILE=$HOME/etc/notes-index.conf
+[ -f $CFILE ] && . $CFILE
+
+#
+# allow anything to be changed
+while [ "$1" = "---E" ]
+do
+    shift
+    eval $1
+    shift
+done
+
+case "$indexer" in
+    [gG][Ll][Ii][Mm][Pp][Ss][Ee])
+	# print line numbers so compile-mode in an emacs shell window works.
+	glimpse -n -H $index_dir "$@"
+	;;
+    [Nn][Aa][Mm][Aa][Zz][Uu])
+	namazu "$@" $index_dir
+	;;
+    ""|[Nn][Oo][Nn][Ee]|[Gg][Rr][Ee][Pp])
+	egrep "$@" $HOME/notes
+	;;
+    *)
+	echo 1>&2 "$0: Unsupported indexer($indexer)"
+	exit 2
+	;;
+esac
+
+exit $?
+

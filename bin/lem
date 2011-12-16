@@ -1,0 +1,61 @@
+#!/bin/sh
+# $Id: lem,v 1.26 2005/06/12 08:20:10 davep Exp $
+
+# start up a local emacs
+# run an emacs that starts up on the host issuing the command.
+# useful when logged in from, say, a laptop.
+#set -x
+
+[[ "$1" == "-x" ]] && {
+    set -x
+    dash_x_opt = "-x"
+    shift
+}
+args="$@"
+
+# check for a ssh forwarded X connection and respect it.
+# >5 is a swag
+if [ -n "$DISPLAY" ]
+then
+    dnum=`echo $DISPLAY | sed -n -e 's/.*:\([0-9]*\).*/\1/p'`
+    [ "$dnum" -gt 5 ] && set -- '-d'
+fi
+
+if [ "$1" != '-d' ]
+then
+    DISPLAY=`remote-disp`; export DISPLAY
+    shift
+fi
+
+REM_HOST=$(myhost)
+xrdbload()
+{
+    set -- $($HOST_INFO -n xf86 -n - X lem_xrdb_file)
+    if [ "$2" != "-" ]
+    then
+	xrdb_file=$2
+    else
+	xrdb_file="$HOME/$1/Xresources.$REM_HOST"
+    fi
+
+    [ -f "$xrdb_file" ] && xrdb -load $xrdb_file
+}
+
+xmodmap_load()
+{
+    set -- $($HOST_INFO -n xf86 -n - X lem_xmodmap_file)
+    if [ "$2" != "-" ]
+    then
+	xmodmap_file=$2
+    else
+	xmodmap_file="$HOME/$1/Xmodmap.$REM_HOST"
+    fi
+
+    [ -f "$xmodmap_file" ] && xmodmap -verbose $xmodmap_file
+}
+
+xrdbload
+xmodmap_load
+
+export CVS_RSH=ssh
+xem $dash_x_opt -l -m "$args"

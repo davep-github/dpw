@@ -1,0 +1,8 @@
+#!/bin/sh
+
+source script-x
+
+: ${kwa_nameRegexp:='(^Client:[[:space:]]+)(.*$)'}
+: ${kwa_nameRef:=2}
+
+p4 client -o | sed -rn 's/'"${kwa_nameRegexp}"'/\'"${kwa_nameRef}"'/p'

@@ -1,0 +1,30 @@
+#!/bin/sh
+
+. script-x
+
+: ${PGREP_REGEXP:=}
+
+prog="$1"
+shift
+
+default_progname()
+{
+    # Fucking non-greedy never does what I want it to.
+    # I really want it to stop as early as possible, leaving the ./- in \2
+    echo $(basename $prog) | sed -rn 's/(.*?)([.-]?iff)/\1/p'
+
+running_p()
+{
+    # Run prog if we fail to find it.
+    if [ -n "${PGREP_REGEXP}" ]; then
+        # 0 --> fail, n --> num matches 
+        NO_HDR=t pgrep $DP_SCRIPT_X_DEBUG_OPT "${PGREP_REGEXP}" | fgrep -vq "$0" &&  exit 1
+        true
+    else
+        # findprog returns success if it finds anything.
+        findprog "$(basename $prog)" >/dev/null && exit 1
+        true
+    fi && (exec "$prog" "$@" &)
+}
+running_p "$@"
+exit 1

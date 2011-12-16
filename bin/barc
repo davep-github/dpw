@@ -1,0 +1,59 @@
+#!/bin/sh
+#set -x
+
+# $Id: barc,v 1.1 2003/01/25 08:30:25 davep Exp $
+#
+# barc - build info archiver
+#
+# 
+
+. eexec
+
+build_base='/sundry/build'
+archive_base='$HOME/yokel/etc/build-info'
+PWDER=pwd
+EExecEcho='EExecStdoutEcho'
+
+if [ "$1" = '-n' ]
+then
+    shift
+    EExecShowOnly=y
+fi
+
+usage()
+{
+    echo 1>&2 'usage: barc [-n] file...'
+    echo 1>&2 '  Put file in the build archive under $archive_base.'
+    echo 1>&2 '  Append current pwd - $build_base'
+    echo 1>&2 '  -n says to just show what would be done.'
+}
+
+
+barc()
+{
+    newdir=$1
+    file=$2
+    case $file in
+    ./*) file=`echo $file | cut -c3-`;;
+    esac
+
+    filedir=`dirname $file`
+    case "$filedir" in
+    .) ;;
+    *) newdir="$newdir/$filedir";;
+    esac
+
+    EExec mkdir -p $newdir
+    EExec cp $file $newdir
+}
+
+subdir=`$PWDER | sed 's!^'$build_base'/!!'`
+newdir="$archive_base/$subdir"
+
+for file in $*
+do
+    barc $newdir $file
+done
+
+exit 0
+

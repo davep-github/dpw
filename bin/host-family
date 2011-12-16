@@ -1,0 +1,6 @@
+#!/bin/sh
+source script-x
+
+default=$(echo "$(host-family-zone)-$OSName" | tr '[:upper:]' '[:lower:]')
+$HOST_INFO -n"$default" family
+

@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+#
+# $Id: num-range,v 1.4 2003/08/11 07:30:13 davep Exp $
+#
+
+prog=$(basename $0)
+
+if [ "$#" -lt 1 -o "$1" = "-h" ]
+then
+    echo 2>&1 "$prog: [-h] [max+1 [start(=0) [zero-pad-width(=1)]]]"
+    echo 2>&1 "  print range of numbers from start.. max"
+    exit 0
+fi
+
+end=${1:-10}
+start=${2:-0}
+width=${3:-1}
+
+fmt="%s%0${width}d"
+#echo ">$fmt<"
+
+i=$start
+sep=''
+while [ $i -lt $end ]
+do
+#    echo -n "$sep$i"
+    printf "$fmt" "$sep" "$i"
+    sep=' '
+    i=$(($i + 1))
+done
+
+echo ''
+
+exit 0

@@ -1,0 +1,68 @@
+#!/bin/sh
+
+. script-x
+
+for sig in 2 3 4 5 6 7 8 15
+do
+    trap "echo ; echo $0: Got sig $sig, exiting.; exit $sig" $sig
+done
+
+[[ "$1" == "+q" ]] && quiet=n
+
+: ${vo:=}
+if [[ -n "$vo" ]]; then
+   : ${vo_opt:="-vo $vo"}
+else
+    vo_opt=""
+fi
+
+: ${quiet:=y}
+if [[ "$quiet" == [Yy1TtQq]* ]]; then
+    : ${quiet_opt:="-quiet"}
+else
+    quiet_opt=""
+    : ${ao:=-}
+fi
+
+: ${ao:=null}
+if [[ "$ao" == '-' ]]; then
+    ao_opt=""
+elif [[ "$ao" == "alsa" ]]; then
+    ao_opt="-ao alsa" #:noblock:device=hw=0"
+    quiet_opt=""
+elif [[ -n "$ao" ]]; then
+	: ${ao_opt:=-ao $ao}
+	quiet_opt=""
+fi
+
+: ${vf=eq}
+if [[ "$vf" ]]; then
+    vf_opt="-vf $vf"
+fi
+opts=""
+dirs=""
+files=""
+for f in "$@"; do
+    if [[ "$f" == -* ]]; then
+	opts="$opts $f"
+    elif [ -d "$f" ]; then
+	dirs="$dirs $f"
+	all_files="$all_files $(find $f -type f)"
+    else
+	all_files="$all_files $f"
+    fi
+done
+
+#vsetp $dirs && all_files="$(find $dirs -type f) $all_files"
+#all_files=$(echo $all_files | sort )
+
+#echo ">$all_files<"
+[ "$all_files" = " " ] && {
+    echo 1>&2 "No files in: $dirs"
+    exit 1
+}
+cmd="mplayer -fs $vo_opt $ao_opt $quiet_opt $vf_opt -idx $opts $all_files"
+#eko $cmd
+echo "$cmd"
+exec $cmd
+###mplayer -fs $vo_opt $ao_opt $quiet_opt -vf eq -idx "$@"

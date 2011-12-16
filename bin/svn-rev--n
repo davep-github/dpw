@@ -1,0 +1,11 @@
+#!/bin/sh
+
+source script-x
+dolat=("$@")
+if [[ "$1" =~ ^-r ]]; then
+    opt_char=
+else
+    opt_char="-r"
+fi
+
+svn-rev-list $opt_char "$@" | tail -n 1

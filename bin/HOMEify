@@ -1,0 +1,21 @@
+#!/bin/sh
+
+source script-x
+
+: ${realpath_p:=t}
+
+HOMEify()
+{
+    for f in "$@"
+    do
+      vsetp $realpath_p && {
+          f="$(realpath ""$f"")"
+      }
+      echo "$f" | sed -r 's|'"$HOME"'|${HOME}|'
+    done
+}
+
+eval p1=$(HOMEify ~/bin)
+q=$p1
+
+ls $q

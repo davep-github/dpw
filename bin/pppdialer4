@@ -1,0 +1,20 @@
+#!/usr/local/bin/expect -f
+set timeout 60
+
+proc abort {reason} {
+        send_error "aborted: $reason\n"
+        exit 1
+}
+
+
+spawn -ignore HUP ppp pcix-dial
+expect "strunza!"
+
+eval exec {xtimer -t "Time For PCIX" -b 0 -S "Hang Up" -x "killprog -HUP ppp" &}
+
+if [fork]!=0 exit
+disconnect
+
+while 1 {
+    sleep 3600
+}

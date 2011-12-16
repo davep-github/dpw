@@ -1,0 +1,15 @@
+#!/bin/sh
+# $Id: dp-xplanet,v 1.3 2005/03/28 09:20:10 davep Exp $
+
+#        -longitude -81.36 \
+
+set -x
+LOG="$HOME/tmp/dp-xplanet.log"
+{ 
+    echo ">$*<"
+    xplanet \
+        -latitude 28.53 \
+        -longitude -40.36 \
+        "$@"
+
+} > "$LOG" 2>&1

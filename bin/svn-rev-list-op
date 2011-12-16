@@ -1,0 +1,57 @@
+#!/bin/sh
+
+###svn log dpmisc.el | sed -rn 's/^(r[0-9]+)(.*)$/\1/p' | head -n 40 | while read r; do echo "rev: $r"; svn cat -$r dpmisc.el | fgrep mapatoms && break; done
+
+dat=("$@")   
+                   # Pristine array version.
+#echo 1>&2 "1:@>$@<"
+. script-x
+#echo 1>&2 "2:@>$@<"
+
+
+# Set variable defaults that can be changed via command line options.
+# e.g.: flag=
+# e.g.: val=0
+
+# Parse command line.
+# std_options has some "useful" options.
+# Set to "" or "-" to get nothing.  It's an error to call dp-getopt+.sh with
+# std_options unset.
+std_options=""
+
+# The real meat...
+option_str="r:f:"       # !!!!!!! You probably want to set this !!!!!!!
+files=
+longoptions="rev:,revision:,file:"
+#echo 1>&2 "pre getopt:@>$@<"
+source dp-getopt+.sh            # Runs when sourced.
+#echo 1>&2 "post getopt:@>$@<"
+
+# Loop over your options.
+for i in "$@"; do
+    case "$1" in
+        -f|--file) files="$files $2"; shift;;
+        -r|--rev|--revision) revision_nums="$revision_nums $2"; shift;;
+        # ...
+        --) shift; break;;
+    esac
+    shift
+done
+shift
+
+svn_revision_opt=
+for r in "$revision_nums"; do
+    svn_revision_opt="--revision $r $svn_revision_opt"
+done
+    
+$DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT "files>$files<"
+for file in $files; do
+    $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT "file>$file<"
+    SVN_REV_LIST_OP_PRE none "$file" "$@"
+    # WTFF is $n ????????????????????
+    # Was counting on svn-rev-list's action that no number --> 1
+    for rev in $(svn-rev-list $svn_revision_opt "$file"); do
+        echo === $file -$rev ====
+        SVN_REV_LIST_OP "$rev" "$file" "$@"
+    done
+done

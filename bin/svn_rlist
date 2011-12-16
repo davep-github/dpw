@@ -1,0 +1,99 @@
+#!/usr/bin/env python
+
+import sys, os, re
+import dp_io
+
+SVN_PROG = "svn"
+
+def do_svn_cmd(cmd, *args, **keys):
+    prog = keys.get("SVN_PROG", SVN_PROG)
+    if args:
+        cmd = cmd % args
+    cmd = "%s %s" % (prog, cmd)
+    return dp_io.bq_lines(cmd)
+
+REV_CRE = re.compile("^r(?P<rev>\d+)\s+\|")
+def svn_log_to_rev_list(log):
+    rev_list = []
+    for line in log:
+        m = REV_CRE.search(line)
+        if m:
+            rev_list.append(m.group('rev'))
+    return rev_list
+    
+def svn_get_log(file_name):
+    return do_svn_cmd("log %s", file_name)
+
+def svn_log_get_rev_list(file_name):
+    log = svn_get_log(file_name)
+    return svn_log_to_rev_list(log)
+
+# No defaults. This makes it impossible to forget to pass an argument.
+# And stops wondering why the fuck the new feature does nothing.
+def svn_rlist(file_name, reverse_p, nth, and_the_rest_p, max):
+    rlist = svn_log_get_rev_list(file_name)
+    if reverse_p:
+        rlist.reverse()
+    if nth is not False:
+        # Select the nth. Obey sign.
+        if and_the_rest_p:
+            rlist = rlist[nth:]
+        else:
+            rlist = [rlist[nth]]
+    if max is not False:
+        rlist = rlist[:max]
+    return rlist
+    
+def main(argv):
+    import getopt
+    reverse_p = False
+    nth = False
+    prev = False
+    and_the_rest_p = False
+    max = False
+    opt_string = "radn:p:P:m:c:"
+    opts, args = getopt.getopt(argv[1:], opt_string)
+    for o, v in opts:
+        if o == '-<option-letter>':
+            # Handle opt
+            continue
+        if o == '-r' or o == '-a':      # reverse or ascending
+            reverse_p = True
+            continue
+        if o == '-d':
+            reverse_p = False;          # descending
+            continue
+        if o == '-n':
+            nth = eval(v)
+            continue
+        if o == '-p':
+            prev = abs(eval(v))
+            # Previous-eth moving back in rev list history
+            nth = prev
+            continue
+        if o == '-P':
+            prev = abs(eval(v))
+            # Previous-eth moving back in rev list history
+            nth = prev
+            reverse_p = False
+            and_the_rest_p = True
+            continue
+        if o in ('-m', '-c'):
+            max = eval(v)
+            continue
+
+    if not args:
+        print >>sys.stderr, "I work best when I know what files to use."
+        sys.exit(1)
+    for file_name in args:
+        if not os.path.exists(file_name):
+            print >>sys.stderr, file_name, "does not exist."
+            continue
+        rlog = svn_rlist(file_name, reverse_p, nth, and_the_rest_p, max)
+        for l in rlog:
+            print l
+        
+if __name__ == "__main__":
+    main(sys.argv)
+
+

@@ -1,0 +1,39 @@
+#!/bin/sh
+
+source script-x
+
+procFiles=(cpuinfo meminfo devices mdstat)
+athOps=(cpuspeed)
+
+host=$1
+
+doop()
+{
+    echo === begin op: "$@" ===
+    "$@"
+    echo === end op: "$@" ===
+}
+dosshop()
+{
+    doop ssh $host "$@"
+}
+
+doathop()
+{
+    doop athinfo $host "$@"
+}
+
+{
+    echo "@>$@<"
+    date
+    for op in $athOps
+    do
+      doathop cpuspeed
+    done
+    for f in "${procFiles[@]}"
+    do
+      pfile=/proc/$f
+      dosshop cat $pfile
+    done
+    dosshop df /mnt/raid0
+}

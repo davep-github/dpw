@@ -1,0 +1,7 @@
+# Source ME!
+#
+[[ "$1" == -x ]] && {
+   set -x
+   shift
+}
+

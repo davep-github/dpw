@@ -1,0 +1,1 @@
+sudo lsof|fgrep /home/davep | awk '{print }' | sort | uniq | xargs ls -lt|less

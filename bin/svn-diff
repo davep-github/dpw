@@ -1,0 +1,24 @@
+#!/bin/sh
+
+. script-x
+#
+# We must use `shift' to access the args in order to consume them.
+SVN_REV_LIST_OP_PRE()
+{
+    return 0
+}
+SVN_REV_LIST_OP()
+{
+    # Input: $1: rev, 2: file, 3: rest of command line args.
+    rev=$1; shift
+    file=$1; shift            # Regular expression (extended)
+    echo === svn diff -$rev "$file" ====
+
+    svn diff -$rev "$file"
+}
+
+#. svn-rev-list-op "$@"
+
+rev="$1"; shift
+file="$1"; shift
+svn diff --revision $(svn-rev--n "$rev" "$file") "$file"

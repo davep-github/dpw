@@ -1,0 +1,17 @@
+#!/bin/sh
+set -x
+
+TTMKFDIR_CMD=ttmkfdir
+
+FONTNAME=$1
+DIR_FILE=./fonts.dir
+SCALE_FILE=./fonts.scale
+#SCALE_FILE=/dev/tty
+
+${TTMKFDIR_CMD} -c -d . | cat -n | sed -e "
+    s,^     1,100000,;
+    s,monotype,${FONTNAME},;
+    s,microsoft,${FONTNAME},;
+    " | sort -r | cut -c 8- > $SCALE_FILE
+
+cp $SCALE_FILE $DIR_FILE

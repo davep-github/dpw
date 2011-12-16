@@ -1,0 +1,27 @@
+#!/bin/bash
+# !<@todo XXX Add a timeout mechanism.
+. script-x
+: ${DP_WAITFOR_PROG_SLEEP_TIME:=10}
+: ${VERBOSE_p:=}
+: ${LABEL_p:=}
+
+declare -A pids
+
+#echo "1st, >$@<"
+
+for prog in "$@"; do
+  while :; do
+    pids[$prog]=$(findprog -q "$prog") && break
+    sleep $DP_WAITFOR_PROG_SLEEP_TIME
+  done    
+done
+
+#echo "2nd, >$@<"
+[ -n "$VERBOSE_p" ] && {
+    for prog in "$@"; do
+        [ -n "$LABEL_p" ] || [ "$VERBOSE_p" = "label" ] && echo -n "$prog "
+        echo ${pids[$prog]}
+    done
+}
+
+exit 0

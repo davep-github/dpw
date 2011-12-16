@@ -1,0 +1,3 @@
+#!/bin/sh
+
+DTE=none WM=dp-metisse-wm startx

@@ -1,0 +1,32 @@
+#!/bin/sh
+set -x
+
+rm -rf /usr/tmp/cvsroot
+cvs -d /usr/tmp/cvsroot init
+
+export CVSROOT=/usr/tmp/cvsroot
+
+sb='/slice6/yokel/home/davep/work/sandbox'
+
+cd $sb
+
+rm -rf test
+mkdir test
+cd test
+echo aaa > a
+echo bbb > b 
+echo ccc > c
+
+cvs import -m 'init import' test davep initial
+
+cd ..
+rm -rf test
+
+cvs co test
+cd test
+echo 111 >> a
+echo 333 >> c
+echo d > d
+cvs tag -b branch1
+cvs update -r branch1
+cvs commit -m 'updated a and c'

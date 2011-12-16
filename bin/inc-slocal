@@ -1,0 +1,22 @@
+#!/bin/sh
+set -x
+. ~/bin/eexec
+TMP_FOLDER=inc-slocal-tmp
+drop=${1:-$MAILPATH}
+mh_dir=$(fgrep Path: $HOME/.mh_profile)
+set -- $mh_dir
+mh_dir=${2:-MH}
+mh_dir=$HOME/$mh_dir/$TMP_FOLDER
+[ -d $mh_dir ] || EExec mkdir $mh_dir
+
+EExec inc +$TMP_FOLDER -file $drop 
+
+for msg in $mh_dir/*
+do
+	case $msg in
+		'#'*) continue;;
+	esac
+	EExec /usr/local/lib/mh/slocal -user davep -verbose  < $msg
+	EExec rm $msg
+done
+

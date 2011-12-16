@@ -1,0 +1,25 @@
+#!/bin/sh
+
+: ${max_digits:=3}
+
+if [ "$1" == "-v" ]; then
+    filter=verbose_filter
+else
+    filter=awk_filter
+fi
+
+awk_filter()
+{
+    awk '{print $8}'
+}
+
+verbose_filter()
+{
+    cat
+}
+
+while read; do
+    set -- $REPLY
+    [ -f "$8" ] || continue
+    echo "$REPLY" | egrep 'root[    ]{1,}[0-9]{1,'"${max_digits}"'}[ 	]' | $filter
+done

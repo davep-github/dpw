@@ -1,0 +1,25 @@
+#!/bin/ksh
+args=$*
+integer num=0 total=0 numDirs=0
+
+du -a $args | while :
+do
+	read line || {
+		echo "total: $total, num: $num, numDirs: $numDirs"
+		exit
+	}
+
+	set -- $line
+	[ -d $2 ] && {
+		numDirs=numDirs+1
+		continue
+	}
+
+	total=total+$1
+	num=num+1
+done
+
+exit 0
+
+	
+	

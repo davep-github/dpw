@@ -1,0 +1,6 @@
+#!/bin/sh
+: ${KDE_HOME:=/usr/kde}
+: ${KDE_MAJOR_GLOB:=$KDE_HOME/4.[0-9]}
+: ${LS:=$(sp -1 ls)}
+: ${R_OPT:=} # Makes us a min version finder.
+${LS} -d${R_OPT}1 $KDE_MAJOR_GLOB | tail -n1

@@ -1,0 +1,8 @@
+#!/bin/sh
+# $Id$
+#
+: ${LSL_COLOR:=--color}
+
+{ 
+    ls -l --sort=size ${LSL_COLOR} "$@"
+} | ${PAGER}

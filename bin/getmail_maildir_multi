@@ -1,0 +1,54 @@
+#!/bin/sh
+
+dolAT=("$@")
+
+source script-x
+
+holding_file=
+
+cleanup()
+{
+    vsetp "$holding_file" && rm -f -- "$holding_file"
+}
+
+deliverX()
+{
+    getmail_maildir "$@"
+}
+
+deliver()
+{
+    echo "@>$@<"
+    wc
+}
+
+for sig in 0 2 3 4 5 6 7 8 15
+do
+  trap cleanup $sig
+done
+
+
+holding_file=$(tempfile)
+# Copy message to a temp file
+cat >| "$holding_file"
+
+# Gather up the options (should only be 1.) This is very brittle.
+# getmail_maildir has only 1 option (-v|--verbose)
+options=
+for a in "$@"
+do
+  case "$1" in
+      -*) options="$options $1"; shift;;
+      *) break;;
+  esac
+done
+
+# Remaining args are destinations.
+# Deliver it everywhere
+
+for dest in "$@"
+do
+  deliver $options "$dest" < "$holding_file"
+done
+
+exit

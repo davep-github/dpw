@@ -1,0 +1,117 @@
+#!/bin/sh
+#set -x
+. eexec
+
+echo_fn ()
+{
+    echo 1>&2 "$*"
+}
+
+prog=`basename $0`
+# init optional vars to defaults here...
+ECHO="echo_fn $prog: "
+ECHOV=":"
+etags_args='--members'
+list_files_only='n'
+absolute_names=y
+TAGS_BIN=etags
+
+set -- ` getopt qa:vlckAnpx $* `
+
+[ $? != 0 ] && Usage
+
+for i in $*
+do
+    case $1 in
+	-q) ECHO=":";;
+	-v) ECHOV="echo_fn $prog: ";;
+	-a) etags_args="$etags_args $2"; shift;;
+	-l) list_files_only=y;;
+	# generate list for cscope
+	-c) list_files_only='y'; ECHO=':';;
+	-k) keep_tags=y;;
+	-A) absolute_names=n;;
+	-n) no_execute=y;;
+	-p) per_dir_TAGS=y;;
+	-x) TAGS_BIN=exctags; etags_args='';;
+	--) shift ; break ;;
+	*) exit 1 ;;
+    esac
+    shift
+done
+
+if [ "$*" = "" ]
+then
+    dirs="."
+else
+    dirs="$@"
+fi
+
+orig_dir=`pwd`
+TAGS="TAGS"
+tag_file="$orig_dir/$TAGS"
+
+# my regexp works better than the builtin one
+if $TAGS_BIN --help | grep -q 'XXXpythonXXX' > /dev/null
+then
+    PY_ARG=''
+else
+    PY_ARG="--regex='/[ \t]*def[ \t]*[a-zA-Z_][a-zA-Z_0-9]*(/'"
+fi
+
+[ -z "$keep_tags" -a -f "$tag_file" -a "$list_files_only" != "y" ] && {
+    ok_to_rm=y
+    EExec rm $tag_file
+}
+
+for dir in $dirs
+do
+    if [ "$absolute_names" = 'y' ]
+    then
+	EExec cd $dir
+	here=`pwd`
+    else
+	here="$dir"
+    fi
+
+    $ECHO "Tagging $here..."
+    EExec find $here \( -name '*.[chsS]' -o -name '*.[ch]xx' -o \
+	-name '*.[ch]pp' -o -name '*.py' -o -name '*.inl' -o \
+	-name '*.el' -o -name '*.cc' -o -name '*.ii' -o \
+	-name '*.hh' -o -name '*.inc' \) -print | while read fname
+    do
+        dir=$(dirname $fname)
+        skip_file="$dir/NOTAG"
+        echo "$skip_file"
+        ls -l "$skip_file"
+        [ -e "$skip_file" ] && continue
+
+	if [ -n "$per_dir_TAGS" ]
+	then
+	    tag_file="`dirname $fname`/$TAGS"
+            [ "$ok_to_rm" = 'y' ] && rm -f "$tag_file"
+	    $ECHOV "tag_file>$tag_file<"
+	fi
+	
+	$ECHOV "fname>$fname<"
+	if [ "$list_files_only" != 'y' ]
+	then
+	    case $fname in
+	    .|..)
+		continue;;
+	    *.py)
+		XARGS="$PY_ARG";;
+	    *)
+		XARGS="";;
+	    esac
+	    
+	    cmd="$TAGS_BIN $etags_args $XARGS --append $fname -o $tag_file"
+	    $ECHOV "$cmd"
+	    [ -z "$no_execute" ] && eval $cmd
+	else
+	    echo $fname
+	fi
+    done
+
+    EExec cd $orig_dir
+done

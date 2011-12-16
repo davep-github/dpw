@@ -1,0 +1,8 @@
+This should go last in the path.
+If something cannot be found in a better place, then something
+almost, but not quite entirely useless can be fallen back to
+in here.
+For example, I find realpath essential. It isn't everwhere I'd
+like it to be. So here is a minimal version that gets the basic
+job done. This one will only be used if nothing better is found.
+

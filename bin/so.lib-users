@@ -1,0 +1,66 @@
+#!/bin/sh
+
+source script-x
+
+: ${SUDO:=}
+
+usage()
+{
+  local code="$1"; shift
+  local msg="$1"; shift
+  
+  {
+    vsetp "$msg" && echo "$msg"
+    echo "Usage: <lib-regexp> file...
+    Which FILEs are using the library(ies) named by lib-regexp."
+  } 1>&2
+
+  case "$code" in
+    ""|0) break;;
+    *) exit $code;;
+  esac
+}
+
+if vunsetp "$@"
+then
+    usage 1
+fi
+name_pat="$1"
+shift
+
+#if vunsetp "$@"
+#then
+#    usage 1 "Please specify some file names"
+#fi
+
+look()
+{
+  local pat="$1"; shift
+  local f="$1"; shift
+  file "$f" | fgrep >/dev/null 2>&1 'shared obj' || {
+    echo -n '.' 1>&2
+    return
+  }
+  $SUDO ldd "$f" | egrep -q "$pat" >/dev/null 2>&1 && {
+    echo "$f"
+  }
+}
+
+look_all()
+{
+  local pat="$@"
+  while read
+  do
+    look "$pat" "$REPLY"
+  done
+}
+      
+if vsetp "$@"
+then
+  # Names on command line
+  echo "$@" | look_all "$name_pat"
+else
+  # Names on stdin
+  look_all "$name_pat"
+fi
+  

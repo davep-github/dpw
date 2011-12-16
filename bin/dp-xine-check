@@ -1,0 +1,1421 @@
+#! /bin/sh
+#
+# xine-check - some simple diagnostics for running xine
+#
+# Copyright (c) 2002 Siggi Langauf
+# This file is free software. You may do with it whatever you want, but
+# if you give away any copies (modified or unmodified), you must include
+# the Authors' names. This comes with no warranty, use at your own risk!
+#
+# Authors: Siggi Langauf <siggi at users dot sf dot net> (main hacking)
+#          Toby J Coleridge <toby at 4mationnet dot com> (excessive testing)
+#          Colin Marquardt <colin at marquardt-home dot de> (DMA message)
+
+VERSION=0.9.12
+
+COMMON_PLACES=/:/usr:/usr/local:/usr/local/xine:/usr/xine:/opt:/opt/xine:/usr/X11:/usr/X11R6
+logfile=""
+bugreport=/tmp/xine-bugreport
+verbose=false
+quiet=false
+batch=false
+#batch=true
+runmode=interactive
+do_log=false
+
+# localisation stuff
+available_langs="en"
+locale_lang=`(locale >/dev/null && locale | grep LC_MESSAGES= | sed -e s/LC_MESSAGES\=//g -e s/\"//g | cut -d _ -f 1) 2>/dev/null || echo en` # for emacs hilight "
+lang=""
+for lg in $available_langs; do
+  if test x$lg = x"$locale_lang";
+    then lang=$lg
+  fi
+done
+if test x$lang = x -o $lang="POSIX";
+  then lang="en"
+fi
+
+messagefile=/tmp/xck.$$.xine-check.$lang
+#messagefile=/tmp/xine-check.en
+indent="         "
+DUMPVARS="" #this holds the variables to dump into bugreports, use vars()!
+
+echo "Please be patient, this script may take a while to run..."
+
+cat <<EOF >/tmp/xck.$$.xine-check.en
+
+root You're running me with root permissions?
+You should definitely run xine as normal user, not root. Running it as
+root will expose you to some severe security issues.
+This script should run as the same user that you would use to run
+xine. If you run me as root (as you currently are), I cannot check
+if your real-life user has sufficient permissions...
+Unless you want to recheck something with root permissions, you should
+abort me now (press Ctrl-C) and run me from your usual account.
+
+several-xine-config several instances of xine-config found in your PATH
+xine-config executables have been found in these places:
+\$xine_configs
+This probably means you have several versions of xine-lib installed.
+It's probably best to uninstall all unused xine-libs.
+Further tests will use \$xine_config.
+
+xine-config-in-path found \$xine_config in your PATH
+xine-config is a script installed by xine-lib. It is used
+to determine various xine file locations on your systems.
+
+xine-config-somewhere found \$xine_config, but not in PATH
+xine-config is a script installed by xine-lib. It is used
+to determine various xine file locations on your systems.
+I have found this script altough it is not in your PATH.
+Note that this is somewhat suspicious...
+
+assuming-xine-package-deb No xine-config found. Assuming xine from Debian package
+The xine-config script can be used to deternime some file locations
+used by xine-lib, but you don't have such a script on your system.
+However, it looks like you installed xine from the Debian packages.
+So I'll just guess that you are using the standard locations.
+If you want me to be sure about those file locations, you can install
+the 'libxine-dev' package, which contains xine-config. However, this
+package is not really needed to run xine...
+
+assuming-xine-package-rpm No xine-config found. Assuming xine from RPMs
+The xine-config script can be used to deternime some file locations
+used by xine-lib, but you don't have such a script on your system.
+However, it looks like you installed xine from the RedHat packages.
+So I'll just guess that you are using the standard locations.
+If you want me to be sure about those file locations, you can install
+the 'xine-lib-devel' package (or 'xine-devel', depend on what packages
+you're using, which contains xine-config. However, this package is
+not really needed to run xine...
+
+assuming-xine-package No xine-config found. Assuming xine from binary packages
+The xine-config script can be used to deternime some file locations
+used by xine-lib, but you don't have such a script on your system.
+However, it looks like you installed xine via some package manager.
+So I'll just guess that you are using the standard locations.
+If you want me to be sure about those file locations, you can install
+the xine-lib development package, which is usually called 
+'xine-lib-devel', 'xine-devel', 'libxine-dev' or similar.
+That package contains xine-config, but this is not really needed to
+run xine...
+
+no-xine-config no xine-config on this machine.
+This means that xine-lib is either not installed 
+or it is installed in a very unusual place.
+So you should probably install xine-lib before running xine-check...
+
+xine-config-executable \$xine_config is executable
+Looks like xine-config permissions are set correctly.
+
+xine-config-not-executable \$xine_config is NOT executable
+There's something wrong with the permissions of xine-config
+in your installation of xine-lib. This could be fixed by issuing
+ chmod a+rx \$xine_config
+as root. But there's probably something more seriously wrong,
+so I'll advise you to reinstall xine-lib.
+
+custom-exec-prefix Your xine-lib uses a customized exec-prefix
+I'll assume you knew what you were doing when you configured it,
+I won't do any further xine-lib location checks...
+
+plugindir-exists plugin directory \$plugindir exists.
+This directory should hold all kinds of xine plugins.
+
+unknown-plugin found unknown plugin: \$i
+I don't know any xine plugins that follow this naming scheme.
+Maybe this is a leftover from obsolete xine versions.
+Maybe you need to upgrade me (xine-check)so I know about this
+(new) kind of plugin...
+
+no-plugindir no plugin directory (\$plugindir)
+The plugin-directory doesn't exist. xine-config claims that there
+is a plugin directory at \$plugindir.
+However, there is no such directory.
+You probably need to reinstall xine-lib.
+
+found-plugins found \$type plugins
+These \$type plugins have been found:
+\$plugins
+
+missing-plugins There are no \$type plugins.
+xine needs at least one \$type plugin, but none is installed.
+You should probably reinstall xine-lib...
+
+unknown-plugindir unable to determine plugin directory
+I could not determine your plugin directory. That would be much easier
+if you had xine-config installed (see message above)...
+Note that I could not check your xine plugins.
+
+unknown-skindir unable to determine skin directory
+I could not determine your skin directory. That would be much easier
+if you had xine-config installed (see message above)...
+Note that I could not check your xine-ui skins.
+
+skindir-exists skin directory \$skindir exists.
+This directory should hold all xine skins.
+
+no-skindir no skin directory (\$skindir)
+The skin-directory doesn't exist. xine-config claims that there
+is a skin directory at \$skindir.
+However, there is no such directory.
+You probably need to reinstall xine-ui.
+
+logo-exists found logo in \$skindir
+This indicates that the skins have actually been installed there...
+
+no-xine-logo xine logo not found in \$skindir.
+You should probably (re)install xine-ui, as it won't run without logo.
+
+found-skins I even found some skins.
+These skins have been found:
+\$skins
+
+no-skins There are no skins.
+Looks like the skins haven't been installd in \$skindir.
+You should reinstall xine-ui, as it won't run without any skins...
+
+several-xine multiple xine executables found
+I have found multiple xine executables on your machine:
+\$xine_executables
+xine is the main player as installed by the xine-ui package.
+You should probably uninstall the instances you don't use...
+
+found-xine found the player at \$xine_executables
+The 'xine' binary has been found. This indicates that you
+have xine-ui installed.
+
+no-xine unable to find 'xine' binary in usual places
+Maybe you don't have xine-ui installed, maybe you have instlled
+it in a strange location, let's see if it's in your PATH...
+
+several-xine-in-path multiple xine executables found in your PATH
+I have found more than one occurance of 'xine' in your PATH:
+\$xine_executable1
+You have probably installed xine-ui more than once, or the directory
+where you have installed xine occurs more than once in your PATH.
+Technically, this is not really a problem, but it's probably
+somewhat confusing, as it's not obvious, which xine you're using.
+You should probably uninstall the copies that you don't use...
+Further tests assume, you're using \$xine_executable
+
+xine-in-path \$xine_executable is in your PATH
+
+no-xine-in-path There is no 'xine' executable in your PATH
+Maybe you don't have xine-ui installed?
+If xine-ui is installed, it would probably be a good idea to add
+it's binary directory to your PATH...
+
+using-linux you're using Linux, doing specific tests
+I can do some additional checks on Linux systems. Most of them check
+for Linux-specific properties...
+
+have-procfs looks like you have a /proc filesystem mounted.
+Many system parameters can be read from the pseudo-files in proc,
+as provided by the procfs.
+I'll now check some of those...
+
+kernel-1.x Kernel 1.x?? You must be kidding...
+This kernel definitely lacks DVD support and probably much more...
+
+kernel-2.2.old Your kernel is older than 2.2.17.
+These kernels didn't have DVD support, so you will have to upgrade
+your kernel in order to watch DVDs. If you don't care about DVDs,
+xine will run fine, showing you any kind of VCD, file or
+network stream that xine supports...
+
+kernel-2.2.new You're running a recent 2.2.x kernel.
+These kernels already have DVD support and anything else
+(except maybe raw devices) that's useful for xine.
+
+kernel-2.4.bad Kernel version between 2.4.10 and 2.4.16
+These kernel versions have been reported to have various bugs,
+some serious security issues, some DVD specific problems.
+You shold probably upgrade to a recent stable kernel.
+
+kernel-2.4.good You seem to have a reasonable kernel version (\$KERNEL_VERSION)
+I've detected a recent 2.4.x kernel, which should have support for
+DVD devices, as well as anything else that could accelerate
+video playback.
+
+kernel-pre-2.2 seems like you're running a pre-2.2 kernel.
+for DVD support you need to upgrade to a recent 2.2 or 2.4 kernel.
+
+kernel-unknown ummm, you're running a strange kernel version.
+Your kernel says, it's version \$KERNEL_VERSION, but I don't know
+anything about this version. That probably means
+You should either upgrade your kernel or upgrade this script.
+  
+arch-i386-mtrr intel compatible processor, checking MTRR support
+video performance can be greatly improved if there is a way to
+make the cache controller access video memory directly. MTRRs
+allow the X server to do this on i386 and compatible processors...
+
+mtrr-not-configured you have MTRR support but it's unused.
+It seems like your X server didn't set any MTRR ranges for the
+graphics card. Maybe upgrading your X server helps...
+You don't have a PCI graphics card, do you? AFAIK, MTRR only
+helps with AGP cards.
+
+mtrr-set you have MTRR support and there are some ranges set.
+This probably means that your X server has set MTRR ranges for
+your graphics memory, which can give a significant performance
+increase when writing big amounts of (video) data.
+
+no-mtrr no MTRR support in kernel.
+If you have an AGP graphics card, you can probably get some
+performance improvements if you recompile your kernel with
+MTRR support.
+
+arch-non-i386 Architecture is \$ARCH (not intel), assuming there is no MTRR.
+MTRR (Memory Type Range Registers) are used on intel CPUs to
+control caching mechanisms for special memory ranges. There is
+probably nothing like this on \$ARCH CPUs...
+
+no-procfs You don't seem to have a /proc filesystem
+The /proc filesystem provides an interface to most of the Linux
+kernel's parameters. All major distributions have been using this
+interface for years now...
+There's probably something wrong with your system setup.
+You should consider reinstalling or upgrading your machine.
+    
+unknown-os unknown operating system (\$OS)
+I don't know anything specific about your '\$OS' operating system.
+some of the following checks might fail for unknown reasons...
+
+have-cdrom /dev/cdrom points to \$CDROM
+You have a /dev/cdrom device, which is the default that xine
+will use for VCD or audio CD playback.
+
+no-cdrom You don't have a /dev/cdrom device.
+This is the default device that xine uses for playing VCDs or CDs.
+You could make your life easier by creating a symlink named /dev/cdrom
+pointing to your real CD device (something like /dev/scd0 or /dev/hdc).
+If your cdrom device is /dev/hdb (slave ATAPI device on primary bus),
+  ln -s hdb /dev/cdrom
+typed as root will give you the symlink.
+Alternatively, you can configure xine to use the real device directly,
+using the setup dialog within xine.
+
+cdrom-not-readable /dev/cdrom points to \$CDROM, but that's unreadable.
+Looks, like you have a /dev/cdrom device that points to your CD-ROM
+drive. That is good, as xine uses this device to read VCDs or audio CDs
+by default.
+However, you don't have permission to read from this device, so you
+won't be able to use it, at least not with this account, that's bad...
+Most people nowadays fix this by using a 'cdrom' group:
+make sure, that you have a group named 'cdrom', become root and type
+chgrp cdrom \$CDROM
+chmod g+r \$CDROM
+Now you only have to make sure you're in the cdrom group. The command
+id -a
+(executed as normal user) should tell you. Some systems add users to
+the 'cdrom' group when they log in from a local console. If yours
+doesn't, you'll have to add yourself to that group using your system's
+user management tools...
+
+dvdrom-not-rw /dev/dvd points to \$DVDROM, no r/w permissions
+Looks, like you have a /dev/dvd device that points to your DVD-ROM
+drive. That is good, as xine uses this device to read DVDs by
+default.
+However, you don't have read/write permissions for this device, so you
+won't be able to use it, at least not with this account, that's bad...
+If you're wondering about write permissions: they're needed to set
+some DVD-specific modes on the drive.
+Many people nowadays fix this by using a 'cdrom' group:
+make sure, that you have a group named 'cdrom', become root and type
+chgrp cdrom \$DVDROM
+chmod g+rw \$DVDROM
+Now you only have to make sure you're in the cdrom group. The command
+id -a
+(executed as normal user) should tell you. Some systems add users to
+the 'cdrom' group when they log in from a local console. If yours
+doesn't, you'll have to add yourself to that group using your system's
+user management tools...
+
+have-dvdrom /dev/dvd points to \$DVDROM
+You have a /dev/dvd device, which is the default that xine
+will use for DVD playback.
+
+no-dvdrom You don't have a /dev/dvd device.
+This is the default device that xine uses for playing DVDs.
+You could make your life easier by creating a symlink named /dev/dvd
+pointing to your DVD device (something like /dev/scd0 or /dev/hdc).
+If your DVD-ROM device is /dev/hdb (slave ATAPI device on primary bus),
+  ln -s hdb /dev/dvd
+typed as root will give you the symlink.
+Alternatively, you can configure xine to use the real device directly,
+using the setup dialog within xine, but I can't check your DMA 
+settings in that case...
+
+dangling-dvdrom /dev/dvd is \$DVDROM, not a DVD device
+/dev/dvd is the default device that xine uses for playing DVDs.
+You could make your life easier by creating a symlink named /dev/dvd
+pointing to your DVD device (something like /dev/scd0 or /dev/hdc).
+If your DVD-ROM device is /dev/hdb (slave ATAPI device on primary bus),
+  rm /dev/dvd
+  ln -s hdb /dev/dvd
+typed as root will give you the symlink.
+Alternatively, you can configure xine to use the real device directly,
+using the setup dialog within xine, but I can't check your DMA 
+settings in that case...
+
+dvd-dma-disabled DMA is disabled for your DVD interface.
+This will probably result in a serious performance hit when
+playing DVDs. You can issue the command
+  hdparm -d1 \$DVDROM
+as root to enable DMA. It would be wise to add this command to
+some script that is executed executed at boot time.
+Note that you probably have to set the DMA mode for your drive as well.
+Most DVD-ROMs work fine with multiword DMA mode 2. You can use
+  hdparm -d1 -X34 \$DVDROM
+(as root again) to set this mode. Maybe UDMA2 will give you even better
+performance, but it only works well with some controllers. You'll
+probably need UDMA capable IDE cables for this mode. If you want
+to try: make backups of your important data and type (as root again)
+  sync
+  hdparm -d1 -X66 \$DVDROM
+If your System still works fine after this, you probably want to keep
+these settings (add them to some boot script).
+If your system hangs or behaves very strangely after a few minutes, you
+should reboot immediately and never use this setting again on this
+machine. Good luck ;-)
+
+dvd-dma-enabled DMA is enabled for your DVD drive
+This should give you good DVD performance without unnecessary CPU
+abuse.
+
+no-hdparm I didn't find the 'hdparm' command.
+'hdparm' is used on some systems (especially Linux) to set ATAPI drive
+parameters. In particular, this is needed with some drive/kernel
+combinations to enable DMA transfers.
+I would check this for you if you re-run me after installing hdparm...
+
+dvd-not-atapi Your DVD drive seems not to be attached via ATAPI.
+This might be due to the use of an ide-scsi emulation.
+If you really have a SCSI DVD drive, your SCSI controller is likely
+to do perfect DMA, so there's no reason to worry about this.
+However, if you're using ide-scsi, there is a chance that DMA is
+disabled for the DVD drive. Moreover, I don't know how to enable
+DMA in that case, so you probably have to live with some performance
+loss. (FIXME: check for /proc/ide, provide solution)
+
+no-display No DISPLAY found. Need X to check X...
+There is not DISPLAY variable set. This indicates that I'm not
+having access to an X display. I could check some X properties
+if you run me, as you would run xine, from an X terminal emulator...
+
+have-xv found xvinfo: \$XVIDEO
+At least that's what xvinfo said. Let's see...
+
+have-yuv your Xv extension supports YUV overlays (improves MPEG performance)
+Your display claims to be capable of converting YUV colorspace to
+RGB in hardware. This should improve performance when playing MPEG
+video, as xine doesn''t have to do this job in software...
+
+no-yuv Your X server doesn't support YUV overlays.
+That means xine will have to to color space transformation and scaling
+in software, which is quite CPU intensive. Maybe upgrading your
+X server will help here.
+If you have an ATI card, you'll find accelerated X servers on
+   http://www.linuxvideo.org/gatos/
+
+have-yuy2 your Xv extension supports packed YUV overlays
+Your display claims to be capable of converting packed YUV colorspace
+(aka. YUY2) to RGB in hardware. This should improve performance when
+playing some streams (DivX in particular), as xine doesn''t have to
+do this job in software...
+
+xv-broken-hint Xv overlays detected, but can't check if it works...
+I can't check if Xv is broken, so if xine hangs when playing video,
+try 'xine -V XShm'. If that works (but is slow), your X server is broken.
+You should try to upgrade your X server in that case. Good luck... 
+
+no-yuy2 Your X server doesn't support packed YUV overlays.
+That means xine will have to to color space transformation and scaling
+in software, which is quite CPU intensive. Maybe upgrading your
+X server will help here.
+If you have an ATI card, you'll find accelerated X servers on
+   http://www.linuxvideo.org/gatos/
+
+xv-planes Xv ports: \$planes
+Your X server reported that it supports these kinds of video overlay.
+That means, there is some hardware support for video.
+
+no-xv-in-server Your X server doesn't have any XVideo support...
+XVideo is an X server extension introduced by XFree86 4.x. This
+extension provides access to hardware accelerated color space
+conversion and scaling, which gives a great performance boost.
+If you have a fast (>1GHz) machine, you may be able to watch all
+kinds of video, anyway. You will waste lots of CPU cycles, though...
+
+no-xvinfo The 'xvinfo' binary hasn't been found.
+Xv is the X Video extension and xvinfo is a diagnostic tool for Xv.
+xine can use Xv to support hardware accelerated scaling and color space
+conversion of videos, which increases performance, especially on slow
+machines.
+Xv has been introduced with XFree86 4.0, so if you're still using an older
+X server, you might consider an upgrade.
+Note: You also need a Graphics card that has Xv driver support.
+      You might want to check the XFree86 homepage before upgrading:
+      http://www.xfree86.org
+
+
+EOF
+
+case "$0" in
+  *-bugreport)
+    runmode=bugreport
+    ;;
+esac
+
+
+clean_exit() {
+    test -f "$messagefile" && rm "$messagefile"
+    test -f "$tmpfile" && rm "$tmpfile"
+    exit "$@"
+}
+ 
+search() {
+  test="-f"
+  case "$1" in
+    -?)
+       test="$1"
+       shift
+	;;
+  esac
+  target="$1"
+  path="$2"
+  test -z "$path" && path=$COMMON_PLACES
+  found=""
+  for dir in `echo "$path"|sed -e 's/:/ /g'`; do
+    if test $test "$dir/$target"; then
+	if [ -z "$found" ]; then
+	  found="$dir/$target"
+	else
+	  found="$found
+$dir/$target"
+	fi
+    fi
+  done
+  test -n "$found"
+}
+
+log() {
+  [ -n "$logfile" ] && echo "$@" >>$logfile
+}
+
+add() {
+  [ -n "$bugreport" ] && echo "$@" >>$bugreport
+}
+
+
+resolve_symlink() {
+    target="$1"
+    while test -h "$target"; do
+	local dir=`dirname $target`
+	target=`ls -l $target | sed -e 's/^.*-> //'`
+	if echo $target|grep -v ^/ >/dev/null 2>&1; then 
+	  target="$dir/$target"
+	fi
+    done
+    echo "$target"
+}
+
+check_perm(){
+    if [ "$#" -ne 2 ]; then
+      echo "internal error: invalid check_perm parameter count" >&2
+    fi
+    result=true
+    case "$1" in
+	*r*)
+	    test -r "$2" || result=false
+	    ;;
+    esac
+    case "$1" in
+	*w*)
+	    test -w "$2" || result=false
+	    ;;
+    esac
+    case "$1" in
+	*x*)
+	    test -x "$2" || result=false
+	    ;;
+    esac;
+    $result
+}
+
+
+# prompt/wait for <enter>
+confirm() {
+   echo "${indent}press <enter> to continue..."
+   read foo;
+}
+
+
+# get (possibly localized) message descriptions for message id
+# usage: getmessage <id>
+# where <id> is the message id
+# this function will set
+# $short       = short (<70 char) message
+# $description = verbose description of the issue, including any instructions
+getmessage(){
+    id="$1"
+    headline=false
+    found=false
+    short=
+    description=
+    tmpfile=/tmp/xine-check-dsc.$$
+    check_tmpfile;
+    true >$tmpfile
+    cat $messagefile | while read line; do
+	if $found; then
+	  if test -n "$line"; then
+	    eval "echo \"$line\" |sed -e \"s/^/$indent/\" >>$tmpfile"
+	  else
+	    found=false #end of description
+	fi
+	else
+	  if $headline; then
+	    set -- $line
+	    if [ "$1" = "$id" ]; then
+		found=true;
+		shift
+		eval "echo \"$*\" >>$tmpfile"
+		$do_log && log "$status $id"
+	    fi
+	    else
+	    if [ x"$line" = x ]; then
+		headline=true
+	    else
+		headline=false
+	    fi
+	  fi
+	fi
+    done
+    short=`head -n 1 <$tmpfile`
+    description="`tail -n +2 <$tmpfile`"
+    rm $tmpfile
+    if test -z "$short"; then
+      echo "internal error: no message for $id" >&2
+    fi
+}
+
+
+
+# give a standard message to the user
+# usage: msg <id> [<status>]
+# where <id> is the name of the message
+# and <status> is one of
+# 0 - okay, everything's fine
+# 1 - hint for possible problem
+# 2 - ouch! something's really wrong
+# if <status> is not given, use the return code from previous command
+msg(){
+    status=$?
+    id="$1"
+    shift
+    if [ "$#" -eq 1 ]; then
+      status="$1"
+      shift
+    fi
+    if [ "$#" -ne 0 ]; then
+	echo "internal error: msg with illegal parms">&2
+	clean_exit 1
+    fi
+    getmessage "$id"
+    case "$status" in
+	0)
+	    echo "[ good ] $short"
+	    if $verbose; then
+	      echo "$description"
+	    fi
+	    ;;
+	1)
+	    echo "[ hint ] $short"
+	    if $quiet; then
+	      echo "         type '$0 explain $id' for more"
+	    else
+	      echo "$description"
+	      $batch || confirm
+	    fi
+	    ;;
+	2)
+	    echo "[OUCH!!] $short"
+	    if $quiet; then
+	      echo "         type '$0 explain $id' for more"
+	    else
+	      echo "$description"
+	      $batch || confirm
+	    fi
+	    ;;
+	ex)
+	    echo "message $id:"
+ 	    echo "* $short"
+	    echo "$description"
+	    ;;
+	-)
+	    oldindent="$indent"
+	    indent=""
+	    echo "$description"
+	    indent="$oldindent"
+	    ;;
+	*)
+	    echo "internal error: unknown status ($status)" >&2
+	    clean_exit 1
+	    ;;
+    esac
+    
+}
+
+vars(){ #add to the list of variables to dump
+  DUMPVARS="$DUMPVARS $*"
+}
+
+
+menu(){
+  n=0
+  answertext=""
+  while [ "$answertext" = "" ]; do
+    for i in "$@"; do
+	n=`expr $n + 1`
+	echo "${n}) $i"
+    done
+    echo -n "please select (1..${n}): " #FIXME: anybody need echo "...\c" here?
+    read answer
+    n=0
+    for i in "$@"; do
+	n=`expr $n + 1`
+	if [ $n -eq "$answer" ]; then
+	  answertext="$i"
+	  answer=$n #the pure number, strip all junk
+	fi
+    done
+    [ "$answertext" = "" ] && echo 'please enter a number between 1 and '$n'!'
+  done
+}
+
+yesno() {
+  echo "$* (y/n)?"
+  read answer
+  case "$answer" in
+    y*)
+	true;;
+    n*)
+	false;;
+    *)
+	echo "'pardon?? neither yes nor no? assuming no..."
+ 	false;;
+  esac
+}
+
+ask() {
+  echo "$@"
+  read answer
+}
+
+check_bugreport() {
+  if test -f "$bugreport"; then
+    echo "Hmmm, I already found a bug report in ${bugreport}."
+    if yesno "Do you want me to overwrite that file?"; then
+      rm "$bugreport" || clean_exit 1
+    else
+      echo "Okay, aborting on your request."
+      clean_exit 0
+    fi
+  fi
+
+  if test -h "$bugreport"; then
+    echo "Hmmm, I already found another file in ${bugreport}."
+    if yesno "Do you want me to try to overwrite that file?"; then
+      rm "$bugreport" || clean_exit 1
+    else
+      echo "Okay, aborting on your request."
+      clean_exit 0
+    fi
+  fi
+}
+
+check_logfile() {
+  if test -h "$logfile"; then
+    echo "Hmmm, I already found another file in ${logfile}."
+    if yesno "Do you want me to try to overwrite that file?"; then
+      rm "$logfile" || clean_exit 1
+    else
+      echo "Okay, aborting on your request."
+      clean_exit 0
+    fi
+  fi
+}
+
+check_tmpfile() {
+  if test -h "$tmpfile"; then
+    rm "$tmpfile" || clean_exit 1
+  fi
+}
+
+# command line
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -q|--quiet)
+      quiet=true
+      shift
+      ;;
+    -v|--verbose)
+      verbose=true
+      shift
+      ;;
+    -B|--batch)
+      batch=true
+      shift
+      ;;
+    -b|--bug|--bugreport)
+      runmode=bugreport
+      shift
+      ;;
+    explain|-e)
+      indent=
+      msg "$2" ex
+      clean_exit 0
+      ;;
+    *)
+	cat <<EOF
+xine-check version $VERSION
+
+This script will check your system, to see if it is ready for playing
+video with xine.
+
+usage: $0 [options] 
+
+options may be one of these:
+-q  --quiet    only give one-line messages, even for found problems
+-v  --verbose  describe each check in detail (produces kind of FAQ)
+-B  --batch    do not wait for confirmation after long messages
+-b  --bug      produce a terse description, (NOT YET IMPLEMENTED)
+EOF
+	clean_exit 0
+	;;
+  esac
+done
+
+
+if [ "$runmode" = "bugreport" ]; then
+  do_log=true
+  logfile=/tmp/xine-check.log
+  check_logfile;
+  echo logging to ${logfile}...
+  echo >$logfile
+fi
+
+## actual checks start here:
+
+case `id` in
+uid=0*) msg root 2;;
+esac
+
+
+# operating system dependant checks
+
+UNAME=`uname -a`
+OS=`uname -s`
+ARCH=`uname -m||arch`
+DISTRO=unknown
+vars UNAME OS ARCH DISTRO
+
+if test -f /etc/debian_version; then
+  DISTRO=Debian
+  DEBIAN_VERSION="`cat /etc/debian_version`"
+  vars DEBIAN_VERSION
+fi
+if test -f /etc/redhat-release; then
+  DISTRO=RedHat
+  REDHAT_RELEASE="`cat /etc/redhat-release`"
+  vars REDHAT_RELEASE
+fi
+if test -f /etc/VERSION; then
+  LINUX_VERSION="`cat /etc/VERSION`"
+  vars LINUX_VERSION
+fi
+
+case "$OS" in
+  Linux)
+    [ "$DISTRO" = "unknown" ] && DISTRO="unknown_Linux"
+    msg using-linux 0
+    if test -f /proc/version; then
+      msg have-procfs 0
+      KERNEL_VERSION=`awk '{print $3}' </proc/version`
+      KERNEL_SUBMINOR=`echo $KERNEL_VERSION | sed -e 's/^.\..\.//' -e 's/[^0-9].*$//'`
+      case "$KERNEL_VERSION" in
+        1.*)
+	  msg kernel-1.x 2
+	  ;;
+        2.2.*)
+	  if [ "$KERNEL_SUBMINOR" -lt 17 ]; then
+	    msg kernel-2.2.old 1
+	  else
+	    msg kernel-2.2.new 0
+	  fi
+	  ;;
+	2.4.*|2.[65].*)
+	  if [ "$KERNEL_SUBMINOR" -gt 10 -a "$KERNEL_SUBMINOR" -lt 16 ]; then
+	    msg kernel-2.4.bad 1
+	  else
+	    msg kernel-2.4.good 0
+	  fi
+	  ;;
+	2.*)
+	  msg kernel-pre-2.2 1
+	  ;;
+	*)
+	  msg kernel-unknown 1
+	  ;;
+      esac
+
+      vars KERNEL_VERSION
+
+      # MTRR support
+      case "$ARCH" in
+        i?86|k6|k7|athlon)
+	  msg arch-i386-mtrr
+	  if test -f /proc/mtrr; then
+	    if [ `wc -l </proc/mtrr` -lt 2 ]; then
+		msg mtrr-not-configured 1
+	    else
+	      msg mtrr-set 0
+	    fi
+	  else
+	    msg no-mtrr 2
+	  fi
+	  ;;
+	*)
+	  msg arch-non-i386 1
+	  ;;
+      esac
+    else
+	msg no-procfs 2
+    fi
+    ;;
+  *)
+    msg unknown-os 1
+    ;;
+esac
+
+# search for xine executable
+
+xine_executables=""
+if search -x bin/xine; then
+  xine_executables="$found"
+  if [ `echo "$xine_executables" | wc -l` -gt 1 ]; then
+    msg several-xine 1
+  else
+    msg found-xine 0
+  fi
+else
+  msg no-xine 0
+fi
+
+
+# search for xine executable in PATH
+
+xine_executable=""
+if search -x xine "$PATH"; then
+  xine_executable1=`echo "$found"|sort|uniq`
+  if [ `echo "$xine_executable1" | wc -l` -gt 1 ]; then
+    xine_executable=`echo "$xine_executable1" | head -1`
+    msg several-xine-in-path 1
+  else
+    xine_executable="$xine_executable1"
+    msg xine-in-path 0
+  fi
+else
+  msg no-xine-in-path 2
+fi
+
+vars xine_executable xine_executables
+
+# search for xine-config in PATH
+
+xine_config=""
+if search -x xine-config "$PATH"; then
+  xine_config=`echo "$found"|sort|uniq`
+  if [ `echo "$xine_config" | wc -l` -gt 1 ]; then
+    xine_configs="$xine_config"
+    xine_config=`echo "$xine_configs" | head -1`
+    msg several-xine-config 1
+  else
+    msg xine-config-in-path 0
+  fi
+else
+  if search -f bin/xine-config; then
+    xine_config="$found";
+    if [ `echo "$xine_config" | wc -l` -gt 1 ]; then
+      xine_configs="$xine_config"
+      xine_config=`echo "$xine_configs" | head -1`
+      msg several-xine-config 1
+    else
+      msg xine-config-somewhere 0
+    fi
+    if test -x "$xine_config"; then
+      msg xine-config-executable
+    else
+      msg xine-config-not-executable 2
+      xine_config=""
+    fi
+  else
+    if [ "$xine_executable" = "/usr/bin/xine" ]; then
+       xine_prefix=/usr
+       plugindir=/usr/lib/xine/plugins
+       skindir=/usr/share/xine/skins
+       case "$DISTRO" in
+	 Debian)
+	    msg assuming-xine-package-deb 1
+	    ;;
+	 RedHat)
+	    msg assuming-xine-package-rpm 1
+	    ;;
+	 *)
+	    msg assuming-xine-package 1
+	    ;;
+       esac
+    else
+      msg no-xine-config 2
+    fi
+  fi
+fi
+
+vars xine_configs xine_config xine_prefix plugindir skindir
+
+if test -n "$xine_config"; then
+  xine_prefix=`$xine_config --prefix`
+  if [ "$xine_prefix" != `$xine_config --exec-prefix` ]; then
+    custom-exec-prefix 1
+  else
+    plugindir=`$xine_config --plugindir`
+    skindir=`$xine_config --skindir`
+  fi
+fi
+  
+## consistency checks of xine-lib installation
+if test -n "$plugindir"; then
+  if test -d "$plugindir"; then
+      vars input demux decoder video_out
+      msg plugindir-exists
+      input=
+      demux=
+      decoder=
+      video_out=
+      audio_out=
+      cd $plugindir
+      for i in *.so; do
+	case "$i" in
+	  xineplug_inp_*)
+	    type=input;
+	    pfx=xineplug_inp_;
+	    ;;
+	  xineplug_dmx_*)
+	    type=demux;
+	    pfx=xineplug_dmx_;
+	    ;;
+	  xineplug_decode_*)
+	    type=decoder;
+	    pfx=xineplug_decode_;
+	    ;;
+	  xineplug_vo_out_*)
+	    type=video_out;
+	    pfx=xineplug_vo_out_;
+	    ;;
+	  xineplug_ao_out_*)
+	    type=audio_out;
+	    pfx=xineplug_ao_out_;
+	    ;;
+	  *)
+	    msg unknown-plugin
+	    ;;
+	esac
+	name=`echo $i | sed -e "s/^$pfx//" -e 's/.so$//'`
+	eval $type=\"\$$type $name\"
+      done
+
+      for type in input demux decoder video_out audio_out; do
+	eval plugins=\"\$$type\"
+        if test -n "$plugins"; then
+	  msg found-plugins
+	else
+	  msg missing-plugins 2
+	fi
+      done
+  else
+    msg no-plugindir 2
+  fi
+else
+  msg unknown-plugindir 1
+fi
+
+
+if test -n "$skindir"; then
+    if test -d "$skindir"; then
+      msg skindir-exists
+      cd $skindir
+      if test -f xine-ui_logo.mpv; then
+        msg logo-exists
+      else
+        msg no-xine-logo 2
+      fi
+      skins=
+      for dir in *; do
+        test -f "$dir/skinconfig" && skins="$skins $dir"
+      done
+      vars skins
+      if test -n "$skins"; then
+	msg found-skins
+      else
+        msg no-skins 2
+      fi
+    else
+      msg no-skindir 2
+    fi
+fi
+
+
+
+
+
+# device tests
+
+vars CDROM DVDROM
+
+CDROM=`resolve_symlink /dev/cdrom`
+if test -b "$CDROM"; then
+  if test -r "$CDROM"; then
+    msg have-cdrom
+  else
+    msg cdrom-not-readable
+  fi
+else
+  msg no-cdrom 1
+fi
+
+DVDROM=`resolve_symlink /dev/dvd`
+if test -b "$DVDROM"; then
+  if check_perm rw "$DVDROM"; then
+    msg have-dvdrom
+  else
+    msg dvdrom-not-rw
+  fi
+else
+  if test -z "$DVDROM"; then
+    msg no-dvdrom 1
+  else
+    msg dangling-dvdrom
+    DVDROM=""
+  fi
+fi
+
+
+# DMA settings
+if test -r "$DVDROM"; then # only test DMA if we have a drive...
+
+    search -x hdparm "$PATH" || search -x bin/hdparm || search -x sbin/hdparm;
+    if test -n "$found"; then
+      hdparm=`echo "$found"|head -1`
+    fi
+
+    case "$DVDROM" in
+	*/hd?|*/ide/*/cd|*/ata/*/cd)
+	    drivetype="ATAPI"
+	    ;;
+	*/scd?*|*/scsi/*/cd)
+	    drivetype="SCSI"
+	    ;;
+	*)
+	    drivetype="unknown"
+	    ;;
+    esac
+    vars drivetype hdparm dma
+    if test -n "$hdparm" && [ "$drivetype" = "ATAPI" ]; then
+      dma=`$hdparm -d /dev/dvd | awk '$1 == "using_dma" {print $3}'`
+      if [ 0"$dma" -eq 0 ]; then
+	msg dvd-dma-disabled 1
+      else
+	msg dvd-dma-enabled 0 
+      fi
+    else
+      if [ "$drivetype" != ATAPI ]; then
+	msg dvd-not-atapi 1
+      else
+	msg no-hdparm 1
+      fi
+    fi
+	
+fi #have DVDROM
+
+
+# X checks
+if [ "x$DISPLAY" = "x" ]; then
+    msg no-display 2
+else
+
+vars DISPLAY xvinfo XVIDEO YUV YUY2 planes
+
+# Xv extension
+search -x xvinfo "$PATH" || search -x bin/xvinfo;
+if test -n "$found"; then
+  xvinfo=`echo "$found"|head -1`
+  XVIDEO=`$xvinfo|head -1`
+  msg have-xv 0
+  YUV=false
+  YUY2=false
+  planes=""
+  for p in `$xvinfo|awk '$1=="id:" {print $3}' |sed -e 's/(//' -e 's/)//'`; do
+    planes="$planes $p";
+    case $p in
+      YUY2|2YUY)
+        YUY2=true
+	;;
+      YV12|21VY)
+        YUV=true
+	;;
+    esac
+  done
+  if $YUV; then
+    msg have-yuv
+  else
+    msg no-yuv
+  fi
+  if $YUY2; then
+    msg have-yuy2
+  else
+    msg no-yuy2
+  fi
+  #if $YUV || $YUY2; then
+  #  msg xv-broken-hint 1
+  #fi
+  if test -n "$planes"; then
+    msg xv-planes 0
+  else
+    msg no-xv-in-server 1
+  fi
+else
+  # no xvinfo found
+  msg no-xvinfo 2
+fi
+
+fi #DISPLAY check
+
+# dump variables for bug report
+if [ "$runmode" = "bugreport" ]; then
+  for var in $DUMPVARS; do
+    eval log ${var}=\"\$$var\"
+  done
+else
+  clean_exit 0    
+fi
+
+echo
+echo
+if yesno "Could you solve your xine problems using the previous hints?"; then
+  echo 'Fine! It was a pleasure to help you. Any time again...'
+  clean_exit
+fi
+
+check_bugreport;
+
+echo
+echo "What kind of trouble does xine cause for you?"
+echo
+menu "plays audio, but no video" \
+     "plays video, but no audio"\
+     "audio is interrupted and/or crackling"\
+     "audio and video are out of sync"\
+     "can't play DVDs"\
+     "xine hangs instead of playing anything"\
+     "xine doesn't start"\
+     "something else"
+
+if [ "$answertext" = "something else" ]; then
+  echo "please describe your xine problem briefly in _one_ line ( < 65 characters):"
+  read problem
+else
+  problem="$answertext"
+fi
+bugclass=$answer
+
+echo
+
+add "short description: $problem"
+
+if test -n "$xine_config"; then
+  lib_version=`$xine_config --version`
+else
+  lib_version=unknown
+fi
+add "xine-lib version: $lib_version"
+add "xine --version says:"
+add "`$xine_executable --version 2>&1`"
+add ""
+
+# problems involving audio drivers
+case $bugclass in
+  2|3|4)
+    echo
+    echo "What audio drivers are you using?"
+    echo
+    menu "OSS/Free (eg. Linux Kernel) drivers" \
+	 "ALSA, version 0.9.x" \
+	 "ALSA, version 0.5.x" \
+	 "older ALSA version" \
+	 "other driver"
+    if [ $answer -eq 5 ]; then
+      ask "What driver (name/version) are you using?"
+      audio_driver="$answer"
+    else
+      audio_driver="$answertext"
+    fi
+    add "Audio driver: $audio_driver"
+    ask "What sound card are you using?"
+    add "Sound card: $answer"
+    ;;
+esac
+
+# further checks for specific problems
+case "$bugclass" in
+  5) #can't play DVDs
+    echo "which DVD plugin are you trying?"
+    menu "DVD (as shipped with xine)" \
+	 "NAV (dvdnav from dvd.sourceforge.net)" \
+	 "d4d (by captain_css)" \
+	 "d5d (by captain_css)" \
+	 "dmd" \
+	 "other plugin, add the plugin name to the plugin version below"
+    add   "used DVD plugin: $answertext"
+    if [ $answer -ne 1 ]; then
+      ask "What version of that plugin have you tried?"
+      add "        version: $answer"
+    fi 
+    add "searching for libdvdread.so and libdvdcss.so gives:"
+    search -r lib/libdvdread.so
+    dvdlibs="$found"
+    search -r lib/libdvdcss
+    dvdlibs="$dvdlibs $found"    
+    for lib in $dvdlibs; do
+      add "$lib is `resolve_symlink $lib`"
+    done
+    add "(end of dvd lib list)"
+    ;;
+  6) #xine hangs
+    echo "Please try to run xine using this command:"
+    echo "xine -V XShm"
+    echo "(you may add a MRL at the end of the command, if you want)"
+    if yesno "Does this hang as well?"; then
+      add "I tried 'xine -V XShm', but that hangs as well..."
+    else
+      echo
+      echo "Okay, looks like we have found the problem:"
+      echo "Your XVideo extension, ie your X server, is broken."
+      echo "You have told xine to use XShm instead, which works, but consumes"
+      echo "considerably more CPU time."
+      echo "xine will remember this setting."
+      echo "If xine runs fast enough with XShm, you can just leave it like that."
+      echo "If it's too slow on your machine, you'll need a working"
+      echo "XVideo extension. You'll have to upgrade your X server for that."
+      echo "Please check with your distribution if they have a newer version"
+      echo "of XFree86. If they don't, you'll have to look at www.xfree86.org."
+      echo 'Good luck!'
+      echo
+      if yesno "Do you still want too report this as a xine bug?"; then
+        echo
+	echo "okay, I'll continue."
+	echo "But note that your report is likely to be ignored if you don't"
+	echo "report any xine bug. Broken X servers don't count..."
+	add "xine-check thinks this is not a xine bug, but I do. (see below)"
+	confirm
+      else
+        clean_exit 0
+      fi
+    fi
+    ;;
+esac
+
+subject="bug: $problem"
+
+echo
+echo "You should include a _complete_ copy of xine's output in your bug report."
+echo "Note, however, that there is a 40K limit on messages sent to the mailing list,"
+echo "So you should strip down the parts that repeat over and over,"
+echo "if there are any."
+echo "You can either copy&paste this output from the terminal where you ran xine,"
+echo "or you can collect xine's output in a file named /tmp/xine.out, using"
+echo "this command:"
+echo "xine >/tmp/xine.out 2>&1"
+echo "(assuming you have a Bourne compatible shell, like bash, for example)"
+echo "If you need to add any parameters, you can do so..."
+echo "This method is useful if you want to remove part of the output..."
+echo "Which method would you prefer?"
+menu "copy&paste" "logfile /tmp/xine.out"
+add ""
+add "xine output:"
+add "-----------"
+
+echo
+if [ $answer -eq 1 ]; then
+  echo "okay, please paste your xine output into this window and"
+  echo 'PRESS CTRL-D on a new line TO FINISH! (sorry for shouting...)'
+  cat >>"$bugreport"
+else
+  echo 'please press <return> when you have the log ready in /tmp/xine.out'
+  if test -r /tmp/xine.out; then
+    cat /tmp/xine.out >>"$bugreport"
+    echo "Okay, got a copy of the log file. You may remove it, if you wish..."
+  else
+    echo
+    echo "Hmmm, I could not read the /tmp/xine.out file. Skipping this step."
+    echo "You may add the output later, if this wasn't your intention..."
+    confirm
+    echo
+  fi 
+fi
+
+add ""
+add "additional description:"
+add "----------------------"
+add ""
+add "PUT YOUR DESCRIPTION HERE"
+add "(please replace these two lines by your complete problem description)"
+add ""
+add ""
+add "system info, as found by xine-check:"
+add "-----------------------------------"
+cat "$logfile" >>$bugreport
+
+echo
+echo 'Okay.' "That's all I could guide you through..."
+echo "I have assembled a skeleton for your bugreport in the file"
+echo
+echo "   $bugreport"
+echo
+echo "You're strongly encouraged to add a detailed description of your problem."
+echo "Just look for 'additional description', and fill it in..."
+echo
+echo "When you're finished, you can use your favourite mailer to send it to"
+echo "<xine-user@lists.sf.net>. Please use this subject line, or something similar:"
+echo "Subject: $subject"
+
+if search -x mail "$PATH" || search -x mailx "$PATH"; then
+  mailer=`echo "$found"|head -1`
+  echo "Alternatively, I could try to send the bug report for you, using"
+  echo $mailer -s \""$subject"\"
+  echo 'Please make sure to add the additional description before saying "yes"!' 
+  if yesno "Do you want me to do this now?"; then
+    $mailer -s "$subject" <"$bugreport" xine-user@lists.sf.net
+    echo "okay, done."
+    echo "If your machine is set up correctly to send mail to the internet,"
+    echo "everything's fine and the message is on the way..."
+    echo "Note that I cannot check if the mail went out correcly, so if you"
+    echo "cannot send mails to the 'net using $mailer, you'll have to send"
+    echo "the bugreport manually."
+  fi
+fi
+
+echo 'Thanks for your bugreport! Have a nice day!' 
+ 

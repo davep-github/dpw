@@ -1,0 +1,310 @@
+#!/bin/sh
+#set -x
+#
+# $Id: redump-xemacs-2,v 1.2 2005/05/31 08:20:11 davep Exp $
+# 
+# when xemacs is built from the source, the doc pointers for the
+# dumped lisp files point into the build dir, so references to the
+# function definitions try to get the source files from there
+# (e.g. /usr/ports/editors/xemacs.../lisp for FreeBSD).  This sucks,
+# since we'd need to keep the build dir around in order be able browse
+# this elisp source.  So, after installing from ports, we need to
+# redump xemacs.  We need to have temacs live under the installed
+# xemacs dir e.g. /usr/local/lib/xemacs-21.1.14/i386--freebsd/temacs
+# and we need to run it from the build dir,
+# e.g. /usr/ports/editors/xemacs-21[-mule]/work/xemacs-21.1.14/src/
+# after building from sources.
+#
+# Placed into the public domain.
+# David Panariti
+#
+progname=$(basename $0)
+#home_yokel=$HOME/yokel Not there yet
+home_yokel=/usr/local
+home_yokel_lib=$home_yokel/lib
+home_yokel_bin=$home_yokel/bin
+
+: ${prefix:=$home_yokel}
+: ${lib_dir:=$home_yokel_lib}
+: ${bin_dir:=$home_yokel_bin}
+: ${install:=y}
+
+case "$prefix" in
+    $HOME*) SUDO=;;
+    *) SUDO=sudo;;
+esac
+
+
+ask_for_permission=n
+dump=y;
+beta='b'
+
+eecho()
+{
+    echo 1>&2 "$@"
+}
+
+FATAL()
+{
+    rc=$1
+    shift
+    eecho "FATAL: $*"
+    exit $rc
+}
+
+usage="usage: $progname [-nodump] [-ask] [-prefix <installation-prefix>]
+I need the above, but you tried to get away with:
+$0 ""$@""
+
+NB: The defaults shown below are the defaults as set by any env vars or args you used 
+    to get this help screen.
+
+ -nodump says to not actually dump xemacs. Default: $dump
+
+ -prefix <p> sets the installation lib_dir to <p>. Default is $prefix.
+  Binaries will go into \$prefix/bin, libs, lisp, etc into \$prefix/lib.
+
+ -ask Ask for permission to copy certain files. Default: $ask_for_permission.
+
+ -[no]beta Is this or is this not a beta version? Default: $beta.
+
+ _ins* Do not install. Default: $install.
+
+Run from the src dir in the build directory, e.g.:
+/usr/ports/editors/xemacs-devel-mule/work/xemacs-21.4.6/src
+"
+
+for i in $*
+do
+    case "$1" in
+	-nodump) dump=n;;
+	-lib_dir) lib_dir=$2; shift;;
+	-ask) ask_for_permission=y;;
+	-nobeta) beta=;;
+	-beta) beta=b;;
+        -ins*) install=n;;
+	"") break;;
+	*) FATAL 1 "Unexpected argument >$1<
+$usage"
+    esac
+    shift
+done
+
+betafy()
+{
+    verin=$1
+    oldIFS=$IFS
+    IFS='-'
+    set -- $verin
+    IFS=$oldIFS
+    echo "$1-b$2"
+}
+
+verify_dest_dir()
+{
+    dirname=$1
+    dir=$2
+    echo -n "verify existence of $dirname: $dir... "
+    if ! [ -d "$dir" ]
+    then
+	eecho ""
+	FATAL 1 "$dirname ($dir) does not exist.
+Please install xemacs normally before redumping."
+    else
+	echo "OK"
+    fi
+}
+
+dumpit()
+{
+    case "$VER" in
+	*-b*) TEMACS_OPTS0='-nd -no-packages';
+	      TEMACS_OPTS1='';;
+    esac
+    # "Loading..." messages go to stderr
+    if ! ${TEMACS} ${TEMACS_OPTS0} -batch -l ${LISPDIR}/loadup $dump 2>&1
+    then
+	echo 1>&5 "${TEMACS} failed."
+    fi | grep -v '^Loading' 1>&2
+}
+
+DUMP_OPT='-dump'
+
+if [ x"$dump" = "xy" ] 
+then
+    dump=dump
+    dump_msg=''
+else
+    dump=''
+    dump_msg="*** $DUMP_OPT was NOT specified; new xemacs NOT written ***"
+fi
+
+[ -d "$PWD/src" ] && cd src
+case "$PWD" in
+    */xemacs*/src) ;;
+    *)
+	eecho "*** You may not be in the proper dir (src in build dir)"
+	eecho "*** Expect problems if you're not."
+	;;
+esac
+
+VERSION_SH="../version.sh"
+if [ -f "$VERSION_SH" ]
+then
+    . "$VERSION_SH"
+    VER="$emacs_major_version.$emacs_minor_version-$beta$emacs_beta_version"
+    echo "Got version from version.sh: $VER"
+else
+    echo -n "Could not find $VERSION_SH, enter ver> "
+    read VER
+fi
+
+# they're not consistent between version numbers and installation dirs, so...
+case "$VER" in
+    21.4-15) DIR_VER=21.4.15; TEMACS_NAME=xemacs;;
+    *) DIR_VER=$VER;;
+esac
+
+case "$lib_dir" in
+    */) len=`echo -n $lib_dir | wc -c`
+	len=`expr $len - 1`
+	lib_dir=`echo $lib_dir | cut -c 1-$len`
+	echo "lib_dir>$lib_dir<"
+	;;
+    *) ;;
+esac
+
+LOADDIR="${lib_dir}/xemacs-${DIR_VER}"
+verify_dest_dir loaddir "$LOADDIR"
+
+LISPDIR=${LOADDIR}/lisp
+verify_dest_dir lispdir "$LISPDIR"
+
+[ -z "$TEMACS_NAME" ] && {
+    if [ -n "$beta" ]
+    then
+	    TEMACS_NAME=xemacs
+    else
+	    TEMACS_NAME=temacs
+    fi
+}
+
+#
+# find the arch specific execdir...
+# NB: this will not work for more than one arch in a multi
+# arch installation.
+bestguess=`sed -n 's/configuration=\(.*\)/\1/p' ../Makefile`
+echo "best guess for arch dir>${bestguess}<"
+for d in ${bestguess} i386--freebsd alphaev6-unknown-linux alphaev56-unknown-linux freebsd alphaev5-unknown-linux freebsd alphaev4-unknown-linux i686-pc-linux
+do
+    testdir=${LOADDIR}/${d}
+    if [ -d  $testdir ]
+    then
+	TEMACS="${testdir}/${TEMACS_NAME}"
+	break
+    fi
+done
+
+[ -x "$TEMACS" ] || {
+    if [ "$ask_for_permission" = 'y' ]
+    then
+	echo -n "temacs($TEMACS_NAME) is not present in the bindir, copy? "
+	read line
+    else
+	line='y'
+    fi
+    case "$line" in
+    1|[yY]|[Yy][Ee][Ss]|[tT]|[Oo][Kk]) 
+	cp ./${TEMACS_NAME} $TEMACS || {
+	    FATAL 1 "cp of temacs failed."
+	}
+	temacs_copied=y
+	;;
+    *)
+	 FATAL 1 "$TEMACS does not exist and copy not requested."
+    esac
+}
+
+INSTALL_NAME=Installation
+INSTALLEL_NAME=${INSTALL_NAME}.el
+INSTALL=${LISPDIR}/$INSTALL_NAME
+INSTALLEL=${LISPDIR}/$INSTALLEL_NAME
+
+# 
+# 21.4.5 (at least) no longer has an Installation.el file
+# so we check for and only copy it if it exists in
+# the build dir.
+files_to_rm=
+for iname in "$INSTALLEL_NAME" "$INSTALL_NAME"
+do
+    echo "trying install file>$iname<"
+    if [ -e ../$iname ]
+    then
+	idest="${LISPDIR}/${iname}"
+	idest2="${LOADDIR}/${iname}"
+	echo "$iname exists."
+	[ -f "$install" ] || {
+	    if [ "$ask_for_permission" = 'y' ]
+	    then
+		echo -n "$iname is not present in the lispdir, copy? "
+		read line
+	    else
+		line='y'
+	    fi
+	    case "$line" in
+	    1|[yY]|[Yy][Ee][Ss]|[tT]|[Oo][Kk]) 
+		for d in "$idest" "$idest2"
+		do
+		    echo "Copying ../$iname $d"
+		    cp ../"$iname" "$d" || {
+			FATAL 1 "cp of $iname to $d failed."
+		    }
+		    files_to_rm="$files_to_rm $d"
+		    installel_copied=y
+		done
+		;;
+	    *)
+		FATAL 1 "$iname does not exist and copy not requested."
+	    esac
+	}
+    fi
+done
+
+export EMACSBOOTSTRAPLOADPATH="${LISPDIR}:${LOADDIR}" 
+echo "Running: ${TEMACS} -batch -l ${LISPDIR}/loadup $dump"
+echo 'Filtering out Loading... messages.'
+exec 5> /dev/null
+rc=`dumpit 5>&1`
+[ -n "$rc" ] && {
+    FATAL 1 "$rc"
+}
+
+if [ -n "$dump_msg" ] 
+then
+    echo "$dump_msg"
+else
+    ##echo "xemacs dumped, you may want to strip it..."
+    ls -l xemacs
+    cmd="strip xemacs && $SUDO cp xemacs ${bin_dir}/xemacs-${DIR_VER}; $SUDO cp xemacs.dmp ${bin_dir}/xemacs-${DIR_VER}-$(xemacs -sd xemacs.dmp).dmp"
+    if [ "$install" = 'y' ]
+    then
+        echo "installing:"
+        echo "$cmd"
+        eval $cmd
+    else
+        echo "might I suggest:"
+        echo "$cmd"
+    fi
+fi
+
+if [ "$installel_copied" = "y" ]
+then
+    rm $files_to_rm || FATAL 1 "rm $files_to_rm failed."
+fi
+
+if [ "$temacs_copied" = "y" ]
+then
+    rm $TEMACS || FATAL 1 "rm $TEMACS failed."
+fi
+
+exit 0

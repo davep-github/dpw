@@ -1,0 +1,5 @@
+#!/bin/sh
+
+: ${GDB_CMD:=gdb}
+sudo ${GDB_CMD} "$@"
+

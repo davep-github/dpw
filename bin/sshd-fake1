@@ -1,0 +1,8 @@
+#!/bin/sh
+env
+{
+    echo "sshd called, \$@>$@<"
+    date
+    echo "PPID>$PPID<"
+    pstree -a -p
+} | tee >> /tmp/sshd-log.out

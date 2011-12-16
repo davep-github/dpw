@@ -1,0 +1,188 @@
+#!/usr/bin/perl
+# $Id: unpackCISMail,v 1.1.1.1 2001/01/17 22:22:30 davep Exp $
+# Unpacks a bundle of mail downloaded from CIS and stuffs it into
+# an inbox.
+# sub retreive shamelessly stolen from:
+#   William M. Perry (wmperry@indiana.edu)
+#   Hacked by Bill Reynolds (bill@goshawk.lanl.gov).
+#
+
+sub retrieve {
+    local($mailbox) = @_;
+    local($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = gmtime(time);
+
+    @day = ('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri','Sat');
+
+    @month = ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
+	      'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+
+    open(SPOOLOUT, "+>$SPOOL_FILE") || die ("canna open $SPOOL_FILE, $!");
+    
+   # 
+   # some mailers are very persnickity about the time string, 
+   # hence the goop. BR Wed Sep  8 14:52:34 MDT 1993
+   # 
+   printf(SPOOLOUT "From CIS-Mail %s %s %2d %02d:%02d:%02d GMT %04d\n"
+           ,$day[$wday],$month[$mon],$mday,$hour,$min,$sec,$year + 1900);
+   printf(SPOOLOUT "X-CIS-Date: %s %s %2d %02d:%02d:%02d GMT %04d\n"
+           ,$day[$wday],$month[$mon],$mday,$hour,$min,$sec,$year + 1900);
+
+    $eof = 1;
+    $line = 0;
+    undef @cis_head;
+    while (<INFILE>)
+    {
+       # remove yukky CR from ends-of-lines
+	print "_>$_<\n" if ($trace);
+       s/\015//g;
+	print "_>$_<\n" if ($trace);
+
+       if ($line < 3)
+       {
+           # save the 1st 3 lines, they are prepended by CIS (with an
+           # illegal blank line as the 4th). If this is an Internet
+           # message, we toss the 1st 4, else we convert and use the
+           # 1st 3 and toss the 4th
+           $cis_head[$line++] = $_;
+           next;
+       }
+       elsif ($line == 3)
+       {
+           $line++;
+           # see if we're from NON CIS
+           $_ = $cis_head[1];
+	   print "0>$cis_head[0]<\n" if ($trace);
+	   print "1>$cis_head[1]<\n" if ($trace);
+	   print "2>$cis_head[2]<\n" if ($trace);
+
+
+
+           if (/INTERNET:/)  # outside of CIS?
+           {
+               # toss the header and the blank line
+               # we'll probably want to do something else with 
+               # MHS messages, but I need to see what one looks like
+               # first.
+           }
+           else
+           {
+               /(^From:[^[]+)\[(\d+),(\d+)\]/;
+               # make the CIS address its Internet equivalent
+               $cis_head[1] = "$1 <$2.$3\@compuserve.com>\n";
+               # convert Subj: to Subject:
+               $cis_head[2] =~ s/^Subj:(.*)/Subject:$1/;
+               # print the "corrected" header lines
+               foreach $line (@cis_head)
+               {
+                   print SPOOLOUT $line;
+               }
+               print SPOOLOUT "\n";    # blank line after headers.
+           }
+           next;
+       }
+       
+       # print "$_";
+       # xmodem pads last block w/^Zs from last byte in file to
+       # end of block.
+       if (/\032/) 
+       {
+	   # print "exiting from ^Z\n";
+	   last;
+       }
+       # CIS message separator
+       if (/<<>>/)
+       {
+	   # print "end of message\n\n\n";
+           $_ = <INFILE>;  # toss nl after separator
+	   $eof = 0;
+	   last;
+       }
+       
+       if ($rx_from_net && /Capture buffer closed/)
+       {
+	   last;
+       }
+
+       print SPOOLOUT $_;
+    }
+    
+    open(MBOX, ">>$mailbox")
+	||   die("Can't open mailbox"); 
+				 
+    $LOCK_SH = 1;		
+    $LOCK_EX = 2;
+    $LOCK_NB = 4;
+    $LOCK_UN = 8;
+    
+    flock(MBOX,$LOCK_EX);
+    # and, in case someone appended
+    # while we were waiting...
+    seek(MBOX, 0, 2);
+    
+    seek(SPOOLOUT,0,0);
+    while(<SPOOLOUT>)
+    {				
+	# print "line to MBOX>$_<";
+	print MBOX $_;
+    } 
+    print MBOX "\n";
+    close SPOOLOUT;
+    unlink $SPOOL_FILE;
+
+    flock(MBOX,$LOCK_UN);
+    close MBOX;
+
+    $eof;
+}
+
+if ($ARGV[0] eq '-n')
+{
+    shift(@ARGV);
+    $rx_from_net = 1;
+}
+else
+{
+    $rx_from_net = 0;
+}
+
+$cis_mail_file = $ARGV[0];
+$mail_box_file = $ARGV[1];
+($ProgName) = 
+    $0 =~ /([^\/]*$)/;
+$SPOOL_FILE = "/tmp/$ProgName.$$";
+
+#print("cis_mail_file>$cis_mail_file<, mail_box_file>$mail_box_file<\n");
+
+open(INFILE, "$cis_mail_file")
+   ||   die("Can't open cis mail file: $cis_mail_file"); 
+
+if ($rx_from_net)
+{
+    # skip thru junk till something nice
+    $hit = 0;
+    while (<INFILE>)
+    {
+	print "_>$_<\n" if ($trace);
+	if (/Opening capture buffer\.\.\./)
+	{
+	    $_ = <INFILE>;
+	    $hit = 1;
+	    last;
+	}
+    }
+}
+else
+{
+    $hit = 1;
+}
+
+if ($hit)
+{
+    while (!&retrieve($mail_box_file))
+    {
+    }
+}
+
+close(INFILE);
+
+exit 0;

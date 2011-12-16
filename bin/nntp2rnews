@@ -1,0 +1,19 @@
+#!/usr/local/bin/perl
+
+$article = "";
+while (<>)
+{
+	chop;
+	if (substr($_, 0, 1) eq ".")
+	{
+		if ($_ eq ".")
+		{
+			print "#! rnews ", length($article), "\n";
+			print $article;
+			$article = "";
+			next;
+		}
+		$_ = substr($_, 1);
+	}
+	$article .= "$_\n";
+}

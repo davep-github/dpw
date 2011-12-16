@@ -1,0 +1,3 @@
+#!/bin/sh
+
+WM=e16 DTE=none startx

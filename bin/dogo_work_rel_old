@@ -1,0 +1,103 @@
+#!/bin/sh
+
+source script-x
+
+set -u
+# Go relative to a sandbox.
+# gr subdir # Relative to current sandbox, ie sb == .
+# gr sandbox subdir
+
+allArgs=("$@")
+potentialSandboxDest=
+one=${1-}
+two=${2-}
+
+currentSb=$(scsandbox $PWD)
+
+add_sep()
+{
+    local dir="$1"
+    case "$1" in
+        "");;
+        */);;
+        *) dir="$dir/";;
+    esac
+    echo "$dir"
+}
+
+
+if [ "$#" = 2 ]
+then
+    sb="$one"
+    sub="$two"
+elif scsandbox -p "${one}"
+then
+    sb="${one}"
+    sub=""
+else
+    # are we in a sandbox [sub]directory?
+    if ! scsandbox -p $PWD
+    then
+        echo 1>&2 "Cannot use just a relative name.
+  \"${one}\" is not a sandbox name and \"$PWD\" is not a sandbox dir."
+        exit 1
+    fi
+    sb=$(scsandbox $PWD)
+    sub=$1
+fi
+
+case "$sb" in
+    =|--|current|work) sb="${currentsb}";;
+    .|here|this) sb=$(scsandbox $PWD);;
+esac    
+
+sb=$(scsandbox -w $sb) || exit 1
+[ -z "$sub" ] && {
+    echo "$sb"
+    exit 0
+}
+osb="$sb"
+shift
+# Absolute name?
+case "$sb" in
+    #  We're done.
+    /*) work=;;
+esac
+
+#echo_id_err work
+#echo_id_err sb
+#echo_id_err sub
+
+sb=$(add_sep "$sb")
+work_rel_name="work_${sub}_rel"
+work_rel_result=$(dogo $work_rel_name)
+# Did the dogo find anything?
+# We want to give sandbox subdirs precedence over direct work subdirs.
+# Eg ~/work/<sb>/src over ~/work/src
+# So we only use the direct work subdir if there is no work_rel_name defined.
+case "$sub" in
+    /) dirname="";;
+    *) dirname=$(add_sep $work_rel_result);;
+esac
+sbPath="${work}${sb}"
+din="${sbPath}${dirname}"
+dest=$(dogo "$din")
+[ -d "$dest" ] && {
+    echo "$dest"
+    exit 0
+}
+[ -d "$potentialSandboxDest" ] && {
+    echo "$potentialSandboxDest"
+    exit 0
+}
+{
+    echo "Args >${allArgs[@]}< yield dest>$dest<, but it isn't a dir."
+    echo "dest>$dest< is not a directory."
+    if [ "$work_rel_name" = "$work_rel_result" ]
+        then
+        echo -n "sub>$sub< has no work relative definition, "
+        echo "and >$osb< is not a top level work subdir."
+    fi
+} 1>&2
+            
+exit 1

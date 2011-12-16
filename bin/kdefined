@@ -1,0 +1,44 @@
+#!/bin/sh
+
+option_str="f:ix"
+
+Usage()
+{
+    rc=$1
+    echo 1>&2 'usage: [-x] [-f config-file-name] [-i]  definition-regexps...
+-x sets bash -x.
+config-file-name defaults to /boot/config.
+-i results in a case insensitive search.
+definition-regexps are egrep extended regexps and are searched for 
+1 by 1 in a loop.'
+    
+    exit $rc
+}
+
+q=$(getopt -o "$option_str" -- "$@")
+[ $? != 0 ] && Usage 1
+eval set -- "$q" 
+
+config_file="/boot/config"
+dash_i_opt=""
+
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -f) config_file=$2; shift;;
+      -i) dash_i_opt="-i";;
+      -x) set -x;;
+      --) shift; break;;
+      *) Usage 1;;
+  esac
+  shift
+done
+
+for i in "$@"; do
+    egrep $dash_i_opt $i $config_file || {
+        # Could just mean not defined. stdout or stderr?
+        echo "$i : not found."
+    }
+done
+

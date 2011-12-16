@@ -1,0 +1,112 @@
+#!/usr/bin/env python
+# $Id: buzzard,v 1.2 2004/02/14 09:20:03 davep Exp $
+
+import os, sys, time, string, types
+import dp_io, getopt
+
+# Save look up time later.
+sleep = time.sleep
+popen = os.popen
+# This mimics original behavior where we waited fer-ever.
+timeout_time = float(os.environ.get('TIMEOUT_TIME', 0) or
+                     os.environ.get('TIMEOUT', 0))
+sleep_time = float(os.environ.get('SLEEP_TIME', 30))
+loop_msg = os.environ.get('LOOP_MSG', 0)
+pre_sleep = float(os.environ.get('PRE_SLEEP', 0))
+post_sleep = float(os.environ.get('POST_SLEEP', 0))
+post_timeout_sleep = float(os.environ.get('POST_TIMEOUT_SLEEP', 0))
+msg_pre_sleep = float(os.environ.get('MSG_PRE_SLEEP', 0))
+msg_post_sleep = float(os.environ.get('MSG_POST_SLEEP', 0))
+wait_for = os.environ.get('WAIT_FOR', False)
+pgrep_p = os.environ.get('PGREP', False)
+
+
+vars = {"sleep_time": sleep_time,
+        "loop_msg": loop_msg,
+        "timeout_time": timeout_time,
+        "pre_sleep": pre_sleep,
+        "post_sleep": post_sleep,
+        "post_timeout_sleep": post_timeout_sleep,
+        "time_slept": 0,
+        "msg_pre_sleep": 0,
+        "msg_post_sleep": 0,
+        "wait_for": False,
+	"pgrep_p": False,   # Use pgrep(dp) to find the bodies.
+        }
+
+our_pgroup = os.getpgrp()
+our_pid = os.getpid()
+opts, args = getopt.getopt(sys.argv[1:], "ps:")
+for o, v in opts:
+    if  o == '-p':
+	pgrep_p  = True
+	continue
+    if o == '-s':
+        sleep_time = eval(v)
+        continue
+    print >>sys.stderr, "Unsupported option", o, "with value >%s<" % v
+    sys.exit(1)
+
+def maybe_sleep(t):
+    if t:
+        sleep(t)
+
+# @todo wait for the program to come up, if asked.
+if wait_for:
+    print >>sys.stderr, "waiting for process to come up is not ready yet. Please try again later."
+    sys.exit(1)
+    
+maybe_sleep(pre_sleep)
+time_slept = 0
+if pgrep_p:
+    finder_of_pids = "pgrep -p"
+else:
+    finder_of_pids = "findprog"
+
+#dp_io.printf("finder_of_pids: %s\n", finder_of_pids)
+finder_of_pids = """%s 2>/dev/null '%s'""" % (finder_of_pids, string.join(args))
+#dp_io.printf("full: finder_of_pids: %s\n", finder_of_pids)
+#dp_io.printf("ts: %s, mst: %s\n", time_slept, timeout_time)
+while (timeout_time == 0) or (time_slept < timeout_time):
+    #dp_io.printf("ts: %s, mst: %s\n", time_slept, timeout_time)
+    pids = dp_io.bq(finder_of_pids) #popen(finder_of_pids).read()
+    #dp_io.printf("OUR pid: %s, pgroup: %s\n", our_pid, our_pgroup)
+    # Filter out some pids
+    if pids:
+	#print "raw pids>%s<" % pids
+	pids = [int(x) for x in string.split(pids)]
+	#print "intergerized pid list:", pids
+	copids = pids + []  # Make a copy.
+	# Prevent matching anything in our subtree; some of which are sure to
+	# have pgrep pattern as part of their args.
+	for pid in copids:
+	    #dp_io.printf("pid: %s --> ", pid)
+	    try:
+		pg = os.getpgid(pid)
+	    except OSError:
+		#dp_io.printf("\npid: %s, seems to have gone missing.\n", pid)
+		pids.remove(pid)
+		#print "NO pgid"
+		continue
+	    #print "pgid:", pg
+	    if pg == our_pgroup:
+		pids.remove(pid)
+
+    #print "FINAL: intergerized pid list:", pids
+    # "All dead, all dead."
+    if not pids:
+        maybe_sleep(post_sleep)
+        sys.exit(0)
+    if loop_msg:
+        maybe_sleep(msg_pre_sleep)
+        print loop_msg % vars
+        maybe_sleep(msg_post_sleep)
+    maybe_sleep(sleep_time)
+    time_slept += sleep_time
+    vars["time_slept"] = time_slept
+if loop_msg:
+    print loop_msg % vars
+    
+maybe_sleep(post_timeout_sleep)
+
+sys.exit(1)                             # Timed out

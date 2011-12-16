@@ -1,0 +1,30 @@
+#!/bin/sh
+
+source script-x
+source eexec
+EExecVerbose
+
+std_options=""
+option_str="nvq"
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+client_name="$(dp4-mk-client-name)"
+
+echo 1>&2 "Creating client... check editor to edit spec."
+EExec p4 client "${client_name}"
+

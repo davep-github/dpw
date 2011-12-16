@@ -1,0 +1,7 @@
+#!/bin/sh
+# $Id: port-grep,v 1.4 2003/07/29 07:30:11 davep Exp $
+#set -x
+
+ports_glob "$@"
+exec search-text-index.sh ports "$@"
+

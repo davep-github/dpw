@@ -1,0 +1,5 @@
+#!/bin/sh
+
+source script-x
+
+# Put a file into subversion temporarily.

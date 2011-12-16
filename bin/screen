@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+. script-x
+#set -x
+args="$@"
+#echo "IMASCREENINSTANCE>$IMASCREENINSTANCE<"
+# screen only sets a shell var, not an env var.
+[ -n "$IMASCREENINSTANCE" ] && {
+    echo -n "Do you really want nested screen instances? "
+    read ans
+    case "$ans" in
+	[Yy]) export IMASCREENINSTANCE=yes;;
+	*) exit 0;;
+    esac
+}
+
+source ~/.rc/func
+PS1='? '
+dp-xterm-like-p && do_xtitle 'Screen instance'
+
+real_bin=$(sp screen | egrep -v "$USER|yokel" | head -n 1)
+exec $real_bin $args

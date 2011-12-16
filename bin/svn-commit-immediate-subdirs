@@ -1,0 +1,19 @@
+#!/bin/sh
+
+. script-x
+
+: ${commit_msg="Misc."}
+
+commit_msg_option=
+vsetp $commit_msg && {
+    commit_msg_option="-m $commit_msg"
+}
+
+svn_op()
+{
+    echo "Committing files in >$PWD<"
+    svn commit $commit_msg_option.
+}
+export -f svn_op
+
+svn-op-immediate-subdirs svn_op "$@"

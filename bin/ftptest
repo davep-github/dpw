@@ -1,0 +1,24 @@
+#!/usr/bin/env expect
+# exp_internal -f rltest.log 1
+
+set machine [lindex "$argv" 0] 
+
+set connected 0
+set timeout 120
+
+proc abort { msg } {
+	send_error "$msg\n"
+	exit 1
+}
+
+#ftp to machine
+while { $connected == 0 } {
+	spawn ftp $machine
+	expect {
+		"ftp>" { set connected 1 }
+		"telnetd: All network ports in use." {}
+		timeout { abort "timeout: Unexpected response from spawn telnet" }
+	}
+}
+
+send "bye\n"

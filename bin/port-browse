@@ -1,0 +1,13 @@
+#!/bin/sh
+
+for f in "$@" 
+do 
+   echo ==== $f ===; 
+   eix -e $f; 
+   echo -n "prs ntr> "; 
+   read x;
+   case "$x" in
+        [QqxX]) break;;
+        *) ;;
+   esac
+done

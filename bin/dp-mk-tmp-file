@@ -1,0 +1,22 @@
+#!/bin/sh
+#set -x
+
+# use exact name to lower possiblity of a false positive
+mkt=$(which mktemp)
+if [ -x "$mkt" ]
+then
+    $mkt "$@"
+else
+    # fake it
+    while :
+    do
+	tfile=$(echo $1 | sed 's!\(XX*\)!'$RANDOM'!')
+	if [ ! -f "$tfile" ]
+	then
+	    touch $tfile
+	    chmod 600 $tfile
+	    echo $tfile
+	    break
+	fi
+    done
+fi

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+: ${TYPE_VAR="^_NET_WM_WINDOW_TYPE"x}
+
+echo "Click upon the window of interest to find $TYPE_VAR..."
+xprop | grep "$TYPE_VAR" || {
+    echo 'Win info found.  Use ``Unknown'"'' with compiz."
+}
+

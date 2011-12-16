@@ -1,0 +1,15 @@
+#!/bin/sh
+# stop on errors
+set -e
+# trace
+set -x
+
+#. script-x
+
+# stolen from:
+# do_callgrind.sh - run callgrind on the program and arguments given
+# on the command line, with useful flags
+# I don't have a /usr/bin/callgrind.
+
+valgrind --tool=callgrind --dump-instr=yes --simulate-cache=yes --separate-callers=20 "$@"
+

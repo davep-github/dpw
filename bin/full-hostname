@@ -1,0 +1,31 @@
+#!/bin/sh
+#set -x -v
+
+if [ "$#" = "0" ]
+then
+    echo 2>&1 "usage: full-hostname host"
+    echo 2>&1 " Display full-hostname of host"
+    exit 1
+fi
+
+name=$1
+# nslookup is going away in linux, so we'll use host
+try=`host $name 2>/dev/null` || {
+    # cannot lookup name, use ''
+    echo ''
+    exit 1
+}
+
+#echo "$try"
+#echo "Host $name *"
+
+if echo "$try" | grep -q "^Host $name"
+then
+    echo 1>&2 "ERROR: $try"
+    exit 1
+fi
+
+set -- $try
+
+echo "$1"
+exit 0
