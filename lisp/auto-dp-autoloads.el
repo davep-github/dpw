@@ -1,0 +1,444 @@
+;;; DO NOT MODIFY THIS FILE
+(if (featurep 'auto-dp-autoloads) (error "Feature auto-dp-autoloads already loaded"))
+
+;;;### (autoloads (dp-colorize-ifdefs) "dp-colorize-ifdefs" "lisp/dp-colorize-ifdefs.el")
+
+(autoload 'dp-colorize-ifdefs "dp-colorize-ifdefs" "\
+Colorize parts of ifdef." t nil)
+
+;;;***
+
+;;;### (autoloads (dp-unhook-insert dp-unhook-message dp-hook-insert dp-hook-message) "dp-debug" "lisp/dp-debug.el")
+
+(autoload 'dp-hook-message "dp-debug" nil t nil)
+
+(autoload 'dp-hook-insert "dp-debug" nil t nil)
+
+(autoload 'dp-unhook-message "dp-debug" nil t nil)
+
+(autoload 'dp-unhook-insert "dp-debug" nil t nil)
+
+;;;***
+
+;;;### (autoloads (dp-edit-faces dp-all-dp*-faces) "dp-faces" "lisp/dp-faces.el")
+
+(autoload 'dp-all-dp*-faces "dp-faces" nil nil nil)
+
+(autoload 'dp-edit-faces "dp-faces" "\
+Alter face characteristics by editing a list of defined faces.
+Pops up a buffer containing a list of defined faces.
+
+WARNING: the changes you may perform with this function are no longer
+saved. The prefered way to modify faces is now to use `customize-face'. If you 
+want to specify particular X font names for faces, please do so in your
+.XDefaults file.
+
+Editing commands:
+
+\\{edit-faces-mode-map}" t nil)
+
+;;;***
+
+;;;### (autoloads (dp-flyspell-prog-mode dp-flyspell-prog-setup dp-flyspell-setup dp-flyspell-setup0) "dp-flyspell" "lisp/dp-flyspell.el")
+
+(autoload 'dp-flyspell-setup0 "dp-flyspell" nil t nil)
+
+(autoload 'dp-flyspell-setup "dp-flyspell" nil t nil)
+
+(autoload 'dp-flyspell-prog-setup "dp-flyspell" nil t nil)
+
+(autoload 'dp-flyspell-prog-mode "dp-flyspell" "\
+Put a buffer into `flyspell-prog-mode', with persistent-highlight OFF.
+PERSISTENT-HIGHLIGHT-P says to turn on persistent-highlight." t nil)
+
+;;;***
+
+;;;### (autoloads (gid) "dp-id-utils" "lisp/dp-id-utils.el")
+
+(autoload 'gid "dp-id-utils" "\
+Run gid, with user-specified ARGS, and collect output in a buffer.
+While gid runs asynchronously, you can use the \\[next-error] command to
+find the text that gid hits refer to. The command actually run is
+defined by the gid-command variable." t nil)
+
+;;;***
+
+;;;### (autoloads (dpj-setup-invisibility dp-journal-mode dpj-visit-other-journal-file dp-journal2 dp-journal dpj-edit-journal-file dpj-mk-external-bookmark cxl dpj-clone-topic-and-link dpj-clone-topic dpj-goto-end-of-journal dpj-new-topic-other-window dpj-new-topic dp-add-elisp-journal-entry dpj-chase-link dpj-tidy-journals-keep dpj-tidy-journals dpj-grep-and-view-hits) "dp-journal" "lisp/dp-journal.el")
+
+(autoload 'dpj-grep-and-view-hits "dp-journal" "\
+Grep topics for regexp and view in view buf.
+Search NUMBER-OF-MONTHS files back in time.
+Search topics matching TOPIC-RE for GREP-RE.
+View all records with matches in a view buf.
+START-WITH-CURRENT-JOURNAL-P (interactively the prefix-arg) says to start
+the search with the current journal file." t nil)
+
+(defalias 'gv 'dpj-grep-and-view-hits)
+
+(defalias 'dg 'dpj-grep-and-view-hits)
+
+(defalias 'jg 'dpj-grep-and-view-hits)
+
+(defalias 'dpj-grep 'dpj-grep-and-view-hits)
+
+(autoload 'dpj-tidy-journals "dp-journal" "\
+Kill all but the most recent journal buffers." t nil)
+
+(autoload 'dpj-tidy-journals-keep "dp-journal" nil t nil)
+
+(autoload 'dpj-chase-link "dp-journal" "\
+Follow a link to another note.
+ !<@todo XXX Make this put the BM in the most recent journal." nil nil)
+
+(autoload 'dp-add-elisp-journal-entry "dp-journal" nil t nil)
+
+(autoload 'dpj-new-topic "dp-journal" "\
+Insert a new topic item.  Completion is allowed from the list of known topics." t nil)
+
+(autoload 'dpj-new-topic-other-window "dp-journal" nil t nil)
+
+(defalias 'cx 'dpj-new-topic-other-window)
+
+(defalias 'cx2 'dpj-new-topic-other-window)
+
+(defalias 'cx1 'dpj-new-topic)
+
+(defalias 'cx0 'dpj-new-topic)
+
+(defalias 'cx\. 'dpj-new-topic)
+
+(defalias 'nt 'dpj-new-topic-other-window)
+
+(defalias 'ntc 'dpj-clone-topic)
+
+(defalias 'nt2 'dpj-new-topic-other-window)
+
+(defalias 'nt1 'dpj-new-topic)
+
+(defalias 'nt0 'dpj-new-topic)
+
+(autoload 'dpj-goto-end-of-journal "dp-journal" nil t nil)
+
+(defalias 'eoj 'dpj-goto-end-of-journal)
+
+(autoload 'dpj-clone-topic "dp-journal" "\
+Clone the current topic with a new timestamp.
+NB: previous topic means the previous SAME topic.
+LINK-TOO-P, if non-nil says to link to the previous topic.
+LINK-TOO-P, if nil will make a link to the previous topic if it is 
+\"far enough away.\"
+INSERT-THIS-TEXT is text to insert after the topic is inserted.
+Allows for an indication of time flow within a continuing topic or 
+continuation of a topic at a later time." t nil)
+
+(defalias 'cxc 'dpj-clone-topic)
+
+(autoload 'dpj-clone-topic-and-link "dp-journal" "\
+Clone topic and force link to previous topic regardless of distance." t nil)
+
+(autoload 'cxl "dp-journal" nil t nil)
+
+(autoload 'dpj-mk-external-bookmark "dp-journal" "\
+Make link a topic @ (or POS (point)) in (or FILE-OR-BUF (current bufer))." t nil)
+
+(autoload 'dpj-edit-journal-file "dp-journal" "\
+Edit the journal file." t nil)
+
+(autoload 'dp-journal "dp-journal" "\
+Visit a journal file.
+If `dpj-current-journal-file' is non-nil, visit that file, otherwise
+visit the journal for the current date and set `dpj-current-journal-file'.
+OTHER-WIN-P says visit in other window.
+GOTO-EOF says go to end of file.
+VISIT-LATEST says visit the current journal even if
+`dpj-current-journal-file' is non-nil.
+RETURN buffer that was visiting the journal, or nil." t nil)
+
+(autoload 'dp-journal2 "dp-journal" nil t nil)
+
+(defalias 'dj 'dp-journal2)
+
+(defalias 'dj2 'dp-journal2)
+
+(defalias 'dj1 'dp-journal)
+
+(defalias 'dj0 'dp-journal)
+
+(defalias 'dj\. 'dp-journal)
+
+(defalias 'djd 'dp-journal)
+
+(autoload 'dpj-visit-other-journal-file "dp-journal" "\
+Visit FILE-NAME as journal and make it sticky to the current buffer.
+This kind of allows us to use a journal file with a non-standard name." t nil)
+
+(when (dp-xemacs-p) (defvar dpj-menubutton-guts [dp-journal :active (fboundp 'dp-journal)] "Menu button to activate journal.") (defvar dpj-menubar-button (vconcat ["Dj"] dpj-menubutton-guts) "Journal menubar button.") (defvar dpj-menu-button-added nil "Non nil if we've already added the menu-button.") (unless dpj-menu-button-added (add-menu-button nil dpj-menubar-button nil default-menubar) (setq dpj-menu-button-added t)))
+
+(autoload 'dp-journal-mode "dp-journal" "\
+Major mode for editing journals." t nil)
+
+(autoload 'dpj-setup-invisibility "dp-journal" "\
+Make a nice glyph for invisible text regions." t nil)
+
+;;;***
+
+;;;### (autoloads (dp-sel2:bm dp-sel2:paste) "dp-sel2" "lisp/dp-sel2.el")
+
+(autoload 'dp-sel2:paste "dp-sel2" "\
+Select the item to paste from a list.
+Rotate kill list so that the selected kill-text is at the head of the
+yank ring." t nil)
+
+(autoload 'dp-sel2:bm "dp-sel2" "\
+Select a bookmark to which to jump." t nil)
+
+;;;***
+
+;;;### (autoloads (dp-ssh-gdb dp-ssh dp-gdb dp-gdb-old dp-shell-other-window dp-shell dp-shell0 dp-lterm dp-cterm dp-start-term dp-python-shell dp-ssh-mode-hook dp-gdb-mode-hook dp-py-shell-hook dp-shell-goto-this-error dp-cscope-next-thing dp-next-error dp-set-compile-like-mode-error-function dp-reset-current-error-function dp-set-current-error-function dp-compilation-mode-hook dp-telnet-mode-hook dp-shell-mode-hook dp-comint-mode-hook dp-shells-mk-prompt-font-lock-regexp dp-shells-add-prompt-regexp shell-uninteresting-face) "dp-shells-dev" "lisp/dp-shells-dev.el")
+
+(defvar shell-uninteresting-face 'shell-uninteresting-face "\
+Face for shell output which is uninteresting.
+Should be a color which nearly blends into background.")
+
+(autoload 'dp-shells-add-prompt-regexp "dp-shells-dev" nil nil nil)
+
+(autoload 'dp-shells-mk-prompt-font-lock-regexp "dp-shells-dev" nil nil nil)
+
+(defvar dp-shells-prompt-font-lock-regexp "^\\([0-9]+\\)\\([/<][0-9]+\\|\\)\\([#>]\\)" "\
+*Regular expression to match my shell prompt.  Used for font locking.
+For my multi-line prompt, this is second line.  For most prompts, this will
+be the only line.  Some shells, like IPython's, already colorize their
+prompt.  We don't want to stomp on them.")
+
+(eval-after-load "shell" '(progn (setq shell-prompt-pattern-for-font-lock dp-shells-prompt-font-lock-regexp)))
+
+(autoload 'dp-comint-mode-hook "dp-shells-dev" "\
+Sets up personal comint mode options.
+Called when shell, inferior-lisp-process, etc. are entered." t nil)
+
+(autoload 'dp-shell-mode-hook "dp-shells-dev" "\
+Sets up shell mode specific options." t nil)
+
+(autoload 'dp-telnet-mode-hook "dp-shells-dev" "\
+Sets up telnet mode specific options." nil nil)
+
+(autoload 'dp-compilation-mode-hook "dp-shells-dev" nil nil nil)
+
+(autoload 'dp-set-current-error-function "dp-shells-dev" nil t nil)
+
+(autoload 'dp-reset-current-error-function "dp-shells-dev" nil t nil)
+
+(autoload 'dp-set-compile-like-mode-error-function "dp-shells-dev" nil nil nil)
+
+(autoload 'dp-next-error "dp-shells-dev" "\
+Find next error in shell buffer.
+This key is globally bound.  It does special things only if it is
+invoked inside a shell type buffer.  In this case, it ensures the
+buffer is in compilation minor-mode and reparses errors if it detects
+that a new command has been sent since the last parse.
+@todo Use/write i/f to `previous-error-p' to make us go backwards." t nil)
+
+(autoload 'dp-cscope-next-thing "dp-shells-dev" nil t nil)
+
+(autoload 'dp-shell-goto-this-error "dp-shells-dev" "\
+Goto the error at point in the shell buffer.  
+This has the fortunate side effect of setting 
+things up so that dp-next-error (\\[dp-next-error]) 
+picks up right after the error we just visited.
+We use this instead of just `compile-goto-error' so that
+we can goto errors anywhere in the buffer, especially 
+earlier in the buffer. `compile-goto-error' has a 
+very (too) forward looking view of parsing error buffers." t nil)
+
+(autoload 'dp-py-shell-hook "dp-shells-dev" "\
+Set up my python shell mode fiddle-faddle." t nil)
+
+(autoload 'dp-gdb-mode-hook "dp-shells-dev" "\
+Set up my gdb shell mode fiddle-faddle." t nil)
+
+(autoload 'dp-ssh-mode-hook "dp-shells-dev" "\
+Set up my ssh shell mode fiddle-faddle." t nil)
+
+(autoload 'dp-python-shell "dp-shells-dev" "\
+Start up python shell and then run my shell-mode-hook since they
+set the key-map after the hook has run." t nil)
+
+(defalias 'dpy 'dp-python-shell)
+
+(autoload 'dp-start-term "dp-shells-dev" "\
+Start up a terminal session, but first set the coding system so eols are 
+handled right." t nil)
+
+(autoload 'dp-cterm "dp-shells-dev" nil t nil)
+
+(autoload 'dp-lterm "dp-shells-dev" nil t nil)
+
+(autoload 'dp-shell0 "dp-shells-dev" "\
+Open/visit a shell buffer.
+First shell is numbered 0 by default.
+ARG is numberp:
+ ARG is >= 0: switch to that numbered shell.
+ ARG is < 0: switch to shell buffer<(abs ARG)>
+ ARG memq `dp-shells-shell<0>-names' shell<0> in other window." t nil)
+
+(autoload 'dp-shell "dp-shells-dev" nil t nil)
+
+(autoload 'dp-shell-other-window "dp-shells-dev" nil t nil)
+
+(autoload 'dp-gdb-old "dp-shells-dev" nil t nil)
+
+(autoload 'dp-gdb "dp-shells-dev" "\
+Extension to gdb that:
+. Prefers the most recently used buffer if it's process is still live,
+. Else it asks for a buffer using a completion list of other gdb's,
+. Else (or if nothing selected above) it starts a new gdb session." t nil)
+
+(autoload 'dp-ssh "dp-shells-dev" "\
+Find/create a shell buf, an existing ssh buf or create a ssh buf." t nil)
+
+(autoload 'dp-ssh-gdb "dp-shells-dev" nil t nil)
+
+;;;***
+
+;;;### (autoloads (dp-ssh-gdb dp-ssh dp-gdb dp-gdb-old dp-shell-other-window dp-shell dp-shell0 dp-lterm dp-cterm dp-start-term dp-python-shell dp-ssh-mode-hook dp-gdb-mode-hook dp-py-shell-hook dp-shell-goto-this-error dp-cscope-next-thing dp-next-error dp-set-compile-like-mode-error-function dp-reset-current-error-function dp-set-current-error-function dp-compilation-mode-hook dp-telnet-mode-hook dp-shell-mode-hook dp-comint-mode-hook dp-shells-mk-prompt-font-lock-regexp dp-shells-add-prompt-regexp shell-uninteresting-face) "dp-shells" "lisp/dp-shells.el")
+
+(defvar shell-uninteresting-face 'shell-uninteresting-face "\
+Face for shell output which is uninteresting.
+Should be a color which nearly blends into background.")
+
+(autoload 'dp-shells-add-prompt-regexp "dp-shells" nil nil nil)
+
+(autoload 'dp-shells-mk-prompt-font-lock-regexp "dp-shells" nil nil nil)
+
+(defvar dp-shells-prompt-font-lock-regexp "^\\([0-9]+\\)\\(/[0-9]+\\)\\([#>]\\|\\(<[0-9]*>\\)?\\)" "\
+*Regular expression to match my shell prompt.  Used for font locking.
+For my multi-line prompt, this is second line.  For most prompts, this will
+be the only line.  Some shells, like IPython's, already colorize their
+prompt.  We don't want to stomp on them.")
+
+(eval-after-load "shell" '(progn (setq shell-prompt-pattern-for-font-lock dp-shells-prompt-font-lock-regexp)))
+
+(autoload 'dp-comint-mode-hook "dp-shells" "\
+Sets up personal comint mode options.
+Called when shell, inferior-lisp-process, etc. are entered." t nil)
+
+(autoload 'dp-shell-mode-hook "dp-shells" "\
+Sets up shell mode specific options." t nil)
+
+(autoload 'dp-telnet-mode-hook "dp-shells" "\
+Sets up telnet mode specific options." nil nil)
+
+(autoload 'dp-compilation-mode-hook "dp-shells" nil nil nil)
+
+(autoload 'dp-set-current-error-function "dp-shells" nil t nil)
+
+(autoload 'dp-reset-current-error-function "dp-shells" nil t nil)
+
+(autoload 'dp-set-compile-like-mode-error-function "dp-shells" nil nil nil)
+
+(autoload 'dp-next-error "dp-shells" "\
+Find next error in shell buffer.
+This key is globally bound.  It does special things only if it is
+invoked inside a shell type buffer.  In this case, it ensures the
+buffer is in compilation minor-mode and reparses errors if it detects
+that a new command has been sent since the last parse.
+@todo Use/write i/f to `previous-error-p' to make us go backwards." t nil)
+
+(autoload 'dp-cscope-next-thing "dp-shells" nil t nil)
+
+(autoload 'dp-shell-goto-this-error "dp-shells" "\
+Goto the error at point in the shell buffer.  
+This has the fortunate side effect of setting 
+things up so that dp-next-error (\\[dp-next-error]) 
+picks up right after the error we just visited.
+We use this instead of just `compile-goto-error' so that
+we can goto errors anywhere in the buffer, especially 
+earlier in the buffer. `compile-goto-error' has a 
+very (too) forward looking view of parsing error buffers." t nil)
+
+(autoload 'dp-py-shell-hook "dp-shells" "\
+Set up my python shell mode fiddle-faddle." t nil)
+
+(autoload 'dp-gdb-mode-hook "dp-shells" "\
+Set up my gdb shell mode fiddle-faddle." t nil)
+
+(autoload 'dp-ssh-mode-hook "dp-shells" "\
+Set up my ssh shell mode fiddle-faddle." t nil)
+
+(autoload 'dp-python-shell "dp-shells" "\
+Start up python shell and then run my shell-mode-hook since they
+set the key-map after the hook has run." t nil)
+
+(defalias 'dpy 'dp-python-shell)
+
+(autoload 'dp-start-term "dp-shells" "\
+Start up a terminal session, but first set the coding system so eols are 
+handled right." t nil)
+
+(autoload 'dp-cterm "dp-shells" nil t nil)
+
+(autoload 'dp-lterm "dp-shells" nil t nil)
+
+(autoload 'dp-shell0 "dp-shells" "\
+Open/visit a shell buffer.
+First shell is numbered 0 by default.
+ARG is numberp:
+ ARG is >= 0: switch to that numbered shell.
+ ARG is < 0: switch to shell buffer<(abs ARG)>
+ ARG memq `dp-shells-shell<0>-names' shell<0> in other window." t nil)
+
+(autoload 'dp-shell "dp-shells" nil t nil)
+
+(autoload 'dp-shell-other-window "dp-shells" nil t nil)
+
+(autoload 'dp-gdb-old "dp-shells" nil t nil)
+
+(autoload 'dp-gdb "dp-shells" "\
+Extension to gdb that:
+. Prefers the most recently used buffer if it's process is still live,
+. Else it asks for a buffer using a completion list of other gdb's,
+. Else (or if nothing selected above) it starts a new gdb session." t nil)
+
+(autoload 'dp-ssh "dp-shells" "\
+Find/create a shell buf, an existing ssh buf or create a ssh buf." t nil)
+
+(autoload 'dp-ssh-gdb "dp-shells" nil t nil)
+
+;;;***
+
+;;;### (autoloads (dp-dired-sudo-edit dp-sudo-edit-devert dp-sudo-edit-this-file dp-sudo-edit dp-sudo-edit-load-hook) "dp-sudo-edit3" "lisp/dp-sudo-edit3.el")
+
+(defvar dp-sudo-edit-load-hook nil "\
+List of functions to be called after the we're loaded.")
+
+(defface dp-sudo-edit-bg-face '((((class color) (background light)) (:background "thistle2"))) "Face for file being sudo edited." :group 'faces :group 'dp-vars)
+
+(autoload 'dp-sudo-edit "dp-sudo-edit3" "\
+Edit a file by using sudo to cat the file into a buffer and sudo to cp the edited file over the original." t nil)
+
+(defalias 'dse 'dp-sudo-edit)
+
+(autoload 'dp-sudo-edit-this-file "dp-sudo-edit3" "\
+Edit the current buffer w/sudo edit." t nil)
+
+(defalias 'dset 'dp-sudo-edit-this-file)
+
+(defalias 'dse\. 'dp-sudo-edit-this-file)
+
+(autoload 'dp-sudo-edit-devert "dp-sudo-edit3" "\
+Stop sudo-editing this file.  Edit it normally." t nil)
+
+(defalias 'dsed 'dp-sudo-edit-devert)
+
+(autoload 'dp-dired-sudo-edit "dp-sudo-edit3" "\
+In dired, sudo the file named on this line." t nil)
+
+;;;***
+
+;;;### (autoloads (dp-pb-new-entry) "dp-templates" "lisp/dp-templates.el")
+
+(autoload 'dp-pb-new-entry "dp-templates" nil t nil)
+
+;;;***
+
+(provide 'auto-dp-autoloads)

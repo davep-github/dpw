@@ -1,0 +1,299 @@
+Loading dpmacs...
+Loading dp-xemacs-fsf-compat.el...
+Loading dp-xemacs-fsf-compat.el...done
+Loading rsz-minibuf...
+Loading rsz-minibuf...done
+Loading completer...
+Loading completer...done
+Loading dp-vars...
+Loading dp-vars...done
+Loading cus-face...
+Loading cus-face...done
+spec-macs>.home .home-freebsd .FreeBSD .baloo .<
+spec-list>(.home .home-freebsd .FreeBSD .baloo .)<
+Loading ~/lisp/dp-dot-emacs.baloo.el...
+spec-macs (~/lisp/dp-dot-emacs.baloo.el) done.
+Loading ~/lisp/dp-dot-emacs.baloo.el...done
+ffaping...
+Loading dp-keys...
+Loading edmacro...
+Loading edmacro...done
+Loading dp-keys...done
+Loading ~/.go.emacs...
+Loading ~/.go.emacs...done
+Loading ~/etc/mailiases.el...
+Loading mail-abbrevs...
+Loading mail-abbrevs...done
+Parsing /home/davep/.mailrc...
+Parsing /home/davep/.mailrc... done
+Loading ~/etc/mailiases.el...done
+Loading ~/.abbrev_defs...
+Loading ~/.abbrev_defs...done
+Loading dp-supercite...
+Loading dp-supercite...done
+Loading dp-mew...
+dp-mew: mew loaded.
+Loading dp-mew...done
+using gnuserv
+Loading icomplete...
+Loading icomplete...done
+Loading dpmacs...done
+Loading time...
+Loading time...done
+Gnuserv process exited; restart with `M-x gnuserv-start'
+file-name>~/lisp/efs-bug.el<
+Loading efs-cu...
+Loading efs-cu...done
+Wrote /home/davep/lisp/efs-bug.el
+Wrote /home/davep/lisp/efs-bug.el
+defvar treated as defconst
+chomped-line
+Wrote /home/davep/lisp/efs-bug.el
+efs-process-handle-line
+efs-process-filter
+No preceding item in file-name-history
+Quit
+Quit
+efs
+defvar treated as defconst
+chomped-line
+efs-process-filter
+efs-process-handle-line
+Loading passwd...
+Loading passwd...done
+dp-comint-mode-hook, mode-name>Comint<, bn>*ftp davep@sybil*<
+Opening FTP connection to sybil...
+ephl 4
+chomped><
+Logging in as user davep...
+ephl 4
+chomped>>ftp> quote user "davep"<<
+ephl 4
+chomped>>ftp> quote pass ^inarms<<
+Logging in as user davep...done
+ephl 4
+chomped><
+Getting pwd...
+ephl 4
+chomped><
+Getting pwd...done
+ephl 4
+chomped>>ftp> quote syst<<
+CWD'ing to /davep@sybil:/curly/udir1/davep/.bashrc/...
+ephl 6
+ephl 6
+CWD'ing to /davep@sybil:/curly/udir1/davep/...
+ephl 4
+chomped>>ftp> quote cwd /curly/udir1/davep/.bashrc/<>ftp> quote site idle<<
+CWD'ing to /davep@sybil:/curly/udir1/davep/...done
+Listing /davep@sybil:/curly/udir1/davep/...
+ephl 1
+ephl 4
+chomped>>ftp> ls "-al" /tmp/davep/efsbrQ96i<<
+Listing /davep@sybil:/curly/udir1/davep/...done
+CWD'ing to /davep@sybil:/curly/udir1/davep/.rc/...
+ephl 4
+chomped><
+CWD'ing to /davep@sybil:/curly/udir1/davep/.rc/...done
+Listing /davep@sybil:/curly/udir1/davep/.rc/...
+ephl 1
+ephl 4
+chomped>>ftp> ls "-al" /tmp/davep/efsbrQ96i<<
+Listing /davep@sybil:/curly/udir1/davep/.rc/...done
+ephl 1
+ephl 1a
+Retrieving /davep@sybil:/curly/udir1/davep/.bashrc...
+ephl 1
+ephl 4
+chomped><
+Retrieving /davep@sybil:/curly/udir1/davep/.bashrc...done
+Loading sh-script...
+Loading sh-script...done
+ephl 3
+ephl 4
+chomped>>ftp> quote mdtm /curly/udir1/davep/.bashrc<<
+
+
+================================================================
+Gruss bug team:
+
+Hi,  
+I sent a bug report on this a few days ago and have since had a chance
+to investigate a bit more.
+
+It is definitely a timing problem.  In this trace you see that the
+hash command is sent before the ftp program has issued the next
+prompt:
+hash
+ftp> hash
+
+efs-process-filter matches "^ftp> " and chews it off.  Then
+efs-process-handle-line matches "^[Hh]ash" and thinks the command is
+done.  It isn't and now we're out of sync.  The hash mark size is
+never determined, and the initial pwd command sees the hash command's
+output, gets confused and errors out.
+If I put messages inside the "^ftp>" chewer, it slows things enough to
+"fix" the bug, so the timing is pretty close.
+It seems it would be good, perhaps, to go into a state that waits for
+the ftp prompt after the required response text is accumulated by the
+process filter.  This would help to keep things in sync.
+I've seen other out of sync sequences while looking for this, so it
+could be responsible for other errors, too.
+
+If you need any more info, let me know.
+
+regards,
+
+davep
+
+
+Emacs  : XEmacs 21.1 (patch 14) "Cuyahoga Valley" [Lucid] (i386--freebsd, Mule) of Sun Sep  2 2001 on baloo.ne.mediaone.net
+Package: efs
+
+efs believes that the host type of sybil is unknown.
+
+Bug occurred during efs-guess-host-type.
+
+Contents of *ftp davep@sybil*:
+Please edit sensitive or irrelevant information.
+================================================
+
+open sybil
+open sybil
+Connected to sybil.crl.dec.com.
+220 ProFTPD 1.2.2rc1 Server (ProFTPD Default Installation) [sybil.crl.dec.com]
+quote user "davep"
+ftp> quote user "davep"
+331 Password required for davep.
+quote pass  Turtle Power!
+ftp> quote pass password
+230 User davep logged in.
+hash
+ftp> hash
+quote pwd
+Hash mark printing on (1024 bytes/hash mark).
+ftp> quote pwd
+257 "/curly/udir1/davep" is current directory.
+ftp> 
+
+current state:
+==============
+(setq
+ efs-cu-version "1.20pre2/1.12"
+ efs-defun-version "1.20pre2/1.1"
+ efs-dump-version "1.20pre2/1.2"
+ efs-fnh-version "1.20pre2/1.4"
+ efs-netrc-version "1.20pre2/1.2"
+ efs-ovwrt-version "1.20pre2/1.3"
+ efs-report-version "1.20pre2/1.10"
+ efs-version "1.20pre2/1.63"
+ efs-x19.15-version "1.20pre2/1.2"
+ efs-36-bit-binary-file-name-regexp nil
+ efs-anonymous-umask nil
+ efs-auto-save 0
+ efs-auto-save-remotely nil
+ efs-backup-by-copying nil
+ efs-binary-file-host-regexp nil
+ efs-binary-file-name-regexp "\\.\\([zZ]\\|t?gz\\|lzh\\|arc\\|zip\\|zoo\\|ta[rz]\\|dvi\\|sit\\|ps\\|elc\\|gif\\|Z-part-..\\|tpz\\|exe\\|[jm]pg\\|TZ[a-z]?\\|lib\\)\\(~\\|~[0-9]+~\\)?$\\|\\.\\(ARC\\|ELC\\|TAGS\\|EXE\\|ZIP\\|DVI|ZOO\\|GIF\\|T?GZ\\|[JM]PG\\)\\([.#;][0-9]+\\)?$"
+ efs-buffer-name-case nil
+ efs-compute-remote-buffer-file-truename nil
+ efs-debug-ftp-connection nil
+ efs-ding-on-chmod-failure t
+ efs-ding-on-umask-failure t
+ efs-disable-netrc-security-check nil
+ efs-expire-ftp-buffers t
+ efs-ftp-buffer-expire-time nil
+ efs-ftp-program-args '("-i" "-n" "-g" "-v")
+ efs-ftp-prompt-regexp "^\\(ftp\\|Ftp\\|FTP\\)> *"
+ efs-gateway-ftp-prompt-regexp "^\\(ftp\\|Ftp\\|FTP\\)> *"
+ efs-gateway-hash-mark-size nil
+ efs-gateway-incoming-binary-hm-size nil
+ efs-generate-anonymous-password t
+ efs-hash-mark-size nil
+ efs-high-security-hosts nil
+ efs-incoming-binary-hm-size nil
+ efs-local-apollo-unix nil
+ efs-ls-cache-max 5
+ efs-make-backup-files '(unix sysV-unix bsd-unix next-unix apollo-unix
+			 dumb-unix dumb-apollo-unix super-dumb-unix)
+ efs-max-ftp-buffer-size 3000
+ efs-maximize-idle nil
+ efs-message-interval 0
+ efs-nlist-cmd "ls"
+ efs-nslookup-on-connect nil
+ efs-nslookup-program "nslookup"
+ efs-prompt-for-transfer-type nil
+ efs-pty-check-retry-time 5
+ efs-pty-check-threshold 1000
+ efs-quote-local-paths nil
+ efs-retry-time 5
+ efs-root-umask nil
+ efs-send-hash t
+ efs-send-progress-off nil
+ efs-set-modtimes-synchronously nil
+ efs-short-circuit nil
+ efs-short-circuit-to-remote-root nil
+ efs-slash-local-paths nil
+ efs-suppress-abort-recursive-edit-and-then nil
+ efs-text-file-name-regexp ".*"
+ efs-treat-crlf-as-nl nil
+ efs-umask nil
+ efs-use-passive-mode nil
+ efs-verbose t
+ efs-verify-anonymous-modtime nil
+ efs-verify-modtime-host-regexp ".*"
+ efs-ftp-program-name "ftp"
+ efs-ftp-program-args '("-i" "-n" "-g" "-v")
+ efs-local-host-regexp ".*"
+ efs-ftp-local-host-regexp ".*"
+ efs-gateway-host nil
+ efs-gateway-type nil
+ reporter-version "3.35"
+ features '(reporter efs-report passwd efs-x19\.15 efs-fnh efs-ovwrt efs-netrc
+	    efs-defun efs efs-dump efs-cu time icomplete xcscope dp-shells
+	    dp-hooks gnuserv dp-mail mail-abbrevs edmacro ffap sendmail
+	    font-lock dpmisc metamail tags etags comint ring cc-mode cc-align
+	    cc-cmds cc-engine cc-styles cc-langs cc-vars wid-edit cus-face
+	    cc-menus imenu cc-defs compile dp-xemacs completer rsz-minibuf
+	    func-menu dp-compat xemacs-devel-autoloads xemacs-base-autoloads
+	    w3-autoloads view-process-autoloads vc-autoloads time-autoloads
+	    text-modes-autoloads texinfo-autoloads supercite-autoloads
+	    strokes-autoloads speedbar-autoloads sounds-wav-autoloads
+	    sounds-au-autoloads slider-autoloads sh-script-autoloads
+	    sgml-autoloads semantic-autoloads psgml-autoloads
+	    ps-print-nomule-autoloads prog-modes-autoloads pcomplete-autoloads
+	    pcl-cvs-autoloads os-utils-autoloads net-utils-autoloads
+	    misc-games-autoloads mine-autoloads mh-e-autoloads
+	    mailcrypt-autoloads mail-lib-autoloads jde-autoloads
+	    ispell-autoloads ilisp-autoloads igrep-autoloads
+	    hm--html-menus-autoloads gnats-autoloads games-autoloads
+	    fsf-compat-autoloads frame-icon-autoloads footnote-autoloads
+	    eterm-autoloads eshell-autoloads emerge-autoloads eieio-autoloads
+	    efs-autoloads edit-utils-autoloads ediff-autoloads
+	    edebug-autoloads dired-autoloads dictionary-autoloads
+	    debug-autoloads cc-mode-autoloads calendar-autoloads
+	    calc-autoloads c-support-autoloads build-autoloads
+	    auctex-autoloads apel-autoloads skk-autoloads mule-base-autoloads
+	    lookup-autoloads locale-autoloads elib-autoloads egg-its-autoloads
+	    Standard-autoloads loadhist auto-show fontl-hooks x-iso8859-1
+	    menubar-items x-menubar mouse mode-motion ccl mule-help itimer
+	    auto-save lisp-mode easymenu iso8859-1 page buff-menu lib-complete
+	    derived frame text-props cus-start custom widget cl-extra mini-cl
+	    cl cl-19 packages backquote very-early-lisp file-coding mule
+	    lucid-scrollbars cut-buffer lucid-menubars xface athena-dialogs x
+	    tty-frames tty toolbar native-sound scrollbar unix-processes
+	    multicast network-streams subprocesses menubar berkeley-db md5
+	    xemacs xim tiff png gif jpeg xpm lisp-float-type berkeley-unix
+	    dialog devices window-system c-balloon-help)
+ )
+
+--
+Yield to Temptation ... it may not pass your way again.
+		-- Lazarus Long, "Time Enough for Love"
+
+
+
+
+
+
+

@@ -1,0 +1,17 @@
+a=128x128 s=128x128 ==> 1 item
+NB: only one stl routine (one rb tree allocation)
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total
+ time   seconds   seconds    calls  Ts/call  Ts/call  name
+ 98.10      1.55     1.55                             do_comp(int const&, int const&, DataVal_t<int> const&, DataVal_t<int>&, DataVal_t<int> const&, DataVal_t<int> const&, DataVal_t<int> const&, DataVal_t<int> const&)
+  0.63      1.56     0.01                             avg_task_step_routine(StepId_t const&)
+  0.63      1.57     0.01                             BaseTuple_t<int>::BaseTuple_t[not-in-charge](BaseTuple_t<int> const&)
+  0.63      1.58     0.01                             std::__simple_alloc<std::_Rb_tree_node<IdKey_t<StepId_t, Task_t> >, std::__default_alloc_template<(bool)1, (int)0> >::deallocate(std::_Rb_tree_node<IdKey_t<StepId_t, Task_t> >*, unsigned)
+
+
+
+;;; Local Variables: ***
+;;; mode:text ***
+;;; truncate-lines:t ***
+;;; eval:(set-frame-width (selected-frame) 120) ***
+;;; End: ***

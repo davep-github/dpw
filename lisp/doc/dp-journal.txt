@@ -1,0 +1,47 @@
+
+Keep a journal of things done, discovered, to do, etc. in a jounral.
+Journal will be split into per month files in `dnf' name format.
+
+A journal will be multi-threaded on multiple topics.
+journal-mode will allow selective display of topics.
+
+A separate file will cantain topic definitions, with a description and
+keywords.  There will be operations on the topics like:
+find-topic-with-keywords, define-topic, etc.
+
+Starting a new topic will prompt for a topic with completion for
+existing topic.  Topic file will look like a journal file with
+keyword: value lines.  
+
+Timestamp:
+
+========================
+2002-01-12T10:52:25
+<topic-name>
+--
+
+Timestamps optionally declare a topic beginning.
+M-x nt -------> new-topic, prompt with completion for topic.  Insert a
+timestamp/topic header
+
+
+Should show-topic set a string which is used in next-in-topic?
+If not set, then extract current topic for next-in-topic.
+
+
+Searches
+--------
+They are done two ways, by an re embedded in a larger re that finds
+topics:
+"================\n<timestamp>\n\\(<topic-re>\\)\n--\n"a
+
+The other way is to find all topic headers:
+"================\n<timestamp>\n\\(.+\\)\n--\n"a
+
+And then apply another re to the matched topic.
+The specified re's have slightly different semantics.
+Case two has an implied .*<re>.* around it, whereas
+Case one has an implied ^<re>$ around it.
+
+
+

@@ -1,0 +1,11 @@
+--- a/b/semantic-grammar.el	2007-08-06 20:23:24.000000000 -0400
++++ cedet-1.0pre4/semantic/semantic-grammar.el	2007-08-06 20:23:54.000000000 -0400
+@@ -993,7 +993,7 @@
+         ;; Specific file argument
+         (or (semantic-grammar-batch-build-one-package arg)
+             (setq status 1))))
+-    (kill-emacs status)
++;;    (kill-emacs status)
+     ))
+ 
+ ;;;;

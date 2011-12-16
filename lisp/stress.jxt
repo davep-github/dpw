@@ -1,0 +1,5909 @@
+				   
+========================
+Saturday January 12 2002
+--
+
+========================
+2002-01-20T11:45:37
+journal elisp devel
+--
+learn to spell journal.
+
+========================
+2002-01-20T11:53:56
+--
+just a timestamp.  acts like ordinary text.
+Belongs to preceding topic
+
+========================
+2002-01-20T11:46:00
+diet
+--
+find good websites/programs for dietary values.
+
+========================
+2002-01-20T11:46:22
+journal elisp devel
+--
+finish this and hope it is useful
+
+========================
+2002-01-20T12:28:13
+another topic with diet in it
+--
+
+========================
+2002-01-20T15:16:58
+diet
+--
+more diet info
+
+========================
+2002-01-20T12:28:42
+goober
+--
+see also <<goober>>
+========================
+2002-01-20T20:10:48
+a string w/jo in it
+--
+
+
+========================
+2002-01-20T12:30:19
+journal elisp devel
+--
+things are moving along.
+
+========================
+2002-01-20T12:34:50
+a topic with spaces
+--
+this requires C-q<space> for spaces.
+
+========================
+2002-01-20T17:50:29
+adding-major-mode
+--
+
+d
+d
+d
+d
+d
+========================
+2002-01-22T21:43:43
+<<done:2002-01-22T23:03:48>>todo: add completion of todos.
+--
+
+========================
+2002-01-22T23:18:19
+todo: make sure todos don't get into journal-topics
+--
+
+========================
+2002-01-22T22:55:41
+journal elisp devel
+--
+see also <<laadeedaa>>
+see file <<dp-journal.el>>
+
+========================
+2002-01-22T23:19:10
+another topic
+--
+;;
+;; Set up the dictionary interface for emacs.
+;; We may want to load this from dpmacs
+;; The autoloads are already done by xemacs' auto-autoload
+;;  in the package system.  yea packages.
+;;
+
+(autoload 'dictionary-search "dictionary"
+  "Ask for a word and search it in all dictionaries" t)
+(autoload 'dictionary-match-words "dictionary"
+  "Ask for a word and search all matching words in the dictionaries" t)
+(autoload 'dictionary-lookup-definition "dictionary"
+  "Unconditionally lookup the word at point." t)
+(autoload 'dictionary "dictionary"
+  "Create a new dictionary buffer" t)
+(autoload 'dictionary-mouse-popup-matching-words "dictionary"
+  "Display entries matching the word at the cursor" t)
+(autoload 'dictionary-popup-matching-words "dictionary"
+  "Display entries matching the word at the point" t)
+(autoload 'dictionary-tooltip-mode "dictionary"
+  "Display tooltips for the current word" t)
+(autoload 'global-dictionary-tooltip-mode "dictionary"
+  "Enable/disable dictionary-tooltip-mode for all buffers" t)
+
+;; key bindings
+(global-set-key "\C-cs" 'dictionary-search)
+(global-set-key "\C-cm" 'dictionary-match-words)
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+################################################################
+###
+### Sample /usr/local/lib/im/SiteConfig
+###
+### Syntax::
+###	key=value
+###
+###  * "key=value" is equivalent to "--key=value" style command option.
+###  * "key" must start at the beginning of the line.
+###  * "=" must follow after "key" without white spaces.
+###  * White spaces are allowed between "=" and "value".
+###  * ":" can be used instead of "=".
+###  * Characters after "#" are ignored.
+###
+### The following examples are all the same:
+###	key=value
+###	key=  value
+###	key:value
+###     key:  value
+###
+### $variable will be expanded.
+### '~' will be expanded.
+###
+
+##
+## Site information
+##
+FromDomain=who.net	# domain of your mail address
+ToDomain=localhost	# domain when domain part is omitted
+
+#Org=The Mew Organization	# for news posting
+
+##
+## Default global parameters
+##
+
+### Directories (relative to ~/)
+#MailDir=Mail
+#NewsDir=News			# for saved news
+
+### Folders in $MailDir
+#InboxFolder=+inbox		# default destination of imget
+#DraftFolder=+draft
+#TrashFolder=+trash		# default destination of message removal in Mew
+
+### Folder style in $NewsDir (saved news articles)
+#PreserveDot=off		# off: /news/group/, on: /news.group/
+
+### Mode for creation
+#FolderMode=0700
+#MsgMode=0600
+
+### To keep state of IM commands (CurrentFolder, etc.)
+#ContextFile=Context		# relative to ~/.im/
+
+
+##
+## Default settings
+##
+
+## Address Book
+#AddrBookFile=Addrbook		# relative to ~/.im/
+## Mail address aliases
+#AliasesFile=Aliases		# relative to ~/.im/
+## PetName: mail address aliases for displaying
+#PetnameFile=Petnames		# relative to ~/.im/
+
+## Message-ID database
+#MsgDBFile=msgiddb		# location (relative to ~/.im/)
+#MsgDBType=DB			# type of database (DB, NDBM, SDBM)
+
+## To call user defined subroutines (relative to ~/.im/)
+#GetChkSbr=getchk.sbr		# hooks for imget
+#GetSbr=get.sbr			# hooks for imget
+#ScanSbr=scan.sbr		# hooks for imget/imls
+
+## Working folders
+#Src=$InboxFolder		# default source of most commands
+#Imrm.Src=$TrashFolder		# default source for message cleanups
+
+## imget/imls specific
+#ScanSbr=scan.sbr		# hook for special processing (rel. to ~/.im/)
+#Form=%+5n %m%d %-14A %S || %b	# default format for scanning
+#AllowCRLF=no			# saved messages may contain CRLF (DOS style)
+#Width=80			# default width for scanning
+#JisSafe=on			# escape seq. of JIS char. should be managed
+#Indent=2			# indent step for threading
+
+## Servers
+#Smtpservers=localhost		# default server for SMTP
+EmgSmtpSvrs=localhost		# SMTP server just for error return
+#NntpServers=localhost		# default server for NNTP
+
+## imget specific
+#GetSbr=get.sbr			# hook for special processing (rel. to ~/.im/)
+#Imget.Src=local		# default source of imget (local mailbox)
+#lock=flock			# locking style of local mailbox
+#rpath=append			# conversion of UNIX From into Return-Path:
+#PopHistory=pophist-{POPSERVERID}	# to save last state (relative to ~/.im/)
+#NntpHistory=newshist		# to save last state (relative to ~/.im/)
+#MBoxStyle=qmail		# if folder style mbox of qmail is used
+#Imget.Src=local:${HOME}/MailDir# in case of qmail
+UseCL=no		# Use value of Content-Length header
+NoSync=no		# Do not need fsync(2) on writing file
+
+#Imget.Src=pop
+#PopAccount=/APOP@localhost	# account info for POP access
+#PopAccount=/APOP:user@host	# account info with user name
+#PopAccount=/APOP:user@host/110	# account info with user name and port number
+#Keep=7				# preserve read messages on server
+#ProtoKeep=UIDL			# how to know which message is unread
+				# (UIDL, LAST, STATUS, MSGID)
+#IgnorePostPet=yes		# leave messages for PostPet on mbox (POP only)
+
+#Imget.Src=imap
+#ImapAccount=/AUTH@localhost	# account info for IMAP access
+#ImapAccount=/AUTH:user@host	# account info with user name
+#HttpProxy=proxy-server:8080	# proxy server for HTTP access
+#NoProxy=http://.*my.domain/	# URL regex not to use Proxy server
+#UsePwAgent=yes			# use password agent
+#PwAgentPort=6543		# Port to connect pwagent with TCP/IP
+				# (Insecure for multi-user system!)
+				# 0 to use UNIX domain socket (more secure)
+
+# be careful on security if you wish to use PwFiles!
+#UsePwFiles=yes			# use password files
+#PwFiles=password		# password files (relative to ~/.im/)
+
+## imput specific
+#FccDir=$MailDir		# directory for FCC folders
+#QueueDir=queue			# directory for to store messages to be sent
+#MsgIdDomain=${HOST}		# if you want to use FQDN of dispatching host
+#ObeyMTAdomain=yes		# do not append domainpart to addresses by imput
+#NoMsgIdForNews=yes		# do not insert Message-Id: when posting as news
+#NewsGMTdate=yes		# use GMT for Date: when posting as news
+#UseLines=yes			# generate Lines header line
+#JPheader=yes			# encode ISO-2022-JP with RFC2047
+#Defcode=EUC			# default code in case no way to judge SJIS/EUCj
+#JPconv=yes			# convert SJIS/EUCj to ISO-2022-JP
+#NoHdrFolding=yes		# do not fold long header line when encoding
+#HdrQEncoding=yes		# use Q-encoding to encode ISO-2022-JP
+#NameInComment=yes		# yes: (Full Name) Addr, no: Full Name <Addr>
+#Lines=3000			# unit to split a message to partial
+#Annotate=yes			# annotate on parent messages (MsgDB required)
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+# File generated by xf86config.
+
+#
+# Copyright (c) 1995 by The XFree86 Project, Inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+# THE XFREE86 PROJECT BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+# OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+# 
+# Except as contained in this notice, the name of the XFree86 Project shall
+# not be used in advertising or otherwise to promote the sale, use or other
+# dealings in this Software without prior written authorization from the
+# XFree86 Project.
+#
+
+# **********************************************************************
+# Refer to the XF86Config(4/5) man page for details about the format of 
+# this file.
+# **********************************************************************
+
+# **********************************************************************
+# Files section.  This allows default font and rgb paths to be set
+# **********************************************************************
+
+Section "Files"
+
+# The location of the RGB database.  Note, this is the name of the
+# file minus the extension (like ".txt" or ".db").  There is normally
+# no need to change the default.
+
+    RgbPath	"/usr/X11R6/lib/X11/rgb"
+
+# Multiple FontPath entries are allowed (which are concatenated together),
+# as well as specifying multiple comma-separated entries in one FontPath
+# command (or a combination of both methods)
+# 
+# If you don't have a floating point coprocessor and emacs, Mosaic or other
+# programs take long to start up, try moving the Type1 and Speedo directory
+# to the end of this list (or comment them out).
+# 
+
+    FontPath   "/usr/X11R6/lib/X11/fonts/local/"
+    FontPath   "/usr/X11R6/lib/X11/fonts/misc/"
+    FontPath   "/usr/X11R6/lib/X11/fonts/75dpi/:unscaled"
+    FontPath   "/usr/X11R6/lib/X11/fonts/100dpi/:unscaled"
+    FontPath   "/usr/X11R6/lib/X11/fonts/Type1/"
+    FontPath   "/usr/X11R6/lib/X11/fonts/Speedo/"
+    FontPath   "/usr/X11R6/lib/X11/fonts/75dpi/"
+    FontPath   "/usr/X11R6/lib/X11/fonts/100dpi/"
+
+# For OSs that support Dynamically loaded modules, ModulePath can be
+# used to set a search path for the modules.  This is currently supported
+# for Linux ELF, FreeBSD 2.x and NetBSD 1.x.  The default path is shown
+# here.
+
+#    ModulePath "/usr/X11R6/lib/modules"
+
+EndSection
+
+# **********************************************************************
+# Module section -- this is an optional section which is used to specify
+# which dynamically loadable modules to load.  Dynamically loadable
+# modules are currently supported only for Linux ELF, FreeBSD 2.x
+# and NetBSD 1.x.  Currently, dynamically loadable modules are used
+# only for some extended input (XInput) device drivers.
+# **********************************************************************
+#
+# Section "Module"
+#
+# This loads the module for the Joystick driver
+#
+# Load "xf86Jstk.so"
+# 
+# EndSection
+
+# **********************************************************************
+# Server flags section.
+# **********************************************************************
+
+Section "ServerFlags"
+
+# Uncomment this to cause a core dump at the spot where a signal is 
+# received.  This may leave the console in an unusable state, but may
+# provide a better stack trace in the core dump to aid in debugging
+
+#    NoTrapSignals
+
+# Uncomment this to disable the <Crtl><Alt><BS> server abort sequence
+# This allows clients to receive this key event.
+
+#    DontZap
+
+# Uncomment this to disable the <Crtl><Alt><KP_+>/<KP_-> mode switching
+# sequences.  This allows clients to receive these key events.
+
+#    DontZoom
+
+# Uncomment this to disable tuning with the xvidtune client. With
+# it the client can still run and fetch card and monitor attributes,
+# but it will not be allowed to change them. If it tries it will
+# receive a protocol error.
+
+#       DisableVidModeExtension
+
+# Uncomment this to enable the use of a non-local xvidtune client. 
+
+#       AllowNonLocalXvidtune
+
+# Uncomment this to disable dynamically modifying the input device
+# (mouse and keyboard) settings. 
+
+#       DisableModInDev
+
+# Uncomment this to enable the use of a non-local client to
+# change the keyboard or mouse settings (currently only xset).
+
+#       AllowNonLocalModInDev
+
+EndSection
+
+# **********************************************************************
+# Input devices
+# **********************************************************************
+
+# **********************************************************************
+# Keyboard section
+# **********************************************************************
+
+Section "Keyboard"
+
+    Protocol	"Standard"
+
+# when using XQUEUE, comment out the above line, and uncomment the
+# following line
+
+#    Protocol	"Xqueue"
+
+    AutoRepeat	500 5
+# Let the server do the NumLock processing.  This should only be required
+# when using pre-R6 clients
+#    ServerNumLock
+
+# Specify which keyboard LEDs can be user-controlled (eg, with xset(1))
+#    Xleds      1 2 3
+
+# To set the LeftAlt to Meta, RightAlt key to ModeShift, 
+# RightCtl key to Compose, and ScrollLock key to ModeLock:
+
+#    LeftAlt     Meta
+#    RightAlt    ModeShift
+#    RightCtl    Compose
+#    ScrollLock  ModeLock
+
+# To disable the XKEYBOARD extension, uncomment XkbDisable.
+
+    XkbDisable
+
+# To customise the XKB settings to suit your keyboard, modify the
+# lines below (which are the defaults).  For example, for a non-U.S.
+# keyboard, you will probably want to use:
+#    XkbModel    "pc102"
+# If you have a US Microsoft Natural keyboard, you can use:
+#    XkbModel    "microsoft"
+#
+# Then to change the language, change the Layout setting.
+# For example, a german layout can be obtained with:
+#    XkbLayout   "de"
+# or:
+#    XkbLayout   "de"
+#    XkbVariant  "nodeadkeys"
+#
+# If you'd like to switch the positions of your capslock and
+# control keys, use:
+#    XkbOptions  "ctrl:swapcaps"
+
+# These are the default XKB settings for XFree86
+#    XkbRules    "xfree86"
+#    XkbModel    "pc101"
+#    XkbLayout   "us"
+#    XkbVariant  ""
+#    XkbOptions  ""
+
+    XkbKeymap   "xfree86(us)"
+
+
+EndSection
+
+
+# **********************************************************************
+# Pointer section
+# **********************************************************************
+
+Section "Pointer"
+    Protocol    "MouseMan"
+    Device      "/dev/mouse"
+
+# When using XQUEUE, comment out the above two lines, and uncomment
+# the following line.
+
+#    Protocol	"Xqueue"
+
+# Baudrate and SampleRate are only for some Logitech mice
+# or for the AceCad tablets which require 9600 baud
+
+#    BaudRate	9600
+#    SampleRate	150
+
+# Emulate3Buttons is an option for 2-button Microsoft mice
+# Emulate3Timeout is the timeout in milliseconds (default is 50ms)
+
+#    Emulate3Buttons
+#    Emulate3Timeout    50
+
+# ChordMiddle is an option for some 3-button Logitech mice
+
+#    ChordMiddle
+
+EndSection
+
+
+# **********************************************************************
+# Xinput section -- this is optional and is required only if you
+# are using extended input devices.  This is for example only.  Refer
+# to the XF86Config man page for a description of the options.
+# **********************************************************************
+#
+# Section "Xinput" 
+#    SubSection "WacomStylus"
+#        Port "/dev/ttyS1"
+#        DeviceName "Wacom"
+#    EndSubSection
+#    SubSection "WacomCursor"
+#        Port "/dev/ttyS1"
+#    EndSubSection
+#    SubSection "WacomEraser"
+#        Port "/dev/ttyS1"
+#    EndSubSection
+#
+#    SubSection "Elographics"
+#        Port "/dev/ttyS1"
+#        DeviceName "Elo"
+#        MinimumXPosition 300
+#        MaximumXPosition 3500
+#        MinimumYPosition 300
+#        MaximumYPosition 3500
+#        Screen 0
+#        UntouchDelay 10
+#        ReportDelay 10
+#    EndSubSection
+#
+#    SubSection "Joystick"
+#        Port "/dev/joy0"
+#        DeviceName "Joystick"
+#        TimeOut 10
+#        MinimumXPosition 100
+#        MaximumXPosition 1300
+#        MinimumYPosition 100
+#        MaximumYPosition 1100
+#        # CenterX 700
+#        # CenterY 600
+#        Delta 20
+#    EndSubSection
+#
+# The Mouse Subsection contains the same type of entries as the
+# standard Pointer Section (see above), with the addition of the
+# DeviceName entry.
+#
+#    SubSection "Mouse" 
+#        Port "/dev/mouse2"
+#        DeviceName "Second Mouse"
+#        Protocol "Logitech"
+#    EndSubSection
+# EndSection
+
+# **********************************************************************
+# Monitor section
+# **********************************************************************
+
+# Any number of monitor sections may be present
+
+Section "Monitor"
+
+    Identifier  "DIG"
+    VendorName  "digital"
+    ModelName   "17in"
+
+# HorizSync is in kHz unless units are specified.
+# HorizSync may be a comma separated list of discrete values, or a
+# comma separated list of ranges of values.
+# NOTE: THE VALUES HERE ARE EXAMPLES ONLY.  REFER TO YOUR MONITOR'S
+# USER MANUAL FOR THE CORRECT NUMBERS.
+
+    HorizSync   31.5 - 64.3
+
+#    HorizSync	30-64         # multisync
+#    HorizSync	31.5, 35.2    # multiple fixed sync frequencies
+#    HorizSync	15-25, 30-50  # multiple ranges of sync frequencies
+
+# VertRefresh is in Hz unless units are specified.
+# VertRefresh may be a comma separated list of discrete values, or a
+# comma separated list of ranges of values.
+# NOTE: THE VALUES HERE ARE EXAMPLES ONLY.  REFER TO YOUR MONITOR'S
+# USER MANUAL FOR THE CORRECT NUMBERS.
+
+    VertRefresh 50-100
+
+# Modes can be specified in two formats.  A compact one-line format, or
+# a multi-line format.
+
+# These two are equivalent
+
+#    ModeLine "1024x768i" 45 1024 1048 1208 1264 768 776 784 817 Interlace
+
+#    Mode "1024x768i"
+#        DotClock	45
+#        HTimings	1024 1048 1208 1264
+#        VTimings	768 776 784 817
+#        Flags		"Interlace"
+#    EndMode
+
+# This is a set of standard mode timings. Modes that are out of monitor spec
+# are automatically deleted by the server (provided the HorizSync and
+# VertRefresh lines are correct), so there's no immediate need to
+# delete mode timings (unless particular mode timings don't work on your
+# monitor). With these modes, the best standard mode that your monitor
+# and video card can support for a given resolution is automatically
+# used.
+
+# 640x400 @ 70 Hz, 31.5 kHz hsync
+Modeline "640x400"     25.175 640  664  760  800   400  409  411  450
+# 640x480 @ 60 Hz, 31.5 kHz hsync
+Modeline "640x480"     25.175 640  664  760  800   480  491  493  525
+# 800x600 @ 56 Hz, 35.15 kHz hsync
+ModeLine "800x600"     36     800  824  896 1024   600  601  603  625
+# 1024x768 @ 87 Hz interlaced, 35.5 kHz hsync
+Modeline "1024x768"    44.9  1024 1048 1208 1264   768  776  784  817 Interlace
+
+# 640x400 @ 85 Hz, 37.86 kHz hsync
+Modeline "640x400"     31.5   640  672 736   832   400  401  404  445 -HSync +VSync
+# 640x480 @ 72 Hz, 36.5 kHz hsync
+Modeline "640x480"     31.5   640  680  720  864   480  488  491  521
+# 640x480 @ 75 Hz, 37.50 kHz hsync
+ModeLine  "640x480"    31.5   640  656  720  840   480  481  484  500 -HSync -VSync
+# 800x600 @ 60 Hz, 37.8 kHz hsync
+Modeline "800x600"     40     800  840  968 1056   600  601  605  628 +hsync +vsync
+
+# 640x480 @ 85 Hz, 43.27 kHz hsync
+Modeline "640x400"     36     640  696  752  832   480  481  484  509 -HSync -VSync
+# 1152x864 @ 89 Hz interlaced, 44 kHz hsync
+ModeLine "1152x864"    65    1152 1168 1384 1480   864  865  875  985 Interlace
+
+# 800x600 @ 72 Hz, 48.0 kHz hsync
+Modeline "800x600"     50     800  856  976 1040   600  637  643  666 +hsync +vsync
+# 1024x768 @ 60 Hz, 48.4 kHz hsync
+Modeline "1024x768"    65    1024 1032 1176 1344   768  771  777  806 -hsync -vsync
+
+# 640x480 @ 100 Hz, 53.01 kHz hsync
+Modeline "640x480"     45.8   640  672  768  864   480  488  494  530 -HSync -VSync
+# 1152x864 @ 60 Hz, 53.5 kHz hsync
+Modeline  "1152x864"   89.9  1152 1216 1472 1680   864  868  876  892 -HSync -VSync
+# 800x600 @ 85 Hz, 55.84 kHz hsync
+Modeline  "800x600"    60.75  800  864  928 1088   600  616  621  657 -HSync -VSync
+
+# 1024x768 @ 70 Hz, 56.5 kHz hsync
+Modeline "1024x768"    75    1024 1048 1184 1328   768  771  777  806 -hsync -vsync
+# 1280x1024 @ 87 Hz interlaced, 51 kHz hsync
+Modeline "1280x1024"   80    1280 1296 1512 1568  1024 1025 1037 1165 Interlace
+
+# 800x600 @ 100 Hz, 64.02 kHz hsync
+Modeline  "800x600"    69.65  800  864  928 1088   600  604  610  640 -HSync -VSync
+# 1024x768 @ 76 Hz, 62.5 kHz hsync
+Modeline "1024x768"    85    1024 1032 1152 1360   768  784  787  823
+# 1152x864 @ 70 Hz, 62.4 kHz hsync
+Modeline  "1152x864"   92    1152 1208 1368 1474   864  865  875  895
+# 1280x1024 @ 61 Hz, 64.2 kHz hsync
+Modeline "1280x1024"  110    1280 1328 1512 1712  1024 1025 1028 1054
+
+# 1024x768 @ 85 Hz, 70.24 kHz hsync
+Modeline "1024x768"   98.9  1024 1056 1216 1408   768 782 788 822 -HSync -VSync
+# 1152x864 @ 78 Hz, 70.8 kHz hsync
+Modeline "1152x864"   110   1152 1240 1324 1552   864  864  876  908
+
+# 1280x1024 @ 70 Hz, 74.59 kHz hsync
+Modeline "1280x1024"  126.5 1280 1312 1472 1696  1024 1032 1040 1068 -HSync -VSync
+# 1600x1200 @ 60Hz, 75.00 kHz hsync
+Modeline "1600x1200"  162   1600 1664 1856 2160  1200 1201 1204 1250 +HSync +VSync
+# 1152x864 @ 84 Hz, 76.0 kHz hsync
+Modeline "1152x864"   135    1152 1464 1592 1776   864  864  876  908
+
+# 1280x1024 @ 74 Hz, 78.85 kHz hsync
+Modeline "1280x1024"  135    1280 1312 1456 1712  1024 1027 1030 1064
+
+# 1024x768 @ 100Hz, 80.21 kHz hsync
+Modeline "1024x768"   115.5  1024 1056 1248 1440  768  771  781  802 -HSync -VSync
+# 1280x1024 @ 76 Hz, 81.13 kHz hsync
+Modeline "1280x1024"  135    1280 1312 1416 1664  1024 1027 1030 1064
+
+# 1600x1200 @ 70 Hz, 87.50 kHz hsync
+Modeline "1600x1200"  189    1600 1664 1856 2160  1200 1201 1204 1250 -HSync -VSync
+# 1152x864 @ 100 Hz, 89.62 kHz hsync
+Modeline "1152x864"   137.65 1152 1184 1312 1536   864  866  885  902 -HSync -VSync
+# 1280x1024 @ 85 Hz, 91.15 kHz hsync
+Modeline "1280x1024"  157.5  1280 1344 1504 1728  1024 1025 1028 1072 +HSync +VSync
+# 1600x1200 @ 75 Hz, 93.75 kHz hsync
+Modeline "1600x1200"  202.5  1600 1664 1856 2160  1200 1201 1204 1250 +HSync +VSync
+# 1600x1200 @ 85 Hz, 105.77 kHz hsync
+Modeline "1600x1200"  220    1600 1616 1808 2080  1200 1204 1207 1244 +HSync +VSync
+# 1280x1024 @ 100 Hz, 107.16 kHz hsync
+Modeline "1280x1024"  181.75 1280 1312 1440 1696  1024 1031 1046 1072 -HSync -VSync
+
+# 1800x1440 @ 64Hz, 96.15 kHz hsync 
+ModeLine "1800X1440"  230    1800 1896 2088 2392 1440 1441 1444 1490 +HSync +VSync
+# 1800x1440 @ 70Hz, 104.52 kHz hsync 
+ModeLine "1800X1440"  250    1800 1896 2088 2392 1440 1441 1444 1490 +HSync +VSync
+
+# 512x384 @ 78 Hz, 31.50 kHz hsync
+Modeline "512x384"    20.160 512  528  592  640   384  385  388  404 -HSync -VSync
+# 512x384 @ 85 Hz, 34.38 kHz hsync
+Modeline "512x384"    22     512  528  592  640   384  385  388  404 -HSync -VSync
+
+# Low-res Doublescan modes
+# If your chipset does not support doublescan, you get a 'squashed'
+# resolution like 320x400.
+
+# 320x200 @ 70 Hz, 31.5 kHz hsync, 8:5 aspect ratio
+Modeline "320x200"     12.588 320  336  384  400   200  204  205  225 Doublescan
+# 320x240 @ 60 Hz, 31.5 kHz hsync, 4:3 aspect ratio
+Modeline "320x240"     12.588 320  336  384  400   240  245  246  262 Doublescan
+# 320x240 @ 72 Hz, 36.5 kHz hsync
+Modeline "320x240"     15.750 320  336  384  400   240  244  246  262 Doublescan
+# 400x300 @ 56 Hz, 35.2 kHz hsync, 4:3 aspect ratio
+ModeLine "400x300"     18     400  416  448  512   300  301  302  312 Doublescan
+# 400x300 @ 60 Hz, 37.8 kHz hsync
+Modeline "400x300"     20     400  416  480  528   300  301  303  314 Doublescan
+# 400x300 @ 72 Hz, 48.0 kHz hsync
+Modeline "400x300"     25     400  424  488  520   300  319  322  333 Doublescan
+# 480x300 @ 56 Hz, 35.2 kHz hsync, 8:5 aspect ratio
+ModeLine "480x300"     21.656 480  496  536  616   300  301  302  312 Doublescan
+# 480x300 @ 60 Hz, 37.8 kHz hsync
+Modeline "480x300"     23.890 480  496  576  632   300  301  303  314 Doublescan
+# 480x300 @ 63 Hz, 39.6 kHz hsync
+Modeline "480x300"     25     480  496  576  632   300  301  303  314 Doublescan
+# 480x300 @ 72 Hz, 48.0 kHz hsync
+Modeline "480x300"     29.952 480  504  584  624   300  319  322  333 Doublescan
+
+EndSection
+
+
+# **********************************************************************
+# Graphics device section
+# **********************************************************************
+
+# Any number of graphics device sections may be present
+
+# Standard VGA Device:
+
+Section "Device"
+    Identifier	"Generic VGA"
+    VendorName	"Unknown"
+    BoardName	"Unknown"
+    Chipset	"generic"
+
+#    VideoRam	256
+
+#    Clocks	25.2 28.3
+
+EndSection
+
+# Sample Device for accelerated server:
+
+# Section "Device"
+#    Identifier	"Actix GE32+ 2MB"
+#    VendorName	"Actix"
+#    BoardName	"GE32+"
+#    Ramdac	"ATT20C490"
+#    Dacspeed	110
+#    Option	"dac_8_bit"
+#    Clocks	 25.0  28.0  40.0   0.0  50.0  77.0  36.0  45.0
+#    Clocks	130.0 120.0  80.0  31.0 110.0  65.0  75.0  94.0
+# EndSection
+
+# Sample Device for Hercules mono card:
+
+# Section "Device"
+#    Identifier "Hercules mono"
+# EndSection
+
+# Device configured by xf86config:
+
+Section "Device"
+    Identifier  "s320iiu"
+    VendorName  "leadtek"
+    BoardName   "s320iiu"
+    #VideoRam    32768
+    # Insert Clocks lines here if appropriate
+EndSection
+
+
+# **********************************************************************
+# Screen sections
+# **********************************************************************
+
+# The Colour SVGA server
+
+Section "Screen"
+    Driver      "svga"
+    # Use Device "Generic VGA" for Standard VGA 320x200x256
+    #Device      "Generic VGA"
+    Device      "s320iiu"
+    Monitor     "DIG"
+    Subsection "Display"
+        Depth       8
+        # Omit the Modes line for the "Generic VGA" device
+        Modes       "640x480" "800x600" "1024x768" "1280x1024"
+        ViewPort    0 0
+        # Use Virtual 320 200 for Generic VGA
+    EndSubsection
+    Subsection "Display"
+        Depth       16
+        Modes       "1280x1024" "640x480" "800x600" "1024x768" "1280x1024"
+        ViewPort    0 0
+    EndSubsection
+    Subsection "Display"
+        Depth       24
+        Modes       "640x480" "800x600" "1024x768" "1280x1024"
+        ViewPort    0 0
+    EndSubsection
+    Subsection "Display"
+        Depth       32
+        Modes       "640x480" "800x600" "1024x768"
+        ViewPort    0 0
+    EndSubsection
+EndSection
+
+# The 16-color VGA server
+
+Section "Screen"
+    Driver      "vga16"
+    Device      "Generic VGA"
+    Monitor     "DIG"
+    Subsection "Display"
+        Modes       "640x480" "800x600"
+        ViewPort    0 0
+        Virtual     800 600
+    EndSubsection
+EndSection
+
+# The Mono server
+
+Section "Screen"
+    Driver      "vga2"
+    Device      "Generic VGA"
+    Monitor     "DIG"
+    Subsection "Display"
+        Modes       "640x480" "800x600"
+        ViewPort    0 0
+        Virtual     800 600
+    EndSubsection
+EndSection
+
+# The accelerated servers (S3, Mach32, Mach8, 8514, P9000, AGX, W32, Mach64)
+
+Section "Screen"
+    Driver      "accel"
+    Device      "s320iiu"
+    Monitor     "DIG"
+    Subsection "Display"
+        Depth       8
+        Modes       "640x480" "800x600" "1024x768" "1280x1024"
+        ViewPort    0 0
+    EndSubsection
+    Subsection "Display"
+        Depth       16
+        Modes       "640x480" "800x600" "1024x768" "1280x1024"
+        ViewPort    0 0
+    EndSubsection
+    Subsection "Display"
+        Depth       24
+        Modes       "640x480" "800x600" "1024x768" "1280x1024"
+        ViewPort    0 0
+    EndSubsection
+    Subsection "Display"
+        Depth       32
+        Modes       "640x480" "800x600" "1024x768"
+        ViewPort    0 0
+    EndSubsection
+EndSection
+
+
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+/usr/local/lib/xemacs/site-packages/lisp/mew/>>>>> "M" == M Warner Losh <imp@village.org> writes:
+
+Yes, but by making a v-folder of the desired folders, you have the
+ability to view all of the messages in the set of folders when you
+view the v-folder.  
+
+Wrt *viewing*, there is little difference between moving from the end of
+one folder to the next and moving thru their concatenation (except
+speed, of course)  Since v-mode seems to scan every input folder, it
+would be slow.
+
+The big problem (most likely a showstopper) is processing marks.
+In order to do so, you need to visit the underlying physical folder
+and issue the process command.  Another small macro could easily cycle
+thru mew folders and process the marks, however.
+
+Another idea is to code a next folder command.
+It skips to the next folder based on a list of lists like so:
+
+(defvar mew-folder-sequence-lists
+  '(('bsd: "+current" "+stable" "+mobile")
+    ('work: "+deadlines" "+meetings")
+    ('ml: "+sawfish" "+mew" "+xemacs")))
+;; of course, you could stick everything on one list
+
+(defun mew-find-next-folder (cur-folder)
+  (let ((new-folder
+	 (catch 'up
+	   (mapc (function 
+		  (lambda (flist)
+		    (when (setq new-folder (member cur-folder flist))
+		      (throw 'up (car (cdr new-folder))))))
+		 mew-folder-sequence-lists)
+	   nil)))
+	new-folder))
+
+(defun mew-goto-next-folder ()
+  (interactive)
+  (let ((newf (mew-find-next-folder (buffer-name))))
+    (message "new>%s<" newf)
+    (if newf
+    	(mew-summary-switch-to-folder newf)
+	;; delete old folder here???
+	)))
+
+bind mew-goto-next-folder to a key, visit the first folder in the list
+and off you go.
+
+Some of the other things on your wish list should be (real)SMOPs.
+
+It would be nice if there was a hook called when falling off the end
+of a buffer, but one extra command is still better than the way it has
+to be done now.
+
+
+M> Virtual folders isn't quite right.  That lets you create a new
+M> folder from other folder(s) or subsets of folders.  I just want to
+M> be able to view the tree of folders I've already created.
+
+M> Warner
+
+--
+"But don't you worry, its for a cause -- feeding global corporations
+paws."
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+http://www.irs.gov/cgi/webw4/w4calc
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+
+========================
+Saturday January 12 2002
+--
+
+========================
+2002-01-20T11:45:37
+journal elisp devel
+--
+508> make config
+rm -f include/asm-arm/arch include/asm-arm/proc
+(cd include/asm-arm; ln -sf arch-sa1100 arch; ln -sf proc-armv proc)
+rm -f include/asm
+( cd include ; ln -sf asm-arm asm)
+/bin/sh scripts/Configure arch/arm/config.in
++ '[' -z /bin/sh ']'
++ set -f -h
++ CONFIG=.tmpconfig
++ CONFIG_H=.tmpconfig.h
++ trap 'rm -f .tmpconfig .tmpconfig.h ; exit 1' 1 2
++ echo '#'
++ echo '# Automatically generated make config: don'\''t edit'
++ echo '#'
++ echo '/*'
++ echo ' * Automatically generated C config: don'\''t edit'
++ echo ' */'
++ echo '#define AUTOCONF_INCLUDED'
++ DEFAULT=
++ '[' arch/arm/config.in = -d ']'
++ CONFIG_IN=./config.in
++ '[' arch/arm/config.in '!=' '' ']'
++ CONFIG_IN=arch/arm/config.in
++ DEFAULTS=arch/arm/defconfig
++ '[' -f .config ']'
++ DEFAULTS=.config
++ '[' -f .config ']'
++ echo '#'
+#
++ echo '# Using defaults found in' .config
+# Using defaults found in .config
++ echo '#'
+#
++ . .config
+++ CONFIG_ARM=y
+++ CONFIG_UID16=y
+++ CONFIG_EXPERIMENTAL=y
+++ CONFIG_MODULES=y
+++ CONFIG_KMOD=y
+++ CONFIG_ARCH_SA1100=y
+++ CONFIG_SA1100_BITSY=y
+++ CONFIG_SA1100_USB=m
+++ CONFIG_SA1100_USB_NETLINK=m
+++ CONFIG_SA1100_USB_CHAR=m
+++ CONFIG_SA1100_FREQUENCY_SCALE=m
+++ CONFIG_CPU_32=y
+++ CONFIG_CPU_32v4=y
+++ CONFIG_CPU_SA1100=y
+++ CONFIG_DISCONTIGMEM=y
+++ CONFIG_HOTPLUG=y
+++ CONFIG_PCMCIA=m
+++ CONFIG_PCMCIA_SA1100=m
+++ CONFIG_MERCURY_BACKPAQ=m
+++ CONFIG_NET=y
+++ CONFIG_SYSVIPC=y
+++ CONFIG_SYSCTL=y
+++ CONFIG_FPE_NWFPE=y
+++ CONFIG_KCORE_ELF=y
+++ CONFIG_BINFMT_AOUT=m
+++ CONFIG_BINFMT_ELF=y
+++ CONFIG_PM=y
+++ CONFIG_APM=m
+++ CONFIG_CMDLINE=keepinitrd
+++ CONFIG_MTD=y
+++ CONFIG_MTD_CFI=y
+++ CONFIG_MTD_CFI_INTELEXT=y
+++ CONFIG_MTD_SA1100=y
+++ CONFIG_MTD_CHAR=m
+++ CONFIG_MTD_BLOCK=y
+++ CONFIG_BLK_DEV_LOOP=m
+++ CONFIG_BLK_DEV_NBD=m
+++ CONFIG_PACKET=y
+++ CONFIG_PACKET_MMAP=y
+++ CONFIG_NETLINK=y
+++ CONFIG_RTNETLINK=y
+++ CONFIG_NETFILTER=y
+++ CONFIG_UNIX=y
+++ CONFIG_INET=y
+++ CONFIG_IP_MULTICAST=y
+++ CONFIG_NET_IPIP=m
+++ CONFIG_NET_IPGRE=m
+++ CONFIG_IPV6=m
+++ CONFIG_IPV6_EUI64=y
+++ CONFIG_IPV6_NO_PB=y
+++ CONFIG_IPV6_MOBILITY=m
+++ CONFIG_NETDEVICES=y
+++ CONFIG_PPP=m
+++ CONFIG_PPP_ASYNC=m
+++ CONFIG_PPP_DEFLATE=m
+++ CONFIG_PPP_BSDCOMP=m
+++ CONFIG_NET_PCMCIA=y
+++ CONFIG_PCMCIA_3C589=m
+++ CONFIG_PCMCIA_3C574=m
+++ CONFIG_PCMCIA_FMVJ18X=m
+++ CONFIG_PCMCIA_PCNET=m
+++ CONFIG_PCMCIA_NMCLAN=m
+++ CONFIG_PCMCIA_SMC91C92=m
+++ CONFIG_PCMCIA_XIRC2PS=m
+++ CONFIG_NET_PCMCIA_RADIO=y
+++ CONFIG_PCMCIA_WVLAN=m
+++ CONFIG_IRDA=m
+++ CONFIG_IRLAN=m
+++ CONFIG_IRNET=m
+++ CONFIG_IRCOMM=m
+++ CONFIG_IRDA_ULTRA=y
+++ CONFIG_IRDA_OPTIONS=y
+++ CONFIG_IRDA_CACHE_LAST_LSAP=y
+++ CONFIG_IRDA_FAST_RR=y
+++ CONFIG_IRDA_DEBUG=y
+++ CONFIG_SA1100_FIR=m
+++ CONFIG_IDE=m
+++ CONFIG_BLK_DEV_IDE=m
+++ CONFIG_BLK_DEV_IDECS=m
+++ CONFIG_VT=y
+++ CONFIG_VT_CONSOLE=y
+++ CONFIG_SERIAL_SA1100=y
+++ CONFIG_SERIAL_SA1100_CONSOLE=y
+++ CONFIG_TOUCHSCREEN_BITSY=m
+++ CONFIG_H3600_SLEEVE=m
+++ CONFIG_SERIAL=m
+++ CONFIG_SERIAL_SA1100=y
+++ CONFIG_SERIAL_SA1100_CONSOLE=y
+++ CONFIG_SA1100_DEFAULT_BAUDRATE=115200
+++ CONFIG_PROFILER=m
+++ CONFIG_SERIAL_CORE=y
+++ CONFIG_SERIAL_CORE_CONSOLE=y
+++ CONFIG_UNIX98_PTYS=y
+++ CONFIG_UNIX98_PTY_COUNT=32
+++ CONFIG_MOUSE=m
+++ CONFIG_SA1100_RTC=m
+++ CONFIG_PCMCIA_SERIAL=m
+++ CONFIG_PCMCIA_SERIAL_CS=m
+++ CONFIG_FAT_FS=m
+++ CONFIG_VFAT_FS=m
+++ CONFIG_JFFS_FS=m
+++ CONFIG_JFFS_FS_VERBOSE=2
+++ CONFIG_JFFS2_FS=m
+++ CONFIG_CRAMFS=y
+++ CONFIG_RAMFS=y
+++ CONFIG_PROC_FS=y
+++ CONFIG_DEVFS_FS=y
+++ CONFIG_DEVFS_MOUNT=y
+++ CONFIG_DEVPTS_FS=y
+++ CONFIG_NFS_FS=m
+++ CONFIG_SUNRPC=m
+++ CONFIG_LOCKD=m
+++ CONFIG_MSDOS_PARTITION=y
+++ CONFIG_NLS=y
+++ CONFIG_NLS_DEFAULT=iso8859-1
+++ CONFIG_PC_KEYMAP=y
+++ CONFIG_FB=y
+++ CONFIG_FB=y
+++ CONFIG_DUMMY_CONSOLE=y
+++ CONFIG_FB_SA1100=y
+++ CONFIG_FBCON_ADVANCED=y
+++ CONFIG_FBCON_CFB16=y
+++ CONFIG_FBCON_FONTWIDTH8_ONLY=y
+++ CONFIG_FBCON_FONTS=y
+++ CONFIG_FONT_8x8=y
+++ CONFIG_SOUND=m
+++ CONFIG_SOUND_UDA1341=m
+++ CONFIG_DEBUG_ERRORS=y
++ sed -e 's/# \(CONFIG_[^ ]*\) is not.*/\1=n/'
++ . .config-is-not.13153
+++ CONFIG_ARM=y
+++ CONFIG_EISA=n
+++ CONFIG_SBUS=n
+++ CONFIG_MCA=n
+++ CONFIG_UID16=y
+++ CONFIG_EXPERIMENTAL=y
+++ CONFIG_OBSOLETE=n
+++ CONFIG_MODULES=y
+++ CONFIG_MODVERSIONS=n
+++ CONFIG_KMOD=y
+++ CONFIG_ARCH_ARCA5K=n
+++ CONFIG_ARCH_CLPS7500=n
+++ CONFIG_ARCH_CO285=n
+++ CONFIG_ARCH_EBSA110=n
+++ CONFIG_ARCH_L7200=n
+++ CONFIG_ARCH_FOOTBRIDGE=n
+++ CONFIG_ARCH_INTEGRATOR=n
+++ CONFIG_ARCH_RPC=n
+++ CONFIG_ARCH_SA1100=y
+++ CONFIG_ARCH_CLPS711X=n
+++ CONFIG_SA1100_ASSABET=n
+++ CONFIG_SA1100_BRUTUS=n
+++ CONFIG_SA1100_CERF=n
+++ CONFIG_SA1100_BITSY=y
+++ CONFIG_SA1100_JORNADA720=n
+++ CONFIG_SA1100_EXTENEX1=n
+++ CONFIG_SA1100_FREEBIRD=n
+++ CONFIG_SA1100_GRAPHICSCLIENT=n
+++ CONFIG_SA1100_HUW_WEBPANEL=n
+++ CONFIG_SA1100_LART=n
+++ CONFIG_SA1100_OMNIMETER=n
+++ CONFIG_SA1100_PLEB=n
+++ CONFIG_SA1100_NANOENGINE=n
+++ CONFIG_SA1100_PANGOLIN=n
+++ CONFIG_SA1100_SHERMAN=n
+++ CONFIG_SA1100_VICTOR=n
+++ CONFIG_SA1100_XP860=n
+++ CONFIG_SA1100_YOPY=n
+++ CONFIG_SA1100_USB=m
+++ CONFIG_SA1100_USB_NETLINK=m
+++ CONFIG_SA1100_USB_CHAR=m
+++ CONFIG_SA1100_FREQUENCY_SCALE=m
+++ CONFIG_ARCH_ACORN=n
+++ CONFIG_FOOTBRIDGE=n
+++ CONFIG_FOOTBRIDGE_HOST=n
+++ CONFIG_FOOTBRIDGE_ADDIN=n
+++ CONFIG_CPU_32=y
+++ CONFIG_CPU_26=n
+++ CONFIG_CPU_32v3=n
+++ CONFIG_CPU_32v4=y
+++ CONFIG_CPU_ARM610=n
+++ CONFIG_CPU_ARM710=n
+++ CONFIG_CPU_ARM720T=n
+++ CONFIG_CPU_ARM920T=n
+++ CONFIG_CPU_ARM1020=n
+++ CONFIG_CPU_SA110=n
+++ CONFIG_CPU_SA1100=y
+++ CONFIG_DISCONTIGMEM=y
+++ CONFIG_ANGELBOOT=n
+++ CONFIG_PCI=n
+++ CONFIG_ISA=n
+++ CONFIG_ISA_DMA=n
+++ CONFIG_HOTPLUG=y
+++ CONFIG_PCMCIA=m
+++ CONFIG_I82365=n
+++ CONFIG_TCIC=n
+++ CONFIG_PCMCIA_SA1100=m
+++ CONFIG_MERCURY_BACKPAQ=m
+++ CONFIG_NET=y
+++ CONFIG_SYSVIPC=y
+++ CONFIG_BSD_PROCESS_ACCT=n
+++ CONFIG_SYSCTL=y
+++ CONFIG_FPE_NWFPE=y
+++ CONFIG_FPE_FASTFPE=n
+++ CONFIG_KCORE_ELF=y
+++ CONFIG_KCORE_AOUT=n
+++ CONFIG_BINFMT_AOUT=m
+++ CONFIG_BINFMT_ELF=y
+++ CONFIG_BINFMT_MISC=n
+++ CONFIG_PM=y
+++ CONFIG_APM=m
+++ CONFIG_ARTHUR=n
+++ CONFIG_CMDLINE=keepinitrd
+++ CONFIG_LEDS=n
+++ CONFIG_ALIGNMENT_TRAP=n
+++ CONFIG_UCB1200=n
+++ CONFIG_PARPORT=n
+++ CONFIG_MTD=y
+++ CONFIG_MTD_DEBUG=n
+++ CONFIG_MTD_DOC1000=n
+++ CONFIG_MTD_DOC2000=n
+++ CONFIG_MTD_DOC2001=n
+++ CONFIG_MTD_DOCPROBE=n
+++ CONFIG_MTD_SLRAM=n
+++ CONFIG_MTD_RAM=n
+++ CONFIG_MTD_ROM=n
+++ CONFIG_MTD_MTDRAM=n
+++ CONFIG_MTD_CFI=y
+++ CONFIG_MTD_CFI_GEOMETRY=n
+++ CONFIG_MTD_CFI_INTELEXT=y
+++ CONFIG_MTD_CFI_AMDSTD=n
+++ CONFIG_MTD_AMDSTD=n
+++ CONFIG_MTD_SHARP=n
+++ CONFIG_MTD_PHYSMAP=n
+++ CONFIG_MTD_NORA=n
+++ CONFIG_MTD_PNC2000=n
+++ CONFIG_MTD_RPXLITE=n
+++ CONFIG_MTD_SBC_MEDIAGX=n
+++ CONFIG_MTD_ELAN_104NC=n
+++ CONFIG_MTD_SA1100=y
+++ CONFIG_MTD_DC21285=n
+++ CONFIG_MTD_CSTM_CFI_JEDEC=n
+++ CONFIG_MTD_JEDEC=n
+++ CONFIG_MTD_NAND=n
+++ CONFIG_MTD_CHAR=m
+++ CONFIG_MTD_BLOCK=y
+++ CONFIG_FTL=n
+++ CONFIG_NFTL=n
+++ CONFIG_PNP=n
+++ CONFIG_BLK_DEV_FD=n
+++ CONFIG_BLK_DEV_LOOP=m
+++ CONFIG_BLK_DEV_NBD=m
+++ CONFIG_BLK_DEV_RAM=n
+++ CONFIG_MD=n
+++ CONFIG_PACKET=y
+++ CONFIG_PACKET_MMAP=y
+++ CONFIG_NETLINK=y
+++ CONFIG_RTNETLINK=y
+++ CONFIG_NETLINK_DEV=n
+++ CONFIG_NETFILTER=y
+++ CONFIG_NETFILTER_DEBUG=n
+++ CONFIG_FILTER=n
+++ CONFIG_UNIX=y
+++ CONFIG_INET=y
+++ CONFIG_IP_MULTICAST=y
+++ CONFIG_IP_ADVANCED_ROUTER=n
+++ CONFIG_IP_PNP=n
+++ CONFIG_NET_IPIP=m
+++ CONFIG_NET_IPGRE=m
+++ CONFIG_NET_IPGRE_BROADCAST=n
+++ CONFIG_IP_MROUTE=n
+++ CONFIG_ARPD=n
+++ CONFIG_INET_ECN=n
+++ CONFIG_SYN_COOKIES=n
+++ CONFIG_IP_NF_CONNTRACK=n
+++ CONFIG_IP_NF_QUEUE=n
+++ CONFIG_IP_NF_IPTABLES=n
+++ CONFIG_IP_NF_COMPAT_IPCHAINS=n
+++ CONFIG_IP_NF_COMPAT_IPFWADM=n
+++ CONFIG_IPV6=m
+++ CONFIG_IPV6_EUI64=y
+++ CONFIG_IPV6_NO_PB=y
+++ CONFIG_IPV6_MOBILITY=m
+++ CONFIG_IP6_NF_IPTABLES=n
+++ CONFIG_KHTTPD=n
+++ CONFIG_ATM=n
+++ CONFIG_IPX=n
+++ CONFIG_ATALK=n
+++ CONFIG_DECNET=n
+++ CONFIG_BRIDGE=n
+++ CONFIG_X25=n
+++ CONFIG_LAPB=n
+++ CONFIG_LLC=n
+++ CONFIG_NET_DIVERT=n
+++ CONFIG_ECONET=n
+++ CONFIG_WAN_ROUTER=n
+++ CONFIG_NET_FASTROUTE=n
+++ CONFIG_NET_HW_FLOWCONTROL=n
+++ CONFIG_NET_SCHED=n
+++ CONFIG_NETDEVICES=y
+++ CONFIG_ARCNET=n
+++ CONFIG_DUMMY=n
+++ CONFIG_BONDING=n
+++ CONFIG_EQUALIZER=n
+++ CONFIG_TUN=n
+++ CONFIG_ETHERTAP=n
+++ CONFIG_NET_SB1000=n
+++ CONFIG_NET_ETHERNET=n
+++ CONFIG_ACENIC_OMIT_TIGON_I=n
+++ CONFIG_FDDI=n
+++ CONFIG_HIPPI=n
+++ CONFIG_PPP=m
+++ CONFIG_PPP_MULTILINK=n
+++ CONFIG_PPP_ASYNC=m
+++ CONFIG_PPP_SYNC_TTY=n
+++ CONFIG_PPP_DEFLATE=m
+++ CONFIG_PPP_BSDCOMP=m
+++ CONFIG_PPPOE=n
+++ CONFIG_SLIP=n
+++ CONFIG_NET_RADIO=n
+++ CONFIG_TR=n
+++ CONFIG_NET_FC=n
+++ CONFIG_RCPCI=n
+++ CONFIG_SHAPER=n
+++ CONFIG_WAN=n
+++ CONFIG_NET_PCMCIA=y
+++ CONFIG_PCMCIA_3C589=m
+++ CONFIG_PCMCIA_3C574=m
+++ CONFIG_PCMCIA_FMVJ18X=m
+++ CONFIG_PCMCIA_PCNET=m
+++ CONFIG_PCMCIA_NMCLAN=m
+++ CONFIG_PCMCIA_SMC91C92=m
+++ CONFIG_PCMCIA_XIRC2PS=m
+++ CONFIG_NET_PCMCIA_RADIO=y
+++ CONFIG_PCMCIA_RAYCS=n
+++ CONFIG_PCMCIA_NETWAVE=n
+++ CONFIG_PCMCIA_WAVELAN=n
+++ CONFIG_PCMCIA_WVLAN=m
+++ CONFIG_HAMRADIO=n
+++ CONFIG_IRDA=m
+++ CONFIG_IRLAN=m
+++ CONFIG_IRNET=m
+++ CONFIG_IRCOMM=m
+++ CONFIG_IRDA_ULTRA=y
+++ CONFIG_IRDA_OPTIONS=y
+++ CONFIG_IRDA_CACHE_LAST_LSAP=y
+++ CONFIG_IRDA_FAST_RR=y
+++ CONFIG_IRDA_DEBUG=y
+++ CONFIG_IRTTY_SIR=n
+++ CONFIG_IRPORT_SIR=n
+++ CONFIG_NSC_FIR=n
+++ CONFIG_WINBOND_FIR=n
+++ CONFIG_TOSHIBA_FIR=n
+++ CONFIG_SMC_IRCC_FIR=n
+++ CONFIG_SA1100_FIR=m
+++ CONFIG_DONGLE=n
+++ CONFIG_IDE=m
+++ CONFIG_BLK_DEV_IDE=m
+++ CONFIG_BLK_DEV_HD_IDE=n
+++ CONFIG_BLK_DEV_HD=n
+++ CONFIG_BLK_DEV_IDEDISK=n
+++ CONFIG_BLK_DEV_IDEDISK_VENDOR=n
+++ CONFIG_BLK_DEV_COMMERIAL=n
+++ CONFIG_BLK_DEV_IDECS=m
+++ CONFIG_BLK_DEV_IDECD=n
+++ CONFIG_BLK_DEV_IDETAPE=n
+++ CONFIG_BLK_DEV_IDEFLOPPY=n
+++ CONFIG_BLK_DEV_CMD640=n
+++ CONFIG_IDE_CHIPSETS=n
+++ CONFIG_IDEDMA_AUTO=n
+++ CONFIG_DMA_NONPCI=n
+++ CONFIG_BLK_DEV_IDE_MODES=n
+++ CONFIG_SCSI=n
+++ CONFIG_I2O=n
+++ CONFIG_ISDN=n
+++ CONFIG_INPUT=n
+++ CONFIG_VT=y
+++ CONFIG_VT_CONSOLE=y
+++ CONFIG_SERIAL_SA1100=y
+++ CONFIG_SERIAL_SA1100_CONSOLE=y
+++ CONFIG_TOUCHSCREEN_BITSY=m
+++ CONFIG_H3600_SLEEVE=m
+++ CONFIG_SERIAL=m
+++ CONFIG_SERIAL_EXTENDED=n
+++ CONFIG_SERIAL_NONSTANDARD=n
+++ CONFIG_SERIAL_SA1100=y
+++ CONFIG_SERIAL_SA1100_CONSOLE=y
+++ CONFIG_SA1100_DEFAULT_BAUDRATE=115200
+++ CONFIG_UCB1200=n
+++ CONFIG_PROFILER=m
+++ CONFIG_SERIAL_CORE=y
+++ CONFIG_SERIAL_CORE_CONSOLE=y
+++ CONFIG_UNIX98_PTYS=y
+++ CONFIG_UNIX98_PTY_COUNT=32
+++ CONFIG_I2C=n
+++ CONFIG_BUSMOUSE=n
+++ CONFIG_MOUSE=m
+++ CONFIG_PSMOUSE=n
+++ CONFIG_82C710_MOUSE=n
+++ CONFIG_PC110_PAD=n
+++ CONFIG_QIC02_TAPE=n
+++ CONFIG_WATCHDOG=n
+++ CONFIG_NVRAM=n
+++ CONFIG_RTC=n
+++ CONFIG_SA1100_RTC=m
+++ CONFIG_DTLK=n
+++ CONFIG_R3964=n
+++ CONFIG_APPLICOM=n
+++ CONFIG_FTAPE=n
+++ CONFIG_AGP=n
+++ CONFIG_DRM=n
+++ CONFIG_PCMCIA_SERIAL=m
+++ CONFIG_PCMCIA_SERIAL_CS=m
+++ CONFIG_VIDEO_DEV=n
+++ CONFIG_QUOTA=n
+++ CONFIG_AUTOFS_FS=n
+++ CONFIG_AUTOFS4_FS=n
+++ CONFIG_REISERFS_FS=n
+++ CONFIG_ADFS_FS=n
+++ CONFIG_AFFS_FS=n
+++ CONFIG_HFS_FS=n
+++ CONFIG_BFS_FS=n
+++ CONFIG_FAT_FS=m
+++ CONFIG_MSDOS_FS=n
+++ CONFIG_VFAT_FS=m
+++ CONFIG_EFS_FS=n
+++ CONFIG_JFFS_FS=m
+++ CONFIG_JFFS_FS_VERBOSE=2
+++ CONFIG_JFFS2_FS=m
+++ CONFIG_CRAMFS=y
+++ CONFIG_RAMFS=y
+++ CONFIG_ISO9660_FS=n
+++ CONFIG_MINIX_FS=n
+++ CONFIG_NTFS_FS=n
+++ CONFIG_HPFS_FS=n
+++ CONFIG_PROC_FS=y
+++ CONFIG_DEVFS_FS=y
+++ CONFIG_DEVFS_MOUNT=y
+++ CONFIG_DEVFS_DEBUG=n
+++ CONFIG_DEVPTS_FS=y
+++ CONFIG_QNX4FS_FS=n
+++ CONFIG_ROMFS_FS=n
+++ CONFIG_EXT2_FS=n
+++ CONFIG_SYSV_FS=n
+++ CONFIG_UDF_FS=n
+++ CONFIG_UFS_FS=n
+++ CONFIG_CODA_FS=n
+++ CONFIG_NFS_FS=m
+++ CONFIG_NFS_V3=n
+++ CONFIG_NFSD=n
+++ CONFIG_SUNRPC=m
+++ CONFIG_LOCKD=m
+++ CONFIG_SMB_FS=n
+++ CONFIG_NCP_FS=n
+++ CONFIG_PARTITION_ADVANCED=n
+++ CONFIG_MSDOS_PARTITION=y
+++ CONFIG_SMB_NLS=n
+++ CONFIG_NLS=y
+++ CONFIG_NLS_DEFAULT=iso8859-1
+++ CONFIG_NLS_CODEPAGE_437=n
+++ CONFIG_NLS_CODEPAGE_737=n
+++ CONFIG_NLS_CODEPAGE_775=n
+++ CONFIG_NLS_CODEPAGE_850=n
+++ CONFIG_NLS_CODEPAGE_852=n
+++ CONFIG_NLS_CODEPAGE_855=n
+++ CONFIG_NLS_CODEPAGE_857=n
+++ CONFIG_NLS_CODEPAGE_860=n
+++ CONFIG_NLS_CODEPAGE_861=n
+++ CONFIG_NLS_CODEPAGE_862=n
+++ CONFIG_NLS_CODEPAGE_863=n
+++ CONFIG_NLS_CODEPAGE_864=n
+++ CONFIG_NLS_CODEPAGE_865=n
+++ CONFIG_NLS_CODEPAGE_866=n
+++ CONFIG_NLS_CODEPAGE_869=n
+++ CONFIG_NLS_CODEPAGE_874=n
+++ CONFIG_NLS_CODEPAGE_932=n
+++ CONFIG_NLS_CODEPAGE_936=n
+++ CONFIG_NLS_CODEPAGE_949=n
+++ CONFIG_NLS_CODEPAGE_950=n
+++ CONFIG_NLS_ISO8859_1=n
+++ CONFIG_NLS_ISO8859_2=n
+++ CONFIG_NLS_ISO8859_3=n
+++ CONFIG_NLS_ISO8859_4=n
+++ CONFIG_NLS_ISO8859_5=n
+++ CONFIG_NLS_ISO8859_6=n
+++ CONFIG_NLS_ISO8859_7=n
+++ CONFIG_NLS_ISO8859_8=n
+++ CONFIG_NLS_ISO8859_9=n
+++ CONFIG_NLS_ISO8859_14=n
+++ CONFIG_NLS_ISO8859_15=n
+++ CONFIG_NLS_KOI8_R=n
+++ CONFIG_NLS_UTF8=n
+++ CONFIG_PC_KEYMAP=y
+++ CONFIG_VGA_CONSOLE=n
+++ CONFIG_FB=y
+++ CONFIG_FB=y
+++ CONFIG_DUMMY_CONSOLE=y
+++ CONFIG_FB_SA1100=y
+++ CONFIG_FB_VIRTUAL=n
+++ CONFIG_FBCON_ADVANCED=y
+++ CONFIG_FBCON_MFB=n
+++ CONFIG_FBCON_CFB2=n
+++ CONFIG_FBCON_CFB4=n
+++ CONFIG_FBCON_CFB8=n
+++ CONFIG_FBCON_CFB16=y
+++ CONFIG_FBCON_CFB24=n
+++ CONFIG_FBCON_CFB32=n
+++ CONFIG_FBCON_AFB=n
+++ CONFIG_FBCON_ILBM=n
+++ CONFIG_FBCON_IPLAN2P2=n
+++ CONFIG_FBCON_IPLAN2P4=n
+++ CONFIG_FBCON_IPLAN2P8=n
+++ CONFIG_FBCON_MAC=n
+++ CONFIG_FBCON_VGA_PLANES=n
+++ CONFIG_FBCON_VGA=n
+++ CONFIG_FBCON_HGA=n
+++ CONFIG_FBCON_FONTWIDTH8_ONLY=y
+++ CONFIG_FBCON_FONTS=y
+++ CONFIG_FONT_8x8=y
+++ CONFIG_FONT_8x16=n
+++ CONFIG_FONT_SUN8x16=n
+++ CONFIG_FONT_PEARL_8x8=n
+++ CONFIG_FONT_ACORN_8x8=n
+++ CONFIG_SOUND=m
+++ CONFIG_SOUND_UDA1341=m
+++ CONFIG_SOUND_SA1100_SSP=n
+++ CONFIG_SOUND_CMPCI=n
+++ CONFIG_SOUND_EMU10K1=n
+++ CONFIG_SOUND_FUSION=n
+++ CONFIG_SOUND_CS4281=n
+++ CONFIG_SOUND_ES1370=n
+++ CONFIG_SOUND_ES1371=n
+++ CONFIG_SOUND_ESSSOLO1=n
+++ CONFIG_SOUND_MAESTRO=n
+++ CONFIG_SOUND_SONICVIBES=n
+++ CONFIG_SOUND_TRIDENT=n
+++ CONFIG_SOUND_MSNDCLAS=n
+++ CONFIG_SOUND_MSNDPIN=n
+++ CONFIG_SOUND_OSS=n
+++ CONFIG_USB=n
+++ CONFIG_NO_FRAME_POINTER=n
+++ CONFIG_DEBUG_ERRORS=y
+++ CONFIG_DEBUG_USER=n
+++ CONFIG_DEBUG_INFO=n
+++ CONFIG_MAGIC_SYSRQ=n
+++ CONFIG_DEBUG_LL=n
++ rm .config-is-not.13153
++ . arch/arm/config.in
+++ mainmenu_name 'Linux Kernel Configuration'
+++ :
+++ define_bool CONFIG_ARM y
+++ define_tristate CONFIG_ARM y
+++ echo CONFIG_ARM=y
+++ echo '#define CONFIG_ARM 1'
+++ eval CONFIG_ARM=y
++++ CONFIG_ARM=y
+++ define_bool CONFIG_EISA n
+++ define_tristate CONFIG_EISA n
+++ echo '# CONFIG_EISA is not set'
+++ echo '#undef  CONFIG_EISA'
+++ eval CONFIG_EISA=n
++++ CONFIG_EISA=n
+++ define_bool CONFIG_SBUS n
+++ define_tristate CONFIG_SBUS n
+++ echo '# CONFIG_SBUS is not set'
+++ echo '#undef  CONFIG_SBUS'
+++ eval CONFIG_SBUS=n
++++ CONFIG_SBUS=n
+++ define_bool CONFIG_MCA n
+++ define_tristate CONFIG_MCA n
+++ echo '# CONFIG_MCA is not set'
+++ echo '#undef  CONFIG_MCA'
+++ eval CONFIG_MCA=n
++++ CONFIG_MCA=n
+++ define_bool CONFIG_UID16 y
+++ define_tristate CONFIG_UID16 y
+++ echo CONFIG_UID16=y
+++ echo '#define CONFIG_UID16 1'
+++ eval CONFIG_UID16=y
++++ CONFIG_UID16=y
+++ mainmenu_option next_comment
+++ :
+++ comment 'Code maturity level options'
+++ echo '*'
+*
+++ echo '* Code maturity level options'
+* Code maturity level options
+++ echo '*'
+*
+++ echo ''
+++ echo '#'
+++ echo '# Code maturity level options'
+++ echo '#'
+++ echo ''
+++ echo '/*'
+++ echo ' * Code maturity level options'
+++ echo ' */'
+++ bool 'Prompt for development and/or incomplete code/drivers' CONFIG_EXPERIMENTAL
++++ eval echo '${CONFIG_EXPERIMENTAL}'
+++++ echo y
+++ old=y
+++ def=y
+++ defprompt=Y/n/?
+++ def=y
+++ :
+++ readln 'Prompt for development and/or incomplete code/drivers (CONFIG_EXPERIMENTAL) [Y/n/?] ' y y
+++ '[' '' = -d -a -n y ']'
+++ echo -n 'Prompt for development and/or incomplete code/drivers (CONFIG_EXPERIMENTAL) [Y/n/?] '
+Prompt for development and/or incomplete code/drivers (CONFIG_EXPERIMENTAL) [Y/n/?] ++ '[' -z y ']'
+++ IFS=@
+++ read ans
++++ rm -f .tmpconfig .tmpconfig.h
++++ exit 1
+make: *** [config] Error 1
+
+
+========================
+2002-01-20T11:53:56
+--
+just a timestamp.  acts like ordinary text.
+Belongs to preceding topic
+
+========================
+2002-01-20T11:46:00
+diet
+--
+find good websites/programs for dietary values.
+
+========================
+2002-01-20T11:46:22
+journal elisp devel
+--
+finish this and hope it is useful
+
+========================
+2002-01-20T12:28:13
+another topic with diet in it
+--
+
+========================
+2002-01-20T15:16:58
+diet
+--
+more diet info
+
+========================
+2002-01-20T12:28:42
+goober
+--
+see also <<goober>>
+========================
+2002-01-20T20:10:48
+a string w/jo in it
+--
+
+
+========================
+2002-01-20T12:30:19
+journal elisp devel
+--
+things are moving along.
+
+========================
+2002-01-20T12:34:50
+a topic with spaces
+--
+this requires C-q<space> for spaces.
+
+========================
+2002-01-20T17:50:29
+adding-major-mode
+--
+
+d
+d
+d
+d
+d
+========================
+2002-01-22T21:43:43
+<<done:2002-01-22T23:03:48>>todo: add completion of todos.
+--
+
+========================
+2002-01-22T23:18:19
+todo: make sure todos don't get into journal-topics
+--
+
+========================
+2002-01-22T22:55:41
+journal elisp devel
+--
+see also <<laadeedaa>>
+see file <<dp-journal.el>>
+
+========================
+2002-01-22T23:19:10
+another topic
+--
+<html>
+<head>
+<title>FMH-1 Chapter 12 [December 1995]</title>
+</head>
+<body bgcolor="ffffff">
+<center><h2><A NAME="ch12link">Federal</A> Meteorological Handbook No. 1</h2></center>
+<center><h3>CHAPTER 12</h3></center>
+ <p>
+<center><h3>CODING</h3></center>
+<p>
+ <p>
+<b>12.1 General</b><p>
+
+ <p>
+
+The coding standards in this chapter conform to WMO Code Forms METAR FM 15-IX Ext. and
+SPECI FM 16-IX Ext. and the United States Exceptions filed with the WMO.  These exceptions
+reflect national observing practices which differ from practices outlined in the WMO <i>Manual on
+Codes</i> No. 306.<p>
+
+<p>
+
+<b>12.2 Scope</b><p>
+
+<p>
+
+This chapter contains the standards for coding a weather observation in either aviation routine
+weather report (METAR) and/or aviation selected special weather report (SPECI) format.      <p>
+
+ <p>
+
+<b>12.3 METAR/SPECI Code</b><p>
+
+ <p>
+
+<b>METAR or SPECI_CCCC_YYGGggZ_AUTO or COR_dddff(f)Gfmfm(fm)KT_dndndnVdxdxdx_
+VVVVVSM_[RDRDR/VRVRVRVRFT or RDRDR/VNVNVNVNVVXVXVXVXFT]_w'w'_[NsNsNshshshs or
+VVhshshs or SKC/CLR]_T'T'/T'dT'd_APHPHPHPH _RMK_(Automated, Manual, Plain Language)_
+(Additive Data and Automated Maintenance Indicators)</b>
+<p>
+
+ <p>
+
+METAR/SPECI has two major sections:  the Body (consisting of a maximum of  11 groups) and the
+Remarks (consisting of 2 categories).  Together, the body and remarks make up the complete
+METAR/SPECI.  In general, the remarks are coded in the order depicted above and established in the
+remainder of this chapter.<p>
+
+ <p>
+
+<b>12.4 Format and Content of the METAR/SPECI</b><p>
+
+ <p>
+<pre>
+  a. <b>Body of report.</b>
+
+     (1) Type of Report - <b>METAR/SPECI</b>
+
+     (2) Station Identifier - <b>CCCC</b>
+
+     (3) Date and Time of Report - <b>YYGGggZ</b>
+
+     (4) Report Modifier - <b>AUTO/COR</b>
+
+     (5) Wind - <b>dddff(f)Gfmfm(fm)KT_dndndnVdxdxdx</b>
+
+     (6) Visibility - <b>VVVVVSM</b>
+
+     (7) Runway Visual Range - <b>RDRDR/VRVRVRVRFT or
+         RDRDR/VNVNVNVNVVXVXVXVXFT</b>
+
+     (8) Present Weather - <b>w'w'</b>
+
+     (9) Sky Condition - <b>NsNsNshshshs or VVhshshs or SKC/CLR</b>
+
+    (10) Temperature and Dew Point - <b>T'T'/T'dT'd</b>
+
+    (11) Altimeter - <b>APHPHPHPH</b>
+
+  b. <b>Remarks section of report--RMK</b>
+
+     (1) Automated, Manual, and Plain Language
+
+     (2) Additive and Maintenance Data
+</pre>
+ <p>
+The underline character "_" indicates a required space between the groups.  If a group is not reported,
+the preceding space is also not reported.  In addition to the format given, agencies shall provide for
+the inclusion of any special Beginning-of-Message, End-of-Message, or End-of-Transmission signals
+required by their communications system.<p>
+
+ <p>
+
+The actual content of a METAR or SPECI depends on the observation program at the individual
+station.  At designated stations, the 0000, 0600, 1200, and 1800 Coordinated Universal Time (UTC)
+METAR's include additional data specified by the responsible agency and are known as 6-hourly
+reports.  At designated stations, the 0300, 0900, 1500, and 2100 UTC METAR's are known as 3-hourly reports and also contain additional information specified by the responsible agency.<p>
+
+<p>
+
+<b>12.5 Coding Missing Data in METAR/SPECI</b><p>
+
+ <p>
+
+When an element does not occur, or cannot be observed, the corresponding group and preceding
+space are omitted from that particular report.<p>
+
+ <p>
+
+<b>12.6 Coding the Body of the METAR/SPECI</b><p>
+
+ <p>
+
+<b>12.6.1 Type of Report (METAR and SPECI).</b>  The type, <b>METAR</b> or <b>SPECI</b>, shall be included in
+all reports.  The type of report shall be separated from elements following it by a space.  Whenever
+SPECI criteria are met at the time of the routine METAR, the type of report shall be METAR.<p>
+
+ <p>
+
+<b>12.6.2 Station Identifier (CCCC).</b>  The station identifier, <b>CCCC</b>, shall be included in all reports to
+identify the station to which the coded report applies.  The station identifier shall consist of four
+alphabetic-only characters if the METAR/SPECI is transmitted long-line.  The agency with
+operational control when the station is first established shall be responsible for coordinating the
+location identifier with the FAA.  A list of approved identifiers can be found in the FAA Manual
+7350 Series, <i>Location Identifiers</i>.  <p>
+
+ <p>
+
+<b>12.6.3 Date and Time of Report (YYGGggZ).</b>  The date, <b>YY</b>, and time, <b>GGgg</b>, shall be included
+in all reports.  The time shall be the actual time of the report or when the criteria for a SPECI is met
+or noted (see paragraph 2.6.4).  If the report is a correction to a previously disseminated report, the
+time of the corrected report shall be the same time used in the report being corrected.  The date and
+time group always ends with a <b>Z</b> indicating Zulu time (or UTC).  For example, METAR KDCA
+210855Z would be the 0900 scheduled report from station KDCA taken at 0855 UTC on the 21st of
+the month.<p>
+
+ <p>
+
+<b>12.6.4 Report Modifier (AUTO or COR).</b>  The report modifier, <b>AUTO,</b> identifies the
+METAR/SPECI as a fully automated report with no human intervention or oversight.  In the event of
+a corrected METAR or SPECI, the report modifier, <b>COR</b>, shall be substituted in place of <b>AUTO</b>.<p>
+
+ <p>
+
+<b>12.6.5 Wind Group</b> (<b>dddff(f)Gfmfm(fm)KT_dndndnVdxdxdx).</b>  The standards for observing and
+reporting wind are described in Chapter 5.<p>
+
+ <p>
+
+The wind direction, <b>ddd</b>, shall be coded in tens of degrees using three figures.  Directions less than
+100 degrees shall be preceded with a "0".  For example, a wind direction of 90 is coded as "090". 
+The wind speed, <b>ff(f)</b>, shall be coded in two or three digits immediately following the wind direction. 
+The wind speed shall be coded, in whole knots, using the units and tens digits and, if required, the
+hundreds digit.  Speeds of less than 10 knots shall be coded using a leading zero.  The wind group
+shall always end with <b>KT</b> to indicate that wind speeds are reported in knots.  For example, a wind
+speed of 8 knots shall be coded "08KT"; a wind speed of 112 knots shall be coded "112KT".  <p>
+
+ <p>
+<pre>
+  a. <b>Gust.</b>  Wind gusts shall be coded in the format,
+     <b>Gfmfm(fm)</b> (see paragraphs 5.4.4 and 5.5.4). The wind
+     gust shall be coded in two or three digits immediately
+     following the wind speed. The wind gust shall be coded, in
+     whole knots, using the units and tens digits and, if required,
+     the hundreds digit.  For example, a wind from due west at
+     20 knots with gusts to 35 knots would be coded "27020G35KT".
+
+  b. <b>Variable Wind Direction (Speeds 6 knots or less).</b> Variable
+     wind direction with wind speed 6 knots or less may be coded as
+     <b>VRB</b> in place of the <b>ddd</b> (see paragraphs 5.4.2 and
+     5.5.3).  For example, if the wind is variable at three knots,
+     it would be coded "VRB03KT".
+
+  c. <b>Variable Wind Direction (Speeds greater than 6 knots).</b>
+     Variable wind direction with wind speed greater than 6 knots
+     shall be coded in the format, <b>dndndnVdxdxdx</b>.  The variable
+     wind direction group shall immediately follow the wind group
+     (see paragraphs 5.4.2 and 5.5.3).  The directional variability
+     shall be coded in a clockwise direction.  For example, if
+     the wind is variable from 180 to 240 at 10 knots, it would be
+     coded "21010KT 180V240".
+
+  d. <b>Calm Wind.</b>  Calm wind shall be coded as "00000KT"
+     (see paragraph 5.5.2).
+</pre>
+
+<p>
+
+<b>12.6.6 Visibility Group (VVVVVSM).</b>  The standards for observing and reporting visibility are
+described in Chapter 6.<p>
+
+ <p>
+
+The surface visibility, <b>VVVVVSM</b>, shall be coded in statute miles using the values listed in Table 12-
+1.  A space shall be coded between whole numbers and fractions of reportable visibility values.  The
+visibility group shall always end with <b>SM</b> to indicate that the visibility is in statute miles.  For
+example, a visibility of one and a half statute miles would be coded "1 1/2SM".  <p>
+
+ <p>
+
+Automated stations shall use an <b>M</b> to indicate "less than" when reporting visibility.  For example,
+"M1/4SM" means a visibility of less than one-quarter statute mile.<p>
+
+<p>
+<CENTER>
+<TABLE BORDER>
+<caption><b>Table 12-1. Reportable Visibility Values</b></caption>
+<tr>
+<th nowrap colspan=8>Source of Visibility Report</th>
+</tr>
+<tr>
+<th nowrap colspan=3>Automated</th><th nowrap colspan=5>Manual</th>
+</tr>
+<tr>
+<td nowrap align=center>M&#188;</td>
+<td nowrap align=center>2</td>
+<td nowrap align=center>9&#185</td>
+<td nowrap align=center>0</td>
+<td nowrap align=center>5/8</td>
+<td nowrap align=center>1&#32;5/8</td>
+<td nowrap align=center>4</td>
+<td nowrap align=center>12</td>
+</tr>
+<tr>
+<td nowrap align=center>&#188;</td>
+<td nowrap align=center>2&#189;</td>
+<td nowrap align=center>10</td>
+<td nowrap align=center>1/16</td>
+<td nowrap align=center>&#190;</td>
+<td nowrap align=center>1&#190;</td>
+<td nowrap align=center>5</td>
+<td nowrap align=center>13</td>
+</tr>
+<tr>
+<td nowrap align=center>&#189;</td>
+<td nowrap align=center>3</td>
+<td></td>
+<td nowrap align=center>1/8</td>
+<td nowrap align=center>7/8</td>
+<td nowrap align=center>1 7/8</td>
+<td nowrap align=center>6</td>
+<td nowrap align=center>14</td>
+</tr>
+<tr>
+<td nowrap align=center>&#190;</td>
+<td nowrap align=center>4</td>
+<td></td>
+<td nowrap align=center>3/16</td>
+<td nowrap align=center>1</td>
+<td nowrap align=center>2</td>
+<td nowrap align=center>7</td>
+<td nowrap align=center>15</td>
+</tr>
+<tr>
+<td nowrap align=center>1</td>
+<td nowrap align=center>5</td>
+<td></td>
+<td nowrap align=center>&#188;</td>
+<td nowrap align=center>1 1/8</td>
+<td nowrap align=center>2&#188;</td>
+<td nowrap align=center>8</td>
+<td nowrap align=center>20</td>
+</tr>
+<tr>
+<td nowrap align=center>1&#188;</td>
+<td nowrap align=center>6&#185;</td>
+<td></td>
+<td nowrap align=center>5/16</td>
+<td nowrap align=center>1&#188;</td>
+<td nowrap align=center>2&#189;</td>
+<td nowrap align=center>9</td>
+<td nowrap align=center>25</td>
+</tr>
+<tr>
+<td nowrap align=center>1&#189;</td>
+<td nowrap align=center>7</td>
+<td></td>
+<td nowrap align=center>3/8</td>
+<td nowrap align=center>1 3/8</td>
+<td nowrap align=center>2&#190;</td>
+<td nowrap align=center>10</td>
+<td nowrap align=center>30</td>
+</tr>
+<tr>
+<td nowrap align=center>1&#190;</td>
+<td nowrap align=center>8&#185;</td>
+<td></td>
+<td nowrap align=center>&#189;</td>
+<td nowrap align=center>1&#189;</td>
+<td nowrap align=center>3</td>
+<td nowrap align=center>11</td>
+<td nowrap align=center>35&#178;</td>
+</tr>
+<tr>
+<td nowrap colspan=8>Note 1: These values may not be reported by some automated stations.<br>
+Note 2: Further values in increments of 5 statue mailes may be reported, i.e., 40, 45, 50, etc.</td>
+</tr>
+</TABLE>
+</CENTER>
+<p>
+
+<b>12.6.7. Runway Visual Range Group (RDRDR/VRVRVRVRFT or
+RDRDR/VnVnVnVnVVxVxVxVxFT).</b>  The standards for observing and reporting Runway Visual Range
+(RVR) are described in Chapter 7.  <p>
+
+ <p>
+<pre>
+  a. RVR shall be coded in the format <b>RDRDR/VRVRVRVRFT</b>,
+     where <b>R</b> indicates that the runway number follows,
+     <b>DRDR</b> is the runway number (an additional <b>DR</b> may
+     be used for runway approach directions, such as <b>R</b> for
+     right, <b>L</b> for left, and <b>C</b> for center), <b>VRVRVRVR</b>
+     is the constant reportable value, and <b>FT</b> indicates that
+     units of measurement are feet.  A solidus "/" without spaces
+     separates the runway number from the constant reportable value.
+     For example, an RVR value for runway 01L of 800 feet would be
+     coded "R01L/0800FT".
+
+  b. RVR that is varying shall be coded in the format,
+     <b>RDRDR/VnVnVnVnVVxVxVxVxFT</b>, where <b>R</b> indicates that
+     the runway number follows, <b>DRDR</b> is the runway number
+     (an additional <b>DR</b> may be used for runway approach directions,
+     such as <b>R</b> for right, <b>L</b> for left, and <b>C</b> for
+     center), <b>VnVnVnVn</b> is the lowest reportable value in feet,
+     <b>V</b> separates lowest and highest visual range values,
+     <b>VxVxVxVx</b> is the highest reportable value, and <b>FT</b>
+     indicates that units of measurement are feet.  A solidus "/"
+     without spaces separates the runway number from the reportable
+     values.  For example, the 10-minute RVR for runway 01L varying
+     between 600 and 1,000 feet would be coded "R01L/0600V1000FT".
+
+  c. The values shall be based on light setting 5 at manual stations
+     regardless of the light setting actually in use (see Appendix D).
+     RVR values shall be coded in increments of 100 feet up to 1,000
+     feet, increments of 200 feet from 1,000 feet to 3,000 feet, and
+     increments of 500 feet from 3,000 feet to 6,000 feet.  Manual
+     RVR shall not be reported below 600 feet.  For automated stations,
+     RVR may be reported from up to four designated runways.
+
+  d. If the RVR is less than its lowest reportable value, the
+     <b>VRVRVRVR</b> or <b>VnVnVnVn</b> groups shall be preceded by
+     <b>M</b>.  If the RVR is greater than its highest reportable value,
+     the <b>VRVRVRVR</b> or <b>VxVxVxVx</b> groups shall be preceded by
+     a <b>P</b>.  For example, an RVR for runway 01L of less than 600
+     feet will be coded "R01L/M0600FT"; an RVR for runway 27 of greater
+     than 6,000 feet will be coded "R27/P6000FT".
+</pre>
+
+ <p>
+
+<b>12.6.8 Present Weather Group (w'w').</b>  The standards for observing and reporting present weather
+are described in Chapter 8.  <p>
+
+ <p>
+
+The appropriate notations found in Table 12-2 shall be used to code present weather.<p>
+
+<p>
+
+
+<center>
+<table border>
+<caption><b>Table 12-2. Notations for Reporting Present Weather</b> (See note 1)</caption>
+<tr>
+<th nowrap colspan=2>QUALIFIER</th><th nowrap colspan=3>WEATHER PHENOMENA</th>
+</tr>
+<tr>
+<th nowrap>INTENSITY OR<br>PROXIMITY<br>1</th>
+<th nowrap>DESCRIPTOR<br><br>2</th>
+<th nowrap>PRECIPITATION<br><br>3</th>
+<th nowrap>OBSCURATION<br><br>4</th>
+<th nowrap>OTHER<br><br>5</th>
+</tr>
+<tr>
+<td nowrap valign=top><pre> <b>&#45;</b> Light
+   Moderate
+   (see note 2)
+ <b>&#43;</b> Heavy
+<b>VC</b> In the
+   Vicinity
+   (see note 3)</td>
+<td nowrap valign=top><pre><b>MI</b> Shallow
+<b>PR</b> Partial
+<b>BC</b> Patches
+<b>DR</b> Low Drifting
+<b>BL</b> Blowing
+<b>SH</b> Shower(s)
+<b>TS</b> Thunderstorm
+<b>FZ</b> Freezing</td>
+<td nowrap valign=top><pre><b>DZ</b> Drizzle
+<b>RA</b> Rain
+<b>SN</b> Snow
+<b>SG</b> Snow Grains
+<b>IC</b> Ice Crystals
+<b>PE</b> Ice Pellets
+<b>GR</b> Hail
+<b>GS</b> Small Hail
+   and/or Snow
+   Pellets
+<b>UP</b> Unknown
+   Precipitation</td>
+<td nowrap valign=top><pre><b>BR</b> Mist
+<b>FG</b> Fog
+<b>FU</b> Smoke
+<b>VA</b> Volcanic Ash
+<b>DU</b> Widespread
+   Dust
+<b>SA</b> Sand
+<b>HZ</b> Haze
+<b>PY</b> Spray</td>
+<td nowrap valign=top><pre><b>PO</b> Well-
+   Developed
+   Dust/Sand
+   Whirls
+<b>SQ</b> Squalls
+<b>FC</b> Funnel Cloud
+   Tornado
+   Waterspout
+   (see note 4)
+<b>SS</b> Sandstorm
+<b>SS</b> Duststorm</td>
+</tr>
+<tr>
+<td nowrap colspan=5><pre>
+<b>1.</b> The weather groups shall be constructed by considering columns 1 to 5 in the table
+   above in sequence, i.e. intensity, followed by description, followed by weather phenomena,
+   e.g. heavy rain shower(s) is coded as +SHRA
+<b>2.</b> To denote moderate intensity no entry or symbol is used.
+<b>3.</b> See paragraph 8.4.1.a.(2), 8.5, and 8.5.1 for vicinity definitions.
+<b>4.</b> Tornados and waterspouts shall be coded as +FC.</pre></td> 
+</table>
+</center>
+<p>
+
+The following general rules apply when coding present weather for a METAR or SPECI:<p>
+
+ <p>
+<ul>
+<li>Weather occurring at the point of observation (at the station) or in the vicinity of the station shall be coded in the body of the report; weather observed but not occurring at the point of
+observation (at the station) or in the vicinity of the station shall be coded in Remarks.</li>
+
+<li>With the exceptions of volcanic ash, low drifting dust, low drifting sand, low drifting snow,
+shallow fog, partial fog, and patches (of) fog, an obscuration shall be coded in the body of the
+report if the surface visibility is less than 7 miles or considered operationally significant. 
+Volcanic ash shall always be coded when observed.</li>
+
+<li>Separate groups shall be used for each type of present weather.  Each group shall be separated from the other by a space.  METAR/SPECI shall contain no more than three present weather groups.</li>
+
+<li>The weather groups shall be constructed by considering columns 1 to 5 in Table 12-2 in
+sequence, i.e., intensity, followed by description, followed by weather phenomena, e.g., heavy
+rain shower(s) is coded as +SHRA.</li>
+</ul>
+ <p>
+<pre>
+  a. <b>Intensity or Proximity Qualifier</b>. 
+
+      (1) Intensity shall be coded with precipitation types, except ice crystals and hail,
+          including those associated with a thunderstorm (<b>TS</b>) and those of a showery nature
+          (<b>SH</b>).  Tornadoes and waterspouts shall be coded as <b>+FC</b>.  No intensity 
+          shall be ascribed to the obscurations of blowing dust (<b>BLDU</b>), blowing sand 
+          <b>(BLSA</b>), and blowing snow (<b>BLSN</b>).  Only moderate or heavy intensity
+          shall be ascribed to sandstorm (<b>SS</b>) and duststorm (<b>DS</b>).
+
+      (2) The proximity qualifier for vicinity, <b>VC</b>, (weather phenomena observed in
+          the vicinity of but not at the point(s) of observation) shall be coded in
+          combination with thunderstorm (<b>TS</b>), fog (<b>FG</b>), shower(s) (<b>SH</b>),
+          well-developed dust/sand whirls (<b>PO</b>), blowing dust (<b>BLDU</b>), blowing
+          sand (<b>BLSA</b>), blowing snow (<b>BLSN</b>), sandstorm (<b>SS</b>), and
+          duststorm (<b>DS</b>).  Intensity qualifiers shall not be coded with <b>VC</b>.
+
+          <b>VCFG</b> shall be coded to report any type of fog in the vicinity of the
+          point(s) of observation.
+
+          Precipitation not occurring at the point of observation but within 10 statute
+          miles shall be coded as showers in the vicinity (<b>VCSH</b>).
+
+  b. <b>Descriptor Qualifier.</b>  Only one descriptor shall be coded for each weather
+     phenomena group, e.g., "-FZDZ".  Mist (<b>BR</b>) shall not be coded with any
+     descriptor.
+
+     (1) The descriptors shallow (<b>MI</b>), partial (<b>PR</b>), and patches (<b>BC</b>)
+         shall only be coded with <b>FG</b>, e.g., "MIFG".
+
+     (2) The descriptors low drifting (<b>DR</b>) and blowing (<b>BL</b>) shall only
+         be coded with dust (<b>DU</b>), sand (<b>SA</b>), and snow (<b>SN</b>), e.g.,
+         "BLSN" or "DRSN".  <b>DR</b> shall be coded for <b>DU</b>, <b>SA</b>, or
+         <b>SN</b> raised by the wind to less than six feet above the ground.
+
+         When blowing snow is observed with snow falling from clouds, both phenomena are
+         reported, e.g., "SN BLSN".  If there is blowing snow and the observer cannot
+         determine whether or not snow is also falling, then <b>BLSN</b> shall be
+         reported.  <b>PY</b> shall be coded only with blowing (<b>BL</b>).
+
+     (3) The descriptor shower(s) (<b>SH</b>) shall be coded only with one or more
+         of the precipitation types of rain (<b>RA</b>), snow (<b>SN</b>), ice
+         pellets (<b>PE</b>), small hail (<b>GS</b>), or large hail (<b>GR</b>). 
+         The <b>SH</b> descriptor indicates showery-type precipitation.  When
+         any type of precipitation is coded with <b>VC</b>, the intensity and
+         type of precipitation shall not be coded.
+
+     (4) The descriptor thunderstorm (<b>TS</b>) may be coded by itself, i.e.,
+         a thunderstorm without associated precipitation, or it may be coded
+         with the precipitation types of rain (<b>RA)</b>, snow (<b>SN</b>),
+         ice pellets (<b>PE</b>), small hail and/or snow pellets (<b>GS</b>),
+         or hail (<b>GR</b>).  For example, a thunderstorm with snow and small
+         hail and/or snow pellets would be coded as "TSSNGS".  <b>TS</b> shall
+         not be coded with <b>SH</b>.
+
+     (5) The descriptor freezing (<b>FZ</b>) shall only be coded in combination
+         with fog (<b>FG)</b>, drizzle (<b>DZ</b>), or rain (<b>RA</b>), e.g.,
+         "FZRA".  <b>FZ</b> shall not be coded with <b>SH</b>.
+
+  c. <b>Precipitation.</b>  Up to three types of precipitation may be coded in
+     a single present weather group.  They shall be coded in order of decreasing
+     dominance based on intensity.
+
+     (1) Drizzle shall be coded as <b>DZ</b>; rain shall be coded as <b>RA</b>;
+         snow shall be coded as <b>SN</b>; snow grains shall be coded as
+         <b>SG</b>; ice crystals shall be coded as <b>IC</b>; ice pellets shall
+         be coded as <b>PE</b>, hail shall be coded as <b>GR</b>, and small hail
+         and/or snow pellets shall be coded as <b>GS</b>.
+
+     (2) At automated stations, precipitation of unknown type shall be coded as
+         <b>UP</b>.
+
+  d. <b>Obscuration.</b>
+
+     (1) Mist shall be coded as <b>BR</b>; fog shall be coded as <b>FG</b>;
+         smoke shall be coded as <b>FU</b>; volcanic ash shall be coded as
+         <b>VA</b>; widespread dust shall be coded as <b>DU</b>; sand shall be
+         coded as <b>SA</b>; and haze shall be coded as <b>HZ</b>
+
+     (2) Shallow fog (<b>MIFG)</b>, patches (of) fog (<b>BCFG</b>), and partial
+         fog (<b>PRFG</b>) may be coded with prevailing visibility of 7 statute
+         miles or greater.
+
+     (3) Spray shall be coded only as <b>BLPY</b>.
+
+  e. <b>Other Weather Phenomena</b>
+
+     (1) Well-developed dust/sand whirls shall be coded as <b>PO</b>; squalls
+         shall be coded as <b>SQ</b>; sandstorm shall be coded as <b>SS</b>;
+         and duststorm shall be coded as <b>DS</b>.
+
+     (2) Tornadoes and waterspouts shall be coded as +<b>FC.</b>  Funnel clouds
+         shall be coded as <b>FC</b>.
+</pre>
+
+ <p>
+
+<b>12.6.9 Sky Condition Group (NsNsNshshshs or VVhshshs or SKC/CLR).</b>  The standards for observing
+and reporting sky condition are described in Chapter 9.  <p>
+
+ <p>
+<pre>
+  a. Sky condition shall be coded in the format, <b>NsNsNshshshs</b>, where
+     <b>NsNsNs</b> is the amount of sky cover and <b>hshshs</b> is the height
+     of the layer.  There shall be no space between the amount of sky cover
+     and the height of the layer.  Sky condition shall be coded in an ascending
+     order up to thefirst overcast layer.  At mountain stations, if the layer
+     is below station level, the height of the layer shall be coded as <b>///</b>.
+
+  b. Vertical visibility shall be coded in the format, <b>VVhshshs</b>, where
+     <b>VV</b> identifies an indefinite ceiling and <b>hshshs</b> is the vertical
+     visibility into the indefinite ceiling (see paragraphs 9.4.4, 9.4.7, and
+     9.5.5).  There shall be no space between the group identifier and the vertical
+     visibility.
+
+  c. Clear skies shall be coded in the format, <b>SKC</b> or <b>CLR</b>, where
+     <b>SKC</b> is the abbreviation used by manual stations to indicate no
+     layers are present and <b>CLR</b> is the abbreviation used by automated
+     stations to indicate no layers are detected at or below 12,000 feet (see
+     paragraph 9.5.4).
+</pre>
+
+ <p>
+
+Each layer shall be separated from other layers by a space.  The sky cover for each layer reported shall
+be coded by using the appropriate reportable contraction from Table 12-3.  The report of clear skies (<b>SKC</b>
+or <b>CLR</b>) are complete layer reports within themselves.  The abbreviations <b>FEW</b>, <b>SCT</b>, <b>BKN</b>, and <b>OVC</b>
+shall be followed, without a space, by the height of the layer.<p>
+
+<p>
+
+<center>
+<table border>
+<caption><b>Table 12-3. Contractions for Sky Cover</b></caption>
+<tr>
+<th nowrap>Reportable Contraction</th><th nowrap>Meaning</th><th>Summation Amount<br>
+of Layer</th>
+</tr>
+<tr>
+<td nowrap align=center><b>VV</b></td>
+<td nowrap align=center>Vertical Visibility</td>
+<td nowrap align=center>8/8</td>
+</tr>
+<tr>
+<td nowrap align=center><b>SKC</b> or <b>CLR</b>&#185;</td>
+<td nowrap align=center>Clear</td>
+<td nowrap align=center>0</td>
+</tr>
+<tr>
+<td nowrap align=center><b>FEW</b>&#178;</td>
+<td nowrap align=center>Few</td>	
+<td nowrap align=center>1/8 - 2/8</td>
+</tr>
+<tr>
+<td nowrap align=center><b>SCT</b></td>
+<td nowrap align=center>Scattered</td>
+<td nowrap align=center>3/8 - 4/8</td>
+</tr>
+<tr>
+<td nowrap align=center><b>BKN</b></td>
+<td nowrap align=center>Broken</td>
+<td nowrap align=center>5/8 - 7/8</td>
+</tr>
+<tr>
+<td nowrap align=center><b>OVC</b></td>
+<td nowrap align=center>Overcast</td>
+<td nowrap align=center>8/8</td>
+</tr>
+<tr>
+<td nowrap colspan=3><pre>1. The abbreviation <b>CLR</b> shall be used at automated stations when
+   no layers at or below 12,000 feet are reported; the abbreviation
+   <b>SKC</b> shall be used at manual stations when no layers are reported.
+2. Any layer amount less than 1/8 is reported as FEW.</td>
+</tr>
+</table>
+</center>
+The height of the base of each layer, <b>hshshs</b>, shall be coded in hundreds of feet above the surface using
+three digits in accordance with Table 12-4.<p>
+
+
+<center>
+<table border>
+<caption><b>Table 12-4. Increments of Reportable Values of Sky Cover Height</b></caption>
+<tr>
+<th nowrap>Range of Height Values (feet)</th>
+<th nowrap>Reportable Increment (feet)</th>
+</tr>
+<tr>
+<td nowrap align=center>&lt;&#61;5,000</td>
+<td nowrap align=center>To nearest 100</td>
+</tr>
+<tr>
+<td nowrap align=center>&gt;5,000 but &lt;&#61;10,000</td>
+<td nowrap align=center>To nearest 500</td>
+</tr>
+<tr>
+<td nowrap align=center>&gt;10,000</td>
+<td nowrap align=center>To nearest 1,000</td>
+</tr>
+</table>
+</center>
+<p>
+At manual stations, cumulonimbus (<b>CB</b>) or towering cumulus (<b>TCU</b>) shall be appended to the associated
+layer.  For example, a scattered layer of towering cumulus at 1,500 feet would be coded "SCT015TCU"
+and would be followed by a space if there were additional higher layers to code. <p>
+
+ <p>
+
+<b>12.6.10 Temperature/Dew Point Group (T'T'/T'dT'd).</b>  The standards for observing and reporting
+temperature and dew point are given in Chapter 10.  The temperature shall be separated from the dew
+point with a solidus "<b>/</b>".<p>
+
+ <p>
+
+The temperature and dew point shall be coded as two digits rounded to the nearest whole degree Celsius
+(see paragraph 2.6.3).  For example, a temperature of 0.3C would be coded as "00".  Sub-zero
+temperatures and dew points shall be prefixed with an <b>M</b>.  For example, a temperature of 4C with a dew
+point of -2C would be coded as "04/M02"; a temperature of  -0.5C would be coded as "M00".<p>
+
+ <p>
+
+<p>
+
+If the temperature is not available, the entire temperature/dew point group shall not be coded.  If the dew
+point is not available, the temperature shall be coded followed by a solidus "<b>/</b>" and no entry made for dew
+point.  For example, a temperature of 1.5C and a missing dew point would be coded as "02/".<p>
+
+ <p>
+
+<b>12.6.11 Altimeter (APHPHPHPH).</b>  The standards for observing and reporting altimeter are described
+in Chapter 11.<p>
+
+ <p>
+
+The altimeter group always starts with an <b>A</b> (the international indicator for altimeter in inches of
+mercury).  The altimeter shall be coded as a four digit group immediately following the <b>A</b> using the tens,
+units, tenths, and hundredths of inches of mercury.  The decimal point is not coded.<p>
+
+ <p>
+
+<b>12.7 Remarks </b>(<b>RMK)</b><p>
+
+ <p>
+
+Remarks shall be included in all METAR and SPECI, if appropriate.<p>
+
+ <p>
+
+Remarks shall be separated from the body of the report by a space and the contraction <b>RMK</b>.  If there
+are no remarks, the contraction <b>RMK</b> is not required.<p>
+
+ <p>
+
+METAR/SPECI remarks fall into 2 categories:  (1) Automated, Manual, and Plain Language (see
+paragraph 12.7.1), and (2) Additive and Maintenance Data (see paragraph 12.7.2).<p>
+
+ <p>
+
+Remarks shall be made in accordance with the following:<p>
+
+ <p>
+<pre>
+  a. Where plain language is called for, authorized contractions,
+     abbreviations, and symbols should be used to conserve time and
+     space.  However, in no case should an essential remark, of which
+     the observer is aware, be omitted for the lack of readily available
+     contractions.  In such cases, the only requirement is that the
+     remark be clear.  For a detailed list of authorized contractions,
+     see FAA Order 7340 Series, <i>Contractions</i>.
+
+  b. Time entries shall be made in minutes past the hour if the time
+     reported occurs during the same hour the observation is taken.
+     Hours and minutes shall be used if the hour is different, or this
+     Handbook prescribes the use of the hour and minutes.
+
+  c. Present weather coded in the body of the report as <b>VC</b> may
+     be further described, i.e., direction from the station, if known.
+     Weather phenomena beyond 10 statute miles of the point(s) of
+     observation shall be coded as distant (<b>DSNT</b>) followed by the
+     direction from the station.  For example, precipitation of unknown
+     intensity within 10 statute miles east of the station would be coded
+     as "VCSH E"; lightning 25 statute miles west of the station would be
+     coded as "LTG DSNT  W".
+
+  d. Distance remarks shall be statute miles except for automated lightning
+     remarks which are in nautical miles.
+
+  e. Movement of clouds or weather, if known, shall be coded with respect
+     to the direction toward which the phenomena is moving.  For example,
+     a thunderstorm moving toward the northeast would be coded as "TS MOV NE".
+
+  f. Directions shall use the eight points of the compass coded in a
+     clockwise order.
+
+  g. Insofar as possible, remarks shall be entered in the order they are
+     presented in the following paragraphs.
+</pre>
+
+ <p>
+
+<p>
+
+<b>12.7.1 Automated, Manual, and Plain Language Remarks.</b>  These remarks generally elaborate on
+parameters reported in the body of the report.  Automated and manual remarks may be generated either
+by an automated or manual station.  Plain language remarks are only provided from manual stations.<p>
+
+ <p>
+<pre>
+  a. <b>Volcanic Eruptions (Plain Language).</b>  Volcanic eruptions shall be coded.  
+
+     The remark shall be plain language and contain the following, if known:
+
+     (1) <b>Name</b> of volcano.
+
+     (2) <b>Latitude and longitude</b> or the direction and the approximate
+         distance from the station.
+
+     (3) <b>Date/Time</b> (UTC) of the eruption.
+
+     (4) Size <b>description</b>, approximate height, and direction of
+         movement <b>of the ash cloud</b>.
+
+     (5) Any <b>other pertinent data</b> about the eruption.
+
+         For example, a remark on a volcanic eruption would look like
+         the following:
+
+         MT. AUGUSTINE VOLCANO 70 MILES SW ERUPTED 231505 LARGE ASH CLOUD
+         EXTENDING TO APRX 30000 FEET MOVING NE.
+
+         Pre-eruption volcanic activity shall not be coded.  Pre-eruption
+         refers to unusual and/or increasing volcanic activity which
+         could presage a volcanic eruption.
+
+  b. <b>Funnel Cloud (Tornadic activity_B/E(hh)mm_LOC/DIR_(MOV)).</b>  At
+     manual stations, tornadoes, funnel clouds, or waterspouts shall be
+     coded in the format,  <b>Tornadic activity_B/E(hh)mm_LOC/DIR_(MOV)</b>,
+     where <b>TORNADO, FUNNEL CLOUD, </b>or<b>WATERSPOUT</b> identifies the
+     specific tornadic activity,  <b>B/E</b> denotes the beginning and/or
+     ending time, <b>(hh)mm</b> is the time of occurrence (only the minutes
+     are required if the hour can be inferred from the report time), <b>LOC/DIR</b>
+     is the location and/or direction of the phenomena from the station,
+     and <b>MOV</b> is the movement, if known (see paragraphs 8.3.3.c, 8.5.3.c,
+     and 8.5.5.b).  Tornadic activity shall be coded as the first remark after
+     the "RMK" entry.  For example, "TORNADO B13 6 NE" would indicate that a
+     tornado, which began at 13 minutes past the hour, was 6 statute miles
+     northeast of the station.
+
+  c. <b>Type of Automated Station (AO1 or AO2).</b>  <b>AO1</b> or <b>AO2</b>
+     shall be coded in all METAR/SPECI from automated stations.  Automated
+     stations without a precipitation discriminator shall be identified as
+     <b>AO1</b>; automated station with a precipitation discriminator shall
+     be identified as <b>AO2</b>.
+
+  d. <b>Peak Wind (PK_WND_dddff(f)/(hh)mm).</b>  The peak wind shall be coded
+     in the format,<b>PK_WND dddff(f)/(hh)mm</b> of the next METAR, where <b>PK_WND</b>
+     is the remark identifier, <b>ddd</b> is the direction of the peak wind,
+     <b>ff(f)</b> is the peak wind speed since the last METAR, and <b>(hh)mm</b> is
+     the time of occurrence (only the minutes are required if the hour can be
+     inferred from the report time) (see paragraphs 5.4.5 and 5.5.5).  There
+     shall be a space between the two elements of the remark identifier and the
+     wind direction/speed group; a solidus "<b>/</b>" (without spaces) shall
+     separate the wind direction/speed group and the time.  For example, a peak
+     wind of 45 knots from 280 degrees that occurred at 15 minutes past the hour
+     would be coded "PK WND 28045/15".
+
+  e. <b>Wind Shift (WSHFT_(hh)mm). </b> A wind shift shall be coded in the format,
+     <b>WSHFT</b>_(hh)mm, where <b>WSHFT</b> is the remark identifier and <b>(hh)mm</b>
+     is the time the wind shift began (only the minutes are required if the hour
+     can be inferred from the report time) (see paragraphs 5.4.6 and 5.5.6).  The
+     contraction <b>FROPA</b> may be entered following the time if it is reasonably
+     certain that the wind shift was the result of a frontal passage.  There shall
+     be a space between the remark identifier and the time and, if applicable,
+     between the time and the frontal passage contraction.  For example, a remark
+     reporting a wind shift accompanied by a frontal passage that began at
+     30 minutes after the hour would be coded as "WSHFT 30 FROPA".
+
+  f. <b>Tower or Surface Visibility (TWR_VIS_vvvvv or SFC_VIS_vvvvv).</b>
+     Tower visibility or surface visibility (see paragraphs 6.5.4 and 6.5.5)
+     shall be coded in the formats, <b>TWR_VIS_vvvvv</b> or <b>SFC_VIS_vvvvv,
+     </b>respectively, where <b>vvvvv</b> is the observed tower/surface
+     visibility value.  A space shall be coded between each of the remark
+     elements.  For example, the control tower visibility of 1 1/2 statute
+     miles would be coded "TWR VIS 1 1/2".
+
+  g. <b>Variable Prevailing Visibility (VIS_vnvnvnvnvnVvxvxvxvxvx).</b>
+     Variable prevailing visibility shall be coded in the format
+     <b>VIS_vnvnvnvnvnVvxvxvxvxvx</b>, where <b>VIS</b> is the remark
+     identifier, <b>vnvnvnvnvn</b> is the lowest visibility evaluated,
+     <b>V</b> denotes variability between two values, and <b>vxvxvxvxvx</b>
+     is the highest visibility evaluated.  There shall be one space following
+     the remark identifier; no spaces between the letter <b>V</b> and the
+     lowest/highest values.  For example, a visibility that was varying
+     between 1/2 and 2 statute miles would be coded "VIS 1/2V2" (see
+     paragraphs 6.4.5 and 6.5.3).
+
+  h. <b>Sector Visibility (VIS_[DIR]_vvvvv) [Plain Language].</b>  The
+     sector visibility shall be coded in the format, <b>VIS_[DIR]_vvvvv,
+     </b> where <b>VIS</b> is the remark identifier, [<b>DIR]</b> defines
+     the sector to 8 points of the compass, and <b>vvvvv</b> is the sector
+     visibility in statute miles, using the appropriate set of values in
+     Table 12-1 (see paragraphs 6.4.6 and 6.5.7).  For example, a visibility
+     of 2 1/2 statute miles in the northeastern octant would be
+     coded "VIS NE 2 1/2".
+
+  i. <b>Visibility At Second Location (VIS_vvvvv_[LOC]).</b>  At designated
+     automated stations, the visibility at a second location shall be coded
+     in the format <b>VIS_vvvvv_[LOC]</b>, where <b>VIS</b> is the remark
+     identifier, <b>vvvvv</b> is the measured visibility value, and <b>[LOC]</b>
+     is the specific location of the visibility sensor(s) at the station (see
+     paragraph 6.5.6).  This remark shall only be generated when the condition
+     is lower than that contained in the body of the report.  For example, a
+     visibility of 2 1/2 statute miles measured by a second sensor located at
+     runway 11 would be coded "VIS 2 1/2 RWY11".
+
+  j. <b>Lightning (Frequency_LTG(type)_[LOC]).</b>
+
+     (1) When lightning is observed at a manual station, the frequency,
+         type of lightning, and location shall be reported.  The remark
+         shall be coded in the format <b>Frequency_LTG(type)_[LOC]</b>.
+         The contractions for the type and frequency of lightning shall
+         be based on Table 12-5.  The location and direction shall be coded
+         in accordance with paragraph 12.7.c.  For example, "OCNL LTGICCG OHD",
+         "FRQ LTG VC", or "LTG DSNT W".
+
+     (2) When lightning is detected by an <u>automated</u> system:
+
+         (a) Within 5 nautical miles of the Airport Location Point (ALP),
+             it will be reported as <b>TS</b> in the body of the report
+             with no remark;
+
+         (b) Between 5 and 10 nautical miles of the ALP, it will be reported
+             as <b>VCTS</b> in the body of the report with no remark;
+
+         (c) Beyond 10 but less than 30 nautical miles of the ALP, it will
+             be reported in remarks only as <b>LTG DSNT</b> followed by the
+             direction from the ALP.
+</pre>
+<center>
+<table border>
+<caption><b>Table 12-5. Type and Frequency of Lightning</b></caption>
+<tr>
+<th colspan=3>Type of Lightning</th>
+</tr>
+<tr>
+<th>Type</th><th>Contraction</th><th>Definition</th>
+</tr>
+<tr>
+<td align=center>Cloud-ground</td>
+<td align=center>CG</td>
+<td>Lightning occurring between cloud and ground.</td>
+</tr>
+<tr>
+<td align=center>In-cloud</td>
+<td align=center>IC</td>
+<td>Lightning which takes place within the cloud.</td>
+</tr>
+<tr>
+<td align=center>Cloud-cloud</td>
+<td align=center>CC</td>
+<td>Streaks of lightning reaching from one cloud to another.</td>
+</tr>
+<tr>
+<td align=center>Cloud-air</td>
+<td align=center>CA</td>
+<td valign=middle>Streaks of lightning which pass from a cloud to air,<br>
+but do not strike the ground.</td>
+</tr>
+<tr>
+<th colspan=3>Frequency of Lightning</th>
+</tr>
+<tr>
+<th>Frequency</th><th>Contraction</th><th>Definition</th>
+</tr>
+<tr>
+<td align=center>Occasional</td>
+<td align=center>OCNL</td>
+<td>Less than 1 flash/minute.</td>
+</tr>
+<tr>
+<td align=center>Frequent</td>
+<td align=center>FRQ</td>
+<td>About 1 to 6 flashes/minute.</td>
+</tr>
+<tr>
+<td align=center>Continuous</td>
+<td align=center>CONS</td>
+<td>More than 6 flashes/minute.</td>
+</tr>
+</table>
+</center>
+<p>
+<pre>
+  k. <b>Beginning and Ending of Precipitation (w'w'B(hh)mmE(hh)mm).</b>
+     At designated stations, the beginning and ending of precipitation
+     shall be coded in the format, <b>w'w'B(hh)mmE(hh)mm</b>, where <b>w'w'</b>
+     is the type of precipitation, <b>B</b> denotes the beginning, <b>E</b>
+     denotes the ending, and <b>(hh)mm</b> is the time of occurrence (only the
+     minutes are required if the hour can be inferred from the report time)
+    (see paragraph 8.5.5.a).  There shall be no spaces between the elements.
+     The coded remarks are not required in SPECI and should be reported in
+     the next METAR.  Intensity qualifiers shall not be coded.  For example,
+     if rain began at 0005, ended at 0030, and snow began at 0020, and ended
+     at 0055, the remarks would be coded "RAB05E30SNB20E55". If the precipitation
+     were showery, the remark would be coded "SHRAB05E30SHSNB20E55".
+
+  l. <b>Beginning and Ending of Thunderstorms (TSB(hh)mmE(hh)mm).</b>  The
+     beginning and ending of thunderstorm(s) shall be coded in the format,
+     <b>TSB(hh)mmE(hh)mm</b>, where <b>TS</b> indicates thunderstorm, <b>B</b>
+     denotes the beginning, <b>E</b> denotes the ending, and <b>(hh)mm</b>
+     is the time of occurrence (only the minutes are required if the hour can be
+     inferred from the report time) (see paragraph 8.5.4).  There shall be no
+     spaces between the elements.  For example, if a thunderstorm began at 0159
+     and ended at 0230, the remark would be coded "TSB0159E30".
+
+  m. <b>Thunderstorm Location</b> <b>(TS_LOC_(MOV_DIR)) [Plain Language].</b>
+     Thunderstorm(s) shall be coded in the format, <b>TS_LOC_(MOV_DIR)</b>,
+     where <b>TS </b>identifies the thunderstorm activity, <b>LOC</b> is the
+     location of the thunderstorm(s) from the station, and <b>MOV_DIR</b> is
+     the movement with direction, if known (see paragraph 8.4.1.b(5) and 8.5.4).
+     For example, a thunderstorm southeast of the station and moving toward the
+     northeast would be coded "TS SE MOV NE".
+
+  n. <b>Hailstone Size (GR_[size]) [Plain Language].</b>  At designated
+     stations, the hailstone size shall be coded in the format, <b>GR_[size]</b>,
+     where <b>GR</b> is the remark identifier and <b>[size]</b> is the
+     diameter of the largest hailstone.  The hailstone size shall be coded in
+     1/4 inch increments (see paragraph 8.5.1.c(8)).  For example, "GR 1 3/4"
+     would indicate that the largest hailstones were 1 3/4 inches in diameter.
+     If <b>GS</b> is coded in the body of the report, no hailstone size remark
+     is required.
+
+  o. <b>Virga (VIRGA_(DIR)) [Plain Language].</b>  Virga shall be coded
+     in the format, <b>VIRGA_(DIR)</b>, where <b>VIRGA</b> is the remark
+     identifier and <b>DIR</b> is the direction from the station.  The
+     direction of the phenomena from the station is optional, e.g., "VIRGA"
+     or "VIRGA SW".
+
+  p. <b>Variable Ceiling Height (CIG_hnhnhnVhxhxhx).</b>  The variable
+     ceiling height shall be coded in the format, <b>CIG_hnhnhnVhxhxhx</b>,
+     where <b>CIG</b> is the remark identifier, <b>hnhnhn</b> is the
+     lowest ceiling height evaluated, <b>V</b> denotes variability between
+     two values, and <b>hxhxhx</b> is the highest ceiling height evaluated
+     (see paragraph 9.5.7 and Table 9-1). There shall be one space
+     following the remark identifier; no spaces between the
+     letter <b>V</b> and the lowest/highest ceiling values.  For example,
+     "CIG 005V010" would indicate a ceiling that was varying between 500
+     and 1,000 feet.
+
+  q. <b>Obscurations (w'w'_[NsNsNs]hshshs). [Plain Language]</b>
+     Obscurations (surface-based or aloft) shall be coded in the format,
+     <b>w'w'_[NsNsNs]hshshs</b>, where <b>w'w'</b> is the weather causing
+     the obscuration at the surface or aloft, <b>NsNsNs</b> is the applicable sky
+     cover amount of the obscuration aloft (FEW, SCT, BKN, OVC) or at the
+     surface (FEW, SCT, BKN), and <b>hshshs</b> is the applicable height
+     (see paragraphs 9.4.3 and 9.5.6). Surface-based obscurations shall have
+     a height of "000".  There shall be a space separating the weather
+     causing the obscuration and the sky cover amount; there shall be no space
+     between the sky cover amount and the height.  For example, fog hiding
+     3-4 oktas of the sky would be coded "FG SCT000"; a broken layer at 2,000 feet
+     composed of smoke would be coded "FU BKN020".
+
+  r. <b>Variable Sky Condition (NsNsNs(hshshs)_V_NsNsNs). [Plain Language]</b>
+     The variable sky condition remark shall be coded in the format,
+     <b>NsNsNs(hshshs)_V_NsNsNs</b>, where <b>NsNsNs(hshshs)</b> and <b>NsNsNs</b>
+     identifies the two operationally significant sky conditions and <b>V</b> denotes
+     the variability between the two ranges (see paragraphs 9.4.2.d and 9.5.9).
+     If there are several layers with the same sky condition amount, the layer
+     height <b>(hshshs</b>) of the variable layer shall be coded.  For example,
+     a cloud layer at 1,400 feet that is varying between broken and overcast would
+     be coded "BKN014 V OVC".
+
+  s. <b>Significant Cloud Types [Plain Language].</b>  The significant cloud
+     type remark shall be coded in all reports in the following manner (see
+     paragraphs 9.4.6 and 9.5.10):
+
+     (1) <b>Cumulonimbus or Cumulonimbus Mammatus (CB or CBMAM_LOC_(MOV_DIR).</b>
+         Cumulonimbus or cumulonimbus mammatus, as appropriate, (for which no
+         thunderstorm is being reported) shall be coded in the format, <b>CB</b> or
+         <b>CBMAM_LOC_(MOV_DIR)</b>, where <b>CB </b>or<b> CBMAM </b>is the cloud
+         type, <b>LOC</b> is the direction from the station, and <b>MOV_DIR</b> is
+         the movement with direction (if known).  The cloud type, location, movement,
+         and direction entries shall be separated from each other with a space.
+         For example, a CB up to 10 statute miles west of the station moving
+         toward the east would be coded "CB W MOV E".  If the CB was more than
+         10 statute miles to the west, the remark would be coded "CB DSNT W".
+
+     (2) <b>Towering cumulus (TCU_[DIR])</b>.  Towering cumulus clouds shall be
+         coded in the format, <b>TCU_[DIR]</b>, where <b>TCU</b> is the cloud
+         type and <b>DIR</b> is the direction from the station.  The cloud type
+         and direction entries shall be separated by a space.  For example, a
+         towering cumulus cloud up to 10 statute miles west of the station would
+         be coded "TCU W".
+
+     (3) <b>Altocumulus castellanus (ACC_[DIR])</b>.  Altocumulus castellanus
+         shall be coded in the format, <b>ACC_[DIR]</b>, where <b>ACC</b> is
+         the cloud type and <b>DIR</b> is the direction from the station.  The
+         cloud type and direction entries shall be separated by a space.  For
+         example, an altocumulus cloud 5 to 10 statute miles northwest of the
+         station would be coded "ACC NW".
+
+     (4) <b>Standing lenticular or Rotor clouds (CLD_[DIR]).</b>  Stratocumulus
+         (SCSL), altocumulus (ACSL), or cirrocumulus (CCSL), or rotor clouds shall
+         be coded in the format, <b>CLD_[DIR]</b>, where <b>CLD</b> is the cloud
+         type and <b>DIR</b> is the direction from the station.  The cloud type
+         and direction entries shall be separated by a space.  For example,
+         altocumulus standing lenticular clouds observed southwest through west
+         of the station would be coded  "ACSL SW-W"; an apparent rotor cloud 5 to
+         10 statute miles northeast of the station would be coded "APRNT ROTOR CLD
+         NE"; and cirrocumulus clouds south of the station would be coded "CCSL S".
+
+  t. <b>Ceiling Height at Second Location (CIG_hhh_[LOC]).</b> <b>  </b>At
+     designated stations, the ceiling height at a second location shall be
+     coded in the format, <b>CIG_hhh_[LOC]</b>, where <b>CIG</b> is the remark
+     identifier,  <b>hhh</b> is the measured height of the ceiling, and <b>[LOC]</b>
+     is the specific location of the ceilometer(s) at the station (see paragraph
+     9.5.8).  This remark shall only be generated when the ceiling is lower than
+     that contained in the body of the report.  For example, if the ceiling
+     measured by a second sensor located at runway 11 is broken at 200 feet,
+     the remark would be "CIG 002RWY11".
+
+  u. <b>Pressure Rising or Falling Rapidly (PRESRR/PRESFR).</b>  At designated
+     stations, when the pressure is rising or falling rapidly at the time of
+     observation (see paragraphs 11.4.6 and 11.5.5), the remark <b>PRESRR</b>
+     (pressure rising rapidly) or <b>PRESFR</b> (pressure falling rapidly) shall
+     be included in the report.
+
+  v. <b>Sea-Level Pressure (SLPppp).</b>  At designated stations, the sea-level
+     pressure shall be coded in the format <b>SLPppp</b>, where <b>SLP</b> is
+     the remark identifier and <b>ppp</b> is the sea-level pressure in
+     hectopascals (see paragraphs 11.4.4 and 11.5.4).  For example, a sea-level
+     pressure of 998.2 hectopascals would be coded as "SLP982".  For a METAR, if
+     sea-level pressure is not available, it is coded as "<b>SLPNO</b>".
+
+  w. <b>Aircraft Mishap (ACFT_MSHP) [Plain Language].  </b>If a report is
+     taken to document weather conditions when notified of an aircraft mishap,
+     the remark <b>ACFT_MSHP</b> shall be coded in the report but not transmitted.
+     The act of non-transmission shall be indicated by enclosing the remark in
+     parentheses in the record, i.e., "(ACFT MSHP)".
+
+  x. <b>No SPECI Reports Taken (NOSPECI) [Plain Language].</b>  At manual
+     stations where SPECI's are not taken, the remark <b>NOSPECI</b> shall
+     be coded to indicate that no changes in weather conditions will be
+     reported until the next METAR.
+
+  y. <b>Snow Increasing Rapidly (SNINCR_[inches-hour/inches on ground]).</b>
+     At designated stations, the snow increasing rapidly remark shall be
+     reported, in the next METAR, whenever the snow depth increases by 1 inch
+     or more in the past hour.  The remark shall be coded in the format,
+     <b>SNINCR [inches-hour/inches on ground]</b>, where <b>SNINCR</b> is the
+     remark indicator, <b>inches-hour</b> is the depth increase in the past hour,
+     and <b>inches on ground</b> is the total depth of snow on the ground at
+     the time of the report.  The depth increase in the past hour and the total
+     depth on the ground are separated from each other by a solidus "<b>/</b>".
+     For example, a snow depth increase of 2 inches in the past hour with a
+     total depth on the ground of 10 inches would be coded "SNINCR 2/10".
+
+  z. <b>Other Significant Information [Plain Language].</b>  Agencies may
+     add to a report other information significant to their operations, such
+     as information on fog dispersal operations, runway conditions, "FIRST"
+     or "LAST" report from station, etc.
+</pre>
+
+ <p>
+
+<p>
+
+<b>12.7.2 Additive and Automated Maintenance Data.</b>  Additive data groups are only reported
+at designated stations.  The maintenance data groups are only reported from automated
+stations. <p>
+
+ <p>
+<pre>
+  a. <b>Precipitation</b>
+
+     (1) <b>Amount of Precipitation.</b>  The amount of liquid precipitation
+         shall be coded as the depth of precipitation that accumulates in an
+         exposed vessel during the time period being evaluated.  The amount
+         of freezing or frozen precipitation shall be the water equivalent of
+         the solid precipitation accumulated during the appropriate time period.
+
+     (2) <b>Units of Measure for Precipitation.</b>  Precipitation measurements
+         shall be in inches, tenths of inches, or hundredths of inches
+         depending on the precipitation being measured (see Table 12-6).
+</pre>
+
+<center>
+<table border>
+<caption><b>Table 12-6. Units of Measure of Precipitatiom</b></caption>
+<tr>
+<th>Type of Measurement</th><th>Unit of Measure</th>
+</tr>
+<tr>
+<td align=center>Liquid Precipitation</td>
+<td align=center>0.01 inch</td>
+</tr>
+<tr>
+<td align=center>Water Equivalent of Solid Precipitation</td>
+<td align=center>0.01 inch</td>
+</tr>
+<tr>
+<td align=center>Solid Precipitation</td>
+<td align=center>0.1 inch</td>
+</tr>
+<tr>
+<td align=center>Snow Depth</td>
+<td align=center>1.0 inch</td>
+</tr>
+</table>
+</center>
+
+<pre>
+     (3) <b>Depth of Freezing or Frozen Precipitation.</b>  The depth
+         of freezing and/or frozen precipitation shall be the actual
+         vertical depth of the precipitation accumulated on a horizontal
+         surface during the appropriate time period (see paragraphs 12.7.2.a(3)(b)
+         and 12.7.2.a(3)(c).  If snow falls, melts, and refreezes, the
+         depth of ice formed shall be included in the measurement.
+
+         (a) <b>Hourly Precipitation Amount (Prrrr).</b>  At designated
+             automated stations, the hourly precipitation amount shall
+             be coded in the format, <b>Prrrr</b>, where <b>P</b> is the
+             group indicator and <b>rrrr</b> is the water equivalent of all
+             precipitation that has occurred since the last METAR (see
+             paragraph 12.7.2.a(1)).  The amount shall be coded in
+             hundredths of an inch.  For example, "P0009" would indicate
+             9/100 of an inch of precipitation fell in the past hour; "P0000"
+             would indicate that less than 1/100 of an inch of precipitation
+             fell in the past hour.
+
+             The group shall be omitted if no precipitation occurred since the
+             last METAR.
+
+         (b) <b>3- and 6-Hour Precipitation Amount (6RRRR).</b>  At designated
+             stations, the 3- and 6-hourly precipitation group shall be coded
+             in the format, <b>6RRRR</b>, where <b>6</b> is the group indicator
+             and <b>RRRR</b> is the amount of precipitation.  The amount of
+             precipitation (water equivalent) accumulated in the past 3 hours
+             shall be reported in the 3-hourly report; the amount accumulated
+             in the past 6 hours shall be reported in the 6-hourly report.  The
+             amount of precipitation shall be coded in inches, using the tens,
+             units, tenths and hundredths digits of the amount.  When an
+             indeterminable amount of precipitation has occurred during the
+             period, <b>RRRR</b> shall be coded 6////.  For example, 2.17 inches
+             of precipitation would be coded "60217".  A trace shall be
+             coded "60000".
+
+         (c) <b>24-Hour Precipitation Amount (7R24R24R24R24).</b>  At
+             designated stations, the 24-hour precipitation amount shall be
+             coded in the format, <b>7R24R24R24R24</b>, where <b>7</b> is the
+             group indicator and <b>R24R24R24R24</b> is the 24-hour precipitation
+             amount. The 24-hour precipitation amount shall be included in the
+             1200 UTC (or other agency designated time) report whenever more
+             than a trace of precipitation (water equivalent) has fallen in the
+             preceding 24 hours.  The amount of precipitation shall be coded by
+             using the tens, units, tenths, and hundredths of inches (water
+             equivalent) for the 24-hour period.  If more than a trace (water
+             equivalent) has occurred and the amount cannot be determined, the
+             group shall be coded 7////.  For example, 1.25 inches of
+             precipitation (water equivalent) in the past 24 hours shall be
+             coded "70125".
+
+         (d) <b>Snow Depth on Ground (4/sss).</b>  At designated stations,
+             the total snow depth on the ground group shall be coded in the
+             0000 and 1200 UTC observation whenever there is more than a trace
+             of snow on the ground.  It shall be coded in the 0600 and 1800 UTC
+             observation if there is more than a trace of snow on the ground
+             and more than a trace of precipitation (water equivalent) has
+             occurred within the past 6 hours.  The remark shall be coded in
+             the format, <b>4/sss</b>, where <b>4/</b> is the group indicator
+             and <b>sss</b> is the snow depth in whole inches using three digits.
+             For example, a snow depth of 21 inches shall be coded as "4/021".
+
+         (e) <b>Water Equivalent of Snow on Ground (933RRR).</b>  At
+             designated stations, the water equivalent of snow on the ground
+             shall be coded each day, in the 1800 UTC report, if the average
+             snow depth is 2 inches or more.  Theremark shall be coded in the
+             format, <b>933RRR</b>, where <b>933</b> is the group indicator
+             and <b>RRR</b> is the water equivalent of snow, i.e., snow, snow
+             pellets, snow grains, ice pellets, ice crystals, and hail, on
+             the ground.  The water equivalent shall be coded in tens, units,
+             and tenths of inches, using three digits.  If the water equivalent
+             of snow consists entirely of hail, the group shall not be coded.
+             A water equivalent of 3.6 inches of snow would be coded as "933036";
+             a water equivalent of 12.5 would be coded as "933125".
+
+  b. <b>Cloud Types (8/CLCMCH).</b>  At designated stations, the group,
+     <b>8/CLCMCH</b>, shall be reported and coded in 3- and 6-hourly reports
+     when clouds are observed.  The predominant low cloud (<b>CL</b>), middle
+     cloud (<b>CM</b>), and high cloud (<b>C</b>H), shall be identified in
+     accordance with the WMO <i>International Cloud Atlas</i>, Volumes I and II,
+     or the WMO <i>Abridged International Cloud Atlas</i> or agency observing
+     aids for cloud identification.  A <b>0</b> shall be coded for the low,
+     middle, or high cloud type if no cloud is present in that classification.
+     A solidus "<b>/</b>" shall be coded for layers above an overcast.  If no
+     clouds are observed due to clear skies, the cloud type group shall not
+     be coded.  For example, a report of "8/6//" would indicate an overcast
+     layer of stratus clouds; a report of "8/903" would indicate cumulonimbus
+     type low clouds, no middle clouds, and dense cirrus high clouds.
+
+  c. <b>Duration of Sunshine (98mmm).</b>  The duration of sunshine that
+     occurred the previous calendar day shall be coded in the 0800 UTC report.
+     If the station is closed at 0800 UTC, the group shall be coded in the
+     first 6-hourly METAR after the station opens.  The duration of sunshine
+     shall be coded in the format, <b>98mmm</b>, where <b>98</b> is the group
+     indicator and <b>mmm</b> is the total minutes of sunshine.  The minutes
+     of sunshine shall be coded by using the hundreds, tens, and units digits.
+     For example, 96 minutes of sunshine would be coded "98096".  If no
+     sunshine occurred, the group would be coded "98000".
+
+  d. <b>Hourly Temperature and Dew Point (TsnT'T'T'snT'dT'dT'd).</b>  At
+     designated stations, the hourly temperature and dew point group shall
+     be coded to the tenth of a degree Celsius in the format, <b>TsnT'T'T'snT'dT'dT'd</b>,
+     where <b>T</b> is the group indicator, <b>sn</b> is the sign of the temperature,
+     <b>T'T'T'</b> is the temperature, and <b>T'dT'dT'd</b> is the dew point
+     (see paragraphs 10.5.1 and 10.5.3).  The sign of the temperature and
+     dew point shall be coded as 1 if the value is below 0&#176;C and 0 if the value
+     is 0&#176;C or higher.  The temperature and dew point shall be reported
+     in tens, units, and tenths of degrees Celsius.  There shall be no spaces
+     between the entries.  For example, a temperature of 2.6&#176;C and dew
+     point of -1.5&#176;C would be reported in the body of the report as
+     "03/M01" and the <b>TsnT'T'T'snT'dT'dT'd</b> group as "T00261015".  If
+     dew point is missing report the temperature; if the temperature is missing
+     do not report the temperature/dew point group.
+
+  e. <b>6-Hourly Maximum Temperature</b> (<b>1snTxTxTx</b>).  At designated
+     stations, the 6-hourly maximum temperature group shall be coded in the
+     format, <b>1snTxTxTx</b>, where <b>1</b> is the group indicator, <b>sn</b>
+     is the sign of the temperature, <b>TxTxTx</b> is the maximum temperature
+     in tenths of degrees Celsius using three digits (see paragraphs 10.4.4,
+     10.5.2, and 10.5.3).  The sign of the maximum temperature shall be coded
+     as 1 if the maximum temperature is below 0&#176;C and 0 if the maximum
+     temperature is 0&#176;C or higher.  For example, a maximum temperature
+     of -2.1&#176;C would be coded "11021"; 14.2&#176;C would be coded "10142".
+
+  f. <b>6-Hourly Minimum Temperature (2snTnTnTn).</b>  At designated stations,
+     the 6-hourly minimum temperature group shall be coded in the format,
+     <b>2snTnTnTn</b>, where <b>2</b> is the group indicator, <b>sn</b> is the
+     sign of the temperature, and <b>TnTnTn</b> is the minimum temperature in
+     tenths of degrees Celsius using three digits (see paragraphs 10.4.4,
+     10.5.2, and 10.5.3).  The sign of the minimum temperature shall be coded
+     as 1 if the minimum temperature is below 0&#176;C and 0 if the minimum
+     temperature is 0&#176;C or higher.  For example, a minimum temperature
+     of -0.1&#176;C would be coded "21001"; 1.2&#176;C would be coded "20012".
+
+  g. <b>24-Hour Maximum and Minimum Temperature (4snTxTxTxsnTnTnTn).</b>  At
+     designated stations, the 24-hour maximum temperature and the 24-hour
+     minimum temperature shall be coded in the format, <b>4snTxTxTxsnTnTnTn</b>,
+     where <b>4</b> is the group indicator, <b>sn</b> is the sign of the
+     temperature, <b>TxTxTx</b> is the maximum 24-hour temperature, and <b>TnTnTn</b>
+     is the 24-hour minimum temperature (see paragraphs 10.4.4, 10.5.2, and
+     10.5.3).  <b>TxTxTx</b> and <b>TnTnTn</b> shall be coded in tenths of
+     degrees Celsius using three digits.  The sign of the maximum or minimum
+     temperature shall be coded as 1 if it is below 0&#176;C and 0 if it
+     is 0&#176;C or higher.  For example, a 24-hour maximum temperature of
+     10.0&#176;C and a 24-hour minimum temperature of -1.5&#176;C would be coded
+     "401001015"; a 24-hour maximum temperature of 11.2&#176;C and a 24-hour
+     minimum temperature of 8.4C would be coded as"401120084".
+
+  h. <b>3-Hourly Pressure Tendency (5appp).</b>  At designated stations, the
+     3-hourly pressure tendency group shall be coded in the format, <b>5appp</b>,
+     where <b>5</b> is the group indicator, <b>a</b> is the character of
+     pressure change over the past 3 hours (see Table 12-7), and <b>ppp</b>
+     is the amount of barometric change in tenths of hectopascals (see Table 12-8).
+     The amount of barometric change shall be coded using the tens, units, and
+     tenths digits (see paragraphs 11.4.7 and 11.5.4).  For example, a steady
+     increase of 3.2 hectopascals in the past three hours would be coded "52032".
+</pre>
+
+<p>
+
+<center>
+<table border>
+<caption><b>Table 12-7. Characteristics of Barometer Tendency</b></caption>
+<tr>
+<th>Primary<br>Requirement</th>
+<th>Description</th>
+<th>Code<br>Figure</th>
+</tr>
+<tr>
+<td align=center rowspan=4>Atmospheric<br>pressure now<br>higher than 3<br>
+hours ago.</td>
+<td>Increasing, then decreasing.</td>
+<td align=center>0</td>
+</tr>
+<tr>
+<td>Increasing, then steady, or increasing then<br>
+increasing more slowly.</td>
+<td align=center>1</td>
+</tr>
+<tr>
+<td>Increasing steadily or unsteadily.</td>
+<td align=center>2</td>
+</tr>
+<tr>
+<td>Decreasing or steady, then increasing; or<br>
+increasing then increasing more rapidly.</td>
+<td align=center>3</td>
+</tr>
+<tr>
+<td align=center rowspan=3>Atmospheric<br>pressure now<br>same as 3 hours<br>
+ago.</td>
+<td>Increasing, then decreasing.</td>
+<td align=center>0</td>
+</tr>
+<tr>
+<td>Steady</td>
+<td align=center>4</td>
+</tr>
+<tr>
+<td>Decreasing then increasing.</td>
+<td align=center>5</td>
+</tr>
+<tr>
+<td align=center rowspan=4>Atmospheric<br>pressure now<br>lower than 3<br>
+hours ago.</td>
+<td>Decreasing, then increasing.</td>
+<td align=center>5</td>
+</tr>
+<tr>
+<td>Decreasing, then steady, or decreasing then<br>
+decreasing more slowly.</td>
+<td align=center>6</td>
+</tr>
+<tr>
+<td>Decreasing steadily or unsteadily.</td>
+<td align=center>7</td>
+</tr>
+<tr>
+<td>Steady or increasing, then decreasing; or<br>
+decreasing then decreasing more rapidly.</td>
+<td align=center>8</td>
+</tr>
+</table>
+</center>
+
+<center>
+<table border>
+<caption><b>Table 12-8. 3-Hour Pressure Change</b></caption>
+<tr>
+<th colspan=9>Amount of Barometric Change (Rise or Fall) in the Past 3 hours "ppp"</th>
+</tr>
+<tr>
+<td align=center>Code<br>Figure</td>
+<td align=center>Inches of<br>Mercury</td>
+<td align=center>Hectopascals</td>
+<td align=center>Code<br>Figure</td>
+<td align=center>Inches of<br>Mercury</td>
+<td align=center>Hectopascals</td>
+<td align=center>Code<br>Figure</td>
+<td align=center>Inches of<br>Mercury</td>
+<td align=center>Hectopascals</td>
+</tr>
+<tr>
+<td align=center>000<br>002<br>003<br>005<br>007<br>008<br>010<br>
+012<br>014<br>015<br>017<br>019<br>020<br>022<br>024<br>025<br>
+027<br>029<br>030<br>032<br>034<br>036<br>037<br>039<br>041<br>
+042<br>044<br>046<br>047<br>049<br>051<br>052<br>054<br>056<br>
+058<br>059<br>061<br>063<br>064<br>066</td>
+<td align=center>0.000<br>0.005<br>0.010<br>0.015<br>0.020<br>
+0.025<br>0.030<br>0.035<br>0.040<br>0.045<br>0.050<br>0.055<br>
+0.060<br>0.065<br>0.070<br>0.075<br>0.080<br>0.085<br>0.090<br>
+0.095<br>0.100<br>0.105<br>0.110<br>0.115<br>0.120<br>0.125<br>
+0.130<br>0.135<br>0.140<br>0.145<br>0.150<br>0.155<br>0.160<br>
+0.165<br>0.170<br>0.175<br>0.180<br>0.185<br>0.190<br>0.195</td>
+<td align=center>0.0<br>0.2<br>0.3<br>0.5<br>0.7<br>0.8<br>1.0<br>
+1.2<br>1.4<br>1.5<br>1.7<br>1.9<br>2.0<br>2.2<br>2.4<br>2.5<br>
+2.7<br>2.9<br>3.0<br>3.2<br>3.4<br>3.6<br>3.7<br>3.9<br>4.1<br>
+4.2<br>4.4<br>4.6<br>4.7<br>4.9<br>5.1<br>5.2<br>5.4<br>5.6<br>
+5.8<br>5.9<br>6.1<br>6.3<br>6.4<br>6.6</td>
+<td align=center>068<br>069<br>071<br>073<br>075<br>076<br>078<br>
+080<br>081<br>083<br>085<br>086<br>088<br>090<br>091<br>093<br>
+095<br>097<br>098<br>100<br>102<br>103<br>105<br>107<br>108<br>
+110<br>112<br>113<br>115<br>117<br>119<br>120<br>122<br>124<br>
+125<br>127<br>129<br>130<br>132<br>134</td>
+<td align=center>0.200<br>0.205<br>0.210<br>0.215<br>0.220<br>
+0.225<br>0.230<br>0.235<br>0.240<br>0.245<br>0.250<br>0.255<br>
+0.260<br>0.265<br>0.270<br>0.275<br>0.280<br>0.285<br>0.290<br>
+0.295<br>0.300<br>0.305<br>0.310<br>0.315<br>0.320<br>0.325<br>
+0.330<br>0.335<br>0.340<br>0.345<br>0.350<br>0.355<br>0.360<br>
+0.365<br>0.370<br>0.375<br>0.380<br>0.385<br>0.390<br>0.395</td>
+<td align=center>6.8<br>6.9<br>7.1<br>7.3<br>7.5<br>7.6<br>7.8<br>
+8.0<br>8.1<br>8.3<br>8.5<br>8.6<br>8.8<br>9.0<br>9.1<br>9.3<br>
+9.5<br>9.7<br>9.8<br>10.0<br>10.2<br>10.3<br>10.5<br>10.7<br>
+10.8<br>11.0<br>11.2<br>11.3<br>11.5<br>11.7<br>11.9<br>12.0<br>
+12.2<br>12.4<br>12.5<br>12.7<br>12.9<br>13.0<br>13.2<br>13.4</td>
+<td align=center>135<br>137<br>139<br>141<br>142<br>144<br>146<br>
+147<br>149<br>151<br>152<br>154<br>156<br>157<br>159<br>161<br>
+163<br>164<br>166<br>168<br>169<br>171<br>173<br>174<br>176<br>
+178<br>179<br>181<br>183<br>185<br>186<br>188<br>190<br>191<br>
+193<br>195<br>196<br>198<br>200<br>201</td>
+<td align=center>0.400<br>0.405<br>0.410<br>0.415<br>0.420<br>
+0.425<br>0.430<br>0.435<br>0.440<br>0.445<br>0.450<br>0.455<br>
+0.460<br>0.465<br>0.470<br>0.475<br>0.480<br>0.485<br>0.490<br>
+0.495<br>0.500<br>0.505<br>0.510<br>0.515<br>0.520<br>0.525<br>
+0.530<br>0.535<br>0.540<br>0.545<br>0.550<br>0.555<br>0.560<br>
+0.565<br>0.570<br>0.575<br>0.580<br>0.585<br>0.590<br>0.595</td>
+<td align=center>13.5<br>13.7<br>13.9<br>14.1<br>14.2<br>14.4<br>
+14.6<br>14.7<br>14.9<br>15.1<br>15.2<br>15.4<br>15.6<br>15.7<br>
+15.9<br>16.1<br>16.3<br>16.4<br>16.6<br>16.8<br>16.9<br>17.1<br>
+17.3<br>17.4<br>17.6<br>17.8<br>17.9<br>18.1<br>18.3<br>18.5<br>
+18.6<br>18.8<br>19.0<br>19.1<br>19.3<br>19.5<br>19.6<br>19.8<br>
+20.0<br>20.1</td>
+</tr>
+</table>
+</center>
+<pre>
+  i. <b>Sensor Status Indicators.</b>  Sensor status indicators should be
+     reported as indicated below:
+
+     (1) if the Runway Visual Range should be reported but is missing,
+         <b>RVRNO</b> shall be coded.
+
+     (2) when automated stations are equipped with a present weather
+         identifier and that sensor is not operating, the remark <b>PWINO</b>
+         shall be coded.
+
+     (3) when automated stations are equipped with a tipping bucket
+         rain gauge and that sensor is not operating, <b>PNO</b> shall
+         be coded.
+
+     (4) when automated stations are equipped with a freezing rain
+         sensor and that sensor is not operating, the remark <b>FZRANO</b>
+         shall be coded.
+
+     (5) when automated stations are equipped with a lightning detection
+         system and that sensor is not operating, the remark <b>TSNO</b>
+         shall be coded.
+
+     (6) when automated stations are equipped with a secondary visibility
+         sensor and that sensor is not operating, the remark <b>VISNO_LOC</b>
+         shall be coded.
+
+     (7) when automated stations are equipped with a secondary ceiling height
+         indicator and that sensor is not operating, the remark <b>CHINO_LOC</b>
+         shall be coded.
+
+  j. <b>Maintenance Indicator. </b> A maintenance indicator sign, <b>$</b>,
+     shall be coded when an automated system detects that maintenance is
+     needed on the system.
+</pre>
+
+
+</body>
+</html>
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+========================
+2002-01-22T23:21:04
+baloo
+--
+more stuff about baloo.
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+one
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+
+========================
+2002-01-22T23:25:07
+ooga
+--
+two
+
+========================
+2002-01-23T22:02:44
+<<done:2002-01-23T22:18:40>>todo: fix todo fonts
+--
+
+========================
+2002-01-23T22:26:19
+todo: test todos
+--
+
+========================
+2002-01-24T21:49:34
+booga
+--
+
+========================
+2002-01-24T21:46:25
+blah on
+--
+========================
+2002-01-25T23:54:48
+!a.private.topic
+--
+
+========================
+2002-01-25T23:57:32
+blergh
+--
+
+========================
+2002-01-26T00:00:29
+!private.too
+--
+
+========================
+2002-01-26T00:07:56
+!private.all.the.way
+--
+
+========================
+2002-01-26T00:09:37
+!priv
+--
+
+========================
+2002-01-26T00:11:02
+!p2
+--
+
+========================
+2002-01-26T00:11:45
+!p3
+--
+
+========================
+2002-01-26T00:13:09
+!p4
+--
+
+========================
+2002-01-26T00:13:15
+latest-topic-editied-illegally-and-againx2
+--
+add some text and save.  no change to journal-topics.
+after the initial write.
+blork.
+jabber.
+
+
+

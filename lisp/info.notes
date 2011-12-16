@@ -1,0 +1,156 @@
+
+------ File: lispref.info  Node: Top  Line: 0
+<<lisp>>
+------
+
+------ File: lispref.info  Node: Top  Line: 0
+<<elisp>>
+------
+
+------ File: cl.info  Node: Top  Line: 0
+<<cl>>
+------
+
+------ File: cl.info  Node: Top  Line: 0
+<<common-lisp>>
+------
+
+------ File: cl.info  Node: Argument Lists  Line: 0
+<<cl-args>>
+------
+
+------ File: cl.info  Node: Macros  Line: 0
+<<cl-macros>>
+------
+
+------ File: cl.info  Node: Loop Facility  Line: 0
+<<cl-loops>>
+------
+
+------ File: lispref.info  Node: Regular Expressions  Line: 0
+<<regexp-syntax>>
+------
+
+------ File: lispref.info  Node: File Names  Line: 1
+<<filenames>>
+------
+
+------ File: gnus.info  Node: Top  Line: 0
+<<gnus>>
+------
+
+------ File: gnus.info  Node: Top  Line: 0
+<<gnus>>
+------
+
+------ File: gnus.info  Node: Posting Styles  Line: 0
+<<posting styles>>
+------
+
+------ File: gnus.info  Node: Posting Styles  Line: 0
+<<posting styles gnus>>
+------
+
+------ File: lispref.info  Node: Extents  Line: 0
+<<extents xemacs>>
+------
+
+------ File: cl.info  Node: Sequence Basics  Line: 0
+<<:key>>
+------
+
+------ File: cl.info  Node: Structures  Line: 0
+<<cl-defstruct>>
+------
+
+------ File: vm.info  Node: Top  Line: 0
+<<vm>>
+------
+
+------ File: vm.info  Node: Virtual Folders  Line: 0
+<<vm virtual folders>>
+------
+
+------ File: lispref.info  Node: Macros  Line: 5
+<<macros>>
+------
+
+------ File: cc-mode.info  Node: Top  Line: 0
+<<ccmode>>
+------
+
+------ File: lispref.info  Node: Syntax of Regexps  Line: 0
+<<regexp-syntax>>
+------
+
+------ File: cedet.info  Node: Top  Line: 0
+<<cedet>>
+------
+
+------ File: cedet.info  Node: Project Management  Line: 0
+<<ede>>
+------
+
+------ File: ede.info  Node: Top  Line: 0
+<<ede-ref-man>>
+------
+
+------ File: lispref.info  Node: Syntax of Regexps  Line: 0
+<<re-grammar>>
+------
+
+------ File: bash.info.bz2  Node: Arrays  Line: 1
+<<bash-arrays>>
+------
+
+------ File: bash.info.bz2  Node: Top  Line: 0
+<<bash>>
+------
+
+------ File: bash.info.bz2  Node: Shell Builtin Commands  Line: 0
+<<bash-builtins-root>>
+------
+
+------ File: bash.info.bz2  Node: Bourne Shell Builtins  Line: 0
+<<bash-builtins-sh>>
+------
+
+------ File: bash.info.bz2  Node: Bash Builtins  Line: 0
+<<bash-builtins-bash>>
+------
+
+------ File: bash.info.bz2  Node: Modifying Shell Behavior  Line: 0
+<<bash-builtins-mods>>
+------
+
+------ File: bash.info.bz2  Node: Special Builtins  Line: 0
+<<bash-builtins-special>>
+------
+
+------ File: bash.info.bz2  Node: Bash Builtins  Line: 411
+<<bash-builtins-read>>
+------
+
+------ File: make.info.bz2  Node: Top  Line: 0
+<<make>>
+------
+
+------ File: make.info.bz2  Node: Top  Line: 0
+<<make>>
+------
+
+------ File: lispref.info  Node: Documentation Basics  Line: 0
+<<docstrings>>
+------
+
+------ File: xemacs.info  Node: Top  Line: 0
+<<xemacs>>
+------
+
+------ File: lispref.info  Node: Faces and Window-System Objects  Line: 0
+<<faces>>
+------
+
+------ File: make.info.bz2  Node: Top  Line: 0
+<<make>>
+------

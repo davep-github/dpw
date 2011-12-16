@@ -1,0 +1,177 @@
+
+========================
+2001-09-29T14:38:08
+--
+Want to make efs able to use just ssh.
+Idea 0) Build a ftp emulator in, say, python, that takes input like an
+ftp client and then does things via ssh.  It produces responses like
+ftp would.
+
+For now, we'll assume only RSA indentities so we don't need
+passwords. 
+
+Here's an example of reading a file.  I used tab for file name
+completion. 
+
+Commands:
+quote cmd...
+  strip quote and reenter command evaluator.
+
+open <host>
+  just save host name for future reference.
+
+user <user>
+  save user name for future reference.
+
+pass <pwd>
+  discard
+
+hash
+  toggle hashing.  After xfer, print correct number of hash marks as
+  ftp would.
+
+pwd
+  We'll need to keep track of this.
+  old CWD = ~
+  ssh "cd $CWD; pwd"
+
+cwd newdir
+  CWD = $(ssh "cd $CWD; cd $newdir; pwd")
+    
+open sybil
+open sybil
+Connected to sybil.crl.dec.com.
+220 sybil.crl.dec.com FTP server (Version wu-2.6.1(1) Wed Aug 9 05:54:50 EDT 2000) ready.
+quote user "davep"
+ftp> quote user "davep"
+331 Password required for davep.
+quote pass  Turtle Power!
+ftp> quote pass ^inarms
+230 User davep logged in.
+hash
+ftp> hash
+Hash mark printing on (1024 bytes/hash mark).
+ftp> quote pwd
+quote pwd
+257 "/udir/davep" is current directory.
+quote syst
+ftp> quote syst
+215 UNIX Type: L8
+quote cwd /udir/davep/
+ftp> quote cwd /udir/davep/
+250 CWD command successful.
+ls "-al" /tmp/davep/efsaVIioV
+ftp> ls "-al" /tmp/davep/efsaVIioV
+227 Entering Passive Mode (16,11,0,209,17,112)
+150 Opening ASCII mode data connection for /bin/ls.
+226 Transfer complete.
+ftp> quote site idle
+quote site idle
+200 Current IDLE time limit is 900 seconds; max 7200
+ftp> type image
+type image
+200 Type set to I.
+ftp> get /udir/davep/.bashrc /tmp/davep/efsaVIioV.bashrc
+get /udir/davep/.bashrc /tmp/davep/efsaVIioV.bashrc
+227 Entering Passive Mode (16,11,0,209,146,29)
+150 Opening BINARY mode data connection for /udir/davep/.bashrc (4252 bytes).
+  0%      0       --:-- ETA100%   4252       00:00 ETA
+226 Transfer complete.
+quote mdtm /udir/davep/.bashrc
+4252 bytes received in 0.44 seconds (9.40 KB/s)
+Can't change modification time on /tmp/davep/efsaVIioV.bashrc to Tue Jun 19 09:29:43 2001
+ftp> quote mdtm /udir/davep/.bashrc
+213 20010619132943
+ftp> 
+
+
+another run:
+open sybil
+open sybil
+Connected to sybil.crl.dec.com.
+220 sybil.crl.dec.com FTP server (Version wu-2.6.1(1) Wed Aug 9 05:54:50 EDT 2000) ready.
+quote user "davep"
+ftp> quote user "davep"
+331 Password required for davep.
+quote pass  Turtle Power!
+ftp> quote pass ^inarms
+230 User davep logged in.
+hash
+ftp> hash
+quote pwd
+Hash mark printing on (1024 bytes/hash mark).
+ftp> quote pwd
+257 "/udir/davep" is current directory.
+ftp> quote pwd
+quote pwd
+257 "/udir/davep" is current directory.
+ftp> quote cwd /udir/davep/.bashrc/
+quote cwd /udir/davep/.bashrc/
+550 /udir/davep/.bashrc/: Not a directory.
+quote cwd /udir/davep/
+ftp> quote cwd /udir/davep/
+250 CWD command successful.
+ls "-al" /tmp/davep/efsbbIXjh
+ftp> ls "-al" /tmp/davep/efsbbIXjh
+227 Entering Passive Mode (16,11,0,209,199,250)
+150 Opening ASCII mode data connection for /bin/ls.
+226 Transfer complete.
+ftp> type image
+type image
+200 Type set to I.
+ftp> get /udir/davep/.bashrc /tmp/davep/efsbbIXjh.bashrc
+get /udir/davep/.bashrc /tmp/davep/efsbbIXjh.bashrc
+227 Entering Passive Mode (16,11,0,209,171,251)
+150 Opening BINARY mode data connection for /udir/davep/.bashrc (4252 bytes).
+  0%      0       --:-- ETA100%   4252       00:00 ETA
+226 Transfer complete.
+quote mdtm /udir/davep/.bashrc
+4252 bytes received in 0.46 seconds (8.93 KB/s)
+Can't change modification time on /tmp/davep/efsbbIXjh.bashrc to Tue Jun 19 09:29:43 2001
+ftp> quote mdtm /udir/davep/.bashrc
+213 20010619132943
+ftp> quote mdtm /udir/davep/.bashrc
+quote mdtm /udir/davep/.bashrc
+213 20010619132943
+ftp> quote mdtm /udir/davep/.bashrc
+quote mdtm /udir/davep/.bashrc
+213 20010619132943
+quote site umask 22
+ftp> quote site umask 22
+200 UMASK set to 022 (was 022)
+ftp> quote site exec cp / /
+quote site exec cp / /
+200-cp / /
+200  (end of 'cp / /')
+get /udir/davep/.bashrc /tmp/davep/efscbIXjh
+ftp> get /udir/davep/.bashrc /tmp/davep/efscbIXjh
+227 Entering Passive Mode (16,11,0,209,83,162)
+150 Opening BINARY mode data connection for /udir/davep/.bashrc (4252 bytes).
+  0%      0       --:-- ETA100%   4252       00:00 ETA
+226 Transfer complete.
+put /tmp/davep/efscbIXjh /udir/davep/.bashrc~
+4252 bytes received in 0.61 seconds (6.83 KB/s)
+ftp> put /tmp/davep/efscbIXjh /udir/davep/.bashrc~
+227 Entering Passive Mode (16,11,0,209,173,227)
+150 Opening BINARY mode data connection for /udir/davep/.bashrc~.
+  0%      0       --:-- ETA100%   4252       00:00 ETA
+226 Transfer complete.
+4252 bytes sent in 0.33 seconds (12.66 KB/s)
+ftp> quote mdtm /udir/davep/.bashrc
+quote mdtm /udir/davep/.bashrc
+213 20010619132943
+put /tmp/davep/efscbIXjh /udir/davep/.bashrc
+ftp> put /tmp/davep/efscbIXjh /udir/davep/.bashrc
+227 Entering Passive Mode (16,11,0,209,173,227)
+150 Opening BINARY mode data connection for /udir/davep/.bashrc.
+  0%      0       --:-- ETA100%   4252       00:00 ETA
+226 Transfer complete.
+quote mdtm /udir/davep/.bashrc
+4252 bytes sent in 0.43 seconds (9.57 KB/s)
+ftp> quote mdtm /udir/davep/.bashrc
+213 20010929185333
+ftp> quote mdtm /udir/davep/.bashrc
+quote mdtm /udir/davep/.bashrc
+213 20010929185333
+ftp> 
+

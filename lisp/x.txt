@@ -1,0 +1,180 @@
+test cases for text mode functionality.
+lsit
+
+legislator lskdj slk slkdj asked 
+Schulz lint slkdj s
+lksjdslkdj 
+lskjdlsj l
+KLLKFJ  SLFJSDKF LSKF SDLKF LSKDJF LSKF LKDFJ slk
+
+hello I am testing flyspell  mode.
+I like the wat it works. 
+pwds-suck
+RAKK dac direct to head amp
+leaf
+
+slab
+compete
+definitely
+# some personal defs.
+xemacs
+Panariti
+AIX 
+
+correspond
+
+* lsa;kd a;lsdk ksjdhhf skdjf skjfh sjkf skjfh skjhfg skjhfg sjkhf skjhf
+  skjdfh sjkhfg skjjjjh kjdhf skjdhf ksjdfh skjjhfg skjhfg skjhfg skjjhf
+  skjdfhsjdfh skkkkkjhfg 
+
+$ lksdjf sldkjf slkdjf slkdjf slkdjf slkdjf sldkjf slkdjf slkdjf slkdjf
+  slkdjf slkdjf 
+
+==> ;laskd a;lskd jlksajd alksjd alksdj alksjd alksjd alksjd alksjd alksjd
+    ;alksjd alkjd alksjd alksjd 
+
+o lksdj skldj slkdj slkdj slkdj slkdj slkdj slkdj slkdj slkdj slkdj slkdj
+  slkjd slkjd slkj
+
+
+??? skdj sdlksj dlskdj skldj skldj slkjd slkjd slkjd slkjd slkdj slkjd slkjd
+    slkdj slkdj lsk
+
+(font-lock-set-defaults)
+
+* boooo
+
+* hello
+
+immature
+
+ec
+
+www.bushwatch.com
+
+R core transformer
+characteristics
+crohns
+
+"The English Patient"
+
+euro dollar conversion
+
+simpsons Halloween thirteenth month 
+
+
+I would also be cautious about charge remaining in the caps after powering
+the amp off.  Especially SP amps with their mega-farads of capacitance. Caps
+can hold a charge for quite a long time after power is removed.  I don't know
+if Mikhail has included circuity for some kind of fast discharge or even if
+it is possible to decrease the discharge time to, say, a few minutes without
+tearing a hole in the fabric of space-time.  Or at least without vaporizing
+the amp and it's owner.
+
+If anyone knows better, please let me know, so I can swap tubes without the
+heebie-jeebies.
+
+I use a paper towel to hold the tubes when inserting and removing tubes.
+Hopefully, this is adequate for keeping the glass clean.
+
+A
+
+transconductance amplification factor
+
+
+While this may sound complicated, it really isn't. Look at figure 1-28. Here you see in view A a
+triode with a +1 volt input signal. At this grid voltage, current through the tube is at 1 milliampere. If the
+input voltage is raised to +3 volts, current through the tube increases to 2 milliamperes. The change in Eg
+(¨Eg) is then 2 volts. This is shown in view B. Suppose that the grid voltage is returned to +1 volt, and the
+plate voltage is increased until the ammeter in view C reads 2 milliamperes of plate current. At this point
+plate voltage is measured. Plate voltage had to be increased by 100 volts (350-250) to get the same
+change in plate current (1 mA). The change in plate voltages (¨Ep) is then 100 volts. The amplification
+IDFWRU  
+ 
+RI MXVW WKH WXEH LV WKHQ HTXD
+
+child's law
+
+bones in ankle
+
+vacuum tube design internal construction
+rega apollo
+
+Himalaya mountains age
+
+Hi,
+
+I'm looking for a new DAC to complement my new headphone amp and the RAKK dac
+looks very promising.
+What I'm wondering is: knowing the characteristics of said amp, is there any
+way to optimize the connection to the amp?
+I.e. to use the head amp as the output stage?
+
+I am by NO means an EE (I'm a S/W engineer, which is almost, but not quite,
+entirely unlike a real engineer), but it seems to me that:
+1) I'd want something to block DC (xformer or cap?)
+2) provide drive for 6/8" of IC
+3) Match impedance to amp's input.
+
+It seems to me, again in my role as one ignorant of all things analog,
+that these are provided by your passive output stage.  But it also probably
+follows good engineering practices and so is "over designed" in order
+to work with a wide range of downstream components.  In particular the 2.0V
+output level.
+
+So if we knew that we'd be connecting to an amp with an input impedance of
+~100K, what would be the minimum needed to interface to the amp?
+
+While typing this, I've just thought that the input section of your toob
+stage is pretty much what I would need.  No?
+Especially since the head amp is a tube design.
+
+signed,
+
+Curious in Reading
+
+davep.af-tech@meduseld.net
+
+afwarehouse-ideazon-mouse-and-fang-keypad.ps
+indulgence
+electromagnetism relativity
+
+sanitarium
+
+(Pardon me if this is double posted, I responded last night but haven't seen
+it on the board yet, so here it goes again...)
+
+First, the amp is a SinglePower MPX3.
+If you're familiar with this amp, then you may know the answers already.
+I know that the inputs are unbalanced.
+The design is OTL, but I've seen some disputes about whether it is actually
+SE or PP.  Dunno if these output details are of any use.
+
+I don't know where the volume control is, but I've always seen it referred to
+as an attenuator, so to me that implies after the gain stage.  
+
+SP is snowed in, but I'll send an email in case they're reading email.
+I can also ask on some other fora.
+
+Do you think an "adapter" stage designed to mate with a known amp could
+sound better than going thru a (redundant?) full-blown gain stage?
+
+Conversely, is the active gain stage powerful enough to drive headphones
+within some range of impedances?  
+If not, any ideas about it?
+(I saw something about this after exploring a bit more thoroughly)
+
+Also, any plans for a USB interface?  I keep thinking that a 2 wire, 1 box
+high end headphone system would be very popular.  USB from PC, headphones to
+ears.  Clean and simple.  I'd also like to see a USB HD thrown in to make the
+thing independent from the computer aside from a music player app.  Another
+idea is to add a uController and LCD with an iPod-like interface and have the
+worlds largest "walkman."  More like a "lug-man."  But, again, I think it
+would be popular amongst (music|audi)ophiles for desktop use.  With a lug
+home for newly ripped (fair use!) music.  Or lug it on vacations, business
+trips, when checked into the audio asylum (oops: wrong forum), what have you.
+
+ok, enough ramblin'...
+thanks for your indulgence!
+
+davep
