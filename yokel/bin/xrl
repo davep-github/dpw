@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#set -x
+
+. script-x
+
+progname="$0"
+if [ "$1" = "-N" ]
+then 
+    just_show='-N'
+    shift
+fi
+
+for i in $*
+do
+    host=$(expand-hostname $i)
+    full_host=$(full-hostname $host) || dpFATAL 1 "full-hostname $host failed"
+    hname=${full_host:-$host}
+    shost=$(echo $hname | cut -d. -f1)
+    title_base=$(rx_name rlogin $hname)
+    rsh_bin=${XRL_BIN:-$($HOST_INFO -h $shost -n 'rsh' xrl_rsh_bin)}
+    rsh_bin_args=${XRL_BIN_ARGS:-$($HOST_INFO -h $shost -n '' xrl_xterm_bin_opts)}
+    xrl_xterm_bin=${XRL_XTERM_BIN:-$($HOST_INFO -n 'xterm' xrl_xterm_bin)}
+    font=${XRL_XTERM_FONT:-$($HOST_INFO -n "$DEFONT" xrl_xterm_font)}
+    [ -z "$font" ] && font=9x15
+    #echo "xx -N -h $host -n $title_base $rsh_bin $host"
+    #echo "FONT>$font<"
+    xx $just_show -h $host -n $title_base -f $font \
+	-x $xrl_xterm_bin $rsh_bin $rsh_bin_args $host
+done

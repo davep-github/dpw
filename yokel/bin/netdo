@@ -1,0 +1,38 @@
+#!/bin/sh
+#set -x
+
+case $1 in
+	-s)
+		service=$2;
+		shift; shift;
+		;;
+	-s?*)
+		service=`echo $1 | cut -c3-`
+		shift
+		;;
+esac
+
+if ! which $1
+then
+	echo "$0: $1 not found." 1>&2
+	exit 1
+fi
+
+service=${service:-$PPP_SERVICE}
+#echo "service: $service"
+
+if ispppup
+then
+	connected=n
+else
+	# connect to network
+	pppdialer -n $service || exit 1
+	connected=y
+fi
+
+"$@"
+
+[ "$connected" = "y" ] && {
+	# hang up
+	killppp || exit 1
+}

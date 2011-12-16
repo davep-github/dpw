@@ -1,0 +1,4 @@
+/yokel/yokel/bin
+177167    0 lrwxrwxrwx   1 davep    root            2 Jan 18 22:04 ./gxx -> xx
+177244    0 lrwxrwxrwx   1 davep    root            4 Jan 18 22:04 ./lstat -> stat
+177261    0 lrwxrwxrwx   1 davep    root            8 Jan 18 22:04 ./findprog -> killprog

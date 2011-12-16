@@ -1,0 +1,7 @@
+#!/bin/sh
+#now=`date`
+#echo "ppplogin ${now}:$*" >> /tmp/ppplogin.log
+#set -x
+/usr/yokel/sbin/disable-mgetty-aa cuaa1
+exec /usr/sbin/pppd crtscts debug defaultroute passive
+#exec /usr/sbin/pppd crtscts debug defaultroute passive :130.200.200.5

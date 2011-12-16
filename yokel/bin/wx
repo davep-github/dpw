@@ -1,0 +1,528 @@
+#! /bin/sh
+#set -x
+PATH=$PATH:/usr/ucb:/usr/bsd:/bin:/usr/bin
+#
+# !!! Registration is now required to access the Weather Underground.
+# !!! Contact Jeff Masters <jmasters@cirrus.sprl.umich.edu>.  May, 1996
+#
+# wx 2.0.1ky August 18, 1995 Dave Yearke <yearke@riemann.calspan.com>
+# via Steve Kinzler <kinzler@cs.indiana.edu>
+#
+#  Catch "-ns" as an exception argument to echo(1) so that it's not
+#  interpreted as an option to echo(1).  Added lone "-boy" option without
+#  argument.  Updated paths for various files moved into subdirectories
+#  on the new wx server.
+#
+# wx 2.0.1k June 9, 1995, Steve Kinzler <kinzler@cs.indiana.edu>
+# madlab.sprl.umich.edu:/pub/underground/undergrd0.scr
+#
+#  tr commands made portable, ie, SysV-compatible.  PATH specification added
+#  so this is runnable in diminished environments, like from crontabs.
+#
+# wx 2.0.1 August 4, 1993
+#
+#  Ability to filter commands and codes implemented using tr command.
+#
+# wx 2.0, July 28, 1993
+# 
+# Copyright (C) 1993, Michael P. Monan (monan@engin.umich.edu)
+# 
+# This script may be freely re-distributed at no charge provided that
+# this notice is left intact.  Modified copies must preserve this notice.
+# It is requested that any useful changes you make be sent to the author,
+# and to the original author, Peter St.Wecker (pswecker@med.unc.edu).
+# 
+# Thanks to: Jeff Masters (jmasters@madlab.sprl.umich.edu) for all his work
+#            on the Weather Underground, and for teaching me all I know about
+#	     shell programming...
+#
+# Skeleton taken from the script "wx" by Peter St.Wecker (pswecker@med.unc.edu) 
+# @(#) wx 1.8, November 25 1992
+# Copyright (C) 1992, Peter St.Wecker (pswecker@med.unc.edu)
+#
+# NOTE:  The National Weather Service data is made available courtesy of
+#        the National Science Foundation-funded UNIDATA project and the
+#        University of Michigan.
+#
+# WX:
+# A (VERY) simple shell program to retrieve various state and local weather
+# reports and info from the gopher port at downwind.sprl.umich.edu and from the 
+# Weather Underground at downwind.sprl.umich.edu. More files and options are
+# now available to the public than in version 1.8 also.
+#
+#
+# Usage: wx {state-code}       --> retrieve WX for a state (ie. AL, AK, etc.).
+#        wx {city-code}        --> retrieve WX for a city  (ie. NYC, RDU, etc.).
+#        wx -fct {city-code}   --> retrieve the forecast for a station 
+#				   (ie. nyc, rdu, etc.).
+#	 wx -cur {city code}   --> retrieve current conditions for a station.
+#        wx -can {region-code} --> retrieve Canadian observations and forecasts.
+#	 wx -stl               --> retrieve a list of all station names and the 
+#         		       	   cities they represent.
+#        wx -can             --> retrieve Canadian zone names.
+#        wx -ski             --> retrieve ski report zone names.
+#        wx -ski {ski-code}  --> retrieve ski reports. 
+#        wx -st {state-code} --> retrieve {city-codes} for a given state
+#        wx -s {city-code}   --> retrieve all severe weather statements for
+#                                a city.
+#        wx -c {city-code}   --> retrieve climatic data for a city. 
+#        wx -e {city-code}   --> retrieve extended forecast for a city.
+#        wx -q   			 --> retrieve earthquake report.
+#        wx -us  			 --> retrieve national weather summary.
+#        wx -30D             --> retrieve 30-day extended forcast for the U.S.
+#	 wx -90D	     --> retrieve 90-day extended forcast for the U.S.
+#	 wx -610	     --> retrieve 6-10 day outlook for the U.S.
+#	 wx -7TE	     --> retrieve 7 day min/max temp. forecasts for the
+#                                East coast.
+#	 wx -7TC             --> retrieve 7 day min/max temp. forecasts for the
+#                                Central U.S.
+#	 wx -7TW	     --> retrieve 7 day min/max temp. forecasts for the
+#				 Western U.S.
+#	 wx -7TN  	     --> retrieve 7 day min/max temp. forecasts for the
+#                                NW U.S. and Canada.
+#        wx -h {storm-code}  --> retrieve hurricane info for an ocean
+#                                (a=Atlantic, af=atlantic forecast,
+#                                ep=East Pacific, wp=West Pacific,
+#                                cp=Central Pacific, loc=local statements,
+#                                i=Indian Ocean, and d=damage reports).
+#        wx -int {international-code} --> retrieve international WX info
+#                                         (c=Carribean,am=Central and South
+#                                         America,w=World cities).
+#        wx -wat --> concatenated file of all current watches.
+#        wx -war --> concatenated file of all current warnings.
+#        wx -rep --> concatenated file of all current storm reports.
+#        wx -sev --> concatenated file of all severe weather statements.
+#	 wx -spc --> concatenated file of all special weather statements.
+#        wx -fld --> concatenated file of all current flood warnings.
+#	 wx -tor --> monthly log of tornado statistics.
+#        wx -stm --> 24-hour log of all severe storm and tornado reports.
+#        wx -x   --> connect interactivly to weather underground.
+#        wx -h   --> show help message.
+#  	 wx -ht  --> show head and tail message of the day.
+#	 wx -ns  --> list stations that issue nearshore forecasts.
+#	 wx -os  --> list stations that issue offshore forecasts.
+#        wx -ns {nearshore station-code} --> retrieve nearshore marine forecast #                                            for a station.
+#	 wx -os {offshore station-code}  --> retrieve offshore marine forecast
+#                                            for a station.
+#        wx -boy {buoy station code}  --> retrieve buoy reports for a station
+#
+##site="madlab.sprl.umich.edu"
+#site="downwind.sprl.umich.edu"
+site="um-weather.sprl.umich.edu"
+port="70"
+port1="3000"
+
+get_page ()
+{
+    # echo w3c -n gopher://$1:$2/$3
+    w3c -n gopher://$1:$2/$3 | 
+	tr -d '\015'
+}
+
+if [ $# -eq 1 ]
+then
+      case "$1" in
+      -[nN][sS])	x=-ns;;
+      *)		x=`echo $1 | tr '[A-Z]' '[a-z]'`;;
+      esac
+      case $x in 
+      	
+      	-us)
+      	file="SUMMARY"
+      	;; 
+      	
+      	-30d)
+      	file="WBC.30D"
+      	;;
+      	
+      	-90d)
+      	file="WBC.90D"
+      	;;
+      	
+      	-610)
+      	file="FEUS.40"
+      	;;
+      	
+      	-7te)
+      	file="FEUS.50"
+      	;;
+      	
+      	-7tc)
+      	file="FEUS.51"
+      	;;
+      	
+      	-7tw)
+      	file="FEUS.52"
+      	;;
+      	
+      	-7tn)
+      	file="FEUS.53"
+      	;;
+      	
+      	-q)
+      	file="quake"
+     	;;
+     	
+      	-ht)
+	get_page $site $port 0/um-weather/head.doc
+	get_page $site $port 0/um-weather/tail.doc
+	exit
+	;;
+		
+      	-fct|-cur|-int|-s|-e|-f|-st)
+        echo 1>&2 'Option '$1' requires an identifier. Type "wx -h" for info.'
+      	exit 1 
+      	;;
+      	
+      	-x)
+        telnet $site $port1
+      	exit
+      	;;
+      
+      	-can)
+        echo 1>&2 'To recieve Canadian forecasts, type "wx -can " followed'
+        echo 1>&2 'by one of the following codes for each area:'
+        echo 1>&2 ''
+        echo 1>&2 '"WEG11" for Southern Alberta'
+        echo 1>&2 '"WEG12" for Central Alberta'
+        echo 1>&2 '"WEG13" for Northern Alberta, NE B.C.'
+        echo 1>&2 '"WVR11" for Coastal British Columbia'
+        echo 1>&2 '"WVR13" for Interior British Columbia'
+        echo 1>&2 '"WWG11" for Southern Manitoba'
+        echo 1>&2 '"WWG16" for Northern Manitoba'
+        echo 1>&2 '"WHX11" for Nova Scotia'
+        echo 1>&2 '"WHX15" for Prince Edward Island'
+        echo 1>&2 '"WHX16" for New Brunswick'
+        echo 1>&2 '"YQX13" for Labrador'
+        echo 1>&2 '"YQX11" for Newfoundland'
+        echo 1>&2 '"YYZ11" for Southern Ontario'
+        echo 1>&2 '"YYZ12" for Northern Ontario'
+        echo 1>&2 '"WWG13" for Northwest Ontario'
+        echo 1>&2 '"WWG15" for Southern Sasketchewan'
+        echo 1>&2 '"WWG18" for Northern Sasketchewan'
+        echo 1>&2 '"YXY11" for The Yukon'
+        echo 1>&2 '"WUL11" for Southern Quebec & Ottowa'
+        echo 1>&2 '"WUL13" for Northern Quebec'
+        echo 1>&2 '"NWT" for The Northwest Territories'
+        echo 1>&2 ''
+        exit
+        ;;
+           	
+      	-ski)
+        echo 1>&2 'To recieve ski reports, type "wx -ski " followed'
+        echo 1>&2 'by a three letter code from the following:'
+        echo 1>&2 ''
+        echo 1>&2 '"NYC" for New York'
+        echo 1>&2 '"ALB" for CT, MA, ME, NH, VT'
+        echo 1>&2 '"RDU" for NC, VA, WV, GA, TN'
+        echo 1>&2 '"DEN" for Colorado'
+        echo 1>&2 '"GEG" for NE Washington, N Idaho'
+        echo 1>&2 '"PIH" for Remainder of Idaho'
+        echo 1>&2 '"SLC" for Utah'
+        echo 1>&2 '"ABQ" for New Mexico'
+	echo 1>&2 ''
+   	exit
+   	;;
+   		
+   	-stl)
+   	file="CITIES.TXT"
+   	;;
+  	 	
+	-boy)
+	file="BOY.doc"
+	;;
+  	 	
+   	[a-z][a-z][a-z])
+	x=`echo $1 | tr '[a-z]' '[A-Z]'`
+       	file="$x.DAT"
+     	;;
+           
+      	[a-z][a-z])
+	x=`echo $1 | tr '[a-z]' '[A-Z]'`
+      	file="OBS/$x.OBS"
+     	;;
+
+     	-h)
+echo 1>&2 '================================================================='
+echo 1>&2 'Usage:  wx {state-code}       --> retrieve WX for a state {ie. AL, AK, etc.}.'
+echo 1>&2 '        wx {city-code}        --> retrieve WX for a city  {ie. NYC, RDU, etc.}.'
+echo 1>&2 '        wx -fct {city-code}   --> retrieve the forecast for a station'
+echo 1>&2 '                                       {ie. nyc, rdu, etc.}.'
+echo 1>&2 '        wx -cur {city code}   --> retrieve current conditions for a station.'
+echo 1>&2 '        wx -can {region-code} --> retrieve Canadian observations and forecasts.'
+echo 1>&2 '        wx -stl             --> retrieve a list of all station names and the'
+echo 1>&2 '                                cities they represent.'
+echo 1>&2 '        wx -can             --> retrieve Canadian zone names.'
+echo 1>&2 '        wx -ski             --> retrieve ski report zone names.'
+echo 1>&2 '        wx -ski {ski-code}  --> retrieve ski reports.'
+echo 1>&2 '        wx -st {state-code} --> retrieve {city-codes} for a given state'
+echo 1>&2 '        wx -s {city-code}   --> retrieve all severe weather statements for'
+echo 1>&2 '                                a city.'
+echo 1>&2 '        wx -c {city-code}   --> retrieve climatic data for a city.'
+echo 1>&2 '        wx -e {city-code}   --> retrieve extended forecast for a city.'
+echo 1>&2 '        wx -q                           --> retrieve earthquake report.'
+echo 1>&2 '        wx -us                          --> retrieve national weather summary.'
+echo 1>&2 '        wx -30D             --> retrieve 30-day extended forcast for the U.S.'
+echo 1>&2 '        wx -90D             --> retrieve 90-day extended forcast for the U.S.'
+echo 1>&2 '        wx -610             --> retrieve 6-10 day outlook for the U.S.'
+echo 1>&2 '        wx -7TE             --> retrieve 7 day min/max temp. forecasts for the'
+echo 1>&2 '                                East coast.'
+echo 1>&2 '        wx -7TC             --> retrieve 7 day min/max temp. forecasts for the'
+echo 1>&2 '                                Central U.S.'
+echo 1>&2 '        wx -7TW             --> retrieve 7 day min/max temp. forecasts for the'
+echo 1>&2 '                                Western U.S.'
+echo 1>&2 '        wx -7TN             --> retrieve 7 day min/max temp. forecasts for the'
+echo 1>&2 '                                NW U.S. and Canada.'
+echo 1>&2 '        wx -h {storm-code}  --> retrieve hurricane info for an ocean'
+echo 1>&2 '                                (a=Atlantic, af=atlantic forecast,'
+echo 1>&2 '                                ep=East Pacific, wp=West Pacific,'
+echo 1>&2 '                                cp=Central Pacific, loc=local statements,'
+echo 1>&2 '                                i=Indian Ocean, and d=damage reports).'
+echo 1>&2 '        wx -int {international-code} --> retrieve international WX info'
+echo 1>&2 '                                         (c=Carribean,am=Central and South'
+echo 1>&2 '                                         America,w=World cities).'
+echo 1>&2 '        wx -wat --> concatenated file of all current watches.'
+echo 1>&2 '        wx -war --> concatenated file of all current warnings.'
+echo 1>&2 '        wx -rep --> concatenated file of all current storm reports.'
+echo 1>&2 '        wx -sev --> concatenated file of all severe weather statements.'
+echo 1>&2 '        wx -spc --> concatenated file of all special weather statements.'
+echo 1>&2 '        wx -fld --> concatenated file of all current flood warnings.'
+echo 1>&2 '        wx -tor --> monthly log of tornado statistics.'
+echo 1>&2 '        wx -stm --> 24-hour log of all severe storm and tornado reports.'
+echo 1>&2 '        wx -x   --> connect interactivly to weather underground.'
+echo 1>&2 '        wx -h   --> show help message.'
+echo 1>&2 '        wx -ht  --> show head and tail message of the day.'
+echo 1>&2 '        wx -ns  --> list stations that issue nearshore forecasts.'
+echo 1>&2 '        wx -os  --> list stations that issue offshore forecasts.'
+echo 1>&2 '        wx -ns {nearshore station-code} --> retrieve nearshore marine forecast'
+echo 1>&2 '                                            for a station.'
+echo 1>&2 '        wx -os {offshore station-code}  --> retrieve offshore marine forecast'
+echo 1>&2 '                                            for a station.'
+echo 1>&2 '        wx -boy {buoy station code}  --> retrieve buoy reports for a station.'
+echo 1>&2 ''
+echo 1>&2 '================================================================='
+  	exit
+	;;
+      
+        -wat)
+        file="watch.dat"
+        ;;
+        
+        -war)
+        file="warn.dat"
+        ;;
+        
+        -rep)
+        file="reports.dat"
+        ;;
+        
+        -sev)
+        file="severe.dat"
+        ;;
+        
+        -spc)
+        file="special.dat"
+        ;;
+        
+        -fld)
+        file="flood.dat"
+        ;;
+        
+        -tor)
+	file="WWUS.61"
+	;;
+        
+        -stm)
+        file="WWUS.60"
+	;;
+       
+        -ns)
+        file="nearshore.doc"
+        ;;
+        
+        -os)
+        file="offshore.doc"
+        ;;
+        
+        -*)
+        echo 1>&2 $1': Unknown option. Type "wx -h" for options.'
+      	exit 1
+      	;;
+      
+        *)
+        echo 1>&2 $1': Not a state or city code.'
+        exit 1
+        ;;
+      esac
+      
+#(echo "0/um-weather/$file" ; sleep 50) |  \
+#telnet $site $port 2> /dev/null | sed \
+#-e  '1,/Escape/d' | tr -d '\015'
+get_page $site $port 0/um-weather/$file
+      
+fi
+
+# If more than one entry on command-line, it should be a city-code lookup.
+# If nothing on command-line, give usage message and exit.
+
+if [ $# -ne 1 ]
+then
+      case "$1" in
+      -[nN][sS])	x=-ns;;
+      *)		x=`echo $1 | tr '[A-Z]' '[a-z]'`;;
+      esac
+      case $x in
+      -st)
+          case $2 in
+          ??)
+              (echo ''
+              echo '1'
+              echo $2
+              echo 'x' ; sleep 50) |  \
+              telnet $site $port1 2>/dev/null | sed \
+              -e '1,/Selection:/d' \
+              -e '/CITY FORECAST/,/Selection:/d' \
+              -e '/Not/,/Selection:/d' \
+              -e '/*/d' \
+              -e '/---/d' | tr -d '\015'
+          exit
+          ;;
+         
+	  *)
+	  echo 1>&2 $2': Unknown.  State code may only be 2 letters.'
+          exit 1
+          ;;
+          esac
+        exit
+        ;;
+
+
+      	-h)
+      	case $2 in
+		 af|AF|aF|Af)
+ 	         file="forecast.hur"
+		 ;;
+      	
+      		 a|A)
+		 file="atlantic.hur"
+		 ;;
+      		
+      		 ep|EP|Ep|eP)
+ 		 file="epacific.hur"
+		 ;;
+      			   
+      		 wp|WP|wP|Wp)
+		 file="wpacific.hur"
+		 ;;
+      			   
+      		 cp|CP|cP|Cp)
+		 file="cpacific.hur"
+		 ;;
+
+      		 i|I)
+      		 file="indian.hur"
+     		 ;;
+
+      		 loc|loC|lOc|lOC|Loc|LoC|LOc|LOC)
+		 file="hurricane.dat"
+		 ;;
+
+      		 d|D)
+      		 file="damage.hur"
+		 ;;
+
+      		 *)
+      		 echo 1>&2 $2': Unknown. Hurricane code must be "a", "ep"'
+      		 echo 1>&2 '"wp", "cp", "i", "af", "loc", or "d".'
+      		 exit 1
+      		 ;;
+        	 esac 
+        ;;
+
+      	-c)
+	x=`echo $2 | tr '[a-z]' '[A-Z]'`
+      	file="CLI/$x.CLI"
+     	;;
+
+      	-e)
+	x=`echo $2 | tr '[a-z]' '[A-Z]'`
+      	file="EXT/$x.EXT"
+     	;;
+     	      	
+      	-s)
+	x=`echo $2 | tr '[a-z]' '[A-Z]'`
+      	file="XXX/$x.XXX"
+     	;;
+
+	-cur)
+	x=`echo $2 | tr '[a-z]' '[A-Z]'`
+	file="CUR/$x.CUR"
+	;;
+
+	-fct)
+	x=`echo $2 | tr '[a-z]' '[A-Z]'`
+	file="FCT/$x.FCT"
+        ;;
+
+        -boy)
+        x=`echo $2 | tr '[a-z]' '[A-Z]'`
+        file="BOY/$x.BOY"
+        ;;
+
+
+      	-int)
+	case $2 in
+		 c|C)
+ 		 file="ABCA1"
+  		 ;;
+       			   
+      		 am|AM|Am|aM)
+ 		 file="ABXX7"
+ 		 ;;
+      			   
+       		 w|W)
+		 file="ABXX6"
+		 ;;
+     			   
+      		 *)
+      		 echo 1>&2 $2':Unknown. International code must be "c",'
+		 echo 1>&2   '"am", or "w"'
+      		 exit 1
+      		 ;;
+      		 esac
+      	;;      
+      
+	-ski)
+	x=`echo $2 | tr '[a-z]' '[A-Z]'`
+      	file="$x.REC"
+     	;;
+     	
+     	-ns)
+	x=`echo $2 | tr '[a-z]' '[A-Z]'`
+     	file="MAR/$x.MAR"
+     	;;
+     	
+	-can)
+	x=`echo $2 | tr '[a-z]' '[A-Z]'`
+	file="$x.CAN"
+	;;
+
+     	-os)
+	x=`echo $2 | tr '[a-z]' '[A-Z]'`
+     	file="OFF/$x.OFF"
+     	;;
+     	
+      	*) 
+      	echo 1>&2 'Usage: wx [option] id-code'
+        echo 1>&2 '       wx -h for help'
+      	exit 1 
+      	;; 
+      
+        esac
+      
+# (echo "0/um-weather/$file" ; sleep 50) |  \
+# telnet $site $port 2> /dev/null | sed \
+# -e  '1,/Escape/d' | tr -d '\015'
+get_page $site $port 0/um-weather/$file
+      
+fi

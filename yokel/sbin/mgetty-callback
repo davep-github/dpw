@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec /usr/yokel/sbin/mgetty -m '"" ATH0 OK AT&F1M1L0S95=1 OK' /dev/ttyS1 &

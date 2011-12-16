@@ -1,0 +1,56 @@
+#!/usr/bin/env perl
+#!/home/davep/bin.sh/runner.sh perl
+
+
+$prog = $0;
+$prog =~ s!.*/!!;
+#print "$prog\n";
+
+sub pnum
+{
+  local($str, $val) = @_;
+
+  print $str, sprintf(": %d, 0x%x, 0%o\n", $val, $val, $val);
+}
+
+sub ptime
+{
+  local($str, $val) = @_;
+
+  print $str, sprintf(": %d, 0x%x, %s\n", 
+		      $val, $val, scalar localtime $val);
+}
+
+# print "#>$#ARGV<\n";
+if ($#ARGV > 0) {
+  $header = 1;
+} else {
+  $header = 0;
+}
+
+foreach $file (@ARGV)
+{
+  if ($prog eq 'stat') {
+    ($dev, $ino, $mode, $nlink, $uid, $gid, $rdev, $size,
+     $atime, $mtime, $ctime, $blksize, $blocks) = stat($file);
+  }
+  else {
+    ($dev, $ino, $mode, $nlink, $uid, $gid, $rdev, $size,
+     $atime, $mtime, $ctime, $blksize, $blocks) = lstat($file);
+  }
+
+  print "==> $file <==\n" if ($header);
+  &pnum("dev", $dev);
+  &pnum("ino", $ino);
+  &pnum("mode", $mode);
+  &pnum("nlink", $nlink);
+  &pnum("uid", $uid);
+  &pnum("gid", $gid);
+  &pnum("rdev", $rdev);
+  &pnum("size", $size);
+  &ptime("atime", $atime);
+  &ptime("mtime", $mtime);
+  &ptime("ctime", $ctime);
+  &pnum("blksize", $blksize);
+  &pnum("blocks", $blocks);
+}

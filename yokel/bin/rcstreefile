@@ -1,0 +1,139 @@
+#!/bin/sh
+#
+# $Id$
+# rcstreefile - rcs a file into a parallel tree of rcs files
+#
+# e.g. /etc/resolv.conf --> $RCSROOT/etc/resolv.conf,v
+# rcstree calls this with RCSROOT set to a `namified' root,
+# when processing /usr/local/etc, RCSROOT is $RCSBASE/usr.local.etc/...
+#  where usr.local.etc is /usr/local/etc namified.
+#
+#set -x
+
+#[[ "$PATH" == *yokel/sbin* ]] && source script-x
+
+prog=$(basename $0)
+#echo "**************** $prog: $*" 1>&2
+
+Usage()
+{
+   echo "${prog}: usage: [-$option_str]" 1>&2
+   exit 1
+}
+
+ECHO=
+ECHO="echo $prog: "
+def_rcs_root='~davep/yokel/RCS'
+rcs_suffix=',v'
+def_text='rcsed_by_rcstree'
+def_msg='rcsed_by_rcstree'
+just_show=n
+TOUCH_REF_FILE="${tmp:-/tmp}/$prog.touch-ref-file"
+
+# see the man page of getopt for inadequacies.
+option_str='r:m:t:nqv'
+#args=` getopt $option_str $* `
+q=$(getopt $getopt_args -o "$option_str" -- "$@")
+[ $? != 0 ] && Usage
+eval set -- "$q"
+unset q
+
+. eexec
+
+for i in "$@"
+do
+    case $1 in
+	-n) EXEC=echo; EExecDashN "+rcstreefile: "; just_show=y; verbose=1;;
+        -v) verbose=1; EExecVerbose;;
+	-q) ECHO=":" ;;
+	-r) rcs_root=$2; shift;; # option with parameter
+	-m) msg=$2; shift;; # option with parameter
+	-t) text=$2; shift;; # option with parameter
+	-c) client=$2; shift;;
+	--) shift ; break ;;
+	*) 
+	    echo 1>&2 "Unsupported option>$1<";
+	    exit 1 ;;
+    esac
+    shift
+done
+
+# only if non optional args required
+#[ "$*" = "" ] && Usage
+
+: ${rcs_root:=$def_rcs_root}
+: ${msg:=$def_msg}
+: ${text:=$def_text}
+
+while read file
+do
+    case $file in
+    *.bak|*.BAK|*~|*/RCS|*/RCS/*|RCS/*|*.core|.svn/*)
+        continue;;
+    esac
+
+    dir_name=$(dirname "$file")
+    file_name=$(basename "$file")
+    rcs_dir="$rcs_root/$dir_name"
+    rcs_file="$rcs_dir/$file_name$rcs_suffix"
+    work_file="$file"
+    
+    #echo "rcs_dir>$rcs_dir<"
+    #echo "rcs_file>$rcs_file<"
+    #echo "work_file>$work_file<"
+
+    [ -d "$rcs_dir" ] || {
+	EExecContinue=0 EExec mkdir -p "$rcs_dir"
+	[ "$just_show" != 'y' -a ! -d "$rcs_dir" ] && {
+	    echo 1>&2 "Cannot mkdir $rcs_dir, skipping $work_file"
+	    continue
+	}
+    }
+    
+    doit=0
+    if [ ! -f "$rcs_file" ]
+    then
+	[ -n "$verbose" ] && echo "$rcs_file does not exist."
+	doit=1
+    else
+        diff_cmd="rcsdiff -q -ko $work_file $rcs_file"
+	[ -n "$verbose" ] && echo $diff_cmd
+	$diff_cmd >/dev/null 2>&1
+	doit=$?
+    fi
+    case $doit in
+	1)
+            # save times...
+            touch -r "$work_file" "$TOUCH_REF_FILE"
+	    EExec ci "-t-$text" "-m$msg" "$work_file" "$rcs_file"
+            (
+                cd $(dirname "$work_file")
+                # don't change rcs info, e.g. $Id$
+                EExec co -T -l -ko "$rcs_file"
+                touch -r "$TOUCH_REF_FILE" "$work_file"
+            )
+            rm -f "$TOUCH_REF_FILE"
+	    ;;
+	2)
+	    set -- $(file $work_file)
+	    shift
+	    file_type="$*"
+	    case "$file_type" in
+		data|*ELF*|*executable*) 
+		    echo 1>&2 "$file is \`$file_type', skipping"
+		    ;;
+		*) 
+		    echo 1>&2 "$file: rcsdiff failed."
+		    ;;
+	    esac
+	    ;;
+	0)
+	    [ -n "$verbose" ] && {
+	    echo "$file: no diffs."
+	    }
+	    ;;
+	*)
+	    echo "$file: unknown doit: $doit." 1>&2
+	    ;;
+    esac
+done

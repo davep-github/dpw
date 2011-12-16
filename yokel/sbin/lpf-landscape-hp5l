@@ -1,0 +1,6 @@
+#!/usr/local/bin/bash
+esc=""
+echo -ne "${esc}E${esc}&k2G${esc}&l1O"
+/usr/libexec/lpr/lpf "$@" || exit $?
+echo -ne "${esc}E"
+exit 0

@@ -1,0 +1,5 @@
+#!/usr/local/bin/bash
+
+
+echo -n ']2;'-${SERIAL_NUM}-"$USER@$HOST:${PWD}"'' >/dev/tty
+exit 0

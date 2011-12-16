@@ -1,0 +1,157 @@
+#!/bin/sh
+set -x
+KERNEL=${1:-/sys/compile/MINI/kernel}
+#
+# create a restore floppy
+#
+# format the floppy
+#
+PATH=/bin:/sbin:/usr/sbin:/usr/bin
+
+if [ "$format" = "y" ] 
+then
+    fdformat -q fd0
+    if [ $? -ne 0 ]
+    then
+         echo "Bad floppy, please use a new one"
+         exit 1
+    fi
+fi
+
+# place boot blocks on the floppy
+#
+disklabel -w -B -b /usr/mdec/fdboot -s /usr/mdec/bootfd /dev/rfd0c fd1440
+
+#
+# newfs the one and only partition
+#
+newfs -t 2 -u 18 -l 1 -c 40 -i 5120 -m 5 -o space /dev/rfd0a
+
+#
+# mount the new floppy
+#
+mount /dev/fd0a /mnt
+
+#
+# create required directories
+#
+mkdir /mnt/dev
+mkdir /mnt/bin
+mkdir /mnt/sbin
+mkdir /mnt/etc
+mkdir /mnt/root
+mkdir /mnt/mnt               # for the root partition
+mkdir /mnt/tmp
+mkdir /mnt/var
+
+#
+# populate the directories
+#
+if [ ! -x $KERNEL ]
+then
+     cat << EOM
+The MINI kernel does not exist, please create one.
+Here is an example config file:
+#
+# MINI -- A kernel to get FreeBSD on onto a disk.
+#
+machine       "i386"
+cpu      "I486_CPU"
+ident         MINI
+maxusers 5
+
+options       INET           # needed for _tcp _icmpstat _ipstat
+                         #            _udpstat _tcpstat _udb
+options       FFS            #Berkeley Fast File System
+options       "FAT_CURSOR"        #block cursor in syscons or pccons
+options       "SCSI_DELAY=15"          #Be pessimistic about Joe SCSI device
+options       "NCONS=2"      #1 virtual consoles
+options       USERCONFIG          #Allow user configuration with -c XXX
+
+config        kernel    root on sd0 swap on sd0 and sd1 dumps on sd0
+controller    isa0
+controller    pci0
+
+controller    fdc0 at isa? port "IO_FD1" bio irq 6 drq 2 vector fdintr
+disk          fd0  at fdc0 drive 0
+
+controller    ncr0
+
+controller    scbus0
+
+device        sc0  at isa? port "IO_KBD" tty irq 1 vector scintr
+device        npx0 at isa? port "IO_NPX" irq 13 vector npxintr
+
+device        sd0
+device        sd1
+device        sd2
+
+device        st0
+
+pseudo-device loop      # required by INET
+pseudo-device gzip      # Exec gzipped a.out's
+EOM
+     exit 1
+fi
+
+cp -f $KERNEL /mnt
+
+gzip -c -best /sbin/init > /mnt/sbin/init
+gzip -c -best /sbin/fsck > /mnt/sbin/fsck
+gzip -c -best /sbin/mount > /mnt/sbin/mount
+gzip -c -best /sbin/halt > /mnt/sbin/halt
+gzip -c -best /sbin/restore > /mnt/sbin/restore
+
+gzip -c -best /bin/sh > /mnt/bin/sh
+gzip -c -best /bin/sync > /mnt/bin/sync
+
+cp /root/.profile /mnt/root
+
+cp -f /dev/MAKEDEV /mnt/dev
+chmod 755 /mnt/dev/MAKEDEV
+
+chmod 500 /mnt/sbin/init
+chmod 555 /mnt/sbin/fsck /mnt/sbin/mount /mnt/sbin/halt
+chmod 555 /mnt/bin/sh /mnt/bin/sync
+chmod 6555 /mnt/sbin/restore
+
+#
+# create the devices nodes
+#
+cd /mnt/dev
+./MAKEDEV std
+./MAKEDEV sd0
+./MAKEDEV sd1
+./MAKEDEV sd2
+./MAKEDEV st0
+./MAKEDEV pty0
+cd /
+
+#
+# create minimum filesystem table
+#
+cat > /mnt/etc/fstab <<EOM
+/dev/fd0a     /    ufs  rw 1 1
+EOM
+
+#
+# create minimum passwd file
+#
+cat > /mnt/etc/passwd <<EOM
+root:*:0:0:Charlie &:/root:/bin/sh
+EOM
+
+cat > /mnt/etc/master.passwd <<EOM
+root::0:0::0:0:Charlie &:/root:/bin/sh
+EOM
+
+chmod 600 /mnt/etc/master.passwd
+chmod 644 /mnt/etc/passwd
+/usr/sbin/pwd_mkdb -d/mnt/etc /mnt/etc/master.passwd
+
+#
+# umount the floppy and inform the user
+#
+/sbin/umount /mnt
+
+

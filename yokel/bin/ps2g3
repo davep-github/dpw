@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/bin/gs -q -dSAFER -dNOPAUSE  -sDEVICE=dfaxhigh -sOutputFile=- -

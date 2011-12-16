@@ -1,0 +1,8 @@
+#!/bin/sh
+
+pager=${PAGER:-less}
+
+for file in $*
+do
+	groff -man -Tascii ../../../../man/man1/gimp.1 | $pager
+done

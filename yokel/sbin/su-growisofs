@@ -1,0 +1,7 @@
+#!/bin/sh
+# $Id$
+# Appease growisofs with respect to sudo.
+
+unset SUDO_COMMAND
+export MKISOFS=/usr/bin/mkisofs
+exec growisofs "$@"

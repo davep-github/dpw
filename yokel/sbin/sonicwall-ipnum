@@ -1,0 +1,3 @@
+#!/bin/sh
+
+nslookup h0040100CCB2F.ne.mediaone.net

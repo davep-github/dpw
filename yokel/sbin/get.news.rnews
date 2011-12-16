@@ -1,0 +1,93 @@
+#!/bin/sh
+#set -x
+
+#NOTE: this script probably needs to be run by root.  Most systems will
+# not let a normal user run rnews
+
+#BEFORE USING - check to ensure all the paths defined below are correct!!
+
+REMOTE_HOST=$NNTPSERVER
+[ -z $REMOTE_HOST ] && {
+	echo "$0: MUST set \$NNTPSERVER." 1>&2
+	exit 1
+}
+
+LOCAL_HOST=localhost
+
+if [ -d /var/spool/news ] && [ ! -d /var/news ]; then
+	SPOOLDIR=/var/spool/news	# base directory for articles to be rposted
+else
+	SPOOLDIR=/var/news
+fi
+NEWSDIR=/usr/local/libexec/news	# base directory for news binaries 
+BINDIR=/usr/local/bin		# base directory for suck rpost and scripts
+
+TMPDIR=/usr/tmp			# location for suck.* files
+DATADIR=/usr/local/etc			# location of sucknewsrc and killfile
+MSGDIR=${TMPDIR}/Msgs			# where to put MultiFile articles when getting them
+
+BATCHFILE=${TMPDIR}/batch.suck.$$	# Name of batchfile to build for rnews or innxmit
+OUTGOING=${SPOOLDIR}/out.going/thecia	# location of the list of articles to upload
+SCRIPT=${BINDIR}/put.news		# my filter for rpost
+OUTFILE=/tmp/tmp$$			# used by rpost as article after it is filtered
+
+RPOST=${BINDIR}/rpost			# my rpost
+SUCK=${BINDIR}/suck			# my suck
+TESTHOST=${BINDIR}/testhost		# my testhost
+RNEWS=${NEWSDIR}/input/rnews		# location of rnews
+
+
+# is the local host up and running so we can post articles we download?
+# ${TESTHOST} ${LOCAL_HOST} > /dev/null 2>&1
+# LOCAL_RESULT=$?
+
+# is the remote host up and running so we can download articles?
+${TESTHOST} ${REMOTE_HOST} > /dev/null 2>&1
+REMOTE_RESULT=$?
+
+if [ ${REMOTE_RESULT} -eq 0 ]; then
+
+	# download articles
+	#if using rnews change the -bi to -br
+	${SUCK} ${REMOTE_HOST} -br ${BATCHFILE} -dt ${TMPDIR} \
+		-dm ${MSGDIR} -dd ${DATADIR}
+	SUCK_STATUS=$?
+
+	if [ ${SUCK_STATUS} -eq 0 ]; then
+		echo "Downloaded Articles"
+		\mv ${DATADIR}/sucknewsrc ${DATADIR}/old.newsrc
+		\mv ${TMPDIR}/suck.newrc ${DATADIR}/sucknewsrc
+		\rm ${TMPDIR}/suck.*
+		if [ -f ${DATADIR}/suckothermsgs ]; then
+			rm ${DATADIR}/suckothermsgs
+		fi
+	fi
+
+	# now upload articles
+	if [ -s ${OUTGOING} ]; then
+		# outgoing articles to post
+		${RPOST} ${REMOTE_HOST} -b ${OUTGOING} -p ${SPOOLDIR} \
+			-f \$\$o=${OUTFILE} ${SCRIPT} \$\$i ${OUTFILE}
+
+		if [ $? -ne 0 ]; then
+			echo "Error remote posting"
+			exit -1;
+		else
+			echo "Remotely posted articles"
+			\rm ${OUTFILE} ${OUTGOING}
+		fi
+	fi	
+	
+	echo "You can hang up the modem now"
+
+	if [ ${SUCK_STATUS} -eq 0 ]; then	
+		# locally post articles
+		${RNEWS} < ${BATCHFILE}
+		
+		if [ $? -eq 0 ]; then
+			echo "Posted Articles Locally"
+			\rm -rf ${MSGDIR}
+			\rm ${BATCHFILE}
+		fi	
+	fi	
+fi

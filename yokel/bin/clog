@@ -1,0 +1,9 @@
+#!/bin/sh
+# $Id$
+# colorize files
+
+for f in "$@"
+do
+    colorize < "$f" | less -R
+done
+

@@ -1,0 +1,20 @@
+#!/bin/sh
+set -x
+
+destdir=.
+
+#    /dcim  (3 entries):
+#drw-rw-rw-  1 root  wheel       0  Jan 31 12:00:00 1999  .
+#drw-rw-rw-  1 root  wheel       0  Jan 31 12:00:00 1999  ..
+#drw-rw-rw-  1 root  wheel       0  Jul 22 06:39:24 2000  100dc240
+#
+# get dir
+dir=`ophoto ls | tail -2 | head -1 | awk '{print $10}'`
+
+#
+# get pics
+ophoto ls $dir | grep dcp_ | awk '{print $10}' | while read picname
+do
+	echo cp $picname $destdir
+	ophoto cp $dir/$picname $destdir
+done

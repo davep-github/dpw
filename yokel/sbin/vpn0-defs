@@ -1,0 +1,13 @@
+SEKRIT="sekritsekritsekritsekrit" 
+# home gateway machine
+HGW=24.147.250.67
+
+# crl g/w
+CGW=192.58.206.200
+
+# home network/machine
+HNET=$HGW
+
+# crl/dec/compaq net
+#CNET=16.11.0.0/16
+CNET=10.0.0.0/24

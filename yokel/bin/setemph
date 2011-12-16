@@ -1,0 +1,42 @@
+#!/bin/sh
+#set -x
+
+#
+# determine how to emphasize text on screen.
+# We try for escape sequences for bolding text.
+# If we cannot determine a bolding sequence and $1 is -t,
+# then we use some ascii text as emphasis markers.
+#
+# this is meant to be sourced, since vars cannot be exported
+# to parent.
+
+#
+# do nothing if already set...
+#
+[ -z "$emph" ] && {
+
+    text_emph=$1
+    case ${OSName=$(uname -s)} in
+	FreeBSD)
+	    emph=`tput md`
+	    norm=`tput me`
+	    ;;
+	OSF1)
+	    emph=`tput bold`
+	    norm=`tput rmso`
+	    ;;
+	Linux)
+	    emph=`tput bold`
+	    norm=`tput sgr0`
+	    ;;
+	*)
+	    if [ "$text_emph" = '-t' ]
+	    then
+		emph='>>>'
+		norm='<<<'
+	    else
+		emph=''
+		norm=''
+	    fi
+    esac
+}

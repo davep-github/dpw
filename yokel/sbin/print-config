@@ -1,0 +1,65 @@
+#!/bin/sh
+# $Id: print-config,v 1.13 2004/07/30 07:12:24 davep Exp $
+#
+# save essential files, names in directories and outputs of
+#  various programs.
+#set -x -v*
+
+#FF=
+FF=
+
+uname -a 	# we get this in dmesg, too
+
+files='/root/.bash_profile
+/root/.bashrc
+/etc/rc.conf 
+/etc/printcap 
+/etc/passwd 
+/etc/fstab 
+/etc/resolv.conf
+/etc/ttys
+/etc/gettytab
+/var/run/dmesg.boot
+/var/log/dmesg
+/dev/MAKEDEV'
+
+#
+# not needed since we now rcs everything instead of linking
+# modified files back into /yokel
+# find / -type l -ls | fgrep /usr/yokel
+
+# @todo merge these in in a machine dependent fashion.
+#dump-disklabels
+#dump-partition-tabs
+#find-nodumps
+# lf /var/db/pkg   FreeBSD only @todo make this automatic
+#  also in gentoo!  This is ALL grabbed in jaz-bak
+#pkg_db='/var/db/pkg'
+#[ -d "$pkg_db" ] && find "$pkg_db" -type d
+
+procs='dmesg
+cat /var/log/dmesg
+ifconfig -a
+ls -d /home/davep/stuff/indices/archivedb/*'
+pr_file()
+{
+	for i in $*
+	do
+		pr -F -h "pr_file \`\`$i''" "$i"
+	done
+}
+
+pr_proc()
+{
+	oldIFS=$IFS
+	IFS='
+'
+	for i in $*
+	do
+		IFS=$oldIFS
+		eval $i | pr -F -h "pr_proc \`\`$i''" 
+	done
+}
+
+pr_file $files
+pr_proc "$procs"

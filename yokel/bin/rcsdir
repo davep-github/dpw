@@ -1,0 +1,72 @@
+#!/bin/sh
+#set -x -v
+prog=`basename $0`
+echo $prog: $* 1>&2
+
+Usage()
+{
+   echo "${prog}: usage: $prog [-t text] [-m msg] dir..." 1>&2
+   exit 1
+}
+
+# init optional vars to defaults here...
+ECHO="echo $prog: "
+text='rcsed_by_rcsdir'
+msg='rcsed_by_rcsdir'
+
+set -- ` getopt t:m:v "$@" `
+
+[ $? != 0 ] && Usage
+
+for i in $*
+do
+	case $1 in
+		-t) text=$2; shift; shift;;
+		-m) msg=$2; shift; shift;;
+		-v) verbose=1; EExecEcho=echo; shift;;
+		--) shift; break;;
+		*) Usage ;;
+	esac
+done
+
+# only if non optional args required
+[ "$*" = "" ] && Usage
+
+. /usr/yokel/bin/eexec
+EExecContinue=1
+
+for dir in $*
+do
+	for file in $dir/* $dir/.*
+	do
+		case $file in
+			*.bak|*~)
+				continue;;
+		esac
+		
+		doit=0
+		[ -f $file ] && {
+			[ -f RCS/$file,v ] || doit=1
+			[ "$doit" = "0" ] && {
+				rcsdiff -q $file >/dev/null 2>&1
+				doit=$?
+			}
+			case $doit in
+				1)
+					EExec ci -t-$text -m$msg -l $file
+					;;
+				2)
+					echo "$file: rscdiff failed." 1>&2
+					;;
+				0)
+					[ -n "$verbose" ] && \
+						echo "$file: no diffs."
+					;;
+				*)
+					echo "$file: unknown doit: $doit." 1>&2
+					;;
+			esac
+		}
+	done
+done
+

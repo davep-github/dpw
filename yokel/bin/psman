@@ -1,0 +1,36 @@
+#!/bin/sh
+#set -x
+#set -v
+what=$1
+
+mpath=$MANPATH
+mpath=`pathadd $mpath "/usr/share/man"`
+
+IFS=":"
+for dir in $mpath
+do
+	# echo "dir>$dir<"
+	for mandir in $dir/man*
+	do
+		# echo "mandir>$mandir<"
+		for manpage in $mandir/$what.*
+		do
+			[ "$manpage" = "$mandir/$what.*" ] && continue
+			# echo "manpage>$manpage<"
+			ty=`file $manpage`
+			case "$ty" in
+			*roff*) 
+				pp=cat;;
+			*data*) 
+				pp=gzcat;;
+			*)
+				echo "$0: unknown type: $type" 1>&2
+				exit 1
+				;;
+			esac
+
+			$pp $manpage | groff -man
+			exit 0
+		done
+	done
+done

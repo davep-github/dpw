@@ -1,0 +1,6 @@
+#!/bin/sh
+
+killprog nfsd
+killprog -9 nfsd:
+killprog portmap
+killprog mountd

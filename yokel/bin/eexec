@@ -1,0 +1,197 @@
+#!/bin/sh
+# $Id: eexec,v 1.16 2005/12/17 08:11:04 davep Exp $
+#
+# run a program with variable amounts of verbosity and 
+# error reporting
+#
+# usage:
+# . eexec
+# EExec some-command
+# INTTMIG (It Needs This To Make It Go -- Various Paclids.)
+# EExec requires command lines like this if you want to EExec both sides of a
+# pipe.  Sorry.
+# E.g.:
+#EExec man -k "$@" \
+#    | EExec egrep -e "$regexp"
+#
+# This way, each EExec doesn't see the rest of the command line and get
+# confuzed.
+#
+# You can set:
+# EExecEcho           A command to echo command being executed, def UNSET.
+# EExecErrorReporter  A command to report errors, def 'EExecDefErrorReporter'.
+# EExecEchoPrefix     A prefix to print before all output.
+# EExecContinue       Non-empty --> continue after errors, def UNSET.
+# EExecRCFile         A file in which to accumulate error msgs, def UNSET.
+# EExecShowOnly       Don't run commands, just show 'em.
+# EExecShowPrefix     What EExecShowOnly prefixes lines with.
+# EExecShowCommand    What EExecShowOnly prints lines with.
+# You can call:
+# EEdie text          Print current value of $?, report text and exit $?.
+# EExecDashN          Set EExecShowOnly and EExecShowPrefix.
+# EExecVerbose        Set up standard verbosity.
+# EExecQuiet          Turn off verbosity.
+
+# MUST be set before sourcing or this will NOT work.
+# On by default. Call EExecNoExport to disable exportation.
+: ${EExecExporter:=export}
+${EExecExporter} EExecShowCommand=EExecStderrEcho
+${EExecExporter} EExecShowPrefix=""
+${EExecExporter} EExecEcho=
+${EExecExporter} EExecEchoPrefix="+"
+${EExecExporter} EExec_loaded_p=t
+${EExecExporter} EExecShowOnly=
+${EExecExporter} EExecErrorReporter=
+
+EExecExport()
+{
+    export EExecExporter="export"
+}
+
+EExecNoExport()
+{
+    export EExecExporter=""
+}
+
+EExecDashN ()
+{
+    
+    if [ "${1-}" == "-k" ]
+    then
+	${EExecExporter} EExecEcho=EExecStderr_eko
+        shift
+    else
+        EExecVerbose
+    fi
+    ${EExecExporter} EExecShowOnly=y
+    ${EExecExporter} EExecShowPrefix="$@"
+    ${EExecExporter} EExecEchoPrefix='-'
+}
+
+EExecVerbose ()
+{
+    if [ -z "$*" ]
+    then
+	${EExecExporter} EExecEcho=EExecStderrEcho
+    else
+	${EExecExporter} EExecEcho="$1"
+    fi
+}
+
+EExecQuiet ()
+{
+    unset EExecEcho
+}
+
+
+EExecDefErrorReporter ()
+{
+    rc=$1
+    shift
+    eMsg="$EExecProgName(EExec): ERROR: `date`, rc: $rc
+$* failed $EExecMsg"
+    echo "$eMsg" 1>&2
+    [ -n "$EExecRCFile" ] && echo "$eMsg" >> $EExecRCFile
+    [ -z "$EExecContinue" ] && exit $rc
+    return $rc
+}
+
+EExecStderrEcho()
+{
+    #echo ">$EExecEchoPrefix<" 1>&2
+    #echo echo "{$EExecEchoPrefix}$*" '1>&2' 1>&2
+    echo "{$EExecEchoPrefix}""$@" 1>&2
+}
+
+EExecStandardErr_eko()
+{
+    echo "PATH>$PATH<" 1>&2
+    eko "${EExecEchoPrefix}""$@" 1>&2
+}
+
+EExecStdoutStderrEcho()
+{
+    EExecStdout Echo "$*"
+    EExecStderrEcho "$*"
+}
+
+# die with status passed in
+EEdie0()
+{
+    rc=$1
+    shift
+    EExecDefErrorReporter $rc $*
+    exit $rc
+}
+
+# die with status from last command
+EEdie()
+{
+    rc=$?
+    EEdie0 $rc "$@"
+}
+
+eexecClrDie()
+{
+    true
+}
+
+EExec ()
+{
+    if [ "$1" = '-n' ]
+    then
+	shift
+	${EExecExporter} eexecShowOnly=y
+	${EExecExporter} eexecShowPrefix="+"
+	if [ -z "$EExecEcho" ]
+	then
+	    eexecEcho=${EExecExporter} EExecStderrEcho
+	else
+	    eexecEcho="$EExecEcho"
+	fi
+    else
+	${EExecExporter} eexecShowOnly="$EExecShowOnly"
+	${EExecExporter} eexecShowPrefix="$EExecShowPrefix"
+	${EExecExporter} eexecEcho="$EExecEcho"
+    fi
+
+    # $eexecEcho is a command to do our echoing
+    [ -n "$eexecEcho" ] && "$eexecEcho" "${eexecShowPrefix}""$@"
+    # run the command
+    if [ -z "$eexecShowOnly" ]
+    then
+	"$@" || {
+	    rc=$?
+	    [ -n "$EExecErrorReporter" ] && {
+		"$EExecErrorReporter" $rc $*
+		return $?
+	    }
+	    [ -z "$EExecContinue" ] && exit $rc
+	    return $rc
+	}
+    elif [ -z "$eexecEcho" ]
+    then
+	#echo "$@"
+	$EExecShowCommand "${eexecShowPrefix}$@"
+    fi
+    return 0
+}
+
+[ -z "$EExecErrorReporter" ] && {
+    ${EExecExporter} EExecErrorReporter=EExecDefErrorReporter
+}
+
+#
+# preserve historical program name if present,
+# otherwise set up a default
+#
+if vsetp "${prog=}"
+then
+    ${EExecExporter} EExecProgName="$prog"
+elif vsetp "$progname"
+then
+    ${EExecExporter} EExecProgName="$progname"
+elif [ -z "$EExecProgName" ]
+then
+    ${EExecExporter} EExecProgName="$0"
+fi

@@ -1,0 +1,2 @@
+#!/bin/sh
+/usr/local/bin/gs -q -dSAFER -dNOPAUSE  -sDEVICE=ljet4 -sOutputFile=- -

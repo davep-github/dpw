@@ -1,0 +1,10 @@
+#!/bin/sh
+set -x
+
+# source this to allow using anon cvs on kernel
+
+export CVSROOT=':pserver:anoncvs@anoncvs.FreeBSD.org:/home/ncvs'
+echo 'enter anoncvs for password'
+cvs login
+echo "don't forget to cvs logout"
+

@@ -1,0 +1,26 @@
+#!/bin/sh
+# problem with suck: Can not open /usr/local/news/lib/history
+#set -x
+
+if ispppup
+then
+	connected=n
+else
+	# connect to network
+	su -l davep -c "pppdialer -n" || exit 1
+	connected=y
+fi
+
+# suck down the news
+get.news.rnews || exit 1
+
+[ "$connected" = "y" ] && {
+	# hang up
+	killppp || exit 1
+}
+
+# process the news
+/usr/local/libexec/news/input/newsrun || exit 1
+/usr/local/libexec/news/expire/doexpire || exit 1
+
+exit 0

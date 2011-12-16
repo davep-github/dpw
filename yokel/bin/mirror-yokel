@@ -1,0 +1,5 @@
+#!/bin/sh
+
+sudo nice -n20 rsync -av /yokel/ /whatsis/yokel-mirror
+
+

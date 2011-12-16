@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# add element to path iff its not there already
+# default is to append
+# NB: null path elements will be converted to .s
+#set -x
+
+if [ "$1" = "-p" ]
+then
+    shift
+    prepend=y
+    cmd='$out$sep$path'		# command to prepend new dirs
+else
+    cmd='$path$sep$out'		# command to append new dirs
+fi
+
+path=$1				# save the original path
+shift
+
+# convert leading and trailing null entries to .s
+case "$path" in
+    :*:) path=".${path}.";;
+    :*) path=".$path";;
+    *:) path="${path}.";;
+esac
+
+#
+# we need these hoops since the replacement doesn't seem to
+# work completely correctly, e.g.: ::::::: --> :.::.::.::
+old="$pathX"
+while [ "$path" != "$old" ]
+do
+    old="$path"
+    path="${path/::/:.:}"
+done
+
+# put colons on ends to ensure every element has the form :xxx:
+path=":$path:"
+
+tsep=''
+out=''
+for new_el in "$@"
+do
+    [ -z "$new_el" ] && new_el=. # fix null entry
+    case "$path" in
+	*:$new_el:*)		# element aleady is in path
+	    [ "$prepend" = "y" ] && {
+		# if prepending, delete and add at front
+		path=${path/:$new_el:/:}
+		out=$out$tsep$new_el
+		tsep=':'
+	    }
+	    ;;			# do nothing if present and not prepending
+	*)
+	    out=$out$tsep$new_el # not present, add to output string
+	    tsep=':'
+	    ;;
+    esac
+done
+
+# strip the extra colons we added.
+path="${path/#:}"
+path="${path/%:}"
+
+sep=':'	
+# echo "out>$out<, sep>$sep<, path>$path<"
+# no separator if path or out is empty, since that adds a null entry
+[ -z "$out" -o -z "$path" ] && sep=""
+eval echo $cmd

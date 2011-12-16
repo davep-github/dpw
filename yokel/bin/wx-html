@@ -1,0 +1,116 @@
+#!/usr/bin/perl -s
+
+$city		  = 'Bloomington, Indiana, USA';
+$root_url	  = '..';
+$made_url	  = 'mailto:weather@cs.indiana.edu';
+$picons_url	  = "$root_url/picons/ftp/index.html";
+#$picons_url	  = 'http://www.cs.indiana.edu/picons/ftp/index.html';
+$wxug_url	  = 'http://groundhog.sprl.umich.edu/';
+$signature	  = 'kinzler@cs.indiana.edu';
+$signature_url	  = "$root_url/hyplan/kinzler.html";
+
+$wx_faces_command = 'wx-faces -alt -stdin orh';
+$weather_db_url	  = "$root_url/picons/db/weather";
+$picon_file	  = 'face.gif';
+$picon_width	  = 64;
+$picon_height	  = 64;
+
+# wx-html - filter a textual weather forecast into HTML with icons
+# Steve Kinzler, kinzler@cs.indiana.edu, Apr 95
+
+# sample usage:
+# wx lax | wx-html > wx-lax.html
+
+$usage = "usage: $0\n";
+die $usage if $h || @ARGV;
+
+###############################################################################
+
+print <<EOF;
+<html><head>
+<title>Weather - $city</title>
+<link rev="made" href="$made_url">
+</head><body>
+
+<h1>Weather for $city</h1>
+
+<strong>Reload</strong> this page on subsequent viewings for the most
+current information.  The first row of thermometers indicates the current
+or forecast <em>high</em> temperatures and the second row indicates the
+effective or forecast <em>low</em> temperatures.<p>
+EOF
+
+$blank = 1;
+while (<>) {
+	s/[^\t -~]//;
+	s/\s*$/\n/;
+	next if /^\.$/;
+	next if $blank && /^$/;
+	$blank = /^$/;
+	push(@wx, $_);
+}
+pop @wx if @wx && $wx[$#wx] =~ /^$/;
+
+if ($wx_faces_command) {
+	$tmp = "/tmp/wh$$";
+	$SIG{'HUP'} = $SIG{'INT'} = $SIG{'PIPE'} = $SIG{'TERM'} = 'handler';
+	open(TMP, "> $tmp") || die "$0: cannot open $tmp ($!)\n";
+	print TMP @wx;
+	close TMP;
+
+	open(FACES, "$wx_faces_command < $tmp |") ||
+		die "$0: cannot run '$wx_faces_command < $tmp' ($!)\n";
+	$_ = <FACES>;
+	$_ = <FACES>;
+	($cols) = /Cols=(\d+)/i;
+	if ($cols) {
+		print "\n<pre>\n";
+		$n = 0;
+		while (<FACES>) {
+			@__ = split(/\t/);
+			$__[1] = 'MISC' if $__[0] eq 'question' ||
+					   $__[0] eq 'unknown';
+			print "<img src=\"$weather_db_url/$__[1]/$__[0]/",
+			      "$picon_file\" ",
+			      "width=$picon_width height=$picon_height>";
+			print("<br>\n"), $n = 0 if ++$n >= $cols;
+		}
+		print "</pre>\n";
+	} else {
+		warn "$0: malformed output from '$wx_faces_command'\n";
+	}
+	close FACES;
+#	unlink $tmp;
+
+}
+
+print "\n<pre>\n";
+while (@wx) {
+	$_ = shift @wx;
+	s/^#{72,}$/<hr>/;
+	s/^[ .](\S[^\.]+)\.\.\./ <strong>$1<\/strong>.../;
+	print;
+}
+print "</pre>\n";
+
+# DO NOT REMOVE THIS PARAGRAPH.
+print "\n", <<EOF;
+This document is generated with software and icons from the
+<a href="$picons_url">Picons Archive</a>
+(in particular, <code>src/apps-*.tar.Z</code> and
+<code>db/weather.tar.Z</code>), and includes data from the
+<a href="$wxug_url">Weather Underground</a>.<p>
+EOF
+
+print "\n", <<EOF;
+<address>
+<a href="$signature_url">$signature</a>
+</address></body></html>
+EOF
+
+###############################################################################
+
+sub handler {
+#	unlink $tmp;
+	exit;
+}

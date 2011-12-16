@@ -1,0 +1,4 @@
+#!/bin/sh
+SUPFILE=/usr/yokel/src/src-supfile
+echo "Using: $SUPFILE"
+/usr/local/bin/cvsup -g -L 2 $SUPFILE

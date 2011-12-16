@@ -1,0 +1,38 @@
+#!/bin/sh
+#set -x
+mnt=/tmp
+show_only=
+
+ERROR() {
+    echo "$progname: $*" 1>&2
+    exit 1
+}
+
+do_cmd () 
+{
+    echo "$*"
+    [ "$show_only" = 'y' ] && return
+    $* || {
+	ERROR "$* failed: $?"
+    }
+}
+
+fses='/dev/wd1a			.
+/dev/wd1s1f			usr
+/dev/wd1s1e			var'
+
+set -- $fses
+while [ "$*" != "" ] 
+do
+    dev=$1
+    shift
+    fs=$1
+    shift
+
+    dir=$mnt/$fs
+    [ -d $dir ] || do_cmd mkdir $dir
+
+    do_cmd newfs -b8192 -f1024 $dev
+
+    do_cmd mount $dev $dir
+done

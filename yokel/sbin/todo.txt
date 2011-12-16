@@ -1,0 +1,11 @@
+pax-dates
+
+pax-src-dir level date
+
+hash on pax src dir.  this yields a list indexed by level.
+
+Read entire file into hash, update, write back
+forall keys
+ forall levels
+  write record
+

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+font_dirs='/usr/X11R6/lib/X11/fonts/freefont /usr/X11R6/lib/X11/fonts/non-cjk'
+
+for dir in $font_dirs
+do
+	xset fp+ $dir
+done
+
+xset fp rehash

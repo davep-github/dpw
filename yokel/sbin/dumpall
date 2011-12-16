@@ -1,0 +1,202 @@
+#!/bin/sh
+#set -x
+
+argses="$@"
+progname=$(basename $0)
+dev=/dev/nrsa0
+#dev=/jaz
+deffilesystems="/ /var /usr /yokel"
+filesystems=
+# valid for 90m, 2gig DAT carts.
+density=61000
+tape_len=29500
+tape_name=
+eom=
+show_only=y
+fs_backup=n
+def_log_file='/var/log/dumpall.log'
+log_file=$def_log_file
+comment=
+def_log_prefix=
+log_prefix=$def_log_prefix
+
+LOG() {
+    echo "$log_prefix$*" >> $log_file
+}
+
+ERROR() {
+    echo "$progname: $*" 1>&2
+    LOG "ERROR: $*"
+    LOG "--"
+    exit 1
+}
+
+do_cmd () 
+{
+    echo "$*"
+    LOG "$*"
+    [ "$show_only" = 'y' ] && return
+    $* || {
+	ERROR "$* failed: $?"
+    }
+}
+
+added_filesystems=$deffilesystems
+set -- ` getopt t:f:d:s:neErN:Fc:x "$@"`
+[ $? != 0 ] && Usage
+for i in $*
+do
+    case $1 in
+	-t)
+	    dev=$2; shift; shift;;
+	-f)
+	    fs=$2
+	    case $fs in
+		+*)
+		    fs=`echo $fs | cut -c2-`
+		    ;;
+		*)
+		    # since we didna use `+', we want to skip the def systems
+		    # to the final results
+		    added_filesystems=''
+		    ;;
+
+	    esac
+	    filesystems="$filesystems $fs"; shift; shift;;
+	-d)
+	    density=$2; shift; shift;;
+	-s)
+	    tape_len=$2; shift; shift;;
+	-n)
+	    show_only=y; shift;;
+	-x)
+	    show_only=n; shift;;
+	-N)
+	    tape_name=$2; shift; shift;;
+	-e)
+	    eom='y'; shift;;
+	-E|-r)
+	    eom='n'; shift;;
+	-F)
+	    fs_backup=y; shift;;
+	-c)
+	    comment="$2"; shift; shift;;
+	--)
+	    shift; break;;
+	*)
+	    ERROR "unknown option: $1"
+	    ;;
+    esac
+done
+
+if [ x"$show_only" = "xy" ]
+then
+    log_prefix="LOG:"
+    log_file=/dev/tty
+    comment_file=/dev/tty
+    comment_prefix='COMMENT:'
+else
+    log_prefix=$def_log_prefix
+    log_file=$def_log_file
+    comment_file=${dev}/comment
+    comment_prefix=''
+fi
+
+filesystems="$added_filesystems $filesystems"
+
+[ -z "$tape_name" ] && {
+    echo -n "Please enter the tape's name: "
+    read tape_name
+}
+[ -z "$tape_name" ] && {
+    ERROR "a tape name must be specified."
+}
+
+
+[ -z "$comment" ] && {
+    echo -n "Comment for this tape? "
+    read comment
+}
+
+case $dev in
+    /dev/*) ;;
+    *)
+	# not a /dev... assume a file system
+	if [ "$fs_backup" != "y" ] 
+	then
+	    ERROR "$dev used w/o -F option"
+	fi
+	[ ! -d "$dev" -a "$show_only" != 'y' ] && {
+	    ERROR "dest dir $dev does not exist."
+	}
+	;;
+esac
+
+start_time=`date`
+LOG "start: $tape_name: $start_time"
+LOG "args: $argses"
+if [ -z "$comment" ] 
+then
+    comment="No comment specified. Backup date: `date`, dev: $dev, filesystems: $filesystems"
+fi
+
+LOG "comment: $comment"
+if [ "$fs_backup" = 'y' ]
+then
+    echo "${comment_prefix}$comment" > $comment_file
+fi
+
+level=${1:-0}
+[ "$filesystems" = "" ] && filesystems=$deffilesystems
+
+if [ -z "$eom" ]
+then
+    if [ "$level" = "0" ]
+    then
+	eom=n
+    else
+       	eom=y
+    fi
+fi
+
+if [ "$fs_backup" != 'y' ]
+then
+if [ "$eom" = 'y' ]
+then
+    do_cmd mt -f $dev eom
+else
+    do_cmd mt -f $dev rewind 
+fi
+fi
+
+for fs in $filesystems
+do
+    case "$fs_backup" in
+    y)
+	if [ "$fs" = "/" ]
+	then
+		fs_name="root"
+	else
+		fs_name="$fs"
+	fi
+ 	do_cmd dump ${level}ufds ${dev}/${fs_name}-dump $density $tape_len $fs
+	;;
+    *)
+ 	do_cmd dump ${level}ufds $dev $density $tape_len $fs
+       	;;
+    esac
+done
+
+if [ "$fs_backup" != 'y' ]
+then
+	do_cmd mt -f $dev offline
+else
+	do_cmd umount $dev
+fi
+
+end_time=`date`
+
+LOG "end: $tape_name: $end_time"
+LOG "--"
+
+exit 0

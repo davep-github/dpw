@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if sp a2ps > /dev/null
+then
+    a2ps -2  "$@"
+    exit 0
+elif sp enscript > /dev/null
+then
+    enscript -2r -DDuplex:true -p- "$@" | lpr
+    exit 0
+elif sp nenscript > /dev/null
+then
+    if sp lpspr > /dev/null
+    then
+	nenscript -2r -p- "$@" | lpspr -K2
+	exit 0
+    fi
+fi
+
+echo 1>&2 "Cannot find a suitable 2up processor."
+exit 1

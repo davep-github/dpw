@@ -1,0 +1,50 @@
+#!/usr/bin/env python
+
+import os, sys, getopt, string
+
+class Globals:
+    """Globals: hold global variables.
+Prevents need for global statement to modify global vars"""
+    def __init__(self):
+        # set up defaults
+        self.sep = ' -or '
+        self.op = '-name '
+        
+globals = Globals()
+opt_str = 's:S:o:O:'
+
+options, args = getopt.getopt(sys.argv[1:], opt_str)
+
+for o, v in options:
+    # print 'o>%s<, v>%s<' % (o, v)
+    if o == '-s':
+        globals.sep = ' ' + v + ' '
+	continue
+    if o == '-S':
+        globals.sep = v
+	continue
+    if o == '-o':
+        globals.op = v + ' '
+	continue
+    if o == '-O':
+        globals.op = v
+	continue
+
+args2 = []
+for s in args:
+    args2.append( "'" + s + "'")
+    
+
+s = string.join(args2, globals.sep + globals.op)
+#print 's>%s<' % s
+
+if len(args) > 0:
+    s = "%s%s" % (globals.op, s)
+if len(args) > 1:
+    s = '\\( %s \\)' % (s,)
+
+print s
+
+sys.exit(0)
+               
+

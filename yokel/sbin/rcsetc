@@ -1,0 +1,72 @@
+#!/bin/sh
+#set -x
+
+progname=`basename $0`
+dirname=`dirname $0`
+
+#source script-x
+
+if [ "$1" = "-n" ]
+then
+    ECHO=echo
+else
+    ECHO=
+fi
+
+if [[ "$PATH" != *yokel/sbin* ]] || [ -z "$DP_BASHRC_COMPLETE" ]
+then
+    rcfile="$HOME/.bashrc"
+    [ -f $rcfile ] && {
+        . $rcfile
+    }
+fi
+
+. "$dirname/DP-RCS.conf"
+echo "rcs_base>$rcs_base<"
+[ -d "$rcs_base" ] || mkdir -p "$rcs_base" || {
+    dpFATAL "cannot make rcs dir >$name<"
+    exit 1
+}
+
+dirs='/etc /usr/local/etc /root /usr/X11R6/etc /usr/X11R6/lib/X11/etc /usr/yokel/etc /usr/kde/*/share/config
+/var/lib/iptables /var/lib/portage'
+# @todo find other files that need excluding.  Things that have no critical,
+# user provided data
+ex_files='-x drift -x dumpdates'
+singular_files='/boot/grub/menu.lst /usr/src/linux/.config* /var/lib/portage/world'
+
+for dir in $dirs
+do
+    [ -d "$dir" ] || {
+	echo dpWARN "no such dir: $dir"
+	continue
+    }
+    cd $dir || dpFATAL 1 "canna cd to $dir"
+    base=`namify-path -n -c . $dir`
+    name="$rcs_base/$base"
+    echo "rcs dir name >$name<"
+    echo ""
+    echo "RCS'ing $dir files to $name"
+    cd $dir && {
+	$ECHO rcstree -r $name -t daily_rcs -m daily_rcs $* $ex_files .
+    }
+    ex_files=''
+done
+
+for f in $singular_files
+do
+    # at this time: 2010-06-27T11:25:31, I can't remember why I pass the $*.
+    # Is it because, when here, only flags are/should be left? 
+    echo "$f" | rcstreefile $* -r "$rcs_base"
+done
+
+#
+# rcs mangles the permissions on this file, and then sudo
+# fails to run.
+# so we fix it.
+#
+sudoers="/usr/local/etc/sudoers /etc/sudoers"
+for suds in $sudoers
+do
+    [ -f "$suds" ] && chmod 440 "$suds"
+done

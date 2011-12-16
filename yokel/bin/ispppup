@@ -1,0 +1,7 @@
+#!/bin/sh
+
+intf=${1:-ppp0}
+
+ifconfig $intf | fgrep -q UP
+
+exit $?

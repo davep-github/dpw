@@ -1,0 +1,11 @@
+#! /bin/sh
+
+for i
+do
+        NAME=`basename $i .dvi`
+	PS_NAME=/tmp/$NAME.$$.ps
+        dvips -P dfaxhigh $NAME.dvi -o $PS_NAME
+        gs -sDEVICE=dfaxhigh -sOutputFile=$NAME-%03d.fax -sNOPAUSE -- $PS_NAME
+	rm $PS_NAME
+done
+

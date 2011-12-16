@@ -1,0 +1,3 @@
+/yokel/yokel/sbin
+326455    0 lrwxrwxrwx   1 davep    root            6 Jan 18 22:09 ./crl-off -> crl-on
+326489    0 lrwxrwxrwx   1 davep    root            8 Jan 18 22:09 ./cd-blank -> cd-erase

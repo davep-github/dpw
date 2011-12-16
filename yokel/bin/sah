@@ -1,0 +1,9 @@
+#!/bin/sh
+# $Id: sah,v 1.5 2004/03/20 12:41:35 davep Exp $
+set -x
+
+cd /usr/yokel/setiathome
+##########setiathome -nice 20 -email > /dev/null 2>&1 &
+# the sudo allows us to su to setiathome(user) to run setiathome(program)
+sudo su setiathome -c setiathome -- -email -nice 19 > /dev/null 2>&1 &
+

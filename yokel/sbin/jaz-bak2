@@ -1,0 +1,289 @@
+#!/bin/sh
+#set -x
+jaz_root="/jaz"
+dst=
+calendrical_dirs=
+ECHO=
+dump_level=0
+do_pax=yes
+do_dump=yes
+do_config=yes
+do_spool=yes
+# /usr/local/private is where smb user info is saved.
+def_pax_dirs='/etc /usr/local/etc /root /usr/X11R6/etc /usr/local/private'
+def_dump_dirs='/yokel'
+pax_dirs=
+dump_dirs=
+date_str=
+excl_dir=
+jaz_dates="/usr/local/etc/jaz-dates"
+jaz_tag="jaz-bak"
+DUMPER=dumpit
+PAXER=paxit
+dry_run=n
+
+. eexec
+EExecEcho=EExecStderrEcho
+EExecEchoPrefix="jaz-bak(eexec): "
+#
+# backup /usr/yokel to a pax file on /jaz
+
+### for testing
+### EExecShowOnly=y; cfg_file=/dev/tty;
+
+#
+# XXX look for dst in fstab and mount if there and not mounted,
+#  otherwise just stick stuff in dst.
+# 
+Usage()
+{
+    echo 1>&2 "jaz-bak [-n] [-l dump-level-for-dumped-dirs] [-d dest]"
+    exit 0
+}
+
+set -- ` getopt nl:d:mP:D:CSp:f:seEcr: $* `
+nomount=n
+
+[ $? != 0 ] && Usage
+
+for i in $*
+do
+    case $1 in
+	-n) EExecShowOnly=y; cfg_file=/dev/tty; dry_run=y;;
+	-l) dump_level=$2; shift;;
+	-d) dst=$2; shift;;
+	-m) nomount=y;;
+	-P) PAXER=$2; shift;;
+	-D) DUMPER=$2; shift;;
+	-C) do_config=no;;
+	-S) do_spool=no;;
+	-p) pax_dirs="$pax_dirs $2"; shift;;
+	-f) dump_dirs="$dump_dirs $2"; shift;;
+	-s) date_str=".`dp-std-date`";;
+	-e) excl_dir=y;;
+    	-E) eject=y;;
+	-c) calendrical_dirs=y; dst="$jaz_root/`dp-std-date`";;
+	-R) calendrical_dirs=n; dst="";;
+	-r) jaz_root=$2; shift;;
+	-L) loop_calendrical=y; dst=$(next_loop_calendrical_dir);;
+	--) shift ; break ;;
+	*) exit 1 ;;
+    esac
+    shift
+done
+
+if [ "$PAXER" = '-' ]
+then
+    do_pax=no
+fi
+if [ "$DUMPER" = '-' ]
+then
+    do_dump=no
+fi
+
+#
+# if calendrical_dirs is not set (=='') then we will set a default
+# based on level of backup
+# this allows the very large level 0 dump to overwrite the existing
+# dump files, but other levels get their own subdirs for rollback
+# if needed.
+if [ -z "$calendrical_dirs" ]
+then
+    case "$dump_level" in
+    [1-9])  if [ -z "$dst" ]
+	    then
+		calendrical_dirs=y; dst="$jaz_root/`dp-std-date`"
+	    fi
+	    ;;
+    0) calendrical_dirs=n;;            # dst="";;
+    *) 
+    esac
+fi
+
+[ -z "$dst" ] && dst="$jaz_root/dump-$dump_level.d"
+
+case "$dst" in
+    /*)
+	dst_base="/`echo $dst | cut -d/ -f2`"
+	;;
+    *)
+	dst_base="$dst"
+	;;
+esac
+
+#echo "dst>$dst<"
+# set this after dst is finalized, but not if it has
+# already been set by -n 
+[ -z "$cfg_file" ] && cfg_file=$dst/print-config${date_str}.txt
+
+paxit ()
+{
+    dir=$1
+    date_str=$2
+    dump_level=$3
+
+    pax_base=`namify-path -n -c _ $dir`
+    pax_name="$dst/$pax_base${date_str}.${dump_level}.pax.gz"
+
+    if [ "$pax_from" = "-" -o "$pax_from" = "XoXoXo" ]
+    then
+	from=
+    else
+	from="-T$from"
+    fi
+    # note, this may result in no files begin archived.
+    # pax will print:
+    # pax: End of archive volume 1 reached
+    # ATTENTION! pax archive volume change required.
+    # Ready for archive volume: 1
+    # Input archive name or "." to quit pax.
+    # Archive name >
+    if [ "$dry_run" = 'y' ]
+    then
+	echo "output file >$pax_name<"
+	pax_name=/dev/null
+    fi
+    
+    EExec pax -x cpio -w $from . | EExec gzip -9c > $pax_name
+}
+
+dumpit()
+{
+    dir=$1
+    date_str=$2
+    dump_level=$3
+
+    dump_base=`namify-path -n -c _ $dir`
+    dump_name="$dst/$dump_base${date_str}.${dump_level}.dump.gz"
+
+    echo "dump -$dump_level -f - -u $dir | gzip -9c > $dump_name"
+
+    if [ "$dry_run" = 'y' ]
+    then
+	echo "output file >$dump_name<"
+	dump_name=/dev/null
+    fi
+
+    EExec dump -$dump_level -f - -u $dir | EExec gzip -9c > $dump_name
+}
+
+find_mp_dev()
+{
+    mp=$1
+    cat /etc/fstab | while read line
+    do
+	case "$line" in
+	    \#*) continue;;
+	esac
+	# dev        mp   fs    opts      fsck-info
+	# /dev/da0c  /jaz ufs	rw,noauto 0  0
+	# $1         $2   $3    $4        $5 $6
+	set -- $line
+	if [ "$2" = "$mp" ]
+	then
+	    echo -n $1
+	    return 0
+	fi
+    done
+
+    echo ""
+    return 0
+}
+
+start=$(ctime)
+#
+# get date of last jaz-bak
+# use that date to select files for the pax archive.
+# pax wants: '[yy[mm[dd[hh]]]]mm[.ss]'
+# we return the EPOCH as `-' which tells paxit to not use the -T option.
+fmt='%y%m%d%H%M.%S'
+pax_from=$(date-level-log.py -E - -F "$fmt" -f $jaz_dates -d $jaz_tag $dump_level)
+
+#
+# Is the dst base already mounted ???
+#
+if [ "$nomount" = "n" ]
+then
+    #
+    # see if dst_base is a mount-point in fstab
+    mount_dev=`find_mp_dev $dst_base`
+
+    if [ -n "$mount_dev" ]
+    then
+	if ! mount | fgrep -q "on $dst_base"
+	then
+	    # not in mount list, mount it.
+	    EExec mount "$dst_base"
+	else
+	    # already mounted, leave it mounted when we're done
+	    nomount=y
+	fi
+    else
+	nomount=y
+    fi
+fi
+
+#
+# make dest dir if it doesn't exist.
+# We must do this after any needed mounts.
+[ -d "$dst" ] || {
+    [ "$excl_dir" = "y" ] && EEdie "$dst exists and excl_dir was specified."
+    EExec mkdir -p "$dst"
+}
+
+if [ "$do_pax" = "yes" ]
+then
+    : ${pax_dirs:=$def_pax_dirs}
+
+    for dir in $pax_dirs
+    do
+	EExec cd $dir
+#	EExec paxit "$pax_from" $pax_name
+	$PAXER "$dir" "$date_str" "$dump_level"
+    done
+fi
+
+if [ "$do_dump" = "yes" ]
+then
+    : ${dump_dirs:=$def_dump_dirs}
+
+    for dir in $dump_dirs
+    do
+	EExec cd $dir
+#	EExec $DUMPER $dir $dump_name $dump_level
+        $DUMPER "$dir" "$date_str" "$dump_level"
+    done
+fi
+
+if [ "$do_spool" = "yes" ]
+then
+    [ -d $dst/mail-spool ] && rm -rf $dst/mail-spool
+    spool_dst="$dst/mail-spool${date_str}"
+    EExec mkdir $spool_dst
+    EExec cp /var/mail/* $spool_dst
+fi
+
+if [ "$do_config" = "yes" ]
+then
+    EExec print-config > $cfg_file
+fi
+
+if [ "$nomount" = "n" ]
+then
+    df -h $dst_base
+    EExec umount "$dst_base"
+    [ x"$mount_dev" = "x" ] && die "Cannot find dev for $dst_base"
+    bdev=`basename $mount_dev`
+    if [ "$eject" = "y" ]
+    then
+    	EExec camcontrol eject $bdev
+    else
+	EExec camcontrol stop $bdev
+    fi
+fi
+
+#
+# record the operation as a whole rather than per directory.
+EExec date-level-log.py -f $jaz_dates -a $jaz_tag $dump_level $start
+
+exit 0

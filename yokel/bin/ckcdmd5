@@ -1,0 +1,18 @@
+#!/usr/local/bin/perl
+
+while (<>)
+{
+	print "file: $_";
+	chop;
+	($name, $md5) = /\(([^)]*)\) = (.*)$/;
+#	print "$name, $md5\n";
+
+	$calc_md5 = `md5 $name`;
+	chop($calc_md5);
+	print "calc: $calc_md5\n";
+	if (! ($calc_md5 eq $_))
+	{
+		warn "!!!!!!!!!!md5 mismatch on $name\n";
+	}
+}
+	

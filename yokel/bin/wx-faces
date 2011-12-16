@@ -1,0 +1,398 @@
+#!/usr/bin/perl -s
+
+# Copyright (c) 1993, 1995 Stephen B Kinzler.  All rights reserved.
+#
+# Redistribution and use, with or without modification, are permitted
+# provided that the following conditions are met:
+# 1. Redistributions must retain the above copyright notice, this list of
+#    conditions and the following disclaimer.
+# 2. All advertising materials mentioning features or use of this software
+#    must display the following acknowledgement:
+#     This product includes software developed by the Stephen B Kinzler.
+# 3. The name Stephen B Kinzler may not be used to endorse or promote
+#    products derived from this software without specific prior written
+#    permission.
+#
+# THIS SOFTWARE IS PROVIDED BY STEPHEN B KINZLER ``AS IS'' AND ANY EXPRESS
+# OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED.  IN NO EVENT SHALL STEPHEN B KINZLER BE LIABLE FOR
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+# OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+# IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+$default_city    = 'fing_bmg';	# Bloomington, IN, USA via finger
+$weather_program = 'wx';
+$weather_command = '$weather_program $city';
+$fing_bmg_wx     = 1;
+
+$main_temp_scale = 'Farenheit';
+
+# wx-faces - faces application to iconically depict the weather forecast
+# Steve Kinzler, kinzler@cs.indiana.edu, Feb 93/Jan 95/Apr 95
+
+# sample usage:
+# faces -f /l/picons/db/weather -p 900 -e '/l/picons/apps/wx-faces lax' \
+#   -l 'wx lax'
+# xfaces -f /l/picons/db/weather -p 900 -e '/l/picons/apps/wx-faces lax' \
+#   -C -K -name wx -title 'wx lax'
+
+$usage = "usage: $0 [ -alt ] [ -stdin ] [ -vert ] [ city_code ]
+	-alt	use alternate version of temperature icons
+	-stdin	read forecast from stdin instead of weather command
+	-vert	output a vertical forecast table\n";
+die $usage if $h;
+
+###############################################################################
+
+$format = "%s\t%s\t%s\t%s\t%s\t%s\n";
+
+%ndays = ('sun', 0, 'mon', 1, 'tue', 2, 'wed', 3,
+	  'thu', 4, 'fri', 5, 'sat', 6);
+%ddays = (0, 'sun', 1, 'mon', 2, 'tue', 3, 'wed',
+	  4, 'thu', 5, 'fri', 6, 'sat');
+$today = (localtime time)[6];
+
+($F, $C) = ($main_temp_scale =~ /^\s*F/i) ? ('F', 'C') : ('C', 'F');
+
+$city = $ARGV[0] || $default_city;
+
+($city eq 'fing_bmg') ? &fing_bmg() : &wx();
+
+foreach (@data) {
+	($day, $sky, $thi, $tlo, $hi, $lo) = &parse($_);
+	next unless grep($_ ne 'unknown', ($sky, $thi, $tlo));
+
+	push(@dayout, sprintf($format, $day, 'day',  '', '', '', ''));
+	push(@skyout, sprintf($format, $sky, 'sky',  '', '', '', ''));
+	push(@hiout,  &tformat('hi', $day, $thi, $hi));
+	push(@loout,  &tformat('lo', $day, $tlo, $lo));
+
+	($isky, $ihi, $ilo) = ($sky, $hi, $lo) unless $isky;
+}
+
+unless ($debug) {
+	printf $format, $isky || 'unknown', 'sky', $ihi, $ilo, '', '';
+	if ($vert) {
+		printf "Cols=4 Rows=%d\n", $#dayout + 1;
+		print shift @dayout, shift @skyout, shift @hiout, shift @loout
+			while @dayout;
+	} else {
+		printf "Cols=%d Rows=4\n", $#dayout + 1;
+		print @dayout, @skyout, @hiout, @loout;
+	}
+}
+
+sub tformat {
+	local($label, $day, $ttp, $tp) = @_;
+
+	if ($alt) {
+		@tpargs = ('temp2', '', '', '', '');
+	} else {
+		($ltp, $approx) = ("$label ", '~');
+		($ltp, $approx) = (($label =~ /^l/i) ? 'e ' : '', '')
+			if $day eq 'now';
+
+		@tpargs = ('temp');
+		push(@tpargs, ($ttp eq 'unknown') ? '' : "$ltp$F");
+		push(@tpargs, (($tp =~ /./) ? $approx : '') . $tp);
+		push(@tpargs, ($ttp eq 'unknown') ? '' : "$ltp$C");
+		push(@tpargs, (($tp =~ /./) ? $approx : '') . &ftoc($tp));
+	}
+
+	sprintf($format, $ttp, @tpargs);
+}
+
+sub ftoc {
+	($_[0] =~ /^\s*-?\d+/) ? int(($_[0] - 32) * 5 / 9 + .5) + 0 : $_[0];
+}
+
+###############################################################################
+
+sub fing_bmg {
+	$in = ($stdin) ? '< -' : 'finger weather@www.cs.indiana.edu |';
+	open(in) || die "$0: cannot open \"$in\" ($!)\n";
+
+	$feelslike = '(Wind\s*Chill|(Chill|Heat)\s*(Factor|Index))';
+
+	while (<in>) {
+		++$sepcount >= 2 && last if /^#{60,80}$/;
+		if (/^\s*BLOOMINGTON\s+\S/i) {
+			$sky1 = $tmp1 = substr($_, 0, 29);
+			$tmp1 =~ s/(\D*)(\d*).*/$2/;
+			$tmp1 = ($1 =~ /-$/) ? "-$tmp1" : $tmp1;
+			$etmp = $1 if /\bWCI:?\s*(-?\d+)/i && $etmp eq '';
+		}
+		$sky2 = $_ if /^\s*Weather:/;
+		$tmp2 = $1 if /^\s*Temp:?\s+(-?\d+)/    && $tmp1 eq '';
+		$etmp = $4 if /$feelslike:?\s*(-?\d+)/i && $tmp2 ne '';
+	}
+	$tmp  = ($tmp2 ne '') ? $tmp2 : $tmp1;
+	@data = ('now: ' . ($sky1 || $sky2) . '.' .
+		 (($tmp)  ? " hi ${tmp}deg."  : '') .
+		 (($etmp) ? " lo ${etmp}deg." : ''));
+
+	&wx('partial') || &wx('partial'), return if $fing_bmg_wx;
+
+	&wx('partial');
+
+	while (<in>) {
+		last if /^[- _].*FORECAST/i;
+	}
+
+	$forecast = '';
+	$flag     = 0;
+	while (<in>) {
+		last if $flag++ && /^[-*_]/;
+		chop;
+		s/:(\s*[-\d])/$1/g;
+		s/\bH(-?\d+)\b/HI$1/gi;
+		s/\bL(-?\d+)\b/LO$1/gi;
+		$forecast .= " $_";
+	}
+
+	close in;
+
+	while ($forecast =~ s/(\S*):([^:]*)$//) {
+		($f, $v) = ($1, $2);
+		if ($f =~ /^ni?gh?t$/i) {
+			$forecast =~ s/(\S*)[ \t]*$//;
+			$f = "$1$f";
+		}
+		if ($f =~ /-/) {
+			push(@gdata, &day($') . ": $v.");
+			push(@gdata, &day($`) . ": $v.");
+		} else {
+			push(@gdata, &day($f) . ": $v.");
+		}
+	}
+
+	@data = (shift @data, reverse @gdata) if @gdata;
+}
+
+###############################################################################
+
+sub wx {
+	local($partial) = @_;
+	local($datasize) = $#data;
+
+	unless ($partial) {
+		$in = ($stdin) ? '< -' : eval "\"$weather_command |\"";
+		open(in) || die "$0: cannot open \"$in\" ($!)\n";
+	}
+
+	$initem = $c = 0;
+	while (<in>) {
+		last if $partial && /^#{60,80}$/;
+		if ($c++ < 10 && /^[-=]{40,}/) {
+			chop($_ = <in>);
+			s/^\s*[-\d\.]+\s/$&deg. /;
+			s/^/now: /;
+			push(@forecast, $_);
+			next;
+		}
+		($f, $v) = /^[ .](\S[^\.]+)\.\.\.(.*\S.*)/;
+		if ($f) {
+			last if $already{$f};
+			$already{$f}++;
+			push(@forecast, "$f: $v");
+			$initem = 1;
+		} elsif ($initem && /^\S/) {
+			chop;
+			$forecast[$#forecast] .= " $_";
+		} else {
+			$initem = 0;
+		}
+	}
+
+	close in unless $partial;
+
+	foreach (@forecast) {
+		($f, $v) = /^([^:]*):(.*)/;
+		$v .= '.';
+		if ($f =~ /\s+AND\s+/i) {
+			($a, $b) = ($`, $');
+			$v1 = $v;
+			$v  =~ s/[^\.]*$b[^\.]*\.//;
+			$v1 =~ s/[^\.]*$a[^\.]*\.//;
+			push(@data, &day($a) . ": $v");
+			push(@data, &day($b) . ": $v1");
+		} elsif ($f =~ /\s+(THROUGH|THRU)\s+/i) {
+			($a, $b) = (&day($`), &day($'));
+			$a =~ s/ ni?gh?t//; $b =~ s/ ni?gh?t//;
+			$a = $ddays{$today} if $a ne 'sun' && ! $ndays{$a};
+			$b = $a		    if $b ne 'sun' && ! $ndays{$b};
+			for ($i = $ndays{$a}; $i != $ndays{$b};
+			     $i = ($i + 1) % 7) {
+				push(@data, $ddays{$i} . ": $v");
+			}
+			push(@data, "$b: $v");
+		} else {
+			push(@data, &day($f) . ": $v");
+		}
+	}
+
+	return $#data - $datasize;
+}
+
+###############################################################################
+
+sub day {
+	local($_) = @_;
+
+	$night = (/ni?gh?t|nite/i) ? ' night' : '';
+
+	return 'now'	  . $night if /^\s*now/i;
+	return 'today'	  . $night if /^\s*(rest\s+of\s+)?today/i;
+	return 'today'	  . $night if /^\s*(this\s+)?(morning|afternoon)/i;
+	return 'tonight'  . $night if /^\s*(to|over)night/i;
+	return 'tonight'  . $night if /^\s*(this\s+)?evening/i;
+	return 'mon'	  . $night if /^\s*mon/i;
+	return 'tue'	  . $night if /^\s*tue/i;
+	return 'wed'	  . $night if /^\s*wed/i;
+	return 'thu'	  . $night if /^\s*thu/i;
+	return 'fri'	  . $night if /^\s*fri/i;
+	return 'sat'	  . $night if /^\s*sat/i;
+	return 'sun'	  . $night if /^\s*sun/i;
+
+	return $ddays{($today + 1) % 7} . $night
+				   if /^\s*tomorrow/i;
+
+	return 'question' . $night;
+}
+
+sub parse {
+	local($_) = @_;
+	local($day, $sky, $hi, $lo) = ('unknown') x 4;
+
+	print "$_\n" if $debug;
+
+	s/^([^:]*):\s*//;
+	$day = $1;
+	$night = $day =~ s/ night//;
+
+	s/[,;]/./g;
+	s/\bnot?\b[^\.]*//gi;
+
+	$showers = 's(h?o?w|ho?w?)e?rs?';
+
+	s/sno?w\s*$showers/snow/gi;
+	s/\bt-?$showers\b/storm/gi;
+	s/\bt?-?stms?\b/storm/gi;
+
+	$cloudy  = '(cl?o?u?dy|ove?rca?s?t)';
+	$drizzly = 'dri?z';
+	$foggy   = 'fog|haz';
+	$maybe1  = '\bch(\.|a?nce?)[^\.]*';
+	$maybe2  = '[^\.]*(\bposs|\bpo?ss?i?bl|\?)';
+	$partly  = '\b(mo?s?t?l?y?\.?|pa?r?t?l?y?\.?)';
+	$rain    = "\\b(rain\\w*|$showers)";
+	$sleet   = "(sleet|freezing\\s+($rain|precip\\w*))";
+	$snow    = '(sno?w|flurr)\w*';
+	$storm   = '(thu?nd|sto?rm)\w*';
+	$sunny   = '(sunn?y?\b|cl(ea)?r\b|fair)';
+
+	$sky = 'sunny'		if /$sunny/i;
+	$sky = 'partlysunny'	if /$partly\s*$sunny/i;
+	$sky = 'cloudy'		if /$cloudy/i;
+	$sky = 'partlycloudy'	if /$partly\s*$cloudy/i;
+	$sky = 'foggy'		if /$foggy/i;
+	$sky = 'drizzly'	if /$drizzly/i;
+	$sky = 'rainy'		if /$rain/i;
+	$sky = 'mayberainy'	if /$maybe1$rain/i || /$rain$maybe2/i;
+	$sky = 'snowy'		if /$snow/i;
+	$sky = 'maybesnowy'	if /$maybe1$snow/i || /$snow$maybe2/i;
+	$sky = 'sleety'		if /$sleet/i || /$rain/i && /$snow/i;
+	$sky = 'stormy'		if /$storm/i;
+	$sky = 'maybestormy'	if /$maybe1$storm/i || /$storm$maybe2/i;
+
+	$sky = 'partlymoonny'	if $night && $sky =~ /^partly/;
+	$sky = 'moonny'		if $night && $sky =~ /sunny$/;
+
+	s/zero/0/gi;
+	s/\bsingle\s*digits?\b/00s/gi;
+	s/\bteens\b/10s/gi;
+	s/(minus|neg(ative)?)\s*(\d)/-$3/gi;
+
+	$decade = '(-?\d+)0\'?s\b';
+	$lower  = '\blo(w(er)?)?-?';
+	$middle = '\bmid(dle)?-?';
+	$upper  = '\b(upper|hi(gh(er)?)?)-?';
+
+	s/$lower\s+to\s+$middle\s*$decade/${4}3/gi;
+	s/$lower\s+to\s+$upper\s*$decade/${6}5/gi;
+	s/$middle\s+to\s+$upper\s*$decade/${5}7/gi;
+
+	s/$lower\s*$decade/${3}2/gi;
+	s/$middle\s*$decade/${2}5/gi;
+	s/$upper\s*$decade/${4}8/gi;
+
+	s/$decade/${1}5/gi;
+
+	$high    = '\bhi(ghs?)?';
+	$low     = '\blo(ws?)?';
+	$temp    = '\btemp(erature)?s?';
+	$degrees = 'deg(r(ees?)?)?';
+	$below   = '\s*($degrees)?\s*below(\s*0\b)?';
+	$above   = '\s*($degrees)?\s*above(\s*0\b)?';
+
+	s/$high(-?\d)/highs $2/gi; $high .= '\b';
+	s/$low(-?\d)/lows $2/gi;   $low  .= '\b';
+	s/$temp(-?\d)/temps $2/gi; $temp .= '\b';
+
+	s/$high/.$&/gi;
+	s/$low/.$&/gi;
+
+	s/\s+-\s+/ to /g;
+	s/(\d)-(\d)/$1 to $2/g;
+
+	s/(near|around)(\s*-?\d)/$2/gi;
+	s/(\d+)\s*to\s*(\d+)$below/-$1 to -$2deg/gi;
+	s/(\d+)$below/-$1deg/gi;
+	s/(\d)$above/$1deg/gi;
+
+	@hi = /$high([^\.\d]*)(\d+)(\s*($degrees)?\s*to\s*(-?\d+))?/i;
+	@lo = /$low([^\.\d]*)(\d+)(\s*($degrees)?\s*to\s*(-?\d+))?/i;
+
+	@hi = /$temp([^\.\d]*)(\d+)(\s*($degrees)?\s*to\s*(-?\d+))?/i
+		if $hi[2] eq '' && $lo[2] eq '';
+
+	$hi[2] = "-$hi[2]" if $hi[2] ne '' && $hi[1] =~ /-$/;
+	$lo[2] = "-$lo[2]" if $lo[2] ne '' && $lo[1] =~ /-$/;
+
+	($hi[2], $hi[7]) = ($3, $2)
+		if $hi[2] eq '' && $lo[2] eq '' &&
+		   /((-?\d+)\s*to\s*)?(-?\d+)\s*$degrees/i;
+
+	# Note: we must avoid using $hi and $lo in numeric context hereon
+	#       to prevent a '' value from becoming a '0'.
+
+	$hi = $hi[2]; $hi = int(($hi[2] + $hi[7]) / 2 + .5) if $hi[7] ne '';
+	$lo = $lo[2]; $lo = int(($lo[2] + $lo[7]) / 2 + .5) if $lo[7] ne '';
+
+	($thi, $tlo) = (&temp($hi), &temp($lo));
+
+	($nhi, $nlo) = ($hi, $lo);
+	$sky = 'verysunny' if ($nhi > 80 || $nlo > 80) && $sky eq 'sunny';
+
+	print "$_\n"				  if $debug;
+	print ":$day:$sky:$hi->$thi:$lo->$tlo:\n" if $debug;
+
+	($day, $sky, $thi, $tlo, $hi, $lo);
+}
+
+sub temp {
+	local($_) = @_;
+
+	return 'unknown' unless /^\s*-?\d+/;
+
+	($sign, $num) = ($_ < 0) ? ('m', 4.999 - $_) : ('p', $_);
+	$num = int($num / 5) * 5;
+	$num = 110 if $sign eq 'p' && $num > 110;
+	$num = 999 if $sign eq 'm' && $num > 15;
+	sprintf("%s%03d", $sign, $num);
+}

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+ROBJ_DIR=/slice6/obj
+OBJ_DIR=/usr/obj
+
+linkit()
+{
+    EExec ln -s $ROBJ_DIR $OBJ_DIR
+}
+
+clean_world_obj()
+{
+    [ -d $ROBJ_DIR ] && {
+	rm -rf $ROBJ_DIR
+	# see if any no schg files broke the rm
+	[ -d $ROBJ_DIR ] && {
+	    chflags -R noschg $ROBJ_DIR
+	    EExec rm -r $ROBJ_DIR
+	}
+    }
+    [ -d $ROBJ_DIR ] || EExec mkdir $ROBJ_DIR
+    rm -f $OBJ_DIR
+    linkit
+}

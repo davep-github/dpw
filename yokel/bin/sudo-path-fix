@@ -1,0 +1,8 @@
+#!/bin/sh
+# $Id$
+#
+if [[ "$PATH" != *yokel/sbin* ]]
+then
+    rcfile="$HOME/.bashrc"
+    [ -f $rcfile ] && . $rcfile
+fi

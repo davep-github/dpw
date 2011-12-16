@@ -1,0 +1,26 @@
+#!/bin/sh
+set -x
+
+[ -z "$1" ] && {
+	echo 1>&2 "$0: usage: isofs-image-file"
+	exit 1
+}
+
+# config vnode device on top of image
+vnconfig -c /dev/vn0c $1
+
+#mount it
+mount -t cd9660 -r /dev/vn0c /mnt
+
+echo "image mounted on /mnt.  take a look."
+
+# look at it
+#ls /mnt
+
+# show how to undo this stuff
+
+echo ""
+echo "-------------------------------------"
+echo "When done: "
+echo "umount /mnt"
+echo "vnconfig -u vn0c"

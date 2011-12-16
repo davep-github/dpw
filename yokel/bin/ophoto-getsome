@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# $Id: ophoto-getsome,v 1.2 2002/03/03 08:10:00 davep Exp $
+#
+# List all photos on the camera and allow user to select which ones
+# to download
+#
+# set -x
+
+if [ "$1" = "-a" ]
+then
+    shift
+    selector='cat'
+else
+    selector='xlist'
+fi
+destdir=.
+
+#    /dcim  (3 entries):
+#drw-rw-rw-  1 root  wheel       0  Jan 31 12:00:00 1999  .
+#drw-rw-rw-  1 root  wheel       0  Jan 31 12:00:00 1999  ..
+#drw-rw-rw-  1 root  wheel       0  Jul 22 06:39:24 2000  100dc240
+#
+# for all dirs...
+# dir=`ophoto ls | tail -2 | head -1 | awk '{print $10}'`
+
+ophoto ls 2>/dev/null | grep '[0-9][0-9]*dc240' | awk '{print $10}' | while read dir
+do
+#list all the pics...
+
+    ophoto ls $dir 2>/dev/null | fgrep dcp_ | awk '{print "'$dir/'"$10}'
+
+done | $selector | while read picname
+do
+	echo cp $picname $destdir
+	ophoto cp $picname $destdir 2>/dev/null
+done

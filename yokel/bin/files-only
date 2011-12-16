@@ -1,0 +1,1 @@
+find -H $* \( -type d -a -prune \) -o -print

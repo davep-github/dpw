@@ -1,0 +1,15 @@
+#!/bin/sh
+SUPFILE=/usr/src/supfile
+echo "Using: $SUPFILE(`realpath $SUPFILE`)"
+
+# @todo make -4 and -5 args select 4.x and 5.x respectively
+if [ -n "$1" ]
+then
+    server="-h $1"
+    shift
+else
+    server=
+fi
+
+set -x
+/usr/local/bin/cvsup -g -L 2 $server $SUPFILE

@@ -1,0 +1,7 @@
+#!/bin/sh
+esc=""
+oh5=""
+echo "$esc@$esc!$oh5"
+/usr/sbin/lpf "$@" || exit $?
+echo "$esc@"
+exit 0

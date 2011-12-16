@@ -1,0 +1,8 @@
+#!/usr/local/bin/perl
+
+for ($x = 0; $x < 90000; $x++)
+{
+	$t = $ARGV[0];
+	$t =~ s!.*/!!;
+#	print $ARGV[0], "\n";
+}

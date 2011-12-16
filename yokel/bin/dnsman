@@ -1,0 +1,3 @@
+#!/bin/sh
+
+browse-html /usr/src/contrib/bind/doc/html/index.html

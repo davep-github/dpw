@@ -1,0 +1,8 @@
+#!/bin/sh
+set -x
+
+portmap
+
+nfsd -u -t -n 4
+
+mountd -r -2

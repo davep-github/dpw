@@ -1,0 +1,42 @@
+#!/bin/sh
+# $Id: mk-sendmail,v 1.2 2001/11/03 08:10:21 davep Exp $
+# see also: /usr/yokel/etc/how-to-make-sendmail.cf
+#
+#set -x
+
+prog=`basename $0`
+
+. eexec
+
+EExecEcho="echo 1>&2 $prog:"
+opt=${1:-""}
+[ "$opt" = "-i" ] && {
+    shift
+    install=y
+}
+mc_root=${1:-panariti}
+mc_deltas=/usr/yokel/etc/$mc_root.mc.adds
+cf_file=$HOST.cf
+
+# 4.x allows building in /etc/mail
+EExec cd /etc/mail
+
+EExec cat freebsd.mc $mc_deltas > $HOST.mc
+
+EExec rm -f $cf_file
+EExec make cf
+[ -f $cf_file ] || {
+    echo 1>&2 "Make failed to make $cf_file."
+    exit 1
+}
+
+ECHO=echo
+if [ "$install" = "y" ]
+then
+    date_suff=`date | sed 's/[ \t][ \t]*/_/g'`
+    EExec cp /etc/mail/sendmail.cf /etc/mail/sendmail.cf.$date_suff || exit 1
+    EExec make install
+else
+    echo "use \`\`make install'' to install new $HOST.cf file."
+fi
+

@@ -1,0 +1,72 @@
+#!/bin/sh
+# $id$
+#
+#set -x
+. script-x
+
+: ${NO_HDR:=}
+
+if [ "$1" = '-p' ]
+then
+    shift
+    printer=out_pid
+    NO_HDR=t
+else
+    printer=out_line
+fi
+
+#GREPPER=egrep
+: ${GREPPER:='egrep'}
+#PGREP='/home/davep/yokel/bin/pgrep'
+PGREP=$0
+
+out_line()
+{
+    echo "$*"
+}
+
+out_pid()
+{
+    set -f
+    set -- $1
+    echo "$3"
+}
+
+PS_O_FMT="-o user,tty,pid,ppid,pgid,ni,pri,state,psr,policy,args"
+PS=ps
+PS_ARGS="-A -ww $PS_O_FMT"
+
+$DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "NO_HDR>$NO_HDR<"
+if [ -z "$NO_HDR" ]
+then
+    # We'll only show this header if there is any other output.
+    # this doesn't work?!?!?! $PS $PS_ARGS | read
+    hdr=$($PS $PS_ARGS | head -n1)
+fi
+
+#echo "@>$@<"
+#set -v
+#old_IFS="$IFS"
+#IFS='|'
+got_one=""
+$PS $PS_ARGS | $GREPPER "$@" | sort | uniq | egrep -v "$GREPPER|$PGREP" | \
+  while :; do
+    # eof
+    read || {
+        if [ -n "$got_one" ]; then
+            exit 0
+        else
+            exit 1
+        fi
+    }
+
+    #echo 1>&2 "REPLY>$REPLY<"
+    # REPLY preserves whitespace, etc.
+    [ -n "$hdr" ] && {
+        echo "$hdr"
+        hdr=
+    }
+    $printer "$REPLY"
+    got_one=t
+  done
+exit

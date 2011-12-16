@@ -1,0 +1,90 @@
+#!/bin/sh
+set -x
+verbose="-d"
+
+#tunnel_name=crl
+tunnel_name='CRL-Inbound'
+tunnel_server='davep-home@crl.dec.com'
+#tunnel_server='003/davep@crl.dec.com'
+#tunnel_server='003/davep-fbsd@crl.dec.com'
+#tunnel_server='004/davep-fbsd2@crl.dec.com'
+#tunnel_server='004/davep-fbsd'
+#tunnel_server='005/davep@crl.dec.com'
+digital_net=16
+
+do_on() 
+{
+	# tunnel not running
+	#bash# itnd -L 003/davep-fbsd@crl.dec.com
+	#D o 003/davep-fbsd@crl.dec.com 199.1.0.1 199.1.0.2 localhost
+	#D o crl D {} mopang.crl.dec.com
+	
+	#tunnel running
+	#bash# itnd -L 003/davep-fbsd@crl.dec.com
+	#D o 003/davep-fbsd@crl.dec.com 199.1.0.1 199.1.0.2 localhost
+	#U o crl D {} mopang.crl.dec.com
+
+	
+	itnd $verbose -k $tunnel_name $tunnel_server > /dev/null 2>&1
+	itnd $verbose -s $tunnel_name $tunnel_server
+	
+	#
+	# ppp-info gives us info about a point to point link:
+	# e.g. 16.11.160.69  a-69.tunnel.crl.dec.com --> 16.11.160.68
+	# but we need to wait for the link to come up
+	#
+	while :
+	do
+		my_gw=`ppp-info itn0`
+		set -- $my_gw
+		my_gw=$4
+		if [ "$my_gw" != "" ]
+		then
+			break
+		fi
+	done
+	
+	route delete -net $digital_net > /dev/null 2>&1
+	
+	route add -net $digital_net $my_gw
+
+#	netstat -rn | mail davep@crl.dec.com
+}
+
+do_off()
+{
+	itnd $verbose -k $tunnel_name $tunnel_server
+	route delete -net $digital_net
+}
+
+
+#
+# main()
+#
+modstat | fgrep itn_mod > /dev/null || {
+
+	modload /usr/yokel/lkm/itn_mod.o || {
+		echo "modload failed" 1>&2
+		exit 3
+	}
+}
+
+findprog itnd || {
+	itnd $verbose
+}
+
+case $0 in
+*-on)
+	do_on
+	;;
+
+*-off)
+	do_off
+	;;
+
+*)
+	echo "unknown command name: $0" 2>&1
+	;;
+esac
+	
+

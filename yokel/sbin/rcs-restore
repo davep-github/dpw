@@ -1,0 +1,22 @@
+#!/bin/sh
+
+. eexec 
+
+[ "$1" = '-n' ] && {
+  EExecDashN
+  shift
+}
+
+RCSbase='/usr/yokel/RCS'	# @todo make an option
+dirbase='/etc'			# @todo make an option
+RCSdir="$RCSbase$dirbase"
+
+for d in `(cd $RCSdir; find * -type d)`
+do   
+     ed="$dirbase/$d";   
+     echo $ed; 
+     EExec mkdir -p $ed; 
+     cd $ed; 
+     pwd; 
+     EExec co $RCSdir/$d/*,v; 
+done

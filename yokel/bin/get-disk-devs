@@ -1,0 +1,12 @@
+#!/bin/sh
+# $Id$
+#
+# get-disk-devs: return a list of ``relevent'' disk devices
+
+# improve to use fstab intelligently
+df -l | grep '^/dev/' | while read line
+do
+    set -- $line
+    dev=$1
+    echo "$dev"
+done

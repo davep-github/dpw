@@ -1,0 +1,31 @@
+#!/bin/sh
+set -x
+
+ETC_BAK_BASE=/stuff/pre-makeworkd-etc-backups
+ETC_BAK_DIR=`dp-std-date`
+ETC_BAK="$ETC_BAK_BASE/$ETC_BAK_DIR"
+
+LOG="/usr/src/make-world-`dp-std-date`.log"
+echo >> $LOG "begin `basename $0` at `$date`"
+
+(
+    mkdir -p $ETC_BAK || {
+	echo 1>&2 mkdir of etc backup dir failed.
+	exit 2
+    }
+    cp -r /etc $ETC_BAK_DIR  || {
+	echo 1>&2 cp of etc backup dir failed.
+	exit 2
+    }
+
+    KERN=$1
+    [ "x$KERN" = "x" ] && KERN=`hostname | cut -f 1 -d . | tr '[a-z]' '[A-Z]' `
+
+    cd /usr/src
+
+    echo 'beginning makeworld and buildkernel'
+    date
+    make buildworld && make buildkernel KERNCONF=$KERN
+    echo 'finished makeworld and buildkernel'
+
+)  >> $LOG 2>&1

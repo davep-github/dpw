@@ -1,0 +1,2 @@
+#!/bin/sh
+groff -s -p -t -e -Tascii -mandoc "$@" | less

@@ -1,0 +1,17 @@
+#!/bin/sh
+set -x
+
+#
+# HOME setup... HOME --> CRL outbound
+#               CRL--> HOME  inbound
+#
+
+. /usr/yokel/sbin/vpn0-defs
+
+THIS_NET=$HNET
+THAT_NET=$CNET
+THIS_GW=$HGW
+THAT_GW=$CGW
+
+. /usr/yokel/sbin/vpn0-set
+

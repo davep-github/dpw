@@ -1,0 +1,13 @@
+#!/bin/sh
+set -x
+
+parms="$@"
+# umount vn file systems
+mount | grep '^/dev/vn' | while read fs
+do
+	# mount format:
+	# /dev/vn0c on /slice5/mh-mailboxes (local)
+	set -- $fs
+	umount $3
+done
+/sbin/reboot "$parms"

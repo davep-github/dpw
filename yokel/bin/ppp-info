@@ -1,0 +1,44 @@
+#!/usr/bin/perl
+
+$if = $ARGV[0] ? $ARGV[0] : "ppp0";
+
+$osname=$ENV{'OSName'};
+if ($osname eq "Linux") {
+  $pat='inet addr:(\d+\.\d+\.\d+\.\d+)  P-t-P:(\d+\.\d+\.\d+\.\d+)';
+}
+elsif ($osname eq "FreeBSD") {
+  $pat='inet\s+(\d+\.\d+\.\d+\.\d+)\s+-->\s+(\d+\.\d+\.\d+\.\d+)';
+}
+else {
+  die "Unknown os: $osname";
+}
+
+open(IFPIPE, "/sbin/ifconfig $if|") || die "canna open ifconfig pipe: $!\n";
+
+IFLINE:
+while (<IFPIPE>)
+  {
+    # e.g.:    inet addr:206.113.25.10  P-t-P:206.113.24.10  Mask:255.255.255.0
+    if (/$pat/)
+      {
+	$ipaddr = $1;
+	$gwaddr = $2;
+	print "$ipaddr ==> $gwaddr\n";
+	open(HOSTPIPE, "host $ipaddr|") ||
+	  die "canna open host pipe: $!\n";
+	$host_name = "no_hostname_avail";
+      HOSTLINE:
+	while (<HOSTPIPE>)
+	  {
+	    if (/Name:(.*)/)
+	      {
+		chop;
+		$host_name = "$1";
+		last HOSTLINE;
+	      }
+	  }
+	last IFLINE;
+      }
+  }
+print " $host_name --> $gwaddr\n";
+exit 0;

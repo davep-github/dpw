@@ -1,0 +1,158 @@
+#!/bin/sh
+#
+# $Id$
+# rcstreefile - rcs a file into a parallel tree of rcs files
+#
+# e.g. /etc/resolv.conf --> $RCSROOT/etc/resolv.conf,v
+# rcstree calls this with RCSROOT set to a `namified' root,
+# when processing /usr/local/etc, RCSROOT is $RCSBASE/usr.local.etc/...
+#  where usr.local.etc is /usr/local/etc namified.
+#
+#set -x
+
+prog=`basename $0`
+#echo $prog: $* 1>&2
+
+TMP_DIR="$HOME/tmp"
+
+Usage()
+{
+   echo "${prog}: usage: [-$option_str]" 1>&2
+   exit 1
+}
+
+def_rcs_root='/usr/yokel/RCS'
+rcs_suffix=',v'
+def_text='rcsed_by_rcstree'
+def_msg='rcsed_by_rcstree'
+just_show=n
+
+# see the man page of getopt for inadequacies.
+
+option_str='r:m:t:nvq'
+args=` getopt $option_str $* `
+
+[ $? != 0 ] && Usage
+
+. eexec
+
+EExecEchoPrefix="$prog: "
+
+set -- $args
+for i in $*
+do
+    case $1 in
+	-n) EXEC=echo; EExecDashN "+rcstree: "; just_show=y; verbose=1;;
+	-v) EExecVerbose; verbose=1;;
+	-q) EExecQuiet; verbose= ;;
+	-r) rcs_root=$2; shift;; # option with parameter
+	-m) msg=$2; shift;; # option with parameter
+	-t) text=$2; shift;; # option with parameter
+	-c) client=$2; shift;;
+	--) shift ; break ;;
+	*) 
+	    echo 1>&2 "Unsupported option>$1<";
+	    exit 1 ;;
+    esac
+    shift
+done
+
+# only if non optional args required
+#[ "$*" = "" ] && Usage
+
+: ${rcs_root:=$def_rcs_root}
+: ${msg:=$def_msg}
+: ${text:=$def_text}
+
+while read file
+do
+    case $file in
+    *.bak|*.BAK|*~|*/RCS|*/RCS/*|RCS/*|*.core)
+        continue;;
+    esac
+
+    dir_name=`dirname "$file"`
+    file_name=`basename "$file"`
+    rcs_dir="$rcs_root/$dir_name"
+    rcs_file="$rcs_dir/$file_name$rcs_suffix"
+    work_file=$(realpath "$file")
+    
+    if [ -n "$verbose" ]
+    then
+        echo "rcs_dir>$rcs_dir<"
+        echo "rcs_file>$rcs_file<"
+        echo "work_file>$work_file<"
+    fi
+
+    [ -e "$rcs_file" ] && rcs_file=$(realpath "$rcs_file")
+    
+    if [ -n "$verbose" ]
+    then
+        echo "rcs_file>$rcs_file<"
+    fi
+
+    [ -d "$rcs_dir" ] || {
+	EExecContinue=0 EExec mkdir -p "$rcs_dir"
+	[ "$just_show" != 'y' -a ! -d "$rcs_dir" ] && {
+	    echo 1>&2 "Cannot mkdir $rcs_dir, skipping $work_file"
+	    continue
+	}
+    }
+
+    old_work_file="$work_file"
+    work_file="$TMP_DIR/$file_name"
+    
+    o=$(realpath "$old_work_file")
+    w=$(realpath "$work_file" 2>/dev/null) # may not exist yet ==> ''
+    t=$(realpath "$TMP_DIR")
+
+    if [ "$o" = "$w" ]
+    then
+        echo 1>&2 "Cannot RCS file($o) from temp dir($t)"
+        exit 1
+    fi
+
+    # RCS a copy so times are not fuck up-ed.
+    EExec cp -pP "$old_work_file" "$work_file"
+
+    doit=1
+#     if [ ! -f "$rcs_file" ]
+#     then
+# 	[ -n "$verbose" ] && echo "$rcs_file does not exist."
+# 	doit=1
+#     else
+# 	[ -n "$verbose" ] && echo rcsdiff -q -kkv $work_file $rcs_file
+# 	rcsdiff -q -kkv "$work_file" "$rcs_file" >/dev/null 2>&1
+# 	doit=$?
+#     fi
+    case $doit in
+	1)
+	    EExec ci "-t-$text" "-m$msg" "$work_file" "$rcs_file"
+            # lock it.  no need to check it out since we've just rcs'd a
+            # copy.
+            EExec rcs -l "$rcs_file"
+	    ;;
+	2)
+	    set -- `file $work_file`
+	    shift
+	    file_type="$*"
+	    case "$file_type" in
+		data|*ELF*|*executable*) 
+		    echo 1>&2 "$file is \`$file_type', skipping"
+		    ;;
+		*) 
+		    echo 1>&2 "$file: rcsdiff failed."
+		    ;;
+	    esac
+	    ;;
+	0)
+	    [ -n "$verbose" ] && {
+	    echo "$file: no diffs."
+	    }
+	    ;;
+	*)
+	    echo "$file: unknown doit: $doit." 1>&2
+	    ;;
+    esac
+    EExec rm -f "$work_file"
+done

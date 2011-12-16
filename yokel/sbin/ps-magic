@@ -1,0 +1,17 @@
+#!/bin/sh
+set -x
+# use nenscript if needed to ensure PS files are sent to TAZ
+echo "ps-magic: $(date)" >> /tmp/ps-magic-log
+read line
+case $line in
+	"%!")
+		# we're already PostScript.  Send file to stdout as is
+		echo $line && cat && exit 0
+		;;
+	*)
+		# not PS. use nenscript
+		(echo $line ; cat ) | nenscript -p- && exit 0
+		;;
+esac
+
+exit 2

@@ -1,0 +1,239 @@
+#! /bin/sh
+###############################################################################
+#
+# File:         cscope-indexer
+# RCS:          $Header: /usr/yokel/archive-cvsroot/yokel/bin/cscope-indexer,v 1.7 2006/01/12 08:11:23 davep Exp $
+# Description:  Script to index files for cscope
+#
+#		This script generates a list of files to index
+#		(cscope.out), which is then (optionally) used to
+#		generate a cscope database.  You can use this script
+#		to just build a list of files, or it can be used to
+#		build a list and database.  This script is not used to
+#		just build a database (skipping the list of files
+#		step), as this can be simply done by just calling
+#		"cscope -b".
+#
+#		Normally, cscope will do its own indexing, but this
+#		script can be used to force indexing.  This is useful
+#		if you need to recurse into subdirectories, or have
+#		many files to index (you can run this script from a
+#		cron job, during the night).  It is especially useful
+#		for large projects, which can contstantly have source
+#		files added and deleted; by using this script, the
+#		changing sources files are automatically handled.
+#
+#		Currently, any paths containing "/CVS/" or "/RCS/" are
+#		stripped out (ignored).
+#
+#		This script is written to use only basic shell features, as
+#		not all shells have advanced features.
+#
+# Author:       Darryl Okahata
+# Created:      Thu Apr 27 17:12:14 2000
+# Modified:     Tue Jun 19 09:47:45 2001 (Darryl Okahata) darrylo@soco.agilent.com
+# Language:     Shell-script
+# Package:      N/A
+# Status:       Experimental
+#
+# (C) Copyright 2000, Darryl Okahata, all rights reserved.
+#
+###############################################################################
+#
+# Usage:
+#
+#     cscope-indexer [ -v ] [-f database_file ] [-i list_file ] [ -l ] [ -r ]
+#
+# where:
+#
+#     -f database_file
+#          Specifies the cscope database file (default: cscope.out).
+#
+#     -i list_file
+#          Specifies the name of the file into which the list of files
+#          to index is placed (default: cscope.files).
+#
+#     -l
+#          Suppress the generation/updating of the cscope database
+#          file.  Only a list of files is generated.
+#
+#     -r
+#          Recurse into subdirectories to locate files to index.
+#          Without this option, only the current directory is
+#          searched.
+#
+#     -v
+#          Be verbose.  Output simple progress messages.
+#
+#
+###############################################################################
+set -e
+#set -X
+
+. script-x
+
+add_foi_regexp()
+{
+    for pat in "$@"; do
+        FILES_OF_INTEREST[${#FILES_OF_INTEREST[@]}]="-e"
+        FILES_OF_INTEREST[${#FILES_OF_INTEREST[@]}]="$pat"
+    done
+}                  
+    
+
+# May have to edit this:
+PATH="/usr/local/bin:/sbin:/usr/sbin:/bin:/usr/bin:$PATH"
+export PATH
+
+LIST_ONLY=
+DIR="$PWD"
+: ${LIST_FILE:='cscope.files'}
+: ${DATABASE_FILE:='cscope.out'}
+RECURSE=t
+VERBOSE=
+just_show_find_output=
+filter=egrep_filter
+verbose_find=
+verbose_find_filter=cat
+follow_symlinks_opt="-L"
+INTERESTING_FILES="\.h|\.([chly](xx|pp)?|cs|cc|hh|py)$"
+AUTOMAKE_REGEXP_DEF="((\.am|\.ac|\.m4)$|^config.*)"
+AUTOMAKE_REGEXP="$AUTOMAKE_REGEXP_DEF"
+FILES_OF_INTEREST=()
+add_foi_regexp $INTERESTING_FILES
+VC_EXCLUDES='-e /^.*\/?(\.svn|CVS|RCS|\.4D)\/?.*/d'
+: ${EXCLUDES:=""}
+: ${cscope_flags:=''}
+
+export DIR RECURSE			# Need to pass these to subprocesses
+
+#echo "*>$*<"
+while [ -n "$1" ]
+do
+    case "$1" in
+    # Add all Automake type files.
+    -am) AUTOMAKE_REGEXP=$AUTOMAKE_REGEXP_DEF ;;
+    -AM) AUTOMAKE_REGEXP="";;
+
+    # Allow other patterns to be specified.
+    # Grow the egrep expression.  The -e act as if joined by |.
+    -foi|--foi) add_foi_regexp "$2"; shift;;
+    # simple cheat to exclude inc dir for rsvp which is simply links.
+    -I) EXCLUDES="-e /\/include\//d $EXCLUDES";;  
+    -E) EXCLUDES="$2 $EXCLUDES"; shift;;
+    -F) cscope_flags="$2 $cscope_flags"; shift;;
+    -f)
+	if [ "X$2" = "X" ]
+	then
+	    echo "$0: No database file specified" >&2
+	    exit 1
+	fi
+	DATABASE_FILE="$2"
+	shift
+	;;
+    -i)
+	if [ "X$2" = "X" ]
+	then
+	    echo "$0: No list file specified" >&2
+	    exit 1
+	fi
+	LIST_FILE="$2"
+	shift
+	;;
+    -l)
+	LIST_ONLY=1
+	;;
+    -r)
+	RECURSE=t;;
+
+    -R) RECURSE=;;
+
+    -v)
+	VERBOSE=1
+	;;
+    -x) set -x;;
+    
+    -s) just_show_find_output=t; filter=cat;;
+    -S) verbose_find=t; verbose_find_filter=tee_filter;;
+    -L) follow_symlinks_opt='-L';;
+    -H) follow_symlinks_opt='';;
+    *)
+	DIR="$*"
+        break
+	;;
+    esac
+    shift
+done
+
+[ -n "$AUTOMAKE_REGEXP" ] && {
+    add_foi_regexp $AUTOMAKE_REGEXP
+}
+
+if [ "X$VERBOSE" != "X" ]
+then
+    echo "VERBOSE>$VERBOSE<"
+    echo "Creating list of files to index ..."
+    echo "FILES_OF_INTEREST>${FILES_OF_INTEREST[@]}<"
+    echo "VC_EXCLUDES>$VC_EXCLUDES<"
+    echo "EXCLUDES>$EXCLUDES<"
+    echo "LIST_FILE>$LIST_FILE<"
+    echo "LIST_ONLY>$LIST_ONLY<"
+fi
+
+tee_filter()
+{
+    tee /dev/tty
+}
+
+egrep_filter()
+{
+    egrep -i "${FILES_OF_INTEREST[@]}" | \
+      sed -r "$VC_EXCLUDES" $EXCLUDES | \
+      sort -n > $LIST_FILE
+}
+
+#set -x
+(
+    if [ "X$RECURSE" = "X" ]
+    then
+	# Ugly, inefficient, but it works.
+	for f in *
+	do
+          cd $DIR
+          echo "$DIR/$f"
+	done
+    else
+        echo "Finding files in $DIR ..." 1>&2
+        # We could use find(1)'s -regex pattern facility, but then we don't
+        # have the (possibly) useful ability to pipe through different
+        # filters.
+	find $follow_symlinks_opt $DIR/ \( -type f -o -type l \)
+    fi
+) | $filter
+
+[ -n "$just_show_find_output" ] && exit 0
+
+if [ "X$VERBOSE" != "X" ]
+then
+    echo "Creating list of files to index ... done"
+fi
+
+if [ "X$LIST_ONLY" != "X" ]
+then
+    exit 0
+fi
+
+if [ "X$VERBOSE" != "X" ]
+then
+    echo "Indexing files ..."
+fi
+
+#set -x
+cscope -q -b -i $LIST_FILE $cscope_flags
+
+if [ "X$VERBOSE" != "X" ]
+then
+    echo "Indexing files ... done"
+fi
+
+exit 0

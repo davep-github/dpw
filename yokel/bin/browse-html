@@ -1,0 +1,24 @@
+#!/bin/sh
+
+dir=$1
+
+case $dir in
+http:*|https:*|ftp:*|gopher:*)
+	;;
+/*)
+	;;
+*)
+	dir=$PWD/$dir
+	;;
+esac
+
+if [ -z "$DISPLAY" ]
+then
+	exe=`$HOST_INFO -n w3m text_html_browser`
+	suff=
+else
+	exe=`$HOST_INFO -n xkonq x_html_browser`
+	suff=
+	echo "Graphical browser starting... be patient"
+fi
+eval $exe $dir $suff

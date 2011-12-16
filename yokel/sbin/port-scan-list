@@ -1,0 +1,22 @@
+#!/bin/sh
+
+#
+# Log msgs look thus:
+# Jun 10 14:10:38 h0000f806dfda /kernel: Connection attempt to TCP 127.0.0.1:16001 from 127.0.0.1:1026
+#
+#
+set -x
+
+if [ "$1" = "-l" ]
+
+then
+    filter="grep -v 127\.0\.0\.1"
+else
+    filter=cat
+fi
+
+zgrep -h 'Connection attempt' /var/log/messages* | \
+	awk '{print $12 " scanned " $9 " " $10 " on " $1 " " $2 " " $3}' | \
+	$filter | \
+	sort -n | \
+	uniq

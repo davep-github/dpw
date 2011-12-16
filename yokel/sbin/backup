@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# This is the new and improved darkstar backup script. 
+
+TAPE=darkstar:/dev/nrmt0h  # 8mm tape drive (5GB)
+DUMP=rdump
+SIZE=999999
+LEVEL="$1"
+DENSITY=54000
+DUMP_ARGS="${LEVEL}dsfu"
+HOST=bigboote
+
+for FS in / /usr /var /disk2
+do
+	echo ""
+	echo "Now dumping $HOST:$FS."
+	echo ""
+	echo $DUMP $DUMP_ARGS $DENSITY $SIZE $TAPE $FS
+	$DUMP $DUMP_ARGS $DENSITY $SIZE $TAPE $FS
+done	
+

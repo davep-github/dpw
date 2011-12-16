@@ -1,0 +1,18 @@
+#!/usr/local/bin/perl
+
+$line_pattern = '/usr/yokel';
+$dirs = ".";
+
+open(FIND, "find $dirs -type l -ls |") || die "canna open find pipe";
+
+while (<FIND>)
+{
+	if (/$line_pattern/o)
+	{
+		#print "line:$_\n";
+		($here, $there) = /([^ ]*) -> (.*)$/;
+		print "here>$here<, there>$there<\n";
+		print system("mv $here $here.before-break-links");#|| die ("mv");
+		print system("cp $there $here");# || die "cp";		
+	}
+}

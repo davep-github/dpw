@@ -1,0 +1,13 @@
+#!/bin/sh
+
+ROOT=`pwd`
+echo $ROOT
+dirs=`find . -type d -print`
+
+find . -type l -ls
+
+exit 0
+# for d in $dirs
+# do
+#     find $d -type l -maxdepth 1 -prune -ls
+# done

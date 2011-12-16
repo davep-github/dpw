@@ -1,0 +1,3 @@
+#!/bin/sh
+lines=$((${LINES:-25} - 2))
+scan +inbox last:$lines

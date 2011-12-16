@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# dumbass thing always hoses the cvsup
+#rm -r /usr/ports/www/jakarta-tomcat
+
+case "$OSName" in
+    FreeBSD) /usr/local/bin/cvsup -g -L 2 /usr/yokel/src/ports-supfile;;
+    Linux) emerge sync && emerge -u --ask world;;
+    *) dpe_echo "Unsupported value of OSName>$OSName<"; exit 2;;
+esac
+

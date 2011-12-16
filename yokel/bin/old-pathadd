@@ -1,0 +1,73 @@
+#!/bin/sh
+# $Id: old-pathadd,v 1.2 2001/10/17 00:09:14 davep Exp $
+# add element to path iff its not there already
+# default is to append
+# NB: null path elements will be converted to .s
+#
+#set -x
+
+SEDPATH="/usr/bin/sed /bin/sed /bin/I_DIDNT_FIND_A_SED_PROGRAM"
+for SED in $SEDPATH
+do
+    [ -x $SED ] && break
+done
+[ -x $SED ] || {
+    echo 1>&2 "Could not find a sed in sedpath>$SEDPATH"
+    exit 1
+}
+
+if [ "$1" = "-p" ]
+then
+    cmd='$out$sep$path'		# prepend
+    push=y
+    shift
+else
+    cmd='$path$sep$out'		# append
+fi
+path=$1
+shift
+
+[ "$path" = "" ] || sep=':'
+
+# fix up any null entries by making them .s
+path=`echo $path | $SED 's!^:!.:!
+s!::!:.:!g
+s!:$!:.!' `
+
+out=
+tsep=
+for new in $*
+do
+    [ -z "$new" ] && new=.
+    case ":$path:" in
+	*:$new:*)
+	    # dir is already in path.
+	    # if pushing, delete and re-add at front
+	    if [ "$push" = "y" ]
+	    then
+		path=`echo $path | $SED 's!:'$new'$!!
+s!:'$new':!:!
+s!^'$new':!!
+s!^'$new'$!!' `
+		out=$out$tsep$new
+		#echo "re-adding:$new:"
+		tsep=':'
+	    fi
+	    ;;
+	*)
+	    out=$out$tsep$new
+	    #echo "adding:$new:"
+	    tsep=':'
+	    ;;
+    esac
+done
+
+if [ "$out" = "" ]
+then
+    echo $path
+else
+    # echo "out>$out<, sep>$sep<, path>$path<"
+    [ -z "$out" -o -z "$path" ] && sep=""
+    eval echo $cmd
+fi
+

@@ -1,0 +1,4 @@
+#!/bin/sh
+ 
+DISPLAY=:0.0; export DISPLAY
+/usr/local/bin/cvsup /etc/cvsupfile

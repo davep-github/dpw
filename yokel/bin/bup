@@ -1,0 +1,46 @@
+#!/bin/sh
+set -x
+if [ "$1" = "-a" ]
+then
+	append=y
+	shift
+	tape_dev=/dev/nrst0
+else
+	tape_dev=/dev/rst0
+fi
+
+if [ $# != 1 ]
+then
+	echo "usage: bup [-a] tape-id" 1>&2
+	exit 1
+fi
+tape_dir_file=$1.t
+tape_dir=/var/tapes/$tape_dir_file
+#excludes="/proc /kern /cdrom /dosc /dosd /dosdrw /p /mnt"
+excludes="/proc /kern /cdrom /dosdrw /p /mnt"
+exclude_cmd=
+for i in $excludes
+do
+	exclude_cmd="$exclude_cmd --exclude $i"
+done
+echo "rewind..."
+mt -f $tape_dev rewind || {
+	stat=$?
+	echo "mt -f $tape_dev rewind failed, ${stat}" 1>&2
+	exit 1
+}
+if [ "$append" != "y" ]
+then
+	> $tape_dir.gz
+else
+	echo "eom..."
+	mt -f $tape_dev eom || {
+		stat=$?
+		echo "mt -f $tape_dev eom failed, ${stat}" 1>&2
+		exit 1
+	}
+	echo "////////$(date)" | gzip -9 -c >> $tape_dir.gz
+fi
+echo "tar -c -v -f $tape_dev $exclude_cmd / | gzip -9 -c >> $tape_dir.gz"
+tar -c -v -f $tape_dev $exclude_cmd / | gzip -9 -c >> $tape_dir.gz
+

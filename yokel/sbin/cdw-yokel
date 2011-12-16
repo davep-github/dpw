@@ -1,0 +1,16 @@
+#!/bin/sh
+
+#
+# perform an incremental backup of yokel file system
+
+#
+# since all of the etc dirs are RCS'd to yokel, we can
+# get a useful backup if we just
+# do a level one (-l 1) jaz-bak w/-P (no pax) -C (no config) 
+cd-bak -j -P -j -C -j -s -l 1
+
+# XXX we may want to date stamp the dump files, then we will have
+# multiple versions accessible on the cd.  This doesn't add much
+# since many things are RCS'd or CVS'd, but the WORM nature of
+# the CD writing means that the older files still exist. We might
+# as well have access to the files.

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+#
+# do a level 1 jaz-bak.  Do just the dumps.
+#
+jaz-bak -l1 -PC "$@"

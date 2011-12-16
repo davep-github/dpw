@@ -1,0 +1,21 @@
+setkey -F
+setkey -FP
+
+setkey -v -c << EOF
+spdadd $THIS_NET $THAT_NET any -P out ipsec
+	esp/tunnel/$THIS_GW-$THAT_GW/require ;
+
+spdadd $THAT_NET $THIS_NET any -P in ipsec
+	esp/tunnel/$THAT_GW-$THIS_GW/require ;
+
+#spdadd $THAT_GW $THIS_GW any -P in ipsec
+#	esp/tunnel/$THAT_GW-$THIS_GW/require ;
+
+#spdadd $THIS_GW $THAT_GW any -P out ipsec
+#	esp/tunnel/$THIS_GW-$THAT_GW/require ;
+
+add $HGW $CGW esp 0x10003 -m any
+	-E 3des-cbc "$SEKRIT" ;
+
+add $CGW $HGW esp 0x10004 -m any
+	-E 3des-cbc "$SEKRIT" ;

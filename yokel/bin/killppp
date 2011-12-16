@@ -1,0 +1,5 @@
+#!/bin/sh
+now=`date`
+#echo "killppp ${now}" >> /tmp/ppplogin.log
+disable-mgetty-aa ${MODEM_DEV:-cuaa1}
+killprog -HUP pppd

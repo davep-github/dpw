@@ -1,0 +1,10 @@
+#!/bin/sh
+
+for file in $*
+do
+	case $file in
+	*.gz) 	catter=gzcat;;
+	*)	catter=cat;;
+	esac
+	$catter $file | groff -man -Tps
+done

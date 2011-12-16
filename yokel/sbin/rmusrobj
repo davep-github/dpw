@@ -1,0 +1,7 @@
+#!/bin/sh
+set -x
+
+rm -rf /usr/obj/
+chflags -R noschg /usr/obj/
+rm -rf /usr/obj/
+mkdir /usr/obj

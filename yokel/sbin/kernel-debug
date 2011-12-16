@@ -1,0 +1,21 @@
+#!/bin/sh
+
+num=$1
+[ -z "$num" ] && {
+	echo 1>&2 "No number given."
+	exit 1
+}
+
+cfile=/tmp/kgdb.startup.$$
+kernel=PANARITI
+
+echo "symbol-file /usr/src/sys/compile/$kernel/kernel.debug" > $cfile
+echo "exec-file /var/crash/kernel.$num" >> $cfile
+echo "core-file /var/crash/vmcore.$num" >> $cfile
+
+gdb -k -command $cfile
+stat=$?
+
+rm -f $cfile
+
+exit $?

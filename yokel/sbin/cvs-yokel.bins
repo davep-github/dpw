@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+
+import sys, os, string
+
+
+if len(sys.argv) > 1 and sys.argv[1] == '-n':
+    debug = 1
+else:
+    debug = 0
+cvsroot = '/usr/yokel/archive-cvsroot'
+places= (("/usr/yokel/bin", "", "-l"),
+         ("/usr/yokel/sbin", "", "-l"))
+
+for place in places:
+    this_dir = place[0]
+    cvs_opts = place[1]
+    if debug:
+        cvs_opts = '-n ' + cvs_opts
+    commit_opts = place[2]
+    os.chdir(this_dir)
+    os.system('/usr/yokel/bin/findlinks . > .symlinks')
+    cmd = 'su davep -c "svn %s -d %s commit %s -m \'periodic commit\'"' % \
+          (cvs_opts, cvsroot, commit_opts)
+    print 'cmd:', cmd
+    rc = os.system(cmd)
+    
+
+sys.exit(0)

@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# $Id: dp-std-date,v 1.3 2003/08/13 07:07:22 davep Exp $
+# print a date in a standard format so date parsers are less stressed.
+# Also, since it is ordered year-month-day it is sortable in a way that 
+# makes sense.
+
+
+base_fmt="%Y-%m-%d"
+# This shows quite clearly that the 2nd number is the month, and still
+# sorts properly.
+extended_fmt="%Y-%m%b-%d"	
+#
+# print a date in a common format
+#
+if [[ "$1" == -[oScb] ]]; then
+    # old/Short/classic/basic
+    fmt=$base_fmt
+    shift
+else
+    fmt=$extended_fmt
+fi
+
+if [ "$1" = "-s" ]; then
+    # Add seconds
+    fmt="$fmt.%T"
+fi
+date +$fmt

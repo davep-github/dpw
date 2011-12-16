@@ -1,0 +1,5 @@
+#!/bin/sh
+do
+    echo "i>$i<"
+    ps augxww | egrep "$@"
+done | sort | uniq | fgrep -v $0
