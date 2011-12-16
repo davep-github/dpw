@@ -1,0 +1,5 @@
+base=/home/davep/eMail/mbsunk/working-copy
+maildir=nodots
+maildir=nodots/*...
+mfolder=/home/davep/eMail/mbsunk/mairix/m1
+database=/home/davep/eMail/mbsunk/mairix/db/nodots

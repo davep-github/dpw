@@ -1,0 +1,440 @@
+run ~/lib/pylib/dp_smtp_lib.py
+ed -p
+run ~/lib/pylib/dp_smtp_lib.py
+down
+ed -p
+print ';'.join(__IP.Completer.all_completions('list_get_w')) #PYTHON-MODE SILENT
+fmap = [((("aaa", "bbb")), "got one!"),]
+print ';'.join(__IP.Completer.all_completions('list_g')) #PYTHON-MODE SILENT
+list_get_with_abbrev(fmap, "aaa")
+list_get_with_abbrev(fmap, "bbb")
+fmap = [((("aaa", "bb.b")), "got one!"),]
+list_get_with_abbrev(fmap, "bbb", "D'OH!")
+list_get_with_abbrev(fmap, "qbbb", "D'OH!")
+list_get_with_abbrev(fmap, "bbbb", "D'OH!")
+p fmap
+print ';'.join(__IP.Completer.all_completions('mk_r')) #PYTHON-MODE SILENT
+print ';'.join(__IP.Completer.all_completions('mk_abb')) #PYTHON-MODE SILENT
+mk_abbrev_regexp("bb.b")
+string.find("bb.b", "*")
+ed -p
+fmap = [(("aaa", "b.bb"), "found one!"),]
+print ';'.join(__IP.Completer.all_completions('list_ge')) #PYTHON-MODE SILENT
+list_get_with_abbrev(fmap, "aaa", "D'OH!")
+ed -p
+list_get_with_abbrev(fmap, "aaa", "D'OH!")
+ed -p
+list_get_with_abbrev(fmap, "aaa", "D'OH!")
+list_get_with_abbrev(fmap, "b.bb", "D'OH!")
+ed -p
+run ~/lib/pylib/dp_smtp_lib.py recip
+import email
+mfo = open("~/mail-test-messages/eg/should-be-spam/obvious-topic0")
+mfo = open("/home/davep/mail-test-messages/eg/should-be-spam/obvious-topic0")
+mail_obj = email.Parser().parse(mfo)
+print ';'.join(__IP.Completer.all_completions('email.messa')) #PYTHON-MODE SILENT
+print ';'.join(__IP.Completer.all_completions('email.message_from_f')) #PYTHON-MODE SILENT
+mail_obj = email.message_from_file(mfo)
+mail_obj?
+dir(mail_obj)
+print ';'.join(__IP.Completer.all_completions('mail_obj._he')) #PYTHON-MODE SILENT
+p mail_obj._headers
+ed -p
+ed
+print ';'.join(__IP.Completer.all_completions('mail_o')) #PYTHON-MODE SILENT
+mail_obj.get?
+mail_obj.keys?
+mail_obj.keys
+mail_obj.keys()
+mail_obj.values()
+mail_obj.values?
+mail_obj.items()
+mail_obj["Received"]
+mail_obj.items?
+mail_obj.get("Received")
+mail_obj.get_all("Received")
+mail_obj.get_all?
+ed -p
+re.compile?
+print ';'.join(__IP.Completer.all_completions('last_sm')) #PYTHON-MODE SILENT
+last_smtp_for(mail_obj)
+ed -p
+last_smtp_for(mail_obj)
+ed -p
+print ';'.join(__IP.Completer.all_completions('User')) #PYTHON-MODE SILENT
+print ';'.join(__IP.Completer.all_completions('UserWarning')) #PYTHON-MODE SILENT
+print ';'.join(__IP.Completer.all_completions('user')) #PYTHON-MODE SILENT
+import userdict
+import UserDict
+UserDict = UserDict.UserDict
+ud = UserDict()
+ud
+ud{'a': "aaa"}
+n
+ud['a'] = 'aaa'
+ud.a
+ud.get('a', "AAA")
+ud.get('A', "AAA")
+ud.get('A')
+ud['a']
+ud["A"]
+ed ~/lib/pylib/dp_dict.py
+dir(ud)
+ud.__setitem__("si", "SSII")
+ud['si']
+us.si
+ud.si
+us=ud
+ed ~/lib/pylib/dp_dict.py
+dpu['a'] = "AAA"
+run /home/davep/lib/pylib/dp_smtp_lib/py
+run /home/davep/lib/pylib/dp_smtp_lib_py
+run /home/davep/lib/pylib/dp_smtp_lib.py
+get_earliest_with_SMTP_for(open("/home/dave/MH/inbox/24512"))
+get_earliest_with_SMTP_for(open("/home/davep/MH/inbox/24512"))
+run /home/davep/lib/pylib/dp_smtp_lib.py
+get_earliest_with_SMTP_for(open("/home/davep/MH/inbox/24512"))
+p parsed_msg
+mfo = open("/home/davep/mail-test-messages/eg/should-be-spam/obvious-topic0")
+mail_obj = email.message_from_file(mfo)
+p mail_obj
+#get_earliest_with_SMTP_for(open("/home/davep/MH/inbox/24512"))
+mfo = open("/home/davep/MH/inbox/24512")
+mail_obj = email.message_from_file(mfo)
+p mail_obj
+mail_obj = email.message_from_file(mfo, **{})
+p mail_obj
+mail_obj = email.message_from_file(mfo)
+p mail_obj
+mfo = open("/home/davep/MH/inbox/24512")
+mail_obj = email.message_from_file(mfo, **{})
+p mail_obj
+mail_obj.get_all()
+mail_obj.get_all("Received")
+run /home/davep/lib/pylib/dp_smtp_lib.py
+get_earliest_with_SMTP_for("/home/davep/MH/inbox/24512")
+up
+p fl
+p fp
+up
+email.message_from_file?
+run /home/davep/lib/pylib/dp_smtp_lib.py
+get_earliest_with_SMTP_for("/home/davep/MH/inbox/24512")
+run /home/davep/lib/pylib/dp_smtp_lib.py
+get_earliest_with_SMTP_for("/home/davep/MH/inbox/24512")
+run /home/davep/lib/pylib/dp_smtp_lib.py
+get_earliest_with_SMTP_for("/home/davep/MH/inbox/24512")
+p 'from unknown (HELO smtp-1-3e.secureserver.net) ([64.202.166.126])
+          (envelope-sender <aaanatio4-e2-19184401@ProcessRequest.com>)
+          by mail7.speakeasy.net (qmail-ldap-1.03) with SMTP
+          for <dpanariti@speakeasy.net>; 23 Sep 2003 18:12:57 -0000'
+p 'from unknown (HELO smtp-1-3e.secureserver.net) ([64.202.166.126])
+          (envelope-sender <aaanatio4-e2-19184401@ProcessRequest.com>)
+          by mail7.speakeasy.net (qmail-ldap-1.03) with SMTP
+p """from unknown (HELO smtp-1-3e.secureserver.net) ([64.202.166.126])
+          (envelope-sender <aaanatio4-e2-19184401@ProcessRequest.com>)
+          by mail7.speakeasy.net (qmail-ldap-1.03) with SMTP
+          for <dpanariti@speakeasy.net>; 23 Sep 2003 18:12:57 -0000"""
+h = """from unknown (HELO smtp-1-3e.secureserver.net) ([64.202.166.126])
+          (envelope-sender <aaanatio4-e2-19184401@ProcessRequest.com>)
+          by mail7.speakeasy.net (qmail-ldap-1.03) with SMTP
+          for <dpanariti@speakeasy.net>; 23 Sep 2003 18:12:57 -0000"""
+WITH_SMTP_FOR_REGEXP = re.compile("E?SMTP\s+for\s+<(?P<deliver_to>[^>]*)>")
+m = WITH_SMTP_FOR_REGEXP.search(h)
+m
+None *4
+None, *4
+n
+(None,) *4
+l = []
+print ';'.join(__IP.Completer.all_completions('l.')) #PYTHON-MODE SILENT
+l.insert
+l.insert?
+l = [99, 100]
+l.insert(0, 4)
+l
+def f(a=5, b=10, **kw_args):
+    print "a:", a, "b:", b, "\nkw_args:", kw_args
+    
+f()
+kwa = {"a": "kw a"}
+f(**kwa)
+f(a=99, **kwa)
+def f(z, a=5, b=10, **kw_args):
+    print "z:", z, "a:", a, "b:", b, "\nkw_args:", kw_args
+f(a=99, **kwa)
+f(12, a=99, **kwa)
+def f(a=5, b=10, **kw_args):
+    print "a:", a, "b:", b, "\nkw_args:", kw_args
+    
+f(a=99, **kwa)
+def f(z, a=5, b=10, **kw_args):
+    print "z:", z, "a:", a, "b:", b, "\nkw_args:", kw_args
+    
+f(12, **kwa)
+kwa = {"a": "kw a", "unu1": "unused1", "bubba": "not used either"}
+f(12, **kwa)
+f(12)
+f(12, **kwa)
+kwa = {"b": "KW B", "unu1": "unused1", "bubba": "not used either"}
+f(12, **kwa)
+os.system("ls")
+run /home/davep/lib/pylib/dp_email_lib.py
+print ';'.join(__IP.Completer.all_completions('parse_msg')) #PYTHON-MODE SILENT
+type(mfo)
+eg_file = "/home/davep/MH/inbox/24512"
+parse_msg
+print ';'.join(__IP.Completer.all_completions('parse_msg')) #PYTHON-MODE SILENT
+parse_msg_if_needed(eg_file)
+msg = parse_msg_if_needed(eg_file)
+msg
+p msg
+mro
+type(mfo)
+dir(mfo)
+mfo.name
+s = set()
+s
+print ';'.join(__IP.Completer.all_completions('s.')) #PYTHON-MODE SILENT
+s.add?
+s.add(1)
+s
+s.add(set(11,12,13))
+set?
+s.add(set([11,12,13]))
+l = [11,22,33]
+s.add(l)
+tu = tuple(l)
+tu
+s.add(l)
+s.add(tu)
+s
+s.add(set(tu))
+s2 = ('a', 'b', 'c')
+s
+s2
+s.add(s2)
+s
+1 in s
+'a' in s
+sc = s.copy()
+sc
+print ';'.join(__IP.Completer.all_completions('iter')) #PYTHON-MODE SILENT
+iter?
+print ';'.join(__IP.Completer.all_completions('is')) #PYTHON-MODE SILENT
+is?
+in?
+print ';'.join(__IP.Completer.all_completions('l.')) #PYTHON-MODE SILENT
+i = iter(s)
+for e in i:
+    print e
+    
+i2 = iter(1)
+try:
+    i2 = iter(2)
+except Exception, e
+ed
+ed -p
+print ';'.join(__IP.Completer.all_completions('try_')) #PYTHON-MODE SILENT
+try_iter()
+ed -p
+run dp_flatten
+os.system("pwd")
+print ';'.join(__IP.Completer.all_completions('dp_fla')) #PYTHON-MODE SILENT
+run /home/davep/lib/pylib/dp_flatten.py
+ed /home/davep/lib/pylib/dp_flatten.py
+print ';'.join(__IP.Completer.all_completions('fla')) #PYTHON-MODE SILENT
+print ';'.join(__IP.Completer.all_completions('flatten_iterables')) #PYTHON-MODE SILENT
+flatten_iterables(1)
+print ';'.join(__IP.Completer.all_completions('fla')) #PYTHON-MODE SILENT
+flatten_iterables((1,2,3))
+run -d /home/davep/lib/pylib/dp_flatten.py
+zz = flatten_iterables((1,2,3))
+zz
+run -d /home/davep/lib/pylib/dp_flatten.py
+run  /home/davep/lib/pylib/dp_flatten.py
+zz = flatten_iterables((1,2,3))
+zz
+zz = flatten_iterables((1,2,('a','b','c')))
+run  /home/davep/lib/pylib/dp_flatten.py
+y
+-100 > -1
+d = {"verbose": -100}
+d.get("verbose", "q") > -1
+mail_name = "/home/davep/MH/inbox/46482"
+run ~/lib/pylib/dp_mail_lib.py
+run ~/lib/pylib/dp_mail_lib
+run ~/lib/pylib/dp_email_lib
+print ';'.join(__IP.Completer.all_completions('parse_ms')) #PYTHON-MODE SILENT
+print ';'.join(__IP.Completer.all_completions('mail')) #PYTHON-MODE SILENT
+msg = parse_msg_if_needed(mail_name)
+msg
+dir(msg)
+msg.get_param?
+print ';'.join(__IP.Completer.all_completions('msg.')) #PYTHON-MODE SILENT
+msg._headers
+msg.get("Received")
+msg.get_all("Received")
+msg.get_all("Delivered-To")
+print ';'.join(__IP.Completer.all_completions('msg.ad_')) #PYTHON-MODE SILENT
+print ';'.join(__IP.Completer.all_completions('msg.add_h')) #PYTHON-MODE SILENT
+msg.add_header?
+msg.add_header("Delivered-To", "ADDED Delivered-To")
+msg.get_all("Delivered-To")
+print ';'.join(__IP.Completer.all_completions('msg.repl')) #PYTHON-MODE SILENT
+msg.replace_header?
+msg.replace_header("Delivered-To", "REPLACED")
+msg.get_all("Delivered-To")
+zip
+zip([a,2,3], ['a','b','c'])
+zip([1,2,3], ['a','b','c'])
+zip([1,2,3], [('a', "A"),'b','c'])
+print ';'.join(__IP.Completer.all_completions('string.lo')) #PYTHON-MODE SILENT
+string.lower?
+MY_DOMAINS_RE = "(meduseld.net|(withywindle|crickhollow|mvsik).org)"
+print ';'.join(__IP.Completer.all_completions('re.sea')) #PYTHON-MODE SILENT
+MY_DOMAINS_RE = "(meduseld.net|(withywindle|crickhollow|mvsik).org)"
+mre = "@" + MY_DOMAINS_RE + "$"
+print ';'.join(__IP.Completer.all_completions('re.se')) #PYTHON-MODE SILENT
+re.search(mre, "davep@meduseld.net")
+re.search(mre, "davep@medusel.net")
+MY_DOMAINS_RE = "(meduseld\.net|(withywindle|crickhollow|mvsik)\.org)"
+mre = "@" + MY_DOMAINS_RE + "$"
+re.search(mre, "davep@medusel.net")
+re.search(mre, "davep@meduseld.net")
+re.search(mre, "davep@meduseld.org")
+re.search(mre, "davep@mvsik.org")
+re.search(mre, "davep@.org")
+re.search(mre, "davep@withywindle.org")
+re.search(mre, "davep@crickhollow.org")
+MY_DOMAINS_RE = "(meduseld\.net|(withywindle|crickhollow|mvsik)\.org)"
+MY_DOMAINS_EMAIL_RE = "@" + MY_DOMAINS_RE + "$"
+MY_CATCHALL_RE = "catch-?all" + MY_DOMAINS_EMAIL_RE
+BAD_DELIVERED_TO_REGEXP =  "unknown|(" + MY_DOMAINS_EMAIL_RE + ")"
+BAD_DELIVERED_TO_REGEXP
+MY_DOMAINS_RE = "(meduseld\.net|(withywindle|crickhollow|mvsik)\.org)"
+MY_DOMAINS_EMAIL_RE = "@(" + MY_DOMAINS_RE + ")$"
+MY_CATCHALL_RE = "(catch-?all" + MY_DOMAINS_EMAIL_RE + ")"
+BAD_DELIVERED_TO_REGEXP =  "unknown|(" + MY_CATCHALL_RE + ")"
+BAD_DELIVERED_TO_REGEXP
+MY_DOMAINS_RE = "(meduseld\.net|(withywindle|crickhollow|mvsik)\.org)"
+MY_DOMAINS_EMAIL_RE = "(@" + MY_DOMAINS_RE + "$)"
+MY_CATCHALL_RE = "(catch-?all" + MY_DOMAINS_EMAIL_RE + ")"
+BAD_DELIVERED_TO_REGEXP =  "(unknown|" + MY_CATCHALL_RE + ")"
+BAD_DELIVERED_TO_REGEXP
+MY_DOMAINS = ("meduseld.net", "mvsik.org", "crickhollow.org", "crickhollow.org")
+for d in MY_DOMAINS:
+    re.search(BAD_DELIVERED_TO_REGEXP, "catchall@" + d)
+for d in MY_DOMAINS:
+    re.search(BAD_DELIVERED_TO_REGEXP, "catchallzz@" + d)
+for d in MY_DOMAINS:
+    re.search(BAD_DELIVERED_TO_REGEXP, "catch-all@" + d)
+zip("catchall@" * 4, MY_DOMAINS)
+"aa" * 4
+"ax" * 4
+zip(("catchall@",) * 4, MY_DOMAINS)
+zip(("catchall@",) * 4, MY_DOMAINS) + ("", "unknown")
+zip(("catchall@",) * 4, MY_DOMAINS) + ["", "unknown"]
+zip(("catchall@",) * 4, MY_DOMAINS) + [("", "unknown")]
+for x in zip(("catchall@",) * 4, MY_DOMAINS) + [("", "unknown")]:
+    x[0] + x[1]
+    
+for x in zip(("catchall@",) * 4, MY_DOMAINS) + [("", "unknown")]:
+    z = x[0] + x[1]
+print ';'.join(__IP.Completer.all_completions('')) #PYTHON-MODE SILENT
+    re.search(BAD_DELIVERED_TO_REGEXP, z)
+for x in zip(("catchall@",) * 4, MY_DOMAINS) + [("", "unknown")]:
+    re.search(BAD_DELIVERED_TO_REGEXP, x[0]+x[1])
+for x in zip(("catchall@",) * 4, MY_DOMAINS) + [("", "unknwn")]:
+    re.search(BAD_DELIVERED_TO_REGEXP, x[0]+x[1])
+    
+msg
+msg.get_all("zuzz")
+l = msg.get_all("zuzz")
+l
+l = msg.get_all("delivered_to")
+l
+l = msg.get_all("delivered-to")
+l
+msg.replace_header("yopp", "REPLACED")
+msg.add_header("yopp", "REPLACED")
+l = msg.get_all("yopp")
+l
+not not 1
+not not 0
+not not None
+run ~/lib/pylib/dp_io.py
+print ';'.join(__IP.Completer.all_completions('Gen')) #PYTHON-MODE SILENT
+print ';'.join(__IP.Completer.all_completions('GeneratorExit')) #PYTHON-MODE SILENT
+GeneratorExit?
+print ';'.join(__IP.Completer.all_completions('gener')) #PYTHON-MODE SILENT
+d = {"a": "AA", "b": "BB"}
+d
+d.__iter__
+diter = d.__iter__
+for o in diter:
+    print "o: %s", o
+    
+diter = d.__iter__()
+for o in diter:
+    print "o: %s", o
+    
+diter = d.__iter__()
+for o in diter:
+    print "o:, o
+diter = d.__iter__()
+for o in diter:
+    print "o:", o
+    
+for o in diter:
+    print "o:", o
+    
+run dp_sequences
+amd = Abbrev_map_dict(a="AAAA", q="QQQQ")
+run dp_sequences
+amd = Abbrev_map_dict(a="AAAA", q="QQQQ")
+amd
+amd.kw_args
+for o in amd:
+    print "o:", o
+    
+run dp_sequences
+for o in amd:
+    print "o:", o
+    
+p amd.items
+run dp_sequences
+amd = Abbrev_map_dict(a="AAAA", q="QQQQ")
+run dp_sequences
+amd = Abbrev_map_dict(a="AAAA", q="QQQQ")
+run dp_sequences
+amd = Abbrev_map_dict(a="AAAA", q="QQQQ")
+for o in amd:
+    print "o:", o
+    
+for k, v in amd:
+    print "k:", k, "v:", v
+    
+for k, v in amd:
+    print "k:", k, ", v:", v
+run dp_sequences
+amd = Abbrev_map_dict(a="AAAA", q="QQQQ")
+for k, v in amd:
+    print "k:", k, ", v:", v
+    
+amd.zzz = 1
+amd.__dict__()
+amd.__dict__
+qiter = [(i[0], i[1]) for i in {"w": "WWW", "r": "ARE"}.items()]
+qiter
+amd = [(i[0], i[1]) for i in {"w": "WWW", "r": "ARE"}.items()].iter()
+amd = [(i[0], i[1]) for i in {"w": "WWW", "r": "ARE"}.items()].__iter__()
+amd
+for k, v in amd:
+    print "k:", k, ", v:", v
+    
+run dp_sequences
+n
+run dp_sequences
+import __future__
+__future__.all_feature_names

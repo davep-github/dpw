@@ -1,0 +1,47 @@
+#!/bin/sh
+set -x
+{
+	dat=$("$@")
+	set --
+	source $HOME/.bashrc
+	set -- "${dat[@]}"
+	source script-x
+
+	# Without some kind of delay between kstarts, the desktop parameter is
+	# ineffective.
+	# Making this function just do a `:' (nop-ish) still breaks.
+	# Who knows how long is long enough.
+	# It's only at startup, and there're a few login prompts along the way, so a
+	# longish delay is acceptable.
+	it_needs_this_to_make_it_go()
+	{
+            echo "it_needs_this_to_make_it_go"
+	    sleep 9
+	}
+
+	make_it_go()
+	{
+	    # thing-to-execute how-to-do-so
+	    local it="$1"
+	    shift
+	    if type "$it" #>/dev/null 2>&1
+	    then
+		local cmd=$(printf "$@" $it)
+                echo_id cmd
+		eval $cmd
+                it_needs_this_to_make_it_go
+	   fi
+	}
+
+#
+# I'm trying to use save session... I don't know what KDE saves wrt non-KDE apps.
+	make_it_go ffox 'kstart %s'
+	make_it_go start_jabbering 'kstart %s'
+#	make_it_go konsole 'kstart --desktop 1 %s'
+#	make_it_go konsole 'kstart --desktop 7 %s'
+#	make_it_go konsole 'kstart --desktop 2 %s'
+#	make_it_go konsole 'kstart --desktop 8 %s'
+#	make_it_go konsole 'kstart --desktop 12 %s'
+	make_it_go start_email '%s'
+	make_it_go start_editing '%s'
+} >| $HOME/log/kde/kde-clients 2>&1

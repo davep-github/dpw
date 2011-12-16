@@ -1,0 +1,18 @@
+# Global configuration flags.
+OneToOne /home/davep/bin/dp-mbsync-to-exchange-imap-stunnel-hack
+Inbox /home/davep/eMail/mbsunk/working-copy/Maildir/.
+Maildir /home/davep/eMail/mbsunk/working-copy/Maildir/.
+
+Mailbox /home/davep/eMail/mbsunk/working-copy/Maildir
+Host imaps:mail.vanu.com
+Box ""
+User davep
+Pass pwds-suck
+Alias repos
+# *should* never be used.
+CopyDeletedTo Deleted-messages
+Delete no
+Expunge no
+Tunnel /home/davep/bin/dp-mbsync-to-exchange-imap-stunnel-hack
+UseTLSv1 no
+

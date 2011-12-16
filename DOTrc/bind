@@ -1,0 +1,6 @@
+bind '^I'=complete
+bind '^?'=delete-char-forward
+
+[ -f $RC_DIR/bind.${HOST} ] && . $RC_DIR/bind.${HOST}
+
+true

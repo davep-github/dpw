@@ -1,0 +1,318 @@
+# Shared with root.
+
+vsetp()
+{
+    [ -n "$*" ]
+}
+
+vunsetp()
+{
+    [ -z "$*" ]
+}
+export -f vsetp vunsetp
+
+sed_path()
+{
+    local opts="" sep="" args=()
+    local nopts=0 nargs=0
+    local swap_em=
+    if [[ "$1" =~ "(-r|--reverse)" ]]; then
+        shift
+        swap_em=t
+    fi
+    for i in "$@"
+    do
+	#echo "0:i>$i<" 1>&2
+	if [[ "$i" == ---[^-]* ]]
+	then
+	    #echo "opt>$i<" 1>&2
+	    opts="$opts$sep$i"
+	    sep=" "
+	    : $((++nopts))
+	    #echo "0:opts>${opts[*]}<" 1>&2
+	else
+	    #echo "arg>$i<" 1>&2
+	    args[$nargs]=$i
+	    : $((++nargs))
+	    #echo "0:args>${args[*]}<" 1>&2
+	fi
+    done
+
+    #echo "1:args>${args[*]}<" 1>&2
+    if [ "$nargs" == 1 ]
+    then
+        echo "nargs == 1" 1>&2
+        # Assume this is a single sed expression.
+	#do_sed_path "$@" ""
+	args=("${args[@]}" "")  
+	: $((++nargs))
+    fi
+    #echo "2:args>${args[*]}<" 1>&2
+    #echo "2:$(echo_id nargs)" 1>&2
+    if [ "$nargs" == 2 ]
+    then
+        if [ -n "$swap_em" ]; then
+            local t="${args[0]}"
+            args[0]="${args[1]|}"
+            args[1]="$t"
+        fi
+        #echo "args[0]>${args[0]}<" 1>&2
+        #echo "args[1]>${args[1]}<" 1>&2
+	local sed_cmd="s|${args[0]}|${args[1]}"
+        #echo_id opts 1>&2
+        #echo_id sed_cmd 1>&2
+	do_sed_path $opts $sed_cmd
+    else
+	echo 1>&2 "sed_path(): I'm comfuzed by this commandline>$@<"
+	return 1
+    fi
+}
+export -f sed_path
+
+sed_cd()
+{
+    cd $(sed_path "$@")
+}
+export -f sed_cd
+alias cd_sed=sed_cd
+
+sed_go()
+{
+    g $(sed_path "$@")
+}
+export -f sed_go
+alias xdir=sed_go
+# go grep
+alias gg=sed_go
+
+# Exchange sandboxes
+
+exchange_sandboxes()
+{
+    [ -z "${1-}" ] && {
+        echo "exchange_sandboxes(): Need a box name."
+        return 1
+    } 1>&2
+    
+    xdir "$(scsandbox $PWD)" "$1"
+    
+    # Is there another arg? That's a directory to `gr' to.
+    [ -n "${2-}" ] && {
+        gr "$2"
+    }
+}
+export -f exchange_sandboxes
+alias xsb=exchange_sandboxes
+
+sedp ()
+{
+    pushd $(sed-path "$@")
+}
+export -f sedp
+
+bglq ()
+{
+    echo "#$(date): $@" >> "$BGLQ_LOG"
+    beagle-query "$@" | grep -v "file:///sundry/davep/beagle-config" \
+        | sed -r 's!^([0-9]+:)?file://(/[^#]*)(.*)$!\2!' \
+        | tee /tmp/bglq-last.out
+}
+export -f bglq
+
+dp_kill_job_id_n ()
+{
+#set -x
+    local jidn="$1"
+    local jid="%$1"
+    shift
+    local sig=${1:--15}
+    kill "$sig" "$jid" && wait "$jid"
+    if jobs | fgrep -q "[$jidn]"
+    then
+	kill -9 "$jid" && wait "$jid"
+    fi
+}
+export -f dp_kill_job_id_n 
+
+: ${DP_DEF_PIX_ARGS:=-FASs}
+: ${DP_PIX_COLORIZE:=-F}
+pix ()
+{
+    # pix + Installed check
+    local opts
+    local less_opt
+    if [[ "$1" != "-l" ]]; then
+	less_opt="| less"
+    else
+	less_opt=""
+	shift
+    fi
+    case "$1" in
+      -*) opts=;;
+      *) opts="${DP_DEF_PIX_ARGS}";;
+    esac
+
+    eval eix $DP_PIX_COLORIZE $opts "$@" $less_opt
+}
+
+pixi ()
+{
+    # pix + Installed check
+    local opts
+    local less_opt
+    if [[ "$1" != "-l" ]]; then
+	less_opt="| less"
+    else
+	less_opt=""
+	shift
+    fi
+    case "$1" in
+      -*) opts=;;
+      *) opts="${DP_DEF_PIX_ARGS} -I";;
+    esac
+
+    eval eix "$opts" "$@" $less_opt
+}
+export -f pixi
+alias ipix=pixi
+
+dashify()
+{
+    ret=
+    for o in $*; do
+        # echo 1>&2 "o>$o<"
+        case "$o" in
+            "") ;;              # Should not happen, but...
+            " ") ;;
+            -*) ret="$ret $o";;
+            *)  ret="$ret -$o";;
+        esac
+    done
+    echo "$ret"
+}
+export -f dashify
+
+alias akrord=acroread
+
+grep_var_log_messages()
+{
+    if [[ "$1" == -HIGH_LAST ]]; then
+	shift
+	first=$(ls -1 /var/log/messages.[0-9]*)
+	first_grep=zgrep
+	last=/var/log/messages
+	last_grep=grep
+    else
+	first=/var/log/messages
+	first_grep=grep
+	last=$(ls -1r /var/log/messages.[0-9]*)
+	last_grep=zgrep
+    fi
+    sudo $first_grep "$@" $first $last
+    sudo $last_grep "$@" $first $last
+}
+
+page_of_history()
+{
+    local lines=$((${LINES:-25} - 2))
+    fc -l -$lines
+}
+
+demerge()
+{
+    local ask="--ask"
+    [ "$1" == "-a" -o "$1" == '-y' ] && {
+	ask=""
+	shift
+    }   
+    emerge --depclean --verbose $ask "$@" || {
+	echo "Emerge refused to depclean... runing equery..."
+	equery d "$@"  # This may barf if any extra emerge options are used.
+    } 1>&2
+}
+export -f demerge
+alias delmerge=demerge
+alias unmerge=demerge
+
+# Linux's /bin/kill does this, but wrap it in case others don't.
+dp_sig_n2n()
+{
+    /bin/kill -l "$1"
+}
+
+dp_rc_to_text()
+{
+    false
+}
+
+: ${DPBRC_Clear_set_x_p:=t}
+: ${DPBRC_Show_rc_in_prompt_p:=t}
+: ${DPBRC_Verbose_rc_in_prompt_p:=t}
+: ${DPBRC_set_x_post_prompt_command_val:='+x'}
+
+dp_set_x_fini()
+{
+    local set2=${1:-${DPBRC_set_x_post_prompt_command_val}}
+    if vsetp $DPBRC_Clear_set_x_p; then
+        set +x
+    else
+        # Set set [-x|+x] as per default
+        set "$set2"
+    fi
+
+    true
+}
+
+prompt_command_errno()
+{
+    if vsetp $dp_verbose_rc_in_prompt_p; then
+        if [ "$1" == 0 ]; then
+            echo 0
+        else
+            echo "$1:"$(errno -n "$@")
+        fi
+    else
+        echo "$1"
+    fi
+}
+    
+#
+# Move this to func?
+#
+prompt_command()
+{
+    # Status is still set from the last command.
+    rc="$?"
+    PS1_terminator="$BASE_PS1_terminator"
+    # Have 0, the most common rc, be plain and simple.
+    if [ "$rc" != 0 ]; then
+	if vsetp DPBRC_Verbose_rc_in_prompt_p && ((rc >= 128)); then
+	    rc_str="$rc:SIG$(dp_sig_n2n $rc)"
+	else
+	    rc_str=$(prompt_command_errno "$rc")
+	fi
+	if vsetp "$DPBRC_Show_rc_in_prompt_p"; then
+	    PS1_terminator='<'"$rc_str$PS1_terminator"
+	fi
+    fi
+    # Need to use utils to get the same effect as PS* escapes.
+    # Or to get that fucking prompt as a whole to work!
+    #local x
+    #eval x="$PS1_line0"
+    #echo "$x"  
+    eval title_bar_titler "$XTerm_title" || {
+	: echo -n "$*" >/dev/tty
+    }
+    dp_set_x_fini
+
+    return $rc
+}
+export PROMPT_COMMAND=prompt_command
+
+pathff()
+{
+    PATH=$(cat "$@")
+}
+export -f pathff
+
+true

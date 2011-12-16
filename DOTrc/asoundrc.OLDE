@@ -1,0 +1,96 @@
+# pcm.amix {
+#    type dmix
+#    ipc_key 50557
+#    slave {
+#        pcm "hw:1,0"
+#        period_time 0
+#        period_size 1024
+#        buffer_size 8192
+#    }
+#    bindings {
+#        0 0
+#        1 1
+#    }
+# }
+
+# # route ALSA software through pcm.amix
+# pcm.!default {
+#    type plug
+#    slave.pcm "amix"
+# }
+
+# pcm.amix { 
+#     type dmix 
+#     ipc_key 1024
+#     ipc_key_add_uid false
+#     ipc_perm 0666			# mixing for all users
+#     slave { 
+#         pcm "hw:1,0" 
+#         period_time 0 
+#         period_size 1024 
+#         buffer_size 8192
+#         #rate 44100
+#     }
+#     bindings { 
+#         0 0 
+#         1 1 
+#     } 
+# } 
+
+# pcm.dsp1 { 
+#     type plug 
+#     slave.pcm "amix" 
+# } 
+
+# pcm.!default { 
+#     type plug 
+#     slave.pcm "amix" 
+# } 
+
+# pcm.default { 
+#    type plug 
+#    slave.pcm "amix" 
+# } 
+
+# ctl.mixer1 { 
+#     type hw 
+#     card 1 
+# }
+
+# pcm.!default {
+#    type plug
+#    slave.pcm "qmixer"
+# }
+
+# pcm.qmixer  {
+#    type dmix
+#    ipc_key 1024
+#    slave {
+#       pcm "hw:1,0"
+#       #format S32_LE
+#       #period_time 0
+#       #period_size 1024
+#       #buffer_size 8192
+
+#       #rate 96000
+#    }
+#    bindings {
+#       0 0
+#       1 1
+#    }
+# }
+
+# ctl.qmixer {
+#    type hw
+#    card 1
+#    device 1
+# }
+# pcm.dsp {
+#     type plug
+#     slave.pcm "qmixer"     # use our new PCM here
+# }
+# ctl.mixer {
+#     type hw
+#     card 1
+# }
+

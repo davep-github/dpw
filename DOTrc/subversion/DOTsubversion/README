@@ -1,0 +1,87 @@
+This directory holds run-time configuration information for Subversion
+clients.  The configuration files all share the same syntax, but you
+should examine a particular file to learn what configuration
+directives are valid for that file.
+
+The syntax is standard INI format:
+
+   - Empty lines, and lines starting with '#', are ignored.
+     The first significant line in a file must be a section header.
+
+   - A section starts with a section header, which must start in
+     the first column:
+
+       [section-name]
+
+   - An option, which must always appear within a section, is a pair
+     (name, value).  There are two valid forms for defining an
+     option, both of which must start in the first column:
+
+       name: value
+       name = value
+
+     Whitespace around the separator (:, =) is optional.
+
+   - Section and option names are case-insensitive, but case is
+     preserved.
+
+   - An option's value may be broken into several lines.  The value
+     continuation lines must start with at least one whitespace.
+     Trailing whitespace in the previous line, the newline character
+     and the leading whitespace in the continuation line is compressed
+     into a single space character.
+
+   - All leading and trailing whitespace around a value is trimmed,
+     but the whitespace within a value is preserved, with the
+     exception of whitespace around line continuations, as
+     described above.
+
+   - When a value is a list, it is comma-separated.  Again, the
+     whitespace around each element of the list is trimmed.
+
+
+Configuration data in the Windows registry
+==========================================
+
+On Windows, configuration data may also be stored in the registry.  The
+functions svn_config_read and svn_config_merge will read from the
+registry when passed file names of the form:
+
+   REGISTRY:<hive>/path/to/config-key
+
+The REGISTRY: prefix must be in upper case. The <hive> part must be
+one of:
+
+   HKLM for HKEY_LOCAL_MACHINE
+   HKCU for HKEY_CURRENT_USER
+
+The values in config-key represent the options in the [DEFAULTS] section.
+The keys below config-key represent other sections, and their values
+represent the options. Only values of type REG_SZ will be used; other
+values, as well as the keys' default values, will be ignored.
+
+
+File locations
+==============
+
+Typically, Subversion uses two config directories, one for site-wide
+configuration,
+
+  /etc/subversion/proxies
+  /etc/subversion/config
+  /etc/subversion/hairstyles
+     -- or --
+  REGISTRY:HKLM\Software\Tigris.org\Subversion\Proxies
+  REGISTRY:HKLM\Software\Tigris.org\Subversion\Config
+  REGISTRY:HKLM\Software\Tigris.org\Subversion\Hairstyles
+
+and one for per-user configuration:
+
+  ~/.subversion/proxies
+  ~/.subversion/config
+  ~/.subversion/hairstyles
+     -- or --
+  REGISTRY:HKCU\Software\Tigris.org\Subversion\Proxies
+  REGISTRY:HKCU\Software\Tigris.org\Subversion\Config
+  REGISTRY:HKCU\Software\Tigris.org\Subversion\Hairstyles
+

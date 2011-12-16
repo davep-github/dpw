@@ -1,0 +1,20 @@
+Ee|elm|			${HOME}/.elm/
+Ee|jobs|		${HOME}/jobs/
+Ee|pine|		${HOME}/pine/
+Ee|ppp|			${HOME}/.ppp/
+Ee|ulb|			/usr/local/bin/
+Ee|yokel|               ${HOME}/yokel/
+Ee|yokelbin|yb|         ${yokel}bin/
+Ee|yokelsbin|ysb|       ${yokel}sbin/
+Ee|yokeletc|ye|         ${yokel}etc/
+Ee|yokellib|yl|         ${yokel}lib/
+q|noway|		no-way-we-see-this-since-selector-is-q
+Ee|ksrc|		/slice5/usr/src/sys/
+Ee|pdb|			${HOME}/etc/pdb/
+Ee|pydb|		${HOME}/etc/pydb/
+Ee|doc|			${HOME}/doc/
+#|bin| should not be used!
+Ee|bin|			${HOME}/bin/
+Ee|lisp|		${HOME}/lisp/
+#E|elisponly|           a test which should not match
+Ee|testA|testB|testC| 	value-for-testABC

@@ -1,0 +1,20 @@
+import sys, os, string, re
+import dns
+dns?
+dns.__new__?
+dns.__init__?
+dns.__class__.__doc__?
+dns.__class__.__doc__
+d = dns()
+n
+os.uname()
+os.uname()[1]
+n
+import string
+"a".substr?
+string.substr?
+string.rfind?
+string.find?
+"a".find("11a22")
+11a22".find("a")
+"11a22".find("a")

@@ -1,0 +1,41 @@
+# Shared with root.
+DP_RC_DIR=$(/bin/ls -1d ~/.rc/)
+# source "~davep/.rc/alias.b0rkd-kb" does not work.
+source "${DP_RC_DIR}/alias.b0rkd-kb"
+
+dp_kill_job_id_n ()
+{
+#set -x
+    local jidn="$1"
+    local jid="%$1"
+    shift
+    local sig=${1:--15}
+    shift
+    local extreme_prejudice=$1
+    kill "$sig" "$jid" && wait "$jid"
+    sleep 2
+    if jobs | fgrep -q "[$jidn]"
+    then
+	if vsetp $extreme_prejudice
+	then
+	    kill -9 "$jid" && wait "$jid"
+	fi
+    fi
+}
+export -f dp_kill_job_id_n 
+
+for i in 1 2 3 4 5 6 7 8 9 11 12 13 14 15 16 17 18 19
+do
+  eval alias k$i="'dp_kill_job_id_n $i'"
+  eval alias sk$i="'sudo dp_kill_job_id_n $i'"
+  eval alias k9$i="'dp_kill_job_id_n $i -9'"
+  eval alias sk9$i="'sudo dp_kill_job_id_n $i -9'"
+#??? why did I do this?  eval alias k9$i=\'kill -9 %$i ; wait %$i \'
+done
+
+# Simple for root.
+alias hgrep='history | egrep'
+alias h=page_of_history
+alias lvlxlog='less /var/log/Xorg.0.log'
+
+true

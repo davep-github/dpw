@@ -1,0 +1,8 @@
+# -*-Shell-script-*-
+###
+### vanu.com specific rc commands.
+###
+
+ulimit -c unlimited
+
+true

@@ -1,0 +1,40 @@
+
+have wajig &&
+_wajig()
+{
+	local cur prev opt
+
+	COMPREPLY=()
+	cur=${COMP_WORDS[COMP_CWORD]}
+	prev=${COMP_WORDS[COMP_CWORD-1]}
+
+	if [[ "$cur" == -* ]]; then
+	    COMPREPLY=($( compgen -W '-h --help -q --quiet -s --simulate  \ 
+                                  -t --teaching -v --verbose' -- $cur ) )
+	else	    
+	    COMPREPLY=($( compgen -W 'addcdrom auto-clean auto-download auto-install \ 
+            available bug build build-depend changelog \ 
+            clean commands daily-upgrade dependees describe \ 
+            describe-new detail detail-new dist-upgrade \ 
+            docs download file-download file-install \ 
+            file-remove find-file find-pkg fix-configure \ 
+            fix-install fix-missing force help hold init \ 
+            install installr installrs installs install \ 
+            integrity large last-update list list-all \ 
+            list-alts list-cache list-commands list-daemons \ 
+            list-files list-hold list-installed list-names \ 
+            list-orphans list-status list-wide local-dist-upgrade \ 
+            local-upgrade move new news new-upgrades \ 
+            non-free orphans package policy purge purge-depend \ 
+            purge-orphans rec-download recommended reconfigure \ 
+            reinstall reload remove remove-depend remove-orphans \ 
+            repackage reset restart rpm rpminstall rpmtodeb \ 
+            search search-apt setup show showdistupgrade \ 
+            showinstall showremove showupgrade size sizes \ 
+            source start status status-match status-search \ 
+            stop suggested tasksel toupgrade unhold unofficial \ 
+            update update-alts upgrade whatis whichpkg' -- $cur ) )
+	fi
+
+}
+[ -n "${have:-}" ] && complete -F _wajig $default wajig

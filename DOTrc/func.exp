@@ -1,0 +1,19 @@
+dpf_comma_sep_list()
+{
+    local sep="$1"
+    shift
+    local ret_str=""
+
+    case "$sep" in
+	""|-) sep=", ";;
+	--*) sep=$(sed -nr 's/(.*)(.$)/\1/p');;
+    esac
+    first="$1"
+    shift
+    for i in "$@"; do
+	ret_str="$ret_str$sep$i"
+    done
+    echo "$first$ret_str"
+}
+
+true

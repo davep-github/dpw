@@ -1,0 +1,8 @@
+MAILDIR=MH
+DEFAULT=inbox/.
+COMSAT=no
+LOGFILE=$HOME/$MAILDIR/procmail_logfile
+LOGABSTRACT=all
+
+:0fw
+| spamassassin -L

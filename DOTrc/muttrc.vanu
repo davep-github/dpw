@@ -1,0 +1,11 @@
+source ~/.mutt-aliases
+my_hdr X-Attribution: davep
+set alias_file = ~/.mutt-aliases
+set attribution  = "On %d, %n wrote:"
+#set nohelp
+set record = sent
+set move  = no
+set mbox_type = Maildir
+bind index i imap-fetch-mail
+# Oh, wow, the colors...
+source ~/.mutt-colors

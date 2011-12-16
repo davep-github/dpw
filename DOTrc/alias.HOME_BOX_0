@@ -1,0 +1,10 @@
+
+JDK=/usr/local/jdk1.3.1
+JDK_BIN="$JDK/bin"
+alias java="$JDK_BIN/java"
+alias javac="$JDK_BIN/javac"
+alias javadoc="browse-html $JDK/index.html"
+alias javatut="browse-html $JDK/docs/books/tutorial/index.html"
+alias routes="netstat -r -f inet"
+
+true

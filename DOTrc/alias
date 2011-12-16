@@ -1,0 +1,218 @@
+#
+#set -x
+#
+# pull in our generic functions
+#
+
+DP_RC_DIR=~davep/.rc
+
+dp_source_rc ${DP_RC_DIR}/alias.b0rkd-kb ${DP_RC_DIR}/alias.root
+
+alias ls_no_color="\ls -CF --color=never"
+alias ls_with_color="\ls -CF --color=tty"
+alias lnc="ls_no_color"
+alias lc='ls_with_color'
+alias lca='\ls -CF --color=always'
+#alias lf="ls_no_color"
+#alias lm="ls_no_color"
+alias ll="ls -l"
+
+if [ -n "$dp_no_color" ]
+then
+    alias ls='ls_no_color'
+else
+    alias ls='ls_with_color'
+fi
+
+alias hdps='echo $PS1 | hd'
+alias lssmod='lsmod | less'
+alias hless='history | less'
+alias cls=clear
+alias bq='beagle-query'
+alias cx='chmod +x'
+alias editprof='vi ~/.bash_profile'
+alias eprof='vi ~/.bash_profile'
+alias sprof='. ~/.bash_profile' # source profile
+alias pro='. ~/.bash_profile' # source profile
+#alias gb='g back'
+alias gb='pushd'		# swaps top two elements, like g b
+alias pd='popd'
+alias h=page_of_history
+alias archie='archie -h $ARCHIE_HOST'
+alias vipath='typeset x=/tmp/vipath.$SECONDS; echo $PATH > $x && vi $x && PATH=`cat $x` && rm -f $x'
+alias vicd='typeset x=/tmp/vicd.$SECONDS; echo $PWD > $x && vi $x && cd `cat $x` && rm -f $x'
+alias alias_p="alias >/dev/null 2>&1"
+alias_iff()
+{
+    local name="$1"
+    shift
+    alias_p "$name" || { eval alias "$name"="$@"; }
+}
+for i in bind env alias func rc bashrc
+do
+  # What in NGC714's name was I thinking of?
+  #alias_iff "${i}rc" '"source_list $RC_DIR/$i \"\" \$locale_rcs"; true'
+  eval alias ${i}rc='"source_list $RC_DIR/$i \"\" \$locale_rcs"; true'
+done
+case $shell_name in
+    bash)
+	alias r='fc -e -'
+	alias print=echo
+	;;
+esac
+
+[ -f $RC_DIR/alias.${HOST} ] && . $RC_DIR/alias.${HOST}
+alias rm='rm -i'
+alias mv='mv -i'
+alias cp='cp -i'
+alias rlogin='rlogin -8'
+alias setdisp='DISPLAY=`remote-disp`; export DISPLAY'
+##alias dirc='__olddir=`pwd`; while popd; do :;done >/dev/null 2>&1 ; cd $__olddir'
+alias dirc='dirs -c'
+#alias nh='export dp_NH=y; HISTFILE=; dp_NH_PS1_prefix=$PS1_prefix; PS1_prefix="(nh)$PS1_prefix"; PS1_title_prefix="-(NH)-"'
+alias hh='export dp_HH=y; HISTFILE=${PWD}/.histfile.here; dp_HH_PS1_prefix=$PS1_prefix; PS1_prefix="(hh)$PS1_prefix"; PS1_title_prefix="-(HH)-"'
+alias uh='unset dp_NH; HISTFILE=$DEF_HISTFILE; PS1_prefix=$dp_NH_PS1_prefix; PS1_title_prefix=""; PS1_prefix=""'
+alias scat='\show -showproc cat'
+
+alias ls1=lsl
+# -i is no longer an option.
+#alias uudecode='uudecode -i'
+
+#echo "TERM>$TERM<"
+#set -x
+if inside_emacs_p
+then
+    # --with-filename puts:
+    # 1) filename: in front of the match if it's in a file.
+    # 2) (standard input) if it's, well, guess.
+    # They'll both take the same amount of parsing and the compile code to
+    # find/goto the location works. `-' allows "" to not be replaced.  Only
+    # unset vars are.
+    #!<@todo make standard util to parse a ^.*?:\d+:.*$ out of grep matches.
+    # ??? (\d+:)? and/or (^.*?:)?
+    : ${dp_emacs_grep_options:-"-n --with-filename"}
+    dp_emacs_dash_n_greps()
+    {
+        alias grep="grep -n"
+        alias egrep="egrep -n"
+        alias fgrep="fgrep -n"
+    }
+    export -f dp_emacs_dash_n_greps
+        
+    #
+    # give certain programs more emacs friendly/useful options
+    #
+
+    #
+    # since I turn on compilation mode, having the greps
+    # use line numbers is very useful
+    # Line numbers are enables in emacs_shell_grepper.
+    # Currently, baroque also implies a little broke.
+    # e.g. grep ls get the expansion of ls rather than just 'ls'.
+    dp_emacs_baroque_greps()
+    {
+        # We also use --file-name, but this causes problems when stdin is
+        # used since we see a (stdin) as file name.  Change of heart: given
+        # we have the name for other files, this is not a problem.  They'll
+        # both take the same amount of parsing and the compile code to
+        # find/goto the location works.
+        alias grep="emacs_shell_grepper grep $grep_opts"
+        alias egrep="emacs_shell_grepper egrep $grep_opts"
+        alias fgrep="emacs_shell_grepper fgrep $grep_opts"
+    }
+    export -f dp_emacs_baroque_greps
+
+    dp_emacs_dash_n_greps
+
+    alias less='cat'
+    alias more='cat'
+    alias show='scat'           # nmh command
+    alias man='emacs_man'
+    #
+    # turn off embedded colorization (-n) and other fiddle faddle.
+    alias esearch='esearch -n'
+    alias emerge='emerge --nospinner'
+    alias pkg-grep='pkg-grep -n'
+    alias eix='eix -n'
+    alias equery='equery -C'
+    alias lssz='ls -l --sort=size'
+    # XEmacs seems OK with these in color. Why did I disable it? Perhaps
+    # something intermittent or in certain cases? Or perhaps I fixed the
+    # colorization issues?
+#    alias lsl='kwa_LSL_COLOR="--color=never" lsl'
+#    alias ls1='kwa_LSL_COLOR="--color=never" lsl'
+#    alias lth='kwa_LSL_COLOR="--color=never" lth'
+    
+    alias ltl='ls -lt '         # xemacs makes an OK less.
+# ?? WTF??    alias lssz='kwa_LSL_COLOR="--color=never" lssz'
+
+    # How to make this dependent on my dp-shells lisp flags so the always match up?
+    alias ls=ls_with_color
+fi
+
+alias npg=port-grep
+alias nmg=mgrep
+alias isascreen='isascreen "$IMASCREENINSTANCE" "$ignoreeof"'
+alias imascreen=isascreen
+alias go2rc='eval $(go2env)'
+alias evalgo2env="go2rc"
+alias evalgo2="go2rc"
+alias hl='history | $PAGER'
+alias make_go='(cd ~; make go_aliases)'
+alias dfh='df -h'
+alias dfhd='dfh .'
+alias dfh.=dfhd
+alias dfhh=dfhd
+alias xx-ncmpc='xx ncmpc'
+
+alias fh='feh -sZF --next-button 2 --zoom-button 1'
+#alias pix=eix
+alias smv='sed-rename'
+alias re-mv='sed-rename'
+alias rpd='realpath .'
+alias rp='realpath'
+###alias mplayer='mplayer -vo x11 -framedrop'
+#alias pquery=equery
+#for i in 1 2 3 4 5 6 7 8 9 11 12 13 14 15 16 17 18 19
+#do
+#  eval alias k$i="'dp_kill_job_id_n $i'"
+#  eval alias k9$i="'dp_kill_job_id_n $i -9'"
+#??? why did I do this?  eval alias k9$i=\'kill -9 %$i ; wait %$i \'
+#done
+
+alias sed-path=sed_path
+alias bashhelp=help
+alias mkpath='mkdir -p'
+alias spv='sp -v'
+# XEmacs command handler.  Originally ef meant `emacs file'.
+alias xf=ef
+
+alias lvlmessages=lmsgs
+alias lvlm=lvlmessages
+alias tail-msgs=tail_var_log_messages
+alias tvlm=tail_var_log_messages
+alias grep-msgs=grep_var_log_messages
+alias gvlm=grep_var_log_messages
+alias hgrep='hist_grep'
+alias kkdm='kill-kdm'
+alias lesspb='less $HOME/etc/pydb/phonebook.py'
+alias subash='sudo -E bash'
+alias tail-fall='tail -n+1 -f'
+alias ascii='man ascii'
+alias md-p='mkdir -p'
+alias gitbr='git branch'
+alias gitco='git checkout'
+alias gitci='git commit'
+alias gits='git status'
+alias gitadd='git add'
+alias gitstat='git status'
+alias gitdiff='git diff'        # Oooo I char... but gives us completion.
+alias gittag='git tag'
+alias gitconf='git config'
+alias gitls='git ls-files'      # Most common/useful ls variant?
+# Log will be more common than ls. Will completion be a PITA?
+alias gitlog='gitlog'
+alias gitremote='git remote'
+alias gitpush='git push'
+alias gitpull='git pull'
+true

@@ -1,0 +1,86 @@
+# Inputs:
+#   $1 -- name of the command whose arguments are being completed
+#   $2 -- word being completed
+#   $3 -- ord preceding the word being completed
+#   $COMP_LINE  -- current command line
+#   $COMP_PONT  -- cursor position
+#   $COMP_WORDS -- array containing individual words in the current
+#                  command line
+#   $COMP_CWORD -- index into ${COMP_WORDS} of the word containing the
+#                  current cursor position
+# Output:
+#   COMPREPLY array variable contains possible completions
+#
+# Feta syntax:
+#   feta [options] [command] [packages|files|urls]
+#
+# Most feta commands accept package names
+# feta {install,-i,contents,-c,-L} also accepts file names (*.deb)
+# feta {find,-S} accepts file names only
+have feta &&
+_complete_feta()
+{
+
+    local i cmdidx accept_pkgs accept_debs accept_files accept_other
+    cmdidx=${#COMP_WORDS[@]}
+    accept_pkgs=1
+    accept_debs=0
+    accept_files=0
+    accept_other=""
+    for (( i=1; i < ${#COMP_WORDS[@]}; i++ )); do
+        case ${COMP_WORDS[$i]} in
+            install|-i|contents|-c|-L)
+                cmdidx=$i
+                accept_debs=1
+                break
+                ;;
+            find|-S)
+                cmdidx=$i
+                accept_files=1
+                accept_pkgs=0
+                break
+                ;;
+            clean)
+                cmdidx=$i
+                accept_pkgs=0
+                break
+                ;;
+            -*)
+                ;;
+            *)
+                cmdidx=$i
+                break
+                ;;
+        esac
+    done
+
+    COMPREPLY=()
+    if (( $COMP_CWORD == $cmdidx )); then
+        # feta commands
+        COMPREPLY=( $(feta commands | grep ^"$2") )
+        return 0
+    elif (( $COMP_CWORD > $cmdidx )); then
+        # arguments
+        local wordlist opts
+        wordlist=""
+        if (( $accept_pkgs != 0 )); then
+            wordlist="$wordlist $(apt-cache pkgnames "$2")"
+        fi
+        if [ -n "$accept_other" ]; then
+            wordlist="$wordlist $accept_other"
+        fi
+        opts=""
+        # XXX The following doesn't work satisfactorily with directories.
+        #     Also, limitation to *.deb doesn't seem to work.  Let somebody who
+        #     knows bash programmable completion better fix these issues.
+        if (( $accept_files != 0 )); then
+            opts="-f"
+        elif (( $accept_debs != 0 )); then
+            opts="-f -X '!*.deb'"
+        fi
+        COMPREPLY=( $(compgen $opts -W "$wordlist" "$2") )
+        return 0
+    fi
+    return 1
+}
+[ "$have" ] && complete -F _complete_feta feta

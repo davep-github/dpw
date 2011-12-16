@@ -1,0 +1,53 @@
+#
+# /home/davep/./.rc/nvidia-settings-rc
+#
+# Configuration file for nvidia-settings - the NVIDIA X Server Settings utility
+# Generated on Sun Mar 22 16:11:43 2009
+#
+
+# ConfigProperties:
+
+RcFileLocale = C
+ToolTips = Yes
+DisplayStatusBar = Yes
+SliderTextEntries = Yes
+IncludeDisplayNameInConfigFile = Yes
+ShowQuitDialog = Yes
+Timer = Thermal_Monitor_(GPU_0),Yes,1000
+Timer = PowerMizer_Monitor_(GPU_0),Yes,1000
+
+# Attributes:
+
+vilya:0.0/CursorShadow=0
+vilya:0.0/CursorShadowAlpha=64
+vilya:0.0/CursorShadowRed=0
+vilya:0.0/CursorShadowGreen=0
+vilya:0.0/CursorShadowBlue=0
+vilya:0.0/CursorShadowXOffset=4
+vilya:0.0/CursorShadowYOffset=2
+vilya:0.0/SyncToVBlank=0
+vilya:0.0/LogAniso=1
+vilya:0.0/FSAA=5
+vilya:0.0/TextureSharpen=1
+vilya:0.0/AllowFlipping=1
+vilya:0.0/FSAAAppControlled=0
+vilya:0.0/LogAnisoAppControlled=0
+vilya:0.0/OpenGLImageSettings=0
+vilya:0.0/FSAAAppEnhanced=0
+vilya:0.0/RedBrightness=0.000000
+vilya:0.0/GreenBrightness=0.000000
+vilya:0.0/BlueBrightness=0.000000
+vilya:0.0/RedContrast=0.000000
+vilya:0.0/GreenContrast=0.000000
+vilya:0.0/BlueContrast=0.000000
+vilya:0.0/RedGamma=1.000000
+vilya:0.0/GreenGamma=1.000000
+vilya:0.0/BlueGamma=1.000000
+vilya:0.0/DigitalVibrance[DFP-1]=0
+vilya:0.0/GPUScaling[DFP-1]=131073
+vilya:0.0/XVideoTextureBrightness=0
+vilya:0.0/XVideoTextureContrast=4096
+vilya:0.0/XVideoTextureHue=0
+vilya:0.0/XVideoTextureSaturation=4096
+vilya:0.0/XVideoTextureSyncToVBlank=1
+vilya:0.0/XVideoSyncToDisplay=131072

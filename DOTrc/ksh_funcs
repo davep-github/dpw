@@ -1,0 +1,110 @@
+tildefy()
+{
+	dir=${dir#$HOME/}
+	case $dir in
+		$HOME)
+			dir=\~;;
+		/*)
+			;;
+		*)
+			dir=\~/$dir;;
+	esac
+}
+dirtrim()
+{
+	typeset max=${__dirstack_max__:-100} cnt
+	set -- $__dirstack__
+	[ "$#" -gt "$max" ] && {
+		cnt=$max
+		__dirstack__=
+		while [ "$cnt" -gt 0 ]
+		do
+			__dirstack__="$__dirstack__ $1"
+			shift
+			cnt=$(($cnt - 1))
+		done
+	}
+}
+cleard()
+{
+	__dirstack__=
+}
+pushd ()
+{
+	typeset ret_to= go_to=
+	case "$1" in
+		"")
+			set -- $__dirstack__
+			[ $# -lt 2 ] && {
+				echo "Not enough items on stack." 1>&2
+				return 1
+			}
+			ret_to=$1
+			go_to=$1
+			shift
+			__dirstack__=$*
+			;;
+		*)
+			go_to=$1
+			;;
+	esac
+
+	typeset dir=$PWD
+	cd $go_to && {
+		tildefy
+		__dirstack__="$dir $__dirstack__"
+		return 0
+	}
+	[ -n "$ret_to" ] && __dirstack__="$ret_to $__dirstack__"
+	return 1
+}
+popd ()
+{
+	typeset num
+	case $1 in
+		-[0-9]*)
+			num=$(( (0 - $1) - 1 ))
+			shift
+			;;
+		*)
+			num=0
+			;;
+	esac
+
+	set -- $__dirstack__
+
+	[ $# -lt 1 ] && {
+		echo "Empty stack." 1>&2
+		return 1
+	}
+
+	if [ $num -gt $# ]
+	then
+		echo "Not enough items on stack." 1>&2
+		return 1
+	else
+		shift $num
+		typeset to=$1
+		shift
+
+	fi
+	case $to in
+		~*) to=$HOME${to#\~};;
+	esac
+	cd $to || {
+		return 1
+	}
+	__dirstack__=$*
+	return 0
+}
+dirs ()
+{
+	typeset dir
+	
+	dir=$PWD
+	tildefy
+	echo "[$dir] $__dirstack__"
+	return 0
+}
+
+true

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+source script-x
+
+DPBRC_set_x_post_prompt_command_val

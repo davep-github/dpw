@@ -1,0 +1,46 @@
+### This file determines which proxy servers to use, if
+### any, when contacting a remote repository.
+###
+### The commented-out examples below are intended only to
+### demonstrate how to use this file; any resemblance to
+### actual servers, living or dead, is entirely
+### coincidental.
+
+### In this section, the URL of the repository you're
+### trying to access is matched against the patterns on
+### the right.  If a match is found, the proxy info is
+### taken from the section with the corresponding name.
+# [groups]
+# group1 = *.collab.net
+# othergroup = repository.blarggitywhoomph.com
+
+### Information for the first group:
+# [group1]
+# host = proxy1.some-domain-name.com
+# port = 80
+# username = blah
+# password = doubleblah
+
+### Information for the second group:
+# [othergroup]
+# host = proxy2.some-domain-name.com
+# port = 9000
+# No username and password, so use the defaults below.
+
+### If there is a `default' section, then anything not set
+### by a specifically matched group is taken from the
+### defaults.  Thus, if you go through the same proxy
+### server to reach every site on the Internet, you
+### probably just want to put that server's information in
+### the `default' section and not bother with `groups' or
+### any other sections.
+### 
+### If you go through a proxy for all but a few sites, you can
+### list those exceptions under `no_proxy', see below.  This only
+### overrides defaults, not explicitly matched proxies.
+# [default]
+# no_proxy = *.exception.com, www.internal-site.org
+# host = defaultproxy.whatever.com
+# port = 7000
+# username = defaultusername
+# password = defaultpassword

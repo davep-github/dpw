@@ -1,0 +1,17 @@
+K 8
+passtype
+V 6
+simple
+K 8
+password
+V 7
+newpass
+K 15
+svn:realmstring
+V 53
+<http://subversion:80> Group 65 Subversion Repository
+K 8
+username
+V 5
+davep
+END

@@ -1,0 +1,722 @@
+# @(#)bash/ksh profile   -*-Shell-script-*-
+# $Id: bashrc,v 1.55 2005/06/25 08:20:21 davep Exp $
+# NB: all non-bash code is old, crufty and untested in a long time.
+#set -x
+# Suppress any other means of enabling this.  NB: may break some stuff.
+#set +x
+#set -x
+#echo "PS1:0>$PS1<"
+#echo "\$0>$0<"
+#echo "\$@>$@<"
+#echo "\$PS1:0 | hd:"
+#echo "$PS1" | ~/yokel/bin/hd
+#echo "dp_NH:-1>$dp_NH<"
+
+export UDS_LOGDIR=$HOME/uds
+export UDS_LOGFILE=$UDS_LOGDIR/uds_logfile.$(hostname)
+
+[ "$DP_BYPASS_BASHRC" = "Yes" ] && {
+    # ??? Should this value be inherited?
+    return 0
+}
+
+COMP_WORDBREAKS=${COMP_WORDBREAKS//:}
+
+most_basic_path="/bin:/usr/bin"
+prompt_command()
+{
+    :
+}
+export -f prompt_command
+
+# We don't want a leading or trailing : to be added.
+# But we do want at least what I consider to be a vital path.
+if [ -z "$PATH" ]
+then
+    PATH="$most_basic_path"
+else
+    PATH="$most_basic_path:$PATH"
+fi
+export -f prompt_command
+
+DP_LOG=$HOME/log
+DP_BITCH_LOG="$DP_LOG/bitches"
+DP_SUGGESTION_BOX="$DP_LOG/suggestions"
+
+if [ -d "$DP_LOG" ]
+then
+    DAVEP_rc_log=$HOME/log/login-rc/$(/bin/hostname).log
+else
+    DAVEP_rc_log=$HOME/login-rc.$(/bin/hostname).log
+fi
+
+dp_rc_logger()
+{
+    echo "$(date +'%j:%R:%S'): $@" >> $DAVEP_rc_log
+}
+dp_rc_logger "================= $(date) ================="
+
+pbit_farm_machine_p()
+{
+    local this_host
+    if [ $# = 0 ]
+        then
+        this_host="$(hostname)"
+    else
+        this_host="$1"
+    fi
+    # Permabit test, benchmark, etc, machines. They can have problems dealing
+    # with my specialized environment.
+    case "$this_host" in
+        *cargo*|*central*|*conventional*|*davis*|*farm*|*harvard*|*lambda*|*mizar*|*porter*|*superlifter*|*winlab*) true;;
+        *) false;;
+    esac
+}
+
+# This can be re-defined in a more specific rc file.
+# Run ssh-agent unless directed not to.
+run_ssh_agent_p()
+{
+    true
+}
+    
+cut_and_run_host_p()
+{
+    pbit_farm_machine_p "$@"
+}
+
+case $- in
+    # an interactive shell
+    *i*) dp_interactive=y;;
+    *) dp_interactive="";;
+esac
+
+# echo(1) but only if we're interactive.
+bashrc_echo()
+{
+    if [ -n "$dp_interactive" ]
+    then
+        # bin's may be more consistent. Certainly across shell types/versions.
+        /bin/echo "$@"
+    else
+        # Did not echo
+        return 2
+    fi
+}
+
+bashrc_echo_err()
+{
+    bashrc_echo "$@" 1>&2
+}
+
+if cut_and_run_host_p && [ -z "$dp_interactive" ]
+then
+    # Simple things like scp or tramp using same don't need anything more.
+    dp_rc_logger "Non-interactive login... cutting and running."
+    return 0
+fi
+
+dp_LOGGER()
+{
+    local logname="$1"
+    shift
+    local prefix="$1[$(~/bin/dp-std-timestamp)]"
+    shift
+    echo "$prefix: $0: $@" >> "$logname"
+}
+dp_bitch() { dp_LOGGER "$DP_BITCH_LOG" bitch "$@"; }
+dp_suggest() { dp_LOGGER "$DP_SUGGESTION_BOX" "why not:"; }
+# &>> isn't in all bash versions# dp_BITCH() { echo &>> "$@"; dp_bitch "$@"; }
+dp_BITCH() { dp_bitch "$@"; }
+export -f dp_bitch dp_suggest dp_BITCH
+export DAVEP_ENVIRONMENT_p=t
+
+
+# (ba)?sh on owls.vanu.com is old.  It canna grok [[, at the least,
+# hence `case' for wild card handling.
+primary_host="timberwolves"
+case "$(hostname)" in
+    owls*) owls=y;;
+    *) ;;
+esac
+if [ -n "$dp_interactive" -a -n "$owls" ]; then
+    echo  
+    bm="******* Bouncing to $primary_host"
+    echo "$bm"
+    dp_rc_logger "$bm"
+    exec ssh "$primary_host"
+fi
+unset owls dp_interactive
+
+export SP_BIN="$HOME/yokel/bin/sp"
+dp_suggest 'Fix settings of "orig" vars to only be iff NULL???'
+dp_suggest "Or collect 'em in an array?" 
+dp_suggest 'Factor out ALL interactive fiddle-faddle and skip unless interactive.'
+
+# Only set if NULL when "" actually has meaning.
+# DISPLAY unset or NULL tells us something important.
+: ${origDISPLAY=$DISPLAY}; export origDISPLAY
+#[ -z "$origDISPLAY" ] && export origDISPLAY=$DISPLAY
+: ${origPATH=$PATH}; export origPATH
+#[ -z "$origPATH" ] && export origPATH="$PATH"
+PATH="$HOME/bin:$origPATH"    # Start with the original path???
+[ -z "$origPKG_CONFIG_PATH" ] && export origPKG_CONFIG_PATH=$PKG_CONFIG_PATH
+export PATHADDBIN=$HOME/bin/pathadd
+# Migrate to this function.
+dp_add_to_path_iff()
+{
+    # np --> add
+    # add --> np
+    "$PATHADDBIN" "$@"
+}
+export -f dp_add_to_path_iff
+
+export PKG_CONFIG_PATH=$(dp_add_to_path_iff $PKG_CONFIG_PATH "$HOME/bree/lib/pkgconfig")
+export RC_DIR=$HOME/.rc
+export OSName=$(uname -s)	# our current os
+export Arch=$(uname -m)		# our current architecture
+case "$Arch" in
+    *86*) genericArch_bin="bin.$OSName.x86";;
+    *);;
+esac
+arch_bin="bin.$Arch"            # arch specific bin dir
+arch_os_bin="bin.$OSName.$Arch"	# arch/os specific bin dir
+if [ -z "$MACHTYPE" ]
+then
+    # Guess a machine type if one is not set.
+    # useful in Makefiles, etc.
+    MACHTYPE="$(uname -m)-$(uname -s)"
+fi
+# These used to be exported, but not anymore.
+# I wonder why? I depended on them for some stuff somewhere, sometime, somehow.
+# ~so I sentence them to be export'd before their peers.~
+export MACHTYPE LINES
+
+#echo "\$TERM>$TERM<"
+# make sure some kind of terminal type is set
+if [ -z "$TERM" ]
+then
+    export TERM=vt100
+elif [ "$TERM" = "rxvt" -a "$OSName" = "OSF1" ]
+then
+    # OSF1 doesn't understand rxvt, but rxvt understands xterm. 
+    export TERM=xterm
+fi
+
+# goddamn linux assholes... gotta fuck with *everything*
+CUTBIN=$(for cutter in /usr/bin/cut /bin/cut
+do
+    [ -x "$cutter" ] && {
+	echo $cutter
+	break
+    }
+done)
+export HOST=$(/bin/hostname | $CUTBIN -f1 -d.) # short host name
+export DOMAIN=$(/bin/hostname | $CUTBIN -f2- -d.)
+
+# Pull in some useful functions. func has a dependency on PATH???
+. $RC_DIR/func
+
+# bin dirs from most specific to least
+if vsetp $genericArch_bin
+then
+    DAVEP_BIN_VARIANTS=",$genericArch_bin.$HOST,$genericArch_bin"
+else
+    DAVEP_BIN_VARIANTS=
+fi
+DAVEP_BIN_VARIANTS="$arch_os_bin.$HOST,$arch_os_bin,$arch_bin.$HOST,$arch_bin,bin.$HOST$DAVEP_BIN_VARIANTS,sbin,bin"
+#echo_id DAVEP_BIN_VARIANTS
+#exit 99
+DAVEP_BIN_DIRS="$(eval echo $HOME/{$DAVEP_BIN_VARIANTS} \
+    $HOME/yokel/{$DAVEP_BIN_VARIANTS})"
+
+# Push some important stuff onto the path.  It can be useful to add locale
+# specific dirs early with no "harm" because PATH is filtered such that
+# nonexistent dirs are discarded.
+export PATH=$(dp_add_to_path_iff -p "$PATH" \
+    $DAVEP_BIN_DIRS \
+    $HOME/lib/pylib \
+    $HOME/bree/bin \
+    $HOME/bree/sbin \
+    /permabit/system/ops/scripts \
+    /etc/alternatives \
+    /opt/kde3/bin \
+    /usr/local/bin \
+    /bin \
+    /usr/bin \
+    /sbin \
+    /usr/sbin \
+    /usr/local/sbin \
+    /usr/yokel/sawmill-cvs/bin \
+    $HOME/bin/last-resort)
+
+# Append some less important stuff if it exists.
+export PATH=$(dp_add_to_path_iff "$PATH" \
+    /usr/bin/mh \
+    /usr/bin/X11 \
+    /usr/X11R6/bin)
+
+unset arch_bin
+
+#
+# OSF1 works best with echo on, period.
+if inside_emacs_p && [ "$OSName" != "OSF1" ] #-a "$OSName" = "Linux" ]
+then
+    #stty echo causes stair-stepping
+    stty -echo
+fi
+
+# add locations for finding bash if they are not already there.
+case "$PATH" in
+    */usr/local/bin*) ;;
+    *) PATH="$PATH:/usr/local/bin";;
+esac
+
+# need this here so host-info, et.al. work
+export PYTHONPATH=$(dp_add_to_path_iff "$PYTHONPATH" "$PATH:$PYTHONPATH_POST")
+PYTHONPATH=$(dp_add_to_path_iff -p "$PYTHONPATH" "$PYTHONPATH_PRE")
+PYTHONPATH=$(path-verify -d "$PYTHONPATH")
+
+export DP_shell_options=''
+
+if type python >/dev/null 2>&1
+then
+    HOST_INFO=host-info.py
+else
+    HOST_INFO=host_info_func
+# we're kinda dependent on host-info.py these days.  This at least lets
+# us not error out.  It also works where the caller gives a default.
+
+#################### fix me! #########################
+    HOST_INFO=host_info_func
+#################### fix me! #########################
+
+host_info_func()
+{
+    case "$1" in
+	-n) echo $2;;
+	*) echo "-";;
+    esac
+}
+fi
+export HOST_INFO
+
+# determine shell name
+# easier to have .profile, .bash_profile call common script w/
+# shell_name set?
+if [ -n "$KSH_VERSION" ]
+then
+    case $KSH_VERSION in
+	*PD\ KSH*)
+	    shell_name=pdksh
+	    ;;
+	*)
+	    shell_name=ksh
+	    ;;
+    esac
+elif [ -n "$BASH_VERSION" ]
+then
+    shell_name=bash
+elif [ "$HOST" = "darkstar" -o "$HOST"  = "rock" ]	# bleagh :-(
+then
+    shell_name="ksh"
+#elif [ -n "${.sh.version}" ]
+#then
+#    shell_name=93ksh
+else
+    shell_name=ksh
+fi
+export shell_name
+
+# load a conf file if one exists.  the values in it will
+# take precedence over anything coming from $HOST_INFO
+# this allows us to function in the absence of python.
+FAMILY= FAMILY_ZONE= pre_rcs= post_rcs= WORK_ZONE=
+HOST_CONF="$RC_DIR/$HOST.conf"
+[ -f  $HOST_CONF ] && source $HOST_CONF
+
+case $HOST in
+    # quabbin is so old that the shell functions cause
+    # syntax errors... it is ULTRIX!
+    # just bail here.  all we use quabbin for is inc'ing
+    # mh mail.
+    quabbin*) 
+	;;
+    *)
+	: ${FAMILY:=$($HOST_INFO -n '' family)}
+	: ${FAMILY_ZONE:=$(host-family-zone)}
+	: ${WORK_ZONE:=$($HOST_INFO -n '' work-zone)}
+	;;
+esac
+export FAMILY
+export FAMILY_ZONE
+export WORK_ZONE
+
+# least specific to most so we can override things.
+export locale_rcs=".$OSName .$FAMILY_ZONE .$FAMILY .$HOST .var" # .$WORK_ZONE"
+: ${pre_rcs:=$($HOST_INFO -n '' locale_pre)}
+: ${post_rcs:=$($HOST_INFO -n '' locale_post)}
+locale_rcs="$pre_rcs $locale_rcs $post_rcs"
+# this strips leading and trailing spaces.  they were
+# causing emacs problems.  We fix 'em here so no one else
+# has to worry about it.
+set -- $locale_rcs
+locale_rcs="$*"
+
+#
+# add some locale specific dirs...
+export PATH=$(dp_add_to_path_iff -p "$PATH" \
+    $HOME/bin.$WORK_ZONE \
+    $HOME/bin.$PROJECT \
+    $HOME/bin.$OSName \
+    $HOME/bin.$FAMILY \
+    $HOME/bin.$FAMILY_ZONE)
+
+# load locale specific functions
+EXTRA_RCS=''			# list of files other rcs want us to run
+source_list -l $RC_DIR/rc $locale_rcs
+source_list -l $RC_DIR/func $locale_rcs
+source_list -l $RC_DIR/env "" $locale_rcs
+source_list -l $RC_DIR/alias "" $locale_rcs
+
+# run any RC files that other RC files have requested.
+# this lets things like host RCs ask for, say, a project RC
+[ -n "$EXTRA_RCS" ] && {
+    source_list -l $RC_DIR/rc    $EXTRA_RCS
+    source_list -l $RC_DIR/func  $EXTRA_RCS
+    source_list -l $RC_DIR/env   $EXTRA_RCS
+    source_list -l $RC_DIR/alias $EXTRA_RCS
+    # add the extra rcs to locale
+    sep=" "
+    [ -z "$locale_rcs" ] && sep=
+    locale_rcs="$locale_rcs$sep$EXTRA_RCS"
+}
+unset EXTRA_RCS sep
+
+# do this after host specific env is run to ensure . is first.
+# . in path is unwise.
+#export PATH=$(dp_add_to_path_iff -p "$PATH" .)
+
+# optionally add YOKEL bins set by any of the env files
+[ -n "$YOKEL_SBIN" ] && PATH=$(dp_add_to_path_iff -p "$PATH" $YOKEL_SBIN)
+[ -n "$YOKEL_BIN"  ] && PATH=$(dp_add_to_path_iff -p "$PATH" $YOKEL_BIN)
+# remove non-existent dirs from path
+PATH=$(dp-fix-kde-order.py)
+PATH=$(path-verify -d "$PATH")
+
+if [ -z "$PATH" ]
+then
+    echo 1>&2 "bashrc: WARNING: PATH is empty, setting up minimal one."
+    PATH="$most_basic_path"
+fi
+
+# add our path to python's list of where to look for imports.
+export PYTHONPATH=$(dp_add_to_path_iff "$PYTHONPATH" "$PATH:$PYTHONPATH_POST")
+PYTHONPATH=$(dp_add_to_path_iff -p "$PYTHONPATH" "$PYTHONPATH_PRE")
+PYTHONPATH=$(path-verify -d "$PYTHONPATH")
+
+if tty -s
+then
+    tty=`mytty`
+    TTY=${TTY:-$tty}
+fi
+
+
+running_as_root_p()
+{
+    [ "$USER" = "root" ]
+}
+
+add_to_sudo_bash_env()
+{
+    running_as_root_p || echo "$@" >> "$sudo_bash_env"
+}
+
+#
+# interactive mode stuff
+case $- in
+    # an interactive shell
+    *i*)
+        sudo_bash_env="$HOME/.rc/sudo_bash_env"
+        dp_interactive=y
+	#dp-stty			# set tty mode
+	fortune_path="/usr/games/fortune"
+	[ "$OSName" = "FreeBSD" ] && fortune_option=-a
+	for i in $fortune_path
+	do
+	    [ -x $i ] && {
+		$i $fortune_option
+		break
+	    }
+	done
+	unset i fortune_path fortune_option
+
+	#set -x
+	unset PS1_path PS1_path_XTerm PS1_path_other
+	#echo "opt>$DP_shell_options<"
+	case ":$DP_shell_options:" in
+	    *:no_ps_path:*)
+		# echo 'no titler set'
+		;;
+	    *)
+		# set up our prompt.
+		# we want username, host and path in the term prompt,
+		# and if we're in an xterm, we want that info plus
+		# the tty in the window's title.  We also set the
+		# icon name.
+
+		#echo "TERM>$TERM<"
+
+                scr_pre=''
+                scr_suf=''
+                _bashrc_set_ps1_path=''
+                # screen's term type is vt100, but it can (?now?) set
+                # title bar names.  But only when we're in an xterm, which
+                # we infer from having a DISPLAY var set.
+		case "$IMASCREENINSTANCE" in
+		1|[Yy][Ee][Ss]|[tT]) 
+                    if [ -n "$DISPLAY" ]; then  
+			_bashrc_set_ps1_path=X
+		    else
+			_bashrc_set_ps1_path=terminal
+		    fi
+                    ;;
+		esac
+
+		case $TERM in
+		    [Xx][Tt][Ee][Rr][Mm]*|[Rr][Xx][Vv][Tt])
+			case $shell_name in
+			    bash|pdksh|93ksh|ksh)
+				# xterm --> X
+                                _bashrc_set_ps1_path=X
+			esac	# $shell_name
+                        #xmodmap -e "keysym Alt_L = Meta_L Alt_L"
+			;;
+		esac		# $TERM
+		if [ "$_bashrc_set_ps1_path" == terminal ]; then
+		    source setemph
+                    # @todo XXX make this work.
+		    PS1_pre_history="${emph}scrn!$norm"
+                fi
+                #echo "IMASCREENINSTANCE>$IMASCREENINSTANCE<"
+                if [ -n "$IMASCREENINSTANCE" ]; then
+                    # Set the XTerm title bar stuff so that we'll see screen
+                    # names even if they were started in a non-XTerm,
+                    # e.g. a console.
+                    # sequence to set the name in the titlebar.
+                    # needs work, screen TERM is vt100
+                    # DISPLAY is set, tho.
+                    scr_pre='Scrn\('
+                    scr_suf="::$DP_MY_SCREEN_NAME\)"
+                else
+                    scr_pre=
+                    scr_suf=
+                fi
+		# We save all title bar information regardless of whether or not
+		# it can be used in the terminal in which we reside.  If we ever
+		# come to reside in a terminal in which the info is useful wer
+		# can use it..
+		# This is primarily (?only?) needed when we are screen'ing.
+                : ${PS1_title_prefix:='-'} ; export PS1_title_prefix
+                : ${PS1_title_suffix:=""} ; export PS1_title_suffix
+                export XTerm_title='${PS1_title_prefix}'"${scr_pre}"'${TTY}'"${scr_suf}"'-${PS1_1}${USER}@${HOST}:${PWD}${PS1_title_suffix}'
+                # set LS_COLORS dir ls file coloring
+		# Predicate color palette based on term type, background type
+		# (loosely grouping colors into {light... dark} sets for ease
+		# of determing best palette.  Eg: white, very light
+		# {grey,blue,etc} can be approximated as light.
+                ####eval export `dircolors ~/.rc/dp-gold-color.rc`
+	esac			# $DP_shell_options
+
+	case $shell_name in
+	    pdksh)
+		. $RC_DIR/bind	# pdksh can do bindings.
+				# shellify bind when others can, too.
+		set -o ignoreeof
+		set -o braceexpand
+		bang='!'
+		;;
+	    ksh)
+		bang='!'
+		;;
+	    bash)
+                : ${PS1_bang_pre:=""}
+                : ${PS1_bang_suff:=""}
+                # Can't pass env vars through sudo.
+                export PS1_bang_pre
+                export PS1_bang_suff
+                add_to_sudo_bash_env "export PS1_bang_pre=$PS1_bang_pre"
+                add_to_sudo_bash_env "export PS1_bang_suff=$PS1_bang_suff"
+		bang='\!'
+                : ${PS1_prefix:=""}
+                : ${PS1_suffix:=""}
+                # Can't pass env vars through sudo.
+                export PS1_prefix
+                export PS1_suffix
+		# num extra ^Ds needed to exit shell
+		# we're usually in a screen for something important
+		#  so make exiting it very hard.  ^Dx3 is a habit.
+		#  can always exit w/exit command.
+		unset ignoreeof
+		case "$IMASCREENINSTANCE" in
+		1|[Yy][Ee][Ss]|[tT]) 
+		    ignoreeof=7
+		    typeset +x IMASCREENINSTANCE # Remove export attribute.
+                    alias exit="echo 1>&2 I\'m a screen... use \\\\exit or ^XK '(kapital K)' to really exit."
+                    ;;
+		*)  
+		    ignoreeof=2;;
+		esac
+	esac
+	source setemph		# set emphasis/norm sequences
+        case "$USER" in
+            root) emph='\[\033[01;31m\]'
+                  emph2='\[\033[01;31m\]'
+                  #emph2=""
+                  PS1_terminator='##'"${norm}"
+                  # Gaping security hole to allow me to pass variables to a
+                  # sudo'd shell.
+                  # All this bullshit just to get matching prompt stuff.
+                  [ -e "$sudo_bash_env" ] && source "$sudo_bash_env"
+		  ;;
+
+            *) PS1_terminator='>';emph2=; norm2=;;
+        esac
+        BASE_PS1_terminator="$PS1_terminator"
+        # experimental comment on: export PS1_terminator
+	PS1_path="${PS1_path}$emph"':\w'"$norm"
+	# make PS1 a shell variable, not an environment variable.
+	# this prevents it from being used by children.
+	# since the prompt is so complex, some things can
+	# be confuzed by it.  E.g. tramp.el, a remote file
+	# editing facility for emacs.
+	unset PS1
+        # Works
+	#PS1="$emph"'\u@\h$PS1_1'"$norm$PS1_path\n$emph2\!$PS1_terminator$norm "
+        # Experimental.
+	PS1='${PS1_prefix}'"${emph}"'\u@\h${PS1_1}'"${norm}${PS1_path}"'\n'"${emph2}"'${PS1_bang_pre}'"\!"'${PS1_bang_suff}${PS1_terminator}'"${norm2} "
+	unset bang emph norm emph2 norm2
+
+	set -o emacs		# ok for bash
+	set -o noclobber	# only set for interactive shells
+	;;
+    *)
+	# non-interactive
+	set +o noclobber	# to prevent scripts from puking
+	;;
+esac
+# this was in ~/.rc/func, but it needs to run *after* the prompt stuff runs
+# but I want to run the alias script earlier, so this is extracted.
+# it may actually be of little use after all this time.
+[ -z "$PS1_path" ] && alias cd=dp_cd
+
+unset i
+
+#
+# ANAL alert: fix path
+# since pwd rudely converts symlink names into absolute names,
+# we do this hack to force the initial home path to be
+# a nice relative name, since bash $PWD is symlink friendly.
+old_cwd=$PWD			# save where we were
+cd ~				# go home
+#
+# see if we are in the long, symlink expanded home dir.
+# if so we stay in the nice ~ version that bash gives us.
+# otherwise we go back to where we were.
+# /bin/pwd will return an ugly absolute pathname.  We see if our shell
+# inherited the same ugly path.  If so, we are home and we can 
+# use the pretty home path.
+# (sometimes I scare myself)
+[ "$old_cwd" != "`/bin/pwd`" ] && cd "$old_cwd"
+
+#
+# source some completion code.
+# It's copied occasionally from the default bash completion stuff in
+# /etc/bash_completion and /etc/bash_completion.d
+#
+# This isn't really needed except on boxes that are completion able but not
+# completion enabled.
+source_bash_completion_code()
+{
+    local bc
+    local BASH_COMPLETION
+    local BASH_COMPLETION_DIR
+    for bc in /etc $HOME/etc $HOME/.rc
+    do
+      # Allow specific files to be specified.
+      [ -d "$bc" ] && bc="$bc/bash-completion.sh"
+      dp_rc_logger "source_bash_completion_code: trying >$bc<"
+      [ -f "$bc" ] && {
+          BASH_COMPLETION=$bc BASH_COMPLETION_DIR=${bc}.d
+          source "$bc"
+          case "$bc" in
+              /etc/*) dp_rc_logger "source_bash_completion_code: sourced system bash completion >$bc<";;
+              *) dp_rc_logger "source_bash_completion_code: sourced NON-system bash completion >$bc<";;
+          esac
+          return
+      }
+    done
+}
+
+[ "$dp_interactive" = 'y' ] && {
+    source $HOME/.rc/dp-ssh-agent
+    run_ssh_agent_p && dp_start_ssh_agent
+    ## Run completion by hand if we're in the odd situation described above
+    ## the definition of `source_bash_completion_code'.
+    ## [ -z "$BASH_COMPLETION" ] && source_bash_completion_code
+    ##dp_rc_logger "sourcing extras: $(expand_source_list $RC_DIR/extra_bash_completion_code "" $locale_rcs)"
+    ##source_list $RC_DIR/extra_bash_completion_code "" $locale_rcs
+}
+
+# arbitrary command to run when executing or sourcing.
+#  e.g. DP_RUN_ME=ls . ~/.bashrc
+[ -n "$DP_RUN_ME" ] && $DP_RUN_ME
+
+
+login_times=$HOME/log/login-times
+[ -e $login_times ] && {
+    echo "$HOST -- $(date)" >> $login_times
+}
+unset login_times
+[ -n "$login_times" ] && echo "WHAT THE FUCK???"
+
+case "$IMASCREENINSTANCE" in
+    1|[Yy][Ee][Ss]|[tT]) ;;
+    *)  if [ "$DP_AUTO_SCREEN" = 'y' ] && shopt login_shell > /dev/null 2>&1
+        then
+            screen
+        fi
+        ;;
+esac
+
+do_go2env
+#echo "PS1:1>$PS1<"
+#echo "dp_NH:0>$dp_NH<"
+# !!! What the Motherfucking what??!?!?
+# [ -z "$dp_NH" ] && echo 'Noooo!!!!!' && nh
+# executes nh even when echo up there shows dp_NH:0><
+#[ "$dp_NH" == 'y' ] && echo 'Noooo!!!!!' && nh
+# [ -n "$ZZZ" ] && echo "?>$?< WTF ZZZ>$NHZZZ<"
+# [ -n "$Xdp_NH" ] && echo "?>$?< WTF Xdp_NH>$Xdp_NH<"
+# [ -n "$dpNH" ] && echo "?>$?< WTF dpNH>$XdpNH<"
+# [ -n "$dp_NH" ] && echo "[ -n ], ?>$?< WTF dp_NH:2>$dp_NH<"
+# [ "$dp_NH" != "" ] && echo "[ != ], ?>$?< WTF dp_NH:3>$dp_NH<"
+# [ "$dp_NH" != "" ] && echo "?>$?< WTF dp_NH:3>$dp_NH<"
+# [ -n "$dp_NH" ] && {
+#         echo "4: about to nh"
+#         nh
+# }
+#echo "bashrc done"
+vsetp "$dp_NH" && {	# It needs "{" to make it go.
+    # mayhaps due to the fact that nh is a big ol' hairy alias?
+    # nh is aliased to `export dp_NH=y; HISTFILE=; dp_NH_PS1_prefix=$PS1_prefix; PS1_prefix="(nh)$PS1_prefix"; PS1_title_prefix="-(NH)-"'
+    nh
+}
+
+unset sudo_bash_env
+
+# Clear any resijule(Tremors) boulders... um, debug settings.
+dp_set_x_fini
+export DP_BASHRC_EXECUTION_COMPLETED=t
+
+true

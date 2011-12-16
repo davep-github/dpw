@@ -1,0 +1,8 @@
+
+mdmutt()
+{
+    EDITOR=vim /usr/bin/mutt -f /home/davep/eMail/mbsunk/working-copy/Maildir/
+}
+export -f mdmutt
+
+true

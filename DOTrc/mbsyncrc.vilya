@@ -1,0 +1,34 @@
+MaildirStore working
+Inbox ~/eMail/mbsunk/working/.
+Path ~/eMail/mbsunk/working/.
+AltMap yes
+
+MaildirStore Maildir-pristine
+Inbox ~/Maildir-pristine/
+Path ~/Maildir-pristine/
+AltMap yes
+
+MaildirStore Maildir
+Inbox ~/Maildir/
+Path ~/Maildir/
+AltMap yes
+
+IMAPAccount repository-server
+Host localhost
+UseIMAPS no
+RequireSSL no
+UseTLSv1 no
+User davep
+Pass bioshok
+
+IMAPStore repository
+Account repository-server
+Path ~/eMail/mbsunk/
+UseNamespace no
+
+Channel main
+Sync Pull
+Master :Maildir-pristine:
+Slave :Maildir:
+Create Slave
+#Pattern *

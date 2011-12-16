@@ -1,0 +1,16 @@
+startup_message         off
+escape                  ^x^x
+autonuke                off
+#term                    vt100
+#term                    linux
+setenv                  IMASCREENINSTANCE 1
+vbell                   on
+defscrollback           10240
+markkeys                "0=^A:$=^E"
+#bufferfile              $SCREEN_EXCHANGE_DIR/screen-exchange
+hardcopydir             /home/davep/.screen/hardcopy
+bind ^/ help
+bind ^h help
+bind ^e quit
+bind ^b copy
+bind / screen

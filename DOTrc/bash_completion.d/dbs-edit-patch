@@ -1,0 +1,56 @@
+#-*- mode: shell-script;-*-
+
+# Debian GNU/Linux dbs-edit-patch(1) completion.
+# Copyright 2002 "Martin Quinson" <Martin.Quinson@tuxfamily.org>
+#
+have dbs-edit-patch && 
+_dbs-edit-patch()
+{
+  local cur prev patches options
+
+  # check if we are in a source package directory
+  #  [[ -d "debian" && -f "debian/rules" ]] || return 0
+
+  cur=${COMP_WORDS[COMP_CWORD]}
+  prev=${COMP_WORDS[COMP_CWORD-1]}
+	
+  # check for a long option
+  if [[ "$cur" == --* ]]; then
+    options='--sourcedir --tempdir --help'
+    COMPREPLY=( $(compgen -W "$options" -- $cur | grep ^$cur ) )
+    return 0
+  fi
+  
+  # check for a short option
+  if [[ "$cur" == -* ]]; then
+    options='--sourcedir --tempdir --help -t -s -p'
+    COMPREPLY=( $(compgen -W "$options" -- $cur | grep ^$cur ) )
+    return 0
+  fi
+  
+  # check tempdir or sourcedir (and complete to a directory)
+  if [[ "$prev" == "-t" || "$prev" == "--tempdir" || \
+        "$prev" == "-s" || "$prev" == "--sourcedir" ]] ; then
+    _filedir -d
+    return 0
+  fi
+  
+  # check for strip level (and complete to '1')
+  if [[ "$prev" == "-p" ]] ; then
+      COMPREPLY=( $( compgen -W '1' $cur ) )
+      return 0
+  fi
+  
+  # check for help (and complete to nothing)
+  if [[ "$prev" == "--help" ]] ; then
+      COMPREPLY=( $( compgen -W '' $cur ) )
+      return 0
+  fi
+      
+  # complete on patch name
+  patches=`find debian/patches/ -type f -name '*.diff' -a ! -name 'chk-*' | sed 's|debian/patches/||' `
+  COMPREPLY=( $( compgen -W '$patches' $cur ) )
+  return 0
+}
+
+[ "$have" ] && complete -F _dbs-edit-patch $filenames dbs-edit-patch

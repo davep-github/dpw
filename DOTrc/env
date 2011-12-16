@@ -1,0 +1,171 @@
+# common env items
+
+# the Name of the home machine's address variable.
+export DP_HOME_MACHINE=VILYA
+
+if inside_emacs_p
+then
+    export dp_no_color=y
+fi
+#export SERIAL_NUM=$(serialize_name $shell_name | cut -f2 -d:)
+export DEFAULT_XTERM_PARMS='-sb -sl 500 -j -ls -fn 9x15'
+#export noclobber=y
+export PAGER=less
+#export LESSOPEN="|lesspipe.sh %s"
+export LESSOPEN="|lesspipe-new.sh %s"
+# check below for xemac's LESS= override
+export LESS='-R -MM -X --ignore-case'
+export NAME="David A. Panariti"
+export PCAL_DIR=$HOME/etc
+export PCAL_OPTS="-m -n /7"
+export XUSERFILESEARCHPATH="./%N%C.ad:$HOME/app-defaults/%N%C:./%N.ad:$HOME/app-defaults/%N"
+export GOPATH=$(mk_go_path)
+export main_display=$(hostname)':0.0'
+export EDITOR='ec-w'
+export PDB_PATH="$HOME/etc/pdb/*.pdb"
+export BLOCKSIZE=K
+# Closest NWS station.
+export WEATHER_CODE=ORH		# Worcester, MA.
+export ARCHIE_HOST=archie.rutgers.edu
+export SCREENDIR=$HOME/.screen
+export DP_NOTE_INDEX_DIR=$($HOST_INFO -n 'DP_NOTE_INDEX_DIR_NOT_SET!!!' \
+					'notes-index-dir')
+export MEWTMP='/usr/tmp/mew'
+# sigh. I'll never use these consistently.
+export LOG="$HOME/log"
+export DP_LOG="$LOG"
+export DP_LOG_DIR="$DP_LOG"
+export RUBYLIB="$HOME/lib/rblib"
+#export TMPDIR="$HOME/tmp"
+export TMPDIR="/tmp"
+export TMP=$TMPDIR
+export TEMP=$TMPDIR
+export BIG_TMPDIR=/var/tmp
+export SEMANTIC_EMACS=xemacs
+export SEMANTIC_PATH="$HOME/lisp/contrib/site-packages/cedet/semantic"
+# This is better than aliasing with --colou?r since older greps won't barf.
+# And all? greps should see it.
+[[ "$dp_no_color" == y ]] && {
+    # Broken.  One binary option, apparently used by auto (`ne') is being
+    # used.
+    #export GREP_OPTIONS='--color=auto'
+    export GREP_OPTIONS='--color=never'
+}
+
+[ -f /etc/timezone ] || export TZ=EST5EDT
+
+#
+
+maybe_shopt()
+{
+    opt="$1"
+    shift
+    dp_rc_logger "maybe_shopt: opt>$opt<"
+    dp_rc_logger "maybe_shopt: @>$@<"
+    if shopt | fgrep -q "$opt"; then
+        shopt "$@"
+    else
+        dp_rc_logger "maybe_shopt: shopt $opt is not in this shell"
+    fi
+}
+
+env_var_ro_p()
+{
+    local name=$1
+    if declare -p  2>/dev/null \
+        | egrep -q -- "^declare .*-r.*$name" >/dev/null 2>&1; then
+        true
+    else
+        false
+    fi
+}
+env_var_rw_p()
+{
+    local name=$1
+    if ! env_var_ro_p "$name"; then
+        true
+    else
+        false
+    fi
+}
+
+export -f env_var_rw_p env_var_ro_p
+
+maybe_set()
+{
+    local name="$1"
+    shift
+    local val="$1"
+    if env_var_rw_p "$name" "$val" ]; then
+        eval $name='$val'
+        return 0
+    fi
+    return 1
+}
+
+case $shell_name in
+    bash)
+	#export history_control=ignoreboth # bash
+	export HISTIGNORE=" *:&"
+	export command_oriented_history=y # bash
+	export cmdhist=y
+        shopt -s no_empty_cmd_completion cdspell checkhash checkwinsize \
+            extglob histreedit histappend hostcomplete
+        # These are relatively new and there's a box here @ vanu that has an
+        # old enough shell to barf, e.g. 2.05b(1)-release
+        maybe_shopt gnu_errfmt -s gnu_errfmt
+        # What the effing f was I thinking?
+        #maybe_shopt nocasematch -s nocasematch
+        # force it ON
+        maybe_shopt nocasematch -u nocasematch
+	export HISTSIZE=5000
+	export HISTFILESIZE=10000
+        export HISTTIMEFORMAT="%FT%T "
+        export HISTFILE="$HOME/.bash_history.$HOST"
+        export GDBHISTFILE="$HOME/.gdb_history.$HOST"
+esac
+
+# Setup vars pointing to the host at which we are typing.
+m=$(which myhost)
+if [ -n "$m" -a -x "$m" ]
+then
+    export REMOTE_HOST=$($m)	# formal
+    export rh=$REMOTE_HOST	# short
+fi
+unset m
+
+if inside_emacs_p
+then
+    export PAGER=cat
+    export TERMINFO=$HOME/.terminfo
+    export DP_HIST_GREP_GREPPER=egrep
+fi
+
+MAILDIR="$HOME/Maildir"
+[ -d  $"MAILDIR" ] && {
+    unset MAIL
+    export MAILDIR
+}
+export LS_OPTIONS='--quoting-style=shell'
+
+# overrides
+if [ "$TERM" = "emacs" -o "$TERM" = "eterm" ]
+then
+    LESS="-MM -X --ignore-case"
+fi
+
+BGLQ_LOG=$DP_LOG/bglq
+FFOX_BIN=firefox
+
+export LS_COLORS='no=00:fi=00:di=01;34:ln=00;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:tw=30;42:ow=34;42:st=37;44:ex=00;32:*.tar=01;31:*.tgz=01;31:*.svgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.lzma=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.rar=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:';
+
+export SCREENDIR=$HOME/.screen/sockets/$HOST
+[ -d "$SCREENDIR" ] || {
+    mkdir -p "$SCREENDIR"
+    chmod 0700 "$SCREENDIR"
+}
+
+# don't escape colons when tab-completing
+COMP_WORDBREAKS=${COMP_WORDBREAKS//:}
+
+true

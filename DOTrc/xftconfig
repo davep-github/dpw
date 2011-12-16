@@ -1,0 +1,39 @@
+##############################
+# XRender configuration file #
+##############################
+
+dir   "/usr/X11R6/lib/X11/fonts/TTF/"
+dir   "/usr/X11R6/lib/X11/fonts/webfonts/"
+dir   "/usr/yokel/fonts/windwoes/"
+dir   "/usr/local/share/urwfonts-ttf/"
+dir   "/usr/X11R6/lib/X11/fonts/local/"
+dir   "/usr/X11R6/lib/X11/fonts/local/sgi/"
+dir   "/usr/X11R6/lib/X11/fonts/misc/"
+dir   "/usr/X11R6/lib/X11/fonts/75dpi/:unscaled"
+dir   "/usr/X11R6/lib/X11/fonts/100dpi/:unscaled"
+dir   "/usr/X11R6/lib/X11/fonts/Speedo/"
+dir   "/usr/X11R6/lib/X11/fonts/75dpi/"
+dir   "/usr/X11R6/lib/X11/fonts/100dpi/"
+dir   "/usr/X11R6/lib/X11/fonts/freefont/"
+dir   "/usr/X11R6/lib/X11/fonts/lfpfonts-fix/"
+dir   "/usr/X11R6/lib/X11/fonts/lfpfonts-var/"
+dir   "/usr/X11R6/lib/X11/fonts/jmk/"
+dir   "/usr/X11R6/lib/X11/fonts/non-cjk/"
+dir   "/usr/X11R6/lib/X11/fonts/Type1/"
+dir   "/usr/X11R6/lib/X11/fonts/artwiz-fonts/"
+dir   "/usr/X11R6/lib/X11/fonts/nucleus/"
+dir   "/usr/yokel/fonts/java/"
+
+
+
+#
+# Configuration patterns
+#
+match any family == "fixed" edit family =+ "mono";
+match any family == "console" edit family =+ "mono";
+match any family == "xos4" edit family =+ "mono";
+match any family == "mono" edit spacing = mono;
+match edit rgba = bgr;
+
+# the fat font looks bad with anit-aliasing on
+#match any family == "Futura_poster" edit antialias = false;

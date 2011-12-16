@@ -1,0 +1,50 @@
+# stupid broken key aliases
+alias kd=cd
+alias khmod='chmod'
+alias khown='chown'
+alias pkg-grep-kont=pkg-grep-cont
+alias kls=clear
+alias kp='cp'
+alias skp='scp'
+alias kat='cat'
+alias kal='cal'
+alias dikt=dict
+alias askii='man ascii'
+alias kut=cut
+alias pikard='BROWSER="firefox \"%s\" &" picard-tagger.py'
+alias yko='echo'
+alias fil=file
+alias pquery=equery
+alias lss='less'
+alias llm='lem'
+alias dat=date
+alias lokat=locate
+alias pmrg=emerge
+alias pmrg-rm='emerge -C'
+alias rmmrg='pmrg-rm'
+alias rm-mrg='rmmrg'
+alias rm-pmrg='rmmrg'
+alias pqury='equery'
+alias pbld=ebuild
+alias pbuild=ebuild
+alias xport=export
+
+unb0rk_str ()
+{
+    kmd=$1
+    shift
+    echo "$kmd" | sed -r 's/_/e/g
+s/,/c/g'
+}
+alias unbs=unb0rk_str
+
+unb0rkmd ()
+{
+    kmd=$1
+    shift
+    cmd=$(unb0rk_str "$kmd")
+    $cmd "$@"
+}
+alias unbk=unb0rkmd
+
+true

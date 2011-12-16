@@ -1,0 +1,8 @@
+if [ -n "$dp_no_color" ]
+then
+    alias ls='ls_no_color'
+else
+    alias ls='ls_with_color'
+fi
+
+true

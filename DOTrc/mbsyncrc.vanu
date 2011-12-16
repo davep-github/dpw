@@ -1,0 +1,147 @@
+
+MaildirStore Maildir
+Inbox ~/eMail/mbsunk/working-copy/Maildir/.
+Path ~/eMail/mbsunk/working-copy/Maildir/.
+AltMap yes
+
+MaildirStore nodots
+Inbox ~/eMail/mbsunk/working-copy/nodots/
+Path ~/eMail/mbsunk/working-copy/nodots/
+
+MaildirStore percent
+Inbox ~/eMail/mbsunk/working-copy/percent/
+Path ~/eMail/mbsunk/working-copy/percent/
+
+MaildirStore backup
+Inbox ~/eMail/mbsunk/IMAP-Mirror/.
+Path ~/eMail/mbsunk/IMAP-Mirror/.
+
+IMAPAccount exchange-server
+Host mail.vanu.com
+User davep
+Pass pwds-suck
+Tunnel ~/bin/dp-mbsync-to-exchange-imap-stunnel-hack
+UseTLSv1 no
+
+IMAPStore exchange
+Account exchange-server
+
+# Give the mirror a unique IMAPStore name so it has it's own cache, etc,
+# state.
+IMAPStore exchange-for-mirroring
+Account exchange-server
+
+IMAPStore exchange-percent
+Account exchange-server
+
+Channel main
+Sync Pull
+Master :exchange:
+Slave :Maildir:
+Create Slave
+Pattern *
+
+Channel mirror
+Sync Pull
+Master :exchange-for-mirroring:
+Slave :backup:
+Create Slave
+Pattern *
+
+Channel nodots
+Sync Pull
+Master :exchange:
+Slave :nodots:
+Create Slave
+Pattern *
+
+Channel percent
+Sync Pull
+Master :exchange-percent:
+Slave :percent:
+Create Slave
+Pattern *
+
+# /usr/share/doc/isync/examples/mbsyncrc.sample
+#CO# # Global configuration section
+#CO# #   Values here are used as defaults for any following Channel section that
+#CO# #   doesn't specify them.
+#CO# Expunge None
+#CO# Create Both
+
+#CO# MaildirStore local
+#CO# Path ~/Mail/
+#CO# Trash Trash
+
+
+#CO# IMAPStore work
+#CO# Host work.host.com
+#CO# Pass xxxxxxxx
+#CO# CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+#CO# Channel work
+#CO# Master :work:
+#CO# Slave :local:work
+#CO# Expunge Slave
+#CO# Sync PullNew Push
+
+
+#CO# IMAPStore personal
+#CO# Host host.play.com
+#CO# Port 6789
+#CO# RequireSSL no
+
+#CO# Channel personal
+#CO# Master :personal:
+#CO# Slave :local:personal
+#CO# Expunge Both
+#CO# MaxMessages 150
+#CO# MaxSize 200k
+
+#CO# IMAPStore remote
+#CO# Tunnel "ssh -q host.remote.com /usr/sbin/imapd"
+
+#CO# Channel remote
+#CO# Master :remote:
+#CO# Slave :local:remote
+
+
+#CO# Group boxes
+#CO# Channels work personal remote
+
+
+#CO# IMAPStore st1
+#CO# Host st1.domain.com
+#CO# RequireCRAM yes
+#CO# CertificateFile ~/.st1-certificate.crt
+
+#CO# IMAPStore st2
+#CO# Host imap.another-domain.com
+#CO# Path non-standard/
+#CO# RequireSSL no
+#CO# UseTLSv1 no
+
+#CO# Channel rst
+#CO# Master :st1:somebox
+#CO# Slave :st2:
+
+
+#CO# IMAPAccount server
+#CO# Host imaps:foo.bar.com
+#CO# CertificateFile ~/.server-certificate.crt
+
+#CO# IMAPStore server
+#CO# Account server
+#CO# MapInbox inbox
+#CO# Trash ~/trash
+#CO# TrashRemoteNew yes
+
+#CO# MaildirStore mirror
+#CO# Path ~/Maildir/
+
+#CO# Channel o2o
+#CO# Master :server:
+#CO# Slave :mirror:
+#CO# Patterns %
+
+#CO# Group partial o2o:inbox,sent-mail,foobar

@@ -1,0 +1,19 @@
+# OBSOLETE
+#set -x
+if tty -s
+then
+	tty=`tty`
+	tty=`basename $tty`
+	TTY=${TTY:-$tty}
+fi
+
+. $RC_DIR/alias
+. $RC_DIR/func
+
+[ -f $RC_DIR/rc.${HOST} ] && . $RC_DIR/rc.${HOST}
+
+cd .				# ensure activation of prompt/titler
+
+echo "************** AHAHAHAHAHAHAHA"
+
+true

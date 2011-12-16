@@ -1,0 +1,1304 @@
+#!/usr/bin/env bash
+# $Id: func,v 1.29 2004/10/27 08:20:03 davep Exp $
+# should be sourced, but the shebang tells us and emacs what's up
+: ${dp_DEPRECATED_log:=${DP_LOG_DIR:=$HOME/log}/dp_DEPRECATEDS.log}
+export dp_DEPRECATED_log
+
+
+export DP_RC_LIST_OTHERS=""
+dp_source_rc()
+{
+    for rcf in "$@"; do
+	#echo considering $rcf
+	#stat $rcf
+	[ -r $rcf ] && {
+	    #echo sourcing $rcf
+            source $rcf
+            DP_RC_LIST_OTHERS="$DP_RC_LIST_OTHERS $rcf"
+        }
+    done
+}
+
+dp_source_rc $HOME/.rc/func.root
+
+dp_LOGGER()
+{
+    local logname="$1"
+    shift
+    local prefix="$1[$(~/bin/dp-std-timestamp)]"
+    shift
+    echo "$prefix: $0: $@" >> "$logname"
+}
+
+dp_DEPRECATED()
+{
+    # Try to capture info about the program using the deprecated thing.
+    dp_LOGGER "$dp_DEPRECATED_log" deprecated "$@"
+    #echo "deprecated: $0: $@" >> $dp_DEPRECATED_log
+}
+
+# Verbose versions of true and false. Useful for debugging and prototyping.
+truev()
+{
+    echo "true"
+    true
+}
+
+falsev()
+{
+    echo "false"
+    false
+}
+
+vsetp_b0rked()
+{
+    [ -n "$@" ]
+}
+
+# Moved to func.root.
+# Remove this after testing.
+# vsetp()
+# {
+#     [ -n "$*" ]
+# }
+
+# vunsetp()
+# {
+#     [ -z "$*" ]
+# }
+# export -f vsetp vunsetp
+
+vnullp()
+{
+    # I can't figure out how to get the variable passed here without evaluating
+    # it.
+    echo 1>&2 "Fuckit, I'm b0rked."
+    return 98
+    #CO#b0rked>> eval echo ${$1?huh?}
+}
+
+yes_p()
+{
+    local rc
+    case "$1" in
+        [tTyY1]) rc=0;;
+        *) rc=1;;
+    esac
+    return $rc
+}
+export -f yes_p
+
+true_p()
+{
+    dp_DEPRECATED "true_p-->yes_p"
+    yes_p "$@"
+}
+
+shell_var_pred_t()
+{
+    [ -n "$1" ]
+}
+export -f shell_var_pred_t
+
+shell_var_pred_nil()
+{
+    ! shell_var_pred_t "$@"
+}
+
+export -f shell_var_pred_t
+
+nope_p()
+{
+    ! true_p "$1"
+}
+export -f nope_p
+
+false_p()
+{
+    dp_DEPRECATED "false_p-->nope_p"
+}
+export -f false_p
+
+invert_shell_var_pred()
+{
+    if [ -z "$1" ]; then
+        true
+    else
+        false
+    fi
+}
+export -f invert_shell_var_pred
+
+inv_truth_p()
+{
+    dp_DEPRECATED "inv_truth_p-->invert_shell_var_pred"
+    invert_shell_var_pred "$@"
+}
+export -f inv_truth_p
+
+not_disabled_p()
+{
+    dp_DEPRECATED "not_disabled_p-->shell_var_pred_t"
+    shell_var_pred_t "$1"
+}
+export -f not_disabled_p
+
+feature_requested_p()
+{
+    not_disabled_p "$@"
+}
+export -f feature_requested_p
+
+empty_string_p()
+{
+    shell_var_pred_nil "$1"
+}
+
+invert_flag()
+{
+    if shell_var_pred_t "$1"; then
+        echo ""
+	false
+    else
+        echo t
+	true
+    fi
+}
+export -f invert_flag
+
+dp_progname()
+{
+    echo "${progname:-${prog_name:-${prog:-${0:-dp_progname: can\'t find program name}}}}"
+}
+export -f dp_progname
+
+dpio_echo ()
+{
+    local redir=$1
+    local ofile=$2
+    shift; shift
+
+    eval echo $redir $ofile '"$@"'
+}
+
+export dpdbg_redir='1>&2'
+export dpdbg_ofile=''
+export dpdbg_enable=''
+
+dpdbg_echo ()
+{
+    if [ -n "$dpdbg_enable" ]
+    then
+	dpio_echo "$dpdbg_redir" "$dpdbg_ofile" "$@"
+    fi
+}
+
+dp_echo()
+{
+    local pname=${DP_ECHO_PROGNAME:-$(dp_progname)}
+    echo "${pname}:" "$@"
+}
+export -f dp_echo
+
+dpe_echo ()
+{
+    local pname=${DPE_ECHO_PROGNAME:-$(dp_progname)}
+    echo 1>&2 "${pname}:" "$@"
+    if [ -n "$DP_ERRLOG" ]
+    then
+        {
+            echo "on $(date '+%Y/%m/%d:%H:%M:%S')"
+            echo "${pname} had a problem:"
+            echo ">""$@""<"
+        } >> $DP_ERRLOG
+    fi
+}
+
+expand_source_list()
+{
+    local base=$1
+    local src
+    shift
+    rc=""
+    for suff in "$@"
+    do
+	src=${base}${suff}
+	[ -f $src ] && {
+	    rc="$rc $src"
+	}
+    done
+
+    echo $rc
+}
+
+source_list()
+{
+    local verbose
+    local src
+    if [ "$1" = '-v' ]
+    then
+	verbose=echo
+	shift
+    elif [ "$1" = '-v' ]; then
+        set -x
+	shift
+    elif [ "$1" = "-l" ]; then
+        verbose=dp_rc_logger
+        shift
+    else
+	verbose=":"
+    fi
+    local base=$1
+    shift
+    local dprc_rc=0
+    for suff in "$@"
+    do
+	src=${base}${suff}
+	$verbose "source_list: try>$src<"
+	[ -f $src ] && {
+	    $verbose "source_list: sourcing>$src<"
+	    . $src ''
+	    dprc_rc=$((++ dprc_rc))
+	}
+    done
+
+    return $dprc_rc
+}
+
+dpFATAL()
+{
+    local rc=$1
+    shift
+    dpe_echo "dpFATAL: rc: $rc:" "$@"
+    exit $rc
+}
+
+dp_die()
+{
+    dpFATAL "$@"
+}
+
+dpe_error()
+{
+    local rc_msg=""
+    local rc="$1"
+    [[ "$rc" -gt "0" ]] && dpFATAL "$@"
+    shift
+    rc=$((- $rc))               # PoPT!
+    [[ "$rc" == "0" ]] || rc_msg="rc: $rc: "
+    dpe_echo "ERROR:" "$rc_msg""$@"
+    return $rc
+}
+
+dpWARN()
+{
+    dpe_echo "WARNING:" "$@"
+}
+
+dpe_warn()
+{
+    dpWARN "$@"
+}
+
+dpe_warning()
+{
+    dpWARN "$@"
+}
+
+export -f expand_source_list source_list dpFATAL dp_die
+export -f dpe_echo dpdbg_echo dpio_echo dpWARN
+export -f dpe_error dpe_warn dpe_warning
+
+inside_emacs_p()
+{
+    [ "$TERM" = "emacs" -o "$TERM" = "eterm" -o -n "${EMACS-}" ]
+}
+export -f inside_emacs_p
+
+
+if inside_emacs_p; then
+    emacs_man()
+    {
+        /usr/bin/man "$@" | col -b
+    }
+    export -f emacs_man
+fi
+
+mk_go_path()
+{
+    local gp=""
+    local sep=""
+    for l in "" $locale_rcs; do
+        gf=$HOME/.go$l
+        #echo 1>&2 "l>$l<, gf>$gf<"
+        [ -f $gf ] && {
+            #echo 1>&2 "B: gp>$gp<"
+            gp="$gp$sep$gf"
+            #echo 1>&2 "A: gp>$gp<"
+            # This is from a lower loop over $GOPATH.  Why?
+            # We do this so make can tell if .go files have changed.
+            # [-e "$gf" ] || touch "$gf"
+            sep=":"
+        }
+    done
+    # Remove the trailing :
+    [ -n "$sep" ] && echo "$gp" | sed -r 's/(.*)(:)$/\1/'
+}
+export -f mk_go_path
+
+
+g()
+{
+    case "$1" in
+	-*)
+	    go-mgr $* ;;
+	*)
+	    gOcWd=$PWD; pushd "$(dogo $@)" && export GoBack=$gOcWd ;;
+    esac
+}
+
+gr()
+{
+    case "$1" in
+	-*)
+	    go-mgr $* ;;
+	*)
+            local dest
+            dest=$(dogo_work_rel $@) || {
+                echo "gr: error finding destination"
+                return 1
+            } 1>&2
+	    gOcWd=$PWD; pushd "$dest" && export GoBack=$gOcWd ;;
+    esac
+}
+
+page_of_history()
+{
+    if [[ -z "$*" ]]; then
+        local lines=$((${LINES:-25} - 2))
+        fc -l -$lines
+    elif [[ "$1" =~ "[0-9]+" ]]; then
+        fc -l -$1
+    else
+        # What is this?
+        fc "$@"
+    fi
+}
+
+scanl()
+{
+    local lines=$((${LINES:-25} - 2))
+    local folder="+${1:-inbox}"
+    local vlines=$(($lines * 10))
+    scan $folder 'last:'$vlines | fgrep -v '**SPAM**' | tail -n$lines
+}
+
+pwd_title()
+{
+    :
+}
+
+case $TERM in
+    *[Xx][Tt][eE][Rr][Mm])
+	pwd_title()
+	{
+	    local __blah
+	    [ -n "$WORKON" ] && __blah="[${SANDBOX}]"
+	    echo -n ']2;'-${tty}-"${__blah}$USER@$HOST:${PWD}"'' \
+		>/dev/tty
+	}
+	;;
+    emacs|eterm)
+        man()
+        {
+            /usr/bin/man "$@" | col -b
+        }
+        ;;
+    *)
+	;;
+esac
+
+typeset -f -x g
+typeset -f -x page_of_history
+
+dp_cd()
+{
+    "cd" "$@"; pwd_title
+}
+
+#
+# convert leading occurences of the home directory into ~
+tildefy()
+{
+    local dir=${dir#$HOME/}
+    case $dir in
+	$HOME)	dir=\~;;
+	/*)	;;
+	*)	dir=\~/$dir;;
+    esac
+}
+
+#. $RC_DIR/dirstack
+
+do_xtitle()
+{
+    echo -n "]2;$1 ]1;$2" >/dev/tty
+}
+
+do_xtitle2()
+{
+    echo -n "]2;$1 ]1;$2"
+}
+
+console()
+{
+    do_xtitle "console@$1" "console@$1"
+    /rtty/bin/console $1
+}
+
+distribute_name()
+{
+    local base=$1
+    shift
+    local out=''; sep=''
+    for x in "$@"
+    do
+	out="$out$sep$base/$x"
+	sep=" "
+    done
+
+    echo $out
+}
+
+viline_BAD()
+{
+    local line="$@"
+    local tmpfile=$(mktemp /tmp/viline_BAD.XXXXX);
+    echo "$line" >> $tmpfile && \
+	vi $tmpfile >/dev/tty </dev/tty && \
+	cat $tmpfile && \
+	rm -f $tmpfile
+}
+export -f viline_BAD
+
+vienv()
+{
+    local vienv_verbose=
+    if [ "$1" = "-v" ]
+    then
+	vienv_verbose=y
+	shift
+    fi
+    vname=$1
+    set -x
+    eval \$$vname="$(viline_BAD $(eval echo \$$vname))"
+    if [ "$vienv_verbose" = "y" ]
+    then
+	eval echo $vname = "\>"\$$vname"\<"
+    fi
+}
+
+vienv_obs()
+{
+    local vienv_verbose=
+    if [ "$1" = "-v" ]
+    then
+	vienv_verbose=y
+	shift
+    fi
+    local vname=$1
+    local x=/tmp/vienv.$vname.$SECONDS;
+    eval echo "\$$vname" > $x && vi $x && eval $vname=$(cat $x) && rm -f $x
+    if [ "$vienv_verbose" = "y" ]
+    then
+	eval echo $vname = "\>"\$$vname"\<"
+    fi
+}
+
+viprompt()
+{
+    local verbose=
+    if [ "$1" = "-v" ]
+    then
+	verbose=y
+	shift
+    fi
+    local vname=PS1
+    local x=/tmp/vienv.$vname.$SECONDS;
+    eval echo "\$$vname" > $x && vi $x && PS1=$(cat $x) && rm -f $x
+    if [ "$verbose" = "y" ]
+    then
+	eval echo $vname = "\>"\$$vname"\<"
+    fi
+}
+
+vi()
+{
+    local vi
+    local VI_ALIKES="vim nvi vi"
+    for vi_try in $VI_ALIKES
+    do
+	vi=$(which $vi_try)
+	if [ -n "$vi" ]
+	then
+	    break
+	fi
+    done
+    if [ -z "$vi" ]
+    then
+	DPE_ECHO_PROGNAME="(func) vi" dpe_error 0 "cannot find vi-like ($VI_ALIKES) editor."
+	return 1
+    else
+	$vi "$@"
+    fi
+}
+
+tailp()
+{
+    local ld
+    if [ "$1" = '-d' ]
+    then
+	ld=$2;shift; shift
+    else
+	ld=2
+    fi
+    lines=$((${LINES:-25} - $ld))
+    tail -n$lines "$@"
+}
+
+headp()
+{
+    local ld
+    if [ "$1" = '-d' ]
+    then
+	ld=$2;shift; shift
+    else
+	ld=2
+    fi
+    lines=$((${LINES:-25} - $ld))
+    head -n $lines "$@"
+}
+
+kde_p ()
+{
+    case "$envDTE" in
+	kde*) ret=0;;
+	*) ret=1;;
+    esac
+    return $ret
+}
+
+xpick_dirs()
+{
+    local d=$(for d in $(dirs "$@"); do echo "$d"; done | xlist)
+    local ret
+    if [ -z "$d" ]
+    then
+	ret=1
+    else
+	ret=0
+    fi
+    echo "$d"
+    return $ret
+}
+
+xcd ()
+{
+    local d
+    if d=$(xpick_dirs "$@")
+    then
+	cd "$d"
+	return 0
+    else
+	return 1
+    fi
+}
+
+repeat ()
+{
+    local n
+    n=$1; shift;
+    while [ $(($n > 0)) != 0 ]
+    do
+	eval "$@"
+	n=$((--n))
+    done
+}
+export -f repeat
+
+src_controlled_p ()
+{
+    local dir=$1
+    shift
+    local sc_name=$1
+    shift
+    if [ "$1" = "-q" ]
+    local ECHOER
+    then
+        ECHOER=:
+    else
+	ECHOER=echo
+    fi
+    [ -d "$dir" ] && $ECHOER "$PWD is $sc_name'd"
+    if ! cmd-p "$sc_name"
+    then
+	echo 1>&2 "sc cmd ($sc_name) for this dir ($PWD) isn't"
+    fi
+}
+export -f src_controlled_p
+
+bash_knows_bracket_bracket_p()
+{
+    false                       # For now
+}
+export -f bash_knows_bracket_bracket_p
+
+svn_p ()
+{
+    src_controlled_p "./.svn" svn "$@"
+}
+export -f svn_p
+
+cvsp ()
+{
+    src_controlled_p "./CVS" cvs "$@"
+}
+
+do_src_control ()
+{
+    local called_as=$1
+    shift
+    local def=$1
+    shift
+    local args="$@"
+    local anno sc real_sc warning
+    if svn_p -q
+    then
+        anno='.svn dir exists, r'
+        sc=$(sp svn|head -n 1)
+        real_sc=svn
+    elif [ -d  "./CVS" ]
+    then
+        anno='CVS dir exists, r'
+        sc=$(sp cvs|head -n1)
+        real_sc=cvs
+    fi
+    if [ -n "$real_sc" ]
+    then
+        [  "$called_as" != "$real_sc" ] && {
+            warning="Using $real_sc instead of $called_as"
+        }
+    elif [ -n "$def" ]
+    then
+        anno='using cmd default, r'
+        sc=$def
+    else                        # We'll always have a default w/cvs & svn
+        echo 1>&2 -n "Enter name of archiver? "
+        read sc
+        sc=$(sp $sc | head -n1)
+    fi
+    #echo 1>&2 "${anno}unning \`\`$sc ""$args""''"
+    [ -n "$warning" ] && echo 2>&1 "WARNING: $warning"
+    $sc "$@"
+}
+export -f do_src_control
+
+cvs()
+{
+    do_src_control cvs $(sp cvs | head -n1) "$@"
+}
+export -f cvs
+
+# For some reason, when running scripts via cron, variables exported in
+# .bashrc are not set and so this isn't set which causes an error. Cron is
+# pissing me off.
+[ -z "$SP_BIN" ] && {
+    export SP_BIN=$(type -p sp)
+}
+export SP_BIN=$HOME/yokel/bin/sp
+export SVN_BIN=$($SP_BIN -1 svn)
+svn ()
+{
+    # Add some new command words that are implemented by me.  They have their
+    # own svn-* names, but sometimes I forget to add the -, e.g. I type "svn
+    # url" rather than svn-url.
+    if bash_knows_bracket_bracket_p; then
+        if [[ "$2" =~ "(url|repl|rev-list|unknowns)" ]]; then
+            # Use re-match to call correct program
+            :
+            return 0
+        fi
+    fi
+    # !<@todo XXX it would be nice if I could detect when I'm committing * by
+    # not specifying everything. Commit all is rare compared to the # times I
+    # want to do a single (or small subset) of the files.
+    # dol_at=$( "$@" )
+
+    do_src_control svn $SVN_BIN "$@"
+}
+export -f svn
+
+# SSH_AGENT_RC="$HOME/.ssh/acmds"
+# SSH_AGENT_RC_STDERR="${SSH_AGENT_RC}.stderr"
+# export SSH_AGENT_RC_umask=0077
+# export SSH_AGENT_RC_STDERR_umask=${SSH_AGENT_RC_umask}
+# start_ssh_agent()
+# {
+#     ssh-agent
+#     ssha
+#     ssh-add
+# }
+# export -f start_ssh_agent
+
+# ssha()
+# {
+#     # rc to allow communication with existing ssh-agent daemon.
+#     {
+# 	source $SSH_AGENT_RC || {
+# 	    echo 2>&1 Sourcing $SSH_AGENT_RC failed
+# 	    return 1
+# 	}
+#     # Running an existing rc ends up echoing the PID in an annoying fashion.
+#     } #  | fgrep -v "Agent pid"
+# }
+
+# start_OUR_ssh_agent()
+# {
+#     # Do the agent's pipe and PID still exist?
+#     (
+# 	# Preventeth race vs { >| ; chmod }.
+# 	umask ${SSH_AGENT_RC_STDERR_umask}
+# 	rm -f ${SSH_AGENT_RC_STDERR} # Divorce us from any existing file perms.
+# 	echo "# ======= $(date)" >| ${SSH_AGENT_RC_STDERR}
+#     )
+#     {	# Capture all output
+# 	echo 1>&2 "$(date): Begin..."
+# 	local pipe_name
+# 	(
+# 	    if [[ -e "${SSH_AGENT_RC}" ]]; then
+# 		unset SSH_AUTH_SOCK
+# 		unset SSH_AGENT_PID
+# 		ssha || {
+# 		    echo "ssha failed."
+# 		    exit 11
+# 		} 1>&2
+# 		[[ -e "$SSH_AUTH_SOCK" ]] && \
+# 		    pid-alive "$SSH_AGENT_PID" ssh-agent && {
+# 		    # Agent seems to be in good shape.
+# 		    exit 0
+# 		}
+# 		{
+# 		    echo "SOCK: >$SSH_AUTH_SOCK<, PID: >$SSH_AGENT_PID<"
+# 		    if [[ -e "$SSH_AUTH_SOCK" ]]; then
+# 			echo "# SOCK file exists."
+# 		    else
+# 			echo "# No sock file."
+# 		    fi
+# 		    if pid-alive $SSH_AGENT_PID ssh-agent; then
+# 			echo "# $SSH_AGENT_PID is pid-alive."
+# 		    else
+# 			echo "# No agent at PID."
+# 		    fi
+# 		} 1>&2
+# 		exit 33
+# 	    fi
+# 	    # No rc file.
+# 	    exit 22
+# 	)
+# 	rc="$?"
+# 	if [[ "$rc" == 0 ]]; then
+# 	    echo "# ======= $(date)"
+# 	    echo "# Using existing ssh-agent."
+# 	    ssha > /dev/null
+# 	else
+# 	    echo 1>&2 "killall: $(killall ssh-agent)."
+# 	    # Using >| actually truncates the {} >> file and future writes
+# 	    # can append to it.
+# 	    # I hope this isn't a bash bug upon which I am counting.
+# 	    # I don't think so, though.  After the >|, the file has the
+# 	    # same inode number, which implies to me that they did a
+# 	    # trunc rather than a unlink + creat in order to make sure it
+# 	    # is the same file.
+# 	    (
+# 		# Preventeth race vs { >| ; chmod }.
+# 		umask ${SSH_AGENT_RC_umask}
+# 		echo "# ======= $(date)" >| ${SSH_AGENT_RC}
+# 		echo "1: $(ls -l ${SSH_AGENT_RC})" 1>&2
+# 	    )
+# 	    echo "# Starting new ssh-agent."
+# 	    start_ssh_agent | fgrep -v "Agent pid"
+# 	fi
+# 	echo "# done"
+# 	ssh-add -l > /dev/null 2>&1 || ssh-add
+# 	echo 1>&2 "finished."
+#     } >> ${SSH_AGENT_RC} 2>> ${SSH_AGENT_RC_STDERR}
+# }
+# export -f start_OUR_ssh_agent
+
+pick_screen ()
+{
+    local screen
+    screen=$(nth-screen "$@")
+    [ "$?" = 0 ] || {
+        return 1
+    }
+    if vsetp "$screen"; then
+        screen -dr "$screen"
+        echo "Back from screen>$screen<"
+        true
+    else
+        #echo 1>&2 "No name given."
+        true
+    fi
+}
+
+# copy .go* items into environment
+do_go2env()
+{
+    if [ -x $HOME/bin/go2env.py ]
+    then
+        eval $(go2env.py)
+    fi
+}
+export -f do_go2env
+
+do_sed_path()
+{
+    # NO /, since it is a common dir sep char ;->
+    local K_delim_chars_sed_regexp='(.*?)([!|])'
+    local K_blah_backref=2
+    local verbose DEBUG pat delim
+    local delim_set_by_option=
+    if [[ "$1" == "---D" ]]
+    then
+	set -x
+	DEBUG=t
+	shift
+    elif [[ "$1" == "---v" ]]
+    then
+	verbose=t
+	shift
+    elif [[ "$1" == "---dp-do-sed-path-delim" ]]; then
+	delim_set_by_option=t
+	delim=$2
+	shift; shift
+    fi
+    pat="$1"
+    if [[ -z "$delim" ]]; then
+	delim=$(echo "$pat" | \
+	  sed -nre \
+	    's/'"$K_delim_chars_sed_regexp"'(.*)$/\'"$K_blah_backref"'/p') # '
+    fi
+    case "$pat" in
+        *${delim}) ;;
+        *) pat="$pat$delim";;
+    esac
+    [[ -n "$verbose" ]] && set -x
+    echo "$PWD" | sed --regexp-extended -e "$pat"
+    [ -n "$verbose" -o -n "$DEBUG" ] && set +x
+}
+export -f do_sed_path
+
+mkcd()
+{
+    mkdir -p "$@" && cd "$1"
+}
+export -f mkcd
+
+show_current_kde()
+{
+    ls -l $HOM_/.kde
+}
+
+hist_cat()
+{
+    prefix=${1:-echo}
+    # The history mechanism seems to use comments to hold time stamps for
+    # commands, so make this an echo so we don't confuse anything.
+    echo "$prefix Snapshot made on $(date)"
+    echo "$prefix $HISTFILE contents..."
+    cat $HISTFILE 2> /dev/null
+    echo "$prefix Output of history command..."
+    history
+}
+export -f hist_cat
+
+hist_snap()
+{
+    # Put something in front of name since HISTFILEs tend to start with a dot.
+    snap_file=HSnap$(basename $HISTFILE)-$(dp-std-timestamp).snap
+    hist_cat > $snap_file
+}
+export -f hist_snap
+
+: ${DP_FAV_GREPPER:=egrep}
+: ${DP_HIST_GREP_GREPPER:=$DP_FAV_GREPPER}
+
+hist_grep()
+{
+    # &*@JH@GHG#!!!!
+    # For some reason, in xemacs, the aliases aren't used.
+    # The variable? Ayup.
+    local hist_file_glob="$HOME/.bash_history*"
+    local hist_files=$(echo $hist_file_glob)
+    [ "$hist_files" == "$hist_files1" ] && {
+            # No expansion of glob --> no files of interest.
+            hist_files=
+    }
+    $DP_HIST_GREP_GREPPER "$@" $hist_files /dev/null # All history files.
+    history | $DP_HIST_GREP_GREPPER "$@" # Current history.
+#CO#     hist_cat "#" | ${DP_HIST_GREP_GREPPER:=egrep} $hist_files
+}
+
+hist_fgrep()
+{
+    DP_HIST_GREP_GREPPER=fgrep hist_grep "$@"
+}
+
+hist_egrep()
+{
+    DP_HIST_GREP_GREPPER=egrep hist_grep "$@"
+}
+
+hist_ggrep()
+{
+    DP_HIST_GREP_GREPPER=grep hist_grep "$@"
+}
+
+export -f hist_grep hist_ggrep hist_fgrep hist_egrep
+
+emacs_shell_grepper()
+{
+    local grepper=$1
+    shift
+    local with_filename_opt
+    if  tty -s; then
+        with_filename_opt="--with-filename"
+    fi
+    $grepper -n $with_filename_opt "$@"
+}
+
+dp_mank_apropos()
+{
+    section="$1"
+    shift
+    apropos -s "$section" "$@"
+}
+
+tdim()
+{
+    # Terminal dimensions as imagined by the environment.
+    echo $LINES x $COLUMNS
+}
+export -f tdim
+
+spg()
+{
+    local to="$1"
+    local cmd="\`sp -d $to'"
+    local todir
+    todir="$(sp -d $to)"
+    local rc=$?
+    local progname=spg
+
+    if [[ "$rc" != 0 ]]; then
+        dpe_echo "$cmd failed: $rc"
+    elif [[ -z "$todir" ]]; then
+        dpe_echo "$cmd returned an empty string"
+    else
+        pushd "$todir"
+    fi
+}
+
+ps1()
+{
+    echo "$PS1" | hd
+}
+export -f ps1
+
+mutt()
+{
+    cd ~
+    EDITOR=${EDITOR=$MUTT_EDITOR} $(sp -1 mutt) -f $MUTT_INBOX
+}
+
+pmutt()
+{
+    echo 1>&2 B0rked
+    echo 1 B0rked
+    exit 1
+    cd ~
+    EDITOR=${EDITOR=$MUTT_EDITOR} $(sp -1 mutt) -f $PRISTINE_MUTT_INBOX
+}
+
+psa()
+{
+    ps augx
+}
+
+psal()
+{
+    psa | less
+}
+
+term_has_xterm_type_title_p()
+{
+    case "$TERM" in
+        [XxAa][Tt][Ee][Rr][Mm]|[Rr][Xx][Vv][Tt]) return 0;;
+        *) return 1;;
+
+    esac
+}
+
+dpf_comma_sep_list()
+{
+    local sep="$1"
+    shift
+    local ret_str=""
+
+    case "$sep" in
+	""|-) sep=", ";;
+	--*) sep=$(sed -nr 's/(.*)(.$)/\1/p');;
+    esac
+    first="${1-}"
+    shift
+    for i in "$@"; do
+	ret_str="$ret_str$sep$i"
+    done
+    echo "$first$ret_str"
+}
+export dpf_comma_sep_list
+
+dp_import()
+{
+    DP_IMPORTING_P=t source "$@"
+}
+export -f dp_import
+
+name_is___main__()
+{
+    # Are we sourcing or running?
+    # My convention (not a BASH command), `innovated'(as per M$) from Python.
+    [ -z "${DP_IMPORTING_P-}" ]
+}
+export -f name_is___main__
+#alias dp_runme="name_is___main__"
+dp_runme()
+{
+    name_is___main__ "$@"
+}
+export -f dp_runme
+
+#alias running_as_script="name_is___main__"
+#alias dp_importing="! name_is___main__"
+#alias dp_importme="! name_is___main__"
+# For some fucking reason, these fucking aliases don't fucking work
+# (command not found) in at least these fucking fucked scripts:
+# dp-getopt+.sh as called by rcgrep.
+# Hopefully, dumbass wrapper functions do work
+running_as_script()
+{
+    name_is___main__ "$@"
+}
+# But the dumbass programmer needs to export the dumbass scripts.
+export -f running_as_script
+
+dp_ima_script()
+{
+    name_is___main__ "$@"
+}
+export -f dp_ima_script
+
+invert_string_pred()
+{
+    if [ -z "$1" ]; then echo t; else echo ""; fi
+}
+
+dictl()
+{
+    dict "$@" | less
+}
+
+echo_name_and_val()
+{
+    local arg
+    local anno=""
+    local noAnno=
+    local prefix=""
+
+    while [[ "${1-}" =~ ^- ]]
+    do
+      arg="$1"
+      case "$arg" in
+          -q) noAnno=t;;
+          -p) prefix="$2"; shift;;
+          *) echo 1>&2 "echo_name_and_val: unknown option: $arg";
+             return 1;;
+      esac
+      shift
+    done
+    [ -z "$noAnno" ] && anno="$1"
+    
+    local type_suffix
+    local __use_a_name_like_this_and_you_get_what_you_deserve__
+    for __use_a_name_like_this_and_you_get_what_you_deserve__ in "$@"; do
+        type_suffix=
+        case "$__use_a_name_like_this_and_you_get_what_you_deserve__" in
+            -*) name=$(echo "$__use_a_name_like_this_and_you_get_what_you_deserve__" | sed -r 's/(-)(.*)/\2/')
+                type_suffix='[]'
+                # eval av="\${$name[@]}"
+                eval val="\${$__use_a_name_like_this_and_you_get_what_you_deserve__[@]}";;
+            *) eval val="\$$__use_a_name_like_this_and_you_get_what_you_deserve__";;
+        esac
+        echo "$prefix$__use_a_name_like_this_and_you_get_what_you_deserve__$type_suffix>$val<${anno}"
+    done
+}
+export -f echo_name_and_val
+alias echo_nv=echo_name_and_val
+#too short?# alias ennv=echo_name_and_val    # ???
+#too short?# alias ecnv=echo_name_and_val    # ???
+
+echo_id()
+{
+    echo_name_and_val "$@"
+}
+
+echo_id_err()
+{
+    echo_id "$@" 1>&2
+}
+
+export -f echo_id
+# I NEED to factor out as much as possible when running non-interactive shells.
+# But, func is needed.
+#echo "who's calling me again and again? 0>$0<"
+
+rmcore()
+{
+    local ls_p=
+    local core_glob='*.CR'
+    local show_me_p=
+    local ask_p=
+
+    for x in "$@"
+    do
+        case "$1" in
+            -a) ls_p=t; ask_p=t;;
+            -q) ls_p=;;
+            -v) ls_p=t;;
+            -n) ls_p=t; show_me_p=t;;
+             *) break;;
+        esac
+        shift
+    done
+
+    if vsetp "$ls_p"
+    then
+        ls -l1 $core_glob
+    fi
+
+    if vsetp $ask_p
+    then
+        read -e -p "Delete[Y/n]? "
+        case "$REPLY" in
+            [Yy]) ;;
+            "") ;;
+            *) return 1
+        esac
+    fi
+
+    vunsetp $show_me_p && rm -f $core_glob
+}
+
+scrn_root_bash()
+{
+    local NAMER
+    # Allow name to be overridden by argument.
+    vsetp $1 && DP_MY_SCREEN_NAME=$1
+    if vsetp $DP_MY_SCREEN_NAME
+        then
+        NAMER="DP_MY_SCREEN_NAME=$DP_MY_SCREEN_NAME"
+    else
+        NAMER=
+    fi
+    screen sudo -E $NAMER IMASCREENINSTANCE=yes bash
+}
+
+ssh_home()
+{
+    local home_addr
+    if vsetp "$DP_HOME_MACHINE"
+    then
+	eval home_addr=\$$DP_HOME_MACHINE
+	if vsetp $home_addr
+        then
+            echo "ssh_home: home is $DP_HOME_MACHINE: $home_addr"
+            ssh "$home_addr"
+        else
+            echo 1>&2 "ssh_home: machine addr variable, '$DP_HOME_MACHINE', not set."
+        fi
+    else
+        echo 1>&2 "ssh_home: machine name variable, 'DP_HOME_MACHINE', is not set."
+    fi
+}
+export -f ssh_home
+
+nh()
+{
+    export dp_NH=y
+    HISTFILE=
+    vunsetp $dp_NH_PS1_prefix && dp_NH_PS1_prefix=$PS1_prefix
+    case "$PS1_prefix" in
+        *"(nh)"*) ;;
+        *) PS1_prefix="(nh)$PS1_prefix";;
+    esac
+    case "$PS1_title_prefix" in
+        *"(NH)"*) ;;
+        *) PS1_title_prefix="-(NH)-$PS1_title_prefix";;
+    esac
+
+}
+export -f nh
+
+unset_by_re()
+{
+    local re                    # Needed with loop var?
+    local e
+    local n
+    for re in "$@"
+    do
+      for e in $(envgrep "$re")
+      do 
+        n=$(echo $e | sed -rn 's/([^=]*)(=.*)/\1/p')
+        unset $n
+      done
+    done
+}
+export -f unset_by_re
+
+git_change_sandbox()
+{
+    # `chdir' with no args means to show us where we are.
+    if [ -z "$*" ]
+    then
+        git branch
+    else
+        git checkout "$@"
+    fi
+}
+export -f git_change_sandbox
+alias gcd="git_change_sandbox"
+alias gsb="git_change_sandbox"
+
+gith()
+{
+    # Since I cannot figure out how to stop git using ^H for bolding, I'll
+    # filter it myself.
+    # Doesn't use ^H in all xemacs windows and I don't know why.
+    if inside_emacs_p
+    then
+        git help "$@" | ul -t dumb
+    fi
+}
+
+true

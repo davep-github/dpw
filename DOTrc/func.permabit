@@ -1,0 +1,43 @@
+export DP_COMM_DESKTOP=7
+# For convenience, don't run ssh-agent on farm machines because it interferes
+# with `rsvpclient release' and requires us to kill the program by hand.
+# But... FUCK. This won't work until I figure out how to 
+run_ssh_agent_p()
+{
+    ! pbit_farm_machine_p "$@"
+}
+
+add_libuds()
+{
+    local libarg="${1-../uds}"
+    # the dir of libuds.so must be relative if we are to run from any p4
+    # client/sandbox. Most things are statically linked, but the tools dir is
+    # for the customer and so uses shared objects.
+    # Make dir absolute.
+    # just what I don't want! libarg=$( (cd "$libarg"; pwd) )
+    export LD_LIBRARY_PATH=$(pathadd $LD_LIBRARY_PATH $libarg)  
+}
+alias uds_addlib=add_libuds
+
+start_jabbering()
+{
+    kstart --desktop "$DP_COMM_DESKTOP" pidgin
+}
+
+start_email()
+{
+    kstart --desktop "$DP_COMM_DESKTOP" thunderbird
+}
+
+start_editing()
+{
+    xem
+}
+
+pbit_locale()
+{
+    export locale_rcs=".Linux .permabit .permabit-linux .$(hostname -s)"
+}
+export -f add_libuds start_editing start_jabbering start_email start_editing
+
+true

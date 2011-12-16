@@ -1,0 +1,96 @@
+# 8Bits supports.
+set bell-style visible
+set meta-flag on
+set convert-meta on
+set input-meta off
+set output-meta off
+set show-all-if-ambiguous on
+set visible-stats on
+set mark-modified-lines on
+
+$if term=xterm
+	"\e[H":beginning-of-line
+	"\e\e[D":backward-word
+	"\e\e[C":forward-word
+	"\eOD":backward-word
+	"\eOC":forward-word
+	Rubout:delete-char
+	"\e[F":end-of-line
+	"\C-?":backward-delete-char
+	"\C-h":backward-delete-char
+$endif
+$if term=rem
+        "\e[D":backward-word
+        "\e[C":forward-word
+$endif
+$if term=console
+	"\e[1~":beginning-of-line
+	"\e[4~":end-of-line
+	"\e[3~":delete-char
+	DEL:delete-char
+$endif
+$if term=linux
+	# In this mode, Alt-BS kills word forward.
+	# Figure out how to map it for ~xterms~.
+	"\e[1~":beginning-of-line
+	"\e[4~":end-of-line
+	"\e[3~":delete-char
+	DEL: backward-delete-char
+$endif
+$if term=cons25
+	set convert-meta on
+	"\e[H":beginning-of-line
+	"\e[F":end-of-line
+	"\e[E":delete-char
+	DEL:delete-char
+	Rubout:backward-delete-char
+$endif
+$if term=eterm
+	"\C-Rubout":backward-kill-word
+	"\M-Rubout":kill-word
+$endif
+
+$if Python
+    "\M-i": "    "
+    "\M-u": "\d\d\d\d"
+$endif
+
+
+"\e-`": history-search-backward
+"\C-`": history-search-backward
+"\M-`": history-search-backward
+"\M-/": dabbrev-expand
+"\M-/": dabbrev-expand
+"\C-p": history-search-backward
+"\C-n": history-search-forward
+# Why just keep ringing the bell?
+#"\C-i":menu-complete
+
+
+#"\e[A": history-search-backward
+#"\e[B": history-search-forward
+
+# move to different binding# "\M-d":	dump-functions
+#
+M-Control-D: dump-functions
+M-Control-M: dump-macros
+"\C-x\C-v": dump-variables
+M-M-Rubout:kill-whole-line
+"\M-\M-Rubout":kill-whole-line
+"\e\eRubout":kill-whole-line
+"\M-r": re-read-init-file
+"\M-h":backward-kill-word
+Control-Rubout:backward-kill-word
+M-Rubout:forward-kill-word
+"\M-\C-?":kill-word
+"\M-l":redraw-current-line
+"\M-/":menu-complete
+# nope# "\e[5C": forward-word
+# nope# "\e[5d": backward-word
+# nope# "\e[1;5d": backward-word
+# nope# "\e[1;5C": forward-word
+"\e[1;3C": forward-word
+"\e[1;3d": backward-word
+"\e[11~]": "backward-word"
+Meta-u: undo
+#include <unistd.h>

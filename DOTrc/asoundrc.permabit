@@ -1,0 +1,58 @@
+#pcm.!default {
+    #type plug
+    #slave.pcm "svol"
+#}
+
+#pcm.!default {
+    #type plug
+    #slave.pcm "dmix"
+#}
+
+pcm.dmixer {
+    type dmix
+    ipc_key 1024
+    ipc_key_add_uid false
+    ipc_perm 0666
+    slave {
+        pcm "hw:1,0"
+        period_time 0
+        period_size 1024
+    buffer_size 8192
+    rate 44100
+    }
+    bindings {
+        0 0
+        1 1
+    }
+}
+
+pcm.svol {
+   type softvol
+   slave {
+       pcm "dmixer"
+   }
+   control {
+     name "Master"
+     card 1
+   }
+}
+ctl.svol {
+    type hw
+    card 1
+}
+
+pcm.mpdout {
+   type softvol
+   slave {
+       pcm "dmixer"
+   }
+   control {
+     name "MPD"
+     card 1
+   }
+}
+ctl.mpdout {
+    type hw
+    card 1
+}
+

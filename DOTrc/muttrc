@@ -1,0 +1,13 @@
+source ~/.mutt-aliases
+my_hdr X-Attribution: davep
+set alias_file = ~/.mutt-aliases
+set attribution  = "On %d, %n wrote:"
+set record = sent
+set move  = no
+set mbox_type = Maildir
+set hostname = meduseld.net
+# Needed?# set use_domain = yes
+#
+
+# Oh, wow, the colors...
+source ~/.mutt-colors

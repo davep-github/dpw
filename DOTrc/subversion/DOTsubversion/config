@@ -1,0 +1,49 @@
+### This file configures various client-side behaviors.
+###
+### The commented-out examples below are intended to demonstrate
+### how to use this file.
+
+### Section for authentication and authorization customizations.
+### Set store_password to 'no' to avoid storing your subversion
+###   password in your working copies.  It defaults to 'yes'.
+# [auth]
+# store_password = no
+
+### Section for configuring external helper applications.
+### Set editor to the command used to invoke your text editor.
+###   This will override the environment variables that Subversion
+###   examines by default to find this information ($EDITOR, 
+###   et al).
+### Set diff_cmd to the absolute path of your `diff' program.
+###   This will override the compile-time default path to `diff'
+###   that Subversion default to.
+### Set diff3_cmd to the absolute path of your `diff3' program.
+###   This will override the compile-time default path to `diff3'
+###   that Subversion default to.
+### Set diff3_has_program_arg to `true' or `yes' if your `diff3'
+###   program accepts the `--diff-program' option.
+# [helpers]
+# editor_cmd = editor (vi, emacs, notepad, etc.)
+# diff_cmd = /usr/local/bin/gdiff
+# diff3_cmd = /usr/local/bin/gdiff3
+# diff3_has_program_arg = false
+
+### Section for configuring miscelleneous Subversion options.
+[miscellany]
+### Set global_ignores to a set of whitespace-delimited globs
+###   which Subversion will ignore in its `status' output.  By
+###   default, this value is '*.o *.lo *.la #*# *.rej *~ .#*'. 
+###   To turn off global ignores, simply set the value to be
+###   empty (as in "global_ignores = ").
+global-ignores = *.o *.lo *.la #*# .*.rej *.rej .*~ *~ .#* .DS_Store
+               *.pyc *.pyo CVS RCS
+               svn-ignore .cvsignore TAGS ETAGS cscope.files 
+               cscope.out cscope.in.out cscope.po.out ncscope.out 
+               ncscope.files svn-obsolete
+
+
+### Set compression to 'no' to avoid compressing requests
+###   to a DAV-enabled Subversion server.  It defaults to 'yes'.
+# compression = yes
+### See http://subversion.tigris.org/issues/show_bug.cgi?id=668
+### for what else will soon be customized in this file.

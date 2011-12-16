@@ -1,0 +1,155 @@
+alias Apex "Apex Systems Inc" <lmccarthy@apexsystemsinc.com>
+alias Verizon "Verizon" <>
+alias aaron "Aaron Berger" <aberger@fne.com>
+alias adrian "Adrian Roy" <aroyjr@adelphia.net>
+alias alex "Alex Nelson" <Alex.Nelson@hp.com>
+alias andyc "Andy Christian" <Andrew.Christian@hp.com>
+alias angela "Angela Baker" <autumndog@juno.com>
+alias arad "Aradhana" <arad@ll.mit.edu>
+alias aradhana "Aradhana" <arad@ll.mit.edu>
+alias arnie "Arnold Jones" <arnold@mdi.com>
+alias arnold "Arnold Garlick" <arnold@pacific.com>
+alias babe "Anne and Angela Baker" <aabak@juno.com>
+alias barry_katz "Barry Katz" <barry@careergroup.com>
+alias barry_katz-2 "Barry Katz" <bpkatz@attbi.com>
+alias bavery "Brian Avery" <Brian.Avery@hp.com>
+alias bavery-home "Brian Avery" <bavery@bavery.com>
+alias bb "Brian Buchner" <bbuchner@cfl.rr.com>
+alias bb-work "Brian Buchner" <buchnerb@ati.com>
+alias bb-work-old "Brian Buchner" <bbuchner@escmail.orl.mmc.com>
+alias bb-work-old2 "Brian Buchner" <buchnerb@real3d.com>
+alias bbaker "Brian Baker" <bbaker@zk3.dec.com>
+alias bbaker-work "Brian Baker" <bbaker@zk3.dec.com>
+alias bee "Eric B. Hawley" <bee@microdes.com>
+alias behzad "Behzad Dariush" <dariush.1@osu.edu>
+alias ben "Ben Ghofrani" <ghofrani@yahoo.com>
+alias bertha "Bertha Kao" <bkao@heliograph.com>
+alias bertha-2 "Bertha Kao" <bkao@lifespan.org>
+alias beth "Beth Evancheck" <beth@spica.bdt.com>
+alias bills "Bill Sanford" <bills@hjinc.com>
+alias bob-usner "Bob Usner" <uszvnbl6@ibmmail.com>
+alias bobi "Robert A. Iannucci" <bob@rail.com>
+alias brad "Brad Lepper" <BQLepper@itt.com>
+alias brad-cis "Brad Lepper" <102631.2531@compuserve.com>
+alias brad-home "Brad Lepper" <is lepper@sssnet.com>
+alias brad-work "Brad Lepper" <lepperb@diebold.com>
+alias brian "Brian Buchner" <bbuchner@cfl.rr.com>
+alias brian-work "Brian Buchner" <buchnerb@ati.com>
+alias brian-work-old "Brian Buchner" <bbuchner@escmail.orl.mmc.com>
+alias brian-work-old2 "Brian Buchner" <buchnerb@real3d.com>
+alias carl "Carl Offner" <Carl.Offner@hp.com>
+alias cfj "Chris Joerg" <cfj@akamai.com>
+alias cfj-alum "Chris Joerg" <cfj@alum.mit.edu>
+alias chris "Christopher D. Gouge" <cgouge@mailbolt.com>
+alias chris-iname "Christopher D. Gouge" <cgouge@iname.com>
+alias chris-old2 "Christopher D. Gouge" <cgouge88@yahoo.com>
+alias chris-ucf "Christopher D. Gouge" <gouge@cs.ucf.edu>
+alias chris-work "Christopher D. Gouge" <chris_gouge@adaptec.com>
+alias chris-work-mdi "Christopher D. Gouge" <cgouge@microdes.com>
+alias chris-work-old "Christopher D. Gouge" <gouge_chris@dpt.com>
+alias clem "Clem Cole" <clemc@ammasso.com>
+alias clem-work-old "Clem Cole" <clemc@hydra.enet.dec.com>
+alias clem-work-old2 "Clem Cole" <clemc@pacelinesystems.com>
+alias dan "Dan Grotefend" <dgrot@atl.mindspring.com>
+alias dan-prod "Dan Grotefend" <rpke37c@prodigy.com>
+alias davep "David Panariti" <davep@meduseld.net>
+alias davep-att "David Panariti" <panariti@attbi.com>
+alias davep-real "David Panariti" <davep@meduseld.net>
+alias davep-v "David Panariti" <panariti@verizon.net>
+alias davep-verizon "David Panariti" <panariti@verizon.net>
+alias davep-work "David Panariti" <david.panariti@hp.com>
+alias davew "Dave Watson" <dwatson@nwlink.com>
+alias df "David Freier" <david@icionline.net>
+alias diane "Diane Pina" <tiffany30@rcn.com>
+alias diane-work "Diane Pina" <Diane.Pina@hp.com>
+alias diane1 "Diane Pina" <dtp30@hotmail.com>
+alias dick "Dick Flower" <dick.flower@hp.com>
+alias dp "David Panariti" <davep@meduseld.net>
+alias dp-att "David Panariti" <panariti@attbi.com>
+alias dp-real "David Panariti" <davep@meduseld.net>
+alias dp-v "David Panariti" <panariti@verizon.net>
+alias dp-verizon "David Panariti" <panariti@verizon.net>
+alias dp-work "David Panariti" <david.panariti@hp.com>
+alias drew "Andrew Gallatin " <gallatin@cs.duke.edu>
+alias eric "Eric Bentley" <bentley@hcgl.eng.ohio-state.edu>
+alias evotech "Jack Lo" <jacklo@evoluent.biz>
+alias fbomba "Frank Bomba" <Frank.Bomba@hp.com>
+alias france "George France" <George.France2@compaq.com>
+alias geneb "Gene Boudreau" <geneb@pop1.channel1.com>
+alias geo "George Dake" <dake@microdes.com>
+alias goob "Brian Ciemian" <ciemian@platsol.com>
+alias greg "Greg Buchner" <buchner@moonrock.asd.sgi.com>
+alias herb "Herb Gideon" <gideon@bga.com>
+alias igor "Igor Pedan" <pedan@alumni.brandeis.edu>
+alias j "J Petrie" <sales@singlepower.com>
+alias jake "Jake Mattison" <jakester626@yahoo.com>
+alias jamey "Jamey Hicks" <jamey.hicks@hp.com>
+alias jason-rinn "Jason Rinn" <jrinn@magicnet.net>
+alias jborzner "John Borzner and Family" <jborzner@cfl.rr.com>
+alias jesse "Jesse Mattison" <jess_slapshot@yahoo.com>
+alias jfg "John F. Gillono" <jfg614@comcast.net>
+alias jfg-home "John F. Gillono" <jfg614@comcast.net>
+alias jfg-work "John F. Gillono" <jfg@netapp.com>
+alias jim "Jim Ennis" <jim@pegasus.cc.ucf.edu>
+alias jimmy "Jimmy Mattison" <low_stick_side@yahoo.com>
+alias joanne "Joanne Mattison" <mattisjo@yahoo.com>
+alias joanne-other "Joanne Mattison" <mattisjo@verizon.net>
+alias joanne-work "Joanne Mattison" <Joanne.Mattison@East.Sun.Com>
+alias junior "John Borzner and Family" <jborzner@cfl.rr.com>
+alias kabir "Kabir Mahadeva" <kabir@alumni.princeton.edu>
+alias kabir-office_wide "Kabir Mahadeva" <fortune@nando.net>
+alias karen "karen haroules" <karenh@locus.com>
+alias kath "Kath Knobe" <Kath.Knobe@hp.com>
+alias leep "Lee Page" <lrpage@mindspring.com>
+alias leep-cis "Lee Page" <75562.3052@compuserve.com>
+alias leep-work "Lee Page" <leep@isrglobal.com>
+alias leep-work-old "Lee Page" <Page_Lee@dpt.com>
+alias leonidas "Leonidas " <kthanasi@hp.com>
+alias leonidas-old2 "Leonidas " <kthanasi@akamai.com>
+alias linda "Linda Burkett" <linda@gwis.com>
+alias loretta "Loretta Nierat" <loretta@hpvablab.cup.hp.com>
+alias mark "Mark Woodruff" <markgwoodruff@yahoo.com>
+alias mark-old.work "Mark Woodruff" <mwoodruff@valenciasystems.com>
+alias markc "Mark Covert" <mark.covert@intel.com>
+alias mel "Melanie Filko" <melfilko@earthlink.net>
+alias mike "Mike Morton" <mike@mikemorton.com>
+alias mikeg "Mike Garrison" <mrhawaii@hits.net>
+alias mikeryan "Mike Ryan" <mryan@cannet.com>
+alias mikeryan-work "Mike Ryan" <uszvnjl6@ibmmail.com>
+alias mikes "Mike Schexnaydre" <mschex@earthlink.net>
+alias mikew "Mike Wonham" <michael.wonham@hp.com>
+alias mm "Mike Morton" <mike@mikemorton.com>
+alias mtim "Tim Michalk" <uszvn7e6@ibmmail.com>
+alias nikhil "R.S. Nikhil" <nikhil@bluespec.com>
+alias nikhil-old "R.S. Nikhil" <nikhil@sandburst.com>
+alias paula "Paula Pineda" <paula@cup.hp.com>
+alias pea "Susan Panariti" <susan@crickhollow.org>
+alias peter "Peter Coffee" <72631.113@compuserve.com>
+alias pod "Susan Panariti" <susan@crickhollow.org>
+alias poddums "Susan Panariti" <susan@crickhollow.org>
+alias problems "problems" <CRLproblems@hp.Com>
+alias ps "Paul Scammel" <ps@veritas.com>
+alias raman "Raman Kapur" <raman@avnisoft.com>
+alias rebeca "Rebeca Chen" <rebeca@microdes.com>
+alias ron "Ron W. Auld" <moushous@gate.net>
+alias ron-cis "Ron W. Auld" <72607.3037@compuserve.com>
+alias ron-work "Ron W. Auld" <rauld@mdi.com>
+alias rsmith-other "Robert W. Smith" <smithrz@hotmail.com>
+alias ruth "Ruth Beane" <ruth@pyramid.com>
+alias sbostic "Scott Bostic" <sbostic@lovetts.com>
+alias schan "Sue Chan" <schan@veritas.com>
+alias scott "Scott Thayer" <sthayer2001@earthlink.net>
+alias seabreeze-alumni-info "Seabreeze Sr High Alumni info" <devaccar@mail.volusia.k12.fl.us>
+alias susan "Susan Panariti" <susan@crickhollow.org>
+alias sv "Susan Verhulst" <susanv@zk3.dec.com>
+alias sv-home "Susan Verhulst" <Susan@globecomm.net>
+alias teri "John Borzner and Family" <jborzner@cfl.rr.com>
+alias thomas "John Borzner and Family" <jborzner@cfl.rr.com>
+alias tim "Tim Lam" <SirYbral@aol.com>
+alias baby-list "Dan Grotefend" <dgrot@atl.mindspring.com>, "Brian Buchner" <bbuchner@cfl.rr.com>, "Mark Woodruff" <markgwoodruff@yahoo.com>, "George Dake" <dake@microdes.com>, "Jim Ennis" <jim@pegasus.cc.ucf.edu>, "Scott Thayer" <sthayer2001@earthlink.net>, "Ron W. Auld" <moushous@gate.net>, "Melanie Filko" <melfilko@earthlink.net>, "Arnold Jones" <arnold@mdi.com>, "Ben Ghofrani" <ghofrani@yahoo.com>, "Lee Page" <lrpage@mindspring.com>, "John Borzner and Family" <jborzner@cfl.rr.com>
+alias jnj "Jimmy Mattison" <low_stick_side@yahoo.com>, "Joanne Mattison" <mattisjo@yahoo.com>, "jnj-home" <jnj-home>
+alias mdiites "Eric B. Hawley" <bee@microdes.com>, "Ben Ghofrani" <ghofrani@yahoo.com>, "Christopher D. Gouge" <cgouge@mailbolt.com>, "Jason Rinn" <jrinn@magicnet.net>, "Lee Page" <lrpage@mindspring.com>, "Mark Woodruff" <markgwoodruff@yahoo.com>, "Melanie Filko" <melfilko@earthlink.net>, "Rebeca Chen" <rebeca@microdes.com>, "Ron W. Auld" <moushous@gate.net>, "Dan Grotefend" <dgrot@atl.mindspring.com>
+alias old-gang "Eric B. Hawley" <bee@microdes.com>, "Ben Ghofrani" <ghofrani@yahoo.com>, "Christopher D. Gouge" <cgouge@mailbolt.com>, "Jason Rinn" <jrinn@magicnet.net>, "Lee Page" <lrpage@mindspring.com>, "Mark Woodruff" <markgwoodruff@yahoo.com>, "Melanie Filko" <melfilko@earthlink.net>, "Rebeca Chen" <rebeca@microdes.com>, "Ron W. Auld" <moushous@gate.net>, "Dan Grotefend" <dgrot@atl.mindspring.com>, "Jim Ennis" <jim@pegasus.cc.ucf.edu>, "Scott Thayer" <sthayer2001@earthlink.net>, "Brian Baker" <bbaker@zk3.dec.com>, "Brad Lepper" <BQLepper@itt.com>, "Mark Covert" <mark.covert@intel.com>, "Eric Bentley" <bentley@hcgl.eng.ohio-state.edu>, "John F. Gillono" <jfg@netapp.com>
+alias recs "Arnold Garlick" <arnold@pacific.com>, "Beth Evancheck" <beth@spica.bdt.com>, "Herb Gideon" <gideon@bga.com>, "Kabir Mahadeva" <kabir@alumni.princeton.edu>, "Scott Bostic" <sbostic@lovetts.com>
+alias ts "Kath Knobe" <Kath.Knobe@hp.com>, "Carl Offner" <Carl.Offner@hp.com>, "Alex Nelson" <Alex.Nelson@hp.com>, "George France" <George.France2@compaq.com>, "Dick Flower" <dick.flower@hp.com>, "Leonidas " <kthanasi@hp.com>
+alias John.Gillono John.Gillono@netapp.com

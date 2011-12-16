@@ -1,0 +1,238 @@
+# IMWheel Configuration file ($HOME/.imwheelrc or /etc/imwheelrc)
+# (GPL)Jon Atkins <jcatki@home.com>
+# Please read the README and/or imwheel(1) manpage for info
+# and this is best operated on using vim (as I said: It's crunchy)
+
+#
+# This is only for demonstration of the priority command...
+# See the other global Exclude command below for the one you want to use!
+# If this is activated it will only apps that have a lower priority
+# priority is based first on the priority command, then the position in this
+# file - the higher the line is in a file the higher in a priority class it is
+# thus for a default priority you can see that the position in the file is
+# important, but the priority command CAN appear anywahere in a window's list
+# of translations, and the priority will be assigned to all translations below
+# it until either a new window is defined or the priority is set again.
+#
+#".*"
+#@Priority=-1000 #the default priority is zero, higher numbers take precedence
+#@Exclude
+#@Repeat
+
+"^kvt"
+None,		Up,		Shift_L|Page_Up
+None,		Down,	Shift_L|Page_Down
+
+"^-(tty|pty|pts).*-"
+None,		Up,		Shift_L|Page_Up
+None,		Down,	Shift_L|Page_Down
+
+"^Konsole"
+None,		Up,		Shift_L|Page_Up
+None,		Down,	Shift_L|Page_Down
+
+"^XMcd"
+None,		Up,		C
+None,		Down,	Shift_L|C
+
+"^XMMS_Player"
+None,		Up,		Right
+None,		Down,	Left
+
+"^XMMS_Playlist"
+Control_L,	Up,		Up
+Control_L,	Down,	Down
+
+"^xmms"
+Alt_L,		Up,		Z
+Alt_L,		Down,	B
+
+"^XATITV-GATOS"
+None,       Down,	KP_Subtract
+None,       Up,		KP_Add
+
+"^fxtv"
+None,		Down,	KP_Subtract
+None,		Up,	KP_Add
+
+"^Xman"
+None,		Down,	F
+Shift_L,	Down,	3
+None,		Up,		B
+
+"^Gvim"
+Shift_L,	Up,		Control_L|Y
+Shift_L,	Down,	Control_L|E
+None,		Up,		Page_Up
+None,		Down,	Page_Down
+
+"^VIM"
+Shift_L,	Up,		Control_L|Y
+Shift_L,	Down,	Control_L|E
+None,		Up,		Page_Up
+None,		Down,	Page_Down
+
+"^Eterm"
+Alt_L,   	Up,     Shift_L|Page_Up
+Alt_L,   	Down,   Shift_L|Page_Down
+
+"^GnomeTerminal"
+@Exclude
+@Repeat
+None,		Up,		Shift_L|Page_Up
+None,		Down,	Shift_L|Page_Down
+
+"^NXTerm"
+None,   	Up,     Shift_L|Page_Up
+None,   	Down,   Shift_L|Page_Down
+
+"^rxvt"
+None,	  	Up,	Shift_L|Page_Up
+None,  		Down,	Shift_L|Page_Down
+
+"^XTerm"
+None,		Up,	Shift_R|Page_Up
+None,		Down,	Shift_R|Page_Down
+None,		Left,	Control_L|A
+None,		Right,	Control_L|E
+#Shift_L,	Down,	Shift_L|1
+
+"^Mozilla.*"
+#
+# If you want to scroll by a few lines then uncomment these 4 lines
+# and comment out the paging 4 lines below these!
+#
+#Shift_L,	Down,	Page_Down,			1,	1000,	1000
+#Shift_L,	Up,		Page_Up,			1,	1000,	1000
+#None,		Down,	Down,				7,	1000,	1000
+#None,		Up,		Up,					7,	1000,	1000
+#
+# If you don't like page scrolling then comment these out and uncomment above!
+#
+Shift_L,	Down,	Down,				7,
+Shift_L,	Up,		Up,					7,
+None,		Down,	Page_Down,			1,
+None,		Up,		Page_Up,			1,
+# Left/Right & Thumb stuff
+None,		Left,	Left,				7,
+None,		Right,	Right,				7,
+None,		Thumb,	Down,				7,
+Shift_L,	Thumb,	Up,					7,
+
+"^Netscape"
+#
+# If you want to scroll by a few lines then uncomment these 4 lines
+# and comment out the paging 4 lines below these!
+#
+#Shift_L,	Down,	Page_Down,			1,	1000,	1000
+#Shift_L,	Up,		Page_Up,			1,	1000,	1000
+#None,		Down,	Down,				7,	1000,	1000
+#None,		Up,		Up,					7,	1000,	1000
+#
+# If you don't like page scrolling then comment these out and uncomment above!
+#
+Shift_L,	Down,	Shift_L|Down,		7,	1000,	1000
+Shift_L,	Up,		Shift_L|Up,			7,	1000,	1000
+None,		Down,	Page_Down,			1,	1000,	1000
+None,		Up,		Page_Up,			1,	1000,	1000
+# Left/Right & Thumb stuff
+None,		Left,	Left,				7,	1000,	1000
+None,		Right,	Right,				7,	1000,	1000
+None,		Thumb,	Down,				7,	1000,	1000
+Shift_L,	Thumb,	Up,					7,	1000,	1000
+
+"^Navigator"
+#Alt_L,		Down,	Alt_L|Right
+#Alt_L,		Up,		Alt_L|Left
+Alt_L,		Down,	Right,				10,	1000,	1000
+Alt_L,		Up,		Left,				10,	1000,	1000
+
+# Thanks to Paul J Collins <sneakums@usa.net>
+"^emacs"
+Shift_L,	Up,		Page_Up
+Shift_L,	Down,	Page_Down
+# you may need Alt instead of Meta....
+None,		Down,	Control_L|Meta_L|Shift_L|parenright
+None,		Up,		Control_L|Meta_L|Shift_L|parenleft
+
+# Thanks to etienne grossmann <etienne@isr.ist.utl.pt>
+"^Xftp"
+,			Down,	j
+,			Up,		k
+
+# Thanks to etienne grossmann <etienne@isr.ist.utl.pt>
+"^gv"
+None,		Up,		Shift_L|space
+None,		Down,	space
+
+"^Event Tester"
+@Repeat
+@Exclude
+
+"^xv grab"
+@Priority=1
+@Exclude
+
+"^XV.*"
+None,	Down,	Tab
+None,	Up,		Delete
+
+"(null)"
+,	Up,		Page_Up
+,	Down,	Page_Down
+
+#
+# Uncommment the following to exclude by default.
+# Then you will have to add new apps all the time, but will retain any built-in
+# wheel functionality contained in some KDE and other newer programs.
+# This kinda defeats the original purpose of the program! ;)
+#
+#".*"
+#@Priority=-1000
+#@Exclude
+#@Repeat
+
+#
+# These are the defaults, but note that the defaults for the right side of the
+# keyboard are still handled within the program, unless you add the
+# combinations desired here. (except for the None modifier of course!)
+# If this section is deleted then the hardcoded defaults will be used, which
+# are the same thing.
+# Modifying these has global effects, but doesn't override what is above.
+#
+".*"
+@Priority=-1001
+None,							Left,	Left
+None,							Right,	Right
+None,							Up,		Page_Up
+None,							Down,	Page_Down
+Shift_L,						Left,	Left
+Shift_L,						Right,	Right
+Shift_L,						Up,		Up
+Shift_L,						Down,	Down
+        Control_L,				Left,	Left,		2
+        Control_L,				Right,	Right,		2
+        Control_L,				Up,		Page_Up,	2
+        Control_L,				Down,	Page_Down,	2
+Shift_L|Control_L,				Left,	Left,		5
+Shift_L|Control_L,				Right,	Right,		5
+Shift_L|Control_L,				Up,		Page_Up,	5
+Shift_L|Control_L,				Down,	Page_Down,	5
+                  Alt_L,		Left,	Left,		10
+                  Alt_L,		Right,	Right,		10
+                  Alt_L,		Up,		Left,		10
+                  Alt_L,		Down,	Right,		10
+Shift_L|          Alt_L,		Left,	Left
+Shift_L|          Alt_L,		Right,	Right
+Shift_L|          Alt_L,		Up,		Left
+Shift_L|          Alt_L,		Down,	Right
+        Control_L|Alt_L,		Left,	Left.		20
+        Control_L|Alt_L,		Right,	Right.		20
+        Control_L|Alt_L,		Up,		Left.		20
+        Control_L|Alt_L,		Down,	Right.		20
+Shift_L|Control_L|Alt_L,		Left,	Left,		50
+Shift_L|Control_L|Alt_L,		Right,	Right,		50
+Shift_L|Control_L|Alt_L,		Up,		Left,		50
+Shift_L|Control_L|Alt_L,		Down,	Right,		50
+
+# vim:ts=4:shiftwidth=4:syntax=sh
