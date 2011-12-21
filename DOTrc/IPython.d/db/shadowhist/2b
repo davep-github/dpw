@@ -1,8 +1,0 @@
-(dp1
-Vo.readline
-p2
-I33
-sVimport IPython.ipapi
-p3
-I5
-s.
