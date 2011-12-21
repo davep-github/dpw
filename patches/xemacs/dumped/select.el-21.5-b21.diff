@@ -1,0 +1,17 @@
+--- select.el.orig	2005-03-12 15:57:42.000000000 -0500
++++ select.el	2005-05-30 15:37:52.000000000 -0400
+@@ -193,10 +193,12 @@
+ 
+ The data may also be a vector of valid non-vector selection values.
+ 
+-Interactively, the text of the region is used as the selection value."
++Interactively, if no prefix arg, the selection value is promped for,
++otherwise, the text of the region is used as the selection value."
++
+   (interactive (if (not current-prefix-arg)
+ 		   (list (read-string "Store text for pasting: "))
+-		 (list (substring (region-beginning) (region-end)))))
++		 (list (buffer-substring (region-beginning) (region-end)))))
+   ;; calling own-selection-internal will mess this up, so preserve it.
+   (let ((zmacs-region-stays zmacs-region-stays))
+ 					;FSFmacs huh??  It says:

@@ -1,0 +1,14 @@
+--- workspace.cpp~	Mon Sep  1 21:04:52 2003
++++ workspace.cpp	Mon Oct 27 14:12:28 2003
+@@ -1711,6 +1711,11 @@
+         popup->insertItem( SmallIconSet( "attach" ), i18n("Always &on Top"), Options::StaysOnTopOp );
+         popup->insertItem( SmallIconSet( "filesave" ), i18n("Sto&re Window Settings"), Options::ToggleStoreSettingsOp );
+ 
++	// dp - begin
++	popup->insertItem( i18n("Maximize &Vert")+'\t'+keys->shortcut("Window Maximize Vert").seq(0).toString(), Options::VMaximizeOp );
++	popup->insertItem( i18n("Maximize &Horiz")+'\t'+keys->shortcut("Window Maximize Horiz").seq(0).toString(), Options::HMaximizeOp );
++	// dp - end
++	
+         if (!KGlobal::config()->isImmutable())
+         {
+             popup->insertSeparator();

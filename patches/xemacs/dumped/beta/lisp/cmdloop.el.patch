@@ -1,0 +1,43 @@
+--- cmdloop.el.ORIG	2004-10-28 23:11:17.000000000 -0400
++++ cmdloop.el	2004-11-05 10:38:08.000000000 -0500
+@@ -34,6 +34,14 @@
+ 
+ ;;; Code:
+ 
++(defconst extended-command-calls-pre-command-hook-p nil
++  "*Should `execute-extended-command' call pre-command-hook functions before
++executing the command read from the mini-buffer?")
++
++(defconst extended-command-calls-post-command-hook-p nil
++  "*Should `execute-extended-command' call post-command-hook functions after
++executing the command read from the mini-buffer?")
++
+ (defun recursion-depth ()
+   "Return the current depth in recursive edits."
+   (+ command-loop-level (minibuffer-depth)))
+@@ -335,7 +343,11 @@
+       ;; funny.  Quoth our forefathers: "We want lexical scope!"
+       (let ((_execute_command_keys_ (where-is-internal this-command))
+ 	    (_execute_command_name_ this-command)) ; the name can change
++        (if extended-command-calls-pre-command-hook-p
++            (run-hooks 'pre-command-hook))
+ 	(command-execute this-command t)
++        (if extended-command-calls-post-command-hook-p
++            (run-hooks 'post-command-hook))
+ 	(when _execute_command_keys_
+ 	  ;; Normally the region is adjusted in post_command_hook;
+ 	  ;; however, it is not called until after we finish.  It
+@@ -360,7 +372,12 @@
+ 	    (sit-for teach-extended-commands-timeout)
+ 	    (clear-message 'no-log))))
+     ;; Else, just run the command.
+-    (command-execute this-command t)))
++    (if extended-command-calls-pre-command-hook-p
++        (run-hooks 'pre-command-hook))
++    (let ((ret (command-execute this-command t)))
++      (if extended-command-calls-post-command-hook-p
++          (run-hooks 'post-command-hook))
++      ret)))
+ 
+ 
+ ;;; C code calls this; the underscores in the variable names are to avoid

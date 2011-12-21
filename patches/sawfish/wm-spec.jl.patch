@@ -1,0 +1,13 @@
+--- ./lisp/sawfish/wm/state/wm-spec.jl.ORIG	Sun Aug 18 22:20:03 2002
++++ ./lisp/sawfish/wm/state/wm-spec.jl	Sun Aug 18 22:20:24 2002
+@@ -207,7 +207,9 @@
+ 	(cond ((or (and (string= (aref class 1) "Panel")
+ 			(string= (aref class 0) "panel_window"))
+ 		   (and (string= (aref class 1) "kicker")
+-			(string= (aref class 0) "Panel")))
++			(string= (aref class 0) "Panel"))
++		   (and (string= (aref class 1) "kicker")
++			(string= (aref class 0) "kicker")))
+ 	       (window-put w 'focus-click-through t)
+ 	       (window-put w 'avoid t)
+ 	       (window-put w 'no-history t)

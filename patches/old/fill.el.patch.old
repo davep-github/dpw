@@ -1,0 +1,15 @@
+--- fill.el.ORIG	Thu Sep 12 10:04:12 2002
++++ fill.el	Thu Sep 12 10:06:21 2002
+@@ -668,7 +668,11 @@
+ See `fill-paragraph' and `fill-region' for more information."
+   (interactive "*P")
+   (if (region-active-p)
+-      (fill-region (point) (mark) arg)
++      (progn
++	;; filladapt does nothing if point > mark
++	(if (> (point) (mark))
++	    (exchange-point-and-mark))
++	(fill-region (point) (mark) arg))
+     (fill-paragraph arg)))
+ 
+ 

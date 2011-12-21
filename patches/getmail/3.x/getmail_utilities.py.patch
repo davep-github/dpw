@@ -1,0 +1,16 @@
+--- getmail_utilities.py.ORIG	Sun Jun  8 13:32:59 2003
++++ getmail_utilities.py	Sun Jun  8 13:33:35 2003
+@@ -217,7 +217,12 @@
+         # No name:num split, use first
+         hdrnum = 1
+ 
+-    return address_no_brackets (message.get_specific_header (hdrname, hdrnum))
++    try:
++        ret = address_no_brackets (message.get_specific_header (hdrname, hdrnum))
++    except getmailConfigException:
++        ret = config['postmaster']
++
++    return ret
+ 
+ #######################################
+ def blurb ():

@@ -1,0 +1,12 @@
+--- Xservers.orig	2004-08-23 02:15:56.000000000 -0400
++++ Xservers	2004-08-23 02:20:20.394669284 -0400
+@@ -10,7 +10,8 @@
+ #       XTerminalName:0 foreign
+ #
+ 
+-:0 local@tty1 /usr/X11R6/bin/X -nolisten tcp
++:0 local@tty1 /usr/X11R6/bin/X -nolisten tcp -depth 24 -dpi 114 vt7
++#:0 local@tty1 /usr/X11R6/bin/X -nolisten tcp
+ #:1 local@tty2 reserve /usr/X11R6/bin/X -nolisten tcp :1
+ #:2 local@tty3 reserve /usr/X11R6/bin/X -nolisten tcp :2
+ #:3 local@tty4 reserve /usr/X11R6/bin/X -nolisten tcp :3

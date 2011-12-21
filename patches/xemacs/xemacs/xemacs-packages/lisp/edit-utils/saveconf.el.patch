@@ -1,0 +1,17 @@
+--- saveconf.el.ORIG	2005-05-02 09:45:05.311505589 -0400
++++ saveconf.el	2005-05-02 09:46:29.710913144 -0400
+@@ -268,11 +268,12 @@
+ 	;;
+ 	;; Recover buffer contexts, if any.
+ 	;;
+-	(while (setq sexpr (read context-buffer))
++	(while (setq sexpr (read context-buffer)
++                     point (read context-buffer))
+ 	  (set-buffer (find-file-noselect sexpr t))
+ 	  (if (zerop (buffer-size))
+ 	      (kill-buffer (current-buffer))
+-	    (goto-char (read context-buffer))))
++	    (goto-char point)))
+ 	(bury-buffer "*scratch*")
+ 	(kill-buffer context-buffer)
+ 	t )

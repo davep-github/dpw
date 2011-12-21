@@ -1,0 +1,24 @@
+--- etags.el.ORIG	2005-07-08 18:07:05.000000000 -0400
++++ etags.el	2005-07-08 18:07:05.000000000 -0400
+@@ -80,6 +80,12 @@
+ 		 (const :tag "Ask" ask))
+   :group 'etags)
+ 
++(defcustom etags-auto-build-completion-table-max 20000
++  "*Don't ask to build the completion table when 
++`tags-build-completion-table' is 'Ask and table is less than this size."
++  :type 'integer
++  :group 'etags)
++
+ (defcustom tags-always-exact nil
+   "*If this variable is non-nil, then tags always looks for exact matches.
+ If it is nil (the default), tags will first go through exact matches,
+@@ -353,7 +359,7 @@
+ 	      ((t) t)
+ 	      ((ask)
+ 	       ;; don't bother asking for small ones
+-	       (or (< (buffer-size) 20000)
++	       (or (< (buffer-size) etags-auto-completion-build-max)
+ 		   (y-or-n-p
+ 		    (format "Build tag completion table for %s? "
+ 			    tag-table)))))

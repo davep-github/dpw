@@ -1,0 +1,44 @@
+--- saveconf.el	2005-10-16 02:21:20.000000000 -0400
++++ /home/dapanarx/inb/saveconf.el	2011-07-05 17:41:00.000000000 -0400
+@@ -124,6 +124,17 @@
+       (save-context))
+   (just-kill-emacs query))
+ 
++(defvar saveconf-file-name nil
++  "Where to save/restore configuration information.")
++
++(defun saveconf-make-file-name ()
++  (concat (original-working-directory)
++          ".emacs_" (user-login-name)))
++
++(defun saveconf-get-filename ()
++  (or saveconf-file-name
++      (saveconf-make-file-name)))
++
+ (defun save-context ()
+   "Save context of all Emacs windows (files visited and position of point).
+ The information goes into a file called .emacs_<username> in the directory
+@@ -138,9 +149,8 @@
+ on terminals with a different number of rows and columns."
+   (interactive)
+   (condition-case error-data
+-      (let (context-buffer mark save-file-name)
+-	(setq save-file-name (concat (original-working-directory)
+-				     ".emacs_" (user-login-name)))
++      (let ((save-file-name (saveconf-get-filename))
++            context-buffer mark)
+ 	(if (not (file-writable-p save-file-name))
+ 	    (if (file-writable-p (original-working-directory))
+ 		(error "context is write-protected, %s" save-file-name)
+@@ -230,9 +240,8 @@
+       ;;
+       ;; Set up some local variables.
+       ;;
+-      (let (sexpr context-buffer recover-file-name)
+-	(setq recover-file-name (concat (original-working-directory)
+-					".emacs_" (user-login-name)))
++      (let ((recover-file-name (saveconf-get-filename))
++            sexpr context-buffer)
+ 	(if (not (file-readable-p recover-file-name))
+ 	    (error "can't access context, %s" recover-file-name))
+ 	;;

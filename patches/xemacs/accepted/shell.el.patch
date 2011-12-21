@@ -1,0 +1,69 @@
+--- shell.el.ORIG	Sun Nov 24 14:30:40 2002
++++ shell.el	Mon Nov 25 21:33:09 2002
+@@ -249,6 +249,26 @@
+ 		 (const nil))
+   :group 'shell-directories)
+ 
++(defcustom shell-dirtrack-other-regexp nil
++  "*Regexp to match commands for which we call `shell-dirtrack-process-other-func'."
++  :type '(choice regexp
++		 (const nil))
++  :group 'shell-directories)
++
++;; @todo make this a full blown hook?  ?A hook which stops when a func
++;; returns t? Or nil?
++(defcustom shell-dirtrack-process-other-func nil
++  "*Function to allow external processing of directory changing commands which match `shell-dirtrack-other-regexp'.
++This allows users to process arbitrary directory changing commands.
++This function takes two arguments:
++CMD - the first word (cmd part) of the current shell command line.
++ARG1 - the rest of the current shell command line.  
++See shell-process-popd, etc., for an example of things for which this
++function might be used.  The motivation for this was to provide a
++pushd-like command which expands ARG1 from an abbrev-table."
++  :type 'function
++  :group 'shell-directories)
++
+ (defcustom explicit-shell-file-name nil
+   "*If non-nil, is file name to use for explicitly requested inferior shell."
+   :type '(choice (const :tag "None" nil) file)
+@@ -637,8 +657,10 @@
+ If emacs gets confused, you can resync with the shell with \\[dirs].
+ 
+ See variables `shell-cd-regexp', `shell-chdrive-regexp', `shell-pushd-regexp',
+-and  `shell-popd-regexp', while `shell-pushd-tohome', `shell-pushd-dextract', 
+-and `shell-pushd-dunique' control the behavior of the relevant command.
++`shell-popd-regexp', `shell-dirtrack-other-regexp', and 
++`shell-dirtrack-process-other-func', while `shell-pushd-tohome', 
++`shell-pushd-dextract', and `shell-pushd-dunique' control the behavior of 
++the relevant command.
+ 
+ Environment variables are expanded, see function `substitute-in-file-name'."
+   (if shell-dirtrackp
+@@ -667,10 +689,24 @@
+ 			  (string-match (concat "\\`\\(" shell-chdrive-regexp
+ 						"\\)\\($\\|[ \t]\\)")
+ 					cmd))
+-		     (shell-process-cd (comint-substitute-in-file-name cmd))))
++		     (shell-process-cd (comint-substitute-in-file-name cmd)))
++		    ((and shell-dirtrack-other-regexp
++			  shell-dirtrack-process-other-func
++			  (string-match (concat "\\`\\(" 
++						shell-dirtrack-other-regexp
++						"\\)\\($\\|[ \t]\\)")
++					cmd))
++		     (funcall shell-dirtrack-process-other-func
++			      ;; pass cmd so one "other-func" can handle
++			      ;; multiple commands.
++			      cmd
++			      ;; leave arg1 unchanged since we don't know
++			      ;; what `shell-dirtrack-process-other-func'
++			      ;; will want to do with it
++			      arg1)))
+ 	      (setq start (progn (string-match "[; \t]*" str end) ; skip again
+ 				 (match-end 0)))))
+-    (error "Couldn't cd"))))
++	(error "Couldn't cd"))))
+ 
+ 
+ ;; Like `cd', but prepends comint-file-name-prefix to absolute names.

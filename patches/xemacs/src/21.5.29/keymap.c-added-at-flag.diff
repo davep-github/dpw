@@ -1,0 +1,35 @@
+--- Originals/keymap.c	2009-10-02 15:43:42.000000000 -0400
++++ keymap.c	2009-10-02 15:44:33.000000000 -0400
+@@ -188,6 +188,8 @@
+ 
+ static Lisp_Object Vvertical_divider_map;
+ 
++static Lisp_Object Vrelevant_keymaps_at_flag;
++
+ /* This is incremented whenever a change is made to a keymap.  This is
+    so that things which care (such as the menubar code) can recompute
+    privately-cached data when the user has changed keybindings.
+@@ -2720,9 +2722,11 @@
+   if (!NILP (pos))
+     {
+       Lisp_Object extent;
+-      for (extent = Fextent_at (pos, buffer_or_string, Qkeymap, Qnil, Qnil);
++      for (extent = Fextent_at (pos, buffer_or_string, Qkeymap, Qnil,
++                                Vrelevant_keymaps_at_flag);
+ 	   !NILP (extent);
+-	   extent = Fextent_at (pos, buffer_or_string, Qkeymap, extent, Qnil))
++	   extent = Fextent_at (pos, buffer_or_string, Qkeymap, extent,
++                                Vrelevant_keymaps_at_flag))
+ 	{
+ 	  Lisp_Object keymap = Fextent_property (extent, Qkeymap, Qnil);
+ 	  if (!NILP (keymap))
+@@ -4802,6 +4806,9 @@
+ */ );
+   Vvertical_divider_map = Qnil;
+ 
++  DEFVAR_LISP ("relevant-keymaps-at-flag", &Vrelevant_keymaps_at_flag);
++  Vrelevant_keymaps_at_flag = Qnil;
++
+   DEFVAR_INT ("keymap-tick", &keymap_tick /*
+ Incremented for each change to any keymap.
+ */ );

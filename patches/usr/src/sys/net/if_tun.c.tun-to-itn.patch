@@ -1,0 +1,389 @@
+--- if_tun.c	Tue Feb 12 19:43:11 2002
++++ /yokel/yokel/home/davep/tmp/if_tun2.c	Wed Jan 30 13:32:07 2002
+@@ -13,7 +13,7 @@
+  * UCL. This driver is based much more on read/write/poll mode of
+  * operation though.
+  *
+- * $FreeBSD: src/sys/net/if_tun.c,v 1.74.2.8 2002/02/13 00:43:11 dillon Exp $
++ * $FreeBSD: src/sys/net/if_tun.c,v 1.74.2.5 2001/08/08 13:07:00 fenner Exp $
+  */
+ 
+ #include "opt_inet.h"
+@@ -50,40 +50,40 @@
+ #include <net/if_tunvar.h>
+ #include <net/if_tun.h>
+ 
+-static MALLOC_DEFINE(M_TUN, "tun", "Tunnel Interface");
++static MALLOC_DEFINE(M_ITN, "itn", "AltaVista Tunnel Interface");
+ 
+-static void tunattach __P((void *));
+-PSEUDO_SET(tunattach, if_tun);
++static void itnattach __P((void *));
++PSEUDO_SET(itnattach, if_itn);
+ 
+-static void tuncreate __P((dev_t dev));
++static void itncreate __P((dev_t dev));
+ 
+-#define TUNDEBUG	if (tundebug) printf
+-static int tundebug = 0;
+-SYSCTL_INT(_debug, OID_AUTO, if_tun_debug, CTLFLAG_RW, &tundebug, 0, "");
++#define ITNDEBUG	if (itndebug) printf
++static int itndebug = 0;
++SYSCTL_INT(_debug, OID_AUTO, if_itn_debug, CTLFLAG_RW, &itndebug, 0, "");
+ 
+-static int tunoutput __P((struct ifnet *, struct mbuf *, struct sockaddr *,
++static int itnoutput __P((struct ifnet *, struct mbuf *, struct sockaddr *,
+ 	    struct rtentry *rt));
+-static int tunifioctl __P((struct ifnet *, u_long, caddr_t));
+-static int tuninit __P((struct ifnet *));
++static int itnifioctl __P((struct ifnet *, u_long, caddr_t));
++static int itninit __P((struct ifnet *));
+ 
+-static	d_open_t	tunopen;
+-static	d_close_t	tunclose;
+-static	d_read_t	tunread;
+-static	d_write_t	tunwrite;
+-static	d_ioctl_t	tunioctl;
+-static	d_poll_t	tunpoll;
+-
+-#define CDEV_MAJOR 52
+-static struct cdevsw tun_cdevsw = {
+-	/* open */	tunopen,
+-	/* close */	tunclose,
+-	/* read */	tunread,
+-	/* write */	tunwrite,
+-	/* ioctl */	tunioctl,
+-	/* poll */	tunpoll,
++static	d_open_t	itnopen;
++static	d_close_t	itnclose;
++static	d_read_t	itnread;
++static	d_write_t	itnwrite;
++static	d_ioctl_t	itnioctl;
++static	d_poll_t	itnpoll;
++
++#define CDEV_MAJOR 77
++static struct cdevsw itn_cdevsw = {
++	/* open */	itnopen,
++	/* close */	itnclose,
++	/* read */	itnread,
++	/* write */	itnwrite,
++	/* ioctl */	itnioctl,
++	/* poll */	itnpoll,
+ 	/* mmap */	nommap,
+ 	/* strategy */	nostrategy,
+-	/* name */	"tun",
++	/* name */	"itn",
+ 	/* maj */	CDEV_MAJOR,
+ 	/* dump */	nodump,
+ 	/* psize */	nopsize,
+@@ -92,33 +92,33 @@
+ };
+ 
+ static void
+-tunattach(dummy)
++itnattach(dummy)
+ 	void *dummy;
+ {
+ 
+-	cdevsw_add(&tun_cdevsw);
++	cdevsw_add(&itn_cdevsw);
+ }
+ 
+ static void
+-tuncreate(dev)
++itncreate(dev)
+ 	dev_t dev;
+ {
+ 	struct tun_softc *sc;
+ 	struct ifnet *ifp;
+ 
+-	dev = make_dev(&tun_cdevsw, minor(dev),
+-	    UID_UUCP, GID_DIALER, 0600, "tun%d", lminor(dev));
++	dev = make_dev(&itn_cdevsw, minor(dev),
++	    UID_UUCP, GID_DIALER, 0600, "itn%d", lminor(dev));
+ 
+-	MALLOC(sc, struct tun_softc *, sizeof(*sc), M_TUN, M_WAITOK);
++	MALLOC(sc, struct tun_softc *, sizeof(*sc), M_ITN, M_WAITOK);
+ 	bzero(sc, sizeof *sc);
+ 	sc->tun_flags = TUN_INITED;
+ 
+ 	ifp = &sc->tun_if;
+ 	ifp->if_unit = lminor(dev);
+-	ifp->if_name = "tun";
+-	ifp->if_mtu = TUNMTU;
+-	ifp->if_ioctl = tunifioctl;
+-	ifp->if_output = tunoutput;
++	ifp->if_name = "itn";
++	ifp->if_mtu = TUNMTU - 40;
++	ifp->if_ioctl = itnifioctl;
++	ifp->if_output = itnoutput;
+ 	ifp->if_flags = IFF_POINTOPOINT | IFF_MULTICAST;
+ 	ifp->if_type = IFT_PPP;
+ 	ifp->if_snd.ifq_maxlen = ifqmaxlen;
+@@ -133,7 +133,7 @@
+  * configured in
+  */
+ static	int
+-tunopen(dev, flag, mode, p)
++itnopen(dev, flag, mode, p)
+ 	dev_t	dev;
+ 	int	flag, mode;
+ 	struct proc *p;
+@@ -148,24 +148,25 @@
+ 
+ 	tp = dev->si_drv1;
+ 	if (!tp) {
+-		tuncreate(dev);
++		itncreate(dev);
+ 		tp = dev->si_drv1;
+ 	}
+ 	if (tp->tun_flags & TUN_OPEN)
+ 		return EBUSY;
+ 	tp->tun_pid = p->p_pid;
+ 	ifp = &tp->tun_if;
++	ifp->if_flags |= IFF_RUNNING;	
+ 	tp->tun_flags |= TUN_OPEN;
+-	TUNDEBUG("%s%d: open\n", ifp->if_name, ifp->if_unit);
++	ITNDEBUG("%s%d: open\n", ifp->if_name, ifp->if_unit);
+ 	return (0);
+ }
+ 
+ /*
+- * tunclose - close the device - mark i/f down & delete
++ * itnclose - close the device - mark i/f down & delete
+  * routing info
+  */
+ static	int
+-tunclose(dev, foo, bar, p)
++itnclose(dev, foo, bar, p)
+ 	dev_t dev;
+ 	int foo;
+ 	int bar;
+@@ -215,19 +216,19 @@
+ 	funsetown(tp->tun_sigio);
+ 	selwakeup(&tp->tun_rsel);
+ 
+-	TUNDEBUG ("%s%d: closed\n", ifp->if_name, ifp->if_unit);
++	ITNDEBUG ("%s%d: closed\n", ifp->if_name, ifp->if_unit);
+ 	return (0);
+ }
+ 
+ static int
+-tuninit(ifp)
++itninit(ifp)
+ 	struct ifnet *ifp;
+ {
+ 	struct tun_softc *tp = ifp->if_softc;
+ 	register struct ifaddr *ifa;
+ 	int error = 0;
+ 
+-	TUNDEBUG("%s%d: tuninit\n", ifp->if_name, ifp->if_unit);
++	ITNDEBUG("%s%d: itninit\n", ifp->if_name, ifp->if_unit);
+ 
+ 	ifp->if_flags |= IFF_UP | IFF_RUNNING;
+ 	getmicrotime(&ifp->if_lastchange);
+@@ -260,7 +261,7 @@
+  * Process an ioctl request.
+  */
+ int
+-tunifioctl(ifp, cmd, data)
++itnifioctl(ifp, cmd, data)
+ 	struct ifnet *ifp;
+ 	u_long	cmd;
+ 	caddr_t	data;
+@@ -279,18 +280,18 @@
+ 			    "\tOpened by PID %d\n", tp->tun_pid);
+ 		break;
+ 	case SIOCSIFADDR:
+-		error = tuninit(ifp);
+-		TUNDEBUG("%s%d: address set, error=%d\n",
++		error = itninit(ifp);
++		ITNDEBUG("%s%d: address set, error=%d\n",
+ 			 ifp->if_name, ifp->if_unit, error);
+ 		break;
+ 	case SIOCSIFDSTADDR:
+-		error = tuninit(ifp);
+-		TUNDEBUG("%s%d: destination address set, error=%d\n",
++		error = itninit(ifp);
++		ITNDEBUG("%s%d: destination address set, error=%d\n",
+ 			 ifp->if_name, ifp->if_unit, error);
+ 		break;
+ 	case SIOCSIFMTU:
+ 		ifp->if_mtu = ifr->ifr_mtu;
+-		TUNDEBUG("%s%d: mtu set\n",
++		ITNDEBUG("%s%d: mtu set\n",
+ 			 ifp->if_name, ifp->if_unit);
+ 		break;
+ 	case SIOCSIFFLAGS:
+@@ -305,10 +306,10 @@
+ }
+ 
+ /*
+- * tunoutput - queue packets from higher level ready to put out.
++ * itnoutput - queue packets from higher level ready to put out.
+  */
+ int
+-tunoutput(ifp, m0, dst, rt)
++itnoutput(ifp, m0, dst, rt)
+ 	struct ifnet   *ifp;
+ 	struct mbuf    *m0;
+ 	struct sockaddr *dst;
+@@ -317,10 +318,10 @@
+ 	struct tun_softc *tp = ifp->if_softc;
+ 	int		s;
+ 
+-	TUNDEBUG ("%s%d: tunoutput\n", ifp->if_name, ifp->if_unit);
++	ITNDEBUG ("%s%d: itnoutput\n", ifp->if_name, ifp->if_unit);
+ 
+ 	if ((tp->tun_flags & TUN_READY) != TUN_READY) {
+-		TUNDEBUG ("%s%d: not ready 0%o\n", ifp->if_name,
++		ITNDEBUG ("%s%d: not ready 0%o\n", ifp->if_name,
+ 			  ifp->if_unit, tp->tun_flags);
+ 		m_freem (m0);
+ 		return EHOSTDOWN;
+@@ -419,7 +420,7 @@
+  * the cdevsw interface is now pretty minimal.
+  */
+ static	int
+-tunioctl(dev, cmd, data, flag, p)
++itnioctl(dev, cmd, data, flag, p)
+ 	dev_t		dev;
+ 	u_long		cmd;
+ 	caddr_t		data;
+@@ -446,10 +447,10 @@
+  		tunp->baudrate = tp->tun_if.if_baudrate;
+  		break;
+ 	case TUNSDEBUG:
+-		tundebug = *(int *)data;
++		itndebug = *(int *)data;
+ 		break;
+ 	case TUNGDEBUG:
+-		*(int *)data = tundebug;
++		*(int *)data = itndebug;
+ 		break;
+ 	case TUNSLMODE:
+ 		if (*(int *)data) {
+@@ -473,11 +474,14 @@
+ 		if (tp->tun_if.if_flags & IFF_UP)
+ 			return(EBUSY);
+ 
+-		switch (*(int *)data & ~IFF_MULTICAST) {
++		switch (*(int *)data) {
+ 		case IFF_POINTOPOINT:
++			tp->tun_if.if_flags |= IFF_POINTOPOINT;
++			tp->tun_if.if_flags &= ~IFF_BROADCAST;
++			break;
+ 		case IFF_BROADCAST:
+-			tp->tun_if.if_flags &= ~(IFF_BROADCAST|IFF_POINTOPOINT);
+-			tp->tun_if.if_flags |= *(int *)data;
++			tp->tun_if.if_flags &= ~IFF_POINTOPOINT;
++			tp->tun_if.if_flags |= IFF_BROADCAST;
+ 			break;
+ 		default:
+ 			return(EINVAL);
+@@ -531,19 +535,19 @@
+  * least as much of a packet as can be read.
+  */
+ static	int
+-tunread(dev, uio, flag)
++itnread(dev, uio, flag)
+ 	dev_t dev;
+ 	struct uio *uio;
+ 	int flag;
+ {
+ 	struct tun_softc *tp = dev->si_drv1;
+ 	struct ifnet	*ifp = &tp->tun_if;
+-	struct mbuf	*m0;
++	struct mbuf	*m, *m0;
+ 	int		error=0, len, s;
+ 
+-	TUNDEBUG ("%s%d: read\n", ifp->if_name, ifp->if_unit);
++	ITNDEBUG ("%s%d: read\n", ifp->if_name, ifp->if_unit);
+ 	if ((tp->tun_flags & TUN_READY) != TUN_READY) {
+-		TUNDEBUG ("%s%d: not ready 0%o\n", ifp->if_name,
++		ITNDEBUG ("%s%d: not ready 0%o\n", ifp->if_name,
+ 			  ifp->if_unit, tp->tun_flags);
+ 		return EHOSTDOWN;
+ 	}
+@@ -560,7 +564,7 @@
+ 			}
+ 			tp->tun_flags |= TUN_RWAIT;
+ 			if((error = tsleep((caddr_t)tp, PCATCH | (PZERO + 1),
+-					"tunread", 0)) != 0) {
++					"itnread", 0)) != 0) {
+ 				splx(s);
+ 				return error;
+ 			}
+@@ -572,11 +576,11 @@
+ 		len = min(uio->uio_resid, m0->m_len);
+ 		if (len != 0)
+ 			error = uiomove(mtod(m0, caddr_t), len, uio);
+-		m0 = m_free(m0);
++		m0 = m_free(m0);
+ 	}
+ 
+ 	if (m0) {
+-		TUNDEBUG("%s%d: Dropping mbuf\n", ifp->if_name, ifp->if_unit);
++		ITNDEBUG("%s%d: Dropping mbuf\n", ifp->if_name, ifp->if_unit);
+ 		m_freem(m0);
+ 	}
+ 	return error;
+@@ -586,7 +591,7 @@
+  * the cdevsw write interface - an atomic write is a packet - or else!
+  */
+ static	int
+-tunwrite(dev, uio, flag)
++itnwrite(dev, uio, flag)
+ 	dev_t dev;
+ 	struct uio *uio;
+ 	int flag;
+@@ -597,13 +602,13 @@
+ 	int		error=0, tlen, mlen;
+ 	uint32_t	family;
+ 
+-	TUNDEBUG("%s%d: tunwrite\n", ifp->if_name, ifp->if_unit);
++	ITNDEBUG("%s%d: tunwrite\n", ifp->if_name, ifp->if_unit);
+ 
+ 	if (uio->uio_resid == 0)
+ 		return 0;
+ 
+ 	if (uio->uio_resid < 0 || uio->uio_resid > TUNMRU) {
+-		TUNDEBUG("%s%d: len=%d!\n", ifp->if_name, ifp->if_unit,
++		ITNDEBUG("%s%d: len=%d!\n", ifp->if_name, ifp->if_unit,
+ 		    uio->uio_resid);
+ 		return EIO;
+ 	}
+@@ -690,12 +695,12 @@
+ }
+ 
+ /*
+- * tunpoll - the poll interface, this is only useful on reads
++ * itnpoll - the poll interface, this is only useful on reads
+  * really. The write detect always returns true, write never blocks
+  * anyway, it either accepts the packet or drops it.
+  */
+ static	int
+-tunpoll(dev, events, p)
++itnpoll(dev, events, p)
+ 	dev_t dev;
+ 	int events;
+ 	struct proc *p;
+@@ -706,15 +711,15 @@
+ 	int		revents = 0;
+ 
+ 	s = splimp();
+-	TUNDEBUG("%s%d: tunpoll\n", ifp->if_name, ifp->if_unit);
++	ITNDEBUG("%s%d: itnpoll\n", ifp->if_name, ifp->if_unit);
+ 
+ 	if (events & (POLLIN | POLLRDNORM)) {
+ 		if (ifp->if_snd.ifq_len > 0) {
+-			TUNDEBUG("%s%d: tunpoll q=%d\n", ifp->if_name,
++			ITNDEBUG("%s%d: itnpoll q=%d\n", ifp->if_name,
+ 			    ifp->if_unit, ifp->if_snd.ifq_len);
+ 			revents |= events & (POLLIN | POLLRDNORM);
+ 		} else {
+-			TUNDEBUG("%s%d: tunpoll waiting\n", ifp->if_name,
++			ITNDEBUG("%s%d: itnpoll waiting\n", ifp->if_name,
+ 			    ifp->if_unit);
+ 			selrecord(p, &tp->tun_rsel);
+ 		}

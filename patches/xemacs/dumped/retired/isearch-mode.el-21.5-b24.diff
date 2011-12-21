@@ -1,0 +1,39 @@
+--- isearch-mode.el.ORIG	2005-02-04 10:08:26.055452885 -0500
++++ isearch-mode.el	2005-02-04 10:08:38.616638394 -0500
+@@ -272,6 +272,7 @@
+     ;(define-key map " " 'isearch-whitespace-chars)
+     (define-key map "\M- " 'isearch-whitespace-chars)
+ 
++    (define-key map [(control \')] 'isearch-yank-char)
+     (define-key map "\C-w" 'isearch-yank-word)
+     (define-key map "\C-y" 'isearch-yank-line)
+     (define-key map "\M-y" 'isearch-yank-kill)
+@@ -419,6 +420,8 @@
+ Type LFD (C-j) to match end of line.
+ Type \\[isearch-repeat-forward] to search again forward,\
+  \\[isearch-repeat-backward] to search again backward.
++Type \\[isearch-yank-char] to yank char from buffer onto end of search\
++ string and search for it.
+ Type \\[isearch-yank-word] to yank word from buffer onto end of search\
+  string and search for it.
+ Type \\[isearch-yank-line] to yank rest of line onto end of search string\
+@@ -1020,6 +1023,11 @@
+ 	  isearch-yank-flag t))
+   (isearch-search-and-update))
+ 
++(defun isearch-yank-char ()
++  "Pull next char from buffer into search string."
++  (interactive)
++  (isearch-yank 'forward-char))
++
+ (defun isearch-yank-word ()
+   "Pull next word from buffer into search string."
+   (interactive)
+@@ -1495,6 +1503,7 @@
+ (put 'isearch-exit				'isearch-command t)
+ (put 'isearch-printing-char			'isearch-command t)
+ (put 'isearch-printing-char			'isearch-command t)
++(put 'isearch-yank-char				'isearch-command t)
+ (put 'isearch-yank-word				'isearch-command t)
+ (put 'isearch-yank-line				'isearch-command t)
+ (put 'isearch-yank-kill				'isearch-command t)

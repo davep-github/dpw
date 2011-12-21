@@ -1,0 +1,19 @@
+--- startkde.ORIG	Mon Nov 18 15:16:32 2002
++++ startkde	Mon Nov 18 15:18:01 2002
+@@ -29,6 +29,7 @@
+ # The standard X background is nasty, causing moire effects and exploding
+ # people's heads. We use colours from the standard KDE palette for those with
+ # palettised displays.
++cl_args=$*
+ 
+ test "$XDM_MANAGED" || bkg="-solid #C0C0C0"
+ xsetroot -cursor_name left_ptr $bkg
+@@ -143,7 +144,7 @@
+ # if no windowmanager is specified, ksmserver will ensure kwin is started.
+ # [--restore] should be controlled by kdm
+ # kwrapper is used to reduce startup time and memory usage
+-kwrapper ksmserver --restore || \
++kwrapper ksmserver --restore $cl_args || \
+   xmessage -geometry 500x100 "Couldn't start ksmserver. Check your installation."
+ 
+ # Clean up

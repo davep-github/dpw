@@ -1,0 +1,11 @@
+--- musicbrainz.py.orig	2004-04-19 16:29:37.000000000 -0400
++++ musicbrainz.py	2005-01-09 20:00:00.877192803 -0500
+@@ -38,7 +38,7 @@
+     mbdll.mb_New.argtypes = []
+     mbdll.mb_UseUTF8.argtypes = [c_void_p, c_int]
+     def __init__(self):
+-        self.mb = mbdll.mb_New();
++        self.mb = c_void_p(mbdll.mb_New());
+         mbdll.mb_UseUTF8(self.mb, True)
+         # need to hold ref for __del__ to work
+         self.mbdll = mbdll

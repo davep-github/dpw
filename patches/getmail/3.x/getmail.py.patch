@@ -1,0 +1,13 @@
+--- getmail.py.ORIG	Mon Feb 24 22:03:50 2003
++++ getmail.py	Mon Feb 24 22:10:40 2003
+@@ -403,8 +403,8 @@
+         global deliverycount
+ 
+         # At least some security...
+-        if os.geteuid () == 0:
+-            raise getmailDeliveryException, 'refuse to deliver to commands as root'
++#         if os.geteuid () == 0:
++#             raise getmailDeliveryException, 'refuse to deliver to commands as root'
+ 
+         # Construct mboxrd-style 'From_' line
+         fromline = 'From %s %s\n' % (env_sender or '<>', time.asctime (time.gmtime (int (time.time ()))))

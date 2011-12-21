@@ -1,0 +1,8 @@
+--- spamassassin.ORIG	Tue Oct 15 15:51:40 2002
++++ spamassassin	Tue Oct 15 15:54:01 2002
+@@ -1,4 +1,4 @@
+-#!/usr/bin/perl
++#!/usr/bin/perl -I /usr/local/lib/perl5/site_perl/5.005
+ 
+ eval 'exec /usr/bin/perl  -S $0 ${1+"$@"}'
+     if 0; # not running under some shell

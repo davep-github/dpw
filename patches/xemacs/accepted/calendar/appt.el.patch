@@ -1,0 +1,84 @@
+--- ORIG/appt.el	Tue Jul 15 01:03:45 2003
++++ appt.el	Tue Aug 12 13:01:35 2003
+@@ -224,6 +224,13 @@
+   :type 'function
+   :group 'appt)
+ 
++(defcustom appt-make-list-hook nil
++  "*List of functions to be called after `appt-make-list' finishes.
++This is designed to be used with `appt-included-diary-entries' which 
++supports included or shared diary files."
++  :type 'hook
++  :group 'appt)
++
+ (defvar appt-time-msg-list nil
+   "The list of appointments for today.  
+ Use `appt-add' and `appt-delete' to add and delete appointments from list.
+@@ -369,8 +376,10 @@
+ 
+ 
+ ;;; Internal stuff
+-(defun appt-diary-entries ()
++(defun appt-diary-entries (&optional preserve-list-p)
+   "Return an updated list of appointments for today."
++  (unless preserve-list-p
++    (setq appt-time-msg-list nil))
+   (let ((list-diary-entries-hook '(appt-make-list))
+ 	(diary-display-hook 'ignore)
+ 	(diary-list-include-blanks nil))
+@@ -378,6 +387,39 @@
+     (diary 1)
+     appt-time-msg-list))
+ 
++(defun appt-included-diary-entries ()
++  "Search for appointments in other diary files.
++This function is suitable for use as the `appt-make-list-hook'; it enables
++you to use shared diary files together with your own.  The files included are
++specified in the diary-file by lines of this form:
++        #include \"filename\"
++This is recursive; that is, #include directives in diary files thus included
++are obeyed.  You can change the `#include' to some other string by
++changing the variable `diary-include-string'."
++  (goto-char (point-min))
++  (while (re-search-forward
++          (concat
++           "\\(\\`\\|\^M\\|\n\\)"
++           (regexp-quote diary-include-string)
++           " \"\\([^\"]*\\)\"")
++          nil t)
++    (let ((diary-file (substitute-in-file-name
++                       (buffer-substring-no-properties
++			(match-beginning 2) (match-end 2))))
++	  (appt-make-list-hook 'appt-included-diary-entries))
++      (if (file-exists-p diary-file)
++          (if (file-readable-p diary-file)
++              (progn
++		(appt-diary-entries 'preserve-list)
++                (kill-buffer (find-buffer-visiting diary-file)))
++            (beep)
++            (message "Can't read included diary file %s" diary-file)
++            (sleep-for 2))
++        (beep)
++        (message "Can't find included diary file %s" diary-file)
++        (sleep-for 2))))
++  (goto-char (point-min)))
++
+ (defun appt-initialize ()
+   "Read your `diary-file' and remember today's appointments.  Call this from 
+  your .emacs file, or any time you want your .diary file re-read (this happens 
+@@ -670,7 +712,6 @@
+ (defun appt-make-list ()
+   "Don't call this directly; call appt-initialize or appt-diary-entries."
+   ;; Clear the appointments list, then fill it in from the diary.
+-  (setq appt-time-msg-list nil)
+   (if diary-entries-list
+ 
+            ;; Cycle through the entry-list (diary-entries-list)
+@@ -719,6 +760,7 @@
+ 	  (setq entry-list (cdr entry-list)))
+ 	(setq appt-time-msg-list ; seems we can't nconc this list...
+ 	      (append (nreverse new-appts) appt-time-msg-list))))
++  (run-hooks 'appt-make-list-hook)
+   (setq appt-time-msg-list (appt-sort-list appt-time-msg-list))
+ 
+         ;; Get the current time and convert it to minutes 

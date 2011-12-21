@@ -1,0 +1,9 @@
+2005-12-29  David A. Panariti  <davep.xemacs@meduseld.net>
+
+	* list-mode.el (next-list-mode-item):
+	Changed calls to {next|previous}-single-property-change to
+	{next|previous}-single-char-property-change. The previous and next
+	list item commands were not working: they always sent you to the
+	end of the buffer since the properties on the list items were not
+	text properties, and {next|previous}-single-property-change only
+	look for changes in text properties.

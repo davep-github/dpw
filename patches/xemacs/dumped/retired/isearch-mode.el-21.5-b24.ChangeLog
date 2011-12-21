@@ -1,0 +1,12 @@
+2005-02-08  David A. Panariti  <davep.xemacs@meduseld.net>
+
+	Add support for yanking buffer characters into search string:
+	* isearch-mode.el: (isearch-mode-map): Add default binding (C-').
+	* isearch-mode.el: (isearch-forward): Add command description to
+	help string.
+	* isearch-mode.el: (isearch-yank-char): New.  Implements the
+	character at a time yanking.
+	* isearch-mode.el: (put 'isearch-yank-char 'isearch-command t)
+	Put required property on command so it doesn't cause an exit from
+	isearch-mode.
+	

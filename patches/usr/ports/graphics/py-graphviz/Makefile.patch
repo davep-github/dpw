@@ -1,0 +1,11 @@
+--- Makefile.bak	Sun Mar 30 23:18:46 2003
++++ dp/Makefile	Tue Dec  2 01:20:49 2003
+@@ -24,7 +24,7 @@
+ 
+ MODFILES=	gv.i __init__.py
+ WRKSRC=		${WRKDIR}/graphviz-${GV_VERSION}/agraph
+-GV_VERSION?=	1.9
++GV_VERSION?=	1.10
+ 
+ USE_PYTHON=	yes
+ USE_PYDISTUTILS=	yes

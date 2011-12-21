@@ -1,0 +1,18 @@
+--- ./modules/background/Makefile.ORIG	Tue Nov 26 16:35:50 2002
++++ ./modules/background/Makefile	Tue Nov 26 16:36:21 2002
+@@ -400,13 +400,13 @@
+ 
+ 
+ %.x %.doc: %.c
+-	$(SCWM_SRC_DIR)/scwm-snarf $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $< > $(basename $<).x && \
++	$(SCWM_SRC_DIR)/scwm-snarf $< $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) > $(basename $<).x && \
+ 	$(SCWM_BUILDSRC_DIR)/scwm-doc-snarf $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $< > $(basename $<).doc \
+ 	|| { rm $(basename $<).x $(basename $<).doc ; false; }
+ 
+ %.x %.doc: %.cc
+ 	CC=$(CXX) \
+-	$(SCWM_SRC_DIR)/scwm-snarf -DGUILE_CPLUSPLUS_SNARF $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $< > $(basename $<).x && \
++	$(SCWM_SRC_DIR)/scwm-snarf $< -DGUILE_CPLUSPLUS_SNARF $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) > $(basename $<).x && \
+ 	$(SCWM_BUILDSRC_DIR)/scwm-doc-snarf -DGUILE_CPLUSPLUS_SNARF $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) $< > $(basename $<).doc \
+ 	|| { rm $(basename $<).x $(basename $<).doc ; false; }
+ 

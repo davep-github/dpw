@@ -1,0 +1,410 @@
+#!/usr/bin/perl
+# mp3butler is (C) 2001 Rando Christensen <eyez@babblica.net>
+#  mp3butler is distributed under the GNU GPL. 
+#  It comes with absolutely no warranty, of any kind. if you've ever seen any
+# warrantys, you didn't see them here.
+#  You should have received a copy of the GPL with this. if not, you can get it
+# from http://www.gnu.org/.
+#  please take the time to care for and feed your butler, or it may cease to Butle.
+
+
+use File::Find ();
+
+
+# program defaults...
+$opt_recursion = 0;
+$opt_fixnames = 0;
+$opt_reorg = 0;
+$opt_id3 = 0;
+$opt_firstlet = 0;
+@SONGLIST = ();
+
+
+&parse_args;  # get command-line opts.
+
+foreach $song (sort(@SONGLIST))
+{
+  if ($opt_fixnames) 
+  {
+    $song = &fix_filename($song);
+  }
+  if ($opt_id3) 
+  {
+    &fix_id3($song);
+  }
+  if ($opt_reorg)
+  {
+    &reorg($song);
+  }
+}
+  
+exit(0);
+
+
+sub parse_args
+{
+  if ($#ARGV == -1)
+  {
+    &usage;
+    exit;
+  }
+  foreach $ARG (@ARGV)
+  {
+    if (! $stop)
+    {
+      if ($ARG =~ m/^-(\w*)$/)
+      {
+        if ($ARG =~ m/h/) { &usage; exit; }
+        if ($ARG =~ m/R/) { $opt_recursion = 1; }
+        if ($ARG =~ m/r/) { $opt_reorg = 1; }
+        if ($ARG =~ m/f/) { $opt_fixnames = 1; }
+        if ($ARG =~ m/F/) { $opt_firstlet = 1; }
+        if ($ARG =~ m/i/) { $opt_id3 = 1; }
+        if ($ARG =~ m/A/) 
+	{ 
+          $opt_id3 = $opt_firstlet = $opt_fixnames = $opt_reorg = $opt_recursion = 1; 
+        }
+      }
+      elsif ($ARG eq '--')
+      {
+        $stop++;
+	next;
+      }
+      elsif ($ARG eq "--help")
+      {
+        &usage;
+        exit;
+      }
+      elsif ($ARG eq '--fixnames')  
+      {
+        $opt_fixnames = 1;
+      } 
+      elsif ($ARG eq '--firstlet')  
+      {
+        $opt_firstlet = 1;
+      } 
+      elsif ($ARG eq '--recurse')
+      {
+        $opt_recursion = 1;
+      }
+      elsif ($ARG eq '--reorg')
+        {
+        $opt_reorg = 1;
+      }
+      elsif ($ARG eq '--id3')
+      {
+        $opt_id3 = 1;
+      }
+      elsif ($ARG eq '--all')
+      {
+        $opt_id3 = $opt_firstlet = $opt_fixnames = $opt_reorg = $opt_recursion = 1;
+      }
+      else
+      { 
+        unshift(@SongsBeta, $ARG); 
+      }
+    }
+    else
+    {
+      unshift(@SongsBeta, $ARG);
+    }
+  }
+  
+  foreach my $SBETA (@SongsBeta)  # adds the songlist.
+  {
+    if (($opt_recursion)&&(-d $SBETA)) 
+    {
+      &recurse_dir($SBETA);
+    }
+    if (( -f "$SBETA")&&( $SBETA =~ m/mp3$/i))
+    {
+      unshift(@SONGLIST, $SBETA);
+    }
+  }
+}
+
+sub usage
+{
+  $progname = $0;
+  $progname =~ s+.*/++;
+  print("usage: $progname [opts] [files] | sh\n");
+  %usage = ("--help,     -h" => "print this.",
+            "--recurse,  -R" => "recurse directories",
+	    "--reorg,    -r" => "Reorganize mp3 directory",
+	    "--fixnames, -f" => "Fix filenames",
+	    "--id3,      -i" => "fix id3 info",
+	    "--firstlet, -F" => "for reorg, dir structure is a/artist/artist-song.mp3",
+	    "--all,      -A" => "same as -FRirf.",
+	    "--            " => "no more options on the commandline.");
+
+  print("\tpossible options:\n");
+  print("\t  $_\t$usage{$_}\n") foreach(sort(keys(%usage)));
+  print("\tthe single-character options can be bunched together, like so:\n");
+  print("\t  $progname -iRf\n");
+  print("$progname DOES NOT DO ANY ACTUAL OPERATIONS BY ITSELF! IT MUST BE PIPED TO SH!!!\n");
+  print("Simply remember to always call $progname like this: $progname [opts] [files] | sh\n");
+  print("  (It is highly recommended that you always check the output of running WITHOUT\n");
+  print("   the pipe before adding the pipe. This ensures that you can stop things from \n   messing up.)\n");
+  print("\tsend any bug reports to <eyez\@babblica.net>\n");
+}
+
+
+sub recurse_dir
+{
+  my $dir = shift;
+  # Traverse desired filesystems
+  File::Find::find({wanted => \&wanted}, $dir);
+}
+
+sub wanted {
+  $_ = $File::Find::name;
+  unshift(@SONGLIST, $_) if ( m/mp3$/i); # we only want real files named with a .mp3 (case insensitive)
+}
+
+sub fix_filename
+{
+  my $orig = shift;
+  $_ = $orig;
+  # print("echo working magic on $orig...\n");
+  next unless ( -f $_ );  # only if this is real file
+  next unless m/mp3$/i;   # it should have either '.mp3' or .MP3 or sommit at the end..
+  # my $orig = $_;
+  s/^\d+-//;
+  s/!//g;
+  s/&/and/;
+  y/ /_/;
+  y/{}[]/()()/;
+  s/_?\(/-/g;
+  s/\)//g;
+  $_ = lc;
+  s/\.mp3$//;
+  s/[\?\*"'\.,`|~]//g;
+  s/_*$//g;
+  s/_+/_/g;
+  s/_-/-/g;
+  s/-_/-/g;
+  s/^[^A-Za-z]*//g;
+  s/-+/-/g;
+  
+  $_ .= ".mp3";
+  $orig =~ s/'/'\\''/g;
+  print("mv -f -- '$orig' $_\n") if ($orig ne $_);
+  return($_);
+}
+sub fix_id3
+{
+  $copy = shift;
+  chomp($copy);
+  my $song=$copy;
+  $song =~ s+.*/++;
+  $song =~ s/\.mp3$//;
+  $song =~ s/-live/ (live)/;
+
+  
+  @song=split('-', $song, 2);
+ 
+  $song[1] =~ s/-([a-zA-Z0-9_]*)/ ($1)/g;
+
+  $artist=$song[0];
+  $title=$song[1];
+
+  @artist=split(/_/,"$artist");
+  $finart=join(" ",@artist);
+  $finart =~ s/(\w+)/\u\L$1/g;
+
+  @title=split(/_/,"$title");
+  $fintit=join(" ",@title);
+  $fintit =~ s/(\w+)/\u\L$1/g;
+  
+  $finart =~ s/(don|can|couldn|wouldn|hasn|shouldn|isn)t/$1\'t/gi;
+  $finart =~ s/(he|she)s/$1\'s/gi; # put ' back in for the id3.
+  $fintit =~ s/(don|can|couldn|wouldn|hasn|shouldn|isn)t/$1\'t/gi;
+  $fintit =~ s/(he|she)s/$1\'s/gi; # put ' back in for the id3.
+
+  print("id3 $cmt -a \"$finart\" -t \"$fintit\" $copy > /dev/null\n");
+}
+
+sub reorg
+{
+  $copy = shift;
+  chomp($copy);
+  my $song=$copy;
+  $song =~ s+.*/++;
+  $song =~ s/\.mp3$//;
+  $song =~ s/-live/ (live)/;
+  @song=split('-', $song, 2);
+  
+  $song[1] =~ s/-([a-zA-Z0-9_]*)/ ($1)/g;
+  $fn = $copy;
+  $fn =~ s+.*/++;
+    
+  $ek = $copy;
+  $ek =~ s+\./++;
+  
+  $artist=$song[0];
+  $title=$song[1];
+  
+  @artist=split(/_/,"$artist");
+  $finart=join(" ",@artist);
+  $finart =~ s/(\w+)/\u\L$1/g;
+ 
+  @title=split(/_/,"$title");
+  $fintit=join(" ",@title);
+  $fintit =~ s/(\w+)/\u\L$1/g;
+  if (substr($artist, 0, 4) eq "the_") {
+    $artist = substr($artist, 4);
+  }
+  if (substr($artist, 0, 2) eq "a_") {
+    $artist = substr($artist, 2);
+  }
+ 
+  if ($opt_firstlet)
+  {
+    $firstlet = substr($artist, 0, 1);
+    $fn =~ s/_*-_*/-/g;
+    $newfn = "$firstlet/$artist/$fn";
+    $newdir = "$firstlet/$artist";
+  }
+  else
+  {
+    $fn =~ s/_*-_*/-/g;
+    $newfn = "$artist/$fn";
+    $newdir = "$artist";
+  }
+  
+  if ($ek ne $newfn) {
+    if (-d $newdir) {
+      print("mv -f -- $copy $newfn\n");
+      print("/bin/echo placing $copy as $newfn.\n");
+    } else {
+      print("/bin/echo -n 'making dir: $newdir. '\n");
+      print("mkdir -p $newdir\n");
+      print("/bin/echo placing $copy as $newfn.\n");
+      print("mv -f -- $copy $newfn\n");
+    }
+  }
+}
+
+
+__END__
+# Below is stub documentation for your module. You better edit it!
+
+=head1 NAME
+
+mp3butler - Organizes, Renames, Fixes ID3's of, and generally Butles mp3's. 
+
+=head1 SYNOPSIS
+
+mp3rev [options] [files] | sh
+
+=head1 DESCRIPTION
+
+mp3butler must be piped to sh if it's to be of any use to you.
+
+Call it like this: mp3butler -Rrif filename.mp3 | sh (or similar)
+or else it WILL NOT FUNCTION.
+
+Butles your mp3's.
+
+Specifically, it will rename your mp3's to a sane format:
+
+=over 4
+
+long_artist_name-long_track_name-extra_info.mp3
+
+=back
+
+It will also set the ID3 tags of your mp3's based on that format (using the ID3 program):
+
+=over 4
+
+Artist: Long Artist Name
+
+Song: Long Track Name (Extra Info)
+
+=back
+
+Finally, it will organize your mp3's into a directory hierarchy of one of 2 formats:
+
+=over 4
+
+a/artist/artist-song.mp3
+m/monkey_man/monkey_man-monkey_song.mp3
+
+=back
+
+or
+
+=over 4
+
+artist/artist-song.mp3
+monkey_man/monkey_man-monkey_song.mp3
+
+=back
+
+=head1 OPTIONS
+
+=over 4
+
+Note that running mp3butler -FRirf will set all options. there is not currently a --all option.
+You can also run mp3butler -Rirf to set all options but the 'firstletter' one.
+
+=item
+--recurse, -R
+
+Specifies to recurse into directories specified on the commandline, and find all files in those directories.
+
+=item
+--help, -h
+
+Prints usage info.
+
+=item
+--fixnames, -f
+
+Specifies to run the filename fixing routine.
+
+=item
+--reorg, -r
+
+Specifies to organize into the directory hierarchy.
+
+=item
+--id3, -i
+
+Specifies to fix ID3 tags.
+
+=item
+--firstlet
+
+Specifies to use the 'firstletter' naming convention for organization. see above.
+
+=item
+--
+
+Specifies "No more options on this commandline."
+
+=back
+
+=head1 NOTES
+
+If the filenames do not end with .mp3 (.MP3 will work too, or .mP3 or .Mp3), then mp3butler will ignore them.
+
+Please read the RANT file in the distribution directory for information on why and how mp3butler works how it does.
+
+=head1 BUGS
+
+None that I know of. If you find them, report them! :)
+
+=head1 AUTHOR
+
+Rando Christensen <eyez@babblica.net>
+
+=head1 SEE ALSO
+
+Nothing. Nothing even compares to an mp3 butler. Mwahahaha.
+
+Although, you may want to pick up the ID3 program if you don't have it already:
+I<http://lly.org/~rcw/id3>
+
+=cut

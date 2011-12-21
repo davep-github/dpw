@@ -1,0 +1,28 @@
+--- Makefile	2004-03-07 03:14:14.000000000 -0500
++++ Makefile.new	2004-03-07 03:16:39.000000000 -0500
+@@ -16,19 +16,21 @@
+ ##
+ 
+ prefix=/usr/local
+-infodir=$(prefix)/info
++infodir=$(prefix)/lib/xemacs/site-packages/info
+ 
+-EMACS=emacs
+-#EMACS = xemacs
++#EMACS=emacs
++EMACS = xemacs
+ #EMACS = mule
+ 
+ INSTALLINFO = `which install-info`
+ #INSTALLINFO = /usr/local/bin/install-info
+ 
+ #INSTALLINFO_OPTIONS = --section Emacs Emacs
++INSTALLINFO_OPTIONS  = --infodir=$(infodir)
+ #INSTALLINFO_JOPTIONS =
+ #infodir = 
+-INSTALLINFO_ARGS  = mew.info $(infodir)/dir
++
++INSTALLINFO_ARGS  = mew.info
+ #INSTALLINFO_ARGS  = mew.info 
+ INSTALLINFO_JARGS = mew.jis.info $(infodir)/dir
+ 

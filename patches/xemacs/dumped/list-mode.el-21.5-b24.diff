@@ -1,0 +1,32 @@
+--- list-mode.el.ORIG	2005-12-29 17:02:58.000000000 -0500
++++ list-mode.el	2005-12-29 17:06:04.000000000 -0500
+@@ -174,8 +174,8 @@
+       (if extent (goto-char (extent-end-position extent)))
+       ;; Move to start of next one.
+       (or (extent-at (point) (current-buffer) 'list-mode-item)
+-	  (goto-char (next-single-property-change (point) 'list-mode-item
+-						  nil end))))
++	  (goto-char (next-single-char-property-change (point) 'list-mode-item
++                                                       nil end))))
+     (setq n (1- n)))
+   (while (and (< n 0) (not (bobp)))
+     (let ((extent (extent-at (point) (current-buffer) 'list-mode-item))
+@@ -186,7 +186,7 @@
+       (if (setq extent (extent-at (point) (current-buffer) 'list-mode-item
+ 				  nil 'before))
+ 	  (goto-char (extent-start-position extent))
+-	(goto-char (previous-single-property-change
++	(goto-char (previous-single-char-property-change
+ 		    (point) 'list-mode-item nil end))
+ 	(if (setq extent (extent-at (point) (current-buffer) 'list-mode-item
+ 				    nil 'before))
+@@ -648,7 +648,7 @@
+   (if (not (get-buffer-window "*Completions*"))
+       nil
+     (select-window (get-buffer-window "*Completions*"))
+-    (goto-char (next-single-property-change (point-min) 'list-mode-item nil
+-					    (point-max)))))
++    (goto-char (next-single-char-property-change 
++                (point-min) 'list-mode-item nil (point-max)))))
+ 
+ ;;; list-mode.el ends here

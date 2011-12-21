@@ -1,0 +1,106 @@
+--- mp3butler.pl.ORIG	Thu Apr 10 14:53:03 2003
++++ /usr/local/bin/mp3butler	Fri Apr 11 11:37:12 2003
+@@ -17,11 +17,24 @@
+ $opt_reorg = 0;
+ $opt_id3 = 0;
+ $opt_firstlet = 0;
++$opt_no_down_case = 0;
++$opt_no_num_nuke = 0;
++$opt_files_from_stdin = 0;
+ @SONGLIST = ();
+ 
+ 
+ &parse_args;  # get command-line opts.
+ 
++if ($opt_files_from_stdin)
++{
++  while (<>)
++  {
++    chop;
++    #print STDERR "_>$_<\n";
++    unshift(@SONGLIST, $_);
++  }
++}
++
+ foreach $song (sort(@SONGLIST))
+ {
+   if ($opt_fixnames) 
+@@ -48,7 +61,8 @@
+     &usage;
+     exit;
+   }
+-  foreach $ARG (@ARGV)
++  my @args = @ARGV;
++  foreach $ARG (@args)
+   {
+     if (! $stop)
+     {
+@@ -60,6 +74,9 @@
+         if ($ARG =~ m/f/) { $opt_fixnames = 1; }
+         if ($ARG =~ m/F/) { $opt_firstlet = 1; }
+         if ($ARG =~ m/i/) { $opt_id3 = 1; }
++        if ($ARG =~ m/c/) { $opt_no_down_case = 1; }
++	if ($ARG =~ m/n/) { $opt_no_num_nuke = 1; }
++	if ($ARG =~ m/I/) { $opt_files_from_stdin = 1; }
+         if ($ARG =~ m/A/) 
+ 	{ 
+           $opt_id3 = $opt_firstlet = $opt_fixnames = $opt_reorg = $opt_recursion = 1; 
+@@ -95,6 +112,18 @@
+       {
+         $opt_id3 = 1;
+       }
++      elsif ($ARG eq '--no_down_case')
++      {
++        $opt_no_down_case = 1;
++      }
++      elsif ($ARG eq '--no_num_nuke')
++      {
++        $opt_no_num_nuke = 1;
++      }
++      elsif ($ARG eq '--files_from_stdin')
++      {
++        $opt_files_from_stdin = 1;
++      }
+       elsif ($ARG eq '--all')
+       {
+         $opt_id3 = $opt_firstlet = $opt_fixnames = $opt_reorg = $opt_recursion = 1;
+@@ -108,6 +137,7 @@
+     {
+       unshift(@SongsBeta, $ARG);
+     }
++    shift @ARGV;
+   }
+   
+   foreach my $SBETA (@SongsBeta)  # adds the songlist.
+@@ -169,21 +199,28 @@
+   next unless ( -f $_ );  # only if this is real file
+   next unless m/mp3$/i;   # it should have either '.mp3' or .MP3 or sommit at the end..
+   # my $orig = $_;
+-  s/^\d+-//;
++  s/^\d+-// unless $opt_no_num_nuke;
+   s/!//g;
+   s/&/and/;
+   y/ /_/;
+   y/{}[]/()()/;
+   s/_?\(/-/g;
+   s/\)//g;
+-  $_ = lc;
++  $_ = lc unless $opt_no_down_case;
+   s/\.mp3$//;
+   s/[\?\*"'\.,`|~]//g;
+   s/_*$//g;
+   s/_+/_/g;
+   s/_-/-/g;
+   s/-_/-/g;
+-  s/^[^A-Za-z]*//g;
++  if ($opt_no_num_nuke)
++  {
++    s/^[^A-Za-z0-9]*//g;
++  }
++  else
++  {
++    s/^[^A-Za-z]*//g;
++  }
+   s/-+/-/g;
+   
+   $_ .= ".mp3";

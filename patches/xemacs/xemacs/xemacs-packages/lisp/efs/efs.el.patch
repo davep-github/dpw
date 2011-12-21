@@ -1,0 +1,49 @@
+--- efs.el.ORIG	Thu Sep 19 18:27:07 2002
++++ efs.el	Thu Sep 19 20:54:03 2002
+@@ -1421,6 +1421,9 @@
+ (defvar efs-process-busy nil)
+ (make-variable-buffer-local 'efs-process-busy)
+ 
++(defvar efs-process-prompt-seen nil)
++(make-variable-buffer-local 'efs-process-prompt-seen)
++
+ (defvar efs-process-result-line "")
+ (make-variable-buffer-local 'efs-process-result-line)
+ 
+@@ -2594,6 +2597,8 @@
+ 		(setq str (efs-process-handle-hash str)
+ 		      efs-process-string (concat efs-process-string str)))
+ 	    (efs-process-log-string proc str)
++	    (if (string-match efs-process-prompt-regexp str)
++		(setq efs-process-prompt-seen t))
+ 	    (while (and efs-process-busy
+ 			(string-match "\n" efs-process-string))
+ 	      (let ((line (substring efs-process-string
+@@ -2606,7 +2611,8 @@
+ 		;; never get prompts in the wrong place. Just to be safe,
+ 		;; chew them off.
+ 		(while (string-match efs-process-prompt-regexp line)
+-		  (setq line (substring line (match-end 0))))
++		  (setq efs-process-prompt-seen t
++			line (substring line (match-end 0))))
+ 		(efs-process-handle-line line proc)))
+ 	    
+ 	    ;; has the ftp client finished?  if so then do some clean-up
+@@ -3422,6 +3428,7 @@
+ 	      efs-process-result-line ""
+ 	      efs-process-result-cont-lines ""
+ 	      efs-process-busy t
++	      efs-process-prompt-seen nil
+ 	      efs-process-msg (and efs-verbose msg)
+ 	      efs-process-continue cont
+ 	      efs-process-server-confused nil
+@@ -3466,7 +3473,8 @@
+ 	      ;; Some clients die after the command is sent, if the server
+ 	      ;; times out. Don't wait on dead processes.
+ 	      (efs-kbd-quit-protect proc
+-		(while (and efs-process-busy
++		(while (and (or efs-process-busy
++				(not efs-process-prompt-seen))
+ 			    ;; Need to recheck nowait, since it may get reset
+ 			    ;; in a cont.
+ 			    (null efs-process-nowait)

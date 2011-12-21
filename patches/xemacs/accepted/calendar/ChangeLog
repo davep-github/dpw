@@ -1,0 +1,10 @@
+2003-08-12  David A. Panariti  <davep.xemacs@meduseld.net>
+
+	* appt.el - Changes to support included diaries
+	(appt-make-list-hook): Added hook var to support
+	included diaries.
+	(appt-diary-entries): Added optional parameter to control clearing
+	of `appt-time-msg-list', which was moved here from `appt-make-list'.
+	(appt-included-diary-entries): Added to support included diaries.
+	(appt-initialize): Remove nil'ing of `appt-time-msg-list'.
+	(appt-make-list): Calls `appt-make-list-hook'.

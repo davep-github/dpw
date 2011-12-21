@@ -1,0 +1,9 @@
+2005-05-02  David A. Panariti  <davep.xemacs@meduseld.net>
+
+	* saveconf.el (recover-context): 
+	Fixed bug when attempting to restore a file that no longer
+	exists.  In this case, the restore loop deletes the buffer but
+	does not read the following file offset.  This puts the restore
+	loop out of alignment with the data in the restore file, which
+	causes the loop to terminate possibly leaving some context
+	unprocessed.

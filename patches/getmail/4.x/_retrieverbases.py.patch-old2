@@ -1,0 +1,40 @@
+--- _retrieverbases.py.orig	2005-06-11 04:56:32.000000000 -0400
++++ _retrieverbases.py	2005-06-11 13:12:01.000000000 -0400
+@@ -549,8 +549,16 @@
+         try:
+             line = data[self.envrecipname][self.envrecipnum]
+         except (KeyError, IndexError), unused:
+-            raise getmailConfigurationError('envelope_recipient specified'
+-                ' header missing (%s)' % self.conf['envelope_recipient'])
++            try:
++                line = data[self.envrecipname][0]
++            except (KeyError, IndexError), unused:
++                # This is a major problem with non-compliant mail.
++                # at least deliver it to *someone*
++                # ??? is there a variable for a postmaster or some other
++                # sensible recipient??? <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
++                line = "Delivered-To: getmail.postmaster@meduseld.net"
++###             raise getmailConfigurationError('envelope_recipient specified'
++###              ' header missing (%s)' % self.conf['envelope_recipient'])
+         msg.recipient = [address_no_brackets(address) for (name, address)
+             in email.Utils.getaddresses([line]) if address]
+         if len(msg.recipient) != 1:
+@@ -821,8 +829,16 @@
+         try:
+             line = data[self.envrecipname][self.envrecipnum]
+         except (KeyError, IndexError), unused:
+-            raise getmailConfigurationError('envelope_recipient specified'
+-                ' header missing (%s)' % self.conf['envelope_recipient'])
++            try:
++                line = data[self.envrecipname][0]
++            except (KeyError, IndexError), unused:
++                # This is a major problem with non-compliant mail.
++                # at least deliver it to *someone*
++                # ??? is there a variable for a postmaster or some other
++                # sensible recipient??? <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
++                line = "Delivered-To: getmail.postmaster@meduseld.net"
++###             raise getmailConfigurationError('envelope_recipient specified'
++###              ' header missing (%s)' % self.conf['envelope_recipient'])
+         msg.recipient = [address_no_brackets(address) for (name, address)
+             in email.Utils.getaddresses([line]) if address]
+         if len(msg.recipient) != 1:

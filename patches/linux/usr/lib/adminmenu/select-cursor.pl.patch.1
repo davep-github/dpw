@@ -1,0 +1,30 @@
+--- select-cursor.pl.ORIG	2004-01-20 10:02:34.000000000 -0500
++++ select-cursor.pl	2004-01-27 21:24:44.000000000 -0500
+@@ -29,8 +29,25 @@
+ 
+ my $CONFIG_FILE = "/etc/libranet/Xresources.Xcursor";
+ 
+-my @THEMES = ("core", "redglass", "whiteglass");
+-my @DESCS = ("standard black with white border cursor theme", "semi-transparent red cursor theme", "semi-transparent white cursor theme");
++#my @THEMES = ("core", "redglass", "whiteglass");
++#my @DESCS = ("standard black with white border cursor theme", "semi-transparent red cursor theme", "semi-transparent white cursor theme");
++
++my $CURSOR_DIR = "/usr/X11R6/lib/X11/icons/";
++my @THEMES;
++my @DESCS;
++open(LSPROC, "ls $CURSOR_DIR|") or die "cannot open $CURSOR_DIR\n";
++while (<LSPROC>)
++{
++  my @themes = split(' ', $_);
++  my $theme;
++  foreach $theme (@themes)
++  {
++    push @THEMES, $theme;
++    push @DESCS, $theme;
++  }
++}
++close(FILE);
++
+ my @SIZES = (8, 16, 24, 32, 64);
+ #}}}
+ 

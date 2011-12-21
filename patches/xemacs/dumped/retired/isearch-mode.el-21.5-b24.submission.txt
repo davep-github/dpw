@@ -1,0 +1,10 @@
+This is a small change to allow yanking buffer characters into the search
+string, analogous to the other isearch-yank-* functions.
+
+This may be too trivial to include, but I find it useful.  Especially when
+the current mode's word chars make C-w less useful.
+
+The default binding is C-'.
+
+regards,
+

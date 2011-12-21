@@ -1,0 +1,31 @@
+--- Xsession.orig	2004-08-23 02:16:14.291459798 -0400
++++ Xsession	2004-08-24 00:06:40.490154686 -0400
+@@ -1,6 +1,10 @@
+ #! /bin/sh
+ # Xsession - run as user
+ 
++set -x
++
++Xsession_one="$1"
++
+ # Note that the respective logout scripts are not sourced.
+ case $SHELL in
+   */bash)
+@@ -42,7 +46,7 @@
+ [ -f /etc/xprofile ] && . /etc/xprofile
+ [ -f $HOME/.xprofile ] && . $HOME/.xprofile
+ 
+-case $1 in
++case "$Xsession_one" in
+   "")
+     exec xmessage -center -buttons OK:0 -default OK "Sorry, $DESKTOP_SESSION is no valid session."
+     ;;
+@@ -56,7 +60,7 @@
+     exec /usr/kde/3.3/bin/startkde
+     ;;
+   *)
+-    eval exec "$1"
++    eval exec "$Xsession_one"
+     ;;
+ esac
+ exec xmessage -center -buttons OK:0 -default OK "Sorry, cannot execute $1. Check $DESKTOP_SESSION.desktop."

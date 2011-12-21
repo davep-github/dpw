@@ -1,0 +1,10 @@
+--- glob.h~	Mon Nov 18 16:28:34 2002
++++ glob.h	Mon Nov 18 16:35:58 2002
+@@ -52,6 +52,7 @@
+ typedef __SIZE_TYPE__ __size_t;
+ #else
+ #include <sys/types.h>
++#define __size_t size_t
+ #endif
+ # else
+ /* This is a guess.  */

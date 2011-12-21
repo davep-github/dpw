@@ -1,0 +1,31 @@
+--- cmdloop.el.ORIG	2004-10-28 23:11:17.767930873 -0400
++++ cmdloop.el	2004-10-28 23:26:00.587322754 -0400
+@@ -34,6 +34,10 @@
+ 
+ ;;; Code:
+ 
++(defconst extended-command-calls-pre-command-hook nil
++  "Should `execute-extended-command' call pre-command-hook functions before
++executing the command read from the mini-buffer.")
++
+ (defun recursion-depth ()
+   "Return the current depth in recursive edits."
+   (+ command-loop-level (minibuffer-depth)))
+@@ -335,6 +339,8 @@
+       ;; funny.  Quoth our forefathers: "We want lexical scope!"
+       (let ((_execute_command_keys_ (where-is-internal this-command))
+ 	    (_execute_command_name_ this-command)) ; the name can change
++        (if extended-command-calls-pre-command-hook
++            (run-hooks 'pre-command-hook))
+ 	(command-execute this-command t)
+ 	(when _execute_command_keys_
+ 	  ;; Normally the region is adjusted in post_command_hook;
+@@ -360,6 +366,8 @@
+ 	    (sit-for teach-extended-commands-timeout)
+ 	    (clear-message 'no-log))))
+     ;; Else, just run the command.
++    (if extended-command-calls-pre-command-hook
++        (run-hooks 'pre-command-hook))
+     (command-execute this-command t)))
+ 
+ 

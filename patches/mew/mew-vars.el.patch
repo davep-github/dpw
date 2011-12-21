@@ -1,0 +1,12 @@
+--- mew-vars.el~	Fri Apr  4 23:42:43 2003
++++ mew-vars.el	Sat Apr 26 15:13:30 2003
+@@ -2196,7 +2196,8 @@
+ ;;;
+ 
+ (defcustom mew-temp-file-initial
+-  (expand-file-name (user-login-name) (or (getenv "TMPDIR")
++  (expand-file-name (user-login-name) (or (getenv "MEWTMP")
++					  (getenv "TMPDIR")
+ 					  (getenv "TEMP")
+ 					  (getenv "TMP")
+ 					  "/tmp"))

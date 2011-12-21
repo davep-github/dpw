@@ -1,0 +1,34 @@
+Index: mew-draft.el
+===================================================================
+RCS file: /cvsroot/mew/mew/mew-draft.el,v
+retrieving revision 1.41.2.8
+diff -c -r1.41.2.8 mew-draft.el
+*** mew-draft.el	2002/02/21 02:58:39	1.41.2.8
+--- mew-draft.el	2003/01/09 07:35:32
+***************
+*** 869,880 ****
+  		    (mew-smtp-queue pnm "from Draft mode"))
+  		   ((eq action 'send)
+  		    (mew-smtp-send-message pnm))))
+! 	      (setq err t)))))
+!       (if (not err)
+! 	  (run-hooks 'mew-real-send-hook)
+! 	(mew-current-set-window-config)
+! 	(switch-to-buffer buf)
+! 	(delete-other-windows)))))
+  
+  (defun mew-draft-make-message (&optional privacy signer)
+    "Compose a MIME message then put it into a queue folder."
+--- 869,880 ----
+  		    (mew-smtp-queue pnm "from Draft mode"))
+  		   ((eq action 'send)
+  		    (mew-smtp-send-message pnm))))
+! 	      (setq err t))))
+! 	(if (not err)
+! 	    (run-hooks 'mew-real-send-hook)
+! 	  (mew-current-set-window-config)
+! 	  (switch-to-buffer buf)
+! 	  (delete-other-windows))))))
+  
+  (defun mew-draft-make-message (&optional privacy signer)
+    "Compose a MIME message then put it into a queue folder."

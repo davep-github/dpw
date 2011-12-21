@@ -1,0 +1,11 @@
+--- bsd.port.mk.ORIG	Thu Nov  7 16:18:39 2002
++++ bsd.port.mk	Thu Nov  7 16:18:48 2002
+@@ -3566,7 +3566,7 @@
+ 		if [ -f ${COMMENT} ]; then \
+ 			${CP} ${COMMENT} ${PKG_DBDIR}/${PKGNAME}/+COMMENT; \
+ 		else \
+-			${ECHO_CMD} ${PORTCOMMENT} > ${PKG_DBDIR}/${PKGNAME}/+COMMENT; \
++			${ECHO_CMD} "${PORTCOMMENT}" > ${PKG_DBDIR}/${PKGNAME}/+COMMENT; \
+ 		fi; \
+ 		if [ -f ${PKGINSTALL} ]; then \
+ 			${CP} ${PKGINSTALL} ${PKG_DBDIR}/${PKGNAME}/+INSTALL; \

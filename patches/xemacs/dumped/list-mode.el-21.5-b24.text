@@ -1,0 +1,25 @@
+XEmacs 21.5  (beta24) "dandelion" [Lucid] (i686-pc-linux, Mule) of Thu Dec 29
+2005 on vilya
+
+Fixes a bug in completion buffers that prevented me from using the keyboard
+to move between completions.  Almost everything ended up putting point at the
+end of the last completion (and at point-max) It seems that something rather
+fundamental has changed.  This is an "always on" bug, not one that happens
+only in certain circumstances.  The completion mode is derived from
+list-mode.  list-mode uses properties to track/locate list items (it seems, I
+don't fully understand the code.)  The next and previous functions worked by
+moving point until the properties changed.  The properties put on the items
+were not text properties but the functions used to move over properties were
+ones that only worked with text properties.  I changed the functions called
+to ones that work with non-text properties.
+
+I'm skeptical of my changes since this seems to be a rather significant
+mismatch in commonly used functionality (completion!) that hasn't been caught
+yet.  I may have a broken installation somehow.
+
+As a point of information for me:  this is dumped lisp code for a beta
+version.  Should this be posted here or to xemacs-beta?
+
+regards,
+davep
+

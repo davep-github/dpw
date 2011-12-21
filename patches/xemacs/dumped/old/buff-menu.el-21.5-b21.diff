@@ -1,0 +1,124 @@
+--- buff-menu.el.orig	2002-03-15 02:43:18.000000000 -0500
++++ buff-menu.el	2005-05-30 15:27:59.000000000 -0400
+@@ -540,7 +540,7 @@
+ 	(insert file)))))
+ 
+ ;; #### not synched
+-(defun list-buffers-internal (output &optional predicate)
++(defun list-buffers-internal (output &optional predicate predicate-args)
+   (let ((current (current-buffer))
+         (buffers (buffer-list)))
+     (save-excursion
+@@ -560,7 +560,7 @@
+                 ((and predicate
+                       (not (if (stringp predicate)
+                                (string-match predicate name)
+-                               (funcall predicate buffer))))
++			     (apply predicate (cons buffer predicate-args)))))
+                  nil)
+                 (t
+                  (set-buffer buffer)
+@@ -570,17 +570,17 @@
+ 		   (setq this-buffer-line-start (point))
+                    (insert (if (eq buffer current)
+                                (progn (setq current (point)) ?\.)
+-                               ?\ ))
++			     ?\ ))
+                    (insert (if (buffer-modified-p buffer)
+                                ?\*
+-                               ?\ ))
++			     ?\ ))
+                    (insert (if ro
+                                ?\%
+-                               ?\ ))
++			     ?\ ))
+                    (if (string-match "[\n\"\\ \t]" name)
+                        (let ((print-escape-newlines t))
+                          (prin1 name output))
+-                       (insert ?\  name))
++		     (insert ?\  name))
+                    (indent-to col1 1)
+                    (cond ((stringp id)
+                           (insert id))
+@@ -599,7 +599,7 @@
+ 						  (point)
+ 						  'highlight t)
+                  (insert ?\n)))))
+-
++      
+       (Buffer-menu-mode)
+       (if (not (bufferp current))
+           (goto-char current)))))
+@@ -617,28 +617,58 @@
+   (display-buffer (list-buffers-noselect files-only)))
+ 
+ ;; #### not synched
++
++(defun buffers-menu-files-only-predicate-func (b files-only)
++  "Default filtering predicate.
++Default value of `buffers-menu-predicate'.
++Predicate functions receive as parameters a buffer and
++whatever PREDICATE-ARGS are passed to `list-buffers-internal'.
++See also `buffers-menu-predicate-args'."
++  (let ((n (buffer-name b)))
++    (cond ((and (/= 0 (length n))
++		(= (aref n 0) ?\ ))
++	   ;;don't mention if starts with " "
++	   nil)
++	  (files-only
++	   (buffer-file-name b))
++	  (t
++	   t))))
++
++(defvar buffers-menu-predicate 'buffers-menu-files-only-predicate-func
++  "*Filtering predicate for `list-buffers-internal'.
++Defaults to `buffers-menu-files-only-predicate-func'.
++Passed to `list-buffers-internal' by `list-buffers-noselect'.")
++
++(defvar buffers-menu-predicate-args nil
++  "*Arguments passed to `buffers-menu-predicate'.
++Passed to `list-buffers-internal' by `list-buffers-noselect' if non-nil.
++If nil, `list-buffers-noselect' will use \(list files-only\)
++as the predicate args passed to `list-buffers-internal'.")
++
+ (defun list-buffers-noselect (&optional files-only)
+   "Create and return a buffer with a list of names of existing buffers.
+ The buffer is named `*Buffer List*'.
+-Note that buffers with names starting with spaces are omitted.
+-Non-nil optional arg FILES-ONLY means mention only file buffers.
++Note that with the default `buffers-menu-predicate', buffers with names
++starting with spaces are omitted.
++Optional arg FILES-ONLY t means list only buffers which satisfy the
++ function pointed to by `buffers-menu-predicate'.
++FILES-ONLY nil means list all files.
++FILES-ONLY not nil or t is assumed to be a string containing a regexp, and
++only buffers whose `buffer-name' `string-match'es FILES-ONLY are displayed.
+ 
+ The M column contains a * for buffers that are modified.
+ The R column contains a % for buffers that are read-only."
+-  (let ((buffer (get-buffer-create "*Buffer List*")))
++  (let ((buffer (get-buffer-create "*Buffer List*"))
++	pred-args)
+     (list-buffers-internal buffer
+ 			   (if (memq files-only '(t nil))
+-			       #'(lambda (b)
+-				   (let ((n (buffer-name b)))
+-				     (cond ((and (/= 0 (length n))
+-						 (= (aref n 0) ?\ ))
+-					    ;;don't mention if starts with " "
+-					    nil)
+-					   (files-only
+-					    (buffer-file-name b))
+-					   (t
+-					    t))))
+-			     files-only))
++			       (progn
++				 (setq pred-args
++				       (or buffers-menu-predicate-args
++					   (list files-only)))
++				 buffers-menu-predicate)
++			     files-only)
++			   pred-args)
+     buffer))
+ 
+ (defun buffers-menu-omit-invisible-buffers (buf)
