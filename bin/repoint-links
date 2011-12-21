@@ -1,0 +1,61 @@
+#!/bin/sh
+
+source script-x
+source eexec
+
+Usage()
+{
+    echo "repoint-links sed-expr
+
+Rename the destination of symlinks in the current directory by applying
+sed-expr to each link name.
+
+e.g. given the link: blah -> hex
+sed-expr 's!x!y!p' results in
+blah -> hey.
+"
+}
+    
+
+sed_expr=$1
+shift
+vsetp $sed_expr || {
+    Usage
+    exit 1
+} 1>&2
+
+sed_links()
+{
+    while read
+    do
+      x=$(readlink "$REPLY") || continue
+      set -- $x
+      name=$REPLY
+      dest=$x
+      new_dest=$(echo "$dest" | sed -rn "$sed_expr") || {
+          echo "sed failed on dest>$dest< with expr>$sed_expr<"
+          exit 1
+      }
+      echo_id name
+      echo_id dest
+      echo_id new_dest
+      if [ "$dest" = "$new_dest" -o -z "$new_dest" ]
+      then
+          echo "No change in dest."
+          continue
+      fi
+      EExec rm $name
+      EExec ln -s $new_dest $name
+    done
+}
+
+#EExecDashN
+EExecVerbose
+if tty > /dev/null 2>&1
+then
+    echo 1>&2 "ls'ing"
+    ls -1 .
+else
+    echo 1>&2 "reading"
+    cat
+fi | sed_links
