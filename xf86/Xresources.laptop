@@ -1,0 +1,32 @@
+#ifdef COLOR
+*customization: 		-color
+#endif
+
+xterm*font:			9x15
+color_xterm*font:		9x15
+nxterm*font:			9x15
+*term*font:			9x15
+! xterm*cursorColor:		white
+! color_xterm*cursorColor:	white
+! *cursorColor:			white
+Seyon*font:			9x15
+pine*VT100.Translations:	#override \
+   <Key>Prior: string("\031") \n\
+   <Key>Next: string("\026") \n\
+   <Key>Home: string("\001") \n\
+   <Key>End: string("\005") \n\
+   <Key>Delete: string("\004") \n\
+   Meta<Key>I: string("G{cannet.cannet.com}INBOX\015") \n\
+   Meta<Key>C: string(";AADX") \n\
+   Meta<Key>A: string("\036")
+
+Emacs*menubar*Font:	-*-helvetica-bold-r-*-*-*-100-*-*-*-*-iso8859-*
+Emacs*menubar*font:	-*-helvetica-bold-r-*-*-*-100-*-*-*-*-iso8859-*
+Emacs*menubar*fontList:	-*-helvetica-bold-r-*-*-*-140-*-*-*-*-iso8859-*
+
+! This is overridden by the -bg option set by xem/lem.
+! since I want bg set by host, xrdb is not easily usable.
+! oh well, grey isn't too bad.
+!Emacs*menubar*Background:  lightsteelblue
+
+!Emacs*XlwScrollBar.SliderStyle:    dimple

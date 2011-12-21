@@ -1,0 +1,402 @@
+; @todo  Make a func like emacs_remote(sybil) which will generate the proper
+; @todo  emacs syntax for a remote file (eg tramp or efs or ange)
+
+Ee|davep|             ${HOME}/
+;|bin| is very important.
+Ee|bin|               ${HOME}/bin/
+Ee|yokel|             ${davep}yokel/
+E|y|                  ${davep}yokel/
+Ee|bree|              ${davep}bree/
+Ee|daveplog|log|      ${davep}log/
+Ee|resume|            ${davep}jobs/resume/
+Ee|webpage|           ${davep}devel/web-page/
+Ee|tt|                ${davep}work/sandbox/Talisman/bin/
+Ee|deco|              /slice6/yokel${davep}.sawfish/themes/deco/
+Ee|work|              ${davep}work/
+Ee|memleak|ml|        ${davep}work/tmp-ccmalloc-test/tstreams-sb/tstreams
+Ee|notes|             ${davep}notes/
+Ee|etc|               ${davep}etc/
+Ee|crond|             ${etc}cron.d/
+Ee|crontab|           ${etc}crontab
+Ee|tmp|               /home/davep/tmp/
+Ee|rc|                ${davep}.rc/
+Ee|rcsroot|           /bfd/sundry/davep/RCS/
+Ee|rcsvilya|vilyarcs| ${rcsroot}RCS.vilya/
+Ee|rcsdavep|daveprcs| ${rcsvilya}home.davep/yokel/yokel/home/davep/
+Ee|patches|           ${davep}patches/
+Ee|wdylan|            ${davep}work/dylan/
+Ee|x7|                ${davep}work-xfer/exp07/
+Ee|wx|                ${davep}work-xfer/
+Ee|kdecfg|kdec|       ${davep}.kde/share/config/
+Ee|icons|             ${davep}icons/
+Ee|kdesh|             ${davep}.kde/share/
+Ee|stuff|             ${davep}stuff/
+Ee|kderc|             ${davep}.kde/share/config/
+Ee|mp3db|             ${davep}stuff/indices/mp3-db/
+Ee|indices|           ${davep}stuff/indices/
+Ee|diags|             ${davep}work/rincon/sandboxen/test/cc/diags/
+Ee|dptmp|htmp|tmp     ${davep}tmp/
+Ee|kdecfg|            ${davep}.kde3.3/share/config/
+Ee|taxes|             ${davep}finances/taxes/
+Ee|merge|             ${davep}tmp/merge/
+Ee|dumped|            ${davep}patches/xemacs/dumped/
+Ee|merge|             ${davep}tmp/merge/
+Ee|rblib|             ${davep}lib/rblib/
+E|inb|                ${davep}inb/
+Ee|rsvp|              ${davep}work/ll/rsvp/
+E|tj|                 ${davep}work/ll/rsvp/test-jig/
+E|r2|                 ${davep}work/ll/rsvp/RSVP2/
+E|rtj|                ${davep}work/ll/rsvp/RSVP2/src/clients/unix/
+Ee|inb|               ${davep}inb/
+Ee|tsat|              ${davep}work/ll/tsat/
+E|ipr2|               ${davep}work/ll/rsvp/research/iproute2-2.6.11/
+Ee|inbox|             ${davep}MH/inbox/
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+E|svnother|svno|      ${SVNOTHER}/
+E|svnwork|svnw|       ${SVNWORK}/
+E|svnworkll|svnll|    ${SVNWORKLL}/
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Ee|varlog|vlog|       /var/log/
+Ee|messages|msgs|vlm| ${varlog}messages
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Ee|yokeletc|          ${yokel}etc/
+Ee|uye|yetc|          ${yokeletc}
+Ee|yportage|yports|   ${yokeletc}
+Ee|xemprefix|         /usr/local/lib/
+Ee|xemver|            xemacs-21.5-b28
+Ee|xemacs|            ${xemprefix}xemacs/
+Ee|xlisp|             ${xemprefix}xemacs-${xemver}/lisp/
+Ee|xpkg|              ${xemacs}xemacs-packages/
+Ee|xplisp|            ${xpkg}lisp/
+Ee|xpl|               ${xpkg}lisp/
+Ee|xsl|               ${xemacs}site-lisp/
+Ee|xsp|               ${xemacs}site-packages/
+Ee|xspl|              ${xsp}lisp/
+Ee|mew|               ${xspl}mew/
+Ee|pyl23|             /usr/python2.3/
+Ee|pyl24|             /usr/python2.4/
+Ee|pyl24|             /usr/python2.5/
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; The stuff below should always use the current version.
+Ee|curr_python_version|  2.5
+Ee|curr_py_version|      2.5
+Ee|curr_py_prog|         python${curr_py_version}
+Ee|python|libpy|         /usr/lib/${curr_py_prog}/
+E|pyl|ulp|               /usr/local/lib/${curr_py_prog}/
+Ee|tkinter|tki|          ${libpy}lib-tk/
+Ee|getmail|gmc|          ${libpy}site-packages/getmailcore/
+Ee|yokeletcgetmail|gmrc| ${yokeletc}getmail/
+Ee|getmailverizonrc|     ${yokeletcgetmail}verizon.rc
+Ee|verizonrc|getmailrc|  ${getmailverizonrc}
+E|vrc|gmrc|gmvrc|        ${getmailverizonrc}
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Ee|stlgcc433v4|stlv4| /usr/lib/gcc/i686-pc-linux-gnu/4.3.3/include/g++-v4/
+E|stl|     ${stlv4}
+Ee|sys|     /usr/src/sys/
+Ee|conf|    /usr/src/sys/i386/conf/
+Ee|clf|     /usr/work/crl/clf/
+Ee|mcpsb|   /clove.crl.dec.com:/crl/stampede/sandboxes/davep/interconnects/myri/sys0/mcp/
+Ee|clfsb|   /clove.crl.dec.com:/crl/stampede/sandboxes/davep/clf/
+Ee|itn|     /usr/src/sys/modules/itn/
+Ee|ruby|    /usr/local/lib/ruby/1.6/
+Ee|oob|     /usr/yokel/share/emacs/site-lisp/oo-browser/
+Ee|hyp|     /usr/yokel/share/emacs/site-lisp/hyperbole/
+Ee|xp|      /usr/local/lib/xemacs/xemacs-packages/lisp/
+Ee|pkg|     /var/db/pkg/
+
+Ee|ts2|       /mnt/stuff/davep/work/ts2/tstreams/
+Ee|tstreams|tsb|  ${work}/ts2/tstreams/
+Ee|tim|           ${tstreams}timing/
+Ee|av|            ${tstreams}avalanche/
+Ee|av2|           ${tstreams}av2/
+Ee|av2s|          ${av2}src/
+Ee|av2d|          ${av2}doc/
+Ee|av2i|          ${av2}include/
+Ee|av2b|          ${tstreams}av2/bin/
+Ee|tsl0|          ${tstreams}lang/tsl0/
+Ee|tsl|           ${tstreams}lang/tsl0/
+Ee|util_lib|ul|   ${work}tstreams/util_lib
+Ee|haskell|       ${work}haskell
+Ee|hs|            ${haskell}
+Ee|xfonts|        /usr/X11R6/lib/X11/fonts/
+Ee|etcX11|etcx11|etcX|etcx| /etc/X11/
+E|x11|X11|X|    ${etcX11}
+Ee|build|       /sundry/build/
+Ee|build|       /sundry/build/
+Ee|bld|         /sundry/build/
+Ee|xemb|        ${bld}xemacs/xemacs-${xemver}/
+Ee|xbld|        ${bld}xemacs-${xemver}/
+Ee|mewb|        ${bld}mew/cvs/mew/
+Ee|dl|          /downloads/
+Ee|wdl|dlw|     ${dl}windwoes/
+Ee|dlk|         ${dl}kde/
+Ee|dlki|        ${dl}kde/icons/
+Ee|sawlisp|     ${yokel}sawmill-cvs/share/sawfish/1.0.1/lisp/
+Ee|sawfish|     ${sawlisp}
+
+Ee|ule|         /usr/local/etc/
+Ee|gi|          /usr/local/lib/gcc-lib/i386-portbld-freebsd4.8/3.2.3/include/
+Ee|ull|         /usr/local/lib/
+Ee|uls|         /usr/local/share/
+Ee|ulsd|        ${uls}doc/
+Ee|ulse|        ${uls}examples/
+Ee|elisp|       ${uls}emacs/21.2/lisp/
+Ee|tkinter|     ${uls}python/tkinter/
+Ee|noatun|      ${uls}apps/noatun/
+
+Ee|apache|      ${ule}apache/
+Ee|cur|         /usr/tmp2/2dlaplace-v2.debugging/
+Ee|kdeapps|     ${kdesh}apps/
+Ee|kdei|kicons| ${kdesh}icons/
+Ee|mi|          /sundry/build/xemacs/xemacs-${xemver}/
+Ee|hr|          /sundry/build/xemacs/xemacs-${xemver}/
+Ee|ut1|         /sundry/build/UnrealTournament/
+Ee|ut|          /sundry/build/UT2003/2225/
+Ee|x6|          ${wx}exp06-static/
+Ee|x9|          ${wx}exp09/
+Ee|x8|          ${wx}exp08/
+Ee|x9a|         ${wx}exp09a/
+Ee|sa|          /sundry/to-be-archived
+Ee|distros|     /sundry/distros/
+Ee|pdist|       /usr/ports/distfiles/
+Ee|dx2|         /smb/chicxulub/bfd2/Deus Ex - Invisible War/
+Ee|dx2s|        ${dx2}System
+Ee|dx|          /smb/chicxulub/bfd/DeusEx/
+Ee|dxs|         ${dx}System
+Ee|cvc|         /sundry/downloads/vpn/cvc/
+Ee|dumps|       /dumps
+Ee|ubin|ub|     /usr/bin
+Ee|usbin|       /usr/sbin
+
+Ee|debs|                /sundry/debs/
+Ee|kconfig|lconfig|     /usr/src/linux/.config
+Ee|mods|                /lib/modules/2.4.21/
+Ee|www|                 /var/www/
+Ee|web|                 /var/www/
+Ee|dpkg|                /var/lib/dpkg/
+Ee|Linux|linux|ksrc|ks| /usr/src/linux/
+Ee|dinfo|               /var/lib/dpkg/info/
+Ee|oldetc|              /mnt/debian/root/etc/
+Ee|kernel|              /usr/src/linux/
+Ee|kern|                /usr/src/linux/
+Ee|kde33|               /usr/kde/3.3/
+Ee|zpi|                 /var/www/localhost/htdocs/zp-images/
+Ee|boinc|               /sundry/BOINC/
+Ee|portage|             /usr/portage/
+Ee|ports|               ${portage}
+Ee|usrportagelocal|     ${portage}local/
+Ee|upl|                 ${usrportagelocal}
+Ee|layman|lman|         ${usrportagelocal}layman
+Ee|cgibin|              /var/www/localhost/cgi-bin/
+Ee|cgi|                 /var/www/localhost/cgi-bin/
+Ee|breesrc|             ${bree}src/
+Ee|bsrc|dpsrc|usrc|     ${breesrc}
+Ee|bbin|                ${bree}bin/
+Ee|mewcvs|              ${breesrc}mew/mew-cvs/mew/
+Ee|afid_lib|            ${breesrc}AudioFile-Identify-MusicBrainz-0.31/lib/
+Ee|amarok_src|amaroksrc|  ${breesrc}amarok/
+Ee|bamarok|               ${breesrc}amarok/
+Ee|samarok|               ${breesrc}amarok/
+Ee|mewsrc|                ${breesrc}mew/mew-cvs/mew/
+Ee|nv|                    ${breesrc}nv6/
+Ee|xemacssrc|             ${breesrc}xemacs/
+Ee|xemsrc|                ${xemacssrc}latest/
+Ee|xembsrc|               ${xemacssrc}beta/
+Ee|xemcsrc|               ${xemacssrc}current/
+Ee|bagcvs|                ${breesrc}baghira-cvs/baghira/
+Ee|amarok|                ${breesrc}amarok/multimedia/amarok/
+Ee|amsvn|                 ${breesrc}amarok/svn/
+Ee|amsrc|                 ${breesrc}amarok/svn/multimedia/
+E|sx|                     ${breesrc}sxemacs/
+E|xmc|                    ${breesrc}xemacs/latest/
+
+Ee|pics|                        /media/pics/
+Ee|forcx|                       /sundry/downloads/for-chicxulub/
+Ee|kdebin|                      /usr/kde/3.4/bin/
+Ee|kdelib|                      /usr/kde/3.4/lib/
+Ee|kdelib3|                     /usr/kde/3.4/lib/kde3/
+Ee|words|                       /media/audio/lossy/words/
+Ee|xfiremaps|                   /sundry/downloads/games/crossfire/maps/
+Ee|xfmaps|                      /sundry/downloads/games/crossfire/maps/
+Ee|gr3|                         /lib/modules/2.6.18-gentoo-r3/
+Ee|audio|                       /media/audio/
+Ee|mvsik|music|                 ${audio}mvsik/
+Ee|mp3|                         ${mvsik}mp3/
+Ee|flac|flak|                   ${mvsik}lossless/flac/
+Ee|asount|                      /proc/asound/
+Ee|asound|                      /proc/asound/
+Ee|palsa|                       /proc/asound/
+Ee|tunes|                       /media/audio/lossless/music/
+Ee|sundrydavep|sundavep|davep2| /sundry/davep/
+E|dp2|sdp|                      ${sundrydavep}
+E|doc2|d2|                      ${sundrydavep}doc/
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Ee|mpdd|        /var/tmp/portage/media-sound/mpd-0.12.2/work/mpd-0.12.2/
+Ee|lllisp|      /home/davep/lisp.d/to-ll/lisp/
+Ee|l|           /home/davep/lisp/
+Ee|play|        /home/davep/play/
+Ee|dok|         /home/davep/doc/
+Ee|bfd2t|       /bfd2/tmp/
+Ee|atidvr|      /bfd2/tmp/ati/
+Ee|bft2|        /bfd2/tmp/
+Ee|wrk|         /home/davep/work/
+Ee|ptmp|        /bfd2/var/tmp/portage/
+Ee|x11|        /home/davep/issues/x11/
+Ee|initd|inid|  /etc/init.d/
+Ee|inid|        /etc/init.d/
+Ee|ulptg|       /bfd2/usr/local/portage/
+Ee|sap|         /home/davep/work/ll/sapient/
+E|pud|          /usr/portage/profiles/use.desc
+E|puld|         /usr/portage/profiles/use.local.desc
+Ee|bft|         /bfd/tmp/
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Ee|yokelsvn|svnyokelysvn| file:///usr/yokel/svn
+Ee|svn_world|svnw|wsnv|   ${ysvn}/my-world
+Ee|SVNOTHER|              file:///bfd/misc/svn.other
+Ee|SVNWORK|               $SVNOTHER/work
+Ee|SVNWORKLL|             ${SVNWORK}/ll
+Ee|PYTHONPATH_PRE|        $HOME/lib/pylib
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Ee|dppythonlib|         $HOME/lib/pylib/
+Ee|pylib|dpylib|        ${dppythonlib}
+Ee|dppythonlibdevel|    ${dppythonlib}devel/
+Ee|dppythonlibdev|      ${dppythonlib}devel/
+Ee|pylibdev|dpylibdev|  ${dppythonlib}devel/
+Ee|pyldev|dpyldev|      ${dppythonlib}devel/
+Ee|pyld|dpyld|          ${dppythonlib}devel/
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+Ee|dfx|                     /bfd2/usr/local/portage/layman/desktop-effects/
+Ee|kdeconfig|kconf|kcfg|    /home/davep/.kde/share/config/
+Ee|kdecompizrc|kczrc|       ${kdeconfig}compizrc
+Ee|ffoxcfg|                 /home/davep/.mozilla/firefox/adi7ooz7.KDE/
+Ee|run3|                    /tmp/run3/
+Ee|bglfiles|                /collections/indices/beagle/davep/beagle/
+Ee|usrshare|usrsh|ushare|   /usr/share/
+E|usrsharedoc|usdoc|usd|    ${usrshare}doc/
+
+Ee|mairixdoc|               /usr/share/doc/mairix-0.21/
+Ee|eclass|                  /usr/portage/eclass/
+Ee|xsessions|               /usr/share/xsessions/
+Ee|xorglog0|                /var/log/Xorg.0.log
+Ee|xorglog|                 ${xorglog0}
+E|xol0|x0l|xol|             ${xorglog0}
+Ee|rbutil|    /usr/portage/tmp/portage/dev-util/rbutil-9999/work/rbutil-9999/rbutil/rbutilqt/
+
+E|dp3|                /mnt/stuff/davep/
+Ee|vmmail|            /home/davep/eMail/vm.el/
+Ee|vmfolders|         /home/davep/eMail/vm.el/folders/
+Ee|vmicache|          /home/davep/eMail/vm.el/IMAP-cache/
+Ee|vmimapcache|       /home/davep/eMail/vm.el/IMAP-cache/
+Ee|xebacs|            /home/davep/droppings/editors/xemacs/xebacs.d/
+Ee|xemacsautosaves|   /home/davep/droppings/editors/xemacs/auto-saves.d/
+Ee|asaves|            /home/davep/droppings/editors/xemacs/auto-saves.d/
+Ee|mbsunk|            /collections/mail/davep/mbsunk/
+Ee|mbsyncdirs|        /collections/mail/davep/mbsunk/
+E|mbs|                /collections/mail/davep/mbsunk/
+Ee|upkb|              /usr/portage/kde-base/
+Ee|xf86|              ${davep}xf86
+Ee|kdebase|           /usr/portage/kde-base/
+Ee|kdeb|              /usr/portage/kde-base/
+Ee|MH|                /home/davep/MH/
+E|sp|                 /home/davep/MH/singlepower/
+Ee|envd|              /etc/env.d/
+Ee|bashcomp|          /usr/share/bash-completion/
+Ee|xdrop|             /home/davep/droppings/editors/xemacs/
+Ee|edrop|             /home/davep/droppings/editors/
+Ee|cedet|             /home/davep/lisp/contrib/site-packages/cedet/
+Ee|work2|             /mnt/stuff/davep/work/
+Ee|ntmp|              /ntmp/
+Ee|eded|              /home/davep/droppings/editors/xemacs/ede.d/
+Ee|edesimpled|        /home/davep/droppings/editors/xemacs/ede.d/simple.d/
+Ee|fsfemacs|          /home/davep/bree/src/emacs/fsf-emacs/
+Ee|talislibinc|       /mnt/stuff/davep/work/talisman/talisman/Talisman/pod-zed-ecos/talislib/include/
+
+Ee|podzedecos|pzedecos|pzecos|    /mnt/stuff/davep/work/talisman/talisman/Talisman/pod-zed-ecos/
+
+# Killing Floor stuff...
+Ee|games|                   /bfd2/games/
+Ee|gamesdistfiles|          ${games}dist-files/
+Ee|gamesdf|                 ${games}dist-files/
+Ee|steam|                   ${games}steam/
+Ee|steambin|                ${steam}bin/
+Ee|killingfloorbase|        ${steam}KillingFloor-base/
+Ee|kfdsbase|kfdsb|          ${killingfloorbase}
+E|kfb|                      ${killingfloorbase}
+Ee|killingfloor|            ${steam}KillingFloor-base/killing-floor/
+Ee|kfds|                    ${killingfloor}dedicated-server/
+Ee|kfdssystem|              ${kfds}system/
+Ee|kfdssys|kfsys|kfdss|     ${kfdssystem}
+Ee|dotkillingfloor|         ${davep}.killingfloor/
+E|dkf|                      ${dotkillingfloor}
+Ee|dotkillingfloorsystem|   ${dotkillingfloor}system/
+E|dkfs|                    ${dotkillingfloorsys}
+E|kfini|                    ${dotkillingfloorsys}Killingfloor.ini
+Ee|hlds|                    ${steam}
+
+Ee|dkfsys|dkfs|       /home/davep/.killingfloor/System/
+Ee|usl|       /usr/src/linux/
+Ee|neporepo|neporepos|neprepo|neprepos| /home/davep/.kde4/share/apps/nepomuk/repository/
+Ee|kdelog|       /home/davep/log/kde/
+Ee|logkde|       /home/davep/log/kde/
+Ee|libxcb|       /usr/portage/x11-libs/libxcb/
+Ee|portagetmp|portmp|portagebuild|portbuild| /mnt/reiser/portage/tmp/portage/
+Ee|uport|       /usr/portage/
+Ee|fusep|       /usr/share/doc/fuse-python-0.2/
+Ee|fuserand|frnd|frand|   /home/davep/work/fuse-2.7.4/randomizer/
+Ee|pbuild|                /mnt/reiser/portage/tmp/portage/
+Ee|breedistfiles|         /home/davep/bree/distfiles/
+Ee|breedist|bdist|        /home/davep/bree/distfiles/
+Ee|gdist|                 /games/dist-files/
+Ee|mvsikmpd|mmpd|mpd|     /mvsik/mpd/
+Ee|varlibmpd|vlmpd|libmpd|mpdlib|       /var/lib/mpd/
+Ee|i1src|       /home/davep/work/is-play/irrational/ideas/idea/i1/src/
+Ee|i1inc|       /home/davep/work/is-play/irrational/ideas/idea/i1/include/
+Ee|bestjobevar| /home/davep/work/is-play/irrational/ideas/idea/i1/
+Ee|bestjobever| /home/davep/work/is-play/irrational/ideas/idea/i1/
+Ee|bje|         /home/davep/work/is-play/irrational/ideas/idea/i1/
+Ee|bjei|        /home/davep/work/is-play/irrational/ideas/idea/i1/include/
+Ee|bjeinc|      /home/davep/work/is-play/irrational/ideas/idea/i1/include/
+Ee|bjeinclude|  /home/davep/work/is-play/irrational/ideas/idea/i1/include/
+Ee|bjes|        /home/davep/work/is-play/irrational/ideas/idea/i1/src/
+Ee|bjesrc|      /home/davep/work/is-play/irrational/ideas/idea/i1/src/
+Ee|tsdi|        /mnt/stuff/davep/work/archive/crl/irrational-ts2/tstreams.d/
+Ee|itsd|        /mnt/stuff/davep/work/archive/crl/irrational-ts2/tstreams.d/
+Ee|irrationalts2|ts2irrational|ts2games|ts2sanitized|       /mnt/stuff/davep/work/archive/crl/irrational-ts2/
+Ee|gamework|gwork|gamew|                        ${work}game-work/
+
+Ee|workisplay|wip|			    /home/davep/work-is-play/
+Ee|wiph|wipinc|				    ${wip}/include/
+Ee|wipsrc|wips				    ${wip}/src/
+Ee|investigation1|wip1|inv1|		    ${wip}investigation1/
+Ee|gamingmusings|gamemusings|dmuse|muse|    ${wip1}musings/
+Ee|gamingpropsets|gamepropsets|propsets|psets|propset|pset|props|  ${wip1}prop-sets/
+Ee|propsetssrc|propsetss|propss|propsrc|psets| ${gamingpropsets}src
+Ee|propsetsinc|propsetsi|propsi|propinc|pseti| ${gamingpropsets}include
+Ee|propsetsh|propsh|pseth|psetsh| ${gamingpropsets}include
+
+Ee|desktopapps|desktopfile|kdeapplications| /home/davep/.local/share/applications/
+
+#######
+E|vld|          /home/davep/lisp.d/vilya-lisp-dev/
+Ee|vtmp|        /var/tmp/
+E|mdp|          /home/davep/Maildir-pristine/
+
+#############################################################################
+
+;;; There *must* be 3 semi-colons, e.g. "^;;;" in order for g -a to work.
+;;; New entries are added after this mess and should occasional be moved
+;;; above which is "A nice place to bring your kids up."
+;;; @todo Fix this.
+;;;
+;;; Local Variables: ***
+;;; tab-width: 2 ***
+;;; tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***
+;;; indent-tabs-mode: nil ***
+;;; comment-start: ";" ***
+;;; comment-end: "" ***
+;;; End: ***
+E|mmo|       /home/davep/work-is-play/investigation1/systems/mmo/
+Ee|ALIB|       /mnt/reiser/portage/tmp/portage/media-libs/alsa-lib-1.0.23/work/alsa-lib-1.0.23/
+E|AST|       /mnt/reiser/portage/tmp/portage/media-sound/alsa-utils-1.0.23/work/alsa-utils-1.0.23/speaker-test/
+Ee|ALIBPCM|       /mnt/reiser/portage/tmp/portage/media-libs/alsa-lib-1.0.23/work/alsa-lib-1.0.23/src/pcm/
+E|red|       /mnt/redrum/

@@ -1,0 +1,9 @@
+#!/bin/sh
+
+unalias
+
+PATH=$(echo ":$PATH:" | \
+    sed -r 's!(:(/usr/bree/|/home/davep/)[^:]*)!!g' | sed -r 's/^:(.*):$/\1/')
+hash -r
+
+avant-window-navigator

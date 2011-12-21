@@ -1,0 +1,9 @@
+# WM specific startx
+echo 1>&2 "********* Running >$0< ********"
+#screenletsd
+#sleep 4
+# Composited dock app.
+#dp-wrapped-avant-window-navigator &
+# Alternate composited dock app.
+cairo-dock &
+#screenlets-manager &

@@ -1,0 +1,10 @@
+! Useful mappings for a Mac PowerBookG4.
+! 
+! Change right enter key into another control key.
+keycode 60 = Control_R
+add Control = Control_R
+!
+! Change left alt into a meta modifier.
+keycode 66 = Alt_L
+clear mod1
+add mod2 = Alt_L

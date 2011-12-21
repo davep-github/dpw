@@ -1,0 +1,164 @@
++ startx=/usr/X11R6/bin/startx
++ bpp=-bpp 16
++ dashes=0
++ [ 0 = 0 ]
++ echo exec /usr/X11R6/bin/startx fvwm2 -- -bpp 16 
++ exec /usr/X11R6/bin/startx fvwm2 -- -bpp 16
+
+
+XFree86 Version 3.3.5 / X Window System
+(protocol Version 11, revision 0, vendor release 6300)
+Release Date: August 23 1999
+	If the server is older than 6-12 months, or if your card is newer
+	than the above date, look for a newer version before reporting
+	problems.  (see http://www.XFree86.Org/FAQ)
+Operating System: FreeBSD 3.1-STABLE i386 [ELF] 
+Configured drivers:
+  SVGA: server for SVGA graphics adaptors (Patchlevel 0):
+      NV1, STG2000, RIVA 128, RIVA TNT, RIVA TNT2, RIVA ULTRA TNT2,
+      RIVA VANTA, RIVA ULTRA VANTA, RIVA INTEGRATED, ET4000, ET4000W32,
+      ET4000W32i, ET4000W32i_rev_b, ET4000W32i_rev_c, ET4000W32p,
+      ET4000W32p_rev_a, ET4000W32p_rev_b, ET4000W32p_rev_c,
+      ET4000W32p_rev_d, ET6000, ET6100, et3000, pvga1, wd90c00, wd90c10,
+      wd90c30, wd90c24, wd90c31, wd90c33, gvga, ati, sis86c201, sis86c202,
+      sis86c205, sis86c215, sis86c225, sis5597, sis5598, sis6326, sis530,
+      sis620, tvga8200lx, tvga8800cs, tvga8900b, tvga8900c, tvga8900cl,
+      tvga8900d, tvga9000, tvga9000i, tvga9100b, tvga9200cxr, tgui9400cxi,
+      tgui9420, tgui9420dgi, tgui9430dgi, tgui9440agi, cyber9320, tgui9660,
+      tgui9680, tgui9682, tgui9685, cyber9382, cyber9385, cyber9388,
+      cyber9397, cyber9520, cyber9525, 3dimage975, 3dimage985, cyber9397dvd,
+      blade3d, cyberblade, clgd5420, clgd5422, clgd5424, clgd5426, clgd5428,
+      clgd5429, clgd5430, clgd5434, clgd5436, clgd5446, clgd5480, clgd5462,
+      clgd5464, clgd5465, clgd6205, clgd6215, clgd6225, clgd6235, clgd7541,
+      clgd7542, clgd7543, clgd7548, clgd7555, clgd7556, ncr77c22, ncr77c22e,
+      cpq_avga, mga2064w, mga1064sg, mga2164w, mga2164w AGP, mgag200,
+      mgag100, mgag400, oti067, oti077, oti087, oti037c, al2101, ali2228,
+      ali2301, ali2302, ali2308, ali2401, cl6410, cl6412, cl6420, cl6440,
+      video7, ark1000vl, ark1000pv, ark2000pv, ark2000mt, mx, realtek,
+      s3_virge, AP6422, AT24, AT3D, s3_svga, NM2070, NM2090, NM2093, NM2097,
+      NM2160, NM2200, ct65520, ct65525, ct65530, ct65535, ct65540, ct65545,
+      ct65546, ct65548, ct65550, ct65554, ct65555, ct68554, ct69000,
+      ct64200, ct64300, mediagx, V1000, V2100, V2200, p9100, spc8110, i740,
+      i740_pci, Voodoo Banshee, Voodoo3, generic
+Using syscons driver with X support (version 2.0)
+(using VT number 9)
+
+XF86Config: /etc/XF86Config
+(**) stands for supplied, (--) stands for probed/default values
+(**) XKB: rules: "xfree86"
+(**) XKB: model: "pc101"
+(**) XKB: layout: "us"
+(**) Mouse: type: sysmouse, device: /dev/sysmouse, samplerate: 150
+(**) Mouse: resolution: 200, buttons: 3
+(**) SVGA: Graphics device ID: "Primary Card"
+(**) SVGA: Monitor ID: "Primary Monitor"
+Warning: The directory "/usr/X11R6/lib/X11/fonts/local" does not exist.
+         Entry deleted from font path.
+(**) FontPath set to "/usr/X11R6/lib/X11/fonts/misc:unscaled,/usr/X11R6/lib/X11/fonts/75dpi:unscaled,/usr/X11R6/lib/X11/fonts/100dpi:unscaled,/usr/X11R6/lib/X11/fonts/Type1,/usr/X11R6/lib/X11/fonts/Speedo,/usr/X11R6/lib/X11/fonts/misc,/usr/X11R6/lib/X11/fonts/75dpi,/usr/X11R6/lib/X11/fonts/100dpi"
+(--) SVGA: PCI: NVidia Riva Ultra TNT2 rev 17, Memory @ 0xe4000000, 0xe6000000
+(--) SVGA: chipset:  RIVA ULTRA TNT2
+(--) SVGA: videoram: 32640k
+(**) SVGA: Option "dac_8_bit"
+(**) SVGA: Using 16 bpp, Depth 16, Color weight: 565
+(--) SVGA: Maximum allowed dot-clock: 350.000 MHz
+(**) SVGA: Mode "1280x1024": mode clock = 135.000
+(--) SVGA: Virtual resolution set to 1280x1024
+(--) SVGA: SpeedUp code selection modified because virtualX != 1024
+(--) SVGA: RIVA ULTRA TNT2: Using hardware cursor
+(--) SVGA: Using XAA (XFree86 Acceleration Architecture)
+(--) SVGA: XAA: Solid filled rectangles
+(--) SVGA: XAA: Screen-to-screen copy
+(--) SVGA: XAA: Using 10 128x64 areas for pixmap caching
+(--) SVGA: XAA: Caching tiles and stipples
+(--) SVGA: XAA: Horizontal and vertical lines and segments
++ args=fvwm2
++ host-info X
++ xinfo=xf86
++ [ xf86 =  ]
++ [ -d /home/davep/xf86 ]
++ /home/davep/xf86/.xinitrc fvwm2 /home/davep/xf86
++ XDIR=X11R6
+++ basename /home/davep/xf86/.xinitrc
++ progname=.xinitrc
++ '[' .xinitrc = .xsession ']'
++ XRCDIR=/home/davep/xf86
++ '[' /home/davep/xf86 = '' ']'
+++ host-info window-manager
++ WMD=afterstep
++ WM=fvwm2
++ WM=fvwm2
++ export WM
+++ host-info family
++ family=home-freebsd
++ wm_args=
++ wm_args=-f /home/davep/.fvwm2rc
++ rcf=/home/davep/xf86/fvwm2.home-freebsd.rc
++ '[' -f /home/davep/xf86/fvwm2.home-freebsd.rc ']'
++ wm_args=-f /home/davep/.fvwm2rc -f /home/davep/xf86/fvwm2.home-freebsd.rc
++ rcf=/home/davep/xf86/fvwm2.h0000f806dfda.rc
++ '[' -f /home/davep/xf86/fvwm2.h0000f806dfda.rc ']'
++ userresources=/home/davep/xf86/.Xresources /home/davep/xf86/.Xresources.h0000f806dfda
++ usermodmaps=/home/davep/xf86/.Xmodmap /home/davep/xf86/.Xmodmap.h0000f806dfda
++ '[' x '!=' x ']'
++ XINIT_DIR=/usr/X11R6/lib/X11/xinit
++ sysresources=/usr/X11R6/lib/X11/xinit/.Xresources
++ sysmodmap=/usr/X11R6/lib/X11/xinit/.Xmodmap
++ '[' -f /usr/X11R6/lib/X11/xinit/.Xresources ']'
++ '[' -f /usr/X11R6/lib/X11/xinit/.Xmodmap ']'
++ '[' -f /home/davep/xf86/.Xresources ']'
++ '[' -f /home/davep/xf86/.Xresources.h0000f806dfda ']'
++ '[' -f /home/davep/xf86/.Xmodmap ']'
++ '[' -f /home/davep/xf86/.Xmodmap.h0000f806dfda ']'
+++ hostname
+++ cut -f 1 -d.
++ host=h0000f806dfda
++ didaclient=
++ '[' -x /home/davep/xf86/.Xclients ']'
++ '[' -x /home/davep/xf86/.Xclients.h0000f806dfda ']'
++ source /home/davep/xf86/.Xclients.h0000f806dfda
+++ echo '/home/davep/xf86/.xinitrc: PATH>/usr/yokel/bin:/usr/yokel/sbin:/home/davep/bin.FreeBSD.i386:/sbin:/usr/sbin:/home/davep/bin:/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin<'
+/home/davep/xf86/.xinitrc: PATH>/usr/yokel/bin:/usr/yokel/sbin:/home/davep/bin.FreeBSD.i386:/sbin:/usr/sbin:/home/davep/bin:/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin<
+++ xearth -pos 'fixed 28.53 -81.36' -markerfile /home/davep/xearth.markers -night 23 -term 25 -bigstars 12 -fork -wait 600 -nice 20 -grid -proj orth
+++ xset s noblank
+++ xset m 8 2
+++ xset +dpms
+++ rm -f /home/davep/tmp/davep@h0000f806dfda_serial_num
+++ xautolock -time 3
+++ '[' fvwm2 '!=' afterstepXX ']'
++ didaclient=t
++ '[' t '!=' t ']'
++ unset didaclient
++ fvwm2 -f /home/davep/.fvwm2rc -f /home/davep/xf86/fvwm2.home-freebsd.rc
+++ unclutter
+++ xx -g +100+100
+++ asclock -12 -noblink -shape -exe ical -led green -position -162+0
+++ asmail -geometry 48x48-1+80
++++ gen-xhosts
+++ xhost clove a-69.tunnel.crl.dec.com panariti h0000f806dfda mpng-r-113.crl.dec.com ping pong wishbone rowdy scout gil dynamo marvin c3po sand dogfish sybil volatile-32
+xhost:  bad hostname "panariti"
+clove being added to access control list
+a-69.tunnel.crl.dec.com being added to access control list
+h0000f806dfda being added to access control list
+mpng-r-113.crl.dec.com being added to access control list
+ping being added to access control list
+pong being added to access control list
+wishbone being added to access control list
+rowdy being added to access control list
+scout being added to access control list
+gil being added to access control list
+dynamo being added to access control list
+marvin being added to access control list
+c3po being added to access control list
+sand being added to access control list
+dogfish being added to access control list
+sybil being added to access control list
+volatile-32 being added to access control list
+Netscape: Ignoring unsupported format code in mailcap file: %{
+Netscape: Ignoring unsupported format code in mailcap file: %{
+X connection to :0.0 broken (explicit kill or server shutdown).
+xterm:  fatal IO error 32 (Broken pipe) or KillClient on X server ":0.0"
+xinit:  connection to X server lost.
+
+waiting for X server to shut down xterm:  fatal IO error 32 (Broken pipe) or KillClient on X server ":0.0"
+
+

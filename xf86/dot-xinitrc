@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+set -x
+
+echo REALLY
+echo "dot-xinitrc ********** Running $0 **************"
+
+#
+# .xinitrc and .xsession
+# .xinitrc is called when we do a startx
+# .xsession is called when we are started by XDM or one of its
+#  variants such as KDM.
+#
+# .xsession doesn't seem to be invoked with our shell
+#  initialization having been done, so we compensate.
+progname=`basename $0`
+dirname=`dirname $0`
+pwd
+args="$@"
+argone=$1
+
+###env
+[ -z "$DP_BASHRC_COMPLETE" -a -f .bash_profile ] && . .bash_profile
+if [ "$progname" = ".xsession" ]
+then
+    if dte=`$HOST_INFO DTE`	# explicit?
+    then
+	sess_type='kdm'
+    # try to guess
+    elif findprog kdm > /dev/null
+    then
+	sess_type='kdm'
+    elif findprog xdm > /dev/null
+    then
+	sess_type='xdm'
+    else
+	sess_type='xsession'
+    fi
+else
+    sess_type='startx'
+fi
+
+xinfo=`$HOST_INFO X`
+if [ "$xinfo" = "-" ]
+then
+    echo 1>&2 "X not found in host-info, using default."
+    # xf86 is best for a guess, other checks below will determine
+    # if it was a bad guess
+    xinfo=xf86
+fi
+
+xdir="$HOME/$xinfo"
+export envXDIR="$xdir"
+if [ -d $xdir ]
+then
+    xinitrc="$xdir/xinitrc"
+    if [ -x $xinitrc ]
+    then 
+	. $xinitrc "$argone" "$xdir" "$sess_type"
+    else
+	echo 1>&2 "No executable xinitrc >$xinitrc< found."
+	exit 1
+    fi
+else
+    echo 1>&2 "xdir ($xdir) not found."
+    exit 1
+fi    
+
+echo "dot-xinitrc ********** Exiting $0 **************"

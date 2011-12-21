@@ -1,0 +1,63 @@
+#!/bin/sh
+#xphoon -t 60 &
+#set -x
+
+run_gnome=n
+echo "$0: PATH>$PATH<"
+#xsetroot -bitmap ~/etc/rdean-ship.xbm -bg blue -fg cyan
+#xsetroot -bitmap ~/etc/daemon.xbm -bg darkgoldenrod2 -fg indianred2
+#xearth -pos "fixed 28.53 -81.36" -markerfile ~/xearth.markers -night 23 -term 25 -bigstars 12 -fork -wait 600 -nice 20 -grid -proj orth
+#
+# set up my >< preferences
+#xset s noblank
+#xset s 600 10
+#xset m 5 8
+#xset m 6 2
+xset m 8 2
+xset +dpms
+
+# smooth out the mouse
+#mouse-properties-capplet --init-session-settings
+
+# locker/saver
+#xautolock -time 3 -corners '-++-' -cornerdelay 1 -cornerredelay 10 &
+# probs under SuSE: never accepts password
+#xautolock -time 3 &
+#xautolock -time 30 -corners '0-0+' &
+
+# clean up before we start...
+rm -f $HOME/tmp/*_serial_num
+
+# start some nice programs
+#unclutter &
+xx -g +0+0 &
+sleep 1
+xx -g +0+395 &
+sleep 1
+xx -g +0+789 &
+xem
+# want gtcd at +1354+0 how to specify in gtk?
+#(sleep5; gtcd & sleep 5; xon mammoth xbiff -rv)
+kscd --geometry 1354+46 &
+
+#xemacs &
+(xhost `gen-xhosts`) &
+if [ "$WM" != "afterstepXX" ]	# originally to let as applets handle
+then
+	# old
+	#xclock -digital -geometry 191x29+733+0 -fg white -bg "#0000b8" &
+	#asclock -12 -noblink -shape -exe "ical" -led green -position +882+0 &
+	#xbiff -volume 0  -rv -geometry 48x48-1+72 &
+	#asmail -geometry 48x48-1+72 &
+
+	if [ "$run_gnome" = 'y' ]
+	then
+	    WINDOW_MANAGER=$WM gnome-session &
+	elif [ "$WM" != "gnome-session" ]
+	    asclock -12 -noblink -shape -exe "ical" -led green -position -162+0 &
+	    asmail -geometry 48x48-1+80 &
+	fi
+	rbiff mammoth -geometry -1+80 &
+	ical -iconic &
+fi
+

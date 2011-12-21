@@ -1,0 +1,15 @@
+6:lrwxrwxrwx  1 dapanarx awesome     12 Dec  8 10:03 .bash_profile -> ./.rc/bashrc
+7:lrwxrwxrwx  1 dapanarx awesome     12 Dec  8 10:03 .bashrc -> ./.rc/bashrc
+8:lrwxrwxrwx  1 dapanarx dapanarx    44 Dec 21 08:15 bin -> /home/dapanarx/davep/dp-world-git/dp.git/bin/
+19:lrwxrwxrwx  1 dapanarx dapanarx     6 Dec 21 11:05 .go -> .rc/go
+21:lrwxrwxrwx  1 dapanarx dapanarx    11 Dec 21 11:07 .go.home -> .rc/go.home
+23:lrwxrwxrwx  1 dapanarx dapanarx    16 Dec 21 11:09 .go.localhost -> .rc/go.localhost
+26:lrwxrwxrwx  1 dapanarx dapanarx    56 Dec 21 11:16 .ipython -> /home/dapanarx/davep/dp-world-git/dp.git/DOTrc/IPython.d/
+31:lrwxrwxrwx  1 dapanarx dapanarx    45 Dec 21 08:27 lisp -> /home/dapanarx/davep/dp-world-git/dp.git/lisp/
+34:lrwxrwxrwx  1 dapanarx dapanarx    40 Dec 21 11:02 Makefile -> davep/dp-world-git/dp.git/tilde/Makefile
+38:lrwxrwxrwx  1 dapanarx dapanarx    48 Dec 21 08:33 patches -> /home/dapanarx/davep/dp-world-git/dp.git/patches/
+40:lrwxrwxrwx  1 dapanarx dapanarx    46 Dec 21 08:06 .rc -> /home/dapanarx/davep/dp-world-git/dp.git/DOTrc/
+42:lrwxrwxrwx  1 dapanarx awesome     12 Dec  8 11:13 .screenrc -> .rc/screenrc
+53:lrwxrwxrwx  1 dapanarx dapanarx     4 Dec 21 11:15 .xemacs -> lisp/
+54:lrwxrwxrwx  1 dapanarx dapanarx    45 Dec 21 11:14 xf86 -> /home/dapanarx/davep/dp-world-git/dp.git/xf86/
+55:lrwxrwxrwx  1 dapanarx dapanarx    46 Dec 21 11:12 yokel -> /home/dapanarx/davep/dp-world-git/dp.git/yokel/

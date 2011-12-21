@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+source ~davep/.bashrc
+source $HOME/xf86/basic_x_apps 108
+source $HOME/xf86/Kclients.$(hostname)
+kwalletmanager &
+
+#############################################################################
+####### Keep these things last, due to their (imagined?) start up requirements.
+#######
+# Starting things in systray kinda sucks.
+# xem-in-tray, et.al, sometimes shows up in the tray with its icon.
+# Sometimes with the default X icon.
+# Sometimes not in systray at all.
+# Ti-i-i-ime, is not on my side, oh no it isn't.
+xem-in-tray &
+# thunderbird, firefox (et al?) have a persistent problem in that they plain
+# old just stop working until I start it with -safe-mode. After which it
+# starts, usually at least once, w/o -safe-mode. I can even ^C the -safe-mode
+# invocation before it's up and then a following -safe-mode less can work.
+# This almost never works. Even if thunderbird actually deigns to start,
+# ksystray fucks up often enough so that BOTH things working as required
+# almost never happens.
+#tbird-in-tray &
+###waitfor-prog thunderbird-bin
