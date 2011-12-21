@@ -594,7 +594,7 @@ case $- in
         # Works
 	#PS1="$emph"'\u@\h$PS1_1'"$norm$PS1_path\n$emph2\!$PS1_terminator$norm "
         # Experimental.
-	PS1='${PS1_prefix}'"${emph}"'\u@\h${PS1_1}'"${norm}${PS1_path}"'\n'"${emph2}"'${PS1_bang_pre}'"\!"'${PS1_bang_suff}${PS1_terminator}'"${norm2} "
+	PS1='${PS1_prefix}'"${emph}"'\u@\h${PS1_1}'"${norm}${PS1_path}"'${PS1_path_suffix}\n'"${emph2}"'${PS1_bang_pre}'"\!"'${PS1_bang_suff}${PS1_terminator}'"${norm2} "
 	unset bang emph norm emph2 norm2
 
 	set -o emacs		# ok for bash
