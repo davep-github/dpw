@@ -283,6 +283,14 @@ prompt_command()
 {
     # Status is still set from the last command.
     rc="$?"
+    local git_branch=$(git-current-branch)
+    if vsetp $git_branch
+    then
+        PS1_path_suffix=" (*$git_branch)"
+    else
+        PS1_path_suffix=
+    fi
+
     PS1_terminator="$BASE_PS1_terminator"
     # Have 0, the most common rc, be plain and simple.
     if [ "$rc" != 0 ]; then
