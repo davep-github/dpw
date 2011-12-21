@@ -1,0 +1,5 @@
+#!/bin/sh
+
+source script-x
+
+git branch 2>/dev/null | sed -rn 's/^(\* )(.*)/\2/p'

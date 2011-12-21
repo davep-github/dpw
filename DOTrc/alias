@@ -215,4 +215,5 @@ alias gitlog='gitlog'
 alias gitremote='git remote'
 alias gitpush='git push'
 alias gitpull='git pull'
+alias githelp='gith'
 true
