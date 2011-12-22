@@ -283,13 +283,7 @@ prompt_command()
 {
     # Status is still set from the last command.
     rc="$?"
-    local git_branch=$(git-current-branch)
-    case "$git_branch" in
-        "") PS1_path_suffix= ;;
-        # I really don't want to do much on the master branch except merge.
-        master) PS1_path_suffix=" (!!${git_branch}!!)";;
-         *) PS1_path_suffix=" (@${git_branch})";;
-         esac
+    PS1_path_suffix=$(__git_ps1)
     PS1_terminator="$BASE_PS1_terminator"
     # Have 0, the most common rc, be plain and simple.
     if [ "$rc" != 0 ]; then
