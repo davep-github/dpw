@@ -1,2 +1,0 @@
-#!/bin/bash
-exec startx $* >| ~/tmp/X.log 2>&1 &
