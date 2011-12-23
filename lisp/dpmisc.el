@@ -2869,7 +2869,7 @@ a comment add a comment prefix to the line."
     (arglist-cont . "@arg")
     (member-init-intro . "@arg")
     (member-init-cont . "@arg")
-    (topmost-intro . (dp-c*-doxy-handle-topmost-intro "@arg"))
+    (topmost-intro . (dp-c*-doxy-handle-topmost-intro ""))
     (topmost-intro-cont . "@arg"))
   "Mapping from cc-mode syntax to a doxygen type.
 The cdr is eval'd; and strings eval to themselves.
@@ -2949,9 +2949,13 @@ reg-exps are anchored at bol."
            (doxy-cmd (if (listp doxy-val)
                          (car-safe doxy-val)
                        doxy-val))
-         (doxy-args (cdr-safe doxy-val)))
-      (dp-apply-if doxy-cmd
-          doxy-args
+           (doxy-args (cdr-safe doxy-val))
+           (doxy-cmd (dp-apply-if doxy-cmd
+                         doxy-args
+                       doxy-cmd)))
+      ;; functional handlers will return 'done if they've handled all of the
+      ;; commenting duties.
+      (unless (eq doxy-cmd 'done)
         (dp-indent-for-comment)
         (when (and doxy-cmd
                    (not (string= doxy-cmd ""))
@@ -2967,9 +2971,10 @@ reg-exps are anchored at bol."
 Handle those cases appropriately."
   (save-excursion
     (end-of-line)
-    (if (not (dp-c-looking-back-at-sans-eos-junk "("))
+    (if (not (dp-c-looking-back-at-sans-eos-junk "[)(]"))
         default-return
-      (dp-insert-tempo-comment))))
+      (dp-insert-tempo-comment)
+      'done)))
 
 (defun dp-map-context-to-doxy-cmd ()
   "Map the current cc-mode syntax to a doxygen command."
@@ -4116,6 +4121,7 @@ PREFIX: Doxygen comment indicator \"!<@\"."
     (if (dp-in-a-string)
         (insert msg " ")
       (save-excursion
+        ;; An easy but icky way to make it work in many modes.
         (dp-call-function-on-key [(meta \;)])
         ;;(indent-for-comment)
         (when clean-up-p
