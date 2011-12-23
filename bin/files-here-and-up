@@ -1,0 +1,31 @@
+#!/bin/sh
+
+source script-x
+
+Usage ()
+{
+    echo "files-here-and-up name [start=$PWD [[stop=$HOME]]
+
+Traverse up the directory tree from start to stop looking for name.
+Return the list from stop to stop.
+Useful for building a list of rc files ordered from least to most specific"
+}
+
+name=$1
+start=$(realpath ${2-$PWD})
+stop=$(realpath ${3-$HOME})
+
+list=
+current=$start
+real_stop=$(dirname "$stop")
+while [ "$current" != "$real_stop" ]
+do
+  rc_file="$current/$name"
+  if [ -e "$rc_file" ]
+  then
+      list="$rc_file $list"
+  fi
+  current=$(dirname "$current")
+done
+
+echo "$list"
