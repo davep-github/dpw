@@ -44,6 +44,10 @@ sed_links()
           echo "No change in dest."
           continue
       fi
+      [ -e "$new_dest" ] || {
+	echo "new_dest>$new_dest< does not exist"
+	exit 1
+      }	1>&2
       EExec rm $name
       EExec ln -s $new_dest $name
     done
