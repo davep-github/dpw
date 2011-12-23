@@ -420,6 +420,11 @@ For now (2010-05-22T08:26:49) I'm just using the symbols corresponding to the Em
   :type 'boolean
   :group 'dp-vars)
 
+(defcustom dp-c*-doxy-command-prefix "!<"
+  "That text with which introduces a doxygen command."
+  :group 'dp-vars
+  :type 'string)
+
 (defcustom dp-global-c*-use-too-long-face t
   "*Use a special font lock pattern and face to highlight overlong lines."
   :type 'boolean

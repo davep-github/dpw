@@ -1819,7 +1819,8 @@ See `dp-c*-junk-after-eos*'."
       (newline)
       (insert " ")               ; A comment at the left margin won't indent.
       (dp-c-indent-command)))
-  (unless (looking-at (concat dp-ws-regexp* "$"))
+  (when (looking-at (concat dp-ws-regexp* "$"))
+    (insert (format "ms0>%s<" (match-string 0)))
     (c-newline-and-indent)
     (previous-line 1)
     (dp-c-indent-command)))
@@ -2868,7 +2869,7 @@ a comment add a comment prefix to the line."
     (arglist-cont . "@arg")
     (member-init-intro . "@arg")
     (member-init-cont . "@arg")
-    (topmost-intro . "@arg")
+    (topmost-intro . (dp-c*-doxy-handle-topmost-intro "@arg"))
     (topmost-intro-cont . "@arg"))
   "Mapping from cc-mode syntax to a doxygen type.
 The cdr is eval'd; and strings eval to themselves.
@@ -2941,38 +2942,56 @@ reg-exps are anchored at bol."
     (beginning-of-line)
     (dp-isa-type-p)))
 
+
 (defun dp-c*-insert-doxy-comment ()
   (unless (dp-mark-active-p)
-    (let ((doxy-cmd (dp-map-context-to-doxy-cmd)))
-      (when (and doxy-cmd
-		 (looking-at (concat (regexp-quote comment-end) "\n")))
-	(backward-char)
-	(if (looking-at " ")
-	    (delete-char))
-        (undo-boundary)
-	(insert "!<" doxy-cmd " ")))))
+    (let* ((doxy-val (dp-map-context-to-doxy-cmd))
+           (doxy-cmd (if (listp doxy-val)
+                         (car-safe doxy-val)
+                       doxy-val))
+         (doxy-args (cdr-safe doxy-val)))
+      (dp-apply-if doxy-cmd
+          doxy-args
+        (dp-indent-for-comment)
+        (when (and doxy-cmd
+                   (not (string= doxy-cmd ""))
+                   (looking-at (concat (regexp-quote comment-end) "\n")))
+          (backward-char)
+          (if (looking-at " ")
+              (delete-char))
+          (undo-boundary)
+          (insert dp-c*-doxy-command-prefix  doxy-cmd " "))))))
+
+(defun dp-c*-doxy-handle-topmost-intro (default-return)
+  "A topmost-intro can contain parameters or just an open paren.
+Handle those cases appropriately."
+  (save-excursion
+    (end-of-line)
+    (if (not (dp-c-looking-back-at-sans-eos-junk "("))
+        default-return
+      (dp-insert-tempo-comment))))
 
 (defun dp-map-context-to-doxy-cmd ()
   "Map the current cc-mode syntax to a doxygen command."
-  (let ((syntax (dp-c-get-syntactic-region))
-	doxy-cmd)
-    (setq doxy-cmd (cdr (assoc syntax dp-doxy-syntax-map)))
-    ;;(dmessage "doxy-cmd>%s<" doxy-cmd)
-    (if doxy-cmd
-	(eval doxy-cmd)                 ; strings eval to themselves.
+  (or (cdr (assoc (dp-c-get-syntactic-region)
+                  dp-doxy-syntax-map))
       ;; make a guess based on text on the line
       (save-excursion
-	(beginning-of-line)
-        (dp-isa-type-p)))))
-  
+        (beginning-of-line)
+        (dp-isa-type-p))))
+
+(setq dp-c*-insert-doxy-cmd-p t)
+
 (defun dp-c-indent-for-comment (&optional arg)
   "Call `indent-for-comment' and then possibly add a Doxygen annotation.
 Current annotations are:
 @arg if comment is in the arglist."
   (interactive "*P")
-  (dp-indent-for-comment arg)
-  (when dp-c*-insert-doxy-cmd-p
-    (dp-c*-insert-doxy-comment)))
+  (if (dp-region-active-p)
+      (call-interactively 'dp-lineup-comments)
+    (if dp-c*-insert-doxy-cmd-p
+        (dp-c*-insert-doxy-comment)
+      (dp-indent-for-comment arg))))
 
 (defun dp-c-fill-paragraph (&optional arg)
   "Fill according to C/C++ syntactical context."
@@ -5979,16 +5998,15 @@ do not indent the newly inserted comment block."
           (beginning-of-line)
           (looking-at "\\s-*\\(class\\|struct\\|template\\)"))
         (dp-c-insert-class-comment)
+      ;; not in C++, just insert a function comment
       (dp-c-tempo-insert-function-comment))))
-    ;; not in C++, just insert a function comment
-;;    (dp-c-tempo-insert-function-comment))
 
 (dp-deflocal dp-insert-tempo-comment-func nil
   "Function to call when adding a tempo template based comment.")
 
 (defun dp-insert-tempo-comment (&optional no-indent)
   "Add a tempo comment.
-Determine the best kind of comment based on the current situation and create it using a tempo template.
+Insert a context sensative comment using a tempo template.
 This is vectored via the buffer local variable `dp-insert-tempo-comment-func' 
 so each mode can have its own logic."
   (interactive "*P")
@@ -7387,15 +7405,15 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
 (defun dp-lineup-comments (begin end)
   "Line up all comments in region to column of the beginning of the region."
   (interactive "*r")
-  (let ((comment-column (save-excursion 
-                          (goto-char begin)
-                          (current-column)))
+  (let ((comment-column comment-column)
         ;; Use `comment-indent-default' because it doesn't do any fancy mode
         ;; specific things which tend to not use the currently defined
         ;; comment-start stuff.
         (comment-indent-function 'comment-indent-default)
 	(endm (set-marker (make-marker) end)))
     (goto-char begin)
+    (when (/= 0 (current-column))
+      (setq comment-start (current-column)))
     (indent-for-comment)
     (next-line 1)
     (set-comment-column 'align-with-previous)
@@ -9971,7 +9989,7 @@ Returns the ultimate value BEG-END-CONS."
 (defvar dp-c-format-func-decl-align-p-default nil
   "Should the args be lined up with `align'?")
 
-(defconst dp-c-format-func-decl-packed-p t
+(defconst dp-c-format-func-decl-packed-p nil
   "Fill a function declaration by putting as many parameters on each line as
 will fit.  Like filling a function currently as of: 2011-11-18T10:21:02
 is done.")
@@ -9987,93 +10005,94 @@ is done.")
   "Format a C/C++ function definition header *my* way."
   (interactive (list current-prefix-arg))
   (undo-boundary)
-  (if nil ;;dp-c-format-func-decl-packed-p
-      (save-restriction
-       (let ((be (dp-c-delimit-func-decl)))
- ;;       (narrow-to-region (car be)
-  ;;                        (1+ (cdr be)))
-        (dp-c-fill-statement)))
-    (let ((start-pos (dp-mk-marker))
-          (final-position (point-marker))
-          decl-bounds
-          open-paren-marker close-paren-marker)
-      (end-of-line)
-      (dp-c-beginning-of-statement)
-      (beginning-of-line)
-      (setq decl-bounds (dp-c-flatten-func-decl))
-      ;;!<@todo why do I have void here?  To shrink wrap w/o spaces?
-      (if (dp-look-ahead "(\\s-*\\(void\\)?\\s-*)" (line-end-position) t)
-          (progn
-            (setq open-paren-marker (match-beginning 0))
-            (replace-match "(void)")
-            (setq close-paren-marker (dp-mk-marker (1- (point)))))
-        (if (not (search-forward "(" (line-end-position) t))
-            (error "No open paren found."))
-        (setq open-paren-marker (1- (dp-mk-marker)))
-        (when add-nl-after-open-paren-p
-          (replace-match "(\n")
-          (beginning-of-line)
-          (c-indent-line))
-        (if dp-c-format-func-decl-packed-p
-              (let* ((be (dp-c-delimit-func-decl))
-                     (e (dp-mk-marker(cdr be))))
-                (dp-c-fill-statement nil nil nil 
-                                     (dp-mk-marker (1+ e)))
-                ;; Leave ourselves position for the ) check which allows us
-                ;; to add an opening { if needed.
-                (goto-char e)
-                (beginning-of-line))
-          (while (re-search-forward ",\\|\\([^:]\\)\\(:\\)\\([^:].*,\\)"
-                                    (line-end-position) t)
-            ;; Handle constructor initializers.
-            (if (string= (match-string 2) ":")
-                (save-excursion
-                  (replace-match "\\1\n:\n\\3")
-                  (forward-line -1)
-                  (beginning-of-line)
-                  (c-indent-line))
-              (replace-match ",\n"))
-            (c-indent-line)))
+  (let ((start-pos (dp-mk-marker))
+        (final-position (point-marker))
+        decl-bounds
+        open-paren-marker close-paren-marker)
+    (end-of-line)
+    (dp-c-beginning-of-statement)
+    (beginning-of-line)
+    (setq decl-bounds (dp-c-flatten-func-decl))
+    ;;!<@todo why do I have void here?  To shrink wrap w/o spaces?
+    (if (dp-look-ahead "(\\s-*\\(void\\)?\\s-*)" (line-end-position) t)
+        (progn
+          (setq open-paren-marker (match-beginning 0))
+          (replace-match "(void)")
+          (setq close-paren-marker (dp-mk-marker (1- (point)))))
+      (if (not (search-forward "(" (line-end-position) t))
+          (error "No open paren found."))
+      (setq open-paren-marker (1- (dp-mk-marker)))
+      (when add-nl-after-open-paren-p
+        (replace-match "(\n")
         (beginning-of-line)
-        (c-indent-line)
-        (unless close-paren-marker
-          (setq close-paren-marker
-                (dp-mk-marker (save-excursion
-                                (beginning-of-line)
-                                ;; No match (ie failure) is not an option.
-                                (search-forward ")" (line-end-position))))))
-        (when (and add-opening-brace-p
-                   (re-search-forward ")" (line-end-position) t))
-          (dp-c-ensure-opening-brace)))
-      (goto-char open-paren-marker)
-      ;; Put function name on a line by itself after any preceding type, etc,
-      ;; info.
-      (when (and type-on-separate-line-p
-                 (re-search-backward "\\(\\S-+\\)\\s-+"
-                                     (line-beginning-position) t))
-        (replace-match "\\1\n")
         (c-indent-line))
+      (if dp-c-format-func-decl-packed-p
+          (let* ((be (dp-c-delimit-func-decl))
+                 (e (dp-mk-marker(cdr be))))
+            (dp-c-fill-statement nil nil nil
+                                 (dp-mk-marker (1+ e)))
+            ;; Leave ourselves position for the ) check which allows us
+            ;; to add an opening { if needed.
+            (goto-char e)
+            (beginning-of-line))
+        (while (re-search-forward ",\\|\\([^:]\\)\\(:\\)\\([^:].*,\\)"
+                                  (line-end-position) t)
+          ;; Handle constructor initializers.
+          (if (string= (match-string 2) ":")
+              (save-excursion
+                (replace-match "\\1\n:\n\\3")
+                (forward-line -1)
+                (beginning-of-line)
+                (c-indent-line))
+            (replace-match ",\n"))
+          (c-indent-line)))
       (beginning-of-line)
-      (when (and (dp-in-c++-class)
-                 (re-search-forward (format "%s::" (symbol-near-point))
-                                    (line-end-position) t))
-        (dmessage "only remove this class's name")
+      (c-indent-line)
+      (unless close-paren-marker
+        (setq close-paren-marker
+              (dp-mk-marker (save-excursion
+                              (beginning-of-line)
+                              ;; No match (ie failure) is not an option.
+                              (search-forward ")" (line-end-position))))))
+      (when (and add-opening-brace-p
+                 (re-search-forward ")" (line-end-position) t))
+        (dp-c-ensure-opening-brace)))
+    (goto-char open-paren-marker)
+    ;; Put function name on a line by itself after any preceding type, etc,
+    ;; info.
+    (when (and type-on-separate-line-p
+               (re-search-backward "\\(\\S-+\\)\\s-+"
+                                   (line-beginning-position) t))
+      (replace-match "\\1\n")
+      (c-indent-line))
+    (beginning-of-line)
+    (when (and (dp-in-c++-class)
+               (re-search-forward (format "%s::" (symbol-near-point))
+                                  (line-end-position) t))
+      (dmessage "only remove this class's name")
         ;;;(replace-match "")
-        )
-      ;; If we were(are) positioned at the closing paren, move down a line.
-      ;; This is useful for typing in all args and then filling after.  This
-      ;; puts the cursor into the function definition area.
+      )
+    ;; If we were(are) positioned at the closing paren, move down a line.
+    ;; This is useful for typing in all args and then filling after.  This
+    ;; puts the cursor into the function definition area.
 ;     (when (and close-paren-marker
 ;                (equal close-paren-marker (point)))
 ;       (forward-line 1))
-      (goto-char close-paren-marker)
-      (unless (eobp) (forward-char 1))
-      (and add-opening-brace-p
-           (dp-c-ensure-opening-brace))
-      (when align-p
-        (align (car decl-bounds) (1+ (cdr decl-bounds)))))))
+    (goto-char close-paren-marker)
+    (unless (eobp) (forward-char 1))
+    (and add-opening-brace-p
+         (dp-c-ensure-opening-brace))
+    (when align-p
+      (align (car decl-bounds) (1+ (cdr decl-bounds))))))
 
 (defalias 'ffd 'dp-c-format-func-decl)
+
+(defun dp-c-format-func-decl-packed ()
+  (interactive)
+  (let ((dp-c-format-func-decl-packed-p t))
+    (dp-c-format-func-decl)))
+
+(defalias 'ffdp 'dp-c-format-func-decl-packed)
 
 (defun dp-c-format-func-call (&optional line-max)
   "Format a C/C++ function call *my* way."
