@@ -11,7 +11,7 @@ vsetp $PROJECT && midix=.${PROJECT}
 
 
 : ${RC_FILE_OVERRIDE=}
-: ${RC_FILE_NAMES=.../DOTindex-code${midix}.rc}
+: ${RC_FILE_NAMES=".../DOTindex-code.rc .../DOTindex-code${midix}.rc"}
 : ${RC_EXTRA_FILE_NAMES=}
 
 # rc file variables should be prefixed with rc_
@@ -22,13 +22,22 @@ if vsetp $RC_FILE_OVERRIDE      # Let this override all
 then
     slist="$RC_FILE_OVERRIDE"
 else
-    d=$(dirname "$RC_FILE_NAMES")
-    if [ "$d" == "..." ]
-    then
-        name=$(basename "$RC_FILE_NAMES")
-        RC_FILE_NAMES=$(files-here-and-up "$name" $PROJECT_HOME $PROJECT_ROOT)
-    fi
-    slist="$RC_FILE_NAMES $RC_EXTRA_FILE_NAMES"
+    rc_file_names=
+    for rc_file in $RC_FILE_NAMES
+    do
+      d=$(dirname "$rc_file")
+      if [ "$d" == "..." ]
+          then
+          name=$(basename $rc_file)
+          rc_files=$(files-here-and-up "$name" $PWD $PROJECT_ROOT)
+          for rcf in $rc_files
+          do
+            [ -x "$rcf" ] && {
+                source "$rcf"
+            }
+          done
+      fi
+    done
 fi
 echo_id slist
 vsetp $slist && source_list "" $slist

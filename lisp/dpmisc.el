@@ -1820,7 +1820,6 @@ See `dp-c*-junk-after-eos*'."
       (insert " ")               ; A comment at the left margin won't indent.
       (dp-c-indent-command)))
   (when (looking-at (concat dp-ws-regexp* "$"))
-    (insert (format "ms0>%s<" (match-string 0)))
     (c-newline-and-indent)
     (previous-line 1)
     (dp-c-indent-command)))
@@ -2969,12 +2968,11 @@ reg-exps are anchored at bol."
 (defun dp-c*-doxy-handle-topmost-intro (default-return)
   "A topmost-intro can contain parameters or just an open paren.
 Handle those cases appropriately."
-  (save-excursion
-    (end-of-line)
-    (if (not (dp-c-looking-back-at-sans-eos-junk "[)(]"))
-        default-return
-      (dp-insert-tempo-comment)
-      'done)))
+  (end-of-line)
+  (if (not (dp-c-looking-back-at-sans-eos-junk "[)({]"))
+      default-return
+    (dp-insert-tempo-comment)
+    'done))
 
 (defun dp-map-context-to-doxy-cmd ()
   "Map the current cc-mode syntax to a doxygen command."
@@ -5929,7 +5927,7 @@ new one."
 (defvar doxy-c-class-comment-elements '("
  /*********************************************************************/" > "
  /*!" > "
- * @class " p > "
+ * @class " > "
  * @brief " p > "
  */" > % >)
   "Elements of a C/C++ class comment template")
@@ -5942,13 +5940,16 @@ new one."
 		        doxy-c-class-comment-elements)
 
 (defun dp-insert-tempo-template-comment (template-func &optional 
-                                         no-indent no-bol indent-to)
+                                         no-indent no-bol indent-to
+                                         beginning-of-statement)
   "Use TEMPLATE-FUNC to add a comment. Typically a tempo template.
 Often context sensitive.
 Please enter a brief description of the function at the prompt.
 If NO-INDENT is non-nil (interactively with prefix arg) then
 do not indent the newly inserted comment block."
   (or no-bol
+      (and beginning-of-statement
+           (goto-char beginning-of-statement))
       (end-of-line)
       (if (dp-in-c)
           (dp-c-beginning-of-statement)))
@@ -5988,10 +5989,12 @@ do not indent the newly inserted comment block."
       ;; @todo templates *WILL* break this.
       ;; Apparently not. 
       (re-search-forward 
-       "\\s-*\\(class\\|struct\\)\\s-+\\(\\S-+?\\)\\s-*\\(:\\|$\\)"))
+       "\\s-*\\(class\\|struct\\)\\s-+\\(\\S-+?\\)\\s-*\\(:\\|{\\|$\\)"))
     (let ((class-name (match-string 2)))
       ;;(tempo-template-doxy-c-class-comment)
-      (dp-insert-tempo-template-comment 'tempo-template-doxy-c-class-comment nil)
+      (dp-insert-tempo-template-comment 
+       'tempo-template-doxy-c-class-comment nil
+       nil nil (match-beginning 0))
       (insert class-name)
       (tempo-forward-mark))))
 
@@ -7256,7 +7259,7 @@ The region is determined by `dp-region-or...'."
                                 nil nil nil 
                                 dp-colorize-bracketing-regexps-history)
           (if prompt-for-others
-              (read-number "color index: " 'ints-only 1)
+              (read-number "color index: " 'ints-only 1)  ; color
             (cond 
              ((not current-prefix-arg) nil)
              ((eq current-prefix-arg '-) '-)
@@ -7343,7 +7346,7 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
   (interactive)
   ;;!<@todo Fix this so we can request shrink wrapping of the string.
   ;; The problem is that colors are specified with the prefix arg.
-  (dp-colorize-matching-lines isearch-string))
+  (call-interactively 'dp-colorize-matching-lines isearch-string))
 
 (defvar dp-colorize-bracketing-regexps-history nil
   "History for `dp-colorize-bracketing-regexps'.")
@@ -9852,7 +9855,8 @@ end is the end of the last matching line."
     (cons (if shrink-wrap-p
               (match-beginning 0)
             (line-beginning-position))
-          (progn
+          (if shrink-wrap-p
+              (match-end 0)
             (beginning-of-line)
             (forward-line 1)
             (while (re-search-forward regex (line-end-position) t)

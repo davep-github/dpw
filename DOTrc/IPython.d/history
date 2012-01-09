@@ -18,3 +18,15 @@ string.find?
 "a".find("11a22")
 11a22".find("a")
 "11a22".find("a")
+"xxx".split?
+"xxx".split("x")
+"x,x,x".split("x")
+string.split
+string.split?
+map?
+l=[1,2,3]
+map(lanbda x: x-1, l)
+map(lambda x: x-1, l)
+l, map(lambda x: x-1, l)
+l = (1,2,3)
+l, map(lambda x: x-1, l)
