@@ -1,0 +1,31 @@
+#!/bin/sh
+
+source script-x
+source eexec
+
+: ${dpw_re='/dpw\.[^/]+/'}
+: ${rc_re='^\.rc/'}
+
+EExec cd $HOME
+
+find_tilde_links()
+{
+    local re="$1"; shift
+    sep=' ' find-symlinks | while read
+    do
+      set -- $REPLY
+      linkname=$1
+      linkee=$2
+      if echo "$linkee" | egrep -- "$re" > /dev/null 2>&1
+          then
+          echo "ln -s $1 $2"
+      fi
+    done
+}
+
+# Find my links to vcs dirs:
+find_tilde_links "$dpw_re"
+
+# Find my links into .rc
+find_tilde_links "$rc_re"
+

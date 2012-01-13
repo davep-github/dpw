@@ -1,0 +1,29 @@
+#!/bin/sh
+source script-x
+
+# Original motivation:
+# In $HOME, find all of my links which point into a vc repository.
+
+# My current system has a repository living "somewhere" and I link things
+# like bin, .rc, so on (can't say etc :-) so that my things can be put into
+# use in another site in an incremental fashion. If that's possible, given my
+# .rc's dependence on bin, and my bin's dependence on .rc funcs, aliases, and
+# so on.
+
+# In addition, I put "non-essential" things on other disks but want them in my dir tree.
+# e.g. I have a place for browser caches, downloaded docs, etc. This can
+# catch those as well.
+#
+# But now this just find(1)s symlinks and prints them in a easy to use format.
+# It will feed find dir symlinks, etc.
+
+: ${max_depth:=1}
+: ${sep:='->'}                 # Many symlink parsers assume this is present.
+
+find . -maxdepth ${max_depth} -type l | \
+  while read
+  do 
+     link="$REPLY"
+     linkee=$(readlink "$link")
+     echo "$(realpath -r $link) ${sep} $(readlink $link)"
+  done
