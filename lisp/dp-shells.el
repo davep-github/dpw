@@ -169,14 +169,20 @@ prompt.  We don't want to stomp on them.")
      (match-string 2 str)
      nil)))                             ;Do I like this? 'no-echo
 
-(defvar dp-shell-vc-commit-cmds '("cvs" "svn" "git" "hg")
+(defvar dp-shell-vc-cmds '("cvs" "svn" "git" "hg")
   "Version control commands that can cause problems if they are used and
   there are dirty buffers.")
+(defvar dp-shell-vc-commit-cmds
+  '("gitci" "gitcia")
+  "Some aliases or extended functionality versions of checkin commands.")
 
 (defvar dp-shell-vc-commit-cmd-regexps
-  (loop for vc-cmd in dp-shell-vc-commit-cmds
-    collect (format "\\s-*\\(%s\\|\\S-*/%s\\).* \\<\\(commit\\|ci\\)\\>"
-                    vc-cmd vc-cmd)))
+  (append
+   (loop for vc-cmd in dp-shell-vc-cmds
+     collect (format "\\s-*\\(%s\\|\\S-*/%s\\).* \\<\\(commit\\|ci\\)\\>"
+                     vc-cmd vc-cmd))
+   (list (regexp-opt dp-shell-vc-commit-cmds))))
+   
 
 (defvar dp-shell-vc-commit-cmd-regexp
   (dp-concat-regexps-grouped dp-shell-vc-commit-cmd-regexps)
@@ -184,36 +190,35 @@ prompt.  We don't want to stomp on them.")
 
 
 (defun dp-shell-vc-commit-p (str)
-    (posix-string-match dp-shell-vc-commit-cmd-regexp str))
+    (or (posix-string-match dp-shell-vc-commit-cmd-regexp str)
+        (posix-string-match dp-shell-vc-commit
+        )
 
-;;does the new ver work?; (defun dp-shell-vc-commit-p (str)
-;;does the new ver work?;   (loop for vc-cmd in '("cvs" "svn")
-;;does the new ver work?;     do (when (posix-string-match 
-;;does the new ver work?;               (format "\\s-*\\(%s\\|\\S-*/%s\\).* \\(commit\\|ci\\)\\(\\s-\\|$\\)"
-;;does the new ver work?;                       vc-cmd vc-cmd)
-;;does the new ver work?;               str)
-;;does the new ver work?;          (return t))))
 
 (defvar dp-shell-dirty-buffer-cmds
   (concat "^\\s-*"
           (dp-concat-regexps-grouped
-           (cons (regexp-opt '("make"
-                               "gcc"
-                               "g++"
-                               "diff"
-                               "grep"
-                               "egrep"
-                               "fgrep"
-                               "sed"
-                               "gawk"
-                               "nawk"
-                               "awk"
-                               "ci"
-                               "xem"
-                               "lem"
-                               "xemacs"))
-                 dp-shell-vc-commit-cmd-regexps)
-           nil 'one-around-all-p))
+           (append (list (regexp-opt '("make"
+                                       "gcc"
+                                       "g++"
+                                       "diff"
+                                       "grep"
+                                       "egrep"
+                                       "fgrep"
+                                       "sed"
+                                       "gawk"
+                                       "nawk"
+                                       "awk"
+                                       "ci"
+                                       "xem"
+                                       "lem"
+                                       "gits"
+                                       "gitstat"
+                                       "xemacs")))
+                   '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(status\\|stat\\)")
+                   dp-shell-vc-commit-cmd-regexps)
+           nil 'one-around-all-p)
+          "\\(\\s-+\\|$\\)")
   "Commands that may want to have modified buffers saved before running.
 Commands that might want to use files in buffers. Shit that would piss us off
 when we realized that we didn't use the latest modifications.
@@ -237,8 +242,12 @@ g++: Why does it act exactly the same in spite of my changes.
 ;;    (add-one-shot-hook 'post-command-hook 'dp-abbrevs nil t)))
     (add-one-shot-hook 'comint-output-filter-functions 'dp-abbrevs t t)))
 
+
+(defun dp-shell-dirty-buffer-cmd-p (str)
+  (string-match dp-shell-dirty-buffer-cmds str)))
+
 (defun dp-shell-lookfor-dirty-buffer-cmds (str)
-  (when (string-match dp-shell-dirty-buffer-cmds str)
+  (when (dp-shell-dirty-buffer-cmd-p str)
     (save-some-buffers)))
 
 (defvar dp-shell-*TAGS-changers

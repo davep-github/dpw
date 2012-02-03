@@ -1,0 +1,29 @@
+#!/bin/sh
+
+source script-x
+set -u
+
+# Motivation is to cat the committed version of a git-diff command.
+# This will, by default, cat its 2nd parameter, the name of the temp file
+# extracted from the given commit by git for doing the diff.
+: ${dp_cat_some:=2}
+
+argv=("$@")
+max=${#argv[@]}
+for i0 in $dp_cat_some
+do
+  if [ "$i0" -le 0 ]
+  then
+      echo "Bad index: $i0. Files are numbered from 1."
+      continue
+  fi 1>&2
+
+  i=$((i0-1))
+  if [ "$i" -gt "$max" ]
+  then
+      echo 1>&2 "Bad index: ${i0}. Num files is: ${max}."
+  else
+      cat ${argv[$i]}
+  fi
+done
+

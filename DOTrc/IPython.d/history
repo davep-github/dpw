@@ -30,3 +30,59 @@ map(lambda x: x-1, l)
 l, map(lambda x: x-1, l)
 l = (1,2,3)
 l, map(lambda x: x-1, l)
+os.path.relpath
+os.path.relpath?
+"".split?
+"a".split?
+"xxx".split?
+"x,x,x".split("x")
+"x,x,x".split("x", 2)
+"x,x,x".split?
+"x,x,x".split??
+"".split
+"x,x,x".split(",", 2)
+"x,x,x".split(",", 1)
+__IP.Completer.all_completions( completeos. complete)
+__IP.Completer.all_completions("os.")
+__IP.Completer.all_completions?
+__IP.Completer.all_completions("os.")
+__IP.Completer.all_completions("sys.")
+__IP.Completer.all_completions("syszzz.")
+__IP.Completer?
+#__IP.Completer.all_completions("sys.")
+__IP.Completer.complete?
+__IP.Completer.complete("os.")
+__IP.Completer.complete("os.", 0)
+__IP.Completer.complete("os.", 1)
+__IP.Completer.complete("os", 0)
+__IP.Completer.complete("os", 1)
+__IP.Completer.complete("o", 0)
+__IP.Completer.complete("o", 1)
+__IP.Completer.complete?
+__IP.Completer.all_completions?
+__IP.Completer.all_completions??
+__IP.Completer.complete("o", 1)
+__IP.Completer.complete("o", 0)
+__IP.Completer.get_endidx?
+__IP.Completer.matches?
+__IP.Completer.namespace?
+__IP.Completer.namespace
+__IP.Completer.complete??
+__IP.Completer.complete("os.", 0, "os.xx")
+__IP.Completer.complete("os.", 0, "os.q")
+__IP.Completer.complete("os.", 0, "os.")
+__IP.Completer.complete("os.", 0, "os")
+__IP.Completer.complete("os.", 0, "os.environ")
+
+__IP.Completer.get_line_buffer?
+__IP.Completer.get_line_buffer??
+__IP.Completer.get_line_buffer()
+__IP.Completer.matches?
+__IP.Completer.matchers?
+%debug?
+run?
+cd?
+cd /home/dapanarx/work/ftci/poc/pyagents/
+!ls
+run?
+run ./pyca

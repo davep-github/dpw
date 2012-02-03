@@ -1,0 +1,8 @@
+#!/bin/sh
+
+source script-x
+
+: ${dp_diff_log_file:=/proc/self/fd/2}
+echo "$@" > "${dp_diff_log_file}"
+
+exec diff "$@"

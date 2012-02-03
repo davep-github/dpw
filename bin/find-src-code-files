@@ -36,7 +36,7 @@ fi
 : ${FILES_FILE:=cscope.files}
 : ${EXCLUDED_FILES_FILE:="extagtree.excluded-files"}
 # .c .h .cxx .py .java etc.
-: ${INTERESTING_FILES:="\.([chly](xx|pp)?|cs|cc|hh|py|pm|pl|java)$"}
+: ${INTERESTING_FILES:="\.([chly](xx|pp)?|h-py|cs|cc|hh|py|pm|pl|java)$"}
 : ${DEF_SYSTEM_INCLUDES:=/usr/include}
 SYSTEM_INCLUDES=
 FILES_OF_INTEREST=()

@@ -414,7 +414,7 @@ far the regexp is concerned.")
 
 (defface dp-trailing-whitespace-face
   '((((class color) (background light)) 
-     (:background "blue" :bold nil))) 
+     (:background "ghostwhite" :bold nil))) 
   "Face for buffer lines which have trailing whitespace."
   :group 'faces
   :group 'dp-vars)
@@ -728,11 +728,13 @@ c-hanging-braces-alist based upon these values.")
 ;     ad-do-it))
 
 (defcustom dp-c++-std-elements
-  '("cout" "cerr" "cin" "clog" "endl" "istream" "ostream" "istringstream"
-    "ostringstream" "streambuf" "streambuf" "string" "streamsize"
+  '("cout" "cerr" "cin" "clog" "endl" "istream" "ostream"
+    "stringstream" "istringstream" "ostringstream" 
+    "streambuf" "string" "streamsize"
     "vector" "ofstream" "ifstream" "map" "set" "multimap"
     "skipws" "noskipws" "auto_ptr" "queue" "ostream_iterator"
     "min" "max" "exception" "list" "for_each" "unary_function"
+    "unitbuf"
     )
   "*List of things in the std:: namespace we want to be expanded to
 std::<thing> by abbrev-mode in a C++ buffer.  

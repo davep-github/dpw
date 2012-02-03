@@ -1,0 +1,5 @@
+#!/bin/sh
+
+source script-x
+
+git status | sed -r 's!(.*/.#.*)!\1 <<<<<<<<<<<<<<<<<<<<<!'

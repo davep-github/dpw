@@ -6015,7 +6015,7 @@ do not indent the newly inserted comment block."
 
 (defun dp-insert-tempo-comment (&optional no-indent)
   "Add a tempo comment.
-Insert a context sensative comment using a tempo template.
+Insert a context sensitive comment using a tempo template.
 This is vectored via the buffer local variable `dp-insert-tempo-comment-func' 
 so each mode can have its own logic."
   (interactive "*P")
@@ -10246,10 +10246,16 @@ split.")
   (dp-set-frame-width (/ dp-2w-frame-width 2)))
 (defalias '1w 'dp-1-window-normal-width)
 
+;; 
+;; | |, | - one window
+;; |-|, : - two horizontal
+;; |||, || - two vertical
+;; 
 (defun dp-2-v-or-h-windows (&optional horizontal-p frame-width)
   "Make 2 windows whose arrangement is determined by the frame-width.
 Frame width may be increased but will never be decreased.
 Uses `dp-2w-frame-width' to increase width.
+|| or :
 If wide enough: | | |, otherwise: |-|"
   (interactive)
   (delete-other-windows)
@@ -10269,6 +10275,7 @@ If wide enough: | | |, otherwise: |-|"
 
 (defun dp-2x2-windows ()
   "Set up a 2x2 grid of windows.
+::
 |-|-|"
   (interactive)
   (delete-other-windows)
@@ -10296,9 +10303,7 @@ If wide enough: | | |, otherwise: |-|"
   (delete-other-windows)
   (split-window-horizontally)
   (split-window-vertically))
-(defalias 'dp-2+1 'dp-2+1-wins)
-(defalias '2x1 'dp-2+1-wins)
-(defalias '2+1 'dp-2+1-wins)
+(dp-defaliases 'dp-2+1 '2x1 '2+1 'dp-2+1-wins)
 
 (defun dp-2-over-1-wins ()
   "|-|
@@ -10780,7 +10785,7 @@ Ignore repeated requests to set the same properties. Idempotentize."
 (defun dp-show-region ()
   (interactive)
   (dp-unextent-region (dp-make-highlight-region-extent-id "dp-hidden")))
-(dp-defaliases 'dp-unhide-region 'dur 'dsr 'dp-show-region 'dv)
+(dp-defaliases 'dp-unhide-region 'dur 'dsr 'dv 'dp-show-region)
 
 (defun dp-log-base-b (base num)
   (interactive)

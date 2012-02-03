@@ -200,6 +200,8 @@ alias subash='sudo -E bash'
 alias tail-fall='tail -n+1 -f'
 alias ascii='man ascii'
 alias md-p='mkdir -p'
+
+# Dirty rotten two-faced gits...
 alias gitbr='git branch'
 alias gitco='git checkout'
 alias gitci='git commit'
@@ -211,9 +213,13 @@ alias gittag='git tag'
 alias gitconf='git config'
 alias gitls='git ls-files'      # Most common/useful ls variant?
 # Log will be more common than ls. Will completion be a PITA?
-alias gitlog='gitlog'
+alias gitlog='git log'
+alias gitl=gitlog               # Abbrevs use long form.
 alias gitremote='git remote'
 alias gitpush='git push'
 alias gitpull='git pull'
 alias githelp='gith'
+alias gitrevert='git checkout --'  # Alternates use exact command.
+alias gitrescue='git checkout --'
+
 true

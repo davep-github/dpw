@@ -41,7 +41,7 @@ set_var()
 #
 # Shorter params are easier for klutzy typists.
 #
-all_options="st:f:g:n:F:B:h:Nx:w:"
+all_options="st:f:g:n:F:B:h:Nx:w:o:"
 #set -- ) getopt $all_options "$@" )
 # New style getopt... fixes ugly quoting problems.
 q=$(getopt -o "$all_options" -- "$@")
