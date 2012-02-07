@@ -172,6 +172,7 @@ prompt.  We don't want to stomp on them.")
 (defvar dp-shell-vc-cmds '("cvs" "svn" "git" "hg")
   "Version control commands that can cause problems if they are used and
   there are dirty buffers.")
+
 (defvar dp-shell-vc-commit-cmds
   '("gitci" "gitcia")
   "Some aliases or extended functionality versions of checkin commands.")
@@ -191,8 +192,7 @@ prompt.  We don't want to stomp on them.")
 
 (defun dp-shell-vc-commit-p (str)
     (or (posix-string-match dp-shell-vc-commit-cmd-regexp str)
-        (posix-string-match dp-shell-vc-commit
-        )
+        ))
 
 
 (defvar dp-shell-dirty-buffer-cmds
@@ -244,7 +244,7 @@ g++: Why does it act exactly the same in spite of my changes.
 
 
 (defun dp-shell-dirty-buffer-cmd-p (str)
-  (string-match dp-shell-dirty-buffer-cmds str)))
+  (string-match dp-shell-dirty-buffer-cmds str))
 
 (defun dp-shell-lookfor-dirty-buffer-cmds (str)
   (when (dp-shell-dirty-buffer-cmd-p str)

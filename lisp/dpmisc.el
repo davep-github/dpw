@@ -10303,7 +10303,7 @@ If wide enough: | | |, otherwise: |-|"
   (delete-other-windows)
   (split-window-horizontally)
   (split-window-vertically))
-(dp-defaliases 'dp-2+1 '2x1 '2+1 'dp-2+1-wins)
+(dp-defaliases 'dp-2+1 '2x1 '2+1 '>| 'dp-2+1-wins)
 
 (defun dp-2-over-1-wins ()
   "|-|

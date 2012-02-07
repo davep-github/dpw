@@ -73,7 +73,6 @@ __IP.Completer.complete("os.", 0, "os.q")
 __IP.Completer.complete("os.", 0, "os.")
 __IP.Completer.complete("os.", 0, "os")
 __IP.Completer.complete("os.", 0, "os.environ")
-
 __IP.Completer.get_line_buffer?
 __IP.Completer.get_line_buffer??
 __IP.Completer.get_line_buffer()
