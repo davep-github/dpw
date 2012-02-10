@@ -61,7 +61,6 @@ def main():
     o.color_info = 1
     o.confirm_exit = 1
     o.deep_reload = 0
-    o.editor = 0
     o.log = 0
     o.logfile = ''
     o.banner = 1
@@ -71,7 +70,6 @@ def main():
     o.readline = 1
     o.screen_length = 0
     import_mods(("os", "sys", "string", "re"))
-    #execf('~/_ipython/ns.py')
 
 
     # -- prompt
@@ -106,7 +104,7 @@ def main():
     # Tab completer that is not quite so picky (i.e. 
     # "foo".<TAB> and str(2).<TAB> will work). Complete 
     # at your own risk!
-    import ipy_greedycompleter
+    #import ipy_greedycompleter
 
     # To get to the readline object inside ipython, try this:
     # import IPython.rlineimpl as readline
@@ -123,7 +121,7 @@ def main():
     # or by hitting TAB twice. Turning this on makes the printing happen at
     # the first TAB.
     readline.parse_and_bind('set show-all-if-ambiguous on')
-    readline.parse_and_bind("'tab:' complete")
+    readline.parse_and_bind("tab:' complete")
     readline.parse_and_bind("\C-i: complete")
     readline.parse_and_bind("\C-l: possible-completions")
     # If you have TAB set to complete names, you can rebind any key

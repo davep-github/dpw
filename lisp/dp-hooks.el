@@ -707,8 +707,9 @@ c-hanging-braces-alist based upon these values.")
     (gtags-mode 1))
   (dp-auto-it?)
   (progn
-    (add-hook 'c-mode-common-hook 'c-setup-filladapt)
-    (dmessage "Trying c-setup-filladapt to hook. If things get fucked up (as-of 2010-05-23T17:37:13, then check this."))
+    (c-setup-filladapt)
+    (filladapt-mode 1)
+    (dmessage "Trying c-setup-filladapt in hook. If things get fucked up (as-of 2010-05-23T17:37:13, then check this."))
   (message "dp-c-like-mode-common-hook, fontifying%s" 
            (if dp-fontify-p
                "."
@@ -942,6 +943,9 @@ See `dp-parenthesize-region-paren-list'")
 (defun dp-python-mode-hook ()
   "Set up python *my* way."
   (interactive)
+  (progn
+    (filladapt-mode)
+    (dmessage "Added filladapt-mode to python hookL 2012-02-10T14:14:39"))
   (setq-ifnil dp-orig-python-tab-binding (key-binding [tab]))
   (make-variable-buffer-local 'block-comment-start)
   (setq dp-insert-tempo-comment-func 'dp-py-insert-tempo-doxy-comment
@@ -2085,6 +2089,8 @@ changed."
 (add-hook 'emms-playlist-mode-hook 'dp-emms-playlist-mode-hook)
 (add-hook 'diff-mode-hook 'dp-diff-mode-hook)
 (add-hook 'after-revert-hook 'dp-after-revert-hook)
+(when (functionp 'vc-find-file-hook)
+  (add-hook 'after-revert-hook 'vc-find-file-hook))
 (add-hook 'before-revert-hook 'dp-before-revert-hook)
 
 ;; <:add-new-`add-hooks'-up-there:>

@@ -11999,6 +11999,7 @@ If it is indeed a script name <script>-it can be called interactively.")
 (defcustom dp-sh-new-file-template
   "
 source script-x
+set -u
 
 "
   "A string to stuff into each new fire created with `dp-script-it'
@@ -14218,6 +14219,20 @@ values must be passed in as stings."
   (interactive "sinsert this: \nsif no that: ")
   (message "%s" (interactive-p))
   (apply 'dp-insert-if-regexp-not-present text1 (regexp-quote text2) rest))
+
+(defun dp-revert ()
+  "Revert a buffer so that the revert hooks are always called.
+This is done by marking the buffer as modified.
+This is good for things like forcing recolorization of files which have
+changed their writability, changing the [git] version information, etc."
+  (interactive)
+  (when (or (not (buffer-modified-p))
+            (yes-or-no-p "Buffer is modified, revert anyway?"))
+    ;; Make the buffer look modified so that revert will call its hooks.
+    ;; This gives us the FILE changed on disk; really change edit the buffer?
+    ;; Do I want this? I'll probably just `y' it reflexively anyway.
+    (set-buffer-modified-p t)
+    (revert-buffer t t)))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;; @todo Write a loop which advises functions with simple push go back

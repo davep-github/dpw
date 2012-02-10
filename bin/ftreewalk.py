@@ -54,11 +54,22 @@ MAX_FILE_SIZE = -1                      # >0 ==> limit in bytes
 # @todo Add switches for various {in|ex}clusions
 
 DEFAULT_EXCLUDE_DIRS = [
-    '^RCS$', '^SCCS$', '^CVS$', '^.svn$',
+    '^RCS$', '^SCCS$', '^CVS$', '^\.(svn|git|hg)$' ,
     # Auto(conf|make) stuff.
     "^autom4te.cache$", 
     # Imagix stuff.
     "\.4D$",
+    # My hidey holes
+    "^(.*-HIDE|.*-IGNORE|HIDE|HIDE-.*IGNORE|IGNORE-.*|SKIP)$",
+    # Junky stuff
+    "^(.*-junk|junk|junk-.*|,.*|te?mp|te?mp-.*|TE?MP|TE?MP-.*)$",
+    # Dev/learning/experimental. Often will be used to figure things out
+    # and the the code will be copied into the real source.
+    # I especially don't want to find stuff here while working on the main
+    # code... "I thought I changed that! Oh, I did, but in the dev version."
+    "^(exp|EXP|ddddev)$",               #duh-duh-duh-dev
+    # Old, but of historical interest. But not for indexing.
+    "^(retired|RETIRED|olde?|OLDE?)$",
     ]
 
 DEBUG_SHOW_ALL_DIRS =                   0x01

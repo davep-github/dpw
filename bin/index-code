@@ -87,7 +87,9 @@ MV=$(sp -1 mv) || {             # Avoid -i type aliaii
     dpe_echo 1 "Cannot find \"mv\" in the path."
 }
 
-option_str="nvdc:t:g:CTkKVo:Gxeiuf:"  # <:add new options:>
+iterate_individually_p=
+
+option_str="nvdc:t:g:CTkKVo:Gxeiuf:I"  # <:add new options:>
 all_options="$option_str$std_options"
 
 q=$(getopt -o "$all_options" -- "$@")
@@ -99,6 +101,7 @@ for i in "$@"
 do
   # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
   case $1 in
+      -I) iterate_individually_p=t;;
       -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
       -v) VERBOSE="echo $prog: "; EExecVerbose;;
       -V) cscope_indexer_verbose='-v';;
@@ -149,17 +152,21 @@ vsetp "$real_paths" && {
 }
 echo_id dirs 
 
+exit_p=
 for d in $dirs
 do
   [ -e "$d" ] || {
       echo "$d does not exist."
-      exit 1
+      exit_p=1
   } 1>&2
   [ -d "$d" ] || {
       echo "$d is not a dir."
-      exit 1
+      exit_p=1
   } 1>&2
 done
+vsetp $exit_p && {
+    exit $exit_p
+}
 
 if [[ -n "$clean" ]]
 then
@@ -186,12 +193,28 @@ gtagser=$(sp -1 gtags)
 #     wait
 # }
 
-echo 1>&2 "This ($(basename $0)), ${tree_tagger} and cscope-indexer need to be reworked.
-    They should work off the same set of files."
-EExec eval ${tree_tagger} $DP_SCRIPT_X_DEBUG_OPT $tflags $dirs
-if vsetp "$output_dir"
-then
-    EExec $MV $index_files "$output_dir"
-fi
+do_taggin()
+{
+    local dirs="$@"
+    echo 1>&2 "This ($(basename $0)), ${tree_tagger} and cscope-indexer need to be reworked.
+They should work off the same set of files."
+    EExec eval ${tree_tagger} $DP_SCRIPT_X_DEBUG_OPT $tflags $dirs
+    echo "taggin in $PWD"
+    if vsetp "$output_dir"
+    then
+        EExec $MV $index_files "$output_dir"
+    fi
+}
 
+if vsetp $iterate_individually_p
+then
+    # Make individual indices in each specified dir.
+    for d in "$dirs"
+    do
+      (cd "$d" && do_taggin) &
+    done
+    wait
+else
+    do_taggin $dirs
+fi
 echo "done."

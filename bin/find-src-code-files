@@ -43,8 +43,9 @@ FILES_OF_INTEREST=()
 FILES_TO_FILTER=()
 : ${v:=''}
 : ${EXCLUDE_PAT:='.*'}
-VC_EXCLUDES='-e /^.*\/?(\.svn|CVS|RCS|\.4D|\.git|.hg)\/?.*/d'
-: ${EXCLUDES:='-e /(doxygen|html|doc|dist-build|retired|,*|HIDE*)/d'}
+### !!! THESE ARE REGEXPs, NOT GLOBS! * is not .* !!!!
+VC_EXCLUDES='-e /^.*\/?(\.svn|CVS|RCS|\.4D|\.git|\.hg)\/?.*/d'
+: ${EXCLUDES:='-e /(doxygen|html|doc|dist-build|retired|,.*|HIDE.*)/d'}
 : ${files_to_cat=""}
 : ${only_cat_files=""}
 

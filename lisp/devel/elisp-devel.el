@@ -63943,3 +63943,17 @@ Friday December 02 2011
 "///////////////////////<:blah private data:>////////////////////////"
 "////////////////////// <:blah private data:> ///////////////////////"
 
+
+========================
+Friday February 10 2012
+--
+
+(defun fill-paragraph-or-region (arg)
+  "Fill the current region, if it's active; otherwise, fill the paragraph.
+See `fill-paragraph' and `fill-region' for more information."
+  (interactive "*P")
+  (dmessage "(region-active-p): %s" (region-active-p))
+  (if (or t region-active-p)
+      (call-interactively 'fill-region)
+    (call-interactively 'fill-paragraph)))
+

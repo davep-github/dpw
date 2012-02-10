@@ -85,3 +85,16 @@ cd /home/dapanarx/work/ftci/poc/pyagents/
 !ls
 run?
 run ./pyca
+from xml.dom.minidom import parse, parseString, getDOMImplementation
+d = parseString("<a>I am a, a I am</a>")
+d
+print  complete; complete.join(__IP.Completer.all_completions( completed. complete))
+__IP.Completer.all_completions('sys')
+__IP.Completer.all_completions('sys.')
+__IP.Completer.all_completions()
+print ';'.join(__IP.Completer.all_completions('sys.')
+n
+print ';'.join(__IP.Completer.all_completions('sys.'))
+print ';'.join(__IP.Completer.all_completions('sys'))
+print ';'.join(__IP.Completer.all_completions('sys.'))
+__IP.Completer.all_completions('sys.')
