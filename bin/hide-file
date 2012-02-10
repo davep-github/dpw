@@ -1,0 +1,44 @@
+#!/bin/sh
+
+source script-x
+set -u
+
+: ${hide_prefix:=HIDE,}
+: ${unhide=}
+
+[ "$*" = "" ] && {
+    echo "Usage: $(basename $0) file...
+Hide a file by renaming it to ${hide_prefix}file"
+    exit 1
+}
+
+hide_msg="Hiding"
+[ "$1" = "-u" ] && {
+    unhide=t
+    shift
+}
+
+
+for f in "$@"
+do
+  hide_file="${hide_prefix}${f}"
+  if vsetp "$unhide"
+  then
+      mv_cmd="mv $hide_file $f"
+      hide_msg="Unhiding"
+      f1="$hide_file"
+  else
+      mv_cmd="mv $f $hide_file"
+      f1="$f"
+
+  fi
+
+  echo "$hide_msg $f1"
+  $mv_cmd || {
+      rc=$?
+      echo "$hide_msg failed: \$?: $rc
+Could not $mv_cmd.
+Bailing."
+      exit $rc
+  } 1>&2
+done
