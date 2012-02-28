@@ -11,15 +11,21 @@
 
 . script-x
 
+set -u
+
 #font="7x13"
 name=
 amper='&'
 extra_options=
 xterm_bin=
+: ${login_shell_p=t}
+: ${just_show=}
 window="@$(hostname)"
+host=
 
 set_var()
 {
+set +u
     vname=$1			# variable's name
     db_val=$2			# value from the host-info db
     default=$3			# default value if host-info had no value
@@ -36,12 +42,13 @@ set_var()
     esac
 	
     echo $vval
+set -u
 }
 		
 #
 # Shorter params are easier for klutzy typists.
 #
-all_options="st:f:g:n:F:B:h:Nx:w:o:"
+all_options="st:f:g:n:F:B:h:Nx:w:o:L"
 #set -- ) getopt $all_options "$@" )
 # New style getopt... fixes ugly quoting problems.
 q=$(getopt -o "$all_options" -- "$@")
@@ -61,10 +68,10 @@ do
 	-s) amper= ;;
 	-h) host="-h $2"; shift ;;
 	-N) just_show=y;;
-	# -o is broken due to quoting probs
 	-o) extra_options="$extra_options $2"; shift ;;
 	-x) xterm_bin=$2; shift;;
         -w) window=$2; shift;;
+        -L) login_shell_p=;;
         --) shift ; break ;;
         *) exit 1 ;;
     esac
@@ -84,8 +91,8 @@ args="$@"
 opts=$($HOST_INFO $host xterm_bg xterm_fg)
 eval set -- $opts
 
-bg=$(set_var bg $1 blue)
-fg=$(set_var fg $2 white)
+bg=$(set_var bg ${1-} blue)
+fg=$(set_var fg ${2-} white)
 
 #
 # the term runs locally, so get bin for local host
@@ -100,6 +107,7 @@ eval set -- $opts
 options=$(set_var options "$2" '')
 options="$options $extra_options"
 geometry=$(set_var geometry $3 '')
+: ${DEFONT=}
 font=$(set_var font $4 $DEFONT)
 
 if [ "$args" != "" ]
@@ -135,7 +143,7 @@ fi
 if [ -n "$exe" ] 
 then 
     exe="-e $exe"
-    options=$(echo "$options" | sed s/--ls//g)
+    options=$(echo "$options" | sed s/-ls//g)
 fi
 
 if [ -n "$name" ]
@@ -177,6 +185,10 @@ then
     EXEC="echo $EXEC"
     amper=''
 fi
+
+vunsetp "$login_shell_p" && {
+    options=$(echo "$options" | sed s/-ls//g)
+}
 
 #echo eval $EXEC $xterm_bin $name $geometry $options $font $bg $fg $exe "$amper"
 eval $EXEC $xterm_bin $name $geometry $options $font $bg $fg $exe $amper
