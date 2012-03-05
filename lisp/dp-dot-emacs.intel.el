@@ -59,4 +59,32 @@
 ;; For some reason, vc isn't being autoloaded here, but it is @ home.
 (vc-load-vc-hooks)  ; This is being added to the Tools->Version Control menu.
 
+;; May want this in a project specific .el
+(defalias 'dp-poc-layout
+  (read-kbd-macro 
+   (concat "M-x 2x1 RET C-2 C-z <C-next> <M-down> C-1 C-z" " <C-next>"
+           " <M-down> C-0 C-z <C-next>")))
+
+(defalias 'dp-poc-layout2
+  (read-kbd-macro 
+   (concat "M-x 2x2 RET C-2 C-z <C-next> <M-down> C-1 C-z" " <C-next>"
+           " <M-down> C-3 C-z <C-next> <M-down> C-0 C-z <C-next>")))
+
+;; I've been saving this window config in register ?k
+;; Hence C-jk, hence jk.
+;; 2 + 1:
+;; shell 2(con) |
+;; -------------+ shell 0 (SA)
+;; shell 1 (CA) |
+;;
+(defalias 'jk 'dp-poc-layout)
+
+;; For 2x SAs
+;; 2 + 2:
+;; shell 2 (con) | shell 3 (SA2)
+;; --------------+--------------
+;; shell 1 (CA)  | shell 0 (SA1)
+;;
+(defalias 'jk2 'dp-poc-layout2)
+
 (provide 'dp-dot-emacs.intel.el)

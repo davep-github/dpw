@@ -92,6 +92,8 @@ Follow a link to another note.
 
 (autoload 'dp-add-elisp-journal-entry "dp-journal" nil t nil)
 
+(dp-safe-alias 'ee 'dp-add-elisp-journal-entry)
+
 (autoload 'dpj-new-topic "dp-journal" "\
 Insert a new topic item.  Completion is allowed from the list of known topics." t nil)
 
@@ -191,112 +193,6 @@ yank ring." t nil)
 
 (autoload 'dp-sel2:bm "dp-sel2" "\
 Select a bookmark to which to jump." t nil)
-
-;;;***
-
-;;;### (autoloads (dp-ssh-gdb dp-ssh dp-gdb dp-gdb-old dp-shell-other-window dp-shell dp-shell0 dp-lterm dp-cterm dp-start-term dp-python-shell dp-ssh-mode-hook dp-gdb-mode-hook dp-py-shell-hook dp-shell-goto-this-error dp-cscope-next-thing dp-next-error dp-set-compile-like-mode-error-function dp-reset-current-error-function dp-set-current-error-function dp-compilation-mode-hook dp-telnet-mode-hook dp-shell-mode-hook dp-comint-mode-hook dp-shells-mk-prompt-font-lock-regexp dp-shells-add-prompt-regexp shell-uninteresting-face) "dp-shells-dev" "lisp/dp-shells-dev.el")
-
-(defvar shell-uninteresting-face 'shell-uninteresting-face "\
-Face for shell output which is uninteresting.
-Should be a color which nearly blends into background.")
-
-(autoload 'dp-shells-add-prompt-regexp "dp-shells-dev" nil nil nil)
-
-(autoload 'dp-shells-mk-prompt-font-lock-regexp "dp-shells-dev" nil nil nil)
-
-(defvar dp-shells-prompt-font-lock-regexp "^\\([0-9]+\\)\\([/<][0-9]+\\|\\)\\([#>]\\)" "\
-*Regular expression to match my shell prompt.  Used for font locking.
-For my multi-line prompt, this is second line.  For most prompts, this will
-be the only line.  Some shells, like IPython's, already colorize their
-prompt.  We don't want to stomp on them.")
-
-(eval-after-load "shell" '(progn (setq shell-prompt-pattern-for-font-lock dp-shells-prompt-font-lock-regexp)))
-
-(autoload 'dp-comint-mode-hook "dp-shells-dev" "\
-Sets up personal comint mode options.
-Called when shell, inferior-lisp-process, etc. are entered." t nil)
-
-(autoload 'dp-shell-mode-hook "dp-shells-dev" "\
-Sets up shell mode specific options." t nil)
-
-(autoload 'dp-telnet-mode-hook "dp-shells-dev" "\
-Sets up telnet mode specific options." nil nil)
-
-(autoload 'dp-compilation-mode-hook "dp-shells-dev" nil nil nil)
-
-(autoload 'dp-set-current-error-function "dp-shells-dev" nil t nil)
-
-(autoload 'dp-reset-current-error-function "dp-shells-dev" nil t nil)
-
-(autoload 'dp-set-compile-like-mode-error-function "dp-shells-dev" nil nil nil)
-
-(autoload 'dp-next-error "dp-shells-dev" "\
-Find next error in shell buffer.
-This key is globally bound.  It does special things only if it is
-invoked inside a shell type buffer.  In this case, it ensures the
-buffer is in compilation minor-mode and reparses errors if it detects
-that a new command has been sent since the last parse.
-@todo Use/write i/f to `previous-error-p' to make us go backwards." t nil)
-
-(autoload 'dp-cscope-next-thing "dp-shells-dev" nil t nil)
-
-(autoload 'dp-shell-goto-this-error "dp-shells-dev" "\
-Goto the error at point in the shell buffer.  
-This has the fortunate side effect of setting 
-things up so that dp-next-error (\\[dp-next-error]) 
-picks up right after the error we just visited.
-We use this instead of just `compile-goto-error' so that
-we can goto errors anywhere in the buffer, especially 
-earlier in the buffer. `compile-goto-error' has a 
-very (too) forward looking view of parsing error buffers." t nil)
-
-(autoload 'dp-py-shell-hook "dp-shells-dev" "\
-Set up my python shell mode fiddle-faddle." t nil)
-
-(autoload 'dp-gdb-mode-hook "dp-shells-dev" "\
-Set up my gdb shell mode fiddle-faddle." t nil)
-
-(autoload 'dp-ssh-mode-hook "dp-shells-dev" "\
-Set up my ssh shell mode fiddle-faddle." t nil)
-
-(autoload 'dp-python-shell "dp-shells-dev" "\
-Start up python shell and then run my shell-mode-hook since they
-set the key-map after the hook has run." t nil)
-
-(defalias 'dpy 'dp-python-shell)
-
-(autoload 'dp-start-term "dp-shells-dev" "\
-Start up a terminal session, but first set the coding system so eols are 
-handled right." t nil)
-
-(autoload 'dp-cterm "dp-shells-dev" nil t nil)
-
-(autoload 'dp-lterm "dp-shells-dev" nil t nil)
-
-(autoload 'dp-shell0 "dp-shells-dev" "\
-Open/visit a shell buffer.
-First shell is numbered 0 by default.
-ARG is numberp:
- ARG is >= 0: switch to that numbered shell.
- ARG is < 0: switch to shell buffer<(abs ARG)>
- ARG memq `dp-shells-shell<0>-names' shell<0> in other window." t nil)
-
-(autoload 'dp-shell "dp-shells-dev" nil t nil)
-
-(autoload 'dp-shell-other-window "dp-shells-dev" nil t nil)
-
-(autoload 'dp-gdb-old "dp-shells-dev" nil t nil)
-
-(autoload 'dp-gdb "dp-shells-dev" "\
-Extension to gdb that:
-. Prefers the most recently used buffer if it's process is still live,
-. Else it asks for a buffer using a completion list of other gdb's,
-. Else (or if nothing selected above) it starts a new gdb session." t nil)
-
-(autoload 'dp-ssh "dp-shells-dev" "\
-Find/create a shell buf, an existing ssh buf or create a ssh buf." t nil)
-
-(autoload 'dp-ssh-gdb "dp-shells-dev" nil t nil)
 
 ;;;***
 

@@ -26,21 +26,30 @@
 ;; 4) Add a `defalias' like below using the string from step 3.
 (defalias 'dp-var-to-initializer    
   (read-kbd-macro
-   (concat "C-a C-s ; RET <backspace> , <left> M-a C-r SPC <right> "
-           "M-o M-a C-a C-d TAB C-s , RET <left> M-9 M-y <down>")))
+   (concat "C-a C-s ; RET <backspace> , <left> M-a C-r SPC <right>"
+           " M-o M-a C-a C-d TAB C-s , RET <left> M-9 M-y <down>")))
 
 (defalias 'insert-hrs-form 
   (read-kbd-macro
    "RET M: SPC RET T: RET W: RET T: RET F: RET S: RET S: RET 7*<up> 3*<right>"))
 
 (defalias 'mak-=-to-echo
-  (read-kbd-macro
-   "C-a TAB @echo SPC \" M-a C-s SPC RET <left> M-o M-k > $ M-9 M-y C-e <\" <down> C-a"))
+  (read-kbd-macro 
+   (concat "C-a TAB @echo SPC \" M-a C-s SPC RET <left> M-o M-k > $ M-9 M-y"
+           " C-e <\" <down> C-a")))
 
 (defalias 'dp-to-knr-open-brace
   (read-kbd-macro "ESC C-s ^ \\s- +{ RET <up> M-j"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defalias 'dp-move-method
+  (read-kbd-macro 
+   (concat "C-a M-a C-s ( <left> M-[ <right> M-C-1 <right> M-o"
+           " C-s { <left> M-[ <down> <up> C-a C-s } <left> M-[ M-a"
+           " M-[ 2*<right> M-C-o C-x C-x DEL <up> C-e ; C-x M-b <C-next>"
+           " <up> M-RET RET M-y")))
+
+;;;;;;; end of kbd macros ;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defsubst dp-sticky-goto-char (offset &optional buffer)
   ;; !<@todo XXX The goto-char alone does not keep point when the buffer is
@@ -1138,11 +1147,13 @@ the newly copied text."
   (interactive "*")
   (dp-kill-or-copy 'kill-region 'append))
 
-(defun dp-op-other-window (op &rest args)
+(defun dp-op-other-window (num op &rest args)
+  "Perform OP on ARGS NUM `other-window's away."
   (interactive)
-  (other-window 1)
-  (apply op args)
-  (other-window -1))
+  (let ((num (or num 1)))
+    (other-window num)
+    (apply op args)
+    (other-window (- num))))
 
 (defun dp-scroll-up-down (&optional nlines half-page-p up-down)
   "Scroll screen down 1 line or 1/2 page."
@@ -1176,13 +1187,13 @@ the newly copied text."
 
 (defun dp-scroll-up-other-window (&optional num)
   (interactive "_p")
-  (dp-op-other-window 'dp-scroll-up))
+  (dp-op-other-window nil 'dp-scroll-up))
 ;;  (dp-scroll-up-down num nil 'up 'other-window))
 (put 'dp-scroll-up-other-window 'isearch-command t)
 
 (defun dp-scroll-down-other-window (&optional num)
   (interactive "_p")
-  (dp-op-other-window 'dp-scroll-down))
+  (dp-op-other-window nil 'dp-scroll-down))
 ;;  (dp-scroll-up-down num nil 'down 'other-window))
 (put 'dp-scroll-down-other-window 'isearch-command t)
 
@@ -1574,7 +1585,8 @@ executing the cond again and again and..."
                      ;; And it most likely indicates a mistake.
                      (if (char= char ?\n)
                          (progn
-                           (warn "Couldn't find copy-to char>%s< by end of line." 
+                           (warn 
+                            "Couldn't find copy-to char>%s< by end of line." 
                                  arg)
                            '(break))
                        '(insert))))
@@ -1795,17 +1807,41 @@ See `dp-c*-junk-after-eos*'."
 ;;;  "\\s-*\\(const\\)?\\s-*\\($\\|{.*$\\|\\s-*//.*\n[ \n\t]*{\\)"
   "Regular expression to determine if an opening brace is present.")
 
+
 (defun* dp-c-ensure-opening-brace (&key ; <:eob:>
                                    (regexp dp-c-open-brace-present-regexp)  
                                    (newline-before-brace t)
                                    (ignore-eos-junk-p t)
                                    (regexp-prefix "")
+                                   (force-newline-after-brace-t t)
                                    (replacement ""))
+  "!<@todo XXX Add a force blank line after brace
+aa bb(
+    aa,
+    bb,
+    cc)
+{
+    -!-f(1,1);
+If off, point is at f.
+If on, transform to:
+
+aa bb(
+    aa,
+    bb,
+    cc)
+{
+    -!-
+    f(1,1);
+
+"
   (interactive)
   (if (looking-at (concat regexp-prefix regexp))
       (progn
         (goto-char (match-end 0))
         (when (= (forward-line 1) 0)
+          ;; We know we have a newline after the brace. We don't want to
+          ;; force another one.
+          (setq force-newline-after-brace-t nil)
           (dp-c-indent-command)))
     (end-of-line)
     (if (not newline-before-brace)
@@ -1819,7 +1855,12 @@ See `dp-c*-junk-after-eos*'."
       (newline)
       (insert " ")               ; A comment at the left margin won't indent.
       (dp-c-indent-command)))
-  (when (looking-at (concat dp-ws-regexp* "$"))
+  ;; !!! added t to see if it helps with if/for/while/etc w/o hurting
+  ;;     function defs too much. There are far fewer function defs than the
+  ;;     others.
+  (when (or force-newline-after-brace-t
+            ;; (looking-at (concat dp-ws-regexp* "$"))
+            )
     (c-newline-and-indent)
     (previous-line 1)
     (dp-c-indent-command)))
@@ -1834,9 +1875,9 @@ See `dp-c*-junk-after-eos*'."
       (dp-open-newline)
     (call-interactively 'c-context-line-break)))
 
-(defun* dp-open-above (&optional (open-newline-p t))
+(defun* dp-open-above (&optional open-newline-p)
   "Newline before current line."
-  (interactive "P")
+  (interactive (list (not current-prefix-arg)))
   (if open-newline-p
       (progn
         (forward-line -1)
@@ -2045,7 +2086,7 @@ from simple.el"
 
 (defun dp-center-to-top-other-window (&optional arg recursing-p)
   (interactive "_P")
-  (dp-op-other-window 'call-interactively 'dp-center-to-top))
+  (dp-op-other-window nil 'call-interactively 'dp-center-to-top))
 
 (put 'dp-center-to-top-other-window 'isearch-command t)
 
@@ -2507,7 +2548,7 @@ It is initialized to #if 0"
   (let ((locations (dp-ifdef-region "1" 'else-p)))
     (goto-char (nth 1 locations))
     (dp-open-newline)
-    (insert "/* replacement code */")
+    (insert "/* Trying replacement code */")
     (dp-open-newline)))
 
 (dp-defaliases 'if1 'io1 'ioin 'ionew 'dp-ifdef-new)
@@ -2571,6 +2612,16 @@ It is initialized to #if 0"
   (dp-ifdef-region-because "is this needed?"))
 (dp-defaliases 'ioneeded 'dp-io-needed)
 
+(defun dp-io-xxx ()
+  (interactive)
+  (dp-ifdef-region-because "XXX_@Todo"))
+
+(defun xxx()
+  (interactive)
+  (if (dp-region-active-p)
+      (dp-io-xxx)
+    (dp-insert-for-comment+)))
+
 (defvar dp-ifdef-debug-level 0
   "Current debug level to use in debug ifdefs.")
 
@@ -2610,7 +2661,7 @@ It is initialized to #if 0"
   (interactive)
   (dp-mark-line-if-no-mark)
   (io-region (mark) (point)
-             (format "#if 0  /* @todo ifdef'd out on %s out for TESTING */"
+             (format "#if 0  /* XXX @todo ifdef'd out on %s out for TESTING */"
                      (dp-timestamp-string))
              "#endif /* commented out for testing */"))
 (defalias 'idt 'dp-ifdef-for-testing)
@@ -2720,6 +2771,13 @@ Also, it will move backwards into a closed class (ie has a };)."
         (while (dp-in-cpp-construct-p)
           (forward-line 1)))))))
 
+(defun dp-c-beginning-of-statement-pos()
+  "Return the point to which `dp-c-beginning-of-statement' would like to go."
+  (let (end)
+    (dp-with-saved-point end
+      (dp-c-beginning-of-statement))
+    end))
+
 (defun dp-c-end-of-line (&optional dont-skip-eos-junk)
   "Go to the end of line, ignoring trailing WS and comments."
   (interactive)
@@ -2743,7 +2801,7 @@ Also, it will move backwards into a closed class (ie has a };)."
                            (if (> (length (match-string (1+ dp-c*-junk-ws))) 1)
                                (substring (match-string (1+ dp-c*-junk-ws)) 1)
                              "\\2")))
-    t)                        ; We still need to do the eol/newlne thing.
+    t)                        ; We still need to do the eol/newline thing.
   )
   
 (defun dp-c-finish-function ()
@@ -2766,9 +2824,11 @@ Also, it will move backwards into a closed class (ie has a };)."
           ;; Cheesy!
           (progn
             (goto-char start)
-            (loop repeat (- (line-end-position) start)
-              always (dp-in-a-c*-comment)
-              do (forward-char 1)))))))
+            ;; We were getting non-nil on empty lines.
+            (when (dp-in-a-c*-comment)
+              (loop repeat (- (line-end-position) start)
+                always (dp-in-a-c*-comment)
+                do (forward-char 1))))))))
 
 ;       (let* ((lep (line-end-position))
 ;              (line-has-/*-p (re-search-forward "^\\s-*/\\*" lep t)))
@@ -3886,13 +3946,6 @@ Use exec-path if PATH is nil."
   (interactive)
   (let ((exec-path (or path exec-path)))
     (executable-find prog)))
-; I forgot about executable-find.
-;   (setq-ifnil path exec-path)
-;   (some (function
-;          (lambda (dir)
-;            (let ((p (concat dir "/" prog)))
-;              (file-executable-p p))))
-; 	path))
 
 (defun dp-find-first-exe (list-of-prog-names)
   "Search, in order, for the first executable program in LIST-OF-PROG-NAMES."
@@ -3905,7 +3958,8 @@ Use exec-path if PATH is nil."
 
 (defun dp-init-spellin ()
   "Set up spellig thnigs."
-  (when (and-boundp 'dp-spell-programs dp-spell-programs)
+  (when (and (dp-val-if-boundp dp-use-spell-p)
+             (dp-val-if-boundp dp-spell-programs))
     ;; Look for the first existing spelling program.
     (dmessage "Searching for spelling program.")
     (let ((spellr (dp-find-first-exe dp-spell-programs)))
@@ -4119,7 +4173,8 @@ PREFIX: Doxygen comment indicator \"!<@\"."
     (if (dp-in-a-string)
         (insert msg " ")
       (save-excursion
-        ;; An easy but icky way to make it work in many modes.
+        ;; Use the function bound to the key to make this DTRT in each mode.
+        ;; (as long as M-; is not a universal binding)
         (dp-call-function-on-key [(meta \;)])
         ;;(indent-for-comment)
         (when clean-up-p
@@ -4142,7 +4197,6 @@ PREFIX: Doxygen comment indicator \"!<@\"."
         ;; Go back to where we added our junk.
         (goto-char end-point)))))
 
-(dp-defaliases 'xxx 'dp-insert-for-comment+)
 ;; e.g.s follow...
 ;; first
 ;; 2.a: preserve-end-point-p t
@@ -6181,7 +6235,7 @@ LESSER-GLOBS-TOO-P says to grep files in `dp-lgrep-lesser-globs' as well. "
                   (if current-prefix-arg
                       " (and lesser)"
                     ""))
-	  (format "egrep -n -e %c%s%c "
+	  (format "egrep -n -i -e %c%s%c "
                   ?\'
                   (dp-get--as-string--region-or...)
                   ?\')
@@ -7950,6 +8004,7 @@ Else `(apply pred pred-args)'."
   ;; Also means there's no need to clear the variable.
   (let ((saved-win-conf dp-saved-window-config))
     (kill-this-buffer)
+    (run-hooks 'dp-after-kill-this-buffer-hook)
     (when saved-win-conf
       (set-window-configuration saved-win-conf))))
 
@@ -8045,8 +8100,9 @@ BUF-OR-NAME-OR-NIL may be nil, a buffer or a buffer name."
   (interactive)
   (when buffer
     (setq buffer (get-buffer buffer))
-    (with-current-buffer buffer
-      (dp-bury-or-kill-process-buffer-0 buffer))))
+    (when buffer
+      (with-current-buffer buffer
+        (dp-bury-or-kill-process-buffer-0 buffer)))))
 
 (defun dp-bury-or-kill-this-process-buffer ()
   (interactive)
@@ -9216,7 +9272,14 @@ Can be called directly or by an abbrev's hook.
     (if prompt-for-file-name-p
         (call-interactively 'dp-recover-context-from-file)
       (recover-context)))
-  (defalias 'wwi 'dp-recover-context))
+  (defalias 'wwi 'dp-recover-context)
+  
+  ;; A pretty sensible place to save the context.
+  ;; Others would be when a file is unvisited (no hook)
+  ;; When a file is saved? I save a **LOT**. But this is pretty lightweight.
+  (loop for hook in '(find-file-hooks after-save-hook 
+                      dp-after-kill-this-buffer-hook)
+    do (add-hook hook 'dp-save-context)))
 
 ;;
 ;; // Add new macros
@@ -9697,6 +9760,9 @@ I like to be more precise in certain cases; such as when deleting things.")
               file-name buf)
       nil)))
 
+(defvar dp-make-targets-history nil
+  "History for make targets. There's no benefit to sharing the entries.")
+
 (defvar dp-make-makefile-relative-name t
   "*Tells dp-make to show the make-file's name relative to the default dir.")
 
@@ -9710,6 +9776,8 @@ This buffer will be used preferentially.")
 (dp-deflocal-permanent dp-saved-window-config nil
   "Have we pushed a window config for this buffer yet?")
 
+(defvar dp-last-make-target ""
+  "The last thing we asked make to make.")
 
 (defun dp-make (&optional absolute-makefile-name-p)
   (interactive "P")
@@ -9719,20 +9787,25 @@ This buffer will be used preferentially.")
         makefile-buffer
         prompt
         target)
-    (when (or (eq major-mode 'compilation-mode)
-              (dp-buffer-live-p compilation-last-buffer))
+    (setq dp-make-targets-history (delete "" dp-make-targets-history))
+    (when (and dp-use-dedicated-make-windows-p
+               (or (eq major-mode 'compilation-mode)
+                   (dp-buffer-live-p compilation-last-buffer)))
       (set-window-dedicated-p (dp-get-buffer-window compilation-last-buffer)
                               nil))
     (if make-command
         (progn
-          (setq makefile-buffer (nth 2 make-command))
-          (setq prompt (format "target in %s: "
+          (setq makefile-buffer (nth 2 make-command)
+                prompt (format "target in %s: "
                                (if (and (not absolute-makefile-name-p)
                                         dp-make-makefile-relative-name)
                                    (file-relative-name 
                                     (buffer-file-name makefile-buffer))
                                  (buffer-file-name makefile-buffer)))
-                target (read-from-minibuffer prompt ""))
+                target (read-from-minibuffer prompt dp-last-make-target
+                                             nil nil 
+                                             'dp-make-targets-history)
+                dp-last-make-target target)
           (with-current-buffer makefile-buffer
             (setq dp-mru-makefile (buffer-file-name))
             ;;Protect this buffer from unintentional killing
@@ -9933,7 +10006,7 @@ end is the end of the last matching line."
 (defalias 'cfs 'dp-c-fill-statement)
     
 
-(defun dp-c-delimit-func-decl (&optional use-markers-p)
+(defun* dp-c-delimit-func-decl (&optional use-markers-p)
   "Find boundaries of a function definition."
   (save-excursion
     (let (beg end)
@@ -9945,6 +10018,9 @@ end is the end of the last matching line."
       (setq beg (point))
       (if (not (re-search-forward "(" nil t))
           (error "No opening paren in `dp-c-delimit-func-decl'.")
+        ;; See if we moved into a different statement.
+        (unless (= (dp-c-beginning-of-statement-pos) beg)
+          (return-from dp-c-delimit-func-decl))
         (backward-char 1)
         (dp-find-matching-paren-including-<)
         (setq end (point)))
@@ -9978,18 +10054,20 @@ Returns the ultimate value BEG-END-CONS."
   (let* ((beg-end (dp-c-delimit-func-decl t))
          (beg (car beg-end))
          (end (cdr beg-end)))
-    (with-narrow-to-region beg end
+    ;; Only do this if we could delimit a decl.
+    (when (and beg end)
+      (with-narrow-to-region beg end
+        (goto-char beg)
+        (while (< (point) (point-max))
+          (beginning-of-line)
+          (join-line)))
+      (goto-char end)
+      (when (looking-at "\\s-*{\\s-*")
+        (replace-match "\n{"))
+      (beginning-of-line)
+      (dp-c-indent-command)
       (goto-char beg)
-      (while (< (point) (point-max))
-        (beginning-of-line)
-        (join-line)))
-    (goto-char end)
-    (when (looking-at "\\s-*{\\s-*")
-      (replace-match "\n{"))
-    (beginning-of-line)
-    (dp-c-indent-command)
-    (goto-char beg)
-    (cons beg end)))
+         (cons beg end))))
 
 (defun dp-look-ahead (&rest re-search-fwd-args)
   "Do a re-search-forward inside a `save-excursion'."
@@ -10017,12 +10095,35 @@ is done.")
   (undo-boundary)
   (let ((start-pos (dp-mk-marker))
         (final-position (point-marker))
+        ;;; ???syntactic-region
+        old-point
         decl-bounds
         open-paren-marker close-paren-marker)
     (end-of-line)
+    ;; Don't do anything if we backup into a different syntactic region.
+    ;; This is b0rked.
+    ;; 
+    ;; -!-function(a,
+    ;;          b,
+    ;; -!-      c)
+    ;; Lower point is arglist-cont
+    ;; upper, got to by dp-c-beginning-of-statement, is topmost intro.
+    ;; We'll need something else to say if we've gone too far.
+    ;; Can't remember exactly what case the change fixed.
+    ;; !<@todo XXX 
+    ;; This seems wrong in too many places. I'm removing it and will look for
+    ;; a more specific fix to the original problem.
+    ;;; ???(setq syntactic-region (dp-c-get-syntactic-region))
+    (setq old-point (point))
     (dp-c-beginning-of-statement)
+;;;;; ???;     (unless (equal syntactic-region (dp-c-get-syntactic-region))
+;;;;; ???;       (goto-char old-point)
+;;;;; ???;       (return-from dp-c-format-func-decl nil))
     (beginning-of-line)
     (setq decl-bounds (dp-c-flatten-func-decl))
+    (unless decl-bounds
+      (goto-char old-point)
+      (return-from dp-c-format-func-decl nil))
     ;;!<@todo why do I have void here?  To shrink wrap w/o spaces?
     (if (dp-look-ahead "(\\s-*\\(void\\)?\\s-*)" (line-end-position) t)
         (progn
@@ -10066,7 +10167,7 @@ is done.")
                               (search-forward ")" (line-end-position))))))
       (when (and add-opening-brace-p
                  (re-search-forward ")" (line-end-position) t))
-        (dp-c-ensure-opening-brace)))
+        (dp-c-ensure-opening-brace :force-newline-after-brace-t nil)))
     (goto-char open-paren-marker)
     ;; Put function name on a line by itself after any preceding type, etc,
     ;; info.
@@ -10091,9 +10192,10 @@ is done.")
     (goto-char close-paren-marker)
     (unless (eobp) (forward-char 1))
     (and add-opening-brace-p
-         (dp-c-ensure-opening-brace))
+         (dp-c-ensure-opening-brace :force-newline-after-brace-t t))
     (when align-p
-      (align (car decl-bounds) (1+ (cdr decl-bounds))))))
+      (align (car decl-bounds) (1+ (cdr decl-bounds)))))
+  t)
 
 (defalias 'ffd 'dp-c-format-func-decl)
 
@@ -10238,6 +10340,29 @@ A bookmark, in this context, is:
 Also used by split window advice to determine when to force a horizontal
 split.")
 
+(defun* dp-layout-windows (op-list &optional other-win-arg 
+                           (delete-other-windows-p t))
+  "Layout windows trying to keep as many buffers visible as possible.
+!<@todo XXX MAKE SURE THE CURSOR STAYS IN THE SAME PLACE."
+  (when delete-other-windows-p
+    (delete-other-windows))
+  
+  (let ((win-list (window-list))
+        (buf-list (buffer-list)))
+    (loop for op in op-list
+      do (let (op-args)
+           (if (listp op)
+             (setq op-args (cdr op)
+                   op (car op)))
+           (apply op op-args)))
+    (when other-win-arg
+      (other-window other-win-arg))
+    ;; !<@todo XXX go through win-list until out of its windows, selecting
+    ;; new buffers for the rest of the windows.
+    ;; !<@todo XXX or out of existing windows: just stop.
+    (dmessage "restore window contents as much as possible")
+    ))
+
 (defun dp-1-window-normal-width ()
   (interactive)
   ;; Yes, this leaves 1/2 of the extra space that was added for extra frame
@@ -10245,6 +10370,30 @@ split.")
   (dp-one-window++)
   (dp-set-frame-width (/ dp-2w-frame-width 2)))
 (defalias '1w 'dp-1-window-normal-width)
+
+(defun dp-win-layout-2-left-of-1 ()
+  "Make a layout:
+| | |
+|-| |
+|_|_|"
+
+  (interactive)
+  (dp-layout-windows '(split-window-horizontally
+                       split-window-vertically)
+                     1))
+
+(defalias 'dp-win-layout=| 'dp-win-layout-2-left-of-1)
+
+(defun dp-win-layout-2-over-1 ()
+  "Give us a layout:
+| | |
+| | |
+|---|
+|___|"
+  (interactive)
+  (dp-layout-windows '(split-window-vertically
+                       split-window-horizontally)
+                     -1))
 
 ;; 
 ;; | |, | - one window
@@ -10278,51 +10427,65 @@ If wide enough: | | |, otherwise: |-|"
 ::
 |-|-|"
   (interactive)
-  (delete-other-windows)
-  (split-window-horizontally)
-  (split-window-vertically)
-  (other-window -1)
-  (split-window-vertically))
-(defalias '4w 'dp-2x2-windows)
-(defalias '2x2 'dp-2x2-windows)
+  (dp-layout-windows '(split-window-horizontally
+                       split-window-vertically
+                       ;; Go to other window and split it, too.
+                       (other-window -1)
+                       ;; Go to the upper left window.
+                       split-window-vertically
+                       (other-window 2))
+                     nil))
+
+(dp-defaliases '2x2 '2+2 '2|2 '4w 'dp-2x2-windows)
 
 (defun dp-1+2-wins ()
   "Set up a 1+2 window arrangement: | |-|"
   (interactive)
-  (delete-other-windows)
-  (split-window-horizontally)
-  (other-window 1)
-  (split-window-vertically))
-(defalias 'dp-1x2 'dp-1+2-wins)
-(defalias '1x2 'dp-1+2-wins)
-(defalias '1+2 'dp-1+2-wins)
+  (dp-layout-windows '(split-window-horizontally
+                       (other-window 1)
+                       split-window-vertically
+                       ;; Go to upper left. A single vertical window can be
+                       ;; considered uppermost and lowermost.
+                       (other-window -1))
+                     nil))
+                     
+(dp-defaliases '1x2 '1+2 '1|2 'dp-1x2 'dp-1+2-wins)
 
 (defun dp-2+1-wins ()
   "Set up a 1+2 window arrangement: |-| |"
   (interactive)
-  (delete-other-windows)
-  (split-window-horizontally)
-  (split-window-vertically))
-(dp-defaliases 'dp-2+1 '2x1 '2+1 '>| 'dp-2+1-wins)
+  (dp-layout-windows '(split-window-horizontally
+                       split-window-vertically)))
+                     
+(dp-defaliases '2|1 'dp-2+1 '2x1 '2+1 '>| 'dp-2+1-wins)
 
 (defun dp-2-over-1-wins ()
   "|-|
    | |"
   (interactive)
-  (delete-other-windows)
-  (split-window-vertically)
-  (split-window-horizontally))
-(defalias 'dp-2/1-wins 'dp-2-over-1-wins)
+  (dp-layout-windows '(split-window-vertically
+                       split-window-horizontally)))
+
+(dp-defaliases '2/1 'dp-2/1-wins 'dp-2-over-1-wins)
 
 (defun dp-1-over-2-wins ()
   "| |
    |-|"
   (interactive)
-  (delete-other-windows)
-  (split-window-vertically)
-  (other-window 1)
-  (split-window-horizontally))
-(defalias 'dp-1/2-wins 'dp-1-over-2-wins)
+  (dp-layout-windows '(split-window-vertically
+                       (other-window 1)
+                       split-window-horizontally
+                       (other-window -1))))
+                     
+(dp-defaliases '1/2 'dp-1/2-wins 'dp-1-over-2-wins)
+
+(defun dp-1-beside-1-wins ()
+  "Basically C-x3, but will go through my layout function which will leave
+  the windows without n duplicated buffers. Also, it does the C-x1 for me."
+  (interactive)
+  (dp-layout-windows '(split-window-horizontally)))
+
+(dp-defaliases '1|1 '1+1 '1x1 'dp-1-beside-1-wins)
 
 (defun dp-2-shells ()
   "Open two new shell buffers. NB: flaky."
@@ -10557,7 +10720,7 @@ This is useful for giving gnuclient & co more control over the editing process."
 
 (defun dp-found-file-setup ()
   "Perform actions on a `new'ly found file.
-Suitable for a find-file-hook (`dp-find-file-hooks')
+Suitable for a find file hook (`dp-find-file-hooks')
 and for setting up a buffers mode (`dp-set-auto-mode')."
   (dp-funcall-if dp-found-file-pre-hook ())
   (setq dp-found-file-pre-hook nil)
@@ -10877,7 +11040,7 @@ Saves window configurations in registers. Default is reg `\(int-to-char 1\)'
             (ding)
             (message "register %s does not contain a window configuration."
                      reg))
-        (if (and (or t (/= 1 reg))
+        (if (and (or t (/= 1 reg))      ; !<@todo XXX ??? or t ???
                  reg-val
                  (not (window-configuration-p reg-val))
                  (not (y-or-n-p 
@@ -10949,11 +11112,18 @@ in a very bizarre fashion."
       (enlarge-window target-win-inc 'horiz win))))
 
 (defun dp-get-win-list-buffers (&optional win-list frame minibuf window)
+  "Return a list of \(buffer . point) for each window in WIN-LIST.
+This is like `window-list' with added window position information.
+WIN-LIST defaults to all windows in FRAME, beginning with WINDOW.
+FRAME is where we get the windows, default: current frame.
+MINIBUF says to include minibuffer windows."
   (mapcar (function
            (lambda (win)
              (cons (window-buffer win)
-                   (point (window-buffer win))
-                   ;;(window-point win)
+                   ;;;(point (window-buffer win))
+                   ;;; Why did I change the below to the above?
+                   ;;; Now it looks like below is better.
+                   (window-point win)
                    )))
           (or win-list (window-list frame minibuf window))))
 
@@ -12462,35 +12632,10 @@ Uses `get-buffer' to get the buffer."
     (setq buffer (get-buffer buffer)))  ; Let "names" work, too.
   (get-buffer-window (or buffer (current-buffer)) frames devices))
 
-(defun dp-win-layout-2-left-of-1 ()
-  "Make a layout:
-| | |
-|-| |
-|_|_|"
-
-  (interactive)
-  (delete-other-windows)
-  (split-window-horizontally)
-  (split-window-vertically)
-  (other-window 1))
-(defalias 'dp-win-layout=| 'dp-win-layout-2-left-of-1)
-
-(defun dp-win-layout-2-over-1 ()
-  "Give us a layout:
-| | |
-| | |
-|---|
-|___|"
-  (interactive)
-  (delete-other-windows)
-  (split-window-vertically)
-  (split-window-horizontally)
-  (other-window -1))
-
 (defun dp-compile-win-layout-func ()
   "Split the frame into multiple windows based on the current frame width."
   (if (dp-wide-enough-for-2-windows-p)
-      (dp-win-layout=|)
+      (dp-win-layout-2-left-of-1)
     (delete-other-windows)
     (split-window-vertically)
     (other-window -1)))
@@ -12515,7 +12660,8 @@ will become the compilation window.")
              original-window-config)
     (dmessage "saving win config, buffer>%s<" (current-buffer))
     (setq dp-saved-window-config original-window-config))
-  (set-window-dedicated-p (dp-get-buffer-window) t)
+  (when dp-use-dedicated-make-windows-p
+    (set-window-dedicated-p (dp-get-buffer-window) t))
   ;;(compilation-set-window-height (dp-get-buffer-window)))
   (dp-compilation-set-window-height (dp-get-buffer-window))
   (dp-end-of-buffer 'no-save))
@@ -12870,6 +13016,7 @@ width is 8, then the number of chars to get to column 8 is 1 (the TAB)."
       (delete-window win))))
 
 (defun dp-canonical-window-list (&optional frame minibuf window)
+  "I think it returns a window list beginning with the current window."
   (interactive)
   (let* ((first-win (or window (car (window-list frame minibuf window))))
          (win-list (list first-win))
@@ -13288,12 +13435,13 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
                                  (start (point-min))
                                  (end (point-max))
                                  (file-name-sticky-p t)
-                                 (confirm-save-p t)
+                                 (confirm-save-p 'ask)
                                  (dir dp-default-save-buffer-contents-dir) 
                                  (name-transformer 'dp-shellify-shell-name)
+                                 (append-p t)
                                  (transformer-args '())
                                  &allow-other-keys)
-  "Useful called from a `kill-buffer-hook' for buffers with no associated file, esp shell buffers."
+  "Useful when called from a `kill-buffer-hook' for buffers with no associated file, esp shell buffers."
   (setq dir (dp-canonicalize-pathname dir))
   (make-directory dir t)
   (let ((file-name (or file-name
@@ -13306,10 +13454,12 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
                                 transformer-args))))))
     (if (not file-name)
         (error 'invalid-argument "buffer name not transformed.")
-      (when (or (not confirm-save-p)
+      (when (or (not (memq confirm-save-p '(ask ask-p t)))
                 (not (file-exists-p file-name))
-                (y-or-n-p (format "File exists: name>%s<. Overwrite? " file-name)))
-        (write-region start end file-name))
+                append-p                ; Nothing will be lost
+                (y-or-n-p (format "File exists: name>%s<. Overwrite? " 
+                                  file-name)))
+        (write-region start end file-name append-p))
       (when file-name-sticky-p
         (setq dp-save-buffer-contents-file-name file-name)))))
 
@@ -13784,9 +13934,15 @@ find-file\(-at-point) and then, if it fails, this function??"
       (unless (bolp)
         (dp-open-newline))
       (newline)
-      (dp-open-above)
+      (dp-open-above t)
       (dp-timestamp))))
 
+
+
+
+                                        ; does it work in lisp? does the
+                                        ; newly added filling via the binding
+                                        ; on meta ?q work? We hopes so.
 (defun dp-move-too-long-comment-above-current-line ()
   (interactive)
   (beginning-of-line)
@@ -13794,13 +13950,16 @@ find-file\(-at-point) and then, if it fails, this function??"
   (backward-char (length comment-start))
   (kill-line)
   (dp-cleanup-line)
-  (dp-open-above)
+  (dp-open-above t)
   (dp-yank)
   (beginning-of-line)
   ;; !<@todo XXX put @ column of line it was taken from before
   ;; `indent-for-comment'
+  ;; at this time: 2012-02-24T09:04:54 WTF was I thinking up there?
   (insert " ")       ; Needed for some modes. Does the wrong thing in others.
-  (indent-for-comment))
+  (indent-for-comment)
+  (dp-call-function-on-key [(meta ?q)]))
+
 (defalias 'mtlcu 'dp-move-too-long-comment-above-current-line)
 
 (defun* dp-jobs-annotate-dice-listing (text &optional (prefix "** ")
@@ -14121,12 +14280,15 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
   (interactive "P")
   (dp-push-go-back "dp-whitespace-cleanup-line-by-line")
   (let ((first-p t)
+        (num -1)                        ; We always loop at least once.
         (last-pt nil))
     (while (or first-p
                (not (= (point) last-pt)))
       (setq first-p (dp-looking-at-whitespace-violation)
             last-pt (point))
-      (dp-whitespace-next-and-cleanup ask-per-line-p))))
+      (incf num)
+      (dp-whitespace-next-and-cleanup ask-per-line-p))
+    (message "%d whitespace %s." num (dp-pluralize-num num nil "es" "fix"))))
 
 (defun dp-whitespace-buffer-ask-to-cleanup (&optional line-by-line-p)
   "Check a buffer for whitespace errors. Prompt for cleanup if any are found."
@@ -14146,8 +14308,19 @@ to me or my other packages like flyspell which seems to be involved in the
 command hook errors."
   (dp-whitespace-cleanup-line))
 
-(defun dp-call-function-on-key (key-seq &rest args)
+(defun dp-apply-function-on-key (key-seq args)
+  "Apply the command currently bound to KEY-SEQ to ARGS.
+See `dp-call-function-on-key'."
   (apply (key-binding key-seq) args))
+
+(defun dp-call-function-on-key (key-seq &optional record-flag keys)
+  "Run the command currently bound to KEY-SEQ interactively.
+See `call-interactively' for information on RECORD-FLAG and KEYS.
+Use this to run commands on keys that DTRT based on context.
+E.g. in C/++ mode, M-q is bound to `dp-c-fill-paragraph' whereas in
+emacs-lisp-mode, M-q is bound to M-q `fill-paragraph-or-region'."
+  (call-interactively (key-binding key-seq) record-flag keys))
+
 
 (defun dp-call-interactively-function-on-key (key-seq)
   (call-interactively (key-binding key-seq)))
@@ -14233,6 +14406,17 @@ changed their writability, changing the [git] version information, etc."
     ;; Do I want this? I'll probably just `y' it reflexively anyway.
     (set-buffer-modified-p t)
     (revert-buffer t t)))
+
+(defun dp-eob-all-windows ()
+  "Goto the end of the buffer in all visible windows.
+Clumsy but effective method."
+  (interactive)
+  (let ((win-num 0)
+        (win-list (window-list nil 'no-minibufs-at-all)))
+    (loop for win in win-list
+      do
+      (dp-op-other-window win-num 'end-of-buffer)
+      (incf win-num))))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;; @todo Write a loop which advises functions with simple push go back

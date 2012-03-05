@@ -4,6 +4,7 @@
 : ${dp_DEPRECATED_log:=${DP_LOG_DIR:=$HOME/log}/dp_DEPRECATEDS.log}
 export dp_DEPRECATED_log
 
+: ${envDTE=}
 
 export DP_RC_LIST_OTHERS=""
 dp_source_rc()

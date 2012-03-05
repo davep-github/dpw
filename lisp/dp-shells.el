@@ -154,7 +154,18 @@ prompt.  We don't want to stomp on them.")
 
 (defun dp-shell-lookfor-cls (str)
   (when (string-match "^[ \t]*cls[ \t]*$" str)
-    (dp-clr-shell0 t t)))
+    (dp-clr-shell0 nil t)))
+
+(defun dp-shell-lookfor-clsx (str)
+  (when (string-match "^[ \t]*clsx[ \t]*$" str)
+    (clsx)))
+
+(defun clsx ()
+  (interactive)
+  (if (dp-shell-buffer-p)
+      (dp-clr-shell0)
+    (message "Must be in a shell buffer to use clsx.")))
+  
 
 (defcustom dp-shell-magic-ls-pattern 
   "^[ \t]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\(?:[ \t]*\\)\\(.*\\)$"
@@ -515,6 +526,7 @@ dir-tracker has become lost.
   (local-set-key [(control down)] 'dp-scroll-up)
   (local-set-key [(meta left)] 'dp-shell-goto-prev-cmd-pos)
   (local-set-key [(meta right)] 'dp-shell-goto-next-cmd-pos)
+  ;; Usurped by \C-l other window.
   ;;(local-set-key [(control meta ?l)] 'dp-clr-shell)
   (local-set-key [(control ?l)] 'dp-center-to-top)
   (local-set-key [(meta ?-)] 'dp-bury-or-kill-this-process-buffer)
@@ -522,7 +534,8 @@ dir-tracker has become lost.
   (local-set-key [(control meta ?m)] 'emms-player-mpd-pause)
 
   (unless (buffer-file-name)
-    (local-set-key [(meta w)] 'dp-you-cant-save-you-silly)
+    ;;(local-set-key [(meta w)] 'dp-you-cant-save-you-silly)
+    (local-set-key [(meta w)] 'dp-shell-save-buffer-command)
     ;;(local-set-key [(control ?x) (control ?s)] 'dp-you-cant-save-silly)
     )
   (local-set-key [(control ?g)] 'keyboard-quit))
@@ -541,7 +554,9 @@ Called when shell, inferior-lisp-process, etc. are entered."
     ;; So I remove any dupes after the first occurrence.
     (dp-nuniqify-lists '(shell-dynamic-complete-functions 
                          comint-dynamic-complete-functions)))
-  (loop for hook in '(dp-shell-lookfor-cls dp-shell-lookfor-ls
+  (loop for hook in '(dp-shell-lookfor-cls
+                      dp-shell-lookfor-clsx
+                      dp-shell-lookfor-ls
                       dp-shell-lookfor-shell-max-lines
                       dp-shell-lookfor-vc-cmd
                       dp-shell-lookfor-g-a-cmd
@@ -970,11 +985,11 @@ command position."
     (dp-highlight-point-until-next-command
      :colors dp-highlight-point-other-window-faces)))
 
-(defun dp-shell-goto-prev-cmd-pos (arg)
+(defun dp-shell-goto-prev-cmd-pos (&optional arg)
   (interactive "_P")
   (dp-shell-goto-cmd-pos arg 'backwards))
 
-(defun dp-shell-goto-next-cmd-pos (arg)
+(defun dp-shell-goto-next-cmd-pos (&optional arg)
   (interactive "_P")
   (dp-shell-goto-cmd-pos arg 'forwards))
 
@@ -982,6 +997,16 @@ command position."
   ;;(dmessage "delta: %s" delta)
   (setq dp-shell-last-cmds
 	(dp-left-shift-position-list dp-shell-last-cmds delta)))
+
+(defun dp-shell-trimmed-command-positions (before-this)
+  ;; BEFORE-THIS is a command position in the command positions ordered list,
+  ;; so all we need to do is find it and return the tail of the list
+  ;; beginning at said position. Which is what member does.
+  (member (dp-mk-marker before-this) dp-shell-last-cmds))
+
+(defun dp-shell-trim-command-positions (before-this)
+  ;; Trim the list and set it.
+  (setq dp-shell-last-cmds (dp-shell-trimmed-command-positions before-this)))
 
 (defvar dp-grep-like-buffer-regexp 
   (regexp-opt '("[efi]?grep" "compilation"))
@@ -1316,7 +1341,7 @@ are kept in the cdr of a cons, e.g. (cons 'args-are-my-cdr real-args).  If
 
 ;;;###autoload
 (defun dp-set-compile-like-mode-error-function ()
-  (dp-set-current-error-function 'dp-do-next-error nil))
+  (dp-set-current-error-function 'dp-do-next-compile-like-error nil))
 
 ;;;###autoload      
 (defun dp-next-error (&optional previous-error-p)
@@ -1360,7 +1385,7 @@ that a new command has been sent since the last parse.
     (call-interactively func)
     (cscope-select-entry-other-window)))
 
-(defun dp-do-next-error ()
+(defun dp-do-next-compile-like-error ()
   "Actually find next error in shell buffer.
 This key is globally bound.  It does special things only if it is
 invoked inside a shell type buffer.  In this case, it ensures the
@@ -1386,6 +1411,7 @@ that a new command has been sent since the last parse."
   ;; set things up so that we end up with the source file and
   ;; error listing (*shell*) in separate windows
   ;; q.v. all vars set.
+  ;; !<@todo XXX this don't work. why?
   (if (string-match "grep\\s-+finish"
                     (with-current-buffer compilation-last-buffer
                       (buffer-substring (line-beginning-position) 
@@ -1604,6 +1630,8 @@ first file that is `dp-file-readable-p' is used.  Also sets
   (setq dp-shell-last-parse-start 0
 	dp-shell-last-parse-end 0)
   (let* ((cur-input (buffer-substring (dp-current-pmark-pos) (point-max))))
+    (when (y-or-n-p "Save contents first? ")
+      (dp-save-shell-buffer))
     (erase-buffer)
     (unless dont-fake-cmd
       (funcall dp-shell-type-enter-func 
@@ -1614,38 +1642,46 @@ first file that is `dp-file-readable-p' is used.  Also sets
       (insert cur-input))
     ))
 
-(defcustom dp-shell-buffer-max-size 5000
+(defcustom dp-shell-buffer-max-lines 1701
   "*Max lines to preserve in shell buf when using `dp-clr-shell' w/o a prefix arg."
   :group 'dp-vars
   :type 'integer)
 
-(defun dp-clr-shell (really-clear-p)
+(defun dp-clr-shell (really-clear-p &optional dont-fake-cmd dont-preserve-input)
   (interactive "P")
   (if (or really-clear-p
-          ;; (eq last-command 'dp-clr-shell)) 
+          (eq last-command 'dp-clr-shell)
           ;; too many accidental real clears, when triggering a real clear by
-          ;; 2 clear commands in a row.  so only use prefix arg to wipe
+          ;; 2 clear commands in a row.  so use only prefix arg to wipe
           ;; history
           nil)                          ;see if I like it.
-      (dp-clr-shell0)
+      (dp-clr-shell0 dont-fake-cmd dont-fake-cmd)
     (let (point
           (old-point-max (point-max)))
-      (dp-end-of-buffer)
-      ;; see if we're over the max
-      (when (= (forward-line (- dp-shell-buffer-max-size)) 0)
+      ;; See if we're over the max.
+      (when (> (line-number (point-max)) dp-shell-buffer-max-lines)
+        (dp-end-of-buffer)
+        (forward-line (- dp-shell-buffer-max-lines))
         ;; move back to previous command so that we have the entire command
         ;; still in the history
         (setq point (point))
         (dp-shell-goto-prev-cmd-pos)
         (if (> (point) point)           ;did we wrap?
             (goto-char point))
+        ;; Remove all of the command positions before the truncation point.
+        ;; They're all markers so the remaining ones should adjust
+        ;; themselves.
+        (dp-shell-trim-command-positions (point))
 	(delete-region (point-min) (point))
 	;; now, adjust all of the command positions
-	(dp-shell-adjust-command-positions (- old-point-max (point-max))))
+        ;; They're markers now.
+	;;(dp-shell-adjust-command-positions (- old-point-max (point-max)))
+        )
       (dp-end-of-buffer)
       (dp-point-to-top 1)
       )))
 
+(dp-safe-alias 'cls 'dp-clr-shell)
 
 (defun dp-shell-beginning-of-line ()
   ;;beginning of command line (after prompt)
@@ -2181,13 +2217,14 @@ ARG is numberp:
               (rename-buffer (format "%s%s" fav-buf-name fan-buf-name)))
             (message "Using fav buf: %s" fav-buf0))
           (dmessage "point: %s, window-point: %s" (point) (window-point)))
+      ;;;;;;;;;;;;;;;;;;;;; EA! ;;;;;;;;;;;;;;;;;;;;;
       ;; Handle new shell case. We may have a name already.
-      ;; EA!
       (setenv "PS1_prefix" nil 'UNSET)
       (setenv "PS1_host_suffix"
               (format "%s" (dp-shells-guess-suffix sh-name "")))
       (setenv "PS1_bang_suff" (format dp-shells-shell-num-fmt pnv))
-      (shell sh-buffer)
+      (save-window-excursion/mapping
+       (shell sh-buffer))
       (dp-visit-or-switch-to-buffer sh-buffer switch-window-func)
       ;;
       ;; We're in the new shell buffer now.
@@ -2200,6 +2237,16 @@ ARG is numberp:
       (add-to-list 'dp-shells-shell-buffer-list sh-buffer)
       (add-local-hook 'kill-buffer-hook 'dp-shells-delq-buffer)
       (add-local-hook 'kill-buffer-hook 'dp-save-shell-buffer-contents-hook)
+      ;; Set the name once. All saves will pile up in the same file.  I've
+      ;; added a manual save command and that will go there, too.  If shell
+      ;; buffers get too big, then the performance begins to suck.  Many
+      ;; things can be shell wide.
+      ;; !<@todo XXX Make sure that as few things as possible (0!) look at
+      ;; the entire buffer. Also, check into the fontifier. It may do evil
+      ;; things.
+      ;; Saves are currently done with sticky names so this isn't needed.
+      ;;(setq-ifnil dp-save-buffer-contents-file-name 
+      ;;            (dp-shellify-shell-name (buffer-name)))
       (dmessage "Loading shell input ring")
       (dp-maybe-read-input-ring))))
 
@@ -2684,14 +2731,20 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 (defvar dp-default-save-buffer-contents-dir "$HOME/log/shell-sessions/"
   "Where do the files go by default.  Will be created including any missing parents.")
 
-(defun dp-shellify-shell-name (name &optional args)
+(defun dp-shellify-shell-name (name &optional args suffixer)
   (let* ((replacement-str (or (car args) dp-default-shellify-replacement-str))
          (new-name (replace-regexp-in-string dp-shell-hostile-chars-regexp
                                              replacement-str
                                              name)))
     ;; Surround the name with a less common file name character to make it
     ;; more visible.
-    (concat "dp-shell-session%" new-name "%" (dp-timestamp-string))))
+    (concat "dp-shell-session%" new-name "%" 
+            (cond
+             ((not suffixer)
+              (dp-timestamp-string))
+             ((stringp suffixer)
+              suffixer)
+             (t (funcall-suffixer))))))
 
 (dp-deflocal dp-save-buffer-contents-file-name nil
   "As it looks.  Can also be used to set a name without using a name transformer.  Say at buffer creation time \(e.g. dp-shell)")
@@ -2708,7 +2761,7 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
       (save-excursion
         ;; We can get multiple stanzas if we save >1 time.
         (goto-char (point-min))
-        (insert "# Buffer saved on " (current-time-string) "\n")
+        (insert "\n# Buffer saved on " (current-time-string) "\n")
         (insert "# In working dir " default-directory "\n")
         (insert "# Logged in as " (user-login-name) "@" (system-name) "\n")
         (insert "# Name: " (user-full-name) "\n")
@@ -2716,6 +2769,12 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
       (apply 'dp-save-buffer-contents 
              :file-name dp-save-buffer-contents-file-name
              kw-args))))
+
+(defun dp-shell-visit-buffer-log ()
+  (interactive)
+  (if dp-save-buffer-contents-file-name
+      (find-file dp-save-buffer-contents-file-name)
+    (message "No save file for this buffer.")))
 
 (defvar dp-save-shell-buffer-contents-exclusion-regexp
   "vilya"
@@ -2726,18 +2785,39 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
                          dp-save-shell-buffer-contents-exclusion-regexp)
                      (buffer-name buffer))))
 
-(defun dp-save-shell-buffer-contents-hook (&optional filter-pred)
+(defun dp-save-shell-buffer-contents-hook (&optional filter-pred
+                                           confirm-save-p)
   (when (funcall (or filter-pred 'dp-save-shell-buffer-contents-pred)
                  (current-buffer))
-    (dp-save-shell-buffer-contents :confirm-save-p nil)))
+    (dp-save-shell-buffer-contents :confirm-save-p confirm-save-p)))
 
-(defun dp-save-shell-buffers ()
+(defun dp-save-shell-buffer (&optional ask-p buf)
+  "Save the shell buffer BUF. 
+The buffer could have useful information from past sessions or record
+procedures that have been partly (0%) remembered."
+  (setq-ifnil buf (current-buffer))
+  (when (buffer-live-p buf)
+    (with-current-buffer buf
+      (dp-save-shell-buffer-contents-hook))))
+
+(defun dp-shell-save-buffer-command (&optional just-save-it-p)
+  (interactive "P")
+  (or just-save-it-p
+      (y-or-n-p "Really save the shell buffer? ")
+      (dp-save-shell-buffer)))
+
+(defun dp-save-shell-buffers (&optional ask-not-p)
   (loop for buf in dp-shells-shell-buffer-list do
-    (when (buffer-live-p buf)
-      (with-current-buffer buf
-        (dp-save-shell-buffer-contents-hook)))))
+    (dp-save-shell-buffer buf ask-not-p)))
   
-(add-hook 'kill-emacs-hook 'dp-save-shell-buffers)
+(defun dp-save-shell-buffers-hook ()
+  "Leaves evidence that we're running in `kill-emacs-hook'.
+It would be nice if there was a global `current-hook' or some such."
+  (setq dp-in-kill-emacs-hook-p t
+        dp-in-save-shell-buffers-hook-p t)
+  (dp-save-shell-buffers t))
+
+(add-hook 'kill-emacs-hook 'dp-save-shell-buffers-hook)
 
 (defun dp-shell-next-buffer-in-cycle (&optional buffer)
   (let ((this-buf (memq (or buffer (current-buffer))

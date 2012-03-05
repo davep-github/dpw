@@ -242,9 +242,12 @@ Eg, via `hack-local-variables', hook, magic.")
       ;; No cf found... we got the list of candidates, tho.
       ;; !<@todo XXX Check in buffer list as well.
       ;; !<@todo XXX Put all variants in the history.
-      (setq co-file (completing-read "No corresponding file found. File-name: "
-                                     (cdr co-file) nil nil (caar co-file)
-                                     (progn
+      (setq co-file (completing-read "No corresponding file found. File name: "
+                                     (cdr co-file) ; completion table
+                                     nil ; predicate
+                                     nil ; require match
+                                     (caar co-file)  ; Initial contents
+                                     (progn  ; history
                                        (setq dp-ecf-dummy-history-var
                                              (cdr (append (mapcar 'car co-file)
                                                           file-name-history)))

@@ -25,6 +25,7 @@
 )
  '(efs-pty-check-retry-time 60)
  '(efs-send-progress-off t)
+ '(epg-debug t)
  '(ffap-machine-p-known 'reject)
  '(fill-column 77)
  '(filladapt-token-conversion-table '((citation-> . exact)

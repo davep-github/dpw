@@ -291,13 +291,12 @@ Bind any keys in KEYS via `dp-define-keys'."
   (dp-define-key-submap 'dp-kb-prefix global-map
                         ;; Prefix for all keys in this map.
                         [(control c) ?d]
-                        ;; "\C-b" 
+                        [(control next)] 'dp-eob-all-windows
+
                         [(control ?b)] 'dp-copy-breakpoint-command-as-kill
                         [(control ?/)] (kb-lambda 
                                            (setq display-buffer-function nil))
-                        ;; "\C-f" 
                         [(control ?f)] 'dp-face-at
-                        ;; [(meta ?c)]
                         [(meta ?c)] 'dp-id-select-and-copy-thing
                         [?b] 'dp-point-to-bottom
 
@@ -532,8 +531,9 @@ already in there.")
                           ;; Yeah, I should do a buncha submaps, but I won't.
                           ;; Nope.  I refuse. Not gun duit.  Read my lips: "No
                           ;; new mapses.
-                          ;; Some of these bindings are longer that some
+                          ;; Some of these bindings are longer than some
                           ;; abbreviated commands
+                          [(control next)] 'dp-eob-all-windows
                           [?s ?r] 'dp-save-wconfig-by-name-or-ring
                           [?s ?n] 'wconfig-add-by-name
                           [?r ?p] (kb-lambda-rest

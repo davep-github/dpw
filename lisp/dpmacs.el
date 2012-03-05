@@ -157,6 +157,8 @@ This should be set by the emacs specific code.")
   "List of things to do after init.")
 (defvar dpj-private-topic-re-extra ""
   "No extra patterens to ignore")
+(defvar dp-after-kill-this-buffer-hook '()
+  "Runs after my kill buffer function.")
 
 (setq list-command-history-max nil)     ; Unlimited limit.
 
@@ -357,12 +359,14 @@ the init files.")
 ;; !<@todo XXX things like save-2 don't work, but save2 do. The [] expr is
 ;; suspect.
 (defvar dp-default-mode-transparent-suffix-regexp
-  (concat "\\([.-]\\(historical\\|save\\|hide\\|no-index\\|pristine"
+  (concat "\\([.,-]\\(historical\\|save\\|hide\\|no-index\\|pristine"
+          ;; Stuff being hidden from version control
+          "\\|novc\\|junk"
           ;; In development, works in progress, being developed.
           "\\|wip\\|exp\\|dev"
           ;; Old but broken or out-of-date.
           "\\|stale\\|bad\\|b0rked\\|broken?\\|hosed\\|fubar"
-          "\\|merged?\\|olde?\\|orig\\)\\([.-,]?\\([0-9]*\\)\\)?\\)?$")
+          "\\|merged?\\|olde?\\|orig\\)\\([.,-]?\\([0-9]*\\)\\)?\\)?$")
   "Suffixes which can be added after a regular extension and are ignored
 for the purpose of mode setting.  At this time, these are also visited read
 only.
@@ -414,23 +418,22 @@ things like c.cxx-no-index to prevent those files from being indexed
 w/tags, cscope, etc.")
 
 (defconst dp-auto-mode-alist-changes
-      (append dp-mode-transparent-regexps
-              '(
-                ("\\.txt$" . text-mode)
-                ("snd.[0-9]*" . text-mode) ; elm mail files
-                ("\\.ol$" . outline-mode) ; outlines
-                ("\\.outline$". outline-mode) ; ibid
-                ("\\.pdb$" . pdb-mode)  ; perl database mode.
-                ("\\.sawfishrc$" . sawfish-mode) ; sawfish lisp files (librep)
-                ;; sawfish lisp files (librep)
-                ("\\.sawfish/custom$" . sawfish-mode) 
-                ("\\.jl$" . sawfish-mode) ; sawfish lisp files (librep)
-                ;; my .rc dir files (bash login stuff)
-                ("/\\.rc/[^/]+$" . shell-script-mode) 
-                ("\\.jxt$" . dp-journal-mode) ; dp Journal files.
-                ("\\.g$" . antlr-mode)
-                )))
-
+  (append dp-mode-transparent-regexps
+          '(
+            ("\\.txt$" . text-mode)
+            ("snd.[0-9]*" . text-mode)  ; elm mail files
+            ("\\.ol$" . outline-mode)   ; outlines
+            ("\\.outline$". outline-mode) ; ibid
+            ("\\.pdb$" . pdb-mode)      ; perl database mode.
+            ("\\.sawfishrc$" . sawfish-mode) ; sawfish lisp files (librep)
+            ;; sawfish lisp files (librep)
+            ("\\.sawfish/custom$" . sawfish-mode)
+            ("\\.jl$" . sawfish-mode)   ; sawfish lisp files (librep)
+            ;; my .rc dir files (bash login stuff)
+            ("/\\.rc/[^/]+$" . shell-script-mode)
+            ("\\.jxt$" . dp-journal-mode) ; dp Journal files.
+            ("\\.g$" . antlr-mode)
+            )))
 
 ;; @todo make this -vvvv use that -^^^^
 (dp-add-list-to-list 'auto-mode-alist dp-auto-mode-alist-changes)
@@ -820,7 +823,8 @@ This can be callable.")
       (setq ispell-program-name dp-ispell-program-name)
       (dmessage "Using spec macs spell program: %s" dp-ispell-program-name))
   ;; Else try to find one
-  (dp-init-spellin))
+  ;;;;(dp-init-spellin)
+)
 
 ;;
 ;; when this abbrev is expanded, it gets the cwd from the
@@ -858,7 +862,7 @@ This can be callable.")
 (add-hook 'dp-post-dpmacs-hook
           (function 
            (lambda ()
-             (require 'psvn)
+             ;;;(require 'psvn) ; Just let vc take care of everything?
              (require 'dp-faces)
              (add-hook 'isearch-mode-hook 'dp-isearch-mode-hook)
              (add-hook 'isearch-mode-end-hook 'dp-isearch-mode-end-hook)

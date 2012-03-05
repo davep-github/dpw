@@ -79,8 +79,15 @@ Username of email account"
   :type 'boolean)
 
 ;;
+;; switch to disable all spelling
+(defcustom dp-use-spell-p t
+  "*Are we interested in using any kind of spelling?"
+  :group 'dp-vars
+  :type 'boolean)
+
+;;
 ;; switch to control use of flyspell.
-(defcustom dp-use-flyspell-p nil
+(defcustom dp-use-flyspell-p t
   "*Are we interested in using flyspell?"
   :group 'dp-vars
   :type 'boolean)
@@ -453,6 +460,13 @@ int some_descriptive_function_name(int a,
 "
   :type 'boolean
   :group 'dp-vars)
+
+(defcustom dp-use-dedicated-make-windows-p nil
+  "*Shall we dedicated windows to compilation(make) buffers.
+At one time it seemed like a good idea, but it's really become a PITA."
+  :type 'boolean
+  :group 'dp-vars)
+  
 
 
 ;; <:new vars go here:>

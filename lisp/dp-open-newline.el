@@ -106,7 +106,8 @@
                     ;; Get some match data
                     (when (dp-c-looking-at-struct-decl-p
                            (line-end-position) t)
-                    ;; ms 4 is non-nil when we are part of a subclassing statement.
+                    ;; match string 4 is non-nil when we are part of a
+                    ;; subclassing statement.
                     (setq t1 (if (match-string 4)
                                  3
                                0))
@@ -147,12 +148,25 @@
 ;;             t)
 
    ;;;;;;;;;;;;;;;;;
+           ;; Add new line for current context {comment|backslashed}
+           ((or ;; (dp-in-a-c*-comment)
+                (dp-c*-pure-comment-line-p)
+                (and (dp-in-cpp-construct-p)
+                     (save-excursion
+                       (beginning-of-line)
+                       (re-search-forward "\\\\$" (line-end-position) t))))
+            (dp-c-continue-comment-or-backslash)
+            (dmessage "cob: dp-c-continue-comment-or-backslash")
+            nil)
+
+   ;;;;;;;;;;;;;;;;;
            ;; Case label... should be pretty unambiguous
            ((dp-c-in-syntactic-region '(case-label))
             (if (dp-c-looking-back-at-sans-eos-junk ":\\s-*" 'from-eol-p)
                 ;; Already colon'd
                 ()
               (dp-c-replace-statement-end ":"))
+            (dmessage "cob: case label")
             t)
            
    ;;;;;;;;;;;;;;;;;
@@ -173,30 +187,31 @@
                  (not (dp-looking-back-at (concat "\\(?:[^(]\\)"
                                                   dp-c-function-type-decl-re 
                                                   "\\s-*")))
-                 (not (dp-c-looking-back-at-sans-eos-junk ";\\s-*" 'from-eol-p)))
-            (dp-c-format-func-decl)
+                 (not (save-excursion
+                        (end-of-line)
+                        (dp-c-looking-back-at-sans-eos-junk ";\\s-*")))
+                 (not (dp-c-looking-back-at-sans-eos-junk "};\\s-*" 
+                                                          'from-eol-p))
+                 ;; We *may not* end up wanting to format ourselves as a
+                 ;; function decl. `dp-c-format-func-decl' tells us if it did
+                 ;; so. If it did, we're done. Else we try something else.
+                 (dp-c-format-func-decl))
             (dmessage "cob: voidify/format decl.")
             (setf (dp-cob-state-t-last-sub-command dp-cob-state) 'voidify)
             nil)
 
    ;;;;;;;;;;;;;;;;;
-           ;; Add new line for current context {comment|backslashed}
-           ((or ;; (dp-in-a-c*-comment)
-                (dp-c*-pure-comment-line-p)
-                (and (dp-in-cpp-construct-p)
-                     (save-excursion
-                       (beginning-of-line)
-                       (re-search-forward "\\\\$" (line-end-position) t))))
-            (dp-c-continue-comment-or-backslash)
-            nil)
-   ;;;;;;;;;;;;;;;;;
            ((and (setq my-sub-cmd 'add-newline-only)
                  (or (eq my-sub-cmd last-sub-cmd)
                      (dp-c-statement-terminated-p)))
             (setf (dp-cob-state-t-last-sub-command dp-cob-state) my-sub-cmd)
+            (dmessage "cod: add a newline 0")
             t) ; Nothing to do but add a new line.
+
+   ;;;;;;;;;;;;;;;;;
            ;; In a c++ class and after a protection label with or without a ":"
            ((dp-c-looking-back-at-sans-eos-junk "}\\|^\\s-*" t)
+            (dmessage "cob: looking back at } or blankness")
             t)                          ; eol/newline/indent.
            
    ;;;;;;;;;;;;;;;;;
@@ -211,6 +226,7 @@
                 nil))
             (setf (dp-cob-state-t-last-sub-command dp-cob-state) 
                   'mk-data-section)
+            (dmessage "cob: make data section")
             nil)
            
    ;;;;;;;;;;;;;;;;;
@@ -284,6 +300,7 @@
 ;                               (- (/ (length (match-data)) 2) 3)  ; n
 ;                               3)))
             (setf (dp-cob-state-t-last-sub-command dp-cob-state) 'lone-else)
+            (dmessage "cob: lone else?")
             t)
 
    ;;;;;;;;;;;;;;;;;
@@ -359,8 +376,13 @@
             nil)
            
    ;;;;;;;;;;;;;;;;;
-           (t (end-of-line) (dp-c-context-line-break)
-              'no-change-p)))
+           (t
+            (dmessage "cob: in default clause")
+            ;;; XXX (barfolal)
+            ;;; !<@todo XXX (end-of-line) 
+            (dp-c-context-line-break)
+            ;; !<@todo XXX "return" 'no-change-p
+            nil)))
     (if (eq result 'no-change-p)
         nil
     (save-excursion

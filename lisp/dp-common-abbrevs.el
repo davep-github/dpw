@@ -380,6 +380,12 @@
      dp-manual)
     (("con" "concierge" "Concierge")
      dp-manual)
+    (("metadata" "meta-data" "meta data")
+     dp-manual)
+    (("md" "metadata" "meta-data" "meta data")
+     dp-manual)
+    (("ccs" "const char* " "const std::string& ")
+     dp-manual)
     (("phr" "Prop_handler_ret_t")
      dp-manual)))
 ;; We could just use the non-void-ness of dp-common-abbrevs, but I
