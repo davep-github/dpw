@@ -1,0 +1,28 @@
+#!/bin/sh
+
+source script-x
+set -u
+
+#
+# Ganked from http://stackoverflow.com/users/6309/vonc
+# Although my dp-cat-some would've been a good base had I not seen this
+# first.
+
+: ${DP_GIT_DIFF_TOOL:=}
+: ${DP_GIT_DIFF_TOOL_LIST:=xxdiff meld diffuse diff}
+
+if vunsetp "$DP_GIT_DIFF_TOOL"
+then
+    DP_GIT_DIFF_TOOL=$(find-bin $DP_GIT_DIFF_TOOL_LIST) || {
+        echo "Cannot find an acceptable diff tool."
+        exit 1
+    } 1>&2
+fi
+
+# diff is called by git with 7 parameters:
+# path old-file old-hex old-mode new-file new-hex new-mode
+
+# Don't bg the command since it will return to git and git will clean up the
+# temp file.
+"$DP_GIT_DIFF_TOOL" "$2" "$5" # vonc used | cat to deal with rc issues.
+
