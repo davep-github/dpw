@@ -9818,7 +9818,7 @@ This buffer will be used preferentially.")
             ;;(dp-set-primary-makefile 1)
             (compile (format "%s %s" (car make-command) target))))
       (call-interactively 'compile))
-    (dp-compile-win-layout original-window-config)
+    (dp-layout-compile-windows original-window-config)
 ;     (unless (one-window-p)
 ;       (end-of-buffer-other-window nil))
     )
@@ -12632,29 +12632,29 @@ Uses `get-buffer' to get the buffer."
     (setq buffer (get-buffer buffer)))  ; Let "names" work, too.
   (get-buffer-window (or buffer (current-buffer)) frames devices))
 
-(defun dp-compile-win-layout-func ()
+(defun dp-layout-compile-windows-func ()
   "Split the frame into multiple windows based on the current frame width."
   (if (dp-wide-enough-for-2-windows-p)
       (dp-win-layout-2-left-of-1)
-    (delete-other-windows)
-    (split-window-vertically)
-    (other-window -1)))
+    (dp-layout-windows '(delete-other-windows
+                         split-window-vertically
+                         (other-window -1)))))
 
-(defvar dp-compile-win-layout-func 'dp-compile-win-layout-func
+(defvar dp-layout-compile-windows-func 'dp-layout-compile-windows-func
   "*Function to partition frame for compilation.
 It is called after `delete-other-windows', but should do that anyway so it
 can be called from other places.  It should leave point in the window that
 will become the compilation window.")
 
-(defun dp-compile-win-layout (&optional original-window-config)
+(defun dp-layout-compile-windows (&optional original-window-config)
   "Setup window layout for compling/Make-ing programs."
   (interactive)
-  (delete-other-windows)
+  ;;(delete-other-windows)
   (when (eq major-mode 'compilation-mode)
     ;; Splitting up the compilation buffer makes it impossible to know which
     ;; resulting window is the one I want.
     (switch-to-next-buffer))
-  (funcall (or dp-compile-win-layout-func 'split-window-vertically))
+  (funcall (or dp-layout-compile-windows-func 'split-window-vertically))
   (dp-find-compilation-buffer 'creat)  ; Leaves us in the compilation buffer.
   (when (and (not dp-saved-window-config)
              original-window-config)
@@ -12665,11 +12665,11 @@ will become the compilation window.")
   ;;(compilation-set-window-height (dp-get-buffer-window)))
   (dp-compilation-set-window-height (dp-get-buffer-window))
   (dp-end-of-buffer 'no-save))
-(defalias 'cw 'dp-compile-win-layout)
+(defalias 'cw 'dp-layout-compile-windows)
 
 
 (defun dp-compilation-set-window-height (window)
-  "Don't make bail if window isn't full frame width."
+  "Don't have `make' bail if window isn't full frame width."
   (and compilation-window-height
        ;; Check if the window is split horizontally.
        ;; Emacs checks window width versus frame-width:

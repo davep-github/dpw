@@ -79,8 +79,9 @@ Monday March 05 2012
   (dp-list-subtract buf-list win-list))
 
 
-(defun dp-distribute-buffers (priority-buffers
-                              &optional buf-list win-list frame first-window)
+(defun* dp-distribute-buffers (priority-buffers
+                               &key buf-list win-list frame first-window
+                               skip-these-windows)
   "Distribute the buffers, 1 per window until no more buffers."
   (setq-ifnil buf-list (buffer-list)
               win-list (window-list frame 'no-minibuffers
@@ -89,6 +90,7 @@ Monday March 05 2012
          (all-buffers (append priority-buffers buf-list)))
     (loop for w in win-list
       until (not all-buffers)
+      unless (memq w skip-these-windows)
       do (let ((good-bufs (dp-first-by-pred
                            (lambda (b)
                              (and b
@@ -100,11 +102,34 @@ Monday March 05 2012
            (setq all-buffers (cdr good-bufs))))))
 
 
-(setq dp-win-buffers (dp-all-window-buffers))
-(#<buffer "elisp-devel.el"> #<buffer "*info*"> #<buffer "*shell*<0>">)
-(dp-distribute-buffers dp-win-buffers)
+;;older; (defun* dp-layout-windows (op-list &optional other-win-arg 
+;;older;                            (delete-other-windows-p t))
+;;older;   "Layout windows trying to keep as many buffers visible as possible.
+;;older; !<@todo XXX MAKE SURE THE CURSOR STAYS IN THE SAME PLACE."
+;;older;   ;; Save the original list of buffers displayed in windows.
+;;older;   (let ((original-window-buffers (dp-all-window-buffers)))
+;;older;     (when delete-other-windows-p
+;;older;       (delete-other-windows))
+;;older;     ;; Set up the new window pattern.
+;;older;     (let ((skip-these-windows (list (get-buffer-window (current-buffer))))
+;;older;           (win-list (window-list))
+;;older;           (buf-list (buffer-list)))
+;;older;       (loop for op in op-list
+;;older;         do (let (op-args)
+;;older;              (if (listp op)
+;;older;                  (eval op)
+;;older;                (apply op op-args))))
+;;older;       (when other-win-arg
+;;older;         (other-window other-win-arg))
+;;older;       (dp-distribute-buffers original-window-buffers
+;;older;                              :skip-these-windows skip-these-windows))))
 
+(listp 'other-window)
+nil
 
+(let ((op '(split-window)))
+  (dp-aif op
+    (eval op)))
 
 (defun* dp-layout-windows (op-list &optional other-win-arg 
                            (delete-other-windows-p t))
@@ -115,20 +140,120 @@ Monday March 05 2012
     (when delete-other-windows-p
       (delete-other-windows))
     ;; Set up the new window pattern.
-    (let ((win-list (window-list))
+    (let ((skip-these-windows (list (get-buffer-window (current-buffer))))
+          (win-list (window-list))
           (buf-list (buffer-list)))
       (loop for op in op-list
         do (let (op-args)
-             (if (listp op)
-                 (setq op-args (cdr op)
-                       op (car op)))
-             (apply op op-args)))
+             (unless (listp op)
+               (setq op (list op)))
+             (dp-aif (op)
+               (eval op))))
       (when other-win-arg
-        (other-window other-win-arg)))
-    (dp-distribute-buffers original-window-buffers)
-    ))
+        (other-window other-win-arg))
+      (dp-distribute-buffers original-window-buffers
+                             :skip-these-windows skip-these-windows))))
 
 
 
+(eval '(dmessage "blah"))
+"blah"
+
+;;(cl-pe
+
+(let ((op (or dp-layout-compile-windows-func 'split-window-vertically)))
+  (unless (listp op)
+    (setq op (list op)))
+  (dp-aif (op)
+    (eval op)))
+
+(dp-layout-compile-windows-func)
+nil
+
+nil
+
+nil
+
+nil
+
+nil
+
+nil
+
+nil
+
+#<window on "elisp-devel.el" 0x7fbeea31>
+
+#<window on "elisp-devel.el" 0x7fb7c783>
+
+
+#<window on "elisp-devel.el" 0x7fb43a7c>
+
+#<window on "elisp-devel.el" 0x7f6ad716>
+
+
+nil
+(let ((op '(other-window 1)))
+  (dp-aif (op)
+    (eval op)))
+
+
+
+'
+(let ((op '(progn (princf "yee haw!"))))
+  (dp-aif (op)
+    (eval op)))
+yee haw!
+nil
+
+yee haw!
+nil
+
+nil
+
+#<window on "elisp-devel.el" 0x7f1e7294>
+
+
+nil
+nil
+#<window on "elisp-devel.el" 0x7f136f0d>
+
+(let ((op '(other-window 1)))
+  (dp-aif (op)
+    (eval op)))
+
+(let ((op '(other-window 1)))
+  (dp-aif (op)
+    (eval op)))
+
+aif-away!!!
+nil
+
+nil
+
+(dp-aif split-window)
+
+
+
+ll)
+(let ((op (quote split-window))) (dp-aif op))
+
+
+
+
+(apply 'progn '(princf "yadda"))
+
+
+
+(functionp 'progn)
+t
+
+
+
+========================
+Tuesday March 06 2012
+--
+
+nil
 
 

@@ -209,7 +209,7 @@ They should work off the same set of files."
 if vsetp $iterate_individually_p
 then
     # Make individual indices in each specified dir.
-    for d in "$dirs"
+    for d in $dirs
     do
       (cd "$d" && do_taggin) &
     done
