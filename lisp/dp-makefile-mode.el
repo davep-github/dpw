@@ -47,6 +47,10 @@ See `dp-parenthesize-region-paren-list'")
                   " "))
                   
     (message "compile command: %s" compile-command))
+  (dp-save-orig-n-set-new 'makefile-font-lock-keywords 
+                          'dp-append-to-list-symbol nil
+                          (list dp-trailing-whitespace-font-lock-element))
+  
   (local-set-key "\e[" 'dp-makefile-mode-find-matching-paren)
   (local-set-key [(meta ?p)] 'dp-parenthesize-region))
 

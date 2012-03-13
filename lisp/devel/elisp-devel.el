@@ -256,4 +256,73 @@ Tuesday March 06 2012
 
 nil
 
+dp-c-mark-current-token
 
+
+========================
+Monday March 12 2012
+--
+
+(defun* dp-clr-shell0 (&key
+                       (clear-fun 'erase-buffer)
+                       (clear-args '())
+                       dont-fake-cmd 
+                       dont-preserve-input)
+  "Clear shell window and remembered command positions."
+  (interactive)
+  (setq dp-shell-last-parse-start 0
+	dp-shell-last-parse-end 0)
+  (let* ((cur-input (buffer-substring (dp-current-pmark-pos) (point-max))))
+    (kill-region (dp-current-pmark-pos) (point-max))
+    (when (y-or-n-p "Save contents first? ")
+      (dp-save-shell-buffer))
+    (apply clear-fun clear-args)
+    (unless dont-fake-cmd
+      (funcall dp-shell-type-enter-func 
+	       (dp-shell-buffer-type (buffer-name)))) ;; get us a prompt
+    (dp-shell-init-last-cmds)
+    (unless dont-preserve-input
+      (dp-end-of-buffer)
+      (insert cur-input))))
+
+(defun dp-clr-shell (really-clear-p &optional dont-fake-cmd dont-preserve-input)
+  (interactive "P")
+  (if (or really-clear-p
+          (eq last-command 'dp-clr-shell)
+          ;; too many accidental real clears, when triggering a real clear by
+          ;; 2 clear commands in a row.  so use only prefix arg to wipe
+          ;; history
+          nil)                          ;see if I like it.
+      (dp-clr-shell0 :clear-fun 'erase-buffer
+                     :dont-fake-cmd dont-fake-cmd 
+                     :dont-preserve-input dont-preserve-input)
+    (dp-clr-shell0 
+     :dont-fake-cmd dont-fake-cmd 
+     :dont-preserve-input  dont-preserve-input
+     :clear-fun (lambda ()
+                  (let (point
+                        (old-point-max (point-max)))
+                    ;; See if we're over the max.
+                    (when (> (line-number (point-max)) 
+                             dp-shell-buffer-max-lines)
+                      (dp-end-of-buffer)
+                      (forward-line (- dp-shell-buffer-max-lines))
+                      ;; move back to previous command so that we have the
+                      ;; entire command still in the history
+                      (setq point (point))
+                      (dp-shell-goto-prev-cmd-pos)
+                      (if (> (point) point) ;did we wrap?
+                          (goto-char point))
+                      ;; Remove all of the command positions before the
+                      ;; truncation point.  They're all markers so the
+                      ;; remaining ones should adjust themselves.
+                      (dp-shell-trim-command-positions (point))
+                      (delete-region (point-min) (point))
+                      ;; now, adjust all of the command positions They're
+                      ;; markers now.
+                      ;;(dp-shell-adjust-command-positions (- old-point-max
+                      ;;(point-max)))
+                      )
+                    (dp-end-of-buffer)
+                    (dp-point-to-top 1)
+                    )))))

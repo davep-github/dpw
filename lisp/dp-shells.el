@@ -154,7 +154,7 @@ prompt.  We don't want to stomp on them.")
 
 (defun dp-shell-lookfor-cls (str)
   (when (string-match "^[ \t]*cls[ \t]*$" str)
-    (dp-clr-shell0 nil t)))
+    (dp-clr-shell nil nil)))
 
 (defun dp-shell-lookfor-clsx (str)
   (when (string-match "^[ \t]*clsx[ \t]*$" str)
@@ -1655,7 +1655,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
           ;; 2 clear commands in a row.  so use only prefix arg to wipe
           ;; history
           nil)                          ;see if I like it.
-      (dp-clr-shell0 dont-fake-cmd dont-fake-cmd)
+      (dp-clr-shell0 dont-fake-cmd dont-preserve-input)
     (let (point
           (old-point-max (point-max)))
       ;; See if we're over the max.

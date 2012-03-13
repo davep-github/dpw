@@ -87,4 +87,11 @@
 ;;
 (defalias 'jk2 'dp-poc-layout2)
 
+;; Make this environment/project aware.
+(defun dp-index-code()
+  (interactive)
+  (shell-command 
+   "cd /home/dapanarx/work/ftci/poc && index-code -I client pyagents&" nil))
+(dp-safe-alias 'ic 'dp-index-code)
+
 (provide 'dp-dot-emacs.intel.el)

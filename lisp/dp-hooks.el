@@ -547,12 +547,10 @@ c-hanging-braces-alist based upon these values.")
     ;; Add some extra types to the xemacs gaudy setting.  Rebuild the
     ;; list each time rather than adding to the existing value.  This
     ;; makes reinitializing cleaner.
-    (let ((appendor (function (lambda (save-sym &rest extras-list)
-                                (append (symbol-value save-sym)
-                                        (car extras-list))))))
-      (dp-save-orig-n-set-new 'c-font-lock-keywords-3 appendor nil extras)
-      (dp-save-orig-n-set-new 'c++-font-lock-keywords-3 appendor nil
-                              extras))))
+    (dp-save-orig-n-set-new 'c-font-lock-keywords-3 
+                            'dp-append-to-list-symbol nil extras)
+    (dp-save-orig-n-set-new 'c++-font-lock-keywords-3 
+                            'dp-append-to-list-symbol nil extras)))
 
 (defvar dp-c-like-modes '(c++-mode c-mode)
   "This list holds the modes that can benefit, att, from `dp-open-newline'.")
@@ -842,6 +840,13 @@ main(
 (defvar dp-c++-new-include-file-template 'dp-dot-h-reinclusion-protection
   "String or function.  Insert or call as appropriate.")
 
+;; When adding initializers to a constructor this takes the var name and
+;; makes it into a standard initializer.
+;; e.g. avar-!-   -->   m_avar(avar),-!-
+(defalias 'dp-c*-member-init
+  (read-kbd-macro "<C-left> M-SPC M-o m) <backspace> _ C-e M-9 M-y C-e ,"))
+
+
 (defun* dp-c++-mode-hook (&optional (insert-template-p t))
   "My C++ mode hook"
   (interactive)
@@ -853,6 +858,7 @@ main(
   (local-set-key [(meta ?[)] 'dp-c++-find-matching-paren)
   (local-set-key [(meta ?u)] 'dp-c++-mode-undo)
   (local-set-key [(control ?c) (control meta ?s)] 'dp-c-get-syntactic-region)
+  (local-set-key [(meta ?s)] 'dp-c*-member-init)
   (when (fboundp 'eassist-list-methods)
     (local-set-key [(control c) ?, ?.] 'eassist-list-methods))
   ;; Trying to find out why point moves around when switching buffers
@@ -1701,6 +1707,7 @@ cscope discovery.
   (when (and (not (active-minibuffer-window))
              (dp-wide-enough-for-2-windows-p)
              (= (length (window-list)) 1)
+             (not size)                 ; Skip action if a size is specified.
              (not dp-called-by-split-vertically))
     (setq horflag t))
   (setq dp-called-by-split-vertically nil))

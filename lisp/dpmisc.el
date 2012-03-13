@@ -41,7 +41,7 @@
 (defalias 'dp-to-knr-open-brace
   (read-kbd-macro "ESC C-s ^ \\s- +{ RET <up> M-j"))
 
-(defalias 'dp-move-method
+(defalias 'dp-move-c++-method
   (read-kbd-macro 
    (concat "C-a M-a C-s ( <left> M-[ <right> M-C-1 <right> M-o"
            " C-s { <left> M-[ <down> <up> C-a C-s } <left> M-[ M-a"
@@ -138,7 +138,8 @@ If NEW-VAR-VALUE is a cons, then the cdr tells us what it is.
 Currently only 'literal is defined.  This allows a way to quote a
 NEW-VAR-VALUE that is functionp but that we don't want to be applied.
 Always return the value from NEW-VAR-VALUE."
-  ;; Simple dp-orig- is too likely to have been done somewhere by hand.
+  ;; Simple dp-orig- prefix is too likely to have been done somewhere by hand.
+  ;; !<@todo XXX put in own namespace
   (let ((save-sym (dp-mk-save-orig-symbol-name var-sym)))
     ;; iff
     (unless (boundp save-sym)
@@ -472,7 +473,8 @@ LESSP defaults to less-than ('<)."
   "Just insulation from `c-beginning-of-current-token'.
 In short, if point is in a token then back up to beginning.
 Otherwise, nothing."
-  (apply 'c-beginning-of-current-token rrr))
+  (apply 'c-beginning-of-current-token rrr)
+  (dp-set-zmacs-region-stays t))
 
 ;;(defvar dp-data-section-id-format 
 ;;  " ///////////////// <:%s%sdata:> /////////////////"
@@ -1068,7 +1070,7 @@ All args are simply passed thru to `dp-mark-region-or...'"
                              (default "")
                              &allow-other-keys)
   "Get region or... (see `dp-region-or...') and return it as a string.
-If region is not active, default gettor is `symbol-at-point'."
+If region is not active, default gettor is `symbol-near-point'."
   (interactive)
   (let* ((beg-end (apply 'dp-region-or... :bounder 'nada 
                          args-for-dp-region-or...))
@@ -2573,9 +2575,12 @@ It is initialized to #if 0"
 (defun dp-notyet ()
   (interactive)
   (dp-ifdef-region-because "notyet"))
-(defalias 'ny 'dp-notyet)
-(defalias 'not-yet 'dp-notyet)
-(defalias 'later 'dp-notyet)
+(dp-defaliases 'notyet 'not-yet 'later 'ny 'dp-notyet)
+
+(defun dp-maybe-later ()
+  (interactive)
+  (dp-ifdef-region-because "maybe_later"))
+(dp-defaliases 'maybe 'possibly 'consider 'maybe-later 'dp-maybe-later)
 
 (defun dp-io-for-now ()
   (interactive)
@@ -2691,6 +2696,11 @@ XXX-ED tells us why, e.g. `wanted' `needed', etc."
   (interactive)
   (dp-is-this-code-*-ed "used"))
 (defalias 'used 'dp-is-this-code-used)
+
+(defun dp-c-mark-current-token ()
+  (interactive "_")
+  (dp-activate-mark)
+  (dp-c-beginning-of-current-token))
 
 (defun dp-c-mark-statement ()
   (interactive)
@@ -3602,12 +3612,20 @@ Otherwise, the sequence begins at \(point-min) and ends at \(point-max)."
 	  (narrow-to-region (point) (mark)))
       (let* ((filename (upcase (file-relative-name (buffer-file-name))))
 	     (def-name (concat filename "_INCLUDED"))
-	     comment-text)
+	     comment-text
+             ifdef-start)
 	(goto-char (point-min))
+        ;; Skip past any header comments. In particular the mode comment:
+        ;; // -*- mode: C++; c-file-style: "intel-c-style" -*- 
+        (while (and (dp-in-a-c*-comment)
+                    (= 0 (forward-line 1)))
+          )
+        (beginning-of-line)
+        (setq ifdef-start (point))
 	(insert def-name "\n")
 	(insert def-name "\n\n")
-	(dp-c-namify-region (point-min) (point) 'say-dot)
-	(goto-char (point-min))
+	(dp-c-namify-region ifdef-start (point) 'say-dot)
+	(goto-char ifdef-start)
 	(setq comment-text
 	      (if dont-comment-endif-p
 		  ""
@@ -4159,7 +4177,7 @@ Leaves region active."
                                 (sloppy-p nil)
                                 (msg "XXX") 
                                 (prefix "!<@todo")
-                                (sep-char " ")
+                                (sep-char "")
                                 (remain-@-end-point-p t))
   "Indent for comment, \\[indent-for-comment], and append a PREFIX and MSG.
 Add the strings immediately after the mode's default comment start.
@@ -10109,16 +10127,24 @@ is done.")
     ;; Lower point is arglist-cont
     ;; upper, got to by dp-c-beginning-of-statement, is topmost intro.
     ;; We'll need something else to say if we've gone too far.
-    ;; Can't remember exactly what case the change fixed.
+    ;; Fixed this case. In class. Don't know if it's a problem outside.
+    ;;    void pmsg_start_seq_sync(
+    ;;-!-     FTCI_message_t* response,
+    ;;    {
+    ;; M-ret packs waaaay too much junk.
     ;; !<@todo XXX 
     ;; This seems wrong in too many places. I'm removing it and will look for
     ;; a more specific fix to the original problem.
-    ;;; ???(setq syntactic-region (dp-c-get-syntactic-region))
-    (setq old-point (point))
+    ;; at this time: 2012-03-08T12:00:27 
+    ;; It seems like this is a problem when we move into a new region *after*
+    ;; point. Lets try adding that condition.
+    ;;(setq syntactic-region (dp-c-get-syntactic-region))
+    ;;(setq old-point (point))
     (dp-c-beginning-of-statement)
-;;;;; ???;     (unless (equal syntactic-region (dp-c-get-syntactic-region))
-;;;;; ???;       (goto-char old-point)
-;;;;; ???;       (return-from dp-c-format-func-decl nil))
+    ;;(unless (or (equal syntactic-region (dp-c-get-syntactic-region))
+    ;;            (<= (point) old-point))
+    ;;  (goto-char old-point)
+    ;;  (return-from dp-c-format-func-decl nil))
     (beginning-of-line)
     (setq decl-bounds (dp-c-flatten-func-decl))
     (unless decl-bounds
@@ -14417,6 +14443,16 @@ Clumsy but effective method."
       do
       (dp-op-other-window win-num 'end-of-buffer)
       (incf win-num))))
+
+;; This was pulled out of `dp-c*-add-extra-faces' where it was used by
+;; `dp-save-orig-n-set-new' as the function to call to add new font lock 
+;; elements. It may be useful in other circumstances, hence the extraction.
+(defun dp-append-to-list-symbol (save-sym &rest append-arg)
+  "Append \(car APPEND-ARG) to the value of save sym.
+The APPEND-ARG is a list wrapped around the real list to append."
+  (interactive)
+  (append (symbol-value save-sym)
+          (car append-arg)))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;; @todo Write a loop which advises functions with simple push go back

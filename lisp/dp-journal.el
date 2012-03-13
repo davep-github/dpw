@@ -239,7 +239,8 @@ This way we can get alternating colors on journal mode structure in the text:
    (cons "^[ 	]*\\+\\+ .*$" 'dp-journal-medium-attention-face)
    (cons "^[ 	]*\\+ .*$" 'dp-journal-low-attention-face)
    ;; e.g. (fyi: I have a eg --> e.g. abbrev)
-   (cons "^[ 	]*[Ee]\\.?[Gg]\\.? .*$" 'dp-journal-high-example-face)
+   (cons "^[ 	]*[Ee]\\.?[Gg][.:]?\\(\\s-+\\|:\\).*$" 
+         'dp-journal-high-example-face)
    ;; n.b. (fyi: I have an abbrev for nb --> N.B.)
    (cons "^[ 	]*[nN]\\.?[Bb]\\.? .*$" 'dp-journal-extra-emphasis-face)
 
