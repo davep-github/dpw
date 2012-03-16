@@ -386,6 +386,8 @@
      dp-manual)
     (("ccs" "const char* " "const std::string& ")
      dp-manual)
+    (("bg" "background")
+     dp-manual)
     (("phr" "Prop_handler_ret_t")
      dp-manual)))
 ;; We could just use the non-void-ness of dp-common-abbrevs, but I

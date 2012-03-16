@@ -150,7 +150,7 @@ if __name__ == "__main__":
     pipe_stream = def_pipe_stream
     grand_total_p = True
     openMode = 'w'
-    outputStream = None
+    outputStreams = []
 
     # tick_interval, increment=1, init_string="counting: ", comma=", ",
     # init_count=0, tick_char
@@ -191,8 +191,8 @@ if __name__ == "__main__":
         else:
             raise RuntimeError("No action for option>%s<" % (o,))
 
-    if args:
-        outputStream = open(args[0], openMode)
+    for a in args:
+        outputStreams.append(open(a, openMode))
 
     #!<@todo Check for twiddle ticker request and handle that.
     #print "ctor_keywords:", ctor_keywords
@@ -202,7 +202,7 @@ if __name__ == "__main__":
 
     #if ctor_keywords.get("twiddle_chars", False) != False:
     #    ctor_keywords["init_string"] = ""
-    #el
+    #
     if ctor_keywords.get("init_string", False) == False:
         if char_wise_p:
             ctor_keywords["init_string"] = "Counting chars: "
@@ -225,8 +225,10 @@ if __name__ == "__main__":
 	if not l:
             ticker.fini()
             break
-        if pipe_mode_p: pipe_stream.write(l)
-        if outputStream: outputStream.write(l)
+        if pipe_mode_p:
+            pipe_stream.write(l)
+        for o in outputStreams:
+            o.write(l)
         if char_wise_p:
             # Iterate for each char in the line.
             for x in xrange(len(l)):
