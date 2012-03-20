@@ -1086,6 +1086,9 @@ Will miss many cases and do it in comments, too. "
             (save-excursion
               (dp-c-de-capitalize-symbol))))))))
 
+(dp-defaliases 'dp-kill-camel 'dp-fix-symbol 'kill-camel 'kamel 
+               'dpkc 'dp-c-camel-to-classic)
+
 (defvar dp-<type>*-regexp-memo nil)
 (defun dp-<type>*-regexp ()
   (setq dp-<type>*-regexp-memo

@@ -166,6 +166,15 @@ prompt.  We don't want to stomp on them.")
       (dp-clr-shell0)
     (message "Must be in a shell buffer to use clsx.")))
   
+(defun clsn ())
+  (if (dp-shell-buffer-p)
+      (dp-clr-shell0 :save-contents-p nil)
+    (message "Must be in a shell buffer to use clsn.")))
+
+(defun clsy ())
+  (if (dp-shell-buffer-p)
+      (dp-clr-shell0 :save-contents-p t)
+    (message "Must be in a shell buffer to use clsy.")))
 
 (defcustom dp-shell-magic-ls-pattern 
   "^[ \t]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\(?:[ \t]*\\)\\(.*\\)$"
@@ -1624,20 +1633,24 @@ first file that is `dp-file-readable-p' is used.  Also sets
   ;; The shell mode underlying the ssh mode handle the history reading.
   (dp-specialized-shell-setup nil 'bind-enter))
 
-(defun dp-clr-shell0 (&optional dont-fake-cmd dont-preserve-input)
+(defun* dp-clr-shell0 (&key (fake-cmd-p t)
+                       (preserve-input t)
+                       (save-contents-p 'ask))
   "Clear shell window and remembered command positions."
   (interactive)
   (setq dp-shell-last-parse-start 0
 	dp-shell-last-parse-end 0)
   (let* ((cur-input (buffer-substring (dp-current-pmark-pos) (point-max))))
-    (when (y-or-n-p "Save contents first? ")
+    (when (or (and (eq save-contents-p 'ask)
+                   (y-or-n-p "Save contents first? "))
+              save-contents-p)
       (dp-save-shell-buffer))
     (erase-buffer)
-    (unless dont-fake-cmd
-      (funcall dp-shell-type-enter-func 
+    (when fake-cmd-p
+      (funcall dp-shell-type-enter-func
 	       (dp-shell-buffer-type (buffer-name)))) ;; get us a prompt
     (dp-shell-init-last-cmds)
-    (unless dont-preserve-input
+    (when preserve-input-p
       (dp-end-of-buffer)
       (insert cur-input))
     ))
@@ -1647,7 +1660,9 @@ first file that is `dp-file-readable-p' is used.  Also sets
   :group 'dp-vars
   :type 'integer)
 
-(defun dp-clr-shell (really-clear-p &optional dont-fake-cmd dont-preserve-input)
+(defun* dp-clr-shell (really-clear-p 
+                      &optional dont-fake-cmd dont-preserve-input
+                      (save-contents-p 'ask))
   (interactive "P")
   (if (or really-clear-p
           (eq last-command 'dp-clr-shell)
@@ -1655,7 +1670,9 @@ first file that is `dp-file-readable-p' is used.  Also sets
           ;; 2 clear commands in a row.  so use only prefix arg to wipe
           ;; history
           nil)                          ;see if I like it.
-      (dp-clr-shell0 dont-fake-cmd dont-preserve-input)
+      (dp-clr-shell0 :fake-cmd-p (not dont-fake-cmd) 
+                     :preserve-input-p (not dont-preserve-input)
+                     :save-contents-p save-contents-p)
     (let (point
           (old-point-max (point-max)))
       ;; See if we're over the max.

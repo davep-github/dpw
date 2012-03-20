@@ -111,6 +111,7 @@ So: \(let* \(\(abbrev-sublist \(car this-list-item))
 	 (and (listp val)
 	      (> (length val) 0)))))
 
+;; Why did I do this? It's not used.
 (defvar dp-abbrev-sym-table-name-map '() 
   "Alist for mapping a symbol (as from a dp-style-abbrev) identifying an 
 abbrev-table to an abbrev-table name.")
@@ -120,12 +121,17 @@ abbrev-table to an abbrev-table name.")
   (or (assoc name-or-sym dp-abbrev-sym-table-name-map)
       (format name-formatter name-or-sym)))
   
+(defun dp-abbrev-mk-mode-abbrev-table-name ()
+  (dp-abbrev-mk-abbrev-table-name "dp"
+                                  (format "%%s-%s-abbrev-table" major-mode)))
 ;;
 ;; @todo
 ;; property: 'upcase. If non-nil --> add all uppercase version as expansion.
 ;; e.g. (("eof" "end of file") '(table-name dp-manual upcase t)) results in
 ;; an expansion list: ("end of-file" "EOF")
 ;; And so for downcase
+;; And, as usual, allow an expansion val to be a function returning an abbrev
+;; or nil.
 (defun dp-redefine-abbrev (dp-style-abbrev &optional force-clear-p)
   "Define abbrevs into list\(s) given in DP-STYLE-ABBREV."
   (let* ((abbrev+expansions (car dp-style-abbrev))
@@ -515,18 +521,21 @@ Tried in order given and first match wins."
       ;;(undo-boundary)                     ; doesn't work.
       (let* ((tables (cond
                       ((null tables) dp-expand-abbrev-default-tables)
-                      ;; Check for symbol after `null' above since nil is
+                      ;; Check `symbolp' after `null' above since nil is
                       ;; a symbol.
                       ;; "Real" nil vs nil --> emacs' defaults
                       ((symbolp tables) nil)
                       (t tables)))
              ;; Terrible function name...  it grabs the "word" near point,
              ;; hopefully exactly like `expand-abbrev' (a subr) does.
-             (abbrev-name (abbrev-string-to-be-defined nil)))
+             (abbrev-name (abbrev-string-to-be-defined nil))
+             (mode-table (intern-soft (dp-abbrev-mk-mode-abbrev-table-name))))
         ;; Set `global-abbrev-table' in the let?
         ;; expand-abbrev uses some hard coded junk.
         ;; It may even reference the global table in such a way as to bypass a
         ;; shadowing definition in a let.
+        (when mode-table
+          (setq tables (cons (symbol-value mode-table) tables)))
         (dolist (table tables)
           (let* ((expansion0 (abbrev-expansion abbrev-name table))
                  ;; This read turns a "normal" abbrev into a symbol.  The
@@ -652,8 +661,7 @@ Otherwise don't write it."
 (defun dp-redefine-abbrev-table (a-dp-style-abbrev-list)
   ;; "Parameter"... It needs to exist across all calls made by the `mapc'.
   (let ((dp-reinitialized-abbrev-table-alist '()))
-    (mapc 'dp-redefine-abbrev a-dp-style-abbrev-list)
-    (dmessage "A hook upon which to hang a breakpoint.")))
+    (mapc 'dp-redefine-abbrev a-dp-style-abbrev-list)))
 
 (dp-deflocal dp-tmp-manual-abbrev-table (make-abbrev-table)
   "These don't ever get saved to a file and are buffer local.")

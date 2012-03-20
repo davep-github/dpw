@@ -66,7 +66,7 @@ See `dp-parenthesize-region-paren-list'")
 
 (defun dp-makefile-mode-find-matching-paren ()
   "Find matching makefile conditional (e.g. ifdef/endif)."
-  (interactive)
+  (interactive "_")
   (let* ((hif-ifndef-regexp "^[.]?ifndef")
 	 (hif-ifx-regexp "^[.]?if\\(n?\\(def\\|eq\\)\\)?[ \t]*")
 	 (hif-else-regexp "^[.]?else")
@@ -75,5 +75,6 @@ See `dp-parenthesize-region-paren-list'")
 	  (concat hif-ifx-regexp "\\|" 
 		  hif-else-regexp "\\|" hif-endif-regexp)))
     (dp-find-matching-paren dp-makefile-mode-ifx-re-alist)))
+(put 'dp-makefile-mode-find-matching-paren 'isearch-command t)
 
 (provide 'dp-makefile-mode)

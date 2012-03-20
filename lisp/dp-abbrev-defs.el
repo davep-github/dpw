@@ -1,28 +1,20 @@
-(define-abbrev-table 'c-mode-abbrev-table 
-  '(
-    ))
+;;
+;; see dp-common-abbrevs.el
+;;
+(defvar dp-abbrev-mode-alist
+  '((c++-mode  
+     ((("vb" "virtual bool")
+       dp-manual)
+      (("vv" "virtual void" "virtual")
+       dp-manual)))
 
-(define-abbrev-table 'text-mode-abbrev-table 
-  '(
-    ))
+    (python-mode
+     ((("f" "for") dp-manual)
+      (("s" "self") dp-manual)
+      (("w" "while") dp-manual)
+      (("d" "def") dp-manual)
+      (("p" "print") dp-manual)))
+    
+    )
+)
 
-(define-abbrev-table 'lisp-mode-abbrev-table 
-  '(
-    ))               
-
-(define-abbrev-table 'fundamental-mode-abbrev-table 
-  '(
-    ))
-
-(define-abbrev-table 'global-abbrev-table   
-  (append
-   ;;; (dp-abbrevs) should handle this. dp-common-abbrevs
-   ))
-
-(define-abbrev-table 'dp-email-composition-abbrevs 
-  '(
-    ))
-
-(define-abbrev-table 'dp-journal-mode-abbrev-table 
-  '(
-   ))

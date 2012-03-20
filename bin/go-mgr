@@ -230,14 +230,14 @@ echo 1>&2 "Check len and offer to clear \`e' flag if too short."
 	    shift
 	    ;;	
 
-	-g)
+	-G)
 	    go_file
 	    shift
 	    ;;
 
         -h) shift; grep_for_pwdname;;
 
-	-G)
+	-g)
             shift
 	    egrep "$@" $GOPATH_WITH_SPACES /dev/null
 	    exit $?

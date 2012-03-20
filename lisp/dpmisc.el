@@ -2861,6 +2861,7 @@ Also, it will move backwards into a closed class (ie has a };)."
         (re-search-backward "//" (line-beginning-position) t)))))
 
 (defun dp-in-a-c-/**/-comment (&optional syntax-el)
+  "A rose is rose."
   (and (dp-in-a-c*-comment nil syntax-el)
        (not (is-c++-one-line-comment))))
 
@@ -4176,7 +4177,7 @@ Leaves region active."
 (defun* dp-insert-for-comment+ (&optional 
                                 (sloppy-p nil)
                                 (msg "XXX") 
-                                (prefix "!<@todo")
+                                (prefix "!<@todo ")
                                 (sep-char "")
                                 (remain-@-end-point-p t))
   "Indent for comment, \\[indent-for-comment], and append a PREFIX and MSG.
@@ -4188,7 +4189,8 @@ PREFIX: Doxygen comment indicator \"!<@\"."
   (let ((msg (concat prefix sep-char msg))
         (clean-up-p (not sloppy-p))
         end-point)
-    (if (dp-in-a-string)
+    (if (or (dp-in-a-string)
+            (dp-in-a-c-/**/-comment))
         (insert msg " ")
       (save-excursion
         ;; Use the function bound to the key to make this DTRT in each mode.
@@ -5070,7 +5072,7 @@ Like adding this while doing something else that came from somewhere else...")
 If ARG is '- discard the top entry.
 Otherwise, if ARG is non-nil, move forward thru the ring.
 !<@todo make C-u0, C-0 prefix go forward and discard."
-  (interactive "P")
+  (interactive "_P")
   (if (ring-empty-p dp-go-back-ring)
       (message "Go back ring is empty.")
     (if (and arg
@@ -5128,6 +5130,7 @@ Otherwise, if ARG is non-nil, move forward thru the ring.
             (setq pop-it (y-or-n-p "Discard marker?"))))
         (if pop-it
             (dp-pop-go-back-ring 0))))))
+(put 'dp-pop-go-back 'isearch-command t)
 
 (defun dp-go-fwd ()
   (interactive)
@@ -8009,7 +8012,8 @@ Else `(apply pred pred-args)'."
                                 nil t))
     (dp-set-recently-killed-file-list tmp)))
 
-(dp-defaliases 'dp-resurrect 'raise-dead 'resurrect 'dp-revisit-killed-file)
+(dp-defaliases 'dp-resurrect 'dprd 'raise-dead 'resurrect 
+               'dp-revisit-killed-file)
 
 
 (defun dp-kill-this-buffer ()
@@ -10366,28 +10370,74 @@ A bookmark, in this context, is:
 Also used by split window advice to determine when to force a horizontal
 split.")
 
+;; I cannot believe I really need to write this. I must've missed it.
+(defun dp-first-by-pred (pred list &rest pred-args)
+  (while (not (apply pred (car list) pred-args))
+    (setq list (cdr list)))
+  list)
+
+
+(defun dp-list-subtract (l1 l2)
+  "Return L1 with all elements of L2 removed."
+  (loop for b in l1
+    when (not (memq b l2))
+    collect b))
+
+(defun dp-all-window-buffers (&optional win-list frame first-window)
+  (mapcar (lambda (win)
+            (window-buffer win))
+          (window-list frame 'no-minibuffers first-window)))
+
+(defun dp-non-window-buffers (&optional buf-list win-list)
+  (setq-ifnil buf-list (buffer-list)
+              win-list (dp-all-window-buffers))
+  (dp-list-subtract buf-list win-list))
+
+
+(defun* dp-distribute-buffers (priority-buffers
+                               &key buf-list win-list frame first-window
+                               skip-these-windows)
+  "Distribute the buffers, 1 per window until no more buffers."
+  (setq-ifnil buf-list (buffer-list)
+              win-list (window-list frame 'no-minibuffers
+                                    first-window))
+  (let* ((buf-list (dp-list-subtract buf-list priority-buffers))
+         (all-buffers (append priority-buffers buf-list)))
+    (loop for w in win-list
+      until (not all-buffers)
+      unless (memq w skip-these-windows)
+      do (let ((good-bufs (dp-first-by-pred
+                           (lambda (b)
+                             (and b
+                                  (not (memq b (dp-all-window-buffers)))
+                                  (not (dp-minibuffer-p b))))
+                           all-buffers)))
+           (when good-bufs
+             (set-window-buffer w (car good-bufs)))
+           (setq all-buffers (cdr good-bufs))))))
+
 (defun* dp-layout-windows (op-list &optional other-win-arg 
                            (delete-other-windows-p t))
   "Layout windows trying to keep as many buffers visible as possible.
 !<@todo XXX MAKE SURE THE CURSOR STAYS IN THE SAME PLACE."
-  (when delete-other-windows-p
-    (delete-other-windows))
-  
-  (let ((win-list (window-list))
-        (buf-list (buffer-list)))
-    (loop for op in op-list
-      do (let (op-args)
-           (if (listp op)
-             (setq op-args (cdr op)
-                   op (car op)))
-           (apply op op-args)))
-    (when other-win-arg
-      (other-window other-win-arg))
-    ;; !<@todo XXX go through win-list until out of its windows, selecting
-    ;; new buffers for the rest of the windows.
-    ;; !<@todo XXX or out of existing windows: just stop.
-    (dmessage "restore window contents as much as possible")
-    ))
+  ;; Save the original list of buffers displayed in windows.
+  (let ((original-window-buffers (dp-all-window-buffers)))
+    (when delete-other-windows-p
+      (delete-other-windows))
+    ;; Set up the new window pattern.
+    (let ((skip-these-windows (list (get-buffer-window (current-buffer))))
+          (win-list (window-list))
+          (buf-list (buffer-list)))
+      (loop for op in op-list
+        do (let (op-args)
+             (unless (listp op)
+               (setq op (list op)))
+             (dp-aif (op)
+               (eval op))))
+      (when other-win-arg
+        (other-window other-win-arg))
+      (dp-distribute-buffers original-window-buffers
+                             :skip-these-windows skip-these-windows))))
 
 (defun dp-1-window-normal-width ()
   (interactive)
