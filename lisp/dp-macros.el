@@ -290,6 +290,8 @@ NEWDEF is last to match the order of args to `defalias'."
         (setq new-elem `(defalias ,arg ,newdef))
         (setq bunch-of-defalias-calls (cons new-elem bunch-of-defalias-calls)))
       (cons 'progn (reverse bunch-of-defalias-calls))))
+  (put 'dp-defaliases 'lisp-indent-function
+       (get 'defalias 'lisp-indent-function))
   
   (defmacro dp-callable0 (vsym)
     `(and 

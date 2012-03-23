@@ -671,19 +671,21 @@ the fiddly bits.")
       ;; Go back, just in case we moved.  Just go w/o seeing if we moved.
       (goto-char p))))
                       
-(defun dp-c++-get-class-name ()
+(defun dp-c++-get-class-name (&optional kill-name-p)
   "Get the name of the class we're in and put in echo area."
-  (interactive)
+  (interactive "P")
   (save-excursion
     (dp-c-beginning-of-defun 1 'real-bof)
     (beginning-of-line)
     (if (looking-at "^\\s-*template\\s-*<")
         (forward-line 1))
-    (if (re-search-forward (concat "^\\s-*" 
-                                   (dp-mk-c++-symbol-regexp "struct\\|class")
-                                   "\\s-*\\(\\S-+\\)\\s-*")
-                           (line-end-position) t)
-        (cons (match-string 1) (match-string 2)))))
+    (when (re-search-forward (concat "^\\s-*"
+                                     (dp-mk-c++-symbol-regexp "struct\\|class")
+                                     "\\s-*\\(\\S-+\\)\\s-*")
+                             (line-end-position) t)
+      (when kill-name-p
+        (kill-new (match-string 2)))
+      (cons (match-string 1) (match-string 2)))))
 
 (defun dp-c-show-class-name ()
   "Find the class' name and display it."

@@ -75,7 +75,7 @@ AND_INDEX="and index"
 : ${etags_p:=t}
 : ${tree_tagger:=extagtree}
 : ${DEF_SYSTEM_INCLUDES:=/usr/include}
-: ${finder_opts:=}
+: ${finder_opts:=} # Bad design: this is a parameter to the source code finder.
 export finder_opts
 
 SYSTEM_INCLUDES=

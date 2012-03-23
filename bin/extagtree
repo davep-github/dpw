@@ -178,6 +178,7 @@ else
     py_props="$py1 $py2"
 fi
 
+# List of directories in which to look for source files.
 argses="$@"
 : ${argses:="."}
 

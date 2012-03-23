@@ -45,6 +45,10 @@ FILES_TO_FILTER=()
 : ${EXCLUDE_PAT:='.*'}
 ### !!! THESE ARE REGEXPs, NOT GLOBS! * is not .* !!!!
 VC_EXCLUDES='-e /^.*\/?(\.svn|CVS|RCS|\.4D|\.git|\.hg)\/?.*/d'
+
+echo 1>&2 "Read various ignore files like, .(cvs|git)ignore, ~/.gitexcludes,
+./.git/info/exclude, etc, and make a sed expression to ignore them.
+NB: most are globs, not regexps."
 : ${EXCLUDES:='-e /(doxygen|html|doc|dist-build|retired|,.*|HIDE.*)/d'}
 : ${files_to_cat=""}
 : ${only_cat_files=""}
@@ -102,9 +106,7 @@ EXCLUDED_FILES_FILE_OPT=
     EXCLUDED_FILES_FILE_OPT="-c $EXCLUDED_FILES_FILE"
 }
 
-x=/yokel/yokel/home/davep/work-is-play/investigation1/prop-sets/Makefile
-echo "$x" | egrep -i -e "$FILES_OF_INTEREST"
-[ -z "${FILES_TO_FILTER[@]}" ] && {
+[ -z "${FILES_TO_FILTER[*]}" ] && {
     FILES_TO_FILTER=('.*')
 }
 echo 1>&2 "FtF>${FILES_TO_FILTER[@]}<"
@@ -131,4 +133,3 @@ set -x
        $follow_sym_links $dirs | \
        tee /dev/null
 } | filter | tee $v_file
-

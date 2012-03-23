@@ -276,7 +276,7 @@ list in my DP-STYLE-ABBREV format (q.v.)"
 
 (defvar dp-num-dp-aliases-tried 0)
 
-;; Pavlovian de-programming.
+;; Operant conditioning.
 (defun dp-aliases (&rest rest)
   (interactive)
   (message (format "Use dp-abbrevs%s"
@@ -339,11 +339,8 @@ list in my DP-STYLE-ABBREV format (q.v.)"
   (interactive)
   (funcall 'dp-edit-common-abbrevs-file abbrev-file other-window-p))
 
-(defalias 'eca0 'dp-edit-common-abbrevs-file-other-window)
-(defalias 'dca0 'dp-edit-common-abbrevs-file-other-window)
-(defalias 'edpa0 'dp-edit-common-abbrevs-file-other-window)
-(defalias 'edpca0 'dp-edit-common-abbrevs-file-other-window)
-(defalias 'ecaf0 'dp-edit-common-abbrevs-file-other-window)
+(dp-defaliases 'eca0 'dca0 'edpa0 'edpca0 'ecaf0 'aca 'nca
+               'dp-edit-common-abbrevs-file-other-window)
 
 (defun dp-edit-go-file (&optional go-file other-window-p)
   "Edit GO-FILE, the most specific .go file or prompt for one, in this order."
@@ -529,12 +526,14 @@ Tried in order given and first match wins."
              ;; Terrible function name...  it grabs the "word" near point,
              ;; hopefully exactly like `expand-abbrev' (a subr) does.
              (abbrev-name (abbrev-string-to-be-defined nil))
+             ;; Check for a mode specific abbrev table.
              (mode-table (intern-soft (dp-abbrev-mk-mode-abbrev-table-name))))
         ;; Set `global-abbrev-table' in the let?
         ;; expand-abbrev uses some hard coded junk.
         ;; It may even reference the global table in such a way as to bypass a
         ;; shadowing definition in a let.
         (when mode-table
+          ;; Put the mode specific table at the front of the list.
           (setq tables (cons (symbol-value mode-table) tables)))
         (dolist (table tables)
           (let* ((expansion0 (abbrev-expansion abbrev-name table))
@@ -553,9 +552,10 @@ Tried in order given and first match wins."
               (setq dp-expand-abbrev-state 
                     (and is-list-p
                          (setq expansion (cons abbrev-name expansion))
-                         (make-dp-expand-abbrev-state :expansions expansion
-                                                      :current (cdr expansion)
-                                                      :expansion-len (length exp))))
+                         (make-dp-expand-abbrev-state 
+                          :expansions expansion
+                          :current (cdr expansion)
+                          :expansion-len (length exp))))
               (return (list abbrev-name expansion table))))))))))
    
 (defun dp-expand-apprev (abbrev-symbol)

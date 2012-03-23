@@ -60,15 +60,36 @@
 (vc-load-vc-hooks)  ; This is being added to the Tools->Version Control menu.
 
 ;; May want this in a project specific .el
-(defalias 'dp-poc-layout
+(defalias 'dp-poc-layout1
   (read-kbd-macro 
-   (concat "M-x 2x1 RET C-2 C-z <C-next> <M-down> C-1 C-z" " <C-next>"
+   (concat "M-x sbd RET C-o"          ; One window, no shell buffers showing.
+           " M-x 2x1 RET C-2 C-z <C-next> <M-down> C-1 C-z" " <C-next>"
            " <M-down> C-0 C-z <C-next>")))
 
 (defalias 'dp-poc-layout2
   (read-kbd-macro 
    (concat "M-x 2x2 RET C-2 C-z <C-next> <M-down> C-1 C-z" " <C-next>"
            " <M-down> C-3 C-z <C-next> <M-down> C-0 C-z <C-next>")))
+
+(defalias 'dp-poc-layout
+  (read-kbd-macro 
+   (concat "C-0 C-z M-- C-1 C-z M-- C-2 C-z M-- M-x 2+1 RET C-2 C-z"
+           " <M-down> C-1 C-z <M-down> C-0 C-z")))
+
+(defvar dp-poc-layout-format-string
+  (concat "C-0 C-z M-- C-1 C-z M-- C-2 C-z M-- M-x %s RET C-2 C-z"
+          " <M-%s> C-1 C-z <M-%s> C-0 C-z")
+"Common layout w/ %s for specific 3x window config.")
+
+(defalias 'dp-poc-layout-2+1
+  (read-kbd-macro 
+   (format dp-poc-layout-format-string "2+1" "down" "down")))
+
+;; *(&!^@))_!!-ing bs. The window order is different.
+(defalias 'dp-poc-layout-2/1
+  (read-kbd-macro 
+   (format dp-poc-layout-format-string "2/1" "up" "up")))
+  
 
 ;; I've been saving this window config in register ?k
 ;; Hence C-jk, hence jk.
@@ -77,7 +98,9 @@
 ;; -------------+ shell 0 (SA)
 ;; shell 1 (CA) |
 ;;
-(defalias 'jk 'dp-poc-layout)
+(defalias 'jk 'dp-poc-layout-2+1)
+(defalias 'jk+ 'dp-poc-layout-2+1)
+(defalias 'jk/ 'dp-poc-layout-2/1)
 
 ;; For 2x SAs
 ;; 2 + 2:

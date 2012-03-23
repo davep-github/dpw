@@ -1,8 +1,12 @@
 ;;;
-;;; 'global abbrevs are for automatic expansion, e.g. speling erors.
+;;; 'global abbrevs are for automatic expansion, e.g. common,
+;;; unambiguous speling erors like: teh thier.
+;;; Another possibility are unambiguous abbreviations:
+;;; eg -> e.g., and some capitalization fixes: khz -> KHz.
 ;;; 'global implies `global-abbrev-table' and abbrevs in that table are
-;;; auto expanded in buffers that request it.  I currently have too many things in there that are
-;;; expanded annoyingly often, so I need to revisit the table
+;;; auto expanded in buffers that request it.  I currently have too many
+;;; things in there that are expanded annoyingly often, so I need to revisit
+;;; the table
 ;;; ASSIGNMENTS.
 ;;; 'manual abbrevs are expected to be expanded by hand.
 ;;; @ todo... add mode to "properties" and then add to table for that mode.
@@ -29,7 +33,8 @@
 ;;;         ;; `dp-expand-abbrev'
 ;;;         [put props on table variable]
 ;;;
-;;; Come on!  There needs to be the need/ability to use eval'able forms somewhere!
+;;; Come on!  There needs to be the need/ability to use eval'able forms
+;;; somewhere!
 ;;; 
 ;;; !<@todo ??? Modify data structures to allow a way to add suffixes
 ;;; programmatically. Eg t for a space? 's for pluralization?
@@ -40,8 +45,13 @@
     (("plisttest" "a test of the plist type table.")
      (table-name dp-manual tmp t)
      (table-name dp-plists))
-    (("onlyinc" "ayup")
+    
+    ;; !<@todo XXX Determine final resting place of mode specific abbrevs.
+    (("cs" "c_str()")
      (table-name dp-c++-mode))
+    (("onlyinCmode" "ayup")
+     (table-name dp-c++-mode))
+    
     (("nn" "non-nil")
      dp-manual)
     (("wrt" "WRT" "with respect to")
@@ -59,7 +69,7 @@
      dp-manual global)
     (("tho" "though" "although")
      dp-manual global)
-    ((("dap" "dp" "DAP" "DP") "David A. Panariti")
+    ((("dap" "dp" "DAP" "DP" "davep") "David A. Panariti")
      dp-manual)
     (("stl" "STL")
      dp-manual)
@@ -67,7 +77,7 @@
      dp-manual)
     (("altho" "although")
      dp-manual global)
-    (("kb" "keyboard" "KB")
+    (("kb" "keyboard" "KB")             ; Works for kilobyte and keyboard.
      dp-manual)
     (("eg" "e.g.")
      dp-manual)
@@ -88,6 +98,8 @@
       "appointments" "appointment")
      dp-manual)
     (("ok" "OK")
+     dp-manual global)
+    (("wtf" "WTF")
      dp-manual global)
     (("fo" "of")
      dp-manual global)
@@ -259,16 +271,16 @@
      dp-manual)
     (("ISTR" "I seem to recall")
      dp-manual)
-    (("ding" "ba DooM!")
+    (("ding" "ba DooM!")                ; WTF?
      dp-manual)
     ((("STFU" "stfu")
-      "please be quiet" "hush" "hushup")
+      "please be quiet" "hush" "hushup" "shhhh")
      dp-manual)
     (("goto" "go to")
      dp-manual)
     (("ww" "wall wart")
      dp-manual)
-    (("flsit" "flist")
+    (("flsit" "flist")                  ; Historical
      dp-manual)
     (("dpdx" "DP_DASH_X=t")
      dp-manual)
@@ -310,6 +322,8 @@
      dp-manual global)
     (("v" "virtual")
      dp-manual global)
+    (("src" "source" "sources")
+     dp-manual)
     ((("hie" "hier")
       "hierarchy")
      dp-manual)
@@ -334,9 +348,11 @@
     (("med" "medication" "medications")
      dp-manual)
     ((("imo" "IMO")
-      "in my opinion" "In my opinion" "im my humble opinion" "In my humble opinion"))
+      "in my opinion" "In my opinion" "im my humble opinion" 
+      "In my humble opinion"))
     ((("imho" "IMHO")
-      "im my humble opinion" "In my humble opinion" "in my opinion" "In my opinion")
+      "im my humble opinion" "In my humble opinion" "in my opinion" 
+      "In my opinion")
      dp-manual)
     (("PPT" "power of positive thinking")
      dp-manual)
@@ -361,8 +377,12 @@
     ((("sand" "land")
       "set and" "logical and" "intersection")
      dp-manual)
-    ((("srcs chc sf") 
-      "*.[ch]*" "*.[ch]")
+    ((("sf" "srcs" "chc")
+      "*.[ch]*")
+     dp-manual)
+    (("arg" "argument" "arguments")
+     dp-manual)
+    (("args" "arguments" "argument")
      dp-manual)
     (("te" "there exists" "-]")
      dp-manual)
@@ -391,6 +411,8 @@
     (("ccs" "const char* " "const std::string& ")
      dp-manual)
     (("bg" "background")
+     dp-manual)
+    (("ascii" "ASCII")
      dp-manual)
     (("phr" "Prop_handler_ret_t")
      dp-manual)))

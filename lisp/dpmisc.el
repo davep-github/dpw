@@ -38,6 +38,15 @@
    (concat "C-a TAB @echo SPC \" M-a C-s SPC RET <left> M-o M-k > $ M-9 M-y"
            " C-e <\" <down> C-a")))
 
+;; Convert a Makefile variable into a line that displays it.
+;; ^MISC_PROG_NAMES$
+;; [ tab ]@echo "MISC_PROGS>$(MISC_PROGS)<"
+(defalias 'mak-=-to-echo1
+  (read-kbd-macro 
+   (concat "C-a TAB C-a <M-backspace> TAB @echo SPC \" M-a C-e M-o > $ M-9 M-y"
+           " C-e <\" <right>")))
+
+
 (defalias 'dp-to-knr-open-brace
   (read-kbd-macro "ESC C-s ^ \\s- +{ RET <up> M-j"))
 
@@ -45,8 +54,8 @@
   (read-kbd-macro 
    (concat "C-a M-a C-s ( <left> M-[ <right> M-C-1 <right> M-o"
            " C-s { <left> M-[ <down> <up> C-a C-s } <left> M-[ M-a"
-           " M-[ 2*<right> M-C-o C-x C-x DEL <up> C-e ; C-x M-b <C-next>"
-           " <up> M-RET RET M-y")))
+           " M-[ 2*<right> M-C-o C-x C-x DEL <up> C-e ; C-x 4 M-b <C-next>"
+           " <up> C-e RET RET M-y")))
 
 ;;;;;;; end of kbd macros ;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2862,7 +2871,8 @@ Also, it will move backwards into a closed class (ie has a };)."
 
 (defun dp-in-a-c-/**/-comment (&optional syntax-el)
   "A rose is rose."
-  (and (dp-in-a-c*-comment nil syntax-el)
+  (and (dp-in-c)
+       (dp-in-a-c*-comment nil syntax-el)
        (not (is-c++-one-line-comment))))
 
 (defvar dp-c-comment-syntax-list '(comment-intro comment))
