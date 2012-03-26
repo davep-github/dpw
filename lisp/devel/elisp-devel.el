@@ -255,3 +255,102 @@ Monday March 12 2012
                     (dp-end-of-buffer)
                     (dp-point-to-top 1)
                     )))))
+
+========================
+Monday March 26 2012
+--
+
+(re-search-forward dp-ws+newline-regexp+)
+
+(match-beginning 1)
+
+abc                     
+                     
+(setq x "x")
+"x"
+
+(member "x" '("a" "b" "x" "z"))
+("x" "z")
+
+(format "%s%s" 
+                                dp-ws+newline-regexp+-not
+                                (or "[a-j)]" ""))
+"[^ 	
+]+[a-j)]"
+
+"[^ 	
+]+[a-j])"
+
+nil
+
+nil
+
+
+(progn (if (looking-at "[  
+]+[a(s]") (list (match-beginning 0) (match-end 0))))
+(6916 6919)
+};
+
+(progn (if (looking-at "[ 	
+]") ;;+[a-f)]") 
+           (list (match-beginning 0) (match-end 0))))
+nil
+
+
+
+
+
+
+
+(6916 6929)
+       
+"[^ 	\n]+[a-f)]"
+
+
+
+(dp-c-looking-back-at-sans-eos-junk "[;}]")
+nil
+
+
+(defun* dp-c-prev-eol-regexp (&optional regexp initial-eol-p)
+  (interactive)
+  (setq-ifnil regexp dp-ws+newline-regexp+-not)
+  (save-excursion
+    (when initial-eol-p
+      (dp-c-end-of-line))
+    (while
+        ;; Look back for any non-ws chars
+        (if (dp-looking-back-at dp-ws+newline-regexp+-not)
+            ;; Got something. Return nil if it's not what we want.
+            (return-from dp-c-prev-eol-regexp
+              (if (dp-looking-back-at regexp)
+                  (list (match-beginning 0)
+                        (buffer-substring-no-properties (match-beginning 0)
+                                                        (match-end 0)))
+                nil))
+          (previous-line 1)
+          (dp-c-end-of-line)))))
+        
+
+
+(defun dp-next-non-whitespace-char (&optional chars)
+  (save-excursion
+    (let (start (point))
+      (when (looking-at (format "%s%s" 
+                                dp-ws+newline-regexp+
+                                (or chars "")))
+        (list (1- (match-end 0))
+              (buffer-substring-no-properties (1- (match-end 0))
+                                              (match-end 0)))))))
+
+
+(defun dp-prev-non-whitespace-char (&optional chars)
+  (save-excursion
+    (when (dp-looking-back-at (format "%s%s"
+                                      (or chars "")
+                                      dp-ws+newline-regexp+)
+                              'nolimit)
+      (list (match-beginning 0)
+            (buffer-substring-no-properties (match-beginning 0)
+                                            (1+(match-beginning 0)))))))
+

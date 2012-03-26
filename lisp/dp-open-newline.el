@@ -106,15 +106,16 @@
                     ;; Get some match data
                     (when (dp-c-looking-at-struct-decl-p
                            (line-end-position) t)
-                    ;; match string 4 is non-nil when we are part of a
-                    ;; subclassing statement.
-                    (setq t1 (if (match-string 4)
-                                 3
-                               0))
-                      (setq under-score (if (string= "_" (match-string (+ t1 3)))
+                      ;; match string 4 is non-nil when we are part of a
+                      ;; subclassing statement.
+                      (setq t1 (if (match-string 4)
+                                   3
+                                 0))
+                      (setq under-score (if (string= "_" (match-string (+ t1
+                                                                          3)))
                                             ""
                                           "_")
-                            std-suffix-present-p (not 
+                            std-suffix-present-p (not
                                                   (string= (match-string 7) ""))
                             )
                       t))))
@@ -146,6 +147,15 @@
 ;;            ;; Already ends with a semi-colon. Just newline and indent.
 ;;            ((dp-c-looking-back-at-sans-eos-junk ";\\s-*" 'from-eol-p)
 ;;             t)
+
+      
+   ;;;;;;;;;;;;;;;;;
+           ;; Find some places where anything special is clearly not
+           ;; desirable, such as after ;, }, etc. Just the basic eol, nl,
+           ;; indent.
+           ((dp-c-prev-eol-regexp "[;}]")
+            (dmessage "Looking back at special action killers.")
+            t)
 
    ;;;;;;;;;;;;;;;;;
            ;; Add new line for current context {comment|backslashed}

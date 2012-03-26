@@ -363,6 +363,27 @@ f11(void)
   return z;                     /* end? */
 }
 
-class blah
+class blah  
+{
+        int x(void)
+        {
+            blah;               // urcz
+        }
+        
+};                              // End of this class.
+
+
+
+class blah2 : public blah_t
+{
+        void yabba();
+};
+
+
+
+        
+        
+        
+
 
   

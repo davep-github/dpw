@@ -58,6 +58,20 @@ a()
                                 // 
     // Make meta-[ push go back.
     // pop if tos == same on meta-[ from same spot?
+
+  a b
+
+  
+  a(b,c,d,     
+
+
+
+
+    
+    
+
+
+      
     
 }
 

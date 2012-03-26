@@ -768,6 +768,26 @@ We are assumed to be in a C-like buffer."
   "Cheesy, but easy regexp to find the beginning of a defun.
 VERY accurate given my indentation style.")
 
+(defun* dp-c-prev-eol-regexp (&optional regexp initial-eol-p)
+  "Look for REGEXP at the end of the first preceding non empty line."
+  (interactive)
+  (setq-ifnil regexp dp-ws+newline-regexp+-not)
+  (save-excursion
+    (when initial-eol-p
+      (dp-c-end-of-line))
+    (while
+        ;; Look back for any non-ws chars
+        (if (dp-looking-back-at dp-ws+newline-regexp+-not)
+            ;; Got something. Return nil if it's not what we want.
+            (return-from dp-c-prev-eol-regexp
+              (if (dp-looking-back-at regexp)
+                  (list (match-beginning 0)
+                        (buffer-substring-no-properties (match-beginning 0)
+                                                        (match-end 0)))
+                nil))
+          (previous-line 1)
+          (dp-c-end-of-line)))))
+
 (defun dp-c-beginning-of-defun (&optional arg real-bof)
   "If preceeding command was `c-end-of-defun' do a go-back.  
 If ARG is C-0, C-u or t then use `c-beginning-of-defun'.  This will call the
@@ -1009,6 +1029,7 @@ Needs to be fixed when subclassing.")
   (re-search-forward dp-c-struct-suffix-regexp limit noerror count buffer))
 
 (defun dp-c-looking-back-at-comma-killers-p ()
+"Look backwards for characters which should never be followed by a comma."
   (dp-looking-back-at "[)(\\\\&|,:;!@#$%^*'{}.]\\s-*"))
 
 (defun dp-c-handle-keyword-lines ())

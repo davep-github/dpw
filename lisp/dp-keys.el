@@ -185,6 +185,7 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(meta ?n)] 'dp-next-error)
 (global-set-key [(meta insert)] 'dp-sel2:paste)
 (global-set-key [(control meta y)] 'dp-sel2:paste)
+(global-set-key [(control meta space)] 'dp-one-space)
 
 ;;; retrain...
 ;;;(global-set-key [(control return)] 'join-line)

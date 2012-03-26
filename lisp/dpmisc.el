@@ -82,6 +82,9 @@
   (null any))
 
 (defun dp-cons-to-list (cons)
+  "Make a list from a cons: \(list (car CONS) (cdr CONS)). nil begets nil.
+I return many things as conses, especially match and regions 
+beginnings and ends."
   (when cons
     (list (car cons) (cdr cons))))
 
@@ -368,15 +371,12 @@ string containing their values."
 ;;; <: White space recognitions regexp :>
 
 (defvar dp-ws " 	"
-  "White space chars.")
-(dp-defaliases 'dp-white-space-defvars-are-around-here
-               'dp-whitespace-defvars-are-around-here
-               'dp-ws)
+  "White space chars sans newline.")
 
 (defvar dp-ws-regexp (format "[%s]" dp-ws)
   "White space chars regexp.")
 
-(defvar dp-ws-regexp+ (format "%s%s*" dp-ws-regexp dp-ws-regexp)
+(defvar dp-ws-regexp+ (format "%s+" dp-ws-regexp)
   "White space chars regexp, one or more.")
 
 (defvar dp-ws-regexp* (format "%s*" dp-ws-regexp)
@@ -389,30 +389,27 @@ string containing their values."
 (defvar dp-ws+newline-regexp (format "[%s]" dp-ws+newline)
   "White space chars including newline regexp.")
 
-(defvar dp-ws+newline-regexp+ (format "%s%s*" 
-                                      dp-ws+newline-regexp
-                                      dp-ws+newline-regexp)
+(defvar dp-ws+newline-regexp* (format "%s*" dp-ws+newline-regexp)
+  "White space chars including newline regexp, zero or more.")
+
+(defvar dp-ws+newline-regexp+ (format "%s+" dp-ws+newline-regexp)
   "White space chars including newline regexp, one or more.")
 
 (defvar dp-ws-regexp-not (format "[^%s]" dp-ws)
   "Non white space chars regexp.")
 
-(defvar dp-ws-regexp+-not (format "%s%s*" dp-ws-regexp-not dp-ws-regexp-not)
+(defvar dp-ws-regexp+-not (format "%s+" dp-ws-regexp-not)
   "Non white space chars regexp, one or more.")
 
 (defvar dp-ws-regexp*-not (format "%s*" dp-ws-regexp-not)
   "White space chars regexp, 0 or more.")
 
-(defvar dp-ws+newline-not (format "[^%s]
-" dp-ws)
-  "White space chars including newline.")
+(defvar dp-ws+newline-regexp-not (format "[^%s]"
+                                         dp-ws+newline)
+  "White space chars including newline regexp, one or more.")
 
-(defvar dp-ws+newline-regexp dp-ws+newline-not
-  "White space chars including newline regexp.")
-
-(defvar dp-ws+newline-regexp+-not (format "%s%s+" 
-                                      dp-ws-regexp+-not
-                                      dp-ws+newline-regexp)
+(defvar dp-ws+newline-regexp+-not (format "[^%s]+"
+                                          dp-ws+newline)
   "White space chars including newline regexp, one or more.")
 
 
@@ -1788,7 +1785,7 @@ See `dp-c*-junk-after-eos*'."
   (save-excursion
     (when from-eol-p
       (dp-c-end-of-line))
-    (dp-looking-back-at (concat regexp dp-c*-junk-after-eos*))))
+    (dp-looking-back-at (concat regexp dp-c*-junk-after-eos*) limit)))
 
 (defun dp-c-looking-at-sans-eos-junk (regexp &optional from-bol-p limit)
   (save-excursion
@@ -1908,11 +1905,6 @@ on the go back ring."
   (unless no-save-pos-p
     (dp-push-go-back "dp-beginning-of-buffer"))
   (goto-char (point-min)))
-
-(defun dp-white-line-p ()
-  (save-excursion
-    (beginning-of-line)
-    (looking-at "^\\s-+$")))
 
 (defun dp-empty-or-white-line-p ()
   (save-excursion
@@ -3627,7 +3619,7 @@ Otherwise, the sequence begins at \(point-min) and ends at \(point-max)."
              ifdef-start)
 	(goto-char (point-min))
         ;; Skip past any header comments. In particular the mode comment:
-        ;; // -*- mode: C++; c-file-style: "intel-c-style" -*- 
+        ;; // -*- mode: C++; c-file-style: "intel-c-style" -*-
         (while (and (dp-in-a-c*-comment)
                     (= 0 (forward-line 1)))
           )
@@ -7623,7 +7615,7 @@ LIMIT, otherwise, has a buffer pos that is the limit."
   (save-excursion
     (let ((p (point))
           (limit (cond
-                  ((memq limit '(t 'nolimit 'no-limit)) nil)
+                  ((memq limit '(t nolimit no-limit)) nil)
                   (t (or limit (line-beginning-position))))))
       (and (re-search-backward regexp limit t)
            ;; If found, `match-' `end', `beginning' can be used to delimit
@@ -12360,7 +12352,9 @@ An `undo-boundary' is done before the template is used."
                               (if rest-o-hack-line
                                   (concat " " rest-o-hack-line " ")
                                 " ")
-                              (concat " " (or comment-end "")))))
+                              (concat (or (and comment-end
+                                               (concat " " comment-end))
+                                          "")))))
          (unless (save-excursion
                    (goto-char (point-min))
                    (re-search-forward hack-regexp nil t))
