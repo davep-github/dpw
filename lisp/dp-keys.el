@@ -409,7 +409,8 @@ Submaps of this map are defined below.")
                           [?C] 'dp-whitespace-buffer-ask-to-cleanup
                           [?c] 'dp-whitespace-checker
                           [?w] 'dp-whitespace-checker
-                          [(meta ? )] 'dp-whitespace-cleanup-line-by-line
+                          [(control ? )] 'dp-whitespace-cleanup-line-by-line
+                          [(meta ? )] 'dp-whitespace-cleanup-buffer
                           [?i] 'dp-show-indentation
                           ;; shift tab cleans up whitespace now as well.
                           [?l] 'dp-whitespace-cleanup-line
@@ -619,7 +620,7 @@ already in there.")
 
 )
 
-
+;; !<@todo XXX change this? This works once because of the defconsts
 (dp-keys-define-init-submaps)
 
 ;; This is, of course, remapped in a shell buffer.

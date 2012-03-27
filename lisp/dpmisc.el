@@ -57,6 +57,11 @@
            " M-[ 2*<right> M-C-o C-x C-x DEL <up> C-e ; C-x 4 M-b <C-next>"
            " <up> C-e RET RET M-y")))
 
+(defalias 'dp-fix-class-dox
+  (read-kbd-macro 
+   (concat "C-a C-s @class RET C-T <up> <C-right> <C-backspace> "
+           "class 2*<C-s> RET <C-backspace> brief SPC")))
+
 ;;;;;;; end of kbd macros ;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -6004,8 +6009,8 @@ new one."
 (defvar doxy-c-class-comment-elements '("
  /*********************************************************************/" > "
  /*!" > "
- * @class " > "
- * @brief " p > "
+ * @class " p > "
+ * @brief " (P "brief desc: " desc nil) > "
  */" > % >)
   "Elements of a C/C++ class comment template")
           
@@ -14341,13 +14346,14 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
   (interactive "P")
   (let ((start (point)))
     (dp-whitespace-next-violation)
-    (when (and (or (dp-looking-at-whitespace-violation)
-                   (not (= start (point))))
-               (or (not ask-per-line-p) ; Don't even ask.
-                   (or (y-or-n-p "Clean up this line?") ; Yes?
-                       ;; No... goto end of line but do nothing else.
-                       (and (end-of-line) nil))))
-      (dp-whitespace-cleanup-line))))
+    (if (and (or (dp-looking-at-whitespace-violation)
+                 (not (= start (point))))
+             (or (not ask-per-line-p)   ; Don't even ask.
+                 (or (y-or-n-p "Clean up this line?") ; Yes?
+                     ;; No... goto end of line but do nothing else.
+                     (and (end-of-line) nil))))
+        (dp-whitespace-cleanup-line)
+      (message "No more violations"))))
 
 (defun dp-whitespace-checker ()
   (interactive)
@@ -14356,9 +14362,12 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
   (beginning-of-buffer)
   (dp-whitespace-next-violation))
 
-(defun dp-whitespace-cleanup-line-by-line (&optional ask-per-line-p)
+(defun dp-whitespace-cleanup-line-by-line (&optional ask-per-line-p
+                                           goto-beginning-of-buffer-p)
   (interactive "P")
   (dp-push-go-back "dp-whitespace-cleanup-line-by-line")
+  (when goto-beginning-of-buffer-p
+    (goto-char (point-min)))
   (let ((first-p t)
         (num -1)                        ; We always loop at least once.
         (last-pt nil))
@@ -14369,6 +14378,11 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
       (incf num)
       (dp-whitespace-next-and-cleanup ask-per-line-p))
     (message "%d whitespace %s." num (dp-pluralize-num num nil "es" "fix"))))
+
+(defun dp-whitespace-cleanup-buffer (&optional ask-per-line-p)
+  (interactive "P")
+  (dp-whitespace-cleanup-line-by-line ask-per-line-p t)
+  (dp-pop-go-back))
 
 (defun dp-whitespace-buffer-ask-to-cleanup (&optional line-by-line-p)
   "Check a buffer for whitespace errors. Prompt for cleanup if any are found."

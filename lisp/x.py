@@ -1,3 +1,15 @@
+
+#######################################################################
+##
+## @class phoo
+## @brief bla
+##
+class phoo(object):
+    def __init__(self):
+        pass
+
+def efff(cla):
+    pass
 """a file for playing with xemacs' programming features for python"""
 # family item template inserted/edited by tempo.el
 e(
