@@ -321,17 +321,19 @@ _str: looks too much like string
 	  (dp-regexp-concat list)
 	  "\\)\\>"))
 
-(defvar dp-debug-like-patterns-orig
-  (concat (regexp-opt `("tmp_cout" "tmp_cerr" "tmp_v_stream" "tmp_d_stream"
-                        "debug_stream"
-                        "tmp_stdout" "tmp_stderr" "tmp_log_stream"
-                        "@tmp@" "@dbg@" "@rmv@" "@mark@" "WTF"
-                        "@todo"
-                        ,dp-debugging-code-tag))
-          "\\|N[.]?B[.]?\\|<<<<<?\\|"
-          "XXXX*\\|!!!!*\\|\\?\\?\\?\\?*")
-  "A regexp that recognizes things that are temporary/debug-like in nature.
-These can then be font-locked to make them easier to find and remove.")
+;;retire; (defvar dp-debug-like-patterns-orig
+;;retire;   (concat (regexp-opt `("tmp_cout" "tmp_cerr" "tmp_v_stream" "tmp_d_stream"
+;;retire;                         "debug_stream"
+;;retire;                         "very_tmp_stream"
+;;retire;                         "dev_stream"
+;;retire;                         "tmp_stdout" "tmp_stderr" "tmp_log_stream"
+;;retire;                         "@tmp@" "@dbg@" "@rmv@" "@mark@" "WTF"
+;;retire;                         "@todo"
+;;retire;                         ,dp-debugging-code-tag))
+;;retire;           "\\|N[.]?B[.]?\\|<<<<<?\\|"
+;;retire;           "XXXX*\\|!!!!*\\|\\?\\?\\?\\?*")
+;;retire;   "A regexp that recognizes things that are temporary/debug-like in nature.
+;;retire; These can then be font-locked to make them easier to find and remove.")
 
 (defvar dp-debug-like-patterns
   (concat (regexp-opt `("@tmp@" "@dbg@" "@rmv@" "@mark@" "WTF"
@@ -346,6 +348,7 @@ file. ")
 (defvar dp-c*-debug-like-patterns
   (concat (regexp-opt `("tmp_cout" "tmp_cerr" "tmp_v_stream" "tmp_d_stream"
                         "debug_stream"
+                        "very_tmp_stream" "dev_stream"
                         "tmp_stdout" "tmp_stderr" "tmp_log_stream"
                         ,dp-debugging-code-tag)))
   "A regexp that recognizes things that are temporary/debug-like in nature.

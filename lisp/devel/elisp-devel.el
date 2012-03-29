@@ -312,24 +312,24 @@ nil
 nil
 
 
-(defun* dp-c-prev-eol-regexp (&optional regexp initial-eol-p)
-  (interactive)
-  (setq-ifnil regexp dp-ws+newline-regexp+-not)
-  (save-excursion
-    (when initial-eol-p
-      (dp-c-end-of-line))
-    (while
-        ;; Look back for any non-ws chars
-        (if (dp-looking-back-at dp-ws+newline-regexp+-not)
-            ;; Got something. Return nil if it's not what we want.
-            (return-from dp-c-prev-eol-regexp
-              (if (dp-looking-back-at regexp)
-                  (list (match-beginning 0)
-                        (buffer-substring-no-properties (match-beginning 0)
-                                                        (match-end 0)))
-                nil))
-          (previous-line 1)
-          (dp-c-end-of-line)))))
+;; (defun* dp-c-prev-eol-regexp (&optional regexp initial-eol-p)
+;;   (interactive)
+;;   (setq-ifnil regexp dp-ws+newline-regexp+-not)
+;;   (save-excursion
+;;     (when initial-eol-p
+;;       (dp-c-end-of-line))
+;;     (while
+;;         ;; Look back for any non-ws chars
+;;         (if (dp-looking-back-at dp-ws+newline-regexp+-not)
+;;             ;; Got something. Return nil if it's not what we want.
+;;             (return-from dp-c-prev-eol-regexp
+;;               (if (dp-looking-back-at regexp)
+;;                   (list (match-beginning 0)
+;;                         (buffer-substring-no-properties (match-beginning 0)
+;;                                                         (match-end 0)))
+;;                 nil))
+;;           (previous-line 1)
+;;           (dp-c-end-of-line)))))
         
 
 

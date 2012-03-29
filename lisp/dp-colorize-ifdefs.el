@@ -107,10 +107,20 @@
     colors))
 
 ;;;###autoload
+(defun dp-uncolorize-ifdefs (&optional begin end)
+  (interactive "r")
+  (dp-delete-extents (or begin
+                         (point-min))
+                     (or end 
+                         (point-max)) 
+                     'dp-cifdef))
+
+;;;###autoload
 (defun dp-colorize-ifdefs (&optional colorize-nested)
   "Colorize parts of ifdef."
   (interactive "P")
   ;; remove any existing colorization
+  (dp-uncolorize-ifdefs)
   (dp-delete-extents (point-min) (point-max) 'dp-cifdef)
   (setq dp-colorize-ifdefs-ret nil)
 
@@ -120,7 +130,6 @@
   ;;(dmessage "ret1>%s<" dp-colorize-ifdefs-ret)
   (dolist (ext dp-colorize-ifdefs-ret)
     (dp-make-extent (nth 0 ext) (nth 1 ext) 'dp-cifdef 'face (nth 2 ext))))
-
 ;;;
 ;;;
 ;;;

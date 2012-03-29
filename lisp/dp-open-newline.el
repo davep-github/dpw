@@ -323,28 +323,36 @@
             (dmessage "cob: auto brace-list comma")
             (insert ",")
             t)
-            
+
+   ;;;;;;;;;;;;;;;;;
+           ((dp-c-in-syntactic-region
+             '(member-init-intro member-init-cont func-decl-cont))
+            (save-excursion
+              (when (dp-c-prev-eol-regexp ")" 'goto-eol)
+                (dmessage "cob: add comma in member-init")
+                (dp-c-end-of-line)
+                (insert ",")))
+            t)
+                         
    ;;;;;;;;;;;;;;;;;
            ;; Add comma to end of line?  <:cob-comma|cob:>
            ((and (not (dp-in-c-iostream-statement-p))
                  (not (save-excursion
                         (dp-c-end-of-line)
                         (dp-c-looking-back-at-comma-killers-p)))
-                 (or (dp-c-in-syntactic-region
-                      '(member-init-intro member-init-cont func-decl-cont))
-                     (progn
+                 (or (progn
                        (beginning-of-line)
                        (and (not (looking-at (concat "\\s-*"
-                                                     (dp-mk-c++-symbol-regexp 
+                                                     (dp-mk-c++-symbol-regexp
                                                       "struct\\|class"))))
-                            (not (re-search-forward 
-                                  "\\(^\\s-*#\\s-*[ie]\\)\\|\\([)\\\\:;,.}{*!@#$%^&:|]\\s-*$\\)\\|\\(^\\s-*$\\)" 
+                            (not (re-search-forward
+                                  "\\(^\\s-*#\\s-*[ie]\\)\\|\\([)\\\\:;,.}{*!@#$%^&:|]\\s-*$\\)\\|\\(^\\s-*$\\)"
                                   (line-end-position) t))))
                      (progn
                        (dp-c-end-of-line)
                        (or (and (dp-in-c-statement)
                                 (not (dp-looking-back-at-close-paren-p 'final)))
-                           (dp-c-in-syntactic-region 
+                           (dp-c-in-syntactic-region
                             dp-c-add-comma-@-eol-of-regions))))
                  (progn
                    (beginning-of-line)

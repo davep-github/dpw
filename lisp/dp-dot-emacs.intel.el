@@ -98,9 +98,13 @@
 ;; -------------+ shell 0 (SA)
 ;; shell 1 (CA) |
 ;;
-(defalias 'jk 'dp-poc-layout-2+1)
 (defalias 'jk+ 'dp-poc-layout-2+1)
+(defalias 'jk| 'dp-poc-layout-2+1)
+
 (defalias 'jk/ 'dp-poc-layout-2/1)
+(defalias 'jk- 'dp-poc-layout-2/1)
+
+(defalias 'jk 'dp-poc-layout-2/1)
 
 ;; For 2x SAs
 ;; 2 + 2:

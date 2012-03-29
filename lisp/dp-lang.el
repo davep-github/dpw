@@ -768,12 +768,12 @@ We are assumed to be in a C-like buffer."
   "Cheesy, but easy regexp to find the beginning of a defun.
 VERY accurate given my indentation style.")
 
-(defun* dp-c-prev-eol-regexp (&optional regexp initial-eol-p)
+(defun* dp-c-prev-eol-regexp (&optional regexp goto-eol-p)
   "Look for REGEXP at the end of the first preceding non empty line."
   (interactive)
   (setq-ifnil regexp dp-ws+newline-regexp+-not)
   (save-excursion
-    (when initial-eol-p
+    (when goto-eol-p
       (dp-c-end-of-line))
     (while
         ;; Look back for any non-ws chars

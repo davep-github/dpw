@@ -10158,6 +10158,9 @@ is done.")
     ;;  (return-from dp-c-format-func-decl nil))
     (beginning-of-line)
     (setq decl-bounds (dp-c-flatten-func-decl))
+    ;; Or skip past any member init before looking for {.
+    (dmessage 
+     "look for \"<ws>*:\" to detect member init and suppress adding \"{\"")
     (unless decl-bounds
       (goto-char old-point)
       (return-from dp-c-format-func-decl nil))
