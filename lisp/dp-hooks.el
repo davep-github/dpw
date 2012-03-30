@@ -862,6 +862,7 @@ main(
   (local-set-key [(meta ?u)] 'dp-c++-mode-undo)
   (local-set-key [(control ?c) (control meta ?s)] 'dp-c-get-syntactic-region)
   (local-set-key [(meta ?s)] 'dp-c*-member-init)
+  (global-set-key [(control ?\\)] 'dp-eval-naked-embedded-lisp)
   (when (fboundp 'eassist-list-methods)
     (local-set-key [(control c) ?, ?.] 'eassist-list-methods))
   ;; Trying to find out why point moves around when switching buffers

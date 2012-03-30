@@ -378,6 +378,10 @@ string containing their values."
 (defvar dp-ws " 	"
   "White space chars sans newline.")
 
+(defvar dp-ws+newline (format "%s
+" dp-ws)
+  "White space chars including newline.")
+
 (defvar dp-ws-regexp (format "[%s]" dp-ws)
   "White space chars regexp.")
 
@@ -386,10 +390,6 @@ string containing their values."
 
 (defvar dp-ws-regexp* (format "%s*" dp-ws-regexp)
   "White space chars regexp, 0 or more.")
-
-(defvar dp-ws+newline (format "%s
-" dp-ws)
-  "White space chars including newline.")
 
 (defvar dp-ws+newline-regexp (format "[%s]" dp-ws+newline)
   "White space chars including newline regexp.")
@@ -1742,12 +1742,15 @@ terminate and eol/nl+indent."
 (defun dp-open-newline (&optional open-newline-func)
   "Add a new line below the current one, ala `o' in vi. Do mucho magick, too.
 Pass t for `open-newline-func' to get the basic open below behavior."
-  (interactive "*")
+  (interactive "*P")
   (let* ((open-newline-func (or open-newline-func
                                 (dp-mode-local-value 'dp-open-newline-func)
                                 (bound-and-true-p dp-open-newline-func)))
-         (do-default (if (memq open-newline-func '(t nil default
-                                                   eol-newline-and-indent))
+         (do-default (if (or (and open-newline-func (listp open-newline-func))
+                             (Cu0p open-newline-func)
+                             (Cu--p open-newline-func)
+                             (memq open-newline-func '(t nil default 
+                                                       eol-newline-and-indent)))
                          t
                        ;; Returns non-nil to do default actions, too.
                        (funcall open-newline-func current-prefix-arg))))
@@ -1855,7 +1858,8 @@ aa bb(
           ;; We know we have a newline after the brace. We don't want to
           ;; force another one.
           (setq force-newline-after-brace-t nil)
-          (dp-c-indent-command)))
+          (dp-c-indent-command)
+          nil))                         ; Did nothing.
     (end-of-line)
     (if (not newline-before-brace)
         (let ((last-command-char ?\{)) 
@@ -1876,7 +1880,8 @@ aa bb(
             )
     (c-newline-and-indent)
     (previous-line 1)
-    (dp-c-indent-command)))
+    (dp-c-indent-command)
+    t))                                 ; Did something.
 
 (defun dp-c-context-line-break ()
   "Do special things at the end of a line."
@@ -8706,12 +8711,23 @@ I'm over stretching it to find it anywhere."
               (- (match-end 0) (length suffix) 1))))))
 
 ;; Make these buffer local in case we have some syntactic conflicts.
+;; !<@todo XXX why not use dp-deflocal?
 (defvar dp-embedded-lisp-prefix ":"
   "Embedded lisp prefix.")
 (make-local-variable 'dp-embedded-lisp-prefix)
 (defvar dp-embedded-lisp-suffix ":"
   "Embedded lisp suffix.")
 (make-local-variable 'dp-embedded-lisp-suffix)
+
+(defun dp-embedded-lisp-open-string (&optional prefix)
+  "Create a string which introduces an embedded lisp string"
+  (setq-ifnil prefix dp-embedded-lisp-prefix)
+  (concat (and-stringp prefix "") "("))
+
+(defun dp-embedded-lisp-close-string (&optional prefix)
+  "Create a string which introduces an embedded lisp string"
+  (setq-ifnil prefix dp-embedded-lisp-prefix)
+  (concat (and-stringp prefix "") ")"))
 
 (defun dp-mk-tag-delimiters (tag)
   (cons (format "<%s>" tag)
@@ -8860,9 +8876,12 @@ search."
                       (buffer-substring-no-properties b (1+ e)))))
           (goto-char (1+ e)))))))
 
-(defun dp-embedded-lisp-eval@point ()
-  "Eval embedded lisp. Look for :(... ): and then tagged as in `dp-eval-tagged-lisp'"
-  (interactive)
+(defun dp-embedded-lisp-eval@point (&optional no-delimitter)
+  "Eval an embedded lisp string.
+An embedded lisp string is delimited by dp-embedded-lisp-open-string and
+dp-embedded-lisp-close-string. In addition the string can be tagged so that
+it can be referred to in other embedded strings."
+  (interactive "P")
   (setq dp-embedded-lisp-eval@point-prefix-arg current-prefix-arg)
   (let* ((region-p (dp-mark-active-p))
          (region (save-excursion
@@ -8870,11 +8889,14 @@ search."
                    (dp-region-or... :bounder 'rest-of-buffer-p)))
          (beg (car region))
          (end (cdr region))
-         (delimiters (dp-mk-tag-delimiters ":")))
+         (delimiters (dp-mk-tag-delimiters (if no-delimitter "" ":"))))
      (if (save-excursion
            (goto-char beg)
            ;; !<@todo XXX use the function to build the :(
-           (re-search-forward ".*:(" (line-end-position) t))
+           (re-search-forward (concat ".*"
+                                       (dp-embedded-lisp-open-string
+                                        no-delimitter))
+                              (line-end-position) t))
          (call-interactively 'dp-embedded-lisp-eval@point0)
        (dp-auto-eval-tagged-lisp beg end))
      (when region-p
@@ -8907,6 +8929,14 @@ search."
         (eval (car (read-from-string (match-string 1))))
         (when (match-end 1)
           (setq beg (goto-char (match-end 1))))))))
+
+
+(defun dp-eval-naked-embedded-lisp ()
+  "Eval unadorned embedded lisp. E.g. \(xxx) vs :(xxx):"
+  (interactive)
+  (let ((dp-embedded-lisp-prefix "")
+        (dp-embedded-lisp-suffix ""))
+    (call-interactively 'dp-embedded-lisp-eval@point)))
 
 ;;is this used???; (defun* dp-eval-embedded-lisp (exact-regexp-p &optional (regexp "") 
 ;;is this used???;                                (bounder 'line-p))
@@ -10382,16 +10412,24 @@ split.")
 
 ;; I cannot believe I really need to write this. I must've missed it.
 (defun dp-first-by-pred (pred list &rest pred-args)
-  (while (not (apply pred (car list) pred-args))
+  (while (and list 
+              (not (apply pred (car list) pred-args)))
     (setq list (cdr list)))
   list)
-
 
 (defun dp-list-subtract (l1 l2)
   "Return L1 with all elements of L2 removed."
   (loop for b in l1
-    when (not (memq b l2))
+    when (not (member b l2))
     collect b))
+
+(defun dp-push-window-config ()
+  (interactive)
+  (call-interactively 'wconfig-ring-save))
+
+(defun dp-pop-window-config (n)
+  (interactive "p")
+  (call-interactively 'wconfig-yank-pop))
 
 (defun dp-all-window-buffers (&optional win-list frame first-window)
   (mapcar (lambda (win)
@@ -10426,11 +10464,14 @@ split.")
              (set-window-buffer w (car good-bufs)))
            (setq all-buffers (cdr good-bufs))))))
 
-(defun* dp-layout-windows (op-list &optional other-win-arg 
+(defun* dp-layout-windows (op-list &optional other-win-arg
+                           (push-window-config-p t)
                            (delete-other-windows-p t))
   "Layout windows trying to keep as many buffers visible as possible.
 !<@todo XXX MAKE SURE THE CURSOR STAYS IN THE SAME PLACE."
   ;; Save the original list of buffers displayed in windows.
+  (when push-window-config-p
+    (dp-push-window-config))
   (let ((original-window-buffers (dp-all-window-buffers)))
     (when delete-other-windows-p
       (delete-other-windows))
@@ -10535,7 +10576,7 @@ If wide enough: | | |, otherwise: |-|"
                        (other-window -1))
                      nil))
                      
-(dp-defaliases '1x2 '1+2 '1|2 'dp-1x2 'dp-1+2-wins)
+(dp-defaliases '1,2 '1x2 '1+2 '1|2 'dp-1x2 'dp-1+2-wins)
 
 (defun dp-2+1-wins ()
   "Set up a 1+2 window arrangement: |-| |"
@@ -10543,7 +10584,7 @@ If wide enough: | | |, otherwise: |-|"
   (dp-layout-windows '(split-window-horizontally
                        split-window-vertically)))
                      
-(dp-defaliases '2|1 'dp-2+1 '2x1 '2+1 '>| 'dp-2+1-wins)
+(dp-defaliases '2,1 '2|1 'dp-2+1 '2x1 '2+1 '>| 'dp-2+1-wins)
 
 (defun dp-2-over-1-wins ()
   "|-|
@@ -10633,7 +10674,7 @@ I like this for keeping a frame on each desktop.")
 
 (defvar dp-buffers-allowed-in-other-frames '(" SPEEDBAR"))
 
-(defun dp-display-buffer-if-visible (buffer)
+(defun* dp-display-buffer-if-visible (buffer &optional (norecord t))
   (interactive "Bbuffer name? ")
   (when (dp-buffer-live-p buffer)
     (let* ((buf-win (get-buffer-window buffer t))
@@ -10648,6 +10689,7 @@ I like this for keeping a frame on each desktop.")
                      (member buf-name dp-buffers-allowed-in-other-frames)
                      (not dp-prefer-independent-frames-p)))
         (select-window buf-win)
+        (set-window-buffer buf-win buffer norecord)
         (unless same-frame-p
           (select-frame buf-frame)
           (raise-frame buf-frame))
@@ -11130,7 +11172,9 @@ Saves window configurations in registers. Default is reg `\(int-to-char 1\)'
                  reg-val
                  (not (window-configuration-p reg-val))
                  (not (y-or-n-p 
-                       (format "Register %s isn't empty and isn't a win cfg; Continue? " reg))))
+                       (format 
+                        "Reg %s isn't empty and isn't a win cfg; Continue? "
+                        reg))))
             (message "Not setting window config.")
           (window-configuration-to-register reg)
           (setq dp-one-window++-last-register arg)
@@ -14524,6 +14568,24 @@ The APPEND-ARG is a list wrapped around the real list to append."
   (interactive)
   (append (symbol-value save-sym)
           (car append-arg)))
+
+(defun and-stringp (string &optional if-not)
+  "If STRING is \(stringp), return STRING, otherwise IF-NOT"
+  (if (stringp string)
+      string
+    if-not))
+
+(defun visit-header-doc ()
+  "Visit the documentation of the following function.
+Assume it's in the corresponding header file."
+  (interactive)
+  ;; Icky, but functional
+  (dp-push-go-back "visit-header-doc")
+  (end-of-line)
+  (search-forward "(")
+  (skip-chars-backward dp-ws+newline)
+  ;;(let ((function-name symbol-near-point))
+  (dp-edit-cf-other-window t))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;; @todo Write a loop which advises functions with simple push go back

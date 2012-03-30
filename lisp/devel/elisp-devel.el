@@ -354,3 +354,62 @@ nil
             (buffer-substring-no-properties (match-beginning 0)
                                             (1+(match-beginning 0)))))))
 
+
+========================
+Friday March 30 2012
+--
+
+(defun dp-push-window-config ()
+  (interactive)
+  (call-interactively 'wconfig-ring-save))
+
+(defun dp-pop-window-config (n)
+  (interactive "p")
+  (call-interactively 'wconfig-yank-pop))
+
+(frame-property (selected-frame) 'wconfig-ring)
+(9 1 . [nil nil nil nil nil nil nil nil nil [cl-struct-window-configuration #<x-frame "XEmacs" 0x2c94f> 1 390 1517 1013 #<buffer "elisp-devel.el"> 15 10 4 [cl-struct-saved-window nil nil nil nil nil nil nil 0 0 1509 990 0 0 nil [cl-struct-saved-window nil nil nil nil nil nil nil 0 0 760 990 0 0 nil nil [cl-struct-saved-window nil nil nil #<buffer "tca.cpp"> #<marker at 4520 in tca.cpp 0x4a575d8> #<marker at 5473 in tca.cpp 0x4a57638> #<marker at 6111 in tca.cpp 0x4a57608> 0 0 760 495 0 0 nil nil nil [cl-struct-saved-window t nil nil #<buffer "elisp-devel.el"> #<marker at 8923 in elisp-devel.el 0x4a57668> #<marker at 8340 in elisp-devel.el 0x4a57698> nil 0 495 760 990 0 0 nil nil nil nil #<window 0x711bfeef>] #<window 0x70d86a89>] [cl-struct-saved-window nil nil nil #<buffer "wconfig.el"> #<marker at 5130 in wconfig.el 0x4a57548> #<marker at 4770 in wconfig.el 0x4a575a8> #<marker at 5262 in wconfig.el 0x4a57578> 760 0 1509 990 0 0 nil nil nil nil #<window 0x711bfddd>] #<window 0x711bfee7>] nil [cl-struct-saved-window nil t nil #<buffer " *Minibuf-1"> #<marker in no buffer 0x4a574b8> #<marker at 1 in  *Minibuf-1 0x4a57518> #<marker at 1 in  *Minibuf-1 0x4a574e8> 0 990 1509 1005 0 0 nil nil nil nil #<window on " *Minibuf-1" 0x2ea85>] #<window 0x711bfdd5>]]])
+
+
+(dp-first-by-pred 'eq '(a b c d) 'q)
+nil
+
+(stringp "a")
+t
+
+(and-stringp nil)
+nil
+
+""
+
+""
+
+""
+
+nil
+
+
+(dp-embedded-lisp-close-string 'lalalal)
+")"
+
+")"
+
+")"
+
+")"
+
+":)"
+
+;; :(princf "HI"):
+;; (princf "HI")
+
+(cl-pe '(dp-deflocal blah 1))
+
+(progn
+  (defvar blah 1 "Undocumented. (dp-deflocal)")
+  (make-variable-buffer-local 'blah)
+  (setq-default blah 1))nil
+
+
+
+

@@ -143,17 +143,24 @@
             (message "Repeat command to cycle type decorators.")
             nil)
 
-   ;;;;;;;;;;;;;;;;;
-;;            ;; Already ends with a semi-colon. Just newline and indent.
-;;            ((dp-c-looking-back-at-sans-eos-junk ";\\s-*" 'from-eol-p)
-;;             t)
 
-      
+           ;; <:first:>
+           ;; First case of syntactic interest.
+   ;;;;;;;;;;;;;;;;;
+           ((dp-in-a-c*-comment)
+            (end-of-line)
+            (c-context-line-break)
+            nil)
+
    ;;;;;;;;;;;;;;;;;
            ;; Find some places where anything special is clearly not
            ;; desirable, such as after ;, }, etc. Just the basic eol, nl,
            ;; indent.
-           ((dp-c-prev-eol-regexp "[;}]")
+           ;; !<@todo XXX exp: adding goto-eol-p to handle
+           ;;   if (aaa) {
+           ;; if point is not @ eol then this breaks.
+           ;; But what about other cases?
+           ((dp-c-prev-eol-regexp "[;}{]" t)
             (dmessage "Looking back at special action killers.")
             t)
 
@@ -277,12 +284,14 @@
                      (search-forward "(" (line-end-position) t))))
             (goto-char (match-beginning 0))
             (dp-find-matching-paren)
-            (dp-c-ensure-opening-brace :newline-before-brace nil
+            (if (dp-c-ensure-opening-brace :newline-before-brace nil
                                        :regexp-prefix ")")
-            (dmessage "cob: add { to if and friends.")
-            (setf (dp-cob-state-t-last-sub-command dp-cob-state) 
-                  'add-statement-block-{)
-            nil)
+                (progn
+                  (dmessage "cob: add { to if and friends.")
+                  (setf (dp-cob-state-t-last-sub-command dp-cob-state) 
+                        'add-statement-block-{)
+                  nil)
+              t))          ; Didn't to anything special so just eol & indent.
            
    ;;;;;;;;;;;;;;;;;
            ;; pre-preprocessor constructs.

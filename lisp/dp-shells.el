@@ -235,7 +235,7 @@ prompt.  We don't want to stomp on them.")
                                        "gits"
                                        "gitstat"
                                        "xemacs")))
-                   '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(status\\|stat\\)")
+                   '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(status\\|diff\\|stat\\)")
                    dp-shell-vc-commit-cmd-regexps)
            nil 'one-around-all-p)
           "\\(\\s-+\\|$\\)")

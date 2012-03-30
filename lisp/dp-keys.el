@@ -536,6 +536,7 @@ already in there.")
                           ;; Some of these bindings are longer than some
                           ;; abbreviated commands
                           [(control next)] 'dp-eob-all-windows
+                          [(meta ?n)] 'dp-pop-window-config
                           [?s ?r] 'dp-save-wconfig-by-name-or-ring
                           [?s ?n] 'wconfig-add-by-name
                           [?r ?p] (kb-lambda-rest
@@ -543,12 +544,12 @@ already in there.")
                                       (call-interactively
                                        (if (Cu--p)
                                            'wconfig-restore-by-name
-                                         'wconfig-yank-pop)))
+                                         'dp-pop-window-config)))
                           [?r ?n] 'wconfig-restore-by-name
-                          [?r ?y] 'wconfig-yank-pop
+                          [?r ?y] 'dp-pop-window-config
                           [?d ?p] 'wconfig-delete-pop
                           [?d ?n] 'wconfig-delete-by-name
-                          ;; Binding for some useful layouts.
+                          ;; Bindings for some useful layouts.
                           ;; Try to pick some chars that look like or are
                           ;; otherwise mnemonic for the layout.
                           ;; "Point" at the split
