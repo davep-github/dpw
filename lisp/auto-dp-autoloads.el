@@ -1,7 +1,9 @@
 ;;; DO NOT MODIFY THIS FILE
 (if (featurep 'auto-dp-autoloads) (error "Feature auto-dp-autoloads already loaded"))
 
-;;;### (autoloads (dp-colorize-ifdefs) "dp-colorize-ifdefs" "lisp/dp-colorize-ifdefs.el")
+;;;### (autoloads (dp-colorize-ifdefs dp-uncolorize-ifdefs) "dp-colorize-ifdefs" "lisp/dp-colorize-ifdefs.el")
+
+(autoload 'dp-uncolorize-ifdefs "dp-colorize-ifdefs" nil t nil)
 
 (autoload 'dp-colorize-ifdefs "dp-colorize-ifdefs" "\
 Colorize parts of ifdef." t nil)

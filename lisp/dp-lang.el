@@ -984,6 +984,7 @@ LIMIT-EOL-P: force arg LIMIT to be line end position."
        (t (error 'invalid-argument))))))
       
 (defun dp-c-fix-comment ()
+  "Fix up the location of a comment in a C like language."
   (interactive)
   ;; `save-excursion' doesn't work here.
   ;; ??? marker vs number?

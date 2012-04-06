@@ -2034,7 +2034,13 @@ and then business as usual."
   (local-set-key [(meta ?n)] 'dp-next-error)
 )
 
-(require 'dp-perforce)
+;;(require 'dp-perforce)
+
+(defadvice vc-diff (around dp-vc-advice activate)
+  (dp-push-window-config)
+  ad-do-it
+  (local-set-key [(control ?c) (control ?c)] 
+                 'dp-kill-buffer-and-pop-window-config))
 
 (defun dp-diff-mode-hook ()
   (interactive)

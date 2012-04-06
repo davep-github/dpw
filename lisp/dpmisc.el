@@ -1860,28 +1860,33 @@ aa bb(
           (setq force-newline-after-brace-t nil)
           (dp-c-indent-command)
           nil))                         ; Did nothing.
-    (end-of-line)
-    (if (not newline-before-brace)
-        (let ((last-command-char ?\{)) 
-          (dp-c-electric-brace nil))        
-      (dp-c-newline-and-indent)
-      (insert "{")
-      (dp-c-indent-command)
+    (dp-c-end-of-line)
+    (if (dp-looking-back-at ";\\s-*")
+        ;;(dp-c-newline-and-indent t) ;; Results in 2 (two, ii, 0010) newlines.
+        ()
+      (end-of-line)
+      (if (not newline-before-brace)
+          (let ((last-command-char ?\{))
+            (dp-c-end-of-line)
+            (dp-c-electric-brace nil))
+        (dp-c-newline-and-indent)
+        (insert "{")
+        (dp-c-indent-command)
 ;   (if (looking-at "[ \n\t]+")
 ;       (replace-match ""))
-      (newline)
-      (insert " ")               ; A comment at the left margin won't indent.
-      (dp-c-indent-command)))
-  ;; !!! added t to see if it helps with if/for/while/etc w/o hurting
-  ;;     function defs too much. There are far fewer function defs than the
-  ;;     others.
-  (when (or force-newline-after-brace-t
-            ;; (looking-at (concat dp-ws-regexp* "$"))
-            )
-    (c-newline-and-indent)
-    (previous-line 1)
-    (dp-c-indent-command)
-    t))                                 ; Did something.
+        (newline)
+        (insert " ")             ; A comment at the left margin won't indent.
+        (dp-c-indent-command)))
+    ;; !!! added t to see if it helps with if/for/while/etc w/o hurting
+    ;;     function defs too much. There are far fewer function defs than the
+    ;;     others.
+    (when (or force-newline-after-brace-t
+              ;; (looking-at (concat dp-ws-regexp* "$"))
+              )
+      (c-newline-and-indent)
+      (previous-line 1)
+      (dp-c-indent-command)
+      t)))                              ; Did something.
 
 (defun dp-c-context-line-break ()
   "Do special things at the end of a line."
@@ -2897,30 +2902,32 @@ Also, it will move backwards into a closed class (ie has a };)."
 ;; cc-mode does this itself now
 ;; a bit more sophisticatedly, too.
 ;; c-context-line-break
-(defun dp-c-newline-and-indent ()
+(defun dp-c-newline-and-indent (&optional end-of-line-first-p)
   "Enter a newline, and indent, and if in C-mode and in
 a comment add a comment prefix to the line."
-  (interactive "*")
-  (if (dp-in-c)
-      (let ((syntax-el (dp-c-get-syntactic-region))
-	    (is-one-liner (is-c++-one-line-comment)))
-	;; we need to preserve the syntax before we indent.
-	;; and the one-liner-ness of the *current* line
-	(newline-and-indent)
-        (dmessage "syntax-el: %s, is-one-liner: %s, old-C comment: %s"
-                  syntax-el is-one-liner 
-                  (dp-in-a-c-/**/-comment syntax-el))
-	(when (and (dp-in-a-c-/**/-comment syntax-el)
-		   (not is-one-liner)
-                   ;; This syntax stuff is so fucking hackish, it makes me
-                   ;; queasy.  For some reason, the /**/ check returns t
-                   ;; because c-got-face-at says that the face at point is
-                   ;; 'font-lock-comment-face.  So, eliminate stuff I know to
-                   ;; be non-comment. And, if I print the current line, it's
-                   ;; empty.
-                   (not (memq syntax-el '(access-label))))
-	  (insert "* ")
-	  (c-indent-line)))
+  (interactive "*P")
+  (when (dp-in-c)
+    (when end-of-line-first-p
+      (end-of-line)))
+    (let ((syntax-el (dp-c-get-syntactic-region))
+          (is-one-liner (is-c++-one-line-comment)))
+      ;; we need to preserve the syntax before we indent.
+      ;; and the one-liner-ness of the *current* line
+      (newline-and-indent)
+      (dmessage "syntax-el: %s, is-one-liner: %s, old-C comment: %s"
+                syntax-el is-one-liner
+                (dp-in-a-c-/**/-comment syntax-el))
+      (when (and (dp-in-a-c-/**/-comment syntax-el)
+                 (not is-one-liner)
+                 ;; This syntax stuff is so fucking hackish, it makes me
+                 ;; queasy.  For some reason, the /**/ check returns t
+                 ;; because c-got-face-at says that the face at point is
+                 ;; 'font-lock-comment-face.  So, eliminate stuff I know to
+                 ;; be non-comment. And, if I print the current line, it's
+                 ;; empty.
+                 (not (memq syntax-el '(access-label))))
+        (insert "* ")
+        (c-indent-line)))
     (newline-and-indent)))
 
 (defvar dp-c-electric-slash-fills nil
@@ -4314,8 +4321,10 @@ control construct)"
           (progn
             (delete-region mbeg mend)
             (backward-char 1)
-            (end-of-line)
+            (dp-c-end-of-line)
             (insert extra " {")
+            (dp-c-fix-comment)
+            (end-of-line)
             (dp-c-newline-and-indent))
         (goto-char here)))))
 
@@ -10429,7 +10438,8 @@ split.")
 
 (defun dp-pop-window-config (n)
   (interactive "p")
-  (call-interactively 'wconfig-yank-pop))
+  ;; Real pop vs rotate. The yank pop acts, to me, counter-intuitively.
+  (call-interactively 'wconfig-delete-pop))
 
 (defun dp-all-window-buffers (&optional win-list frame first-window)
   (mapcar (lambda (win)
@@ -14586,6 +14596,32 @@ Assume it's in the corresponding header file."
   (skip-chars-backward dp-ws+newline)
   ;;(let ((function-name symbol-near-point))
   (dp-edit-cf-other-window t))
+
+;;
+;; Meta- is my kill-buffer key. But it is bound in a file/buffer specific
+;; manner. In order to mimic the functionality of that binding within buffer,
+;; I call the function bound to the key.
+;; !<@todo XXX Have this call use a mode/buffer local variable which contains
+;; the function which would be bound to the M-- key.
+
+(dp-deflocal dp-kill-buffer-func (lambda ()
+                                   (interactive)
+                                   (call-interactively 
+                                    (key-binding [(meta ?-)])))
+
+"What should be called when the user wishes to kill a buffer?
+Different functions are used depending on some context such as minor-mode.
+Some examples are:
+`dp-maybe-kill-this-buffer', `dp-bury-or-kill-buffer', etc.")
+(defun dp-meta-minus ()
+  (interactive)
+  (call-interactively dp-kill-buffer-func))
+  
+  
+(defun dp-kill-buffer-and-pop-window-config (&optional nth-config)
+  (interactive "p")
+  (dp-meta-minus)
+  (dp-pop-window-config nth-config))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;; @todo Write a loop which advises functions with simple push go back

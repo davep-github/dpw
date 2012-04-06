@@ -2,6 +2,22 @@
 /*
  */
 
+extern int common_arg_handler(
+    int arg_char,
+    const char* optarg,
+    int option_index);
+
+
+f(void)
+{
+    const char* v = n->value();
+    if (!v) {                   // || !*v
+        v = "(empty)";
+    }
+    std::string name = n->name();
+    std::string vs = v;
+}
+
 
 /*********************************************************************/
 /*!

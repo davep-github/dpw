@@ -285,7 +285,7 @@
             (goto-char (match-beginning 0))
             (dp-find-matching-paren)
             (if (dp-c-ensure-opening-brace :newline-before-brace nil
-                                       :regexp-prefix ")")
+                                           :regexp-prefix ")")
                 (progn
                   (dmessage "cob: add { to if and friends.")
                   (setf (dp-cob-state-t-last-sub-command dp-cob-state) 
