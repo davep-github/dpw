@@ -5715,6 +5715,14 @@ ALIST-SYM's format is: ((k1 kv1 kv2...) (kn kn1 kn2...))."
                         (extents-at pos object property before at-flag)
                         ""))))
 
+(defun dp-extent-prop-match (ext prop prop-val)
+  (let ((ext-prop-val (extent-property ext prop)))
+    (when (or (equal prop-val ext-prop-val)
+              (and ext-prop-val
+                   (listp ext-prop-val)
+                   (member prop-val ext-prop-val)))
+      ext)))
+
 (defun* dp-extents-at-with-prop (prop &optional value pos (at-flag 'at))
   "Find extents with property PROP, optionally with VALUE.
 POS, if non-nil, can be a position or a marker.  If it's a marker, then the
@@ -5734,8 +5742,8 @@ of nil, i.e. nil vs (unused . nil)."
                          (when (memq prop (extent-properties ext))
                            ;; if there's a value then it must match as well
                            (if value
-                               (when (equal (cdr value) 
-                                            (extent-property ext prop))
+                               (when (dp-extent-prop-match ext prop 
+                                                           (cdr value))
                                  ext)
                              ext))))
                       (extents-at (or pos (point)) nil nil nil 'at)
@@ -6894,8 +6902,8 @@ matching ones."
                                             starting-here))
                                 ;; if there's a value then it must match
                                 (if value
-                                    (when (equal (cdr value) 
-                                                 (extent-property ext prop))
+                                    (when (dp-extent-prop-match ext prop 
+                                                                (cdr value))
                                       (cons 'done-p ext))
                                   (cons 'done-p ext)))))
                            starting-here
@@ -7291,7 +7299,8 @@ COLOR_INDEX can be <=0 or '- to indicate invisibility."
         (setq face-sym 'face
               face-val face))
       (setq extent (apply 'dp-make-extent beg end 
-                          'dp-colorized-region 
+                          'dp-colorized-region
+                          'dp-colorized-p t
                           face-sym face-val
                           ;;'invisible 'dp-colorize-region
                           'dp-colorized-region-color-num arg
@@ -14593,7 +14602,7 @@ Assume it's in the corresponding header file."
   (dp-push-go-back "visit-header-doc")
   (end-of-line)
   (search-forward "(")
-  (skip-chars-backward dp-ws+newline)
+  (skip-chars-backward (concat "(" dp-ws+newline))
   ;;(let ((function-name symbol-near-point))
   (dp-edit-cf-other-window t))
 

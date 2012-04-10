@@ -1144,6 +1144,34 @@ We say: \" p is a pointer to char\", not
       ;; return.
       (insert " ")))
 
+;;
+;; Doc stuff
+;;
+(defun q.v.-header-doc ()
+  "Meet naming convention for q.v. functions."
+  (visit-header-doc))
+
+(defun q.v.f (what)
+  "q.v. which see. Go and see it."
+  (let* ((what-name (concat "q.v.-"
+                           (dp-string-join what "-" 
+                                           nil nil nil
+                                           (lambda (s)
+                                             (format "%s" s)))))
+         ;; Do this or make an assoc?
+         (what-sym (intern-soft what-name)))
+    (when what-sym
+      (funcall what-sym))))
+
+
+(defmacro q.v. (&rest rest)
+  "Quote the args in REST and call the q.v. function"
+  `(q.v.f (quote ,rest)))
+
+;;;
+;;; Perl sucks. Perl sucks. Perl sucks. Perl sucks. Perl sucks. Perl sucks.
+;;; 
+
 ;; Take a list of perl parameters with a `,' added to the last one (eg $a,
 ;; $b, $c,) and convert it into a vertical list of @param doxygen lines.
 (defalias 'dp-perl-@param-defs 

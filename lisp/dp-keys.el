@@ -476,7 +476,8 @@ Hopefully [space] is mnemonic.")
                                          (dp-uncolorize-region (point-min) 
                                                                (point-max)
                                                                nil (C-u-p)))
-                          [?p] 'dp-set-colorized-extent-priority)
+                          [?p] 'dp-set-colorized-extent-priority
+                          [?a] 'dp-uncolorize-all)
     ;; <:cdd map colorization bindings:>
     "My color mode keys.")
   

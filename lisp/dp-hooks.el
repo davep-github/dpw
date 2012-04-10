@@ -423,7 +423,7 @@ far the regexp is concerned.")
   :group 'dp-vars)
 
 (defvar dp-trailing-whitespace-font-lock-element
-  (cons "\\s-+$" 'dp-trailing-whitespace-face)
+  '("\\s-+$" 0 dp-trailing-whitespace-face prepend)
   "A font-lock element to pick out trailing whitespace.")
 
 (defun dp-blah-blah (save-sym)
@@ -1469,6 +1469,11 @@ Before visiting means after the command completes."
         (setq ad-return-value (buffer-substring (mark) (point)))
       ad-do-it))
 
+  (defun dp-cscope-select-entry-this-window ()
+    "Visit the current entry in the cscope buffer window."
+    (interactive)
+    (cscope-select-entry-specified-window (selected-window)))
+
   (defun dp-bind-xcscope-keys (&optional map)
     (interactive "Smap? ")
     (setq-ifnil map global-map)
@@ -1537,7 +1542,7 @@ Before visiting means after the command completes."
         (kb-lambda (dp-func-or-kill-buffer 
                     'cscope-bury-buffer)))
       (dp-define-keys cscope-list-entry-keymap 
-                      '("." cscope-show-entry-other-window
+                      '("." dp-cscope-select-entry-this-window
                         "v" cscope-show-entry-other-window
                         "o" cscope-select-entry-other-window
                         [return] cscope-select-entry-other-window

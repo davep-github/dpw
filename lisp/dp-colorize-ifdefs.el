@@ -129,7 +129,11 @@
   (setq dp-colorize-ifdefs-ret (nreverse dp-colorize-ifdefs-ret))
   ;;(dmessage "ret1>%s<" dp-colorize-ifdefs-ret)
   (dolist (ext dp-colorize-ifdefs-ret)
-    (dp-make-extent (nth 0 ext) (nth 1 ext) 'dp-cifdef 'face (nth 2 ext))))
+    (dp-make-extent (nth 0 ext) (nth 1 ext) 
+                    'dp-cifdef
+                    ;; A common property for all of my colorized regions.
+                    'dp-colorized-p t
+                    'face (nth 2 ext))))
 ;;;
 ;;;
 ;;;

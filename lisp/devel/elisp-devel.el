@@ -411,5 +411,109 @@ nil
   (setq-default blah 1))nil
 
 
+(setq p 'b
+      q '(c d e))
+(c d e)
 
+  `(a ,p (quote (list ,@q)))
+(a b (quote (list c d e)))
+
+(a b (quote c d e))
+
+(a b c d e)
+
+  `(a . b)
+  `(a . ,p)
+
+q.v.
+
+(dp-string-join '(a b c) "-" nil nil nil
+                (lambda (s)
+                  (format "%s" s)))
+"a-b-c"
+
+(intern-soft "visit-header-docK")
+nil
+
+visit-header-doc
+
+nil
+
+;; q.v. header doc
+;; q.v. header-doc
+;; 
+
+q\.v\.
+
+q\.v\.
+
+(cl-pe '(q.v. header doc))
+
+(q\.v\.f '(header doc))
+
+
+
+
+
+
+
+
+
+
+(nil
+nil
+q\.v\.f header doc)nil
+
+
+
+
+(q\.v\.f header doc)
+
+
+
+
+(q\.v\.f 'headerdoc)nil
+)
+
+
+
+
+
+
+
+
+(q\.v\.f '(header doc))
+
+nil
+
+
+
+
+(q\.v\.f '(header doc))nil
+
+
+
+(q\.v\.f 'rest)nil
+
+(q.v. header doc)
+nil
+
+
+(defun dp-uncolorize-all (&optional rest-of-buffer-p)
+  "Remove all of my colorization. 
+If the region is active, that is colorized.
+REST-OF-BUFFER-P says only from point to point-max.
+All means every dp-extent with the property 'dp-colorized-p non-nil."
+  (interactive "P")
+  (let ((beg-end
+         (cond
+          ((dp-region-active-p)
+           (dp-region-boundaries-ordered))
+          (rest-of-buffer-p
+           (cons (point) (point-max)))
+          (t
+           (cons (point-min) (point-max))))))
+        (dp-unextent-region 'dp-colorized-p
+                            (car beg-end)
+                            (cdr beg-end)))))
 
