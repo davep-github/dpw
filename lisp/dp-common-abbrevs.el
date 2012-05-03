@@ -39,6 +39,10 @@
 ;;; !<@todo ??? Modify data structures to allow a way to add suffixes
 ;;; programmatically. Eg t for a space? 's for pluralization?
 ;;; !<@todo Automatically generate "logical" case mixtures.
+
+;;; Convenience binding:
+;;; C-c C-c (dp-save-and-redefine-abbrevs)
+;;; 
 (defconst dp-common-abbrevs
   '((("teh" "the" "duh" "D'OH!")
      dp-manual global)
@@ -229,9 +233,9 @@
      dp-manual)
     (("Filesystem" "File system")
      dp-manual)
-    ((("filename" "fname") "file name")
+    ((("filename" "fname") "file name" "File name")
      dp-manual)
-    (("Filename" "File name")
+    ((("fd" "fdesc") "file descriptor" "File descriptor")
      dp-manual)
     (("symlink" "symbolic link")
      dp-manual)
@@ -259,6 +263,9 @@
     (("vars" "variables")
      dp-manual)
     (("env" "environment")
+     dp-manual)
+    ((("envv" "envvar" "evar" "envar" "ev")
+      "environment variable" "environment variables")
      dp-manual)
     (("info" "information")
      dp-manual)
@@ -296,6 +303,10 @@
      dp-manual)
     ((("dir" "dirs")
       "directory" "directories")
+     dp-manual)
+    ((("subdir" "subdirs")
+      "subdirectory" "subdirectories"
+      "sub-directory" "sub-directories")
      dp-manual)
     ((("paren" "parens")
       "parenthesis" "parentheses" "parenthesize")

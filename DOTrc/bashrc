@@ -367,10 +367,13 @@ locale_rcs="$*"
 # add some locale specific dirs...
 export PATH=$(dp_add_to_path_iff -p "$PATH" \
     $HOME/bin.$WORK_ZONE \
-    $HOME/bin.$PROJECT \
+    $HOME/bin.$PROJECT_BIN \
     $HOME/bin.$OSName \
     $HOME/bin.$FAMILY \
     $HOME/bin.$FAMILY_ZONE)
+
+# Project stuff:
+PROJECT_WORK=$HOME/work
 
 # load locale specific functions
 EXTRA_RCS=''			# list of files other rcs want us to run
@@ -392,6 +395,12 @@ source_list -l $RC_DIR/alias "" $locale_rcs
     locale_rcs="$locale_rcs$sep$EXTRA_RCS"
 }
 unset EXTRA_RCS sep
+
+: ${PROJECT_ROOT:="${PROJECT_WORK}/${PROJECT_NAME-}"}
+export PROJECT_ROOT
+: ${PROJECT_HOME:="${PROJECT_ROOT-}"}
+export PROJECT_HOME
+
 
 # do this after host specific env is run to ensure . is first.
 # . in path is unwise.

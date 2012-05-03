@@ -1200,6 +1200,7 @@ isearch while the region is active to locate the end of the region."
 
 (defun dp-hyper-apropos-mode-hook ()
   (interactive)
+  (define-key hyper-apropos-help-map [tab] 'help-next-symbol)
   (local-set-key [tab] 'help-next-symbol)
   (local-set-key [?l] 'lgrep)
   (local-set-key [?p] 'hyper-apropos-last-help))
@@ -2049,11 +2050,12 @@ and then business as usual."
 
 (defun dp-diff-mode-hook ()
   (interactive)
-  ;; Put 'diff-goto-source on CxMb
-  ;; It's on Mo and that will NOT do.
-  ;; set CxMb to what was on Mo
+  ;; Put 'diff-goto-source on C-xM-e
+  ;; It's on M-o and that will NOT do.
+  ;; set C-xM-e to what was on M-o
+  ;; M-e is open file, so it's kind of mnemonic.
   (dp-bump-key-binding [(meta ?o)] 
-                       'dp-kill-ring-save [(control ?x) (meta b)]))
+                       'dp-kill-ring-save [(control ?x) (meta e)]))
 
 (defun dp-revert-hook ()
   ;; Remove existing colorization. We may want to have a "permanent" flag

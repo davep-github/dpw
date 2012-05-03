@@ -4,9 +4,7 @@
 
 source script-x
 
-#eko 1111 "$@"
 . script-x
-#eko 2222 "$@"
 
 # @todo make -m add mvsik dir to dirs ???
 # @todo share code w/fer-all-dirs ??
@@ -15,7 +13,8 @@ option_str='nqd:g:D:p:P:sf:'
 qdat=($(getopt -o "$option_str" -- "$@"))
 [ $? != 0 ] && Usage
 # is eval needed? eval set -- "${qdat[@]}" NO!
-set -- "${qdat[@]}" 
+eval set -- "${qdat[@]}"
+
 vsetp "$DP_SCRIPT_X_DEBUG" && {
     echo '$DP_SCRIPT_X_DEBUG='"$DP_SCRIPT_X_DEBUG"
     echo "Results from getopt -o:"
@@ -47,17 +46,16 @@ FIND_PRINT0_OPT="-print0"
 XARGS_PRINT0_OPT="-0"
 : ${XARGS_OPTS=-r}
 show_cmd=
-
 for i in "$@"
 do
     #eko 5555 "$i"
-    #echo "i>$i<"
-    #echo "1>$1<"
+    echo "i>$i<"
+    echo "1>$1<"
     case $1 in
 	-v) set -x;;		# Lazy^H^H^H^HPoor man's verbosity.
 	-q) ECHO=":" ;;
-	-d) dirs_a[${#dirs_a[@]}]=$2; shift;;   # Save off dirs.
-	-g) PATS_a[${#PATS_a[@]}]=$2; shift;;   # Save off globs.
+	-d) dirs_a+=($2); shift;;   # Save off dirs.
+	-g) PATS_a+=($2); shift;;   # Save off globs.
 	-D) file=d; shift;;
         -p) FIND_PRE_ARGS_a[${#FIND_PRE_ARGS_a[@]}]="$2"; shift;;
         -P) FIND_POST_ARGS_a[${#FIND_POST_ARGS_a[@]}]="$2"; shift;;
@@ -80,9 +78,10 @@ pats=${PATS_a[@]}
 [ -z "${dirs_a[*]}" ] && dirs_a=(.)
 if [ -n "$pats" ]
 then
-    name_arg=$(mk-find-list $pats)
+    echo "PATS_a>${PATS_a[@]}<PATS_a"
+    name_arg=($(mk-find-list "${PATS_a[@]}"))
 else
-    name_arg=
+    name_arg=''
 fi
 
 vsetp $DP_SCRIPT_X_DEBUG && {
@@ -130,9 +129,9 @@ crappy_dash_n2()
 #
 # NB!!! Any output to stdout after the pipe is set up will
 # screw up the input to xargs.
-echo "dirs_a>"${dirs_a[0]}"<"
-$RUNNER1 $FINDER $(echo ${dirs_a[@]}) $FIND_PRE_ARGS -type $type $name_arg \
+set -v
+$RUNNER1 $FINDER $(echo ${dirs_a[@]}) $FIND_PRE_ARGS -type $type \
+    "${name_arg[@]}" \
     $FIND_PRINT0_OPT $FIND_POST_ARGS \
     | \
     $RUNNER2 xargs $XARGS_OPTS $XARGS_PRINT0_OPT "$@"
-

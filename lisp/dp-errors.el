@@ -14,7 +14,12 @@
 ;; Debugger entered--Lisp error: (error "You've already clocked in!")
 ;;
 ;; Debugger entered--Lisp error: (error "History is not being recorded in this context")
-;;
+;; For:
+;; Lisp error: (invalid-operation "Keyboard macro terminated by a command ringing the bell")
+;; can use:
+;; "^Invalid operation: Keyboard macro terminated by a command ringing the bell$"
+;; Useful if you really want to use ^ & $
+;; However, "Keyboard macro terminated...bell$" is just fine.
 ;;Debugger entered--Lisp error: (error "Quit")
 ;;  signal(error ("Quit"))
 ;;  cerror("Quit")
@@ -41,8 +46,7 @@
     folder-empty
     end-of-folder                       ; vm-* error.
     dp-vm-IMAP-data-modification-disabled
- ;; ??    "^Keyboard macro terminated by a command ringing the bell"
-    
+    "Keyboard macro terminated by a command ringing the bell$"
     "No cross references in this node"
     "There is no next link"
     "wconfig-rotate-yank-pointer): Window configuration save ring is empty"

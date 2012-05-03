@@ -290,16 +290,38 @@ such. Getting a \"xxx is modified, do something anyway? (yes or no)\" is
 fucking annoying and I shouldn't have to deal with it. But I do, so I let
 elisp handle it. ")
 
+(defun dp-refresh-tags (&optional preserve-files-p)
+  "Jump through hoops the kill the fucking tags buffers.
+See `dp-shell-*TAGS-changers' rant. "
+  (interactive "P")
+  ;; Nuke the pesky completion buffer, which seems to be obnoxiously
+  ;; permanent.
+  (make-vector 511 0)
+  (setq tag-completion-table (make-vector 
+                              (length tag-completion-table) 
+                              0))
+  (loop for buf in (buffer-list)
+    do (when (and (buffer-file-name buf)
+                  (string-match "^.?TAGS$" (file-name-nondirectory
+                                            (buffer-file-name buf))))
+         ;; !<@todo XXX Change this to use the new `dp-kill-buffers-by-name'
+         ;; But it will need to be able to force the mod status of the buffer
+         ;; to nil.
+         (let ((file-name (buffer-file-name buf))
+               status-msg)
+           (setq status-msg (format "killing %s" buf))
+           (set-buffer-modified-p nil buf)
+           (kill-buffer buf)
+           (unless (or preserve-files-p
+                       (not file-name))
+             (setq status-msg (format "%s, deleting: %s" status-msg file-name))
+             (delete-file file-name))
+           (message status-msg)))))
+
+
 (defun dp-shell-lookfor-*TAGS-changer (str)
   (when (string-match dp-shell-*TAGS-changers str)
-    ;; !<@todo XXX Change this to use the new `dp-kill-buffers-by-name'
-    (loop for buf in (buffer-list)
-      do (when (and (buffer-file-name buf)
-                    (string-match "^.?TAGS$" (file-name-nondirectory
-                                              (buffer-file-name buf))))
-           (message "killing TAG-type buffer: %s" buf)
-           (set-buffer-modified-p nil buf)
-           (kill-buffer buf)))))
+    (dp-refresh-tags)))
 
 (defvar dp-cd-type-command-regexp 
   "^[ \t]*\\(g\\s-+\\(\\|gb\\|pd\\)[ \t]*$\\)"
@@ -662,7 +684,8 @@ see it and the favoring buffer.")
   "This tells, if non-nil, which shell buffer to select when using dp-shell.
 Values:
 nil --> No preference.  Traditional behavior.
-buffer --> Switch to this buffer as controlled by dp-shells-favored-shell-other-window-p
+buffer --> Switch to this buffer as controlled by 
+           `dp-shells-favored-shell-other-window-p'
 cons --> car is buffer, cdr is overriding other-window-p.")
 
 (dp-deflocal dp-shell-mode-abbrev-table nil
@@ -2130,16 +2153,16 @@ NAME is a buffer or buf-name.  Type is (currently) one of: '(shell ssh)")
 ;;CO;         (or (dp-visit-or-switch-to-buffer 
 ;;CO;              (car-safe dp-shells-most-recent-shell)) t))))
 
-(defun dp-shells-set-favored-buffer (name &optional buffer)
+(defun dp-shells-set-favored-buffer (name &optional other-window-p buffer)
   "Set the shell buffer we think the current buffer most wants to visit."
-  (let ((fav-buf (dp-shells-get-favored-buffer buffer)))
-    (when fav-buf
-      (setcar fav-buf name))))
+  (interactive "bBuffer: \nP")
+  (setq dp-shells-favored-shell-buffer
+        (cons name other-window-p)))
 
 (defun dp-shells-get-favored-buffer (&optional buffer)
   (with-current-buffer (or buffer (current-buffer))
     (let ((fav (cond
-                (dp-shells-favored-shell-buffer
+                (dp-shells-favored-shell-buffer ; Something set in this buffer?
                  (if (consp dp-shells-favored-shell-buffer)
                      dp-shells-favored-shell-buffer
                    (cons dp-shells-favored-shell-buffer nil)))
@@ -2150,7 +2173,7 @@ NAME is a buffer or buf-name.  Type is (currently) one of: '(shell ssh)")
            fav))))
 
 (defun dp-fav-buf-p (buf)
-  (consp buf))
+  (dp-and-consp buf))
   
 (defun dp-shells-favored-shell-buffer-buffer (fav-buf)
   (if (dp-fav-buf-p fav-buf)
@@ -2158,7 +2181,9 @@ NAME is a buffer or buf-name.  Type is (currently) one of: '(shell ssh)")
     fav-buf))
 
 (defun dp-shells-favored-shell-buffer-name (fav-buf)
-  (buffer-name (dp-shells-favored-shell-buffer-buffer fav-buf)))
+  (when (dp-and-consp fav-buf)
+    (setq fav-buf (car fav-buf)))
+  (dp-buffer-name (dp-shells-favored-shell-buffer-buffer fav-buf)))
 
 (defun dp-shells-favored-shell-buffer-flags (buf)
   (if (dp-fav-buf-p buf)

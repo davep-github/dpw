@@ -517,3 +517,373 @@ All means every dp-extent with the property 'dp-colorized-p non-nil."
                             (car beg-end)
                             (cdr beg-end)))))
 
+
+(let ((comment-end "")
+      (comment-start "x"))
+  (list (not (or (string= comment-end "")
+                 (string= comment-start "")))
+        (and (not (string= comment-end ""))
+             (not (string= comment-start "")))))
+(nil nil)
+
+(t t)
+
+(nil nil)
+
+(nil nil)
+
+
+
+
+========================
+Thursday April 12 2012
+--
+
+(defun dp-space-to-col (col &optional insert-char)
+  (interactive "Ncol: ")
+  (setq-ifnil insert-char ? )
+  (let ((num-to-insert (- col (current-column))))
+    (when (> num-to-insert 0)
+      (insert (make-string num-to-insert insert-char)))))
+
+............................................
+    hi
+
+========================
+Wednesday April 18 2012
+--
+(symbol-value 'dp-python-new-file-template)
+"
+import sys, os
+
+def main(argv):
+    import getopt
+    opt_string = \"\"
+    opts, args = getopt.getopt(argv[1:], opt_string)
+    for o, v in opts:
+        #if o == '-<option-letter>':
+        #    # Handle opt
+        #    continue
+        pass BUBBA
+
+    for arg in args:
+        # Handle arg
+        pass
+
+if __name__ == \"__main__\":
+    main(sys.argv)
+
+"
+
+(cl-pe dp-major-mode-to-shebang)
+
+
+((python-mode i-name
+              "python"
+              env-p
+              run-with-/usr/bin/env-p
+              comment-start
+              "### "
+              template
+              dp-python-new-file-template)
+ (sh-mode it shit)
+ (c-mode it dp-c-new-file-template)
+ (c++-mode it dp-c-new-file-template)
+ (example-mode it example-it)
+ (perl-mode i-name "perl" env-p run-with-/usr/bin/env-p))nil
+
+
+
+
+((python-mode i-name "python" env-p run-with-/usr/bin/env-p comment-start "### " template "
+import sys, os
+
+def main(argv):
+    import getopt
+    opt_string = \"\"
+    opts, args = getopt.getopt(argv[1:], opt_string)
+    for o, v in opts:
+        if o == '-<option-letter>':
+            # Handle opt
+            continue
+    for arg in args:
+        # Handle arg
+
+if __name__ == \"__main__\":
+    main(sys.argv)
+
+")
+ (sh-mode it shit)
+ (c-mode it dp-c-new-file-template)
+ (c++-mode it dp-c-new-file-template)
+ (example-mode it example-it)
+ (perl-mode i-name "perl" env-p run-with-/usr/bin/env-p))nil
+
+
+
+========================
+Tuesday April 24 2012
+--
+(princf"\\(^\\|\\s-\\|-D\\|\"\\|(\\)"
+"\\(^\\|\\s-\\|-D\\|\"\\|(\\)"
+
+
+(let ((vars '(
+              "CXX_PTHREAD_OPT"
+              "CXX_LD_PTHREAD_OPT"
+              "LIBS"
+              "EXTRA_CXX_DEFS"
+              "CXX_DEBUG_FLAG"
+              "CXX_OPT_FLAG"
+              "CXX_ERROR_FLAGS"
+              "EXTRA_CXX_DEFS"
+              "EXTRA_CXX_FLAGS"
+              "SHARED_DEF_PROG"
+              "ADDITIONAL_PACKAGE_DIR"
+              "INC_DIRS"
+              "LIB_DIRS")))
+  (with-current-buffer (dp-get-buffer "common.am.mak")
+    (loop for v in vars do
+      (dp-beginning-of-buffer)
+      (while (re-search-forward
+            ;; (repre "\\(\"\\|(\\)" "\\1ftci" nil)
+              ;;                    |-D\\|\"\\|(\\)
+              ;; epre "\\(^\\|-D\\|\"\\|(\\)" "\\1ftci_" nil)
+              ;; epre "\\(^\\|\\s-\\|-D\\|\"\\|(\\)" "\\1ftci_" nil)
+              (concat "\\(^\\|\\s-\\|-D\\|\"\\|(\\)" 
+                      "\\(" v "\\)"
+                      "\\($\\|\\s-\\|>\\|)\\)" ) nil t)
+        (replace-match "\\1ftci_\\2\\3" t)))))
+
+
+========================
+Wednesday April 25 2012
+--
+
+xxx = aaa bbb  ccc   ddd
+xxx = aaa bbb ddd     eeee \
+q-followed-by-spaces
+
+
+xxx = aaa bbb ccc
+
+(defvar yaddaddadda t)
+yaddaddadda
+
+(defun dp-break-up-line (&optional sep term replacement)
+  "Replace regexp SEP with REPLACEMENT. Add TERM to end of original line.
+Continue to end of region if active, else end of original line.
+Like when you have some long var in a Makefile:
+SRCS = a.c b.c d.c ...
+-->
+SRCS = a.c \
+       b.c \
+       d.c
+..."
+  (interactive)
+  (setq-ifnil sep "\\s-+"
+              term " \\"
+              replacement "\n")
+  (let* ((b&e (dp-region-or... :bounder 'rest-of-line-p))
+         (end-marker (dp-mk-marker (cdr b&e) nil t)))
+    (goto-char (car b&e))
+    (dmessage "em: %s lep: %s" end-marker (line-end-position))
+    (while (re-search-forward sep end-marker t)
+      (dmessage "ms>%s<" (match-string 0) end-marker)
+      (unless t ;;(looking-at (regexp-quote term))
+        (replace-match replacement)
+        (goto-char (match-beginning 0))
+        (dp-delete-to-end-of-line)
+        (end-of-line)
+        (dmessage "me: %s, em: %s" (match-end 0) end-marker)
+        (unless (>= (match-end 0) end-marker)
+          (insert term)))
+      (next-line 1)
+      (beginning-of-line)
+      (when (looking-at sep)
+        (replace-match ""))
+      ;; !<@todo XXX run command on TAB?
+      (indent-for-tab-command))))
+
+
+
+psa_SOURCES = psa.cpp
+
+sa-concierge.cpp \
+sa-concierge.h \
+sa-message-handler.cpp \
+sa-message-handler.h
+
+
+
+
+
+
+
+
+
+
+
+
+# don't split me!
+
+========================
+Monday April 30 2012
+--
+(defun dp-shells-set-favored-buffer (name &optional buffer override-p)
+  "Set the shell buffer we think the current buffer most wants to visit."
+  (let ((fav-buf (dp-shells-get-favored-buffer buffer)))
+    (cond
+     ((and fav-buf
+           (consp fav-buf))
+      (setcar fav-buf name))
+     (t (setq ))
+     
+(defun* dp-shell0 (&optional arg &key other-window-p name)
+  "Open/visit a shell buffer.
+First shell is numbered 0 by default.
+ARG is numberp:
+ ARG is >= 0: switch to that numbered shell.
+ ARG is < 0: switch to shell buffer<\(abs ARG)>
+ ARG memq `dp-shells-shell<0>-names' shell<0> in other window."
+  (interactive "P")
+  (let* ((specific-buf-requested-p current-prefix-arg)
+         (arg-specified-p (null (current-prefix-arg)))
+         (pnv (cond
+               ((member arg dp-shells-shell<0>-names)
+                0)
+               (t (prefix-numeric-value arg))))
+         (fav-buf0 (dp-shells-get-favored-buffer (current-buffer)))
+         (fav-buf (dp-shells-favored-shell-buffer-buffer fav-buf0))
+         (fav-buf-name (dp-shells-favored-shell-buffer-name fav-buf))
+         ;; The fan is the buffer who favors this shell.
+         (fan-buf-name (format "<%s>" (buffer-name)))
+         (fav-flags (dp-shells-favored-shell-buffer-flags fav-buf0))
+         (other-window-p (or (eq arg '-) 
+                             (and pnv (< pnv 0) (setq pnv (abs pnv)))
+                             other-window-p
+                             fav-flags
+                             (Cup)))
+         (switch-window-func (cond
+                              ((functionp other-window-p) other-window-p)
+                              (other-window-p 'switch-to-buffer-other-window)
+                              (t nil)))
+         ;; Ordered by priority.
+         (sh-name (or name
+                      (stringp arg)
+                      (and arg
+                           (or (dp-shells-get-shell-buffer-name pnv)
+                               (format "*shell*<%s>" pnv)))
+                      (and fav-buf0 fav-buf-name)
+                      (and pnv
+                           (or (dp-shells-get-shell-buffer-name pnv)
+                               (format "*shell*<%s>" pnv)))
+                      (and (dp-buffer-live-p 
+                            (dp-shells-most-recent-shell-buffer)))))
+         ;; Is the shell already in existence?
+         (existing-shell-p (dp-buffer-live-p sh-name))
+         (sh-buffer (and sh-name
+                         (get-buffer-create sh-name)))
+         win fav-buf0 new-shell-buf)
+
+    (
+    (setq fav-buf0 (dp-shells-get-favored-buffer (current-buffer))
+         fav-buf (dp-shells-favored-shell-buffer-buffer fav-buf0)
+         fav-buf-name (dp-shells-favored-shell-buffer-name fav-buf)
+         ;; The fan is the buffer who favors this shell.
+         fan-buf-name (format "<%s>" (buffer-name))
+         fav-flags (dp-shells-favored-shell-buffer-flags fav-buf0)
+         switch-window-func (cond
+                              ((functionp other-window-p) other-window-p)
+                              (other-window-p 'switch-to-buffer-other-window)
+                              (t nil))
+         ;; Ordered by priority.
+         sh-name (or name
+                      (stringp arg)
+                      (and arg
+                           (or (dp-shells-get-shell-buffer-name pnv)
+                               (format "*shell*<%s>" pnv)))
+                      (and fav-buf0 fav-buf-name)
+                      (and pnv
+                           (or (dp-shells-get-shell-buffer-name pnv)
+                               (format "*shell*<%s>" pnv)))
+                      (and (dp-buffer-live-p 
+                            (dp-shells-most-recent-shell-buffer))))
+         ;; Is the shell already in existence?
+         existing-shell-p (dp-buffer-live-p sh-name)
+         sh-buffer (and sh-name
+                         (get-buffer-create sh-name))
+         win fav-buf0 new-shell-buf)
+
+    ;;(dmessage "arg>%s<, sh-name>%s<" arg sh-name)
+    (if existing-shell-p
+        (progn
+          (dp-visit-or-switch-to-buffer sh-buffer switch-window-func)
+          ;; We're in the requested buffer now.
+          ;; If we came from a file with a live favored shell buffer, set up
+          ;; the fiddly-bits(tm).
+          ;;!<@todo This should be moved to any we visit this buffer, but
+          ;;the hook doesn't exist yet.  I can still do it in all of my
+          ;;visit  points.
+          (when specific-buf-requested-p
+            (dp-shells-set-most-recent-shell (current-buffer) 'shell))
+          (when (dp-fav-buf-p fav-buf0)
+            (setq dp-shell-whence-buf fav-buf
+                  dp-use-whence-buffers-p t)
+            (unless (string-match (regexp-quote fan-buf-name) fav-buf-name)
+              (rename-buffer (format "%s%s" fav-buf-name fan-buf-name)))
+            (message "Using fav buf: %s" fav-buf0))
+          (dmessage "point: %s, window-point: %s" (point) (window-point)))
+      ;;;;;;;;;;;;;;;;;;;;; EA! ;;;;;;;;;;;;;;;;;;;;;
+      ;; Handle new shell case. We may have a name already.
+      (setenv "PS1_prefix" nil 'UNSET)
+      (setenv "PS1_host_suffix"
+              (format "%s" (dp-shells-guess-suffix sh-name "")))
+      (setenv "PS1_bang_suff" (format dp-shells-shell-num-fmt pnv))
+      (save-window-excursion/mapping
+       (shell sh-buffer))
+      (dp-visit-or-switch-to-buffer sh-buffer switch-window-func)
+      ;;
+      ;; We're in the new shell buffer now.
+      ;;
+      (setq dp-shell-isa-shell-buf-p '(dp-shell shell)
+            other-window-p nil)
+      (dp-shells-set-most-recently-created-shell sh-buffer 'shell)
+      (dp-shells-set-most-recent-shell sh-buffer 'shell)
+      ;; new shell (I hope!)
+      (add-to-list 'dp-shells-shell-buffer-list sh-buffer)
+      (add-local-hook 'kill-buffer-hook 'dp-shells-delq-buffer)
+      (add-local-hook 'kill-buffer-hook 'dp-save-shell-buffer-contents-hook)
+      ;; Set the name once. All saves will pile up in the same file.  I've
+      ;; added a manual save command and that will go there, too.  If shell
+      ;; buffers get too big, then the performance begins to suck.  Many
+      ;; things can be shell wide.
+      ;; !<@todo XXX Make sure that as few things as possible (0!) look at
+      ;; the entire buffer. Also, check into the fontifier. It may do evil
+      ;; things.
+      ;; Saves are currently done with sticky names so this isn't needed.
+      ;;(setq-ifnil dp-save-buffer-contents-file-name 
+      ;;            (dp-shellify-shell-name (buffer-name)))
+      (dmessage "Loading shell input ring")
+      (dp-maybe-read-input-ring))))
+
+========================
+Wednesday May 02 2012
+--
+
+;; Copped from `compilation-set-window-height'
+(defun dp-set-window-height (height-in-lines &optional buffer-or-window)
+  (interactive "NNew height: ")
+  ;; if buffer, find window.
+  (let ((window (cond
+                 ((not buffer-or-window)
+                  (selected-window))
+                 ((bufferp buffer-or-window)
+                  (dp-get-buffer-window buffer-or-window))
+                 ((windowp buffer-or-window)
+                  buffer-or-window)
+                 (t (error "bad type to dp-set-window-height")))))
+  (save-excursion
+    (with-selected-window window
+      (enlarge-window (- height-in-lines
+                         (window-height)))))))

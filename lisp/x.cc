@@ -37,8 +37,8 @@ typedef typename yaya yadda;
 ************************************************************************
 */
 
-   fab
-00fab(
+//   fab
+//00fab(
 //
 
 name_std::string
@@ -368,6 +368,8 @@ class blah
         int x(void)
         {
             blah;               // urcz
+            if (a) {
+            }
         }
         
 };                              // End of this class.
@@ -377,6 +379,7 @@ class blah
 class blah2 : public blah_t
 {
         void yabba();
+        if (a)
 };
 
 

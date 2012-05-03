@@ -42,8 +42,10 @@ SYSTEM_INCLUDES=
 FILES_OF_INTEREST=()
 FILES_TO_FILTER=()
 : ${v:=''}
-: ${EXCLUDE_PAT:='.*'}
-### !!! THESE ARE REGEXPs, NOT GLOBS! * is not .* !!!!
+# It may be easier to specify excludes in some cases rather than including
+# everything else. Things like all c files except test.c
+: ${EXCLUDE_PAT:=''}
+### NB: !!! THESE ARE REGEXPs, NOT GLOBS! * is not the same as .* !!!!
 VC_EXCLUDES='-e /^.*\/?(\.svn|CVS|RCS|\.4D|\.git|\.hg)\/?.*/d'
 
 echo 1>&2 "Read various ignore files like, .(cvs|git)ignore, ~/.gitexcludes,
@@ -109,12 +111,23 @@ EXCLUDED_FILES_FILE_OPT=
 [ -z "${FILES_TO_FILTER[*]}" ] && {
     FILES_TO_FILTER=('.*')
 }
-echo 1>&2 "FtF>${FILES_TO_FILTER[@]}<"
 
+filter_excludes()
+{
+    if [ -z "${EXCLUDE_PAT}" ]
+    then
+        cat
+    else
+        egrep -v "${EXCLUDE_PAT}"
+    fi
+}
+
+echo 1>&2 "FtF>${FILES_TO_FILTER[@]}<"
+echo_id EXCLUDE_PAT 1>&2
 filter()
 {
     tee /dev/null | \
-    egrep -e "${EXCLUDE_PAT}" | \
+    filter_excludes | \
     egrep -i "${FILES_OF_INTEREST[@]}" | \
     sed -r "$VC_EXCLUDES" $EXCLUDES | \
     egrep -i "${FILES_TO_FILTER[@]}" | \

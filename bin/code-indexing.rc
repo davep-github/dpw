@@ -1,4 +1,5 @@
 #!/bin/sh
+# Source me since I set variables and such.
 
 source script-x
 

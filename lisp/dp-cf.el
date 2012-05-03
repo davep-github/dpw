@@ -1,4 +1,4 @@
-(defconst dp-c-source-file-extensions '("cxx" "cc" "c" "c++" "C" "tcc" "cpp"
+(defconst dp-c-source-file-extensions '("cpp" "cxx" "cc" "c" "c++" "C" "tcc"
                                         "inl" "impl" "tcc")
   "Name says it all.")
 
@@ -73,11 +73,11 @@ And a plain old C extension.")
 
 (defvar dp-cf-inc-search-path '("../include" "../h" "./inc" "./include" "./h"
                                 "./inc" "../../include" "../../h"
-                                "../../inc" "."))
+                                "../../inc" "../common" "./common" "."))
 
 (defvar dp-cf-src-search-path '("../src" "../source" "../code" "../../src"
                                 "../../source" "../../code" "./src" "./source"
-                                "./code" "."))
+                                "./code" ".." "."))
 
 (defstruct dp-cf-file-info
   ;;

@@ -9,9 +9,11 @@ Prevents need for global statement to modify global vars"""
         # set up defaults
         self.sep = ' -or '
         self.op = '-name '
+        self.open_quote = "'"
+        self.close_quote = "'"
         
 globals = Globals()
-opt_str = 's:S:o:O:'
+opt_str = 's:S:o:O:qdQ:'
 
 options, args = getopt.getopt(sys.argv[1:], opt_str)
 
@@ -29,10 +31,24 @@ for o, v in options:
     if o == '-O':
         globals.op = v
 	continue
+    if o == '-q':
+        # "'...'"
+        globals.open_quote = """"'"""
+        globals.close_quote = """"'"""
+        continue
+    if o == '-d':
+        globals.open_quote = '"'
+        globals.close_quote = '"'
+        continue
+    if o == '-Q':
+        globals.open_quote = v
+        globals.close_quote = v
+        continue
+
 
 args2 = []
 for s in args:
-    args2.append( "'" + s + "'")
+    args2.append(globals.open_quote + s + globals.close_quote)
     
 
 s = string.join(args2, globals.sep + globals.op)

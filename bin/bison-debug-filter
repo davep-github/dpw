@@ -1,0 +1,21 @@
+#!/bin/sh
+
+source script-x
+set -u
+
+: ${error_tag:='!!!!!!!!!!'}
+[ -n "$error_tag" ] && {
+    error_tag="|$error_tag"
+}
+: ${output_tag:='=========='}
+[ -n "$output_tag" ] && {
+    output_tag="|$output_tag"
+}
+
+: ${extra_terms:=''}
+[ -n "$extra_terms" ] && {
+    extra_terms="|$extra_terms"
+}
+
+expr='^(Shifting|Reducing|->)|Next token is|\(line \)'"$error_tag$output_tag$extra_terms"
+egrep -e "$expr"

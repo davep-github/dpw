@@ -154,6 +154,19 @@ nil says to use the default builtin image."
   "Regexp to represent information-like patterns,
 e.g. URLs.")
 
+(defvar dpj-topic-to-file-map 
+  '(("\\(\\.\\|^\\)politics\\(\\.\\|$\\)" "daily-private")
+    ("\\.*" "daily"))
+  "Map a topic name to a topic specific file name")
+
+(defun dpj-topic-to-file (topic)
+  "Create a topic specific note file name.
+!<@todo XXX allow the name-base to include a dir."
+  (let* ((name-base (cadr (dp-assoc-regexp topic dpj-topic-to-file-map))))
+    (dp-make-dated-note-file-name name-base 
+                                  :extension ".jxt"
+                                  :note-base-dir (dpj-base-dir-name topic))))
+
 (defvar dpj-info-regexps (concat dpj-info-regexps0 "[^ 	
 ]*"))
 

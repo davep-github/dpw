@@ -22,6 +22,10 @@ git_diff_or_cat()
     
 commit="$1"; shift
 
+[ -z "$*" ] && {
+    echo 1>&2 "Usage: git-commit commit file+"
+    exit 1
+}
 for f in "$@"
 do
   git_diff_or_cat "$commit" "$f"

@@ -12,6 +12,12 @@
 
 (require 'advice)
 
+;; Not sure why this isn't buffer local by default.
+;; quote:
+;; This variable is intended for use by making it local to a buffer.
+;; But it is local only if you make it local.
+(make-variable-buffer-local 'backup-inhibited)
+
 ;; I need to require this because it inits its name ring to a funky value.
 (require 'wconfig)
 ;; Also, annoyingly, its public and apparently meant to be used by clients is

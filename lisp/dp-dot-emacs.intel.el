@@ -77,8 +77,8 @@
            " <M-down> C-1 C-z <M-down> C-0 C-z")))
 
 (defvar dp-poc-layout-format-string
-  (concat "C-0 C-z M-- C-1 C-z M-- C-2 C-z M-- M-x %s RET C-2 C-z"
-          " <M-%s> C-1 C-z <M-%s> C-0 C-z")
+  (concat "C-1 C-z M-- C-2 C-z M-- C-3 C-z M-- M-x %s RET C-3 C-z"
+          " <M-%s> C-2 C-z <M-%s> C-1 C-z")
 "Common layout w/ %s for specific 3x window config.")
 
 (defalias 'dp-poc-layout-2+1
@@ -115,10 +115,32 @@
 (defalias 'jk2 'dp-poc-layout2)
 
 ;; Make this environment/project aware.
-(defun dp-index-code()
+(defun dp-index-code(&optional sync-p)
   (interactive)
-  (shell-command 
-   "cd /home/dapanarx/work/ftci/poc && index-code -I client pyagents&" nil))
+  (let (cmd
+        (index-root 
+         (car (dp-first-with-pred 'getenv 
+                                  '("PROJECT_INDEX"
+                                    "PROJECT_HOME"
+                                    "PROJECT_ROOT")))))
+    (setq index-root
+          (if index-root
+              (getenv index-root)
+            (read-directory-name 
+             "index root: " 
+             nil 
+             nil
+             t)))
+    (when index-root
+      ;; It doesn't really matter when we kill the old tags buffers.
+      ;; But we shouldn't do a tag op until the whole process is finished.
+      (setq index-root (expand-file-name index-root))
+      (dp-refresh-tags)
+      (setq cmd (concat "cd " index-root " && index-code -I client pyagents"
+                        (if sync-p "" "&")))
+      (message "running: %s" cmd)
+      (shell-command cmd))))
+
 (dp-safe-alias 'ic 'dp-index-code)
 
 (provide 'dp-dot-emacs.intel.el)

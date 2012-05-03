@@ -8,7 +8,7 @@
 
 . script-x
 
-all_options="RnqvdDm:cspPlzr:h"
+all_options="RnqvVdDm:cspPlzr:hgC"
 ln_s_p=
 MV_CMD=
 MV_OPTS=
@@ -70,8 +70,6 @@ then
     shift
     verbose=1;
 else
-    # see the man page of getopt for inadequacies.
-    ##args=` getopt RnqvdDm:cs $* `
     q=$(getopt -o "$all_options" -- "$@")
     [ $? != 0 ] && { 
         Usage
@@ -95,7 +93,9 @@ else
             -m) MV_CMD=$2; shift;;
             -l) MV_CMD=ln; MV_OPTS='-s';;
             -c) show_cmds=y;;
+            -C) show_cmds=;;
             -s) show_cmds=y; dash_i=''; dash_dash=''; MV_CMD='svn mv';;
+            -g) show_cmds=y; dash_i=''; dash_dash=''; MV_CMD='git mv';;
             -p) paranoid_p=;;
             -P) paranoid_p="auto_exit";;
             -z) zippit=t;;

@@ -316,6 +316,7 @@ pathff()
 }
 export -f pathff
 
+# Copped from GIT shell on Windwoes.
 __git_ps1 () 
 { 
     local g="$(__gitdir)";

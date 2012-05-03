@@ -21,7 +21,7 @@ EXCLUDE_TREES_WITH_THIS_FILE = 'DP_NO_RCS_TREE'
 EXCLUDE_PER_DIR_FILE_NAME = "DP_RCS_EXCLUDE_FILES"
 
 # RCS the control files so we don't lose them when we recreate the tree.
-DEFAULT_EXCLUDE_FILES = [
+DEFAULT_EXCLUDE_FILE_REGEXPS = [
     #INCLUDE_DIRS_WITH_THIS_FILE, INCLUDE_TREES_WITH_FILE,
     #EXCLUDE_DIRS_WITH_THIS_FILE, EXCLUDE_TREES_WITH_THIS_FILE,
     '^CVS.adm$', '^Rcslog$', '^cvslog\..*$',
@@ -46,14 +46,14 @@ DEFAULT_EXCLUDE_FILES = [
     ".*\.CR$",
     ]
 
-EXCLUDE_FILES = DEFAULT_EXCLUDE_FILES
+EXCLUDE_FILES = DEFAULT_EXCLUDE_FILE_REGEXPS
 
 # @todo Add path exclusions, regexps on full pathname
 # @todo Add size exclusions
 MAX_FILE_SIZE = -1                      # >0 ==> limit in bytes
 # @todo Add switches for various {in|ex}clusions
 
-DEFAULT_EXCLUDE_DIRS = [
+DEFAULT_EXCLUDE_DIR_REGEXPS = [
     '^RCS$', '^SCCS$', '^CVS$', '^\.(svn|git|hg)$' ,
     # Auto(conf|make) stuff.
     "^autom4te.cache$", 
@@ -69,7 +69,7 @@ DEFAULT_EXCLUDE_DIRS = [
     # code... "I thought I changed that! Oh, I did, but in the dev version."
     "^(exp|EXP|ddddev)$",               #duh-duh-duh-dev
     # Old, but of historical interest. But not for indexing.
-    "^(retired|RETIRED|olde?|OLDE?)$",
+    "^(deprecated|retired|RETIRED|olde?|OLDE?)$",
     ]
 
 DEBUG_SHOW_ALL_DIRS =                   0x01
@@ -95,7 +95,6 @@ DEFAULT_FILE_TYPE_EXCLUSIONS = [
     "PDF document",
     "Netpbm",
     "pixmap",
-    
     ]
 
 FOLLOW_SYMLINKS = False
@@ -472,7 +471,7 @@ class FileTreeWalker:
                                  exclude_files)
         dp_sequences.extend_list(self.file_type_exclusion_list,
                                  DEFAULT_FILE_TYPE_EXCLUSIONS)
-        self.add_dir_exclude(DEFAULT_EXCLUDE_DIRS)
+        self.add_dir_exclude(DEFAULT_EXCLUDE_DIR_REGEXPS)
         dp_io.ldebug(1, 'dir>%s<\ndir_exclusion_list>[%s]<\n',
                      dir,
                      string.join(self.dir_exclusion_list, ']\n['))

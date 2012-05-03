@@ -283,82 +283,84 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key "\C-cjc" 'dpj-new-topic)
 (global-set-key "\C-cjb" 'dpj-mk-external-bookmark)
 
-;; Beginning to use C-cC-d as dp-* command prefix.
-;; dp prefixed keys; dp keys prefix; dp key prefix
-;;!<@todo ?Sometimes? some of these keys don't get defined.
-;;!<@todo `eval-defun` by hand works.
 
-(defconst dp-Ccd-map
-  (dp-define-key-submap 'dp-kb-prefix global-map
-                        ;; Prefix for all keys in this map.
-                        [(control c) ?d]
-                        [(control next)] 'dp-eob-all-windows
-
-                        [(control ?b)] 'dp-copy-breakpoint-command-as-kill
-                        [(control ?/)] (kb-lambda 
-                                           (setq display-buffer-function nil))
-                        [(control ?f)] 'dp-face-at
-                        [(meta ?c)] 'dp-id-select-and-copy-thing
-                        [?b] 'dp-point-to-bottom
-
-                        [(meta n)] (kb-lambda 
-                                       (dp-goto-next-dp-extent-from-point '(4)))
-                        [tab] (kb-lambda 
-                                  (dp-goto-next-dp-extent-from-point '(4)))
-
-                        [(control ?p)] 'dp-shell-resync-dirs
-                        [(control ?r)] 'dp-rotate-windows
-                        [(control ?s)] 'dp-find-or-create-sb
-                        [(control ?v)] 'dp-symbol-info
-                        [(control ?d)] 'dired ; For when I type the wrong thing
-                        [(control ?e)] 'dp-embedded-lisp-eval@point
-                        [(meta control ?x)] 'dp-embedded-lisp-eval@point
-                        ;; Copying is more common than just selecting.
-                        [?k] 'dp-copy-to-end-of-line 
-                        [(control ?k)] 'dp-mark-to-end-of-line
-
-                        [(control left)] 'dp-slide-window-left
-                        [(control meta ?p)] 'dp-set-extent-priority
-                        [(control ?q)] 'dp-rw/ro-region
-                        [(control right)] 'dp-slide-window-right
-                        [(meta ?-)] 'dp-maybe-kill-other-window-buffer
-                        [(meta ?a)] 'dp-auto-it
-                        [(meta ?v)] 'dp-show-variable-value-and-copy
-                        [(meta \')] 'dp-dupe-n-chars-prev-line
-                        [(meta \;)] 'dp-comment-out-sexp
-                        [(meta ?p)] 'dp-parenthesize-region
-                        [(meta ?s)] 'dp-try-to-fix-effin-isearch
-                        ;; Use M-u since M-u is my `undo' binding.
-                        [(meta ?u)] 'dp-undo-till-unmodified
-                        [(meta ?x)] 'repeat-complex-command
-                        [(shift tab)] 'dp-goto-next-dp-extent-from-point
-                        [?e] 'dp-extents-at
-                        [?G] 'dp-set-or-goto-bm
-                        [?`] 'dp-bq-rest-of-line
-                        [?f] 'dp-show-buffer-file-name
-                        [?g] 'dp-sel2:bm
-                        [?i] 'dp-ifdef-region
-                        [?M] 'dp-edit-spec-macs
-                        [?n] 'dp-goto-next-dp-extent-from-point
-                        [?p] 'dp-python-shell
-                        [?q] 'dp-calc-eval-region
-                        [?r] 'dp-rotate-windows ; ?r make more sense w/new prefix
-                        [?v] 'dp-show-variable-value
-                        [?x] 'dp-cx-file-mode
-                        [left] 'dp-shift-windows
-                        [right] 'dp-shift-windows
-                        [(control ?\\)] 'align
-
-                        ;; <:add-new-ccd-bindings:>
-                        )               ; Close paren for `dp-define-key-submap'
-  "Keymap for my dp-* commands.
-Submaps of this map are defined below.")
 
 ;;;(define-key dp-Ccd-map "\C-/" (kb-lambda (setq display-buffer-function nil)))
 
 ;; major-mode'ed temp buffers.
 (defun dp-keys-define-init-submaps ()
-  (defconst dp-temp-buffer-mode-map 
+  ;; Beginning to use C-cC-d as dp-* command prefix.
+  ;; dp prefixed keys; dp keys prefix; dp key prefix
+  (defconst dp-Ccd-map
+    (dp-define-key-submap 'dp-kb-prefix global-map
+                          ;; Prefix for all keys in this map.
+                          [(control c) ?d]
+                          [(control next)] 'dp-eob-all-windows
+
+                          [(control ?b)] 'dp-copy-breakpoint-command-as-kill
+                          [(control ?/)] (kb-lambda
+                                             (setq display-buffer-function nil))
+                          [(control ?f)] 'dp-face-at
+                          [(meta ?c)] 'dp-id-select-and-copy-thing
+                          [?b] 'dp-point-to-bottom
+
+                          [(meta n)] (kb-lambda
+                                         (dp-goto-next-dp-extent-from-point 
+                                          '(4)))
+                          [tab] (kb-lambda
+                                    (dp-goto-next-dp-extent-from-point '(4)))
+
+                          [(control ?p)] 'dp-shell-resync-dirs
+                          [(control ?r)] 'dp-rotate-windows
+                          [(control ?s)] 'dp-find-or-create-sb
+                          [(control ?v)] 'dp-symbol-info
+                          ;; For when I type the wrong thing
+                          [(control ?d)] 'dired
+                          [(control ?e)] 'dp-embedded-lisp-eval@point
+                          [(meta control ?x)] 'dp-embedded-lisp-eval@point
+                          ;; Copying is more common than just selecting.
+                          [?k] 'dp-copy-to-end-of-line
+                          [(control ?k)] 'dp-mark-to-end-of-line
+
+                          [(control left)] 'dp-slide-window-left
+                          [(control meta ?p)] 'dp-set-extent-priority
+                          [(control ?q)] 'dp-rw/ro-region
+                          [(control right)] 'dp-slide-window-right
+                          [(meta ?-)] 'dp-maybe-kill-other-window-buffer
+                          [(meta ?a)] 'dp-auto-it
+                          [(meta ?v)] 'dp-show-variable-value-and-copy
+                          [(meta \')] 'dp-dupe-n-chars-prev-line
+                          [(meta \;)] 'dp-comment-out-sexp
+                          [(meta ?p)] 'dp-parenthesize-region
+                          [(meta ?s)] 'dp-try-to-fix-effin-isearch
+                          ;; Use M-u since M-u is my `undo' binding.
+                          [(meta ?u)] 'dp-undo-till-unmodified
+                          [(meta ?x)] 'repeat-complex-command
+                          [(shift tab)] 'dp-goto-next-dp-extent-from-point
+                          [?e] 'dp-extents-at
+                          [?G] 'dp-set-or-goto-bm
+                          [?`] 'dp-bq-rest-of-line
+                          [?f] 'dp-show-buffer-file-name
+                          [?g] 'dp-sel2:bm
+                          [?i] 'dp-ifdef-region
+                          [?M] 'dp-edit-spec-macs
+                          [?n] 'dp-goto-next-dp-extent-from-point
+                          [?p] 'dp-python-shell
+                          [?q] 'dp-calc-eval-region
+                          [?r] 'dp-rotate-windows
+                          [?v] 'dp-show-variable-value
+                          [?x] 'dp-cx-file-mode
+                          [?\\] 'dp-split-and-continue-line
+                          [left] 'dp-shift-windows
+                          [right] 'dp-shift-windows
+                          [(control ?\\)] 'align
+
+                          ;; <:add-new-ccd-bindings:>
+                          )          ; Close paren for `dp-define-key-submap'
+    "Keymap for my dp-* commands.
+Submaps of this map are defined below.")
+  
+  (defconst dp-temp-buffer-mode-map
     (dp-define-key-submap 'dp-temp-buffer-mode-prefix dp-Ccd-map
                           ;; Key in parent map which accesses this map.
                           [?t]     
@@ -614,7 +616,7 @@ already in there.")
     
     ;;template;     <: insert new key submaps here template:>
     
-;;template;     (defconst dp-<SOME-MODE>-map 
+;;template;     (defvar dp-<SOME-MODE>-map 
 ;;template;       (dp-define-key-submap 'dp-SOME-MODE-prefix dp-Ccd-map
 ;;template;                             ;; Key in parent map which accesses this map.
 ;;template;                             [?<MODE-PREFIX-KEY])
@@ -622,7 +624,6 @@ already in there.")
 
 )
 
-;; !<@todo XXX change this? This works once because of the defconsts
 (dp-keys-define-init-submaps)
 
 ;; This is, of course, remapped in a shell buffer.

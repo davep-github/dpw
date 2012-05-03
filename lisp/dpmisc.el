@@ -21,8 +21,8 @@
 ;;
 ;; Simple way to make these:
 ;; 1) Record kbd macro
-;; 2) `name-last-kbd-macro'
-;; 3) `format-kbd-macro' on name from step 2.
+;; 2) M-x name-last-kbd-macro
+;; 3) (format-kbd-macro 'name) on name from step 2.
 ;; 4) Add a `defalias' like below using the string from step 3.
 (defalias 'dp-var-to-initializer    
   (read-kbd-macro
@@ -33,7 +33,18 @@
   (read-kbd-macro
    "RET M: SPC RET T: RET W: RET T: RET F: RET S: RET S: RET 7*<up> 3*<right>"))
 
+;;
+;;
+;; Simply run on (a copy of) the assignment and whalah[sic]
+;; e.g.
+;; before EXTRA_LIBS += -L $(ADDITIONAL_PACKAGE_DIR)/lib
+;; after @echo "EXTRA_LIBS>$(EXTRA_LIBS)<"
 (defalias 'mak-=-to-echo
+  (read-kbd-macro
+   (concat "C-a SPC C-a <M-backspace> TAB @echo SPC \" M-a ESC C-s "
+           "\\s- RET <left> M-o > $ M-9 M-y M-0 <\" M-k <down> C-a")))
+
+(defalias 'mak-=-to-echo0
   (read-kbd-macro 
    (concat "C-a TAB @echo SPC \" M-a C-s SPC RET <left> M-o M-k > $ M-9 M-y"
            " C-e <\" <down> C-a")))
@@ -1752,8 +1763,22 @@ Pass t for `open-newline-func' to get the basic open below behavior."
                              (memq open-newline-func '(t nil default 
                                                        eol-newline-and-indent)))
                          t
-                       ;; Returns non-nil to do default actions, too.
-                       (funcall open-newline-func current-prefix-arg))))
+                       ;; Perform some mode specific actions.
+                       ;; This can return non-nil as well in order to do
+                       ;; defaultactions either because it couldn't find a
+                       ;; special case or because the default actions are
+                       ;; useful in addition.
+                       ;; Trap any errors and fall back to a simple 
+                       ;; eol, nl, indent operation.
+                       ;; !<@todo XXX Try to undo any misguided changes made
+                       ;; before we bailed out.
+                       (condition-case nil
+                           (progn
+                             (undo-boundary)
+                             (funcall open-newline-func current-prefix-arg))
+                         (error
+                          (undo)
+                          t)))))
     (when do-default
       (end-of-line)
       (newline-and-indent))))
@@ -1765,11 +1790,8 @@ Pass t for `open-newline-func' to get the basic open below behavior."
 (defvar dp-c++-symbol-regexp (replace-in-string dp-c++-symbol-regexp-guts
                                                 "%s" ""))
 
-
 (defvar dp-c++-symbol-shy-regexp (replace-in-string dp-c++-symbol-regexp-guts
                                                     "%s" "?:" 'LITERAL))
-                                         
-
 
 (defun dp-c-find-stmt-closing-paren (&optional limit)  ; <:ctcp:>
   (interactive)
@@ -1829,9 +1851,17 @@ See `dp-c*-junk-after-eos*'."
                                    (newline-before-brace t)
                                    (ignore-eos-junk-p t)
                                    (regexp-prefix "")
-                                   (force-newline-after-brace-t t)
+                                   ;; the following default has problems
+                                   ;; whether nil or non-
+                                   ;; Find the error CALLERS and set
+                                   ;; appropriately.
+                                   (force-newline-after-brace-t nil)
                                    (replacement ""))
-  "!<@todo XXX Add a force blank line after brace
+  "!<@todo XXX Add a force blank line after brace predicate.
+I added the idea that this would return a valuing telling the caller if
+anything was done to prevent double newlines. I need to determine then this
+is the case.
+non-nil tells the caller there is nothing more to do.
 aa bb(
     aa,
     bb,
@@ -1851,42 +1881,45 @@ aa bb(
 
 "
   (interactive)
-  (if (looking-at (concat regexp-prefix regexp))
-      (progn
-        (goto-char (match-end 0))
-        (when (= (forward-line 1) 0)
-          ;; We know we have a newline after the brace. We don't want to
-          ;; force another one.
-          (setq force-newline-after-brace-t nil)
+  (let ((ret 'unset))
+    (if (looking-at (concat regexp-prefix regexp))
+        (progn
+          (goto-char (match-end 0))
+          (when (= (forward-line 1) 0)
+            ;; We know we have a newline after the brace. We don't want to
+            ;; force another one.
+            (setq force-newline-after-brace-t nil)
+            (dp-c-indent-command)
+            (setq ret t)))        ; Did nothing. Don't want dp-cob to add one.
+      (dp-c-end-of-line)
+      (if (dp-looking-back-at ";\\s-*")
+          ;;(dp-c-newline-and-indent t)
+          ;; Results in 2 (two, ii, 0010) newlines.
+          (setq ret t)
+        (end-of-line)
+        (if (not newline-before-brace)
+            (let ((last-command-char ?\{))
+              (dp-c-end-of-line)
+              (dp-c-electric-brace nil))
+          (dp-c-newline-and-indent)
+          (insert "{")
           (dp-c-indent-command)
-          nil))                         ; Did nothing.
-    (dp-c-end-of-line)
-    (if (dp-looking-back-at ";\\s-*")
-        ;;(dp-c-newline-and-indent t) ;; Results in 2 (two, ii, 0010) newlines.
-        ()
-      (end-of-line)
-      (if (not newline-before-brace)
-          (let ((last-command-char ?\{))
-            (dp-c-end-of-line)
-            (dp-c-electric-brace nil))
-        (dp-c-newline-and-indent)
-        (insert "{")
-        (dp-c-indent-command)
 ;   (if (looking-at "[ \n\t]+")
 ;       (replace-match ""))
-        (newline)
-        (insert " ")             ; A comment at the left margin won't indent.
-        (dp-c-indent-command)))
-    ;; !!! added t to see if it helps with if/for/while/etc w/o hurting
-    ;;     function defs too much. There are far fewer function defs than the
-    ;;     others.
-    (when (or force-newline-after-brace-t
-              ;; (looking-at (concat dp-ws-regexp* "$"))
-              )
-      (c-newline-and-indent)
-      (previous-line 1)
-      (dp-c-indent-command)
-      t)))                              ; Did something.
+          (newline)
+          (insert " ")           ; A comment at the left margin won't indent.
+          (dp-c-indent-command)))
+      ;; !!! added t to see if it helps with if/for/while/etc w/o hurting
+      ;;     function defs too much. There are far fewer function defs than the
+      ;;     others.
+      (when (or force-newline-after-brace-t
+                ;; (looking-at (concat dp-ws-regexp* "$"))
+                )
+        (c-newline-and-indent)
+        (previous-line 1)
+        (dp-c-indent-command)
+        t))
+    ret))                              ; I'm confused about this whole thing.
 
 (defun dp-c-context-line-break ()
   "Do special things at the end of a line."
@@ -1968,7 +2001,12 @@ Tidying includes: re `indent-for-comment' and fixing up white space."
    (function
     (lambda ()
       (back-to-indentation)			;shell mode needs this
-      (indent-according-to-mode)
+      ;; Sadly, many modes don't handle TAB consistently. Sometimes it's
+      ;; `indent-for-tab-command' or `indent-according-to-mode' or...
+      ;; Since this is very much like a keystroke macro of 
+      ;; BOL, TAB, NEXT-LINE, we'll just use the tab key itself.
+      ;;(indent-according-to-mode)
+      (dp-call-function-on-key [tab])
       (unless (or (Cu--p)
                   dp-il&md-dont-fix-comments-p)
         (dp-with-saved-point nil
@@ -2906,9 +2944,10 @@ Also, it will move backwards into a closed class (ie has a };)."
   "Enter a newline, and indent, and if in C-mode and in
 a comment add a comment prefix to the line."
   (interactive "*P")
-  (when (dp-in-c)
+  (if (not (dp-in-c))
+      (newline-and-indent)
     (when end-of-line-first-p
-      (end-of-line)))
+      (end-of-line))
     (let ((syntax-el (dp-c-get-syntactic-region))
           (is-one-liner (is-c++-one-line-comment)))
       ;; we need to preserve the syntax before we indent.
@@ -2927,8 +2966,7 @@ a comment add a comment prefix to the line."
                  ;; empty.
                  (not (memq syntax-el '(access-label))))
         (insert "* ")
-        (c-indent-line)))
-    (newline-and-indent)))
+        (c-indent-line)))))
 
 (defvar dp-c-electric-slash-fills nil
  "If non-nil, then `dp-c-electric-slash' fills the comment when it closes it.")
@@ -4213,8 +4251,13 @@ PREFIX: Doxygen comment indicator \"!<@\"."
         (insert msg " ")
       (save-excursion
         ;; Use the function bound to the key to make this DTRT in each mode.
-        ;; (as long as M-; is not a universal binding)
-        (dp-call-function-on-key [(meta \;)])
+        ;; (as long as M-; is a universal binding)
+        (let ((comment-start (or comment-start ""))
+              (comment-end (or comment-end "")))
+          ;; Don't clean up if there's no comment-start.  I don't think there
+          ;; will ever be a comment-end without a comment-start.
+          (setq clean-up-p (not (string= comment-start "")))
+          (dp-call-function-on-key [(meta \;)]))
         ;;(indent-for-comment)
         (when clean-up-p
           (just-one-space))
@@ -7550,7 +7593,7 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
     (dp-lineup-comments begin end)))
 
 (defun dp-assoc-regexp (key regexp-alist)
-  "Find KEY in REGEXP-ALIST.
+  "Find KEY in REGEXP-ALIST, an alist who's keys are regexps.
 REGEXP-ALIST is a list of (regexp . whatever).  When matched, the cons
 cell is returned."
   (save-match-data
@@ -9294,7 +9337,7 @@ Can be called directly or by an abbrev's hook.
 	  (throw 'up item))))))
 
 (defun dp-regexp-assoc (key-regexp alist)
-  "Find the first entry in ALIST whose key matches KEY-REGEXP."
+  "Return 1st item in ALIST where \(string-match KEY-REGEXP ALIST-key) is true."
   (dp-find-regexp-in-list key-regexp alist 'car-safe))
 
 (defvar dp-use-saveconf-p t
@@ -9853,17 +9896,29 @@ This buffer will be used preferentially.")
 (dp-deflocal-permanent dp-saved-window-config nil
   "Have we pushed a window config for this buffer yet?")
 
-(defvar dp-last-make-target ""
-  "The last thing we asked make to make.")
+(defvar dp-mru-make-target nil
+  "The most recent thing we asked make to make.")
 
-(defun dp-make (&optional absolute-makefile-name-p)
+(defvar dp-mru-make-makefile nil
+  "The most recently used makefile.")
+
+(defvar dp-mru-make-command nil
+  "The last make command.")
+
+(defvar dp-mru-make-compile-arg nil
+  "The last arg to `compile'.
+Just for informational purposes.")
+
+(defun dp-make (&optional absolute-makefile-name-p remake-p)
   (interactive "P")
-  (setq absolute-makefile-name-p t)
-  (let ((make-command (dp-make-make-command))
-        (original-window-config (current-window-configuration))
-        makefile-buffer
-        prompt
-        target)
+  (setq absolute-makefile-name-p t)     ; !<@todo XXX Use the parameter.
+  (let* ((make-command (if (and remake-p dp-mru-make-command)
+                           dp-mru-make-command
+                         (dp-make-make-command)))
+         (original-window-config (current-window-configuration))
+         (makefile-buffer (nth 2 make-command))
+         (target (and remake-p dp-mru-make-target))
+         prompt)
     (setq dp-make-targets-history (delete "" dp-make-targets-history))
     (when (and dp-use-dedicated-make-windows-p
                (or (eq major-mode 'compilation-mode)
@@ -9872,19 +9927,13 @@ This buffer will be used preferentially.")
                               nil))
     (if make-command
         (progn
-          (setq makefile-buffer (nth 2 make-command)
-                prompt (format "target in %s: "
-                               (if (and (not absolute-makefile-name-p)
-                                        dp-make-makefile-relative-name)
-                                   (file-relative-name 
-                                    (buffer-file-name makefile-buffer))
-                                 (buffer-file-name makefile-buffer)))
-                target (read-from-minibuffer prompt dp-last-make-target
+          (setq prompt (format "target in %s: " (nth 1 make-command))
+                target (read-from-minibuffer prompt dp-mru-make-target
                                              nil nil 
                                              'dp-make-targets-history)
-                dp-last-make-target target)
+                dp-mru-make-target target)
           (with-current-buffer makefile-buffer
-            (setq dp-mru-makefile (buffer-file-name))
+            (setq dp-mru-make-makefile (buffer-file-name))
             ;;Protect this buffer from unintentional killing
             (dp-define-buffer-local-keys '([(meta ?-)] 
                                            dp-bury-or-kill-buffer))
@@ -9893,13 +9942,27 @@ This buffer will be used preferentially.")
             ;; compilations. This can be good or bad, depending on the
             ;; situation.
             ;;(dp-set-primary-makefile 1)
-            (compile (format "%s %s" (car make-command) target))))
+            (setq dp-mru-make-compile-arg 
+                  (format "%s %s" (car make-command) target)
+                  dp-mru-make-command make-command)
+            (compile dp-mru-make-compile-arg)))
       (call-interactively 'compile))
     (dp-layout-compile-windows original-window-config)
 ;     (unless (one-window-p)
 ;       (end-of-buffer-other-window nil))
     )
   )
+
+;; !<@todo XXX Refactor more from dp-make.
+(defun dp-remake ()
+  "Remake using last setup."
+  (interactive)
+  (if (not dp-mru-make-compile-arg)
+      (dp-ding-and-message "No last make information")
+    (message "remaking: %s" dp-mru-make-command)
+    (dp-make nil t)))
+
+(dp-safe-alias 'remake 'dp-remake)
 
 (defun dp-find-compilation-buffer (&optional creat-p)
   "Go to the compilation buffer."
@@ -10429,7 +10492,7 @@ Also used by split window advice to determine when to force a horizontal
 split.")
 
 ;; I cannot believe I really need to write this. I must've missed it.
-(defun dp-first-by-pred (pred list &rest pred-args)
+(defun dp-first-with-pred (pred list &rest pred-args)
   (while (and list 
               (not (apply pred (car list) pred-args)))
     (setq list (cdr list)))
@@ -10473,7 +10536,7 @@ split.")
     (loop for w in win-list
       until (not all-buffers)
       unless (memq w skip-these-windows)
-      do (let ((good-bufs (dp-first-by-pred
+      do (let ((good-bufs (dp-first-with-pred
                            (lambda (b)
                              (and b
                                   (not (memq b (dp-all-window-buffers)))
@@ -12246,6 +12309,8 @@ the minibuffer."
    ;; To get a simple string to control the return, do use a simple
    ;; function like so...
    ;; :template (lambda (s r) (insert s) r) &rest s r
+   ((symbolp template)
+    (insert (symbol-value template)))
    ((stringp template) 
     (insert template)
     'added-junk)
@@ -12289,7 +12354,7 @@ If it is indeed a script name <script>-it can be called interactively.")
     (insert (if run-with-/usr/bin/env-p 
                 "/usr/bin/env "
               "") 
-            ;; Let template plate determine the spacing after the #! line
+            ;; Let template determine the spacing after the #! line
             ;; ? and newline?
             interpreter "\n"))
   (dp-set-auto-mode)
@@ -12358,11 +12423,14 @@ def main(argv):
     opt_string = \"\"
     opts, args = getopt.getopt(argv[1:], opt_string)
     for o, v in opts:
-        if o == '-<option-letter>':
-            # Handle opt
-            continue
+        #if o == '-<option-letter>':
+        #    # Handle opt
+        #    continue
+        pass
+
     for arg in args:
         # Handle arg
+        pass
 
 if __name__ == \"__main__\":
     main(sys.argv)
@@ -12819,6 +12887,7 @@ will become the compilation window.")
 (defalias 'cw 'dp-layout-compile-windows)
 
 
+
 (defun dp-compilation-set-window-height (window)
   "Don't have `make' bail if window isn't full frame width."
   (and compilation-window-height
@@ -12860,8 +12929,8 @@ spec-macsen are used for the completion list."
 
 (defvar dp-major-mode-to-shebang
   ;; Symbol for key, plist for value
-  `((python-mode i-name "python" env-p run-with-/usr/bin/env-p 
-                 comment-start "### " template ,dp-python-new-file-template)
+  '((python-mode i-name "python" env-p run-with-/usr/bin/env-p 
+                 comment-start "### " template dp-python-new-file-template)
     ;;(sh-mode i-name "/bin/sh")
     (sh-mode it shit)
     (c-mode it dp-c-new-file-template)
@@ -14632,6 +14701,42 @@ Some examples are:
   (dp-meta-minus)
   (dp-pop-window-config nth-config))
 
+(defun dp-split-and-continue-line (&optional sep term replacement)
+  "Replace regexp SEP with REPLACEMENT. Add TERM to end of original line.
+Continue to end of region if active, else end of original line.
+Like when you have some long var in a Makefile:
+SRCS = a.c b.c d.c ...
+-->
+SRCS = a.c \
+       b.c \
+       d.c
+..."
+  (interactive)
+  (setq-ifnil sep "\\s-+"
+              term " \\"
+              replacement "\n")
+  (let* ((b&e (dp-region-or... :bounder 'rest-of-line-p))
+         (end-marker (dp-mk-marker (cdr b&e) nil t)))
+    (goto-char (car b&e))
+    (dmessage "em: %s lep: %s" end-marker (line-end-position))
+    (while (re-search-forward sep end-marker t)
+      (dmessage "ms>%s<" (match-string 0) end-marker)
+      (replace-match replacement)
+      (goto-char (match-beginning 0))
+      (dp-delete-to-end-of-line)
+      (end-of-line)
+      (dmessage "me: %s, em: %s" (match-end 0) end-marker)
+      (unless (>= (match-end 0) end-marker)
+        (insert term))
+      (next-line 1)
+      (beginning-of-line)
+      (when (looking-at sep)
+        (replace-match ""))
+      ;; !<@todo XXX run command on TAB?
+      (indent-for-tab-command))
+    (undo-boundary)
+    (align (car b&e) (cdr b&e))))
+
 ;;;;; <:functions: add-new-ones-above:>
 ;;; @todo Write a loop which advises functions with simple push go back
 ;;; commands.
@@ -14648,10 +14753,14 @@ Some examples are:
 (require 'dp-ephemeral)
 
 (dp-defaliases 'mkdir 'md 'make-directory)
-(dp-defaliases 'rep-re 'repre 'repr 'replace-regexp)
-(dp-defaliases 'rep-str 'reps 'replace-string)
-(dp-defaliases 'qreps 'repsq 'reps? 'query-replace)
-(dp-defaliases 'qrepr 'reprq 'repr? 'query-replace-regexp)
+(dp-defaliases 'rep-re 'repre 'repr 'rerep 'replace-regexp)
+(dp-defaliases 'rep-str 'repstr 'str-rep 'strrep 'reps 'srep 'replace-string)
+(dp-defaliases 'qrep-str 'qrepstr 'qstr-rep 'qstrrep 'qreps 'qsrep
+               'rep-strq 'repstrq 'str-repq 'strrepq 'repsq 'srepq 
+               'query-replace)
+(dp-defaliases 'qrep-re 'qrepre 'qrepr 'qrerep
+               'rep-req 'repreq 'reprq 'rerepq
+               'query-replace-regexp)
 
 ;;;;; <:aliases: add-new-ones-up-there:>
 
