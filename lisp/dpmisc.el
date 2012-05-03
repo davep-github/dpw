@@ -9853,9 +9853,10 @@ I like to be more precise in certain cases; such as when deleting things.")
 (defvar dp-make-command "make -k"
   "Default command used to `make' systems.")
 
-(defun dp-make-make-command ()
+(defun dp-make-make-command (&optional makefile)
   (interactive)
-  (let* ((def-makefile (or (and-boundp 'dp-default-makefile-name
+  (let* ((def-makefile (or makefile
+                           (and-boundp 'dp-default-makefile-name
                              (stringp dp-default-makefile-name)
                              (expand-file-name dp-default-makefile-name))
                            (and-boundp 'dp-default-makefile-name
@@ -9909,12 +9910,18 @@ This buffer will be used preferentially.")
   "The last arg to `compile'.
 Just for informational purposes.")
 
-(defun dp-make (&optional absolute-makefile-name-p remake-p)
+(defvar dp-make-makefile-history ()
+  "Makefiles I have known.")
+
+(defun* dp-make (&optional choose-make-file-p remake-p
+                 (absolute-makefile-name-p t))
   (interactive "P")
-  (setq absolute-makefile-name-p t)     ; !<@todo XXX Use the parameter.
-  (let* ((make-command (if (and remake-p dp-mru-make-command)
+  (let* ((chosen-make-file (when choose-make-file-p
+                             (expand-file-name
+                              (read-file-name "Makefile: " nil t nil))))
+         (make-command (if (and remake-p dp-mru-make-command)
                            dp-mru-make-command
-                         (dp-make-make-command)))
+                         (dp-make-make-command chosen-make-file)))
          (original-window-config (current-window-configuration))
          (makefile-buffer (nth 2 make-command))
          (target (and remake-p dp-mru-make-target))
@@ -9928,10 +9935,18 @@ Just for informational purposes.")
     (if make-command
         (progn
           (setq prompt (format "target in %s: " (nth 1 make-command))
-                target (read-from-minibuffer prompt dp-mru-make-target
-                                             nil nil 
-                                             'dp-make-targets-history)
-                dp-mru-make-target target)
+                target (or target (read-from-minibuffer 
+                                   prompt dp-mru-make-target nil nil 
+                                   'dp-make-targets-history)))
+                
+          ;; cannot remake if there's no target.
+          (when (and dp-mru-make-target 
+                     (member target '("=" "==" ".")))
+            ;; We won't ask for the target name again so we won't loop
+            ;; keep recursing.
+            (dp-remake)
+            (return-from dp-make))
+          (setq dp-mru-make-target target)
           (with-current-buffer makefile-buffer
             (setq dp-mru-make-makefile (buffer-file-name))
             ;;Protect this buffer from unintentional killing
@@ -14736,6 +14751,34 @@ SRCS = a.c \
       (indent-for-tab-command))
     (undo-boundary)
     (align (car b&e) (cdr b&e))))
+
+(defun dp-refresh-tags (&optional preserve-files-p)
+  "Jump through hoops the kill the fucking tags buffers.
+See `dp-shell-*TAGS-changers' rant. "
+  (interactive "P")
+  ;; Nuke the pesky completion buffer, which seems to be obnoxiously
+  ;; permanent.
+  (make-vector 511 0)
+  (setq tag-completion-table (make-vector 
+                              (length tag-completion-table) 
+                              0))
+  (loop for buf in (buffer-list)
+    do (when (and (buffer-file-name buf)
+                  (string-match "^.?TAGS$" (file-name-nondirectory
+                                            (buffer-file-name buf))))
+         ;; !<@todo XXX Change this to use the new `dp-kill-buffers-by-name'
+         ;; But it will need to be able to force the mod status of the buffer
+         ;; to nil.
+         (let ((file-name (buffer-file-name buf))
+               status-msg)
+           (setq status-msg (format "killing %s" buf))
+           (set-buffer-modified-p nil buf)
+           (kill-buffer buf)
+           (unless (or preserve-files-p
+                       (not file-name))
+             (setq status-msg (format "%s, deleting: %s" status-msg file-name))
+             (delete-file file-name))
+           (message status-msg)))))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;; @todo Write a loop which advises functions with simple push go back

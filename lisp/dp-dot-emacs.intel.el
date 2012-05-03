@@ -90,6 +90,9 @@
   (read-kbd-macro 
    (format dp-poc-layout-format-string "2/1" "up" "up")))
   
+(defun dp-do-a-jk (sym)
+  (execute-kbd-macro sym)
+  (setq-default dp-shells-favored-shell-buffer "*shell*<0>"))
 
 ;; I've been saving this window config in register ?k
 ;; Hence C-jk, hence jk.
@@ -104,7 +107,9 @@
 (defalias 'jk/ 'dp-poc-layout-2/1)
 (defalias 'jk- 'dp-poc-layout-2/1)
 
-(defalias 'jk 'dp-poc-layout-2/1)
+(defun jk ()
+  (interactive)
+  (dp-do-a-jk 'dp-poc-layout-2/1))
 
 ;; For 2x SAs
 ;; 2 + 2:

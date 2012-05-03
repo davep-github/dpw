@@ -886,4 +886,19 @@ Wednesday May 02 2012
   (save-excursion
     (with-selected-window window
       (enlarge-window (- height-in-lines
+
                          (window-height)))))))
+
+========================
+Thursday May 03 2012
+--
+
+(defun dp-bob ()
+  (execute-kbd-macro 'dp-poc-layout-2+1))
+
+(dp-bob)
+nil
+(dp-do-a-jk 'dp-poc-layout-2/1)
+nil
+
+

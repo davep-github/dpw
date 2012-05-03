@@ -186,12 +186,16 @@ It can't be this bad, I must be missing something.")
                ;; is to see if we've moved off the current line.  This will
                ;; break when we try to find a symbol that is defined on the
                ;; current line, which is basically a braino.
-               (setq new-pos (point-marker))
-               (when (or (not (equal start-buffer (current-buffer)))
-                         (< new-pos bol)
-                         (> new-pos eol))
-                 (dp-*TAGS-push-handler handler)
-                 (return)))
+               ;; FUCK gtags for now.
+               (dp-*TAGS-push-handler handler)
+               (return))
+;;                (setq new-pos (point-marker))
+;;                (when (or (not (equal start-buffer (current-buffer)))
+;;                          (< new-pos bol)
+;;                          (> new-pos eol))
+;;                  (dp-*TAGS-push-handler handler)
+;;                  (return))
+;;                (dp-ding-and-message "Tag didn't take us anywhere."))
            (t (dmessage "Caught condition: %s in dp-*TAGS-try-handler-funcs"
                         err))))))
 
@@ -213,7 +217,9 @@ It can't be this bad, I must be missing something.")
 (defun dp-tag-pop (&rest r)
   (interactive)
   (let ((handler (dp-*TAGS-pop-handler)))
-    (call-interactively (dp-*TAGS-handler-returner handler))))
+    (if handler
+        (call-interactively (dp-*TAGS-handler-returner handler))
+      (dp-ding-and-message "No tags on stack."))))
 
 (defun dp-tag-find-other-window (&rest r)
   (interactive)

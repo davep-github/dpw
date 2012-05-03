@@ -290,35 +290,6 @@ such. Getting a \"xxx is modified, do something anyway? (yes or no)\" is
 fucking annoying and I shouldn't have to deal with it. But I do, so I let
 elisp handle it. ")
 
-(defun dp-refresh-tags (&optional preserve-files-p)
-  "Jump through hoops the kill the fucking tags buffers.
-See `dp-shell-*TAGS-changers' rant. "
-  (interactive "P")
-  ;; Nuke the pesky completion buffer, which seems to be obnoxiously
-  ;; permanent.
-  (make-vector 511 0)
-  (setq tag-completion-table (make-vector 
-                              (length tag-completion-table) 
-                              0))
-  (loop for buf in (buffer-list)
-    do (when (and (buffer-file-name buf)
-                  (string-match "^.?TAGS$" (file-name-nondirectory
-                                            (buffer-file-name buf))))
-         ;; !<@todo XXX Change this to use the new `dp-kill-buffers-by-name'
-         ;; But it will need to be able to force the mod status of the buffer
-         ;; to nil.
-         (let ((file-name (buffer-file-name buf))
-               status-msg)
-           (setq status-msg (format "killing %s" buf))
-           (set-buffer-modified-p nil buf)
-           (kill-buffer buf)
-           (unless (or preserve-files-p
-                       (not file-name))
-             (setq status-msg (format "%s, deleting: %s" status-msg file-name))
-             (delete-file file-name))
-           (message status-msg)))))
-
-
 (defun dp-shell-lookfor-*TAGS-changer (str)
   (when (string-match dp-shell-*TAGS-changers str)
     (dp-refresh-tags)))
@@ -684,7 +655,8 @@ see it and the favoring buffer.")
   "This tells, if non-nil, which shell buffer to select when using dp-shell.
 Values:
 nil --> No preference.  Traditional behavior.
-buffer --> Switch to this buffer as controlled by 
+buffer --> Switch to this buffer as controlled by
+string --> Get the buffer and do buffer action.
            `dp-shells-favored-shell-other-window-p'
 cons --> car is buffer, cdr is overriding other-window-p.")
 
@@ -2178,7 +2150,7 @@ NAME is a buffer or buf-name.  Type is (currently) one of: '(shell ssh)")
 (defun dp-shells-favored-shell-buffer-buffer (fav-buf)
   (if (dp-fav-buf-p fav-buf)
       (car fav-buf)
-    fav-buf))
+    (get-buffer fav-buf)))
 
 (defun dp-shells-favored-shell-buffer-name (fav-buf)
   (when (dp-and-consp fav-buf)
