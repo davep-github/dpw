@@ -9977,7 +9977,7 @@ Just for informational purposes.")
     (message "remaking: %s" dp-mru-make-command)
     (dp-make nil t)))
 
-(dp-safe-alias 'remake 'dp-remake)
+(dp-safe-aliases 'remk 'rmk 'remake 'dp-remake)
 
 (defun dp-find-compilation-buffer (&optional creat-p)
   "Go to the compilation buffer."

@@ -902,3 +902,194 @@ nil
 nil
 
 
+
+========================
+Tuesday May 08 2012
+--
+(defmacro dp-defaliases0 (def-type &rest symbols-followed-by-newdef)
+  "Define a list of aliases. SYMBOLS-FOLLOWED-BY-NEWDEF ends with 'newdef.
+SYMBOLS-FOLLOWED-BY-NEWDEF is an &rest list: SYMB0 SYMB1... NEWDEF.
+Ie, NEWDEF is \(last symbol-followed-by-newdefs).
+Emits a series of defaliases:
+\(defalias SYMB0 NEWDEF)
+\(defalias SYMB1 NEWDEF)
+\(defalias SYMBn NEWDEF)
+NEWDEF is last to match the order of args to `defalias'."
+  (unless (>= (length symbols-followed-by-newdef) 2)
+    (error "dp-defaliases: requires 2 or more args."))
+  (let ((newdef (car (last symbols-followed-by-newdef)))
+        (symbols-followed-by-newdef (butlast symbols-followed-by-newdef))
+        arg init-val bunch-of-defalias-calls)
+    (while symbols-followed-by-newdef
+      (setq arg (car symbols-followed-by-newdef)
+            symbols-followed-by-newdef (cdr symbols-followed-by-newdef))
+      (setq new-elem `(,def-type ,arg ,newdef))
+      (setq bunch-of-defalias-calls (cons new-elem bunch-of-defalias-calls)))
+    (cons 'progn (reverse bunch-of-defalias-calls))))
+(put 'dp-defaliases0 'lisp-indent-function
+     (get 'defalias 'lisp-indent-function))
+
+
+(defmacro dp-defaliases (&rest symbols-followed-by-newdef)
+  `(dp-defaliases0 defalias ,@symbols-followed-by-newdef))
+(put 'dp-defaliases 'lisp-indent-function
+     (get 'defalias 'lisp-indent-function))
+
+(defmacro dp-safe-aliases (&rest symbols-followed-by-newdef)
+  `(dp-defaliases0 dp-safe-alias ,@symbols-followed-by-newdef))
+(put 'dp-safe-aliases 'lisp-indent-function
+     (get 'defalias 'lisp-indent-function))
+
+
+(cl-pe '(dp-defaliases 'a 'b 'c 'BLAH))
+
+(cl-pe '(dp-safe-aliases 'a 'b 'c 'BLAH))
+
+(progn
+  (if (fboundp 'a)
+      (if (get 'a 'dp-safe-alias-p)
+          (if (dp-alias-eq 'a 'BLAH)
+              (dmessage "dp-safe-alias: Identical redefinition.")
+            (dmessage-ding "dp-safe-alias:: Allowing redefinition of %s from %s to %s"
+                           'a
+                           (symbol-function 'a)
+                           'BLAH)
+            (defalias 'a 'BLAH))
+        (funcall (if dp-unsafe-alias-is-fatal-p 'error 'warn)
+                 "dp-safe-alias: DENIED! %ssymbol: `%s' is already fbound to `%s'."
+                 (if (functionp 'BLAH) "function " "")
+                 'a
+                 'BLAH))
+    (defalias 'a 'BLAH)
+    (put 'a 'dp-safe-alias-p t))
+  (if (fboundp 'b)
+      (if (get 'b 'dp-safe-alias-p)
+          (if (dp-alias-eq 'b 'BLAH)
+              (dmessage "dp-safe-alias: Identical redefinition.")
+            (dmessage-ding "dp-safe-alias:: Allowing redefinition of %s from %s to %s"
+                           'b
+                           (symbol-function 'b)
+                           'BLAH)
+            (defalias 'b 'BLAH))
+        (funcall (if dp-unsafe-alias-is-fatal-p 'error 'warn)
+                 "dp-safe-alias: DENIED! %ssymbol: `%s' is already fbound to `%s'."
+                 (if (functionp 'BLAH) "function " "")
+                 'b
+                 'BLAH))
+    (defalias 'b 'BLAH)
+    (put 'b 'dp-safe-alias-p t))
+  (if (fboundp 'c)
+      (if (get 'c 'dp-safe-alias-p)
+          (if (dp-alias-eq 'c 'BLAH)
+              (dmessage "dp-safe-alias: Identical redefinition.")
+            (dmessage-ding "dp-safe-alias:: Allowing redefinition of %s from %s to %s"
+                           'c
+                           (symbol-function 'c)
+                           'BLAH)
+            (defalias 'c 'BLAH))
+        (funcall (if dp-unsafe-alias-is-fatal-p 'error 'warn)
+                 "dp-safe-alias: DENIED! %ssymbol: `%s' is already fbound to `%s'."
+                 (if (functionp 'BLAH) "function " "")
+                 'c
+                 'BLAH))
+    (defalias 'c 'BLAH)
+    (put 'c 'dp-safe-alias-p t)))nil
+
+
+
+(progn
+  (defalias 'a 'BLAH)
+  (defalias 'b 'BLAH)
+  (defalias 'c 'BLAH))
+
+
+
+
+BLAH
+
+
+
+
+
+
+
+
+
+
+(dp-defaliases 'a 'b 'c 'BLAH)
+BLAH
+
+(symbol-plist 'c)
+(custom-group ((c-strict-syntax-p custom-variable) (c-echo-syntactic-information-p custom-variable) (c-report-syntactic-errors custom-variable) (c-basic-offset custom-variable) (c-tab-always-indent custom-variable) (c-insert-tab-function custom-variable) (c-syntactic-indentation custom-variable) (c-syntactic-indentation-in-macros custom-variable) (c-comment-only-line-offset custom-variable) (c-indent-comment-alist custom-variable) (c-indent-comments-syntactically-p custom-variable) (c-block-comment-prefix custom-variable) (c-comment-prefix-regexp custom-variable) (c-doc-comment-style custom-variable) (c-ignore-auto-fill custom-variable) (c-cleanup-list custom-variable) (c-hanging-braces-alist custom-variable) (c-hanging-colons-alist custom-variable) (c-hanging-semi&comma-criteria custom-variable) (c-backslash-column custom-variable) (c-backslash-max-column custom-variable) (c-auto-align-backslashes custom-variable) (c-backspace-function custom-variable) (c-delete-function custom-variable) (c-require-final-newline custom-variable) (c-electric-pound-behavior custom-variable) (c-special-indent-hook custom-variable) (c-label-minimum-indentation custom-variable) (c-progress-interval custom-variable) (c-default-style custom-variable) (c-offsets-alist custom-variable) (c-style-variables-are-local-p custom-variable) (c-mode-hook custom-variable) (c++-mode-hook custom-variable) (objc-mode-hook custom-variable) (java-mode-hook custom-variable) (idl-mode-hook custom-variable) (pike-mode-hook custom-variable) (c-mode-common-hook custom-variable) (c-initialization-hook custom-variable) (c-enable-xemacs-performance-kludge-p custom-variable) (c-font-lock-extra-types custom-variable) (c++-font-lock-extra-types custom-variable) (objc-font-lock-extra-types custom-variable) (java-font-lock-extra-types custom-variable) (idl-font-lock-extra-types custom-variable) (pike-font-lock-extra-types custom-variable) (fume custom-group)))
+
+a
+
+
+(symbol-function 'c)
+BLAH
+
+BLAH
+
+
+
+nil
+
+nil
+
+(custom-group ((c-strict-syntax-p custom-variable) (c-echo-syntactic-information-p custom-variable) (c-report-syntactic-errors custom-variable) (c-basic-offset custom-variable) (c-tab-always-indent custom-variable) (c-insert-tab-function custom-variable) (c-syntactic-indentation custom-variable) (c-syntactic-indentation-in-macros custom-variable) (c-comment-only-line-offset custom-variable) (c-indent-comment-alist custom-variable) (c-indent-comments-syntactically-p custom-variable) (c-block-comment-prefix custom-variable) (c-comment-prefix-regexp custom-variable) (c-doc-comment-style custom-variable) (c-ignore-auto-fill custom-variable) (c-cleanup-list custom-variable) (c-hanging-braces-alist custom-variable) (c-hanging-colons-alist custom-variable) (c-hanging-semi&comma-criteria custom-variable) (c-backslash-column custom-variable) (c-backslash-max-column custom-variable) (c-auto-align-backslashes custom-variable) (c-backspace-function custom-variable) (c-delete-function custom-variable) (c-require-final-newline custom-variable) (c-electric-pound-behavior custom-variable) (c-special-indent-hook custom-variable) (c-label-minimum-indentation custom-variable) (c-progress-interval custom-variable) (c-default-style custom-variable) (c-offsets-alist custom-variable) (c-style-variables-are-local-p custom-variable) (c-mode-hook custom-variable) (c++-mode-hook custom-variable) (objc-mode-hook custom-variable) (java-mode-hook custom-variable) (idl-mode-hook custom-variable) (pike-mode-hook custom-variable) (c-mode-common-hook custom-variable) (c-initialization-hook custom-variable) (c-enable-xemacs-performance-kludge-p custom-variable) (c-font-lock-extra-types custom-variable) (c++-font-lock-extra-types custom-variable) (objc-font-lock-extra-types custom-variable) (java-font-lock-extra-types custom-variable) (idl-font-lock-extra-types custom-variable) (pike-font-lock-extra-types custom-variable) (fume custom-group)))
+
+
+(progn
+  (defalias 'a 'BLAH)
+  (defalias 'b 'BLAH)
+  (defalias 'c 'BLAH))nil
+
+
+dpj-topic-list
+(("ansys.fluent" last-update: "2012-01-02T13:40:39") ("ask-the-physicist" last-update: "2012-02-24T07:54:45") ("bs" last-update: "2012-01-05T13:18:14") ("bull" last-update: "2012-02-28T08:45:56") ("def.environment" last-update: "2012-03-15T10:01:45") ("dp-coding-standard.naming" last-update: "2012-03-07T08:46:18") ("dp-coding-standard.style") ("emacs.elisp" last-update: "2012-05-02T17:00:13") ("ftci" last-update: "2012-04-24T16:51:01") ("ftci.autohell") ("ftci.code" last-update: "2012-03-23T13:47:19") ("ftci.code.design" last-update: "2012-03-13T11:45:36") ("ftci.code.gloox" last-update: "2012-03-12T12:38:21") ("ftci.future" last-update: "2012-01-23T08:10:48") ("ftci.messages" last-update: "2012-05-03T18:18:10") ("ftci.messages.run") ("ftci.millstones" last-update: "2012-03-15T12:23:02") ("ftci_client" last-update: "2012-01-11T07:40:41") ("fvwm" last-update: "2012-03-23T08:51:38") ("git" last-update: "2012-04-30T11:41:23") ("hardware.cluster" last-update: "2012-05-03T09:47:52") ("hardware.cluster.bright.license") ("humor" last-update: "2012-04-24T09:30:36") ("ideas" last-update: "2012-04-23T13:07:01") ("jabber" last-update: "2012-02-13T09:57:37") ("personal.work.after-contract" last-update: "2012-03-15T07:07:31") ("physi" last-update: "2012-04-27T15:22:01") ("physics" last-update: "2012-04-27T15:22:13") ("politics" last-update: "2012-05-08T13:27:29") ("tools.git" last-update: "2012-03-07T07:20:06") ("tools.index-code" last-update: "2012-04-20T08:14:32") ("tools.teeker") ("work.tools" last-update: "2012-04-20T08:14:08"))
+
+(("ansys.fluent" last-update: "2012-01-02T13:40:39") ("ask-the-physicist" last-update: "2012-02-24T07:54:45") ("bs" last-update: "2012-01-05T13:18:14") ("bull" last-update: "2012-02-28T08:45:56") ("def.environment" last-update: "2012-03-15T10:01:45") ("dp-coding-standard.naming" last-update: "2012-03-07T08:46:18") ("dp-coding-standard.style") ("emacs.elisp" last-update: "2012-05-02T17:00:13") ("ftci" last-update: "2012-04-24T16:51:01") ("ftci.autohell") ("ftci.code" last-update: "2012-03-23T13:47:19") ("ftci.code.design" last-update: "2012-03-13T11:45:36") ("ftci.code.gloox" last-update: "2012-03-12T12:38:21") ("ftci.future" last-update: "2012-01-23T08:10:48") ("ftci.messages" last-update: "2012-05-03T18:18:10") ("ftci.messages.run") ("ftci.millstones" last-update: "2012-03-15T12:23:02") ("ftci_client" last-update: "2012-01-11T07:40:41") ("fvwm" last-update: "2012-03-23T08:51:38") ("git" last-update: "2012-04-30T11:41:23") ("hardware.cluster" last-update: "2012-05-03T09:47:52") ("hardware.cluster.bright.license") ("humor" last-update: "2012-04-24T09:30:36") ("icypoo" last-update: "2012-05-08T17:52:23") ("ideas" last-update: "2012-04-23T13:07:01") ("jabber" last-update: "2012-02-13T09:57:37") ("personal.work.after-contract" last-update: "2012-03-15T07:07:31") ("physi" last-update: "2012-04-27T15:22:01") ("physics" last-update: "2012-04-27T15:22:13") ("politics" last-update: "2012-05-08T13:27:29") ("tools.git" last-update: "2012-03-07T07:20:06") ("tools.index-code" last-update: "2012-04-20T08:14:32") ("tools.teeker") ("work.tools" last-update: "2012-04-20T08:14:08"))
+
+(assoc "ask-the-physicist" dpj-topic-list)
+("ask-the-physicist" last-update: "2012-02-24T07:54:45")
+
+(setq aalliisstt '((a b c) (1 2 3) (p q r)))
+((a b c) (1 2 3) (p q r))
+
+((a b c) (1 2 3))
+
+((a b c) (1 2 3))
+
+((a b c) (1 2 3) (p q r))
+
+(assoc '1 aalliisstt)
+(1 2 3)
+
+(remove-alist 'aalliisstt '1)
+((a b c) (p q r))
+
+
+
+nil
+
+aalliisstt
+((a b c) (1 2 3) (p q r))
+
+
+
+
+(a b c)
+
+nil
+
+
+(defun dp-c-cheap-move-out-of-syntactic-region (&optional backwards-p)
+  (interactive "P")
+  (let ((movement-cmd (if backwards-p
+                          'backward-char-command
+                        'forward-char-command))
+        (initial-syntax (list (dp-c-get-syntactic-region))))
+    (while (dp-c-in-syntactic-region initial-syntax)
+      (funcall movement-cmd))))
+        
+                      

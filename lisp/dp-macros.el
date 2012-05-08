@@ -175,9 +175,10 @@ However if we are `interactive-p' and
     `(if (fboundp ,symbol)
       (if (get ,symbol 'dp-safe-alias-p)
           (if (dp-alias-eq ,symbol ,newdef)
-              (dmessage "dp-safe-alias: Identical redefinition.")
-            (dmessage-ding 
-             "dp-safe-alias:: Allowing redefinition of %s from %s to %s" 
+              (dmessage "dp-safe-alias: Identical redefinition of %s."
+                        ,symbol)
+            (dmessage-ding
+             "dp-safe-alias: Allowing redefinition of %s from %s to %s" 
              ,symbol (symbol-function ,symbol ),newdef)
             (defalias ,symbol ,newdef))
         (funcall (if ,fatal-p 'error 'warn)
@@ -268,9 +269,7 @@ it as a string."
         (setq result (cons new-elem result)))
       (cons 'progn (reverse result))))
 
-  ;; @ todo make this take an argument for the alias command:
-  ;; eg `defalias' or `dp-safe-alias'
-  (defmacro dp-defaliases (&rest symbols-followed-by-newdef)
+  (defmacro dp-defaliases0 (def-type &rest symbols-followed-by-newdef)
     "Define a list of aliases. SYMBOLS-FOLLOWED-BY-NEWDEF ends with 'newdef.
 SYMBOLS-FOLLOWED-BY-NEWDEF is an &rest list: SYMB0 SYMB1... NEWDEF.
 Ie, NEWDEF is \(last symbol-followed-by-newdefs).
@@ -287,24 +286,35 @@ NEWDEF is last to match the order of args to `defalias'."
       (while symbols-followed-by-newdef
         (setq arg (car symbols-followed-by-newdef)
               symbols-followed-by-newdef (cdr symbols-followed-by-newdef))
-        (setq new-elem `(defalias ,arg ,newdef))
+        (setq new-elem `(,def-type ,arg ,newdef))
         (setq bunch-of-defalias-calls (cons new-elem bunch-of-defalias-calls)))
       (cons 'progn (reverse bunch-of-defalias-calls))))
+  (put 'dp-defaliases0 'lisp-indent-function
+       (get 'defalias 'lisp-indent-function))
+
+
+  (defmacro dp-defaliases (&rest symbols-followed-by-newdef)
+    `(dp-defaliases0 defalias ,@symbols-followed-by-newdef))
   (put 'dp-defaliases 'lisp-indent-function
        (get 'defalias 'lisp-indent-function))
-  
+
+  (defmacro dp-safe-aliases (&rest symbols-followed-by-newdef)
+    `(dp-defaliases0 dp-safe-alias ,@symbols-followed-by-newdef))
+  (put 'dp-safe-aliases 'lisp-indent-function
+       (get 'defalias 'lisp-indent-function))
+
   (defmacro dp-callable0 (vsym)
-    `(and 
+    `(and
       ;;    (symbolp ',vsym)
       ;;    (symbolp ,vsym)
       (or (and (fboundp ',vsym)
                (functionp ',vsym)
                (symbol-function ',vsym))
-          (and (boundp ',vsym) 
+          (and (boundp ',vsym)
                (functionp ,vsym)
                (symbol-function ,vsym))
-          (and (boundp ',vsym) 
-               (fboundp ,vsym) 
+          (and (boundp ',vsym)
+               (fboundp ,vsym)
                (symbol-function ,vsym)))))
 
   (defmacro dp-callable (vsym)

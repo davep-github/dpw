@@ -1160,7 +1160,8 @@ non-nil otherwise get the current list topics."
 
 
 (defun dpj-remove-topic (topic)
-  (remove-alist 'dp-topic-list
+  (interactive (list (dpj-read-topic)))
+  (remove-alist 'dpj-topic-list
                 (or (and (eq topic 'current-topic-p)
                          (current-topic))
                     topic)))
