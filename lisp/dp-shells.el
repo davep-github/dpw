@@ -2140,17 +2140,17 @@ NAME is a buffer or buf-name.  Type is (currently) one of: '(shell ssh)")
                    (cons dp-shells-favored-shell-buffer nil)))
                 ((dp-shells-most-recent-shell-buffer))
                 (t nil))))
-      (and (dp-buffer-live-p 
-            (dp-shells-favored-shell-buffer-buffer fav))
+      (setq fav (dp-shells-favored-shell-buffer-buffer fav))
+      (and (dp-buffer-live-p fav)
            fav))))
 
 (defun dp-fav-buf-p (buf)
   (dp-and-consp buf))
   
 (defun dp-shells-favored-shell-buffer-buffer (fav-buf)
-  (if (dp-fav-buf-p fav-buf)
-      (car fav-buf)
-    (get-buffer fav-buf)))
+  (get-buffer (if (dp-fav-buf-p fav-buf)
+                  (car fav-buf)
+                fav-buf)))
 
 (defun dp-shells-favored-shell-buffer-name (fav-buf)
   (when (dp-and-consp fav-buf)
