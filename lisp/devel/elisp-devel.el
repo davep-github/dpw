@@ -1093,3 +1093,61 @@ nil
       (funcall movement-cmd))))
         
                       
+
+========================
+Monday May 14 2012
+--
+(defun dp-c-in-a-pure-// ()
+  (interactive)
+  (and (is-c++-one-line-comment)
+       (dp-c*-pure-comment-line-p)))
+
+(cons nil nil)
+(nil)
+
+;;in a command AND looking back at (//|/*)[^!]
+(defun dp-c-doxy-need-a-!-p (&optional false-val)
+  (cond
+   ((not (dp-in-c)) (cons "!" t))
+   ((not (dp-in-a-c*-comment)) (cons "!" t))
+   ((save-excursion
+      (beginning-of-line)
+      (let ((beg-pos (comment-search-forward (line-end-position) t)))
+        (when beg-pos
+          (goto-char beg-pos)
+          (looking-at "\\(//\\|/\\*\\)\\($\\|[^!]\\).*"))))
+    (cons "!" nil))
+   (t (cons false-val t))))
+;;
+"
+/*!
+ * @todo
+ * ... no ! needed ...
+ * too hard to see if ! is up there so assume in old style comment and 
+ * not looking back at /*, --> no !.
+ */
+//! @todo
+/*! @todo */
+
+xxx(
+ int a,          //!<@arg -- let M-; handle.
+ const char* p)
+"
+(defun xxx()
+  (interactive)
+  (if (dp-region-active-p)
+      (dp-io-xxx)
+    ;; The doxygen element syntax is different when it comes after a line vs
+    ;; before it.
+    ;; e.g.
+    ;; /*!
+    ;;  *!@todo blah
+    ;;  */
+    ;; vs:
+    ;; bad_thing(ccc);   //!<@todo.
+    ;; So fix it.
+    (let ((!-stuff (dp-c-doxy-need-a-!-p "")))
+    (dp-insert-for-comment+ "XXX" 
+                            " @todo " 
+                            :doxy-prefix (car !-stuff)
+                            :remove-preceding-ws-p (cdr !-stuff)))))

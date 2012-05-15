@@ -2,6 +2,7 @@
 /*
  */
 
+// @todo XXX 
 extern int common_arg_handler(
     int arg_char,
     const char* optarg,
@@ -24,6 +25,7 @@ f(void)
  * @class c_one
  * @brief lsld
  */
+/*! hi */
 class c_one
 {
   /*
@@ -36,7 +38,8 @@ class c_one
     
 };
 
-
+// ! @todo XXX
+// 
 extern int
 char* strthis(
   char*	    that,
@@ -48,7 +51,7 @@ void
 fff(void)
 {
     x = "abcdefg";              V
-    return o.q();               // blah
+    return o.q();               //! blah
     return 0;
     return;
 }
@@ -65,6 +68,7 @@ char* strthis(
 
 a()
 {
+    f(x);
   /*
    * blah
    */
@@ -90,7 +94,13 @@ a()
 
 
     
-    
+    //! @todo XXX
+    // ! @todo XXX
+    // @todo XXX
+    // ! @todo XXXyadda already
+    //! hello
+    // 
+    /*! @todo XXX */
 
 
       

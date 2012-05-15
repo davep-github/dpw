@@ -2679,7 +2679,19 @@ It is initialized to #if 0"
   (interactive)
   (if (dp-region-active-p)
       (dp-io-xxx)
-    (dp-insert-for-comment+)))
+    ;; The doxygen element syntax is different when it comes after a line vs
+    ;; before it.
+    ;; e.g.
+    ;; /*!
+    ;;  *!@todo blah
+    ;;  */
+    ;; vs:
+    ;; bad_thing(tm);   //!<@todo.
+    ;; So fix it.
+    (dp-insert-for-comment+ "XXX" "@todo " :sep-char ""
+                            :doxy-prefix (if (dp-in-a-c*-comment)
+                                             ""
+                                           "!<"))))
 
 (defvar dp-ifdef-debug-level 0
   "Current debug level to use in debug ifdefs.")
@@ -2912,6 +2924,7 @@ Also, it will move backwards into a closed class (ie has a };)."
   (when (dp-in-c)
     (save-match-data
       (save-excursion
+        (end-of-line)
         (re-search-backward "//" (line-beginning-position) t)))))
 
 (defun dp-in-a-c-/**/-comment (&optional syntax-el)
@@ -3091,7 +3104,7 @@ reg-exps are anchored at bol."
           (if (looking-at " ")
               (delete-char))
           (undo-boundary)
-          (insert dp-c*-doxy-command-prefix  doxy-cmd " "))))))
+          (insert dp-c*-doxy-command-prefix doxy-cmd " "))))))
 
 (defun dp-c*-doxy-handle-topmost-intro (default-return)
   "A topmost-intro can contain parameters or just an open paren.
@@ -4231,24 +4244,30 @@ Leaves region active."
 	    (insert ":fcd:"))
 	(message "canna find comment start.")))))
 
-(defun* dp-insert-for-comment+ (&optional 
-                                (sloppy-p nil)
-                                (msg "XXX") 
-                                (prefix "!<@todo ")
+(defun* dp-insert-for-comment+ (msg
+                                prefix
+                                &key
+                                (clean-up-p nil)
                                 (sep-char "")
-                                (remain-@-end-point-p t))
+                                (remain-@-end-point-p t)
+                                (remove-preceding-ws-p nil)
+                                (doxy-prefix ""))
   "Indent for comment, \\[indent-for-comment], and append a PREFIX and MSG.
 Add the strings immediately after the mode's default comment start.
 Defaults are:
 MSG: a traditional \"XXX\" (TO BE DONE or LOOKED AT) comment.
-PREFIX: Doxygen comment indicator \"!<@\"."
-  (interactive "*P")
-  (let ((msg (concat prefix sep-char msg))
-        (clean-up-p (not sloppy-p))
+PREFIX: Doxygen comment indicator \"!@\"."
+  (interactive "*sComment text: \nsPrefix: \nsSeparator: ")
+  (let ((msg (concat doxy-prefix prefix sep-char msg))
         end-point)
     (if (or (dp-in-a-string)
             (dp-in-a-c-/**/-comment))
-        (insert msg " ")
+        (progn 
+          (when (dp-looking-back-at dp-ws-regexp+ 
+                                    (line-beginning-position))
+            (replace-match ""))
+          ;; @todo XXX look into this. Seems like  " " vs "" is bad.
+          (insert msg ""))
       (save-excursion
         ;; Use the function bound to the key to make this DTRT in each mode.
         ;; (as long as M-; is a universal binding)
@@ -4256,15 +4275,21 @@ PREFIX: Doxygen comment indicator \"!<@\"."
               (comment-end (or comment-end "")))
           ;; Don't clean up if there's no comment-start.  I don't think there
           ;; will ever be a comment-end without a comment-start.
-          (setq clean-up-p (not (string= comment-start "")))
-          (dp-call-function-on-key [(meta \;)]))
+          ;;(setq clean-up-p (not (string= comment-start "")))
+          (dp-call-function-on-key [(meta \;)])
+          (when (and remove-preceding-ws-p
+                     (dp-looking-back-at dp-ws-regexp+ 
+                                         (line-beginning-position))
+                     (replace-match "")))
+          ;; Not always true, but almost always as far as we're concerned.
+          (skip-chars-forward "!"))
         ;;(indent-for-comment)
         (when clean-up-p
           (just-one-space))
-        (unless (and clean-up-p
-                     (looking-at (regexp-quote msg)))
+        (unless (search-forward msg (line-end-position) t)
+;;          (skip-chars-forward dp-ws)
           (insert msg))
-        ;; !<@todo XXX XXX comes after so we fit Doxygen standard format.
+        ;; "!<@todo XXX" XXX comes after so we fit Doxygen standard format.
         (and clean-up-p
              (just-one-space))          ; !<@todo XXX 
         ;; Save our resulting end point.
@@ -4294,33 +4319,33 @@ PREFIX: Doxygen comment indicator \"!<@\"."
 (defun* dp-interactive-insert-for-comment+ (string)
   "Insert a comment meant to draw attention."
   (interactive "sinsert: ")
-  (dp-insert-for-comment+ nil string))
+  (dp-insert-for-comment+ string))
 
 (defun* wtf (&optional (msg "WTF is going on!!??"))
   (interactive)
-  (dp-insert-for-comment+ nil msg))
+  (dp-insert-for-comment+ msg))
 
 (defun* ick (&optional (msg "ick! Fix this ASAP!!"))
   (interactive)
-  (dp-insert-for-comment+ nil msg))
+  (dp-insert-for-comment+ msg))
 
 ;; !<@todo XXX!<@todo XXX!<@todoXXX dslkdjlskjdlskjdlsjd
 ;;    !<@todo XXX ubbakdflkdfj  ldkjflkdf  ldkjflkj 
 ;; !<@todo XXX 
 (defun dp-comment-experimental-code (&optional prompt-for-message-p)
   (interactive "P")
-  (dp-insert-for-comment+ nil "dp:experimental: "))
+  (dp-insert-for-comment+ "dp:experimental: "))
 
 (defalias 'exp 'dp-comment-experimental-code)
 
 (defun dp-c-add-data-comment ()
   (interactive "*")
-  (dp-insert-for-comment+ nil "<:data:>"))
+  (dp-insert-for-comment+ "<:data:>"))
 (defalias 'data 'dp-c-add-data-comment)
 
 (defun dp-add-for-now-comment ()
   (interactive "*")
-  (dp-insert-for-comment+ nil "Just for now. Remove ASA fixed."))
+  (dp-insert-for-comment+ "Just for now. Remove ASA fixed."))
 
 (defun dp-c-electric-brace (reindent-p)
   "Insert a brace \"intelligently.\"  
@@ -4503,8 +4528,7 @@ ARGS are passed thru to `dp-timestamp-string'."
 (defun dp-insert-for-comment-as-of ()
   (interactive)
   "Add something along the lines of 'as of: <timestamp>"
-  (dp-insert-for-comment+ nil
-                          (concat "as of: " (dp-timestamp-string))
+  (dp-insert-for-comment+ (concat "as of: " (dp-timestamp-string))
                           "" ""))
 (dp-defaliases 'dpao 'dpasof 'dp-as/of 'as/of 'asof 
                'dp-insert-for-comment-as-of)
@@ -4512,8 +4536,7 @@ ARGS are passed thru to `dp-timestamp-string'."
 (defun dp-insert-for-comment-at-this-time ()
   (interactive)
   "Add something along the lines of 'at this time: <timestamp>"
-  (dp-insert-for-comment+ nil
-                          (concat "at this time: " (dp-timestamp-string))
+  (dp-insert-for-comment+ (concat "at this time: " (dp-timestamp-string))
                           "" ""))
 (dp-defaliases 'dp-at-this-time 'dp-att 'att 'dp-insert-for-comment-at-this-time)
 
