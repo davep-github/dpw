@@ -18,6 +18,7 @@ dp_add_default_keys()
     esac
 }
 
+# Really start or connect to ssh agent
 dp_start_ssh_agent()
 {
     # See if there's a running agent to which we can attach.

@@ -5988,7 +5988,7 @@ new one."
     (dp-start-server t))
   ;; Start gnu (har, har!) one.
   (dp-start-server))
-(dp-defaliases 'xserver 'eserver 'gnuserve 'dp-start-editing-server)
+(dp-defaliases 'gserv 'xserver 'eserver 'gnuserve 'dp-start-editing-server)
 
 (defun dp-never-cleanup-buffer-p (buf)
   (string-match "Minibuf" (buffer-name buf)))

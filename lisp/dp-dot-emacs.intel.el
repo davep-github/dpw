@@ -58,8 +58,10 @@
 (defun dp-intel-c-style ()
   "Set up C/C++ style."
   (interactive)
-  (dp-define-intel-c-style))
+  (dp-define-intel-c-style)
   (c-add-style "intel-c-style" intel-c-style t))
+
+(dp-intel-c-style)
 
 ;; For some reason, vc isn't being autoloaded here, but it is @ home.
 (vc-load-vc-hooks)  ; This is being added to the Tools->Version Control menu.
