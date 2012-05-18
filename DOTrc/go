@@ -18,3 +18,6 @@ Ee|bin|			${HOME}/bin/
 Ee|lisp|		${HOME}/lisp/
 #E|elisponly|           a test which should not match
 Ee|testA|testB|testC| 	value-for-testABC
+Ee|faf|                 find . -type f -print0 | xargs -r0 
+Ee|faff|                find . -type f -print0 | xargs -r0 fgrep 
+Ee|fafe|                find . -type f -print0 | xargs -r0 egrep 

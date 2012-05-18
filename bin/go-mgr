@@ -139,7 +139,7 @@ dump_go_files()
 
 #set -- ` getopt "x:a:d:lef:gG:E:" $* `
 # getopt done right!
-opts="x:a:d:lef:gG:E:h"
+opts="x:a:d:lef:g:GE:h"
 q=$(getopt -o "$opts" -- "$@")
 [ $? != 0 ] && Usage
 eval set -- "$q" 

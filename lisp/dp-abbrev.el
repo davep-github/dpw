@@ -348,8 +348,12 @@ list in my DP-STYLE-ABBREV format (q.v.)"
   (let* ((wtf (kb-lambda
                   (save-buffer)
                   (dp-abbrevs)))
+         ;; Ask the go manager for the most specific go file.
+         (go-name (shell-command-to-string "go-mgr -G"))
          (def-file (expand-file-name 
-                    (substring (or (shell-command-to-string "go-mgr -g")
+                    (substring (or (and go-name 
+                                        (not (string= "" go-name)) 
+                                        go-name)
                                    "~/.go.home\n") 
                                0 -1)))
          (go-path (getenv "GOPATH"))

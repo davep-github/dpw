@@ -217,4 +217,4 @@ then
 else
     do_taggin $dirs
 fi
-echo "done."
+echo "index-code done: $(date)."
