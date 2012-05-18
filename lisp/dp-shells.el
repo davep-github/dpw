@@ -166,12 +166,12 @@ prompt.  We don't want to stomp on them.")
       (dp-clr-shell0)
     (message "Must be in a shell buffer to use clsx.")))
   
-(defun clsn ())
+(defun clsn ()
   (if (dp-shell-buffer-p)
       (dp-clr-shell0 :save-contents-p nil)
     (message "Must be in a shell buffer to use clsn.")))
 
-(defun clsy ())
+(defun clsy ()
   (if (dp-shell-buffer-p)
       (dp-clr-shell0 :save-contents-p t)
     (message "Must be in a shell buffer to use clsy.")))
@@ -1919,9 +1919,9 @@ Xemacs's view of the pwd often gets confuzed."
 (dp-deflocal dp-shell-isa-shell-buf-p nil
   "Is this a shell buffer?  This is a list of symbols which ID the buffer.")
 
-(defsubst* dp-shell-buffer-p(&optional buffer 
-                             (pred dp-shell-isa-shell-buf-p)
-                             pred-args)
+(defsubst* dp-shell-buffer-p (&optional buffer 
+                              (pred dp-shell-isa-shell-buf-p)
+                              pred-args)
   (with-current-buffer (or buffer (current-buffer))
     (dp-apply-or-value pred pred-args)))
 
@@ -2148,9 +2148,11 @@ NAME is a buffer or buf-name.  Type is (currently) one of: '(shell ssh)")
   (dp-and-consp buf))
   
 (defun dp-shells-favored-shell-buffer-buffer (fav-buf)
-  (get-buffer (if (dp-fav-buf-p fav-buf)
-                  (car fav-buf)
-                fav-buf)))
+  (let ((buf (if (dp-fav-buf-p fav-buf)
+                 (car fav-buf)
+               fav-buf)))
+    (when buf
+      (get-buffer buf))))
 
 (defun dp-shells-favored-shell-buffer-name (fav-buf)
   (when (dp-and-consp fav-buf)

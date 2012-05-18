@@ -14781,9 +14781,11 @@ See `dp-shell-*TAGS-changers' rant. "
   (interactive "P")
   ;; Nuke the pesky completion buffer, which seems to be obnoxiously
   ;; permanent.
-  (make-vector 511 0)
-  (setq tag-completion-table (make-vector 
-                              (length tag-completion-table) 
+  ;;;;;;;;;;; WTF??!?!?!! all by itself(make-vector 511 0)
+  (setq tag-completion-table (make-vector
+                              (or (and (bound-and-true-p tag-completion-table)
+                                       (length tag-completion-table))
+                                  511)
                               0))
   (loop for buf in (buffer-list)
     do (when (and (buffer-file-name buf)
