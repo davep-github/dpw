@@ -46,7 +46,7 @@ FILES_TO_FILTER=()
 # everything else. Things like all c files except test.c
 : ${EXCLUDE_PAT:=''}
 ### NB: !!! THESE ARE REGEXPs, NOT GLOBS! * is not the same as .* !!!!
-VC_EXCLUDES='-e /^.*\/?(\.svn|CVS|RCS|\.4D|\.git|\.hg)\/?.*/d'
+VC_EXCLUDES='-e /^.*\/?(\.obs\.|\.svn|CVS|RCS|\.4D|\.git|\.hg)\/?.*/d'
 
 echo 1>&2 "Read various ignore files like, .(cvs|git)ignore, ~/.gitexcludes,
 ./.git/info/exclude, etc, and make a sed expression to ignore them.

@@ -64,7 +64,7 @@
                 path)))
 
 
-(defvar dp-c++-extensions '("cxx" "c++" "cc" "tcc" "cpp" "c")
+(defvar dp-c++-extensions '("cpp" "cxx" "c++" "cc" "tcc" "c")
   "All known -- to me -- c++ extensions.
 And a plain old C extension.")
 
@@ -158,7 +158,7 @@ Every possible extension in every possible dir in PATH."
                     (new-name-format dp-cf-default-name-format))
   "Find the FILE-NAME's corresponding file based on EXT. 
 Primary motivation was: x.c <-->x.h
-It will search \"standard\" places for a match to FILE-NAME's counterpart.
+It will search `standard' places for a match to FILE-NAME's counterpart.
 
 If no counterpart is found, return a completion list suitable and useful for
 handing to a completing read."
@@ -257,6 +257,7 @@ Eg, via `hack-local-variables', hook, magic.")
         (dp-push-go-back "ecf"))
       (funcall find-file-func co-file)
       (when search-re
+        (beginning-of-line)
         (dp-search-re-with-wrap search-re))
       (setq dp-ecf-whence-marker whence))))
 

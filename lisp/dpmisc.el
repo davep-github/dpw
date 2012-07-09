@@ -61,6 +61,12 @@
 (defalias 'dp-to-knr-open-brace
   (read-kbd-macro "ESC C-s ^ \\s- +{ RET <up> M-j"))
 
+(defalias 'dp-prepare-to-move-c++-method
+  (read-kbd-macro 
+   (concat "C-a M-a C-s ( <left> M-[ <right> M-C-1 <right> M-o"
+           " C-s { <left> M-[ <down> <up> C-a C-s } <left> M-[ M-a"
+           " M-[ 2*<right> M-C-o C-x C-x DEL <up> C-e ; ")))
+
 (defalias 'dp-move-c++-method
   (read-kbd-macro 
    (concat "C-a M-a C-s ( <left> M-[ <right> M-C-1 <right> M-o"
@@ -1979,10 +1985,12 @@ on the go back ring."
 Motivated by `dp-indent-line-and-move-down'."
   (interactive "*")
   ;;(beginning-of-line)
-  (when (or (not pred)
+  (set-goal-column nil)
+  (when (or (eq pred t)
             (funcall pred))
     (apply func func-args))
-  (forward-line 1)
+  (next-line 1)
+  (set-goal-column t)
   ;; python-mode does different things if the previous command was an indent
   ;; command, so we make sure this isn't true.  This should be OK since this
   ;; command is supposed to emulate the key sequence <tab><down>, so the
@@ -1993,27 +2001,28 @@ Motivated by `dp-indent-line-and-move-down'."
 ;; A bunch of these often works better than indent-region.
 ;; I've seen indent-region get confused and make mistakes,
 ;; but indenting line-by-line seems to always work.
-(defun dp-indent-line-and-move-down (&optional arg)
+(defun dp-indent-line-and-move-down (arg)
   "Indent line mode as per mode, tidy it up and move to then next line.
 Tidying includes: re `indent-for-comment' and fixing up white space."
-  (interactive "*")
-  (dp-func-and-move-down 
-   (function
-    (lambda ()
-      (back-to-indentation)			;shell mode needs this
-      ;; Sadly, many modes don't handle TAB consistently. Sometimes it's
-      ;; `indent-for-tab-command' or `indent-according-to-mode' or...
-      ;; Since this is very much like a keystroke macro of 
-      ;; BOL, TAB, NEXT-LINE, we'll just use the tab key itself.
-      ;;(indent-according-to-mode)
-      (dp-call-function-on-key [tab])
-      (unless (or (Cu--p)
-                  dp-il&md-dont-fix-comments-p)
-        (dp-with-saved-point nil
-          (dp-fix-comment)))
-      (dp-cleanup-line)))
-   nil
-   'forward-line))
+  (interactive "*p")
+  (loop repeat arg do
+    (dp-func-and-move-down
+     (function
+      (lambda ()
+        (back-to-indentation)           ;shell mode needs this
+        ;; Sadly, many modes don't handle TAB consistently. Sometimes it's
+        ;; `indent-for-tab-command' or `indent-according-to-mode' or...
+        ;; Since this is very much like a keystroke macro of
+        ;; BOL, TAB, NEXT-LINE, we'll just use the tab key itself.
+        ;;(indent-according-to-mode)
+        (dp-call-function-on-key [tab])
+        (unless (or (Cu--p)
+                    dp-il&md-dont-fix-comments-p)
+          (dp-with-saved-point nil
+            (dp-fix-comment)))
+        (dp-cleanup-line)))
+     t
+     'forward-line)))
 
 (defun dp-fix-comment-and-move-down ()
   (interactive)
@@ -2022,6 +2031,7 @@ Tidying includes: re `indent-for-comment' and fixing up white space."
     (lambda ()
       (dp-with-saved-point nil
         (dp-fix-comment))))
+   t
    'forward-line))
 
 (defun dp-delete-indentation-and-move-down (&optional arg)
@@ -2566,7 +2576,8 @@ It is initialized to #if 0"
            (posix-string-match "^[0-9]" arg))
       (setq io-start-text (format "#if %s" arg)))
      
-     ((posix-string-match "^[a-zA-Z_]" arg)
+     ((and (stringp arg)
+           (posix-string-match "^[a-zA-Z_]" arg))
       (setq io-start-text (format "#ifdef %s" arg)))
      
      ((string-equal arg "")
@@ -2594,12 +2605,21 @@ It is initialized to #if 0"
 
 (defun dp-ifdef-out (&optional arg)
   (interactive (dp-ifdef-region-read-arg))
-  (let ((locations (dp-ifdef-region "0" nil)))
+  (let ((locations (dp-ifdef-region arg nil)))
     (goto-char (nth 1 locations))))
 
 (dp-defaliases 'if0 'io0 'io 'dp-ifdef-out)
 
 (defun dp-ifdef-new (&optional arg)
+  "#ifdef a block of code out and define a region where alternate code can go.
+E.g.
+#if 1                           /* 2012-06-21T09:12:56 */
+/* Trying replacement code */
+
+#else
+<old/orig code is here>
+...
+#endif"
   (interactive (dp-ifdef-region-read-arg))
   (let ((locations (dp-ifdef-region "1" 'else-p)))
     (goto-char (nth 1 locations))
@@ -2610,7 +2630,8 @@ It is initialized to #if 0"
 (dp-defaliases 'if1 'io1 'ioin 'ionew 'dp-ifdef-new)
 
 (defun* dp-ifdef-region-because (excuse &optional (not ""))
-  (interactive)
+  (interactive "sExcuse text: ")
+  (setq excuse (dp-c-namify-string excuse))
   (dp-mark-line-if-no-mark)
   (io-region (mark) (point) 
              (format "#if %sdefined(%s) && 0 /* @todo as of %s :dp */"
@@ -2688,7 +2709,7 @@ It is initialized to #if 0"
     ;; vs:
     ;; bad_thing(tm);   //!<@todo.
     ;; So fix it.
-    (dp-insert-for-comment+ "XXX" "@todo " :sep-char ""
+    (dp-insert-for-comment+ "XXX " "@todo " :sep-char ""
                             :doxy-prefix (if (dp-in-a-c*-comment)
                                              ""
                                            "!<"))))
@@ -3137,14 +3158,19 @@ Current annotations are:
         (dp-c*-insert-doxy-comment)
       (dp-indent-for-comment arg))))
 
-(defun dp-c-fill-paragraph (&optional arg)
+(defun* dp-c-fill-paragraph (&optional arg)
   "Fill according to C/C++ syntactical context."
   (interactive "*P")
   (let* ((region (dp-mark-active-p))
+         (beg-end-list (and region (dp-region-boundaries-ordered-list)))
          (syntax (save-excursion
                    (when region (goto-char (car region)))
                    (end-of-line)
                    (dp-c-get-syntactic-region))))
+    (when (and region
+               (apply 'dp-c*-in-doxy-comment beg-end-list))
+      (apply 'dp-c*-align beg-end-list)
+      (return-from dp-c-fill-paragraph))
     (save-excursion
       (save-restriction
         (when region
@@ -3769,11 +3795,19 @@ lisp-interaction mode."
          'switch-to-buffer-other-window'
        'switch-to-buffer) (get-buffer dp-hyper-apropos-buffer-name))))
 
-(defun dp-view-buffer (buf-or-name &optional same-window-p post-hook)
+(defun dp-view-buffer (buf-or-name &optional same-window-p post-hook
+                       scroll-with-output-p)
   (interactive)
-  (if same-window-p
-      (switch-to-buffer buf-or-name)
-    (display-buffer buf-or-name))
+  (let ((view-win
+         (if (not same-window-p)
+             (display-buffer buf-or-name)
+           (switch-to-buffer buf-or-name)
+           (dp-get-buffer-window))))
+    (when scroll-with-output-p
+      (save-window-excursion
+        (select-window view-win)
+        (goto-char (point-max)))))
+  
   (when post-hook
     ;; Call in context of new buffer.
     ;; Not doing so messed up my (*&@(*&#(*!!! key bindings.
@@ -3787,7 +3821,8 @@ lisp-interaction mode."
                   same-window-p 
                   (function
                    (lambda ()
-                     (local-set-key [(meta ?-)] 'dp-bury-or-kill-buffer)))))
+                     (local-set-key [(meta ?-)] 'dp-bury-or-kill-buffer)))
+                  'follow-output))
 
 (dp-defaliases 'mb 'mb2 'mb-other 'dp-display-message-buffer)
 
@@ -4528,8 +4563,7 @@ ARGS are passed thru to `dp-timestamp-string'."
 (defun dp-insert-for-comment-as-of ()
   (interactive)
   "Add something along the lines of 'as of: <timestamp>"
-  (dp-insert-for-comment+ (concat "as of: " (dp-timestamp-string))
-                          "" ""))
+  (dp-insert-for-comment+ (concat "as of: " (dp-timestamp-string)) ""))
 (dp-defaliases 'dpao 'dpasof 'dp-as/of 'as/of 'asof 
                'dp-insert-for-comment-as-of)
 
@@ -5154,7 +5188,7 @@ Like adding this while doing something else that came from somewhere else...")
 ;; Add flag to gbi that says this item was recalled from a save hist.  Clear
 ;; as files are visited.  Add various global defaults and parameters and
 ;; predicates.
-(defun dp-pop-go-back (&optional arg)
+(defun dp-pop-go-back (&optional arg &key silent-p)
   "Pop the top of `dp-go-back-ring' and go there.
 If ARG is '- discard the top entry.
 Otherwise, if ARG is non-nil, move forward thru the ring.
@@ -5212,7 +5246,8 @@ Otherwise, if ARG is non-nil, move forward thru the ring.
                 (setq pop-it nil)
                 ;;;(switch-to-buffer buffer)
                 (dp-goto-marker marker)
-                (message "back from %s" reason)
+                (unless silent-p
+                  (message "back from %s" reason))
                 (set-marker marker nil)) ; hasten GC of marker
             (setq pop-it (y-or-n-p "Discard marker?"))))
         (if pop-it
@@ -6080,8 +6115,8 @@ new one."
 ;; doesn't ignore the line.  In the case where the comment shoud be at
 ;; the beginning of the line, it will be moved backwards correctly.
 ;;!<@todo get and insert class name?  Or does doxy do it already?
-(defvar doxy-c-class-member-comment-elements '("
- /*********************************************************************/" > "
+(defvar doxy-c-class-member-comment-elements '(
+" /*********************************************************************/" > "
  /*!" > "
   * @brief " (P "brief desc: " desc nil) > "
   */" > % >)
@@ -6159,7 +6194,7 @@ do not indent the newly inserted comment block."
       ;; @todo templates *WILL* break this.
       ;; Apparently not. 
       (re-search-forward 
-       "\\s-*\\(class\\|struct\\)\\s-+\\(\\S-+?\\)\\s-*\\(:\\|{\\|$\\)"))
+       "\\s-*\\(enum\\|class\\|struct\\)\\s-+\\(\\S-+?\\)\\s-*\\(:\\|{\\|$\\)"))
     (let ((class-name (match-string 2)))
       ;;(tempo-template-doxy-c-class-comment)
       (dp-insert-tempo-template-comment 
@@ -6175,7 +6210,7 @@ do not indent the newly inserted comment block."
       (dp-c-tempo-insert-member-comment)
     (if (save-excursion
           (beginning-of-line)
-          (looking-at "\\s-*\\(class\\|struct\\|template\\)"))
+          (looking-at "\\s-*\\(enum\\|class\\|struct\\|template\\)"))
         (dp-c-insert-class-comment)
       ;; not in C++, just insert a function comment
       (dp-c-tempo-insert-function-comment))))
@@ -8399,7 +8434,7 @@ If region is active, set width to that of the longest line in the region."
           (cons beg? end?)
         (cons end? beg?))
     (when (and exchange-pt-and-mark-p
-               (< mark) (point))
+               (< mark (point)))
       (exchange-point-and-mark))
     (cons (region-beginning) (region-end))))
 
@@ -8704,7 +8739,7 @@ The highlight will be removed after the next command."
 (defun dp-toggle-var (arg var-sym &optional quiet-p)
 "Toggle value of VAR-SYM in the canonical manner as a function of ARG.
 If ARG is nil, toggle value of VAR-SYM.
-If ARG is > 0, set value of VAR-SYM to t.
+If ARG is > 0, or t then set value of VAR-SYM to t.
 If ARG is <= 0, set value of VAR-SYM to nil.
 If QUIET-P is non-nil, show new value of VAR-SYM."
   (interactive "P")
@@ -9888,7 +9923,8 @@ I like to be more precise in certain cases; such as when deleting things.")
                               'dp-default-makefile-name))
                            (and-fboundp 'dp-default-makefile-name
                              (funcall dp-default-makefile-name))))
-         (buf (or (car-safe (dp-find-primary-makefile-buffer))
+         (buf (or (and (not makefile)
+                       (car-safe (dp-find-primary-makefile-buffer)))
                   (when def-makefile
                     (or (find-buffer-visiting def-makefile)
                         (when (file-readable-p def-makefile)
@@ -9949,6 +9985,8 @@ Just for informational purposes.")
          (makefile-buffer (nth 2 make-command))
          (target (and remake-p dp-mru-make-target))
          prompt)
+    (when (Cu-p 2)
+      (dp-set-primary-makefile t makefile-buffer))
     (setq dp-make-targets-history (delete "" dp-make-targets-history))
     (when (and dp-use-dedicated-make-windows-p
                (or (eq major-mode 'compilation-mode)
@@ -10163,7 +10201,7 @@ end is the end of the last matching line."
   (dp-c-stack-statement "\\s-*\\(<<\\|>>\\)\\s-*" "\\1 " 'before 'after-first))
 (defalias 'csi 'dp-c-stack-iostream)
 
-(defun dp-c-fill-statement (&optional line-max rest-of-statement beg end)
+(defun dp-c-fill-statement (&optional max-line-len rest-of-statement beg end)
   (interactive)
   (dmessage "HANDLE spaces after opening (")
   (save-excursion
@@ -10176,10 +10214,11 @@ end is the end of the last matching line."
                           (dp-c-stack-rest-of-statement)
                         (dp-c-stack-statement nil nil nil nil beg end))))
            (end (dp-mk-marker (car (cdr beg-end))))
-           (line-max (dp-c-fill-column line-max)))
+           (max-line-len (dp-c-fill-column max-line-len)))
       (while (< (line-end-position) end)
         (join-line)
-        (unless (<= (- (line-end-position) (line-beginning-position)) line-max)
+        (unless (<= (- (line-end-position) (line-beginning-position)) 
+                    max-line-len)
           (c-context-line-break))))))
 (defalias 'cfs 'dp-c-fill-statement)
     
@@ -10194,21 +10233,23 @@ end is the end of the last matching line."
         (end-of-line))
       (dp-c-beginning-of-statement)
       (setq beg (point))
-      (if (not (re-search-forward "(" nil t))
-          (error "No opening paren in `dp-c-delimit-func-decl'.")
-        ;; See if we moved into a different statement.
-        (unless (= (dp-c-beginning-of-statement-pos) beg)
-          (return-from dp-c-delimit-func-decl))
-        (backward-char 1)
-        (dp-find-matching-paren-including-<)
-        (setq end (point)))
+      (unless (re-search-forward "(" nil t)
+        (dp-ding-and-message "No opening paren in `dp-c-delimit-func-decl'.")
+        (return-from dp-c-delimit-func-decl))
+      ;; See if we moved into a different statement.
+      (unless (= (dp-c-beginning-of-statement-pos) beg)
+        (dp-ding-and-message "Problem finding beginning of statement.")
+        (return-from dp-c-delimit-func-decl))
+      (backward-char 1)
+      (dp-find-matching-paren-including-<)
+      (setq end (point))
       (cons (if use-markers-p
                 (dp-mk-marker beg)
               beg)
             (if use-markers-p
                 (dp-mk-marker end)
               end)))))
-
+  
 (defun dp-mark-region (beg-end-cons &optional end-if-not-a-cons)
   "Mark the region indicated by BEG-END-CONS.
 BEG-END-CONS has the form: \(beginning-of-region . end-of-region\).
@@ -10245,7 +10286,7 @@ Returns the ultimate value BEG-END-CONS."
       (beginning-of-line)
       (dp-c-indent-command)
       (goto-char beg)
-         (cons beg end))))
+      (cons beg end))))
 
 (defun dp-look-ahead (&rest re-search-fwd-args)
   "Do a re-search-forward inside a `save-excursion'."
@@ -10299,7 +10340,7 @@ is done.")
     ;; It seems like this is a problem when we move into a new region *after*
     ;; point. Lets try adding that condition.
     ;;(setq syntactic-region (dp-c-get-syntactic-region))
-    ;;(setq old-point (point))
+    (setq old-point (point))
     (dp-c-beginning-of-statement)
     ;;(unless (or (equal syntactic-region (dp-c-get-syntactic-region))
     ;;            (<= (point) old-point))
@@ -10395,11 +10436,11 @@ is done.")
 
 (defalias 'ffdp 'dp-c-format-func-decl-packed)
 
-(defun dp-c-format-func-call (&optional line-max)
+(defun dp-c-format-func-call (&optional max-line-len)
   "Format a C/C++ function call *my* way."
   (interactive "*P")
-  (setq-ifnil line-max (dp-c-fill-column 
-                        (and line-max (prefix-numeric-value line-max))))
+  (setq-ifnil max-line-len (dp-c-fill-column 
+                        (and max-line-len (prefix-numeric-value max-line-len))))
   (undo-boundary)
   (save-excursion
     (dp-c-format-func-decl)
@@ -10410,7 +10451,7 @@ is done.")
       (beginning-of-line)
       (join-line)
       (if (<= (- (line-end-position) (line-beginning-position)) 
-              (dp-c-fill-column line-max))
+              (dp-c-fill-column max-line-len))
           ()
         (c-context-line-break)))
     (when (string= (match-string 0) "{")
@@ -10530,11 +10571,12 @@ Also used by split window advice to determine when to force a horizontal
 split.")
 
 ;; I cannot believe I really need to write this. I must've missed it.
-(defun dp-first-with-pred (pred list &rest pred-args)
-  (while (and list 
-              (not (apply pred (car list) pred-args)))
-    (setq list (cdr list)))
-  list)
+;; And I did indeed: CL function `member-if'
+;; (defun dp-first-with-pred (pred list &rest pred-args)
+;;   (while (and list 
+;;               (not (apply pred (car list) pred-args)))
+;;     (setq list (cdr list)))
+;;   list)
 
 (defun dp-list-subtract (l1 l2)
   "Return L1 with all elements of L2 removed."
@@ -10574,7 +10616,7 @@ split.")
     (loop for w in win-list
       until (not all-buffers)
       unless (memq w skip-these-windows)
-      do (let ((good-bufs (dp-first-with-pred
+      do (let ((good-bufs (member-if
                            (lambda (b)
                              (and b
                                   (not (memq b (dp-all-window-buffers)))
@@ -10683,7 +10725,7 @@ If wide enough: | | |, otherwise: |-|"
                        (other-window 2))
                      nil))
 
-(dp-defaliases '2x2 '2+2 '2|2 '4w 'dp-2x2-windows)
+(dp-defaliases '2x2 '2+2 '2|2 '2/2 '-- '-|- '4w 'dp-2x2-windows)
 
 (defun dp-1+2-wins ()
   "Set up a 1+2 window arrangement: | |-|"
@@ -10910,7 +10952,7 @@ basically the union of the args to `find-file-noselect' and
 
 (defun dp-find-file-this-window  (file-name &optional codesys wildcards)
   "Find a file in this window unless it is displayed in another."
-  (interactive (list (read-file-name "dp:Find file in other window: ")
+  (interactive (list (read-file-name "dp:Find file in this window: ")
 		     (and current-prefix-arg
 			  (read-coding-system "Coding system: "))
 		     t))
@@ -10998,11 +11040,12 @@ and for setting up a buffers mode (`dp-set-auto-mode')."
                                  (add-hook 'write-file-hooks 
                                            'dp-stealth-time-stamp)))
 
-(defun dp-set-primary-makefile (&optional arg)
+(defun dp-set-primary-makefile (&optional toggle-var buf-or-name-of-makefile)
   "Cause the Makefile in the current buffer to be the one to use in this tree."
   (interactive "P")
-  (setq buffer-read-only (not arg))
-  (dp-toggle-var arg 'dp-primary-makefile-p))
+  (with-current-buffer (dp-get-buffer buf-or-name-of-makefile)
+    (setq buffer-read-only (not toggle-var))
+    (dp-toggle-var toggle-var 'dp-primary-makefile-p)))
 
 (defun 411f (&optional name-regex case-unfold-p)
   "Find NAME-REGEX in phone book."
@@ -11219,7 +11262,7 @@ Essentially return whether log base4 of `current-prefix-arg' == NUM-C-U."
                   (if (listp a)
                       (car a)
                     a)))))
-(defalias 'Cup 'C-u-p)
+(dp-defaliases 'Cu-p 'Cup 'C-u-p)
 
 (defun Cup> (num &optional prefix-arg)
   (C-u-p num prefix-arg '<))
@@ -13104,7 +13147,7 @@ Raised is already done by XEmacs. Is this an FSF holdover or just a brain-fart?"
     (backward-char)
     (cons (point) (dp-matching-paren-pos))))
 
-(defun dp-fill-region (&optional line-breaker line-max)
+(defun dp-fill-region (&optional line-breaker max-line-len)
   (interactive)
   (setq-ifnil line-breaker 'c-context-line-break)
   (let* ((region (dp-region-or... 
@@ -13121,7 +13164,7 @@ Raised is already done by XEmacs. Is this an FSF holdover or just a brain-fart?"
                                       (cdr region)
                                     (1- (cdr region)))
                                 (line-end-position)))))
-         (line-max (dp-c-fill-column line-max)))
+         (max-line-len (dp-c-fill-column max-line-len)))
     (dmessage "b: %s, e: %s" beg end)
     (if (not (and beg end))
         (error "Cannot determine region.")
@@ -13130,7 +13173,8 @@ Raised is already done by XEmacs. Is this an FSF holdover or just a brain-fart?"
       (dp-c-stack-rest-of-statement end)
       (while (< (line-end-position) end)
         (join-line)
-        (when (> (- (line-end-position) (line-beginning-position)) line-max)
+        (when (> (- (line-end-position) (line-beginning-position)) 
+                 max-line-len)
           (funcall line-breaker))))))
 
 
@@ -13717,6 +13761,11 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
                 append-p                ; Nothing will be lost
                 (y-or-n-p (format "File exists: name>%s<. Overwrite? " 
                                   file-name)))
+        (setq file-name (expand-file-name (read-file-name "Save to: "
+                                                          ""
+                                                          file-name
+                                                          nil
+                                                          file-name)))
         (write-region start end file-name append-p))
       (when file-name-sticky-p
         (setq dp-save-buffer-contents-file-name file-name)))))
@@ -14555,7 +14604,7 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
 (defun dp-whitespace-cleanup-buffer (&optional ask-per-line-p)
   (interactive "P")
   (dp-whitespace-cleanup-line-by-line ask-per-line-p t)
-  (dp-pop-go-back))
+  (dp-pop-go-back nil :silent-p t))
 
 (defun dp-whitespace-buffer-ask-to-cleanup (&optional line-by-line-p)
   "Check a buffer for whitespace errors. Prompt for cleanup if any are found."
@@ -14701,12 +14750,12 @@ The APPEND-ARG is a list wrapped around the real list to append."
       string
     if-not))
 
-(defun visit-header-doc ()
+(defun dp-visit-header-doc ()
   "Visit the documentation of the following function.
 Assume it's in the corresponding header file."
   (interactive)
   ;; Icky, but functional
-  (dp-push-go-back "visit-header-doc")
+  (dp-push-go-back "dp-visit-header-doc")
   (end-of-line)
   (search-forward "(")
   (skip-chars-backward (concat "(" dp-ws+newline))

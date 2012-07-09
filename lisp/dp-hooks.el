@@ -417,7 +417,7 @@ far the regexp is concerned.")
 
 (defface dp-trailing-whitespace-face
   '((((class color) (background light)) 
-     (:background "ghostwhite" :bold nil))) 
+     (:background "aquamarine" :bold nil))) 
   "Face for buffer lines which have trailing whitespace."
   :group 'faces
   :group 'dp-vars)
@@ -615,6 +615,8 @@ c-hanging-braces-alist based upon these values.")
     (define-key map [(meta ?j)] 'join-line)
     (define-key map [(control ?y)] 'dp-c-yank-pop)
     (define-key map [(control meta ?a)] 'mark-defun)
+    (define-key map [(meta ?Q)] 'align)
+
     
     ;;
     ;; cc-mode now does much of what I do in dp-c-newline-and-indent in
@@ -642,6 +644,7 @@ c-hanging-braces-alist based upon these values.")
     (define-key map [return] 'dp-c-context-line-break)
     (define-key map [?l] 'dp-c-mode-l)
     (define-key map [(control /)] 'semantic-ia-show-summary)
+    (define-key map [down] 'dp-c*-next-line)
     
     ;; 'C-;'
     (define-key map [(control 59)] (kb-lambda (insert ";" )))
@@ -736,6 +739,7 @@ c-hanging-braces-alist based upon these values.")
     "vector" "ofstream" "ifstream" "map" "set" "multimap"
     "skipws" "noskipws" "auto_ptr" "queue" "ostream_iterator"
     "min" "max" "exception" "list" "for_each" "unary_function"
+    "deque" "pair"
     "unitbuf"
     )
   "*List of things in the std:: namespace we want to be expanded to

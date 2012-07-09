@@ -1149,7 +1149,7 @@ We say: \" p is a pointer to char\", not
 ;;
 (defun q.v.-header-doc ()
   "Meet naming convention for q.v. functions."
-  (visit-header-doc))
+  (dp-visit-header-doc))
 
 (defun q.v.f (what)
   "q.v. which see. Go and see it."
@@ -1168,8 +1168,61 @@ We say: \" p is a pointer to char\", not
   "Quote the args in REST and call the q.v. function"
   `(q.v.f (quote ,rest)))
 
+(defun dp-doxy-align-comment-doc (begin end)
+  "Align doxygen comments for readability in the source. E.g.:
+@arg this -- this is what this is.
+@retval this_results -- f(this).
+Becomes:
+@arg    this         -- this is what this is.
+@retval this_results -- f(this).
+"
+  (interactive "r")
+  ;; Hacked together from simple align interactive commands
+  (unless (markerp end)
+    (setq end (dp-mk-marker end nil t)))
+  (align-regexp begin end "@\\S-+\\(\\s-+\\)" 1 1 nil)
+  (align-regexp begin end  "\\(\\s-*\\)--" 1 1 nil))
+
+(defun dp-doxy-directives-in-range (begin end)
+  "Does the range include doxygen directives?"
+  (interactive "r")
+  (save-excursion
+    (goto-char begin)
+    (re-search-forward "@\\S-+\\s-+" end t)))
+
+(defun dp-c*-in-doxy-comment (begin end)
+  "Are we in a C/C++ comment which includes doxygen directives??"
+  (interactive "r")
+  (and (dp-in-a-c*-comment)
+       (dp-doxy-directives-in-range begin end)))
+
+
+(defun dp-c*-align (begin end &optional separate rules exclude-rules)
+  "Simple mod to `align' for c++-mode to change behavior in a doxygen comment."
+  (interactive "r")
+  (if (dp-c*-in-doxy-comment begin end)
+      (dp-doxy-align-comment-doc begin end)
+    (align begin end separate rules exclude-rules)))
+
+(defun dp-c*-next-line (count)
+  "Add trailing white space removal functionality."
+  (interactive "_p")
+  (loop repeat count do
+    (if (eolp)
+        (dp-func-and-move-down 'dp-cleanup-line
+                               t
+                               'next-line)
+      (call-interactively 'next-line))))
+
+;;-----------------------------------------------------------------------------
+;;
+;; Lang: C/C++ <:c|c++|c language functions end:>
+;;
+;;-----------------------------------------------------------------------------
+
 ;;;
-;;; Perl sucks. Perl sucks. Perl sucks. Perl sucks. Perl sucks. Perl sucks.
+;;; perl sucks. Perl sucks. perl Sucks. Perl Sucks. PERL sucks. perl SUCKS.
+;;; PERL SUCKS.
 ;;; 
 
 ;; Take a list of perl parameters with a `,' added to the last one (eg $a,

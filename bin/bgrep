@@ -21,6 +21,8 @@ $sep = "";
 
 $till_eof = 1 if ($second eq '$^' || $second eq '');
 
+$HANDLE_EOF_FLAG = "handle till-eof flag";
+
 while (<>)
 {
   print STDOUT "state $state>$_<" if ($debug);
@@ -30,7 +32,7 @@ while (<>)
 	{
 	  #print "s0.0: $sep<";
 	  print "$sep";
-	  $state = "handle till-eof flag";
+	  $state = $HANDLE_EOF_FLAG;
 	  if (!$to_stdout) {
 	    $oname = sprintf("%s%04d", $base, $num);
 	    $num++;
@@ -46,12 +48,12 @@ while (<>)
 	  next;
 	}
     }
-  if ($state eq "handle till-eof flag")
+  if ($state eq $HANDLE_EOF_FLAG)
     {
       #print $OUT "s1.0: $_<";
-      print $OUT "$_";
       if ($till_eof)
 	{
+          print $OUT "$_";
 	  $sep = "###################################################\n\n";
 	  next
 	}

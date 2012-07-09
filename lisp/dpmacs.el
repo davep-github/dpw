@@ -372,7 +372,7 @@ the init files.")
           "\\|wip\\|exp\\|dev"
           ;; Old but broken or out-of-date.
           "\\|stale\\|bad\\|b0rked\\|broken?\\|hosed\\|fubar"
-          "\\|merged?\\|olde?\\|orig\\)\\([.,-]?\\([0-9]*\\)\\)?\\)?$")
+          "\\|merged?\\|obs\\|olde?\\|orig\\)\\([.,-]?\\([0-9]*\\)\\)?\\)?$")
   "Suffixes which can be added after a regular extension and are ignored
 for the purpose of mode setting.  At this time, these are also visited read
 only.

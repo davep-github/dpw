@@ -1160,11 +1160,17 @@ non-nil otherwise get the current list topics."
 
 
 (defun dpj-remove-topic (topic)
+  "Remove the given topic from the topic list."
   (interactive (list (dpj-read-topic)))
   (remove-alist 'dpj-topic-list
                 (or (and (eq topic 'current-topic-p)
                          (current-topic))
                     topic)))
+(dp-defaliases 'dpj-kill-topic 'dpj-nuke-topic 'dpj-delete-topic
+               'dpj-rm-topic 
+               'kill-topic 'nuke-topic 'delete-topic
+               'rm-topic
+               'dpj-remove-topic)
    
 (defun dpj-get-and-insert-topic ()
   (interactive)

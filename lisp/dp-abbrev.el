@@ -105,11 +105,15 @@ So: \(let* \(\(abbrev-sublist \(car this-list-item))
 ")
 
 (defun dp-is-a-dp-common-abbrev-sym-p (var-sym)
+  "Determine if the VAR-SYM references a dp style abbrev thing.
+If so, the `symbol-value' of VAR-SYM is returned."
   (and (boundp var-sym)
        (get var-sym 'dp-I-am-a-dp-style-abbrev-file)
        (let ((val (symbol-value var-sym)))
-	 (and (listp val)
-	      (> (length val) 0)))))
+	 (and val
+              (listp val)
+	      (> (length val) 0)
+              val))))
 
 ;; Why did I do this? It's not used.
 (defvar dp-abbrev-sym-table-name-map '() 
@@ -225,7 +229,8 @@ list in my DP-STYLE-ABBREV format (q.v.)"
   (when make-p
     (when save-some-buffers-p
       ;; regexp: |\\.go.*\\|
-      (dmessage "@todo: Use a predicate with `save-some-buffers-p' so we don't get swamped with save requests.")
+      (dmessage (concat "@todo: Use a predicate with `save-some-buffers-p'"
+                        " so we don't get swamped with save requests."))
       (save-some-buffers))
     (message "make(1L)'ing...")
     (let* ((make-command0 "make -C $HOME emacs-abbrevs")
@@ -256,6 +261,19 @@ list in my DP-STYLE-ABBREV format (q.v.)"
                status)
       (unless ok
         (return-from dp-abbrevs))))
+
+  ;;! @todo XXX eval'ing my abbrev tables must come before reading the normal
+  ;;  ones because my table code clears any tables that have abbrevs defined
+  ;;  in them.
+  ;; FIX THIS. add prop to my defs? Add prop to normal table names?
+  ;;! @todo XXX eval'ing in this order nukes defs in my files.
+
+  ;; Clear the list of my style abbrev tables.
+  
+  (setq dp-dp-style-abbrev-tables '())
+  (loop for f in dp-common-abbrev-file-names do
+    (dp-eval-abbrev-file f))
+
   ;; Normal tables.
   (mapcar (function
 	   (lambda (file)
@@ -263,10 +281,6 @@ list in my DP-STYLE-ABBREV format (q.v.)"
 		 (load file))))
 	  dp-abbrev-files)
 
-  ;; Clear the list of my style abbrev tables.
-  (setq dp-dp-style-abbrev-tables '())
-  (loop for f in dp-common-abbrev-file-names do
-    (dp-eval-abbrev-file f))
   ;;
   ;; Pull in any hard-coded, standard emacs type abbrev tables. 
   (when (file-readable-p "~/.abbrev_defs")
@@ -303,7 +317,7 @@ list in my DP-STYLE-ABBREV format (q.v.)"
 (defun dp-save-and-redefine-abbrevs (&optional arg1)
   (interactive "P")
   (save-buffer)
-  (dp-abbrevs)
+  (dp-init-abbrevs)
   (when arg1
     (kill-this-buffer)))
 
@@ -413,11 +427,6 @@ Disabled by default.")
   "Sometimes it's easiest to have spaces automagically inserted after an
 abbrev is expanded.")
 
-(defvar dp-modes-NOT-wanting-post-alias-spaces '(text-mode)
-  "!<@todo XXX Is it most useful to add spaces by default and disable it on a
-case-by-case basis? Qv `dp-modes-wanting-post-alias-spaces'")
-
-  
 (dp-set-mode-local-value 'dp-abbrev-suffix " "
                          dp-modes-wanting-post-alias-spaces)
 
@@ -426,7 +435,8 @@ case-by-case basis? Qv `dp-modes-wanting-post-alias-spaces'")
   (interactive)
   (when (dp-looking-back-at (concat regexp key-string))
     (list (match-beginning 2)
-          (+ (length key-string) (match-end 2)) ; Include terminating key string.
+          ;; Include terminating key string.
+          (+ (length key-string) (match-end 2))
           (if component-split-string
               (split-string (match-string 2) component-split-string)
             (match-string 2)))))
@@ -508,13 +518,12 @@ Tried in order given and first match wins."
                                dp-expand-abbrev-state))
                          (dp-expand-abbrev-state-expansions
                           dp-expand-abbrev-state)))
-               (exp (car next)))
+               (exp (concat (car next) (dp-abbrev-suffix))))
           ;; Remove previous expansion
-          (backward-delete-char (dp-abbrev-len
-                                 (dp-expand-abbrev-state-expansion-len 
-                                  dp-expand-abbrev-state)))
-          
-          (insert exp (dp-abbrev-suffix))
+          (backward-delete-char (dp-expand-abbrev-state-expansion-len 
+                                  dp-expand-abbrev-state))
+
+          (insert exp)
           (setf (dp-expand-abbrev-state-current dp-expand-abbrev-state) next
                 (dp-expand-abbrev-state-expansion-len dp-expand-abbrev-state) 
                 (length exp)))
@@ -552,7 +561,10 @@ Tried in order given and first match wins."
             (if (not expansion)
                 (setq dp-expand-abbrev-state nil)
               (backward-delete-char (length abbrev-name))
-              (insert (format "%s%s" exp (dp-abbrev-suffix)))
+              ;;(insert (format "from table>%s<\n" table))
+              ;; format %s will stringify anything. exp can be a symbol.
+              (setq exp (format "%s%s" exp (dp-abbrev-suffix)))
+              (insert exp)
               (setq dp-expand-abbrev-state 
                     (and is-list-p
                          (setq expansion (cons abbrev-name expansion))
@@ -675,14 +687,18 @@ Otherwise don't write it."
   (define-abbrev dp-tmp-manual-abbrev-table abbrev expansion))
 (defalias 'deftma 'dp-add-tmp-manual-abbrev)
 
+(dp-deflocal dp-expand-abbrev-default-tables '(nil)
+  "All abbrev tables to check by default.  Use nil for the current default 
+table.")
+
 (defun dp-init-abbrevs ()
   (dp-abbrevs)				;load my mailiases and abbrevs
   ;; We need this here after this table has been read.
-  (dp-deflocal dp-expand-abbrev-default-tables (list nil ; Default table.
-                                                     dp-tmp-manual-abbrev-table
-                                                     dp-go-abbrev-table 
-                                                     dp-manual-abbrev-table)
-  "All abbrev tables to check by default.  Use nil the current default table."))
+  (setq-default dp-expand-abbrev-default-tables 
+                (list nil ; Default table.
+                      dp-tmp-manual-abbrev-table
+                      dp-go-abbrev-table 
+                      dp-manual-abbrev-table)))
 
 ;;;
 ;;;

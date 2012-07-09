@@ -144,7 +144,7 @@ It can't be this bad, I must be missing something.")
   (file-name-nondirectory (or (dp-find-nearest-*TAGS-file-path tag-file-names 
                                                                start-dir)
                               (error 'dp-*TAGS-aborted 
-                                     (format "Can't find any tags file (%s, %s)" 
+                                     (format "Can't find any tags file (%s, %s)"
                                              tag-file-names start-dir)))))
 
 (defun dp-get-*TAGS-handler (&optional tag-file-names start-dir)
@@ -152,8 +152,9 @@ It can't be this bad, I must be missing something.")
                dp-*TAGS-handlers)))
 
 (defun* dp-get-*TAGS-handler-list (&optional 
-                                   (tag-file-names dp-default-*TAGS-file-names) 
+                                   (tag-file-names dp-default-*TAGS-file-names)
                                    start-dir)
+  "Create a list of tag handlers based on current dir and existing tag files."
   (delq nil (mapcar (function
                      (lambda (tag-file-name)
                        (funcall 'dp-get-*TAGS-handler (list tag-file-name)

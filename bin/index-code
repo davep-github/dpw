@@ -13,11 +13,17 @@ vsetp $PROJECT && midix=.${PROJECT}
 : ${RC_FILE_OVERRIDE=}
 : ${RC_FILE_NAMES=".../DOTindex-code.rc .../DOTindex-code${midix}.rc"}
 : ${RC_EXTRA_FILE_NAMES=}
+: ${RC_START_DIR:=$PWD}
+: ${RC_STOP_DIR:=${PROJECT_ROOT:=$HOME}}
 
 # rc file variables should be prefixed with rc_
 # This is a list of extra dirs to index provided by any possible rc files.
 rc_dirs=
 
+#
+# Bummer. Want this read first, to let options override values set in rc files.
+# But 2 options, RC_STOP|START_DIR control *this* operation.
+# Must use the envvars.
 if vsetp $RC_FILE_OVERRIDE      # Let this override all
 then
     slist="$RC_FILE_OVERRIDE"
@@ -29,7 +35,10 @@ else
       if [ "$d" == "..." ]
           then
           name=$(basename $rc_file)
-          rc_files=$(files-here-and-up "$name" $PWD $PROJECT_ROOT)
+          rc_files=$(files-here-and-up "$name" $RC_START_DIR $RC_STOP_DIR) || {
+              echo 1>&2 "$progname: Error finding ancestral list of rc files."
+              exit 1
+          }
           for rcf in $rc_files
           do
             [ -x "$rcf" ] && {
@@ -89,7 +98,7 @@ MV=$(sp -1 mv) || {             # Avoid -i type aliaii
 
 iterate_individually_p=
 
-option_str="nvdc:t:g:CTkKVo:Gxeiuf:I"  # <:add new options:>
+option_str="nvdc:t:g:CTkKVo:Gxeiuf:Is:S:"  # <:add new options:>
 all_options="$option_str$std_options"
 
 q=$(getopt -o "$all_options" -- "$@")
@@ -126,6 +135,8 @@ do
       -i) SYSTEM_INCLUDES="$DEF_SYSTEM_INCLUDES";;
       -u) export src_code_finder=uds-files;;
       -f) finder_opts="$finder_opts $2"; shift;;
+      -s) shift; RC_STOP_DIR=$1;;  # Stop is more likely to change.
+      -S) shift; RC_START_DIR=$1;;  # Stop is more likely to change.
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";

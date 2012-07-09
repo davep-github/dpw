@@ -2,18 +2,45 @@
 
 source script-x
 
-Usage ()
-{
-    echo "files-here-and-up name [start=$PWD [[stop=$HOME]]
+progname=$(basename "$0")
 
-Traverse up the directory tree from start to stop looking for name.
-Return the list from stop to stop.
-Useful for building a list of rc files ordered from least to most specific"
+Usage_msg()
+{
+    # Not all usages are an evil.
+    echo "$progname: Usage: name [start [stop]]
+[start=$PWD]
+[stop=$HOME]
+
+Traverse up the directory tree from <start> to <stop> looking for name.
+<stop> must be a parent of <start>
+Return the reversed list from <stop> to <start>.
+Useful for building a list of rc files ordered from least to most specific."
 }
 
+Usage ()
+{
+    Usage_msg 1>&2
+}
+
+
+[ "$#" -lt 1 -o "$#" -gt 3 ] && {
+    Usage
+    exit 1
+}
 name=$1
 start=$(realpath ${2-$PWD})
 stop=$(realpath ${3-$HOME})
+
+case "$start" in
+    ${stop}*) ;;
+    *) echo 1>&2 "$progname: 
+stop location:
+[$stop] 
+is not a parent of start:
+[$start]."
+       Usage
+       exit 1;;
+esac
 
 list=
 current=$start

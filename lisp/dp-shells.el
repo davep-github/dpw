@@ -1620,6 +1620,10 @@ first file that is `dp-file-readable-p' is used.  Also sets
   )
 
 
+(defsubst dp-shell-reset-parse-info ()
+  (setq dp-shell-last-parse-start 0
+	dp-shell-last-parse-end 0))
+
 ;;;###autoload
 (defun dp-ssh-mode-hook ()              ;<:ssh:>
   "Set up my ssh shell mode fiddle-faddle."
@@ -1633,8 +1637,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
                        (save-contents-p 'ask))
   "Clear shell window and remembered command positions."
   (interactive)
-  (setq dp-shell-last-parse-start 0
-	dp-shell-last-parse-end 0)
+  (dp-shell-reset-parse-info)
   (let* ((cur-input (buffer-substring (dp-current-pmark-pos) (point-max))))
     (when (or (and (eq save-contents-p 'ask)
                    (y-or-n-p "Save contents first? "))
@@ -1659,6 +1662,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
                       &optional dont-fake-cmd dont-preserve-input
                       (save-contents-p 'ask))
   (interactive "P")
+  (dp-shell-reset-parse-info)
   (if (or really-clear-p
           (eq last-command 'dp-clr-shell)
           ;; too many accidental real clears, when triggering a real clear by
@@ -2816,11 +2820,12 @@ procedures that have been partly (0%) remembered."
     (with-current-buffer buf
       (dp-save-shell-buffer-contents-hook))))
 
-(defun dp-shell-save-buffer-command (&optional just-save-it-p)
+(defun dp-shell-save-buffer-command (&optional confirm-p)
   (interactive "P")
-  (or just-save-it-p
-      (y-or-n-p "Really save the shell buffer? ")
-      (dp-save-shell-buffer)))
+  (if (or (not confirm-p)
+          (y-or-n-p "Really save the shell buffer? "))
+      (dp-save-shell-buffer)
+    (message "Not saving shell buffer.")))
 
 (defun dp-save-shell-buffers (&optional ask-not-p)
   (loop for buf in dp-shells-shell-buffer-list do

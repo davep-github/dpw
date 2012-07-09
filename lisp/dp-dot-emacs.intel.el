@@ -42,7 +42,7 @@
                                         (substatement-open . 0)
                                         (inline-open       . 0)
                                         (cpp-macro-cont    . +)
-                                        (access-label      . -)
+                                        (access-label      . /)
                                         (inclass           . +)
                                         (case-label        . +)))
       (c-hanging-semi&comma-criteria dp-c-semi&comma-nada)
@@ -131,10 +131,10 @@
   (interactive)
   (let (cmd
         (index-root 
-         (car (dp-first-with-pred 'getenv 
-                                  '("PROJECT_INDEX"
-                                    "PROJECT_HOME"
-                                    "PROJECT_ROOT")))))
+         (car (member-if 'getenv 
+                         '("PROJECT_INDEX"
+                           "PROJECT_HOME"
+                           "PROJECT_ROOT")))))
     (setq index-root
           (if index-root
               (getenv index-root)

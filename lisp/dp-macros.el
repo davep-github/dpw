@@ -622,6 +622,19 @@ FORMS complete."
           (car ,list-name)
         (setf ,list-name (cdr ,list-name)))))
 
+  (defmacro dp-refvar (name init-val &optional docstring)
+  "Force reevaluation of a defvar just like eval'ing in interactive lisp mode."
+  (let ((expr `(defvar 
+                ,name
+                ,init-val)))
+    (when docstring
+      (setq expr `(,@expr ,docstring)))
+    `(let ((eval-interactive-verbose nil))
+      (eval-interactive (quote ,expr)))))
+  (put 'dp-refvar 'lisp-indent-function
+       (get 'defvar 'lisp-indent-function))
+
+
 ;;; // ///// <:macros new up there:>
 
 )  

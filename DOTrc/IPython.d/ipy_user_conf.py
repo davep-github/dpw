@@ -69,7 +69,7 @@ def main():
     o.pprint = 1
     o.readline = 1
     o.screen_length = 0
-    import_mods(("os", "sys", "string", "re"))
+    import_mods(("os", "sys", "string", "re", "exceptions"))
 
 
     # -- prompt

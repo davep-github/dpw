@@ -1,0 +1,23 @@
+#!/bin/sh
+
+source script-x
+set -u
+
+: ${commit:=HEAD}
+
+git_hist_diff_file()
+{
+    local commit="$1"
+    local file="$2"
+    git rev-list "$commit" -- "$file" | \
+  while read
+  do 
+      git diff $REPLY -- "$file"
+  done
+}
+
+for f in "$@"
+do
+  git_hist_diff_file "$commit" "$f"
+done
+

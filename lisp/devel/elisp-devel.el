@@ -1163,3 +1163,474 @@ tag-completion-table
 nil
 
 
+
+========================
+Wednesday May 23 2012
+--
+
+faf
+/home/dapanarx/davep/dpw.git/
+
+(define-abbrev dp-go-abbrev-table "faff" "find . -type f -print0 | xargs -r0 fgrep" nil 1)
+
+"faff" "find . -type f -print0 | xargs -r0 fgrep"
+
+
+(define-abbrev dp-go-abbrev-table "faff" "find . -type f -print0 | xargs -r0 fgrep" nil 1)
+
+(dp-add-abbrev "faffX" "find . -type f -print0 | xargs -r0 fgrep" nil
+               :table-names '(dp-manual))
+(#<buffer "elisp-devel.el"> #<buffer " *Minibuf-1"> #<buffer "dp-common-abbrevs.el"> #<buffer "dp-abbrev.el"> #<buffer "dp-common-abbrevs-orig.el"> #<buffer "dp-abbrev-defs.el"> #<buffer "*shell*<0>"> #<buffer "*scratch*"> #<buffer ".go.emacs"> #<buffer "*Help: variable `dp-go-abbrev-table'*"> #<buffer " *Minibuf-0*"> #<buffer "*Hyper Help*"> #<buffer "lisp"> #<buffer "go2env"> #<buffer ".go"> #<buffer ".go.intel"> #<buffer "go-mgr"> #<buffer "mic-paren.el"> #<buffer "Man: xargs"> #<buffer "dpmisc.el"> #<buffer "gnuserv.el"> #<buffer "*background-1*"> #<buffer "process.el"> #<buffer "index-code"> #<buffer "*igrep*"> #<buffer "keydefs.el"> #<buffer "info.el"> #<buffer "disass.el"> #<buffer "cus-edit.el"> #<buffer "callers-of-rpt.el"> #<buffer "bytecomp.el"> #<buffer "dp-dot-emacs.intel.el"> #<buffer "bytecomp-runtime.el"> #<buffer " *Message-Log*"> #<buffer " *Echo Area*"> #<buffer " *substitute*"> #<buffer " *pixmap conversion*"> #<buffer "*Help: function `background'*"> #<buffer "*Completions*"> #<buffer "*journal-topics*"> #<buffer " *string-output*"> #<buffer " *string-output*<2>"> #<buffer "daily-2012-05.jxt"> #<buffer "*Buffer List*"> #<buffer "*Hyper Apropos*">)
+
+(#<buffer "elisp-devel.el"> #<buffer " *Minibuf-1"> #<buffer "dp-abbrev.el"> #<buffer "dp-common-abbrevs-orig.el"> #<buffer "dp-common-abbrevs.el"> #<buffer "dp-abbrev-defs.el"> #<buffer "*shell*<0>"> #<buffer "*scratch*"> #<buffer ".go.emacs"> #<buffer "*Help: variable `dp-go-abbrev-table'*"> #<buffer " *Minibuf-0*"> #<buffer "*Hyper Help*"> #<buffer "lisp"> #<buffer "go2env"> #<buffer ".go"> #<buffer ".go.intel"> #<buffer "go-mgr"> #<buffer "mic-paren.el"> #<buffer "Man: xargs"> #<buffer "dpmisc.el"> #<buffer "gnuserv.el"> #<buffer "*background-1*"> #<buffer "process.el"> #<buffer "index-code"> #<buffer "*igrep*"> #<buffer "keydefs.el"> #<buffer "info.el"> #<buffer "disass.el"> #<buffer "cus-edit.el"> #<buffer "callers-of-rpt.el"> #<buffer "bytecomp.el"> #<buffer "dp-dot-emacs.intel.el"> #<buffer "bytecomp-runtime.el"> #<buffer " *Message-Log*"> #<buffer " *Echo Area*"> #<buffer " *substitute*"> #<buffer " *pixmap conversion*"> #<buffer "*Help: function `background'*"> #<buffer "*Completions*"> #<buffer "*journal-topics*"> #<buffer " *string-output*"> #<buffer " *string-output*<2>"> #<buffer "daily-2012-05.jxt"> #<buffer "*Buffer List*"> #<buffer "*Hyper Apropos*">)
+
+dp-go-abbrev-table
+[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]
+
+
+find . -type f -print0 | xargs -r0 fgrep
+find . -type f -print0 | xargs -r0 egrep
+find . -type f -print0 | xargs -r0
+find . -type f -print0 | xargs -r0 fgrep
+
+dp-manual-abbrev-table
+[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata symlink dq ws ccs PPT faffX hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]
+
+global-abbrev-table
+[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 yeild 0 0 0 0 0 0 0 0 0 0 0 peice 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+
+(cl-pe '(dp-deflocal dp-expand-abbrev-default-tables (list nil ; Default table.
+                                                     dp-tmp-manual-abbrev-table
+                                                     dp-go-abbrev-table 
+                                                     dp-manual-abbrev-table)
+  "All abbrev tables to check by default.  Use nil the current default table."))
+
+(progn
+  (defvar dp-expand-abbrev-default-tables (list nil dp-tmp-manual-abbrev-table dp-go-abbrev-table dp-manual-abbrev-table) "All abbrev tables to check by default.  Use nil the current default table.
+(dp-deflocal)")
+ (make-variable-buffer-local 'dp-expand-abbrev-default-tables)
+ (setq-default dp-expand-abbrev-default-tables
+ (list nil
+ dp-tmp-manual-abbrev-table
+ dp-go-abbrev-table
+ dp-manual-abbrev-table)))nil
+
+'(nil)
+(nil)
+osr
+from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+find . -type f -print0 | xargs -r0 fgrep
+dp-expand-abbrev-default-tables
+(nil)
+(dp-init-abbrevs)
+
+from table>[0 0 0 0 0 0 0 0 0 0 0 0 0 0 faffGo 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]<
+find . -type f -print0 | xargs -r0 fgrep
+
+from table>[0 0 0 0 0 0 0 0 0 faffBubba 0 0 0 0 faffGo 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]<
+find Bubba -type f -print0 | xargs -r0 fgrep
+
+from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+find . -type f -print0 | xargs -r0 fgrep
+
+find . -type f -print0 | xargs -r0 fgrep
+
+dp-manual-abbrev-table
+[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]
+
+[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata symlink dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]
+find
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+find
+
+from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+find . -type f -print0 | xargs -r0 fgrep
+
+from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+find . -type f -print0 | xargs -r0 fgrep
+from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+find . -type f -print0 | xargs -r0 egrep
+from table>[0 0 0 0 0 0 0 0 0 faffBubba 0 0 0 0 faffGo 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]<
+faffGo
+from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+find . -type f -print0 | xargs -r0 fgrep
+
+find . -type f -print0 | xargs -r0 fgrep
+
+from table>[0 0 0 0 0 0 0 0 0 faffBubba 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]<
+find Bubba -type f -print0 | xargs -r0 fgrep
+
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+find
+
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+find
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+find
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+find
+
+from table>[0 0 0 0 0 0 0 0 0 faffBubba 0 0 0 0 faffGo 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]<
+find Bubba -type f -print0 | xargs -r0 fgrep
+
+from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+find . -type f -print0 | xargs -r0
+
+from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+find . -type f -print0 | xargs -r0 fgrep
+from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+find . -type f -print0 | xargs -r0 egrep
+
+find . -type f -print0 | xargs -r0 fgrep
+
+find . -type f -print0 | xargs -r0 egrep
+find . -type f -print0 | xargs -r0 fgrep
+find . -type f -print0 | xargs -r0 fgrep
+find . -type f -print0 | xargs -r0 fgrep
+rc
+
+dp-go-abbrev-table
+[0 0 0 0 0 0 0 0 0 faffBubba 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+
+[0 0 0 0 0 0 0 0 0 faffBubba 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+find . -type f -print0 | xargs -r0 fgrep
+from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+find . -type f -print0 | xargs -r0 fgrep
+from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+find . -type f -print0 | xargs -r0 egrep
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+find
+from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+find . -type f -print0 | xargs -r0 fgrep
+from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+ASCII
+
+dp-go-abbrev-table
+[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]
+
+[0 0 0 0 0 0 0 0 0 faffBubba 0 0 0 0 faffGo 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+
+[0 0 0 0 0 0 0 0 0 faffBubba 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+
+[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]
+
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+/home/dapanarx/work/ftci/
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+/home/dapanarx/.rc/
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+/home/dapanarx/.rc/
+
+from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+find . -type f -print0 | xargs -r0 fgrep
+from table>[0 0 0 0 0 0 0 0 0 faffBubba 0 0 0 0 faffGo 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]<
+find Go -type f -print0 | xargs -r0 fgrep
+from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+background
+from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+find . -type f -print0 | xargs -r0 egrep
+
+dp-go-abbrev-table
+[0 0 0 0 0 0 0 0 0 faffBubba 0 0 0 0 faffGo 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+
+[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]
+
+[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]
+
+[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]
+
+[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]
+
+
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+/home/dapanarx/.rc/
+
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+find
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+find
+
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+find
+
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+/home/dapanarx/bin/
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+find
+
+(dp-add-abbrev "dpMan" "dpMan . -type f -print0 | xargs -r0 egrep" 
+               nil :table-names '(dp-go))
+(#<buffer "elisp-devel.el"> #<buffer " *Minibuf-1"> #<buffer "dp-common-abbrevs.el"> #<buffer "dp-abbrev.el"> #<buffer ".go.emacs"> #<buffer "*Help: function `dp-add-abbrev'*"> #<buffer "*grep*"> #<buffer "dp-vars.el"> #<buffer "dpmisc.el"> #<buffer "*igrep*"> #<buffer "*shell*<0>"> #<buffer "daily-2012-05.jxt"> #<buffer "symbols.c"> #<buffer "go2env"> #<buffer "*scratch*"> #<buffer "dp-abbrev-defs.el"> #<buffer "*Hyper Help*"> #<buffer "simple.el"> #<buffer "*Help: variable `dp-go-abbrev-table'*"> #<buffer "dp-common-abbrevs-orig.el"> #<buffer " *Minibuf-0*"> #<buffer "lisp"> #<buffer ".go"> #<buffer ".go.intel"> #<buffer "go-mgr"> #<buffer "mic-paren.el"> #<buffer "Man: xargs"> #<buffer "gnuserv.el"> #<buffer "*background-1*"> #<buffer "process.el"> #<buffer "index-code"> #<buffer "keydefs.el"> #<buffer "info.el"> #<buffer "disass.el"> #<buffer "cus-edit.el"> #<buffer "callers-of-rpt.el"> #<buffer "bytecomp.el"> #<buffer "dp-dot-emacs.intel.el"> #<buffer "bytecomp-runtime.el"> #<buffer " *Message-Log*"> #<buffer " *Echo Area*"> #<buffer " *substitute*"> #<buffer " *pixmap conversion*"> #<buffer "*Help: function `background'*"> #<buffer "*Completions*"> #<buffer "*journal-topics*"> #<buffer " *string-output*"> #<buffer " *string-output*<2>"> #<buffer "*Hyper Apropos*"> #<buffer "*Buffer List*"> #<buffer " *revert*">)
+
+
+
+from table>[v srcs 0 inv dpdx ooi fname land hud sf med ntms hier npc bg dpMan os fd envvar mem osr wadr libs FHR IMHO metadata symlink dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+const char* 
+
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+find
+
+from table>[v srcs 0 inv dpdx ooi fname land hud sf med ntms hier npc bg dpMan os fd envvar mem osr wadr libs FHR IMHO metadata symlink dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+dpMan . -type f -print0 | xargs -r0 egrep
+
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+/home/dapanarx/.rc/
+
+from table>[v srcs 0 inv dpdx ooi fname land hud sf med ntms hier npc bg pita os fd envvar mem osr wadr libs FHR IMHO metadata symlink dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+ASCII
+
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+/home/dapanarx/.rc/
+
+from table>[v srcs 0 inv dpdx ooi fname land hud sf med ntms hier npc bg dpMan os fd envvar mem osr wadr libs FHR IMHO metadata symlink dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+dpMan . -type f -print0 | xargs -r0 egrep
+
+from table>[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 dpMan 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]<
+dpMan . -type f -print0 | xargs -r0 egrep
+dpMan
+
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+find
+
+from table>[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]<
+/home/dapanarx/.rc/
+
+(dp-add-abbrev "dpGo" "dpGo . -type f -print0 | xargs -r0 egrep" 
+               nil :table-names '(dp-go))
+(#<buffer "elisp-devel.el"> #<buffer " *Minibuf-1"> #<buffer "dp-common-abbrevs.el"> #<buffer "dp-abbrev.el"> #<buffer ".go.emacs"> #<buffer "*Help: function `dp-add-abbrev'*"> #<buffer "*grep*"> #<buffer "dp-vars.el"> #<buffer "dpmisc.el"> #<buffer "*igrep*"> #<buffer "*shell*<0>"> #<buffer "daily-2012-05.jxt"> #<buffer "symbols.c"> #<buffer "go2env"> #<buffer "*scratch*"> #<buffer "dp-abbrev-defs.el"> #<buffer "*Hyper Help*"> #<buffer "simple.el"> #<buffer "*Help: variable `dp-go-abbrev-table'*"> #<buffer "dp-common-abbrevs-orig.el"> #<buffer " *Minibuf-0*"> #<buffer "lisp"> #<buffer ".go"> #<buffer ".go.intel"> #<buffer "go-mgr"> #<buffer "mic-paren.el"> #<buffer "Man: xargs"> #<buffer "gnuserv.el"> #<buffer "*background-1*"> #<buffer "process.el"> #<buffer "index-code"> #<buffer "keydefs.el"> #<buffer "info.el"> #<buffer "disass.el"> #<buffer "cus-edit.el"> #<buffer "callers-of-rpt.el"> #<buffer "bytecomp.el"> #<buffer "dp-dot-emacs.intel.el"> #<buffer "bytecomp-runtime.el"> #<buffer " *Message-Log*"> #<buffer " *Echo Area*"> #<buffer " *substitute*"> #<buffer " *pixmap conversion*"> #<buffer "*Help: function `background'*"> #<buffer "*Completions*"> #<buffer "*journal-topics*"> #<buffer " *string-output*"> #<buffer " *string-output*<2>"> #<buffer "*Hyper Apropos*"> #<buffer "*Buffer List*"> #<buffer " *revert*">)
+dpGo
+from table>[v srcs 0 inv dpdx ooi fname land hud sf med ntms hier npc bg pita os fd envvar mem osr wadr libs FHR IMHO metadata symlink dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
+Prop_handler_ret_t
+from table>[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 dpGo 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]<
+dpGo . -type f -print0 | xargs -r0 egrep
+
+
+
+(defun dp-add-abbrevs (abbrev-list &rest rest)
+  ;; apply dp-add-abbrev to each element in abbrev-list where rest is passed through to dp-add-abbrev.
+                
+
+
+========================
+Friday May 25 2012
+--
+
+dp-go-abbrev-table
+[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]
+
+phr
+[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]
+
+[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]
+
+[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]
+
+[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 faffQ 0 0 0 0 0 0 faffX 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+
+[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 faffX 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+
+[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 faffX 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+
+[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]
+
+(listp nil)
+t
+
+(setq dpgat dp-go-abbrev-table)
+[alien ppp 0 dpgit 0 pocc dpgitbin ulb 0 0 pine 0 0 0 yb lisp poc ye poccc 0 yokeletc pocs 0 fluent yl 0 0 ksrc pydb pya yokelsbin 0 testA yokellib testC 0 poccom work 0 0 dpw elm inb notes 0 dpgitlisp 0 0 doc 0 0 poclib yokelbin yokel 0 0 ysb 0 0]
+
+
+(dp-add-abbrev "faffX" "find . -type f -print0 | xargs -r0 fgrep" nil
+               :table-names '(dp-go))
+(#<buffer "elisp-devel.el"> #<buffer " *Minibuf-0*"> #<buffer "dp-abbrev.el"> #<buffer "*grep*"> #<buffer "dp-abbrev-defs.el"> #<buffer "dp-common-abbrevs.el"> #<buffer "*Hyper Apropos*"> #<buffer "abbrev.el"> #<buffer "compile.el"> #<buffer "*scratch*"> #<buffer " *Echo Area*"> #<buffer " *Message-Log*"> #<buffer " *substitute*"> #<buffer " *pixmap conversion*">)
+
+(#<buffer "elisp-devel.el"> #<buffer " *Minibuf-0*"> #<buffer "dp-abbrev.el"> #<buffer "*grep*"> #<buffer "dp-abbrev-defs.el"> #<buffer "dp-common-abbrevs.el"> #<buffer "*Hyper Apropos*"> #<buffer "abbrev.el"> #<buffer "compile.el"> #<buffer "*scratch*"> #<buffer " *Echo Area*"> #<buffer " *Message-Log*"> #<buffer " *substitute*"> #<buffer " *pixmap conversion*">)
+
+
+========================
+Thursday June 14 2012
+--
+(dp-get-*TAGS-handler-list)
+([cl-struct-dp-*TAGS-handler find-tag pop-tag-mark find-tag-other-window])
+
+
+
+
+========================
+Thursday June 21 2012
+--
+?*
+?*
+?x
+?x
+
+(format "%d" ?*)
+"42"
+
+"*"
+
+
+(defvar dp-c-doxy-comment-first-line-format 
+  "
+ /*%s*/"
+  "Opening line in a C/C++ doxy comment. Will be filled to C[++] fill column.")
+
+(defvar doxy-c-class-member-comment-elements '( > "
+ /*!" > "
+  * @brief " (P "brief desc: " desc nil) > "
+  */" > % >)
+  "Elements of a class function comment template")
+
+(defvar doxy-c-function-comment-elements '( > "
+ /*!" > "
+  * @brief " (P "brief desc: " desc nil) > "
+  */" > % >)
+  "Elements of a C/C++ function comment template")
+
+(defvar doxy-c-class-comment-elements '( > "
+ /*!" > "
+ * @class " p > "
+ * @brief " (P "brief desc: " desc nil) > "
+ */" > % >)
+  "Elements of a C/C++ class comment template")
+
+(defvar dpx '(a b))
+
+
+dpx
+
+dpx
+
+
+dpx
+
+dpx
+
+CRAP! need class indent to members for correct length.
+(defun* dp-c-define-doxy-tempo-templates (&optional (num-stars 72)
+                                          (star ?*))
+  ;; lead by: "/*" and trailed by: "*/" == 4 chars
+  (let ((stars (make-string (- dp-line-too-long-warning-column 1 4)
+                           star))
+        (tempo-define-template "doxy-c-class-member-comment"
+                               doxy-c-class-member-comment-elements)
+  (tempo-define-template "doxy-c-function-comment"
+                         doxy-c-function-comment-elements)
+  (tempo-define-template "doxy-c-class-comment"
+                         doxy-c-class-comment-elements))
+
+  (defmacro dp-deflocal (name init-val &optional docstring)
+    "Define a variable and make it buffer local."
+    (setq docstring
+          (if docstring
+              (setq docstring (format "%s\n(dp-deflocal)" docstring))
+            "Undocumented. (dp-deflocal)"))
+    `(progn
+      (defvar ,name ,init-val ,docstring)
+      (make-variable-buffer-local ',name)
+      (setq-default ,name ,init-val)))
+
+  (put 'dp-deflocal 'lisp-indent-function lisp-body-indent)
+
+(defvar dpx '(forced))
+dpx
+
+(cl-pe '(setq-ifnil dpxl 'blah))
+
+(if dpxl dpxl (setq dpxl 'blah))nil
+
+(cl-pe '(setq-ifnil-or-unbound zzz 'no-zzz))
+
+(if (progn nil (and (boundp 'zzz) zzz)) zzz (setq arg 'no-zzz))nil
+
+
+
+(progn
+  (defvar dpxl 'blah "Undocumented. (dp-deflocal)")
+  (make-variable-buffer-local 'dpxl)
+  (setq-default dpxl 'blah))nil
+(defvar dpx '(forced))
+dpx
+
+
+
+
+
+
+(defvar 'dpx '(forced)) ==> (defvar (quote dpx) (quote (forced)))
+(defvar 'dpx '(forced) "some doc") ==> 
+                (defvar (quote dpx) (quote (forced)) "some doc")
+
+(defvar dpx '(forced) "some doc")
+dpx
+(forced)
+(eval-interactive-verbose nil)
+
+(defmacro dp-revar (name init-val &optional docstring)
+  "Force reevaluation of a defvar just like eval'ing in interactive lisp mode."
+  (let ((expr `(defvar 
+                ,name
+                ,init-val)))
+    (when docstring
+      (setq expr `(,@expr ,docstring)))
+    `(let ((eval-interactive-verbose nil))
+      (eval-interactive (quote ,expr)))))
+
+(cl-pe '(dp-revar dpx '(forced) "some doc"))
+
+(let ((eval-interactive-verbose nil))
+  (eval-interactive 
+   '(defvar dpx (quote (forced)) "some doc")))
+
+
+========================
+Monday June 25 2012
+--
+
+(defun dp-delete-co-region (&optional beg end)
+  (multiple-value-bind 
+      (beg end) 
+      (dp-region-boundaries-ordered beg end)
+    (dp-iterate-lines-in-region (beg end (function 
+                                          (lambda ()
+                                            (beginning-of-line)
+                                            (when)
+                                            
+                                            )))
+
+)
+
+
+dpvt
+(1 9 "sudo" nil "*dse-debug*" nil "tee" "-a" "/home/dapanarx/tmp/dse-test")
+
+
+========================
+Monday July 02 2012
+--
+
+(defun dp-c-get-syntactic-line-indentation ()
+  "Determine `c++-mode's desired indentation for this line."
+  (interactive)
+  (let ((indentation (c-get-syntactic-indentation
+                      (c-guess-basic-syntax))))
+    (when (interactive-p)
+      (message "%s: desired indentation: %s" major-mode indentation))
+    indentation))
+
+
+
+
+========================
+Monday July 09 2012
+--
+(defun dp-c*-next-line (count)
+  "Add trailing white space removal functionality."
+  (interactive "_p")
+  (loop repeat count do
+    (if (eolp)
+        (dp-func-and-move-down 'dp-cleanup-line
+                               t
+                               'next-line)
+      (call-interactively 'next-line))))
+    

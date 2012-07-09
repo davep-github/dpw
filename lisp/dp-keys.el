@@ -470,8 +470,12 @@ Hopefully [space] is mnemonic.")
                           [(control ?n)] 'dp-goto-next-colorized-region
                           ;; We'll consider invisible a color.
                           [?h] 'dp-hide-region
+                          ;; A space is kind of hidden
+                          [? ] 'dp-hide-region
                           [(meta ?h)] 'dp-hide-excluding
+                          [(meta ? )] 'dp-hide-excluding
                           [?s] 'dp-show-region
+                          [(control ? )] 'dp-show-region
                           [?u] (kb-lambda
                                    (dp-uncolorize-region nil nil (C-u-p)))
                           [(meta u)] (kb-lambda
