@@ -574,9 +574,7 @@ c-hanging-braces-alist based upon these values.")
 
 (defun dp-after-load-cc-mode ()     ;<:cc-after-load|bind-c*-keys|setup c* :>
   (interactive)
-
-  (setq dp-cleanup-whitespace-p t)
-
+  ;; NB! Don't put per buffer vars, etc, here.
   ;; allow us to override the default style with a "current project"
   ;; style. This is not suitable for specifying in file local
   ;; variables due to the order in which things are done.  To use file
@@ -688,7 +686,8 @@ c-hanging-braces-alist based upon these values.")
   ;; @todo... try it on since the global abbrev table only has typos in it.
   (abbrev-mode 1)
   (c-toggle-auto-state 1)               ;set c-auto-newline
-  (dp-turn-off-auto-fill)
+  (dp-turn-off-auto-fill),
+  (setq dp-cleanup-whitespace-p t)
   (setq indent-tabs-mode nil
         c-recognize-knr-p nil
         dp-insert-tempo-comment-func 'dp-c-insert-tempo-comment)
