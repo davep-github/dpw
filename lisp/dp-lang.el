@@ -600,6 +600,24 @@ the fiddly bits.")
     (py-newline-and-indent))
   (insert dp-py-main+getopt-template))
 
+;; @todo XXX make all indent-for-comment functions call a common dp- routine
+;; which supports all of my added semantics, like handling regions, doing
+;; line ups, etc.
+(defun dp-py-indent-for-comment (&optional continue)
+  "Fix Python's commenting to not always leave the comment at comment-column.
+Python's `indent-for-comment' always puts the comment at the comment column
+even if it's on an empty line. Most others put it at the current indent when
+the line is blank."
+  (interactive)
+  (if current-prefix-arg
+      (call-interactively 'indent-for-comment)  ; We don't do continues.
+    ;; We need to know if the line was blank before we start
+    (let ((blank-line-p (dp-blank-line-p)))
+      (indent-for-comment)
+      (when blank-line-p
+        ;; This does the right thing on a blank line.
+        (dp-press-tab-key)))))
+
 ;;-----------------------------------------------------------------------------
 ;;
 ;; Lang: C/C++ <:c|c++|c language functions:>

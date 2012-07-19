@@ -20,7 +20,15 @@ git_diff_or_cat()
     fi
 }
     
+nth=
 commit="$1"; shift
+case "$commit" in
+    -n) nth=$1; shift;;
+    -n?*) nth=$(echo "$commit" | sed -rn 's/^(-n)([0-9]*)/\2/p');;
+    -[0-9]*) nth=$(echo "$commit" | sed -rn 's/^(-)([0-9]*)/\2/p');;
+    *);;
+esac
+
 
 [ -z "$*" ] && {
     echo 1>&2 "Usage: git-commit commit file+"
@@ -28,5 +36,9 @@ commit="$1"; shift
 }
 for f in "$@"
 do
+  if [ -n "$nth" ]
+  then
+      commit=$(git-nth-rev "$nth" "$f")
+  fi
   git_diff_or_cat "$commit" "$f"
 done

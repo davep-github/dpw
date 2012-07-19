@@ -197,11 +197,13 @@ it as a string."
       (setq buffer-read-only nil)
       (buffer-disable-undo (current-buffer))
       (erase-buffer)
-      (let ((standard-output (current-buffer)))
-        ,@forms)
-      (prog1
-          (buffer-string)
-        (erase-buffer))))
+      (unwind-protect
+          (progn
+            (let ((standard-output (current-buffer)))
+              ,@forms)
+            (buffer-string))
+        (set-buffer-modified-p nil)
+        (kill-this-buffer))))
 
   (defmacro dp-defcustom-local (symbol value docstring &rest args)
     "Define a custom variable and make it buffer local."

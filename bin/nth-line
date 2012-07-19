@@ -1,6 +1,13 @@
 #!/bin/sh
+source script-x
+set -u
 
 line=$1
+shift
 
-head -n $1 | tail -n 1
+[ -z "$*" ] && set -- -
+for f in "$@"
+do
+  head -n $line $f | tail -n 1
+done
 

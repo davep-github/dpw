@@ -11,10 +11,14 @@ git_hist_diff_file()
     local file="$2"
     git rev-list "$commit" -- "$file" | \
   while read
-  do 
+  do
       git diff $REPLY -- "$file"
   done
 }
+
+[ $# = 0 ] && {
+    echo 1>&2 "usage: $(basename $0) COMMIT files...
+For all files, diff them against all specs in rev-list COMMIT"
 
 for f in "$@"
 do

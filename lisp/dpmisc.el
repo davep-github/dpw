@@ -1960,7 +1960,10 @@ on the go back ring."
     (dp-push-go-back "dp-beginning-of-buffer"))
   (goto-char (point-min)))
 
-(defun dp-empty-or-white-line-p ()
+(defun dp-blank-line-p ()
+  "Pretty much what the name says: return non-nil if the line is blank.
+`Blank' is henceforth defined as a region which is entirely white space or
+empty."
   (save-excursion
     (beginning-of-line)
     (looking-at "^\\s-*$")))
@@ -1985,18 +1988,18 @@ on the go back ring."
 Motivated by `dp-indent-line-and-move-down'."
   (interactive "*")
   ;;(beginning-of-line)
-  (set-goal-column nil)
-  (when (or (eq pred t)
-            (funcall pred))
-    (apply func func-args))
-  (next-line 1)
-  (set-goal-column t)
+  (let ((goal-column nil))
+    (when (or (eq pred t)
+              (funcall pred))
+      (apply func func-args))
+    (next-line 1))
+
   ;; python-mode does different things if the previous command was an indent
   ;; command, so we make sure this isn't true.  This should be OK since this
   ;; command is supposed to emulate the key sequence <tab><down>, so the
   ;; `this-command' would not be an indent function.
   (when new-this-command
-    (setq this-command 'new-this-command)))
+    (setq this-command new-this-command)))
 ;;
 ;; A bunch of these often works better than indent-region.
 ;; I've seen indent-region get confused and make mistakes,
@@ -2015,7 +2018,7 @@ Tidying includes: re `indent-for-comment' and fixing up white space."
         ;; Since this is very much like a keystroke macro of
         ;; BOL, TAB, NEXT-LINE, we'll just use the tab key itself.
         ;;(indent-according-to-mode)
-        (dp-call-function-on-key [tab])
+        (dp-press-tab-key)
         (unless (or (Cu--p)
                     dp-il&md-dont-fix-comments-p)
           (dp-with-saved-point nil
@@ -2541,7 +2544,7 @@ Used and set by \\[io] and used by \\[io-region].")
                          nil 'dp-ifdef-region-read-arg-history)
           (prefix-numeric-value current-prefix-arg))))
 
-(defun dp-ifdef-region (&optional arg else-p tss-prefix)
+(defun* dp-ifdef-region (&optional arg else-p tss-prefix)
   "Ifdef out a line or region.
 ARG is value to use as start text of the ifdef.  
 If ARG starts with a DIGIT, you get #if ARG.
@@ -2554,8 +2557,13 @@ ARG is saved for future use in `io-start-text'.
 It is initialized to #if 0"
   (interactive (dp-ifdef-region-read-arg))
   (if (and (not (dp-in-c))
-           (not (y-or-n-p "Buffer does not look C-like, continue?")))
-      (message "Canceled,")
+           (not (and 
+                 (y-or-n-p "Buffer does not look C-like, comment out? ")
+                 (progn 
+                   (call-interactively 'dp-comment-out-region)
+                   (return-from dp-ifdef-region))))
+           (not (y-or-n-p "Buffer does not look C-like, continue? ")))
+      (and (message "Canceled.") nil)
     (if (and arg (numberp arg)
              (/= arg 1))
         (if (or (eq arg 0)        ;C-0 seems natural for requesting resetment
@@ -2606,7 +2614,8 @@ It is initialized to #if 0"
 (defun dp-ifdef-out (&optional arg)
   (interactive (dp-ifdef-region-read-arg))
   (let ((locations (dp-ifdef-region arg nil)))
-    (goto-char (nth 1 locations))))
+    (when locations
+      (goto-char (nth 1 locations)))))
 
 (dp-defaliases 'if0 'io0 'io 'dp-ifdef-out)
 
@@ -7859,13 +7868,11 @@ Is this a good idea?"
   (interactive "P")
   (let ((text (dp-with-all-output-to-string
 	       (insert-selection))))
-    (when (and (string-match "
-" text)
+    (when (and (string-match "" text)
 	       (or (ding) t)
 	       (or (not prompt-if-^Ms)
 		   (y-or-n-p "^Ms in text; dedosify")))
-      (setq text (replace-in-string text "
-" "" 'literal))
+      (setq text (replace-in-string text "" "" 'literal))
       (message "dedos'd"))
     (push-mark (point))
     (unless no-insert-p
@@ -9451,6 +9458,11 @@ Can be called directly or by an abbrev's hook.
         (call-interactively 'dp-recover-context-from-file)
       (recover-context)))
   (defalias 'wwi 'dp-recover-context)
+  
+  (defun dp-edit-recover-context-file ()
+    (interactive)
+    (find-file (saveconf-get-filename)))
+  (defalias 'ewwi 'dp-edit-recover-context-file)
   
   ;; A pretty sensible place to save the context.
   ;; Others would be when a file is unvisited (no hook)
@@ -11045,7 +11057,10 @@ and for setting up a buffers mode (`dp-set-auto-mode')."
   (interactive "P")
   (with-current-buffer (dp-get-buffer buf-or-name-of-makefile)
     (setq buffer-read-only (not toggle-var))
-    (dp-toggle-var toggle-var 'dp-primary-makefile-p)))
+    (dp-toggle-var toggle-var 'dp-primary-makefile-p)
+    (when dp-primary-makefile-p
+      (dp-define-buffer-local-keys '([(meta ?-)] 
+                                     dp-bury-or-kill-buffer)))))
 
 (defun 411f (&optional name-regex case-unfold-p)
   "Find NAME-REGEX in phone book."
@@ -14637,6 +14652,13 @@ E.g. in C/++ mode, M-q is bound to `dp-c-fill-paragraph' whereas in
 emacs-lisp-mode, M-q is bound to M-q `fill-paragraph-or-region'."
   (call-interactively (key-binding key-seq) record-flag keys))
 
+(defsubst dp-press-tab-key (&optional goto-bol)
+  "Pretend we've pressed the tab key; its behavior varies according to mode.
+There is also no standard function bound. The native bindings often mostly do
+the right thing. When I personalize the behavior, I often want the original
+functionality somewhere. Advice is often problematic."
+  (dp-call-function-on-key [tab]))
+
 
 (defun dp-call-interactively-function-on-key (key-seq)
   (call-interactively (key-binding key-seq)))
@@ -14853,6 +14875,19 @@ See `dp-shell-*TAGS-changers' rant. "
              (setq status-msg (format "%s, deleting: %s" status-msg file-name))
              (delete-file file-name))
            (message status-msg)))))
+
+(defun dp-next-line (count)
+  "Add trailing white space removal functionality."
+  (interactive "_p")
+  (if (not dp-cleanup-whitespace-p)
+      (call-interactively 'next-line)
+    (loop repeat count do
+      (if (or (eq dp-cleanup-whitespace-p t)
+              (eolp))
+          (dp-func-and-move-down 'dp-cleanup-line
+                                 t
+                                 'next-line)
+        (call-interactively 'next-line)))))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;; @todo Write a loop which advises functions with simple push go back

@@ -1634,3 +1634,69 @@ Monday July 09 2012
                                'next-line)
       (call-interactively 'next-line))))
     
+
+========================
+Monday July 16 2012
+--
+
+
+
+
+(cl-pe '(dp-with-all-output-to-string (princf "CCC")))
+
+(save-current-buffer (set-buffer (get-buffer-create (generate-new-buffer-name " *string-output-CCC*")))
+                     (setq buffer-read-only nil)
+                     (buffer-disable-undo (current-buffer))
+                     (erase-buffer)
+                     (unwind-protect
+                         (progn
+                           (let ((standard-output (current-buffer)))
+                             (princf "CCC"))
+                           (buffer-string))
+                       (set-buffer-modified-p nil)
+                       (kill-this-buffer)))
+"CCC
+"
+
+
+
+
+
+
+
+========================
+Wednesday July 18 2012
+--
+
+;; thinks we don't have a fully functional terminal
+;;work on this later.; (defun gith (topic &optional sync-p)
+;;work on this later.;   (interactive "sgit help on: \nP")
+;;work on this later.;   (shell-command (concat "git help " topic
+;;work on this later.;                          (if sync-p "" "&"))))
+
+
+(defun gith (topic &optional other-window-p)
+  (interactive "sgit help on: \nP")
+  (let ((git-man-page (concat "git-" topic)))
+    (funcall (if other-window-p '2man 'manual-entry)
+             git-man-page)))
+
+========================
+Thursday July 19 2012
+--
+
+(defun dp-gnuserv-find-file-function (path)
+  "Called when gnuserv edits a file.
+This could be done with advice, but advice should be avoided if another
+solution exists. In this case, the `gnuserv-find-file-function' variable."
+  (interactive "fFile: ")
+  ;; gnuserv unconditionally goes to the line in the message.
+  ;; Makes sense, except when the file is already being edited.
+  ;; So, if the file is already in a buffer, then we push a go-back
+  (let ((visited-p (get-file-buffer path)))
+    (dp-find-file path)
+    (when visited-p
+      (dp-push-go-back "gnuserv visiting an already visited file"))))
+
+(setq gnuserv-find-file-function 'dp-gnuserv-find-file-function)
+

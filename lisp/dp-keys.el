@@ -154,6 +154,8 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(control down)] 'dp-scroll-up)
 (global-set-key [(control meta up)] 'dp-scroll-down-other-window)
 (global-set-key [(control meta down)] 'dp-scroll-up-other-window)
+(global-set-key [down] 'dp-next-line)   ; q.v. dp-cleanup-whitespace-p
+
 ;; I don't use the extra junk in my versions.
 ;; Ah, but I can't tag 'em as isearch-commands this way.
 ; (global-set-key [(control up)] (kb-lambda (scroll-down 1)))

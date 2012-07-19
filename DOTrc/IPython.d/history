@@ -49,7 +49,6 @@ __IP.Completer.all_completions("os.")
 __IP.Completer.all_completions("sys.")
 __IP.Completer.all_completions("syszzz.")
 __IP.Completer?
-#__IP.Completer.all_completions("sys.")
 __IP.Completer.complete?
 __IP.Completer.complete("os.")
 __IP.Completer.complete("os.", 0)
@@ -98,3 +97,175 @@ print ';'.join(__IP.Completer.all_completions('sys.'))
 print ';'.join(__IP.Completer.all_completions('sys'))
 print ';'.join(__IP.Completer.all_completions('sys.'))
 __IP.Completer.all_completions('sys.')
+import math
+print ';'.join(__IP.Completer.all_completions('math.'))
+math.pi?
+print ';'.join(__IP.Completer.all_completions('math.'))
+print ';'.join(__IP.Completer.all_completions('math.l'))
+print ';'.join(__IP.Completer.all_completions('math.lo'))
+math.log?
+pdb?
+run?
+cd /home/dapanarx/work/ftci/poc/pyagents/
+print ';'.join(__IP.Completer.all_completions('pycon'))
+run ./pycon.py
+pdb?
+pdb on
+run?
+pdb?
+debug?
+pwd
+reload
+help
+help b
+break /home/dapanarx/work/ftci/poc/pyagents/pyagent.py:1042
+run -d ./pycon.py
+run -d ./pycon.py
+break /home/dapanarx/work/ftci/poc/pyagents/pyagent.py:488
+run -d ./pycon.py
+break /home/dapanarx/work/ftci/poc/pyagents/pyagent.py:488
+break /home/dapanarx/work/ftci/poc/pyagents/pycon.py:184
+help
+help return
+return
+b 1035
+run -d ./pycon.py
+break /home/dapanarx/work/ftci/poc/pyagents/pycon.py:166
+run -d ./pycon.py
+print ';'.join(__IP.Completer.all_completions('x'))
+print ';'.join(__IP.Completer.all_completions('xml'))
+run -d ./exp-xml_proc.py
+pwd
+run -d ./exp-xml.py
+edit?
+ed -x xml_proc.py
+run -l 'msg-specific/app-info' ../client/,,exp/m5.xml
+run?
+run ./xml_proc.py -i 'msg-header/initiator' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -i 'msg-header/initiator' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -i 'msg-header/initiator' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -i 'msg-header/initiator' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -i 'msg-header/initiator' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -i 'msg-header/initiator' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -i 'msg-header/initiator' ../client/,,exp/m5.xml
+run ./xml_proc.py -b 'msg-header/initiator' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -b 'msg-header/initiator' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -b 'msg-header/initiator' ../client/,,exp/m5.xml
+print ';'.join(__IP.Completer.all_completions('ftci_base'))
+ed -x ftci_base_types.py
+run ./xml_proc.py -b 'msg-header/initiator' ../client/,,exp/m5.xml
+n
+ed -x xml_proc.py
+run ./xml_proc.py -j 'msg-header/initiator,11' ../client/,,exp/m5.xml
+run -d ./xml_proc.py -j 'msg-header/initiator,11' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -j 'msg-header/initiator,11' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -j 'msg-header/initiator,11' ../client/,,exp/m5.xml
+run ./xml_proc.py -j 'msg-header/initiator,99' ../client/,,exp/m5.xml
+run ./xml_proc.py -i'msg-header/initiator' -j 'msg-header/initiator,99' -i'msg-header/initiator' ../client/,,exp/m5.xml
+run ./xml_proc.py -j 'msg-header/initiatorX,99' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -j 'msg-header/initiatorX,99' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -j 'msg-header/initiatorX,99' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -j 'msg-header/initiatorX,99' -p ../client/,,exp/m5.xml
+run ./xml_proc.py -j 'msg-header/initiatorX,99' -i 'msg-header/initiatorX' -p ../client/,,exp/m5.xml
+y
+ed -x xml_proc.py
+run -d ./xml_proc.py -p -b 'msg-header' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -l 'msg-header' ../client/,,exp/m5.xml 2>&1 | head -n 300
+break /home/dapanarx/work/ftci/poc/pyagents/xml_proc.py:544
+help b
+break /home/dapanarx/work/ftci/poc/pyagents/xml_proc.py:544
+ed -x xml_proc.py
+run -d ./xml_proc.py -l 'msg-header' ../client/,,exp/m5.xml 2>&1 | head -n 300
+break /home/dapanarx/work/ftci/poc/pyagents/xml_proc.py:544
+ed -x xml_proc.py
+run -d ./xml_proc.py -l 'msg-header' ../client/,,exp/m5.xml 2>&1 | head -n 300
+pwd
+run -d ./xml_proc.py -l 'msg-header' ../client/,,exp/m5.xml 2>&1 | head -n 300
+run -d ./xml_proc.py -l 'msg-header' ../client/,,exp/m5.xml 
+run -d ./xml_proc.py -b 'msg-header' ../client/,,exp/m5.xml 
+ed -x xml_proc.py
+run -d ./xml_proc.py -l 'msg-header' -b 'msg-header' ../client/,,exp/m5.xml 
+ed -x xml_proc.py
+run -d ./xml_proc.py -l 'msg-header' -b 'msg-header' ../client/,,exp/m5.xml 
+ed -x xml_proc.py
+run ./xml_proc.py -l 'msg-header' -b 'msg-header' ../client/,,exp/m5.xml 
+c
+run ./xml_proc.py -l 'msg-header' -b 'msg-header' ../client/,,exp/m5.xml 
+run ./xml_proc.py -l 'msg-header' ../client/,,exp/m5.xml 
+run ./xml_proc.py -l 'msg-header' -b 'msg-header' ../client/,,exp/m5.xml 
+run -d ./xml_proc.py -l 'msg-header' -b 'msg-header' ../client/,,exp/m5.xml 
+run -d ./xml_proc.py -p -l 'msg-header' -b 'msg-header' ../client/,,exp/m5.xml 
+ed -x xml_proc.py
+run -d ./xml_proc.py -p -l 'msg-header' -b 'msg-header' ../client/,,exp/m5.xml 
+run -d ./xml_proc.py -b 'msg-header' ../client/,,exp/m5.xml 
+run -d -p ./xml_proc.py -b 'msg-header' ../client/,,exp/m5.xml 
+run -d ./xml_proc.py -p -b 'msg-header' ../client/,,exp/m5.xml 
+ed -x xml_proc.py
+run ./xml_proc.py -p -b 'msg-header' ../client/,,exp/m5.xml 
+ed -x xml_proc.py
+run -d ./xml_proc.py -p -b 'msg-header' ../client/,,exp/m5.xml 
+ed -x xml_proc.py
+run ./xml_proc.py -p -b 'msg-header' ../client/,,exp/m5.xml 
+ed -x xml_proc.py
+run ./xml_proc.py -a 'msg-specific/app-info;an,bubba;av=v1' ../client/,,exp/m5.xml
+run -d ./xml_proc.py -a 'msg-specific/app-info;an,bubba;av=v1' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -a 'msg-specific/app-info;an=bubba;av=v1' ../client/,,exp/m5.xml
+run -d ./xml_proc.py -a 'msg-specific/app-info/blah;an=bubba;av=v1' ../client/,,exp/m5.xml
+run -d ./xml_proc.py -a 'msg-specific/app-info;an=bubba;av=v1' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -a 'msg-specific/app-info;an=bubba;av=v1' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -a 'msg-specific/app-info;an=bubba;av=v1' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -a 'msg-specific/app-info;an=bubba;av=v1' ../client/,,exp/m5.xml
+run -d ./xml_proc.py -a 'msg-specific/app-info;an=bubba;av=v1' -b 'msg-specific/app-info' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -D -a 'msg-specific/app-info;an=bubba;av=v1' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -D -a 'msg-specific/app-info;an=bubba;av=v1' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py 
+ed -x xml_proc.py
+run ./xml_proc.py -p ../client/,,exp/m5.xml
+n
+break /home/dapanarx/work/ftci/poc/pyagents/xml_proc.py:138
+run -d ./xml_proc.py -p ../client/,,exp/m5.xml
+run ./xml_proc.py -p ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -p ../client/,,exp/m5.xml
+run ./xml_proc.py -p
+run ./xml_proc.py -p -j 'bubba,blah'
+run ./xml_proc.py -p -j 'bubba=blah'
+run ./xml_proc.py -p -j 'bubba=blah' -p
+run ./xml_proc.py -p -j 'bubba=blah' -p -D
+run  ./xml_proc.py -D -p -j 'bubba=blah' -p
+run  ./xml_proc.py -D -p -j 'bubba=blah' -j 'b2=beetwo' -p
+run  ./xml_proc.py -D -a';a=1,b=2'
+ed -x xml_proc.py
+run  ./xml_proc.py -D -a';a=1,b=2'
+ed -x xml_proc.py
+run  ./xml_proc.py -D -a';a=1,b=2'
+ed -x xml_proc.py
+run  ./xml_proc.py -D -a';a=1,b=2'
+run -d  ./xml_proc.py -D -a';a=1,b=2'
+run -d  ./xml_proc.py -D -a'sub;a=1,b=2'
+run -d  ./xml_proc.py -D -a'sub;a=1,b=2' -p
+run -d  ./xml_proc.py -l '' -p
+run  ./xml_proc.py -l '' -p
+run  ./xml_proc.py -j 'b=bubba' -l '' -p
+run  ./xml_proc.py -j 'b=bubba' -l 'b' -p

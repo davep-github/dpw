@@ -83,6 +83,16 @@
 ;;
 
 
+(dp-deflocal dp-cleanup-whitespace-p nil
+  "Should trailing whitespace be cleaned up in this buffer?
+In particular, should `dp-next-line' do it?
+Values:
+nil      - NO.
+t        - Just do it(tm)
+eol-only - Only clean lines when cursor it at the end of a line.
+           This makes it easy to leave the whitespace alone.
+@todo XXX better to default to t or eol-only?")
+
 (defvar dp-enable-minibuffer-marking nil
   "Prevents any minibuffer marking from happening.")
 
@@ -564,6 +574,9 @@ c-hanging-braces-alist based upon these values.")
 
 (defun dp-after-load-cc-mode ()     ;<:cc-after-load|bind-c*-keys|setup c* :>
   (interactive)
+
+  (setq dp-cleanup-whitespace-p t)
+
   ;; allow us to override the default style with a "current project"
   ;; style. This is not suitable for specifying in file local
   ;; variables due to the order in which things are done.  To use file
@@ -644,30 +657,15 @@ c-hanging-braces-alist based upon these values.")
     (define-key map [return] 'dp-c-context-line-break)
     (define-key map [?l] 'dp-c-mode-l)
     (define-key map [(control /)] 'semantic-ia-show-summary)
-    (define-key map [down] 'dp-c*-next-line)
     
     ;; 'C-;'
     (define-key map [(control 59)] (kb-lambda (insert ";" )))
-    ;;(setq indent-tabs-mode t)
-;;     (dmessage "adding c*-extra-faces...")
-;;     (dmessage "A: c-font-lock-keywords-3>%s<" c-font-lock-keywords-3)
-;;     (dmessage "A: c++-font-lock-keywords-3>%s<" c++-font-lock-keywords-3)
-;;     (dmessage "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     (dp-c*-add-extra-faces)
-;;     (dmessage "...added c*-extra-faces")
-;;     (dmessage "B: c-font-lock-keywords-3>%s<" c-font-lock-keywords-3)
-;;     (dmessage "B: c++-font-lock-keywords-3>%s<" c++-font-lock-keywords-3)
-;;     (dmessage "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
     ;; This line seems to wipe out the extra faces.
     ;; Because it modifies the original value, not the current.
     ;; `dp-save-orig-n-set-new' saves that variable the first time it is
     ;; called and applies all other changes to that copy.  Hence, this
     ;; returns us to the original value and adds the line-too-long stuff.
-;;     (dp-add-line-too-long-font '(c-font-lock-keywords-3
-;;                                  c++-font-lock-keywords-3))
-;;     (dmessage "C: c-font-lock-keywords-3>%s<" c-font-lock-keywords-3)
-;;     (dmessage "C: c++-font-lock-keywords-3>%s<" c++-font-lock-keywords-3)
-;;     (dmessage "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
     ))
 
 (eval-after-load "cc-mode"
@@ -906,6 +904,7 @@ main(
   "Set up ruby-mode *my* way."
   (interactive)
   (dp-add-line-too-long-font 'ruby-font-lock-keywords)
+  (setq dp-cleanup-whitespace-p t)
   (dp-add-to-font-patterns '(ruby-font-lock-keywords)
                            dp-trailing-whitespace-font-lock-element)
 
@@ -971,6 +970,7 @@ See `dp-parenthesize-region-paren-list'")
   ;; ## forces comment to line up @ comment col.
   (setq comment-start "#")
   (local-set-key [tab] 'dp-python-indent-command)
+  (local-set-key [(meta \;)] 'dp-py-indent-for-comment)
   (local-set-key [(meta ?`)] 'comint-previous-matching-input-from-input)
   (local-set-key "\C-p`" 'comint-previous-matching-input-from-input)
   (local-set-key [delete] 'dp-delete)
@@ -984,6 +984,7 @@ See `dp-parenthesize-region-paren-list'")
   (local-set-key [(meta s)] 'dp-py-insert-self?)
   (local-set-key [(meta q)] 'dp-fill-paragraph-or-region-with-no-prefix)
   (dp-add-line-too-long-font 'python-font-lock-keywords)
+  (setq dp-cleanup-whitespace-p t)
   (dp-add-to-font-patterns '(python-font-lock-keywords)
                            dp-trailing-whitespace-font-lock-element)
 
@@ -1430,12 +1431,25 @@ faces had different sizes."
 ;;;(add-hook 'pre-command-hook 'dp-pre-command-hook)
 ;;;(add-hook 'post-command-hook 'dp-post-command-hook)
 
+(dp-deflocal dp-gnuserv-done-function (lambda (&rest ignored)
+                                        (switch-to-buffer nil))
+  "What shall we do when we are done editing a gnuserv file?
+Default is to switch to a buffer as chosen by `switch-to-buffer'.")
+
+(defun dp-gnuserv-edit (&optional count)
+  "Like `gnuserv-edit' except leaves buffer alone rather than killing it."
+  (interactive "P")
+  ;; count < 0 --> kill ?
+  (let ((gnuserv-done-function dp-gnuserv-done-function))
+    (call-interactively 'gnuserv-edit)
+    (message "Editing complete.")))
+
 (setq gnuserv-find-file-function 'dp-find-file)
 (add-hook 'gnuserv-visit-hook 'dp-gnuserv-visit-hook)
 
 (defun dp-gnuserv-visit-hook ()
   (interactive)
-  (local-set-key "\C-c\C-c" 'gnuserv-edit))
+  (local-set-key "\C-c\C-c" 'dp-gnuserv-edit))
 
 (when (dp-optionally-require 'igrep)
   (defadvice igrep (after dp-igrep activate)
@@ -1811,6 +1825,7 @@ and then business as usual."
   (dp-add-line-too-long-font '(sh-font-lock-keywords
                                sh-font-lock-keywords-1
                                sh-font-lock-keywords-2))
+  (setq dp-cleanup-whitespace-p t)
   (dp-add-to-font-patterns '(sh-font-lock-keywords
                              sh-font-lock-keywords-1
                              sh-font-lock-keywords-2)
@@ -2081,6 +2096,7 @@ changed."
   (dp-revert-hook)
   (dp-colorize-found-file-buffer))
 
+;; Dum, dee, dum, dum, dada, do, dum... PERL SUCKS!
 (defun dp-cperl-mode-hook ()
   (setq dp-il&md-dont-fix-comments-p t) ; cperl sucks at this.
   (substitute-key-definition 'cperl-indent-for-comment
@@ -2091,6 +2107,7 @@ changed."
   (dp-add-line-too-long-font '(perl-font-lock-keywords
                                perl-font-lock-keywords-1
                                perl-font-lock-keywords-2))
+  (setq dp-cleanup-whitespace-p t)
   (dp-add-to-font-patterns '(perl-font-lock-keywords
                                perl-font-lock-keywords-1
                                perl-font-lock-keywords-2)

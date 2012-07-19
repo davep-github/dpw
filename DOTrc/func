@@ -1291,15 +1291,28 @@ export -f git_change_sandbox
 alias gcd="git_change_sandbox"
 alias gsb="git_change_sandbox"
 
-gith()
+githh()
 {
+    local dash_n
+    if [ -z "${1-}" ]
+    then
+        dash_n=-0               # Everything
+    else
+        dash_n="$1"
+    fi
+    shift
     # Since I cannot figure out how to stop git using ^H for bolding, I'll
     # filter it myself.
     # Doesn't use ^H in all xemacs windows and I don't know why.
     if inside_emacs_p
     then
-        git help "$@" | ul -t dumb
+        git help "$@" | ul -t dumb | head -n "$dash_n"
     fi
+}
+
+gith()
+{
+    githh "" "$@"
 }
 
 true

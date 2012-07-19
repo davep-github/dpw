@@ -42,6 +42,7 @@ else
           for rcf in $rc_files
           do
             [ -x "$rcf" ] && {
+                echo "sourcing, $(echo_id rcf)"
                 source "$rcf"
             }
           done
