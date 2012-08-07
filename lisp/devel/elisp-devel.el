@@ -1675,12 +1675,6 @@ Wednesday July 18 2012
 ;;work on this later.;                          (if sync-p "" "&"))))
 
 
-(defun gith (topic &optional other-window-p)
-  (interactive "sgit help on: \nP")
-  (let ((git-man-page (concat "git-" topic)))
-    (funcall (if other-window-p '2man 'manual-entry)
-             git-man-page)))
-
 ========================
 Thursday July 19 2012
 --
@@ -1699,4 +1693,119 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
       (dp-push-go-back "gnuserv visiting an already visited file"))))
 
 (setq gnuserv-find-file-function 'dp-gnuserv-find-file-function)
+
+
+========================
+Monday July 23 2012
+--
+(describe-bindings-internal emacs-lisp-mode-map)
+
+tab             dp-python-indent-command
+delete          dp-delete
+C-tab           lisp-complete-symbol
+C-/             eldoc-doc
+C-c             << Prefix Command >>
+C-p             << Prefix Command >>
+C-x             << Prefix Command >>
+C-z             dp-shell
+M-tab           lisp-complete-symbol
+M-return        dp-open-newline
+M-;             lisp-indent-for-comment
+M-`             comint-previous-matching-input-from-input
+M-q             dp-fill-paragraph-or-region-with-no-prefix
+M-s             dp-upcase-preceding-symbol
+M-backspace     dp-delete-word
+M-left          dp-beginning-of-defun
+M-right         dp-end-of-defun
+M-C-return      Anonymous Lambda
+M-C-i           lisp-complete-symbol
+M-C-p           py-beginning-of-def-or-class
+M-C-q           indent-sexp
+M-C-x           dp-eval-defun-or-region
+
+C-c !           dp-python-shell
+C-c C-c         gnuserv-edit
+
+C-p `           comint-previous-matching-input-from-input
+
+C-x C-left      py-beginning-of-def-or-class
+nil
+
+Minor Mode Bindings for `flyspell-mode':
+key             binding
+---             -------
+
+
+
+========================
+Wednesday July 25 2012
+--
+
+(defvar ffap-string-at-point-mode-alist
+  '(
+    ;; The default, used when the `major-mode' is not found.
+    ;; Slightly controversial decisions:
+    ;; * strip trailing "@" and ":"
+    ;; * no commas (good for latex)
+    ;; BUT commas are good for me for names to be ignored by version controlled
+    ;;;(file "--:$+<>@-Z_a-z~" "<@" "@>;.,!?:")
+    (file "--:$+<>@-Z_a-z~," "<@" "@,>;.!?:")
+    ;; An url, or maybe a email/news message-id:
+    (url "--:=&?$+@-Z_a-z~#,%" "^A-Za-z0-9" ":;.,!?")
+    ;; Find a string that does *not* contain a colon:
+    (nocolon "--9$+<>@-Z_a-z~" "<@" "@>;.,!?")
+    ;; A machine:
+    (machine "-a-zA-Z0-9." "" ".")
+    ;; Mathematica paths: allow backquotes
+    (math-mode ",-:$+<>@-Z_a-z~`" "<" "@>;.,!?`:")
+    )
+  "Alist of \(MODE CHARS BEG END\), where MODE is a symbol,
+possibly a `major-mode' or some symbol internal to ffap
+\(such as 'file, 'url, 'machine, and 'nocolon\).
+`ffap-string-at-point' uses the data fields as follows:
+1. find a maximal string of CHARS around point,
+2. strip BEG chars before point from the beginning,
+3. Strip END chars after point from the end.")
+
+ffap-string-at-point-mode-alist
+
+========================
+Thursday July 26 2012
+--
+gdb-arrow-extent
+#<extent *[5723, 5746) 0x1803d7b0 in buffer fml.h>
+
+
+
+;;installed; (defun dp-gdb-scroll-down-source-buffer (num)
+;;installed;   (interactive "_p")
+;;installed;   (let ((buffer (and gdb-arrow-extent
+;;installed;                      (extent-object gdb-arrow-extent)))
+;;installed;         window)
+;;installed;     (if (not buffer)
+;;installed;         (call-interactively 'dp-scroll-down-other-window)
+;;installed;       (setq window (display-buffer buffer))
+;;installed;       (with-selected-window window
+;;installed;         (dp-scroll-down num)))))
+
+;;installed; (defun dp-gdb-scroll-up-source-buffer (num)
+;;installed;   (interactive "_p")
+;;installed;   (let ((buffer (and gdb-arrow-extent
+;;installed;                      (extent-object gdb-arrow-extent)))
+;;installed;         window)
+;;installed;     (if (not buffer)
+;;installed;         (call-interactively 'dp-scroll-up-other-window)
+;;installed;       (setq window (display-buffer buffer))
+;;installed;       (with-selected-window window
+;;installed;         (dp-scroll-up num)))))
+
+
+
+========================
+Friday July 27 2012
+--
+
+(cl-pe '(decf num))
+
+(setq num (1- num))nil
 

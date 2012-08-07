@@ -235,7 +235,7 @@ prompt.  We don't want to stomp on them.")
                                        "gits"
                                        "gitstat"
                                        "xemacs")))
-                   '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(status\\|diff\\|stat\\)")
+                   '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(cia\\|stash\\|status\\|diff\\|stat\\)")
                    dp-shell-vc-commit-cmd-regexps)
            nil 'one-around-all-p)
           "\\(\\s-+\\|$\\)")
@@ -1616,6 +1616,8 @@ first file that is `dp-file-readable-p' is used.  Also sets
                               :dp-ef-before-pmark-func nil)
   (define-key c++-mode-map [(control ?x)(control space)] 'dp-gdb-run-to-here)
   (define-key c-mode-map [(control ?x)(control space)] 'dp-gdb-run-to-here)
+  (local-set-key [(control meta down)] 'dp-gdb-scroll-up-source-buffer)
+  (local-set-key [(control meta up)] 'dp-gdb-scroll-down-source-buffer)
 ;   (setq dp-wants-ansi-color-p nil)
   )
 
@@ -1776,6 +1778,21 @@ set the key-map after the hook has run."
 
 ;;;###autoload
 (defalias 'dpy 'dp-python-shell)
+
+;;;###autoload
+(defsubst dp-python-shell-this-window (&optional args)
+  "Try to put the shell in the current window."
+  (interactive "P")
+  (dp-python-shell)
+  ;; This may or may not work, depending on the original window config.
+  (dp-slide-window-right 1))
+
+;;;###autoload
+(defalias 'dpyd 'dp-python-shell-this-window)
+;;;###autoload
+(defalias 'dpy. 'dp-python-shell-this-window)
+;;;###autoload
+(defalias 'dpy0 'dp-python-shell-this-window)
 
 (defun dpy-reload ()
   (interactive)
@@ -2378,7 +2395,7 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
                                (and-boundp 'ssh-host ssh-host))
                              buf)))))
               
-(defvar dp-gdb-history '()
+(defvar dp-gdb-buffer-history '()
   "Gdb buffer name history.")
 
 (defvar dp-gdb-buffers '()
@@ -2414,7 +2431,7 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
                    "gdb buffer name: ")))
      (completing-read  prompt (dp-gdb-buffer-completion-list)
                        nil nil nil 
-                       'dp-gdb-history (dp-gdb-most-recent-buffer)))))
+                       'dp-gdb-buffer-history (dp-gdb-most-recent-buffer)))))
 
 (defun* dp-get-locale-rcs (&optional (env-var-name "locale_rcs"))
   (let ((rcs (getenv env-var-name)))
@@ -2426,6 +2443,28 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 
 ;;!<@todo finish this 
 ;;(defvar dp-locale-rcs-regexp (dp-))
+
+(defun dp-gdb-scroll-down-source-buffer (num)
+  (interactive "_p")
+  (let ((buffer (and gdb-arrow-extent
+                     (extent-object gdb-arrow-extent)))
+        window)
+    (if (not buffer)
+        (call-interactively 'dp-scroll-down-other-window)
+      (setq window (display-buffer buffer))
+      (with-selected-window window
+        (dp-scroll-down num)))))
+
+(defun dp-gdb-scroll-up-source-buffer (num)
+  (interactive "_p")
+  (let ((buffer (and gdb-arrow-extent
+                     (extent-object gdb-arrow-extent)))
+        window)
+    (if (not buffer)
+        (call-interactively 'dp-scroll-up-other-window)
+      (setq window (display-buffer buffer))
+      (with-selected-window window
+        (dp-scroll-up num)))))
 
 (defvar dp-gdb-recursing nil)
 
@@ -2443,12 +2482,15 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
     (let ((dp-gdb-recursing t))
       (call-interactively 'gdb))
     (dp-add-or-update-alist 'dp-gdb-buffers (buffer-name) (or corefile 'dp-gdb))
-    (dp-add-to-history 'dp-gdb-history (buffer-name))
+    (dp-add-to-history 'dp-gdb-buffer-history (buffer-name))
     (when (boundp 'dp-gdb-commands)
       (loop for key in (cons "." (dp-get-locale-rcs)) do
         (loop for cmd in (cdr (assoc key dp-gdb-commands)) do
           (insert cmd)
           (comint-send-input))))))
+
+(defvar dp-gdb-file-history '()
+  "Files on which we've run `dp-gdb'.")
 
 ;;;###autoload
 (defun dp-gdb (&optional new-p path corefile)
@@ -2474,13 +2516,16 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
   (when new-p                           ; New can be changed above.
     ;; Want to get here if new-p or no live proc buffers.
     (let ((dp-gdb-recursing t))
-      (if (interactive-p)
-          (call-interactively 'gdb)
-        (gdb path corefile)))
-    
+      ;; Let's grab the file name our-self, regardless of interactivity, so
+      ;; we can put it into our own history.
+      (setq-ifnil path (read-file-name "Run dp-gdb on file: " nil nil nil nil
+                                       'dp-gdb-file-history))
+      (gdb path corefile))
+
     (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-dead-buffers)
-    (dp-add-or-update-alist 'dp-gdb-buffers (buffer-name) (or corefile 'dp-gdb))
-    (dp-add-to-history 'dp-gdb-history (buffer-name))
+    (dp-add-or-update-alist 'dp-gdb-buffers (buffer-name) 
+                            (or corefile 'dp-gdb))
+    (dp-add-to-history 'dp-gdb-buffer-history (buffer-name))
     (when (boundp 'dp-gdb-commands)
       ;; The node-name from locale-rcs will probably be used most.  But since
       ;; I have the whole list easily available, I may as well allow gdb

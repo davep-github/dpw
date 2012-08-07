@@ -461,9 +461,12 @@ int some_descriptive_function_name(int a,
   :type 'boolean
   :group 'dp-vars)
 
-(defcustom dp-use-dedicated-make-windows-p nil
+(defcustom dp-use-dedicated-make-windows-p t
   "*Shall we dedicated windows to compilation(make) buffers.
-At one time it seemed like a good idea, but it's really become a PITA."
+At one time it seemed like a good idea, but it's really become a PITA.
+But it's also a PITA to have the window used for other files while looking
+for compilation errors. In this case, I only want dedicated-ness to prevent
+other-window functions to select it. Perhaps there's... another way."
   :type 'boolean
   :group 'dp-vars)
   

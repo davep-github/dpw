@@ -814,7 +814,7 @@ not an inlined defun.  Otherwise use a really cheap but not entirely
 ineffective regexp to find the beginning of a defun like construct.  
 Also, leave the region active."
   (interactive "_p")
-  (if (eq last-command 'dp-c-end-of-defun)
+  (if (memq last-command '(dp-c-end-of-defun dp-scroll-down dp-scroll-up))
       (progn
         (dp-pop-go-back)
         (setq this-command nil))
@@ -845,7 +845,7 @@ Also, leave the region active."
 (defun dp-c-end-of-defun (&optional arg real-bof)
   "Inverse of `dp-c-beginning-of-defun'."
   (interactive "_p")
-  (if (eq last-command 'dp-c-beginning-of-defun)
+  (if (memq last-command '(dp-c-end-of-defun dp-scroll-down dp-scroll-up))
       (progn
         (dp-pop-go-back)
         (setq this-command nil))

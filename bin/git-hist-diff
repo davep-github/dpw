@@ -17,8 +17,9 @@ git_hist_diff_file()
 }
 
 [ $# = 0 ] && {
-    echo 1>&2 "usage: $(basename $0) COMMIT files...
+    echo 1>&2 "usage: commit=<COMMIT> $(basename $0) files...
 For all files, diff them against all specs in rev-list COMMIT"
+}
 
 for f in "$@"
 do

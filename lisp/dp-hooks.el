@@ -686,7 +686,7 @@ c-hanging-braces-alist based upon these values.")
   ;; @todo... try it on since the global abbrev table only has typos in it.
   (abbrev-mode 1)
   (c-toggle-auto-state 1)               ;set c-auto-newline
-  (dp-turn-off-auto-fill),
+  (dp-turn-off-auto-fill)
   (setq dp-cleanup-whitespace-p t)
   (setq indent-tabs-mode nil
         c-recognize-knr-p nil
@@ -1382,9 +1382,41 @@ faces had different sizes."
         (call-interactively expr)
       (eval expr))))
 
+(defvar dp-Manual-section-regexp "^[0-9_A-Z -]+\\(([0-9]+)\\s-+.*\\)?$"
+  "Part of a cheesy to find a man page section.
+@todo XXX do we want the (number), e.g. the title, to be included? 
+`\\[dp-beginning-of-buffer]' gets the job done with the possibility of a false
+positive. ")
+                       
+
+(defun dp-Manual-previous-section (num)
+  "Go to the previous section (NAME, SYNOPSIS, etc)."
+  (interactive "p")
+  (let ((case-fold-search nil))
+    (while (and (> num 0)
+                (re-search-backward dp-Manual-section-regexp nil t))
+      ;; prev puts us at the beginning of the section name which makes a next
+      ;; go to the end of that section name. Equivalent for next/prev.
+      ;; Moving one character in the "opposite" direction means that there
+      ;; will be no match on the current line.
+      (forward-char)
+      (decf num))))
+
+(defun dp-Manual-next-section (num)
+  "Go to the next section (NAME, SYNOPSIS, etc)."
+  (interactive "p")
+  (let ((case-fold-search nil))
+    (while (and (> num 0)
+                (re-search-forward dp-Manual-section-regexp nil t))
+      (backward-char)
+      (decf num))))
+
 (defun dp-manual-mode-hook ()
   (define-key Manual-mode-map [(return)] 'dp-Manual-follow-xref-at-point)
   (define-key Manual-mode-map "\C-m" 'dp-Manual-follow-xref-at-point)
+  (define-key Manual-mode-map [(meta left)] 'dp-Manual-previous-section)
+  (define-key Manual-mode-map [(meta right)] 'dp-Manual-next-section)
+
   ;;(dp-define-buffer-local-keys '( [(return)] 'dp-Manual-follow-xref-at-point))
   (define-key Manual-mode-map "\M-." 'dp-Manual-follow-xref-at-point)
   (define-key Manual-mode-map "\M-," 'dp-pop-go-back))
@@ -1439,9 +1471,13 @@ Default is to switch to a buffer as chosen by `switch-to-buffer'.")
   "Like `gnuserv-edit' except leaves buffer alone rather than killing it."
   (interactive "P")
   ;; count < 0 --> kill ?
-  (let ((gnuserv-done-function dp-gnuserv-done-function))
-    (call-interactively 'gnuserv-edit)
-    (message "Editing complete.")))
+  (let ((dp-gnuserv-done-function dp-gnuserv-done-function))
+    (when (Cu--p)
+      (setq current-prefix-arg 1
+            dp-gnuserv-done-function 'dp-maybe-kill-this-buffer))
+    (let ((gnuserv-done-function dp-gnuserv-done-function))
+      (call-interactively 'gnuserv-edit)
+      (message "Editing complete."))))
 
 (setq gnuserv-find-file-function 'dp-find-file)
 (add-hook 'gnuserv-visit-hook 'dp-gnuserv-visit-hook)
@@ -1701,7 +1737,7 @@ cscope discovery.
 ;;;;(add-hook 'kill-buffer-query-functions 'dp-kill-buffer-query-function)
 
 (defadvice compile-internal (around dp-advised-compile-internal activate)
- ;  (when (eq major-mode 'compilation-mode)
+;  (when (eq major-mode 'compilation-mode)
 ;     (set-window-dedicated-p (dp-get-buffer-window) nil))
 ;   (when (dp-buffer-live-p compilation-last-buffer)
 ;     (set-window-dedicated-p (dp-get-buffer-window compilation-last-buffer) nil))

@@ -269,3 +269,229 @@ run -d  ./xml_proc.py -l '' -p
 run  ./xml_proc.py -l '' -p
 run  ./xml_proc.py -j 'b=bubba' -l '' -p
 run  ./xml_proc.py -j 'b=bubba' -l 'b' -p
+n
+"a=".split('=')
+ed -x xml_proc.py
+run -d  ./xml_proc.py -a 'top'
+"a".split("z")
+run -d  ./xml_proc.py -a 'top'
+run -d  ./xml_proc.py -a 'top;'
+ed -x xml_proc.py
+run -d  ./xml_proc.py -a 'top;'
+ed -x xml_proc.py
+run  ./xml_proc.py -a 'top;'
+run  ./xml_proc.py -a 'top;a=c'
+run -d  ./xml_proc.py -a 'top;a=c'
+ed -x xml_proc.py
+run  ./xml_proc.py -a 'top;a=c'
+ed -x xml_proc.py
+run  ./xml_proc.py -a 'top;' -j top/bubba=wow
+ed -x xml_proc.py
+run  ./xml_proc.py -a 'top;' -j top/bubba=wow
+ed -x xml_proc.py
+run  ./xml_proc.py -a 'top;' -j top/bubba=wow
+run  ./xml_proc.py -a 'top;' -j top/bubba=wow -p
+run  ./xml_proc.py -A 'top;' -j bubba=wow -p
+ed -x xml_proc.py
+run  ./xml_proc.py -A 'top;' -j bubba=wow -p
+ed -x xml_proc.py
+run  ./xml_proc.py -A 'top;' -j bubba=wow -p
+run  ./xml_proc.py -A 'top;a=b' -j bubba=wow -p
+run  ./xml_proc.py -A 'top;' -j bubba=wow -p
+run  ./xml_proc.py -A 'top;a=b' -j bubba=wow -p
+run  ./xml_proc.py -A 'top;a=b' -j bubba=wow -a'top;q=p'
+ed -x xml_proc.py
+run  ./xml_proc.py -A 'top;a=b' -j bubba=wow -a'top;q=p'
+run  ./xml_proc.py -A 'top;' -j bubba=wow -a'top;q=p'
+run  ./xml_proc.py -A 'top;' -j bubba=wow
+run  ./xml_proc.py -A 'top;' -j bubba=wow -a'top;q=p'
+run  ./xml_proc.py -A 'top;' -p -j bubba=wow -p -a'top;q=p' -p
+run  ./xml_proc.py -A 'top;' -p -j bubba=wow -p -a'top;q=p' -D -p
+run  ./xml_proc.py -D -A 'top;' -p -j bubba=wow -p -a'top;q=p' -D -p
+ed -x xml_proc.py
+run  ./xml_proc.py -D -A 'top;' -p -j bubba=wow -p -a'top;q=p' -D -p
+ed -x xml_proc.py
+run  ./xml_proc.py -D -A 'top;' -p -j bubba=wow -p -a'top;q=p' -D -p
+ed -x xml_proc.py
+run  ./xml_proc.py -D -A 'top;' -p -j bubba=wow -p -a'top;q=p' -D -p
+run  ./xml_proc.py -D -A 'top;a=b' -p -j bubba=wow -p -a'top;q=p' -D -p
+ed -x xml_proc.py
+run  ./xml_proc.py -D -A 'top;a=b' -p -j bubba=wow -p -a'top;q=p' -D -p
+run  ./xml_proc.py -D -A 'top;' -p -j bubba=wow -p -a'top;q=p' -D -p
+run  ./xml_proc.py -A 'top;a=b' -p -j bubba=wow -p -a'top;q=p' -p
+run  ./xml_proc.py -D -A 'top;a=b' -p -j bubba=wow -p -a'top;q=p' -p
+run  ./xml_proc.py -D -A 'top;a=b' -p -j bubba=wow -p -a'top;q=p' -pP
+ed -x xml_proc.py
+run -d  ./xml_proc.py -D -A 'top;a=b' -p -j bubba=wow -p -a'top;q=p' -pP
+ed -x xml_proc.py
+run  ./xml_proc.py -D -A 'top;a=b' -p -j bubba=wow -p -a'top;q=p' -pP
+ed -x xml_proc.py
+run  ./xml_proc.py -DD -A 'top;a=b' -p -j bubba=wow -p -a'top;q=p' -pP
+ed -x xml_proc.py
+run  ./xml_proc.py -DD -A 'top;a=b' -p -j bubba=wow -p -a'top;q=p' -pP
+ed -x xml_proc.py
+run  ./xml_proc.py -DD -A 'top;a=b' -p -j bubba=wow -p -a'top;q=p' -pP
+run  ./xml_proc.py -DD -A 'top;a=b' -p -j bubba=wow -p -a'top2;q=p' -pP
+run  ./xml_proc.py -DD -A 'top' -p -j bubba=wow -p -a'top2;q=p' -pP
+run  ./xml_proc.py -DD -A 'top;' -p -j bubba=wow -p -a'top2;q=p' -pP
+run  ./xml_proc.py -DD -A 'top;a=b' -p -j bubba=wow -p -a'top2;q=p' -pP
+run  ./xml_proc.py -DD -A 'top;' -p -j bubba=wow -p -a'top2;q=p' -pP
+run  ./xml_proc.py -DD -a 'top;a=b' -a 'top;1=2' -p -j bubba=wow -p -a'top2;q=p' -pP
+run  ./xml_proc.py -DD -a 'top;a=b' -a 'top;c=d' -p -j bubba=wow -p -a'top2;q=p' -pP
+ed -x xml_proc.py
+run  ./xml_proc.py -X
+ed -x xml_proc.py
+run  ./xml_proc.py -X
+run  ./xml_proc.py -X -DpP
+run  ./xml_proc.py -X -f "protocol-version"
+run  ./xml_proc.py -X -f "msg-header/protocol-version"
+run  ./xml_proc.py -X -a "msg-header;protocol-version=9"
+ed -x xml_proc.py
+ed?
+edit?
+run  ./xml_proc.py -X
+run  ./xml_proc.py -X -p
+run  ./xml_proc.py -X -Dp
+run  ./xml_proc.py -X -DDp
+{}
+if {}: print "OK"
+if not {}: print "OK"
+i = (1,2,{1: "one"})
+i
+ii = (i,)
+ii
+initializer = ("a",
+"h",
+{"p": 
+"v"})
+initializer
+down
+up
+down
+run  ./xml_proc.py -X -DDpP
+y
+ed -x xml_proc.py
+run -d ./xml_proc.py -X -DDpP
+ed -x xml_proc.py
+run -d ./xml_proc.py -a'msg-header;ver=2728798273' -f 'msg-header/ver'
+ed -x xml_proc.py
+run  ./xml_proc.py -X -DDpP
+ed -x xml_proc.py
+run  ./xml_proc.py -X -DDpP
+run -d  ./xml_proc.py -X -DDpP
+ed -x xml_proc.py
+run -d  ./xml_proc.py -X -DDpP
+run -d ./xml_proc.py -a'msg-header;ver=2728798273' -j 'blah=x' -DDpP
+run -d  ./xml_proc.py -X -DDpP
+run -d ./xml_proc.py -a'msg-header;ver=2728798273' -j 'blah=x' -DDpP
+ed -x xml_proc.py
+run -d  ./xml_proc.py -X -DDpP
+ed -x xml_proc.py
+run -d ./xml_proc.py -a'msg-header;ver=2728798273' -j 'blah=x' -DDpP
+ed -x xml_proc.py
+run -d ./xml_proc.py -a'msg-header;ver=2728798273' -j 'blah=x' -DDpP
+run -d ./xml_proc.py -a'msg-header;ver=2728798273' -j 'ver=x' -DDpP
+run -d ./xml_proc.py -a'msg-header;ver=2728798273' -j 'msg-header/ver=x' -DDpP
+c
+run ./xml_proc.py -a'msg-header;ver=2728798273' -j 'msg-header/ver=x' -DDpP
+run ./xml_proc.py -a'msg-header;ver=2728798273' -f msg-header/ver -j 'msg-header/ver=x' -DDpP
+run ./xml_proc.py -a'msg-header;ver=2728798273' -f msg-header/ver -j 'msg-header/ver=x' -f msg-header/ver -DDpP
+run ./xml_proc.py -X -DDPp
+ed -x xml_proc.py
+run ./xml_proc.py -X -DDPp
+ed
+ed -x
+edit ?
+edit -p
+edit
+edit -p
+edit -x -p
+for x in iterate_path_components("/a/b/c/d"): print x
+edit -p
+for x in iterate_path_components("/a/b/c/d"): print x
+edit -p
+for x in iterate_path_components("/a/b/c/d"): print x
+edit -p
+for x in iterate_path_components(""): print x
+for x in iterate_path_components(""): print "x:", x
+for x in iterate_path_components("a"): print "x:", x
+for x in iterate_path_components("a/b"): print "x:", x
+for x in iterate_path_components("a/b/c"): print "x:", x
+for x in iterate_path_components("/a/b/c"): print "x:", x
+print ';'.join(__IP.Completer.all_completions('xml_proc.p'))
+ed -x xml_proc.py
+run -d ./xml_proc.py -a'msg-specific/app-info;ver=2728798273' -DDpP
+n
+run -d ./xml_proc.py -a'msg-specific/app-info;ver=2728798273' -DDpP
+ed -x
+ed -x xml_proc.py
+run -d ./xml_proc.py -a'msg-specific/app-info;ver=2728798273' -DDpP
+ed -x xml_proc.py
+run -d ./xml_proc.py -a'msg-specific/app-info;ver=2728798273' -DDpP
+edit -p
+edit
+for x in iterate_path_components("msg-specific/app-info"): print "x:", x
+for x in iterate_path_components("/msg-specific/app-info"): print "x:", x
+n
+run -d ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -DDpP
+print ';'.join(__IP.Completer.all_completions('buil'))
+print ';'.join(__IP.Completer.all_completions('build_pa'))
+print ';'.join(__IP.Completer.all_completions('build_path'))
+build_path("msg-specific", "app-info")
+build_path("/msg-specific", "app-info")
+l = [1,2,3]
+"/".join(l)
+l.join("/")
+"/".join(l)
+l
+s = "/"
+s.join(l)
+l = [str(x) for x in l]
+l
+s.join(l)
+s.join([""] + l)
+l = ["1", "2", "3"]
+s.join([""] + l)
+s.join(l)
+l = ["/1", "2", "3"]
+s.join(l)
+run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -DDpP
+#run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -DDpP
+#run ./xml_proc.py -a'msg-specific/app-info;ver=2728798273' -DDpP
+run ./xml_proc.py -a'msg-specific/app-info;ver=2728798273' -DDpP
+run ./xml_proc.py -a'msg-specific/app-info;ver=2728798273' -a'msg-specific/app-info;app-name=zuzz' -DDpP
+run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -a'/msg-specific/app-info;app-name=zuzz' -DDpP
+run ./xml_proc.py -A'/msg-specific/app-info;ver=2728798273' -j"a=b" -j"c=d" -DDpP
+run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -a'/msg-specific/app-info;app-name=zuzz' -DDpP
+p parent_path
+run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -a'/msg-specific/app-info;app-name=zuzz' -DDpP
+n
+run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -a'/msg-specific/app-info;app-name=zuzz' -DDpP
+run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -j'/msg-specific/bubba=blah' -DDpP
+run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -j'/msg-specific/app-info/bubba=blah' -DDpP
+run ./xml_proc.py -B'/msg-specific/app-info' -j a=b
+ed -x xml_proc.py
+run -d ./xml_proc.py -B'/msg-specific/app-info' -j a=b
+ed -x xml_proc.py
+run -d ./xml_proc.py -B'/msg-specific/app-info' -j a=b
+run -d ./xml_proc.py -B'/msg-specific/app-info' -j a=b -pP
+run -d ./xml_proc.py -B'/msg-specific/app-info' -p -j a=b -pP
+run -d ./xml_proc.py -B'/msg-specific/app-info' -P -j a=b -pP
+ed -x xml_proc.py
+run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -j'/msg-specific/bubba=blah' -DDpP
+ed -x xml_proc.py
+run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -j'/msg-specific/bubba=blah' -DDpP
+ed -x xml_proc.py
+run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -j'/msg-specific/bubba=blah' -DDpP
+#run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -j'/msg-specific/bubba=blah' -DDpP
+run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -j'/msg-specific/bubba=blah' -j'/msg-specific/app-info/yadda=dadda' -DDpP
+ed -x xml_proc.py
+run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -a'/msg-specific/app-info;second-app-info=True'  -DDpP
+run ./xml_proc.py -B'/msg-specific/app-info;ver=2728798273' -B'/msg-specific/app-info;second-app-info=True'  -DDpP
+ed -x xml_proc.py
+run ./xml_proc.py -B'/msg-specific/app-info;ver=2728798273' -B'/msg-specific/app-info;second-app-info=True'  -DDpP
+run ./xml_proc.py -B'/msg-specificA/app-info;ver=2728798273' -B'/msg-specific/app-info;second-app-info=True'  -DDpP
+ed -x xml_proc.py
+run ./xml_proc.py -B'/msg-specificA/app-info;ver=2728798273' -B'/msg-specific/app-info;second-app-info=True'  -DDpP
+run ./xml_proc.py -B'/msg-specific/app-info;ver=2728798273' -B'/msg-specific/app-info;second-app-info=True'  -DDpP
+y

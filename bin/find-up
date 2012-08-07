@@ -3,6 +3,8 @@
 import sys, os
 
 def main(args):
+    print >>sys.stderr, "Nothing implemented yet."
+    sys.exit(99)
     import getopt
     highest_p = False
     opts, args = getopt.getopt(sys.argv[1:], 'h')

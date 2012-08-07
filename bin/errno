@@ -187,8 +187,16 @@ for eno in "$@"; do
         echo 0
         continue
     fi
-    errno_line=$(egrep "${mws}#${mws}define${ws}${nws}${ws}$eno(${ws}|$|/)" \
-        $ERRNO_FILES)
+    case "$eno" in
+        [0-9]*) pat="${mws}#${mws}define${ws}${nws}${ws}$eno(${ws}|$|/)";;
+        *) pat="${mws}#${mws}define${ws}${eno}${ws}${nws}(${ws}|$|/)";;
+    esac
+    errno_line=$(egrep "$pat" $ERRNO_FILES)
+
+#    errno_line=$(egrep "${mws}#${mws}define${ws}${nws}${ws}$eno(${ws}|$|/)" \
+#        $ERRNO_FILES)
+
+
     rc=$?
     [ "$rc" != 0 ] && {
         #echo "couldn't find $eno in $ERRNO_FILES"

@@ -67,12 +67,19 @@
            " C-s { <left> M-[ <down> <up> C-a C-s } <left> M-[ M-a"
            " M-[ 2*<right> M-C-o C-x C-x DEL <up> C-e ; ")))
 
-(defalias 'dp-move-c++-method
+(defalias 'dp-move-c++-method-olde
   (read-kbd-macro 
    (concat "C-a M-a C-s ( <left> M-[ <right> M-C-1 <right> M-o"
            " C-s { <left> M-[ <down> <up> C-a C-s } <left> M-[ M-a"
            " M-[ 2*<right> M-C-o C-x C-x DEL <up> C-e ; C-x 4 M-b <C-next>"
            " <up> C-e RET RET M-y")))
+
+(defalias 'dp-move-c++-method
+  (read-kbd-macro 
+   (concat "C-a M-a C-s ( <left> M-[ <right> M-C-1 C-e <right> M-o"
+           " C-a C-s { <left> M-[ <down> <up> C-a C-s } <left> M-[ M-a"
+           " M-[ 2*<right> M-C-o C-x C-x DEL <up> C-e ; 2*<down> C-x 4 M-b"
+           " <C-next> <up> C-e RET RET M-y C-x C-x C-a M-q")))
 
 (defalias 'dp-fix-class-dox
   (read-kbd-macro 
@@ -1085,11 +1092,11 @@ See `dp-region-function-map' for other bounders."
      ((eq bounder 'nada) nil))))
 
 (defun dp-region-or...as-list (&rest r)
-  (dp-cons-to-list (apply dp-region-or... r)))
+  (dp-cons-to-list (apply 'dp-region-or... r)))
 
 (defun dp-mark-region-or... (&rest args-for-dp-region-or...)
   "Mark region as determined by `dp-region-or...'.
-All args are simply passed thru to `dp-mark-region-or...'"
+All args are simply passed thru to `dp-mark-region'"
   (interactive)
   (dp-mark-region (apply 'dp-region-or... args-for-dp-region-or...)))
 
@@ -1176,6 +1183,14 @@ the newly copied text."
   "Kill and append current region if defined, else the current line."
   (interactive "*")
   (dp-kill-or-copy 'kill-region 'append))
+
+;; (defun dp-op-other-window (num op &rest args)
+;;   "Perform OP on ARGS NUM `other-window's away."
+;;   (interactive)
+;;   (let ((num (or num 1)))
+;;     (other-window num)
+;;     (apply op args)
+;;     (other-window (- num))))
 
 (defun dp-op-other-window (num op &rest args)
   "Perform OP on ARGS NUM `other-window's away."
@@ -1343,7 +1358,10 @@ matching operation and only if we are on a ?< or ?>."
          (point))))
 
 (defun dp-true (&rest r)
+  "Return t. Nice for predicate functions.
+Better than (or (eq pred t) (funcall pred))."
   t)
+(dp-defaliases 'dpt 'dp-t 'dp-non-nil 'dp-true)
 
 (defun* dp-mk-completion-list (list &key (pred 'dp-true) pred-args
                                ctor ctor-args
@@ -1968,6 +1986,9 @@ empty."
     (beginning-of-line)
     (looking-at "^\\s-*$")))
 
+(defsubst dp-empty-line-p ()
+  (= (line-beginning-position) (line-end-position)))
+
 (defun dp-end-of-buffer (&optional no-save-pos-p)
   "Goto end of buffer, quickly, and
 remember where we were in bookmarks: tbbm* and gbbm* and
@@ -2009,23 +2030,28 @@ Motivated by `dp-indent-line-and-move-down'."
 Tidying includes: re `indent-for-comment' and fixing up white space."
   (interactive "*p")
   (loop repeat arg do
-    (dp-func-and-move-down
-     (function
-      (lambda ()
-        (back-to-indentation)           ;shell mode needs this
-        ;; Sadly, many modes don't handle TAB consistently. Sometimes it's
-        ;; `indent-for-tab-command' or `indent-according-to-mode' or...
-        ;; Since this is very much like a keystroke macro of
-        ;; BOL, TAB, NEXT-LINE, we'll just use the tab key itself.
-        ;;(indent-according-to-mode)
-        (dp-press-tab-key)
-        (unless (or (Cu--p)
-                    dp-il&md-dont-fix-comments-p)
-          (dp-with-saved-point nil
-            (dp-fix-comment)))
-        (dp-cleanup-line)))
-     t
-     'forward-line)))
+      (dp-func-and-move-down
+       (function
+        (lambda ()
+          (back-to-indentation)         ;shell mode needs this
+          ;; Sadly, many modes don't handle TAB consistently. Sometimes it's
+          ;; `indent-for-tab-command' or `indent-according-to-mode' or...
+          ;; Since this is very much like a keystroke macro of
+          ;; BOL, TAB, NEXT-LINE, we'll just use the tab key itself.
+          ;;(indent-according-to-mode)
+
+          ;; Not operating on an empty line is useful because it doesn't
+          ;; cause the buffer to be modified. Otherwise, the tab + remove
+          ;; trailing white space modifies the buffer.
+          (unless (dp-empty-line-p)
+            (dp-press-tab-key))
+          (unless (or (Cu--p)
+                      dp-il&md-dont-fix-comments-p)
+            (dp-with-saved-point nil
+              (dp-fix-comment)))
+          (dp-cleanup-line)))
+       t
+       'forward-line)))
 
 (defun dp-fix-comment-and-move-down ()
   (interactive)
@@ -2636,7 +2662,7 @@ E.g.
     (insert "/* Trying replacement code */")
     (dp-open-newline)))
 
-(dp-defaliases 'if1 'io1 'ioin 'ionew 'dp-ifdef-new)
+(dp-defaliases 'if1 'io1 'ioifn 'ionew 'ioifnew 'dp-ifdef-new)
 
 (defun* dp-ifdef-region-because (excuse &optional (not ""))
   (interactive "sExcuse text: ")
@@ -2700,6 +2726,11 @@ E.g.
   (interactive)
   (dp-ifdef-region-because "is this needed?"))
 (dp-defaliases 'ioneeded 'dp-io-needed)
+
+(defun dp-io-nuking ()
+  (interactive)
+  (dp-ifdef-region-because "Nuking. Remove ASAP?"))
+(dp-defaliases 'nuking 'ionuking 'removing 'dp-io-nuking)
 
 (defun dp-io-xxx ()
   (interactive)
@@ -4579,9 +4610,10 @@ ARGS are passed thru to `dp-timestamp-string'."
 (defun dp-insert-for-comment-at-this-time ()
   (interactive)
   "Add something along the lines of 'at this time: <timestamp>"
-  (dp-insert-for-comment+ (concat "at this time: " (dp-timestamp-string))
-                          "" ""))
-(dp-defaliases 'dp-at-this-time 'dp-att 'att 'dp-insert-for-comment-at-this-time)
+  (dp-insert-for-comment+ (concat "at this time: " (dp-timestamp-string))))
+
+(dp-defaliases 'dp-at-this-time 'dp-att 'att
+               'dp-insert-for-comment-at-this-time)
 
 (defvar dp-timestamp-len
   (length (dp-timestamp-string)))
@@ -10715,12 +10747,12 @@ If wide enough: | | |, otherwise: |-|"
   (if horizontal-p
       (split-window-vertically)
     (split-window-horizontally)))
-(defalias 'dp-2-vertical-windows 'dp-2-v-or-h-windows)
-(defalias '2w 'dp-2-v-or-h-windows)
+(dp-defaliases '2w 'dp-2-vertical-windows 'dp-2-v-or-h-windows)
 
 (defun dp-2-horizontal-windows (&optional width)
   (interactive)
   (dp-2-v-or-h-windows 'horizontal-p width))
+
 (defalias '2h 'dp-2-horizontal-windows)
 
 (defun dp-2x2-windows ()
@@ -10737,7 +10769,7 @@ If wide enough: | | |, otherwise: |-|"
                        (other-window 2))
                      nil))
 
-(dp-defaliases '2x2 '2+2 '2|2 '2/2 '-- '-|- '4w 'dp-2x2-windows)
+(dp-defaliases '2:2 '2x2 '2+2 '2|2 '2/2 '-- '-|- '4w 'dp-2x2-windows)
 
 (defun dp-1+2-wins ()
   "Set up a 1+2 window arrangement: | |-|"
@@ -10750,7 +10782,7 @@ If wide enough: | | |, otherwise: |-|"
                        (other-window -1))
                      nil))
                      
-(dp-defaliases '1,2 '1x2 '1+2 '1|2 'dp-1x2 'dp-1+2-wins)
+(dp-defaliases '1:2 '1,2 '1x2 '1+2 '1|2 'dp-1x2 'dp-1+2-wins)
 
 (defun dp-2+1-wins ()
   "Set up a 1+2 window arrangement: |-| |"
@@ -10758,7 +10790,7 @@ If wide enough: | | |, otherwise: |-|"
   (dp-layout-windows '(split-window-horizontally
                        split-window-vertically)))
                      
-(dp-defaliases '2,1 '2|1 'dp-2+1 '2x1 '2+1 '>| 'dp-2+1-wins)
+(dp-defaliases '2:1 '2,1 '2|1 'dp-2+1 '2x1 '2+1 '>| 'dp-2+1-wins)
 
 (defun dp-2-over-1-wins ()
   "|-|
@@ -10786,7 +10818,7 @@ If wide enough: | | |, otherwise: |-|"
   (interactive)
   (dp-layout-windows '(split-window-horizontally)))
 
-(dp-defaliases '1|1 '1+1 '1x1 'dp-1-beside-1-wins)
+(dp-defaliases '1:1 '1|1 '1+1 '1x1 'dp-1-beside-1-wins)
 
 (defun dp-2-shells ()
   "Open two new shell buffers. NB: flaky."
@@ -13299,6 +13331,8 @@ width is 8, then the number of chars to get to column 8 is 1 (the TAB)."
       (- (point) (line-beginning-position)))))
 
 (defun dp-non-empty-string (str)
+  "Returns non-nil (str) if str is a str that is not \"\".
+This is different than a nil \"string\"."
   (and str (stringp str)
        (not (string= "" str))
        str))
@@ -14881,13 +14915,46 @@ See `dp-shell-*TAGS-changers' rant. "
   (interactive "_p")
   (if (not dp-cleanup-whitespace-p)
       (call-interactively 'next-line)
-    (loop repeat count do
-      (if (or (eq dp-cleanup-whitespace-p t)
-              (eolp))
-          (dp-func-and-move-down 'dp-cleanup-line
-                                 t
-                                 'next-line)
-        (call-interactively 'next-line)))))
+    (let ((gating-pred 'dp-true))
+      (when (< count 0)
+        (setq count (- count)
+              gating-pred 'eolp))
+      (loop repeat count do
+        (if (or (and (not buffer-read-only)
+                     (eq dp-cleanup-whitespace-p t)
+                     (funcall gating-pred)))
+            (dp-func-and-move-down 'dp-cleanup-line
+                                   t
+                                   'next-line)
+          (next-line count))))))
+
+(defun dp-fast-replace-regexp-region (regexp replacement &optional beg end)
+  "Do a fast regexp replace as recommended in the doc for `replace-regexp."
+  ;;(interactive "sRegexp: \nsReplacement: ")
+  (interactive (query-replace-read-args "Replace regexp" t))
+  (let ((be (dp-region-or... beg end)))
+    (save-excursion
+      (goto-char (car be))
+      (while (re-search-forward regexp (cdr be) t)
+        (replace-match replacement)))))
+
+(defun dp-dediff-region ()
+  "Remove the diff markup from a chunk of code."
+  (interactive)
+  (let ((region (dp-region-or...as-list)))
+    (save-excursion)
+    (apply 'dp-fast-replace-regexp-region "^\\(\\s-*\\)[+-]" "" region)
+    (apply 'c-indent-region region)))
+
+(defun gith (topic &optional other-window-p)
+  (interactive "sgit help on: \nP")
+  (let ((git-man-page (concat "git-" topic)))
+    (funcall (if other-window-p '2man 'manual-entry)
+             git-man-page)))
+
+(defun gith2 (topic &optional other-window-p)
+  (interactive "sgit help on: \nP")
+  (gith topic (not other-window-p)))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;; @todo Write a loop which advises functions with simple push go back

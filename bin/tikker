@@ -2,7 +2,7 @@
 
 import os, sys, string
 
-import dp_utils
+import ticker_lib
 
 # Regular variable names are strings. So we'll use a non-string for some
 # special, internal codes. This `var' holds the constructor of the chosen
@@ -69,12 +69,12 @@ def eval_twiddle(twiddle_chars):
     return twiddle_chars
 
 def handle_twiddle(v, *args, **kw_args):
-    return ({CTOR: dp_utils.Twiddle_ticker_t},
+    return ({CTOR: ticker_lib.Twiddle_ticker_t},
             {"twiddle_chars": eval_twiddle(v)})
 
 def handle_c(char, *args, **kw_args):
     #print "char:", char
-    return ({CTOR: dp_utils.Char_ticker_t}, {"tick_char": char})
+    return ({CTOR: ticker_lib.Char_ticker_t}, {"tick_char": char})
 
 def handle_dots(v, *args, **kw_args):
     return handle_c(".")
@@ -156,20 +156,20 @@ if __name__ == "__main__":
     # init_count=0, tick_char
     options = 'i:I:s:C:z:c:t:TdD:kphgaK:.'
     ctor_keywords = {}
-    var_dict = {CTOR: dp_utils.Ticker_t,
+    var_dict = {CTOR: ticker_lib.Ticker_t,
                 "tick_interval": def_tick_interval,
                 "char_wise_p": False,}
 
     options, args = getopt.getopt(sys.argv[1:], options)
     for o, v in options:
         if o == '-i':
-            var_dict["tick_interval"] = dp_utils.sizeWithUnits(v)
+            var_dict["tick_interval"] = ticker_lib.sizeWithUnits(v)
             continue
         if o == '-h':
             usage()
             sys.exit(0)
         if o == '-T':
-            dp_utils.Twiddle_twiddles()
+            ticker_lib.Twiddle_twiddles()
             sys.exit(0)
         # tee(1) compatibility.
         if o == '-a':

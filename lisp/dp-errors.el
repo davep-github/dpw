@@ -80,6 +80,7 @@
     "^kb-warning"
     "^You've already clocked in"
     "^Place cursor inside tag to be searched for"
+    ".* does not belong to a gnuserv client$"
     
     ;;XEmacs
     "^No preceding item in "
