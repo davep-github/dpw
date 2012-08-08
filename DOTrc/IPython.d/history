@@ -495,3 +495,50 @@ ed -x xml_proc.py
 run ./xml_proc.py -B'/msg-specificA/app-info;ver=2728798273' -B'/msg-specific/app-info;second-app-info=True'  -DDpP
 run ./xml_proc.py -B'/msg-specific/app-info;ver=2728798273' -B'/msg-specific/app-info;second-app-info=True'  -DDpP
 y
+help edit
+help ed
+%ed help
+%edit help
+%edit ?
+ed -x ~/bin/week_of_year
+run ~/bin/week_of_year
+ed -x ~/bin/week_of_year
+run ~/bin/week_of_year
+run ~/bin/week_of_year -d 1
+run ~/bin/week_of_year -vv -d 1
+run ~/bin/week_of_year -vv
+ed -x ~/bin/week_of_year
+run ~/bin/week_of_year -vv
+run ~/bin/week_of_year -vv -d-1
+ed -x ~/bin/week_of_year
+run ~/bin/week_of_year -vv -d-1
+run ~/bin/week_of_year -vv -d 1
+ed -x ~/bin/week_of_year
+run ~/bin/week_of_year -vv -d 1
+run ~/bin/week_of_year -vv -d -11
+ed -x ~/bin/week_of_year
+run ~/bin/week_of_year -vv -d -11
+ed -x ~/bin/week_of_year
+run ~/bin/week_of_year -vv -d -11
+ed -x ~/bin/week_of_year
+run ~/bin/week_of_year -vv -d -11
+ed -x ~/bin/week_of_year
+run ~/bin/week_of_year -vv -d -11
+ed -x ~/bin/week_of_year
+run ~/bin/week_of_year -vv -d -11
+ed -x ~/bin/week_of_year
+run ~/bin/week_of_year -vv -d -11
+ed -x ~/bin/week_of_year
+run ~/bin/week_of_year -vv -d -11
+ed -x ~/bin/week_of_year
+run ~/bin/week_of_year -vv -d -11
+ed -x ~/bin/week_of_year
+run ~/bin/week_of_year -vv -d -11
+ed -x ~/bin/week_of_year
+run ~/bin/week_of_year -vv -d -11
+ed -x ~/bin/week_of_year
+run ~/bin/week_of_year -vv -d -11
+run ~/bin/week_of_year -vv -d -1
+run ~/bin/week_of_year -vv -d -8
+run ~/bin/week_of_year -vv -d -7
+run ~/bin/week_of_year -vv -y -7
