@@ -148,10 +148,13 @@
       ;; But we shouldn't do a tag op until the whole process is finished.
       (setq index-root (expand-file-name index-root))
       (dp-refresh-tags)
-      (setq cmd (concat "cd " index-root " && index-code -I client pyagents"
-                        (if sync-p "" "&")))
-      (message "running: %s" cmd)
-      (shell-command cmd))))
+      (loop for subsys-root in '("client" "pyagents") do
+        (progn
+          (setq cmd (concat "cd " index-root "/" subsys-root
+                            " && index-code" 
+                            (if sync-p "" "&")))
+          (message "running: %s" cmd)
+          (shell-command cmd))))))
 
 (dp-safe-alias 'ic 'dp-index-code)
 

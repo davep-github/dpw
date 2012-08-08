@@ -1479,7 +1479,21 @@ Default is to switch to a buffer as chosen by `switch-to-buffer'.")
       (call-interactively 'gnuserv-edit)
       (message "Editing complete."))))
 
-(setq gnuserv-find-file-function 'dp-find-file)
+(defun dp-gnuserv-find-file-function (path)
+  "Called when gnuserv edits a file.
+This could be done with advice, but advice should be avoided if another
+solution exists. In this case, the `gnuserv-find-file-function' variable."
+  (interactive "fFile: ")
+  ;; gnuserv unconditionally goes to the line in the message.
+  ;; Makes sense, except when the file is already being edited.
+  ;; So, if the file is already in a buffer, then we push a go-back
+  (let ((visited-p (get-file-buffer path)))
+    (dp-find-file path)
+    (when visited-p
+      (dp-push-go-back "gnuserv visiting an already visited file"))))
+
+(setq gnuserv-find-file-function 'dp-gnuserv-find-file-function)
+
 (add-hook 'gnuserv-visit-hook 'dp-gnuserv-visit-hook)
 
 (defun dp-gnuserv-visit-hook ()

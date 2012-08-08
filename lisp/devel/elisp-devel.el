@@ -1679,20 +1679,20 @@ Wednesday July 18 2012
 Thursday July 19 2012
 --
 
-(defun dp-gnuserv-find-file-function (path)
-  "Called when gnuserv edits a file.
-This could be done with advice, but advice should be avoided if another
-solution exists. In this case, the `gnuserv-find-file-function' variable."
-  (interactive "fFile: ")
-  ;; gnuserv unconditionally goes to the line in the message.
-  ;; Makes sense, except when the file is already being edited.
-  ;; So, if the file is already in a buffer, then we push a go-back
-  (let ((visited-p (get-file-buffer path)))
-    (dp-find-file path)
-    (when visited-p
-      (dp-push-go-back "gnuserv visiting an already visited file"))))
+;;installed; (defun dp-gnuserv-find-file-function (path)
+;;installed;   "Called when gnuserv edits a file.
+;;installed; This could be done with advice, but advice should be avoided if another
+;;installed; solution exists. In this case, the `gnuserv-find-file-function' variable."
+;;installed;   (interactive "fFile: ")
+;;installed;   ;; gnuserv unconditionally goes to the line in the message.
+;;installed;   ;; Makes sense, except when the file is already being edited.
+;;installed;   ;; So, if the file is already in a buffer, then we push a go-back
+;;installed;   (let ((visited-p (get-file-buffer path)))
+;;installed;     (dp-find-file path)
+;;installed;     (when visited-p
+;;installed;       (dp-push-go-back "gnuserv visiting an already visited file"))))
 
-(setq gnuserv-find-file-function 'dp-gnuserv-find-file-function)
+;;installed; (setq gnuserv-find-file-function 'dp-gnuserv-find-file-function)
 
 
 ========================
@@ -1808,4 +1808,9 @@ Friday July 27 2012
 (cl-pe '(decf num))
 
 (setq num (1- num))nil
+
+
+========================
+Wednesday August 08 2012
+--
 

@@ -5128,7 +5128,7 @@ Set by motion commands from which one may wish to return from whence they came."
           "\\(\\*\\("
           (regexp-opt '("scratch" "shell" "Python" "Hyper Apropos" "cscope"))
           ".*\\)\\*\\)")
-  "*Do push go-backs into these buffers.")
+  "*Do not push go-backs into these buffers.")
 
 (defvar dp-go-back-min-distance 120
   "*Minimum distance to push a go back position.")
@@ -6177,6 +6177,14 @@ new one."
  * @brief " (P "brief desc: " desc nil) > "
  */" > % >)
   "Elements of a C/C++ class comment template")
+
+(defvar doxy-c-file-comment-elements '("
+ /*********************************************************************/" > "
+ /*!" > "
+ * @file " p > "
+ * @brief " (P "brief desc: " desc nil) > "
+ */" > % >)
+  "Elements of a C/C++ file comment template")
           
 (tempo-define-template "doxy-c-class-member-comment"
 		        doxy-c-class-member-comment-elements)
@@ -6184,6 +6192,8 @@ new one."
 		        doxy-c-function-comment-elements)
 (tempo-define-template "doxy-c-class-comment"
 		        doxy-c-class-comment-elements)
+(tempo-define-template "doxy-c-file-comment"
+		        doxy-c-file-comment-elements)
 
 (defun dp-insert-tempo-template-comment (template-func &optional 
                                          no-indent no-bol indent-to
@@ -6244,6 +6254,13 @@ do not indent the newly inserted comment block."
       (insert class-name)
       (tempo-forward-mark))))
 
+(defun dp-c-tempo-insert-file-comment (&optional no-indent)
+  "Add a tempo file comment."
+  (interactive "*")
+  (dp-insert-tempo-template-comment 
+   'tempo-template-doxy-c-file-comment no-indent))
+(dp-defaliases 'cifc 'ifc 'tifc 'dp-c-tempo-insert-file-comment)
+
 (defun dp-c-insert-tempo-comment (&optional no-indent-p)
   "Insert a C/C++ mode tempo comment in a syntax sensitive manner."
   (interactive "*P")
@@ -6259,14 +6276,14 @@ do not indent the newly inserted comment block."
 (dp-deflocal dp-insert-tempo-comment-func nil
   "Function to call when adding a tempo template based comment.")
 
-(defun dp-insert-tempo-comment (&optional no-indent)
+(defun dp-insert-tempo-comment (&optional no-indent-p)
   "Add a tempo comment.
 Insert a context sensitive comment using a tempo template.
 This is vectored via the buffer local variable `dp-insert-tempo-comment-func' 
 so each mode can have its own logic."
   (interactive "*P")
   (when dp-insert-tempo-comment-func
-    (funcall dp-insert-tempo-comment-func no-indent)))
+    (funcall dp-insert-tempo-comment-func no-indent-p)))
 (defalias 'tc 'dp-insert-tempo-comment)
 
 (defun pyman ()
@@ -14914,7 +14931,9 @@ See `dp-shell-*TAGS-changers' rant. "
   "Add trailing white space removal functionality."
   (interactive "_p")
   (if (not dp-cleanup-whitespace-p)
-      (call-interactively 'next-line)
+      (progn
+        (call-interactively 'next-line)
+        (setq this-command 'next-line))
     (let ((gating-pred 'dp-true))
       (when (< count 0)
         (setq count (- count)
