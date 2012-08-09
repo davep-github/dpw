@@ -561,14 +561,24 @@ Tried in order given and first match wins."
             (if (not expansion)
                 (setq dp-expand-abbrev-state nil)
               (backward-delete-char (length abbrev-name))
-              ;;(insert (format "from table>%s<\n" table))
-              ;; format %s will stringify anything. exp can be a symbol.
+              ;;(insert (format "from table>%s<\n" table)) format %s will
+              ;; stringify anything. exp can be a symbol.  BUG. expansions
+              ;; with spaces need to be quoted because the read only returns
+              ;; the first word.  However, if they come from the default
+              ;; table (table is nil) then the (read expansion0) isn't done
+              ;; and the encompassing escaped quotes remain. I can't remember
+              ;; why I only do the read if the expansion comes from a
+              ;; non-default (nil) table.  I say symbol in the comment and
+              ;; there is a abbrev-symbol function which I may have used at
+              ;; one time.  The bottom line is that the way it works now, if
+              ;; the expansion comes from the default map then the outer
+              ;; quotes remain, otherwise things are copacetic.
               (setq exp (format "%s%s" exp (dp-abbrev-suffix)))
               (insert exp)
-              (setq dp-expand-abbrev-state 
+              (setq dp-expand-abbrev-state
                     (and is-list-p
                          (setq expansion (cons abbrev-name expansion))
-                         (make-dp-expand-abbrev-state 
+                         (make-dp-expand-abbrev-state
                           :expansions expansion
                           :current (cdr expansion)
                           :expansion-len (length exp))))
