@@ -1,0 +1,17 @@
+#!/bin/sh
+# I'm sure this exists somehow, somewhere.
+
+source script-x
+set -u
+
+: ${base_rev=HEAD}
+export base_rev
+
+nth=${1-}
+shift
+
+for file in "$@"
+do
+  rev=$(git-nth-rev "$nth" "$file")
+  git diff "$rev" "$file"
+done

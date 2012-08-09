@@ -23,14 +23,14 @@ def handle_csh(name, val, **kw_args):
     print 'setenv %s "%s";' % (name, val)
 
 def emacs_pre():
-    print '(setq dp-go-abbrev-table (make-abbrev-table))'
+    print '(setq ' + emacs_abbrev_table_name + ' (make-abbrev-table))'
 
 #####################################################################
 def handle_emacs(name, val, **kw_args):
     """Emacs won't look past non-alpha numeric when expanding aliases,
     so we nuke those chars here."""
     name = re.sub('[^a-zA-Z0-9]', '', name)
-    print '(define-abbrev %s "%s" "%s" nil 1)' % \
+    print '(define-abbrev %s "%s" "\\"%s\\"" nil 1)' % \
           (emacs_abbrev_table_name, name, val)
 
 #####################################################################

@@ -1233,8 +1233,11 @@ find Bubba -type f -print0 | xargs -r0 fgrep
 from table>[v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]<
 find . -type f -print0 | xargs -r0 fgrep
 
-find . -type f -print0 | xargs -r0 fgrep
+;; a good one>>
+(define-abbrev dp-go-abbrev-table "faff" "\"find . -type f -print0 | xargs -r0 fgrep\"" nil 1)
 
+find . -type f -print0 | xargs -r0 fgrep
+faff
 dp-manual-abbrev-table
 [v srcs 0 inv dpdx faf fname land hud sf med ntms hier npc bg pita os fd envvar mem fafe faff libs FHR IMHO metadata faffMan dq ws ccs PPT yopp hp xmission mks arg bup seqs sand te dap 0 con 0 FCFS LARTC dep STFU ascii IMO phr exe devel vp BCBS WH vvs md acet]
 
@@ -1814,3 +1817,17 @@ Friday July 27 2012
 Wednesday August 08 2012
 --
 
+
+========================
+Thursday August 09 2012
+--
+;; a good one>>
+(define-abbrev dp-go-abbrev-table "faff" "\"find . -type f -print0 | xargs -r0 fgrep\"" nil 1)
+faff
+
+(define-abbrev dp-go-abbrev-table "faff" "\"find . -type f -print0 | xargs -r0 fgrep\"" nil 1)
+
+find . -type f -print0 | xargs -r0 fgrep
+faff
+
+faff

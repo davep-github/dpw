@@ -193,7 +193,7 @@ Make it buffer local since there can be >1 minibuffers.")
     (when (memq this-command '(eval-expression edebug-eval-expression))
       (define-key map [tab] 'lisp-complete-symbol))
     (define-key map [(meta ?o)] 'dp-kill-ring-save)
-    (dp-minibuffer-abbrevs-post-hook)
+;;remove if unneeded.;     (dp-minibuffer-abbrevs-post-hook)
     
     ;; M-e `find-file' M-w `save-buffer' don't make sense in a minibuffer so we
     ;; use them to grab a path name from the current *sh* window.  We put the

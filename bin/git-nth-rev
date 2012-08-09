@@ -1,0 +1,28 @@
+#!/bin/sh
+
+source script-x
+set -u
+argc=$#
+
+: ${max_count:=1}
+: ${base_rev:=HEAD}
+
+nth="$1"
+shift; ((--argc))
+file="$1"
+shift; ((--argc))
+
+if ((argc > 0))
+then
+    case "$1" in
+        -|=|.) ;;
+        *) base_rev="${1}";
+    esac
+    shift; ((--argc))
+    if ((argc > 0))
+    then
+        max_count="${1}"
+    fi
+fi
+
+git rev-list --max-count=${max_count} --skip="$nth" "$base_rev" "$file"
