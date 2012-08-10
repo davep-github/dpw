@@ -12045,11 +12045,12 @@ s/-/ /g")
   (format dp-py-class-or-def-regexp-format-str 
           (concat "\\(" dp-py-block-keywords "\\)")))
 
-(defun* dp-py-code-text-ends-with-special-char-p (&key except special-chars new-pos)
-  "Are we on a \"special\" character? E.g. one which should not be followed by a comma.
+(defun* dp-py-code-text-ends-with-special-char-p (&key except special-chars
+                                                  new-pos)
+  "Are we on a special character? E.g. one which cannot precede [,:], etc.
 The characters are classified as good or bad by `looking-at' and so EXCEPT
 must be compatible with that function.
-Chars in EXCEPT are always OK. 
+Chars in EXCEPT are *always* OK. 
 There is a standard `looking-at' type string which is filled with all kinds
 of naughty characters `dp-py-special-chars'.  This can be overridden by
 passing SPECIAL-CHARS."
@@ -12187,7 +12188,7 @@ passing SPECIAL-CHARS."
         (if (and something-special-p
                  (not (dp-py-code-text-ends-with-special-char-p
                        :new-pos colon-pos
-                       :except ")"))                 
+                       :except "[])]"))                 
 ;;                  (or (not parameters)
 ;;                      block-kw-p)
                  )

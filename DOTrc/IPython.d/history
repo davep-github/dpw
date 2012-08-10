@@ -456,8 +456,6 @@ s.join(l)
 l = ["/1", "2", "3"]
 s.join(l)
 run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -DDpP
-#run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -DDpP
-#run ./xml_proc.py -a'msg-specific/app-info;ver=2728798273' -DDpP
 run ./xml_proc.py -a'msg-specific/app-info;ver=2728798273' -DDpP
 run ./xml_proc.py -a'msg-specific/app-info;ver=2728798273' -a'msg-specific/app-info;app-name=zuzz' -DDpP
 run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -a'/msg-specific/app-info;app-name=zuzz' -DDpP
@@ -483,7 +481,6 @@ ed -x xml_proc.py
 run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -j'/msg-specific/bubba=blah' -DDpP
 ed -x xml_proc.py
 run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -j'/msg-specific/bubba=blah' -DDpP
-#run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -j'/msg-specific/bubba=blah' -DDpP
 run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -j'/msg-specific/bubba=blah' -j'/msg-specific/app-info/yadda=dadda' -DDpP
 ed -x xml_proc.py
 run ./xml_proc.py -a'/msg-specific/app-info;ver=2728798273' -a'/msg-specific/app-info;second-app-info=True'  -DDpP
@@ -556,3 +553,115 @@ p " ".join([str(x) for x in ev])
 ed -x xml_proc.py
 run -d ./xml_proc.py -D -i 'msg-specific/app-info/app-info-name' ../client/,,exp/m8.xml
 run -d ./xml_proc.py -D -f 'msg-specific/app-info/app-info-name' ../client/,,exp/m8.xml
+run -d ./xml_proc.py -w ../client/,,exp/m8.xml
+run -d ./xml_proc.py -d ../client/,,exp/m8.xml
+run ./xml_proc.py -d ../client/,,exp/m8.xml
+run -d ./xml_proc.py -d ../client/,,exp/m8.xml
+run ./xml_proc.py -d ../client/,,exp/m8.xml
+run -d ./xml_proc.py ../client/,,exp/m8.xml
+run ./xml_proc.py -d ../client/,,exp/m8.xml
+run -d ./xml_proc.py ../client/,,exp/m8.xml
+run  ./xml_proc.py -w ../client/,,exp/m8.xml
+ed -x xml-exp.py
+root
+ed xml-exp.py
+root
+dump(root)
+ed xml-exp.py
+ET
+ET.__class__
+print ';'.join(__IP.Completer.all_completions('ET.'))
+ET.__repr__()
+type(ET)
+from ET import dump
+ed xml-exp.py
+ET
+ET.dump
+ET.dump?
+from ET import dump
+print ';'.join(__IP.Completer.all_completions('xml.etree.Ele'))
+print ';'.join(__IP.Completer.all_completions('xml.etree.ElementTr'))
+print ';'.join(__IP.Completer.all_completions('xml.etree.ElementTre'))
+from xml.etree.ElementTree import dump
+dump
+ET
+ET.dump
+dump
+ET.dump == dump
+import xml.etree.ElementTree as ET
+ed xml-exp.py
+type (head)
+type (root)
+root
+head
+print ';'.join(__IP.Completer.all_completions('ET.El'))
+print ';'.join(__IP.Completer.all_completions('ET.Ele'))
+print ';'.join(__IP.Completer.all_completions('ET.Elen'))
+print ';'.join(__IP.Completer.all_completions('ET.Elem'))
+print ';'.join(__IP.Completer.all_completions('ET.Eleme'))
+ET.Element?
+ET.SubElement?
+ET.SubElement??
+ET.Element??
+e = ET.Element('bubba')
+print ';'.join(__IP.Completer.all_completions('e.'))
+e._childred
+e._children
+se = ET.SubElement(e, 'bubbsdottir')
+e._children
+se._children
+print ';'.join(__IP.Completer.all_completions('e.'))
+e.getchildren()
+zzzz
+sys.stdout
+print ';'.join(__IP.Completer.all_completions('sys.stdout.'))
+print ';'.join(__IP.Completer.all_completions('sys.stdout.write'))
+print ';'.join(__IP.Completer.all_completions('sys.stdout.writel'))
+sys.stdout.writelines?
+print ';'.join(__IP.Completer.all_completions('sys.stdout.'))
+sys.stdout.newlines?
+sys.stdout.newlines??
+sys.stdout.newlines
+type sys.stdout.newlines
+run -d ./xml_proc.py -w ../client/,,exp/m8.xml
+p self
+p self
+p child
+n
+n
+run ./xml_proc.py -w ../client/,,exp/m8.xml
+run -d ./xml_proc.py -w ../client/,,exp/m8.xml
+break /home/dapanarx/work/ftci/poc/pyagents/xml_proc.py:108
+p os
+p tag
+p os
+p s
+b 181
+run
+run -d ./xml_proc.py -w ../client/,,exp/m8.xml
+break /home/dapanarx/work/ftci/poc/pyagents/ftca_base_types.py:192
+p n
+p self.d_prefix
+p n
+run -d ./xml_proc.py -w ../client/,,exp/m8.xml
+break /home/dapanarx/work/ftci/poc/pyagents/ftca_base_types.py:192
+p n
+p s
+run -d ./xml_proc.py -w ../client/,,exp/m8.xml
+break /home/dapanarx/work/ftci/poc/pyagents/xml_proc.py:119
+run -d ./xml_proc.py -w ../client/,,exp/m8.xml
+break /home/dapanarx/work/ftci/poc/pyagents/xml_proc.py:745
+p level
+p fmt
+run ./xml_proc.py -w ../client/,,exp/m8.xml
+run ./xml_proc.py -w ../client/,,exp/m5.xml
+run ./xml_proc.py -x ../client/,,exp/m5.xml
+run -d ./xml_proc.py -x ../client/,,exp/m5.xml
+run ./xml_proc.py -x ../client/,,exp/m5.xml
+run ./xml_proc.py -x ../client/@@exp/m5.xml
+run ./xml_proc.py -x ../client/,,exp/m5.xml
+run ./xml_proc.py -x ../client/@@exp/m5.xml
+n
+run ./xml_proc.py -x ../client/@@exp/m5.xml
+n
+run ./xml_proc.py -x ../client/@@exp/m5.xml

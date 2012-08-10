@@ -1,8 +1,41 @@
 #!/bin/sh
+source script-x
+set -u
 
-for b in "$@"; do
-    if z=$(sp -1 "$b"); then
-        echo "$z"
+Usage()
+{
+    echo "Not enough args.
+Usage: [-a] some-program...
+Find first program in the list that is in first in your path.
+-a says to return the name as it appears in the arg list."
+}
+
+UsageErr()
+{
+    Usage 1>&2
+}
+
+(( "$#" < 1 )) && {
+    UsageErr
+    exit 1
+}
+
+emit_arg=
+[ "$1" == "-a" ] && {
+    emit_arg=t
+    shift
+}
+
+for b in "$@"
+do
+    if z=$(sp -1 "$b")
+    then
+        if [ -z "$emit_arg" ]
+        then
+            echo "$z"
+        else
+            echo "$b"
+        fi
         exit 0
     fi
 done
