@@ -12,6 +12,13 @@ import time, datetime
 #
 # dtd = datetime.date(2010, 8, 8)
 
+# e.g. datetime(2002, 12, 25, tzinfo=TZ()).isoformat(' ')
+class TZ(datetime.tzinfo):
+    def __init__(self, tz_seconds=time.timezone):
+        self.tz_seconds = tz_seconds
+    def utcoffset(self, dt):
+        return datetime.timedelta(seconds=self.tz_seconds)
+
 def eval_date_component(parameter_value, parameter_string, parameter_name):
     pval0 = parameter_value
     isa_delta_p = parameter_string[0] in ('+', '-')
@@ -55,8 +62,11 @@ def main(argv):
         if verbosity > 1:
             suffix += ", today: %s" % (today_ymd,)
 
-    datetime_date = datetime.date(*ymd)
-    week_of_year = datetime_date.isocalendar()[1]
+    datetime_date = datetime.datetime(*ymd, tzinfo=TZ())
+    iso_cal = datetime_date.isocalendar()
+    if verbosity:
+        print "iso_cal:", iso_cal
+    week_of_year = iso_cal[1]
     if suffix != "":
         suffix = " " + suffix
 

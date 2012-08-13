@@ -30,7 +30,9 @@ def handle_emacs(name, val, **kw_args):
     """Emacs won't look past non-alpha numeric when expanding aliases,
     so we nuke those chars here."""
     name = re.sub('[^a-zA-Z0-9]', '', name)
-    print '(define-abbrev %s "%s" "\\"%s\\"" nil 1)' % \
+#    print '(define-abbrev %s "%s" "\\"%s\\"" nil 1)' % \
+#          (emacs_abbrev_table_name, name, val)
+    print '(define-abbrev %s "%s" "%s" nil 1)' % \
           (emacs_abbrev_table_name, name, val)
 
 #####################################################################

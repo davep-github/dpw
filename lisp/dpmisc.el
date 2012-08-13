@@ -14976,6 +14976,15 @@ See `dp-shell-*TAGS-changers' rant. "
   (interactive "sgit help on: \nP")
   (gith topic (not other-window-p)))
 
+
+(defun dp-duplicate-window-horizontally ()
+  "Display the current buffer in 2 horizontal (side-by-side) windows.
+anything --> |b|b|"
+  (interactive)
+  (delete-other-windows)
+  (split-window-horizontally))
+(dp-defaliases  '|| '2b '2: '2| 'dp-duplicate-window-horizontally)
+
 ;;;;; <:functions: add-new-ones-above:>
 ;;; @todo Write a loop which advises functions with simple push go back
 ;;; commands.

@@ -665,3 +665,96 @@ n
 run ./xml_proc.py -x ../client/@@exp/m5.xml
 n
 run ./xml_proc.py -x ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -x ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -c'/msg-specific/app-info;ver=2728798273' -a'/msg-specific/app-info;second-app-info=True'
+run ./xml_proc.py -k'/msg-specific/app-info;ver=2728798273' -a'/msg-specific/app-info;second-app-info=True'
+ed -x xml_proc.py
+run ./xml_proc.py -k'/msg-specific/app-info;ver=2728798273' -a'/msg-specific/app-info;second-app-info=True'
+run -d ./xml_proc.py -k'/msg-specific/app-info;ver=2728798273' -a'/msg-specific/app-info;second-app-info=True'
+run -d ./xml_proc.py -k'/msg-specific/app-info;ver=2728798273' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -x ../client/@@exp/m5.xml
+run -d ./xml_proc.py -x ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -k'/msg-specific/app-info;ver=2728798273' ../client/@@exp/m5.xml
+run ./xml_proc.py -x ../client/@@exp/m5.xml
+run -d ./xml_proc.py -k'/msg-specific/app-info;ver=2728798273' ../client/@@exp/m5.xml
+break /home/dapanarx/work/ftci/poc/pyagents/xml_proc.py:160
+p self
+p sub_body
+p child
+run -d ./xml_proc.py -k'/msg-specific/app-info;ver=2728798273' ../client/@@exp/m5.xml
+break /home/dapanarx/work/ftci/poc/pyagents/xml_proc.py:160
+run -d ./xml_proc.py -k'/msg-specific/app-info;ver=2728798273' ../client/@@exp/m5.xml
+break /home/dapanarx/work/ftci/poc/pyagents/xml_proc.py:160
+run -d ./xml_proc.py -k'/msg-specific/app-info;ver=2728798273' ../client/@@exp/m5.xml
+run ./xml_proc.py -k'/msg-specific/app-info;ver=2728798273' ../client/@@exp/m5.xml
+run -d ./xml_proc.py -k'/msg-specific/app-info;ver=2728798273' ../client/@@exp/m5.xml
+up
+run -d ./xml_proc.py -k'/msg-specific/app-info;ver=2728798273' ../client/@@exp/m5.xml
+run ./xml_proc.py -x ../client/@@exp/m5.xml
+run -d ./xml_proc.py -x ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -k'/msg-specific/app-info;ver=2728798273' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -k'/msg-specific/app-info;ver=2728798273' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -k'/msg-specific/app-info;ver=2728798273' ../client/@@exp/m5.xml
+run -d ./xml_proc.py -x ../client/@@exp/m5.xml
+run -d ./xml_proc.py -j 'msg-header/initiator,11' ../client/,,exp/m5.xml
+run -d ./xml_proc.py -j 'msg-header/initiator=11' ../client/,,exp/m5.xml
+run -d ./xml_proc.py -j 'msg-header/initiatorXX=11' ../client/,,exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -k'/msg-specific/app-info;ver=2728798273' ../client/@@exp/m5.xml
+run -d ./xml_proc.py -k'app-info;ver=2728798273' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -k'app-info;ver=2728798273' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -k'app-info;ver=2728798273' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -k'app-info;ver=2728798273' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -k'app-info;ver=2728798273' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -k'app-info;ver=2728798273' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -k'app-info;ver=2728798273' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -k'app-info;ver=2728798273' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -k'app-info;ver=2728798273' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -k'app-info;ver=2728798273' ../client/@@exp/m5.xml
+run ./xml_proc.py -k'app-info;app-name=eko' ../client/@@exp/m5.xml
+run -d ./xml_proc.py -k'app-info;app-name=eko' ../client/@@exp/m5.xml
+run -d ./xml_proc.py -k'msg-specific/app-info;app-name=eko' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -k'msg-specific/app-info;app-name=eko' ../client/@@exp/m5.xml
+run ./xml_proc.py -k'msg-specific/app-info;app-name=eko' ../client/@@exp/m5.xml
+run ./xml_proc.py -x ../client/@@exp/m5.xml
+run ./xml_proc.py -k'msg-specific/app-info;app-name=eko' ../client/@@exp/m5.xml
+run -d ./xml_proc.py -k'msg-specific/app-info;app-name=eko' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -k'msg-specific/app-info;app-name=eko' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -k'msg-specific/app-info;app-name=eko' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -k'msg-specific/app-info;app-name=eko' ../client/@@exp/m5.xml
+run ./xml_proc.py -k'msg-specific/app-info;app-name=eko,blah=1' ../client/@@exp/m5.xml
+run ./xml_proc.py -k'msg-specific/app-info;app-name=eko,app_version=0' ../client/@@exp/m5.xml
+run ./xml_proc.py -k'msg-specific/app-info;app-name=eko,app-version=0' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -k'msg-specific/app-info;app-name=eko,app-version=0' ../client/@@exp/m5.xml
+run ./xml_proc.py -k'msg-specific/app-info;app-name=eko,app-xversion=0' ../client/@@exp/m5.xml
+run ./xml_proc.py -k'msg-specific/app-info;app-name=eko,app-version=1' ../client/@@exp/m5.xml
+run ./xml_proc.py -k'msg-specific/app-info;app-name=eko,app-version=0' ../client/@@exp/m5.xml
+run ./xml_proc.py -k'msg-specific/app-info;args-required=f' ../client/@@exp/m5.xml
+run -d ./xml_proc.py -k'msg-specific/app-info;args-required=f' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run -d ./xml_proc.py -k'msg-specific/app-info;args-required=f' ../client/@@exp/m5.xml
+ed -x xml_proc.py
+run ./xml_proc.py -k'msg-specific/app-info;args-required=f' ../client/@@exp/m5.xml
+run ./xml_proc.py -k'msg-specific/app-info;args-required=t' ../client/@@exp/m5.xml
+run ./xml_proc.py -k'msg-specific/app-info;args-required=pfffht' ../client/@@exp/m5.xml
