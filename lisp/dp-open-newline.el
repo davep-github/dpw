@@ -393,8 +393,7 @@
            
    ;;;;;;;;;;;;;;;;;
            ;; Add stream operator?
-           ((and (dp-in-c)
-                 (setq stream-op (dp-stream-op-needed-p)))
+           ((setq stream-op (dp-in-c-iostream-statement-p))
             (c-newline-and-indent)
             (insert stream-op " ")
             (c-indent-line)

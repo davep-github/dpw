@@ -1587,6 +1587,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
 ;;superceded-by-working-version;     (goto-char (point-max))))
 
 (defun dp-gdb-run-to-here ()
+  "Create a temporary gdb break point and then issue a `c' command."
   (interactive)
   (dp-gdb-issue-command (dp-mk-breakpoint-command t))
   (gdb-refresh)

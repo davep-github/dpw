@@ -698,7 +698,8 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
           (goto-char p))
       (unless missing-ok-p
         (message "cannot find: %s" (dp-c++-make-data-section-id prot-level))
-        (ding)))))
+        (ding)
+        nil))))
 
 (defun dp-buffer-empty-p()
   (= 1 (point) (point-min) (point-max)))
@@ -1730,6 +1731,7 @@ executing the cond again and again and..."
 (defvar dp-c-statement-syntaxes '(statement)
   "C syntax regions that indicate we're in a statement")
 
+;; Needed should be: in stream and ends w/o <<|>>
 (defun* dp-stream-op-needed-p (&optional (anywhere-p nil))
   "Are we in an iostream statement? If so, return which kind \(<<|>>\).
 NB! the caller expects that, if there is a match, then the matching op is in
@@ -1739,7 +1741,7 @@ Non-nil ANYWHERE-P means to return the kind if a stream op is anywhere in the
 statement so far.
 Otherwise, only return the kind if the stream op is at EOS so far and just
 terminate and eol/nl+indent."
-  (interactive)
+  (interactive "P")
   (when (and (dp-in-c)
              ;;(dp-c-in-syntactic-region '(stream-op))
              (not (dp-c-statement-terminated-p))
@@ -1758,11 +1760,11 @@ terminate and eol/nl+indent."
     (dmessage "mstrings: %s" (dp-all-match-strings-string))
     (match-string 1)))
 
-(defun dp-in-c-iostream-statement-p ()
+(defun* dp-in-c-iostream-statement-p (&optional (anywhere-p t))
   (save-excursion
     (beginning-of-line)
     ;; Sometimes, either I or cc-mode gets confuzed about iostream-ed-ness.
-    (or (dp-stream-op-needed-p)
+    (or (dp-stream-op-needed-p anywhere-p)
         (dp-c-in-syntactic-region '(stream-op)))))
 
 (defun dp-in-c-statement ()
