@@ -13,11 +13,74 @@ import time, datetime
 # dtd = datetime.date(2010, 8, 8)
 
 # e.g. datetime(2002, 12, 25, tzinfo=TZ()).isoformat(' ')
-class TZ(datetime.tzinfo):
-    def __init__(self, tz_seconds=time.timezone):
-        self.tz_seconds = tz_seconds
+##del# class TZ(datetime.tzinfo):
+##del#     def __init__(self, tz_seconds=time.timezone):
+##del#         self.tz_seconds = tz_seconds
+##del#         print "self.tz_seconds", self.tz_seconds
+##del#     def utcoffset(self, dt):
+##del#         return datetime.timedelta(seconds=self.tz_seconds)
+
+class DynamicLocalTZinfo(datetime.tzinfo):
+    """Fixed offset in minutes east from UTC."""
+
+    def __init__(self, offset=None, tzname=None, dst_name=None,
+                 dst_offset=None):
+        if offset is not None:
+            self.d_offset = datetime.timedelta(seconds = offset)
+        else:
+            self.d_offset = datetime.timedelta(seconds = -time.timezone)
+
+        if dst_offset is not None:
+            self.d_dst_offset = dst_offset
+        else:
+            if time.daylight:
+                self.d_dst_offset = datetime.timedelta(seconds = -time.altzone)
+            else:
+                self.d_dst_offset = datetime.timedelta(self.d_offset)
+        self.d_dst_diff = self.d_dst_offset - self.d_offset
+        tmp_tzname, tmp_dst_name =  time.tzname
+
+        if tzname is not None:
+            self.d_tzname = tzname
+        else:
+            self.d_tzname = tmp_tzname
+        if dst_name is not None:
+            self.d_dst_name = dst_name
+        else:
+            self.d_dst_name = tmp_dst_name
+
     def utcoffset(self, dt):
-        return datetime.timedelta(seconds=self.tz_seconds)
+        if self._isdst(dt):
+            return self.d_dst_offset
+        else:
+            return self.d_offset
+
+    def tzname(self, dt):
+        return self.d_tzname
+
+    def dst(self, dt):
+        if self.dst_p(dt):
+            return self.d_dst_diff
+        else:
+            return 0
+
+    def dst_p(self, dt):
+        tt = (dt.year, dt.month, dt.day,
+              dt.hour, dt.minute, dt.second,
+              dt.weekday(), 0, -1)
+        stamp = _time.mktime(tt)
+        tt = _time.localtime(stamp)
+        return tt.tm_isdst > 0
+
+    def __repr__(self):
+        ret = []
+        ret.append("name: %s" % (self.d_tzname,))
+        ret.append("offset: %s" % (self.d_offset,))
+        ret.append("dst name: %s" % (self.d_dst_name,))
+        ret.append("dst offset: %s" % (self.d_dst_offset,))
+        ret.append("dst diff: %s" % (self.d_dst_diff,))
+
+        return ", ".join(ret)
 
 def eval_date_component(parameter_value, parameter_string, parameter_name):
     pval0 = parameter_value
@@ -62,7 +125,8 @@ def main(argv):
         if verbosity > 1:
             suffix += ", today: %s" % (today_ymd,)
 
-    datetime_date = datetime.datetime(*ymd, tzinfo=TZ())
+    datetime_date = datetime.datetime(*ymd,
+                                      tzinfo=DynamicLocalTZinfo())
     iso_cal = datetime_date.isocalendar()
     if verbosity:
         print "iso_cal:", iso_cal

@@ -758,3 +758,70 @@ ed -x xml_proc.py
 run ./xml_proc.py -k'msg-specific/app-info;args-required=f' ../client/@@exp/m5.xml
 run ./xml_proc.py -k'msg-specific/app-info;args-required=t' ../client/@@exp/m5.xml
 run ./xml_proc.py -k'msg-specific/app-info;args-required=pfffht' ../client/@@exp/m5.xml
+print ';'.join(__IP.Completer.all_completions('exa'))
+ed -x ~/inb/tzinfo-examples.py
+print ';'.join(__IP.Completer.all_completions('FixedO'))
+q = FixedOffset(5*60, "EST")
+ed ~/inb/tzinfo-examples.py
+q = FixedOffset(5*60, "EST")
+q
+ed ~/inb/tzinfo-examples.py
+q = FixedOffset(5*60, "EST")
+p q
+str(q)
+repr(q)
+ed ~/inb/tzinfo-examples.py
+q = FixedOffset(5*60, "EST")
+p q
+ed ~/inb/tzinfo-examples.py
+q = FixedOffset(5*60, "EST")
+ed ~/inb/tzinfo-examples.py
+q = FixedOffset(5*60, "EST")
+print ';'.join(__IP.Completer.all_completions('time.'))
+ed ~/inb/tzinfo-examples.py
+q = FixedOffset(5*60, "EST")
+p q
+q = FixedOffset(5*60, "EST")
+ed ~/inb/tzinfo-examples.py
+q = FixedOffset(5*60, "EST")
+p q
+ed ~/inb/tzinfo-examples.py
+q = FixedOffset(5*60, "EST")
+p q
+q = FixedOffset()
+ed ~/inb/tzinfo-examples.py
+q = FixedOffset()
+p q
+ed ~/inb/tzinfo-examples.py
+q = FixedOffset()
+p q
+q0 = FixedOffset(5*60, "EST")
+p q0
+p q
+ed ~/inb/tzinfo-examples.py
+q = DynamicLocalTZinfo()
+ed ~/inb/tzinfo-examples.py
+q = DynamicLocalTZinfo()
+ed ~/inb/tzinfo-examples.py
+q = DynamicLocalTZinfo()
+p q
+ed ~/inb/tzinfo-examples.py
+q = DynamicLocalTZinfo()
+p q
+print ';'.join(__IP.Completer.all_completions('datet'))
+datetime.timedelta(minutes = -time.timezone)
+timedelta(minutes = -time.timezone)
+p timedelta(minutes = -time.timezone)
+ed ~/inb/tzinfo-examples.py
+q = DynamicLocalTZinfo()
+p q
+p timedelta(seconds = -time.timezone)
+print ';'.join(__IP.Completer.all_completions('time.timez'))
+p time.timezone
+p timedelta(seconds = -time.altzone)
+ed ~/bin/ww
+ed -x ~/bin/ww
+run -d  ~/bin/ww -m1 -d1 -y2012
+run -d  ~/bin/ww -m1 -d1
+run  ~/bin/ww -m1 -d1
+run -d  ~/bin/ww -m1 -d1
