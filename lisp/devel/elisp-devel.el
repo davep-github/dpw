@@ -1832,3 +1832,60 @@ faff
 
 faff
 pocc
+========================
+Friday August 17 2012
+--
+
+
+(mapconcat FUNCTION SEQUENCE SEPARATOR)
+
+(mapconcat (lambda (x)
+             (format "%s" x))
+           '(i 2 3)
+           "-")
+"i-2-3"
+
+
+
+"i-2-3"
+
+"a-b-c"
+
+
+(let* ((what '(header-doc))
+       (what-name (concat "q.v.-"
+                          (mapconcat (lambda (x)
+                                       (format "%s" x))
+                                     what
+                                     "-")))
+       ;; Do this or make an assoc?
+       (what-sym (intern-soft what-name)))
+  (princf "what-name>%s<" what-name)
+  (princf "what-sym>%s<" what-sym)
+  (when what-sym
+    (funcall what-sym)))
+what-name>q.v.-header-doc<
+what-sym>q.v.-header-doc<
+
+what-name>q.v.-header-doc<
+what-sym>q.v.-header-doc<
+
+what-name>q.v.-header-doc<
+what-sym>q.v.-header-doc<
+
+what-name>q.v.-header-doc<
+what-sym>q.v.-header-doc<
+
+what-name>q.v.-header-doc<
+what-sym>q.v.-header-doc<
+
+what-name>q.v.-a-b-c<
+what-sym>nil<
+nil
+
+what-sym>nil<
+nil
+
+
+
+

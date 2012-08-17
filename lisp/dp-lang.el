@@ -1174,7 +1174,7 @@ We say: \" p is a pointer to char\", not
   (let* ((what-name (concat "q.v.-"
                            (dp-string-join what "-" 
                                            nil nil nil
-                                           (lambda (s)
+                                           (lambda (s)  ; ensure stringiness.
                                              (format "%s" s)))))
          ;; Do this or make an assoc?
          (what-sym (intern-soft what-name)))

@@ -937,11 +937,55 @@ document base10
 Set input and output radices to decimal.
 end
 
+define b10
+ set output-radix 0x0a
+ set input-radix 0x0a
+end
+document b10
+Set input and output radices to decimal.
+end
+
+define deco
+ set output-radix 0x0a
+end
+document deco
+Set output radix to decimal.
+end
+
+define deci
+ set input-radix 0x0a
+end
+document deco
+Set input radix to decimal.
+end
+
+define hexo
+ set output-radix 0x10
+end
+document hexo
+Set output radix to hexadecimal.
+end
+
+define hexi
+ set input-radix 0x10
+end
+document hexo
+Set input radix to hexadecimal.
+end
+
 define base16
  set output-radix 0x10
  set input-radix 0x10
 end
 document base16
+Set input and output radices to hex.
+end
+
+define b16
+ set output-radix 0x10
+ set input-radix 0x10
+end
+document b16
 Set input and output radices to hex.
 end
 

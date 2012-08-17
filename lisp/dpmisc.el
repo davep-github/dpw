@@ -280,7 +280,7 @@ compound regexp to match a list of specific strings."
     (concat (if (stringp prefix-one-p) 
                 prefix-one-p
               (if prefix-one-p sep ""))
-            (mapconcat 
+            (mapconcat
              (lambda (s)
                (setq s (funcall string-pre-proc s))
                (format "%s" (if dont-number-p
@@ -488,20 +488,29 @@ LESSP defaults to less-than ('<)."
                       (concat "dp-" (or post-dp-prefix "orig-")))
                   symbol)))
 
-(defun dp-flanked-string (start end middle front back 
-                          &optional sep prefix)
-  (setq-ifnil sep " "
+(defun* dp-flanked-string (text front 
+                           &key
+                           start end
+                           back
+                           sep prefix
+                           width)
+  (setq-ifnil start (line-beginning-position)
+              end (if width
+                      (+ start width)
+                    (+ (line-beginning-position) (current-fill-column)))
+              back front
+              sep " "
               prefix "")
   (let* ((sep-len (length sep))
-         (middle (concat sep middle sep))
-         (mid-len (length middle))
+         (text (concat sep text sep))
+         (mid-len (length text))
          (width (- end start))
          (flank-space (/ (- width mid-len) 2))
          (front (concat prefix (make-string flank-space front)))
          (num-back (- width mid-len (length front)))
          )
     (concat front
-            middle
+            text
             (make-string num-back back))))
 
 (defun dp-c-beginning-of-current-token (&rest rrr)
@@ -521,7 +530,7 @@ Otherwise, nothing."
   (setq-ifnil start-col (current-column)
               end-col fill-column)
   (let* ((name (format "<:%s%sdata:>" name prot-level)))
-    (dp-flanked-string start-col end-col name ?/ ?/)))
+    (dp-flanked-string name ?/ :start start-col :end end-col)))
 
 (defvar dp-data-section-id-format 'dp-format-data-section-id)
 
@@ -648,7 +657,7 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
                                                (concat 
                                                 "\\([ \t\n\r]*\\("
                                                 (dp-regexp-concat 
-                                                 dp-c++-class-protection-names) 
+                                                 dp-c++-class-protection-names)
                                                 "\\)\\s-*:[ \t\n\r]*\\)")
                                                limit t)
                                           (goto-char (match-beginning 2))

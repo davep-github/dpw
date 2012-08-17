@@ -341,7 +341,15 @@
     (("src" "source" "sources")
      dp-manual)
     ((("dest" "dst")
-      "destination" "destinationss")
+      "destination" "destinations")
+     dp-manual)
+    ((("conf" "config" "cfg")
+      "configuration" "configurations"
+      "Configuration" "Configurations")
+     dp-manual)
+    ((("cap" "caps")
+      "capability" "capabilities"
+      "Capability" "Capabilities")
      dp-manual)
     ((("hie" "hier")
       "hierarchy")
@@ -423,7 +431,7 @@
      dp-manual)
     (("FCFS" "first come first served")
      dp-manual)
-    (("con" "concierge" "Concierge")
+    (("con" "concierge" "concierges" "Concierge" "Concierges")
      dp-manual)
     (("metadata" "meta-data" "meta data")
      dp-manual)
@@ -453,12 +461,13 @@
      dp-manual)
     (("phr" "Prop_handler_ret_t")
      dp-manual)
-    (("faffQ" "find . -type f -print0 | xargs -r0 fgrep")
-     dp-go)
-    (("faffX" "find . -type f -print0 | xargs -r0 fgrep")
+    (("faff" "find . -type f -print0 | xargs -r0 fgrep")
      dp-go)
     (("cttoi" "come to think of it")
-     dp-manual)))
+     dp-manual))
+
+;; A good place for new entries
+)
 ;; We could just use the non-void-ness of dp-common-abbrevs, but I
 ;; like suspenders with my belt.
 (put 'dp-common-abbrevs 'dp-I-am-a-dp-style-abbrev-file t)

@@ -226,7 +226,8 @@
             t) ; Nothing to do but add a new line.
 
    ;;;;;;;;;;;;;;;;;
-           ;; In a c++ class and after a protection label with or without a ":"
+           ;; In a c++ class and after a access/protection label with or
+           ;; without a ":"
            ((dp-c-looking-back-at-sans-eos-junk "}\\|^\\s-*" t)
             (dmessage "cob: looking back at } or blankness")
             t)                          ; eol/newline/indent.
