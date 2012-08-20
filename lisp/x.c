@@ -4,8 +4,8 @@
  * llkjslkjd
  */
 
-// recommend 
-
+// recommend
+// block-comment-start
 /* * this file is used for testing c-mode things.
  *
  * Fuck this.
@@ -39,12 +39,12 @@ int fuck_fuck_fuck;
 /* aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa vvvvvvvvvvvvvvvvvvvvvvvveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrrrrrrrrrrrrrrrrrrrrrrrrryyyyyyyyyyyyyyyyyyyyyy loooooooooooooooonnnnnnnnnnnnnnnnnnnngggggggggggggggggggg lllllllllllllllllllliiiiiiiiiiiiiiiiiiiiiiiiinnnnnnnnnnnnnnnnnnnnneeeeeeeeeeeeeeeeee */
 
 {	/* XXX - debug code:REMOVE 2001-09-23T13:06:42 */
-    
+
 }	/* XXX - debug code:REMOVE 2001-09-23T13:06:42 */
 
 typedef struct blah_s
 {
-    
+
 }
 blah_t;
 
@@ -59,20 +59,20 @@ typedef enum anenum_e
   { /*  @todo:debug:REMOVE 2003-08-09T03:14:55  */
     yaya();
   } /*  @todo:debug:REMOVE 2003-08-09T03:14:55  */
-  
+
 
   // a one line comment
 
   a++;				/*  */
 
   int boo;
-  
+
   /* comment */
   /* comment */
   /* comment */
   /* comment */
-             
-  
+
+
 }
 anenum_t;
 
@@ -140,10 +140,10 @@ oof(void)
 
 foofoo_t_snoo_t xxx = {
     {
-	
+
     {aaa,bbb,bbb},
     {
-    
+
     }
     }
     aaa = 1;
@@ -156,7 +156,7 @@ foofoo_t_snoo_t xxx = {
 static UdsGlobalState udsState = {
   .mutex                = MUTEX_INITIALIZER,
   .hashQueue            = NULL,
-  .indexQueue           = NULL,   // 
+  .indexQueue           = NULL,   //
   .remoteQueue          = NULL,
   .callbackQueue        = NULL,
   .indexSessions        = NULL,
@@ -166,28 +166,28 @@ static UdsGlobalState udsState = {
   .numZones             = 1,
   .dir                  = NULL,
   .runMode              = UDS_XM_CLIENT,
-  .requestRestarter     = restartRequest, 
+  .requestRestarter     = restartRequest,
 };
 
 static UdsGlobalState udsState = {
-  .mutex             = MUTEX_INITIALIZER,         //      
-  .hashQueue         = NULL,                      // 
-  .indexQueue        = NULL,                      // 
-  .remoteQueue       = NULL,                      // 
-  .callbackQueue     = NULL,                      // 
-  .indexSessions     = NULL,                      // 
-  .contexts          = NULL,                      // 
-  .currentState      = UDS_GS_UNINIT, // 
-  .numCores          = 1,       // 
-  .numZones          = 1,       // 
-  .dir               = NULL,    // 
-  .runMode           = UDS_XM_CLIENT, // 
-  .requestRestarter  = restartRequest, // 
+  .mutex             = MUTEX_INITIALIZER,         //
+  .hashQueue         = NULL,                      //
+  .indexQueue        = NULL,                      //
+  .remoteQueue       = NULL,                      //
+  .callbackQueue     = NULL,                      //
+  .indexSessions     = NULL,                      //
+  .contexts          = NULL,                      //
+  .currentState      = UDS_GS_UNINIT, //
+  .numCores          = 1,       //
+  .numZones          = 1,       //
+  .dir               = NULL,    //
+  .runMode           = UDS_XM_CLIENT, //
+  .requestRestarter  = restartRequest, //
 };
 
 
 static UdsGlobalState udsState = {
-  .mutex = MUTEX_INITIALIZER,    
+  .mutex = MUTEX_INITIALIZER,
   .hashQueue = NULL,
   .indexQueue = NULL,
   .remoteQueue = NULL,
@@ -199,7 +199,7 @@ static UdsGlobalState udsState = {
   .numZones           = 1,
   .dir                         = NULL,
   .runMode                        = UDS_XM_CLIENT,
-  .requestRestarter                   = restartRequest,     
+  .requestRestarter                   = restartRequest,
 };
 
 char* names = {
@@ -225,13 +225,13 @@ funyun123(
 {
     printf("HA!\n");
 }
-    
+
 
 /*
 ************************************************************************
 *
 * see x.h#an_underscored_func
-* 
+*
 ************************************************************************
 */
 void
@@ -242,7 +242,7 @@ an_underscored_func()
 //=====================================================================
 // NB
 // WTF??
-// !<@todo XXX 
+// !<@todo XXX
 #define a_big_one (x)				\
     {						\
     some_lines_of_code;				\
@@ -254,7 +254,7 @@ fff(
     blah_t  b)		/*!< ibid  */
 {
   FILE* blah;
-  xx* 
+  xx*
   ffff(aaa);
   { /*  @todo:debug:REMOVE 2003-08-09T03:13:05  */
                                 // yadda
@@ -267,17 +267,17 @@ dddd
 x(void)
 {}
 
-  
-  
-  
 
-                
-	 
+
+
+
+
+
 /*
 ************************************************************************
 *
 * ./x.h#main
-* 
+*
 ************************************************************************
 */
 int
@@ -285,7 +285,7 @@ main(
     int	    argc,
     char*   argv[])
 {
-    
+
     blah_t  ab, b2;
     char* s = "ooga booga";
     int	    ja;
@@ -297,7 +297,7 @@ main(
 
     /*  */
     an_underscored_func();
-    
+
     if (a) {
 	blah;
     }
@@ -311,7 +311,7 @@ main(
     }
 
     // a single liner
-    
+
     /*
      * a comment block.
      */
@@ -333,16 +333,16 @@ main(
     }	/* XXX - tmp debug code: remove me! */
 
     { /* XXX:debug:REMOVE 2001-10-18T22:56:32 */
-	
+
     } /* XXX:debug:REMOVE 2001-10-18T22:56:32 */
-    
+
     /* new style db comments... */
     {	/* XXX - debug code:REMOVE 2001-09-23T12:56:14  */
-	
+
     }	/* XXX - debug code:REMOVE 2001-09-23T12:56:14  */
 
     { /* XXX:debug:REMOVE 2001-12-01T23:54:08 */
-	
+
     } /* XXX:debug:REMOVE 2001-12-01T23:54:08 */
     {
 	/*
@@ -352,28 +352,28 @@ main(
     }
 
     if (1) {
-      
+
       if (x) {
 	/* if then else */
 	blah();
       }
-      
+
       if (x && y) {
 	print("blah x + y");
       }
-      
+
       if (blha) {
 	/* blah, it should be.. */
 	exit(100);
       }
     }
-    
+
     exit(1);
-    
+
 }
 
 
-	 
+
 #if blah
 
 #ifdef gar
@@ -410,7 +410,7 @@ main(
 #elif h
 
 #elif i
-    
+
 #endif
 #if boo
     // boo stuff

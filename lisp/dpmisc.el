@@ -2311,7 +2311,7 @@ E.g. ;; commented out by dp-comment-out-sexp;"
              (end (cdr region))
              text)
         (if (not bracket-p)
-            (comment-region beg end)
+            (comment-or-uncomment-region beg end)
           (setq text (format "%s%s"
                              comment-start
                              (if (or (not comment-end)
