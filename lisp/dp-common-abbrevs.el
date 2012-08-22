@@ -1,15 +1,30 @@
+;;; --------------- Preserve everything above this line ----------------
+;;; Anything in this file *before* the above line is preserved.
+;;; --------------------- Begin generated section ----------------------
+;;; Everything in this file from the beginning of the previous line to the
+;;; end of file will be deleted.
 ;;;
-;;; 'global abbrevs are for automatic expansion, e.g. common,
-;;; unambiguous speling erors like: teh thier.
-;;; Another possibility are unambiguous abbreviations:
-;;; eg -> e.g., and some capitalization fixes: khz -> KHz.
-;;; 'global implies `global-abbrev-table' and abbrevs in that table are
-;;; auto expanded in buffers that request it.  I currently have too many
-;;; things in there that are expanded annoyingly often, so I need to revisit
-;;; the table
+;;; File: /home/dapanarx/lisp/dp-common-abbrevs.el
+;;; Last saved: 2012-08-22T18:02:02
+;;;
+;;; `manual' abbrevs are more common than global since they are only expanded
+;;; upon request.  Automatic expansion in the wrong place is *veru* amnoying!
+;;; These used to be called `common.' Manual abbrevs can be more ambiguous
+;;; and `error prone' because they are only expanded where the human has
+;;; deemed correct. So something like `a' is acceptable as manual but insane
+;;; as automatic.
+;;;
+;;; `auto' abbrevs are put into the *macs standard `global-abbrev-table' and
+;;; so are expanded automatically.  These are called `global.' Global derives
+;;; from `global-abbrev-table' but auto is more descriptive.
+;;;
+;;; 'global abbrevs are for automatic expansion, e.g. speling erors.
+;;; 'global becomes global-abbrev-table and abbrevs in that table are
+;;; auto expanded.  I currently have too many things in there that are
+;;; expanded annoyingly often, so I need to revisit the table
 ;;; ASSIGNMENTS.
 ;;; 'manual abbrevs are expected to be expanded by hand.
-;;; @ todo... add mode to "properties" and then add to table for that mode.
+;;; @ todo... add mode to `properties' and then add to table for that mode.
 ;;; Stems of abbrev tables.  If just a symbol then construct a table name of
 ;;; @ todo... add 'tmp property to indicate table is not to be saved.
 ;;;  <sym>-abbrev-table
@@ -39,10 +54,11 @@
 ;;; !<@todo ??? Modify data structures to allow a way to add suffixes
 ;;; programmatically. Eg t for a space? 's for pluralization?
 ;;; !<@todo Automatically generate "logical" case mixtures.
-
 ;;; Convenience binding:
 ;;; C-c C-c (dp-save-and-redefine-abbrevs)
-;;; 
+;;;
+;;; This information is common between the abbrev file and dp-abbrev.el
+
 (defconst dp-common-abbrevs
   '((("teh" "the" "duh" "D'OH!")
      dp-manual global)
@@ -57,7 +73,8 @@
      dp-manual)
     (("wrt" "WRT" "with respect to")
      dp-manual)
-    (("dtrt" "DTRT" "do the right thing")
+    ((("dtrt" "DTRT")
+      "do the right thing" "DTRT" "dtrt")
      dp-manual)
     (("st" "such that ")
      dp-manual)
@@ -153,7 +170,8 @@
     (("e2ei" "RSVP-E2E-IGNORE")
      dp-manual)
     ((("LARTC" "lartc")
-      "Linux Advanced Routing & Traffic Control HOWTO")
+      "Lin
+  ux Advanced Routing & Traffic Control HOWTO")
      dp-manual)
     (("pkt" "packet")
      dp-manual)
@@ -344,12 +362,10 @@
       "destination" "destinations")
      dp-manual)
     ((("conf" "config" "cfg")
-      "configuration" "configurations"
-      "Configuration" "Configurations")
+      "configuration" "configurations" "Configuration" "Configurations")
      dp-manual)
     ((("cap" "caps")
-      "capability" "capabilities"
-      "Capability" "Capabilities")
+      "capability" "capabilities" "Capability" "Capabilities")
      dp-manual)
     ((("hie" "hier")
       "hierarchy")
@@ -439,8 +455,7 @@
      dp-manual)
     (("ccs" "const char* " "const std::string& ")
      dp-manual)
-    (("css" "const std::string& " "std::string& " "const char* "
-      "const std::string " "std::string ")
+    (("css" "const std::string& " "std::string& " "const char* " "const std::string " "std::string ")
      dp-manual)
     (("less" "std::less")
      dp-manual)
@@ -464,10 +479,9 @@
     (("faff" "find . -type f -print0 | xargs -r0 fgrep")
      dp-go)
     (("cttoi" "come to think of it")
-     dp-manual))
-
-;; A good place for new entries
-)
+     dp-manual)
+    ((("ftci" "FTCI" "ftca" "FTCA")))
+    ))
 ;; We could just use the non-void-ness of dp-common-abbrevs, but I
 ;; like suspenders with my belt.
 (put 'dp-common-abbrevs 'dp-I-am-a-dp-style-abbrev-file t)

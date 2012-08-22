@@ -293,18 +293,25 @@ compound regexp to match a list of specific strings."
                 append-one-p
               (if append-one-p sep "")))))
 
-(defun dp-regexp-concat (re-list &optional group-all-p quote-p)
+(defun dp-regexp-concat (re-list &optional group-all-p quote-elements-p)
   "Concatenate all of the regexps in RE-LIST separated by \\\\|.
 @todo Should each list element be wrapped in shy grouping operators?
 `\(?: ... \)'
 This can now be done by calling `dp-concat-regexps-grouped' with non-nil shy-p.
-QUOTE-P controls regexp quoting. t -> use `regexp-quote'. Anything else 
-non-nil is assumed to be a quoting function.
+QUOTE-ELEMENTS-P controls regexp quoting. t -> use `regexp-quote'. 
+Anything else non-nil is assumed to be a quoting function.
 "
   (concat (if group-all-p "\\(" "")
-          (dp-string-join re-list "\\|" nil nil nil (if (memq quote-p '(t quote-p))
-                                                        'regexp-quote
-                                                      quote-p))
+          (dp-string-join re-list "\\|" nil nil nil 
+                          (if (memq quote-elements-p '(t 
+                                                       quote-p
+                                                       quote
+                                                       quote-elements-p
+                                                       quote-elements))
+                              'regexp-quote
+                            ;; Not a regexp-quote request, pass it in.
+                            ;; It is either nil or a quoting function.
+                            quote-elements-p))  
           (if group-all-p "\\)" "")))
 
 (defun dp-re-concat (first last &optional shy-p quote-p)
@@ -488,30 +495,42 @@ LESSP defaults to less-than ('<)."
                       (concat "dp-" (or post-dp-prefix "orig-")))
                   symbol)))
 
-(defun* dp-flanked-string (text front 
+(defun* dp-flanked-string (text-in front-char
                            &key
                            start end
-                           back
-                           sep prefix
-                           width)
+                           back-char
+                           sep-str prefix
+                           desired-width)
   (setq-ifnil start (line-beginning-position)
-              end (if width
-                      (+ start width)
+              end (if desired-width
+                      (+ start desired-width)
                     (+ (line-beginning-position) (current-fill-column)))
-              back front
-              sep " "
+              back-char front-char
+              sep-str " "
               prefix "")
-  (let* ((sep-len (length sep))
-         (text (concat sep text sep))
-         (mid-len (length text))
-         (width (- end start))
-         (flank-space (/ (- width mid-len) 2))
-         (front (concat prefix (make-string flank-space front)))
-         (num-back (- width mid-len (length front)))
-         )
-    (concat front
-            text
-            (make-string num-back back))))
+  (let* ((required-text (concat sep-str text-in sep-str))
+         (required-width (+ (length prefix) (length required-text)))
+         (remaining-width (if (> required-width desired-width)
+                              0
+                            (- desired-width required-width)))
+         ;; desired-width is used to adjust end if end is nil and
+         ;; desired-width is not. Here we recompute it based on current
+         ;; values of start/end and the width of any required text. Width is
+         ;; expanded to include all required text. But if it was too small,
+         ;; there will be no wings.  The text, prefix and separators are
+         ;; required. The wings are not. The prefix will need to include the
+         ;; equivalent of a sep-str.
+         ;; E.g. ";;; " vs ";;;<sep-str>
+         (flank-len (/ remaining-width 2))
+         ;; 1/2 Remaining space, truncated down
+         (front-flank (make-string flank-len front-char))
+         ;; If remaining space was not an integer multiple of 2, then any
+         ;; extra will end up in the back flank.
+         (back-flank (make-string (- remaining-width flank-len) back-char)))
+    (concat prefix
+            front-flank
+            required-text
+            back-flank)))
 
 (defun dp-c-beginning-of-current-token (&rest rrr)
   "Just insulation from `c-beginning-of-current-token'.
@@ -7621,7 +7640,8 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
   (interactive)
   ;;!<@todo Fix this so we can request shrink wrapping of the string.
   ;; The problem is that colors are specified with the prefix arg.
-  (call-interactively 'dp-colorize-matching-lines isearch-string))
+  ;;(call-interactively 'dp-colorize-matching-lines isearch-string)
+  (dp-colorize-matching-lines isearch-string))
 
 (defvar dp-colorize-bracketing-regexps-history nil
   "History for `dp-colorize-bracketing-regexps'.")
@@ -14977,15 +14997,18 @@ See `dp-shell-*TAGS-changers' rant. "
     (apply 'dp-fast-replace-regexp-region "^\\(\\s-*\\)[+-]" "" region)
     (apply 'c-indent-region region)))
 
-(defun gith (topic &optional other-window-p)
+(defun dp-git-manual-entry (topic &optional other-window-p)
   (interactive "sgit help on: \nP")
   (let ((git-man-page (concat "git-" topic)))
     (funcall (if other-window-p '2man 'manual-entry)
              git-man-page)))
+(dp-defaliases 'gith 'githelp 'gitman 'mangit 'dp-git-manual-entry)
 
-(defun gith2 (topic &optional other-window-p)
+(defun dp-git-manual-entry-other-window (topic &optional other-window-p)
   (interactive "sgit help on: \nP")
-  (gith topic (not other-window-p)))
+  (dp-git-manual-entry topic (not other-window-p)))
+(dp-defaliases 'gith2 'githelp2 'gitman2 'mangit2 
+               'dp-git-manual-entry-other-window)
 
 
 (defun dp-duplicate-window-horizontally ()

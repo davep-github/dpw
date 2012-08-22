@@ -1,0 +1,80 @@
+#!/bin/sh
+
+source script-x
+set -u
+
+D_one=${1-}
+
+gitted_p()
+{
+    local file="$1"
+    git mv -n "$f" some-file-or-another
+}
+
+gitted_p_quiet()
+{
+    local file="$1"
+    gitted_p "$file" > /dev/null 2>&1
+}
+
+gitted_p_debug()
+{
+    local file="$1"
+    gitted_p "$file"
+}
+
+gitted_p_normal()
+{
+    local file="$1"
+    if gitted_p_quiet "$file"
+    then
+        echo "$file is under git's dominion."
+        return 0
+    else
+        echo "$file is not under git's dominion."
+        return 1
+    fi
+    # WTF?
+    return 2
+}
+
+git_fun="gitted_p_normal"
+
+
+# Parse command line.
+# std_options has some "useful" options.
+# Set to "" or "-" to get nothing.  It's an error to call dp-getopt+.sh with
+# std_options unset.
+std_options=""
+DPGOP_Usage_args_info=" file..."
+DPGOP_Usage_synopsis="
+Display whether or not each file is under git domination.
+-d : debug   -- See raw results from git command, it's exit status.
+-q : quiet   -- No output, just exit with status.
+
+Default is to show a message showing domination status.
+Exit:
+  0: File is dominated
+  1: File is Free, not dominated, but not necessarily indomitable.
+  ?: WTF?
+"
+
+# The real meat...
+option_str="dq"
+source dp-getopt+.sh            # Runs when sourced.
+# Loop over your options.
+$DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT "1:@>$@<"
+for i in "$@"; do
+    case "$1" in
+        -d) git_fun="gitted_p_debug";;
+        -q) git_fun="gitted_p_quiet";;
+        --) shift; break;;
+    esac
+    shift
+done
+
+for f in "$@"
+do
+  # Error status is what we're after.
+  "$git_fun" "$f"
+done

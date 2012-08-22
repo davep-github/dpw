@@ -1,35 +1,49 @@
 (message "dp-abbrev eval-ing...")
 
-;;;
-;;; "manual" abbrevs are more common and global since they are only expanded
+(setq dp-preserve-above-monition
+      ;; These first two cannot have trailing newlines embedded because then
+      ;; the search for them ends up on a line not including the text and so
+      ;; a `beginning-of-line' doesn't go to the beginning of the correct
+      ;; line.
+      ";;; --------------- Preserve everything above this line ----------------"
+      dp-preserve-above-monition-comment
+      ";;; Anything in this file *before* the above line is preserved."
+      dp-begin-generated-section-declaration
+      ";;; --------------------- Begin generated section ----------------------"
+      dp-begin-generated-section-declaration-comment
+      ";;; Everything in this file from the beginning of the previous line to the
+;;; end of file will be deleted.
+;;;"
+      dp-abbrev-shared-comment-block
+      ";;;
+;;; `manual' abbrevs are more common than global since they are only expanded
 ;;; upon request.  Automatic expansion in the wrong place is *veru* amnoying!
-;;; These used to be called "common."
+;;; These used to be called `common.' Manual abbrevs can be more ambiguous
+;;; and `error prone' because they are only expanded where the human has
+;;; deemed correct. So something like `a' is acceptable as manual but insane
+;;; as automatic.
 ;;;
-;;; "auto" abbrevs are put into `global-abbrev-table' and so are expanded
-;;; automatically.
-;;; These used to be called "global."
+;;; `auto' abbrevs are put into the *macs standard `global-abbrev-table' and
+;;; so are expanded automatically.  These are called `global.' Global derives
+;;; from `global-abbrev-table' but auto is more descriptive.
 ;;;
-;;; The two names global and common don't imply this kind of behavior at all.
-;;;
-;;; This doc is replicated in the file ~/lisp/dp-common-abbrevs.el
-;;; They'll probably drift out of sync.
 ;;; 'global abbrevs are for automatic expansion, e.g. speling erors.
 ;;; 'global becomes global-abbrev-table and abbrevs in that table are
 ;;; auto expanded.  I currently have too many things in there that are
 ;;; expanded annoyingly often, so I need to revisit the table
 ;;; ASSIGNMENTS.
 ;;; 'manual abbrevs are expected to be expanded by hand.
-;;; @ todo... add mode to "properties" and then add to table for that mode.
+;;; @ todo... add mode to `properties' and then add to table for that mode.
 ;;; Stems of abbrev tables.  If just a symbol then construct a table name of
 ;;; @ todo... add 'tmp property to indicate table is not to be saved.
 ;;;  <sym>-abbrev-table
 ;;; Abbrev entry format:
 ;;; ABBREV-ENTRY ::= (ABBREVS/EXPANSIONS TABLE-INFO)
 ;;; ABBREVS/EXPANSIONS ::= (ABBREV-NAMES EXPANSIONS)
-;;; ABBREV-NAMES ::= "abbrev-name" | ("abbrev-name0"...)
-;;; EXPANSIONS ::= "expansion0"...
+;;; ABBREV-NAMES ::= \"abbrev-name\" | (\"abbrev-name0\"...)
+;;; EXPANSIONS ::= \"expansion0\"...
 ;;; TABLE-INFO ::= TABLE-NAME | TABLE-INFO-PLIST
-;;; TABLE-NAME ::= 'table-name-sym | "table-name"  ; it's `format'd w/%s
+;;; TABLE-NAME ::= 'table-name-sym | \"table-name\"  ; it's `format'd w/%s
 ;;; TABLE-INFO-PLIST ::= (PROP/VAL PROP/VAL ...)
 ;;; PROP/VAL ::= 'table-name TABLE-NAME
 ;;;
@@ -43,6 +57,18 @@
 ;;;         ;; `dp-expand-abbrev'
 ;;;         [put props on table variable]
 ;;;
+;;; Come on!  There needs to be the need/ability to use eval'able forms
+;;; somewhere!
+;;; 
+;;; !<@todo ??? Modify data structures to allow a way to add suffixes
+;;; programmatically. Eg t for a space? 's for pluralization?
+;;; !<@todo Automatically generate \"logical\" case mixtures.
+;;; Convenience binding:
+;;; C-c C-c (dp-save-and-redefine-abbrevs)
+;;;
+;;; This information is common between this abbrev file and dp-abbrev.el
+
+")
 (defvar dp-dp-style-abbrev-tables '()
   "All of my `special' tables.")
 
@@ -629,10 +655,24 @@ If (eq 'ask), prompt w/`y-or-n-p'.
 Otherwise don't write it."
   (save-excursion
     (set-buffer (find-file-noselect abbrev-file))
+    (backup-buffer)
     (goto-char (point-min))
-    (re-search-forward "(defconst dp-common-abbrevs\\s-*$")
-    (beginning-of-line)
+    (if (re-search-forward 
+         (dp-regexp-concat (list dp-preserve-above-monition
+                                 dp-begin-generated-section-declaration)
+                           nil
+                           'quote-elements)
+         nil t)
+        (beginning-of-line)
+      (goto-char (point-min)))
     (delete-region (point) (point-max))
+    (insert dp-preserve-above-monition "\n"
+            dp-preserve-above-monition-comment "\n"
+            dp-begin-generated-section-declaration "\n"
+            dp-begin-generated-section-declaration-comment "\n"
+            (format ";;; File: %s\n" abbrev-file)
+            (dp-mk-timestamp ";;; Last saved: " "")
+            dp-abbrev-shared-comment-block)
     (pprint `(defconst ,abbrev-list (quote ,(symbol-value abbrev-list)))
 	    (current-buffer))
     (insert ";; We could just use the non-void-ness of dp-common-abbrevs, but I
@@ -667,7 +707,7 @@ Otherwise don't write it."
                      (or (when (and (interactive-p)
                                     (or table-names
                                         current-prefix-arg))
-                           (let ((types (read-string ; !!!!!!!!! completing read
+                           (let ((types (read-string ; !!!!!!!! completing read
                                          "abbrev types (manual global)): "))
                                  (targ '()))
                              (loop for table in (split-string types)

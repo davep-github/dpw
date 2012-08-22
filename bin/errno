@@ -126,7 +126,7 @@ DPGOP_Usage_synopsis="
 Display info about errno-s:
 -n name
 -d description
--v be verbose (kinda for testing) 
+-v be verbose (kinda for testing)
 -t be terse (different that just non-verbose)
 -p echo back args verbatim as entered (debugging)
 -h print errno in hex
@@ -160,7 +160,7 @@ for i in "$@"; do
         --) shift; break;;
     esac
     shift
-done        
+done
 [ -n "$*" ] || {
     echo 1>&2 "I need some signal to find."
     exit 1
