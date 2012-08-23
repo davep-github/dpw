@@ -1,0 +1,85 @@
+#!/bin/sh
+source script-x
+
+# @ todo
+# fer-all-files [-FAF<opt>...] [find opts] [find args] [-- xargs opts]
+# e.g. fer-all-files ./client -- fgrep Mk
+# but?
+# fer-all-files -name '*mak' -- fgrep Mk
+
+option_str='vnqd:g:D:p:P:sf:'
+qdat=($(getopt -o "$option_str" -- "$@"))
+[ $? != 0 ] && Usage
+# is eval needed? eval set -- "${qdat[@]}" NO!
+eval set -- "${qdat[@]}"
+
+vsetp "$DP_SCRIPT_X_DEBUG" && {
+    echo '$DP_SCRIPT_X_DEBUG='"$DP_SCRIPT_X_DEBUG"
+    echo "Results from getopt -o:"
+    echo '${qdat[@]}:'
+    #eko 3333 "${qdat[@]}"
+    echo '$@:'
+    #eko 4444 "$@"
+    for i in "$@"; do echo "i>$i<"; done
+}
+
+dirs=
+type=f
+
+[ $? != 0 ] && Usage
+
+RUNNER=runnit
+RUNNER1="$RUNNER"
+RUNNER2="$RUNNER"
+#POTENTIAL_FINDERS="find-sans-svn find"
+# Finders in order of preference.  First one found wins.
+POTENTIAL_FINDERS="find"
+FINDER=$(find-bin $POTENTIAL_FINDERS)
+FIND_PRE_ARGS_a=()
+FIND_POST_ARGS_a=()
+PATS_a=()
+dirs_a=()
+pipe='|'
+FIND_PRINT0_OPT="-print0"
+XARGS_PRINT0_OPT="-0"
+: ${XARGS_OPTS=-r}
+show_cmd=
+echo "0: @>$@<"
+for i in "$@"
+do
+    case "$1" in
+	-v) set -x;;		# Lazy^H^H^H^HPoor man's verbosity.
+	-q) ECHO=":" ;;
+	-d) dirs_a+=($2); shift;;   # Save off dirs.
+	-g) PATS_a+=($2); shift;;   # Save off globs.
+	-D) file=d; shift;;
+        -p) FIND_PRE_ARGS_a[${#FIND_PRE_ARGS_a[@]}]="$2"; shift;;
+        -P) FIND_POST_ARGS_a[${#FIND_POST_ARGS_a[@]}]="$2"; shift;;
+        -s) FINDER=find;;
+        -f) FINDER=$2; shift;;
+        -n) show_cmd=t; RUNNER1=crappy_dash_n1; RUNNER2=crappy_dash_n2;;
+	--) break ;;
+	-*)
+	    echo 1>&2 "Unsupported option>$1<";
+	    exit 1 ;;
+    esac
+    shift
+done
+
+# That sucked off all of our options.
+# All up to possible '--' are find args.
+# All after -- art xargs opts.
+find_args=()
+for j in "$@"
+do
+  echo_id j
+  echo "1>$1<"
+  case "$1" in
+      --) shift; break;;
+      *) find_args+=($1)
+  esac
+  shift
+done
+xargs_args=("$@")
+
+echo $FINDER "${find_args[@]}" -print0 \| xargs -r0 "${xargs_args[@]}"

@@ -2,6 +2,11 @@
 # $Id: fer-all-files,v 1.12 2004/12/03 09:20:04 davep Exp $
 #set -x
 
+# @ todo
+# fer-all-files [-FAF<opt>...] [find opts] [find args] [-- xargs opts]
+# e.g. fer-all-files ./client -- fgrep Mk
+# but?
+# fer-all-files -name '*mak' -- fgrep Mk
 source script-x
 
 . script-x
@@ -48,9 +53,6 @@ XARGS_PRINT0_OPT="-0"
 show_cmd=
 for i in "$@"
 do
-    #eko 5555 "$i"
-    echo "i>$i<"
-    echo "1>$1<"
     case $1 in
 	-v) set -x;;		# Lazy^H^H^H^HPoor man's verbosity.
 	-q) ECHO=":" ;;
@@ -63,12 +65,16 @@ do
         -f) FINDER=$2; shift;;
         -n) show_cmd=t; RUNNER1=crappy_dash_n1; RUNNER2=crappy_dash_n2;;
 	--) shift ; break ;;
-	*) 
+	*)
 	    echo 1>&2 "Unsupported option>$1<";
 	    exit 1 ;;
     esac
     shift
 done
+
+# this sucks off all of our options.
+# All up to possible '--' are find args.
+# All after -- art xargs opts.
 
 FIND_PRE_ARGS=${FIND_PRE_ARGS_a[@]}
 FIND_POST_ARGS=${FIND_POST_ARGS_a[@]}

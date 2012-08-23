@@ -3,8 +3,12 @@
 source script-x
 set -u
 
-: ${hide_prefix:=HIDE,}
+
+: ${hide_prefix:=}
+# -HIDE hides from vc, too. Is that wise?
+: ${hide_suffix:=-HIDE}
 : ${unhide=}
+: ${mover=mv}
 
 [ "$*" = "" ] && {
     echo "Usage: $(basename $0) file...
@@ -12,28 +16,38 @@ Hide a file by renaming it to ${hide_prefix}file"
     exit 1
 }
 
-hide_msg="Hiding"
-[ "$1" = "-u" ] && {
-    unhide=t
+if [ "$1" = "-n" ]
+then
     shift
-}
+    mover="echo +mv"
+fi
 
+if [ "$1" = "-u" ]
+then
+    shift
+    hide_msg="Unhiding"
+    word="back to"
+    unhide=t
+else
+    hide_msg="Hiding"
+    word="as"
+fi
 
 for f in "$@"
 do
-  hide_file="${hide_prefix}${f}"
+  hide_file="${hide_prefix}${f}${hide_suffix}"
   if vsetp "$unhide"
   then
-      mv_cmd="mv $hide_file $f"
-      hide_msg="Unhiding"
+      mv_cmd="$mover $hide_file $f"
       f1="$hide_file"
+      f2="$f"
   else
-      mv_cmd="mv $f $hide_file"
+      mv_cmd="$mover $f $hide_file"
       f1="$f"
-
+      f2="$hide_file"
   fi
 
-  echo "$hide_msg $f1"
+  echo "$hide_msg $f1 $word $f2"
   $mv_cmd || {
       rc=$?
       echo "$hide_msg failed: \$?: $rc

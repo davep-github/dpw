@@ -1141,6 +1141,7 @@ echo_name_and_val()
     [ -z "$noAnno" ] && anno="$1"
     
     local type_suffix
+    # This local could hide another with the same name
     local __use_a_name_like_this_and_you_get_what_you_deserve__
     for __use_a_name_like_this_and_you_get_what_you_deserve__ in "$@"; do
         type_suffix=

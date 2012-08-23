@@ -28,10 +28,10 @@ gitted_p_normal()
     local file="$1"
     if gitted_p_quiet "$file"
     then
-        echo "$file is under git's dominion."
+        echo "+ $file is under git's dominion."
         return 0
     else
-        echo "$file is not under git's dominion."
+        echo "- $file is not under git's dominion."
         return 1
     fi
     # WTF?
