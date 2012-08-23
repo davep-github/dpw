@@ -15002,12 +15002,12 @@ See `dp-shell-*TAGS-changers' rant. "
   (let ((git-man-page (concat "git-" topic)))
     (funcall (if other-window-p '2man 'manual-entry)
              git-man-page)))
-(dp-defaliases 'gith 'githelp 'gitman 'mangit 'dp-git-manual-entry)
+(dp-defaliases 'gith 'githelp 'gitman 'dp-git-manual-entry)
 
 (defun dp-git-manual-entry-other-window (topic &optional other-window-p)
   (interactive "sgit help on: \nP")
   (dp-git-manual-entry topic (not other-window-p)))
-(dp-defaliases 'gith2 'githelp2 'gitman2 'mangit2 
+(dp-defaliases 'gith2 'githelp2 'gitman2
                'dp-git-manual-entry-other-window)
 
 
