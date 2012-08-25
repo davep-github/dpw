@@ -10089,7 +10089,10 @@ Just for informational purposes.")
         (progn
           (setq prompt (format "target in %s: " (nth 1 make-command))
                 target (or target (read-from-minibuffer 
-                                   prompt dp-mru-make-target nil nil 
+                                   prompt 
+                                   ;;dp-mru-make-target
+                                   nil
+                                   nil nil 
                                    'dp-make-targets-history)))
                 
           ;; cannot remake if there's no target.

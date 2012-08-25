@@ -82,4 +82,4 @@ do
 done
 xargs_args=("$@")
 
-echo $FINDER "${find_args[@]}" -print0 \| xargs -r0 "${xargs_args[@]}"
+$FINDER "${find_args[@]}" -print0 | xargs -r0 "${xargs_args[@]}"
