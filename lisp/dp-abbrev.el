@@ -41,13 +41,25 @@
 ;;; ABBREV-ENTRY ::= (ABBREVS/EXPANSIONS TABLE-INFO)
 ;;; ABBREVS/EXPANSIONS ::= (ABBREV-NAMES EXPANSIONS)
 ;;; ABBREV-NAMES ::= \"abbrev-name\" | (\"abbrev-name0\"...)
-;;; EXPANSIONS ::= \"expansion0\"...
+;;; EXPANSIONS ::= \"expansion0\"... | '=
 ;;; TABLE-INFO ::= TABLE-NAME | TABLE-INFO-PLIST
 ;;; TABLE-NAME ::= 'table-name-sym | \"table-name\"  ; it's `format'd w/%s
 ;;; TABLE-INFO-PLIST ::= (PROP/VAL PROP/VAL ...)
 ;;; PROP/VAL ::= 'table-name TABLE-NAME
 ;;;
-;;; we define abbrevs: {ABBREV-NAMES} X {EXPANSIONS} X {TABLES}
+;;; If EXPANSIONS eq '= then EXPANSIONS is set to ABBREV-NAMES.
+;;; This is a hack to allow a ring of abbrevs to be defined with little effort.
+;;; This means that '(("a" "b" "c") '=) becomes:
+;;; (("a" "b" "c") "a" "b" "c") which defines:
+;;; This results in multiple entries: 
+;;; "a" -> '("a" "b" "c")
+;;; "b" -> '("a" "b" "c")
+;;; "c" -> '("a" "b" "c")
+;;; This means that "a" "b" or "c" can begin a cycle around those expansions.
+;;; Doing just '("a" "b" "c") allows:
+;;; "a" -> '("b" "c" "a"...) But "b" doesn't go to "c", "a", ...
+;;;
+;;; We define abbrevs: {ABBREV-NAMES} X {EXPANSIONS} X {TABLES}
 ;;; for each name
 ;;;     for each table
 ;;;         define abbrev name expansion[-list]
@@ -67,6 +79,9 @@
 ;;; C-c C-c (dp-save-and-redefine-abbrevs)
 ;;;
 ;;; This information is common between this abbrev file and dp-abbrev.el
+;;; This is copied to each abbrev file when it is saved, so it can be 
+;;; out of date. I don't know why I don't just put a see dp-abbrev.el comment
+;;; in these files.
 
 ")
 (defvar dp-dp-style-abbrev-tables '()
@@ -168,12 +183,15 @@ abbrev-table to an abbrev-table name.")
          (abbrev-names (car abbrev+expansions))
          (expansions (cdr abbrev+expansions))
          (table-info (cdr dp-style-abbrev))
+         filtered-expansions
          full-table-name-str
          full-table-name
          table)
     (setq-ifnil table-info (list dp-default-abbrev-table))
     (unless (listp abbrev-names)
       (setq abbrev-names (list abbrev-names)))
+    (when (equal expansions '('=))
+      (setq expansions abbrev-names))
     (loop for abbrev-name in abbrev-names do
       (loop for table-name in table-info do
         (let* ((props (and (listp table-name)
@@ -227,8 +245,18 @@ Should it be formally defined elsewhere?"))
             (clear-abbrev-table table)
             (dp-add-to-alist-if-new-key 'dp-reinitialized-abbrev-table-alist 
                                         (cons full-table-name t)))
-          (define-abbrev table abbrev-name
-            (format "%S" expansions)))))))
+          ;;
+          ;; There's no sense in having x expand to x. In fact it's confusing
+          ;; because it can make it look like there are no expansions when
+          ;; x's doppelgangers is the first expansion value. In addition it's
+          ;; redundant because we circle around to the initial value anyway.
+          (setq filtered-expansions 
+                (dp-rotate-and-func expansions abbrev-name 
+                                    'remove 'missing-ok))
+          ;; Don't define empty expansions.
+          (when filtered-expansions
+            (define-abbrev table abbrev-name
+              (format "%S" filtered-expansions))))))))
 
 (defun* dp-eval-abbrev-file (abbrev-file &optional 
                              (abbrev-sym 'dp-common-abbrevs))

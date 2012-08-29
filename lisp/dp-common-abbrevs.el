@@ -60,14 +60,16 @@
 ;;; This information is common between the abbrev file and dp-abbrev.el
 
 (defconst dp-common-abbrevs
-  '((("teh" "the" "duh" "D'OH!")
+  '(((("dev" "development" "develop" "device")
+;;      "dev" "development" "develop" "device")
+      '=)
+     dp-manual)
+    (("teh" "the" "duh" "D'OH!")
      dp-manual global)
     (("plisttest" "a test of the plist type table.")
      (table-name dp-manual tmp t)
      (table-name dp-plists))
     (("cs" "c_str()")
-     (table-name dp-c++-mode))
-    (("onlyinCmode" "ayup")
      (table-name dp-c++-mode))
     (("nn" "non-nil")
      dp-manual)
@@ -170,8 +172,7 @@
     (("e2ei" "RSVP-E2E-IGNORE")
      dp-manual)
     ((("LARTC" "lartc")
-      "Lin
-  ux Advanced Routing & Traffic Control HOWTO")
+      "Linux Advanced Routing & Traffic Control HOWTO")
      dp-manual)
     (("pkt" "packet")
      dp-manual)
@@ -314,8 +315,6 @@
     (("flsit" "flist")
      dp-manual)
     (("dpdx" "DP_DASH_X=t")
-     dp-manual)
-    (("dev" "development" "develop" "device")
      dp-manual)
     (("devs" "developers" "devices")
      dp-manual)

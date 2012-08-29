@@ -1889,3 +1889,81 @@ nil
 
 
 
+
+========================
+Wednesday August 29 2012
+--
+(("a" "b") "a" "b")
+(("a" "b") t) -->
+
+(let ((e '(("a" "b") t))
+      a b c d)
+  (princf "%s" (car e))
+  (princf "%s" (cdr e))
+  (setq c (car e))
+  (setq a (cons c c))
+  (princf "%s" a)
+
+
+
+(listp nil)
+t
+
+(and-listp)
+
+queue
+
+)
+(a b)
+(t)
+((a b) a b)
+nil
+
+(a b)
+(t)
+nil
+nil
+
+(a b)
+(t)
+
+(a b)
+(t)
+
+(a b)
+(t)
+
+(a b)
+(t)
+nil
+
+;;; Abbrev entry format:
+;;; ABBREV-ENTRY ::= (ABBREVS/EXPANSIONS TABLE-INFO)
+;;; ABBREVS/EXPANSIONS ::= (ABBREV-NAMES EXPANSIONS)
+;;; ABBREV-NAMES ::= \"abbrev-name\" | (\"abbrev-name0\"...)
+;;; EXPANSIONS ::= \"expansion0\"...
+;;; TABLE-INFO ::= TABLE-NAME | TABLE-INFO-PLIST
+;;; TABLE-NAME ::= 'table-name-sym | \"table-name\"  ; it's `format'd w/%s
+;;; TABLE-INFO-PLIST ::= (PROP/VAL PROP/VAL ...)
+;;; PROP/VAL ::= 'table-name TABLE-NAME
+
+
+(dp-redefine-abbrev '((("abbrev-test-a" "abbrev-test-bb" "abbrev-test-ccc")
+                       "abbrev-test-a" "abbrev-test-bb" "abbrev-test-ccc")
+                     dp-manual))
+
+
+
+
+(dp-redefine-abbrev '((("abbrev-test-a" "abbrev-test-bb" "abbrev-test-ccc")
+                       (t))
+                     dp-manual))
+
+
+
+
+
+
+device
+
+

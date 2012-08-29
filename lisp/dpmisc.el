@@ -103,6 +103,7 @@
   
 
 (defsubst and-listp (list?)
+  "Return non-nil if LIST? is a non-nil list."
   (and (listp list?)
        ;; put the list last so it will be returned if non-nil and listp
        list?))
@@ -7675,8 +7676,12 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
                           elt)))
 		     list-in)))
 
-(defun dp-rotate-and-func (l-in m &optional func)
-  "Rotate the list L-IN s.t. M is the new head, then apply FUNC."
+(defun dp-rotate-and-func (l-in m &optional func missing-ok-p)
+  "Rotate the list L-IN s.t. M is the new head, then apply non-nil FUNC.
+The rotation is non-destructive. FUNC depends on FUNC.
+If MISSING-OK-P is non-nil, it's OK that M is not in L-IN. In which case L-IN
+is returned.
+"
   (let* ((l (copy-list l-in))
 	 l2 l3 
 	 (ret
@@ -7686,20 +7691,21 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
 	    (while (and (setq l3 (cdr l2))
 			(not (equal m (car l3))))
 	      (setq l2 l3))
-	    (if (not l3)
-		(error "dp-func-and-rotate: %s not in %s" m l)  
+	    (if (and (not l3)
+                     (not missing-ok-p))
+                (error "dp-func-and-rotate: %s not in %s" m l)
 	      (setcdr l2 nil)
 	      (append l3 l)))))
     (if func
 	(funcall func m ret)
       ret)))
 
-(defun dp-rotate-and-delq (l-in m)
-  (dp-rotate-and-func l-in m 'delq))
+(defun dp-rotate-and-delq (l-in m &optional missing-ok-p)
+  (dp-rotate-and-func l-in m 'delq missing-ok-p))
 
-(defsubst dp-rotate-to (l-in m)
+(defsubst dp-rotate-to (l-in m &optional missing-ok-p)
   "Rotate L-IN s.t. M is the new head."
-  (dp-rotate-and-func l-in m))
+  (dp-rotate-and-func l-in m missing-ok-p))
 
 (defun dp-list-rot (list)
   "Rotate a list left."
