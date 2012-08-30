@@ -248,11 +248,17 @@ Should it be formally defined elsewhere?"))
           ;;
           ;; There's no sense in having x expand to x. In fact it's confusing
           ;; because it can make it look like there are no expansions when
-          ;; x's doppelgangers is the first expansion value. In addition it's
+          ;; x's doppelganger is the first expansion value. In addition it's
           ;; redundant because we circle around to the initial value anyway.
+	  (unless expansions
+	    (dmessage "Expansions is nil"))
+          ;; Can't rotate an empty list. But `define-abbrev' uses nil
+          ;; EXPANSION to undefine an abbrev, so we handle the case and let
+          ;; the nil go through.
           (setq filtered-expansions 
-                (dp-rotate-and-func expansions abbrev-name 
-                                    'remove 'missing-ok))
+                (and expansions
+                     (dp-rotate-and-func expansions abbrev-name 
+                                         'remove 'missing-ok)))
           ;; Don't define empty expansions.
           (when filtered-expansions
             (define-abbrev table abbrev-name
@@ -776,7 +782,18 @@ table.")
                 (list nil ; Default table.
                       dp-tmp-manual-abbrev-table
                       dp-go-abbrev-table 
-                      dp-manual-abbrev-table)))
+                      dp-manual-abbrev-table))
+  ;; Add some special abbrevs.
+  ;; This needs to be done after the tables have been created
+  (define-abbrev dp-manual-abbrev-table "xdrop" 
+    (concat dp-xemacs-droppings "/"))
+  (define-abbrev dp-manual-abbrev-table "edrop" 
+    (concat dp-editor-droppings "/"))
+  (define-abbrev dp-manual-abbrev-table "xebac" 
+    (concat dp-backup-droppings "/"))
+  (define-abbrev dp-manual-abbrev-table "asave" 
+    (concat dp-auto-save-droppings "/"))
+  )
 
 ;;;
 ;;;

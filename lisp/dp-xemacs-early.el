@@ -17,8 +17,6 @@
                        ""))))
     (format-time-string fmt time)))
 
-(setq dp-editor-droppings (expand-file-name "~/droppings/editors")
-      dp-xemacs-droppings (concat dp-editor-droppings "/xemacs"))
 ;;
 (defun* dp-mk-dropping-dir (subdir &optional dont-change-subdir-name-p 
                             (create-p t))
@@ -40,16 +38,21 @@
     (warn "dropping dir >%s< isn't." subdir ))
   subdir)
 
+(setq dp-editor-droppings (expand-file-name "~/droppings/editors")
+      dp-xemacs-droppings (concat dp-editor-droppings "/xemacs")
+      dp-backup-droppings (dp-mk-dropping-dir "xebacs")
+      dp-auto-save-droppings (dp-mk-dropping-dir
+                              "/session-auto-saves.d/"
+                              'leave-it-alone))
+
 ;; Set autosave & backup variables more to my liking.
-(setq ;;!<@todo how  does this work?  !<@todo also try setting prefix our way
-      ;;and letting the rest go as usual.
-      ;; If the prefix is nil, then using `auto-save-list-file-name' is
-      ;; disabled, even if `auto-save-list-file-name' is not.  Obscure and
-      ;; annoying.  But if the prefix is non-nil, the early start up code
-      ;; constructs `auto-save-list-file-name'
-      auto-save-list-file-prefix (concat (dp-mk-dropping-dir
-                                          "/session-auto-saves.d/"
-                                          'leave-it-alone)
+;;!<@todo how  does this work?  !<@todo also try setting prefix our way
+;;and letting the rest go as usual.
+;; If the prefix is nil, then using `auto-save-list-file-name' is
+;; disabled, even if `auto-save-list-file-name' is not.  Obscure and
+;; annoying.  But if the prefix is non-nil, the early start up code
+;; constructs `auto-save-list-file-name'
+(setq auto-save-list-file-prefix (concat dp-auto-save-droppings
                                          (format "%s-%s-aka-%s-"
                                                  (dp-timestamp-string)
                                                  (user-real-login-name)
@@ -81,7 +84,7 @@
       ;; now that we have auto-save-timeout, let's crank this up
       ;; for better interactive response.
       auto-save-interval 2000
-      backup-directory-alist (list (cons "." (dp-mk-dropping-dir "xebacs")))
+      backup-directory-alist (list (cons "." dp-backup-droppings))
       backup-by-copying-when-linked t
       version-control t
       kept-new-versions 7)

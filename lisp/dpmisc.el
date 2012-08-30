@@ -381,7 +381,8 @@ string containing their values."
 (defun dp-identity (&rest rest)
   ;; Remove effects of &rest
   (car rest))
-(defalias 'dp-nop 'dp-identity)
+
+(defun dp-nop (&rest r))
 
 ;; Fails with simple M-x invocation.
 (defun dp-interactive-default-arg (arg)
@@ -7680,22 +7681,25 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
   "Rotate the list L-IN s.t. M is the new head, then apply non-nil FUNC.
 The rotation is non-destructive. FUNC depends on FUNC.
 If MISSING-OK-P is non-nil, it's OK that M is not in L-IN. In which case L-IN
-is returned.
-"
-  (let* ((l (copy-list l-in))
-	 l2 l3 
-	 (ret
-	  (if (equal (car l) m)
-	      l
-	    (setq l2 l)
-	    (while (and (setq l3 (cdr l2))
-			(not (equal m (car l3))))
-	      (setq l2 l3))
-	    (if (and (not l3)
-                     (not missing-ok-p))
-                (error "dp-func-and-rotate: %s not in %s" m l)
-	      (setcdr l2 nil)
-	      (append l3 l)))))
+is RETURNED.
+FUNC is called even for on an empty list. The caller should make sure FUNC
+can handle that case."
+  (let ((l (copy-list l-in))
+        l2 l3
+        (ret))
+    (when l-in
+      (setq ret
+            (if (equal (car l) m)
+                l
+              (setq l2 l)
+              (while (and (setq l3 (cdr l2))
+                          (not (equal m (car l3))))
+                (setq l2 l3))
+              (if (and (not l3)
+                       (not missing-ok-p))
+                  (error "dp-func-and-rotate: %s not in %s" m l)
+                (setcdr l2 nil)
+                (append l3 l)))))
     (if func
 	(funcall func m ret)
       ret)))
@@ -11696,7 +11700,8 @@ when the command was issued?")
 ;; Copped from describe-variable
 (defun* dp-read-variable-name (&optional def-prompt prompt history-symbol 
                                confirm-name-p
-                               (void-var-format "Describe variable (%s is void): "))
+                               (void-var-format 
+                                "Describe variable (%s is void): "))
   (let* ((v (variable-at-point))
          (val (let ((enable-recursive-minibuffers t))
                 (if (and v (not confirm-name-p))
@@ -11711,8 +11716,13 @@ when the command was issued?")
                                             (symbol-near-point)))
                                   prompt "Describe variable: ")))
                    obarray 'boundp t nil (or history-symbol 'variable-history)
-                   (symbol-name v))))))
-    (list (intern val))))
+                   (if v
+                       (symbol-name v)
+                     nil)
+                   )))))
+    (list (if (string= val "")
+              nil
+            (intern val)))))
 
 (defun dp-show-variable-value (var-sym &optional confirm-name-p
                                copy-as-kill-p no-history-p)
@@ -11721,7 +11731,7 @@ when the command was issued?")
                                       "Show var: " nil 
                                       current-prefix-arg))
   (if (not var-sym)
-      (error "No value for %s" (current-word))
+      (dingm "No value for `%s'" (current-word))
     (if current-prefix-arg
         (dp-symbol-info var-sym)
       (let* ((value (eval var-sym))

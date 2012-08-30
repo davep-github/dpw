@@ -1967,3 +1967,55 @@ nil
 device
 
 
+
+========================
+Thursday August 30 2012
+--
+(dp-abbrev-mk-abbrev-table-name dp-default-abbrev-table)
+"dp-manual-abbrev-table"
+
+"dp-manual-abbrev-table"
+)
+
+(dp-rotate-and-func '(a b c) 'a)
+(a b c)
+(a b c)
+
+(dp-rotate-and-func '(a b c) 'q)
+<error>
+
+(dp-rotate-and-func '(a b c) 'a 'remove)
+(b c)
+(b c)
+
+(dp-rotate-and-func '(a b c) 'q 'remove)
+<error>
+
+(dp-rotate-and-func '() 'a)
+nil
+
+(dp-rotate-and-func '() 'a 'dp-nop)
+a
+
+(setq dp-q "a b")
+"a b"
+
+(setq dp-qi (intern "dp-q"))
+dp-q
+
+(symbol-value (intern "dp-q"))
+"a b"
+
+
+
+ehoh
+
+
+
+(dp-nop)
+nil
+
+
+
+
+

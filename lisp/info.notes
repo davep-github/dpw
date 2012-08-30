@@ -155,18 +155,38 @@
 <<make>>
 ------
 
------- File: automake.info.gz  Node: Programs  Line: 14
-<<auto-junk>>
-------
-
------- File: autoconf.info.gz  Node: Making configure Scripts  Line: 0
-<<auto-layout>>
-------
-
 ------ File: autoconf.info.gz  Node: Autoconf Language  Line: 0
 <<ac-lang>>
 ------
 
 ------ File: make.info.gz  Node: Top  Line: 0
 <<make>>
+------
+
+------ File: autoconf.info.gz  Node: Making configure Scripts  Line: 0
+<<ac-layout>>
+------
+
+------ File: autoconf.info.gz  Node: Making configure Scripts  Line: 0
+<<ac-writing-config-scripts>>
+------
+
+------ File: automake.info.gz  Node: Programs  Line: 0
+<<am-progs>>
+------
+
+------ File: automake.info.gz  Node: Top  Line: 0
+<<automake>>
+------
+
+------ File: autoconf.info.gz  Node: Autoconf Macro Index  Line: 0
+<<ac-macros>>
+------
+
+------ File: autoconf.info.gz  Node: Autoconf Macro Index  Line: 0
+<<ac-macro-index>>
+------
+
+------ File: autoconf.info.gz  Node: Autoconf Macro Index  Line: 0
+<<autoconf-macro-index>>
 ------

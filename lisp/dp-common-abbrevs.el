@@ -454,7 +454,8 @@
      dp-manual)
     (("ccs" "const char* " "const std::string& ")
      dp-manual)
-    (("css" "const std::string& " "std::string& " "const char* " "const std::string " "std::string ")
+    (("css" "const std::string& " "std::string& " "const char* " 
+      "const std::string " "std::string ")
      dp-manual)
     (("less" "std::less")
      dp-manual)
@@ -479,7 +480,7 @@
      dp-go)
     (("cttoi" "come to think of it")
      dp-manual)
-    ((("ftci" "FTCI" "ftca" "FTCA")))
+    ((("ftci" "FTCI" "ftca" "FTCA") '=))
     ))
 ;; We could just use the non-void-ness of dp-common-abbrevs, but I
 ;; like suspenders with my belt.
