@@ -190,3 +190,19 @@
 ------ File: autoconf.info.gz  Node: Autoconf Macro Index  Line: 0
 <<autoconf-macro-index>>
 ------
+
+------ File: automake.info.gz  Node: Libtool Convenience Libraries  Line: 0
+<<SUBDIRS-some-stuff>>
+------
+
+------ File: automake.info.gz  Node: Subdirectories  Line: 0
+<<auto-subdirs>>
+------
+
+------ File: autoconf.info.gz  Node: Top  Line: 0
+<<ac-top>>
+------
+
+------ File: automake.info.gz  Node: Top  Line: 0
+<<am-top>>
+------

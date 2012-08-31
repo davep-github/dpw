@@ -190,8 +190,9 @@ way.")
 
 (setq ediff-temp-file-prefix (concat (getenv "HOME") "/tmp/")
       grep-command "egrep -n -e "
-      grep-find-command "find . -type f -print0 | xargs -0  egrep -n -e "
-      igrep-program "egrep")            ; igrep adds -n -e
+      grep-find-command "find . -type f -print0 | xargs -0  egrep -n -e ")
+
+(setq igrep-program "egrep")            ; igrep adds -n -e before regexp.
 
 ;;   "List of arguments (switches) to pass to `diff' by `recover-file'.")
 (setq recover-file-diff-arguments '("-u"))
