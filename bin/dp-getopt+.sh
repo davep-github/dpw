@@ -79,8 +79,8 @@ running_as_script && {
   : ${long_options=""}
   long_options_opt=
   vsetp $long_options && long_options_opt=-"-longoptions $long_options"
-  
-  # New style getopt... fixes ugly quoting problems.
+
+  # New style getopt... fixes ugly quoting problems. Wh00t!
   q=$(getopt $getopt_args $long_options_opt -o "$all_options" -- "$@")
   if [ $? = 0 ]
   then

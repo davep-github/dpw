@@ -12580,6 +12580,7 @@ If it is indeed a script name <script>-it can be called interactively.")
   "
 source script-x
 set -u
+progname=\"$(basename $0)\"
 
 "
   "A string to stuff into each new fire created with `dp-script-it'

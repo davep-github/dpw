@@ -1,0 +1,36 @@
+#!/bin/sh
+
+source script-x
+set -u
+
+# change a diff [-q] difference line into a more useful form.
+# We get:
+# Files ./.git/refs/stash and /home/dapanarx/work/ftca/poc/.git/refs/stash differ
+#_-----__________________-----____________________________________________-------
+# More useful, in some cases would be:
+# [diff] ./.git/refs/stash /home/dapanarx/work/ftca/poc/.git/refs/stash
+#
+
+split_it()
+{
+    local line="$1"
+    shift
+    prefix="${1-}"
+    [ -n "$prefix" ] && prefix="$prefix "
+
+    local x=$(echo "$line" | sed -rn 's/(Files )([^[:space:]]+)( and )([^[:space:]]+)( differ)/'"$prefix"'\2 \4/p')
+    echo "$x"
+}
+
+prefix=
+[ "${1-}" = '-p'  ] && {
+    shift
+    prefix="$1"
+    shift
+}
+
+while read
+do
+  split_it "$REPLY" "$prefix"
+done
+    

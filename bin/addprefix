@@ -1,0 +1,29 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+: ${addprefix_prefix_sep:=" "}
+
+# As per the gnu make function
+
+Usage()
+{
+    echo "$progname prefix to-be-prefixeds..."
+}
+
+addprefix()
+{
+    local sep="$1"
+    shift
+    prefix="$1"
+    shift
+
+    for t in "$@"
+    do
+      echo "${prefix}${sep}${t}"
+    done
+}
+
+[ -z "${load_as_lib-}" ] && addprefix "${addprefix_prefix_sep}" "$@"
