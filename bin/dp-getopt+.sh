@@ -78,10 +78,12 @@ running_as_script && {
   : ${getopt_args=""}
   : ${long_options=""}
   long_options_opt=
-  vsetp $long_options && long_options_opt=-"-longoptions $long_options"
+  [ -n "$long_options" ] && {
+      long_options_opt=$(addprefix "--longoption" "${long_options[@]}")
+  }
 
   # New style getopt... fixes ugly quoting problems. Wh00t!
-  q=$(getopt $getopt_args $long_options_opt -o "$all_options" -- "$@")
+  q=$(getopt $getopt_args -o "$all_options" $long_options_opt -- "$@")
   if [ $? = 0 ]
   then
       eval set -- "$q"
@@ -94,7 +96,6 @@ running_as_script && {
 }
 
 # Example of arg parsing.
-# (entirely) a PITA.
 #eg# option_str=""
 #eg# source dp-getopt+.sh
 #eg# for i in "$@"

@@ -1,16 +1,11 @@
 #!/bin/sh
-
-. script-x
-
+source script-x
 set -u
 
-# Handle as many SCM systems as possible.
-SCM_EXCLUDES="/(\.svn|CVS|RCS|\.git)(/|$)"
+# todo: if cwd or the find args contains an VC_EXCLUDE dir then don't filter
+# the vc directories.
 
-terminator=""
-[ "${1-}" == "-*" ] && {
-    terminator="/"
-    shift
-}
-set -x
-find "$@" | egrep -v -e "$SCM_EXCLUDES"
+# Handle as many VC systems as possible.
+VC_EXCLUDES="/(\.svn|CVS|RCS|\.git|\.hg)(/|$)"
+
+find "$@" | egrep -v -e "$VC_EXCLUDES"

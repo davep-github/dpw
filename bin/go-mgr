@@ -137,8 +137,6 @@ dump_go_files()
     done
 }
 
-#set -- ` getopt "x:a:d:lef:gG:E:" $* `
-# getopt done right!
 opts="x:a:d:lef:g:GE:h"
 q=$(getopt -o "$opts" -- "$@")
 [ $? != 0 ] && Usage
@@ -172,13 +170,17 @@ do
 
 	-a)
 	    # allow g -a xx     # to mean g -a xx `pwd`
-	    # and   g -a xx yy 
+	    # and   g -a xx yy
 	    # to be specified
 	    shift # consume -a
 	    # and (new!) g -a [.=/-] --> g -a $(basename $PWD) $PWD
+            # Let g -a
+            # mean g -a $(basename $PWD)
+            # which, further down the line, becomes g -a $(basename $PWD) $PWD
+            # but can't because getopt insists on an argument.
 	    #dat=("$@")
 	    case "$1" in
-		.|=|/|-) shift; set -- $(basename $PWD) "$@";;
+		.|=|/|-|"") shift; set -- $(basename $PWD) "$@";;
 	    esac
 	    name=${1:-"$progname: no name specified"}
 	    shift # consume name

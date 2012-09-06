@@ -234,6 +234,11 @@ prompt.  We don't want to stomp on them.")
                                        "lem"
                                        "gits"
                                        "gitstat"
+                                       "autoreconf"
+                                       "aclocal"
+                                       "autoconf"
+                                       "libtoolize"
+                                       "automake"
                                        "xemacs")))
                    '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(cia\\|stash\\|status\\|diff\\|stat\\)")
                    dp-shell-vc-commit-cmd-regexps)

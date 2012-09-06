@@ -1,0 +1,31 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+# ./info/refs:8d4206cd7181927affd63a9bc0af38922ba8c956[[:space:]]+refs/tags/pre-KVPA
+# use --no-filename
+# 8d4206cd7181927affd63a9bc0af38922ba8c956[[:space::]+refs/tags/pre-KVPA
+
+tag_filter_nop()
+{
+    cat
+}
+
+tag_filter_re()
+{
+    local re="$1"
+    shift
+    egrep "$re"
+}
+
+tag_filter=tag_filter_nop
+
+egrep -v '[{}^]' \
+| \
+$tag_filter \
+| \
+sed -rn 's!^([^[:space:]]+)([[:space:]]+)(.*/)([^^{}]+)$!\1 \4!p' \
+| \
+sort | uniq

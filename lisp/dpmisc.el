@@ -3549,7 +3549,9 @@ indices are unchanged.
 paren.
 @todo -- add the ability to select the pair with my selection code.
 @todo -- add a echo area display of all the pairs with some indication of
-where we are in the list... like flyspell does."
+where we are in the list... like flyspell does.
+@todo -- add a way to look at the char @ point and begin the match sequence there after adding the corresponding(closing) paren char.
+e.g. [aaa<M-p> -- [aaa]. Repeating M-p goes the next pair after '['.  ?How to tell M-p to do this?. Use another binding? Running out of prefix arg interpretations."
   (interactive "*P")
   ;;(dmessage "lc: %s, tc: %s" last-command this-command)
   (let* ((orig-raw-index index)

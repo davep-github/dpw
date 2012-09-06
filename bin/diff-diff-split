@@ -2,35 +2,58 @@
 
 source script-x
 set -u
+progname="$(basename $0)"
+
+: ${prefix:=}
+: ${prefix_separator:=" "}
+: ${exec_p:=}
 
 # change a diff [-q] difference line into a more useful form.
 # We get:
-# Files ./.git/refs/stash and /home/dapanarx/work/ftca/poc/.git/refs/stash differ
-#_-----__________________-----____________________________________________-------
+# Files ./.git/refs/stash and /home/davep/work/ftca/poc/.git/refs/stash differ
+#_-----__________________-----_________________________________________-------
 # More useful, in some cases would be:
-# [diff] ./.git/refs/stash /home/dapanarx/work/ftca/poc/.git/refs/stash
+# [prefix][sep]./.git/refs/stash /home/davep/work/ftca/poc/.git/refs/stash
 #
 
 split_it()
 {
+    local prefix="$1"
+    shift
+    local sep="$1"
+    shift
     local line="$1"
     shift
-    prefix="${1-}"
-    [ -n "$prefix" ] && prefix="$prefix "
+    [ -n "$prefix" ] && prefix="$prefix$sep"
 
     local x=$(echo "$line" | sed -rn 's/(Files )([^[:space:]]+)( and )([^[:space:]]+)( differ)/'"$prefix"'\2 \4/p')
-    echo "$x"
+
+    if [ -n "$exec_p" ]
+    then
+        "$x"
+    else
+        echo "$x"
+    fi
 }
 
-prefix=
-[ "${1-}" = '-p'  ] && {
-    shift
-    prefix="$1"
-    shift
-}
+long_options=("prefix:" "exec" "separator:" "prefix-separator:" "prefix-suffix:")
+option_str="p:xes:"
+source dp-getopt+.sh
+
+for i in "$@"
+do
+  case $1 in
+      -p|--prefix) shift; prefix="$1";;
+      -e|-x|--exec) exec_p=t;;
+      --separator|--prefix-separator|--prefix-suffix|-s) shift; separator="$1";;
+      --) break;;
+      *) exit 1;;
+  esac
+  shift
+done
 
 while read
 do
-  split_it "$REPLY" "$prefix"
+  split_it "$prefix" "$separator" "$REPLY"
 done
     
