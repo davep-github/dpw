@@ -20,12 +20,29 @@ tag_filter_re()
     egrep "$re"
 }
 
+input_pump_nop()
+{
+    cat
+}
+
+input_pump_files()
+{
+    cat "$@"
+}
+
+input_pump=input_pump_nop
 tag_filter=tag_filter_nop
 
-egrep -v '[{}^]' \
-| \
-$tag_filter \
-| \
-sed -rn 's!^([^[:space:]]+)([[:space:]]+)(.*/)([^^{}]+)$!\1 \4!p' \
-| \
-sort | uniq
+main_loop_body()
+{
+  egrep -v '[{}^]' \
+  | \
+  sed -rn 's!^([^[:space:]]+)([[:space:]]+)(.*/)([^^{}]+)$!\1 \4!p'
+}
+
+while read
+do
+  echo 1>&2 "REPLY>$REPLY<REPLY"
+  echo "$REPLY" | main_loop_body
+done | sort | uniq
+
