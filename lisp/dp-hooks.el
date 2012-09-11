@@ -432,8 +432,16 @@ far the regexp is concerned.")
   :group 'faces
   :group 'dp-vars)
 
+(defvar dp-trailing-whitespace-regexp "\\s-+$"
+  "Regular expression to detect that most egregious of all programming
+  problems, that of trailing whitespace. Something so bad, so heinous, so
+  unutterably eeveel that it's worth checking out and modifying every single
+  hideous violator of that most sacred of all things, the trailing whitespace
+  free line. We must spare no effort to return our files to the most holy of
+  all states. And don't get me stahted on macros. MACROS BAAAAAD, grrrrr!")
+
 (defvar dp-trailing-whitespace-font-lock-element
-  '("\\s-+$" 0 dp-trailing-whitespace-face prepend)
+  (list dp-trailing-whitespace-regexp 0 'dp-trailing-whitespace-face 'prepend)
   "A font-lock element to pick out trailing whitespace.")
 
 (defun dp-blah-blah (save-sym)
@@ -2145,7 +2153,7 @@ changed."
   (dp-revert-hook)
   (dp-colorize-found-file-buffer))
 
-;; Dum, dee, dum, dum, dada, do, dum... PERL SUCKS!
+;; Dum, dee, dum, dum, dada, do, dum... PERL SUCKS! dee, dum, dum...
 (defun dp-cperl-mode-hook ()
   (setq dp-il&md-dont-fix-comments-p t) ; cperl sucks at this.
   (substitute-key-definition 'cperl-indent-for-comment

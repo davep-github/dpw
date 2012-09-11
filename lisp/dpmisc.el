@@ -14656,8 +14656,9 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
       (funcall fun file-name))))
 
 (defun dp-looking-at-whitespace-violation ()
-  (car-safe
-   (dp-extents-at-with-prop 'face '(blah . dp-trailing-whitespace-face))))
+  (or (car-safe
+       (dp-extents-at-with-prop 'face '(blah . dp-trailing-whitespace-face)))
+      (looking-at dp-trailing-whitespace-regexp)))
 
 ;; (defun dp-whitespace-next-violation ()
 ;;   (interactive)
@@ -14668,20 +14669,23 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
 (defun dp-whitespace-next-violation ()
   "Replacement for whitespace package's function."
   (interactive)
-  (let* ((prop-val '(blah . dp-trailing-whitespace-face))
-         (ext (save-excursion
-                (goto-char (line-end-position))
-                (dp-looking-at-whitespace-violation))))
-    (if ext
-        (goto-char (extent-start-position ext))
-      (dp-goto-next-matching-extent 'face prop-val))))
+  ;; Search for the evil regexp. An older implementation searched for the
+  ;; whitespace face extent. That didn't work on files that didn't have
+  ;; whitespace exorcism enabled. This isn't the best way to do it because
+  ;; the whitespace determination may become more complicated and repeating
+  ;; that logic everywhere will be bad.
+  ;; The fact that fontifying is largely based on regular expressions means
+  ;; using the WSV regexp won't cause cats to live with dogs and vice-versa.
+  (when (re-search-forward dp-trailing-whitespace-regexp nil t)
+    (goto-char (match-beginning 0))))
 
 (defun dp-whitespace-cleanup-line ()
   "Clean up trailing whitespace on the current line. Uses my whitespace hack."
   (interactive)
   (save-excursion
     (beginning-of-line)
-    (when (re-search-forward "\\s-+$" (line-end-position) t)
+    (when (re-search-forward dp-trailing-whitespace-regexp 
+                             (line-end-position) t)
       (replace-match ""))))
 
 (defun dp-whitespace-next-and-cleanup (&optional ask-per-line-p)
