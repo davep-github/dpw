@@ -10,7 +10,9 @@
 ;; Style notes:
 ;;\/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ 
 ;; NB use ?x for char in key sequences so that it is easier to search for them.
-;; ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+;; Always use vector key sequences.
+;; Always order modifiers control, meta, shift
+;;/\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ /\ 
 
 (eval-when-compile
   (require 'cl)
@@ -293,6 +295,7 @@ Bind any keys in KEYS via `dp-define-keys'."
 (defun dp-keys-define-init-submaps ()
   ;; Beginning to use C-cC-d as dp-* command prefix.
   ;; dp prefixed keys; dp keys prefix; dp key prefix
+  (makunbound 'dp-Ccd-map)
   (defconst dp-Ccd-map
     (dp-define-key-submap 'dp-kb-prefix global-map
                           ;; Prefix for all keys in this map.
@@ -319,7 +322,7 @@ Bind any keys in KEYS via `dp-define-keys'."
                           ;; For when I type the wrong thing
                           [(control ?d)] 'dired
                           [(control ?e)] 'dp-embedded-lisp-eval@point
-                          [(meta control ?x)] 'dp-embedded-lisp-eval@point
+                          [(control meta ?x)] 'dp-embedded-lisp-eval@point
                           ;; Copying is more common than just selecting.
                           [?k] 'dp-copy-to-end-of-line
                           [(control ?k)] 'dp-mark-to-end-of-line
@@ -399,6 +402,7 @@ Submaps of this map are defined below.")
                           ;; Key in parent map which accesses this map.
                           [?s]     
                           ;; List of bindings to define in this map.
+                          [?f] 'dp-insert-flanked-string
                           [?s] 'dp-search-path
                           [?S] 'dp-ssh)
     

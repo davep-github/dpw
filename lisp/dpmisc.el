@@ -504,6 +504,7 @@ LESSP defaults to less-than ('<)."
                            sep-str prefix
                            desired-width)
   (setq-ifnil start (line-beginning-position)
+              desired-width (current-fill-column)
               end (if desired-width
                       (+ start desired-width)
                     (+ (line-beginning-position) (current-fill-column)))
@@ -533,6 +534,15 @@ LESSP defaults to less-than ('<)."
             front-flank
             required-text
             back-flank)))
+
+(defun dp-insert-flanked-string (text-in flanker
+                                 desired-width)
+  (interactive "sString: \ncFlanking char: \nP")
+  (insert (dp-flanked-string text-in flanker
+                             :desired-width
+                             (if desired-width
+                                 (prefix-numeric-value current-prefix-arg)
+                               (- (current-fill-column) (current-column))))))
 
 (defun dp-c-beginning-of-current-token (&rest rrr)
   "Just insulation from `c-beginning-of-current-token'.

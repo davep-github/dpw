@@ -136,6 +136,9 @@
 
     ;; folding-mode
     "^Outside all folds$"
+    
+    ;; (X|SG)ML mode
+    "No previous element in .* element$"
 
     ;; etags
     "^No tags table in use!  Use .* to select one\\.$"

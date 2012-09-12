@@ -13,11 +13,15 @@ ln_s_p=
 MV_CMD=
 MV_OPTS=
 prog=`basename $0`
-[ "$prog" == "sed-ln-s" ] && {
+if [ "$prog" == "sed-ln-s" ]
+then
     ln_s_p=t
     MV_CMD=ln
     MV_OPTS=-s
-}
+elif [ "$prog" == "sed-cp" ]
+then
+    MV_CMD=cp
+fi
 
 #echo $prog: $* 1>&2
 query=
@@ -60,7 +64,7 @@ has_spaces_p()
     fi
     return 1
 }
-    
+
 risky_p()
 {
     has_spaces_p $paranoid_p "$1" && return 1
