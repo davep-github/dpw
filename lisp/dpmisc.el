@@ -535,9 +535,16 @@ LESSP defaults to less-than ('<)."
             required-text
             back-flank)))
 
+(dp-deflocal dp-default-flanker-char ?#
+  "What is used if the user simply presses <Enter> in response to the
+interactive \"Flanking char:\" prompt.")
+
 (defun dp-insert-flanked-string (text-in flanker
                                  desired-width)
   (interactive "sString: \ncFlanking char: \nP")
+  (when (and (interactive-p)
+             (eq flanker ?\r))
+    (setq flanker dp-default-flanker-char))
   (insert (dp-flanked-string text-in flanker
                              :desired-width
                              (if desired-width
@@ -6161,45 +6168,8 @@ new one."
        ((listp val) (custom-set-faces (list face val t)))
        (t (error "Unknown val type in dp-maybe-set-face")))))
 
-; ;;
-; ;; stick a space at the beginning of each line so the indent function
-; ;; doesn't ignore the line.  In the case where the comment shoud be at
-; ;; the beginning of the line, it will be moved backwards correctly.
-; ;;!<@todo get and insert class name?  Or does doxy do it already?
-; (defvar doxy-python-class-member-comment-elements '("
-;  /*********************************************************************/" > "
-;  /*!" > "
-;   * @brief " (P "brief desc: " desc nil) > "
-;   */" > % >)
-;   "Elements of a class function comment template")
+;; old Python defs in VC.
 
-; (defvar doxy-python-function-comment-elements '("
-;  /*********************************************************************/" > "
-;  /*!" > "
-;   * @brief " (P "brief desc: " desc nil) > "
-;   */" > % >)
-;   "Elements of a C/C++ function comment template")
-
-; (defvar doxy-python-class-comment-elements '("
-;  /*********************************************************************/" > "
-;  /*!" > "
-;  * @class " p > "
-;  * @brief " p > "
-;  */" > % >)
-;   "Elements of a C/C++ class comment template")
-          
-; (tempo-define-template "doxy-python-class-member-comment"
-; 		        doxy-python-class-member-comment-elements)
-; (tempo-define-template "doxy-python-function-comment"
-; 		        doxy-python-function-comment-elements)
-; (tempo-define-template "doxy-python-class-comment"
-; 		        doxy-python-class-comment-elements)
-
-;;
-;; stick a space at the beginning of each line so the indent function
-;; doesn't ignore the line.  In the case where the comment shoud be at
-;; the beginning of the line, it will be moved backwards correctly.
-;;!<@todo get and insert class name?  Or does doxy do it already?
 (defvar doxy-c-class-member-comment-elements '(
 " /*********************************************************************/" > "
  /*!" > "
@@ -6270,7 +6240,7 @@ do not indent the newly inserted comment block."
   (interactive "*")
   (dp-insert-tempo-template-comment 
    'tempo-template-doxy-c-class-member-comment no-indent))
-(defalias 'tcfc 'dp-c-tempo-insert-member-comment)
+(dp-defaliases 'tcfc 'tcmc 'dp-c-tempo-insert-member-comment)
 
 (defun dp-c-tempo-insert-function-comment (&optional no-indent)
   "Add a tempo function comment."
@@ -6278,7 +6248,6 @@ do not indent the newly inserted comment block."
   (dp-insert-tempo-template-comment 
    'tempo-template-doxy-c-function-comment no-indent))
 (defalias 'tfc0 'dp-c-tempo-insert-function-comment)
-
 
 (defun dp-c-insert-class-comment ()
   "Insert a tempo class comment, using the class name from the current line."

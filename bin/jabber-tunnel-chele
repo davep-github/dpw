@@ -10,5 +10,5 @@ then
     echo Creating a jabber tunnel to chele
     EExec ssh -N -L 5222:localhost:5222 ${other_end}
 else
-    EExec xx -g47x3+0-1 -F black -B green $0 "$RUNNIT"
+    EExec xx -g47x3+0-24 -F black -B green $0 "$RUNNIT"
 fi
