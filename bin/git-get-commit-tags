@@ -1,0 +1,40 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+# 5104/0000> git for-each-ref 'refs/tags/*th*'
+# 0f95f1cf4aa740e9c4e8a12c9b9094e889096762 tag	refs/tags/1th
+# 39c7cd64a97f87e35c026e049a0a3c15df845d27 tag	refs/tags/2th
+# 93edd254ede6d51832ef593f8ed25b454fa4007c tag	refs/tags/2th++
+# dapanarx@grape01:~/work/gitexp/3/test-one (!master!)
+# 5104/0000>
+
+refname_fmt="%(refname:short)"  # alternative: refname
+objname_fmt="%(objectname)"     # alternative: objectname:short
+
+rev_fmt="${refname_fmt} ${objname_fmt}"
+fwd_fmt="${objname_fmt} ${refname_fmt}"
+fmt="$fwd_fmt"
+
+[ "${1-}" = "-r" ] && {
+    fmt="$rev_fmt"
+    shift
+}
+
+patterns=()
+for p in "$@"
+do
+  case "$p" in
+      # Which literal prefix is better?
+      # I don't think /* matches anything anyway.
+      /*) q=$(echo "$p" | cut -c2-); patterns+=($q);;
+      #==*) q=$(echo "$p" | cut -c3-); patterns+=($q);;
+      
+      */*) patterns+=($p);;
+      *) patterns+=(refs/tags/$p);;
+  esac
+done
+
+git for-each-ref --format="$fmt" "${patterns[@]}"
