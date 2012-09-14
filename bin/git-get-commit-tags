@@ -31,10 +31,12 @@ do
       # I don't think /* matches anything anyway.
       /*) q=$(echo "$p" | cut -c2-); patterns+=($q);;
       #==*) q=$(echo "$p" | cut -c3-); patterns+=($q);;
-      
+
       */*) patterns+=($p);;
       *) patterns+=(refs/tags/$p);;
   esac
 done
+
+[ -z "${patterns[@]-}" ] && patterns=("refs/heads")
 
 git for-each-ref --format="$fmt" "${patterns[@]}"

@@ -16,6 +16,24 @@
   :group 'dp-vars
   :type '(repeat (symbol :tag "Major mode")))
 
+(defvar dp-buffer-menu-invocation-arg nil
+  "Arg that dp-buffer-menu was invoked with.")
+
+(defun dp-refresh-buffer-menu ()
+  (interactive)
+  (dp-buffer-menu dp-buffer-menu-invocation-arg))
+
+(defun dp-list-buffers (&optional arg)
+  (interactive "P")
+  (dp-buffer-menu (not arg) 'list-buffers))
+
+(defun* dp-buffer-menu (&optional arg (listing-function 'buffer-menu))
+  "Invert the arg to buffer-menu so that ARG is required
+to have buffer-menu show non-file buffers."
+  (interactive "P")
+  (setq dp-buffer-menu-invocation-arg arg)
+  (funcall listing-function (not arg)))
+
 (defun dp-bmm-visit (&optional one-window)
   (interactive "P")
   (if one-window
@@ -43,21 +61,21 @@
 
 (defun dp-buffer-menu-mode-hook ()
   "Sets up personal menu mode options."
-  (local-set-key "e" 'Buffer-menu-1-window)
-  (local-set-key "w" 'Buffer-menu-save)
-  (local-set-key "W" 'dp-bmm-save-immed)
-  (local-set-key "S" 'dp-bmm-save-immed)
-  (local-set-key "\ew" 'dp-bmm-save-immed)
+  (local-set-key [?e] 'Buffer-menu-1-window)
+  (local-set-key [?w] 'Buffer-menu-save)
+  (local-set-key [?W] 'dp-bmm-save-immed)
+  (local-set-key [?S] 'dp-bmm-save-immed)
+  (local-set-key [(meta ?w)] 'dp-bmm-save-immed)
   (local-set-key [return] 'dp-bmm-visit)
   (local-set-key [(meta return)] 'Buffer-menu-1-window)
   (local-set-key [(control return)] 'Buffer-menu-1-window)
   ;; retain behavior that I like (inverted from standard): 
   ;; no prefix arg --> just files
   ;;    prefix arg --> all buffers
-  (local-set-key "g" (kb-lambda 
+  (local-set-key [?g] (kb-lambda 
 		       (dp-buffer-menu dp-buffer-menu-invocation-arg)))
-  (local-set-key "=" 'Buffer-menu-this-window)
-  (local-set-key "." 'Buffer-menu-this-window)
+  (local-set-key [?=] 'Buffer-menu-this-window)
+  (local-set-key [?.] 'Buffer-menu-this-window)
   (local-set-key [?D] 'dp-buffer-menu-mark-for-kill-matching-buffers)
   (local-set-key [(meta ?D)] 'dp-buffer-menu-mark-for-kill-matching-buffers)
   (local-set-key [up] (kb-lambda 
@@ -70,12 +88,12 @@
 )
 
 (when (boundp 'buffers-menu-predicate)
-  (defun dp-list-buffers-predicate (b &rest rest)
-    (if (and b
-	     (memq (symbol-value-in-buffer 'major-mode b)
+  (defun dp-list-buffers-predicate (buffer &rest rest)
+    (if (and buffer
+	     (memq (symbol-value-in-buffer 'major-mode buffer)
 		   dp-bmm-visible-major-modes))
 	t
-      (apply dp-old-buf-menu-pred (cons b rest))))
+      (apply dp-old-buf-menu-pred (cons buffer rest))))
   (defvar dp-old-buf-menu-pred buffers-menu-predicate)
   (setq buffers-menu-predicate 'dp-list-buffers-predicate))
 

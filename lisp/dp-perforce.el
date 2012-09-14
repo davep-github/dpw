@@ -37,7 +37,7 @@ This mode uses tabs, so the line too long regexp fails.")
   '(;; Comments
     ("^#.*"
      (0 'font-lock-comment-face))
-    ;; Client Specication Details
+    ;; Client Specification Details
     ("^\\([A-Za-z]+\\):[ \t]*\\(.*\\)"
      (1 'font-lock-keyword-face)
      (2 'font-lock-variable-name-face))
@@ -85,9 +85,10 @@ This mode uses tabs, so the line too long regexp fails.")
 
 ;; Setup indentation for p4 buffers
 (defun p4-setup-indent ()
-  "Setup indentation for a p4 buffer to DTRT>"
+  "Setup indentation for a p4 buffer to DTRT"
   (interactive)
-  ;; Filladapt's guesses are no where near our wonky style.
+  ;; Filladapt's guesses are no where near their wonky style.
+  ;; Adjust for next gig.
   (filladapt-mode 0)
   (make-variable-buffer-local 'tab-stop-list)
   (setq tab-stop-list '(8 10))

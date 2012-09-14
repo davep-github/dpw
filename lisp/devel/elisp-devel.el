@@ -2019,3 +2019,66 @@ nil
 
 
 
+
+========================
+Friday September 14 2012
+--
+
+(car-safe nil)
+nil
+
+;; dedicated is least best. selection-preference = - (1/0)
+;; 
+
+(dp-deflocal dp-selection-preference 0
+  "How much do we want to choose this buffer's window as the
+`other' or `next' or whatever window?")
+
+(defun dp-get-selection-preference (&optional buffer)
+  (setq-ifnil buffer (current-buffer))
+  ;; If buffer is in a dedicated window, return very small
+  (buffer-local-value 'dp-selection-preference buffer))
+
+(defun dp-best-other-window (&optional win-list frame minibuf window)
+  (interactive)
+  (setq-ifnil win-list (window-list frame minibuf window))
+  ;; For all buffers displayed in windows
+  ;; find highest preference.
+  (let ((original-buffer (current-buffer))
+        (buffers (dp-all-window-buffers win-list))
+        (best-pref -999999)
+        best-buf buf pref)
+    (setq buffers (cdr-safe buffers))
+    (while buffers
+      (setq buf (car buffers)
+            pref (dp-get-selection-preference buf))
+      (when (and (not (equal original-buffer buf))
+                 (> pref best-pref))
+        (setq best-buf buf
+              best-pref pref))
+      (setq buffers (cdr buffers)))
+    best-buf))
+
+
+(dp-best-other-window)
+#<buffer "config">
+
+#<buffer "*Hyper Help*">
+
+#<buffer "dpmisc.el">
+
+#<buffer "dpmisc.el">
+
+#<buffer "config">
+
+#<buffer "dpmisc.el">
+
+#<buffer "dpmisc.el">
+
+#<buffer "elisp-devel.el">
+
+
+#<buffer "elisp-devel.el">
+
+nil
+

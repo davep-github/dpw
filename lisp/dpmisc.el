@@ -2292,24 +2292,6 @@ if FROM-BEGINNING-P, mark entire line. Leaves cursor @ end-of-region."
       (end-kbd-macro)
     (start-kbd-macro nil)))
 
-(defvar dp-buffer-menu-invocation-arg nil
-  "Arg that dp-buffer-menu was invoked with.")
-
-(defun* dp-buffer-menu (&optional arg (listing-function 'buffer-menu))
-  "Invert the arg to buffer-menu so that ARG is required
-to have buffer-menu show non-file buffers."
-  (interactive "P")
-  (setq dp-buffer-menu-invocation-arg arg)
-  (funcall listing-function (not arg)))
-
-(defun dp-refresh-buffer-menu ()
-  (interactive)
-  (dp-buffer-menu dp-buffer-menu-invocation-arg))
-
-(defun dp-list-buffers (&optional arg)
-  (interactive "P")
-  (dp-buffer-menu (not arg) 'list-buffers))
-
 (defun* dp-comment-out-region (&optional sexp-p (comment-comment-text "")
                                comment-tag
                                bracket-p)
@@ -10682,7 +10664,8 @@ split.")
 (defun dp-all-window-buffers (&optional win-list frame first-window)
   (mapcar (lambda (win)
             (window-buffer win))
-          (window-list frame 'no-minibuffers first-window)))
+          (or win-list
+              (window-list frame 'no-minibuffers first-window))))
 
 (defun dp-non-window-buffers (&optional buf-list win-list)
   (setq-ifnil buf-list (buffer-list)
