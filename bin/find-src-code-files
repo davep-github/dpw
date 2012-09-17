@@ -140,9 +140,13 @@ filter()
     }
     [ -n "$only_cat_files" ] && exit 0
 
-set -x
     ftreewalk.py -X NOTAG \
        $EXCLUDED_FILES_FILE_OPT \
        $follow_sym_links $dirs | \
        tee /dev/null
 } | filter | tee $v_file
+
+rm -f "$EXCLUDED_FILES_FILE"
+
+exit 0
+

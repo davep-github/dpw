@@ -106,3 +106,6 @@ ftreewalk.py -X NOTAG \
     $EXCLUDED_FILES_FILE_OPT \
     $follow_sym_links $dirs | \
     $filter
+rm -f "$EXCLUDED_FILES_FILE"
+
+exit 0

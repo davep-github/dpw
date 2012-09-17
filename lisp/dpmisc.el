@@ -2957,7 +2957,12 @@ Also, it will move backwards into a closed class (ie has a };)."
         (goto-char (match-beginning 1))
       (end-of-line))))
 
-(defun* dp-c-terminate-function-stmt () ; <:ctf|cfts:>
+(defun* dp-c-terminate-function-stmt (&optional ; <:ctf|cfts:>
+                                      (trailer-string ""))
+  "Terminate a function statement by adding a ; after the C* text.
+Preserve any junk past the end of the C* code, e.g. // comments.  Insert
+trailer-string after everything. This make a good cheap place to add a
+newline."
   (interactive)
   (save-excursion
     (dp-c-beginning-of-statement)
@@ -2965,10 +2970,11 @@ Also, it will move backwards into a closed class (ie has a };)."
       (return-from dp-c-terminate-function-stmt)))
   (dp-c-end-of-line)
   (when (dp-looking-back-at-close-paren-p 'final)
-    (replace-match (format "\\1;%s" ; The ) above
+    (replace-match (format "\\1;%s%s" ; 1st %s: The ) and other eol-junk above
                            (if (> (length (match-string (1+ dp-c*-junk-ws))) 1)
                                (substring (match-string (1+ dp-c*-junk-ws)) 1)
-                             "\\2")))
+                             "\\2")
+                           trailer-string))
     t)                        ; We still need to do the eol/newline thing.
   )
   
@@ -5662,9 +5668,12 @@ Note the spaces."
           (if (functionp prompt)
               (apply prompt prompt-args)
             (or prompt ""))
-          (let ((default (if (functionp default)
-                             (apply default default-args)
-                           default)))
+          (let ((default (cond
+                          ((functionp default)
+                           (apply default default-args))
+                          ((and default (string= "" default))
+                           "\"\"")
+                          (t default))))
             (if default
                 (format " (default: %s)" default)
               ""))))
@@ -10060,13 +10069,16 @@ Just for informational purposes.")
                               nil))
     (if make-command
         (progn
-          (setq prompt (format "target in %s: " (nth 1 make-command))
+          (setq prompt (dp-prompt-string-with-default
+                        (format "target in %s" (nth 1 make-command))
+                        dp-mru-make-target)
                 target (or target (read-from-minibuffer 
                                    prompt 
-                                   ;;dp-mru-make-target
+                                   nil nil nil 
+                                   'dp-make-targets-history
                                    nil
-                                   nil nil 
-                                   'dp-make-targets-history)))
+                                   (or dp-mru-make-target
+                                       "install"))))
                 
           ;; cannot remake if there's no target.
           (when (and dp-mru-make-target 
@@ -10385,6 +10397,7 @@ is done.")
         ;;; ???syntactic-region
         old-point
         decl-bounds
+        is-decl-p
         open-paren-marker close-paren-marker)
     (end-of-line)
     ;; Don't do anything if we backup into a different syntactic region.
@@ -10410,6 +10423,12 @@ is done.")
     ;;(setq syntactic-region (dp-c-get-syntactic-region))
     (setq old-point (point))
     (dp-c-beginning-of-statement)
+    ;; Is this a declaration?
+    ;; extern is one way to tell.
+    (when (looking-at "extern")
+      (unless (eq add-opening-brace-p 'always)
+        (setq add-opening-brace-p nil
+              is-decl-p t)))
     ;;(unless (or (equal syntactic-region (dp-c-get-syntactic-region))
     ;;            (<= (point) old-point))
     ;;  (goto-char old-point)
@@ -10440,7 +10459,7 @@ is done.")
                  (e (dp-mk-marker(cdr be))))
             (dp-c-fill-statement nil nil nil
                                  (dp-mk-marker (1+ e)))
-            ;; Leave ourselves position for the ) check which allows us
+            ;; Leave ourselves positioned for the ) check which allows us
             ;; to add an opening { if needed.
             (goto-char e)
             (beginning-of-line))
@@ -10489,10 +10508,15 @@ is done.")
 ;       (forward-line 1))
     (goto-char close-paren-marker)
     (unless (eobp) (forward-char 1))
-    (and add-opening-brace-p
-         (dp-c-ensure-opening-brace :force-newline-after-brace-t t))
+    (when is-decl-p
+      ;; Terminate the statement.
+      (dp-c-terminate-function-stmt "\n")
+      (return-from dp-c-format-func-decl t))
+    (when add-opening-brace-p
+      (dp-c-ensure-opening-brace :force-newline-after-brace-t t))
     (when align-p
       (align (car decl-bounds) (1+ (cdr decl-bounds)))))
+  ;; Unless we know we did nothing, assume we did something.
   t)
 
 (defalias 'ffd 'dp-c-format-func-decl)
