@@ -1059,7 +1059,7 @@ xxx-send-input as a last resort."
            (or (dp-grep-like-buffer-p (major-mode-str))
                (not (fboundp (dp-sls variant '-after-pmark-p)))
                (not (funcall (dp-sls variant '-after-pmark-p)))))
-      (funcall dp-ef-before-pmark-func)
+      (funcall dp-ef-before-pmark-func current-prefix-arg)
     ;; save the position in the buffer where the latest command was issued.
     (dp-save-last-command-pos)
     (setq dp-shell-output-line-count 0)
@@ -1323,10 +1323,10 @@ are kept in the cdr of a cons, e.g. (cons 'args-are-my-cdr real-args).  If
 `real-args' is a symbol, then there are no args... e.g. we just (funcall
 'fun), else we (apply fun (cdr args-cons)).")
 
-(defun dp-shell-set-error-func&goto-this-error ()
-  (interactive)
+(defun dp-shell-set-error-func&goto-this-error (&optional force-reparse-p)
+  (interactive "P")
   (dp-set-compile-like-mode-error-function)
-  (dp-shell-goto-this-error))
+  (dp-shell-goto-this-error force-reparse-p))
 
 ;; !<@todo XXX Need to define a local `one-window-p' function and have it
 ;; return 1
@@ -1444,7 +1444,7 @@ that a new command has been sent since the last parse."
 (defadvice compile-goto-error (after dp-advised-compile-goto-error activate)
   (dp-highlight-point-until-next-command))
                               
-(defun dp-error-parse-point-to-end (&optional force-reparse)
+(defun dp-error-parse-point-to-end (&optional force-reparse-p)
   "Parse errors from point to end of buffer.  We narrow the buf to be
 point to EOB to reduce the amount of parsing that is needed."
   (interactive "P")
@@ -1452,10 +1452,10 @@ point to EOB to reduce the amount of parsing that is needed."
                                   (forward-line -2)
                                   (line-beginning-position))
                                 (point-max)
-                                (not force-reparse)))
+                                (not force-reparse-p)))
 
 ;;;###autoload
-(defun dp-shell-goto-this-error (&optional force-reparse)
+(defun dp-shell-goto-this-error (&optional force-reparse-p)
   "Goto the error at point in the shell buffer.  
 This has the fortunate side effect of setting 
 things up so that dp-next-error (\\[dp-next-error]) 
@@ -1467,7 +1467,7 @@ very (too) forward looking view of parsing error buffers."
   (interactive "P")
   (setq compilation-last-buffer (current-buffer))
   (when (dp-maybe-add-compilation-minor-mode)
-    (dp-error-parse-point-to-end force-reparse))
+    (dp-error-parse-point-to-end force-reparse-p))
   (compile-goto-error))
 
 (dp-deflocal dp-shell-ignoreeof 1

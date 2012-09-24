@@ -1,0 +1,37 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+
+# file name base dir for comp.
+
+this_file="$1"
+shift
+other_dir="$1"
+
+this_file=$(realpath -r "$this_file")
+dir=$(dirname "$this_file")
+file=$(basename "$this_file")
+
+# If other dir is a dir, we need to append the file
+if [ -d "$other_dir" ]
+then
+    other_dir="$other_dir/$this_file"
+elif [ -f "$other_dir" ]
+then
+    echo 1>&2 "other dir must be a directory"
+    exit 1
+else
+    echo 1>&2 "$other_dir is neither a file nor a directory"
+    exit 1
+fi
+
+#other_file="$other_dir/$dir"
+#other_file=$(realpath -R $this_file $other_dir)
+
+cmd="diff -u $this_file $other_dir"
+echo "+$cmd"
+$cmd
+

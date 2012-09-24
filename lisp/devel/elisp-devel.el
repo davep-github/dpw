@@ -2082,3 +2082,70 @@ nil
 
 nil
 
+
+========================
+Thursday September 20 2012
+--
+
+(defun cre-guts (reparse limit-search find-at-least)
+        (set-buffer compilation-last-buffer)
+      ;; If we are out of errors, or if user says "reparse",
+      ;; discard the info we have, to force reparsing.
+      (if (or (eq compilation-error-list t)
+	      reparse)
+	  (compilation-forget-errors))
+      (if (and compilation-error-list
+	       (or (not limit-search)
+		 (> compilation-parsing-end limit-search))
+	     (or (not find-at-least)
+		 (>= (length compilation-error-list) find-at-least)))
+	;; Since compilation-error-list is non-nil, it points to a specific
+	;; error the user wanted.  So don't move it around.
+	nil
+
+      ;; XEmacs change: if the compilation buffer is already visible
+      ;; in a window, use that instead of thrashing the display.
+      (let ((w (get-buffer-window compilation-last-buffer)))
+	(if w
+	    (select-window w)
+	  (switch-to-buffer compilation-last-buffer)))
+
+      ;; This was here for a long time (before my rewrite); why? --roland
+      ;;(switch-to-buffer compilation-last-buffer)
+      (set-buffer-modified-p nil)
+      (if (< compilation-parsing-end (point-max))
+	  ;; compilation-error-list might be non-nil if we have a non-nil
+	  ;; LIMIT-SEARCH or FIND-AT-LEAST arg.  In that case its value
+	  ;; records the current position in the error list, and we must
+	  ;; preserve that after reparsing.
+	  (let ((error-list-pos compilation-error-list))
+	    (funcall compilation-parse-errors-function
+		     limit-search
+		     (and find-at-least
+			  ;; We only need enough new parsed errors to reach
+			  ;; FIND-AT-LEAST errors past the current
+			  ;; position.
+			  (- find-at-least (length compilation-error-list))))
+	    ;; Remember the entire list for compilation-forget-errors.  If
+	    ;; this is an incremental parse, append to previous list.  If
+	    ;; we are parsing anew, compilation-forget-errors cleared
+	    ;; compilation-old-error-list above.
+	    (setq compilation-old-error-list
+		  (nconc compilation-old-error-list compilation-error-list))
+	    (if error-list-pos
+		;; We started in the middle of an existing list of parsed
+		;; errors before parsing more; restore that position.
+		(setq compilation-error-list error-list-pos))
+	    ))))
+
+(defun compile-reinitialize-errors (reparse
+                                    &optional limit-search find-at-least)
+  (save-excursion
+    ;; XEmacs change: Below we made a change to possibly change the
+    ;; selected window.  If we don't save and restore the old window
+    ;; then if we get an error such as 'no more errors' we'll end up
+    ;; in the compilation buffer.
+    (save-window-excursion
+      (cre-guts reparse limit-search find-at-least)
+)
+))
