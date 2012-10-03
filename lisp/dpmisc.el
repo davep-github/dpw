@@ -11246,6 +11246,18 @@ Uses SYMBOL-PREFIX to make the symbol unique to the caller(s)."
   (interactive)
   (intern (format "%s-dhr-extent" symbol-prefix)))
 
+(defvar dp-highlight-region-ops
+  '(showall sa 
+    highlight hl h 
+    lowlight ll l 
+    hide invis i
+    show unhide s reveal r
+    unhighlight unhl u normal
+    nop)
+  "Keep up-to-date with `dp-highlight-region'.
+\"Keep up-to-date with\" ==> one of the worst phrases in programming.")
+
+
 (defun dp-highlight-region (from to op symbol-prefix
                             &optional hi-face lo-face priority &rest props)
   "Highlight a region according to OP.
@@ -14373,7 +14385,8 @@ find-file\(-at-point) and then, if it fails, this function??"
   (indent-for-comment)
   (dp-call-function-on-key [(meta ?q)]))
 
-(defalias 'mtlcu 'dp-move-too-long-comment-above-current-line)
+(dp-defaliases 'mtlcu 'dp-move-comment-up 
+               'dp-move-too-long-comment-above-current-line)
 
 (defun* dp-jobs-annotate-dice-listing (text &optional (prefix "** ")
                                        (suffix " ** ")
@@ -15030,6 +15043,12 @@ anything --> |b|b|"
   (delete-other-windows)
   (split-window-horizontally))
 (dp-defaliases  '|| '2b '2: '2| 'dp-duplicate-window-horizontally)
+
+(defsubst dp-mk-buffer-position (pos &optional mk-marker-p)
+  (funcall (if mk-marker-p
+               'dp-mk-marker
+             'dp-identity)
+           pos))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;; @todo Write a loop which advises functions with simple push go back

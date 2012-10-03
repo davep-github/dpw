@@ -415,13 +415,17 @@ Otherwise, it uses the topic of the current item.")
   (dpj-restore-match-data)
   (match-string (or num dpj-topic-subexp)))
 
-(defsubst dpj-topic-match-beginning (&optional num)
+(defsubst* dpj-topic-match-beginning (&optional num (no-marker-p t))
   (dpj-restore-match-data)
-  (match-beginning (or num dpj-topic-subexp)))
+  (dp-mk-buffer-position (match-beginning 
+                          (or num dpj-topic-subexp))
+                         (not no-marker-p)))
 
-(defsubst dpj-topic-match-end (&optional num)
+(defsubst* dpj-topic-match-end (&optional num (no-marker-p t))
   (dpj-restore-match-data)
-  (match-end (or num dpj-topic-subexp)))
+  (dp-mk-buffer-position (match-end 
+                          (or num dpj-topic-subexp))
+                         (not no-marker-p)))
 
 (defsubst dpj-topic-match-timestamp ()
   "Return point of the timstamp part of a topic after finding a topic"
@@ -775,7 +779,7 @@ next topic that matches the current topic."
   (interactive "p")
   (dpj-find-todo 'forward-no-wrap topic-flag))
 
-(defun dpj-find-topics (&optional topic-re pos skip-re)
+(defun dpj-find-topics (&optional topic-re pos skip-re no-markers-p)
   "Visit all topics.  Return two lists, matching and not-matching TOPIC-RE.
 Each list element is a list:
 \(topic-string record-start topic-start record-end\)
@@ -806,7 +810,7 @@ Each list element is a list:
 		 not-done)
 	    (setq rec-start (dpj-topic-match-beginning 0)
 		  topic-start (dpj-topic-match-beginning))
-	  (setq rec-start (1+ (point-max))
+	  (setq rec-start (dp-mk-marker (1+ (point-max)))
 		topic-start nil))
 	;;(dmessage "not-done>%s< skip>%s< rec-start>%s< mtop>%s<" 
 	;;	  not-done skip rec-start topic)
@@ -818,6 +822,11 @@ Each list element is a list:
 	  ;; end of previous rec is beginning of next-1
 	  (setq last-entry 
 		(append last-entry (list (1- rec-start))))
+          (unless no-markers-p
+            (setq last-entry (list (nth 0 last-entry)
+                                   (dp-mk-marker (nth 1 last-entry))
+                                   (dp-mk-marker (nth 2 last-entry))
+                                   (dp-mk-marker (nth 3 last-entry)))))
 	  (if match-or-not
 	      (setq matching-list (append matching-list 
 					  (list last-entry)))
@@ -838,6 +847,10 @@ Each list element is a list:
       ;;(dmessage "F:ml>%s<, uml>%s<" matching-list unmatching-list)
       (cons matching-list unmatching-list))))
 
+;; Need this shim to match the signature of `dpj-highlight-region'
+(defun dpj-kill-topic-record (start end op)
+  (funcall op start end))
+
 (defun dpj-process-topics (topic-re match-op others-op keep-others 
 				    &optional skip-re no-contig)
   "Process items matching TOPIC-RE.  Process matching entries with
@@ -853,14 +866,18 @@ non-nil says to not reset all highlighting before proceeding."
   ;; partition topics into matching and unmatching lists
   (let* ((lists (dpj-find-topics dpj-next-in-topic-topic nil skip-re))
 	 (match-list (car lists))
-	 (other-list (cdr lists)))
+	 (other-list (cdr lists))
+         ;; @todo XXX factor something like this out.
+         (processor (if (memq match-op '(delete-region kill-region))
+                        'dpj-kill-topic-record
+                      'dpj-highlight-region)))
 
     ;; apply match op to matching list
     (dolist (topic-info match-list)
       ;;(dmessage "show, topic-info>%s<" topic-info)
-      (dpj-highlight-region (dpj-topic-info-record-start topic-info)
-			    (dpj-topic-info-end topic-info)
-			    match-op))
+      (funcall processor (dpj-topic-info-record-start topic-info)
+               (dpj-topic-info-end topic-info)
+               match-op))
 
     ;; process contiguous unmatching topics as a unit.
     ;; this makes the hidden stuff appear as a single instance of
@@ -928,6 +945,20 @@ Return a list of the chosen topic/re and the current-prefix-arg."
   (interactive (dpj-read-topic-n-flag))
   ;;(dmessage "topic-re>%s<" topic-re)
   (dpj-process-topics topic-re 'highlight 'lowlight keep-others skip-re))
+
+(defun dpj-kill-topic-records (&optional topic-re keep-others skip-re)
+  "Kill the matching topics."
+  (interactive (dpj-read-topic-n-flag))
+  ;;(dmessage "topic-re>%s<" topic-re)
+  (dpj-process-topics topic-re 'kill-region 'nop keep-others skip-re)
+  (setq dpj-last-process-topics-args nil))
+
+(defun dpj-delete-topic-records (&optional topic-re keep-others skip-re)
+  "Delete the matching topics."
+  (interactive (dpj-read-topic-n-flag))
+  ;;(dmessage "topic-re>%s<" topic-re)
+  (dpj-process-topics topic-re 'delete-region 'nop keep-others skip-re)
+  (setq dpj-last-process-topics-args nil))
 
 (defun dpj-show-topic (&optional topic-re keep-others skip-re)
   "Show matching topics, hiding all others."
@@ -1366,7 +1397,8 @@ returning."
 
 ;;;###autoload
 (defun* dpj-grep-and-view-hits (number-of-months topic-re grep-re 
-                               &optional (continue-from-last-p nil cflp-set-p))
+                                &optional 
+                                (continue-from-last-p nil cflp-set-p))
   "Grep topics for regexp and view in view buf.
 Search NUMBER-OF-MONTHS files back in time.
 Search topics matching TOPIC-RE for GREP-RE.

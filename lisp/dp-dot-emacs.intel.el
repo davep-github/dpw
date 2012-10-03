@@ -128,6 +128,7 @@
 
 ;; Make this environment/project aware.
 (defun dp-index-code(&optional sync-p)
+  "Index code for the current project. Each spec-macs should define/override."
   (interactive)
   (let (cmd
         (index-root 
