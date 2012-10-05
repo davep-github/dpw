@@ -8,7 +8,7 @@ git_diff_or_cat()
     local file="$1"; shift
     # This will, by default, cat its 2nd parameter, the name of the temp file
     # extracted from the given commit by git for doing the diff.
-    export GIT_EXTERNAL_DIFF=$HOME/bin/dp-cat-some 
+    export GIT_EXTERNAL_DIFF=$HOME/bin/dp-cat-some
     # sadly git doesn't seem to invoke the diff program if the files are
     # identical.
     if git diff "$commit" -- "$file" | grep -q .
@@ -19,7 +19,7 @@ git_diff_or_cat()
         cat "$file"
     fi
 }
-    
+
 nth=
 commit="$1"; shift
 case "$commit" in
@@ -31,7 +31,7 @@ esac
 
 
 [ -z "$*" ] && {
-    echo 1>&2 "Usage: git-commit commit file+"
+    echo 1>&2 "Usage: git-cat commit file+"
     exit 1
 }
 for f in "$@"

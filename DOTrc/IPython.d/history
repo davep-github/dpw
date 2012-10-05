@@ -825,3 +825,9 @@ run -d  ~/bin/ww -m1 -d1 -y2012
 run -d  ~/bin/ww -m1 -d1
 run  ~/bin/ww -m1 -d1
 run -d  ~/bin/ww -m1 -d1
+ed?
+edit?
+ed -x xml_proc.py
+run ./xml_proc.py -p -j/BLOB/z=x -p ~/tmp/m.xml
+run ./xml_proc.py -p -j/BLOB/z=x -p /home/dapanarx/tmp/m.xml
+run -d ./xml_proc.py -p -j/BLOB/z=x -p /home/dapanarx/tmp/m.xml
