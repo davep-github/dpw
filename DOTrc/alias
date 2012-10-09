@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+# should be sourced, but the shebang tells us and emacs what's up
 #
 #set -x
 #
@@ -11,7 +13,8 @@ dp_source_rc ${DP_RC_DIR}/alias.b0rkd-kb ${DP_RC_DIR}/alias.root
 alias ls_no_color="\ls -CF --color=never"
 alias ls_with_color="\ls -CF --color=tty"
 alias lnc="ls_no_color"
-alias lc='ls_with_color'
+alias lc='ls_with_color'        # @todo XXX deprecate this
+alias lwc='ls_with_color'
 alias lca='\ls -CF --color=always'
 #alias lf="ls_no_color"
 #alias lm="ls_no_color"

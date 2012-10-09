@@ -2279,7 +2279,9 @@ ARG is numberp:
       ;; new shell (I hope!)
       (add-to-list 'dp-shells-shell-buffer-list sh-buffer)
       (add-local-hook 'kill-buffer-hook 'dp-shells-delq-buffer)
-      (add-local-hook 'kill-buffer-hook 'dp-save-shell-buffer-contents-hook)
+      (add-local-hook 'kill-buffer-hook 
+                      (lambda ()
+                        (dp-save-shell-buffer-contents-hook nil t)))
       ;; Set the name once. All saves will pile up in the same file.  I've
       ;; added a manual save command and that will go there, too.  If shell
       ;; buffers get too big, then the performance begins to suck.  Many
@@ -2823,23 +2825,27 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 
 (defun* dp-save-shell-buffer-contents (&rest kw-args
                                        &key (buffer (current-buffer))
+                                       (confirm-save-p 'ask)
                                        &allow-other-keys)
   (interactive)
   ;; Annotate the buffer.
-  (with-current-buffer (get-buffer buffer)
-    (save-restriction
-      (widen)
-      (save-excursion
-        ;; We can get multiple stanzas if we save >1 time.
-        (goto-char (point-min))
-        (insert "\n# Buffer saved on " (current-time-string) "\n")
-        (insert "# In working dir " default-directory "\n")
-        (insert "# Logged in as " (user-login-name) "@" (system-name) "\n")
-        (insert "# Name: " (user-full-name) "\n")
-        (insert "#\n"))
-      (apply 'dp-save-buffer-contents 
-             :file-name dp-save-buffer-contents-file-name
-             kw-args))))
+  (if (or (not confirm-save-p)
+          (y-or-n-p "Save shell buffer contents? "))
+      (with-current-buffer (get-buffer buffer)
+        (save-restriction
+          (widen)
+          (save-excursion
+            ;; We can get multiple stanzas if we save >1 time.
+            (goto-char (point-min))
+            (insert "\n# Buffer saved on " (current-time-string) "\n")
+            (insert "# In working dir " default-directory "\n")
+            (insert "# Logged in as " (user-login-name) "@" (system-name) "\n")
+            (insert "# Name: " (user-full-name) "\n")
+            (insert "#\n"))
+          (apply 'dp-save-buffer-contents
+                 :file-name dp-save-buffer-contents-file-name
+                 kw-args)))
+    (message "Not saving shell buffer contents.")))
 
 (defun dp-shell-visit-buffer-log ()
   (interactive)

@@ -54,7 +54,7 @@ dp_rc_logger()
 {
     echo "$(date +'%j:%R:%S'): $@" >> $DAVEP_rc_log
 }
-dp_rc_logger "================= $(date) ================="
+dp_rc_logger "================= $(date): begin bashrc ================="
 
 pbit_farm_machine_p()
 {
@@ -390,11 +390,9 @@ source_list -l $RC_DIR/alias "" $locale_rcs
     source_list -l $RC_DIR/env   $EXTRA_RCS
     source_list -l $RC_DIR/alias $EXTRA_RCS
     # add the extra rcs to locale
-    sep=" "
-    [ -z "$locale_rcs" ] && sep=
-    locale_rcs="$locale_rcs$sep$EXTRA_RCS"
+    locale_rcs=$($PATHADDBIN -S "$locale_rcs" $EXTRA_RCS)
 }
-unset EXTRA_RCS sep
+unset EXTRA_RCS
 
 : ${PROJECT_ROOT:="${PROJECT_WORK}/${PROJECT_NAME-}"}
 export PROJECT_ROOT

@@ -220,16 +220,15 @@ expand_source_list()
     local base=$1
     local src
     shift
-    rc=""
+    rc=()
     for suff in "$@"
     do
 	src=${base}${suff}
 	[ -f $src ] && {
-	    rc="$rc $src"
+	    rc+=("$src")
 	}
     done
-
-    echo $rc
+    echo "${rc[@]}"
 }
 
 source_list()
@@ -238,29 +237,21 @@ source_list()
     local src
     if [ "$1" = '-v' ]
     then
+	shift
 	verbose=echo
-	shift
-    elif [ "$1" = '-v' ]; then
         set -x
-	shift
     elif [ "$1" = "-l" ]; then
         verbose=dp_rc_logger
         shift
     else
 	verbose=":"
     fi
-    local base=$1
-    shift
     local dprc_rc=0
-    for suff in "$@"
+    for src in $(expand_source_list "$@")
     do
-	src=${base}${suff}
-	$verbose "source_list: try>$src<"
-	[ -f $src ] && {
-	    $verbose "source_list: sourcing>$src<"
-	    . $src ''
-	    dprc_rc=$((++ dprc_rc))
-	}
+        $verbose "source_list: sourcing>$src<"
+        source $src
+        ((++ dprc_rc))
     done
 
     return $dprc_rc
