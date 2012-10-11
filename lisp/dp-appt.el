@@ -142,7 +142,7 @@ Returns appt-list so it can be squirreled away if needed."
         (dp-appt-zombify-buffer zombie))
       (set-buffer-dedicated-frame (current-buffer) frame)
       (set-buffer-modified-p nil)
-      (setq buffer-read-only t)
+      (dp-toggle-read-only 1)
       (dp-shrink-wrap-frame frame)))
   
   (defun dp-appt-delete-frame-old ()

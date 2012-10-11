@@ -194,7 +194,7 @@ it as a string."
     ;; by "William G. Dubuque" <wgd@zurich.ai.mit.edu> w/ mods from Stig
     `(with-current-buffer (get-buffer-create
                            (generate-new-buffer-name " *string-output*"))
-      (setq buffer-read-only nil)
+      (dp-toggle-read-only 0)
       (buffer-disable-undo (current-buffer))
       (erase-buffer)
       (unwind-protect

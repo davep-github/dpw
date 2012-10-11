@@ -4,7 +4,8 @@
 ;;;
 ;;; Originally began as an implementation of "o" command in Vi*.
 ;;;
-;;; The baseline behavior is, loosely: got EOL, mode specific [return] and mode specific 
+;;; The baseline behavior is, loosely: got EOL, mode specific [return] 
+;;; and mode specific 
 ;;; I have been trying to add intelligence to it so it can do the most useful
 ;;; thing given that I want to create a new line (not a newline).
 ;;; Some examples:

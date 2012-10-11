@@ -1232,6 +1232,16 @@ Becomes:
                                'next-line)
       (call-interactively 'next-line))))
 
+(defun dp-c++-member-init ()
+  "Lazy func. Convert the symbol at point to a C++ standardized initializer.
+E.g. \"some_var\" --> \"m_some_var(some_var)\"."
+  (interactive)
+  (let ((symbol-name (symbol-near-point)))
+    (c-simple-skip-symbol-backward)
+    (insert "m_")
+    (forward-char (length symbol-name))
+    (insert "(" symbol-name ")")))
+
 ;;-----------------------------------------------------------------------------
 ;;
 ;; Lang: C/C++ <:c|c++|c language functions end:>

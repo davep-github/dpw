@@ -237,7 +237,7 @@ current."
 	      (message "Already sudo editing this buffer")
 	      (throw 'done nil))
 	    (setq point (point))
-	    (setq buffer-read-only nil)
+            (dp-toggle-read-only nil)
 	    (erase-buffer)
 	    ;; revert will reread the file via our handlers.
 	    (revert-buffer nil 'no-confirm)
@@ -286,7 +286,7 @@ current."
     (let ((point (point)))
       (dp-sudo-edit-remove-handler-entry)
       (setq dp-sudo-edit-handler-entry nil)
-      (setq buffer-read-only nil)
+      (dp-toggle-read-only nil)
       (dp-delete-extents (point-min) (point-max) 'dp-sudo-edit-bg-extent)
       (erase-buffer)
       ;; revert will reread the file via our handlers.

@@ -135,7 +135,8 @@ dealing with indexed colours.")
     (if (dp-apply-or-value pred pred-args)
         (dp-colorize-region (or color dp-default-read-only-color) 
                             beg end
-                            'no-roll-colors nil 'priority 1
+                            'no-roll-colors nil 
+                            'priority -11  ; This is a background.
                             ;; The property below says that the underlying
                             ;; extent is there showing some kind of file
                             ;; state, like read-only or remote.

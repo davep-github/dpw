@@ -2149,3 +2149,11 @@ Thursday September 20 2012
       (cre-guts reparse limit-search find-at-least)
 )
 ))
+
+========================
+Wednesday October 10 2012
+--
+
+c-simple-skip-symbol-backward
+c-simple-skip-symbol-backward
+

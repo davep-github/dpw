@@ -348,8 +348,8 @@ _str: looks too much like string
 (defvar dp-debug-like-patterns
   (concat (regexp-opt `("@tmp@" "@dbg@" "@rmv@" "@mark@" "WTF"
                         "@todo"))
-          "\\|N[.]?B[.]?\\|<<<<<?\\|"
-          "XXXX*\\|!!!!*\\|\\?\\?\\?\\?*")
+          "\\|N[.]?B[.]?!*\\|<<<<<?\\|"
+          "XXXX*!*\\|!!!!*\\|\\?\\?\\?\\?*!*")
   "A regexp that recognizes things that are temporary/debug-like in nature.
 These can then be font-locked to make them easier to find and remove.
 These are general in nature and can be found in any [programming language]
@@ -870,7 +870,7 @@ main(
   (local-set-key [(meta ?[)] 'dp-c++-find-matching-paren)
   (local-set-key [(meta ?u)] 'dp-c++-mode-undo)
   (local-set-key [(control ?c) (control meta ?s)] 'dp-c-get-syntactic-region)
-  (local-set-key [(meta ?s)] 'dp-c*-member-init)
+  (local-set-key [(meta ?s)] 'dp-c++-member-init)
   (global-set-key [(control ?\\)] 'dp-eval-naked-embedded-lisp)
   (when (fboundp 'eassist-list-methods)
     (local-set-key [(control c) ?, ?.] 'eassist-list-methods))
@@ -1890,8 +1890,9 @@ and then business as usual."
   (dp-auto-it?))
 
 
-(defadvice fill-paragraph-or-region (around dp-fill-paragraph-or-region activate)
-  "Allow prefix arg of C-0 to mean fill only that which is on the current line and below."
+(defadvice fill-paragraph-or-region (around dp-fill-paragraph-or-region 
+                                     activate)
+  "Allow prefix args C-0 or C-- to limit filling to the current line and below."
   (let ((current-prefix-arg current-prefix-arg))
     (if (not (Cu*p '(- 0)))
         ad-do-it

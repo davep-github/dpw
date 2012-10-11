@@ -313,7 +313,8 @@ dp-sel2 uses these bindings:
 
     (switch-to-buffer-other-window 
      (dp-sel2:items buf-name insertor insertor-args item-list))
-;    (setq buffer-read-only nil)		; in case this is a re-entry
+;    (dp-toggle-read-only 0 nil)		; in case this is a re-entry
+
 ;    (goto-char (point-min))
 ;    (erase-buffer)
 
@@ -425,7 +426,7 @@ Entry to this mode via command dp-sel2:list calls the value of
   (setq mode-name "dp-sel2")
   (setq mode-line-buffer-identification mode-name)
   (setq truncate-lines t)
-  (setq buffer-read-only t)
+  (dp-toggle-read-only 1 nil)
   (setq major-mode 'dp-sel2:mode)
   (goto-char (point-min))
   (if (search-forward "\n." nil t) (forward-char -1))
@@ -588,7 +589,8 @@ the item is displayed."
       (setq dp-sel2:items-offset-list nil
 	    dp-sel2:items-num-offsets 0)
       
-      (setq buffer-read-only nil)
+      (dp-toggle-read-only 0 nil)
+
       (erase-buffer)
       (goto-char (point-min))
       ;;

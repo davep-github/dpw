@@ -504,14 +504,14 @@ LESSP defaults to less-than ('<)."
                            sep-str prefix
                            desired-width)
   (setq-ifnil start (line-beginning-position)
-              desired-width (current-fill-column)
               end (if desired-width
                       (+ start desired-width)
-                    (+ (line-beginning-position) (current-fill-column)))
+                    (current-fill-column))
               back-char front-char
               sep-str " "
               prefix "")
-  (let* ((required-text (concat sep-str text-in sep-str))
+  (let* ((desired-width (- end start))
+         (required-text (concat sep-str text-in sep-str))
          (required-width (+ (length prefix) (length required-text)))
          (remaining-width (if (> required-width desired-width)
                               0
@@ -562,8 +562,8 @@ Otherwise, nothing."
 ;;  " ///////////////// <:%s%sdata:> /////////////////"
 ;;  "String to indicate the location of a class's data.")
 
-(defun dp-format-data-section-id (name prot-level &optional
-                                  start-col end-col)
+(defun* dp-format-data-section-id (name prot-level &optional
+                                   (start-col 4) (end-col 72))
   
   (setq-ifnil start-col (current-column)
               end-col fill-column)
@@ -1333,7 +1333,7 @@ Return nil of not on a supported directive."
   "Goto matching paren type character.
 Also, if on a CPP conditional directive, find complementary part:
 {if[xx]|else|elif} -> endif, endif -> if[xx].
-Inspired (now distantly) by `vi-find-matching-paren'."
+Inspired by `vi-find-matching-paren'."
   (interactive "_")
   (let (ifdef-item)
     ;;(dmessage "0, st>%s<" (syntax-table))
@@ -7876,7 +7876,7 @@ LIMIT, otherwise, has a buffer pos that is the limit."
   (sam)
   ;; Prevent changes until I learn how to re-encrypt.
   (set-buffer-modified-p nil)
-  (setq buffer-read-only t))
+  (dp-toggle-read-only 1))
 
 (defalias 'vpw 'dp-view-passwords)
 
@@ -8000,7 +8000,7 @@ called with Q-KEY-COMMAND-ARGS.
 If KEY-MAP is non-nil, use that in place of a copy of the current keymap.
 QUIT-KEYS, if neq t, are added to this map."
   (switch-to-buffer buf-or-name)
-  (setq buffer-read-only t)
+  (dp-toggle-read-only 1)
   (let ((inhibit-read-only t)
 	rc)
     (erase-buffer)
@@ -10321,14 +10321,22 @@ end is the end of the last matching line."
         (dp-ding-and-message "Problem finding beginning of statement.")
         (return-from dp-c-delimit-func-decl))
       (backward-char 1)
-      (dp-find-matching-paren-including-<)
-      (setq end (point))
-      (cons (if use-markers-p
-                (dp-mk-marker beg)
-              beg)
-            (if use-markers-p
-                (dp-mk-marker end)
-              end)))))
+      (if (dp-find-matching-paren-including-< t)
+          (progn
+            ;; `dp-find-matching-paren-including-<' returns non-nil if it
+            ;; finds a matching paren.
+            ;; XXX !!! oddness!!! If (at least) COB calls this and
+            ;; `dp-find-matching-paren-including-<' fails, something does an
+            ;; UNDO operation.
+        (setq end (point))
+        (cons (if use-markers-p
+                  (dp-mk-marker beg)
+                beg)
+              (if use-markers-p
+                  (dp-mk-marker end)
+                end)))
+        (dp-ding-and-message "Cannot find closing parenthesis.")
+        nil))))
   
 (defun dp-mark-region (beg-end-cons &optional end-if-not-a-cons)
   "Mark the region indicated by BEG-END-CONS.
@@ -11137,11 +11145,13 @@ and for setting up a buffers mode (`dp-set-auto-mode')."
   "Cause the Makefile in the current buffer to be the one to use in this tree."
   (interactive "P")
   (with-current-buffer (dp-get-buffer buf-or-name-of-makefile)
-    (setq buffer-read-only (not toggle-var))
     (dp-toggle-var toggle-var 'dp-primary-makefile-p)
-    (when dp-primary-makefile-p
+    (dp-toggle-read-only (if dp-primary-makefile-p 1 0))
+    (if dp-primary-makefile-p
+        (dp-define-buffer-local-keys '([(meta ?-)] 
+                                       dp-bury-or-kill-buffer))
       (dp-define-buffer-local-keys '([(meta ?-)] 
-                                     dp-bury-or-kill-buffer)))))
+                                       dp-maybe-kill-this-buffer)))))
 
 (defun 411f (&optional name-regex case-unfold-p)
   "Find NAME-REGEX in phone book."
@@ -15049,6 +15059,19 @@ anything --> |b|b|"
                'dp-mk-marker
              'dp-identity)
            pos))
+
+;;
+;; Upgrade toggle-read-only.
+(defun* dp-toggle-read-only (&optional toggle-flag (colorize-p t))
+  "Toggle read only. Set color accordingly if COLORIZE-P is non-nil.
+NB: for the original `toggle-read-only', t --> 1 --> set RO because
+\(prefix-numeric-value t) is 1."
+  (interactive "P")
+  (let ((original-read-only buffer-read-only))
+    (toggle-read-only toggle-flag)
+    (when (and colorize-p
+               (not (equal original-read-only buffer-read-only)))
+      (dp-colorize-found-file-buffer))))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;; @todo Write a loop which advises functions with simple push go back
