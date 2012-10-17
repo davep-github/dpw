@@ -13860,6 +13860,16 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
   (expand-file-name (paths-construct-path (or (and-listp (car components))
                                               components))))
 
+(defun* dp-transformed-save-buffer-file-name (dir name-transformer 
+                                              &optional transformer-args)
+  (expand-file-name
+   ;; A / is required after the dir name the way I'm
+   ;; calling this.
+   (append-expand-filename
+    dir
+    (apply name-transformer (buffer-name)
+           transformer-args))))
+
 (defun* dp-save-buffer-contents (&key
                                  file-name
                                  (start (point-min))
@@ -13875,13 +13885,8 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
   (setq dir (dp-canonicalize-pathname dir))
   (make-directory dir t)
   (let ((file-name (or file-name
-                       (expand-file-name
-                        ;; A / is required after the dir name the way I'm
-                        ;; calling this.
-                        (append-expand-filename
-                         dir
-                         (apply name-transformer (buffer-name)
-                                transformer-args))))))
+                       (dp-transformed-save-buffer-file-name 
+                        dir name-transformer transformer-args))))
     (if (not file-name)
         (error 'invalid-argument "buffer name not transformed.")
       (when (or (not (memq confirm-save-p '(ask ask-p t)))
@@ -13889,6 +13894,10 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
                 append-p                ; Nothing will be lost
                 (y-or-n-p (format "File exists: name>%s<. Overwrite? " 
                                   file-name)))
+        ;; This serves as a cancellation point. 
+        ;; Putting a (y-or-n-p "save
+        ;; buffer? ") before getting here is, to me (and this is for me)
+        ;; redundant and annoying. C-g or M-u is pretty much as easy as y.
         (setq file-name (expand-file-name (read-file-name "Save to: "
                                                           ""
                                                           file-name

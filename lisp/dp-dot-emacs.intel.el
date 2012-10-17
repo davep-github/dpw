@@ -99,7 +99,14 @@
   
 (defun dp-do-a-jk (sym)
   (execute-kbd-macro sym)
-  (setq-default dp-shells-favored-shell-buffer "*shell*<0>"))
+  (setq-default dp-shells-favored-shell-buffer "*shell*<0>")
+  ;; Prefer displaying the gdb buffers over the shell buffers.
+  (loop for (gdb-buffer shell-buffer) in '(("*gdb-sa*" 1)
+                                           ("*gdb-ca*" 2)) do
+    (when (dp-buffer-live-p gdb-buffer)
+      ;; Go to the shell buffer's window we want the gdb buffer in.
+      (dp-shell shell-buffer)
+      (switch-to-buffer gdb-buffer))))
 
 ;; I've been saving this window config in register ?k
 ;; Hence C-jk, hence jk.
@@ -107,6 +114,12 @@
 ;; shell 2(con) |
 ;; -------------+ shell 0 (SA)
 ;; shell 1 (CA) |
+;;
+;; And now:
+;; 2/1
+;; shell 2(con) | shell 0 (SA)
+;; -------------+-------------
+;;         shell 1 (CA)
 ;;
 (defalias 'jk+ 'dp-poc-layout-2+1)
 (defalias 'jk| 'dp-poc-layout-2+1)

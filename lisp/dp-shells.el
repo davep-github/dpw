@@ -1666,12 +1666,13 @@ first file that is `dp-file-readable-p' is used.  Also sets
   :group 'dp-vars
   :type 'integer)
 
-(defun* dp-clr-shell (really-clear-p 
+(defun* dp-clr-shell (erase-buffer-p 
                       &optional dont-fake-cmd dont-preserve-input
                       (save-contents-p 'ask))
   (interactive "P")
   (dp-shell-reset-parse-info)
-  (if (or really-clear-p
+  (if (or (and erase-buffer-p
+               (not (Cu0p erase-buffer-p)))
           (eq last-command 'dp-clr-shell)
           ;; too many accidental real clears, when triggering a real clear by
           ;; 2 clear commands in a row.  so use only prefix arg to wipe
@@ -1684,6 +1685,11 @@ first file that is `dp-file-readable-p' is used.  Also sets
           (old-point-max (point-max)))
       ;; See if we're over the max.
       (when (> (line-number (point-max)) dp-shell-buffer-max-lines)
+        (when (and (not (Cu0p erase-buffer-p))
+                   (if (eq save-contents-p 'ask)
+                       (y-or-n-p "Save shell buffer contents? ")
+                     save-contents-p))
+          (dp-save-shell-buffer))
         (dp-end-of-buffer)
         (forward-line (- dp-shell-buffer-max-lines))
         ;; move back to previous command so that we have the entire command
@@ -1696,14 +1702,9 @@ first file that is `dp-file-readable-p' is used.  Also sets
         ;; They're all markers so the remaining ones should adjust
         ;; themselves.
         (dp-shell-trim-command-positions (point))
-	(delete-region (point-min) (point))
-	;; now, adjust all of the command positions
-        ;; They're markers now.
-	;;(dp-shell-adjust-command-positions (- old-point-max (point-max)))
-        )
+	(delete-region (point-min) (point)))
       (dp-end-of-buffer)
-      (dp-point-to-top 1)
-      )))
+      (dp-point-to-top 1))))
 
 (dp-safe-alias 'cls 'dp-clr-shell)
 
@@ -2266,14 +2267,18 @@ ARG is numberp:
       (setenv "PS1_host_suffix"
               (format "%s" (dp-shells-guess-suffix sh-name "")))
       (setenv "PS1_bang_suff" (format dp-shells-shell-num-fmt pnv))
-      (save-window-excursion/mapping
-       (shell sh-buffer))
+      (save-window-excursion/mapping (shell sh-buffer))
       (dp-visit-or-switch-to-buffer sh-buffer switch-window-func)
       ;;
       ;; We're in the new shell buffer now.
       ;;
       (setq dp-shell-isa-shell-buf-p '(dp-shell shell)
-            other-window-p nil)
+            other-window-p nil
+            dp-shell-buffer-save-file-name 
+            (dp-transformed-save-buffer-file-name
+             dp-default-save-buffer-contents-dir
+             'dp-shellify-shell-name))
+
       (dp-shells-set-most-recently-created-shell sh-buffer 'shell)
       (dp-shells-set-most-recent-shell sh-buffer 'shell)
       ;; new shell (I hope!)
@@ -2804,20 +2809,28 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 (defvar dp-default-save-buffer-contents-dir "$HOME/log/shell-sessions/"
   "Where do the files go by default.  Will be created including any missing parents.")
 
+(dp-deflocal dp-shell-buffer-save-file-name nil
+  "This is set when each shell starts up. This allows all saves from of the
+  shell to go into a single file. Using a timestamp from the time of the save
+  gives each buffer a unique save file (mod resolution of the timestamp and
+  save frequency).")
+
 (defun dp-shellify-shell-name (name &optional args suffixer)
-  (let* ((replacement-str (or (car args) dp-default-shellify-replacement-str))
-         (new-name (replace-regexp-in-string dp-shell-hostile-chars-regexp
-                                             replacement-str
-                                             name)))
-    ;; Surround the name with a less common file name character to make it
-    ;; more visible.
-    (concat "dp-shell-session%" new-name "%" 
-            (cond
-             ((not suffixer)
-              (dp-timestamp-string))
-             ((stringp suffixer)
-              suffixer)
-             (t (funcall-suffixer))))))
+  (or dp-shell-buffer-save-file-name
+      (let* ((replacement-str (or (car args) 
+                                  dp-default-shellify-replacement-str))
+             (new-name (replace-regexp-in-string dp-shell-hostile-chars-regexp
+                                                 replacement-str
+                                                 name)))
+        ;; Surround the name with a less common file name character to make it
+        ;; more visible.
+        (concat "dp-shell-session%" new-name "%"
+                (cond
+                 ((not suffixer)
+                  (dp-timestamp-string))
+                 ((stringp suffixer)
+                  suffixer)
+                 (t (funcall-suffixer)))))))
 
 (dp-deflocal dp-save-buffer-contents-file-name nil
   "As it looks.  Can also be used to set a name without using a name transformer.  Say at buffer creation time \(e.g. dp-shell)")
