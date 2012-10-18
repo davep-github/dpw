@@ -1317,6 +1317,7 @@ isearch while the region is active to locate the end of the region."
   (dp-toggle-truncate 1)
   (local-set-key [(meta ?e)] 'find-file-at-point)
   (local-set-key [(meta return)] 'dired-find-file-other-window)
+  (local-set-key [down] 'dired-next-line)
   ;; This is a buffer local variable.
   ;; They don't seem to be regular expressions.
   (dp-add-list-to-list 'dired-omit-extensions

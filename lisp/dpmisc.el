@@ -5249,7 +5249,8 @@ Like adding this while doing something else that came from somewhere else...")
       (if (equal marker (dp-gb-top-marker))
           ;; Why did I not check buffer and pos?
           ;;(equal (marker-position marker) (dp-gb-top-pos))
-          (dmessage "Not pushing duplicate go-back marker.")
+          ;;;(dmessage "Not pushing duplicate go-back marker.")
+          ()
       (let ((buf-name (buffer-name (marker-buffer marker))))
         (if (or allow-dammit-p
                 (and dp-go-back-allow-regexp

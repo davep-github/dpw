@@ -160,22 +160,6 @@ prompt.  We don't want to stomp on them.")
   (when (string-match "^[ \t]*clsx[ \t]*$" str)
     (clsx)))
 
-(defun clsx ()
-  (interactive)
-  (if (dp-shell-buffer-p)
-      (dp-clr-shell0)
-    (message "Must be in a shell buffer to use clsx.")))
-  
-(defun clsn ()
-  (if (dp-shell-buffer-p)
-      (dp-clr-shell0 :save-contents-p nil)
-    (message "Must be in a shell buffer to use clsn.")))
-
-(defun clsy ()
-  (if (dp-shell-buffer-p)
-      (dp-clr-shell0 :save-contents-p t)
-    (message "Must be in a shell buffer to use clsy.")))
-
 (defcustom dp-shell-magic-ls-pattern 
   "^[ \t]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\(?:[ \t]*\\)\\(.*\\)$"
   "*Match this pattern for magic ls functionality!"
@@ -1641,7 +1625,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
   (dp-specialized-shell-setup nil 'bind-enter))
 
 (defun* dp-clr-shell0 (&key (fake-cmd-p t)
-                       (preserve-input t)
+                       (preserve-input-p t)
                        (save-contents-p 'ask))
   "Clear shell window and remembered command positions."
   (interactive)
@@ -1670,7 +1654,6 @@ first file that is `dp-file-readable-p' is used.  Also sets
                       &optional dont-fake-cmd dont-preserve-input
                       (save-contents-p 'ask))
   (interactive "P")
-  (dp-shell-reset-parse-info)
   (if (or (and erase-buffer-p
                (not (Cu0p erase-buffer-p)))
           (eq last-command 'dp-clr-shell)
@@ -1684,7 +1667,9 @@ first file that is `dp-file-readable-p' is used.  Also sets
     (let (point
           (old-point-max (point-max)))
       ;; See if we're over the max.
-      (when (> (line-number (point-max)) dp-shell-buffer-max-lines)
+      (if (<= (line-number (point-max)) dp-shell-buffer-max-lines)
+          (message "Not enough lines to bother clearing.")
+        (dp-shell-reset-parse-info)
         (when (and (not (Cu0p erase-buffer-p))
                    (if (eq save-contents-p 'ask)
                        (y-or-n-p "Save shell buffer contents? ")
@@ -1706,7 +1691,26 @@ first file that is `dp-file-readable-p' is used.  Also sets
       (dp-end-of-buffer)
       (dp-point-to-top 1))))
 
+
 (dp-safe-alias 'cls 'dp-clr-shell)
+
+(defun dp-clr-shell-dont-save ()
+  "Clear shell buffer w/o asking to save contents."
+  (interactive)
+  (if (dp-shell-buffer-p)
+      (dp-clr-shell0 :save-contents-p nil)
+    (message "Must be in a shell buffer to use clsn.")))
+
+(dp-defaliases 'clsx 'clx 'clsn 'dp-clr-shell-dont-save)
+
+(defun dp-clr-shell-after-save ()
+  "Clear shell buffer after saving contents."
+  (interactive)
+  (if (dp-shell-buffer-p)
+      (dp-clr-shell0 :save-contents-p t)
+    (message "Must be in a shell buffer to use clsy.")))
+
+(dp-defaliases 'clss 'clsy 'dp-clr-shell-after-save)
 
 (defun dp-shell-beginning-of-line ()
   ;;beginning of command line (after prompt)
