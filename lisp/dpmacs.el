@@ -720,6 +720,12 @@ This can be callable.")
 ;;; that are indented and/or are set off with semicolons, dashes, etc.
 ;;; (copped from sample.init.el)
 (when (dp-optionally-require 'filladapt)
+  (defvar dp-filladapt-token-table-additions 
+    '(("[!?@$]+[ 	]" dpj-action-item)
+      ("\\(~~\\|==\\)>[ 	]" dpj-action-item-resolution))
+    "Things I'd like filladapt to know about.")
+  (dp-add-list-to-list 'filladapt-token-table 
+                       dp-filladapt-token-table-additions)
   (setq-default filladapt-mode t)
   (add-hook 'outline-mode-hook 'turn-off-filladapt-mode)
   (setq filladapt-mode-line-string ""))

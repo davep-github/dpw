@@ -18,18 +18,22 @@ $state = "find-opening-regexp";
 $num = 0;
 $base = "out";
 $sep = "";
+$invert_match_sense = 0;
 
 $till_eof = 1 if ($second eq '$^' || $second eq '');
 
 $HANDLE_EOF_FLAG = "handle till-eof flag";
 
+$old_state = "perl bites";
+
 while (<>)
 {
-  print STDOUT "state $state>$_<" if ($debug);
-  if ($state eq "find-opening-regexp")
-    {
-      if (/$first/o)
-	{
+  if ($debug && !($old_state eq $state)) {
+      print STDOUT "state $state>$_<";
+      $old_state = $state;
+    }
+  if ($state eq "find-opening-regexp") {
+      if (/$first/o) {
 	  #print "s0.0: $sep<";
 	  print "$sep";
 	  $state = $HANDLE_EOF_FLAG;
@@ -48,8 +52,7 @@ while (<>)
 	  next;
 	}
     }
-  if ($state eq $HANDLE_EOF_FLAG)
-    {
+  if ($state eq $HANDLE_EOF_FLAG) {
       #print $OUT "s1.0: $_<";
       if ($till_eof)
 	{
@@ -59,25 +62,13 @@ while (<>)
 	}
       $state = "find-closing-regexp";
     }
-  if ($state eq "find-closing-regexp")
-    {
+  if ($state eq "find-closing-regexp") {
       #print $OUT "s2.0: $_<";
       print $OUT "$_";
-      if (/$second/o)
-	{
+      if (/$second/o) {
 	  $state = "find-opening-regexp";
 	  close OUT0 if (!$to_stdout);
 	  next;
 	}
-    } 
-  if ($state == 3)
-    {
-      #print $OUT "s3.0: $_<";
-      print $OUT "$_";
-      if (/$second/o)
-	{
-	  $state = "find-opening-regexp";
-	  close OUT0 if (!$to_stdout);
-	}
-    } 
+    }
 }

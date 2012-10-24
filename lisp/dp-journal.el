@@ -197,6 +197,15 @@ e.g. URLs.")
 ; 	    (throw 'done t)))
 ;       (set-match-data nil))))
 
+
+(when (featurep 'filladapt)
+  (defvar dpj-filladapt-token-match-table-additions
+    '((dpj-action-item dpj-action-item)
+      (dpj-action-item-resolution dpj-action-item-resolution))
+    "Inform filladapt about my journal mode tokens.")
+  (dp-add-list-to-list 'filladapt-token-match-table 
+                       dpj-filladapt-token-match-table-additions))
+  
 (defun dpj-alt-0 (limit)
   "Helps to determine if chars in a sequence can be considered even.
 Things like (sub-)?topics in an outline:
