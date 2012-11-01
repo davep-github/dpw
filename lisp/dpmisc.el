@@ -9474,8 +9474,15 @@ Can be called directly or by an abbrev's hook.
 (when (and dp-use-saveconf-p (dp-optionally-require 'saveconf nil))
   (setq saveconf-file-name (concat (saveconf-make-file-name)
                                    "."
-                                   (dp-short-hostname)))
+                                   (dp-short-hostname))
+        saveconf-file-name-prev (concat saveconf-file-name ".prev"))
 
+  ;; Keep the data from the last save so it won't be overwritten as current
+  ;; data are written.
+  (when (file-exists-p saveconf-file-name)
+    (copy-file saveconf-file-name saveconf-file-name-prev
+               t t))
+  
   (defvar dp-save-context-exclusion-regexp "\\(^/\\[\\)"
     "Regexp of filenames we DON'T want to save. E.g. remote files.")
   (setq save-context-buffer-file-name-predicate
@@ -9502,8 +9509,6 @@ Can be called directly or by an abbrev's hook.
           (save-context)))))
 
   ;; Recovering context is currently not automatically done.
-  (defalias 'where-was-i 'recover-context)
-  (defalias 'wwi 'recover-context)
 
   (defun dp-recover-context-from-file (file-name)
     (interactive (list
@@ -9512,15 +9517,23 @@ Can be called directly or by an abbrev's hook.
                    :symbol-type (cons 'f saveconf-file-name)
                    :reader-args (list "~/" nil t))))
     (let ((saveconf-file-name file-name))
+      (message "Recovering context from: %s" file-name)
       (recover-context)))
   (defalias 'wwif 'dp-recover-context-from-file)
   
-  (defun dp-recover-context (&optional prompt-for-file-name-p)
+  (defun dp-recover-context (&optional file-flag)
+    "Recover our file context.
+Periodically, the list of files, windows, etc are saved so that context can
+be restored. When we start up, the current context file is copied. In
+general, that is what we are interested in using because the current context
+is the current context. But, for whatever reason, we give a way to get it."
     (interactive "P")
-    (if prompt-for-file-name-p
-        (call-interactively 'dp-recover-context-from-file)
-      (recover-context)))
-  (defalias 'wwi 'dp-recover-context)
+    (cond 
+     ((not file-flag) (dp-recover-context-from-file saveconf-file-name-prev))
+     ((Cu0p) (dp-recover-context-from-file saveconf-file-name))
+     (t (call-interactively 'dp-recover-context-from-file))))
+
+  (dp-defaliases 'where-was-i 'wwi 'dp-recover-context)
   
   (defun dp-edit-recover-context-file ()
     (interactive)
