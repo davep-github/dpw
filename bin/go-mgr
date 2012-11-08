@@ -33,7 +33,7 @@ has_alternation_p()
 {
     local str="$1"
     case "$str" in
-        *|*) return 0;;
+        *\|*) return 0;;
         *) return 1;;
     esac
 }
