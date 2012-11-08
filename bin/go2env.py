@@ -23,13 +23,15 @@ def handle_csh(name, val, **kw_args):
     print 'setenv %s "%s";' % (name, val)
 
 def emacs_pre():
-    print '(setq dp-go-abbrev-table (make-abbrev-table))'
+    print '(setq ' + emacs_abbrev_table_name + ' (make-abbrev-table))'
 
 #####################################################################
 def handle_emacs(name, val, **kw_args):
     """Emacs won't look past non-alpha numeric when expanding aliases,
     so we nuke those chars here."""
     name = re.sub('[^a-zA-Z0-9]', '', name)
+#    print '(define-abbrev %s "%s" "\\"%s\\"" nil 1)' % \
+#          (emacs_abbrev_table_name, name, val)
     print '(define-abbrev %s "%s" "%s" nil 1)' % \
           (emacs_abbrev_table_name, name, val)
 
@@ -104,7 +106,7 @@ handlers = { 'E': (handle_emacs, emacs_pre, None, "E"),
 def expand_alias(line, selector, aliases, file_name):
     """Expand an alias line."""
     #(l, val) = string.split(line)
-    # format: abc|a1|a2| value
+    # format: abc|a1|a2|<ws+>value
     m = re.search("(\S+)\s+(.+)$", line)
     dp_io.dprintf("""expand_alias: line>%s<
 selector>%s<
@@ -124,9 +126,10 @@ aliases>%s<""", line, selector, aliases)
     l = m.group(1)
     val = m.group(2)
     var_name = val
+    ##print >> sys.stderr, "l>%s<" % (l,)
     l = string.split(l, '|')
+    ##print >> sys.stderr, "split l>%s<" % (l,)
     ctl = l[0]
-#    if selector in ctl:
     if selector.search(ctl):
         # get list of all aliases
         names = l[1:-1]

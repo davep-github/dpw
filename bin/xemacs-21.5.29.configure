@@ -43,6 +43,7 @@ esac
 
 ${DS_CONFIGURE} \
     ${FUCKEDUP_CONFIG} \
+    --x-libraries=/usr/X11R6/lib64 \
     --without-debug             \
     --with-error-checking=none  \
     --with-optimization         \
@@ -68,7 +69,7 @@ ${DS_CONFIGURE} \
     --enable-pdump
 
 rc=$?
-echo "RC: $?"
+echo "RC: $rc"
 exit $rc
 
 # ./configure 

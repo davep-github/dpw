@@ -29,11 +29,21 @@ maybe_fix_flags()
     fi
 }        
 
+has_alternation_p()
+{
+    local str="$1"
+    case "$str" in
+        *|*) return 0;;
+        *) return 1;;
+    esac
+}
+
 check_name_len()
 {
     local name="$1"
     local flags="$2"
-    if [[ "$name" =~ \| ]]; then
+    if has_alternation_p "$name"
+    then
         echo 1>&2 "Alternate in name [$name].  Not checking name len yet.
 @todo XXX split on | and loop over components."
     else

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+
+git status | fgrep modified: | awk '{print $3}'

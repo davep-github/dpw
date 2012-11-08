@@ -57,7 +57,7 @@ go.emacs:
 	- rm $(HOME)/.go.emacs
 	go2env -e >| $(HOME)/.go.emacs
 
-emacs-aliases emacs-abbrevs: go.emacs mailiases
+emacs-aliases emacs-abbrevs: go.emacs # old/obsolete... I don't use an emacs mail client. # mailiases
 
 
 rhosts:

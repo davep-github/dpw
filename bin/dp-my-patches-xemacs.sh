@@ -3,6 +3,13 @@
 source script-x
 source eexec
 
+: ${XEM_ORIGINALS_DIR:=../dp-patches-Originals}
+
+[ "$1" = "-k" ] && {
+  shift
+  rm -rf "$XEM_ORIGINALS_DIR"
+}
+
 [ -z "$*" ] && {
   echo 1>&2 "I need something with which to identify the current version."
   exit 1
@@ -12,7 +19,6 @@ VERSION_ID="$1"
 : ${XEM_PATCH_BASE_DIR:=$HOME/patches/xemacs}
 : ${XEM_DUMPED_PATCHES:=$XEM_PATCH_BASE_DIR/dumped}
 : ${XEM_SRC_PATCHES:=$XEM_PATCH_BASE_DIR/src}
-: ${XEM_ORIGINALS_DIR:=../dp-patches-Originals}
 : ${XEM_LISP_ORIGINALS_DIR:=$XEM_ORIGINALS_DIR/lisp}
 : ${XEM_SRC_ORIGINALS_DIR:=$XEM_ORIGINALS_DIR/src}
 
@@ -48,16 +54,30 @@ patch_em()
 {
   local originals_dir="$1"
   shift
-  local patch_files=("$@")
+  # With at least one bash, using local breaks the array usage.
+  patch_files=("$@")
   for patch_file in "${patch_files[@]}"; do
+    echo_id patch_file
     patch_file_base=$(basename $patch_file)
     fname=$(head -n2 $patch_file | tail -n1 | sed -rn 's/(\+\+\+ )([^ \t]+)(.*)$/\2/p')
+    [ -z "$fname" ] && {
+      echo "Error extracting file name from diff file."
+      exit 1
+    } 1>&2
     fname=$(basename $fname)
+    [ -z "$fname" ] && {
+      echo "Error extracting base file name."
+      exit 1
+    } 1>&2
     echo "Attempting to patch \`$fname' with \`$patch_file'"
     orig_file_name=$originals_dir/$fname
     echo "Backing up \`$fname' to \`$orig_file_name'"
     [ -e "$orig_file_name" ] && {
       echo "Backup copy of original file \`$orig_file_name' already exists."
+      if diff -q "$orig_file_name" "$fname"
+      then
+        echo "It doesn't like like we're patched: files are the same."
+      fi
       read -e -p "Assume we're already patched and continue(Y/n)? "
       case "$REPLY" in
         [nN]) EXIT 2;;

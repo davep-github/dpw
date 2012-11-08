@@ -75,6 +75,7 @@ $endif
 M-Control-D: dump-functions
 M-Control-M: dump-macros
 "\C-x\C-v": dump-variables
+"\C-x\C-v": dump-functions
 M-M-Rubout:kill-whole-line
 "\M-\M-Rubout":kill-whole-line
 "\e\eRubout":kill-whole-line
@@ -90,7 +91,7 @@ M-Rubout:forward-kill-word
 # nope# "\e[1;5d": backward-word
 # nope# "\e[1;5C": forward-word
 "\e[1;3C": forward-word
-"\e[1;3d": backward-word
+"\e[1;3D": backward-word
 "\e[11~]": "backward-word"
 Meta-u: undo
 #include <unistd.h>

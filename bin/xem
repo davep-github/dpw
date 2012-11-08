@@ -1,4 +1,8 @@
 #!/bin/sh
+/home/dpanariti/yokel/bin/xemacs&
+echo 1>&2 "Restore normal functionality when host info stuff is working."
+exit 99
+
 #
 # $Id: xem,v 1.36 2005/06/12 08:20:10 davep Exp $
 # Start up an (x)emacs session with defaults from the HOST_INFO

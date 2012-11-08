@@ -2,7 +2,7 @@
 
 source script-x
 
-: ${client_prefix:=davep}
+: ${client_prefix:=${LOGNAME}}
 : ${client_sep:=-}
 
 sb=$(scsandbox $PWD)

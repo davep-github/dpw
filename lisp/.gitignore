@@ -1,1 +1,4 @@
 history.*
+# For safety, don't use .emacs.
+# Maybe this file should be renamed.
+.emacs_dpanariti*

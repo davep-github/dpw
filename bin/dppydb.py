@@ -79,10 +79,10 @@ class PythonDataBase:
         
         if type(key) == types.IntType:
             return self.entries[key]
-        elif self.keys != {}:
+        else: #if self.keys != {}:
             return self.keys[key]
-        else:
-            raise 'Key search on unkeyed database.'
+        #else:
+        #    raise 'Key search on unkeyed database.'
 
     ###############################################################
     def get(self, key, default=None):

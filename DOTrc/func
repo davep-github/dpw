@@ -225,7 +225,8 @@ expand_source_list()
     do
 	src=${base}${suff}
 	[ -f $src ] && {
-	    rc+=("$src")
+	    #rc+=("$src")
+	    rc[${#rc[@]}]="$src"
 	}
     done
     echo "${rc[@]}"

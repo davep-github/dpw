@@ -4,7 +4,7 @@ source script-x
 source eexec
 progname=$(basename $0)
 
-: ${kwa_work:=${work}}
+: ${kwa_work:=${PROJECT_HOME}}
 
 P4CONFIG_FILE=.p4config
 

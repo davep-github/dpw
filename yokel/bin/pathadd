@@ -19,6 +19,7 @@ for i in $*
 do
     case $1 in
 	-p) prepend=y;;
+	-a) prepend=;;
 	-s) DEF_SEP=$2; shift;;
         -S) DEF_SEP=' ';;       # can't use -s ' ' due to getopt mangling.
 	--) shift ; break ;;

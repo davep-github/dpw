@@ -1,1 +1,1 @@
-custom.intel.el
+custom.nvidia.el

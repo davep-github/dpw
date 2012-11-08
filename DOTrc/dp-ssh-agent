@@ -43,4 +43,7 @@ dp_start_ssh_agent()
     dp_add_default_keys
 }
 
+[ -n "${runme-}" -o "$(basename $0)" = dp-ssh-agent ] && {
+    dp_start_ssh_agent
+}
 

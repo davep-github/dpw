@@ -12,6 +12,12 @@
 #echo "$PS1" | ~/yokel/bin/hd
 #echo "dp_NH:-1>$dp_NH<"
 
+# If, e.g., I run "bash" in a tcsh, SHELL remains tcsh.
+# Even though the parent shell is tcsh, this file is only run by a bash 
+# and some things it calls (e.g. go2env) use SHELL.
+export SHELL=bash
+export INPUTRC=$HOME/.inputrc
+
 export UDS_LOGDIR=$HOME/uds
 export UDS_LOGFILE=$UDS_LOGDIR/uds_logfile.$(hostname)
 
@@ -238,7 +244,6 @@ export PATH=$(dp_add_to_path_iff -p "$PATH" \
     $HOME/lib/pylib \
     $HOME/bree/bin \
     $HOME/bree/sbin \
-    /permabit/system/ops/scripts \
     /etc/alternatives \
     /opt/kde3/bin \
     /usr/local/bin \
@@ -247,7 +252,6 @@ export PATH=$(dp_add_to_path_iff -p "$PATH" \
     /sbin \
     /usr/sbin \
     /usr/local/sbin \
-    /usr/yokel/sawmill-cvs/bin \
     $HOME/bin/last-resort)
 
 # Append some less important stuff if it exists.
@@ -343,9 +347,9 @@ case $HOST in
     quabbin*) 
 	;;
     *)
-	: ${FAMILY:=$($HOST_INFO -n '' family)}
+	: ${FAMILY:=$($HOST_INFO -n '-' family)}
 	: ${FAMILY_ZONE:=$(host-family-zone)}
-	: ${WORK_ZONE:=$($HOST_INFO -n '' work-zone)}
+	: ${WORK_ZONE:=$($HOST_INFO -n '-' work-zone)}
 	;;
 esac
 export FAMILY
@@ -408,7 +412,7 @@ export PROJECT_HOME
 [ -n "$YOKEL_SBIN" ] && PATH=$(dp_add_to_path_iff -p "$PATH" $YOKEL_SBIN)
 [ -n "$YOKEL_BIN"  ] && PATH=$(dp_add_to_path_iff -p "$PATH" $YOKEL_BIN)
 # remove non-existent dirs from path
-PATH=$(dp-fix-kde-order.py)
+###PATH=$(dp-fix-kde-order.py)
 PATH=$(path-verify -d "$PATH")
 
 if [ -z "$PATH" ]

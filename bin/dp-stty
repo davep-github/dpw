@@ -64,7 +64,7 @@ osname=$(uname)
 case "$osname" in
     Linux) 
 	case "$TERM" in
-	    linux|screen) set_erase_DEL;;
+	    xterm|linux|screen) set_erase_DEL;;
 	    *);;
 	esac
 	;;

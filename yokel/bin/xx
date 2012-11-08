@@ -91,7 +91,7 @@ args="$@"
 opts=$($HOST_INFO $host xterm_bg xterm_fg)
 eval set -- $opts
 
-bg=$(set_var bg ${1-} blue)
+bg=$(set_var bg ${1-} gray40)
 fg=$(set_var fg ${2-} white)
 
 #
@@ -107,7 +107,7 @@ eval set -- $opts
 options=$(set_var options "$2" '')
 options="$options $extra_options"
 geometry=$(set_var geometry $3 '')
-: ${DEFONT=}
+: ${DEFONT=9x15}
 font=$(set_var font $4 $DEFONT)
 
 if [ "$args" != "" ]
@@ -190,7 +190,7 @@ vunsetp "$login_shell_p" && {
     options=$(echo "$options" | sed s/-ls//g)
 }
 
-#echo eval $EXEC $xterm_bin $name $geometry $options $font $bg $fg $exe "$amper"
+eval echo $EXEC $xterm_bin $name $geometry $options $font $bg $fg $exe $amper
 eval $EXEC $xterm_bin $name $geometry $options $font $bg $fg $exe $amper
 
 #exec $term $geometry -fat -sl 2500 -ls -font $font -bg "#e0ffff" $exe &
