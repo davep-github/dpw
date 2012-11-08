@@ -10,6 +10,14 @@
 /bin/git-upload-pack
 /bin/gitk
 /bin/xemacs-21.5-b32
+/bin/b2m
+/bin/ellcc
+/bin/gnuattach
+/bin/gnuclient
+/bin/gnudoit
+/bin/ootags
+/bin/xemacs
+/bin/xemacs-script
 /info/
 /lib64/
 /libexec/
