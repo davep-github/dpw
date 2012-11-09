@@ -251,8 +251,7 @@ export PATH=$(dp_add_to_path_iff -p "$PATH" \
     /usr/bin \
     /sbin \
     /usr/sbin \
-    /usr/local/sbin \
-    $HOME/bin/last-resort)
+    /usr/local/sbin)
 
 # Append some less important stuff if it exists.
 export PATH=$(dp_add_to_path_iff "$PATH" \
@@ -413,6 +412,8 @@ export PROJECT_HOME
 [ -n "$YOKEL_BIN"  ] && PATH=$(dp_add_to_path_iff -p "$PATH" $YOKEL_BIN)
 # remove non-existent dirs from path
 ###PATH=$(dp-fix-kde-order.py)
+PATH=$(dp_add_to_path_iff "$PATH" "$HOME/bin/last-resort")
+
 PATH=$(path-verify -d "$PATH")
 
 if [ -z "$PATH" ]

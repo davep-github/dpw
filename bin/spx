@@ -1,0 +1,18 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+sp "$@" || {
+    # If sp fails, try type to see if that can find them
+    # If there are any options, bag it.
+    source_list /home/dpanariti/.rc/alias "" $locale_rcs
+    for x in "$@"
+    do
+      case "$x" in
+          -*) echo 1>&2 "Skipping option: $x";;
+           *) type "$x";;
+      esac
+    done
+}

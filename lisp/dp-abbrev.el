@@ -281,8 +281,13 @@ list in my DP-STYLE-ABBREV format (q.v.)"
       (dp-redefine-abbrev-table (symbol-value abbrev-sym))
     (makunbound abbrev-sym)))
 
+(defvar dp-emacs-style-abbrev-files 
+  '("~/.abbrev_defs" "~/.abbrev-defs")
+  "Boring old emacs style abbrev files. Emacs can just load them")
+
 (defun* dp-abbrevs (&optional show-make-output-p (make-p t) 
-                    (save-some-buffers-p t))
+                    (save-some-buffers-p t)
+                    &key (emacs-style-abbrev-files dp-emacs-style-abbrev-files))
   "Load aliases and abbreviation files listed in `dp-abbrev-files'."
   (interactive "P")
   (dmessage "dp-abbrevs")
@@ -342,10 +347,13 @@ list in my DP-STYLE-ABBREV format (q.v.)"
 	  dp-abbrev-files)
 
   ;;
-  ;; Pull in any hard-coded, standard emacs type abbrev tables. 
-  (when (file-readable-p "~/.abbrev_defs")
-    (read-abbrev-file "~/.abbrev_defs")
-    (setq save-abbrevs nil))
+  ;; Pull in any hard-coded, standard emacs type abbrev tables.
+  (mapcar (function
+           (lambda (file)
+             (when (file-readable-p file)
+               (read-abbrev-file file)
+               (setq save-abbrevs nil))))
+          dp-emacs-style-abbrev-files)
   (dp-abbrev-refresh-buffers dp-go-abbrev-table))
 
 (defvar dp-num-dp-aliases-tried 0)

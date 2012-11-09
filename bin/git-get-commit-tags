@@ -29,11 +29,11 @@ do
   case "$p" in
       # Which literal prefix is better?
       # I don't think /* matches anything anyway.
-      /*) q=$(echo "$p" | cut -c2-); patterns+=($q);;
-      #==*) q=$(echo "$p" | cut -c3-); patterns+=($q);;
+      /*) q=$(echo "$p" | cut -c2-); patterns[${#patterns[@]}]=$q;;
+      #==*) q=$(echo "$p" | cut -c3-); patterns[${#patterns[@]}]=$q;;
 
-      */*) patterns+=($p);;
-      *) patterns+=(refs/tags/$p);;
+      */*) patterns[${#patterns[@]}]="$p";;
+      *) patterns[${#patterns[@]}]="refs/tags/$p";;
   esac
 done
 

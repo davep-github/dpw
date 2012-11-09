@@ -81,7 +81,7 @@ do
   #echo_id j
   case "$1" in
       --) shift; break;;
-      *) find_args+=($1)
+      *) find_args[${#find_args[@]}]="$1";;
   esac
   ${DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR} "find_args>${find_args[@]}<find_args"
   shift

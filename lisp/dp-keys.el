@@ -53,24 +53,32 @@ Bind any keys in KEYS via `dp-define-keys'."
       (dp-define-keys new-map keys))
     new-map))
 
-(global-set-key [(control left)] 'backward-word)
-(global-set-key [(control right)] 'forward-word)
-(global-set-key [(control next)] 'dp-end-of-buffer)
-(global-set-key [(control end)] 'dp-end-of-buffer)
-(global-set-key [(end)] 'dp-brief-end)
-(global-set-key [(control ?e)] 'dp-brief-end)
+(global-set-key [end] 'dp-brief-end)
 (global-set-key [home] 'dp-brief-home)
-(global-set-key [(control ?a)] 'dp-brief-home)
-(global-set-key [(control prior)] 'dp-beginning-of-buffer)
+(global-set-key [(control end)] 'dp-end-of-buffer)
 (global-set-key [(control home)] 'dp-beginning-of-buffer)
-(global-set-key [(meta ?k)] 'dp-delete-to-end-of-line)
-(global-set-key [(meta ?w)] 'save-buffer)
-;; I've probably never used these bindings... probably not even to test.
-;;(global-set-key [(control meta next)] 'end-of-buffer-other-window)
-;;(global-set-key [(control meta prior)] 'beginning-of-buffer-other-window)
+(global-set-key [(control left)] 'backward-word)
+(global-set-key [(control next)] 'dp-end-of-buffer)
+(global-set-key [(control prior)] 'dp-beginning-of-buffer)
+(global-set-key [(control right)] 'forward-word)
 (global-set-key [(control meta next)] 'dp-other-frame)
 (global-set-key [(control meta prior)] 'dp-other-frame-up)
 
+(global-set-key [kp-end] 'dp-brief-end)
+(global-set-key [kp-home] 'dp-brief-home)
+(global-set-key [(control kp-end)] 'dp-end-of-buffer)
+(global-set-key [(control kp-home)] 'dp-beginning-of-buffer)
+(global-set-key [(control kp-left)] 'backward-word)
+(global-set-key [(control kp-next)] 'dp-end-of-buffer)
+(global-set-key [(control kp-prior)] 'dp-beginning-of-buffer)
+(global-set-key [(control kp-right)] 'forward-word)
+(global-set-key [(control meta kp-next)] 'dp-other-frame)
+(global-set-key [(control meta kp-prior)] 'dp-other-frame-up)
+
+(global-set-key [(control ?a)] 'dp-brief-home)
+(global-set-key [(control ?e)] 'dp-brief-end)
+(global-set-key [(meta ?k)] 'dp-delete-to-end-of-line)
+(global-set-key [(meta ?w)] 'save-buffer)
 
 (global-set-key [(control ?x) ?K] 'dp-find-function-on-key)
 ;;(global-set-key [(meta ?e)] 'find-file-at-point)
@@ -138,7 +146,9 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(meta ?h)] 'help-command)
 (global-set-key [(meta h) (meta k)] 'dp-ff-key)
 (global-set-key [(meta up)] 'dp-other-window-up)
+(global-set-key [(meta kp-up)] 'dp-other-window-up)
 (global-set-key [(meta down)] 'other-window)
+(global-set-key [(meta kp-down)] 'other-window)
 (global-set-key [insert] 'dp-yank)
 ;;was a waste of a meta-<char>
 ;; Waaaay too many things usurp this key sequence.
@@ -157,6 +167,11 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(control meta up)] 'dp-scroll-down-other-window)
 (global-set-key [(control meta down)] 'dp-scroll-up-other-window)
 (global-set-key [down] 'dp-next-line)   ; q.v. dp-cleanup-whitespace-p
+(global-set-key [(control kp-up)] 'dp-scroll-down)
+(global-set-key [(control kp-down)] 'dp-scroll-up)
+(global-set-key [(control meta kp-up)] 'dp-scroll-down-other-window)
+(global-set-key [(control meta kp-down)] 'dp-scroll-up-other-window)
+(global-set-key [kp-down] 'dp-next-line)   ; q.v. dp-cleanup-whitespace-p
 
 ;; I don't use the extra junk in my versions.
 ;; Ah, but I can't tag 'em as isearch-commands this way.
@@ -301,6 +316,7 @@ Bind any keys in KEYS via `dp-define-keys'."
                           ;; Prefix for all keys in this map.
                           [(control c) ?d]
                           [(control next)] 'dp-eob-all-windows
+                          [(control kp-next)] 'dp-eob-all-windows
 
                           [(control ?b)] 'dp-copy-breakpoint-command-as-kill
                           [(control ?/)] (kb-lambda
@@ -549,6 +565,7 @@ already in there.")
                           ;; Some of these bindings are longer than some
                           ;; abbreviated commands
                           [(control next)] 'dp-eob-all-windows
+                          [(control kp-next)] 'dp-eob-all-windows
                           [(meta ?n)] 'dp-pop-window-config
                           [?s ?r] 'dp-save-wconfig-by-name-or-ring
                           [?s ?n] 'wconfig-add-by-name
@@ -617,6 +634,8 @@ already in there.")
                             [?p] 'emms-player-mpd-pause  ; Really pause/play.
                             [up] 'emms-player-mpd-previous
                             [down] 'emms-player-mpd-next
+                            [kp-up] 'emms-player-mpd-previous
+                            [kp-down] 'emms-player-mpd-next
                             [?i] 'emms-player-mpd-show
                             [?S] 'emms-player-mpd-stop
                             [?s] 'emms-player-mpd-start

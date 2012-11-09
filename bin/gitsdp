@@ -1,0 +1,8 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+g dpworld > /dev/null 2>&1
+git status

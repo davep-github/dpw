@@ -464,6 +464,17 @@ dir-tracker has become lost.
                :before-pmark-fun 'previous-line
                ;; mark active: up
                :mark-active-fun 'previous-line))
+       [kp-up] (lambda ()
+                 (interactive)
+                 (dp-shell-xxx-input
+                  ;; at: prev input
+                  :at-pmark-fun (dp-sls (quote ,variant) '-previous-input)
+                  ;; after: prev input
+                  :after-pmark-fun (dp-sls (quote ,variant) '-previous-input)
+                  ;; before: up
+                  :before-pmark-fun 'previous-line
+                  ;; mark active: up
+                  :mark-active-fun 'previous-line))
        [down] (lambda ()
                 (interactive)
                 (dp-shell-xxx-input
@@ -475,6 +486,17 @@ dir-tracker has become lost.
                  :before-pmark-fun 'next-line
                  ;; mark active: down
                  :mark-active-fun 'next-line))
+       [kp-down] (lambda ()
+                   (interactive)
+                   (dp-shell-xxx-input
+                    ;; at: next input
+                    :at-pmark-fun (dp-sls (quote ,variant) '-next-input)
+                    ;; after: next input
+                    :after-pmark-fun (dp-sls (quote ,variant) '-next-input)
+                    ;; before: down
+                    :before-pmark-fun 'next-line
+                    ;; mark active: down
+                    :mark-active-fun 'next-line))
        [(meta ?d)] (lambda ()
                      (interactive)
                      (dp-shell-xxx-input
