@@ -1162,6 +1162,11 @@ echo_id_err()
     echo_id "$@" 1>&2
 }
 
+echo_id2()
+{
+    echo_id_err "$@"
+}
+
 export -f echo_id
 # I NEED to factor out as much as possible when running non-interactive shells.
 # But, func is needed.

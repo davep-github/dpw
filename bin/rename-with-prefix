@@ -1,8 +1,7 @@
 #!/bin/sh
 #
-# $Id: add-prefix,v 1.3 2003/12/15 08:30:08 davep Exp $
 #
-# add prefix to file names.
+# Rename files by adding a prefix to the name.
 
 . eexec
 if [ "$1" = '-n' ]
@@ -20,4 +19,3 @@ for f in $*
 do
     EExec mv -i $f $pre$f
 done
-

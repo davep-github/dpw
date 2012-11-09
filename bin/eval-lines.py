@@ -9,7 +9,7 @@ def eval_file(f):
             break
         n = eval(l)
         print n
-    
+
 if len(sys.argv) > 1:
     for fname in sys.argv[1:]:
         f = open(fname)

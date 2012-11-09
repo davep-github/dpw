@@ -26,7 +26,7 @@ class State(object):
     def match_line(self, cre, line):
         self.d_match = cre.search(line)
         return self.d_match
-    
+
     def match(self):
         return self.d_match
 
@@ -35,7 +35,7 @@ class State(object):
 
     def next_state(self):
         return d_next_state
-    
+
 
 Libs = {}                               # lib_path_name: count
 Short_libs = {}                         # lib_short_name: count
@@ -73,12 +73,12 @@ def classify_line(line, m):
         wtf(line)
         ## next state is invalid so we call our self on the next line.
         return State(False, classify_line)
-        
+
 def state_driver(istream):
     for line in istream:
         state = classify_line(line)
         state.next_state(line, state.match())
-        
+
 def main(argv):
     import getopt
     opt_string = ""
@@ -90,5 +90,3 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv)
-
-

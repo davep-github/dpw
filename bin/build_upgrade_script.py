@@ -13,7 +13,7 @@ def build_script_from_string(port_list):
 #
 log_file=$DP_SUNDRY_LOG/'portupgrade.log'
 sudo chmod a+rw $log_file
-    
+
 ports='
 %s
 '
@@ -51,7 +51,7 @@ done 2>&1 | tee -a $log_file
 
 def build_script_from_list(port_list):
     print build_script_from_string(string.join(port_list, '\n'))
-    
+
 if __name__ == "__main__":
     import sys
 
@@ -59,4 +59,3 @@ if __name__ == "__main__":
     #print '>%s<' % ports
     print "%s" % build_script_from_string(string.join(ports, ''))
     sys.exit(0)
-

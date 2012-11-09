@@ -1,5 +1,0 @@
-#!/bin/sh
-
-ACROREAD=/opt/bin/acroread
-
-exec "$ACROREAD" "$@"

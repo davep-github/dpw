@@ -18,7 +18,7 @@ def fix_kde_order(num_to_retain):
     #print "kde_path:", kde_path
     #print "path:", path
     return string.join(path + kde_path[0:num_to_retain], ":")
-    
+
 def main(args):
     if len(args) > 1:
 	n = eval(args[1])
