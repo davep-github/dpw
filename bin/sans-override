@@ -1,0 +1,10 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+[ -n "$DP_ENV_BIN_OVERRIDE" ] && {
+    PATH=$(echo "$PATH" | sed -rn "s!(^${DP_ENV_BIN_OVERRIDE}:?)(.*)!\2!p")
+}
+exec "$@"

@@ -83,6 +83,9 @@
 ;;
 
 
+(defvar dp-global-master-cleanup-whitespace-p nil
+  "Turn whitespace cleanup off everywhere.")
+
 (dp-deflocal dp-cleanup-whitespace-p nil
   "Should trailing whitespace be cleaned up in this buffer?
 In particular, should `dp-next-line' do it?
@@ -92,6 +95,10 @@ t        - Just do it(tm)
 eol-only - Only clean lines when cursor it at the end of a line.
            This makes it easy to leave the whitespace alone.
 @todo XXX better to default to t or eol-only?")
+
+(defun dp-cleanup-whitespace-p ()
+  (and dp-global-master-cleanup-whitespace-p
+       dp-cleanup-whitespace-p))
 
 (defvar dp-enable-minibuffer-marking nil
   "Prevents any minibuffer marking from happening.")
@@ -682,6 +689,9 @@ c-hanging-braces-alist based upon these values.")
       (and (fboundp 'gtags-mode)
            (dmessage "not featurep 'gtags, but gtags-mode defined."))))
 
+(defvar dp-default-c-like-mode-cleanup-whitespace-p nil
+  "Turn it all on or off here.")
+
 (defun dp-c-like-mode-common-hook ()
   "Sets up personal C/C++ mode options."
   (interactive)
@@ -695,7 +705,7 @@ c-hanging-braces-alist based upon these values.")
   (abbrev-mode 1)
   (c-toggle-auto-state 1)               ;set c-auto-newline
   (dp-turn-off-auto-fill)
-  (setq dp-cleanup-whitespace-p t)
+  (setq dp-cleanup-whitespace-p dp-default-c-like-mode-cleanup-whitespace-p)
   (setq indent-tabs-mode nil
         c-recognize-knr-p nil
         dp-insert-tempo-comment-func 'dp-c-insert-tempo-comment)

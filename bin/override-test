@@ -1,0 +1,7 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+echo "$0: test"

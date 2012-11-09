@@ -3555,8 +3555,11 @@ paren.
 @todo -- add the ability to select the pair with my selection code.
 @todo -- add a echo area display of all the pairs with some indication of
 where we are in the list... like flyspell does.
-@todo -- add a way to look at the char @ point and begin the match sequence there after adding the corresponding(closing) paren char.
-e.g. [aaa<M-p> -- [aaa]. Repeating M-p goes the next pair after '['.  ?How to tell M-p to do this?. Use another binding? Running out of prefix arg interpretations."
+@todo -- add a way to look at the char @ point and begin the match sequence 
+there after adding the corresponding(closing) paren char.
+e.g. [aaa<M-p> -- [aaa]. Repeating M-p goes the next pair after '['.  
+?How to tell M-p to do this?. 
+Use another binding? Running out of prefix arg interpretations."
   (interactive "*P")
   ;;(dmessage "lc: %s, tc: %s" last-command this-command)
   (let* ((orig-raw-index index)
@@ -8362,20 +8365,26 @@ BUF-OR-NAME-OR-NIL may be nil, a buffer or a buffer name."
 (defun dp-longest-line-in-region (&optional beg end)
   "Return (max-len . line-number-of-max-line) of 1st longest line in region.
 Use BEG END if given, else (mark) (point)."
-  (interactive)
+  (interactive "P")
   (save-excursion
-    (let* ((region (if beg (cons beg end) (dp-region-boundaries-ordered)))
+    (let* ((region (cond
+                    ((memq beg '(t - all))
+                     (cons (point-min) (point-max)))
+                    (beg
+                     (cons beg (or end (point-max))))
+                    (t (dp-region-boundaries-ordered))))
+           (reg-beg (car region))
            (reg-end (cdr region))
            (line-num-of-max)
            (max 0)
            len)
+      (dmessage "reg-beg: %s, reg-end: %s" reg-beg reg-end)
       (save-excursion
-        (goto-char (car region))
+        (goto-char reg-beg)
         (beginning-of-line)
         (while (and (not (eobp)) 
                     (< (point) reg-end))
           (setq len (- (line-end-position) (line-beginning-position)))
-          (dmessage "len: %s, max: %s" len max)
           (if (> len max)
               (setq max len
                     line-num-of-max (line-number)))
@@ -8454,6 +8463,10 @@ If region is active, set width to that of the longest line in the region."
     (let ((ll (min dp-max-frame-width (1+ (car (dp-longest-line-in-region))))))
       (sfw ll)
       (message "new width: %s" ll))))
+
+(defsubst sfw-fit-file ()
+  (interactive)
+  (sfw-fit-region t))
       
 (defun dp-up-with-wrap (arg &optional command args)
   (interactive "p")
@@ -15020,7 +15033,7 @@ See `dp-shell-*TAGS-changers' rant. "
 (defun dp-next-line (count)
   "Add trailing white space removal functionality."
   (interactive "_p")
-  (if (not dp-cleanup-whitespace-p)
+  (if (not (dp-cleanup-whitespace-p))
       (progn
         (call-interactively 'next-line)
         (setq this-command 'next-line))
@@ -15030,7 +15043,7 @@ See `dp-shell-*TAGS-changers' rant. "
               gating-pred 'eolp))
       (loop repeat count do
         (if (or (and (not buffer-read-only)
-                     (eq dp-cleanup-whitespace-p t)
+                     (eq (dp-cleanup-whitespace-p) t)
                      (funcall gating-pred)))
             (dp-func-and-move-down 'dp-cleanup-line
                                    t
