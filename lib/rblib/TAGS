@@ -1,0 +1,15 @@
+
+edit.rb,63
+def edit(filename=nil, b=TOPLEVEL_BINDING, level=2)edit9,175
+
+tempfile.rb,327
+class Tempfile < SimpleDelegatorTempfile14,481
+  def Tempfile.callback(path, data)callback17,530
+  def initialize(basename, tmpdir=ENV['TMPDIR']||ENV['TMP']||ENV['TEMP']||'/tmp')initialize31,831
+  def Tempfile.open(*args)open71,1753
+  def openopen75,1811
+  def close(real=false)close82,1953
+  def pathpath91,2135
+
+x.rb,15
+def a()a2,19

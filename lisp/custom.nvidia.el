@@ -1,4 +1,4 @@
-(message "custom.el...")
+(message "custom[.nvidia].el...")
 (custom-set-variables
  '(auto-raise-frame nil)
  '(browse-url-gnome-moz-arguments '("--raise")
@@ -178,4 +178,3 @@
 (put 'narrow-to-region 'disabled nil)
 
 (message "custom.el...finished")
-

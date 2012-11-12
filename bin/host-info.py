@@ -10,10 +10,10 @@ class Success_t(Exception):
     def __init__(self, *args, **kargs):
         # super not in 2.4#super(Success_t, self).__init__(*args, **kargs)
         Exception.__init__(self, *args, **kargs)
-        
+
     def __str__(self):
         return "Success_t"
-        
+
 SUCCESS = Success_t()
 
 num_failures = 0
@@ -67,10 +67,10 @@ class Dumper_t(object):
         self.ostream.write(str)
         if new_line:
             self.ostream.write('\n')
-        
+
     def not_found(self, info_item, not_found_string='-', new_line=True):
         self.simple_emit(not_found_string, new_line=new_line)
-            
+
     def found(self, info_item, data, new_line=True):
         self.simple_emit(data, new_line=new_line)
 
@@ -82,7 +82,7 @@ def dump_all(info_list):
         info.print_fields(sortem=1)
 
     raise SUCCESS
-        
+
 ##################################################################
 def lookup_item(info_item, not_found_string='-', dumper=Def_dumper,
                 locale_search=True, domain_search=True,
@@ -133,7 +133,7 @@ def lookup_item(info_item, not_found_string='-', dumper=Def_dumper,
                         print 'domain hit, info>%s<.' % info
                         if verbose > 1:
                             print '%s' % inf.ret_fields()
-                
+
             if rc == RC_NO_SUCH_HOST and locale_search:
                 locale_rcs = os.environ.get('locale_rcs', '')
                 if verbose:
@@ -171,7 +171,7 @@ def lookup_item(info_item, not_found_string='-', dumper=Def_dumper,
                             print 'fam hit, info>%s<.' % info
                             if verbose > 1:
                                 print '%s' % inf.ret_fields()
-                
+
             if rc != RC_OK and default_search:
                 #
                 # still no match, try for an overall default record.

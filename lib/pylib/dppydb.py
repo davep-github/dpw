@@ -36,21 +36,16 @@ class field_fixes:
             self.value_post = "'"
 
 fixes = field_fixes()
-
+    
 #
 # format a family name as a node name
 # make it unlikey, inconvenient and illegal for a real node name
 #
 def family_to_node_name(fam):
-    #return ' ...*FAM:%s!`` ' % fam
-    return ("family", fam)
+    return ' ...*FAM:%s!`` ' % fam
 
 def default_to_node_name():
-    #return ' ...default... '
-    return ("default", None)
-
-def domain_to_node_name(domain):
-    return ("domain", domain)
+    return ' ...default... '
 
 def def_formatter(prefix, field, value, fixes=fixes):
     # this is almost 2x faster than string.join !
@@ -76,13 +71,13 @@ class PythonDataBase:
          This way, we don't have to build up and return a list of all items.
          To have an int as key, you'll need to `` into a string.
         Otherwise, use key as a key into keys."""
-
+        
         if type(key) == types.IntType:
             return self.entries[key]
-        else: #if self.keys != {}:
+        elif self.keys != {}:
             return self.keys[key]
-        #else:
-        #    raise 'Key search on unkeyed database.'
+        else:
+            raise 'Key search on unkeyed database.'
 
     ###############################################################
     def get(self, key, default=None):
@@ -98,7 +93,7 @@ class PythonDataBase:
             print 'e:', e
             e.dump()
         print '^^^^^^^^^^^^^^^^^^^^^^^^^^'
-
+            
     ###############################################################
     def entries_as_list(self):
         return self.entries
@@ -136,7 +131,7 @@ class PythonDataBase:
         of fields that make up the entry.  In all other cases,
         the args are processed normally.  I prefer to use keyword args
         in all cases except add(x)."""
-
+        
         if dat == None:
             if type(key) != types.DictType:
                 raise 'Single arg must be a dictionary'
@@ -155,7 +150,7 @@ class PythonDataBase:
             if key != None:
                 dp_io.eprintf('key >%s< is being overridden by kef.\n',
                               key)
-            key=entry.get_item(kef, exception_if_not_found=KeyError)
+            key=entry.get_item(kef, exception=KeyError)
         if key != None:
             self.keys[key] = entry
         self.entries.append(entry)
@@ -165,14 +160,14 @@ class PythonDataBase:
 class Entry:
     """class Entry
     A general purpose container for flexibly structured small data bases."""
-
+    
     def __init__(self, *pargs, **kargs):
         """__init__(self, *list, **fields):
         Add all positional parameters in *pargs to the object's
         fields element. Each element of *pargs must be a dictionary.
         Add all the key/val pairs in **kargs to the object's
         fields element."""
-
+        
         self.references = []
         self.fields = {}
         apply(self.add_fields, pargs)
@@ -186,7 +181,7 @@ class Entry:
             self.references.extend(refs)
         else:
             self.references.append(refs)
-
+        
     ###############################################################
     def add_fields(self, *pargs, **kargs):
         """add_fields(self, *pargs, **kargs):
@@ -219,7 +214,7 @@ class Entry:
         If None --> match all (faster than matching .*)
         Return the entry if anything matches.
         Also search the referenced entries"""
-
+        
         if type(pat) == types.StringType:
             field_rex = re.compile(pat)
         else:
@@ -258,7 +253,7 @@ class Entry:
 
         if self.all_my_refs:
             return self.all_my_refs
-
+            
         refs = []
         for ref in self.references:
             refs.append(ref)
@@ -273,7 +268,7 @@ class Entry:
         and field values that match vpat.
         Pats may be: strings w/regexps, compiled regexps, None
         If None --> match all (hopefully faster than matching .*)"""
-
+        
         if type(pat) == types.StringType:
             field_rex = re.compile(pat)
         else:
@@ -323,12 +318,12 @@ class Entry:
             print print_sep
 
     ###############################################################
-    def get_item(self, field, default=None, exception_if_not_found=None):
+    def get_item(self, field, default=None, exception=None):
         """get_item(self, field, default=AttributeError):
         Get the data item named in field.   Search the
         object first, then all references in order.
         If item is not present in the object:
-           if exception_if_not_found is not None then raise it
+           if exception is not None then raise exception
            otherwise return default."""
 
         try:
@@ -337,19 +332,19 @@ class Entry:
             pass
         for place in self.references:
             try:
-                return place.get_item(field, exception_if_not_found=KeyError)
+                return place.get_item(field, exception=KeyError)
             except KeyError:
                 pass
         else:
-            if exception_if_not_found != None:
-                raise exception_if_not_found
+            if exception != None:
+                raise exception
             else:
                 return default
 
     ###############################################################
     def __getitem__(self, key):
         """Implement the index operation, e.g. entry[key]"""
-        return self.get_item(key, exception_if_not_found=KeyError)
+        return self.get_item(key, exception=KeyError)
 
     ###############################################################
     def dump(self):
@@ -360,7 +355,7 @@ class Entry:
 ###############################################################
 def prep(db_location=None):
     """prepare things so the python database works."""
-
+    
     p = db_location
     if not p:
         p = os.environ.get('PYDB_PATH')
@@ -391,7 +386,7 @@ def cleanup_locale(s):
     if s:
         s = s + '.'
     return s
-
+    
 ###############################################################
 def mk_loclist(localize=None, loclist=None):
     """make a localization list.
@@ -427,7 +422,7 @@ def find_db_file(dbfile, localize=None, loclist=None):
                 modname, modext = os.path.splitext(tfile)
                 if modext != '.py':
                     continue
-
+            
                 if fnmatch.fnmatch(modname, dbfile):
                     ret.append(os.path.normpath(dir+'/'+modname+'.py'))
                 else:
@@ -512,8 +507,6 @@ def load(dirs=None, pat=None, wild=None, verbose=None, localize=None, loclist=No
                     print 'exec import %s' % modname
                 exec 'import %s' % modname
 
-                if verbose:
-                    print "Joining, modname>%s<" % (modname,)
                 pandb.join(sys.modules[modname].DB)
     finally:
         sys.path = orig_syspath
@@ -524,5 +517,5 @@ def load(dirs=None, pat=None, wild=None, verbose=None, localize=None, loclist=No
 def loadall(dirs=None, verbose=None):
     """loadall(dirs=None, verbose=None):
     load all databases in dirs"""
-
+    
     return load(dirs, verbose=verbose)

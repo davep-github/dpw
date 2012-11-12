@@ -1,0 +1,108 @@
+From nobody Thu Aug 14 08:42:58 2008
+Return-Path: <unknown>
+Delivered-To: unknown
+Delivered-To: davep.mew@meduseld.net
+Received: from incoming.verizon.net (206.46.232.10) by vilya.meduseld.net
+	with POP3 for <davep.mew@meduseld.net>; 11 Aug 2008 23:05:52 -0000
+Return-Path: <unknown>
+Received: from smtp21-02.prod.mesa1.secureserver.net ([64.202.189.45])
+	by vms172065.mailsrvcs.net
+	(Sun Java System Messaging Server 6.2-6.01 (built Apr  3 2006))
+	with ESMTP id <0K5F001MAK2D90N0@vms172065.mailsrvcs.net> for
+	panariti@verizon.net; Mon, 11 Aug 2008 04:37:25 -0500 (CDT)
+Received: (qmail 12776 invoked by uid 1000); Mon, 11 Aug 2008 09:37:25 +0000
+Received: (qmail 12745 invoked from network); Mon, 11 Aug 2008 09:37:24 +0000
+Received: from unknown (HELO pre-smtp14-01.prod.mesa1.secureserver.net)
+	([10.0.19.114]) (envelope-sender <mew-int-bounces@mew.org>)
+	by smtp21-02.prod.mesa1.secureserver.net (qmail-1.03)
+	with SMTP for <davep.mew@meduseld.net>; Mon, 11 Aug 2008 09:37:24 +0000
+Received: (qmail 18856 invoked from network); Mon, 11 Aug 2008 09:37:24 +0000
+Received: from mew.iijlab.net (HELO www.mew.org) ([202.232.15.101])
+	(envelope-sender <mew-int-bounces@mew.org>)
+	by pre-smtp14-01.prod.mesa1.secureserver.net (qmail-ldap-1.03)
+	with SMTP for <davep.mew@meduseld.net>; Mon, 11 Aug 2008 09:37:24 +0000
+Received: from www.mew.org (localhost [127.0.0.1])	by mew.mew.org (MEW/www)
+	id m7B9bMC6065263; Mon, 11 Aug 2008 18:37:23 +0900 (JST)
+Received: from cl-mailhost.FernUni-Hagen.de
+	(cl-mailhost.fernuni-hagen.de	[132.176.114.188]) by mew.mew.org
+	(MEW/www) id m7B9bJhD065259	for <mew-int@mew.org>;
+	Mon, 11 Aug 2008 18:37:19 +0900 (JST)
+Received: from ki33.fernuni-hagen.de ([132.176.72.33])
+	by cl-mailhost.FernUni-Hagen.de with esmtp (Exim 4.24)
+	id 1KSTq2-0000go-HE	for mew-int@mew.org; Mon, 11 Aug 2008 11:37:18 +0200
+Received: from localhost by ki33.fernuni-hagen.de (8.9.3+Sun/SMI-SVR4)
+	id LAA16218; Mon, 11 Aug 2008 11:37:05 +0200 (MET DST)
+Date: Mon, 11 Aug 2008 11:37:17 +0200 (CEST)
+From: Sven.Hartrumpf@FernUni-Hagen.de
+Subject: [mew-int 2573]  Switching from SMTP to IMAP: folders for refiling
+X-Originating-IP: [64.202.189.45]
+Sender: mew-int-bounces@mew.org
+To: mew-int@mew.org
+Errors-to: mew-int-bounces@mew.org
+Message-id: <20080811.113717.99741963.Sven.Hartrumpf@fernuni-hagen.de>
+MIME-version: 1.0
+X-Mailer: Mew version 6.1 on Emacs 22.2 / Mule 5.0 (SAKAKI)
+Content-type: Multipart/Signed; protocol="application/pgp-signature";
+	micalg=pgp-sha1;
+	boundary="--Security_Multipart(Mon_Aug_11_11_37_17_2008_191)--"
+Content-transfer-encoding: 7bit
+Precedence: list
+X-BeenThere: mew-int@mew.org
+Delivered-to: davep.mew@meduseld.net
+DKIM-Signature: a=rsa-sha1; c=relaxed/simple; d=mew.org; s=main; t=1218447443; 
+	bh=PwAcHrAQRQ+e3JTPHOQKSvfkkjw=; h=Received:
+	Authentication-Results:Authentication-Results:Received:Received:
+	From:Date:Message-Id:To:X-Mailer:Mime-Version:Content-Type:
+	Content-Transfer-Encoding:X-prewhitelist:Subject:X-BeenThere:
+	X-Mailman-Version:Precedence:List-Id:List-Unsubscribe:List-Archive:
+	List-Post:List-Help:List-Subscribe:Sender:Errors-To; b=o/M6j67YqLFt
+	+SDVGIUcti2R3aoayqCpyX12wPvA7i3fUnayF8VXo6GFroLOxxLXhs7nv05frGyLqNU	KRlTOSQ==
+Authentication-Results: www.mew.org smtp.from=sven@ki33.FernUni-Hagen.de;
+	spf=neutral
+Authentication-Results: www.mew.org
+	header.from=Sven.Hartrumpf@FernUni-Hagen.de; sender-id=neutral
+X-prewhitelist: your reply will pass through without greylisting
+X-Mailman-Version: 2.1.8
+List-Post: <mailto:mew-int@mew.org>
+List-Subscribe: <http://www.mew.org/mailman/listinfo/mew-int>,
+	<mailto:mew-int-request@mew.org?subject=subscribe>
+List-Unsubscribe: <http://www.mew.org/mailman/listinfo/mew-int>,
+	<mailto:mew-int-request@mew.org?subject=unsubscribe>
+List-Archive: <http://www.mew.org/pipermail/mew-int>
+List-Help: <mailto:mew-int-request@mew.org?subject=help>
+List-Id: The Mew ML for the international <mew-int.mew.org>
+X-Virus-Status: No
+X-Virus-Checker-Version: clamassassin 1.2.4 with clamscan / ClamAV
+	0.93.3/8009/Mon Aug 11 14:57:09 2008
+X-dp-info: -- Last header added by fixup_for_godaddy_catchall --
+
+----Security_Multipart(Mon_Aug_11_11_37_17_2008_191)--
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+Hello.
+
+Now that I have switched from an SMTP mailbox to some IMAP mailbox,
+how can I use my old local folders for refiling?
+I tried hitting 'o' but in this way I can only
+reach folders below my local imap folder but not
+on top level, where my refiling folders from SMTP time
+are (e.g. ~/Mail/job/)
+
+Greetings
+Sven
+
+----Security_Multipart(Mon_Aug_11_11_37_17_2008_191)--
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+
+iD8DBQBIoAhNxztbDwtWmxMRAtbsAJ9+YgRFDJrO7XUMkVKxQcDtd8LEcwCfZY8Y
+XtYSWFY0HEYJIeA3hnKW72I=
+=vEhR
+-----END PGP SIGNATURE-----
+
+----Security_Multipart(Mon_Aug_11_11_37_17_2008_191)----
+
