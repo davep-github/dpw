@@ -197,12 +197,16 @@ it as a string."
       (dp-toggle-read-only 0)
       (buffer-disable-undo (current-buffer))
       (erase-buffer)
+;;      (dmessage "dp-with-all-output-to-string[0], current-buffer: %s" 
+;;                (current-buffer))
       (unwind-protect
           (progn
             (let ((standard-output (current-buffer)))
               ,@forms)
             (buffer-string))
         (set-buffer-modified-p nil)
+;;        (dmessage "dp-with-all-output-to-string[1], current-buffer: %s" 
+;;                  (current-buffer))
         (kill-this-buffer))))
 
   (defmacro dp-defcustom-local (symbol value docstring &rest args)

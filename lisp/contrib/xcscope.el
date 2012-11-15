@@ -555,6 +555,12 @@ It is designed to answer questions like:
   :prefix "cscope-"
   :group 'tools)
 
+(defcustom cscope-use-perverted-index "-q"
+  "*Should we ask cscope to use perverted(inverted/permuted) indices.
+The generated format must agree with this flag."
+  :type 'string
+  :group 'cscope)
+
 
 (defcustom cscope-do-not-update-database nil
   "*If non-nil, never check and/or update the cscope database when searching.
@@ -2046,11 +2052,13 @@ using the mouse."
 	  (insert "\nDatabase directory/file: "
 		  cscope-directory base-database-file-name "\n"
 		  cscope-separator-line))
-        ;; Doesn't work with -q
-	;; Add the correct database file to search
-	;;(setq options (cons base-database-file-name options))
-	;;(setq options (cons "-f" options))
-;;;;;;;;        (setq options (cons "-q" options))
+        (if cscope-use-perverted-index
+            (setq options (cons cscope-use-perverted-index options))
+          ;; The following doesn't work with -q because the database name is
+          ;; different.  Add the correct database file to search
+          (setq options (cons base-database-file-name options))
+          (setq options (cons "-f" options)))
+
 	(setq cscope-output-start (point))
 	(setq default-directory cscope-directory)
 	(if cscope-filter-func
@@ -2069,6 +2077,7 @@ using the mouse."
 		  (setq modeline-process ": Searching ..."))
 	      (setq buffer-read-only t)
 	      )
+          (dmessage "cscope: %s %s %s %s %s" cscope-program nil outbuf t options)
 	  (apply 'call-process cscope-program nil outbuf t options)
 	  )
 	t

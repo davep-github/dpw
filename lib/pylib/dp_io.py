@@ -3,7 +3,12 @@
 #
 import re, types, os, sys, types, string, select, StringIO
 import dp_sequences, dp_utils
-import subprocess
+Have_subprocess_module_p = False
+try:
+    import subprocess
+    Have_subprocess_module_p = True
+except ImportError:
+    Have_subprocess_module_p = False
 
 f_debug = False                         # turns on/off *ALL* debug prints
 f_eprint = True                         # turns on/off *ALL* error prints
@@ -552,14 +557,37 @@ def print_vars(*namelist, **kargs):
 
 
 ###############################################################
-def bq(cmd):
-    """Run a command, capturing stdout and stderr, mixed, into a string.
-Returns that string. CMD is passed straight thru to Popen.
-Reads all output at once, so beware capturing huge outputs."""
-    p = subprocess.Popen(cmd, shell=True,
-			 stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-			 stderr=subprocess.STDOUT, close_fds=True)
-    return p.stdout.read()          # Joined w/stderr.
+# Sigh. Compatibility.
+# Just because if FOSS doesn't mean everyone can/will/has update[ed].
+# The popen family was just fine. IMO, subprocess, in this context, adds
+# nothing.
+if Have_subprocess_module_p:
+    def bq(cmd):
+        """Run a command, capturing stdout and stderr, mixed, into a string.
+        Returns that string. CMD is passed straight thru to Popen.  Reads all
+        output at once, so beware capturing huge outputs."""
+        p = subprocess.Popen(cmd, shell=True,
+                             stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                             stderr=subprocess.STDOUT, close_fds=True)
+        return p.stdout.read()          # Joined w/stderr.
+
+    ###############################################################
+    def bq_lines(cmd):
+        """Run a command, capturing stdout and stderr, into 2 lists of
+        strings.  Returns those lists.  Reads all output at once, so beware
+        capturing huge outputs."""
+        p = subprocess.Popen(cmd, shell=True,
+                             stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                             stderr=subprocess.STDOUT, close_fds=True)
+        ret = p.stdout.readlines()
+        return ret
+else:
+    def bq(cmd):
+        return os.popen(cmd).read()
+
+    ###############################################################
+    def bq_lines(cmd):
+        return os.popen(cmd).readlines()
 
 ###############################################################
 def bq_lines_blah(cmd):
@@ -587,18 +615,6 @@ Reads all output at once, so beware capturing huge outputs."""
         ret = fd.readlines()
         fd.close ()
         return ret
-
-###############################################################
-def bq_lines(cmd):
-    """Run a command, capturing stdout and stderr, into 2 lists of
-    strings.
-Returns those lists.
-Reads all output at once, so beware capturing huge outputs."""
-    p = subprocess.Popen(cmd, shell=True,
-                         stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                         stderr=subprocess.STDOUT, close_fds=True)
-    ret = p.stdout.readlines()
-    return ret
 
 ###############################################################
 def file_length(f):

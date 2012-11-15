@@ -38,4 +38,7 @@
 
 (dp-nvidia-c-style)
 
+;; For some reason, vc isn't being autoloaded here, but it is @ home.
+(vc-load-vc-hooks)  ; This is being added to the Tools->Version Control menu.
+
 (provide 'dp-dot-emacs.nvidia.el)

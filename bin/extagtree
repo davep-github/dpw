@@ -9,7 +9,7 @@ echo $prog: $* 1>&2
 # expected format" errors. Not using -q has, at least once, in at least one
 # case, fixed this.
 ##: ${DASH_Q=-q}
-: ${DASH_Q=}
+: ${DASH_Q=-q}
 . script-x
 
 . eexec
@@ -65,6 +65,7 @@ fi
 : ${src_code_finder:=find-src-code-files}
 : ${use_id=t}
 : ${finder_opts=}
+: ${use_files_file_p=}
 
 SYSTEM_INCLUDES=
 ###
@@ -105,6 +106,8 @@ do
         -E) ETAGS_P="";;
         -I) SYSTEM_INCLUDES=$DEF_SYSTEM_INCLUDES;;
         -f) finder_opts="$finder_opts $2"; shift;;
+        -r) use_files_file_p=$FILES_FILE;;
+        -R) shift; use_files_file_p=$1;;
 	--) shift ; break ;;
 	*) 
             break ;;
@@ -148,7 +151,13 @@ do
     EXCTAGS=$(sp -1 $tag_prog)
     [ -n "$EXCTAGS" ] && {
 	[[ "$EXCTAGS" = */ctags ]] && {
-	    echo 1>&2 "Falling back to ctags, which may be exctags"
+            echo -n 1>&2 "$prog: Found simply ctags. "
+            if "$EXCTAGS" --help 2>&1 | fgrep -qi "Exuberant" 2>/dev/null
+            then
+                echo 1>&2 "It looks Exuberant"
+            else
+                echo 1>&2 "$prog: May not be exuberant."
+            fi
 	}
 	break
     }
@@ -192,7 +201,26 @@ argses="$@"
 #     $follow_sym_links $dirs | \
 #     filter | tee $v_file >| "$FILES_FILE"
 
-${src_code_finder} $finder_opts $argses | tee "$v_file" >| "$FILES_FILE"
+if [ -n "$use_files_file_p" ]
+then
+    if [ -s "$use_files_file_p" ]
+    then
+        FILES_FILE="$use_files_file_p"
+        echo "Using files file: $FILES_FILE"
+    else
+        {
+            echo "$use_files_file_p doesn't exist or is empty."
+            echo "Will find files and put them in $use_files_file_p."
+        } 1>&2
+        FILES_FILE=$use_files_file_p
+        use_files_file_p=
+    fi
+fi
+
+if [ -z "$use_files_file_p" ]
+then
+    ${src_code_finder} $finder_opts $argses | tee "$v_file" >| "$FILES_FILE"
+fi
 [ -s "$FILES_FILE" ] || {
     echo "Cound not find any files. $FILES_FILE is empty."
 } 1>&2

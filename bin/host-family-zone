@@ -2,4 +2,11 @@
 
 source script-x
 
-$HOST_INFO -n "$(domain-sans-TLD)" family_zone
+default="$(domain-sans-TLD)"
+hinfo=$($HOST_INFO -n "none-default" family_zone)
+if [ "$hinfo" = "none-default" ]
+then
+    echo "$default"
+else
+    echo "$hinfo"
+fi

@@ -82,9 +82,11 @@
 ;;   (c-set-style "vanu-c-style"))
 ;;
 
-
 (defvar dp-global-master-cleanup-whitespace-p nil
   "Turn whitespace cleanup off everywhere.")
+
+(defvar dp-global-master-cleanup-whitespace-pred-fun nil
+  "Call this to determine if we want to clean up whitespace.")
 
 (dp-deflocal dp-cleanup-whitespace-p nil
   "Should trailing whitespace be cleaned up in this buffer?

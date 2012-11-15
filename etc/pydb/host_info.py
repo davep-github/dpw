@@ -42,6 +42,8 @@ import os
 
 HOME = os.environ["HOME"]
 BREE = os.environ.get("BREE", os.path.join(HOME, "bree"))
+YOKEL = os.path.join(HOME, "yokel")
+YOKEL_BIN = os.path.join(YOKEL, "bin")
 
 default = dppydb.Entry({
     'pydb_type:': 'host-info',
@@ -68,8 +70,8 @@ default = dppydb.Entry({
     #
     'fsf_xem_bin': 'emacs',
     #'xem_bin': '/usr/local/bin/xemacs',
-    'xem_bin': os.path.join(BREE, "bin", "xemacs"),
-    'lem_bin': '/home/davep/yokel/bin/xemacs',
+    'xem_bin': os.path.join(YOKEL_BIN, "xemacs"),
+    'lem_bin': os.path.join(YOKEL_BIN, "xemacs"),
     'lem_opts': '-eval (dp-laptop-rc)',
     'main_macs_opts': '-eval (dp-main-rc)',
     #'xem_font': '''-font -*-courier-medium-r-*-*-*-140-*-*-*-*-iso8859-*''',
@@ -84,7 +86,7 @@ default = dppydb.Entry({
 
     # this looks better on XFree86 under cygwin.
     'lem_font': '''-*-Fixed-medium-r-*-*-*-120-*-*-*-*-iso8859-*''',
-   
+
     'lem_xrdb_file': '''/home/davep/xf86/Xresources.lem_laptop''',
     'xem_bg_color': '',
     'lem_bg_color': '',
@@ -139,6 +141,9 @@ HOME_FG_COLOR = 'rgb:2f/06/5e'
 REDNET_BG_COLOR = 'LavenderBlush1'      # reddish for rednet.
 VANU_BG_COLOR = 'rgb:cb/d9/ee'       #cbd9ee # looks very nice w/golden colors
 VANU_FG_COLOR = 'black'
+NVIDIA_BG_COLOR = 'gray40'
+NVIDIA_FG_COLOR = 'white'
+
 XEM_RUN_SERVER="""-eval (dp-start-server)"""
 XEM_RUN_APPTS="""-eval (dp-activate-appts)"""
 WORK_BG_COLOR = VANU_BG_COLOR
@@ -149,96 +154,90 @@ WORK_BG_COLOR = VANU_BG_COLOR
 
 #
 # FAMILY entry for CRL-DUNIX
-e(
-    kef='family',
-    dat={
-    'family': 'crl-dunix',
-    'comment': 'digital unix boxen around the lab',
-    'X': 'CDE',
-    'family_zone': 'crl',
-    'xterm_bg': "'"+CRL_BG_COLOR+"'",   # family colors help distinguish
-    'xterm_fg': 'black',                # who's who when many windows are up
-    'rinc_host': 'goliath',             # from where do we inc mail?
-    'xem_bin': 'emacs',  # B.O.E
-    'xrl_rsh_bin': 'rsh',               # we're usually tunneled in
-    },
-    ref=default
-)
+## e(
+##     kef='family',
+##     dat={
+##     'family': 'crl-dunix',
+##     'comment': 'digital unix boxen around the lab',
+##     'X': 'CDE',
+##     'family_zone': 'crl',
+##     'xterm_bg': "'"+CRL_BG_COLOR+"'",   # family colors help distinguish
+##     'xterm_fg': 'black',                # who's who when many windows are up
+##     'rinc_host': 'goliath',             # from where do we inc mail?
+##     'xem_bin': 'emacs',  # B.O.E
+##     'xrl_rsh_bin': 'rsh',               # we're usually tunneled in
+##     },
+##     ref=default
+## )
 
 #
 # FAMILY entry for CRL-LINUX
-e(
-    kef='family',
-    dat={
-    'family': 'crl-linux',
-    'family_zone': 'crl',
-    'comment': 'My linux boxen at CRL.',
-    'DTE': 'kde',
-    'xterm_bg': "'"+CRL_BG_COLOR+"'",
-    'xterm_fg': 'black',
-    'xem_bg_color': "'"+CRL_BG_COLOR+"'",
-    'rinc_host': 'goliath',    # since linux boxen can't mount the mail spool
-    'xterm_opts': """'-sb -sl 1024 -ls -sr +si -sk'""", # no fade support
-    'xem_opts': '-geometry 81x74+753+0',
-    'xns_dir': '/usr/lib/netscape',
-    'xns_bin': 'netscape-communicator',
-    'xrl_rsh_bin': 'rsh',               # we're usually tunneled in
-    },
-    # these go in ordered
-    ref=[OSDB['linux'], default] 
-)
+## e(
+##     kef='family',
+##     dat={
+##     'family': 'crl-linux',
+##     'family_zone': 'crl',
+##     'comment': 'My linux boxen at CRL.',
+##     'DTE': 'kde',
+##     'xterm_bg': "'"+CRL_BG_COLOR+"'",
+##     'xterm_fg': 'black',
+##     'xem_bg_color': "'"+CRL_BG_COLOR+"'",
+##     'rinc_host': 'goliath',    # since linux boxen can't mount the mail spool
+##     'xterm_opts': """'-sb -sl 1024 -ls -sr +si -sk'""", # no fade support
+##     'xem_opts': '-geometry 81x74+753+0',
+##     'xns_dir': '/usr/lib/netscape',
+##     'xns_bin': 'netscape-communicator',
+##     'xrl_rsh_bin': 'rsh',               # we're usually tunneled in
+##     },
+##     # These are searched in the order given.
+##     ref=[OSDB['linux'], default]
+## )
 
 #
 # FAMILY entry for VANU-LINUX
-e(
-    kef='family',
-    dat={
-    'family': 'vanu-linux',
-    'family_zone': 'vanu',
-    'comment': 'My linux boxen at Vanu.',
-    'DTE': 'kde',
-    'xterm_bg': "'"+VANU_BG_COLOR+"'",
-    'xterm_fg': "'"+VANU_FG_COLOR+"'",
-    'xem_bg_color': "'"+VANU_BG_COLOR+"'",
-    'xem_opts': '-geometry 81x74+753+0',
-    'xns_dir': '/home/davep',
-    'xns_bin': 'ffox',
-    'work-zone': 'vanu',
-    },
-    # these go in ordered
-    ref=[OSDB['linux'], default] 
-)
-
-#
-# FAMILY entry for CRL-REDNET-LINUX
-e(
-    kef='family',
-    dat={
-    'family': 'crl-rednet-linux',
-    'comment': 'CRL machines on the rednet',
-    'xem_bg_color': REDNET_BG_COLOR,
-    'xterm_bg': REDNET_BG_COLOR,
-    'xterm_bin': 'aterm',
-    'xterm_opts': """'-sb -sl 1024 -ls -sr +si -sk'""",
-    'xem_opts': '-geometry 80x74+553+0',
-    },
-    ref=famDB['crl-linux']
-    )
+## e(
+##     kef='family',
+##     dat={
+##     'family': 'vanu-linux',
+##     'family_zone': 'vanu',
+##     'comment': 'My linux boxen at Vanu.',
+##     'DTE': 'kde',
+##     'xterm_bg': "'"+VANU_BG_COLOR+"'",
+##     'xterm_fg': "'"+VANU_FG_COLOR+"'",
+##     'xem_bg_color': "'"+VANU_BG_COLOR+"'",
+##     'xem_opts': '-geometry 81x74+753+0',
+##     'xns_dir': '/home/davep',
+##     'xns_bin': 'ffox',
+##     'work-zone': 'vanu',
+##     },
+##     # These are searched in the order given.
+##     ref=[OSDB['linux'], default]
+## )
 
 #
 # FAMILY entry for CRL-NETBSD
-e(
-    kef='family',
-    dat={
-    'family': 'crl-netbsd',
-    'comment': 'CRL netbsd boxes.',
-    'shell': 'tcsh'
-    },
-    ref=default
-)
+## e(
+##     kef='family',
+##     dat={
+##     'family': 'crl-netbsd',
+##     'comment': 'CRL netbsd boxes.',
+##     'shell': 'tcsh'
+##     },
+##     ref=default
+## )
 
 #
-# FAMILY entry.  Common home stuff
+# FAMILY entry for CRL-DOZE
+## e(
+##     kef='family',
+##     dat={
+##     'family': 'crl-doze',
+##     'shell': 'cmd',
+##     'family_zone': 'crl',
+##     })
+
+#
+# FAMILY entry.  Common home (meduseld.net) stuff
 namazu_base_dir = os.path.join(HOME, 'stuff/indices/')
 home_family = e(
     kef='family',
@@ -247,7 +246,7 @@ home_family = e(
     'comment': 'Common things for home unix like machines.',
     'network-name': 'meduseld',
     'ISP': 'verizon.net',
-    'family_zone': 'home', 
+    'family_zone': 'home',
     'xterm_bg': "'"+HOME_BG_COLOR+"'",  # quotes for the `#' inside the value
     'xterm_fg': "'"+HOME_FG_COLOR+"'",
     'xterm_bin': "xterm",
@@ -265,7 +264,7 @@ home_family = e(
     # only colors scrollbar and menubar.
     # other colors in ~/xf86/Xresources.huan
     # except eit window bg, that is xterm_bg, above
-    #'xem_bg_color': 'rgb:f1/df/d4', 
+    #'xem_bg_color': 'rgb:f1/df/d4',
     #'xem_bg_color': 'rgb:f1/f1/f1',
     # Too close to other terms' colors.
     #'xem_bg_color': 'rgb:f3/f3/f7',
@@ -303,14 +302,27 @@ e(
 )
 
 #
-# FAMILY entry for CRL-DOZE
+# FAMILY entry for NVIDIA-LINUX
 e(
     kef='family',
     dat={
-    'family': 'crl-doze',
-    'shell': 'cmd',
-    'family_zone': 'crl',
-    })
+    'family': 'nvidia-linux',
+    'family_zone': 'nvidia',
+    'comment': 'My linux boxen at nVIDIA.',
+    'DTE': 'kde',
+    'xterm_bg': "'" + NVIDIA_BG_COLOR + "'",
+    'xterm_fg': "'" + NVIDIA_FG_COLOR + "'",
+    'main_macs_opts': '-eval (dp-main-rc+2w)',
+    'xem_opts': '-geometry 81x71+0+0',
+    # This is OK, but O0{}[]() : no slashed 0. O & 0 are distinguishable.
+    'xem_font': '''-*-Lucidatypewriter-medium-r-*-*-*-120-*-*-*-*-*-*''',
+    # May be less legible in the long run, but 0 is slashed.
+    'xem_font2': '''-*-Fxd-medium-r-*-*-*-120-*-*-*-*-*-*''',
+    'work-zone': 'nvidia',
+    },
+    # These are searched in the order given.
+    ref=[OSDB['linux'], default]
+)
 
 #
 # build the host records
@@ -353,46 +365,46 @@ for fam in famDB:
         },
         ref=fam)
 
-e(
-    kef='host',
-    dat={
-    'host': 'baloo',
-    'DTE': 'kde',                       # or none 
-    'comment': 'My main box at home.',
-    'nick': 'home',
-    #'xterm_bin': 'konsole',            # hangs, selection sucks.
-    #'xterm_opts': '--ls',              # konsole's opts
+## e(
+##     kef='host',
+##     dat={
+##     'host': 'baloo',
+##     'DTE': 'kde',                       # or none
+##     'comment': 'My main box at home.',
+##     'nick': 'home',
+##     #'xterm_bin': 'konsole',            # hangs, selection sucks.
+##     #'xterm_opts': '--ls',              # konsole's opts
 
-    #'lem_bg_color': """#d3d3da""",
-    #'xem_bg_color': 'lavenderblush',
-    #'xem_opts': '-geometry 80x62-1+0',
-    # when using gnome & panel.
-    #'xem_opts': '-geometry 80x62+453+0 '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS, 
-    #'lem_opts': '-eval (dp-laptop-rc) -geometry 80x64+428+0',
-    # evo
-    'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
-    # notebook
-    #'lem_opts': '-eval (dp-laptop-rc) -geometry 80x52-1+0',
-    # old: '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS
-    # was part of xem_opts.
-    #'xem_opts': '-geometry 80x69-1+0', #digital 17in
-    #'xem_opts': '-geometry  80x74-30+0',
-    'xem_opts': '-geometry  80x69-77+0',
-    'xem_font': '-*-Terminus-medium-r-*-*-*-120-*-*-*-*-iso8859-*',
-    # with KDE setting colors of non-KDE apps, this only affects
-    #  menubar and scrollbar (?would toolbar be set, too?)
-    #'xem_bg_color': 'rgb:c5/ca/e6',     # consider: #F2F0FF
-    'xem_bg_color': 'rgb:f1/e8/d8',     # consider: #F2F0FF
-    'tunnel-ip': '16.11.64.97',
-    },
-    ref=famDB['home-freebsd'])
+##     #'lem_bg_color': """#d3d3da""",
+##     #'xem_bg_color': 'lavenderblush',
+##     #'xem_opts': '-geometry 80x62-1+0',
+##     # when using gnome & panel.
+##     #'xem_opts': '-geometry 80x62+453+0 '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS,
+##     #'lem_opts': '-eval (dp-laptop-rc) -geometry 80x64+428+0',
+##     # evo
+##     'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
+##     # notebook
+##     #'lem_opts': '-eval (dp-laptop-rc) -geometry 80x52-1+0',
+##     # old: '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS
+##     # was part of xem_opts.
+##     #'xem_opts': '-geometry 80x69-1+0', #digital 17in
+##     #'xem_opts': '-geometry  80x74-30+0',
+##     'xem_opts': '-geometry  80x69-77+0',
+##     'xem_font': '-*-Terminus-medium-r-*-*-*-120-*-*-*-*-iso8859-*',
+##     # with KDE setting colors of non-KDE apps, this only affects
+##     #  menubar and scrollbar (?would toolbar be set, too?)
+##     #'xem_bg_color': 'rgb:c5/ca/e6',     # consider: #F2F0FF
+##     'xem_bg_color': 'rgb:f1/e8/d8',     # consider: #F2F0FF
+##     'tunnel-ip': '16.11.64.97',
+##     },
+##     ref=famDB['home-freebsd'])
 
 #    'xterm_bin': 'konsole',
 e(
     kef='host',
     dat={
     'host': 'huan',
-    'DTE': 'kde',                       # or none 
+    'DTE': 'kde',                       # or none
     'comment': 'My main box at home.',
     'nick': 'home',
     'xterm_bin': 'aterm',            # hangs, selection sucks.
@@ -402,7 +414,7 @@ e(
     #'xem_bg_color': 'lavenderblush',
     #'xem_opts': '-geometry 80x62-1+0',
     # when using gnome & panel.
-    #'xem_opts': '-geometry 80x62+453+0 '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS, 
+    #'xem_opts': '-geometry 80x62+453+0 '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS,
     #'lem_opts': '-eval (dp-laptop-rc) -geometry 80x64+428+0',
     # evo
     'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
@@ -416,7 +428,7 @@ e(
     'xem_font': '-*-Terminus-medium-r-*-*-*-120-*-*-*-*-iso8859-*',
     # with KDE setting colors of non-KDE apps, this only affects
     #  menubar and scrollbar (?would toolbar be set, too?)
-    # use home_family's 
+    # use home_family's
     #'xem_bg_color': 'rgb:c5/ca/e6',     # consider: #F2F0FF
     'tunnel-ip': '16.11.64.97',
     },
@@ -427,7 +439,7 @@ e(
     dat={
     'host': 'vilya',
     'work-zone': 'vanu',
-    'DTE': 'kde',                       # or none 
+    'DTE': 'kde',                       # or none
     'comment': 'My main box at home.',
     'nick': 'home',
     #'xterm_bin': 'aterm',            # hangs, selection sucks.
@@ -450,7 +462,7 @@ e(
     # Font menu is fucked, but this works:
     # (set-default-font "Inconsolata-12")
     """xem-xft-font""": '''"Inconsolata-12"''',
-        
+
     # NB! using the version number can cause extreme weirdness with fonts!
     'tunnel-ip': '16.11.64.97',
     'SVN_ROOT': '''file:///usr/yokel/svn/my-world''',
@@ -464,7 +476,7 @@ e(
     kef='host',
     dat={
     'host': 'laptop',
-    'DTE': 'none',                      # or none 
+    'DTE': 'none',                      # or none
     'comment': 'Laptop running debian.',
     'nick': 'laptop',
     'xterm_bin': 'aterm',
@@ -472,7 +484,7 @@ e(
     #'xem_bg_color': 'lavenderblush',
     #'xem_opts': '-geometry 80x62-1+0',
     # when using gnome & panel.
-    #'xem_opts': '-geometry 80x62+453+0 '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS, 
+    #'xem_opts': '-geometry 80x62+453+0 '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS,
     'xem_font': '''-*-Fixed-medium-r-*-*-*-120-*-*-*-*-iso8859-*''',
     'xem_opts': """-geometry 80x52-1+0 """+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS,
     'xem_bg_color': 'honeydew2',
@@ -480,143 +492,169 @@ e(
     },
     ref=famDB['home-linux'])
 
-e(
-    kef='host',
-    dat={
-    'host': 'sybil',
-    'comment': 'My main box at CRL.',
-    'xem_opts': '-geometry 80x74+753+0 '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS, 
-    'distribution': 'Mandrake',
-    },
-    ref=famDB['crl-linux'])
 
 #
-# Vanu, Inc. hosts.
-e(
-    kef='host',
-    dat={
-    'host': 'timberwolves',
-    'distribution': 'debian etch',
-    'xterm_bg': 'linen',
-    'xterm_fg': 'black',
-    'firefox-profile': "",
-    'firefox-bin': "iceweasel",
-    },
-    ref=famDB['vanu-linux'])  ## !!! Make Vanu vamily.
+# FAMILY entry for CRL-REDNET-LINUX
+## e(
+##     kef='family',
+##     dat={
+##     'family': 'crl-rednet-linux',
+##     'comment': 'CRL machines on the rednet',
+##     'xem_bg_color': REDNET_BG_COLOR,
+##     'xterm_bg': REDNET_BG_COLOR,
+##     'xterm_bin': 'aterm',
+##     'xterm_opts': """'-sb -sl 1024 -ls -sr +si -sk'""",
+##     'xem_opts': '-geometry 80x74+553+0',
+##     },
+##     ref=famDB['crl-linux']
+##     )
 
-e(
-    kef='host',
-    dat={
-    'host': 'sentinels',
-    "comment": "Immediately ssh's over to timberwolves, but I need it defined here so I get the correct setup.",
-    'distribution': 'debian etch',
-    'xterm_bg': 'moccasin',
-    'xterm_fg': 'black',
-    'firefox-profile': "",
-    },
-    ref=famDB['vanu-linux'])  ## !!! Make Vanu vamily.
+## e(
+##     kef='host',
+##     dat={
+##     'host': 'sybil',
+##     'comment': 'My main box at CRL.',
+##     'xem_opts': '-geometry 80x74+753+0 '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS,
+##     'distribution': 'Mandrake',
+##     },
+##     ref=famDB['crl-linux'])
 
-e(
-    kef='host',
-    dat={
-    'host': 'walrus',
-    'comment': '2nd linux box @ work.',
-    'distribution': 'Mandrake',
-    'xterm_bg': 'linen',
-    'xterm_fg': 'black',
-    },
-    ref=famDB['crl-linux'])
+## e(
+##     kef='host',
+##     dat={
+##     'host': 'walrus',
+##     'comment': '2nd linux box @ work.',
+##     'distribution': 'Mandrake',
+##     'xterm_bg': 'linen',
+##     'xterm_fg': 'black',
+##     },
+##     ref=famDB['crl-linux'])
 
-e(
-    kef='host',
-    dat={
-    'host': 'mammoth',
-    'comment': 'a BIG alpha server',
-    'xterm_opts': """'-sb -sl 1024 -ls -sr +si -sk'""",
-    'xem_bin': 'emacs',
-    'xem_opts': '-geometry 80x76+440+0',
-    'xem_bg_color': 'white',
-    'xrl_rsh_bin': 'rsh',               # used by xrl
-    },
-    ref=famDB['crl-dunix'])
+## e(
+##     kef='host',
+##     dat={
+##     'host': 'highwind',
+##     },
+##     ref=famDB['crl-linux'])
 
-e(
-    kef='host',
-    dat={
-    'host': 'highwind',
-    },
-    ref=famDB['crl-linux'])
+## e(
+##     kef='host',
+##     dat={
+##     'host': 'thorin',
+##     'xterm_bg': REDNET_BG_COLOR,
+##     'xrl_rsh_bin': 'ssh',               # used by xrl
+##     },
+##     ref=famDB['crl-linux'])
 
-e(
-    kef='host',
-    dat={
-    'host': 'thorin',
-    'xterm_bg': REDNET_BG_COLOR,
-    'xrl_rsh_bin': 'ssh',               # used by xrl
-    },
-    ref=famDB['crl-linux'])
+## e(
+##     kef='host',
+##     dat={
+##     'host': 'foehammer',                # glamdring from the outside
+##     'xterm_bg': REDNET_BG_COLOR,
+##     'xrl_rsh_bin': 'ssh',               # used by xrl
+##     },
+##     ref=famDB['crl-linux'])
 
-e(
-    kef='host',
-    dat={
-    'host': 'foehammer',                # glamdring from the outside
-    'xterm_bg': REDNET_BG_COLOR,
-    'xrl_rsh_bin': 'ssh',               # used by xrl
-    },
-    ref=famDB['crl-linux'])
+## #
+## # my alpha test cluster
+## PP_BG_COLOR='cornsilk'
+## for h in ('ping', 'pong'):              # test hosts, linux 2-way alphas
+##     e(
+##         kef='host',
+##         dat={
+##         'host': h,
+##         'xterm_bg': PP_BG_COLOR,
+##         'xem_bg_color': PP_BG_COLOR,
+##         },
+##         ref=famDB['crl-linux'])
 
-#
-# my alpha test cluster
-PP_BG_COLOR='cornsilk'
-for h in ('ping', 'pong'):              # test hosts, linux 2-way alphas
-    e(
-        kef='host',
-        dat={
-        'host': h,
-        'xterm_bg': PP_BG_COLOR,
-        'xem_bg_color': PP_BG_COLOR,
-        },
-        ref=famDB['crl-linux'])
 
 #
 # misc digital unix hosts around the lab
-for h in ('wishbone', 'rowdy', 'gil', 'scout', # rawhide cluster
-          'mustang', 'goliath'):        # useful servers
-    e(
-        kef='host',
-        dat={
-        'host': h,
-        },
-        ref=famDB['crl-dunix'])
+## e(
+##     kef='host',
+##     dat={
+##     'host': 'mammoth',
+##     'comment': 'a BIG alpha server',
+##     'xterm_opts': """'-sb -sl 1024 -ls -sr +si -sk'""",
+##     'xem_bin': 'emacs',
+##     'xem_opts': '-geometry 80x76+440+0',
+##     'xem_bg_color': 'white',
+##     'xrl_rsh_bin': 'rsh',               # used by xrl
+##     },
+##     ref=famDB['crl-dunix'])
 
-e(
-    kef='host',
-    dat={
-    'host': 'well',                     # terminal server
-    'xterm_bg': 'aquamarine',           # it is a well, after all
-    },
-    ref=famDB['crl-dunix'])
-    
+## for h in ('wishbone', 'rowdy', 'gil', 'scout', # rawhide cluster
+##           'mustang', 'goliath'):        # useful servers
+##     e(
+##         kef='host',
+##         dat={
+##         'host': h,
+##         },
+##         ref=famDB['crl-dunix'])
+
+## e(
+##     kef='host',
+##     dat={
+##     'host': 'well',                     # terminal server
+##     'xterm_bg': 'aquamarine',           # it is a well, after all
+##     },
+##     ref=famDB['crl-dunix'])
+
 
 #
 # some net-bsd boxen
-for h in ('marvin', 'c3po',
-          'sand', 'dogfish'
-          ):
-    e(
-        kef='host',
-        dat={
-        'host': h,
-        'shell': 'tcsh',
-        },
-        ref=famDB['crl-netbsd'])
+## for h in ('marvin', 'c3po',
+##           'sand', 'dogfish'
+##           ):
+##     e(
+##         kef='host',
+##         dat={
+##         'host': h,
+##         'shell': 'tcsh',
+##         },
+##         ref=famDB['crl-netbsd'])
 
 #
 # add the rednet nodes
-for x in xrange(1, 8):
-    e(
-        kef='host',
-        dat={
-        'host': 'alpha%d' % x,
-        },
-        ref=famDB['crl-rednet-linux'])
+## for x in xrange(1, 8):
+##     e(
+##         kef='host',
+##         dat={
+##         'host': 'alpha%d' % x,
+##         },
+##         ref=famDB['crl-rednet-linux'])
+
+#
+# Vanu, Inc. hosts.
+## e(
+##     kef='host',
+##     dat={
+##     'host': 'timberwolves',
+##     'distribution': 'debian etch',
+##     'xterm_bg': 'linen',
+##     'xterm_fg': 'black',
+##     'firefox-profile': "",
+##     'firefox-bin': "iceweasel",
+##     },
+##     ref=famDB['vanu-linux'])  ## !!! Make Vanu vamily.
+
+## e(
+##     kef='host',
+##     dat={
+##     'host': 'sentinels',
+##     "comment": "Immediately ssh's over to timberwolves, but I need it defined here so I get the correct setup.",
+##     'distribution': 'debian etch',
+##     'xterm_bg': 'moccasin',
+##     'xterm_fg': 'black',
+##     'firefox-profile': "",
+##     },
+##     ref=famDB['vanu-linux'])  ## !!! Make Vanu vamily.
+
+
+############################ nVIDIA Hosts Begin #############################
+#
+# There are many, all identical save name:
+# o-xterm-[0-9][0-9]+ (don't know full range.)
+# They can be handled by a single family entry.
+#

@@ -2157,3 +2157,30 @@ Wednesday October 10 2012
 c-simple-skip-symbol-backward
 c-simple-skip-symbol-backward
 
+
+========================
+Tuesday November 13 2012
+--
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+cols=${1-}
+shift
+lines=${1-}
+shift
+
+echo 1>&2 COLUMNS=$cols LINES=$lines "$@"
+COLUMNS=$cols LINES=$lines "$@"
+
+
+========================
+Thursday November 15 2012
+--
+(lambda (buffer) 
+  (unless (and (buffer-file-name buffer) 
+               (file-exists-p (buffer-file-name buffer))) 
+    (set-buffer-modified-p t buffer)) 
+  (switch-to-buffer buffer))

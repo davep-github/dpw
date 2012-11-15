@@ -215,6 +215,18 @@ dpe_echo ()
     fi
 }
 
+aappend()
+{
+    # 	    rc[${#rc[@]}]="$src"
+    # 	    ${aname}[${#${aname}[@]}]="$@"
+
+    local aname="$1"
+    for x in "$@"
+    do
+      eval ${aname}[\${#${aname}[@]}]="$x"
+    done
+}
+
 expand_source_list()
 {
     local base=$1

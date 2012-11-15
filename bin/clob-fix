@@ -1,0 +1,63 @@
+#!/bin/sh
+
+source script-x
+source eexec
+
+set -u
+progname="$(basename $0)"
+
+EExec_parse "$@"
+
+places=(
+bin/...
+clib/...
+fmod/lib/...
+cmod/lib/...
+platform/tools/lib/...
+.../README
+.../.p4ignore)
+
+errors=()
+good_places=()
+for p in "${places[@]}"
+do
+  d=$(dirname "$p")
+  b=$(basename "$p")
+  e=
+  if [ "$b" = "..." ]
+  then
+      [ -d "$d" ] || {
+          e="d: $d part of $p should be a dir."
+      }
+  elif [ "$d" = "..." ]
+  then
+      [ -f "$b" ] || {
+          e="b: $b part of $p should be a file."
+      }
+  fi
+  if [ -n "$e" ]
+  then
+      errors[${#errors[@]}]="$e"
+  else
+      good_places[${#good_places[@]}]="$p"
+  fi
+done
+
+[ -n "${errors[*]}" ] && {
+    echo "Errors detected:"
+    for e in "${errors[@]}"
+    do
+      echo "$e"
+    done 1>&2
+    read -e -p "Process remaining good places [Y/n]? "
+    case "$REPLY" in
+        [nN]|[Nn][Oo]) exit 1;;
+        *);;
+    esac
+}
+
+for p in "${good_places[@]}"
+do
+  EExec p4 sync -f "$p"
+done
+

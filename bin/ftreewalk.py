@@ -56,7 +56,7 @@ MAX_FILE_SIZE = -1                      # >0 ==> limit in bytes
 DEFAULT_EXCLUDE_DIR_REGEXPS = [
     '^RCS$', '^SCCS$', '^CVS$', '^\.(svn|git|hg)$' ,
     # Auto(conf|make) stuff.
-    "^autom4te.cache$", 
+    "^autom4te.cache$",
     # Imagix stuff.
     "\.4D$",
     # My hidey holes
@@ -108,7 +108,7 @@ def emit_excluded(fmt, *args, **kw_args):
         dp_io.vcprintf(3, fmt, *args)
     else:
         dp_io.fprintf(fobj, fmt, *args)
-                   
+
 ##########################################
 def list_collector(fname, walk_data):
     if walk_data:
@@ -117,7 +117,7 @@ def list_collector(fname, walk_data):
 ##########################################
 def file_emitter(fname, walk_data):
     dp_io.printf('%s\n', fname)
-    
+
 ##########################################
 def escape_single_quoted_filename(filename):
     return `filename`
@@ -131,7 +131,7 @@ def regexp_join(regexps):
 class PostProcessData:
     def __init__(self):
         pass
-    
+
 ##########################################
 class FileTreeWalker:
     def __init__(self, root, walk_type='include',
@@ -146,7 +146,7 @@ class FileTreeWalker:
         self.prune_children = True      # @todo make settable.
 
         self.included_tree_dirs = {}
-        
+
         self.dir_exclusion_list = []
         self.per_dir_file_exclusion_list = []
         self.global_file_exclusion_list = []
@@ -163,7 +163,7 @@ class FileTreeWalker:
             'include': ((EXCLUDE_DIRS_WITH_THIS_FILE,
                          EXCLUDE_TREES_WITH_THIS_FILE),
                         self.walk_default_include)}
-        
+
         self.set_control_info(self.walk_type, self.dir_control_file,
                               self.tree_control_file)
 
@@ -232,12 +232,12 @@ class FileTreeWalker:
                     del dirs[:]
                     dp_io.vcprintf(0, 'p')
                 continue
-            
+
             if self.dir_control_file and (self.dir_control_file in files):
                 emit_excluded('ignoring cwd>%s<\n', cwd,
                               fobj=self.excluded_files_file_obj)
                 # don't rcs this dir
-                # Child files won't be visited, 
+                # Child files won't be visited,
                 # child dirs  will be.
                 dp_io.vcprintf(0, 'e')
                 continue
@@ -253,7 +253,7 @@ class FileTreeWalker:
                 eval(per_dir_exclude_files)
             else:
                 per_dir_exclude_files = []
-                
+
             whither = os.getcwd()
             os.chdir(cwd)
             flist = []
@@ -307,7 +307,7 @@ class FileTreeWalker:
     ##########################################
     def add_included_dirs(self, cwd, dirs, files):
         for dir in dirs:
-            if not self.dir_is_excluded(dir): 
+            if not self.dir_is_excluded(dir):
                 p = os.path.normpath(os.path.join(cwd, dir))
                 self.included_tree_dirs[p] = True
 
@@ -317,17 +317,17 @@ class FileTreeWalker:
         dp_io.dprintf('dir>%s<\nincluded_tree_dirs>[%s]<\n',
                     dir,
                     string.join(self.included_tree_dirs, ']\n['))
-        
+
         return self.included_tree_dirs.get(dir)
-    
-            
+
+
     ##########################################
     def dir_is_included(self, dir, files):
         if ((self.tree_control_file in files)
             or
             (self.dir_in_included_tree(dir))):
             return INCLUDE_SUBTREE_RC
-        
+
         if (self.dir_control_file in files):
             return INCLUDE_DIR_RC
 
@@ -384,7 +384,7 @@ class FileTreeWalker:
                     # @todo: if NO_TREE in files, don't add anything.
                     # blah
                     self.add_included_dirs(cwd, dirs, files)
-                    
+
                     # If we're including the sub-tree then we include all of
                     # the files, too.
                     inc_regexp = re.compile('.*')
@@ -414,7 +414,7 @@ class FileTreeWalker:
             self.per_dir_file_exclusion_list = []
         dp_io.vcprintf(0, '\n')
         return ret
-    
+
 
     ##########################################
     def set_control_info(self, walk_type='include', dir_control_file=None,
@@ -431,7 +431,7 @@ class FileTreeWalker:
         dp_io.vcprintf(1, 'control_files>%s<\n', control_files)
         dp_io.vcprintf(1, 'dir_control_file>%s<\n', self.dir_control_file)
         dp_io.vcprintf(1, 'tree_control_file>%s<\n', self.tree_control_file)
-        
+
 
     ##########################################
     def add_file_type_exclusion(self, exclusions):
@@ -444,7 +444,7 @@ class FileTreeWalker:
         self.file_type_exclusion_regexp = re.compile(regexp_string)
         dp_io.dprintf('file_type_exclusion_regexp_string\n  >%s<\n',
                       regexp_string)
-        
+
     ##########################################
     def add_dir_exclude(self, exclusions):
         dp_sequences.extend_list(self.dir_exclusion_list, exclusions)
@@ -489,7 +489,7 @@ class FileTreeWalker:
         dp_io.cdebug(4, 'dir>%s<\nper_dir_file_exclusion_list>[%s]<\n',
                       dir,
                       string.join(self.per_dir_file_exclusion_list, ']\n['))
-        return ((self.per_dir_file_exclusion_regexp and 
+        return ((self.per_dir_file_exclusion_regexp and
                  self.per_dir_file_exclusion_regexp.search(dir)))
 
     ##########################################
@@ -497,7 +497,7 @@ class FileTreeWalker:
         dp_io.cdebug(4, 'file>%s<\nglobal_file_exclusion_list>[%s]<\n',
                       filename,
                       string.join(self.global_file_exclusion_list, ']\n['))
-        return ((self.global_file_exclusion_regexp and 
+        return ((self.global_file_exclusion_regexp and
                  self.global_file_exclusion_regexp.search(filename)))
 
     ##########################################
@@ -514,7 +514,7 @@ class FileTreeWalker:
                 dp_io.ldebug(2, 'filter_global_excludes, appended\n')
             else:
                 dp_io.ldebug(2, 'filter_global_excludes, rej >%s<\n', f)
-                
+
         return ret
 
     ##########################################
@@ -522,7 +522,7 @@ class FileTreeWalker:
         ename = escape_single_quoted_filename(filename)
         return  ' ' + ename
         #return  ' ' + "'" + ename + "'"
-    
+
     ##########################################
     def filter_global_file_types(self, files):
         ret = []
@@ -533,7 +533,7 @@ class FileTreeWalker:
         dp_io.ldebug(3, 'num_files: %d\n', num_files)
         dp_io.fdebug(DEBUG_SHOW_FILE_TYPE_FILTERING,
                      'num_files: %5d: ', num_files)
-        
+
         file_i = 0
         i = file_i
         while file_i < num_files:
@@ -557,7 +557,7 @@ class FileTreeWalker:
                                   num_files, i, rs)
                     dp_io.eprintf('cmd>%s<\n', file_cmd_str)
                     raise 'sanity_check: file_i >= num_files'
-                
+
                 dp_io.ldebug(3, 'file_i: %5d, r>%s<\n', file_i, r)
                 accepted = not regexp.search(r)
                 dp_io.ldebug(2, 'filter_global_file_types>%s< %s\n',
@@ -584,7 +584,7 @@ class FileTreeWalker:
         os.chdir(newdir)
         self.filter_global_file_types(files)
         os.chdir(newdir)
-        
+
 
     ##########################################
     def walk(self, post_proc, post_proc_data):
@@ -595,7 +595,7 @@ class FileTreeWalker:
         self.compile_global_file_exclusion_regexp()
         self.compile_dir_exclusion_regexp()
         self.compile_file_type_exclusion_regexp()
-            
+
         self.walker(post_proc=post_proc, post_proc_data=post_proc_data)
 
         # NB here we are filtering full pathnames.
@@ -607,7 +607,7 @@ class FileTreeWalker:
 if __name__ == "__main__":
 
     def add_file_excludes(file_name):
-        print "file_name: ", file_name
+        #print "file_name: ", file_name
         f = open(file_name)
         if f:
             ls = f.readlines(f)
@@ -616,7 +616,7 @@ if __name__ == "__main__":
         else:
             dp_io.eprintf('Cannot open exclude file>%s<\n', file_name)
             sys.exit(1)
-            
+
     walk_type = 'include'
     cfile = None
     dir_control_file = None
@@ -686,7 +686,7 @@ if __name__ == "__main__":
 
     if args == []:
         args = ['.']
-    
+
     for directory in args:
         abs_dir = os.path.abspath(directory)
         walker = FileTreeWalker(abs_dir, walk_type,
@@ -703,6 +703,6 @@ if __name__ == "__main__":
                 dp_io.printf('%s\n', file)
         else:
             walker.walk(file_emitter, None)
-            
+
 
     sys.exit(0)

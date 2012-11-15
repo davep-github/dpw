@@ -541,6 +541,7 @@ interactive \"Flanking char:\" prompt.")
 
 (defun dp-insert-flanked-string (text-in flanker
                                  desired-width)
+  "Insert a string flanked by equal matching string: === Str ==="
   (interactive "sString: \ncFlanking char: \nP")
   (when (and (interactive-p)
              (eq flanker ?\r))
@@ -6343,7 +6344,7 @@ so each mode can have its own logic."
 run server and activate appointments."
   (interactive)
   (message "dp-main-rc()...")
-  (dp-start-server)
+  (dp-start-editing-server)
   ;; This runs after dpmacs has completed.
   ;;(add-hook 'dp-post-dpmacs-hook 'dp-activate-appts)
   (dp-activate-appts)
@@ -6351,6 +6352,11 @@ run server and activate appointments."
   ;; the -geometry arg doesn't work quite right under kde.
   (message "dp-main-rc()...finished.")
 )		       ; MAC + flat panel in ll office
+
+(defun dp-main-rc+2w ()
+  (dp-main-rc)
+  (dp-2-v-or-h-windows))
+
 ;;;??? why did I add this here?  (dp-run-post-dpmacs-hooks))
 ;;; For one thing, it fixed the window config that was set in the hook var
 ;;; which was set by the dp-post-dpmacs-hook.  This is not a good way to do

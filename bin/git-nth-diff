@@ -15,8 +15,20 @@ export base_rev
 nth=${1-}
 shift
 
+if [ "$nth" = 1 ]
+then
+    th="st"
+else
+    th="th"
+fi
 for file in "$@"
 do
   rev=$(git-nth-rev "$nth" "$file")
+  if [ -z "$rev" ]
+  then
+      echo "$file has no ${nth}${th} previous rev."
+      continue
+  fi 1>&2
+
   git diff "$rev" "$file"
 done

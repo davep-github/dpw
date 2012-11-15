@@ -37,6 +37,7 @@
 
 (defconst dp-default-work-root-pattern (dp-concat-regexps-grouped
                                         '("/work/"
+                                          "/scratch.dpanariti"
                                           "work-is-play"
                                           "/include/"
                                           "/inc/"

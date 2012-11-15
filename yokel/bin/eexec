@@ -43,6 +43,18 @@ ${EExecExporter} EExec_loaded_p=t
 ${EExecExporter} EExecShowOnly=
 ${EExecExporter} EExecErrorReporter=
 
+EExec_parse()
+{
+    for i in "$@"
+    do
+      case "$i" in
+          -n) EExecDashN;;
+          -v) EExecVerbose;;
+          *) break;;
+      esac
+    done
+}
+
 EExecExport()
 {
     export EExecExporter="export"
@@ -89,7 +101,7 @@ EExecDefErrorReporter ()
     rc=$1
     shift
     eMsg="$EExecProgName(EExec): ERROR: `date`, rc: $rc
-$* failed $EExecMsg"
+$* failed ${EExecMsg-}"
     echo "$eMsg" 1>&2
     [ -n "$EExecRCFile" ] && echo "$eMsg" >> $EExecRCFile
     [ -z "$EExecContinue" ] && exit $rc

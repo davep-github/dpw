@@ -1,0 +1,25 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+: ${ls_display_opts=-1}
+
+argses=("$@")
+oldIFS="$IFS"
+IFS=":"
+set -- $PATH
+IFS="$oldIFS"
+
+for d in "$@"
+do
+  cd "$d"
+  for g in "${argses[@]}"
+  do
+    matches=$(ls $d/$g 2>/dev/null)
+    [ -n "$matches" ] && {
+        ls $ls_display_opts $d/$g
+    }
+  done
+done

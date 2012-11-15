@@ -1,0 +1,14 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+cols=${1-}
+shift
+lines=${1-}
+shift
+
+#@todo  XXX Doesn't work with anything other than programs.
+# ??? try eval?
+COLUMNS=$cols LINES=$lines "$@"

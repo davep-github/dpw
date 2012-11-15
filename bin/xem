@@ -1,7 +1,7 @@
 #!/bin/sh
-/home/dpanariti/yokel/bin/xemacs&
-echo 1>&2 "Restore normal functionality when host info stuff is working."
-exit 99
+#/home/dpanariti/yokel/bin/xemacs&
+#echo 1>&2 "Restore normal functionality when host info stuff is working."
+#exit 99
 
 #
 # $Id: xem,v 1.36 2005/06/12 08:20:10 davep Exp $
@@ -175,6 +175,7 @@ then
     set -v
     #eval exec $cmd  >> $log_file 2>&1 $amper
     # Why didn't the exec fuck things up?
+    eval echo $cmd
     eval $cmd  >> $log_file 2>&1 $amper
     xem_pid=$!
     if vsetp "$amper" && vsetp "$do_renice"

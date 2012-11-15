@@ -12,14 +12,22 @@
 #echo "$PS1" | ~/yokel/bin/hd
 #echo "dp_NH:-1>$dp_NH<"
 
+# Define setenv to work like export so we can just copy in .cshrc stuff
+setenv () 
+{
+    eval "export $1='$2'"
+}
+
 # If, e.g., I run "bash" in a tcsh, SHELL remains tcsh.
 # Even though the parent shell is tcsh, this file is only run by a bash 
 # and some things it calls (e.g. go2env) use SHELL.
 export SHELL=bash
 export INPUTRC=$HOME/.inputrc
 
-export UDS_LOGDIR=$HOME/uds
-export UDS_LOGFILE=$UDS_LOGDIR/uds_logfile.$(hostname)
+# XXX something in the vVIDIA build process barfs if there is no trailing /.
+# Even though tcsh is the shell of choice in the company, it can't hurt to stick it here as
+# well.
+export TMPDIR=/tmp/
 
 [ "$DP_BYPASS_BASHRC" = "Yes" ] && {
     # ??? Should this value be inherited?
@@ -282,26 +290,20 @@ PYTHONPATH=$(path-verify -d "$PYTHONPATH")
 
 export DP_shell_options=''
 
-if type python >/dev/null 2>&1
+if type python && type host-info.py
 then
     HOST_INFO=host-info.py
 else
     HOST_INFO=host_info_func
-# we're kinda dependent on host-info.py these days.  This at least lets
-# us not error out.  It also works where the caller gives a default.
-
-#################### fix me! #########################
-    HOST_INFO=host_info_func
-#################### fix me! #########################
-
-host_info_func()
-{
-    case "$1" in
-	-n) echo $2;;
-	*) echo "-";;
-    esac
-}
-fi
+    host_info_func()
+    {
+        case "$1" in
+            -n) echo $2;;
+             *) echo "-";;
+        esac
+    }
+    export -f host_info_func
+fi > /dev/null 2>&1
 export HOST_INFO
 
 # determine shell name
@@ -346,7 +348,7 @@ case $HOST in
     quabbin*) 
 	;;
     *)
-	: ${FAMILY:=$($HOST_INFO -n '-' family)}
+	: ${FAMILY:=$(host-family)}
 	: ${FAMILY_ZONE:=$(host-family-zone)}
 	: ${WORK_ZONE:=$($HOST_INFO -n '-' work-zone)}
 	;;
@@ -364,7 +366,7 @@ locale_rcs="$pre_rcs $locale_rcs $post_rcs"
 # causing emacs problems.  We fix 'em here so no one else
 # has to worry about it.
 set -- $locale_rcs
-locale_rcs="$*"
+locale_rcs="$@"
 
 #
 # add some locale specific dirs...

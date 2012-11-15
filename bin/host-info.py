@@ -137,9 +137,10 @@ def lookup_item(info_item, not_found_string='-', dumper=Def_dumper,
             if rc == RC_NO_SUCH_HOST and locale_search:
                 locale_rcs = os.environ.get('locale_rcs', '')
                 if verbose:
-                    print 'try families {%s}' % locale_rcs
+                    print 'try locale_rcs {%s}' % locale_rcs
                     # host_db.dump('a')
                     if verbose > 1:
+                        print "items in host_db.keys"
                         for k, v in host_db.keys.items():
                             print 'k>%s<, v>%s<' % (k, v)
 
@@ -269,9 +270,9 @@ if not host or not domain:
     if not domain:
         domain = tdomain
 
-    if verbose:
-        dp_io.eprintf('host>%s<\n', host)
-        dp_io.eprintf('domain>%s<\n', domain)
+if verbose:
+    dp_io.eprintf('host>%s<\n', host)
+    dp_io.eprintf('domain>%s<\n', domain)
 
 if dump_all_fields:
     try:
@@ -292,7 +293,6 @@ for item in items + args:
                     domain_search=domain_search,
                     default_search=default_search,
                     dump_all_fields=dump_all_fields)
-
     except Success_t:
         pass
 

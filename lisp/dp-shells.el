@@ -38,6 +38,12 @@ Should be a color which nearly blends into background."
   :group 'dp-vars
   :type '(repeat string))
 
+(defcustom dp-ls-front-end-command "run-with-cols-and-lines"
+  "Use this to run an ls type command. This takes care of differences between 
+*csh and *sh environment syntax."
+  :type 'string
+  :group 'dp-vars)
+
 (defconst dp-sh-prompt-regexp "^[0-9]+\\([/<][0-9]+\\)?\\([#>]\\|<[0-9]*>\\)"
   "For bash/sh/etc. Obsolete???")
 
@@ -160,11 +166,16 @@ prompt.  We don't want to stomp on them.")
   (when (string-match "^[ \t]*clsx[ \t]*$" str)
     (clsx)))
 
-(defcustom dp-shell-magic-ls-pattern 
-  "^[ \t]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\(?:[ \t]*\\)\\(.*\\)$"
+(defcustom dp-shell-magic-ls-pattern
+  "^[ 	]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\(?:\\s-*\\)\\($\\|.*\\)$"
+  ;;;"^[ \t]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\($\\|\\(?:[ \t]+\\)\\)\\(.*\\)$"
   "*Match this pattern for magic ls functionality!"
   :group 'dp-vars
   :type 'string)
+
+(defun* dp-bash-like-p (&optional (shell-name (getenv "SHELL")))
+  "Are we using a bash-like shell?"
+  (string-match "/\\(ba\\)?sh" (getenv "SHELL")))
 
 (defun dp-shell-lookfor-ls (str)
   (when (string-match dp-shell-magic-ls-pattern str)
@@ -2390,7 +2401,8 @@ displayed."
            (args (if args (concat " " args) ""))
            ;; Space --> Don't put command in the history.  Well, we do want
            ;; the rest of the line and I don't want to lose that.
-           (cmd (format "COLUMNS=%s LINES=%s %s%s"
+           (cmd (format "%s %s %s %s%s"
+                        dp-ls-front-end-command
                         (or cols
                             (- (window-width shell-win) 5))
                         (or lines

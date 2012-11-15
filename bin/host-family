@@ -1,6 +1,12 @@
 #!/bin/sh
+
 source script-x
 
 default=$(echo "$(host-family-zone)-$OSName" | tr '[:upper:]' '[:lower:]')
-$HOST_INFO -n"$default" family
-
+hinfo=$($HOST_INFO -n "none-default" family)
+if [ "$hinfo" = "none-default" ]
+then
+    echo "$default"
+else
+    echo "$hinfo"
+fi

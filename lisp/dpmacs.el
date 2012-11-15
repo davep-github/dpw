@@ -591,6 +591,7 @@ w/tags, cscope, etc.")
       )))
 
 ;; 500K took forever to build completion table.
+;; as does 50K
 (setq etags-auto-build-completion-table-max (* 50 1024))
 
 ;;;;###autoload

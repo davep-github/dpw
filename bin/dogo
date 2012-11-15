@@ -5,18 +5,6 @@
 . script-x 
 
 SHIFT=shift
-[ "$1" = "-l" ] && {
-    shift
-    show_dir_opt="-l"
-    SHIFT=:
-}
-argWas="$1"
-two="$2"
-
-case "$two" in
-    ""|/*) ;;
-    */) two="/$two"
-esac
 
 fini()
 {
@@ -25,6 +13,47 @@ fini()
     [ "$o_val" = "$argWas" ] && exit 1
     exit 0
 }
+
+go_lookup()
+{
+    c="$1"; shift
+    gPath=${GOPATH-$HOME/.go}
+    oldIFS=$IFS
+    IFS=":"
+    for pathEl in $gPath # search all files in the GOPATH
+    do
+      [ -f "$pathEl" ] && {
+          IFS=$oldIFS
+          # tmp=`egrep "(^|[^#;])|$c|" $pathEl` && {
+          tmp=$(fgrep $show_dir_opt "|$c|" $pathEl) && {
+              set -- $tmp
+              $SHIFT
+              eval echo "$*$cs"
+              return
+          }
+      }
+    done
+    IFS=$oldIFS
+    echo "$argWas"
+}
+
+for o in "$@"
+do
+  case "$1" in
+      -l) show_dir_opt="-l"; SHIFT=:;;
+      -L) shift; fini $(go_lookup "$1"); exit;;
+      *) break;;
+  esac
+  shift
+done
+
+argWas="$1"
+two="$2"
+
+case "$two" in
+    ""|/*) ;;
+    */) two="/$two"
+esac
 
 case "$1" in
     /*)  fini "$1"; exit 0;;
@@ -41,25 +70,7 @@ case "$y" in
     case "$c" in
         back|b) fini ${GoBack-$HOME} ;;
         "") fini . ; exit ;;
-        *) gPath=${GOPATH-$HOME/.go}
-           oldIFS=$IFS
-           IFS=":"
-           for pathEl in $gPath # search all files in the GOPATH
-           do
-           [ -f "$pathEl" ] && {
-                IFS=$oldIFS
-                # tmp=`egrep "(^|[^#;])|$c|" $pathEl` && {
-                tmp=$(fgrep $show_dir_opt "|$c|" $pathEl) && {
-                    set -- $tmp
-                    $SHIFT
-                    eval fini "$*$cs"
-                    exit
-                }
-           }
-           done
-           IFS=$oldIFS
-           fini "$argWas"
-           ;;
+        *) fini $(go_lookup "$c") ;;
     esac ;;
 
     *) eval fini "$y$cs" ; exit ;;

@@ -112,11 +112,13 @@ Opt_map = {
                         "count chars vs lines (the default)"),
     "-K": Option_info_t('char-wise-plus-char', None, handle_char_wise_and_char,
                         "count chars vs lines (the default) and set the char"),
+#    "-l": Option_info_t("line_tick_p", eval, None,
+#                        "Use the nth line as the tick value."),
 
     ## Pipe mode sends ticks to stderr so you can pipe through tikker and not
     ## pollute the stdout stream.
     "-p": Option_info_t('pipe-mode', None, handle_pipe_mode,
-                        "send ticks to stdout (add forward stdint to stdout"),
+                        "send ticks to stderr (and forward stdin to stdout"),
     "-e": Option_info_t('pipe-mode', None, handle_pipe_mode, "same as -p"),
     }
 
@@ -149,12 +151,15 @@ if __name__ == "__main__":
     def_pipe_stream = sys.stdout
     pipe_stream = def_pipe_stream
     grand_total_p = True
+    line_tick_p = False
+    line_tick_prefix = ">>>"
+    no_clobber_p = False
     openMode = 'w'
     outputStreams = []
 
     # tick_interval, increment=1, init_string="counting: ", comma=", ",
     # init_count=0, tick_char
-    options = 'i:I:s:C:z:c:t:TdD:kphgaK:.'
+    options = 'i:I:s:C:z:c:t:TdD:kphgaK:.lL:A'
     ctor_keywords = {}
     var_dict = {CTOR: ticker_lib.Ticker_t,
                 "tick_interval": def_tick_interval,
@@ -171,6 +176,16 @@ if __name__ == "__main__":
         if o == '-T':
             dp_utils.Twiddle_twiddles()
             sys.exit(0)
+        if o == '-l':
+            line_tick_p = not line_tick_p
+            continue
+        if o == '-L':
+            line_tick_prefix = v
+            continue
+        if o == '-A':
+            no_clobber_p = True
+            continue
+
         # tee(1) compatibility.
         if o == '-a':
             openMode = 'a'
@@ -192,6 +207,10 @@ if __name__ == "__main__":
             raise RuntimeError("No action for option>%s<" % (o,))
 
     for a in args:
+        if no_clobber_p:
+            if os.path.exists(a):
+                print >>sys.stderr, "File [%s] exists: not clobbering" % (a,)
+                sys.exit(1)
         outputStreams.append(open(a, openMode))
 
     #!<@todo Check for twiddle ticker request and handle that.
@@ -211,28 +230,42 @@ if __name__ == "__main__":
             ctor_keywords["init_string"] = "Counting lines: "
             ctor_keywords["unit_name"] = 'line'
 
-
     if pipe_mode_p:
         ctor_keywords["ostream"] = sys.stderr
     else:
         ctor_keywords["ostream"] = ostream
 
+    if line_tick_p:
+        #ctor_keywords["init_string"] = "Sampling 1 of every %s lines\n" % \
+        #                               (var_dict["tick_interval"],)
+        ctor_keywords["init_string"] = "Sampling every %sth line\n" % \
+                                       (var_dict["tick_interval"],)
+        ctor_keywords["unit_name"] = 'line'
+        ctor_keywords["comma"] = ""     # Line will end with newline.
+
     ticker = var_dict[CTOR](var_dict["tick_interval"], **ctor_keywords)
     if pipe_mode_p:
+        outputStreams.append(pipe_stream)
         ostream.write("\n")
     while True:
 	l = sys.stdin.readline()
 	if not l:
             ticker.fini()
             break
-        if pipe_mode_p:
-            pipe_stream.write(l)
         for o in outputStreams:
             o.write(l)
         if char_wise_p:
             # Iterate for each char in the line.
-            for x in xrange(len(l)):
-                ticker()
+            for c in l:
+                if line_tick_p:
+                    tick = line_tick_prefix + c
+                else:
+                    tick = None
+                ticker(tick=tick)
         else:
-            ticker()
+            if line_tick_p:
+                tick = line_tick_prefix + l
+            else:
+                tick = None
+            ticker(tick=tick)
     print
