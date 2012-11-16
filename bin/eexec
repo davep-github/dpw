@@ -103,8 +103,8 @@ EExecDefErrorReporter ()
     eMsg="$EExecProgName(EExec): ERROR: `date`, rc: $rc
 $* failed ${EExecMsg-}"
     echo "$eMsg" 1>&2
-    [ -n "$EExecRCFile" ] && echo "$eMsg" >> $EExecRCFile
-    [ -z "$EExecContinue" ] && exit $rc
+    [ -n "${EExecRCFile-}" ] && echo "$eMsg" >> $EExecRCFile
+    [ -z "${EExecContinue-}" ] && exit $rc
     return $rc
 }
 
@@ -148,6 +148,16 @@ eexecClrDie()
     true
 }
 
+EExec_start()
+{
+    echo "$@" | bash -l
+}
+
+EExec_start_tcsh()
+{
+    echo "$@" | tcsh -l
+}
+
 EExec ()
 {
     if [ "$1" = '-n' ]
@@ -167,12 +177,20 @@ EExec ()
 	${EExecExporter} eexecEcho="$EExecEcho"
     fi
 
+    if [ "$1" == "-tcsh" ]
+    then
+        shift
+        executor=EExec_start_tcsh
+    else
+        executor=EExec_start
+    fi
+
     # $eexecEcho is a command to do our echoing
     [ -n "$eexecEcho" ] && "$eexecEcho" "${eexecShowPrefix}""$@"
     # run the command
     if [ -z "$eexecShowOnly" ]
     then
-	"$@" || {
+	"$executor" "$@" || {
 	    rc=$?
 	    [ -n "$EExecErrorReporter" ] && {
 		"$EExecErrorReporter" $rc $*

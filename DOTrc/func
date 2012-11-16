@@ -215,6 +215,7 @@ dpe_echo ()
     fi
 }
 
+# Works via side effects.
 aappend()
 {
     # 	    rc[${#rc[@]}]="$src"
@@ -720,7 +721,7 @@ export -f cvs
 [ -z "$SP_BIN" ] && {
     export SP_BIN=$(type -p sp)
 }
-export SP_BIN=$HOME/yokel/bin/sp
+export SP_BIN=$HOME/bin/sp
 export SVN_BIN=$($SP_BIN -1 svn)
 svn ()
 {
@@ -742,103 +743,6 @@ svn ()
     do_src_control svn $SVN_BIN "$@"
 }
 export -f svn
-
-# SSH_AGENT_RC="$HOME/.ssh/acmds"
-# SSH_AGENT_RC_STDERR="${SSH_AGENT_RC}.stderr"
-# export SSH_AGENT_RC_umask=0077
-# export SSH_AGENT_RC_STDERR_umask=${SSH_AGENT_RC_umask}
-# start_ssh_agent()
-# {
-#     ssh-agent
-#     ssha
-#     ssh-add
-# }
-# export -f start_ssh_agent
-
-# ssha()
-# {
-#     # rc to allow communication with existing ssh-agent daemon.
-#     {
-# 	source $SSH_AGENT_RC || {
-# 	    echo 2>&1 Sourcing $SSH_AGENT_RC failed
-# 	    return 1
-# 	}
-#     # Running an existing rc ends up echoing the PID in an annoying fashion.
-#     } #  | fgrep -v "Agent pid"
-# }
-
-# start_OUR_ssh_agent()
-# {
-#     # Do the agent's pipe and PID still exist?
-#     (
-# 	# Preventeth race vs { >| ; chmod }.
-# 	umask ${SSH_AGENT_RC_STDERR_umask}
-# 	rm -f ${SSH_AGENT_RC_STDERR} # Divorce us from any existing file perms.
-# 	echo "# ======= $(date)" >| ${SSH_AGENT_RC_STDERR}
-#     )
-#     {	# Capture all output
-# 	echo 1>&2 "$(date): Begin..."
-# 	local pipe_name
-# 	(
-# 	    if [[ -e "${SSH_AGENT_RC}" ]]; then
-# 		unset SSH_AUTH_SOCK
-# 		unset SSH_AGENT_PID
-# 		ssha || {
-# 		    echo "ssha failed."
-# 		    exit 11
-# 		} 1>&2
-# 		[[ -e "$SSH_AUTH_SOCK" ]] && \
-# 		    pid-alive "$SSH_AGENT_PID" ssh-agent && {
-# 		    # Agent seems to be in good shape.
-# 		    exit 0
-# 		}
-# 		{
-# 		    echo "SOCK: >$SSH_AUTH_SOCK<, PID: >$SSH_AGENT_PID<"
-# 		    if [[ -e "$SSH_AUTH_SOCK" ]]; then
-# 			echo "# SOCK file exists."
-# 		    else
-# 			echo "# No sock file."
-# 		    fi
-# 		    if pid-alive $SSH_AGENT_PID ssh-agent; then
-# 			echo "# $SSH_AGENT_PID is pid-alive."
-# 		    else
-# 			echo "# No agent at PID."
-# 		    fi
-# 		} 1>&2
-# 		exit 33
-# 	    fi
-# 	    # No rc file.
-# 	    exit 22
-# 	)
-# 	rc="$?"
-# 	if [[ "$rc" == 0 ]]; then
-# 	    echo "# ======= $(date)"
-# 	    echo "# Using existing ssh-agent."
-# 	    ssha > /dev/null
-# 	else
-# 	    echo 1>&2 "killall: $(killall ssh-agent)."
-# 	    # Using >| actually truncates the {} >> file and future writes
-# 	    # can append to it.
-# 	    # I hope this isn't a bash bug upon which I am counting.
-# 	    # I don't think so, though.  After the >|, the file has the
-# 	    # same inode number, which implies to me that they did a
-# 	    # trunc rather than a unlink + creat in order to make sure it
-# 	    # is the same file.
-# 	    (
-# 		# Preventeth race vs { >| ; chmod }.
-# 		umask ${SSH_AGENT_RC_umask}
-# 		echo "# ======= $(date)" >| ${SSH_AGENT_RC}
-# 		echo "1: $(ls -l ${SSH_AGENT_RC})" 1>&2
-# 	    )
-# 	    echo "# Starting new ssh-agent."
-# 	    start_ssh_agent | fgrep -v "Agent pid"
-# 	fi
-# 	echo "# done"
-# 	ssh-add -l > /dev/null 2>&1 || ssh-add
-# 	echo 1>&2 "finished."
-#     } >> ${SSH_AGENT_RC} 2>> ${SSH_AGENT_RC_STDERR}
-# }
-# export -f start_OUR_ssh_agent
 
 pick_screen ()
 {

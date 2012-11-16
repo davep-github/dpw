@@ -1,0 +1,27 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+to_null()
+{
+    tty > /dev/null 2>&1
+}
+
+to_out()
+{
+    tty
+}
+
+# I don't want to use a variable to redirect the output, just in case there
+# is any difference caused by using redirection, even to fd/1, vs no
+# redirection at all.
+if [ "${1-}" = "-q" ] 
+then
+    handler=to_null
+else
+    handler=to_out
+fi
+
+$handler

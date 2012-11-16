@@ -8157,14 +8157,13 @@ Else `(apply pred pred-args)'."
                      :point (point)))
          ;; Assoc cons, (file-name . state)
          (old-state (dp-find-file-state buffer)))
+    ;; Update an existing record.
     (if old-state
         (setcdr old-state new-state)
       ;; Keep resultant list trimmed to a max length.
       (when (> (length dp-killed-file-states) dp-recently-killed-files-max)
         ;; Keep the newest, so nuke the earliest, since we are a stack
         (setq dp-killed-file-states (butlast dp-killed-file-states)))
-      ;; We unconditionally add the new name even if it's already in the list
-      ;; because the most recent state is required.
       (setq dp-killed-file-states
             (cons (cons file-name new-state)
                   dp-killed-file-states)))))
@@ -8195,6 +8194,9 @@ Else `(apply pred pred-args)'."
       (goto-char (dp-killed-file-state-point (cdr state))))))
 
 (defun dp-push-killed-file-name (buffer-file-name)
+  ;; Remove any existing copies of this name
+  (setq dp-recently-killed-files 
+        (delete buffer-file-name dp-recently-killed-files))
   (dp-push-onto-bounded-stack 'dp-recently-killed-files 
                               buffer-file-name
                               dp-recently-killed-files-max))
@@ -8219,7 +8221,8 @@ Else `(apply pred pred-args)'."
 	 (table (dp-mk-completion-list tmp)))
     (find-file (completing-read "Resurrect file: " 
                                 table
-                                nil t))
+                                nil t nil
+                                'file-name-history))
     (dp-set-recently-killed-file-list tmp)))
 
 (dp-defaliases 'dp-resurrect 'dprd 'raise-dead 'resurrect 
@@ -10968,7 +10971,7 @@ If wide enough: | | |, otherwise: |-|"
   "Treat visiting buffers and such as closely as possible to having 2 instances of xemacs running.
 I like this for keeping a frame on each desktop.")
 
-(defvar dp-buffers-allowed-in-other-frames '(" SPEEDBAR"))
+(defvar dp-buffers-allowed-in-other-frames '("SPEEDBAR" "\\*shell\\*"))
 
 (defun* dp-display-buffer-if-visible (buffer &optional (norecord t))
   (interactive "Bbuffer name? ")
@@ -10982,6 +10985,8 @@ I like this for keeping a frame on each desktop.")
            (same-frame-p (eq buf-frame orig-frame)))
       (when (and buf-win 
                  (or same-frame-p
+                     (dp-match-a-regexp buf-name 
+                                        dp-buffers-allowed-in-other-frames)
                      (member buf-name dp-buffers-allowed-in-other-frames)
                      (not dp-prefer-independent-frames-p)))
         (select-window buf-win)

@@ -1,8 +1,13 @@
 #!/bin/sh
 
+source script-x
+source eexec
+
+EExec_parse "$@"
+
 # A good env.<host> candidate?
 # Or better tied, somehow, to client.
 #: ${VNC_GEOMETRY:=1280x1024} 
 : ${VNC_GEOMETRY:=1920x1080} 
 
-vncserver -geometry ${VNC_GEOMETRY}
+EExec vncserver -geometry ${VNC_GEOMETRY} -depth 24

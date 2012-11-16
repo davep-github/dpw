@@ -3,10 +3,25 @@
 source script-x
 source eexec
 
-dest=
+Usage()
+{
+    echo "Usage: cp-parallel src-files... dest-root
+Copy src-files to dest-root keeping the path elements.
+I.e. replace / with dest-root.
+All directories are created as needed."
+}
+
+[ -z "$*" ] && {
+    Usage 1>&2
+    exit 1
+}
+
+: ${dest=}
+: ${dash_i=-i}
+: ${mkdirs_only_p=}
 
 std_options=""
-option_str="nvqw"
+option_str="nvqwIid"
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -16,6 +31,9 @@ do
       -v) VERBOSE="echo $progname: "; EExecVerbose;;
       -q) VERBOSE=":"; EExecQuiet;;
       -w) dest=~/tmp/wtctts;;
+      -I) dash_i=;;
+      -i) dash_i=-i;;
+      -d) mkdirs_only_p=t;;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";
@@ -25,31 +43,35 @@ do
     shift
 done
 
-[ -z "$dest" ] && {
-    dest=$1
-    shift
-}
-
-case "$dest" in
-    */) dest=$(echo "$dest" | sed -rn 's!(.*)/$!\1!p');;
-    *)
-esac
-
 abs_is_dir()
 {
     (cd "$1"; echo "$PWD")
 }
 
+argses=("$@")
+num_argses=${#argses[@]}
+[ -z "$dest" ] && {
+    dest=${argses[$((num_argses - 1))]}
+}
+
+orig_dest="$dest"
+case "$dest" in
+    */) dest=$(echo "$dest" | sed -rn 's!(.*)/$!\1!p');;
+    *)
+esac
+
 for f in "$@"
 do
+  # Hack. should remove last element of argses.
+  if [ "$f" = "$orig_dest" ]
+  then
+      continue
+  fi
   dname=$(dirname "$f")
   fname=$(basename "$f")
   dname=$(abs_is_dir "$dname")
   tdest="$dest$dname"
   EExec mkdir -p "$tdest"
-  # Passing a single - allows us to just make a parallel dir.
-  if [ "$f" != '-' ]
-  then
-      EExec cp "$f" "$tdest"
-  fi
+  [ -n "$mkdirs_only_p" ] && continue
+  EExec cp $dash_i "$f" "$tdest"
 done

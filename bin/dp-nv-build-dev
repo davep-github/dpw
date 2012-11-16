@@ -1,0 +1,77 @@
+#!/bin/sh
+
+argses=("$@")
+
+[ -n "$DAVEP_ENVIRONMENT_p" ] || {
+    source $HOME/.bashrc
+}
+
+set -- "${argses[@]}"
+
+source script-x
+source eexec                    # Primarily for verbosity.
+set -u
+progname="$(basename $0)"
+progdir=$(dirname "$0")
+
+
+: ${shell_option:=-tcsh}
+: ${console_out=/dev/tty}
+
+if ! type realpath >/dev/null 2>&1
+then 
+realpath()
+{
+    local b=$(basename "$1")
+    local d=$(dirname "$1")
+    local rpd=$(cd $d; echo $PWD)
+    echo $rpd$b
+}
+fi
+
+# Make a copy of the original fd.
+exec 5>&1
+
+log_to_console()
+{
+    echo "-=[ $@ ]=-" 1>&5
+}
+
+EExec_parse "$@"
+
+log_dir="${progname}/$(dp-std-timestamp)"
+echo "log_dir>$log_dir<"
+mkdir -p "$log_dir"
+log_file="$log_dir/$progname.out"
+num_FAILS=0
+FAIL_prefix=
+echo "log_file>$log_file<"
+{
+    echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>> Begin: $(date)"
+    echo '>>>> "$@"'
+    echo "$@"
+    echo '<<<<< "$@"'
+
+    # Hold some status info it would be nice to see.
+    prefixen=()
+
+    # EExecDashN isn't very useful because of this.
+    EExec $shell_option "$@" 2>&1 | while read
+    do
+      echo "$REPLY"
+      error_file=$(echo "$REPLY" | sed -rn "s/(.*)(The job whose output file is )([^[:space:]]*)(.*)/\3/p")
+      [ -n "$error_file" ] && {
+          EExec cp-parallel "$error_file" "$log_dir"
+          echo "[$0: $error_file copied to $(realpath $log_dir$error_file)]"
+      }
+      if fgrep -q FAIL > /dev/null 2>&1
+      then
+          ((++num_FAILS))
+          FAIL_prefix="FAILS: $num_FAILS:"
+      fi
+      log_to_console $FAIL_prefix "$REPLY"
+    done
+    echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<< End: $(date)"
+} >> $log_file 2>&1
+
+
