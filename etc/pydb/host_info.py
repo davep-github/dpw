@@ -141,8 +141,15 @@ HOME_FG_COLOR = 'rgb:2f/06/5e'
 REDNET_BG_COLOR = 'LavenderBlush1'      # reddish for rednet.
 VANU_BG_COLOR = 'rgb:cb/d9/ee'       #cbd9ee # looks very nice w/golden colors
 VANU_FG_COLOR = 'black'
-NVIDIA_BG_COLOR = 'gray40'
-NVIDIA_FG_COLOR = 'white'
+#NVIDIA_BG_COLOR = 'gray40'
+#NVIDIA_FG_COLOR = 'white'
+
+#NVIDIA_BG_COLOR = 'honeydew'
+#NVIDIA_BG_COLOR = 'azure'
+#NVIDIA_BG_COLOR = 'AliceBlue'
+NVIDIA_BG_COLOR = 'lavender'
+NVIDIA_FG_COLOR = 'black'
+
 
 XEM_RUN_SERVER="""-eval (dp-start-server)"""
 XEM_RUN_APPTS="""-eval (dp-activate-appts)"""
