@@ -1,5 +1,5 @@
 [core]
-	excludesfile = /home/dpanariti/.gitexclude
+	excludesfile = ~/.gitexclude
 [user]
 	name = David Panariti
 	email = davep.dpw@meduseld.net

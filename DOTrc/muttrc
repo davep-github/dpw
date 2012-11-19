@@ -3,11 +3,32 @@ my_hdr X-Attribution: davep
 set alias_file = ~/.mutt-aliases
 set attribution  = "On %d, %n wrote:"
 set record = sent
-set move  = no
+set move = no
 set mbox_type = Maildir
 set hostname = meduseld.net
+set folder=~/Maildir
+set sort = reverse-date-received
+set sort_aux = reverse-date-received
+set tmpdir=~/tmp                 # Temporary files aren't stored in public places.
+
+set history=1000                 # Number of lines of history in memory
+set history_file=~tmp/.mutt-history
+set save_history=1000            # Number of lines of history in file
+
+set reverse_name
+set from=davep@meduseld.net
+alternates ".*@meduseld\.net"
+
+## Fix the following
+## from /etc/... set spoolfile=~/.maildir/
+## from /etc/... set record=~/.maildir-sent/
+## from /etc/... set move=no
+
 # Needed?# set use_domain = yes
 #
 
 # Oh, wow, the colors...
 source ~/.mutt-colors
+
+alternative_order text/plain text/html
+auto_view text/html

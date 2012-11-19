@@ -1,8 +1,4 @@
 #!/bin/sh
-#/home/dpanariti/yokel/bin/xemacs&
-#echo 1>&2 "Restore normal functionality when host info stuff is working."
-#exit 99
-
 #
 # $Id: xem,v 1.36 2005/06/12 08:20:10 davep Exp $
 # Start up an (x)emacs session with defaults from the HOST_INFO
@@ -99,6 +95,16 @@ else
     BIN=$XEM_BIN
 fi
 
+[ -e "$BIN" ] || {
+    echo "xemacs executable>$BIN<, doesn't exist."
+    exit 1
+} 1>&2
+
+[ -x "$BIN" ] || {
+    echo "xemacs executable>$BIN<, isn't"
+    exit 1
+} 1>&2
+
 [ -z "$main_macs" ] && {
     # guess main macs status
     # we're the main if we're the only one
@@ -175,7 +181,6 @@ then
     set -v
     #eval exec $cmd  >> $log_file 2>&1 $amper
     # Why didn't the exec fuck things up?
-    eval echo $cmd
     eval $cmd  >> $log_file 2>&1 $amper
     xem_pid=$!
     if vsetp "$amper" && vsetp "$do_renice"

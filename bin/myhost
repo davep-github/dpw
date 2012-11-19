@@ -7,7 +7,7 @@
 # your workstation
 #
 #set -x
-. script-x
+source script-x
 
 if ! tty -s
 then
@@ -34,8 +34,14 @@ FreeBSD)
     #echo 1>&2 "*>$*<"
     host=$6
     ;;
-Linux) set -- $(utmpdump /var/run/utmp 2>/dev/null | grep $(mytty) | cut -d '[' -f 7 | cut -d ']' -f 1 | fgrep $(hostname -d))
-    host="$1"
+Linux) z=$(hostname -d)
+    if [ -n "$z" ]
+    then
+	set -- $(utmpdump /var/run/utmp 2>/dev/null | grep $(mytty) | cut -d '[' -f 7 | cut -d ']' -f 1 | fgrep "$z")
+	host="$1"
+    else
+	host=
+    fi
     ;;
 *)
     echo 1>&2 "Unsupported OSName>$OSName<"

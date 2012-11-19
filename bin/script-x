@@ -25,7 +25,7 @@
 
 
 # Pass this as an environment variable to debug our self.
-: ${DP_DEBUG_SCRIPT_X_ITSELF:=} # Make -u happy.
+: ${DP_DEBUG_SCRIPT_X_ITSELF=} # Make -u happy.
 [ -n "$DP_DEBUG_SCRIPT_X_ITSELF" ] && set -x
 
 DP_SCRIPT_X_PRISTINE_DOLLAR1="${1-}"
@@ -38,16 +38,16 @@ DP_SCRIPT_X_PROG_LOG_FILE_STDOUT="${DP_SCRIPT_X_PROG_LOG_DIR}/log.stdout"
 DP_SCRIPT_X_PROG_LOG_FILE_STDERR="${DP_SCRIPT_X_PROG_LOG_DIR}/log.stderr"
 DP_SCRIPT_X_PROG_LOG_FILE_STDALL="${DP_SCRIPT_X_PROG_LOG_DIR}/log.stdall"
 
-: ${DP_SETUP_ENV_ONLY:=""}
-: ${DP_NO_LOG:=""}
+: ${DP_SETUP_ENV_ONLY=""}
+: ${DP_NO_LOG=""}
 # Set to ignore a leading -x and allow it to be
 # passed to the enclosing script as a parameter.
-: ${DP_NO_DASH_X:=}
+: ${DP_NO_DASH_X=}
 # Ditto for -xq.
-: ${DP_NO_DASH_XQ:=}
+: ${DP_NO_DASH_XQ=}
 # Or change these to something non-conflicting.
-: ${DP_SCRIPT_X_DASH_X_STR=-x}
-: ${DP_SCRIPT_X_DASH_XQ_STR=-xq}
+: ${DP_SCRIPT_X_DASH_X_STR="-x"}
+: ${DP_SCRIPT_X_DASH_XQ_STR="-xq"}
 : ${DP_SCRIPT_X_DASH_X=}        # Or fire off by environment variable only
 : ${DP_SCRIPT_X_DASH_XQ=}       # Or fire off by environment variable only
 : ${DP_SCRIPT_X_EXTRA_ARGSES=}
@@ -58,6 +58,7 @@ DP_SCRIPT_X_PROG_LOG_FILE_STDALL="${DP_SCRIPT_X_PROG_LOG_DIR}/log.stdall"
 : ${DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT=}
 : ${DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR=}
 : ${DP_SCRIPT_X_DEBUG_INITIATOR=}
+: ${DP_SCRIPT_X_DEBUG_INITIATOR_N=}
 # Do this here for convenience since there are many cases,
 # e.g. from firefox, KDE's Add Application to Panel, etc.
 # that don't get my environment.
@@ -76,8 +77,8 @@ vsetp "$SCRIPT_X_EXEC" && {
     # Ditto for -xq.
     DP_NO_DASH_XQ=t
     # Or change these to something non-conflicting.
-    DP_SCRIPT_X_DASH_X_STR=-x
-    DP_SCRIPT_X_DASH_XQ_STR=-xq
+    DP_SCRIPT_X_DASH_X_STR="-x"
+    DP_SCRIPT_X_DASH_XQ_STR="-xq"
     DP_SCRIPT_X_DASH_X=         # Or fire off by environment variable only
     DP_SCRIPT_X_DASH_XQ=        # Or fire off by environment variable only
     DP_SCRIPT_X_EXTRA_ARGSES=
@@ -105,18 +106,21 @@ DP_SCRIPT_X_echo_id=":"
 # !<@todo XXX What else would it be useful to inherit, record, etc?
 # For now, a hack to ignore inheritance is to always unset
 # DP_SCRIPT_X_DEBUG_INITIATOR before sourcing this file.
+#echo 1>&2 "0:DP_SCRIPT_X_DEBUG_INITIATOR_N>$DP_SCRIPT_X_DEBUG_INITIATOR_N<"
 if vunsetp "$DP_NO_DASH_X" ; then
-    [ "${1-}" == -x ] || vsetp "$DP_SCRIPT_X_DEBUG_INITIATOR" && {
+    if [ "${1-}" = "-x" ] || vsetp "$DP_SCRIPT_X_DEBUG_INITIATOR_N"
+    then
         # -xq means to only activate the other, quiet, debug features.
         # All this, simply for the following ~99% of the time.
         set -x
-        if vunsetp "$DP_SCRIPT_X_DEBUG_INITIATOR"; then
+        if vunsetp "$DP_SCRIPT_X_DEBUG_INITIATOR_N"; then
             # We've just activated the -x stuff
             DP_SCRIPT_X_DEBUG_INITIATOR=()
+            export DP_SCRIPT_X_DEBUG_INITIATOR_N="${#DP_SCRIPT_X_DEBUG_INITIATOR[@]}"
         fi
         # Record initiating callers.
         DP_SCRIPT_X_DEBUG_INITIATOR[${#DP_SCRIPT_X_DEBUG_INITIATOR[@]}]="$0"
-    }
+    fi
     DP_SCRIPT_X_DOLLAR1="$DP_SCRIPT_X_PRISTINE_DOLLAR1"
     case "$DP_SCRIPT_X_DOLLAR1" in
         -x*l*) mkdir -p "$DP_SCRIPT_X_PROG_LOG_DIR" || {
@@ -128,7 +132,7 @@ if vunsetp "$DP_NO_DASH_X" ; then
 
     # Set lots of stuff that does nothing if not in debug mode to things that
     # do in debug mode.
-    if [ "$DP_SCRIPT_X_DOLLAR1" == "-xq" -o "$DP_SCRIPT_X_DOLLAR1" == "-x" ]; then
+    if [ "$DP_SCRIPT_X_DOLLAR1" = "-xq" -o "$DP_SCRIPT_X_DOLLAR1" = "-x" ]; then
         shift
         DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT="echo"
         DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR="DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT_func"
@@ -140,7 +144,7 @@ if vunsetp "$DP_NO_DASH_X" ; then
         #    ...
         # fi
         export DP_SCRIPT_X_DEBUG=y
-        export DP_SCRIPT_X_DEBUG_PROPAGATOR=-x  # We can use this to propagate -x'ing.
+        export DP_SCRIPT_X_DEBUG_PROPAGATOR="-x"  # We can use this to propagate -x'ing.
         # Use these to turn on tracing in various places if we're -x'ing.
         export DP_SCRIPT_X_DASH_X_ON="set -x"
         export DP_SCRIPT_X_DASH_X_OFF="set +x"

@@ -1,8 +1,1 @@
-#!/bin/sh
-
-prog=$(basename $0)
-mh_prog=$(echo $prog | cut -f2 -d-)
-pickall "$@" | while read line
-do
-	$mh_prog $line
-done
+mh-xx-all

@@ -720,8 +720,9 @@ export -f cvs
 [ -z "$SP_BIN" ] && {
     export SP_BIN=$(type -p sp)
 }
-export SP_BIN=$HOME/yokel/bin/sp
+export SP_BIN=$HOME/bin/sp
 export SVN_BIN=$($SP_BIN -1 svn)
+unalias svn >/dev/null 2>&1
 svn ()
 {
     # Add some new command words that are implemented by me.  They have their

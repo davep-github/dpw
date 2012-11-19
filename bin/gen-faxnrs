@@ -1,4 +1,1 @@
-#!/bin/sh
-# convert gen-xxx to xxx
-xxx=`basename $0 | cut -c5-`
-qdb -r @$HOME/bin/$xxx.pdbx
+gen-from-pdb
