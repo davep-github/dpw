@@ -10699,7 +10699,7 @@ A bookmark, in this context, is:
       (or threshold-width 164)))
 
 (defun dp-primary-frame-width ()
-  (frame-width dp-primary-frame))
+  (frame-width (dp-primary-frame)))
 
 (defvar dp-2w-frame-width 174
   "Default frame width for 2w -- 2 vertical windows 80 columns wide.  

@@ -2234,7 +2234,7 @@ NAME is a buffer or buf-name.  Type is (currently) one of: '(shell ssh)")
   "Other names by which shell<0> can be selected.")
    
 ;;;###autoload
-(defun* dp-shell0 (&optional arg &key other-window-p name)
+(defun* dp-shell0 (&optional arg &key other-window-p name other-frame-p)
   "Open/visit a shell buffer.
 First shell is numbered 0 by default.
 ARG is numberp:
@@ -2338,7 +2338,7 @@ ARG is numberp:
       (dp-maybe-read-input-ring))))
 
 ;;;###autoload
-(defun* dp-shell (&optional arg &key other-window-p name)
+(defun* dp-shell (&optional arg &key other-window-p name other-frame-p)
   (interactive "P")
   ;; Don't set the whence buffer when leaving a shell buffer.
   (let ((whence-buf (unless (dp-shell-buffer-p) 
@@ -2346,7 +2346,8 @@ ARG is numberp:
         shell-buf)
     (if (equal current-prefix-arg '(4)) ; One plain C-u
         (dp-shell-cycle-buffers -1)
-    (dp-shell0 arg :other-window-p other-window-p :name name)
+    (dp-shell0 arg :other-window-p other-window-p :name name
+               :other-frame-p other-frame-p)
     ;; WTF??;;(setq shell-buf (current-buffer))
     ;; we're now in the new shell buffer
     ;; Set the previous buffer
