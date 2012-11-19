@@ -6,9 +6,11 @@ $cmd = 0;
 $cmd_args = "";
 $num_to_print = -1;
 $capture_output_p = 1;
+$sudo = "";
+$look_in_cwd = 0;
 
 sub usage {
-    printf("usage: sp [-{0-9}+] [-l[l]] [-r] [-L] [-X cmd [args]] [-x cmd] file...\n");
+    printf("usage: sp [-{0-9}+] [-l[l]] [-r] [-L] [-S] [-X cmd [args]] [-x cmd] file...\n");
     exit(0);
 }
 
@@ -84,6 +86,10 @@ while (($opt, $opt_arg) = ($ARGV[0] =~ /^-(\S)(\S*)/)) {
     $cmd = "dirname";
     $num_to_print = 1;
     $capture_output_p = 0;
+  } elsif ($opt eq "S") {
+    $sudo = "sudo";
+  } elsif ($opt eq ".") {
+    unshift(@path, ".")
   }
 
 
@@ -119,9 +125,9 @@ foreach $arg (@ARGV) {
       } elsif (-x $targ) {
         ++$num_printed if $num_to_print >= 0;
         if ($cmd) {
-          $qmd = sprintf("%s %s%s%s", $cmd,
+          $qmd = sprintf("%s %s %s%s%s", $sudo, $cmd,
                          $cmd_args, ($cmd_args) ? " " : "", $targ);
-#          printf("qmd>$qmd<\n");
+          #printf("qmd>$qmd<\n");
 	  $capture_output_p ? print `$qmd` : system $qmd;
         } else {
           print "$targ\n";
