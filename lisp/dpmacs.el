@@ -895,9 +895,9 @@ This can be callable.")
   (setq-default folding-internal-margins nil))
 
 ;; Make the password hider work with some other programs.
-(loop for prompt in '("Enter passphrase for key" 
+(loop for prompt in '("Enter passphrase for" 
                       "[sudo] password for dapanarx")
-  do (unless (posix-string-match prompt
+  do (unless (posix-string-match (concat "^" prompt "$")
               comint-password-prompt-regexp)
        (setq comint-password-prompt-regexp 
              (concat comint-password-prompt-regexp
