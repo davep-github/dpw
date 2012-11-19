@@ -26,7 +26,7 @@ cd "$use_flag_dir" || {
 }
 for a in $@; do
     regexp="$bounding_prefix$a$bounding_suffix"
-    find . $max_depth_opt -regex "$find_regex" \
+    find . $max_depth_opt -type f -regex "$find_regex" \
 	| xargs \
 	egrep --color "$regexp"
 done
