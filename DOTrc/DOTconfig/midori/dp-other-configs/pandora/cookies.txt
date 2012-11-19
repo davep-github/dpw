@@ -1,9 +1,0 @@
-.pandora.com	TRUE	/	FALSE	1280676988	__qca	P0-537449792-1278084988085
-.quantserve.com	TRUE	/	FALSE	1280677098	mc	4c2e07ea-cd583-78af8-e5eba
-.pandora.com	TRUE	/	FALSE	1280677099	__utmz	118078728.1278085100.2.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)
-.pandora.com	TRUE	/	FALSE	1280677099	__utma	118078728.16700760.1278084988.1278084988.1278085100.2
-.pandora.com	TRUE	/	FALSE	1280677099	__utmb	118078728.1.10.1278085100
-stat.onestat.com	FALSE	/	FALSE	1280677100	ONESTAT	3C87A554
-stat.onestat.com	FALSE	/	FALSE	1280677100	246941	7%2f2%2f2010
-.scorecardresearch.com	TRUE	/	FALSE	1280677100	UID	279a58e-63.84.95.34-1278084988
-.pandora.com	TRUE	/	FALSE	1280677100	fbsetting_ca44798cf7067942a82579c2c720f7dd	%7B%22connectState%22%3A2%2C%22oneLineStorySetting%22%3A3%2C%22shortStorySetting%22%3A3%2C%22inFacebook%22%3Afalse%7D

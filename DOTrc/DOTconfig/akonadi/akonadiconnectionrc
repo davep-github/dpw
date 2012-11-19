@@ -1,6 +1,0 @@
-[Data]
-Method=UnixPath
-UnixPath=/home/davep/.local/share/akonadi/akonadiserver.socket
-
-[DBUS]
-Address="unix:abstract=/tmp/dbus-P4nRvg3Lv3,guid=f3ca73c902aa3ca1dd2c181800000870"
