@@ -1142,20 +1142,29 @@ scrn_root_bash()
 
 ssh_home()
 {
+    local executor=
+    [ "${1-}" = "-n" ] && {
+        executor="echo {-}"
+        shift
+    }
     local home_addr
-    if vsetp "$DP_HOME_MACHINE"
+    if vunsetp "$DP_HOME_MACHINE"
     then
-	eval home_addr=\$$DP_HOME_MACHINE
-	if vsetp $home_addr
-        then
-            echo "ssh_home: home is $DP_HOME_MACHINE: $home_addr"
-            ssh "$home_addr"
-        else
-            echo 1>&2 "ssh_home: machine addr variable, '$DP_HOME_MACHINE', not set."
-        fi
-    else
-        echo 1>&2 "ssh_home: machine name variable, 'DP_HOME_MACHINE', is not set."
+        echo 1>&2 "ssh_home: machine addr variable, '$DP_HOME_MACHINE', not set."
+        return 1
     fi
+    eval home_addr="\$${DP_HOME_MACHINE}_ADDR"
+    eval home_user="\$${DP_HOME_MACHINE}_USER"
+    vsetp $home_addr || {
+        echo "home addr is not set."
+        return 1
+    } 1>&2
+    vsetp $home_user || {
+        echo "home user is not set."
+        return 1
+    } 1>&2
+    echo "ssh_home: home[$DP_HOME_MACHINE] info: addr: $home_addr, user: $home_user"
+    $executor ssh "$home_user@$home_addr"
 }
 export -f ssh_home
 

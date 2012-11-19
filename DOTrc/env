@@ -2,6 +2,7 @@
 
 # the Name of the home machine's address variable.
 export DP_HOME_MACHINE=VILYA
+export VILYA_USER=davep
 
 if inside_emacs_p
 then
