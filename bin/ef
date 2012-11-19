@@ -11,6 +11,8 @@ progname=$(basename $0)
 
 : ${ask_if_no_display:=t}
 : ${ask_about_text_mode:=${ask_if_no_display}}
+# The known_* vars are searched in order, so that can be used to specify a
+# preference order.
 : ${known_servers:=gnuserv}
 : ${known_clients:="gnuclient emacsclient"}
 : ${known_text_mode_editors:="vim vi nvi nano pico"}
@@ -130,7 +132,7 @@ process_file ()
 
     [[ -n "$prob" ]] && {
         if [[ "$ask_about_text_mode" == t ]]; then
-            local textModeEditor=$(find_one_of_these_programs ${known_text_mode_editors})
+            local textModeEditor=$(find-bin ${known_text_mode_editors})
 	    echo -n "$progname: "
             read -e -p "$prob; use $textModeEditor instead[Y/n/f/q]? "
             case "$REPLY" in

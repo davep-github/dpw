@@ -1,0 +1,29 @@
+#!/bin/sh
+#set -x
+if [[ "$1" == -d ]]
+then
+    op=-d
+    shift
+else
+    op=-f
+fi
+oldIFS=$IFS
+IFS=":"
+
+opath=
+sep=
+for el in $*
+do
+    [ -z "$el" ] && el=.
+    [ $op $el ] && { 
+	opath="$opath$sep$el"; 
+	sep=":" 
+    }
+done
+
+IFS=$oldIFS
+
+echo $opath
+
+exit 0
+

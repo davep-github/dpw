@@ -1,0 +1,271 @@
+#!/usr/bin/env python
+
+import os, sys, string
+
+import dp_utils, ticker_lib
+
+# Regular variable names are strings. So we'll use a non-string for some
+# special, internal codes. This `var' holds the constructor of the chosen
+# Ticker*_t
+CTOR = ("special var", "constructor")
+def identity(x, *args, **kw_args):
+    if args:
+	return [x] + args
+    return x
+
+class Option_info_t:
+    def __init__(self, name, evaluator, evaluator2, doc_string,
+                 *eval_args, **eval_kw_args):
+        self.name = name
+        self.evaluator = evaluator
+        self.evaluator2 = evaluator2
+        self.eval_args = eval_args
+        self.eval_kw_args = eval_kw_args
+        self.doc_string = doc_string
+        self.doc_stream = sys.stderr
+
+    def eval(self, arg):
+        if not self.evaluator:
+            raise RuntimeError("1st evaluator isn't set.")
+        return self.evaluator(arg, *self.eval_args, **self.eval_kw_args)
+
+    def eval2(self, arg):
+        if not self.evaluator2:
+            raise RuntimeError("2nd evaluator isn't set.")
+        return self.evaluator2(arg, *self.eval_args, **self.eval_kw_args)
+
+    def usage(self, ostream=None):
+        os = ostream or self.doc_stream
+        os.write("%s" % self)
+
+    def doc(self):
+        docstr()
+
+    def docstr(self, ostream=None):
+        os = ostream or self.doc_stream
+        os.write(self.doc_string)
+
+    def __str_str(self):
+        return "name[%s], doc_string[%s]" % (self.name,
+                                             self.doc_string)
+    def __repr__(self):
+        return "<Option: %s>" % (self.__str_str())
+
+    def __str__(self):
+        return self.__str_str()
+
+# -class Option_info_t:
+def eval_twiddle(twiddle_chars):
+    is_numeric = True
+    if  twiddle_chars[0] in ('-', "0","1","2","3","4","5","6","7","8","9"):
+        for c in twiddle_chars[1:]:
+            if not c in ("0","1","2","3","4","5","6","7","8","9"):
+                is_numeric = False
+                break
+    else:
+        is_numeric = True
+    if is_numeric:
+        return eval(twiddle_chars)
+    return twiddle_chars
+
+def handle_twiddle(v, *args, **kw_args):
+    return ({CTOR: ticker_lib.Twiddle_ticker_t},
+            {"twiddle_chars": eval_twiddle(v)})
+
+def handle_c(char, *args, **kw_args):
+    #print "char:", char
+    return ({CTOR: ticker_lib.Char_ticker_t}, {"tick_char": char})
+
+def handle_dots(v, *args, **kw_args):
+    return handle_c(".")
+
+def handle_DOTS(v, *args, **kw_args):
+    vdu, cku = handle_dots("unused")
+    vdu.update({"tick_interval": eval(v)})
+    return (vdu, cku)
+
+def handle_char_wise(v, *args, **kw_args):
+    return ({"char_wise_p": True}, None)
+
+def handle_char_wise_and_char(char, *args, **kw_args):
+    vdu, cku = handle_c(char)
+    vdu.update({"char_wise_p": True})
+    return (vdu, cku)
+
+def handle_pipe_mode(v, *args, **kw_args):
+    return ({"pipe_mode_p": True}, None)
+
+Opt_map = {
+    '-I': Option_info_t('increment', eval, None, "increment"),
+    '-s': Option_info_t('init_string', identity, None, "prefix string"),
+    '-C': Option_info_t('comma', identity, None, "count separator char"),
+    '-z': Option_info_t('init_count', eval, None, "init_count"),
+    '-c': Option_info_t('tick_char', None, handle_c, "tick character"),
+    '-t': Option_info_t('twiddle', None, handle_twiddle,
+                        "use twiddle[twiddle-id]"),
+    "-d": Option_info_t('dots', None, handle_dots, "expand me: dots"),
+    "-.": Option_info_t('dots', None, handle_dots, "expand me: dots"),
+    "-D": Option_info_t('DOTS', None, handle_DOTS, "expand me: DOTS"),
+    "-g": Option_info_t('grand_total_p', eval, None,
+                        "Print grand total when done"),
+    "-k": Option_info_t('char-wise', None, handle_char_wise,
+                        "count chars vs lines (the default)"),
+    "-K": Option_info_t('char-wise-plus-char', None, handle_char_wise_and_char,
+                        "count chars vs lines (the default) and set the char"),
+#    "-l": Option_info_t("line_tick_p", eval, None,
+#                        "Use the nth line as the tick value."),
+
+    ## Pipe mode sends ticks to stderr so you can pipe through tikker and not
+    ## pollute the stdout stream.
+    "-p": Option_info_t('pipe-mode', None, handle_pipe_mode,
+                        "send ticks to stderr (and forward stdin to stdout"),
+    "-e": Option_info_t('pipe-mode', None, handle_pipe_mode, "same as -p"),
+    }
+
+# MOVE to dp_utils
+
+def thereis_short_opt(options, opt_char):
+    """None if opt_char is not a short option,
+    True if opt has an arg, else False."""
+    if len(opt_char) != 1:
+        raise RuntimeError(
+            "This function is for one character options, opt_char>%s<." %
+            opt_char)
+    off = string.find(options, opt_char)
+    if off >= 0:
+        return (off < len(options)) and (options[off+1] == ':')
+    else:
+        return None
+
+def usage():
+    keys = Opt_map.keys()
+    keys.sort()
+    for key in keys:
+        print key+":", Opt_map[key]
+    dp_util.Twiddle_twiddles()
+
+if __name__ == "__main__":
+    import getopt
+    def_tick_interval = 100
+    ostream = sys.stdout
+    def_pipe_stream = sys.stdout
+    pipe_stream = def_pipe_stream
+    grand_total_p = True
+    line_tick_p = False
+    line_tick_prefix = ">>>"
+    no_clobber_p = False
+    openMode = 'w'
+    outputStreams = []
+
+    # tick_interval, increment=1, init_string="counting: ", comma=", ",
+    # init_count=0, tick_char
+    options = 'i:I:s:C:z:c:t:TdD:kphgaK:.lL:A'
+    ctor_keywords = {}
+    var_dict = {CTOR: ticker_lib.Ticker_t,
+                "tick_interval": def_tick_interval,
+                "char_wise_p": False,}
+
+    options, args = getopt.getopt(sys.argv[1:], options)
+    for o, v in options:
+        if o == '-i':
+            var_dict["tick_interval"] = dp_utils.numWithUnits(v)
+            continue
+        if o == '-h':
+            usage()
+            sys.exit(0)
+        if o == '-T':
+            dp_utils.Twiddle_twiddles()
+            sys.exit(0)
+        if o == '-l':
+            line_tick_p = not line_tick_p
+            continue
+        if o == '-L':
+            line_tick_prefix = v
+            continue
+        if o == '-A':
+            no_clobber_p = True
+            continue
+
+        # tee(1) compatibility.
+        if o == '-a':
+            openMode = 'a'
+            continue
+
+        oi = Opt_map.get(o, None)
+        if oi:
+            if oi.evaluator:
+                ctor_keywords[oi.name] = oi.eval(v)
+            elif oi.evaluator2:
+                vdu, cku = oi.eval2(v)
+                #print "vdu:", vdu
+                #print "cku:", cku
+                if vdu:
+		    var_dict.update(vdu)
+                if cku:
+                    ctor_keywords.update(cku)
+        else:
+            raise RuntimeError("No action for option>%s<" % (o,))
+
+    for a in args:
+        if no_clobber_p:
+            if os.path.exists(a):
+                print >>sys.stderr, "File [%s] exists: not clobbering" % (a,)
+                sys.exit(1)
+        outputStreams.append(open(a, openMode))
+
+    #!<@todo Check for twiddle ticker request and handle that.
+    #print "ctor_keywords:", ctor_keywords
+    # pipe mode: Ticks go to stderr and lines go to stdout.
+    pipe_mode_p, char_wise_p = (var_dict.get("pipe_mode_p", False),
+                                var_dict["char_wise_p"])
+
+    #if ctor_keywords.get("twiddle_chars", False) != False:
+    #    ctor_keywords["init_string"] = ""
+    #
+    if ctor_keywords.get("init_string", False) == False:
+        if char_wise_p:
+            ctor_keywords["init_string"] = "Counting chars: "
+            ctor_keywords["unit_name"] = 'char'
+        else:
+            ctor_keywords["init_string"] = "Counting lines: "
+            ctor_keywords["unit_name"] = 'line'
+
+    if pipe_mode_p:
+        ctor_keywords["ostream"] = sys.stderr
+    else:
+        ctor_keywords["ostream"] = ostream
+
+    if line_tick_p:
+        #ctor_keywords["init_string"] = "Sampling 1 of every %s lines\n" % \
+        #                               (var_dict["tick_interval"],)
+        ctor_keywords["init_string"] = "Sampling every %sth line\n" % \
+                                       (var_dict["tick_interval"],)
+        ctor_keywords["unit_name"] = 'line'
+        ctor_keywords["comma"] = ""     # Line will end with newline.
+
+    ticker = var_dict[CTOR](var_dict["tick_interval"], **ctor_keywords)
+    if pipe_mode_p:
+        outputStreams.append(pipe_stream)
+        ostream.write("\n")
+    while True:
+	l = sys.stdin.readline()
+	if not l:
+            ticker.fini()
+            break
+        for o in outputStreams:
+            o.write(l)
+        if char_wise_p:
+            # Iterate for each char in the line.
+            for c in l:
+                if line_tick_p:
+                    tick = line_tick_prefix + c
+                else:
+                    tick = None
+                ticker(tick=tick)
+        else:
+            if line_tick_p:
+                tick = line_tick_prefix + l
+            else:
+                tick = None
+            ticker(tick=tick)
+    print

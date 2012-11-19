@@ -1,11 +1,1 @@
-#!/bin/sh
-source script-x
-set -u
-
-# todo: if cwd or the find args contains an VC_EXCLUDE dir then don't filter
-# the vc directories.
-
-# Handle as many VC systems as possible.
-VC_EXCLUDES="/(\.svn|CVS|RCS|\.git|\.hg)(/|$)"
-
-find "$@" | egrep -v -e "$VC_EXCLUDES"
+find-sans-vc

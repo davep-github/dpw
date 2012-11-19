@@ -8,16 +8,20 @@
 
 . script-x
 
-all_options="RnqvdDm:cspPlzr:h"
+all_options="CNPRVacdghlm:npqr:svz"
 ln_s_p=
 MV_CMD=
 MV_OPTS=
 prog=`basename $0`
-[ "$prog" == "sed-ln-s" ] && {
+if [ "$prog" == "sed-ln-s" ]
+then
     ln_s_p=t
     MV_CMD=ln
     MV_OPTS=-s
-}
+elif [ "$prog" == "sed-cp" ]
+then
+    MV_CMD=cp
+fi
 
 #echo $prog: $* 1>&2
 query=
@@ -29,7 +33,8 @@ dash_dash='--'
 ropt=-r
 zippit=
 substitute_opt=
-first_arg_is_not_regexp=  
+first_arg_is_not_regexp=
+dash_n_prefix='[-n]: '
 # Ignore any iffy renames.
 paranoid_p="auto_exit"
 Usage()
@@ -59,7 +64,7 @@ has_spaces_p()
     fi
     return 1
 }
-    
+
 risky_p()
 {
     has_spaces_p $paranoid_p "$1" && return 1
@@ -70,14 +75,12 @@ then
     shift
     verbose=1;
 else
-    # see the man page of getopt for inadequacies.
-    ##args=` getopt RnqvdDm:cs $* `
     q=$(getopt -o "$all_options" -- "$@")
-    [ $? != 0 ] && { 
+    [ $? != 0 ] && {
         Usage
         exit 1
     }
-    eval set -- "$q" 
+    eval set -- "$q"
     unset q
     #eko "$@"
 
@@ -86,16 +89,19 @@ else
     do
 	case $1 in
             -R) ropt=;;
-	    -n) skip=y; verbose=1; dash_n=y;;
+	    -n) skip_if_dest_exists_p=y; verbose=1; dash_n=y;;
+            -N) dash_n_prefix=""; skip_if_dest_exists_p=y; verbose=1; dash_n=y;;
 	    -q) query=y;;
 	    -v) verbose=1;;
 	    -V) verbose=1; ECHO=eko;;
             -d) : $((++verbose));;
-	    -D) set -x;;
             -m) MV_CMD=$2; shift;;
             -l) MV_CMD=ln; MV_OPTS='-s';;
             -c) show_cmds=y;;
+            -C) show_cmds=;;
+            -a) skip_if_dest_exists_p=y;;
             -s) show_cmds=y; dash_i=''; dash_dash=''; MV_CMD='svn mv';;
+            -g) show_cmds=y; dash_i=''; dash_dash=''; MV_CMD='git mv';;
             -p) paranoid_p=;;
             -P) paranoid_p="auto_exit";;
             -z) zippit=t;;
@@ -167,27 +173,27 @@ sed_renamer()
 	eval echo -n "$cmd, do it?"; echo -n " "
 	read line
 	case "$line" in
-	1|[yY]|[Yy][Ee][Ss]|[tT]|[Oo][Kk]) skip=; dash_i='';;
-	*) skip=y;;
+	1|[yY]|[Yy][Ee][Ss]|[tT]|[Oo][Kk]) skip_if_dest_exists_p=; dash_i='';;
+	*) skip_if_dest_exists_p=y;;
 	esac
     fi
     [[ "$verbose" == 1 && -z "$dash_n" ]] && eval $ECHO $cmd
-    # file exists
+    # file exists ?
     if [ -f "$newname" ]
     then
-        if [ -n "$skip" ]
+        if [ -n "$skip_if_dest_exists_p" ]
         then
-            echo 1>&2 "dest($newname) exists. skipping."
+            [ -z "$zippit" ] && echo 1>&2 "dest($newname) exists. skipping."
         elif [ -n "$dash_n" ]
         then
-            eval echo "[-n]: $cmd"
+            eval echo "${dash_n_prefix}${cmd}"
         else
             eval $cmd
         fi
     else
         if [ -n "$dash_n" ]
         then
-            eval echo "[-n]: $cmd"
+            eval echo "${dash_n_prefix}${cmd}"
         else
             eval $cmd
         fi

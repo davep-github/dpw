@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-### Time-stamp: <08/06/29 13:48:57 davep>
+### Time-stamp: <12/09/08 13:31:00 davep>
 #############################################################################
 ## @package 
 ##
-import sys, os
+import sys, os, types
 import random
 
 
@@ -36,18 +36,23 @@ def deal_em(l, random_range_fun=None, handlor=None):
     if not random_range_fun:
         random_range_fun = random.Random().randrange
     llen = len(l)
-    while llen:
-        r = random_range_fun(0, llen-1)
+    while llen > 0:
+	if llen == 1:
+	    r = 0
+	else:
+	    r = random_range_fun(0, llen)
+        print >>sys.stderr,  "r:", r, "llen:", llen
         i = l[r]
         if handlor:
             handlor(i)
         ret.append(i)
         del l[r]
         llen -= 1
+    ret.extend(l)
     return ret
 
 def print_em(l, printor=printf):
-    deal_em(handlor=printor)
+    deal_em(l, handlor=printor)
 
 def main(files_or_names):
     if len(files_or_names) == 0:

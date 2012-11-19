@@ -1,0 +1,83 @@
+application/vnd.sun.xml.writer sxw
+application/vnd.sun.xml.writer.template stw
+application/vnd.sun.xml.writer.global sxg
+application/vnd.stardivision.writer sdw vor
+application/vnd.stardivision.writer-global sgl
+application/vnd.sun.xml.calc sxc
+application/vnd.sun.xml.calc.template stc
+application/vnd.stardivision.calc sdc
+application/vnd.sun.xml.impress sxi
+application/vnd.sun.xml.impress.template sti
+application/vnd.stardivision.impress sdd sdp
+application/vnd.sun.xml.draw sxd
+application/vnd.sun.xml.draw.template std
+application/vnd.stardivision.draw sda
+application/vnd.sun.xml.math sxm
+application/vnd.stardivision.math smf
+application/vnd.sun.xml.writer sxw
+application/vnd.sun.xml.writer.template stw
+application/vnd.sun.xml.writer.global sxg
+application/vnd.stardivision.writer sdw vor
+application/vnd.stardivision.writer-global sgl
+application/vnd.sun.xml.calc sxc
+application/vnd.sun.xml.calc.template stc
+application/vnd.stardivision.calc sdc
+application/vnd.sun.xml.impress sxi
+application/vnd.sun.xml.impress.template sti
+application/vnd.stardivision.impress sdd sdp
+application/vnd.sun.xml.draw sxd
+application/vnd.sun.xml.draw.template std
+application/vnd.stardivision.draw sda
+application/vnd.sun.xml.math sxm
+application/vnd.stardivision.math smf
+application/postscript	.ps
+sound/basic	.wav
+image/gif	.GIF
+audio/x-midi	midi
+#--Netscape Communications Corporation MIME Information
+#Do not delete the above line. It is used to identify the file type.
+#
+
+#
+#mime types added by Progressive Networks http://www.realaudio.com
+#
+#mime types added by Netscape Helper
+type=application/pdf .pdf
+audio/x-pn-realaudio rmm ram
+audio/vnd.rn-realaudio ra
+application/smil smi smil
+text/vnd.rn-realtext rt
+video/vnd.rn-realvideo rv
+image/vnd.rn-realflash rf swf
+application/x-shockwave-flash2-preview rf swf
+application/sdp sdp
+application/x-sdp sdp
+application/vnd.rn-realmedia rm
+application/pdf acroread
+image/vnd.rn-realpix rp
+audio/wav wav
+audio/x-wav wav
+audio/x-pn-wav wav
+audio/x-pn-windows-acm wav
+audio/basic au
+audio/x-pn-au au
+audio/aiff aiff af
+audio/x-aiff aiff af
+#--Netscape Communications Corporation MIME Information
+#Do not delete the above line. It is used to identify the file type.
+#
+audio/x-pn-aiff aiff af
+#mime types added by Netscape Helper
+application/octet-stream exe bin
+type=audio/x-mpeg
+type=audio/x-mp3
+type=audio/x-mpegurl
+type=audio/x-scpls
+type=audio/mpeg
+type=audio/mp3
+type=audio/mpegurl
+type=audio/scpls
+type=application/vnd.rn-rn_music_package
+type=application/x-zinf-theme
+#
+type=text/html htm html

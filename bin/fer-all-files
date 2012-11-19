@@ -2,14 +2,11 @@
 # $Id: fer-all-files,v 1.12 2004/12/03 09:20:04 davep Exp $
 #set -x
 
-# @ todo
-# fer-all-files [-FAF<opt>...] [find opts] [find args] [-- xargs opts]
-# e.g. fer-all-files ./client -- fgrep Mk
-# but?
-# fer-all-files -name '*mak' -- fgrep Mk
 source script-x
 
+#eko 1111 "$@"
 . script-x
+#eko 2222 "$@"
 
 # @todo make -m add mvsik dir to dirs ???
 # @todo share code w/fer-all-dirs ??
@@ -18,8 +15,7 @@ option_str='nqd:g:D:p:P:sf:'
 qdat=($(getopt -o "$option_str" -- "$@"))
 [ $? != 0 ] && Usage
 # is eval needed? eval set -- "${qdat[@]}" NO!
-eval set -- "${qdat[@]}"
-
+set -- "${qdat[@]}" 
 vsetp "$DP_SCRIPT_X_DEBUG" && {
     echo '$DP_SCRIPT_X_DEBUG='"$DP_SCRIPT_X_DEBUG"
     echo "Results from getopt -o:"
@@ -51,8 +47,12 @@ FIND_PRINT0_OPT="-print0"
 XARGS_PRINT0_OPT="-0"
 : ${XARGS_OPTS=-r}
 show_cmd=
+
 for i in "$@"
 do
+    #eko 5555 "$i"
+    #echo "i>$i<"
+    #echo "1>$1<"
     case $1 in
 	-v) set -x;;		# Lazy^H^H^H^HPoor man's verbosity.
 	-q) ECHO=":" ;;
@@ -65,16 +65,12 @@ do
         -f) FINDER=$2; shift;;
         -n) show_cmd=t; RUNNER1=crappy_dash_n1; RUNNER2=crappy_dash_n2;;
 	--) shift ; break ;;
-	*)
+	*) 
 	    echo 1>&2 "Unsupported option>$1<";
 	    exit 1 ;;
     esac
     shift
 done
-
-# this sucks off all of our options.
-# All up to possible '--' are find args.
-# All after -- art xargs opts.
 
 FIND_PRE_ARGS=${FIND_PRE_ARGS_a[@]}
 FIND_POST_ARGS=${FIND_POST_ARGS_a[@]}
@@ -84,10 +80,9 @@ pats=${PATS_a[@]}
 [ -z "${dirs_a[*]}" ] && dirs_a=(.)
 if [ -n "$pats" ]
 then
-    echo "PATS_a>${PATS_a[@]}<PATS_a"
-    name_arg=($(mk-find-list "${PATS_a[@]}"))
+    name_arg=$(mk-find-list $pats)
 else
-    name_arg=''
+    name_arg=
 fi
 
 vsetp $DP_SCRIPT_X_DEBUG && {
@@ -135,9 +130,9 @@ crappy_dash_n2()
 #
 # NB!!! Any output to stdout after the pipe is set up will
 # screw up the input to xargs.
-set -v
-$RUNNER1 $FINDER $(echo ${dirs_a[@]}) $FIND_PRE_ARGS -type $type \
-    "${name_arg[@]}" \
+echo "dirs_a>"${dirs_a[0]}"<"
+$RUNNER1 $FINDER $(echo ${dirs_a[@]}) $FIND_PRE_ARGS -type $type $name_arg \
     $FIND_PRINT0_OPT $FIND_POST_ARGS \
     | \
     $RUNNER2 xargs $XARGS_OPTS $XARGS_PRINT0_OPT "$@"
+

@@ -1,0 +1,130 @@
+application/vnd.sun.xml.writer;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.sun.xml.writer.global;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.stardivision.writer;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.stardivision.writer-global;/home/davep/.openoffice/1.1.3/soffice %s
+application/x-starwriter;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.sun.xml.writer.template;/home/davep/.openoffice/1.1.3/soffice %s
+application/msword;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.sun.xml.calc;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.stardivision.calc;/home/davep/.openoffice/1.1.3/soffice %s
+application/x-starcalc;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.sun.xml.calc.template;/home/davep/.openoffice/1.1.3/soffice %s
+application/excel;/home/davep/.openoffice/1.1.3/soffice %s
+application/msexcel;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.ms-excel;/home/davep/.openoffice/1.1.3/soffice %s
+application/x-msexcel;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.sun.xml.impress;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.stardivision.impress;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.stardivision.impress-packed;/home/davep/.openoffice/1.1.3/soffice %s
+application/x-starimpress;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.sun.xml.impress.template;/home/davep/.openoffice/1.1.3/soffice %s
+application/powerpoint;/home/davep/.openoffice/1.1.3/soffice %s
+application/mspowerpoint;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.ms-powerpoint;/home/davep/.openoffice/1.1.3/soffice %s
+application/x-mspowerpoint;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.sun.xml.draw;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.stardivision.draw;/home/davep/.openoffice/1.1.3/soffice %s
+application/x-stardraw;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.sun.xml.draw.template;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.sun.xml.math;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.stardivision.math;/home/davep/.openoffice/1.1.3/soffice %s
+application/x-starmath;/home/davep/.openoffice/1.1.3/soffice %s
+application/vnd.sun.xml.writer;/home/davep/.openoffice/1.1.0/soffice %s
+application/vnd.sun.xml.writer.global;/home/davep/.openoffice/1.1.0/soffice %s
+application/vnd.stardivision.writer;/home/davep/.openoffice/1.1.0/soffice %s
+application/vnd.stardivision.writer-global;/home/davep/.openoffice/1.1.0/soffice %s
+application/x-starwriter;/home/davep/.openoffice/1.1.0/soffice %s
+application/vnd.sun.xml.writer.template;/home/davep/.openoffice/1.1.0/soffice %s
+application/vnd.sun.xml.calc;/home/davep/.openoffice/1.1.0/soffice %s
+application/vnd.stardivision.calc;/home/davep/.openoffice/1.1.0/soffice %s
+application/x-starcalc;/home/davep/.openoffice/1.1.0/soffice %s
+application/vnd.sun.xml.calc.template;/home/davep/.openoffice/1.1.0/soffice %s
+application/vnd.sun.xml.impress;/home/davep/.openoffice/1.1.0/soffice %s
+application/vnd.stardivision.impress;/home/davep/.openoffice/1.1.0/soffice %s
+application/vnd.stardivision.impress-packed;/home/davep/.openoffice/1.1.0/soffice %s
+application/x-starimpress;/home/davep/.openoffice/1.1.0/soffice %s
+application/vnd.sun.xml.impress.template;/home/davep/.openoffice/1.1.0/soffice %s
+application/vnd.sun.xml.draw;/home/davep/.openoffice/1.1.0/soffice %s
+application/vnd.stardivision.draw;/home/davep/.openoffice/1.1.0/soffice %s
+application/x-stardraw;/home/davep/.openoffice/1.1.0/soffice %s
+application/vnd.sun.xml.draw.template;/home/davep/.openoffice/1.1.0/soffice %s
+application/vnd.sun.xml.math;/home/davep/.openoffice/1.1.0/soffice %s
+application/vnd.stardivision.math;/home/davep/.openoffice/1.1.0/soffice %s
+application/x-starmath;/home/davep/.openoffice/1.1.0/soffice %s
+# This is a simple example mailcap file.
+# Lines starting with '#' are comments.
+
+# etc.) to the viewer 'showaudio'.  Note that '%s' means 'put the
+# datafile name here when the viewer is executed'.
+audio/*; xplay.py -f %s &
+#audio/*; esdplay %s &
+
+# This maps all types of images (image/gif, image/jpeg, etc.)
+# to the viewer 'xli'.
+image/gif; xli %s 
+image/jpg; xli %s 
+image/*; xli %s 
+
+# This maps MPEG video data to the viewer 'mpeg_play'.
+video/mpeg; dl-saver.sh %s
+#video/*; xanim +Sr +Ca +CF4 -Cn -b -B %s
+#video/*; mplayer %s
+video/*; dl-saver.sh %s
+
+# This maps all types of video *other than MPEG* to the viewer
+# 'genericmovie'.
+#video/*; genericmovie %s
+
+application/postscript; gv %s
+application/x-dvi; xdvi %s
+
+# Definitions for MIME security with PGP
+multipart/encrypted; showencrypted %{boundary} %s; \
+	test=test %{protocol} = application/pgp-encrypted; needsterminal
+multipart/signed; showsigned %{boundary} %s; \
+	test=test %{protocol} = application/pgp-signature; needsterminal
+application/pgp-keys; pgp %s; needsterminal
+
+#mailcap entry added by Netscape Helper
+application/pdf;acroread %s
+
+# text/html; xx -- lynx -force_html %s; needsterminal
+#text/html; lynx -force_html %s; needsterminal;
+#text/html; xx -- w3m -T text/html %s; needsterminal
+
+#text/html; xx -- w3m -T text/html %s; copiousoutput; description=HTML Text; nametemplate=%s.html
+text/html; w3m -T text/html %s; copiousoutput
+#text/html; links text/html %s; nametemplate=%s.html
+
+# This should be used interactively, but isn't.
+#text/html;      links2 -dump %s; nametemplate=%s.html
+# This should be used only for autoview, but is always used.
+#text/html;      links2 -dump %s; nametemplate=%s.html; copiousoutput
+
+
+application/x-pn-realaudio; raplayer %s &
+
+#application/octet-stream; metamail; \
+#x-mozilla-flags=prompt
+#mailcap entry added by Netscape Helper
+type=application/pdf;acroread %s
+audio/x-pn-realaudio;/slice6/yokel/RealPlayer8/realplay "%u"
+audio/vnd.rn-realaudio;/slice6/yokel/RealPlayer8/realplay "%u"
+application/smil;/slice6/yokel/RealPlayer8/realplay "%u"
+text/vnd.rn-realtext;/slice6/yokel/RealPlayer8/realplay "%u"
+video/vnd.rn-realvideo;/slice6/yokel/RealPlayer8/realplay "%u"
+image/vnd.rn-realflash;/slice6/yokel/RealPlayer8/realplay "%u"
+application/x-shockwave-flash2-preview;/slice6/yokel/RealPlayer8/realplay "%u"
+application/sdp;/slice6/yokel/RealPlayer8/realplay "%u"
+application/x-sdp;/slice6/yokel/RealPlayer8/realplay "%u"
+application/vnd.rn-realmedia;/slice6/yokel/RealPlayer8/realplay "%u"
+image/vnd.rn-realpix;/slice6/yokel/RealPlayer8/realplay "%u"
+#audio/wav;/slice6/yokel/RealPlayer8/realplay "%u"
+#audio/x-wav;/slice6/yokel/RealPlayer8/realplay "%u"
+#audio/x-pn-wav;/slice6/yokel/RealPlayer8/realplay "%u"
+#audio/x-pn-windows-acm;/slice6/yokel/RealPlayer8/realplay "%u"
+#audio/basic;/slice6/yokel/RealPlayer8/realplay "%u"
+#audio/x-pn-au;/slice6/yokel/RealPlayer8/realplay "%u"
+#audio/aiff;/slice6/yokel/RealPlayer8/realplay "%u"
+#audio/x-aiff;/slice6/yokel/RealPlayer8/realplay "%u"
+#audio/x-pn-aiff;/slice6/yokel/RealPlayer8/realplay "%u"
