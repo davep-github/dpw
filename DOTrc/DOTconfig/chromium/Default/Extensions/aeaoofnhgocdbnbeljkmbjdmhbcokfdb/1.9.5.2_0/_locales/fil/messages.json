@@ -1,0 +1,451 @@
+{
+   "caption_backup": {
+      "message": "Taas sa imung likod"
+   },
+   "caption_backup_or_restore_settings": {
+      "message": "Taas sa imung likod / Ibalik ang pagpanglingkod"
+   },
+   "caption_blacklist": {
+      "message": "Itum nga linya"
+   },
+   "caption_cancel": {
+      "message": "Dili ko"
+   },
+   "caption_close": {
+      "message": "Sirado"
+   },
+   "caption_confirm": {
+      "message": "Intawn"
+   },
+   "caption_create_custom_stroke": {
+      "message": "Buhata"
+   },
+   "caption_current_stroke": {
+      "message": "Naglusi karon"
+   },
+   "caption_edit_trail_style": {
+      "message": "Utroha ang giagian nga istillo"
+   },
+   "caption_help_custom_stroke": {
+      "message": "Tabang intawn"
+   },
+   "caption_label": {
+      "message": "Marka"
+   },
+   "caption_mouse_stroke_options": {
+      "message": "Opsyon sa paglihok sa ilaga"
+   },
+   "caption_none": {
+      "message": "Wala"
+   },
+   "caption_previous_stroke": {
+      "message": "Ang niaging lusi"
+   },
+   "caption_remove": {
+      "message": "Tanggala"
+   },
+   "caption_restore": {
+      "message": "Balik sa kaniadto"
+   },
+   "caption_restore_default": {
+      "message": "Ibalik ang kaniadto"
+   },
+   "caption_save": {
+      "message": "Isalbar"
+   },
+   "caption_script": {
+      "message": "Kodigo"
+   },
+   "caption_set": {
+      "message": "Lingkod"
+   },
+   "caption_share_custom_stroke": {
+      "message": "Ilimus sa uban"
+   },
+   "caption_show_advanced_options": {
+      "message": "Ipakita ang nag-una nga opsyon"
+   },
+   "caption_translated_by": {
+      "message": "Gitranslar ni"
+   },
+   "caption_unset": {
+      "message": "Ayaw lingkod"
+   },
+   "category_desc_dnd_strokes": {
+      "message": "Ang napilian nga teksto, sumpay, ug litrato mabira-bira"
+   },
+   "category_desc_wheel_strokes": {
+      "message": "Nagligid samtang nagunit sa tuong butones"
+   },
+   "category_label_bookmark": {
+      "message": "Memoraysa tawn"
+   },
+   "category_label_custom_strokes": {
+      "message": "Imung ganahan nga paglusi"
+   },
+   "category_label_dnd_strokes": {
+      "message": "Drag'n'Drop nga Lusi"
+   },
+   "category_label_image": {
+      "message": "Litrato"
+   },
+   "category_label_link": {
+      "message": "Sumpay"
+   },
+   "category_label_navigation": {
+      "message": "Gaybar sa Limketkai sa una"
+   },
+   "category_label_options": {
+      "message": "Opsyon"
+   },
+   "category_label_other": {
+      "message": "Uban pa"
+   },
+   "category_label_rocker_strokes": {
+      "message": "Bato nga galusi"
+   },
+   "category_label_tab": {
+      "message": "Tabas"
+   },
+   "category_label_utilities": {
+      "message": "Tig hinlo sa CR"
+   },
+   "category_label_wheel_strokes": {
+      "message": "Ligid sa Ilaga nga Galusi"
+   },
+   "category_label_window": {
+      "message": "Bintana"
+   },
+   "extension_description": {
+      "message": "Gamita ang Paglihok sa Ilaga (AKA pagchurva) para mupaspas ang imung pagtarbaho. Nagsuportar kini sa pinaspasay na pagguyod ug adto na, binatuhan na pagchurva ur ligid na pagchurva sa usa lamang ka sumpay! Mga tig-translar nga way bayad gikinahanglan."
+   },
+   "extension_name": {
+      "message": "Paglihok sa Ilaga"
+   },
+   "option_desc_stroke_timeout": {
+      "message": "Dagko nga balwarte makapa-sayon sa paglusi"
+   },
+   "option_label_alt_key_suppresses_strokes": {
+      "message": "Gisugpo sa Alt nga yabi ang paglusi"
+   },
+   "option_label_close_window_with_the_last_tab": {
+      "message": "Isarado ang pinaka-last na bintana kauban ang last nga tabas"
+   },
+   "option_label_custom_stroke_runs_in": {
+      "message": "Nagdagan sa"
+   },
+   "option_label_draw_trails": {
+      "message": "Pagdrowing ug ikog"
+   },
+   "option_label_enable_dnd_strokes": {
+      "message": "Adunay Drag'n'Drop nga paglusi"
+   },
+   "option_label_hold_ctrl_key_to_fire_custom_strokes": {
+      "message": "Guniti ang Ctrl nga yabi para magamit ang imung ganahan na paglusi"
+   },
+   "option_label_minimal_step": {
+      "message": "Kinagamyang Lak-ang (Pixels)"
+   },
+   "option_label_new_tab_open_at": {
+      "message": "Kung mag abli ug bag o nga tabas, ablihi tawn"
+   },
+   "option_label_page_open_as_new_tab": {
+      "message": "Kung mag abli ug bag o nga tabas, ablihi tawn"
+   },
+   "option_label_prefferred_search_engine": {
+      "message": "Imung guto nga makina sa pagpangita"
+   },
+   "option_label_stroke_timeout": {
+      "message": "Lusi nigawaas sa oraasan (MIlliseconds)"
+   },
+   "option_label_stroke_trigger": {
+      "message": "Paglusi sa gunitanan sa pusil nga yabi"
+   },
+   "option_label_trail_color": {
+      "message": "Kolor sa ikog"
+   },
+   "option_label_trail_width": {
+      "message": "Kalapdon sa ikog"
+   },
+   "option_value_all_frames": {
+      "message": "tanan pramar"
+   },
+   "option_value_as_first_tab": {
+      "message": "Unang Tabas"
+   },
+   "option_value_as_last_tab": {
+      "message": "Susama sa pinaka-last na tabas"
+   },
+   "option_value_at_left_of_current_tab": {
+      "message": "Sa wala sa tabas nimu karon"
+   },
+   "option_value_at_right_of_current_tab": {
+      "message": "Sa tuo sa tabas nimu karon"
+   },
+   "option_value_chrome_newtab_page": {
+      "message": "Ang bag-ong tabas sa Chrome"
+   },
+   "option_value_left_mouse_button": {
+      "message": "Butones sa wala sa ilaga"
+   },
+   "option_value_middle_mouse_button": {
+      "message": "Butones sa tunga-tunga sa ilaga (Linux ug Mac)"
+   },
+   "option_value_my_homepage": {
+      "message": "Akong Balay"
+   },
+   "option_value_other_search_engine": {
+      "message": "Uban"
+   },
+   "option_value_right_mouse_button": {
+      "message": "Tuo nga butones sa ilaga (Bintana)"
+   },
+   "option_value_target_frame": {
+      "message": "ang target nga prama"
+   },
+   "option_value_the_blank_page": {
+      "message": "Ang walay pulos ng pahina"
+   },
+   "option_value_top_frame": {
+      "message": "ang pramar sa taas"
+   },
+   "prompt_backup_settings_currupted": {
+      "message": "Kurakot nga data nakit-an, niundang ang pag-churva sa kuan nga ambot lamang."
+   },
+   "prompt_invalid_search_engine_url": {
+      "message": "Ang makina nga gipangita nga URL kay dili lagi namo makit-an."
+   },
+   "prompt_label_and_script_are_empty": {
+      "message": "Pareho ang [Label] ug [Script] dapat naay sulod."
+   },
+   "prompt_overwrite_custom_stroke_label": {
+      "message": "'$label$' naa naman ni, pulihan nimu sha?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_overwrite_stroke_sequence": {
+      "message": "[$sequence$] na-assign sa '$label$', pulihan?",
+      "placeholders": {
+         "label": {
+            "content": "$2"
+         },
+         "sequence": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_remove_custom_stroke": {
+      "message": "Kuhaon ang ganahan nimung istrokar: '$label$'?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_reset_settings": {
+      "message": "Ma-reset ang tanan nga siting, way labot ang ganahan nimung istrokar, sugot ka?"
+   },
+   "prompt_restore_complete": {
+      "message": "Humana ang pagbalik sa kaniadto."
+   },
+   "prompt_save_blacklist_complete": {
+      "message": "Humana ang pagsalbar sa itom nga linya."
+   },
+   "prompt_save_complete": {
+      "message": "Humana ang pagsalbar."
+   },
+   "stroke_label_bookmark_this_link": {
+      "message": "Memoraysa ni nga Sumpay"
+   },
+   "stroke_label_bookmark_this_page": {
+      "message": "Memoraysa ni nga Pahina"
+   },
+   "stroke_label_close_all_tabs_to_the_left": {
+      "message": "Isirado ang Tanang Tabas sa Wala"
+   },
+   "stroke_label_close_all_tabs_to_the_right": {
+      "message": "Isirado ang Tanang Tabas sa Tuo"
+   },
+   "stroke_label_close_other_tabs": {
+      "message": "Isirado ang Ubang Tabas"
+   },
+   "stroke_label_close_tab": {
+      "message": "Isirado ang Tabas"
+   },
+   "stroke_label_close_tab_to_the_left": {
+      "message": "Isirado ang Tabas sa Wala"
+   },
+   "stroke_label_close_tab_to_the_right": {
+      "message": "Isirado ang Tabas sa Tuo"
+   },
+   "stroke_label_close_window": {
+      "message": "Isirado ang bintana"
+   },
+   "stroke_label_decrease_number_in_url": {
+      "message": "Huna-hunaa ang Miaging Pahina"
+   },
+   "stroke_label_detach_tab": {
+      "message": "Tanggala ang Tabas"
+   },
+   "stroke_label_dnd_down": {
+      "message": "Ihagbong sa ubos"
+   },
+   "stroke_label_dnd_left": {
+      "message": "Ihagbong sa wala"
+   },
+   "stroke_label_dnd_right": {
+      "message": "Ihagbong sa tuo"
+   },
+   "stroke_label_dnd_up": {
+      "message": "Ihagbong sa taas"
+   },
+   "stroke_label_duplicate_tab": {
+      "message": "Kaduhaa ang Tabas"
+   },
+   "stroke_label_first_tab": {
+      "message": "Unang Tabas"
+   },
+   "stroke_label_history_back": {
+      "message": "Balik sa Istorya"
+   },
+   "stroke_label_history_forward": {
+      "message": "Unahan sa Istorya"
+   },
+   "stroke_label_increase_number_in_url": {
+      "message": "Huna-hunaa ang Sunod Pahina"
+   },
+   "stroke_label_last_tab": {
+      "message": "Pinaka-last nga Tabas"
+   },
+   "stroke_label_maximize_window": {
+      "message": "Madak-a ang Bintana"
+   },
+   "stroke_label_minimize_window": {
+      "message": "Pagamyi ang Bintana"
+   },
+   "stroke_label_mouse_stroke_options": {
+      "message": "Opsyon sa paglusi sa ilaga"
+   },
+   "stroke_label_new_tab": {
+      "message": "Bag-ong Tabas"
+   },
+   "stroke_label_new_window": {
+      "message": "Bag ong bintana"
+   },
+   "stroke_label_next_tab": {
+      "message": "Sa Naunang mga Tabas"
+   },
+   "stroke_label_open_homepage": {
+      "message": "Buhati ug Balay"
+   },
+   "stroke_label_open_link_in_new_background_tab": {
+      "message": "Ablihi ang sumpay sa laing bintana sa likod"
+   },
+   "stroke_label_open_link_in_new_foreground_tab": {
+      "message": "Ablihi ang sumpay sa laing bintana sa atubangan"
+   },
+   "stroke_label_open_link_in_new_window": {
+      "message": "Ablihi ang sumpay sa laing bintana"
+   },
+   "stroke_label_previous_tab": {
+      "message": "Sa Niaging mga Tabas"
+   },
+   "stroke_label_reload": {
+      "message": "Utroha"
+   },
+   "stroke_label_remove_bookmark": {
+      "message": "Kalimti"
+   },
+   "stroke_label_rocker_left_to_right": {
+      "message": "I-click ang tuo nga butones samtang gigunitan ang wala nga butones"
+   },
+   "stroke_label_rocker_right_to_left": {
+      "message": "I-click ang wala nga butones samtang gigunitan ang tuo nga butones"
+   },
+   "stroke_label_save_image": {
+      "message": "Isalbar ang litrato"
+   },
+   "stroke_label_scroll_down_one_page": {
+      "message": "Ubos ug usa ka pahina"
+   },
+   "stroke_label_scroll_up_one_page": {
+      "message": "Taas ug usa ka pahina"
+   },
+   "stroke_label_search_selected_text": {
+      "message": "Pangitaa ang na-highlight nga teksto"
+   },
+   "stroke_label_skip_cache_reload": {
+      "message": "Ambaki ang Kash nga Utroha ambot wa ko kasabot ani na part"
+   },
+   "stroke_label_stop_page_loading": {
+      "message": "Undangi na"
+   },
+   "stroke_label_take_screenshot": {
+      "message": "Piktshuri"
+   },
+   "stroke_label_text_zoom_in": {
+      "message": "Padak-a ang mga sulat"
+   },
+   "stroke_label_text_zoom_out": {
+      "message": "Pagam-ya ang mga sulat"
+   },
+   "stroke_label_text_zoom_reset": {
+      "message": "Balik ang Sulat sa Ilang tarong nga kadak-on"
+   },
+   "stroke_label_to_page_bottom": {
+      "message": "Ubos sa pahina"
+   },
+   "stroke_label_to_page_top": {
+      "message": "Taas sa pahina"
+   },
+   "stroke_label_undo_close_tab": {
+      "message": "Mali ang pagsirado sa Tabas"
+   },
+   "stroke_label_upper_level_in_url": {
+      "message": "Sa Taas nga lebel sa URL"
+   },
+   "stroke_label_view_image": {
+      "message": "Tan-awa ang Litrato"
+   },
+   "stroke_label_view_source": {
+      "message": "Tan awa ang churva"
+   },
+   "stroke_label_wheel_down": {
+      "message": "Iubos ang ligid sa ilaga"
+   },
+   "stroke_label_wheel_left": {
+      "message": "Ipawala ang ligid sa ilaga"
+   },
+   "stroke_label_wheel_right": {
+      "message": "Ipatuo ang ligid sa ilaga"
+   },
+   "stroke_label_wheel_up": {
+      "message": "Itaas ang ligid sa ilaga"
+   },
+   "text_backup_and_restore_settings_description": {
+      "message": "\u003Cli\u003E\n  Para makabaliksa taas sa imung likod na paglingkod, sumbaga ang \u003Cem\u003ETaas sa Imung Likod\u003C/em\u003E nga butones dayun \u003Cstrong\u003Ekopyaha ang sulod sa teskto sa laing lugar\u003C/strong\u003E.\n  Sumbaga jud ug ayo para naay pulos.\n\u003C/li\u003E\n\u003Cli\u003E\n  Kapoy \u003Cem\u003Etranslate\u003C/em\u003E tawn.\n\u003C/li\u003E"
+   },
+   "text_blacklist_description": {
+      "message": "Mouse Stroke will be disabled for websites in the blacklist. Please add one URL per line.\u003Cbr/\u003E\nWildcards and regular expressions are \u003Cstrong\u003ENOT\u003C/strong\u003E supported.\u003Cbr/\u003E\nYou should be as specific as possible because simple entries, i.e. \u003Ccode\u003Eshoes\u003C/code\u003E, will blacklist all websites that has 'shoes' in their URL."
+   },
+   "text_dnd_notes": {
+      "message": "Dragging text will search the selected text in a new tab.\u003Cbr/\u003E\nThe last drag direction counts."
+   },
+   "text_extension_description": {
+      "message": "This is a Google Chrome extension which enables \u003Ca href=\"http://en.wikipedia.org/wiki/Mouse_gesture\"\u003Emouse strokes\u003C/a\u003E (also known as mouse gestures) in the browser. With this extension, you can perform common tasks by simply moving your mouse."
+   },
+   "text_translator": {
+      "message": "Arnold Calang"
+   },
+   "text_version_highlight_prompt": {
+      "message": "\u003Cstrong\u003EMouse Stroke\u003C/strong\u003E was just upgraded to the latest version!\u003Cbr/\u003E\nIf you are willing to help translate Mouse Stroke into your language, please go to\n\u003Ca href=\"http://code.google.com/p/chrome-mouse-stroke/issues/detail?id=85\"\u003Ethis page\u003C/a\u003E\nand read the instructions there.\u003Cbr/\u003E\u003Cbr/\u003E\n\u003Ca target=\"_blank\" href=\"$option_page$\"\u003EExplore\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"https://chrome.google.com/extensions/detail/aeaoofnhgocdbnbeljkmbjdmhbcokfdb\"\u003EHome\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/wiki/FAQs\"\u003EFAQs\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/issues/list\"\u003ESupport\u003C/a\u003E",
+      "placeholders": {
+         "option_page": {
+            "content": "$1"
+         }
+      }
+   }
+}

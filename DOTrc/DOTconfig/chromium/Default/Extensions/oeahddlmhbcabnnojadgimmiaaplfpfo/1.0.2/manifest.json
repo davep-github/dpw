@@ -1,0 +1,20 @@
+{
+   "background_page": "background.html",
+   "browser_action": {
+      "default_icon": "icon19.png",
+      "default_title": "Google Map",
+      "popup": "map.html"
+   },
+   "description": "Google maps in a click away.",
+   "icons": {
+      "128": "icon128.png",
+      "16": "icon16.png",
+      "32": "icon32.png",
+      "48": "icon48.png"
+   },
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCop85VXEFxorKf6dLF62fFrvqmbPd3zRkxF91CqURqunyrrQRdCFzonU3PZoOHVIAvXPAlGpdvCs3spyQy5X5Mo/cTjsA+z2pabrCCBqgqV/boljhQUhkJA63Ex3GihFKRxae5AYvH2AK7fTilcSoLigMYDSIa2zl2HzOp7N3JawIDAQAB",
+   "name": "Mini Google Maps",
+   "permissions": [ "tabs" ],
+   "update_url": "http://clients2.google.com/service/update2/crx",
+   "version": "1.0.2"
+}

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Exec=beagle-search --icon
+Hidden=true
+Name=Beagle Search Tool
+StartupNotify=false
+Terminal=false
+Type=Application
+X-GNOME-Autostart-enabled=false
+X-KDE-autostart-after=panel
+X-KDE-autostart-phase=2

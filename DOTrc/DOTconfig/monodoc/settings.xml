@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EnableEditing>true</EnableEditing>
+  <SerialNumber>0</SerialNumber>
+  <ShowInheritedMembers>false</ShowInheritedMembers>
+  <ShowComments>false</ShowComments>
+  <LastSeenVersion>1</LastSeenVersion>
+  <preferred_font_family>Sans</preferred_font_family>
+  <preferred_font_size>100</preferred_font_size>
+</Settings>

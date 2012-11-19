@@ -1,0 +1,34 @@
+CachingBackend: Loading instances from cache
+CachingBackend: Loading <Notes1>
+Creating new entry for NotesScreenlet in /tmp/screenlets/screenlets.running
+Loading instances in: /home/davep/.config/Screenlets/Notes/default/
+File: Notes1.ini
+Creating new instance: 
+UPDATING SHAPE
+UPDATING SHAPE
+Set options in NotesScreenlet
+UPDATING SHAPE
+Restored instances from session 'default' ...
+CachingBackend: Saving <#Notes1> :) ...
+OK
+CachingBackend: Saving <#Notes1> :) ...
+OK
+CachingBackend: Saving <#Notes1> :) ...
+OK
+/home/davep/.screenlets/Notes/themes
+Path /home/davep/.screenlets/Notes/themes not found.
+/usr/share/screenlets/Notes/themes
+active theme is: default
+Changed: is_widget
+CachingBackend: Saving <#Notes1> :) ...
+OK
+Changed: font_name
+CachingBackend: Saving <#Notes1> :) ...
+OK
+UPDATING SHAPE
+TODO: copy to clipboard
+/home/davep/.screenlets/Notes/themes
+Path /home/davep/.screenlets/Notes/themes not found.
+/usr/share/screenlets/Notes/themes
+active theme is: default
+UPDATING SHAPE

@@ -1,0 +1,17 @@
+CachingBackend: Loading instances from cache
+CachingBackend: Loading <Launcher1>
+Creating new entry for LauncherScreenlet in /tmp/screenlets/screenlets.running
+Loading instances in: /home/davep/.config/Screenlets/Launcher/default/
+File: Launcher1.ini
+Creating new instance: 
+UPDATING SHAPE
+UPDATING SHAPE
+UPDATING SHAPE
+UPDATING SHAPE
+Set options in LauncherScreenlet
+UPDATING SHAPE
+Restored instances from session 'default' ...
+CachingBackend: Saving <#Launcher1> :) ...
+OK
+UPDATING SHAPE
+Removing entry for LauncherScreenlet from global tempfile /tmp/screenlets/screenlets.running

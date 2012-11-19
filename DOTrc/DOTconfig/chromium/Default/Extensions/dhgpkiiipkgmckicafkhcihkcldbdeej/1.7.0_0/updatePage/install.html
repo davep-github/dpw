@@ -1,0 +1,101 @@
+<html>
+    <head>
+        <title>Wikipedia Companion</title>
+        <link rel="stylesheet" type="text/css" href="updatePage2.css">
+        <style>
+            body {
+                background: white;
+                min-height: 100%;
+            }
+            p {
+                font: 16px Times, Times New Roman, serif;
+                line-height: 19px;
+            }
+
+            #screen-0 {
+                float: left;
+                width: 400px;
+                height: 230px;
+                margin: 5px 30px 15px 0px;
+                background: url(screen-wiki.png);
+                -webkit-box-shadow: 2px 2px 8px black;
+            }
+
+            #topfeature {
+                background: -webkit-gradient(linear, 0% 0%, 100% 100%, from(#666), to(#333));
+                background: -moz-linear-gradient(top left, #666, #333);
+                height: 290px;
+                padding: 15px;
+            }
+
+            #topfeature p,a{
+                color:white;
+            }
+
+            #topfeaturetext a {
+                font-weight: bold;
+                font-size: 20px;
+                text-decoration: none;
+            }
+
+            #topfeature:hover {
+                background:  -webkit-gradient(linear, 0% 0%, 100% 100%, from(#777), to(#444));
+            }
+            img{
+                border-style: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="header">
+                <div id="screen-0"></div>
+
+                <h1>Thank you for using Wikipedia Companion</h1>
+
+                <p>The Wikipedia Companion is a mini wiki browser with history, cache and search features. We hope it will make Wikipedia more enjoyable and useful!</p>
+
+                <p>In this version, clicking the language switch will change the current article to a second language. There is also an option to show today's featured article on startup.</p>
+            </div>
+
+            <div style="clear: both; height: 20px;"></div>
+
+
+            <h3>Try other extensions that enhance Chrome!</h3>
+
+            <div id="topfeature">
+                <a href="https://chrome.google.com/extensions/detail/ddkahgkblobiogkkeedfnjkldecloidi"
+                    onclick="_gaq.push(['trackPageview', '/outgoing/chrome_google_com/feedsquares'])"
+                    target="_blank">
+                    <img src="screen-feedsquares.jpg" alt="FeedSquare for Chrome" style="clear:left;float:left;padding-right:15px; text-decoration: none;"/>
+                </a>
+                <div>
+                    <img src="logo-feedsquares.png" style="float:left; margin-right:10px;" />
+                    <div id="topfeaturetext"><a href="https://chrome.google.com/extensions/detail/ddkahgkblobiogkkeedfnjkldecloidi" onclick="javascript: pageTracker._trackPageview('/outgoing/chrome_google_com/feedsquares');" target="_blank">FeedSquares - Supercharge Your Google Reader</a></div>
+                    <p>FeedSquares is a whole new way to experience Google Reader on Chrome - fully synchronized with Google Reader, and gives lightweight listings of feed items with image previews. </p>
+                    <p><a href="https://chrome.google.com/extensions/detail/ddkahgkblobiogkkeedfnjkldecloidi" onclick="javascript: pageTracker._trackPageview('/outgoing/chrome_google_com/feedsquares');" target="_blank">Download at Google Chrome Gallery</a></p>
+                </div>
+            </div>
+            <div style="clear: both;"></div>
+            <br>
+            <br>
+            <br>
+            <div style="clear: both; height: 40px;"></div>
+        </div>
+
+        <script>
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-16226188-1']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+                var ga = document.createElement('script');
+                ga.type = 'text/javascript'; ga.async = true;
+                ga.src = 'https://ssl.google-analytics.com/ga.js';
+                (document.getElementsByTagName('head')[0] ||
+                document.getElementsByTagName('body')[0]).appendChild(ga);
+            })();
+        </script>
+    </body>
+</html>
+

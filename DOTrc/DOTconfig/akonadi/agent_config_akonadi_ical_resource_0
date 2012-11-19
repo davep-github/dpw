@@ -1,0 +1,6 @@
+[Agent]
+Online=false
+Name=std.ics
+
+[ChangeRecorder]
+change\size=0

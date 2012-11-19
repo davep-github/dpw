@@ -1,0 +1,89 @@
+<html>
+
+<body>
+<center>
+<embed type="application/IP2Country" align=center width=0 height=0 hidden=true>
+</embed>
+
+
+<script language="javascript">
+
+var lastCountry = "";
+var lastIP   = "";
+var lastDomain = "";
+
+var a = chrome.extension.getURL("");
+var EXT_ID = a.split("chrome-extension://")[1].split("/")[0];
+
+function getFlag(url) {
+    var embed = document.embeds[0];
+	embed.SetExtName(EXT_ID + "\\1.4");
+	var data = embed.GetURLData(url); 
+	var dataList = data.split("|");
+	lastDomain = dataList[0]
+	lastIP = dataList[1]
+	var country =  embed.IP2CC(lastIP);  
+	lastCountry = country
+	return country;
+}
+
+function setTabFlag(id, url) {
+	var country = getFlag(url);
+	chrome.pageAction.setIcon({
+		tabId  : id,
+		path   : "flags/"+ country +".gif"
+	})
+	chrome.pageAction.show(id)	
+}
+
+chrome.tabs.onSelectionChanged.addListener(function(tabId, info) {
+	chrome.tabs.getSelected(null, function (tab) {
+		if (tab.url!=null) {
+			var a = setTimeout(function() {
+				setTabFlag(tab.id, tab.url);
+			}, 50);
+		}
+	})
+});
+chrome.tabs.onUpdated.addListener(function(tabId, info, tab) {
+	if (info.url!=null) {
+		setTabFlag(tabId, info.url);
+	}
+});
+
+chrome.extension.onRequest.addListener(
+  function(request, sender, sendResponse) {
+	if (sender.tab!=null) {
+		if (sender.tab.url!=null) {
+			setTabFlag(sender.tab.id, sender.tab.url);
+		}
+	}
+});
+	
+
+if ((localStorage["firstRun"]!="false") && (localStorage["firstRun"]!=false)){
+  chrome.tabs.create({url: "welcome.html", selected:true})
+  localStorage["firstRun"] = false;
+  localStorage["ver"]      = "1.0";
+}
+
+
+function loadInAllTabs() {
+	chrome.windows.getAll({populate:true},function(windows){
+		for (var i=0;i<windows.length;i++){
+			var tabs = windows[i].tabs
+			for (var j=0;j<tabs.length;j++) {
+				if (tabs[j].url!=null) {
+					setTabFlag(tabs[j].id, tabs[j].url);
+				}
+			}
+		}
+	})
+}
+</script>
+
+
+
+</center>
+</body>
+</html>

@@ -1,0 +1,10 @@
+[general]
+profile = davep
+integration = true
+backend = kconfig
+plugin_list_autosort = true
+
+[kde_session]
+profile = 
+backend = kconfig
+

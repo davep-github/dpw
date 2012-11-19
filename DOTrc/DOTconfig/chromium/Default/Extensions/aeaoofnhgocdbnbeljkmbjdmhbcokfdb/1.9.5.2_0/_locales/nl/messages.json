@@ -1,0 +1,433 @@
+{
+   "caption_backup": {
+      "message": "Back-up"
+   },
+   "caption_backup_or_restore_settings": {
+      "message": "Back-up / Herstel instellingen"
+   },
+   "caption_cancel": {
+      "message": "Annuleren"
+   },
+   "caption_close": {
+      "message": "Afsluiten"
+   },
+   "caption_confirm": {
+      "message": "Bevestigen"
+   },
+   "caption_create_custom_stroke": {
+      "message": "Maak"
+   },
+   "caption_current_stroke": {
+      "message": "Huidig patroon"
+   },
+   "caption_edit_trail_style": {
+      "message": "Bewerk spoor stijl"
+   },
+   "caption_help_custom_stroke": {
+      "message": "Help"
+   },
+   "caption_label": {
+      "message": "Label"
+   },
+   "caption_mouse_stroke_options": {
+      "message": "Muis patroon opties."
+   },
+   "caption_none": {
+      "message": "Geen"
+   },
+   "caption_previous_stroke": {
+      "message": "Vorige patroon"
+   },
+   "caption_remove": {
+      "message": "Verwijder"
+   },
+   "caption_restore": {
+      "message": "Terugzetten"
+   },
+   "caption_restore_default": {
+      "message": "Herstel naar standaard"
+   },
+   "caption_save": {
+      "message": "Opslaan"
+   },
+   "caption_script": {
+      "message": "Script"
+   },
+   "caption_set": {
+      "message": "+"
+   },
+   "caption_share_custom_stroke": {
+      "message": "Deel"
+   },
+   "caption_show_advanced_options": {
+      "message": "Geavanceerde opties"
+   },
+   "caption_translated_by": {
+      "message": "Vertaald door"
+   },
+   "caption_unset": {
+      "message": "-"
+   },
+   "category_desc_dnd_strokes": {
+      "message": "Geselecteerde tekst, links en afbeeldingen kunnen versleept worden."
+   },
+   "category_desc_wheel_strokes": {
+      "message": "Scroll met de rechtermuisknop ingedrukt"
+   },
+   "category_label_bookmark": {
+      "message": "Bladwijzer"
+   },
+   "category_label_custom_strokes": {
+      "message": "Eigen patronen"
+   },
+   "category_label_dnd_strokes": {
+      "message": "Drag-N-Drop patronen"
+   },
+   "category_label_image": {
+      "message": "Afbeelding"
+   },
+   "category_label_link": {
+      "message": "Link"
+   },
+   "category_label_navigation": {
+      "message": "Navigatie"
+   },
+   "category_label_options": {
+      "message": "Opties"
+   },
+   "category_label_other": {
+      "message": "Overig"
+   },
+   "category_label_rocker_strokes": {
+      "message": "Rocker patronen"
+   },
+   "category_label_tab": {
+      "message": "Tab"
+   },
+   "category_label_utilities": {
+      "message": "Handelingen"
+   },
+   "category_label_wheel_strokes": {
+      "message": "Muis wiel patronen"
+   },
+   "category_label_window": {
+      "message": "Venster"
+   },
+   "extension_description": {
+      "message": "Gebruik muis gebaren (mouse gestures) om sneller te navigeren. Ondersteunt super drag & go, rocket gestures en muiswiel gebaren in \u00E9\u00E9n extensie!"
+   },
+   "extension_name": {
+      "message": "Mouse Stroke"
+   },
+   "option_desc_stroke_timeout": {
+      "message": "Hoge waarde maken het makkelijker om patronen te maken."
+   },
+   "option_label_alt_key_suppresses_strokes": {
+      "message": "Alt toets onderdrukt patronen"
+   },
+   "option_label_close_window_with_the_last_tab": {
+      "message": "Sluit venster met laatste tab"
+   },
+   "option_label_draw_trails": {
+      "message": "Spoor"
+   },
+   "option_label_enable_dnd_strokes": {
+      "message": "Zet Drag-N-Drop patronen"
+   },
+   "option_label_hold_ctrl_key_to_fire_custom_strokes": {
+      "message": "Houd Ctrl ingedrukt voor eigen patronen"
+   },
+   "option_label_minimal_step": {
+      "message": "Minimale stap (Pixels)"
+   },
+   "option_label_new_tab_open_at": {
+      "message": "Wanneer je 'nieuw tabblad openen' kiest, open"
+   },
+   "option_label_page_open_as_new_tab": {
+      "message": "Wanneer je 'nieuw tabblad openen' kiest, open"
+   },
+   "option_label_prefferred_search_engine": {
+      "message": "Zoekmachine voorkeur"
+   },
+   "option_label_stroke_timeout": {
+      "message": "Patroon Time-out (Milliseconden)"
+   },
+   "option_label_stroke_trigger": {
+      "message": "Patroon toets"
+   },
+   "option_label_trail_color": {
+      "message": "Spoor kleur"
+   },
+   "option_label_trail_width": {
+      "message": "Spoor dikte"
+   },
+   "option_value_as_first_tab": {
+      "message": "Als eerste tab"
+   },
+   "option_value_as_last_tab": {
+      "message": "Als laatste tab"
+   },
+   "option_value_at_left_of_current_tab": {
+      "message": "Aan de linkerkant van de huidige tab"
+   },
+   "option_value_at_right_of_current_tab": {
+      "message": "Aan de rechterkant van de huidige tab"
+   },
+   "option_value_chrome_newtab_page": {
+      "message": "Chrome's nieuwe tab pagina"
+   },
+   "option_value_left_mouse_button": {
+      "message": "Linkermuisknop"
+   },
+   "option_value_middle_mouse_button": {
+      "message": "Middelstemuisknop (Linux and Mac)"
+   },
+   "option_value_my_homepage": {
+      "message": "Mijn startpagina"
+   },
+   "option_value_other_search_engine": {
+      "message": "Andere"
+   },
+   "option_value_right_mouse_button": {
+      "message": "Rechtermuisknop (Windows)"
+   },
+   "option_value_the_blank_page": {
+      "message": "Een lege pagina"
+   },
+   "prompt_backup_settings_currupted": {
+      "message": "Corrupte gegevens gedetecteerd, het terugzetten van de back-up instellingen is gestopt."
+   },
+   "prompt_invalid_search_engine_url": {
+      "message": "De zoekmachine URL is ongeldig."
+   },
+   "prompt_label_and_script_are_empty": {
+      "message": "[Label] en [Script] mogen niet leeg zijn."
+   },
+   "prompt_overwrite_custom_stroke_label": {
+      "message": "'$label$' bestaat al, overschrijven?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_overwrite_stroke_sequence": {
+      "message": "[$sequence$] is toegewezen aan '$label$', overschrijven?",
+      "placeholders": {
+         "label": {
+            "content": "$2"
+         },
+         "sequence": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_remove_custom_stroke": {
+      "message": "Verwijder eigen patroon: '$label$'?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_reset_settings": {
+      "message": "Alle instellingen zullen worden gereset, behalve je eigen patroon, doorgaan?"
+   },
+   "prompt_restore_complete": {
+      "message": "Herstel voltooid."
+   },
+   "prompt_save_complete": {
+      "message": "Opgeslagen."
+   },
+   "stroke_label_bookmark_this_link": {
+      "message": "Maak bladwijzer van deze link"
+   },
+   "stroke_label_bookmark_this_page": {
+      "message": "Maak bladwijzer van deze pagina"
+   },
+   "stroke_label_close_all_tabs_to_the_left": {
+      "message": "Sluit alle tabs aan de linkerkant"
+   },
+   "stroke_label_close_all_tabs_to_the_right": {
+      "message": "Sluit alle tabs aan de rechterkant"
+   },
+   "stroke_label_close_other_tabs": {
+      "message": "Sluit andere tabs"
+   },
+   "stroke_label_close_tab": {
+      "message": "Sluit tab"
+   },
+   "stroke_label_close_tab_to_the_left": {
+      "message": "Sluit tab aan de linkerkant"
+   },
+   "stroke_label_close_tab_to_the_right": {
+      "message": "Sluit tab aan de rechterkant"
+   },
+   "stroke_label_close_window": {
+      "message": "Sluit venster"
+   },
+   "stroke_label_decrease_number_in_url": {
+      "message": "Gok vorige pagina"
+   },
+   "stroke_label_detach_tab": {
+      "message": "Ontkoppel tab"
+   },
+   "stroke_label_dnd_down": {
+      "message": "Drag-N-Drop omlaag"
+   },
+   "stroke_label_dnd_left": {
+      "message": "Drag-N-Drop links"
+   },
+   "stroke_label_dnd_right": {
+      "message": "Drag-N-Drop rechts"
+   },
+   "stroke_label_dnd_up": {
+      "message": "Drag-N-Drop omhoog"
+   },
+   "stroke_label_duplicate_tab": {
+      "message": "Dupliceer tab"
+   },
+   "stroke_label_first_tab": {
+      "message": "Eerste tab"
+   },
+   "stroke_label_history_back": {
+      "message": "Pagina terug"
+   },
+   "stroke_label_history_forward": {
+      "message": "Pagina vooruit"
+   },
+   "stroke_label_increase_number_in_url": {
+      "message": "Gok volgende pagina"
+   },
+   "stroke_label_last_tab": {
+      "message": "Laatste tab"
+   },
+   "stroke_label_maximize_window": {
+      "message": "Maximaliseer venster"
+   },
+   "stroke_label_minimize_window": {
+      "message": "Minimaliseer venster"
+   },
+   "stroke_label_mouse_stroke_options": {
+      "message": "Muis patroon opties"
+   },
+   "stroke_label_new_tab": {
+      "message": "Nieuwe tab"
+   },
+   "stroke_label_new_window": {
+      "message": "Nieuw venster"
+   },
+   "stroke_label_next_tab": {
+      "message": "Volgende tab"
+   },
+   "stroke_label_open_homepage": {
+      "message": "Open start pagina"
+   },
+   "stroke_label_open_link_in_new_background_tab": {
+      "message": "Open link in nieuw achtergrond tab"
+   },
+   "stroke_label_open_link_in_new_foreground_tab": {
+      "message": "Open link in nieuw voorgrond tab"
+   },
+   "stroke_label_open_link_in_new_window": {
+      "message": "Open link in nieuw venster"
+   },
+   "stroke_label_previous_tab": {
+      "message": "Vorige tab"
+   },
+   "stroke_label_reload": {
+      "message": "Herlaad"
+   },
+   "stroke_label_remove_bookmark": {
+      "message": "Verwijder bladwijzer"
+   },
+   "stroke_label_rocker_left_to_right": {
+      "message": "Rechter klik met linkermuisknop ingedrukt"
+   },
+   "stroke_label_rocker_right_to_left": {
+      "message": "Linker klik met rechtermuisknop ingedrukt"
+   },
+   "stroke_label_save_image": {
+      "message": "Sla afbeelding op"
+   },
+   "stroke_label_scroll_down_one_page": {
+      "message": "Scroll een pagina omlaag"
+   },
+   "stroke_label_scroll_up_one_page": {
+      "message": "Scoll een pagina omhoog"
+   },
+   "stroke_label_search_selected_text": {
+      "message": "Zoek op geselecteerde tekst"
+   },
+   "stroke_label_skip_cache_reload": {
+      "message": "Sla herladen van cache over"
+   },
+   "stroke_label_stop_page_loading": {
+      "message": "Stop laden van de pagina"
+   },
+   "stroke_label_take_screenshot": {
+      "message": "Maak screenshot"
+   },
+   "stroke_label_text_zoom_in": {
+      "message": "Tekst zoom in"
+   },
+   "stroke_label_text_zoom_out": {
+      "message": "Tekst zoom out"
+   },
+   "stroke_label_text_zoom_reset": {
+      "message": "Tekst zoom resetten"
+   },
+   "stroke_label_to_page_bottom": {
+      "message": "Naar eind van de pagina"
+   },
+   "stroke_label_to_page_top": {
+      "message": "Naar begin van de pagina"
+   },
+   "stroke_label_undo_close_tab": {
+      "message": "Maak gesloten tab ongedaan"
+   },
+   "stroke_label_upper_level_in_url": {
+      "message": "Bovenste level van URL"
+   },
+   "stroke_label_view_image": {
+      "message": "Bekijk afbeelding"
+   },
+   "stroke_label_view_source": {
+      "message": "Bekijk bron"
+   },
+   "stroke_label_wheel_down": {
+      "message": "Scroll wiel omlaag"
+   },
+   "stroke_label_wheel_left": {
+      "message": "Scroll wiel naar links"
+   },
+   "stroke_label_wheel_right": {
+      "message": "Scroll wiel naar rechts"
+   },
+   "stroke_label_wheel_up": {
+      "message": "Scroll wiel omhoog"
+   },
+   "text_backup_and_restore_settings_description": {
+      "message": "\u003Cli\u003E\n  Om je instellingen te back-uppen, klik de \u003Cem\u003Eback-up\u003C/em\u003E knop en \u003Cstrong\u003Ekopieer de tekst naar een veilige plaats\u003C/strong\u003E.\n  Alleen de back-up knop indrukken slaat je instellingen niet op.\n\u003C/li\u003E\n\u003Cli\u003E\n  Om je instellingen terug te zetten, plak de opgeslagen tekst in het tekstvlak en klik de \u003Cem\u003EHerstel\u003C/em\u003E knop.\n  Jouw back-up data zal dan samengevoegd worden met de standaard instellingen om incompatibiliteit or data corruptie tegen te gaan.\n\u003C/li\u003E"
+   },
+   "text_dnd_notes": {
+      "message": "Tekst slepen zorgt ervoor dat er op de geselecteerde tekst wordt gezocht in een nieuw tabblad.\u003Cbr/\u003E\nDe laatste sleep richting telt."
+   },
+   "text_extension_description": {
+      "message": "Dit is een Google Chrome extensie met muis 'gestures' in de browser. Met deze extensie kun je taken uitvoeren met een simpele muis beweging."
+   },
+   "text_translator": {
+      "message": "Henk van der Velden"
+   },
+   "text_version_highlight": {
+      "message": "\u003Cli\u003E\n  \u003Cstrong\u003ENieuw in 1.9.4\u003C/strong\u003E: Mouse Stroke spreekt meerdere talen!\u003Cbr/\u003E\n  Als je wil helpen om Mouse Stroke te vertalen in je eten taal, bezoek \u003Ca href=\"http://code.google.com/p/chrome-mouse-stroke/issues/detail?id=85\"\u003E\u003C/a\u003E\n  en volg de instructies.\u003Cbr/\u003E\n  Je werk zal gewaardeerd worden door velen.\n\u003C/li\u003E\n\u003Cli\u003E\n  Eigen patronen kunnen nu alle DOM objecten en functies aanspreken.\n\u003C/li\u003E\n\u003Cli\u003E\n  Sommige bugs zijn opgelost.\n\u003C/li\u003E"
+   },
+   "text_version_highlight_prompt": {
+      "message": "\u003Cstrong\u003EMouse Stroke\u003C/strong\u003E is het geupgrade naar de laatste versie!\u003Cbr/\u003E\nDeze functie support meerdere talen!\u003Cbr/\u003E\nAls je wil helpen met vertalen van Mouse Stroke, ga naar\n\u003Ca href=\"http://code.google.com/p/chrome-mouse-stroke/issues/detail?id=85\"\u003E\u003C/a\u003E\nen lees de instructies.\u003Cbr/\u003E\u003Cbr/\u003E\n\u003Ca target=\"_blank\" href=\"$option_page$\"\u003EExplore\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"https://chrome.google.com/extensions/detail/aeaoofnhgocdbnbeljkmbjdmhbcokfdb\"\u003EHome\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/wiki/FAQs\"\u003EFAQs\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/issues/list\"\u003ESupport\u003C/a\u003E",
+      "placeholders": {
+         "option_page": {
+            "content": "$1"
+         }
+      }
+   }
+}

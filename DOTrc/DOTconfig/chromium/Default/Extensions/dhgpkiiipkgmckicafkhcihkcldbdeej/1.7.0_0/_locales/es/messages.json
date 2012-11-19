@@ -1,0 +1,74 @@
+{
+   "clearHistory": {
+      "message": "Borrar historial"
+   },
+   "copyright1": {
+      "description": "do not translate it",
+      "message": "Wikipedia and logo of Wikipedia are trademarks of Wikimedia Foundation, Inc."
+   },
+   "copyright2": {
+      "description": "do not translate it",
+      "message": "Usage of all Wikipedia content governed by term and conditions of Wikimedia Foundation, Inc."
+   },
+   "copyright3": {
+      "description": "do not translate it",
+      "message": "Extension created by mongolian2010. All rights reserved."
+   },
+   "extDescription": {
+      "message": "la extensi\u00F3n esencial para cualquier usuario de Wikipedia. con todas las funciones: guarda tus b\u00FAsquedas wiki reciente, multi-lingual, atr\u00E1s / adelante y m\u00E1s!"
+   },
+   "extName": {
+      "message": "Wikipedia Companion - Mini Wiki Browser"
+   },
+   "goBack": {
+      "message": "Regresar"
+   },
+   "goForward": {
+      "message": "Ir hacia delante"
+   },
+   "language": {
+      "message": "Lenguaje"
+   },
+   "normal": {
+      "message": "Normal"
+   },
+   "openInTab": {
+      "message": "Abrir en Tab"
+   },
+   "optionLanguageHints": {
+      "message": "Nueva opci\u00F3n de idioma es eficaz en la b\u00FAsqueda siguiente."
+   },
+   "optionShowFeatureArticle": {
+      "message": "Mostrar art\u00EDculo destacado en la puesta en marcha (s\u00F3lo disponible en algunos idiomas de Wikipedia)"
+   },
+   "optionTitle": {
+      "message": "Wikipedia para Chrome - Opciones"
+   },
+   "options": {
+      "message": "Opciones"
+   },
+   "pageWidth": {
+      "message": "Popup Window Width"
+   },
+   "primaryLanguage": {
+      "message": "La lengua primaria"
+   },
+   "save": {
+      "message": "Guardar"
+   },
+   "search": {
+      "message": "Buscar"
+   },
+   "secondaryLanguage": {
+      "message": "La lengua secundaria"
+   },
+   "updateMessage": {
+      "message": "Wikipedia Companion es actualizado a $1! Haga clic aqu\u00ED para m\u00E1s informaci\u00F3n"
+   },
+   "welcomeMessage": {
+      "message": "Bienvenidos a Wikipedia Companion"
+   },
+   "wide": {
+      "message": "Wide"
+   }
+}

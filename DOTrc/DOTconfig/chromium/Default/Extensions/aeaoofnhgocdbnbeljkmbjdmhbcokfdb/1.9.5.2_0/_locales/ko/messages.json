@@ -1,0 +1,451 @@
+{
+   "caption_backup": {
+      "message": "\uBC31\uC5C5"
+   },
+   "caption_backup_or_restore_settings": {
+      "message": "\uBC31\uC5C5 / \uBCF5\uAD6C \uC124\uC815"
+   },
+   "caption_blacklist": {
+      "message": "\uBE14\uB799\uB9AC\uC2A4\uD2B8"
+   },
+   "caption_cancel": {
+      "message": "\uCDE8\uC18C"
+   },
+   "caption_close": {
+      "message": "\uB2EB\uAE30"
+   },
+   "caption_confirm": {
+      "message": "\uD655\uC778"
+   },
+   "caption_create_custom_stroke": {
+      "message": "\uB9CC\uB4E4\uAE30"
+   },
+   "caption_current_stroke": {
+      "message": "\uD604\uC7AC \uC2A4\uD2B8\uB85C\uD06C"
+   },
+   "caption_edit_trail_style": {
+      "message": "\uB9C8\uC6B0\uC2A4 \uD754\uC801 \uD615\uD0DC \uC218\uC815"
+   },
+   "caption_help_custom_stroke": {
+      "message": "\uB3C4\uC6C0\uB9D0"
+   },
+   "caption_label": {
+      "message": "\uC774\uB984\uD45C"
+   },
+   "caption_mouse_stroke_options": {
+      "message": "\uB9C8\uC6B0\uC2A4 \uC2A4\uD2B8\uB85C\uD06C \uC635\uC158"
+   },
+   "caption_none": {
+      "message": "\uC5C6\uC74C"
+   },
+   "caption_previous_stroke": {
+      "message": "\uC774\uC804 \uC2A4\uD2B8\uB85C\uD06C"
+   },
+   "caption_remove": {
+      "message": "\uC81C\uAC70"
+   },
+   "caption_restore": {
+      "message": "\uBCF5\uAD6C"
+   },
+   "caption_restore_default": {
+      "message": "\uAE30\uBCF8\uAC12\uC73C\uB85C \uBCF5\uAD6C"
+   },
+   "caption_save": {
+      "message": "\uC800\uC7A5"
+   },
+   "caption_script": {
+      "message": "\uBA85\uB839\uBB38"
+   },
+   "caption_set": {
+      "message": "\uC124\uC815"
+   },
+   "caption_share_custom_stroke": {
+      "message": "\uACF5\uC720"
+   },
+   "caption_show_advanced_options": {
+      "message": "\uACE0\uAE09\uC635\uC158 \uBCF4\uAE30"
+   },
+   "caption_translated_by": {
+      "message": "\uBC88\uC5ED\uC790:"
+   },
+   "caption_unset": {
+      "message": "\uC124\uC815\uCDE8\uC18C"
+   },
+   "category_desc_dnd_strokes": {
+      "message": "\uC120\uD0DD\uB41C \uAE00\uC774\uB098 \uB9C1\uD06C, \uADF8\uB9BC\uB4F1\uC744 \uB4DC\uB798\uADF8 \uD560\uC218 \uC788\uC2B5\uB2C8\uB2E4."
+   },
+   "category_desc_wheel_strokes": {
+      "message": "\uB9C8\uC6B0\uC2A4 \uC624\uB978\uCABD \uBC84\uD2BC\uC744 \uD074\uB9AD\uD558\uB294\uC911\uC5D0 \uC2A4\uD06C\uB864 \uD558\uAE30"
+   },
+   "category_label_bookmark": {
+      "message": "\uBD81\uB9C8\uD06C"
+   },
+   "category_label_custom_strokes": {
+      "message": "\uAC1C\uC778 \uC2A4\uD2B8\uB85C\uD06C"
+   },
+   "category_label_dnd_strokes": {
+      "message": "\uB4DC\uB798\uADF8 \uC564 \uB4DC\uB78D \uC2A4\uD2B8\uB85C\uD06C"
+   },
+   "category_label_image": {
+      "message": "\uADF8\uB9BC"
+   },
+   "category_label_link": {
+      "message": "\uB9C1\uD06C"
+   },
+   "category_label_navigation": {
+      "message": "\uC774\uB3D9"
+   },
+   "category_label_options": {
+      "message": "\uC635\uC158"
+   },
+   "category_label_other": {
+      "message": "\uAE30\uD0C0"
+   },
+   "category_label_rocker_strokes": {
+      "message": "Rocker Strokes"
+   },
+   "category_label_tab": {
+      "message": "\uD0ED"
+   },
+   "category_label_utilities": {
+      "message": "\uAE30\uB2A5"
+   },
+   "category_label_wheel_strokes": {
+      "message": "\uB9C8\uC6B0\uC2A4 \uD720 \uC2A4\uD2B8\uB85C\uD06C"
+   },
+   "category_label_window": {
+      "message": "\uCC3D"
+   },
+   "extension_description": {
+      "message": "\uB9C8\uC6B0\uC2A4 \uC2A4\uD2B8\uB85C\uD06C\uB97C \uC774\uC6A9\uD574 \uC778\uD130\uB137\uC744 \uD3B8\uD558\uAC8C \uC0AC\uC6A9\uD558\uC138\uC694. \uC5EC\uB7EC\uAC00\uC9C0 \uC81C\uC2A4\uCCD0\uB97C \uC9C0\uC6D0\uD569\uB2C8\uB2E4. \uBC88\uC5ED\uD558\uB294\uAC78 \uB3C4\uC640\uC8FC\uC138\uC694!!"
+   },
+   "extension_name": {
+      "message": "Mouse Stroke"
+   },
+   "option_desc_stroke_timeout": {
+      "message": "\uD070 \uC218\uB97C \uB123\uC73C\uC2DC\uBA74 \uC0AC\uC6A9\uD558\uAE30 \uD3B8\uD569\uB2C8\uB2E4."
+   },
+   "option_label_alt_key_suppresses_strokes": {
+      "message": "Alt\uD0A4\uB97C \uB20C\uB7EC \uC2A4\uD2B8\uB85C\uD06C \uC911\uB2E8."
+   },
+   "option_label_close_window_with_the_last_tab": {
+      "message": "\uB9C8\uC9C0\uB9C9 \uD0ED\uC744 \uB2EB\uC73C\uBA74 \uCC3D\uB3C4 \uB2EB\uC74C."
+   },
+   "option_label_custom_stroke_runs_in": {
+      "message": "\uD504\uB808\uC784\uC774 \uC788\uC744\uACBD\uC6B0 \uC5B4\uB5A4 \uD504\uB808\uC784\uC5D0\uC11C \uC2E4\uD589\uD560\uAE4C\uC694?"
+   },
+   "option_label_draw_trails": {
+      "message": "\uB9C8\uC6B0\uC2A4 \uD754\uC801 \uADF8\uB9AC\uAE30"
+   },
+   "option_label_enable_dnd_strokes": {
+      "message": "\uB4DC\uB798\uADF8 \uC564 \uB4DC\uB78D \uAE30\uB2A5 \uC0AC\uC6A9."
+   },
+   "option_label_hold_ctrl_key_to_fire_custom_strokes": {
+      "message": "\uAC1C\uC778 \uC2A4\uD2B8\uB85C\uD06C\uB97C \uC0AC\uC6A9\uD560\uB54C Ctrl \uD0A4\uC640 \uD568\uAED8 \uC0AC\uC6A9."
+   },
+   "option_label_minimal_step": {
+      "message": "\uCD5C\uC18C \uC6C0\uC9C1\uC784 \uC124\uC815 (\uD53D\uC140)"
+   },
+   "option_label_new_tab_open_at": {
+      "message": "\uC0C8\uB85C\uC6B4 \uD0ED\uC774 \uC5F4\uB9B4\uB54C \uC5B4\uB290\uACF3\uC5D0 \uC5F4\uAE4C\uC694?"
+   },
+   "option_label_page_open_as_new_tab": {
+      "message": "\uC0C8\uB85C\uC6B4 \uD0ED\uC774 \uC5F4\uB9B4\uB54C \uC5B4\uB5A4 \uD0ED\uC73C\uB85C \uC5F4\uAE4C\uC694?"
+   },
+   "option_label_prefferred_search_engine": {
+      "message": "\uAE30\uBCF8 \uAC80\uC0C9 \uC5D4\uC9C4"
+   },
+   "option_label_stroke_timeout": {
+      "message": "\uC2A4\uD2B8\uB85C\uD06C \uC2DC\uAC04\uC81C\uD55C (\uBBF8\uB9AC\uCD08)"
+   },
+   "option_label_stroke_trigger": {
+      "message": "Stroke Trigger Key"
+   },
+   "option_label_trail_color": {
+      "message": "\uB9C8\uC6B0\uC2A4 \uD754\uC801 \uC0C9"
+   },
+   "option_label_trail_width": {
+      "message": "\uB9C8\uC6B0\uC2A4 \uD754\uC801 \uB450\uAED8"
+   },
+   "option_value_all_frames": {
+      "message": "\uBAA8\uB4E0 \uD504\uB808\uC784"
+   },
+   "option_value_as_first_tab": {
+      "message": "\uCCAB\uBC88\uC9F8 \uD0ED\uC73C\uB85C"
+   },
+   "option_value_as_last_tab": {
+      "message": "\uB9C8\uC9C0\uB9C9 \uD0ED\uC73C\uB85C"
+   },
+   "option_value_at_left_of_current_tab": {
+      "message": "\uD604\uC7AC \uD0ED \uC67C\uCABD"
+   },
+   "option_value_at_right_of_current_tab": {
+      "message": "\uD604\uC7AC \uD0ED \uC624\uB978\uCABD"
+   },
+   "option_value_chrome_newtab_page": {
+      "message": "\uD06C\uB86C\uC758 \uC0C8 \uD398\uC774\uC9C0"
+   },
+   "option_value_left_mouse_button": {
+      "message": "\uC67C\uCABD \uB9C8\uC6B0\uC2A4 \uBC84\uD2BC"
+   },
+   "option_value_middle_mouse_button": {
+      "message": "\uAC00\uC6B4\uB370 \uB9C8\uC6B0\uC2A4 \uBC84\uD2BC (\uB9AC\uB205\uC2A4\uC640 \uB9E5)"
+   },
+   "option_value_my_homepage": {
+      "message": "\uB098\uC758 \uD648\uD398\uC774\uC9C0"
+   },
+   "option_value_other_search_engine": {
+      "message": "\uAE30\uD0C0"
+   },
+   "option_value_right_mouse_button": {
+      "message": "\uC624\uB978\uCABD \uB9C8\uC6B0\uC2A4 \uBC84\uD2BC (\uC708\uB3C4\uC6B0\uC988)"
+   },
+   "option_value_target_frame": {
+      "message": "\uBAA9\uD45C \uD504\uB808\uC784"
+   },
+   "option_value_the_blank_page": {
+      "message": "\uBE48\uD398\uC774\uC9C0"
+   },
+   "option_value_top_frame": {
+      "message": "\uC704\uCABD \uD504\uB808\uC784"
+   },
+   "prompt_backup_settings_currupted": {
+      "message": "\uC624\uB958\uAC00 \uBC1C\uACAC\uB418\uC5B4 \uC124\uC815 \uBCF5\uAD6C\uAC00 \uC911\uB2E8\uB418\uC5C8\uC2B5\uB2C8\uB2E4."
+   },
+   "prompt_invalid_search_engine_url": {
+      "message": "\uAC80\uC0C9 \uC5D4\uC9C4 \uC8FC\uC18C\uAC00 \uC815\uD655\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."
+   },
+   "prompt_label_and_script_are_empty": {
+      "message": "[\uC774\uB984\uD45C] \uACFC [\uBA85\uB839\uBB38]\uC774 \uBE44\uC5B4\uC788\uC2B5\uB2C8\uB2E4."
+   },
+   "prompt_overwrite_custom_stroke_label": {
+      "message": "'$label$'\uC740(\uB294) \uC774\uBBF8 \uC788\uC2B5\uB2C8\uB2E4. \uB36E\uC5B4\uC4F0\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_overwrite_stroke_sequence": {
+      "message": "[$sequence$] \uC740(\uB294) '$label$'\uC5D0 \uC124\uC815\uB418\uC5B4\uC788\uC2B5\uB2C8\uB2E4. \uB36E\uC5B4\uC4F0\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?",
+      "placeholders": {
+         "label": {
+            "content": "$2"
+         },
+         "sequence": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_remove_custom_stroke": {
+      "message": "'$label$' \uC2A4\uD2B8\uB85C\uD06C\uB97C \uC9C0\uC6B0\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_reset_settings": {
+      "message": "\uAC1C\uC778 \uC2A4\uD2B8\uB85C\uD06C\uB97C \uC81C\uC678\uD55C \uBAA8\uC2A8 \uC124\uC815\uC774 \uCD08\uAE30\uD654 \uB429\uB2C8\uB2E4. \uACC4\uC18D\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
+   },
+   "prompt_restore_complete": {
+      "message": "\uBCF5\uAD6C\uB418\uC5C8\uC2B5\uB2C8\uB2E4."
+   },
+   "prompt_save_blacklist_complete": {
+      "message": "\uBE14\uB799\uB9AC\uC2A4\uD2B8\uB97C \uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4."
+   },
+   "prompt_save_complete": {
+      "message": "\uC800\uC7A5\uD588\uC2B5\uB2C8\uB2E4."
+   },
+   "stroke_label_bookmark_this_link": {
+      "message": "\uB9C1\uD06C\uB97C \uBD81\uB9C8\uD06C \uD558\uAE30"
+   },
+   "stroke_label_bookmark_this_page": {
+      "message": "\uBD81\uB9C8\uD06C \uD558\uAE30"
+   },
+   "stroke_label_close_all_tabs_to_the_left": {
+      "message": "\uC67C\uCABD\uC758 \uBAA8\uB4E0 \uD0ED \uB2EB\uAE30"
+   },
+   "stroke_label_close_all_tabs_to_the_right": {
+      "message": "\uC624\uB978\uCABD\uC758 \uBAA8\uB4E0 \uD0ED \uB2EB\uAE30"
+   },
+   "stroke_label_close_other_tabs": {
+      "message": "\uB2E4\uB978 \uD0ED \uB2EB\uAE30"
+   },
+   "stroke_label_close_tab": {
+      "message": "\uD0ED \uB2EB\uAE30"
+   },
+   "stroke_label_close_tab_to_the_left": {
+      "message": "\uC67C\uCABD \uD0ED \uB2EB\uAE30"
+   },
+   "stroke_label_close_tab_to_the_right": {
+      "message": "\uC624\uB978\uCABD \uD0ED \uB2EB\uAE30"
+   },
+   "stroke_label_close_window": {
+      "message": "\uCC3D \uB2EB\uAE30"
+   },
+   "stroke_label_decrease_number_in_url": {
+      "message": "\uC774\uC804 \uD398\uC774\uC9C0 \uCD94\uCE21\uD574\uC11C \uAC00\uAE30"
+   },
+   "stroke_label_detach_tab": {
+      "message": "\uD0ED \uBD84\uB9AC"
+   },
+   "stroke_label_dnd_down": {
+      "message": "\uC544\uB798\uB85C \uB4DC\uB78D"
+   },
+   "stroke_label_dnd_left": {
+      "message": "\uC67C\uCABD\uC73C\uB85C \uB4DC\uB78D"
+   },
+   "stroke_label_dnd_right": {
+      "message": "\uC624\uB978\uCABD\uC73C\uB85C \uB4DC\uB78D"
+   },
+   "stroke_label_dnd_up": {
+      "message": "\uC704\uB85C \uB4DC\uB78D"
+   },
+   "stroke_label_duplicate_tab": {
+      "message": "\uD0ED \uBCF5\uC0AC"
+   },
+   "stroke_label_first_tab": {
+      "message": "\uCCAB\uBC88\uC9F8 \uD0ED"
+   },
+   "stroke_label_history_back": {
+      "message": "\uB4A4\uB85C"
+   },
+   "stroke_label_history_forward": {
+      "message": "\uC55E\uC73C\uB85C"
+   },
+   "stroke_label_increase_number_in_url": {
+      "message": "\uB2E4\uC74C \uD398\uC774\uC9C0 \uCD94\uCE21\uD574\uC11C \uAC00\uAE30"
+   },
+   "stroke_label_last_tab": {
+      "message": "\uB9C8\uC9C0\uB9C9 \uD0ED"
+   },
+   "stroke_label_maximize_window": {
+      "message": "\uCD5C\uB300\uD654"
+   },
+   "stroke_label_minimize_window": {
+      "message": "\uCD5C\uC18C\uD654"
+   },
+   "stroke_label_mouse_stroke_options": {
+      "message": "\uB9C8\uC6B0\uC2A4 \uC2A4\uD2B8\uB85C\uD06C \uC635\uC158"
+   },
+   "stroke_label_new_tab": {
+      "message": "\uC0C8\uD0ED"
+   },
+   "stroke_label_new_window": {
+      "message": "\uC0C8\uB85C\uC6B4 \uCC3D \uC5F4\uAE30"
+   },
+   "stroke_label_next_tab": {
+      "message": "\uB2E4\uC74C \uD0ED"
+   },
+   "stroke_label_open_homepage": {
+      "message": "\uD648\uD398\uC774\uC9C0 \uC5F4\uAE30"
+   },
+   "stroke_label_open_link_in_new_background_tab": {
+      "message": "\uBC30\uACBD\uD0ED\uC73C\uB85C \uB9C1\uD06C \uC5F4\uAE30"
+   },
+   "stroke_label_open_link_in_new_foreground_tab": {
+      "message": "\uC0C8\uD0ED\uC73C\uB85C \uB9C1\uD06C \uC5F4\uAE30"
+   },
+   "stroke_label_open_link_in_new_window": {
+      "message": "\uC0C8 \uCC3D\uC5D0 \uB9C1\uD06C \uC5F4\uAE30"
+   },
+   "stroke_label_previous_tab": {
+      "message": "\uC774\uC804 \uD0ED"
+   },
+   "stroke_label_reload": {
+      "message": "\uC0C8\uB85C\uACE0\uCE68"
+   },
+   "stroke_label_remove_bookmark": {
+      "message": "\uBD81\uB9C8\uD06C \uC9C0\uC6B0\uAE30"
+   },
+   "stroke_label_rocker_left_to_right": {
+      "message": "\uC67C\uCABD \uB9C8\uC6B0\uC2A4 \uBC84\uD2BC \uD074\uB9AD\uC911\uC5D0 \uC624\uB978\uCABD \uB9C8\uC6B0\uC2A4 \uBC84\uD2BC \uD074\uB9AD"
+   },
+   "stroke_label_rocker_right_to_left": {
+      "message": "\uC624\uB978\uCABD \uB9C8\uC6B0\uC2A4 \uBC84\uD2BC \uD074\uB9AD\uC911\uC5D0 \uC67C\uCABD \uB9C8\uC6B0\uC2A4 \uBC84\uD2BC \uD074\uB9AD"
+   },
+   "stroke_label_save_image": {
+      "message": "\uADF8\uB9BC \uC800\uC7A5"
+   },
+   "stroke_label_scroll_down_one_page": {
+      "message": "\uD55C\uD398\uC774\uC9C0 \uC544\uB798\uB85C"
+   },
+   "stroke_label_scroll_up_one_page": {
+      "message": "\uD55C\uD398\uC774\uC9C0 \uC704\uB85C"
+   },
+   "stroke_label_search_selected_text": {
+      "message": "\uC120\uD0DD\uB41C \uAE00 \uAC80\uC0C9"
+   },
+   "stroke_label_skip_cache_reload": {
+      "message": "\uCE90\uC26C \uB2E4\uC2DC \uBD88\uB7EC\uC624\uAE30 \uB118\uAE30\uAE30"
+   },
+   "stroke_label_stop_page_loading": {
+      "message": "\uC911\uC9C0"
+   },
+   "stroke_label_take_screenshot": {
+      "message": "\uC2A4\uD06C\uB9B0\uC0F7 \uCC0D\uAE30"
+   },
+   "stroke_label_text_zoom_in": {
+      "message": "\uAE00\uC790 \uD06C\uAC8C"
+   },
+   "stroke_label_text_zoom_out": {
+      "message": "\uAE00\uC790 \uC791\uAC8C"
+   },
+   "stroke_label_text_zoom_reset": {
+      "message": "\uAE00\uC790 \uD06C\uAE30 \uAE30\uBCF8\uC73C\uB85C"
+   },
+   "stroke_label_to_page_bottom": {
+      "message": "\uD398\uC774\uC9C0 \uAC00\uC7A5 \uBC11\uC73C\uB85C"
+   },
+   "stroke_label_to_page_top": {
+      "message": "\uD398\uC774\uC9C0 \uAC00\uC7A5 \uC704\uB85C"
+   },
+   "stroke_label_undo_close_tab": {
+      "message": "\uD0ED \uB2EB\uAE30 \uCDE8\uC18C"
+   },
+   "stroke_label_upper_level_in_url": {
+      "message": "\uC778\uD130\uB137 \uC8FC\uC18C \uD55C\uB2E8\uACC4 \uC704\uB85C."
+   },
+   "stroke_label_view_image": {
+      "message": "\uADF8\uB9BC \uBCF4\uAE30"
+   },
+   "stroke_label_view_source": {
+      "message": "\uC18C\uC2A4 \uBCF4\uAE30"
+   },
+   "stroke_label_wheel_down": {
+      "message": "\uB9C8\uC6B0\uC2A4 \uD720 \uB0B4\uB9BC"
+   },
+   "stroke_label_wheel_left": {
+      "message": "\uB9C8\uC6B0\uC2A4 \uD720 \uC67C\uCABD\uC73C\uB85C "
+   },
+   "stroke_label_wheel_right": {
+      "message": "\uB9C8\uC6B0\uC2A4 \uD720 \uC624\uB978\uCABD\uC73C\uB85C"
+   },
+   "stroke_label_wheel_up": {
+      "message": "\uB9C8\uC6B0\uC2A4 \uC70C \uC62C\uB9BC"
+   },
+   "text_backup_and_restore_settings_description": {
+      "message": "\u003Cli\u003E\n  \uC124\uC815\uC744 \uBC31\uC5C5\uD558\uC2DC\uB824\uBA74 , \u003Cem\u003E\uBC31\uC5C5\u003C/em\u003E \uBC84\uD2BC\uC744 \uB204\uB974\uC2E0\uD6C4 \u003Cstrong\u003E\uAE00\uC744 \uC548\uC804\uD55C\uACF3\uC5D0 \uC800\uC7A5\uD558\uC138\uC694.\u003C/strong\u003E.\n  \uBC84\uD2BC\uB9CC \uB204\uB974\uC2E0\uAC70\uB9CC\uC73C\uB85C\uB294 \uC800\uC7A5\uC774 \uB418\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.\n\u003C/li\u003E\n\u003Cli\u003E\n  \uBC31\uC5C5\uD55C \uC124\uC815\uC744 \uBCF5\uAD6C \uD558\uC2DC\uB824\uBA74, \uC774\uC804\uC5D0 \uC800\uC7A5\uD558\uC2E0 \uBC31\uC5C5 \uAE00\uC744 \uAE00 \uC601\uC5ED\uC5D0 \uBCF5\uC0AC\uD558\uC2E0\uD6C4 \u003Cem\u003E\uBCF5\uAD6C\u003C/em\u003E \uBC84\uD2BC\uC744 \uB204\uB974\uC2ED\uC2DC\uC624.\n  \uC800\uC7A5\uB41C \uC815\uBCF4\uB294 \uC624\uB958\uB97C \uD53C\uD558\uAE30 \uC704\uD558\uC5EC, \uAE30\uBCF8 \uC124\uC815\uB3C4 \uC870\uD569\uB429\uB2C8\uB2E4.\n\u003C/li\u003E"
+   },
+   "text_blacklist_description": {
+      "message": "\uBE14\uB799\uB9AC\uC2A4\uD2B8\uC5D0 \uC788\uB294 \uC0AC\uC774\uD2B8\uC5D0 \uBC29\uBB38\uD558\uC2DC\uBA74 \uB9C8\uC6B0\uC2A4 \uC2A4\uD2B8\uB85C\uD06C\uAC00 \uBE44\uD65C\uC131\uD654 \uB429\uB2C8\uB2E4. \uD55C\uC904\uC5D0 \uD558\uB098\uC529 \uC8FC\uC18C\uB97C \uCD94\uAC00\uD574 \uC8FC\uC138\uC694.\u003Cbr/\u003E\n\uC640\uC77C\uB4DC \uCE74\uB4DC\uB098 \uC77C\uBC18\uC801\uC778 \uB2E8\uC5B4\uB294 \uC9C0\uC6D0\uB418\uC9C0 \u003Cstrong\u003E\uC54A\uC2B5\uB2C8\uB2E4.\u003C/strong\u003E\u003Cbr/\u003E\n\uAC00\uB2A5\uD558\uBA74 \uC790\uC138\uD558\uAC8C \uC791\uC131\uD574 \uC8FC\uC2ED\uC2DC\uC694. \uAC04\uB2E8\uD55C \uB2E8\uC5B4, \uC608\uB97C\uB4E4\uC5B4 \u003Ccode\u003E\uC2E0\uBC1C\u003C/code\u003E\uC744 \uC0AC\uC6A9\uD55C\uB2E4\uBA74 \uC2E0\uBC1C\uC774 \uB4E4\uC5B4\uAC04 \uBAA8\uB4E0 \uC0AC\uC774\uD2B8\uAC00 \uBE14\uB799\uB9AC\uC2A4\uD2B8\uC5D0 \uC62C\uB77C\uAC00\uAE30 \uB54C\uBB38\uC785\uB2C8\uB2E4."
+   },
+   "text_dnd_notes": {
+      "message": "\uAE00\uC744 \uB4DC\uB798\uADF8 \uD558\uC2DC\uBA74, \uC0C8\uD0ED\uC5D0 \uC120\uD0DD\uB41C \uAE00\uC758 \uAC80\uC0C9\uACB0\uACFC\uB97C \uD45C\uC2DC\uD569\uB2C8\uB2E4.\u003Cbr/\u003E\n\uB9C8\uC9C0\uB9C9 \uB4DC\uB798\uADF8 \uBC29\uD5A5\uC740 "
+   },
+   "text_extension_description": {
+      "message": "\uC774\uAC83\uC740 \uAD6C\uAE00 \uD06C\uB86C\uC758 \uD655\uC7A5\uAE30\uB2A5\uC73C\uB85C \u003Ca href=\"http://en.wikipedia.org/wiki/Mouse_gesture\"\u003E\uB9C8\uC6B0\uC2A4 \uC2A4\uD2B8\uB85C\uD06C\u003C/a\u003E (\uB9C8\uC6B0\uC2A4 \uC81C\uC2A4\uCCD0\uB85C\uB3C4 \uC54C\uB824\uC9D0)\uB97C \uD06C\uB86C\uC5D0\uC11C \uD65C\uC131\uD654 \uC2DC\uD0B5\uB2C8\uB2E4. \uBE0C\uB77C\uC6B0\uC838\uC758 \uC5EC\uB7EC \uAE30\uB2A5\uB4E4\uC744 \uAC04\uB2E8\uD55C \uB9C8\uC6B0\uC2A4 \uC6C0\uC9C1\uC784\uC73C\uB85C \uC2E4\uD589\uD560 \uC218 \uC788\uAC8C \uB429\uB2C8\uB2E4."
+   },
+   "text_translator": {
+      "message": "Hansu K."
+   },
+   "text_version_highlight_prompt": {
+      "message": "\u003Cstrong\u003E\uB9C8\uC6B0\uC2A4 \uC2A4\uD2B8\uB85C\uD06C\u003C/strong\u003E \uAC00 \uCD5C\uC2E0 \uBC84\uC804\uC73C\uB85C \uC5C5\uB370\uC774\uD2B8 \uB418\uC5C8\uC2B5\uB2C8\uB2E4.\u003Cbr/\u003E\n\uB9CC\uC57D \uB9C8\uC6B0\uC2A4 \uC2A4\uD2B8\uB85C\uD06C\uB97C \uB2F9\uC2E0\uC758 \uC5B8\uC5B4\uB85C \uBC88\uC5ED\uD558\uB294\uAC78 \uB3D5\uACE0 \uC2F6\uC73C\uC2DC\uB2E4\uBA74 \n\u003Ca href=\"http://code.google.com/p/chrome-mouse-stroke/issues/detail?id=85\"\u003E\uC774 \uD398\uC774\uC9C0\u003C/a\u003E\uB97C \uBC29\uBB38\uD558\uC154\uC11C \uC124\uBA85\uC5D0 \uB530\uB77C \uB3C4\uC6C0\uC744 \uC8FC\uC138\uC694.\u003Cbr/\u003E\u003Cbr/\u003E\n\u003Ca target=\"_blank\" href=\"$option_page$\"\u003E\uC635\uC158\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"https://chrome.google.com/extensions/detail/aeaoofnhgocdbnbeljkmbjdmhbcokfdb\"\u003E\uD648\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/wiki/FAQs\"\u003E\uC790\uC8FC\uBB3B\uB294\uC9C8\uBB38\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/issues/list\"\u003E\uC9C0\uC6D0\u003C/a\u003E",
+      "placeholders": {
+         "option_page": {
+            "content": "$1"
+         }
+      }
+   }
+}

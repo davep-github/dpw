@@ -1,0 +1,15 @@
+{
+   "background_page": "background.html",
+   "description": "An old extension that is no longer needed. Uninstall.",
+   "icons": {
+      "128": "icon128.png",
+      "16": "icon16.png",
+      "32": "icon32.png",
+      "48": "icon48.png"
+   },
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDmkZjaGOHb5g4P9W/K+2e8FHyWAV26Zoq+JO8f0lWiGqFaUT8kjaaIeBNfmH+J8JhpBpccvbXLdkPmYOURJUhqG7YlTCtoUlaF+7ccTYZY0XOM5s1zrUi/H5srSiNr25aBtQNjX0kWiCa9o5c4TOzseDBOuvjLO29vaELhxt7r3wIDAQAB",
+   "name": "Smooth Gestures: File Protocols (uninstall)",
+   "permissions": [ "management" ],
+   "update_url": "http://clients2.google.com/service/update2/crx",
+   "version": "1.5"
+}

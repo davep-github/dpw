@@ -1,0 +1,4 @@
+Licensed under MIT
+http://www.opensource.org/licenses/mit-license.php
+
+2009, Gan Quan <vigacmoe@gmail.com>

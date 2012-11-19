@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <script src="http://secbrowsing.appspot.com/static/ns.js"></script>
+    <script src="http://secbrowsing.appspot.com/static/plugin.js"></script>
+    <script>
+
+var POLL_INTERVAL = 1000 * 60 * 60 * 12;  // 12 hours
+
+// This value is updated every time GetPluginVersions() is called.
+var staticNumOutOfDatePlugins = 0;
+
+// Fetch new plugin versions.  This method will call itself every
+// 'POLL_INTERVAL' seconds.
+function GetPluginVersions() {
+  var req = new XMLHttpRequest();
+  req.open("GET", "http://secbrowsing.appspot.com/get?format=json",
+           false /* synchronous */);
+  req.send(null);
+  if (req.status == 200) {
+    secBrowsing.Plugin.setPluginVersions(JSON.parse(req.responseText));
+    var plugins = secBrowsing.Plugin.checkPlugins();
+    staticNumOutOfDatePlugins = plugins.old.length;
+  } else {
+    secBrowsing.Plugin.setPluginVersions(null);
+  }
+}
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  if (staticNumOutOfDatePlugins > 0) {
+    chrome.pageAction.setTitle(
+      {tabId: tabId,
+       title: staticNumOutOfDatePlugins + ' out-of-date plugin(s)'});
+    chrome.pageAction.show(tabId);
+  } else {
+    chrome.pageAction.hide(tabId);
+  }
+});
+
+chrome.pageAction.onClicked.addListener(function(tab) {
+  // Force a reload of the plugins when you click on the button.
+  GetPluginVersions();
+  chrome.tabs.create({url:"http://secbrowsing.appspot.com/"});
+});
+
+window.setInterval(GetPluginVersions, POLL_INTERVAL);
+    </script>
+  </head>
+  <body onload="GetPluginVersions();"></body>
+</html>

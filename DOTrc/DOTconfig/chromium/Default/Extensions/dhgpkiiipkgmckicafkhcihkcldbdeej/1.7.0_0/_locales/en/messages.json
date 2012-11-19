@@ -1,0 +1,86 @@
+{
+   "clearHistory": {
+      "message": "Clear History"
+   },
+   "copyright1": {
+      "description": "do not translate it",
+      "message": "Wikipedia and logo of Wikipedia are trademarks of Wikimedia Foundation, Inc."
+   },
+   "copyright2": {
+      "description": "do not translate it",
+      "message": "Usage of all Wikipedia content governed by term and conditions of Wikimedia Foundation, Inc."
+   },
+   "copyright3": {
+      "description": "do not translate it",
+      "message": "Extension created by mongolian2010. All rights reserved."
+   },
+   "extDescription": {
+      "message": "Essential extension for any Wikipedia users. Full-featured: saves your recent wiki lookups, multi-lingual, back/forward and more!"
+   },
+   "extName": {
+      "message": "Wikipedia Companion - Mini Wiki Browser"
+   },
+   "fontSize": {
+      "message": "Font Size"
+   },
+   "goBack": {
+      "message": "Go Back"
+   },
+   "goForward": {
+      "message": "Go Forward"
+   },
+   "language": {
+      "message": "Language"
+   },
+   "large": {
+      "message": "Large"
+   },
+   "normal": {
+      "message": "Normal"
+   },
+   "openInTab": {
+      "message": "Open in Tab"
+   },
+   "optionLanguageHints": {
+      "message": "New language option is effective in your NEXT search."
+   },
+   "optionShowFeatureArticle": {
+      "message": "Show featured article on start-up (only available in certain Wikipedia languages)"
+   },
+   "optionTitle": {
+      "message": "Wikipedia for Chrome - Options"
+   },
+   "options": {
+      "message": "Options"
+   },
+   "pageWidth": {
+      "message": "Popup Window Width"
+   },
+   "primaryLanguage": {
+      "message": "Primary Language"
+   },
+   "save": {
+      "message": "Save"
+   },
+   "saved": {
+      "message": "Saved"
+   },
+   "search": {
+      "message": "Search"
+   },
+   "secondaryLanguage": {
+      "message": "Secondary Language"
+   },
+   "small": {
+      "message": "Small"
+   },
+   "updateMessage": {
+      "message": "Wikipedia Companion is updated to $1! Click here for more info"
+   },
+   "welcomeMessage": {
+      "message": "Welcome to Wikipedia Companion"
+   },
+   "wide": {
+      "message": "Wide"
+   }
+}

@@ -1,0 +1,161 @@
+CachingBackend: Loading instances from cache
+CachingBackend: Loading <Calendar1>
+Creating new entry for CalendarScreenlet in /tmp/screenlets/screenlets.running
+Loading instances in: /home/davep/.config/Screenlets/Calendar/default/
+File: Calendar1.ini
+Creating new instance: 
+UPDATING SHAPE
+UPDATING SHAPE
+Set options in CalendarScreenlet
+UPDATING SHAPE
+Restored instances from session 'default' ...
+CachingBackend: Saving <#Calendar1> :) ...
+OK
+/home/davep/.screenlets/Calendar/themes
+Path /home/davep/.screenlets/Calendar/themes not found.
+/usr/share/screenlets/Calendar/themes
+active theme is: ryx
+Changed: allow_option_override
+CachingBackend: Saving <#Calendar1> :) ...
+OK
+UPDATING SHAPE
+CachingBackend: Saving <#Calendar1> :) ...
+OK
+CachingBackend: Saving <#Calendar1> :) ...
+OK
+CachingBackend: Saving <#Calendar1> :) ...
+OK
+UPDATING SHAPE
+CachingBackend: Saving <#Calendar1> :) ...
+OK
+UPDATING SHAPE
+CachingBackend: Saving <#Calendar1> :) ...
+OK
+UPDATING SHAPE
+CachingBackend: Saving <#Calendar1> :) ...
+OK
+Screenlet: Set theme ryx
+UPDATING SHAPE
+CachingBackend: Saving <#Calendar1> :) ...
+OK
+CachingBackend: Saving <#Calendar1> :) ...
+OK
+UPDATING SHAPE
+CachingBackend: Saving <#Calendar1> :) ...
+OK
+/home/davep/.screenlets/Calendar/themes
+Path /home/davep/.screenlets/Calendar/themes not found.
+/usr/share/screenlets/Calendar/themes
+active theme is: ryx
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+CachingBackend: Saving <#Calendar1> :) ...
+OK
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+CachingBackend: Saving <#Calendar1> :) ...
+OK
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+CachingBackend: Saving <#Calendar1> :) ...
+OK
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+Changed: scale
+UPDATING SHAPE
+CachingBackend: Saving <#Calendar1> :) ...
+OK
+UPDATING SHAPE
+Removing entry for CalendarScreenlet from global tempfile /tmp/screenlets/screenlets.running

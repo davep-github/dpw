@@ -1,0 +1,76 @@
+<style type="text/css">
+body {
+	font-family: helvetica, arial, sans-serif;
+	font-size: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	color: #000099;
+	text-decoration: none;
+}
+
+.highlight {
+	color: #a00;
+}
+
+#notification p {
+	margin: .5em 0;
+}
+
+#notification {
+	font-size: .8em;
+	margin: 0;
+	padding: 0;
+}
+
+#notification .title {
+	display: inline-block;
+	font-family: georgia, times, serif;
+	font-weight: normal;
+	font-size: 24px;
+	padding-top: 8px;
+}
+
+#notification .icon {
+	border: none;
+	float: left;
+	margin: 0 10px 0 0;
+}
+</style>
+
+<div id="notification">
+	<h3>
+		<img class="icon" src="icons/icon-48.png">
+		<span class="title">Mouse Stroke was upgraded</span>
+	</h3>
+
+	<p>
+		This is a bugfix release, for full release notes please click
+		<a href="http://code.google.com/p/chrome-mouse-stroke/wiki/VersionHistory#1.9.5.2">here</a>.
+	</p>
+
+	<p>
+		Mouse Stroke now has a
+		<a target="_blank" href="http://ganq.net/mouse-stroke/">website</a> for you to
+		<a href="http://ganq.net/mouse-stroke/custom-stroke/recently-added">browse</a>,
+		<a href="http://ganq.net/mouse-stroke/custom-stroke/add">share</a> and
+		<a href="http://ganq.net/mouse-stroke/custom-stroke/open-incognito-window">one-click install</a>
+		custom strokes.
+	</p>
+
+	<p>
+		<a href="http://code.google.com/p/chrome-mouse-stroke/wiki/VersionHistory#1.9.5.2">Changes</a> |
+		<a href="http://ganq.net">Home</a> |
+		<a href="http://ganq.net/mouse-stroke/page/mouse-stroke-faqs">FAQs</a> |
+		<a href="http://code.google.com/p/chrome-mouse-stroke/issues/list">Support</a>
+	</p>
+</div>
+
+<script>
+(function() {
+	var i, a = document.getElementsByTagName('a');
+	for (i = 0; i < a.length; a[i++].setAttribute('target', '_blank'));
+})();
+</script>

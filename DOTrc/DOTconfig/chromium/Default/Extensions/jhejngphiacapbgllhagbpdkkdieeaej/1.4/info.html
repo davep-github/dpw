@@ -1,0 +1,171 @@
+<html>
+<head>
+<style>
+  body {
+    font-size:12px;
+	font-family:arial;
+	color:#000000;
+  }
+  div{
+    margin-top:5px;
+	margin-bottom:5px;
+  }
+  #country {
+    padding-bottom:7px;
+    border-bottom:1px solid #e1e1e1;
+  }
+  #separator {
+    width:100%;
+	height:1px;
+	background-color:#e1e1e1;
+  }
+
+  #service {
+	background-position:0px 2px;
+	background-repeat:no-repeat;
+	padding-left:22px;
+	margin-top:0px;
+	margin-bottom:0px;
+
+	padding-bottom:3px;
+	padding-top:3px;
+	border:1px solid #ffffff;
+	 -webkit-border-radius:5px;
+	 cursor:pointer;
+  }
+  #service:hover {
+	background-color:#d5e4ff;
+	border:1px solid #8492ac;
+
+	  -webkit-transition-property: border;
+	  -webkit-transition-duration: 0.4s;
+	  transition-timing-function : linear ;
+
+  }
+  .google {
+	background-image: url('services/google.ico');
+  }
+  .whois {
+	background-image: url('services/whois.ico');
+  }
+  .alexa {
+	background-image: url('services/alexa.gif');
+  }
+  .compete {
+	background-image: url('services/compete.png');
+  }
+  .quantcast {
+	background-image: url('services/quantcast.ico');
+  }
+  .mcafee {
+	background-image: url('services/McAfee.gif');
+  }
+  .wot {
+	background-image: url('services/wot.png');
+  }
+
+
+
+</style>
+<script type="text/javascript">
+
+  var countryList = new Array();
+
+  countryList["ai"] = "Australia"
+  countryList["ch"] = "China"
+  countryList["us"] = "United States"
+  countryList["jp"] = "Japan"
+  countryList["in"] = "India"
+  countryList["br"] = "Brazil"
+  countryList["de"] = "Germany"
+  countryList["uk"] = "United Kingdom"
+  countryList["ru"] = "Russia"
+  countryList["fr"] = "France"
+  countryList["kr"] = "Korea South"
+  countryList["ir"] = "Iran"
+  countryList["it"] = "Italy"
+  countryList["il"] = "Israel"
+  countryList["id"] = "Indonesia"
+  countryList["es"] = "Spain"
+  countryList["mx"] = "Mexico"
+  countryList["tr"] = "Turkey"
+  countryList["ca"] = "Canada"
+  countryList["ph"] = "Philippines"
+  countryList["vn"] = "Vietnam"
+  countryList["pl"] = "Poland"
+  countryList["fi"] = "Finland"
+  countryList["nl"] = "Netherlands"
+  countryList["se"] = "Sweden"
+  countryList["th"] = "Thailand"
+
+  var backgroundPage = chrome.extension.getBackgroundPage()
+
+  function onLoad() {
+	 if (countryList[backgroundPage.lastCountry.toLowerCase()]!=null) {
+		 document.getElementById("country").innerHTML = "<img src='flags/"+ backgroundPage.lastCountry+".gif' width='16' height='11' style='margin-right:5px'>"+countryList[backgroundPage.lastCountry.toLowerCase()];
+	 }
+	 document.getElementById("domain").innerHTML = backgroundPage.lastDomain;
+	 document.getElementById("ip").innerHTML = backgroundPage.lastIP;
+
+  }
+
+
+
+  function openWebSite (index) {
+		 /* var domain = fnt.currentDomain;
+			
+		  var domainList = domain.split(".");
+		  if (domainList.length>3) {
+			domain = domainList[domainList.length-3]+"."+domainList[domainList.length-2]+"."+domainList[domainList.length-1]
+		  }*/
+		  var domain = backgroundPage.lastDomain;
+		  switch (index) {
+				case 0:
+				  var url = "http://trends.google.com/websites?q="  + domain + "&sa=N";
+				break;
+				case 1:
+				  var url = "http://whois.domaintools.com/" + domain;
+				break;
+				case 2:
+				  var url = "http://alexa.com/siteinfo/" + domain;
+				break;
+				case 3:
+				  var url = "http://siteanalytics.compete.com/" + domain;
+				break;
+				case 4:
+				  var url = "http://www.quantcast.com/" + domain;
+				break;
+				case 5:
+				  var url = "http://www.mywot.com/en/scorecard/" + domain;
+				break;
+				case 6:
+				  var url = "http://www.siteadvisor.com/sites/" + domain;
+				break;
+		  }
+		  chrome.tabs.create({url: url, selected:true})
+	}
+
+
+
+
+</script>
+</head>
+<body onload="onLoad()" style="width:140px">
+  <div id="main" style="">
+    <div id="country"></div>
+    <div id="domain"></div>
+    <div id="ip"></div>
+    <div id="separator"></div>
+    <div id="service" class="google" onclick="openWebSite(0);">Google Trends</div>
+    <div id="service" class="whois" onclick="openWebSite(1);">Who Is</div>
+    <div id="service" class="alexa" onclick="openWebSite(2);">Alexa</div>
+    <div id="service" class="compete" onclick="openWebSite(3);">Compete</div>
+    <div id="service" class="quantcast" onclick="openWebSite(4);">Quantcast</div>
+    <div id="separator"></div>
+    <div id="service" class="wot" onclick="openWebSite(5);">WOT - Web of Trust</div>
+    <div id="service" class="mcafee" onclick="openWebSite(6);">McAfee SiteAdvisor</div>
+
+
+  </div>
+</body>
+</html>

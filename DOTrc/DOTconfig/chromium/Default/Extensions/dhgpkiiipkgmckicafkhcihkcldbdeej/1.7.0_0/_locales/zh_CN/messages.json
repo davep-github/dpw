@@ -1,0 +1,82 @@
+{
+   "_gen": {
+      "description": "Editor",
+      "message": "Localizer, http://www.mixesoft.com/localizer.html"
+   },
+   "_inf": {
+      "description": "Author",
+      "message": "Dean Lee \u003Cxslidian@gmail.com\u003E"
+   },
+   "clearHistory": {
+      "message": "\u6E05\u9664\u67E5\u8BE2\u5386\u53F2"
+   },
+   "copyright1": {
+      "description": "\u4E0D\u7528\u7FFB\u8BD1",
+      "message": "\u7EF4\u57FA\u767E\u79D1\u548C\u7EF4\u57FA\u767E\u79D1\u6807\u5FD7\u662F\u7EF4\u57FA\u5A92\u4F53\u57FA\u91D1\u4F1A\u7684\u6CE8\u518C\u5546\u6807"
+   },
+   "copyright2": {
+      "description": "\u4E0D\u7528\u7FFB\u8BD1",
+      "message": "\u6240\u6709\u5BF9\u7EF4\u57FA\u767E\u79D1\u5185\u5BB9\u7684\u4F7F\u7528\u53D7\u7EF4\u57FA\u5A92\u4F53\u57FA\u91D1\u4F1A\u6761\u6B3E\u548C\u6761\u4EF6\u7684\u63A7\u5236"
+   },
+   "copyright3": {
+      "description": "\u4E0D\u7528\u7FFB\u8BD1",
+      "message": "\u6269\u5C55\u4F5C\u8005\u4E3A mongolian2010\u3002\u4FDD\u7559\u6240\u6709\u6743\u5229\u3002"
+   },
+   "extDescription": {
+      "message": "\u7EF4\u57FA\u767E\u79D1\u7528\u6237\u5FC5\u5907\u6269\u5C55\u3002\u529F\u80FD\u5168\u9762\uFF1A\u4FDD\u5B58\u60A8\u6700\u8FD1\u7684\u7EF4\u57FA\u67E5\u8BE2\u8BB0\u5F55\uFF0C\u591A\u8BED\u79CD\uFF0C\u540E\u9000/\u524D\u8FDB\u7B49\u7B49\uFF01"
+   },
+   "extName": {
+      "message": "\u7EF4\u57FA\u767E\u79D1\u4F34\u4FA3 - \u8FF7\u4F60\u7EF4\u57FA\u6D4F\u89C8\u5668"
+   },
+   "goBack": {
+      "message": "\u8FD4\u56DE"
+   },
+   "goForward": {
+      "message": "\u524D\u8FDB"
+   },
+   "language": {
+      "message": "\u8BED\u8A00"
+   },
+   "normal": {
+      "message": "\u6807\u51C6"
+   },
+   "openInTab": {
+      "message": "\u5728\u6807\u7B7E\u4E2D\u6253\u5F00"
+   },
+   "optionLanguageHints": {
+      "message": "\u65B0\u7684\u8BED\u8A00\u9009\u9879\u662F\u5728\u60A8*\u4E0B\u6B21*\u641C\u7D22\u65F6\u751F\u6548\u3002"
+   },
+   "optionShowFeatureArticle": {
+      "message": "\u542F\u52A8\u65F6\u663E\u793A\u7279\u8272\u6587\u7AE0\uFF08\u4EC5\u5728\u7279\u5B9A\u7684\u7EF4\u57FA\u767E\u79D1\u8BED\u8A00\u7248\u672C\u4E2D\u53EF\u7528\uFF09"
+   },
+   "optionTitle": {
+      "message": "Chrome \u7EF4\u57FA\u767E\u79D1\u4F34\u4FA3 - \u9009\u9879"
+   },
+   "options": {
+      "message": "\u9009\u9879"
+   },
+   "pageWidth": {
+      "message": "\u5F39\u51FA\u7A97\u53E3\u5BBD\u5EA6"
+   },
+   "primaryLanguage": {
+      "message": "\u7B2C\u4E00\u8BED\u8A00"
+   },
+   "save": {
+      "message": "\u4FDD\u5B58"
+   },
+   "search": {
+      "message": "\u641C\u7D22"
+   },
+   "secondaryLanguage": {
+      "message": "\u7B2C\u4E8C\u8BED\u8A00"
+   },
+   "updateMessage": {
+      "message": "\u7EF4\u57FA\u767E\u79D1\u4F34\u4FA3\u66F4\u65B0\u81F3 $1 \u7248\u5566\uFF01\u70B9\u6B64\u67E5\u770B\u66F4\u591A\u4FE1\u606F"
+   },
+   "welcomeMessage": {
+      "message": "\u6B22\u8FCE\u4F7F\u7528\u7EF4\u57FA\u767E\u79D1\u4F34\u4FA3"
+   },
+   "wide": {
+      "message": "\u5BBD"
+   }
+}

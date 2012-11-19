@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<playlist version="1" xmlns="http://xspf.org/ns/0/">
+  <creator>audacious-plugins-2.4-beta1</creator>
+  <title>Untitled Playlist</title>
+  <trackList>
+    <track>
+      <location>file:///media/audio/music/mp3/downloaded/Bart%20Klepka%20-%20Deus%20Ex%20(Happy%20Planet%20Mix)%20%5BDeus%20Ex%5D.mp3</location>
+      <creator>Mixed by Bart Klepka</creator>
+      <title>Deus Ex (Happy Planet Mix)</title>
+      <album>Deus Ex</album>
+      <annotation>See 'deusexmx.txt' file.&#13;
+Released 5th April, 2001</annotation>
+      <meta rel="genre">Game</meta>
+      <duration>244715</duration>
+      <meta rel="year">2001</meta>
+      <meta rel="mtime">1172673011</meta>
+    </track>
+    <track>
+      <location>file:///media/audio/mvsik/flac/JeffersonAirplane/SurrealisticPillow19661967/10-White_Rabbit_1966.flac</location>
+      <duration>150000</duration>
+      <meta rel="quality">lossless</meta>
+      <meta rel="codec">Free Lossless Audio Codec (FLAC)</meta>
+      <meta rel="mtime">-1</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://stream.laut.fm:80/mehrgags</location>
+      <meta rel="quality">Stereo, 44100 Hz</meta>
+      <meta rel="codec">MPEG-1 layer 3</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="bitrate">128</meta>
+    </track>
+    <track>
+      <location>http://everego.com:8000/guitar</location>
+      <meta rel="quality">Stereo, 48000 Hz</meta>
+      <meta rel="codec">MPEG-1 layer 3</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="bitrate">128</meta>
+    </track>
+    <track>
+      <location>http://everego.com:8000/guitar</location>
+      <meta rel="quality">Stereo, 44100 Hz</meta>
+      <meta rel="codec">MPEG-1 layer 3</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="bitrate">64</meta>
+    </track>
+    <track>
+      <location>http://everego.com:8000/guitar</location>
+      <meta rel="quality">Mono, 48000 Hz</meta>
+      <meta rel="codec">MPEG-1 layer 1</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="bitrate">256</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mtime">-1</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://wbur-ogg.streamguys.com:80/wburlive.ogg</location>
+      <creator>WBUR 90.9 FM</creator>
+      <title>Boston's NPR News Station</title>
+      <meta rel="quality">lossy</meta>
+      <meta rel="codec">Ogg Vorbis [Xiph.Org libVorbis I 20020717]</meta>
+      <meta rel="mime-type">application/ogg</meta>
+      <meta rel="bitrate">47</meta>
+    </track>
+    <track>
+      <location>http://www.bbc.co.uk/iplayer/console/b00j0hbm</location>
+    </track>
+    <track>
+      <location>http://www.npr.org/rss/podcast.php?id=510053</location>
+    </track>
+  </trackList>
+</playlist>

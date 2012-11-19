@@ -1,0 +1,126 @@
+<html>
+    <head>
+        <title id="stringOptionTitle"></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <script type="text/javascript" src="jquery-1.4.4.min.js"></script>
+        <script type="text/javascript" src="options.js"></script>
+        <style>
+            body{
+                font-family: arial, serif;
+            }
+        </style>
+    </head>
+
+    <body onload="loadLang();restore_options()">
+        <center>
+            <br><br>
+            <img src="img/wikipediaLogo.png" border="0"></img>
+            <h2><span id="stringOptionTitle2"></span></h2>
+            <span id="stringPrimaryLanguage"></span>:
+            <select id="primaryLang" name="primaryLanguage" size="1">
+                <option value="ar">العربية</option>
+                <option value="bar">Boarisch</option>
+                <option value="bg">Български</option>
+                <option value="cs">Česky</option>
+                <option value="da">Dansk</option>
+                <option value="de">Deutsch</option>
+                <option value="el">Ελληνικά</option>
+                <option selected="selected" value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fa">فارسی</option>
+                <option value="fr">Français</option>
+                <option value="it">Italiano</option>
+                <option value="lt">Lietuvių</option>
+                <option value="he">עִבְרִית</option>
+                <option value="hr">Hrvatski</option>
+                <option value="hu">Magyar</option>
+                <option value="ksh">Ripoarisch</option>
+                <option value="ru">Русский</option>
+                <option value="sv">Svenska</option>
+                <option value="vi">Tiếng Việt</option>
+                <option value="tr">Türkçe</option>
+                <option value="nds">Plattdüütsch</option>
+                <option value="nl">Nederlands</option>
+                <option value="no">Norsk (bokmål)</option>
+                <option value="nn">Norsk (nynorsk)</option>
+                <option value="pl">Polski</option>
+                <option value="pt">Português</option>
+                <option value="sr">Српски / Srpski</option>
+                <option value="fi">Suomi</option>
+                <option value="uk">Українська</option>
+                <option value="zh">中文</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+            </select>
+            <br>
+            <br>
+            <span id="stringSecondaryLanguage"></span>:
+            <select id="secondaryLang" name="secondaryLanguage" size="1">
+                <option selected="selected" value="">-</option>
+                <option value="ar">العربية</option>
+                <option value="bar">Boarisch</option>
+                <option value="bg">Български</option>
+                <option value="cs">Česky</option>
+                <option value="da">Dansk</option>
+                <option value="de">Deutsch</option>
+                <option value="el">Ελληνικά</option>
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fa">فارسی</option>
+                <option value="fr">Français</option>
+                <option value="it">Italiano</option>
+                <option value="lt">Lietuvių</option>
+                <option value="he">עִבְרִית</option>
+                <option value="hr">Hrvatski</option>
+                <option value="hu">Magyar</option>
+                <option value="ksh">Ripoarisch</option>
+                <option value="ru">Русский</option>
+                <option value="sv">Svenska</option>
+                <option value="vi">Tiếng Việt</option>
+                <option value="tr">Türkçe</option>
+                <option value="nds">Plattdüütsch</option>
+                <option value="nl">Nederlands</option>
+                <option value="no">Norsk (bokmål)</option>
+                <option value="nn">Norsk (nynorsk)</option>
+                <option value="pl">Polski</option>
+                <option value="pt">Português</option>
+                <option value="sr">Српски / Srpski</option>
+                <option value="fi">Suomi</option>
+                <option value="uk">Українська</option>
+                <option value="zh">中文</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+            </select>
+            <br>
+            <br>
+            <span id="stringPageWidth"></span>:
+            <select id="pageWidthSelect" name="pageWidthSelect" size="1">
+                <option value="480" id="stringNormal"></option>
+                <option value="600" id="stringWide"></option>
+            </select>
+            <br>
+            <br>
+            <span id="fontSize"></span>:
+            <select id="fontSizeSelect" name="fontSizeSelect" size="1">
+                <!--<option value="0.6" id="stringSmall"></option>-->
+                <option value="0.8" id="stringNormal2"></option>
+                <option value="1" id="stringLarge"></option>
+            </select>
+            <br>
+            <br>
+            <input type="checkbox" id="showFeatureArticle" > <span id="stringOptionShowFeatureArticle"></span><br>
+            <br>
+            <button onclick="save_options()"><span id="stringSave"></span></button>
+
+            <p><span id="stringOptionLanguageHints"></span></p>
+            <br>
+            <br>
+            <small>
+                <span id="stringCopyright1"></span>
+                <br><span id="stringCopyright2"></span>
+                <br><span id="stringCopyright3"></span>
+            </small>
+        </center>
+    </body>
+</html>
+

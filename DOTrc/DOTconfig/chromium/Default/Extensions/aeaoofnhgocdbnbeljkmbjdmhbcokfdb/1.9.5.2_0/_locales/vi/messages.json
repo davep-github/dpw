@@ -1,0 +1,451 @@
+{
+   "caption_backup": {
+      "message": "Sao l\u01B0u"
+   },
+   "caption_backup_or_restore_settings": {
+      "message": "C\u00E1c thi\u1EBFt l\u1EADp sao l\u01B0u, kh\u00F4i ph\u1EE5c"
+   },
+   "caption_blacklist": {
+      "message": "Danh s\u00E1ch \u0111en"
+   },
+   "caption_cancel": {
+      "message": "H\u1EE7y b\u1ECF"
+   },
+   "caption_close": {
+      "message": "\u0110\u00F3ng"
+   },
+   "caption_confirm": {
+      "message": "X\u00E1c nh\u1EADn"
+   },
+   "caption_create_custom_stroke": {
+      "message": "T\u1EA1o m\u1EDBi"
+   },
+   "caption_current_stroke": {
+      "message": "N\u00E9t v\u1EBD hi\u1EC7n t\u1EA1i"
+   },
+   "caption_edit_trail_style": {
+      "message": "S\u1EEDa ki\u1EC3u d\u00E1ng n\u00E9t v\u1EBD"
+   },
+   "caption_help_custom_stroke": {
+      "message": "Tr\u1EE3 gi\u00FAp"
+   },
+   "caption_label": {
+      "message": "Nh\u00E3n"
+   },
+   "caption_mouse_stroke_options": {
+      "message": "T\u00F9y ch\u1ECDn thi\u1EBFt l\u1EADp ra l\u1EC7nh b\u1EB1ng chu\u1ED9t"
+   },
+   "caption_none": {
+      "message": "Kh\u00F4ng c\u00F3"
+   },
+   "caption_previous_stroke": {
+      "message": "N\u00E9t v\u1EBD tr\u01B0\u1EDBc \u0111\u00F3"
+   },
+   "caption_remove": {
+      "message": "X\u00F3a"
+   },
+   "caption_restore": {
+      "message": "Kh\u00F4i ph\u1EE5c"
+   },
+   "caption_restore_default": {
+      "message": "Kh\u00F4i ph\u1EE5c gi\u00E1 tr\u1ECB m\u1EB7c \u0111\u1ECBnh"
+   },
+   "caption_save": {
+      "message": "L\u01B0u tr\u1EEF"
+   },
+   "caption_script": {
+      "message": "K\u1ECBch b\u1EA3n"
+   },
+   "caption_set": {
+      "message": "Thi\u1EBFt l\u1EADp"
+   },
+   "caption_share_custom_stroke": {
+      "message": "Chia s\u1EBB"
+   },
+   "caption_show_advanced_options": {
+      "message": "Hi\u1EC3n th\u1ECB t\u00F9y ch\u1ECDn n\u00E2ng cao"
+   },
+   "caption_translated_by": {
+      "message": "\u0110\u01B0\u1EE3c d\u1ECBch b\u1EDFi"
+   },
+   "caption_unset": {
+      "message": "H\u1EE7y thi\u1EBFt l\u1EADp"
+   },
+   "category_desc_dnd_strokes": {
+      "message": "C\u00E1c \u0111o\u1EA1n v\u0103n b\u1EA3n, li\u00EAn k\u1EBFt v\u00E0 h\u00ECnh \u1EA3nh c\u00F3 th\u1EC3 k\u00E9o \u0111\u01B0\u1EE3c"
+   },
+   "category_desc_wheel_strokes": {
+      "message": "Cu\u1ED9n khi \u0111ang gi\u1EEF n\u00FAt ph\u1EA3i chu\u1ED9t"
+   },
+   "category_label_bookmark": {
+      "message": "\u0110\u00E1nh d\u1EA5u"
+   },
+   "category_label_custom_strokes": {
+      "message": "C\u00E1c l\u1EC7nh t\u1EF1 t\u1EA1o"
+   },
+   "category_label_dnd_strokes": {
+      "message": "Ra l\u1EC7nh b\u1EB1ng thao t\u00E1c k\u00E9o v\u00E0 th\u1EA3"
+   },
+   "category_label_image": {
+      "message": "\u1EA2nh"
+   },
+   "category_label_link": {
+      "message": "Li\u00EAn k\u1EBFt"
+   },
+   "category_label_navigation": {
+      "message": "\u0110i\u1EC1u h\u01B0\u1EDBng"
+   },
+   "category_label_options": {
+      "message": "T\u00F9y ch\u1ECDn"
+   },
+   "category_label_other": {
+      "message": "Kh\u00E1c"
+   },
+   "category_label_rocker_strokes": {
+      "message": "Ra l\u1EC7nh b\u1EB1ng n\u00FAt chu\u1ED9t"
+   },
+   "category_label_tab": {
+      "message": "Tab"
+   },
+   "category_label_utilities": {
+      "message": "C\u00E1c ti\u1EC7n \u00EDch"
+   },
+   "category_label_wheel_strokes": {
+      "message": "Ra l\u1EC7nh b\u1EB1ng n\u00FAt cu\u1ED9n"
+   },
+   "category_label_window": {
+      "message": "C\u1EEDa s\u1ED5"
+   },
+   "extension_description": {
+      "message": "S\u1EED d\u1EE5ng c\u00E1c n\u00E9t v\u1EBD b\u1EB1ng chu\u1ED9t \u0111\u1EC3 ra l\u1EC7nh cho Chrome, t\u0103ng t\u1ED1c c\u00E1c thao t\u00E1c. H\u1ED7 tr\u1EE3 t\u00EDnh n\u0103ng ra l\u1EC7nh b\u1EB1ng k\u00E9o th\u1EA3, nh\u1EA5n 2 n\u00FAt c\u00F9ng l\u00FAc, v\u00E0 ra l\u1EC7nh b\u1EB1ng n\u00FAt cu\u1ED9n, ch\u1EC9 trong 1 ti\u1EC7n \u00EDch."
+   },
+   "extension_name": {
+      "message": "Ra l\u1EC7nh b\u1EB1ng chu\u1ED9t"
+   },
+   "option_desc_stroke_timeout": {
+      "message": "Gi\u00E1 tr\u1ECB c\u00E0ng l\u1EDBn c\u00E0ng c\u00F3 nhi\u1EC1u th\u1EDDi gian \u0111\u1EC3 v\u1EBD (ra 1 l\u1EC7nh)"
+   },
+   "option_label_alt_key_suppresses_strokes": {
+      "message": "Gi\u1EEF ph\u00EDm Alt \u0111\u1EC3 ra l\u1EC7nh"
+   },
+   "option_label_close_window_with_the_last_tab": {
+      "message": "Khi \u0111\u00F3ng tab cu\u1ED1i c\u00F9ng, \u0111\u00F3ng lu\u00F4n c\u1EEDa s\u1ED5"
+   },
+   "option_label_custom_stroke_runs_in": {
+      "message": "Th\u1EF1c hi\u1EC7n trong"
+   },
+   "option_label_draw_trails": {
+      "message": "N\u00E9t v\u1EBD"
+   },
+   "option_label_enable_dnd_strokes": {
+      "message": "Cho ph\u00E9p th\u1EF1c hi\u1EC7n c\u00E1c l\u1EC7nh k\u00E9o th\u1EA3"
+   },
+   "option_label_hold_ctrl_key_to_fire_custom_strokes": {
+      "message": "Gi\u1EEF ph\u00EDm Ctrl \u0111\u1EC3 ra c\u00E1c l\u1EC7nh t\u1EF1 t\u1EA1o "
+   },
+   "option_label_minimal_step": {
+      "message": "B\u01B0\u1EDBc thay \u0111\u1ED5i t\u1ED1i thi\u1EC3u (s\u1ED1 \u0111i\u1EC3m \u1EA3nh)"
+   },
+   "option_label_new_tab_open_at": {
+      "message": "Khi m\u1EDF 1 tab m\u1EDBi, m\u1EDF"
+   },
+   "option_label_page_open_as_new_tab": {
+      "message": "Khi m\u1EDF tab m\u1EDBi, m\u1EDF"
+   },
+   "option_label_prefferred_search_engine": {
+      "message": "M\u00E1y t\u00ECm ki\u1EBFm m\u1EB7c \u0111\u1ECBnh"
+   },
+   "option_label_stroke_timeout": {
+      "message": "Th\u1EDDi l\u01B0\u1EE3ng ra l\u1EC7nh (mili-gi\u00E2y)"
+   },
+   "option_label_stroke_trigger": {
+      "message": "Ph\u00EDm k\u00EDch h\u1ECDat l\u1EC7nh"
+   },
+   "option_label_trail_color": {
+      "message": "M\u00E0u n\u00E9t v\u1EBD"
+   },
+   "option_label_trail_width": {
+      "message": "\u0110\u1ED9 r\u1ED9ng n\u00E9t v\u1EBD"
+   },
+   "option_value_all_frames": {
+      "message": "t\u1EA5t c\u1EA3 c\u00E1c khung"
+   },
+   "option_value_as_first_tab": {
+      "message": "Th\u00E0nh tab \u0111\u1EA7u ti\u00EAn"
+   },
+   "option_value_as_last_tab": {
+      "message": "Th\u00E0nh tab cu\u1ED1i c\u00F9ng"
+   },
+   "option_value_at_left_of_current_tab": {
+      "message": "B\u00EAn tr\u00E1i tab hi\u1EC7n t\u1EA1i"
+   },
+   "option_value_at_right_of_current_tab": {
+      "message": "B\u00EAn ph\u1EA3i tab hi\u1EC7n t\u1EA1i"
+   },
+   "option_value_chrome_newtab_page": {
+      "message": "Trang tab m\u1EDBi c\u1EE7a Chrome"
+   },
+   "option_value_left_mouse_button": {
+      "message": "N\u00FAt chu\u1ED9t tr\u00E1i"
+   },
+   "option_value_middle_mouse_button": {
+      "message": "N\u00FAt chu\u1ED9t gi\u1EEFa (Linux v\u00E0 Mac)"
+   },
+   "option_value_my_homepage": {
+      "message": "Trang ch\u1EE7 c\u1EE7a t\u00F4i"
+   },
+   "option_value_other_search_engine": {
+      "message": "Kh\u00E1c"
+   },
+   "option_value_right_mouse_button": {
+      "message": "N\u00FAt chu\u1ED9t ph\u1EA3i (Windows)"
+   },
+   "option_value_target_frame": {
+      "message": "khung \u0111\u00EDch"
+   },
+   "option_value_the_blank_page": {
+      "message": "Trang r\u1ED7ng"
+   },
+   "option_value_top_frame": {
+      "message": "khung tr\u00EAn c\u00F9ng"
+   },
+   "prompt_backup_settings_currupted": {
+      "message": "Ph\u00E1t hi\u1EC7n d\u1EEF li\u1EC7u b\u1ECB h\u1ECFng, kh\u00F4i ph\u1EE5c c\u00E1c thi\u1EBFt l\u1EADp d\u1EF1 ph\u00F2ng b\u1ECB d\u1EEBng l\u1EA1i."
+   },
+   "prompt_invalid_search_engine_url": {
+      "message": "\u0110\u01B0\u1EDDng d\u1EABn m\u00E1y t\u00ECm ki\u1EBFm kh\u00F4ng h\u1EE3p l\u1EC7."
+   },
+   "prompt_label_and_script_are_empty": {
+      "message": "C\u1EA3 [Nh\u00E3n] v\u00E0 [K\u1ECBch b\u1EA3n] kh\u00F4ng \u0111\u01B0\u1EE3c ph\u00E9p r\u1ED7ng."
+   },
+   "prompt_overwrite_custom_stroke_label": {
+      "message": "'$label$' \u0111\u00E3 t\u1ED3n t\u1EA1i s\u1EB5n, b\u1EA1n c\u00F3 mu\u1ED1n ghi \u0111\u00E8 kh\u00F4ng?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_overwrite_stroke_sequence": {
+      "message": "[$sequence$] \u0111\u00E3 \u0111\u01B0\u1EE3c g\u00E1n cho '$label$', b\u1EA1n c\u00F3 mu\u1ED1n ghi \u0111\u00E8 kh\u00F4ng?",
+      "placeholders": {
+         "label": {
+            "content": "$2"
+         },
+         "sequence": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_remove_custom_stroke": {
+      "message": "B\u1EA1n c\u00F3 ch\u1EAFc ch\u1EAFn mu\u1ED1n x\u00F3a l\u1EC7nh t\u1EF1 t\u1EA1o: '$$label' kh\u00F4ng?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_reset_settings": {
+      "message": "T\u1EA5t c\u1EA3 c\u00E1c thi\u1EBFt l\u1EADp s\u1EBD b\u1ECB kh\u00F4i ph\u1EE5c v\u1EC1 tr\u1EA1ng th\u00E1i ban \u0111\u1EA7u, tr\u1EEB c\u00E1c l\u1EC7nh t\u1EF1 t\u1EA1o, b\u1EA1n c\u00F3 \u0111\u1ED3ng \u00FD kh\u00F4ng?"
+   },
+   "prompt_restore_complete": {
+      "message": "Ho\u00E0n t\u1EA5t h\u1ED3i ph\u1EE5c."
+   },
+   "prompt_save_blacklist_complete": {
+      "message": "Ho\u00E0n t\u1EA5t l\u01B0u tr\u1EEF danh s\u00E1ch \u0111en."
+   },
+   "prompt_save_complete": {
+      "message": "Ho\u00E0n t\u1EA5t l\u01B0u tr\u1EEF."
+   },
+   "stroke_label_bookmark_this_link": {
+      "message": "D\u00E1nh d\u1EA5u li\u00EAn k\u1EBFt n\u00E0y"
+   },
+   "stroke_label_bookmark_this_page": {
+      "message": "\u0110\u00E1nh d\u1EA5u trang n\u00E0y"
+   },
+   "stroke_label_close_all_tabs_to_the_left": {
+      "message": "\u0110\u00F3ng t\u1EA5t c\u1EA3 tab b\u00EAn tr\u00E1i"
+   },
+   "stroke_label_close_all_tabs_to_the_right": {
+      "message": "\u0110\u00F3ng t\u1EA5t c\u1EA3 tab b\u00EAn ph\u1EA3i"
+   },
+   "stroke_label_close_other_tabs": {
+      "message": "\u0110\u00F3ng c\u00E1c tab kh\u00E1c"
+   },
+   "stroke_label_close_tab": {
+      "message": "\u0110\u00F3ng tab"
+   },
+   "stroke_label_close_tab_to_the_left": {
+      "message": "\u0110\u00F3ng tab b\u00EAn tr\u00E1i"
+   },
+   "stroke_label_close_tab_to_the_right": {
+      "message": "\u0110\u00F3ng tab b\u00EAn ph\u1EA3i"
+   },
+   "stroke_label_close_window": {
+      "message": "\u0110\u00F3ng c\u1EEDa s\u1ED5"
+   },
+   "stroke_label_decrease_number_in_url": {
+      "message": "D\u1EF1 \u0111o\u00E1n trang tr\u01B0\u1EDBc \u0111\u00F3 (gi\u1EA3m s\u1ED1 trong \u0111\u01B0\u1EDDng d\u1EABn)"
+   },
+   "stroke_label_detach_tab": {
+      "message": "T\u00E1ch tab ra c\u1EEDa s\u1ED5 m\u1EDBi"
+   },
+   "stroke_label_dnd_down": {
+      "message": "Th\u1EA3 ph\u00EDa d\u01B0\u1EDBi"
+   },
+   "stroke_label_dnd_left": {
+      "message": "Th\u1EA3 b\u00EAn tr\u00E1i"
+   },
+   "stroke_label_dnd_right": {
+      "message": "Th\u1EA3 b\u00EAn ph\u1EA3i"
+   },
+   "stroke_label_dnd_up": {
+      "message": "Th\u1EA3 ph\u00EDa tr\u00EAn"
+   },
+   "stroke_label_duplicate_tab": {
+      "message": "Nh\u00E2n \u0111\u00F4i tab"
+   },
+   "stroke_label_first_tab": {
+      "message": "Tab \u0111\u1EA7u ti\u00EAn"
+   },
+   "stroke_label_history_back": {
+      "message": "Trang tr\u01B0\u1EDBc"
+   },
+   "stroke_label_history_forward": {
+      "message": "Trang sau"
+   },
+   "stroke_label_increase_number_in_url": {
+      "message": "D\u1EF1 \u0111o\u00E1n trang ti\u1EBFp theo (t\u0103ng s\u1ED1 trong \u0111\u01B0\u1EDDng d\u1EABn)"
+   },
+   "stroke_label_last_tab": {
+      "message": "Tab cu\u1ED1i c\u00F9ng"
+   },
+   "stroke_label_maximize_window": {
+      "message": "Ph\u00F3ng to c\u1EEDa s\u1ED5"
+   },
+   "stroke_label_minimize_window": {
+      "message": "Thu nh\u1ECF c\u1EEDa s\u1ED5"
+   },
+   "stroke_label_mouse_stroke_options": {
+      "message": "T\u00F9y ch\u1ECDn ra l\u1EC7nh b\u1EB1ng ch\u1EE5\u00F4t"
+   },
+   "stroke_label_new_tab": {
+      "message": "Tab m\u1EDBi"
+   },
+   "stroke_label_new_window": {
+      "message": "C\u1EEDa s\u1ED5 m\u1EDBi"
+   },
+   "stroke_label_next_tab": {
+      "message": "Tab sau"
+   },
+   "stroke_label_open_homepage": {
+      "message": "M\u1EDF trang ch\u1EE7"
+   },
+   "stroke_label_open_link_in_new_background_tab": {
+      "message": "M\u1EDF li\u00EAn k\u1EBFt trong tab m\u1EDBi nh\u01B0ng kh\u00F4ng chuy\u1EC3n tab"
+   },
+   "stroke_label_open_link_in_new_foreground_tab": {
+      "message": "M\u1EDF li\u00EAn k\u1EBFt trong tab m\u1EDBi v\u00E0 chuy\u1EC3n \u0111\u1EBFn tab \u0111\u00F3"
+   },
+   "stroke_label_open_link_in_new_window": {
+      "message": "M\u1EDF li\u00EAn k\u1EBFt trong c\u1EEDa s\u1ED5 m\u1EDBi"
+   },
+   "stroke_label_previous_tab": {
+      "message": "Tab tr\u01B0\u1EDBc"
+   },
+   "stroke_label_reload": {
+      "message": "N\u1EA1p l\u1EA1i trang"
+   },
+   "stroke_label_remove_bookmark": {
+      "message": "H\u1EE7y \u0111\u00E1nh d\u1EA5u"
+   },
+   "stroke_label_rocker_left_to_right": {
+      "message": "Nh\u1EA5n chu\u1ED9t ph\u1EA3i khi \u0111ang gi\u1EEF chu\u1ED9t tr\u00E1i"
+   },
+   "stroke_label_rocker_right_to_left": {
+      "message": "Nh\u1EA5n chu\u1ED9t tr\u00E1i khi \u0111ang gi\u1EEF chu\u1ED9t ph\u1EA3i"
+   },
+   "stroke_label_save_image": {
+      "message": "L\u01B0u \u1EA3nh"
+   },
+   "stroke_label_scroll_down_one_page": {
+      "message": "Cu\u1ED9n xu\u1ED1ng 1 trang"
+   },
+   "stroke_label_scroll_up_one_page": {
+      "message": "Cu\u1ED9n l\u00EAn 1 trang"
+   },
+   "stroke_label_search_selected_text": {
+      "message": "T\u00ECm ki\u1EBFm v\u1EDBi t\u1EEB kh\u00F3a \u0111\u01B0\u1EE3c \u0111\u00E1nh d\u1EA5u (b\u00F4i \u0111en)"
+   },
+   "stroke_label_skip_cache_reload": {
+      "message": "N\u1EA1p l\u1EA1i trang b\u1ECF qua b\u1ED9 \u0111\u1EC7m"
+   },
+   "stroke_label_stop_page_loading": {
+      "message": "D\u1EEBng n\u1EA1p trang"
+   },
+   "stroke_label_take_screenshot": {
+      "message": "Ch\u1EE5p \u1EA3nh m\u00E0n h\u00ECnh"
+   },
+   "stroke_label_text_zoom_in": {
+      "message": "T\u0103ng c\u1EE1 ch\u1EEF"
+   },
+   "stroke_label_text_zoom_out": {
+      "message": "Gi\u1EA3m c\u1EE1 ch\u1EEF"
+   },
+   "stroke_label_text_zoom_reset": {
+      "message": "Thi\u1EBFt l\u1EADp l\u1EA1i c\u1EE1 ch\u1EEF m\u1EB7c \u0111\u1ECBnh"
+   },
+   "stroke_label_to_page_bottom": {
+      "message": "V\u1EC1 cu\u1ED1i trang"
+   },
+   "stroke_label_to_page_top": {
+      "message": "V\u1EC1 \u0111\u1EA7u trang"
+   },
+   "stroke_label_undo_close_tab": {
+      "message": "M\u1EDF l\u1EA1i tab v\u1EEBa \u0111\u00F3ng"
+   },
+   "stroke_label_upper_level_in_url": {
+      "message": "L\u00EAn 1 c\u1EA5p trong \u0111\u01B0\u1EDDng d\u1EABn"
+   },
+   "stroke_label_view_image": {
+      "message": "Xem \u1EA3nh"
+   },
+   "stroke_label_view_source": {
+      "message": "Xem m\u00E3 ngu\u1ED3n"
+   },
+   "stroke_label_wheel_down": {
+      "message": "L\u0103n n\u00FAt cu\u1ED9n xu\u1ED1ng"
+   },
+   "stroke_label_wheel_left": {
+      "message": "L\u0103n n\u00FAt cu\u1ED9n sang tr\u00E1i"
+   },
+   "stroke_label_wheel_right": {
+      "message": "L\u0103n n\u00FAt cu\u1ED9n sang ph\u1EA3i"
+   },
+   "stroke_label_wheel_up": {
+      "message": "L\u0103n n\u00FAt cu\u1ED9n l\u00EAn"
+   },
+   "text_backup_and_restore_settings_description": {
+      "message": "\u003Cli\u003E\n  \u0110\u1EC3 sao l\u01B0u c\u00E1c thi\u1EBFt l\u1EADp, nh\u1EA5n n\u00FAt \u003Cem\u003ESao l\u01B0u\u003C/em\u003E sau \u0111\u00F3 \u003Cstrong\u003Esao ch\u00E9p n\u1ED9i dung v\u0103n b\u1EA3n v\u00E0o 1 ch\u1ED7 an to\u00E0n\u003C/strong\u003E.\n  Ch\u1EC9 nh\u1EA5n n\u00FAt s\u1EBD kh\u00F4ng gi\u00FAp sao l\u01B0u c\u00E1c thi\u1EBFt l\u1EADp c\u1EE7a b\u1EA1n.\n\u003C/li\u003E\n\u003Cli\u003E\n  \u0110\u1EC3 kh\u00F4i ph\u1EE5c c\u00E1c thi\u1EBFt l\u1EADp, d\u00E1n n\u1ED9i dung v\u0103n b\u1EA3n \u0111\u00E3 l\u01B0u tr\u1EEF v\u00E0o v\u00F9ng v\u0103n b\u1EA3n v\u00E0 nh\u1EA5n n\u00FAt \u003Cem\u003EKh\u00F4i ph\u1EE5c\u003C/em\u003E.\n  D\u1EEF li\u1EC7u \u0111\u00E3 l\u01B0u tr\u1EEF c\u1EE7a b\u1EA1n s\u1EBD \u0111\u01B0\u1EE3c k\u1EBFt h\u1EE3p v\u1EDBi c\u00E1c d\u1EEF li\u1EC7u m\u1EB7c \u0111\u1ECBnh \u0111\u1EC3 tr\u00E1nh s\u1EF1 kh\u00F4ng t\u01B0\u01A1ng th\u00EDch ho\u1EB7c d\u1EEF li\u1EC7u h\u1ECFng\n\u003C/li\u003E"
+   },
+   "text_blacklist_description": {
+      "message": "Ra l\u1EC7nh b\u1EB1ng chu\u1ED9t s\u1EBD b\u1ECB v\u00F4 hi\u1EC7u tr\u00EAn c\u00E1c trang web n\u1EB1m trong danh s\u00E1ch \u0111en. Xin h\u00E3y th\u00EAm m\u1ED7i d\u00F2ng m\u1ED9t li\u00EAn k\u1EBFt.\u003Cbr/\u003E\nK\u00FD t\u1EF1 \u0111\u1EA1i di\u1EC7n v\u00E0 c\u00E1c bi\u1EC3u th\u1EE9c th\u00F4ng th\u01B0\u1EDDng \u003Cstrong\u003EKH\u00D4NG\u003C/strong\u003E \u0111\u01B0\u1EE3c h\u1ED7 tr\u1EE3.\u003Cbr/\u003E\nB\u1EA1n n\u00EAn ch\u1EC9 \u0111\u1ECBnh c\u00E0ng c\u1EE5 th\u1EC3 c\u00E0ng t\u1ED1t v\u00EC c\u00E1c t\u1EEB kh\u00F3a \u0111\u01A1n gi\u1EA3n nh\u01B0 \u003Ccode\u003Eshoes\u003C/code\u003E, s\u1EBD ng\u0103n ch\u1EB7n t\u1EA5t c\u00E1c c\u00E1c trang Web c\u00F3 t\u1EEB kh\u00F3a 'shoes' trong \u0111\u01B0\u1EDDng d\u1EABn li\u00EAn k\u1EBFt."
+   },
+   "text_dnd_notes": {
+      "message": "K\u00E9o th\u1EA3 1 \u0111o\u1EA1n v\u0103n b\u1EA3n s\u1EBD ra l\u1EC7nh cho tr\u00ECnh duy\u1EC7t t\u00ECm ki\u1EBFm \u0111o\u1EA1n v\u0103n b\u1EA3n trong tab m\u1EDBi.\u003Cbr/\u003E\nH\u01B0\u1EDBng k\u00E9o cu\u1ED1i c\u00F9ng s\u1EBD c\u00F3 hi\u1EC7u l\u1EF1c."
+   },
+   "text_extension_description": {
+      "message": "\u0110\u00E2y l\u00E0 ti\u1EC7n \u00EDch c\u1EE7a Google Chrome cho ph\u00E9p \u003Ca href=\"http://en.wikipedia.org/wiki/Mouse_gesture\"\u003Era l\u1EC7nh b\u1EB1ng chu\u1ED9t\u003C/a\u003E (hay di\u1EC5n t\u1EA3 y\u00EAu c\u1EA7u b\u1EB1ng chu\u1ED9t) trong tr\u00ECnh duy\u1EC7t. V\u1EDBi ti\u1EC7n \u00EDch n\u00E0y, b\u1EA1n c\u00F3 th\u1EC3 th\u1EF1c hi\u1EC7n c\u00E1c l\u1EC7nh th\u00F4ng th\u01B0\u1EDDng \u0111\u01A1n gi\u1EA3n b\u1EB1ng c\u00E1ch di chuy\u1EC3n con chu\u1ED9t c\u1EE7a b\u1EA1n."
+   },
+   "text_translator": {
+      "message": "\u003Ca href=\"mailto:chipchipknight@gmail.com\"\u003EV\u0169 Ph\u01B0\u1EE3ng Ho\u00E0ng\u003C/a\u003E, \u003Ca href=\"mailto:haibinhng@yahoo.com\"\u003EBinh Nguyen\u003C/a\u003E"
+   },
+   "text_version_highlight_prompt": {
+      "message": "\u003Cstrong\u003ERa l\u1EC7nh b\u1EB1ng chu\u1ED9t\u003C/strong\u003E v\u1EEBa \u0111\u01B0\u1EE3c n\u00E2ng c\u1EA5p l\u00EAn phi\u00EAn b\u1EA3n m\u1EDBi nh\u1EA5t\u003Cbr/\u003E\nN\u1EBFu b\u1EA1n mu\u1ED1n gi\u00FAp phi\u00EAn d\u1ECBch sang ng\u00F4n ng\u1EEF c\u1EE7a b\u1EA1n, h\u00E3y t\u1EDBi \n\u003Ca href=\"http://code.google.com/p/chrome-mouse-stroke/issues/detail?id=85\"\u003Etrang n\u00E0y\u003C/a\u003E\nv\u00E0 \u0111\u1ECDc h\u01B0\u1EDBng d\u1EABn \u1EDF \u0111\u00F3.\u003Cbr/\u003E\u003Cbr/\u003E\n\u003Ca target=\"_blank\" href=\"$option_page$\"\u003EKh\u00E1m ph\u00E1\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"https://chrome.google.com/extensions/detail/aeaoofnhgocdbnbeljkmbjdmhbcokfdb\"\u003ETrang ch\u1EE7\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/wiki/FAQs\"\u003EC\u00E1c c\u00E2u h\u1ECFi th\u01B0\u1EDDng g\u1EB7p\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/issues/list\"\u003EH\u1ED7 tr\u1EE3\u003C/a\u003E",
+      "placeholders": {
+         "option_page": {
+            "content": "$1"
+         }
+      }
+   }
+}

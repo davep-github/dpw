@@ -1,0 +1,96 @@
+CachingBackend: Loading instances from cache
+Creating new entry for CopyStackScreenlet in /tmp/screenlets/screenlets.running
+Loading instances in: /home/davep/.config/Screenlets/CopyStack/default/
+No instance(s) found in session-path, creating new one.
+UPDATING SHAPE
+UPDATING SHAPE
+[]
+theme.conf found! Loading option-overrides.
+theme.conf loaded: 
+Name: Bars
+Author: RYX (aka Rico Pfaus)
+Version: 1.0
+Info: A simple theme for the copystack.
+UPDATING SHAPE
+CachingBackend: Saving <#CopyStack1> :) ...
+OK
+Creating new instance: 
+ID is unset or already in use - creating new one!
+UPDATING SHAPE
+UPDATING SHAPE
+[]
+theme.conf found! Loading option-overrides.
+theme.conf loaded: 
+Name: Bars
+Author: RYX (aka Rico Pfaus)
+Version: 1.0
+Info: A simple theme for the copystack.
+UPDATING SHAPE
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+Start drag
+DRAG BEGIN
+Button release
+End drag
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+UPDATING SHAPE
+/home/davep/.screenlets/CopyStack/themes
+Path /home/davep/.screenlets/CopyStack/themes not found.
+/usr/share/screenlets/CopyStack/themes
+active theme is: default
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+Changed: is_widget
+Changed: is_sticky
+Changed: keep_above
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+UPDATING SHAPE
+Start drag
+DRAG BEGIN
+Button release
+End drag
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+Start drag
+DRAG BEGIN
+Button release
+End drag
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+/home/davep/.screenlets/CopyStack/themes
+Path /home/davep/.screenlets/CopyStack/themes not found.
+/usr/share/screenlets/CopyStack/themes
+active theme is: default
+Changed: lock_position
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+UPDATING SHAPE
+/home/davep/.screenlets/CopyStack/themes
+Path /home/davep/.screenlets/CopyStack/themes not found.
+/usr/share/screenlets/CopyStack/themes
+active theme is: default
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+Changed: lock_position
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+UPDATING SHAPE
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+CachingBackend: Saving <#CopyStack2> :) ...
+OK
+Removing entry for CopyStackScreenlet from global tempfile /tmp/screenlets/screenlets.running

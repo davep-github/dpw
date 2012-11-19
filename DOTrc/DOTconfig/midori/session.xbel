@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xbel PUBLIC "+//IDN python.org//DTD XML Bookmark Exchange Language 1.0//EN//XML" "http://www.python.org/topics/xml/dtds/xbel-1.0.dtd">
+<xbel version="1.0" xmlns:midori="http://www.twotoasts.de">
+<info>
+<metadata owner="http://www.twotoasts.de" midori:current="4"/>
+</info>
+<bookmark href="http://www.google.com/search?hl=en&amp;ie=ISO-8859-1&amp;q=strigiindex_sopranobackend.so+crash&amp;aq=f&amp;oq=&amp;aqi=">
+<title>‪strigiindex_sopranobackend.so crash - Google Search</title>
+</bookmark>
+<bookmark href="http://liquidat.wordpress.com/2007/06/19/more-about-nepomuk-kde-soprano-and-kde-integration/">
+<title>‪More about Nepomuk-KDE: Soprano and KDE integration « /home/liquidat</title>
+</bookmark>
+<bookmark href="http://techbase.kde.org/Research/Nepomuk">
+<title>‪Research/Nepomuk - KDE TechBase</title>
+</bookmark>
+<bookmark href="http://nepomuk.kde.org/node/2">
+<title>‪Documentation | Nepomuk</title>
+</bookmark>
+<bookmark href="http://www.kdedevelopers.org/node/3274">
+<title>‪Fetch, Nepomuk, fetch! | kdedevelopers.org</title>
+</bookmark>
+<bookmark href="http://www.head-fi.org/forums/f5/moderator-inquiry-singlepower-who-here-has-money-amps-being-held-mikhail-343787/">
+<title>‪Moderator inquiry -$$$ Singlepower-Who here has money or amps being held by Mikhail? - Head-Fi: Covering Headphones, Earphones and Portable Audio</title>
+</bookmark>
+<bookmark href="http://osdir.com/ml/kde-bugs-dist/2009-08/msg16665.html">
+<title>‪[Bug 182607] nepomukservicestub causes crash in So: msg#16665 kde-bugs-dist</title>
+</bookmark>
+<bookmark href="http://www.pandora.com/">
+<title>‪Pandora Radio - Listen to Free Internet Radio, Find New Music</title>
+</bookmark>
+</xbel>

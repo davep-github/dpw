@@ -1,0 +1,1553 @@
+{
+   "_": {
+      "message": "_"
+   },
+   "action_bookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Lesezeichen hinzuf\u00FCgen",
+      "update": "20110415"
+   },
+   "action_clone_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Tab duplizieren",
+      "update": "20100708"
+   },
+   "action_clone_tab_hack": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Tab duplizieren (hack)",
+      "update": "20100708"
+   },
+   "action_close_left_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Tabs links schlie\u00DFen",
+      "update": "20100826"
+   },
+   "action_close_other_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Schlie\u00DFe alle anderen Tabs",
+      "update": "20100708"
+   },
+   "action_close_right_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Tabs rechts schlie\u00DFen",
+      "update": "20100826"
+   },
+   "action_close_tab": {
+      "description": "Action title for close_tab",
+      "message": "Tab schlie\u00DFen"
+   },
+   "action_close_window": {
+      "description": "Action title for close_window",
+      "message": "Fenster schlie\u00DFen"
+   },
+   "action_copy": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Text in die Zwischenablage kopieren",
+      "update": "20110209"
+   },
+   "action_goto_bottom": {
+      "description": "Action title for goto_bottom",
+      "message": "Zum Seitenende"
+   },
+   "action_goto_top": {
+      "description": "Action title for goto_top",
+      "message": "Zum Seitenanfang"
+   },
+   "action_hide_image": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Bild verstecken",
+      "update": "20100826"
+   },
+   "action_maximize_x": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Maximiere Fenster (hack)",
+      "update": "20100708"
+   },
+   "action_merge_tabs": {
+      "description": "Action title for merge_tabs",
+      "message": "* Tabs zusammenf\u00FChren *"
+   },
+   "action_minimize_x": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Minimiere Fenster (hack)",
+      "update": "20100708"
+   },
+   "action_navigate_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for new_tab",
+      "message": "Gehe zu neuem Tab",
+      "update": "20100708"
+   },
+   "action_new_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for new_tab",
+      "message": "Neuer Tab",
+      "update": "20110415"
+   },
+   "action_new_tab_back": {
+      "description": "Action title for new_tab_back",
+      "message": "Link in neuem Tab im Hintergrund \u00F6ffnen"
+   },
+   "action_new_tab_link": {
+      "description": "Action title for new_tab_link",
+      "message": "Link in neuem Tab \u00F6ffnen"
+   },
+   "action_new_window": {
+      "description": "Action title for new_window",
+      "message": "Neues Fenster"
+   },
+   "action_new_window_link": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Neues Fenster (Link \u00F6ffnen)",
+      "update": "20100708"
+   },
+   "action_next_tab": {
+      "description": "Action title for next_tab",
+      "message": "N\u00E4chstes Tab"
+   },
+   "action_next_window": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "N\u00E4chstes Fenster (hack)",
+      "update": "20100708"
+   },
+   "action_open_bookmarks": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Lesezeichen-Manager \u00F6ffnen",
+      "update": "20100708"
+   },
+   "action_open_downloads": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Downloads \u00F6ffnen",
+      "update": "20100708"
+   },
+   "action_open_extensions": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Erweiterungen \u00F6ffnen",
+      "update": "20100708"
+   },
+   "action_open_history": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Verlauf \u00F6ffnen",
+      "update": "20100826"
+   },
+   "action_open_image": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Bild \u00F6ffnen",
+      "update": "20100826"
+   },
+   "action_options": {
+      "description": "Action title for options",
+      "message": "Optionen aufrufen"
+   },
+   "action_page_back": {
+      "description": "Action title for page_back",
+      "message": "Verlauf zur\u00FCck"
+   },
+   "action_page_back_close": {
+      "description": "Action title for page_back_close",
+      "message": "Verlauf zur\u00FCck oder schlie\u00DFen"
+   },
+   "action_page_down": {
+      "description": "Action title for page_down",
+      "message": "Bild ab"
+   },
+   "action_page_forward": {
+      "description": "Action title for page_forward",
+      "message": "Verlauf vorw\u00E4rts"
+   },
+   "action_page_next": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_next",
+      "message": "N\u00E4chste Seite",
+      "update": "20100826"
+   },
+   "action_page_prev": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_prev",
+      "message": "Vorherige Seite",
+      "update": "20100826"
+   },
+   "action_page_up": {
+      "description": "Action title for page_up",
+      "message": "Bild auf"
+   },
+   "action_parent_dir": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "N\u00E4chsth\u00F6heres Verzeichnis",
+      "update": "20100826"
+   },
+   "action_pin": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Tab anheften",
+      "update": "20110209"
+   },
+   "action_prev_tab": {
+      "description": "Action title for prev_tab",
+      "message": "Vorheriges Tab"
+   },
+   "action_prev_window": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Vorheriges Fenster (Hack)",
+      "update": "20100826"
+   },
+   "action_print": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Seite drucken",
+      "update": "20110415"
+   },
+   "action_reload_all_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Alle Tabs neu laden",
+      "update": "20100826"
+   },
+   "action_reload_tab": {
+      "description": "Action title for reload_tab",
+      "message": "Tab neu laden"
+   },
+   "action_reload_tab_full": {
+      "description": "Action title for reload_tab_full",
+      "message": "Tab neu laden (ohne Cache)"
+   },
+   "action_search_sel": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Mit Google suchen",
+      "update": "20100826"
+   },
+   "action_show_cookies": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Cookies anzeigen",
+      "update": "20100826"
+   },
+   "action_split_tabs": {
+      "description": "Action title for split_tabs",
+      "message": "* Tabs aufteilen *"
+   },
+   "action_status": {
+      "description": "Action title for status",
+      "message": "Statusseite aufrufen"
+   },
+   "action_stop": {
+      "description": "Action title for stop",
+      "message": "Laden anhalten"
+   },
+   "action_tab_to_left": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Tab nach links bewegen",
+      "update": "20100826"
+   },
+   "action_tab_to_right": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Tab nach rechts bewegen",
+      "update": "20100826"
+   },
+   "action_toggle_bookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Lesezeichen umschalten",
+      "update": "20110329"
+   },
+   "action_toggle_pin": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Angehefteten Tab umschalten",
+      "update": "20110209"
+   },
+   "action_translate": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Markierung \u00FCbersetzen",
+      "update": "20110209"
+   },
+   "action_unbookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Lesezeichen entfernen",
+      "update": "20110329"
+   },
+   "action_undo_close": {
+      "category": "Options Page: Actions",
+      "description": "Action title for undo_close",
+      "message": "Geschlossener Tab wieder \u00F6ffnen",
+      "update": "20110325"
+   },
+   "action_undo_close_hack": {
+      "category": "Options Page: Actions",
+      "description": "Action title for undo_close_hack",
+      "message": "Tab schliessen r\u00FCckg\u00E4ngig machen (hack)",
+      "update": "20100908"
+   },
+   "action_unpin": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Tab losl\u00F6sen",
+      "update": "20110209"
+   },
+   "action_view_source": {
+      "description": "Action title for view_source",
+      "message": "Seitenquelltext anzeigen"
+   },
+   "action_zoom_img_in": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "In Bild hinein zoomen",
+      "update": "20110415"
+   },
+   "action_zoom_img_out": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Aus Bild heraus zoomen",
+      "update": "20110415"
+   },
+   "action_zoom_img_zero": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Bildgr\u00F6\u00DFe zur\u00FCcksetzen",
+      "update": "20100826"
+   },
+   "action_zoom_in": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Seite vergr\u00F6\u00DFern",
+      "update": "20110415"
+   },
+   "action_zoom_out": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Seite verkleinern",
+      "update": "20110415"
+   },
+   "action_zoom_zero": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Seitengr\u00F6\u00DFe zur\u00FCcksetzen",
+      "update": "20100826"
+   },
+   "cat_custom": {
+      "description": "Name of category for all custom actions",
+      "message": "Benutzerdefinierte Aktionen"
+   },
+   "cat_other": {
+      "description": "Name of category for actions that don't have a category",
+      "message": "Andere Aktionen"
+   },
+   "cat_page_navigation": {
+      "description": "Name of category encompassing basic page navigation actions",
+      "message": "Seitennavigation"
+   },
+   "cat_settings": {
+      "description": "Title of the settings group",
+      "message": "Andere Einstellungen"
+   },
+   "cat_tab_management": {
+      "description": "Name of category encompassing tab manipulation actions",
+      "message": "Tab-Verwaltung"
+   },
+   "cat_utilities": {
+      "category": "Options Page: Action Categories",
+      "description": "Name of category for general utility actions",
+      "message": "Werkzeuge",
+      "update": "20100908"
+   },
+   "context_not_image": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is not valid on an image",
+      "message": "ung\u00FCltig auf Bildern",
+      "update": "20110510"
+   },
+   "context_not_link": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is not valid on a link",
+      "message": "ung\u00FCltig auf Links",
+      "update": "20110510"
+   },
+   "context_not_links_images": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is not valid starting on a link or an image",
+      "message": "nicht auf Links oder Bildern beginnen",
+      "update": "20110510"
+   },
+   "context_not_selection": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is not valid with a selection",
+      "message": "ung\u00FCltig mit Auswahl",
+      "update": "20110510"
+   },
+   "context_on_image": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is only valid starting on an image",
+      "message": "auf Bildern beginnen",
+      "update": "20110510"
+   },
+   "context_on_link": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is only valid starting on a link",
+      "message": "auf Links beginnen",
+      "update": "20110510"
+   },
+   "context_with_selection": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is only valid with a selection",
+      "message": "g\u00FCltig nur mit Auswahl",
+      "update": "20110510"
+   },
+   "descrip_bookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "F\u00FCge ein Lesezeichen zur aktuellen Seite hinzu.",
+      "update": "20110329"
+   },
+   "descrip_clone_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "\u00D6ffnen Sie eine Kopie des Tabs der aktuellen Seite. Der kopierte Tab wird nicht die Historie des urspr\u00FCnglichen Tabs \u00FCbernehmen. ",
+      "update": "20101224"
+   },
+   "descrip_clone_tab_hack": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Dupliziert den aktuellen Tab in einem neuen Tab. Versuche dabei dem neuen Tab auch den Verlauf des Original-Tabs mitzgeben - fehlerbehaftet - kann fehlschlagen",
+      "update": "20110415"
+   },
+   "descrip_close_left_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Schliesse alle Tabs links vom aktuellen Tab",
+      "update": "20100908"
+   },
+   "descrip_close_other_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Alle Tabs schlie\u00DFen, mit Ausnahme des ausgew\u00E4hlten Tabs.",
+      "update": "20101224"
+   },
+   "descrip_close_right_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Schliesse alle Tabs rechts vom aktuellen Tab",
+      "update": "20100908"
+   },
+   "descrip_close_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for close_tab",
+      "message": "Schlie\u00DFe den aktiven Tab",
+      "update": "20110415"
+   },
+   "descrip_close_window": {
+      "description": "Action description for close_window",
+      "message": "Schlie\u00DFt alle Tabs im aktiven Fenster."
+   },
+   "descrip_copy": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Markierten Text in Zwischenablage kopieren",
+      "update": "20110209"
+   },
+   "descrip_goto_bottom": {
+      "category": "Options Page: Actions",
+      "description": "Action description for goto_bottom",
+      "message": "Bl\u00E4ttert zum Seitenende runter",
+      "update": "20110415"
+   },
+   "descrip_goto_top": {
+      "category": "Options Page: Actions",
+      "description": "Action description for goto_top",
+      "message": "Bl\u00E4ttert zum Seitenanfang hoch",
+      "update": "20110415"
+   },
+   "descrip_hide_image": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Entferne das Bild unter dem Mauszeiger aus der Seite",
+      "update": "20110415"
+   },
+   "descrip_maximize_x": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Dies ist eine unsch\u00F6ne Demonstration um das Maximieren eines Fensters zu simulieren",
+      "update": "20110415"
+   },
+   "descrip_merge_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description for merge_tabs",
+      "message": "Verschiebt alle Tabs des aktiven Fensters und des zuletzt aktivierten Fensters in ein Fenster",
+      "update": "20110415"
+   },
+   "descrip_minimize_x": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Dies ist eine _sehr_ unsch\u00F6ne Demonstration um das Minimieren eines Fensters zu simulieren",
+      "update": "20110415"
+   },
+   "descrip_navigate_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_tab",
+      "message": "Zu neuem Tab navigieren (die URL kann nachstehend festgelegt werden)",
+      "update": "20110209"
+   },
+   "descrip_new_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_tab",
+      "message": "\u00D6ffnet ein neues Tab im aktiven Fenster (Die URL kann unten eingestellt werden)",
+      "update": "20110415"
+   },
+   "descrip_new_tab_back": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_tab_back",
+      "message": "\u00D6ffnet den Link, auf dem die Geste begonnen wurde, in einem neuen Tab, ohne den neuen Tab zu zeigen.",
+      "update": "20110415"
+   },
+   "descrip_new_tab_link": {
+      "description": "Action description for new_tab_link",
+      "message": "\u00D6ffnet den Link, auf dem die Geste begonnen wurde, in einem neuen Tab."
+   },
+   "descrip_new_window": {
+      "description": "Action description for new_window",
+      "message": "\u00D6ffnet ein neues Fenster mit einem neuen Tab."
+   },
+   "descrip_new_window_link": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "F\u00FChren Sie diese Geste auf einem Link aus um ihn in einem neuem Fenster zu \u00F6ffnen.",
+      "update": "20101224"
+   },
+   "descrip_next_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for next_tab",
+      "message": "Aktiviert das Tab rechts des aktiven Tabs",
+      "update": "20110415"
+   },
+   "descrip_next_window": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "W\u00E4hlt das \u00E4lteste fokussierte Tab",
+      "update": "20110209"
+   },
+   "descrip_open_bookmarks": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "\u00D6ffne Lesenzeichen Manager in neuem Tab",
+      "update": "20100908"
+   },
+   "descrip_open_downloads": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "\u00D6ffne Downloadseite in neuem Tab",
+      "update": "20100908"
+   },
+   "descrip_open_extensions": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "\u00D6ffne Erweiterungsseite in neuem Tab",
+      "update": "20100908"
+   },
+   "descrip_open_history": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "\u00D6ffne Verlaufsseite in neuem Tab",
+      "update": "20100908"
+   },
+   "descrip_open_image": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "\u00D6ffne das Bild, auf dem sich der Mauszeiger befindet, in einem neuen Tab",
+      "update": "20110415"
+   },
+   "descrip_options": {
+      "category": "Options Page: Actions",
+      "description": "Action description for options",
+      "message": "\u00D6ffnet diese Optionen-Seite",
+      "update": "20110415"
+   },
+   "descrip_page_back": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_back",
+      "message": "Wechselt zur vorherigen Seite im Verlauf des aktiven Tabs",
+      "update": "20110415"
+   },
+   "descrip_page_back_close": {
+      "description": "Action description for page_back_close",
+      "message": "Wechselt zur vorherigen Seite im Verlauf des aktiven Tabs oder schlie\u00DFt das Tab, wenn es keine vorherige Seite gibt (am Anfang des Verlaufs)."
+   },
+   "descrip_page_down": {
+      "description": "Action description for page_down",
+      "message": "Bl\u00E4ttert die Seite um 80% der Seitenh\u00F6he runter."
+   },
+   "descrip_page_forward": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_forward",
+      "message": "Wechselt zur n\u00E4chsten Seite im Verlauf des aktiven Tabs",
+      "update": "20110415"
+   },
+   "descrip_page_next": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_next",
+      "message": "Versuche zur n\u00E4chsten Seite zu wechseln, indem du einem Link mit dem Text \"next\" folgst",
+      "update": "20110527"
+   },
+   "descrip_page_prev": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_prev",
+      "message": "Versuche zur vorherigen Seite zu wechseln, indem Du einem Link mit dem Text \"previous\" folgst",
+      "update": "20110527"
+   },
+   "descrip_page_up": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_up",
+      "message": "Bl\u00E4ttert die Seite um 80% der Seitenh\u00F6he hoch",
+      "update": "20110415"
+   },
+   "descrip_parent_dir": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Gehe in das Vaterverzeichnis der aktuellen Seite. Wenn Du schon im obersten Verzeichnis bist, werden Subdom\u00E4nen entfernt [(www.example.com -\u003E example.com)]",
+      "update": "20110415"
+   },
+   "descrip_pin": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Aktuellen Tab anheften",
+      "update": "20110415"
+   },
+   "descrip_prev_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for prev_tab",
+      "message": "Aktiviert das Tab links des aktiven Tabs",
+      "update": "20110415"
+   },
+   "descrip_prev_window": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "W\u00E4hle das Fenster das vor dem aktuellen Fenster aktiv war.",
+      "update": "20100918"
+   },
+   "descrip_print": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Drucke die aktuelle Seite",
+      "update": "20110415"
+   },
+   "descrip_reload_all_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Aktualisiere alle Tabs im aktuellen Fenster",
+      "update": "20110415"
+   },
+   "descrip_reload_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for reload_tab",
+      "message": "L\u00E4dt das aktive [den aktiven] Tab neu",
+      "update": "20110415"
+   },
+   "descrip_reload_tab_full": {
+      "description": "Action description for reload_tab_full",
+      "message": "Aktualisiert alle Inhalte des aktiven Tabs (\u00FCberspringt den Cache)"
+   },
+   "descrip_search_sel": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Mit Google nach ausgew\u00E4hltem Text suchen",
+      "update": "20100908"
+   },
+   "descrip_show_cookies": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Zeige eine Liste von allen Cookies des aktuellen Fensters",
+      "update": "20110415"
+   },
+   "descrip_split_tabs": {
+      "description": "Action description for split_tabs",
+      "message": "Verschiebt alle Tabs rechts (inklusive) des aktiven Tabs in ein neues Fenster."
+   },
+   "descrip_status": {
+      "description": "Action description for status",
+      "message": "\u00D6ffnet die Statusseite der Smooth-Gestures-Erweiterung."
+   },
+   "descrip_stop": {
+      "category": "Options Page: Actions",
+      "description": "Action description for stop",
+      "message": "H\u00E4lt das Laden des aktiven Tabs an (Funktioniert m\u00F6glicherweise auf manchen Seiten nicht, wie Bildseiten)",
+      "update": "20110415"
+   },
+   "descrip_tab_to_left": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Bewegen Sie den aktuellen Tab einmal nach links",
+      "update": "20101224"
+   },
+   "descrip_tab_to_right": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Bewegen Sie den aktuellen Tab einmal nach rechts",
+      "update": "20101224"
+   },
+   "descrip_toggle_bookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Entfernt das Lesezeichen zu der aktuellen Seite, wenn es existiert, ansonsten wird eines gesetzt.",
+      "update": "20110415"
+   },
+   "descrip_toggle_pin": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Anheft-Status des aktuellen Tabs \u00E4ndern",
+      "update": "20110325"
+   },
+   "descrip_translate": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Ausgew\u00E4hlten Text in Chrome's Standard-Sprache \u00FCbersetzen",
+      "update": "20110209"
+   },
+   "descrip_unbookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Entfernt das Lesezeichen zu der aktuellen Seite wenn es existiert.",
+      "update": "20110325"
+   },
+   "descrip_undo_close": {
+      "category": "Options Page: Actions",
+      "description": "Action description for undo_close",
+      "message": "\u00D6ffnet das zuletzt geschlossene Tab wieder. Es wird nur die URL der Seite ge\u00F6ffnet, Strg+Shift+T ist immer noch \u00FCberlegen, weil es den Verlauf des Tabs erh\u00E4lt.",
+      "update": "20110501"
+   },
+   "descrip_undo_close_hack": {
+      "category": "Options Page: Actions",
+      "description": "Action description for undo_close",
+      "message": "\u00D6ffne den gerade geschlossenen Tab wieder. Versuche die History wiederherzustellen - fehlerbehaftet - kann fehlschlagen",
+      "update": "20110415"
+   },
+   "descrip_unpin": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Den aktuellen Tab losl\u00F6sen",
+      "update": "20110415"
+   },
+   "descrip_view_source": {
+      "description": "Action description for view_source",
+      "message": "Zeigt den Quelltext der aktuellen Seite an."
+   },
+   "descrip_zoom_img_in": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Vergr\u00F6\u00DFere das Bild, auf dem sich der Mauszeiger befindet",
+      "update": "20101224"
+   },
+   "descrip_zoom_img_out": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Verkleinere das Bild, auf dem sich der Mauszeiger befindet",
+      "update": "20101224"
+   },
+   "descrip_zoom_img_zero": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Zeige das Bild in Originalgr\u00F6\u00DFe",
+      "update": "20100918"
+   },
+   "descrip_zoom_in": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Vergr\u00F6\u00DFere den gesamten Inhalt der Seite",
+      "update": "20101224"
+   },
+   "descrip_zoom_out": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Verkleinere Alles auf der Seite",
+      "update": "20100918"
+   },
+   "descrip_zoom_zero": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Letzten Zoom der Seite r\u00FCckg\u00E4gig machen",
+      "update": "20110415"
+   },
+   "description": {
+      "category": "About",
+      "description": "short extension description",
+      "message": "Mausgesten! Auf Webseiten schnell und einfach mit Tastatur und Maus navigieren!",
+      "update": "20110625"
+   },
+   "doubleclick_alert": {
+      "category": "Options Page",
+      "description": "Pop up an alert box the first time a user right-clicks to let them know that they may need to double-click the right mouse button to get to the context menu",
+      "message": "Doppelklick mit der rechten Maustaste, um das Kontextmen\u00FC zu \u00F6ffnen.\n\nBetrifft Chrome-Versionen f\u00FCr Linux und Mac. (Notwendig, damit die Gesten funktionieren)",
+      "update": "20100826"
+   },
+   "gesture_rL": {
+      "description": "rocker left gesture title",
+      "message": "Rocker Left"
+   },
+   "gesture_rLR": {
+      "category": "Options Page: Gestures",
+      "description": "rocker right gesture title",
+      "message": "Rocker-Geste rechts",
+      "update": "20110415"
+   },
+   "gesture_rL_descrip": {
+      "description": "rocker left gesture description",
+      "message": "Rechte Taste gedr\u00FCckt halten, linke klicken"
+   },
+   "gesture_rR": {
+      "description": "rocker right gesture title",
+      "message": "Rocker Right"
+   },
+   "gesture_rRL": {
+      "category": "Options Page: Gestures",
+      "description": "rocker left gesture title",
+      "message": "Rocker-Geste links",
+      "update": "20110415"
+   },
+   "gesture_rR_descrip": {
+      "description": "rocker right gesture description",
+      "message": "Linke Taste gedr\u00FCckt halten, rechte klicken"
+   },
+   "gesture_rocker_descrip": {
+      "category": "Options Page: Gestures",
+      "description": "rocker right gesture description",
+      "message": "Halte Taste  $BUTTON1$, Klicke $BUTTON2$",
+      "placeholders": {
+         "button1": {
+            "content": "$1",
+            "example": "right"
+         },
+         "button2": {
+            "content": "$2",
+            "example": "right"
+         }
+      },
+      "update": "20100908"
+   },
+   "gesture_wD": {
+      "description": "wheel down gesture title",
+      "message": "Runterbl\u00E4ttern"
+   },
+   "gesture_wD_descrip": {
+      "description": "wheel down gesture description",
+      "message": "Aktionstaste gedr\u00FCckt halten, mit dem Mausrad runterbl\u00E4ttern"
+   },
+   "gesture_wU": {
+      "description": "wheel up gesture title",
+      "message": "Hochbl\u00E4ttern"
+   },
+   "gesture_wU_descrip": {
+      "category": "Options Page: Gestures",
+      "description": "wheel up gesture description",
+      "message": "Aktionstaste gedr\u00FCckt halten, hochscrollen",
+      "update": "20110426"
+   },
+   "long_description": {
+      "category": "About",
+      "description": "complete extension description",
+      "message": "Diese Mausgesten-Erweiterung erm\u00F6glicht es dir Aktionen wie z.B. Seitennavigation oder Tab-Verwaltung auszuf\u00FChren, w\u00E4hrend man die rechte Maustaste gedr\u00FCckt h\u00E4lt und die Maus bewegt.\nEs unterst\u00FCtzt klicken+bewegen (Mausgeste), klicken+scrollen (Scroll Geste), klicken+klicken (Rocker Geste) und Tastatur-Shortcuts!\n\n\u2022 Umfangreiche Anpassung von Gesten (und benutzerdefinierte Aktionen!)\n\u2022 Unterst\u00FCtzt diagonale Gesten, Synchronisieren/ Import/ Export von Einstellungen\n\u2022 Funktioniert nicht auf dieser Erweiterungsseite, oder anderen in Chrome integrierten Seiten aufgrund von Sicherheitseinschr\u00E4nkungen f\u00FCr Erweiterungen.\nFunktioniert jedoch auf den meisten Seiten per http:// und https://.",
+      "update": "20110625"
+   },
+   "name": {
+      "category": "About",
+      "description": "\"Smooth Gestures\" in your language",
+      "message": "Fl\u00FCssige Gesten",
+      "update": "20110625"
+   },
+   "options_addgesture_instruct_1": {
+      "category": "Options Page",
+      "description": "instructions for making a gesture (just before bullet point list)",
+      "message": "F\u00FChren Sie eine der folgenden Gesten aus:",
+      "update": "20110415"
+   },
+   "options_addgesture_instruct_2": {
+      "category": "Options Page",
+      "description": "[bullet point] instructions for making a gesture (mouse) ($BUTTON$ is replaced automatically by the appropriate button name--above--so insert it untranslated in the appropriate place in the translation)",
+      "message": "Maus Geste: Halten Sie die $BUTTON$ Maustaste gedr\u00FCckt und zeichnen Sie eine Geste durch das Bewegen der Maus, lassen Sie die Taste dann los.",
+      "placeholders": {
+         "button": {
+            "content": "$1",
+            "example": "right"
+         }
+      },
+      "update": "20110415"
+   },
+   "options_addgesture_instruct_3": {
+      "category": "Options Page",
+      "description": "[bullet point] instructions for making a gesture (scroll) ($BUTTON$ is replaced automatically by the appropriate button name--above--so insert it untranslated in the appropriate place in the translation)",
+      "message": "Scroll-Geste: Halte die $BUTTON$ Maustaste gedr\u00FCckt und drehe das Mausrad (Scroll-Geste)",
+      "placeholders": {
+         "button": {
+            "content": "$1",
+            "example": "right"
+         }
+      },
+      "update": "20110415"
+   },
+   "options_addgesture_instruct_4": {
+      "category": "Options Page",
+      "description": "[bullet point] instructions for making a gesture (rocker)",
+      "message": "Rocker Geste: Halte eine beliebige Maustaste gedr\u00FCckt und klicke dann eine andere (Rocker-Geste)",
+      "update": "20110415"
+   },
+   "options_addgesture_instruct_5": {
+      "category": "Options Page",
+      "description": "[bullet point] instructions for doing a keyboard shortcut",
+      "message": "Tastaturk\u00FCrzel: Dr\u00FCcke die gew\u00FCnschte Taste alleine, oder dr\u00FCcke sie w\u00E4hrend du eine Hilfstaste (Umschalt-, Steuerungstaste ...) gedr\u00FCckt h\u00E4ltst.",
+      "update": "20110501"
+   },
+   "options_addgesture_overwrite": {
+      "description": "warning message that a gesture will be overwritten",
+      "message": "Diese Geste wird bereits f\u00FCr \u201E$ACTION$\u201C verwendet",
+      "placeholders": {
+         "action": {
+            "content": "$1",
+            "example": "Verlauf zur\u00FCck"
+         }
+      }
+   },
+   "options_addgesture_title": {
+      "category": "Options Page",
+      "description": "explanation of what you are doing (adding a gesture to a specific action) ($ACTION$ is replaced automatically by the action name, such as: History Back--so insert it untranslated in the appropriate place in the translation)",
+      "message": "Zeichne eine Geste f\u00FCr die Aktion $ACTION$",
+      "placeholders": {
+         "action": {
+            "content": "$1",
+            "example": "History Back"
+         }
+      },
+      "update": "20110325"
+   },
+   "options_button_addcustomaction": {
+      "category": "Options Page",
+      "description": "Label for a button to start setting up a new custom action",
+      "message": "Benutzerdefinierte Aktion hinzuf\u00FCgen",
+      "update": "20110330"
+   },
+   "options_button_addgesture": {
+      "description": "button to add the new gesture to the action",
+      "message": "Diese Geste hinzuf\u00FCgen"
+   },
+   "options_button_overwrite": {
+      "description": "button to overwrite the gesture made to the new action",
+      "message": "Geste ersetzen"
+   },
+   "options_button_startaddgesture": {
+      "category": "Options Page",
+      "description": "Label for a button to start setting up a new gesture",
+      "message": "Geste hinzuf\u00FCgen",
+      "update": "20110330"
+   },
+   "options_button_tryagain": {
+      "description": "button to reject the gesture made and try to make a new one",
+      "message": "Erneut versuchen"
+   },
+   "options_contents_actions": {
+      "description": "category type for all actions links",
+      "message": "Gestenaktionen"
+   },
+   "options_contents_more": {
+      "description": "category type for all external links",
+      "message": "Mehr"
+   },
+   "options_contents_settings": {
+      "description": "category type for all settings links",
+      "message": "Einstellungen"
+   },
+   "options_contents_status": {
+      "description": "link to open the status page",
+      "message": "Status anzeigen"
+   },
+   "options_externalactions": {
+      "category": "Options Page",
+      "description": "link to external actions",
+      "message": "Externe Aktionen",
+      "update": "20110329"
+   },
+   "options_moreactions": {
+      "category": "Options Page",
+      "description": "Link to access more actions. These actions don't currently have a gesture assigned",
+      "message": "Weitere verf\u00FCgbare Aktionen",
+      "update": "20110329"
+   },
+   "options_mousebutton_0": {
+      "category": "Options Page",
+      "description": "name for the 'left' mouse button (To replace $BUTTON$ variables below)",
+      "message": "\"linke\" (Maustaste)",
+      "update": "20110415"
+   },
+   "options_mousebutton_1": {
+      "category": "Options Page",
+      "description": "name for the 'middle' mouse button (To replace $BUTTON$ variables below)",
+      "message": "\"mittlere\" (Maustaste)",
+      "update": "20110415"
+   },
+   "options_mousebutton_2": {
+      "category": "Options Page",
+      "description": "name for the 'right' mouse button (To replace $BUTTON$ variables below)",
+      "message": "\"rechte\" (Maustaste)",
+      "update": "20110415"
+   },
+   "options_note_doubleclick": {
+      "category": "Options Page",
+      "description": "Let the user know that they may need to double-click the right mouse button to get to the context menu",
+      "message": "M\u00F6glicherweise musst du einen Doppelklick mit der rechten Maustaste ausf\u00FChren, um das Kontextmen\u00FC zu \u00F6ffnen. Dies betrifft nur die Linux und Mac Version von Chrome.",
+      "update": "20110325"
+   },
+   "options_note_hidepageaction_button": {
+      "category": "Options Page",
+      "description": "Label on the button to hide the Smooth Gestures icon in the url bar",
+      "message": "Symbol verstecken",
+      "update": "20110330"
+   },
+   "options_note_print": {
+      "category": "Options Page",
+      "description": "Promote printing the page so users have a help sheet to remember all of the gestures",
+      "message": "Probleme damit, alle Gesten im Kopf zu behalten? Drucken Sie sich doch  einen Spickzettel!",
+      "update": "20110415"
+   },
+   "options_note_print_button": {
+      "category": "Options Page",
+      "description": "Label on the button to print the page",
+      "message": "Drucken",
+      "update": "20110415"
+   },
+   "options_note_remindrate": {
+      "category": "Options Page",
+      "description": "Notify the user that they can rate this extension to help promote it",
+      "message": "Magst du Smooth Gestures? Bitte f\u00F6rdere diese Erweiterung $LINK$!",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "\u003Ca href=''\u003Eleave a 5 star rating\u003C/a\u003E"
+         }
+      },
+      "update": "20110501"
+   },
+   "options_note_remindrate_link": {
+      "category": "Options Page",
+      "description": "Text for the link leading to the extension's page",
+      "message": "Hinterlasse eine 5-Sterne-Bewertung",
+      "update": "20110501"
+   },
+   "options_note_sync": {
+      "category": "Options Page",
+      "description": "Let the user know that they may need to double-click the right mouse button to get to the context menu",
+      "message": "M\u00F6glicherweise m\u00FCssen sie einen Doppelklick mit der rechten Maustaste ausf\u00FChren, um das Kontextmen\u00FC zu \u00F6ffnen. Dies betrifft nur die Linux und Mac Version von Chrome.",
+      "update": "20100708"
+   },
+   "options_note_translate": {
+      "category": "Options Page",
+      "description": "Solicit translation requests",
+      "message": "Du kannst Englisch? $LINK$! [$LINK$ should be something like \"bei der \u00DCbersetzung!\", which in english is, \"with the translation!\"]",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "\u003Ca href=''\u003Etranslate Smooth Gestures into your language\u003C/a\u003E"
+         }
+      },
+      "update": "20110527"
+   },
+   "options_note_translate_link": {
+      "category": "Options Page",
+      "description": "Link for soliciting translation requests",
+      "message": "\u00DCbersetzen Sie Smooth Gestures in Ihre Sprache",
+      "update": "20110527"
+   },
+   "options_note_updated": {
+      "category": "Options Page",
+      "description": "Notify that the extension has been updated",
+      "message": "Smooth Gestures wurde auf Version $VERSION$ geupdatet.",
+      "placeholders": {
+         "version": {
+            "content": "$1",
+            "example": "0.13.1"
+         }
+      },
+      "update": "20100708"
+   },
+   "options_remind_doubleclick": {
+      "description": "Let the user know that they may need to double-click the right mouse button to get to the context menu",
+      "message": "Erinnerung: Abh\u00E4ngig von Ihrem Betriebssystem m\u00FCssen Sie die rechte Maustaste evtl. doppelklicken, um das Kontextmen\u00FC zu \u00F6ffnen."
+   },
+   "options_title": {
+      "description": "The title of the options page, at top and tab name",
+      "message": "Optionen!"
+   },
+   "options_welcome_0": {
+      "category": "Options Page",
+      "description": "First just-installed line",
+      "message": "Willkommen zu Smooth Gestures!",
+      "update": "20110329"
+   },
+   "options_welcome_1": {
+      "category": "Options Page",
+      "description": "First just-installed bullet point",
+      "message": "Sie haben gerade Smooth Gestures installiert! Sie gelangen zu diesen Optionen, indem Sie die rechte Maustaste gedr\u00FCckt halten und ein \u201EO\u201C zeichnen (versuchen Sie es: rechts-runter-links-hoch-rechts).",
+      "update": "20110415"
+   },
+   "options_welcome_2": {
+      "category": "Options Page",
+      "description": "Second just-installed bullet point",
+      "message": "Klicken Sie auf das '+', um neue Gesten oder Aktionen festzulegen.",
+      "update": "20110415"
+   },
+   "options_welcome_3": {
+      "category": "Options Page",
+      "description": "Third just-installed bullet point",
+      "message": "Du kannst verschiedene Optionen konfigurieren, indem du rechts auf \u201EEinstellungen\u201C klickst oder ans Ende der Seite bl\u00E4tterst.",
+      "update": "20110325"
+   },
+   "options_welcome_4": {
+      "description": "Bold reload all tabs just-installed",
+      "message": "Starten Sie den Browser neu oder laden Sie jedes ge\u00F6ffnete Tab neu, damit die Gesten in dem Tab funktionieren."
+   },
+   "options_welcome_all_status": {
+      "description": "just-installed link to go to the status page",
+      "message": "Status aller Tabs anzeigen"
+   },
+   "popup_button_hidepageaction": {
+      "category": "Status Notification",
+      "description": "a button to hide the pageaction",
+      "message": "Verstecke dieses Symbol",
+      "update": "20110501"
+   },
+   "popup_button_options": {
+      "category": "Status Notification",
+      "description": "a button to go to the options page",
+      "message": "Optionen",
+      "update": "20110330"
+   },
+   "popup_button_reload": {
+      "description": "a button to reload the current page",
+      "message": "Neu laden"
+   },
+   "popup_link_status": {
+      "description": "link to the status page",
+      "message": "Status aller Tabs anzeigen"
+   },
+   "popup_status_blocked_1": {
+      "description": "text explaining a blocked tab",
+      "message": "Chrome sperrt Erweiterungen auf dieser Seite als Sicherheitsvorkehrung."
+   },
+   "popup_status_blocked_2": {
+      "description": "text explaining a blocked tab",
+      "message": "Smooth Gestures kann auf dieser Seite wegen der Richtlinie nicht funktionieren."
+   },
+   "popup_status_blocked_file2": {
+      "category": "Status Notification",
+      "description": "text explaining how to make a file:// tab work",
+      "message": "Damit Smooth Gestures unter file:// und ftp:// Protokollen funktionieren, \u00F6ffne chrome://extensions/ an markiere \" Erlaube Zugriff auf Datei URLs\" unter dem Eintrag \"Smooth Gestures\"",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "Extensions"
+         }
+      },
+      "update": "20110501"
+   },
+   "popup_status_blocked_file2_link": {
+      "category": "Status Notification",
+      "description": "text naming the link that goes to chrome://extensions/",
+      "message": "Erweiterungen",
+      "update": "20110330"
+   },
+   "popup_status_blocked_newtab": {
+      "category": "Status Notification",
+      "description": "text explaining how to make a newtab page work",
+      "message": "Versuche dies $LINK$ um Gesten auf der New Tab Seite zu erm\u00F6glichen",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "Smooth Gestures New Tab Add-on"
+         }
+      },
+      "update": "20110320"
+   },
+   "popup_status_blocked_newtab2": {
+      "category": "Status Notification",
+      "description": "text explaining how to make a newtab page work",
+      "message": "Versuche $LINK$ um Gesten auf der Seite \"Neuer Tab\" zu aktivieren.",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "Smooth Gestures New Tab Add-on"
+         }
+      },
+      "update": "20110501"
+   },
+   "popup_status_blocked_newtab2_link": {
+      "category": "Status Notification",
+      "description": "text naming the extension that adds newtab functionality to Smooth Gestures",
+      "message": "Ultimate Neuer Reiter",
+      "update": "20110419"
+   },
+   "popup_status_blocked_newtab_link": {
+      "category": "Status Notification",
+      "description": "text naming the extension that adds newtab functionality to Smooth Gestures",
+      "message": "Smooth Gestures New Tab Add-on",
+      "update": "20110320"
+   },
+   "popup_status_broken": {
+      "description": "text explaining a broken tab",
+      "message": "Gesten funktionieren auf dieser Seite derzeit nicht."
+   },
+   "popup_status_broken_short": {
+      "category": "Status Notification",
+      "description": "short text saying that gestures are broken on this page.",
+      "message": "Gesten defekt",
+      "update": "20110501"
+   },
+   "popup_status_question": {
+      "description": "text explaining a questionable tab",
+      "message": "Gesten funktionieren auf dieser Seite derzeit m\u00F6glicherweise nicht..."
+   },
+   "popup_status_unable_short": {
+      "category": "Status Notification",
+      "description": "short text saying that gestures are blocked by this page.",
+      "message": "Gesten Blockiert",
+      "update": "20110415"
+   },
+   "popup_status_working": {
+      "category": "Status Notification",
+      "description": "text explaining a working tab",
+      "message": "Gesten funktionieren auf dieser Seite.",
+      "update": "20110329"
+   },
+   "popup_status_working_short": {
+      "category": "Status Notification",
+      "description": "short text saying that gestures are working on this page.",
+      "message": "Gesten funktionieren",
+      "update": "20110329"
+   },
+   "setting_blacklist": {
+      "description": "setting title",
+      "message": "Schwarze Liste"
+   },
+   "setting_blacklist_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Deaktiviert Gesten auf Domains, die in der schwarzen Liste angegeben sind. Domains durch Komma trennen. (Beispiel: \"mail.google.com, www.example.com\")",
+      "update": "20110415"
+   },
+   "setting_button_export": {
+      "category": "Options Page: Settings",
+      "description": "button to save settings as a backup file",
+      "message": "Einstellungen speichern",
+      "update": "20100901"
+   },
+   "setting_button_import": {
+      "category": "Options Page: Settings",
+      "description": "button to load a settings file",
+      "message": "Einstellungsdatei laden",
+      "update": "20100901"
+   },
+   "setting_button_left": {
+      "description": "choose left mouse button",
+      "message": "Linke Taste"
+   },
+   "setting_button_middle": {
+      "description": "choose middle mouse button",
+      "message": "Mittlere Taste"
+   },
+   "setting_button_off": {
+      "description": "setting label",
+      "message": "Aus"
+   },
+   "setting_button_on": {
+      "description": "setting label",
+      "message": "Ein"
+   },
+   "setting_button_reset": {
+      "description": "button label",
+      "message": "Zur\u00FCcksetzen"
+   },
+   "setting_button_right": {
+      "description": "choose right mouse button",
+      "message": "Rechte Taste"
+   },
+   "setting_button_update": {
+      "description": "button label",
+      "message": "Aktualisieren"
+   },
+   "setting_closelastblock": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Letzten Tab nicht schlie\u00DFen",
+      "update": "20110501"
+   },
+   "setting_closelastblock_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Den letzten Tab nicht mit der \"Tab schlie\u00DFen\"-Geste schlie\u00DFen. Gehe stattdessen zur neuen Tab-URL.",
+      "update": "20110415"
+   },
+   "setting_disabled": {
+      "category": "Options Page: Settings",
+      "description": "choose no mouse button (gestures are disabled)",
+      "message": "Deaktiviert",
+      "update": "20100901"
+   },
+   "setting_force_context": {
+      "description": "setting title",
+      "message": "Kontextmen\u00FC auf Links erzwingen"
+   },
+   "setting_force_context2": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Kontextmen\u00FC erzwingen",
+      "update": "20110209"
+   },
+   "setting_force_context2_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Das Kontextmen\u00FC immer bei Rechtsklick anzeigen. N\u00FCtzlich f\u00FCr Gesten, die mit der mittleren Taste aktiviert werden.",
+      "update": "20110209"
+   },
+   "setting_force_context_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Verhindert Gesten, die auf Links beginnen. Auf Systemen mit Konflikten bez\u00FCglich des Kontextmen\u00FCs erm\u00F6glicht dies, das Kontextmen\u00FC durch einmaliges statt zweimaliges Klicken der rechten Maustaste aufzurufen. Es deaktiviert allerdings auch die Funktion \u201ELink in neuem Tab \u00F6ffnen\u201C.",
+      "update": "20110501"
+   },
+   "setting_group_assorted": {
+      "category": "Options Page: Settings",
+      "description": "title of a group of settings",
+      "message": "Diverse Einstellungen",
+      "update": "20100901"
+   },
+   "setting_group_context": {
+      "category": "Options Page: Settings",
+      "description": "title of a group of settings",
+      "message": "Kontextmen\u00FC-Einstellungen",
+      "update": "20110501"
+   },
+   "setting_group_hide": {
+      "description": "button to hide a group of settings",
+      "message": "verstecken"
+   },
+   "setting_group_newtab": {
+      "category": "Options Page: Settings",
+      "description": "title of a group of settings",
+      "message": "Einstellungen f\u00FCr Neuen Tab",
+      "update": "20110415"
+   },
+   "setting_group_show": {
+      "description": "button to show a group of settings",
+      "message": "anzeigen"
+   },
+   "setting_group_trail": {
+      "category": "Options Page: Settings",
+      "description": "title of a group of settings",
+      "message": "Einstellungen der Spurlinie",
+      "update": "20110415"
+   },
+   "setting_hidepageaction": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Icon immer anzeigen",
+      "update": "20110329"
+   },
+   "setting_hidepageaction_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Das Symbol in der URL-Leiste erlaubt dir schnellen Zugang zu dieser Einstellungsseite. Alternativ findest du die Seite unter Einstellungen \u003E Tools \u003E Erweiterungen \u003E Smooth Gestures \u003E Optionen",
+      "update": "20110501"
+   },
+   "setting_hold_button": {
+      "description": "setting title",
+      "message": "Maustaste zum Zeichnen von Gesten"
+   },
+   "setting_hold_button_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Erlaubt Dir, die mittlere oder linke statt der rechten Maustaste zum Zeichnen von Gesten zu verwenden.",
+      "update": "20110415"
+   },
+   "setting_import": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Einstellungen sichern",
+      "update": "20100901"
+   },
+   "setting_import_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Speichere aktuelle Einstellungen (beinhaltet Gesten, benutzerdefinierte Aktionen und Optionen). Lade die Datei, um verlorene Einstellungen wiederherzustellen oder Einstellungen auf einen anderen Computer zu portieren",
+      "update": "20110415"
+   },
+   "setting_newtab_linkright": {
+      "description": "setting title",
+      "message": "Neue Tabs neben dem aktiven Tab \u00F6ffnen"
+   },
+   "setting_newtab_linkright_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "\u00C4hnlich Chromiums Standardverhalten beim \u00D6ffnen von Links in einem neuen Tab. Dadurch werden Tabs eher thematisch gruppiert. (N\u00FCtzlich zum Aufteilen und Zusammenf\u00FChren von Tabs; siehe oben)",
+      "update": "20110415"
+   },
+   "setting_newtab_right": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Neue Tabs werden neben aktuellem Tab ge\u00F6ffnet",
+      "update": "20110209"
+   },
+   "setting_newtab_right_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Neue Tabs (nicht von Verkn\u00FCpfungen) werden neben aktuellem Tab ge\u00F6ffnet",
+      "update": "20110415"
+   },
+   "setting_newtab_url": {
+      "description": "setting title",
+      "message": "URL des neuen Tabs"
+   },
+   "setting_newtab_url_descrip": {
+      "description": "setting description",
+      "message": "URL, die bei der Aktion \u201ENeues Tab\u201C geladen wird. (Vorgabe ist chrome://newtab/)"
+   },
+   "setting_reset": {
+      "description": "setting title",
+      "message": "Auf Vorgaben zur\u00FCcksetzen"
+   },
+   "setting_reset_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Setzt alle Gesten und Einstellungen auf ihre Werkseinstellungen zur\u00FCck",
+      "update": "20110415"
+   },
+   "setting_selecttolink": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Verwende ausgew\u00E4hlte URLs als Link",
+      "update": "20100908"
+   },
+   "setting_selecttolink_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "W\u00E4hle Text mit 2 oder mehr URLs als Eingabe zu einer verbunden Geste aus. Zum Bespiel: W\u00E4hle 2 URLs im Text aus, f\u00FChre die Geste \"Neuer Tab\" aus -- beide URLs werden in separaten Tabs ge\u00F6ffnet!",
+      "update": "20110501"
+   },
+   "setting_sendstats": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Verwendungsstatistik \u00FCbermitteln",
+      "update": "20100901"
+   },
+   "setting_sendstats_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Sende einen anonymen Bericht zur Gestenbenutzung, um das Programm \u00FCber die am h\u00E4ufigsten benutzten Gesten zu informieren. Diese k\u00F6nnen dann zu den Standard-Gesten der zuk\u00FCnftigen Versionen hinzugef\u00FCgt werden.",
+      "update": "20110501"
+   },
+   "setting_sync": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Synchronisieren",
+      "update": "20100901"
+   },
+   "setting_sync_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Synchronisiere Einstellungen und Gesten mit anderen Computern \u00FCber Lesezeichen. Um diese Funktion zu nutzen, muss auch die Lesezeichen-Synchronisierung aktiviert werden.",
+      "update": "20110209"
+   },
+   "setting_trail_color": {
+      "description": "setting title",
+      "message": "Farbe der Spurlinie"
+   },
+   "setting_trail_color_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Stelle die Farbe und Durchsichtigkeit der beim Zeichnen einer Geste angezeigten Linie ein.",
+      "update": "20110415"
+   },
+   "setting_trail_draw": {
+      "description": "setting title",
+      "message": "Spurlinie anzeigen"
+   },
+   "setting_trail_draw_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Zeigt immer eine Spur auf dem Bildschirm an, wenn eine Geste gezeichnet wird.",
+      "update": "20110415"
+   },
+   "setting_trail_width": {
+      "description": "setting title",
+      "message": "Breite der Spurlinie"
+   },
+   "setting_trail_width_descrip": {
+      "description": "setting description",
+      "message": "Stellt die Breite der beim Zeichnen einer Geste angezeigten Linie ein."
+   },
+   "setting_warning_reset": {
+      "category": "Options Page: Settings",
+      "description": "warn that setting will be lost during a reset",
+      "message": "Bist Du sicher, dass Du die Einstellungen zur\u00FCcksetzen m\u00F6chtest? Dadurch gehen alle benutzerdefinierten Einstellungen verloren.",
+      "update": "20110415"
+   },
+   "status_button_reloadall": {
+      "description": "button to reload all broken pages",
+      "message": "Alle nicht funktionierenden Seiten neu laden"
+   },
+   "status_button_reloadone": {
+      "description": "button to reload single broken page",
+      "message": "Seite neu laden"
+   },
+   "status_legend_blocked": {
+      "description": "status of a page",
+      "message": "Gesperrte Systemseiten"
+   },
+   "status_legend_broken": {
+      "description": "status of a page",
+      "message": "Funktioniert nicht"
+   },
+   "status_legend_loading": {
+      "description": "status of a page",
+      "message": "Laden"
+   },
+   "status_legend_working": {
+      "description": "status of a page",
+      "message": "Funktioniert"
+   },
+   "status_link_options": {
+      "category": "Tab Status Page",
+      "description": "Link to go to the options page",
+      "message": "Zu Smooth Gestures: Optionen!",
+      "update": "20110415"
+   },
+   "status_title": {
+      "description": "The title of the options page, at top and tab name",
+      "message": "Status"
+   },
+   "status_window_other": {
+      "category": "Tab Status Page",
+      "description": "title for a group of tab statuses",
+      "message": "Anderes Fenster",
+      "update": "20110415"
+   },
+   "status_window_this": {
+      "description": "title for a group of tab statuses",
+      "message": "Dieses Fenster"
+   }
+}

@@ -1,0 +1,6 @@
+[Agent]
+Online=false
+Name=std.vcf
+
+[ChangeRecorder]
+change\size=0

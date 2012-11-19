@@ -1,0 +1,815 @@
+{
+   "apps_promo_counter": 11,
+   "autofill": {
+      "default_profile": "Home",
+      "enabled": true,
+      "infobar_shown": true
+   },
+   "bookmark_bar": {
+      "show_on_all_tabs": true
+   },
+   "bookmark_editor": {
+      "expanded_nodes": [ "1" ]
+   },
+   "browser": {
+      "check_default_browser": true,
+      "custom_chrome_frame": true,
+      "ntp": {
+         "promo_image_remaining": 4,
+         "promo_line_remaining": 4
+      },
+      "window_placement": {
+         "bottom": 1005,
+         "left": 391,
+         "maximized": false,
+         "right": 1850,
+         "top": 154,
+         "work_area_bottom": 1080,
+         "work_area_left": 0,
+         "work_area_right": 1920,
+         "work_area_top": 48
+      }
+   },
+   "content_settings_window": {
+      "last_tab_index": 5
+   },
+   "countryid_at_install": 21843,
+   "default_apps_installed": true,
+   "default_search_provider": {
+      "enabled": true,
+      "encodings": "UTF-8",
+      "icon_url": "http://www.google.com/favicon.ico",
+      "id": "2",
+      "instant_url": "{google:baseURL}webhp?{google:RLZ}sourceid=chrome-instant&{google:instantFieldTrialGroupParameter}ie={inputEncoding}&ion=1{searchTerms}&nord=1",
+      "keyword": "google.com",
+      "name": "Google",
+      "prepopulate_id": "1",
+      "search_url": "{google:baseURL}search?{google:RLZ}{google:acceptedSuggestion}{google:originalQueryForSuggestion}{google:searchFieldtrialParameter}{google:instantFieldTrialGroupParameter}sourceid=chrome&ie={inputEncoding}&q={searchTerms}",
+      "suggest_url": "{google:baseSuggestURL}search?{google:searchFieldtrialParameter}{google:instantFieldTrialGroupParameter}client=chrome&hl={language}&q={searchTerms}"
+   },
+   "dns_prefetching": {
+      "host_referral_list": [ 2, [ "http://178.63.96.144/", [ "http://178.63.96.144/", 1.387590599283029, "http://admoon.net/", 1.0372583192660272, "http://bigquality4.ru/", 0.8037034659213589, "http://google2.ru/", 0.8037034659213589, "http://payperclik.ru/", 0.8037034659213589 ] ], [ "http://178.63.96.168/", [ "http://178.63.96.168/", 1.387590599283029, "http://admoon.net/", 1.0372583192660272, "http://bigquality4.ru/", 0.8037034659213589, "http://google2.ru/", 0.8037034659213589, "http://payperclik.ru/", 0.8037034659213589 ] ], [ "http://178.63.96.170/", [ "http://178.63.96.170/", 1.387590599283029, "http://admoon.net/", 1.0372583192660272, "http://bigquality4.ru/", 0.8037034659213589, "http://google2.ru/", 0.8037034659213589, "http://payperclik.ru/", 0.8037034659213589 ] ], [ "http://2754.btrll.com/", [ "http://ad.yieldmanager.com/", 0.33784094633593986, "http://cache.btrll.com/", 0.6231203716651315, "http://edge.quantserve.com/", 0.8764500978772359, "http://ib.adnxs.com/", 0.22739149809940568, "http://load.exelator.com/", 0.33784094633593986, "http://pixel.quantserve.com/", 0.3954158826183596, "http://rc.rlcdn.com/", 0.1000440479804911, "http://segs.btrll.com/", 0.3954158826183596, "http://tags.bluekai.com/", 0.22739149809940568, "http://www.burstnet.com/", 0.22739149809940568 ] ], [ "http://2909.btrll.com/", [ "http://2909.btrll.com/", 0.19750854443940713, "http://ad.yieldmanager.com/", 0.19750854443940713, "http://cache.btrll.com/", 0.3119361218243853, "http://edge.quantserve.com/", 0.19750854443940713, "http://ib.adnxs.com/", 0.19750854443940713, "http://load.exelator.com/", 0.19750854443940713, "http://pixel.quantserve.com/", 0.3352580577544596, "http://rc.rlcdn.com/", 0.19750854443940713, "http://segs.btrll.com/", 0.19750854443940713, "http://tags.bluekai.com/", 0.06991806641549513 ] ], [ "http://2960.btrll.com/", [ "http://2960.btrll.com/", 0.8417097816135999, "http://ad.doubleclick.net/", 0.8354721178186651, "http://pixel.quantserve.com/", 0.7367128661532204, "http://s0.2mdn.net/", 0.7223770850849942, "http://s1.2mdn.net/", 0.21254102301284183 ] ], [ "http://46.4.117.30/", [ "http://178.63.96.144/", 0.8037034659213589, "http://178.63.96.168/", 0.8037034659213589, "http://178.63.96.170/", 0.8037034659213589, "http://46.4.117.30/", 0.9204808925936929 ] ], [ "http://a.rfihub.com/", [ "http://a.rfihub.com/", 2.3201221892899198, "http://adadvisor.net/", 1.2395173340042036, "http://b.scorecardresearch.com/", 2.500222998504205, "http://c1.rfihub.net/", 1.2395173340042036, "http://cm.g.doubleclick.net/", 1.4196181432184896, "http://ib.adnxs.com/", 1.4196181432184896, "http://p.brilig.com/", 1.2395173340042036, "http://secure-us.imrworldwide.com/", 1.2395173340042036, "http://syndication.mmismm.com/", 1.4196181432184896 ] ], [ "http://a.tribalfusion.com/", [ "http://ad.doubleclick.net/", 0.09667579508066004, "http://b3.mookie1.com/", 0.09667579508066004, "http://dm.de.mookie1.com/", 0.09667579508066004, "http://secure-us.imrworldwide.com/", 0.2789406216282269, "http://t.mookie1.com/", 0.09667579508066004 ] ], [ "http://ad-emea.doubleclick.net/", [ "http://a.akncdn.com/", 0.3447673369264391, "http://impl.ackak.com/", 0.30102819716711476, "http://s0.2mdn.net/", 0.16533163795891756 ] ], [ "http://ad.agkn.com/", [ "http://adadvisor.net/", 0.6879135037498747, "http://api.bizographics.com/", 1.1042755784134997, "http://d.agkn.com/", 1.2087205874554707, "http://pbid.pro-market.net/", 0.6879135037498747, "http://r.nexac.com/", 0.8483638014680757, "http://rd.rlcdn.com/", 0.6879135037498747 ] ], [ "http://ad.amgdgt.com/", [ "http://b.scorecardresearch.com/", 0.21718286941775067, "http://cdn-video.adconion.com/", 0.21718286941775067, "http://cdn.amgdgt.com/", 0.1896298188199763 ] ], [ "http://ad.burstdirectads.com/", [ "http://ad.burstdirectads.com/", 1.5155646640480438, "http://ad.yieldmanager.com/", 1.5155646640480438 ] ], [ "http://ad.doubleclick.net/", [ "http://as1.suitesmart.com/", 0.10733978000871504, "http://c.betrad.com/", 0.2128837177916066, "http://cdn.doubleverify.com/", 0.37336095113919876, "http://l.betrad.com/", 0.2128837177916066, "http://pixel.quantserve.com/", 0.37336095113919876, "http://s0.2mdn.net/", 2.2086570657060003, "http://secure-us.imrworldwide.com/", 0.10733978000871504, "http://sensor2.suitesmart.com/", 0.10733978000871504, "http://static.suitesmart.com/", 0.10733978000871504, "http://www.facebook.com/", 0.10733978000871504 ] ], [ "http://ad.turn.com/", [ "http://ad.doubleclick.net/", 0.10669145471112293, "http://ad2.turn.com/", 0.7029592360596231, "http://bs.serving-sys.com/", 0.7028836666452876, "http://cdn.turn.com/", 0.8436835160997301, "http://view.c3metrics.com/", 0.3089727164271288 ] ], [ "http://ad.yieldmanager.com/", [ "http://ad.doubleclick.net/", 2.319614810014193, "http://ad.yieldmanager.com/", 1.1424968465607555, "http://ads-vrx.adbrite.com/", 1.336721310666388, "http://ads.adbrite.com/", 1.336721310666388, "http://ads2.adbrite.com/", 1.336721310666388, "http://psa-d.openx.com/", 0.6803407582264347, "http://psa-i.openx.com/", 0.08465986955897489 ] ], [ "http://admoon.net/", [ "http://admoon.net/", 0.8037034659213589 ] ], [ "http://ads-vrx.adbrite.com/", [ "http://ad.burstdirectads.com/", 0.8946956813224706, "http://ad.turn.com/", 1.4918718080118634, "http://adbrite-match.dotomi.com/", 0.848933836516428, "http://js.admeld.com/", 1.5929443457744126, "http://map.media6degrees.com/", 0.9746715912324251, "http://media.inspiremediagrouponline.com/", 0.7859766977779022, "http://pbid.pro-market.net/", 0.4117212970452515, "http://pcm2.map.pulsemgr.com/", 1.2689510820551213, "http://tag.admeld.com/", 1.0499400187740389, "http://www.burstnet.com/", 2.0759187300516317 ] ], [ "http://ads.advancedmn.com/", [ "http://ads.advancedmn.com/", 0.24637676616497042, "http://adserv.rotator.hadj7.adjuggler.net/", 0.2752445984061246, "http://cdn.hadj7.adjuggler.net/", 0.3229427544407993, "http://www.3dclicktracker.com/", 0.3229427544407993 ] ], [ "http://ads.bluelithium.com/", [ "http://ad.yieldmanager.com/", 0.2783397295624899, "http://ads.bluelithium.com/", 0.2674686774469255, "http://tag.admeld.com/", 0.22058213546515523 ] ], [ "http://ads.eqads.com/", [ "http://ad.103092804.com/", 1.519188738264389, "http://ad.yieldmanager.com/", 2.1521454806414217, "http://bh.contextweb.com/", 0.2963320466070793, "http://ib.adnxs.com/", 0.8862319958873565, "http://image2.pubmatic.com/", 0.2963320466070793, "http://r.openx.net/", 0.2963320466070793 ] ], [ "http://ads.pubmatic.com/", [ "http://ad.turn.com/", 0.3903922932482842, "http://ads.pubmatic.com/", 0.3903922932482842, "http://d.xp1.ru4.com/", 0.3903922932482842, "http://i.w55c.net/", 0.3903922932482842, "http://ib.adnxs.com/", 0.3903922932482842, "http://idpix.media6degrees.com/", 0.3903922932482842, "http://image2.pubmatic.com/", 0.5605632928693305, "http://pixel.invitemedia.com/", 0.3903922932482842 ] ], [ "http://ads.react2media.com/", [ "http://ad.yieldmanager.com/", 0.925152831062886 ] ], [ "http://ads.specificmedia.com/", [ "http://ad.doubleclick.net/", 0.115225193197529, "http://cache.specificmedia.com/", 0.1742577796100408, "http://cdn.eyewonder.com/", 0.389343985500625, "http://cdn4.eyewonder.com/", 0.22106819515713458, "http://js.dmtry.com/", 0.37927782465950555, "http://log.dmtry.com/", 0.5446040559213406 ] ], [ "http://ads.traffiq.com/", [ "http://aperture.displaymarketplace.com/", 0.3745512294450272 ] ], [ "http://adserver.adtechus.com/", [ "http://adserver.adtechus.com/", 0.11497790768033277, "http://cdn.onescreen.net/", 0.06651992323185836, "http://edge.quantserve.com/", 0.06651992323185836, "http://pixel.quantserve.com/", 0.06651992323185836 ] ], [ "http://afe.specificclick.net/", [ "http://ad.doubleclick.net/", 0.7808220282465778, "http://cache.specificmedia.com/", 0.8942748015815505 ] ], [ "http://api.clover.com/", [ "http://api.clover.com/", 23.37667585949357 ] ], [ "http://b3.mookie1.com/", [ "http://dm.de.mookie1.com/", 0.6146388298777539 ] ], [ "http://bcp.crwdcntrl.net/", [ "http://c1.rfihub.net/", 0.6683286062981157, "http://d.turn.com/", 0.8197729155929602, "http://ib.adnxs.com/", 1.0422931874998105, "http://lotame.nexac.com/", 0.8197729155929602, "http://p.adsymptotic.com/", 1.0422931874998105, "http://p.rfihub.com/", 0.7654361815722011, "http://segment-pixel.invitemedia.com/", 0.8197729155929602, "http://set.tidaltv.com/", 0.8625437568462857, "https://ad.yieldmanager.com/", 0.3500932297553437, "https://ib.mookie1.com/", 0.07407590700820772 ] ], [ "http://bn.xp1.ru4.com/", [ "http://ad.doubleclick.net/", 0.8855725769734726, "http://bid.openx.net/", 0.058454212620646664, "http://m.xp1.ru4.com/", 0.23106153163852694 ] ], [ "http://c.www.endless.com/", [ "http://s.amazon-cornerstone.com/", 2.2733802 ] ], [ "http://cache.btrll.com/", [ "http://cache.btrll.com/", 1.281408313580475, "http://platform.twitter.com/", 0.13309501272888993 ] ], [ "http://cdn-bpx.a9.com/", [ "http://ad.doubleclick.net/", 0.3903922932482842, "http://ads.pubmatic.com/", 0.5605632928693305, "http://ak1.abmr.net/", 0.44711595978863306, "http://cdn.doubleverify.com/", 0.5605632928693305, "http://d.agkn.com/", 0.3903922932482842, "http://log50.doubleverify.com/", 0.3903922932482842, "http://s0.2mdn.net/", 0.3903922932482842, "http://showadsak.pubmatic.com/", 0.44711595978863306, "http://track.pubmatic.com/", 0.3903922932482842, "http://www.burstnet.com/", 0.44711595978863306 ] ], [ "http://cdn.formspring.me/", [ "http://button.formspring.me/", 0.05058130820523537, "http://cdn.formspring.me/", 0.05058130820523537 ] ], [ "http://cdn.krxd.net/", [ "http://adadvisor.net/", 0.06083181185166874, "http://service.krxd.net/", 0.06083181185166874 ] ], [ "http://cdn.onescreen.net/", [ "http://cdn.onescreen.net/", 0.19844679501126405, "http://r.1screen.me/", 0.15270873101895868 ] ], [ "http://cdn.orbengine.com/", [ "http://adadvisor.net/", 0.14261449403035215, "http://ads.adbrite.com/", 0.14261449403035215, "http://bh.contextweb.com/", 0.42037623620894704, "http://cm.g.doubleclick.net/", 0.14261449403035215, "http://pixel.rubiconproject.com/", 0.14261449403035215, "http://ssp.orbengine.com/", 0.5678449478594749, "http://tags.bluekai.com/", 0.14261449403035215 ] ], [ "http://cdn.turn.com/", [ "http://r.openx.net/", 0.8822360650398162 ] ], [ "http://cdn.w55c.net/", [ "http://ad.doubleclick.net/", 1.5929443457744126, "http://api.dimestore.com/", 0.8327166319106191, "http://ar.voicefive.com/", 2.319614810014193, "http://b.voicefive.com/", 2.319614810014193, "http://cdn.doubleverify.com/", 2.025335319191497, "http://cheetah.vizu.com/", 1.0747026616966109, "http://cti.w55c.net/", 1.4873597484062389, "http://log30.doubleverify.com/", 2.025335319191497, "http://pixel.quantserve.com/", 0.8327166319106191, "http://puma.vizu.com/", 0.9537096468036149 ] ], [ "http://cdn5.tribalfusion.com/", [ "http://a.tribalfusion.com/", 0.21948057032400325, "http://adadvisor.net/", 0.21948057032400325, "http://rd.rlcdn.com/", 0.21654438925091526, "http://tags.expo9.exponential.com/", 0.21948057032400325 ] ], [ "http://cgi.audiogon.com/", [ "http://pic2.audiogon.com/", 2.529573049612 ] ], [ "http://code.google.com/", [ "http://chromium.googlecode.com/", 2.2733802, "http://code.google.com/", 2.6037003999999997, "http://csi.gstatic.com/", 2.2733802, "http://www.google-analytics.com/", 2.6037003999999997, "http://www.gstatic.com/", 3.924981199999999, "https://apis.google.com/", 2.2733802, "https://kibbles.googlecode.com/", 2.2733802 ] ], [ "http://content.dimestore.com/", [ "http://admin.dimestore.com/", 1.8261300257220376, "http://api.dimestore.com/", 6.636814618513553, "http://content.dimestore.com/", 2.6347617812481903 ] ], [ "http://core.insightexpressai.com/", [ "http://core.insightexpressai.com/", 0.1896298188199763, "http://images.insightexpressai.com/", 0.1896298188199763 ] ], [ "http://d.agkn.com/", [ "http://adadvisor.net/", 0.23627284923841005, "http://d.agkn.com/", 0.3049333353418796, "http://pbid.pro-market.net/", 0.23627284923841005, "http://r.nexac.com/", 0.23627284923841005, "http://rd.rlcdn.com/", 0.23627284923841005 ] ], [ "http://d.ibtimes.com/", [ "http://d.ibtimes.com/", 0.10085606556994355, "http://i.xx.openx.com/", 0.05706343934004062 ] ], [ "http://d.tradex.openx.com/", [ "http://bid.openx.net/", 1.3421529199036009, "http://d.audienceiq.com/", 0.8393578130447187, "http://d.mediabrandsww.com/", 1.0422931874998105, "http://d.p-td.com/", 0.6879135037498746, "http://d.tradex.openx.com/", 1.1937374967946544, "http://i.w55c.net/", 1.0422931874998105, "http://mediaservices-d.openxenterprise.com/", 1.0422931874998105, "http://r.openx.net/", 1.1937374967946544, "http://r.turn.com/", 0.6879135037498746, "https://rs.gwallet.com/", 0.10065040318174237 ] ], [ "http://d.w55c.net/", [ "http://d.w55c.net/", 0.9530189281755601, "http://i.xx.openx.com/", 0.853065684040963 ] ], [ "http://d.xp1.ru4.com/", [ "http://http.content.ru4.com/", 0.3903922932482842, "http://load.exelator.com/", 0.3903922932482842, "http://m.xp1.ru4.com/", 0.3903922932482842 ] ], [ "http://d12.rsdisp.ru/", [ "http://46.4.117.30/", 0.8037034659213589, "http://d12.rsdisp.ru/", 0.8037034659213589, "http://urlt.dyndns.tv/", 0.8037034659213589 ] ], [ "http://d3.zedo.com/", [ "http://d13.zedo.com/", 0.16412990155041987, "http://d3.zedo.com/", 0.25952163920365534, "http://d7.zedo.com/", 0.16412990155041987, "http://m1.zedo.com/", 0.16412990155041987, "http://simg.zedo.com/", 0.16412990155041987 ] ], [ "http://d3l3lkinz3f56t.cloudfront.net/", [ "http://r.turn.com/", 2.2733802, "http://s.amazon-cornerstone.com/", 2.2733802, "http://spe.atdmt.com/", 0.25765891354386755, "http://view.atdmt.com/", 0.25765891354386755 ] ], [ "http://d7.zedo.com/", [ "http://d13.zedo.com/", 0.23212029811267693, "http://serve.directdigitalllc.com/", 0.05682196874117772 ] ], [ "http://deadspace.wikia.com/", [ "http://api.clover.com/", 0.3903922932482842, "http://deadspace.wikia.com/", 1.297970957893867, "http://images.intellitxt.com/", 0.9576289586517739, "http://images.wikia.com/", 0.3903922932482842, "http://images1.wikia.nocookie.net/", 1.4223463079810503, "http://images2.wikia.nocookie.net/", 1.0062571742847182, "http://images3.wikia.nocookie.net/", 0.44711595978863306, "http://images4.wikia.nocookie.net/", 0.5605632928693305, "http://s0.2mdn.net/", 0.5605632928693305, "http://www.google-analytics.com/", 3.3875130589199274 ] ], [ "http://dg.specificclick.net/", [ "http://b.scorecardresearch.com/", 2.529573049612 ] ], [ "http://dm.de.mookie1.com/", [ "http://matcher.bidder7.mookie1.com/", 0.6134687249901315, "http://matcher.bidder8.mookie1.com/", 0.613839704089926 ] ], [ "http://dragonage.wikia.com/", [ "http://b.scorecardresearch.com/", 1.0422931874998105, "http://cdn.fastclick.net/", 1.1937374967946544, "http://dragonage.wikia.com/", 2.8596248990379403, "http://images.intellitxt.com/", 2.253847661858564, "http://images.wikia.com/", 2.808187992144394, "http://images1.wikia.nocookie.net/", 5.820974321994411, "http://images2.wikia.nocookie.net/", 2.9818741755972997, "http://media.fastclick.net/", 1.1937374967946544, "http://tags.expo9.exponential.com/", 1.0422931874998105, "http://www.google-analytics.com/", 5.869961682172651 ] ], [ "http://en.gentoo-wiki.com/", [ "http://en.gentoo-wiki.com/", 0.2773327351351265 ] ], [ "http://en.wikipedia.org/", [ "http://bits.wikimedia.org/", 1.8935634967742236, "http://en.wikipedia.org/", 0.5502875655876407, "http://geoiplookup.wikimedia.org/", 0.13494685798922124, "http://meta.wikimedia.org/", 0.24709506468633563, "http://upload.wikimedia.org/", 0.5414049302646678 ] ], [ "http://fw.adsafeprotected.com/", [ "http://ad.doubleclick.net/", 1.136950432457374, "http://fw.adsafeprotected.com/", 1.136950432457374 ] ], [ "http://game.playpickle.com/", [ "http://game.playpickle.com/", 4.683972450149549, "https://ajax.googleapis.com/", 1.519188738264389 ] ], [ "http://geo.ipromote.com/", [ "http://cdn.ipromote.com/", 0.19867861013029556 ] ], [ "http://get.adobe.com/", [ "http://stats.adobe.com/", 2.048762464, "http://www.adobe.com/", 2.266773796, "http://wwwimages.adobe.com/", 18.141962607999993 ] ], [ "http://go.cpmadvisors.com/", [ "http://ad.yieldmanager.com/", 1.4924714588813923, "http://go.cpmadvisors.com/", 1.4924714588813923 ] ], [ "http://googleads.g.doubleclick.net/", [ "http://ad.doubleclick.net/", 0.052483611112590006, "http://b.scorecardresearch.com/", 0.06010943494946204, "http://cdn.doubleverify.com/", 0.18255423071134896, "http://choices.truste.com/", 0.0677352587863341, "http://google.com/", 0.720749834949462, "http://googleads.g.doubleclick.net/", 0.89475389400941, "http://pagead2.googlesyndication.com/", 1.819868734963503, "http://s0.2mdn.net/", 0.079008584805692, "http://secure-us.imrworldwide.com/", 0.052483611112590006, "https://googleads.g.doubleclick.net/", 0.720749834949462 ] ], [ "http://guru.sitescout.com/", [ "http://guru.sitescout.netdna-cdn.com/", 1.4307995075142648 ] ], [ "http://he-japu.blogspot.com/", [ "http://buttons.blogger.com/", 2.2086570657060003, "http://dg.specificclick.net/", 2.2086570657060003, "http://img2.blogblog.com/", 2.529573049612, "http://photos1.blogger.com/", 2.2086570657060003, "http://s21.sitemeter.com/", 2.850489033518, "http://www.blogblog.com/", 3.4923210013299997, "http://www.blogger.com/", 3.4923210013299997, "http://www.blogstreet.com/", 2.2086570657060003, "https://www.google.com/", 2.2086570657060003 ] ], [ "http://i.media-imdb.com/", [ "http://platform.twitter.com/", 0.3903922932482842 ] ], [ "http://ib.adnxs.com/", [ "http://ad.doubleclick.net/", 0.1873020365417487, "http://altfarm.mediaplex.com/", 1.298664854951716, "http://domdex.com/", 1.298664854951716, "http://fw.adsafeprotected.com/", 0.0744033038009514, "http://img.mediaplex.com/", 1.298664854951716, "http://pixel.everesttech.net/", 0.564845000778231, "http://s0.2mdn.net/", 0.15350735790441347, "http://static.adsafeprotected.com/", 0.06496407869187545, "http://www.everestads.net/", 0.564845000778231 ] ], [ "http://imagecache.blastro.com/", [ "http://cache.vindicosuite.com/", 0.15291845661024991, "http://imagecache.blastro.com/", 0.1529184565286652, "http://www.google-analytics.com/", 0.30583691322049983 ] ], [ "http://info.urltraf.org.ua/", [ "http://admoon.net/", 1.1540357459383606, "http://night.urltraf.org.ua/", 1.0372583192660272, "http://partern.hotptp.com/", 0.8037034659213589, "http://r1432.rsdisp.ru/", 0.8037034659213589, "http://urltraf.org.ua/", 0.8037034659213589, "http://www.777seo.com/", 0.8037034659213589 ] ], [ "http://intranet.permabit.com/", [ "https://intranet.permabit.com/", 1.4966261153843425 ] ], [ "http://jdn.monster.com/", [ "http://jdn.monster.com/", 0.4288019050237293, "http://spe.atdmt.com/", 0.14044972421347818, "http://view.atdmt.com/", 0.14044972421347818 ] ], [ "http://liftium.wikia.com/", [ "http://liftium.wikia.com/", 0.1472147035938513 ] ], [ "http://m.xp1.ru4.com/", [ "http://ad.doubleclick.net/", 0.6879135037498747, "http://altfarm.mediaplex.com/", 1.967674022654115, "http://img-cdn.mediaplex.com/", 1.967674022654115 ] ], [ "http://maps.google.com/", [ "chrome-extension://gofhjkjmkpinhpoiabjplobcaignabnl/", 0.09370158224612625, "http://khm1.google.com/", 0.22165654360028242, "http://maps.google.com/", 1.2471264575305048, "http://maps.gstatic.com/", 4.418318536502721, "http://mt0.google.com/", 4.502043176997685, "http://mt1.google.com/", 4.183334695121287, "http://ssl.gstatic.com/", 0.43935639617122657, "http://www.google.com/", 0.2256983477620773 ] ], [ "http://media.fastclick.net/", [ "http://ad.doubleclick.net/", 0.31438258008421643, "http://fw.adsafeprotected.com/", 0.4085438665411957, "http://media.fastclick.net/", 0.3903922932482842, "https://secure.fastclick.net/", 0.3903922932482842 ] ], [ "http://media.inspiremediagrouponline.com/", [ "http://banners.highscoremediagroup.com/", 2.066525344788971, "http://media.inspiremediagrouponline.com/", 1.8043542189575343 ] ], [ "http://media.intermundomedia.com/", [ "http://media.intermundomedia.com/", 0.2600771237396135 ] ], [ "http://media.match.com/", [ "http://media.match.com/", 1.3913222852435276 ] ], [ "http://mediaservices-d.openxenterprise.com/", [ "http://ad.yieldmanager.com/", 0.856515557971207, "http://mediaservices-d.openxenterprise.com/", 0.8655279141776786 ] ], [ "http://mig.nexac.com/", [ "http://dm.de.mookie1.com/", 0.2717706031067445, "http://t.mookie1.com/", 0.2717706031067445 ] ], [ "http://mobile.answers.com/", [ "http://www.answers.com/", 2.2733802 ] ], [ "http://mycheats.1up.com/", [ "http://mycheats.1up.com/", 0.08109144302196682 ] ], [ "http://old.nabble.com/", [ "http://edge.quantserve.com/", 2.2086570657060003, "http://old.nabble.com/", 7.343312808201998, "http://pixel.quantserve.com/", 2.2086570657060003, "http://www.google-analytics.com/", 2.850489033518 ] ], [ "http://p.adsymptotic.com/", [ "http://p.adsymptotic.com/", 0.515342538642741 ] ], [ "http://p.brilig.com/", [ "http://ad.yieldmanager.com/", 0.1360804035664676, "http://d.audienceiq.com/", 0.515342538642741, "http://d.p-td.com/", 0.13128545748339693, "http://r.turn.com/", 0.20789457844253628 ] ], [ "http://p.rfihub.com/", [ "http://a.rfihub.com/", 1.1597517902609105, "http://ad.yieldmanager.com/", 1.1597517902609105, "http://apnxscm.ac3.msn.com:81/", 1.012619100451691, "http://b.scorecardresearch.com/", 1.4540171698793503, "http://cm.g.doubleclick.net/", 1.012619100451691, "http://googleads.g.doubleclick.net/", 1.1597517902609105, "http://ib.adnxs.com/", 1.6011498596885705, "http://m.adnxs.com/", 1.012619100451691, "http://view.atdmt.com/", 1.012619100451691, "http://www.googleadservices.com/", 1.1597517902609105 ] ], [ "http://partern.hotptp.com/", [ "http://goclicks.co.uk/", 0.8037034659213589, "http://versetime.com/", 0.8037034659213589, "http://www.nobleppc.com/", 0.8037034659213589, "http://www.searchebuy.com/", 0.8037034659213589 ] ], [ "http://pbid.pro-market.net/", [ "http://tag.admeld.com/", 0.2599856625127483 ] ], [ "http://pc.ign.com/", [ "http://mediacdn.disqus.com/", 0.3903922932482842, "http://ping.chartbeat.net/", 0.3903922932482842, "http://platform.twitter.com/", 0.44711595978863306, "http://platform2.twitter.com/", 0.3903922932482842, "http://static.chartbeat.com/", 0.3903922932482842, "http://widgets.ign.com/", 0.3903922932482842, "http://widgets.outbrain.com/", 0.44711595978863306, "http://www.facebook.com/", 0.503839626328982, "http://www.google-analytics.com/", 0.44711595978863306, "https://plusone.google.com/", 0.44711595978863306 ] ], [ "http://pic8.audiogon.com/", [ "http://c.compete.com/", 0.9620910178215336, "http://edge.quantserve.com/", 0.9620910178215336, "http://pic8.audiogon.com/", 0.9620910178215336, "http://pixel.quantserve.com/", 1.4948115511054936, "http://trgc.opt.fimserve.com/", 1.4948115511054936, "http://www.google-analytics.com/", 1.6346025536949473 ] ], [ "http://pixel.invitemedia.com/", [ "http://ad.yieldmanager.com/", 1.5617189435841379, "http://adadvisor.net/", 1.5617189435841379, "http://googleads.g.doubleclick.net/", 1.5617189435841379, "http://pixel.invitemedia.com/", 1.788635371284397, "http://r.nexac.com/", 0.1401294617101969, "http://segment-pixel.invitemedia.com/", 1.2046963835683986, "http://tags.bluekai.com/", 0.29703067276736106, "http://www.googleadservices.com/", 1.5617189435841379 ] ], [ "http://pl.yumenetworks.com/", [ "http://ar.voicefive.com/", 2.007691368222829, "http://b.voicefive.com/", 1.7529842543438134, "http://cdn.doubleverify.com/", 1.7529842543438134, "http://log30.doubleverify.com/", 1.7529842543438134, "http://view.atdmt.com/", 1.7529842543438134 ] ], [ "http://platform.twitter.com/", [ "http://cdn.api.twitter.com/", 0.3903922932482842, "http://platform.twitter.com/", 0.3903922932482842 ] ], [ "http://platform0.twitter.com/", [ "http://platform0.twitter.com/", 0.1387800155980378, "http://urls.api.twitter.com/", 0.10175934172246998 ] ], [ "http://platform1.twitter.com/", [ "http://platform1.twitter.com/", 0.30704703081562257, "http://urls.api.twitter.com/", 0.30704703081562257 ] ], [ "http://premium.mookie1.com/", [ "http://imagen04.247realmedia.com/", 0.37927782465950555 ] ], [ "http://pubads.g.doubleclick.net/", [ "http://ad.doubleclick.net/", 2.529573049612, "http://ak.p.openx.net/", 2.850489033518, "http://ak1.abmr.net/", 2.2086570657060003, "http://bid.openx.net/", 4.134152969141999, "http://choices.truste.com/", 4.4550689530479985, "http://delivery.huddler.com/", 3.1714050174239996, "http://fw.adsafeprotected.com/", 3.8132369852359993, "http://pagead2.googlesyndication.com/", 6.380564856483998, "http://r.openx.net/", 2.2086570657060003, "http://www.google-analytics.com/", 6.0596488725779984 ] ], [ "http://puma.vizu.com/", [ "http://cheetah.vizu.com/", 1.4038750502410846, "http://puma.vizu.com/", 1.7600821525410617 ] ], [ "http://r.turn.com/", [ "http://cdn.turn.com/", 1.012619100451691 ] ], [ "http://reviews.logitech.com/", [ "chrome-extension://gofhjkjmkpinhpoiabjplobcaignabnl/", 0.13784834101758695, "http://reviews.logitech.com/", 0.6694041023538517 ] ], [ "http://rs.gwallet.com/", [ "http://api.tweetmeme.com/", 0.08260274907798162, "http://pb.tynt.com/", 0.1930222300998862, "http://rs.gwallet.com/", 1.3132281179390324, "http://srv.clickfuse.com/", 1.3132281179390324, "http://tag.admeld.com/", 0.23252424455291726 ] ], [ "http://s.amazon-cornerstone.com/", [ "http://sis.amazon.com/", 2.2733802 ] ], [ "http://s.ytimg.com/", [ "http://www.youtube.com/", 0.1148988706225206 ] ], [ "http://s7.addthis.com/", [ "http://aidps.atdmt.com/", 2.2733802, "http://cf.addthis.com/", 0.36858031844290773, "http://cspix.media6degrees.com/", 2.2733802, "http://ds.addthis.com/", 0.36801894176069283, "http://ib.adnxs.com/", 2.9340205999999998, "http://l.addthiscdn.com/", 0.7576592767381729, "http://pixel.33across.com/", 2.2733802, "http://segment-pixel.invitemedia.com/", 2.2733802, "http://xcdn.xgraph.net/", 2.6037003999999997 ] ], [ "http://serve.directdigitalllc.com/", [ "http://c1142172.cdn.cloudfiles.rackspacecloud.com/", 0.234700226086126, "http://c1142172.r72.cf0.rackcdn.com/", 0.10755406907050961 ] ], [ "http://servedby.flashtalking.com/", [ "http://a.flashtalking.com/", 0.4018806934015927, "http://ad.doubleclick.net/", 0.6013870419326987, "http://cdn.doubleverify.com/", 0.5008702178481924, "http://cdn.flashtalking.com/", 0.46065204695915246, "http://log50.doubleverify.com/", 0.4147790896369066, "http://pfa.levexis.com/", 0.9285702433741843, "http://res.levexis.com/", 1.0634907060866723, "http://stat.flashtalking.com/", 2.4788700423990737 ] ], [ "http://sis.amazon.com/", [ "http://c.www.endless.com/", 2.2733802 ] ], [ "http://speaker4less.com/", [ "http://d12.rsdisp.ru/", 0.5304442875080965, "http://d50.rsdisp.ru/", 0.5304442875080965, "http://r0218.rsstatic.ru/", 0.5304442875080965, "http://speaker4less.com/", 4.283951046580928, "http://tiasissi.com.br/", 0.5304442875080965, "http://www.speaker4less.com/", 4.384099367695119 ] ], [ "http://survey.questionmarket.com/", [ "http://amch.questionmarket.com/", 2.9366450055924993, "http://survey.questionmarket.com/", 2.396937274834959 ] ], [ "http://surveyclubonline.com/", [ "http://ajax.aspnetcdn.com/", 2.2733802, "http://static.surveyclubonline.com/", 4.255301399999999, "http://surveyclubonline.com/", 2.2733802 ] ], [ "http://swf.mixpo.com/", [ "http://cdncomp.mixpo.com/", 2.066525344788971, "http://cdnmedia.mixpo.com/", 2.066525344788971 ] ], [ "http://tag.admeld.com/", [ "http://adx.adnxs.com/", 0.07407590700820772, "http://ak1.abmr.net/", 0.07407590700820772, "http://ar.voicefive.com/", 0.08483907298375928, "http://b.voicefive.com/", 0.08483907298375928, "http://r1-ads.ace.advertising.com/", 0.08483907298375928, "http://tag.admeld.com/", 0.10636540493486232, "http://uac.advertising.com/", 0.08483907298375928, "http://view.atdmt.com/", 0.07407590700820772, "http://view.c3metrics.com/", 0.08483907298375928, "https://ssegs.btrll.com/", 0.08483907298375928 ] ], [ "http://tags.bluekai.com/", [ "http://d.p-td.com/", 0.25032336427527363, "http://d.turn.com/", 0.25032336427527363, "http://tags.bluekai.com/", 0.25032336427527363, "http://va.px.invitemedia.com/", 0.13112788268599507 ] ], [ "http://technology.theladders.com/", [ "http://technology.theladders.com/", 0.05569476151667281 ] ], [ "http://thetubestore.com/", [ "http://a.analytics.yahoo.com/", 2.4298658311779597, "http://d.yimg.com/", 2.10894984727196, "http://ep.yimg.com/", 4.486267497745879, "http://geo.yahoo.com/", 2.4298658311779597, "http://l.yimg.com/", 4.698072047123839, "http://lib.store.yahoo.net/", 3.504711113839879, "http://redirect1.vip.store.yahoo.com/", 2.10894984727196, "http://redirect1.vip.store.yahoo.net/", 2.10894984727196, "http://store.yahoo.net/", 2.4298658311779597, "http://us.bc.yahoo.com/", 2.4298658311779597 ] ], [ "http://tracker.bidder7.mookie1.com/", [ "http://ad.doubleclick.net/", 0.10535477990298955, "http://b3.mookie1.com/", 0.10535477990298955 ] ], [ "http://uac.advertising.com/", [ "http://cm.g.doubleclick.net/", 0.3903922932482842, "http://cmap.am.ace.advertising.com/", 0.3903922932482842, "http://cmap.an.ace.advertising.com/", 0.3903922932482842, "http://cmap.dc.ace.advertising.com/", 0.3903922932482842, "http://cmap.rub.ace.advertising.com/", 0.3903922932482842, "http://cms.ad.yieldmanager.net/", 0.3903922932482842, "http://cookex.amp.yahoo.com/", 0.3903922932482842, "http://ib.adnxs.com/", 0.3903922932482842, "http://pixel.rubiconproject.com/", 0.3903922932482842, "http://tag.admeld.com/", 0.3903922932482842 ] ], [ "http://um.eqads.com/", [ "http://ads.adbrite.com/", 1.5617189435841379, "http://tag.admeld.com/", 1.5617189435841379 ] ], [ "http://urlt.dyndns.tv/", [ "http://info.urltraf.org.ua/", 0.9204808925936929, "http://r1432.rsdisp.ru/", 0.8037034659213589, "http://urlt.dyndns.tv/", 0.9204808925936929 ] ], [ "http://us.100y.com.tw/", [ "http://us.100y.com.tw/", 2.2155081009599993 ] ], [ "http://view.atdmt.com/", [ "http://c.betrad.com/", 0.6302519190901015, "http://cdn.doubleverify.com/", 0.6302519190901015, "http://cheetah.vizu.com/", 0.06654479561618282, "http://l.betrad.com/", 0.6302519190901015, "http://log30.doubleverify.com/", 0.6302519190901015, "http://puma.vizu.com/", 0.059052997434228476 ] ], [ "http://w55c.net/", [ "http://tag.admeld.com/", 0.19488583724149494 ] ], [ "http://www.6moons.com/", [ "http://www.6moons.com/", 9.870744799999997 ] ], [ "http://www.adfusion.com/", [ "http://aranet.vo.llnwd.net/", 0.5813900366515004 ] ], [ "http://www.adobe.com/", [ "http://adobe.tt.omtrdc.net/", 3.2643407999999994, "http://api.demandbase.com/", 2.2733802, "http://l.betrad.com/", 2.6037003999999997, "http://stats.adobe.com/", 2.6037003999999997, "http://store1.adobe.com/", 2.2733802, "http://use.typekit.com/", 2.2733802, "http://www.adobe.com/", 11.522345799999997, "http://wwwimages.adobe.com/", 34.97508000000003, "https://fls.doubleclick.net/", 2.6037003999999997 ] ], [ "http://www.alldatasheet.com/", [ "http://ad.doubleclick.net/", 2.850489033518, "http://banner.alldatasheet.com/", 2.529573049612, "http://googleads.g.doubleclick.net/", 3.1714050174239996, "http://inventory.alldatasheet.com/", 2.529573049612, "http://other.alldatasheet.com/", 10.231556663355997, "http://pagead2.googlesyndication.com/", 2.529573049612, "http://s0.2mdn.net/", 2.529573049612, "http://www.alldatasheet.com/", 2.850489033518, "http://www.googleadservices.com/", 2.850489033518, "http://www.supplyframe.com/", 2.529573049612 ] ], [ "http://www.amazon.com/", [ "http://bes-clck.com/", 2.2733802, "http://client-log.amazon.com/", 2.2733802, "http://d2o307dm5mqftz.cloudfront.net/", 2.2733802, "http://ecx.images-amazon.com/", 6.237222599999998, "http://g-ecx.images-amazon.com/", 11.852665999999996, "http://pda-as.amazon.com/", 2.2733802, "http://uedata.amazon.com/", 2.2733802, "http://www.amazon.com/", 2.9340205999999998, "http://z-ecx.images-amazon.com/", 9.540424599999996, "https://images-na.ssl-images-amazon.com/", 11.192025599999996 ] ], [ "http://www.answers.com/", [ "http://a.answers.com/", 2.6037003999999997, "http://b.scorecardresearch.com/", 2.6037003999999997, "http://edge.quantserve.com/", 2.2733802, "http://en.site2.answcdn.com/", 4.255301399999999, "http://pixel.quantserve.com/", 2.2733802, "http://s7.addthis.com/", 2.9340205999999998, "http://site.answcdn.com/", 2.2733802, "http://wiki.answers.com/", 2.2733802, "http://www.answers.com/", 2.2733802, "http://www.google-analytics.com/", 2.6037003999999997 ] ], [ "http://www.audioadvisor.com/", [ "http://www.audioadvisor.com/", 4.452217162747199, "http://www.google-analytics.com/", 0.6535877139792, "https://ssl.google-analytics.com/", 0.6535877139792 ] ], [ "http://www.blogger.com/", [ "http://img1.blogblog.com/", 2.2086570657060003 ] ], [ "http://www.dcu.org/", [ "http://www.dcu.org/", 1.517287717249008 ] ], [ "http://www.direct2drive.com/", [ "http://a248.e.akamai.net/", 0.9576289586517739, "http://atax.ign.com/", 0.3903922932482842, "http://b.scorecardresearch.com/", 0.44711595978863306, "http://beacon.clickequations.net/", 0.3903922932482842, "http://d1ivexoxmp59q7.cloudfront.net/", 0.3903922932482842, "http://js.clickequations.net/", 0.3903922932482842, "http://log.optimizely.com/", 0.3903922932482842, "http://wrapper.direct2drive.com/", 0.3903922932482842, "http://www.direct2drive.com/", 0.6740106259500287, "http://www.google-analytics.com/", 0.44711595978863306 ] ], [ "http://www.directorslive.com/", [ "chrome-extension://gofhjkjmkpinhpoiabjplobcaignabnl/", 0.30102819716711476, "http://cdn-static.liverail.com/", 0.30102819716711476 ] ], [ "http://www.diyaudio.com/", [ "http://cdn1.dastatic.com/", 4.134152969141999, "http://cdn2.dastatic.com/", 4.134152969141999, "http://code.jquery.com/", 2.2086570657060003, "http://lib.store.yahoo.net/", 2.2086570657060003, "http://pagead2.googlesyndication.com/", 2.2086570657060003, "http://s3.dastatic.com/", 2.2086570657060003, "http://www.diyaudio.com/", 3.8132369852359993, "http://www.google-analytics.com/", 2.2086570657060003, "http://www.google.com/", 2.2086570657060003 ] ], [ "http://www.duane-n-lisa.net/", [ "http://www.duane-n-lisa.net/", 0.1330623696301523 ] ], [ "http://www.duncanamps.com/", [ "http://www.duncanamps.com/", 1.3814640255898942, "http://www.google-analytics.com/", 1.4227980043169872 ] ], [ "http://www.ebay.co.uk/", [ "http://p.ebaystatic.com/", 5.246261999999999, "http://pics.ebaystatic.com/", 3.2643407999999994, "http://q.ebaystatic.com/", 4.585621599999999, "http://rover.ebay.co.uk/", 2.2733802, "http://rtm.ebaystatic.com/", 2.9340205999999998, "http://srx.uk.ebayrtm.com/", 2.6037003999999997, "http://tags.bluekai.com/", 2.2733802, "http://thumbs2.ebaystatic.com/", 3.2643407999999994, "http://thumbs3.ebaystatic.com/", 3.5946609999999994, "http://thumbs4.ebaystatic.com/", 2.9340205999999998 ] ], [ "http://www.enbrel.com/", [ "http://statse.webtrendslive.com/", 2.9340205999999998, "http://view.atdmt.com/", 2.6037003999999997, "http://www.enbrel.com/", 37.94796180000006, "https://ar.voicefive.com/", 2.2733802, "https://siterecruit.comscore.com/", 2.6037003999999997 ] ], [ "http://www.everestads.net/", [ "http://pixel.everesttech.net/", 0.8143416849854771, "http://www.everestjs.net/", 0.8078502244626399 ] ], [ "http://www.facebook.com/", [ "http://static.ak.fbcdn.net/", 1.0085952576913393 ] ], [ "http://www.g8wrb.org/", [ "http://jigsaw.w3.org/", 2.2086570657060003, "http://megagate.com/", 2.2086570657060003, "http://www.g8wrb.org/", 4.775984936953999, "http://www.w3.org/", 2.2086570657060003 ] ], [ "http://www.gamefront.com/", [ "http://cdn.gamefront.com/", 0.08977981191717753 ] ], [ "http://www.gamerfuzion.com/", [ "http://fe9e5192b9dd68242a118342e07b840d.s3.amazonaws.com/", 0.07737235775514226, "http://www.gamerfuzion.com/", 0.0883317504346424 ] ], [ "http://www.gamerzines.com/", [ "http://www.gamerzines.com/", 0.05726764179809237 ] ], [ "http://www.google.com/", [ "http://csi.gstatic.com/", 0.6535877139792, "http://news.google.com/", 1.7184422639999999, "http://ssl.gstatic.com/", 0.530352711510772, "http://t2.gstatic.com/", 1.500430932, "http://www.google-analytics.com/", 0.7485534501984, "http://www.google.com/", 6.2741222729876185, "http://www.gstatic.com/", 1.033450658856 ] ], [ "http://www.head-fi.org/", [ "http://api.viglink.com/", 2.2086570657060003, "http://cdn.head-fi.org/", 6.0596488725779984, "http://edge.quantserve.com/", 2.2086570657060003, "http://files.head-fi.org/", 3.1714050174239996, "http://partner.googleadservices.com/", 2.850489033518, "http://pixel.quantserve.com/", 2.2086570657060003, "http://pubads.g.doubleclick.net/", 7.022396824295997, "http://www.google-analytics.com/", 3.1714050174239996, "http://www.head-fi.org/", 11.194304615073996, "http://yui.yahooapis.com/", 6.380564856483998 ] ], [ "http://www.imdb.com/", [ "http://ad.doubleclick.net/", 0.3903922932482842, "http://bes-clck.com/", 0.3903922932482842, "http://cdn-bpx.a9.com/", 0.3903922932482842, "http://i.media-imdb.com/", 3.283299286806079, "http://ia.media-imdb.com/", 1.184523624813169, "http://pagead2.googlesyndication.com/", 0.44711595978863306, "http://s.media-imdb.com/", 0.61728695940968, "http://www.facebook.com/", 0.44711595978863306, "http://www.google-analytics.com/", 0.44711595978863306, "http://www.imdb.com/", 0.8441816255710759 ] ], [ "http://www.lijit.com/", [ "http://ad.turn.com/", 0.11297716064455564, "http://ap.lijit.com/", 0.11297716064455564, "http://ce.lijit.com/", 0.1953617866533679, "http://r.turn.com/", 0.11297716064455564, "http://rs.gwallet.com/", 0.11297716064455564, "http://sync.mathtag.com/", 0.17894630177338974, "http://um.simpli.fi/", 0.11297716064455564 ] ], [ "http://www.linuxmint.com/", [ "http://pagead2.googlesyndication.com/", 2.2733802, "http://www.google-analytics.com/", 2.6037003999999997, "http://www.linuxmint.com/", 15.816508399999995 ] ], [ "http://www.little-tube.com/", [ "http://rd.soopa.com/", 1.500430932, "http://surveyclubonline.com/", 1.500430932, "http://www.little-tube.com/", 1.8307511319999998, "http://zeroclick.sendori.com/", 2.2733802 ] ], [ "http://www.littledot.net/", [ "http://img.auctiva.com/", 1.324900130986648, "http://lh3.ggpht.com/", 1.0933357262729897, "http://lh4.ggpht.com/", 0.22008598393157602, "http://lh6.ggpht.com/", 0.22174998771189927, "http://www.littledot.net/", 0.0725934304190768 ] ], [ "http://www.logitech.com/", [ "http://content.channelintelligence.com/", 3.1698519537253813, "http://content.links.channelintelligence.com/", 0.3903922932482842, "http://logitech.links.channelintelligence.com/", 0.6692551616749572, "http://logitech.links.origin.channelintelligence.com/", 0.40014246823357547, "http://reviews.logitech.com/", 1.0793044579975075, "http://s7.addthis.com/", 0.3903922932482842, "http://statse.webtrendslive.com/", 0.40014246823357547, "http://ttwbs.channelintelligence.com/", 0.44711595978863306, "http://www.google-analytics.com/", 0.44851973349817686, "http://www.logitech.com/", 10.555318234468759 ] ], [ "http://www.mif.pg.gda.pl/", [ "http://frank.pocnet.net/", 0.9620910178215336, "http://frank.yueksel.org/", 0.9620910178215336, "http://tubedata.itchurch.org/", 0.9620910178215336, "http://tubedata.milbert.com/", 0.9620910178215336, "http://tubedata.tigahost.com/", 0.9620910178215336, "http://tubedata.tubes.se/", 0.9620910178215336, "http://www.mif.pg.gda.pl/", 2.080419038537162, "http://www.shinjo.info/", 0.9620910178215336, "http://www.tubedata.info/", 0.9620910178215336 ] ], [ "http://www.platenspeler.com/", [ "http://stat.onestat.com/", 2.2733802, "http://www.platenspeler.com/", 6.237222599999998 ] ], [ "http://www.purplemath.com/", [ "http://ad.yieldmanager.com/", 0.3903922932482842, "http://edge.quantserve.com/", 0.3903922932482842, "http://ignitiontutoring.com/", 0.3903922932482842, "http://media.fastclick.net/", 0.1311278826859951, "http://pagead2.googlesyndication.com/", 0.13510465348472384, "http://pixel.quantserve.com/", 0.13489610911108874, "http://r.casalemedia.com/", 0.25032336427527346, "http://www.google-analytics.com/", 0.26979221822217747, "http://www.purplemath.com/", 1.7539998045894933, "http://www.wtp101.com/", 0.25032336427527346 ] ], [ "http://www.radiomuseum.org/", [ "http://m1.nedstatbasic.net/", 2.529573049612, "http://pagead2.googlesyndication.com/", 2.529573049612, "http://static.radiomuseum.org/", 7.6642287921079975, "http://www.google-analytics.com/", 3.1714050174239996, "http://www.radiomuseum.org/", 4.4550689530479985 ] ], [ "http://www.rewardsflow.com/", [ "http://www.rewardsflow.com/", 5.246261999999999 ] ], [ "http://www.skyhookwireless.com/", [ "http://www.google-analytics.com/", 2.387589482583341, "http://www.skyhookwireless.com/", 8.748555492152388, "https://www.google-analytics.com/", 2.084686339270529 ] ], [ "http://www.supplyframe.com/", [ "http://ads.supplyframe.com/", 2.31135018055592, "http://cms.quantserve.com/", 1.45771366336596, "http://edge.quantserve.com/", 1.45771366336596, "http://ib.adnxs.com/", 1.45771366336596, "http://images.ads.supplyframe.com/", 1.7786296472719598, "http://pixel.quantserve.com/", 1.7786296472719598, "http://www.google-analytics.com/", 1.9904341966499202, "http://www.supplyframe.com/", 1.7786296472719598 ] ], [ "http://www.verizonwireless.com/", [ "http://akamai.turn.com/", 0.4343865684134507, "http://cache.vzw.com/", 5.118629787498795, "http://sales.liveperson.net/", 3.5070825057165362, "http://verizonwireless.tt.omtrdc.net/", 1.5147261792730278, "http://www.verizonwireless.com/", 1.5992633587750413, "http://www35.vzw.com/", 0.727916814419211, "https://ecache.vzw.com/", 1.8515433725199963, "https://fls.doubleclick.net/", 0.2983054018483018, "https://scache.vzw.com/", 10.240371795760538, "https://seal.verisign.com/", 0.4269118756351155 ] ], [ "http://www.virtualcomputer.com/", [ "http://553-hfb-936.mktoresp.com/", 0.14091556324555035, "http://cdn.pardot.com/", 0.14091556324555035, "http://munchkin.marketo.net/", 0.12659749129092424, "http://pi.pardot.com/", 0.14091556324555035, "http://storage.pardot.com/", 0.2371490332830812, "http://www.google-analytics.com/", 0.23881571987013692, "http://www.virtualcomputer.com/", 1.3149788925526937, "http://www2.virtualcomputer.com/", 0.3299246233287756 ] ], [ "http://www.watfordvalves.com/", [ "http://www.watfordvalves.com/", 32.05384356896401 ] ], [ "http://www.youtube.com/", [ "http://suggestqueries.google.com/", 0.0625380104708373 ] ], [ "http://www22.verizon.com/", [ "http://ak1.abmr.net/", 0.24241774988962006, "http://ehg-verizon.hitbox.com/", 0.28615688964894426, "http://www22.verizon.com/", 0.7769100377485638, "https://www22.verizon.com/", 0.24241774988962006 ] ], [ "https://accounts.google.com/", [ "https://accounts.google.com/", 2.084686339270529, "https://www.google.com/", 2.084686339270529 ] ], [ "https://bbs.archlinux.org/", [ "https://bbs.archlinux.org/", 7.152943732641053 ] ], [ "https://chrome.google.com/", [ "https://chrome.google.com/", 3.1567832577567994, "https://lh3.googleusercontent.com/", 3.370183319764799, "https://lh4.googleusercontent.com/", 3.5572370426207995, "https://lh5.googleusercontent.com/", 3.7500462646416, "https://lh6.googleusercontent.com/", 3.8450120008607995, "https://plusone.google.com/", 1.500430932, "https://ssl.google-analytics.com/", 1.7537495295376, "https://ssl.gstatic.com/", 1.1312941446576, "https://www.google.com/", 0.6535877139792 ] ], [ "https://clients6.google.com/", [ "https://clients6.google.com/", 0.21137124786102413, "https://ssl.gstatic.com/", 0.21137124786102413 ] ], [ "https://fls.doubleclick.net/", [ "https://solutions.vzwshop.com/", 0.06427901605512479, "https://stags.bluekai.com/", 0.06427901605512479 ] ], [ "https://intranet.permabit.com/", [ "https://intranet.permabit.com/", 0.7741666665362639 ] ], [ "https://nbillpay.verizonwireless.com/", [ "https://ecache.vzw.com/", 7.080594859862415, "https://nbillpay.verizonwireless.com/", 0.5197238959637364, "https://sales.liveperson.net/", 0.5197238959637364, "https://scache.vzw.com/", 0.3447673369264391, "https://seal.verisign.com/", 0.43224561644508747, "https://www.verizonwireless.com/", 0.43224561644508747, "https://www35.vzw.com/", 0.5634630357230606 ] ], [ "https://plusone.google.com/", [ "https://plusone.google.com/", 0.889610861154949, "https://ssl.gstatic.com/", 0.8727179531880481 ] ], [ "https://solutions.vzwshop.com/", [ "https://ad.yieldmanager.com/", 0.6548215434292314, "https://ads.adrdgt.com/", 0.37927782465950555, "https://bp.specificclick.net/", 0.37927782465950555, "https://googleads.g.doubleclick.net/", 0.37927782465950555, "https://s.tribalfusion.com/", 0.37927782465950555, "https://sb.scorecardresearch.com/", 0.37927782465950555, "https://secure.adnxs.com/", 0.37927782465950555, "https://secure.leadback.advertising.com/", 0.37927782465950555, "https://secure.trafficmp.com/", 0.37927782465950555, "https://www.googleadservices.com/", 0.37927782465950555 ] ], [ "https://stags.bluekai.com/", [ "https://ad.yieldmanager.com/", 0.1862366264399404, "https://data.aggregateknowledge.com/", 0.16646414924671354, "https://s.tribalfusion.com/", 0.37927782465950555, "https://tacoda.at.atwola.com/", 0.37927782465950555 ] ], [ "https://text.vzw.com/", [ "https://ecache.vzw.com/", 4.45624647430293, "https://globalnav.vzw.com/", 0.3447673369264391, "https://scache.vzw.com/", 0.5634630357230606, "https://text.vzw.com/", 1.263289271872249, "https://www35.vzw.com/", 1.0883327128349531 ] ], [ "https://www.dcu.org/", [ "https://bear.dcunet.org/", 0.37927782465950555, "https://sci.intuit.com/", 0.5446040559213406, "https://ssl.google-analytics.com/", 0.48949531216739595, "https://www.dcu.org/", 8.700698131505261 ] ], [ "https://www.paypal.com/", [ "https://paypal.112.2o7.net/", 0.13491321310097418, "https://www.paypal-search.com/", 0.05500709738221903, "https://www.paypal.com/", 0.31159288991531325, "https://www.paypalobjects.com/", 1.4606619589484533 ] ] ],
+      "startup_list": [ 1, "http://crl.geotrust.com/", "http://ocsp.thawte.com/", "http://smoothgestures.fujan.name:81/", "http://ssl.gstatic.com/", "http://www.google-analytics.com/", "http://www.google.com/", "http://www.gstatic.com/", "https://accounts.google.com/", "https://clients5.google.com/", "https://ssl.google-analytics.com/" ]
+   },
+   "download": {
+      "directory_upgrade": true,
+      "extensions_to_open": "",
+      "prompt_for_download": true
+   },
+   "extensions": {
+      "autoupdate": {
+         "last_check": "12961775221498378",
+         "next_check": "12961794352783477"
+      },
+      "blacklistupdate": {
+         "lastpingday": "12961753200226906",
+         "version": "0.0.0.6"
+      },
+      "chrome_url_overrides": {
+         "bookmarks": [ "chrome-extension://eemcgdkfndhakfknompkggombfjjjeno/main.html" ]
+      },
+      "settings": {
+         "aeaoofnhgocdbnbeljkmbjdmhbcokfdb": {
+            "granted_permissions": {
+               "api": [ "bookmarks", "notifications", "tabs" ],
+               "explicit_host": [ "file:///*", "ftp://*/*", "http://*/*", "https://*/*" ]
+            },
+            "incognito": false,
+            "install_time": "12943328808407360",
+            "lastpingday": "12961753200356265",
+            "location": 1,
+            "manifest": {
+               "background_page": "stroke.html",
+               "content_scripts": [ {
+                  "all_frames": true,
+                  "js": [ "essentials.js", "stroke.js" ],
+                  "matches": [ "http://*/*", "https://*/*", "ftp://*/*", "file:///*" ],
+                  "run_at": "document_start"
+               }, {
+                  "all_frames": true,
+                  "js": [ "essentials.js", "stroke.js" ],
+                  "matches": [ "http://*/*", "https://*/*", "ftp://*/*", "file:///*" ],
+                  "run_at": "document_end"
+               } ],
+               "current_locale": "en_US",
+               "default_locale": "en",
+               "description": "Use mouse strokes (aka gestures) to accelerate your operations. Support super drag & go, rocker gestures and wheel gestures in one extension! Volunteer translators needed.",
+               "icons": {
+                  "128": "icons/icon-128.png",
+                  "16": "icons/icon-16.png",
+                  "32": "icons/icon-32.png",
+                  "48": "icons/icon-48.png"
+               },
+               "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDX9ms/0AHVq6HEB3ttckIIyILsO6RkHvyvvgUsT4NR6OwtAGrzUkQLC94ykYUzmRxniY/xPfgX84LgdQBIWk3zk18U6VgEtMqJkR4dy1mCYD6QSkCmRpPQS63ZbuuaRFsClwxVSM7S19bk0U9JnG6zSi5sXpGj8xoZcn2KWO238wIDAQAB",
+               "name": "Mouse Stroke",
+               "options_page": "options.html",
+               "permissions": [ "tabs", "bookmarks", "notifications", "http://*/*", "https://*/*" ],
+               "update_url": "http://clients2.google.com/service/update2/crx",
+               "version": "1.9.5.2"
+            },
+            "path": "aeaoofnhgocdbnbeljkmbjdmhbcokfdb/1.9.5.2_0",
+            "state": 1
+         },
+         "dhgpkiiipkgmckicafkhcihkcldbdeej": {
+            "app_launcher_index": 6,
+            "granted_permissions": {
+               "explicit_host": [ "http://*.wikipedia.org/*" ]
+            },
+            "incognito": false,
+            "install_time": "12943329318558256",
+            "lastpingday": "12961753200356265",
+            "location": 1,
+            "manifest": {
+               "background_page": "background.html",
+               "browser_action": {
+                  "default_icon": "icon19.png",
+                  "default_title": "Wikipedia Companion",
+                  "popup": "wiki.html"
+               },
+               "current_locale": "en_US",
+               "default_locale": "en",
+               "description": "Essential extension for any Wikipedia users. Full-featured: saves your recent wiki lookups, multi-lingual, back/forward and more!",
+               "icons": {
+                  "128": "icon128.png",
+                  "16": "icon16.png",
+                  "32": "icon32.png",
+                  "48": "icon48.png"
+               },
+               "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDYaP319Fsc5ODEfXgJs0b163fYNdL/K0OQnglAtLbpdOtfOgLQatCHhQh3Kmfs85bGqtCS0sCFUz5UWXaSDwi2+K2nHfBUiir11rG/h61TyhCjXOh4KxtQrGN6Qe1+jweBhXJP/rtc5toauWDKAzK2p+uDQytjkCpFUc9r6AmGXQIDAQAB",
+               "name": "Wikipedia Companion - Mini Wiki Browser",
+               "options_page": "options.html",
+               "permissions": [ "http://*.wikipedia.org/" ],
+               "update_url": "http://clients2.google.com/service/update2/crx",
+               "version": "1.7.0"
+            },
+            "path": "dhgpkiiipkgmckicafkhcihkcldbdeej/1.7.0_0",
+            "state": 1
+         },
+         "djnmanljkopakfofdpmelbccmbpbocaa": {
+            "app_launcher_index": 7,
+            "granted_permissions": {
+               "api": [ "bookmarks", "history", "tabs", "unlimitedStorage" ],
+               "explicit_host": [ "chrome://favicon/*", "http://*/*", "https://*/*" ]
+            },
+            "incognito": false,
+            "install_time": "12943329318960276",
+            "install_warning_on_enable": true,
+            "lastpingday": "12943267201010540",
+            "location": 1,
+            "manifest": {
+               "background_page": "background.html",
+               "chrome_url_overrides": {
+                  "newtab": "newtab.html"
+               },
+               "description": "Works with Smooth Gestures. A custom new tab page that supports theming, tab organization, bookmarks, history, and speeddial.",
+               "icons": {
+                  "128": "icon128.png",
+                  "16": "icon16.png",
+                  "32": "icon32.png",
+                  "48": "icon48.png"
+               },
+               "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCs/3XrazaBH+HQ12VPrDCs4OGwHsP8qoRmI9iWzXGl4R13QgMU24ChJpyQk6MYKE5dvSSPuHoYgI0qBs8t7EV3q3r3ZjwHXkg92kix8fqguekfoJM2bEguQiV6RBJEPzw5mLii3du+FFz31CXdnA5O5MQLhdQyTBkFZEnioOP2uQIDAQAB",
+               "minimum_chrome_version": "8",
+               "name": "Ultimate New Tab",
+               "permissions": [ "tabs", "bookmarks", "history", "http://*/*", "https://*/*", "unlimited_storage", "chrome://favicon/", "management" ],
+               "update_url": "http://clients2.google.com/service/update2/crx",
+               "version": "0.4"
+            },
+            "path": "djnmanljkopakfofdpmelbccmbpbocaa/0.4_0",
+            "state": 0
+         },
+         "flmlpboicgnkgijhjggfhjkfbenipjlc": {
+            "install_time": "12943328808407413",
+            "lastpingday": "12961753200356265",
+            "location": 1,
+            "manifest": {
+               "browser_action": {
+                  "default_icon": "favicon.ico",
+                  "popup": "popup.html"
+               },
+               "content_url": "http://mobile.answers.com/",
+               "description": "Wiki QA combined with free online dictionary, thesaurus, and encyclopedias. Ask questions, get answers.",
+               "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9VJ5a1Ww21uZNpxCS+J07QoZ2GI3BPOz6D4e0Eriw1jCtawf94llP90he8nBYsMZMpbTbIzwqBs9ys8IjpxCIlX+t+afhROqxU892i+uGQmtw9hpuj5kWwGq7cAfti2kHXGnwBCc6NLtN7G1c3E9sF4cG0PtaElsmRDkl8OQEnwIDAQAB",
+               "name": "Answers.com for Google Chrome",
+               "update_url": "http://clients2.google.com/service/update2/crx",
+               "version": "1.0"
+            },
+            "path": "flmlpboicgnkgijhjggfhjkfbenipjlc/1.0",
+            "state": 1
+         },
+         "galfofdpepkcahkfobimileafiobdplb": {
+            "granted_permissions": {
+               "api": [ "tabs" ]
+            },
+            "install_time": "12943328808407429",
+            "lastpingday": "12961753200356265",
+            "location": 1,
+            "manifest": {
+               "browser_action": {
+                  "default_icon": "35.png",
+                  "popup": "menu.html"
+               },
+               "description": "Select, close, rearrange, and search your tabs from a toolbar menu!",
+               "icons": {
+                  "128": "48.png",
+                  "16": "16.png",
+                  "32": "35.png",
+                  "48": "48.png"
+               },
+               "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDKJofYINOnW66XEYmGPh5rKtvJek1Iiv1rvupOg5r6cTMrxUVM3eCMB++TvH/PgAu0YhVXGNR83UY1RclfNeMvGpTlaPvdflgMt+ugU/GIAVrFgEjlqJTm9hZFKj3CHMUYP6khPcZ+VhrudtAUfE478pcG8szIYZk+I/IcNPFGHQIDAQAB",
+               "name": "Tab Menu",
+               "permissions": [ "tabs" ],
+               "update_url": "http://clients2.google.com/service/update2/crx",
+               "version": "7"
+            },
+            "path": "galfofdpepkcahkfobimileafiobdplb/7",
+            "state": 1
+         },
+         "gegkoiakifeoejnjkbnnojkkdoegeofp": {
+            "app_launcher_index": 17,
+            "incognito": false,
+            "install_time": "12945045425035077",
+            "lastpingday": "12961753200356265",
+            "location": 1,
+            "manifest": {
+               "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC87fz98fc92REB0SojrzPW0ysa6owVqEdb47bl+8yaOo2KByYCmfrOEwINoXbId6aCLYxXaNGrGUvsmgwHhEeHx/VghdjkqHbmOeTpd0WHQVlAKb6GXJH5M5/RY1Om/NZ9varZZ2w1rflDR2My93Rv/xYQBxq8imnAiD3jalSMVQIDAQAB",
+               "name": "AT_ChuckAnderson",
+               "theme": {
+                  "colors": {
+                     "bookmark_text": [ 23, 34, 55 ],
+                     "frame": [ 43, 104, 102 ],
+                     "ntp_background": [ 255, 255, 255 ],
+                     "ntp_header": [ 165, 51, 102, 1 ],
+                     "ntp_link": [ 28, 119, 125 ],
+                     "ntp_section": [ 232, 241, 246, 1 ],
+                     "ntp_section_link": [ 28, 119, 125 ],
+                     "ntp_section_text": [ 91, 55, 88 ],
+                     "ntp_text": [ 28, 119, 125 ],
+                     "tab_background_text": [ 255, 255, 255 ],
+                     "tab_text": [ 23, 34, 55 ],
+                     "toolbar": [ 128, 143, 156 ]
+                  },
+                  "images": {
+                     "theme_button_background": "i/agxjaHJvbWV0aGVtZXNyDAsSBEZpbGUYmPkCDA",
+                     "theme_frame": "i/agxjaHJvbWV0aGVtZXNyDAsSBEZpbGUYoYEDDA",
+                     "theme_ntp_attribution": "i/agxjaHJvbWV0aGVtZXNyDAsSBEZpbGUYk8oEDA",
+                     "theme_tab_background": "i/agxjaHJvbWV0aGVtZXNyDAsSBEZpbGUYv_ECDA",
+                     "theme_toolbar": "i/agxjaHJvbWV0aGVtZXNyDAsSBEZpbGUY-cMGDA"
+                  },
+                  "properties": {
+                     "ntp_background_alignment": "bottom",
+                     "ntp_background_repeat": "no-repeat"
+                  },
+                  "tints": {
+                     "buttons": [ 0.671, 0.329, 0.5 ]
+                  }
+               },
+               "version": "3"
+            },
+            "path": "gegkoiakifeoejnjkbnnojkkdoegeofp/3_0",
+            "state": 1
+         },
+         "gighmmpiobklfepjocnamgkkbiglidom": {
+            "app_launcher_index": 8,
+            "granted_permissions": {
+               "api": [ "contextMenus" ],
+               "explicit_host": [ "http://*/*", "https://*/*" ]
+            },
+            "incognito": false,
+            "install_time": "12943329319470719",
+            "install_warning_on_enable": true,
+            "lastpingday": "12943267201010540",
+            "location": 1,
+            "manifest": {
+               "background_page": "background.html",
+               "browser_action": {
+                  "default_icon": "img/icon19.png",
+                  "default_title": "AdBlock Options",
+                  "popup": "button/popup.html"
+               },
+               "content_scripts": [ {
+                  "all_frames": true,
+                  "js": [ "port.js", "jquery/jquery-1.4.4-hacked-up.min.js", "functions.js", "broadcast_channel.js", "filtering/filteroptions.js", "filtering/fifocache.js", "filtering/filtertypes.js", "filtering/filterset.js", "adblock_start.js" ],
+                  "matches": [ "http://*/*", "https://*/*" ],
+                  "run_at": "document_start"
+               }, {
+                  "all_frames": true,
+                  "js": [ "blacklisting/overlay.js", "blacklisting/clickwatcher.js", "blacklisting/elementchain.js", "blacklisting/blacklistui.js", "blacklister.js", "whitelister.js", "adblock.js" ],
+                  "matches": [ "http://*/*", "https://*/*" ],
+                  "run_at": "document_end"
+               } ],
+               "current_locale": "en_US",
+               "default_locale": "en",
+               "description": "The most popular Chrome extension, with over 2 million users!  Blocks ads all over the web.",
+               "icons": {
+                  "128": "img/icon128.png",
+                  "16": "img/icon16.png",
+                  "48": "img/icon48.png"
+               },
+               "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDZWWNkerYNFB0SIg87WwcrcniMYkCqxLz4OB3CLNoogUUsHN+Rk9vRB7o3Jjc4shlz2LBvAbtPbrGkU+NK9Hc3ubVydzpnoRDEl1RKz3GhqKFkECvTyAxrsKainXH+4Ni2+K7bg1U0tLoQMPJ9f3ieYLIwXeHh9+lYXQi6soq0pwIDAQAB",
+               "minimum_chrome_version": "6",
+               "name": "AdBlock",
+               "options_page": "options/index.html",
+               "permissions": [ "http://*/*", "https://*/*", "contextMenus", "tabs" ],
+               "update_url": "http://clients2.google.com/service/update2/crx",
+               "version": "2.3.6"
+            },
+            "path": "gighmmpiobklfepjocnamgkkbiglidom/2.3.6_0",
+            "state": 0
+         },
+         "gofhjkjmkpinhpoiabjplobcaignabnl": {
+            "granted_permissions": {
+               "api": [ "tabs" ],
+               "explicit_host": [ "http://*/*", "https://*/*" ]
+            },
+            "incognito": false,
+            "install_time": "12943328808407507",
+            "lastpingday": "12961753200356265",
+            "location": 1,
+            "manifest": {
+               "background_page": "background.html",
+               "content_scripts": [ {
+                  "all_frames": true,
+                  "js": [ "content.js" ],
+                  "matches": [ "http://*/*", "https://*/*" ],
+                  "run_at": "document_start"
+               } ],
+               "description": "FlashBlock for Chrome. Block them all, or be selective with the embedded whitelist manager",
+               "icons": {
+                  "128": "icons/icon128.png",
+                  "16": "icons/icon16.png",
+                  "32": "icons/icon32.png",
+                  "48": "icons/icon48.png"
+               },
+               "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDRmFygsWWPDx/izHE0xrHEzTZxvlaJks0nri7RTCBqs3UkffT8xgL4DnzkXYPfwx6EHyRB9hx8024BpxnHhuMVvSg83CWt+sTOtbNcg92YxN78xdIgaNtaKl/9JyeXrR6qdfRAuG19uHXspLLlCOOrLxHUfHnRKGG5C5wS0Cv0eQIDAQAB",
+               "name": "FlashBlock",
+               "options_page": "options.html",
+               "page_action": {
+                  "default_icon": "blocked.png",
+                  "popup": "popup.html"
+               },
+               "permissions": [ "tabs", "http://*/*" ],
+               "update_url": "http://clients2.google.com/service/update2/crx",
+               "version": "0.9.31"
+            },
+            "path": "gofhjkjmkpinhpoiabjplobcaignabnl/0.9.31_0",
+            "state": 1
+         },
+         "hpibmhghjndideebpackbdlpncgkcppp": {
+            "blacklist": true,
+            "install_time": "12944351614018861"
+         },
+         "jhejngphiacapbgllhagbpdkkdieeaej": {
+            "granted_permissions": {
+               "api": [ "tabs", "plugin" ],
+               "explicit_host": [ "http://*/*" ]
+            },
+            "install_time": "12943328808407539",
+            "lastpingday": "12961753200356265",
+            "location": 1,
+            "manifest": {
+               "background_page": "background.html",
+               "content_scripts": [ {
+                  "all_frames": false,
+                  "js": [ "script.js" ],
+                  "matches": [ "http://*/*" ],
+                  "run_at": "document_end"
+               } ],
+               "description": "Porting of FlagFox to Chrome. Displays a country flag indicating the location of the websites you're visiting",
+               "icons": {
+                  "128": "128.png",
+                  "16": "16.png",
+                  "32": "32.png",
+                  "48": "48.png"
+               },
+               "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCkUq12ayg/hd2cwRGBd7G/x2m88j+3f5s6CjT0P/1BD5M5lnEuqDg42Gwj59jcN11wIjSwNOL/F/1o6cThh6znvodaiMsncCrLNhX2G/X74NNrJDainkisvxoUn/Pw5YS0N6arsdwIbCSB6c9+hxwlymzt6+NAcVMAXENjoexmYwIDAQAB",
+               "name": "Chrome Flags",
+               "page_action": {
+                  "default_icon": "flags/none.png",
+                  "popup": "info.html"
+               },
+               "permissions": [ "tabs" ],
+               "plugins": [ {
+                  "path": "NPIP2Country.dll"
+               } ],
+               "update_url": "http://clients2.google.com/service/update2/crx",
+               "version": "1.4"
+            },
+            "path": "jhejngphiacapbgllhagbpdkkdieeaej/1.4",
+            "state": 1
+         },
+         "kgjchjmpdgiajbpieghnchannpmekpbg": {
+            "allowFileAccess": true,
+            "app_launcher_index": 24,
+            "granted_permissions": {
+               "explicit_host": [ "file://*", "ftp://*/*" ]
+            },
+            "incognito": false,
+            "install_time": "12950148273463900",
+            "install_warning_on_enable": true,
+            "lastpingday": "12950089201069625",
+            "location": 1,
+            "manifest": {
+               "background_page": "background.html",
+               "description": "An old extension that is no longer needed. Uninstall.",
+               "icons": {
+                  "128": "icon128.png",
+                  "16": "icon16.png",
+                  "32": "icon32.png",
+                  "48": "icon48.png"
+               },
+               "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDmkZjaGOHb5g4P9W/K+2e8FHyWAV26Zoq+JO8f0lWiGqFaUT8kjaaIeBNfmH+J8JhpBpccvbXLdkPmYOURJUhqG7YlTCtoUlaF+7ccTYZY0XOM5s1zrUi/H5srSiNr25aBtQNjX0kWiCa9o5c4TOzseDBOuvjLO29vaELhxt7r3wIDAQAB",
+               "name": "Smooth Gestures: File Protocols (uninstall)",
+               "permissions": [ "management" ],
+               "update_url": "http://clients2.google.com/service/update2/crx",
+               "version": "1.5"
+            },
+            "path": "kgjchjmpdgiajbpieghnchannpmekpbg/1.5_0",
+            "state": 0
+         },
+         "lambangeielkjcnmioccboaphdfcffib": {
+            "allowFileAccess": true,
+            "app_launcher_index": 35,
+            "from_webstore": false,
+            "incognito": false,
+            "install_time": "12959271414906803",
+            "lastpingday": "12961753200356265",
+            "location": 1,
+            "manifest": {
+               "browser_action": {
+                  "default_icon": "48.png",
+                  "popup": "popup.html"
+               },
+               "description": "Live TV around the world.",
+               "icons": {
+                  "128": "128.png",
+                  "48": "48.png"
+               },
+               "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDW/U6hpsu4WbKn1shEfJZlDhtMtGyP3dUgXKECmPF0/Mg/6vCldzFh6ZInFFchdrnzOdfD5+dBbIyzJ+47Fe1DrbuqQE0ehD0lxSYgo/idmo7W5iTSgYudzY5YVEZq9OjSFUtKpxC2u7MLVVhNbMMs8z2YkV5/yMaOtSMUCbyGSQIDAQAB",
+               "name": "TV for Google Chrome\u2122",
+               "update_url": "http://clients2.google.com/service/update2/crx",
+               "version": "2.2.4"
+            },
+            "path": "lambangeielkjcnmioccboaphdfcffib/2.2.4_0",
+            "state": 1
+         },
+         "lfkgmnnajiljnolcgolmmgnecgldgeld": {
+            "allowFileAccess": true,
+            "app_launcher_index": 39,
+            "from_webstore": false,
+            "granted_permissions": {
+               "api": [ "bookmarks", "tabs" ],
+               "explicit_host": [ "http://*/*", "https://*/*" ]
+            },
+            "incognito": false,
+            "install_time": "12961721470444068",
+            "lastpingday": "12961753200356265",
+            "location": 1,
+            "manifest": {
+               "background_page": "background.html",
+               "content_scripts": [ {
+                  "all_frames": true,
+                  "js": [ "js/gestures.js", "js/define.js", "js/pluginstorage.js" ],
+                  "matches": [ "\u003Call_urls\u003E" ],
+                  "run_at": "document_start"
+               }, {
+                  "all_frames": true,
+                  "js": [ "js/gestures.js", "js/sitejs/youtube.js", "js/sitejs/yahoo.js" ],
+                  "matches": [ "\u003Call_urls\u003E" ],
+                  "run_at": "document_end"
+               }, {
+                  "all_frames": true,
+                  "js": [ "js/jquery.min.js" ],
+                  "matches": [ "\u003Call_urls\u003E" ],
+                  "run_at": "document_idle"
+               } ],
+               "current_locale": "en_US",
+               "default_locale": "en",
+               "description": "Mouse Gestures! Quickly and easily navigate webpages using the mouse or keyboard.",
+               "icons": {
+                  "128": "im/icon128.png",
+                  "16": "im/icon16.png",
+                  "32": "im/icon32.png",
+                  "48": "im/icon48.png"
+               },
+               "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDBAsZtLKg1B7P+mD4osPAoPO6f87XLi+wyyjbnxIDH+n7Snly0c0/rNnTfM3bZ+hj3DSEHGYnwJp+1jf9OAh1CZiCG+JoUmWMumrQZAqJZWPPzfLDBz1TpS8Jb1MasCIZRlngp8bSiooiBxGFlIaXGlk6l5/ExB/OJN9ZKW3+8XwIDAQAB",
+               "minimum_chrome_version": "8",
+               "name": "Smooth Gestures",
+               "options_page": "options.html",
+               "page_action": {
+                  "default_icon": "im/pageaction.png",
+                  "popup": "popup.html"
+               },
+               "permissions": [ "tabs", "bookmarks", "notifications", "idle", "cookies", "unlimitedStorage", "\u003Call_urls\u003E" ],
+               "update_url": "http://clients2.google.com/service/update2/crx",
+               "version": "0.15.4.8"
+            },
+            "path": "lfkgmnnajiljnolcgolmmgnecgldgeld/0.15.4.8_0",
+            "state": 1
+         },
+         "lncjcfkpannmofmpgdfoonkniofdnaba": {
+            "blacklist": true,
+            "install_time": "12944351614018908"
+         },
+         "mgijmajocgfcbeboacabfgobmjgjcoja": {
+            "allowFileAccess": true,
+            "app_launcher_index": 37,
+            "from_webstore": false,
+            "granted_permissions": {
+               "api": [ "tabs" ],
+               "explicit_host": [ "http://*/*", "https://*/*" ]
+            },
+            "incognito": false,
+            "install_time": "12961201531880627",
+            "lastpingday": "12961753200356265",
+            "location": 1,
+            "manifest": {
+               "background_page": "background.html",
+               "browser_action": {
+                  "default_icon": "static/icon19.png",
+                  "default_popup": "page_action.html",
+                  "default_title": "Google Dictionary"
+               },
+               "content_scripts": [ {
+                  "all_frames": true,
+                  "css": [ "content_css_min.css" ],
+                  "js": [ "content_js_min.js" ],
+                  "matches": [ "\u003Call_urls\u003E" ]
+               } ],
+               "description": "View definitions easily as you browse the web.",
+               "icons": {
+                  "128": "static/icon128.png",
+                  "32": "static/icon32.png",
+                  "48": "static/icon48.png"
+               },
+               "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCuLnDgxFluQcqbOGrRJ2N7gYRj2DlTTnXa02Ho6IZNKm+Qv8cePlrsn/06irXeEPyikjoo9vokhsv54vV4Wb73x0a5K7s9pY2tuXnBzvik4Jru4KZozebnJTyYDAcjiyPc/ATrzlfQxlZiXIHBVj5KITnaFlR2SuxYkRVebPjUfwIDAQAB",
+               "name": "Google Dictionary (by Google)",
+               "options_page": "options.html",
+               "permissions": [ "tabs", "https://clients5.google.com/*" ],
+               "update_url": "http://clients2.google.com/service/update2/crx",
+               "version": "3.0.6"
+            },
+            "path": "mgijmajocgfcbeboacabfgobmjgjcoja/3.0.6_0",
+            "state": 1
+         },
+         "oeahddlmhbcabnnojadgimmiaaplfpfo": {
+            "granted_permissions": {
+               "api": [ "tabs" ]
+            },
+            "install_time": "12943328808407633",
+            "lastpingday": "12961753200356265",
+            "location": 1,
+            "manifest": {
+               "background_page": "background.html",
+               "browser_action": {
+                  "default_icon": "icon19.png",
+                  "default_title": "Google Map",
+                  "popup": "map.html"
+               },
+               "description": "Google maps in a click away.",
+               "icons": {
+                  "128": "icon128.png",
+                  "16": "icon16.png",
+                  "32": "icon32.png",
+                  "48": "icon48.png"
+               },
+               "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCop85VXEFxorKf6dLF62fFrvqmbPd3zRkxF91CqURqunyrrQRdCFzonU3PZoOHVIAvXPAlGpdvCs3spyQy5X5Mo/cTjsA+z2pabrCCBqgqV/boljhQUhkJA63Ex3GihFKRxae5AYvH2AK7fTilcSoLigMYDSIa2zl2HzOp7N3JawIDAQAB",
+               "name": "Mini Google Maps",
+               "permissions": [ "tabs" ],
+               "update_url": "http://clients2.google.com/service/update2/crx",
+               "version": "1.0.2"
+            },
+            "path": "oeahddlmhbcabnnojadgimmiaaplfpfo/1.0.2",
+            "state": 1
+         },
+         "pbglijbamgmlcpnnpbfjkbdeheejjloj": {
+            "blacklist": true
+         },
+         "pgkcfihepeihdlfphbndagmompiakeci": {
+            "app_launcher_index": 40,
+            "from_webstore": true,
+            "granted_permissions": {
+               "api": [ "tabs" ],
+               "explicit_host": [ "http://secbrowsing.appspot.com/*" ]
+            },
+            "install_time": "12961791768584401",
+            "location": 1,
+            "manifest": {
+               "background_page": "background.html",
+               "description": "Periodically checks that all your plugins are up-to-date.",
+               "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDVR1IRDZ3HbxmbK2Lqe9pWTyLXnHj6boZOiCH0iOL38wCIWh7f9qOvqlxavXzZ0KSwp4G9dZpv2hQN4oRY21f2lh82gI34/PbGp7BALQ9/xfaDQMlEPN/9FW0hP2aVJtcZdHIyxIOAcSV6TJ4CmGNylq9XQ2WGEoggwOP2MM1xSQIDAQAB",
+               "name": "Secbrowsing - plugin version checker",
+               "page_action": {
+                  "default_icon": "icon16red.png"
+               },
+               "permissions": [ "http://secbrowsing.appspot.com/", "tabs" ],
+               "update_url": "http://clients2.google.com/service/update2/crx",
+               "version": "1.7"
+            },
+            "path": "pgkcfihepeihdlfphbndagmompiakeci/1.7_0",
+            "state": 1
+         },
+         "pioclpoplcdbaefihamjohnefbikjilc": {
+            "allowFileAccess": true,
+            "app_launcher_index": 27,
+            "granted_permissions": {
+               "api": [ "tabs" ],
+               "explicit_host": [ "http://*/*", "https://*/*" ]
+            },
+            "incognito": false,
+            "install_time": "12950148275286620",
+            "install_warning_on_enable": true,
+            "lastpingday": "12950089201069625",
+            "location": 1,
+            "manifest": {
+               "background_page": "background.html",
+               "browser_action": {
+                  "default_icon": "images/evernote-icon-19.png",
+                  "default_title": "Clip to Evernote",
+                  "popup": "popup.html"
+               },
+               "current_locale": "en_US",
+               "default_locale": "en",
+               "description": "Use the Evernote extension to save things you see on the web into your Evernote account. It even lets you search through your notes.",
+               "icons": {
+                  "128": "images/en_app_icon-128.png",
+                  "16": "images/en_app_icon-16.png",
+                  "32": "images/en_app_icon-32.png",
+                  "48": "images/en_app_icon-48.png"
+               },
+               "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDagHdvA7LfpgVcEBFjt6ADW0PMXRJpeSnRsjAJWdapZYbS2LAIMB5lftI0ZjGZyyH2obL2coYBgcULJkidtZ8YIX9yP5tbB7mh1RzHj2oNfXBlh2yzJm/4/QELGmHhOy3S6x/2102Zo+Q7AgBtPN5RPX1X2FJbasBT02O4DvvRcwIDAQAB",
+               "minimum_chrome_version": "4.1",
+               "name": "Clip to Evernote",
+               "options_page": "options.html",
+               "permissions": [ "unlimitedStorage", "management", "contextMenus", "cookies", "tabs", "notifications", "http://*/*", "https://*/*" ],
+               "update_url": "http://clients2.google.com/service/update2/crx",
+               "version": "4.2.14.5300"
+            },
+            "path": "pioclpoplcdbaefihamjohnefbikjilc/4.2.14.5300_0",
+            "state": 0
+         }
+      },
+      "theme": {
+         "id": "gegkoiakifeoejnjkbnnojkkdoegeofp",
+         "pack": "/home/davep/.config/chromium/Default/Extensions/gegkoiakifeoejnjkbnnojkkdoegeofp/3_0/Cached Theme.pak",
+         "use_system": false
+      },
+      "toolbar": [ "galfofdpepkcahkfobimileafiobdplb", "lambangeielkjcnmioccboaphdfcffib", "flmlpboicgnkgijhjggfhjkfbenipjlc", "oeahddlmhbcabnnojadgimmiaaplfpfo", "dhgpkiiipkgmckicafkhcihkcldbdeej", "mgijmajocgfcbeboacabfgobmjgjcoja" ],
+      "toolbarsize": -1
+   },
+   "google": {
+      "services": {
+         "username": ""
+      }
+   },
+   "homepage": "http://www.google.com/",
+   "homepage_is_newtabpage": false,
+   "ntp": {
+      "alt_logo_end": 0.0,
+      "alt_logo_resource_server": "https://www.google.com/support/chrome/bin/topic/30248/inproduct",
+      "alt_logo_start": 0.0,
+      "pref_version": 3,
+      "promo_build": 0,
+      "promo_closed": false,
+      "promo_end": 1316246340.0,
+      "promo_group": 23,
+      "promo_group_max": 0,
+      "promo_group_timeslice": 0,
+      "promo_line": "Like Chrome? You might like the Chromebook, too. \u003Ca href=\"http://www.google.com/chromebook/buynow.html#utm_campaign=en&utm_source=en-ntp-na-us-bkws&utm_medium=ntp\"\u003ELearn more.\u003C/a\u003E",
+      "promo_resource_cache_update": "1317172709.876257",
+      "promo_start": 1315641480.0,
+      "shown_sections": 64,
+      "tips_cache": {
+         "current_tip": 0,
+         "tips": [ "Did you know that there are over 450 browser themes in the Chrome extensions gallery? These include new \u003Ca href=\"http://chrome.google.com/extensions/featured/worldcup\"\u003EWorld Cup themes\u003C/a\u003E.", "The \u003Ca href=\"https://chrome.google.com/extensions/\"\u003EChrome extensions gallery\u003C/a\u003E has over 5,000 extensions! Explore extensions in different categories, such as blogging, shopping, web development, and more.", "Parlez-vous fran\u00E7ais ? Google Chrome's built-in translation bar helps you read more of the Web. \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=173424&ctx=tip\"\u003ELearn more\u003C/a\u003E", "Add extra features and functionality to your browser with extensions. Visit the \u003Ca href=\"https://chrome.google.com/extensions\" target=\"_blank\"\u003EChrome extensions gallery\u003C/a\u003E or \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?hl=en&answer=154007&ctx=tip\" target=\"_blank\"\u003Elearn more\u003C/a\u003E.\n", "Control Google Chrome from the command line: run \u003Cspan class=\"code\"\u003Eman google-chrome\u003C/span\u003E in a terminal.", "Middle-click the new tab button to open a URL from the clipboard.", "Click and hold down the back button to see your browsing history.", "Customize Google Chrome with themes! Check out designs at the \u003Ca href=\"https://tools.google.com/chrome/intl/en/themes/index.html\" target=\"_blank\"\u003EThemes Gallery\u003C/a\u003E.", "When you use the find bar, yellow markers on the scrollbar help you quickly locate matches on the page. \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95635&ctx=tip\"\u003ELearn more\u003C/a\u003E", "Search your bookmarks and browsing history from the address bar. \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95440&ctx=tip\"\u003ELearn more\u003C/a\u003E", "Have your tabs arranged your way. Click a tab and drag it to a new position along the top of the browser window. \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95622&ctx=tips\"\u003ELearn more\u003C/a\u003E", "Press \u003Cstrong\u003ECtrl+T\u003C/strong\u003E to open a new tab. Learn more \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95743&ctx=tip\"\u003Ekeyboard shortcuts\u003C/a\u003E.", "Press \u003Cstrong\u003ECtrl+N\u003C/strong\u003E to open a new browser window. Learn more \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95743&ctx=tip\"\u003Ekeyboard shortcuts\u003C/a\u003E.", "To search a site, start typing the site's web address in the address bar and press \u003Cstrong\u003ETab\u003C/strong\u003E when prompted. Learn more \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95655&ctx=tip\"\u003Esearch tricks\u003C/a\u003E.", "Create address bar keywords for search engines you frequently use. \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?hl=en&answer=95653&ctx=tips\"\u003ELearn how\u003C/a\u003E", "Press \u003Cstrong\u003ECtrl\u003C/strong\u003E and + to enlarge a page; \u003Cstrong\u003ECtrl\u003C/strong\u003E and - to make the page smaller; and \u003Cstrong\u003ECtrl\u003C/strong\u003E and \u003Cstrong\u003E0\u003C/strong\u003E to return the page to its normal size. Learn more \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95743&ctx=tip\"\u003Ekeyboard shortcuts\u003C/a\u003E.", "Press \u003Cstrong\u003ECtrl+F\u003C/strong\u003E to search the page you're viewing. Learn more about \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95635&ctx=tip\"\u003Eusing the find bar\u003C/a\u003E.\n", "Press \u003Cstrong\u003ECtrl+S\u003C/strong\u003E to save your current webpage. Learn more \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95743&ctx=tip\"\u003Ekeyboard shortcuts\u003C/a\u003E.", "Press \u003Cstrong\u003ECtrl+P\u003C/strong\u003E to print your current webpage. Learn more \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95743&ctx=tip\"\u003Ekeyboard shortcuts\u003C/a\u003E.", "Press \u003Cstrong\u003ECtrl+J\u003C/strong\u003E to see a list of files you've downloaded. Learn more \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95743&ctx=tip\"\u003Ekeyboard shortcuts\u003C/a\u003E.", "Press \u003Cstrong\u003ECtrl+H\u003C/strong\u003E to see your browsing history. Learn more \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95743&ctx=tip\"\u003Ekeyboard shortcuts\u003C/a\u003E.", "Click a tab and drag it out of the tab strip to open it in a new window. \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95622&ctx=tips\"\u003ELearn more\u003C/a\u003E\n", "Press \u003Cstrong\u003ECtrl+Shift+N\u003C/strong\u003E to open a new window in incognito mode. Pages you visit while in incognito mode aren't stored in your browsing history. \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95464&ctx=tip\"\u003ELearn more\u003C/a\u003E", "Press \u003Cstrong\u003ECtrl+O\u003C/strong\u003E to open a file in the browser. Learn more \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95743&ctx=tip\"\u003Ekeyboard shortcuts\u003C/a\u003E.", "Press \u003Cstrong\u003EF11\u003C/strong\u003E to go full screen. Learn more \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95743&ctx=tip\"\u003Ekeyboard shortcuts\u003C/a\u003E.", "Click the star next to the address bar to bookmark the page you're viewing. Learn more \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95739&ctx=tip\"\u003Ebookmarking tricks\u003C/a\u003E.\n", "Want to hide thumbnails on the New Tab page? Use the controls at the top of the page. \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95451&ctx=tip\"\u003ELearn more\u003C/a\u003E", "Press \u003Cstrong\u003ECtrl+Shift+T\u003C/strong\u003E repeatedly to reopen the last 10 tabs you closed. Learn more \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95743&ctx=tip\"\u003Ekeyboard shortcuts\u003C/a\u003E.", "Don't want to leave traces of your browsing history? Browse in incognito mode. \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95464&ctx=tip\"\u003ELearn more\u003C/a\u003E", "Accidentally closed a window full of tabs? Find it again in the \u003Cstrong\u003ERecently closed\u003C/strong\u003E section of the New Tab page.", "Add a home button next to the address bar. \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95314&ctx=tip\"\u003ELearn how\u003C/a\u003E", "Search directly from the address bar. Learn more \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95655&ctx=tip\"\u003Esearch tips\u003C/a\u003E.\n", "Press \u003Cstrong\u003EF6\u003C/strong\u003E to quickly place your cursor in the address bar. Learn more \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=95743&ctx=tip\"\u003Ekeyboard shortcuts\u003C/a\u003E.", "Switching between computers? Keep your Google Chrome settings, bookmarks, and themes in sync across computers. \u003Ca href=\"http://www.google.com/support/chrome/bin/answer.py?answer=165138&ctx=tip\"\u003ELearn how\u003C/a\u003E" ],
+         "topic_id": "25688"
+      },
+      "tips_cache_update": "1280269454.304588",
+      "tips_server": "https://clients2.google.com/tools/service/npredir?r=chrometips_linux&hl=en-US",
+      "web_resource_cache_update": "1300834569.337376",
+      "webstore_last_promo_id": "1257606"
+   },
+   "plugins": {
+      "enabled_internal_pdf3": true,
+      "enabled_nacl": true,
+      "last_internal_directory": "/usr/lib/chromium-browser",
+      "plugins_list": [ {
+         "enabled": true,
+         "name": "Shockwave Flash",
+         "path": "/bfd/opt/Adobe/flash-player/plugin/libflashplayer.so",
+         "version": "11.0 r1"
+      }, {
+         "enabled": true,
+         "name": "Shockwave Flash",
+         "path": "/usr/lib/nsbrowser/plugins/libswfdecmozilla.so",
+         "version": "9.0 r999"
+      }, {
+         "enabled": true,
+         "name": "Java(TM) Plug-in 1.6.0_21",
+         "path": "/bfd/opt/sun-jdk-1.6.0.21/jre/lib/i386/libnpjp2.so",
+         "version": "1.6.0_21"
+      }, {
+         "enabled": true,
+         "name": "Remoting Viewer",
+         "path": "internal-remoting-viewer",
+         "version": ""
+      }, {
+         "enabled": true,
+         "name": "VLC Multimedia Plug-in",
+         "path": "/usr/lib/nsbrowser/plugins/libvlcplugin.so",
+         "version": ""
+      }, {
+         "enabled": true,
+         "name": "VLC Multimedia Plugin (compatible Totem 2.32.0)",
+         "path": "/usr/lib/nsbrowser/plugins/libtotem-cone-plugin.so",
+         "version": ""
+      }, {
+         "enabled": true,
+         "name": "Windows Media Player Plug-in 10 (compatible; Totem)",
+         "path": "/usr/lib/nsbrowser/plugins/libtotem-gmp-plugin.so",
+         "version": ""
+      }, {
+         "enabled": true,
+         "name": "DivX\u00AE Web Player",
+         "path": "/usr/lib/nsbrowser/plugins/libtotem-mully-plugin.so",
+         "version": ""
+      }, {
+         "enabled": true,
+         "name": "QuickTime Plug-in 7.6.6",
+         "path": "/usr/lib/nsbrowser/plugins/libtotem-narrowspace-plugin.so",
+         "version": ""
+      }, {
+         "enabled": true,
+         "name": "gxine starter plugin",
+         "path": "/usr/lib/gxine/gxineplugin.so",
+         "version": ""
+      }, {
+         "enabled": true,
+         "name": "MozPlugger 1.14.2 handles QuickTime and Windows Media Player Plugin",
+         "path": "/usr/lib/nsbrowser/plugins/mozplugger.so",
+         "version": ""
+      }, {
+         "enabled": true,
+         "name": "Default Plug-in",
+         "path": "default_plugin",
+         "version": "1"
+      }, {
+         "enabled": true,
+         "name": "Flash"
+      }, {
+         "enabled": true,
+         "name": "Java"
+      }, {
+         "enabled": true,
+         "name": "Remoting Viewer"
+      }, {
+         "enabled": true,
+         "name": "VLC Multimedia Plug-in"
+      }, {
+         "enabled": true,
+         "name": "VLC Multimedia Plugin (compatible Totem 2.32.0)"
+      }, {
+         "enabled": true,
+         "name": "Windows Media Player Plug-in 10 (compatible; Totem)"
+      }, {
+         "enabled": true,
+         "name": "DivX\u00AE Web Player"
+      }, {
+         "enabled": true,
+         "name": "QuickTime Plug-in 7.6.6"
+      }, {
+         "enabled": true,
+         "name": "gxine starter plugin"
+      }, {
+         "enabled": true,
+         "name": "MozPlugger 1.14.2 handles QuickTime and Windows Media Player Plugin"
+      }, {
+         "enabled": true,
+         "name": "Default Plug-in"
+      } ]
+   },
+   "profile": {
+      "content_settings": {
+         "pref_version": 1
+      },
+      "exited_cleanly": true,
+      "local_profile_id": 14431260,
+      "multiple_profile_prefs_version": 1
+   },
+   "savefile": {
+      "default_directory": "/home/davep/doc/rmv"
+   },
+   "session": {
+      "restore_on_startup": 1
+   },
+   "tabs": {
+      "use_compact_navigation_bar": false,
+      "use_vertical_tabs": false
+   },
+   "translate_accepted_count": {
+      "fr": 0
+   },
+   "translate_denied_count": {
+      "fr": 1
+   }
+}

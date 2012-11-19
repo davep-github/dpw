@@ -1,0 +1,19 @@
+{
+   "background_page": "background.html",
+   "chrome_url_overrides": {
+      "newtab": "newtab.html"
+   },
+   "description": "Works with Smooth Gestures. A custom new tab page that supports theming, tab organization, bookmarks, history, and speeddial.",
+   "icons": {
+      "128": "icon128.png",
+      "16": "icon16.png",
+      "32": "icon32.png",
+      "48": "icon48.png"
+   },
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCs/3XrazaBH+HQ12VPrDCs4OGwHsP8qoRmI9iWzXGl4R13QgMU24ChJpyQk6MYKE5dvSSPuHoYgI0qBs8t7EV3q3r3ZjwHXkg92kix8fqguekfoJM2bEguQiV6RBJEPzw5mLii3du+FFz31CXdnA5O5MQLhdQyTBkFZEnioOP2uQIDAQAB",
+   "minimum_chrome_version": "8",
+   "name": "Ultimate New Tab",
+   "permissions": [ "tabs", "bookmarks", "history", "http://*/*", "https://*/*", "unlimited_storage", "chrome://favicon/", "management" ],
+   "update_url": "http://clients2.google.com/service/update2/crx",
+   "version": "0.4"
+}

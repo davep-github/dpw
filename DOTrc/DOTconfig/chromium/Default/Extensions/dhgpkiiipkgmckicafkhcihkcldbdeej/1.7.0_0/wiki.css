@@ -1,0 +1,136 @@
+#main {
+    position: relative;
+}
+#toolbar {
+    padding-left: 8px;
+    height: 40px;
+    position: relative;
+}
+
+.button {
+    display: inline-block;
+    margin-top: 10px;
+    height: 19px;
+    width: 19px;
+    cursor: pointer;
+    opacity: 0.75;
+}
+.button:hover {
+    opacity: 1;
+}
+.button[disabled="true"] {
+    cursor: default;
+    opacity: 0.3;
+}
+
+#clearhistorybutton {
+    background: url('img/wiki_clear.png');
+}
+#backbutton {
+    background: url('img/wiki_back.png');
+}
+#forwardbutton {
+    background: url('img/wiki_forward.png');
+}
+#searchbox {
+    position: relative;
+    display: inline-block;
+    top: -5px;
+    height: 20px;
+    width: 120px;
+}
+#searchbutton {
+    background: url('img/wiki_search.png');
+}
+
+#toolbar-left {
+    position: absolute;
+    left: 8px;
+    top: 0px;
+}
+
+#toolbar-right {
+    position: absolute;
+    right: 8px;
+    top: 0px;
+}
+
+.button-big {
+    display: inline-block;
+    margin-top: 9px;
+    margin-left: 5px;
+    padding: 3px 6px;
+
+    border: 1px solid #777;
+    -webkit-border-radius: 5px;
+    background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#ccc));
+    color: #000;
+    text-align: center;
+
+    font: 11px Verdana, Arial, Tahoma, sans-serif;
+    cursor: pointer;
+}
+.button-big:hover {
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eee));
+}
+
+#wikipage {
+    position: absolute;
+    top: 40px;
+    height: 485px;
+    width: 480px;
+    margin: 0px;
+    border: none;
+}
+
+body {
+    width: 480px;
+    height: 500px;
+    background: #ddd;
+    margin: 0;
+    padding: 0;
+}
+body[updated="true"] {
+    height: 530px;
+}
+body[updated="true"] #update {
+    display: block;
+}
+
+#update {
+    padding: 10px;
+    background: -webkit-gradient(linear, left top, left bottom, from(#555), to(#333));
+    color: white;
+    font: 13px Verdana, Arial, Tahoma;
+    text-align: center;
+    text-shadow: #444 -1px -1px 0;
+    line-height: 100%;
+
+    cursor: pointer;
+    display: none;
+}
+#update:hover {
+    background: -webkit-gradient(linear, left top, left bottom, from(#666), to(#444));
+}
+
+#welcome {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+
+    background: -webkit-gradient(linear, left top, left bottom, from(#555), to(#333));
+    color: white;
+    font: 15px Verdana, Arial, Tahoma;
+    text-align: center;
+    text-shadow: #444 -1px -1px 0;
+    line-height: 100%;
+
+    cursor: pointer;
+    display: none;
+}
+#welcome:hover {
+    background: -webkit-gradient(linear, left top, left bottom, from(#666), to(#444));
+}
+

@@ -1,0 +1,1698 @@
+{
+   "action_bookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Zak\u0142adki",
+      "update": "20110324"
+   },
+   "action_clone_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Duplikuj kart\u0119",
+      "update": "20100906"
+   },
+   "action_clone_tab_hack": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Zduplikuj kart\u0119 ",
+      "update": "20110418"
+   },
+   "action_close_left_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Zamknij karty po lewej od zaznaczonej",
+      "update": "20110418"
+   },
+   "action_close_other_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Zamknij wszystkie inne karty",
+      "update": "20110323"
+   },
+   "action_close_right_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Zamknij karty po prawej od zaznaczonej",
+      "update": "20110418"
+   },
+   "action_close_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for close_tab",
+      "message": "Zamknij kart\u0119",
+      "update": "20100906"
+   },
+   "action_close_window": {
+      "category": "Options Page: Actions",
+      "description": "Action title for close_window",
+      "message": "Zamknij okno",
+      "update": "20100906"
+   },
+   "action_copy": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Skopiuj tekst do schowka",
+      "update": "20110216"
+   },
+   "action_goto_bottom": {
+      "category": "Options Page: Actions",
+      "description": "Action title for goto_bottom",
+      "message": "D\u00F3\u0142 strony",
+      "update": "20100906"
+   },
+   "action_goto_top": {
+      "category": "Options Page: Actions",
+      "description": "Action title for goto_top",
+      "message": "G\u00F3ra strony",
+      "update": "20100906"
+   },
+   "action_hide_image": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Ukryj obrazek",
+      "update": "20100906"
+   },
+   "action_maximize_x": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Maksymalizuj okno",
+      "update": "20100906"
+   },
+   "action_merge_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title for merge_tabs",
+      "message": "* Scal Karty *",
+      "update": "20110323"
+   },
+   "action_minimize_x": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Zminimalizuj okno",
+      "update": "20110418"
+   },
+   "action_navigate_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for new_tab",
+      "message": "Przejd\u017A do Nowej karty",
+      "update": "20110418"
+   },
+   "action_new_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for new_tab",
+      "message": "Otw\u00F3rz Now\u0105 kart\u0119",
+      "update": "20100906"
+   },
+   "action_new_tab_back": {
+      "category": "Options Page: Actions",
+      "description": "Action title for new_tab_back",
+      "message": "Otw\u00F3rz Now\u0105 Kart\u0119 (w tle)",
+      "update": "20110426"
+   },
+   "action_new_tab_link": {
+      "category": "Options Page: Actions",
+      "description": "Action title for new_tab_link",
+      "message": "Otw\u00F3rz link w nowej karcie",
+      "update": "20110426"
+   },
+   "action_new_window": {
+      "category": "Options Page: Actions",
+      "description": "Action title for new_window",
+      "message": "Otw\u00F3rz nowe okno",
+      "update": "20110426"
+   },
+   "action_new_window_link": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Otw\u00F3rz Link w Nowym Oknie",
+      "update": "20110323"
+   },
+   "action_next_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for next_tab",
+      "message": "Nast\u0119pna Karta",
+      "update": "20110323"
+   },
+   "action_next_window": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Nast\u0119pne okno",
+      "update": "20100906"
+   },
+   "action_open_bookmarks": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Otw\u00F3rz Zak\u0142adki",
+      "update": "20110418"
+   },
+   "action_open_downloads": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Otw\u00F3rz panel pobierania",
+      "update": "20110413"
+   },
+   "action_open_extensions": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Otw\u00F3rz panel rozszerze\u0144",
+      "update": "20110413"
+   },
+   "action_open_history": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Otw\u00F3rz histori\u0119",
+      "update": "20110413"
+   },
+   "action_open_image": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Otw\u00F3rz obrazek",
+      "update": "20100906"
+   },
+   "action_options": {
+      "category": "Options Page: Actions",
+      "description": "Action title for options",
+      "message": "Otw\u00F3rz opcje",
+      "update": "20110413"
+   },
+   "action_page_back": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_back",
+      "message": "Cofnij",
+      "update": "20100906"
+   },
+   "action_page_back_close": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_back_close",
+      "message": " Cofnij do poprzedniej strony z historii lub zamknij je\u015Bli takowej nie ma",
+      "update": "20110418"
+   },
+   "action_page_down": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_down",
+      "message": "Strona w d\u00F3\u0142",
+      "update": "20100831"
+   },
+   "action_page_forward": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_forward",
+      "message": "Kolejna strona z historii",
+      "update": "20110418"
+   },
+   "action_page_next": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_next",
+      "message": "Nast\u0119pna strona",
+      "update": "20100906"
+   },
+   "action_page_prev": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_prev",
+      "message": "Poprzednia strona",
+      "update": "20100906"
+   },
+   "action_page_up": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_up",
+      "message": "Strona w g\u00F3r\u0119",
+      "update": "20100831"
+   },
+   "action_parent_dir": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Katalog macierzysty",
+      "update": "20110418"
+   },
+   "action_pin": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Przypnij kart\u0119",
+      "update": "20110216"
+   },
+   "action_prev_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for prev_tab",
+      "message": "Poprzednia karta",
+      "update": "20100906"
+   },
+   "action_prev_window": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Poprzednie okno",
+      "update": "20100906"
+   },
+   "action_print": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Drukuj stron\u0119",
+      "update": "20100913"
+   },
+   "action_reload_all_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Od\u015Bwie\u017C wszystkie karty",
+      "update": "20100906"
+   },
+   "action_reload_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for reload_tab",
+      "message": "Od\u015Bwie\u017C kart\u0119",
+      "update": "20100906"
+   },
+   "action_reload_tab_full": {
+      "category": "Options Page: Actions",
+      "description": "Action title for reload_tab_full",
+      "message": "Od\u015Bwie\u017C kart\u0119 (pomi\u0144 cache)",
+      "update": "20100831"
+   },
+   "action_search_sel": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Znajd\u017A w Google",
+      "update": "20100906"
+   },
+   "action_show_cookies": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Lista plik\u00F3w cookie",
+      "update": "20100906"
+   },
+   "action_split_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title for split_tabs",
+      "message": "Podziel karty",
+      "update": "20100831"
+   },
+   "action_status": {
+      "category": "Options Page: Actions",
+      "description": "Action title for status",
+      "message": "Otw\u00F3rz okno statusu",
+      "update": "20100831"
+   },
+   "action_stop": {
+      "category": "Options Page: Actions",
+      "description": "Action title for stop",
+      "message": "Zatrzymaj \u0142adowanie",
+      "update": "20110413"
+   },
+   "action_tab_to_left": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Przesu\u0144 kart\u0119 w lewo",
+      "update": "20100906"
+   },
+   "action_tab_to_right": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Przesu\u0144 kart\u0119 w prawo",
+      "update": "20100906"
+   },
+   "action_toggle_bookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Prze\u0142\u0105cz zak\u0142adki",
+      "update": "20110324"
+   },
+   "action_toggle_pin": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Prze\u0142\u0105cz przypi\u0119cie strony",
+      "update": "20110418"
+   },
+   "action_translate": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Przet\u0142umacz zaznaczone",
+      "update": "20110418"
+   },
+   "action_unbookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Usu\u0144 zak\u0142adk\u0119",
+      "update": "20110324"
+   },
+   "action_undo_close": {
+      "category": "Options Page: Actions",
+      "description": "Action title for undo_close",
+      "message": "Przywr\u00F3\u0107 kart\u0119",
+      "update": "20100906"
+   },
+   "action_undo_close_hack": {
+      "category": "Options Page: Actions",
+      "description": "Action title for undo_close_hack",
+      "message": "Przywr\u00F3\u0107 kart\u0119",
+      "update": "20100906"
+   },
+   "action_unpin": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Odepnij kart\u0119",
+      "update": "20110216"
+   },
+   "action_view_source": {
+      "category": "Options Page: Actions",
+      "description": "Action title for view_source",
+      "message": "\u0179r\u00F3d\u0142o strony",
+      "update": "20100906"
+   },
+   "action_zoom_img_in": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Powi\u0119ksz obrazek",
+      "update": "20100906"
+   },
+   "action_zoom_img_out": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Zmniejsz obrazek",
+      "update": "20100906"
+   },
+   "action_zoom_img_zero": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Resetuj powi\u0119kszenie obrazka",
+      "update": "20100906"
+   },
+   "action_zoom_in": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Powi\u0119ksz stron\u0119",
+      "update": "20100906"
+   },
+   "action_zoom_out": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Zmniejsz stron\u0119",
+      "update": "20100906"
+   },
+   "action_zoom_zero": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Resetuj powi\u0119kszenie strony",
+      "update": "20110413"
+   },
+   "cat_custom": {
+      "category": "Options Page: Action Categories",
+      "description": "Name of category for all custom actions",
+      "message": "W\u0142asne Skr\u00F3ty",
+      "update": "20110418"
+   },
+   "cat_other": {
+      "category": "Options Page: Action Categories",
+      "description": "Name of category for actions that don't have a category",
+      "message": "Inne Skr\u00F3ty",
+      "update": "20110418"
+   },
+   "cat_page_navigation": {
+      "category": "Options Page: Action Categories",
+      "description": "Name of category encompassing basic page navigation actions",
+      "message": "Nawigacja Strony",
+      "update": "20110323"
+   },
+   "cat_settings": {
+      "category": "Options Page: Action Categories",
+      "description": "Title of the settings group",
+      "message": "Inne Ustawienia",
+      "update": "20110323"
+   },
+   "cat_tab_management": {
+      "category": "Options Page: Action Categories",
+      "description": "Name of category encompassing tab manipulation actions",
+      "message": "Zarz\u0105dzajnie Kartami",
+      "update": "20110418"
+   },
+   "cat_utilities": {
+      "category": "Options Page: Action Categories",
+      "description": "Name of category for general utility actions",
+      "message": "Narz\u0119dzia",
+      "update": "20100906"
+   },
+   "context_not_image": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is not valid on an image",
+      "message": "Nie dzia\u0142a na obrazku",
+      "update": "20110418"
+   },
+   "context_not_link": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is not valid on a link",
+      "message": "Nie dzia\u0142a na linku",
+      "update": "20110418"
+   },
+   "context_not_links_images": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is not valid starting on a link or an image",
+      "message": "Nie dzia\u0142a na linku lub grafice",
+      "update": "20110418"
+   },
+   "context_not_selection": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is not valid with a selection",
+      "message": "Nie dzia\u0142a, z zaznaczeniem",
+      "update": "20110418"
+   },
+   "context_on_image": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is only valid starting on an image",
+      "message": "Dost\u0119pny tylko na grafice",
+      "update": "20110324"
+   },
+   "context_on_link": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is only valid starting on a link",
+      "message": "Dost\u0119pny tylko na linku",
+      "update": "20110324"
+   },
+   "context_with_selection": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is only valid with a selection",
+      "message": "Dost\u0119pny tylko gdy zaznaczono",
+      "update": "20110418"
+   },
+   "descrip_bookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Dodaj zak\u0142adk\u0119 do bie\u017C\u0105cej strony.",
+      "update": "20110324"
+   },
+   "descrip_clone_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Otw\u00F3rz duplikat aktywnej strony. Duplikat nie b\u0119dzie mia\u0142 historii oryginalnej karty.",
+      "update": "20100831"
+   },
+   "descrip_clone_tab_hack": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Otw\u00F3rz duplikat aktywnej strony. Za\u0142aduj histori\u0119 z niedoskona\u0142ym obej\u015Bciem ",
+      "update": "20100831"
+   },
+   "descrip_close_left_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Zamknij wszystkie karty po lewej",
+      "update": "20100906"
+   },
+   "descrip_close_other_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Zamknij wszystkie karty w bie\u017C\u0105cym oknie, opr\u00F3cz zaznaczonych",
+      "update": "20110426"
+   },
+   "descrip_close_right_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Zamknij wszystkie karty po prawej",
+      "update": "20100906"
+   },
+   "descrip_close_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for close_tab",
+      "message": "Zamknij kart\u0119",
+      "update": "20100906"
+   },
+   "descrip_close_window": {
+      "category": "Options Page: Actions",
+      "description": "Action description for close_window",
+      "message": "Zamknij wszystkie karty",
+      "update": "20100906"
+   },
+   "descrip_copy": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Skopiuj zaznaczony tekst do schowka.",
+      "update": "20110216"
+   },
+   "descrip_goto_bottom": {
+      "category": "Options Page: Actions",
+      "description": "Action description for goto_bottom",
+      "message": "Przewi\u0144 do do\u0142u",
+      "update": "20100906"
+   },
+   "descrip_goto_top": {
+      "category": "Options Page: Actions",
+      "description": "Action description for goto_top",
+      "message": "Przewi\u0144 do g\u00F3ry",
+      "update": "20100906"
+   },
+   "descrip_hide_image": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Usu\u0144 ze strony grafik\u0119 nad kt\u00F3r\u0105 jest mysz",
+      "update": "20100831"
+   },
+   "descrip_maximize_x": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "To jest niedoskona\u0142y hack symuluj\u0105cy maksymalizowanie okna",
+      "update": "20110418"
+   },
+   "descrip_merge_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description for merge_tabs",
+      "message": "Scal wszystkie karty aktywnego okna z kartami ostatnio aktywnego okna",
+      "update": "20100831"
+   },
+   "descrip_minimize_x": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "To jest bardzo niedoskona\u0142y hack symuluj\u0105cy minimalizowanie okna",
+      "update": "20110418"
+   },
+   "descrip_navigate_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_tab",
+      "message": "Nawiguj do nowej karty (mo\u017Cesz ustawi\u0107 adres URL poni\u017Cej)",
+      "update": "20100831"
+   },
+   "descrip_new_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_tab",
+      "message": "Otw\u00F3rz nowa kart\u0119 w aktywnym oknie (mo\u017Cesz ustawi\u0107 adres URL poni\u017Cej)",
+      "update": "20100831"
+   },
+   "descrip_new_tab_back": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_tab_back",
+      "message": "Rozpocznij gest na linku aby otworzy\u0107 go w nowej karcie, ale nie przechod\u017A do nowej karty",
+      "update": "20100831"
+   },
+   "descrip_new_tab_link": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_tab_link",
+      "message": "Rozpocznij gest na linku aby otworzy\u0107 go w nowej karcie",
+      "update": "20100831"
+   },
+   "descrip_new_window": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_window",
+      "message": "Otw\u00F3rz nowe okno ze stron\u0105 startow\u0105",
+      "update": "20110413"
+   },
+   "descrip_new_window_link": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Rozpocznij gest na linku aby otworzy\u0107 go w nowym oknie",
+      "update": "20100831"
+   },
+   "descrip_next_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for next_tab",
+      "message": "Zaznacz kart\u0119 na prawo od aktywnej",
+      "update": "20100831"
+   },
+   "descrip_next_window": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Zaznacz okno kt\u00F3re by\u0142o wybrane najdawniej",
+      "update": "20110426"
+   },
+   "descrip_open_bookmarks": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Otw\u00F3rz mened\u017Cera zak\u0142adek w nowej karcie",
+      "update": "20100831"
+   },
+   "descrip_open_downloads": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Otw\u00F3rz pobrane w nowej karcie",
+      "update": "20100831"
+   },
+   "descrip_open_extensions": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Otw\u00F3rz rozszerzenia w nowej karcie",
+      "update": "20100831"
+   },
+   "descrip_open_history": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Otw\u00F3rz histori\u0119 w nowej karcie",
+      "update": "20100831"
+   },
+   "descrip_open_image": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Otw\u00F3rz grafik\u0119 na kt\u00F3rej jest mysz w nowej karcie",
+      "update": "20110418"
+   },
+   "descrip_options": {
+      "category": "Options Page: Actions",
+      "description": "Action description for options",
+      "message": "Otw\u00F3rz t\u0119 stron\u0119 opcji",
+      "update": "20100831"
+   },
+   "descrip_page_back": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_back",
+      "message": "Cofnij si\u0119 w historii o jedn\u0105 stron\u0119 dla aktywnej karty",
+      "update": "20100831"
+   },
+   "descrip_page_back_close": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_back_close",
+      "message": "Cofnij si\u0119 w historii o jedn\u0105 stron\u0119 dla aktywnej karty; lub, je\u015Bli nie ma historii, zamknij kart\u0119",
+      "update": "20100831"
+   },
+   "descrip_page_down": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_down",
+      "message": "Przewi\u0144 stron\u0119 w d\u00F3\u0142 o 80% ekranu (Page Down)",
+      "update": "20110418"
+   },
+   "descrip_page_forward": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_forward",
+      "message": "Id\u017A w historii o jedn\u0105 stron\u0119 w prz\u00F3d dla aktywnej karty",
+      "update": "20100831"
+   },
+   "descrip_page_next": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_next",
+      "message": "Spr\u00F3buj i\u015B\u0107 do nast\u0119pnej strony poprzez przej\u015Bcie do linku \"next\"",
+      "update": "20100831"
+   },
+   "descrip_page_prev": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_prev",
+      "message": "Spr\u00F3buj i\u015B\u0107 do poprzedniej strony strony poprzez przej\u015Bcie do linku \"previous\"",
+      "update": "20100831"
+   },
+   "descrip_page_up": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_up",
+      "message": "Przewi\u0144 stron\u0119 w g\u00F3r\u0119 o 80% ekranu (Page Up)",
+      "update": "20110418"
+   },
+   "descrip_parent_dir": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Nawiguj katalog wy\u017Cej dla aktywnej strony. Je\u017Celi jeste\u015B w katalogu g\u0142\u00F3wnym, spr\u00F3buj pozby\u0107 si\u0119 subdomen",
+      "update": "20100831"
+   },
+   "descrip_pin": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Przypnij aktualn\u0105 kart\u0119",
+      "update": "20110216"
+   },
+   "descrip_prev_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for prev_tab",
+      "message": "Zaznacz kart\u0119 na lewo od aktywnej",
+      "update": "20100831"
+   },
+   "descrip_prev_window": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Zaznacz okno aktywne bezpo\u015Brednio przed aktywnym oknem",
+      "update": "20100831"
+   },
+   "descrip_print": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Drukuj obecn\u0105 stron\u0119",
+      "update": "20100913"
+   },
+   "descrip_reload_all_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Od\u015Bwie\u017C wszystkie karty aktywnego okna",
+      "update": "20100831"
+   },
+   "descrip_reload_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for reload_tab",
+      "message": "Od\u015Bwie\u017C zawarto\u015B\u0107 aktywnej karty",
+      "update": "20100831"
+   },
+   "descrip_reload_tab_full": {
+      "category": "Options Page: Actions",
+      "description": "Action description for reload_tab_full",
+      "message": "Od\u015Bwie\u017C zawarto\u015B\u0107 aktywnej karty (pomi\u0144 cache)",
+      "update": "20100831"
+   },
+   "descrip_search_sel": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Szukaj w Google zaznaczonego tekstu",
+      "update": "20100831"
+   },
+   "descrip_show_cookies": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Poka\u017C list\u0119 ciasteczek dla aktywnej strony",
+      "update": "20100831"
+   },
+   "descrip_split_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description for split_tabs",
+      "message": "Podziel wszystkie karty na prawo aktywnej karty (i w\u0142\u0105czaj\u0105c t\u0105 kart\u0119) do nowego okna",
+      "update": "20100831"
+   },
+   "descrip_status": {
+      "category": "Options Page: Actions",
+      "description": "Action description for status",
+      "message": "Otw\u00F3rz stron\u0119 statusu Gest\u00F3w Myszy",
+      "update": "20100831"
+   },
+   "descrip_stop": {
+      "category": "Options Page: Actions",
+      "description": "Action description for stop",
+      "message": "Przerwij \u0142adowanie aktywnej karty (mo\u017Ce nie dzia\u0142a\u0107 na niekt\u00F3rych stronach, takich jak strony grafik)",
+      "update": "20100831"
+   },
+   "descrip_tab_to_left": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Przenie\u015B bie\u017C\u0105c\u0105 kart\u0119 o jeden w lewo",
+      "update": "20110418"
+   },
+   "descrip_tab_to_right": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Przenie\u015B bie\u017C\u0105c\u0105 kart\u0119 o jeden w prawo",
+      "update": "20110418"
+   },
+   "descrip_toggle_bookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Usuwa zak\u0142adk\u0119, je\u015Bli jest ju\u017C ustawiona. Dodaje zak\u0142adk\u0119 do bie\u017C\u0105cej strony, je\u015Bli nie jest.",
+      "update": "20110324"
+   },
+   "descrip_toggle_pin": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Zmie\u0144 status przypi\u0119cia karty na przeciwny",
+      "update": "20110426"
+   },
+   "descrip_translate": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Przet\u0142umacz zaznaczony tekst na domy\u015Blny j\u0119zyk przegl\u0105darki",
+      "update": "20110418"
+   },
+   "descrip_unbookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Usuwa zak\u0142adk\u0119 obecnej strony, je\u015Bli istnieje.",
+      "update": "20110324"
+   },
+   "descrip_undo_close": {
+      "category": "Options Page: Actions",
+      "description": "Action description for undo_close",
+      "message": "Otw\u00F3rz ostatnio zamkni\u0119ta kart\u0119. Za\u0142adowany zostanie tylko adres URL strony - CTRL-SHIFT-T wci\u0105\u017C lepiej dzia\u0142a, poniewa\u017C \u0142aduje histori\u0119",
+      "update": "20100831"
+   },
+   "descrip_undo_close_hack": {
+      "category": "Options Page: Actions",
+      "description": "Action description for undo_close",
+      "message": "Otw\u00F3rz ostatnio zamkni\u0119t\u0105 kart\u0119. Za\u0142aduj histori\u0119 z niedoskona\u0142ym obej\u015Bciem",
+      "update": "20100831"
+   },
+   "descrip_unpin": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Odepnij aktualn\u0105 kart\u0119",
+      "update": "20110216"
+   },
+   "descrip_view_source": {
+      "category": "Options Page: Actions",
+      "description": "Action description for view_source",
+      "message": "Poka\u017C kod \u017Ar\u00F3d\u0142owy aktywnej strony",
+      "update": "20110418"
+   },
+   "descrip_zoom_img_in": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Powi\u0119ksz grafik\u0119 nad kt\u00F3r\u0105 jest mysz",
+      "update": "20100831"
+   },
+   "descrip_zoom_img_out": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Pomniejsz grafik\u0119 nad kt\u00F3r\u0105 jest mysz",
+      "update": "20100831"
+   },
+   "descrip_zoom_img_zero": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Ustaw grafik\u0119 do oryginalnego rozmiaru przed powi\u0119kszeniem",
+      "update": "20100831"
+   },
+   "descrip_zoom_in": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Powi\u0119ksz ca\u0142\u0105 zawarto\u015B\u0107 aktywnej strony",
+      "update": "20100831"
+   },
+   "descrip_zoom_out": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Pomniejsz ca\u0142\u0105 zawarto\u015B\u0107 aktywnej strony",
+      "update": "20100831"
+   },
+   "descrip_zoom_zero": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Cofnij do oryginalnego rozmiaru strony",
+      "update": "20100831"
+   },
+   "description": {
+      "category": "About",
+      "description": "short extension description",
+      "message": "Gesty myszy! Szybko i \u0142atwo nawiguj zak\u0142adkami przy u\u017Cyciu myszki i/lub klawiatury. ",
+      "update": "20110723"
+   },
+   "doubleclick_alert": {
+      "category": "Options Page",
+      "description": "Pop up an alert box the first time a user right-clicks to let them know that they may need to double-click the right mouse button to get to the context menu",
+      "message": "Kliknij dwukrotnie Prawym Klawiszem Myszy aby wy\u015Bwietli\u0107 menu kontekstowe (dotyczy u\u017Cytkownik\u00F3w Chrome dla Linuksa lub Mac'a).",
+      "update": "20100906"
+   },
+   "gesture_rLR": {
+      "category": "Options Page: Gestures",
+      "description": "rocker right gesture title",
+      "message": "Strza\u0142ka W Prawo",
+      "update": "20110324"
+   },
+   "gesture_rRL": {
+      "category": "Options Page: Gestures",
+      "description": "rocker left gesture title",
+      "message": "Strza\u0142ka W Lewo",
+      "update": "20110324"
+   },
+   "gesture_rocker_descrip": {
+      "category": "Options Page: Gestures",
+      "description": "rocker right gesture description",
+      "message": "Naci\u015Bnij i przytrzymaj $BUTTON1$ przycisk, kliknij $BUTTON2$ przycisk",
+      "placeholders": {
+         "button1": {
+            "content": "$1",
+            "example": "right"
+         },
+         "button2": {
+            "content": "$2",
+            "example": "right"
+         }
+      },
+      "update": "20100831"
+   },
+   "gesture_wD": {
+      "category": "Options Page: Gestures",
+      "description": "wheel down gesture title",
+      "message": "Przewi\u0144 na d\u00F3\u0142",
+      "update": "20100831"
+   },
+   "gesture_wD_descrip": {
+      "category": "Options Page: Gestures",
+      "description": "wheel down gesture description",
+      "message": "Naci\u015Bnij i przytrzymaj przycisk akcji a nast\u0119pnie przewi\u0144 w d\u00F3\u0142",
+      "update": "20100831"
+   },
+   "gesture_wU": {
+      "category": "Options Page: Gestures",
+      "description": "wheel up gesture title",
+      "message": "przewi\u0144 do g\u00F3ry",
+      "update": "20100831"
+   },
+   "gesture_wU_descrip": {
+      "category": "Options Page: Gestures",
+      "description": "wheel up gesture description",
+      "message": "Naci\u015Bnij i przytrzymaj przycisk akcji a nast\u0119pnie przewi\u0144 w g\u00F3r\u0119",
+      "update": "20100831"
+   },
+   "long_description": {
+      "category": "About",
+      "description": "complete extension description",
+      "message": "To rozszerzenie pozwala Ci na poruszanie myszk\u0105 aby wykonywa\u0107 akcje takie jak nawigacja po stronie lub zarz\u0105dzanie kartami. Wspiera gesty 1 przyciskiem myszy, gesty przewijania, gesty 2 przyciskami myszy oraz skr\u00F3ty klawiaturowe.\n\n\u2022 Dostosowywanie gest\u00F3w\n\u2022 Wspiera synchronizowanie/import/eksport ustawie\u0144\n\u2022 Nie dzia\u0142a na stronie rozszerze\u0144 i innych wbudowanych w Chrome stronach z powodu ogranicze\u0144 spowodowanych bezpiecze\u0144stwem. Ale dzia\u0142a na prawie wszystkich stronach http:// i https://.",
+      "update": "20110426"
+   },
+   "name": {
+      "category": "About",
+      "description": "\"Smooth Gestures\" in your language",
+      "message": "Gesty Myszy",
+      "update": "20110426"
+   },
+   "options_addgesture_instruct_1": {
+      "category": "Options Page",
+      "description": "instructions for making a gesture (just before bullet point list)",
+      "message": "Wykonaj jeden z poni\u017Cszych gest\u00F3w:",
+      "update": "20100831"
+   },
+   "options_addgesture_instruct_2": {
+      "category": "Options Page",
+      "description": "[bullet point] instructions for making a gesture (mouse) ($BUTTON$ is replaced automatically by the appropriate button name--above--so insert it untranslated in the appropriate place in the translation)",
+      "message": "Gest Myszy: Wci\u015Bnij $BUTTON$ klawisz myszy i wykonaj gest, po czym zwolnij przycisk.",
+      "placeholders": {
+         "button": {
+            "content": "$1",
+            "example": "right"
+         }
+      },
+      "update": "20110424"
+   },
+   "options_addgesture_instruct_3": {
+      "category": "Options Page",
+      "description": "[bullet point] instructions for making a gesture (scroll) ($BUTTON$ is replaced automatically by the appropriate button name--above--so insert it untranslated in the appropriate place in the translation)",
+      "message": "Gest Rolk\u0105:\n1. Wci\u015Bnij i przytrzymaj $BUTTON$ przycisk myszy.\n2. Przewi\u0144 rolk\u0119 myszy.",
+      "placeholders": {
+         "button": {
+            "content": "$1",
+            "example": "right"
+         }
+      },
+      "update": "20110418"
+   },
+   "options_addgesture_instruct_4": {
+      "category": "Options Page",
+      "description": "[bullet point] instructions for making a gesture (rocker)",
+      "message": "Gest 2 przyciskami myszy:\n1. Wci\u015Bnij i przytrzymaj dowolny przycisk myszy.\n2. Wci\u015Bnij inny przycisk myszy",
+      "update": "20110418"
+   },
+   "options_addgesture_instruct_5": {
+      "category": "Options Page",
+      "description": "[bullet point] instructions for doing a keyboard shortcut",
+      "message": "Skr\u00F3t klawiaturowy: \n1. Wci\u015Bnij i przytrzymaj przycisk modydikatora (ctrl, shift, alt) lub \u017Caden.\n2. Wci\u015Bnij inny przycisk.\n",
+      "update": "20110418"
+   },
+   "options_addgesture_overwrite": {
+      "category": "Options Page",
+      "description": "warning message that a gesture will be overwritten ($ACTION$ is replaced automatically by the action name, such as: History Back--so insert it untranslated in the appropriate place in the translation)",
+      "message": "Ten gest jest ju\u017C u\u017Cywany jako $ACTION$",
+      "placeholders": {
+         "action": {
+            "content": "$1",
+            "example": "History Back"
+         }
+      },
+      "update": "20110418"
+   },
+   "options_addgesture_title": {
+      "category": "Options Page",
+      "description": "explanation of what you are doing (adding a gesture to a specific action) ($ACTION$ is replaced automatically by the action name, such as: History Back--so insert it untranslated in the appropriate place in the translation)",
+      "message": "Ustaw gest dla $ACTION$",
+      "placeholders": {
+         "action": {
+            "content": "$1",
+            "example": "History Back"
+         }
+      },
+      "update": "20100831"
+   },
+   "options_button_addcustomaction": {
+      "category": "Options Page",
+      "description": "Label for a button to start setting up a new custom action",
+      "message": "Dodaj w\u0142asne dzia\u0142anie",
+      "update": "20110418"
+   },
+   "options_button_addgesture": {
+      "category": "Options Page",
+      "description": "button to add the new gesture to the action",
+      "message": "Dodaj ten Gest",
+      "update": "20100902"
+   },
+   "options_button_overwrite": {
+      "category": "Options Page",
+      "description": "button to overwrite the gesture made to the new action",
+      "message": "Nadpisz Gest",
+      "update": "20100902"
+   },
+   "options_button_startaddgesture": {
+      "category": "Options Page",
+      "description": "Label for a button to start setting up a new gesture",
+      "message": "Dodaj gest",
+      "update": "20110324"
+   },
+   "options_button_tryagain": {
+      "category": "Options Page",
+      "description": "button to reject the gesture made and try to make a new one",
+      "message": "Wybierz inny Gest",
+      "update": "20110418"
+   },
+   "options_contents_actions": {
+      "category": "Options Page",
+      "description": "category type for all actions links",
+      "message": "Akcje gest\u00F3w",
+      "update": "20110418"
+   },
+   "options_contents_more": {
+      "category": "Options Page",
+      "description": "category type for all external links",
+      "message": "Wi\u0119cej....",
+      "update": "20110508"
+   },
+   "options_contents_settings": {
+      "category": "Options Page",
+      "description": "category type for all settings links",
+      "message": "Ustawienia",
+      "update": "20100902"
+   },
+   "options_contents_status": {
+      "category": "Options Page",
+      "description": "link to open the status page",
+      "message": "Zobacz status",
+      "update": "20100831"
+   },
+   "options_externalactions": {
+      "category": "Options Page",
+      "description": "link to external actions",
+      "message": "Dzia\u0142ania zewn\u0119trzne",
+      "update": "20110324"
+   },
+   "options_moreactions": {
+      "category": "Options Page",
+      "description": "Link to access more actions. These actions don't currently have a gesture assigned",
+      "message": "Wi\u0119cej dost\u0119pnych dzia\u0142a\u0144",
+      "update": "20110324"
+   },
+   "options_mousebutton_0": {
+      "category": "Options Page",
+      "description": "name for the 'left' mouse button (To replace $BUTTON$ variables below)",
+      "message": "lewy",
+      "update": "20100902"
+   },
+   "options_mousebutton_1": {
+      "category": "Options Page",
+      "description": "name for the 'middle' mouse button (To replace $BUTTON$ variables below)",
+      "message": "\u015Brodkowy",
+      "update": "20100902"
+   },
+   "options_mousebutton_2": {
+      "category": "Options Page",
+      "description": "name for the 'right' mouse button (To replace $BUTTON$ variables below)",
+      "message": "prawy",
+      "update": "20100902"
+   },
+   "options_note_doubleclick": {
+      "category": "Options Page",
+      "description": "Let the user know that they may need to double-click the right mouse button to get to the context menu",
+      "message": "Kliknij dwukrotnie Prawym Klawiszem Myszy aby wy\u015Bwietli\u0107 menu kontekstowe (dotyczy u\u017Cytkownik\u00F3w Chrome dla Linuksa lub Mac'a).",
+      "update": "20100906"
+   },
+   "options_note_hidepageaction_button": {
+      "category": "Options Page",
+      "description": "Label on the button to hide the Smooth Gestures icon in the url bar",
+      "message": "Schowaj ikon\u0119",
+      "update": "20110324"
+   },
+   "options_note_print": {
+      "category": "Options Page",
+      "description": "Promote printing the page so users have a help sheet to remember all of the gestures",
+      "message": "Masz problem z zapami\u0119taniem ustawionych gest\u00F3w? Wydrukuj \u015Bci\u0105gawk\u0119!",
+      "update": "20110424"
+   },
+   "options_note_print_button": {
+      "category": "Options Page",
+      "description": "Label on the button to print the page",
+      "message": "Drukuj",
+      "update": "20110324"
+   },
+   "options_note_remindrate": {
+      "category": "Options Page",
+      "description": "Notify the user that they can rate this extension to help promote it",
+      "message": "Je\u015Bli polubi\u0142e\u015B t\u0105 wtyczk\u0119 wejd\u017A na  $LINK$",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "\u003Ca href=''\u003Eleave a 5 star rating\u003C/a\u003E"
+         }
+      },
+      "update": "20110418"
+   },
+   "options_note_remindrate_link": {
+      "category": "Options Page",
+      "description": "Text for the link leading to the extension's page",
+      "message": "przyznaj 5 gwiazdek!",
+      "update": "20110424"
+   },
+   "options_note_sync": {
+      "category": "Options Page",
+      "description": "Let the user know that they may need to double-click the right mouse button to get to the context menu",
+      "message": "Kliknij dwukrotnie Prawym Klawiszem Myszy aby wy\u015Bwietli\u0107 menu kontekstowe (dotyczy u\u017Cytkownik\u00F3w Chrome dla Linuksa lub Mac'a).",
+      "update": "20100906"
+   },
+   "options_note_translate": {
+      "category": "Options Page",
+      "description": "Solicit translation requests",
+      "message": "Je\u015Bli znasz Angielski to pom\u00F3\u017C $LINK$",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "\u003Ca href=''\u003Etranslate Smooth Gestures into your language\u003C/a\u003E"
+         }
+      },
+      "update": "20110418"
+   },
+   "options_note_translate_link": {
+      "category": "Options Page",
+      "description": "Link for soliciting translation requests",
+      "message": "przet\u0142umaczy\u0107 Smooth Gestures na sw\u00F3j j\u0119zyk",
+      "update": "20110424"
+   },
+   "options_note_updated": {
+      "category": "Options Page",
+      "description": "Notify that the extension has been updated",
+      "message": "Gesty myszy zosta\u0142y uaktualnione do $VERSION$",
+      "placeholders": {
+         "version": {
+            "content": "$1",
+            "example": "0.13.1"
+         }
+      },
+      "update": "20110418"
+   },
+   "options_title": {
+      "category": "Options Page",
+      "description": "The title of the options page, at top and tab name",
+      "message": "Opcje",
+      "update": "20110424"
+   },
+   "options_welcome_0": {
+      "category": "Options Page",
+      "description": "First just-installed line",
+      "message": "Witaj w Smooth Textures!",
+      "update": "20110424"
+   },
+   "options_welcome_1": {
+      "category": "Options Page",
+      "description": "First just-installed bullet point",
+      "message": "Dzi\u0119kujemy za instalacj\u0119 Smooth Gestures! Mo\u017Cesz otworzy\u0107 t\u0119 stron\u0119 opcji poprzez naci\u015Bni\u0119cie i przytrzymanie prawego przycisku myszy i narysowanie \"O\" (spr\u00F3buj: prawo-d\u00F3\u0142-lewo-g\u00F3ra-prawo).",
+      "update": "20110424"
+   },
+   "options_welcome_2": {
+      "category": "Options Page",
+      "description": "Second just-installed line",
+      "message": "Aby ustawi\u0107 nowe gesty lub akcje kliknij poni\u017Cszy przycisk \"+\".",
+      "update": "20100831"
+   },
+   "options_welcome_3": {
+      "category": "Options Page",
+      "description": "Third just-installed bullet point",
+      "message": "Ustaw r\u00F3\u017Cne opcje kilkaj\u0105c \"opcje\" po prawej lub przewijaj\u0105c na d\u00F3\u0142 tej strony",
+      "update": "20110418"
+   },
+   "popup_button_hidepageaction": {
+      "category": "Status Notification",
+      "description": "a button to hide the pageaction",
+      "message": "Schowaj t\u0105 ikon\u0119 URL.",
+      "update": "20110324"
+   },
+   "popup_button_options": {
+      "category": "Status Notification",
+      "description": "a button to go to the options page",
+      "message": "Opcje",
+      "update": "20110324"
+   },
+   "popup_button_reload": {
+      "category": "Status Notification",
+      "description": "a button to reload the current page",
+      "message": "Od\u015Bwie\u017C",
+      "update": "20100831"
+   },
+   "popup_link_status": {
+      "category": "Status Notification",
+      "description": "link to the status page",
+      "message": "Zobacz status wszystkich kart",
+      "update": "20100831"
+   },
+   "popup_status_blocked_1": {
+      "category": "Status Notification",
+      "description": "text explaining a blocked tab",
+      "message": "Chrome blokuje rozszerzenia od dzia\u0142ania na tej stronie z powodu bezpiecze\u0144stwa",
+      "update": "20100831"
+   },
+   "popup_status_blocked_2": {
+      "category": "Status Notification",
+      "description": "text explaining a blocked tab",
+      "message": "Geste Myszy nie mog\u0105 pracowa\u0107 na tej stronie z powodu licencji.",
+      "update": "20100831"
+   },
+   "popup_status_blocked_file": {
+      "category": "Status Notification",
+      "description": "text explaining how to make a file:// tab work",
+      "message": "Spr\u00F3buj $LINK$ aby umo\u017Cliwi\u0107 gesty na protoko\u0142ach file:// i ftp://.",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "Smooth Gestures New Tab Add-on"
+         }
+      },
+      "update": "20100831"
+   },
+   "popup_status_blocked_file2": {
+      "category": "Status Notification",
+      "description": "text explaining how to make a file:// tab work",
+      "message": "Aby Smooth Gestures dzia\u0142a\u0142o dla protoko\u0142\u00F3w file:// i ftp:// przejd\u017A na chrome://extensions/ i przy Smooth Gestures zaznacz \"Allow access to file URLs\".",
+      "update": "20110216"
+   },
+   "popup_status_blocked_file2_link": {
+      "category": "Status Notification",
+      "description": "text naming the link that goes to chrome://extensions/",
+      "message": "Rozszerzenia",
+      "update": "20110324"
+   },
+   "popup_status_blocked_file_link": {
+      "category": "Status Notification",
+      "description": "text naming the extension that adds file:// functionality to Smooth Gestures",
+      "message": "Dodatek do Gest\u00F3w Myszy - protoko\u0142y plik\u00F3w",
+      "update": "20100831"
+   },
+   "popup_status_blocked_newtab": {
+      "category": "Status Notification",
+      "description": "text explaining how to make a newtab page work",
+      "message": "Spr\u00F3buj $LINK$ aby umo\u017Cliwi\u0107 gesty na stronie nowej karty.",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "Smooth Gestures New Tab Add-on"
+         }
+      },
+      "update": "20100831"
+   },
+   "popup_status_blocked_newtab2": {
+      "category": "Status Notification",
+      "description": "text explaining how to make a newtab page work",
+      "message": "Wypr\u00F3buj $LINK$ by aktywowa\u0107 gesty na nowej karcie.",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "Smooth Gestures New Tab Add-on"
+         }
+      },
+      "update": "20110324"
+   },
+   "popup_status_blocked_newtab2_link": {
+      "category": "Status Notification",
+      "description": "text naming the extension that adds newtab functionality to Smooth Gestures",
+      "message": "Dodatek, dodaj\u0105cy funkcje Nowej Karty do Gest\u00F3w Myszy",
+      "update": "20110418"
+   },
+   "popup_status_blocked_newtab_link": {
+      "category": "Status Notification",
+      "description": "text naming the extension that adds newtab functionality to Smooth Gestures",
+      "message": "Dodatek do Gest\u00F3w Myszy - nowa karta",
+      "update": "20100831"
+   },
+   "popup_status_broken": {
+      "category": "Status Notification",
+      "description": "text explaining a broken tab",
+      "message": "Gesty nie dzia\u0142aj\u0105 teraz na tej stronie.",
+      "update": "20100831"
+   },
+   "popup_status_broken_short": {
+      "category": "Status Notification",
+      "description": "short text saying that gestures are broken on this page.",
+      "message": "Gesty nie dzia\u0142aj\u0105",
+      "update": "20110324"
+   },
+   "popup_status_question": {
+      "category": "Status Notification",
+      "description": "text explaining a questionable tab",
+      "message": "Gesty mog\u0105 nie dzia\u0142a\u0107 teraz na tej stronie.",
+      "update": "20100831"
+   },
+   "popup_status_unable_short": {
+      "category": "Status Notification",
+      "description": "short text saying that gestures are blocked by this page.",
+      "message": "Gesty zablokowane",
+      "update": "20110324"
+   },
+   "popup_status_working": {
+      "category": "Status Notification",
+      "description": "text explaining a working tab",
+      "message": "Gesty dzia\u0142aj\u0105 na tej stronie",
+      "update": "20110324"
+   },
+   "popup_status_working_short": {
+      "category": "Status Notification",
+      "description": "short text saying that gestures are working on this page.",
+      "message": "Gesty dzia\u0142aj\u0105",
+      "update": "20110324"
+   },
+   "setting_blacklist": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Czarna lista",
+      "update": "20100831"
+   },
+   "setting_blacklist_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Wy\u0142\u0105cza gesty na domenach zawartych na czarnej li\u015Bcie. Oddziel domeny przecinkiem (przyk\u0142ad: \"mail.google.com, www.example.com\")",
+      "update": "20110418"
+   },
+   "setting_button_export": {
+      "category": "Options Page: Settings",
+      "description": "button to save settings as a backup file",
+      "message": "Zapisz ustawienia",
+      "update": "20100831"
+   },
+   "setting_button_import": {
+      "category": "Options Page: Settings",
+      "description": "button to load a settings file",
+      "message": "Za\u0142aduj plik ustawie\u0144",
+      "update": "20100831"
+   },
+   "setting_button_left": {
+      "category": "Options Page: Settings",
+      "description": "choose left mouse button",
+      "message": "Lewy przycisk",
+      "update": "20100831"
+   },
+   "setting_button_middle": {
+      "category": "Options Page: Settings",
+      "description": "choose middle mouse button",
+      "message": "\u015Arodkowy przycisk",
+      "update": "20100831"
+   },
+   "setting_button_off": {
+      "category": "Options Page: Settings",
+      "description": "setting label",
+      "message": "Wy\u0142\u0105czony",
+      "update": "20100831"
+   },
+   "setting_button_on": {
+      "category": "Options Page: Settings",
+      "description": "setting label",
+      "message": "W\u0142\u0105czony",
+      "update": "20100831"
+   },
+   "setting_button_reset": {
+      "category": "Options Page: Settings",
+      "description": "button label",
+      "message": "Resetuj",
+      "update": "20100831"
+   },
+   "setting_button_right": {
+      "category": "Options Page: Settings",
+      "description": "choose right mouse button",
+      "message": "Prawy przycisk",
+      "update": "20100831"
+   },
+   "setting_button_update": {
+      "category": "Options Page: Settings",
+      "description": "button label",
+      "message": "Aktualizuj",
+      "update": "20100831"
+   },
+   "setting_closelastblock": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Nie zamykaj ostatniej karty",
+      "update": "20100831"
+   },
+   "setting_closelastblock_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Nie zamykaj ostatniej karty gestem zamykania karty: zamiast tego za\u0142aduj adres URL nowej karty",
+      "update": "20100831"
+   },
+   "setting_disabled": {
+      "category": "Options Page: Settings",
+      "description": "choose no mouse button (gestures are disabled)",
+      "message": "Wy\u0142\u0105czony",
+      "update": "20100831"
+   },
+   "setting_force_context": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Wymu\u015B menu kontekstowe na linkach",
+      "update": "20100831"
+   },
+   "setting_force_context2": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Wymu\u015B menu kontekstowe",
+      "update": "20100831"
+   },
+   "setting_force_context2_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Zawsze pokazuj menu kontekstowe przy klikni\u0119ciu prawym przyciskiem myszki. Przydatne przy gestach myszy aktywowanych \u015Brodkowym przyciskiem myszy",
+      "update": "20100831"
+   },
+   "setting_force_context_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Zablokuj gesty zaczynaj\u0105ce si\u0119 na linkach. W systemach z konfliktami menu kontekstowego pozwala to na uzyskanie menu kontekstowego klikaj\u0105c raz, a nie dwa. Jednak\u017Ce powoduje to zablokowanie funkcji nowej karty z linku",
+      "update": "20100831"
+   },
+   "setting_group_assorted": {
+      "category": "Options Page: Settings",
+      "description": "title of a group of settings",
+      "message": "R\u00F3\u017Cne ustawienia",
+      "update": "20100831"
+   },
+   "setting_group_context": {
+      "category": "Options Page: Settings",
+      "description": "title of a group of settings",
+      "message": "Ustawienia menu kontekstowego",
+      "update": "20100831"
+   },
+   "setting_group_hide": {
+      "category": "Options Page: Settings",
+      "description": "button to hide a group of settings",
+      "message": "ukryj",
+      "update": "20100831"
+   },
+   "setting_group_newtab": {
+      "category": "Options Page: Settings",
+      "description": "title of a group of settings",
+      "message": "Ustawienia nowej karty",
+      "update": "20100831"
+   },
+   "setting_group_show": {
+      "category": "Options Page: Settings",
+      "description": "button to show a group of settings",
+      "message": "poka\u017C",
+      "update": "20100831"
+   },
+   "setting_group_trail": {
+      "category": "Options Page: Settings",
+      "description": "title of a group of settings",
+      "message": "Ustawienia linii pod\u0105\u017Cania",
+      "update": "20110418"
+   },
+   "setting_hidepageaction": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Zawsz\u0119 Pokazuj Ikon\u0119",
+      "update": "20110324"
+   },
+   "setting_hidepageaction_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Ikona na pasku URL pozwala na szybki dost\u0119p do strony opcji Gest\u00F3w Myszy. Mo\u017Cesz te\u017C znale\u017A\u0107 t\u0105 stron\u0119 w Ustawieniach Google Chrome\u003E Narz\u0119dzia\u003E Rozszerzenia\u003E Smooth Gestures(Gesty Myszy)\u003E Opcje.",
+      "update": "20110418"
+   },
+   "setting_hold_button": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Przycisk myszy rozpoczynaj\u0105cy gest",
+      "update": "20100831"
+   },
+   "setting_hold_button_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Pozwala na rysowanie gest\u00F3w u\u017Cywaj\u0105c lewego lub \u015Brodkowego przycisku myszy, zamiast prawego",
+      "update": "20100831"
+   },
+   "setting_import": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Ustawienia kopii zapasowej",
+      "update": "20100831"
+   },
+   "setting_import_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Zapisz swoje aktualne ustawienia (w\u0142\u0105cznie z gestami, akcjami niestandardowymi i opcjami). Za\u0142aduj ten plik aby przywr\u00F3ci\u0107 utracone ustawienia lub przy przenoszeniu ustawie\u0144 na inny komputer ",
+      "update": "20100831"
+   },
+   "setting_newtab_linkright": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Nowe karty otwarte z linku otwieraj obok aktywnej",
+      "update": "20100831"
+   },
+   "setting_newtab_linkright_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Podobne do domy\u015Blnego zachowania Chromium przy otwieraniu link\u00F3w w nowej karcie. prowadzi to do grupowania kart tematycznie. (przydatne przy dzieleniu i \u0142\u0105czeniu kart; patrz wy\u017Cej)",
+      "update": "20100831"
+   },
+   "setting_newtab_right": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Nowe karty otwieraj obok aktywnej",
+      "update": "20100831"
+   },
+   "setting_newtab_right_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Nowe karty (nie z link\u00F3w) otwieraj obok aktywnej",
+      "update": "20100831"
+   },
+   "setting_newtab_url": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Adres URL nowej karty",
+      "update": "20100831"
+   },
+   "setting_newtab_url_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Ustaw adres URL kt\u00F3ry otwiera akcja nowej karty. (domy\u015Blny to chrome://newtab/)",
+      "update": "20100831"
+   },
+   "setting_reset": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Przywr\u00F3\u0107 do warto\u015Bci domy\u015Blnych",
+      "update": "20100831"
+   },
+   "setting_reset_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Przywr\u00F3\u0107 wszystkie gesty i ustawienia do warto\u015Bci domy\u015Blnych",
+      "update": "20100831"
+   },
+   "setting_selecttolink": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "U\u017Cywaj zaznaczonych adres\u00F3w URL jako link\u00F3w",
+      "update": "20100831"
+   },
+   "setting_selecttolink_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Zaznacz tekst z jednym lub wi\u0119cej adres\u00F3w URL do gestu linkuj\u0105cego. Na przyk\u0142ad: \n1.zaznacz tekst z dwoma adresami URL\n2. wykonaj gest nowa karta z linku - oba adresy URL otworz\u0105 si\u0119 w dw\u00F3ch nowych kartach.",
+      "update": "20110418"
+   },
+   "setting_sendstats": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Prze\u015Blij opini\u0119",
+      "update": "20100831"
+   },
+   "setting_sendstats_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Prze\u015Blij anonimowy raport o u\u017Cywaniu gest\u00F3w aby poinformowa\u0107 program o najcz\u0119\u015Bciej u\u017Cywanych gestach, aby w przysz\u0142ych wydaniach zmieni\u0107 warto\u015Bci domy\u015Blne",
+      "update": "20100831"
+   },
+   "setting_sync": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Synchronizuj",
+      "update": "20100831"
+   },
+   "setting_sync_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Synchronizuj ustawienia i gesty z innymi komputerami poprzez zak\u0142adki. Aby u\u017Cywa\u0107 tej funkcji musisz zezwoli\u0107 na synchronizowanie zak\u0142adek.",
+      "update": "20100831"
+   },
+   "setting_trail_color": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Kolor linii pod\u0105\u017Cania",
+      "update": "20110418"
+   },
+   "setting_trail_color_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Dostosuj kolor i przezroczysto\u015B\u0107 linii kt\u00F3ra rysujesz podczas wykonywania gestu.",
+      "update": "20100831"
+   },
+   "setting_trail_draw": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Narysuj lini\u0119",
+      "update": "20100831"
+   },
+   "setting_trail_draw_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Narysuj lini\u0119 pod\u0105\u017Cania na ekranie kiedykolwiek gesty b\u0119d\u0105 wykonywane",
+      "update": "20110418"
+   },
+   "setting_trail_width": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Szeroko\u015B\u0107 rysowanej linii",
+      "update": "20100831"
+   },
+   "setting_trail_width_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Dostosuj szeroko\u015B\u0107 rysowanej linii kiedy wykonujesz gest",
+      "update": "20100831"
+   },
+   "setting_warning_reset": {
+      "category": "Options Page: Settings",
+      "description": "warn that setting will be lost during a reset",
+      "message": "Na pewno chcesz resetowa\u0107? Stracisz wszystkie w\u0142asne ustawienia.",
+      "update": "20100831"
+   },
+   "status_button_reloadall": {
+      "category": "Tab Status Page",
+      "description": "button to reload all broken pages",
+      "message": "Od\u015Bwie\u017C wszystkie niedzia\u0142aj\u0105ce strony",
+      "update": "20100831"
+   },
+   "status_button_reloadone": {
+      "category": "Tab Status Page",
+      "description": "button to reload single broken page",
+      "message": "Od\u015Bwie\u017C stron\u0119",
+      "update": "20100831"
+   },
+   "status_legend_blocked": {
+      "category": "Tab Status Page",
+      "description": "status of a page",
+      "message": "Zablokowane strony domy\u015Blne",
+      "update": "20100831"
+   },
+   "status_legend_broken": {
+      "category": "Tab Status Page",
+      "description": "status of a page",
+      "message": "Nie dzia\u0142a",
+      "update": "20100831"
+   },
+   "status_legend_loading": {
+      "category": "Tab Status Page",
+      "description": "status of a page",
+      "message": "\u0141adowanie",
+      "update": "20100831"
+   },
+   "status_legend_working": {
+      "category": "Tab Status Page",
+      "description": "status of a page",
+      "message": "Pracuje",
+      "update": "20100831"
+   },
+   "status_link_options": {
+      "category": "Tab Status Page",
+      "description": "Link to go to the options page",
+      "message": "Ustawienia Smooth Gestures: Opcje!",
+      "update": "20110407"
+   },
+   "status_title": {
+      "category": "Tab Status Page",
+      "description": "The title of the status page, at top and tab name",
+      "message": "Status",
+      "update": "20100831"
+   },
+   "status_window_other": {
+      "category": "Tab Status Page",
+      "description": "title for a group of tab statuses",
+      "message": "Inne okno",
+      "update": "20100831"
+   },
+   "status_window_this": {
+      "category": "Tab Status Page",
+      "description": "title for a group of tab statuses",
+      "message": "To okno",
+      "update": "20100831"
+   }
+}

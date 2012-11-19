@@ -1,0 +1,433 @@
+{
+   "caption_backup": {
+      "message": "rezerva"
+   },
+   "caption_backup_or_restore_settings": {
+      "message": "Backup / Restore Settings"
+   },
+   "caption_cancel": {
+      "message": "prekli\u010Di"
+   },
+   "caption_close": {
+      "message": "zapri"
+   },
+   "caption_confirm": {
+      "message": "potrdi"
+   },
+   "caption_create_custom_stroke": {
+      "message": "Create"
+   },
+   "caption_current_stroke": {
+      "message": "Sedanji premik"
+   },
+   "caption_edit_trail_style": {
+      "message": "Edit trail style"
+   },
+   "caption_help_custom_stroke": {
+      "message": "Help"
+   },
+   "caption_label": {
+      "message": "oznaka"
+   },
+   "caption_mouse_stroke_options": {
+      "message": "Mo\u017Enosti Mi\u0161kinih premikov."
+   },
+   "caption_none": {
+      "message": "ni\u010D"
+   },
+   "caption_previous_stroke": {
+      "message": "Prej\u0161nji premik"
+   },
+   "caption_remove": {
+      "message": "odstrani"
+   },
+   "caption_restore": {
+      "message": "znova pridobi"
+   },
+   "caption_restore_default": {
+      "message": "nastavi osnovno"
+   },
+   "caption_save": {
+      "message": "Shrani"
+   },
+   "caption_script": {
+      "message": "Script"
+   },
+   "caption_set": {
+      "message": "nastavljeno"
+   },
+   "caption_share_custom_stroke": {
+      "message": "Share"
+   },
+   "caption_show_advanced_options": {
+      "message": "Show advanced options"
+   },
+   "caption_translated_by": {
+      "message": "Translated by"
+   },
+   "caption_unset": {
+      "message": "nenastavljeno"
+   },
+   "category_desc_dnd_strokes": {
+      "message": "Izbran tekst, slike in povezave "
+   },
+   "category_desc_wheel_strokes": {
+      "message": "premikajte stran z dr\u017Eanjem desnega gumba"
+   },
+   "category_label_bookmark": {
+      "message": "oznaka"
+   },
+   "category_label_custom_strokes": {
+      "message": "Posebni premiki"
+   },
+   "category_label_dnd_strokes": {
+      "message": "Premiki \"povleci in spusti\""
+   },
+   "category_label_image": {
+      "message": "slika"
+   },
+   "category_label_link": {
+      "message": "povezava"
+   },
+   "category_label_navigation": {
+      "message": "Navigation"
+   },
+   "category_label_options": {
+      "message": "Options"
+   },
+   "category_label_other": {
+      "message": "Ostalo"
+   },
+   "category_label_rocker_strokes": {
+      "message": "Premiki s tresenjem"
+   },
+   "category_label_tab": {
+      "message": "zavihek"
+   },
+   "category_label_utilities": {
+      "message": "Pripomo\u010Dek"
+   },
+   "category_label_wheel_strokes": {
+      "message": "Premiki s kolescem"
+   },
+   "category_label_window": {
+      "message": "okno"
+   },
+   "extension_description": {
+      "message": "Uporabite premike mi\u0161ke za pohitritev va\u0161ega dela. Podpira \"super drag & go\" tresljajne ukaze in ukaze s kolesom v enem dodatku. \u010Ce imate bolj\u0161i prevod ste dobrodo\u0161li."
+   },
+   "extension_name": {
+      "message": "Mi\u0161kini Premiki"
+   },
+   "option_desc_stroke_timeout": {
+      "message": "Large values make it easier to perform strokes"
+   },
+   "option_label_alt_key_suppresses_strokes": {
+      "message": "Alt key suppresses strokes"
+   },
+   "option_label_close_window_with_the_last_tab": {
+      "message": "Close window with the last tab"
+   },
+   "option_label_draw_trails": {
+      "message": "Draw Trails"
+   },
+   "option_label_enable_dnd_strokes": {
+      "message": "Enable Drag'n'Drop Strokes"
+   },
+   "option_label_hold_ctrl_key_to_fire_custom_strokes": {
+      "message": "Hold Ctrl key to fire Custom Strokes"
+   },
+   "option_label_minimal_step": {
+      "message": "Minimal Step (Pixels)"
+   },
+   "option_label_new_tab_open_at": {
+      "message": "When Open New Tabs, Open"
+   },
+   "option_label_page_open_as_new_tab": {
+      "message": "When Open New Tabs, Open"
+   },
+   "option_label_prefferred_search_engine": {
+      "message": "Preferred Search Engine"
+   },
+   "option_label_stroke_timeout": {
+      "message": "Stroke Timeout (Milliseconds)"
+   },
+   "option_label_stroke_trigger": {
+      "message": "Stroke Trigger Key"
+   },
+   "option_label_trail_color": {
+      "message": "Trail Color"
+   },
+   "option_label_trail_width": {
+      "message": "Trial Width"
+   },
+   "option_value_as_first_tab": {
+      "message": "As the first tab"
+   },
+   "option_value_as_last_tab": {
+      "message": "As the last tab"
+   },
+   "option_value_at_left_of_current_tab": {
+      "message": "At the left of the current tab"
+   },
+   "option_value_at_right_of_current_tab": {
+      "message": "At the right of the current tab"
+   },
+   "option_value_chrome_newtab_page": {
+      "message": "Chrome's new tab page"
+   },
+   "option_value_left_mouse_button": {
+      "message": "Left Mouse Button"
+   },
+   "option_value_middle_mouse_button": {
+      "message": "Middle Mouse Button (Linux and Mac)"
+   },
+   "option_value_my_homepage": {
+      "message": "My homepage"
+   },
+   "option_value_other_search_engine": {
+      "message": "Other"
+   },
+   "option_value_right_mouse_button": {
+      "message": "Right Mouse Button (Windows)"
+   },
+   "option_value_the_blank_page": {
+      "message": "The blank page"
+   },
+   "prompt_backup_settings_currupted": {
+      "message": "Zaznani pokvarjeni podatki. Pridobivanje rezervnih podatkov ustavljeno."
+   },
+   "prompt_invalid_search_engine_url": {
+      "message": "The search engine URL is invalid."
+   },
+   "prompt_label_and_script_are_empty": {
+      "message": "[Label] in [Script] ne moreta biti prazna."
+   },
+   "prompt_overwrite_custom_stroke_label": {
+      "message": "'$label$' \u017Ee obstaja. Prekrijem?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_overwrite_stroke_sequence": {
+      "message": "[$sequence$] je bil namenjen '$label$'. Prekrijem?",
+      "placeholders": {
+         "label": {
+            "content": "$2"
+         },
+         "sequence": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_remove_custom_stroke": {
+      "message": "Odstranim posebni premik:'$label$'?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_reset_settings": {
+      "message": "Vse nastavitve se bodo ponastavile razen posebnih premikov. Nadaljujem?"
+   },
+   "prompt_restore_complete": {
+      "message": "Obnovljeno."
+   },
+   "prompt_save_complete": {
+      "message": "Shranjevanje kon\u010Dano."
+   },
+   "stroke_label_bookmark_this_link": {
+      "message": "Bookmark This Link"
+   },
+   "stroke_label_bookmark_this_page": {
+      "message": "Bookmark This Page"
+   },
+   "stroke_label_close_all_tabs_to_the_left": {
+      "message": "Close All Tabs To The Left"
+   },
+   "stroke_label_close_all_tabs_to_the_right": {
+      "message": "Close All Tabs To The Right"
+   },
+   "stroke_label_close_other_tabs": {
+      "message": "Close Other Tabs"
+   },
+   "stroke_label_close_tab": {
+      "message": "Close Tab"
+   },
+   "stroke_label_close_tab_to_the_left": {
+      "message": "Close Tab To The Left"
+   },
+   "stroke_label_close_tab_to_the_right": {
+      "message": "Close Tab To The Right"
+   },
+   "stroke_label_close_window": {
+      "message": "Close Window"
+   },
+   "stroke_label_decrease_number_in_url": {
+      "message": "Guess Previous Page"
+   },
+   "stroke_label_detach_tab": {
+      "message": "Detach Tab"
+   },
+   "stroke_label_dnd_down": {
+      "message": "Drop down"
+   },
+   "stroke_label_dnd_left": {
+      "message": "Drop left"
+   },
+   "stroke_label_dnd_right": {
+      "message": "Drop right"
+   },
+   "stroke_label_dnd_up": {
+      "message": "Drop up"
+   },
+   "stroke_label_duplicate_tab": {
+      "message": "Duplicate Tab"
+   },
+   "stroke_label_first_tab": {
+      "message": "First Tab"
+   },
+   "stroke_label_history_back": {
+      "message": "History Back"
+   },
+   "stroke_label_history_forward": {
+      "message": "History Forward"
+   },
+   "stroke_label_increase_number_in_url": {
+      "message": "Guess Next Page"
+   },
+   "stroke_label_last_tab": {
+      "message": "Last Tab"
+   },
+   "stroke_label_maximize_window": {
+      "message": "Maximize Window"
+   },
+   "stroke_label_minimize_window": {
+      "message": "Minimize Window"
+   },
+   "stroke_label_mouse_stroke_options": {
+      "message": "Mouse Stroke Options"
+   },
+   "stroke_label_new_tab": {
+      "message": "New Tab"
+   },
+   "stroke_label_new_window": {
+      "message": "New Window"
+   },
+   "stroke_label_next_tab": {
+      "message": "Next Tab"
+   },
+   "stroke_label_open_homepage": {
+      "message": "Open Homepage"
+   },
+   "stroke_label_open_link_in_new_background_tab": {
+      "message": "Open Link In New Background Tab"
+   },
+   "stroke_label_open_link_in_new_foreground_tab": {
+      "message": "Open Link In New Foreground Tab"
+   },
+   "stroke_label_open_link_in_new_window": {
+      "message": "Open Link In New Window"
+   },
+   "stroke_label_previous_tab": {
+      "message": "Previous Tab"
+   },
+   "stroke_label_reload": {
+      "message": "Reload"
+   },
+   "stroke_label_remove_bookmark": {
+      "message": "Remove Bookmark"
+   },
+   "stroke_label_rocker_left_to_right": {
+      "message": "Right click while holding the left button"
+   },
+   "stroke_label_rocker_right_to_left": {
+      "message": "Left click while holding the right button"
+   },
+   "stroke_label_save_image": {
+      "message": "Save Image"
+   },
+   "stroke_label_scroll_down_one_page": {
+      "message": "Scroll Down One Page"
+   },
+   "stroke_label_scroll_up_one_page": {
+      "message": "Scroll Up One Page"
+   },
+   "stroke_label_search_selected_text": {
+      "message": "Search Selected Text"
+   },
+   "stroke_label_skip_cache_reload": {
+      "message": "Skip Cache Reload"
+   },
+   "stroke_label_stop_page_loading": {
+      "message": "Stop Page Loading"
+   },
+   "stroke_label_take_screenshot": {
+      "message": "Take Screenshot"
+   },
+   "stroke_label_text_zoom_in": {
+      "message": "Text Zoom In"
+   },
+   "stroke_label_text_zoom_out": {
+      "message": "Text Zoom Out"
+   },
+   "stroke_label_text_zoom_reset": {
+      "message": "Text Zoom Reset"
+   },
+   "stroke_label_to_page_bottom": {
+      "message": "To Page Bottom"
+   },
+   "stroke_label_to_page_top": {
+      "message": "To Page Top"
+   },
+   "stroke_label_undo_close_tab": {
+      "message": "Undo Close Tab"
+   },
+   "stroke_label_upper_level_in_url": {
+      "message": "Upper Level In Url"
+   },
+   "stroke_label_view_image": {
+      "message": "View Image"
+   },
+   "stroke_label_view_source": {
+      "message": "View Source"
+   },
+   "stroke_label_wheel_down": {
+      "message": "Mouse wheel down"
+   },
+   "stroke_label_wheel_left": {
+      "message": "Mouse wheel left"
+   },
+   "stroke_label_wheel_right": {
+      "message": "Mouse wheel right"
+   },
+   "stroke_label_wheel_up": {
+      "message": "Mouse wheel up"
+   },
+   "text_backup_and_restore_settings_description": {
+      "message": "\u003Cli\u003E\n  To backup settings, hit the \u003Cem\u003EBackup\u003C/em\u003E button then \u003Cstrong\u003Ecopy the text content to a safe place\u003C/strong\u003E.\n  Hit the button alone will not save your settings.\n\u003C/li\u003E\n\u003Cli\u003E\n  To restore settings, paste previously saved content in the text area then hit the \u003Cem\u003ERestore\u003C/em\u003E button.\n  Your backup data will be merged with the default settings to avoid incompatibility or data corruption.\n\u003C/li\u003E"
+   },
+   "text_dnd_notes": {
+      "message": "Vle\u010Denje teksta bo spro\u017Eilo iskanje za tekst v novem zavihku.\u003Cbr/\u003E\nupo\u0161teva se smer zadnje vleke."
+   },
+   "text_extension_description": {
+      "message": "To je dodatek za Google Chrome ki omogo\u010Da \u003Ca href=\"http://en.wikipedia.org/wiki/Mouse_gesture\"\u003Epremike mi\u0161ke \u003C/a\u003E (znanih tudi kot mi\u0161kine geste) v brskalniku. S tem dodatkom lahko preprosta opravilaopravite s premikom mi\u0161ke."
+   },
+   "text_translator": {
+      "message": "Erazem Jurkovi\u0107"
+   },
+   "text_version_highlight": {
+      "message": "\u003Cli\u003E\n  \u003Cstrong\u003ENovo v 1.9.4\u003C/strong\u003E: Mi\u0161kini Premiki lahko zdaj govori v ve\u010D jezikih!\u003Cbr/\u003E\n  \u010Ce ste pripravljeni pomagati revesti Mi\u0161kine Premike v va\u0161 jezik, pojdite na\n  \u003Ca href=\"http://code.google.com/p/chrome-mouse-stroke/issues/detail?id=85\"\u003Eta stran in sledite navodilom.\u003Cbr/\u003E\n  Va\u0161e delo bo spo\u0161tovano\n\u003C/li\u003E\n\u003Cli\u003E\n  Posebni premiki imajo zdaj dostop do vseh DOM predmetov in funkcij\n\u003C/li\u003E\n\u003Cli\u003E\n  Popravili smo nekaj hro\u0161\u010Dev\n\u003C/li\u003E"
+   },
+   "text_version_highlight_prompt": {
+      "message": "\u003Cstrong\u003EMi\u0161kin Premik\u003C/strong\u003E se je nadgradil na najnovej\u0161o verzijo!\u003Cbr/\u003E\nTa verzija podpira ve\u010Djezi\u010Dnost!\u003Cbr/\u003E\n\u010Ce ste pripravljeni pomagati revesti Mi\u0161kine Premike v va\u0161 jezik, pojdite na:\n\u003Ca href=\"http://code.google.com/p/chrome-mouse-stroke/issues/detail?id=85\"\u003Ethis page\u003C/a\u003E\nin sledite navodilom.\u003Cbr/\u003E\u003Cbr/\u003E\n\u003Ca target=\"_blank\" href=\"$option_page$\"\u003EExplore\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"https://chrome.google.com/extensions/detail/aeaoofnhgocdbnbeljkmbjdmhbcokfdb\"\u003EHome\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/wiki/FAQs\"\u003EFAQs\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/issues/list\"\u003ESupport\u003C/a\u003E",
+      "placeholders": {
+         "option_page": {
+            "content": "$1"
+         }
+      }
+   }
+}

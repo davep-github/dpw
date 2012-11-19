@@ -1,0 +1,95 @@
+[audioscrobbler]
+username = 
+password = 
+use_audioscrobbler = False
+
+[format]
+current = %T : %A - %S - %B - %F
+currsong1 = %S
+currsong2 = by %A from %B
+library = %A - %B - %S - %F
+title = [Sonata] %A - %S - %E
+
+[currformat]
+current = %N : %A - %T - %B - %F
+currsong1 = %T
+currsong2 = by %A from %B
+library = %A - %B - %T - %F
+title = [Sonata] %A - %T - %E
+
+[library]
+root_artist_level = 1
+root = flac/Yes/The_Yes_Album
+root_artist_artist = 
+root_artist_album = 
+
+[player]
+art_location_custom_filename = 
+lyrics = True
+trayicon = False
+covers = True
+sticky = True
+stop_on_exit = False
+info_song_more = False
+search_num = 4
+progressbar = True
+ontop = False
+lyrics_location = 0
+info_art_enlarged = False
+play_on_activate = False
+info_lyrics_expanded = True
+notification = True
+withdrawn = False
+playback = True
+statusbar = True
+notif_location = 4
+popup_time = 2
+covers_pref = 1
+info_song_expanded = True
+browser = 
+screen = 0
+show_header = True
+info_album_expanded = True
+use_infofile = False
+columnwidths = 1
+art_location = 0
+infofile_path = /tmp/xmms-info
+minimize = False
+h = 720
+expanded = True
+xfade = 1
+initial_run = False
+w = 1024
+update_on_start = False
+y = 22
+x = 0
+view = 0
+xfade_enabled = False
+
+[connection]
+auto = True
+profile_num = 0
+
+[notebook]
+info_tab_pos = 4
+current_tab_pos = 0
+current_tab_visible = True
+playlists_tab_pos = 2
+playlists_tab_visible = True
+info_tab_visible = True
+streams_tab_visible = True
+library_tab_visible = True
+library_tab_pos = 1
+streams_tab_pos = 3
+
+[streams]
+num_streams = 0
+
+[profiles]
+names[0] = Default Profile
+num_profiles = 1
+passwords[0] = 
+hosts[0] = localhost
+ports[0] = 6600
+musicdirs[0] = /media/audio/music/
+

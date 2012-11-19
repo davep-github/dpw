@@ -1,0 +1,224 @@
+{
+   "action_close_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for close_tab",
+      "message": "Zavrie\u0165 list",
+      "update": "20110614"
+   },
+   "action_hide_image": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Ukry\u0165 obr\u00E1zok",
+      "update": "20110614"
+   },
+   "action_new_window": {
+      "category": "Options Page: Actions",
+      "description": "Action title for new_window",
+      "message": "Nov\u00E9 okno",
+      "update": "20110614"
+   },
+   "action_next_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for next_tab",
+      "message": "Nov\u00FD list",
+      "update": "20110614"
+   },
+   "action_search_sel": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Prehlad\u00E1vaj Google",
+      "update": "20110614"
+   },
+   "action_translate": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Prelo\u017E v\u00FDber",
+      "update": "20110614"
+   },
+   "action_unbookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Odstr\u00E1ni\u0165 z\u00E1lo\u017Eku",
+      "update": "20110614"
+   },
+   "cat_settings": {
+      "category": "Options Page: Action Categories",
+      "description": "Title of the settings group",
+      "message": "In\u00E9 nastavenia",
+      "update": "20110614"
+   },
+   "descrip_search_sel": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Prehlad\u00E1vaj Google pre vybran\u00FD text",
+      "update": "20110614"
+   },
+   "description": {
+      "category": "About",
+      "description": "short extension description",
+      "message": "Gest\u00FAry my\u0161ou! R\u00FDchla a jednoduch\u00E1 navig\u00E1cia po internetov\u00FDch str\u00E1knach za pou\u017Eitia my\u0161i a kl\u00E1vesnice.",
+      "update": "20110614"
+   },
+   "gesture_wD": {
+      "category": "Options Page: Gestures",
+      "description": "wheel down gesture title",
+      "message": "Skroluj dole",
+      "update": "20110614"
+   },
+   "gesture_wU": {
+      "category": "Options Page: Gestures",
+      "description": "wheel up gesture title",
+      "message": "Skroluj hore",
+      "update": "20110614"
+   },
+   "name": {
+      "category": "About",
+      "description": "\"Smooth Gestures\" in your language",
+      "message": "Gest\u00FAry my\u0161ou",
+      "update": "20110614"
+   },
+   "options_addgesture_title": {
+      "category": "Options Page",
+      "description": "explanation of what you are doing (adding a gesture to a specific action) ($ACTION$ is replaced automatically by the action name, such as: History Back--so insert it untranslated in the appropriate place in the translation)",
+      "message": "$$",
+      "placeholders": {
+         "action": {
+            "content": "$1",
+            "example": "History Back"
+         }
+      },
+      "update": "20110504"
+   },
+   "options_button_addgesture": {
+      "category": "Options Page",
+      "description": "button to add the new gesture to the action",
+      "message": "Prida\u0165 toto gesto",
+      "update": "20110614"
+   },
+   "options_button_overwrite": {
+      "category": "Options Page",
+      "description": "button to overwrite the gesture made to the new action",
+      "message": "Prep\u00EDsa\u0165 gesto",
+      "update": "20110614"
+   },
+   "options_button_startaddgesture": {
+      "category": "Options Page",
+      "description": "Label for a button to start setting up a new gesture",
+      "message": "Prida\u0165 gesto",
+      "update": "20110614"
+   },
+   "options_button_tryagain": {
+      "category": "Options Page",
+      "description": "button to reject the gesture made and try to make a new one",
+      "message": "Sk\u00FAs znovu",
+      "update": "20110614"
+   },
+   "options_contents_more": {
+      "category": "Options Page",
+      "description": "category type for all external links",
+      "message": "Viac",
+      "update": "20110614"
+   },
+   "options_contents_settings": {
+      "category": "Options Page",
+      "description": "category type for all settings links",
+      "message": "Nastavenia",
+      "update": "20110614"
+   },
+   "options_contents_status": {
+      "category": "Options Page",
+      "description": "link to open the status page",
+      "message": "Zobrazi\u0165 status",
+      "update": "20110614"
+   },
+   "options_mousebutton_1": {
+      "category": "Options Page",
+      "description": "name for the 'middle' mouse button (To replace $BUTTON$ variables below)",
+      "message": "$$",
+      "update": "20110504"
+   },
+   "options_note_print_button": {
+      "category": "Options Page",
+      "description": "Label on the button to print the page",
+      "message": "Tla\u010Di\u0165",
+      "update": "20110614"
+   },
+   "popup_button_hidepageaction": {
+      "category": "Status Notification",
+      "description": "a button to hide the pageaction",
+      "message": "Skry\u0165 URL ikonu",
+      "update": "20110614"
+   },
+   "popup_button_options": {
+      "category": "Status Notification",
+      "description": "a button to go to the options page",
+      "message": "Nastavenia",
+      "update": "20110614"
+   },
+   "popup_status_blocked_file2_link": {
+      "category": "Status Notification",
+      "description": "text naming the link that goes to chrome://extensions/",
+      "message": "Roz\u0161\u00EDrenia",
+      "update": "20110614"
+   },
+   "setting_button_export": {
+      "category": "Options Page: Settings",
+      "description": "button to save settings as a backup file",
+      "message": "Ulo\u017E nastavenia",
+      "update": "20110614"
+   },
+   "setting_button_left": {
+      "category": "Options Page: Settings",
+      "description": "choose left mouse button",
+      "message": "\u013Dav\u00E9 tla\u010Didlo",
+      "update": "20110614"
+   },
+   "setting_button_reset": {
+      "category": "Options Page: Settings",
+      "description": "button label",
+      "message": "Resetova\u0165",
+      "update": "20110614"
+   },
+   "setting_button_right": {
+      "category": "Options Page: Settings",
+      "description": "choose right mouse button",
+      "message": "Prav\u00E9 tla\u010Didlo",
+      "update": "20110614"
+   },
+   "setting_group_hide": {
+      "category": "Options Page: Settings",
+      "description": "button to hide a group of settings",
+      "message": "Ukry\u0165",
+      "update": "20110614"
+   },
+   "setting_group_show": {
+      "category": "Options Page: Settings",
+      "description": "button to show a group of settings",
+      "message": "Zobraz",
+      "update": "20110614"
+   },
+   "setting_hidepageaction": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "V\u017Edy zobraz ikonu",
+      "update": "20110614"
+   },
+   "setting_import": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Z\u00E1lohuj nastavenia",
+      "update": "20110614"
+   },
+   "setting_reset": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Resetova\u0165 na p\u00F4vodn\u00E9 nastavenia",
+      "update": "20110614"
+   },
+   "setting_sync": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Synchronizova\u0165",
+      "update": "20110614"
+   }
+}

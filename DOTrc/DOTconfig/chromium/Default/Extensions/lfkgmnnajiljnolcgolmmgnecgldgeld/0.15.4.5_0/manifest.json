@@ -1,0 +1,38 @@
+{
+   "background_page": "background.html",
+   "content_scripts": [ {
+      "all_frames": true,
+      "js": [ "js/gestures.js" ],
+      "matches": [ "\u003Call_urls\u003E" ],
+      "run_at": "document_start"
+   }, {
+      "all_frames": true,
+      "js": [ "js/gestures.js" ],
+      "matches": [ "\u003Call_urls\u003E" ],
+      "run_at": "document_end"
+   }, {
+      "all_frames": true,
+      "js": [ "js/jquery.min.js" ],
+      "matches": [ "\u003Call_urls\u003E" ],
+      "run_at": "document_idle"
+   } ],
+   "default_locale": "en",
+   "description": "__MSG_description__",
+   "icons": {
+      "128": "im/icon128.png",
+      "16": "im/icon16.png",
+      "32": "im/icon32.png",
+      "48": "im/icon48.png"
+   },
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDBAsZtLKg1B7P+mD4osPAoPO6f87XLi+wyyjbnxIDH+n7Snly0c0/rNnTfM3bZ+hj3DSEHGYnwJp+1jf9OAh1CZiCG+JoUmWMumrQZAqJZWPPzfLDBz1TpS8Jb1MasCIZRlngp8bSiooiBxGFlIaXGlk6l5/ExB/OJN9ZKW3+8XwIDAQAB",
+   "minimum_chrome_version": "8",
+   "name": "Smooth Gestures",
+   "options_page": "options.html",
+   "page_action": {
+      "default_icon": "im/pageaction.png",
+      "popup": "popup.html"
+   },
+   "permissions": [ "tabs", "bookmarks", "notifications", "idle", "cookies", "unlimitedStorage", "\u003Call_urls\u003E" ],
+   "update_url": "http://clients2.google.com/service/update2/crx",
+   "version": "0.15.4.5"
+}

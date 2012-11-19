@@ -1,0 +1,174 @@
+<html>
+<head>
+    <title>Chrome Flags - Welcome!</title>
+    <style>
+	  body {
+	    padding:0px;
+		margin:0px;
+	  }
+      #main {
+	    width: 800px;
+		text-align:left;
+		margin-top:30px;
+	  }
+      #main-text {
+	    xwidth: 400px;
+		text-align:left;
+
+	  }
+
+
+	  #main-title {
+		float:left;
+		margin-bottom:15px;
+		padding-bottom:3px;
+		border-bottom:1px solid #d3d3d3;
+	  }
+	  #main-title h3{
+		float:left;
+		margin-top:11px;
+		margin-left:6px;
+	  }
+	  #icon {
+		float:left;
+
+	  }
+	  h3{
+		margin:0px;
+		padding:0px;
+		margin-top:5px;
+		color:#d92583;
+		font-size:24px;
+		font-family:arial;
+		font-weight:normal;
+	  }
+
+	  h4 {
+		margin:0px;
+		padding:0px;
+		margin-top:12px;
+		margin-bottom:6px;
+		color:#d92583;
+		font-size:18px;
+		font-family:arial;
+		font-weight:normal;
+	  }
+	  h5 {
+		margin:0px;
+		padding:0px;
+		margin-top:12px;
+		margin-bottom:4px;
+		color:#2554d9;
+		font-size:16px;
+		font-family:arial;
+		font-weight:normal;
+	  }		
+	.text {
+		font-family:arial;
+		font-size:13px;
+		color:#2e2e2e;
+	}
+	#extensions {
+		width:600px;
+		margin-top:14px;
+	}
+	.extension{
+		float:left;
+		margin-bottom:20px;
+		padding-bottom:20px;
+		border-bottom:1px solid #eaeaea;
+	}
+	.extension .ext-icon {
+		float:left;
+	}
+	.ext-title {
+	    float:left;
+		font-size:18px;
+		font-family:arial;
+		font-weight:normal;	
+		color:#2554d9;
+		margin-left:10px;
+		margin-top:3px;
+	}
+	.description {
+	    float:left;
+		clear:both;
+		margin-top:5px;
+		font-family:arial;
+		font-size:13px;
+		color:#2e2e2e;	
+	}
+	</style>
+	<script type="text/javascript">
+		function onLoad() {
+			 var backgroundPage = chrome.extension.getBackgroundPage()
+			 //backgroundPage.loadInAllTabs();
+		}
+	</script>
+</head>
+
+<body onLoad="onLoad();">
+   <center>
+   <div id="main">
+	  <div id="main-title">
+			<img id="icon" src="48.png" width="48" height="48">
+			<h3>Thank you for installing Chrome Flags</h3>
+	  </div>
+	  
+	  <div id="main-text" class="text">
+		  <table>
+		    <tr>
+			  <td valign="top">
+				 <img src="main_image.png" width="323" height="248" style="border:1px solid #dcdada">
+			  </td>
+			 <td width="640" class="text" valign="top" style="padding-left:15px">
+
+				  <h5 style="margin-top:1px">Welcome!</h5>
+					 Chrome Flags Displays a country flag indicating the location of the website you're currently visiting.
+					 The extension also provides access to detailed information regarding the website's server, owner, trustworthiness and more.
+				  
+				     <h5>Getting Started</h5>
+					 During visiting a web page you'll notice a flag icon on the address bar.
+					 That flag tells you were the server you're visiting is actually hosted.
+
+					 If you click on the flag, a popup menu provides quick links to details about the given server and website, such as:<br>
+					 &nbsp;&nbsp;- Who owns it (whois) and what the IP address of the given server.<br>
+					 &nbsp;&nbsp;- Web analytic information from Google Trends, Quantcast, Compete and &nbsp;&nbsp;&nbsp;&nbsp;Alexa.<br>
+					 &nbsp;&nbsp;- McAfee Site Advisor.<br>
+					 &nbsp;&nbsp;- Users opinion on Web Of Trust.<br>
+			  </td>
+
+			 </tr>
+		   </table>
+	  </div>
+
+	  <h4 style="margin-top:15px">What other extensions we have made?</h4>
+	  <div id="extensions">
+		<div class="extension">
+			<img class="ext-icon" src="ietab.png" width="25" height="25"/>
+			<a href="https://chrome.google.com/extensions/detail/miedgcmlgpmdagojnnbemlkgidepfjfi" class="ext-title" target="_blank">IE Tab Classic</a>
+			<div class="description">
+			   IE Tab lets you use Internet Explorer inside Chrome. Some websites are still not compatible with standard browsers, so if you need access to those websites, this extension will assist you.
+			</div>
+		</div>
+		<div class="extension">
+			<img class="ext-icon" src="icon.png" width="25" height="25"/>
+			<a href="https://chrome.google.com/extensions/detail/gofhjkjmkpinhpoiabjplobcaignabnl" class="ext-title" target="_blank">FlashBlock</a>
+			<div class="description">
+			    This extension automatically blocks all the flash contents on any webpage.
+				Each flash element is being replaced with a placeholder that allows you to load only selected elements on a given page.
+				You can also manage a whitelist of allowed websites via a configuration panel.
+			</div>
+		</div>
+		<div class="extension">
+			<img class="ext-icon" src="dragngo.png" width="25" height="25"/>
+			<a href="https://chrome.google.com/extensions/detail/okmlpemfjpklknpajkaapehdglgbkgin" class="ext-title" target="_blank">Drag N Go</a>
+			<div class="description">
+			    With Drag N Go, browsing the web become faster and more intuitive. Highlight any word or a phrase and instantly search for it on one of several provided search engines by simply drag the text up or down, with or without the Control key pressed.
+			</div>
+		</div>
+	  </div>
+   </div>
+</body>
+</html>
+

@@ -1,0 +1,554 @@
+<GXINEMM VERSION="1">
+  <SUB NAME="Alternative">
+    <ENTRY>
+      <TITLE>BBC 1Xtra</TITLE>
+      <REF HREF="http://www.bbc.co.uk/1xtra/realmedia/1xtralive.rpm" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>BBC 6 Music</TITLE>
+      <REF HREF="http://www.bbc.co.uk/6music/ram/dsatg2.rpm" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>BBC Asian Network</TITLE>
+      <REF HREF="http://www.bbc.co.uk/asiannetwork/rams/asiannetwork.rpm" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>KQRX 95x</TITLE>
+      <REF HREF="mms://media.apex2000.net/KQRX">
+        <STARTTIME VALUE="299:49:52.384" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Radiostorm Alternative</TITLE>
+      <REF HREF="http://205.188.209.193:80/stream/1011" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>WBER 90.5 FM</TITLE>
+      <REF HREF="rtsp://media.monroe.edu/encoder/live2.ra">
+        <STARTTIME VALUE="00:00:01.810" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>The Drive</TITLE>
+      <REF HREF="pnm://audio.cintek.com/ekradio">
+        <STARTTIME VALUE="00:00:06.121" />
+      </REF>
+    </ENTRY>
+  </SUB>
+  <SUB NAME="Rock">
+    <ENTRY>
+      <TITLE>Project 89.0 digital</TITLE>
+      <REF HREF="mms://213.200.64.227/fettesradio$livestream.wma" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>87,9 Star FM</TITLE>
+      <REF HREF="mms://62.146.11.2/2884starfm_live.wmv?cid=47241&amp;dummy=.wmv" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Rock Antenne</TITLE>
+      <REF HREF="mms://213.200.75.252/rockantenne$livestream02b.wma" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>totalrock</TITLE>
+      <REF HREF="mms://62.25.96.7/TRLive" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Die neue 107.7</TITLE>
+      <REF HREF="http://nonstoppopundrock.ath.cx:8000/">
+        <STARTTIME VALUE="00:00:00.021" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Magic 105</TITLE>
+      <REF HREF="mms://204.117.117.92/magic105" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>The Coast KOZT FM</TITLE>
+      <REF HREF="rtsp://streamer.kozt.com/encoder/live.rm" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Rockland Sachsen-Anhalt</TITLE>
+      <REF HREF="rtsp://213.200.64.166/farm/pull2/62.89.187.100:2030/encoder/rockland/livestream.rm" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Radiostorm - Hard Rock</TITLE>
+      <REF HREF="http://152.163.134.164:80/stream/1012">
+        <STARTTIME VALUE="00:00:04.761" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Radio Paradise</TITLE>
+      <REF HREF="http://64.236.34.141:80/stream/1015">
+        <STARTTIME VALUE="00:00:12.451" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Braingell</TITLE>
+      <REF HREF="http://209.164.21.246:8000">
+        <STARTTIME VALUE="00:00:11.058" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Heavy Metal Radio</TITLE>
+      <REF HREF="http://war.str3am.com:7080">
+        <STARTTIME VALUE="00:00:06.790" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Metal Express</TITLE>
+      <REF HREF="http://radio.metalexpress.no:7128">
+        <STARTTIME VALUE="00:00:05.660" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>knac.com - pure rock!</TITLE>
+      <REF HREF="rtsp://cdl.earthcache.net/live-nyc-001.media.globix.net/encoder/COMP006822BCT1/knac.rm">
+        <STARTTIME VALUE="00:00:06" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Rockfun 24</TITLE>
+      <REF HREF="http://rockfun24.de:9001">
+        <STARTTIME VALUE="00:00:15" />
+      </REF>
+    </ENTRY>
+  </SUB>
+  <SUB NAME="Pop">
+    <ENTRY>
+      <TITLE>4FM</TITLE>
+      <REF HREF="rtsp://mss.streampower.be/broadcast/streampower/encoder/4fm/high.rm" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>104.6 RTL Berlin</TITLE>
+      <REF HREF="mms://213.200.75.252/rtl1046$rtllive.wma" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>KZRO-100FM</TITLE>
+      <REF HREF="mms://aqua.str3am.com/kzro" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>KGRG 89.9 FM</TITLE>
+      <REF HREF="http://63.231.5.225:8999/">
+        <STARTTIME VALUE="00:00:00.012" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>N-Joy Radio</TITLE>
+      <REF HREF="rtsp://193.97.251.26:554/live/n-joy.rm">
+        <STARTTIME VALUE="00:00:00.059" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>VOX FM</TITLE>
+      <REF HREF="rtsp://200.13.161.13:554/encoder/vox945fm.rm">
+        <STARTTIME VALUE="00:00:00.077" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Radiostorm: POP</TITLE>
+      <REF HREF="http://64.236.34.141:80/stream/1022">
+        <STARTTIME VALUE="00:00:08.221" />
+      </REF>
+    </ENTRY>
+  </SUB>
+  <SUB NAME="News & sport">
+    <ENTRY>
+      <TITLE>BBC Radio 5 Live</TITLE>
+      <REF HREF="http://www.bbc.co.uk/fivelive/live/surestream.ram" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>BBC Radio 5 Live Sports Extra</TITLE>
+      <REF HREF="http://www.bbc.co.uk/fivelive/live/surestream_sportsextra.ram" />
+    </ENTRY>
+  </SUB>
+  <SUB NAME="News & talk">
+    <ENTRY>
+      <TITLE>BBC World Service</TITLE>
+      <REF HREF="http://www.bbc.co.uk/worldservice/ram/live_infent.ram" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>WTOP 1500AM</TITLE>
+      <REF HREF="mms://wmr01sea.activate.net/wtopnews-p" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>JPR News</TITLE>
+      <REF HREF="mms://a1688.m.akastream.net/7/1688/2124/3a3541b6/publicin.download.akamai.com/2124/pb/content/audio/100/jpr_open.wma" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>C-SPAN Radio</TITLE>
+      <REF HREF="mms://wms-rbn-sea03.rbn.com/cspan/cspan/wmlive/cspan4db.asf">
+        <STARTTIME VALUE="40:13:34.080" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Deutschlandfunk live</TITLE>
+      <REF HREF="http://62.153.249.30/live_dlf">
+        <STARTTIME VALUE="00:00:00.004" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>WHDH-TV News Boston</TITLE>
+      <REF HREF="mms://video.whdh.com/live" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>WOR RADIO 710AM</TITLE>
+      <REF HREF="rtsp://real.nj.com:7071/encoder/njo/wor/wor.rm">
+        <STARTTIME VALUE="00:00:24" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>FederalNewsRadio</TITLE>
+      <REF HREF="mms://wms-rbn-sea10.rbn.com/bonnevilledc/fnr/wmlive/fnrlive.asf" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>mdr info</TITLE>
+      <REF HREF="mms://213.200.75.252/mdr$mdrinfo$live.wma">
+        <STARTTIME VALUE="37:32:55" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>B5 aktuell</TITLE>
+      <REF HREF="mms://a451.l674424667.c6744.g.lm.akamaistream.net/D/451/6744/v0001/reflector:24667" />
+    </ENTRY>
+  </SUB>
+  <SUB NAME="TV">
+    <ENTRY>
+      <TITLE>C-SPAN 1</TITLE>
+      <REF HREF="mms://wms-rbn-sea18.rbn.com/cspan/cspan/wmlive/cspan1v.asf">
+        <STARTTIME VALUE="37:32:49.984" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>C-SPAN 2</TITLE>
+      <REF HREF="mms://wms-rbn-sea16.rbn.com/cspan/cspan/wmlive/cspan2v.asf" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>C-SPAN 3</TITLE>
+      <REF HREF="mms://wms-rbn-sea16.rbn.com/cspan/cspan/wmlive/cspan3v.asf" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>BBC News 24 (summary)</TITLE>
+      <REF HREF="http://www.bbc.co.uk/newsa/n5ctrl/tvseq/n24/nb/rm/video/heads_nb.ram" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>ZDF infobox</TITLE>
+      <REF HREF="mms://mp.video.t-online.de/zdf-infobox_lod300k" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>NBC Giga</TITLE>
+      <REF HREF="mms://mp.video.t-online.de/giga_loddsl" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>The Basement Music/Vision</TITLE>
+      <REF HREF="mms://wmt.streaming.telstra.com/UCS-wh_mulray0" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>KCCG-TV2</TITLE>
+      <REF HREF="rtsp://216.62.88.52/encoder/ch2.rm">
+        <STARTTIME VALUE="00:00:22.871" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Bloomberg TV Germany</TITLE>
+      <REF HREF="mms://mp.video.t-online.de/bloombergtv_lod300k" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>WSVN Live Miami</TITLE>
+      <REF HREF="mms://video.whdh.com/broadband" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Deutsche Welle TV</TITLE>
+      <REF HREF="rtsp://62.153.249.11/live/dwelle/dwelle-live-d.rm">
+        <STARTTIME VALUE="00:00:00.022" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>n-tv</TITLE>
+      <REF HREF="rtsp://62.153.249.11:554/live/ntv/ntv1_300.rm" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Telebasel</TITLE>
+      <REF HREF="rtsp://tv.telebasel.ch/encoder/live.rm">
+        <STARTTIME VALUE="00:00:00.025" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>NASA TV</TITLE>
+      <REF HREF="rtsp://198.116.66.254:554/encoder/live.rm">
+        <STARTTIME VALUE="00:00:00.024" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Phoenix</TITLE>
+      <REF HREF="rtsp://kermit.sda.t-online.de/broadcast/zdf/195.124.124.88:2030/encoder/phoenix.rm">
+        <STARTTIME VALUE="00:00:00.017" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>RTL Tele Letzebuerg</TITLE>
+      <REF HREF="mms://millhouse.rtl.lu/telehighres" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Cuba Vision TV</TITLE>
+      <REF HREF="mms://216.138.240.231/Cuba">
+        <STARTTIME VALUE="40:28:59.776" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>WAM.TV</TITLE>
+      <REF HREF="mms://146.101.200.150/WAMTV" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Alternative.nu</TITLE>
+      <REF HREF="mms://stream.ihost.nu/nwez3" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Boston Channel 22 Live</TITLE>
+      <REF HREF="rtsp://140.241.251.199:554/encoder/live.rm?cloakport=8080,554,7070">
+        <STARTTIME VALUE="00:00:10.183" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>BYU TV</TITLE>
+      <REF HREF="mms://windowsmedia2.byu.edu/byutv250" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>KCCG-TV2</TITLE>
+      <REF HREF="rtsp://216.62.88.52/encoder/ch2.rm">
+        <STARTTIME VALUE="00:00:07.625" />
+      </REF>
+    </ENTRY>
+  </SUB>
+  <SUB NAME="Oldies">
+    <ENTRY>
+      <TITLE>BBC Radio 2</TITLE>
+      <REF HREF="http://www.bbc.co.uk/radio2/realmedia/fmg2.rpm" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>BBC Radio 3</TITLE>
+      <REF HREF="http://www.bbc.co.uk/radio3/ram/r3g2.rpm" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>RTL Radio</TITLE>
+      <REF HREF="mms://213.200.75.252/rtlradio$livestream.wma" />
+    </ENTRY>
+  </SUB>
+  <SUB NAME="College">
+    <ENTRY>
+      <TITLE>WGXM Flyer Radio Dayton</TITLE>
+      <REF HREF="rtsp://131.238.250.75:554/encoder/flyerlive.rm">
+        <STARTTIME VALUE="00:00:00.182" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>KWAR 89.1 FM</TITLE>
+      <REF HREF="rtsp://real-server.wartburg.edu:8080/encoder/broadcast.rm">
+        <STARTTIME VALUE="00:00:04.549" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>WBWC 88.3FM</TITLE>
+      <REF HREF="rtsp://real.bw.edu/encoder/wbwc.rm">
+        <STARTTIME VALUE="00:00:01.810" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>KSLU 90.9 FM</TITLE>
+      <REF HREF="http://147.174.55.20:8000">
+        <STARTTIME VALUE="00:00:22.731" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>WFPK Radio</TITLE>
+      <REF HREF="http://204.107.174.104:7070/wfpk64k.mp3">
+        <STARTTIME VALUE="00:00:06.655" />
+      </REF>
+    </ENTRY>
+  </SUB>
+  <SUB NAME="Hot adult contemporary">
+    <ENTRY>
+      <TITLE>The Peak 95.1 FM</TITLE>
+      <REF HREF="mms://204.101.160.36:1037" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Hit Radio Antenne 1</TITLE>
+      <REF HREF="mms://213.200.75.252/antenne1$livestream.wma">
+        <STARTTIME VALUE="299:49:52.384" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>104.6 RTL</TITLE>
+      <REF HREF="mms://213.200.75.252/rtl1046$rtllive.wma">
+        <STARTTIME VALUE="299:49:52.384" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>R.SH</TITLE>
+      <REF HREF="mms://213.200.75.252/rsh$live.wma">
+        <STARTTIME VALUE="65:06:27.896" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Z104</TITLE>
+      <REF HREF="mms://wmr01sea.activate.net/z104-p" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>hitmix fm</TITLE>
+      <REF HREF="mms://212.202.236.84:8080">
+        <STARTTIME VALUE="40:26:44.608" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Radio 538 powered by Enertel</TITLE>
+      <REF HREF="MMS://media.radio538.nl/radio538" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Q-Music</TITLE>
+      <REF HREF="mms://195.121.244.221/Stubru2" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>swr 3</TITLE>
+      <REF HREF="mms://213.200.75.252/swr3$livestream.wma">
+        <STARTTIME VALUE="37:32:55" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Netzantenne</TITLE>
+      <REF HREF="http://dna-network.com:9000">
+        <STARTTIME VALUE="00:00:13" />
+      </REF>
+    </ENTRY>
+  </SUB>
+  <SUB NAME="Top 40">
+    <ENTRY>
+      <TITLE>BBC Radio 1</TITLE>
+      <REF HREF="http://www.bbc.co.uk/radio1/realaudio/media/r1live.rpm" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Sun FM</TITLE>
+      <REF HREF="http://www4.vip.net:8000/">
+        <STARTTIME VALUE="00:00:14.675" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>N-Joy</TITLE>
+      <REF HREF="rtsp://193.97.251.26:554/live/n-joy.rm">
+        <STARTTIME VALUE="00:00:03.725" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Eins Live</TITLE>
+      <REF HREF="rtsp://a723.l672123071.c6721.g.lr.akamaistream.net/live/D/723/6721/v0001/reflector:23071" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>MDR JUMP </TITLE>
+      <REF HREF="mms://213.200.75.252/mdr$jump$livestream_32.wma">
+        <STARTTIME VALUE="299:49:52.384" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>HitzRadio</TITLE>
+      <REF HREF="http://64.236.34.141:80/stream/1038">
+        <STARTTIME VALUE="00:00:06.681" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Radio Donna</TITLE>
+      <REF HREF="mms://195.121.244.219/donna2" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>PlanetRadio</TITLE>
+      <REF HREF="mms://213.200.64.231/planetradio$livestream.wma" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>chart radio</TITLE>
+      <REF HREF="rtsp://213.200.64.234/farm/*/encoder/chartradio/livestream.rm">
+        <STARTTIME VALUE="00:00:07" />
+      </REF>
+    </ENTRY>
+  </SUB>
+  <SUB NAME="Adult contemporary">
+    <ENTRY>
+      <TITLE>BKR - Soft Rock</TITLE>
+      <REF HREF="pnm://sarnoff.sunshinecable.com/live.ra">
+        <STARTTIME VALUE="00:00:05.697" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>The Mix 106</TITLE>
+      <REF HREF="pnm://216.183.128.11/livefm.rm">
+        <STARTTIME VALUE="00:00:02.980" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>HIT Radio FFH</TITLE>
+      <REF HREF="mms://213.200.64.231/radioffh$livestream.wma" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>MDR Sputnik</TITLE>
+      <REF HREF="rtsp://213.200.64.234/farm/*/encoder/mdr/sputnik/livestream.rm" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Club 977 - The 80s channel</TITLE>
+      <REF HREF="http://205.188.209.193:80/stream/1040">
+        <STARTTIME VALUE="00:01:46.070" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>WOLF FM</TITLE>
+      <REF HREF="http://64.236.34.141:80/stream/1004">
+        <STARTTIME VALUE="00:00:20.251" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>TheMixRadio</TITLE>
+      <REF HREF="http://207.44.186.99:8500">
+        <STARTTIME VALUE="00:00:17.033" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>LetsHit.com</TITLE>
+      <REF HREF="http://64.202.98.33:6180">
+        <STARTTIME VALUE="00:00:06.684" />
+      </REF>
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Virgin Radio</TITLE>
+      <REF HREF="http://152.163.134.164:80/stream/1031" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>Studio Brussels</TITLE>
+      <REF HREF="mms://195.121.244.221/Stubru2" />
+    </ENTRY>
+  </SUB>
+  <SUB NAME="Dance">
+    <ENTRY>
+      <TITLE>Sunshine Live</TITLE>
+      <REF HREF="rtsp://213.200.75.253/farm/*/encoder/sunshinelive/livestream2.rm" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>hr xxl</TITLE>
+      <REF HREF="mms://213.200.75.252/hrxxl$livestream.wma" />
+    </ENTRY>
+  </SUB>
+  <SUB NAME="Spoken word">
+    <ENTRY>
+      <TITLE>BBC Radio 4 (FM)</TITLE>
+      <REF HREF="http://www.bbc.co.uk/radio4/realplayer/media/fmg2.rpm" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>BBC Radio 4 (LW)</TITLE>
+      <REF HREF="http://www.bbc.co.uk/radio4/realplayer/media/lwg2.rpm" />
+    </ENTRY>
+    <ENTRY>
+      <TITLE>BBC 7</TITLE>
+      <REF HREF="http://www.bbc.co.uk/bbc7/realplayer/dsatg2.rpm" />
+    </ENTRY>
+  </SUB>
+  <SUB NAME="Local">
+    <ENTRY>
+      <TITLE>BBC Radio Newcastle</TITLE>
+      <REF HREF="http://www.bbc.co.uk/england/realmedia/live/localradio/newcastle.ram" />
+    </ENTRY>
+  </SUB>
+</GXINEMM>

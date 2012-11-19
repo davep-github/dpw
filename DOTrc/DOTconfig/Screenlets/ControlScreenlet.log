@@ -1,0 +1,18 @@
+CachingBackend: Loading instances from cache
+Creating new entry for ControlScreenlet in /tmp/screenlets/screenlets.running
+Loading instances in: /home/davep/.config/Screenlets/Control/default/
+No instance(s) found in session-path, creating new one.
+UPDATING SHAPE
+UPDATING SHAPE
+CachingBackend: Saving <#Control1> :) ...
+OK
+CachingBackend: Saving <#Control1> :) ...
+OK
+/home/davep/.screenlets/Control/themes
+Path /home/davep/.screenlets/Control/themes not found.
+/usr/share/screenlets/Control/themes
+active theme is: default
+Changed: is_widget
+UPDATING SHAPE
+CachingBackend: Saving <#Control1> :) ...
+OK

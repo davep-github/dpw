@@ -1,0 +1,1541 @@
+{
+   "_": {
+      "message": "_"
+   },
+   "action_bookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "P\u00E1gina de Marcadores",
+      "update": "20110330"
+   },
+   "action_clone_tab": {
+      "description": "Action title for clone_tab",
+      "message": "Duplicar Pesta\u00F1a"
+   },
+   "action_clone_tab_hack": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Duplicar pesta\u00F1a (hack)",
+      "update": "20100803"
+   },
+   "action_close_left_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Cerrar pesta\u00F1as izquierdas",
+      "update": "20101223"
+   },
+   "action_close_other_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Cerrar todas las dem\u00E1s pesta\u00F1as",
+      "update": "20100803"
+   },
+   "action_close_right_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Cerrar pesta\u00F1as derechas",
+      "update": "20101223"
+   },
+   "action_close_tab": {
+      "description": "Action title for close_tab",
+      "message": "Cerrar Pesta\u00F1a"
+   },
+   "action_close_window": {
+      "description": "Action title for close_window",
+      "message": "Cerrar Ventana"
+   },
+   "action_copy": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Copiar texto al portapapeles",
+      "update": "20110215"
+   },
+   "action_goto_bottom": {
+      "category": "Options Page: Actions",
+      "description": "Action title for goto_bottom",
+      "message": "It hacia abajo",
+      "update": "20110330"
+   },
+   "action_goto_top": {
+      "category": "Options Page: Actions",
+      "description": "Action title for goto_top",
+      "message": "Ir hacia arriba",
+      "update": "20110330"
+   },
+   "action_hide_image": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Esconder Imagen",
+      "update": "20101223"
+   },
+   "action_maximize_x": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Maximizar Ventana (Truco)",
+      "update": "20110513"
+   },
+   "action_merge_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title for merge_tabs",
+      "message": "* Combinar Pesta\u00F1as *",
+      "update": "20110330"
+   },
+   "action_minimize_x": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Minimizar Ventana (Truco)",
+      "update": "20110513"
+   },
+   "action_navigate_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for new_tab",
+      "message": "Ir a la P\u00E1gina de Nueva Pesta\u00F1a",
+      "update": "20100803"
+   },
+   "action_new_tab": {
+      "description": "Action title for new_tab",
+      "message": "Nueva Pesta\u00F1a"
+   },
+   "action_new_tab_back": {
+      "description": "Action title for new_tab_back",
+      "message": "Nueva Pesta\u00F1a (Abrir Enlace en Segundo plano)"
+   },
+   "action_new_tab_link": {
+      "description": "Action title for new_tab_link",
+      "message": "Nueva Pesta\u00F1a (Abrir Enlace)"
+   },
+   "action_new_window": {
+      "description": "Action title for new_window",
+      "message": "Nueva Ventana"
+   },
+   "action_new_window_link": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Nueva Ventana (Abrir Enlace)",
+      "update": "20110330"
+   },
+   "action_next_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for next_tab",
+      "message": "Siguiente Pesta\u00F1a",
+      "update": "20110330"
+   },
+   "action_next_window": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Siguiente Ventana (hack)",
+      "update": "20110330"
+   },
+   "action_open_bookmarks": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Abrir el Gestor de Favoritos",
+      "update": "20100803"
+   },
+   "action_open_downloads": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Abrir Descargas",
+      "update": "20100703"
+   },
+   "action_open_extensions": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Abrir Extensiones",
+      "update": "20100703"
+   },
+   "action_open_history": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Abrir Historial",
+      "update": "20100703"
+   },
+   "action_open_image": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Abrir Imagen",
+      "update": "20100703"
+   },
+   "action_options": {
+      "description": "Action title for options",
+      "message": "Abrir P\u00E1gina de Opciones"
+   },
+   "action_page_back": {
+      "description": "Action title for page_back",
+      "message": "Historial Atr\u00E1s"
+   },
+   "action_page_back_close": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_back_close",
+      "message": "Historial Atr\u00E1s o Cerrar",
+      "update": "20110605"
+   },
+   "action_page_down": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_down",
+      "message": "Av P\u00E1g (bajar la p\u00E1gina)",
+      "update": "20110330"
+   },
+   "action_page_forward": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_forward",
+      "message": "Historial Siguiente",
+      "update": "20110330"
+   },
+   "action_page_next": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_next",
+      "message": "P\u00E1gina Siguiente",
+      "update": "20110330"
+   },
+   "action_page_prev": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_prev",
+      "message": "P\u00E1gina Anterior",
+      "update": "20110330"
+   },
+   "action_page_up": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_up",
+      "message": "Re P\u00E1g (subir la p\u00E1gina)",
+      "update": "20110330"
+   },
+   "action_parent_dir": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Directorio Ra\u00EDz",
+      "update": "20110605"
+   },
+   "action_pin": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Anclar pesta\u00F1a",
+      "update": "20110328"
+   },
+   "action_prev_tab": {
+      "description": "Action title for prev_tab",
+      "message": "Pesta\u00F1a Anterior"
+   },
+   "action_prev_window": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Ventana Anterior (Truco)",
+      "update": "20110513"
+   },
+   "action_print": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Imprimir P\u00E1gina",
+      "update": "20101223"
+   },
+   "action_reload_all_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Recargar todas las pesta\u00F1as",
+      "update": "20100803"
+   },
+   "action_reload_tab": {
+      "description": "Action title for reload_tab",
+      "message": "Recargar Pesta\u00F1a"
+   },
+   "action_reload_tab_full": {
+      "description": "Action title for reload_tab_full",
+      "message": "Recargar Pesta\u00F1a (sin cache)"
+   },
+   "action_restore_x": {
+      "description": "Action title for clone_tab",
+      "message": "Restaurar Ventana (hack)"
+   },
+   "action_search_sel": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Buscar en Google",
+      "update": "20100803"
+   },
+   "action_show_cookies": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Ver la lista de Cookies",
+      "update": "20100803"
+   },
+   "action_split_tabs": {
+      "description": "Action title for split_tabs",
+      "message": "* Separar Pesta\u00F1as *"
+   },
+   "action_status": {
+      "description": "Action title for status",
+      "message": "Abrir P\u00E1gina de Estado"
+   },
+   "action_stop": {
+      "category": "Options Page: Actions",
+      "description": "Action title for stop",
+      "message": "Detener Carga",
+      "update": "20110330"
+   },
+   "action_tab_to_left": {
+      "description": "Action title",
+      "message": "Mover Pesta\u00F1a hacia la Izquierda"
+   },
+   "action_tab_to_right": {
+      "description": "Action title",
+      "message": "Mover Pesta\u00F1a hacia la Derecha"
+   },
+   "action_toggle_bookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Activar marcador",
+      "update": "20110327"
+   },
+   "action_toggle_pin": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Activar pesta\u00F1as fijadas",
+      "update": "20110327"
+   },
+   "action_translate": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Traducir selecci\u00F3n",
+      "update": "20110215"
+   },
+   "action_unbookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Eliminar Marcador",
+      "update": "20110330"
+   },
+   "action_undo_close": {
+      "description": "Action title for undo_close",
+      "message": "Deshacer Cerrar Pesta\u00F1a"
+   },
+   "action_undo_close_hack": {
+      "category": "Options Page: Actions",
+      "description": "Action title for undo_close_hack",
+      "message": "Deshacer Cerrar Pesta\u00F1a (hack)",
+      "update": "20100803"
+   },
+   "action_unpin": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Desanclar pesta\u00F1a",
+      "update": "20110328"
+   },
+   "action_view_source": {
+      "description": "Action title for view_source",
+      "message": "Ver el C\u00F3digo Fuente"
+   },
+   "action_zoom_img_in": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Ampliar Imagen",
+      "update": "20110330"
+   },
+   "action_zoom_img_out": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Alejar Imagen",
+      "update": "20110330"
+   },
+   "action_zoom_img_zero": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Restaurar Zoom en la Imagen",
+      "update": "20110330"
+   },
+   "action_zoom_in": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Acercar P\u00E1gina",
+      "update": "20110330"
+   },
+   "action_zoom_out": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Alejar P\u00E1gina",
+      "update": "20110330"
+   },
+   "action_zoom_zero": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Restaurar Zoom en la P\u00E1gina",
+      "update": "20110330"
+   },
+   "cat_custom": {
+      "description": "Name of category for all custom actions",
+      "message": "Acciones Personalizadas"
+   },
+   "cat_other": {
+      "description": "Name of category for actions that don't have a category",
+      "message": "Otras Acciones"
+   },
+   "cat_page_navigation": {
+      "description": "Name of category encompassing basic page navigation actions",
+      "message": "Navegaci\u00F3n de P\u00E1gina"
+   },
+   "cat_settings": {
+      "description": "Title of the settings group",
+      "message": "Otros Ajustes"
+   },
+   "cat_tab_management": {
+      "category": "Options Page: Action Categories",
+      "description": "Name of category encompassing tab manipulation actions",
+      "message": "Gesti\u00F3n de Pesta\u00F1as",
+      "update": "20110605"
+   },
+   "cat_utilities": {
+      "category": "Options Page: Action Categories",
+      "description": "Name of category for general utility actions",
+      "message": "Utilidades",
+      "update": "20100803"
+   },
+   "context_not_image": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is not valid on an image",
+      "message": "no sobre imagen",
+      "update": "20110605"
+   },
+   "context_not_link": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is not valid on a link",
+      "message": "no sobre enlace",
+      "update": "20110605"
+   },
+   "context_not_links_images": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is not valid starting on a link or an image",
+      "message": "no sobre enlaces o imagenes",
+      "update": "20110605"
+   },
+   "context_not_selection": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is not valid with a selection",
+      "message": "con con selecci\u00F3n",
+      "update": "20110605"
+   },
+   "context_on_image": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is only valid starting on an image",
+      "message": "sobre imagen",
+      "update": "20110605"
+   },
+   "context_on_link": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is only valid starting on a link",
+      "message": "sobre enlace",
+      "update": "20110605"
+   },
+   "context_with_selection": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is only valid with a selection",
+      "message": "con selecci\u00F3n",
+      "update": "20110605"
+   },
+   "descrip_bookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "A\u00F1adir un marcador a la p\u00E1gina actual.",
+      "update": "20110330"
+   },
+   "descrip_clone_tab": {
+      "description": "Action description for clone_tab",
+      "message": "Abrir una pesta\u00F1a duplicada de la p\u00E1gina actual. La pesta\u00F1a duplicada no tendr\u00E1 el historial de la pesta\u00F1a original."
+   },
+   "descrip_clone_tab_hack": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Abre una pesta\u00F1a duplicada de la p\u00E1gina actual. Recupera el Historial con una apa\u00F1o imperfecto.",
+      "update": "20100803"
+   },
+   "descrip_close_left_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Cerrar todas las pesta\u00F1as a la izquierda de la actual",
+      "update": "20101223"
+   },
+   "descrip_close_other_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Cierra todas las pesta\u00F1as en la ventana actual, excepto la pesta\u00F1a seleccionada",
+      "update": "20100803"
+   },
+   "descrip_close_right_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Cerrar todas las pesta\u00F1as a la derecha de la actual",
+      "update": "20101223"
+   },
+   "descrip_close_tab": {
+      "description": "Action description for close_tab",
+      "message": "Cerrar la Pesta\u00F1a seleccionada"
+   },
+   "descrip_close_window": {
+      "description": "Action description for close_window",
+      "message": "Cerrar todas las pesta\u00F1as en la ventana seleccionada"
+   },
+   "descrip_copy": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Copiar el texto seleccionado al portapapeles",
+      "update": "20110212"
+   },
+   "descrip_goto_bottom": {
+      "category": "Options Page: Actions",
+      "description": "Action description for goto_bottom",
+      "message": "Bajar p\u00E1gina hasta el final",
+      "update": "20110330"
+   },
+   "descrip_goto_top": {
+      "category": "Options Page: Actions",
+      "description": "Action description for goto_top",
+      "message": "Subir p\u00E1gina hasta el principio",
+      "update": "20110330"
+   },
+   "descrip_hide_image": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Borrar la imagen que el mouse est\u00E1 sobre la p\u00E1gina",
+      "update": "20101223"
+   },
+   "descrip_maximize_x": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Este es un hack desordenado para simular el maximizado de una ventana",
+      "update": "20110330"
+   },
+   "descrip_merge_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description for merge_tabs",
+      "message": "Juntar todas las pesta\u00F1as de la ventana actual con aquellas de la \u00FAltima ventana seleccionada",
+      "update": "20110330"
+   },
+   "descrip_minimize_x": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Este es un _muy_ complejo hack para simular el minimizado de una ventana",
+      "update": "20110605"
+   },
+   "descrip_navigate_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_tab",
+      "message": "Navega a la p\u00E1gina de Nueva Pesta\u00F1a (la URL se puede especificar m\u00E1s abajo)",
+      "update": "20100803"
+   },
+   "descrip_new_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_tab",
+      "message": "Abrir una nueva pesta\u00F1a en la ventana actual (la URL se puede incluir abajo)",
+      "update": "20110513"
+   },
+   "descrip_new_tab_back": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_tab_back",
+      "message": "Comenzar un gesto en un enlace para abrir ese enlace en una nueva pesta\u00F1a, pero no verla todav\u00EDa",
+      "update": "20110513"
+   },
+   "descrip_new_tab_link": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_tab_link",
+      "message": "Comenzar un gesto en un enlace para abrirlo en una nueva pesta\u00F1a",
+      "update": "20110513"
+   },
+   "descrip_new_window": {
+      "description": "Action description for new_window",
+      "message": "Abrir una nueva ventana con la pesta\u00F1a por defecto"
+   },
+   "descrip_new_window_link": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Comienza un gesto en un enlace para abrirlo en una nueva ventana",
+      "update": "20110513"
+   },
+   "descrip_next_tab": {
+      "description": "Action description for next_tab",
+      "message": "Selecciona la pesta\u00F1a a la derecha de la pesta\u00F1a actual"
+   },
+   "descrip_next_window": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Selecciona la ventana que ha estado fijada por m\u00E1s tiempo",
+      "update": "20110330"
+   },
+   "descrip_open_bookmarks": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Abre el Gestor de Favoritos en una pesta\u00F1a nueva",
+      "update": "20100803"
+   },
+   "descrip_open_downloads": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Abre la p\u00E1gina de Descargas en una pesta\u00F1a nueva",
+      "update": "20100803"
+   },
+   "descrip_open_extensions": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Abre la p\u00E1gina de Extensiones en una pesta\u00F1a nueva",
+      "update": "20100803"
+   },
+   "descrip_open_history": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Abre la p\u00E1gina de Historial en una pesta\u00F1a nueva",
+      "update": "20100803"
+   },
+   "descrip_open_image": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Abre la imagen sobre la que est\u00E1 el rat\u00F3n en una pesta\u00F1a nueva",
+      "update": "20100803"
+   },
+   "descrip_options": {
+      "description": "Action description for options",
+      "message": "Abrir esta p\u00E1gina de opciones"
+   },
+   "descrip_page_back": {
+      "description": "Action description for page_back",
+      "message": "Volver una p\u00E1gina en el historial para la pesta\u00F1a actual"
+   },
+   "descrip_page_back_close": {
+      "description": "Action description for page_back_close",
+      "message": "Volver una p\u00E1gina en el historial para la pesta\u00F1a actual; o, si no hay historial, cerrar la pesta\u00F1a"
+   },
+   "descrip_page_down": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_down",
+      "message": "Desplaza la p\u00E1gina hacia abajo en un 80%",
+      "update": "20110616"
+   },
+   "descrip_page_forward": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_forward",
+      "message": "Ir a la p\u00E1gina siguiente de la pesta\u00F1a actual",
+      "update": "20110513"
+   },
+   "descrip_page_next": {
+      "description": "Action description for page_next",
+      "message": "Intentar ir a la pr\u00F3xima p\u00E1gina siguiendo el enlace con texto: 'siguiente'"
+   },
+   "descrip_page_prev": {
+      "description": "Action description for page_prev",
+      "message": "Intentar ir a la p\u00E1gina anterior siguiendo el enlace con texto: 'anterior'"
+   },
+   "descrip_page_up": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_up",
+      "message": "Desplaza la p\u00E1gina hacia arriba en un 80%",
+      "update": "20110616"
+   },
+   "descrip_parent_dir": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Navegar hasta el directorio principal de la p\u00E1gina actual. Si ya se encuentra en el directorio ra\u00EDz, tratar de eliminar subdominios.",
+      "update": "20110513"
+   },
+   "descrip_pin": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Fijar la pesta\u00F1a actual",
+      "update": "20110327"
+   },
+   "descrip_prev_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for prev_tab",
+      "message": "Seleccionar la pesta\u00F1a a la izquierda de la pesta\u00F1a actual.",
+      "update": "20110513"
+   },
+   "descrip_prev_window": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Seleccionar la ventana visualizada inmediatamente antes de la actual.",
+      "update": "20110513"
+   },
+   "descrip_print": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Imprimir la p\u00E1gina actual",
+      "update": "20101223"
+   },
+   "descrip_reload_all_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Refresca todas las pesta\u00F1as de la ventana actual",
+      "update": "20100803"
+   },
+   "descrip_reload_tab": {
+      "description": "Action description for reload_tab",
+      "message": "Refrescar los contenidos de la pesta\u00F1a actual"
+   },
+   "descrip_reload_tab_full": {
+      "category": "Options Page: Actions",
+      "description": "Action description for reload_tab_full",
+      "message": "Refrescar por completo los contenidos de la pesta\u00F1a actual (sin cache)",
+      "update": "20110513"
+   },
+   "descrip_restore_x": {
+      "description": "Action description for clone_tab",
+      "message": "Este es un hack desprolijo para devolver una ventana maximizada a su tama\u00F1o original"
+   },
+   "descrip_search_sel": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Busca en Google el texto seleccionado",
+      "update": "20100803"
+   },
+   "descrip_show_cookies": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Muestra una lista de todas las cookies de la p\u00E1gina actual",
+      "update": "20100803"
+   },
+   "descrip_split_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description for split_tabs",
+      "message": "Separar todas las pesta\u00F1as de la derecha de (e incluyendo) la pesta\u00F1a actual en una nueva ventana",
+      "update": "20110513"
+   },
+   "descrip_status": {
+      "description": "Action description for status",
+      "message": "Abrir la p\u00E1gina de estado de las extensiones de Gestos Suaves"
+   },
+   "descrip_stop": {
+      "description": "Action description for stop",
+      "message": "Parar de cargar la pesta\u00F1a actual. (Puede no funcionar en algunas p\u00E1ginas, como p\u00E1ginas con imagen)"
+   },
+   "descrip_tab_to_left": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Mover la pesta\u00F1a actual un puesto hacia la izquierda",
+      "update": "20110513"
+   },
+   "descrip_tab_to_right": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Mover la pesta\u00F1a actual un puesto hacia la derecha",
+      "update": "20110513"
+   },
+   "descrip_toggle_bookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Elimina un marcador si uno ya est\u00E1 establecido. A\u00F1ade un marcador a la p\u00E1gina actual, si no lo esta.",
+      "update": "20110327"
+   },
+   "descrip_toggle_pin": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Activar la pesta\u00F1a fijada en el tab",
+      "update": "20110327"
+   },
+   "descrip_translate": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Traducir el texto seleccionado al idioma definido en el navegador.",
+      "update": "20110327"
+   },
+   "descrip_unbookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Eliminar un marcador de la pagina actual, si este existe.",
+      "update": "20110327"
+   },
+   "descrip_undo_close": {
+      "category": "Options Page: Actions",
+      "description": "Action description for undo_close",
+      "message": "Abrir la \u00FAltima pesta\u00F1a cerrada. Esto s\u00F3lo permite cargar la URL de la p\u00E1gina -- CTRL-SHIFT-T es a\u00FAn mejor, porque mantiene el historial.",
+      "update": "20110513"
+   },
+   "descrip_undo_close_hack": {
+      "category": "Options Page: Actions",
+      "description": "Action description for undo_close",
+      "message": "Abre la \u00FAltima pesta\u00F1a cerrada. Carga el Historial mediante el uso de un apa\u00F1o imperfecto.",
+      "update": "20100803"
+   },
+   "descrip_unpin": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Desfijar la actual pesta\u00F1a",
+      "update": "20110327"
+   },
+   "descrip_view_source": {
+      "category": "Options Page: Actions",
+      "description": "Action description for view_source",
+      "message": "Ver el C\u00F3digo Fuente de la p\u00E1gina actual.",
+      "update": "20110513"
+   },
+   "descrip_zoom_img_in": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Acercar la imagen en la cual se encuentra el mouse",
+      "update": "20110616"
+   },
+   "descrip_zoom_img_out": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Alejar la imagen en la cual se encuentra el mouse",
+      "update": "20110616"
+   },
+   "descrip_zoom_img_zero": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Establecer la imagen a su tama\u00F1o original.",
+      "update": "20110513"
+   },
+   "descrip_zoom_in": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "ampliaci\u00F3n en todo el contenido de la p\u00E1gina",
+      "update": "20110325"
+   },
+   "descrip_zoom_out": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Reducci\u00F3n en todo el contenido de la p\u00E1gina",
+      "update": "20110325"
+   },
+   "descrip_zoom_zero": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Deshacer las acciones de zoom previas en la p\u00E1gina.",
+      "update": "20110513"
+   },
+   "description": {
+      "category": "About",
+      "description": "short extension description",
+      "message": "\u00A1Gestos de Rat\u00F3n! Navega por p\u00E1ginas web de forma r\u00E1pida y f\u00E1cil, utilizando el rat\u00F3n o el teclado.",
+      "update": "20110703"
+   },
+   "doubleclick_alert": {
+      "category": "Options Page",
+      "description": "Pop up an alert box the first time a user right-clicks to let them know that they may need to double-click the right mouse button to get to the context menu",
+      "message": "Haz doble clic con el bot\u00F3n derecho para ver el men\u00FA contextual\n\nEsto afecta a las versiones de Chrome para Linux y Mac (necesario para que los gestos funcionen).",
+      "update": "20110330"
+   },
+   "gesture_rLR": {
+      "description": "rocker right gesture title",
+      "message": "Rocker Derecho"
+   },
+   "gesture_rRL": {
+      "description": "rocker left gesture title",
+      "message": "Rocker Izquierdo"
+   },
+   "gesture_rocker_descrip": {
+      "description": "rocker right gesture description",
+      "message": "Mantega el bot\u00F3n $BUTTON1$, Clic $BUTTON2$",
+      "placeholders": {
+         "button1": {
+            "content": "$1",
+            "example": "right"
+         },
+         "button2": {
+            "content": "$2",
+            "example": "right"
+         }
+      }
+   },
+   "gesture_wD": {
+      "description": "wheel down gesture title",
+      "message": "Scroll hacia abajo"
+   },
+   "gesture_wD_descrip": {
+      "description": "wheel down gesture description",
+      "message": "Mantenga bot\u00F3n acci\u00F3n, Scroll hacia abajo"
+   },
+   "gesture_wU": {
+      "description": "wheel up gesture title",
+      "message": "Scroll hacia arriba"
+   },
+   "gesture_wU_descrip": {
+      "description": "wheel up gesture description",
+      "message": "Mantenga bot\u00F3n acci\u00F3n, Scroll hacia arriba"
+   },
+   "long_description": {
+      "category": "About",
+      "description": "complete extension description",
+      "message": "La extensi\u00F3n Mouse Gestures te permite mover el mouse mientras presionas el bot\u00F3n derecho para realizar acciones, como navegar a trav\u00E9s de p\u00E1ginas  o manejar pesta\u00F1as. Soporta el movimiento de click-arrastre (Gestos de rat\u00F3n), click-and-click (gestos de vaiv\u00E9n), y accesos r\u00E1pidos de teclado!\n\n\u2022 Gran personalizaci\u00F3n de gestos (\u00A1y acciones!)\n\u2022 Soporta gestos diagonales y el sincronizado/importado/exportado de configuraciones\n\u2022 No sirve en las p\u00E1ginas de extensiones u otra pagina incluida en Chrome por las restricciones de este para las extensiones, pero sirve para la mayor\u00EDa de las p\u00E1ginas http:// y https://",
+      "update": "20110703"
+   },
+   "name": {
+      "category": "About",
+      "description": "\"Smooth Gestures\" in your language",
+      "message": "Gestos suaves",
+      "update": "20110613"
+   },
+   "options_addgesture_instruct_1": {
+      "category": "Options Page",
+      "description": "instructions for making a gesture (just before bullet point list)",
+      "message": "Haga uno de los siguientes gestos:",
+      "update": "20110513"
+   },
+   "options_addgesture_instruct_2": {
+      "category": "Options Page",
+      "description": "[bullet point] instructions for making a gesture (mouse) ($BUTTON$ is replaced automatically by the appropriate button name--above--so insert it untranslated in the appropriate place in the translation)",
+      "message": "Gesto del Rat\u00F3n: Mantenga presionado el bot\u00F3n $BUTTON$ del rat\u00F3n y dibuje un gesto moviendo el rat\u00F3n, luego su\u00E9ltelo ",
+      "placeholders": {
+         "button": {
+            "content": "$1",
+            "example": "right"
+         }
+      },
+      "update": "20110407"
+   },
+   "options_addgesture_instruct_3": {
+      "category": "Options Page",
+      "description": "[bullet point] instructions for making a gesture (scroll) ($BUTTON$ is replaced automatically by the appropriate button name--above--so insert it untranslated in the appropriate place in the translation)",
+      "message": "Gesto de Rueda: Mantenga presionado el bot\u00F3n $BUTTON$ del rat\u00F3n y mueva la rueda del rat\u00F3n",
+      "placeholders": {
+         "button": {
+            "content": "$1",
+            "example": "right"
+         }
+      },
+      "update": "20110407"
+   },
+   "options_addgesture_instruct_4": {
+      "category": "Options Page",
+      "description": "[bullet point] instructions for making a gesture (rocker)",
+      "message": "Gesto Vaiv\u00E9n: Mantenga presionado cualquier bot\u00F3n del rat\u00F3n, luego haga clic en otro",
+      "update": "20110407"
+   },
+   "options_addgesture_instruct_5": {
+      "category": "Options Page",
+      "description": "[bullet point] instructions for doing a keyboard shortcut",
+      "message": "Atajo de Teclado: Mantenga presionadas las teclas de modificaci\u00F3n (o ninguna), luego presione otra tecla",
+      "update": "20110407"
+   },
+   "options_addgesture_overwrite": {
+      "description": "warning message that a gesture will be overwritten ($ACTION$ is replaced automatically by the action name, such as: History Back--so insert it untranslated in the appropriate place in the translation)",
+      "message": "Este gesto ya est\u00E1 siendo utilizado por $ACTION$",
+      "placeholders": {
+         "action": {
+            "content": "$1",
+            "example": "History Back"
+         }
+      }
+   },
+   "options_addgesture_title": {
+      "category": "Options Page",
+      "description": "explanation of what you are doing (adding a gesture to a specific action) ($ACTION$ is replaced automatically by the action name, such as: History Back--so insert it untranslated in the appropriate place in the translation)",
+      "message": "Establezca un gesto para la acci\u00F3n $ACTION$",
+      "placeholders": {
+         "action": {
+            "content": "$1",
+            "example": "History Back"
+         }
+      },
+      "update": "20110407"
+   },
+   "options_button_addcustomaction": {
+      "category": "Options Page",
+      "description": "Label for a button to start setting up a new custom action",
+      "message": "A\u00F1adir Acci\u00F3n Personalizada",
+      "update": "20110330"
+   },
+   "options_button_addgesture": {
+      "category": "Options Page",
+      "description": "button to add the new gesture to the action",
+      "message": "A\u00F1adir este gesto",
+      "update": "20110703"
+   },
+   "options_button_overwrite": {
+      "category": "Options Page",
+      "description": "button to overwrite the gesture made to the new action",
+      "message": "Sobrescribir gesto",
+      "update": "20110703"
+   },
+   "options_button_startaddgesture": {
+      "category": "Options Page",
+      "description": "Label for a button to start setting up a new gesture",
+      "message": "A\u00F1adir Gesto",
+      "update": "20110330"
+   },
+   "options_button_tryagain": {
+      "category": "Options Page",
+      "description": "button to reject the gesture made and try to make a new one",
+      "message": "Pruebe otra vez",
+      "update": "20110407"
+   },
+   "options_contents_actions": {
+      "category": "Options Page",
+      "description": "category type for all actions links",
+      "message": "Acciones de los Gestos",
+      "update": "20110327"
+   },
+   "options_contents_more": {
+      "description": "category type for all external links",
+      "message": "M\u00E1s"
+   },
+   "options_contents_settings": {
+      "description": "category type for all settings links",
+      "message": "Ajustes"
+   },
+   "options_contents_status": {
+      "category": "Options Page",
+      "description": "link to open the status page",
+      "message": "Ver el estado",
+      "update": "20110703"
+   },
+   "options_externalactions": {
+      "category": "Options Page",
+      "description": "link to external actions",
+      "message": "Acciones Externas",
+      "update": "20110330"
+   },
+   "options_moreactions": {
+      "category": "Options Page",
+      "description": "Link to access more actions. These actions don't currently have a gesture assigned",
+      "message": "M\u00E1s Acciones Disponibles",
+      "update": "20110330"
+   },
+   "options_mousebutton_0": {
+      "category": "Options Page",
+      "description": "name for the 'left' mouse button (To replace $BUTTON$ variables below)",
+      "message": "izquierda",
+      "update": "20110719"
+   },
+   "options_mousebutton_1": {
+      "category": "Options Page",
+      "description": "name for the 'middle' mouse button (To replace $BUTTON$ variables below)",
+      "message": "centro",
+      "update": "20110327"
+   },
+   "options_mousebutton_2": {
+      "category": "Options Page",
+      "description": "name for the 'right' mouse button (To replace $BUTTON$ variables below)",
+      "message": "derecha",
+      "update": "20110719"
+   },
+   "options_note_doubleclick": {
+      "category": "Options Page",
+      "description": "Let the user know that they may need to double-click the right mouse button to get to the context menu",
+      "message": "Es posible que tengas que hacer doble clic con el bot\u00F3n derecho del rat\u00F3n para abrir el men\u00FA contextual. Esto afecta a las versiones de Chrome para Mac y Linux.",
+      "update": "20110330"
+   },
+   "options_note_hidepageaction_button": {
+      "category": "Options Page",
+      "description": "Label on the button to hide the Smooth Gestures icon in the url bar",
+      "message": "Ocultar Icono",
+      "update": "20110330"
+   },
+   "options_note_print": {
+      "category": "Options Page",
+      "description": "Promote printing the page so users have a help sheet to remember all of the gestures",
+      "message": "\u00BFTienes problemas para recordar todos los gestos que has configurado? \u00A1Impr\u00EDmelos en una hoja!",
+      "update": "20110330"
+   },
+   "options_note_print_button": {
+      "category": "Options Page",
+      "description": "Label on the button to print the page",
+      "message": "Imprimir",
+      "update": "20110330"
+   },
+   "options_note_remindrate": {
+      "category": "Options Page",
+      "description": "Notify the user that they can rate this extension to help promote it",
+      "message": "\u00BFTe gusta Gestos Suaves? \u00A1Puedes contribuir a promocionar esta extensi\u00F3n $LINK$ !",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "\u003Ca href=''\u003Eleave a 5 star rating\u003C/a\u003E"
+         }
+      },
+      "update": "20110330"
+   },
+   "options_note_remindrate_link": {
+      "category": "Options Page",
+      "description": "Text for the link leading to the extension's page",
+      "message": "Deje una puntuaci\u00F3n de 5 estrellas",
+      "update": "20110407"
+   },
+   "options_note_sync": {
+      "category": "Options Page",
+      "description": "Let the user know that they may need to double-click the right mouse button to get to the context menu",
+      "message": "Quiz\u00E1s tengas que hacer doble clic con el bot\u00F3n derecho del rat\u00F3n para abrir el men\u00FA contextual.\nAplica a las versiones de Chrome para Linux y Mac",
+      "update": "20100803"
+   },
+   "options_note_translate": {
+      "category": "Options Page",
+      "description": "Solicit translation requests",
+      "message": "\u00BFSabes ingl\u00E9s? Ay\u00FAdanos $LINK$",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "\u003Ca href=''\u003Etranslate Smooth Gestures into your language\u003C/a\u003E"
+         }
+      },
+      "update": "20110330"
+   },
+   "options_note_translate_link": {
+      "category": "Options Page",
+      "description": "Link for soliciting translation requests",
+      "message": "traducir \"Smooth Gestures\" a su idioma",
+      "update": "20110328"
+   },
+   "options_note_updated": {
+      "category": "Options Page",
+      "description": "Notify that the extension has been updated",
+      "message": "Gestos Sueves se ha actualizado a $VERSION$",
+      "placeholders": {
+         "version": {
+            "content": "$1",
+            "example": "0.13.1"
+         }
+      },
+      "update": "20110330"
+   },
+   "options_remind_doubleclick": {
+      "description": "Let the user know that they may need to double-click the right mouse button to get to the context menu",
+      "message": "Recordatorio: dependiento de tu plataforma, puedes llegar a tener que hacer un doble clic con el bot\u00F3n derecho del mouse para abrir el men\u00FA contextual."
+   },
+   "options_title": {
+      "description": "The title of the options page, at top and tab name",
+      "message": "\u00A1Opciones!"
+   },
+   "options_welcome_0": {
+      "category": "Options Page",
+      "description": "First just-installed line",
+      "message": "\u00A1Bienvenido a Gestos Suaves!",
+      "update": "20110330"
+   },
+   "options_welcome_1": {
+      "category": "Options Page",
+      "description": "First just-installed bullet point",
+      "message": "\u00A1Has instalado Gestos Suaves! Puedes llegar a esta p\u00E1gina de Opciones manteniendo presionado el bot\u00F3n derecho del rat\u00F3n y dibujando una 'O' (prueba: derecha-abajo-izquierda-arriba-derecha).",
+      "update": "20110330"
+   },
+   "options_welcome_2": {
+      "category": "Options Page",
+      "description": "Second just-installed bullet point",
+      "message": "Para establecer nuevos gestos o acciones, haz clic en el bot\u00F3n '+' de abajo.",
+      "update": "20110330"
+   },
+   "options_welcome_3": {
+      "category": "Options Page",
+      "description": "Third just-installed bullet point",
+      "message": "Configura diferentes opciones haciendo clic en 'Ajustes' a la derecha o bajando con la rueda hasta el final de la p\u00E1gina.",
+      "update": "20110330"
+   },
+   "options_welcome_4": {
+      "description": "Bold reload all tabs just-installed",
+      "message": "Reinicia el navegador web o recarga cada pesta\u00F1a abierta para que los gestos funcionen en esa pesta\u00F1a."
+   },
+   "options_welcome_all_status": {
+      "description": "just-installed link to go to the status page",
+      "message": "Ver Todos los Estados de las Pesta\u00F1as"
+   },
+   "popup_button_hidepageaction": {
+      "category": "Status Notification",
+      "description": "a button to hide the pageaction",
+      "message": "Ocultar este icono.",
+      "update": "20110327"
+   },
+   "popup_button_options": {
+      "category": "Status Notification",
+      "description": "a button to go to the options page",
+      "message": "Opciones",
+      "update": "20110327"
+   },
+   "popup_button_reload": {
+      "description": "a button to reload the current page",
+      "message": "Recargar"
+   },
+   "popup_link_status": {
+      "description": "link to the status page",
+      "message": "Ver todos los estados de las pesta\u00F1as"
+   },
+   "popup_status_blocked_1": {
+      "description": "text explaining a blocked tab",
+      "message": "Chrome bloquea las extensiones a correr en esta p\u00E1gina como precuaci\u00F3n de seguridad."
+   },
+   "popup_status_blocked_2": {
+      "description": "text explaining a blocked tab",
+      "message": "Gestos Suaves no puede funcionar en esta p\u00E1gina por esta pol\u00EDtica."
+   },
+   "popup_status_blocked_file": {
+      "category": "Status Notification",
+      "description": "text explaining how to make a file:// tab work",
+      "message": "Intenta $LINK$ para habilitar los gestos en los protocolos file:// y ftp://",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "Smooth Gestures New Tab Add-on"
+         }
+      },
+      "update": "20100803"
+   },
+   "popup_status_blocked_file2": {
+      "category": "Status Notification",
+      "description": "text explaining how to make a file:// tab work",
+      "message": "Para permitir que Gestos Suaves trabaje con los protocolos file:// y ftp://, ves a $LINK$ y marca \"Permitir el acceso a archivos URLs\" bajo la entrada de Gestos Suaves.",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "Extensions"
+         }
+      },
+      "update": "20110327"
+   },
+   "popup_status_blocked_file2_link": {
+      "category": "Status Notification",
+      "description": "text naming the link that goes to chrome://extensions/",
+      "message": "Extensiones",
+      "update": "20110327"
+   },
+   "popup_status_blocked_file_link": {
+      "category": "Status Notification",
+      "description": "text naming the extension that adds file:// functionality to Smooth Gestures",
+      "message": "Funci\u00F3n extra de Smooth Gestures para el Protocolo File",
+      "update": "20100803"
+   },
+   "popup_status_blocked_newtab": {
+      "category": "Status Notification",
+      "description": "text explaining how to make a newtab page work",
+      "message": "Intenta $LINK$ para habilitar los gestos en la p\u00E1gina de Nueva Pesta\u00F1a",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "Smooth Gestures New Tab Add-on"
+         }
+      },
+      "update": "20100803"
+   },
+   "popup_status_blocked_newtab2": {
+      "category": "Status Notification",
+      "description": "text explaining how to make a newtab page work",
+      "message": "Prueba $LINK$ para habilitar gestos en una nueva pesta\u00F1a.",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "Smooth Gestures New Tab Add-on"
+         }
+      },
+      "update": "20110327"
+   },
+   "popup_status_blocked_newtab2_link": {
+      "category": "Status Notification",
+      "description": "text naming the extension that adds newtab functionality to Smooth Gestures",
+      "message": "Ultima pesta\u00F1a abierta",
+      "update": "20110327"
+   },
+   "popup_status_blocked_newtab_link": {
+      "category": "Status Notification",
+      "description": "text naming the extension that adds newtab functionality to Smooth Gestures",
+      "message": "Funci\u00F3n extra de Smooth Gestures para Nueva Pesta\u00F1a",
+      "update": "20100803"
+   },
+   "popup_status_broken": {
+      "description": "text explaining a broken tab",
+      "message": "Los gestos no est\u00E1n funcionando en esta p\u00E1gina ahora."
+   },
+   "popup_status_broken_short": {
+      "category": "Status Notification",
+      "description": "short text saying that gestures are broken on this page.",
+      "message": "Los gestos no funcionan en esta pagina.",
+      "update": "20110327"
+   },
+   "popup_status_question": {
+      "description": "text explaining a questionable tab",
+      "message": "Los gestos podr\u00EDan no estar funcionando en esta p\u00E1gina ahora..."
+   },
+   "popup_status_unable_short": {
+      "category": "Status Notification",
+      "description": "short text saying that gestures are blocked by this page.",
+      "message": "Gestos bloqueados en esta pagina",
+      "update": "20110327"
+   },
+   "popup_status_working": {
+      "category": "Status Notification",
+      "description": "text explaining a working tab",
+      "message": "Los gestos estan funcionando en esta pagina.",
+      "update": "20110327"
+   },
+   "popup_status_working_short": {
+      "category": "Status Notification",
+      "description": "short text saying that gestures are working on this page.",
+      "message": "Gestos funcionando.",
+      "update": "20110327"
+   },
+   "setting_blacklist": {
+      "description": "setting title",
+      "message": "Lista negra"
+   },
+   "setting_blacklist_descrip": {
+      "description": "setting description",
+      "message": "Deshabilitar gestos en dominions incluidos en la lista negra. Separar dominios con comas. (Ejemplo: \"mail.google.com, www.example.com\")"
+   },
+   "setting_button_export": {
+      "category": "Options Page: Settings",
+      "description": "button to save settings as a backup file",
+      "message": "Guardar configuraci\u00F3n",
+      "update": "20100803"
+   },
+   "setting_button_import": {
+      "category": "Options Page: Settings",
+      "description": "button to load a settings file",
+      "message": "Cargar Fichero de Configuraci\u00F3n",
+      "update": "20100803"
+   },
+   "setting_button_left": {
+      "description": "choose left mouse button",
+      "message": "Bot\u00F3n Izquierdo"
+   },
+   "setting_button_middle": {
+      "description": "choose middle mouse button",
+      "message": "Bot\u00F3n del Medio"
+   },
+   "setting_button_off": {
+      "description": "setting label",
+      "message": "Desactivado"
+   },
+   "setting_button_on": {
+      "description": "setting label",
+      "message": "Activado"
+   },
+   "setting_button_reset": {
+      "description": "button label",
+      "message": "Reiniciar"
+   },
+   "setting_button_right": {
+      "description": "choose right mouse button",
+      "message": "Bot\u00F3n Derecho"
+   },
+   "setting_button_update": {
+      "description": "button label",
+      "message": "Actualizar"
+   },
+   "setting_closelastblock": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "No cerrar la \u00FAltima pesta\u00F1a",
+      "update": "20100803"
+   },
+   "setting_closelastblock_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "No cierra la \u00FAltima pesta\u00F1a con el gesto de Cerrar Pesta\u00F1a; en vez de eso, va a la URL de \"Nueva Pesta\u00F1a\"",
+      "update": "20100803"
+   },
+   "setting_disabled": {
+      "description": "choose no mouse button",
+      "message": "Deshabilitar"
+   },
+   "setting_force_context": {
+      "description": "setting title",
+      "message": "Forzar Men\u00FA Contextual en los Enlaces"
+   },
+   "setting_force_context2": {
+      "description": "setting title",
+      "message": "Forzar Men\u00FA Contextual"
+   },
+   "setting_force_context2_descrip": {
+      "description": "setting description",
+      "message": "Siempre mostrar el men\u00FA contextual al hacer clic derecho. \u00DAtil para gestos activados con el bot\u00F3n del medio del mouse."
+   },
+   "setting_force_context_descrip": {
+      "description": "setting description",
+      "message": "Bloquea los gestos que comienzan desde enlaces. En sistemas que poseen conflictos con el men\u00FA contextual esto permite que se pueda hacer clic derecho s\u00F3lo una vez, en vez de dos para obtener el men\u00FA contextual. Aunque, tambi\u00E9n deshabilita la Nueva Pesta\u00F1a desde la caracter\u00EDstica Enlace."
+   },
+   "setting_group_assorted": {
+      "category": "Options Page: Settings",
+      "description": "title of a group of settings",
+      "message": "Configuraciones varias",
+      "update": "20100803"
+   },
+   "setting_group_context": {
+      "description": "title of a group of settings",
+      "message": "Ajustes Men\u00FA Contextual"
+   },
+   "setting_group_hide": {
+      "category": "Options Page: Settings",
+      "description": "button to hide a group of settings",
+      "message": "Ocultar",
+      "update": "20110513"
+   },
+   "setting_group_newtab": {
+      "description": "title of a group of settings",
+      "message": "Ajustes de Nueva Pesta\u00F1a"
+   },
+   "setting_group_show": {
+      "description": "button to show a group of settings",
+      "message": "mostrar"
+   },
+   "setting_group_trail": {
+      "description": "title of a group of settings",
+      "message": "Ajustes de L\u00EDnea Rastro"
+   },
+   "setting_hidepageaction": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Mostrar siempre el icono",
+      "update": "20110327"
+   },
+   "setting_hidepageaction_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "El icono en la barra de la URL permite acceder a la pagina de opciones de Gestos Suaves. Alternativamente, tu puedes encontrar esta pagina en la llave inglesa de la dereca \u003E Herramientas \u003E Extensiones \u003E Smooth Gestures \u003E Opciones",
+      "update": "20110327"
+   },
+   "setting_hold_button": {
+      "description": "setting title",
+      "message": "Bot\u00F3n del Mouse para Comenzar Gesto"
+   },
+   "setting_hold_button_descrip": {
+      "description": "setting description",
+      "message": "Permite dibujar gestos con el bot\u00F3n del medio o izquierdo del mouse, en lugar del bot\u00F3n derecho."
+   },
+   "setting_import": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Copia de Seguridad de la Configuraci\u00F3n",
+      "update": "20100803"
+   },
+   "setting_import_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Guarda tu configuraci\u00F3n actual (incluyendo gestos, acciones definidas por el usuario, y opciones). Carga el fichero para restaurar la configuraci\u00F3n si la pierdes, o para mover la configuraci\u00F3n a otro ordenador.",
+      "update": "20100803"
+   },
+   "setting_newtab_linkright": {
+      "description": "setting title",
+      "message": "Nuevas Pesta\u00F1as de origen enlace Abren Siguiente hacia Actual"
+   },
+   "setting_newtab_linkright_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Similar al comportamiento por defecto de Chromium cuando abre enlace en una nueva pesta\u00F1a. Esto tiende a agrupar pesta\u00F1as por tema. (\u00DAtil para separar y juntar pesta\u00F1as; mira arriba)",
+      "update": "20110325"
+   },
+   "setting_newtab_right": {
+      "description": "setting title",
+      "message": "Nuevas Pesta\u00F1as Abren Siguiente hacia Actual"
+   },
+   "setting_newtab_right_descrip": {
+      "description": "setting description",
+      "message": "Nuevas Pesta\u00F1as (no desde enlaces) abren siguiente hacia actual pesta\u00F1a"
+   },
+   "setting_newtab_url": {
+      "description": "setting title",
+      "message": "Nueva Pesta\u00F1a URL"
+   },
+   "setting_newtab_url_descrip": {
+      "description": "setting description",
+      "message": "Establecer la URL a la que la acci\u00F3n Nueva Pesta\u00F1a va. (por defecto es chrome://newtab/)"
+   },
+   "setting_reset": {
+      "description": "setting title",
+      "message": "Reinicializar a los valores por defecto"
+   },
+   "setting_reset_descrip": {
+      "description": "setting description",
+      "message": "Establecer todos los gestos y ajustes a los valores por defecto"
+   },
+   "setting_selecttolink": {
+      "description": "setting title",
+      "message": "Utilizar URLs Seleccionadas para Enlazar"
+   },
+   "setting_selecttolink_descrip": {
+      "description": "setting description",
+      "message": "Selecciona el texto con una o m\u00E1s urls como entrada para un gesto de enlace. Por ejemplo: Selecciona 2 urls en el texto, realiza el gesto Nueva Pesta\u00F1a desde Enlace -- ambas urls se abrir\u00E1n en dos nuevas pesta\u00F1as."
+   },
+   "setting_sendstats": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Enviar uso",
+      "update": "20110327"
+   },
+   "setting_sendstats_descrip": {
+      "description": "setting description",
+      "message": "Enviar reporte de utilizaci\u00F3n de gesto an\u00F3nimo para informar los gestos m\u00E1s comunmente utilizados, y de esta manera influenciar los gestos por defecto en futuros releases."
+   },
+   "setting_sync": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Sincronizar",
+      "update": "20100803"
+   },
+   "setting_sync_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Sincroniza la configuraci\u00F3n y los gestos con otros ordenadores mediante los Favoritos. Para usar esta funci\u00F3n tienes que habilitar la sincronizaci\u00F3n de Favoritos.",
+      "update": "20100803"
+   },
+   "setting_trail_color": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Color del rastro del gesto.",
+      "update": "20110513"
+   },
+   "setting_trail_color_descrip": {
+      "description": "setting description",
+      "message": "Ajustar el color y transparencia de la linea dibujada cuando realizas un gesto."
+   },
+   "setting_trail_draw": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Dibujar el rastro del gesto.",
+      "update": "20110513"
+   },
+   "setting_trail_draw_descrip": {
+      "category": "Options Page: Settings",
+      "description": "setting description",
+      "message": "Dibujar una l\u00EDnea de rastro en la pantalla cuando los gestos est\u00E1n siendo dibujados. (Rastro del gesto)",
+      "update": "20110513"
+   },
+   "setting_trail_width": {
+      "category": "Options Page: Settings",
+      "description": "setting title",
+      "message": "Ancho del rastro del gesto.",
+      "update": "20110513"
+   },
+   "setting_trail_width_descrip": {
+      "description": "setting description",
+      "message": "Ajustar el ancho de la l\u00EDnea dibujada cuando realizas un gesto."
+   },
+   "setting_warning_reset": {
+      "description": "warn that setting will be lost during a reset",
+      "message": "\u00BFEst\u00E1 seguro que desea reiniciar? Perder\u00E1 todos sus ajustes personalizados."
+   },
+   "status_button_reloadall": {
+      "description": "button to reload all broken pages",
+      "message": "Recargar Todas las P\u00E1ginas que No Funcionan"
+   },
+   "status_button_reloadone": {
+      "description": "button to reload single broken page",
+      "message": "Recargar P\u00E1gina"
+   },
+   "status_legend_blocked": {
+      "description": "status of a page",
+      "message": "P\u00E1ginas Bloqueadas por el Sistema"
+   },
+   "status_legend_broken": {
+      "description": "status of a page",
+      "message": "No Funciona"
+   },
+   "status_legend_loading": {
+      "description": "status of a page",
+      "message": "Cargando"
+   },
+   "status_legend_working": {
+      "category": "Tab Status Page",
+      "description": "status of a page",
+      "message": "Trabajando",
+      "update": "20110404"
+   },
+   "status_link_options": {
+      "category": "Tab Status Page",
+      "description": "Link to go to the options page",
+      "message": "Establecer Gestos Suaves:\u00A1Opciones!",
+      "update": "20110325"
+   },
+   "status_title": {
+      "description": "The title of the options page, at top and tab name",
+      "message": "Estado"
+   },
+   "status_window_other": {
+      "description": "title for a group of tab statuses",
+      "message": "Otra Ventana"
+   },
+   "status_window_this": {
+      "description": "title for a group of tab statuses",
+      "message": "Esta Ventana"
+   }
+}

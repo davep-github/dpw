@@ -1,0 +1,31 @@
+<ASX VERSION="3.0">
+  <SETTINGS REPEAT='false' REPEAT-TRACK='false' RANDOM='false'/>
+  <ENTRY>
+    <TITLE>2356 - Devon, Barrett &amp; Ginger Lynn</TITLE>
+    <REF HREF="file:///home/davep/tmp/2356_01-700K-1.asf" />
+  </ENTRY>
+  <ENTRY>
+    <TITLE>90.9 WBUR FM</TITLE>
+    <REF HREF="http://wbur-sc.streamguys.com:80/" />
+  </ENTRY>
+  <ENTRY>
+    <TITLE>Boston's NPR News Station</TITLE>
+    <REF HREF="http://wbur-ogg.streamguys.com:80/wburlive.ogg#demux:ogg" />
+  </ENTRY>
+  <ENTRY>
+    <TITLE>90.9 WBUR FM</TITLE>
+    <REF HREF="http://wbur-sc.streamguys.com:80/" />
+  </ENTRY>
+  <ENTRY>
+    <TITLE default="y">phywe</TITLE>
+    <REF HREF="http://www.vaxman.de/my_machines/phywe/pgr/phywe.mpg" />
+  </ENTRY>
+  <ENTRY>
+    <TITLE default="y">pling</TITLE>
+    <REF HREF="http://static.ak.fbcdn.net/sound/pling.mp3" />
+  </ENTRY>
+  <ENTRY>
+    <TITLE default="y">OTR_X_minus_one__hallucination_orbit_05_15_1956</TITLE>
+    <REF HREF="http://hw.libsyn.com/p/7/3/9/739ee9c96425b1db/OTR_X_minus_one__hallucination_orbit_05_15_1956.mp3?sid=85ba9a91906e96419be5fb98fa89c367&amp;l_sid=18286&amp;l_eid=&amp;l_mid=1515746&amp;expiration=1323317407&amp;hwt=8c673acf48c36c7f2e02bd408e5ac042" />
+  </ENTRY>
+</ASX>

@@ -1,0 +1,1118 @@
+{
+   "action_bookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Obilje\u017Ei stranicu",
+      "update": "20110609"
+   },
+   "action_clone_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Dupliciraj tab",
+      "update": "20110609"
+   },
+   "action_clone_tab_hack": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Dupliciraj tab (hack)",
+      "update": "20110609"
+   },
+   "action_close_left_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Zatvori lijeve tabove",
+      "update": "20110609"
+   },
+   "action_close_other_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Zatvori sve tabove",
+      "update": "20110609"
+   },
+   "action_close_right_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Zatvori desne tabove",
+      "update": "20110609"
+   },
+   "action_close_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for close_tab",
+      "message": "Zatvori tab",
+      "update": "20110609"
+   },
+   "action_close_window": {
+      "category": "Options Page: Actions",
+      "description": "Action title for close_window",
+      "message": "Zatvori prozor",
+      "update": "20110609"
+   },
+   "action_copy": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Kopiraj tekst",
+      "update": "20110115"
+   },
+   "action_goto_bottom": {
+      "category": "Options Page: Actions",
+      "description": "Action title for goto_bottom",
+      "message": "Odi na dno",
+      "update": "20110115"
+   },
+   "action_goto_top": {
+      "category": "Options Page: Actions",
+      "description": "Action title for goto_top",
+      "message": "Odi na vrh",
+      "update": "20110115"
+   },
+   "action_hide_image": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Sakrij sliku",
+      "update": "20110115"
+   },
+   "action_maximize_x": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Maksimiziraj prozor (hack)",
+      "update": "20110115"
+   },
+   "action_merge_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title for merge_tabs",
+      "message": "Stopi tabove",
+      "update": "20110609"
+   },
+   "action_minimize_x": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Minimiziraj prozor",
+      "update": "20110115"
+   },
+   "action_navigate_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for new_tab",
+      "message": "Idi na novi tab",
+      "update": "20110609"
+   },
+   "action_new_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for new_tab",
+      "message": "Novi tab",
+      "update": "20110609"
+   },
+   "action_new_tab_back": {
+      "category": "Options Page: Actions",
+      "description": "Action title for new_tab_back",
+      "message": "Novi tab (otvori link u pozadini)",
+      "update": "20110609"
+   },
+   "action_new_tab_link": {
+      "category": "Options Page: Actions",
+      "description": "Action title for new_tab_link",
+      "message": "Novi tab (otvori link)",
+      "update": "20110609"
+   },
+   "action_new_window": {
+      "category": "Options Page: Actions",
+      "description": "Action title for new_window",
+      "message": "Novi prozor",
+      "update": "20110115"
+   },
+   "action_new_window_link": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Novi prozor (otvori link)",
+      "update": "20110609"
+   },
+   "action_next_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for next_tab",
+      "message": "Sljede\u0107i tab",
+      "update": "20110609"
+   },
+   "action_next_window": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Sljede\u0107i prozor (hack)",
+      "update": "20110609"
+   },
+   "action_open_bookmarks": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Otvori zabilje\u0161ke",
+      "update": "20110609"
+   },
+   "action_open_downloads": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Otvori preuzimanja",
+      "update": "20110609"
+   },
+   "action_open_extensions": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Otvori ekstenzije",
+      "update": "20110609"
+   },
+   "action_open_history": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Otvori povijest",
+      "update": "20110609"
+   },
+   "action_open_image": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Otvori sliku",
+      "update": "20110609"
+   },
+   "action_options": {
+      "category": "Options Page: Actions",
+      "description": "Action title for options",
+      "message": "Otvori opcije",
+      "update": "20110609"
+   },
+   "action_page_back": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_back",
+      "message": "Nazad ",
+      "update": "20110115"
+   },
+   "action_page_back_close": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_back_close",
+      "message": "Nazad ili zatvori",
+      "update": "20110115"
+   },
+   "action_page_down": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_down",
+      "message": "Pomakni se dolje",
+      "update": "20110609"
+   },
+   "action_page_forward": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_forward",
+      "message": "Naprijed",
+      "update": "20110115"
+   },
+   "action_page_next": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_next",
+      "message": "Sljede\u0107a stranica",
+      "update": "20110609"
+   },
+   "action_page_prev": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_prev",
+      "message": "Prethodna stranica",
+      "update": "20110609"
+   },
+   "action_page_up": {
+      "category": "Options Page: Actions",
+      "description": "Action title for page_up",
+      "message": "Pomakni gore",
+      "update": "20110609"
+   },
+   "action_parent_dir": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Po\u010Detna lokacija",
+      "update": "20110115"
+   },
+   "action_pin": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Zalijepi tab",
+      "update": "20110609"
+   },
+   "action_prev_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for prev_tab",
+      "message": "Prethodni tab",
+      "update": "20110609"
+   },
+   "action_prev_window": {
+      "category": "Options Page: Actions",
+      "description": "Action title for clone_tab",
+      "message": "Prethodni prozor (hack)",
+      "update": "20110609"
+   },
+   "action_print": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Ispi\u0161i stranicu",
+      "update": "20110609"
+   },
+   "action_reload_all_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Osvje\u017Ei sve tabove",
+      "update": "20110609"
+   },
+   "action_reload_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action title for reload_tab",
+      "message": "Osvje\u017Ei tab",
+      "update": "20110609"
+   },
+   "action_reload_tab_full": {
+      "category": "Options Page: Actions",
+      "description": "Action title for reload_tab_full",
+      "message": "Osvje\u017Ei tab (bez chachea)",
+      "update": "20110609"
+   },
+   "action_search_sel": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Pretra\u017Ei Google",
+      "update": "20110115"
+   },
+   "action_show_cookies": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Popis Cookieja",
+      "update": "20110609"
+   },
+   "action_split_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action title for split_tabs",
+      "message": "Razdjeli Tabove",
+      "update": "20110115"
+   },
+   "action_status": {
+      "category": "Options Page: Actions",
+      "description": "Action title for status",
+      "message": "Otvori statusnu stranicu",
+      "update": "20110115"
+   },
+   "action_stop": {
+      "category": "Options Page: Actions",
+      "description": "Action title for stop",
+      "message": "Prestani u\u010Ditavati",
+      "update": "20110115"
+   },
+   "action_tab_to_left": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Pomakni tab ulijevo",
+      "update": "20110609"
+   },
+   "action_tab_to_right": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Pomakni tab udesno",
+      "update": "20110609"
+   },
+   "action_toggle_bookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Obilje\u017Ei stranicu / makni zabilje\u0161ku",
+      "update": "20110609"
+   },
+   "action_toggle_pin": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Zalijepi/odlijepi tab",
+      "update": "20110609"
+   },
+   "action_translate": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Prevedi ozna\u010Deno",
+      "update": "20110115"
+   },
+   "action_unbookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Makni zabilje\u0161ku",
+      "update": "20110609"
+   },
+   "action_undo_close": {
+      "category": "Options Page: Actions",
+      "description": "Action title for undo_close",
+      "message": "Vrati zatvoreni tab",
+      "update": "20110609"
+   },
+   "action_undo_close_hack": {
+      "category": "Options Page: Actions",
+      "description": "Action title for undo_close_hack",
+      "message": "Vrati zatvoreni tab (hack)",
+      "update": "20110609"
+   },
+   "action_unpin": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Odlijepi tab",
+      "update": "20110609"
+   },
+   "action_view_source": {
+      "category": "Options Page: Actions",
+      "description": "Action title for view_source",
+      "message": "Vidi izvorni k\u00F4d stranice",
+      "update": "20110609"
+   },
+   "action_zoom_img_in": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Zumiraj sliku",
+      "update": "20110115"
+   },
+   "action_zoom_img_out": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Smanji sliku",
+      "update": "20110115"
+   },
+   "action_zoom_img_zero": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Vrati zoom na zadano",
+      "update": "20110115"
+   },
+   "action_zoom_in": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Zumiraj stranicu",
+      "update": "20110115"
+   },
+   "action_zoom_out": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Smanji stranicu",
+      "update": "20110115"
+   },
+   "action_zoom_zero": {
+      "category": "Options Page: Actions",
+      "description": "Action title",
+      "message": "Vrati zoom na zadano",
+      "update": "20110115"
+   },
+   "cat_custom": {
+      "category": "Options Page: Action Categories",
+      "description": "Name of category for all custom actions",
+      "message": "Moje akcije",
+      "update": "20110609"
+   },
+   "cat_other": {
+      "category": "Options Page: Action Categories",
+      "description": "Name of category for actions that don't have a category",
+      "message": "Ostale akcije",
+      "update": "20110609"
+   },
+   "cat_page_navigation": {
+      "category": "Options Page: Action Categories",
+      "description": "Name of category encompassing basic page navigation actions",
+      "message": "Navigacija stranicama",
+      "update": "20110609"
+   },
+   "cat_settings": {
+      "category": "Options Page: Action Categories",
+      "description": "Title of the settings group",
+      "message": "Ostale postavke",
+      "update": "20110609"
+   },
+   "cat_tab_management": {
+      "category": "Options Page: Action Categories",
+      "description": "Name of category encompassing tab manipulation actions",
+      "message": "Kontrola nad tabovima",
+      "update": "20110609"
+   },
+   "context_not_image": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is not valid on an image",
+      "message": "ne na slici",
+      "update": "20110609"
+   },
+   "context_not_link": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is not valid on a link",
+      "message": "ne na linku",
+      "update": "20110609"
+   },
+   "context_not_links_images": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is not valid starting on a link or an image",
+      "message": "ne na linkovima i slikama",
+      "update": "20110609"
+   },
+   "context_not_selection": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is not valid with a selection",
+      "message": "ne s ozna\u010Denim tekstom",
+      "update": "20110609"
+   },
+   "context_on_image": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is only valid starting on an image",
+      "message": "na slici",
+      "update": "20110609"
+   },
+   "context_on_link": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is only valid starting on a link",
+      "message": "na linku",
+      "update": "20110609"
+   },
+   "context_with_selection": {
+      "category": "Gesture Contexts",
+      "description": "A short label for a gesture indicating that the gesture is only valid with a selection",
+      "message": "s ozna\u010Denim tekstom",
+      "update": "20110609"
+   },
+   "descrip_bookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Obilje\u017Ei trenutnu stranicu",
+      "update": "20110609"
+   },
+   "descrip_clone_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Otvori tab koji je duplikat ovoga. Duplicirani tab ne\u0107e imati povijest originalnog taba.",
+      "update": "20110609"
+   },
+   "descrip_clone_tab_hack": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Otvori tab koji je duplikat ovoga. Povijest \u0107e se kopirati nesavr\u0161eno.",
+      "update": "20110609"
+   },
+   "descrip_close_left_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Zatvori sve tabove lijevo od trenutnog.",
+      "update": "20110609"
+   },
+   "descrip_close_other_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Zatvori sve tabove u ovom prozoru, osim ozna\u010Denog taba.",
+      "update": "20110609"
+   },
+   "descrip_close_right_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Zatvori sve tabove desno od trenutnog.",
+      "update": "20110609"
+   },
+   "descrip_close_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for close_tab",
+      "message": "Zatvori trenutni tab.",
+      "update": "20110609"
+   },
+   "descrip_close_window": {
+      "category": "Options Page: Actions",
+      "description": "Action description for close_window",
+      "message": "Zatvori sve tabove u ovom prozoru.",
+      "update": "20110609"
+   },
+   "descrip_copy": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Kopiraj ozna\u010Deni tekst.",
+      "update": "20110609"
+   },
+   "descrip_goto_bottom": {
+      "category": "Options Page: Actions",
+      "description": "Action description for goto_bottom",
+      "message": "Odi na dno stranice.",
+      "update": "20110609"
+   },
+   "descrip_goto_top": {
+      "category": "Options Page: Actions",
+      "description": "Action description for goto_top",
+      "message": "Odi na vrh stranice.",
+      "update": "20110609"
+   },
+   "descrip_hide_image": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Makni sa stranice sliku na kojoj je pokaziva\u010D mi\u0161a.",
+      "update": "20110609"
+   },
+   "descrip_maximize_x": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Ovo je lo\u0161 na\u010Din da se simulira pove\u0107avanje prozora.",
+      "update": "20110609"
+   },
+   "descrip_merge_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description for merge_tabs",
+      "message": "Grupiraj sve tabove ovog prozora s onima od zadnje otvorenog prozora.",
+      "update": "20110609"
+   },
+   "descrip_minimize_x": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Ovo je _vrlo_ lo\u0161 na\u010Din da se simulira minimiziranje prozora.",
+      "update": "20110609"
+   },
+   "descrip_navigate_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_tab",
+      "message": "Otvori novi tab (stranica se mo\u017Ee namjestiti ispod).",
+      "update": "20110609"
+   },
+   "descrip_new_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_tab",
+      "message": "Otvori novi tab u ovom prozoru (stranica se mo\u017Ee namjestiti ispod).",
+      "update": "20110609"
+   },
+   "descrip_new_tab_back": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_tab_back",
+      "message": "Zapo\u010Dnite pokret na linku da biste ga otvorili u novom tabu, a ne \u017Eelite ga odmah pogledati.",
+      "update": "20110609"
+   },
+   "descrip_new_tab_link": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_tab_link",
+      "message": "Zapo\u010Dnite pokret na linku da biste ga otvorili u novom tabu.",
+      "update": "20110609"
+   },
+   "descrip_new_window": {
+      "category": "Options Page: Actions",
+      "description": "Action description for new_window",
+      "message": "Otvori novi prozor s jednim predodre\u0111enim tabom.",
+      "update": "20110609"
+   },
+   "descrip_new_window_link": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Zapo\u010Dnite pokret na linku da biste ga otvorili u novom prozoru.",
+      "update": "20110609"
+   },
+   "descrip_next_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for next_tab",
+      "message": "Ozna\u010Di tab desno od trenutnog.",
+      "update": "20110609"
+   },
+   "descrip_next_window": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Ozna\u010Di prozor koji je najdavnije bio fokusiran.",
+      "update": "20110609"
+   },
+   "descrip_open_bookmarks": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Otvori upravitelj zabilje\u0161kama u novom tabu.",
+      "update": "20110609"
+   },
+   "descrip_open_downloads": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Otvori stranicu s preuzimanjima u novom tabu.",
+      "update": "20110609"
+   },
+   "descrip_open_extensions": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Otvori stranicu s ekstenzijama u novom tabu.",
+      "update": "20110609"
+   },
+   "descrip_open_history": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Otvori stranicu s povije\u0161\u0107u u novom tabu.",
+      "update": "20110609"
+   },
+   "descrip_open_image": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Otvori u novom tabu sliku iznad koje je pokaziva\u010D mi\u0161a.",
+      "update": "20110609"
+   },
+   "descrip_options": {
+      "category": "Options Page: Actions",
+      "description": "Action description for options",
+      "message": "Otvori ovu stranicu.",
+      "update": "20110609"
+   },
+   "descrip_page_back": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_back",
+      "message": "Vrati se nazad za jedan korak u povijesti ovog taba.",
+      "update": "20110609"
+   },
+   "descrip_page_back_close": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_back_close",
+      "message": "Vrati se nazad za jedan korak u povijesti ovog taba. Ako nema povijesti, zatvori tab.",
+      "update": "20110609"
+   },
+   "descrip_page_down": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_down",
+      "message": "Scrollaj dolje za 80%.",
+      "update": "20110609"
+   },
+   "descrip_page_forward": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_forward",
+      "message": "Odi jednu stranicu naprijed.",
+      "update": "20110609"
+   },
+   "descrip_page_next": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_next",
+      "message": "Poku\u0161aj do\u0107i do sljede\u0107e stranice tra\u017Ee\u0107i link s tekstom \"next\".",
+      "update": "20110609"
+   },
+   "descrip_page_prev": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_prev",
+      "message": "Poku\u0161aj do\u0107i do prethodne stranice tra\u017Ee\u0107i link s tekstom \"previous\".",
+      "update": "20110609"
+   },
+   "descrip_page_up": {
+      "category": "Options Page: Actions",
+      "description": "Action description for page_up",
+      "message": "Scrollaj gore za 80%.",
+      "update": "20110609"
+   },
+   "descrip_pin": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Zalijepi ovaj tab.",
+      "update": "20110609"
+   },
+   "descrip_prev_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for prev_tab",
+      "message": "Ozna\u010Di tab lijevo od ovog.",
+      "update": "20110609"
+   },
+   "descrip_prev_window": {
+      "category": "Options Page: Actions",
+      "description": "Action description for clone_tab",
+      "message": "Ozna\u010Di prozor koji je bio u fokusu neposredno prije ovog.",
+      "update": "20110609"
+   },
+   "descrip_print": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Ispi\u0161i ovu stranicu.",
+      "update": "20110609"
+   },
+   "descrip_reload_all_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Osvje\u017Ei sve tabove u ovom prozoru.",
+      "update": "20110609"
+   },
+   "descrip_reload_tab": {
+      "category": "Options Page: Actions",
+      "description": "Action description for reload_tab",
+      "message": "Osvje\u017Ei zadr\u017Eaj ovog taba.",
+      "update": "20110609"
+   },
+   "descrip_reload_tab_full": {
+      "category": "Options Page: Actions",
+      "description": "Action description for reload_tab_full",
+      "message": "Potpuno osvje\u017Ei sadr\u017Eaj ovog taba (ne koristi cache).",
+      "update": "20110609"
+   },
+   "descrip_search_sel": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Tra\u017Ei ozna\u010Deni tekst koriste\u0107i Google.",
+      "update": "20110609"
+   },
+   "descrip_show_cookies": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Poka\u017Ei popis svih kola\u010Di\u0107a za ovu stranicu.",
+      "update": "20110609"
+   },
+   "descrip_split_tabs": {
+      "category": "Options Page: Actions",
+      "description": "Action description for split_tabs",
+      "message": "Neka se svi tabovi desno od ovog (uklju\u010Duju\u0107i i njega) odvoje u novi prozor.",
+      "update": "20110609"
+   },
+   "descrip_status": {
+      "category": "Options Page: Actions",
+      "description": "Action description for status",
+      "message": "Otvori stranicu sa statusom ove ekstenzije.",
+      "update": "20110609"
+   },
+   "descrip_stop": {
+      "category": "Options Page: Actions",
+      "description": "Action description for stop",
+      "message": "Prestani s u\u010Ditavanjem ove stranice (mo\u017Eda ne\u0107e raditi s nekim stranicama, recimo s pojedinom slikom).",
+      "update": "20110609"
+   },
+   "descrip_tab_to_left": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Pomakni ovaj tab ulijevo.",
+      "update": "20110609"
+   },
+   "descrip_tab_to_right": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Pomakni ovaj tab udesno.",
+      "update": "20110609"
+   },
+   "descrip_toggle_bookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Uklanja zabilje\u0161ku ako neka ve\u0107 postoji, a dodaje ju u suprotnom.",
+      "update": "20110609"
+   },
+   "descrip_toggle_pin": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Mijenja status zalijepljenosti taba.",
+      "update": "20110609"
+   },
+   "descrip_translate": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Prevodi ozna\u010Deni tekst na glavni jezik Chromea.",
+      "update": "20110609"
+   },
+   "descrip_unbookmark": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Uklanja zabilje\u0161ku na ovu stranicu, ako postoji.",
+      "update": "20110609"
+   },
+   "descrip_undo_close": {
+      "category": "Options Page: Actions",
+      "description": "Action description for undo_close",
+      "message": "Otvara zadnje zatvoreni tab. Ne\u0107e se u\u010Ditati i povijest tog taba, nego samo zadnja stranica (za to koristite Ctrl+Shift+T).",
+      "update": "20110609"
+   },
+   "descrip_undo_close_hack": {
+      "category": "Options Page: Actions",
+      "description": "Action description for undo_close",
+      "message": "Otvara zadnje zatvoreni tab. U\u010Ditava i povijest tog taba, \u0161to nije izvedeno ba\u0161 savr\u0161eno.",
+      "update": "20110609"
+   },
+   "descrip_unpin": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Odlijepi ovaj tab.",
+      "update": "20110609"
+   },
+   "descrip_view_source": {
+      "category": "Options Page: Actions",
+      "description": "Action description for view_source",
+      "message": "Pogledaj izvorni k\u00F4d ove stranice.",
+      "update": "20110609"
+   },
+   "descrip_zoom_img_in": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Zumiraj na sliku nad kojom je pokaziva\u010D mi\u0161a.",
+      "update": "20110609"
+   },
+   "descrip_zoom_img_out": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Odzumiraj od slike na kojoj je pokaziva\u010D mi\u0161a.",
+      "update": "20110609"
+   },
+   "descrip_zoom_img_zero": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Vrati sliku na izvornu veli\u010Dinu (prije zumiranja).",
+      "update": "20110609"
+   },
+   "descrip_zoom_in": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Zumiraj cijelu stranicu.",
+      "update": "20110609"
+   },
+   "descrip_zoom_out": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Odzumiraj cijelu stranicu",
+      "update": "20110609"
+   },
+   "descrip_zoom_zero": {
+      "category": "Options Page: Actions",
+      "description": "Action description",
+      "message": "Poni\u0161ti zadnje zumiranje.",
+      "update": "20110609"
+   },
+   "description": {
+      "category": "About",
+      "description": "short extension description",
+      "message": "Glatki Pokreti! Brzo i jednostavno se kre\u0107i po web stranicama pomo\u0107u mi\u0161a ili tipkovnice.",
+      "update": "20110609"
+   },
+   "doubleclick_alert": {
+      "category": "Options Page",
+      "description": "Pop up an alert box the first time a user right-clicks to let them know that they may need to double-click the right mouse button to get to the context menu",
+      "message": "Kliknite dvaput Desno-dugme mi\u0161a kako bi do\u0161li do izbornika.\n\nOvo utje\u010De samo na Linux i Mac korisnike Chroma. (zahtjeva kako bi pokreti radili)",
+      "update": "20110115"
+   },
+   "long_description": {
+      "category": "About",
+      "description": "complete extension description",
+      "message": "Ova ekstenzija (\"Glatki Pokreti\") omogu\u0107uje Vam upravljate preglednikom tako da pomi\u010Dete mi\u0161 dok dr\u017Eite desnu tipku. Podr\u017Eava pokrete mi\u0161a, kori\u0161tenje kota\u010Di\u0107a, kombinacije klikova i kratice na tipkovnici!\n\n\u2022 Sna\u017Ena prilagodljivost (i prilagodljivost akcija!)\n\u2022 Podr\u017Eava prenosive pokrete, uvoz i izvoz opcija na druga ra\u010Dunala\n\u2022 Ne radi na \"Chrome Settings\" stranicama tj. ugra\u0111enim Chrome stranicama radi sigurnosnih razloga i restrikcija za ekstenzije. Ali radi na gotovo svim http:// i https:// stranicama.",
+      "update": "20110609"
+   },
+   "name": {
+      "category": "About",
+      "description": "Extension name",
+      "message": "Glatki Pokreti",
+      "update": "20110115"
+   },
+   "options_addgesture_instruct_1": {
+      "category": "Options Page",
+      "description": "instructions for making a gesture (just before bullet point list)",
+      "message": "U\u010Dinite jedan od navedenih pokreta:",
+      "update": "20110609"
+   },
+   "options_addgesture_instruct_2": {
+      "category": "Options Page",
+      "description": "[bullet point] instructions for making a gesture (mouse) ($BUTTON$ is replaced automatically by the appropriate button name--above--so insert it untranslated in the appropriate place in the translation)",
+      "message": "Glatki Pokreti: Dr\u017Eite $BUTTON$ tipku mi\u0161a i nacrtajte pokret pomi\u010Du\u0107i mi\u0161, onda pustite dugme.",
+      "placeholders": {
+         "button": {
+            "content": "$1",
+            "example": "right"
+         }
+      },
+      "update": "20110609"
+   },
+   "options_addgesture_instruct_3": {
+      "category": "Options Page",
+      "description": "[bullet point] instructions for making a gesture (scroll) ($BUTTON$ is replaced automatically by the appropriate button name--above--so insert it untranslated in the appropriate place in the translation)",
+      "message": "Scroll Pokreti: Dr\u017Eite $BUTTON$ tipku mi\u0161a i okre\u0107ite kota\u010Di\u0107.",
+      "placeholders": {
+         "button": {
+            "content": "$1",
+            "example": "right"
+         }
+      },
+      "update": "20110609"
+   },
+   "options_addgesture_instruct_4": {
+      "category": "Options Page",
+      "description": "[bullet point] instructions for making a gesture (rocker)",
+      "message": "Roker Pokreti: Dr\u017Eite bilo koju tipku mi\u0161a, onda kliknite drugu.",
+      "update": "20110609"
+   },
+   "options_addgesture_instruct_5": {
+      "category": "Options Page",
+      "description": "[bullet point] instructions for doing a keyboard shortcut",
+      "message": "Kratica na tipkovnici: dr\u017Eite Shift, Ctrl, Alt (ili ni\u0161ta) i stisnite neku drugu tipku",
+      "update": "20110609"
+   },
+   "options_addgesture_overwrite": {
+      "category": "Options Page",
+      "description": "warning message that a gesture will be overwritten ($ACTION$ is replaced automatically by the action name, such as: History Back--so insert it untranslated in the appropriate place in the translation)",
+      "message": "Ovaj se pokret ve\u0107 koristi za akciju \"$ACTION$\".",
+      "placeholders": {
+         "action": {
+            "content": "$1",
+            "example": "History Back"
+         }
+      },
+      "update": "20110609"
+   },
+   "options_addgesture_title": {
+      "category": "Options Page",
+      "description": "explanation of what you are doing (adding a gesture to a specific action) ($ACTION$ is replaced automatically by the action name, such as: History Back--so insert it untranslated in the appropriate place in the translation)",
+      "message": "Postavite pokret za akciju \"$ACTION$\".",
+      "placeholders": {
+         "action": {
+            "content": "$1",
+            "example": "History Back"
+         }
+      },
+      "update": "20110609"
+   },
+   "options_button_addcustomaction": {
+      "category": "Options Page",
+      "description": "Label for a button to start setting up a new custom action",
+      "message": "Dodajte svoj pokret",
+      "update": "20110609"
+   },
+   "options_button_addgesture": {
+      "category": "Options Page",
+      "description": "button to add the new gesture to the action",
+      "message": "Dodaj ovaj pokret",
+      "update": "20110609"
+   },
+   "options_button_overwrite": {
+      "category": "Options Page",
+      "description": "button to overwrite the gesture made to the new action",
+      "message": "Prebri\u0161i pokret",
+      "update": "20110609"
+   },
+   "options_button_startaddgesture": {
+      "category": "Options Page",
+      "description": "Label for a button to start setting up a new gesture",
+      "message": "Dodaj pokret",
+      "update": "20110609"
+   },
+   "options_button_tryagain": {
+      "category": "Options Page",
+      "description": "button to reject the gesture made and try to make a new one",
+      "message": "Poku\u0161aj ponovo",
+      "update": "20110609"
+   },
+   "options_contents_actions": {
+      "category": "Options Page",
+      "description": "category type for all actions links",
+      "message": "Akcije",
+      "update": "20110609"
+   },
+   "options_contents_more": {
+      "category": "Options Page",
+      "description": "category type for all external links",
+      "message": "Vi\u0161e",
+      "update": "20110609"
+   },
+   "options_contents_settings": {
+      "category": "Options Page",
+      "description": "category type for all settings links",
+      "message": "Postavke",
+      "update": "20110609"
+   },
+   "options_contents_status": {
+      "category": "Options Page",
+      "description": "link to open the status page",
+      "message": "Stanje",
+      "update": "20110609"
+   },
+   "options_externalactions": {
+      "category": "Options Page",
+      "description": "link to external actions",
+      "message": "Vanjske akcije",
+      "update": "20110609"
+   },
+   "options_moreactions": {
+      "category": "Options Page",
+      "description": "Link to access more actions. These actions don't currently have a gesture assigned",
+      "message": "Vi\u0161e dostupnih akcija",
+      "update": "20110609"
+   },
+   "options_mousebutton_0": {
+      "category": "Options Page",
+      "description": "name for the 'left' mouse button (To replace $BUTTON$ variables below)",
+      "message": "lijevu",
+      "update": "20110609"
+   },
+   "options_mousebutton_1": {
+      "category": "Options Page",
+      "description": "name for the 'middle' mouse button (To replace $BUTTON$ variables below)",
+      "message": "srednju",
+      "update": "20110609"
+   },
+   "options_mousebutton_2": {
+      "category": "Options Page",
+      "description": "name for the 'right' mouse button (To replace $BUTTON$ variables below)",
+      "message": "desnu",
+      "update": "20110609"
+   },
+   "options_note_hidepageaction_button": {
+      "category": "Options Page",
+      "description": "Label on the button to hide the Smooth Gestures icon in the url bar",
+      "message": "Sakrij ikonu",
+      "update": "20110609"
+   },
+   "options_note_print": {
+      "category": "Options Page",
+      "description": "Promote printing the page so users have a help sheet to remember all of the gestures",
+      "message": "Te\u0161ko Vam je zapamtiti sve pokrete koje ste namjestili? Ispi\u0161ite ovu stranicu kao \u0161alabahter!",
+      "update": "20110609"
+   },
+   "options_note_print_button": {
+      "category": "Options Page",
+      "description": "Label on the button to print the page",
+      "message": "Ispi\u0161i",
+      "update": "20110609"
+   },
+   "options_note_remindrate": {
+      "category": "Options Page",
+      "description": "Notify the user that they can rate this extension to help promote it",
+      "message": "Svi\u0111aju Vam se Glatki Pokreti? Molimo Vas $LINK$!",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "\u003Ca href=''\u003Eleave a 5 star rating\u003C/a\u003E"
+         }
+      },
+      "update": "20110609"
+   },
+   "options_note_remindrate_link": {
+      "category": "Options Page",
+      "description": "Text for the link leading to the extension's page",
+      "message": "glasujte sa 5 zvijezdica",
+      "update": "20110609"
+   },
+   "options_note_translate": {
+      "category": "Options Page",
+      "description": "Solicit translation requests",
+      "message": "Zna\u0161 li Engleski? Pomozi $LINK$",
+      "placeholders": {
+         "link": {
+            "content": "$1",
+            "example": "\u003Ca href=''\u003Etranslate Smooth Gestures into your language\u003C/a\u003E"
+         }
+      },
+      "update": "20110606"
+   },
+   "options_note_translate_link": {
+      "category": "Options Page",
+      "description": "Link for soliciting translation requests",
+      "message": "prevedite Smooth Gestures na svoj jezik",
+      "update": "20110609"
+   },
+   "options_note_updated": {
+      "category": "Options Page",
+      "description": "Notify that the extension has been updated",
+      "message": "Glatki Pokreti su a\u017Eurirani na verziju $VERSION$",
+      "placeholders": {
+         "version": {
+            "content": "$1",
+            "example": "0.13.1"
+         }
+      },
+      "update": "20110609"
+   },
+   "options_title": {
+      "category": "Options Page",
+      "description": "The title of the options page, at top and tab name",
+      "message": "Opcije!",
+      "update": "20110115"
+   },
+   "options_welcome_0": {
+      "category": "Options Page",
+      "description": "First just-installed line",
+      "message": "Dobrodo\u0161li u Glatke pokrete",
+      "update": "20110609"
+   },
+   "options_welcome_1": {
+      "category": "Options Page",
+      "description": "First just-installed bullet point",
+      "message": "Mo\u017Eete do\u0107i do ove stranice s opcijama tako da dr\u017Eite desnu tipku mi\u0161a i nacrtate 'O' (desno-dolje-lijevo-gore-desno)",
+      "update": "20110609"
+   },
+   "options_welcome_2": {
+      "category": "Options Page",
+      "description": "Second just-installed bullet point",
+      "message": "Da biste postavili nove pokrete ili akcije, kliknite '+' gumbe ispod.",
+      "update": "20110609"
+   },
+   "options_welcome_3": {
+      "category": "Options Page",
+      "description": "Third just-installed bullet point",
+      "message": "Konfigurirajte ekstenziju tako da kliknete 'Postavke' desno ili na dnu stranice.",
+      "update": "20110609"
+   }
+}

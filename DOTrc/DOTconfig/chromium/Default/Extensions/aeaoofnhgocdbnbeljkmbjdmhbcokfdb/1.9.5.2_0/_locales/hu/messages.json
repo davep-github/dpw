@@ -1,0 +1,442 @@
+{
+   "caption_backup": {
+      "message": "Archiv\u00E1l\u00E1s"
+   },
+   "caption_backup_or_restore_settings": {
+      "message": "Archiv\u00E1l\u00E1s / Vissza\u00E1ll\u00EDt\u00E1s be\u00E1ll\u00EDt\u00E1sok"
+   },
+   "caption_blacklist": {
+      "message": "Tilt\u00F3lista"
+   },
+   "caption_cancel": {
+      "message": "M\u00E9gse"
+   },
+   "caption_close": {
+      "message": "Bez\u00E1r"
+   },
+   "caption_confirm": {
+      "message": "Meger\u0151s\u00EDt\u00E9s"
+   },
+   "caption_create_custom_stroke": {
+      "message": "L\u00E9trehoz"
+   },
+   "caption_current_stroke": {
+      "message": "Aktu\u00E1lis mozdulat"
+   },
+   "caption_edit_trail_style": {
+      "message": "Az ecsetvon\u00E1s st\u00EDlus\u00E1nak a be\u00E1ll\u00EDt\u00E1sa"
+   },
+   "caption_help_custom_stroke": {
+      "message": "Seg\u00EDts\u00E9g"
+   },
+   "caption_label": {
+      "message": "C\u00EDmke"
+   },
+   "caption_mouse_stroke_options": {
+      "message": "Eg\u00E9r mozdulat be\u00E1ll\u00EDt\u00E1sok"
+   },
+   "caption_none": {
+      "message": "Egyik sem"
+   },
+   "caption_previous_stroke": {
+      "message": "El\u0151z\u0151 mozdulat"
+   },
+   "caption_remove": {
+      "message": "T\u00F6rl\u00E9s"
+   },
+   "caption_restore": {
+      "message": "Vissza\u00E1ll\u00EDt\u00E1s"
+   },
+   "caption_restore_default": {
+      "message": "Alap\u00E9rtelmez\u00E9s vissza\u00E1ll\u00EDt\u00E1sa"
+   },
+   "caption_save": {
+      "message": "Ment\u00E9s"
+   },
+   "caption_script": {
+      "message": "Szkript"
+   },
+   "caption_set": {
+      "message": "Be\u00E1ll\u00EDt\u00E1s"
+   },
+   "caption_share_custom_stroke": {
+      "message": "Megoszt\u00E1s"
+   },
+   "caption_show_advanced_options": {
+      "message": "Halad\u00F3 be\u00E1ll\u00EDt\u00E1sok megmutat\u00E1sa"
+   },
+   "caption_translated_by": {
+      "message": "Ford\u00EDtotta"
+   },
+   "caption_unset": {
+      "message": "Vissza\u00E1ll\u00EDt\u00E1s"
+   },
+   "category_desc_dnd_strokes": {
+      "message": "A kijel\u00F6lt sz\u00F6veg, linkek \u00E9s k\u00E9pek h\u00FAzhat\u00F3ak"
+   },
+   "category_desc_wheel_strokes": {
+      "message": "G\u00F6rd\u00EDts, a jobb eg\u00E9rgomb lenyomva tart\u00E1sa k\u00F6zben"
+   },
+   "category_label_bookmark": {
+      "message": "K\u00F6nyvjelz\u0151"
+   },
+   "category_label_custom_strokes": {
+      "message": "Egyedi mozdulatok"
+   },
+   "category_label_dnd_strokes": {
+      "message": "Drag'n'Drop mozdulatok"
+   },
+   "category_label_image": {
+      "message": "K\u00E9p"
+   },
+   "category_label_link": {
+      "message": "Link"
+   },
+   "category_label_navigation": {
+      "message": "Navig\u00E1ci\u00F3"
+   },
+   "category_label_options": {
+      "message": "Be\u00E1ll\u00EDt\u00E1sok"
+   },
+   "category_label_other": {
+      "message": "Egy\u00E9b"
+   },
+   "category_label_rocker_strokes": {
+      "message": "Eg\u00E9rgomb kombin\u00E1ci\u00F3k"
+   },
+   "category_label_tab": {
+      "message": "F\u00FCl"
+   },
+   "category_label_utilities": {
+      "message": "Eszk\u00F6z\u00F6k"
+   },
+   "category_label_wheel_strokes": {
+      "message": "Eg\u00E9r g\u00F6rd\u00EDt\u0151 mozdulatok"
+   },
+   "category_label_window": {
+      "message": "Ablak"
+   },
+   "extension_description": {
+      "message": "Haszn\u00E1ld az eg\u00E9r mozdulatokat (gesztusokat) a tev\u00E9kenys\u00E9geid felgyors\u00EDt\u00E1s\u00E1hoz. T\u00E1mogatja a szuper h\u00FAzd \u00E9s menj, jobb - bal gomb \u00E9s g\u00F6rget\u0151 kombin\u00E1ci\u00F3kat egyben! \u00D6nk\u00E9ntes fod\u00EDt\u00F3k kerestetnek."
+   },
+   "extension_name": {
+      "message": "Eg\u00E9r mozdulatok"
+   },
+   "option_desc_stroke_timeout": {
+      "message": "A nagy \u00E9rt\u00E9k k\u00F6nnyebb\u00E9 teszi a mozdulatok v\u00E9grehajt\u00E1s\u00E1t"
+   },
+   "option_label_alt_key_suppresses_strokes": {
+      "message": "Az Alt elnyomja a mozdulatokat"
+   },
+   "option_label_close_window_with_the_last_tab": {
+      "message": "Az ablak bez\u00E1r\u00E1sa az utols\u00F3 f\u00FCl bez\u00E1r\u00E1sakor\n"
+   },
+   "option_label_draw_trails": {
+      "message": "Modulat nyomot hagy"
+   },
+   "option_label_enable_dnd_strokes": {
+      "message": "Enged\u00E9lyezni a Drag'n'Drop mozdulatokat"
+   },
+   "option_label_hold_ctrl_key_to_fire_custom_strokes": {
+      "message": "Tartsd a CTRL billenyt\u0171t lenyomva az egyedi mozdulatok ind\u00EDt\u00E1s\u00E1hoz"
+   },
+   "option_label_minimal_step": {
+      "message": "Minim\u00E1lis l\u00E9p\u00E9sk\u00F6z (pixel)"
+   },
+   "option_label_new_tab_open_at": {
+      "message": "Ha \u00FAj f\u00FClet nyitsz, akkor nyisd"
+   },
+   "option_label_page_open_as_new_tab": {
+      "message": "Ha \u00FAj f\u00FClet nyitsz, akkor nyisd\n"
+   },
+   "option_label_prefferred_search_engine": {
+      "message": "V\u00E1lasztott keres\u0151motor\n"
+   },
+   "option_label_stroke_timeout": {
+      "message": "Mozdulat aktivit\u00E1si id\u0151ablaka (ezredm\u00E1sodperc)"
+   },
+   "option_label_stroke_trigger": {
+      "message": "Mozdulat ind\u00EDt\u00F3 billenty\u0171\n"
+   },
+   "option_label_trail_color": {
+      "message": "Nyom sz\u00EDne"
+   },
+   "option_label_trail_width": {
+      "message": "Nyom sz\u00E9less\u00E9ge"
+   },
+   "option_value_as_first_tab": {
+      "message": "Mint az \u00FAj f\u00FCl"
+   },
+   "option_value_as_last_tab": {
+      "message": "Az utols\u00F3 f\u00FCln\u00E9l"
+   },
+   "option_value_at_left_of_current_tab": {
+      "message": "Balra az aktu\u00E1lis f\u00FClt\u0151l"
+   },
+   "option_value_at_right_of_current_tab": {
+      "message": "Jobbra az aktu\u00E1lis f\u00FClt\u0151l"
+   },
+   "option_value_chrome_newtab_page": {
+      "message": "Chrome \u00FAj f\u00FCl"
+   },
+   "option_value_left_mouse_button": {
+      "message": "Bal eg\u00E9r gomb"
+   },
+   "option_value_middle_mouse_button": {
+      "message": "K\u00F6z\u00E9ps\u0151 eg\u00E9r gomb (Linux \u00E9s Mac)"
+   },
+   "option_value_my_homepage": {
+      "message": "Honlapom"
+   },
+   "option_value_other_search_engine": {
+      "message": "Egy\u00E9b"
+   },
+   "option_value_right_mouse_button": {
+      "message": "Jobb eg\u00E9r gomb (Windows)"
+   },
+   "option_value_the_blank_page": {
+      "message": "Az \u00FCres oldal"
+   },
+   "prompt_backup_settings_currupted": {
+      "message": "Az adatok s\u00E9r\u00FCltek. A biztons\u00E1gi ment\u00E9s vissza\u00E1ll\u00EDt\u00E1sa megszak\u00EDtva."
+   },
+   "prompt_invalid_search_engine_url": {
+      "message": "A keres\u0151 motor URL nem \u00E9rv\u00E9nyes."
+   },
+   "prompt_label_and_script_are_empty": {
+      "message": "Mindkett\u0151 [C\u00EDmke] \u00E9s [Szkript] nem lehet \u00FCres."
+   },
+   "prompt_overwrite_custom_stroke_label": {
+      "message": "'$label$' m\u00E1r l\u00E9tezik. Fel\u00FCl\u00EDrjam?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_overwrite_stroke_sequence": {
+      "message": "[$sequence$] hozz\u00E1rendel\u00E9se a k\u00F6vetkez\u0151 c\u00EDmk\u00E9hez '$label$'. Fel\u00FCl\u00EDrjam?",
+      "placeholders": {
+         "label": {
+            "content": "$2"
+         },
+         "sequence": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_remove_custom_stroke": {
+      "message": "Egyedi mozdulat elt\u00E1vol\u00EDt\u00E1sa: '$label$'?\n",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_reset_settings": {
+      "message": "Minden be\u00E1ll\u00EDt\u00E1s alap\u00E9rtelmezettre \u00E1ll\u00EDt\u00E1sa az egyedi mozdulatokon k\u00EDv\u00FCl. Mehet?"
+   },
+   "prompt_restore_complete": {
+      "message": "A vissza\u00E1ll\u00EDt\u00E1s sikeres."
+   },
+   "prompt_save_blacklist_complete": {
+      "message": "Tilt\u00F3lista ment\u00E9se befejezve."
+   },
+   "prompt_save_complete": {
+      "message": "A ment\u00E9s befejezve."
+   },
+   "stroke_label_bookmark_this_link": {
+      "message": "A link megjegyz\u00E9se k\u00F6nyvjelz\u0151ben"
+   },
+   "stroke_label_bookmark_this_page": {
+      "message": "Az oldal megjegyz\u00E9se k\u00F6nyvjelz\u0151ben"
+   },
+   "stroke_label_close_all_tabs_to_the_left": {
+      "message": "Az \u00F6sszes f\u00FCl bez\u00E1r\u00E1sa balra"
+   },
+   "stroke_label_close_all_tabs_to_the_right": {
+      "message": "Az \u00F6sszes f\u00FCl bez\u00E1r\u00E1sa jobbra"
+   },
+   "stroke_label_close_other_tabs": {
+      "message": "A nem akt\u00EDv f\u00FClek bez\u00E1r\u00E1sa"
+   },
+   "stroke_label_close_tab": {
+      "message": "F\u00FCl bez\u00E1r\u00E1sa"
+   },
+   "stroke_label_close_tab_to_the_left": {
+      "message": "A f\u00FCl bez\u00E1r\u00E1sa balra"
+   },
+   "stroke_label_close_tab_to_the_right": {
+      "message": "A f\u00FCl bez\u00E1r\u00E1sa jobbra"
+   },
+   "stroke_label_close_window": {
+      "message": "Ablak bez\u00E1r\u00E1sa"
+   },
+   "stroke_label_decrease_number_in_url": {
+      "message": "Tipp az el\u0151z\u0151 oldalra"
+   },
+   "stroke_label_detach_tab": {
+      "message": "F\u00FCl lev\u00E1laszt\u00E1sa"
+   },
+   "stroke_label_dnd_down": {
+      "message": "H\u00FAz\u00E1s le"
+   },
+   "stroke_label_dnd_left": {
+      "message": "H\u00FAz\u00E1s balra"
+   },
+   "stroke_label_dnd_right": {
+      "message": "H\u00FAz\u00E1s jobbra"
+   },
+   "stroke_label_dnd_up": {
+      "message": "H\u00FAz\u00E1s felfel\u00E9"
+   },
+   "stroke_label_duplicate_tab": {
+      "message": "F\u00FCl kl\u00F3noz\u00E1sa"
+   },
+   "stroke_label_first_tab": {
+      "message": "Els\u0151 f\u00FCl"
+   },
+   "stroke_label_history_back": {
+      "message": "El\u0151zm\u00E9nyek vissza"
+   },
+   "stroke_label_history_forward": {
+      "message": "El\u0151zm\u00E9nyek el\u0151re"
+   },
+   "stroke_label_increase_number_in_url": {
+      "message": "Tipp a k\u00F6vetket\u0151 oldalra"
+   },
+   "stroke_label_last_tab": {
+      "message": "Utols\u00F3 f\u00FCl"
+   },
+   "stroke_label_maximize_window": {
+      "message": "Az ablak meximaliz\u00E1l\u00E1sa"
+   },
+   "stroke_label_minimize_window": {
+      "message": "Az ablak minimaliz\u00E1l\u00E1sa"
+   },
+   "stroke_label_mouse_stroke_options": {
+      "message": "Eg\u00E9r mozdulatok be\u00E1ll\u00EDt\u00E1sai"
+   },
+   "stroke_label_new_tab": {
+      "message": "\u00DAj f\u00FCl"
+   },
+   "stroke_label_new_window": {
+      "message": "\u00DAj ablak"
+   },
+   "stroke_label_next_tab": {
+      "message": "K\u00F6vetkez\u0151 f\u00FCl"
+   },
+   "stroke_label_open_homepage": {
+      "message": "Kezd\u0151oldal megnyit\u00E1sa"
+   },
+   "stroke_label_open_link_in_new_background_tab": {
+      "message": "Link megnyit\u00E1sa a h\u00E1tt\u00E9rben"
+   },
+   "stroke_label_open_link_in_new_foreground_tab": {
+      "message": "Link megnyit\u00E1sa a el\u0151t\u00E9rben"
+   },
+   "stroke_label_open_link_in_new_window": {
+      "message": "Link megnyit\u00E1sa \u00FAj ablakban"
+   },
+   "stroke_label_previous_tab": {
+      "message": "El\u0151z\u0151 f\u00FCl"
+   },
+   "stroke_label_reload": {
+      "message": "\u00DAjrat\u00F6lt\u00E9s"
+   },
+   "stroke_label_remove_bookmark": {
+      "message": "K\u00F6nyvjelz\u0151 elt\u00E1vol\u00EDt\u00E1sa"
+   },
+   "stroke_label_rocker_left_to_right": {
+      "message": "Jobb gomb kattint\u00E1sa a bal lenyomva tart\u00E1sa mellett."
+   },
+   "stroke_label_rocker_right_to_left": {
+      "message": "Bal gomb kattint\u00E1sa a jobb lenyomva tart\u00E1sa mellett."
+   },
+   "stroke_label_save_image": {
+      "message": "K\u00E9p ment\u00E9se"
+   },
+   "stroke_label_scroll_down_one_page": {
+      "message": "Egy oldalnyit le"
+   },
+   "stroke_label_scroll_up_one_page": {
+      "message": "Egy oldalnyit fel"
+   },
+   "stroke_label_search_selected_text": {
+      "message": "Kijel\u00F6lt sz\u00F6veg ekres\u00E9se"
+   },
+   "stroke_label_skip_cache_reload": {
+      "message": "\u00DAjrat\u00F6lt\u00E9s a gyors\u00EDt\u00F3t\u00E1r \u00E1tugr\u00E1s\u00E1val"
+   },
+   "stroke_label_stop_page_loading": {
+      "message": "Az oldal bet\u00F6lt\u00E9s\u00E9nek a le\u00E1ll\u00EDt\u00E1sa\n"
+   },
+   "stroke_label_take_screenshot": {
+      "message": "K\u00E9perny\u0151kiv\u00E1g\u00E1s k\u00E9sz\u00EDt\u00E9se"
+   },
+   "stroke_label_text_zoom_in": {
+      "message": "Sz\u00F6vegm\u00E9ret nagy\u00EDt\u00E1s"
+   },
+   "stroke_label_text_zoom_out": {
+      "message": "Sz\u00F6vegm\u00E9ret kicsiny\u00EDt\u00E9s"
+   },
+   "stroke_label_text_zoom_reset": {
+      "message": "Sz\u00F6vegm\u00E9ret alap\u00E9rtelmezett"
+   },
+   "stroke_label_to_page_bottom": {
+      "message": "Az oldal alj\u00E1ra"
+   },
+   "stroke_label_to_page_top": {
+      "message": "Az oldal tetej\u00E9re"
+   },
+   "stroke_label_undo_close_tab": {
+      "message": "F\u00FCl bez\u00E1r\u00E1s\u00E1nak a visszavon\u00E1sa"
+   },
+   "stroke_label_upper_level_in_url": {
+      "message": "Magasabb szint\u0171 URL"
+   },
+   "stroke_label_view_image": {
+      "message": "K\u00E9p megtekint\u00E9se"
+   },
+   "stroke_label_view_source": {
+      "message": "Forr\u00E1s megtekint\u00E9se"
+   },
+   "stroke_label_wheel_down": {
+      "message": "Eg\u00E9r g\u00F6rget\u0151 le"
+   },
+   "stroke_label_wheel_left": {
+      "message": "Eg\u00E9r g\u00F6rget\u0151 balra"
+   },
+   "stroke_label_wheel_right": {
+      "message": "Eg\u00E9r g\u00F6rget\u0151 jobbra"
+   },
+   "stroke_label_wheel_up": {
+      "message": "Eg\u00E9r g\u00F6rget\u0151 fel"
+   },
+   "text_backup_and_restore_settings_description": {
+      "message": "\u003Cli\u003E\n  A be\u00E1ll\u00EDt\u00E1sok archiv\u00E1l\u00E1s\u00E1hoz, nyomd meg az \u003Cem\u003EArchiv\u00E1l\u00E1s\u003C/em\u003E gombot, azut\u00E1n \u003Cstrong\u003Ea sz\u00F6veges tartalmat mentsd el egy biztons\u00E1gos helyre.\u003C/strong\u003E\n  A gomb lenyom\u00E1sa \u00F6nmag\u00E1ban nem eredm\u00E9nyez archiv\u00E1l\u00E1st.\n\u003C/li\u003E\n\u003Cli\u003E\n  A be\u00E1ll\u00EDt\u00E1sok vissza\u00E1ll\u00EDt\u00E1s\u00E1hoz illeszd be a kor\u00E1bban elmentett tartalmat a sz\u00F6vegdobozba, azut\u00E1n nyomd meg a \u003Cem\u003EVissza\u00E1ll\u00EDt\u00E1s\u003C/em\u003E gombot.\n  A biztons\u00E1gi ment\u00E9sed az alap\u00E9rtemezett be\u00E1ll\u00EDt\u00E1sokhoz t\u00F6lt\u0151dik hozz\u00E1 az inkompatibilit\u00E1si hib\u00E1k \u00E9s az adats\u00E9r\u00FCl\u00E9s elker\u00FCl\u00E9s\u00E9nek az \u00E9rdek\u00E9ben.\n\u003C/li\u003E"
+   },
+   "text_blacklist_description": {
+      "message": "A tilt\u00F3list\u00E1ban szerepl\u0151 oldalak eset\u00E9ben a gesztusok le lesznek tiltva. K\u00E9rem soronk\u00E9nt egy URL-tadjon meg.\u003Cbr/\u003E\nA 'Wildcard'-ok \u00E9s regul\u00E1ris kifejez\u00E9sek \u003Cstrong\u003ENEM\u003C/strong\u003E t\u00E1mogatottak.\u003Cbr/\u003E\nLegyen min\u00E9l alaposabb a c\u00EDmek megad\u00E1s\u00E1n\u00E1l, mert az egyszer\u0171 kifejez\u00E9sek, mint pl.: \u003Ccode\u003Ecip\u0151k\u003C/code\u003E minden oldalt le fognak tiltani, melynek c\u00EDme tartalmazza az eml\u00EDtett kifejez\u00E9st."
+   },
+   "text_dnd_notes": {
+      "message": "A kijel\u00F6lt sz\u00F6veg h\u00FAz\u00E1s\u00E1val \u00FAj f\u00FCl\u00F6n kezd\u00FCnk keres\u00E9st.\u003Cbr/\u003E\nAz utols\u00F3 h\u00FAz\u00E1si ir\u00E1ny sz\u00E1m\u00EDt.\n\n"
+   },
+   "text_extension_description": {
+      "message": "Ez egy Google Chrome b\u0151v\u00EDtm\u00E9ny, ami enged\u00E9lyezi az \u003Ca href=\"http://en.wikipedia.org/wiki/Mouse_gesture\"\u003Eeg\u00E9rmozdulatok\u003C/a\u003E haszn\u00E1lat\u00E1t a b\u00F6ng\u00E9sz\u0151ben. A b\u0151v\u00EDtm\u00E9nnyel gyakori m\u0171veleteket hajthatsz v\u00E9gre az eg\u00E9r mozd\u00EDt\u00E1s\u00E1val.\n"
+   },
+   "text_translator": {
+      "message": "Markovits Gy\u00F6rgy, Arn\u00F3czky Zolt\u00E1n"
+   },
+   "text_version_highlight": {
+      "message": "\u003Cli\u003E\n  \u003Cstrong\u003E\u00DAj az 1.9.4-ben/strong\u003E: Mouse Stroke m\u00E1r t\u00F6bb nyelvet is besz\u00E9l!\u003Cbr/\u003E\n  Ha szeretn\u00E9 seg\u00EDteni a ford\u00EDt\u00E1si munk\u00E1kat, k\u00E9rem l\u00E1togasson el\n  \u003Ca href=\"http://code.google.com/p/chrome-mouse-stroke/issues/detail?id=85\"\u003Eide\u003C/a\u003E\n  \u00E9s k\u00F6vesse az utas\u00EDt\u00E1sokat.\u003Cbr/\u003E\n  A munk\u00E1j\u00E1t \u00F6r\u00F6mmel fogadjuk.\n\u003C/li\u003E\n\u003Cli\u003E\n  A gesztusok imm\u00E1ron minden DOM objektumot \u00E9s funkci\u00F3t el\u00E9rnek.\n\u003C/li\u003E\n\u003Cli\u003E\n  N\u00E9h\u00E1ny hiba jav\u00EDtva.\n\u003C/li\u003E"
+   },
+   "text_version_highlight_prompt": {
+      "message": "\u003Cstrong\u003EMouse Stroke\u003C/strong\u003Ea leg\u00FAjabb verzi\u00F3j\u00E1ra friss\u00EDtve!\u003Cbr/\u003E\nEz a verzi\u00F3 t\u00F6bb nyelvet t\u00E1mogat!\u003Cbr/\u003E\nHa szeretn\u00E9 seg\u00EDteni a ford\u00EDt\u00E1si munk\u00E1kat, k\u00E9rem l\u00E1togasson el\n\u003Ca href=\"http://code.google.com/p/chrome-mouse-stroke/issues/detail?id=85\"\u003Eide\u003C/a\u003E\n\u00E9s k\u00F6vesse az utas\u00EDt\u00E1sokat.\u003Cbr/\u003E\u003Cbr/\u003E\n\u003Ca target=\"_blank\" href=\"$option_page$\"\u003EFelfedez\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"https://chrome.google.com/extensions/detail/aeaoofnhgocdbnbeljkmbjdmhbcokfdb\"\u003EOtthon\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/wiki/FAQs\"\u003EGYIK\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/issues/list\"\u003ET\u00E1mogat\u00E1s\u003C/a\u003E",
+      "placeholders": {
+         "option_page": {
+            "content": "$1"
+         }
+      }
+   }
+}

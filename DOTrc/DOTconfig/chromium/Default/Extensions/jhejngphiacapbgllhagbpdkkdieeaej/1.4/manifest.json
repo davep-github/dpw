@@ -1,0 +1,28 @@
+{
+   "background_page": "background.html",
+   "content_scripts": [ {
+      "all_frames": false,
+      "js": [ "script.js" ],
+      "matches": [ "http://*/*" ],
+      "run_at": "document_end"
+   } ],
+   "description": "Porting of FlagFox to Chrome. Displays a country flag indicating the location of the websites you're visiting",
+   "icons": {
+      "128": "128.png",
+      "16": "16.png",
+      "32": "32.png",
+      "48": "48.png"
+   },
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCkUq12ayg/hd2cwRGBd7G/x2m88j+3f5s6CjT0P/1BD5M5lnEuqDg42Gwj59jcN11wIjSwNOL/F/1o6cThh6znvodaiMsncCrLNhX2G/X74NNrJDainkisvxoUn/Pw5YS0N6arsdwIbCSB6c9+hxwlymzt6+NAcVMAXENjoexmYwIDAQAB",
+   "name": "Chrome Flags",
+   "page_action": {
+      "default_icon": "flags/none.png",
+      "popup": "info.html"
+   },
+   "permissions": [ "tabs" ],
+   "plugins": [ {
+      "path": "NPIP2Country.dll"
+   } ],
+   "update_url": "http://clients2.google.com/service/update2/crx",
+   "version": "1.4"
+}

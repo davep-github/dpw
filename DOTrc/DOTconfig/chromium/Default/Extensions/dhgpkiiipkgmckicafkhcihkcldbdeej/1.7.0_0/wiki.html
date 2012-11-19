@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="wiki.css" />
+    </head>
+
+    <body onload="init();">
+        <div id="update" onclick="update_dismiss()"></div>
+
+        <div id="main">
+            <div id="toolbar">
+                <!-- basic controls -->
+                <div id="toolbar-left">
+                    <div id="clearhistorybutton" class="button" onclick="clearHistory()"></div>
+                    <div id="backbutton" class="button" onclick="moveInHistory(1)"></div>
+                    <div id="forwardbutton" class="button" onclick="moveInHistory(-1)"></div>
+                    <input id="searchbox" type="text" onKeyDown="if (event.keyCode == 13) doSearch()">
+                    <div id="searchbutton" class="button" onclick="doSearch()"></div>
+                </div>
+
+                <!-- langauage, open new windows -->
+                <div id="toolbar-right">
+                    <div id="language" class="button-big" onclick="toggleLang()"></div>
+                    <div id="openInTab" class="button-big" onclick="openInNewTab()"></div>
+                    <div id="options" class="button-big" onclick="openOptions()"></div>
+                </div>
+
+                <!-- welcome message covers the div -->
+                <div id="welcome" onclick="welcome_dismiss()"></div>
+            </div>
+            <iframe id="wikipage" src="./content.html"></iframe>
+        </div>
+    </body>
+
+    <script type="text/javascript" src="wiki.js">
+    </script>
+</html>
+

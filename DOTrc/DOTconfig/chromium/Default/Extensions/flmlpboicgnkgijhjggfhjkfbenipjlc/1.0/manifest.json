@@ -1,0 +1,12 @@
+{
+   "browser_action": {
+      "default_icon": "favicon.ico",
+      "popup": "popup.html"
+   },
+   "content_url": "http://mobile.answers.com/",
+   "description": "Wiki QA combined with free online dictionary, thesaurus, and encyclopedias. Ask questions, get answers.",
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9VJ5a1Ww21uZNpxCS+J07QoZ2GI3BPOz6D4e0Eriw1jCtawf94llP90he8nBYsMZMpbTbIzwqBs9ys8IjpxCIlX+t+afhROqxU892i+uGQmtw9hpuj5kWwGq7cAfti2kHXGnwBCc6NLtN7G1c3E9sF4cG0PtaElsmRDkl8OQEnwIDAQAB",
+   "name": "Answers.com for Google Chrome",
+   "update_url": "http://clients2.google.com/service/update2/crx",
+   "version": "1.0"
+}

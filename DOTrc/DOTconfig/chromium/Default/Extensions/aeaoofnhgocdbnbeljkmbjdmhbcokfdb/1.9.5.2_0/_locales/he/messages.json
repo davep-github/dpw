@@ -1,0 +1,433 @@
+{
+   "caption_backup": {
+      "message": "\u05D2\u05D9\u05D1\u05D5\u05D9"
+   },
+   "caption_backup_or_restore_settings": {
+      "message": "\u05D2\u05D9\u05D1\u05D5\u05D9 / \u05E9\u05D7\u05D6\u05D5\u05E8 \u05D4\u05D2\u05D3\u05E8\u05D5\u05EA"
+   },
+   "caption_cancel": {
+      "message": "\u05D1\u05D9\u05D8\u05D5\u05DC"
+   },
+   "caption_close": {
+      "message": "\u05E1\u05D2\u05D5\u05E8"
+   },
+   "caption_confirm": {
+      "message": "\u05D0\u05D9\u05E9\u05D5\u05E8"
+   },
+   "caption_create_custom_stroke": {
+      "message": "\u05E6\u05D5\u05E8 \u05D7\u05D3\u05E9"
+   },
+   "caption_current_stroke": {
+      "message": "\u05EA\u05E0\u05D5\u05E2\u05EA \u05E2\u05DB\u05D1\u05E8 \u05E0\u05D5\u05DB\u05D7\u05D9\u05EA"
+   },
+   "caption_edit_trail_style": {
+      "message": "\u05E2\u05E8\u05D5\u05DA \u05E1\u05D2\u05E0\u05D5\u05DF \u05E7\u05D5 \u05E2\u05DB\u05D1\u05E8"
+   },
+   "caption_help_custom_stroke": {
+      "message": "\u05E2\u05D6\u05E8\u05D4"
+   },
+   "caption_label": {
+      "message": "\u05EA\u05D5\u05D5\u05D9\u05EA"
+   },
+   "caption_mouse_stroke_options": {
+      "message": "\u05D0\u05E4\u05E9\u05E8\u05D5\u05D9\u05D5\u05EA Mouse Stroke"
+   },
+   "caption_none": {
+      "message": "\u05DC\u05DC\u05D0"
+   },
+   "caption_previous_stroke": {
+      "message": "\u05EA\u05E0\u05D5\u05E2\u05EA \u05E2\u05DB\u05D1\u05E8 \u05E7\u05D5\u05D3\u05DE\u05EA"
+   },
+   "caption_remove": {
+      "message": "\u05D4\u05E1\u05E8"
+   },
+   "caption_restore": {
+      "message": "\u05E9\u05D7\u05D6\u05D5\u05E8"
+   },
+   "caption_restore_default": {
+      "message": "\u05E9\u05D7\u05D6\u05E8 \u05D4\u05D2\u05D3\u05E8\u05D5\u05EA \u05D1\u05E8\u05D9\u05E8\u05EA \u05DE\u05D7\u05D3\u05DC"
+   },
+   "caption_save": {
+      "message": "\u05E9\u05DE\u05D5\u05E8"
+   },
+   "caption_script": {
+      "message": "\u05E1\u05E7\u05E8\u05D9\u05E4\u05D8"
+   },
+   "caption_set": {
+      "message": "\u05D4\u05D2\u05D3\u05E8"
+   },
+   "caption_share_custom_stroke": {
+      "message": "\u05E9\u05EA\u05E3"
+   },
+   "caption_show_advanced_options": {
+      "message": "\u05D4\u05E6\u05D2 \u05D0\u05E4\u05E9\u05E8\u05D5\u05D9\u05D5\u05EA \u05DE\u05EA\u05E7\u05D3\u05DE\u05D5\u05EA"
+   },
+   "caption_translated_by": {
+      "message": "\u05EA\u05D5\u05E8\u05D2\u05DD \u05E2\"\u05D9"
+   },
+   "caption_unset": {
+      "message": "\u05DE\u05D7\u05E7"
+   },
+   "category_desc_dnd_strokes": {
+      "message": "\u05D8\u05E7\u05E1\u05D8 \u05DE\u05E1\u05D5\u05DE\u05DF, \u05E7\u05D9\u05E9\u05D5\u05E8\u05D9\u05DD \u05D5\u05EA\u05DE\u05D5\u05E0\u05D5\u05EA \u05E0\u05D9\u05EA\u05E0\u05D9\u05DD \u05DC\u05D2\u05E8\u05D9\u05E8\u05D4"
+   },
+   "category_desc_wheel_strokes": {
+      "message": "\u05D2\u05DC\u05D5\u05DC \u05EA\u05D5\u05DA \u05D4\u05D7\u05D6\u05E7\u05EA \u05D4\u05DB\u05E4\u05EA\u05D5\u05E8 \u05D4\u05D9\u05DE\u05E0\u05D9"
+   },
+   "category_label_bookmark": {
+      "message": "\u05E1\u05D9\u05DE\u05E0\u05D9\u05D4"
+   },
+   "category_label_custom_strokes": {
+      "message": "\u05EA\u05E0\u05D5\u05E2\u05D5\u05EA \u05DE\u05D5\u05EA\u05D0\u05DE\u05D5\u05EA \u05D0\u05D9\u05E9\u05D9\u05EA"
+   },
+   "category_label_dnd_strokes": {
+      "message": "\u05DE\u05D7\u05D5\u05D5\u05EA \"\u05D2\u05E8\u05D5\u05E8 \u05D5\u05E9\u05D7\u05E8\u05E8\""
+   },
+   "category_label_image": {
+      "message": "\u05EA\u05DE\u05D5\u05E0\u05D4"
+   },
+   "category_label_link": {
+      "message": "\u05E7\u05D9\u05E9\u05D5\u05E8"
+   },
+   "category_label_navigation": {
+      "message": "\u05E0\u05D9\u05D5\u05D5\u05D8"
+   },
+   "category_label_options": {
+      "message": "\u05D0\u05E4\u05E9\u05E8\u05D5\u05D9\u05D5\u05EA"
+   },
+   "category_label_other": {
+      "message": "\u05D0\u05D7\u05E8"
+   },
+   "category_label_rocker_strokes": {
+      "message": "\u05DE\u05D7\u05D5\u05D5\u05EA \u05D1\u05DB\u05E4\u05EA\u05D5\u05E8\u05D9 \u05E2\u05DB\u05D1\u05E8 (Rocker Strokes)"
+   },
+   "category_label_tab": {
+      "message": "\u05DC\u05E9\u05D5\u05E0\u05D9\u05EA"
+   },
+   "category_label_utilities": {
+      "message": "\u05E9\u05D9\u05DE\u05D5\u05E9\u05D9"
+   },
+   "category_label_wheel_strokes": {
+      "message": "\u05DE\u05D7\u05D5\u05D5\u05EA \u05D1\u05DB\u05E4\u05EA\u05D5\u05E8 \u05D4\u05D2\u05DC\u05D9\u05DC\u05D4"
+   },
+   "category_label_window": {
+      "message": "\u05D7\u05DC\u05D5\u05DF"
+   },
+   "extension_description": {
+      "message": "\u05D4\u05E9\u05EA\u05DE\u05E9 \u05D1\u05EA\u05E0\u05D5\u05E2\u05D5\u05EA \u05E2\u05DB\u05D1\u05E8 (\u05DE\u05D7\u05D5\u05D5\u05EA) \u05E2\u05DC \u05DE\u05E0\u05EA \u05DC\u05E9\u05DC\u05D5\u05D8 \u05D1\u05D3\u05E4\u05D3\u05E4\u05DF \u05D1\u05DE\u05D4\u05D9\u05E8\u05D5\u05EA \u05D5\u05D1\u05D9\u05E2\u05D9\u05DC\u05D5\u05EA. \u05DB\u05D5\u05DC\u05DC \u05EA\u05DE\u05D9\u05DB\u05D4 \u05D1\u05EA\u05E0\u05D5\u05E2\u05D5\u05EA \u05D2\u05E8\u05D9\u05E8\u05D4 \u05DE\u05D5\u05E8\u05DB\u05D1\u05D5\u05EA, \u05E9\u05D9\u05DE\u05D5\u05E9 \u05D1\u05DC\u05D7\u05E6\u05E0\u05D9 \u05D4\u05E2\u05DB\u05D1\u05E8 (Rocker Gestures) \u05D5\u05D1\u05DB\u05E4\u05EA\u05D5\u05E8 \u05D4\u05D2\u05DC\u05D9\u05DC\u05D4 \u05D5\u05D4\u05DB\u05DC \u05D1\u05EA\u05D5\u05E1\u05E3 \u05D0\u05D7\u05D3!"
+   },
+   "extension_name": {
+      "message": "Mouse Stroke"
+   },
+   "option_desc_stroke_timeout": {
+      "message": "\u05D4\u05E9\u05EA\u05DE\u05E9 \u05D1\u05E2\u05E8\u05DB\u05D9\u05DD \u05D2\u05D1\u05D5\u05D4\u05D9\u05DD \u05E2\u05DC \u05DE\u05E0\u05EA \u05DC\u05D4\u05E7\u05DC \u05E2\u05DC \u05D1\u05D9\u05E6\u05D5\u05E2 \u05EA\u05E0\u05D5\u05E2\u05D5\u05EA \u05D4\u05E2\u05DB\u05D1\u05E8"
+   },
+   "option_label_alt_key_suppresses_strokes": {
+      "message": "\u05DE\u05E7\u05E9 Alt \u05DC\u05D7\u05D5\u05E5 \u05DE\u05D1\u05D8\u05DC \u05EA\u05E0\u05D5\u05E2\u05D5\u05EA \u05E2\u05DB\u05D1\u05E8"
+   },
+   "option_label_close_window_with_the_last_tab": {
+      "message": "\u05E1\u05D2\u05D5\u05E8 \u05D7\u05DC\u05D5\u05DF \u05E2\u05DD \u05D4\u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05D4\u05D0\u05D7\u05E8\u05D5\u05E0\u05D4"
+   },
+   "option_label_draw_trails": {
+      "message": "\u05E6\u05D9\u05D9\u05E8 \u05E7\u05D5 \u05E2\u05DB\u05D1\u05E8"
+   },
+   "option_label_enable_dnd_strokes": {
+      "message": "\u05D0\u05E4\u05E9\u05E8 \u05EA\u05E0\u05D5\u05E2\u05D5\u05EA \"\u05D2\u05E8\u05D5\u05E8 \u05D5\u05E9\u05D7\u05E8\u05E8\""
+   },
+   "option_label_hold_ctrl_key_to_fire_custom_strokes": {
+      "message": "\u05D4\u05D7\u05D6\u05E7 \u05D0\u05EA \u05DE\u05E7\u05E9 Ctrl \u05DB\u05D3\u05D9 \u05DC\u05D1\u05E6\u05E2 \u05EA\u05E0\u05D5\u05E2\u05D5\u05EA \u05E2\u05DB\u05D1\u05E8 \u05DE\u05D5\u05EA\u05D0\u05DE\u05D5\u05EA \u05D0\u05D9\u05E9\u05D9\u05EA"
+   },
+   "option_label_minimal_step": {
+      "message": "\u05DE\u05E8\u05D5\u05D5\u05D7 \u05E9\u05DC\u05D1 \u05E6\u05D9\u05D5\u05E8 \u05E7\u05D5 (\u05E4\u05D9\u05E7\u05E1\u05DC\u05D9\u05DD)"
+   },
+   "option_label_new_tab_open_at": {
+      "message": "\u05D1\u05E4\u05EA\u05D9\u05D7\u05EA \u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05D7\u05D3\u05E9\u05D4, \u05E4\u05EA\u05D7"
+   },
+   "option_label_page_open_as_new_tab": {
+      "message": "\u05D1\u05E4\u05EA\u05D9\u05D7\u05EA \u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05D7\u05D3\u05E9\u05D4, \u05E4\u05EA\u05D7"
+   },
+   "option_label_prefferred_search_engine": {
+      "message": "\u05DE\u05E0\u05D5\u05E2 \u05D7\u05D9\u05E4\u05D5\u05E9 \u05DE\u05D5\u05E2\u05D3\u05E3"
+   },
+   "option_label_stroke_timeout": {
+      "message": "\u05DE\u05E9\u05DA \u05D6\u05DE\u05DF \u05DC\u05EA\u05E0\u05D5\u05E2\u05EA \u05E2\u05DB\u05D1\u05E8 (\u05DE\u05D9\u05DC\u05D9\u05E9\u05E0\u05D9\u05D5\u05EA)"
+   },
+   "option_label_stroke_trigger": {
+      "message": "\u05D4\u05D2\u05D3\u05E8 \u05DB\u05E4\u05EA\u05D5\u05E8 \u05DC\u05EA\u05E0\u05D5\u05E2\u05D5\u05EA \u05E2\u05DB\u05D1\u05E8"
+   },
+   "option_label_trail_color": {
+      "message": "\u05E6\u05D1\u05E2 \u05E7\u05D5"
+   },
+   "option_label_trail_width": {
+      "message": "\u05E8\u05D5\u05D7\u05D1 \u05E7\u05D5"
+   },
+   "option_value_as_first_tab": {
+      "message": "\u05DB\u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05E8\u05D0\u05E9\u05D5\u05E0\u05D4"
+   },
+   "option_value_as_last_tab": {
+      "message": "\u05DB\u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05D0\u05D7\u05E8\u05D5\u05E0\u05D4"
+   },
+   "option_value_at_left_of_current_tab": {
+      "message": "\u05DC\u05E4\u05E0\u05D9 \u05D4\u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05D4\u05E0\u05D5\u05DB\u05D7\u05D9\u05EA"
+   },
+   "option_value_at_right_of_current_tab": {
+      "message": "\u05D0\u05D7\u05E8\u05D9 \u05D4\u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05D4\u05E0\u05D5\u05DB\u05D7\u05D9\u05EA"
+   },
+   "option_value_chrome_newtab_page": {
+      "message": "\u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05D7\u05D3\u05E9\u05D4 \u05E9\u05DC \u05D3\u05E4\u05D3\u05E4\u05DF Chrome"
+   },
+   "option_value_left_mouse_button": {
+      "message": "\u05DB\u05E4\u05EA\u05D5\u05E8 \u05E2\u05DB\u05D1\u05E8 \u05E9\u05DE\u05D0\u05DC\u05D9"
+   },
+   "option_value_middle_mouse_button": {
+      "message": "\u05DB\u05E4\u05EA\u05D5\u05E8 \u05E2\u05DB\u05D1\u05E8 \u05D0\u05DE\u05E6\u05E2\u05D9 (\u05DC\u05D9\u05E0\u05D5\u05E7\u05E1 \u05D5\u05DE\u05E7)"
+   },
+   "option_value_my_homepage": {
+      "message": "\u05D0\u05EA \u05D3\u05E3 \u05D4\u05D1\u05D9\u05EA \u05E9\u05DC\u05D9"
+   },
+   "option_value_other_search_engine": {
+      "message": "\u05D0\u05D7\u05E8"
+   },
+   "option_value_right_mouse_button": {
+      "message": "\u05DB\u05E4\u05EA\u05D5\u05E8 \u05E2\u05DB\u05D1\u05E8 \u05D9\u05DE\u05E0\u05D9 (\u05D7\u05DC\u05D5\u05E0\u05D5\u05EA)"
+   },
+   "option_value_the_blank_page": {
+      "message": "\u05D3\u05E3 \u05E8\u05D9\u05E7"
+   },
+   "prompt_backup_settings_currupted": {
+      "message": "\u05D4\u05EA\u05D2\u05DC\u05EA\u05D4 \u05EA\u05E7\u05DC\u05D4 \u05D1\u05E0\u05EA\u05D5\u05E0\u05D9\u05DD, \u05E4\u05E2\u05D5\u05DC\u05EA \u05E9\u05D7\u05D6\u05D5\u05E8 \u05D4\u05D2\u05D3\u05E8\u05D5\u05EA \u05D4\u05D5\u05E4\u05E1\u05E7\u05D4."
+   },
+   "prompt_invalid_search_engine_url": {
+      "message": "\u05DB\u05EA\u05D5\u05D1\u05EA \u05DE\u05E0\u05D5\u05E2 \u05D4\u05D7\u05D9\u05E4\u05D5\u05E9 \u05E9\u05D2\u05D5\u05D9\u05D4."
+   },
+   "prompt_label_and_script_are_empty": {
+      "message": "\u05D4\u05E2\u05E8\u05DB\u05D9\u05DD [\u05EA\u05D5\u05D5\u05D9\u05EA] \u05D5-[\u05E1\u05E7\u05E8\u05D9\u05E4\u05D8] \u05D7\u05D9\u05D9\u05D1\u05D9\u05DD \u05DC\u05D4\u05D9\u05D5\u05EA \u05DE\u05DC\u05D0\u05D9\u05DD."
+   },
+   "prompt_overwrite_custom_stroke_label": {
+      "message": "'$label$' \u05DB\u05D1\u05E8 \u05E7\u05D9\u05D9\u05DD. \u05D4\u05D0\u05DD \u05DC\u05D4\u05D7\u05DC\u05D9\u05E3?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_overwrite_stroke_sequence": {
+      "message": "[$sequence$] \u05D4\u05D5\u05D2\u05D3\u05E8 \u05E2\u05D1\u05D5\u05E8 '$label$', \u05D4\u05D0\u05DD \u05DC\u05D4\u05D7\u05DC\u05D9\u05E3?",
+      "placeholders": {
+         "label": {
+            "content": "$2"
+         },
+         "sequence": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_remove_custom_stroke": {
+      "message": "\u05D4\u05D0\u05DD \u05DC\u05D4\u05E1\u05D9\u05E8 \u05EA\u05E0\u05D5\u05E2\u05EA \u05E2\u05DB\u05D1\u05E8: '$label$'?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_reset_settings": {
+      "message": "\u05DB\u05DC \u05D4\u05D4\u05D2\u05D3\u05E8\u05D5\u05EA \u05D9\u05D0\u05D5\u05E4\u05E1\u05D5, \u05DE\u05DC\u05D1\u05D3 \u05EA\u05E0\u05D5\u05E2\u05D5\u05EA \u05E2\u05DB\u05D1\u05E8 \u05E9\u05D4\u05D5\u05D2\u05D3\u05E8\u05D5 \u05D0\u05D9\u05E9\u05D9\u05EA \u05E2\"\u05D9 \u05D4\u05DE\u05E9\u05EA\u05DE\u05E9. \u05D4\u05D0\u05DD \u05DC\u05D4\u05DE\u05E9\u05D9\u05DA?"
+   },
+   "prompt_restore_complete": {
+      "message": "\u05E9\u05D7\u05D6\u05D5\u05E8 \u05D1\u05D5\u05E6\u05E2 \u05D1\u05D4\u05E6\u05DC\u05D7\u05D4."
+   },
+   "prompt_save_complete": {
+      "message": "\u05E9\u05DE\u05D9\u05E8\u05D4 \u05D1\u05D5\u05E6\u05E2\u05D4 \u05D1\u05D4\u05E6\u05DC\u05D7\u05D4."
+   },
+   "stroke_label_bookmark_this_link": {
+      "message": "\u05E9\u05DE\u05D5\u05E8 \u05E7\u05D9\u05E9\u05D5\u05E8 \u05D1\u05E1\u05D9\u05DE\u05E0\u05D9\u05D5\u05EA"
+   },
+   "stroke_label_bookmark_this_page": {
+      "message": "\u05E9\u05DE\u05D5\u05E8 \u05D3\u05E3 \u05D6\u05D4 \u05D1\u05E1\u05D9\u05DE\u05E0\u05D9\u05D5\u05EA"
+   },
+   "stroke_label_close_all_tabs_to_the_left": {
+      "message": "\u05E1\u05D2\u05D5\u05E8 \u05D0\u05EA \u05DB\u05DC \u05D4\u05DC\u05E9\u05D5\u05E0\u05D9\u05D5\u05EA \u05D4\u05E7\u05D5\u05D3\u05DE\u05D5\u05EA"
+   },
+   "stroke_label_close_all_tabs_to_the_right": {
+      "message": "\u05E1\u05D2\u05D5\u05E8 \u05D0\u05EA \u05DB\u05DC \u05D4\u05DC\u05E9\u05D5\u05E0\u05D9\u05D5\u05EA \u05D4\u05D1\u05D0\u05D5\u05EA"
+   },
+   "stroke_label_close_other_tabs": {
+      "message": "\u05E1\u05D2\u05D5\u05E8 \u05D0\u05EA \u05DB\u05DC \u05D4\u05DC\u05E9\u05D5\u05E0\u05D9\u05D5\u05EA \u05D4\u05D0\u05D7\u05E8\u05D5\u05EA"
+   },
+   "stroke_label_close_tab": {
+      "message": "\u05E1\u05D2\u05D5\u05E8 \u05DC\u05E9\u05D5\u05E0\u05D9\u05EA"
+   },
+   "stroke_label_close_tab_to_the_left": {
+      "message": "\u05E1\u05D2\u05D5\u05E8 \u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05E7\u05D5\u05D3\u05DE\u05EA"
+   },
+   "stroke_label_close_tab_to_the_right": {
+      "message": "\u05E1\u05D2\u05D5\u05E8 \u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05D4\u05D1\u05D0\u05D4"
+   },
+   "stroke_label_close_window": {
+      "message": "\u05E1\u05D2\u05D5\u05E8 \u05D7\u05DC\u05D5\u05DF"
+   },
+   "stroke_label_decrease_number_in_url": {
+      "message": "\u05DE\u05E6\u05D0 \u05D4\u05D3\u05E3 \u05D4\u05E7\u05D5\u05D3\u05DD"
+   },
+   "stroke_label_detach_tab": {
+      "message": "\u05D4\u05E4\u05E8\u05D3 \u05DC\u05E9\u05D5\u05E0\u05D9\u05EA"
+   },
+   "stroke_label_dnd_down": {
+      "message": "\u05E9\u05D7\u05E8\u05E8 \u05DC\u05DE\u05D8\u05D4"
+   },
+   "stroke_label_dnd_left": {
+      "message": "\u05E9\u05D7\u05E8\u05E8 \u05E9\u05DE\u05D0\u05DC\u05D4"
+   },
+   "stroke_label_dnd_right": {
+      "message": "\u05E9\u05D7\u05E8\u05E8 \u05D9\u05DE\u05D9\u05E0\u05D4"
+   },
+   "stroke_label_dnd_up": {
+      "message": "\u05E9\u05D7\u05E8\u05E8 \u05DC\u05DE\u05E2\u05DC\u05D4"
+   },
+   "stroke_label_duplicate_tab": {
+      "message": "\u05E9\u05DB\u05E4\u05DC \u05DC\u05E9\u05D5\u05E0\u05D9\u05EA"
+   },
+   "stroke_label_first_tab": {
+      "message": "\u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05E8\u05D0\u05E9\u05D5\u05E0\u05D4"
+   },
+   "stroke_label_history_back": {
+      "message": "\u05D3\u05E3 \u05E7\u05D5\u05D3\u05DD"
+   },
+   "stroke_label_history_forward": {
+      "message": "\u05D3\u05E3 \u05D4\u05D1\u05D0"
+   },
+   "stroke_label_increase_number_in_url": {
+      "message": "\u05DE\u05E6\u05D0 \u05D4\u05D3\u05E3 \u05D4\u05D1\u05D0"
+   },
+   "stroke_label_last_tab": {
+      "message": "\u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05D0\u05D7\u05E8\u05D5\u05E0\u05D4"
+   },
+   "stroke_label_maximize_window": {
+      "message": "\u05D4\u05D2\u05D3\u05DC \u05D7\u05DC\u05D5\u05DF"
+   },
+   "stroke_label_minimize_window": {
+      "message": "\u05DE\u05D6\u05E2\u05E8 \u05D7\u05DC\u05D5\u05DF"
+   },
+   "stroke_label_mouse_stroke_options": {
+      "message": "\u05D0\u05E4\u05E9\u05E8\u05D5\u05D9\u05D5\u05EA Mouse Stroke"
+   },
+   "stroke_label_new_tab": {
+      "message": "\u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05D7\u05D3\u05E9\u05D4"
+   },
+   "stroke_label_new_window": {
+      "message": "\u05D7\u05DC\u05D5\u05DF \u05D7\u05D3\u05E9"
+   },
+   "stroke_label_next_tab": {
+      "message": "\u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05D4\u05D1\u05D0\u05D4"
+   },
+   "stroke_label_open_homepage": {
+      "message": "\u05E4\u05EA\u05D7 \u05D3\u05E3 \u05D4\u05D1\u05D9\u05EA"
+   },
+   "stroke_label_open_link_in_new_background_tab": {
+      "message": "\u05E4\u05EA\u05D7 \u05E7\u05D9\u05E9\u05D5\u05E8 \u05D1\u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05D7\u05D3\u05E9\u05D4 \u05D1\u05E8\u05E7\u05E2"
+   },
+   "stroke_label_open_link_in_new_foreground_tab": {
+      "message": "\u05E4\u05EA\u05D7 \u05E7\u05D9\u05E9\u05D5\u05E8 \u05D1\u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05D7\u05D3\u05E9\u05D4"
+   },
+   "stroke_label_open_link_in_new_window": {
+      "message": "\u05E4\u05EA\u05D7 \u05E7\u05D9\u05E9\u05D5\u05E8 \u05D1\u05D7\u05DC\u05D5\u05DF \u05D7\u05D3\u05E9"
+   },
+   "stroke_label_previous_tab": {
+      "message": "\u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05E7\u05D5\u05D3\u05DE\u05EA"
+   },
+   "stroke_label_reload": {
+      "message": "\u05D8\u05E2\u05DF \u05DE\u05D7\u05D3\u05E9"
+   },
+   "stroke_label_remove_bookmark": {
+      "message": "\u05D4\u05E1\u05E8 \u05E1\u05D9\u05DE\u05E0\u05D9\u05D4"
+   },
+   "stroke_label_rocker_left_to_right": {
+      "message": "\u05E7\u05DC\u05D9\u05E7 \u05D9\u05DE\u05E0\u05D9 \u05EA\u05D5\u05DA \u05D4\u05D7\u05D6\u05E7\u05EA \u05DB\u05E4\u05EA\u05D5\u05E8 \u05E9\u05DE\u05D0\u05DC\u05D9"
+   },
+   "stroke_label_rocker_right_to_left": {
+      "message": "\u05E7\u05DC\u05D9\u05E7 \u05E9\u05DE\u05D0\u05DC\u05D9 \u05EA\u05D5\u05DA \u05D4\u05D7\u05D6\u05E7\u05EA \u05DB\u05E4\u05EA\u05D5\u05E8 \u05D9\u05DE\u05E0\u05D9"
+   },
+   "stroke_label_save_image": {
+      "message": "\u05E9\u05DE\u05D5\u05E8 \u05EA\u05DE\u05D5\u05E0\u05D4"
+   },
+   "stroke_label_scroll_down_one_page": {
+      "message": "\u05D2\u05DC\u05D5\u05DC \u05DC\u05DE\u05D8\u05D4 \u05E2\u05DE\u05D5\u05D3 \u05D0\u05D7\u05D3"
+   },
+   "stroke_label_scroll_up_one_page": {
+      "message": "\u05D2\u05DC\u05D5\u05DC \u05DC\u05DE\u05E2\u05DC\u05D4 \u05E2\u05DE\u05D5\u05D3 \u05D0\u05D7\u05D3"
+   },
+   "stroke_label_search_selected_text": {
+      "message": "\u05D7\u05E4\u05E9 \u05D0\u05EA \u05D4\u05D8\u05E7\u05E1\u05D8 \u05D4\u05DE\u05E1\u05D5\u05DE\u05DF"
+   },
+   "stroke_label_skip_cache_reload": {
+      "message": "\u05D8\u05E2\u05DF \u05DE\u05D7\u05D3\u05E9 \u05DC\u05DC\u05D0 \u05E9\u05D9\u05DE\u05D5\u05E9 \u05D1\u05DE\u05D8\u05DE\u05D5\u05DF"
+   },
+   "stroke_label_stop_page_loading": {
+      "message": "\u05E2\u05E6\u05D5\u05E8 \u05D8\u05E2\u05D9\u05E0\u05EA \u05D3\u05E3"
+   },
+   "stroke_label_take_screenshot": {
+      "message": "\u05E6\u05D9\u05DC\u05D5\u05DD \u05DE\u05E1\u05DA"
+   },
+   "stroke_label_text_zoom_in": {
+      "message": "\u05D4\u05D2\u05D3\u05DC \u05D8\u05E7\u05E1\u05D8"
+   },
+   "stroke_label_text_zoom_out": {
+      "message": "\u05D4\u05E7\u05D8\u05DF \u05D8\u05E7\u05E1\u05D8"
+   },
+   "stroke_label_text_zoom_reset": {
+      "message": "\u05D0\u05E4\u05E1 \u05D2\u05D5\u05D3\u05DC \u05D8\u05E7\u05E1\u05D8"
+   },
+   "stroke_label_to_page_bottom": {
+      "message": "\u05DC\u05E1\u05D5\u05E3 \u05D4\u05D3\u05E3"
+   },
+   "stroke_label_to_page_top": {
+      "message": "\u05DC\u05EA\u05D7\u05D9\u05DC\u05EA \u05D4\u05D3\u05E3"
+   },
+   "stroke_label_undo_close_tab": {
+      "message": "\u05D1\u05D8\u05DC \u05E1\u05D2\u05D9\u05E8\u05EA \u05DC\u05E9\u05D5\u05E0\u05D9\u05EA"
+   },
+   "stroke_label_upper_level_in_url": {
+      "message": "\u05D3\u05E3 \u05E8\u05D0\u05E9\u05D9 \u05D1\u05DB\u05EA\u05D5\u05D1\u05EA"
+   },
+   "stroke_label_view_image": {
+      "message": "\u05E6\u05E4\u05D4 \u05D1\u05EA\u05DE\u05D5\u05E0\u05D4"
+   },
+   "stroke_label_view_source": {
+      "message": "\u05E6\u05E4\u05D4 \u05D1\u05E7\u05D5\u05D3 \u05DE\u05E7\u05D5\u05E8"
+   },
+   "stroke_label_wheel_down": {
+      "message": "\u05DB\u05E4\u05EA\u05D5\u05E8 \u05D2\u05DC\u05D9\u05DC\u05D4 \u05DC\u05DE\u05D8\u05D4"
+   },
+   "stroke_label_wheel_left": {
+      "message": "\u05DB\u05E4\u05EA\u05D5\u05E8 \u05D2\u05DC\u05D9\u05DC\u05D4 \u05E9\u05DE\u05D0\u05DC\u05D4"
+   },
+   "stroke_label_wheel_right": {
+      "message": "\u05DB\u05E4\u05EA\u05D5\u05E8 \u05D2\u05DC\u05D9\u05DC\u05D4 \u05D9\u05DE\u05D9\u05E0\u05D4"
+   },
+   "stroke_label_wheel_up": {
+      "message": "\u05DB\u05E4\u05EA\u05D5\u05E8 \u05D2\u05DC\u05D9\u05DC\u05D4 \u05DC\u05DE\u05E2\u05DC\u05D4"
+   },
+   "text_backup_and_restore_settings_description": {
+      "message": "\u003Cli\u003E\n\u05DC\u05D2\u05D9\u05D1\u05D5\u05D9 \u05D4\u05D4\u05D2\u05D3\u05E8\u05D5\u05EA, \u05DC\u05D7\u05E5 \u05E2\u05DC \u05DB\u05E4\u05EA\u05D5\u05E8 \u003Cem\u003E\u05D2\u05D9\u05D1\u05D5\u05D9\u003C/em\u003E \u003Cstrong\u003E\u05D5\u05D4\u05E2\u05EA\u05E7 \u05D0\u05EA \u05D4\u05D8\u05E7\u05E1\u05D8 \u05DC\u05DE\u05E7\u05D5\u05DD \u05D1\u05D8\u05D5\u05D7\u003C/strong\u003E. \u05DC\u05D7\u05D9\u05E6\u05D4 \u05E2\u05DC \u05DB\u05E4\u05EA\u05D5\u05E8 \u05D2\u05D9\u05D1\u05D5\u05D9 \u05D1\u05DC\u05D1\u05D3 \u05DC\u05D0 \u05EA\u05E9\u05DE\u05D5\u05E8 \u05D0\u05EA \u05D4\u05D4\u05D2\u05D3\u05E8\u05D5\u05EA.\n\u003C/li\u003E\n\u003Cli\u003E\n\u05DC\u05E9\u05D7\u05D6\u05E8 \u05D4\u05D2\u05D3\u05E8\u05D5\u05EA, \u05D4\u05D3\u05D1\u05E7 \u05D0\u05EA \u05D4\u05D8\u05E7\u05E1\u05D8 \u05E9\u05E0\u05E9\u05DE\u05E8 \u05D1\u05E2\u05D1\u05E8 \u05DC\u05EA\u05D9\u05D1\u05EA \u05D4\u05D8\u05E7\u05E1\u05D8 \u05D5\u05DC\u05D7\u05E5 \u05E2\u05DC \u003Cem\u003E\u05E9\u05D7\u05D6\u05D5\u05E8\u003C/em\u003E. \u05D4\u05DE\u05D9\u05D3\u05E2 \u05E9\u05D2\u05D5\u05D1\u05D4 \u05D9\u05DE\u05D5\u05D6\u05D2 \u05D0\u05DC \u05D4\u05D2\u05D3\u05E8\u05D5\u05EA \u05D1\u05E8\u05D9\u05E8\u05EA \u05D4\u05DE\u05D7\u05D3\u05DC \u05DB\u05D3\u05D9 \u05DC\u05DE\u05E0\u05D5\u05E2 \u05D0\u05D9-\u05EA\u05D0\u05D9\u05DE\u05D5\u05EA \u05D0\u05D5 \u05EA\u05E7\u05D9\u05E0\u05D5\u05EA \u05E9\u05DC \u05D4\u05E0\u05EA\u05D5\u05E0\u05D9\u05DD.\n\u003C/li\u003E"
+   },
+   "text_dnd_notes": {
+      "message": "\u05D2\u05E8\u05D9\u05E8\u05EA \u05D8\u05E7\u05E1\u05D8 \u05EA\u05D2\u05E8\u05D5\u05DD \u05DC\u05D7\u05D9\u05E4\u05D5\u05E9 \u05D4\u05D8\u05E7\u05E1\u05D8 \u05E9\u05E1\u05D5\u05DE\u05DF \u05D1\u05DC\u05E9\u05D5\u05E0\u05D9\u05EA \u05D7\u05D3\u05E9\u05D4.\u003Cbr/\u003E\n\u05DB\u05D9\u05D5\u05D5\u05DF \u05D4\u05D2\u05E8\u05D9\u05E8\u05D4 \u05D4\u05D0\u05D7\u05E8\u05D5\u05DF \u05D4\u05D5\u05D0 \u05D6\u05D4 \u05E9\u05E7\u05D5\u05D1\u05E2."
+   },
+   "text_extension_description": {
+      "message": "\u05D6\u05D4\u05D5 \u05EA\u05D5\u05E1\u05E3 \u05E9\u05DC Google Chrome \u05D0\u05E9\u05E8 \u05DE\u05D0\u05E4\u05E9\u05E8 \u05E9\u05DC\u05D9\u05D8\u05D4 \u05D1\u05D3\u05E4\u05D3\u05E4\u05DF \u05D1\u05D0\u05DE\u05E6\u05E2\u05D5\u05EA \u05EA\u05E0\u05D5\u05E2\u05D5\u05EA \u05E2\u05DB\u05D1\u05E8 (\u003Ca href=\"http://en.wikipedia.org/wiki/Mouse_gesture\"\u003EMouse Gestures\u003C/a\u003E). \u05E2\u05DD \u05EA\u05D5\u05E1\u05E3 \u05D6\u05D4, \u05EA\u05D5\u05DB\u05DC \u05DC\u05D1\u05E6\u05E2 \u05DE\u05E9\u05D9\u05DE\u05D5\u05EA \u05E0\u05E4\u05D5\u05E6\u05D5\u05EA \u05E4\u05E9\u05D5\u05D8 \u05E2\"\u05D9 \u05D4\u05D6\u05D6\u05EA \u05D4\u05E2\u05DB\u05D1\u05E8."
+   },
+   "text_translator": {
+      "message": "\u003Ca href=\"http://oneshen.com\"\u003EItai Shen\u003C/a\u003E"
+   },
+   "text_version_highlight": {
+      "message": "\u003Cli\u003E\n  \u003Cstrong\u003ENew in 1.9.4\u003C/strong\u003E: Mouse Stroke can speak multiple languages now!\u003Cbr/\u003E\n  If you want to help translate Mouse Stroke into your language, please visit\n  \u003Ca href=\"http://code.google.com/p/chrome-mouse-stroke/issues/detail?id=85\"\u003Ethis page\u003C/a\u003E\n  and follow the instructions.\u003Cbr/\u003E\n  Your work will be appreciated by many.\n\u003C/li\u003E\n\u003Cli\u003E\n  Custom strokes can now access all DOM objects and functions.\n\u003C/li\u003E\n\u003Cli\u003E\n  Some bugs are fixed.\n\u003C/li\u003E"
+   },
+   "text_version_highlight_prompt": {
+      "message": "\u003Cstrong\u003EMouse Stroke\u003C/strong\u003E was just upgraded to the latest version!\u003Cbr/\u003E\nThis release features multilingual support!\u003Cbr/\u003E\nIf you are willing to help translate Mouse Stroke into your language, please go to\n\u003Ca href=\"http://code.google.com/p/chrome-mouse-stroke/issues/detail?id=85\"\u003Ethis page\u003C/a\u003E\nand read the instructions there.\u003Cbr/\u003E\u003Cbr/\u003E\n\u003Ca target=\"_blank\" href=\"$option_page$\"\u003EExplore\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"https://chrome.google.com/extensions/detail/aeaoofnhgocdbnbeljkmbjdmhbcokfdb\"\u003EHome\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/wiki/FAQs\"\u003EFAQs\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/issues/list\"\u003ESupport\u003C/a\u003E",
+      "placeholders": {
+         "option_page": {
+            "content": "$1"
+         }
+      }
+   }
+}

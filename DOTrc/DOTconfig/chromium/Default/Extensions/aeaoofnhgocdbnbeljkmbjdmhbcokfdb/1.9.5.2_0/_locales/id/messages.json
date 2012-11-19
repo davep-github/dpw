@@ -1,0 +1,451 @@
+{
+   "caption_backup": {
+      "message": "Cadangkan"
+   },
+   "caption_backup_or_restore_settings": {
+      "message": "Cadangkan / Kembalikan Pengaturan"
+   },
+   "caption_blacklist": {
+      "message": "Daftar hitam"
+   },
+   "caption_cancel": {
+      "message": "Batal"
+   },
+   "caption_close": {
+      "message": "Tutup"
+   },
+   "caption_confirm": {
+      "message": "Konfirmasi"
+   },
+   "caption_create_custom_stroke": {
+      "message": "Buat"
+   },
+   "caption_current_stroke": {
+      "message": "Isyarat sekarang"
+   },
+   "caption_edit_trail_style": {
+      "message": "Ubah gaya alur"
+   },
+   "caption_help_custom_stroke": {
+      "message": "Bantuan"
+   },
+   "caption_label": {
+      "message": "Label"
+   },
+   "caption_mouse_stroke_options": {
+      "message": "Opsi Isyarat Mouse"
+   },
+   "caption_none": {
+      "message": "Tidak ada"
+   },
+   "caption_previous_stroke": {
+      "message": "Isyarat Sebelumnya"
+   },
+   "caption_remove": {
+      "message": "Hapus"
+   },
+   "caption_restore": {
+      "message": "Kembalikan"
+   },
+   "caption_restore_default": {
+      "message": "Kembalikan ke asal"
+   },
+   "caption_save": {
+      "message": "Simpan"
+   },
+   "caption_script": {
+      "message": "Isyarat sekarang"
+   },
+   "caption_set": {
+      "message": "Pasang"
+   },
+   "caption_share_custom_stroke": {
+      "message": "Bagikan"
+   },
+   "caption_show_advanced_options": {
+      "message": "Tampilkan opsi lanjutan"
+   },
+   "caption_translated_by": {
+      "message": "Terjemahkan dengan"
+   },
+   "caption_unset": {
+      "message": "Copot"
+   },
+   "category_desc_dnd_strokes": {
+      "message": "Teks terpilih, tautan dan gambar dapat diseret"
+   },
+   "category_desc_wheel_strokes": {
+      "message": "Gulung sementara menekan tombol kanan"
+   },
+   "category_label_bookmark": {
+      "message": "Penanda"
+   },
+   "category_label_custom_strokes": {
+      "message": "Isyarat Buatan"
+   },
+   "category_label_dnd_strokes": {
+      "message": "Isarat Seret'&'Jatuhkan"
+   },
+   "category_label_image": {
+      "message": "Gambar"
+   },
+   "category_label_link": {
+      "message": "Tautan"
+   },
+   "category_label_navigation": {
+      "message": "Navigasi"
+   },
+   "category_label_options": {
+      "message": "Opsi"
+   },
+   "category_label_other": {
+      "message": "Lain-lain"
+   },
+   "category_label_rocker_strokes": {
+      "message": "Isyarat Roker"
+   },
+   "category_label_tab": {
+      "message": "Tab"
+   },
+   "category_label_utilities": {
+      "message": "Utilitas"
+   },
+   "category_label_wheel_strokes": {
+      "message": "Isyarat Roda Mouse"
+   },
+   "category_label_window": {
+      "message": "Jendela"
+   },
+   "extension_description": {
+      "message": "Gunakan isyarat mouse (aka gestures) untuk mempercepat operasi Anda. Mendukung seret & pergi super, isyarat roker dan isyarat gulung dalam satu ekstensi! rocker gestures and wheel gestures in one extension! Dibutuhkan penerjemah sukarelawan."
+   },
+   "extension_name": {
+      "message": "Mouse Stroke"
+   },
+   "option_desc_stroke_timeout": {
+      "message": "Nilai besar membuat lebih mudah untuk melakukan isyarat"
+   },
+   "option_label_alt_key_suppresses_strokes": {
+      "message": "Kunci Alt meredam isyarat"
+   },
+   "option_label_close_window_with_the_last_tab": {
+      "message": "Tutup jendela dengan tab terakhir"
+   },
+   "option_label_custom_stroke_runs_in": {
+      "message": "Berjalan di"
+   },
+   "option_label_draw_trails": {
+      "message": "Gambar Alur"
+   },
+   "option_label_enable_dnd_strokes": {
+      "message": "Aktifkan Isyarat Seret'&'Jatuhkan"
+   },
+   "option_label_hold_ctrl_key_to_fire_custom_strokes": {
+      "message": "Tahan kunci Ctrl untuk menyulut Isyarat Buatan"
+   },
+   "option_label_minimal_step": {
+      "message": "Langkah minimal (Piksel)"
+   },
+   "option_label_new_tab_open_at": {
+      "message": "Ketika Membuka Tab Baru, Buka"
+   },
+   "option_label_page_open_as_new_tab": {
+      "message": "Ketika Membuka Tab Baru, Buka"
+   },
+   "option_label_prefferred_search_engine": {
+      "message": "Mesin Pencari Dipilih"
+   },
+   "option_label_stroke_timeout": {
+      "message": "Waktu-habis Isyarat (Milidetik)"
+   },
+   "option_label_stroke_trigger": {
+      "message": "Kunci Penyulut Isyarat"
+   },
+   "option_label_trail_color": {
+      "message": "Warna Alur"
+   },
+   "option_label_trail_width": {
+      "message": "Lebar Alur"
+   },
+   "option_value_all_frames": {
+      "message": "semua bingkai"
+   },
+   "option_value_as_first_tab": {
+      "message": "Sebagai tab pertama"
+   },
+   "option_value_as_last_tab": {
+      "message": "Sebagai tab terakhir"
+   },
+   "option_value_at_left_of_current_tab": {
+      "message": "Di kiri tab sekarang"
+   },
+   "option_value_at_right_of_current_tab": {
+      "message": "Di kanan tab sekarang"
+   },
+   "option_value_chrome_newtab_page": {
+      "message": "Halaman tab baru Chrome"
+   },
+   "option_value_left_mouse_button": {
+      "message": "Tombol Kiri Mouse"
+   },
+   "option_value_middle_mouse_button": {
+      "message": "Tombol Tengah Mouse (Linux dan Mac)"
+   },
+   "option_value_my_homepage": {
+      "message": "Berandaku"
+   },
+   "option_value_other_search_engine": {
+      "message": "Lainnya"
+   },
+   "option_value_right_mouse_button": {
+      "message": "Tombol Kanan Mouse (Windows)"
+   },
+   "option_value_target_frame": {
+      "message": "bingkai target"
+   },
+   "option_value_the_blank_page": {
+      "message": "Halaman kosong"
+   },
+   "option_value_top_frame": {
+      "message": "bingkai teratas"
+   },
+   "prompt_backup_settings_currupted": {
+      "message": "Data rusak terdeteksi, pengembalian dihentikan."
+   },
+   "prompt_invalid_search_engine_url": {
+      "message": "URL mesin pencari tidak benar."
+   },
+   "prompt_label_and_script_are_empty": {
+      "message": "Kedua [Label] dan [Script] tidak boleh kosong."
+   },
+   "prompt_overwrite_custom_stroke_label": {
+      "message": "'$label$' telah ada, ditimpa?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_overwrite_stroke_sequence": {
+      "message": "[$sequence$] telah diterapkan pada '$label$', ditimpa?",
+      "placeholders": {
+         "label": {
+            "content": "$2"
+         },
+         "sequence": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_remove_custom_stroke": {
+      "message": "Hapus isyarat buatan: '$label$'?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_reset_settings": {
+      "message": "Semua pengaturan akan diatur mula, keculai isyarat buatan, lanjutkan?"
+   },
+   "prompt_restore_complete": {
+      "message": "Pengembalian selesai."
+   },
+   "prompt_save_blacklist_complete": {
+      "message": "Penyimpanan daftar hitam selesai."
+   },
+   "prompt_save_complete": {
+      "message": "Penyimpanan selesai."
+   },
+   "stroke_label_bookmark_this_link": {
+      "message": "Tandai Tautan Ini"
+   },
+   "stroke_label_bookmark_this_page": {
+      "message": "Tandai Halaman Ini"
+   },
+   "stroke_label_close_all_tabs_to_the_left": {
+      "message": "Tutup Semua Tab Di Kirinya"
+   },
+   "stroke_label_close_all_tabs_to_the_right": {
+      "message": "Tutup Semua Tab Di Kanannya"
+   },
+   "stroke_label_close_other_tabs": {
+      "message": "Tutup Tab Lain"
+   },
+   "stroke_label_close_tab": {
+      "message": "Tutup Tab"
+   },
+   "stroke_label_close_tab_to_the_left": {
+      "message": "Tutup Tab Di Kirinya"
+   },
+   "stroke_label_close_tab_to_the_right": {
+      "message": "Tutup Tab Di Kanannya"
+   },
+   "stroke_label_close_window": {
+      "message": "Tutup Jendela"
+   },
+   "stroke_label_decrease_number_in_url": {
+      "message": "Tebak Halaman Sebelumnya"
+   },
+   "stroke_label_detach_tab": {
+      "message": "Copot Tab"
+   },
+   "stroke_label_dnd_down": {
+      "message": "Jatuhkan ke bawah"
+   },
+   "stroke_label_dnd_left": {
+      "message": "Jatuhkan ke kiri"
+   },
+   "stroke_label_dnd_right": {
+      "message": "Jatuhkan ke kanan"
+   },
+   "stroke_label_dnd_up": {
+      "message": "Jatuhkan ke atas"
+   },
+   "stroke_label_duplicate_tab": {
+      "message": "Gandakan Tab"
+   },
+   "stroke_label_first_tab": {
+      "message": "Tab Pertama"
+   },
+   "stroke_label_history_back": {
+      "message": "Riwayat Mundur"
+   },
+   "stroke_label_history_forward": {
+      "message": "Riwayat Maju"
+   },
+   "stroke_label_increase_number_in_url": {
+      "message": "Tebak Halaman Berikutnya"
+   },
+   "stroke_label_last_tab": {
+      "message": "Tab Terakhir"
+   },
+   "stroke_label_maximize_window": {
+      "message": "Maksimalkan Jendela"
+   },
+   "stroke_label_minimize_window": {
+      "message": "Minimalkan Jendela"
+   },
+   "stroke_label_mouse_stroke_options": {
+      "message": "Opsi Isyarat Mouse"
+   },
+   "stroke_label_new_tab": {
+      "message": "Tab Baru"
+   },
+   "stroke_label_new_window": {
+      "message": "Jendela Baru"
+   },
+   "stroke_label_next_tab": {
+      "message": "Tab Selanjutnya"
+   },
+   "stroke_label_open_homepage": {
+      "message": "Buka Homepage"
+   },
+   "stroke_label_open_link_in_new_background_tab": {
+      "message": "Buka Tautan Di Tab Latar-Belakang Baru"
+   },
+   "stroke_label_open_link_in_new_foreground_tab": {
+      "message": "Buka Tautan Di Tab Latar-Muka Baru"
+   },
+   "stroke_label_open_link_in_new_window": {
+      "message": "Buka Tautan Di Tab Baru"
+   },
+   "stroke_label_previous_tab": {
+      "message": "Tab Sebelumnya"
+   },
+   "stroke_label_reload": {
+      "message": "Muat-ulang"
+   },
+   "stroke_label_remove_bookmark": {
+      "message": "Hapus Penanda"
+   },
+   "stroke_label_rocker_left_to_right": {
+      "message": "Klik kanan sementara menahan klik kiri"
+   },
+   "stroke_label_rocker_right_to_left": {
+      "message": "Klik Kiri sementara menahan klik kanan"
+   },
+   "stroke_label_save_image": {
+      "message": "Simpan Gambar"
+   },
+   "stroke_label_scroll_down_one_page": {
+      "message": "Gulung Bawah Satu Halaman"
+   },
+   "stroke_label_scroll_up_one_page": {
+      "message": "Gulung Atas Satu Halaman"
+   },
+   "stroke_label_search_selected_text": {
+      "message": "Cari Teks Terpilih"
+   },
+   "stroke_label_skip_cache_reload": {
+      "message": "Lewati Pemuatan Tembolok"
+   },
+   "stroke_label_stop_page_loading": {
+      "message": "Hentikan Pemuatan Halaman"
+   },
+   "stroke_label_take_screenshot": {
+      "message": "Ambil Jepretan Layar"
+   },
+   "stroke_label_text_zoom_in": {
+      "message": "Perbesar Teks"
+   },
+   "stroke_label_text_zoom_out": {
+      "message": "Perkecil Teks"
+   },
+   "stroke_label_text_zoom_reset": {
+      "message": "Atur-mula Perbesaran"
+   },
+   "stroke_label_to_page_bottom": {
+      "message": "Ke Bawah Halaman"
+   },
+   "stroke_label_to_page_top": {
+      "message": "Ke Atas Halaman"
+   },
+   "stroke_label_undo_close_tab": {
+      "message": "Batalkan Menutup Tab"
+   },
+   "stroke_label_upper_level_in_url": {
+      "message": "Tingkat Lebih Tinggi Dalam Url"
+   },
+   "stroke_label_view_image": {
+      "message": "Lihat Gambar"
+   },
+   "stroke_label_view_source": {
+      "message": "Lihat Kode Sumber"
+   },
+   "stroke_label_wheel_down": {
+      "message": "Roda mouse ke bawah"
+   },
+   "stroke_label_wheel_left": {
+      "message": "Roda mouse ke kiri"
+   },
+   "stroke_label_wheel_right": {
+      "message": "Roda mouse ke kanan"
+   },
+   "stroke_label_wheel_up": {
+      "message": "Roda mouse ke atas"
+   },
+   "text_backup_and_restore_settings_description": {
+      "message": "\u003Cli\u003E\n  Untuk mencadangkan pengaturan, tekan tombol \u003Cem\u003EBackup\u003C/em\u003E kemudian \u003Cstrong\u003Esalin isi teks ke tempat amane\u003C/strong\u003E.\n  Hanya menekan tombol tidak akan menyimpan pengaturan Anda.\n\u003C/li\u003E\n\u003Cli\u003E\n  Untuk mengembalikan pengaturan, tempel isi yang sebelumnya disimpan ke dalam area teks kemudian tekan tombol \u003Cem\u003ERestore\u003C/em\u003E.\n  Data cadangan Anda akan digabungkan dengan pengaturan asal untuk menghindari ketidak-kompatibelan atau kerusakan data.\n\u003C/li\u003E"
+   },
+   "text_blacklist_description": {
+      "message": "Isyarat Mouse akan dinon-aktifkan untuk situs-situs dalam daftar hitam. Silahkan menambahkan satu URL per baris.\u003Cbr/\u003E\nKartu-liar (wildcard) dan ekspresi reguler \u003Cstrong\u003ETIDAK\u003C/strong\u003E didukung.\u003Cbr/\u003E\nAnda harus sespesifik mungkin karena masukan sederhana , mis. \u003Ccode\u003Esepatu\u003C/code\u003E, akan mendaftar-hitam semua situs yang mengandung 'sepatu' dalam URL-nya."
+   },
+   "text_dnd_notes": {
+      "message": "Menyeret teks akan melakukan pencarian dalam satu tab baru.\u003Cbr/\u003E\nArah penyeretan terakhir diperhitungkan."
+   },
+   "text_extension_description": {
+      "message": "Ini merupakan satu ekstensi Google Chrome yang memungkinkan \u003Ca href=\"http://en.wikipedia.org/wiki/Mouse_gesture\"\u003Eisyarat mouse\u003C/a\u003E (juga dikenal sebagai mouse gestures) dalam peramban. Dengan ekstensi ini, Anda dapat melakukan tugas umum dengan hanya menggerakkan mouse Anda."
+   },
+   "text_translator": {
+      "message": "\u003Ca href=\"mailto:akubeda@yahoo.com\"\u003EZein\u003C/a\u003E"
+   },
+   "text_version_highlight_prompt": {
+      "message": "\u003Cstrong\u003EMouse Stroke\u003C/strong\u003E was just upgraded to the latest version!\u003Cbr/\u003E\nIf you are willing to help translate Mouse Stroke into your language, please go to\n\u003Ca href=\"http://code.google.com/p/chrome-mouse-stroke/issues/detail?id=85\"\u003Ethis page\u003C/a\u003E\nand read the instructions there.\u003Cbr/\u003E\u003Cbr/\u003E\n\u003Ca target=\"_blank\" href=\"$option_page$\"\u003EExplore\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"https://chrome.google.com/extensions/detail/aeaoofnhgocdbnbeljkmbjdmhbcokfdb\"\u003EHome\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/wiki/FAQs\"\u003EFAQs\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/issues/list\"\u003ESupport\u003C/a\u003E",
+      "placeholders": {
+         "option_page": {
+            "content": "$1"
+         }
+      }
+   }
+}

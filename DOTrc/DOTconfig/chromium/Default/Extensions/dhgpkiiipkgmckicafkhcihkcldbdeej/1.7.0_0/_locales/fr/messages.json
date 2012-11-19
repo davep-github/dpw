@@ -1,0 +1,74 @@
+{
+   "clearHistory": {
+      "message": "Effacer l'historique"
+   },
+   "copyright1": {
+      "description": "do not translate it",
+      "message": "Wikipedia and logo of Wikipedia are trademarks of Wikimedia Foundation, Inc."
+   },
+   "copyright2": {
+      "description": "do not translate it",
+      "message": "Usage of all Wikipedia content governed by term and conditions of Wikimedia Foundation, Inc."
+   },
+   "copyright3": {
+      "description": "do not translate it",
+      "message": "Extension created by mongolian2010. All rights reserved."
+   },
+   "extDescription": {
+      "message": "extension indispensable pour tout les utilisateurs de Wikipedia. Full-vedette: enregistre vos recherches r\u00E9centes wiki, multi-lingual, de retour / avance et plus!"
+   },
+   "extName": {
+      "message": "Wikipedia Companion - Mini Wiki Browser"
+   },
+   "goBack": {
+      "message": "Go Back"
+   },
+   "goForward": {
+      "message": "Allez de l'avant"
+   },
+   "language": {
+      "message": "Langue"
+   },
+   "normal": {
+      "message": "Normal"
+   },
+   "openInTab": {
+      "message": "Ouvrir dans un onglet"
+   },
+   "optionLanguageHints": {
+      "message": "Nouvelle option de langue est efficace dans votre prochaine recherche."
+   },
+   "optionShowFeatureArticle": {
+      "message": "Voir l'article vedette sur les start-up (disponible uniquement dans certaines langues de Wikipedia)"
+   },
+   "optionTitle": {
+      "message": "Wikipedia pour Chrome - Options"
+   },
+   "options": {
+      "message": "Options"
+   },
+   "pageWidth": {
+      "message": "Popup Window Width"
+   },
+   "primaryLanguage": {
+      "message": "Langue principale"
+   },
+   "save": {
+      "message": "Enregistrer"
+   },
+   "search": {
+      "message": "Recherche"
+   },
+   "secondaryLanguage": {
+      "message": "langue secondaire"
+   },
+   "updateMessage": {
+      "message": "Wikipedia Companion est mise \u00E0 jour $1! Cliquez ici pour plus d'information"
+   },
+   "welcomeMessage": {
+      "message": "Bienvenue sur Wikip\u00E9dia Companion"
+   },
+   "wide": {
+      "message": "Wide"
+   }
+}

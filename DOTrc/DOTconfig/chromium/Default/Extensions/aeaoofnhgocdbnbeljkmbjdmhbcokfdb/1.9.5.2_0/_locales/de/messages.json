@@ -1,0 +1,451 @@
+{
+   "caption_backup": {
+      "message": "Sicherung"
+   },
+   "caption_backup_or_restore_settings": {
+      "message": "Sicherung / Einstellungen wiederherstellen"
+   },
+   "caption_blacklist": {
+      "message": "Blacklist"
+   },
+   "caption_cancel": {
+      "message": "Abbrechen"
+   },
+   "caption_close": {
+      "message": "Schlie\u00DFen"
+   },
+   "caption_confirm": {
+      "message": "Best\u00E4tigen"
+   },
+   "caption_create_custom_stroke": {
+      "message": "Erstellen"
+   },
+   "caption_current_stroke": {
+      "message": "Aktuelle Mausgeste"
+   },
+   "caption_edit_trail_style": {
+      "message": "Mausspur-Stil anpassen"
+   },
+   "caption_help_custom_stroke": {
+      "message": "Hilfe"
+   },
+   "caption_label": {
+      "message": "Bezeichnung"
+   },
+   "caption_mouse_stroke_options": {
+      "message": "Mouse Stroke Einstellungen"
+   },
+   "caption_none": {
+      "message": "Keine Aktion"
+   },
+   "caption_previous_stroke": {
+      "message": "Bisherige Mausgeste"
+   },
+   "caption_remove": {
+      "message": "Entfernen"
+   },
+   "caption_restore": {
+      "message": "Wiederherstellen"
+   },
+   "caption_restore_default": {
+      "message": "Standardeinstellungen wiederherstellen"
+   },
+   "caption_save": {
+      "message": "Speichern"
+   },
+   "caption_script": {
+      "message": "Skript"
+   },
+   "caption_set": {
+      "message": "\u00C4ndern"
+   },
+   "caption_share_custom_stroke": {
+      "message": "Ver\u00F6ffentlichen"
+   },
+   "caption_show_advanced_options": {
+      "message": "Erweiterte Einstellungen anzeigen"
+   },
+   "caption_translated_by": {
+      "message": "\u00DCbersetzt von"
+   },
+   "caption_unset": {
+      "message": "Leeren"
+   },
+   "category_desc_dnd_strokes": {
+      "message": "Markierter Text, Links und Bilder k\u00F6nnen bewegt werden"
+   },
+   "category_desc_wheel_strokes": {
+      "message": "Mausrad bewegen mit gedr\u00FCckter rechter Maustaste"
+   },
+   "category_label_bookmark": {
+      "message": "Lesezeichen"
+   },
+   "category_label_custom_strokes": {
+      "message": "Benutzerdefinierte Mausgesten"
+   },
+   "category_label_dnd_strokes": {
+      "message": "Drag'n'Drop Gesten"
+   },
+   "category_label_image": {
+      "message": "Bilder"
+   },
+   "category_label_link": {
+      "message": "Links"
+   },
+   "category_label_navigation": {
+      "message": "Navigation"
+   },
+   "category_label_options": {
+      "message": "Optionen"
+   },
+   "category_label_other": {
+      "message": "Sonstiges"
+   },
+   "category_label_rocker_strokes": {
+      "message": "Rocker-Gesten"
+   },
+   "category_label_tab": {
+      "message": "Tabs"
+   },
+   "category_label_utilities": {
+      "message": "Tools"
+   },
+   "category_label_wheel_strokes": {
+      "message": "Mausrad-Gesten"
+   },
+   "category_label_window": {
+      "message": "Fenster"
+   },
+   "extension_description": {
+      "message": "Nutze Mausgesten um deinen Arbeitsablauf zu beschleunigen. Unterst\u00FCtzt Drag'n'Drop, Rocker-Gestures und Mausrad-Gesten in einer Erweiterung! Freiwillige \u00DCbersetzer werden gesucht."
+   },
+   "extension_name": {
+      "message": "Mouse Stroke"
+   },
+   "option_desc_stroke_timeout": {
+      "message": "Gro\u00DFe Werte erleichtern Durchf\u00FChrung von Mausgesten"
+   },
+   "option_label_alt_key_suppresses_strokes": {
+      "message": "ALT-Taste unterdr\u00FCckt Mausgesten"
+   },
+   "option_label_close_window_with_the_last_tab": {
+      "message": "Schlie\u00DFe Fenster mit letztem Tab"
+   },
+   "option_label_custom_stroke_runs_in": {
+      "message": "L\u00E4auft in"
+   },
+   "option_label_draw_trails": {
+      "message": "Mausspur"
+   },
+   "option_label_enable_dnd_strokes": {
+      "message": "Drag'n'Drop Mausgesten aktivieren"
+   },
+   "option_label_hold_ctrl_key_to_fire_custom_strokes": {
+      "message": "STRG-Taste dr\u00FCcken, um benutzerdefinierte Gesten auszuf\u00FChren"
+   },
+   "option_label_minimal_step": {
+      "message": "Minimall\u00E4nge (Pixels)"
+   },
+   "option_label_new_tab_open_at": {
+      "message": "Position neuer Tabs"
+   },
+   "option_label_page_open_as_new_tab": {
+      "message": "Neuer Tab zeigt"
+   },
+   "option_label_prefferred_search_engine": {
+      "message": "Bevorzugte Suchmaschine"
+   },
+   "option_label_stroke_timeout": {
+      "message": "Timeout bei Gestenerstellung (Millisekunden)"
+   },
+   "option_label_stroke_trigger": {
+      "message": "Gestenausl\u00F6ser"
+   },
+   "option_label_trail_color": {
+      "message": "Farbe"
+   },
+   "option_label_trail_width": {
+      "message": "Breite"
+   },
+   "option_value_all_frames": {
+      "message": "allen Rahmen"
+   },
+   "option_value_as_first_tab": {
+      "message": "Als erster Tab"
+   },
+   "option_value_as_last_tab": {
+      "message": "Als letzter Tab"
+   },
+   "option_value_at_left_of_current_tab": {
+      "message": "Links vom aktiven Tab"
+   },
+   "option_value_at_right_of_current_tab": {
+      "message": "Rechts vom aktiven Tab"
+   },
+   "option_value_chrome_newtab_page": {
+      "message": "Chrome's Neuen Tab"
+   },
+   "option_value_left_mouse_button": {
+      "message": "Linke Maustaste"
+   },
+   "option_value_middle_mouse_button": {
+      "message": "Mittlere Maustaste (Linux und Mac)"
+   },
+   "option_value_my_homepage": {
+      "message": "Homepage"
+   },
+   "option_value_other_search_engine": {
+      "message": "Andere"
+   },
+   "option_value_right_mouse_button": {
+      "message": "Rechte Maustaste (Windows)"
+   },
+   "option_value_target_frame": {
+      "message": "Ziel-Rahmen"
+   },
+   "option_value_the_blank_page": {
+      "message": "Leere Seite"
+   },
+   "option_value_top_frame": {
+      "message": "Top-Rahmen"
+   },
+   "prompt_backup_settings_currupted": {
+      "message": "Fehlerhafte Daten; Wiederherstellung der Sicherung wurde gestoppt."
+   },
+   "prompt_invalid_search_engine_url": {
+      "message": "Die Adresse der Suchmaschine ist ung\u00FCltig."
+   },
+   "prompt_label_and_script_are_empty": {
+      "message": "Beide, [Bezeichnung] und [Skript] k\u00F6nnen nicht gleichzeitig leer sein."
+   },
+   "prompt_overwrite_custom_stroke_label": {
+      "message": "'$label$' existiert bereits; \u00FCberschreiben?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_overwrite_stroke_sequence": {
+      "message": "[$sequence$] ist derzeit '$label$' zugeordnet; \u00FCberschreiben?",
+      "placeholders": {
+         "label": {
+            "content": "$2"
+         },
+         "sequence": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_remove_custom_stroke": {
+      "message": "Benutzerdefinierte Mausgeste '$label$' l\u00F6schen?",
+      "placeholders": {
+         "label": {
+            "content": "$1"
+         }
+      }
+   },
+   "prompt_reset_settings": {
+      "message": "Standardeinstellungen werden wiederhergestellt. Alle bisher vorgenommenen Anpassungen mit Ausnahme der benutzerdefinierten Mausgesten gehen verloren; Fortfahren?"
+   },
+   "prompt_restore_complete": {
+      "message": "Einstellungen wiederhergestellt."
+   },
+   "prompt_save_blacklist_complete": {
+      "message": "Blacklist gespeichert."
+   },
+   "prompt_save_complete": {
+      "message": "Einstellungen gespeichert."
+   },
+   "stroke_label_bookmark_this_link": {
+      "message": "Lesezeichen f\u00FCr diesen Link hinzuf\u00FCgen"
+   },
+   "stroke_label_bookmark_this_page": {
+      "message": "Lesezeichen f\u00FCr diese Seite"
+   },
+   "stroke_label_close_all_tabs_to_the_left": {
+      "message": "Linke Tabs schlie\u00DFen (alle)"
+   },
+   "stroke_label_close_all_tabs_to_the_right": {
+      "message": "Rechte Tabs schlie\u00DFen (alle)"
+   },
+   "stroke_label_close_other_tabs": {
+      "message": "Andere Tabs schlie\u00DFen"
+   },
+   "stroke_label_close_tab": {
+      "message": "Tab schlie\u00DFen"
+   },
+   "stroke_label_close_tab_to_the_left": {
+      "message": "Linken Tab schlie\u00DFen"
+   },
+   "stroke_label_close_tab_to_the_right": {
+      "message": "Rechten Tab schlie\u00DFen"
+   },
+   "stroke_label_close_window": {
+      "message": "Fenster schlie\u00DFen"
+   },
+   "stroke_label_decrease_number_in_url": {
+      "message": "vorherige Seite raten"
+   },
+   "stroke_label_detach_tab": {
+      "message": "Tab in neuem Fenster anzeigen"
+   },
+   "stroke_label_dnd_down": {
+      "message": "Nach unten ziehen"
+   },
+   "stroke_label_dnd_left": {
+      "message": "Nach links ziehen"
+   },
+   "stroke_label_dnd_right": {
+      "message": "Nach rechts ziehen"
+   },
+   "stroke_label_dnd_up": {
+      "message": "Nach oben ziehen"
+   },
+   "stroke_label_duplicate_tab": {
+      "message": "Tab duplizieren"
+   },
+   "stroke_label_first_tab": {
+      "message": "Erster Tab"
+   },
+   "stroke_label_history_back": {
+      "message": "Chronik zur\u00FCck"
+   },
+   "stroke_label_history_forward": {
+      "message": "Chronik vor"
+   },
+   "stroke_label_increase_number_in_url": {
+      "message": "n\u00E4chste Seite raten"
+   },
+   "stroke_label_last_tab": {
+      "message": "Letzter Tab"
+   },
+   "stroke_label_maximize_window": {
+      "message": "Fenster maximieren"
+   },
+   "stroke_label_minimize_window": {
+      "message": "Fenster minimieren"
+   },
+   "stroke_label_mouse_stroke_options": {
+      "message": "Mouse Stroke Einstellungen"
+   },
+   "stroke_label_new_tab": {
+      "message": "Neuer Tab"
+   },
+   "stroke_label_new_window": {
+      "message": "Neues Fenster"
+   },
+   "stroke_label_next_tab": {
+      "message": "N\u00E4chster Tab"
+   },
+   "stroke_label_open_homepage": {
+      "message": "Homepage \u00F6ffnen"
+   },
+   "stroke_label_open_link_in_new_background_tab": {
+      "message": "Link in neuem Tab im Hintergrund \u00F6ffnen"
+   },
+   "stroke_label_open_link_in_new_foreground_tab": {
+      "message": "Link in neuem Tab im Vordergrund \u00F6ffnen"
+   },
+   "stroke_label_open_link_in_new_window": {
+      "message": "Link in neuem Fenster \u00F6ffnen"
+   },
+   "stroke_label_previous_tab": {
+      "message": "Vorhergehender Tab"
+   },
+   "stroke_label_reload": {
+      "message": "Seite neu laden"
+   },
+   "stroke_label_remove_bookmark": {
+      "message": "Lesezeichen entfernen"
+   },
+   "stroke_label_rocker_left_to_right": {
+      "message": "Rechtsklick mit gedr\u00FCckter linker Maustaste\n"
+   },
+   "stroke_label_rocker_right_to_left": {
+      "message": "Linksklick mit gedr\u00FCckter rechter Maustaste"
+   },
+   "stroke_label_save_image": {
+      "message": "Bild speichern"
+   },
+   "stroke_label_scroll_down_one_page": {
+      "message": "Bild runter"
+   },
+   "stroke_label_scroll_up_one_page": {
+      "message": "Bild auf"
+   },
+   "stroke_label_search_selected_text": {
+      "message": "Ausgew\u00E4hlten Text durchsuchen"
+   },
+   "stroke_label_skip_cache_reload": {
+      "message": "Seite neu laden (Cache \u00FCberspringen)"
+   },
+   "stroke_label_stop_page_loading": {
+      "message": "Laden der Seite anhalten"
+   },
+   "stroke_label_take_screenshot": {
+      "message": "Bildschirmfoto nehmen"
+   },
+   "stroke_label_text_zoom_in": {
+      "message": "Zoom - Vergr\u00F6\u00DFern"
+   },
+   "stroke_label_text_zoom_out": {
+      "message": "Zoom - Verkleinern"
+   },
+   "stroke_label_text_zoom_reset": {
+      "message": "Zoom - Normal"
+   },
+   "stroke_label_to_page_bottom": {
+      "message": "Zum Seitenende"
+   },
+   "stroke_label_to_page_top": {
+      "message": "Zum Seitenanfang"
+   },
+   "stroke_label_undo_close_tab": {
+      "message": "Geschlossenen Tab wiederherstellen"
+   },
+   "stroke_label_upper_level_in_url": {
+      "message": "Auf n\u00E4chsth\u00F6heres URL-Level wechseln"
+   },
+   "stroke_label_view_image": {
+      "message": "Bild anzeigen"
+   },
+   "stroke_label_view_source": {
+      "message": "Quellcode anzeigen"
+   },
+   "stroke_label_wheel_down": {
+      "message": "Mausrad nach unten"
+   },
+   "stroke_label_wheel_left": {
+      "message": "Mausrad nach links"
+   },
+   "stroke_label_wheel_right": {
+      "message": "Mausrad nach rechts"
+   },
+   "stroke_label_wheel_up": {
+      "message": "Mausrad nach oben"
+   },
+   "text_backup_and_restore_settings_description": {
+      "message": "\u003Cli\u003E\n  Um die Einstellungen zu sichern, dr\u00FCcke den Men\u00FCpunkt \u003Cem\u003ESicherung\u003C/em\u003E, dann \u003Cstrong\u003Ekopiere den Text und speichere ihn an einem sicheren Ort\u003C/strong\u003E.\n  Nur den Men\u00FCpunkt dr\u00FCcken sichert deine Einstellugen nicht! \n\u003C/li\u003E\n\u003Cli\u003E\n  Um die Einstellungen wiederherzustellen, kopiere den gesicherten Text in das Textfeld und dr\u00FCcke den Men\u00FCpunkt \u003Cem\u003EWiederherstellen\u003C/em\u003E.\n  Deine gesicherten Einstellungen werden mit den Standardeinstellungen zusammengef\u00FChrt, um Inkompatibilit\u00E4ten und Datenkorruption zu verhindern.\n\u003C/li\u003E"
+   },
+   "text_blacklist_description": {
+      "message": "Mouse Stroke wird f\u00FCr Webseiten in der Blacklist deaktiviert. Bitte nur eine URL pro Zeile angeben.\u003Cbr/\u003E\nPlatzhalter (wildcards)und regul\u00E4re Ausdr\u00FCcke werden \u003Cstrong\u003ENICHT\u003C/strong\u003E unterst\u00FCtzt.\u003Cbr/\u003E\nEintr\u00E4ge in der Blacklist sollten m\u00F6glichst genau sein, denn generelle Eintr\u00E4ge, wie z.B. \u003Ccode\u003ESchuhe\u003C/code\u003E, deaktivieren Mausgesten auf allen Webseiten, die den Ausdruck 'Schuhe' in ihrer URL enthalten."
+   },
+   "text_dnd_notes": {
+      "message": "Markierten Text ziehen, sucht nach der Markierung in der eingestellten Suchmaschine."
+   },
+   "text_extension_description": {
+      "message": "Mouse Stroke ist eine Google Chrome Erweiterung, die \u003Ca href=\"http://de.wikipedia.org/wiki/Mausgeste\"\u003EMausgesten\u003C/a\u003E im Webbrowser erm\u00F6glicht. Mit dieser Erweiterung kannst Du h\u00E4ufige Aktionen einfach durch eine Mausgeste erledigen."
+   },
+   "text_translator": {
+      "message": "\u003Ca href=\"mailto:jarleih@gmail.com\"\u003Ejarleih\u003C/a\u003E"
+   },
+   "text_version_highlight_prompt": {
+      "message": "\u003Cstrong\u003EMouse Stroke\u003C/strong\u003E wurde aktualisiert!\u003Cbr/\u003E\nDiese Version unterst\u00FCtzt mehrere Sprachen!\u003Cbr/\u003E\nWenn Du helfen m\u00F6chtest, Mouse Stroke in deine Sprache zu \u00FCbersetzen, besuche\n\u003Ca href=\"http://code.google.com/p/chrome-mouse-stroke/issues/detail?id=85\"\u003Ediese Seite\u003C/a\u003E\nund folge deren Instruktionen.\u003Cbr/\u003E\u003Cbr/\u003E\n\u003Ca target=\"_blank\" href=\"$option_page$\"\u003EExplore\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"https://chrome.google.com/extensions/detail/aeaoofnhgocdbnbeljkmbjdmhbcokfdb\"\u003EHome\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/wiki/FAQs\"\u003EFAQs\u003C/a\u003E |\n\u003Ca target=\"_blank\" href=\"http://code.google.com/p/chrome-mouse-stroke/issues/list\"\u003ESupport\u003C/a\u003E",
+      "placeholders": {
+         "option_page": {
+            "content": "$1"
+         }
+      }
+   }
+}

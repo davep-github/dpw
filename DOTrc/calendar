@@ -1,0 +1,92 @@
+Calendar [v1.7]
+DayviewTimeFinish [18]
+DayviewTimeStart [8]
+MondayFirst [0]
+NoticeHeight [3]
+Appt [
+Start [480]
+Length [30]
+Uid [panux_7f0100_575_0]
+Owner [davep]
+Text [0 []]
+Remind [1]
+Hilite [always]
+Dates [Single 6/2/1995 End
+]
+]
+Appt [
+Start [510]
+Length [30]
+Uid [panux_7f0100_575_1]
+Owner [davep]
+Text [0 []]
+Remind [1]
+Hilite [always]
+Dates [Single 6/2/1995 End
+]
+]
+Appt [
+Start [1080]
+Length [30]
+Uid [panux_7f0100_5a5_2]
+Owner [davep]
+Text [31 [6:30 flight to Colorado Springs]]
+Remind [1]
+Hilite [always]
+Dates [Single 9/2/1995 End
+]
+]
+Note [
+Length [30]
+Uid [panux_7f0100_5a5_3]
+Owner [davep]
+Text [41 [fly to Canton, Ohio: Interbold interview
+]]
+Remind [1]
+Hilite [always]
+Dates [Single 14/2/1995 End
+]
+]
+Note [
+Length [30]
+Uid [panux_7f0100_5a5_4]
+Owner [davep]
+Text [38 [fly to Colorado Springs, NCR interview]]
+Remind [1]
+Hilite [always]
+Dates [Single 9/2/1995 End
+]
+]
+Note [
+Length [30]
+Uid [panux_7f0100_5a5_5]
+Owner [davep]
+Text [16 [fly back Sun 12.]]
+Remind [1]
+Hilite [always]
+Dates [Single 9/2/1995 End
+]
+]
+Note [
+Length [30]
+Uid [panux.pcix.com_0_2a7_6]
+Owner [davep]
+Text [16 [This is a todo.
+]]
+Remind [1]
+Hilite [always]
+Todo []
+Dates [Single 25/5/1996 End
+]
+]
+Appt [
+Start [540]
+Length [30]
+Uid [baloo.ne.mediaone.net_0_881c_7]
+Owner [davep]
+Text [10 [antibiotic]]
+Remind [1]
+Hilite [always]
+Dates [Single 13/6/2001 End
+]
+]
