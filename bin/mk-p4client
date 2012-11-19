@@ -1,0 +1,29 @@
+#!/bin/sh
+
+type script-x >/dev/null 2>&1 && source script-x
+set -u
+progname="$(basename $0)"
+
+: ${CLIENT_PAT:=@CLIENT@}
+: ${PORT_PAT:=@PORT@}
+: ${PORT_DEFAULT:=p4hw.nvidia.com:2001}
+: ${DIFF_PAT:=@DIFF@}
+: ${DIFF_DEFAULT:=mgdiff}
+: 
+: ${CLIENT_TEMPLATE:=~/work/info/examples/DOTp4config}
+
+Usage()
+{
+    echo "$progname: <client-name>"
+}
+
+[ -z "$@" ] && {
+    Usage 1>&2
+    exit 1
+}
+
+sed -r "s/$CLIENT_PAT/$1/
+s/$PORT_PAT/$PORT_DEFAULT/
+s/$DIFF_PAT/$DIFF_DEFAULT/" $CLIENT_TEMPLATE
+
+

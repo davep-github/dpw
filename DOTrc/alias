@@ -231,6 +231,6 @@ alias gitpush='git push'
 alias gitpull='git pull'
 alias githelp='gith'            # Remove ^H bolding/underlining
 
-alias g=go
+alias go=g
 
 true
