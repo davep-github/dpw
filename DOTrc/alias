@@ -232,5 +232,8 @@ alias gitpull='git pull'
 alias githelp='gith'            # Remove ^H bolding/underlining
 
 alias go=g
+# @todo XXX Have these invoke tcsh login shells to run the commands?
+alias make='echo 1>&2 Making should be done in a tcsh login shell at this time.'
+alias nvmk=make
 
 true

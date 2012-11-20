@@ -220,6 +220,7 @@ fi
 if [ -z "$use_files_file_p" ]
 then
     ${src_code_finder} $finder_opts $argses | tee "$v_file" >| "$FILES_FILE"
+    chmod a-w "$FILES_FILE"
 fi
 [ -s "$FILES_FILE" ] || {
     echo "Cound not find any files. $FILES_FILE is empty."

@@ -1,0 +1,27 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+c_program=('#define zuzz(n) #n is n'
+'zuzz(@ERRNO@)')
+
+
+find_errno()
+{
+    local enum="$1"; shift
+    for l in "${c_program[@]}"
+      do
+      echo "$l"
+    done | sed -r "s/@ERRNO@/${enum}/g" \
+  | cpp -imacros /usr/include/errno.h \
+  | \fgrep '" is ' \
+  | head -n1 \
+  | sed -rn 's/^(".*")( is )(.*)$/\1 \3/p'
+}
+
+for enum in "$@"
+do
+  find_errno "$enum"
+done

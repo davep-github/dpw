@@ -53,6 +53,18 @@ echo_id slist
 vsetp $slist && source_list "" $slist
 echo_id rc_dirs
 
+chmod_index_files()
+{
+    local mod="$1"; shift
+
+    for f in $index_files
+    do
+      [ -e "$f" ] && {
+          chmod "$mod" "$f"
+      }
+    done
+}
+
 # main_machine="excuses-and-accusations"
 # type -p realpath >/dev/null 2>&1 || {
 #     echo 1>&2 "$progname: realpath not found; indexing on $main_machine."
@@ -182,6 +194,7 @@ vsetp $exit_p && {
 
 if [[ -n "$clean" ]]
 then
+    chmod_index_files "u+w"
     rm -f $index_files || {
         echo "rc of index files>$index_files<, failed."
         exit
@@ -229,4 +242,7 @@ then
 else
     do_taggin $dirs
 fi
+
+chmod_index_files a-w
+
 echo "index-code done: $(date)."

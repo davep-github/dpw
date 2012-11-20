@@ -23,8 +23,8 @@ Ee|work|       /home/dpanariti/work/
 Ee|active|       /home/dpanariti/work/active/
 Ee|scratch0|       /home/scratch.dpanariti_t124/
 Ee|weg|       /home/dpanariti/work/info/examples/
-Ee|sb0|       /home/scratch.dpanariti_t124/hw.t124/
-Ee|sb2|       /home/scratch.dpanariti_t124/2.hw.t124/
-Ee|sb0ap|       /home/scratch.dpanariti_t124/hw.t124/hw/ap/
-Ee|sb2ap|       /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/
-Ee|sb2testgen|sb2tgen|sb2tg|       /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/diag/testgen/
+Ee|sb|       /home/scratch.dpanariti_t124/2.hw.t124/
+Ee|sbap|       /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/
+Ee|sbtestgen|sbtgen|sbtg|       /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/diag/testgen/
+Ee|bldfail|       /home/dpanariti/work/active/build/
+Ee|dotvnc|dvnc|vnc|       /home/dpanariti/.vnc/

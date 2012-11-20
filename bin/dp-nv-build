@@ -1,5 +1,13 @@
 #!/bin/sh
 
+argses=("$@")
+
+[ -n "$DAVEP_ENVIRONMENT_p" ] || {
+    source $HOME/.bashrc
+}
+
+set -- "${argses[@]}"
+
 source script-x
 source eexec                    # Primarily for verbosity.
 set -u
