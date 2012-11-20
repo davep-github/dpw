@@ -1,0 +1,17 @@
+#!/bin/sh
+# $Id: cron-getmail,v 1.5 2005/04/26 07:11:16 davep Exp $
+#
+#date >> /tmp/cron-getmail.log
+set -x
+rc=0
+/home/davep/bin/vpn-connected-p || {
+    echo "id: $(id)"
+    echo "tilde: " ~
+    echo "HOME>$HOME<"
+    /usr/bin/getmail -q -r /usr/yokel/etc/getmail/verizon.rc 2>&1
+    rc=$?
+} | egrep -v -e 'FutureWarning
+return \("<%s at 0x%x: %r>"
+returned fewer headers'
+
+exit $rc
