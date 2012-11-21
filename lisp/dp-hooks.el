@@ -1834,7 +1834,7 @@ cscope discovery.
 ;     ad-do-it))
 
 
-(dp-deflocal-permanent dp-advise-confirm-frame-deletion-p nil
+(dp-deflocal-permanent dp-advise-confirm-frame-deletion-p t
   "Should we advise delete frame to possibly ask for confirmation before
   deleting the frame?")
 
@@ -1855,7 +1855,8 @@ cscope discovery.
                                         ;Try to catch special frames like ediff control frame and
                                         ;speedbar.  We may want to check a list of frame name
                                         ;regexps, too.
-                   (< (frame-width) 80))
+                   (< (frame-width) 80)
+                   (dp-primary-frame-p))
                (y-or-n-p "Did you mean to do `other-frame'? "))
           (progn
             (setq this-command 'other-frame)

@@ -2310,11 +2310,11 @@ ARG is numberp:
       ;; We're in the new shell buffer now.
       ;;
       (setq dp-shell-isa-shell-buf-p '(dp-shell shell)
+            dp-prefer-independent-frames-p t
             other-window-p nil
-            dp-shell-buffer-save-file-name 
-            (dp-transformed-save-buffer-file-name
-             dp-default-save-buffer-contents-dir
-             'dp-shellify-shell-name))
+            dp-shell-buffer-save-file-name (dp-transformed-save-buffer-file-name
+                                            dp-default-save-buffer-contents-dir
+                                            'dp-shellify-shell-name))
 
       (dp-shells-set-most-recently-created-shell sh-buffer 'shell)
       (dp-shells-set-most-recent-shell sh-buffer 'shell)

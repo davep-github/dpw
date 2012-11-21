@@ -2184,3 +2184,15 @@ Thursday November 15 2012
                (file-exists-p (buffer-file-name buffer))) 
     (set-buffer-modified-p t buffer)) 
   (switch-to-buffer buffer))
+
+========================
+Wednesday November 21 2012
+--
+
+(defun* dp-mk-shell-frame (&key (width 256)
+                           (height 47))
+  (interactive)
+  (select-frame-set-input-focus (make-frame))
+  (dp-set-frame-width width)
+  (dp-set-frame-height height))
+

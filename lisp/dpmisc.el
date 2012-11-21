@@ -8422,7 +8422,7 @@ Use BEG END if given, else (mark) (point)."
 (defvar dp-last-sfw-width dp-default-sfw-width)
 
 (defun dp-set-frame-width (width &optional frame col-mode-win-width)
-  "Sets (or FRAME (selected-fram)) to WIDTH.
+  "Sets (or FRAME (selected-frame)) to WIDTH.
 If region is active, set width to that of the longest line in the region."
   (interactive (list (or
                       (and (dp-mark-active-p)
@@ -10967,7 +10967,7 @@ If wide enough: | | |, otherwise: |-|"
   (funcall (or op '<=) (or num dp-max-preferred-frames)
       (length (device-frame-list device))))
 
-(defvar dp-prefer-independent-frames-p t
+(dp-deflocal dp-prefer-independent-frames-p t
   "Treat visiting buffers and such as closely as possible to having 2 instances of xemacs running.
 I like this for keeping a frame on each desktop.")
 
@@ -13301,6 +13301,18 @@ Raised is already done by XEmacs. Is this an FSF holdover or just a brain-fart?"
   "Other frame, up."
   (interactive "p")
   (other-frame (- arg)))
+
+(defun dp-get-non-primary-frame (&optional create-p)
+  "Select a non-primary frame. CREATE-P says to create a new frame if needed.
+By default, the startup frame is set to be the primary frame."
+  (interactive "P")
+  (let ((frame (selected-frame)))
+    (when (dp-primary-frame-p frame)
+      (setq frame (next-frame frame))
+      (setq create-p (and create-p (equal frame (selected-frame)))))
+    (if create-p
+        (make-frame)
+      frame)))
 
 (defun dp-delimit-function-like-statement (&optional beg)
   (interactive)
