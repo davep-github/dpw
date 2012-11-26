@@ -3,14 +3,34 @@
 source script-x
 # WARN more vigorously (require yes vs y?) 
 # when backup dirs are not present.
-read -e -p "Don't forget about any patches.  Continue [Y/n]? "
-case "$REPLY" in
-    ""|[Yy]) continue;;
-    *) exit 0;;
-esac
+if [ -d "dp-patches-Originals" ]
+then
+   read -e -p "Don't forget about any patches.  Continue [Y/n]? "
+   case "$REPLY" in
+       ""|[Yy]) continue;;
+       *) exit 0;;
+   esac
+else
+   while :
+   do
+      read -e -p "Patch dir is not present.  Continue [yes/N]? "
+      case "$REPLY" in
+          [Yy]) echo 'Enter "yes" to confirm'; continue;;
+	  [yY][eE][sS]) echo 'Continuing.'; break;;
+	  [nN]|"") exit 0;;
+          *) exit 2;;
+      esac
+   done
+fi
 
 . script-x
-: ${PREFIX:=$HOME/yokel}
+if [ "$HOST" = "vilya" ]
+then
+	: ${PREFIX:=$HOME/bree}
+else
+	: ${PREFIX:=$HOME/yokel}
+fi
+
 : ${LOCAL:=/usr/local}
 : ${DS_CONFIGURE:=./configure}
 # And I quote:
@@ -41,6 +61,8 @@ esac
 
 
 
+# the lib64 library is needed to build on the o-xterm-* machines at
+# nVIDIA
 ${DS_CONFIGURE} \
     ${FUCKEDUP_CONFIG} \
     --x-libraries=/usr/X11R6/lib64 \

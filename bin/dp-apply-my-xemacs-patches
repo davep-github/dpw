@@ -10,6 +10,16 @@ source eexec
   rm -rf "$XEM_ORIGINALS_DIR"
 }
 
+for i in "$@"
+do
+  case "$1" in
+      -n) EExecDashN;;
+      -v) EExecVerbose;;
+      *) break;;
+  esac
+  shift
+done
+
 [ -z "$*" ] && {
   echo 1>&2 "I need something with which to identify the current version."
   exit 1
@@ -76,11 +86,11 @@ patch_em()
       echo "Backup copy of original file \`$orig_file_name' already exists."
       if diff -q "$orig_file_name" "$fname"
       then
-        echo "It doesn't like like we're patched: files are the same."
+        echo "It doesn't look like we're patched: backup and original are the same."
       fi
-      read -e -p "Assume we're already patched and continue(Y/n)? "
+      read -e -p "Assume we're already patched and continue(Y/n/q)? "
       case "$REPLY" in
-        [nN]) EXIT 2;;
+        [nNqQ]) exit 2;;
       esac
     } 1>&2
 
@@ -88,11 +98,15 @@ patch_em()
       EExec cp $fname $orig_file_name
       yes n | EExec patch < $patch_file
       # Just in case the patch is now a few lines off.  Files names will be
-      # different, so come code will be needed to diff the diffs w/o
+      # different, so some code will be needed to diff the diffs w/o
       # getting thrown off by the name diffs.
-      diff -u $orig_file_name $fname > $originals_dir/AM-I-DIFFERENT-$patch_file_base
+      EExecDashN_p || {
+          local diff_file=$originals_dir/AM-I-DIFFERENT-$patch_file_base
+          diff -u $orig_file_name $fname > "$diff_file"
+      }
     }
   done
+  true
 }
 
 # Patch lisps

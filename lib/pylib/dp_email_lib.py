@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #############################################################################
-## @package 
+## @package
 ##
 import sys, os, string, re, types
 import email
@@ -53,7 +53,7 @@ def CLEAR_FLAGS(current_flags, flag):
         if f != flag:
             ret.append(f)
     return ret
-            
+
 def FLAG_SET_P(current_flags, flag):
     if not current_flags:
         return False
@@ -98,7 +98,7 @@ def KW_VERBOSE(kw_args, level, fmt, *args, **my_kw_args):
     if KW_VERBOSE_p(kw_args, level):
         pfunk(fmt, *args)
 
-# anomaly 
+# anomaly
 def ANOMALY(kw_args, msg_fmt, *msg_args, **my_kw_args):
     ostream = (my_kw_args.get("anomaly_ostream", False)
                or
@@ -178,7 +178,8 @@ def apply_to_each_header_instance(file_obj, header_name, func,
     if msg == None:
         return None
     # result=None, done_p=None, func_context=None, success_p=False):
-    ret_val = Iter_return_c(result=result, done_p=done_p, func_context=func_context,
+    ret_val = Iter_return_c(result=result, done_p=done_p,
+                            func_context=func_context,
                             success_p=success_p)
     headers = msg.get_all(header_name)
     if not headers:
@@ -194,9 +195,10 @@ def apply_to_each_header_instance(file_obj, header_name, func,
         if done_p:
             KW_VERBOSE(kw_args, 0, "apply... done_p, returning: %s\n", ret_val)
             return ret_val
-        
+
     if fall_off_end_ok_p(flags):
-        KW_VERBOSE(kw_args, 0, "apply... falling off and returning: %s\n", ret_val)
+        KW_VERBOSE(kw_args, 0, "apply... falling off and returning: %s\n",
+                   ret_val)
         return ret_val
     ret_val.success_p = False
     return ret_val
@@ -293,7 +295,7 @@ def fix_delivered_to(file_obj, msg=None, **kw_args):
         # No delivered tos at all... add a good one.
         ANOMALY(kw_args, "No %s headers in message.\n",
                 DELIVERED_TO_HEADER_NAME)
-    
+
     # Get a good one and add it (if no others) or replace newest one.
     good_one = get_earliest_with_SMTP_for(None, msg=msg, **kw_args).result
     if not good_one:
@@ -305,7 +307,7 @@ def fix_delivered_to(file_obj, msg=None, **kw_args):
         msg.replace_header(DELIVERED_TO_HEADER_NAME, good_one)
     else:
         msg.add_header(DELIVERED_TO_HEADER_NAME, good_one)
-    
+
     annotate_imperfections(msg, X_ANNOTATION_Header,
                            "%s: changed from >%s< to >%s<",
                            DELIVERED_TO_HEADER_NAME,
@@ -406,7 +408,7 @@ def process_msg(file_obj, funcs, **kw_args):
         if kw_args.get("process_msg_print_file_name_p", False):
             vprintf("process_msg: file name>%s<\n", file_obj_name(file_obj))
         func(file_obj, msg=msg, **kw_args)
-    
+
 def process_msgs(args, funcs, **kw_args):
     """Parse args and run.  Put parser here so we can be called from a
 program that wants to be able to pass thru (parts of) a command line."""
@@ -440,7 +442,7 @@ def fixup_for_godaddy_catchall(args, **kw_args):
         eprintf("dp_email_lib.fix_delivered_to: exception: %s.", e)
         sys.exit(1)
     sys.exit(len("WTF! Over?"))         # *Something* non-zero
-    
+
 # Add some abbrevs for selecting functions on the command line.
 #FUNC_NAME_MAP = {
 
@@ -513,7 +515,7 @@ program that wants to be able to pass thru (parts of) a command line."""
         if o == '-a':
             kw_args["print_anomalies_p"] = True
             continue
-        
+
         # <:add new option cases :>
 
     if GODADDY_FIXUP_p:
@@ -533,7 +535,7 @@ program that wants to be able to pass thru (parts of) a command line."""
                      **kw_args)
     if close_ostream_p:
         ostream.close()
-        
+
 
 # Mainly (heh, heh) for testing.
 if __name__ == "__main__":

@@ -47,11 +47,11 @@ def rewriter(istream=sys.stdin, ostream=sys.stdout, rules=None):
 
             if subject_line != None:
                 ostream.write(subject_line)
-            
+
             ostream.write(line)
             log.write(line)
             break
-            
+
         if not delivered_match:
             delivered_match = cre_delivered_to.search(line)
             if delivered_match:
