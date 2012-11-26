@@ -28,3 +28,9 @@ Ee|sbap|       /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/
 Ee|sbtestgen|sbtgen|sbtg|       /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/diag/testgen/
 Ee|bldfail|       /home/dpanariti/work/active/build/
 Ee|dotvnc|dvnc|vnc|       /home/dpanariti/.vnc/
+Ee|sandbox2|sbox2|sb2|workspace2|ws2|       /home/scratch.dpanariti_t124/2.hw.t124/
+Ee|sandbox2hw|sbox2hw|sb2hw|workspace2hw|ws2hw|       /home/scratch.dpanariti_t124/2.hw.t124/hw/
+Ee|sandbox2ap|sbox2ap|sb2ap|workspace2ap|ws2ap|       /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/
+Ee|sandbox2diag|sbox2diag|sb2diag|workspace2diag|ws2diag|       /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/diag/
+Ee|sandbox2tg|sbox2tg|sb2tg|workspace2tg|ws2tg|       /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/diag/testgen/
+Ee|sandbox2testgen|sbox2testgen|sb2testgen|workspace2testgen|ws2testgen|       /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/diag/testgen/

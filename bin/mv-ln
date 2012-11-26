@@ -2,7 +2,7 @@
 #
 # Move some stuff over there, and make links so that it still looks like it's
 # here.
-. script-x
+source script-x
 
 : ${mv_opts:="-i"}
 : ${ln_opts:=""}

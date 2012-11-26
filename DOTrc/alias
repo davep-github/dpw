@@ -232,5 +232,7 @@ alias gitpull='git pull'
 alias githelp='gith'            # Remove ^H bolding/underlining
 
 alias go=g
+alias home_addr='eval echo "\$${DP_HOME_MACHINE}_ADDR"'
+alias home_user='eval echo "\$${DP_HOME_MACHINE}_USER"'
 
 true

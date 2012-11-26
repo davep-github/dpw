@@ -11536,7 +11536,8 @@ FILENAME defaults to the name of the current buffer or
                               (buffer-file-name (current-buffer)))))))
     (when (interactive-p)
       (message "%s is%s owned by %s." file-name (if status "" " NOT") 
-               (or user-name (user-login-name))))))
+               (or user-name (user-login-name))))
+    status))
 
 
 (defun dp-balance-horizontal-windows ()

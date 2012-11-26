@@ -1,3 +1,4 @@
+# -*-sh-*-
 
 # $Id: .cshrc_custom,v 1.1 2012-11-26 12:24:58-05 dpanariti Exp dpanariti $
 
@@ -41,18 +42,28 @@ alias pd popd
 alias go pushd
 # 'pr \!* | lpr'' 
 alias ltl 'ls -lt \!* | less'
+alias lth 'ls -lt \!* | head'
 alias lsl 'ls \!* | less'
+alias mv 'mv -i'
+alias rm 'rm -i'
+alias cp 'cp -i'
 # I've had my own xx routine for >20 years.
 alias nvxx xx
 alias xxnv xx
-set history=512 savehist=10240
+set history = 5120
+set savehist = $history
+set histfile = "$HOME/.csh_history.$HNAME"
 
 unalias make; alias make 'set make = "make"; if ( -e "`depth`/bin/make" ) set make = "`depth`/bin/make"; $make'unalias make; alias make 'set make = "make"; if ( -e "`depth`/bin/make" ) set make = "`depth`/bin/make"; $make'
 
 setenv PATH `addtopath.pl PATH -"$HOME/bin"`
 
+# Somehow I came across a binding of this function to ^p vs M-p and now I'm
+# programmed to it on ^p.
+bindkey "^p" history-search-backward
+
 #
 ### Local Variables: ***
-### eval:(auto-fill-mode -1) ***
+### eval: (auto-fill-mode -1) ***
 ### End: ***
 
