@@ -1,0 +1,58 @@
+
+# $Id: .cshrc_custom,v 1.1 2012-11-26 12:24:58-05 dpanariti Exp dpanariti $
+
+
+########################################
+# CUSTOM ALIASES
+########################################
+
+#alias ghostview "/home/ghostview/bin/ghostview -bg gray90"
+
+
+########################################
+# CUSTOM ENV VARIABLES
+########################################
+
+# setenv NV17 /home/scratch.${USER}/nv17
+
+########################################
+# CUSTOM PATHS
+########################################
+
+# the ":q" suffix in $path quotes the previous path names, so we can handle
+# path directories that contain spaces.
+
+# set path = ( \
+# 	/home/utils/gcc-4.1.0/bin \
+# 	$path:q \
+# )
+
+setenv PATH `addtopath.pl -back -quiet PATH /home/utils/git-1.7.10.3/bin`
+setenv PATH `addtopath.pl -quiet PATH $HOME/bin.primitive`
+
+setenv MANPAGER less
+
+alias ls ls -CF
+alias hgrep 'history | egrep'
+alias envgrep 'env | egrep'
+alias setgrep 'set | egrep'
+alias aliasgrep 'alias | egrep'
+alias pd popd
+alias go pushd
+# 'pr \!* | lpr'' 
+alias ltl 'ls -lt \!* | less'
+alias lsl 'ls \!* | less'
+# I've had my own xx routine for >20 years.
+alias nvxx xx
+alias xxnv xx
+set history=512 savehist=10240
+
+unalias make; alias make 'set make = "make"; if ( -e "`depth`/bin/make" ) set make = "`depth`/bin/make"; $make'unalias make; alias make 'set make = "make"; if ( -e "`depth`/bin/make" ) set make = "`depth`/bin/make"; $make'
+
+setenv PATH `addtopath.pl PATH -"$HOME/bin"`
+
+#
+### Local Variables: ***
+### eval:(auto-fill-mode -1) ***
+### End: ***
+

@@ -1,0 +1,195 @@
+# $Id: //hw/nv/env/.cshrc_tools#74 $
+
+##echo "trace_ct01"
+
+set PATH_PROGS = ""
+
+setenv LM_LICENSE_FILE "/home/tools/admin/license_files"
+setenv SNPSLMD_LICENSE_FILE `/home/nv/bin/build_lic_list.pl /home/tools/admin/license_files/*synopsys*` # synopsys tools
+setenv CDS_LIC_FILE 5280@lic-14,5280@lic-15,5280@lic-16
+setenv CDS_LIC_ONLY true
+
+# setup X resource search paths
+
+# path for default app files
+setenv XFILESEARCHPATH "/usr/lib/X11/%L/%T/%N%C:/usr/lib/X11/%l/%T/%N%C:/usr/lib/X11/%T/%N%C:/usr/lib/X11/%L/%T/%N:/usr/lib/X11/%l/%T/%N:/usr/lib/X11/%T/%N"
+
+# path for user customizations
+setenv XUSERFILESEARCHPATH ~/app-defaults/%N:/home/nv/env/app-defaults/%N
+
+
+# LSF batch-queue setup linux and solaris the same
+setenv LSF_SERVERDIR /usr/local/lsf/etc
+set   PATH_PROGS = "$PATH_PROGS /usr/local/lsf/bin"
+
+if ($OSTYPE == "Linux" || $OSTYPE == "SunOS") then
+    setenv MANPATH `addtopath.pl -quiet MANPATH /usr/local/lsf/man`
+else
+    setenv MANPATH ${MANPATH}:/usr/local/lsf/man
+endif
+
+# TimingDesigner setup
+if ($OSTYPE == "SunOS") then
+   setenv TDDIR /home/tools/td/td5303/solaris
+else
+   setenv TDDIR /home/tools/td/td5303/linux
+endif
+set   PATH_PROGS = "$PATH_PROGS $TDDIR/bin"
+#
+if ($OSTYPE == "SunOS") then
+    setenv XKEYSYMDB /usr/openwin/lib/XKeysymDB
+else
+    setenv XKEYSYMDB /usr/X11R6/lib/X11/XKeysymDB
+endif
+
+##echo "trace_ct02"
+
+# SYNOPSYS
+if ($OSTYPE == "SunOS") then
+    setenv SYN_ARCH sparcOS5
+else
+    setenv SYN_ARCH linux
+endif
+
+# SYNOPSYS set-up
+setenv SYNOPSYS     /home/tools/synopsys/syn_2010.12-SP5
+
+setenv  SYN_BIN      $SYNOPSYS/bin
+set     PATH_PROGS = "$PATH_PROGS $SYN_BIN"
+setenv  MANPATH      ${MANPATH}:$SYNOPSYS/doc/syn/man
+alias   synman       'man -M $SYNOPSYS/doc/syn/man'
+
+setenv  SYNOPSYS_PT  /home/tools/synopsys/pt_2009.06-SP3
+setenv  SYN_BIN_PT   $SYNOPSYS_PT/bin
+set     PATH_PROGS = "$PATH_PROGS $SYN_BIN_PT"
+setenv  MANPATH      ${MANPATH}:$SYNOPSYS_PT/doc/syn/man
+alias   ptman        'man -M $SYNOPSYS_PT/doc/pt/man'
+
+# MC set-up
+setenv  MCDIR        $SYNOPSYS/mc
+setenv  MCENVDIR     $MCDIR/localadm:$MCDIR/adm
+setenv  MCLIBDIR     $MCDIR/tech
+setenv  MCRAMLIBDIR  $MCLIBDIR
+set     PATH_PROGS = "$PATH_PROGS $SYNOPSYS/$SYN_ARCH/mc/bin"
+
+# Formality setup
+setenv	FM_ROOT     /home/tools/synopsys/fm_2010.12-SP5
+setenv	FM_BIN  ${FM_ROOT}/bin
+set     PATH_PROGS =    "$PATH_PROGS ${FM_BIN}"
+alias	fmman 		'man -M ${FM_ROOT}/doc/fm/man'
+
+##echo "trace_ct03"
+
+# show dates in local time instead of UTC
+setenv RCSINIT -zLT
+
+# Perforce setup
+setenv P4CONFIG .p4config
+setenv P4CLIENT ${USER}
+#
+# Uncomment the P4PORT that is needed. Default is HW.
+#
+#setenv P5PORT perforce:2000 # 3dfx diags mediaq loki
+setenv P4PORT     p4hw:2001  # arch hw layout
+#setenv P4PORT perforce:2002 # demo devrel mktg techpubs sales mobile
+#setenv P4PORT perforce:2003 # mis
+#setenv P4PORT perforce:2004 # misc
+#setenv P4PORT perforce:2005 # notnv
+#setenv P4PORT perforce:2006 # sw
+#setenv P4PORT perforce:2007 # syseng
+#
+setenv P4DIFF mgdiff
+alias p4 'p4 -d `/bin/pwd`'
+
+
+# verilint 4.1 setup the old stuff , it works if you want to use it
+#setenv interHDL /home/tools/verilint/verilint-4.10
+#set PATH_PROGS = "$PATH_PROGS $interHDL"
+#setenv  INTERHDL_ELMHOST "lic-1:lic-2:lic-3"
+
+# explorertl setup to replace verilint
+#  verilint
+if ($OSTYPE == "SunOS") then
+    set     VLINTHOME = "/home/tools/verilint/2001.4.10-solaris"
+    set     PATH_PROGS = "$PATH_PROGS $VLINTHOME"
+else
+    # linux is different
+    set     VLINTHOME = "/home/tools/verilint/2001.4.10-linux2.2"
+    set     PATH_PROGS = "$PATH_PROGS $VLINTHOME"
+endif
+
+# VirSim setup
+setenv  VIRSIMHOME      /home/tools/vcs/vcs_latest/virsimdir
+setenv  XFILESEARCHPATH ${XFILESEARCHPATH}:/home/tools/vcs/vcs_latest/virsimdir/appfiles/%N
+setenv  XNLSPATH        ${VIRSIMHOME}/nls
+set     PATH_PROGS =    "$PATH_PROGS ${VIRSIMHOME}/bin"
+alias   virsim          '/home/tools/vcs/vcs_latest/virsimdir/bin/virsim +vpdnolock'
+
+#cadence_xl for verilog97A setup
+#setenv	XL      	/home/xl_97A
+setenv	XL      	/home/xl_98
+#setenv	XKEYSYMDB	${XKEYSYMDB}:${XL}/tools/leapfrog/files/X/XKeysymDB
+setenv	XNLSPATH	${XNLSPATH}:${XL}/tools/leapfrog/files/X/nls
+set	PATH_PROGS = 	"$PATH_PROGS ${XL}/tools/verilog/bin"
+setenv 	MANPATH 	${MANPATH}:$XL/tools.sun4/man/man1:$XL/tools.sun4/man/man5
+
+
+# NC setup (some stuff should be put in makefile.inc)
+#setenv LM_LICENSE_FILE ${LM_LICENSE_FILE}:/home/xl/share/license/license.7231841b
+#setenv CDS_INST_DIR       /home/nc4.42
+#setenv VENVHOME           $CDS_INST_DIR
+#setenv VENV_PATH          "${VENVHOME}/tools/bin:${VENVHOME}/tools/dfII/bin"
+#setenv VENV_LD_LIB_PATH   ${VENVHOME}/tools/lib
+#setenv PATH               "${VENV_PATH}:$PATH"
+#setenv LD_LIBRARY_PATH    "${VENV_LD_LIB_PATH}:$LD_LIBRARY_PATH"
+#setenv LD_LIBRARY_PATH    ".:$LD_LIBRARY_PATH"
+
+# Cadence openbook setup
+set	PATH_PROGS = 	"$PATH_PROGS ${XL}/tools/bin"
+
+##echo "trace_ct04"
+
+# VCS setup
+setenv	VCS_HOME	/home/tools/vcs/vcs_latest
+setenv	VCS		${VCS_HOME}
+# VCS man pages no longer exist, now use "vcs -help"
+# setenv	MANPATH		${MANPATH}:$VCS_HOME/sun_sparc_solaris_5.5.1/man
+set	PATH_PROGS = 	"$PATH_PROGS ${VCS}/bin"
+
+# Debussy setup
+setenv DEBUSSY_HOME /home/tools/debussy/latest
+setenv VERDI_HOME /home/tools/debussy/verdi_latest
+set PATH_PROGS = "$PATH_PROGS $DEBUSSY_HOME/bin $VERDI_HOME/bin"
+
+#source /home/modelsim/ENV/modelsim.env
+
+##echo "trace_ct05"
+
+# Verplex setup
+setenv VERPLEX_HOME /home/tools/verplex/lec.10.1-s400_linux
+set PATH_PROGS = "$PATH_PROGS $VERPLEX_HOME/bin"
+alias lecman 'man -M $VERPLEX_HOME/doc'
+
+############### setup for iModl ################
+
+setenv HOST_MACH   `uname -m | tr "A-Z" "a-z" | sed -e "s/^sun.*/sparc/" \
+                    | sed -e "s/^9000.*/hppa/"`
+setenv HOST_OS     `uname -s | sed -e "s/-//g" | tr "A-Z" "a-z" \
+                    | sed -e "s/os//"``uname -r \
+                    | sed -e "s/^[^0-9]*[0]*\([1-9][0-9]*\)\..*/\1/"`
+setenv IMODL       /home/imodl/p6
+setenv IMODL_LIB   $IMODL/lib/$HOST_MACH-$HOST_OS
+setenv IMODL_BIN   $IMODL/bin/$HOST_MACH-$HOST_OS
+
+set PATH_PROGS = "$PATH_PROGS $IMODL_BIN"
+
+if ($OSTYPE == "Linux" || $OSTYPE == "SunOS") then
+    setenv PATH `addtopath.pl -back -quiet PATH $PATH_PROGS`
+else
+    # the ":q" suffix in $path quotes the previous path names, so we can handle
+    # path directories that contain spaces.
+    set path = ($path:q $PATH_PROGS)
+endif
+
+##echo "trace_ct06"
+
