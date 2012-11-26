@@ -1349,7 +1349,7 @@ returning."
   (if (= number-of-months 0)
       (setq number-of-months 1))
   ;; use a copy of dpj-current-journal-file so we don't change it.
-  (let* ((dpj-current-journal-file dpj-current-journal-file)
+  (let* ((dpj-current-journal-file (dpj-current-journal-file))
 	 (latest-file (or dpj-current-journal-file
 			  (dpj-latest-note-file-name)))
 	 (latest-month-num (dpj-journal-name-to-month-num latest-file))
@@ -1636,6 +1636,17 @@ Also will use prefix-arg as default NUM-MONTHS."
     (insert "\n{%/fundamental%}\n")
     (goto-char p)))
 
+(defun dpj-visit-appropriate-journal-file (topic dir-name)
+  "Visit the journal file based on various criteria."
+  ;; 1) Map topic to specific file
+  ;; 2) Look for cwd/local-notes.jxt (buffer & possibly file in cwd)
+  ;; 3) as before.
+  ;; Let's see if the topic should live in another file.
+  (unless (string= (dpj-current-journal-file)
+                   (dpj-latest-note-file-name topic dir-name))
+    ;; !<@todo XXX Make a `dp-journal-noselect'.
+    (dp-journal other-win-p nil 'visit-latest topic)))
+
 ;;;###autoload
 (defun dp-add-elisp-journal-entry ()
   (interactive)
@@ -1678,11 +1689,7 @@ Also will use prefix-arg as default NUM-MONTHS."
     (dp-journal other-win-p nil 'visit-latest topic)
     (unless topic
       (setq topic (car (dpj-get-topic-interactive nil cur-topic))))
-    ;; Let's see if the topic should live in another file.
-    (unless (string= (dpj-current-journal-file) 
-                     (dpj-latest-note-file-name topic dir-name))
-      ;; !<@todo XXX Make a `dp-journal-noselect'.
-      (dp-journal other-win-p nil 'visit-latest topic))
+    (dpj-visit-appropriate-journal-file topic dir-name)
     (goto-char (setq new-record-pos (point-max)))
     (dpj-new-topic0 :topic topic :no-spaced-append-p no-spaced-append-p)
     (if (or link-too-p

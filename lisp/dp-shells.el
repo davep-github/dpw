@@ -168,7 +168,7 @@ prompt.  We don't want to stomp on them.")
 
 (defcustom dp-shell-magic-ls-pattern
   "^[ 	]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\(?:\\s-*\\)\\($\\|.*\\)$"
-  ;;;"^[ \t]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\($\\|\\(?:[ \t]+\\)\\)\\(.*\\)$"
+;;"^[ \t]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\($\\|\\(?:[ \t]+\\)\\)\\(.*\\)$"
   "*Match this pattern for magic ls functionality!"
   :group 'dp-vars
   :type 'string)
@@ -2160,7 +2160,8 @@ NAME is a buffer or buf-name.  Type is (currently) one of: '(shell ssh)")
 ;; This was mostly copied from shell-resync-dirs.
 ;;
 (defun dp-shells-setenv (var val)
-  "Return as a string the shell's value of environment variable VAR."
+  "Set a shell's environment VAR to VAL.
+It isn't pretty."
   (interactive "svar? \nsval? ")
   (let* ((cmd (format "%s=%s; export %s\n" var val var))
 	 (proc (get-buffer-process (current-buffer)))
@@ -2310,11 +2311,11 @@ ARG is numberp:
       ;; We're in the new shell buffer now.
       ;;
       (setq dp-shell-isa-shell-buf-p '(dp-shell shell)
+            dp-prefer-independent-frames-p t
             other-window-p nil
-            dp-shell-buffer-save-file-name 
-            (dp-transformed-save-buffer-file-name
-             dp-default-save-buffer-contents-dir
-             'dp-shellify-shell-name))
+            dp-shell-buffer-save-file-name (dp-transformed-save-buffer-file-name
+                                            dp-default-save-buffer-contents-dir
+                                            'dp-shellify-shell-name))
 
       (dp-shells-set-most-recently-created-shell sh-buffer 'shell)
       (dp-shells-set-most-recent-shell sh-buffer 'shell)
@@ -2399,11 +2400,13 @@ displayed."
            (shell-proc (get-buffer-process shell-buf))
            (shell-win (get-buffer-window shell-buf))
            (echo "")
-           (args (if args (concat " " args) ""))
+           (args (if (not (string= args ""))
+                     (concat " " args)
+                   args))
            ;; Space --> Don't put command in the history.  Well, we do want
            ;; the rest of the line and I don't want to lose that.
-           (cmd (format "%s %s %s %s%s"
-                        dp-ls-front-end-command
+           ;; 
+           (cmd (format "COLS=%s LINES=%s %s%s"
                         (or cols
                             (- (window-width shell-win) 5))
                         (or lines

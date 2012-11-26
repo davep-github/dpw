@@ -137,6 +137,10 @@ This should be set by the emacs specific code.")
   "Return the primary frame, the startup frame by default."
   dp-primary-frame)
 
+(defun dp-primary-frame-p (&optional frame)
+  "Return non-nil if frame \(or \(selected-frame)) is the primary frame."
+  (equal (dp-primary-frame) (or frame (selected-frame))))
+
 (eval-when-compile
   (require 'cl)
   (load "cl-macs")
