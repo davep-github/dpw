@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -u
+
+[ "$1" = "-x" ] && {
+    set -x
+    shift
+}
+
