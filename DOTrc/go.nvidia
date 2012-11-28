@@ -1,36 +1,34 @@
-Ee|dpworld|dpw|       /home/dpanariti/davep/dpw/
-Ee|dpwbuild|       /home/dpanariti/davep/dpw/build/
-Ee|dwpbld|       /home/dpanariti/davep/dpw/build/
-Ee|bashbullshit|       /home/dpanariti/davep/dpw/build/
-Ee|inb|       /home/dpanariti/inb/
-Ee|davep|       /home/dpanariti/davep/
-Ee|dpbuild|dpbld|       /home/dpanariti/davep/build/
-Ee|dpwgit|       /home/dpanariti/davep/dpw.git/
-Ee|rc|       /home/dpanariti/.rc/
-Ee|scratch|       /home/scratch.dpanariti_t124/
-Ee|hw124|       /home/scratch.dpanariti_t124/hw.t124/
-Ee|hw124hw|       /home/scratch.dpanariti_t124/hw.t124/hw/
-Ee|t124|       /home/scratch.dpanariti_t124/
-Ee|sb124|       /home/scratch.dpanariti_t124/
-Ee|dotrc|       /home/dpanariti/.rc/
-Ee|lastresort|       /home/dpanariti/bin/last-resort/
-Ee|rsee|       /home/dpanariti/.rc/
-Ee|wrk|       /home/scratch.dpanariti_t124/hw.t124/hw/ap/
-Ee|wrkhw|       /home/scratch.dpanariti_t124/hw.t124/hw/ap/
-Ee|hwrk|       /home/scratch.dpanariti_t124/hw.t124/hw/ap/
-Ee|hwwrk|       /home/scratch.dpanariti_t124/hw.t124/hw/ap/
-Ee|work|       /home/dpanariti/work/
-Ee|active|       /home/dpanariti/work/active/
-Ee|scratch0|       /home/scratch.dpanariti_t124/
-Ee|weg|       /home/dpanariti/work/info/examples/
-Ee|sb|       /home/scratch.dpanariti_t124/2.hw.t124/
-Ee|sbap|       /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/
-Ee|sbtestgen|sbtgen|sbtg|       /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/diag/testgen/
-Ee|bldfail|       /home/dpanariti/work/active/build/
-Ee|dotvnc|dvnc|vnc|       /home/dpanariti/.vnc/
-Ee|sandbox2|sbox2|sb2|workspace2|ws2|       /home/scratch.dpanariti_t124/2.hw.t124/
-Ee|sandbox2hw|sbox2hw|sb2hw|workspace2hw|ws2hw|       /home/scratch.dpanariti_t124/2.hw.t124/hw/
-Ee|sandbox2ap|sbox2ap|sb2ap|workspace2ap|ws2ap|       /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/
-Ee|sandbox2diag|sbox2diag|sb2diag|workspace2diag|ws2diag|       /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/diag/
-Ee|sandbox2tg|sbox2tg|sb2tg|workspace2tg|ws2tg|       /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/diag/testgen/
-Ee|sandbox2testgen|sbox2testgen|sb2testgen|workspace2testgen|ws2testgen|       /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/diag/testgen/
+Ee|dotrc|rsee|rcee|drc|  /home/dpanariti/.rc/
+Ee|lastresort|           /home/dpanariti/bin/last-resort/
+Ee|rsee|                 /home/dpanariti/.rc/
+Ee|wrk|                  /home/scratch.dpanariti_t124/hw.t124/hw/ap/
+Ee|wrkhw|                /home/scratch.dpanariti_t124/hw.t124/hw/ap/
+Ee|hwrk|                 /home/scratch.dpanariti_t124/hw.t124/hw/ap/
+Ee|hwwrk|                /home/scratch.dpanariti_t124/hw.t124/hw/ap/
+Ee|work|                 /home/dpanariti/work/
+Ee|active|               /home/dpanariti/work/active/
+Ee|weg|                  /home/dpanariti/work/info/examples/
+Ee|sb|                   /home/scratch.dpanariti_t124/2.hw.t124/
+Ee|sbap|                 /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/
+Ee|bldfail|              /home/dpanariti/work/active/build/
+#
+Ee|dotvnc|dvnc|vnc|   /home/dpanariti/.vnc/
+#
+
+Ee|scratch0|          /home/scratch.dpanariti_t124/
+Ee|scratch1|          /home/scratch.dpanariti_t124_1/
+
+Ee|sandbox0|sbox0|sb0|workspace0|ws0|                            ${scratch0}t124_0/
+Ee|sandbox0hw|sbox0hw|sb0hw|workspace0hw|ws0hw|hw0|              ${workspace0}hw/
+Ee|sandbox0ap|sbox0ap|sb0ap|workspace0ap|ws0ap|ap0|              ${workspace0hw}ap/
+Ee|sandbox0diag|sbox0diag|sb0diag|workspace0diag|ws0diag|diag0|  ${workspace0ap}diag/
+Ee|sandbox0tg|sbox0tg|sb0tg|workspace0tg|ws0tg|tgen0|tg0|        ${workspace0diag}testgen/
+Ee|sandbox0testgen|sbox0testgen|sb0testgen|workspace0testgen|ws0testgen| ${workspace0tg}
+
+Ee|sandbox1|sbox1|sb1|workspace1|ws1|                            ${scratch1}t124_1/
+Ee|sandbox1hw|sbox1hw|sb1hw|workspace1hw|ws1hw|hw1|              ${workspace1}hw/
+Ee|sandbox1ap|sbox1ap|sb1ap|workspace1ap|ws1ap|ap1|              ${workspace1hw}ap/
+Ee|sandbox1diag|sbox1diag|sb1diag|workspace1diag|ws1diag|diag1|  ${workspace1ap}diag/
+Ee|sandbox1tg|sbox1tg|sb1tg|workspace1tg|ws1tg|tgen1|tg1|        ${workspace1diag}testgen/
+Ee|sandbox1testgen|sbox1testgen|sb1testgen|workspace1testgen|ws1testgen| ${workspace1tg}
+

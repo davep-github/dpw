@@ -28,8 +28,9 @@
 # 	$path:q \
 # )
 
+# We want to be as "standard" as possible, so add as much as possible to the end of PATH.
 setenv PATH `addtopath.pl -back -quiet PATH /home/utils/git-1.7.10.3/bin`
-setenv PATH `addtopath.pl -quiet PATH $HOME/bin.primitive`
+setenv PATH `addtopath.pl -back -quiet PATH $HOME/bin.primitive`
 
 setenv MANPAGER less
 
@@ -50,6 +51,7 @@ alias cp 'cp -i'
 # I've had my own xx routine for >20 years.
 alias nvxx xx
 alias xxnv xx
+set autolist = t
 set history = 5120
 set savehist = $history
 set histfile = "$HOME/.csh_history.$HNAME"
@@ -57,6 +59,11 @@ set histfile = "$HOME/.csh_history.$HNAME"
 unalias make; alias make 'set make = "make"; if ( -e "`depth`/bin/make" ) set make = "`depth`/bin/make"; $make'unalias make; alias make 'set make = "make"; if ( -e "`depth`/bin/make" ) set make = "`depth`/bin/make"; $make'
 
 setenv PATH `addtopath.pl PATH -"$HOME/bin"`
+
+setenv LESSKEY /usr/bin/.lesskey
+setenv LESSOPEN_PROG lesspipe-new.sh
+setenv LESS "-R -MM -X --ignore-case"
+setenv LESSOPEN "|lesspipe-new.sh %s"
 
 # Somehow I came across a binding of this function to ^p vs M-p and now I'm
 # programmed to it on ^p.

@@ -4,6 +4,7 @@
 ;; Initial code kindly donated by Alex Lawson.
 ;;
 
+(require 'p4)
 (defvar p4-make-backup-files t
   "Should emacs make backup files when editing files under p4 control")
 

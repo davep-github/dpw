@@ -1,5 +1,8 @@
 (dmessage "dp-dot-emcas.nvidia.el")
 
+(require 'dp-perforce)
+
+
 (setq visible-bell nil)
 (defun dp-define-nvidia-c-style ()
   (defconst nvidia-c-style

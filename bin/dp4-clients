@@ -1,0 +1,10 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+: ${user=dpanariti}
+
+p4 clients -u "$user"
+

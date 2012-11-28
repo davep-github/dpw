@@ -389,17 +389,26 @@ Otherwise, it uses the topic of the current item.")
   ;; !<@todo XXX FOR NOW!
   dpj-current-journal-file)
 
-(defun dpj-stick-current-journal-file ()
-  "Ass/2 way to make non-standard journal files a little less unusable."
-  (make-local-variable 'dpj-current-journal-file))
-
 (defun dpj-set-current-journal-file (file-name &optional sticky-p)
   (setq dpj-current-journal-file file-name)
   (when sticky-p
     (dpj-stick-current-journal-file)))
 
 (defun dpj-unstick-current-journal-file ()
-  (kill-local-variable 'dpj-current-journal-file))
+  (kill-local-variable 'dpj-current-journal-file)
+  (setq dpj-current-journal-file nil))
+
+(defun dpj-stick-current-journal-file (&optional unstick-p)
+  "Ass/2 way to make non-standard journal files a little less unusable."
+  (interactive "P")
+  (if unstick-p
+      (dpj-unstick-current-journal-file)
+    (make-local-variable 'dpj-current-journal-file)
+    (setq dpj-current-journal-file (buffer-file-name))
+    (message "New current journal file: %s" dpj-current-journal-file)))
+
+(dp-defaliases 'dpj-stick 'dpj-scfj 'dpj-sjf 'sjf 
+               'dpj-stick-current-journal-file)
 
 (defun* dpj-journal-file-sticky-p (&optional (buffer (current-buffer)))
   (local-variable-p 'dpj-current-journal-file buffer))
@@ -1679,8 +1688,7 @@ Also will use prefix-arg as default NUM-MONTHS."
 	  (setq timestamp-info (dpj-get-current-timestamp)
 		cur-topic (dpj-current-topic nil 'no-quote)
 		context-info (car timestamp-info)))
-      (setq context-info "")
-      )
+      (setq context-info ""))
     
     ;; links to journals and non-journals need an offset.
     (setq offset (point))

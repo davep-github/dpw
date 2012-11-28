@@ -9850,13 +9850,14 @@ on interactiveness, but due to cases like this, I'm trending away from
   "A predicate function used by `dp-choose-buffers'."
   (apply 'string-match regexp string rest))
 
-(defun* dp-choose-buffers (predicate &optional (buffer-list (buffer-list))
+(defun* dp-choose-buffers (predicate &optional buffer-list
                            &rest pred-args)
   "Return the subset of BUFFER-LIST that pass PREDICATE.
 If BUFFER-LIST is nil, then use `buffer-list'.
 If PREDICATE is a string, then it is assumed to be a regexp.
 Otherwise, PREDICATE is `apply'd to the buffer and PRED-ARGS."
   (interactive "sreg-exp: ")
+  (setq-ifnil buffer-list (buffer-list))
   (let* (regexp)
     (when (stringp predicate)
       (setq pred-args (list predicate) ;the regexp

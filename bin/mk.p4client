@@ -10,6 +10,8 @@ redir_op='>|'
 # Let's have a convention:
 # Client name = $USER-$(basename $PWD)
 : ${kwa_p4client_name:=${USER}-$(basename "$PWD")}
+: ${kwa_p4client_boiler_plate:=${DP_P4_BOILER_PLATE-}}
+: ${kwa_p4client_template:=${DP_P4_CLIENT_TEMPLATE}}
 
 skip_create_p=
 std_options=
@@ -46,14 +48,29 @@ done
 
 vunsetp $skip_create_p && {
     eval echo "P4CLIENT=$kwa_p4client_name" $redir_op "$kwa_p4config_file"
+    [ -n "$kwa_p4client_boiler_plate" ] && {
+        echo "$kwa_p4client_boiler_plate" >> "$kwa_p4config_file"
+    }
 }
 
 if vsetp $create_client_p
 then
+    if [ -z "$kwa_p4client_template" ]
+    then
+        read -e -p "Client template does not exist (from: DP_P4_CLIENT_TEMPLATE). Continue (y/N)? "
+        case "$REPLY" in
+            [Yy]);;
+            *) exit 1;;
+        esac
+        template_opt=
+    else
+        template_opt="-t $kwa_p4client_template"
+    fi
     echo 1>&2 "Creating client... check editor to edit spec."
-    EExec p4 client
+    EExec p4 client $template_opt "$kwa_p4client_name"
 else
-    EExec true
+    echo 1>&2 "Not making client by user request (use -c)."
+    true
 fi
 
 exit

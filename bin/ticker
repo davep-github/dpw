@@ -236,8 +236,6 @@ if __name__ == "__main__":
         ctor_keywords["ostream"] = ostream
 
     if line_tick_p:
-        #ctor_keywords["init_string"] = "Sampling 1 of every %s lines\n" % \
-        #                               (var_dict["tick_interval"],)
         ctor_keywords["init_string"] = "Sampling every %sth line\n" % \
                                        (var_dict["tick_interval"],)
         ctor_keywords["unit_name"] = 'line'
@@ -264,7 +262,7 @@ if __name__ == "__main__":
                 ticker(tick=tick)
         else:
             if line_tick_p:
-                tick = line_tick_prefix + l
+                tick = "%6d%s" % (ticker.counter, line_tick_prefix + l)
             else:
                 tick = None
             ticker(tick=tick)
