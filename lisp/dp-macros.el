@@ -193,7 +193,8 @@ However if we are `interactive-p' and
 it as a string."
     ;; by "William G. Dubuque" <wgd@zurich.ai.mit.edu> w/ mods from Stig
     `(with-current-buffer (get-buffer-create
-                           (generate-new-buffer-name " *string-output*"))
+                           (generate-new-buffer-name 
+                            " *dp-with-all-output-to-string*"))
       (dp-toggle-read-only 0)
       (buffer-disable-undo (current-buffer))
       (erase-buffer)

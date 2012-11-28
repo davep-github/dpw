@@ -9888,13 +9888,13 @@ If BUFFER-LIST is nil, get the buffer list with `buffer-list'."
     (lambda (buf &rest args)
       (buffer-local-value 'dp-primary-makefile-p buf)))))
 
-(defun dp-choose-buffers-names (predicate &optional buffer-list
+(defun dp-choose-buffers-names (pred-or-regexp &optional buffer-list
                                 &rest pred-args)
   (interactive "sreg-exp: ")
   (mapcar (function
            (lambda (buf)
              (buffer-name buf)))
-          (dp-choose-buffers predicate buffer-list pred-args)))
+          (dp-choose-buffers pred-or-regexp buffer-list pred-args)))
 
 (defun dp-get-dired-visited-dir (buf)
   "Get the directory name in a buffer dired is visiting.
@@ -9942,9 +9942,9 @@ I like to be more precise in certain cases; such as when deleting things.")
   (when (eq major-mode 'Buffer-menu-mode)
     (dp-refresh-buffer-menu)))
 
-(defun dp-kill-buffers-by-name (name-regexp &optional
-                                skip-dired-buffers-p
-                                all-p)
+(defun dp-kill-buffers-by-file-name (name-regexp &optional
+                                     skip-dired-buffers-p
+                                     all-p)
   (interactive "sname regexp: \nP")
   (with-case-folded dp-kill-these-file-buffers-case-fold-search
     (when all-p
@@ -9953,11 +9953,13 @@ I like to be more precise in certain cases; such as when deleting things.")
      (dp-choose-buffers-file-names
       name-regexp (not skip-dired-buffers-p)))))
 
-;;     (mapcar (function
-;;              (lambda (buf)
-;;                (kill-buffer buf)))
-;;             (dp-choose-buffers-file-names
-;;              name-regexp (not skip-dired-buffers-p)))))
+(defun* dp-kill-buffers-by-buffer-name (name-regexp &optional (all-p t))
+  (interactive "sname regexp: \nP")
+  (with-case-folded dp-kill-these-file-buffers-case-fold-search
+    (when all-p
+      (concat name-regexp "<[0-9]+>"))
+    (dp-kill-chosen-buffers
+     (dp-choose-buffers-names name-regexp))))
 
 (defun dp-kill-.el-buffers (&optional with-extreme-prejudice-p)
   "Kill all of the buffers holding elisp files."
@@ -9986,7 +9988,7 @@ I like to be more precise in certain cases; such as when deleting things.")
 
 (defun dp-kill-code-indexer-data-buffers (all-p)
   (interactive "P")
-  (dp-kill-buffers-by-name
+  (dp-kill-buffers-by-file-name
    (dp-regexp-concat dp-code-indexer-data-files
                      nil t)
    nil all-p))
@@ -9994,7 +9996,7 @@ I like to be more precise in certain cases; such as when deleting things.")
 (defun dp-kill-sandbox-buffers (sandbox-name &optional all-p)
   "Kill all buffers visiting files in SANDBOX-NAME."
   (interactive "ssandbox of buffers to kill: \nP")
-  (dp-kill-buffers-by-name
+  (dp-kill-buffers-by-file-name
    (concat "/davep/work/" sandbox-name "/")
    t all-p))
 (dp-safe-alias 'dp-kill-buffers-by-sandbox 'dp-kill-sandbox-buffers)
@@ -15041,7 +15043,7 @@ See `dp-shell-*TAGS-changers' rant. "
     do (when (and (buffer-file-name buf)
                   (string-match "^.?TAGS$" (file-name-nondirectory
                                             (buffer-file-name buf))))
-         ;; !<@todo XXX Change this to use the new `dp-kill-buffers-by-name'
+         ;; !<@todo XXX Change this to use the new `dp-kill-buffers-by-file-name'
          ;; But it will need to be able to force the mod status of the buffer
          ;; to nil.
          (let ((file-name (buffer-file-name buf))
