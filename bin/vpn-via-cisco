@@ -2,12 +2,13 @@
 #set -x
 source script-x
 set -x -e
-: ${dest:=permabit}
+: ${dest:=nvidia}
 : ${dest_desc:=$dest}
 : ${kill_ffox:=}
 : ${try_to_be_smart=t}
 : ${log_it:=}
 : ${no_xx:=t}
+: ${vpnc_service:=/etc/init.d/vpnc}
 
 : {color_opts:="-B black -F DarkGoldenrod"}
 
@@ -16,7 +17,7 @@ vsetp "$dest" || {
     exit 2;                     # Slinker + Stinker
 }
 case "$dest" in
-    pbit|pb|p) dest=permabit;;
+    v|nv|-|=|.) dest=nvidia;;
     *);;
 esac
 
@@ -64,8 +65,8 @@ vpn_it()
 
     vsetp $kill_ffox && kill-ffox
 
-    sudo /etc/init.d/vpnclient_init start || {
-        sudo /etc/init.d/vpnclient_init restart
+    sudo ${vpnc_client} start || {
+        sudo ${vpnc_client} restart
     }
     
     eval $cmd sudo vpnclient connect $dest

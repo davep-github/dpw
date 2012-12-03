@@ -1,10 +1,14 @@
 #!/bin/sh
 
+set -u
+
 progname=$(basename "$0")
 
 errno_dat=("$@")	    # Pristine args.
-. script-x
+source script-x
+
 errno_dat_tarnished0=("$@")
+
 
 ERRNO_FILES='/usr/include/errno.h 
 /usr/include/asm-generic/errno.h
@@ -18,6 +22,8 @@ newline_opt="-n"
 return_exit_code_p=""           # Exit with the first errno as our status.
 return_exit_code_index=         # Unset, don't use it. ^ implies `$1'
 use_hex_p=
+make_negative_p=
+make_positive_p=
 #
 # This, overall, can throw one for a loop as it looks like an error has 
 # occurred as it should. But during debugging or if one isn't really paying 
@@ -120,20 +126,23 @@ errno_emitter=errno_emit_match
 # Set to "" or "-" to get nothing.  It's an error to call dp-getopt+.sh with
 # std_options unset.
 std_options=""
-DPGOP_Usage_args_info=" errno..."
-DPGOP_Usage_synopsis="
-Display info about errno-s:
--n name
--d description
--v be verbose (kinda for testing)
--t be terse (different that just non-verbose)
--p echo back args verbatim as entered (debugging)
--h print errno in hex
--m print 0 - errno (negative errno)
+Usage_args_info=" errno..."
+Usage_synopsis="Display various info about errno...:
+"
+Usage_details="-n name only.
+-N emit name only without newline.
+-s sort [same as -n].
+-d description only.
+-v be verbose (kinda for testing).
+-t be terse (different that just non-verbose).
+-p echo back args verbatim as entered (debugging).
+-h print errno in hex.
+-m print (0 - errno) (negative errno) [why did I do this?].
+-+ make errno... positive. A '--' must separate this from the other options.
 "
 
 # The real meat...
-option_str="ntdvpNxXh"
+option_str="nstdvpNxX:hm+"
 #echo "0:DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT>$DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT<"
 $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT "0:@>$@<"
 source dp-getopt+.sh            # Runs when sourced.
@@ -142,7 +151,7 @@ source dp-getopt+.sh            # Runs when sourced.
 $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT "1:@>$@<"
 for i in "$@"; do
     case "$1" in
-        -n) errno_emitter=errno_emit_name;;
+        -n|-s) errno_emitter=errno_emit_name;;
         -N) errno_emitter=errno_emit_name_no_newline;;
 	-d) errno_emitter=errno_emit_desc;;
 	-v) errno_emitter=errno_emit_verbose;;
@@ -156,6 +165,7 @@ for i in "$@"; do
             errno_emitter=errno_emit___not;;
         -h) use_hex_p=t;;
         -m) make_negative_p=t;;
+        -+) make_positive_p=t;;
         --) shift; break;;
     esac
     shift
