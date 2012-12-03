@@ -1,0 +1,30 @@
+*.[oa]
+*.pyc
+*.pyo
+*.elc
+a.out
+
+# Naming conventions to prevent git's gaze.
+*-hide
+hide-*
+*-novc
+novc-*
+*-nogit
+nogit-*
+*-HIDE
+HIDE-*
+*-NOVC
+NOVC-*
+*-NOGIT
+NOGIT-*
+
+# Oft-modified files with transient contents.
+.csh_history*
+.bash_history*
+
+
+# Invisible dirs
+/@@*
+/*@@
+/JUNK
+/junk

@@ -793,12 +793,12 @@ Or both.")
 
 (defalias 'sml 'dp-set-shell-max-lines)
 
-(defun dp-maybe-add-ansi-color (&optional force-it-p filter-it-p)
+(defun* dp-maybe-add-ansi-color (&optional force-it-p (filter-it-p t))
   (interactive)
-  (require 'ansi-color)
   (if (or force-it-p
           (bound-and-true-p dp-wants-ansi-color-p))
       (progn
+        (require 'ansi-color)
         (setq dp-wants-ansi-color-p t)
         (ansi-color-for-comint-mode-on)
         ;; Cheesy hack to replace the nigh invisible green face used for

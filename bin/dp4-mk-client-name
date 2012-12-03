@@ -5,7 +5,7 @@ source script-x
 : ${client_prefix:=${LOGNAME}}
 : ${client_sep:=-}
 
-sb=$(scsandbox $PWD)
+sb=$(scsandbox -.)
 echo "${client_prefix}${client_sep}${sb}"
 
 exit 0

@@ -1,0 +1,9 @@
+# .cshrc_layout_tools file
+# $Id: //hw/nv/env/.cshrc_layout_tools#4 $
+
+# Layout tools setup
+source "/home/tools/setups/setup_avanti"
+source "/home/tools/setups/setup_astro"
+source "/home/tools/setups/setup_psyn"
+source "/home/tools/setups/setup_sequence"
+

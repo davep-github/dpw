@@ -52,7 +52,7 @@ relative_p=
 noErrors_p=
 
 EExecVerbose
-option_str="nvqkwpcrQq"
+option_str="nvqkwpcrQq."
 source dp-getopt+.sh || {
     # We will have had our Usage called.
     exit 1
@@ -73,6 +73,7 @@ do
       -c) returnPerforceClientName=t;;
       -r) relative_p=t;;
       -q) noErrors_p=t;;
+      -.) kwa_work=$(dirname $PWD);;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";

@@ -9854,13 +9854,14 @@ on interactiveness, but due to cases like this, I'm trending away from
   "A predicate function used by `dp-choose-buffers'."
   (apply 'string-match regexp string rest))
 
-(defun* dp-choose-buffers (predicate &optional (buffer-list (buffer-list))
+(defun* dp-choose-buffers (predicate &optional buffer-list
                            &rest pred-args)
   "Return the subset of BUFFER-LIST that pass PREDICATE.
 If BUFFER-LIST is nil, then use `buffer-list'.
 If PREDICATE is a string, then it is assumed to be a regexp.
 Otherwise, PREDICATE is `apply'd to the buffer and PRED-ARGS."
   (interactive "sreg-exp: ")
+  (setq-ifnil buffer-list (buffer-list))
   (let* (regexp)
     (when (stringp predicate)
       (setq pred-args (list predicate) ;the regexp
@@ -11540,7 +11541,8 @@ FILENAME defaults to the name of the current buffer or
                               (buffer-file-name (current-buffer)))))))
     (when (interactive-p)
       (message "%s is%s owned by %s." file-name (if status "" " NOT") 
-               (or user-name (user-login-name))))))
+               (or user-name (user-login-name))))
+    status))
 
 
 (defun dp-balance-horizontal-windows ()

@@ -485,6 +485,8 @@
      dp-go)
     (("cttoi" "come to think of it")
      dp-manual)
+    (("br" "bug report")
+     dp-manual)
     ((("ftci" "FTCI" "ftca" "FTCA") '=))
     ))
 ;; We could just use the non-void-ness of dp-common-abbrevs, but I

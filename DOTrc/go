@@ -1,3 +1,4 @@
+# ${HOME} is special in that it does not end with a /
 Ee|elm|			${HOME}/.elm/
 Ee|jobs|		${HOME}/jobs/
 Ee|pine|		${HOME}/pine/
@@ -13,11 +14,21 @@ Ee|ksrc|		/slice5/usr/src/sys/
 Ee|pdb|			${HOME}/etc/pdb/
 Ee|pydb|		${HOME}/etc/pydb/
 Ee|doc|			${HOME}/doc/
-#|bin| should not be used!
+Ee|inb|                 ${HOME}/inb/
+E|rc|                   ${HOME}/.rc/
 Ee|bin|			${HOME}/bin/
 Ee|lisp|		${HOME}/lisp/
-#E|elisponly|           a test which should not match
+Ee|dpbuild|dpbld|       ${HOME}/davep/build/
+
+#E|elisponly|           a test which should not match because of comment
 Ee|testA|testB|testC| 	value-for-testABC
+
+# Other things can be expanded... sort of. Needs work.
 Ee|faf|                 find . -type f -print0 | xargs -r0 
 Ee|faff|                find . -type f -print0 | xargs -r0 fgrep 
-Ee|fafe|                find . -type f -print0 | xargs -r0 egrep 
+Ee|fafe|                find . -type f -print0 | xargs -r0 egrep
+
+Ee|dpworld|dpw|              ${HOME}/davep/dpw/
+Ee|dpwgit|                   ${HOME}/davep/dpw/
+Ee|dpwbuild|dpwbld|dpwbld|   ${dpworld}build/
+

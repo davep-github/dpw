@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #set -x
 
-. script-x
+source script-x
 
 progname="$0"
 if [ "$1" = "-N" ]

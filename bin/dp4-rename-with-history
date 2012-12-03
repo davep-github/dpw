@@ -1,0 +1,15 @@
+#!/bin/sh
+
+source script-x
+source eexec
+EExecDashN
+echo 1>&2 "Not tested/ready for prime time."
+
+set -u
+progname="$(basename $0)"
+
+fromFile="$1"
+toFile="$2"
+
+EExec p4 integrate "$fromFile" "$toFile"
+EExec p4 delete "$fromFile"

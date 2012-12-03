@@ -311,7 +311,7 @@ against the list of regexps."
   :group 'dp-vars
   :type 'boolean)
 
-(defcustom dp-wants-ansi-color-p t
+(defcustom dp-wants-ansi-color-p nil
   "*Convert ANSI escape sequences to faces in comint and derived modes.
 Unfortunately there are a lot of font problems: different sizes, not all
 fixed width, etc.

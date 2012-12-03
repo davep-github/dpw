@@ -147,7 +147,7 @@ dump_go_files()
     done
 }
 
-opts="x:a:d:lef:g:GE:h"
+opts="x:a:d:lef:g:GE:hw"
 q=$(getopt -o "$opts" -- "$@")
 [ $? != 0 ] && Usage
 eval set -- "$q" 
@@ -247,7 +247,7 @@ echo 1>&2 "Check len and offer to clear \`e' flag if too short."
 	    shift
 	    ;;
 
-        -h) shift; grep_for_pwdname;;
+        -h|-w) shift; grep_for_pwdname;;
 
 	-g)
             shift
