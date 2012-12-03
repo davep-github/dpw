@@ -2480,6 +2480,10 @@ E.g. ;; commented out by dp-comment-out-sexp;"
   (interactive)
   (dp-comment-out-with-tag "b0rked?"))
 
+(defun cot-eg ()
+  (interactive)
+  (dp-comment-out-with-tag "e.g."))
+(dp-defaliases 'coeg 'cot-eg)
   
 (defsubst dp-comment-out-with-tag-OEM (&optional no-kill-first-p
                                        append-p)
