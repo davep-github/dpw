@@ -4225,14 +4225,16 @@ Use exec-path if PATH is nil."
   (dp-find-pydb-file (or note-file "phonebook.py") other-window-p))
 (defalias 'pb 'dp-visit-phone-book)
 
-(defun hi (&optional other-window-p note-file)
+(defun dp-visit-host-info (&optional other-window-p note-file)
   "Open the host-info database."
   (interactive "P")
   (dp-find-pydb-file (or note-file "host_info.py") other-window-p))
 
+(dp-defaliases 'hi 'dp-visit-host-info)
+
 (defsubst hi2 (&optional note-file)
   (interactive)
-  (hi t note-file))
+  (dp-visit-host-info t note-file))
 
 (defun todo (&optional other-window-p note-file)
   "Open the (obsolete, use the journal instead) todo file."

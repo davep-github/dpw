@@ -1,9 +1,11 @@
 #!/bin/sh
 #
-# xx - start up an xterm.
-# has shorter option names for lazy typists.
-# Also will get default xterm characteristics from hosts database.
-# -h host option allows xterm to have characteristics of host instead of
+# WAS: xx for since late 80s. Now dpxx due to name clash @ nVIDIA.
+# More convenient way to start up an xterm with my preferences.
+# Has shorter option names for lazy typists.
+# Also will get default xterm characteristics from hosts database 
+# (M-x dp-visit-host-info).
+# -h host option allows xterm to have characteristics of [remote] host instead of
 #  the current host.  Useful for differentiating xterms connected to
 #  other hosts (see xrl)
 #

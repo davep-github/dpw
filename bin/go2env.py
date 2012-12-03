@@ -11,6 +11,7 @@ PERMANENT_PREFIX = ""
 PREFIX = ""
 HOME = os.environ['HOME']
 UGLY_HOME = dp_io.bq('cd $HOME; /bin/pwd')[:-1]
+Shell_type = None                       # None means use $SHELL
 
 #dp_io.eprintf('HOME>%s<, UGLY_HOME>%s<', HOME, UGLY_HOME)
 
@@ -69,10 +70,11 @@ def permanent_prefix_handler(name, val, **kw_args):
 
 
 #####################################################################
-def environment_var_handler():
+def environment_var_handler(shell):
     """Figure out what shell we are using so we can select
     the proper environment setting handler."""
-    shell = os.environ.get('SHELL', 'sh')
+    if not shell:
+        shell = os.environ.get('SHELL', 'sh')
     shell_name = os.path.basename(shell)
     try:
         return shell_handlers[shell_name]
@@ -87,14 +89,17 @@ def list_handler(name, val, file_name, ctl, **kw_args):
 
 def LIST_handler(name, val, file_name, ctl, **kw_args):
     print "%s:%s" % (file_name,  val), name, file_name, ctl
-    
+
 #
 # handlers map.
 # key: selector char in .go file
 # val: list of handlers for selector:
 #   entry, prefix in file, suffix in file selector-regexp
-handlers = { 'E': (handle_emacs, emacs_pre, None, "E"),
-             'e': environment_var_handler() + ("e",),
+def get_handlers(shell_type=None):
+    if shell_type == None:
+        shell_type = Shell_type
+    return { 'E': (handle_emacs, emacs_pre, None, "E"),
+             'e': environment_var_handler(shell_type) + ("e",),
              'p': (prefix_handler, None, None, "p"),
              'P': (permanent_prefix_handler, None, None, "P"),
              'l': (list_handler, None, None, "E|e"),
@@ -113,7 +118,7 @@ selector>%s<
 aliases>%s<""", line, selector, aliases)
     if m:
         dp_io.debug("m.groups()>%s<\n", m.groups())
-        
+
     if not m:
         if line[-1] == "\n":
             line = line[:-1]
@@ -197,7 +202,7 @@ def expand_file(file, selector, aliases):
         if re.search("^\s*$", line):
             # Catches "", too
             continue
-        
+
         expand_alias(line, selector, aliases, file)
 
 
@@ -212,7 +217,7 @@ def expand_files(files, selector, aliases):
 # parse args
 #
 selector = 'e'
-opts, args = getopt.getopt(sys.argv[1:], 'efvdlL')
+opts, args = getopt.getopt(sys.argv[1:], 'efvdlLs:')
 for opt, val in opts:
     if opt == '-e':
         selector = 'E'
@@ -227,6 +232,10 @@ for opt, val in opts:
         selector = 'l'
     elif opt == "-L":              # Simple listing with file names displayed
         selector = 'L'
+    elif opt == '-s':
+        Shell_type = val                # Override $SHELL.
+
+handlers = get_handlers(Shell_type)
 
 #
 # find the go path
@@ -247,7 +256,7 @@ else:
 files.reverse()
 
 aliases = {}
-    
+
 handle, handle_pre, handle_post, selector_regexp = handlers[selector]
 if type(selector_regexp) == types.StringType:
     selector_regexp = re.compile(selector_regexp)
@@ -258,7 +267,6 @@ expand_files(files, selector_regexp, aliases)
 keys = aliases.keys()
 keys.sort()
 
-                                        
 ##!<@todo Stash away file name for better location purposes.
 
 if handle_pre:

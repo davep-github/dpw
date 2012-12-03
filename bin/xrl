@@ -22,8 +22,8 @@ do
     xrl_xterm_bin=${XRL_XTERM_BIN:-$($HOST_INFO -n 'xterm' xrl_xterm_bin)}
     font=${XRL_XTERM_FONT:-$($HOST_INFO -n "$DEFONT" xrl_xterm_font)}
     [ -z "$font" ] && font=9x15
-    #echo "xx -N -h $host -n $title_base $rsh_bin $host"
+    #echo "dpxx -N -h $host -n $title_base $rsh_bin $host"
     #echo "FONT>$font<"
-    xx $just_show -h $host -n $title_base -f $font \
+    dpxx $just_show -h $host -n $title_base -f $font \
 	-x $xrl_xterm_bin $rsh_bin $rsh_bin_args $host
 done
