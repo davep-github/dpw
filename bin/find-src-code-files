@@ -3,6 +3,17 @@
 source script-x
 
 args=("$@")
+
+add_foi_regexp()
+{
+    #echo 1>&2 "B:FOI>${FILES_OF_INTEREST[@]}<"
+    for pat in "$@"; do
+        FILES_OF_INTEREST[${#FILES_OF_INTEREST[@]}]="-e"
+        FILES_OF_INTEREST[${#FILES_OF_INTEREST[@]}]="$pat"
+    done
+    #echo 1>&2 "A: FOI>${FILES_OF_INTEREST[@]}<"
+}                  
+
 add_foi_regexp()
 {
     #echo 1>&2 "B:FOI>${FILES_OF_INTEREST[@]}<"
@@ -15,12 +26,12 @@ add_foi_regexp()
 
 add_filter_regexp()
 {
-    #echo 1>&2 "B:FOI>${FILES_TO_FILTER[@]}<"
+    #echo 1>&2 "B:FOI>${FILES_TO_FILTER_IN[@]}<"
     for pat in "$@"; do
-        FILES_TO_FILTER[${#FILES_OF_INTEREST[@]}]="-e"
-        FILES_TO_FILTER[${#FILES_OF_INTEREST[@]}]="$pat"
+        FILES_TO_FILTER_IN[${#FILES_OF_INTEREST[@]}]="-e"
+        FILES_TO_FILTER_IN[${#FILES_OF_INTEREST[@]}]="$pat"
     done
-    #echo 1>&2 "A: FOI>${FILES_TO_FILTER[@]}<"
+    #echo 1>&2 "A: FOI>${FILES_TO_FILTER_IN[@]}<"
 }                  
 
 # {gentoo|libranet}'s default sudo define SECURE_PATH and so our binaries
@@ -40,7 +51,7 @@ fi
 : ${DEF_SYSTEM_INCLUDES:=/usr/include}
 SYSTEM_INCLUDES=
 FILES_OF_INTEREST=()
-FILES_TO_FILTER=()
+FILES_TO_FILTER_IN=()
 : ${v:=''}
 # It may be easier to specify excludes in some cases rather than including
 # everything else. Things like all c files except test.c
@@ -108,29 +119,36 @@ EXCLUDED_FILES_FILE_OPT=
     EXCLUDED_FILES_FILE_OPT="-c $EXCLUDED_FILES_FILE"
 }
 
-[ -z "${FILES_TO_FILTER[*]}" ] && {
-    FILES_TO_FILTER=('.*')
+[ -z "${FILES_TO_FILTER_IN[*]}" ] && {
+    FILES_TO_FILTER_IN=('.*')
 }
 
-filter_excludes()
+filter_excludes_none()
 {
-    if [ -z "${EXCLUDE_PAT}" ]
-    then
-        cat
-    else
-        egrep -v "${EXCLUDE_PAT}"
-    fi
+    cat
 }
 
-echo 1>&2 "FtF>${FILES_TO_FILTER[@]}<"
+filter_excludes_egrep()
+{
+    egrep -v "${EXCLUDE_PAT}"
+}
+
+if [ -z "${EXCLUDE_PAT}" ]
+then
+    exclude_filter=cat
+else
+    exclude_filter=filter_excludes_egrep
+fi
+
+echo 1>&2 "FtF>${FILES_TO_FILTER_IN[@]}<"
 echo_id EXCLUDE_PAT 1>&2
 filter()
 {
     tee /dev/null | \
-    filter_excludes | \
-    egrep -i "${FILES_OF_INTEREST[@]}" | \
+    $exclude_filter | \
     sed -r "$VC_EXCLUDES" $EXCLUDES | \
-    egrep -i "${FILES_TO_FILTER[@]}" | \
+    egrep -i "${FILES_OF_INTEREST[@]}" | \
+    egrep -i "${FILES_TO_FILTER_IN[@]}" | \
     tee /dev/null
 }
 

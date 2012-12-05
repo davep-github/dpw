@@ -7,6 +7,7 @@ Ee|hwrk|                 /home/scratch.dpanariti_t124/hw.t124/hw/ap/
 Ee|hwwrk|                /home/scratch.dpanariti_t124/hw.t124/hw/ap/
 Ee|work|                 /home/dpanariti/work/
 Ee|active|               /home/dpanariti/work/active/
+Ee|current|              ${active}current/
 Ee|weg|                  /home/dpanariti/work/info/examples/
 Ee|sb|                   /home/scratch.dpanariti_t124/2.hw.t124/
 Ee|sbap|                 /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/
@@ -32,3 +33,4 @@ Ee|sandbox1diag|sbox1diag|sb1diag|workspace1diag|ws1diag|diag1|  ${workspace1ap}
 Ee|sandbox1tg|sbox1tg|sb1tg|workspace1tg|ws1tg|tgen1|tg1|        ${workspace1diag}testgen/
 Ee|sandbox1testgen|sbox1testgen|sb1testgen|workspace1testgen|ws1testgen| ${workspace1tg}
 
+Ee|workinfo|winfo|       /home/dpanariti/work/info/

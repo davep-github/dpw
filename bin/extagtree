@@ -19,7 +19,7 @@ args=("$@")                     # Preserve args across .bashrc execution.
 tagtree()
 {
     local files_file="$1"
-    eval $SUDO $EXCTAGS "$inheritance_opt" $etags_opt -L "$files_file" \
+    eval $SUDO $EXCTAGS $inheritance_opt $etags_opt -L "$files_file" \
       --links=no -o $TAGFILE \
       $h_OPT $langmap $full_member_names "$py_props" "${EC_XARGS}"
 }

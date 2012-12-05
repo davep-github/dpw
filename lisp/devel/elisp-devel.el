@@ -2196,3 +2196,20 @@ Wednesday November 21 2012
   (dp-set-frame-width width)
   (dp-set-frame-height height))
 
+
+========================
+Monday December 03 2012
+--
+(setq ORIG-comint-password-prompt-regexp comint-password-prompt-regexp)
+"\\(\\([Oo]ld \\|[Nn]ew \\|^\\)[Pp]assword\\|pass ?phrase\\):\\s *\\'\\|\\(Enter passphrase for.*: \\)\\|\\(\\[sudo\\] password for dapanarx.*: \\)\\|\\(Enter passphrase for.*: \\)\\|\\(\\[sudo\\] password for dapanarx.*: \\)\\|\\(Enter passphrase for.*: \\)\\|\\(Enter password.*: \\)\\|\\(\\[sudo\\] password for dapanarx.*: \\)"
+
+"\\(\\([Oo]ld \\|[Nn]ew \\|^\\)[Pp]assword\\|pass ?phrase\\):\\s *\\'\\|\\(Enter passphrase for.*: \\)\\|\\(\\[sudo\\] password for dapanarx.*: \\)\\|\\(Enter passphrase for.*: \\)\\|\\(\\[sudo\\] password for dapanarx.*: \\)"
+
+"\\(\\([Oo]ld \\|[Nn]ew \\|^\\)[Pp]assword\\|pass ?phrase\\):\\s *\\'\\|\\(Enter passphrase for.*: \\)\\|\\(\\[sudo\\] password for dapanarx.*: \\)"
+
+"\\(\\([Oo]ld \\|[Nn]ew \\|^\\)[Pp]assword\\|pass ?phrase\\):\\s *\\'\\|\\(Enter passphrase for.*: \\)\\|\\(\\[sudo\\] password for dapanarx.*: \\)"
+
+(posix-string-match (concat "^" "Enter passphrase for" "$")
+              comint-password-prompt-regexp)
+nil
+

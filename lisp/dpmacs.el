@@ -444,7 +444,8 @@ w/tags, cscope, etc.")
             ;; sawfish lisp files (librep)
             ("\\.sawfish/custom$" . sawfish-mode)
             ("\\.jl$" . sawfish-mode)   ; sawfish lisp files (librep)
-            ;; my .rc dir files (bash login stuff)
+            ;; my .rc dir files (mostly bash login stuff)
+            ;; @todo XXX revist blanket application of sh mode.
             ("/\\.rc/[^/]+$" . shell-script-mode)
             ("\\.jxt$" . dp-journal-mode) ; dp Journal files.
             ("\\.g$" . antlr-mode)
@@ -902,8 +903,12 @@ This can be callable.")
 (when (dp-optionally-require 'folding nil)
   (setq-default folding-internal-margins nil))
 
+(defvar dp-orig-comint-password-prompt-regexp comint-password-prompt-regexp
+  "`defvar' allows us to save the original version once, unless eval'd interactively.")
+
 ;; Make the password hider work with some other programs.
 (loop for prompt in '("Enter passphrase for" 
+                      "Enter password"
                       "[sudo] password for dapanarx")
   do (unless (posix-string-match (concat "^" prompt "$")
               comint-password-prompt-regexp)

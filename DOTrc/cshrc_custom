@@ -48,10 +48,14 @@ alias lsl 'ls \!* | less'
 alias mv 'mv -i'
 alias rm 'rm -i'
 alias cp 'cp -i'
+alias gtot 'pushd `depth`'
+alias totot 'cd `depth`'
+
 set autolist = t
 set history = 5120
 set savehist = $history
 set histfile = "$HOME/.csh_history.$HNAME"
+set correct =
 
 # Reconcilable differences
 alias type which
@@ -64,6 +68,7 @@ setenv LESSKEY /usr/bin/.lesskey
 setenv LESSOPEN_PROG lesspipe.sh
 setenv LESS "-R -MM -X --ignore-case"
 setenv LESSOPEN "|lesspipe.sh %s"
+setenv PURPOSE '-[tcsh std env]- '
 
 # Somehow I came across a binding of this function to ^p vs M-p and now I'm
 # programmed to it on ^p.
@@ -73,6 +78,14 @@ bindkey "^p" history-search-backward
 set ipc_rc = "$HOME/ipc/customrc.csh"
 if (-x "$ipc_rc" ) then
     source "$ipc_rc"
+endif
+
+if ($?prompt) then
+  if ($?tcsh) then
+    set prompt='[%B%n@%m %c]$ ' 
+  else
+    set prompt=\[`id -nu`@`hostname -s`\]\$\ 
+  endif
 endif
 
 #

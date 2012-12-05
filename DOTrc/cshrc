@@ -325,7 +325,6 @@ endif
 #   echo "DISPLAY not set.\n"
 # endif
 
-
 source ~/.aliases
 
 ##echo "trace_c10"
@@ -366,6 +365,7 @@ if (($?INIT_TCSH) && ($INIT_TCSH == 1)) then
   if ($OSTYPE == "SunOS") set tty=`/bin/tty | /home/utils/perl-5.6.1/bin/perl5.6.1 -pe 's/\/dev\/\w+\///'`
   if ($OSTYPE == "Linux") set tty=`/usr/bin/tty | /home/utils/perl-5.8.6/bin/perl -pe 's/\/dev\/\w+\///'`
   set	histfile="$HOME/.$HNAME-$tty"
+  
 ##echo "trace_t10"
   source $HOME/.login
 ##echo "trace_t20"
