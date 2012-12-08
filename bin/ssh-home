@@ -1,0 +1,75 @@
+#!/bin/sh
+
+source script-x
+source eexec
+set -u
+progname="$(basename $0)"
+
+# File in which variables useful to ssh'ing to home are kept.
+: ${source_file="$HOME/.rc/env.var"}
+
+ssh_home()
+{
+    local home_addr
+    if vunsetp "$DP_HOME_MACHINE"
+    then
+        echo 1>&2 "ssh_home: machine addr variable, '$DP_HOME_MACHINE', not set."
+        return 1
+    fi
+    eval home_addr="\$${DP_HOME_MACHINE}_ADDR"
+    eval home_user="\$${DP_HOME_MACHINE}_USER"
+    vsetp $home_addr || {
+        echo "home addr is not set."
+        return 1
+    } 1>&2
+    vsetp $home_user || {
+        echo "home user is not set."
+        return 1
+    } 1>&2
+    echo "ssh_home: home[$DP_HOME_MACHINE] info: addr: $home_addr, user: $home_user"
+    EExec ssh "$home_user@$home_addr"
+}
+
+[ "${DP__name__=""}" = "__main__" ] || exit 0
+
+#Usage variable usage:
+Usage_args_info=" [<eexec-opts>]"
+Usage_synopsis="ssh to default home machine.
+"
+Usage_details="-n -- Show what would happen but don\'t do it. [eexec]
+-v -- Be verbose about it. [eexec]
+-q -- Anti-verbose. [eexec]
+"
+# Example of arg parsing.
+Usage_args_info="No args"
+Usage_details="$EExec_parse_option_str
+-s -- Do not source $source_file
+-S <source-file> -- Do source <source-file> immediately. May be repeated."
+option_str="nvqsS:"
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      # eexec support
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+      # Program options.
+      -s) source_file="";;
+      -S) shift; source "$1";;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+[ -n "$source_file" ] && {
+    # Make sure we have the latest home ssh variables.
+    source $source_file
+}
+
+ssh_home

@@ -10,11 +10,12 @@ progname="$(basename $0)"
 : ${DIFF_PAT:=@DIFF@}
 : ${DIFF_DEFAULT:=mgdiff}
 : 
-: ${CLIENT_TEMPLATE:=~/work/info/examples/DOTp4config}
+: ${CONFIG_TEMPLATE:=~/work/info/examples/DOTp4config}
 
 Usage()
 {
-    echo "$progname: <client-name>"
+    echo "$progname: <client-name>
+  Generate a .p4config file for the current environment."
 }
 
 [ -z "$@" ] && {
@@ -24,6 +25,4 @@ Usage()
 
 sed -r "s/$CLIENT_PAT/$1/
 s/$PORT_PAT/$PORT_DEFAULT/
-s/$DIFF_PAT/$DIFF_DEFAULT/" $CLIENT_TEMPLATE
-
-
+s/$DIFF_PAT/$DIFF_DEFAULT/" $CONFIG_TEMPLATE

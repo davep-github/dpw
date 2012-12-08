@@ -31,6 +31,7 @@
 # EExecDashN          Set EExecShowOnly and EExecShowPrefix.
 # EExecVerbose        Set up standard verbosity.
 # EExecQuiet          Turn off verbosity.
+# EExec_verbose_func  Function to display EExec_verbose_msg messages.
 
 # MUST be set before sourcing or this will NOT work.
 # On by default. Call EExecNoExport to disable exportation.
@@ -42,19 +43,32 @@ ${EExecExporter} EExecEchoPrefix="+"
 ${EExecExporter} EExec_loaded_p=t
 ${EExecExporter} EExecShowOnly=
 ${EExecExporter} EExecErrorReporter=
+${EExecExporter} EExec_verbose_func=
 
+EExec_parse_usage="-n -- Show what would happen but don't do it. [eexec]
+-v -- Be verbose about it. [eexec]
+-q -- Anti-verbose. [eexec]
+"
+
+EExec_parse_option_str="nvq"
+
+#
+# This is a terrible hack, only working in precise circumstances, but is
+# surprisingly useful nonetheless.
 EExec_parse()
 {
+    local prog=""
     for i in "$@"
     do
       case "$1" in
-          -n) EExecDashN;;
-          -v) EExecVerbose;;
+          -n) prog="${prog}EExecDashN ";;
+          -v) prog="${prog}EExecVerbose ";;
+          -q) prog="${prog}EExecQuiet ";;
           *) break;;
       esac
       shift
     done
-    echo "$@"
+    echo "$prog"
 }
 
 EExecExport()
@@ -87,14 +101,21 @@ EExecDashN_p()
     [ -n "$EExecShowOnly" ]
 }
 
+# Should be named something like EExecSetVerbose (EExec_set_verbose)
 EExecVerbose ()
 {
-    if [ -z "$*" ]
+    if [ -z "${1-}" ]
     then
-	${EExecExporter} EExecEcho=EExecStderrEcho
+	EExec_verbose_func=EExecStderrEcho
     else
-	${EExecExporter} EExecEcho="$1"
+	EExec_verbose_func="$1"
     fi
+    EExecEcho="$EExec_verbose_func"
+}
+
+EExec_verbose_msg()
+{
+    [ -n "$EExec_verbose_func" ] && "$EExec_verbose_func" "{v}$@"
 }
 
 EExecQuiet ()

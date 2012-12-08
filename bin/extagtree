@@ -19,7 +19,7 @@ args=("$@")                     # Preserve args across .bashrc execution.
 tagtree()
 {
     local files_file="$1"
-    eval $SUDO $EXCTAGS "$inheritance_opt" $etags_opt -L "$files_file" \
+    eval $SUDO $EXCTAGS $inheritance_opt $etags_opt -L "$files_file" \
       --links=no -o $TAGFILE \
       $h_OPT $langmap $full_member_names "$py_props" "${EC_XARGS}"
 }
@@ -154,7 +154,7 @@ do
             echo -n 1>&2 "$prog: Found simply ctags. "
             if "$EXCTAGS" --help 2>&1 | fgrep -qi "Exuberant" 2>/dev/null
             then
-                echo 1>&2 "It looks Exuberant"
+                echo 1>&2 "It looks Exuberant!"
             else
                 echo 1>&2 "$prog: May not be exuberant."
             fi

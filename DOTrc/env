@@ -1,5 +1,9 @@
 # common env items
 
+# This is needed for the new idiom of using the Python idiom of
+# __name__ == __main__ to allow scripts to be used as libs, too.
+# Setting this here means that the default for command line 
+export DP__name__=__main__
 # the Name of the home machine's address variable.
 export DP_HOME_MACHINE=VILYA
 export VILYA_USER=davep

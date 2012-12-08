@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# WAS: xx for since late 80s. Now dpxx due to name clash @ nVIDIA.
+# WAS: xx since late 80s. Now dpxx due to name clash @ nVIDIA.
 # More convenient way to start up an xterm with my preferences.
 # Has shorter option names for lazy typists.
 # Also will get default xterm characteristics from hosts database 
@@ -11,7 +11,7 @@
 #
 #env | sort >| ~/Esaw.s
 
-. script-x
+source script-x
 
 set -u
 

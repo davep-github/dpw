@@ -1,7 +1,8 @@
 (dmessage "dp-dot-emcas.nvidia.el")
 
-(require 'dp-perforce)
-
+;; add to post-dpmacs hook.
+(add-hook 'dp-post-dpmacs-hook (lambda ()
+                                 (require 'dp-perforce)))
 
 (setq visible-bell nil)
 (defun dp-define-nvidia-c-style ()

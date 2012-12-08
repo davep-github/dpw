@@ -97,7 +97,7 @@ def handle_pipe_mode(v, *args, **kw_args):
 
 Opt_map = {
     '-I': Option_info_t('increment', eval, None, "increment"),
-    '-s': Option_info_t('init_string', identity, None, "prefix string"),
+    '-P': Option_info_t('init_string', identity, None, "prefix string"),
     '-C': Option_info_t('comma', identity, None, "count separator char"),
     '-z': Option_info_t('init_count', eval, None, "init_count"),
     '-c': Option_info_t('tick_char', None, handle_c, "tick character"),
@@ -112,9 +112,6 @@ Opt_map = {
                         "count chars vs lines (the default)"),
     "-K": Option_info_t('char-wise-plus-char', None, handle_char_wise_and_char,
                         "count chars vs lines (the default) and set the char"),
-#    "-l": Option_info_t("line_tick_p", eval, None,
-#                        "Use the nth line as the tick value."),
-
     ## Pipe mode sends ticks to stderr so you can pipe through tikker and not
     ## pollute the stdout stream.
     "-p": Option_info_t('pipe-mode', None, handle_pipe_mode,
@@ -151,15 +148,15 @@ if __name__ == "__main__":
     def_pipe_stream = sys.stdout
     pipe_stream = def_pipe_stream
     grand_total_p = True
-    line_tick_p = False
-    line_tick_prefix = ">>>"
+    sample_lines_tick_p = False
+    sample_lines_tick_prefix = "th-line>"
     no_clobber_p = False
     openMode = 'w'
     outputStreams = []
 
     # tick_interval, increment=1, init_string="counting: ", comma=", ",
     # init_count=0, tick_char
-    options = 'i:I:s:C:z:c:t:TdD:kphgaK:.lL:A'
+    options = 'i:I:P:C:z:c:t:TdD:kphgaK:.lsL:S:A'
     ctor_keywords = {}
     var_dict = {CTOR: ticker_lib.Ticker_t,
                 "tick_interval": def_tick_interval,
@@ -176,11 +173,11 @@ if __name__ == "__main__":
         if o == '-T':
             dp_utils.Twiddle_twiddles()
             sys.exit(0)
-        if o == '-l':
-            line_tick_p = not line_tick_p
+        if o in ('-l', '-s'):
+            sample_lines_tick_p = not sample_lines_tick_p
             continue
-        if o == '-L':
-            line_tick_prefix = v
+        if o in ('-L', '-S'):
+            sample_lines_tick_prefix = v
             continue
         if o == '-A':
             no_clobber_p = True
@@ -235,7 +232,7 @@ if __name__ == "__main__":
     else:
         ctor_keywords["ostream"] = ostream
 
-    if line_tick_p:
+    if sample_lines_tick_p:
         ctor_keywords["init_string"] = "Sampling every %sth line\n" % \
                                        (var_dict["tick_interval"],)
         ctor_keywords["unit_name"] = 'line'
@@ -255,14 +252,15 @@ if __name__ == "__main__":
         if char_wise_p:
             # Iterate for each char in the line.
             for c in l:
-                if line_tick_p:
-                    tick = line_tick_prefix + c
+                if sample_lines_tick_p:
+                    tick = sample_lines_tick_prefix + c
                 else:
                     tick = None
                 ticker(tick=tick)
         else:
-            if line_tick_p:
-                tick = "%6d%s" % (ticker.counter, line_tick_prefix + l)
+            if sample_lines_tick_p:
+                # @todo XXX allow a format to be used (dictionary type)
+                tick = "%8d%s" % (ticker.counter, sample_lines_tick_prefix + l)
             else:
                 tick = None
             ticker(tick=tick)

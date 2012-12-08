@@ -407,7 +407,7 @@ Otherwise, it uses the topic of the current item.")
     (setq dpj-current-journal-file (buffer-file-name))
     (message "New current journal file: %s" dpj-current-journal-file)))
 
-(dp-defaliases 'dpj-stick 'dpj-scfj 'dpj-sjf 'sjf 
+(dp-defaliases 'dpj-stick 'dpj-scfj 'dpj-sjf 'sjf 'snf
                'dpj-stick-current-journal-file)
 
 (defun* dpj-journal-file-sticky-p (&optional (buffer (current-buffer)))

@@ -147,11 +147,13 @@ then
 #    alias ls1='kwa_LSL_COLOR="--color=never" lsl'
 #    alias lth='kwa_LSL_COLOR="--color=never" lth'
     
-    alias ltl='ls -lt '         # xemacs makes an OK less.
+    alias ltl='ls -lt'         # xemacs makes an OK less.
+    alias lrl='ls -ltr'         # xemacs makes an OK less.
 # ?? WTF??    alias lssz='kwa_LSL_COLOR="--color=never" lssz'
 
     # How to make this dependent on my dp-shells lisp flags so the always match up?
     alias ls=ls_with_color
+    
 fi
 
 alias npg=port-grep
@@ -232,7 +234,18 @@ alias gitpull='git pull'
 alias githelp='gith'            # Remove ^H bolding/underlining
 
 alias go=g
+alias cdrp='cd $(rpd)'
+alias gorp='cd $(rpd)'
 alias home_addr='eval echo "\$${DP_HOME_MACHINE}_ADDR"'
 alias home_user='eval echo "\$${DP_HOME_MACHINE}_USER"'
+alias dotfgrep='GLOBIGNORE=".:.." ; fgrep'
+alias dotegrep='GLOBIGNORE=".:.." ; egrep'
+alias dotjgrep='GLOBIGNORE=".:.." ; grep' # just grep. Almost never used... egrep is preferred.
+alias dotgrep=dotfgrep          # fgrep is far and away my most common grepper.
+
+alias .fgrep=dotfgrep
+alias .egrep=dotegrep
+alias .jgrep=dotjgrep
+alias .grep=dotgrep
 
 true

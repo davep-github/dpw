@@ -220,6 +220,10 @@ prompt.  We don't want to stomp on them.")
                                        "grep"
                                        "egrep"
                                        "fgrep"
+                                       "dotfgrep"
+                                       "dotegrep"
+                                       "dotjgrep"
+                                       "dotgrep"
                                        "sed"
                                        "gawk"
                                        "nawk"
@@ -2383,7 +2387,7 @@ ARG is numberp:
   (unless (posix-string-match dp-comint-discard-regexp input)
     (funcall dp-orig-comint-input-sender proc input)))
     
-(defun dp-magic-columns-ls (&optional ls-cmd args cols echo-p lines)
+(defun dp-magic-columns-ls (ls-cmd &optional args cols echo-p lines)
   "Do an ls-like command in the *shell* buffer with COL columns.
 COL defaults the the width of the window in which the first *shell* buffer is
 displayed."
@@ -2406,7 +2410,7 @@ displayed."
            ;; Space --> Don't put command in the history.  Well, we do want
            ;; the rest of the line and I don't want to lose that.
            ;; 
-           (cmd (format "COLS=%s LINES=%s %s%s"
+           (cmd (format "COLUMNS=%s LINES=%s %s%s"
                         (or cols
                             (- (window-width shell-win) 5))
                         (or lines

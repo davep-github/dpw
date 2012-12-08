@@ -1,0 +1,29 @@
+#!/bin/sh
+
+source script-x
+source eexec
+set -u
+progname="$(basename $0)"
+
+EExec_parse "$@"
+
+#
+# Minimal set of files to index for MultiEngine Testing
+# //hw/ap/drv/drvapi
+# //hw/ap/drv/multiengine
+# //arch/traces/mobile/traces/gpu_multiengine/
+# //arch/traces/mobile/traces/nongpu_multiengine/
+# //hw/ap/inf/mods/trace_3d/plugin/
+#
+# /home/scratch.dpanariti_t124/t124_0/arch/traces/mobile/traces/gpu_multiengine/sanity_bsea/sanity_bsea.cpp
+depot_dirs_of_interest="
+//hw/ap/drv/drvapi
+//hw/ap/drv/multiengine
+//arch/traces/mobile/traces/gpu_multiengine/
+//arch/traces/mobile/traces/nongpu_multiengine/
+//hw/ap/inf/mods/trace_3d/plugin/
+"
+dirs_of_interest=$(dp4-reroot . $depot_dirs_of_interest)
+
+EExec index-code $dirs_of_interest
+

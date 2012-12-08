@@ -1,0 +1,277 @@
+#!/bin/sh
+
+source script-x
+source eexec
+set -u
+progname="$(basename $0)"
+
+#
+# E.g. run until failure (run while success)
+# egrep -q TEST_SUCCEEDED xxx
+# invert is true --> pass_stat = 1
+# if TEST_SUCCEEDED is present, rc = 0
+# if 1 == 0
+#   exit 0
+# fi
+# 
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+
+exit_how()
+{
+    while :
+    do
+      read -p "Exit now or after the next loop [^C|q/n]? "
+      case "$REPLY" in
+          [Qq]) {
+                   echo
+                   echo "Immediate exit requested"
+                   exit 2
+                };;
+          [Nn]) run_p=; break;;
+          *) echo "Unsupported response>$REPLY<";;
+      esac
+    done 1>&2
+}
+
+trap exit_how 2
+
+# Should always symlink this to the proper test file.
+: ${default_command=rerun-test.sh}
+: ${command=}
+: ${commands=${command=${default_command}}
+: ${pattern:=TEST_SUCCEEDED}
+: ${pattern_files=trep.txt}
+: ${log_file_base:=last-log-file}
+: ${grepper:=egrep}
+: ${grepper_args=-q}
+: ${ticker:=ticker_teeker_sample}
+: ${ticker_args:=-s}            # Sample
+: ${loop_end_condition:=loop_end_condition_grep}
+: ${max_loops=9999}
+: ${keep_logs_p=t}
+: ${save_pattern_files_p=t}
+: ${rm_pattern_files_p=t}       # e.g. trep.txt is appended to.
+: ${keep_nothing_p=}
+: ${loop_delay=10s}
+: ${match_p=}
+: ${nomatch_p=t}
+# Exit after reporting this many successes. Use `-', "" or something < 0 to get
+# all possible matches.
+: ${max_matches=1}
+: ${log_root=.}
+: ${log_dir=""}
+
+[ -z "$log_dir" ] && {
+    log_dir=$(dp-std-timestamp)
+}
+log_dir="${log_root}/${progname}.$log_dir"
+log_file_base="$log_dir/$log_file_base"
+[ -d "$log_dir" ] || {
+    mkdir -p "$log_dir"
+}
+
+UNSET="* UNSET *"
+: ${invert_p="$UNSET"}
+[ "$invert_p" = "$UNSET" ] && {
+    if [ -n "$match_p" ]
+    then
+        invert_p=
+    elif [ -n "$nomatch_p" ]
+    then
+        invert_p=t
+    else
+        invert_p=t
+    fi
+}
+
+[ -n "$keep_nothing_p" ] && {
+    keep_logs_p=
+    save_pattern_files_p=
+}
+
+# Really should use 0 and !0, but that requires making the check itself change.
+# == 0 and != 0
+# vs always using ==
+#
+if [ -n "$invert_p" ]
+then
+    pass_stat=1
+else
+    pass_stat=0
+fi
+ 
+# Files to be searched for completion status are kept in the positional args.   
+if [ -z "$*" ]
+then
+    set -- $pattern_files
+fi
+pattern_files=("$@")
+
+wrapup()
+{
+    local indent=""
+    [ -n "$1" ] && {
+        echo "Wrapup: $1"
+        indent="  "
+    }
+    shift
+    echo "${indent}Num matches: $num_matches"
+    echo "${indent}Loop count: $loop_count"
+    echo "${indent}last log file>${current_log_file}<"
+    echo "${indent}pattern>$pattern<"
+    echo "${indent}Pattern file(s): $@"
+}
+
+loop_end_condition_grep()
+{
+  $grepper $grepper_args $pattern "$@"
+}
+
+ticker_silent()
+{
+    cat > /dev/null
+}
+
+ticker_cat_overwrite()
+{
+    local log_file=${1}; shift
+    cat >| "$log_file"
+}
+
+ticker_cat_append()
+{
+    local log_file=${1}; shift
+    cat >> "$log_file"
+}
+
+ticker_teeker_sample()
+{
+    local log_file=${1}; shift
+    teeker -s "$log_file"
+}
+
+ticker_teeker_dots()
+{
+    local log_file=${1}; shift
+    teeker -c. "$log_file"
+}
+
+ticker_teeker()
+{
+    local log_file=${1}; shift
+    teeker ${ticker_args} "$log_file"
+}
+
+[ -z "$commands" ]  && {
+    echo "One or more command names are needed."
+    exit 1
+} 1>&2
+
+[ -z "$pattern" ] && {
+    echo "A success/fail pattern is needed."
+    exit 1
+} 1>&2
+
+loop_count=0
+run_p=t
+
+# Allow a user specified log file to be used.
+: ${current_log_file=}
+num_matches=0
+want_all_matches_p=
+# - or < 0 --> All matches. The max possible matches is max_loops.
+# num_matches can never reach (max_loops + 1) before the loop exits.
+[ "$max_matches" = "-" ] || [ -z "$max_matches" ] || ((max_matches < 0)) && {
+    max_matches=$((max_loops + 1))
+    want_all_matches_p=t
+}
+while [ -n "$run_p" ] && ((loop_count < max_loops))
+do
+  # We may as well use the loop_count even if we're not saving them.
+  # Removes the need for conditional code and keeps loop_count info available
+  # in the case of a crash.
+  : ${current_log_file="${log_file_base}.$loop_count"}
+  # This will also tell us the iteration.
+  echo "Logging run to $current_log_file"
+  
+  # This is the log file of the current run's output.
+  # The end condition data will not necessarily be in the log files.
+  for command in $commands
+  do
+    EExec_verbose_msg "command>$command<"
+    EExec_verbose_msg "ticker>$ticker<"
+    
+    EExec $command 2>&1 | EExec $ticker "$current_log_file"
+
+    # Examine the pattern files one at a time.
+    for pattern_file in "${pattern_files[@]}"
+      do
+      EExec_verbose_msg "pattern_file>$pattern_file<"
+
+      [ -e "$pattern_file" ] || {
+          echo "cannot find pattern file>$pattern_file<, skipping."
+          continue
+      } 1>&2 
+
+      $loop_end_condition "$pattern_file"
+  
+      rc=$?
+      if ((rc == pass_stat))
+          then
+          ((++num_matches))
+          wrapup "${num_matches} of ${max_matches} end conditions met" "$pattern_file of ${pattern_files[@]}"
+          ((num_matches >= max_matches)) && {
+              echo
+              echo "All end conditions met. Exiting."
+              exit 0
+          }
+      fi
+    # All related files have the same suffix.
+      [ -n "${save_pattern_files_p}" ] && {
+          EExec cp $pattern_file $log_dir/$pattern_file.$loop_count
+      }
+    done
+    [ -z "${keep_logs_p}" ] && EExec rm -f "${current_log_file}"
+    [ -n "${rm_pattern_files_p}" ] && {
+        rm -f "${pattern_files[@]}"
+    }
+    [ -n "${loop_delay}" ] && {
+        EExec_verbose_msg "sleeping for $loop_delay"
+        EExec sleep "${loop_delay}"
+        EExec_verbose_msg "done sleeping."
+    }
+  done
+  ((++loop_count))
+  
+  ### !!! REMOVE !!!
+  #{
+  #    echo 1>&2 "Forcing match for next iteration."
+  #    echo "$pattern" >> "${pattern_files[@]}"
+  #}
+done
+
+exit_reason=
+if [ -z "$run_p" ]
+then
+    exit_reason="Interrupted."
+elif ((num_matches == 0))
+then
+    exit_reason="Too many loops: End condition never found."
+elif [ -n "$want_all_matches_p" ]
+then
+    exit_reason="Looking for ALL matches (not an error)"
+elif ((num_matches < max_matches))
+then
+    exit_reason="Too many loops: End conditions, $num_matches of $max_matches"
+else
+    # There should be no unknown reason for exiting the loop.
+    exit_reason="Unknown. Fix me."
+fi
+wrapup "$exit_reason" "${pattern_files[@]}"
+
+exit 1

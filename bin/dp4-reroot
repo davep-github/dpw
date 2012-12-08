@@ -1,0 +1,37 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+verify_p=
+
+[ "${1}" = "-v" ] && {
+    verify_p=t
+    shift
+}
+
+workspace=${1}
+if [ "$workspace" = "." ]
+then
+    workspace=$(dp4-get-root)
+fi
+case "$workspace" in
+    */);;
+    *) workspace="$workspace"/;;
+esac
+shift
+rc=0
+for p in "$@"
+do
+  newp=$(echo "$p" | sed -r "s|^//|${workspace}|")
+  [ -n "$verify_p" ] && {
+      [ -d "$newp" ] || {
+          echo 1>&2 "ERROR: $newp is not a directory."
+          rc=1
+      }
+  }
+  echo "$newp"
+done
+
+exit $rc

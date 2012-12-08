@@ -1,0 +1,39 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+# How should this work?
+# Classes:
+# 1) Exceptions
+# 2) reject
+# 3) accept if
+
+# Can make pure exclusions
+# .* ... blah ... .*
+# Can make exceptions:
+# blah1 ... blah ... .*
+# 
+# to do dir1 dir2 ...
+# .* ... "" ... "(^|/)(dir1|dir2|...)
+: ${exceptions='$^'}
+: ${rejections='$^'}
+: ${accept='.*\.py$|.*\.[ch](pp)?$'}
+
+# Final d is to force a new cycle. I can't find any other way.
+exception_expression="/$exceptions/ {
+   p
+   d
+}"
+rejection_expression="/$rejections/ {
+   d
+}"
+accept_expression="\!$accept! {
+   p
+}"
+sed -rn \
+-e "${exception_expression}" \
+-e "${rejection_expression}" \
+-e "${accept_expression}"
+

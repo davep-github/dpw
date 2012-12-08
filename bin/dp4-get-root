@@ -1,0 +1,10 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+#
+# @todo XXX exit after the first match.
+p4 client -o | sed -rn 's/(^Root:[[:space:]])(.*)$/\2/p'
+
