@@ -4180,8 +4180,9 @@ Use exec-path if PATH is nil."
         ;; specified in the ispell package.
         (dmessage "checking default ispell program: %s" ispell-program-name)
         (unless (executable-find ispell-program-name)
-          (dmessage "No spelling program found. flyspell is disabled.")
+          (dmessage "No spelling program found. *spell is disabled.")
           (setq ispell-program-name nil)
+          ;; @todo XXX Are there any other spell modes we need to handle here?
           (setq dp-use-flyspell-p nil)) ;no spellr --> canna flyspel.
         ))))
 

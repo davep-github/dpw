@@ -835,6 +835,7 @@ This can be callable.")
   (require 'dp-fsf-late))
 
 (defun dp-using-flyspell-p ()
+  "Are we using flyspell? We need a spell program and the flyspell feature."
   (and dp-use-flyspell-p
        (executable-find ispell-program-name)
        (fboundp 'flyspell-mode)))
@@ -845,8 +846,8 @@ This can be callable.")
       (setq ispell-program-name dp-ispell-program-name)
       (dmessage "Using spec macs spell program: %s" dp-ispell-program-name))
   ;; Else try to find one
-  ;;;;(dp-init-spellin)
-)
+  ;; Why did I comment this out?
+  (dp-init-spellin))
 
 ;;
 ;; when this abbrev is expanded, it gets the cwd from the

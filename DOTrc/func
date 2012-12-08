@@ -929,7 +929,7 @@ export -f ps1
 mutt()
 {
     cd ~
-    EDITOR=${EDITOR=$MUTT_EDITOR} $(sp -1 mutt) -f $MUTT_INBOX
+    EDITOR=${EDITOR=$MUTT_EDITOR} $(sp -1 mutt) -f $MUTT_INBOX "$@"
 }
 
 pmutt()
@@ -938,7 +938,7 @@ pmutt()
     echo 1 B0rked
     exit 1
     cd ~
-    EDITOR=${EDITOR=$MUTT_EDITOR} $(sp -1 mutt) -f $PRISTINE_MUTT_INBOX
+    EDITOR=${EDITOR=$MUTT_EDITOR} $(sp -1 mutt) -f $PRISTINE_MUTT_INBOX "$@"
 }
 
 psa()
