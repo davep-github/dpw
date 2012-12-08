@@ -48,21 +48,6 @@ then
     }
 fi
 
-# Variable usage:
-#e.g.# Usage_args_info=" errno..."
-#e.g.# Usage_synopsis="Display various info about errno...:
-#e.g.# "
-#e.g.# Usage_details="-n name only.
-#e.g.# -N emit name only without newline.
-#e.g.# -s sort [same as -n].
-#e.g.# -d description only.
-#e.g.# -v be verbose (kinda for testing).
-#e.g.# -t be terse (different that just non-verbose).
-#e.g.# -p echo back args verbatim as entered (debugging).
-#e.g.# -h print errno in hex.
-#e.g.# -m print (0 - errno) (negative errno).
-#e.g.# "
-
 # defaults to placate -u and to educate user of this -- $0 -- utility.
 : ${DPGOP_Usage_args_info=${Usage_args_info="INFO: \$Usage_args_info is null.
 "}}
@@ -118,30 +103,43 @@ running_as_script && {
   fi
 }
 
-# Example of arg parsing.
-#eg# Usage_args_info="No args"
-#eg# Usage_synopsis="Do something that would normally require typing 3 words."
-#eg# Usage_details="Detailed args, raison de etre, etc."
-#eg# option_str=""
-#eg# source dp-getopt+.sh
-#eg# for i in "$@"
-#eg# do
-#eg#   # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
-#eg#   case $1 in
-#eg#       -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
-#eg#       -v) VERBOSE="echo $progname: "; EExecVerbose;;
-#eg#       -q) VERBOSE=":"; EExecQuiet;;
-#eg#       # -d is really just verbosity
-#eg#       -d) EExecVerbose; DEBUG="echo 1>&2 $progname: ";;
-#eg#       # superseded by . script-x# -D) set -x;;
-#eg#       --) shift ; break ;;
-#eg#       *) 
-#eg#       echo 1>&2 "Unsupported option>$1<";
-#eg#       Usage
-#eg#       exit 1 ;;
-#eg#     esac
-#eg#     shift
-#eg# done
-# The following is needed only when non optional args are required.
-#[ "$@" = "" ] && Usage
+#
+# A snippet/template for ease of use.
+#
+
+#e.g.# Usage variable usage:
+#e.g.# Usage_args_info=" errno..."
+#e.g.# Usage_synopsis="Display various info about errno...:
+#e.g.# "
+#e.g.# Usage_details="-n -- Show what would happen but don't do it. [eexec]
+#e.g.# -v -- Be verbose about it. [eexec]
+#e.g.# -q -- Anti-verbose. [eexec]
+#e.g.# "
+#e.g.# # Example of arg parsing.
+#e.g.# Usage_args_info="No args"
+#e.g.# Usage_synopsis="Do something that would normally require typing 3 words."
+#e.g.# Usage_details="Detailed args, raison de etre, etc."
+#e.g.# "nvq" Enable the 1st 3 options and are useful when using eexec(1dp)
+#e.g.# option_str="nvq"
+#e.g.# source dp-getopt+.sh
+#e.g.# for i in "$@"
+#e.g.# do
+#e.g.#   # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+#e.g.#   case $1 in
+#e.g.#       # eexec support
+#e.g.#       -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+#e.g.#       -v) VERBOSE="echo $progname: "; EExecVerbose;;
+#e.g.#       -q) VERBOSE=":"; EExecQuiet;;
+#e.g.# 
+#e.g.# # Program options.
+#e.g.#       --) shift ; break ;;
+#e.g.#       *) 
+#e.g.#       echo 1>&2 "Unsupported option>$1<";
+#e.g.#       Usage
+#e.g.#       exit 1 ;;
+#e.g.#     esac
+#e.g.#     shift
+#e.g.# done
+#e.g.# # The following is needed only when non optional args are required.
+#e.g.# [ "$@" = "" ] && Usage
 

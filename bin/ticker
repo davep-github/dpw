@@ -149,7 +149,7 @@ if __name__ == "__main__":
     pipe_stream = def_pipe_stream
     grand_total_p = True
     sample_lines_tick_p = False
-    sample_lines_tick_prefix = "th line>"
+    sample_lines_tick_prefix = "th-line>"
     no_clobber_p = False
     openMode = 'w'
     outputStreams = []

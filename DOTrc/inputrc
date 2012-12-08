@@ -20,6 +20,7 @@ set output-meta off
 set show-all-if-ambiguous on
 set visible-stats on
 set mark-modified-lines on
+# delete key [3~
 
 $if term=xterm
 	"\e[H":beginning-of-line
@@ -31,6 +32,7 @@ $if term=xterm
 	"\e[F":end-of-line
 	"\C-?":backward-delete-char
 	"\C-h":backward-delete-char
+	"\e[3~":delete-char
 $endif
 $if term=rem
         "\e[D":backward-word

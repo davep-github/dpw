@@ -4,8 +4,9 @@ source script-x
 source eexec
 EExecVerbose
 
+template_opt=
 std_options=""
-option_str="nvq"
+option_str="nvqtT:"
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -14,6 +15,8 @@ do
       -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
       -v) VERBOSE="echo $progname: "; EExecVerbose;;
       -q) VERBOSE=":"; EExecQuiet;;
+      -t) template_opt="-t ${DP_P4_CLIENT_TEMPLATE}";;
+      -T) shift; template_opt="-t $2";;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";
@@ -26,5 +29,5 @@ done
 client_name="$(dp4-mk-client-name)"
 
 echo 1>&2 "Creating client... check editor to edit spec."
-EExec p4 client "${client_name}"
+EExec p4 client $template_opt "${client_name}"
 

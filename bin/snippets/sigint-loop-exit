@@ -1,0 +1,51 @@
+#!/bin/sh
+
+source script-x
+timeout=${1:-600}
+
+exit_how()
+{
+    while :
+    do
+      read -p "Exit now or after the next loop [^C|q/n]? "
+      case "$REPLY" in
+          [Qq]) {
+                   echo
+                   echo "Immediate exit requested"
+                   exit 2
+                };;
+          [Nn]) run_p=; break;;
+          *) echo "Unsupported response>$REPLY<";;
+      esac
+    done 1>&2
+}
+
+sigtrap()
+{
+    {
+        local signum="$1"; shift
+        echo "caught signal >$signum<"
+        exit $signum
+    } 1>&2
+}
+
+for sig in 3 4 5 6 7 8 15
+do
+	trap "sigtrap $sig" $sig
+done
+
+trap exit_how 2
+
+run_p=t
+loop_count=0
+while [ -n "$run_p" ] && test "$timeout" != 0
+do
+  echo "Top of loop # $loop_count"
+  sleep 1
+  echo "Bottom of loop # $loop_count"
+  ((--timeout))
+  ((++loop_count))
+  echo "Real bottom of loop # $loop_count"
+done
+
+exit 192

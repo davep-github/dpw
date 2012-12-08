@@ -2,10 +2,19 @@
 
 source script-x
 
+#
+# Keep all of the convention in one place.
+#
 : ${client_prefix:=${LOGNAME}}
 : ${client_sep:=-}
 
-sb=$(scsandbox -.)
+if [ -n "$*" ]
+then
+    args=("$@")
+else
+    args=("-.")
+fi
+sb=$(scsandbox "${args[@]}")
 echo "${client_prefix}${client_sep}${sb}"
 
 exit 0

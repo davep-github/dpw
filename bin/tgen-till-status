@@ -14,7 +14,12 @@ progname="$(basename $0)"
 #   exit 0
 # fi
 # 
-# 
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
 
 exit_how()
 {
@@ -35,9 +40,12 @@ exit_how()
 
 trap exit_how 2
 
-: ${command:=}
+# Should always symlink this to the proper test file.
+: ${default_command=rerun-test.sh}
+: ${command=}
+: ${commands=${command=${default_command}}
 : ${pattern:=TEST_SUCCEEDED}
-: ${pattern_file=trep.txt}
+: ${pattern_files=trep.txt}
 : ${log_file_base:=last-log-file}
 : ${grepper:=egrep}
 : ${grepper_args=-q}
@@ -55,17 +63,17 @@ trap exit_how 2
 # Exit after reporting this many successes. Use `-', "" or something < 0 to get
 # all possible matches.
 : ${max_matches=1}
+: ${log_root=.}
 : ${log_dir=""}
 
 [ -z "$log_dir" ] && {
     log_dir=$(dp-std-timestamp)
 }
-
+log_dir="${log_root}/${progname}.$log_dir"
+log_file_base="$log_dir/$log_file_base"
 [ -d "$log_dir" ] || {
     mkdir -p "$log_dir"
 }
-
-log_file_base="$log_dir/$log_file_base"
 
 UNSET="* UNSET *"
 : ${invert_p="$UNSET"}
@@ -100,8 +108,9 @@ fi
 # Files to be searched for completion status are kept in the positional args.   
 if [ -z "$*" ]
 then
-    set -- $pattern_file
+    set -- $pattern_files
 fi
+pattern_files=("$@")
 
 wrapup()
 {
@@ -158,8 +167,8 @@ ticker_teeker()
     teeker ${ticker_args} "$log_file"
 }
 
-[ -z "$command" ] && {
-    echo "A command name is needed."
+[ -z "$commands" ]  && {
+    echo "One or more command names are needed."
     exit 1
 } 1>&2
 
@@ -170,7 +179,9 @@ ticker_teeker()
 
 loop_count=0
 run_p=t
-current_log_file="WHOA. I should be something else."
+
+# Allow a user specified log file to be used.
+: ${current_log_file=}
 num_matches=0
 want_all_matches_p=
 # - or < 0 --> All matches. The max possible matches is max_loops.
@@ -184,55 +195,63 @@ do
   # We may as well use the loop_count even if we're not saving them.
   # Removes the need for conditional code and keeps loop_count info available
   # in the case of a crash.
-  current_log_file="${log_file_base}.$loop_count"
+  : ${current_log_file="${log_file_base}.$loop_count"}
   # This will also tell us the iteration.
   echo "Logging run to $current_log_file"
   
   # This is the log file of the current run's output.
-  # The end condition data will not necessarily be in this file.
-  EExec $command 2>&1 | EExec $ticker "$current_log_file"
-
-  # Examine the pattern files one at a time.
-  for pattern_file in "$@"
+  # The end condition data will not necessarily be in the log files.
+  for command in $commands
   do
-    [ -e "$pattern_file" ] || {
-        echo "cannot find pattern file>$pattern_file<, skipping."
-        continue
-    } 1>&2 
+    EExec_verbose_msg "command>$command<"
+    EExec_verbose_msg "ticker>$ticker<"
+    
+    EExec $command 2>&1 | EExec $ticker "$current_log_file"
 
-    $loop_end_condition "$pattern_file"
+    # Examine the pattern files one at a time.
+    for pattern_file in "${pattern_files[@]}"
+      do
+      EExec_verbose_msg "pattern_file>$pattern_file<"
+
+      [ -e "$pattern_file" ] || {
+          echo "cannot find pattern file>$pattern_file<, skipping."
+          continue
+      } 1>&2 
+
+      $loop_end_condition "$pattern_file"
   
-    rc=$?
-    if ((rc == pass_stat))
-    then
-        ((++num_matches))
-        wrapup "${num_matches} of ${max_matches} end conditions met" "$pattern_file of $@"
-        ((num_matches >= max_matches)) && {
-            echo
-            echo "All end conditions met. Exiting."
-            exit 0
-        }
-    fi
+      rc=$?
+      if ((rc == pass_stat))
+          then
+          ((++num_matches))
+          wrapup "${num_matches} of ${max_matches} end conditions met" "$pattern_file of ${pattern_files[@]}"
+          ((num_matches >= max_matches)) && {
+              echo
+              echo "All end conditions met. Exiting."
+              exit 0
+          }
+      fi
     # All related files have the same suffix.
-    [ -n "${save_pattern_files_p}" ] && {
+      [ -n "${save_pattern_files_p}" ] && {
           EExec cp $pattern_file $log_dir/$pattern_file.$loop_count
+      }
+    done
+    [ -z "${keep_logs_p}" ] && EExec rm -f "${current_log_file}"
+    [ -n "${rm_pattern_files_p}" ] && {
+        rm -f "${pattern_files[@]}"
+    }
+    [ -n "${loop_delay}" ] && {
+        EExec_verbose_msg "sleeping for $loop_delay"
+        EExec sleep "${loop_delay}"
+        EExec_verbose_msg "done sleeping."
     }
   done
-  [ -z "${keep_logs_p}" ] && EExec rm -f "${current_log_file}"
-  [ -n "${rm_pattern_files_p}" ] && {
-      rm -f "$@"
-  }
-  [ -n "${loop_delay}" ] && {
-      EExec_verbose_msg "sleeping for $loop_delay"
-      EExec sleep "${loop_delay}"
-      EExec_verbose_msg "done sleeping."
-  }
   ((++loop_count))
   
   ### !!! REMOVE !!!
   #{
   #    echo 1>&2 "Forcing match for next iteration."
-  #    echo "$pattern" >> "$@"
+  #    echo "$pattern" >> "${pattern_files[@]}"
   #}
 done
 
@@ -253,6 +272,6 @@ else
     # There should be no unknown reason for exiting the loop.
     exit_reason="Unknown. Fix me."
 fi
-wrapup "$exit_reason" "$@"
+wrapup "$exit_reason" "${pattern_files[@]}"
 
 exit 1

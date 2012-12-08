@@ -455,7 +455,7 @@ case $- in
     *i*)
         sudo_bash_env="$HOME/.rc/sudo_bash_env"
         dp_interactive=y
-	#dp-stty			# set tty mode
+	dp-stty			# set tty mode
 	fortune_path="/usr/games/fortune"
 	[ "$OSName" = "FreeBSD" ] && fortune_option=-a
 	for i in $fortune_path

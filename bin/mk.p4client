@@ -13,7 +13,7 @@ redir_op='>|'
 : ${kwa_p4client_boiler_plate:=${DP_P4_BOILER_PLATE-}}
 : ${kwa_p4client_template:=${DP_P4_CLIENT_TEMPLATE}}
 
-skip_create_p=
+skip_p4config_create_p=
 std_options=
 option_str="nvc"
 source dp-getopt+.sh
@@ -41,12 +41,12 @@ done
     case "$REPLY" in
         [yY]) ;;
         [Aa]) redir_op='>>';;
-        ""|[nN]) skip_create_p=t;;
+        ""|[nN]) skip_p4config_create_p=t;;
         *) exit 1;;
     esac
 }
 
-vunsetp $skip_create_p && {
+vunsetp $skip_p4config_create_p && {
     eval echo "P4CLIENT=$kwa_p4client_name" $redir_op "$kwa_p4config_file"
     [ -n "$kwa_p4client_boiler_plate" ] && {
         echo "$kwa_p4client_boiler_plate" >> "$kwa_p4config_file"

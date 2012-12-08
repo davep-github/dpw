@@ -9,9 +9,16 @@ source eexec
 askForConfirmation=
 revision=
 
-: ${workDir:=$HOME/work}
+: ${work_dir:=.}
 : ${sync_p=}
 : ${DASH_N_OPT=}
+: ${P4CONFIG=.p4config}
+tmp_file=                # Needs to be non-null so at_exit() is less brittle.
+
+at_exit()
+{
+    [ -n "$tmp_file" ] && rm -f "$tmp_file"
+}
 
 # We need a shared directory if editing across machines.
 # p4 help environment lists both TMP and TEMP, but I don't know which one has
@@ -19,7 +26,7 @@ revision=
 export TMP=$HOME/tmp
 export TEMP=$TMP
 
-Usage_synopsis="Make a new perforce(tm) sandbox under work dir [$workDir] 
+Usage_synopsis="Make a new perforce(tm) sandbox under work dir [$work_dir] 
   and optionally populate it."
 Usage_args_info=" <sandbox a.k.a client-name>"
 
@@ -37,11 +44,11 @@ do
       -n) DASH_N_OPT=-n; EXEC=echo; EExecDashN;; # Don't actually execute stuff
       -v) VERBOSE="echo $progname: "; EExecVerbose;;
       -q) VERBOSE=":"; EExecQuiet;;
-      -w) workDir=$2; shift;;
+      -w) work_dir=$2; shift;;
       -s) sync_p=t;;
       -r) revision="$2"; shift;;
-#      -.) sandboxName=$(scsandbox -.);;
-      -.) sandboxName=$(basename $PWD);;
+#      -.) sandbox_name=$(scsandbox -.);;
+      -.) sandbox_name=$(basename $PWD);;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";
@@ -51,22 +58,30 @@ do
     shift
 done
 
-: ${sandboxName:=${1-}}
+: ${sandbox_name:=${1-}}
 shift
-[ -z "$sandboxName" ] && {
-    read -e -p "I need a sandbox name: " sandboxName
+[ -z "$sandbox_name" ] && {
+    read -e -p "I need a sandbox name: " sandbox_name
 }
 
-EExec cd $workDir
+EExec cd $work_dir
 
-[ -d "$sandboxName" ] && {
-    echo "sandbox \`$sandboxName' already exists."
+[ -d "$sandbox_name" ] && {
+    echo "sandbox \`$sandbox_name' already exists."
     exit 1
 } 1>&2
 
-EExec mkdir -p $sandboxName
-EExec cd $sandboxName
-mk.p4client $DASH_N_OPT -c
+EExec mkdir -p $sandbox_name
+EExec cd $sandbox_name
+
+#mk.p4client $DASH_N_OPT -c
+: ${tmp_file:=$(mktemp -p ~/tmp dp4-new-clientXXXXX)}
+client_name=$(dp4-mk-client-name)
+EExec dp4-mk-config "${client_name}" >| $tmp_file
+EExec /bin/cp -f $tmp_file $P4CONFIG
+EExec rm -f $tmp_file
+
+EExec dp4-client -t
 
 rc=
 if [ "$sync_p" == 't' ]
@@ -78,5 +93,5 @@ else
     true
 fi
 rc=$?
-echo 1>&2 "Finished creating sandbox $sandboxName."
+echo 1>&2 "Finished creating sandbox $sandbox_name."
 exit $?
