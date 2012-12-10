@@ -1,8 +1,42 @@
-MAILDIR=MH
-DEFAULT=inbox/.
+# N.B.
+# N.B. Maildir folders should start with a dot and MUST end with a /
+# N.B.
+MAILDIR=$HOME/Maildir/
+DEFAULT=$HOME/Maildir/
+LOCKFILE=$HOME/Maildir/.lock
 COMSAT=no
-LOGFILE=$HOME/$MAILDIR/procmail_logfile
+LOGFILE=$HOME/log/procmail/procmail.log
 LOGABSTRACT=all
 
-:0fw
-| spamassassin -L
+#
+# Paranoia runs deep. Clone everything.  Keep in place until I feel
+# comfortable about my use of procmail.
+:0 c
+.OMFG/
+
+# This can be used to limit the number of copies kept.
+# E.g. 32 in this case.
+##:0 ic
+##| cd omfg && rm -f dummy `ls -t msg.* | sed -e 1,32d`
+
+# Testing recipes...
+:0
+* ^TOdavep.tests?@
+.test/
+
+:0
+* ^TOtests?@
+.test/
+
+# Real recipes begin here.
+
+#
+# simulate default handling
+:0 fhw
+* ^TO .*
+| formail -a 'X-pseudo-default-procmail-delivery:'
+
+
+# :0fw
+# | spamassassin -L
+#
