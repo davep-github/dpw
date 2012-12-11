@@ -35,3 +35,10 @@ Ee|sandbox1testgen|sbox1testgen|sb1testgen|workspace1testgen|ws1testgen| ${works
 
 Ee|workinfo|winfo|       /home/dpanariti/work/info/
 Ee|sb2|       /home/scratch.dpanariti_t124/t124_2/
+Ee|bug0sb|sbb0|b0sb|bug0ws|wsb0|b0ws|       /home/scratch.autosubmit120/trees/tree2644641/
+Ee|as2bug|       /home/scratch.autosubmit120/trees/tree2644641/hw/ap/diag/testgen/batch_ap_t124_fmodel_ar2_level_tegra_regress_tegra_gpu_multiengine_15307209_1354637514/tests/kepler_b_ogtest/00/00/72/000072/
+Ee|bug0tgen|tgenbug0|b0tg|b0tgen|tgb0|       /home/scratch.dpanariti_t124_1/t124_1/hw/ap/diag/testgen/
+Ee|sb5158|ws5158|bug5158|b5158|       /home/scratch.dpanariti_t124/t124_0/
+Ee|as2tg|tgas2|       /home/scratch.autosubmit120/trees/tree2644641/hw/ap/diag/testgen/
+Ee|as2sb|as2ws|       /home/scratch.autosubmit120/trees/tree2644641/
+Ee|sbas2|wsas2|       /home/scratch.autosubmit120/trees/tree2644641/

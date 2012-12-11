@@ -30,8 +30,8 @@
 
 # We want to be as "standard" as possible, so add as much as possible to the end of PATH.
 setenv PATH `addtopath.pl -back -quiet PATH /home/utils/git-1.7.10.3/bin`
+setenv PATH `addtopath.pl -back -quiet PATH /home/utils/xxdiff-3.0.4/bin`
 setenv PATH `addtopath.pl -back -quiet PATH $HOME/bin.primitive`
-
 setenv MANPAGER less
 
 alias ls ls -CF
@@ -49,7 +49,10 @@ alias mv 'mv -i'
 alias rm 'rm -i'
 alias cp 'cp -i'
 alias gtot 'pushd `depth`'
+alias gotot 'pushd `depth`'
 alias totot 'cd `depth`'
+alias dfh 'df -h'
+alias dfhd 'df -h .'
 
 set autolist = t
 set history = 5120

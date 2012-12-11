@@ -1,0 +1,64 @@
+#!/bin/sh
+
+source script-x
+source eexec
+set -u
+progname="$(basename $0)"
+
+: ${odir=sanity_msenc}
+: ${clobber=t}
+: ${only=sanity_msenc}
+: ${trace_root:="/home/scratch.traces02/arch/traces/"}
+: ${tree_root_from_testgen=../../../..}
+: ${as2_modsrunspace=${tree_root_from_testgen}/hw/nvdiag/mods/chipsa/Linux}
+: ${modsrunspace:=}
+
+# AS2 runs look like this:
+# AS2 command: 
+# tgen.pl \
+#  -modsrunspace $AS2_TREEROOT/hw/nvdiag/mods/chipsa/Linux \
+#  -chip t124 \
+#  -project gpumobile_t124_arch_fc_verif \
+#  -target fmodel \
+#  -release \
+#  -f as2.rc \
+#  -f traces.rc \
+#  -flagMissingError \
+#  -exitFailCount \
+#  -failOnZeroTests \
+#  -level ${PWD}/config/levels/tegra/submit_tegra_gpu_multiengine \
+#  -d hwApPath=${PWD}/../../ \
+#  -blacklist as2/theAs2BlackList.t124-ALL \
+#  -blackTrepList as2/theAs2BlackTrepList.t124-ALL \
+#  -blackArgList as2/theAs2BlackArgList.t124-ALL \
+#  -queue ${AS2_O_CPU_QUEUE}_2G_1H \
+#  -outDir batch_ap_t124_fmodel_regress_tegra_gpu_multiengine_sanity_@ ${TFF_AR2_EXITFAILCOUNT}
+
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+
+## [ "$modsrunspace" = "as2" ] && modsrunspace="-modsrunspace $as2_modsrunspace"
+[ "${1-}" = "as2" ] && modsrunspace="-modsrunspace $as2_modsrunspace"
+
+only_opt=
+[ -n "$only" ] && only_opt="-only $only"
+
+[ -z "$odir" ] && {
+    odir=${progname}/$(dp-std-timestamp)
+}
+
+clobber_opt=
+[ -n "$clobber" ] && clobber_opt=-clobber
+
+EExec ./tgen.pl $clobber_opt $modsrunspace \
+  -target FMODEL \
+  -chip t124 \
+  -level `pwd`/config/levels/tegra/regress_tegra_gpu_multiengine \
+  -d hwApPath=`pwd`/../../ \
+  -traceRoot "$trace_root" \
+  -outDir $odir \
+  $only_opt

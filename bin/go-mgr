@@ -44,13 +44,13 @@ check_name_len()
     local flags="$2"
     if has_alternation_p "$name"
     then
-        echo 1>&2 "Alternate in name [$name].  Not checking name len yet.
+        echo 1>&2 "Alternate in name>$name<.  Not checking name len yet.
 @todo XXX split on | and loop over components."
     else
         if echo "$name" | egrep -q ".{$ENV_NAME_MIN_LEN,}"; then
             :
         else
-            read -p "Alias name [$name] is pretty short ("$(expr length "$name")") (<= $ENV_NAME_MIN_LEN); Nix making it an env var [y/N]? "
+            read -p "Alias name>$name< is pretty short ("$(expr length "$name")") (<= $ENV_NAME_MIN_LEN); Nix making it an env var [y/N]? "
             case "$REPLY" in
                 [Yy]) flags=$(echo "$flags" | sed 's/e//g');;
             *);;

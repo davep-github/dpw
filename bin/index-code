@@ -14,7 +14,7 @@ vsetp $PROJECT && midix=.${PROJECT}
 : ${RC_FILE_NAMES=".../DOTindex-code.rc .../DOTindex-code${midix}.rc"}
 : ${RC_EXTRA_FILE_NAMES=}
 : ${RC_START_DIR:=$PWD}
-: ${RC_STOP_DIR:=${PROJECT_ROOT:=$HOME}}
+: ${RC_STOP_DIR:=${PROJECT_ROOT:=/home}}
 
 # rc file variables should be prefixed with rc_
 # This is a list of extra dirs to index provided by any possible rc files.
