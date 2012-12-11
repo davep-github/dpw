@@ -25,6 +25,9 @@ xterm_bin=
 window="@$(hostname)"
 host=
 
+bg="${inherited_dpxx_bg-}"
+fg="${inherited_dpxx_fg-}"
+
 set_var()
 {
 set +u
@@ -90,6 +93,7 @@ args="$@"
 # and then rlogins to a remote host.  Using params for the remote
 # host allows us to differentiate windows on different hosts.
 #
+
 opts=$($HOST_INFO $host xterm_bg xterm_fg)
 eval set -- $opts
 

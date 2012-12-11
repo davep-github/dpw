@@ -75,6 +75,7 @@ done
 
 sep= out=
 #set -x
+path2=$path
 for new_el in $newargs
 do
     [ -z "$new_el" ] && new_el=. # fix null entry
@@ -85,6 +86,8 @@ do
     esac
     [ -n "$new_el" ] && {
 	out=$out$sep$new_el # not present, add to output string
+        # not present, add to path so duped new elements don't get added.
+	path2=$path2$sep$new_el 
 	sep=$DEF_SEP
     }
 done

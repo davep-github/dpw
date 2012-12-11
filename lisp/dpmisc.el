@@ -6519,6 +6519,7 @@ It greps through all of my current rc files.")
   (format dp-rcgrep-command (dp-get--as-string--region-or...)))
 
 
+;; Make smarter like lgrep. factor something out? (i)
 (defun rcgrep (&optional command-args )
   (interactive)
   (let ((grep-command dp-rcgrep-command))

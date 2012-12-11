@@ -1,0 +1,35 @@
+#!/bin/sh
+
+source script-x
+source eexec
+set -u
+progname="$(basename $0)"
+
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+
+# qsub -q o_pri_interactive_cpu_2G -P t124 -cwd $PWD -Is $SHELL -l
+# dpxx -B linen -- qsub -q o_pri_interactive_cpu_2G -P t124 -cwd $PWD -Is $SHELL -l
+: ${queue:=o_pri_interactive_cpu_2G}
+: ${dashP:=t124}
+: ${cwd:=${PWD}}
+: ${shell:=${SHELL:=/bin/bash}}
+: ${dash_l=-l}
+: ${bg:=linen}
+: ${fg:=black}
+
+EExec dpxx \
+    -B "$bg" \
+    -F "$fg" \
+    -- \
+    qsub \
+       -q "$queue" \
+       -P "$dashP" \
+       -cwd "$cwd" \
+       -Is "$shell" \
+       $dash_l \
+       "$@"

@@ -6,9 +6,10 @@ set -u
 progname="$(basename $0)"
 
 #
-# E.g. run until failure (run while success)
-# egrep -q TEST_SUCCEEDED xxx
-# invert is true --> pass_stat = 1
+# Motivation/initial requirement.
+#
+# E.g. run a test until failure (run while success)
+# egrep -q TEST_SUCCEEDED <status-files...>
 # if TEST_SUCCEEDED is present, rc = 0
 # if 1 == 0
 #   exit 0
@@ -69,10 +70,28 @@ trap exit_how 2
 [ -z "$log_dir" ] && {
     log_dir=$(dp-std-timestamp)
 }
+# If log dir is a timestamp, then putting it last lets ls give us a list
+# grouped by progname and sorted by date.
 log_dir="${log_root}/${progname}.$log_dir"
 log_file_base="$log_dir/$log_file_base"
 [ -d "$log_dir" ] || {
     mkdir -p "$log_dir"
+}
+
+#
+# "Passing" can mean either a file containing a particular string or not.
+# E.g. I can run until the run status is not "TEST_SUCCEEDED" if chasing down
+# an intermittent failure, or wait *for* success (TEST_SUCCEEDED) or for a
+# particular fail mode, say, SIM_FAIL.
+
+end_condition_positive_p
+{
+    (($1 == 0))
+}
+
+end_condition_inverted_p()
+{
+    (($1 != 0))
 }
 
 UNSET="* UNSET *"
@@ -80,12 +99,12 @@ UNSET="* UNSET *"
 [ "$invert_p" = "$UNSET" ] && {
     if [ -n "$match_p" ]
     then
-        invert_p=
+        end_condition_p=end_condition_positive_p
     elif [ -n "$nomatch_p" ]
     then
-        invert_p=t
+        end_condition_p=end_condition_inverted_p
     else
-        invert_p=t
+        end_condition_p=end_condition_positive_p
     fi
 }
 
@@ -94,17 +113,7 @@ UNSET="* UNSET *"
     save_pattern_files_p=
 }
 
-# Really should use 0 and !0, but that requires making the check itself change.
-# == 0 and != 0
-# vs always using ==
-#
-if [ -n "$invert_p" ]
-then
-    pass_stat=1
-else
-    pass_stat=0
-fi
- 
+
 # Files to be searched for completion status are kept in the positional args.   
 if [ -z "$*" ]
 then
@@ -115,7 +124,7 @@ pattern_files=("$@")
 wrapup()
 {
     local indent=""
-    [ -n "$1" ] && {
+    [ -n "${1-}" ] && {
         echo "Wrapup: $1"
         indent="  "
     }
@@ -221,17 +230,18 @@ do
       $loop_end_condition "$pattern_file"
   
       rc=$?
-      if ((rc == pass_stat))
+      if end_condition_p $rc
           then
           ((++num_matches))
-          wrapup "${num_matches} of ${max_matches} end conditions met" "$pattern_file of ${pattern_files[@]}"
+          wrapup "${num_matches} of ${max_matches} end conditions met" \
+                 "$pattern_file of ${pattern_files[@]}"
           ((num_matches >= max_matches)) && {
               echo
               echo "All end conditions met. Exiting."
               exit 0
           }
       fi
-    # All related files have the same suffix.
+      # All related files have the same suffix.
       [ -n "${save_pattern_files_p}" ] && {
           EExec cp $pattern_file $log_dir/$pattern_file.$loop_count
       }
@@ -248,10 +258,10 @@ do
   done
   ((++loop_count))
   
-  ### !!! REMOVE !!!
+  # Test detection logic
   #{
   #    echo 1>&2 "Forcing match for next iteration."
-  #    echo "$pattern" >> "${pattern_files[@]}"
+  #    echo "$pattern" >> "${pattern_files[0]}"
   #}
 done
 
