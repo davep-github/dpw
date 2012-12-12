@@ -1,5 +1,4 @@
 #!/bin/sh
-
 source script-x
 source eexec
 set -u
@@ -41,10 +40,11 @@ exit_how()
 
 trap exit_how 2
 
+
 # Should always symlink this to the proper test file.
 : ${default_command=rerun-test.sh}
 : ${command=}
-: ${commands=${command=${default_command}}
+: ${commands:=${command:=${default_command}}}
 : ${pattern:=TEST_SUCCEEDED}
 : ${pattern_files=trep.txt}
 : ${log_file_base:=last-log-file}
@@ -53,7 +53,7 @@ trap exit_how 2
 : ${ticker:=ticker_teeker_sample}
 : ${ticker_args:=-s}            # Sample
 : ${loop_end_condition:=loop_end_condition_grep}
-: ${max_loops=9999}
+: ${max_loops=-1}
 : ${keep_logs_p=t}
 : ${save_pattern_files_p=t}
 : ${rm_pattern_files_p=t}       # e.g. trep.txt is appended to.
@@ -84,7 +84,7 @@ log_file_base="$log_dir/$log_file_base"
 # an intermittent failure, or wait *for* success (TEST_SUCCEEDED) or for a
 # particular fail mode, say, SIM_FAIL.
 
-end_condition_positive_p
+end_condition_positive_p()
 {
     (($1 == 0))
 }
@@ -99,14 +99,22 @@ UNSET="* UNSET *"
 [ "$invert_p" = "$UNSET" ] && {
     if [ -n "$match_p" ]
     then
-        end_condition_p=end_condition_positive_p
+        invert_p=
     elif [ -n "$nomatch_p" ]
     then
-        end_condition_p=end_condition_inverted_p
+        invert_p=t
     else
-        end_condition_p=end_condition_positive_p
+        invert_p=
     fi
 }
+
+if [ -n "$invert_p" ]
+then
+    end_condition_p=end_condition_inverted_p
+else
+    end_condition_p=end_condition_positive_p
+fi
+
 
 [ -n "$keep_nothing_p" ] && {
     keep_logs_p=
@@ -190,21 +198,27 @@ loop_count=0
 run_p=t
 
 # Allow a user specified log file to be used.
-: ${current_log_file=}
 num_matches=0
 want_all_matches_p=
 # - or < 0 --> All matches. The max possible matches is max_loops.
 # num_matches can never reach (max_loops + 1) before the loop exits.
-[ "$max_matches" = "-" ] || [ -z "$max_matches" ] || ((max_matches < 0)) && {
+[ "$max_matches" = "-"  -o  -z "$max_matches" -o $max_matches -lt 0 ] && {
     max_matches=$((max_loops + 1))
     want_all_matches_p=t
 }
-while [ -n "$run_p" ] && ((loop_count < max_loops))
+
+infinite_loop_p=
+[ "$max_loops" = "-" -o  -z "$max_loops" -o $max_loops -lt 0 ] && {
+    infinite_loop_p=t
+    echo "Looping forever."
+}
+
+while [ -n "$run_p" -a \( -n "$infinite_loop_p"  -o $loop_count -lt $max_loops \) ]
 do
   # We may as well use the loop_count even if we're not saving them.
   # Removes the need for conditional code and keeps loop_count info available
   # in the case of a crash.
-  : ${current_log_file="${log_file_base}.$loop_count"}
+  : ${current_log_file:="${log_file_base}.$loop_count"}
   # This will also tell us the iteration.
   echo "Logging run to $current_log_file"
   
@@ -230,7 +244,7 @@ do
       $loop_end_condition "$pattern_file"
   
       rc=$?
-      if end_condition_p $rc
+      if $end_condition_p $rc
           then
           ((++num_matches))
           wrapup "${num_matches} of ${max_matches} end conditions met" \

@@ -952,7 +952,21 @@ document deco
 Set output radix to decimal.
 end
 
+define o10
+ set output-radix 0x0a
+end
+document o10
+Set output radix to decimal.
+end
+
 define deci
+ set input-radix 0x0a
+end
+document deco
+Set input radix to decimal.
+end
+
+define i10
  set input-radix 0x0a
 end
 document deco
@@ -966,7 +980,21 @@ document hexo
 Set output radix to hexadecimal.
 end
 
+define o16
+ set output-radix 0x10
+end
+document o16
+Set output radix to hexadecimal.
+end
+
 define hexi
+ set input-radix 0x10
+end
+document hexo
+Set input radix to hexadecimal.
+end
+
+define i16
  set input-radix 0x10
 end
 document hexo
@@ -1088,7 +1116,7 @@ document tip_display
 Tips on automatically displaying values when a program stops.
 end
 # __________________gdb options_________________
-### I use GDBHISTFILE #set history filename /permabit/user/davep/.gdb_history
+### I use GDBHISTFILE #set history filename /
 set history save
 set history expansion on
 # hist is saved but isn't reloaded.

@@ -22,6 +22,14 @@ done
 : ${bg:=linen}
 : ${fg:=black}
 
+# For some reason (to be looked into) in a dpxx(dp1) term, $SHELL is "bash",
+# just "bash", which can cause problems. So we add a path if it looks like
+# one is needed.
+case "$shell" in
+    sh|bash) shell=/bin/bash;;
+    *);;
+esac
+
 EExec dpxx \
     -B "$bg" \
     -F "$fg" \

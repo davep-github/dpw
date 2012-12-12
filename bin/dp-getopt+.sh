@@ -107,19 +107,15 @@ running_as_script && {
 # A snippet/template for ease of use.
 #
 
-#e.g.# Usage variable usage:
-#e.g.# Usage_args_info=" errno..."
-#e.g.# Usage_synopsis="Display various info about errno...:
-#e.g.# "
-#e.g.# Usage_details="-n -- Show what would happen but don't do it. [eexec]
-#e.g.# -v -- Be verbose about it. [eexec]
-#e.g.# -q -- Anti-verbose. [eexec]
-#e.g.# "
+#e.g.# # Usage variable usage:
+#e.g.# # Usage_args_info=" errno..."
+#e.g.# # Usage_synopsis="Display various info about errno...:
+#e.g.# # "
+#e.g.# # Usage_details="-n -- Show what would happen but don't do it. [eexec]
+#e.g.# # -v -- Be verbose about it. [eexec]
+#e.g.# # -q -- Anti-verbose. [eexec]
+#e.g.# # "
 #e.g.# # Example of arg parsing.
-#e.g.# Usage_args_info="No args"
-#e.g.# Usage_synopsis="Do something that would normally require typing 3 words."
-#e.g.# Usage_details="Detailed args, raison de etre, etc."
-#e.g.# "nvq" Enable the 1st 3 options and are useful when using eexec(1dp)
 #e.g.# option_str="nvq"
 #e.g.# source dp-getopt+.sh
 #e.g.# for i in "$@"
@@ -133,13 +129,11 @@ running_as_script && {
 #e.g.# 
 #e.g.# # Program options.
 #e.g.#       --) shift ; break ;;
-#e.g.#       *) 
-#e.g.#       echo 1>&2 "Unsupported option>$1<";
-#e.g.#       Usage
-#e.g.#       exit 1 ;;
+#e.g.#       *) echo 1>&2 "Unsupported option>$1<"
+#e.g.#          exit 1;;
 #e.g.#     esac
 #e.g.#     shift
 #e.g.# done
 #e.g.# # The following is needed only when non optional args are required.
-#e.g.# [ "$@" = "" ] && Usage
+#e.g.# [ "$*" = "" ] && Usage
 

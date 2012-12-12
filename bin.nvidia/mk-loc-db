@@ -1,0 +1,38 @@
+#!/bin/sh
+
+source script-x
+source eexec
+set -u
+progname="$(basename $0)"
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+
+# I will have a locate alias that references my db so we need to get the real
+# one here.
+: ${LOCATE:=/usr/bin/locate}
+: ${LOC_DIRS:=/home/utils}
+: ${LOC_EXCLUDES=}
+: ${LOC_DB:=$DP_LOC_DB}
+
+[ -z "$LOC_DB" ] && {
+    echo "I need an output file for the locate database."
+    exit 1
+} 1>&2
+
+loc_db_dir=$(dirname "$LOC_DB")
+[ -d "$loc_db_dir" ] || {
+    read -e -p "loc db dir>$loc_db_dir< does not exist, create [y/N]? "
+    case "$REPLY" in
+        [yY]) EExec mkdir -p "$loc_db_dir";;
+           *) echo "Not creating loc db dir>$loc_db_dir<. Exiting."; exit 1;;
+    esac
+} 1>&2
+
+loc_exclude_opt=
+[ -n "$LOC_EXCLUDES" ] && loc_exclude_opt="-e $LOC_EXCLUDES"
+
+EExec $LOCATE -U ${LOC_DIRS} ${loc_exclude_opt} -o ${LOC_DB} -l 0 "$@"
