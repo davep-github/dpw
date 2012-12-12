@@ -46,8 +46,8 @@ for opt in "$@"; do
         -r) reset;;
         -[zs]) stty sane;;
         -n) normal_settings;;
-	-q) set_erase_DEL; force_erase_DEL=; force_erase_Ctl_h=;;
-	-h) set_erase_Ctl_h; force_erase_DEL=; force_erase_Ctl_h=;;
+	-q|-d) force_erase_DEL=t; force_erase_Ctl_h=;;
+	-h) force_erase_DEL=; force_erase_Ctl_h=t;;
 	-v) verbose=t;;
         *) echo 1>&2 "Bad option: $opt."; exit 1;;
     esac
@@ -71,15 +71,14 @@ case "$osname" in
     *) stty set_erase_Ctl_h;;
 esac
 
-vunsetp "$settings_set_p" && {
-    if vsetp $force_erase_Ctl_h
-    then
-	set_erase_Ctl_h
-    elif vsetp $force_erase_DEL
-    then
-	set_erase_DEL
-    fi
-}
+# Force specific erase setting.
+if vsetp $force_erase_Ctl_h
+then
+   set_erase_Ctl_h
+elif vsetp $force_erase_DEL
+then
+   set_erase_DEL
+fi
     
 if stty -a | grep -q erase2
 then
