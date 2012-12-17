@@ -20,15 +20,33 @@ LOGABSTRACT=all
 ##| cd omfg && rm -f dummy `ls -t msg.* | sed -e 1,32d`
 
 # Testing recipes...
-:0
-* ^TOdavep.tests?@
-.test/
+#tmp# :0
+#tmp# * ^TOdavep.tests?@
+#tmp# .test/
 
-:0
-* ^TOtests?@
-.test/
+#tmp# :0
+#tmp# * ^TOtests?@
+#tmp# .test/
 
-# Real recipes begin here.
+#tmp# * ^TOtests?@
+#tmp# .test/
+
+#tmp# # Real recipes begin here.
+
+#tmp# * ^TODAVEP.ORION@
+#tmp# .ads/
+
+#tmp# * ^FromMarc.Cenedella
+#tmp# .bunk/
+
+#tmp# * ^TOdavep.xemacs@
+#tmp# .xemacs/
+
+#tmp# * ^TOdavep.jobs@
+#tmp# .jobs/
+
+#tmp# * ^TO.*\.(ipadbs|snet|vivid|brainwave-entertainment)@
+#tmp# .junk/
 
 #
 # simulate default handling

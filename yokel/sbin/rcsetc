@@ -33,13 +33,16 @@ dirs='/etc /usr/local/etc /root /usr/X11R6/etc /usr/X11R6/lib/X11/etc /usr/yokel
 # @todo find other files that need excluding.  Things that have no critical,
 # user provided data
 ex_files='-x drift -x dumpdates'
-singular_files='/boot/grub/menu.lst /usr/src/linux/.config* /var/lib/portage/world'
+# /boot/grub/menu.lst -- older version of grub.
+singular_files='/usr/src/linux/.config* /var/lib/portage/world'
 
-for dir in $dirs
+for d2 in $dirs
 do
+  for dir in $d2
+  do
     [ -d "$dir" ] || {
-	echo dpWARN "no such dir: $dir"
-	continue
+        dpWARN "no such dir: $dir"
+        continue
     }
     cd $dir || dpFATAL 1 "canna cd to $dir"
     base=`namify-path -n -c . $dir`
@@ -48,16 +51,22 @@ do
     echo ""
     echo "RCS'ing $dir files to $name"
     cd $dir && {
-	$ECHO rcstree -r $name -t daily_rcs -m daily_rcs $* $ex_files .
+        $ECHO rcstree -r $name -t daily_rcs -m daily_rcs "$@" $ex_files .
     }
     ex_files=''
+  done
 done
 
 for f in $singular_files
 do
-    # at this time: 2010-06-27T11:25:31, I can't remember why I pass the $*.
-    # Is it because, when here, only flags are/should be left? 
-    echo "$f" | rcstreefile $* -r "$rcs_base"
+  # at this time: 2010-06-27T11:25:31, I can't remember why I pass the $*.
+  # Is it because, when here, only flags are/should be left?
+  if [ -e "$f" ]
+  then
+      echo "$f" | rcstreefile $* -r "$rcs_base"
+  else
+      echo 1>&2 "Singular file>$f< does not exist."
+  fi
 done
 
 #
@@ -68,5 +77,5 @@ done
 sudoers="/usr/local/etc/sudoers /etc/sudoers"
 for suds in $sudoers
 do
-    [ -f "$suds" ] && chmod 440 "$suds"
+  [ -f "$suds" ] && chmod 440 "$suds"
 done

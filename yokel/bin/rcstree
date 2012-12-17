@@ -55,7 +55,7 @@ fi
 
 [ -z "$rcs_root" ] && Usage
 
-. /usr/yokel/bin/eexec
+source eexec
 EExecContinue=1
 
 PRUNEDIRS="RCS CVS ,RCS-HIDE, .svn"

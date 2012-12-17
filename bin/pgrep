@@ -40,20 +40,22 @@ printer=out_line
 Usage_args_info=" [options] <regular-expression>"
 Usage_synopsis="Find processes by regular expression."
 Usage_details="Options:
--p -- Only show pid.
+-p -- Only show pid.                [$printer]
 -P -- Show entire matched line.
--w -- Widen display.
+-w -- Widen display.                [$PS_WIDTH]
 -W -- Narrow display.
--u -- Show only user processes.
+-u -- Show only user processes.     [$PS_ALL_OPT]
 -U -- Show all processes
--c -- Color grep output.
+-c -- Color grep output.            [$GREP_COLOR]
 -C -- Do not color grep output.
--n -- Show what would happen but don't do it. [eexec]
--v -- Be verbose about it. [eexec]
--q -- Anti-verbose. [eexec]
+-o <ps-opt> -- Add a ${PS} option.     [$PS_OPTIONS]
+EExec Options:
+-n -- Show what would happen but don't do it.
+-v -- Be verbose about it.
+-q -- Anti-verbose.
 "
 # Example of arg parsing.
-option_str="nvqpPuUwWcC"
+option_str="nvqpPuUwWcCo:h"
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -73,6 +75,8 @@ do
       -U) PS_ALL_OPT='-A'; PS_O_FMT=$PS_O_LONG_FMT;;
       -w) PS_WIDTH="${PS_WIDTH}w";;
       -W) PS_WIDTH="";;
+      -o) shift; PS_OPTIONS="${PS_OPTIONS}$1";;
+      -h) Usage; exit 0;;
       --) shift ; break ;;
       *) echo 1>&2 "Unsupported option>$1<";
          exit 1 ;;

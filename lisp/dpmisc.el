@@ -4653,7 +4653,7 @@ ARGS are passed thru to `dp-timestamp-string'."
 (defun dp-insert-for-comment-as-of ()
   (interactive)
   "Add something along the lines of 'as of: <timestamp>"
-  (dp-insert-for-comment+ (concat "as of: " (dp-timestamp-string)) ""))
+  (dp-insert-for-comment+ (concat " [as of: " (dp-timestamp-string) "]") ""))
 (dp-defaliases 'dpao 'dpasof 'dp-as/of 'as/of 'asof 
                'dp-insert-for-comment-as-of)
 

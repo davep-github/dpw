@@ -6,6 +6,8 @@ source script-x
 : ${dump_dir:=/bfd2/dumps}
 : ${EZEC:=vezec}
 
+# e.g.
+# dump_dir=/bfd2/dumps/ddd dump_fses='/mathoms /yokel /' EExec trivial-yokel-dump 0
 vezec()
 {
     echo "$@"
