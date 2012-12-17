@@ -398,18 +398,6 @@ Otherwise, it uses the topic of the current item.")
   (kill-local-variable 'dpj-current-journal-file)
   (setq dpj-current-journal-file nil))
 
-(defun dpj-stick-current-journal-file (&optional unstick-p)
-  "Ass/2 way to make non-standard journal files a little less unusable."
-  (interactive "P")
-  (if unstick-p
-      (dpj-unstick-current-journal-file)
-    (make-local-variable 'dpj-current-journal-file)
-    (setq dpj-current-journal-file (buffer-file-name))
-    (message "New current journal file: %s" dpj-current-journal-file)))
-
-(dp-defaliases 'dpj-stick 'dpj-scfj 'dpj-sjf 'sjf 'snf
-               'dpj-stick-current-journal-file)
-
 (defun* dpj-journal-file-sticky-p (&optional (buffer (current-buffer)))
   (local-variable-p 'dpj-current-journal-file buffer))
 
@@ -1195,7 +1183,7 @@ non-nil otherwise get the current list topics."
   (unless (or 
 	   no-spaced-append-p
 	   (dpj-no-spaced-append-p))
-    (dp-set-eof-spacing 2))
+    (dp-set-eof-spacing 2 (dpj-new-topic-insertion-point)))
   (when (not (string= topic ""))
     ;; @todo make new, full ts if date is different.
     (if nil ;; (equal topic (dpj-current-topic nil 'no-re-quote))
@@ -1204,8 +1192,10 @@ non-nil otherwise get the current list topics."
         ;; was significant enough to be marked with a cxc.  Another ?better? 
         ;; solution is to include short topics in the topic scans.
         (dpj-short-timestamp)
-      (dp-timestamp nil nil topic 'v2)
-      (dpj-update-topic-list topic))))
+      (dp-timestamp nil nil topic 'v2))
+    (dpj-update-topic-list topic)
+    (insert "\n")
+    (backward-char)))
 
 
 (defun dpj-remove-topic (topic)
@@ -1412,6 +1402,26 @@ returning."
   (dpj-view-topics number-of-months 
 		   'dpj-find-for-view-topic
 		   (list topic-re)))
+
+(defun dpj-sticky-variables-hack ()
+  "Create a local variables hack block that make a journal sticky when it loads."
+  (interactive)
+  (dp-insert-local-variables-hack 
+   '("eval: (dpj-stick-current-journal-file)")))
+
+;;;###autoload
+(defun dpj-stick-current-journal-file (&optional unstick-p)
+  "Ass/2 way to make non-standard journal files a little less unusable."
+  (interactive "P")
+  (if unstick-p
+      (dpj-unstick-current-journal-file)
+    (make-local-variable 'dpj-current-journal-file)
+    (setq dpj-current-journal-file (buffer-file-name))
+    (message "New current journal file: %s" dpj-current-journal-file)))
+
+(dp-defaliases 'dpj-stick 'dpj-scfj 'dpj-sjf 'sjf 'snf 'dpj-make-sticky
+               'dpj-stick-current-journal-file)
+
 
 ;;;###autoload
 (defun* dpj-grep-and-view-hits (number-of-months topic-re grep-re 
@@ -1645,6 +1655,24 @@ Also will use prefix-arg as default NUM-MONTHS."
     (insert "\n{%/fundamental%}\n")
     (goto-char p)))
 
+;; Make this stop before a possible local variables hack section.
+;; My style is:
+;; 3x comment start chars, ^L
+;; 3x comment start chars, Local Variables:<space>***
+;; ...
+;; ;; 3x comment start chars, End:<space>***
+;; I use ; for comment start
+;; ??? goto eof, look back <n-lines> for ^;;; End: ***
+;; If found, look back for ;;;^L
+;; If found (beginning-of-line) (insert "\n") (previous-line) (beginning-of-line
+(defun dpj-new-topic-insertion-point ()
+  (save-excursion
+    (goto-char (point-max))
+    (if (re-search-backward (regexp-quote (dp-mk-local-variables-hack-header))
+                            nil t)
+        (point)
+      (point-max))))
+
 (defun dpj-visit-appropriate-journal-file (topic dir-name)
   "Visit the journal file based on various criteria."
   ;; 1) Map topic to specific file
@@ -1698,7 +1726,8 @@ Also will use prefix-arg as default NUM-MONTHS."
     (unless topic
       (setq topic (car (dpj-get-topic-interactive nil cur-topic))))
     (dpj-visit-appropriate-journal-file topic dir-name)
-    (goto-char (setq new-record-pos (point-max)))
+    ;;(goto-char (setq new-record-pos (dpj-new-topic-insertion-point)))
+    ;; `dpj-new-topic0' does the moving.
     (dpj-new-topic0 :topic topic :no-spaced-append-p no-spaced-append-p)
     (if (or link-too-p
 	    (and is-a-clone-p
@@ -1947,7 +1976,7 @@ continuation of a topic at a later time."
                        :no-spaced-append-p nil 
                        :link-too-p link-too-p 
                        :is-a-clone-p 'is-a-clone-p)
-      (dp-set-eof-spacing 2))
+      (dp-set-eof-spacing 2 (dpj-new-topic-insertion-point)))
     (when insert-this-text
       (insert insert-this-text "\n"))))
 
@@ -2808,8 +2837,8 @@ exist to move from one topic record to the next or previous.
   ;;(dmessage "ENTER: dp-journal-mode")
 
   ;; We make these variables buffer local and lower 'em into the paranoid zone.
-  (setq auto-save-interval 200)
-  (setq auto-save-timeout 30)
+  (setq auto-save-interval 200
+        auto-save-timeout 30)
 
   ;;
   ;; this make line up/down movement commands skip over invisible
@@ -2934,7 +2963,9 @@ exist to move from one topic record to the next or previous.
   (abbrev-mode 1)
 
   (setq auto-save-interval 42
-        auto-save-timeout 30)
+        auto-save-timeout 30
+        comment-start "; ")
+
 
   ;; now that we have auto-save-timeout, let's crank this up
 

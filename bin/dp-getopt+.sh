@@ -77,7 +77,8 @@ VERBOSE=:
 DEBUG=:
 
 running_as_script && {
-  source eexec
+  ###source eexec Why? This invocation will stomp things set by an earlier one.
+  ### what will break now?
   [[ -z "${option_str}" ]] && [[ "${option_str-null}" == "null" ]] && \
    dpe_error 1 'EINVAL: option_str is null.  Set it to "" if you do not want options.'
   # Only replace values if the variable is null.

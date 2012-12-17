@@ -42,4 +42,9 @@ Ee|sb5158|ws5158|bug5158|b5158|       /home/scratch.dpanariti_t124/t124_0/
 Ee|as2tg|tgas2|       /home/scratch.autosubmit120/trees/tree2644641/hw/ap/diag/testgen/
 Ee|as2sb|as2ws|       /home/scratch.autosubmit120/trees/tree2644641/
 Ee|sbas2|wsas2|       /home/scratch.autosubmit120/trees/tree2644641/
-Ee|bnv|       /home/dpanariti/bin.nvidia
+Ee|bnv|       /home/dpanariti/bin.nvidia/
+Ee|drv1|       /home/scratch.dpanariti_t124_1/t124_1/hw/ap/drv/
+Ee|drvapi1|       /home/scratch.dpanariti_t124_1/t124_1/hw/ap/drv/drvapi/
+Ee|sb1a|       /home/scratch.dpanariti_t124_1/t124_1a/
+Ee|ap1a|       /home/scratch.dpanariti_t124_1/t124_1a/hw/ap/
+Ee|tg1a|       /home/scratch.dpanariti_t124_1/t124_1a/hw/ap/diag/testgen/

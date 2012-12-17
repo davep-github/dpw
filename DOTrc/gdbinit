@@ -962,14 +962,14 @@ end
 define deci
  set input-radix 0x0a
 end
-document deco
+document deci
 Set input radix to decimal.
 end
 
 define i10
  set input-radix 0x0a
 end
-document deco
+document i10
 Set input radix to decimal.
 end
 
@@ -990,14 +990,14 @@ end
 define hexi
  set input-radix 0x10
 end
-document hexo
+document hexi
 Set input radix to hexadecimal.
 end
 
 define i16
  set input-radix 0x10
 end
-document hexo
+document i16
 Set input radix to hexadecimal.
 end
 
@@ -1115,6 +1115,22 @@ end
 document tip_display
 Tips on automatically displaying values when a program stops.
 end
+
+# ________ nVIDIA Multiengine specific _________
+define initb
+  break GpuTrace::ReadHeader
+end
+document initb
+Set initial break after some .so,s have been loaded allowing other subsystem breaks.
+end
+
+define tinitb
+  tbreak GpuTrace::ReadHeader
+end
+document tinitb
+Set as initb but using a tbreak. It is usually not useful after the initial break.
+end
+
 # __________________gdb options_________________
 ### I use GDBHISTFILE #set history filename /
 set history save

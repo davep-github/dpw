@@ -221,7 +221,7 @@ gtagser=$(sp -1 gtags)
 do_taggin()
 {
     local dirs="$@"
-    echo 1>&2 "This ($(basename $0)), ${tree_tagger} and cscope-indexer need to be reworked.
+    echo 1>&2 "This program ($(basename $0)), ${tree_tagger} and cscope-indexer need to be reworked.
 They should work off the same set of files."
     EExec eval ${tree_tagger} $DP_SCRIPT_X_DEBUG_OPT $tflags $dirs
     echo "taggin in $PWD"

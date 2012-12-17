@@ -382,3 +382,16 @@ endif
 if ( -e ~/.p4client ) then
   source ~/.p4client
 endif
+
+#complete someday# set echo
+#complete someday# ( echo ====; date ; env ) >>& ~/tmp/env
+#complete someday# ( echo ====; date ; set ) >>& ~/tmp/set
+
+#complete someday# # .cshrc is called twice at least during login.
+#complete someday# if ($?HNAME) then
+#complete someday#     set ipcrc=~/ipc/$HNAME.rc
+#complete someday#     if ( -e  $ipcrc) then
+#complete someday#         source $ipcrc $ipcrc
+#complete someday#     endif
+#complete someday# endif
+#complete someday# setenv DP_CSHRC_PASS1 t

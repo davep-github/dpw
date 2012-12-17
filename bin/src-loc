@@ -1,0 +1,34 @@
+#!/bin/sh
+
+source script-x
+source eexec
+set -u
+progname="$(basename $0)"
+
+: ${GREP:=egrep}
+
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+
+: ${DB:=loc.db}
+: ${file_list:=all-src-files}
+
+EExec -y cd $HOME/work/active/current-sb
+echo "Searching in $PWD"
+
+if [ -f "$DB" ]
+then
+    EExec_verbose_msg "Using locate."
+    EExec locate -d "$DB" "$@"
+elif [ -e "$file_list" ]
+then
+    EExec_verbose_msg "Using $GREP."
+    EExec $GREP "$@" "$file_list"
+else
+    echo 1>&2 "Cannot find db or list of files."
+    exit 1
+fi

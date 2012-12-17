@@ -16,10 +16,18 @@ sed_path()
     local opts="" sep="" args=()
     local nopts=0 nargs=0
     local swap_em=
-    if [[ "$1" =~ "(-r|--reverse)" ]]; then
-        shift
-        swap_em=t
-    fi
+    local slash_g=
+    local i
+    for i in "$@"
+    do
+      case "$1" in
+          -r|--reverse) swap_em=t;;
+          -g|--global) slash_g=t;;
+          --) shift; break;;
+          *) break;;
+      esac
+      shift
+    done
     for i in "$@"
     do
 	#echo "0:i>$i<" 1>&2
@@ -45,7 +53,7 @@ sed_path()
         # Assume this is a single sed expression.
 	#do_sed_path "$@" ""
 	args=("${args[@]}" "")  
-	: $((++nargs))
+	((++nargs))
     fi
     #echo "2:args>${args[*]}<" 1>&2
     #echo "2:$(echo_id nargs)" 1>&2
@@ -63,7 +71,7 @@ sed_path()
         #echo_id sed_cmd 1>&2
 	do_sed_path $opts $sed_cmd
     else
-	echo 1>&2 "sed_path(): I'm comfuzed by this commandline>$@<"
+	echo 1>&2 "sed_path(): I'm comfuzed by this command line>$@<"
 	return 1
     fi
 }

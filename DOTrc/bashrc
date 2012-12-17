@@ -12,6 +12,9 @@
 #echo "$PS1" | ~/yokel/bin/hd
 #echo "dp_NH:-1>$dp_NH<"
 
+# $@ is unset when called for a new/login shell.
+export DP_RC_LIST_OTHERS="$HOME/.rc/bashrc"
+
 # Define setenv to work like export so we can just copy in .cshrc stuff
 setenv () 
 {

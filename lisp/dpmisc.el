@@ -9639,22 +9639,44 @@ If OBA is nil, use `obarray'."
   (py-newline-and-indent)
   (pbtemp))
 
+(defun dp-mk-local-variables-hack-line (s)
+  (dp-build-co-comment-start
+   ;; Format allows s to be almost any type.
+   (format " %s" s)  nil
+   :end " ***"
+   :num-starts 3))
+  
+(defun dp-mk-local-variables-hack-header ()
+  (concat (dp-build-co-comment-start "" nil :num-starts 3)
+          "\n"
+          (dp-mk-local-variables-hack-line "Local Variables:")))
+
+(defun dp-mk-local-variables-hack (&optional vars no-end-p)
+  "Build a Local Variables block. Add VARS element by element after comment chars."
+  (interactive)
+  (concat
+   (dp-mk-local-variables-hack-header)
+   "\n"
+   (let ((vars (append vars (if no-end-p
+                                '()
+                              '("End:")))))
+    (mapconcat 'dp-mk-local-variables-hack-line
+               vars
+               "\n"))))
+
+(defun dp-insert-local-variables-hack (&optional vars no-end-p)
+  (interactive)
+  (insert (dp-mk-local-variables-hack vars no-end-p)))
+
 (defun dp-mk-shell-script ()
   (interactive)
   (dp-end-of-buffer)
-  (insert "#
-### Local Variables: ***
-### mode:sh ***
-### comment-start: \"#\" ***
-### comment-end: \"\" ***
-### End: ***
-"))
+  (dp-insert-local-variables-hack 
+   '("mode:sh"
+     "comment-start: \"#\""
+     "comment-end: \"\"")))
 
-;;; don't let the above force us into shell script mode!!!!!!!
-;;; make sure it isn't on the last page.
-
-
-(defun dp-set-eof-spacing (&optional num-lines)
+(defun dp-set-eof-spacing (&optional num-lines insertion-point)
   "Add spacing to EOF to ensure `num-lines' blank lines at eof."
   (interactive "*")
   (let* (add-str
@@ -9663,7 +9685,7 @@ If OBA is nil, use `obarray'."
          (bs0 (concat "[^" dp-ws+newline "]"))
          (bs (concat bs0 bs0 "*"))
          (fs (concat "[" dp-ws+newline "]*")))
-    (goto-char (point-max))
+    (goto-char (or insertion-point (point-max)))
     ;; ensure we have at least one newline to match at EOB
     (insert "\n")
     (when (re-search-backward bs (point-min) t)
@@ -13893,7 +13915,9 @@ the next session."
   "What we stick, by default, in a comment added by `co'.
 Use \\[dp-comment-out-with-tag] to specify a tag string.")
 
-(defun dp-build-co-comment-start (&optional tag start end
+(defun* dp-build-co-comment-start (&optional tag start 
+                                  &key end
+                                  (num-starts 1)
                                   read-as-last-resort-p
                                   recursing)
   (setq-ifnil tag dp-default-co-tag
@@ -13909,8 +13933,16 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
     ;; Good for languages like Python.
     ;; e.g. ; --> ;C;, ;; --> ;;C;,
     (string-match "^\\(.*?\\)\\(\\s-*\\)$" start)
-    (concat (match-string 1 start) tag (substring start 0 1) 
-            (or (match-string 2 start) "")))
+    (let* ((final-start (match-string 1 start))
+           (tstart final-start))
+      (if (> num-starts 1)
+          (let ((tstart (match-string 1 start))
+                (start ""))
+            (loop repeat (1- num-starts)
+              do (setq final-start (concat final-start tstart))))
+      (setq final-start (match-string 1 start)))
+      (concat final-start tag (or end (substring start 0 1))
+              (or (match-string 2 start) ""))))
     (read-as-last-resort-p 
      (read-from-minibuffer "Comment start: " (format "#%s# " tag)))))
 

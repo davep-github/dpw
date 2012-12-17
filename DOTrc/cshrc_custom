@@ -63,7 +63,7 @@ set correct =
 # Reconcilable differences
 alias type which
 
-unalias make; alias make 'set make = "make"; if ( -e "`depth`/bin/make" ) set make = "`depth`/bin/make"; $make'unalias make; alias make 'set make = "make"; if ( -e "`depth`/bin/make" ) set make = "`depth`/bin/make"; $make'
+unalias make; alias make 'set make = "make"; if ( -e "`depth`/bin/make" ) set make = "`depth`/bin/make"; $make'
 
 setenv PATH `addtopath.pl PATH -"$HOME/bin"`
 
@@ -78,10 +78,12 @@ setenv PURPOSE '-[tcsh std env]- '
 bindkey "^p" history-search-backward
 
 # There will be a race here.
-set ipc_rc = "$HOME/ipc/customrc.csh"
-if (-x "$ipc_rc" ) then
-    source "$ipc_rc"
-endif
+# This should live at the very end of .cshrc.
+# It may get clobbered during an update.
+#set ipc_rc = "$HOME/ipc/customrc.csh"
+#if (-x "$ipc_rc" ) then
+#    source "$ipc_rc"
+#endif
 
 if ($?prompt) then
   if ($?tcsh) then
@@ -91,7 +93,7 @@ if ($?prompt) then
   endif
 endif
 
-#
-### Local Variables: ***
-### eval: (auto-fill-mode -1) ***
-### End: ***
+### 
+### Local Variables: *** 
+### eval: (dpj-stick-current-journal-file) *** 
+### End: *** 

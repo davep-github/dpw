@@ -16,6 +16,14 @@ done
 : ${LOCATE:=/usr/bin/locate}
 : ${LOC_DIRS:=/home/utils}
 : ${LOC_EXCLUDES=}
+: ${LOC_DB_NAME:=}
+: ${LOC_DB_DIR:=.}
+: ${lval:=0}
+
+if [ -z "${LOC_DB-}" -a -n "$LOC_DB_NAME" ]
+then
+    LOC_DB="${LOC_DB_DIR-.}/${LOC_DB_NAME}"
+fi
 : ${LOC_DB:=$DP_LOC_DB}
 
 [ -z "$LOC_DB" ] && {
@@ -35,4 +43,4 @@ loc_db_dir=$(dirname "$LOC_DB")
 loc_exclude_opt=
 [ -n "$LOC_EXCLUDES" ] && loc_exclude_opt="-e $LOC_EXCLUDES"
 
-EExec $LOCATE -U ${LOC_DIRS} ${loc_exclude_opt} -o ${LOC_DB} -l 0 "$@"
+EExec $LOCATE -U ${LOC_DIRS} ${loc_exclude_opt} -o ${LOC_DB} -l "$lval" "$@"

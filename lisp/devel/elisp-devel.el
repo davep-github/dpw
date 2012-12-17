@@ -2213,3 +2213,148 @@ Monday December 03 2012
               comint-password-prompt-regexp)
 nil
 
+
+========================
+Thursday December 13 2012
+--
+(dp-build-co-comment-start "bubba")
+";bubba "
+
+";bubba "
+
+";bubba "
+
+
+
+(dp-build-co-comment-start "bubba" nil :end "<<<" :num-starts 3)
+";;;bubba<<< "
+
+
+";bubba<<< "
+
+";bubba<<< "
+
+";bubba<<< "
+
+"endbubba"
+
+";bubba "
+
+"; "
+
+"; "
+
+(dp-build-co-comment-start "" nil :num-starts 3)
+";;; "
+
+"; "
+
+""
+
+
+(dp-build-co-comment-start "tag" ";" :end "z" :num-starts 3)
+";;;tagz"
+
+";;;tag"
+
+";;;tag"
+comment-start
+"; "
+
+"; ; ;tag "
+
+
+"aaatag!!!"
+
+"aaataga"
+
+";;;tag;"
+
+";;;tag;"
+
+";;;tag;"
+
+(dp-add-local-variables-hack '("setq" "funcall" "blah"))
+(nil nil nil nil nil)
+
+
+(let* ((v '(0))
+       (v (cons "a" v))
+       (v (append v (list "z"))))
+  v)
+("a" 0 "z")
+
+("a" 0 . "z")
+
+(nconc '(a b) "c")
+(a b . "c")
+
+(a b "c")
+
+(a b . "c")
+
+
+("a" 0 . "z")
+
+("a" . "z")
+
+("a")
+
+
+(append '("a") '("q") '("b"))
+("a" "q" "b")
+
+("a" "b")
+
+
+(dp-build-co-comment-start "blah" nil :end "***"
+                           :num-starts 3)
+";;;blah*** "
+
+"*********blah"
+
+(dp-build-co-comment-start "setq" ";" :end "z" :num-starts 3)
+";;;setqz"
+
+(dp-add-local-variables-hack 
+   '("mode:sh"
+     "comment-start: \"#\""
+     "comment-end: \"\""))
+(nil nil nil nil nil)
+
+(dpj-sticky-variables-hack)
+(nil nil nil)
+
+(append '(a) nil nil)
+(a)
+
+
+
+     "comment-start: \"#\""
+     "comment-end: \"\""))
+)
+(dpj-sticky-variables-hack)
+(nil nil nil nil nil)
+
+
+
+  (dp-add-local-variables-hack 
+   '("(dpj-make-sticky)")))
+dpj-sticky-variables-hack
+
+
+dpj-sticky-variables-hack
+
+
+     "comment-start: \"#\""
+     "comment-end: \"\""))
+
+(dp-mk-local-variables-hack-header)
+
+
+(dp-mk-local-variables-hack '(a b 1) t)
+
+(dp-build-co-comment-start 
+                         (concat " " "a")  nil 
+                         :end " ***"
+                         :num-starts 3)
