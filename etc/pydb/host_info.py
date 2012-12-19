@@ -320,7 +320,7 @@ e(
     'xterm_bg': "'" + NVIDIA_BG_COLOR + "'",
     'xterm_fg': "'" + NVIDIA_FG_COLOR + "'",
     'main_macs_opts': '-eval (dp-main-rc+2w)',
-    'xem_opts': '-geometry 81x71+0+0',
+    'xem_opts': '-geometry 81x71-42+6',
     # This is OK, but O0{}[]() : no slashed 0. O & 0 are distinguishable.
     'xem_font': '''-*-Lucidatypewriter-medium-r-*-*-*-120-*-*-*-*-*-*''',
     # May be less legible in the long run, but 0 is slashed.

@@ -6,7 +6,6 @@ export dp_DEPRECATED_log
 
 : ${envDTE=}
 
-export DP_RC_LIST_OTHERS=""
 dp_source_rc()
 {
     for rcf in "$@"; do
@@ -205,7 +204,7 @@ dpe_echo ()
 {
     local pname=${DPE_ECHO_PROGNAME:-$(dp_progname)}
     echo 1>&2 "${pname}:" "$@"
-    if [ -n "$DP_ERRLOG" ]
+    if [ -n "${DP_ERRLOG-}" ]
     then
         {
             echo "on $(date '+%Y/%m/%d:%H:%M:%S')"
@@ -264,7 +263,7 @@ source_list()
     for src in $(expand_source_list "$@")
     do
         $verbose "source_list: sourcing>$src<"
-        source $src
+        dp_source_rc $src
         ((++ dprc_rc))
     done
 

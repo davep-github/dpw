@@ -4,6 +4,17 @@ source script-x
 source eexec
 set -u
 progname="$(basename $0)"
+
+# I will have a locate alias that references my db so we need to get the real
+# one here.
+: ${LOCATE:=which-locate}
+: ${LOC_DIRS:=/home/utils}
+: ${LOC_EXCLUDES=}
+: ${LOC_DB_NAME:=}
+: ${LOC_DB_DIR:=.}
+: ${lval:=0}
+: ${uniqifier=$(basename $PWD)}
+
 eexec_program=$(EExec_parse "$@")
 for op in $eexec_program
 do
@@ -11,11 +22,56 @@ do
   shift
 done
 
-# I will have a locate alias that references my db so we need to get the real
-# one here.
-: ${LOCATE:=/usr/bin/locate}
-: ${LOC_DIRS:=/home/utils}
-: ${LOC_EXCLUDES=}
+
+# Usage variable usage:
+Usage_args_info="[options]"
+Usage_synopsis="Make a locate db with a few extensions for nVIDIA environment:
+"
+Usage_details="-n -- Show what would happen but don't do it. [eexec]
+-v -- Be verbose about it. [eexec]
+-q -- Anti-verbose. [eexec]
+-u <uniqifying-arting> -- Incorporate this into the db name for differentiation.
+
+"
+# Example of arg parsing.
+option_str="nvqu:"
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      # eexec support
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+
+      # Program options.
+      -u) shift; uniqifier=$1;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+# No args.
+! [ "$*" = "" ] && Usage
+
+if [ -n "$uniqifier" ]
+then
+    # Allow abbrevs.
+    uniqifier="$(basename $(dogo "$uniqifier"))"
+    case "$uniqifier" in
+        .*) ;;
+        *) uniqifier=".${uniqifier}";;
+    esac
+fi
+
+    
+
+if [ -z "${LOC_DB-}" -a -n "$LOC_DB_NAME" ]
+then
+    LOC_DB="${LOC_DB_DIR-.}/${LOC_DB_NAME}"
+fi
 : ${LOC_DB:=$DP_LOC_DB}
 
 [ -z "$LOC_DB" ] && {
@@ -35,4 +91,8 @@ loc_db_dir=$(dirname "$LOC_DB")
 loc_exclude_opt=
 [ -n "$LOC_EXCLUDES" ] && loc_exclude_opt="-e $LOC_EXCLUDES"
 
-EExec $LOCATE -U ${LOC_DIRS} ${loc_exclude_opt} -o ${LOC_DB} -l 0 "$@"
+ext="$(which-locate -i)$uniqifier"
+
+env | egrep -i 'eexec.*verbos'
+EExec $LOCATE --create -U ${LOC_DIRS} ${loc_exclude_opt} \
+   -o ${LOC_DB}.${ext} -l "$lval" "$@"

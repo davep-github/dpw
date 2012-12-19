@@ -1,0 +1,41 @@
+#!/bin/sh
+
+source script-x
+source eexec
+set -u
+progname="$(basename $0)"
+
+: ${GREP:=egrep}
+: ${src_dir=$HOME/work/active/current-sb}
+: ${LOCATE:=}
+
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+
+: ${DB:=loc.db}
+: ${file_list:=all-src-files}
+
+# Different boxes have different locate executables.
+# Different executables have different file formats.
+[ -z "${LOCATE}" ] && {
+    help=$(locate --help)
+
+EExec -y cd ${src_dir}
+echo "Searching in $PWD"
+
+if [ -f "$DB" ]
+then
+    EExec_verbose_msg "Using locate."
+    EExec locate -d "$DB" "$@"
+elif [ -e "$file_list" ]
+then
+    EExec_verbose_msg "Using $GREP."
+    EExec $GREP "$@" "$file_list"
+else
+    echo 1>&2 "Cannot find db or list of files."
+    exit 1
+fi

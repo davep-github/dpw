@@ -6,7 +6,15 @@
 # pull in our generic functions
 #
 
-DP_RC_DIR=~davep/.rc
+if [ "$USER" = "davep" ]
+then
+    # This is so I get my env in a sudo bash.
+    DP_RC_DIR=~davep/.rc
+else
+    DP_RC_DIR=$HOME/.rc
+fi
+
+    
 
 dp_source_rc ${DP_RC_DIR}/alias.b0rkd-kb ${DP_RC_DIR}/alias.root
 
@@ -19,6 +27,9 @@ alias lca='\ls -CF --color=always'
 #alias lf="ls_no_color"
 #alias lm="ls_no_color"
 alias ll="ls -l"
+alias l1="ls -1"
+alias l1t="ls -1t"
+
 
 if [ -n "$dp_no_color" ]
 then

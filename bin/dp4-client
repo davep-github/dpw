@@ -16,7 +16,7 @@ do
       -v) VERBOSE="echo $progname: "; EExecVerbose;;
       -q) VERBOSE=":"; EExecQuiet;;
       -t) template_opt="-t ${DP_P4_CLIENT_TEMPLATE}";;
-      -T) shift; template_opt="-t $2";;
+      -T) shift; template_opt="-t $1";;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";

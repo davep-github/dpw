@@ -20,7 +20,7 @@
 # You can set:
 # EExecEcho           A command to echo command being executed, def UNSET.
 # EExecErrorReporter  A command to report errors, def 'EExecDefErrorReporter'.
-# EExecEchoPrefix     A prefix to print before all output.
+# EExecEchoPrefixG    A prefix to print before all output.
 # EExecContinue       Non-empty --> continue after errors, def UNSET.
 # EExecRCFile         A file in which to accumulate error msgs, def UNSET.
 # EExecShowOnly       Don't run commands, just show 'em.
@@ -39,7 +39,7 @@
 ${EExecExporter} EExecShowCommand=EExecStderrEcho
 ${EExecExporter} EExecShowPrefix=""
 ${EExecExporter} EExecEcho=
-${EExecExporter} EExecEchoPrefix="+"
+${EExecExporter} EExecEchoPrefixG="+"
 ${EExecExporter} EExec_loaded_p=t
 ${EExecExporter} EExecShowOnly=
 ${EExecExporter} EExecErrorReporter=
@@ -55,6 +55,14 @@ EExec_parse_option_str="nvq"
 #
 # This is a terrible hack, only working in precise circumstances, but is
 # surprisingly useful nonetheless.
+# Use it like this:
+#e.g. eexec_program=$(EExec_parse "$@")
+#e.g. for op in $eexec_program
+#e.g. do
+#e.g.   $op
+#e.g.   shift
+#e.g. done
+
 EExec_parse()
 {
     local prog=""
@@ -64,11 +72,17 @@ EExec_parse()
           -n) prog="${prog}EExecDashN ";;
           -v) prog="${prog}EExecVerbose ";;
           -q) prog="${prog}EExecQuiet ";;
+          --) prog="${prog}EExecNOP";; # Allow user to consume a --
           *) break;;
       esac
       shift
     done
     echo "$prog"
+}
+
+EExecNOP()
+{
+    :
 }
 
 EExecExport()
@@ -93,7 +107,7 @@ EExecDashN ()
     fi
     ${EExecExporter} EExecShowOnly=y
     ${EExecExporter} EExecShowPrefix="$@"
-    ${EExecExporter} EExecEchoPrefix='-'
+    ${EExecExporter} EExecEchoPrefixG='-'
 }
 
 EExecDashN_p()
@@ -115,7 +129,10 @@ EExecVerbose ()
 
 EExec_verbose_msg()
 {
-    [ -n "$EExec_verbose_func" ] && "$EExec_verbose_func" "{v}$@"
+    local old=$EExecEchoPrefix
+    EExecEchoPrefix=v
+    [ -n "$EExec_verbose_func" ] && "$EExec_verbose_func" "$@"
+    EExecEchoPrefix=$old
 }
 
 EExecQuiet ()
@@ -138,6 +155,7 @@ $* failed ${EExecMsg-}"
 
 EExecStderrEcho()
 {
+    local ep=${EExecEchoPrefix-$EExecEchoPrefixG}
     #echo ">$EExecEchoPrefix<" 1>&2
     #echo echo "{$EExecEchoPrefix}$*" '1>&2' 1>&2
     echo "{$EExecEchoPrefix}""$@" 1>&2
@@ -200,8 +218,17 @@ EExec()
 	    eexecEcho="$EExecEcho"
 	fi
     else
-	${EExecExporter} eexecShowOnly="$EExecShowOnly"
-	${EExecExporter} eexecShowPrefix="$EExecShowPrefix"
+        if [ "$1" == "-y" ]     # Override a global -n
+        then
+            shift
+            ${EExecExporter} eexecShowOnly=""
+            ${EExecExporter} eexecShowPrefix=""
+            ${EExecExporter} EExecEchoPrefix="+"
+        else
+            ${EExecExporter} eexecShowOnly="$EExecShowOnly"
+            ${EExecExporter} eexecShowPrefix="$EExecShowPrefix"
+            ${EExecExporter} EExecEchoPrefix=$EExecEchoPrefixG
+        fi
 	${EExecExporter} eexecEcho="$EExecEcho"
     fi
 

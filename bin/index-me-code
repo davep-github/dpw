@@ -15,7 +15,7 @@ done
 : ${p4_root=${1-"."}}
 
 #
-# Minimal set of files to index for MultiEngine Testing
+# Suggested minimal set of files to index for MultiEngine Testing..
 # //hw/ap/drv/drvapi
 # //hw/ap/drv/multiengine
 # //arch/traces/mobile/traces/gpu_multiengine/
@@ -23,6 +23,12 @@ done
 # //hw/ap/inf/mods/trace_3d/plugin/
 #
 # /home/scratch.dpanariti_t124/t124_0/arch/traces/mobile/traces/gpu_multiengine/sanity_bsea/sanity_bsea.cpp
+
+####
+## Let's see if all of drv chokes us or not... YES.
+## //hw/ap/drv/drvapi
+## //hw/ap/drv/multiengine
+####
 base_depot_dirs_of_interest="
 //hw/ap/drv/drvapi
 //hw/ap/drv/multiengine
@@ -31,8 +37,17 @@ base_depot_dirs_of_interest="
 //hw/ap/inf/mods/trace_3d/plugin/
 "
 
+# too big: //hw/ap/include/
+# Taken care of with NOTAG files.
+# I would like the contents of the dir itself, however. Need to add files by hand.
+# /home/scratch.dpanariti_t124_1/t124_1/hw/ap/drv/simfront/Main.cpp
+# !&@^%#&^@%#! //hw/ap/include/ works if it is in this order.
+# order dependence sucks.
 more_depot_dirs_of_interest="
-/hw/ap/ip/vdec/cmod
+//hw/ap/include
+//hw/ap/ip/vdec/cmod/
+//hw/ap/drv/simfront/
+//hw/ap/drv/bootrom/
 "
 
 depot_dirs_of_interest="$base_depot_dirs_of_interest $more_depot_dirs_of_interest"

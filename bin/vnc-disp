@@ -1,0 +1,22 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+# /etc/vnc/Xvnc-core :30
+
+PROC_NAME="/etc/vnc/Xvnc-core"
+
+x=$(pgrep "$PROC_NAME" | sed -rn "s!(.*)($PROC_NAME )(:[[:digit:]]{2,3})(.*)!\3!p")
+
+set -- $x
+if (($# > 1))
+then
+    echo "More than one vnc servers running. Choose on by hand."
+    echo "$x"
+    exit 1
+fi
+
+echo "$HOST$x"
+exit 0

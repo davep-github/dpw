@@ -87,10 +87,12 @@ $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "filtered_path>""${filtered_path[@]}<"
 
 grep_em()
 {
+    #echo "filtered_path>${filtered_path[@]}<"
     for d in "${filtered_path[@]}"
     do
       $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "d>$d<"
-      find "$d" -type f -print | tee /dev/null | print_accepted | tee /dev/null | grepper "$@"
+      find "$d/" -xtype f -print | tee /dev/null | print_accepted \
+       | tee /dev/null | grepper "$@" | egrep -v '^Binary'
     done
     #find "${filtered_path[@]}" -type f -print0 | xargs -0 $GREPPETH "$@"
 #CO#     for dir in $PATH; do

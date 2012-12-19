@@ -1,0 +1,16 @@
+Push/Pull to/from Master origin.
+Live and work in clones.
+
+Master repo: [vilya:/mathoms/dpw.git]
+   Common git'd home clone: /bfd3/vc-repositories/dpw.git
+   git remote -v
+   origin	/mathoms/dpw.git (fetch)
+   origin	/mathoms/dpw.git (push)
+
+   Common git'd work clone: /home/dpanariti/davep/dpw.git
+   git remote -v
+   origin	davep@71.184.123.42:/mathoms/dpw.git (fetch)
+   origin	davep@71.184.123.42:/mathoms/dpw.git (push)
+
+
+

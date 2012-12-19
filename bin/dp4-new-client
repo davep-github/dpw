@@ -13,6 +13,8 @@ revision=
 : ${sync_p=}
 : ${DASH_N_OPT=}
 : ${P4CONFIG=.p4config}
+: ${client_template=${DP_P4_CLIENT_TEMPLATE}}
+
 tmp_file=                # Needs to be non-null so at_exit() is less brittle.
 
 at_exit()
@@ -32,7 +34,7 @@ Usage_args_info=" <sandbox a.k.a client-name>"
 
 EExecVerbose
 std_options=""
-option_str="anvqw:sr:."
+option_str="anvqw:sr:.t:T"
 DPGOP_args_required=t
 source dp-getopt+.sh || exit 1
 
@@ -49,6 +51,8 @@ do
       -r) revision="$2"; shift;;
 #      -.) sandbox_name=$(scsandbox -.);;
       -.) sandbox_name=$(basename $PWD);;
+      -t) shift; client_template="$1";;
+      -T) client_template=;;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";
@@ -81,7 +85,10 @@ EExec dp4-mk-config "${client_name}" >| $tmp_file
 EExec /bin/cp -f $tmp_file $P4CONFIG
 EExec rm -f $tmp_file
 
-EExec dp4-client -t
+template_opt=
+[ -n "$client_template" ] && template_opt="-T $client_template"
+
+EExec dp4-client $template_opt
 
 rc=
 if [ "$sync_p" == 't' ]

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+source script-x
+source eexec
+set -u
+progname="$(basename $0)"
+
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+
+EExec mmake
+EExec -y cd "$(depth)/diag/testgen"
+EExec_verbose_msg "cwd: $PWD"
+EExec ./build_gpu_multiengine.pl purge
+EExec ./build_gpu_multiengine.pl -debug=1

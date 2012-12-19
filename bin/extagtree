@@ -2,6 +2,7 @@
 #set -x
 #set -v
 
+echo "\$@>$@<"
 prog=`basename $0`
 echo $prog: $* 1>&2
 
@@ -10,17 +11,17 @@ echo $prog: $* 1>&2
 # case, fixed this.
 ##: ${DASH_Q=-q}
 : ${DASH_Q=-q}
-. script-x
-
-. eexec
+source script-x
+source  eexec
 
 args=("$@")                     # Preserve args across .bashrc execution.
 
 tagtree()
 {
-    local files_file="$1"
-    eval $SUDO $EXCTAGS $inheritance_opt $etags_opt -L "$files_file" \
-      --links=no -o $TAGFILE \
+    local files_file="$1"; shift
+    local tag_file=${1-$TAGFILE}
+    eval EExec $SUDO $EXCTAGS $inheritance_opt $etags_opt -L "$files_file" \
+      --links=no -o $tag_file \
       $h_OPT $langmap $full_member_names "$py_props" "${EC_XARGS}"
 }
 
@@ -33,7 +34,7 @@ cscope_tree()
         then
         echo 1>&2 "Cannot find a cscope program."
     else
-        $cs $DASH_Q -b -i "$files_file" $cscope_flags
+        EExec $cs $DASH_Q -b -i "$files_file" $cscope_flags
     fi
 }
 
@@ -50,14 +51,13 @@ fi
 #
 : ${EXCTAGS:=exctags}
 : ${EMACS_OPT:=-e}
-: ${SUDO:=}
-: ${NOTAGFILE:=NOTAG}
-: ${EC_ARGS:='--links=no'}
-: ${EC_XARGS:=''}
-: ${FPAT:='.*'}
+: ${SUDO=}
+: ${NOTAGFILE=NOTAG}
+: ${EC_ARGS='--links=no'}
+: ${EC_XARGS=''}
+: ${FPAT='.*'}
 : ${v:=''}
 : ${FILES_FILE:=cscope.files}
-: ${ETAGS_P:=t}
 : ${ETAGFILE:=TAGS}
 : ${CTAGFILE:=tags}
 : ${EXCLUDED_FILES_FILE:="extagtree.excluded-files"}
@@ -66,6 +66,10 @@ fi
 : ${use_id=t}
 : ${finder_opts=}
 : ${use_files_file_p=}
+: ${cscope_p=t}
+: ${etag_p=t}
+: ${ctag_p=}
+
 
 SYSTEM_INCLUDES=
 ###
@@ -103,11 +107,14 @@ do
 	-T) tag_args="$2 $tag_args"; shift;;
         -p) FPAT=$2; finder_opts="$finder_opts $1 $2"; shift;;
         -h) follow_sym_links="-h"; finder_opts="$finder_opts $1";;
-        -E) ETAGS_P="";;
         -I) SYSTEM_INCLUDES=$DEF_SYSTEM_INCLUDES;;
         -f) finder_opts="$finder_opts $2"; shift;;
         -r) use_files_file_p=$FILES_FILE;;
         -R) shift; use_files_file_p=$1;;
+        -C) cscope_p=;;
+        -T) etag_p=; ctag_p=;;
+        -e) etag_p=t;;
+        -c) ctag_p=t;;
 	--) shift ; break ;;
 	*) 
             break ;;
@@ -121,13 +128,13 @@ dirs="$@"
 # Put the system includes first so any collisions will be noticeable.
 dirs="$SYSTEM_INCLUDES $dirs"
 
-if true_p "$ETAGS_P"; then
-    etags_opt="-e"
-    TAGFILE=$ETAGFILE
-else
-    etags_opt=""
-    TAGFILE=$CTAGFILE
-fi
+#if true_p "$ETAGS_P"; then
+#    etags_opt="-e"
+#    TAGFILE=$ETAGFILE
+#else
+#    etags_opt=""
+#    TAGFILE=$CTAGFILE
+#fi
 
 #
 # specify some extra options for exuberant ctags
@@ -226,34 +233,44 @@ fi
     echo "Cound not find any files. $FILES_FILE is empty."
 } 1>&2
 
-TAGFILES="$ETAGFILE $CTAGFILE"
-(
-    # subshell
-    etags_opt="-e"
+TAGFILES=()
+[ -n "$etag_p" ] && {
     TAGFILE="$ETAGFILE"
-    tagtree "$FILES_FILE"
-) &
-(
-    # subshell
-    etags_opt=""
+    TAGFILES+=($TAGFILE)
+    (
+        # subshell
+        etags_opt="-e"
+        tagtree "$FILES_FILE" "$TAGFILE"
+    ) &
+}
+
+[ -n "$ctag_p" ] && {
     TAGFILE="$CTAGFILE"
-    tagtree "$FILES_FILE"
-) &
+    TAGFILES+=($TAGFILE)
+    (
+        # subshell
+        etags_opt=""
+        tagtree "$FILES_FILE" "$TAGFILE"
+    ) &
+}
 
 if [ -n "$use_id" ] && type mkid >/dev/null 2>&1
 then
     prunes=$(untagged-dirs $argses)
     #echo_id prunes
-    mkid $prunes &
+    EExec mkid $prunes &
 fi
-cscope_tree "$FILES_FILE" &
+
+[ -n "$cscope_p" ] && {
+    cscope_tree "$FILES_FILE" &
+}
 
 echo "waiting for procs to complete..."
 wait
 
 if vsetp "$SUDO"
 then
-    exec $SUDO chown $(id -u) $TAGFILES
+    EExec $SUDO chown $(id -u) "${TAGFILES[@]}"
 else
     true
 fi

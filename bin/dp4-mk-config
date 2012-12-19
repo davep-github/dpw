@@ -8,7 +8,7 @@ progname="$(basename $0)"
 : ${PORT_PAT:=@PORT@}
 : ${PORT_DEFAULT:=p4hw.nvidia.com:2001}
 : ${DIFF_PAT:=@DIFF@}
-: ${DIFF_DEFAULT:=mgdiff}
+: ${DIFF_DEFAULT:=xxdiff}
 : 
 : ${CONFIG_TEMPLATE:=~/work/info/examples/DOTp4config}
 

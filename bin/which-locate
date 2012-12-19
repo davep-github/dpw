@@ -1,0 +1,72 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+LOC_BIN=$(sp locate | tail -n1)
+# Secure Locate 2.7 - Released January 24, 2003
+# mlocate 0.15
+
+version=$($LOC_BIN --version | head -n1)
+
+functions=()
+
+mlocate_create()
+{
+    EExec $LOC_BIN "$@"
+}
+
+mlocate_search()
+{
+    echo "mloc"
+}
+
+slocate_create()
+{
+    EExec updatedb "$@"
+}
+
+slocate_search()
+{
+    echo "sloc"
+}
+
+Usage()
+{
+    echo "Usage: $progname <-c|-i|-b> [<locate-args>]
+Try to give a consistent interface to various locate programs.
+
+Exactly one of -c|-i (or an alias) must be provided.
+-b|--binary|-p|--program -- The real locate's path name.
+-c|--create -- Actually create the database using the correct format.
+-i|--id|--database-id|--ext -- Identify the locator. Useful for extensions to 
+                               differentiate databases.
+"
+}
+    
+
+case "$version" in
+    mlocate*) create=mlocate_create; search=mlocate_search;;
+    Secure*Locate*) create=slocate_create; search=slocate_search;;
+    *) {
+          echo "Unsupported locate. Version info:"
+          $LOC_BIN --version
+       } 1>&2
+       ;;
+esac
+
+[ -z "$*" ] && {
+    echo "-c or -i must be specified."
+    Usage
+    exit 1
+} 1>&2
+
+for i in "$@"
+do
+  case "$i" in
+      -b|--binary|-p|--program) echo "$LOC_BIN"; exit;;
+      -c|--create) shift; $create "$@"; exit;;
+      -i|--id|--database-id|--ext) $search "$@"; exit;;
+      *) Usage; exit 1;;
+  esac
+done
