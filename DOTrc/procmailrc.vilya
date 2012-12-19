@@ -24,29 +24,31 @@ LOGABSTRACT=all
 #tmp# * ^TOdavep.tests?@
 #tmp# .test/
 
-#tmp# :0
-#tmp# * ^TOtests?@
-#tmp# .test/
-
-#tmp# * ^TOtests?@
-#tmp# .test/
+:0
+* ^TOtests?@
+.test/
 
 #tmp# # Real recipes begin here.
 
-#tmp# * ^TODAVEP.ORION@
-#tmp# .ads/
+:0
+* ^TODAVEP.ORION@
+.ads/
 
-#tmp# * ^FromMarc.Cenedella
-#tmp# .bunk/
+:0
+* ^FromMarc.Cenedella
+.bunk/
 
-#tmp# * ^TOdavep.xemacs@
-#tmp# .xemacs/
+:0
+* ^TOdavep.xemacs@
+.xemacs/
 
-#tmp# * ^TOdavep.jobs@
-#tmp# .jobs/
+:0
+* ^TOdavep.jobs@
+.jobs/
 
-#tmp# * ^TO.*\.(ipadbs|snet|vivid|brainwave-entertainment)@
-#tmp# .junk/
+:0
+* ^TO.*\.(ipadbs|snet|vivid|brainwave-entertainment)@
+.junk/
 
 #
 # simulate default handling
