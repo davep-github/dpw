@@ -1131,6 +1131,13 @@ document tinitb
 Set as initb but using a tbreak. It is usually not useful after the initial break.
 end
 
+define inittb
+  tbreak GpuTrace::ReadHeader
+end
+document inittb
+Set as initb but using a tbreak. It is usually not useful after the initial break.
+end
+
 # __________________gdb options_________________
 ### I use GDBHISTFILE #set history filename /
 set history save

@@ -1,0 +1,25 @@
+#!/bin/sh
+
+source script-x
+source eexec
+set -u
+progname="$(basename $0)"
+
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+
+: ${db:=$DP_LOC_DB}
+ext=$(which-locate -i)
+LOC_BIN=$(which-locate --program)
+db="$db.$ext"
+: ${DB:=$db}
+
+# bin.nvidia is showing up in my path twice. So take the last until I track
+# that down.
+LOC_BIN=$(sp locate | tail -1)
+
+EExec "$LOC_BIN" -d "$DB" "$@"

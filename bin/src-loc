@@ -6,6 +6,8 @@ set -u
 progname="$(basename $0)"
 
 : ${GREP:=egrep}
+: ${src_dir=$HOME/work/active/current-sb}
+: ${LOCATE:=}
 
 eexec_program=$(EExec_parse "$@")
 for op in $eexec_program
@@ -17,7 +19,12 @@ done
 : ${DB:=loc.db}
 : ${file_list:=all-src-files}
 
-EExec -y cd $HOME/work/active/current-sb
+# Different boxes have different locate executables.
+# Different executables have different file formats.
+[ -z "${LOCATE}" ] && {
+    help=$(locate --help)
+
+EExec -y cd ${src_dir}
 echo "Searching in $PWD"
 
 if [ -f "$DB" ]

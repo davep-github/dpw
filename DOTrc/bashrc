@@ -241,7 +241,7 @@ then
 else
     DAVEP_BIN_VARIANTS=
 fi
-DAVEP_BIN_VARIANTS="$arch_os_bin.$HOST,$arch_os_bin,$arch_bin.$HOST,$arch_bin,bin.$HOST$DAVEP_BIN_VARIANTS,sbin,bin"
+DAVEP_BIN_VARIANTS="$arch_os_bin.$HOST,$arch_os_bin,$arch_bin.$HOST,$arch_bin,bin.$HOST,$DAVEP_BIN_VARIANTS,sbin,bin"
 #echo_id DAVEP_BIN_VARIANTS
 #exit 99
 DAVEP_BIN_DIRS="$(eval echo $HOME/{$DAVEP_BIN_VARIANTS} \

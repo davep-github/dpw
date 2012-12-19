@@ -1,8 +1,6 @@
-
 # @todo XXX Have these invoke tcsh login shells to run the commands?
 alias make='echo 1>&2 Making should be done in a tcsh login shell at this time.'
 alias xterm_sized="xterm -sb -sl 600 -fg white -bg gray40 -cr yellow -fn 9x15 -name $HNAME"
-alias locate="locate -d $DP_LOC_DB"
 alias wx="winterm -geometry 80x24"
 [ -n "$DISPLAY" ] && {
   alias fastcase="xterm -bg gray90 -fg darkgreen -sb -sl 2000 -display $DISPLAY -title FAST_CASE"
@@ -10,6 +8,8 @@ alias wx="winterm -geometry 80x24"
   alias bfastcase="bsub -q primetime4g fastcase"
   alias bslowcase="bsub -q primetime4g slowcase"
 }
+
+alias nvgrep=/home/nv/toolroot/bin/nvgrep
 
 # @todo XXX move to func.nvidia
 
@@ -27,3 +27,5 @@ xxd()
 {
     DISPLAY="$@" xx ; sleep 2 ; exit
 }
+
+true

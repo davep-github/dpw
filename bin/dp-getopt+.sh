@@ -128,7 +128,7 @@ running_as_script && {
 #e.g.#       -v) VERBOSE="echo $progname: "; EExecVerbose;;
 #e.g.#       -q) VERBOSE=":"; EExecQuiet;;
 #e.g.# 
-#e.g.# # Program options.
+#e.g.#       # Program options.
 #e.g.#       --) shift ; break ;;
 #e.g.#       *) echo 1>&2 "Unsupported option>$1<"
 #e.g.#          exit 1;;

@@ -1415,7 +1415,7 @@ returning."
   (interactive "P")
   (if unstick-p
       (dpj-unstick-current-journal-file)
-    (make-local-variable 'dpj-current-journal-file)
+    (make-variable-buffer-local 'dpj-current-journal-file)
     (setq dpj-current-journal-file (buffer-file-name))
     (message "New current journal file: %s" dpj-current-journal-file)))
 

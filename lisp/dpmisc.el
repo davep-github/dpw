@@ -15157,6 +15157,15 @@ anything --> |b|b|"
   (split-window-horizontally))
 (dp-defaliases  '|| '2b '2: '2| 'dp-duplicate-window-horizontally)
 
+(defun dp-duplicate-window-vertically ()
+  "Display the current buffer in 2 horizontal (side-by-side) windows.
+anything --> |b|b|"
+  (interactive)
+  (delete-other-windows)
+  (split-window-vertically))
+(dp-defaliases '_- '-_ 'ddv 'dwv '1/1 '1=1'dp-duplicate-window-vertically)
+
+
 (defsubst dp-mk-buffer-position (pos &optional mk-marker-p)
   (funcall (if mk-marker-p
                'dp-mk-marker
@@ -15175,6 +15184,11 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
     (when (and colorize-p
                (not (equal original-read-only buffer-read-only)))
       (dp-colorize-found-file-buffer))))
+
+;; Restore Other Window.
+(defsubst row ()
+  (interactive)
+  (switch-to-buffer-other-window (other-buffer (current-buffer))))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;; @todo Write a loop which advises functions with simple push go back

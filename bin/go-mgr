@@ -152,7 +152,7 @@ q=$(getopt -o "$opts" -- "$@")
 [ $? != 0 ] && Usage
 eval set -- "$q" 
 
-for i in $*
+for i in "$@"
 do
     #echo "optloop, 1>$1<"
     case $1 in 
