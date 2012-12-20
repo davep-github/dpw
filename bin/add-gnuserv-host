@@ -1,0 +1,35 @@
+#!/bin/sh
+
+source script-x
+source eexec
+set -u
+progname="$(basename $0)"
+
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+
+: ${host_file=$HOME/.gnuserv-hosts}
+
+[ -f "$host_file" ] || {
+    echo "$host_file not found."
+    exit 1
+} 1>&2
+
+: ${hn:=$(hostname --short)}
+
+[ -z "$hn" ] && {
+    echo "Cannot determine host name."
+    exit 1
+} 1>&2
+
+fgrep -q "$hn" "$host_file" && {
+    echo "$hn is already in $host_file"
+    exit 0
+}
+
+EExecDashN_p && host_file=/dev/null
+EExec echo "$hn" >> "$host_file"
