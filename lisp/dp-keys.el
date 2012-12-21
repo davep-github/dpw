@@ -93,19 +93,19 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(control ?l)] 'dp-center-to-top)
 (global-set-key [(control meta ?l)] 'dp-center-to-top-other-window)
 (global-set-key [(meta ?a)] 'dp-toggle-mark)
-(global-set-key "\C-x4\ee" 'ffap-other-window)
-(global-set-key "\C-x8\ee" (kb-lambda 
-                               (dp-2-vertical-windows-do-cmd 
-                                'ffap-other-window)))
-(global-set-key "\C-x8f" (kb-lambda 
+(global-set-key [(control ?x) ?4 (meta ?e)] 'ffap-other-window)
+(global-set-key [(control ?x) ?8 (meta ?e)] (kb-lambda 
+                                                (dp-2-vertical-windows-do-cmd 
+                                                 'ffap-other-window)))
+(global-set-key [(control ?x) ?8 ?f] (kb-lambda 
                              (dp-2-vertical-windows-do-cmd 
                               'ffap-other-window)))
-(global-set-key "\C-x8b" (kb-lambda 
+(global-set-key [(control ?x) ?8 ?b] (kb-lambda 
                                (dp-2-vertical-windows-do-cmd
                                 'dp-switch-to-buffer t)))
 (global-set-key [(control ?x)(meta ?=)] 'dp-balance-horizontal-windows)
 (global-set-key [kp-subtract] 'dp-kill-region)
-(global-set-key "\C-w" 'dp-kill-region)
+(global-set-key [(control ?w)] 'dp-kill-region)
 (global-set-key [(control meta ?w)] 'dp-kill-region-append)
 (global-set-key [(control meta ?k)] (kb-lambda
                                         (dp-mark-to-end-of-line)
@@ -126,16 +126,17 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(meta delete)] 'dp-x-copy-to-kill-selection)
 
 (if (boundp 'global-window-system-map)
-    (define-key global-window-system-map "\C-z" 'dp-shell))
+    (define-key global-window-system-map [(control ?z)] 'dp-shell))
 ;; Yes, I used a VAX once.
-(global-set-key "\C-z" 'dp-shell)
-(global-set-key "\C-x4\C-z" 'dp-shell-other-window)
+;; @todo XXX Why this given the above? Look into `global-window-system-map'
+(global-set-key [(control ?z)] 'dp-shell)
+(global-set-key [(control ?x) ?4 (control ?z)] 'dp-shell-other-window)
 ;; Rarely -- if ever -- used; so move it and take it's more comfortable
 ;; binding for something oft used.
 (global-set-key [(control meta ?z)] 'zap-to-char)
 (global-set-key [(meta ?z)] 'dp-shell-cycle-buffers)
 
-(global-set-key "\C-cg" 'dp-gdb)
+(global-set-key [(control ?c) ?g] 'dp-gdb)
 
 ;;(global-set-key "\C-z" 'dp-lterm)
 
@@ -160,7 +161,7 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(control delete)] 'kill-region)
 ;;;(global-set-key [(meta ?s)] 're-search-forward)
 (global-set-key [delete] 'dp-delete)
-(global-set-key "\C-d" 'dp-delete)
+(global-set-key [(control ?d)] 'dp-delete)
 ;; New versions, less goop.
 (global-set-key [(control up)] 'dp-scroll-down)
 (global-set-key [(control down)] 'dp-scroll-up)
@@ -190,6 +191,7 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(meta ?[)] 'dp-find-matching-paren)
 (global-set-key [(meta ?])] 'dp-pop-go-back)
 (global-set-key [(control meta ?])] 'dp-goto-last-edit)
+;;;;;;(global-set-key [(control meta ?\])] 'dp-goto-last-edit)
 (global-set-key [(meta -)] 'dp-maybe-kill-this-buffer)
 (global-set-key [(control -)] 'negative-argument)
 (global-set-key [(meta ?')] 'dp-dupe-chars-prev-line)
@@ -747,7 +749,11 @@ This is NOT idempotent, so we skip if KEY-SEQ and NEW-DEF are bound."
 ;;(global-set-key [(meta ?0)] (kb-lambda (self-insert-internal ?))))
 ;;(global-set-key [(meta ?0)] (kb-lambda (dp-set-or-goto-bm 1 :reset t)))
 
-(global-set-key "\C-xb" 'dp-switch-to-buffer)
-(global-set-key "\C-x4b" 'dp-switch-to-buffer-other-window)
+(global-set-key [(control ?x) ?b] 'dp-switch-to-buffer)
+(global-set-key [(control ?x) ?4 ?b] 'dp-switch-to-buffer-other-window)
+(add-hook 'dp-post-dpmacs-hook (lambda ()
+                                 (global-set-key [(control ?x) (control ?c)] 
+                                   'dp-save-buffers-kill-emacs)))
+
 
 (provide 'dp-keys)

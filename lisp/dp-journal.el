@@ -1403,7 +1403,7 @@ returning."
 		   'dpj-find-for-view-topic
 		   (list topic-re)))
 
-(defun dpj-sticky-variables-hack ()
+(defun dpj-insert-sticky-variables-hack ()
   "Create a local variables hack block that make a journal sticky when it loads."
   (interactive)
   (dp-insert-local-variables-hack 

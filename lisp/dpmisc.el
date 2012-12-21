@@ -15190,6 +15190,14 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
   (interactive)
   (switch-to-buffer-other-window (other-buffer (current-buffer))))
 
+(defun dp-save-buffers-kill-emacs (&optional arg)
+  "DUH... Are you sure?"
+  (interactive)
+  (when (y-or-n-p "DUH... Are you sure? ")
+    (save-buffers-kill-emacs))
+  (message "Good thing I asked, huh?"))
+
+
 ;;;;; <:functions: add-new-ones-above:>
 ;;; @todo Write a loop which advises functions with simple push go back
 ;;; commands.

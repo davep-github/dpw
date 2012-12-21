@@ -340,9 +340,24 @@ def nPlusUnits(n, allow_fractions_p=False):
      return "%s%s" % (n, suffix)
 numPlusUnits = nPlusUnits
 
+#######################################################################
+##
+## @brief Prevent things like "You have 1 messages" or "... 1 message(s)"
+## 
 def pluralize(name, num, singular="", plural="s"):
     if num == 1:
         suffix = singular
     else:
         suffix = plural
     return name + suffix
+
+def invert_dict(indict):
+    outdict = {}
+    for k, v in indict.items():
+        vals = outdict.get(v, [])
+        vals.append(k)
+        outdict[v] = vals
+
+    for k, v in out_dict:
+        print "k:", h, "vals:", v
+    

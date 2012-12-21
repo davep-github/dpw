@@ -1,0 +1,109 @@
+#!/bin/sh
+
+source script-x
+source eexec
+set -u
+progname="$(basename $0)"
+
+: ${wait_opt=}
+: ${tgen_opts=}
+: ${clobber_opt=-clobber}
+: ${level_opt=$(pwd)/config/levels/tegra/regress_tegra_gpu_multiengine}
+: ${traceRoot_opt=/home/scratch.traces02/arch/traces/}
+: ${chip_opt=t124}
+: ${target_opt=FMODEL}
+: ${d_opt=hwApPath=$(pwd)/../../}
+
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+
+# Usage variable usage:
+Usage_args_info=" <tgen-level-test>..."
+Usage_synopsis="Run tgen levels one at a time using a consistent set of vars.
+"
+Usage_details="-n -- Show what would happen but don't do it. [eexec]
+-v -- Be verbose about it. [eexec]
+-q -- Anti-verbose. [eexec]
+-w -- Wait for completion rather than submitting to LSF.
+-T <tgen-opt> -- Add value to an additional string of tgen options.
+-C -- Clear clobber opt.
+-l <level> -- Specify tgen level file.
+-r <trace-root> -- Root for traces.
+-c <chip> -- Chip name/type.
+-t <target> -- E.g. FMODEL.
+-d <???> -- Default is hwApPath=$(pwd)/../../
+"
+# Example of arg parsing.
+option_str="nvqwT:Cl:r:c:t:d:"
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      # eexec support
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+
+      # Program options.
+      -w) wait_opt=-wait;;
+      -T) shift; tgen_opts="$tgen_opts $1";;
+      -C) clobber_opt=;;
+      -l) shift; level_opt=$1;;
+      -r) shift; traceRoot_opt=$1;;
+      -c) shift; chip_opt=$1;;
+      -t) shift; target_opt=$1;;
+      -d) shift; d_opt=$1;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+# The following is needed only when non optional args are required.
+[ "$*" = "" ] && Usage
+
+
+[ -z "${1-}" ] && {
+    echo "At least one test name is required."
+    exit 1
+} 1>&2
+
+[ -n "$level_opt}" ] && {
+        level_opt="-level $level_opt"
+}
+[ -n "$traceRoot_opt}" ] && {
+        traceRoot_opt="-traceRoot $traceRoot_opt"
+}
+[ -n "$chip_opt}" ] && {
+        chip_opt="-chip $chip_opt"
+}
+[ -n "$target_opt}" ] && {
+        target_opt="-target $target_opt"
+}
+[ -n "$d_opt}" ] && {
+        d_opt="-d $d_opt"
+}
+
+for i in "$@"
+do
+  test_name="$i"
+  # Setting this doesn't make much sense for >1 tests.
+  : ${out_dir:="$test_name.$(dp-std-timestamp)${wait_opt}"}
+
+  EExec ./tgen.pl \
+      ${target_opt} \
+      ${chip_opt} \
+      ${level_opt} \
+      ${d_opt} \
+      ${traceRoot_opt} \
+      -only "$test_name" \
+      -outDir "$out_dir" \
+      ${wait_opt} \
+      ${clobber_opt} \
+      ${tgen_opts}
+done

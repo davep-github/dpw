@@ -1193,8 +1193,9 @@ isearch while the region is active to locate the end of the region."
     (define-key is-mode-map [(control ?n)] 'isearch-ring-advance)
 ;;    (define-key is-mode-map [up] 'isearch-ring-retreat)
 
-    (setq dp-isearch-mark-active-p (dp-mark-active-p))
-    (setq dp-isearch-mark-at-start (point)) ;; was (mark)
+    (when (dp-mark-active-p)
+      (setq dp-isearch-mark-active-p t
+            dp-isearch-mark-at-start (region-beginning)));; (point)) ;; was (mark)
     ;; M-p is set to `dp-parenthesize-region' in `dp-minibuffer-setup-hook'.
     (define-key is-mode-map "\C-p" 'isearch-ring-retreat)
     (define-key is-mode-map "\C-n" 'isearch-ring-retreat)
@@ -1207,6 +1208,13 @@ isearch while the region is active to locate the end of the region."
     (define-key map [(control ?p)] 'isearch-ring-retreat-edit)
     (define-key map [(control ?n)] 'isearch-ring-advance-edit)))
 
+;;
+;; I went to a lot of trouble to do this, and the above talks about it a bit.
+;; But it causes a problem when: begin marking; move around with mark active;
+;; isearch; exit isearch mode This ends up with the region beginning at the
+;; point where the isearch started. I can see that being useful in some
+;; cases, but it is unexpected and surprising. The same effect can be gotten
+;; by deactivating the mark, reactivating it and then doing the isearch.
 (defun dp-isearch-mode-end-hook ()
   (when dp-isearch-mark-active-p
     (setq dp-isearch-mark-active-p nil)

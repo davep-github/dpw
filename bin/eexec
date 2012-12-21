@@ -127,6 +127,11 @@ EExecVerbose ()
     EExecEcho="$EExec_verbose_func"
 }
 
+EExecVerbose_p()
+{
+    [ n "$EExec_verbose_func" ]
+}
+
 EExec_verbose_msg()
 {
     local old=$EExecEchoPrefix

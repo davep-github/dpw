@@ -2358,3 +2358,96 @@ dpj-sticky-variables-hack
                          (concat " " "a")  nil 
                          :end " ***"
                          :num-starts 3)
+
+
+(defun isearch-done (&optional nopush edit)
+  ;; Called by all commands that terminate isearch-mode.
+  (dmessage "isearch-done: point: %s" (point))
+  (dmessage "isearch-done: mark: %s" (mark))
+  (dmessage "isearch-done: region-beginning: %s" (region-beginning))
+
+  (setq isearch-window-configuration nil)
+  (let ((inhibit-quit t)) ; danger danger!
+    (if (and isearch-buffer (buffer-live-p isearch-buffer))
+	;; Some loser process filter might have switched the window's
+	;; buffer, so be sure to set these variables back in the
+	;; buffer we frobbed them in.  But only if the buffer is still
+	;; alive.
+	(with-current-buffer isearch-buffer
+	  (setq overriding-local-map nil)
+	  ;; Use remove-hook instead of just setting it to our saved value
+	  ;; in case some process filter has created a buffer and modified
+	  ;; the pre-command-hook in that buffer...  yeah, this is obscure,
+	  ;; and yeah, I was getting screwed by it. -jwz
+	  (remove-hook 'pre-command-hook 'isearch-pre-command-hook)
+	  (set-keymap-parents isearch-mode-map nil)
+	  (setq isearch-mode nil)
+	  (redraw-modeline)
+	  (isearch-dehighlight)
+	  (isearch-highlight-all-cleanup)
+	  (isearch-restore-invisible-extents nil nil)
+	  ))
+
+    ;; it's not critical that this be inside inhibit-quit, but leaving
+    ;; things in small-window-mode would be bad.
+    (let ((found-start (window-start (selected-window)))
+	  (found-point (point)))
+      (cond ((eq (selected-frame) isearch-selected-frame)
+	     (if isearch-small-window
+		 (goto-char found-point)
+	       ;; Exiting the save-window-excursion clobbers
+	       ;; window-start; restore it.
+	       (set-window-start (selected-window) found-start t))))
+      ;; If there was movement, mark the starting position.
+      ;; Maybe should test difference between and set mark iff > threshold.
+      (dmessage "isearch-done[1]: region-beginning: %s" (region-beginning))
+      (if (and (buffer-live-p isearch-buffer)
+ 	       (/= (point isearch-buffer) isearch-opoint))
+ 	  ;; #### FSF doesn't do this if the region is active.  Should
+ 	  ;; we do the same?
+ 	  (progn
+ 	    (push-mark isearch-opoint t nil isearch-buffer)
+ 	    (or executing-kbd-macro (> (minibuffer-depth) 0)
+ 		(display-message 'command "Mark saved where search started"))))
+)
+    (dmessage "isearch-done[2]: region-beginning: %s" (region-beginning))
+
+    (setq isearch-buffer nil)
+    (dmessage "isearch-done[3]: region-beginning: %s" (region-beginning))
+    ) ; inhibit-quit is t before here
+
+  (when (and (> (length isearch-string) 0) (not nopush))
+    ;; Update the ring data.
+    (dmessage "isearch-done[4]: region-beginning: %s" (region-beginning))
+    (isearch-update-ring isearch-string isearch-regexp))
+
+  (run-hooks 'isearch-mode-end-hook)
+  (dmessage "isearch-done[5]: region-beginning: %s" (region-beginning))
+
+  (and (not edit) isearch-recursive-edit (exit-recursive-edit))
+  (dmessage "isearch-done[n]: region-beginning: %s" (region-beginning))
+
+)
+
+
+(defun zmacs-activate-region ()
+  "Make the region between `point' and `mark' be active (highlighted),
+if `zmacs-regions' is true.  Only a very small number of commands
+should ever do this.  Calling this function will call the hook
+`zmacs-activate-region-hook', if the region was previously inactive.
+Calling this function ensures that the region stays active after the
+current command terminates, even if `zmacs-region-stays' is not set.
+Returns t if the region was activated (i.e. if `zmacs-regions' if t)."
+  (dmessage "zmacs-activate-region: point: %s" (point))
+  (dmessage "zmacs-activate-region: mark: %s" (mark))
+  (dmessage "zmacs-activate-region: region-beginning: %s" (region-beginning))
+  (if (not zmacs-regions)
+      nil
+    (setq zmacs-region-active-p t
+	  zmacs-region-stays t
+	  zmacs-region-rectangular-p (and-boundp 'mouse-track-rectangle-p
+                                       mouse-track-rectangle-p))
+    (if (marker-buffer (mark-marker t))
+	(zmacs-make-extent-for-region (cons (point-marker t) (mark-marker t))))
+    (run-hooks 'zmacs-activate-region-hook)
+    t))
