@@ -1,4 +1,4 @@
 #!/bin/sh
 
 user=${1:-root}
-exec xx -g 80x7+0-0 -F yellow -B darkred -n '-root-' ssh ${user}@localhost &
+exec dpxx -g 80x7+0-0 -F yellow -B darkred -n '-root-' sudo bash &

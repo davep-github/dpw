@@ -124,7 +124,7 @@ def parse_message(file_obj, headersonly=False, **kw_args):
 # Find last field in the headers (which is the first field chronologically)
 # eg: with SMTP for <davep@meduseld.net>; Fri, 25 Jul 2008 03:27:41 +0000
 # Since GoDaddy fucks up Delivered-To: headers, I look for the earliest
-# E?SMTP for field which always seems to have the name I use to deliver mail.
+# "E?SMTP for" field which always seems to have the name I use to deliver mail.
 
 WITH_SMTP_FOR_REGEXP = re.compile("E?SMTP\s+for\s+<(?P<with_SMTP_for>[^>]*)>",
                                   re.IGNORECASE)
