@@ -182,8 +182,8 @@ export PATHADDBIN=$HOME/bin/pathadd
 # Migrate to this function.
 dp_add_to_path_iff()
 {
-    # np --> add
-    # add --> np
+    # not present --> add
+    # add --> not (wasn't) present.
     "$PATHADDBIN" "$@"
 }
 export -f dp_add_to_path_iff
@@ -425,9 +425,10 @@ PATH=$(path-verify -d "$PATH")
 
 if [ -z "$PATH" ]
 then
-    echo 1>&2 "bashrc: WARNING: PATH is empty, setting up minimal one."
+    echo "bashrc: WARNING: PATH is empty, setting up minimal one."
+    echo "It's amazing we got this far."
     PATH="$most_basic_path"
-fi
+fi 1>&2
 
 # add our path to python's list of where to look for imports.
 export PYTHONPATH=$(dp_add_to_path_iff "$PYTHONPATH" "$PATH:$PYTHONPATH_POST")

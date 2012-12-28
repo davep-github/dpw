@@ -4,22 +4,49 @@ source script-x
 source eexec
 set -u
 progname="$(basename $0)"
-
-eexec_program=$(EExec_parse "$@")
-for op in $eexec_program
+: ${uniqifier=utils}
+# Usage variable usage:
+Usage_args_info=" file-name..."
+Usage_synopsis="Locate file-name.
+"
+Usage_details="-n -- Show what would happen but don't do it. [eexec]
+-v -- Be verbose about it. [eexec]
+-q -- Anti-verbose. [eexec]
+-d <db> -- Locate database to use.
+-u <uniqifier> -- Uniquifier for dbs in standard dir.
+"
+# Example of arg parsing.
+option_str="nvqu:d:"
+source dp-getopt+.sh
+for i in "$@"
 do
-  $op
-  shift
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      # eexec support
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+
+      # Program options.
+      -d) shift; DB=$1;;
+      -u) shift; uniqifier=$1;;
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
 done
+# The following is needed only when non optional args are required.
+[ "$*" = "" ] && {
+    Usage
+    exit 1
+}
 
-: ${db:=$DP_LOC_DB}
-ext=$(which-locate -i)
+[ "$uniqifier" = "." ] && uniqifier=$(basename $PWD)
+
+: ${DB:=$(mk-loc-db-name -u "$uniqifier")}
+
 LOC_BIN=$(which-locate --program)
-db="$db.$ext"
-: ${DB:=$db}
-
-# bin.nvidia is showing up in my path twice. So take the last until I track
-# that down.
-LOC_BIN=$(sp locate | tail -1)
 
 EExec "$LOC_BIN" -d "$DB" "$@"

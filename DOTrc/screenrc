@@ -5,10 +5,10 @@ autonuke                off
 #term                    linux
 setenv                  IMASCREENINSTANCE 1
 vbell                   on
-defscrollback           10240
+defscrollback           ${SCREEN_DEFSCROLLBACK}
 markkeys                "0=^A:$=^E"
-#bufferfile              $SCREEN_EXCHANGE_DIR/screen-exchange
-hardcopydir             /home/davep/.screen/hardcopy
+bufferfile              ${SCREENDATA_EXCHANGE}
+hardcopydir             ${SCREENDATA_HARDCOPY_DIR}
 bind ^/ help
 bind ^h help
 bind ^e quit

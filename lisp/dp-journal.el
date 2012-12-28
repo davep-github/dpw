@@ -1406,6 +1406,7 @@ returning."
 (defun dpj-insert-sticky-variables-hack ()
   "Create a local variables hack block that make a journal sticky when it loads."
   (interactive)
+  (insert (make-string 77 ?\;) "\n")
   (dp-insert-local-variables-hack 
    '("eval: (dpj-stick-current-journal-file)")))
 
@@ -1670,7 +1671,10 @@ Also will use prefix-arg as default NUM-MONTHS."
     (goto-char (point-max))
     (if (re-search-backward (regexp-quote (dp-mk-local-variables-hack-header))
                             nil t)
-        (point)
+        (progn
+          (while (re-search-backward "^;" nil t)
+            )
+          (point))
       (point-max))))
 
 (defun dpj-visit-appropriate-journal-file (topic dir-name)
@@ -2875,8 +2879,7 @@ exist to move from one topic record to the next or previous.
   (dpj-define-key-and-add-to-menu "\C-ch" 'dpj-highlight-topic
 				  "Highlight topic")
   (dpj-define-key-and-add-to-menu "\C-cs" 'dpj-show-topic-command "Show topic")
-  (dpj-define-key-and-add-to-menu "\C-c\C-s" 'dpj-show-current 
-				  "Show current topic")
+  (dpj-add-menu-item "Show current topic" 'dpj-show-current)
 
   ;; use outline mode's show-all binding.
   (dpj-define-key-and-add-to-menu "\C-c\C-a" 'dpj-show-all "Show all")

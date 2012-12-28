@@ -1,6 +1,7 @@
 #!/bin/sh
 
-source script-x 
+source script-x
+source eexec
 
 : ${GREPPETH:=$(sp -1 egrep)}
 : ${EXCLUDE_REGEXP:="\.svn|CVS"}
@@ -10,7 +11,19 @@ source script-x
 : ${user_only_p:=t}
 : ${ALL:=}
 
-vsetp $ALL && user_only_p=t
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+
+[ -z "$*" ] && {
+    echo "No pattern specific. Bailing."
+    exit 1
+} 1>&2
+
+vsetp $ALL || user_only_p=t
 
 vsetp $user_only_p && {
     INCLUDE_REGEXP="$HOME|bree"
@@ -63,6 +76,11 @@ filter_dirs()
                 # fucking while bodies as sub-processes and the inability to
                 # set values outside the loop
                 #${filtered_path[${#filtered_path[@]}]}="$dir"
+                d="$dirs$fset$dir"
+                case "$d" in
+                    */) ;;
+                    *) d="$d/";;
+                esac
                 echo -n "$dirs$fset$dir"
                 fset=" "
                 
@@ -78,22 +96,26 @@ grepper()
     while read
     do
       $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "grepping file>$REPLY<"
-      $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "running>$GREPPETH >$@< >$REPLY<"
+      $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "running>$GREPPETH< >$@< >$REPLY<"
       ## eko "$@" 1>&2 
-      $GREPPETH "$@" "$REPLY" /dev/null
+      EExec $GREPPETH "$@" "$REPLY" /dev/null
     done
 }
+
 $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "filtered_path>""${filtered_path[@]}<"
 
 grep_em()
 {
-    #echo "filtered_path>${filtered_path[@]}<"
-    for d in "${filtered_path[@]}"
-    do
-      $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "d>$d<"
-      find "$d/" -xtype f -print | tee /dev/null | print_accepted \
-       | tee /dev/null | grepper "$@" | egrep -v '^Binary'
-    done
+    find "${filtered_path[@]}" -xtype f -print | tee /dev/null | print_accepted \
+      | tee /dev/null | grepper "$@" | egrep -v '^Binary'
+
+#try find on filtered dirs again     #echo "filtered_path>${filtered_path[@]}<"
+#try find on filtered dirs again     for d in "${filtered_path[@]}"
+#try find on filtered dirs again     do
+#try find on filtered dirs again       $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "d>$d<"
+#try find on filtered dirs again       find "$d/" -xtype f -print | tee /dev/null | print_accepted \
+#try find on filtered dirs again        | tee /dev/null | grepper "$@" | egrep -v '^Binary'
+#try find on filtered dirs again     done
     #find "${filtered_path[@]}" -type f -print0 | xargs -0 $GREPPETH "$@"
 #CO#     for dir in $PATH; do
 #CO#         egrep "$@" $PATH/* /dev/null

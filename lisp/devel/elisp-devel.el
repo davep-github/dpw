@@ -2451,3 +2451,209 @@ Returns t if the region was activated (i.e. if `zmacs-regions' if t)."
 	(zmacs-make-extent-for-region (cons (point-marker t) (mark-marker t))))
     (run-hooks 'zmacs-activate-region-hook)
     t))
+
+
+
+========================
+Wednesday December 26 2012
+--
+(progn
+  (save-excursion
+    (dp-colorize-matching-lines "breakpoint 3, c_ip_interface::getnextbyte.*$"))
+  (save-excursion
+    (dp-colorize-matching-lines "breakpoint 2, c_ip_interface::start.*id=0x0, bitstreamdata=0x1) at ip_interface\\.cpp:370.*$"))
+  (save-excursion 
+    (dp-colorize-matching-lines "#1  0x[0-9a-f]* in c_ip_interface::start.*0x0, bitstreamdata=0x1) at ip_interface\\.cpp:370.*$"))
+  (save-excursion
+    (dp-colorize-matching-lines "breakpoint 1, c_ip_interface::stop (this=0x[0-9a-f]*, id=0x0, bitstreamdata=0x1) at ip_interface.cpp:403.*$"))
+)
+
+
+(setq dp-tmp-v1 '("breakpoint 3, c_ip_interface::getnextbyte.*$"
+                  "breakpoint 2, c_ip_interface::start.*id=0x0, bitstreamdata=0x1) at ip_interface\\.cpp:370.*$"
+                  "#1  0x[0-9a-f]* in c_ip_interface::start.*0x0, bitstreamdata=0x1) at ip_interface\\.cpp:370.*$"
+                  "breakpoint 1, c_ip_interface::stop (this=0x[0-9a-f]*, id=0x0, bitstreamdata=0x1) at ip_interface.cpp:403.*$"))
+("breakpoint 3, c_ip_interface::getnextbyte.*$" "breakpoint 2, c_ip_interface::start.*id=0x0, bitstreamdata=0x1) at ip_interface\\.cpp:370.*$" "#1  0x[0-9a-f]* in c_ip_interface::start.*0x0, bitstreamdata=0x1) at ip_interface\\.cpp:370.*$" "breakpoint 1, c_ip_interface::stop (this=0x[0-9a-f]*, id=0x0, bitstreamdata=0x1) at ip_interface.cpp:403.*$")
+
+
+
+========================
+Thursday December 27 2012
+--
+(dp-gdb-most-recent-buffer 
+ :dead-or-alive-p t)
+
+(let ((dead-or-alive-p t))
+  (dp-choose-buffers (function 
+                      (lambda (buf-cons)
+                        (when (or dead-or-alive-p
+                                  (dp-buffer-process-live-p 
+                                   (car buf-cons)))
+                          buf-cons)))
+                     dp-gdb-buffers))
+(#<buffer "elisp-devel.el"> #<buffer "dp-shells.el"> #<buffer " *Minibuf-0*"> #<buffer "*scratch*"> #<buffer "*grep*"> #<buffer "dpmisc.el"> #<buffer "just-opcodes.0"> #<buffer "*shell*<0>"> #<buffer "dp-keys.el"> #<buffer " *Echo Area*"> #<buffer " *Message-Log*"> #<buffer " *substitute*"> #<buffer " *pixmap conversion*"> #<buffer " *Recovered Context*"> #<buffer " *string-output*"> #<buffer " *string-output*<2>"> #<buffer "*Buffer List*"> #<buffer "bsev_command_decoder.cpp"> #<buffer "bitstream_fetch_engine.cpp"> #<buffer "ip_interface.cpp"> #<buffer "pkt.fOPCODE-list.0"> #<buffer "hub_uma_me_9_10.pl"> #<buffer "run-one-tgen"> #<buffer " *string-output*<3>"> #<buffer " *string-output*<4>"> #<buffer " *string-output*<5>"> #<buffer " *string-output*<6>"> #<buffer "all-start-stop=getNextByte.0"> #<buffer "notes.jxt"> #<buffer "*journal-topics*"> #<buffer "screenrc"> #<buffer " *string-output*<7>"> #<buffer " *string-output*<8>"> #<buffer "env"> #<buffer " *string-output*<9>"> #<buffer " *string-output*<10>"> #<buffer "bt@all-getNextByte.0"> #<buffer "bt@stop.2"> #<buffer "bsev_fetch_core.cpp"> #<buffer "h264_MBdecoder.cpp"> #<buffer "mpeg2_MBdecoder.cpp"> #<buffer "gdb.info.gz"> #<buffer "bt@stop.1"> #<buffer "bt@stop.0"> #<buffer "bsev_fetch_core.h"> #<buffer "bsev_command_decoder.h"> #<buffer "ip_interface.h"> #<buffer "crypto_interface.cpp"> #<buffer "crypto_interface.h"> #<buffer "bitstream_fetch_engine.h"> #<buffer "pathadd"> #<buffer " *string-output*<11>"> #<buffer " *string-output*<12>"> #<buffer "bashrc"> #<buffer " *string-output*<13>"> #<buffer " *string-output*<14>"> #<buffer "vde_bsev.cpp"> #<buffer "vde_bsev.h"> #<buffer "gdb-pid"> #<buffer "csl.h"> #<buffer "csl.h<2>"> #<buffer "eng_tsec.cpp"> #<buffer "dpmacs.el"> #<buffer " *string-output*<15>"> #<buffer " *string-output*<16>"> #<buffer "info.notes"> #<buffer " *string-output*<17>"> #<buffer " *string-output*<18>"> #<buffer "daily-2012-12.jxt"> #<buffer " *string-output*<19>"> #<buffer " *string-output*<20>"> #<buffer " *string-output*<21>"> #<buffer " *string-output*<22>">)
+
+(dp-identity-rest 1 2 3 '(a b))
+(cdr '(1 2 3 (a b)))
+(2 3 (a b))
+
+(apply 'dp-identity-rest 1 2 3 '(a b) nil)
+(1 2 3 (a b))
+
+(apply 'dp-identity-rest 1 2 3 'a)
+
+
+(1 2 3 a)
+
+(1 2 3 nil)
+
+
+
+(1 2 3 a b nil)
+
+(list 1 2 nil)
+(1 2 nil)
+
+(1 2 3 a b)
+
+
+
+(car '(1 2 3 (a b)))
+1
+
+
+rest>(1 2 3 (a b))<
+1
+
+1
+
+nil
+
+
+(list 1 nil)
+(1 nil)
+(append '(a) '(z))
+(a z)
+
+(append 'a nil)
+
+(a . z)
+
+(a)
+
+(let ((file "a")
+      (corefile "z")
+      tail-args)
+  (when file
+    (setq tail-args (list file))
+    (when corefile
+      (setq tail-args (append tail-args (list corefile)))))
+  tail-args)
+("a" "z")
+
+nil
+
+("a")
+
+nil
+
+nil
+
+nil
+
+("x" "c")
+
+
+
+(defun* dp-start-gdb (&key path corefile directory name)
+  "Run gdb on program FILE in buffer *gdb-FILE*.
+The directory containing FILE becomes the initial working directory
+and source-file directory for GDB.  If you wish to change this, use
+the GDB commands `cd DIR' and `directory'."
+  (when path
+    (setq path (file-truename (expand-file-name path))))
+  (let* ((file (and path (file-name-nondirectory path)))
+         (name (or name (concat "gdb-" (or file "NONE"))))
+         (buffer-name (concat "*" name "*"))
+         tail-args)
+    (switch-to-buffer (concat "*" name "*"))
+    (if (eq major-mode 'gdb-mode)
+        (message "Buffer is already in gdb-mode")
+      (cond
+       (directory (setq default-directory directory))
+       (path (setq default-directory (file-name-directory path))))
+      (or (bolp) (newline))
+      (insert "Current directory is " default-directory "\n")
+      (when file
+        (setq tail-args (list file))
+        (when corefile
+          (setq tail-args (append tail-args (list corefile)))))
+      (apply 'make-comint
+             name
+             (substitute-in-file-name gdb-command-name)
+             nil
+             "-fullname"
+             "-cd" default-directory
+             tail-args)
+      (set-process-filter (get-buffer-process (current-buffer)) 'gdb-filter)
+      (set-process-sentinel (get-buffer-process (current-buffer)) 'gdb-sentinel)
+      ;; XEmacs change: turn on gdb mode after setting up the proc filters
+      ;; for the benefit of shell-font.el
+      (gdb-mode)
+      (gdb-set-buffer))
+    (goto-char (point-max))))
+
+(dp-gdb0)
+
+
+(defun dp-gdb (&optional new-p path corefile)
+  "Extension to gdb that:
+. Prefers the most recently used buffer if its process is still live,
+. Else it asks for a buffer using a completion list of other gdb buffers,
+. Else (or if nothing selected above) it starts a new gdb session."
+  (interactive "P")
+  (unless new-p
+    ;; Not new, try to switch to the most recent session/buffer.
+    (if (and (dp-buffer-process-live-p (dp-gdb-most-recent-buffer 
+                                        :dead-or-alive-p t)
+                                       :default-p nil)
+             (let ((buf (car (dp-gdb-get-buffer-interactively))))
+               (if (not (string= buf "-" ))
+                   ;; Make sure we're true.
+                   (or (dp-visit-or-switch-to-buffer buf) t)
+                 nil)))
+        ()
+      ;; Nothing to resume, make a new one.
+      (setq new-p t)
+      ;; Toss a buffer with a dead gdb proc.
+      (dp-bury-or-kill-process-buffer (dp-gdb-most-recent-buffer 
+                                       :dead-or-alive-p t))))
+  (when new-p                           ; New can be changed above.
+    ;; Want to get here if new-p or no live proc buffers.
+    (let ((dp-gdb-recursing t)
+          (id-num (prefix-numeric-value new-p))
+          name)
+      ;; Let's grab the file name our-self, regardless of interactivity, so
+      ;; we can put it into our own history.
+      (if (< id-num 0)                  ; '- --> -1
+          (setq name (format "gdb-NONE%d" id-num)
+                path nil)
+        (setq-ifnil path (read-file-name "Run dp-gdb on file: " nil nil nil nil
+                                         'dp-gdb-file-history))
+        (when (member path '("" "-" "." "/"))
+          (setq path nil)))
+
+      (dp-start-gdb :path path :corefile corefile :name name))
+
+    (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-dead-buffers)
+    (dp-add-or-update-alist 'dp-gdb-buffers (buffer-name) 
+                            (or corefile 'dp-gdb))
+    (dp-add-to-history 'dp-gdb-buffer-history (buffer-name))
+    (when (boundp 'dp-gdb-commands)
+      ;; The node-name from locale-rcs will probably be used most.  But since
+      ;; I have the whole list easily available, I may as well allow gdb
+      ;; commands to be keyed to any of the locales.
+      (loop for key in (cons "." (dp-get-locale-rcs)) do
+        (loop for cmd in (cdr (assoc key dp-gdb-commands)) do
+          (insert cmd)
+          (comint-send-input))))))

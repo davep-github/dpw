@@ -1,11 +1,19 @@
 #!/bin/sh
 
 source script-x
+source eexec
 set -u
 progname="$(basename $0)"
 LOC_BIN=$(sp locate | tail -n1)
 # Secure Locate 2.7 - Released January 24, 2003
 # mlocate 0.15
+
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
 
 version=$($LOC_BIN --version | head -n1)
 

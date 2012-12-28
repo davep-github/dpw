@@ -929,17 +929,21 @@ document tips
 Provide a list of tips from users on various topics. 
 end
 
+#
+# Base commands
+# NB: Can always use 0x<num> to specify a hex number.
+#
 define base10
- set output-radix 0x0a
  set input-radix 0x0a
+ set output-radix 0x0a
 end
 document base10
 Set input and output radices to decimal.
 end
 
 define b10
- set output-radix 0x0a
  set input-radix 0x0a
+ set output-radix 0x0a
 end
 document b10
 Set input and output radices to decimal.
@@ -1002,34 +1006,58 @@ Set input radix to hexadecimal.
 end
 
 define base16
- set output-radix 0x10
  set input-radix 0x10
+ set output-radix 0x10
 end
 document base16
 Set input and output radices to hex.
 end
 
 define b16
- set output-radix 0x10
  set input-radix 0x10
+ set output-radix 0x10
 end
 document b16
 Set input and output radices to hex.
 end
 
 define base1016
- set output-radix 0x10
  set input-radix 0x0a
+ set output-radix 0x10
 end
 document base1016
 Set input base to 10 (we can still use 0x) and output to hex.
 end
 
 define base1610
- set output-radix 0x0a
  set input-radix 0x10
+ set output-radix 0x0a
 end
 document base1610
+Set input base to hex and output to decimal.
+end
+
+define i10o16
+ set input-radix 0x0a
+ set output-radix 0x10
+end
+document i10o16
+Set input base to decimal and output to hex.
+end
+
+define dec_in_hex_out
+ set input-radix 0x0a
+ set output-radix 0x10
+end
+document dec_in_hex_out
+Set input base to decimal and output to hex.
+end
+
+define i16o10
+ set input-radix 0x10
+ set output-radix 0x0a
+end
+document i16o10
 Set input base to 16 and output to decimal.
 end
 
@@ -1155,5 +1183,9 @@ set width 0
 # why do these not work???
 set $SHOW_CONTEXT = 1
 set $SHOW_NEST_INSN=0
+
+#
+# Set default in/out bases
+dec_in_hex_out
 
 #EOF

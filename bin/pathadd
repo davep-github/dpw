@@ -79,14 +79,16 @@ path2=$path
 for new_el in $newargs
 do
     [ -z "$new_el" ] && new_el=. # fix null entry
-    case "$DEF_SEP$path$DEF_SEP" in
-	*$DEF_SEP$new_el$DEF_SEP*)		# element aleady is in path
+    case "$DEF_SEP$path2$DEF_SEP" in
+	*$DEF_SEP$new_el$DEF_SEP*) # Element is already in then path.
 	    [ "$prepend" != "y" ] && new_el=
 	    ;;
     esac
     [ -n "$new_el" ] && {
 	out=$out$sep$new_el # not present, add to output string
         # not present, add to path so duped new elements don't get added.
+        # We need to set the separator now if path2 isn't empty
+        [ -n "$path2" ] && sep=$DEF_SEP
 	path2=$path2$sep$new_el 
 	sep=$DEF_SEP
     }

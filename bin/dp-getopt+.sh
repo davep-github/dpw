@@ -86,13 +86,15 @@ running_as_script && {
   : ${all_options="$option_str"}
   : ${getopt_args=""}
   : ${long_options=""}
+  : ${long_help_option="--longoption help"}
   long_options_opt=
   [ -n "$long_options" ] && {
       long_options_opt=$(addprefix "--longoption" "${long_options[@]}")
   }
 
   # New style getopt... fixes ugly quoting problems. Wh00t!
-  q=$(getopt $getopt_args -o "$all_options" $long_options_opt -- "$@")
+  q=$(getopt $getopt_args -o "$all_options" \
+        $long_options_opt $long_help_option -- "$@")
   if [ $? = 0 ]
   then
       eval set -- "$q"
@@ -129,6 +131,9 @@ running_as_script && {
 #e.g.#       -q) VERBOSE=":"; EExecQuiet;;
 #e.g.# 
 #e.g.#       # Program options.
+#e.g.#
+#e.g.#       # Help!
+#e.g.#       --help) Usage; exit 0;;
 #e.g.#       --) shift ; break ;;
 #e.g.#       *) echo 1>&2 "Unsupported option>$1<"
 #e.g.#          exit 1;;

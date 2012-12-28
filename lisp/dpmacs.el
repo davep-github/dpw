@@ -495,7 +495,22 @@ w/tags, cscope, etc.")
 
 (autoload 'compilation-minor-mode "compile")
 (autoload 'compilation-buffer-p "compile")
-(autoload 'find-tag-interactive "etags")
+(require 'etags)
+(defun file-of-tag ()
+  "Replace etags' version. Theirs barfs on large tag files.
+This will not handle the 'include feature... but I don't use it.
+And their failure occurs way too often."
+  (save-excursion
+    (end-of-line)
+    (re-search-backward "^$")
+    (forward-line)
+    (beginning-of-line)
+    (let ((b (point))
+          e)
+        (re-search-forward ",")
+        (setq e (1- (point)))
+        (buffer-substring b e))))
+
 (autoload 'pdb-mode "pdb-mode" "Perl data base mode." t)
 ;;;;;;;(autoload 'python-mode "python-mode" "Python editing mode." t)
 ;;;;;;;(autoload 'py-shell "python-mode" "" t)

@@ -1550,10 +1550,10 @@ Before visiting means after the command completes."
   (dp-push-go-back "advised grep"))
 
 (defvar dp-bind-xcscope-fkeys-p t
-  "Pretty self-explanitory?")
+  "Pretty self-explanatory?")
 
 (defvar dp-bind-xcscope-keys-p t
-  "Pretty self-explanitory?")
+  "Pretty self-explanatory?")
 
 ;; 
 ;; -C ignore case.

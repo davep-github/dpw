@@ -1,0 +1,28 @@
+#!/bin/sh
+
+source script-x
+source eexec
+set -u
+progname="$(basename $0)"
+
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+
+debug_prog=${1}
+debug_prog_pattern="/${debug_prog} "
+
+pid=$(pgrep -p ${debug_prog_pattern})
+
+set -- $pid
+if (($# != 1))
+then
+    echo "I need exactly one arg: the program name."
+    exit 1
+fi 1>&2
+
+EExec gdb "$debug_prog" "$pid"
+

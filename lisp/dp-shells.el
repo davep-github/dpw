@@ -2461,14 +2461,17 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
   "Gdb buffers we have active.  In completion list format (q.v.)")
 
 (defun* dp-gdb-get-buffers (&key dead-or-alive-p)
-  (setq dp-gdb-buffers 
-        (dp-choose-buffers (function 
-                            (lambda (buf-cons)
-                              (when (or dead-or-alive-p
-                                        (dp-buffer-process-live-p 
-                                         (car buf-cons)))
-                                buf-cons)))
-                           dp-gdb-buffers)))
+  "Get the current list of gdb buffers, predicating on DEAD-OR-ALIVE-P."
+  ;; `dp-choose-buffers' uses `buffer-list<f>' if the incoming buffer-list is nil."
+  (when dp-gdb-buffers
+    (setq dp-gdb-buffers 
+          (dp-choose-buffers (function 
+                              (lambda (buf-cons)
+                                (when (or dead-or-alive-p
+                                          (dp-buffer-process-live-p 
+                                           (car buf-cons)))
+                                  buf-cons)))
+                             dp-gdb-buffers))))
 
 ;; Aliased because, currently, they do the same thing.
 (defalias 'dp-gdb-buffer-completion-list 'dp-gdb-get-buffers)
@@ -2554,8 +2557,8 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 ;;;###autoload
 (defun dp-gdb (&optional new-p path corefile)
   "Extension to gdb that:
-. Prefers the most recently used buffer if it's process is still live,
-. Else it asks for a buffer using a completion list of other gdb's,
+. Prefers the most recently used buffer if its process is still live,
+. Else it asks for a buffer using a completion list of other gdb buffers,
 . Else (or if nothing selected above) it starts a new gdb session."
   (interactive "P")
   (unless new-p

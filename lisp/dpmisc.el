@@ -1213,6 +1213,13 @@ copied text."
   (interactive "P")
   (dp-kill-or-copy 'copy-region-as-kill append-p 'dp-pwn-sel))
 
+(defun dp-mark-and-kill-ring-save (&optional start end append-p)
+  "Activate the region spanned by START and END and copy it as kill.
+If APPEND-P if set append the newly copied text."
+  (interactive "r")
+  (dp-activate-mark)
+  (dp-kill-or-copy 'copy-region-as-kill append-p 'dp-pwn-sel))
+
 (defun dp-kill-ring-save-append ()
   "Append the current region to the kill ring if mark is set,
 the current line otherwise."
@@ -2262,23 +2269,22 @@ if FROM-BEGINNING-P, mark entire line. Leaves cursor @ end-of-region."
   
 
 (defun dp-copy-to-end-of-line (&optional beginning include-newline)
-  "Copy chars from point to the end of the current line to the kill ring."
+  "Copy chars from point to the end of the current line to the kill ring.
+This will *&@^*&^#-ing NOT put the text onto the clipboard.  However, a
+manual `dp-mark-to-end-of-line' -- C-c d C-k -- followed by a
+`dp-kill-ring-save' -- M-o -- does."
   (interactive "P")
-  ;;(copy-region-as-kill
-  (kill-ring-save
-   (cond
-    ((memq beginning '(from-beginning -))
-     (line-beginning-position))
-    ((number-or-marker-p beginning) beginning)
-    ((null beginning) (point))
-    ((functionp beginning) (funcall beginning))
-    (t (line-beginning-position)))
-   (+ (line-end-position)
-      (if (and include-newline 
-               (< (line-end-position)
-                  (point-max)))
-          1
-        0))))
+  (save-excursion
+    (dp-mark-to-end-of-line beginning (not include-newline))
+    (dp-kill-ring-save)))
+;;   ;;(copy-region-as-kill
+;;   (dp-deactivate-mark)
+;;   (save-excursion
+;;     (dp-mark-region-or... :bounder 'rest-of-line-p 
+;;                           :bounder-args (list 
+;;                                          :from-beginning-p beginning 
+;;                                          :no-newline-p (not include-newline)))
+;;     (dp-kill-ring-save)))
 
 ;;
 ;; dp-push tag and friends are now retired (in peace).
@@ -7627,6 +7633,12 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
       (unless roll-colors-p
         (dp-colorize-roll-colors color)))))
 
+(defun* dp-colorize-matching-line-sequence (regexps &rest pass-thru-args)
+  (interactive)
+  (loop for regexp in regexps
+    do (save-excursion 
+         (apply 'dp-colorize-matching-lines regexp pass-thru-args))))
+
 (defun dp-colorize-matching-lines-from-isearch ()
   "Use the last regexp from the last `isearch-\(for\|back\)ward\(-regexp\)?'."
   (interactive)
@@ -8471,15 +8483,26 @@ If region is active, set width to that of the longest line in the region."
 
 (defalias 'sfh 'dp-set-frame-height)
 
-(defun sfw-fit-region (&optional entire-file-p)
-  (interactive "P")
+;;change args (defun sfw-fit-region (&optional entire-buffer-p)
+;;change args   (interactive "P")
+;;change args   (save-excursion
+;;change args     (if entire-buffer-p
+;;change args         (mark-whole-buffer)
+;;change args       (dp-mark-line-if-no-mark))
+;;change args     (let ((ll (min dp-max-frame-width (1+ (car (dp-longest-line-in-region))))))
+;;change args       (sfw ll)
+;;change args       (message "new width: %s" ll))))
+
+(defun sfw-fit-region (&optional pad)
+  (interactive "p")
   (save-excursion
-    (if entire-file-p
-        (mark-whole-buffer)
-      (dp-mark-line-if-no-mark))
-    (let ((ll (min dp-max-frame-width (1+ (car (dp-longest-line-in-region))))))
+    (dp-mark-line-if-no-mark)
+    (let ((ll (min dp-max-frame-width 
+                   (+ pad (car (dp-longest-line-in-region))))))
       (sfw ll)
       (message "new width: %s" ll))))
+
+
 
 (defsubst sfw-fit-file ()
   (interactive)

@@ -8,20 +8,11 @@ progname="$(basename $0)"
 # I will have a locate alias that references my db so we need to get the real
 # one here.
 : ${LOCATE:=which-locate}
-: ${LOC_DIRS:=/home/utils}
+: ${LOC_DIR:=/home/utils}
 : ${LOC_EXCLUDES=}
 : ${LOC_DB_NAME:=}
 : ${LOC_DB_DIR:=.}
 : ${lval:=0}
-: ${uniqifier=$(basename $PWD)}
-
-eexec_program=$(EExec_parse "$@")
-for op in $eexec_program
-do
-  $op
-  shift
-done
-
 
 # Usage variable usage:
 Usage_args_info="[options]"
@@ -30,11 +21,11 @@ Usage_synopsis="Make a locate db with a few extensions for nVIDIA environment:
 Usage_details="-n -- Show what would happen but don't do it. [eexec]
 -v -- Be verbose about it. [eexec]
 -q -- Anti-verbose. [eexec]
--u <uniqifying-arting> -- Incorporate this into the db name for differentiation.
-
+-u <uniqifying-string> -- Incorporate this into the db name for differentiation.
+-l|-d <dir-to-index> -- Build loc db from this tree.
 "
 # Example of arg parsing.
-option_str="nvqu:"
+option_str="nvqu:l:"
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -47,6 +38,8 @@ do
 
       # Program options.
       -u) shift; uniqifier=$1;;
+      -l|-d) shift; LOC_DIR=$1;;
+      --help) Usage; exit 0;;
       --) shift ; break ;;
       *) echo 1>&2 "Unsupported option>$1<"
          exit 1;;
@@ -56,43 +49,20 @@ done
 # No args.
 ! [ "$*" = "" ] && Usage
 
-if [ -n "$uniqifier" ]
-then
-    # Allow abbrevs.
-    uniqifier="$(basename $(dogo "$uniqifier"))"
-    case "$uniqifier" in
-        .*) ;;
-        *) uniqifier=".${uniqifier}";;
-    esac
-fi
+LOC_DIR=$(dogo $LOC_DIR)
+[ "$LOC_DIR" = "." ] && LOC_DIR="$PWD"
 
-    
+: ${uniqifier=$(basename "$LOC_DIR")}
+loc_db=$(mk-loc-db-name -f "$LOC_DB_NAME" -d "$LOC_DB_DIR" -c -u "$uniqifier")    
 
-if [ -z "${LOC_DB-}" -a -n "$LOC_DB_NAME" ]
-then
-    LOC_DB="${LOC_DB_DIR-.}/${LOC_DB_NAME}"
-fi
-: ${LOC_DB:=$DP_LOC_DB}
-
-[ -z "$LOC_DB" ] && {
+[ -z "$loc_db" ] && {
     echo "I need an output file for the locate database."
     exit 1
-} 1>&2
-
-loc_db_dir=$(dirname "$LOC_DB")
-[ -d "$loc_db_dir" ] || {
-    read -e -p "loc db dir>$loc_db_dir< does not exist, create [y/N]? "
-    case "$REPLY" in
-        [yY]) EExec mkdir -p "$loc_db_dir";;
-           *) echo "Not creating loc db dir>$loc_db_dir<. Exiting."; exit 1;;
-    esac
 } 1>&2
 
 loc_exclude_opt=
 [ -n "$LOC_EXCLUDES" ] && loc_exclude_opt="-e $LOC_EXCLUDES"
 
-ext="$(which-locate -i)$uniqifier"
-
 env | egrep -i 'eexec.*verbos'
-EExec $LOCATE --create -U ${LOC_DIRS} ${loc_exclude_opt} \
-   -o ${LOC_DB}.${ext} -l "$lval" "$@"
+EExec $LOCATE --create -U "${LOC_DIR}" ${loc_exclude_opt} \
+   -o "${loc_db}" -l "$lval" "$@"
