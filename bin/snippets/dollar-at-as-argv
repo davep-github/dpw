@@ -1,0 +1,16 @@
+#
+# snippet for handling things like
+# mv 1 2 3 4 dest
+# I.e. getting the last element so it can be treated specially.
+# This makes it more natural for the user.
+
+argv=("$@")
+argc="$#"
+special_arg=${argv[ $((argc - 1))]}
+unset argv[$((argc - 1))]
+
+# It's OK to have a function take the odd ordering, e.g. making a mv_func
+# take: <dest> src1 src2 src3...
+
+SOME_OP "$special_arg" "${argv[@]}"
+

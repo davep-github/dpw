@@ -134,7 +134,7 @@ EExecVerbose_p()
 
 EExec_verbose_msg()
 {
-    local old=$EExecEchoPrefix
+    local old=${EExecEchoPrefix-}
     EExecEchoPrefix=v
     [ -n "$EExec_verbose_func" ] && "$EExec_verbose_func" "$@"
     EExecEchoPrefix=$old

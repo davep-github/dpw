@@ -58,7 +58,7 @@ fi
 
 DPGOP_Usage()
 {
-    [[ -n "$@" ]] && echo "$@"
+    [[ -n "$@" ]] && echo "${progname}: $@"
     echo -n "Usage: ${progname} [-$all_options]$DPGOP_Usage_args_info
 $DPGOP_Usage_synopsis
 $DPGOP_Usage_details"
