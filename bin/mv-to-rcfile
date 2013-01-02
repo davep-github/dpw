@@ -1,52 +1,7 @@
 #!/bin/sh
 
-source script-x
-source eexec
-set -u
-progname="$(basename $0)"
+#
+# Major change to use this as a front-end to mv-ln(dp)
+#
 
-eexec_program=$(EExec_parse "$@")
-for op in $eexec_program
-do
-  $op
-  shift
-done
-
-mk_rcfile()
-{
-    local file="$1"; shift
-    local dest_dir="$1"; shift
-
-    [ -L "$file" ] && {
-        echo "file>$file< is already a symlink. Bailing."
-        exit 1
-    } 1>&2
-
-    local non_dot_name=$(basename $file | sed -rn 's/^(\.)(.*)$/\2/p')
-    [ -z "$non_dot_name" ] && {
-        echo "Bad file name>$file<"
-        exit 1
-    } 1>&2
-
-    local dest_file="$dest_dir/$non_dot_name"
-
-    EExec mv "$file" "$dest_file"
-    EExec ln -s "$dest_file" "$file"
-}
-
-mk_rcfiles()    
-{
-    local dest_dir="$1"; shift
-    for file in "$@"
-    do
-      mk_rcfile "$file" "$dest_dir"
-    done
-}
-
-dest_dir="${1-$HOME/.rc}"; shift
-[ -d "$dest_dir" ] || {
-    echo "Dest_Dir dir>$dest_dir< does not exist."
-    exit 1
-} 1>&2
-
-mk_rcfiles "$dest_dir" "$@"
+exec mv-ln -r "$@"

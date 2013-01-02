@@ -34,6 +34,10 @@ esac
 
 # XXX ??? Override or (pre|ap)pend?
 vsetp $* && dump_fses="$@"
+
+# Make sure all dump files have the same date if we start one dump before mignight
+# and the next after.
+date_stamp=$(dp-std-date)
 for dump_fs in ${dump_fses}
 do
     # Single /s and none @ end.
@@ -44,5 +48,5 @@ do
 	# There should only be one leading, but...
       *) name=$(echo $dump_fs | sed -r -e 's,^//*,,' -e 's,/,%,g')
   esac
-  ${EZEC} dump $lvl -f ${dump_dir}/${name}-on-$(dp-std-date).lvl${lvl}.dump -j7 -u ${dump_fs}
+  ${EZEC} dump $lvl -f ${dump_dir}/${name}-on-${date_stamp}.lvl${lvl}.dump -j7 -u ${dump_fs}
 done

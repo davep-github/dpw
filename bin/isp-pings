@@ -5,9 +5,11 @@
 # isp-pings: ping a list of sites to see where things are hosed.
 #set -x
 source script-x
-echo 1>&2 '!!!!!Save unique list of failed addresses @ dump before exit. In trap.'
 source ping-lib.sh
 
+: ${LAN_GW=$(netstat -r | sed -rn 's/(^default[[:space:]]+)([^[:space:]]+)(.*)/\2/p')}
+
+bad_nodes=
 
 : ${zzz:=0}
 [ -z "$ISP" ] && ISP=$($HOST_INFO -n verizon.net ISP)
@@ -22,9 +24,42 @@ other_places=(www.$ISP outgoing.$ISP
 	    www.google.com
 	    www.buy.com)
 
+add_failure()
+{
+    local node=$1; shift
+
+    bad_nodes=$(pathadd "$bad_nodes" "$node")
+    num_failures=$((num_failures + 1))
+    prefix='***'"[$num_failures]"'***'
+}
+
+dump_bad_nodes()
+{
+    [ -z "$*" ] && {
+        echo "No bad nodes detected."
+        return
+    }
+    echo "Bad nodes:"
+    for bn in "$@"
+    do
+      echo "  $bn"
+    done
+}
+
+sig_exit ()
+{
+    {
+        local sig_num=$1; shift
+        echo
+        echo "sig_exit, sig_num: $sig_num"
+        dump_bad_nodes $bad_nodes
+        exit 1
+    } 1>&2
+}
+
 for sig in 2 3 4 5 6 7 8 15
 do
-    trap "echo ; echo $0: Got sig $sig, exiting.; exit $sig" $sig
+    trap "sig_exit $sig" $sig
 done
 
 num_failures=0
@@ -38,30 +73,25 @@ do_pings ()
     then
         prefix='***'"[$num_failures]"'***'
     fi
-    pingit 192.168.0.1 "$prefix(LAN-GW)" || {
-        num_failures=$(( $num_failures + 1 ))
-        prefix='***'"[$num_failures]"'***'
-    }
+    pingit "$LAN_GW" "$prefix(LAN-GW)" || add_failure "$LAN_GW"
 
     # !!! find verizon gateway (hopefully programmatically)
     # pingit 66.92.73.1 '(ISP-GW) '
     
     for s in `find_nameservers` 
     do
-        pingit "$s" "$prefix(NS)" || {
-            num_failures=$(( $num_failures + 1 ))
-            prefix='***'"[$num_failures]"'***'
-        }
+        pingit "$s" "$prefix(NS)" || add_failure "$2"
     done
     
     for s in ${other_places[@]}
     do
-        pingit "$s" "$prefix" || {
-            num_failures=$(( $num_failures + 1 ))
-            prefix='***'"[$num_failures]"'***'
-        }
+        pingit "$s" "$prefix" || add_failure "$s"
     done
 }
+
+# Make this work... right now it interferes with using $1 as the loop count.
+#other_places+=("$@")
+#echo "other_places>${other_places[@]}<"
 
 iter=0
 while [ "$num_loops" -ne 0 ]
@@ -72,6 +102,8 @@ do
     sleep "$zzz"
     [ "$num_loops" -lt 0 ] || : $((--num_loops))
 done
+
+dump_bad_nodes
 
 exit 0
 

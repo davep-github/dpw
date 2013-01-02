@@ -3,47 +3,130 @@
 # Move some stuff over there, and make links so that it still looks like it's
 # here.
 source script-x
+source eexec
 
 : ${mv_opts:="-i"}
 : ${ln_opts:=""}
+: ${ln_name_transform=""}
 
-[ "$#" == 2 ] || {
-    echo "I need 2 args: src dst"
-    echo "(todo: handle options -m mv-opt -l in-opt)"
-    echo "(todo: ensure existence of all but last dir in dst)"
-    echo "(todo: Allow the equivalent: mv xxx /a/b/NEW; ln -s /a/b/NEW xxx)"
-    echo " src is mv'd to dst"
-    echo " and then ln -s dst ."
-    
-    exit 2
+#e.g.# # Usage variable usage:
+Usage_args_info=" src dst"
+Usage_synopsis="Move src to dst and symlink dst to src.
+Effectively: mv src dst; ln -s dst src
+"
+Usage_details="-n -- Show what would happen but don't do it. [eexec]
+-v -- Be verbose about it. [eexec]
+-q -- Anti-verbose. [eexec]
+
+-p <prefix> -- Prefix link name with <prefix>
+-r|-d -- Move src to dst/<src-with-no-dot> and ln dst/<src-with-no-dot> src.
+         Used to move dot files to my dotfile [.rc] dir.
+"
+# Example of arg parsing.
+option_str="nvqp:rd"
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      # eexec support
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+
+      # Program options.
+      -p) shift; ln_name_transform=$1;;
+      -r|-d) ln_name_transform='s/^(\.)(.*)$/\2/';;
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+
+mv_one()
+{
+    local src="$1"; shift
+    local dst="$1"; shift
+    local link_name="$1"; shift
+    local sep="/"
+
+    src=$(normpath "$src")
+    dst=$(normpath "$dst")
+    link_name=$(normpath "$link_name")
+    realpath_src=$(realpath "$src")
+    EExec_verbose_msg "realpath_src>$realpath_src<"
+
+    realpath_dst=$(realpath "$dst")
+    EExec_verbose_msg "realpath_dst>$realpath_dst<"
+
+    if [ "$realpath_src" == "$realpath_dst" ]; then
+        echo "realpath of src [$realpath_src]
+  is the same as
+  dst [$realpath_dst]"
+        if [ -L "$src" ]; then
+            echo "src[$realpath_src] is already a
+  link to dst[$realpath_dst].
+  Senior moment? Did you already do this?"
+        fi
+        exit 1
+    fi 1>&2
+
+    [ -e "$src" ] || {
+        echo "src[$src] does not exist."
+        exit 1
+    } 1>&2
+    local link_target="${dst}${sep}${link_name}"
+    if [ -e "$link_target" ]
+    then
+        read -e -p "$link_target[$link_target] exists.  Continue[y/N]? "
+        case "$REPLY" in
+            [Yy]) ;;
+            *) echo 1>&2 "Exiting."; exit 1;;
+        esac
+    fi
+    if [ -L "$src" ]
+    then
+        read -e -p "src is a link.  Is this what you really want[y/N]? "
+        case "$REPLY" in
+            [Yy]) ;;
+            *) echo 1>&2 "Exiting."; exit 1;;
+        esac
+    fi
+        
+    # ln syntax: mv src link-name
+    # ln syntax: mv src... dir
+    # mv-ln .mozilla-crap /bfd3/davep   # will go into /bfd3/davep/.mozilla-crap
+    #       src       link-name
+    # mv .mozilla-crap /bfd3/davep
+    # ln -s /bfd3/davep/mozilla-crap .mozilla-crap
+    #          full-src             link-name
+EExecDashN
+    EExec mv ${mv_opts} "${src}" "${link_target}" \
+      && EExec ln -s ${ln_opts} "${link_target}" "${src}"
+}
+
+argv=("$@")
+argc="$#"
+((argc < 2)) && {
+    Usage "Not enough args provided."
+    exit 1
 } 1>&2
 
-src="$1"
-dst="$2"
+dst=${argv[ $((argc - 1))]}
+unset argv[$((argc - 1))]
 
-case "$dst" in
-    */) sep="" ;;
-    *) sep="/" ;;
-esac
-rs=$(realpath "$src")
-rd=$(realpath "$dst")
-if [ "$rs" == "$rd" ]; then
-    echo 1>&2 "realpath of src [$rs] is the same as dst [$rd]"
-    if [ -L "$src" ]; then
-        echo 1>&2 "src is already a link.  Senior moment?"
-    fi
-    exit 1
-fi
-
-if [ -L "$src" ]; then
-    echo -n "src is a link.  Is this what you really want[y/N]? "
-    read
-    case "$REPLY" in
-        [Yy]) ;;
-        *) echo 1>&2 "Exiting."; exit 1;;
-    esac
-fi
-
-mv ${mv_opts} "$src" "$dst" && \
-    ln -s ${ln_opts} "$dst$sep$src" .
+for src in "${argv[@]}"
+do
+  if [ -n "$ln_name_transform" ]
+  then
+      link_name=$(echo "$src" | sed -r "$ln_name_transform")
+  else
+      link_name="$src"
+  fi
+      
+  mv_one "$src" "$dst" "$link_name"
+done
 

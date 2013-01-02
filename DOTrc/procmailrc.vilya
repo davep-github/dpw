@@ -50,6 +50,17 @@ LOGABSTRACT=all
 * ^TO.*\.(ipadbs|snet|vivid|brainwave-entertainment)@
 .junk/
 
+:0
+* ^TOdavep.testh@
+{
+  :0 fhw
+  * .*
+  | formail -a 'X-added-header:'
+
+  :0 a
+  .header-test/
+}
+
 #
 # simulate default handling
 :0 fhw

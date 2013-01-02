@@ -2,13 +2,6 @@
 
 import os, sys, re, string, time
 
-# Mark:
-# This program is called as a filter by getmail, an email retrieval tool
-# built in Python.  In fact I would suggest looking into it as the
-# fetch/front-end for your project.  It is a very reliable front end.  And it
-# is extensible in Python to add new types of functionality.  It may fit in
-# quite well.
-
 # Keep a log file so we can debug if something goes wrong.
 log_file = '/home/davep/log/auto-rotate-c10-50K/' + \
            os.path.basename(sys.argv[0]) + '.log'
@@ -60,4 +53,3 @@ if __name__ == "__main__":
     check_for_ping(sys.stdin, sys.stdout, log)
     log.close()
     sys.exit(0)
-        
