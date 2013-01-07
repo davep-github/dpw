@@ -1,9 +1,9 @@
 #!/bin/sh
 #set -x
-. script-x
-. eexec
-
+source script-x
 progname=$(basename $0)
+source eexec
+
 EXEC=echo
 
 Usage()

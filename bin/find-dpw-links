@@ -1,6 +1,7 @@
 #!/bin/sh
 
 source script-x
+progname="$(basename $0)"
 source eexec
 
 : ${dpw_re='/dpw\.[^/]+/'}

@@ -1,9 +1,9 @@
 #!/bin/sh
 
 source script-x
+progname="$(basename $0)"
 source eexec
 set -u
-progname="$(basename $0)"
 
 # File in which variables useful to ssh'ing to home are kept.
 : ${source_file="$HOME/.rc/env.var"}

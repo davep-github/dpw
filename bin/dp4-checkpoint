@@ -1,6 +1,7 @@
 #!/bin/sh
 
 source script-x
+progname="$(basename $0)"
 source eexec
 
 # Put change list files on a shelf as a checkpoint during development.

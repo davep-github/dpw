@@ -383,23 +383,64 @@ Otherwise, it uses the topic of the current item.")
   "re-match-{forward|backeard} subexpression which holds the topic string.")
 
 (defvar dpj-current-journal-file nil
-  "*Current journal file.")
+  "*Current journal file. This can be global or buffer-local.  
+A particular journal can be made sticky. This means that the sticky file will
+be used instead of the computed newest journal file. Making a journal sticky
+makes this variable become buffer local.  If it is made default, then the
+buffer-local default is set. The variable remains bufer-local and so can be
+used to override the global/default value.
+A particular notes file can be made sticky so that notes added while in that
+buffer will go into that notes file.
+A non-standard (latest date-wise) file can be made the default as well, so,
+for example, a project notes file can be used.")
 
 (defun dpj-current-journal-file ()
   ;; !<@todo XXX FOR NOW!
   dpj-current-journal-file)
 
-(defun dpj-set-current-journal-file (file-name &optional sticky-p)
+(defun dpj-set-current-journal-file (file-name &optional sticky-p default-p)
+  (interactive "fJournal file name? \nP")
+  (when (or default-p sticky-p)
+    ;; Clear existing and set new.
+    (kill-local-variable 'dpj-current-journal-file)
+    (when (eq sticky-p t)
+      (make-variable-buffer-local 'dpj-current-journal-file))
+    (when (and default-p (local-variable-p 'dpj-current-journal-file nil t))
+      (setq-default dpj-current-journal-file file-name))
   (setq dpj-current-journal-file file-name)
-  (when sticky-p
-    (dpj-stick-current-journal-file)))
+  (message "New %s%scurrent journal file: %s" 
+           (if sticky-p
+               "sticky "
+             "")
+           (if default-p
+               "default "
+             "")
+           dpj-current-journal-file)))
 
 (defun dpj-unstick-current-journal-file ()
-  (kill-local-variable 'dpj-current-journal-file)
-  (setq dpj-current-journal-file nil))
+  (dpj-set-current-journal-file nil 'un t))
 
 (defun* dpj-journal-file-sticky-p (&optional (buffer (current-buffer)))
   (local-variable-p 'dpj-current-journal-file buffer))
+
+;;;###autoload
+(defun dpj-stick-journal-file (&optional file-name unstick-p default-p)
+  "Ass/2 way to make non-standard journal files a little less unusable."
+  (setq-ifnil file-name (buffer-file-name))
+  (interactive "P")
+  (if unstick-p
+      (dpj-unstick-current-journal-file)
+    (dpj-set-current-journal-file file-name t default-p)))
+
+;;;###autoload
+(defun dpj-stick-current-journal-file (&optional unstick-p default-p)
+  "Ass/2 way to make non-standard journal files a little less unusable."
+  (interactive "P")
+  (dpj-stick-journal-file (buffer-file-name) unstick-p default-p))
+
+(dp-defaliases 'dpj-stick 'dpj-scfj 'dpj-sjf 'sjf 'snf 'dpj-make-sticky
+               'dpj-stick-current-journal-file)
+
 
 (defsubst dpj-restore-match-data (&optional data)
   "Set DATA or our saved match data into the global match-data."
@@ -1409,20 +1450,6 @@ returning."
   (insert (make-string 77 ?\;) "\n")
   (dp-insert-local-variables-hack 
    '("eval: (dpj-stick-current-journal-file)")))
-
-;;;###autoload
-(defun dpj-stick-current-journal-file (&optional unstick-p)
-  "Ass/2 way to make non-standard journal files a little less unusable."
-  (interactive "P")
-  (if unstick-p
-      (dpj-unstick-current-journal-file)
-    (make-variable-buffer-local 'dpj-current-journal-file)
-    (setq dpj-current-journal-file (buffer-file-name))
-    (message "New current journal file: %s" dpj-current-journal-file)))
-
-(dp-defaliases 'dpj-stick 'dpj-scfj 'dpj-sjf 'sjf 'snf 'dpj-make-sticky
-               'dpj-stick-current-journal-file)
-
 
 ;;;###autoload
 (defun* dpj-grep-and-view-hits (number-of-months topic-re grep-re 

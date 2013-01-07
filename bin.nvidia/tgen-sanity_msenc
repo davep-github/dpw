@@ -40,6 +40,7 @@ do
   $op
   shift
 done
+unset eexec_program
 
 ## [ "$modsrunspace" = "as2" ] && modsrunspace="-modsrunspace $as2_modsrunspace"
 [ "${1-}" = "as2" ] && modsrunspace="-modsrunspace $as2_modsrunspace"

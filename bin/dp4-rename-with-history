@@ -1,12 +1,12 @@
 #!/bin/sh
 
 source script-x
+progname="$(basename $0)"
 source eexec
 EExecDashN
 echo 1>&2 "Not tested/ready for prime time."
 
 set -u
-progname="$(basename $0)"
 
 fromFile="$1"
 toFile="$2"

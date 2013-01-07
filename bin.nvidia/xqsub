@@ -11,6 +11,7 @@ do
   $op
   shift
 done
+unset eexec_program
 
 # qsub -q o_pri_interactive_cpu_2G -P t124 -cwd $PWD -Is $SHELL -l
 # dpxx -B linen -- qsub -q o_pri_interactive_cpu_2G -P t124 -cwd $PWD -Is $SHELL -l

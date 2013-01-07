@@ -1,7 +1,7 @@
 #!/bin/sh
 set -x
 
-prog=`basename $0`
+progname=`basename $0`
 . eexec
 args=$*
 rc=0
@@ -10,7 +10,7 @@ do
     echo "dst>$dst<"
 	[ -d "$dst" ] && {
 		rc=2
-		echo $prog: $dst exists 1>&2
+		echo $progname: $dst exists 1>&2
 		continue
 	}
 

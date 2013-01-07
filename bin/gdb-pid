@@ -1,9 +1,9 @@
 #!/bin/sh
 
 source script-x
+progname="$(basename $0)"
 source eexec
 set -u
-progname="$(basename $0)"
 
 eexec_program=$(EExec_parse "$@")
 for op in $eexec_program
@@ -11,6 +11,7 @@ do
   $op
   shift
 done
+unset eexec_program
 
 debug_prog=${1}
 debug_prog_pattern="/${debug_prog} "

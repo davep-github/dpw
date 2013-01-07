@@ -137,6 +137,13 @@ document stack
 Print call stack
 end
 
+define isrc
+ info source
+end
+document isrc
+Print info about the current source file.
+end
+
 define framex
  info frame
  info args

@@ -37,7 +37,13 @@ log_to_console()
     echo "-=[ $@ ]=-" 1>&5
 }
 
-EExec_parse "$@"
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
 
 log_dir="${progname}/$(dp-std-timestamp)"
 echo "log_dir>$log_dir<"

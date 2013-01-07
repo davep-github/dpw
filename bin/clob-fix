@@ -1,12 +1,18 @@
 #!/bin/sh
 
 source script-x
-source eexec
 
 set -u
 progname="$(basename $0)"
+source eexec
 
-EExec_parse "$@"
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
 
 places=(
 bin/...

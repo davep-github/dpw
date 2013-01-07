@@ -1,14 +1,13 @@
 #!/bin/sh
 
-. script-x
-. eexec
-
-prog=`basename $0`
+source script-x
+progname=`basename $0`
+source eexec
 
 Usage()
 {
    {
-       echo "${prog}: usage: [-$all_options]"
+       echo "${progname}: usage: [-$all_options]"
    } 1>&2
    
    exit 1
@@ -53,10 +52,10 @@ do
   # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
   case $1 in
       -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
-      -v) VERBOSE="echo $prog: "; EExecVerbose;;
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
       -V) cscope_indexer_verbose='-v';;
       # -d is really just verbosity
-      -d) EExecVerbose; DEBUG="echo 1>&2 $prog: ";;
+      -d) EExecVerbose; DEBUG="echo 1>&2 $progname: ";;
       -t) tflags="$tflags $2"; shift;;
       -t) if [[ "$2" =~ "^--?$" ]]; then 
              gtflags=""

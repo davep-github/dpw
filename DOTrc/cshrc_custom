@@ -53,6 +53,7 @@ alias gotot 'pushd `depth`'
 alias totot 'cd `depth`'
 alias dfh 'df -h'
 alias dfhd 'df -h .'
+alias boblivnc 'qsub -q o_pri_interactive_cpu_2G -Is -P gf117 "vncserver -geometry 1200x720 -depth 24 -alwaysshared"'
 
 set autolist = t
 set history = 5120

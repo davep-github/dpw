@@ -61,6 +61,10 @@ export SEMANTIC_PATH="$HOME/lisp/contrib/site-packages/cedet/semantic"
 
 #
 
+#
+# Useful for shopts that may not be in all of the versions of bash that I
+# interact with.
+#
 maybe_shopt()
 {
     opt="$1"
@@ -118,6 +122,7 @@ case $shell_name in
             extglob histreedit histappend hostcomplete
         # Wouldn't like to cd to the wrong dir and wreak havoc.
         shopt -u cdspell
+        shopt -s cdable_vars
         # These are relatively new and there's a box here @ vanu that has an
         # old enough shell to barf, e.g. 2.05b(1)-release
         maybe_shopt gnu_errfmt -s gnu_errfmt

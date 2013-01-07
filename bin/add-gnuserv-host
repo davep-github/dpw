@@ -1,16 +1,16 @@
 #!/bin/sh
 
 source script-x
-source eexec
 set -u
 progname="$(basename $0)"
-
+source eexec
 eexec_program=$(EExec_parse "$@")
 for op in $eexec_program
 do
   $op
   shift
 done
+unset eexec_program
 
 : ${host_file=$HOME/.gnuserv-hosts}
 

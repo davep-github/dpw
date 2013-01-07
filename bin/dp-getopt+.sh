@@ -85,7 +85,7 @@ running_as_script && {
   : ${option_str=""}
   : ${all_options="$option_str"}
   : ${getopt_args=""}
-  : ${long_options=""}
+  : ${long_options=""}          # Just names. We'll add the --longoption
   : ${long_help_option="--longoption help"}
   long_options_opt=
   [ -n "$long_options" ] && {
@@ -111,13 +111,13 @@ running_as_script && {
 #
 
 #e.g.# # Usage variable usage:
-#e.g.# # Usage_args_info=" errno..."
-#e.g.# # Usage_synopsis="Display various info about errno...:
-#e.g.# # "
-#e.g.# # Usage_details="-n -- Show what would happen but don't do it. [eexec]
-#e.g.# # -v -- Be verbose about it. [eexec]
-#e.g.# # -q -- Anti-verbose. [eexec]
-#e.g.# # "
+#e.g.# Usage_args_info=" errno..."
+#e.g.# Usage_synopsis="Display various info about errno...:
+#e.g.# "
+#e.g.# Usage_details="${EExec_parse_usage}
+#e.g.# -o -- flag o
+#e.g.# -O <val> -- set Option to <val>
+#e.g.# "
 #e.g.# # Example of arg parsing.
 #e.g.# option_str="nvq"
 #e.g.# source dp-getopt+.sh
@@ -140,6 +140,6 @@ running_as_script && {
 #e.g.#     esac
 #e.g.#     shift
 #e.g.# done
-#e.g.# # The following is needed only when non optional args are required.
+#e.g.# # The following is needed only when args are required.
 #e.g.# [ "$*" = "" ] && Usage
 

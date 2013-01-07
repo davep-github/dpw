@@ -5,6 +5,7 @@
 #set -x
 
 source script-x
+progname="$(basename $0)"
 source eexec
 
 eexec_program=$(EExec_parse "$@")
@@ -13,9 +14,9 @@ do
   $op
   shift
 done
+unset eexec_program
 
 LOG_FILE="$HOME/log/xemacs/ec-log-file.log"
-progname=$(basename $0)
 
 : ${ask_if_no_display:=t}
 : ${ask_about_text_mode:=${ask_if_no_display}}

@@ -3,6 +3,7 @@
 #
 #set -x
 source script-x
+progname="$(basename $0)"
 source eexec
 
 : ${NO_HDR:=}

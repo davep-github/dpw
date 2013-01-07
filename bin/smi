@@ -3,7 +3,8 @@
 # useful shortcut, especially in the ports tree.
 #set -x
 
-. eexec 
+progname="$(basename $0)"
+source eexec 
 
 # let's see what's going on...
 EExecVerbose

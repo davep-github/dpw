@@ -1,9 +1,17 @@
 #!/bin/sh
 
 source script-x
+progname="$(basename $0)"
 source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
 
 for d in "$@"
 do
-  cp-parallel "$d" -
+  EExec cp-parallel "$d" -
 done

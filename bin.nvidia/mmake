@@ -11,6 +11,7 @@ do
   $op
   shift
 done
+unset eexec_program
 
 EExec $(depth)/bin/make
 

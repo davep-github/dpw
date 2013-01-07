@@ -1,9 +1,8 @@
 #!/bin/sh
 # Make a new perforce sandbox.
 
-progname=$(basename "$0")
-
 source script-x
+progname="$(basename $0)"
 source eexec
 
 askForConfirmation=

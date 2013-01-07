@@ -385,7 +385,7 @@ string containing their values."
 (defun dp-nop (&rest r))
 
 ;; Fails with simple M-x invocation.
-(defun dp-interactive-default-arg (arg)
+(defun dp-interactive-required-arg (arg)
   (interactive "p")
   arg)
 
@@ -393,6 +393,40 @@ string containing their values."
   (interactive "p")
   (dmessage "arg>%s<" arg)
   arg)
+
+(defun dp-show-interactive--P-optional (&optional arg)
+  (interactive "P")
+  (message "arg>%s<" arg)
+  arg)
+
+(defun dp-show-interactive--P-required (arg)
+  (interactive "P")
+  (message "arg>%s<" arg)
+  arg)
+
+(defun dp-show-interactive--p-optional (&optional arg)
+  (interactive "p")
+  (message "arg>%s<" arg)
+  arg)
+
+(defun dp-show-interactive--p-required (arg)
+  (interactive "p")
+  (message "arg>%s<" arg)
+  arg)
+
+(defun dp-interactive-info-P-arg (&optional arg)
+  "Show what `\(interactive \"-P\"\)' returns and `current-prefix-arg'."
+  (interactive "P")
+  (message "\"P\": argument to function >%s<, current-prefix-arg>%s<" 
+           arg current-prefix-arg))
+(defalias 'raw-itest 'dp-interactive-info-P-arg)
+
+(defun dp-interactive-info-no-arg (&optional arg)
+  "Show what `\(interactive\)' returns and `current-prefix-arg'."
+  (interactive)
+  (message "nil: argument to function >%s<, current-prefix-arg>%s<" 
+           arg current-prefix-arg))
+(defalias 'nil-itest 'dp-interactive-info-no-arg)
 
 (defun dp-nop-nil (&rest rest)
   (interactive)
@@ -8077,21 +8111,6 @@ QUIT-KEYS, if neq t, are added to this map."
            arg current-prefix-arg))
 (defalias 'itest 'dp-interactive-info-p-arg)
 
-(defun dp-interactive-info-P-arg (&optional arg)
-  "Show what interactive returns."
-  (interactive "P")
-  (message "\"P\": argument to function >%s<, current-prefix-arg>%s<" 
-           arg current-prefix-arg))
-(defalias 'raw-itest 'dp-interactive-info-P-arg)
-
-(defun dp-interactive-info-no-arg (&optional arg)
-  "Show what interactive returns."
-  (interactive)
-  (message "nil: argument to function >%s<, current-prefix-arg>%s<" 
-           arg current-prefix-arg))
-(defalias 'nil-itest 'dp-interactive-info-no-arg)
-
-
 (defun dp-mark-sexp (&optional arg)
   "Do a mark-sexp the way I like it: if on close 'paren' mark the sexp that that 'paren' closes.  Otherwise, mark as usual"
   (interactive "p")
@@ -12686,6 +12705,14 @@ If it is indeed a script name <script>-it can be called interactively.")
 source script-x
 set -u
 progname=\"$(basename $0)\"
+source eexec
+eexec_program=$(EExec_parse \"$@\")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
 
 "
   "A string to stuff into each new fire created with `dp-script-it'

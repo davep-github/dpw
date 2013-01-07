@@ -7,7 +7,9 @@
 #
 # 
 
-. eexec
+source script-x
+progname=$(basename "$0")
+source eexec
 
 build_base='/sundry/build'
 archive_base='$HOME/yokel/etc/build-info'

@@ -2,9 +2,11 @@
 #set -x
 #set -v
 
-echo "\$@>$@<"
-prog=`basename $0`
-echo $prog: $* 1>&2
+source script-x
+progname=`basename $0`
+source eexec
+
+echo $progname: $* 1>&2
 
 # xcscope/cscope, have been having problems with "File does not have the
 # expected format" errors. Not using -q has, at least once, in at least one
@@ -158,12 +160,12 @@ do
     EXCTAGS=$(sp -1 $tag_prog)
     [ -n "$EXCTAGS" ] && {
 	[[ "$EXCTAGS" = */ctags ]] && {
-            echo -n 1>&2 "$prog: Found simply ctags. "
+            echo -n 1>&2 "$progname: Found simply ctags. "
             if "$EXCTAGS" --help 2>&1 | fgrep -qi "Exuberant" 2>/dev/null
             then
                 echo 1>&2 "It looks Exuberant!"
             else
-                echo 1>&2 "$prog: May not be exuberant."
+                echo 1>&2 "$progname: May not be exuberant."
             fi
 	}
 	break

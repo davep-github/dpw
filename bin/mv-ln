@@ -3,6 +3,7 @@
 # Move some stuff over there, and make links so that it still looks like it's
 # here.
 source script-x
+progname="$(basename $0)"
 source eexec
 
 : ${mv_opts:="-i"}

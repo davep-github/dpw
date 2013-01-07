@@ -1,9 +1,15 @@
 #!/bin/sh
 #set -x
-. script-x
-. eexec
-
-vsetp $eexec_dash_n && EExecDashN
+source script-x
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
 
 case "$1" in
     -s) fox=swiftfox; shift;;

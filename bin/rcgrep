@@ -10,6 +10,7 @@ do
   $op
   shift
 done
+unset eexec_program
 
 qdat=($(getopt -o "$option_str" -- "$@"))
 

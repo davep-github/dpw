@@ -1,9 +1,9 @@
 #!/bin/sh
 
 source script-x
+progname="$(basename $0)"
 source eexec
 set -u
-progname="$(basename $0)"
 
 : ${GREP:=egrep}
 : ${src_dir=$HOME/work/active/current-sb}
@@ -15,6 +15,7 @@ do
   $op
   shift
 done
+unset eexec_program
 
 : ${DB:=loc.db}
 : ${file_list:=all-src-files}

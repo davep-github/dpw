@@ -8,12 +8,12 @@
 # sh script template
 #
 
-prog=`basename $0`
-#echo $prog: "$@" 1>&2
+progname=`basename $0`
+#echo $progname: "$@" 1>&2
 
 Usage()
 {
-   echo "${prog}: usage: [-$option_str]" 1>&2
+   echo "${progname}: usage: [-$option_str]" 1>&2
    exit 1
 }
 
@@ -26,12 +26,12 @@ nada ()
 
 verbose ()
 {
-    echo "$prog: $@"
+    echo "$progname: $@"
 }
 
 debug ()
 {
-    echo 1>&2 "+ $prog: $@"
+    echo 1>&2 "+ $progname: $@"
 }
 
 dry_run ()

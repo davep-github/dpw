@@ -4,6 +4,9 @@ source eexec
 set -u
 progname="$(basename $0)"
 
+# Should always symlink this to the proper test file.
+default_command=rerun-test.sh
+
 #
 # Motivation/initial requirement.
 #
@@ -13,13 +16,7 @@ progname="$(basename $0)"
 # if 1 == 0
 #   exit 0
 # fi
-# 
-eexec_program=$(EExec_parse "$@")
-for op in $eexec_program
-do
-  $op
-  shift
-done
+#
 
 exit_how()
 {
@@ -40,9 +37,75 @@ exit_how()
 
 trap exit_how 2
 
+# Usage variable usage:
+Usage_args_info=""
+Usage_synopsis="Run tests until desired results.
+"
+Usage_details="${EExec_parse_usage}
+"
+# Example of arg parsing.
+long_options=("command:"
+    "pattern:"
+    "pattern-files:"
+    "log-file-base:"
+    "grepper:"
+    "grepper-args:"
+    "ticker:"
+    "ticker-args:"
+    "loop-end-condition:"
+    "max-loops:"
+    "max-matches:"
+    "loop-delay:"
+    "log-file:"
+    "log-dir:"
+    "keep-logs"
+    "save-pattern-files"
+    "rm-pattern-files"
+    "keep-nothing"
+    "match" "present" "found"
+    "nomatch" "missing" "not-found")
+option_str="nvq"
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      # eexec support
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
 
-# Should always symlink this to the proper test file.
-: ${default_command=rerun-test.sh}
+      # Program options.
+      --command) shift; command=$1;;
+      --pattern) shift; pattern=$1;;
+      --pattern-files) shift; pattern_files=$1;;
+      --log-file-base) shift; log_file_base=$1;;
+      --grepper) shift; grepper=$1;;
+      --grepper-args) shift; grepper_args=$1;;
+      --ticker) shift; ticker=$1;;
+      --ticker-args) shift; ticker_args=$1;;
+      --loop-end-condition) shift; loop_end_condition=$1;;
+      --max-loops) shift; max_loops=$1;;
+      --max-matches) shift; max_matches=$1;;
+      --loop-delay) shift; loop_delay=$1;;
+      --log-file) shift; user_log_file=$1;;
+      --log-dir) shift; user_log_dir=$1;;
+      --no-keep-logs) keep_logs_p=;;
+      --no-save-pattern-files) save_pattern_files_p=;;
+      --no-rm-pattern-files) rm_pattern_files_p=;;
+      --keep-nothing) keep_nothing_p=t;;
+      --match|--present|--found) end_condition_p=end_condition_0_p;;
+      --nomatch|--missing|--not-found) end_condition_p=end_condition_non_0_p;;
+
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+
 : ${command=}
 : ${commands:=${command:=${default_command}}}
 : ${pattern:=TEST_SUCCEEDED}
@@ -59,70 +122,49 @@ trap exit_how 2
 : ${rm_pattern_files_p=t}       # e.g. trep.txt is appended to.
 : ${keep_nothing_p=}
 : ${loop_delay=10s}
-: ${match_p=}
-: ${nomatch_p=t}
+: ${user_log_file=}
+: ${user_log_dir=}
 # Exit after reporting this many successes. Use `-', "" or something < 0 to get
 # all possible matches.
 : ${max_matches=1}
-: ${log_root=.}
-: ${log_dir=""}
+: ${log_root=run-until-status.d}
+: ${log_dir=${user_log_dir}}
+: ${end_condition_p:=end_condition_non_0_p}
+
+[ -n "$user_log_file" ] && {
+    log_dir="$(dirname $user_log_file)"
+}
 
 [ -z "$log_dir" ] && {
-    log_dir=$(dp-std-timestamp)
-}
-# If log dir is a timestamp, then putting it last lets ls give us a list
-# grouped by progname and sorted by date.
-log_dir="${log_root}/${progname}.$log_dir"
-log_file_base="$log_dir/$log_file_base"
-[ -d "$log_dir" ] || {
-    mkdir -p "$log_dir"
+    log_dir="$log_root/$(dp-std-timestamp)"
 }
 
+log_dir=$(normpath "$log_dir")
+mkdir -p "$log_dir"
+
 #
-# "Passing" can mean either a file containing a particular string or not.
+# "Passing a test" can mean either a file containing a particular string or
+# not.
 # E.g. I can run until the run status is not "TEST_SUCCEEDED" if chasing down
 # an intermittent failure, or wait *for* success (TEST_SUCCEEDED) or for a
 # particular fail mode, say, SIM_FAIL.
 
-end_condition_positive_p()
+end_condition_0_p()
 {
     (($1 == 0))
 }
 
-end_condition_inverted_p()
+end_condition_non_0_p()
 {
     (($1 != 0))
 }
-
-UNSET="* UNSET *"
-: ${invert_p="$UNSET"}
-[ "$invert_p" = "$UNSET" ] && {
-    if [ -n "$match_p" ]
-    then
-        invert_p=
-    elif [ -n "$nomatch_p" ]
-    then
-        invert_p=t
-    else
-        invert_p=
-    fi
-}
-
-if [ -n "$invert_p" ]
-then
-    end_condition_p=end_condition_inverted_p
-else
-    end_condition_p=end_condition_positive_p
-fi
-
 
 [ -n "$keep_nothing_p" ] && {
     keep_logs_p=
     save_pattern_files_p=
 }
 
-
-# Files to be searched for completion status are kept in the positional args.   
+# Files to be searched for completion status are kept in the positional args.
 if [ -z "$*" ]
 then
     set -- $pattern_files
@@ -218,47 +260,58 @@ do
   # We may as well use the loop_count even if we're not saving them.
   # Removes the need for conditional code and keeps loop_count info available
   # in the case of a crash.
-  : ${current_log_file:="${log_file_base}.$loop_count"}
+  current_log_file=${user_log_file-}
+  [ -z "$current_log_file" ] && {
+      current_log_dir="${log_dir}/${loop_count}"
+      EExec -y mkdir -p "${current_log_dir}"
+      current_log_file="${current_log_dir}/log"
+  }
   # This will also tell us the iteration.
   echo "Logging run to $current_log_file"
-  
+
   # This is the log file of the current run's output.
   # The end condition data will not necessarily be in the log files.
   for command in $commands
   do
     EExec_verbose_msg "command>$command<"
     EExec_verbose_msg "ticker>$ticker<"
-    
-    EExec $command 2>&1 | EExec $ticker "$current_log_file"
+
+    # Let the command know the pattern files we want to use. This allows the
+    # command to use that or those files. This allows us to specify the file
+    # the command will use by using the --pattern-files option.
+    EExec $command "${pattern_files[@]}" 2>&1 | EExec $ticker "$current_log_file"
 
     # Examine the pattern files one at a time.
     for pattern_file in "${pattern_files[@]}"
       do
       EExec_verbose_msg "pattern_file>$pattern_file<"
 
-      [ -e "$pattern_file" ] || {
-          echo "cannot find pattern file>$pattern_file<, skipping."
-          continue
-      } 1>&2 
+      if ! [ -e "$pattern_file" ]
+      then
+          echo 1>&2 -n "Skipping missing pattern file>$pattern_file<."
+          echo 1>&2 " It may not exist yet, which is OK."
+      else
+          EExec $loop_end_condition "$pattern_file"
+          rc=$?
 
-      $loop_end_condition "$pattern_file"
-  
-      rc=$?
-      if $end_condition_p $rc
+          if $end_condition_p $rc
           then
-          ((++num_matches))
-          wrapup "${num_matches} of ${max_matches} end conditions met" \
-                 "$pattern_file of ${pattern_files[@]}"
-          ((num_matches >= max_matches)) && {
-              echo
-              echo "All end conditions met. Exiting."
-              exit 0
+              ((++num_matches))
+              wrapup "${num_matches} of ${max_matches} end conditions met" \
+                "$pattern_file of ${pattern_files[@]}"
+              ((num_matches > 0)) && ((num_matches >= max_matches)) && {
+                  echo
+                  echo "All end conditions met. Exiting."
+                  exit 0
+              }
+          fi
+          # All related files have the same suffix.
+          [ -n "${save_pattern_files_p}" ] && {
+              # Use loop_count in case the user has specified a log file to
+              # prevent files being overwritten.
+              EExec cp $pattern_file $current_log_dir/$pattern_file.$loop_count
           }
       fi
-      # All related files have the same suffix.
-      [ -n "${save_pattern_files_p}" ] && {
-          EExec cp $pattern_file $log_dir/$pattern_file.$loop_count
-      }
     done
     [ -z "${keep_logs_p}" ] && EExec rm -f "${current_log_file}"
     [ -n "${rm_pattern_files_p}" ] && {
@@ -266,12 +319,12 @@ do
     }
     [ -n "${loop_delay}" ] && {
         EExec_verbose_msg "sleeping for $loop_delay"
-        EExec sleep "${loop_delay}"
+        EExec -y sleep "${loop_delay}"
         EExec_verbose_msg "done sleeping."
     }
   done
   ((++loop_count))
-  
+
   # Test detection logic
   #{
   #    echo 1>&2 "Forcing match for next iteration."
@@ -285,13 +338,13 @@ then
     exit_reason="Interrupted."
 elif ((num_matches == 0))
 then
-    exit_reason="Too many loops: End condition never found."
+    exit_reason="Loop max reached: End condition never found."
 elif [ -n "$want_all_matches_p" ]
 then
     exit_reason="Looking for ALL matches (not an error)"
 elif ((num_matches < max_matches))
 then
-    exit_reason="Too many loops: End conditions, $num_matches of $max_matches"
+    exit_reason="Loop max reached: End conditions, $num_matches of $max_matches"
 else
     # There should be no unknown reason for exiting the loop.
     exit_reason="Unknown. Fix me."

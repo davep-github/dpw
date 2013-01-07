@@ -1,8 +1,8 @@
 #!/bin/sh
 
 source script-x
+progname="$(basename $0)"
 source eexec
-progname=$(basename $0)
 
 : ${kwa_work:=${PROJECT_HOME}}
 

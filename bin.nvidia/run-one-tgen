@@ -20,6 +20,7 @@ do
   $op
   shift
 done
+unset eexec_program
 
 # Usage variable usage:
 Usage_args_info=" <tgen-level-test>..."

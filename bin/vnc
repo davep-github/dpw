@@ -1,13 +1,35 @@
 #!/bin/sh
+#
+# Start up a vnc server using my preferred defaults.
+# There are a number of vnc servers, and versions, out there and this
+# provides some insulation from those differences.
+# It also allows for node specific configuration. Shared home directories are
+# not perfect for every need.
+#
 
 source script-x
+eexec_program=$(EExec_parse "$@")
 source eexec
-
-EExec_parse "$@"
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
 
 # A good env.<host> candidate?
 # Or better tied, somehow, to client.
-#: ${VNC_GEOMETRY:=1280x1024} 
-: ${VNC_GEOMETRY:=1920x1080} 
+#: ${VNC_GEOMETRY:=1280x1024}
+: ${VNC_DIR:=$HOME/.vnc}
+: ${VNC_CONFIG_DIR:=$HOME/.vnc}
+: ${VNC_GEOMETRY:=1920x1080}
+: ${VNC_PASSWORD_DEFAULT_FILE=vnc-passwd.default}
+: ${VNC_PASSWORD_FILE=vnc-passwd.$HOST}
 
-EExec vncserver -geometry ${VNC_GEOMETRY} -depth 24
+EExec -y cd "${VNC_DIR}"
+
+[ -e "${VNC_PASSWORD_FILE}" ] || {
+    EExec ln -s "${VNC_PASSWORD_DEFAULT_FILE}" "${VNC_PASSWORD_FILE}"
+}
+
+EExec vncserver -geometry ${VNC_GEOMETRY} -depth 24 "$@"

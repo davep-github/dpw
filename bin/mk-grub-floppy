@@ -1,9 +1,16 @@
 #!/bin/sh
 
-. eexec
-
-#EExecShowOnly=y
-EExecEcho=echo
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
 
 if [ -z "$1" ] 
 then

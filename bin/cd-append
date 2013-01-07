@@ -15,7 +15,8 @@ then
 fi
 echo "src>$src<"
 
-. eexec 
+progname=$(basename "$0")
+source eexec 
 #EExecDashN
 echo "src>$src<"
 

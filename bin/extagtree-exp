@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
-#set -x
-#set -v
 
-prog=`basename $0`
-echo $prog: $* 1>&2
-
-. eexec
+source script-x
+progname=`basename $0`
+source eexec
 
 args="$@"                       # Preserve args across .bashrc execution.
 # {gentoo|libranet}'s default sudo define SECURE_PATH and so our binaries

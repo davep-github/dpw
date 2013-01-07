@@ -9,9 +9,9 @@ argses=("$@")
 set -- "${argses[@]}"
 
 source script-x
+progname="$(basename $0)"
 source eexec                    # Primarily for verbosity.
 set -u
-progname="$(basename $0)"
 progdir=$(dirname "$0")
 
 : ${shell_option:=-tcsh}
@@ -28,7 +28,14 @@ realpath()
 }
 fi
 
-EExec_parse "$@"
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
 PATH="$progdir:$PATH"
 
 log_dir="${progname}/$(dp-std-timestamp)"

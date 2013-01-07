@@ -21,7 +21,7 @@ Must be run in the top level dir, e.g. same dir as bin, include, lib, share...
    exit 1
 }
 
-. eexec
+source eexec
 
 AUTOBUILD="autobuild.pl"
 def_ab_module="Chiswick"

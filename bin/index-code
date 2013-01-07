@@ -97,6 +97,7 @@ AND_INDEX="and index"
 : ${etags_p:=t}
 : ${tree_tagger:=extagtree}
 : ${DEF_SYSTEM_INCLUDES:=/usr/include}
+: ${EExec_opts=}
 : ${finder_opts:=} # Bad design: this is a parameter to the source code finder.
 export finder_opts
 
@@ -124,13 +125,14 @@ do
   # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
   case $1 in
       -I) iterate_individually_p=t;;
-      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
-      -v) VERBOSE="echo $prog: "; EExecVerbose;;
+      # Don't actually execute stuff
+      -n) EXEC=echo; EExecDashN; EExec_opts="$EExec_opts $1";;
+      -v) VERBOSE="echo $prog: "; EExecVerbose; EExec_opts="$EExec_opts $1";;
       -V) cscope_indexer_verbose='-v';;
       # -d is really just verbosity
       -d) EExecVerbose; DEBUG="echo 1>&2 $prog: ";;
       -t) tflags="$tflags $2"; shift;;
-      -t) if [[ "$2" =~ "^--?$" ]]; then 
+      -g) if [[ "$2" =~ "^--?$" ]]; then 
              gtflags=""
           else
              gtflags="$gtflags $2";
@@ -223,7 +225,7 @@ do_taggin()
     local dirs="$@"
     echo 1>&2 "This program ($(basename $0)), ${tree_tagger} and cscope-indexer need to be reworked.
 They should work off the same set of files."
-    EExec eval ${tree_tagger} $DP_SCRIPT_X_DEBUG_OPT $tflags $dirs
+    EExec eval ${tree_tagger} $DP_SCRIPT_X_DEBUG_OPT $EExec_opts $tflags $dirs
     echo "taggin in $PWD"
     if vsetp "$output_dir"
     then
