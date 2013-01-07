@@ -3,11 +3,17 @@
 source script-x
 source eexec
 
-EExec_parse "$@"
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+   $op
+   shift
+done
+unset eexec_program
 
 # A good env.<host> candidate?
 # Or better tied, somehow, to client.
 #: ${VNC_GEOMETRY:=1280x1024} 
 : ${VNC_GEOMETRY:=1920x1080} 
 
-EExec vncserver -geometry ${VNC_GEOMETRY} -depth 24
+EExec vncserver -geometry ${VNC_GEOMETRY} -depth 24 "$@"
