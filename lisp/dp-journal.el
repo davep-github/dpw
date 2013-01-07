@@ -82,6 +82,13 @@
   "Regexp that matches a datestamp.  Not 100% immune to false
 positives, but funky enough to minimize them.")
 
+(defvar dpj-local-variables-hack-separator (make-string 77 ?\;)
+  "Separator which comes before local variables hack section.")
+
+(dp-set-mode-local-value 'dp-local-variables-hack-separator
+                         dpj-local-variables-hack-separator
+                         'dp-journal-mode)
+
 (defun dp-journal-mode-indent-according-to-mode ()
   "Indent line so it ends up 1 dpj tab under past the previous line's."
   (save-excursion
@@ -1447,7 +1454,7 @@ returning."
 (defun dpj-insert-sticky-variables-hack ()
   "Create a local variables hack block that make a journal sticky when it loads."
   (interactive)
-  (insert (make-string 77 ?\;) "\n")
+  (insert dpj-local-variables-hack-separator "\n")
   (dp-insert-local-variables-hack 
    '("eval: (dpj-stick-current-journal-file)")))
 

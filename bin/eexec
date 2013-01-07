@@ -44,6 +44,7 @@ ${EExecExporter} EExec_loaded_p=t
 ${EExecExporter} EExecShowOnly=
 ${EExecExporter} EExecErrorReporter=
 ${EExecExporter} EExec_verbose_func=
+${EExecExporter} EExecContinue=
 
 EExec_parse_usage="-n -- Show what would happen but don't do it. [eexec]
 -v -- Be verbose about it. [eexec]
@@ -172,7 +173,7 @@ EExecDefErrorReporter ()
 $* failed ${EExecMsg-}"
     echo "$eMsg" 1>&2
     [ -n "${EExecRCFile-}" ] && echo "$eMsg" >> $EExecRCFile
-    [ -z "${EExecContinue-}" ] && exit $rc
+    ## Just report the news, don't make it. [ -z "${EExecContinue-}" ] && exit $rc
     return $rc
 }
 
@@ -229,39 +230,39 @@ EExec_start_tcsh()
 
 EExec()
 {
-    if [ "$1" = '-n' ]
-    then
-	shift
-	${EExecExporter} eexecShowOnly=y
-	${EExecExporter} eexecShowPrefix="+"
-	if [ -z "$EExecEcho" ]
-	then
-	    eexecEcho=${EExecExporter} EExecStderrEcho
-	else
-	    eexecEcho="$EExecEcho"
-	fi
-    else
-        if [ "$1" == "-y" ]     # Override a global -n
-        then
-            shift
-            ${EExecExporter} eexecShowOnly=""
-            ${EExecExporter} eexecShowPrefix=""
-            ${EExecExporter} EExecEchoPrefix="+"
-        else
-            ${EExecExporter} eexecShowOnly="$EExecShowOnly"
-            ${EExecExporter} eexecShowPrefix="$EExecShowPrefix"
-            ${EExecExporter} EExecEchoPrefix=$EExecEchoPrefixG
-        fi
-	${EExecExporter} eexecEcho="$EExecEcho"
-    fi
-
-    if [ "$1" == "-tcsh" ]
-    then
-        shift
-        executor=EExec_start_tcsh
-    else
-        executor=               # was: EExec_start
-    fi
+    # @todo XXX Is it worth it to do a full getopt?
+    # Only of argv[1] has a leading `-'?
+    local i
+    local eexecEcho=${EExecEcho}
+    local eexecShowOnly=${EExecShowOnly}
+    local eexecShowPrefix=${EExecShowPrefix}
+    local eexecContinue=${EExecContinue}
+    local fake_success_p=
+    local executor=
+    ${EExecExporter} EExecEchoPrefix=$EExecEchoPrefixG
+    for i in "$@"
+    do
+      case "$1" in
+          -n) eexecShowOnly=y
+              eexecShowPrefix="+"
+              eexecEcho=${EExecEcho-EExecStderrEcho}
+              ;;
+          -c) eexecContinue=t
+              ;;
+          -C) eexecContinue=t
+              fake_success_p=y
+              ;;
+          -y) eexecShowOnly=""
+              eexecShowPrefix=""
+              ${EExecExporter} EExecEchoPrefix="y"
+              ;;
+          -x) shift; executor="$1";;
+          -tcsh) executor=EExec_start_tcsh
+                 ;;
+         *) break;;
+      esac
+      shift
+    done
 
     # $eexecEcho is a command to do our echoing
     [ -n "$eexecEcho" ] && "$eexecEcho" "${eexecShowPrefix}""$@"
@@ -274,7 +275,8 @@ EExec()
 		"$EExecErrorReporter" $rc $*
 		return $?
 	    }
-	    [ -z "$EExecContinue" ] && exit $rc
+	    [ -z "$eexecContinue" ] && exit $rc
+            [ -n "$fake_success_p" ] && rc=0
 	    return $rc
 	}
     elif [ -z "$eexecEcho" ]

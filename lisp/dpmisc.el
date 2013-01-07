@@ -9686,12 +9686,21 @@ If OBA is nil, use `obarray'."
    ;; Format allows s to be almost any type.
    (format " %s" s)  nil
    :end " ***"
-   :num-starts 3))
+   :num-starts 3
+   :no-preserve-trailing-spaces-p t))
   
 (defun dp-mk-local-variables-hack-header ()
-  (concat (dp-build-co-comment-start "" nil :num-starts 3)
-          "\n"
-          (dp-mk-local-variables-hack-line "Local Variables:")))
+  (let ((sep (dp-mode-local-value 'dp-local-variables-hack-separator)))
+    (setq sep
+          (if sep
+              (concat sep "\n")
+            ""))
+    (concat 
+     sep
+     (dp-build-co-comment-start "" nil :num-starts 3 
+                                :no-preserve-trailing-spaces-p t)
+     "\n"
+     (dp-mk-local-variables-hack-line "Local Variables:"))))
 
 (defun dp-mk-local-variables-hack (&optional vars no-end-p)
   "Build a Local Variables block. Add VARS element by element after comment chars."
@@ -9707,6 +9716,7 @@ If OBA is nil, use `obarray'."
                "\n"))))
 
 (defun dp-insert-local-variables-hack (&optional vars no-end-p)
+  "Insert a local variables hack block."
   (interactive)
   (insert (dp-mk-local-variables-hack vars no-end-p)))
 
@@ -12976,7 +12986,8 @@ Inserts `dp-python-new-file-template' by default."
            (format "mode local obarray for %s" mode-name-or-sym)))
     (intern mob-name)))
 
-(defun dp-mode-local-value (var-sym &optional mode-name-or-sym)
+(defun dp-mode-local-value (var-sym &optional mode-name-or-sym 
+                            value-if-not-found)
   "Get a mode local variable VAR-SYM's value.
 Returns nil if there is either no mode obarray or no VAR-SYM in the mode's obarray.
 !<@todo Should this throw an error?"
@@ -12984,7 +12995,8 @@ Returns nil if there is either no mode obarray or no VAR-SYM in the mode's obarr
          (vsym (when mob (intern-soft (format "%s" var-sym)
                                       (symbol-value mob)))))
     (if vsym
-      (symbol-value vsym))))
+        (symbol-value vsym)
+      value-if-not-found)))
 
 (defun dp-mode-local-value-p (var-sym &optional mode-name-or-sym)
   "Return nil if there is not a mode local variable VAR-SYM.
@@ -13968,6 +13980,7 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
 (defun* dp-build-co-comment-start (&optional tag start 
                                   &key end
                                   (num-starts 1)
+                                  no-preserve-trailing-spaces-p
                                   read-as-last-resort-p
                                   recursing)
   (setq-ifnil tag dp-default-co-tag
@@ -13992,9 +14005,11 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
               do (setq final-start (concat final-start tstart))))
       (setq final-start (match-string 1 start)))
       (concat final-start tag (or end (substring start 0 1))
-              (or (match-string 2 start) ""))))
-    (read-as-last-resort-p 
-     (read-from-minibuffer "Comment start: " (format "#%s# " tag)))))
+              (or (and (not no-preserve-trailing-spaces-p)
+                       (match-string 2 start))
+                  ""))))
+   (read-as-last-resort-p 
+    (read-from-minibuffer "Comment start: " (format "#%s# " tag)))))
 
 (defun dp-canonicalize-pathname (name)
   (expand-file-name (substitute-in-file-name name)))

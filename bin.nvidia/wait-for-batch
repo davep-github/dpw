@@ -111,11 +111,12 @@ EExec_verbose_msg "continue_regexp>${continue_regexp}<"
 EExec_verbose_msg "status_program_args>${status_program_args}<"
 EExec_verbose_msg "continue_pred_args>${continue_pred_args}<"
 
+echo "Using ${batch_dir} for status."
 while [ -n "$run_p" ]
 do 
   EExec "${status_program}" ${status_program_args} \
     | EExec "${continue_pred_program}" ${continue_pred_args} || {
-      echo "Failure required to exit loop."
+      echo "${continue_pred_program} ${continue_pred_args} Failure is the exit condition."
       break
   } 1>&2
   echo -n "sleep for ${sleep_interval}..."

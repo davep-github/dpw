@@ -4,8 +4,8 @@ source eexec
 set -u
 progname="$(basename $0)"
 
-# Should always symlink this to the proper test file.
-default_command=rerun-test.sh
+# Should always symlink this to the proper/current test file.
+default_command=./rerun-test.sh
 
 #
 # Motivation/initial requirement.
@@ -18,24 +18,34 @@ default_command=rerun-test.sh
 # fi
 #
 
+interrupt_status=
 exit_how()
 {
+    interrupt_status="Interrupted."
     while :
     do
-      read -p "Exit now or after the next loop [^C|q/n]? "
+      read -p "Exit now [q], after the next loop [n] or continue [c]? "
       case "$REPLY" in
           [Qq]) {
                    echo
                    echo "Immediate exit requested"
+                   interrupt_status="Interrupt: Immediate exit."
                    exit 2
                 };;
-          [Nn]) run_p=; break;;
+          [Nn]) run_p=;
+                interrupt_status="Interrupt: Complete current iteration.";
+                break
+                ;;
+          [Cc]) break;;
+
           *) echo "Unsupported response>$REPLY<";;
       esac
     done 1>&2
 }
 
 trap exit_how 2
+
+user_pattern_files=
 
 # Usage variable usage:
 Usage_args_info=""
@@ -78,7 +88,7 @@ do
       # Program options.
       --command) shift; command=$1;;
       --pattern) shift; pattern=$1;;
-      --pattern-files) shift; pattern_files=$1;;
+      --pattern-files) shift; user_pattern_files=($user_pattern_files $1);;
       --log-file-base) shift; log_file_base=$1;;
       --grepper) shift; grepper=$1;;
       --grepper-args) shift; grepper_args=$1;;
@@ -109,7 +119,7 @@ done
 : ${command=}
 : ${commands:=${command:=${default_command}}}
 : ${pattern:=TEST_SUCCEEDED}
-: ${pattern_files=trep.txt}
+: ${pattern_files=${user_pattern_files:="trep.txt"}}
 : ${log_file_base:=last-log-file}
 : ${grepper:=egrep}
 : ${grepper_args=-q}
@@ -122,11 +132,11 @@ done
 : ${rm_pattern_files_p=t}       # e.g. trep.txt is appended to.
 : ${keep_nothing_p=}
 : ${loop_delay=10s}
-: ${user_log_file=}
-: ${user_log_dir=}
 # Exit after reporting this many successes. Use `-', "" or something < 0 to get
 # all possible matches.
 : ${max_matches=1}
+: ${user_log_file=}
+: ${user_log_dir=}
 : ${log_root=run-until-status.d}
 : ${log_dir=${user_log_dir}}
 : ${end_condition_p:=end_condition_non_0_p}
@@ -164,13 +174,6 @@ end_condition_non_0_p()
     save_pattern_files_p=
 }
 
-# Files to be searched for completion status are kept in the positional args.
-if [ -z "$*" ]
-then
-    set -- $pattern_files
-fi
-pattern_files=("$@")
-
 wrapup()
 {
     local indent=""
@@ -179,6 +182,9 @@ wrapup()
         indent="  "
     }
     shift
+    [ -n "$interrupt_status" ] && {
+        echo "${indent}interrupt_status>$interrupt_status<"
+    }
     echo "${indent}Num matches: $num_matches"
     echo "${indent}Loop count: $loop_count"
     echo "${indent}last log file>${current_log_file}<"
@@ -252,7 +258,7 @@ want_all_matches_p=
 infinite_loop_p=
 [ "$max_loops" = "-" -o  -z "$max_loops" -o $max_loops -lt 0 ] && {
     infinite_loop_p=t
-    echo "Looping forever."
+    echo "Looping TTCCH."
 }
 
 while [ -n "$run_p" -a \( -n "$infinite_loop_p"  -o $loop_count -lt $max_loops \) ]
@@ -279,7 +285,8 @@ do
     # Let the command know the pattern files we want to use. This allows the
     # command to use that or those files. This allows us to specify the file
     # the command will use by using the --pattern-files option.
-    EExec $command "${pattern_files[@]}" 2>&1 | EExec $ticker "$current_log_file"
+    EExec $command "$@" --run-until-status-pattern-files "${pattern_files}" 2>&1 \
+         | EExec $ticker "$current_log_file"
 
     # Examine the pattern files one at a time.
     for pattern_file in "${pattern_files[@]}"
@@ -319,7 +326,7 @@ do
     }
     [ -n "${loop_delay}" ] && {
         EExec_verbose_msg "sleeping for $loop_delay"
-        EExec -y sleep "${loop_delay}"
+        EExec -c -y sleep "${loop_delay}"
         EExec_verbose_msg "done sleeping."
     }
   done
@@ -335,7 +342,7 @@ done
 exit_reason=
 if [ -z "$run_p" ]
 then
-    exit_reason="Interrupted."
+    exit_reason="Loop cancelled."
 elif ((num_matches == 0))
 then
     exit_reason="Loop max reached: End condition never found."

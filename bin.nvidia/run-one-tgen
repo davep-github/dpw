@@ -5,23 +5,6 @@ source eexec
 set -u
 progname="$(basename $0)"
 
-: ${wait_opt=}
-: ${tgen_opts=}
-: ${clobber_opt=-clobber}
-: ${level_opt=$(pwd)/config/levels/tegra/regress_tegra_gpu_multiengine}
-: ${traceRoot_opt=/home/scratch.traces02/arch/traces/}
-: ${chip_opt=t124}
-: ${target_opt=FMODEL}
-: ${d_opt=hwApPath=$(pwd)/../../}
-
-eexec_program=$(EExec_parse "$@")
-for op in $eexec_program
-do
-  $op
-  shift
-done
-unset eexec_program
-
 # Usage variable usage:
 Usage_args_info=" <tgen-level-test>..."
 Usage_synopsis="Run tgen levels one at a time using a consistent set of vars.
@@ -40,6 +23,19 @@ Usage_details="-n -- Show what would happen but don't do it. [eexec]
 "
 # Example of arg parsing.
 option_str="nvqwT:Cl:r:c:t:d:"
+long_options=("wait"
+"tgen-opt:"
+"clobber"
+"level:"
+"trace-root:"
+"chip:"
+"target:"
+"log-dir:"
+"log-base:")
+
+: ${user_levels=}
+: ${user_tgen_opts=}
+
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -51,14 +47,17 @@ do
       -q) VERBOSE=":"; EExecQuiet;;
 
       # Program options.
-      -w) wait_opt=-wait;;
-      -T) shift; tgen_opts="$tgen_opts $1";;
-      -C) clobber_opt=;;
-      -l) shift; level_opt=$1;;
-      -r) shift; traceRoot_opt=$1;;
-      -c) shift; chip_opt=$1;;
-      -t) shift; target_opt=$1;;
-      -d) shift; d_opt=$1;;
+      -w|--wait) wait_opt=-wait;;
+      -T|--tegn-opt) shift; user_tgen_opts="$user_tgen_opts $1";;
+      -C|--clobber) clobber_opt=;;
+      -l|--level) shift; llist=$(echo "$1" | sed -r 's/,/ /g')
+                  user_levels="${user_levels} ${llist}";;
+      -r|--trace-root) shift; traceRoot_opt="$1";;
+      -c|--chip) shift; chip_opt="$1";;
+      -t|--target) shift; target_opt="$1";;
+      -d) shift; d_opt="$1";;
+      --log-dir) shift; user_log_dir="$1";;
+      --log-base) shift; log_dir_base="$1";;
       --) shift ; break ;;
       *) echo 1>&2 "Unsupported option>$1<"
          exit 1;;
@@ -66,17 +65,42 @@ do
     shift
 done
 # The following is needed only when non optional args are required.
-[ "$*" = "" ] && Usage
-
-
-[ -z "${1-}" ] && {
-    echo "At least one test name is required."
+[ "$*" = "" ] && {
+    Usage "Test name[s] are required."
     exit 1
-} 1>&2
-
-[ -n "$level_opt}" ] && {
-        level_opt="-level $level_opt"
 }
+
+: ${wait_opt=}
+: ${tgen_opts=${user_tgen_opts}}
+: ${clobber_opt=-clobber}
+: ${levels:=${user_levels-$(pwd)/config/levels/tegra/regress_tegra_gpu_multiengine}}
+: ${traceRoot_opt=/home/scratch.traces02/arch/traces/}
+: ${chip_opt=t124}
+: ${target_opt=FMODEL}
+: ${d_opt=hwApPath=$(pwd)/../../}
+: ${user_log_dir=}
+: ${log_dir_base=run-tgens.d}
+: ${log_dir=${user_log_dir}}
+
+# Common timestamp
+timestamp=$(dp-std-timestamp)
+
+[ -z "$levels}" ] && {
+    Usage "At least one level is needed."
+    exit 1
+}
+
+[ -z "$user_log_dir" ] && {
+
+    [ -z "$log_dir_base" ] && {
+        log_dir_base="$log_root/${timestamp}"
+    }
+
+    log_dir_base=$(normpath "$log_dir_base")
+    log_dir="$log_dir_base"
+}
+mkdir -p $(dirname "$log_dir_base")
+
 [ -n "$traceRoot_opt}" ] && {
         traceRoot_opt="-traceRoot $traceRoot_opt"
 }
@@ -90,13 +114,23 @@ done
         d_opt="-d $d_opt"
 }
 
-for i in "$@"
-do
-  test_name="$i"
-  # Setting this doesn't make much sense for >1 tests.
-  : ${out_dir:="$test_name.$(dp-std-timestamp)${wait_opt}"}
+log_prefix="$log_dir"
 
-  EExec ./tgen.pl \
+for level in $levels
+do
+  level_opt="-level $level"
+  for test_name in "$@"
+  do
+    if [ -n "$user_log_dir" ]
+        then
+        out_dir="$user_log_dir"
+    else
+        out_dir="${log_prefix}/${timestamp}/${test_name}${wait_opt}.out"}
+        out_dir=$(normpath "$out_dir")
+    fi
+    EExec -y mkdir -p $(dirname "$out_dir")
+    
+    EExec ./tgen.pl \
       ${target_opt} \
       ${chip_opt} \
       ${level_opt} \
@@ -107,4 +141,5 @@ do
       ${wait_opt} \
       ${clobber_opt} \
       ${tgen_opts}
+  done
 done
