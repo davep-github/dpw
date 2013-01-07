@@ -104,7 +104,6 @@ mv_one()
     # mv .mozilla-crap /bfd3/davep
     # ln -s /bfd3/davep/mozilla-crap .mozilla-crap
     #          full-src             link-name
-EExecDashN
     EExec mv ${mv_opts} "${src}" "${link_target}" \
       && EExec ln -s ${ln_opts} "${link_target}" "${src}"
 }

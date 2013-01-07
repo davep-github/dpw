@@ -65,6 +65,9 @@ EExec_parse_option_str="nvq"
 EExec_parse()
 {
     local prog=""
+    # Can NOT use getopt here because if you use ganged variables then
+    # too may args will be shifted.
+    # Until I learn how to return a *properly quoted* "$@"
     for i in "$@"
     do
       case "$1" in
@@ -77,6 +80,22 @@ EExec_parse()
       shift
     done
     echo "$prog"
+}
+
+# Provide a little helper than removes the need to run the annoying
+# eexec_program everywhere. We return the number of ops consumed and the
+# caller can just shift that many times.
+EExec_parse_n()
+{
+    local prog=$(EExec_parse "$@")
+    local n=0
+    for op in $prog
+    do
+      "$op"
+      shift
+      ((++n))
+    done
+    echo $n
 }
 
 EExecNOP()

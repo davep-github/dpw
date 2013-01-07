@@ -8,12 +8,13 @@
 #
 
 source script-x
-eexec_program=$(EExec_parse "$@")
+progname=$(basename "$0")
 source eexec
+eexec_program=$(EExec_parse "$@")
 for op in $eexec_program
 do
-  $op
-  shift
+   $op
+   shift
 done
 unset eexec_program
 
