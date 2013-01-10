@@ -753,7 +753,7 @@ This can be callable.")
                        dp-filladapt-token-table-additions)
   (setq-default filladapt-mode t)
   (add-hook 'outline-mode-hook 'turn-off-filladapt-mode)
-  (setq filladapt-mode-line-string ""))
+  (setq filladapt-mode-line-string "Fa"))
 
 (require 'dp-hooks)
 

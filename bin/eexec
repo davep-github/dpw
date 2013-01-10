@@ -119,7 +119,7 @@ EExecDashN ()
     
     if [ "${1-}" == "-k" ]
     then
-	${EExecExporter} EExecEcho=EExecStderr_eko
+	${EExecExporter} EExecEcho=EExecStandardErr_eko
         shift
     else
         EExecVerbose
@@ -272,8 +272,7 @@ EExec()
 	$executor "$@" || {
 	    rc=$?
 	    [ -n "$EExecErrorReporter" ] && {
-		"$EExecErrorReporter" $rc $*
-		return $?
+		"$EExecErrorReporter" $rc "$@"
 	    }
 	    [ -z "$eexecContinue" ] && exit $rc
             [ -n "$fake_success_p" ] && rc=0

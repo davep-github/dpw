@@ -33,7 +33,7 @@ Usage_args_info=" <sandbox a.k.a client-name>"
 
 EExecVerbose
 std_options=""
-option_str="anvqw:sr:.t:T"
+option_str="anvqw:sr:.t:Ty"
 DPGOP_args_required=t
 source dp-getopt+.sh || exit 1
 
@@ -52,6 +52,7 @@ do
       -.) sandbox_name=$(basename $PWD);;
       -t) shift; client_template="$1";;
       -T) client_template=;;
+      -y) do_it_anyway_p=-y;;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";
@@ -67,6 +68,8 @@ shift
     read -e -p "I need a sandbox name: " sandbox_name
 }
 
+${do_it_anyway_p=}
+
 EExec cd $work_dir
 
 [ -d "$sandbox_name" ] && {
@@ -74,8 +77,8 @@ EExec cd $work_dir
     exit 1
 } 1>&2
 
-EExec mkdir -p $sandbox_name
-EExec cd $sandbox_name
+EExec ${do_it_anyway_p} mkdir -p $sandbox_name
+EExec ${do_it_anyway_p} cd $sandbox_name
 
 #mk.p4client $DASH_N_OPT -c
 : ${tmp_file:=$(mktemp -p ~/tmp dp4-new-clientXXXXX)}

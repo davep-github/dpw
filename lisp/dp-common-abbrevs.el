@@ -490,6 +490,11 @@
      dp-manual)
     (("br" "bug report")
      dp-manual)
+    (("style" "/home/dpanariti/work/doc/code-style.txt")
+     dp-manual)
+    (("style" "/home/dpanariti/work/doc/code-style.txt")
+     global)
+
     ((("ftci" "FTCI" "ftca" "FTCA") '=))
     ))
 ;; We could just use the non-void-ness of dp-common-abbrevs, but I

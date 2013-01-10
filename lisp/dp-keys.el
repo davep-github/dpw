@@ -349,7 +349,7 @@ Bind any keys in KEYS via `dp-define-keys'."
                           [(control meta ?p)] 'dp-set-extent-priority
                           [(control ?q)] 'dp-rw/ro-region
                           [(control right)] 'dp-slide-window-right
-                          [(meta ?-)] 'dp-maybe-kill-other-window-buffer
+                          [(meta ?-)] 'dp-meta-minus-other-window
                           [(meta ?a)] 'dp-auto-it
                           [(meta ?v)] 'dp-show-variable-value-and-copy
                           [(meta \')] 'dp-dupe-n-chars-prev-line

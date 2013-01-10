@@ -9401,6 +9401,12 @@ keep the file around."
           (message "Saving buffer after `dp-save-buffer'...done."))
         (dp-kill-this-buffer)))))
 
+(defun dp-meta-minus-other-window (&optional other-window-arg)
+  "Go to the specified window and invoke the [\(meta ?-)] function."
+  (interactive "p")
+  (other-window (prefix-numeric-value current-prefix-arg))
+  (dp-meta-minus))
+
 (defun dp-maybe-kill-buffer (buffer)
   "Kill buffer if local, else ask to kill for remote files.
 This can save bandwidth.  Also good if remote site is down, since we will
