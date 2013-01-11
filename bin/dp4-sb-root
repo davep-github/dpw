@@ -1,0 +1,21 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+: ${p4config:=$P4CONFIG}
+f=$(EExec -q find-up "$@" "${p4config}") && {
+    # Prevent a '.' when using EExec -n
+    # f is "", but there is no error and dirname "" --> '.'
+    [ -n "$f" ] && dirname "${f}"
+    exit 0
+}
+

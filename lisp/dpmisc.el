@@ -4574,7 +4574,8 @@ control construct)"
   (setq last-command-char ?\})
   (call-interactively 'c-electric-brace))
   
-(defvar dp-debugging-code-tag "@todo:debug:REMOVE"
+(defvar dp-debugging-code-tag (format "@todo:debug:REMOVE:%s"
+                                      (user-login-name))
   "Intro to debug code identifying comment.")
 
 (defun dp-find-debugging-code-tag ()
@@ -4633,13 +4634,7 @@ placed after the last line in the region."
     (newline)
     (c-indent-region (marker-position beg-mark) (point))
     (forward-line -2)
-    ;;(beginning-of-line) ; not needed w/forward-line
     (c-indent-line)
-;     (save-excursion
-;       (goto-char beg-mark)
-;       (dp-c-indent-for-comment)
-;       (goto-char end-mark)
-;       (dp-c-indent-for-comment))
     (set-marker beg-mark nil)
     (set-marker end-mark nil)))
 (defalias 'db 'dp-insert-debugging-code-tag)
@@ -11757,27 +11752,26 @@ another frame."
 (defun dp-kill-protect-status (&optional message fun fun-args)
   "Display Kill Protect(tm) status in BUFFER (current-buffer)."
   (interactive)
-  (setq-ifnil message 
-              (format "%s is Kill Protected(tm). But it has been buried." 
-                      (buffer-name)))
-  (let* ((this-buf (current-buffer))
-         (fun-name  (if fun
-                        (apply fun fun-args)
-                      (dp-bury-or-kill-buffer))))
-    (when (dp-buffer-live-p this-buf)
-      (message "%s%s" message (if fun-name
-                                (format " with `%s'." fun-name)
-                              "")))))
+  (let ((binding (key-binding [(meta ?-)]))
+        annotation)
+    (if (eq binding 'dp-bury-or-kill-buffer)
+        (setq annotation "")
+      (setq annotation "not "))
+    (message "%s is %skill protected, M-- binding is %s"
+             (buffer-name)
+             annotation
+             binding)))
 
 
 (defun dp-kill-protect (&optional buffer)
-  "Protect this buffer from being killed by setting Meta-- to `dp-bury-or-kill-buffer'."
+  "Protect this buffer from being killed by setting Meta-- to `dp-bury-or-kill-buffer'.
+BROKEN"
   (interactive)
   (when buffer
     (set-buffer buffer))
   ;; dp-bury-or-kill-buffer
   ;; Redefine (meta -) to not really kill the buffer.
-  (dp-define-buffer-local-keys '([(meta ?-)] dp-kill-protect-status) buffer))
+  (dp-define-buffer-local-keys '([(meta ?-)] 'dp-bury-or-kill-buffer) buffer))
 
 (dp-deflocal dp-use-whence-buffers-p nil
   "KEEP NIL... system is b0rked.

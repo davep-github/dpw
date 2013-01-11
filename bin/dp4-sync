@@ -3,24 +3,32 @@ source script-x
 progname="$(basename $0)"
 source eexec
 
-# Use my teeker program which saves stdin into a file like tee, but simple
+# Use my teeker program which saves stdin into a file like tee, but simply
 # ticks off chars to stdout using tikker. Makes for a lot less output but
 # gives feedback that something is happening.
 teekerer()
 {
-    teeker $teekerOpts "$@"
+    EExec -y teeker $teeker_opts "$@"
+}
+
+teekerer_sample()
+{
+    EExec -y teeker -s -i $teeker_interval "$@"
 }
 
 teeer()
 {
-    tee "$@"
+    EExec -y tee "$@"
 }
 
 p4DashN=
-teeFunc=teekerer
-teekerOpts=
+tee_func=teekerer
+teeker_opts=
+teeker_interval=100
 std_options=""
-option_str="nvqtsk:"
+option_str="nvqtsk:i:"
+long_options=("p4-n" "teeker-opts:" "tee:" "teeker-interval:")
+
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -29,9 +37,11 @@ do
       -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
       -v) VERBOSE="echo $progname: "; EExecVerbose;;
       -q) VERBOSE=":"; EExecQuiet;;
-      -t) teeFunc=teeer;;
-      -s) p4DashN=-n;;
-      -k) teekerOpts="$2"; shift;;
+      -t) tee_func=teeer;;
+      -s|--p4-n) p4DashN=-n;;
+      -k|--teeker-opts) shift; teeker_opts="$1";;
+      -i|--teeker-interval) shift; teeker_interval="$1";;
+      --tee) shift; tee_func="$1";;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";
@@ -41,14 +51,14 @@ do
     shift
 done
 
-: ${kwa_log_dir:=$(scsandbox -w $PWD)}
-: ${kwa_log_base:=p4-sync-}
+: ${kwa_log_dir:=$(scsandbox --root $PWD)}
+: ${kwa_log_base:=dp4-sync-}
 : ${kwa_log_name:=${kwa_log_dir}/${kwa_log_base}$(dp-std-timestamp)}
 
 # print log name before and after in case it is a long sync.
 echo "log file>${kwa_log_name}<"
-EExec p4 sync $p4DashN 2>&1 | $teeFunc "${kwa_log_name}"
+EExec p4 sync $p4DashN 2>&1 | $tee_func "${kwa_log_name}"
 echo "log in>${kwa_log_name}<"
 # Let me know if anything needs merging.
-EExec p4 resolve -n | $teeFunc -a "${kwa_log_name}"
+EExec p4 resolve -n | $tee_func -a "${kwa_log_name}"
 exit 0

@@ -233,10 +233,11 @@ EExec()
     # @todo XXX Is it worth it to do a full getopt?
     # Only of argv[1] has a leading `-'?
     local i
-    local eexecEcho=${EExecEcho}
-    local eexecShowOnly=${EExecShowOnly}
-    local eexecShowPrefix=${EExecShowPrefix}
-    local eexecContinue=${EExecContinue}
+    local eexecEcho="${EExecEcho}"
+    local eexecShowOnly="${EExecShowOnly}"
+    local eexecShowPrefix="${EExecShowPrefix}"
+    local eexecContinue="${EExecContinue}"
+    local eexecErrorReporter="${EExecErrorReporter}"
     local fake_success_p=
     local executor=
     ${EExecExporter} EExecEchoPrefix=$EExecEchoPrefixG
@@ -256,6 +257,7 @@ EExec()
               eexecShowPrefix=""
               ${EExecExporter} EExecEchoPrefix="y"
               ;;
+          -q) eexecErrorReporter=;;
           -x) shift; executor="$1";;
           -tcsh) executor=EExec_start_tcsh
                  ;;
@@ -271,8 +273,8 @@ EExec()
     then
 	$executor "$@" || {
 	    rc=$?
-	    [ -n "$EExecErrorReporter" ] && {
-		"$EExecErrorReporter" $rc "$@"
+	    [ -n "$eexecErrorReporter" ] && {
+		"$eexecErrorReporter" $rc "$@"
 	    }
 	    [ -z "$eexecContinue" ] && exit $rc
             [ -n "$fake_success_p" ] && rc=0

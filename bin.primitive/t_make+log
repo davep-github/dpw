@@ -1,7 +1,9 @@
 #!/bin/tcsh
-
+set echo
 # bin/t_make -clean
 # bin/t_make -skiprtl
 #( true || { echo "t_make -clean failed." ; exit 1 } echo "t_make -clean passed." ; true  || { echo "t_make -skiprtl failed." ; exit 1 }  echo "t_make -skiprtl passed." ) |& tee bin%t_make.`dp-std-timestamp`.out
 # Mr Joy, yer csh sucks.
-( bin/t_make -clean && bin/t_make -skiprtl ) | & tee make-`dp-std-timestamp`.out
+set log_file=make-`dp-std-timestamp`.out
+echo "log_file>$log_file<"
+( bin/t_make -clean && bin/t_make -skiprtl ) | & tee $log_file

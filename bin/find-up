@@ -1,17 +1,80 @@
 #!/usr/bin/env python
 
 import sys, os
+opath = os.path
+
+def make_path_from_components(components):
+    p = opath.sep.join(components)
+    return opath.normpath(opath.realpath(p))
+
+def find_up(file_name, stop_dir="/", start_dir=None):
+    #print >>sys.stderr, "start_dir>%s<" % (start_dir,)
+    #print >>sys.stderr, "stop_dir>%s<" % (stop_dir,)
+    if not start_dir:
+        start_dir = opath.curdir
+    start_dir = opath.normpath(opath.realpath(start_dir))
+    stop_dir = opath.normpath(opath.realpath(stop_dir))
+    #print >>sys.stderr, "start_dir>%s<" % (start_dir,)
+    #print >>sys.stderr, "stop_dir>%s<" % (stop_dir,)
+    # The start dir will only get shorter.
+    if len(stop_dir) > len(start_dir):
+        return None
+    if start_dir == opath.sep:
+        components = ['']
+    else:
+        components = start_dir.split(opath.sep)
+    while components:
+        #print >>sys.stderr, "components>%s<" % (components,)
+        pwd = make_path_from_components(components)
+        #print >>sys.stderr, "pwd>%s<" % (pwd,)
+        pn_comps = [pwd, file_name]
+        path_name = make_path_from_components(pn_comps)
+        #print >>sys.stderr, "path_name>%s<" % (path_name,)
+        if opath.isfile(path_name):
+            return path_name
+        #print >>sys.stderr, "pwd>%s<" % (pwd,)
+        #print >>sys.stderr, "stop_dir>%s<" % (stop_dir,)
+        if pwd == stop_dir:
+            #print >>sys.stderr, "stopping loop"
+            return None
+        components = components[:-1]
+    #print >>sys.stderr, "exiting loop"
+    return None
 
 def main(args):
-    print >>sys.stderr, "Nothing implemented yet."
-    sys.exit(99)
     import getopt
     highest_p = False
-    opts, args = getopt.getopt(sys.argv[1:], 'h')
+    stop_dir = "/"
+    start_dir = None                    # Use pwd.
+    # Print this when file is not found to provide positional info about failure.
+    placeholder = ""
+    opts, args = getopt.getopt(sys.argv[1:], 'hs:S:pP:')
     for o, v in opts:
         if o == '-h':
             highest_p = not highest_p
             continue
+        if o == '-S':
+            stop_dir = v
+            continue
+        if o == '-s':
+            start_dir = v
+            continue
+        if o == '-p':
+            placeholder = "//"
+            continue
+        if o == '-P':
+            placeholder = v
+            continue
+
+    num_not_found = 0
+    for file_name in args:
+        n = find_up(file_name, stop_dir=stop_dir, start_dir=start_dir)
+        if not n:
+            n = placeholder
+            num_not_found += 1
+        if n:
+            print "%s" % (n,)
+    sys.exit(num_not_found)
 
 if __name__ == "__main__":
     main(sys.argv)

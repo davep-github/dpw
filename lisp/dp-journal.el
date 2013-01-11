@@ -1454,7 +1454,6 @@ returning."
 (defun dpj-insert-sticky-variables-hack ()
   "Create a local variables hack block that make a journal sticky when it loads."
   (interactive)
-  (insert dpj-local-variables-hack-separator "\n")
   (dp-insert-local-variables-hack 
    '("eval: (dpj-stick-current-journal-file)")))
 
