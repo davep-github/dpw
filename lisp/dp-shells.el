@@ -746,36 +746,44 @@ And maybe having a line count print out periodically?
 Or write to a spill file.
 Or both.")
 
-(defun dp-limit-comint-output (s &optional max)
-  (if (or (not dp-shell-output-max-lines)
-          (< dp-shell-output-max-lines 0))
-      nil
-    (if (and dp-shell-output-max-lines
-             (< dp-shell-output-line-count (or max 
-                                               dp-shell-output-max-lines)))
-        (progn
-          (setq dp-shell-output-line-count (+ dp-shell-output-line-count
-                                              (dp-count-matches-string s))))
-      ;; !<@todo XXX see `dp-shell-ask-to-limit-comint-output-p'
-      (if (and dp-shell-ask-to-limit-comint-output-p
-               (not (y-or-n-p "Kill over large output command?")))
-          (setq dp-shell-output-max-lines -1)
-        (process-send-signal 'SIGINT nil 'CURRENT-GROUP)
-        (dmessage "siginting: pid: %s @ %s of %s lines." (process-id process)
-                  dp-shell-output-line-count
-                  dp-shell-output-max-lines)
-        (save-excursion
-          (dp-end-of-buffer)
-          (insert "\n\n*** TOO MANY OUTPUT LINES "
-                  (format "(dp-shell-output-max-lines: %d).  " 
-                          dp-shell-output-max-lines)
-                  "COMMAND ABORTED ***\n\n"))
-        (ding)
-        ;; Stop this repeating ferever.
-        (setq dp-shell-output-line-count 0)))))
+;;(defun dp-limit-comint-output (s &optional max)
+;;  )
+;;good riddance   (if (or (not dp-shell-output-max-lines)
+;;good riddance           (< dp-shell-output-max-lines 0))
+;;good riddance       nil
+;;good riddance     (if (and dp-shell-output-max-lines
+;;good riddance              (< dp-shell-output-line-count (or max 
+;;good riddance                                                dp-shell-output-max-lines)))
+;;good riddance         (progn
+;;good riddance           (setq dp-shell-output-line-count (+ dp-shell-output-line-count
+;;good riddance                                               (dp-count-matches-string s))))
+;;good riddance       ;; !<@todo XXX see `dp-shell-ask-to-limit-comint-output-p'
+;;good riddance       (if (and dp-shell-ask-to-limit-comint-output-p
+;;good riddance                (not (y-or-n-p "Kill over large output command?")))
+;;good riddance           (setq dp-shell-output-max-lines -1)
+;;good riddance         (process-send-signal 'SIGINT nil 'CURRENT-GROUP)
+;;good riddance         (dmessage "siginting: pid: %s @ %s of %s lines." (process-id process)
+;;good riddance                   dp-shell-output-line-count
+;;good riddance                   dp-shell-output-max-lines)
+;;good riddance         (save-excursion
+;;good riddance           (dp-end-of-buffer)
+;;good riddance           (insert "\n\n*** TOO MANY OUTPUT LINES "
+;;good riddance                   (format "(dp-shell-output-max-lines: %d).  " 
+;;good riddance                           dp-shell-output-max-lines)
+;;good riddance                   "COMMAND ABORTED ***\n\n"))
+;;good riddance         (ding)
+;;good riddance         ;; Stop this repeating ferever.
+;;good riddance         (setq dp-shell-output-line-count 0)))))
 
+(defun dp-shell-filter-proc (proc string)
+    (dp-limiting-process-filter proc string dp-original-shell-filter-function
+                                ;; Some average ? line length to concert to
+                                ;; characters.
+                                (and dp-shell-output-max-lines
+                                     (* 2 dp-shell-output-max-lines))))
+  
 (defun dp-set-shell-max-lines (max-lines)
-  "Set max lines per shell command output."
+  "Set max lines per shell command output and return it."
   (interactive 
    "sMaximum number of output lines per shell command (nil or < 0 --> unlimited; 0 --> default; 'fh --> current frame height)? ")
   (when (stringp max-lines)
@@ -785,8 +793,7 @@ Or both.")
          ((eq max-lines 'fh) (frame-height))
          ((eq max-lines nil) nil)
          ((numberp max-lines) max-lines)
-         (t (message "WARNING: I don't understand the arg: %s, var is unchanged.")
-            dp-shell-output-max-lines)))
+         (t dp-shell-output-max-lines-default)))
   (message "dp-shell-output-max-lines set to %s%s" 
            dp-shell-output-max-lines
            (if (or (not dp-shell-output-max-lines)
@@ -833,7 +840,7 @@ Or both.")
     (dp-maybe-add-compilation-minor-mode)
     ;;(font-lock-set-defaults)
     (dp-maybe-add-ansi-color)
-    (add-hook 'comint-output-filter-functions 'dp-limit-comint-output)
+;;good riddance     (add-hook 'comint-output-filter-functions 'dp-limit-comint-output)
     (add-hook 'comint-output-filter-functions 'comint-strip-ctrl-m))
   ;; something wipes this out after the call to comint-mode-hook and here,
   ;; so we do it again.
@@ -1051,10 +1058,12 @@ command position."
   "Number of lines ouput by the current command.")
 
 (dp-deflocal dp-shell-output-max-lines-default (* 3 16383)
-  "Maximum number of lines which may be output by a single shell command.")
+  "Maximum number of lines which is kept in each shell buffer.
+XXX @todo Limiter should be modified to handle lines.")
 
 (dp-deflocal dp-shell-output-max-lines dp-shell-output-max-lines-default
-  "*Max lines allowed to be output by a single command.
+  "*Number of lines which is kept in each shell buffer.
+XXX @todo Limiter should be modified to handle lines.
 NIL --> no limit.")
 
 (dp-deflocal dp-shell-send-input-sender 'dp-shell-send-input
@@ -2237,6 +2246,9 @@ It isn't pretty."
 (defvar dp-shells-shell<0>-names '((4) - nil 0 ; (Cup) (not arg) (Cu0p))
                                    primary 0th zeroth main first 1st)
   "Other names by which shell<0> can be selected.")
+
+(dp-deflocal dp-original-shell-filter-function nil
+  "So we can use it later.")
    
 ;;;###autoload
 (defun* dp-shell0 (&optional arg &key other-window-p name other-frame-p)
@@ -2329,6 +2341,11 @@ ARG is numberp:
       (add-local-hook 'kill-buffer-hook 
                       (lambda ()
                         (dp-save-shell-buffer-contents-hook nil t)))
+      ;; Set up a filter to prevent a flood of output from hanging us up.
+      (setq dp-original-shell-filter-function 
+            (process-filter (dp-get-buffer-process-safe)))
+      (set-process-filter (dp-get-buffer-process-safe) 'dp-shell-filter-proc)
+
       ;; Set the name once. All saves will pile up in the same file.  I've
       ;; added a manual save command and that will go there, too.  If shell
       ;; buffers get too big, then the performance begins to suck.  Many
@@ -2554,6 +2571,60 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 (defvar dp-gdb-file-history '()
   "Files on which we've run `dp-gdb'.")
 
+(dp-deflocal dp-gdb-buffer-max-size (* 45 3000)
+  "How big can the gdb buffer get?")
+
+(defun dp-limiting-process-filter (proc string original-filter
+                                   max-size &optional max-percentage)
+  "A process filter which limits the size of the process output buffer.
+PROC is the process, STRING is the string to filter, ORIGINAL-FILTER is the
+filter that would normally be called, MAX-SIZE is the maximum size in chars
+and MAX-PERCENTAGE is the percentage of MAX-SIZE is the desired number of
+chars that that will remain after the oldest output has been deleted.
+If MAX-SIZE is nil, do not limit the size.
+MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
+  (prog1
+      (when original-filter
+        (funcall original-filter proc string))
+    (save-excursion
+      (when max-size
+        (with-current-buffer (process-buffer proc)
+          (dp-restrict-buffer-growth max-size max-percentage))))))
+
+(defun dp-gdb-filter (proc string)
+  (dp-limiting-process-filter proc string 'gdb-filter
+                              dp-gdb-buffer-max-size))
+
+;;;###autoload
+(defun dp-gdb-naught (&optional name)
+  "Run gdb on program FILE in buffer *gdb-FILE*.
+The directory containing FILE becomes the initial working directory
+and source-file directory for GDB.  If you wish to change this, use
+the GDB commands `cd DIR' and `directory'."
+  (interactive)
+  (let* ((name (concat "gdb-" (or name "naught")))
+         (buffer-name (generate-new-buffer-name name))
+         ;; This is really stupid. We have to mimic the name make-comint will
+         ;; use, Make it, switch to it do junk, make the comint which will
+         ;; make the same buffer name and switch to it.  This is NOT mine. It
+         ;; is copped from `gdb'. LISP is, IIR a *functional* language.
+         (gdb-buffer-name (concat "*" buffer-name "*")))
+    (switch-to-buffer (get-buffer-create gdb-buffer-name))
+    (or (bolp) (newline))
+    (insert "Current directory is " default-directory "\n")
+    (apply 'make-comint
+           buffer-name
+           (substitute-in-file-name gdb-command-name)
+           nil
+           "-fullname"
+           nil)
+    (set-process-filter (get-buffer-process (current-buffer)) 'dp-gdb-filter)
+    (set-process-sentinel (get-buffer-process (current-buffer)) 'gdb-sentinel)
+    ;; XEmacs change: turn on gdb mode after setting up the proc filters
+    ;; for the benefit of shell-font.el
+    (gdb-mode)
+    (gdb-set-buffer)))
+
 ;;;###autoload
 (defun dp-gdb (&optional new-p path corefile)
   "Extension to gdb that:
@@ -2575,27 +2646,31 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
       ;; Toss a buffer with a dead gdb proc.
       (dp-bury-or-kill-process-buffer (dp-gdb-most-recent-buffer 
                                        :dead-or-alive-p t))))
-  (when new-p                           ; New can be changed above.
-    ;; Want to get here if new-p or no live proc buffers.
-    (let ((dp-gdb-recursing t))
-      ;; Let's grab the file name our-self, regardless of interactivity, so
-      ;; we can put it into our own history.
-      (setq-ifnil path (read-file-name "Run dp-gdb on file: " nil nil nil nil
-                                       'dp-gdb-file-history))
-      (gdb path corefile))
+  (if (eq new-p '-)
+      (dp-gdb-naught)
+    (when new-p                         ; New can be changed above.
+      ;; Want to get here if new-p or no live proc buffers.
+      (let ((dp-gdb-recursing t))
+        ;; Let's grab the file name our-self, regardless of interactivity, so
+        ;; we can put it into our own history.
+        (setq-ifnil path (read-file-name "Run dp-gdb on file: " nil nil nil nil
+                                         'dp-gdb-file-history))
+        (gdb path corefile)
+        (set-process-filter (get-buffer-process (current-buffer))
+                            'dp-gdb-filter))
 
-    (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-dead-buffers)
-    (dp-add-or-update-alist 'dp-gdb-buffers (buffer-name) 
-                            (or corefile 'dp-gdb))
-    (dp-add-to-history 'dp-gdb-buffer-history (buffer-name))
-    (when (boundp 'dp-gdb-commands)
-      ;; The node-name from locale-rcs will probably be used most.  But since
-      ;; I have the whole list easily available, I may as well allow gdb
-      ;; commands to be keyed to any of the locales.
-      (loop for key in (cons "." (dp-get-locale-rcs)) do
-        (loop for cmd in (cdr (assoc key dp-gdb-commands)) do
-          (insert cmd)
-          (comint-send-input))))))
+      (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-dead-buffers)
+      (dp-add-or-update-alist 'dp-gdb-buffers (buffer-name)
+                              (or corefile 'dp-gdb))
+      (dp-add-to-history 'dp-gdb-buffer-history (buffer-name))
+      (when (boundp 'dp-gdb-commands)
+        ;; The node-name from locale-rcs will probably be used most.  But since
+        ;; I have the whole list easily available, I may as well allow gdb
+        ;; commands to be keyed to any of the locales.
+        (loop for key in (cons "." (dp-get-locale-rcs)) do
+          (loop for cmd in (cdr (assoc key dp-gdb-commands)) do
+            (insert cmd)
+            (comint-send-input)))))))
 
 (defadvice gdb (around dp-advised-gdb activate)
   (dmessage "YOPP!")
@@ -2827,7 +2902,7 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
                                         gdb-command-name
                                         (substitute-in-file-name path)
                                         default-directory))
-      (set-process-filter proc 'gdb-filter)
+      (set-process-filter proc 'dp-gdb-filter)
       (set-process-sentinel proc 'gdb-sentinel)
       ;; XEmacs change: turn on gdb mode after setting up the proc filters
       ;; for the benefit of shell-font.el

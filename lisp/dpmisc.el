@@ -2814,21 +2814,23 @@ E.g.
 
 (defun xxx()
   (interactive)
-  (if (dp-region-active-p)
-      (dp-io-xxx)
-    ;; The doxygen element syntax is different when it comes after a line vs
-    ;; before it.
-    ;; e.g.
-    ;; /*!
-    ;;  *!@todo blah
-    ;;  */
-    ;; vs:
-    ;; bad_thing(tm);   //!<@todo.
-    ;; So fix it.
-    (dp-insert-for-comment+ "XXX " "@todo " :sep-char ""
-                            :doxy-prefix (if (dp-in-a-c*-comment)
-                                             ""
-                                           "!<"))))
+  (if (dp-in-c)
+      (if (dp-region-active-p)
+          (dp-io-xxx)
+        ;; The doxygen element syntax is different when it comes after a line vs
+        ;; before it.
+        ;; e.g.
+        ;; /*!
+        ;;  *!@todo blah
+        ;;  */
+        ;; vs:
+        ;; bad_thing(tm);   //!<@todo.
+        ;; So fix it.
+        (dp-insert-for-comment+ "XXX " "@todo " :sep-char ""
+                                :doxy-prefix (if (dp-in-a-c*-comment)
+                                                 ""
+                                               "!<")))
+    (insert "XXX @todo ")))
 
 (defvar dp-ifdef-debug-level 0
   "Current debug level to use in debug ifdefs.")
@@ -4692,10 +4694,17 @@ ARGS are passed thru to `dp-timestamp-string'."
 (dp-defaliases 'dpao 'dpasof 'dp-as/of 'as/of 'asof 
                'dp-insert-for-comment-as-of)
 
+(defun dp-at-this-time-string ()
+  (interactive)
+  (concat "at this time: " (dp-timestamp-string)))
+
 (defun dp-insert-for-comment-at-this-time ()
   (interactive)
   "Add something along the lines of 'at this time: <timestamp>"
-  (dp-insert-for-comment+ (concat "at this time: " (dp-timestamp-string))))
+  (if (dp-in-c)
+      (dp-insert-for-comment+ (dp-at-this-time-string))
+    (insert (dp-at-this-time-string))))
+  
 
 (dp-defaliases 'dp-at-this-time 'dp-att 'att
                'dp-insert-for-comment-at-this-time)
@@ -8334,8 +8343,9 @@ If BUF-OR-NAME is nil, use the current buffer's name."
 BUFFER is name or buffer object."
   (when (or default-p buffer)
     (setq-ifnil buffer (current-buffer))
-    (process-live-p (and (dp-buffer-live-p buffer)
-                         (get-buffer-process buffer)))))
+    (when (process-live-p (and (dp-buffer-live-p buffer)
+                               (get-buffer-process buffer)))
+      (get-buffer-process buffer))))
 
 (defalias 'dp-get-buffer-process-safe 'dp-buffer-process-live-p)
 
@@ -15262,6 +15272,21 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
     (save-buffers-kill-emacs))
   (message "Good thing I asked, huh?"))
 
+(defun dp-restrict-buffer-growth (threshold-chars &optional threshold-percent)
+  "Keep the size of a file with limits."
+  (interactive "NMax size? ")
+  (setq-ifnil threshold-percent 0.9)
+  (when (> (point-max) (max threshold-chars (point-min)))
+	;; Trim log to some percent of max size to avoid truncating on every
+	;; iteration.
+	(goto-char (max (- (point-max)
+			   (truncate (* threshold-percent 
+                                        threshold-chars)))
+			(point-min)))
+	(forward-line 1)
+ 	(delete-region (point-min) (point))
+        ;;(insert "================== 8>< ===================\n")
+        ))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;; @todo Write a loop which advises functions with simple push go back

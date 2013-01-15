@@ -9,3 +9,21 @@ qsubrc()
 
     ignoreeof=10
 }
+
+mego() 
+{ 
+    case "$1" in 
+        -*)
+            go-mgr "$@"
+        ;;
+        *)
+            local dest=$(me_dogo "$@") || {
+                echo "Cannot find>$@<"
+                return 1
+            } 1>&2
+            local oldPWD=$PWD;
+            pushd "${dest}" && export GoBack="${oldPWD}"
+        ;;
+    esac
+}
+

@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Do a go relative to the current source tree.
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+export domain="__ME_src"
+EExec relative_dogo "$@"
+

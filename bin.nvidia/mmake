@@ -13,5 +13,52 @@ do
 done
 unset eexec_program
 
-EExec $(depth)/bin/make
+: ${debug_p="-debug"}
+: ${purge_p="t"}
+: ${clean_p="t"}
+: ${build_program:="./build_gpu_multiengine.pl"}
 
+depth=$(depth)
+EExec ${depth}/bin/make
+
+banner "Build tests?"
+read -e -p "y -- default, also implies debug.
+d -- NO debug] 
+n -- Don't build
+? "
+
+continue=y
+while [ -n "${continue}" ]
+do
+  continue=
+  case "$REPLY" in
+      [Nn0f]|nil) exit 0;;
+      [Dd]) debug_p=;;
+      ""|[yY1t]) debug_p="-debug";;
+      *) echo "Unsupported option, try again." 1>&2
+         continue=t
+         ;;
+  esac
+done
+
+EExec cd "${depth}"
+
+[ -e "${build_program}" ] || {
+    echo "build_program>$build_program< does not exist."
+    exit 1
+} 1>&2
+
+[ -x "${build_program}" ] || {
+    echo "build_program>${build_program}< is not executable."
+    exit 1
+} 1>&2
+
+[ -n "${clean_p}" ] && {
+    EExec "${build_program}" clean
+}
+
+[ -n "${purge_p}" ] && {
+    EExec "${build_program}" purge
+}
+
+EExec "${build_program}" ${debug_p}

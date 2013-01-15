@@ -53,6 +53,7 @@ noErrors_p=
 
 EExecVerbose
 option_str="nvqkwpcrQq."
+long_options=("root")
 source dp-getopt+.sh || {
     # We will have had our Usage called.
     exit 1
@@ -72,6 +73,7 @@ do
       -p) verifyIsSandbox=t;;
       -c) returnPerforceClientName=t;;
       -r) relative_p=t;;
+      --root) kwa_work=$(dp4-sb-root);;
       -q) noErrors_p=t;;
       -.) kwa_work=$(dirname $PWD);;
       --) shift ; break ;;

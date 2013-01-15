@@ -114,12 +114,18 @@ arguments: (ARGS)
 
 ;;;***
 
-;;;### (autoloads (dpj-setup-invisibility dp-journal-mode dpj-visit-other-journal-file dp-journal2 dp-journal dpj-edit-journal-file dpj-mk-external-bookmark cxl dpj-clone-topic-and-link dpj-clone-topic dpj-goto-end-of-journal dpj-new-topic-other-window dpj-new-topic dp-add-elisp-journal-entry dpj-chase-link dpj-tidy-journals-keep dpj-tidy-journals dpj-grep-and-view-hits dpj-stick-current-journal-file) "dp-journal" "lisp/dp-journal.el")
+;;;### (autoloads (dpj-setup-invisibility dp-journal-mode dpj-visit-other-journal-file dp-journal2 dp-journal dpj-edit-journal-file dpj-mk-external-bookmark cxl dpj-clone-topic-and-link dpj-clone-topic dpj-goto-end-of-journal dpj-new-topic-other-window dpj-new-topic dp-add-elisp-journal-entry dpj-chase-link dpj-tidy-journals-keep dpj-tidy-journals dpj-grep-and-view-hits dpj-stick-current-journal-file dpj-stick-journal-file) "dp-journal" "lisp/dp-journal.el")
+
+(autoload 'dpj-stick-journal-file "dp-journal" "\
+Ass/2 way to make non-standard journal files a little less unusable.
+
+arguments: (&optional FILE-NAME UNSTICK-P DEFAULT-P)
+" nil nil)
 
 (autoload 'dpj-stick-current-journal-file "dp-journal" "\
 Ass/2 way to make non-standard journal files a little less unusable.
 
-arguments: (&optional UNSTICK-P)
+arguments: (&optional UNSTICK-P DEFAULT-P)
 " t nil)
 
 (autoload 'dpj-grep-and-view-hits "dp-journal" "\
@@ -319,7 +325,7 @@ arguments: (&optional IGNORE-EMBEDDED-BOOKMARKS-P)
 
 ;;;***
 
-;;;### (autoloads (dp-ssh-gdb dp-ssh dp-gdb dp-gdb-old dp-shell-other-window dp-shell dp-shell0 dp-lterm dp-cterm dp-start-term dp-python-shell dp-ssh-mode-hook dp-gdb-mode-hook dp-py-shell-hook dp-shell-goto-this-error dp-cscope-next-thing dp-next-error dp-set-compile-like-mode-error-function dp-reset-current-error-function dp-set-current-error-function dp-compilation-mode-hook dp-telnet-mode-hook dp-shell-mode-hook dp-comint-mode-hook dp-shells-mk-prompt-font-lock-regexp dp-shells-add-prompt-regexp shell-uninteresting-face) "dp-shells" "lisp/dp-shells.el")
+;;;### (autoloads (dp-ssh-gdb dp-ssh dp-gdb dp-gdb-naught dp-gdb-old dp-shell-other-window dp-shell dp-shell0 dp-lterm dp-cterm dp-start-term dp-python-shell dp-ssh-mode-hook dp-gdb-mode-hook dp-py-shell-hook dp-shell-goto-this-error dp-cscope-next-thing dp-next-error dp-set-compile-like-mode-error-function dp-reset-current-error-function dp-set-current-error-function dp-compilation-mode-hook dp-telnet-mode-hook dp-shell-mode-hook dp-comint-mode-hook dp-shells-mk-prompt-font-lock-regexp dp-shells-add-prompt-regexp shell-uninteresting-face) "dp-shells" "lisp/dp-shells.el")
 
 (defvar shell-uninteresting-face 'shell-uninteresting-face "\
 Face for shell output which is uninteresting.
@@ -502,10 +508,19 @@ arguments: (&optional ARG)
 arguments: (&optional NEW-P PATH COREFILE)
 " t nil)
 
+(autoload 'dp-gdb-naught "dp-shells" "\
+Run gdb on program FILE in buffer *gdb-FILE*.
+The directory containing FILE becomes the initial working directory
+and source-file directory for GDB.  If you wish to change this, use
+the GDB commands `cd DIR' and `directory'.
+
+arguments: (&optional NAME)
+" t nil)
+
 (autoload 'dp-gdb "dp-shells" "\
 Extension to gdb that:
-. Prefers the most recently used buffer if it's process is still live,
-. Else it asks for a buffer using a completion list of other gdb's,
+. Prefers the most recently used buffer if its process is still live,
+. Else it asks for a buffer using a completion list of other gdb buffers,
 . Else (or if nothing selected above) it starts a new gdb session.
 
 arguments: (&optional NEW-P PATH COREFILE)

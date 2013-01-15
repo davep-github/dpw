@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
-#set -x
-progname=$(basename $0)
-. script-x
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
 ENV_NAME_MIN_LEN=4
 flags='Ee'
 flags_set_p=
@@ -72,29 +82,33 @@ go_file()
 
 grep_for_dirname()
 {
-    local pat=""
-    local sep=""
-    if [ -n "$1" ]; then
-        pat="$1"
-        sep="|"
-        shift
-        for p in "$@"; do
-            pat="$pat$sep$p"
-        done
-    else
-        shift
-        pat="$1"
-    fi
-    go2env -L | egrep "$pat" 
+    {
+        local pat=""
+        local sep=""
+        if [ -n "$1" ]; then
+            pat="$1"
+            sep="|"
+            shift
+            for p in "$@"; do
+                p="$(normpath $p)/"
+                pat="$pat$sep$p"
+            done
+        else
+            shift
+            pat="$1"
+        fi
+        EExec go2env -L | EExec -0 egrep "$pat" 
+    } | sort | uniq
 }
 
 grep_for_pwdname()
 {
-    # Look for various versions of the current directory name.
-    grep_for_dirname "$PWD" "$(pwd)" 
-    pat="^($PWD|$(pwd)|$(realpath .))/? "
-    #echo "pat>$pat<"
-    grep_for_dirname "" "$pat"
+    {
+        # Look for various versions of the current directory name.
+        pat=":($PWD|$(pwd)|$(realpath .))/?"
+        #echo "pat>$pat<"
+        EExec -y -0 grep_for_dirname "" "$pat"
+    } | sort | uniq
 }
 
 delete_item()

@@ -123,7 +123,7 @@ running_as_script && {
 #e.g.# source dp-getopt+.sh
 #e.g.# for i in "$@"
 #e.g.# do
-#e.g.#   # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+#e.g.#   # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
 #e.g.#   case $1 in
 #e.g.#       # eexec support
 #e.g.#       -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff

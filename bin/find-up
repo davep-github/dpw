@@ -3,17 +3,28 @@
 import sys, os
 opath = os.path
 
+
+# canonicalize path to either be real or apparent
+def abs_canonicalize_path(p):
+    return opath.normpath(opath.abspath(p))
+
+def real_canonicalize_path(p):
+    return opath.normpath(opath.realpath(p))
+
 def make_path_from_components(components):
     p = opath.sep.join(components)
-    return opath.normpath(opath.realpath(p))
+    return canonicalize_path(p)
+
+# I made the symlinks for a reason.
+canonicalize_path = abs_canonicalize_path
 
 def find_up(file_name, stop_dir="/", start_dir=None):
     #print >>sys.stderr, "start_dir>%s<" % (start_dir,)
     #print >>sys.stderr, "stop_dir>%s<" % (stop_dir,)
     if not start_dir:
-        start_dir = opath.curdir
-    start_dir = opath.normpath(opath.realpath(start_dir))
-    stop_dir = opath.normpath(opath.realpath(stop_dir))
+        start_dir = os.environ["PWD"]   # This preserves link names.
+    start_dir = canonicalize_path(start_dir)
+    stop_dir = canonicalize_path(stop_dir)
     #print >>sys.stderr, "start_dir>%s<" % (start_dir,)
     #print >>sys.stderr, "stop_dir>%s<" % (stop_dir,)
     # The start dir will only get shorter.
@@ -48,7 +59,8 @@ def main(args):
     start_dir = None                    # Use pwd.
     # Print this when file is not found to provide positional info about failure.
     placeholder = ""
-    opts, args = getopt.getopt(sys.argv[1:], 'hs:S:pP:')
+    global canonicalize_path
+    opts, args = getopt.getopt(sys.argv[1:], 'hs:S:pP:ar')
     for o, v in opts:
         if o == '-h':
             highest_p = not highest_p
@@ -64,6 +76,12 @@ def main(args):
             continue
         if o == '-P':
             placeholder = v
+            continue
+        if o == '-r':
+            canonicalize_path = real_canonicalize_path
+            continue
+        if o == '-a':
+            canonicalize_path = abs_canonicalize_path
             continue
 
     num_not_found = 0

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+days=${1-1}
+mins=${2-0}
+echo $((days * 24 * 60 + mins))

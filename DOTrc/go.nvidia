@@ -12,9 +12,9 @@ Ee|weg|                  /home/dpanariti/work/info/examples/
 Ee|sb|                   /home/scratch.dpanariti_t124/2.hw.t124/
 Ee|sbap|                 /home/scratch.dpanariti_t124/2.hw.t124/hw/ap/
 Ee|bldfail|              /home/dpanariti/work/active/build/
-Ee|nvenv|envnv|          /home/dpanariti/.rc/env.nvidia
-Ee|nvalias|aliasnv|      /home/dpanariti/.rc/alias.nvidia
-Ee|nvfunc|funcnv|        /home/dpanariti/.rc/func.nvidia
+Ee|nvenv|envnv|          /home/dpanariti/.rc/env.nvidia/
+Ee|nvalias|aliasnv|      /home/dpanariti/.rc/alias.nvidia/
+Ee|nvfunc|funcnv|        /home/dpanariti/.rc/func.nvidia/
 
 #
 Ee|dotvnc|dvnc|vnc|   /home/dpanariti/.vnc/
@@ -22,6 +22,26 @@ Ee|dotvnc|dvnc|vnc|   /home/dpanariti/.vnc/
 
 Ee|scratch0|          /home/scratch.dpanariti_t124/
 Ee|scratch1|          /home/scratch.dpanariti_t124_1/
+
+
+# Sandbox relative dirs for various places in the source tree.
+# $(depth) --> //hw/ap
+# Our base: $(depth)../../
+# These are best used by a utility because the _ interferes with abbrev
+# expansion.
+# It's really not the ME root, but I'm an ME guy
+Ee|hw__ME_src|                hw/
+Ee|ap__ME_src|                hw/ap/
+Ee|diag__ME_src|              hw/ap/diag/
+Ee|tg__ME_src|                hw/ap/diag/testgen/
+Ee|tgen__ME_src|              hw/ap/diag/testgen/
+Ee|testgen__ME_src|           hw/ap/diag/testgen/
+Ee|drv__ME_src|               hw/ap/drv/
+Ee|me__ME_src|                hw/ap/drv/multiengine/
+Ee|multi__ME_src|             hw/ap/drv/multiengine/
+Ee|multiengine__ME_src|       hw/ap/drv/multiengine/
+Ee|drvapi__ME_src|            hw/ap/drv/multiengine/drvapi/
+Ee|hw__ME_src|                hw/
 
 Ee|sandbox0|sbox0|sb0|workspace0|ws0|                            ${scratch0}t124_0/
 Ee|sandbox0hw|sbox0hw|sb0hw|workspace0hw|ws0hw|hw0|              ${workspace0}hw/
@@ -58,6 +78,52 @@ Ee|debug1|       /home/scratch.dpanariti_t124_1/t124_1/debug/
 Ee|deb1|       /home/scratch.dpanariti_t124_1/t124_1/debug/
 Ee|heldtree1175158|       /home/scratch.autosubmit131/trees/tree2687131/hw/ap/diag/testgen/batch_ap_t124_fmodel_ar2_level_tegra_regress_tegra_gpu_multiengine_16223001_1356360378/tests/kepler_b_ogtest/00/00/64/000064/
 Ee|msenc0|       /home/scratch.dpanariti_t124/t124_0/hw/ap/drv/multiengine/drvapi/msenc/
-Ee|drvapi0|       /home/scratch.dpanariti_t124/t124_0/hw/ap/drv/multiengine/drvapi
-Ee|me0|       /home/scratch.dpanariti_t124/t124_0/hw/ap/drv/multiengine
-Ee|drv0|       /home/scratch.dpanariti_t124/t124_0/hw/ap/drv
+Ee|drvapi0|       /home/scratch.dpanariti_t124/t124_0/hw/ap/drv/multiengine/drvapi/
+Ee|me0|       /home/scratch.dpanariti_t124/t124_0/hw/ap/drv/multiengine/
+Ee|drv0|       /home/scratch.dpanariti_t124/t124_0/hw/ap/drv/
+
+# Bug 0 aliases. at this time: 2013-01-14T11:57:25 this refers to
+# /home/scratch.autosubmit79/trees/tree2706162
+Ee|b5158| /home/scratch.dpanariti_t124/t124_b0/
+Ee|bug5158| /home/scratch.dpanariti_t124/t124_b0/
+Ee|apb0| /home/scratch.dpanariti_t124/t124_b0/hw/ap/
+Ee|diagb0| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/
+Ee|sandboxb0diag| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/
+Ee|sbb0diag| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/
+Ee|sboxb0diag| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/
+Ee|sandboxb0testgen| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/testgen/
+Ee|sandboxb0tg| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/testgen/
+Ee|sbb0testgen| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/testgen/
+Ee|sbb0tg| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/testgen/
+Ee|sboxb0testgen| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/testgen/
+Ee|sboxb0tg| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/testgen/
+Ee|tgb0| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/testgen/
+Ee|tgenb0| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/testgen/
+Ee|workspaceb0testgen| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/testgen/
+Ee|workspaceb0tg| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/testgen/
+Ee|wsb0testgen| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/testgen/
+Ee|wsb0tg| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/testgen/
+Ee|workspaceb0diag| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/
+Ee|wsb0diag| /home/scratch.dpanariti_t124/t124_b0/hw/ap/diag/
+Ee|drvb0| /home/scratch.dpanariti_t124/t124_b0/hw/ap/drv/
+Ee|drvapib0| /home/scratch.dpanariti_t124/t124_b0/hw/ap/drv/multiengine/drvapi/
+Ee|ws5158| /home/scratch.dpanariti_t124/t124_b0/
+Ee|msencb0| /home/scratch.dpanariti_t124/t124_b0/hw/ap/drv/multiengine/drvapi/msenc/
+Ee|meb0| /home/scratch.dpanariti_t124/t124_b0/hw/ap/drv/multiengine/
+Ee|sandboxb0ap| /home/scratch.dpanariti_t124/t124_b0/hw/ap/
+Ee|sbb0ap| /home/scratch.dpanariti_t124/t124_b0/hw/ap/
+Ee|sboxb0ap| /home/scratch.dpanariti_t124/t124_b0/hw/ap/
+Ee|workspaceb0ap| /home/scratch.dpanariti_t124/t124_b0/hw/ap/
+Ee|wsb0ap| /home/scratch.dpanariti_t124/t124_b0/hw/ap/
+Ee|hwb0| /home/scratch.dpanariti_t124/t124_b0/hw/
+Ee|sandboxb0hw| /home/scratch.dpanariti_t124/t124_b0/hw/
+Ee|sbb0hw| /home/scratch.dpanariti_t124/t124_b0/hw/
+Ee|sboxb0hw| /home/scratch.dpanariti_t124/t124_b0/hw/
+Ee|workspaceb0hw| /home/scratch.dpanariti_t124/t124_b0/hw/
+Ee|wsb0hw| /home/scratch.dpanariti_t124/t124_b0/hw/
+Ee|sandboxb0| /home/scratch.dpanariti_t124/t124_b0/
+Ee|sbb0| /home/scratch.dpanariti_t124/t124_b0/
+Ee|sb5158| /home/scratch.dpanariti_t124/t124_b0/
+Ee|sboxb0| /home/scratch.dpanariti_t124/t124_b0/
+Ee|workspaceb0| /home/scratch.dpanariti_t124/t124_b0/
+Ee|wsb0| /home/scratch.dpanariti_t124/t124_b0/

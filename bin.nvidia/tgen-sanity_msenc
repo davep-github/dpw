@@ -62,4 +62,5 @@ EExec ./tgen.pl $clobber_opt $modsrunspace \
   -d hwApPath=`pwd`/../../ \
   -traceRoot "$trace_root" \
   -outDir $odir \
+  -clobber \
   $only_opt

@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# Do a go relative to the current source tree.
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+[ -z "$*" ] && {
+    echo "Destination directory abbrevs are needed."
+    exit 1
+} 1>&2
+
+: ${domain=""}
+: ${go_here_first=""}
+
+[ -n "$go_here_first" ] && {
+    cd $(dogo "$go_here_first")
+}
+sb_root=$(dp4-get-root)
+
+for dest in "$@"
+do
+  go_arg="${dest}${domain}"
+  go_val=$(dogo "$go_arg") || {
+      echo "Cannot find >$go_arg<"
+      exit 1
+  } 1>&2
+
+  [ "$go_arg" = "$go_val" ] && {
+      echo "WARNING: dogo returned input value unchanged>$go_val<"
+  } 1>&2
+
+  echo "${sb_root}/$go_val"
+done

@@ -746,7 +746,10 @@ ARG is numberp:
  ARG is >= 0: switch to that numbered shell.
  ARG is < 0: switch to shell buffer<\(abs ARG)>
  ARG memq `dp-shells-shell<0>-names' shell<0> in other window."
+"pmax: 1, p: 17428"
+"pmix: 1, pmax: 107367"
   (interactive "P")
+"del region: pmin: 1, p: 17492, remainder: 89984"
   (let* ((specific-buf-requested-p current-prefix-arg)
          (arg-specified-p (null (current-prefix-arg)))
          (pnv (cond
@@ -2657,3 +2660,62 @@ the GDB commands `cd DIR' and `directory'."
         (loop for cmd in (cdr (assoc key dp-gdb-commands)) do
           (insert cmd)
           (comint-send-input))))))
+
+========================
+Monday January 14 2013
+--
+# Make gdb buffer limit its size.
+# from log-message
+(defun dp-restrict-buffer-growth (threshold-chars &optional threshold-percent)
+  "Keep the size of a file with limits."
+  (interactive "NMax size? ")
+  (setq-ifnil threshold-percent 0.9)
+  (when (> (point-max) (max threshold-chars (point-min)))
+	;; Trim log to some percent of max size to avoid truncating on every
+	;; iteration.
+	(goto-char (max (- (point-max)
+			   (truncate (* threshold-percent 
+                                        threshold-chars)))
+			(point-min)))
+	(forward-line 1)
+        (dmessage "del region: pmin: %s, p: %s, remainder: %s" 
+                  (point-min) (point) (- (point-max) (point)))
+ 	(delete-region (point-min) (point))))
+
+(dp-restrict-buffer-growth 100000)
+
+(defun gdb (path &optional corefile)
+  "Run gdb on program FILE in buffer *gdb-FILE*.
+The directory containing FILE becomes the initial working directory
+and source-file directory for GDB.  If you wish to change this, use
+the GDB commands `cd DIR' and `directory'."
+  (interactive "FRun gdb on file: ")
+  (setq path (file-truename (expand-file-name path)))
+  (let ((file (file-name-nondirectory path)))
+    (switch-to-buffer (concat "*gdb-" file "*"))
+    (setq default-directory (file-name-directory path))
+    (or (bolp) (newline))
+    (insert "Current directory is " default-directory "\n")
+    (apply 'make-comint
+	   (concat "gdb-" file)
+	   (substitute-in-file-name gdb-command-name)
+	   nil
+	   "-fullname"
+	   "-cd" default-directory
+	   file
+	   (and corefile (list corefile)))
+    (set-process-filter (get-buffer-process (current-buffer)) 'gdb-filter)
+    (set-process-sentinel (get-buffer-process (current-buffer)) 'gdb-sentinel)
+    ;; XEmacs change: turn on gdb mode after setting up the proc filters
+    ;; for the benefit of shell-font.el
+    (gdb-mode)
+    (gdb-set-buffer)))
+
+
+nil
+
+
+========================
+Tuesday January 15 2013
+--
+

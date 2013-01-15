@@ -845,7 +845,7 @@ Also, leave the region active."
 (defun dp-c-end-of-defun (&optional arg real-bof)
   "Inverse of `dp-c-beginning-of-defun'."
   (interactive "_p")
-  (if (memq last-command '(dp-c-end-of-defun dp-scroll-down dp-scroll-up))
+  (if (memq last-command '(dp-c-beginning-of-defun dp-scroll-down dp-scroll-up))
       (progn
         (dp-pop-go-back)
         (setq this-command nil))

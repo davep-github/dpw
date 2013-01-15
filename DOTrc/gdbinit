@@ -1173,6 +1173,14 @@ document inittb
 Set as initb but using a tbreak. It is usually not useful after the initial break.
 end
 
+define meinit
+  initb
+  run
+end
+document meinit
+Initialize for Multiengine debugging.
+end
+
 # __________________gdb options_________________
 ### I use GDBHISTFILE #set history filename /
 set history save

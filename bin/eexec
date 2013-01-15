@@ -170,7 +170,7 @@ EExecDefErrorReporter ()
     rc=$1
     shift
     eMsg="$EExecProgName(EExec): ERROR: `date`, rc: $rc
-$* failed ${EExecMsg-}"
+\`$*' failed ${EExecMsg-}"
     echo "$eMsg" 1>&2
     [ -n "${EExecRCFile-}" ] && echo "$eMsg" >> $EExecRCFile
     ## Just report the news, don't make it. [ -z "${EExecContinue-}" ] && exit $rc
@@ -250,7 +250,7 @@ EExec()
               ;;
           -c) eexecContinue=t
               ;;
-          -C) eexecContinue=t
+          -C|-0) eexecContinue=t
               fake_success_p=y
               ;;
           -y) eexecShowOnly=""
@@ -273,11 +273,15 @@ EExec()
     then
 	$executor "$@" || {
 	    rc=$?
-	    [ -n "$eexecErrorReporter" ] && {
-		"$eexecErrorReporter" $rc "$@"
-	    }
-	    [ -z "$eexecContinue" ] && exit $rc
-            [ -n "$fake_success_p" ] && rc=0
+            if [ -z "$fake_success_p" ]
+            then
+                [ -n "$eexecErrorReporter" ] && {
+                    "$eexecErrorReporter" $rc "$@"
+                }
+                [ -z "$eexecContinue" ] && exit $rc
+            else
+                rc=0
+            fi
 	    return $rc
 	}
     elif [ -z "$eexecEcho" ]
