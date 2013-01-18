@@ -13,6 +13,12 @@ do
 done
 unset eexec_program
 
+#: ${sb=""}
+#export go_here_first="$sb"
 export domain="__ME_src"
-EExec relative_dogo "$@"
+relative_to=$(dp4-sb-root) || {
+    relative_to=$(depth)/../..
+}
+export relative_to
+EExec relative-dogo "$@"
 

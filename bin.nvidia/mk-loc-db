@@ -25,7 +25,7 @@ Usage_details="-n -- Show what would happen but don't do it. [eexec]
 -l|-d <dir-to-index> -- Build loc db from this tree.
 "
 # Example of arg parsing.
-option_str="nvqu:l:"
+option_str="nvqu:l:d:"
 source dp-getopt+.sh
 for i in "$@"
 do

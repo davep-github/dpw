@@ -1,42 +1,49 @@
 #!/bin/sh
 
-source script-x
-progname="$(basename $0)"
-source eexec
-set -u
 
-: ${GREP:=egrep}
-: ${src_dir=$HOME/work/active/current-sb}
-: ${LOCATE:=}
+sb=$(dp4-get-root)
+u=$(basename "$sb")
+locate -u "${u}" "$@"
+exit
 
-eexec_program=$(EExec_parse "$@")
-for op in $eexec_program
-do
-  $op
-  shift
-done
-unset eexec_program
+#testing above source script-x
+#testing above progname="$(basename $0)"
+#testing above source eexec
+#testing above set -u
 
-: ${DB:=loc.db}
-: ${file_list:=all-src-files}
+#testing above : ${GREP:=egrep}
+#testing above : ${src_dir=$HOME/work/active/current-sb}
+#testing above : ${LOCATE:=}
 
-# Different boxes have different locate executables.
-# Different executables have different file formats.
-[ -z "${LOCATE}" ] && {
-    help=$(locate --help)
+#testing above eexec_program=$(EExec_parse "$@")
+#testing above for op in $eexec_program
+#testing above do
+#testing above   $op
+#testing above   shift
+#testing above done
+#testing above unset eexec_program
 
-EExec -y cd ${src_dir}
-echo "Searching in $PWD"
+#testing above : ${DB:=loc.db}
+#testing above : ${file_list:=all-src-files}
 
-if [ -f "$DB" ]
-then
-    EExec_verbose_msg "Using locate."
-    EExec locate -d "$DB" "$@"
-elif [ -e "$file_list" ]
-then
-    EExec_verbose_msg "Using $GREP."
-    EExec $GREP "$@" "$file_list"
-else
-    echo 1>&2 "Cannot find db or list of files."
-    exit 1
-fi
+#testing above # Different boxes have different locate executables.
+#testing above # Different executables have different file formats.
+#testing above [ -z "${LOCATE}" ] && {
+#testing above     help=$(locate --help)
+#testing above }
+
+#testing above EExec -y cd ${src_dir}
+#testing above echo "Searching in $PWD"
+
+#testing above if [ -f "$DB" ]
+#testing above then
+#testing above     EExec_verbose_msg "Using locate."
+#testing above     EExec locate -d "$DB" "$@"
+#testing above elif [ -e "$file_list" ]
+#testing above then
+#testing above     EExec_verbose_msg "Using $GREP."
+#testing above     EExec $GREP "$@" "$file_list"
+#testing above else
+#testing above     echo 1>&2 "Cannot find db or list of files."
+#testing above     exit 1
+#testing above fi

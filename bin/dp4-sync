@@ -3,6 +3,7 @@ source script-x
 progname="$(basename $0)"
 source eexec
 
+
 # Use my teeker program which saves stdin into a file like tee, but simply
 # ticks off chars to stdout using tikker. Makes for a lot less output but
 # gives feedback that something is happening.
@@ -18,37 +19,40 @@ teekerer_sample()
 
 teeer()
 {
+    EExecDashN_p && {
+        set -- /dev/null
+    }
     EExec -y tee "$@"
 }
 
 : ${save_args_p=t}
-: ${save_args_at_root_p=t}
-: ${save_args_here=}
-tee_func=teekerer
+: ${sync_dash_n=}
+tee_func=teekerer_sample
 teeker_opts=
 teeker_interval=100
 std_options=""
 option_str="nvqtsk:i:"
-long_options=("teeker-opts:" "tee:" "teeker-interval:"
-    "no-save-args"
-    "save_args_here:"
-    "no-save-args-at-root")
+long_options=("teeker-opts:" "tee-func:" "teeker-interval:"
+    "sync-dash-n"
+    "sample" "tee" "teeker"
+    "no-save-args")
 
 source dp-getopt+.sh
 for i in "$@"
 do
   # do. e.g.  shift; $OPTION_ARG=$1;; to process options with arguments.
   case $1 in
-      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -n) EXEC=echo; EExecDashN; tee_func=teeer;; # Don't actually execute stuff
       -v) VERBOSE="echo $progname: "; EExecVerbose;;
       -q) VERBOSE=":"; EExecQuiet;;
-      -t) tee_func=teeer;;
+      -t|--tee) tee_func=teeer;;
       -k|--teeker-opts) shift; teeker_opts="$1";;
       -i|--teeker-interval) shift; teeker_interval="$1";;
       --no-save-args) save_args_p=;;
-      --no-save-args-at-root_p) save_args_at_root_p=;;
-      --save_args_here) shift; save_args_here="$1"; save_args_p=t;;
-      --tee) shift; tee_func="$1";;
+      --tee-func) shift; tee_func="$1";;
+      --sample) tee_func=teekerer_sample;;
+      --teeker) tee_func=teekerer;;
+      --sync-dash-n) sync_dash_n=-n;;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";
@@ -58,31 +62,25 @@ do
     shift
 done
 
-: ${kwa_log_dir:=$(scsandbox --root $PWD)}
+: ${kwa_log_root:=$(dp4-get-root)}
 : ${kwa_log_base:=dp4-sync-}
-: ${kwa_log_name:=${kwa_log_dir}/${kwa_log_base}$(dp-std-timestamp)}
+: ${kwa_log_dir:=${kwa_log_root}/${kwa_log_base}$(dp-std-timestamp)}
+: ${kwa_log_file:=${kwa_log_dir}/p4sync.log}
 EExec -y mkdir -p "${kwa_log_dir}"
 
-# print log name before and after in case it is a long sync.
-echo "log file>${kwa_log_name}<"
-[ -n "$save_args_p" ] && {
-    [ -z "$save_args_here" ] && {
-        if [ -n "$save_args_at_root_p" ]
-        then
-            save_args_here=$(depth)  # nVIDIA specific.
-        else
-            save_args_here="${kwa_log_dir}"
-        fi
-    }
-    echo_id save_args_here
-    EExec mkdir -p "${save_args_here}"
-    save_args_file="${save_args_here}/dp4-sync-args"
-    echo_id save_args_file
-    echo "p4 sync args:
+echo "log dir>${kwa_log_dir}<"
+{
+    # print log name before and after in case it is a long sync.
+    [ -n "$save_args_p" ] && {
+        save_args_file="${kwa_log_dir}/dp4-sync-args"
+        echo_id save_args_file
+        echo "p4 sync args:
 $@" >| "${save_args_file}"
-}
-EExec p4 sync "$@" 2>&1 | $tee_func "${kwa_log_name}"
-echo "log in>${kwa_log_name}<"
-# Let me know if anything needs merging.
-EExec p4 resolve -n | $tee_func -a "${kwa_log_name}"
+    }
+    EExec p4 sync $sync_dash_n "$@"
+    # Let me know if anything needs merging. -n --> just show problems.
+    EExec p4 resolve -n
+} 2>&1 | EExec -y $tee_func "${kwa_log_file}"
+
+echo "log dir>${kwa_log_dir}<"
 exit 0

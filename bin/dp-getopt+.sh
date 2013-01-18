@@ -59,7 +59,17 @@ fi
 DPGOP_Usage()
 {
     [[ -n "$@" ]] && echo "${progname}: $@"
-    echo -n "Usage: ${progname} [-$all_options]$DPGOP_Usage_args_info
+    set +u
+    if ((${#long_options[@]} > 0))
+    then
+        loo=$(addprefix_prefix_sep="" addprefix "--" "${long_options[@]}")
+        loo="[${loo}]"
+    else
+        loo=""
+    fi
+    set -u
+
+    echo -n "Usage: ${progname} [-$all_options]${loo}$DPGOP_Usage_args_info
 $DPGOP_Usage_synopsis
 $DPGOP_Usage_details"
 }

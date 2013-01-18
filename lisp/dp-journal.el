@@ -413,16 +413,16 @@ for example, a project notes file can be used.")
     (when (eq sticky-p t)
       (make-variable-buffer-local 'dpj-current-journal-file))
     (when (and default-p (local-variable-p 'dpj-current-journal-file nil t))
-      (setq-default dpj-current-journal-file file-name))
+      (setq-default dpj-current-journal-file file-name)))
   (setq dpj-current-journal-file file-name)
-  (message "New %s%scurrent journal file: %s" 
+  (message "New %s%scurrent journal file: %s"
            (if sticky-p
                "sticky "
              "")
            (if default-p
                "default "
              "")
-           dpj-current-journal-file)))
+           dpj-current-journal-file))
 
 (defun dpj-unstick-current-journal-file ()
   (dpj-set-current-journal-file nil 'un t))

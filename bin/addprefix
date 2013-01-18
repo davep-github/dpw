@@ -4,7 +4,7 @@ source script-x
 set -u
 progname="$(basename $0)"
 
-: ${addprefix_prefix_sep:=" "}
+: ${addprefix_prefix_sep=" "}
 
 # As per the gnu make function
 

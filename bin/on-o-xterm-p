@@ -1,0 +1,19 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+case "$HNAME" in
+    o-xterm-*) exit 0;;
+esac
+
+exit 1

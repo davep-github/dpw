@@ -105,7 +105,7 @@ grep_for_pwdname()
 {
     {
         # Look for various versions of the current directory name.
-        pat=":($PWD|$(pwd)|$(realpath .))/?"
+        pat=":($PWD|$(pwd)|$(realpath .))/ "
         #echo "pat>$pat<"
         EExec -y -0 grep_for_dirname "" "$pat"
     } | sort | uniq
@@ -208,7 +208,7 @@ do
 	    esac
 	    name=${1:-"$progname: no name specified"}
 	    shift # consume name
-	    if [ "$1" = '--' -a -n "$2" ]
+	    if [ "$1" = '--' -a -n "${2-}" ]
 	    then
 		    val=$2
 	    else

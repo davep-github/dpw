@@ -20,11 +20,11 @@ unset eexec_program
 
 : ${domain=""}
 : ${go_here_first=""}
+: ${relative_to="."}            # Would / be better?
 
 [ -n "$go_here_first" ] && {
     cd $(dogo "$go_here_first")
 }
-sb_root=$(dp4-get-root)
 
 for dest in "$@"
 do
@@ -38,5 +38,5 @@ do
       echo "WARNING: dogo returned input value unchanged>$go_val<"
   } 1>&2
 
-  echo "${sb_root}/$go_val"
+  echo "${relative_to}/$go_val"
 done

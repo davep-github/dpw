@@ -24,35 +24,41 @@ Ee|scratch0|          /home/scratch.dpanariti_t124/
 Ee|scratch1|          /home/scratch.dpanariti_t124_1/
 
 
+#######################################################################
 # Sandbox relative dirs for various places in the source tree.
 # $(depth) --> //hw/ap
 # Our base: $(depth)../../
 # These are best used by a utility because the _ interferes with abbrev
 # expansion.
-# It's really not the ME root, but I'm an ME guy
-Ee|hw__ME_src|                hw/
-Ee|ap__ME_src|                hw/ap/
-Ee|diag__ME_src|              hw/ap/diag/
-Ee|tg__ME_src|                hw/ap/diag/testgen/
-Ee|tgen__ME_src|              hw/ap/diag/testgen/
-Ee|testgen__ME_src|           hw/ap/diag/testgen/
-Ee|drv__ME_src|               hw/ap/drv/
-Ee|me__ME_src|                hw/ap/drv/multiengine/
-Ee|multi__ME_src|             hw/ap/drv/multiengine/
-Ee|multiengine__ME_src|       hw/ap/drv/multiengine/
-Ee|drvapi__ME_src|            hw/ap/drv/multiengine/drvapi/
-Ee|hw__ME_src|                hw/
+# It's really not the ME root, but I'm an ME guy.
+# For tot, the extra dot prevents a double slash at the end of the expansion.
+E|sb__ME_src|                ./
+E|hw__ME_src|                hw/
+E|ap__ME_src|                hw/ap/
+E|tot__ME_src|               hw/ap/
+E|diag__ME_src|              hw/ap/diag/
+E|tg__ME_src|                hw/ap/diag/testgen/
+E|tgen__ME_src|              hw/ap/diag/testgen/
+E|testgen__ME_src|           hw/ap/diag/testgen/
+E|drv__ME_src|               hw/ap/drv/
+E|me__ME_src|                hw/ap/drv/multiengine/
+E|meng__ME_src|              hw/ap/drv/multiengine/
+E|multi__ME_src|             hw/ap/drv/multiengine/
+E|multiengine__ME_src|       hw/ap/drv/multiengine/
+E|drvapi__ME_src|            hw/ap/drv/multiengine/drvapi/
+
+#######################################################################
 
 Ee|sandbox0|sbox0|sb0|workspace0|ws0|                            ${scratch0}t124_0/
 Ee|sandbox0hw|sbox0hw|sb0hw|workspace0hw|ws0hw|hw0|              ${workspace0}hw/
-Ee|sandbox0ap|sbox0ap|sb0ap|workspace0ap|ws0ap|ap0|              ${workspace0hw}ap/
+Ee|sandbox0ap|sbox0ap|sb0ap|workspace0ap|ws0ap|ap0|tot0|         ${workspace0hw}ap/
 Ee|sandbox0diag|sbox0diag|sb0diag|workspace0diag|ws0diag|diag0|  ${workspace0ap}diag/
 Ee|sandbox0tg|sbox0tg|sb0tg|workspace0tg|ws0tg|tgen0|tg0|        ${workspace0diag}testgen/
 Ee|sandbox0testgen|sbox0testgen|sb0testgen|workspace0testgen|ws0testgen| ${workspace0tg}
 
 Ee|sandbox1|sbox1|sb1|workspace1|ws1|                            ${scratch1}t124_1/
 Ee|sandbox1hw|sbox1hw|sb1hw|workspace1hw|ws1hw|hw1|              ${workspace1}hw/
-Ee|sandbox1ap|sbox1ap|sb1ap|workspace1ap|ws1ap|ap1|              ${workspace1hw}ap/
+Ee|sandbox1ap|sbox1ap|sb1ap|workspace1ap|ws1ap|ap1|tot1|         ${workspace1hw}ap/
 Ee|sandbox1diag|sbox1diag|sb1diag|workspace1diag|ws1diag|diag1|  ${workspace1ap}diag/
 Ee|sandbox1tg|sbox1tg|sb1tg|workspace1tg|ws1tg|tgen1|tg1|        ${workspace1diag}testgen/
 Ee|sandbox1testgen|sbox1testgen|sb1testgen|workspace1testgen|ws1testgen| ${workspace1tg}
@@ -127,3 +133,4 @@ Ee|sb5158| /home/scratch.dpanariti_t124/t124_b0/
 Ee|sboxb0| /home/scratch.dpanariti_t124/t124_b0/
 Ee|workspaceb0| /home/scratch.dpanariti_t124/t124_b0/
 Ee|wsb0| /home/scratch.dpanariti_t124/t124_b0/
+Ee|workdoc|wdoc|       /home/dpanariti/work/doc/

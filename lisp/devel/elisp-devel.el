@@ -2719,3 +2719,10 @@ nil
 Tuesday January 15 2013
 --
 
+(dp-mk-gdb-name)
+("gdb-naught" . "*gdb-naught*")
+
+
+
+set annotate 1
+

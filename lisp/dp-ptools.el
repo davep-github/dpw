@@ -5,7 +5,7 @@
 (dmessage "loading dp-ptools.el...")
 
 (define-error 'dp-*TAGS-aborted
-  "Badness in the guts of the (too) deeply nested *TAGS stiff." 
+  "Badness in the guts of the (too) deeply nested *TAGS stuff." 
   'error)
 
 ;;(dp-setup-hyperbole)

@@ -1,0 +1,46 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+exec_file=$(mktemp "$HOME/tmp/tcsh_run-XXXXXX")
+
+trap_fun()
+{
+    local sig="${1-}"
+    echo "sig>$sig<"
+    rm -f "$exec_file"
+    exit 1
+}
+
+for sig in 2 3 4 5 6 7 8 15
+do
+  trap "trap_fun $sig" $sig
+done
+
+: ${use_stdin_p=t}
+
+if [ -n "$use_stdin_p" ]
+then
+    echo '#!/bin/tcsh'
+    echo 'setenv SHELL "/bin/tcsh"'
+    cat
+fi >| "${exec_file}"
+
+chmod +x "${exec_file}"
+
+EExec_verbose_msg "exec_file>$(cat $exec_file)<"
+
+EExec "${exec_file}"
+
+EExec -y rm -f "${exec_file}"
+

@@ -87,7 +87,7 @@ do
       -q) VERBOSE=":"; EExecQuiet;;
 
       # Program options.
-      -b) shift; batch_dir=$1;;
+      -b) shift; batch_dir=$1; status_program_args="${batch_dir}";;
       -s) shift; sleep_interval=$1;;
       -c) shift; continue_regexp=$1;;
       -P) shift; final_batch_status_post_process=$1;;
@@ -108,6 +108,7 @@ done
 EExec_verbose_msg "batch_dir>${batch_dir}<"
 EExec_verbose_msg "sleep_interval>${sleep_interval}<"
 EExec_verbose_msg "continue_regexp>${continue_regexp}<"
+EExec_verbose_msg "status_program>${status_program}<"
 EExec_verbose_msg "status_program_args>${status_program_args}<"
 EExec_verbose_msg "continue_pred_args>${continue_pred_args}<"
 

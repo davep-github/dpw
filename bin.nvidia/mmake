@@ -13,52 +13,69 @@ do
 done
 unset eexec_program
 
-: ${debug_p="-debug"}
-: ${purge_p="t"}
-: ${clean_p="t"}
-: ${build_program:="./build_gpu_multiengine.pl"}
+cat_log()
+{
+    cat
+}
 
-depth=$(depth)
-EExec ${depth}/bin/make
+null_log()
+{
+    cat > /dev/null
+}
 
-banner "Build tests?"
-read -e -p "y -- default, also implies debug.
-d -- NO debug] 
-n -- Don't build
-? "
+tee_log()
+{
+    if [ -n "${log_file}" ]
+    then
+        tee "${log_file}"
+    else
+        cat_log
+    fi
+}
 
-continue=y
-while [ -n "${continue}" ]
+on-o-xterm-p && {
+    echo "$progname: Should not do this on an o-xterm box."
+    exit 1
+} 1>&2
+
+# Usage variable usage:
+Usage_args_info=' `depth`/bin/make-options-and-args...'
+Usage_synopsis='make using `depth`/bin/make
+'
+Usage_details="${EExec_parse_usage}
+--log-file <file> -- Log output to <file>.
+--logger <logger> -- Log with tee or cat.
+--null -- Send output to /dev/null
+"
+# Example of arg parsing.
+option_str="${EExec_parse_option_str}"
+long_options=("logger:" "log-file:" "null")
+source dp-getopt+.sh
+for i in "$@"
 do
-  continue=
-  case "$REPLY" in
-      [Nn0f]|nil) exit 0;;
-      [Dd]) debug_p=;;
-      ""|[yY1t]) debug_p="-debug";;
-      *) echo "Unsupported option, try again." 1>&2
-         continue=t
-         ;;
-  esac
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+
+      # Program options.
+      --logger) shift; logger="$1";;
+      --log-file) shift; log_file="$1";;
+      --null) log_file=/dev/null;;
+
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
 done
 
-EExec cd "${depth}"
+: ${log_file=}
+: ${logger:=cat_log}
 
-[ -e "${build_program}" ] || {
-    echo "build_program>$build_program< does not exist."
-    exit 1
-} 1>&2
-
-[ -x "${build_program}" ] || {
-    echo "build_program>${build_program}< is not executable."
-    exit 1
-} 1>&2
-
-[ -n "${clean_p}" ] && {
-    EExec "${build_program}" clean
-}
-
-[ -n "${purge_p}" ] && {
-    EExec "${build_program}" purge
-}
-
-EExec "${build_program}" ${debug_p}
+depth=$(depth)
+EExec ${depth}/bin/make "$@" 2>&1 | $logger

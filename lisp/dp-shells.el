@@ -777,7 +777,7 @@ Or both.")
 
 (defun dp-shell-filter-proc (proc string)
     (dp-limiting-process-filter proc string dp-original-shell-filter-function
-                                ;; Some average ? line length to concert to
+                                ;; Some average ? line length to convert to
                                 ;; characters.
                                 (and dp-shell-output-max-lines
                                      (* 2 dp-shell-output-max-lines))))
@@ -2595,6 +2595,31 @@ MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
   (dp-limiting-process-filter proc string 'gdb-filter
                               dp-gdb-buffer-max-size))
 
+(defun dp-mk-gdb-name (&optional name)
+  (let* ((name (concat "gdb-" (or name "naught")))
+         (buffer-name (generate-new-buffer-name name)))
+    (cons buffer-name (concat "*" buffer-name "*"))))
+
+;;;###autoload
+(defun dp-tack-on-gdb-mode (&optional buffer-or-name new-buffer-name)
+  (interactive)
+  (let ((buffer (dp-get-buffer buffer-or-name)))
+    (switch-to-buffer buffer)
+    (unless (eq new-buffer-name t)
+      (dp-gdb-issue-command "set annotate 1" nil (current-buffer))
+      (rename-buffer (cdr (dp-mk-gdb-name (or new-buffer-name
+                                              "tacked-gdb")))))
+    (set-process-filter (get-buffer-process buffer) 'dp-gdb-filter)
+    (set-process-sentinel (get-buffer-process buffer) 'gdb-sentinel)
+    (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-dead-buffers)
+    (dp-add-or-update-alist 'dp-gdb-buffers (buffer-name) 'dp-gdb)
+    (dp-add-to-history 'dp-gdb-buffer-history (buffer-name))
+    ;; XEmacs change: turn on gdb mode after setting up the proc filters
+    ;; for the benefit of shell-font.el
+    (gdb-mode)
+    (gdb-set-buffer)))
+
+
 ;;;###autoload
 (defun dp-gdb-naught (&optional name)
   "Run gdb on program FILE in buffer *gdb-FILE*.
@@ -2602,13 +2627,13 @@ The directory containing FILE becomes the initial working directory
 and source-file directory for GDB.  If you wish to change this, use
 the GDB commands `cd DIR' and `directory'."
   (interactive)
-  (let* ((name (concat "gdb-" (or name "naught")))
-         (buffer-name (generate-new-buffer-name name))
-         ;; This is really stupid. We have to mimic the name make-comint will
-         ;; use, Make it, switch to it do junk, make the comint which will
-         ;; make the same buffer name and switch to it.  This is NOT mine. It
-         ;; is copped from `gdb'. LISP is, IIR a *functional* language.
-         (gdb-buffer-name (concat "*" buffer-name "*")))
+  (let* ((names (dp-mk-gdb-name name))
+         (buffer-name (car names))
+         (gdb-buffer-name (cdr names)))
+    ;; This is really stupid. We have to mimic the name make-comint will
+    ;; use, Make it, switch to it do junk, make the comint which will
+    ;; make the same buffer name and switch to it.  This is NOT mine. It
+    ;; is copped from `gdb'. LISP is, IIR a *functional* language.
     (switch-to-buffer (get-buffer-create gdb-buffer-name))
     (or (bolp) (newline))
     (insert "Current directory is " default-directory "\n")
@@ -2646,9 +2671,9 @@ the GDB commands `cd DIR' and `directory'."
       ;; Toss a buffer with a dead gdb proc.
       (dp-bury-or-kill-process-buffer (dp-gdb-most-recent-buffer 
                                        :dead-or-alive-p t))))
-  (if (eq new-p '-)
-      (dp-gdb-naught)
-    (when new-p                         ; New can be changed above.
+  (when new-p                         ; New can be changed above.
+    (if (eq new-p '-)
+          (dp-gdb-naught)
       ;; Want to get here if new-p or no live proc buffers.
       (let ((dp-gdb-recursing t))
         ;; Let's grab the file name our-self, regardless of interactivity, so
@@ -2657,7 +2682,7 @@ the GDB commands `cd DIR' and `directory'."
                                          'dp-gdb-file-history))
         (gdb path corefile)
         (set-process-filter (get-buffer-process (current-buffer))
-                            'dp-gdb-filter))
+                            'dp-gdb-filter)))
 
       (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-dead-buffers)
       (dp-add-or-update-alist 'dp-gdb-buffers (buffer-name)

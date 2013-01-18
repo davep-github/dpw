@@ -15,6 +15,9 @@ Usage_details="-n -- Show what would happen but don't do it. [eexec]
 -d <db> -- Locate database to use.
 -u <uniqifier> -- Uniquifier for dbs in standard dir.
 "
+
+LOC_BIN=$(which-locate --program)
+
 # Example of arg parsing.
 option_str="nvqu:d:"
 source dp-getopt+.sh
@@ -30,7 +33,11 @@ do
       # Program options.
       -d) shift; DB=$1;;
       -u) shift; uniqifier=$1;;
-      --help) Usage; exit 0;;
+      --help) Usage;
+              echo
+              echo "***** Help for real locate[$LOC_BIN] *****";
+              $LOC_BIN --help;
+              exit 0;;
       --) shift ; break ;;
       *) echo 1>&2 "Unsupported option>$1<"
          exit 1;;
@@ -46,7 +53,5 @@ done
 [ "$uniqifier" = "." ] && uniqifier=$(basename $PWD)
 
 : ${DB:=$(mk-loc-db-name -u "$uniqifier")}
-
-LOC_BIN=$(which-locate --program)
 
 EExec "$LOC_BIN" -d "$DB" "$@"

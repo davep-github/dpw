@@ -8,10 +8,9 @@ progname="$(basename $0)"
 # Usage variable usage:
 Usage_args_info=" <tgen-level-test>..."
 Usage_synopsis="Run tgen levels one at a time using a consistent set of vars.
+See also tgen.pl and testgen.pl for additional ops.
 "
-Usage_details="-n -- Show what would happen but don't do it. [eexec]
--v -- Be verbose about it. [eexec]
--q -- Anti-verbose. [eexec]
+Usage_details="${EExec_parse_usage}
 -w -- Wait for completion rather than submitting to LSF.
 -T <tgen-opt> -- Add value to an additional string of tgen options.
 -C -- Clear clobber opt.
@@ -20,9 +19,12 @@ Usage_details="-n -- Show what would happen but don't do it. [eexec]
 -c <chip> -- Chip name/type.
 -t <target> -- E.g. FMODEL.
 -d <???> -- Default is hwApPath=$(pwd)/../../
+--wait -- Run synchronously. Implies --nomail. --mail after this will override.
+--nomail -- No status/results mail is sent upon completion.
+--mail -- Not --nomail.
 "
 # Example of arg parsing.
-option_str="nvqwT:Cl:r:c:t:d:"
+option_str="${EExec_parse_option_str}wT:Cl:r:c:t:d:"
 long_options=("wait"
 "tgen-opt:"
 "clobber"
@@ -31,11 +33,14 @@ long_options=("wait"
 "chip:"
 "target:"
 "log-dir:"
-"log-base:")
+"log-base:"
+"nomail"
+"mail")
 
 : ${default_level=$(pwd)/config/levels/tegra/regress_tegra_gpu_multiengine}
 : ${user_levels=}
 : ${user_tgen_opts=}
+: ${mail_opt=}                  # Whatever tgen*'s default is.
 
 source dp-getopt+.sh
 for i in "$@"
@@ -48,7 +53,8 @@ do
       -q) VERBOSE=":"; EExecQuiet;;
 
       # Program options.
-      -w|--wait) wait_opt=-wait;;
+      # No mail if we're waiting. Can be turned on by a following --mail.
+      -w|--wait) wait_opt=-wait; mail_opt="-nomail";;
       -T|--tegn-opt) shift; user_tgen_opts="$user_tgen_opts $1";;
       -C|--clobber) clobber_opt=;;
       -l|--level) shift; llist=$(echo "$1" | sed -r 's/,/ /g')
@@ -59,6 +65,8 @@ do
       -d) shift; d_opt="$1";;
       --log-dir) shift; user_log_dir="$1";;
       --log-base) shift; log_dir_base="$1";;
+      --nomail) mail_opt=;;
+      --mail) mail_opt="-mail";;
       --) shift ; break ;;
       *) echo 1>&2 "Unsupported option>$1<"
          exit 1;;
@@ -133,7 +141,9 @@ do
         out_dir="${log_prefix}/${timestamp}/${test_name}${wait_opt}.out"
         out_dir=$(normpath "$out_dir")
     fi
+    
     EExec -y mkdir -p $(dirname "$out_dir")
+    echo "$out_dir" >| last_out_dir
     
     EExec ./tgen.pl \
       ${target_opt} \
@@ -144,6 +154,7 @@ do
       -only "$test_name" \
       -outDir "$out_dir" \
       ${wait_opt} \
+      ${mail_opt} \
       ${clobber_opt} \
       ${tgen_opts}
   done

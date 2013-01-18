@@ -1,4 +1,4 @@
-personal_ws-1.1 en 208
+personal_ws-1.1 en 210
 www
 psionics
 pinouts
@@ -34,10 +34,11 @@ colour
 internet
 com
 Korn
+GPU
 Effexor
 symlink
-QOS
 LANai
+QOS
 KDE
 maki
 nuked
@@ -101,19 +102,20 @@ SVR
 Debian
 strangelove
 combinable
+ifdefs
 UnixWare
 rpc
 RPG
 Firefox
 Scala
 mvsik
-Skype
 davep
+Skype
 DVD
 Marvasti
 SMP
-Radeon
 SunOS
+Radeon
 Cirith
 Singlepower
 SPARC
@@ -152,13 +154,13 @@ Daytona
 DASD
 getmail
 functor
-Iannucci
 online
 inline
+Iannucci
 ketamine
-immersive
 Amarok
 AmaroK
+immersive
 VFS
 NewScientist
 Stereophile
@@ -179,8 +181,8 @@ vilya
 xemacs
 XEmacs
 VPN
-Sennheiser
 Solaris
+Sennheiser
 ethernet
 phishing
 argv
@@ -188,8 +190,8 @@ VxWorks
 slashdotted
 ECMA
 Xenix
-AGP
 Elika
+AGP
 args
 AIX
 lbns
