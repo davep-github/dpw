@@ -15284,9 +15284,23 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
                                         threshold-chars)))
 			(point-min)))
 	(forward-line 1)
+        (dmessage "dp-restrict-buffer-growth, pt-min: %s, pt: %s, pt-max: %s"
+                  (point-min) (point) (point-max))
  	(delete-region (point-min) (point))
-        ;;(insert "================== 8>< ===================\n")
+        (insert "================== 8>< ===================\n")
         ))
+
+(defun dp-warn-if-empty (msg &optional warning-type)
+  "Warn about empty files. 
+Asking a remote editing server to edit a local file results in editing an empty
+file."
+  (when (= (point-min) (point-max))
+    (dp-ding-and-message "Empty buffer: %s" msg)
+    (cond
+     ((eq warning-type 'warn)
+      (warn "Empty buffer: %s" msg))
+     ((eq warning-type 'error)
+      (error 'invalid-operation (format "Empty buffer: %s" msg))))))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;; @todo Write a loop which advises functions with simple push go back

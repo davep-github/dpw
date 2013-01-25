@@ -2602,6 +2602,7 @@ MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
 
 ;;;###autoload
 (defun dp-tack-on-gdb-mode (&optional buffer-or-name new-buffer-name)
+  "Major hack to change a shell buffer which is running gdb into a gdb-mode buffer."
   (interactive)
   (let ((buffer (dp-get-buffer buffer-or-name)))
     (switch-to-buffer buffer)
@@ -2622,16 +2623,15 @@ MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
 
 ;;;###autoload
 (defun dp-gdb-naught (&optional name)
-  "Run gdb on program FILE in buffer *gdb-FILE*.
-The directory containing FILE becomes the initial working directory
-and source-file directory for GDB.  If you wish to change this, use
-the GDB commands `cd DIR' and `directory'."
+  "Run gdb on nothing. 
+Useful for creating a gdb session from which you can attach to another
+running process."
   (interactive)
   (let* ((names (dp-mk-gdb-name name))
          (buffer-name (car names))
          (gdb-buffer-name (cdr names)))
     ;; This is really stupid. We have to mimic the name make-comint will
-    ;; use, Make it, switch to it do junk, make the comint which will
+    ;; use, Make it, switch to it, do junk, make the comint which will
     ;; make the same buffer name and switch to it.  This is NOT mine. It
     ;; is copped from `gdb'. LISP is, IIR a *functional* language.
     (switch-to-buffer (get-buffer-create gdb-buffer-name))

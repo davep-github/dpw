@@ -11,7 +11,7 @@
  '(buffers-menu-sort-function 'sort-buffers-menu-alphabetically)
  '(cal-tex-diary t)
  '(cvs-allow-dir-commit t)
- '(dabbrev-ignored-buffer-regexps '("TAGS\\(<.*>\\)")
+ '(dabbrev-ignored-buffer-regexps '("TAGS\\(<.*>\\)?")
 )
  '(default-toolbar-position 'left)
  '(dired-find-subdir t)

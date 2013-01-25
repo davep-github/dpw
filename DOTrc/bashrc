@@ -739,4 +739,5 @@ unset sudo_bash_env
 dp_set_x_fini
 export DP_BASHRC_EXECUTION_COMPLETED=t
 
+unset EExecProgName
 true

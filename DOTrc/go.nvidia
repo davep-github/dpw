@@ -36,6 +36,8 @@ E|sb__ME_src|                ./
 E|hw__ME_src|                hw/
 E|ap__ME_src|                hw/ap/
 E|tot__ME_src|               hw/ap/
+E|TOT__ME_src|               hw/ap/
+E|topoftree__ME_src|         hw/ap/
 E|diag__ME_src|              hw/ap/diag/
 E|tg__ME_src|                hw/ap/diag/testgen/
 E|tgen__ME_src|              hw/ap/diag/testgen/
@@ -134,3 +136,5 @@ Ee|sboxb0| /home/scratch.dpanariti_t124/t124_b0/
 Ee|workspaceb0| /home/scratch.dpanariti_t124/t124_b0/
 Ee|wsb0| /home/scratch.dpanariti_t124/t124_b0/
 Ee|workdoc|wdoc|       /home/dpanariti/work/doc/
+Ee|etc|       /home/dpanariti/etc/
+Ee|dpsw|       /home/dpanariti/sw/

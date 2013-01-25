@@ -5,30 +5,69 @@ source eexec
 set -u
 progname="$(basename $0)"
 
-eexec_program=$(EExec_parse "$@")
-for op in $eexec_program
-do
-  $op
-  shift
-done
-unset eexec_program
-
 # qsub -q o_pri_interactive_cpu_2G -P t124 -cwd $PWD -Is $SHELL -l
 # dpxx -B linen -- qsub -q o_pri_interactive_cpu_2G -P t124 -cwd $PWD -Is $SHELL -l
 : ${queue:=o_pri_interactive_cpu_2G}
-: ${dashP:=t124}
+: ${project:=t124}
 : ${cwd:=${PWD}}
 : ${shell:=${SHELL:=/bin/bash}}
 : ${dash_l=-l}
+: ${dash_m=}
 : ${bg:=linen}
 : ${fg:=black}
+
+# Usage variable usage:
+Usage_args_info=" extra-qsub-parameters"
+Usage_synopsis="Start a qsub process with useful defaults in a dpxx(dp1) window.
+"
+Usage_details="${EExec_parse_usage}
+-P <project> -- qsub project. Default[$project].
+-Q <queue> -- qsub queue. Default[$queue].
+-c <cwd> -- Change dir to <cwd> before running. Default[\$PWD].
+-s <shell> -- Use this as the shell.
+-l -- Do not pass -l to qsub. Default[$dash_l].
+-m <m-opt> -- Pass -m <m-opt> to qsub. Default:[].
+-b <bg-color> -- Use <bg-color> as bg color of the xterm. Default[$bg].
+-f <fg-color> -- Use <fg-color> as fg color of the xterm. Default[$fg].
+"
+# Example of arg parsing.
+option_str="q:nvP:Qc:s:lm:b:f:"
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -Q) VERBOSE=":"; EExecQuiet;;
+
+      # Program options.
+      -P) shift; project="${1}";;
+      -q) shift; queue="${1}";;
+      -c) shift; cwd="${1}";;
+      -s) shift; shell="${1}";;
+      -l) dash_l=;;
+      -m) shift; dash_m="-m ${1}";;
+      -b) shift; bg="${1}";;
+      -f) shift; fg="${1}";;
+
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+
 
 # For some reason (to be looked into) in a dpxx(dp1) term, $SHELL is "bash",
 # just "bash", which can cause problems. So we add a path if it looks like
 # one is needed.
 case "$shell" in
-    sh|bash) shell=/bin/bash;;
-    *);;
+    /*) ;;
+    *) shell=$(sp -1 $shell) || shell=/bin/bash;;
 esac
 
 EExec dpxx \
@@ -37,8 +76,9 @@ EExec dpxx \
     -- \
     qsub \
        -q "$queue" \
-       -P "$dashP" \
+       -P "$project" \
        -cwd "$cwd" \
        -Is "$shell" \
        $dash_l \
+       $dash_m \
        "$@"

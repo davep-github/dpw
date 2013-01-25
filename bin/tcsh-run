@@ -12,7 +12,7 @@ do
 done
 unset eexec_program
 
-exec_file=$(mktemp "$HOME/tmp/tcsh_run-XXXXXX")
+exec_file=$(mktemp "$HOME/tmp/${progname}-XXXXXX")
 
 trap_fun()
 {
@@ -38,7 +38,9 @@ fi >| "${exec_file}"
 
 chmod +x "${exec_file}"
 
-EExec_verbose_msg "exec_file>$(cat $exec_file)<"
+EExec_verbose_msg "exec_file[$exec_file]>"
+cat $exec_file
+EExec_verbose_msg "<exec_file"
 
 EExec "${exec_file}"
 

@@ -256,10 +256,10 @@ Eg, via `hack-local-variables', hook, magic.")
       (unless (memq last-command '(ecf ecf2))
         (dp-push-go-back "ecf"))
       (funcall find-file-func co-file)
+      (setq dp-ecf-whence-marker whence)
       (when search-re
         (beginning-of-line)
-        (dp-search-re-with-wrap search-re))
-      (setq dp-ecf-whence-marker whence))))
+        (dp-search-re-with-wrap search-re)))))
 
 ;; 1 def, 2 refs
 (defvar dp-fixed-corresponding-files nil
@@ -276,15 +276,23 @@ Eg, via `hack-local-variables', hook, magic.")
 (defun dp-edit-corresponding-file (&optional find-symbol-p find-file-func)
   "Call `dp-find-corresponding-file' using `find-file' for FIND-FILE-FUNC.
 1 C-u says look for symbol at point in the current file, in the new file.
-2 C-u says set dp-ecf-whence-marker to nil."
+2 C-u says set dp-ecf-whence-marker to nil.
+3 C-- says return whence we came, if `dp-ecf-whence-marker' is set."
   (interactive "P")
-  (when (C-u-p 2 find-symbol-p)
-    (setq dp-ecf-whence-marker nil
-          find-symbol-p t))
-  (dp-find-corresponding-file nil (or find-file-func 'dp-find-file-this-window)
-                              (when find-symbol-p
-                                (format "\\<\\(%s\\)\\>" 
-                                        (symbol-near-point)))))
+  (dmessage "Do a \"find-up\" for include dirs?")
+  (if (Cu--p)
+      (let ((whence (point-marker)))
+        (message "Returning whence we came.")
+        (dp-ecf-return-whence)
+        (setq dp-ecf-whence-marker whence))
+    (when (C-u-p 2 find-symbol-p)
+      (setq dp-ecf-whence-marker nil
+            find-symbol-p t))
+    (dp-find-corresponding-file nil (or find-file-func 'dp-find-file-this-window)
+                                (when find-symbol-p
+                                  (format "\\<\\(%s\\)\\>" 
+                                          (symbol-near-point))))))
+
 (defalias 'ecf 'dp-edit-corresponding-file)
 
 (defun dp-edit-cf-other-window (&optional find-symbol-p)

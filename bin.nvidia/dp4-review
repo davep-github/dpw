@@ -4,20 +4,40 @@ source script-x
 set -u
 progname="$(basename $0)"
 source eexec
-eexec_program=$(EExec_parse "$@")
-for op in $eexec_program
-do
-  $op
-  shift
-done
-unset eexec_program
+
+# Streamline access to p4review.pl
+
+# Submission example
+#perl ${P4_ROOT}/sw/main/apps/p4review/p4review.pl -save \
+#    -server -uploadcmd 'curl -u svcsw:Gforcetop#1 --upload-file' \
+#    $CHANGELIST
+
+#perl ${P4_ROOT}/sw/main/apps/p4review/p4review.pl \
+#    -downloadcmd "wget --http-user=svcsw --http-passwd=Gforcetop#1" \
+#    -diff p4merge -autoreview $FILENAME
+
+# Review example:
+#perl ~/code/sw/main/apps/p4review/p4review.pl \
+#    -downloadcmd "curl -u svcsw:Gforcetop#1 http://nvp4review/p4review/$FILE -o $FILE" \
+#    [-diff p4merge] [-autoreview] $FILE
+
+
 
 : ${P4_SW_ROOT:=$HOME/sw}
 : ${DEFAULT_p4review_repository:="http://nvp4review/p4review"}
+: ${password='Gforcetop#1'}
 : ${p4r_opts=}
 force_fetch_p=
 force_no_fetch_p=
-guess_location_p=t
+just_fetch_p=
+fetch_to_file=
+guess_location_p=t              # Guess from file name/syntax. Noto Implemento.
+save_p=                         # Save to server
+save_opt=                       # Complete option.
+creat_p=                        # Make a new .p4r
+review_p=t                      # By default, we'll be reviewing.
+verbatim_p=
+: ${zipdir_opt=}                # Will look like p4 option: -zipdir <zd>
 
 # Usage variable usage:
 Usage_args_info=" .p4r-files..."
@@ -30,11 +50,19 @@ Usage_details="${EExec_parse_usage}
 --p4r-opt <p4review-opt> -- Add p4review-opt to the list of extra options.
 --no-fetch|--file|--local -- Use the file names directly and don't delete.
 --fetch|--remote -- Force a remote fetch.
+--just-fetch|--fetch-only -- Fetch the .p4r and do nothing else.
+--fetch-to <file> -- For just-fetch, just fetch to here.
+--save -- Save to current server.
+--save-to <server> -- Save to <server>
+--no-review -- Don't review the arguments.
+--verbatim -- Don't convert xxxx to cl-xxxx.p4r
+--zipdir <zd> -- Save newly created p4r files here.
 "
 # Example of arg parsing.
 long_options=("diff:" "server:" "p4r:" "p4r-opt:" "no-fetch" "file" "local"
-"fetch" "remote")
-option_str="$EExec_parse_option_str"
+"fetch" "just-fetch" "fetch-only" "remote" "password:" "passwd:" "pass:" "pwd:"
+"fetch-to" "verbatim")
+option_str="${EExec_parse_option_str}d:s:r:o:lfjp:t:c"
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -46,21 +74,37 @@ do
       -q) VERBOSE=":"; EExecQuiet;;
 
       # Program options.
-      --diff) shift; diff_program="$1";;
-      --server) shift; p4review_repository="$1";;
-      --p4r) shift; p4review_program="$1";;
-      --p4r-opt) shift; p4r_opts="$p4r_opts $1";;
-      --no-fetch|--file|--local) p4review_repository=; fetch_function=fetch_no_fetch
-                                 fetch_cleanup=cleanup_no_fetch
-                                 force_no_fetch_p=t
-                                 guess_location_p=
-                                 ;;
-      --fetch|--remote) p4review_repository=; fetch_function=fetch_no_fetch
-                        fetch_cleanup=cleanup_no_fetch
-                        force_fetch_p=t
-                        guess_location_p=
+      -d|--diff) shift; diff_program="$1";;
+      -s|--server) shift; p4review_repository="$1";;
+      -r|--p4r) shift; p4review_program="$1";;
+      -o|--p4r-opt) shift; p4r_opts="$p4r_opts $1";;
+      -l|--no-fetch|--file|--local) p4review_repository=;
+                                    fetch_function=fetch_no_fetch
+                                    fetch_cleanup=cleanup_no_fetch
+                                    force_no_fetch_p=t
+                                    guess_location_p=
+                                    ;;
+       # This will result in getting the default repository.
+      -f|--fetch|--remote) p4review_repository=;
+                           fetch_function=fetch_wget
+                           fetch_cleanup=cleanup_wget
+                           force_fetch_p=t
+                           guess_location_p=
+                           ;;
+      -j|--just-fetch|--fetch-only) 
+                        fetch_function=just_fetch_wget
+                        fetch_cleanup=cleanup_nop
+                        just_fetch_p=t
                         ;;
-
+      -t|--fetch-to) fetch_function=just_fetch_wget
+                     fetch_cleanup=cleanup_nop
+                     shift; fetch_to_file="${1}"
+                     ;;
+      -p|--password|--passwd|--pass|--pwd)
+                        shift
+                        password="${1}"
+                        ;;
+      --verbatim) verbatim_p=t;;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -77,6 +121,10 @@ done
 : ${p4review_program:=${P4_SW_ROOT}/sw/main/apps/p4review/p4review.pl}
 : ${fetch_function:=fetch_wget}
 : ${fetch_cleanup:=cleanup_wget}
+
+[ -n "${save_p}" ] && {
+    save_opt="-save"
+}
 
 cleanup_tmp_files()
 {
@@ -106,6 +154,10 @@ set_traps()
     done
 }
 
+cleanup_nop()
+{
+    EExec -y true
+}
 fetch_no_fetch()
 {
     EExec -y echo "${1}"
@@ -113,7 +165,7 @@ fetch_no_fetch()
 
 cleanup_no_fetch()
 {
-    EExec -y true
+    cleanup_nop
 }
 
 cleanup_wget()
@@ -121,28 +173,112 @@ cleanup_wget()
     cleanup_tmp_files "${1}"
 }
 
-fetch_wget()
+# > p4 changes -u dpanariti
+#Change 17156093 on 2013/01/18 by dpanariti@dpanariti-t124_1 *pending* 'Add prints to EngMsenc::~EngMse'
+verify_my_cl()
 {
+    local cl="${1}"; shift
+    p4 changes -u "${USER}" | egrep -q "Change ${cl} on" >/dev/null 2>&1
+}
+
+do_fetch_wget()
+{
+    # $1 -- File to fetch.
+    # $2 -- Server to fetch from.
+    # $3 -- Destination file.
+    
     local fetch_file="${1}"; shift
     local server="${1}"; shift
+    local dest_file="${1}"; shift
+    local tmp_file
+
+    tmp_file=$(mktemp "$HOME/tmp/dp4-review.tmp.XXXXXXX") || {
+        echo "Couldn't make a temp file."
+        exit 1
+    } 1>&2
+    EExec wget --http-user=svcsw \
+      "--http-passwd=${password}" \
+      -O "${dest_file}" \
+     "${server}/${fetch_file}"
+    echo "${dest_file}"
+}
+
+fetch_wget()
+{
+    # $1 -- File to fetch.
+    # $2 -- Server to fetch from.
     local tmp_file
     tmp_file=$(mktemp "$HOME/tmp/dp4-review.tmp.XXXXXXX") || {
         echo "Couldn't make a temp file."
         exit 1
     } 1>&2
     set_traps "sig_handler" "$tmp_file" ERR 1 2 3 4 5 6 7 8 10 11 12 13 15 # EXIT
-    EExec wget --http-user=svcsw \
-      "--http-passwd=Gforcetop#1" \
-      -O "${tmp_file}" \
-     "${server}/${fetch_file}"
-    echo "${tmp_file}"
-}    
+    do_fetch_wget "${1}" "${2}" "${tmp_file}"
+}
 
+just_fetch_wget()
+{
+    # $1 -- File to fetch.
+    # $2 -- Server to fetch from.
+    local fetch_to=${fetch_to_file:=$1}
+    do_fetch_wget "${1}" "${2}" "${fetch_to}"
+}
+
+dp4r_create()
+{
+    local cl="${1}"; shift
+    verify_my_cl "${cl}" || {
+        echo "$progname: Cannot verify changelist number ${cl}"
+        exit 1
+    } 1>&2
+    # p4review.pl -zipdir . -save 17156093
+    # Always create locally, and send to server as a possible additional step?
+    EExec perl "$p4review_program" \
+       ${zipdir_opt} \
+       ${save_opt} \
+       "${cl}"
+}
+
+dp4r_review()
+{
+    local f="${1}"
+    f=$($fetch_function "${f}" "${p4review_repository}")
+    if [ -z "${just_fetch_p}" ]
+    then
+        EExec perl "$p4review_program" \
+           ${p4r_opts} \
+           -diff "${diff_program}" -autoreview "${f}"
+        $fetch_cleanup "${f}"
+    else
+        true
+    fi
+}
+
+# If we do the ops in order, we can create/save/review a new p4r.
+# Some combinations may not make sense.
 for f in "$@"
 do
-  f=$($fetch_function "${f}" "${p4review_repository}")
-  EExec perl "$p4review_program" \
-    ${p4r_opts} \
-    -diff "${diff_program}" -autoreview "${f}"
-  $fetch_cleanup "${f}"
+  if [ -n "${creat_p}" -a -z "${just_fetch_p}" ]
+   then
+      # We create via CL, but other commands use formats w/other names.
+      f=$(dp4r_creat "${f}")
+  fi
+
+  if [ -n "$save_p" -a -z "${just_fetch_p}" ]
+   then
+      dp4r_save "${f}"
+  fi
+
+  if [ -n "$review_p" ]
+  then
+      [ -z "${verbatim_p}" ] && {
+          case "$f" in
+              cl-*) ;;
+              *) f="cl-${f}.p4r";;
+          esac
+      }
+
+
+      dp4r_review "${f}"
+  fi
 done

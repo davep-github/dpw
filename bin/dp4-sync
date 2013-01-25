@@ -63,22 +63,26 @@ do
 done
 
 : ${kwa_log_root:=$(dp4-get-root)}
-: ${kwa_log_base:=dp4-sync-}
-: ${kwa_log_dir:=${kwa_log_root}/${kwa_log_base}$(dp-std-timestamp)}
-: ${kwa_log_file:=${kwa_log_dir}/p4sync.log}
+: ${kwa_log_base:=${progname}}
+: ${kwa_log_dir:=${kwa_log_root}/${kwa_log_base}-$(dp-std-timestamp)}
+: ${kwa_log_file:=${kwa_log_dir}/${progname}.out}
 EExec -y mkdir -p "${kwa_log_dir}"
+EExec -y cd "${kwa_log_root}"
+EExec_verbose_msg "Sync'ing in >$(pwd)<"
 
 echo "log dir>${kwa_log_dir}<"
 {
     # print log name before and after in case it is a long sync.
     [ -n "$save_args_p" ] && {
-        save_args_file="${kwa_log_dir}/dp4-sync-args"
+        save_args_file="${kwa_log_dir}/dp4-sync.args"
         echo_id save_args_file
         echo "p4 sync args:
 $@" >| "${save_args_file}"
     }
     EExec p4 sync $sync_dash_n "$@"
+    echo
     # Let me know if anything needs merging. -n --> just show problems.
+    echo "******* Potential resolves shown here must be done by hand. *******"
     EExec p4 resolve -n
 } 2>&1 | EExec -y $tee_func "${kwa_log_file}"
 

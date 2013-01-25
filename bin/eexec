@@ -18,27 +18,33 @@
 # confuzed.
 #
 # You can set:
-# EExecEcho           A command to echo command being executed, def UNSET.
+# EExecEcho           A command to echo command being executed, def "".
 # EExecErrorReporter  A command to report errors, def 'EExecDefErrorReporter'.
 # EExecEchoPrefixG    A prefix to print before all output.
-# EExecContinue       Non-empty --> continue after errors, def UNSET.
-# EExecRCFile         A file in which to accumulate error msgs, def UNSET.
+# EExecContinue       Non-empty --> continue after errors, def "".
+# EExecRCFile         A file in which to accumulate error msgs, def "".
 # EExecShowOnly       Don't run commands, just show 'em.
 # EExecShowPrefix     What EExecShowOnly prefixes lines with.
 # EExecShowCommand    What EExecShowOnly prints lines with.
+#
 # You can call:
 # EEdie text          Print current value of $?, report text and exit $?.
 # EExecDashN          Set EExecShowOnly and EExecShowPrefix.
 # EExecVerbose        Set up standard verbosity.
 # EExecQuiet          Turn off verbosity.
 # EExec_verbose_func  Function to display EExec_verbose_msg messages.
+#
+# You can reference:
+# EExecDash[NVQ]_opt  Contain the corresponging -n, -v or -q if they've been used.
+#                     snippet: $EExecDashN_opt $EExecDashV_opt $EExecDashQ_opt
+
 
 # MUST be set before sourcing or this will NOT work.
 # On by default. Call EExecNoExport to disable exportation.
 : ${EExecExporter:=export}
 ${EExecExporter} EExecShowCommand=EExecStderrEcho
 ${EExecExporter} EExecShowPrefix=""
-${EExecExporter} EExecEcho=
+${EExecExporter} EExecEcho=""
 ${EExecExporter} EExecEchoPrefixG="+"
 ${EExecExporter} EExec_loaded_p=t
 ${EExecExporter} EExecShowOnly=
@@ -167,7 +173,8 @@ EExec_verbose_msg()
 
 EExecQuiet ()
 {
-    unset EExecEcho
+    EExecEcho=
+    ${EExecExporter} EExecDashQ_opt="-q"
 }
 
 
@@ -254,17 +261,17 @@ EExec()
               eexecShowPrefix="+"
               eexecEcho=${EExecEcho-EExecStderrEcho}
               ;;
-          -c) eexecContinue=t
+          -c|-k|--keep-going) eexecContinue=t
               ;;
-          -C|-0) eexecContinue=t
+          -C|-0|--fake-success|--return-zero) eexecContinue=t
               fake_success_p=y
               ;;
-          -y) eexecShowOnly=""
+          -y|--execute-anyway|--ignore-dash-n) eexecShowOnly=""
               eexecShowPrefix=""
               ${EExecExporter} EExecEchoPrefix="y"
               ;;
-          -q) eexecErrorReporter=;;
-          -x) shift; executor="$1";;
+          -q|--quiet-errors) eexecErrorReporter=;;
+          -x|--executor|--execute-with) shift; executor="$1";;
           -tcsh) executor=EExec_start_tcsh
                  ;;
          *) break;;

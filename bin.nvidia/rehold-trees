@@ -16,8 +16,8 @@ unset eexec_program
 : ${chown=}
 : ${chown_opt=}
 
-[ "${1-}" ] && {
-    chown_opt=t
+[ "${1-}" = '-t' ] && {
+    chown_opt='-t'
     shift
 }
 
@@ -26,7 +26,7 @@ unset eexec_program
 }
     
 [ -z "$*" ] && {
-    echo -- ${DP_HELD_TREE_IDS-}
+    set -- ${DP_HELD_TREE_IDS-}
 }
 
 for tree_id in "$@"

@@ -4,12 +4,16 @@ source script-x
 progname="$(basename $0)"
 source eexec
 EExecDashN
-echo 1>&2 "Not tested/ready for prime time."
+echo 1>&2 "Not tested AT ALL."
 
 set -u
 
 fromFile="$1"
 toFile="$2"
 
+EExec()
+{
+    echo "NOT executing: $@"
+}
 EExec p4 integrate "$fromFile" "$toFile"
 EExec p4 delete "$fromFile"

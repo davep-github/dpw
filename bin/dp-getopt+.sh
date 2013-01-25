@@ -59,7 +59,7 @@ fi
 DPGOP_Usage()
 {
     [[ -n "$@" ]] && echo "${progname}: $@"
-    set +u
+    set +u                      # XXX @todo ICK!
     if ((${#long_options[@]} > 0))
     then
         loo=$(addprefix_prefix_sep="" addprefix "--" "${long_options[@]}")
@@ -67,7 +67,7 @@ DPGOP_Usage()
     else
         loo=""
     fi
-    set -u
+    set -u                      # XXX @todo unICK!
 
     echo -n "Usage: ${progname} [-$all_options]${loo}$DPGOP_Usage_args_info
 $DPGOP_Usage_synopsis

@@ -42,6 +42,9 @@
 
 (dp-nvidia-c-style)
 
+;;(defun dp4-locale-client-setup ())
+(fmakunbound 'dp4-locale-client-setup)
+
 ;; For some reason, vc isn't being autoloaded here, but it is @ home.
 (vc-load-vc-hooks)  ; This is being added to the Tools->Version Control menu.
 

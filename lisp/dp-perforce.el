@@ -99,26 +99,29 @@ This mode uses tabs, so the line too long regexp fails.")
 	indent-tabs-mode t
 	tab-width 8))
 
-; If you have samplep4-async-command-hook installed, this will be
+(defun dp4-form-hook-common (font-lock-keywords)
+  (p4-setup-indent)
+  (set (make-local-variable 'font-lock-defaults)
+       font-lock-keywords)
+  (font-lock-fontify-buffer))
+
+; If you have p4-async-command-hook installed, this will be
 ; called when you create a change or submit buffer.
-(setq p4-change-hook
-      (function (lambda ()
-		  (p4-setup-indent)
-		  (set (make-local-variable 'font-lock-defaults)
-		       '(p4-changeset-font-lock-keywords
-			 t nil nil backward-paragraph))
-                  (font-lock-fontify-buffer))))
+(defun dp4-change-form-hook ()
+  (dp4-form-hook-common '(p4-changeset-font-lock-keywords
+                          t nil nil backward-paragraph)))
 
-; If you have samplep4-async-command-hook installed, this will be
+(setq p4-change-hook 'dp4-change-form-hook)
+
+; If you have p4-async-command-hook installed, this will be
 ; called when you create a client buffer.
-(setq p4-client-hook
-      (function (lambda ()
-		  (p4-setup-indent)
-		  (set (make-local-variable 'font-lock-defaults)
-		       '(p4-client-font-lock-keywords
-			 t nil nil backward-paragraph))
-                  (font-lock-fontify-buffer))))
+(defun dp4-client-form-hook ()
+  (dp4-form-hook-common
+   '(p4-client-font-lock-keywords
+     t nil nil backward-paragraph))
+  (font-lock-fontify-buffer))
 
+(setq p4-client-hook 'dp4-client-form-hook)
 
 (defvar dp4-frame-configurations-max 16
   "Only keep this absurd amount of configs around.")
@@ -207,9 +210,11 @@ This mode uses tabs, so the line too long regexp fails.")
 ;; Example form headers:
 ;; # A Perforce Client Specification.
 ;; # A Perforce Change Specification.
+;; # Map a perforce form to a hook. This is used when we are used as an
+;; editing server.
 (defvar dp4-form-type-to-hook-map
-  '(("Client" . p4-client-hook)
-    ("Change" . p4-change-hook))
+  '(("Client" . dp4-client-form-load-hook)
+    ("Change" . dp4-change-form-load-hook))
   "Map a perforce form type to a hook function.")
 
 (defun dp4-deduce-form-type ()
@@ -222,15 +227,50 @@ This mode uses tabs, so the line too long regexp fails.")
 
 (defun dp4-get-form-type-hook ()
   (cdr-safe (assoc (dp4-deduce-form-type) dp4-form-type-to-hook-map)))
-  
+
+(defun dp4-run-form-type-hooks ()
+  "Run the appropriate hook(s) for the form type."
+  (let ((hook (dp4-get-form-type-hook)))
+    (when hook
+      (funcall hook))))
+
 (defun dp-p4-emacs-client ()
-  "Set up editing for perforce forms. p4 client, p4 change, ... "
+  "Set up p4 forms we're editing as a server. p4 client, p4 change, ... 
+Things which are edited with ec-p4 which is the value of $P4EDITOR"
   ;; Is this a client or a change form?
-    (let ((hook (dp4-get-form-type-hook)))
-      (when hook
-        (run-hooks hook)))
+  (dp4-run-form-type-hooks)
   (setq indent-tabs-mode t))
 
+(defun dp4-nuke-Host-line ()
+  "Nuke the ever painful, veritably unused Host: line."
+  (interactive)
+  (goto-char (point-min))
+  (when (re-search-forward "^Host:.*$" nil t)
+    (dp-kill-entire-line)
+    (dp-kill-entire-line)))
+
+(defun dp4-basic-form-setup ()
+  "Nice standard client setup."
+  (interactive)
+  (dp4-nuke-Host-line))
+
+(defun dp4-client-form-load-hook ()
+  (interactive)
+  (dp-warn-if-empty "perforce client form.")
+  (if-and-fboundp 'dp4-locale-client-form-load-hook
+      (dp4-locale-client-setup)
+    (dp4-basic-form-setup)
+    (dp4-client-form-hook)))
+
+(defun dp4-change-form-load-hook ()
+  (interactive)
+  (dp-warn-if-empty "perforce change form.")
+  (if-and-fboundp 'dp4-locale-change-form-load-hook
+      (dp4-locale-client-setup)
+    (dp4-basic-form-setup)
+    (dp4-change-form-hook)))
+
+;; Called when a p4.el command is executed.
 (defun dp4-async-command-hook ()
 ;;   (dmessage "dp4-async-command-hook, buffer-name>%s<" (buffer-name)
   (if (or (string-match "*p4 \\(new\\|[0-9]+\\) change*" (buffer-name))
