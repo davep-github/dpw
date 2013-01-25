@@ -6,32 +6,61 @@ progname="$(basename $0)"
 
 verify_p=
 
-[ "${1}" = "-v" ] && {
+[ "${1-}" = "-v" ] && {
     verify_p=t
     shift
 }
 
-workspace=${1}
-if [ "$workspace" = "." ]
+if [ -n "$*" ]
 then
+    workspace=${1}
+    shift
+else
+    workspace="."
+fi
+if [ "$workspace" = "." ]
+    then
     workspace=$(dp4-get-root)
 fi
 case "$workspace" in
     */);;
     *) workspace="$workspace"/;;
 esac
-shift
+
+[ -n "$verify_p" ] && {
+    [ -d "$workspace" ] || {
+        echo "Workspace>$workspace< is not a dir."
+        exit 1
+    } 1>&2
+}
+
+reroot_one()
+{
+    local p="${1}"
+    local justp=$(echo "${p}" | sed -r 's/([^#]+)(#.*$)/\1/')
+    local newp=$(echo "$justp" | sed -r "s|^//|${workspace}|")
+    [ -n "$verify_p" ] && {
+        [ -e "$newp" ] || {
+            echo "ERROR: Rerooted file>$newp< does not exist."
+            exit 1
+        } 1>&2
+    }
+    echo "$newp"
+}
+
 rc=0
-for p in "$@"
-do
-  newp=$(echo "$p" | sed -r "s|^//|${workspace}|")
-  [ -n "$verify_p" ] && {
-      [ -d "$newp" ] || {
-          echo 1>&2 "ERROR: $newp is not a directory."
-          rc=1
-      }
-  }
-  echo "$newp"
-done
+
+if [ -z "$*" ]
+then
+    while read
+    do
+      reroot_one "$REPLY}"
+    done
+else
+    for p in "$@"
+    do
+      reroot_one "${p}"
+    done
+fi
 
 exit $rc

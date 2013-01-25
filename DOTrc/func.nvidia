@@ -13,7 +13,7 @@ qsubrc()
 me_dogo_op()
 {
     local op="${1}"; shift
-    local dest="${1-}"
+    local dest="${1-sb}"
 
     case "$dest" in 
         -*)

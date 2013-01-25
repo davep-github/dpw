@@ -99,6 +99,7 @@ eol-only - Only clean lines when cursor it at the end of a line.
 @todo XXX better to default to t or eol-only?")
 
 (defun dp-cleanup-whitespace-p ()
+  "Do we wish to be anal about whitespace?"
   (and dp-global-master-cleanup-whitespace-p
        dp-cleanup-whitespace-p))
 
@@ -563,7 +564,7 @@ c-hanging-braces-alist based upon these values.")
 				      dp-global-c*-use-too-long-face)))
   (interactive)
   (let ((extras
-         (list dp-trailing-whitespace-font-lock-element
+         (list ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
                (cons
                 (dp-mk-font-lock-type-re dp-c-font-lock-extra-types)
                 font-lock-type-face)
@@ -925,7 +926,8 @@ main(
   (dp-add-line-too-long-font 'ruby-font-lock-keywords)
   (setq dp-cleanup-whitespace-p t)
   (dp-add-to-font-patterns '(ruby-font-lock-keywords)
-                           dp-trailing-whitespace-font-lock-element)
+                            ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
+)
 
   (local-set-key [(meta right)] 'ruby-end-of-block)
   (local-set-key [(meta left)] 'dp-beginning-of-def-or-class)
@@ -1005,7 +1007,8 @@ See `dp-parenthesize-region-paren-list'")
   (dp-add-line-too-long-font 'python-font-lock-keywords)
   (setq dp-cleanup-whitespace-p t)
   (dp-add-to-font-patterns '(python-font-lock-keywords)
-                           dp-trailing-whitespace-font-lock-element)
+                            ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
+)
 
   ;; !<@todo XXX Add this to a new file hook?
   (dp-auto-it?)
@@ -1908,7 +1911,8 @@ and then business as usual."
   (dp-add-to-font-patterns '(sh-font-lock-keywords
                              sh-font-lock-keywords-1
                              sh-font-lock-keywords-2)
-                           dp-trailing-whitespace-font-lock-element)
+                            ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
+)
   (dp-auto-it?))
 
 
@@ -2191,7 +2195,8 @@ changed."
   (dp-add-to-font-patterns '(perl-font-lock-keywords
                                perl-font-lock-keywords-1
                                perl-font-lock-keywords-2)
-                           dp-trailing-whitespace-font-lock-element))
+                            ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
+                           ))
 
 ;; I'm trending away from advice, since I've seen code that really rapes it
 ;; (I'm looking at you, ECB)

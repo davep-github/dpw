@@ -28,7 +28,7 @@
      (1 'font-lock-keyword-face)
      (2 'font-lock-variable-name-face))
     ,dp-font-lock-line-too-long-element
-    ,dp-trailing-whitespace-font-lock-element
+    ;; ,dp-trailing-whitespace-font-lock-element
     ) 
   "Regexp used to colorize p4-mode changesets.
 This mode uses tabs, so the line too long regexp fails.")

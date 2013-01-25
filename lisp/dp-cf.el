@@ -229,8 +229,8 @@ Eg, via `hack-local-variables', hook, magic.")
             (and co-file-r (car co-file-r))))))
   
 ;; refs 1 def, 2 calls
-(defun dp-find-corresponding-file (&optional file-name find-file-func 
-                                   search-re)
+(defun* dp-find-corresponding-file (&optional file-name find-file-func 
+                                    search-re)
   "Edit the corresponding file: *.c-type <--> *.h-type"
   (interactive)
   (setq-ifnil file-name (buffer-file-name)
@@ -242,16 +242,21 @@ Eg, via `hack-local-variables', hook, magic.")
       ;; No cf found... we got the list of candidates, tho.
       ;; !<@todo XXX Check in buffer list as well.
       ;; !<@todo XXX Put all variants in the history.
-      (setq co-file (completing-read "No corresponding file found. File name: "
-                                     (cdr co-file) ; completion table
-                                     nil ; predicate
-                                     nil ; require match
-                                     (caar co-file)  ; Initial contents
-                                     (progn  ; history
-                                       (setq dp-ecf-dummy-history-var
-                                             (cdr (append (mapcar 'car co-file)
-                                                          file-name-history)))
-                                       'dp-ecf-dummy-history-var))))
+      (if (and dp-ecf-whence-marker
+               (y-or-n-p "Return whence?"))
+          (progn
+            (dp-ecf-return-whence)
+            (return-from dp-find-corresponding-file))
+        (setq co-file (completing-read "No corresponding file found. File name: "
+                                       (cdr co-file) ; completion table
+                                       nil ; predicate
+                                       nil ; require match
+                                       (caar co-file) ; Initial contents
+                                       (progn ; history
+                                         (setq dp-ecf-dummy-history-var
+                                               (cdr (append (mapcar 'car co-file)
+                                                            file-name-history)))
+                                         'dp-ecf-dummy-history-var)))))
     (when co-file
       (unless (memq last-command '(ecf ecf2))
         (dp-push-go-back "ecf"))

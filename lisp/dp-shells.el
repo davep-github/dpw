@@ -2658,7 +2658,7 @@ running process."
 . Else (or if nothing selected above) it starts a new gdb session."
   (interactive "P")
   (unless new-p
-    (if (and (dp-buffer-process-live-p (dp-gdb-most-recent-buffer 
+    (if (and (dp-buffer-process-live-p (dp-gdb-most-recent-buffer
                                         :dead-or-alive-p t)
                                        :default-p nil)
              (let ((buf (car (dp-gdb-get-buffer-interactively))))
@@ -2669,11 +2669,11 @@ running process."
         ()
       (setq new-p t)
       ;; Toss a buffer with a dead gdb proc.
-      (dp-bury-or-kill-process-buffer (dp-gdb-most-recent-buffer 
+      (dp-bury-or-kill-process-buffer (dp-gdb-most-recent-buffer
                                        :dead-or-alive-p t))))
-  (when new-p                         ; New can be changed above.
+  (when new-p                           ; New can be changed above.
     (if (eq new-p '-)
-          (dp-gdb-naught)
+        (dp-gdb-naught)
       ;; Want to get here if new-p or no live proc buffers.
       (let ((dp-gdb-recursing t))
         ;; Let's grab the file name our-self, regardless of interactivity, so
@@ -2683,19 +2683,18 @@ running process."
         (gdb path corefile)
         (set-process-filter (get-buffer-process (current-buffer))
                             'dp-gdb-filter)))
-
-      (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-dead-buffers)
-      (dp-add-or-update-alist 'dp-gdb-buffers (buffer-name)
-                              (or corefile 'dp-gdb))
-      (dp-add-to-history 'dp-gdb-buffer-history (buffer-name))
-      (when (boundp 'dp-gdb-commands)
-        ;; The node-name from locale-rcs will probably be used most.  But since
-        ;; I have the whole list easily available, I may as well allow gdb
-        ;; commands to be keyed to any of the locales.
-        (loop for key in (cons "." (dp-get-locale-rcs)) do
-          (loop for cmd in (cdr (assoc key dp-gdb-commands)) do
-            (insert cmd)
-            (comint-send-input)))))))
+    (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-dead-buffers)
+    (dp-add-or-update-alist 'dp-gdb-buffers (buffer-name)
+                            (or corefile 'dp-gdb))
+    (dp-add-to-history 'dp-gdb-buffer-history (buffer-name))
+    (when (boundp 'dp-gdb-commands)
+      ;; The node-name from locale-rcs will probably be used most.  But since
+      ;; I have the whole list easily available, I may as well allow gdb
+      ;; commands to be keyed to any of the locales.
+      (loop for key in (cons "." (dp-get-locale-rcs)) do
+        (loop for cmd in (cdr (assoc key dp-gdb-commands)) do
+          (insert cmd)
+          (comint-send-input))))))
 
 (defadvice gdb (around dp-advised-gdb activate)
   (dmessage "YOPP!")

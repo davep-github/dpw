@@ -23,6 +23,7 @@ on-o-xterm-p && {
 : ${rtl_opt=-skiprtl}
 : ${disp_file=/proc/self/fd/1}
 : ${make_p=t}
+: ${log_dir=t_make+log.logs}    # Since we cd to tot.
 
 # Usage variable usage:
 Usage_args_info=" t_make args..."
@@ -75,13 +76,19 @@ do
     shift
 done
 
+[ -z "${log_dir}" ] && {
+    echo "log_dir is not set. Using ."
+    log_dir=.
+} 1>&2
+
 [ -z "$log_name" ] && {
-    log_name="${log_name_base}.$(dp-std-timestamp)"
+    log_name="${log_dir}/${log_name_base}.$(dp-std-timestamp)"
 }
 
 if [ -n "$make_p" ]
 then
     EExec -y cd $(me-dogo tot)
+    EExec mkdir -p "${log_dir}"
     {
         EExec_verbose_msg "cwd>$(pwd)<"
         EExec_verbose_msg "log_name>${log_name}<"

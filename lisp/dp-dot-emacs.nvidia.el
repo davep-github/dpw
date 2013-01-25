@@ -2,7 +2,8 @@
 
 ;; add to post-dpmacs hook.
 (add-hook 'dp-post-dpmacs-hook (lambda ()
-                                 (require 'dp-perforce)))
+                                 (require 'dp-perforce)
+                                 (p4-use-xxdiff)))
 
 (setq visible-bell nil)
 (defun dp-define-nvidia-c-style ()
