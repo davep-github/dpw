@@ -1,0 +1,4 @@
+-h +.inl.tcc.h
+--langmap=c++:+.inl.tcc
+--regex-python=/[ \t]*([_A-Za-z][_A-Za-z0-9]*)[ \t]*=[ \t]*property/\1/
+--regex-c=/DEFUN[[:space:]]*\("([^"])*"[[:space:]]*,/\1/

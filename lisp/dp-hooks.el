@@ -1530,6 +1530,15 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
 
 (defun dp-gnuserv-visit-hook ()
   (interactive)
+  (let ((file-name (buffer-file-name)))
+    ;; Warn if we're serving a temp file that is empty.  When working as a
+    ;; server, the file needs to be in a common file system between the
+    ;; client and server. Things which like to edit temp files in temp dirs
+    ;; don't work.
+    (when (and file-name
+               (string-match "/te?mp/" file-name)
+               (equal (point-min) (point-max)))
+      (dp-ding-and-message "Could be a remote temp file.")))
   (local-set-key "\C-c\C-c" 'dp-gnuserv-edit))
 
 (when (dp-optionally-require 'igrep)

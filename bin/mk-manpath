@@ -1,0 +1,36 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+pathadd_sep_opt=
+if [ "${1-}" = "-S" ]
+then
+    pathadd_sep_opt="-S"
+    shift
+elif [ "${1-}" = "-s" ]
+then
+    shift
+    pathadd_sep_opt="-s ${1}"
+    shift
+fi
+
+: ${pathin:=${PATH}}
+export pathin                   # Used by path(dp1)
+
+# q=$(pathadd "" $(path -1 | sed -r 's!(/bin(/?))!/man\2!'))
+#                    sed -r 's!(/(s?)bin(/?))!/man\3!'
+manpath0=$(path -1 | sed -r 's!(/(s?)bin(/?))!/man\3!')
+manpath0a=$(path -1 | sed -r 's!(/(s?)bin(/?))!/share/man\3!')
+manpath1=$(pathadd ${pathadd_sep_opt} "" $manpath0 $manpath0a)
+manpath2=$(path-verify -d "$manpath1")
+echo "$manpath2"

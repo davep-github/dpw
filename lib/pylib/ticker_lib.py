@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, dp_utils
+import sys, dp_utils, types, re
 
 def Ticker_printf(ticker, fmt, *args):
     from dp_io import fprintf

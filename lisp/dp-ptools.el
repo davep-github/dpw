@@ -109,22 +109,31 @@ we're under a directory named work."
 (defstruct dp-*TAGS-handler
   (finder)
   (returner)
-  (other-window-finder))
+  (other-window-finder)
+  (name))
 
+;; XXX @todo remove regular tags if
+;; 1) gtags proves better
+;; 2) gtags is installed
+;; In general, verify existence of tag chaser.
 (defvar dp-*TAGS-handlers
   (list
-;;CO;    (list "GTAGS" (make-dp-*TAGS-handler 
-;;CO;                   :finder 'gtags-find-tag
-;;CO;                   :returner 'gtags-pop-stack 
-;;CO;                   :other-window-finder 'gtags-find-tag-other-window)
-;;CO;          )
+   (list "GTAGS" (make-dp-*TAGS-handler
+                  :finder 'gtags-find-tag
+                  :returner 'gtags-pop-stack
+                  :other-window-finder 'gtags-find-tag-other-window
+                  :name "gtags")
+         )
    (list "TAGS" (make-dp-*TAGS-handler 
                  :finder 'find-tag 
                  :returner 'pop-tag-mark 
-                 :other-window-finder 'find-tag-other-window)))
+                 :other-window-finder 'find-tag-other-window
+                 :name "tags")))
   "Tags commands for given tag systems.")
 
-(defvar dp-default-*TAGS-file-names '("TAGS") ; "GTAGS") Mostly sucks.
+;; Let the handlers register themselves and their tag file names.
+;; This lets us enable/disable in one place.
+(defvar dp-default-*TAGS-file-names '("GTAGS" "TAGS")
   "In order of preference.
 Either GTAGS/Global sucks big-time or I'm too stupid to use it rightly.  It
 never seems to find what I need and (minor point) doesn't clean up after
@@ -135,22 +144,25 @@ class VectorSink : public Sprockit::Sink1<Frame<int> >
   void Iterate()
 
 Whereas Global can't even find Vector.
-It can't be this bad, I must be missing something.")
+It can't be this bad, I must be missing something.
+By default, gtags doesn't look in .h files C++ features.
+Oddly, it doesn't handle structs.")
 
 (defun dp-find-nearest-*TAGS-file-path (&optional tag-file-names start-dir)
   (dp-find-nearest-*-file (or tag-file-names dp-default-*TAGS-file-names)
                           start-dir))
 
 (defun dp-find-nearest-*TAGS-file (&optional tag-file-names start-dir)
-  (file-name-nondirectory (or (dp-find-nearest-*TAGS-file-path tag-file-names 
-                                                               start-dir)
-                              (error 'dp-*TAGS-aborted 
-                                     (format "Can't find any tags file (%s, %s)"
-                                             tag-file-names start-dir)))))
+  (let ((tag-file (dp-find-nearest-*TAGS-file-path tag-file-names 
+                                                   start-dir)))
+    (when tag-file
+      (file-name-nondirectory tag-file))))
 
 (defun dp-get-*TAGS-handler (&optional tag-file-names start-dir)
-  (cadr (assoc (dp-find-nearest-*TAGS-file tag-file-names start-dir)
-               dp-*TAGS-handlers)))
+  (let ((tag-file (dp-find-nearest-*TAGS-file tag-file-names start-dir)))
+    (when tag-file
+      (cadr (assoc (dp-find-nearest-*TAGS-file tag-file-names start-dir)
+                   dp-*TAGS-handlers)))))
 
 (defun* dp-get-*TAGS-handler-list (&optional 
                                    (tag-file-names dp-default-*TAGS-file-names)
@@ -181,6 +193,12 @@ It can't be this bad, I must be missing something.")
              new-pos)
          (condition-case err
              (progn
+               ;; Try the handler. If it succeeds, then we'll push a
+               ;; corresponding handler entry onto our old stack. This is
+               ;; used to return from a tag in a handler specific fashion.
+               ;; We need to know if the gettor succeeded in order for this
+               ;; to work. GLOBAL/GTAGS makes this hard.
+               (message "Trying: %s" (dp-*TAGS-handler-name handler))
                (call-interactively (funcall gettor handler))
                ;; gtags is a pain in the ass.  It moves point to the
                ;; beginning of the current symbol and leaves it there. This
@@ -189,15 +207,28 @@ It can't be this bad, I must be missing something.")
                ;; break when we try to find a symbol that is defined on the
                ;; current line, which is basically a braino.
                ;; FUCK gtags for now.
-               (dp-*TAGS-push-handler handler)
-               (return))
-;;                (setq new-pos (point-marker))
-;;                (when (or (not (equal start-buffer (current-buffer)))
-;;                          (< new-pos bol)
-;;                          (> new-pos eol))
-;;                  (dp-*TAGS-push-handler handler)
-;;                  (return))
-;;                (dp-ding-and-message "Tag didn't take us anywhere."))
+               ;; gtags seems to be fixed. By default, .h files are treated
+               ;; as C only and are not examined for C++ constructs. Oddly,
+               ;; structs don't work wither
+;;               (dp-*TAGS-push-handler handler)
+;;               (return))
+               (setq new-pos (point-marker))
+               ;; Compensate for gtags.el's bogus moving of point even if it
+               ;; cannot find the tag, and only push the (return)handler if
+               ;; we've moved to a different line.
+               (when (or (not (equal start-buffer (current-buffer)))
+                         ;; Inconvenient, but failure leaves us at point if
+                         ;; we enter an unfindable tag name on a blank line.
+                         (= (point) (start-pos))
+                         (< new-pos bol)
+                         (> new-pos eol))
+                 ;; When gtags goes to the gtags buffer, we lose the ability
+                 ;; to return to original spot, so hack till time:
+                 (dp-push-go-back "Hack in dp-tags stuff.")
+                 (dp-*TAGS-push-handler handler)
+                 (return))
+               (dp-ding-and-message "%s didn't take us anywhere with the tag."
+                                    (dp-*TAGS-handler-name handler)))
            (t (dmessage "Caught condition: %s in dp-*TAGS-try-handler-funcs"
                         err))))))
 
@@ -207,10 +238,16 @@ It can't be this bad, I must be missing something.")
 
 (defun dp-tag-find (&rest r)
   (interactive)
-  (condition-case err
-      (dp-*TAGS-try-handler-funcs (dp-get-*TAGS-handler-list)
-                                  'dp-*TAGS-handler-finder)
-    ('dp-*TAGS-aborted (ding)(message "Tag op aborted: %s" err))))
+  (call-interactively 'gtags-find-tag))
+;;   (condition-case err
+;;       (let ((handler-list (dp-get-*TAGS-handler-list)))
+;;         (if handler-list
+;;             (dp-*TAGS-try-handler-funcs handler-list
+;;                                         'dp-*TAGS-handler-finder)
+;;           (dp-ding-and-message "No handlers/tag files found.")))
+;;     ('dp-*TAGS-aborted 
+;;      (ding)
+;;      (message "Tag op aborted: %s" err))))
 
 (defun dp-tag-pop-old (&rest r)
   (interactive)
@@ -218,15 +255,17 @@ It can't be this bad, I must be missing something.")
 
 (defun dp-tag-pop (&rest r)
   (interactive)
-  (let ((handler (dp-*TAGS-pop-handler)))
-    (if handler
-        (call-interactively (dp-*TAGS-handler-returner handler))
-      (dp-ding-and-message "No tags on stack."))))
+  (call-interactively 'gtags-pop-stack))
+;;   (let ((handler (dp-*TAGS-pop-handler)))
+;;     (if handler
+;;         (call-interactively (dp-*TAGS-handler-returner handler))
+;;       (dp-ding-and-message "No tags on dp tag stack."))))
 
 (defun dp-tag-find-other-window (&rest r)
   (interactive)
-  (call-interactively (dp-*TAGS-handler-other-window-finder 
-                       (dp-get-*TAGS-handler))))
+  (call-interactively 'gtags-find-tag-other-window))
+;;   (call-interactively (dp-*TAGS-handler-other-window-finder 
+;;                        (dp-get-*TAGS-handler))))
 (global-set-key [(meta ?.)] 'dp-tag-find)
 (global-set-key [(control ?x) (control ?.)]
   (kb-lambda 
@@ -237,15 +276,39 @@ It can't be this bad, I must be missing something.")
 ;;
 ;; fsf wants nil t to go to the next tag,
 ;; xemacs wants nil nil ""
-(global-set-key [(control ?.)] (kb-lambda (find-tag nil (not (dp-xemacs-p)))))
+;;(global-set-key [(control ?.)] (kb-lambda (find-tag nil (not (dp-xemacs-p)))))
+;; When gtagsing, this will be it's prefix.
 
-(defun dp-gtags-select-mode-hook ()
-  (dp-define-buffer-local-keys 
-   `([return] ,(kb-lambda
-                  (dp-push-go-back&call-interactively
-                   'gtags-select-tag
-                   nil nil "dp-gtags-select-mode-hook")))))
-(add-hook 'gtags-select-mode-hook 'dp-gtags-select-mode-hook)
+(when (dp-gtags-p)
+  (defun dp-gtags-select-mode-hook ()
+    (dp-define-buffer-local-keys
+     `([return] ,(kb-lambda
+                     (dp-push-go-back&call-interactively
+                      'gtags-select-tag
+                      nil nil "dp-gtags-select-mode-hook")))))
+  (add-hook 'gtags-select-mode-hook 'dp-gtags-select-mode-hook)
+
+  (setq gtags-prefix-key [(control c) (control ?.)])
+
+  (defun dp-gtags-map-key (keys def &optional map)
+    (setq-ifnil map gtags-mode-map)
+    (define-key map (concatenate 'vector gtags-prefix-key keys) def))
+
+  (if dp-gtags-suggested-key-mapping
+      (progn
+        ;; Current key mapping.
+        (dp-gtags-map-key "h" 'gtags-display-browser)
+        (dp-gtags-map-key "P" 'gtags-find-file)
+        (dp-gtags-map-key "f" 'gtags-parse-file)
+        (dp-gtags-map-key "g" 'gtags-find-with-grep)
+        (dp-gtags-map-key "I" 'gtags-find-with-idutils)
+        (dp-gtags-map-key "s" 'gtags-find-symbol)
+        (dp-gtags-map-key "r" 'gtags-find-rtag)
+        (dp-gtags-map-key "t" 'gtags-find-tag)
+        (dp-gtags-map-key "d" 'gtags-find-tag)
+        (dp-gtags-map-key "v" 'gtags-visit-rootdir)
+                                        ; common
+        (define-key gtags-mode-map "\C-x4." 'gtags-find-tag-other-window))))
 
 (provide 'dp-ptools)
 (dmessage "done loading dp-ptools.el...")

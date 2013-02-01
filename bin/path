@@ -1,9 +1,11 @@
 #!/bin/sh
 
+: ${pathin:=${PATH}}
+
 if [[ "$1" == -[1p] ]]
 then
     IFS=:
-    for elem in $PATH
+    for elem in $pathin
     do
 	echo "  $elem"
     done

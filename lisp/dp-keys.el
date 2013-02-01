@@ -290,7 +290,7 @@ Bind any keys in KEYS via `dp-define-keys'."
 ;; Like my screen (1 )key sequence.  Kowtow to habits.
 (global-set-key "\C-x\C-n" 'dp-switch-to-next-buffer)
 (global-set-key "\C-x\C-p" 'dp-switch-to-previous-buffer)
-(global-set-key [(control meta -)] 'delete-window)
+(global-set-key [(control meta -)] 'dp-meta-minus-other-window)
 (global-set-key [(control meta ?!)] 'dp-shell-command-in-minibuffer)
 
 ;;; <:add-new "normal"/global binding:>

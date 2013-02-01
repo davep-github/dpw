@@ -7,7 +7,7 @@ progname="$(basename $0)"
 : ${CLIENT_PAT:=@CLIENT@}
 : ${PORT_PAT:=@PORT@}
 : ${PORT_HW_DEFAULT:=${DP4_HW_PORT:=p4hw.nvidia.com:2001}}
-: ${PORT_WW_DEFAULT:=${DP4_SW_PORT:=p4sw.nvidia.com:2006}}
+: ${PORT_SW_DEFAULT:=${DP4_SW_PORT:=p4sw.nvidia.com:2006}}
 : ${PORT_DEFAULT:=${P4PORT:=${DP4_HW_PORT}}}
 : ${DIFF_PAT:=@DIFF@}
 : ${DIFF_DEFAULT:=${P4DIFF:-xxdiff}}

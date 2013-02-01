@@ -245,7 +245,7 @@ DAVEP_BIN_VARIANTS="$arch_os_bin.$HOST,$arch_os_bin,$arch_bin.$HOST,$arch_bin,bi
 #echo_id DAVEP_BIN_VARIANTS
 #exit 99
 DAVEP_BIN_DIRS="$(eval echo $HOME/{$DAVEP_BIN_VARIANTS} \
-    $HOME/yokel/{$DAVEP_BIN_VARIANTS})
+    $HOME/{local,yokel}/{$DAVEP_BIN_VARIANTS})
     $HOME/lib/pylib \
     $HOME/bree/bin \
     $HOME/bree/sbin"

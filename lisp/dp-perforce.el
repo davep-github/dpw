@@ -108,6 +108,7 @@ This mode uses tabs, so the line too long regexp fails.")
 ; If you have p4-async-command-hook installed, this will be
 ; called when you create a change or submit buffer.
 (defun dp4-change-form-hook ()
+  (interactive)
   (dp4-form-hook-common '(p4-changeset-font-lock-keywords
                           t nil nil backward-paragraph)))
 
@@ -116,6 +117,7 @@ This mode uses tabs, so the line too long regexp fails.")
 ; If you have p4-async-command-hook installed, this will be
 ; called when you create a client buffer.
 (defun dp4-client-form-hook ()
+  (interactive)
   (dp4-form-hook-common
    '(p4-client-font-lock-keywords
      t nil nil backward-paragraph))

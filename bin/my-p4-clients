@@ -1,7 +1,0 @@
-#!/bin/sh
-
-source script-x
-
-: ${pat:=$USER}
-
-p4 clients | egrep "$pat"

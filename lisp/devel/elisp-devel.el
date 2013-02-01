@@ -2726,3 +2726,74 @@ Tuesday January 15 2013
 
 set annotate 1
 
+
+========================
+Wednesday January 30 2013
+--
+(progn
+  (global-set-key [(meta ?.)] 'gtags-find-tag)
+  (global-set-key [(meta ?,)] 'gtags-pop-stack)
+  (define-key gtags-mode-map [(control meta ?.)] 'gtags-find-tag-other-window)
+  (define-key gtags-mode-map [(meta ?,)] 'gtags-pop-stack)
+
+)
+
+
+========================
+Thursday January 31 2013
+--
+(setq gtags-prefix-key "\C-c\C-.")
+""
+
+""
+(define-key gtags-mode-map (concat gtags-prefix-key "P") 'gtags-find-file)
+gtags-find-file
+
+(concat gtags-prefix-key "P")
+"P"
+
+"P"
+
+(global-set-key [(control c) (control ?.) ?P] 'gtags-find-file)
+(global-set-key [(control c) (control ?.) ?Q] 'gtags-find-file)
+nil
+
+(global-set-key "\C-c\C-.Q" 'gtags-find-file)
+nil
+
+nil
+
+nil
+
+gtags-find-file
+
+(concatenate 'vector [(control c) (control ?.)] "A")
+[(control c) (control ?\.) ?A]
+
+[(control c) (control ?\.) ?P]
+
+
+
+(setq gtags-prefix-key [(control c) (control ?.)])
+
+(defun dp-gtags-map-key (keys def &optional map)
+  (setq-ifnil map gtags-mode-map)
+  (define-key map (concatenate 'vector gtags-prefix-key keys) def))
+
+(if gtags-suggested-key-mapping
+    (progn
+      ;; Current key mapping.
+      (dp-gtags-map-key "h" 'gtags-display-browser)
+      (dp-gtags-map-key "P" 'gtags-find-file)
+      (dp-gtags-map-key "f" 'gtags-parse-file)
+      (dp-gtags-map-key "g" 'gtags-find-with-grep)
+      (dp-gtags-map-key "I" 'gtags-find-with-idutils)
+      (dp-gtags-map-key "s" 'gtags-find-symbol)
+      (dp-gtags-map-key "r" 'gtags-find-rtag)
+      (dp-gtags-map-key "t" 'gtags-find-tag)
+      (dp-gtags-map-key "d" 'gtags-find-tag)
+      (dp-gtags-map-key "v" 'gtags-visit-rootdir)
+      ; common
+      (define-key gtags-mode-map "\C-x4." 'gtags-find-tag-other-window)))
+
+

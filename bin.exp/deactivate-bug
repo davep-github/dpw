@@ -1,0 +1,17 @@
+#!/bin/sh
+
+source script-x
+progname="$(basename $0)"
+source eexec
+set -u
+: ${current:=current}
+
+go "${active}"
+[ -e "${current}" ] || exit 0
+
+[ -L current ] || {
+    echo "${current} is not a symlink, bailing"
+    exit 1
+} 1>&2
+
+EExec rm -f current

@@ -44,7 +44,7 @@ Usage_args_info=" .p4r-files..."
 Usage_synopsis="p4review the files.
 "
 Usage_details="${EExec_parse_usage}
---diff <diff-prig> -- Set diff program.
+--diff <diff-prog> -- Set diff program.
 --server <server> -- default server holding the review files.
 --p4r <p4review-program> -- Use this program to do the reviewing.
 --p4r-opt <p4review-opt> -- Add p4review-opt to the list of extra options.

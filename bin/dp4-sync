@@ -82,7 +82,9 @@ $@" >| "${save_args_file}"
     EExec p4 sync $sync_dash_n "$@"
     echo
     # Let me know if anything needs merging. -n --> just show problems.
-    echo "******* Potential resolves shown here must be done by hand. *******"
+    echo "******* Running p4 resolve -n "
+    echo "*******  to show anything which may need to be resolved *******"
+    echo "******* Any resolves shown here must be done by hand. *******"
     EExec p4 resolve -n
 } 2>&1 | EExec -y $tee_func "${kwa_log_file}"
 

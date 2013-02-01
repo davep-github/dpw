@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -u
+echo "$1"
+progname="$(basename $0)"
+
+echo "$1"
+
+for i in "$@"
+do
+  echo "\$1>$1<"
+done

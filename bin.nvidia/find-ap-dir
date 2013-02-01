@@ -1,0 +1,34 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+# Better than depth because it works *anywhere* in the sandbox.
+
+: ${ap_dir_candidates:=hw/ap hw/ap_tlit1}
+
+sb=$(me-dogo sb) || {
+    echo "Cannot find sandbox root. Specify ap_root."
+    exit 1
+} 1>&2
+
+    # Icky
+for dir in ${ap_dir_candidates}
+  do
+  ap_dir0="${sb}${dir}/"
+  [ -d "$ap_dir0" ] && {
+      normpath "${ap_dir0}"
+      exit 0
+  }
+done
+
+exit 1

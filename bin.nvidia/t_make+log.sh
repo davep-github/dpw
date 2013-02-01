@@ -24,6 +24,7 @@ on-o-xterm-p && {
 : ${disp_file=/proc/self/fd/1}
 : ${make_p=t}
 : ${log_dir=t_make+log.logs}    # Since we cd to tot.
+: ${keeplogs_opt=-keepLogs}
 
 # Usage variable usage:
 Usage_args_info=" t_make args..."
@@ -33,6 +34,7 @@ Usage_details="${EExec_parse_usage}
 -o <file> -- Tee output to log to <file>.<timestamp>
 -O <file> -- Tee output to log to <file>.
 --no-log -- tee /dev/null to show progress but make no log.
+--no-keeplogs -- Tell t_make not to keep log files about.
 --quiet -- tee <log-file> > /dev/null. Log w/o output.
 -c -- Do a -clean first
 -r -- Do NOT use -skiprtl
@@ -45,7 +47,9 @@ long_options=("out-file:"
     "null" 
     "quiet"
     "no-make" 
-    "no-build")
+    "no-build"
+    "no-log"
+    "no-keeplogs")
 
 # Example of arg parsing.
 option_str="${EExec_parse_option_str}o:O:cr"
@@ -67,6 +71,7 @@ do
       --no-log) log_name="/dev/null";;
       --quiet) disp_file=/dev/null;;
       --no-make|--no-build) make_p=;;
+      --no-keeplogs) keeplogs_opt=;;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -85,6 +90,12 @@ done
     log_name="${log_dir}/${log_name_base}.$(dp-std-timestamp)"
 }
 
+run_t_make()
+{
+    echo "bin/t_make ${keeplogs_opt} $@" | EExec -y tcsh-run ${EExecDashN_opt}
+}
+
+
 if [ -n "$make_p" ]
 then
     EExec -y cd $(me-dogo tot)
@@ -94,11 +105,13 @@ then
         EExec_verbose_msg "log_name>${log_name}<"
         EExec_verbose_msg "disp_file>${disp_file}<"
         [ -n "${clean_opt}" ] && {
-            echo "bin/t_make ${clean_opt}" | EExec -y tcsh-run ${EExecDashN_opt}
+            run_t_make ${clean_opt}
+            #echo "bin/t_make ${keeplogs_opt} ${clean_opt}" | EExec -y tcsh-run ${EExecDashN_opt}
 
         }
 
-        echo "bin/t_make ${rtl_opt}" | EExec -y tcsh-run ${EExecDashN_opt}
+        #echo "bin/t_make ${keeplogs_opt} ${rtl_opt}" | EExec -y tcsh-run ${EExecDashN_opt}
+        run_t_make ${rtl_opt}
 
     } | tee "${log_name}" > "${disp_file}"
 fi

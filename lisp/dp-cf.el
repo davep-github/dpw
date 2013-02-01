@@ -213,6 +213,9 @@ handing to a completing read."
 (defvar dp-ecf-dummy-history-var nil
   "Needed for `completing-read' and friends.")
 
+(dp-deflocal dp-ecf-auto-whence t
+  "Automatically follow a whence marker if there is no computable cf.")
+
 (dp-deflocal dp-fixed-corresponding-file-names nil
   "Set per file if there is no rhyme/reason for the corresponding file's name.
 Eg, via `hack-local-variables', hook, magic.")
@@ -243,7 +246,8 @@ Eg, via `hack-local-variables', hook, magic.")
       ;; !<@todo XXX Check in buffer list as well.
       ;; !<@todo XXX Put all variants in the history.
       (if (and dp-ecf-whence-marker
-               (y-or-n-p "Return whence?"))
+               (or dp-ecf-auto-whence
+                   (y-or-n-p "Return whence?")))
           (progn
             (dp-ecf-return-whence)
             (return-from dp-find-corresponding-file))

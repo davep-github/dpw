@@ -229,7 +229,7 @@ export SCREEN_DEFSCROLLBACK=10240
 COMP_WORDBREAKS=${COMP_WORDBREAKS//:}
 
 export MANPAGER=$PAGER
-export MANPATH="$HOME/yokel/share/man:$HOME/yokel/man:$MANPATH"
+
 export GNU_SECURE="$HOME/.gnuserv-hosts"
 
 true

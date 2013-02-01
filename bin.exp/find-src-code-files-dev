@@ -1,0 +1,185 @@
+#!/bin/sh
+
+source script-x
+
+args=("$@")
+
+add_foi_regexp()
+{
+    #echo 1>&2 "B:FOI>${FILES_OF_INTEREST[@]}<"
+    for pat in "$@"; do
+        FILES_OF_INTEREST[${#FILES_OF_INTEREST[@]}]="-e"
+        FILES_OF_INTEREST[${#FILES_OF_INTEREST[@]}]="$pat"
+    done
+    #echo 1>&2 "A: FOI>${FILES_OF_INTEREST[@]}<"
+}                  
+
+add_foi_regexp()
+{
+    #echo 1>&2 "B:FOI>${FILES_OF_INTEREST[@]}<"
+    for pat in "$@"; do
+        FILES_OF_INTEREST[${#FILES_OF_INTEREST[@]}]="-e"
+        FILES_OF_INTEREST[${#FILES_OF_INTEREST[@]}]="$pat"
+    done
+    #echo 1>&2 "A: FOI>${FILES_OF_INTEREST[@]}<"
+}                  
+
+add_filter_regexp()
+{
+    #echo 1>&2 "B:FOI>${FILES_TO_FILTER_IN[@]}<"
+    for pat in "$@"; do
+        FILES_TO_FILTER_IN[${#FILES_OF_INTEREST[@]}]="-e"
+        FILES_TO_FILTER_IN[${#FILES_OF_INTEREST[@]}]="$pat"
+    done
+    #echo 1>&2 "A: FOI>${FILES_TO_FILTER_IN[@]}<"
+}                  
+
+# {gentoo|libranet}'s default sudo define SECURE_PATH and so our binaries
+# are inaccessible.
+if [[ "$PATH" != *yokel/sbin* ]]
+then
+    rcfile="$HOME/.bashrc"
+    [ -f $rcfile ] && . $rcfile
+fi
+
+: ${AUTOMAKE_REGEXP_DEF:="((\.am|\.ac|\.m4)$|^config.*)"}
+: ${AUTOMAKE_REGEXP:="$AUTOMAKE_REGEXP_DEF"}
+: ${FILES_FILE:=cscope.files}
+: ${EXCLUDED_FILES_FILE:="extagtree.excluded-files"}
+# .c .h .cxx .py .java etc.
+: ${INTERESTING_FILES:="\.([chly](xx|pp)?|h-py|cs|cc|hh|py|pm|pl|java)$"}
+: ${DEF_SYSTEM_INCLUDES:=/usr/include}
+SYSTEM_INCLUDES=
+FILES_OF_INTEREST=()
+FILES_TO_FILTER_IN=()
+: ${v:=''}
+# It may be easier to specify excludes in some cases rather than including
+# everything else. Things like all c files except test.c
+: ${EXCLUDE_PAT:=''}
+### NB: !!! THESE ARE REGEXPs, NOT GLOBS! * is not the same as .* !!!!
+VC_EXCLUDES='-e /^.*\/?(\.obs\.|\.svn|CVS|RCS|\.4D|\.git|\.hg)\/?.*/d'
+
+echo 1>&2 "Read various ignore files like, .(cvs|git)ignore, ~/.gitexcludes,
+./.git/info/exclude, etc, and make a sed expression to ignore them.
+NB: most are globs, not regexps."
+: ${EXCLUDES:='-e /(doxygen|html|doc|dist-build|retired|,.*|HIDE.*)/d'}
+: ${files_to_cat=""}
+: ${only_cat_files=""}
+
+add_foi_regexp $INTERESTING_FILES
+
+if [ -n "$v" ]
+then
+    v_file="/dev/tty"
+else
+    v_file="/dev/null"
+fi
+v=
+
+set -- "${args[@]}"
+for i in "$@"
+do
+    case $1 in
+        -i) SYSTEM_INCLUDES=$DEF_SYSTEM_INCLUDES;;
+	-t) tag_args="$tag_args $2"; shift;;
+	-T) tag_args="$2 $tag_args"; shift;;
+        -p) EXCLUDE_PAT=$2; shift;;
+        -h) follow_sym_links="-h";;
+
+        -I) EXCLUDES="-e /\/include\//d $EXCLUDES";;  
+        -E) EXCLUDES="$2 $EXCLUDES"; shift;;
+        -foi|--foi) add_foi_regexp "$2"; shift;;
+        -f|--filter) add_filter_regexp "$2"; shift;;
+        -c) add_filter_regexp ".*\.[ch]$";;  # C language files only
+
+	--) shift ; break ;;
+	*) 
+            break ;;
+	    #echo 1>&2 "Unsupported option>$1<";
+	    #exit 1 ;;
+    esac
+    shift
+done
+
+if vunsetp "$@"
+    then
+    dirs="$PWD"
+else
+    dirs="$@"
+fi    
+
+# Put the system includes first so any collisions will be noticeable.
+dirs="$SYSTEM_INCLUDES $dirs"
+
+if [[ -n "$EXCLUDED_FILES_FILE" && "$EXCLUDED_FILES_FILE" == "-" ]]; then
+        EXCLUDED_FILES_FILE=""
+fi
+EXCLUDED_FILES_FILE_OPT=
+[[ -n "$EXCLUDED_FILES_FILE" ]] && {
+    EXCLUDED_FILES_FILE_OPT="-c $EXCLUDED_FILES_FILE"
+}
+
+[ -z "${FILES_TO_FILTER_IN[*]}" ] && {
+    FILES_TO_FILTER_IN=('.*')
+}
+
+filter_excludes_none()
+{
+    cat
+}
+
+filter_excludes_egrep()
+{
+    egrep -v "${EXCLUDE_PAT}"
+}
+
+if [ -z "${EXCLUDE_PAT}" ]
+then
+    exclude_filter=cat
+else
+    exclude_filter=filter_excludes_egrep
+fi
+
+# If filter in use it.
+# If filter out skip it.
+# Use it.
+echo 1>&2 "FtF>${FILES_TO_FILTER_IN[@]}<"
+echo_id EXCLUDE_PAT 1>&2
+filter()
+{
+    while read
+    do
+      if $include_filter "$REPLY"
+      then
+          :
+      elif $exclude_filter "$REPLY"
+      then
+          continue
+      fi
+      echo "$REPLY"
+    done
+}
+    tee /dev/null | \
+    $exclude_filter | \
+    sed -r "$VC_EXCLUDES" $EXCLUDES | \
+    egrep -i "${FILES_OF_INTEREST[@]}" | \
+    egrep -i "${FILES_TO_FILTER_IN[@]}" | \
+    tee /dev/null
+}
+
+{
+    [ -n "$files_to_cat" ] && {
+        cat $files_to_cat
+    }
+    [ -n "$only_cat_files" ] && exit 0
+
+    ftreewalk.py -X NOTAG \
+       $EXCLUDED_FILES_FILE_OPT \
+       $follow_sym_links $dirs | \
+       tee /dev/null
+} | filter | tee $v_file
+
+rm -f "$EXCLUDED_FILES_FILE"
+
+exit 0
+

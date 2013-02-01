@@ -1,0 +1,20 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+
+# zero error count, clear summary.
+# loop ?? n iterations ?
+
+# print current error summary.
+# run testgen w/-wait and -exitFailCount -outDir=XXX and -clobber
+# when a failure occurs:
+#  if this is not an error of interest, continue.
+#  mv XXX to some usefully named file (UNF)
+#  Add UNF to summary.
+#  print some kind of error message
+#  inc number of failures
+#  does number of failures warrant an exit? If so, exit.
+#  add at least the error count to summary.
+# continue

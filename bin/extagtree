@@ -62,6 +62,7 @@ fi
 : ${FILES_FILE:=cscope.files}
 : ${ETAGFILE:=TAGS}
 : ${CTAGFILE:=tags}
+: ${GTAGFILE:=GTAGS}
 : ${EXCLUDED_FILES_FILE:="extagtree.excluded-files"}
 : ${DEF_SYSTEM_INCLUDES:="/usr/include"}
 : ${src_code_finder:=find-src-code-files}
@@ -69,8 +70,9 @@ fi
 : ${finder_opts=}
 : ${use_files_file_p=}
 : ${cscope_p=t}
-: ${etag_p=t}
+: ${etag_p=}
 : ${ctag_p=}
+: ${gtag_p=t}                   # Only this now that it seems to work.
 
 
 SYSTEM_INCLUDES=
@@ -117,6 +119,7 @@ do
         -T) etag_p=; ctag_p=;;
         -e) etag_p=t;;
         -c) ctag_p=t;;
+        -g) gtag_p=t;;
 	--) shift ; break ;;
 	*) 
             break ;;
@@ -253,6 +256,15 @@ TAGFILES=()
         # subshell
         etags_opt=""
         tagtree "$FILES_FILE" "$TAGFILE"
+    ) &
+}
+
+[ -n "$gtag_p" ] && {
+    TAGFILE="$GTAGFILE"
+    TAGFILES+=($TAGFILE)
+    (
+        # subshell
+        EExec gtags --file "${FILES_FILE}"
     ) &
 }
 

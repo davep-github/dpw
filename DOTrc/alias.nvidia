@@ -1,5 +1,5 @@
 # @todo XXX Have these invoke tcsh login shells to run the commands?
-alias make='echo 1>&2 Making should be done in a tcsh login shell at this time.'
+alias make=dp-safe-make
 alias xterm_sized="xterm -sb -sl 600 -fg white -bg gray40 -cr yellow -fn 9x15 -name $HNAME"
 alias wx="winterm -geometry 80x24"
 [ -n "$DISPLAY" ] && {

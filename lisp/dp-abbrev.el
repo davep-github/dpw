@@ -498,10 +498,10 @@ abbrev is expanded.")
 (dp-set-mode-local-value 'dp-abbrev-suffix " "
                          dp-modes-wanting-post-alias-spaces)
 
-(defun* dp-get-special-abbrev (key-string regexp 
+(defun* dp-get-special-abbrev (key-string regexp-for-abbrev-text
                                &optional component-split-string)
   (interactive)
-  (when (dp-looking-back-at (concat regexp key-string))
+  (when (dp-looking-back-at (concat regexp-for-abbrev-text key-string))
     (list (match-beginning 2)
           ;; Include terminating key string.
           (+ (length key-string) (match-end 2))

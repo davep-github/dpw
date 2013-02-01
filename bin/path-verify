@@ -23,7 +23,8 @@ done
 
 IFS=$oldIFS
 
-echo $opath
+#echo $opath
+pathadd "" $opath                  # Only print the first of repeated values.
 
 exit 0
 

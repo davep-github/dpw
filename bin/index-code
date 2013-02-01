@@ -92,7 +92,7 @@ AND_INDEX="and index"
 : ${amper:="&"}
 : ${clean:="$AND_INDEX"}
 : ${real_paths:=t}
-: ${no_gtags_p:=t}
+: ${gtags_p:=t}
 : ${ctags_p:=t}
 : ${etags_p:=t}
 : ${tree_tagger:=extagtree}
@@ -112,7 +112,7 @@ MV=$(sp -1 mv) || {             # Avoid -i type aliaii
 
 iterate_individually_p=
 
-option_str="nvdc:t:g:CTkKVo:Gxeiuf:Is:S:"  # <:add new options:>
+option_str="nvdc:t:g:CTkKVo:Gxeiuf:Is:S:C"  # <:add new options:>
 all_options="$option_str$std_options"
 
 q=$(getopt -o "$all_options" -- "$@")
@@ -143,7 +143,8 @@ do
       -D) ciflags="";;
       -K) clean="$AND_INDEX";;
       -k) clean=t;;
-      -G) no_gtags_p=t;;
+      -C) clean=;;
+      -G) gtags_p=;;
       -o) output_dir=$(realpath $2); shift;;
       -x) ctags_p=$(invert_flag $ctags_p);;
       -e) etags_p=$(invert_flag $etags_p);;
@@ -206,10 +207,10 @@ then
     }
 fi
 
-gtagser=$(sp -1 gtags)
-[[ -z "$no_gtags_p" && -n "$gtagser" ]] && {
-    EExec eval gtagtree $gtflags $dirs $amper
-}
+#gtagser=$(sp -1 gtags)
+#[[ -n "gtags_p" && -n "$gtagser" ]] && {
+#    EExec eval gtagtree $gtflags $dirs $amper
+#}
 
 # extagtree defaults to making etags compatible files.  -E inverts this.
 # [ -n "$ctags_p" ] && EExec eval ${tree_tagger} -E $tflags $dirs $amper

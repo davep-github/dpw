@@ -83,7 +83,7 @@ EExec_parse()
           -n) prog="${prog}EExecDashN ";;
           -v) prog="${prog}EExecVerbose ";;
           -q) prog="${prog}EExecQuiet ";;
-          --) prog="${prog}EExecNOP";; # Allow user to consume a --
+          --) prog="${prog}EExecNOP"; break;; # Allow user to consume a --
           *) break;;
       esac
       shift

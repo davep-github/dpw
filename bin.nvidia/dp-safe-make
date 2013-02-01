@@ -1,0 +1,35 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+: ${REAL_MAKE=/usr/bin/make}
+
+
+case "$PWD" in
+    /home/scratch.*) ;;
+    *) EExec exec "${REAL_MAKE}" "$@"; exit 2;;
+esac
+
+while :
+do
+  read -e -p "Plain make is discouraged in scratch dirs. Continue [N/y]? "
+  case "$REPLY" in
+      [Nn]|"") EExec -y exit 0;;
+      [Yy]) EExec exec  "${REAL_MAKE}" "$@"; exit 2;;
+      *) continue;;
+  esac
+done
+
+# HUH? A -n w/EExec can get us here.
+echo "HUH? HTF did we get here?" 1>&2
+exit 2
+

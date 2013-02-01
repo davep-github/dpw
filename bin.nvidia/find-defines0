@@ -1,0 +1,22 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${fgrep_num_lines=-n}
+
+mecd tot
+
+for def in "$@"
+do
+  EExec fer-all-files -d make -d etc -- fgrep ${fgrep_num_lines} "${def}"
+done

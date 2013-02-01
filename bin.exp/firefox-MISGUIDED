@@ -1,0 +1,13 @@
+#!/bin/sh
+
+. script-x
+
+: ${REAL_FIREFOX:=/usr/bin/firefox}
+
+for arg in "$@"; do
+    case "$arg" in
+        -P*) exec "$REAL_FIREFOX" "$@";;
+    esac
+done
+
+exec firefox-KDE "$@"

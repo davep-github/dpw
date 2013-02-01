@@ -20,6 +20,7 @@ Usage_details="${EExec_parse_usage}
 -t <target> -- E.g. FMODEL.
 -d <???> -- Default is hwApPath=$(pwd)/../../
 --wait -- Run synchronously. Implies --nomail. --mail after this will override.
+--status -- Print status after a sync run.
 --nomail -- No status/results mail is sent upon completion.
 --mail -- Not --nomail.
 "
@@ -34,6 +35,10 @@ long_options=("wait"
 "target:"
 "log-dir:"
 "log-base:"
+"status"
+"status-wait"
+"wait-status"
+"ws"
 "nomail"
 "mail")
 
@@ -65,8 +70,13 @@ do
       -d) shift; d_opt="$1";;
       --log-dir) shift; user_log_dir="$1";;
       --log-base) shift; log_dir_base="$1";;
+      --wait-status|--status-wait|--ws) wait_opt="-wait"; mail_opt='-nomail';
+                                        display_status_p=t;;
+      --status) display_status_p=t;;
       --nomail) mail_opt=;;
       --mail) mail_opt="-mail";;
+      # Help!
+      --help) Usage; exit 0;;
       --) shift ; break ;;
       *) echo 1>&2 "Unsupported option>$1<"
          exit 1;;
@@ -88,8 +98,9 @@ done
 : ${target_opt=FMODEL}
 : ${d_opt=hwApPath=$(pwd)/../../}
 : ${user_log_dir=}
-: ${log_dir_base=run-tgens.d}
+: ${log_dir_base=dp-run-tgens.d}
 : ${log_dir=${user_log_dir}}
+: ${display_status_p=}
 
 # Common timestamp
 timestamp=$(dp-std-timestamp)
@@ -108,7 +119,7 @@ timestamp=$(dp-std-timestamp)
     log_dir_base=$(normpath "$log_dir_base")
     log_dir="$log_dir_base"
 }
-mkdir -p $(dirname "$log_dir_base")
+EExec mkdir -p $(dirname "$log_dir_base")
 
 [ -n "$traceRoot_opt}" ] && {
         traceRoot_opt="-traceRoot $traceRoot_opt"
@@ -125,6 +136,10 @@ mkdir -p $(dirname "$log_dir_base")
 
 log_prefix="$log_dir"
 
+[ -n "$display_status_p" -a -z "$wait_opt" ] && {
+    echo "WARNING: display status and wait do not play well together."
+} 1>&2
+
 echo_id levels
 for level in $levels
 do
@@ -138,11 +153,11 @@ do
         then
         out_dir="$user_log_dir"
     else
-        out_dir="${log_prefix}/${timestamp}/${test_name}${wait_opt}.out"
+        out_dir="${log_prefix}/${test_name}/${timestamp}${wait_opt}.out"
         out_dir=$(normpath "$out_dir")
     fi
     
-    EExec -y mkdir -p $(dirname "$out_dir")
+    EExec mkdir -p $(dirname "$out_dir")
     echo "$out_dir" >| last_out_dir
     
     EExec ./tgen.pl \
@@ -157,5 +172,9 @@ do
       ${mail_opt} \
       ${clobber_opt} \
       ${tgen_opts}
+    
+    [ -n "$display_status_p" ] && {
+        EExec ./batch_status "$out_dir"
+    }
   done
 done

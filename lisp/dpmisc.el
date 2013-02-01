@@ -2310,6 +2310,8 @@ manual `dp-mark-to-end-of-line' -- C-c d C-k -- followed by a
   (interactive "P")
   (save-excursion
     (dp-mark-to-end-of-line beginning (not include-newline))
+    ;; The following doesn't put the region on the clipboard.
+    ;;(dp-call-function-on-key [(meta ?o)])
     (dp-kill-ring-save)))
 ;;   ;;(copy-region-as-kill
 ;;   (dp-deactivate-mark)
@@ -10760,6 +10762,8 @@ A bookmark, in this context, is:
                             )))
     (when insertion-buffer
       (with-current-buffer insertion-buffer
+        (end-of-line)
+        (newline)
         (insert bm-string)
         (end-of-line)
         (dp-maybe-set-window-point)

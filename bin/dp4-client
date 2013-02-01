@@ -29,6 +29,7 @@ done
 
 client_name="$(dp4-mk-client-name)"
 
+echo_id P4EDITOR
 echo 1>&2 "Creating client... check editor to edit spec."
 EExec p4 client $template_opt "${client_name}"
 

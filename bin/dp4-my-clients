@@ -12,4 +12,11 @@ do
 done
 unset eexec_program
 
+case "${1-}" in
+    --this|--current|.|--here|--local|-[c.hlt])
+        p4 client -o | sed -rn 's/(^Client:[[:space:]]+)(.*$)/\2/p'
+        exit 0;;
+    *);;
+esac
+
 EExec p4 clients -u $USER

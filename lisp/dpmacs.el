@@ -294,18 +294,22 @@ the init files.")
 (setq browse-url-browser-function 'browse-url-opera)
 (dmessage "browse-url-browser-function: %s" browse-url-browser-function)
 
-;;global mostly sucks; (cond 
-;;global mostly sucks;  ((dp-optionally-require 'gtags)
-;;global mostly sucks;   (dmessage "gtags'ing.")
-;;global mostly sucks;   (define-key gtags-select-mode-map [?o] 'gtags-select-tag-other-window)
-;;global mostly sucks;   (define-key gtags-select-mode-map [(control ?o)] 'dp-one-window++)
-;;global mostly sucks;   (define-key gtags-mode-map 'button2 'gtags-pop-stack)
-;;global mostly sucks;   (define-key gtags-mode-map 'button3 'gtags-find-tag-by-event)
-;;global mostly sucks;   (define-key gtags-mode-map "\e." 'dp-tag-find)
-;;global mostly sucks;   (define-key gtags-mode-map [(control meta ?.)] 'dp-tag-find-other-window)
-;;global mostly sucks;   (define-key gtags-mode-map [(meta ?,)] 'dp-tag-pop))
-;;global mostly sucks;  ;; @todo put defaults here:
-;;global mostly sucks;  (t nil))				; Make it easy to add others.
+(cond 
+ ((and dp-use-gtags-p 
+       (dp-optionally-require 'gtags))
+  (dmessage "gtags'ing.")
+  (define-key gtags-select-mode-map [?o] 'gtags-select-tag-other-window)
+  (define-key gtags-select-mode-map [??] 'describe-mode)
+  (define-key gtags-select-mode-map [(control ?o)] 'dp-one-window++)
+  (define-key gtags-select-mode-map [?q] 'bury-buffer)
+  (define-key gtags-mode-map 'button2 'gtags-pop-stack)
+  (define-key gtags-mode-map 'button3 'gtags-find-tag-by-event)
+  (define-key gtags-mode-map "\e." 'dp-tag-find)
+  (define-key gtags-mode-map [(control meta ?.)] 'dp-tag-find-other-window)
+  (define-key gtags-mode-map [(meta ?,)] 'dp-tag-pop)
+)
+ ;; @todo put defaults here:
+ (t nil))				; Make it easy to add others.
 
 ;; <:savehist stuff | save history | save variables:>
 

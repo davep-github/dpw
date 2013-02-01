@@ -273,7 +273,10 @@ nil --> use builtin image of chuck."
     "cscope.out"
     "cscope.in.out"
     "cscope.po.out"
-    "ID")
+    "ID"
+    "GTAGS"                             ; Sucks
+    "GRTAGS"                            ; utte
+    "GPATH")                            ; rly
   "*Files used to support code indexing, eg: tags, cscope, etc.
 These should be regexp quoted."
   :group 'dp-vars
@@ -307,6 +310,16 @@ against the list of regexps."
   :type '(repeat string))
 
 (defcustom dp-ask-to-change-bm-protect-status-p nil
+  "*A rose is a rose."
+  :group 'dp-vars
+  :type 'boolean)
+
+(defcustom dp-use-gtags-p t
+  "*A rose is a rose."
+  :group 'dp-vars
+  :type 'boolean)
+
+(defcustom dp-use-etags-p nil
   "*A rose is a rose."
   :group 'dp-vars
   :type 'boolean)
