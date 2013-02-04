@@ -33,7 +33,7 @@ cscope_tree()
     cs=$(sp -1 cscope)
     vunsetp $cs && cs=$(sp -1 dp-cscope)
     if vunsetp $cs
-        then
+    then
         echo 1>&2 "Cannot find a cscope program."
     else
         EExec $cs $DASH_Q -b -i "$files_file" $cscope_flags
@@ -51,6 +51,7 @@ fi
 #
 # specify some extra options for exuberant ctags
 #
+source code-indexing.rc
 : ${EXCTAGS:=exctags}
 : ${EMACS_OPT:=-e}
 : ${SUDO=}
@@ -62,11 +63,11 @@ fi
 : ${FILES_FILE:=cscope.files}
 : ${ETAGFILE:=TAGS}
 : ${CTAGFILE:=tags}
-: ${GTAGFILE:=GTAGS}
+: ${GTAGFILES:=GTAGS GRTAGS GPATH}
 : ${EXCLUDED_FILES_FILE:="extagtree.excluded-files"}
 : ${DEF_SYSTEM_INCLUDES:="/usr/include"}
 : ${src_code_finder:=find-src-code-files}
-: ${use_id=t}
+: ${use_id=}
 : ${finder_opts=}
 : ${use_files_file_p=}
 : ${cscope_p=t}
@@ -100,11 +101,11 @@ v=
 
 set -- "${args[@]}"
 
-for i in $*
+for i in "$@"
 do
     case $1 in
         -i) inheritance_opt="--fields=+i";;
-        -n) EExecDashN; finder_opts="$finder_opts $1";;
+        -n) EExecDashN;;
         -v) EExecVerbose; finder_opts="$finder_opts $1";;
 	-s) SUDO=sudo;;
 	-t) tag_args="$tag_args $2"; shift;;
@@ -231,7 +232,10 @@ fi
 
 if [ -z "$use_files_file_p" ]
 then
-    ${src_code_finder} $finder_opts $argses | tee "$v_file" >| "$FILES_FILE"
+    echo_id finder_opts
+    echo_id argses
+    chmod a+w "$FILES_FILE"
+    EExec ${src_code_finder} $finder_opts $argses | tee "$v_file" >| "$FILES_FILE"
     chmod a-w "$FILES_FILE"
 fi
 [ -s "$FILES_FILE" ] || {
@@ -260,16 +264,25 @@ TAGFILES=()
 }
 
 [ -n "$gtag_p" ] && {
-    TAGFILE="$GTAGFILE"
-    TAGFILES+=($TAGFILE)
+    TAGFILES+=($GTAGFILES)
     (
         # subshell
-        EExec gtags --file "${FILES_FILE}"
+        if sp mkid > /dev/null 2>&1
+        then
+            idutils_opt="--idutils"
+        else
+            idutils_opt=""
+        fi 
+echo 1>&2 forcing --idutils off.
+idutils_opt=           
+        EExec gtags ${idutils_opt} --file "${FILES_FILE}"
     ) &
 }
 
 if [ -n "$use_id" ] && type mkid >/dev/null 2>&1
 then
+    echo BROKEN wrt gtags and --idutils.
+    exit 88
     prunes=$(untagged-dirs $argses)
     #echo_id prunes
     EExec mkid $prunes &

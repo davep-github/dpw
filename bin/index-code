@@ -92,9 +92,6 @@ AND_INDEX="and index"
 : ${amper:="&"}
 : ${clean:="$AND_INDEX"}
 : ${real_paths:=t}
-: ${gtags_p:=t}
-: ${ctags_p:=t}
-: ${etags_p:=t}
 : ${tree_tagger:=extagtree}
 : ${DEF_SYSTEM_INCLUDES:=/usr/include}
 : ${EExec_opts=}
@@ -110,9 +107,16 @@ MV=$(sp -1 mv) || {             # Avoid -i type aliaii
     dpe_echo 1 "Cannot find \"mv\" in the path."
 }
 
+set_all_index_methods()
+{
+    ctags_p=t
+    gtags_p=t
+    cscope_p=t
+}
+
 iterate_individually_p=
 
-option_str="nvdc:t:g:CTkKVo:Gxeiuf:Is:S:C"  # <:add new options:>
+option_str="nvdc:t:g:CTkKVo:Gxeiuf:Is:S:Caz"  # <:add new options:>
 all_options="$option_str$std_options"
 
 q=$(getopt -o "$all_options" -- "$@")
@@ -150,7 +154,9 @@ do
       -e) etags_p=$(invert_flag $etags_p);;
       -i) SYSTEM_INCLUDES="$DEF_SYSTEM_INCLUDES";;
       -u) export src_code_finder=uds-files;;
-      -f) finder_opts="$finder_opts $2"; shift;;
+      -a) set_all_index_methods;;
+      -z) set_all_index_methods; clean=t;;
+      -f) shift; finder_opts="$finder_opts $1";;
       -s) shift; RC_STOP_DIR=$1;;  # Stop is more likely to change.
       -S) shift; RC_START_DIR=$1;;  # Stop is more likely to change.
       --) shift ; break ;;
@@ -194,6 +200,11 @@ done
 vsetp $exit_p && {
     exit $exit_p
 }
+
+index_files=
+vsetp "$ctags_p" && index_files="$index_files TAGS tags"
+vsetp "$gtags_p" && index_files="$index_files GTAGS GRTAGS GPATH"
+vsetp "$cscope_p" && index_files="$index_files cscope.*" 
 
 if [[ -n "$clean" ]]
 then

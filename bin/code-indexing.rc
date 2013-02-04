@@ -3,4 +3,9 @@
 
 source script-x
 
-: ${index_files:=TAGS tags cscope.*}
+# := means this can't be used to turn the flags off.
+: ${gtags_p:=t}; export gtags_p;
+: ${ctags_p:=}; export ctags_p;
+: ${etags_p:=}; export etags_p;
+: ${cscope_p:=}; export cscope_p;
+

@@ -52,7 +52,6 @@ do
       -w) work_dir=$2; shift;;
       -s) sync_p=t;;
       -r) revision="$2"; shift;;
-#      -.) sandbox_name=$(scsandbox -.);;
       -.) sandbox_name=$(basename $PWD);;
       -t) shift; client_template="$1";;
       -T) client_template=;;
@@ -118,6 +117,13 @@ then
 else
     true
 fi
-rc=$?
+
+rc="$?"
 echo 1>&2 "Finished creating sandbox $sandbox_name."
-exit $?
+
+if test "$rc" = 0
+then
+    dp4-new-client-post-processor
+fi
+
+exit "${rc}"

@@ -1,0 +1,31 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+post_type=$(type -t dp4_new_client_post 2>/dev/null)
+if [ "${post_type}" = "function" ]
+then
+    EExec_verbose_msg "post processing function exists:
+$(type dp4_new_client_post)"
+    if EExecDashN_p
+        then
+        echo 1>&2 "{-}dp4_new_client_post"
+    else
+        dp4_new_client_post
+    fi
+elif vsetp "$post_type"
+then
+    echo 1>&2 "dp4_new_client_post is>$post_type< not function."
+    exit 1
+fi
+exit 0

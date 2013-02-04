@@ -279,7 +279,10 @@ Oddly, it doesn't handle structs.")
 ;;(global-set-key [(control ?.)] (kb-lambda (find-tag nil (not (dp-xemacs-p)))))
 ;; When gtagsing, this will be it's prefix.
 
-(when (dp-gtags-p)
+(dp-deflocal dp-gtags-suggested-key-mapping t
+  "Does this buffer want gtags key mappings?")
+
+(when t ;;; (dp-gtags-p)
   (defun dp-gtags-select-mode-hook ()
     (dp-define-buffer-local-keys
      `([return] ,(kb-lambda
@@ -294,21 +297,19 @@ Oddly, it doesn't handle structs.")
     (setq-ifnil map gtags-mode-map)
     (define-key map (concatenate 'vector gtags-prefix-key keys) def))
 
-  (if dp-gtags-suggested-key-mapping
-      (progn
-        ;; Current key mapping.
-        (dp-gtags-map-key "h" 'gtags-display-browser)
-        (dp-gtags-map-key "P" 'gtags-find-file)
-        (dp-gtags-map-key "f" 'gtags-parse-file)
-        (dp-gtags-map-key "g" 'gtags-find-with-grep)
-        (dp-gtags-map-key "I" 'gtags-find-with-idutils)
-        (dp-gtags-map-key "s" 'gtags-find-symbol)
-        (dp-gtags-map-key "r" 'gtags-find-rtag)
-        (dp-gtags-map-key "t" 'gtags-find-tag)
-        (dp-gtags-map-key "d" 'gtags-find-tag)
-        (dp-gtags-map-key "v" 'gtags-visit-rootdir)
-                                        ; common
-        (define-key gtags-mode-map "\C-x4." 'gtags-find-tag-other-window))))
+  (defun dp-gtags-map-keys ()
+    (interactive)
+    (dp-gtags-map-key "h" 'gtags-display-browser)
+    (dp-gtags-map-key "P" 'gtags-find-file)
+    (dp-gtags-map-key "f" 'gtags-parse-file)
+    (dp-gtags-map-key "g" 'gtags-find-with-grep)
+    (dp-gtags-map-key "I" 'gtags-find-with-idutils)
+    (dp-gtags-map-key "s" 'gtags-find-symbol)
+    (dp-gtags-map-key "r" 'gtags-find-rtag)
+    (dp-gtags-map-key "t" 'gtags-find-tag)
+    (dp-gtags-map-key "d" 'gtags-find-tag)
+    (dp-gtags-map-key "v" 'gtags-visit-rootdir)
+    (define-key gtags-mode-map "\C-x4." 'gtags-find-tag-other-window)))
 
 (provide 'dp-ptools)
 (dmessage "done loading dp-ptools.el...")

@@ -89,4 +89,5 @@ $@" >| "${save_args_file}"
 } 2>&1 | EExec -y $tee_func "${kwa_log_file}"
 
 echo "log dir>${kwa_log_dir}<"
-exit 0
+dp4-new-client-post-processor
+exit

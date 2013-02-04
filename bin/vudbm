@@ -10,7 +10,7 @@ foreach $db (@ARGV)
 	print "key>$key<, val>$val<\n";
     }
 
-    dbmclose(DB);
+    dbmclose(%DB);
 
 }
 
