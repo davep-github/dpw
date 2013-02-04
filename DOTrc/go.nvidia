@@ -35,6 +35,7 @@ E|ap__ME_src|                hw/ap_tlit1/
 E|tot__ME_src|               hw/ap_tlit1/
 E|TOT__ME_src|               hw/ap_tlit1/
 E|topoftree__ME_src|         hw/ap_tlit1/
+E|etc__ME_src|               hw/ap_tlit1/diag/
 E|diag__ME_src|              hw/ap_tlit1/diag/
 E|tg__ME_src|                hw/ap_tlit1/diag/testgen/
 E|tgen__ME_src|              hw/ap_tlit1/diag/testgen/
@@ -78,8 +79,6 @@ Ee|msenc1|                                                       ${me1}drvapi/ms
 Ee|runtestcommon1|rtc1|                                          ${drvapi1}/runtest_common/
 Ee|levels1|lev1|                                                 ${testgen1}config/levels/tegra/
 
-
-
 Ee|scratch2|scr2|sc2|                                            /home/scratch.dpanariti_t124/
 Ee|sandbox2|sbox2|sb2|workspace2|ws2|                            ${scratch2}sb2/hw/
 Ee|sandbox2hw|sbox2hw|sb2hw|workspace2hw|ws2hw|hw2|              ${workspace2}hw/
@@ -93,4 +92,18 @@ Ee|me2|                                                          ${drv2}multieng
 Ee|msenc2|                                                       ${me2}drvapi/msenc/
 Ee|runtestcommon2|rtc2|                                          ${drvapi2}/runtest_common/
 Ee|levels2|lev2|                                                 ${testgen2}config/levels/tegra/
+
+Ee|scratch3|scr3|sc3|                                            /home/scratch.dpanariti_t124_1/
+Ee|sandbox3|sbox3|sb3|workspace3|ws3|                            ${scratch3}sb3/sb3hw/
+Ee|sandbox3hw|sbox3hw|sb3hw|workspace3hw|ws3hw|hw3|              ${workspace3}hw/
+Ee|sandbox3ap|sbox3ap|sb3ap|workspace3ap|ws3ap|ap3|tot3|         ${workspace3hw}ap_tlit1/
+Ee|sandbox3diag|sbox3diag|sb3diag|workspace3diag|ws3diag|diag3|  ${tot3}diag/
+Ee|sandbox3tg|sbox3tg|sb3tg|workspace3tg|ws3tg|tgen3|tg3|testgen3| ${workspace3diag}testgen/
+Ee|sandbox3testgen|sbox3testgen|sb3testgen|workspace3testgen|ws3testgen| ${testgen3}
+Ee|drv3|                                                         ${tot3}drv/
+Ee|drvapi3|                                                      ${drv3}drvapi/
+Ee|me3|                                                          ${drv3}multiengine/
+Ee|msenc3|                                                       ${me3}drvapi/msenc/
+Ee|runtestcommon3|rtc3|                                          ${drvapi3}/runtest_common/
+Ee|levels3|lev3|                                                 ${testgen3}config/levels/tegra/
 

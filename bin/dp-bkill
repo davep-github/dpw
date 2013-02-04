@@ -1,0 +1,26 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+[ -z "$*" ] && {
+    set -- '.*'
+}
+
+jids=$(bjobs -w \
+     | egrep -v 'JOBID|o_pri_interactive' 2>/dev/null \
+     | awk '{print $1}' \
+     | egrep "$@")
+
+[ -n "${jids}" ] && {
+    EExec bkill ${jids}
+}
