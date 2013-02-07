@@ -12,21 +12,21 @@ do
 done
 unset eexec_program
 
-post_type=$(type -t dp4_new_client_post 2>/dev/null)
+post_type=$(type -t dp4_sync_post 2>/dev/null)
 if [ "${post_type}" = "function" ]
 then
     EExec_verbose_msg "post processing function exists:
-$(type dp4_new_client_post)"
+$(type dp4_sync_post)"
     if EExecDashN_p
         then
         echo 1>&2 "{-}dp4_new_client_post"
     else
-        echo "** Suggested post new client actions:"
-        dp4_new_client_post
+        echo "** Suggested post sync actions:"
+        dp4_sync_post
     fi
 elif vsetp "$post_type"
 then
-    echo 1>&2 "dp4_new_client_post is>$post_type< not function."
+    echo 1>&2 "dp4_sync_post is>$post_type< not function."
     exit 1
 else
     EExec_verbose_msg "No dp4_sync_post."

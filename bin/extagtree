@@ -5,6 +5,7 @@
 source script-x
 progname=`basename $0`
 source eexec
+set -u
 
 echo $progname: $* 1>&2
 
@@ -30,7 +31,8 @@ tagtree()
 cscope_tree()
 {
     local files_file="$1"
-    cs=$(sp -1 cscope)
+    local cs=$(sp -1 cscope)
+    
     vunsetp $cs && cs=$(sp -1 dp-cscope)
     if vunsetp $cs
     then
@@ -67,6 +69,7 @@ source code-indexing.rc
 : ${EXCLUDED_FILES_FILE:="extagtree.excluded-files"}
 : ${DEF_SYSTEM_INCLUDES:="/usr/include"}
 : ${src_code_finder:=find-src-code-files}
+: ${cscope_flags=}
 : ${use_id=}
 : ${finder_opts=}
 : ${use_files_file_p=}
@@ -106,7 +109,8 @@ do
     case $1 in
         -i) inheritance_opt="--fields=+i";;
         -n) EExecDashN;;
-        -v) EExecVerbose; finder_opts="$finder_opts $1";;
+        -v) EExecVerbose;;
+        -V) EExecVerbose; finder_opts="$finder_opts $1";;
 	-s) SUDO=sudo;;
 	-t) tag_args="$tag_args $2"; shift;;
 	-T) tag_args="$2 $tag_args"; shift;;
@@ -236,6 +240,8 @@ then
     echo_id argses
     chmod a+w "$FILES_FILE"
     EExec ${src_code_finder} $finder_opts $argses | tee "$v_file" >| "$FILES_FILE"
+    EExec_verbose_msg "$(ls -l $FILES_FILE)"
+    EExec_verbose_msg "$(wc -l $FILES_FILE)"
     chmod a-w "$FILES_FILE"
 fi
 [ -s "$FILES_FILE" ] || {
@@ -273,7 +279,7 @@ TAGFILES=()
         else
             idutils_opt=""
         fi 
-echo 1>&2 forcing --idutils off.
+echo 1>&2 "forcing --idutils for gtags off (WHY? I don't remember)."
 idutils_opt=           
         EExec gtags ${idutils_opt} --file "${FILES_FILE}"
     ) &
@@ -288,12 +294,20 @@ then
     EExec mkid $prunes &
 fi
 
+echo_id cscope_p
 [ -n "$cscope_p" ] && {
+    echo_id cscope_p
     cscope_tree "$FILES_FILE" &
 }
 
+EExec_verbose_msg "$(ls -l $FILES_FILE)"
+EExec_verbose_msg "$(wc -l $FILES_FILE)"
+
 echo "waiting for procs to complete..."
 wait
+
+EExec_verbose_msg "$(ls -l $FILES_FILE)"
+EExec_verbose_msg "$(wc -l $FILES_FILE)"
 
 if vsetp "$SUDO"
 then

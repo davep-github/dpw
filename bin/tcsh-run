@@ -43,6 +43,9 @@ cat $exec_file
 EExec_verbose_msg "<exec_file"
 
 EExec "${exec_file}"
+rc=$?
 
 EExec -y rm -f "${exec_file}"
+
+exit "${rc}"
 

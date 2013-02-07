@@ -9,6 +9,17 @@ vunsetp()
 {
     [ -z "$*" ]
 }
+
+DP_TRUTH_VAL=t                  # Preferred
+truth_p()
+{
+    case "${1-}" in
+        [tTyY1]) return 0;;
+        *) return 1
+    esac
+    return 1
+}
+
 export -f vsetp vunsetp
 
 sed_path()

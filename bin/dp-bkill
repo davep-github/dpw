@@ -12,12 +12,16 @@ do
 done
 unset eexec_program
 
+: ${filter_regexp:=' o_pri_interactive '}
+
 [ -z "$*" ] && {
     set -- '.*'
 }
 
+filter_regexp="JOBID|${filter_regexp}"
+
 jids=$(bjobs -w \
-     | egrep -v 'JOBID|o_pri_interactive' 2>/dev/null \
+     | egrep -v "${filter_regexp}" 2>/dev/null \
      | awk '{print $1}' \
      | egrep "$@")
 

@@ -652,13 +652,14 @@ And their failure occurs way too often."
 (defalias 'cl-pe 'cl-prettyexpand)
 (defalias 'cl-px 'cl-prettyexpand)
 
-(when dp-use-ffap-p
-  (require 'ffap)			; load the package
+(when (and dp-use-ffap-p
+           (dp-optionally-require 'ffap))
+  (message "ffapping...")
   (ffap-bindings)			; do default key bindings
   (dp-add-list-to-list 'ffap-compression-suffixes '(".bz2"))
 
   ;; the builtin ds.internic.net seems to be history
-  ;; alternates: 
+  ;; alternates:
   ;; NIS.NSF.NET:/internet/documents/rfc/rfc%s.txt
   ;; FTP.RFC-EDITOR.ORG:/in-notes/rfc%s.txt
   ;; SUNSITE.ORG.UK:rfc/rfc%s.txt
@@ -666,8 +667,8 @@ And their failure occurs way too often."
   ;; send mail to: RFC-SERVER@ISI.EDU w/body: help: ways_to_get_rfcs
   ;;  to get info about obtaining rfcs.
   (setq ffap-rfc-path
-      (concat (ffap-host-to-path "ftp.rfc-editor.org") 
-	      "/in-notes/rfc%s.txt"))
+        (concat (ffap-host-to-path "ftp.rfc-editor.org")
+                "/in-notes/rfc%s.txt"))
 
   (defvar dp-ffap-ffap-file-finder ffap-file-finder
     "Copy of `ffap-file-finder', since we point it our function.")
@@ -678,10 +679,20 @@ And their failure occurs way too often."
   ;; precisely, any file names in a c/c++ file.
   ;; Called by by using `ffap-alist' (q.v.). 
   ;;
-  (dp-add-list-to-list 'ffap-c-path
-                       '("../include" "../src"))
+  (dp-add-list-to-list 'ffap-c-path 
+                       '("../include" 
+                         "../src"))
 
-  (message "ffaping...")
+  (defun dp-ffap-p4-location (file &optional sb)
+    (interactive "sFile-name: ") ;; fix this "fFile-name: \n)
+    (setq-ifnil sb ".")
+    (message "%s"
+             (dp-nuke-newline 
+              (shell-command-to-string 
+               (format "dp4-reroot %s %s" sb file)))))
+  (add-to-list 'ffap-alist (cons "^//[^:]+" 'dp-ffap-p4-location))
+
+  (message "ffapped.")
 )
 
 (defvar dp-file-finder (if (and dp-use-ffap-p

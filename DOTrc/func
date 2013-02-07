@@ -55,19 +55,6 @@ vsetp_b0rked()
     [ -n "$@" ]
 }
 
-# Moved to func.root.
-# Remove this after testing.
-# vsetp()
-# {
-#     [ -n "$*" ]
-# }
-
-# vunsetp()
-# {
-#     [ -z "$*" ]
-# }
-# export -f vsetp vunsetp
-
 vnullp()
 {
     # I can't figure out how to get the variable passed here without evaluating

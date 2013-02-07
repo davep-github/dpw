@@ -29,25 +29,31 @@ Ee|dotvnc|dvnc|vnc|   ${gohome}.vnc/
 # It's really not the ME root, but I'm an ME guy.
 # For tot, the superfluous dot prevents a double slash at the end of the
 # expansion.
-E|sb__ME_src|                ./
-E|hw__ME_src|                hw/
-E|ap__ME_src|                hw/ap_tlit1/
-E|tot__ME_src|               hw/ap_tlit1/
-E|TOT__ME_src|               hw/ap_tlit1/
-E|topoftree__ME_src|         hw/ap_tlit1/
-E|etc__ME_src|               hw/ap_tlit1/diag/
-E|diag__ME_src|              hw/ap_tlit1/diag/
-E|tg__ME_src|                hw/ap_tlit1/diag/testgen/
-E|tgen__ME_src|              hw/ap_tlit1/diag/testgen/
-E|testgen__ME_src|           hw/ap_tlit1/diag/testgen/
-E|drv__ME_src|               hw/ap_tlit1/drv/
-E|me__ME_src|                hw/ap_tlit1/drv/multiengine/
-E|meng__ME_src|              hw/ap_tlit1/drv/multiengine/
-E|multi__ME_src|             hw/ap_tlit1/drv/multiengine/
-E|multiengine__ME_src|       hw/ap_tlit1/drv/multiengine/
-E|drvapi__ME_src|            hw/ap_tlit1/drv/multiengine/drvapi/
-E|levelsroot__ME_src|        hw/ap/diag/testgen/config/levels/
-E|levels__ME_src|            hw/ap/diag/testgen/config/levels/tegra/
+Ee|workspace__ME_src|         ./
+Ee|ws__ME_src|                ./
+Ee|sandbox__ME_src|           ./
+Ee|sb__ME_src|                ./
+Ee|hw__ME_src|                hw/
+Ee|ap__ME_src|                hw/ap_tlit1/
+Ee|tot__ME_src|               hw/ap_tlit1/
+Ee|TOT__ME_src|               hw/ap_tlit1/
+Ee|topoftree__ME_src|         hw/ap_tlit1/
+Ee|etc__ME_src|               hw/ap_tlit1/etc/
+Ee|diag__ME_src|              hw/ap_tlit1/diag/
+Ee|tg__ME_src|                hw/ap_tlit1/diag/testgen/
+Ee|tgen__ME_src|              hw/ap_tlit1/diag/testgen/
+Ee|testgen__ME_src|           hw/ap_tlit1/diag/testgen/
+Ee|drv__ME_src|               hw/ap_tlit1/drv/
+Ee|drvapi__ME_src|            hw/ap_tlit1/drv/drvapi/
+Ee|runtestcommon__ME_src|     hw/ap_tlit1/drv/drvapi/runtest_common
+Ee|rtc__ME_src|               hw/ap_tlit1/drv/drvapi/runtest_common
+Ee|me__ME_src|                hw/ap_tlit1/drv/multiengine/
+Ee|meng__ME_src|              hw/ap_tlit1/drv/multiengine/
+Ee|multi__ME_src|             hw/ap_tlit1/drv/multiengine/
+Ee|multiengine__ME_src|       hw/ap_tlit1/drv/multiengine/
+Ee|drvapi__ME_src|            hw/ap_tlit1/drv/multiengine/drvapi/
+Ee|levelsroot__ME_src|        hw/ap_tlit1/diag/testgen/config/levels/
+Ee|levels__ME_src|            hw/ap_tlit1/diag/testgen/config/levels/tegra/
 
 #######################################################################
 
@@ -107,3 +113,19 @@ Ee|msenc3|                                                       ${me3}drvapi/ms
 Ee|runtestcommon3|rtc3|                                          ${drvapi3}/runtest_common/
 Ee|levels3|lev3|                                                 ${testgen3}config/levels/tegra/
 
+Ee|scratch4|scr4|sc4|                                            /home/scratch.dpanariti_t124_1/
+Ee|sandbox4|sbox4|sb4|workspace4|ws4|                            ${scratch4}sb4/sb4hw/
+Ee|sandbox4hw|sbox4hw|sb4hw|workspace4hw|ws4hw|hw4|              ${workspace4}hw/
+Ee|sandbox4ap|sbox4ap|sb4ap|workspace4ap|ws4ap|ap4|tot4|         ${workspace4hw}ap_tlit1/
+Ee|sandbox4diag|sbox4diag|sb4diag|workspace4diag|ws4diag|diag4|  ${tot4}diag/
+Ee|sandbox4tg|sbox4tg|sb4tg|workspace4tg|ws4tg|tgen4|tg4|testgen4| ${workspace4diag}testgen/
+Ee|sandbox4testgen|sbox4testgen|sb4testgen|workspace4testgen|ws4testgen| ${testgen4}
+Ee|drv4|                                                         ${tot4}drv/
+Ee|drvapi4|                                                      ${drv4}drvapi/
+Ee|me4|                                                          ${drv4}multiengine/
+Ee|msenc4|                                                       ${me4}drvapi/msenc/
+Ee|runtestcommon4|rtc4|                                          ${drvapi4}/runtest_common/
+Ee|levels4|lev4|                                                 ${testgen4}config/levels/tegra/
+
+Ee|status|stat|       /home/dpanariti/work/status/
+Ee|global|       /home/dpanariti/davep/build/global-6.2.7/

@@ -1,0 +1,58 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${sep:=,}
+
+me_expand_dest()
+{
+    # Args: dest | sb dest
+    local dest="${1-sb}"; shift
+    local sb_dest
+    # sb_dest[0] is sandbox
+    # sb_dest[1] is dest
+    if [ -n "${1-}" ]           # sb dest, dest is really sb
+    then
+        sb_dest=("${dest}" "${1}")
+    else
+        sb_dest=($(echo "${dest}" | sed -r "s/^(${sep})(.*)(${sep})(.*)$/\2 \4/"))
+    fi
+    #echo 1>&2 "sb_dest>${sb_dest[@]}<"
+    if [ -z "${dest}" ]
+    then
+        dest="tot"
+    elif [ -n "${sb_dest[*]}" ]
+    then
+        # Assume only one element means just the dest was specified.
+        if [ "${#sb_dest[@]}" = 2 ]
+        then
+            sb="${sb_dest[0]}"
+            EExec -y cd $(dogo "$sb")
+            dest="${sb_dest[1]}"
+        else
+            dest="${sb_dest[0]}"
+        fi
+    fi
+    
+    local dest=$(me-dogo "${dest}") || {
+        echo "Cannot find>$@<"
+        return 1
+    } 1>&2
+    shift
+    [ -n "$*" ] && dest="${dest}/$@"
+    dest=$(normpath "${dest}")
+    echo "$dest"
+    return 0
+}    
+
+me_expand_dest "$@"

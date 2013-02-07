@@ -75,6 +75,7 @@ else
     [ "$*" = '' ] && set -- .
 fi
 
+last_newest=
 dot=$(pwd)
 for arg in "$@"
 do
@@ -84,12 +85,18 @@ do
     # ls -t1 | head -n4 | tail -n1
   while :
   do
-    newest=$(list_files "$dir_opt" $ls_opts $extra_ls_opts $rev_opt | head -n$tnth | tail -n$R)
+    newest=$(list_files "$dir_opt" $ls_opts $extra_ls_opts $rev_opt \
+                        | head -n$tnth | tail -n$R)
+    [ "${last_newest}" = "${newest}" ] && {
+        # Newest hasn't changed, so we've run out of things to try."
+        exit 1
+    }
+    last_newest="${newest}"
     #echo_id newest
     if [ -z "$allow_cwd" ]
     then
         case "$newest" in
-            */.|*/..|.|..) : $((++tnth))
+            */.|*/..|.|..) ((++tnth))
                            continue;;
             *) break;;
         esac

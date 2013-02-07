@@ -537,8 +537,50 @@ abbrev is expanded.")
                        (shell-command-to-string 
                         (format "dogo_work_rel %s" 
                                 (dp-string-join abbrev-strings " ")))))
-      (kill-region beg end)
+      (delete-region beg end)
       (insert expansion))))
+
+(defun dp-get-sandbox-rel-abbrev ()
+  (interactive)
+  (dp-get-special-abbrev "," "\\(\\(,[^,]*,[^,]+\\)\\)"))
+
+(defun dp-expand-sandbox-rel-abbrev ()
+  (interactive)
+  (let* ((abbrev-data (dp-get-sandbox-rel-abbrev))
+         beg end abbrev-strings expansion)
+    (when abbrev-data
+      (setq beg (nth 0 abbrev-data)
+            end (nth 1 abbrev-data)
+            abbrev-strings (nth 2 abbrev-data)
+            expansion (dp-nuke-newline 
+                       (shell-command-to-string 
+                        (format "me-expand-dest %s" 
+                                (if (listp abbrev-strings)
+                                    (dp-string-join abbrev-strings " ")
+                                  abbrev-strings)))))
+      (delete-region beg end)
+      (insert expansion "/"))))
+
+(defun dp-get-p4-location ()
+  (interactive)
+  (dp-get-special-abbrev "'" "\\(\\(^//.*\\)\\)"))
+
+(defun dp-expand-p4-location ()
+  (interactive)
+  (let* ((abbrev-data (dp-get-p4-location))
+         beg end abbrev-strings expansion)
+    (when abbrev-data
+      (setq beg (nth 0 abbrev-data)
+            end (nth 1 abbrev-data)
+            abbrev-strings (nth 2 abbrev-data)
+            expansion (dp-nuke-newline 
+                       (shell-command-to-string 
+                        (format "dp4-reroot . %s" 
+                                (if (listp abbrev-strings)
+                                    (dp-string-join abbrev-strings " ")
+                                  abbrev-strings)))))
+      (delete-region beg end)
+      (insert expansion "/"))))
 
 (defun dp-abbrev-insert-suffix-p ()
   "Determine if we should add a suffix."
@@ -575,6 +617,8 @@ Tried in order given and first match wins."
   ;; abbrev.
 
   (cond
+   ((dp-expand-sandbox-rel-abbrev))
+   ((dp-expand-p4-location))
    ((dp-expand-work-rel-abbrev)
     ;; return the expansion if non-nil
     )

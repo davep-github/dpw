@@ -13,19 +13,22 @@ progname="$(basename $0)"
 : ${LOC_DB_NAME:=}
 : ${LOC_DB_DIR:=.}
 : ${lval:=0}
+: ${uniqifier_is_abbrev=}
 
 # Usage variable usage:
-Usage_args_info="[options]"
+Usage_args_info="[options-to-real-locate-db-builder]"
 Usage_synopsis="Make a locate db with a few extensions for nVIDIA environment:
 "
-Usage_details="-n -- Show what would happen but don't do it. [eexec]
--v -- Be verbose about it. [eexec]
--q -- Anti-verbose. [eexec]
--u <uniqifying-string> -- Incorporate this into the db name for differentiation.
--l|-d <dir-to-index> -- Build loc db from this tree.
+Usage_details="-n) Show what would happen but don't do it. [eexec]
+-v) Be verbose about it. [eexec]
+-q) Anti-verbose. [eexec]
+-u <uniqifying-string>) Incorporate this into the db name for differentiation.
+                          Uses the basename of the current dir by default.
+-l|-d <dir-to-index>) Build loc db from this tree.
+-g) Don't treat the uniqifier as an abbreviation.
 "
 # Example of arg parsing.
-option_str="nvqu:l:d:"
+option_str="nvqu:l:d:g"
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -38,6 +41,7 @@ do
 
       # Program options.
       -u) shift; uniqifier=$1;;
+      -g) uniqifier_is_abbrev=-g;;
       -l|-d) shift; LOC_DIR=$1;;
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -53,7 +57,7 @@ LOC_DIR=$(dogo $LOC_DIR)
 [ "$LOC_DIR" = "." ] && LOC_DIR="$PWD"
 
 : ${uniqifier=$(basename "$LOC_DIR")}
-loc_db=$(mk-loc-db-name -f "$LOC_DB_NAME" -d "$LOC_DB_DIR" -c -u "$uniqifier")    
+loc_db=$(mk-loc-db-name ${uniqifier_is_abbrev} -f "$LOC_DB_NAME" -d "$LOC_DB_DIR" -c -u "$uniqifier")    
 
 [ -z "$loc_db" ] && {
     echo "I need an output file for the locate database."

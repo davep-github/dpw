@@ -15,7 +15,7 @@ alias nvgrep=/home/nv/toolroot/bin/nvgrep
 
 xx()
 {
-    xterm_sized "$@" &
+    xterm_sized  "$@" -e tcsh -l &
 }
 alias xh="xterm_sized -fg black -bg white &"
 alias xs="nohup xterm_sized & ; exit"

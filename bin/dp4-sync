@@ -79,15 +79,17 @@ echo "log dir>${kwa_log_dir}<"
         echo "p4 sync args:
 $@" >| "${save_args_file}"
     }
-    EExec p4 sync $sync_dash_n "$@"
+    EExec p4 sync $sync_dash_n "$@" 
+} 2>&1 | EExec -y $tee_func "${kwa_log_file}"
+{
     echo
     # Let me know if anything needs merging. -n --> just show problems.
     echo "******* Running p4 resolve -n "
     echo "*******  to show anything which may need to be resolved *******"
     echo "******* Any resolves shown here must be done by hand. *******"
     EExec p4 resolve -n
-} 2>&1 | EExec -y $tee_func "${kwa_log_file}"
+} 2>&1 | EExec -y tee -a "${kwa_log_file}"
 
 echo "log dir>${kwa_log_dir}<"
-dp4-new-client-post-processor
+dp4-sync-post-processor
 exit

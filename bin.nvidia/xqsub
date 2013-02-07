@@ -7,7 +7,9 @@ progname="$(basename $0)"
 
 # qsub -q o_pri_interactive_cpu_2G -P t124 -cwd $PWD -Is $SHELL -l
 # dpxx -B linen -- qsub -q o_pri_interactive_cpu_2G -P t124 -cwd $PWD -Is $SHELL -l
-: ${queue:=o_pri_interactive_cpu_2G}
+: ${queue_size=2}
+: ${default_queue:=o_pri_interactive_cpu_@QUEUE_SIZE@G}
+: ${queue:=$default_queue}
 : ${project:=t124}
 : ${cwd:=${PWD}}
 : ${shell:=${SHELL:=/bin/bash}}
@@ -16,6 +18,9 @@ progname="$(basename $0)"
 : ${bg:=linen}
 : ${fg:=black}
 
+long_options=(
+    "queue-size:"
+    "q-size:")
 # Usage variable usage:
 Usage_args_info=" extra-qsub-parameters"
 Usage_synopsis="Start a qsub process with useful defaults in a dpxx(dp1) window.
@@ -23,6 +28,7 @@ Usage_synopsis="Start a qsub process with useful defaults in a dpxx(dp1) window.
 Usage_details="${EExec_parse_usage}
 -P <project> -- qsub project. Default[$project].
 -Q <queue> -- qsub queue. Default[$queue].
+--queue-size G -- make the queue size G gig.
 -c <cwd> -- Change dir to <cwd> before running. Default[\$PWD].
 -s <shell> -- Use this as the shell.
 -l -- Do not pass -l to qsub. Default[$dash_l].
@@ -45,6 +51,7 @@ do
       # Program options.
       -P) shift; project="${1}";;
       -q) shift; queue="${1}";;
+      --queue-size|--q-size) shift; queue_size="${1}";;
       -c) shift; cwd="${1}";;
       -s) shift; shell="${1}";;
       -l) dash_l=;;
@@ -61,6 +68,9 @@ do
     shift
 done
 
+[ "$queue" = "$default_queue" ] && {
+    queue=$(echo "$queue" | sed -r "s/@QUEUE_SIZE@/$queue_size/")
+}
 
 # For some reason (to be looked into) in a dpxx(dp1) term, $SHELL is "bash",
 # just "bash", which can cause problems. So we add a path if it looks like

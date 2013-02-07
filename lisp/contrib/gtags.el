@@ -674,6 +674,7 @@
   (interactive)
   (let (delete context)
     (if (and (not (equal gtags-current-buffer nil))
+             (buffer-live-p gtags-current-buffer)
              (not (equal gtags-current-buffer (current-buffer))))
          (switch-to-buffer gtags-current-buffer)
          ; By default, the buffer of the referred file is left.

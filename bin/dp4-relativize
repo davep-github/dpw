@@ -6,3 +6,4 @@ source script-x
 # sed -nr 's!^(//eng/albireo-releases/carl/)([^#]*)(#.*)$!\2!p'
 # Need to convert pwd to p4 depot name and use that for the prefix in the sed command.
 
+echo 1>&2 "You may want to try dp4-reroot."

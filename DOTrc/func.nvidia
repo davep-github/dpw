@@ -10,23 +10,26 @@ qsubrc()
     ignoreeof=10
 }
 
+##
+## This can, and should, be genericized.
+##
 me_dogo_op()
 {
     local op="${1}"; shift
-    local dest="${1-sb}"
+    local dest
 
-    case "$dest" in 
+    case "$@" in 
         -*)
             go-mgr "$@"
         ;;
         *)
-            [ -z "${dest}" ] && dest="tot"
-            local dest=$(me-dogo "${dest}") || {
+            [ -z "$*" ] && dest="tot"
+            local dest=$(me-expand-dest "$@") || {
                 echo "Cannot find>$@<"
                 return 1
             } 1>&2
             shift
-            [ -n "$*" ] && dest="${dest}/$@"
+            #[ -n "$*" ] && dest="${dest}/$@"
             dest=$(normpath "${dest}")
             local oldPWD=$PWD;
             "${op}" "${dest}" && export GoBack="${oldPWD}"
@@ -40,6 +43,7 @@ mego()
     me_dogo_op pushd "$@"
 }
 export -f mego
+alias mg=mego
 
 mecd() 
 {

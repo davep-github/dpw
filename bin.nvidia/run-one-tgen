@@ -21,6 +21,7 @@ Usage_details="${EExec_parse_usage}
 -d <???> -- Default is hwApPath=$(pwd)/../../
 --wait -- Run synchronously. Implies --nomail. --mail after this will override.
 --status -- Print status after a sync run.
+--wait-status|--status-wait|--ws -- --wait and --status.
 --nomail -- No status/results mail is sent upon completion.
 --mail -- Not --nomail.
 "

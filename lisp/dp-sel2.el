@@ -812,87 +812,89 @@ we started.  The strings are in the same order that a series of
     
 
 ;;;###autoload
-(defun dp-sel2:paste ()
+(defun dp-sel2:paste (&optional goto-embedded-p)
   "Select the item to paste from a list.
 Rotate kill list so that the selected kill-text is at the head of the
 yank ring."
-  (interactive)
-  (let ()                               ;(sel-item)
-    (if (not kill-ring)
-	(message "Nothing in kill-ring.")
-      (dp-rehighlight-point :id-prop dp-sel2-arrow-id)
-      (dp-sel2 "*pasties*"              ;Buffer name prefix.
+  (interactive "P")
+  (if goto-embedded-p
+      (dp-sel3:bm)
+    (let ()                             ;(sel-item)
+      (if (not kill-ring)
+          (message "Nothing in kill-ring.")
+        (dp-rehighlight-point :id-prop dp-sel2-arrow-id)
+        (dp-sel2 "*pasties*"            ;Buffer name prefix.
 
-               ;; Item generator function
-	       'dp-sel2:list-pastes
-	  
-               ;; Function to apply when an item has been selected.
-	       (function               ; selected callback
-                (lambda (region sel-item &optional rotate-only-p)
-                  ;; ignore the interprogram-paste-function since
-                  ;; 1) we know we want stuff from the kill-list
-                  ;; 2) it seems to be buggy and causes much
-                  ;;    duplication of kill items.
-                  (dp-unhighlight-point :id-prop dp-sel2-arrow-id)
-                  (let (interprogram-paste-function
-                        (do-not-rotate
-                         (and (not rotate-only-p)
-                              (or (and (key-press-event-p last-input-event)
-                                       (eq (event-key last-input-event) 'insert)
-                                       (equal (event-modifiers last-input-event)
-                                              (list 'meta)))
-                                  (and last-command-char
-                                       (= last-command-char ?Y))))))
-                    (if region
-                        (insert region)
-                      ;; not enough... ring will not be rotated correctly
-                      ;; if another sel buf has inserted and rotated
-                      ;; kill-ring
-                      (unless rotate-only-p
-                        (insert (cdr sel-item)))
-                      (current-kill (car sel-item) do-not-rotate)))
-                  (setq this-command 'yank)))
-	       
-	       ;; Function to apply when the operation has been cancelled.
-	       (function 
-                (lambda (&rest unused)
-                  (dp-unhighlight-point :id-prop dp-sel2-arrow-id)))
-	       
-	       ;; post-mode-hook
-	       (function 
-                (lambda ()
-                  (local-set-key "r" (kb-lambda 
-                                         (let ((dp-sel2:rotate-only-p t))
-                                           (dp-sel2:select))))
-                  (local-set-key "R" 
-                                 (kb-lambda 
-                                     (current-kill 
-                                      (car (dp-sel2:current-item)))
-                                     (dp-sel2:refresh)))
-                  (local-set-key "c" (kb-lambda
-                                         (dp-sel2-paste:copy-no-exit 'copy)))
-                  (local-set-key "k" (kb-lambda
-                                         (dp-sel2-paste:copy-no-exit 'copy)))
-                  (local-set-key "C" (kb-lambda
-                                         (dp-sel2-paste:copy-no-exit 'copy)
-                                         (dp-sel2:exit-mode)))
-                  (local-set-key "K" (kb-lambda
-                                         (dp-sel2-paste:copy-no-exit 'copy)
-                                         (dp-sel2:exit-mode)))
-                  (local-set-key "o" 'dp-sel2-paste:view-item)
-                  (local-set-key "v" 'dp-sel2-paste:view-item))))))
-  (setq this-command 'yank))
+                 ;; Item generator function
+                 'dp-sel2:list-pastes
+
+                 ;; Function to apply when an item has been selected.
+                 (function              ; selected callback
+                  (lambda (region sel-item &optional rotate-only-p)
+                    ;; ignore the interprogram-paste-function since
+                    ;; 1) we know we want stuff from the kill-list
+                    ;; 2) it seems to be buggy and causes much
+                    ;;    duplication of kill items.
+                    (dp-unhighlight-point :id-prop dp-sel2-arrow-id)
+                    (let (interprogram-paste-function
+                          (do-not-rotate
+                           (and (not rotate-only-p)
+                                (or (and (key-press-event-p last-input-event)
+                                         (eq (event-key last-input-event) 'insert)
+                                         (equal (event-modifiers last-input-event)
+                                                (list 'meta)))
+                                    (and last-command-char
+                                         (= last-command-char ?Y))))))
+                      (if region
+                          (insert region)
+                        ;; not enough... ring will not be rotated correctly
+                        ;; if another sel buf has inserted and rotated
+                        ;; kill-ring
+                        (unless rotate-only-p
+                          (insert (cdr sel-item)))
+                        (current-kill (car sel-item) do-not-rotate)))
+                    (setq this-command 'yank)))
+
+                 ;; Function to apply when the operation has been cancelled.
+                 (function
+                  (lambda (&rest unused)
+                    (dp-unhighlight-point :id-prop dp-sel2-arrow-id)))
+
+                 ;; post-mode-hook
+                 (function
+                  (lambda ()
+                    (local-set-key "r" (kb-lambda
+                                           (let ((dp-sel2:rotate-only-p t))
+                                             (dp-sel2:select))))
+                    (local-set-key "R"
+                                   (kb-lambda
+                                       (current-kill
+                                        (car (dp-sel2:current-item)))
+                                       (dp-sel2:refresh)))
+                    (local-set-key "c" (kb-lambda
+                                           (dp-sel2-paste:copy-no-exit 'copy)))
+                    (local-set-key "k" (kb-lambda
+                                           (dp-sel2-paste:copy-no-exit 'copy)))
+                    (local-set-key "C" (kb-lambda
+                                           (dp-sel2-paste:copy-no-exit 'copy)
+                                           (dp-sel2:exit-mode)))
+                    (local-set-key "K" (kb-lambda
+                                           (dp-sel2-paste:copy-no-exit 'copy)
+                                           (dp-sel2:exit-mode)))
+                    (local-set-key "o" 'dp-sel2-paste:view-item)
+                    (local-set-key "v" 'dp-sel2-paste:view-item))))))
+    (setq this-command 'yank)))
 
 (defun dp-sel2:list-bookmarks ()
   (save-excursion
-    (mapcar 
-     (function 
+    (mapcar
+     (function
       (lambda (name)
         (setq bm (dp-bm-find name))
         ;;format: (bookmark-name . marker)
         (dp-goto-bm bm)
         ;; grab line from bm location
-        (setq line (buffer-substring 
+        (setq line (buffer-substring
                     (progn (beginning-of-line) (point))
                     (progn (end-of-line) (point))))
         (cons (format "`%s'%s" name  line) name)))

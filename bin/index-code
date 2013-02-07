@@ -1,13 +1,14 @@
 #!/bin/sh
 
-progname=$(basename $0)
 . script-x
-. eexec
-. code-indexing.rc
 
+progname="$(basename $0)"
+source eexec
+. code-indexing.rc
+set -u
 
 midix=
-vsetp $PROJECT && midix=.${PROJECT}
+vsetp ${PROJECT-} && midix=.${PROJECT}
 
 
 : ${RC_FILE_OVERRIDE=}
@@ -28,6 +29,7 @@ if vsetp $RC_FILE_OVERRIDE      # Let this override all
 then
     slist="$RC_FILE_OVERRIDE"
 else
+    slist=
     rc_file_names=
     for rc_file in $RC_FILE_NAMES
     do
@@ -116,8 +118,9 @@ set_all_index_methods()
 
 iterate_individually_p=
 
+
 option_str="nvdc:t:g:CTkKVo:Gxeiuf:Is:S:Caz"  # <:add new options:>
-all_options="$option_str$std_options"
+all_options="$option_str"
 
 q=$(getopt -o "$all_options" -- "$@")
 [ $? != 0 ] && Usage
@@ -237,7 +240,7 @@ do_taggin()
     local dirs="$@"
     echo 1>&2 "This program ($(basename $0)), ${tree_tagger} and cscope-indexer need to be reworked.
 They should work off the same set of files."
-    EExec eval ${tree_tagger} $DP_SCRIPT_X_DEBUG_OPT $EExec_opts $tflags $dirs
+    eval ${tree_tagger} $DP_SCRIPT_X_DEBUG_OPT $EExec_opts $tflags $dirs
     echo "taggin in $PWD"
     if vsetp "$output_dir"
     then

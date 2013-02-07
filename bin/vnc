@@ -18,19 +18,20 @@ do
 done
 unset eexec_program
 
-# A good env.<host> candidate?
-# Or better tied, somehow, to client.
+#bogus # A good env.<host> candidate?
+#bogus # Or better tied, somehow, to client.
+#bogus : ${VNC_DIR:=$HOME/.vnc}
+#bogus : ${VNC_CONFIG_DIR:=$HOME/.vnc/config.d/${HOST}}
+#bogus EExec mkdir -p "${VNC_CONFIG_DIR}"
+#bogus : ${VNC_PASSWORD_DEFAULT_FILE=vnc-passwd.default}
+#bogus : ${VNC_PASSWORD_FILE=vnc-passwd.$HOST}
+
+#bogus EExec -y cd "${VNC_DIR}"
+
+#bogus [ -e "${VNC_PASSWORD_FILE}" ] || {
+#bogus     EExec ln -s "${VNC_PASSWORD_DEFAULT_FILE}" "${VNC_PASSWORD_FILE}"
+#bogus }
+
 #: ${VNC_GEOMETRY:=1280x1024}
-: ${VNC_DIR:=$HOME/.vnc}
-: ${VNC_CONFIG_DIR:=$HOME/.vnc}
 : ${VNC_GEOMETRY:=1920x1080}
-: ${VNC_PASSWORD_DEFAULT_FILE=vnc-passwd.default}
-: ${VNC_PASSWORD_FILE=vnc-passwd.$HOST}
-
-EExec -y cd "${VNC_DIR}"
-
-[ -e "${VNC_PASSWORD_FILE}" ] || {
-    EExec ln -s "${VNC_PASSWORD_DEFAULT_FILE}" "${VNC_PASSWORD_FILE}"
-}
-
 EExec vncserver -geometry ${VNC_GEOMETRY} -depth 24 "$@"

@@ -288,28 +288,52 @@ Oddly, it doesn't handle structs.")
      `([return] ,(kb-lambda
                      (dp-push-go-back&call-interactively
                       'gtags-select-tag
-                      nil nil "dp-gtags-select-mode-hook")))))
-  (add-hook 'gtags-select-mode-hook 'dp-gtags-select-mode-hook)
+                      nil nil "dp-gtags-select-mode-hook"))
+       [(meta ?-)] dp-bury-or-kill-buffer
+       [?h] gtags-display-browser
+       [?P] gtags-find-file
+       [?f] gtags-parse-file
+       [?g] gtags-find-with-grep
+       [?I] gtags-find-with-idutils
+       [?s] gtags-find-symbol
+       [?r] gtags-find-rtag
+       [?t] gtags-find-tag
+       [?d] gtags-find-tag
+       [?v] gtags-visit-rootdir
+       [?o] gtags-select-tag-other-window)))
 
-  (setq gtags-prefix-key [(control c) (control ?.)])
 
-  (defun dp-gtags-map-key (keys def &optional map)
-    (setq-ifnil map gtags-mode-map)
-    (define-key map (concatenate 'vector gtags-prefix-key keys) def))
+  (defun dp-visit-gtags-select-buffer (&optional other-window-p)
+    (interactive "P")
+    (let ((buf (dp-get-buffer (car-safe (dp-choose-buffers-by-major-mode
+                                         'gtags-select-mode))
+                              'nil-if-nil)))
+      (if buf
+          (if other-window-p
+              (switch-to-buffer-other-window buf)
+            (switch-to-buffer buf))
+        (dp-ding-and-message "No gtags select buffers."))))
+  (add-hook 'gtags-select-mode-hook 'dp-gtags-select-mode-hook))
+  
 
-  (defun dp-gtags-map-keys ()
-    (interactive)
-    (dp-gtags-map-key "h" 'gtags-display-browser)
-    (dp-gtags-map-key "P" 'gtags-find-file)
-    (dp-gtags-map-key "f" 'gtags-parse-file)
-    (dp-gtags-map-key "g" 'gtags-find-with-grep)
-    (dp-gtags-map-key "I" 'gtags-find-with-idutils)
-    (dp-gtags-map-key "s" 'gtags-find-symbol)
-    (dp-gtags-map-key "r" 'gtags-find-rtag)
-    (dp-gtags-map-key "t" 'gtags-find-tag)
-    (dp-gtags-map-key "d" 'gtags-find-tag)
-    (dp-gtags-map-key "v" 'gtags-visit-rootdir)
-    (define-key gtags-mode-map "\C-x4." 'gtags-find-tag-other-window)))
+(defvar dp-T3D-hide-ifdef-default-defs
+  '("NV_T3D")
+  "T3D definitions for hide-ifdef-* to show code of interest.")
+
+(defun dp-setup-hide-ifdef-for-T3D (&optional extras)
+  (interactive)
+  (setq hide-ifdef-lines t
+        hide-ifdef-env nil)
+  (let ((defs (append dp-T3D-hide-ifdef-default-defs extras)))
+    (loop for def in defs do
+      (hide-ifdef-define def)
+      (hide-ifdef-set-define-alist "t3d"))))
+
+(defun dp-hide-ifdef-for-T3D ()
+  (interactive)
+  (hide-ifdef-mode 1)
+  (hide-ifdef-use-define-alist "t3d")
+  (hide-ifdefs))
 
 (provide 'dp-ptools)
 (dmessage "done loading dp-ptools.el...")

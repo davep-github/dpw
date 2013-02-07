@@ -2776,24 +2776,112 @@ gtags-find-file
 
 (setq gtags-prefix-key [(control c) (control ?.)])
 
-(defun dp-gtags-map-key (keys def &optional map)
-  (setq-ifnil map gtags-mode-map)
-  (define-key map (concatenate 'vector gtags-prefix-key keys) def))
+;;installed (defun dp-gtags-map-key (keys def &optional map)
+;;installed   (setq-ifnil map gtags-mode-map)
+;;installed   (define-key map (concatenate 'vector gtags-prefix-key keys) def))
 
-(if gtags-suggested-key-mapping
-    (progn
-      ;; Current key mapping.
-      (dp-gtags-map-key "h" 'gtags-display-browser)
-      (dp-gtags-map-key "P" 'gtags-find-file)
-      (dp-gtags-map-key "f" 'gtags-parse-file)
-      (dp-gtags-map-key "g" 'gtags-find-with-grep)
-      (dp-gtags-map-key "I" 'gtags-find-with-idutils)
-      (dp-gtags-map-key "s" 'gtags-find-symbol)
-      (dp-gtags-map-key "r" 'gtags-find-rtag)
-      (dp-gtags-map-key "t" 'gtags-find-tag)
-      (dp-gtags-map-key "d" 'gtags-find-tag)
-      (dp-gtags-map-key "v" 'gtags-visit-rootdir)
-      ; common
-      (define-key gtags-mode-map "\C-x4." 'gtags-find-tag-other-window)))
+;;installed (if gtags-suggested-key-mapping
+;;installed     (progn
+;;installed       ;; Current key mapping.
+;;installed       (dp-gtags-map-key "h" 'gtags-display-browser)
+;;installed       (dp-gtags-map-key "P" 'gtags-find-file)
+;;installed       (dp-gtags-map-key "f" 'gtags-parse-file)
+;;installed       (dp-gtags-map-key "g" 'gtags-find-with-grep)
+;;installed       (dp-gtags-map-key "I" 'gtags-find-with-idutils)
+;;installed       (dp-gtags-map-key "s" 'gtags-find-symbol)
+;;installed       (dp-gtags-map-key "r" 'gtags-find-rtag)
+;;installed       (dp-gtags-map-key "t" 'gtags-find-tag)
+;;installed       (dp-gtags-map-key "d" 'gtags-find-tag)
+;;installed       (dp-gtags-map-key "v" 'gtags-visit-rootdir)
+;;installed       ; common
+;;installed       (define-key gtags-mode-map "\C-x4." 'gtags-find-tag-other-window)))
+
+
+
+;;installed (defun dp-choose-buffers-by-major-mode (mode)
+;;installed   (dp-choose-buffers (lambda (buf)
+;;installed                        (with-current-buffer buf
+;;installed                          (when (eq mode major-mode)
+;;installed                            buf)))))
+
+;;installed (dp-choose-buffers-by-major-mode 'gtags-select-mode)
+;;installed (#<buffer "*GTAGS SELECT* (D)GetSurfaceByName">)
+
+;;installed (defun dp-gtags-visit-select-buffer (other-window-p)
+;;installed   (interactive "P")
+;;installed   (let ((buffers (dp-choose-buffers-by-major-mode 'gtags-select-mode)))
+;;installed     (if (not buffers)
+;;installed         (dp-ding-and-message "No gtags select buffers.")
+;;installed       (when (> (length buffers) 1)
+;;installed         (dp-ding-and-message "More than one select buffer. Choosing 1st."))
+;;installed       (if other-window-p
+;;installed           (switch-to-buffer-other-window (car buffers))
+;;installed         (switch-to-buffer (car buffers))))))
+
+;;installed (defun dp-get-p4-location ()
+;;installed   (interactive)
+;;installed   (dp-get-special-abbrev "'" "\\(\\(^//.*\\)\\)"))
+
+;;installed (defun dp-expand-p4-location ()
+;;installed   (interactive)
+;;installed   (let* ((abbrev-data (dp-get-p4-location))
+;;installed          beg end abbrev-strings expansion)
+;;installed     (when abbrev-data
+;;installed       (setq beg (nth 0 abbrev-data)
+;;installed             end (nth 1 abbrev-data)
+;;installed             abbrev-strings (nth 2 abbrev-data)
+;;installed             expansion (dp-nuke-newline 
+;;installed                        (shell-command-to-string 
+;;installed                         (format "dp4-reroot . %s" 
+;;installed                                 (if (listp abbrev-strings)
+;;installed                                     (dp-string-join abbrev-strings " ")
+;;installed                                   abbrev-strings)))))
+;;installed       (delete-region beg end)
+;;installed       (insert expansion "/"))))
+
+=============================================================================
+
+
+:(cfl "/home/dpanariti/yokel/share/xemacs/xemacs-packages/lisp/xemacs-base/ffap.el" 30131 "    (c++-mode . ffap-c-mode)		; " nil):
+
+
+(setq original-ffap-alist ffap-alist)
+
+(setq ffap-alist original-ffap-alist)
+
+
+(setq ffap-alist (cons (cons "^//[^:]+" 'dp-ffap-p4-location)
+                       original-ffap-alist))
+
+(("^//[^:]+" . dp-ffap-p4-location) ("" . ffap-completable) ("\\.info\\'" . ffap-info) ("\\`info/" . ffap-info-2) ("\\`[-a-z]+\\'" . ffap-info-3) ("\\.elc?\\'" . ffap-el) (emacs-lisp-mode . ffap-el-mode) (finder-mode . ffap-el-mode) (help-mode . ffap-el-mode) (c++-mode . ffap-c-mode) (cc-mode . ffap-c-mode) ("\\.\\([chCH]\\|cc\\|hh\\)\\'" . ffap-c-mode) (fortran-mode . ffap-fortran-mode) ("\\.[fF]\\'" . ffap-fortran-mode) (tex-mode . ffap-tex-mode) (latex-mode . ffap-latex-mode) ("\\.\\(tex\\|sty\\|doc\\|cls\\)\\'" . ffap-tex) ("\\.bib\\'" . ffap-bib) ("\\`\\." . ffap-home) ("\\`~/" . ffap-lcd) ("^[Rr][Ff][Cc][- #]?\\([0-9]+\\)" . ffap-rfc) (dired-mode . ffap-dired))
+
+
+
+
+(("^//[^:]+" . dp-ffap-p4-location) ("" . ffap-completable) ("\\.info\\'" . ffap-info) ("\\`info/" . ffap-info-2) ("\\`[-a-z]+\\'" . ffap-info-3) ("\\.elc?\\'" . ffap-el) (emacs-lisp-mode . ffap-el-mode) (finder-mode . ffap-el-mode) (help-mode . ffap-el-mode) (c++-mode . ffap-c-mode) (cc-mode . ffap-c-mode) ("\\.\\([chCH]\\|cc\\|hh\\)\\'" . ffap-c-mode) (fortran-mode . ffap-fortran-mode) ("\\.[fF]\\'" . ffap-fortran-mode) (tex-mode . ffap-tex-mode) (latex-mode . ffap-latex-mode) ("\\.\\(tex\\|sty\\|doc\\|cls\\)\\'" . ffap-tex) ("\\.bib\\'" . ffap-bib) ("\\`\\." . ffap-home) ("\\`~/" . ffap-lcd) ("^[Rr][Ff][Cc][- #]?\\([0-9]+\\)" . ffap-rfc) (dired-mode . ffap-dired))
+
+      
+(let ((l '((a . b) (c . d))))
+  (setq l (cons '(1 . 2) l)))
+((1 . 2) (a . b) (c . d))
+
+(append '(a v d) '())
+(a v d)
+
+dp-hide-ifdef-for-T3D
+
+
+(defun dp-visit-gtags-select-buffer (&optional other-window-p)
+  (interactive "P")
+  (let ((buf (dp-get-buffer (car-safe (dp-choose-buffers-by-major-mode
+                                       'gtags-select-mode))
+                            'nil-if-nil)))
+    (if buf
+        (if other-window-p
+            (switch-to-buffer-other-window buf)
+          (switch-to-buffer buf))
+      (dp-ding-and-message "No gtags select buffers."))))
+
+
 
 

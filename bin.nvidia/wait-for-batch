@@ -3,6 +3,7 @@
 source script-x
 source eexec
 set -u
+
 progname="$(basename $0)"
 : ${sleep_interval:=10}
 : ${continue_regexp:=RUN}
@@ -15,15 +16,16 @@ progname="$(basename $0)"
 : ${default_continue_pred_args:=-q ${continue_regexp}}
 : ${run_p=t}
 
-
-option_str="${EExec_parse_option_str}b:s:c:g:fP:"
+option_str="${EExec_parse_option_str}b:s:c:g:fP:C:"
+long_options=("sleep:"
+    "cont-regexp:")
 
 # Usage variable usage:
 Usage_args_info="" # $option_string is shown by default
 Usage_synopsis="Wait for a testgen batch job to finish.
 "
 Usage_details="While there are a lot of options, by default this will run:
-${status_program} <newest-dir> | ${continue_pred_program} ${default_continue_pred_args}
+${status_program} <newest-dir[${batch_dir}]> | ${continue_pred_program} ${default_continue_pred_args}
 and stop sleeping and looping when ${continue_regexp} is not in the output of 
 ${status_program}
 -c <regexp> AND -b <batch-dir> will probably be the most common options.
@@ -34,6 +36,7 @@ ${EExec_parse_usage}
 -s <sleep-interval> -- How long to sleep between iterations.
 -c <continue-regexp> -- Continue as long as this regexp is present in 
                         <status-program>'s output.
+-C|--cont-pred-args <args> -- Continuation predicate args.
 -p <status-program> -- Program to run each iteration to determine run status.
 -A <status-program-args> -- Args to <status-program>. Just <batch-dir> by default.
 -e <continue-pred-program> -- What to run to process <status-program>'s output
@@ -77,9 +80,9 @@ done
 trap stop_looping 2
 
 source dp-getopt+.sh
+
 for i in "$@"
 do
-  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
   case $1 in
       # eexec support
       -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
@@ -88,8 +91,9 @@ do
 
       # Program options.
       -b) shift; batch_dir=$1; status_program_args="${batch_dir}";;
-      -s) shift; sleep_interval=$1;;
-      -c) shift; continue_regexp=$1;;
+      -s|--sleep) shift; sleep_interval=$1;;
+      -c|--cont-regexp) shift; continue_regexp=$1;;
+      -C|--cont-pred-args) shift; continue_pred_args="${1}";;
       -P) shift; final_batch_status_post_process=$1;;
       -f) show_final_batch_status_p=;;
 
@@ -112,15 +116,16 @@ EExec_verbose_msg "status_program>${status_program}<"
 EExec_verbose_msg "status_program_args>${status_program_args}<"
 EExec_verbose_msg "continue_pred_args>${continue_pred_args}<"
 
+iter=0
 echo "Using ${batch_dir} for status."
 while [ -n "$run_p" ]
 do 
   EExec "${status_program}" ${status_program_args} \
     | EExec "${continue_pred_program}" ${continue_pred_args} || {
-      echo "${continue_pred_program} ${continue_pred_args} Failure is the exit condition."
+      echo "${continue_pred_program} ${continue_pred_args} Failure (not finding the regexp) is the correct exit condition."
       break
   } 1>&2
-  echo -n "sleep for ${sleep_interval}..."
+  echo -n "$((++iter)): sleep for ${sleep_interval}..."
   sleep "${sleep_interval}"
   echo 'Awaken.'
 done

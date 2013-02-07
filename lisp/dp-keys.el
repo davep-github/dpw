@@ -386,7 +386,7 @@ Submaps of this map are defined below.")
   (defconst dp-temp-buffer-mode-map
     (dp-define-key-submap 'dp-temp-buffer-mode-prefix dp-Ccd-map
                           ;; Key in parent map which accesses this map.
-                          [?t]     
+                          [(control ?t)]     
                           ;; List of bindings to define in this map.
                           [?c] 'dp-make-temp-c++-mode-buffer
                           [?t] 'dp-make-temp-text-mode-buffer
@@ -554,6 +554,23 @@ already in there.")
     ;; <:cdd map journal bindings:>
     "Keymap for my journal commands.")
   
+  (defconst dp-tag-system-map
+    (dp-define-key-submap 'dp-journal-prefix dp-Ccd-map
+                          [?t]
+                          [?b] 'dp-visit-gtags-select-buffer
+                          [?h] 'gtags-display-browser
+                          [?P] 'gtags-find-file
+                          [?f] 'gtags-parse-file
+                          [?g] 'gtags-find-with-grep
+                          [?I] 'gtags-find-with-idutils
+                          [?s] 'gtags-find-symbol
+                          [?r] 'gtags-find-rtag
+                          [?t] 'gtags-find-tag
+                          [?d] 'gtags-find-tag
+                          [?v] 'gtags-visit-rootdir
+                          )
+    ;; <:cdd map journal bindings:>
+    "Keymap for my tag system commands.")
   ;;
   ;; Window management stuff.  Enough here to make it worthwhile?
   ;; Commands will be more intuitive and remomorable[sic].
@@ -659,9 +676,9 @@ already in there.")
 
 ;; This is, of course, remapped in a shell buffer.
 (global-set-key [(control ?c) ?z] (kb-lambda (dp-kb-binding-moved arg 'dp-ssh)))
-(global-set-key [(control ?c) (control ?g)] 
-  (kb-lambda 
-      (dp-kb-binding-moved arg 'dp-sel2:bm)))
+;; (global-set-key [(control ?c) (control ?g)] 
+;;   (kb-lambda 
+;;       (dp-kb-binding-moved arg 'dp-sel2:bm)))
 (global-set-key [(control ?c) (control ?z)] 
   (kb-lambda 
       (dp-kb-binding-moved arg 'dp-python-shell)))

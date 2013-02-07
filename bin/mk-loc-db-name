@@ -11,6 +11,7 @@ set -u
 : ${LOC_DB_NAME:=}
 : ${LOC_DB_DIR:=.}
 : ${uniqifier=}
+: ${uniqifier_is_abbrev=t}
 
 eexec_program=$(EExec_parse "$@")
 for op in $eexec_program
@@ -29,14 +30,15 @@ CREAT_NO_ASK_P=
 Usage_args_info="[options]"
 Usage_synopsis="Make a locate db name in a context sensitive manner.
 "
-Usage_details="-n -- Show what would happen but don't do it. [eexec]
--v -- Be verbose about it. [eexec]
--q -- Anti-verbose. [eexec]
--u <uniqifying-string> -- Incorporate this into the db name for differentiation.
+Usage_details="-n) Show what would happen but don't do it. [eexec]
+-v) Be verbose about it. [eexec]
+-q) Anti-verbose. [eexec]
+-u <uniqifying-string>) Incorporate this into the db name for differentiation.
+-g) Don't treat the uniqifying-string as an abbrev.
 
 "
 # Example of arg parsing.
-option_str="nvqu:f:d:cC"
+option_str="nvqu:f:d:cCg"
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -53,6 +55,7 @@ do
       -d) shift; LOC_DB_DIR=$1;;
       -c) CREAT_P=t;;
       -C) CREAT_P=t; CREAT_NO_ASK_P=t;;
+      -g) uniqifier_is_abbrev=;;
       --help) Usage; exit 0;;
       --) shift ; break ;;
       *) echo 1>&2 "Unsupported option>$1<"
@@ -64,7 +67,8 @@ done
 case "$uniqifier" in
     .|=|-) uniqifier="$(basename $PWD)";;
     "") ;;
-    *) uniqifier="$(basename $(dogo "$uniqifier"))" # Allow abbrevs.
+    *) truth_p $uniqifier_is_abbrev &&  uniqifier="$(dogo "$uniqifier")" # Allow abbrevs.
+       uniqifier=$(basename "${uniqifier}");;
 esac
 
 if [ -n "$uniqifier" ]
