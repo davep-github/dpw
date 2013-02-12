@@ -1146,18 +1146,18 @@ export -f nh
 unset_by_re()
 {
     local re                    # Needed with loop var?
-    local e
     local n
     for re in "$@"
     do
-      for e in $(envgrep "$re")
-      do 
-        n=$(echo $e | sed -rn 's/([^=]*)(=.*)/\1/p')
-        unset $n
-      done
+      unset $(envgrep "${re}" | sed -rn 's/(.*)(=.*)/\1/p')
     done
 }
 export -f unset_by_re
+
+unset_mesrc()
+{
+    unset_by_re __ME_src
+}
 
 git_change_sandbox()
 {

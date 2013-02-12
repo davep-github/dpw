@@ -29,31 +29,44 @@ Ee|dotvnc|dvnc|vnc|   ${gohome}.vnc/
 # It's really not the ME root, but I'm an ME guy.
 # For tot, the superfluous dot prevents a double slash at the end of the
 # expansion.
-Ee|workspace__ME_src|         ./
-Ee|ws__ME_src|                ./
-Ee|sandbox__ME_src|           ./
-Ee|sb__ME_src|                ./
-Ee|hw__ME_src|                hw/
-Ee|ap__ME_src|                hw/ap_tlit1/
-Ee|tot__ME_src|               hw/ap_tlit1/
-Ee|TOT__ME_src|               hw/ap_tlit1/
-Ee|topoftree__ME_src|         hw/ap_tlit1/
-Ee|etc__ME_src|               hw/ap_tlit1/etc/
-Ee|diag__ME_src|              hw/ap_tlit1/diag/
-Ee|tg__ME_src|                hw/ap_tlit1/diag/testgen/
-Ee|tgen__ME_src|              hw/ap_tlit1/diag/testgen/
-Ee|testgen__ME_src|           hw/ap_tlit1/diag/testgen/
-Ee|drv__ME_src|               hw/ap_tlit1/drv/
-Ee|drvapi__ME_src|            hw/ap_tlit1/drv/drvapi/
-Ee|runtestcommon__ME_src|     hw/ap_tlit1/drv/drvapi/runtest_common
-Ee|rtc__ME_src|               hw/ap_tlit1/drv/drvapi/runtest_common
-Ee|me__ME_src|                hw/ap_tlit1/drv/multiengine/
-Ee|meng__ME_src|              hw/ap_tlit1/drv/multiengine/
-Ee|multi__ME_src|             hw/ap_tlit1/drv/multiengine/
-Ee|multiengine__ME_src|       hw/ap_tlit1/drv/multiengine/
-Ee|drvapi__ME_src|            hw/ap_tlit1/drv/multiengine/drvapi/
-Ee|levelsroot__ME_src|        hw/ap_tlit1/diag/testgen/config/levels/
-Ee|levels__ME_src|            hw/ap_tlit1/diag/testgen/config/levels/tegra/
+E|workspace__ME_src|         ./
+E|ws__ME_src|                ./
+E|sandbox__ME_src|           ./
+E|sb__ME_src|                ./
+E|hw__ME_src|                hw/
+E|ap__ME_src|                hw/ap_tlit1/
+E|tot__ME_src|               hw/ap_tlit1/
+E|TOT__ME_src|               hw/ap_tlit1/
+E|topoftree__ME_src|         hw/ap_tlit1/
+E|etc__ME_src|               hw/ap_tlit1/etc/
+E|diag__ME_src|              hw/ap_tlit1/diag/
+E|tg__ME_src|                hw/ap_tlit1/diag/testgen/
+E|tgen__ME_src|              hw/ap_tlit1/diag/testgen/
+E|testgen__ME_src|           hw/ap_tlit1/diag/testgen/
+E|drv__ME_src|               hw/ap_tlit1/drv/
+E|drvapi__ME_src|            hw/ap_tlit1/drv/drvapi/
+E|runtestcommon__ME_src|     hw/ap_tlit1/drv/drvapi/runtest_common
+E|rtc__ME_src|               hw/ap_tlit1/drv/drvapi/runtest_common
+E|me__ME_src|                hw/ap_tlit1/drv/multiengine/
+E|meng__ME_src|              hw/ap_tlit1/drv/multiengine/
+E|multi__ME_src|             hw/ap_tlit1/drv/multiengine/
+E|multiengine__ME_src|       hw/ap_tlit1/drv/multiengine/
+E|drvapi__ME_src|            hw/ap_tlit1/drv/multiengine/drvapi/
+E|levelsroot__ME_src|        hw/ap_tlit1/diag/testgen/config/levels/
+E|levels__ME_src|            hw/ap_tlit1/diag/testgen/config/levels/tegra/
+
+# /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile/traces/gpu_multiengine
+#                            arch/traces/mobile/traces/gpu_multiengine
+E|arch__ME_src|              arch/
+E|tracesroot__ME_src|        arch/traces/
+E|troot__ME_src|             arch/traces/
+E|mobiletraces__ME_src|      arch/traces/mobile/traces/
+E|mtraces__ME_src|           arch/traces/mobile/traces/
+E|gpumetraces__ME_src|       arch/traces/mobile/traces/gpu_multiengine
+E|gmetraces__ME_src|         arch/traces/mobile/traces/gpu_multiengine
+E|gmet__ME_src|              arch/traces/mobile/traces/gpu_multiengine
+E|gme__ME_src|               arch/traces/mobile/traces/gpu_multiengine
+
 
 #######################################################################
 

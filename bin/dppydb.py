@@ -52,6 +52,9 @@ def default_to_node_name():
 def domain_to_node_name(domain):
     return ("domain", domain)
 
+def famDB_to_node_name():
+    return ("famDB", None)
+
 def def_formatter(prefix, field, value, fixes=fixes):
     # this is almost 2x faster than string.join !
     return "%s%s%s%s%s%s%s" % (fixes.field_pre, prefix,
@@ -103,6 +106,9 @@ class PythonDataBase:
     def entries_as_list(self):
         return self.entries
 
+    def __iter__(self):
+        return iter(self.entries)
+    
     ###############################################################
     def grep_fields(self, pat=None, vpat=None):
         if type(pat) == types.StringType:
@@ -436,7 +442,8 @@ def find_db_file(dbfile, localize=None, loclist=None):
     return ret
 
 ###############################################################
-def load(dirs=None, pat=None, wild=None, verbose=None, localize=None, loclist=None):
+def load(dirs=None, pat=None, wild=None, verbose=None, localize=None,
+         loclist=None):
     """load(dirs=None, pat=None, wild=None, verbose=None):
     Within the directories in dirs,
     load all databases matching pat (a python regular expression)

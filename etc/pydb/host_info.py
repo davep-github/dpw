@@ -149,6 +149,8 @@ VANU_FG_COLOR = 'black'
 #NVIDIA_BG_COLOR = 'AliceBlue'
 NVIDIA_BG_COLOR = 'lavender'
 NVIDIA_FG_COLOR = 'black'
+NVIDIA_LSIM_FG_COLOR = 'black'
+NVIDIA_LSIM_BG_COLOR = 'linen'
 
 
 XEM_RUN_SERVER="""-eval (dp-start-server)"""
@@ -310,15 +312,13 @@ e(
 
 #
 # FAMILY entry for NVIDIA-LINUX
-e(
+nvidia_family = e(
     kef='family',
     dat={
     'family': 'nvidia-linux',
     'family_zone': 'nvidia',
     'comment': 'My linux boxen at nVIDIA.',
     'DTE': 'kde',
-    'xterm_bg': "'" + NVIDIA_BG_COLOR + "'",
-    'xterm_fg': "'" + NVIDIA_FG_COLOR + "'",
     'main_macs_opts': '-eval (dp-main-rc+2w)',
     'xem_opts': '-geometry 81x71-42+6',
     # This is OK, but O0{}[]() : no slashed 0. O & 0 are distinguishable.
@@ -329,6 +329,34 @@ e(
     },
     # These are searched in the order given.
     ref=[OSDB['linux'], default]
+)
+
+#
+# FAMILY entry for o-xterm
+e(
+    kef='family',
+    dat={
+    'family': 'nv-o-xterm',
+    'comment': 'o-xterm-boxen @ nvidia.',
+    'host-pattern': 'o-xterm-[0-9]+',
+    'xterm_bg': "'" + NVIDIA_BG_COLOR + "'",
+    'xterm_fg': "'" + NVIDIA_FG_COLOR + "'",
+    'xem_bg_color': "'" + NVIDIA_BG_COLOR + "'",
+    },
+    ref=[nvidia_family, OSDB['linux'], default]
+)
+
+e(
+    kef='family',
+    dat={
+    'family': 'nv-l-sim',
+    'comment': 'o-xterm-boxen @ nvidia.',
+    'host-pattern': 'l-sim-',
+    'xterm_bg': "'" + NVIDIA_LSIM_BG_COLOR + "'",
+    'xterm_fg': "'" + NVIDIA_LSIM_FG_COLOR + "'",
+    'xem_bg_color': "'" + NVIDIA_LSIM_BG_COLOR + "'",
+    },
+    ref=[nvidia_family, OSDB['linux'], default]
 )
 
 #
@@ -355,6 +383,16 @@ e(
     ref=default
     )
 
+#
+# Put family DB in the db
+e(
+    kef='host',
+    dat={
+        'host': dppydb.famDB_to_node_name(),
+        'db': famDB,
+    },
+    ref=famDB
+    )
 #
 # create entries for all of the families for the case where a node is
 # not explicitly listed.

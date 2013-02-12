@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-import sys, socket, string, os, dp_io
+import sys, socket, string, os, re
+import dp_io
 
 RC_NO_SUCH_HOST = 1
 RC_NO_SUCH_ITEM = 2
@@ -84,9 +85,23 @@ def dump_all(info_list):
     raise SUCCESS
 
 ##################################################################
+def match_family_by_host(host):
+    # XXX @todo Will need to preserver order somehow.
+    famDB = host_db.get(dppydb.famDB_to_node_name(), None).get_item('db')
+    pattern_field_name = "host-pattern"
+    families_with_host_patterns = famDB.grep_fields(pattern_field_name)
+    for fam in families_with_host_patterns:
+        pat = fam.get_item(pattern_field_name)
+        m = re.search(pat, host)
+        if m:
+            return (RC_OK, (fam,))
+    return RC_NO_SUCH_HOST
+    
+##################################################################
 def lookup_item(info_item, not_found_string='-', dumper=Def_dumper,
                 locale_search=True, domain_search=True,
                 default_search=True,
+                wildcard_match=True,
                 dump_all_fields=False):
     if verbose:
         print 'try >%s< for >%s<' % (host, info_item)
@@ -134,6 +149,8 @@ def lookup_item(info_item, not_found_string='-', dumper=Def_dumper,
                         if verbose > 1:
                             print '%s' % inf.ret_fields()
 
+            if rc == RC_NO_SUCH_HOST and wildcard_match:
+                rc, info = match_family_by_host(host)
             if rc == RC_NO_SUCH_HOST and locale_search:
                 locale_rcs = os.environ.get('locale_rcs', '')
                 if verbose:
@@ -221,25 +238,35 @@ dump_all_fields = False
 locale_search = True
 domain_search = True
 default_search = True
+wildcard_match = True
 import getopt
 
 # dp_io.eprintf('argv: %s', sys.argv)
-options, args = getopt.getopt(sys.argv[1:], 'h:d:vn:DLai:')
+options, args = getopt.getopt(sys.argv[1:], 'h:d:vn:DLai:w')
 for (o, v) in options:
     if o == '-d':
         domain = v
+        continue
     if o == '-h':
         host = v
+        continue
     if o == '-v':
         verbose = verbose + 1
+        continue
     if o == '-n':
         not_found_strings.append(v)
+        continue
     if o == '-D':
         default_search = not default_search
+        continue
     if o == '-L':
         locale_search = not locale_search
+        continue
     if o == '-a':
         dump_all_fields = not dump_all_fields
+        continue
+    if o == '-w':
+        wildcard_match = not wildcard_match
 
     #
     # Allow query items to be given with -i <item>
@@ -248,6 +275,7 @@ for (o, v) in options:
     # -i boo -n no_boo_in_the_database
     if o == '-i':
         items.append(v)
+        continue
 
 dppydb.prep()
 host_db = dppydb.load(wild='host_info', verbose=verbose)
@@ -292,6 +320,7 @@ for item in items + args:
                     locale_search=locale_search,
                     domain_search=domain_search,
                     default_search=default_search,
+                    wildcard_match=wildcard_match,
                     dump_all_fields=dump_all_fields)
     except Success_t:
         pass

@@ -15288,8 +15288,8 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
                                         threshold-chars)))
 			(point-min)))
 	(forward-line 1)
-        (dmessage "dp-restrict-buffer-growth, pt-min: %s, pt: %s, pt-max: %s"
-                  (point-min) (point) (point-max))
+;;        (dmessage "dp-restrict-buffer-growth, pt-min: %s, pt: %s, pt-max: %s"
+;;                  (point-min) (point) (point-max))
  	(delete-region (point-min) (point))
         (insert "================== 8>< ===================\n")
         ))

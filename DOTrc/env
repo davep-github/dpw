@@ -57,7 +57,8 @@ export SEMANTIC_PATH="$HOME/lisp/contrib/site-packages/cedet/semantic"
     export GREP_OPTIONS='--color=never'
 }
 
-[ -f /etc/timezone ] || export TZ=EST5EDT
+#[ -f /etc/timezone ] || export TZ=EST5EDT
+[ -f /etc/timezone ] || export TZ=PST8PDT
 
 #
 

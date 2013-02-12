@@ -287,7 +287,7 @@ Oddly, it doesn't handle structs.")
     (dp-define-buffer-local-keys
      `([return] ,(kb-lambda
                      (dp-push-go-back&call-interactively
-                      'gtags-select-tag
+                      'gtags-select-tag-other-window
                       nil nil "dp-gtags-select-mode-hook"))
        [(meta ?-)] dp-bury-or-kill-buffer
        [?h] gtags-display-browser
@@ -300,8 +300,17 @@ Oddly, it doesn't handle structs.")
        [?t] gtags-find-tag
        [?d] gtags-find-tag
        [?v] gtags-visit-rootdir
+       [?.] gtags-select-tag
+       [?=] gtags-select-tag
+       [space] dp-gtags-select-tag-one-window
+       [?1] dp-gtags-select-tag-one-window
+       [(meta return)] gtags-select-tag
        [?o] gtags-select-tag-other-window)))
 
+  (defun dp-gtags-select-tag-one-window ()
+    (interactive)
+    (gtags-select-tag)
+    (dp-one-window++))
 
   (defun dp-visit-gtags-select-buffer (&optional other-window-p)
     (interactive "P")
@@ -315,25 +324,28 @@ Oddly, it doesn't handle structs.")
         (dp-ding-and-message "No gtags select buffers."))))
   (add-hook 'gtags-select-mode-hook 'dp-gtags-select-mode-hook))
   
+(when (and (bound-and-true-p dp-wants-hide-ifdef-p)
+           (dp-optionally-require 'hideif))
+  (message "Configuring hide-ifdef...")
+  (defvar dp-T3D-hide-ifdef-default-defs
+    '(NV_T3D)
+    "T3D definitions for hide-ifdef-* to show code of interest.")
 
-(defvar dp-T3D-hide-ifdef-default-defs
-  '("NV_T3D")
-  "T3D definitions for hide-ifdef-* to show code of interest.")
+  (defun dp-setup-hide-ifdef-for-T3D (&optional extras)
+    (interactive)
+    (setq hide-ifdef-lines t
+          hide-ifdef-env nil)
+    (let ((defs (append dp-T3D-hide-ifdef-default-defs extras)))
+      (loop for def in defs do
+        (hide-ifdef-define def)))
+    (hide-ifdef-set-define-alist "t3d"))
 
-(defun dp-setup-hide-ifdef-for-T3D (&optional extras)
-  (interactive)
-  (setq hide-ifdef-lines t
-        hide-ifdef-env nil)
-  (let ((defs (append dp-T3D-hide-ifdef-default-defs extras)))
-    (loop for def in defs do
-      (hide-ifdef-define def)
-      (hide-ifdef-set-define-alist "t3d"))))
+  (defun dp-hide-ifdef-for-T3D ()
+    (interactive)
+    (hide-ifdef-mode 1)
+    (hide-ifdef-use-define-alist "t3d")
+    (hide-ifdefs)))
 
-(defun dp-hide-ifdef-for-T3D ()
-  (interactive)
-  (hide-ifdef-mode 1)
-  (hide-ifdef-use-define-alist "t3d")
-  (hide-ifdefs))
 
 (provide 'dp-ptools)
 (dmessage "done loading dp-ptools.el...")

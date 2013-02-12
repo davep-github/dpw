@@ -46,6 +46,10 @@
 ;;(defun dp4-locale-client-setup ())
 (fmakunbound 'dp4-locale-client-setup)
 
+(defvar dp-wants-hide-ifdef-p t
+  "Do I want the hide ifdef package activated?
+At nVIDIA, the answer is HELL YES!")
+
 ;; For some reason, vc isn't being autoloaded here, but it is @ home.
 (vc-load-vc-hooks)  ; This is being added to the Tools->Version Control menu.
 

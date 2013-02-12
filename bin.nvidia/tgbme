@@ -1,0 +1,27 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+EExec -y mecd testgen
+
+EExec ./build_gpu_multiengine.pl purge \
+   && {
+          echo "***** Purge Complete *****"
+          EExec ./build_gpu_multiengine.pl -debug=1 \
+          && {
+                  echo "***** Build Complete *****"
+                  exit 0
+          }
+   }
+
+echo 1>&2 "Failed somewhere."
