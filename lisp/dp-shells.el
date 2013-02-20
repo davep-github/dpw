@@ -238,8 +238,10 @@ prompt.  We don't want to stomp on them.")
                                        "autoconf"
                                        "libtoolize"
                                        "automake"
+                                       "tgbme"  ; Build multiengine test util.
                                        "xemacs")))
                    '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(cia\\|stash\\|status\\|diff\\|stat\\)")
+                   '("\\(.*/\\)\\(t_make\\|build_gpu_multiengine.*\\.pl\\)")
                    dp-shell-vc-commit-cmd-regexps)
            nil 'one-around-all-p)
           "\\(\\s-+\\|$\\)")
