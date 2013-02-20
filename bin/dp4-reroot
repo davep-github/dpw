@@ -54,7 +54,7 @@ if [ -z "$*" ]
 then
     while read
     do
-      reroot_one "$REPLY}"
+      reroot_one "${REPLY}"
     done
 else
     for p in "$@"

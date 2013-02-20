@@ -33,6 +33,9 @@ E|workspace__ME_src|         ./
 E|ws__ME_src|                ./
 E|sandbox__ME_src|           ./
 E|sb__ME_src|                ./
+Ee|nvdiag__ME_src|           hw/nvdiag/
+Ee|nvd__ME_src|              hw/nvdiag/
+Ee|mods__ME_src|             hw/nvdiag/mods/
 E|hw__ME_src|                hw/
 E|ap__ME_src|                hw/ap_tlit1/
 E|tot__ME_src|               hw/ap_tlit1/
@@ -50,8 +53,10 @@ E|rtc__ME_src|               hw/ap_tlit1/drv/drvapi/runtest_common
 E|me__ME_src|                hw/ap_tlit1/drv/multiengine/
 E|meng__ME_src|              hw/ap_tlit1/drv/multiengine/
 E|multi__ME_src|             hw/ap_tlit1/drv/multiengine/
+E|drvme__ME_src|             hw/ap_tlit1/drv/multiengine/
 E|multiengine__ME_src|       hw/ap_tlit1/drv/multiengine/
 E|drvapi__ME_src|            hw/ap_tlit1/drv/multiengine/drvapi/
+E|medrvapi__ME_src|          hw/ap_tlit1/drv/multiengine/drvapi/
 E|levelsroot__ME_src|        hw/ap_tlit1/diag/testgen/config/levels/
 E|levels__ME_src|            hw/ap_tlit1/diag/testgen/config/levels/tegra/
 
@@ -99,7 +104,7 @@ Ee|runtestcommon1|rtc1|                                          ${drvapi1}/runt
 Ee|levels1|lev1|                                                 ${testgen1}config/levels/tegra/
 
 Ee|scratch2|scr2|sc2|                                            /home/scratch.dpanariti_t124/
-Ee|sandbox2|sbox2|sb2|workspace2|ws2|                            ${scratch2}sb2/hw/
+Ee|sandbox2|sbox2|sb2|workspace2|ws2|                           ${scratch2}sb2/hw/
 Ee|sandbox2hw|sbox2hw|sb2hw|workspace2hw|ws2hw|hw2|              ${workspace2}hw/
 Ee|sandbox2ap|sbox2ap|sb2ap|workspace2ap|ws2ap|ap2|tot2|         ${workspace2hw}ap_tlit1/
 Ee|sandbox2diag|sbox2diag|sb2diag|workspace2diag|ws2diag|diag2|  ${tot2}diag/
@@ -113,7 +118,7 @@ Ee|runtestcommon2|rtc2|                                          ${drvapi2}/runt
 Ee|levels2|lev2|                                                 ${testgen2}config/levels/tegra/
 
 Ee|scratch3|scr3|sc3|                                            /home/scratch.dpanariti_t124_1/
-Ee|sandbox3|sbox3|sb3|workspace3|ws3|                            ${scratch3}sb3/sb3hw/
+Ee|sandbox3|sbox3|sb3|workspace3|ws3|sbrtargs|                   ${scratch3}sb3/sb3hw/
 Ee|sandbox3hw|sbox3hw|sb3hw|workspace3hw|ws3hw|hw3|              ${workspace3}hw/
 Ee|sandbox3ap|sbox3ap|sb3ap|workspace3ap|ws3ap|ap3|tot3|         ${workspace3hw}ap_tlit1/
 Ee|sandbox3diag|sbox3diag|sb3diag|workspace3diag|ws3diag|diag3|  ${tot3}diag/
@@ -127,7 +132,7 @@ Ee|runtestcommon3|rtc3|                                          ${drvapi3}/runt
 Ee|levels3|lev3|                                                 ${testgen3}config/levels/tegra/
 
 Ee|scratch4|scr4|sc4|                                            /home/scratch.dpanariti_t124_1/
-Ee|sandbox4|sbox4|sb4|workspace4|ws4|                            ${scratch4}sb4/sb4hw/
+Ee|sandbox4|sbox4|sb4|workspace4|ws4|sbbar0|sbbar1|sbbarx|sbbar| ${scratch4}sb4/sb4hw/
 Ee|sandbox4hw|sbox4hw|sb4hw|workspace4hw|ws4hw|hw4|              ${workspace4}hw/
 Ee|sandbox4ap|sbox4ap|sb4ap|workspace4ap|ws4ap|ap4|tot4|         ${workspace4hw}ap_tlit1/
 Ee|sandbox4diag|sbox4diag|sb4diag|workspace4diag|ws4diag|diag4|  ${tot4}diag/
@@ -140,5 +145,20 @@ Ee|msenc4|                                                       ${me4}drvapi/ms
 Ee|runtestcommon4|rtc4|                                          ${drvapi4}/runtest_common/
 Ee|levels4|lev4|                                                 ${testgen4}config/levels/tegra/
 
+Ee|scratch5|scr5|sc5|                                            /home/scratch.dpanariti_t124_2/
+Ee|sandbox5|sbox5|sb5|workspace5|ws5|sbengcpu|                   ${scratch5}sb5/sb5hw/
+Ee|sandbox5hw|sbox5hw|sb5hw|workspace5hw|ws5hw|hw5|              ${workspace5}hw/
+Ee|sandbox5ap|sbox5ap|sb5ap|workspace5ap|ws5ap|ap5|tot5|         ${workspace5hw}ap_tlit1/
+Ee|sandbox5diag|sbox5diag|sb5diag|workspace5diag|ws5diag|diag5|  ${tot5}diag/
+Ee|sandbox5tg|sbox5tg|sb5tg|workspace5tg|ws5tg|tgen5|tg5|testgen5| ${workspace5diag}testgen/
+Ee|sandbox5testgen|sbox5testgen|sb5testgen|workspace5testgen|ws5testgen| ${testgen5}
+Ee|drv5|                                                         ${tot5}drv/
+Ee|drvapi5|                                                      ${drv5}drvapi/
+Ee|me5|                                                          ${drv5}multiengine/
+Ee|msenc5|                                                       ${me5}drvapi/msenc/
+Ee|runtestcommon5|rtc5|                                          ${drvapi5}/runtest_common/
+Ee|levels5|lev5|                                                 ${testgen5}config/levels/tegra/
+
 Ee|status|stat|       /home/dpanariti/work/status/
 Ee|global|       /home/dpanariti/davep/build/global-6.2.7/
+Ee|mods|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/hw/nvdiag/

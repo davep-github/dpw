@@ -46,9 +46,14 @@
 ;;(defun dp4-locale-client-setup ())
 (fmakunbound 'dp4-locale-client-setup)
 
+(defvar dp-cscope-perverted-index-option nil
+  "This is a localized value for cscope-perverted-index-option (q.v.).")
+
 (defvar dp-wants-hide-ifdef-p t
   "Do I want the hide ifdef package activated?
 At nVIDIA, the answer is HELL YES!")
+
+(setq dp-edting-server-valid-host-regexp "o-xterm-.*")
 
 ;; For some reason, vc isn't being autoloaded here, but it is @ home.
 (vc-load-vc-hooks)  ; This is being added to the Tools->Version Control menu.

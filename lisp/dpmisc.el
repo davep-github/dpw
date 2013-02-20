@@ -6133,9 +6133,30 @@ you've added enough info for set-auto-mode to figure it out.."
   (marker-position (process-mark (get-buffer-process (or buffer
 							 (current-buffer))))))
 
+(defvar dp-editing-server-ipc-file 
+  (or (getenv "DP_EDITING_SERVER_FILE")
+                        (format "%s/ipc/dp-editing-server" (getenv "HOME")))
+  "We store the editing server name in here. The environment variable is
+consistently stale.")
+
+(defun dp-gnuserv-running-p ()
+  "Determine if the editing server process exists and is alive.
+Standard function simply checks that the process is non-nil without checking
+to see if it's alive as well."
+  (and-boundp 'gnuserv-process
+    (eq (process-status gnuserv-process) 'run)))
+
 ;;
-;; try for more feature filled gnuserv and fall back
+;; Finalize the editing server. If one is running, remove the IPC file.
+;;
+(defun dp-finalize-editing-server ()
+  (when (dp-gnuserv-running-p)
+    (shell-command-to-string (format "rm -f %s" dp-editing-server-ipc-file))))
+
+;;
+;; Try for more feature filled gnuserv and fall back
 ;; to the regular server if gnuserv is not available.
+;; gnuserv is always available when I build my own XEmacs.
 ;;
 (defun dp-start-server (&optional leave-or-make-dead-p)
   "Start up an editing server.  Try for gnuserv, then server.
@@ -6163,7 +6184,17 @@ new one."
   ;; Nuke any possible existing server.
     (dp-start-server t))
   ;; Start gnu (har, har!) one.
-  (dp-start-server))
+  (dp-start-server)
+  (let ((host-name (dp-short-hostname)))
+    (when (and (dp-gnuserv-running-p)
+               (string-match dp-edting-server-valid-host-regexp
+                             host-name))
+      ;; Don't clobber existing server advertisement.
+      (shell-command-to-string (format "echo %s %d > %s" 
+                                       host-name
+                                       (emacs-pid)
+                                       dp-editing-server-ipc-file)))))
+  
 (dp-defaliases 'gserv 'xserver 'eserver 'gnuserve 'dp-start-editing-server)
 
 (defun dp-never-cleanup-buffer-p (buf)
@@ -9609,9 +9640,16 @@ Can be called directly or by an abbrev's hook.
   (defun dp-recover-context (&optional file-flag)
     "Recover our file context.
 Periodically, the list of files, windows, etc are saved so that context can
-be restored. When we start up, the current context file is copied. In
-general, that is what we are interested in using because the current context
-is the current context. But, for whatever reason, we give a way to get it."
+be restored. When we start up, the current context file is copied so that it
+becomes the previous context.. In general, that is what we are interested
+because it represents the previous context. By doing it this way, we have a
+context even if we exit in an unpleasant manner. This is better than counting
+on our exit hook saving to the previous context. We need 2 context files
+because as soon as we begin operating, we begin writing to the current
+context file, which will obliterate the previous one. Context files are host
+specific, so if we move to another machine, we may want to recover the
+context from the previous machine. This function allows us to specify a
+specific context file so we can get context from another machine."
     (interactive "P")
     (cond 
      ((not file-flag) (dp-recover-context-from-file saveconf-file-name-prev))
@@ -11071,7 +11109,11 @@ If wide enough: | | |, otherwise: |-|"
   "Treat visiting buffers and such as closely as possible to having 2 instances of xemacs running.
 I like this for keeping a frame on each desktop.")
 
-(defvar dp-buffers-allowed-in-other-frames '("SPEEDBAR" "\\*shell\\*"))
+;;(defvar dp-buffers-allowed-in-other-frames '("SPEEDBAR" "\\*shell\\*"))
+;; For now, since I want to have independent frames on each desktop, I want
+;; shells to show up in the current frame.
+(defvar dp-buffers-allowed-in-other-frames '("SPEEDBAR")  ;; "\\*shell\\*"))
+  "Windows matching this regexp will always show up in their own frames.")
 
 (defun* dp-display-buffer-if-visible (buffer &optional (norecord t))
   (interactive "Bbuffer name? ")
@@ -15269,12 +15311,17 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
   (interactive)
   (switch-to-buffer-other-window (other-buffer (current-buffer))))
 
-(defun dp-save-buffers-kill-emacs (&optional arg)
+(defun dp-save-buffers-kill-emacs (&optional no-hooks-p)
   "DUH... Are you sure?"
   (interactive)
   (when (y-or-n-p "DUH... Are you sure? ")
+    (when no-hooks-p
+      (setq kill-emacs-hook nil))
     (save-buffers-kill-emacs))
   (message "Good thing I asked, huh?"))
+
+(defun dp-kill-emacs-no-hook ()
+  (dp-save-buffers-kill-emacs 'dont-run-kill-emacs-hook))
 
 (defun dp-restrict-buffer-growth (threshold-chars &optional threshold-percent)
   "Keep the size of a file with limits."

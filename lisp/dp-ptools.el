@@ -282,6 +282,7 @@ Oddly, it doesn't handle structs.")
 (dp-deflocal dp-gtags-suggested-key-mapping t
   "Does this buffer want gtags key mappings?")
 
+;; XXX @todo Fix this to use a real predicate.
 (when t ;;; (dp-gtags-p)
   (defun dp-gtags-select-mode-hook ()
     (dp-define-buffer-local-keys
@@ -311,6 +312,7 @@ Oddly, it doesn't handle structs.")
     (interactive)
     (gtags-select-tag)
     (dp-one-window++))
+  (setq gtags-global-command "ranking-global-gtags.py")
 
   (defun dp-visit-gtags-select-buffer (&optional other-window-p)
     (interactive "P")

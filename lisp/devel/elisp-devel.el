@@ -2885,3 +2885,152 @@ dp-hide-ifdef-for-T3D
 
 
 
+
+========================
+Thursday February 14 2013
+--
+
+(shell-command-to-string "figlet hi")
+" _     _ 
+| |__ (_)
+| '_ \\| |
+| | | | |
+|_| |_|_|
+         
+"
+
+
+0
+
+0
+
+0
+
+0
+
+(shell-command-to-string "echo hi2 > /home/dpanariti/tmp/shell-command-echo-test")
+
+
+""
+
+0
+
+(process-status gnuserv-process)
+exit
+
+(dp-gnuserv-running-p)
+nil
+
+
+========================
+Tuesday February 19 2013
+--
+
+
+(progn 
+  (save-window-excursion
+    (select-window (or (get-buffer-window current-gdb-buffer)
+                       (selected-window)))
+
+    (walk-windows
+     (function
+      (lambda (w)
+        (princf "w: %s" w))))))
+nil
+w: #<window on "run-to-here.cpp" 0x50f>
+w: #<window on "elisp-devel.el" 0x50d>
+w: #<window on "*gdb-run-to-here*" 0x485>
+
+(dp-get-buffer "run-to-here.cpp")
+#<buffer "run-to-here.cpp">
+
+
+(setq bubba
+(progn
+  ;; Searches frame for the most appropriate source window
+  ;; BUFFER to display
+  ;; LINE number to display
+  (let* ((line 29)
+         (source-buffer (dp-get-buffer "run-to-here.cpp"))
+         (source-pos
+          (eval-in-buffer source-buffer
+                          (save-excursion (goto-line line) (point)))))
+    (catch 'found
+      (save-window-excursion
+        (select-window (or (get-buffer-window current-gdb-buffer)
+                           (selected-window)))
+        (walk-windows
+         (function
+          (lambda (w)
+            (princf "w: %s" w)
+            (and (eq source-buffer (window-buffer w))
+                 (pos-visible-in-window-p source-pos w)
+                 (throw 'found w))))))
+      (display-buffer source-buffer))))
+)
+w: #<window on "*scratch*" 0x643>
+w: #<window on "run-to-here.cpp" 0x61d>
+#<window on "run-to-here.cpp" 0x61d>
+
+w: #<window on "*scratch*" 0x643>
+w: #<window on "run-to-here.cpp" 0x61d>
+#<window on "run-to-here.cpp" 0x61d>
+
+w: #<window on "*scratch*" 0x643>
+w: #<window on "run-to-here.cpp" 0x61d>
+#<window on "run-to-here.cpp" 0x61d>
+
+w: #<window on "*scratch*" 0x643>
+w: #<window on "run-to-here.cpp" 0x61d>
+#<window on "run-to-here.cpp" 0x61d>
+
+w: #<window on "*scratch*" 0x643>
+w: #<window on "dp-shells.el" 0x61d>
+w: #<window on "elisp-devel.el" 0x645>
+#<window on "run-to-here.cpp" 0x61d>
+
+#<window 0x52f>
+w: #<window on "run-to-here.cpp" 0x52f>
+bubba
+#<window 0x52f>
+(princf "w: %s" bubba)
+w: #<window 0x52f>
+nil
+
+
+
+
+
+
+
+(defun gdb-display-window (source-buffer line)
+  ;; Searches frame for the most appropriate source window
+  ;; BUFFER to display
+  ;; LINE number to display
+  (let ((source-pos
+         (eval-in-buffer source-buffer
+           (save-excursion (goto-line line) (point)))))
+    (catch 'found
+      (save-window-excursion
+        (select-window (or (get-buffer-window current-gdb-buffer)
+                           (selected-window)))
+        (walk-windows
+         (function
+          (lambda (w)
+            (and (eq source-buffer (window-buffer w))
+                 (pos-visible-in-window-p source-pos w)
+                 (throw 'found w))))))
+      (display-buffer source-buffer))))
+
+
+========================
+Wednesday February 20 2013
+--
+(setq debug-ignored-errors nil)
+(setq debug-on-error t)
+(kill-emacs)
+
+(setq kill-emacs-hook nil)
+nil
+
+

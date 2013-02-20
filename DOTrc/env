@@ -48,6 +48,8 @@ export TEMP=$TMPDIR
 export BIG_TMPDIR=/var/tmp
 export SEMANTIC_EMACS=xemacs
 export SEMANTIC_PATH="$HOME/lisp/contrib/site-packages/cedet/semantic"
+export DP_IPC_DIR="$HOME/ipc"
+export DP_EDITING_SERVER_FILE="$IPC/dp-editing-server"
 # This is better than aliasing with --colou?r since older greps won't barf.
 # And all? greps should see it.
 [[ "$dp_no_color" == y ]] && {
@@ -57,8 +59,8 @@ export SEMANTIC_PATH="$HOME/lisp/contrib/site-packages/cedet/semantic"
     export GREP_OPTIONS='--color=never'
 }
 
-#[ -f /etc/timezone ] || export TZ=EST5EDT
-[ -f /etc/timezone ] || export TZ=PST8PDT
+[ -f /etc/timezone ] || export TZ=EST5EDT
+#[ -f /etc/timezone ] || export TZ=PST8PDT
 
 #
 

@@ -1057,7 +1057,7 @@ command position."
 (dp-deflocal dp-shell-output-line-count 0
   "Number of lines ouput by the current command.")
 
-(dp-deflocal dp-shell-output-max-lines-default (* 3 16383)
+(dp-deflocal dp-shell-output-max-lines-default (* 3 163830)
   "Maximum number of lines which is kept in each shell buffer.
 XXX @todo Limiter should be modified to handle lines.")
 
@@ -1605,39 +1605,38 @@ first file that is `dp-file-readable-p' is used.  Also sets
      "\C-d" dp-shell-delchar-or-quit
      [(control backspace)] dp-ipython-backward-delete-word)))
 
+(require 'gdb)
+
 (defvar dp-gdb-buffer-name nil
   "Latest gdb shell we've started.")
 
 (defvar dp-gdb-default-func nil
   "Function to call when `dp-gdb-buffer-name' is nil or dead.")
 
-;;superceded-by-working-version; (defun dp-gdb-run-to-here-old (&optional pos)
-;;superceded-by-working-version;   (interactive)
-;;superceded-by-working-version;   (save-excursion
-;;superceded-by-working-version;     (when pos
-;;superceded-by-working-version;       (goto-char pos))
-;;superceded-by-working-version;     (let ((current-prefix-arg '(4)))
-;;superceded-by-working-version;       (call-interactively 'gdb-break))
-;;superceded-by-working-version;     (gdb-call "c")
-;;superceded-by-working-version;     (goto-char (point-max))))
-
 (defun dp-gdb-run-to-here ()
   "Create a temporary gdb break point and then issue a `c' command."
   (interactive)
-  (dp-gdb-issue-command (dp-mk-breakpoint-command t))
-  (gdb-refresh)
-  (dp-gdb-issue-command "c")
-  (gdb-refresh))
+  (dp-gdb-issue-command-list (list (dp-mk-breakpoint-command 'temporary) "c")))
+;;   (dp-gdb-issue-command (dp-mk-breakpoint-command 'temporary))
+;;   ;;(gdb-refresh)
+;;   (dp-gdb-issue-command "c")
+;;   (setq current-gdb-buffer (current-buffer))
+;; ;;   (gdb-refresh)
+;;  )
 
-(defun dp-gdb-issue-command (cmd &optional do-not-send-p buffer)
+(defun dp-gdb-issue-command (cmd &optional do-not-send-p gdb-buffer)
   (interactive "scmd name: \nSdo not send: ")
-  (let ((gdb-buffer (or buffer current-gdb-buffer)))
-    (set-buffer gdb-buffer)
-    (goto-char (process-mark (get-buffer-process gdb-buffer)))
-    (delete-region (point) (point-max))
-    (insert cmd)
-    (unless do-not-send-p
-      (comint-send-input))))
+  (setq-ifnil gdb-buffer current-gdb-buffer)
+  (set-buffer gdb-buffer)
+  (goto-char (process-mark (get-buffer-process gdb-buffer)))
+  (delete-region (point) (point-max))
+  (insert cmd)
+  (unless do-not-send-p
+    (comint-send-input)))
+
+(defun dp-gdb-issue-command-list (cmds &rest rest)
+  (loop for cmd in cmds do
+    (apply 'dp-gdb-issue-command rest)))
 
 ;;;###autoload
 (defun dp-gdb-mode-hook ()              ;<:gdb:>
@@ -2299,7 +2298,10 @@ ARG is numberp:
     ;;(dmessage "arg>%s<, sh-name>%s<" arg sh-name)
     (if existing-shell-p
         (progn
+          ;; I need to figure out how to force a [shell] buffer to display
+          ;; itself in the CURRENT FRAME.
           (dp-visit-or-switch-to-buffer sh-buffer switch-window-func)
+          ;;(switch-to-buffer sh-buffer)
           ;; We're in the requested buffer now.
           ;; If we came from a file with a live favored shell buffer, set up
           ;; the fiddly-bits(tm).

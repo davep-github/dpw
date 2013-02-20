@@ -256,8 +256,8 @@ home_family = e(
     'network-name': 'meduseld',
     'ISP': 'verizon.net',
     'family_zone': 'home',
-    'xterm_bg': "'"+HOME_BG_COLOR+"'",  # quotes for the `#' inside the value
-    'xterm_fg': "'"+HOME_FG_COLOR+"'",
+    'xterm_bg': HOME_BG_COLOR,
+    'xterm_fg': HOME_FG_COLOR,
     'xterm_bin': "xterm",
     'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
     #'xterm_font': "*NONE*",
@@ -339,9 +339,9 @@ e(
     'family': 'nv-o-xterm',
     'comment': 'o-xterm-boxen @ nvidia.',
     'host-pattern': 'o-xterm-[0-9]+',
-    'xterm_bg': "'" + NVIDIA_BG_COLOR + "'",
-    'xterm_fg': "'" + NVIDIA_FG_COLOR + "'",
-    'xem_bg_color': "'" + NVIDIA_BG_COLOR + "'",
+    'xterm_bg': NVIDIA_BG_COLOR,
+    'xterm_fg': NVIDIA_FG_COLOR,
+    'xem_bg_color': NVIDIA_BG_COLOR,
     },
     ref=[nvidia_family, OSDB['linux'], default]
 )
@@ -352,9 +352,9 @@ e(
     'family': 'nv-l-sim',
     'comment': 'o-xterm-boxen @ nvidia.',
     'host-pattern': 'l-sim-',
-    'xterm_bg': "'" + NVIDIA_LSIM_BG_COLOR + "'",
-    'xterm_fg': "'" + NVIDIA_LSIM_FG_COLOR + "'",
-    'xem_bg_color': "'" + NVIDIA_LSIM_BG_COLOR + "'",
+    'xterm_bg': NVIDIA_LSIM_BG_COLOR,
+    'xterm_fg': NVIDIA_LSIM_FG_COLOR,
+    'xem_bg_color': NVIDIA_LSIM_BG_COLOR,
     },
     ref=[nvidia_family, OSDB['linux'], default]
 )

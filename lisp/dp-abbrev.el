@@ -41,13 +41,13 @@
 ;;; ABBREV-ENTRY ::= (ABBREVS/EXPANSIONS TABLE-INFO)
 ;;; ABBREVS/EXPANSIONS ::= (ABBREV-NAMES EXPANSIONS)
 ;;; ABBREV-NAMES ::= \"abbrev-name\" | (\"abbrev-name0\"...)
-;;; EXPANSIONS ::= \"expansion0\"... | '=
+;;; EXPANSIONS ::= \"expansion0\"... | '= | 'circular
 ;;; TABLE-INFO ::= TABLE-NAME | TABLE-INFO-PLIST
 ;;; TABLE-NAME ::= 'table-name-sym | \"table-name\"  ; it's `format'd w/%s
 ;;; TABLE-INFO-PLIST ::= (PROP/VAL PROP/VAL ...)
 ;;; PROP/VAL ::= 'table-name TABLE-NAME
 ;;;
-;;; If EXPANSIONS eq '= then EXPANSIONS is set to ABBREV-NAMES.
+;;; If EXPANSIONS memq '(circular =) then EXPANSIONS is set to ABBREV-NAMES.
 ;;; This is a hack to allow a ring of abbrevs to be defined with little effort.
 ;;; This means that '(("a" "b" "c") '=) becomes:
 ;;; (("a" "b" "c") "a" "b" "c") which defines:
@@ -56,6 +56,7 @@
 ;;; "b" -> '("a" "b" "c")
 ;;; "c" -> '("a" "b" "c")
 ;;; This means that "a" "b" or "c" can begin a cycle around those expansions.
+;;; In addition, the ring begins just after the initial abbrev.
 ;;; Doing just '("a" "b" "c") allows:
 ;;; "a" -> '("b" "c" "a"...) But "b" doesn't go to "c", "a", ...
 ;;;
@@ -190,7 +191,7 @@ abbrev-table to an abbrev-table name.")
     (setq-ifnil table-info (list dp-default-abbrev-table))
     (unless (listp abbrev-names)
       (setq abbrev-names (list abbrev-names)))
-    (when (equal expansions '('=))
+    (when (member (car expansions) '('circular '=))
       (setq expansions abbrev-names))
     (loop for abbrev-name in abbrev-names do
       (loop for table-name in table-info do

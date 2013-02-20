@@ -81,6 +81,8 @@ long_options=("out-file:"
     "purge"
     "no-purge"
     "mm"
+    "gb"
+    "get-build"
     "only:")
 
 # Example of arg parsing.
@@ -131,7 +133,8 @@ do
       --debug) debug_opt="-debug=1";;
       --no-purge) purge_opt=;;
       --purge) purge_opt="purge";;
-      --mm) get_mods_p=t; build_me_p=t;;
+      --mm|--gb|--get-build) get_mods_p=t; build_me_p=t;;
+
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -185,6 +188,11 @@ run_t_make()
          | EExec -y tcsh-run ${EExecDashN_opt}
 }
 
+# Make this because we tee to a file inside this dir. The tee is part of the
+# following redirection and gets created before any of the commands inside
+# the {} run
+EExec mkdir -p "${log_dir}"
+
 {
     if [ -n "$make_p" ]
     then
@@ -194,7 +202,6 @@ run_t_make()
             exit 1
         } 1>&2
 
-        EExec mkdir -p "${log_dir}"
         EExec_verbose_msg "cwd>$(pwd)<"
         EExec_verbose_msg "log_name>${log_name}<"
         EExec_verbose_msg "disp_file>${disp_file}<"
@@ -253,5 +260,7 @@ run_t_make()
     fi
 
 } | tee "${log_name}" > "${disp_file}"
+
+echo "Log file: ${log_name}"
 
 exit 0

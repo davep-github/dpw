@@ -146,8 +146,8 @@ This should be set by the emacs specific code.")
   (load "cl-macs")
   (require 'dp-macros))
 
-(defvar dp-kill-emacs-hook '()
-  "List of things to do during exit.")
+;;is this used/needed? (defvar dp-kill-emacs-hook '()
+;;is this used/needed?   "List of things to do during exit.")
 
 (require 'dp-compat)
 (require 'dp-errors)
@@ -212,6 +212,11 @@ way.")
   (cons 'expr '(insert (dp-mk-baroque-fortune-sig)))
   "See `dp-insert-sig'.")
 ;;
+
+(defconst dp-edting-server-valid-host-regexp ".*"
+  "Only hosts which match this regexp will be allowed to be advertised as
+editing servers via `dp-editing-server-ipc-file'.")
+
 
 (require 'dp-keys) ;; my highly unstandard keybindings.
 (require 'dpmisc)

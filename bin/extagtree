@@ -11,9 +11,8 @@ echo $progname: $* 1>&2
 
 # xcscope/cscope, have been having problems with "File does not have the
 # expected format" errors. Not using -q has, at least once, in at least one
-# case, fixed this.
-##: ${DASH_Q=-q}
-: ${DASH_Q=-q}
+# case, fixed this >0 times.
+: ${EXTAGTREE_DASH_Q:=-q}
 source script-x
 source  eexec
 
@@ -38,7 +37,7 @@ cscope_tree()
     then
         echo 1>&2 "Cannot find a cscope program."
     else
-        EExec $cs $DASH_Q -b -i "$files_file" $cscope_flags
+        EExec $cs $EXTAGTREE_DASH_Q -b -i "$files_file" $cscope_flags
     fi
 }
 

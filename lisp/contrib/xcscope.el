@@ -555,8 +555,8 @@ It is designed to answer questions like:
   :prefix "cscope-"
   :group 'tools)
 
-(defcustom cscope-use-perverted-index "-q"
-  "*Should we ask cscope to use perverted(inverted/permuted) indices.
+(defcustom cscope-perverted-index-option "-q"
+  "*Should we ask cscope to use perverted(permuted/inverted) indices?
 The generated format must agree with this flag."
   :type 'string
   :group 'cscope)
@@ -2052,8 +2052,8 @@ using the mouse."
 	  (insert "\nDatabase directory/file: "
 		  cscope-directory base-database-file-name "\n"
 		  cscope-separator-line))
-        (if cscope-use-perverted-index
-            (setq options (cons cscope-use-perverted-index options))
+        (if cscope-perverted-index-option
+            (setq options (cons cscope-perverted-index-option options))
           ;; The following doesn't work with -q because the database name is
           ;; different.  Add the correct database file to search
           (setq options (cons base-database-file-name options))

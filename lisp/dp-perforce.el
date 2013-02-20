@@ -8,7 +8,8 @@
 (defvar p4-make-backup-files t
   "Should emacs make backup files when editing files under p4 control")
 
-; Pattern used to highlite P4 ChangeSets
+;; Pattern used to highlite P4 ChangeSets
+;; Some of these faces are defined in add-log.el.
 (defvar p4-changeset-font-lock-keywords
   `(;; Comments
     ("^#.*"

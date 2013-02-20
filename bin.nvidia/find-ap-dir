@@ -14,7 +14,7 @@ unset eexec_program
 
 # Better than depth because it works *anywhere* in the sandbox.
 
-: ${ap_dir_candidates:=hw/ap hw/ap_tlit1}
+: ${ap_dir_candidates:=hw/ap_tlit1 hw/ap}
 
 sb=$(me-dogo sb) || {
     echo "Cannot find sandbox root. Specify ap_root."

@@ -61,8 +61,7 @@
 
 (defconst dp-common-abbrevs
   '(((("dev" "development" "develop" "device")
-;;      "dev" "development" "develop" "device")
-      '=)
+      'circular)
      dp-manual)
     (("teh" "the" "duh" "D'OH!")
      dp-manual global)
@@ -494,8 +493,8 @@
      dp-manual)
     (("style" "/home/dpanariti/work/doc/code-style.txt")
      global)
-
-    ((("ftci" "FTCI" "ftca" "FTCA") '=))
+    ((("emacs" "xemacs" "XEmacs" "Emacs") 'circular))
+    ((("ftci" "FTCI" "ftca" "FTCA") 'circular))
     ))
 ;; We could just use the non-void-ness of dp-common-abbrevs, but I
 ;; like suspenders with my belt.

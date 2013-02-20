@@ -3,6 +3,16 @@
 *.pyo
 *.elc
 a.out
+# Cscope files.
+cscope.files
+cscope.out
+cscope.in.out
+cscope.po.out
+# Global files.
+GTAGS
+GRTAGS
+GPATH
+
 
 # Naming conventions to prevent git's gaze.
 *-hide

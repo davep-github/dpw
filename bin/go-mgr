@@ -161,7 +161,7 @@ dump_go_files()
     done
 }
 
-opts="x:a:d:lef:g:GE:hw"
+opts="x:a:A:d:lef:g:GE:hw"
 q=$(getopt -o "$opts" -- "$@")
 [ $? != 0 ] && Usage
 eval set -- "$q" 
@@ -192,7 +192,9 @@ do
 	    shift; shift
 	    ;;
 
-	-a)
+	-[Aa])
+            suffix=
+            [ "$1" = "-A" ] && suffix=__ME_src
 	    # allow g -a xx     # to mean g -a xx `pwd`
 	    # and   g -a xx yy
 	    # to be specified
@@ -206,7 +208,8 @@ do
 	    case "$1" in
 		.|=|/|-|"") shift; set -- $(basename $PWD) "$@";;
 	    esac
-	    name=${1:-"$progname: no name specified"}
+	    name="${1}${suffix}"
+            echo_id2 name
 	    shift # consume name
 	    if [ "$1" = '--' -a -n "${2-}" ]
 	    then

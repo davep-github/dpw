@@ -85,9 +85,12 @@ $@" >| "${save_args_file}"
     echo
     # Let me know if anything needs merging. -n --> just show problems.
     echo "******* Running p4 resolve -n "
-    echo "*******  to show anything which may need to be resolved *******"
+    echo "*******   to show anything which may need to be resolved *******"
     echo "******* Any resolves shown here must be done by hand. *******"
+    echo
     EExec p4 resolve -n
+    echo
+    echo "*******"
 } 2>&1 | EExec -y tee -a "${kwa_log_file}"
 
 echo "log dir>${kwa_log_dir}<"

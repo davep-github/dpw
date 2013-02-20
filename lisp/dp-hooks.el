@@ -239,8 +239,9 @@ Make it buffer local since there can be >1 minibuffers.")
 (defun dp-kill-emacs-hook ()
   "Do my finalization procedures when xemacs exits."
   (let ((debug-on-error nil))
+    (dp-finalize-editing-server))
     (when (featurep 'saveconf)
-        (dp-save-context))))
+        (dp-save-context)))
 
 (defun dp-match-buffer-name (regexp &optional not-a-regexp-p buffer)
   "RE match the current buffer or BUFFER's name against regexp.
@@ -620,13 +621,12 @@ c-hanging-braces-alist based upon these values.")
     (define-key map [(meta ?e)] 'find-file-at-point)
     (define-key map [(meta ?a)] 'dp-toggle-mark)
     (define-key map [tab] 'dp-c-indent-command)
-    (define-key map [(meta left)] 'dp-c-beginning-of-defun)
+    (define-key map [(meta left)] (kb-lambda 
+                                      (dp-c-beginning-of-defun 1 'real-bof)))
+    (define-key map [(control ?x) (control left)] 'dp-c-beginning-of-defun)
     (define-key map [(control ?x) left] 'dp-c-show-class-name)
-    (define-key map [(control ?x) (control left)]
-      (kb-lambda
-          (dp-c-beginning-of-defun 1 'real-bof)))
-    (define-key map [(meta right)] 'dp-c-end-of-defun)
-    (define-key map [(control ?x) (control right)] 
+    (define-key map [(control ?x) (control right)] 'dp-c-end-of-defun)
+    (define-key map [(meta right)] 
       (kb-lambda
           (dp-c-end-of-defun 1 'real-bof)))
     (define-key map [(control ?x) right] 
@@ -1644,7 +1644,10 @@ Before visiting means after the command completes."
     (define-key map [(meta f10)] 'cscope-display-buffer-toggle))
 
   (when (dp-optionally-require 'xcscope)
-    ;; defun dp-cscope-minor-mode-hook
+    ;; defun dp-cscope-minor-mode-hook Something in some files can cause the
+    ;; permuted style index (-q) to fail to find things. Currently, there is
+    ;; something in the src tree @ nv that causes this.
+    (setq cscope-perverted-index-option dp-cscope-perverted-index-option)
     (defun dp-cscope-minor-mode-hook ()
       (interactive)
       (define-key cscope-list-entry-keymap [(meta ?-)] 

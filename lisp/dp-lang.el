@@ -808,10 +808,10 @@ VERY accurate given my indentation style.")
 
 (defun dp-c-beginning-of-defun (&optional arg real-bof)
   "If preceeding command was `c-end-of-defun' do a go-back.  
-If ARG is C-0, C-u or t then use `c-beginning-of-defun'.  This will call the
-orginal code and currently that takes us back to the beginning of the class,
-not an inlined defun.  Otherwise use a really cheap but not entirely
-ineffective regexp to find the beginning of a defun like construct.  
+If ARG is none of C-0, C-u or t then use `c-beginning-of-defun'.  This will
+call the orginal code and currently that takes us back to the beginning of
+the class, not an inlined defun.  Otherwise use a really cheap but not
+entirely ineffective regexp to find the beginning of a defun like construct.
 Also, leave the region active."
   (interactive "_p")
   (if (memq last-command '(dp-c-end-of-defun dp-scroll-down dp-scroll-up))
@@ -819,28 +819,29 @@ Also, leave the region active."
         (dp-pop-go-back)
         (setq this-command nil))
     ;; May want to change sense of arg to mean plain defun when true.
-    (cond ((or real-bof
-               (member current-prefix-arg '(0 (4) '- t)))
-           (dp-push-go-back "`real c-beginning-of-defun'")
-           (c-beginning-of-defun 1)
-           ;; if this is called by a `kb-lambda' then we need to make sure
-           ;; that the last-command var is currect so the toggling works.
-           (setq this-command 'dp-c-beginning-of-defun))
-          ((and (numberp arg) (< arg 0)) 
-           (dp-push-go-back "`real c-beginning-of-defun'")
-           (c-beginning-of-defun (- arg)))
-          ((dp-point-follows-regexp dp-c-beginning-of-defun-regexp)
-           (dp-push-go-back "`after dp-c-beginning-of-defun-regexp'")
-           (beginning-of-line)
-           (dp-c-beginning-of-statement))
-          ((save-excursion
-             (beginning-of-line)
-             (re-search-backward dp-c-beginning-of-defun-regexp nil t))
-           (dp-push-go-back 
-            "`re-search-backward  dp-c-beginning-of-defun-regexp'")
-           (goto-char (match-end 0)))
-          (t (call-interactively 'c-beginning-of-defun)
-             (dp-push-go-back "`real c-beginning-of-defun'")))))
+    (cond 
+     ((or real-bof
+          (not (member current-prefix-arg '(0 (4) '- t))))
+      (dp-push-go-back "`real c-beginning-of-defun'")
+      (c-beginning-of-defun 1)
+      ;; if this is called by a `kb-lambda' then we need to make sure
+      ;; that the last-command var is correct so the toggling works.
+      (setq this-command 'dp-c-beginning-of-defun))
+     ((and (numberp arg) (< arg 0))
+      (dp-push-go-back "`real c-beginning-of-defun'")
+      (c-beginning-of-defun (- arg)))
+     ((dp-point-follows-regexp dp-c-beginning-of-defun-regexp)
+      (dp-push-go-back "`after dp-c-beginning-of-defun-regexp'")
+      (beginning-of-line)
+      (dp-c-beginning-of-statement))
+     ((save-excursion
+        (beginning-of-line)
+        (re-search-backward dp-c-beginning-of-defun-regexp nil t))
+      (dp-push-go-back
+       "`re-search-backward  dp-c-beginning-of-defun-regexp'")
+      (goto-char (match-end 0)))
+     (t (call-interactively 'c-beginning-of-defun)
+        (dp-push-go-back "`real c-beginning-of-defun'")))))
 
 (defun dp-c-end-of-defun (&optional arg real-bof)
   "Inverse of `dp-c-beginning-of-defun'."
@@ -851,7 +852,7 @@ Also, leave the region active."
         (setq this-command nil))
     ;; May want to change sense of arg to mean plain defun when true.
     (cond ((or real-bof 
-               (member current-prefix-arg '(0 (4) '- t)))
+               (not (member current-prefix-arg '(0 (4) '- t))))
            (dp-push-go-back "`dp-c-end-of-defun'")
            (c-end-of-defun 1)
            ;; if this is called by a `kb-lambda' then we need to make sure
