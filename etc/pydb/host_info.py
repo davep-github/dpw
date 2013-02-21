@@ -44,6 +44,8 @@ HOME = os.environ["HOME"]
 BREE = os.environ.get("BREE", os.path.join(HOME, "bree"))
 YOKEL = os.path.join(HOME, "yokel")
 YOKEL_BIN = os.path.join(YOKEL, "bin")
+HOME_LOCAL = os.path.join(HOME, "local")
+HOME_LOCAL_BIN = os.path.join(HOME_LOCAL, "bin")
 
 default = dppydb.Entry({
     'pydb_type:': 'host-info',
@@ -310,6 +312,7 @@ e(
     ref=[home_family, OSDB['linux'], default]
 )
 
+NV_GEOMETRY = '-geometry 81x71-42+6'
 #
 # FAMILY entry for NVIDIA-LINUX
 nvidia_family = e(
@@ -320,12 +323,16 @@ nvidia_family = e(
     'comment': 'My linux boxen at nVIDIA.',
     'DTE': 'kde',
     'main_macs_opts': '-eval (dp-main-rc+2w)',
-    'xem_opts': '-geometry 81x71-42+6',
+    'xem_opts': NV_GEOMETRY,
     # This is OK, but O0{}[]() : no slashed 0. O & 0 are distinguishable.
     'xem_font': '''-*-Lucidatypewriter-medium-r-*-*-*-120-*-*-*-*-*-*''',
     # May be less legible in the long run, but 0 is slashed.
     'xem_font2': '''-*-Fxd-medium-r-*-*-*-120-*-*-*-*-*-*''',
     'work-zone': 'nvidia',
+    'xterm_bg': NVIDIA_BG_COLOR,
+    'xterm_fg': NVIDIA_FG_COLOR,
+    'xem_bg_color': NVIDIA_BG_COLOR,
+
     },
     # These are searched in the order given.
     ref=[OSDB['linux'], default]
@@ -339,9 +346,6 @@ e(
     'family': 'nv-o-xterm',
     'comment': 'o-xterm-boxen @ nvidia.',
     'host-pattern': 'o-xterm-[0-9]+',
-    'xterm_bg': NVIDIA_BG_COLOR,
-    'xterm_fg': NVIDIA_FG_COLOR,
-    'xem_bg_color': NVIDIA_BG_COLOR,
     },
     ref=[nvidia_family, OSDB['linux'], default]
 )
@@ -352,9 +356,11 @@ e(
     'family': 'nv-l-sim',
     'comment': 'o-xterm-boxen @ nvidia.',
     'host-pattern': 'l-sim-',
+    'xem_opts': '-eval (2w) ' + NV_GEOMETRY,
     'xterm_bg': NVIDIA_LSIM_BG_COLOR,
     'xterm_fg': NVIDIA_LSIM_FG_COLOR,
     'xem_bg_color': NVIDIA_LSIM_BG_COLOR,
+    'main_macs_opts': '',
     },
     ref=[nvidia_family, OSDB['linux'], default]
 )

@@ -6424,18 +6424,17 @@ so each mode can have its own logic."
     (message "dp-laptop-rc()...finished"))
 
 (defun dp-main-rc ()
-  "NB: This runs after `dp-post-dpmacs-hook'. Sets us up as a primary emacs:
-run server and activate appointments."
+  "Set us up as a primary emacs: run editing server and activate appointments.
+NB: This runs after `dp-post-dpmacs-hook'. It is intended to be invoked as a
+command-line argument to XEmacs, e.g. -eval \(dp-main-rc)."
   (interactive)
   (message "dp-main-rc()...")
   (dp-start-editing-server)
-  ;; This runs after dpmacs has completed.
-  ;;(add-hook 'dp-post-dpmacs-hook 'dp-activate-appts)
+  ;; This function is called after dpmacs has completed.
   (dp-activate-appts)
   (dp-appt-initialize)
   ;; the -geometry arg doesn't work quite right under kde.
-  (message "dp-main-rc()...finished.")
-)		       ; MAC + flat panel in ll office
+  (message "dp-main-rc()...finished."))
 
 (defun dp-main-rc+2w ()
   (dp-main-rc)

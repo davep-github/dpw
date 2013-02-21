@@ -56,6 +56,29 @@ local_server_p()
     findprog -s ${known_servers}
 }
 
+#
+# Find the best editing server.
+# An environment variable, DP_GNU_EDITING_HOST, is most authoritative, but
+# tends to be the most out-of-date. It really should just be used as a
+# parameter to force selection of a host.
+# The most up-to-date tends to be kept in the ipc(dp) file:
+# ~/ipc/dp-editing-server which has the format:
+# server-name pid
+# If we find no host then we use a new instance.
+#
+find_best_editing_host()
+{
+    vsetp "${DP_GNU_EDITING_HOST-}" && {
+        echo "${DP_GNU_EDITING_HOST}"
+        return 0
+    }
+    [ -e "${DP_EDITING_SERVER_FILE}" ] && {
+        set -- $(cat "${DP_EDITING_SERVER_FILE}")
+        # $1 == server, $2 == pid
+        # If server is this host, verify the pid exists and is gnuserv.
+    }
+}
+
 find_one_of_these_programs()
 {
     for p in "$@"

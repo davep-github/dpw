@@ -594,7 +594,7 @@ xpick_dirs()
     return $ret
 }
 
-xcd ()
+xpick_cd ()
 {
     local d
     if d=$(xpick_dirs "$@")
@@ -765,20 +765,19 @@ do_sed_path()
     local K_blah_backref=2
     local verbose DEBUG pat delim
     local delim_set_by_option=
-    if [[ "$1" == "---D" ]]
-    then
-	set -x
-	DEBUG=t
-	shift
-    elif [[ "$1" == "---v" ]]
-    then
-	verbose=t
-	shift
-    elif [[ "$1" == "---dp-do-sed-path-delim" ]]; then
-	delim_set_by_option=t
-	delim=$2
-	shift; shift
-    fi
+    local delim=
+    local trailing_opts=
+    while [ -n "$*" ]
+    do
+      case "$1" in
+          ---D) set -x; DEBUG=t;;
+          ---v) verbose=t;;
+          ---dp-do-sed-path-delim) delim_set_by_option=t; shift; delim=$1;;
+          ---trailing-opts) shift; trailing_opts=$1;;
+          *) break;;
+      esac
+      shift
+    done
     pat="$1"
     if [[ -z "$delim" ]]; then
 	delim=$(echo "$pat" | \
@@ -789,6 +788,7 @@ do_sed_path()
         *${delim}) ;;
         *) pat="$pat$delim";;
     esac
+    pat="${pat}${trailing_opts}"
     [[ -n "$verbose" ]] && set -x
     echo "$PWD" | sed --regexp-extended -e "$pat"
     [ -n "$verbose" -o -n "$DEBUG" ] && set +x

@@ -33,7 +33,7 @@ sed_path()
     do
       case "$1" in
           -r|--reverse) swap_em=t;;
-          -g|--global) slash_g=t;;
+          -g|--global) slash_g="---trailing-opts g";;
           --) shift; break;;
           *) break;;
       esac
@@ -80,7 +80,7 @@ sed_path()
 	local sed_cmd="s|${args[0]}|${args[1]}"
         #echo_id opts 1>&2
         #echo_id sed_cmd 1>&2
-	do_sed_path $opts $sed_cmd
+	do_sed_path $opts ${slash_g} $sed_cmd
     else
 	echo 1>&2 "sed_path(): I'm comfuzed by this command line>$@<"
 	return 1
@@ -93,7 +93,8 @@ sed_cd()
     cd $(sed_path "$@")
 }
 export -f sed_cd
-alias cd_sed=sed_cd
+alias cd-sed=sed_cd
+alias xcd=sed_cd
 
 sed_go()
 {

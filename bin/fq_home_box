@@ -1,0 +1,38 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+get_fq_home_box()
+{
+    local home_addr
+    if vunsetp "$DP_HOME_MACHINE"
+    then
+        echo 1>&2 "ssh_home: machine addr variable, '$DP_HOME_MACHINE', not set."
+        return 1
+    fi
+    eval home_addr="\$${DP_HOME_MACHINE}_ADDR"
+    eval home_user="\$${DP_HOME_MACHINE}_USER"
+    vsetp $home_addr || {
+        echo "home addr is not set."
+        return 1
+    } 1>&2
+    vsetp $home_user || {
+        echo "home user is not set."
+        return 1
+    } 1>&2
+
+    echo "${home_user}@${home_addr}"
+}
+
+get_fq_home_box
+

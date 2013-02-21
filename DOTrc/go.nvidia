@@ -162,3 +162,4 @@ Ee|levels5|lev5|                                                 ${testgen5}conf
 Ee|status|stat|       /home/dpanariti/work/status/
 Ee|global|       /home/dpanariti/davep/build/global-6.2.7/
 Ee|mods|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/hw/nvdiag/
+Ee|tgbarx|barxtg|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/sanity_soc_therm/2013-02-07T17.48.49-0500-wait.out/tests/kepler_b_ogtest/00/00/01/000001/

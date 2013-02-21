@@ -12,11 +12,12 @@ source eexec
 #    -server -uploadcmd 'curl -u svcsw:Gforcetop#1 --upload-file' \
 #    $CHANGELIST
 
+# Review example, wget:
 #perl ${P4_ROOT}/sw/main/apps/p4review/p4review.pl \
 #    -downloadcmd "wget --http-user=svcsw --http-passwd=Gforcetop#1" \
 #    -diff p4merge -autoreview $FILENAME
 
-# Review example:
+# Review example, curl:
 #perl ~/code/sw/main/apps/p4review/p4review.pl \
 #    -downloadcmd "curl -u svcsw:Gforcetop#1 http://nvp4review/p4review/$FILE -o $FILE" \
 #    [-diff p4merge] [-autoreview] $FILE
@@ -32,7 +33,8 @@ force_no_fetch_p=
 just_fetch_p=
 fetch_to_file=
 guess_location_p=t              # Guess from file name/syntax. Noto Implemento.
-save_p=                         # Save to server
+upload_p=                       # Save to server [why don't they call this upload?]
+save_p=                         # Save.
 save_opt=                       # Complete option.
 creat_p=                        # Make a new .p4r
 review_p=t                      # By default, we'll be reviewing.
@@ -44,25 +46,30 @@ Usage_args_info=" .p4r-files..."
 Usage_synopsis="p4review the files.
 "
 Usage_details="${EExec_parse_usage}
---diff <diff-prog> -- Set diff program.
---server <server> -- default server holding the review files.
---p4r <p4review-program> -- Use this program to do the reviewing.
---p4r-opt <p4review-opt> -- Add p4review-opt to the list of extra options.
---no-fetch|--file|--local -- Use the file names directly and don't delete.
---fetch|--remote -- Force a remote fetch.
---just-fetch|--fetch-only -- Fetch the .p4r and do nothing else.
---fetch-to <file> -- For just-fetch, just fetch to here.
---save -- Save to current server.
---save-to <server> -- Save to <server>
---no-review -- Don't review the arguments.
---verbatim -- Don't convert xxxx to cl-xxxx.p4r
---zipdir <zd> -- Save newly created p4r files here.
+--diff <diff-prog>) Set diff program.
+--server <server>) default server holding the review files.
+--p4r <p4review-program>) Use this program to do the reviewing.
+--p4r-opt <p4review-opt>) Add p4review-opt to the list of extra options.
+--no-fetch|--file|--local) Use the file names directly and don't delete.
+--fetch|--remote) Force a remote fetch.
+--just-fetch|--fetch-only) Fetch the .p4r and do nothing else.
+--fetch-to <file>) For just-fetch, just fetch to here.
+--save) Save a p4r.
+--save-to <server>) Save to <server>
+--upload) Create and upload to current server.
+--upload-to <server>) Create and upload to <server>.
+--no-review) Don't review the arguments.
+--review) Review [some options clear this].
+--verbatim) Don't convert xxxx to cl-xxxx.p4r
+--zipdir <zd>) Save newly created p4r files here.
+--creat) Create a local .p4r file.
 "
 # Example of arg parsing.
 long_options=("diff:" "server:" "p4r:" "p4r-opt:" "no-fetch" "file" "local"
 "fetch" "just-fetch" "fetch-only" "remote" "password:" "passwd:" "pass:" "pwd:"
-"fetch-to" "verbatim")
-option_str="${EExec_parse_option_str}d:s:r:o:lfjp:t:c"
+"fetch-to:" "verbatim" "save" "save-to:" "upload" "up" "upload-to:" "up-to:"
+"no-review")
+option_str="${EExec_parse_option_str}d:s:r:o:lfjp:t:cN"  # <:options:>
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -104,7 +111,15 @@ do
                         shift
                         password="${1}"
                         ;;
+      -N|--no-review) review_p=;;
+      --review) review_p=t;;
       --verbatim) verbatim_p=t;;
+      -c|--creat) creat_p=t; review_p=;;
+      --save) save_p=t; review_p=;;
+      --save-to) shift; p4review_repository="${1}"; save_p=t; review_p=;;
+      --upload|--up) upload_p=t; review_p=;;
+      --upload-to|--up-to) shift; p4review_repository="${1}"; upload_p=t; 
+                           review_p=;;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -117,6 +132,7 @@ done
 [ "$*" = "" ] && Usage "At least one review file is needed."
 
 : ${diff_program:=${P4DIFF-xxdiff}}
+# p4review_repository must be NULL, not just "", for this to work.
 : ${p4review_repository=$DEFAULT_p4review_repository}
 : ${p4review_program:=${P4_SW_ROOT}/sw/main/apps/p4review/p4review.pl}
 : ${fetch_function:=fetch_wget}
@@ -178,6 +194,7 @@ cleanup_wget()
 verify_my_cl()
 {
     local cl="${1}"; shift
+    EExec_verbose_msg "verify_my_cl>$cl<"
     p4 changes -u "${USER}" | egrep -q "Change ${cl} on" >/dev/null 2>&1
 }
 
@@ -231,11 +248,31 @@ dp4r_create()
         echo "$progname: Cannot verify changelist number ${cl}"
         exit 1
     } 1>&2
-    # p4review.pl -zipdir . -save 17156093
+    # E.g. support: p4review.pl -zipdir . -save 17156093
     # Always create locally, and send to server as a possible additional step?
     EExec perl "$p4review_program" \
        ${zipdir_opt} \
        ${save_opt} \
+       "${cl}"
+}
+
+#perl ${P4_ROOT}/sw/main/apps/p4review/p4review.pl -save \
+#    -server -uploadcmd 'curl -u svcsw:Gforcetop#1 --upload-file' \
+#    $CHANGELIST
+
+dp4r_upload()
+{
+    local cl="${1}"; shift
+    verify_my_cl "${cl}" || {
+        echo "$progname: Cannot verify changelist number ${cl}"
+        exit 1
+    } 1>&2
+    # E.g. support: p4review.pl -zipdir . -save 17156093
+    # Always create locally, and send to server as a possible additional step?
+    EExec perl "$p4review_program" \
+       -save \
+       -server \
+       -uploadcmd 'curl -u svcsw:Gforcetop#1 --upload-file' \
        "${cl}"
 }
 
@@ -266,16 +303,19 @@ dp4r_review()
 # Some combinations may not make sense.
 for f in "$@"
 do
-  if [ -n "${creat_p}" -a -z "${just_fetch_p}" ]
-   then
-      # Should we do a run-through of that which is to submitted?
-      # We create via CL, but other commands use formats w/other names.
-      f=$(dp4r_creat "${f}")
-  fi
-
-  if [ -n "$save_p" -a -z "${just_fetch_p}" ]
-   then
-      dp4r_save "${f}"
+  if [ -z "${just_fetch_p}" ]
+  then
+      if [ -n "${creat_p}" ]
+      then
+          
+          # Should we do a run-through of that which is to submitted?
+          # We create via CL, but other commands use formats w/other names.
+          dp4r_create "${f}"
+      fi
+      if [ -n "$upload_p" ]
+      then
+          dp4r_upload "${f}"
+      fi
   fi
 
   if [ -n "$review_p" ]
@@ -286,8 +326,6 @@ do
               *) f="cl-${f}.p4r";;
           esac
       }
-
-
       dp4r_review "${f}"
   fi
 done
