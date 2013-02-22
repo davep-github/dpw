@@ -3,13 +3,71 @@
 source script-x
 set -u
 progname="$(basename $0)"
+source eexec
 
+verify_sandbox_p=
+verify_verbose_p=
 verify_p=
+filter_regexp=".*"
+expand_sb_p=
 
 [ "${1-}" = "-v" ] && {
-    verify_p=t
+    verify_sandbox_p=t
     shift
 }
+
+Usage_args_info=" sandbox //perforce/type/path[possible-junk]..."
+Usage_synopsis="Replace // with sandbox, retaining possible junk.
+"
+Usage_details="${EExec_parse_usage}
+-V|--verify-sandbox) Verify sandbox/workspace dir exists. 
+                     Exit non-zero if not w/o error message.
+--verify) Verify the rerooted pathanmes exist
+--verify-all) Verify sandbox is a dir and translations exist.
+-f <filter-regexp>) Only output translations matching regexp.
+--nv) Convenience for nvidia sandbox filtering: \"^/home/scratch.\"
+--NV) As --nv plus verification.
+-a|--expand-sb) Allow sb/workspace to be expanded like a go type abbrev.
+"
+# Example of arg parsing.
+option_str="${EExec_parse_option_str}Vf:Nea"
+long_options=(
+    "verify"
+    "verify-sandbox" "vs"
+    "verify-verbosely" "vv"
+    "verify-all" "va"
+    "filter:" "filter-regexp:"
+    "nv"
+    "NV"
+    "expand-sb"
+)
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+
+      # Program options.
+      -V|--verify-sandbox|--vs) verify_sandbox_p=t;;
+      --verify-verbosely|-e|--vv) verify_sandbox_p=t; verify_verbose_p=t;;
+      --verify) verify_p=t;;
+      --verify-all|--va) verify_p=t; verify_sandbox_p=t;;
+      --filter|--filter-regexp|-f) shift; filter_regexp="${1}";;
+      --nv|-N) filter_regexp="^/home/scratch\.";;
+      --NV) filter_regexp="^/home/scratch\."; verify_p=t; verify_sandbox_p=t;;
+      -a|--expand-sb) expand_sb_p=t;;
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
+done
 
 if [ -n "$*" ]
 then
@@ -27,21 +85,44 @@ case "$workspace" in
     *) workspace="$workspace"/;;
 esac
 
-[ -n "$verify_p" ] && {
-    [ -d "$workspace" ] || {
-        echo "Workspace>$workspace< is not a dir."
+vsetp "${expand_sb_p}" && workspace=$(dogo "${workspace}")
+
+[ -n "$verify_sandbox_p" ] && {
+    echo "${workspace}" | egrep -q "${filter_regexp}" || {
+        vsetp "${verify_verbose_p}" && {
+            echo "workspace>${workspace}< did not pass filter>${filter_regexp}"
+        }
         exit 1
-    } 1>&2
+    }
+    [ -d "$workspace" ] || {
+        vsetp "${verify_verbose_p}" && echo "Workspace>$workspace< is not a dir."
+        exit 1
+    }
+} 1>&2
+
+
+sans_line_num()
+{
+    echo "$@" | sed -r 's/([^:]+)(:[0-9]*$)/\1/'
+}
+
+sans_p4_junk()
+{
+    echo "$@" | sed -r 's/([^#]+)(#.*$)/\1/'
 }
 
 reroot_one()
 {
     local p="${1}"
-    local justp=$(echo "${p}" | sed -r 's/([^#]+)(#.*$)/\1/')
+    local justp=$(sans_p4_junk "${p}")
     local newp=$(echo "$justp" | sed -r "s|^//|${workspace}|")
     [ -n "$verify_p" ] && {
-        [ -e "$newp" ] || {
-            echo "ERROR: Rerooted file>$newp< does not exist."
+        # Allow some junk to not cause a failure.
+        justp=$(sans_line_num "${newp}")
+        [ -e "$justp" ] || {
+            vsetp "${verify_verbose_p}" && {
+                echo "ERROR: Rerooted file>$newp< does not exist."
+            }
             exit 1
         } 1>&2
     }
@@ -61,6 +142,6 @@ else
     do
       reroot_one "${p}"
     done
-fi
+fi | egrep "${filter_regexp}"
 
 exit $rc

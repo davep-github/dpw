@@ -30,7 +30,6 @@ unset eexec_program
 
 t_make_args=
 
-# Usage variable usage:
 Usage_args_info=" t_make args..."
 Usage_synopsis="Do a t_make at TOT:
 "

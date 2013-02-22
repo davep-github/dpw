@@ -3034,3 +3034,14 @@ Wednesday February 20 2013
 nil
 
 
+
+========================
+Friday February 22 2013
+--
+
+(dp-expand-p4-location "//hw/bubba")
+"/home/dpanariti/lisp/devel/hw/bubba"
+
+"bubba"
+
+

@@ -57,7 +57,6 @@
    (concat "C-a TAB C-a <M-backspace> TAB @echo SPC \" M-a C-e M-o > $ M-9 M-y"
            " C-e <\" <right>")))
 
-
 (defalias 'dp-to-knr-open-brace
   (read-kbd-macro "ESC C-s ^ \\s- +{ RET <up> M-j"))
 
@@ -85,6 +84,9 @@
   (read-kbd-macro 
    (concat "C-a C-s @class RET C-T <up> <C-right> <C-backspace> "
            "class 2*<C-s> RET <C-backspace> brief SPC")))
+
+(defalias 'dp-split-command-args
+  (read-kbd-macro "C-s SPC - RET <left> RET <left> \\ <down> C-a 3*SPC"))
 
 ;;;;;;; end of kbd macros ;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -8715,59 +8717,114 @@ Motivation was the ability to run commands like this \"mpc play\"."
   ;; eg this string: "%s"
   (message "%s" (match-string 1 shell-output-string))))
 
-; (defun dp-ffap-file-finder ()
-;   "Recognize /file/name:<linenum>.
-; Visit /file/name and then goto <linenum>."
-;   (interactive)
-;   (let ((name (ffap-string-at-point 'file))
-; 	line-num
-; 	filename)
-;     (string-match "\\(.*\\)[@:]\\([0-9][0-9]*\\)$" name)
-;     (setq line-num (match-string 2 name))
-;     (setq filename (match-string 1 name))
-;     (if (and line-num
-; 	     (file-exists-p filename)
-; 	     (y-or-n-p (format "visit %s and goto %s? " filename line-num))
-; 	     (find-file filename))
-; 	(goto-line (string-to-int line-num))
-;       (call-interactively dp-file-finder))))
-
 (defvar dp-ffap-ask-to-goto-line nil
   "What more can I say than the variable name?")
 
+;;rewriting (defun dp-ffap-file-finder2 (&optional name-in)
+;;rewriting   "Recognize /file/name:<linenum>.
+;;rewriting Visit /file/name and then goto <linenum>."
+;;rewriting   (interactive)
+;;rewriting   (if (not name-in)
+;;rewriting       (call-interactively dp-ffap-ffap-file-finder)
+;;rewriting     (let (
+;;rewriting           ;; This function needs to have the name in the current buffer at
+;;rewriting           ;; point to work. This is more than we need, at least until the
+;;rewriting           ;; hack fails to work.
+;;rewriting           ;;(name (ffap-string-at-point 'file))
+;;rewriting           (file-name-in (file-name-nondirectory name-in))
+;;rewriting           file-parts
+;;rewriting           line-num
+;;rewriting           filename)
+;;rewriting       (when (string-match "\\(.*\\)[@:]\\([0-9][0-9]*\\)\\s-?" file-name-in)
+;;rewriting         (setq line-num (match-string 2 name))
+;;rewriting         (setq filename (file-name-nondirectory (match-string 1 name))))
+;;rewriting       (if (and line-num
+;;rewriting                (string= filename file-name-in)
+;;rewriting                (file-exists-p name-in)
+;;rewriting                (if dp-ffap-ask-to-goto-line
+;;rewriting                    (y-or-n-p (format "goto %s in %s? " line-num filename))
+;;rewriting                  t)                       ;keeps the (and) going
+;;rewriting                (funcall dp-ffap-ffap-file-finder name-in))
+;;rewriting           (progn
+;;rewriting             (if (find-buffer-visiting name-in)
+;;rewriting                 (dp-push-go-back "dp-ffap-file-finder2"))
+;;rewriting             (goto-line (string-to-int line-num)))
+;;rewriting         (funcall dp-ffap-ffap-file-finder name-in)))))
+
+;;
+;; ffap will not pass anything after [;>]
+;; name-in is what was in the minibuffer before this was called.
+;; (ffap-string-at-point 'file) is what was at point
+;; E.g. with no editing of minibuffer.
+;; under point:
+;; //hw/ap_tlit1/drv/drvapi/runtest_common/runtest_exec.cpp:99
+;; name-in: (has been xlated by `dp-ffap-p4-location'
+;; /home/scratch.dpanariti_t124_1/sb4/sb4hw/hw/ap_tlit1/drv/drvapi/runtest_common/runtest_exec.cpp
+;; 
+;; The big problem is that if ffap is passing in a name from a buffer, then
+;; line number will not be given even if there is one following the name in
+;; the buffer.
+;; So we need to determine if name-in has been expanded from the buffer line
+;; so we can legitimately use the line number.
+;; Another wrinkle: if the user enters a p4 path, then this routine will NOT see the //.
 (defun dp-ffap-file-finder2 (&optional name-in)
   "Recognize /file/name:<linenum>.
 Visit /file/name and then goto <linenum>."
   (interactive)
-  (if (not name-in)
-      (call-interactively dp-ffap-ffap-file-finder)
-    (let ((name (ffap-string-at-point 'file))
-          (file-name-in (file-name-nondirectory name-in))
-          line-num
-          filename)
-      (when (string-match "\\(.*\\)[@:]\\([0-9][0-9]*\\)\\s-?" name)
-        (setq line-num (match-string 2 name))
-        (setq filename (file-name-nondirectory (match-string 1 name))))
-      (if (and line-num
-               (string= filename file-name-in)
-               (file-exists-p name-in)
-               (if dp-ffap-ask-to-goto-line
-                   (y-or-n-p (format "goto %s in %s? " line-num filename))
-                 t)                       ;keeps the (and) going
-               (funcall dp-ffap-ffap-file-finder name-in))
+  (if (or (not name-in)
+          current-prefix-arg)          ; Skip our cleverness in a stupid way.
+      (progn
+        (setq current-prefix-arg nil) ; this is bogus. No way to pass the c-p-a.
+        (call-interactively dp-ffap-ffap-file-finder))
+    (when (string= (concat "/" name-in) (car file-name-history))
+      (setq name-in (car file-name-history)))
+    (let* (;; Will include line number, if one.
+           (filename-part name-in)
+           (working-filename name-in)
+           ;; This is the line ffap is looking at in the current buffer.
+           ;; I may or may not be a filename.
+           (ffap-filename (ffap-string-at-point 'file))
+           ;; If ffap is looing at a p4 location then name-in is expanded.
+           ;; But there is no line number info.
+           ;; If ffap translated the p4 name, then this will be the same expansion.
+           (p4-filename (dp-maybe-expand-p4-location ffap-filename))
+           line-num-part)
+      (if (and p4-filename
+               ;; Are the names equivalent given that the ffap-filename may
+               ;; have a line number appended.
+               (string-match (format "^\\(%s\\)\\([:;@>$]\\([0-9]+\\)\\)$"
+                                     name-in)
+                             p4-filename))
+          (setq working-filename ffap-filename))
+      (when (string-match "\\(^//\\)\\(.*\\)$" working-filename)
+        (setq working-filename (dp-maybe-expand-p4-location+ working-filename)))
+      (if (string-match "\\(.*\\)[@:]\\([0-9][0-9]*\\)?$" working-filename)
+          (setq filename-part (match-string 1 working-filename)
+                line-num-part (match-string 2 working-filename))
+        (setq filename-part working-filename))
+      (dmessage "filename-part: %s, line-num-part: %s" filename-part line-num-part)
+      (if (and line-num-part
+               (file-exists-p filename-part)
+               (or (not dp-ffap-ask-to-goto-line)
+                   (y-or-n-p (format "goto %s in %s? " 
+                                     line-num filename-part))))
           (progn
-            (if (find-buffer-visiting name-in)
+            (funcall dp-ffap-ffap-file-finder filename-part)
+            (if (find-buffer-visiting filename-part)
                 (dp-push-go-back "dp-ffap-file-finder2"))
-            (goto-line (string-to-int line-num)))
-        (funcall dp-ffap-ffap-file-finder name-in)))))
+            (goto-line (string-to-int line-num-part)))
+        (funcall dp-ffap-ffap-file-finder filename-part)))))
 
 (defun dp-ffap (&optional file-name)
   (interactive "P")
   (cond
    ((not (interactive-p))
     (find-file file-name))
+   ((Cu--p)                             ; Just call find-file
+    (call-interactively 'find-file))
    ((Cu--p)
     (call-interactively 'dp-search-path))
+   ;; Here's where we should add our crap.
    (t (call-interactively dp-file-finder)))
 ;;   (dp-restore-file-state)
   )
@@ -15358,17 +15415,55 @@ file."
                          (when (eq mode major-mode)
                            buf)))))
 
-;;;;; <:functions: add-new-ones-above:>
-;;; @todo Write a loop which advises functions with simple push go back
-;;; commands.
-(defadvice replace-string (before dp-replace-string activate)
-  (dp-push-go-back "replace string"))
+(defvar dp-p4-location-regexp "^//[^:]+"
+  "This matches a perforce type pathname (//blah)")
+
+(defsubst dp-p4-location-p (path)
+  (string-match dp-p4-location-regexp path))
+
+(defun dp-expand-p4-location (file &optional sb extra-expansion-options)
+  (interactive "sFile-name: ") ;; fix this "fFile-name: \n)
+  ;;(dmessage "dp-expand-p4-location, file in>%s<" file)
+  (setq-ifnil sb ".")
+  (let ((ret (dp-nuke-newline
+              (shell-command-to-string
+               (format "dp4-reroot --expand-sb %s %s %s"
+                       (or extra-expansion-options "")
+                       sb file)))))
+    ;;(dmessage "dp-expand-p4-location, ret>%s<" ret)
+    ret))
+
+(defun dp-maybe-expand-p4-location (file &optional sb)
+  "If FILE looks like a perforce path (//blah), expand it; else return nil."
+  (when (dp-p4-location-p file)
+    ;; --NV --> Only allow legitimate nVIDIA WORK sandboxes.
+    (let ((expansion (dp-expand-p4-location file sb "--NV")))
+      (and expansion ; Put this check early to prevent type probs and needless work.
+           (stringp expansion)
+           (not (string= expansion ""))
+           expansion))))
+
+(defun dp-maybe-expand-p4-location+ (file)
+  ;; Try w/default Sb, ie nil.
+  (let ((prompt "Workspace? ")
+        (expansion (dp-maybe-expand-p4-location file)))
+    (if expansion
+        expansion
+      ;; Ask for a sb and try again.
+      ;; The message make sure we see a prompt if we're already in the
+      ;; minibuffer reading a filename.
+      (message prompt)
+      (dp-maybe-expand-p4-location file
+                                   (read-from-minibuffer prompt)))))
+
+;;;;; <:functions: add-new-ones-above:> ;;; @todo Write a loop which advises
+functions with simple push go back ;;; commands.  (defadvice replace-string
+(before dp-replace-string activate) (dp-push-go-back "replace string"))
 (defadvice query-replace (before dp-query-replace-string activate)
-  (dp-push-go-back "query replace string"))
-(defadvice replace-regexp (before dp-replace-regexp activate)
-  (dp-push-go-back "replace regexp"))
-(defadvice query-replace-regexp (before dp-query-replace-regexp activate)
-  (dp-push-go-back "query-replace regexp"))
+(dp-push-go-back "query replace string")) (defadvice replace-regexp (before
+dp-replace-regexp activate) (dp-push-go-back "replace regexp")) (defadvice
+query-replace-regexp (before dp-query-replace-regexp activate)
+(dp-push-go-back "query-replace regexp"))
 
 ;;;;; <:simple defadvice definitions: add-new-ones-above:>
 (require 'dp-ephemeral)

@@ -880,7 +880,8 @@ main(
   ;; add the std:: namespace qualifier to a bunch of things.
   ;; may want to tweak this list
   (dp-c++-mode-define-abbrevs)
-  (local-set-key [(meta ?[)] 'dp-c++-find-matching-paren)
+  (local-set-key [(meta ?e)] 'dp-ffap)
+  (local-set-key "\e[" 'dp-c++-find-matching-paren)
   (local-set-key [(meta ?u)] 'dp-c++-mode-undo)
   (local-set-key [(control ?c) (control meta ?s)] 'dp-c-get-syntactic-region)
   (local-set-key [(meta ?s)] 'dp-c++-member-init)

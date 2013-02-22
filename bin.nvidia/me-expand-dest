@@ -44,7 +44,12 @@ me_expand_dest()
         fi
     fi
     
-    local dest=$(me-dogo "${dest}") || {
+    local rc
+    case "${dest}" in
+        //*) dest=$(echo "${dest}" | dp4-reroot); rc="$?";;
+          *) dest=$(me-dogo "${dest}"); rc="$?";;
+    esac
+    [ "${rc}" = "0" ] || {
         echo "Cannot find>$@<"
         return 1
     } 1>&2

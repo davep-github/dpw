@@ -15,6 +15,8 @@ Ee|nvalias|aliasnv|      ${rsee}alias.nvidia/
 Ee|nvfunc|funcnv|        ${rsee}func.nvidia/
 Ee|bnv|nvb|nvbin|binnv|  ${gohome}bin.nvidia/
 Ee|p4r|                  ${gohome}sw/sw/main/apps/p4review/
+Ee|status|stat|          /home/dpanariti/work/status/
+Ee|global|               /home/dpanariti/davep/build/global-6.2.7/
 
 #
 Ee|dotvnc|dvnc|vnc|   ${gohome}.vnc/
@@ -27,12 +29,15 @@ Ee|dotvnc|dvnc|vnc|   ${gohome}.vnc/
 # These are best used by a utility because the _ interferes with abbrev
 # expansion.
 # It's really not the ME root, but I'm an ME guy.
+# .__ME_src --> ./   lets `mecd sb-name .' work.
 # For tot, the superfluous dot prevents a double slash at the end of the
 # expansion.
 E|workspace__ME_src|         ./
 E|ws__ME_src|                ./
 E|sandbox__ME_src|           ./
 E|sb__ME_src|                ./
+E|indices__ME_src|           ./
+E|.__ME_src|                 ./
 Ee|nvdiag__ME_src|           hw/nvdiag/
 Ee|nvd__ME_src|              hw/nvdiag/
 Ee|mods__ME_src|             hw/nvdiag/mods/
@@ -159,7 +164,15 @@ Ee|msenc5|                                                       ${me5}drvapi/ms
 Ee|runtestcommon5|rtc5|                                          ${drvapi5}/runtest_common/
 Ee|levels5|lev5|                                                 ${testgen5}config/levels/tegra/
 
-Ee|status|stat|       /home/dpanariti/work/status/
-Ee|global|       /home/dpanariti/davep/build/global-6.2.7/
-Ee|mods|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/hw/nvdiag/
-Ee|tgbarx|barxtg|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/sanity_soc_therm/2013-02-07T17.48.49-0500-wait.out/tests/kepler_b_ogtest/00/00/01/000001/
+#
+# Some direct accesses for objects which are way too overloaded.
+# sb4 /home/scratch.dpanariti_t124_1/sb4/sb4hw/
+#
+Ee|surfacep4| //hw/ap_tlit1/drv/drvapi/include/runtest_surface.h:740
+Ee|surface|   ${sb4}hw/ap_tlit1/drv/drvapi/include/runtest_surface.h:740
+Ee|t3dAlloc|  ${sb4}hw/ap_tlit1/drv/drvapi/runtest_common/runtest_exec.cpp:267
+#
+# Temp stuff for most active tasks.
+Ee|tgbarx|barxtg|  ${sb4}hw/ap_tlit1/diag/testgen/dp-run-tgens.d/sanity_soc_therm/2013-02-07T17.48.49-0500-wait.out/tests/kepler_b_ogtest/00/00/01/000001/
+
+Ee|asimflow|       /home/scratch.dpanariti_t124_1/sb3/sb3hw/

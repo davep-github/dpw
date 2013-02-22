@@ -5,4 +5,4 @@
 source script-x
 
 : ${DISPLAY:=:0.0}
-xx -B aquamarine1 orpie
+dpxx -B aquamarine1 orpie

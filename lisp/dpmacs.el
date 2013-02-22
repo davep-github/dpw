@@ -686,16 +686,12 @@ And their failure occurs way too often."
   ;;
   (dp-add-list-to-list 'ffap-c-path 
                        '("../include" 
+                         "../inc"
+                         "../h"
                          "../src"))
 
-  (defun dp-ffap-p4-location (file &optional sb)
-    (interactive "sFile-name: ") ;; fix this "fFile-name: \n)
-    (setq-ifnil sb ".")
-    (message "%s"
-             (dp-nuke-newline 
-              (shell-command-to-string 
-               (format "dp4-reroot %s %s" sb file)))))
-  (add-to-list 'ffap-alist (cons "^//[^:]+" 'dp-ffap-p4-location))
+  (add-to-list 'ffap-alist (cons dp-p4-location-regexp 
+                                 'dp-maybe-expand-p4-location+))
 
   (message "ffapped.")
 )

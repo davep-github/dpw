@@ -93,13 +93,13 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(control ?l)] 'dp-center-to-top)
 (global-set-key [(control meta ?l)] 'dp-center-to-top-other-window)
 (global-set-key [(meta ?a)] 'dp-toggle-mark)
-(global-set-key [(control ?x) ?4 (meta ?e)] 'ffap-other-window)
+(global-set-key [(control ?x) ?4 (meta ?e)] 'dp-ffap-other-window)
 (global-set-key [(control ?x) ?8 (meta ?e)] (kb-lambda 
                                                 (dp-2-vertical-windows-do-cmd 
-                                                 'ffap-other-window)))
+                                                 'dp-ffap-other-window)))
 (global-set-key [(control ?x) ?8 ?f] (kb-lambda 
                              (dp-2-vertical-windows-do-cmd 
-                              'ffap-other-window)))
+                              'dp-ffap-other-window)))
 (global-set-key [(control ?x) ?8 ?b] (kb-lambda 
                                (dp-2-vertical-windows-do-cmd
                                 'dp-switch-to-buffer t)))

@@ -566,7 +566,7 @@ abbrev is expanded.")
   (interactive)
   (dp-get-special-abbrev "'" "\\(\\(^//.*\\)\\)"))
 
-(defun dp-expand-p4-location ()
+(defun dp-expand-p4-abbrev ()
   (interactive)
   (let* ((abbrev-data (dp-get-p4-location))
          beg end abbrev-strings expansion)
@@ -574,14 +574,16 @@ abbrev is expanded.")
       (setq beg (nth 0 abbrev-data)
             end (nth 1 abbrev-data)
             abbrev-strings (nth 2 abbrev-data)
-            expansion (dp-nuke-newline 
-                       (shell-command-to-string 
-                        (format "dp4-reroot . %s" 
-                                (if (listp abbrev-strings)
-                                    (dp-string-join abbrev-strings " ")
-                                  abbrev-strings)))))
+            expansion (dp-expand-p4-location
+                       (if (listp abbrev-strings)
+                           (dp-string-join abbrev-strings " ")
+                         abbrev-strings)
+                       "."))
       (delete-region beg end)
-      (insert expansion "/"))))
+      ;; Are we interested more in dirs or files?
+      ;; Time will tell.
+      (insert expansion) ;; "/")
+      )))
 
 (defun dp-abbrev-insert-suffix-p ()
   "Determine if we should add a suffix."
@@ -619,7 +621,7 @@ Tried in order given and first match wins."
 
   (cond
    ((dp-expand-sandbox-rel-abbrev))
-   ((dp-expand-p4-location))
+   ((dp-expand-p4-abbrev))
    ((dp-expand-work-rel-abbrev)
     ;; return the expansion if non-nil
     )

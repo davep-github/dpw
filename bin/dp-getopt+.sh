@@ -124,12 +124,15 @@ running_as_script && {
 #e.g.# Usage_args_info=" errno..."
 #e.g.# Usage_synopsis="Display various info about errno...:
 #e.g.# "
+#e.g.# # Using ) after the args makes copy & paste between here and the 
+#e.g.# # case statement easier.
 #e.g.# Usage_details="${EExec_parse_usage}
-#e.g.# -o -- flag o
-#e.g.# -O <val> -- set Option to <val>
+#e.g.# -o) flag o
+#e.g.# -O <val>) set Option to <val>
 #e.g.# "
 #e.g.# # Example of arg parsing.
 #e.g.# option_str="${EExec_parse_option_str}"
+#e.g.# # long_options=("option-name-without-leading--" ...)
 #e.g.# source dp-getopt+.sh
 #e.g.# for i in "$@"
 #e.g.# do

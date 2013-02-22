@@ -14,19 +14,28 @@ GRTAGS
 GPATH
 
 
-# Naming conventions to prevent git's gaze.
-*-hide
-hide-*
-*-novc
-novc-*
-*-nogit
-nogit-*
-*-HIDE
-HIDE-*
-*-NOVC
-NOVC-*
-*-NOGIT
-NOGIT-*
+# Naming conventions to prevent git's gaze. Can also be used as dirs.
+githide
+*[.,-]githide
+githide[.,-]*
+hide
+*[.,-]hide
+hide[.,-]*
+novc
+*[.,-]novc
+novc[.,-]*
+nogit
+*[.,-]nogit
+nogit[.,-]*
+HIDE
+*[.,-]HIDE
+HIDE[.,-]*
+NOVC
+*[.,-]NOVC
+NOVC[.,-]*
+NOGIT
+*[.,-]NOGIT
+NOGIT[.,-]*
 
 # Oft-modified files with transient contents.
 .csh_history*
