@@ -25,7 +25,8 @@ go_lookup()
       [ -f "$pathEl" ] && {
           IFS=$oldIFS
           # tmp=`egrep "(^|[^#;])|$c|" $pathEl` && {
-          tmp=$(fgrep $show_dir_opt "|$c|" $pathEl) && {
+          # tmp=$(egrep -v '^[[:space:]]*[;#]' $pathEl | fgrep $show_dir_opt "|$c|") && {
+          tmp=$(egrep -v '^[[:space:]]*[;#]' $pathEl | fgrep -m1 $show_dir_opt "|$c|") && {
               set -- $tmp
               $SHIFT
               eval echo "$*$cs"

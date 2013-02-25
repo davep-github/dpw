@@ -662,7 +662,7 @@ And their failure occurs way too often."
 
 (when (and dp-use-ffap-p
            (dp-optionally-require 'ffap))
-  (message "ffapping...")
+  (message "ffaping...")
   (ffap-bindings)			; do default key bindings
   (dp-add-list-to-list 'ffap-compression-suffixes '(".bz2"))
 

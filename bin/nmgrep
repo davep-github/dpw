@@ -8,18 +8,30 @@ source script-x
 NM=
 grepper_args=
 nm_args=
+demangle_opt=--demangle
+extern_only_opt=
+grep_color_opt=--color
 unset regexp
 
 # Parse command line.
 std_options=""
 option_str="ax8ig:N:A:e:n:"
-#source sh-script-template.sh
+long_options=("no-demangle" "demangle" "mangle"
+    "extern-only" "no-extern-only"
+    "grep-color" "no-grep-color")
+
 source dp-getopt+.sh
 for i in "$@"; do
     case "$1" in
         -a) NM=$def_arm_nm;;
         -[x8i]) NM=$def_x86_nm;;
         -[NA]) NM=$2; shift;;
+        --demangle) demangle_opt=--demangle;;
+        --no-demangle|--mangle) demangle_opt=;;
+        --extern-only) extern_only_opt=--extern-only;;
+        --no-extern-only) extern_only_opt=;;
+        --grep-color) grep_color_opt=--color;;
+        --no-grep-color) grep_color_opt=;;
         -g) grepper_args="$grepper_args $2"; shift;;
         -n) nm_args="$nm_args $2"; shift;;
         -e) regexp=$2; shift;;
@@ -32,18 +44,16 @@ for i in "$@"; do
     shift
 done
 
-x86_file_glob="*x86*"
 arm_file_glob="*ARM*"
 
 guess_nm()
 {
+    # Assume x86 unless specified otherwise.
     local file="$1"
     local file_says=$(file "$file")
     case "$file_says" in
         $arm_file_glob) echo $def_arm_nm;;
-        $x86_file_glob) echo $def_x86_nm;;
-        *) echo 1>&2 "Unsupported file type>$file_says<"
-        exit 1;;
+        *) echo $def_x86_nm;;
     esac
 }
 
@@ -60,8 +70,15 @@ get_nm()
 shift
 
 for file in "$@"; do
-#set -x
-    $(get_nm "$file") $nm_args $file | \
-     ${grepper} $grepper_args --label="$file" -H "$regexp"
-#set +x
+    $(get_nm "$file") \
+        ${demangle_opt} \
+        ${extern_only_opt} \
+        ${nm_args} ${file} \
+        | \
+        ${grepper} \
+          ${grep_color_opt} \
+          ${grepper_args} \
+           --label="${file}" \
+          -H \
+          "${regexp}"
 done

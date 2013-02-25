@@ -373,7 +373,7 @@ Bind any keys in KEYS via `dp-define-keys'."
                           [?r] 'dp-rotate-windows
                           [?v] 'dp-show-variable-value
                           [?x] 'dp-cx-file-mode
-                          [?\\] 'dp-split-and-continue-line
+                          [?\\] 'dp-split-and-continue-line0
                           [left] 'dp-shift-windows
                           [right] 'dp-shift-windows
                           [(control ?\\)] 'align

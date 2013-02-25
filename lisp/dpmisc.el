@@ -8772,32 +8772,26 @@ Motivation was the ability to run commands like this \"mpc play\"."
 Visit /file/name and then goto <linenum>."
   (interactive)
   (if (or (not name-in)
-          current-prefix-arg)          ; Skip our cleverness in a stupid way.
+          current-prefix-arg) ; Skip our attempted cleverness in a stupid way.
       (progn
         (setq current-prefix-arg nil) ; this is bogus. No way to pass the c-p-a.
         (call-interactively dp-ffap-ffap-file-finder))
-    (when (string= (concat "/" name-in) (car file-name-history))
-      (setq name-in (car file-name-history)))
     (let* (;; Will include line number, if one.
            (filename-part name-in)
-           (working-filename name-in)
            ;; This is the line ffap is looking at in the current buffer.
            ;; I may or may not be a filename.
            (ffap-filename (ffap-string-at-point 'file))
-           ;; If ffap is looing at a p4 location then name-in is expanded.
-           ;; But there is no line number info.
-           ;; If ffap translated the p4 name, then this will be the same expansion.
-           (p4-filename (dp-maybe-expand-p4-location ffap-filename))
+           (working-filename (if (string= (concat "/" name-in) 
+                                          (car file-name-history))
+                                 (dp-maybe-expand-p4-location+ 
+                                   (car file-name-history) 
+                                   t)
+                               (or (and (dp-p4-location-p ffap-filename)
+                                        (dp-maybe-expand-p4-location+ 
+                                         ffap-filename
+                                         t))
+                                   name-in)))
            line-num-part)
-      (if (and p4-filename
-               ;; Are the names equivalent given that the ffap-filename may
-               ;; have a line number appended.
-               (string-match (format "^\\(%s\\)\\([:;@>$]\\([0-9]+\\)\\)$"
-                                     name-in)
-                             p4-filename))
-          (setq working-filename ffap-filename))
-      (when (string-match "\\(^//\\)\\(.*\\)$" working-filename)
-        (setq working-filename (dp-maybe-expand-p4-location+ working-filename)))
       (if (string-match "\\(.*\\)[@:]\\([0-9][0-9]*\\)?$" working-filename)
           (setq filename-part (match-string 1 working-filename)
                 line-num-part (match-string 2 working-filename))
@@ -15208,7 +15202,7 @@ Some examples are:
   (dp-meta-minus)
   (dp-pop-window-config nth-config))
 
-(defun dp-split-and-continue-line (&optional sep term replacement)
+(defun dp-split-and-continue-line0 (&optional sep term replacement no-indent-p)
   "Replace regexp SEP with REPLACEMENT. Add TERM to end of original line.
 Continue to end of region if active, else end of original line.
 Like when you have some long var in a Makefile:
@@ -15240,9 +15234,14 @@ SRCS = a.c \
       (when (looking-at sep)
         (replace-match ""))
       ;; !<@todo XXX run command on TAB?
-      (indent-for-tab-command))
+      (unless no-indent-p
+        (indent-for-tab-command)))
     (undo-boundary)
     (align (car b&e) (cdr b&e))))
+
+(defun dp-split-and-continue-line (sep term replacement)
+  (interactive "sSep[spaces]: \nsterminator[\\]: \nsreplacement[newline]: ")
+  (dp-split-and-continue-line0 sep term replacement))
 
 (defun dp-refresh-tags (&optional preserve-files-p)
   "Jump through hoops the kill the fucking tags buffers.
@@ -15443,18 +15442,29 @@ file."
            (not (string= expansion ""))
            expansion))))
 
-(defun dp-maybe-expand-p4-location+ (file)
+(defvar dp-p4-stupid-hack-saved-sb nil
+  "Stupid way to prevent being prompted for a sandbox name twice.
+Will fail often, no doubt. Add a condition case or unwind protect or something.")
+
+(defun dp-maybe-expand-p4-location+ (file &optional sb)
   ;; Try w/default Sb, ie nil.
-  (let ((prompt "Workspace? ")
-        (expansion (dp-maybe-expand-p4-location file)))
+  (if (eq sb t)
+      (setq sb dp-p4-stupid-hack-saved-sb
+            dp-p4-stupid-hack-saved-sb nil))
+  (let* ((prompt "Workspace? ")
+         (need-new-sb (not sb))
+         (sb (or sb "."))
+         (expansion (dp-maybe-expand-p4-location file sb)))
     (if expansion
         expansion
       ;; Ask for a sb and try again.
       ;; The message makes sure we see a prompt if we're already in the
       ;; minibuffer reading a filename.
-      (message prompt)
-      (dp-maybe-expand-p4-location file
-                                   (read-from-minibuffer prompt)))))
+      (when need-new-sb
+        (message prompt)
+        (setq sb (read-from-minibuffer prompt)
+              dp-p4-stupid-hack-saved-sb sb)
+        (dp-maybe-expand-p4-location file sb)))))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;;
