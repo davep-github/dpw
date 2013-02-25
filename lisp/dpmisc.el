@@ -15450,7 +15450,7 @@ file."
     (if expansion
         expansion
       ;; Ask for a sb and try again.
-      ;; The message make sure we see a prompt if we're already in the
+      ;; The message makes sure we see a prompt if we're already in the
       ;; minibuffer reading a filename.
       (message prompt)
       (dp-maybe-expand-p4-location file
