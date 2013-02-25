@@ -15456,14 +15456,20 @@ file."
       (dp-maybe-expand-p4-location file
                                    (read-from-minibuffer prompt)))))
 
-;;;;; <:functions: add-new-ones-above:> ;;; @todo Write a loop which advises
-functions with simple push go back ;;; commands.  (defadvice replace-string
-(before dp-replace-string activate) (dp-push-go-back "replace string"))
+;;;;; <:functions: add-new-ones-above:>
+;;;
+;;;
+;;; @todo Write a loop which advises functions with simple push go back 
+;;; commands.  
+
+(defadvice replace-string (before dp-replace-string activate)
+  (dp-push-go-back "replace string"))
 (defadvice query-replace (before dp-query-replace-string activate)
-(dp-push-go-back "query replace string")) (defadvice replace-regexp (before
-dp-replace-regexp activate) (dp-push-go-back "replace regexp")) (defadvice
-query-replace-regexp (before dp-query-replace-regexp activate)
-(dp-push-go-back "query-replace regexp"))
+  (dp-push-go-back "query replace string")) 
+(defadvice replace-regexp (before dp-replace-regexp activate) 
+  (dp-push-go-back "replace regexp")) 
+(defadvice query-replace-regexp (before dp-query-replace-regexp activate)
+  (dp-push-go-back "query-replace regexp"))
 
 ;;;;; <:simple defadvice definitions: add-new-ones-above:>
 (require 'dp-ephemeral)

@@ -20,12 +20,15 @@ esac
 arg=$1
 : ${fox:=${arg:=swiftfox}}
 : ${kwa_profs:=.*-P.*(KDE|dp2|zzz)}
-: ${proc_re:="(fucking-)?${fox}(-bin)?"}
+: ${proc_re:="(fucking-)?(fire|swift)fox(-bin)?"}
 
-killprog ffox
 # tty is `?' if none.
-pids=$(pgrep ${proc_re} | \
-    sed -rn 's!^(.*(pts|tty|\?)/[0-9]+ +)([0-9]+)( .*)$!\3!p')
+EExec_verbose_msg "dpgrep>${proc_re}
+$(dpgrep ${proc_re})<"
+
+pids=$(dpgrep ${proc_re} \
+    | sed -rn 's/^(davep[[:space:]]+)([[:digit:]]+)(.*)/\2/p' \
+    | fgrep -v "${progname}")
 
 if [ -n "$pids" ]
 then
@@ -34,9 +37,10 @@ else
     echo 1>&2 "No instances of ${proc_re} found."
 fi
 
+
 #
-# 0 if pgrep fails to find the program.
-pgrep fox
+# 0 if dpgrep fails to find the program.
+dpgrep fox
 rc="$?"
 if [ "$rc" != '0' ]
 then
