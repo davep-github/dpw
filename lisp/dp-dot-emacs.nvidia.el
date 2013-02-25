@@ -46,8 +46,7 @@
 ;;(defun dp4-locale-client-setup ())
 (fmakunbound 'dp4-locale-client-setup)
 
-(defvar dp-cscope-perverted-index-option nil
-  "This is a localized value for cscope-perverted-index-option (q.v.).")
+(setq dp-cscope-perverted-index-option nil)
 
 (defvar dp-wants-hide-ifdef-p t
   "Do I want the hide ifdef package activated?

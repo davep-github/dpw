@@ -160,6 +160,9 @@ This should be set by the emacs specific code.")
 		"unknown-host")
 	    ?.))))
 
+(defvar dp-cscope-perverted-index-option nil
+  "This is a localized value for cscope-perverted-index-option (q.v.).")
+
 ;; load fsf/x emacs specific stuff
 (if (dp-xemacs-p)
     (require 'dp-xemacs-early)
