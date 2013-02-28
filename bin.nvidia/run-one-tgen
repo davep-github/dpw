@@ -167,18 +167,21 @@ do
     else
         only_opt="-only ${test_name}"
     fi
-    EExec ./tgen.pl \
-      ${target_opt} \
-      ${chip_opt} \
-      ${level_opt} \
-      ${d_opt} \
-      ${traceRoot_opt} \
-      ${only_opt} \
-      -outDir "$out_dir" \
-      ${wait_opt} \
-      ${mail_opt} \
-      ${clobber_opt} \
-      ${tgen_opts}
+    cmd="./tgen.pl ${target_opt} ${chip_opt} ${level_opt} ${d_opt} ${traceRoot_opt} ${only_opt} -outDir $out_dir ${wait_opt} ${mail_opt} ${clobber_opt} ${tgen_opts}"
+    echo "$cmd" > "${out_dir}.command-line"
+    EExec $cmd
+#     EExec ./tgen.pl \
+#       ${target_opt} \
+#       ${chip_opt} \
+#       ${level_opt} \
+#       ${d_opt} \
+#       ${traceRoot_opt} \
+#       ${only_opt} \
+#       -outDir "$out_dir" \
+#       ${wait_opt} \
+#       ${mail_opt} \
+#       ${clobber_opt} \
+#       ${tgen_opts}
     
     [ -n "$display_status_p" ] && {
         EExec ./batch_status "$out_dir"

@@ -32,7 +32,9 @@ mlocate_search()
 
 slocate_create()
 {
-    EExec updatedb "$@"
+    # This used to work?
+    # EExec updatedb "$@"
+    EExec $LOC_BIN "$@"
 }
 
 slocate_search()

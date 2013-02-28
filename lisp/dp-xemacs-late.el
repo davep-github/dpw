@@ -225,8 +225,8 @@ Turn off if on-off < 0 (e.g. C-u - interactively)"
 (when (fboundp 'pending-delete-mode)
   (pending-delete-mode 1)
   ;; kill the modeline display this mode
-  (setq pending-delete-modeline-string " pD")
-  )
+  (setq pending-delete-modeline-string " pD"))
+
 (dmessage "xem-late: pre-command-hook>%s<" pre-command-hook)
 
 ;; @todo is this xemacs specific?

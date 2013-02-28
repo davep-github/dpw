@@ -3045,3 +3045,34 @@ Friday February 22 2013
 "bubba"
 
 
+
+========================
+Wednesday February 27 2013
+--
+!! make a function to dump all minor-modeline strings.
+(cddadr '(flyspell-mode (buf-obj0 buf-obj1  . flyspell-mode-line-string)))
+flyspell-mode-line-string
+
+(buf-obj1 . flyspell-mode-line-string)
+
+(buf-obj0 buf-obj1 . flyspell-mode-line-string)
+
+
+(car '((buf-obj0 buf-obj1 . flyspell-mode-line-string)))
+(cdr '(buf-obj0 buf-obj1 . flyspell-mode-line-string))
+(buf-obj1 . flyspell-mode-line-string)
+
+(cdr '(buf-obj0 buf-obj1 . flyspell-mode-line-string))
+buf-obj0
+
+
+
+
+nil
+
+((buf-obj0 buf-obj1 . flyspell-mode-line-string))
+
+flyspell-mode
+
+
+

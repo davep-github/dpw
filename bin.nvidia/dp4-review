@@ -320,10 +320,13 @@ do
 
   if [ -n "$review_p" ]
   then
+      f=$(basename $f)
       [ -z "${verbatim_p}" ] && {
           case "$f" in
-              cl-*) ;;
-              *) f="cl-${f}.p4r";;
+              cl-*.p4r) ;;
+              cl-*) f="${f}.p4r";;
+              *.p4r) f="cl-${f}";;
+              
           esac
       }
       dp4r_review "${f}"

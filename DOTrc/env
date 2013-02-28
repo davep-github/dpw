@@ -236,6 +236,6 @@ export MANPAGER=$PAGER
 export GNU_SECURE="$HOME/.gnuserv-hosts"
 
 # Make sure we're defined but don't change anything.
-: ${DP_GNU_EDITING_HOST=""}
+: ${DP_GNU_EDITING_SERVER=""}
 
 true

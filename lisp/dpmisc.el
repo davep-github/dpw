@@ -10029,7 +10029,7 @@ on interactiveness, but due to cases like this, I'm trending away from
       (call-interactively 'tabify)
     (tabify (point-min) (point-max))))
 
-(defun dp-cb-string-match (string regexp &rest rest)
+(defun dp-choose-buffers-string-match (string regexp &rest rest)
   "A predicate function used by `dp-choose-buffers'."
   (apply 'string-match regexp string rest))
 
@@ -10046,7 +10046,7 @@ Otherwise, PREDICATE is `apply'd to the buffer and PRED-ARGS."
       (setq pred-args (list predicate) ;the regexp
             predicate (function
                        (lambda (buf regexp &rest rest)
-                         (apply 'dp-cb-string-match 
+                         (apply 'dp-choose-buffers-string-match 
                                 (buffer-name buf) regexp rest)))))
     (delq nil
           (mapcar (function
@@ -11309,17 +11309,15 @@ basically the union of the args to `find-file-noselect' and
     (dp-find-file file-name :other-window-p t)))
 
 (defun dp-force-read-only-by-file-name-regexp ()
-  "Make buffers with file names matching `dp-force-read-only-regexps' READ-ONLY."
+  "Make file names matching `dp-implied-read-only-filename-regexp-list' READ-ONLY."
   ;; Nothing to do for buffers w/o files.
   (when buffer-file-name
     ;; Force expansion since find-file-use-truenames may not be.
     (let ((bfn (expand-file-name buffer-file-name)))
-      (dolist (r dp-force-read-only-regexps)
-        (when (string-match r bfn)
-          (dmessage "Forcing %s to be read-only." bfn)
-          (toggle-read-only 1)
-          (return))))))
-
+      (when (dp-file-name-implies-readonly-p bfn)
+        (dmessage "Forcing %s to be read-only." bfn)
+        (toggle-read-only 1)))))
+        
 (defun dp-remove-file-state-colorization ()
   (interactive)
   (dp-unextent-region (cons 'dp-file-state-colorization t)))
@@ -11785,11 +11783,16 @@ equivalent vertically(horizontally) split set."
       (funcall split-func)
       (setq num-wins (1- num-wins)))
     (balance-windows)
+    ;; Go back one so that when we exit the following loop, we are in the
+    ;; window just switched to.
+    (other-window -1)
     (while buf-list
       (switch-to-buffer (buffer-name (caar buf-list)))
       (goto-char (cdar buf-list))
+      (set-window-point (selected-window) (point))
       (other-window 1)
       (setq buf-list (cdr buf-list)))))
+
 (put 'dp-rotate-windows 'isearch-command t)
 
 (defun dp-num-frames (&optional device)
@@ -14303,24 +14306,40 @@ e.g. \"a\" --> '(\"a\")
   (delq nil (mapcar 'dp-listify-thing things)))
 
 (defun dp-match-a-regexp (string &rest regexp-list)
-  "Each element of REGEXP-LIST can be an atom or nil or a list of regexp atoms."
+  "Each element of REGEXP-LIST can be an atom or nil or a list of regexp atoms.
+REGEXP-LIST can contain nils which are ignored. This makes it easier to use lists from things like `mapcar` which often have nils or the consing of a value that may be nil, like dp-singlular-write-restricted-regexp."
   (loop for regexps in (apply 'dp-listify-things regexp-list)
     thereis (loop for regexp in regexps
               ;; do (princf "regexp>%s<, filename>%s<" regexp string)
-              thereis (string-match regexp string))))
+              thereis (and regexp
+                           (string-match regexp string)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun* dp-file-name-implies-readonly-p (filename 
-                                         &optional regexp-in 
-                                         (mode-local-list-p t))
-  "Call this from a mode hook to make sure that FILENAME is known to match the mode regexp."
-  (and (dp-match-a-regexp filename 
-                          (and mode-local-list-p
+(defvar dp-detect-read-only-file-hook nil
+  "Hook to determine if a file should be read only.")
+
+(defvar dp-implied-read-only-filename-regexp-list nil
+  "File names matching this become read only.")
+
+(defun* dp-file-name-implies-readonly0-p (filename 
+                                          &optional regexp-in 
+                                          (mode-local-list-p t))
+  "Determine if something in a filename implies the file should be read only.
+MODE-LOCAL-LIST-P allows restricting regexps on a per-mode basis."
+  (and (dp-match-a-regexp filename
+                          (if mode-local-list-p
                                (dp-mode-local-value 
-                                'dp-implied-read-only-filename-regexp))
+                                'dp-implied-read-only-filename-regexp)
+                            dp-implied-read-only-filename-regexp)
                           regexp-in)
        (< 0 (length (match-string 0 filename)))))
+
+(defun* dp-file-name-implies-readonly-p (filename
+                                         &optional regexp-in
+                                         (mode-local-list-p t))
+  (or (dp-file-name-implies-readonly0-p filename regexp-in mode-local-list-p)
+      (run-hook-with-args 'dp-detect-read-only-file-hook filename)))
 
 (defun dp-local-set-keys (key-func-list)
   "Do a bunch of `local-set-key' ops @ once.
@@ -15092,7 +15111,7 @@ values must be passed in as stings."
 (defun dp-add-force-read-only-regexp (regexp)
   "Add a regexp to the list of regexps which determine if a file is read only."
   (interactive "sRegexp: ")
-  (add-to-list 'dp-force-read-only-regexps regexp))
+  (add-to-list 'dp-implied-read-only-filename-regexp-list regexp))
 
 (defun dp-delete-force-read-only-regexp (regexp)
   "Delete a regexp from the list of regexps which determine if a file is read only."
@@ -15100,10 +15119,10 @@ values must be passed in as stings."
                       "Regexp to delete: "
                       (mapcar (lambda (regexp)
                                 (cons regexp "Blah"))
-                              dp-force-read-only-regexps)
+                              dp-implied-read-only-filename-regexp-list)
                       nil t)))
-  (setq dp-force-read-only-regexps 
-        (delete regexp dp-force-read-only-regexps)))
+  (setq dp-implied-read-only-filename-regexp-list
+        (delete regexp dp-implied-read-only-filename-regexp-list)))
 
 (defun* dp-insert-if-regexp-not-present (text regexp 
                                         &key search-from

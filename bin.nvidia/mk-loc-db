@@ -68,5 +68,10 @@ loc_exclude_opt=
 [ -n "$LOC_EXCLUDES" ] && loc_exclude_opt="-e $LOC_EXCLUDES"
 
 env | egrep -i 'eexec.*verbos'
-EExec $LOCATE --create -U "${LOC_DIR}" ${loc_exclude_opt} \
+EExec -y $LOCATE $EExecDash_opts --create -U "${LOC_DIR}" ${loc_exclude_opt} \
    -o "${loc_db}" -l "$lval" "$@"
+
+vsetp "${send_mail_on_completion-}" && {
+    mail -s "$progname is done" "${USER}" < /dev/null >/dev/null 2>&1
+}
+

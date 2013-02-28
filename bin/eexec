@@ -53,6 +53,7 @@ ${EExecExporter} EExec_verbose_func=
 ${EExecExporter} EExecContinue=
 ${EExecExporter} EExecDashN_opt=
 ${EExecExporter} EExecDashV_opt=
+${EExecExporter} EExecDash_opts=
 
 EExec_parse_usage="-n -- Show what would happen but don't do it. [eexec]
 -v -- Be verbose about it. [eexec]
@@ -137,6 +138,8 @@ EExecDashN ()
     ${EExecExporter} EExecEchoPrefixG='-'
     # Use this to propagate -n ed ness.
     ${EExecExporter} EExecDashN_opt="-n"
+    ${EExecExporter} EExecDash_opts="$EExecDash_opts $EExecDashN_opt"
+
 }
 
 EExecDashN_p()
@@ -156,6 +159,8 @@ EExecVerbose ()
     EExecEcho="$EExec_verbose_func"
     # Use this to propagate -n ed ness.
     ${EExecExporter} EExecDashV_opt="-v"
+    ${EExecExporter} EExecDash_opts="$EExecDash_opts $EExecDashV_opt"
+
 }
 
 EExecVerbose_p()

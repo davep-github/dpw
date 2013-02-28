@@ -348,6 +348,53 @@ Oddly, it doesn't handle structs.")
     (hide-ifdef-use-define-alist "t3d")
     (hide-ifdefs)))
 
+;;
+;; Give the ability to prevent writing to certain directory trees.
+;;
+;; (defvar dp-singlular-write-restricted-regexp nil
+;;   "This is a special case. It can only have a single value, so it's useful
+;;   for things like a current sandbox.")
+
+;; (defun dp-set-singlular-write-restricted-regexp (regexp)
+;;   (interactive "sRegexp: ")
+;;   (setq dp-implied-read-only-filename-regexp-list
+;;         (delete dp-singlular-write-restricted-regexp 
+;;                 dp-implied-read-only-filename-regexp-list)
+;;         dp-implied-read-only-filename-regexp-list
+;;         (cons regexp dp-implied-read-only-filename-regexp-list)
+;;         dp-singlular-write-restricted-regexp regexp))
+
+(defvar dp-sandbox-regexp "/home/scratch\."
+  "Regexp to detect a sandbox.")
+
+(defsubst dp-sandbox-p (filename)
+  (string-match dp-sandbox-regexp filename))
+
+(defvar dp-current-sandbox-regexp nil
+  "Regexp to detect the current sandbox.")
+
+(defsubst dp-current-sandbox-p (filename)
+  (and (dp-sandbox-p filename)
+       dp-current-sandbox-regexp
+       (string-match dp-current-sandbox-regexp filename)))
+
+(defun dp-set-sandbox (regexp)
+  "Setup things for a singular, unique sandbox."
+  (interactive (list (read-from-minibuffer 
+                      (format "Sandbox regexp%s: " 
+                              (if dp-current-sandbox-regexp
+                                  (format "[current: %s]" 
+                                          dp-current-sandbox-regexp)
+                                "")))))
+  (setq dp-current-sandbox-regexp (if (string= regexp "")
+                                      nil
+                                    regexp)))
+
+(defun dp-sandbox-read-only-p (filename)
+  (and (dp-sandbox-p filename)
+       (not (dp-current-sandbox-p filename))))
+  
+(add-hook 'dp-detect-read-only-file-hook 'dp-sandbox-read-only-p)
 
 (provide 'dp-ptools)
 (dmessage "done loading dp-ptools.el...")

@@ -262,4 +262,8 @@ EExec mkdir -p "${log_dir}"
 
 echo "Log file: ${log_name}"
 
+vsetp "${send_mail_on_completion-}" && {
+    mail -s "$progname is done" "${USER}" < /dev/null >/dev/null 2>&1
+}
+
 exit 0

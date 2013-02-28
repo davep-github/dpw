@@ -177,7 +177,7 @@ e.g. URLs.")
 (defvar dpj-info-regexps (concat dpj-info-regexps0 "[^ 	
 ]*"))
 
-(defvar dpj-alt-regexp "^[ 	]*\\([0-9]+[.a-zA-Z0-9]*\\)).*$")
+(defvar dpj-alt-regexp "^[ 	]*\\([0-9]+[.a-zA-Z0-9]*\\)[].:|)].*$")
 ;;;(defvar dpj-alt-regexp "^[ 	]*|.*$")
 ;;;(defvar dpj-alt-regexp "^\\([ 	]*| .*\\|[0-9][0-9]*) .*\\)$")
 

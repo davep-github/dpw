@@ -5,19 +5,19 @@ source eexec
 set -u
 progname="$(basename $0)"
 : ${uniqifier=utils}
-# Usage variable usage:
-Usage_args_info=" file-name..."
-Usage_synopsis="Locate file-name.
-"
-Usage_details="-n -- Show what would happen but don't do it. [eexec]
--v -- Be verbose about it. [eexec]
--q -- Anti-verbose. [eexec]
--d <db> -- Locate database to use.
--u <uniqifier> -- Uniquifier for dbs in standard dir.
-"
 
 LOC_BIN=$(which-locate --program)
 
+# Usage variable usage:
+Usage_args_info=" [$LOC_BIN opts] file-name..."
+Usage_synopsis="Front end to locate file-name.
+"
+Usage_details="-n) Show what would happen but don't do it. [eexec]
+-v) Be verbose about it. [eexec]
+-q) Anti-verbose. [eexec]
+-d <db>) Locate database to use.
+-u <uniqifier>) Uniquifier for dbs in standard dir.
+"
 # Example of arg parsing.
 option_str="nvqu:d:"
 source dp-getopt+.sh

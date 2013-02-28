@@ -292,7 +292,7 @@ A good thing to add to in a spec-macs file."
   :type '(repeat string))
 
 ;; e.g. "^/home/davep/work/ll/rsvp"
-(defcustom dp-force-read-only-regexps '()
+(defcustom dp-implied-read-only-filename-regexp-list '()
   "*List of regexps to determine which files are forced to be read only.
 Each new buffer's file name as returned by `expand-file-name' is matched
 against the list of regexps."

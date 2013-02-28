@@ -20,6 +20,9 @@ EExec ./build_gpu_multiengine.pl purge \
           EExec ./build_gpu_multiengine.pl -debug=1 \
           && {
                   echo "***** Build Complete *****"
+                  vsetp "${send_mail_on_completion-}" && {
+                      mail -s "$progname is done" "${USER}" < /dev/null >/dev/null 2>&1
+                  }
                   exit 0
           }
    }

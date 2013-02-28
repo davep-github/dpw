@@ -25,7 +25,7 @@ LOG_FILE="$HOME/log/xemacs/ec-log-file.log"
 : ${known_servers:=gnuserv}
 : ${known_clients:="gnuclient emacsclient"}
 : ${known_text_mode_editors:="vim vi nvi nano pico"}
-: ${eh=${DP_GNU_EDITING_HOST}}
+: ${eh=${DP_GNU_EDITING_SERVER}}
 : ${client=}
 
 editing_host_opt=
@@ -58,7 +58,7 @@ local_server_p()
 
 #
 # Find the best editing server.
-# An environment variable, DP_GNU_EDITING_HOST, is most authoritative, but
+# An environment variable, DP_GNU_EDITING_SERVER, is most authoritative, but
 # tends to be the most out-of-date. It really should just be used as a
 # parameter to force selection of a host.
 # The most up-to-date tends to be kept in the ipc(dp) file:
@@ -68,16 +68,20 @@ local_server_p()
 #
 find_best_editing_host()
 {
-    vsetp "${DP_GNU_EDITING_HOST-}" && {
-        echo "${DP_GNU_EDITING_HOST}"
+    vsetp "${DP_GNU_EDITING_SERVER-}" && {
+        echo "${DP_GNU_EDITING_SERVER}"
         return 0
     }
     [ -e "${DP_EDITING_SERVER_FILE}" ] && {
         set -- $(cat "${DP_EDITING_SERVER_FILE}")
         # $1 == server, $2 == pid
         # If server is this host, verify the pid exists and is gnuserv.
+        echo "${1}"
+        return 0
     }
+    return 1
 }
+
 
 find_one_of_these_programs()
 {
@@ -133,7 +137,10 @@ process_file ()
     # Choose a local server over a remote one.
     if ! local_server_p
     then
-        if [ -n "$eh" ]
+        vsetp "${eh}" || {
+            eh=$(find_best_editing_host)
+        }
+        if vsetp "$eh"
         then
             editing_host_opt="-h $eh"
             [ -z "$quiet_p" ] && {
