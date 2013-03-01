@@ -553,14 +553,13 @@ abbrev is expanded.")
       (setq beg (nth 0 abbrev-data)
             end (nth 1 abbrev-data)
             abbrev-strings (nth 2 abbrev-data)
-            expansion (dp-nuke-newline 
-                       (shell-command-to-string 
-                        (format "me-expand-dest %s" 
-                                (if (listp abbrev-strings)
-                                    (dp-string-join abbrev-strings " ")
-                                  abbrev-strings)))))
-      (delete-region beg end)
-      (insert expansion "/"))))
+            expansion (dp-me-expand-dest
+                       (if (listp abbrev-strings)
+                           (dp-string-join abbrev-strings " ")
+                         abbrev-strings)))
+      (when expansion
+        (delete-region beg end)
+        (insert expansion "/")))))
 
 (defun dp-get-p4-location ()
   (interactive)

@@ -5,6 +5,8 @@ source eexec
 set -u
 progname="$(basename $0)"
 
+: ${o_xterm_ok_p=}
+
 eexec_program=$(EExec_parse "$@")
 for op in $eexec_program
 do
@@ -33,11 +35,6 @@ tee_log()
     fi
 }
 
-on-o-xterm-p && {
-    echo "$progname: Should not do this on an o-xterm box."
-    exit 1
-} 1>&2
-
 # Usage variable usage:
 Usage_args_info=' `depth`/bin/make-options-and-args...'
 Usage_synopsis='make using `depth`/bin/make
@@ -49,7 +46,7 @@ Usage_details="${EExec_parse_usage}
 "
 # Example of arg parsing.
 option_str="${EExec_parse_option_str}"
-long_options=("logger:" "log-file:" "null")
+long_options=("logger:" "log-file:" "null" "override" "o-xterm-ok")
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -64,6 +61,7 @@ do
       --logger) shift; logger="$1";;
       --log-file) shift; log_file="$1";;
       --null) log_file=/dev/null;;
+      --override|--o-xterm-ok) o_xterm_ok_p=y;;
 
       # Help!
       --help) Usage; exit 0;;
@@ -73,6 +71,12 @@ do
     esac
     shift
 done
+
+on-o-xterm-p && vunsetp "${o_xterm_ok_p}" && {
+    echo "$progname: Should not do this on an o-xterm box."
+    exit 1
+} 1>&2
+
 
 : ${log_file=}
 : ${logger:=cat_log}

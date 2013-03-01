@@ -386,6 +386,17 @@
   :group 'faces
   :group 'dp-vars)
 
+(defface dp-default-read-only-color
+  '((((class color) (background light)) 
+     (:background "pink"))) 
+  "*We colourize read only buffers so we can more easily recognize them.
+!<@todo This needs reworking.  I need to rework my whole colour system.
+Using numbers all over the place is BS.  Need names and a colour mapping if
+dealing with indexed colours."
+  :group 'faces
+  :group 'dp-vars)
+
+
 (defstruct dp-highlight-point-faces
   before                    ; Face for text before point on the current line.
   at                        ; Face for text at point on the current line.

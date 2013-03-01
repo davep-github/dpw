@@ -237,7 +237,7 @@ if [ -z "$use_files_file_p" ]
 then
     echo_id finder_opts
     echo_id argses
-    chmod a+w "$FILES_FILE"
+    [ -e "${FILES_FILE}" ] && chmod a+w "$FILES_FILE"
     EExec ${src_code_finder} $finder_opts $argses | tee "$v_file" >| "$FILES_FILE"
     EExec_verbose_msg "$(ls -l $FILES_FILE)"
     EExec_verbose_msg "$(wc -l $FILES_FILE)"
@@ -293,9 +293,7 @@ then
     EExec mkid $prunes &
 fi
 
-echo_id cscope_p
-[ -n "$cscope_p" ] && {
-    echo_id cscope_p
+vsetp "$cscope_p" && {
     cscope_tree "$FILES_FILE" &
 }
 

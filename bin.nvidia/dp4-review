@@ -68,7 +68,7 @@ Usage_details="${EExec_parse_usage}
 long_options=("diff:" "server:" "p4r:" "p4r-opt:" "no-fetch" "file" "local"
 "fetch" "just-fetch" "fetch-only" "remote" "password:" "passwd:" "pass:" "pwd:"
 "fetch-to:" "verbatim" "save" "save-to:" "upload" "up" "upload-to:" "up-to:"
-"no-review")
+"no-review" "creat")
 option_str="${EExec_parse_option_str}d:s:r:o:lfjp:t:cN"  # <:options:>
 source dp-getopt+.sh
 for i in "$@"
@@ -303,16 +303,16 @@ dp4r_review()
 # Some combinations may not make sense.
 for f in "$@"
 do
-  if [ -z "${just_fetch_p}" ]
+  if vunsetp "${just_fetch_p}"
   then
-      if [ -n "${creat_p}" ]
+      if vsetp "${creat_p}"
       then
           
           # Should we do a run-through of that which is to submitted?
           # We create via CL, but other commands use formats w/other names.
           dp4r_create "${f}"
       fi
-      if [ -n "$upload_p" ]
+      if vunsetp "$upload_p"
       then
           dp4r_upload "${f}"
       fi

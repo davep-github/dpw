@@ -27,6 +27,7 @@ unset eexec_program
 : ${build_me_p=a}
 : ${debug_opt=-debug=1}
 : ${purge_opt=purge}
+: ${send_mail_on_completion=t}
 
 t_make_args=
 
@@ -53,8 +54,10 @@ Usage_details="${EExec_parse_usage}
 --no-debug) Build me tests W/O debug.
 --purge) Purge me tests.
 --no-purge) Don't purge me tests.
---mm) Get mods AND make me tests.
+--mm|--gb|--get-build|--all) Get mods AND make me tests.
 -m|--no-make|--no-build) Don't do the basic bin/t_make(s)
+--mail) Send mail when complete.
+--no-mail) Don't
 "
 
 long_options=("out-file:" 
@@ -79,9 +82,8 @@ long_options=("out-file:"
     "debug"
     "purge"
     "no-purge"
-    "mm"
-    "gb"
-    "get-build"
+    "mm" "gb" "get-build" "all"
+    "mail" "no-mail"
     "only:")
 
 # Example of arg parsing.
@@ -132,7 +134,9 @@ do
       --debug) debug_opt="-debug=1";;
       --no-purge) purge_opt=;;
       --purge) purge_opt="purge";;
-      --mm|--gb|--get-build) get_mods_p=t; build_me_p=t;;
+      --mm|--gb|--get-build|--all) get_mods_p=t; build_me_p=t;;
+      --mail) send_mail_on_completion=t;;
+      --no-mail) send_mail_on_completion=;;
 
       # Help!
       --help) Usage; exit 0;;
@@ -159,21 +163,41 @@ done
     log_name="${log_dir}/${log_name_base}.$(dp-std-timestamp)"
 }
 
+mail_results()
+{
+    if vsetp "${send_mail_on_completion-}"
+    then
+        mail -s "$progname is done" "${USER}" >/dev/null 2>&1
+    else
+        cat > /dev/null
+    fi
+}
+
 trap_fun()
 {
-    local sig="${1-}"; shift
-    echo "sig>$sig<"
-    local log_name="${1}"; shift
-    
-    EExecDashN_p && {
-        echo "Running w/-n, removing log file>${log_name}<"
-        rm -rf "${log_name}"
-    }
-    if ((sig != 0))
-    then
-        trap "" 0
-        exit 1
-    fi
+    {
+        local sig="${1-}"; shift
+        local log_name="${1}"; shift
+
+        EExecDashN_p && {
+            echo "${progname}: Running w/-n, removing log file>${log_name}<"
+            rm -rf "${log_name}"
+            log_name=
+        }
+        if ((sig != 0))
+        then
+            echo "${progname}: sig>$sig<"
+            trap "" 0
+            exit 1
+        else
+            echo "${progname}: Success"
+        fi
+        EExecVerbose_p && vsetp "${log_name}" && {
+            echo "==== Log file start: ${log_name} ==="
+            cat "${log_name}"
+            echo "==== Log file end: ${log_name} ==="
+        }
+    } 2>&1 | tee /dev/tty | tee -a "${log_name}" | mail_results
 }
 
 for sig in 0 2 3 4 5 6 7 8 15
@@ -210,7 +234,11 @@ EExec mkdir -p "${log_dir}"
         }
 
         #echo "bin/t_make ${keeplogs_opt} ${rtl_opt}" | EExec -y tcsh-run ${EExecDashN_opt}
-        run_t_make ${rtl_opt}
+        run_t_make ${rtl_opt} || {
+            echo "!!!!!!!!!!! t_make failed !!!!!!!!!!!"
+            banner "t_make failed."
+            exit 1
+        } 1>&2
 
     fi
 
@@ -258,12 +286,8 @@ EExec mkdir -p "${log_dir}"
         EExec ./build_gpu_multiengine.pl ${debug_opt}
     fi
 
+    echo "Log file: ${log_name}"
+
 } | tee "${log_name}" > "${disp_file}"
-
-echo "Log file: ${log_name}"
-
-vsetp "${send_mail_on_completion-}" && {
-    mail -s "$progname is done" "${USER}" < /dev/null >/dev/null 2>&1
-}
 
 exit 0

@@ -213,7 +213,7 @@ if [[ -n "$clean" ]]
 then
     chmod_index_files "u+w"
     rm -f $index_files || {
-        echo "rc of index files>$index_files<, failed."
+        echo "rm of index files>$index_files<, failed."
         exit
     } 1>&2
     [ "$clean" = "$AND_INDEX" ] || {

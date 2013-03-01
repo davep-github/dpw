@@ -141,7 +141,7 @@ to have buffer-menu show non-file buffers."
         (and (symbol-value-in-buffer 'buffer-read-only buf)
              (buffer-file-name buf)
              ;; Give the name the same background as the read-only file.
-             dp-default-read-only-color))))
+             'dp-default-read-only-color))))
 
 (defvar dp-bmm-get-buffer-name-face 'dp-bmm-get-color-for-buf-name
   "Function used to determine face of buffer name.

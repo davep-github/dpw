@@ -7467,7 +7467,7 @@ has value \(cdr region-id), then that extent is matched."
 (defvar dp-colorize-region-roll-colors t
   "Should `dp-colorize-region' increment the color after each invocation.")
 
-(defvar dp-colorize-region-num-colors (length dp-faces))
+(defvar dp-colorize-region-num-colors (length dp-colorize-region-faces))
 
 (dp-deflocal dp-dont-overwrite-existing-colors nil
   "*What more can I say?")
@@ -7504,7 +7504,7 @@ COLOR_INDEX can be <=0 or '- to indicate invisibility."
                         (1- color)))))
          (face (cond
                 ((and color (symbolp color)) color)
-                ((integerp arg) (nth arg dp-faces))
+                ((integerp arg) (nth arg dp-colorize-region-faces))
                 (t arg))))
     (cons arg face)))
 
@@ -8553,6 +8553,7 @@ If region is active, set width to that of the longest line in the region."
 
 (defun sfw-fit-region (&optional pad)
   (interactive "p")
+  (setq-ifnil pad 0)
   (save-excursion
     (dp-mark-line-if-no-mark)
     (let ((ll (min dp-max-frame-width 
@@ -8564,7 +8565,8 @@ If region is active, set width to that of the longest line in the region."
 
 (defsubst sfw-fit-file ()
   (interactive)
-  (sfw-fit-region t))
+  (mark-whole-buffer)
+  (sfw-fit-region))
       
 (defun dp-up-with-wrap (arg &optional command args)
   (interactive "p")
@@ -8796,7 +8798,7 @@ Visit /file/name and then goto <linenum>."
           (setq filename-part (match-string 1 working-filename)
                 line-num-part (match-string 2 working-filename))
         (setq filename-part working-filename))
-      (dmessage "filename-part: %s, line-num-part: %s" filename-part line-num-part)
+;;      (dmessage "filename-part: %s, line-num-part: %s" filename-part line-num-part)
       (if (and line-num-part
                (file-exists-p filename-part)
                (or (not dp-ffap-ask-to-goto-line)
@@ -10118,6 +10120,7 @@ I like to be more precise in certain cases; such as when deleting things.")
                           (string-match mode-name-regexp mode-name))))))
 
 (defun dp-kill-chosen-buffers (buffer-list)
+  (message "Killing %s buffers" (length buffer-list))
   (mapcar (function
            (lambda (buf)
              (kill-buffer buf)))
@@ -15470,7 +15473,10 @@ Will fail often, no doubt. Add a condition case or unwind protect or something."
   (if (eq sb t)
       (setq sb dp-p4-stupid-hack-saved-sb
             dp-p4-stupid-hack-saved-sb nil))
-  (let* ((prompt "Workspace? ")
+  (let* ((prompt (format "Workspace:%s "
+                         (if dp-current-sandbox-name
+                             (format " (default %s)" dp-current-sandbox-name)
+                           "")))
          (need-new-sb (not sb))
          (sb (or sb "."))
          (expansion (dp-maybe-expand-p4-location file sb)))
@@ -15481,7 +15487,9 @@ Will fail often, no doubt. Add a condition case or unwind protect or something."
       ;; minibuffer reading a filename.
       (when need-new-sb
         (message prompt)
-        (setq sb (read-from-minibuffer prompt)
+        (setq sb (read-from-minibuffer prompt
+                                       nil nil nil nil nil
+                                       dp-current-sandbox-name)
               dp-p4-stupid-hack-saved-sb sb)
         (dp-maybe-expand-p4-location file sb)))))
 

@@ -364,16 +364,36 @@ Oddly, it doesn't handle structs.")
 ;;         (cons regexp dp-implied-read-only-filename-regexp-list)
 ;;         dp-singlular-write-restricted-regexp regexp))
 
+(defun dp-me-expand-dest (sb-or-abbrev &optional sb)
+  (let ((first sb-or-abbrev) 
+        (second sb) 
+        tmp)
+    (when sb
+      (setq tmp first
+            first second
+            second tmp))
+    (dp-nuke-newline
+     (shell-command-to-string 
+      (format "me-expand-dest %s %s" 
+              first (or second ""))))))
+
 (defvar dp-sandbox-regexp "/home/scratch\."
   "Regexp to detect a sandbox.")
 
 (defsubst dp-sandbox-p (filename)
   (string-match dp-sandbox-regexp filename))
 
-(defvar dp-current-sandbox-regexp nil
+(dp-deflocal dp-current-sandbox-regexp nil
   "Regexp to detect the current sandbox.")
 
+;; XXX @todo I want to allow an abbrev for the name.
+;; It will be expanded and regexp quoted into `dp-current-sandbox-regexp'.
+(dp-deflocal dp-current-sandbox-name nil
+  "Name of the current sandbox.")
+
 (defsubst dp-current-sandbox-p (filename)
+  "Return non-nil if we are in the current sandbox dir.
+Returns nil if there is no current sandbox."
   (and (dp-sandbox-p filename)
        dp-current-sandbox-regexp
        (string-match dp-current-sandbox-regexp filename)))
@@ -381,18 +401,25 @@ Oddly, it doesn't handle structs.")
 (defun dp-set-sandbox (regexp)
   "Setup things for a singular, unique sandbox."
   (interactive (list (read-from-minibuffer 
-                      (format "Sandbox regexp%s: " 
+                      (format "Sandbox regexp%s: "
                               (if dp-current-sandbox-regexp
-                                  (format "[current: %s]" 
+                                  (format "[current: %s]"
                                           dp-current-sandbox-regexp)
                                 "")))))
-  (setq dp-current-sandbox-regexp (if (string= regexp "")
-                                      nil
-                                    regexp)))
+  (setq-default dp-current-sandbox-regexp (if (string= regexp "")
+                                              nil
+                                            regexp)
+                dp-current-sandbox-name dp-current-sandbox-regexp))
 
 (defun dp-sandbox-read-only-p (filename)
+  "Determine if a file is in a readonly sandbox.
+An RO sandbox is one that is not the current one. This is done to prevent a
+modification to the wrong file when several sandboxes \(NOT good but
+necessary) are in play.  For additional safety, all sandboxes are read only
+if there is no current one set."
   (and (dp-sandbox-p filename)
-       (not (dp-current-sandbox-p filename))))
+       (or (not dp-current-sandbox-regexp)
+           (not (dp-current-sandbox-p filename)))))
   
 (add-hook 'dp-detect-read-only-file-hook 'dp-sandbox-read-only-p)
 

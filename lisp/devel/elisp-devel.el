@@ -3074,5 +3074,32 @@ nil
 
 flyspell-mode
 
+(setq dpv-frame (selected-frame))
+#<x-frame "XEmacs" on #<x-device on "o-xterm-51:23.0" 0x2> 0x2>
+
+(set-frame-property dpv-frame 'bubba "i am teh bubba")
+nil
+(frame-property dpv-frame 'bubba)
+"i am teh bubba"
+
+(defun dp-set-frame-local-var (name-sym val &optional frame)
+  (set-frame-property (or frame (selected-frame)) name-sym val))
+dp-set-frame-local-var
+
+dp-set-frame-local-var
+
+
+(defun dp-get-frame-local-var (name-sym &optional frame)
+  (frame-property (or frame (selected-frame)) name-sym))
+
+(dp-set-frame-local-var 'bubba "new-bubba")
+nil
+
+(dp-get-frame-local-var 'bubba)
+"new-bubba"
+
+
+
+
 
 

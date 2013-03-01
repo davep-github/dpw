@@ -30,12 +30,10 @@ for dest in "$@"
 do
   go_arg="${dest}${domain}"
   go_val=$(dogo "$go_arg") || {
-      echo "Cannot find >$go_arg<"
-      exit 1
-  } 1>&2
-
-  [ "$go_arg" = "$go_val" ] && {
-      echo "WARNING: dogo returned input value unchanged>$go_val<"
+      case "$go_val" in
+          */*) ;;               # It's OK if it looks like a path.
+          *) echo "Cannot find >$go_arg<"; exit 1;;
+      esac
   } 1>&2
 
   echo "${relative_to}/$go_val"

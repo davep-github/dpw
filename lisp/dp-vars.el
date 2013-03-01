@@ -340,7 +340,7 @@ Things are looking better with this (quite nice, readable and legible) font:
 ;;; These are just symbols.
 ;;; We define and get definitions of faces later.
 ;;; 
-(defvar dp-faces
+(defvar dp-colorize-region-faces
   '(dp-cifdef-face0 
     dp-cifdef-face1 
     dp-cifdef-face3

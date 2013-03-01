@@ -19,6 +19,7 @@ export domain="__ME_src"
 relative_to=$(dp4-sb-root) || {
     relative_to=$(depth)/../..
 }
+# XXX @todo STUPID way to pass parameters.
 export relative_to
 EExec relative-dogo "$@"
 

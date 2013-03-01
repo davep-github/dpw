@@ -1,0 +1,39 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+vunsetp "$*" && {
+    echo "A glob is needed."
+    exit 1
+} 1>&2
+
+glob="${1}"
+shift
+
+spaced_path=$(echo "${PATH}" | sed -r 's/:/ /g')
+for bin in ${spaced_path}
+do
+  #echo_id bin
+  ls -1 "${bin}"/$glob 2>/dev/null | while read
+     do
+        #echo_id REPLY
+        [ -x "${REPLY}" ]
+        rc="$?"
+        case "$rc" in
+            0) ;;
+            *) echo -n "not executable: "
+        esac
+        echo "${REPLY}"
+     done
+done
+
