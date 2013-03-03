@@ -1,0 +1,105 @@
+# metisse config revision 7
+#
+
+# Do not edit! this file will be replaced when you upgrade!
+#
+
+#------------------------------------------------------------------------------
+# start FvwmCompositor
+
+BugOpts MetisseWorkaround On
+
+Echo "Starting Compositor $[FVWMCOMPOSITOR_ARGS]"
+ModuleSynchronous FvwmCompositor $[FVWMCOMPOSITOR_ARGS]
+
+#------------------------------------------------------------------------------
+# add our images path and cursor
+
+PipeRead 'echo SetEnv FVWM_CONFIG_DIR `fvwmi-config -d`'
+
+SetEnv OPALE_CONFIG_DIR $[FVWM_CONFIG_DIR]/opale
+
+ImagePath $[OPALE_CONFIG_DIR]/icons:$[FVWM_USERDIR]/images/:$[METISSE_FVWM_CONFIG_DIR]/images:+
+
+# the X cross is ugly
+CursorStyle ROOT left_ptr
+
+# No good rotate Z stock cursor
+CursorStyle ROTATEZ cursors/sb_bltr_double_arrow.xpm
+
+# folding cursor
+CursorStyle FOLD_TOP_LEFT 	cursors/fold_tl.xpm
+CursorStyle FOLD_TOP		cursors/fold_t.xpm
+CursorStyle FOLD_TOP_RIGHT	cursors/fold_tr.xpm
+CursorStyle FOLD_RIGHT		cursors/fold_r.xpm
+CursorStyle FOLD_BOTTOM_RIGHT	cursors/fold_br.xpm
+CursorStyle FOLD_BOTTOM		cursors/fold_b.xpm
+CursorStyle FOLD_BOTTOM_LEFT	cursors/fold_bl.xpm
+CursorStyle FOLD_LEFT		cursors/fold_l.xpm
+
+# ---------------------------------------------------------------------------
+#  some functions used by FvwmCompositor itself
+
+DestroyFunc sma
+AddToFunc   sma
++ I  SendToModule FvwmCompositor $*
+
+DestroyFunc AFuncRestartModule
+AddToFunc   AFuncRestartModule
++ I KillModule $0 $1
++ I Module $*
+
+DestroyFunc AFuncDeiconifyFocusAndRaise
+AddToFunc   AFuncDeiconifyFocusAndRaise
++ I Iconify Off
++ I ThisWindow (State 1) CompositorIconifyOff
++ I Raise
++ I Focus
++ I sma ShowWindow
+
+# should redefine the default "raise" WindowList function
+DestroyFunc WindowListFunc
+AddToFunc   WindowListFunc
++ I AFuncDeiconifyFocusAndRaise
++ I WarpToWindow 5p 5p
+
+# and the ewmh one:
+DestroyFunc EWMHActivateWindowFunc
+AddToFunc   EWMHActivateWindowFunc
++ I AFuncDeiconifyFocusAndRaise
+
+DestroyFunc EWMHActivateClientWindowFunc
+AddToFunc   EWMHActivateClientWindowFunc
++ I DemandsAttention On
+#+ I Echo EWMHActivateClientWindowFunc
+
+DestroyFunc EWMHActivateLegacyWindowFunc
+AddToFunc   EWMHActivateLegacyWindowFunc
++ I DemandsAttention On
+#+ I Echo EWMHActivateLegacyWindowFunc
+
+AddToFunc UrgencyFunc
+#+ I FuncDeiconifyFocusAndRaise
++ I DemandsAttention On
+#+ I Echo UrgencyFunc
+
+#------------------------------------------------------------------------------
+# 
+
+DestroyFunc AFuncDuplicate
+AddToFunc AFuncDuplicate
++ I Exec exec facade-holder -d --id $[w.id]
+
+
+#------------------------------------------------------------------------------
+# start FvwmScript in the fvwm metisse config dir
+
+DestroyFunc AFuncStartMetisseFvwmScript
+AddToFunc   AFuncStartMetisseFvwmScript
++ I FvwmScript $[METISSE_FVWM_CONFIG_DIR]/$*
+
+#------------------------------------------------------------------------------
+# read the "user" configuration
+
+read metisserc
+

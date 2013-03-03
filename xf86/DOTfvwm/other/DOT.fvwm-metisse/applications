@@ -1,0 +1,349 @@
+# ---------------------------------------------------------------------------
+# Programs menu
+# ---------------------------------------------------------------------------
+
+# FIXME: choose between 2 methodes: usual big distribution prog menu or simple
+# menu with your prefered application
+
+DestroyMenu AMenuProgram
+AddToMenu   AMenuProgram 
++ "Web Browser"		FuncFvwmWebBrowser
++ "Mailer"		FuncFvwmMailer
++ "Instant Messager"    FuncFvwmIM
++ "" Nop
++ "Editor"		FuncFvwmTextEditor
++ "File Browser"	FuncFvwmFileBrowser
++ "Terminal"		FuncFvwmTerminal
++ "" Nop
++ "Office Suite"        FuncFvwmOfficeSuite
++ "Image Viewer"	FuncFvwmImageViewer
++ "Image Editor"	FuncFvwmImageEditor
++ "PDF Viewer"		FuncFvwmPDFViewer
++ "" Nop
++ "Video Player"	FuncFvwmVideoPlayer
++ "Music Player"	FuncFvwmMusicPlayer
+#+ "CD burner"		FuncFvwmCDBurner
++ "" Nop
+# some examples
+# Examples of applications which need a terminal:
+#  The syntax is FuncFvwmRunInTerminal Name Command
++ "Root Terminal"   FuncFvwmRunInTerminal "Root Terminal" "su root"
+# a simple application, Syntax Exec exec applications
++ "Xcalc"	Exec exec xcalc
+
+# ---------------------------------------------------------------------------
+# Your preferred programs
+# ---------------------------------------------------------------------------
+
+# ------------------- FuncFvwmWebBrowser
+
+DestroyFunc FuncFvwmWebBrowser
+AddToFunc   FuncFvwmWebBrowser
++ I Test (x your_prefered_web_browser) Exec exec your_prefered_web_browser
++ I TestRc (Match) break
++ I Test (x my-mozilla) Exec exec my-mozilla
++ I TestRc (Match) break
++ I Test (x mozilla-firefox) Exec exec mozilla-firefox
++ I TestRc (Match) break
++ I Test (x firefox) Exec exec firefox
++ I TestRc (Match) break
++ I Test (x mozilla) Exec exec mozilla
++ I TestRc (Match) break
++ I Test (x galeon) Exec exec galeon
++ I TestRc (Match) break
++ I Echo No Web Browser found, edit applications
+
+DestroyFunc AFuncStartOrActivateWebBrowser
+AddToFunc   AFuncStartOrActivateWebBrowser
++ I AFuncStartOrActivate "Mozilla-firefox-bin" FuncFvwmWebBrowser
+
+# ------------------- FuncFvwmMailer
+
+DestroyFunc FuncFvwmMailer
+AddToFunc   FuncFvwmMailer
++ I Test (x my-mailer) Exec exec my-mailer
++ I TestRc (Match) break
++ I Test (x mozilla-thunderbird) Exec exec mozilla-thunderbird
++ I TestRc (Match) break
++ I Test (x thunderbird) Exec exec thunderbird
++ I TestRc (Match) break
++ I Test (x kmail) Exec exec kmail
++ I TestRc (Match) break
++ I Test (x evolution) Exec exec evolution
++ I TestRc (Match) break
++ I Test (x sunderbird) Exec exec sunderbird
++ I TestRc (Match) break
++ I Echo No Mailer found, edit applications
+
+DestroyFunc AFuncStartOrActivateMailer
+AddToFunc   AFuncStartOrActivateMailer
++ I AFuncStartOrActivate "Thunderbird-bin" FuncFvwmMailer
+
+# ------------------- FuncFvwmIM
+
+DestroyFunc FuncFvwmIM
+AddToFunc   FuncFvwmIM
++ I Test (x your_prefered_im) Exec exec your_prefered_im
++ I TestRc (Match) break
++ I Test (x psi) Exec exec psi
++ I TestRc (Match) break
++ I TestRc (Match) break
++ I Test (x gaim) Exec exec gaim
++ I TestRc (Match) break
++ I Test (x kopete) Exec exec kopete
++ I TestRc (Match) break
++ I Echo No IM found, edit applications
+
+DestroyFunc AFuncStartOrActivateIM
+AddToFunc   AFuncStartOrActivateIM
++ I AFuncStartOrActivate "psi" FuncFvwmIM
+
+# ------------------- FuncFvwmTextEditor
+
+DestroyFunc FuncFvwmTextEditor
+AddToFunc   FuncFvwmTextEditor
++ I Test (x your_prefered_editor) Exec exec your_prefered_editor $0
++ I TestRc (Match) break
++ I Test (x xemacs) Exec exec xemacs $0
++ I TestRc (Match) break
++ I Test (x emacs) Exec exec emacs $*
++ I TestRc (Match) break
++ I Test (x gvim) Exec exec gvim $*
++ I TestRc (Match) break
++ I Test (x kate) Exec exec kate $*
++ I TestRc (Match) break
++ I Test (x gedit) Exec exec gedit $*
++ I TestRc (Match) break
++ I Test (x kwrite) Exec exec kwrite $*
++ I TestRc (Match) break
++ I Echo No Text editor found ...
+
+
+# ------------------- FuncFvwmFileBrowser
+
+DestroyFunc FuncFvwmFileBrowser
+AddToFunc   FuncFvwmFileBrowser
++ I Test (x your_prefered_editor) Exec exec your_prefered_editor $0
++ I Test (x rox) Exec exec rox
++ I TestRc (Match) break
++ I Test (x kfmclient) Exec  exec kfmclient exec .
++ I TestRc (Match) break
++ I Test (x nautilus) Exec exec nautilus
++ I TestRc (Match) break
++ I Echo No File browser found ...
+
+DestroyFunc FuncAppOpenFileOrDir
+AddToFunc   FuncAppOpenFileOrDir
++ I Test (x rox) Exec exec rox $0
++ I TestRc (Match) break
++ I Test (x kfmclient) Exec exec kfmclient exec $0
++ I TestRc (Match) break
+# howto open with nautilus???
++ I Echo No File browser found ...
+
+# ------------------- FuncFvwmTerminal
+
+DestroyFunc FuncFvwmTerminal
+AddToFunc   FuncFvwmTerminal
++ I Test (x your_prefered_terminal) Exec exec your_prefered_terminal
++ I TestRc (Match) break
++ I Test (x konsole) Exec konsole
++ I TestRc (Match) break
++ I Test (x rxvt) Exec rxvt
++ I TestRc (Match) break
++ I Test (x gnome-terminal) Exec gnome-terminal
++ I TestRc (Match) break
++ I Test (x xterm) Exec xterm
++ I TestRc (Match) break
++ I Echo No Terminal found, edit applications
+
+DestroyFunc FuncAppTerminalInDir
+AddToFunc   FuncAppTerminalInDir
++ I Test (x your_prefered_terminal) Exec cd $0; Exec exec your_prefered_terminal
++ I TestRc (Match) break
++ I Test (x konsole) Exec cd $0; konsole
++ I TestRc (Match) break
++ I Test (x rxvt) Exec cd $0; rxvt
++ I TestRc (Match) break
++ I Test (x gnome-terminal) Exec cd $0; gnome-terminal
++ I TestRc (Match) break
++ I Test (x xterm) Exec cd $0; xterm
++ I TestRc (Match) break
++ I Echo No Terminal found, edit applications
+
+DestroyFunc FuncFvwmRunInTerminal
+AddToFunc   FuncFvwmRunInTerminal
++ I Test (x rxvtu) Exec rxvt -rv -T "$0" -title "$0" -e $1
++ I TestRc (Match) break
++ I Test (x xterm) Exec xterm -rv -T "$0" -n "$0" -name "$1" -class "$0" -e $1
++ I TestRc (Match) break
++ I Echo Please install xterm, rxvt or edit applications
+
+DestroyFunc FuncFvwmSimpleTerminal
+AddToFunc   FuncFvwmSimpleTerminal
++ I Test (x rxvt) Exec rxvt
++ I TestRc (Match) break
++ I Test (x xterm) Exec xterm
++ I TestRc (Match) break
++ I Test (x konsole) Exec konsole
++ I TestRc (Match) break
++ I Test (x gnome-terminal) Exec gnome-terminal
++ I TestRc (Match) break
++ I Echo No Terminal found, edit applications
+
+DestroyFunc FuncFvwmConsole
+AddToFunc   FuncFvwmConsole
++ I Test (x rxvt) FvwmConsole -terminal rxvt
++ I TestRc (Match) break
++ I Test (x xterm) FvwmConsole -terminal xterm
++ I TestRc (Match) break
+#+ I Test (x konsole) Exec konsole
+#+ I TestRc (Match) break
+#+ I Test (x gnome-terminal) Exec gnome-terminal
+#+ I TestRc (Match) break
++ I Echo No Terminal for FvwmConsolefound, edit applications or install rxvt
+
+# ------------------- FuncFvwmOfficeSuite
+
+DestroyFunc FuncFvwmOfficeSuite
+AddToFunc   FuncFvwmOfficeSuite
++ I Test (x soffice) Exec exec soffice
++ I TestRc (Match) break
++ I Test (x ooffice) Exec exec ooffice
++ I TestRc (Match) break
++ I Test (x koffice) Exec exec koffice
++ I TestRc (Match) break
++ I Echo No Office Suite found, edit applications
+
+# ------------------- FuncFvwmImageViewer
+
+DestroyFunc FuncFvwmImageViewer
+AddToFunc   FuncFvwmImageViewer
++ I Test (x gqview) Exec exec gqview
++ I TestRc (Match) break
++ I Test (x kuickshow) Exec exec kuickshow
++ I TestRc (Match) break
++ I Test (x kview) Exec exec kview
++ I TestRc (Match) break
++ I Exec exec display
++ I Echo No ImageViewer Viewer found, edit applications
+
+# ------------------- FuncFvwmImageEditor
+
+DestroyFunc FuncFvwmImageEditor
+AddToFunc   FuncFvwmImageEditor
++ I Test (x gimp) Exec exec gimp
++ I TestRc (Match) break
++ I Echo No Image Editor found, edit applications
+
+# ------------------- FuncFvwmPDFViewer
+
+DestroyFunc FuncFvwmPDFViewer
+AddToFunc   FuncFvwmPDFViewer
++ I Test (x acroread) Exec exec acroread
++ I TestRc (Match) break
++ I Test (x kghostview) Exec exec kghostview
++ I TestRc (Match) break
++ I Test (x xpdf) Exec exec xpdf
++ I TestRc (Match) break
++ I Echo No PDF Viewer found, edit applications
+
+# ------------------- FuncFvwmVideoPlayer
+
+DestroyFunc FuncFvwmVideoPlayer
+AddToFunc   FuncFvwmVideoPlayer
++ I Test (x vlc) Exec exec vlc
++ I TestRc (Match) break
++ I Test (x totem) Exec exec totem
++ I TestRc (Match) break
++ I Test (x totem) Exec exec totem
++ I TestRc (Match) break
++ I Test (x  gmplayer) Exec exec  gmplayer
++ I TestRc (Match) break
++ I Test (x  xine) Exec exec  xine
++ I TestRc (Match) break
++ I Echo No Video Player found, edit applications
+
+# ------------------- FuncFvwmMusicPlayer
+
+DestroyFunc FuncFvwmMusicPlayer
+AddToFunc   FuncFvwmMusicPlayer
++ I Test (x xmms) Exec exec gimp
++ I TestRc (Match) break
++ I Echo No Music Player found, edit applications
+
+# ------------------- FuncFvwmCDBurner
+
+DestroyFunc FuncFvwmCDBurner
+AddToFunc   FuncFvwmCDBurner
++ I Test (x k3b) Exec exec k3b
++ I TestRc (Match) break
++ I Echo No CD Burner found, edit applications
+
+# ---------------------------------------------------------------------------
+# utils functions
+# ---------------------------------------------------------------------------
+
+DestroyFunc AFuncStartOrActivate
+AddToFunc   AFuncStartOrActivate
++ I Prev ("$0", !Iconic) AFuncDeiconifyFocusAndRaise
++ I TestRc (Match) Break
++ I Prev ("$0") AFuncDeiconifyFocusAndRaise
++ I TestRc (Match) Break
++ I $1
+
+# ---------------------------------------------------------------------------
+# Fvwm Panel buttons
+# ---------------------------------------------------------------------------
+
+# -------------------
+# Menu directory
+
+DestroyMenu AMenuFvwmBrowser
+AddToMenu   AMenuFvwmBrowser
++ DynamicPopupAction Piperead 'fvwm-menu-directory -r -na AMenuFvwmBrowser -d $HOME -s -command-f "FuncAppOpenFileOrDir %f" --command-app "FuncAppOpenFileOrDir %f" --command-t "FuncAppTerminalInDir %d" --opale-icons --check-subdir --menu-style="MenuStyleFvwmDirectory" --links'
+
+# --exec-app --xte="rxvt -e"
+DestroyMenu AMenuFvwmBrowserCached
+AddToMenu   AMenuFvwmBrowserCached DynamicPopupAction Piperead 'fvwm-menu-directory -all -r -na AMenuFvwmBrowserCached -d $HOME -s --command-f "FuncAppOpenFileOrDir %f" --command-app "FuncAppOpenFileOrDir %f" --command-t "FuncAppTerminalInDir %d" --opale-icons --check-subdir --menu-style="MenuStyleFvwmDirectory" --links'
+
+# -------------------
+# Experimental marking menu to start application
+
+DestroyFunc AFuncMarkingUPStartPreferredDoIt
+AddToFunc   AFuncMarkingUPStartPreferredDoIt
++ I Any (MarkingDirectionFull N) FuncFvwmTextEditor
++ I TestRc (Match) Break 
++ I Any (MarkingDirectionFull NE) FuncFvwmImageViewer
++ I TestRc (Match) Break 
++ I Any (MarkingDirectionFull E) FuncFvwmImageEditor
++ I TestRc (Match) Break 
++ I Any (MarkingDirectionFull NW) FuncFvwmPDFViewer
++ I TestRc (Match) Break 
++ I Any (MarkingDirectionFull W) FuncFvwmTerminal
++ I TestRc (Match) Break 
+
+DestroyFunc AFuncMarkingUPStartPreferred
+AddToFunc   AFuncMarkingUPStartPreferred
++ EA N "Text Editor" NE "Image Viewer" E "Image Editor" NW "PDF Viewer" \
+	W "Terminal"
++ A AFuncMarkingUPStartPreferredDoIt
+
+DestroyFunc AFuncMarkingUPStartPreferred2DoIt
+AddToFunc   AFuncMarkingUPStartPreferred2DoIt
++ I Any (MarkingDirectionFull N) AFuncStartOrActivateWebBrowser
++ I TestRc (Match) Break 
++ I Any (MarkingDirectionFull NE) AFuncStartOrActivateMailer
++ I TestRc (Match) Break 
++ I Any (MarkingDirectionFull E) FuncFvwmFileBrowser
++ I TestRc (Match) Break 
++ I Any (MarkingDirectionFull NW) AFuncStartOrActivateIM
++ I TestRc (Match) Break 
++ I Any (MarkingDirectionFull W) Exec rxvt -e su root
++ I TestRc (Match) Break
+
+DestroyFunc AFuncMarkingUPStartPreferred2
+AddToFunc   AFuncMarkingUPStartPreferred2
++ EA N "Web Browser" NE "Mail" E "File Browser" NW "Messager" \
+	W "SU Term"
++ A AFuncMarkingUPStartPreferred2DoIt

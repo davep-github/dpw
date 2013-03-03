@@ -1,0 +1,110 @@
+# ---------------------------------------------------------------------------
+# global feel 
+# ---------------------------------------------------------------------------
+
+ # FIXME: should be moved
+ClickTime 200
+
+# in fact, at present time, we need SloopyFocus (or MouseFocus) !
+
+Style * SloppyFocus, ClickToFocusPassesClick, ClickToFocusRaises, \
+	MouseFocusClickRaises
+
+Style * !FPGrabFocus, FPReleaseFocus
+
+# Not so bad under certain circonstance ...
+#Style * FPIgnoreRaiseClickMotion, FPIgnoreFocusClickMotion
+
+# To strong
+# Style * FPRestackRaiseClickMotion
+# metisse variant
+#Style * FPRestackRaiseClickMotionModule
+# Not so bad ...
+#Style * FPLeaveRestackRaiseClickMotion  
+
+# Good any way! ... disabled for now!
+Style * FPIgnoreRaiseClickXdndMotion, FPIgnoreFocusClickXdndMotion
+
+# A great thing
+#Style * FPRestackRaiseTextSelectionMotion, \
+#        !FPLeaveRestackRaiseTextSelectionMotion, \
+#	 !FPRestackRaiseTextSelectionMotionModule, \
+#	FPLeaveRestackRaiseClickMotion  
+# a variant:
+#Style * !FPRestackRaiseTextSelectionMotion, \
+#       FPLeaveRestackRaiseTextSelectionMotion
+# ... metisse variant which wrok only with gtk apps for now!
+#Style * FPRestackRaiseTextSelectionMotionModule, \
+#	!FPRestackRaiseTextSelectionMotion, \
+#	!FPLeaveRestackRaiseTextSelectionMotion
+
+# Experimental ... FPRestackRaiseClickMotionModule !
+Style * !FPRestackRaiseTextSelectionMotionModule, \
+	!FPRestackRaiseClickMotion, \
+	FPRestackRaiseClickMotionModule, \
+	!FPLeaveRestackRaiseClickMotion, \
+	!FPRestackRaiseTextSelectionMotion
+
+# should be "large" enought for xdnd detection! (see the XSETTING spec)
+# MoveFocusRaiseThreshold 12
+MoveFocusRaiseThreshold 4
+
+# NO manual placement!
+Style * MinOverlapPercentPlacement
+# this the default but for sticky (1) and strut (50)
+#  normal ontop icon sticky below strut
+Style * MinOverlapPlacementPenalties 1 5 10 0.05 0.05 50000
+# The default
+# cover_100 cover_95 cover_85 cover_75
+Style * MinOverlapPercentPlacementPenalties 12 6 4 1
+
+Style * IndexedWindowName, IndexedIconName
+Style * DecorateTransient
+
+# respect MWM, OL and GNOME hints
+Style * OLDecor, NoOverride, MwmFunctions, GNOMEUseHints,  MwmDecor
+# but not the Mwm Decor?
+#Style * NoDecorHint
+Style * MwmDecor
+
+# We need that unfortunately
+Style * WindowShadeSteps 5
+
+# ETC ..
+
+# ---------------------------------------------------------------------------
+#  some specific styles
+# ---------------------------------------------------------------------------
+
+# tear off menu
+Style fvwm_menu WindowListHit
+
+Style FvwmConsole TitleAtLeft
+Style XClock NoTitle, !Borders, NeverFocus
+Style FvwmForm-QuitVerify NoTitle
+
+Style FvwmButtons* !FPLeaveRestackRaiseClickMotion,  \
+	!FPIgnoreRaiseClickXdndMotion, !FPIgnoreFocusClickXdndMotion, \
+	!FPRestackRaiseTextSelectionMotion, \
+        !FPLeaveRestackRaiseTextSelectionMotion
+
+
+Style Emacs FixedPSize
+Style Mozilla-bin NoPPosition
+Style mozilla-bin NoPPosition
+
+# important one are just the 2 last one
+Style OpenOffice* NoPPosition, NoUSPosition, AllowMaximizeFixedSize, !FixedPSize, ResizeHintOverride, HintOverride, NoFuncHint
+
+# Facade hack
+Style "Avancer au prochain message*" FixedPSize, MaxWindowSize 337p 130p
+
+# cannot be done in the programme!
+Style "Façade" FixedUSSize
+
+Style FvwmScript-SaveFacade CenterPlacement
+
+AddToFunc   AFuncWindowThemesOverride
+#+ I Style "metisse wincut" !Borders
+
+# ...ETC

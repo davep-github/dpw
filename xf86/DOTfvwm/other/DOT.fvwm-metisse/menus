@@ -1,0 +1,207 @@
+#------------------------------------
+# the root menu
+
+DestroyMenu AMenuRoot
+AddToMenu   AMenuRoot "Root Menu" Title
++ "&Programs"		Popup AMenuProgram
++ "&Window Ops"		Popup AMenuWinOps
++ "WM &Configuration"	Popup AMenuConfig
++ "" Nop
++ "&Terminal"		FuncFvwmSimpleTerminal
++ "&FVWM Console"	FuncFvwmConsole
++ "" Nop
++ "&Restart"		Restart
++ "&Quit"		Quit
+
+
+#------------------------------------
+# some window ops menu
+
+DestroyMenu AMenuWinOps
+AddToMenu   AMenuWinOps
+#+ "&Move" Move
++ "&Move	Alt-F7" Pick AFuncMove
++ "&Resize	Alt-F8" Resize
++ "&Iconify (Right Click All)	Alt-F9" Iconify
+++ 3 Pick All ($r CurrentPage) Iconify
+#+ "(Un)&Shade" WindowShade
++ "(Un)S&tick" Stick
++ "Raise/Lower	Alt-F5"	RaiseLower
++ "(Un)&On Top (RC Bottom)" FuncToggleOnTop
+++ 3 FuncToggleOnBottom
++ "" Nop
+#olivier
+#+ "&Lense" Popup MenuMenusLens
+#end
++ "S&cale"  Popup AMenuWinOpsScale item +90 c
++ "R&otate" Popup AMenuWinOpsRotate item +90 c
++ "&Transparency" Popup AMenuWinOpsTransparency item +90 c
++ "&Duplicate" AFuncDuplicate
++ "R&eset TRMs (RC All)	Super-F1(r)"  Pick sma Reset
+++ 3 All (CurrentPage CirculateHit !Sticky !Iconified) AFuncReset
++ "" Nop 
++ "&Close (Right Click All)	Alt-F4" Close
+++ 3 Pick All ($r) Close
++ "&Destroy (Right Click All)" Destroy
+++ 3 Pick All ($r) Destroy
++ "" Nop
++ "WM &Configuration" NoWindow Menu AMenuConfig
++ "&Identify" FvwmIdent
+
+DestroyMenu MenuMenusLens
+AddToMenu   MenuMenusLens
++ "None" Pick sma LensType None
++ "Centred" Pick sma LensType Center
++ "Horizontal" Pick sma LensType Horiz
++ "Vertical" Pick sma LensType Vert
++ "Cross" Pick sma LensType Cross
+
+DestroyMenu AMenuWinOpsScale
+AddToMenu   AMenuWinOpsScale
++ "+ 50 %%" Pick sma Scale 1.5
++ "+ 40 %%" Pick sma Scale 1.4
++ "+ 30 %%" Pick sma Scale 1.3
++ "+ 20 %%" Pick sma Scale 1.2
++ "+ 10 %%" Pick sma Scale 1.1
++ "" Nop
++ "- 10 %%" Pick sma Scale 0.9
++ "- 20 %%" Pick sma Scale 0.8
++ "- 30 %%" Pick sma Scale 0.7
++ "- 40 %%" Pick sma Scale 0.6
++ "- 50 %%" Pick sma Scale 0.5
+
+DestroyMenu AMenuWinOpsRotate
+AddToMenu   AMenuWinOpsRotate "Drag vs ..." Title
++ "&X axis" AFuncDragRotateWindow DragRotateX RotateX
++ "&Y axis" AFuncDragRotateWindow DragRotateY RotateY
++ "&Z axis" AFuncDragRotateWindow DragRotateZ RotateZ
++ "XY &axis" AFuncDragRotateWindow DragRotateXY RotateXY
+
+
+DestroyMenu AMenuWinOpsTransparency
+AddToMenu   AMenuWinOpsTransparency
++ "None"  Pick sma SetTransparency 1
++ "10 %%" Pick sma SetTransparency 0.9
++ "20 %%" Pick sma SetTransparency 0.8
++ "30 %%" Pick sma SetTransparency 0.7
++ "40 %%" Pick sma SetTransparency 0.6
++ "50 %%" Pick sma SetTransparency 0.5
++ "60 %%" Pick sma SetTransparency 0.4
++ "70 %%" Pick sma SetTransparency 0.3
++ "80 %%" Pick sma SetTransparency 0.2
++ "90 %%" Pick sma SetTransparency 0.1
+
+#---------------------------------------
+# A maximize Menu for double click on a maximize button
+
+DestroyMenu AMenuMaximize
+AddToMenu   AMenuMaximize "Maximize / Scale" Title
++ "Maximize" AFuncMaximize On 100 100
++ "Maximize Fully" AFuncMaximize ewmhiwa On 100 100
++ "Unmaximize"	   AFuncMaximize Off
++ "Maximize Grow"  AFuncMaximize On grow grow
++ "Maximize Vertically	Alt-F11" AFuncMaximize On 0 100
++ "Maximize Horizontally	Alt-F10" AFuncMaximize On 100 0
++ "" Nop
++ "Scale Maximize"  AFuncScaleMaximize 150 150 0.6666667
++ "Scale Maximize Vert"  AFuncScaleMaximize 0 150 0.6666667
++ "Scale Maximize Horiz"  AFuncScaleMaximize 150 0 0.6666667
++ "" Nop
++ "Zoom out 10%%"  sma Scale 1.1111111
++ "Zoom out 25%%"  sma Scale 1.25
++ "Zoom out 40%%"  sma Scale 1.4285714
++ "Zoom out 66%%"  sma Scale 1.6666667
++ "Zoom out 100%%" sma Scale 2
+
+# A minimize Menu for double click on minimize button
+
+DestroyMenu AMenuMinimize
+AddToMenu   AMenuMinimize "Zoom in" Title
++ "Zoom in 10%%"  sma Scale 0.9
++ "Zoom in 20%%"  sma Scale 0.8
++ "Zoom in 30%%"  sma Scale 0.7
++ "Zoom in 60%%"  sma Scale 0.6
++ "Zoom in 50%%"  sma Scale 0.5
+
+#---------------------------------------
+
+DestroyMenu MenuMenusFacadeOps
+AddToMenu   MenuMenusFacadeOps "Facade Ops" Title
++ "Create Facade" Pick sma CreateFacade
++ "Create All Facade" sma CreateAllFacade
+Test (EnvMatch FVWMCOMPOSITOR_STENCIL yes) + "Create a Hole" Pick sma CutWindow
+#+ "Multi Buttons" Pick sma MultiButtons
+#+ "Repeat Buttons" Pick sma MultiButtons
+#+ "" Nop
+#+ "Scrolling" Popup MenuMenusAllValuatorSpeed
+
+DestroyMenu MenuMenusOnFacade
+AddToMenu   MenuMenusOnFacade
++ "Remove Element" Pick sma RemoveFacadeElement
++ "Move Element" Pick sma MoveFacadeElement
+
+DestroyMenu MenuMenusValuatorSpeed
+AddToMenu   MenuMenusValuatorSpeed "Scroll Speed" Title
++ "Cancel" Pick sma SetValuatorSpeed -1
++ "Auto" Pick sma SetValuatorSpeed    0
++ "" Nop
++ "0.75" Pick sma SetValuatorSpeed 0.75
++ "0.5" Pick sma SetValuatorSpeed 0.5
++ "0.25" Pick sma SetValuatorSpeed 0.25
++ "0.1" Pick sma SetValuatorSpeed 0.1
++ "0.05" Pick sma SetValuatorSpeed 0.05
++ "0.01" Pick sma SetValuatorSpeed 0.01
+
+DestroyMenu MenuMenusAllValuatorSpeed
+AddToMenu   MenuMenusAllValuatorSpeed "All Scroll Speed" Title
++ "Cancel" Pick sma SetAllValuatorSpeed -1
++ "Auto" Pick sma SetAllValuatorSpeed    0
++ "" Nop
++ "0.75" Pick sma SetAllValuatorSpeed 0.75
++ "0.5" Pick sma SetAllValuatorSpeed 0.5
++ "0.25" Pick sma SetAllValuatorSpeed 0.25
++ "0.1" Pick sma SetAllValuatorSpeed 0.1
++ "0.05" Pick sma SetAllValuatorSpeed 0.05
++ "0.01" Pick sma SetAllValuatorSpeed 0.01
+
+DestroyMenu MenuMenusValuatorSpeedOrthoZoom
+AddToMenu   MenuMenusValuatorSpeedOrthoZoom "Scroll Speed" Title
+#+ "10" Pick sma SetValuatorSpeed 10
+#+ "4" Pick sma SetValuatorSpeed 4
+#+ "2" Pick sma SetValuatorSpeed 2
+#+ "" Nop
++ "1" Pick sma SetValuatorSpeed       1
++ "Cancel" Pick sma SetValuatorSpeed -1
++ "Auto" Pick sma SetValuatorSpeed    0
++ "OrthoZoom" Pick sma SetValuatorSpeed    -2
++ "" Nop
++ "0.75" Pick sma SetValuatorSpeed 0.75
++ "0.5" Pick sma SetValuatorSpeed 0.5
++ "0.25" Pick sma SetValuatorSpeed 0.25
++ "0.1" Pick sma SetValuatorSpeed 0.1
++ "0.05" Pick sma SetValuatorSpeed 0.05
++ "0.01" Pick sma SetValuatorSpeed 0.01
+
+DestroyMenu MenuMenusComboBox
+AddToMenu   MenuMenusComboBox "Combo Box" Title
++ "Combo To Radio" Pick sma ComboBoxAction ToRadioButton
++ "Combo To Radio Editor" Pick sma ComboBoxAction ToRadioButtonEditor
++ "Province Map"  Pick sma ComboBoxAction CanadaProvince
+
+
+# Internal per Window Menu
+DestroyFunc _FuncInterMakeMenuInterWindow
+AddToFunc   _FuncInterMakeMenuInterWindow
++ I FuncInterMakeMenuInterWindow$[w.id]
+
+DestroyMenu MenuInterWindow
+AddToMenu   MenuInterWindow
++ DynamicPopupAction _FuncInterMakeMenuInterWindow
+
+
+ChangeMenuStyle AMenuStyleWinOps AMenuWinOps
+ChangeMenuStyle AMenuStyleWinOps AMenuWinOpsScale
+ChangeMenuStyle AMenuStyleWinOps AMenuWinOpsRotate
+ChangeMenuStyle AMenuStyleWinOps AMenuWinOpsTransparency
+ChangeMenuStyle AMenuStyleWinOps AMenuWinOpsMoveToDesk
+ChangeMenuStyle AMenuStyleWinOps MenuMenusFacadeOps
