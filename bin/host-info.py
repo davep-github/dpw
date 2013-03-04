@@ -77,14 +77,14 @@ class Dumper_t(object):
 
 Def_dumper = Dumper_t()
 
-##################################################################
+############################################################################
 def dump_all(info_list):
     for info in info_list:
         info.print_fields(sortem=1)
 
     raise SUCCESS
 
-##################################################################
+############################################################################
 def match_family_by_host(host):
     # XXX @todo Will need to preserver order somehow.
     famDB = host_db.get(dppydb.famDB_to_node_name(), None).get_item('db')
@@ -95,9 +95,9 @@ def match_family_by_host(host):
         m = re.search(pat, host)
         if m:
             return (RC_OK, (fam,))
-    return RC_NO_SUCH_HOST
+    return RC_NO_SUCH_HOST, RC_NO_SUCH_HOST  # Need to return a tuple
     
-##################################################################
+############################################################################
 def lookup_item(info_item, not_found_string='-', dumper=Def_dumper,
                 locale_search=True, domain_search=True,
                 default_search=True,

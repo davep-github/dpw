@@ -10139,6 +10139,8 @@ I like to be more precise in certain cases; such as when deleting things.")
      (dp-choose-buffers-file-names
       name-regexp (not skip-dired-buffers-p)))))
 
+(dp-safe-alias 'kbfn 'dp-kill-buffers-by-file-name)
+
 (defun* dp-kill-buffers-by-buffer-name (name-regexp &optional (all-p t))
   (interactive "sname regexp: \nP")
   (with-case-folded dp-kill-these-file-buffers-case-fold-search
@@ -10147,16 +10149,25 @@ I like to be more precise in certain cases; such as when deleting things.")
     (dp-kill-chosen-buffers
      (dp-choose-buffers-names name-regexp))))
 
-(defun dp-kill-.el-buffers (&optional with-extreme-prejudice-p)
-  "Kill all of the buffers holding elisp files."
+(dp-safe-alias 'kbbn 'dp-kill-buffers-by-buffer-name)
+
+
+(defun* dp-kill-.el-buffers (&optional (all-p t))
   (interactive "P")
-  (mapcar (function
-           (lambda (buf)
-             (if with-extreme-prejudice-p
-                 (kill-buffer buf)
-               (call-interactively
-                (key-binding [(meta ?-)])))))
-          (dp-choose-buffers-file-names ".*\\.el$")))
+  (dp-kill-buffers-by-file-name "\\.el$" all-p))
+    
+;;being replaced (defun dp-kill-.el-buffers (&optional with-extreme-prejudice-p)
+;;being replaced   "Kill all of the buffers holding elisp files."
+;;being replaced   (interactive "P")
+;;being replaced   (mapcar (function
+;;being replaced            (lambda (buf)
+;;being replaced              (if with-extreme-prejudice-p
+;;being replaced                  (kill-buffer buf)
+;;being replaced                (call-interactively
+;;being replaced                 (key-binding [(meta ?-)])))))
+;;being replaced           (dp-choose-buffers-file-names ".*\\.el$")))
+
+(dp-safe-alias 'kelb 'dp-kill-.el-buffers)
 
 (defun dp-kill-buffers-by-mode (mode-name-regexp)
   (interactive "sname reg-exp: ")

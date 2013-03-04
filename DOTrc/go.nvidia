@@ -15,8 +15,9 @@ Ee|nvalias|aliasnv|      ${rsee}alias.nvidia/
 Ee|nvfunc|funcnv|        ${rsee}func.nvidia/
 Ee|bnv|nvb|nvbin|binnv|  ${gohome}bin.nvidia/
 Ee|p4r|                  ${gohome}sw/sw/main/apps/p4review/
-Ee|status|stat|          /home/dpanariti/work/status/
-Ee|global|               /home/dpanariti/davep/build/global-6.2.7/
+Ee|status|stat|          ${gohome}work/status/
+Ee|global|               ${gohome}davep/build/global-6.2.7/
+Ee|fvwm|                 ${gohome}.fvwm/
 
 #
 Ee|dotvnc|dvnc|vnc|   ${gohome}.vnc/
@@ -170,6 +171,5 @@ Ee|surface|   ${sb4}hw/ap_tlit1/drv/drvapi/include/runtest_surface.h:740
 Ee|t3dAlloc|  ${sb4}hw/ap_tlit1/drv/drvapi/runtest_common/runtest_exec.cpp:267
 #
 # Temp stuff for most active tasks.
-Ee|tgbarx|barxtg|  ${sb4}hw/ap_tlit1/diag/testgen/dp-run-tgens.d/sanity_soc_therm/2013-02-07T17.48.49-0500-wait.out/tests/kepler_b_ogtest/00/00/01/000001/
-
 Ee|asimflow|       /home/scratch.dpanariti_t124_1/sb3/sb3hw/
+Ee|sgds|barbin|barrun|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/sanity_gr_disp_syncpt/2013-03-01T15.52.30-0500.out/tests/kepler_b_ogtest/00/00/01/000001/

@@ -83,9 +83,9 @@ Mouse 2		I	A	Iconify
 # Button 2 in the corners, sides, or title-bar gives the window ops menu
 Mouse 2		FST	A	Menu Window-Ops2
 
-# Button 3 anywhere in the decoration (except the title-bar buttons)
+# Button 3 anywhere in the non-title-[bar|button]  decoration
 # does a raise-lower
-Mouse 3		TSF	A	RaiseLower
+Mouse 3		SF	A	RaiseLower
 
 # Button 3 on a icon:
 Mouse 3		I	A	Menu Window-Ops3 c+0 -101m
@@ -96,7 +96,7 @@ Mouse 3         W       SM       RaiseLower
 
 # Modifier 4 works as the Windwoes Key.
 Mouse 1         W       4        RaiseLower
-
+Mouse 3         T       A        Popup Window-Ops2
 
 #-----------------------------------------------------------------------------
 # Mouse windows buttons binding
@@ -194,18 +194,19 @@ Mouse 3         6       A       All ($c) WindowShade On
 # The famous Alt-tab binding
 #------------------------------------------------------------------------------
 
-DestroyFunc my_dbltab2
-AddToFunc   my_dbltab2
-+ I WindowListFunc $w
-DestroyFunc my_dbltab_prev
-AddToFunc   my_dbltab_prev
-+ I Prev my_dbltab2
+# DestroyFunc my_dbltab2
+# AddToFunc   my_dbltab2
+# + I WindowListFunc $w
+# DestroyFunc my_dbltab_prev
+# AddToFunc   my_dbltab_prev
+# + I Prev my_dbltab2
 
-Key Tab A M	WindowList Root c c NoGeometry, NoDeskSort, SelectOnRelease Alt_L my_dbltab_prev
-Key Tab	A CM	WindowList Root c c NoGeometry, OnlyListSkip, SelectOnRelease
+# Key Tab A M	WindowList Root c c NoGeometry, NoDeskSort, SelectOnRelease Alt_L my_dbltab_prev
 
-Key Tab A 4	WindowList Root c c NoGeometry, NoDeskSort, SelectOnRelease Alt_L my_dbltab_prev
+# Key Tab A 4	WindowList Root c c NoGeometry, NoDeskSort, SelectOnRelease Alt_L my_dbltab_prev
+Key Tab A 4     WindowList Root c c DeskSort, SelectOnRelease 4_L
 Key Tab	A C4	WindowList Root c c NoGeometry, OnlyListSkip, SelectOnRelease
+Key Tab	A CM	WindowList Root c c NoGeometry, OnlyListSkip, SelectOnRelease
 
 
 #------------------------------------------------------------------------------
@@ -280,6 +281,17 @@ Key F4 A SM GotoDeskAndPage 3 0 1
 Key F5 A SM GotoDeskAndPage 4 0 1
 Key F6 A SM GotoDeskAndPage 5 0 1
 Key F7 A SM GotoDeskAndPage 6 0 1
+
+Key F1 A C  GotoPage 0 0
+Key F2 A C  GotoPage 0 1
+Key F3 A C  GotoPage 1 0
+Key F4 A C  GotoPage 1 1
+
+Key Insert A 4  GotoPage 0 0
+Key Delete A 4  GotoPage 0 1
+Key Home   A 4  GotoPage 1 0
+Key End    A 4  GotoPage 1 1
+
 
 #------------------------------------------------------------------------------
 # Misc Bindings

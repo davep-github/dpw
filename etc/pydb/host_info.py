@@ -355,7 +355,7 @@ e(
     dat={
     'family': 'nv-l-sim',
     'comment': 'o-xterm-boxen @ nvidia.',
-    'host-pattern': 'l-sim-',
+    'host-pattern': 'l-sim-|sc-sim',
     'xem_opts': '-eval (2w) ' + NV_GEOMETRY,
     'xterm_bg': NVIDIA_LSIM_BG_COLOR,
     'xterm_fg': NVIDIA_LSIM_FG_COLOR,

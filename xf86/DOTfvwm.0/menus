@@ -28,20 +28,23 @@ AddToMenu   StartMenu@side.fvwm2.xpm@^black^
 # Root Menu: This menu will fire up some very common utilities
 #------------------------------------------------------------------------------
 
+###+ "&Top"                 Exec exec xterm -geometry 80x40 -T Top -n Top -e top
+###+ "&shells"              Popup Shells
+###+ "&Programs"            Popup Programs
+###+ ""                     Nop
+
 DestroyMenu  Utilities
 AddToMenu    Utilities "FVWM Root Menu" Title
 #PREF 3
 + "&Terminal"            Exec exec dpxx
-+ "&Top"                 Exec exec xterm -geometry 80x40 -T Top -n Top -e top
-+ ""                     Nop
-+ "&shells"              Popup Shells
-+ "&Programs"            Popup Programs
++ "Mo&ve window"         Popup Move-window
 + ""                     Nop
 + "&Modules"             Popup Module-Popup
 + "&Settings"            Popup Settings
 + "&Documents"           Popup Documents
 + "&Window Ops"          Popup Window
 + ""                     Nop
++ "Restart &FVWM"        Restart
 + "&Restart"             Popup Restart
 + "&Exit FVWM"           FvwmForm FvwmForm-QuitVerify
 
@@ -388,28 +391,28 @@ AddToMenu   Kill-Module-Popup
 DestroyMenu Settings
 AddToMenu   Settings
 + "&Configuration"               Popup FvwmConfig
-+ "&Animation"                Popup Animate-Settings
-+ "Applications &Managers"    Popup AppsManager
-+ "Auto&Raise"                  Popup AutoRaise-Settings
-+ "Back&ground"               Popup Background-Settings
-+ "&Banner"                       Popup Banner-Settings
-+ "B&uttons Bar"               Popup Buttons-Settings
-+ "&Mini Buttons"              Popup MiniButtons-Settings
-+ "Desker &Panel"               Popup DeskerPanel-settings
-+ "S&ounds Effect"           Popup Sound-Settings
-+ "&WMaker Applets"            Popup WinMakerApp-Settings
-+ "Set &Layers"                Popup Layers-Settings
-+ "&X Setup Scripts"                Popup XsetupScripts
++ "&Animation"                   Popup Animate-Settings
++ "Applications &Managers"       Popup AppsManager
++ "Auto&Raise"                   Popup AutoRaise-Settings
++ "Back&ground"                  Popup Background-Settings
++ "&Banner"                      Popup Banner-Settings
++ "B&uttons Bar"                 Popup Buttons-Settings
++ "&Mini Buttons"                Popup MiniButtons-Settings
++ "Desker &Panel"                Popup DeskerPanel-settings
++ "S&ounds Effect"               Popup Sound-Settings
++ "&WMaker Applets"              Popup WinMakerApp-Settings
++ "Set &Layers"                  Popup Layers-Settings
++ "&X Setup Scripts"             Popup XsetupScripts
 + "&Show/Load/Save Settings"     Popup Load-Settings
 + "" Nop
-+ "&Edit .fvwm2rc"               Popup Edit-Config
-+ "Reload .fvwm2rc"              Popup Reload-Config
-+  "Temporary Change:"                  Title
-+ "&Focus/Paging"                Popup Focus-Settings
-+ "&Mouse Speed"                  Popup Mouse-Settings
-+ "&Keyboard"                Popup Keyboard-Settings
-+ "&Bell"                    Popup Bell-Settings
-+ "&Screen"                   Popup X-settings
++ "&Edit .fvwm2rc"              Popup Edit-Config
++ "Reload .fvwm2rc"             Popup Reload-Config
++  "Temporary Change:"          Title
++ "&Focus/Paging"               Popup Focus-Settings
++ "&Mouse Speed"                Popup Mouse-Settings
++ "&Keyboard"                   Popup Keyboard-Settings
++ "&Bell"                       Popup Bell-Settings
++ "&Screen"                     Popup X-settings
 
 #------------------------------------------------------------------------------
 #--------- Fvwm Config
@@ -954,24 +957,25 @@ AddToMenu "Window" "Window Operations" Title
 + "&Rearrange/Scroll"   Popup WinRearrange
 + ""                    Nop
 + "&Identify"           Module FvwmIdent
-+ "Switch &to..."       WindowList
++ "Switch &to..."       WindowList Root c c
 
 #------------------------------------------------------------------------------
 # A trimmed down version of "Window Ops", good for binding to decorations
 
 DestroyMenu "Window-Ops2"
 AddToMenu "Window-Ops2"
++ "Move to &Page"               Popup Move-window
 + "&Move"                       Move
 + "&Resize"                     Resize
 + "(De)&Iconify"                Iconify
++ "(Un)&Shade"                  WindowShade
++ "(Un)S&tick"                  Stick
 + "(Un)M&aximize"               Maximize 100 100
 + "(Un)Max&wide"                Maximize 100 0
 + "(Un)Max&tall"                Maximize   0 100
-+ "(Un)&Shade"                  WindowShade
-+ "(Un)S&tick"                  Stick
 #+ "R&aiseLower"                RaiseLower
 + ""                            Nop
-+ "&Close%mini.delete.xpm"      Close
++ "&Close"                      Close
 + ""                            Nop
 + "&Identify"                   Module FvwmIdent
 + "More&..."                    Menu Window This 0 0

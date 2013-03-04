@@ -142,8 +142,11 @@ AddToDecor dp_work_decor
 
 MenuStyle * FVWM
 #MenuStyle * MenuFace DGradient 128 #c0c0e0 #6060c0 
-MenuStyle * MenuFace DGradient 128 #9090ff #c0c0f0
-MenuStyle * Font -adobe-times-bold-r-*-*-14-*-*-*-*-*-*-*
+MenuStyle * MenuFace DGradient 128 #829bd6 #e0e0f0 -- flat
+#MenuStyle * MenuFace DGradient 128 #9090ff #c0c0f0
+#MenuStyle * Font -adobe-times-bold-r-*-*-14-*-*-*-*-*-*-*
+MenuStyle * Font -*-Lucida-medium-r-*-*-*-120-*-*-*-*-*-*
+MenuStyle WindowList SelectOnRelease Meta_L
 ClickTime 750
 
 Style "*"           	BorderWidth 7, HandleWidth 7
@@ -197,4 +200,3 @@ Style "bare:::"       	NoTitle,WindowListSkip,BorderWidth 3
 # MenuStyle winops TitleWarpOff
 
 # MenuStyle winops VerticalItemSpacing 1 2, VerticalTitleSpacing 1 2
-

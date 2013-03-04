@@ -312,7 +312,7 @@ do
           # We create via CL, but other commands use formats w/other names.
           dp4r_create "${f}"
       fi
-      if vunsetp "$upload_p"
+      if vsetp "$upload_p"
       then
           dp4r_upload "${f}"
       fi

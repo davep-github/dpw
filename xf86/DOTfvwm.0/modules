@@ -34,7 +34,7 @@ DestroyModuleConfig BarButtons: *
 # Warning: I've added a size geometry to avoid pbs if the fvwm_icons are
 # not in the image path ! Remove the size in this geometry especially if
 # you add buttons
-*BarButtons: Geometry 120x150+1746+859
+*BarButtons: Geometry 65x80+14+0
 # Layout: specify rows or columns, not both
 *BarButtons: Columns 2
 
@@ -68,11 +68,11 @@ DestroyModuleConfig BarButtons: *
 # *BarButtons: (Icon mini.bomb.xpm, Action Destroy)
 # *BarButtons: (Icon mini.question.xpm, Action Module FvwmIdent)
 # *BarButtons: (End)
-*BarButtons: (1x2, Title "xload", Swallow "xload" "Exec exec nice -16 \
-		xload -nolabel -update 4 -bg grey59 -hl grey70 \
-		-geometry -1500-1500")
-*BarButtons: (1x2, Title "xclock", Swallow "xclock" "Exec \
-		exec xclock -padding 0 -geometry -1500-1500")
+# *BarButtons: (1x2, Title "xload", Swallow "xload" "Exec exec nice -16 \
+# 		xload -nolabel -update 4 -bg grey59 -hl grey70 \
+# 		-geometry -1500-1500")
+# *BarButtons: (1x2, Title "xclock", Swallow "xclock" "Exec \
+# 		exec xclock -padding 0 -geometry -1500-1500")
 *BarButtons: (2x2, Swallow "FvwmPagerPager" 'FvwmPager FvwmPagerPager * *')
 
 #------------------------------------------------------------------------------
@@ -110,12 +110,15 @@ DestroyModuleConfig DeskerPanelButtons: *
 *DeskerPanelButtons: Fore Black
 *DeskerPanelButtons: Back grey57
 *DeskerPanelButtons: Font -adobe-helvetica-bold-r-*-*-10-*-*-*-*-*-*-*
-*DeskerPanelButtons: Geometry 12x79
+# This is the geometry of the button to open/close the panel.
+# It was originally [close to?] the height of a Desk pager.
+#*DeskerPanelButtons: Geometry 12x79
+*DeskerPanelButtons: Geometry 12x33
 *DeskerPanelButtons: Rows 1
 *DeskerPanelButtons: Frame 1
 *DeskerPanelButtons: Padding 0 0
 #FAST 1
-*DeskerPanelButtons: (Panel(right, steps 12, delay 0, position module top, indicator10) "FvwmDesker" 'Module FvwmPager FvwmDesker 0 3')
+*DeskerPanelButtons: (Panel(right, steps 12, delay 0, position module top, indicator10) "FvwmDesker" 'Module FvwmPager FvwmDesker 0 7')
 #SLOW 1
 #*DeskerPanelButtons: (Panel(right, steps 0, position module top, indicator10) "FvwmDesker" 'Module FvwmPager FvwmDesker 0 3')
 
@@ -346,7 +349,8 @@ DestroyModuleConfig FvwmPagerPager: *
 *FvwmPagerPager: Balloons
 *FvwmPagerPager: BalloonFore black
 *FvwmPagerPager: BalloonBack bisque
-*FvwmPagerPager: Geometry 319x69+5000+5000
+# Change the size of the entire pager... e.g. when put into a panel.
+*FvwmPagerPager: Geometry 553x69+5000+5000
 #WIN 1
 #*FvwmPagerPager: WindowColors white grey51 white Blue4
 #FVWM 1
@@ -369,7 +373,7 @@ DestroyModuleConfig FvwmDesker: *
 *FvwmDesker: Fore black
 *FvwmDesker: Font -adobe-helvetica-bold-r-*-*-10-*-*-*-*-*-*-*
 *FvwmDesker: Hilight white
-*FvwmDesker: Geometry 319x69+5000+5000
+*FvwmDesker: Geometry 553x69+5000+5000
 *FvwmDesker: MiniIcons
 *FvwmDesker: Balloons
 *FvwmDesker: BalloonFore black
