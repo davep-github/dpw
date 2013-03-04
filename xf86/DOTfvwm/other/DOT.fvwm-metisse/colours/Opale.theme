@@ -1,0 +1,148 @@
+# Opale colours
+
+##### default
+Colorset 0 bg grey, sh, hi, bgTint, \
+  fg black, fgsh grey50, fgAlpha, fgTint, \
+  Plain, NoShape, IconAlpha, IconTint
+
+FuncFontsSet-DefaultFont 0 Normal Regular
+
+###### windows inactive/active
+
+Colorset 1 bg average, sh, hi, bgTint, \
+  fg white, fgsh black, fgAlpha, fgTint, \
+  VGradient 50 #745f4f #daa579, dither, Tint, Alpha, NoShape, \
+  IconAlpha, IconTint
+Colorset 2 bg average, sh, hi, bgTint, \
+  fg white, fgsh black, fgAlpha, fgTint, \
+  Vgradient 50 #8188db blue4, dither, Tint, Alpha, NoShape, \
+  IconAlpha, IconTint
+
+# shadow [bold|normal|] [Italic|Regular|] [bold|medium|*] [o|r|i|*]
+FuncFontsSet-WinFont 1 normal Regular medium r
+FuncFontsSet-ActiveWinFont 1 normal Regular medium r
+
+# Border InActive/Active (no fg any way)
+Colorset 3 bg #daa579, sh, hi, bgTint, \
+  Plain, NoShape, IconAlpha, IconTint
+Colorset 4 bg blue4, sh, hi, bgTint, \
+  Plain, NoShape, IconAlpha, IconTint
+
+#### menu
+
+# bg
+Colorset 5 bg average, sh, hi, bgTint, \
+  fg white, fgsh grey20, fgAlpha, fgTint, \
+  VGradient 600 #8188db blue4, dither, Tint, Alpha, NoShape, \
+  IconAlpha, IconTint
+# selected (depends on ActiveForeOff, HilightBackOff ...)
+Colorset 6 bg #8188db, sh, hi, bgTint, \
+  fg white, fgsh grey20, fgAlpha, fgTint, \
+  Plain, NoShape, IconAlpha, IconTint
+# greyed, Only the fg is useful
+Colorset 7 fg white, fgsh grey20, fgAlpha 50, fgTint, Plain, NoShape
+
+DestroyFunc FuncColoursMenuStyleOverRide
+AddToFunc   FuncColoursMenuStyleOverRide
++ I MenuStyle * ActiveForeOff, HilightBackOff, Hilight3DThickness 1, \
+	!TrianglesSolid
++ I FuncFontsSet-MenuFont "$0" "1 all" Normal Regular medium r
+
+DestroyFunc FuncColoursWinMenuStyleOverRide
+AddToFunc   FuncColoursWinMenuStyleOverRide
++ I FuncFontsSet-WinMenuFont "$0" 1 Normal Regular medium r
+
+DestroyFunc FuncColoursUtf8MenuStyleOverRide
+AddToFunc   FuncColoursUtf8MenuStyleOverRide
++ I FuncFontsSet-Utf8MenuFont "$0" "1 all" Normal Regular medium r
+
+#### colors for modules
+
+### panel defaults
+
+Colorset 10 bg grey, sh, hi, bgTint, \
+  fg black, fgsh, fgAlpha 60, fgTint, \
+  Plain, NoShape, IconAlpha 60, IconTint
+# panel over colorset
+Colorset 11 bg grey60, sh, hi, bgTint, \
+  fg black, fgsh, fgAlpha, fgTint, \
+  Plain, NoShape, IconAlpha, IconTint
+# panel pressed colorset
+Colorset 12 bg grey80, sh, hi, bgTint, \
+  fg black, fgsh, fgAlpha, fgTint, \
+  Plain, NoShape, IconAlpha, IconTint red 10
+
+### pager
+
+# bg
+Colorset 14 bg grey, sh, hi, bgTint, \
+  fg black, fgsh, fgAlpha, fgTint, \
+  Plain, NoShape, IconAlpha, IconTint
+# pager hi
+Colorset 15 bg white, sh, hi, bgTint, \
+  fg black, fgsh, fgAlpha, fgTint, \
+  Plain, NoShape, IconAlpha, IconTint
+
+### tips
+Colorset 16 bg #8188db, sh, hi, bgTint, \
+  fg white, fgsh, fgAlpha, fgTint, \
+  Plain,  NoShape, IconAlpha, IconTint
+
+### taskbar
+
+# normal item
+Colorset 17 bg average, sh, hi, bgTint, \
+  fg white, fgsh black,  fgAlpha, fgTint, \
+  VGradient 50 grey60 grey80, dither, Tint, Alpha,  NoShape, \
+  IconAlpha, IconTint
+# hi item
+Colorset 18 bg average, sh, hi, bgTint, \
+  fg white, fgsh black, fgAlpha, fgTint, \
+  Vgradient 50  #8188db blue4, dither, Tint, Alpha,  NoShape, \
+  IconAlpha, IconTint
+# iconified item
+Colorset 19 bg average, sh, hi, bgTint, \
+  fg black, fgsh white,  fgAlpha 60, fgTint, \
+  VGradient 50 grey60 grey80, dither, Tint, Alpha,  NoShape, \
+  IconAlpha 60, IconTint
+
+# as above selected
+# normal item
+Colorset 20 bg average, sh, hi, bgTint black 15, \
+  fg white, fgsh black,  fgAlpha, fgTint, \
+  VGradient 50 grey60 grey80, dither, Tint black 15, Alpha,  NoShape, \
+  IconAlpha, IconTint
+# hi item
+Colorset 21 bg average, sh, hi, bgTint white 15, \
+  fg white, fgsh black, fgAlpha, fgTint, \
+  Vgradient 50  #8188db blue4, dither, Tint white 15, Alpha,  NoShape, \
+  IconAlpha, IconTint
+# iconified item
+Colorset 22 bg average, sh, hi, bgTint black 15, \
+  fg black, fgsh white,  fgAlpha 60, fgTint, \
+  VGradient 50 grey60 grey80, dither, Tint black 15, Alpha,  NoShape, \
+  IconAlpha, IconTint
+
+
+# attention colorset
+# normal
+Colorset 23 bg average, sh, hi, bgTint, \
+  fg white, fgsh black, fgAlpha, fgTint, \
+  VGradient 50 orange orange4, dither, NoTint, Alpha,  NoShape, \
+  IconAlpha, IconTint
+# selected
+Colorset 24 bg average, sh, hi, bgTint white 20, \
+  fg white, fgsh black, fgAlpha, fgTint, \
+  VGradient 50 orange orange4, dither, Tint white 15, Alpha,  NoShape, \
+  IconAlpha, IconTint white 20
+# icon
+Colorset 25 bg average, sh, hi, bgTint, \
+  fg black, fgsh white, fgAlpha 60,  fgTint, \
+  VGradient 50 orange orange4, dither, Tint, Alpha, \
+  IconAlpha 60,  IconTint
+# icon selected
+Colorset 26 bg average, sh, hi, bgTint white 15, \
+  fg black, fgsh white, fgAlpha 60, fgTint, \
+  VGradient 50 orange orange4, dither, Tint white 15, Alpha,  NoShape, \
+  IconAlpha, IconTint
+

@@ -1,0 +1,279 @@
+
+Style * ThinBorder, BorderWidth 5, HandleWidth 5
+Style * MwmButtons,  FirmBorder
+Style * TitleBordersUseTitleDecor, TitleBordersTitleDecorUseRelief
+Style * !StickyStippledTitle, !StickyStippledIconTitle
+
+Style * Button 1, Button 3, NoButton 5, NoButton 7,  NoButton 9, \
+	Button 2, Button 4, Button 6, NoButton 8
+
+TitleStyle Centered MinHeight 23
+TitleStyle -- Flat
+
+ButtonState Hover True
+ButtonStyle All Default -- UseTitleStyle Flat
+
+#BorderStyle InActive Simple -- HiddenHandles !NoInset Raised
+#BorderStyle Active   Simple -- HiddenHandles !NoInset Raised
+BorderStyle InActive Colorset 3 -- HiddenHandles !NoInset Raised
+BorderStyle Active   Colorset 4 -- HiddenHandles !NoInset Raised
+# No border colorset
+#Style * BorderColorset, HilightBorderColorset
+
+### right window buttons (left to right)
+
+# close
+AddButtonStyle 2 ActiveUp  AVector 20 30+1px30+1p@5 70+1px70+1p@5 30+1px70+1p@4 70+1px30+1p@5 30-1px30-1p@4 70-1px70-1p@5 30-1px70-1p@4 70-1px30-1p@5 30+1px30-1p@4 70+1px70-1p@5 30+1px70-1p@4 70+1px30-1p@5 30-1px30+1p@4 70-1px70+1p@5 30-1px70+1p@4 70-1px30+1p@5 30x30@4 70x70@3 30x70@4 70x30@3 -- LineWidth 1.5
+
+AddButtonStyle 2 InactiveUp  AVector 4 30x30@3 70x70@3 30x70@4 70x30@3 -- LineWidth 1 Alpha 50
+
+AddButtonStyle 2 AllDown  AVector 20 30+1px30+1p@5 70+1px70+1p@5 30+1px70+1p@4 70+1px30+1p@5 30-1px30-1p@4 70-1px70-1p@5 30-1px70-1p@4 70-1px30-1p@5 30+1px30-1p@4 70+1px70-1p@5 30+1px70-1p@4 70+1px30-1p@5 30-1px30+1p@4 70-1px70+1p@5 30-1px70+1p@4 70-1px30+1p@5 30x30@4 70x70@3 30x70@4 70x30@3 -- Offset 1 LineWidth 1.5 Tint red 15
+
+AddButtonStyle 2 AllHover  AVector 20 30+1px30+1p@5 70+1px70+1p@5 30+1px70+1p@4 70+1px30+1p@5 30-1px30-1p@4 70-1px70-1p@5 30-1px70-1p@4 70-1px30-1p@5 30+1px30-1p@4 70+1px70-1p@5 30+1px70-1p@4 70+1px30-1p@5 30-1px30+1p@4 70-1px70+1p@5 30-1px70+1p@4 70-1px30+1p@5 30x30@4 70x70@3 30x70@4 70x30@3 -- Offset -1 LineWidth 1.5  Tint red 15
+
+ButtonStyle 2 - Clear 
+
+Mouse 1 2 A AFuncButtonClose
+Mouse 2 2 A AFuncButtonClose2
+Mouse 3 2 A AFuncButtonClose3
+
+# maximize look
+AddButtonStyle 4 ActiveUp AVector 25 30+1px30+1p@5 30+1px70+1p@5 70+1px70+1p@5 70+1px30+1p@5 30+1px30+1p@5  30-1px30-1p@4 30-1px70-1p@5 70-1px70-1p@5 70-1px30-1p@5 30-1px30-1p@5  30-1px30+1p@4 30-1px70+1p@5 70-1px70+1p@5 70-1px30+1p@5 30-1px30+1p@5 30+1px30-1p@4 30+1px70-1p@5 70+1px70-1p@5 70+1px30-1p@5 30+1px30-1p@5   30x30@4 30x70@3 70x70@3 70x30@3 30x30@3  -- LineWidth 1.5
+
+AddButtonStyle 4 ActiveDown AVector 25 30+1px30+1p@5 30+1px70+1p@5 70+1px70+1p@5 70+1px30+1p@5 30+1px30+1p@5  30-1px30-1p@4 30-1px70-1p@5 70-1px70-1p@5 70-1px30-1p@5 30-1px30-1p@5  30-1px30+1p@4 30-1px70+1p@5 70-1px70+1p@5 70-1px30+1p@5 30-1px30+1p@5 30+1px30-1p@4 30+1px70-1p@5 70+1px70-1p@5 70+1px30-1p@5 30+1px30-1p@5   30x30@4 30x70@3 70x70@3 70x30@3 30x30@3 -- Offset 1 LineWidth 1.5 Tint green 15
+
+AddButtonStyle 4 ActiveHover AVector 25 30+1px30+1p@5 30+1px70+1p@5 70+1px70+1p@5 70+1px30+1p@5 30+1px30+1p@5  30-1px30-1p@4 30-1px70-1p@5 70-1px70-1p@5 70-1px30-1p@5 30-1px30-1p@5  30-1px30+1p@4 30-1px70+1p@5 70-1px70+1p@5 70-1px30+1p@5 30-1px30+1p@5 30+1px30-1p@4 30+1px70-1p@5 70+1px70-1p@5 70+1px30-1p@5 30+1px30-1p@5   30x30@4 30x70@3 70x70@3 70x30@3 30x30@3 -- Offset -1 LineWidth 1.5 Tint green 15
+
+AddButtonStyle 4 InactiveUp  AVector 5 30x30@3 30x70@3 70x70@3 70x30@3 30x30@3 -- LineWidth 1 Alpha 50
+AddButtonStyle 4 InactiveDown AVector 25 30+1px30+1p@5 30+1px70+1p@5 70+1px70+1p@5 70+1px30+1p@5 30+1px30+1p@5  30-1px30-1p@4 30-1px70-1p@5 70-1px70-1p@5 70-1px30-1p@5 30-1px30-1p@5  30-1px30+1p@4 30-1px70+1p@5 70-1px70+1p@5 70-1px30+1p@5 30-1px30+1p@5 30+1px30-1p@4 30+1px70-1p@5 70+1px70-1p@5 70+1px30-1p@5 30+1px30-1p@5   30x30@4 30x70@3 70x70@3 70x30@3 30x30@3 -- Offset 1 LineWidth 1.5 Tint green 15
+
+AddButtonStyle 4 InactiveHover AVector 25 30+1px30+1p@5 30+1px70+1p@5 70+1px70+1p@5 70+1px30+1p@5 30+1px30+1p@5  30-1px30-1p@4 30-1px70-1p@5 70-1px70-1p@5 70-1px30-1p@5 30-1px30-1p@5  30-1px30+1p@4 30-1px70+1p@5 70-1px70+1p@5 70-1px30+1p@5 30-1px30+1p@5 30+1px30-1p@4 30+1px70-1p@5 70+1px70-1p@5 70+1px30-1p@5 30+1px30-1p@5   30x30@4 30x70@3 70x70@3 70x30@3 30x30@3 -- Offset -1 LineWidth 1.5 Tint green 15
+
+AddButtonStyle 4 ToggledActiveUp  AVector 40 \
+	30+1px30+1p@5 30+1px70+1p@5 70+1px70+1p@5 70+1px30+1p@5 30+1px30+1p@5 \
+	30+1px45+1p@4  55+1px45+1p@5 55+1px70+1p@5 \
+	30-1px30-1p@4 30-1px70-1p@5 70-1px70-1p@5 70-1px30-1p@5 30-1px30-1p@5 \
+	30-1px45-1p@4  55-1px45-1p@5 55-1px70-1p@5 \
+	30-1px30+1p@4 30-1px70+1p@5 70-1px70+1p@5 70-1px30+1p@5 30-1px30+1p@5 \
+	30-1px45+1p@4  55-1px45+1p@5 55-1px70+1p@5 \
+	30+1px30-1p@4 30+1px70-1p@5 70+1px70-1p@5 70+1px30-1p@5 30+1px30-1p@5 \
+	30+1px45-1p@4  55+1px45-1p@5 55+1px70-1p@5 \
+	30x30@4 30x70@3 70x70@3 70x30@3 30x30@3 \
+	30x45@4  55x45@3 55x70@3 -- LineWidth 1.5
+AddButtonStyle 4 ToggledActiveDown  AVector 40 \
+	30+1px30+1p@5 30+1px70+1p@5 70+1px70+1p@5 70+1px30+1p@5 30+1px30+1p@5 \
+	30+1px45+1p@4  55+1px45+1p@5 55+1px70+1p@5 \
+	30-1px30-1p@4 30-1px70-1p@5 70-1px70-1p@5 70-1px30-1p@5 30-1px30-1p@5 \
+	30-1px45-1p@4  55-1px45-1p@5 55-1px70-1p@5 \
+	30-1px30+1p@4 30-1px70+1p@5 70-1px70+1p@5 70-1px30+1p@5 30-1px30+1p@5 \
+	30-1px45+1p@4  55-1px45+1p@5 55-1px70+1p@5 \
+	30+1px30-1p@4 30+1px70-1p@5 70+1px70-1p@5 70+1px30-1p@5 30+1px30-1p@5 \
+	30+1px45-1p@4  55+1px45-1p@5 55+1px70-1p@5 \
+	30x30@4 30x70@3 70x70@3 70x30@3 30x30@3 \
+	30x45@4  55x45@3 55x70@3 -- Offset 1 LineWidth 1.5 Tint green 15
+AddButtonStyle 4 ToggledActiveHover  AVector 40 \
+	30+1px30+1p@5 30+1px70+1p@5 70+1px70+1p@5 70+1px30+1p@5 30+1px30+1p@5 \
+	30+1px45+1p@4  55+1px45+1p@5 55+1px70+1p@5 \
+	30-1px30-1p@4 30-1px70-1p@5 70-1px70-1p@5 70-1px30-1p@5 30-1px30-1p@5 \
+	30-1px45-1p@4  55-1px45-1p@5 55-1px70-1p@5 \
+	30-1px30+1p@4 30-1px70+1p@5 70-1px70+1p@5 70-1px30+1p@5 30-1px30+1p@5 \
+	30-1px45+1p@4  55-1px45+1p@5 55-1px70+1p@5 \
+	30+1px30-1p@4 30+1px70-1p@5 70+1px70-1p@5 70+1px30-1p@5 30+1px30-1p@5 \
+	30+1px45-1p@4  55+1px45-1p@5 55+1px70-1p@5 \
+	30x30@4 30x70@3 70x70@3 70x30@3 30x30@3 \
+	30x45@4  55x45@3 55x70@3 -- Offset -1 LineWidth 1.5 Tint green 15
+
+AddButtonStyle 4 ToggledInactiveUp AVector 8 30x30@3 30x70@3 70x70@3 70x30@3 30x30@3 30x45@4  55x45@3 55x70@3  -- LineWidth 1 Alpha 50
+
+AddButtonStyle 4 ToggledInactiveDown  AVector 40 \
+	30+1px30+1p@5 30+1px70+1p@5 70+1px70+1p@5 70+1px30+1p@5 30+1px30+1p@5 \
+	30+1px45+1p@4  55+1px45+1p@5 55+1px70+1p@5 \
+	30-1px30-1p@4 30-1px70-1p@5 70-1px70-1p@5 70-1px30-1p@5 30-1px30-1p@5 \
+	30-1px45-1p@4  55-1px45-1p@5 55-1px70-1p@5 \
+	30-1px30+1p@4 30-1px70+1p@5 70-1px70+1p@5 70-1px30+1p@5 30-1px30+1p@5 \
+	30-1px45+1p@4  55-1px45+1p@5 55-1px70+1p@5 \
+	30+1px30-1p@4 30+1px70-1p@5 70+1px70-1p@5 70+1px30-1p@5 30+1px30-1p@5 \
+	30+1px45-1p@4  55+1px45-1p@5 55+1px70-1p@5 \
+	30x30@4 30x70@3 70x70@3 70x30@3 30x30@3 \
+	30x45@4  55x45@3 55x70@3 -- Offset 1 LineWidth 1.5 Tint green 15
+AddButtonStyle 4 ToggledInactiveHover  AVector 40 \
+	30+1px30+1p@5 30+1px70+1p@5 70+1px70+1p@5 70+1px30+1p@5 30+1px30+1p@5 \
+	30+1px45+1p@4  55+1px45+1p@5 55+1px70+1p@5 \
+	30-1px30-1p@4 30-1px70-1p@5 70-1px70-1p@5 70-1px30-1p@5 30-1px30-1p@5 \
+	30-1px45-1p@4  55-1px45-1p@5 55-1px70-1p@5 \
+	30-1px30+1p@4 30-1px70+1p@5 70-1px70+1p@5 70-1px30+1p@5 30-1px30+1p@5 \
+	30-1px45+1p@4  55-1px45+1p@5 55-1px70+1p@5 \
+	30+1px30-1p@4 30+1px70-1p@5 70+1px70-1p@5 70+1px30-1p@5 30+1px30-1p@5 \
+	30+1px45-1p@4  55+1px45-1p@5 55+1px70-1p@5 \
+	30x30@4 30x70@3 70x70@3 70x30@3 30x30@3 \
+	30x45@4  55x45@3 55x70@3 -- Offset -1 LineWidth 1.5 Tint green 15
+
+ButtonStyle 4 - Clear MwmDecorMax
+
+Mouse 1 4 A AFuncButtonMaximize
+Mouse 2 4 A AFuncButtonMaximize2
+Mouse 3 4 A AFuncButtonMaximize3
+Mouse 4 4 A AFuncButtonMaximize4
+Mouse 5 4 A AFuncButtonMaximize5
+
+Mouse 1 4 S AFuncButtonMaximizeShift
+
+# minimize
+AddButtonStyle 6 ActiveUp  AVector  20 50+1px70+1p@5 30+1px30+1p@5 70+1px30+1p@5 50+1px70+1p@5 50-1px70-1p@4 30-1px30-1p@5 70-1px30-1p@5 50-1px70-1p@5 50-1px70+1p@4 30-1px30+1p@5 70-1px30+1p@5 50-1px70+1p@5 50+1px70-1p@4 30+1px30-1p@5 70+1px30-1p@5 50+1px70-1p@5 50x70@4 30x30@3 70x30@3 50x70@3 -- LineWidth 1.5
+
+AddButtonStyle 6 InactiveUp   AVector  4 50x70@3 30x30@3 70x30@3 50x70@3 -- LineWidth Alpha 50 
+
+AddButtonStyle 6 AllDown  AVector  20 50+1px70+1p@5 30+1px30+1p@5 70+1px30+1p@5 50+1px70+1p@5 50-1px70-1p@4 30-1px30-1p@5 70-1px30-1p@5 50-1px70-1p@5 50-1px70+1p@4 30-1px30+1p@5 70-1px30+1p@5 50-1px70+1p@5 50+1px70-1p@4 30+1px30-1p@5 70+1px30-1p@5 50+1px70-1p@5 50x70@4 30x30@3 70x30@3 50x70@3 -- Offset 1 LineWidth 1.5 Tint yellow 25
+
+AddButtonStyle 6 AllHover  AVector  20 50+1px70+1p@5 30+1px30+1p@5 70+1px30+1p@5 50+1px70+1p@5 50-1px70-1p@4 30-1px30-1p@5 70-1px30-1p@5 50-1px70-1p@5 50-1px70+1p@4 30-1px30+1p@5 70-1px30+1p@5 50-1px70+1p@5 50+1px70-1p@4 30+1px30-1p@5 70+1px30-1p@5 50+1px70-1p@5 50x70@4 30x30@3 70x30@3 50x70@3 --  Offset -1 LineWidth 1.5 Tint yellow 25
+
+ButtonStyle 6 - Clear MwmDecorMin
+
+Mouse 1 6 A AFuncButtonMinimize
+Mouse 2 6 A AFuncButtonMinimize2
+Mouse 3 6 A AFuncButtonMinimize3
+Mouse 4 6 A AFuncButtonMinimize4
+Mouse 5 6 A AFuncButtonMinimize5
+
+# remove button 8
+Mouse 1 8 A -
+Mouse 2 8 A -
+Mouse 3 8 A -
+
+### left default button (right to left)
+
+# menu look
+ButtonStyle 1 ActiveUp MiniIcon -- UseTitleStyle Flat
+ButtonStyle 1 InactiveUp MiniIcon -- UseTitleStyle Flat Alpha 50
+ButtonStyle 1 AllDown MiniIcon -- UseTitleStyle Flat Offset 1 Tint white 20
+ButtonStyle 1 AllHover MiniIcon -- UseTitleStyle Flat Offset -1 Tint white 20
+
+ButtonStyle 1 - Clear MwmDecorMenu
+
+Mouse 1 1 A AFuncButtonMenu Delete
+Mouse 2 1 A AFuncButtonMenu2
+Mouse 3 1 A AFuncButtonMenu3
+ 
+# Stick look
+
+AddButtonStyle 3 ActiveUp  AVector  25 \
+	32+1px45+1p@5 68+1px45+1p@5 68+1px55+1p@5 32+1px55+1p@5 32+1px45+1p@5 \
+	32-1px45-1p@4 68-1px45-1p@5 68-1px55-1p@5 32-1px55-1p@5 32-1px45-1p@5 \
+	32-1px45+1p@4 68-1px45+1p@5 68-1px55+1p@5 32-1px55+1p@5 32-1px45+1p@5 \
+	32+1px45-1p@4 68+1px45-1p@5 68+1px55-1p@5 32+1px55-1p@5 32+1px45-1p@5 \
+	32x45@4 68x45@3 68x55@3 32x55@3 32x45@3 -- LineWidth 1.5
+AddButtonStyle 3 ActiveDown  AVector  25 \
+	32+1px45+1p@5 68+1px45+1p@5 68+1px55+1p@5 32+1px55+1p@5 32+1px45+1p@5 \
+	32-1px45-1p@4 68-1px45-1p@5 68-1px55-1p@5 32-1px55-1p@5 32-1px45-1p@5 \
+	32-1px45+1p@4 68-1px45+1p@5 68-1px55+1p@5 32-1px55+1p@5 32-1px45+1p@5 \
+	32+1px45-1p@4 68+1px45-1p@5 68+1px55-1p@5 32+1px55-1p@5 32+1px45-1p@5 \
+	32x45@4 68x45@3 68x55@3 32x55@3 32x45@3  -- Offset 1 LineWidth 1.5 Tint blue 15
+AddButtonStyle 3 ActiveHover  AVector  25 \
+	32+1px45+1p@5 68+1px45+1p@5 68+1px55+1p@5 32+1px55+1p@5 32+1px45+1p@5 \
+	32-1px45-1p@4 68-1px45-1p@5 68-1px55-1p@5 32-1px55-1p@5 32-1px45-1p@5 \
+	32-1px45+1p@4 68-1px45+1p@5 68-1px55+1p@5 32-1px55+1p@5 32-1px45+1p@5 \
+	32+1px45-1p@4 68+1px45-1p@5 68+1px55-1p@5 32+1px55-1p@5 32+1px45-1p@5 \
+	32x45@4 68x45@3 68x55@3 32x55@3 32x45@3  -- Offset -1 LineWidth 1.5 Tint blue 15
+
+AddButtonStyle 3 InactiveUp  AVector 5 32x45@3 68x45@3 68x55@3 32x55@3 32x45@3 -- LineWidth 1 Alpha 50
+
+AddButtonStyle 3 InactiveDown  AVector  25 \
+	32+1px45+1p@5 68+1px45+1p@5 68+1px55+1p@5 32+1px55+1p@5 32+1px45+1p@5 \
+	32-1px45-1p@4 68-1px45-1p@5 68-1px55-1p@5 32-1px55-1p@5 32-1px45-1p@5 \
+	32-1px45+1p@4 68-1px45+1p@5 68-1px55+1p@5 32-1px55+1p@5 32-1px45+1p@5 \
+	32+1px45-1p@4 68+1px45-1p@5 68+1px55-1p@5 32+1px55-1p@5 32+1px45-1p@5 \
+	32x45@4 68x45@3 68x55@3 32x55@3 32x45@3  -- Offset 1 LineWidth 1.5 Tint blue 15
+AddButtonStyle 3 InactiveHover  AVector  25 \
+	32+1px45+1p@5 68+1px45+1p@5 68+1px55+1p@5 32+1px55+1p@5 32+1px45+1p@5 \
+	32-1px45-1p@4 68-1px45-1p@5 68-1px55-1p@5 32-1px55-1p@5 32-1px45-1p@5 \
+	32-1px45+1p@4 68-1px45+1p@5 68-1px55+1p@5 32-1px55+1p@5 32-1px45+1p@5 \
+	32+1px45-1p@4 68+1px45-1p@5 68+1px55-1p@5 32+1px55-1p@5 32+1px45-1p@5 \
+	32x45@4 68x45@3 68x55@3 32x55@3 32x45@3  -- Offset -1 LineWidth 1.5 Tint blue 15 
+
+AddButtonStyle 3 ToggledActiveUp AVector 50 \
+	22+1px35+1p@5 78+1px35+1p@5 78+1px65+1p@5 22+1px65+1p@5 22+1px35+1p@5 \
+	32+1px45+1p@4 68+1px45+1p@5 68+1px55+1p@5 32+1px55+1p@5 32+1px45+1p@5 \
+	22-1px35-1p@5 78-1px35-1p@5 78-1px65-1p@5 22-1px65-1p@5 22-1px35-1p@5 \
+	32-1px45-1p@4 68-1px45-1p@5 68-1px55-1p@5 32-1px55-1p@5 32-1px45-1p@5 \
+	22-1px35+1p@5 78-1px35+1p@5 78-1px65+1p@5 22-1px65+1p@5 22-1px35+1p@5 \
+	32-1px45+1p@4 68-1px45+1p@5 68-1px55+1p@5 32-1px55+1p@5 32-1px45+1p@5 \
+	22+1px35-1p@5 78+1px35-1p@5 78+1px65-1p@5 22+1px65-1p@5 22+1px35-1p@5 \
+	32+1px45-1p@4 68+1px45-1p@5 68+1px55-1p@5 32+1px55-1p@5 32+1px45-1p@5 \
+	22x35@4 78x35@3 78x65@3 22x65@3 22x35@3 \
+	32x45@4 68x45@3 68x55@3 32x55@3 32x45@3 -- LineWidth 1.5
+AddButtonStyle 3 ToggledActiveDown AVector 50 \
+	22+1px35+1p@5 78+1px35+1p@5 78+1px65+1p@5 22+1px65+1p@5 22+1px35+1p@5 \
+	32+1px45+1p@4 68+1px45+1p@5 68+1px55+1p@5 32+1px55+1p@5 32+1px45+1p@5 \
+	22-1px35-1p@5 78-1px35-1p@5 78-1px65-1p@5 22-1px65-1p@5 22-1px35-1p@5 \
+	32-1px45-1p@4 68-1px45-1p@5 68-1px55-1p@5 32-1px55-1p@5 32-1px45-1p@5 \
+	22-1px35+1p@5 78-1px35+1p@5 78-1px65+1p@5 22-1px65+1p@5 22-1px35+1p@5 \
+	32-1px45+1p@4 68-1px45+1p@5 68-1px55+1p@5 32-1px55+1p@5 32-1px45+1p@5 \
+	22+1px35-1p@5 78+1px35-1p@5 78+1px65-1p@5 22+1px65-1p@5 22+1px35-1p@5 \
+	32+1px45-1p@4 68+1px45-1p@5 68+1px55-1p@5 32+1px55-1p@5 32+1px45-1p@5 \
+	22x35@4 78x35@3 78x65@3 22x65@3 22x35@3 \
+	32x45@4 68x45@3 68x55@3 32x55@3 32x45@3 -- Offset 1 LineWidth 1.5 Tint blue 15
+AddButtonStyle 3 ToggledActiveHover AVector 50 \
+	22+1px35+1p@5 78+1px35+1p@5 78+1px65+1p@5 22+1px65+1p@5 22+1px35+1p@5 \
+	32+1px45+1p@4 68+1px45+1p@5 68+1px55+1p@5 32+1px55+1p@5 32+1px45+1p@5 \
+	22-1px35-1p@5 78-1px35-1p@5 78-1px65-1p@5 22-1px65-1p@5 22-1px35-1p@5 \
+	32-1px45-1p@4 68-1px45-1p@5 68-1px55-1p@5 32-1px55-1p@5 32-1px45-1p@5 \
+	22-1px35+1p@5 78-1px35+1p@5 78-1px65+1p@5 22-1px65+1p@5 22-1px35+1p@5 \
+	32-1px45+1p@4 68-1px45+1p@5 68-1px55+1p@5 32-1px55+1p@5 32-1px45+1p@5 \
+	22+1px35-1p@5 78+1px35-1p@5 78+1px65-1p@5 22+1px65-1p@5 22+1px35-1p@5 \
+	32+1px45-1p@4 68+1px45-1p@5 68+1px55-1p@5 32+1px55-1p@5 32+1px45-1p@5 \
+	22x35@4 78x35@3 78x65@3 22x65@3 22x35@3 \
+	32x45@4 68x45@3 68x55@3 32x55@3 32x45@3  -- Offset -1 LineWidth 1.5 Tint blue 15
+
+AddButtonStyle 3 ToggledInActiveUp AVector 10 22x35@3 78x35@3 78x65@3 22x65@3 22x35@3 32x45@4 68x45@3 68x55@3 32x55@3 32x45@3  -- LineWidth 1 Alpha 50
+
+AddButtonStyle 3 ToggledInactiveDown AVector 50 \
+	22+1px35+1p@5 78+1px35+1p@5 78+1px65+1p@5 22+1px65+1p@5 22+1px35+1p@5 \
+	32+1px45+1p@4 68+1px45+1p@5 68+1px55+1p@5 32+1px55+1p@5 32+1px45+1p@5 \
+	22-1px35-1p@5 78-1px35-1p@5 78-1px65-1p@5 22-1px65-1p@5 22-1px35-1p@5 \
+	32-1px45-1p@4 68-1px45-1p@5 68-1px55-1p@5 32-1px55-1p@5 32-1px45-1p@5 \
+	22-1px35+1p@5 78-1px35+1p@5 78-1px65+1p@5 22-1px65+1p@5 22-1px35+1p@5 \
+	32-1px45+1p@4 68-1px45+1p@5 68-1px55+1p@5 32-1px55+1p@5 32-1px45+1p@5 \
+	22+1px35-1p@5 78+1px35-1p@5 78+1px65-1p@5 22+1px65-1p@5 22+1px35-1p@5 \
+	32+1px45-1p@4 68+1px45-1p@5 68+1px55-1p@5 32+1px55-1p@5 32+1px45-1p@5 \
+	22x35@4 78x35@3 78x65@3 22x65@3 22x35@3 \
+	32x45@4 68x45@3 68x55@3 32x55@3 32x45@3 -- Offset 1 LineWidth 1.5 Tint blue 15
+AddButtonStyle 3 ToggledInactiveHover AVector 50 \
+	22+1px35+1p@5 78+1px35+1p@5 78+1px65+1p@5 22+1px65+1p@5 22+1px35+1p@5 \
+	32+1px45+1p@4 68+1px45+1p@5 68+1px55+1p@5 32+1px55+1p@5 32+1px45+1p@5 \
+	22-1px35-1p@5 78-1px35-1p@5 78-1px65-1p@5 22-1px65-1p@5 22-1px35-1p@5 \
+	32-1px45-1p@4 68-1px45-1p@5 68-1px55-1p@5 32-1px55-1p@5 32-1px45-1p@5 \
+	22-1px35+1p@5 78-1px35+1p@5 78-1px65+1p@5 22-1px65+1p@5 22-1px35+1p@5 \
+	32-1px45+1p@4 68-1px45+1p@5 68-1px55+1p@5 32-1px55+1p@5 32-1px45+1p@5 \
+	22+1px35-1p@5 78+1px35-1p@5 78+1px65-1p@5 22+1px65-1p@5 22+1px35-1p@5 \
+	32+1px45-1p@4 68+1px45-1p@5 68+1px55-1p@5 32+1px55-1p@5 32+1px45-1p@5 \
+	22x35@4 78x35@3 78x65@3 22x65@3 22x35@3 \
+	32x45@4 68x45@3 68x55@3 32x55@3 32x45@3  -- Offset -1 LineWidth 1.5 Tint blue 15
+
+AddButtonStyle 3
+ButtonStyle 3 - Clear MwmDecorStick
+
+Mouse 1 3 A AFuncButtonStick
+Mouse 2 3 A AFuncButtonStick
+Mouse 3 3 A AFuncButtonStick
+
+# remove button 5
+Mouse 1 5 A -
+Mouse 2 5 A -
+Mouse 3 5 A -
+
+# Gesture button
+#AddButtonStyle 5 13 60x20@3 60x40@3 80x40@3 80x60@3 60x60@3 60x80@3 40x80@3 40x60@3 20x60@3   20x40@3 40x40@3 40x20@3 60x20@3
+#ButtonStyle 5 - Clear
+#Mouse 1 5 A AFuncButtonGesture
+#Mouse 2 5 A AFuncButtonGesture
+#Mouse 3 5 A AFuncButtonGesture
+
+# remove button 7
+Mouse 1 7 A -
+Mouse 2 7 A -
+Mouse 3 7 A -
+
+# remove button 9
+Mouse 1 9 A -
+Mouse 2 9 A -
+Mouse 3 9 A -

@@ -8507,7 +8507,7 @@ If region is active, set width to that of the longest line in the region."
                            (1+ (car (dp-longest-line-in-region))))
                       (read-number 
                        (format 
-                        "width(current: %s; default: %s; 0 for max: %s): "
+                        "width(current: %s; previous: %s; 0 for max: %s): "
                         (frame-width)
                         dp-last-sfw-width
                         dp-max-frame-width)
@@ -13495,6 +13495,22 @@ string's characters.
     (if (stringp k)
         (apply 'dp-fake-key-presses (string-to-list k))
       (dispatch-event (make-event 'key-press (list 'key k))))))
+
+(defun dp-delete-frame &optional frame force
+  "Confirm deletion because I use C-x 5 0 too often."
+  (interactive)
+  (if (and dp-confirm-frame-deletion-p
+           (or (< (dp-primary-frame-width) dp-2w-frame-width)
+               ;; Try to catch special frames like ediff control frame and
+               ;; speedbar.  We may want to check a list of frame name
+               ;; regexps, too.
+               (< (frame-width) 80)
+               (dp-primary-frame-p))
+           (y-or-n-p "Did you mean to do `other-frame'? "))
+      (progn
+        (setq this-command 'other-frame)
+        (call-interactively 'other-frame))
+    (call-interactively 'delete-frame)))
 
 (defun dp-other-frame (lower-frame-p)
   "Add the ability to request that the new frame be lowered.

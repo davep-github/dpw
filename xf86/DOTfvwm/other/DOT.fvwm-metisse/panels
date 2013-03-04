@@ -1,0 +1,415 @@
+# ---------------------------------------------------------------------------
+#  FvwmPager
+# ---------------------------------------------------------------------------
+Style FvwmPager* NeverFocus, WindowListSkip, Sticky, NoTitle, NoHandles, \
+	!Borders
+
+AddToFunc AFuncWindowThemesOverride
++ I Style FvwmPager* NoTitle, NoHandles, !Borders
+
+DestroyModuleConfig FvwmPager*
+
+#PipeRead 'c=`expr "(" "(" "(" 64 "*" $[vp.height] "*" $[FVWM_NUMBER_PAGE_ROWS] ")" / "(" $[vp.width] "*" $[FVWM_NUMBER_PAGE_COLUMS] ")" ")" + 22 ")"`; \
+#	a=`expr "(" $[FVWM_NUMBER_OF_DESK] "*" ${c} ")"`; \
+#	echo "*FvwmPager-Desker: Geometry 64x${a}-0+0"'
+
+#*FvwmPager-Desker: Geometry 64x253-0+0
+*FvwmPager-Desker: DeskTopScale 16
+*FvwmPager-Desker: Columns 1
+#*FvwmPager-Desker: Rows 1
+*FvwmPager-Desker: Colorset * 14
+*FvwmPager-Desker: HilightColorset * 15
+*FvwmPager-Desker: BalloonColorset * 16
+*FvwmPager-Desker: WindowColorsets 1 2
+*FvwmPager-Desker: Balloons            All
+*FvwmPager-Desker: BalloonYOffset      +1
+*FvwmPager-Desker: UseSkipList
+*FvwmPager-Desker: Font "xft:sans:pixelsize=10"
+*FvwmPager-Desker: SmallFont "xft:sans:pixelsize=7;5x7"
+*FvwmPager-Desker: Window3DBorders
+*FvwmPager-Desker: Animate
+*FvwmPager-Desker: MiniIcons
+AFuncSetFont-ModulePagerLabel FvwmPager-Desker Font 10
+AFuncSetFont-ModuleSmall FvwmPager-Desker SmallFont
+AFuncSetFont-ModuleTips FvwmPager-Desker BalloonFont
+
+*FvwmPager-Swallowed: Geometry +5000+5000
+*FvwmPager-Swallowed: DeskTopScale 22
+#*FvwmPager-Swallowed: Columns 2
+*FvwmPager-Swallowed: Rows 2
+*FvwmPager-Swallowed: Colorset * 14
+*FvwmPager-Swallowed: HilightColorset * 15
+*FvwmPager-Swallowed: BalloonColorset * 16
+*FvwmPager-Swallowed: WindowColorsets 1 2
+*FvwmPager-Swallowed: Balloons            All
+*FvwmPager-Swallowed: BalloonYOffset      -3
+*FvwmPager-Swallowed: UseSkipList
+*FvwmPager-Swallowed: Window3DBorders
+*FvwmPager-Swallowed: Font None
+*FvwmPager-Swallowed: SolidSeparators
+*FvwmPager-Swallowed: Animate
+*FvwmPager-Swallowed: MiniIcons
+# AFuncSetFont-ModulePagerLabel FvwmPager-Swallowed Font 10
+AFuncSetFont-ModuleSmall FvwmPager-Swallowed SmallFont
+AFuncSetFont-ModuleTips FvwmPager-Swallowed BalloonFont
+
+Style FvwmPager-Swallowed-Single Slippery
+*FvwmPager-Swallowed-Single: Geometry +5000+5000
+*FvwmPager-Swallowed-Single: DeskTopScale 22
+#*FvwmPager-Swallowed-Single: Columns 2
+#*FvwmPager-Swallowed-Single: Rows 2
+*FvwmPager-Swallowed-Single: Colorset * 14
+*FvwmPager-Swallowed-Single: HilightColorset * 15
+*FvwmPager-Swallowed-Single: BalloonColorset * 16
+*FvwmPager-Swallowed-Single: WindowColorsets 1 2
+*FvwmPager-Swallowed-Single: Balloons            All
+*FvwmPager-Swallowed-Single: BalloonYOffset      -3
+*FvwmPager-Swallowed-Single: UseSkipList
+*FvwmPager-Swallowed-Single: Window3DBorders
+*FvwmPager-Swallowed-Single: Font None
+*FvwmPager-Swallowed-Single: SolidSeparators
+*FvwmPager-Swallowed-Single: Animate
+*FvwmPager-Swallowed-Single: MiniIcons
+# AFuncSetFont-ModulePagerLabel FvwmPager-Swallowed-Single Font 10
+AFuncSetFont-ModuleSmall FvwmPager-Swallowed-Single SmallFont
+AFuncSetFont-ModuleTips FvwmPager-Swallowed-Single BalloonFont
+
+
+#*FvwmPager-Floating: Geometry +5000+5000
+# was 22 (tested 16 for a few haours)
+*FvwmPager-Floating: DeskTopScale 22
+#*FvwmPager-Floating: Columns 2
+#*FvwmPager-Floating: Rows 2
+*FvwmPager-Floating: Colorset * 14
+*FvwmPager-Floating: HilightColorset * 15
+*FvwmPager-Floating: BalloonColorset * 16
+*FvwmPager-Floating: WindowColorsets 1 2
+*FvwmPager-Floating: Balloons            All
+*FvwmPager-Floating: BalloonYOffset      -3
+*FvwmPager-Floating: UseSkipList
+*FvwmPager-Floating: Window3DBorders
+*FvwmPager-Floating: Font None
+*FvwmPager-Floating: SolidSeparators
+*FvwmPager-Floating: Animate
+*FvwmPager-Floating: MiniIcons
+# AFuncSetFont-ModulePagerLabel FvwmPager-Floating Font 10
+AFuncSetFont-ModuleSmall FvwmPager-Floating SmallFont
+AFuncSetFont-ModuleTips FvwmPager-Floating BalloonFont
+
+Style FvwmPager-Floating NoHandles, !Borders
+
+AddToFunc AFuncWindowThemesOverride
++ I Style FvwmPager-Floating NoHandles, !Borders
+
+# ----------------------------------------------------------------------------
+# panel
+# ----------------------------------------------------------------------------
+
+#NoHandles, BorderWidth 1
+ 
+Style FvwmButtons-Panel WindowListSkip, Sticky, NoTitle, !Borders, NeverFocus
+
+AddToFunc AFuncWindowThemesOverride I Style FvwmButtons-Panel NoTitle, !Borders
+
+## parameters
+# $0 width, $1 height, $2 position, $3 panel font size,
+# $4 corner button width,
+# $5 icon dir ("size"),
+# $6 non corner all left buttons width ( = 4*(one button with) ), 
+# $7 Icon man font
+
+# for  $[vp.width] = 1680
+# examples: $[vp.width] 18 +0-0 11 18 16x16/ 144 11
+#           $[vp.width] 20 +0-0 12 20 16x16/ 160 12
+#           $[vp.width] 22 +0-0 13 22 16x16/ 176 13
+
+DestroyFunc _BuildPanel
+AddToFunc   _BuildPanel
+#
+# Panel config
+#
++ I DestroyModuleConfig FvwmButtons-Panel: *
++ I *FvwmButtons-Panel: Geometry $0x$1$2
++ I AFuncSetFont-ModuleButtonLabel FvwmButtons-Panel Font $3
++ I *FvwmButtons-Panel: Rows 1
++ I *FvwmButtons-Panel: Columns $0
++ I *FvwmButtons-Panel: BoxSize smart
++ I *FvwmButtons-Panel: Colorset 10
++ I *FvwmButtons-Panel: ActiveColorset 11
++ I *FvwmButtons-Panel: PressColorset 12
+# left corner button
++ I *FvwmButtons-Panel:  ($4x1, Frame 0, \
+	Container(Frame 1, Padding 0 0, Columns 1, Rows 1), \
+	Padding 0 0))
++ I *FvwmButtons-Panel: (1x1, Frame 1, Icon "$5/apps/opale.png", \
+	ActionOnPress, \
+	Action(Mouse 1) 'Menu AMenuRoot Mouse -100p -102m', \
+	Action(Mouse 2) 'FuncWindowListMouse "Mouse -100p -102m" ""', \
+	Action(Mouse 3) 'Menu AMenuWinOps Mouse -100p -102m', \
+	Action(Mouse 4) 'Menu AMenuConfig Mouse -100p -102m')
++ I *FvwmButtons-Panel: (End)
+# the left buttons
++ I *FvwmButtons-Panel:  ($6x1, Frame 0, \
+	Container(Frame 1, Padding 0 0, Columns 4, Rows 1), \
+	Padding 0 0))
+# places/folder or actions/document-open or browse-files
++ I *FvwmButtons-Panel: (1x1, Icon "$5/places/folder.png", \
+	ActionOnPress, \
+	Action(Mouse 1) 'Menu AMenuFvwmBrowser Mouse -100p -102m', \
+	Action(Mouse 2) 'FuncFvwmFileBrowser', \
+	Action(Mouse 3) 'Menu AMenuFvwmBrowserCached Mouse -100p -102m')
++ I *FvwmButtons-Panel: (1x1, Icon "$5/categories/applications.png", \
+	Action(Mouse 1) 'Menu AMenuProgram Mouse -100p -102m', \
+	Action(Mouse 2) 'FuncFvwmVideoPlayer', \
+	Action(Mouse 3) 'FuncFvwmImageEditor')
++ I *FvwmButtons-Panel: (1x1, Icon "$5/categories/applications-office.png", \
+	Action(Mouse 1) 'FuncFvwmTextEditor', \
+	Action(Mouse 2) 'FuncFvwmOfficeSuite', \
+	Action(Mouse 3) 'FuncFvwmPDFViewer')
++ I *FvwmButtons-Panel: (1x1, Icon "$5/categories/applications-internet.png", \
+	Action(Mouse 1) 'AFuncStartOrActivateWebBrowser', \
+	Action(Mouse 2) 'AFuncStartOrActivateIM', \
+	Action(Mouse 3) 'AFuncStartOrActivateMailer')
++ I *FvwmButtons-Panel: (End)
++ I PipeRead 'a=`expr "(" $0 - $4 - $6 - $4 ")"`; \
+	echo "*FvwmButtons-Panel: (${a}x1, Frame 0, \
+	Swallow \\"FvwmIconMan\\" \\"FvwmIconMan\\")"'
+# FIXME: Icon
++ I *FvwmButtons-Panel: ($4x1, Frame 1, \
+	Title "D", 	\
+	Action(Mouse 3) 'FvwmPager -transient FvwmPager-Desker \
+		0 $[FVWM_LAST_DESK]', \
+	Action(Mouse 2) 'GotoDesk 1 0 $[FVWM_LAST_DESK]', \
+	Action(Mouse 1) 'sma PagerMode'
+#	Action(Mouse 1) 'FuncFuncGotoPrevPage'
+#
+# Auxiliare config
+#
++ I EwmhBaseStruts 0 5 0 $1
++ I AFuncSetFont-ModuleWindowListLabel FvwmIconMan Font $7
++ I *FvwmIconMan: ButtonGeometry 116x$1
++ I *FvwmPager-Floating: Geometry -0-$1
+
+
+# ----------------------------------------------------------------------------
+# an IconMan for our panel
+# ----------------------------------------------------------------------------
+
+Style FvwmIconMan WindowListSkip, Sticky, NoTitle, NoHandles, BorderWidth 5, \
+	NeverFocus
+
+AddToFunc AFuncWindowThemesOverride
++ I Style FvwmIconMan NoTitle, NoHandles, BorderWidth 5
+
+DestroyModuleConfig FvwmIconMan: *
+
+*FvwmIconMan: NumManagers 1
+
+# menu configurable 
+#*FvwmIconMan: Resolution global
+
+*FvwmIconMan: PlainButton  up
+*FvwmIconMan: SelectButton down
+*FvwmIconMan: FocusButton  up
+*FvwmIconMan: FocusAndSelectButton down
+*FvwmIconMan: IconButton up
+*FvwmIconMan: IconAndSelectButton down
+
+*FvwmIconMan: AttentionButton  up
+*FvwmIconMan: AttentionAndSelectButton  down
+*FvwmIconMan: AttentionAndIconButton  up
+*FvwmIconMan: AttentionAndIconAndSelectButton down
+
+*FvwmIconMan: ReliefThickness 1
+
+*FvwmIconMan: Colorset		10
+
+*FvwmIconMan: IconColorset	19
+*FvwmIconMan: IconAndSelectColorset	22
+*FvwmIconMan: PlainColorset	17
+*FvwmIconMan: SelectColorset	20
+*FvwmIconMan: FocusColorset	18
+*FvwmIconMan: FocusAndSelectColorset 21
+
+*FvwmIconMan: AttentionColorset 23
+*FvwmIconMan: AttentionAndSelectColorset 24
+*FvwmIconMan: AttentionAndIconColorset 25
+*FvwmIconMan: AttentionAndIconAndSelectColorset 26
+
+*FvwmIconMan: TipsColorset	16
+
+*FvwmIconMan: UseWinList true
+*FvwmIconMan: DrawIcons always
+*FvwmIconMan: Shape false
+
+*FvwmIconMan: FollowFocus true
+# name, namewithcase, weighted, id, none
+*FvwmIconMan: Sort id
+*FvwmIconMan: Format %i
+
+*FvwmIconMan: Tips needed
+*FvwmIconMan: TipsDelays 1000 0
+*FvwmIconMan: TipsOffsets 2 2
+
+*FvwmIconMan: ManagerGeometry 5x1
+*FvwmIconMan: ButtonGeometry 116x22
+#*FvwmIconMan: MaxButtonWidth 256
+*FvwmIconMan: MaxButtonWidthByColumns 3
+
+*FvwmIconMan: NoIconAction "SendToModule FvwmCompositor IconifyAnimate"
+#*FvwmIconMan: NoIconAction "SendToModule FvwmAnimate animate"
+
+AFuncSetFont-ModuleWindowListLabel FvwmIconMan Font 11
+AFuncSetFont-ModuleTips   FvwmIconMan TipsFont
+
+# action
+*FvwmIconMan: Action  Mouse 1 A sendcommand AFuncDeiconifyFocusAndRaise
+# FIXME
+*FvwmIconMan: Action  Mouse 2 A sendcommand Iconify
+*FvwmIconMan: Action  Mouse 3 A sendcommand "Menu AMenuWinOps \
+	Mouse -50m -100m"
+*FvwmIconMan: Action  Mouse 3 C sendcommand "Menu AMenuWinOpsMoveToDesk"
+*FvwmIconMan: Action  Mouse 3 S sendcommand "Menu AMenuWinOpsMoveToDesk"
+
+# ------------------------------------------------------------------------------
+# Config Functions 
+# ------------------------------------------------------------------------------
+
+#------------------------------
+# For the StartFunction and the switching function
+
+# standard
+DestroyFunc _BuildAndStartPanel
+AddToFunc   _BuildAndStartPanel
++ I KillModule FvwmButtons FvwmButtons-Panel
++ I KillModule FvwmPager
++ I _BuildPanel $*
++ I FvwmPager FvwmPager-Floating *
++ I FvwmButtons FvwmButtons-Panel
+
+DestroyFunc FuncPanStartFuncStartPanel
+AddToFunc   FuncPanStartFuncStartPanel
++ I _BuildAndStartPanel $*
+
+# Just a pager (good for gnome and kde)
+DestroyFunc _StartPagerOnly
+AddToFunc   _StartPagerOnly
++ I DestroyModuleConfig FvwmButtons-Panel: *
++ I KillModule FvwmButtons FvwmButtons-Panel
++ I KillModule FvwmPager
++ I EwmhBaseStruts 0 5 0 0
++ I *FvwmPager-Floating: Geometry -0-$0
++ I FvwmPager FvwmPager-Floating *
+
+DestroyFunc FuncPanStartFuncStartPagerOnly
+AddToFunc   FuncPanStartFuncStartPagerOnly
++ I  _StartPagerOnly $*
+
+# No panel (good for gnome and kde)
+DestroyFunc _StartPanelNone
+AddToFunc   _StartPanelNone
++ I DestroyModuleConfig FvwmButtons-Panel: *
++ I KillModule FvwmButtons FvwmButtons-Panel
++ I KillModule FvwmPager
++ I EwmhBaseStruts 0 0 0 0
+
+DestroyFunc FuncPanStartFuncStartNone
+AddToFunc   FuncPanStartFuncStartNone
++ I  _StartPanelNone
+
+
+#---------------------------------------
+# Config stuff
+
+# a hack for startup
+DestroyFunc FuncPanConfigMenuCurrentWindowListResolution
+AddToFunc   FuncPanConfigMenuCurrentWindowListResolution
+
+DestroyFunc FuncPanConfigUpdateMenu
+AddToFunc   FuncPanConfigUpdateMenu
++ I DestroyMenu MenuModConfigPanel
++ I AddToMenu   MenuModConfigPanel "Panel Config" Title
++ I + "Panel with size" Popup  MenuModConfigPanelSize
++ I DestroyMenu MenuModConfigPanelSize
++ I AddToMenu   MenuModConfigPanelSize
++ I + "20 (10)" FuncPanConfigPanelAndSwitch Panel \
+	$[vp.width] 20 +0-0 10 20 '16x16/' 160 10
++ I + "20 (11)" FuncPanConfigPanelAndSwitch Panel \
+	$[vp.width] 20 +0-0 11 20 '16x16/' 160 11
++ I + "20 (12)" FuncPanConfigPanelAndSwitch Panel \
+	$[vp.width] 20 +0-0 12 20 '16x16/' 160 12
++ I + "22 (11)" FuncPanConfigPanelAndSwitch Panel \
+	$[vp.width] 22 +0-0 11 22 '16x16/' 176 11
++ I + "22 (12)" FuncPanConfigPanelAndSwitch Panel \
+	$[vp.width] 22 +0-0 12 22 '16x16/' 176 12
++ I + "22 (13)" FuncPanConfigPanelAndSwitch Panel \
+	$[vp.width] 22 +0-0 13 22 '16x16/' 176 13
++ I + "24 (12)" FuncPanConfigPanelAndSwitch Panel \
+	$[vp.width] 24 +0-0 12 24 '16x16/' 194 12
++ I + "24 (13)" FuncPanConfigPanelAndSwitch Panel \
+	$[vp.width] 24 +0-0 13 24 '16x16/' 194 13
++ I + "24 (14)" FuncPanConfigPanelAndSwitch Panel \
+	$[vp.width] 24 +0-0 14 24 '16x16/' 194 14
++ I + "28 (14)" FuncPanConfigPanelAndSwitch Panel \
+	$[vp.width] 28 +0-0 14 28 'Size 18:16x16/' 224 14
++ I + "28 (15)" FuncPanConfigPanelAndSwitch Panel \
+	$[vp.width] 28 +0-0 15 28 'Size 18:16x16/' 224 15
++ I + "28 (16)" FuncPanConfigPanelAndSwitch Panel \
+	$[vp.width] 28 +0-0 16 28 'Size 18:16x16/' 224 16
++ I + "32 (16)"  FuncPanConfigPanelAndSwitch Panel \
+	$[vp.width] 32 +0-0 16 32 'Size 20:16x16/' 256 16
++ I + "32 (17)"  FuncPanConfigPanelAndSwitch Panel \
+	$[vp.width] 32 +0-0 17 32 'Size 20:16x16/' 256 17
++ I + "32 (18)"  FuncPanConfigPanelAndSwitch Panel \
+	$[vp.width] 32 +0-0 18 32 'Size 20:16x16/' 256 18
++ I AddToMenu   MenuModConfigPanel
++ I + "Just a Pager" FuncPanConfigPanelAndSwitch PagerOnly 56
++ I + "No Panels"    FuncPanConfigPanelAndSwitch None
++ I FuncPanConfigMenuModuleCurrentPanel
++ I + "Global Resolution" FuncPanConfigWindowListResolution Global
++ I + "Desk Resolution" FuncPanConfigWindowListResolution Desk
++ I + "Page Resolution" FuncPanConfigWindowListResolution Page
++ I FuncPanConfigMenuCurrentWindowListResolution
+
+
+DestroyFunc FuncPanConfigPanel
+AddToFunc   FuncPanConfigPanel
++ I DestroyFunc FuncStartFuncStartPanel
++ I AddToFunc   FuncStartFuncStartPanel I FuncPanStartFuncStart$*
+#
++ I DestroyFunc FuncPanConfigMenuModuleCurrentPanel
++ I AddToFunc   FuncPanConfigMenuModuleCurrentPanel
++ I + I + "Current Panel: $0 $2 ($4)" Title
+#
++ I FuncPanConfigUpdateMenu
+#
++ I DestroyFunc FuncPanSaveConfigModulePanel
++ I AddToFunc   FuncPanSaveConfigModulePanel
++ I + I Exec echo "FuncPanConfigPanel $*" >> $[FVWM_USERDIR]/.aconfig
++ I AFuncSaveConfig
+
+
+# --------------------------------------
+# switchers
+
+DestroyFunc FuncPanConfigPanelandSwitch
+AddToFunc   FuncPanConfigPanelandSwitch
++ I FuncPanConfigPanel $*
++ I FuncPanStartFuncStart$*
+
+# Resolution
+
+DestroyFunc FuncPanConfigWindowListResolution
+AddToFunc   FuncPanConfigWindowListResolution
++ I *FvwmIconMan: Resolution $0
+#           
++ I DestroyFunc FuncPanConfigMenuCurrentWindowListResolution
++ I AddToFunc   FuncPanConfigMenuCurrentWindowListResolution
++ I + I + "Current Resolution: $0" Title
+#
++ I FuncPanConfigUpdateMenu
+#
++ I DestroyFunc FuncPanSaveConfigWindowListResolution
++ I AddToFunc   FuncPanSaveConfigWindowListResolution
++ I + I Exec echo "FuncPanConfigWindowListResolution $0" >> $[FVWM_USERDIR]/.aconfig
++ I AFuncSaveConfig

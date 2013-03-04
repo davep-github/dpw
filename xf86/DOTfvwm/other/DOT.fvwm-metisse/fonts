@@ -1,0 +1,86 @@
+# The FuncFontsSet-* are called or used in then colour themes to set the
+# shadows and the styles (bold, italic ...)
+
+# set a default font, if we have no xft support we get the default fvwm core
+# X font
+DestroyFunc FuncFontsSet-DefaultFont
+AddToFunc   FuncFontsSet-DefaultFont
++ I DefaultFont "Shadow=$0:xft:sans:size=10:$1:$2"
+
+# Windows font
+# default fontconfig "sans" font and if no xft support helvetica bold
+
+DestroyFunc FuncFontsSet-WinFont
+AddToFunc   FuncFontsSet-WinFont
++ I Style * InactiveFont "Shadow=$0:xft:sans:size=12:$1:$2;-*-helvetica-$3-$4-*-120-*"
+
+DestroyFunc FuncFontsSet-ActiveWinFont
+AddToFunc   FuncFontsSet-ActiveWinFont
++ I Style * Font "Shadow=$0:xft:sans:size=12:$1:$2;-*-helvetica-$3-$4-*-120-*"
+
+# Menu fonts add minspace=true?
+
+DestroyFunc FuncFontsSet-MenuFont
+AddToFunc   FuncFontsSet-MenuFont
++ I MenuStyle $0 Font "Shadow=$1:xft:sans:size=13:$2:$3;-*-helvetica-$4-$5-*-120-*"
+
+DestroyFunc FuncFontsSet-WinMenuFont
+AddToFunc   FuncFontsSet-WinMenuFont
++ I MenuStyle $0 Font "Shadow=$1:xft:sans:size=12:minspace=true:$2:$3;-*-helvetica-$4-$5-*-120-*"
+
+DestroyFunc FuncFontsSet-Utf8MenuFont
+AddToFunc   FuncFontsSet-Utf8MenuFont
++ I MenuStyle $0 Font "StringEncoding=UTF-8:Shadow=$1:xft:sans:size=13:minspace=true:$2:$3;-*-helvetica-$4-$5-*-120-*"
+
+
+#---------------------------------------
+# Modules fonts ... We should have Fontsets as we have Colorsets ...
+
+*FvwmIdent: Font "xft:sans:size=12;-*-helvetica-medium-r-*-120-*"
+
+# See also ~/.fvwm-metisse/.FvwmForm which can be create with
+# FvwmForm-Form
+*FvwmFormDefault: Font "xft:sans:size=12;-*-helvetica-medium-r-*-120-*"
+*FvwmFormDefault: InputFont "xft:Monospace:size=11;-*-fixed-medium-r-*-120-*"
+*FvwmFormDefault: ButtonFont "xft:sans:size=12;-*-helvetica-medium-r-*-120-*"
+*FvwmFormDefault: TimeoutFont "xft:sans:size=12;-*-helvetica-medium-r-*-120-*"
+
+# default font for IconBox, IconMan, TaskBar and WinList
+DestroyFunc AFuncSetFont-ModuleWindowList
+AddToFunc   AFuncSetFont-ModuleWindowList
++ I *$0: $1 "shadow=1:xft:sans:size=12;-*-helvetica-medium-r-*-120-*"
+
+# selected font (TaskBar)
+DestroyFunc AFuncSetFont-ModuleSelectedWindowList
+AddToFunc   AFuncSetFont-ModuleSelectedWindowList
++ I *$0: $1 "shadow=1:xft:sans:bold:size=12;-*-helvetica-bold-r-*-120-*"
+
+DestroyFunc AFuncSetFont-ModuleTips
+AddToFunc   AFuncSetFont-ModuleTips
++ I *$0: $1 "shadow=0:xft:sans:size=12;-*-helvetica-medium-r-*-120-*"
+
+# small font (Pager mini window font)
+DestroyFunc AFuncSetFont-ModuleSmall
+AddToFunc   AFuncSetFont-ModuleSmall
++ I *$0: $1 "shadow=1:xft:sans:pixelsize=7;-*-helvetica-medium-r-*-7-*"
+
+###
+#
+# Should give a pixel size!! For use in module which is not resized
+# vs the font size
+#
+###
+
+DestroyFunc AFuncSetFont-ModulePagerLabel
+AddToFunc   AFuncSetFont-ModulePagerLabel
++ I *$0: $1 "shadow=1:xft:sans:pixelsize=$2;-*-helvetica-medium-r-*-$2-*"
+
+DestroyFunc AFuncSetFont-ModuleButtonLabel
+AddToFunc   AFuncSetFont-ModuleButtonLabel
++ I *$0: $1 "shadow=1:xft:sans:pixelsize=$2;-*-helvetica-medium-r-*-$2-*"
+
+DestroyFunc AFuncSetFont-ModuleWindowListLabel
+AddToFunc   AFuncSetFont-ModuleWindowListLabel
++ I *$0: $1 "shadow=1:xft:sans:pixelsize=$2;-*-helvetica-medium-r-*-$2-*"
+
+

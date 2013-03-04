@@ -1866,26 +1866,26 @@ cscope discovery.
   "Should our advised delete frame ask for confirmation before deleting the
   frame?")
 
-(when-and-boundp 'dp-advise-confirm-frame-deletion-p
-  (defadvice delete-frame (around dp-advised-delete-frame activate)
-    "Ask the user if they really meant to delete the frame rather than change to another."
-    ;; Twice in a row actually does it.
-    (if (or (C-u-p) (eq last-command 'delete-frame))
-        ad-do-it
-      ;; Not second in a row, so ask the user really wanted to do an
-      ;; `other-frame'.
-      (if (and dp-confirm-frame-deletion-p
-               (or (< (dp-primary-frame-width) dp-2w-frame-width)
-                                        ;Try to catch special frames like ediff control frame and
-                                        ;speedbar.  We may want to check a list of frame name
-                                        ;regexps, too.
-                   (< (frame-width) 80)
-                   (dp-primary-frame-p))
-               (y-or-n-p "Did you mean to do `other-frame'? "))
-          (progn
-            (setq this-command 'other-frame)
-            (call-interactively 'other-frame))
-        ad-do-it))))
+;; (when-and-boundp 'dp-advise-confirm-frame-deletion-p
+;;   (defadvice delete-frame (around dp-advised-delete-frame activate)
+;;     "Ask the user if they really meant to delete the frame rather than change to another."
+;;     ;; Twice in a row actually does it.
+;;     (if (or (C-u-p) (eq last-command 'delete-frame))
+;;         ad-do-it
+;;       ;; Not second in a row, so ask the user really wanted to do an
+;;       ;; `other-frame'.
+;;       (if (and dp-confirm-frame-deletion-p
+;;                (or (< (dp-primary-frame-width) dp-2w-frame-width)
+;;                                         ;Try to catch special frames like ediff control frame and
+;;                                         ;speedbar.  We may want to check a list of frame name
+;;                                         ;regexps, too.
+;;                    (< (frame-width) 80)
+;;                    (dp-primary-frame-p))
+;;                (y-or-n-p "Did you mean to do `other-frame'? "))
+;;           (progn
+;;             (setq this-command 'other-frame)
+;;             (call-interactively 'other-frame))
+;;         ad-do-it))))
 
 ;;; Used by way too many commands to be advised.
 (defun dp-beginning-of-defun (&optional arg)
@@ -1924,8 +1924,9 @@ and then business as usual."
   (dp-add-to-font-patterns '(sh-font-lock-keywords
                              sh-font-lock-keywords-1
                              sh-font-lock-keywords-2)
-                            ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
-)
+                            ;; @todo XXX conditionalize this properly
+                            ;; dp-trailing-whitespace-font-lock-element
+                           )
   (dp-auto-it?))
 
 

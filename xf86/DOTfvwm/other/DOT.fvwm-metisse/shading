@@ -1,0 +1,37 @@
+DestroyFunc FuncShaderEnterWindow
+AddToFunc   FuncShaderEnterWindow
+
+DestroyFunc FuncShaderLeaveWindow
+AddToFunc   FuncShaderLeaveWindow
+
+DestroyFunc FuncShaderAddWindow
+AddToFunc   FuncShaderAddWindow
+
+DestroyFunc FuncSetupEnterLeaveShaders
+AddToFunc   FuncSetupEnterLeaveShaders
++ I FuncStopEnterLeaveShaders
++ I sma DefineShader EnterLeaveWin fragment:$[FVWM_USERDIR]/shaders/simple-anim-f.glsl
+#+ I sma DefineShader EnterLeaveWin fragment:$[METISSE_SHADERS_DIR]/simple-anim-f.glsl
++ I All sma SetShaderWindow EnterLeaveWin Anim 10 500
++ I PointerWindow sma AnimBackShaderWindow EnterLeaveWin
+##
++ I AddToFunc   FuncShaderEnterWindow
++ I + I sma AnimBackShaderWindow EnterLeaveWin
++ I AddToFunc   FuncShaderLeaveWindow
++ I + I sma AnimShaderWindow  EnterLeaveWin
++ I AddToFunc   FuncShaderAddWindow
++ I + I sma SetShaderWindow  EnterLeaveWin Anim 10 500
++ I + I PointerWindow sma AnimBackShaderWindow EnterLeaveWin
+
+DestroyFunc FuncStopEnterLeaveShaders
+AddToFunc   FuncStopEnterLeaveShaders
++ I sma DestroyShader EnterLeaveWin
++ I DestroyFunc FuncShaderEnterWindow
++ I AddToFunc   FuncShaderEnterWindow
++ I DestroyFunc FuncShaderLeaveWindow
++ I AddToFunc   FuncShaderLeaveWindow
++ I DestroyFunc FuncShaderAddWindow
++ I AddToFunc   FuncShaderAddWindow
+
+PointerKey s A 4C FuncSetupEnterLeaveShaders
+PointerKey s A 4CM FuncStopEnterLeaveShaders

@@ -1,0 +1,41 @@
+# ---------------------------------------------------------------------------
+# Desk Config  
+# ---------------------------------------------------------------------------
+
+sma SnapAttraction 15 Rubber
+#sma SnapAttraction 20 SnapAndGo
+
+SetEnv FVWM_NUMBER_OF_DESK 1
+# must be $FVWM_NUMBER_OF_DESK - 1
+SetEnv FVWM_LAST_DESK 0
+
+EWMHNumberOfDesktops $[FVWM_NUMBER_OF_DESK]
+
+SetEnv FVWM_NUMBER_PAGE_ROWS   3
+SetEnv FVWM_NUMBER_PAGE_COLUMS 3
+
+DesktopSize $[FVWM_NUMBER_PAGE_COLUMS] $[FVWM_NUMBER_PAGE_ROWS]
+ 
+DestroyMenu AMenuWinOpsMoveToDesk
+AddToMenu   AMenuWinOpsMoveToDesk "Move To ..." Title
+
+PipeRead 'i=0; j=0; nop=0; if [ $FVWM_NUMBER_PAGE_ROWS = 1 -a $FVWM_NUMBER_PAGE_COLUMS = 1 ]; then exit; fi; \
+	  while test 1 == `expr "(" ${i} "<" $[FVWM_NUMBER_PAGE_COLUMS] ")"`; \
+	    do j=0; \
+	    while test 1 == `expr "(" ${j} "<" $[FVWM_NUMBER_PAGE_ROWS] ")"`; \
+	      do echo "+ \\"$[gt.Page] ${i}c ${j}r\\" MoveToPage ${i} ${j}"; \
+	      let j=${j}+1; \
+	      nop=1; \
+	    done; \
+	    let i=${i}+1; \
+	  done; \
+	  if test ${nop} == 1; then \
+	    echo "+ \\"\\" Nop"; \
+	  fi'
+
+PipeRead 'i=0; while test 1 == `expr "(" ${i} "<" $[FVWM_NUMBER_OF_DESK] ")"`; \
+	  do echo "DesktopName $i  $[gt.Desk]  $i"; \
+	  echo "+ \\"$[gt.Desk] ${i}\\"	MoveToDesk 0 ${i}"; \
+	  let i=${i}+1; \
+	done'
+                        
