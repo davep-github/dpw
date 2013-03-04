@@ -338,26 +338,26 @@ AddToMenu Amusements
 
 DestroyMenu Module-Popup
 AddToMenu   Module-Popup
-+ "&Autoraise"              RestartModule FvwmAuto 500
-+ "A&nimate"                RestartModule FvwmAnimate
-+ "&Backer"                 RestartModule FvwmBacker
-+ "B&anner"                 RestartModule FvwmBanner
-+ "B&uttons Bar"            RestartModuleByAlias FvwmButtons BarButtons BarButtons
-+ "&Mini button bar"        RestartModuleByAlias FvwmButtons MiniButtons MiniButtons
-+ "&WMaker buttons"         RestartModuleByAlias FvwmButtons WinMakerAppButtons WinMakerApp*
-+ "Fvwm &Console"           Module FvwmConsole -sb
-+ "&Debug"                  RestartModule FvwmDebug
-+ "&IconBox"                RestartModule FvwmIconBox
-+ "I&conMan"                RestartModule FvwmIconMan
-+ "Identif&y"               RestartModule FvwmIdent
-+ "Desker &Panel"           RestartModuleByAlias FvwmButtons DeskerPanelButtons DeskerPanelButtons
-+ "Sound &effect"           RestartModule FvwmEvent
-+ "&Talk to Fvwm"           FvwmForm FvwmForm-Talk
-+ "Task&Bar"                RestartModule FvwmTaskBar
-+ "Window &List"            RestartModule FvwmWinList
-+ "&Wharf"                  RestartModule FvwmWharf
++ "&Autoraise"            RestartModule FvwmAuto 500
++ "A&nimate"              RestartModule FvwmAnimate
++ "&Backer"               RestartModule FvwmBacker
++ "B&anner"               RestartModule FvwmBanner
++ "B&uttons Bar"          RestartModuleByAlias FvwmButtons BarButtons BarButtons
++ "&Mini button bar"      RestartModuleByAlias FvwmButtons MiniButtons MiniButtons
++ "&WMaker buttons"       RestartModuleByAlias FvwmButtons WinMakerAppButtons WinMakerApp*
++ "Fvwm &Console"         Module FvwmConsole -sb
++ "&Debug"                RestartModule FvwmDebug
++ "&IconBox"              RestartModule FvwmIconBox
++ "I&conMan"              RestartModule FvwmIconMan
++ "Identif&y"             RestartModule FvwmIdent
++ "Desker &Panel"         RestartModuleByAlias FvwmButtons DeskerPanelButtons DeskerPanelButtons
++ "Sound &effect"         RestartModule FvwmEvent
++ "&Talk to Fvwm"         FvwmForm FvwmForm-Talk
++ "Task&Bar"              RestartModule FvwmTaskBar
++ "Window &List"          RestartModule FvwmWinList
++ "&Wharf"                RestartModule FvwmWharf
 + "" Nop
-+ "&Kill Modules"           Popup Kill-Module-Popup
++ "&Kill Modules"         Popup Kill-Module-Popup
 
 DestroyMenu Kill-Module-Popup
 AddToMenu   Kill-Module-Popup

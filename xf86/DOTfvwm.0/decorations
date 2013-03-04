@@ -154,7 +154,8 @@ Style "*"           	DecorateTransient
 Style "*"		IconBox -210 320 -1 -1, IconFill t r
 Style "*"           	SloppyFocus
 Style "*"           	UseDecor dp_def_decor
-Style "*"           	MiniIcon chuck.xpm 
+Style "*"           	MiniIcon chuck.xpm
+Style "*"           	SnapAttraction 5
 Style "Fvwm*"       	NoTitle, NoHandles, Sticky, WindowListSkip,
 Style "Fvwm*"       	BorderWidth 0,CirculateSkipIcon
 Style "Fvwm Pager"  	BorderWidth 2, StaysOnTop

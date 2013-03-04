@@ -27,7 +27,7 @@ HideGeometryWindow Never
 #WIN 1
 #SnapAttraction 10 SameType Screen
 #FVWM 1
-SnapAttraction 0 SameType Screen
+#SnapAttraction 10 SameType Screen
 
 #FAST 3
 OpaqueMoveSize 100
