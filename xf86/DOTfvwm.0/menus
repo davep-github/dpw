@@ -362,23 +362,23 @@ AddToMenu   Module-Popup
 DestroyMenu Kill-Module-Popup
 AddToMenu   Kill-Module-Popup
 + "&Autoraise"          KillModule FvwmAuto
-+ "A&nimate"          KillModule FvwmAnimate
-+ "&Backer"           KillModule FvwmBacker
-+ "B&anner"               KillModule FvwmBanner
-+ "B&utton bar"        All (BarButtons) Close
-+ "&Mini button bar"   All (MiniButtons) Close
-+ "&WMaker buttons"    All (WinMakerApp*) Close
++ "A&nimate"            KillModule FvwmAnimate
++ "&Backer"             KillModule FvwmBacker
++ "B&anner"             KillModule FvwmBanner
++ "B&utton bar"         All (BarButtons) Close
++ "&Mini button bar"    All (MiniButtons) Close
++ "&WMaker buttons"     All (WinMakerApp*) Close
 + "Fvwm &Console"       KillModule FvwmConsole
-+ "&Debug"               KillModule FvwmDebug
++ "&Debug"              KillModule FvwmDebug
 + "&IconBox"            KillModule FvwmIconBox
-+ "I&conMan"              KillModule FvwmIconMan
-+ "Identif&y"        KillModule FvwmIdent
++ "I&conMan"            KillModule FvwmIconMan
++ "Identif&y"           KillModule FvwmIdent
 + "Desker &Panel"       All (DeskerPanelButtons) Close
 + "Sound &effect"       KillModule FvwmEvent
-+ "&Talk"              All (FvwmForm-Talk) Close
-+ "Task&Bar"               KillModule FvwmTaskBar
-+ "Window &List"      KillModule FvwmWinList
-+ "&Wharf"             KillModule FvwmWharf
++ "&Talk"               All (FvwmForm-Talk) Close
++ "Task&Bar"            KillModule FvwmTaskBar
++ "Window &List"        KillModule FvwmWinList
++ "&Wharf"              KillModule FvwmWharf
 
 #------------------------------------------------------------------------------
 #--------- Settings
