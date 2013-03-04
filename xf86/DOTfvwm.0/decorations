@@ -1,0 +1,199 @@
+#-----------------------------------------------------------------------------#
+#
+# 2. Root cursor, Windows Decoration and Menu Styles:
+#   Default fonts, colors, Border, Title, Button Styles, Menu Styles
+#   window button bindings.
+#   (this section may be the theme part of the config, but you need to use
+#    FvwmTheme to define and propagate the colors)
+#-----------------------------------------------------------------------------#
+
+#------------------------------------------------------------------------------
+# Set the root cursor
+#------------------------------------------------------------------------------
+
+CursorStyle ROOT         left_ptr
+CursorStyle TITLE        left_ptr
+CursorStyle DEFAULT      left_ptr
+CursorStyle SYS          left_ptr
+CursorStyle MENU         left_ptr
+
+#------------------------------------------------------------------------------
+# Fonts - one for window titles, another for icons, and another for the menus
+#------------------------------------------------------------------------------
+
+#WIN 1
+#Style * Font		-*-times-medium-r-*-*-16-*-*-*-*-*-*-*
+#FVWM 1
+Style * Font		-*-times-bold-r-*-*-14-*-*-*-*-*-*-*
+
+Style * IconFont	fixed
+
+# Button numbering:
+# 1 3 5 7 9    0 8 6 4 2
+
+
+AddToDecor dp_base_decor
++ BorderStyle Simple
++ BorderStyle -- HiddenHandles NoInset
++ ButtonStyle 2 16 20x20@1 30x20@1 50x40@1 70x20@1 80x20@1 80x30@0 60x50@0 80x80@0 70x80@0 50x60@0 30x80@0 20x80@0 20x70@0 40x50@1 20x30@0 20x20@1
++ ButtonStyle 2 - !MWMDecorMax
++ ButtonStyle 4 5 25x25@1 25x75@1 75x75@0 75x25@0 25x25@1
++ ButtonStyle 4 - MWMDecorMax
++ ButtonStyle 6 16 60x40@1 60x80@0 15x80@0 15x40@1 60x40@1 40x40@1 40x25@1 75x25@1 75x60@0 60x60@0 75x60@0 75x40@0 85x40@0 85x15@0 60x15@1 60x25@1
++ ButtonStyle 6 - MWMDecorMin
++ WindowFont -adobe-helvetica-bold-r-*-*-12-*-*-*-*-*-*-*
+
+AddToDecor dp_def_decor
++ BorderStyle Simple
++ BorderStyle -- HiddenHandles NoInset
++ ButtonStyle 1 MiniIcon MWMDecorMenu
++ ButtonStyle 2 16 20x20@1 30x20@1 50x40@1 70x20@1 80x20@1 80x30@0 60x50@0 80x80@0 70x80@0 50x60@0 30x80@0 20x80@0 20x70@0 40x50@1 20x30@0 20x20@1
++ ButtonStyle 2 - !MWMDecorMax
++ ButtonStyle 4 5 25x25@1 25x75@1 75x75@0 75x25@0 25x25@1
++ ButtonStyle 4 - MWMDecorMax
++ ButtonStyle 6 16 60x40@1 60x80@0 15x80@0 15x40@1 60x40@1 40x40@1 40x25@1 75x25@1 75x60@0 60x60@0 75x60@0 75x40@0 85x40@0 85x15@0 60x15@1 60x25@1
++ ButtonStyle 6 - MWMDecorMin
++ WindowFont -adobe-helvetica-bold-r-*-*-12-*-*-*-*-*-*-*
+
++ TitleStyle ActiveUp VGradient 128 #829bd6 #e0e0f0 -- flat
++ TitleStyle ActiveDown VGradient 128 #e0e0f0 #a0a0e0 -- Sunk
++ TitleStyle Inactive VGradient 16 #c0c0c0 #707070 -- flat
++ HilightColor #000000 #9090ff
+
+#+ ButtonStyle 1 Pixmap jlower.xpm MWMDecorMenu
+
+AddToDecor dp_work_decor
++ BorderStyle Simple
++ BorderStyle -- HiddenHandles NoInset
++ ButtonStyle 1 MiniIcon MWMDecorMenu
++ ButtonStyle 2 16 20x20@1 30x20@1 50x40@1 70x20@1 80x20@1 80x30@0 60x50@0 80x80@0 70x80@0 50x60@0 30x80@0 20x80@0 20x70@0 40x50@1 20x30@0 20x20@1
++ ButtonStyle 2 - !MWMDecorMax
++ ButtonStyle 4 5 25x25@1 25x75@1 75x75@0 75x25@0 25x25@1
++ ButtonStyle 4 - MWMDecorMax
++ ButtonStyle 6 16 60x40@1 60x80@0 15x80@0 15x40@1 60x40@1 40x40@1 40x25@1 75x25@1 75x60@0 60x60@0 75x60@0 75x40@0 85x40@0 85x15@0 60x15@1 60x25@1
++ ButtonStyle 6 - MWMDecorMin
++ WindowFont -adobe-helvetica-bold-r-*-*-12-*-*-*-*-*-*-*
+
++ TitleStyle ActiveUp VGradient 128 #82d69b #e0f0e0 -- flat
++ TitleStyle ActiveDown VGradient 128 #e0e0f0 #a0a0e0 -- Sunk
++ TitleStyle Inactive VGradient 16 #c0c0c0 #707070 -- flat
++ HilightColor #000000 #80d690
+
+# #------------------------------------------------------------------------------
+# # Set the default window colors.
+# #------------------------------------------------------------------------------
+
+# # Text and background color for the title bar (overridden in the WIN case),
+# # and the border of the inactive window (also used by icon title,
+# # and "hilight" and "shadow" colors).
+# #WIN 1
+# #Style * ForeColor #c3c3c3, BackColor #c3c3c3
+# #FVWM 1
+# Style * ForeColor #c3c3c3, BackColor grey51
+
+# # Text and background color for the title bar (overriden in the WIN case),
+# # and the border of the active (selected) window (also used by icon title,
+# # and "hilight" and "shadow" colors).
+# #WIN 1
+# #Style * HilightFore white, HilightBack #c3c3c3
+# #FVWM 1
+# Style * HilightFore white, HilightBack SlateBlue
+
+# #------------------------------------------------------------------------------
+# # Border, Title and Button Styles
+# #------------------------------------------------------------------------------
+# Style * BorderWidth 5, HandleWidth 5
+
+# #WIN 13
+# #Style	"*"	FvwmBorder  # MWMBorder
+# #Style	"*"	FvwmButtons
+# #BorderStyle	Inactive -- HiddenHandles NoInset
+# #BorderStyle	Active -- HiddenHandles NoInset
+# #TitleStyle	ActiveUp (solid Blue4 -- Flat)
+# #TitleStyle	ActiveDown (solid Blue4 -- Flat)
+# #TitleStyle	Inactive (solid grey51 -- Flat)
+# #TitleStyle	LeftJustified
+# #ButtonStyle	1	MiniIcon (-- flat)
+# #ButtonStyle	all	-- UseTitleStyle Flat
+# #AddButtonStyle	2	Pixmap mini.winXX-close.xpm
+# #AddButtonStyle	4	Pixmap mini.winXX-maximize.xpm
+# #AddButtonStyle	6	Pixmap mini.winXX-minimize.xpm
+
+# #FVWM 11
+# Style	"*"	FvwmBorder  # MWMBorder
+# Style	"*"	MWMButtons
+# TitleStyle	Centered
+# ButtonStyle	all	-- UseTitleStyle
+# ButtonStyle 2 17 20x20@1 30x20@1 50x40@1 70x20@1 80x20@1 80x30@0 60x50@0 80x70@1 80x80@0 70x80@0 50x60@0 30x80@0 20x80@0 20x70@0 40x50@1 20x30@0 20x20@1
+# ButtonStyle 4 4 50x25@1 75x75@0 25x75@0 50x25@1
+# ButtonStyle 6 4 50x65@1 35x35@1 65x35@1 50x65@0
+# ButtonStyle 1 - Clear MWMDecorMenu
+# ButtonStyle 2 - Clear
+# ButtonStyle 4 - Clear MWMDecorMax
+# ButtonStyle 6 - Clear MWMDecorShade
+
+#------------------------------------------------------------------------------
+# The MenuStyle command allows almost full control over menu look and feel.
+# We use the preconfigured 'Win' or 'Fvwm' default. This resets most other
+# options and must be set first. We also define a menu called winops for
+# the windows operations menus and very long one. The menus which use this
+# style are (and must) be defined in the end of the menus.
+#------------------------------------------------------------------------------
+
+MenuStyle * FVWM
+#MenuStyle * MenuFace DGradient 128 #c0c0e0 #6060c0 
+MenuStyle * MenuFace DGradient 128 #9090ff #c0c0f0
+MenuStyle * Font -adobe-times-bold-r-*-*-14-*-*-*-*-*-*-*
+ClickTime 750
+
+Style "*"           	BorderWidth 7, HandleWidth 7
+Style "*"           	Icon unknown1.xpm, Color Black/grey
+Style "*"           	SmartPlacement, RandomPlacement
+Style "*"           	MWMFunctions,MWMDecor,HintOverride
+Style "*"           	DecorateTransient
+Style "*"		IconBox -210 320 -1 -1, IconFill t r
+Style "*"           	SloppyFocus
+Style "*"           	UseDecor dp_def_decor
+Style "*"           	MiniIcon chuck.xpm 
+Style "Fvwm*"       	NoTitle, NoHandles, Sticky, WindowListSkip,
+Style "Fvwm*"       	BorderWidth 0,CirculateSkipIcon
+Style "Fvwm Pager"  	BorderWidth 2, StaysOnTop
+Style "FvwmPager"   	BorderWidth 2, StaysOnTop
+Style "FvwmBanner"  	StaysOnTop
+Style "FvwmButtons" 	NoTitle, NoHandles, Sticky, WindowListSkip
+Style "FvwmButtons" 	BorderWidth 0, CirculateSkip
+Style "FvwmButtons" 	Icon toolbox.xpm,ClickToFocus
+Style "*clock"       	NoTitle, NoHandles, Sticky, WindowListSkip
+Style "*clock"       	BorderWidth 3, StaysOnTop
+Style "asmail"       	NoTitle, NoHandles, Sticky, WindowListSkip
+Style "asmail"       	BorderWidth 3, StaysOnTop
+Style "xbiff"       	NoTitle, NoHandles, Sticky, WindowListSkip,ClickToFocus
+Style "xbiff"       	BorderWidth 3, StaysOnTop
+Style "rxvt"        	Icon  term.xpm,SloppyFocus
+Style "XTerm"       	Icon monitor_bsd.xpm
+Style "XTerm"       	MWMBorder,MWMButtons
+Style "XTerm"       	MiniIcon mini.refresh.xpm
+Style "emacs"  	    	Icon scroll.xpm 
+Style "emacs"		MiniIcon mini.file.xpm
+Style "DPTimer"	    	Sticky
+Style "bare:::"       	NoTitle,WindowListSkip,BorderWidth 3
+
+# MenuStyle * FVWM
+# MenuStyle * font -*-times-bold-r-*-*-14-*-*-*-*-*-*-*
+# MenuStyle * Foreground black, Background grey80
+# MenuStyle * ActiveFore black, HilightBack grey85
+# MenuStyle * Hilight3DThick
+
+# MenuStyle * Greyed grey60  # default is invisible on backgroud grey80
+# MenuStyle * VerticalItemSpacing 2 4, VerticalTitleSpacing 2 4
+
+# CopyMenuStyle * winops
+
+# #WIN 1
+# #MenuStyle winops font -*-times-medium-r-*-*-14-*-*-*-*-*-*-*
+# #FVWM 2
+# MenuStyle winops font -*-times-bold-r-*-*-12-*-*-*-*-*-*-*
+# MenuStyle winops TitleWarpOff
+
+# MenuStyle winops VerticalItemSpacing 1 2, VerticalTitleSpacing 1 2
+

@@ -201,6 +201,9 @@ AddToFunc   my_dbltab_prev
 Key Tab A M	WindowList Root c c NoGeometry, NoDeskSort, SelectOnRelease Alt_L my_dbltab_prev
 Key Tab	A CM	WindowList Root c c NoGeometry, OnlyListSkip, SelectOnRelease
 
+Key Tab A 4	WindowList Root c c NoGeometry, NoDeskSort, SelectOnRelease Alt_L my_dbltab_prev
+Key Tab	A C4	WindowList Root c c NoGeometry, OnlyListSkip, SelectOnRelease
+
 
 #------------------------------------------------------------------------------
 # Stroke Bindings

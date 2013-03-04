@@ -276,7 +276,7 @@ Style "FvwmIconMan"   NoTitle, NoHandles, Sticky, WindowListSkip, CirculateSkip
 DestroyModuleConfig FvwmIconMan: *
 
 # nbr de manager
-*FvwmIconMan: *nummanagers 2
+*FvwmIconMan: *nummanagers 1
 #global, desk, or page
 #*FvwmIconMan: *Resolution page
 *FvwmIconMan: *Resolution global
@@ -297,16 +297,16 @@ DestroyModuleConfig FvwmIconMan: *
 *FvwmIconMan: *usewinlist true
 *FvwmIconMan: *sort name
 *FvwmIconMan: *drawicons always
-*FvwmIconMan: *2*title           "Icon Man"
+*FvwmIconMan: *1*title           "Icon Man"
 #PREF 4
-*FvwmIconMan: *1*title           " xemacs windows"
-*FvwmIconMan: *1*iconname        "FvwmIconMan: xemacs"
-*FvwmIconMan: *1*format          "%i"
-*FvwmIconMan: *1*show            resource=emacs
-*FvwmIconMan: *2*managergeometry 1x0+0-0
-*FvwmIconMan: *1*managergeometry 1x0+260-0
-*FvwmIconMan: *1*buttongeometry 200x20
-*FvwmIconMan: *2*buttongeometry 250x20
+#*FvwmIconMan: *1*title           " xemacs windows"
+#*FvwmIconMan: *1*iconname        "FvwmIconMan: xemacs"
+#*FvwmIconMan: *1*format          "%i"
+#*FvwmIconMan: *1*show            resource=emacs
+*FvwmIconMan: *1*managergeometry 1x0+0+952
+##*FvwmIconMan: *1*managergeometry 1x0+260-0
+#*FvwmIconMan: *1*buttongeometry 200x20
+*FvwmIconMan: *1*buttongeometry 250x20
 # action
 *FvwmIconMan: *action    Mouse    1 N sendcommand DeiconifyFocusAndRaise
 *FvwmIconMan: *action    Mouse    2 N sendcommand Iconify

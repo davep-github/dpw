@@ -40,7 +40,7 @@ Style * WindowShadeSteps 20
 
 
 EdgeScroll 0 0
-EdgeResistance 500 0
+EdgeResistance 10000 0
 EdgeThickness 1
 
 #
