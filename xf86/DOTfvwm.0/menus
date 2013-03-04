@@ -1011,10 +1011,13 @@ AddToMenu   "Move-Window" "Move to ..." Title
 + 'Page &3'     MoveToPage 0 1
 + 'Page &4'     MoveToPage 1 1
 + '' Nop
-+ '&Fvwm'       MoveToDesk 0 0
-+ '&Devel'      MoveToDesk 0 1
-+ '&Internet'   MoveToDesk 0 2
-+ '&Misc'       MoveToDesk 0 3
++ '&General'    MoveToDesk 0 0
++ '&SB1'        MoveToDesk 0 1
++ '&SB2-RTArgs' MoveToDesk 0 2
++ '&SB3-ASIM'   MoveToDesk 0 3
++ '&SB4-BARx'   MoveToDesk 0 4
++ '&SB5-EngCpu' MoveToDesk 0 5
+
 
 #------------------------------------------------------------------------------
 # A group version of WindowOps
