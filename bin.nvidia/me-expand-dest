@@ -37,7 +37,7 @@ me_expand_dest()
         if [ "${#sb_dest[@]}" = 2 ]
         then
             sb="${sb_dest[0]}"
-            EExec -y cd $(dogo "$sb")
+            EExec -y cd $(dogo "$sb")  # All sb roots need to be known to dogo.
             dest="${sb_dest[1]}"
         else
             dest="${sb_dest[0]}"

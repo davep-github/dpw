@@ -24,9 +24,11 @@ go_lookup()
     do
       [ -f "$pathEl" ] && {
           IFS=$oldIFS
-          # tmp=`egrep "(^|[^#;])|$c|" $pathEl` && {
-          # tmp=$(egrep -v '^[[:space:]]*[;#]' $pathEl | fgrep $show_dir_opt "|$c|") && {
-          tmp=$(egrep -v '^[[:space:]]*[;#]' $pathEl | fgrep -m1 $show_dir_opt "|$c|") && {
+          # tmp=`egrep "(^|[^#;])|$c|" $pathEl` && { tmp=$(egrep -v
+          # '^[[:space:]]*[;#]' $pathEl | fgrep $show_dir_opt "|$c|") && {
+          # When -m1 is used, the fgrep can exit before the egrep resulting
+          # in a pipe error.
+          tmp=$(egrep -v '^[[:space:]]*[;#]' $pathEl 2>/dev/null | fgrep -m1 $show_dir_opt "|$c|") && {
               set -- $tmp
               $SHIFT
               eval echo "$*$cs"

@@ -25,7 +25,7 @@
 ;;;###autoload
 (defface dp-sudo-edit-bg-face
   '((((class color) (background light)) 
-     (:background "thistle2"))) 
+     (:background "pink"))) 
   "Face for file being sudo edited."
   :group 'faces
   :group 'dp-vars)

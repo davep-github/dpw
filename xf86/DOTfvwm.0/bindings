@@ -1,3 +1,7 @@
+#
+# NB! Num Lock makes modifier 4 (Windwoes Key) stop working.
+#
+
 #-----------------------------------------------------------------------------#
 #
 # 9. Mouse, frame buttons and keyboard bindings
@@ -44,13 +48,14 @@
 
 Mouse 1		R   	A       Menu Utilities mouse -1p -1p
 Mouse 2		R    	A       Menu Window mouse -1p -1p
-Mouse 3         R       A       WindowList mouse -1p -1p
+Mouse 3         R       A       WindowList mouse -1p -1p CurrentDesk
+Mouse 3         R       4       WindowList mouse -1p -1p
 Mouse 3         R       C       WindowList mouse -1p -1p OnlyListSkip
 
-Mouse 1		W   	M       Menu Utilities mouse -1p -1p
-Mouse 2		W    	M       Menu Window mouse -1p -1p
-Mouse 3         W       M       WindowList mouse -1p -1p
-Mouse 3         W       CM      WindowList mouse -1p -1p OnlyListSkip
+#Mouse 1		W   	M       Menu Utilities mouse -1p -1p
+#Mouse 2		W    	M       Menu Window mouse -1p -1p
+#Mouse 3         W       M       WindowList mouse -1p -1p
+#Mouse 3         W       CM      WindowList mouse -1p -1p OnlyListSkip
 
 
 #G_SESSION 3 bind Shift Mouse * to gnomebutton
@@ -112,7 +117,7 @@ Mouse 1         2       A       Close
 Mouse 2		2	A	All ($c) Close
 Mouse 3         2       A       Destroy
 Mouse 1		4    	A     	Maximize 100 100
-Mouse 2         4       A       Maximize 0 100
+Mouse 2         4       A       Maximize 0 90
 Mouse 3         4       A       Maximize 100 0
 Mouse 1		6    	A     	Iconify
 Mouse 2		6    	A     	All ($c) Iconify On
@@ -191,7 +196,7 @@ Mouse 3         6       A       All ($c) WindowShade On
 
 
 #------------------------------------------------------------------------------
-# The famous Alt-tab binding
+# The [in]famous Alt-tab binding
 #------------------------------------------------------------------------------
 
 # DestroyFunc my_dbltab2
@@ -204,6 +209,7 @@ Mouse 3         6       A       All ($c) WindowShade On
 # Key Tab A M	WindowList Root c c NoGeometry, NoDeskSort, SelectOnRelease Alt_L my_dbltab_prev
 
 # Key Tab A 4	WindowList Root c c NoGeometry, NoDeskSort, SelectOnRelease Alt_L my_dbltab_prev
+Key Tab A M     WindowList Root c c CurrentDesk
 Key Tab A 4     WindowList Root c c DeskSort, SelectOnRelease 4_L
 Key Tab	A C4	WindowList Root c c NoGeometry, OnlyListSkip, SelectOnRelease
 Key Tab	A CM	WindowList Root c c NoGeometry, OnlyListSkip, SelectOnRelease
@@ -292,9 +298,16 @@ Key Delete A 4  GotoPage 0 1
 Key Home   A 4  GotoPage 1 0
 Key End    A 4  GotoPage 1 1
 
+Mouse 1 W 4 Move-NoRaise-or-RaiseLower
+Mouse 1 W M Move-NoRaise-or-RaiseLower
+Mouse 3 W 4 Resize
+Mouse 3 W M Resize
 
+Key Tab A C Next
 #------------------------------------------------------------------------------
 # Misc Bindings
 #------------------------------------------------------------------------------
-Key e A 4 
+#Key e A 4 WindowId (XEmacs@o-xterm) Raise
+#Key e A 4 Next ("XEmacs@o-xterm*") WarpToWindow 33p 33p
+Key e A 4 Next ("XEmacs@o-xterm*") FlipFocus
 

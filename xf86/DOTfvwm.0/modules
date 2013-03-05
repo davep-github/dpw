@@ -34,7 +34,7 @@ DestroyModuleConfig BarButtons: *
 # Warning: I've added a size geometry to avoid pbs if the fvwm_icons are
 # not in the image path ! Remove the size in this geometry especially if
 # you add buttons
-*BarButtons: Geometry 65x80+14+0
+*BarButtons: Geometry 80x80+14+0
 # Layout: specify rows or columns, not both
 *BarButtons: Columns 2
 
@@ -103,8 +103,8 @@ DestroyModuleConfig MiniButtons*
 #------------------ FvwmButtons: DeskerPanelButtons
 #------------------------------------------------------------------------------
 
-Style "DeskerPanelButtons"  NoTitle,NoHandles,Sticky,WindowListSkip,\
-			BorderWidth 0, CirculateSkip
+Style "DeskerPanelButtons" NoTitle, NoHandles, Sticky, WindowListSkip, \
+                           NoOnTop, BorderWidth 0, CirculateSkip
 #Style "DeskerPanelButtons"  StayOnTop
 DestroyModuleConfig DeskerPanelButtons: *
 *DeskerPanelButtons: Fore Black
@@ -403,8 +403,8 @@ DestroyModuleConfig FvwmDesker: *
 #------------------ FvwmTaskBar
 #------------------------------------------------------------------------------
 
-Style "FvwmTaskBar" NoTitle,Sticky,WindowListSkip,CirculateSkip,NoHandles, \
-			TitleAtBottom
+Style "FvwmTaskBar" NoTitle, Sticky, WindowListSkip, CirculateSkip, \
+                    NoHandles, TitleAtBottom
 # Note: Title at bottom is for shading.
 
 *FvwmTaskBar: Geometry +0-0
@@ -475,7 +475,7 @@ DestroyModuleConfig FvwmWharf: *
 #------------------------------------------------------------------------------
 #------------------ FvwmWinList
 #------------------------------------------------------------------------------
-Style "FvwmWinList" NoTitle,Sticky,WindowListSkip,CirculateSkip
+Style "FvwmWinList" NoTitle, Sticky, WindowListSkip, CirculateSkip
 
 DestroyModuleConfig FvwmWinList: *
 *FvwmWinList: Back #c3c3c3

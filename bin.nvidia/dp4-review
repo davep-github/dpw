@@ -207,7 +207,6 @@ do_fetch_wget()
     local fetch_file="${1}"; shift
     local server="${1}"; shift
     local dest_file="${1}"; shift
-    local tmp_file
 
     tmp_file=$(mktemp "$HOME/tmp/dp4-review.tmp.XXXXXXX") || {
         echo "Couldn't make a temp file."

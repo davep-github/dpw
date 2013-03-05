@@ -431,24 +431,24 @@ AddToMenu   FvwmConfig
 
 DestroyMenu AppsManager
 AddToMenu   AppsManager
-+ "TaskBar &Desk"         ChangeAppsMan TaskBarDesk
-+ "TaskBar &Global"       ChangeAppsMan TaskBarGlobal
++ "TaskBar &Desk"               ChangeAppsMan TaskBarDesk
++ "TaskBar &Global"             ChangeAppsMan TaskBarGlobal
 + "TaskBar &Desk (Auto Hide)"   ChangeAppsMan TaskBarDeskAutoHide
 + "TaskBar &Global (Auto Hide)" ChangeAppsMan TaskBarGlobalAutoHide
 + "" Nop
-+ "IconBox &Desk"       ChangeAppsMan IconBoxDesk
-+ "IconBox &Global"     ChangeAppsMan IconBoxGlobal
++ "IconBox &Desk"               ChangeAppsMan IconBoxDesk
++ "IconBox &Global"             ChangeAppsMan IconBoxGlobal
 + "" Nop
-+ "IconMan &Page"         ChangeAppsMan IconManPage
-+ "IconMan &Desk"         ChangeAppsMan IconManDesk
-+ "IconMan &Global"       ChangeAppsMan IconManGlobal
++ "IconMan &Page"               ChangeAppsMan IconManPage
++ "IconMan &Desk"               ChangeAppsMan IconManDesk
++ "IconMan &Global"             ChangeAppsMan IconManGlobal
 + "" Nop
-+ "WinList &Desk"     ChangeAppsMan WinListDesk
-+ "WinList &Global"   ChangeAppsMan WinListGlobal
++ "WinList &Desk"               ChangeAppsMan WinListDesk
++ "WinList &Global"             ChangeAppsMan WinListGlobal
 + "" Nop
-+ "Use &Icons"          UseIcons
++ "Use &Icons"                  UseIcons
 + "" Nop
-+ "&None"     AppsManNone
++ "&None"                       AppsManNone
 
 #------------------------------------------------------------------------------
 #--------- Animate  settings

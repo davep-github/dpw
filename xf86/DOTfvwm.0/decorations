@@ -46,7 +46,7 @@ AddToDecor dp_base_decor
 AddToDecor dp_def_decor
 + BorderStyle Simple
 + BorderStyle -- HiddenHandles NoInset
-+ ButtonStyle 1 MiniIcon MWMDecorMenu
++ ButtonStyle 1 MWMDecorMenu
 + ButtonStyle 2 16 20x20@1 30x20@1 50x40@1 70x20@1 80x20@1 80x30@0 60x50@0 80x80@0 70x80@0 50x60@0 30x80@0 20x80@0 20x70@0 40x50@1 20x30@0 20x20@1
 + ButtonStyle 2 - !MWMDecorMax
 + ButtonStyle 4 5 25x25@1 25x75@1 75x75@0 75x25@0 25x25@1
@@ -55,9 +55,11 @@ AddToDecor dp_def_decor
 + ButtonStyle 6 - MWMDecorMin
 + WindowFont -adobe-helvetica-bold-r-*-*-12-*-*-*-*-*-*-*
 
-+ TitleStyle ActiveUp VGradient 128 #829bd6 #e0e0f0 -- flat
+#+ TitleStyle ActiveUp VGradient 128 #829bd6 #e0e0f0 -- flat
++ TitleStyle ActiveUp (Solid #829bd6 -- flat)
 + TitleStyle ActiveDown VGradient 128 #e0e0f0 #a0a0e0 -- Sunk
 + TitleStyle Inactive VGradient 16 #c0c0c0 #707070 -- flat
++ TitleStyle Inactive (Solid #b0b0b0 -- flat)
 + HilightColor #000000 #9090ff
 
 #+ ButtonStyle 1 Pixmap jlower.xpm MWMDecorMenu

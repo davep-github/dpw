@@ -390,13 +390,6 @@ For C/C++ source code.")
 (defun dp-mk-c*-debug-like-patterns ()
   (dp-mk-debug-like-patterns dp-c*-debug-like-patterns))
 
-(defface dp-debug-like-face
-  '((((class color) (background light)) 
-     (:background "thistle2"))) 
-  "Face for debug like lines."
-  :group 'faces
-  :group 'dp-vars)
-
 (dp-deflocal dp-line-too-long-warning-column 79
   "Begin complaining (new face) when going beyond this column.
 For now this must be < the error col.")

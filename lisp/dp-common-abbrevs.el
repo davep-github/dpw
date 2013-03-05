@@ -415,8 +415,7 @@
      dp-manual)
     (("mks" "makeshift")
      dp-manual)
-    (("cons" "constructable")
-     dp-manual)
+    ((("cons" "constructable" "construct") 'circular) dp-manual)
     ((("fa" "forall")
       "\\-/")
      dp-manual)
@@ -493,8 +492,10 @@
      dp-manual)
     (("style" "/home/dpanariti/work/doc/code-style.txt")
      global)
-    ((("emacs" "xemacs" "XEmacs" "Emacs") 'circular))
-    ((("ftci" "FTCI" "ftca" "FTCA") 'circular))
+    ;; Extra quote is really used.
+    ((("ctor" "construct" "constructor") 'circular) dp-manual)
+    ((("emacs" "xemacs" "XEmacs" "Emacs") 'circular) dp-manual)
+    ((("ftci" "FTCI" "ftca" "FTCA") 'circular) dp-manual)
     ))
 ;; We could just use the non-void-ness of dp-common-abbrevs, but I
 ;; like suspenders with my belt.

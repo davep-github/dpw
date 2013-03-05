@@ -16,6 +16,11 @@ AddToFunc Move-or-Raise M Move
 +                       C Raise
 +                       D Maximize 0 100
 
+DestroyFunc Move-NoRaise-or-RaiseLower
+AddToFunc Move-NoRaise-or-RaiseLower M Move
++                       C RaiseLower
++                       D Maximize 0 100
+
 
 #------------------------------------------------------------------------------
 # As above but double click shade

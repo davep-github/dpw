@@ -55,6 +55,7 @@ Usage_details="${EExec_parse_usage}
 --purge) Purge me tests.
 --no-purge) Don't purge me tests.
 --mm|--gb|--get-build|--all) Get mods AND make me tests.
+-nn) Don't get mods or make me tests.
 -m|--no-make|--no-build) Don't do the basic bin/t_make(s)
 --mail) Send mail when complete.
 --no-mail) Don't
@@ -83,6 +84,7 @@ long_options=("out-file:"
     "purge"
     "no-purge"
     "mm" "gb" "get-build" "all"
+    "nn"
     "mail" "no-mail"
     "only:")
 
@@ -135,6 +137,7 @@ do
       --no-purge) purge_opt=;;
       --purge) purge_opt="purge";;
       --mm|--gb|--get-build|--all) get_mods_p=t; build_me_p=t;;
+      --nn) get_mods_p=; build_me_p=;;
       --mail) send_mail_on_completion=t;;
       --no-mail) send_mail_on_completion=;;
 

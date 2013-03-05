@@ -386,9 +386,16 @@
   :group 'faces
   :group 'dp-vars)
 
+(defface dp-debug-like-face
+  '((((class color) (background light)) 
+     (:foreground "blue" :bold t))) 
+  "Face for debug like lines."
+  :group 'faces
+  :group 'dp-vars)
+
 (defface dp-default-read-only-color
   '((((class color) (background light)) 
-     (:background "pink"))) 
+     (:background "thistle2"))) 
   "*We colourize read only buffers so we can more easily recognize them.
 !<@todo This needs reworking.  I need to rework my whole colour system.
 Using numbers all over the place is BS.  Need names and a colour mapping if

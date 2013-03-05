@@ -747,6 +747,7 @@ pick_screen ()
         true
     fi
 }
+alias pick-screen=pick_screen
 
 # copy .go* items into environment
 do_go2env()
