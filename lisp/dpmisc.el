@@ -442,49 +442,49 @@ string containing their values."
   t)
 
 ;;;
-;;; <: White space recognitions regexp :>
+;;; <: white space whitespace recognitions regexp :>
 
 (defvar dp-ws " 	"
   "White space chars sans newline.")
 
 (defvar dp-ws+newline (format "%s
 " dp-ws)
-  "White space chars including newline.")
+  "Whitespace chars including newline.")
 
 (defvar dp-ws-regexp (format "[%s]" dp-ws)
-  "White space chars regexp.")
+  "Whitespace chars regexp.")
 
 (defvar dp-ws-regexp+ (format "%s+" dp-ws-regexp)
-  "White space chars regexp, one or more.")
+  "Whitespace chars regexp, one or more.")
 
 (defvar dp-ws-regexp* (format "%s*" dp-ws-regexp)
-  "White space chars regexp, 0 or more.")
+  "Whitespace chars regexp, 0 or more.")
 
 (defvar dp-ws+newline-regexp (format "[%s]" dp-ws+newline)
-  "White space chars including newline regexp.")
+  "Whitespace chars including newline regexp.")
 
 (defvar dp-ws+newline-regexp* (format "%s*" dp-ws+newline-regexp)
-  "White space chars including newline regexp, zero or more.")
+  "Whitespace chars including newline regexp, zero or more.")
 
 (defvar dp-ws+newline-regexp+ (format "%s+" dp-ws+newline-regexp)
-  "White space chars including newline regexp, one or more.")
+  "Whitespace chars including newline regexp, one or more.")
 
 (defvar dp-ws-regexp-not (format "[^%s]" dp-ws)
-  "Non white space chars regexp.")
+  "Non whitespace chars regexp.")
 
 (defvar dp-ws-regexp+-not (format "%s+" dp-ws-regexp-not)
-  "Non white space chars regexp, one or more.")
+  "Non whitespace chars regexp, one or more.")
 
 (defvar dp-ws-regexp*-not (format "%s*" dp-ws-regexp-not)
-  "White space chars regexp, 0 or more.")
+  "White spacechars regexp, 0 or more.")
 
 (defvar dp-ws+newline-regexp-not (format "[^%s]"
                                          dp-ws+newline)
-  "White space chars including newline regexp, one or more.")
+  "White spacechars including newline regexp, one or more.")
 
 (defvar dp-ws+newline-regexp+-not (format "[^%s]+"
                                           dp-ws+newline)
-  "White space chars including newline regexp, one or more.")
+  "Whitespace chars including newline regexp, one or more.")
 
 
 (defsubst dp-order-cons (cons &optional lessp)
@@ -14123,7 +14123,7 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
                                   read-as-last-resort-p
                                   recursing)
   (setq-ifnil tag dp-default-co-tag
-              start comment-start
+              start (or comment-start "")
               end comment-end)
   (cond
    ((or (not tag) (string= tag ""))

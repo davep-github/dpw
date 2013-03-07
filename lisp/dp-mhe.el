@@ -59,9 +59,9 @@ to mail message."
 (defun dp-mh-folder-mode-hook ()
   "Perpetuate my non-standard bindings..."
   (interactive)
-  (local-set-key "\ee" 'find-file)
-  (local-set-key "\ea" 'dp-toggle-mark)
-  (local-set-key "\eb" 'dp-buffer-menu))
+  (local-set-key [(meta ?e)] 'find-file)
+  (local-set-key [(meta ?a)] 'dp-toggle-mark)
+  (local-set-key [(meta ?b)] 'dp-buffer-menu))
 
 (defun dp-rmail ()
   "Read the last few mail messages.  Since at CRL,  linux is 

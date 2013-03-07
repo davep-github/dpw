@@ -613,6 +613,7 @@ c-hanging-braces-alist based upon these values.")
     ;;(define-key map [(meta return)] 'dp-c-open-newline)
     (define-key map [(meta ?e)] 'find-file-at-point)
     (define-key map [(meta ?a)] 'dp-toggle-mark)
+    (define-key map [(meta ?A)] 'dp-mark-to-end-of-line)
     (define-key map [tab] 'dp-c-indent-command)
     (define-key map [(meta left)] (kb-lambda 
                                       (dp-c-beginning-of-defun 1 'real-bof)))
@@ -1254,6 +1255,7 @@ isearch while the region is active to locate the end of the region."
   (local-set-key [(meta right)] 'w3m-view-next-page)
   (local-set-key [(meta ?.)] 'w3m-view-this-url)
   (local-set-key [(meta ?a)] 'dp-toggle-mark)
+  (local-set-key [(meta ?A)] 'dp-mark-to-end-of-line)
   (local-set-key [(shift tab)] 'w3m-previous-anchor)
   (local-set-key [(iso-left-tab)] 'w3m-previous-anchor)
 

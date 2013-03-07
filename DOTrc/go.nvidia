@@ -110,6 +110,7 @@ Ee|scratch1|scr1|sc1|                                            /home/scratch.d
 # Ee|runtestcommon1|rtc1|                                          ${drvapi1}/runtest_common/
 # Ee|levels1|lev1|                                                 ${testgen1}config/levels/tegra/
 
+|/home/scratch.dpanariti_t124/sb2/hw/| sb2
 Ee|sandbox2|sbox2|sb2|workspace2|ws2|                            ${scratch0}sb2/hw/
 Ee|sandbox2hw|sbox2hw|sb2hw|workspace2hw|ws2hw|hw2|              ${workspace2}hw/
 Ee|sandbox2ap|sbox2ap|sb2ap|workspace2ap|ws2ap|ap2|tot2|         ${workspace2hw}ap_tlit1/

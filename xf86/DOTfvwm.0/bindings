@@ -1,5 +1,7 @@
 #
 # NB! Num Lock makes modifier 4 (Windwoes Key) stop working.
+# NB! But sometimes it needs to be on to make things work. Just having a
+# Windwoes connection of any kind causes bugs.
 #
 
 #-----------------------------------------------------------------------------#
@@ -272,6 +274,9 @@ Key Tab	A CM	WindowList Root c c NoGeometry, OnlyListSkip, SelectOnRelease
 # Pager Bindings
 #------------------------------------------------------------------------------
 
+# Keynames:
+# /usr/include/X11/keysymdef.h
+
 Key F1 A M GotoDeskAndPage 0 0 0
 Key F2 A M GotoDeskAndPage 1 0 0
 Key F3 A M GotoDeskAndPage 2 0 0
@@ -303,7 +308,8 @@ Mouse 1 W M Move-NoRaise-or-RaiseLower
 Mouse 3 W 4 Resize
 Mouse 3 W M Resize
 
-Key Tab A C Next
+Key period W 4 RaiseLower
+
 #------------------------------------------------------------------------------
 # Misc Bindings
 #------------------------------------------------------------------------------

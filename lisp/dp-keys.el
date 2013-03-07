@@ -93,6 +93,7 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(control ?l)] 'dp-center-to-top)
 (global-set-key [(control meta ?l)] 'dp-center-to-top-other-window)
 (global-set-key [(meta ?a)] 'dp-toggle-mark)
+(global-set-key [(meta ?A)] 'dp-mark-to-end-of-line)
 (global-set-key [(control ?x) ?4 (meta ?e)] 'dp-ffap-other-window)
 (global-set-key [(control ?x) ?8 (meta ?e)] (kb-lambda 
                                                 (dp-2-vertical-windows-do-cmd 

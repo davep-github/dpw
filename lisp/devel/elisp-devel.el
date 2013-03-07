@@ -3103,3 +3103,152 @@ nil
 
 
 
+
+========================
+Wednesday March 06 2013
+--
+dp-ws+newline
+" 	
+"
+
+
+(add-hook 'comint-output-filter-functions 'dp-shell-lookfor-dir-change)
+(dp-shell-lookfor-dir-change comint-strip-ctrl-m py-pdbtrack-track-stack-file ansi-color-process-output comint-postoutput-scroll-to-bottom comint-watch-for-password-prompt)
+
+(dp-shell-lookfor-dir-change)
+
+      (message "dir>%s<" (match-string 1 str)))))
+dp-shell-lookfor-dir-change
+
+
+(dp-shell-lookfor-dir-change "dpanariti@o-xterm-34:/home/scratch.dpanariti_t124/sb2/hw/hw")
+"/home/scratch.dpanariti_t124/sb2/hw/hw"
+
+"/home/scratch.dpanariti_t124/sb2/hw/hw"
+
+
+nil
+
+
+nil
+
+
+nil
+
+nil
+
+
+nil
+
+"/home/scratch.dpanariti_t124/sb2/hw/hw"
+
+"/home/scratch.dpanariti_t124/sb2/hw/hw"
+
+"/home/scratch.dpanariti_t124/sb2/hw/hw"
+
+
+nil
+
+"/home/scratch.dpanariti_t124/sb2/hw/hw"
+
+"dir>/home/scratch.dpanariti_t124/sb2/hw/hw<"
+
+"dir>/home/scratch.dpanariti_t124/sb2/hw/hw<"
+
+"dir>/home/scratch.dpanariti_t124/sb2/hw/hw<"
+
+nil
+
+nil
+
+nil
+
+
+                                
+
+========================
+Thursday March 07 2013
+--
+(dp-me-expand-dest "." "sb2")
+"/home/scratch.dpanariti_t124/sb2/hw"
+
+(directory-file-name "/home/scratch.dpanariti_t124_1/sb3/sb3hw")
+"/home/scratch.dpanariti_t124_1/sb3/sb3hw"
+
+(file-name-directory "/home/scratch.dpanariti_t124/sb2/hw")
+"/home/scratch.dpanariti_t124/sb2/"
+
+(file-name-nondirectory
+ (directory-file-name
+  (file-name-directory (directory-file-name
+                        "/home/scratch.dpanariti_t124/sb2/hw"))))
+"sb2"
+
+(file-name-nondirectory
+ (directory-file-name
+  (file-name-directory (directory-file-name
+                        (dp-me-expand-dest "." "sb2")))))
+"sb2"
+
+
+/home/scratch.dpanariti_t124/sb2/hw/
+(progn
+  (dp-set-sandbox "/home/scratch.dpanariti_t124/sb2/hw/")
+  
+  (princf "name %s" dp-current-sandbox-name)
+  (princf "path %s" dp-current-sandbox-regexp))
+name sb2
+path /home/scratch.dpanariti_t124/sb2/hw/
+nil
+
+name sb2
+path /home/scratch.dpanariti_t124/sb2/hw/
+nil
+
+"sb2"
+
+"sb2"
+dp-current-sandbox-regexp
+"/home/scratch.dpanariti_t124/sb2/hw"
+
+"sb2"
+
+(progn
+  (princf "name %s" dp-current-sandbox-name)
+  (princf "path %s" dp-current-sandbox-regexp))
+name sb5
+path /home/scratch.dpanariti_t124_2/sb5/sb5hw/
+nil
+
+name sb2
+path sb2
+nil
+
+name sb2
+path sb2
+nil
+
+name sb2
+path /home/scratch.dpanariti_t124/sb2/hw/
+nil
+
+)
+
+("" 
+ (modeline-coding-system-extent "%C")
+ (#<extent [detached) help-echo keymap from no buffer 0xc> . modeline-modified) 
+ (#<extent [detached) keymap from no buffer 0x8> 
+           (#<extent [detached) 
+                     help-echo keymap from no buffer 0x6> 
+                     10 
+                     (line-number-mode "L%l") 
+                     (column-number-mode "C%c")) 
+           " " 
+           (24 (#<extent [detached) help-echo keymap from no buffer 0x7> "%b"))) 
+ " " 
+ global-mode-string 
+ " %[(" 
+ (#<extent [detached) keymap from no buffer 0x5> "" mode-name minor-mode-alist) 
+ (#<extent [detached) help-echo keymap from no buffer 0x12> . "%n") 
+ modeline-process ")%]----" "%-"))
+

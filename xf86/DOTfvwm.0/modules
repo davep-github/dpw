@@ -28,51 +28,11 @@ Style BarButtons  NoTitle, NoHandles, Sticky, WindowListSkip,\
 
 DestroyModuleConfig BarButtons: *
 *BarButtons: Fore Black
-*BarButtons: Back #c3c3c3
+*BarButtons: Back grey57
 *BarButtons: Font -adobe-helvetica-bold-r-*-*-10-*-*-*-*-*-*-*
-# Geometry - really likes to pick its own size, but giving a position is OK
-# Warning: I've added a size geometry to avoid pbs if the fvwm_icons are
-# not in the image path ! Remove the size in this geometry especially if
-# you add buttons
 *BarButtons: Geometry 80x80+14+0
-# Layout: specify rows or columns, not both
 *BarButtons: Columns 2
-
-#LAPTOP 1 Are you a laptop user ?
-#*BarButtons: (2x1, Title "xapm", Swallow(Kill) "xapm" "Exec exec xapm -geometry -1500-1500 -p")
 # Define the buttons to use.....
-#PREF 3
-# *BarButtons: (1x2, Title FileMgr, Icon Xfm.xpm, Action 'Exec exec xfm')
-# *BarButtons: (1x2, Title terminal, Icon rterm2.xpm, Action 'Exec exec dpxx')
-# *BarButtons: (1x2, Title editor, Icon lemacs.xpm, Action 'Exec exec xemacs')
-# *BarButtons: (1x2, Title xv,   Icon xv.xpm, Action 'Exec exec xv', \
-#     Action(Mouse 2) 'Exec exec ee', \
-#     Action(Mouse 3) 'Exec exec gqview')
-# *BarButtons: (1x2, Title Gimp,    Icon gimp.xpm,   Action 'Exec exec gimp', \
-#     Action(Mouse 2) 'Exec exec xpaint', \
-#     Action(Mouse 3) 'Exec exec kiconedit')
-# *BarButtons: (1x2, Title gview,   Icon  gv.xpm, Action 'Exec exec ghostview', \
-#     Action(Mouse 2) 'Exec exec xdvi', \
-#     Action(Mouse 3) 'Exec exec xpdf')
-# *BarButtons: (1x2, Title www, Icon nscape.xpm, Action 'Exec exec netscape', \
-#     Action(Mouse 2) 'Exec exec vppp', \
-#     Action(Mouse 3) 'Exec exec xterm -geometry 80x30 -e mutt')
-# *BarButtons: (1x2, Padding 0 0, Container(Padding 0 0, Frame 2, Columns 3))
-# *BarButtons: (Icon mini.move1.xpm, Action Move)
-# *BarButtons: (Icon mini.resize3.xpm, Action Resize)
-# *BarButtons: (Icon mini.iconify1.xpm, Action Iconify)
-# *BarButtons: (Icon mini.maximize1.xpm, Action Maximize 90 90)
-# *BarButtons: (Icon mini.shade1.xpm, Action WindowShade)
-# *BarButtons: (Icon mini.stick1.xpm, Action Stick)
-# *BarButtons: (Icon mini.cross.xpm, Action Delete)
-# *BarButtons: (Icon mini.bomb.xpm, Action Destroy)
-# *BarButtons: (Icon mini.question.xpm, Action Module FvwmIdent)
-# *BarButtons: (End)
-# *BarButtons: (1x2, Title "xload", Swallow "xload" "Exec exec nice -16 \
-# 		xload -nolabel -update 4 -bg grey59 -hl grey70 \
-# 		-geometry -1500-1500")
-# *BarButtons: (1x2, Title "xclock", Swallow "xclock" "Exec \
-# 		exec xclock -padding 0 -geometry -1500-1500")
 *BarButtons: (2x2, Swallow "FvwmPagerPager" 'FvwmPager FvwmPagerPager * *')
 
 #------------------------------------------------------------------------------
@@ -84,7 +44,7 @@ Style "MiniButtons"  NoTitle,NoHandles,Sticky,WindowListSkip,BorderWidth 0,\
 
 DestroyModuleConfig MiniButtons*
 *MiniButtons: Fore Black
-*MiniButtons: Back #c0c0c0
+*MiniButtons: Back grey57
 *MiniButtons: Font -adobe-helvetica-bold-r-*-*-10-*-*-*-*-*-*-*
 *MiniButtons: Geometry -2+2
 *MiniButtons: Rows 1
@@ -354,7 +314,7 @@ DestroyModuleConfig FvwmPagerPager: *
 #WIN 1
 #*FvwmPagerPager: WindowColors white grey51 white Blue4
 #FVWM 1
-*FvwmPagerPager: WindowColors white grey51 white SlateBlue
+*FvwmPagerPager: WindowColors white grey51 black #92e6ab
 *FvwmPagerPager: Label 0 General
 *FvwmPagerPager: Label 1 SB1
 *FvwmPagerPager: Label 2 SB2-RTArgs

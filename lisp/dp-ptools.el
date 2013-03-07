@@ -398,18 +398,48 @@ Returns nil if there is no current sandbox."
        dp-current-sandbox-regexp
        (string-match dp-current-sandbox-regexp filename)))
 
-(defun dp-set-sandbox (regexp)
+;;old (defun dp-set-sandbox (regexp)
+;;old   "Setup things for a singular, unique sandbox."
+;;old   (interactive (list (read-from-minibuffer 
+;;old                       (format "Sandbox regexp%s: "
+;;old                               (if dp-current-sandbox-regexp
+;;old                                   (format "[current: %s]"
+;;old                                           dp-current-sandbox-regexp)
+;;old                                 "")))))
+;;old   (setq-default dp-current-sandbox-regexp (if (string= regexp "")
+;;old                                               nil
+;;old                                             regexp)
+;;old                 dp-current-sandbox-name dp-current-sandbox-regexp))
+
+(defun dp-set-sandbox (sandbox)
   "Setup things for a singular, unique sandbox."
-  (interactive (list (read-from-minibuffer 
-                      (format "Sandbox regexp%s: "
+  (interactive (list (read-from-minibuffer
+                      (format "Sandbox name/path%s: "
                               (if dp-current-sandbox-regexp
                                   (format "[current: %s]"
                                           dp-current-sandbox-regexp)
                                 "")))))
-  (setq-default dp-current-sandbox-regexp (if (string= regexp "")
-                                              nil
-                                            regexp)
-                dp-current-sandbox-name dp-current-sandbox-regexp))
+
+  (let ((sandbox (if (string= sandbox "")
+                     nil
+                   sandbox)))
+    (if (not sandbox)
+        (setq dp-current-sandbox-regexp nil
+              dp-current-sandbox-name nil)
+      ;; If name, determine path/sandbox
+      ;; If path/sandbox, determine name
+      (if (string-match "/" sandbox)
+          ;; We're a path. find sb name
+          (setq-default dp-current-sandbox-regexp sandbox
+                        dp-current-sandbox-name (file-name-nondirectory
+                                                 (directory-file-name
+                                                  (file-name-directory
+                                                   (directory-file-name 
+                                                    sandbox)))))
+        ;; We're a name, find path
+        (setq-default dp-current-sandbox-name sandbox
+                      dp-current-sandbox-regexp
+                      (concat (dp-me-expand-dest "." sandbox) "/" ))))))
 
 (defun dp-sandbox-read-only-p (filename)
   "Determine if a file is in a readonly sandbox.

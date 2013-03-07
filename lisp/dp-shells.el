@@ -151,6 +151,18 @@ prompt.  We don't want to stomp on them.")
   (when (dp-comint-pmark)
     (= (marker-position (dp-comint-pmark)) (point))))
 
+;; Current prompt style: NO / @ end
+;; dpanariti@o-xterm-34:/home/scratch.dpanariti_t124/sb2/hw/hw
+(defun dp-shell-lookfor-dir-change (str)
+  (let ((regexp (format "^%s@%s:\\(/.*[^/]$\\)"
+                        (user-login-name) (dp-short-hostname))))
+    ;;(message "regexp>%s<" regexp)
+    (when (string-match regexp str)
+      (let ((s (match-string 1 str)))
+        (when (string-match "^\\([^ 	
+]+\\)" s)
+          (setq default-directory (match-string 1 s)))))))
+
 (defun dp-shell-lookfor-shell-max-lines (str)
   (when (string-match "DP_SML=\\(-?[0-9]*\\)" str)
     (let ((num-lines (match-string 1 str)))
@@ -748,35 +760,6 @@ And maybe having a line count print out periodically?
 Or write to a spill file.
 Or both.")
 
-;;(defun dp-limit-comint-output (s &optional max)
-;;  )
-;;good riddance   (if (or (not dp-shell-output-max-lines)
-;;good riddance           (< dp-shell-output-max-lines 0))
-;;good riddance       nil
-;;good riddance     (if (and dp-shell-output-max-lines
-;;good riddance              (< dp-shell-output-line-count (or max 
-;;good riddance                                                dp-shell-output-max-lines)))
-;;good riddance         (progn
-;;good riddance           (setq dp-shell-output-line-count (+ dp-shell-output-line-count
-;;good riddance                                               (dp-count-matches-string s))))
-;;good riddance       ;; !<@todo XXX see `dp-shell-ask-to-limit-comint-output-p'
-;;good riddance       (if (and dp-shell-ask-to-limit-comint-output-p
-;;good riddance                (not (y-or-n-p "Kill over large output command?")))
-;;good riddance           (setq dp-shell-output-max-lines -1)
-;;good riddance         (process-send-signal 'SIGINT nil 'CURRENT-GROUP)
-;;good riddance         (dmessage "siginting: pid: %s @ %s of %s lines." (process-id process)
-;;good riddance                   dp-shell-output-line-count
-;;good riddance                   dp-shell-output-max-lines)
-;;good riddance         (save-excursion
-;;good riddance           (dp-end-of-buffer)
-;;good riddance           (insert "\n\n*** TOO MANY OUTPUT LINES "
-;;good riddance                   (format "(dp-shell-output-max-lines: %d).  " 
-;;good riddance                           dp-shell-output-max-lines)
-;;good riddance                   "COMMAND ABORTED ***\n\n"))
-;;good riddance         (ding)
-;;good riddance         ;; Stop this repeating ferever.
-;;good riddance         (setq dp-shell-output-line-count 0)))))
-
 (defun dp-shell-filter-proc (proc string)
     (dp-limiting-process-filter proc string dp-original-shell-filter-function
                                 ;; Some average ? line length to convert to
@@ -842,8 +825,8 @@ Or both.")
     (dp-maybe-add-compilation-minor-mode)
     ;;(font-lock-set-defaults)
     (dp-maybe-add-ansi-color)
-;;good riddance     (add-hook 'comint-output-filter-functions 'dp-limit-comint-output)
-    (add-hook 'comint-output-filter-functions 'comint-strip-ctrl-m))
+    (loop for hook in '(comint-strip-ctrl-m dp-shell-lookfor-dir-change)
+      do (add-hook 'comint-output-filter-functions hook)))
   ;; something wipes this out after the call to comint-mode-hook and here,
   ;; so we do it again.
   (dp-shell-refresh-abbrevs)

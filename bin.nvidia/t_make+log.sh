@@ -168,6 +168,7 @@ done
 
 mail_results()
 {
+    EExecDashN_p && send_mail_on_completion=
     if vsetp "${send_mail_on_completion-}"
     then
         mail -s "$progname is done" "${USER}" >/dev/null 2>&1
@@ -220,6 +221,7 @@ run_t_make()
 EExec mkdir -p "${log_dir}"
 
 {
+    EExecDashN_p && send_mail_on_completion=
     if [ -n "$make_p" ]
     then
         EExec -y cd $(me-dogo tot)
@@ -290,7 +292,6 @@ EExec mkdir -p "${log_dir}"
     fi
 
     echo "Log file: ${log_name}"
-
 } | tee "${log_name}" > "${disp_file}"
 
 exit 0
