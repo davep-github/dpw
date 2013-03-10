@@ -4,7 +4,8 @@ source script-x
 $DP_SCRIPT_X_DASH_X_OFF
 
 MOTD=/etc/motd
-MOTDer="/home/davep/bin.Linux.i686/lcursive"
+#MOTDer="/home/davep/bin.Linux.i686/lcursive"
+MOTDer="figlet"
 cleanup_sep='!!!! Do not Forget New Kernel Cleanup (try: new-kernel-fini) !!!!'
 date="$(dp-std-date).$$"
 log_dir="/var/log/bk"

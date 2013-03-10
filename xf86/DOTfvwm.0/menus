@@ -36,7 +36,7 @@ AddToMenu   StartMenu@side.fvwm2.xpm@^black^
 DestroyMenu  Utilities
 AddToMenu    Utilities "FVWM Root Menu" Title
 #PREF 3
-+ "&Terminal"            Exec exec dpxx
++ "&Terminal(dpxx)"      Exec exec dpxx
 + "Mo&ve window"         Popup Move-window
 + ""                     Nop
 + "&Modules"             Popup Module-Popup

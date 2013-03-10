@@ -309,6 +309,7 @@ Mouse 3 W 4 Resize
 Mouse 3 W M Resize
 
 Key period W 4 RaiseLower
+Key comma W 4 Next WarpToWindow 12 12
 
 #------------------------------------------------------------------------------
 # Misc Bindings
@@ -316,4 +317,5 @@ Key period W 4 RaiseLower
 #Key e A 4 WindowId (XEmacs@o-xterm) Raise
 #Key e A 4 Next ("XEmacs@o-xterm*") WarpToWindow 33p 33p
 Key e A 4 Next ("XEmacs@o-xterm*") FlipFocus
+Key n A 4 Next WarpToWindow 12 12
 

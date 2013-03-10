@@ -1,10 +1,24 @@
 #!/bin/sh
-
+source script-x
 case "$1" in
      [0-9]) suffix=.$1.gz
 	    PAGR=zless ;;
      *) suffix=$1
 	PAGR=less ;;
 esac     
-     
-sudo $PAGR /var/log/messages$suffix
+
+mfile=
+for message_file in /var/log/messages$suffix \
+                   /var/log/everything/current$suffix
+do
+   sudo [ -e "$message_file" ] && {
+	m_file=$message_file
+   }
+done
+
+if vsetp "$m_file"
+then   
+    sudo $PAGR "$m_file"
+else
+    echo "Cannot find log file." 1>&2
+fi

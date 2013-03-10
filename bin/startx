@@ -2,7 +2,7 @@
 set -x
 cd ~
 
-startx="/usr/X11R6/bin/startx"
+startx="/usr/bin/startx"
 startx_opts=`$HOST_INFO -n '' startx-opts`
 
 LOGFILE="$DP_LOG/X11/xlog.$USER.startx"
