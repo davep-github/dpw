@@ -35,9 +35,14 @@ tee_log()
     fi
 }
 
+case "${PWD}" in
+    /home/scratch.dpanariti_*);;
+    *) echo "INFO: you are not in a sandbox." 1>&2;;
+esac
+
 # Usage variable usage:
 Usage_args_info=' `depth`/bin/make-options-and-args...'
-Usage_synopsis='make using `depth`/bin/make
+Usage_synopsis='make using the proper make for t124, et al, tree: `depth`/bin/make
 '
 Usage_details="${EExec_parse_usage}
 --log-file <file> -- Log output to <file>.

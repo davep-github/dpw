@@ -821,7 +821,7 @@ Also, leave the region active."
     ;; May want to change sense of arg to mean plain defun when true.
     (cond 
      ((or real-bof
-          (not (member current-prefix-arg '(0 (4) '- t))))
+          (not (member current-prefix-arg '(0 (4) - t))))
       (dp-push-go-back "`real c-beginning-of-defun'")
       (c-beginning-of-defun 1)
       ;; if this is called by a `kb-lambda' then we need to make sure

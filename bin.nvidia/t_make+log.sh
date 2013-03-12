@@ -171,7 +171,7 @@ mail_results()
     EExecDashN_p && send_mail_on_completion=
     if vsetp "${send_mail_on_completion-}"
     then
-        mail -s "$progname is done" "${USER}" >/dev/null 2>&1
+        echo "$PWD" | mail -s "$progname is done" "${USER}" 2>&1
     else
         cat > /dev/null
     fi

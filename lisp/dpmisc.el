@@ -8769,7 +8769,7 @@ Motivation was the ability to run commands like this \"mpc play\"."
 ;; So we need to determine if name-in has been expanded from the buffer line
 ;; so we can legitimately use the line number.
 ;; Another wrinkle: if the user enters a p4 path, then this routine will NOT see the //.
-(defun dp-ffap-file-finder2 (&optional name-in)
+(defun dp-ffap-file-finder2-0 (&optional name-in)
   "Recognize /file/name:<linenum>.
 Visit /file/name and then goto <linenum>."
   (interactive)
@@ -8798,18 +8798,30 @@ Visit /file/name and then goto <linenum>."
           (setq filename-part (match-string 1 working-filename)
                 line-num-part (match-string 2 working-filename))
         (setq filename-part working-filename))
+      (list filename-part line-num-part))))
+
+(defun* dp-ffap-file-finder2-1 (&optional name-in 
+                                (finder dp-ffap-ffap-file-finder))
+
 ;;      (dmessage "filename-part: %s, line-num-part: %s" filename-part line-num-part)
-      (if (and line-num-part
+  (let* ((ffap-info (dp-ffap-file-finder2-0 name-in))
+         (filename-part (car ffap-info))
+         (line-num-part (cadr ffap-info)))
+    (funcall finder filename-part)
+    (when (and line-num-part
                (file-exists-p filename-part)
                (or (not dp-ffap-ask-to-goto-line)
                    (y-or-n-p (format "goto %s in %s? " 
                                      line-num filename-part))))
-          (progn
-            (funcall dp-ffap-ffap-file-finder filename-part)
-            (if (find-buffer-visiting filename-part)
-                (dp-push-go-back "dp-ffap-file-finder2"))
-            (goto-line (string-to-int line-num-part)))
-        (funcall dp-ffap-ffap-file-finder filename-part)))))
+      (if (find-buffer-visiting filename-part)
+          (dp-push-go-back "dp-ffap-file-finder2"))
+      (goto-line (string-to-int line-num-part)))))
+
+(defun dp-ffap-file-finder2 (&optional name-in)
+  (dp-ffap-file-finder2-1 name-in))
+
+(defun dp-ffap-file-finder2-other-window (&optional name-in)
+  (dp-ffap-file-finder2-1 name-in 'find-file-other-window))
 
 (defun dp-ffap (&optional file-name)
   (interactive "P")
@@ -9494,8 +9506,9 @@ keep the file around."
 (defun dp-meta-minus-other-window (&optional other-window-arg)
   "Go to the specified window and invoke the [\(meta ?-)] function."
   (interactive "p")
-  (other-window (prefix-numeric-value current-prefix-arg))
-  (dp-meta-minus))
+  (save-window-excursion
+    (other-window (prefix-numeric-value current-prefix-arg))
+    (dp-meta-minus)))
 
 (defun dp-maybe-kill-buffer (buffer)
   "Kill buffer if local, else ask to kill for remote files.
@@ -10319,10 +10332,13 @@ Just for informational purposes.")
           ;; cannot remake if there's no target.
           (when (and dp-mru-make-target 
                      (member target '("=" "==" ".")))
-            ;; We won't ask for the target name again so we won't loop
+            ;; We won't ask for the target name again so we won't
             ;; keep recursing.
             (dp-remake)
             (return-from dp-make))
+          (when (and dp-mru-make-target
+                     (member target '("\"\"" "/" "'")))
+            (setq target ""))
           (setq dp-mru-make-target target)
           (with-current-buffer makefile-buffer
             (setq dp-mru-make-makefile (buffer-file-name))
@@ -10405,12 +10421,14 @@ mode but not the new lines themselves.  Hence, this."
   (interactive)
   (dp-push-go-back "dp-chase-file-link")
   (apply (if current-prefix-arg
-             'find-file
-           'find-file-other-window)
-         (list (expand-file-name file-name)))
-  (when regexp
-    (with-saved-match-data
-     (dp-search-with-wrap regexp point limit error))))
+             'dp-ffap-file-finder2
+           'dp-ffap-file-finder2-other-window)
+         (list file-name)))
+;;
+;;         (list (expand-file-name file-name)))
+;;  (when regexp
+;;    (with-saved-match-data
+;;     (dp-search-with-wrap regexp point limit error))))
   
 (defalias 'cfl 'dp-chase-file-link)
 
@@ -11394,6 +11412,7 @@ and for setting up a buffers mode (`dp-set-auto-mode')."
                                        dp-bury-or-kill-buffer))
       (dp-define-buffer-local-keys '([(meta ?-)] 
                                        dp-maybe-kill-this-buffer)))))
+(defalias 'dp-make-primary-makefile 'dp-set-primary-makefile)
 
 (defun 411f (&optional name-regex case-unfold-p)
   "Find NAME-REGEX in phone book."
@@ -13507,7 +13526,7 @@ string's characters.
         (apply 'dp-fake-key-presses (string-to-list k))
       (dispatch-event (make-event 'key-press (list 'key k))))))
 
-(defun dp-delete-frame &optional frame force
+(defun dp-delete-frame (&optional frame force)
   "Confirm deletion because I use C-x 5 0 too often."
   (interactive)
   (if (and dp-confirm-frame-deletion-p

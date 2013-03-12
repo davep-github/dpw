@@ -70,7 +70,9 @@ if ($OSName eq 'Linux')
   $scriptNameFinder = '^\s*(\d+).*\d+:\d+\s+\S+\s+\S+?([^/]+)(\s|$)';
     
   # display all processes command
-  $psCmd = 'ps agxww';
+  #$psCmd = 'ps agxww';
+  # Now that we're living on shared boxen, don't look at other people's stuff.
+  $psCmd = 'ps u ww x'
 }
 elsif ($OSName eq 'FreeBSD')
 {

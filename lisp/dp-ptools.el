@@ -377,8 +377,13 @@ Oddly, it doesn't handle structs.")
       (format "me-expand-dest %s %s" 
               first (or second ""))))))
 
-(defvar dp-sandbox-regexp "/home/scratch\."
+;; Set in a spec-macs.
+(defvar dp-sandbox-regexp nil
   "Regexp to detect a sandbox.")
+
+;; Set in a spec-macs.
+(defvar dp-sandbox-make-command nil
+  "A special makefile for using in sandbox. E.g. mmake @ nvidia.")
 
 (defsubst dp-sandbox-p (filename)
   (string-match dp-sandbox-regexp filename))

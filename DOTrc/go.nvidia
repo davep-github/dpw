@@ -61,6 +61,11 @@ E|me__ME_src|                hw/ap_tlit1/drv/multiengine/
 E|meng__ME_src|              hw/ap_tlit1/drv/multiengine/
 E|multi__ME_src|             hw/ap_tlit1/drv/multiengine/
 E|drvme__ME_src|             hw/ap_tlit1/drv/multiengine/
+E|multienginefw__ME_src|     hw/ap_tlit1/drv/multiengine/framework
+E|mefw__ME_src|              hw/ap_tlit1/drv/multiengine/framework
+E|mengfw__ME_src|            hw/ap_tlit1/drv/multiengine/framework
+E|multifw__ME_src|           hw/ap_tlit1/drv/multiengine/framework
+E|drvme__ME_src|             hw/ap_tlit1/drv/multiengine/
 E|multiengine__ME_src|       hw/ap_tlit1/drv/multiengine/
 E|drvapi__ME_src|            hw/ap_tlit1/drv/multiengine/drvapi/
 E|medrvapi__ME_src|          hw/ap_tlit1/drv/multiengine/drvapi/

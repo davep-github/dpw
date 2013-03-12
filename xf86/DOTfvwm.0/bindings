@@ -277,26 +277,21 @@ Key Tab	A CM	WindowList Root c c NoGeometry, OnlyListSkip, SelectOnRelease
 # Keynames:
 # /usr/include/X11/keysymdef.h
 
-Key F1 A M GotoDeskAndPage 0 0 0
-Key F2 A M GotoDeskAndPage 1 0 0
-Key F3 A M GotoDeskAndPage 2 0 0
-Key F4 A M GotoDeskAndPage 3 0 0
-Key F5 A M GotoDeskAndPage 4 0 0
-Key F6 A M GotoDeskAndPage 5 0 0
-Key F7 A M GotoDeskAndPage 6 0 0
+Key F1 A 4 GotoDeskAndPage 0 0 0
+Key F2 A 4 GotoDeskAndPage 1 0 0
+Key F3 A 4 GotoDeskAndPage 2 0 0
+Key F4 A 4 GotoDeskAndPage 3 0 0
+Key F5 A 4 GotoDeskAndPage 4 0 0
+Key F6 A 4 GotoDeskAndPage 5 0 0
+Key F7 A 4 GotoDeskAndPage 6 0 0
 
-Key F1 A SM GotoDeskAndPage 0 0 1
-Key F2 A SM GotoDeskAndPage 1 0 1
-Key F3 A SM GotoDeskAndPage 2 0 1
-Key F4 A SM GotoDeskAndPage 3 0 1
-Key F5 A SM GotoDeskAndPage 4 0 1
-Key F6 A SM GotoDeskAndPage 5 0 1
-Key F7 A SM GotoDeskAndPage 6 0 1
-
-Key F1 A C  GotoPage 0 0
-Key F2 A C  GotoPage 0 1
-Key F3 A C  GotoPage 1 0
-Key F4 A C  GotoPage 1 1
+Key F1 A S4 GotoDeskAndPage 0 0 1
+Key F2 A S4 GotoDeskAndPage 1 0 1
+Key F3 A S4 GotoDeskAndPage 2 0 1
+Key F4 A S4 GotoDeskAndPage 3 0 1
+Key F5 A S4 GotoDeskAndPage 4 0 1
+Key F6 A S4 GotoDeskAndPage 5 0 1
+Key F7 A S4 GotoDeskAndPage 6 0 1
 
 Key Insert A 4  GotoPage 0 0
 Key Delete A 4  GotoPage 0 1
@@ -304,7 +299,6 @@ Key Home   A 4  GotoPage 1 0
 Key End    A 4  GotoPage 1 1
 
 Mouse 1 W 4 Move-NoRaise-or-RaiseLower
-Mouse 1 W M Move-NoRaise-or-RaiseLower
 Mouse 3 W 4 Resize
 Mouse 3 W M Resize
 
