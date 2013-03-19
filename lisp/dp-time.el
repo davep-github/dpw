@@ -137,10 +137,14 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
   (interactive "P")
   (with-current-buffer (or buffer (current-buffer))
     (message "buffer-file-truename: %s" buffer-file-truename)
-    (when kill-name-p 
-      (if buffer-file-truename
-          (kill-new buffer-file-truename)
-        (dmessage "buffer-file-truename is nil, not putting on kill ring.")))))
+    (if kill-name-p
+        (if (not buffer-file-truename)
+            (dmessage "buffer-file-truename is nil, not putting on kill ring.")
+          (cond 
+           ((Cu-p nil kill-name-p)
+            (kill-new buffer-file-truename))
+            ((Cu--p kill-name-p)
+             (kill-new (file-name-directory buffer-file-truename))))))))
 
 (defun* dp-timevalue-at-time (hrs24 &optional (minutes 0) (seconds 0) 
                               base-timeval)

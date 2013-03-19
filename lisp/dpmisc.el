@@ -2038,15 +2038,48 @@ aa bb(
         t))
     ret))                              ; I'm confused about this whole thing.
 
+;; 
+;; One nvidia style for constructors is to have *leading* commas in the
+;; initializer list. I can actually see some usefulness, especially when
+;; having to delete the last, unused, comma.
+;; 
+;; This can be contolled crudely by putting the member init syntax symbols in
+;; the eol list (trailing commas) or the bol list (leading)
+;; XXX @todo Needs to be conditionalized better.
+;;
+
+(defvar dp-c-member-init-leading-commas t
+  "One nvidia style for constructors is to have *leading* commas in the
+  initializer list. I can actually see some usefulness, especially when
+  having to delete the last, unused, comma.")
+
+(defvar dp-c-add-comma-@-eol-of-regions 
+  '(brace-list-entry arglist-cont arglist-intro 
+    ;;member-init-intro
+    ;;member-init-cont 
+    arglist-cont-nonempty brace-list-intro 
+    brace-list-entry statement-case-intro brace-list-open)
+  "Syntax regions after which we may want to put a comma.")
+
+(defvar dp-c-add-comma-@-bol-of-regions 
+  '(member-init-intro member-init-cont)
+  "Syntax regions before which we may want to put a comma.")
+
+
 (defun dp-c-context-line-break ()
   "Do special things at the end of a line."
   (interactive "*")
-  (if (and (dp-c-in-syntactic-region dp-c-add-comma-@-eol-of-regions)
-           (looking-at "\\s-*$")
-           (save-excursion
-             (not (dp-point-follows-regexp "[-,:\\&;+=|.!@#$%^*(_/?]\\s-*"))))
-      (dp-open-newline)
-    (call-interactively 'c-context-line-break)))
+  (let ((syntactic-region 
+         (dp-c-get-syntactic-region)))
+    (if (and (dp-c-in-syntactic-region dp-c-add-comma-@-eol-of-regions)
+             (looking-at "\\s-*$")
+             (save-excursion
+               (not (dp-point-follows-regexp "[-,:\\&;+=|.!@#$%^*(_/?]\\s-*"))))
+        (dp-open-newline)
+      (call-interactively 'c-context-line-break)
+      (if (and (member syntactic-region dp-c-add-comma-@-bol-of-regions)
+               (dp-looking-back-at "^\\s-*"))
+          (insert ",")))))
 
 (defun* dp-open-above (&optional open-newline-p)
   "Newline before current line."
@@ -3819,7 +3852,13 @@ Use another binding? Running out of prefix arg interpretations."
   (interactive)
   (dp-undo-while 'buffer-modified-p))
 
-(defun dp-dot-h-reinclusion-protection (&optional dont-comment-endif-p)
+(defun* dp-dot-h-reinclusion-protection (comment-endif-p
+                                         &key
+                                         comment
+                                         (prefix "")
+                                         (suffix "_INCLUDED")
+                                         (format-str "%s%s%s")
+                                         formatter)
   "Add reinclusion protection sequence to a header file.
 The sequence looks like this:
 #ifndef xx
@@ -3841,7 +3880,9 @@ Otherwise, the sequence begins at \(point-min) and ends at \(point-max)."
       (if (dp-mark-active-p)
 	  (narrow-to-region (point) (mark)))
       (let* ((filename (upcase (file-relative-name (buffer-file-name))))
-	     (def-name (concat filename "_INCLUDED"))
+	     (def-name (if formatter
+                           (funcall formatter (buffer-file-name) prefix suffix)
+                         (format format-str prefix filename suffix)))
 	     comment-text
              ifdef-start)
 	(goto-char (point-min))
@@ -3857,20 +3898,22 @@ Otherwise, the sequence begins at \(point-min) and ends at \(point-max)."
 	(dp-c-namify-region ifdef-start (point) 'say-dot)
 	(goto-char ifdef-start)
 	(setq comment-text
-	      (if dont-comment-endif-p
-		  ""
-		(concat " /* #ifndef "
-			(buffer-substring (point) (line-end-position))
-                        " Reinclusion protection."
-			" */")))
+	      (if (and comment comment-endif-p)
+                  (concat " /* #ifndef "
+                          (buffer-substring (point) (line-end-position))
+                          " Reinclusion protection."
+                          " */")
+                ""))
 	(insert "#ifndef ")
         (end-of-line)
-        (insert " /* Reinclusion protection. */")
+        (when comment
+          (insert " /* Reinclusion protection. */"))
 	(forward-line 1)
 	;;(beginning-of-line) ; not needed w/forward-line
 	(insert "#define ")
         (end-of-line)
-        (insert " /* Reinclusion protection. */")
+        (when comment
+          (insert " /* Reinclusion protection. */"))
 	(goto-char (point-max))
 	(insert "\n#endif" comment-text "\n"))))
   (dmessage "@todo: Delete any existing ifdef lines first."))
@@ -10337,7 +10380,7 @@ Just for informational purposes.")
             (dp-remake)
             (return-from dp-make))
           (when (and dp-mru-make-target
-                     (member target '("\"\"" "/" "'")))
+                     (member target '("\"\"" "/" "'" "''")))
             (setq target ""))
           (setq dp-mru-make-target target)
           (with-current-buffer makefile-buffer

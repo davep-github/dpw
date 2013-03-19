@@ -176,6 +176,18 @@ EExec_verbose_msg()
     EExecEchoPrefix=$old
 }
 
+EExec_verbose_echo_id()
+{
+    local msg
+    local sep=
+    for m in "$@"
+    do
+      msg="$msg$sep$(echo_id $m)"
+      sep=", "
+    done
+    EExec_verbose_msg "$msg"
+}
+
 EExecQuiet ()
 {
     EExecEcho=

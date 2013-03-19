@@ -1,9 +1,18 @@
 #!/bin/sh
 
-gen()
+source script-x
+
+gen_height()
 {
     local width=$1
     local height=$(($width * 9 / 16))
+    echo "${height}"
+}
+
+gen_width()
+{
+    local height=$1
+    local height=$(($height * 16 / 9))
     echo "${height}"
 }
 
@@ -11,26 +20,38 @@ check()
 {
     local width=$1
     local height=$2
-    local genned=$(gen $width)
+    local genned=$("$gen" $width)
     [ "$height" == "$genned" ]
     return
 }
 
-wid=$1
-orig_ht=$2
+gen=gen_height
+
+[ "${1-}" = "-w" ] && {
+    gen=gen_width
+    shift
+}
+
+wid_or_ht=$1
+orig_other=$2
 if [ -z "$2" ]; then
-    ht=$(gen $1)
+    other=$("$gen" $1)
 else
-    ht=$2
+    other=$2
 fi
 
 rc=""
-if ! check "$wid" "$ht"; then
-    echo -n 1>&2 "*** Something is wrong with: "
+if ! check "$wid_or_ht" "$other"; then
+    echo -n 1>&2 "*** Something is wrong with the ratio of: "
     rc=1
 fi
-echo "${wid}x${ht}"
+if [ "$gen" = "gen_width" ]
+then
+    echo "${other}x${wid_or_ht}"
+else
+    echo "${wid_or_ht}x${other}"
+fi
 [ -n "$rc" ] && {
-    echo 1>&2 "    A width of $wid implies a height of $(gen wid)."
+    echo 1>&2 "    A width of $wid implies a height of $($gen wid)."
 }
 exit $rc

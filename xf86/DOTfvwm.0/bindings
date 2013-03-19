@@ -185,8 +185,8 @@ Mouse 3         6       A       All ($c) WindowShade On
 # Key F7		A	MS	Move
 # Key F8		A	MS	Resize
 # Key F9		A	MS	Iconify
-# Key F10		A	MS	Maximize 100 100
-# Key F11		A	MS	FvwmIdent
+Key F10		A	MS	Maximize 100 100
+Key F11		A	MS	FvwmIdent
 # Key F12		A	MS	FvwmConsole
 
 #------------------------------------------------------------------------------
@@ -211,7 +211,7 @@ Mouse 3         6       A       All ($c) WindowShade On
 # Key Tab A M	WindowList Root c c NoGeometry, NoDeskSort, SelectOnRelease Alt_L my_dbltab_prev
 
 # Key Tab A 4	WindowList Root c c NoGeometry, NoDeskSort, SelectOnRelease Alt_L my_dbltab_prev
-Key Tab A M     WindowList Root c c CurrentDesk
+#Key Tab A M     WindowList Root c c CurrentDesk
 Key Tab A 4     WindowList Root c c DeskSort, SelectOnRelease 4_L
 Key Tab	A C4	WindowList Root c c NoGeometry, OnlyListSkip, SelectOnRelease
 Key Tab	A CM	WindowList Root c c NoGeometry, OnlyListSkip, SelectOnRelease
@@ -310,6 +310,18 @@ Key comma W 4 Next WarpToWindow 12 12
 #------------------------------------------------------------------------------
 #Key e A 4 WindowId (XEmacs@o-xterm) Raise
 #Key e A 4 Next ("XEmacs@o-xterm*") WarpToWindow 33p 33p
-Key e A 4 Next ("XEmacs@o-xterm*") FlipFocus
-Key n A 4 Next WarpToWindow 12 12
 
+# XXX @todo I want to do a cycle windows where each one is raised as I cycle
+# over it.
+#Key e A 4 Next ("XEmacs@o-xterm*") FlipFocus
+#Key n A 4 Next WarpToWindow 12 12
+
+Key Tab A M  CycleWindows
+
+#
+# Everything but root.
+Key z WFST1246 4 Maximize 90 90
+Key y WFST1246 4 Iconify
+
+Key Left A 4 GotoDesk -1
+Key Right A 4 GotoDesk 1

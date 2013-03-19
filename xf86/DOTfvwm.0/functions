@@ -416,3 +416,21 @@ I Exec T=$FVWM_USERDIR/.tmp-x-set;u=~/.xinitrc-fvwm;echo "">$T;for j in 0 1 2 3 
 DestroyFunc ShowLayers
 AddToFunc ShowLayers I Exec F=$FVWM_USERDIR; T=$F/.tmp-layers; echo -e "A StaysOnTop window is a window which is above \nthe normal (i.e., StaysPut) windows, a StaysOnBottom\nwindow is below the normal windows. Here the list\nof StaysOnTop and StaysOnBottom windows:\n"> $T; u=$F/.fvwm-layers; for j in 0 1 2 3 4; do if [ "$j" -eq "0" ];then z=$u; t="Current Setting:"; l="---------------"; else z="$u-$j"; t="Setting-$j:"; l="----------"; fi; echo $t >>$T; echo $l >>$T; [ ! -f $z ] || cat $z>>$T; echo "" >> $T; done; xmessage -file $T
 
+
+DestroyFunc FocusRaiseAndStuff
+AddToFunc FocusRaiseAndStuff
++ I Iconify off
++ I Focus
++ I Raise
++ I WarpToWindow 16p 16p
+
+SetEnv DIRECTION Next
+
+DestroyFunc CycleWindows
+AddToFunc CycleWindows
++ I $[DIRECTION] (CurrentPage, !Iconic, !CirculateSkip) FocusRaiseAndStuff
++ I Deschedule 134000
++ I PipeRead `[ "$[DIRECTION]" == "Prev" ] && \
+    echo 'SetEnv NDIRECTION Next' || \
+    echo 'SetEnv NDIRECTION Prev'`
++ I Schedule 700 134000 SetEnv DIRECTION $[NDIRECTION]

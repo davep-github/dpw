@@ -161,7 +161,9 @@ prompt.  We don't want to stomp on them.")
       (let ((s (match-string 1 str)))
         (when (string-match "^\\([^ 	
 ]+\\)" s)
-          (setq default-directory (match-string 1 s)))))))
+          ;; Just set it, no sense in comparing to see if it changed.
+          (setq default-directory 
+                (concat (match-string 1 s) "/")))))))
 
 (defun dp-shell-lookfor-shell-max-lines (str)
   (when (string-match "DP_SML=\\(-?[0-9]*\\)" str)

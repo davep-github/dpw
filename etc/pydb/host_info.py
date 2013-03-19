@@ -312,7 +312,7 @@ e(
     ref=[home_family, OSDB['linux'], default]
 )
 
-NV_GEOMETRY = '-geometry 81x71-42+6'
+NV_GEOMETRY = '-geometry 81x72-42+6'
 #
 # FAMILY entry for NVIDIA-LINUX
 nvidia_family = e(

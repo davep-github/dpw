@@ -336,15 +336,30 @@
             t)
 
    ;;;;;;;;;;;;;;;;;
+           ;; One nvidia style for constructors is to have *leading* commas
+           ;; in the initializer list. I can actually see some usefulness,
+           ;; especially when having to delete the last, unused, comma.
+           ;; This needs to be made switchable in this function.
            ((dp-c-in-syntactic-region
              '(member-init-intro member-init-cont func-decl-cont))
-            (save-excursion
-              (when (dp-c-prev-eol-regexp ")" 'goto-eol)
-                (dmessage "cob: add comma in member-init")
-                (dp-c-end-of-line)
-                (insert ",")))
-            t)
-                         
+            (let (goto-here ret)
+              (save-excursion
+                (when (dp-c-prev-eol-regexp ")" 'goto-eol)
+                  (dmessage "cob: add comma in member-init")
+                  (dp-c-end-of-line)
+                  (if (or (not dp-c-member-init-leading-commas)
+                          (dp-c-in-syntactic-region '(func-decl-cont)))
+                      (progn 
+                        (insert ",")
+                        (setq ret t))
+                    (newline-and-indent)
+                    (insert ", ")
+                    (setq goto-here (point)
+                          ret nil))))
+              (when goto-here
+                (goto-char goto-here))
+              ret))
+
    ;;;;;;;;;;;;;;;;;
            ;; Add comma to end of line?  <:cob-comma|cob:>
            ((and (not (dp-in-c-iostream-statement-p))

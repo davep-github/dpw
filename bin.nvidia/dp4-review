@@ -40,6 +40,7 @@ creat_p=                        # Make a new .p4r
 review_p=t                      # By default, we'll be reviewing.
 verbatim_p=
 : ${zipdir_opt=}                # Will look like p4 option: -zipdir <zd>
+p4r_debug=
 
 # Usage variable usage:
 Usage_args_info=" .p4r-files..."
@@ -61,6 +62,7 @@ Usage_details="${EExec_parse_usage}
 --no-review) Don't review the arguments.
 --review) Review [some options clear this].
 --verbatim) Don't convert xxxx to cl-xxxx.p4r
+--debug) Turn on p4review's debugging.
 --zipdir <zd>) Save newly created p4r files here.
 --creat) Create a local .p4r file.
 "
@@ -68,7 +70,7 @@ Usage_details="${EExec_parse_usage}
 long_options=("diff:" "server:" "p4r:" "p4r-opt:" "no-fetch" "file" "local"
 "fetch" "just-fetch" "fetch-only" "remote" "password:" "passwd:" "pass:" "pwd:"
 "fetch-to:" "verbatim" "save" "save-to:" "upload" "up" "upload-to:" "up-to:"
-"no-review" "creat")
+"review" "no-review" "creat" "debug")
 option_str="${EExec_parse_option_str}d:s:r:o:lfjp:t:cN"  # <:options:>
 source dp-getopt+.sh
 for i in "$@"
@@ -85,6 +87,8 @@ do
       -s|--server) shift; p4review_repository="$1";;
       -r|--p4r) shift; p4review_program="$1";;
       -o|--p4r-opt) shift; p4r_opts="$p4r_opts $1";;
+      --debug) p4r_opts="$p4r_opts -debug";;
+
       -l|--no-fetch|--file|--local) p4review_repository=;
                                     fetch_function=fetch_no_fetch
                                     fetch_cleanup=cleanup_no_fetch
@@ -114,11 +118,12 @@ do
       -N|--no-review) review_p=;;
       --review) review_p=t;;
       --verbatim) verbatim_p=t;;
-      -c|--creat) creat_p=t; review_p=;;
+      -c|--creat) creat_p=t; review_p=; save_p=t;;
       --save) save_p=t; review_p=;;
       --save-to) shift; p4review_repository="${1}"; save_p=t; review_p=;;
-      --upload|--up) upload_p=t; review_p=;;
-      --upload-to|--up-to) shift; p4review_repository="${1}"; upload_p=t; 
+      --upload|--up) save_p=t; upload_p=t; review_p=;;
+      --upload-to|--up-to) shift; p4review_repository="${1}"; upload_p=t;
+                           save_p=t
                            review_p=;;
       # Help!
       --help) Usage; exit 0;;
@@ -191,11 +196,18 @@ cleanup_wget()
 
 # > p4 changes -u dpanariti
 #Change 17156093 on 2013/01/18 by dpanariti@dpanariti-t124_1 *pending* 'Add prints to EngMsenc::~EngMse'
+verified_p=
 verify_my_cl()
 {
-    local cl="${1}"; shift
-    EExec_verbose_msg "verify_my_cl>$cl<"
-    p4 changes -u "${USER}" | egrep -q "Change ${cl} on" >/dev/null 2>&1
+    if vunsetp "${verified_p}"
+    then
+        local cl="${1}"; shift
+        EExec_verbose_msg "verify_my_cl>$cl<"
+        p4 changes -u "${USER}" | egrep -q "Change ${cl} on" >/dev/null 2>&1
+        verified_p="$?"
+    fi
+    
+    return $verified_p
 }
 
 do_fetch_wget()
@@ -250,6 +262,7 @@ dp4r_create()
     # E.g. support: p4review.pl -zipdir . -save 17156093
     # Always create locally, and send to server as a possible additional step?
     EExec perl "$p4review_program" \
+       ${p4r_opts} \
        ${zipdir_opt} \
        ${save_opt} \
        "${cl}"
@@ -269,7 +282,8 @@ dp4r_upload()
     # E.g. support: p4review.pl -zipdir . -save 17156093
     # Always create locally, and send to server as a possible additional step?
     EExec perl "$p4review_program" \
-       -save \
+       ${p4r_opts} \
+       ${save_opt} \
        -server \
        -uploadcmd 'curl -u svcsw:Gforcetop#1 --upload-file' \
        "${cl}"

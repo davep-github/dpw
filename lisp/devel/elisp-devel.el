@@ -3252,3 +3252,27 @@ nil
  (#<extent [detached) help-echo keymap from no buffer 0x12> . "%n") 
  modeline-process ")%]----" "%-"))
 
+
+========================
+Tuesday March 12 2013
+--
+
+;; elephant = loader_0
+(defun dp-grep-buffers (regexp)
+  (interactive "sregexp? ")
+  (let ((bl (delq nil (mapcar (function
+                               (lambda (buf)
+                                 (with-current-buffer buf
+                                   (save-excursion
+                                     ;; Widen, too.
+                                     (goto-char (point-min))
+                                     ;; Make an igrep, etc, like buffer with
+                                     ;; all matches and line numbers.
+                                     (when (re-search-forward regexp nil t)
+                                       buf)))))
+                              (buffer-list)))))
+        (message "bl>%s<" bl)))
+
+(dp-grep-buffers "loader_0")
+(#<buffer "elisp-devel.el"> #<buffer "sanity_msenc.cpp"> #<buffer "sanity_vde.cpp"> #<buffer "vde_gpu_compositing_by_vic.cpp"> #<buffer "vic2gpu_display_composite.cpp"> #<buffer "vic2gpu_display_composite_256x128_A8B8G8R8_bl_1x16x1_gpu_input_cfg"> #<buffer " *Message-Log*">)
+
