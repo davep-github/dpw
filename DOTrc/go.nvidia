@@ -1,23 +1,23 @@
-Ee|gohome|               /home/dpanariti/
-Ee|dotrc|rsee|rcee|drc|  ${gohome}.rc/
-Ee|lastresort|           ${gohome}bin/last-resort/
-Ee|rsee|                 ${gohome}.rc/
-Ee|etc|                  ${gohome}etc/
-Ee|dpsw|                 ${gohome}sw/
-Ee|work|                 ${gohome}work/
-Ee|workinfo|winfo|       ${work}info/
-Ee|workdoc|wdoc|         ${work}doc/
-Ee|active|               ${gohome}work/active/
-Ee|current|              ${active}current/
-Ee|weg|                  ${work}info/examples/
-Ee|nvenv|envnv|          ${rsee}env.nvidia/
-Ee|nvalias|aliasnv|      ${rsee}alias.nvidia/
-Ee|nvfunc|funcnv|        ${rsee}func.nvidia/
-Ee|bnv|nvb|nvbin|binnv|  ${gohome}bin.nvidia/
-Ee|p4r|                  ${gohome}sw/sw/main/apps/p4review/
-Ee|status|stat|          ${gohome}work/status/
-Ee|global|               ${gohome}davep/build/global-6.2.7/
-Ee|fvwm|                 ${gohome}.fvwm/
+Ee|gohome|                    /home/dpanariti/
+Ee|dotrc|rsee|rcee|drc|       ${gohome}.rc/
+Ee|lastresort|                ${gohome}bin/last-resort/
+Ee|rsee|                      ${gohome}.rc/
+Ee|etc|                       ${gohome}etc/
+Ee|dpsw|                      ${gohome}sw/
+Ee|work|                      ${gohome}work/
+Ee|workinfo|winfo|            ${work}info/
+Ee|workdoc|wdoc|              ${work}doc/
+Ee|active|                    ${gohome}work/active/
+Ee|current|                   ${active}current/
+Ee|weg|                       ${work}info/examples/
+Ee|nvenv|envnv|               ${rsee}env.nvidia/
+Ee|nvalias|aliasnv|           ${rsee}alias.nvidia/
+Ee|nvfunc|funcnv|             ${rsee}func.nvidia/
+Ee|bnv|nvb|nvbin|binnv|binv|  ${gohome}bin.nvidia/
+Ee|p4r|                       ${gohome}sw/sw/main/apps/p4review/
+Ee|status|stat|               ${gohome}work/status/
+Ee|global|                    ${gohome}davep/build/global-6.2.7/
+Ee|fvwm|                      ${gohome}.fvwm/
 
 #
 Ee|dotvnc|dvnc|vnc|   ${gohome}.vnc/
@@ -33,6 +33,7 @@ Ee|dotvnc|dvnc|vnc|   ${gohome}.vnc/
 # .__ME_src --> ./   lets `mecd sb-name .' work.
 # For tot, the superfluous dot prevents a double slash at the end of the
 # expansion.
+# <:me defs:>
 E|workspace__ME_src|         ./
 E|ws__ME_src|                ./
 E|sandbox__ME_src|           ./
@@ -61,11 +62,17 @@ E|me__ME_src|                hw/ap_tlit1/drv/multiengine/
 E|meng__ME_src|              hw/ap_tlit1/drv/multiengine/
 E|multi__ME_src|             hw/ap_tlit1/drv/multiengine/
 E|drvme__ME_src|             hw/ap_tlit1/drv/multiengine/
+E|multienginefw__ME_src|     hw/ap_tlit1/drv/multiengine/framework
+E|mefw__ME_src|              hw/ap_tlit1/drv/multiengine/framework
+E|gpumultienginefw__ME_src|  arch/traces/mobile/traces/gpu_multiengine/framework
+E|gmefw__ME_src|             arch/traces/mobile/traces/gpu_multiengine/framework
+E|drvme__ME_src|             hw/ap_tlit1/drv/multiengine/
 E|multiengine__ME_src|       hw/ap_tlit1/drv/multiengine/
 E|drvapi__ME_src|            hw/ap_tlit1/drv/multiengine/drvapi/
 E|medrvapi__ME_src|          hw/ap_tlit1/drv/multiengine/drvapi/
 E|levelsroot__ME_src|        hw/ap_tlit1/diag/testgen/config/levels/
 E|levels__ME_src|            hw/ap_tlit1/diag/testgen/config/levels/tegra/
+E|melevels__ME_src|          hw/ap_tlit1/diag/testgen/config/levels/tegra/
 
 # /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile/traces/gpu_multiengine
 #                            arch/traces/mobile/traces/gpu_multiengine
@@ -76,8 +83,11 @@ E|mobiletraces__ME_src|      arch/traces/mobile/traces/
 E|mtraces__ME_src|           arch/traces/mobile/traces/
 E|gpumetraces__ME_src|       arch/traces/mobile/traces/gpu_multiengine
 E|gmetraces__ME_src|         arch/traces/mobile/traces/gpu_multiengine
+E|sanity__ME_src|            arch/traces/mobile/traces/gpu_multiengine
+E|gmesanity__ME_src|         arch/traces/mobile/traces/gpu_multiengine
 E|gmet__ME_src|              arch/traces/mobile/traces/gpu_multiengine
 E|gme__ME_src|               arch/traces/mobile/traces/gpu_multiengine
+E|gmefw__ME_src|             arch/traces/mobile/traces/gpu_multiengine/framework
 
 
 #######################################################################
@@ -175,3 +185,6 @@ Ee|t3dAlloc|  ${sb4}hw/ap_tlit1/drv/drvapi/runtest_common/runtest_exec.cpp:267
 # Temp stuff for most active tasks.
 Ee|asimflow|       /home/scratch.dpanariti_t124_1/sb3/sb3hw/
 Ee|sgds|barbin|barrun|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/sanity_gr_disp_syncpt/2013-03-01T15.52.30-0500.out/tests/kepler_b_ogtest/00/00/01/000001/
+Ee|sanitybar1|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile/traces/gpu_multiengine/sanity_gr_disp_syncpt_bar1/
+Ee|sanitybar1|bar1sanity|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile/traces/gpu_multiengine/sanity_gr_disp_syncpt_bar1/
+Ee|goodvic2|       /home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/vic2gpu_display_composite_128x128_A4B4G4R4_bl_1x16x1_gpu_input/2013-03-21T12.48.43-0400.out/tests/kepler_b_ogtest/00/00/01/000001/

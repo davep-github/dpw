@@ -1,0 +1,22 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${mail_to:=$USER}
+: ${subject:="$1 completed"}
+
+command="$@"
+"$@"
+rc=$?
+
+echo "${command} completed. rc: ${rc}" | mail -s "$subject" "${mail_to}" 

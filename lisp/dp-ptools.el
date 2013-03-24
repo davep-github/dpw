@@ -377,18 +377,23 @@ Oddly, it doesn't handle structs.")
       (format "me-expand-dest %s %s" 
               first (or second ""))))))
 
-(defvar dp-sandbox-regexp "/home/scratch\."
+;; Set in a spec-macs.
+(defvar dp-sandbox-regexp nil
   "Regexp to detect a sandbox.")
+
+;; Set in a spec-macs.
+(defvar dp-sandbox-make-command nil
+  "A special makefile for using in sandbox. E.g. mmake @ nvidia.")
 
 (defsubst dp-sandbox-p (filename)
   (string-match dp-sandbox-regexp filename))
 
-(dp-deflocal dp-current-sandbox-regexp nil
+(defvar dp-current-sandbox-regexp nil
   "Regexp to detect the current sandbox.")
 
 ;; XXX @todo I want to allow an abbrev for the name.
 ;; It will be expanded and regexp quoted into `dp-current-sandbox-regexp'.
-(dp-deflocal dp-current-sandbox-name nil
+(defvar dp-current-sandbox-name nil
   "Name of the current sandbox.")
 
 (defsubst dp-current-sandbox-p (filename)
@@ -416,9 +421,11 @@ Returns nil if there is no current sandbox."
   (interactive (list (read-from-minibuffer
                       (format "Sandbox name/path%s: "
                               (if dp-current-sandbox-regexp
-                                  (format "[current: %s]"
+                                  (format "[current: %s:%s]"
+                                          dp-current-sandbox-name
                                           dp-current-sandbox-regexp)
-                                "")))))
+                                ""))
+                      nil nil nil nil nil dp-current-sandbox-name)))
 
   (let ((sandbox (if (string= sandbox "")
                      nil
@@ -439,7 +446,14 @@ Returns nil if there is no current sandbox."
         ;; We're a name, find path
         (setq-default dp-current-sandbox-name sandbox
                       dp-current-sandbox-regexp
-                      (concat (dp-me-expand-dest "." sandbox) "/" ))))))
+                      (concat (dp-me-expand-dest "/" sandbox) "/" ))))
+    (setq frame-title-format (concat "["
+                                     (or dp-current-sandbox-name "No SB")
+                                     "] "
+                                     dp-frame-title-format))
+    (when dp-current-sandbox-regexp
+      (define-abbrev dp-manual-abbrev-table 
+         "sb" dp-current-sandbox-regexp))))
 
 (defun dp-sandbox-read-only-p (filename)
   "Determine if a file is in a readonly sandbox.
@@ -447,6 +461,8 @@ An RO sandbox is one that is not the current one. This is done to prevent a
 modification to the wrong file when several sandboxes \(NOT good but
 necessary) are in play.  For additional safety, all sandboxes are read only
 if there is no current one set."
+  (dmessage "dp-sandbox-read-only-p, filename>%s<" filename)
+  (dmessage "dp-sandbox-read-only-p, regexp>%s<" dp-current-sandbox-regexp)
   (and (dp-sandbox-p filename)
        (or (not dp-current-sandbox-regexp)
            (not (dp-current-sandbox-p filename)))))

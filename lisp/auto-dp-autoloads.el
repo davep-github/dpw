@@ -314,7 +314,7 @@ Select the item to paste from a list.
 Rotate kill list so that the selected kill-text is at the head of the
 yank ring.
 
-arguments: ()
+arguments: (&optional GOTO-EMBEDDED-P)
 " t nil)
 
 (autoload 'dp-sel2:bm "dp-sel2" "\
@@ -550,7 +550,7 @@ arguments: (SSH-ARGS PATH &optional COREFILE)
 (defvar dp-sudo-edit-load-hook nil "\
 List of functions to be called after the we're loaded.")
 
-(defface dp-sudo-edit-bg-face '((((class color) (background light)) (:background "thistle2"))) "Face for file being sudo edited." :group 'faces :group 'dp-vars)
+(defface dp-sudo-edit-bg-face '((((class color) (background light)) (:background "pink"))) "Face for file being sudo edited." :group 'faces :group 'dp-vars)
 
 (autoload 'dp-sudo-edit "dp-sudo-edit3" "\
 Edit a file by using sudo to cat the file into a buffer and sudo to cp the edited file over the original.

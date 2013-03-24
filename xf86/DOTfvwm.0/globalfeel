@@ -25,7 +25,7 @@ Emulate fvwm
 HideGeometryWindow Never
 
 #WIN 1
-#SnapAttraction 10 SameType Screen
+SnapAttraction 10 SameType Screen
 #FVWM 1
 #SnapAttraction 10 SameType Screen
 

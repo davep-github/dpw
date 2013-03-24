@@ -131,17 +131,6 @@ e.g.: Mon Dec 11 14:48:17 EST 2006 - Mon Dec 11 11:19:27 EST 2006."
   (interactive "stime string1: \nstime string2: ")
   (/ (dp-date-cmd-diff date-string-1 date-string-2) 60 60))
 
-(defun dp-show-buffer-file-name (&optional kill-name-p buffer)
-  "Show the BUFFER or current-buffer's file name in echo area.
-KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
-  (interactive "P")
-  (with-current-buffer (or buffer (current-buffer))
-    (message "buffer-file-truename: %s" buffer-file-truename)
-    (when kill-name-p 
-      (if buffer-file-truename
-          (kill-new buffer-file-truename)
-        (dmessage "buffer-file-truename is nil, not putting on kill ring.")))))
-
 (defun* dp-timevalue-at-time (hrs24 &optional (minutes 0) (seconds 0) 
                               base-timeval)
   "Return a time value for hrs24:min:sec on the same day as BASE-TIMEVAL.

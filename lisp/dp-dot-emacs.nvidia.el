@@ -57,4 +57,18 @@ At nVIDIA, the answer is HELL YES!")
 ;; For some reason, vc isn't being autoloaded here, but it is @ home.
 (vc-load-vc-hooks)  ; This is being added to the Tools->Version Control menu.
 
+(setq dp-sandbox-regexp "/home/scratch\.")
+(setq dp-sandbox-make-command "mmake")
+
+;; 
+;; Since I cannot add variable hacks to files, I'll do it another way.
+;;
+
+(defun dp-make-no-wrap-stupidly ()
+  (setq fill-column 9999))
+
+(dp-add-list-to-list 'auto-mode-alist
+		     `(("\\(^\\|/\\)regress_tegra_gpu_multiengine$" .
+                        dp-make-no-wrap-stupidly)))
+
 (provide 'dp-dot-emacs.nvidia.el)

@@ -161,7 +161,9 @@ prompt.  We don't want to stomp on them.")
       (let ((s (match-string 1 str)))
         (when (string-match "^\\([^ 	
 ]+\\)" s)
-          (setq default-directory (match-string 1 s)))))))
+          ;; Just set it, no sense in comparing to see if it changed.
+          (setq default-directory 
+                (concat (match-string 1 s) "/")))))))
 
 (defun dp-shell-lookfor-shell-max-lines (str)
   (when (string-match "DP_SML=\\(-?[0-9]*\\)" str)
@@ -2561,6 +2563,23 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 (dp-deflocal dp-gdb-buffer-max-size (* 45 3000)
   "How big can the gdb buffer get?")
 
+;; (defun dp-limiting-process-filter (proc string original-filter
+;;                                    max-size &optional max-percentage)
+;;   "A process filter which limits the size of the process output buffer.
+;; PROC is the process, STRING is the string to filter, ORIGINAL-FILTER is the
+;; filter that would normally be called, MAX-SIZE is the maximum size in chars
+;; and MAX-PERCENTAGE is the percentage of MAX-SIZE is the desired number of
+;; chars that that will remain after the oldest output has been deleted.
+;; If MAX-SIZE is nil, do not limit the size.
+;; MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
+;;   (prog1
+;;       (when original-filter
+;;         (funcall original-filter proc string))
+;;     (save-excursion
+;;       (when max-size
+;;         (with-current-buffer (process-buffer proc)
+;;           (dp-restrict-buffer-growth max-size max-percentage))))))
+
 (defun dp-limiting-process-filter (proc string original-filter
                                    max-size &optional max-percentage)
   "A process filter which limits the size of the process output buffer.
@@ -2570,13 +2589,12 @@ and MAX-PERCENTAGE is the percentage of MAX-SIZE is the desired number of
 chars that that will remain after the oldest output has been deleted.
 If MAX-SIZE is nil, do not limit the size.
 MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
-  (prog1
-      (when original-filter
-        (funcall original-filter proc string))
-    (save-excursion
+  (save-excursion
       (when max-size
         (with-current-buffer (process-buffer proc)
-          (dp-restrict-buffer-growth max-size max-percentage))))))
+          (dp-restrict-buffer-growth max-size max-percentage))))
+  (when original-filter
+    (funcall original-filter proc string)))
 
 (defun dp-gdb-filter (proc string)
   (dp-limiting-process-filter proc string 'gdb-filter

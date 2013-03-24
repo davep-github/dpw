@@ -38,6 +38,7 @@ AddToMenu    Utilities "FVWM Root Menu" Title
 #PREF 3
 + "&Terminal(dpxx)"      Exec exec dpxx
 + "Mo&ve window"         Popup Move-window
++ "&Goto window"         Popup Goto-window
 + ""                     Nop
 + "&Modules"             Popup Module-Popup
 + "&Settings"            Popup Settings
@@ -1006,17 +1007,34 @@ AddToMenu "Window-Ops3"
 
 DestroyMenu "Move-Window"
 AddToMenu   "Move-Window" "Move to ..." Title
-+ 'Page &1'     MoveToPage 0 0
-+ 'Page &2'     MoveToPage 1 0
-+ 'Page &3'     MoveToPage 0 1
-+ 'Page &4'     MoveToPage 1 1
++ '&o-xterm'     MoveToPage 0 0
++ '&farm'        MoveToPage 0 1
++ 'Page &2'      MoveToPage 1 0
++ 'Page &4'      MoveToPage 1 1
 + '' Nop
 + '&General'    MoveToDesk 0 0
 + '&SB1'        MoveToDesk 0 1
-+ '&SB2-RTArgs' MoveToDesk 0 2
-+ '&SB3-ASIM'   MoveToDesk 0 3
++ '&SB2-ME-B1'  MoveToDesk 0 2
++ '&SB3-DEPCPU' MoveToDesk 0 3
 + '&SB4-BARx'   MoveToDesk 0 4
 + '&SB5-EngCpu' MoveToDesk 0 5
+
+#------------------------------------------------------------------------------
+# A "Goto Window" menu
+
+DestroyMenu "Goto-Window"
+AddToMenu   "Goto-Window" "Go to ..." Title
++ '&o-xterm'    GotoPage 0 0
++ '&farm'       GotoPage 0 1
++ 'Page &2'     GotoPage 1 0
++ 'Page &4'     GotoPage 1 1
++ '' Nop
++ '&General'       GotoDesk 0 0
++ '&SB1'           GotoDesk 0 1
++ '&SB2-ME-B1'     GotoDesk 0 2
++ '&SB3-ME-DEPCPU' GotoDesk 0 3
++ '&SB4-BARx'      GotoDesk 0 4
++ '&SB5-EngCpu'    GotoDesk 0 5
 
 
 #------------------------------------------------------------------------------

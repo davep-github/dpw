@@ -35,18 +35,29 @@ tee_log()
     fi
 }
 
+case "${PWD}" in
+    /home/scratch.dpanariti_*);;
+    *) echo "INFO: you are not in a sandbox." 1>&2;;
+esac
+
+: ${send_mail_on_completion=}
+
 # Usage variable usage:
 Usage_args_info=' `depth`/bin/make-options-and-args...'
-Usage_synopsis='make using `depth`/bin/make
+Usage_synopsis='make using the proper make for t124, et al, tree: `depth`/bin/make
 '
 Usage_details="${EExec_parse_usage}
---log-file <file> -- Log output to <file>.
---logger <logger> -- Log with tee or cat.
---null -- Send output to /dev/null
+--log-file <file>) Log output to <file>.
+--logger <logger>) Log with <logger> [tee, cat or null].
+--notify|--mail) Send email when done.
+--tee) Log with tee.
+--cat) 
+--null) Send output to /dev/null
 "
 # Example of arg parsing.
 option_str="${EExec_parse_option_str}"
-long_options=("logger:" "log-file:" "null" "override" "o-xterm-ok")
+long_options=("logger:" "log-file:" "null" "override" "o-xterm-ok" "tee" "cat"
+"mail" "notify")
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -61,7 +72,10 @@ do
       --logger) shift; logger="$1";;
       --log-file) shift; log_file="$1";;
       --null) log_file=/dev/null;;
+      --tee) logger=tee_log;;
+      --cat) logger=cat_log;;
       --override|--o-xterm-ok) o_xterm_ok_p=y;;
+      --mail|--notify) send_mail_on_completion=t;;
 
       # Help!
       --help) Usage; exit 0;;
@@ -77,9 +91,14 @@ on-o-xterm-p && vunsetp "${o_xterm_ok_p}" && {
     exit 1
 } 1>&2
 
-
 : ${log_file=}
 : ${logger:=cat_log}
 
+# @todo XXX Look for logger. If not look for ${logger}_log. If not, set to cat.
+
 depth=$(depth)
 EExec ${depth}/bin/make "$@" 2>&1 | $logger
+
+vsetp "${send_mail_on_completion-}" && {
+    mail -s "$progname is done" "${USER}" < /dev/null >/dev/null 2>&1
+}

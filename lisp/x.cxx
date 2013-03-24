@@ -1,7 +1,18 @@
 // WTF
 /*
  */
+(12  )
 
+(  )
+struct S_t
+{
+    S_t()
+        : m_a(1)
+        ,
+        , m_b(2)
+          
+        
+          
 // @todo XXX 
 extern int common_arg_handler(
     int arg_char,

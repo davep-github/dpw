@@ -38,13 +38,13 @@ See `dp-parenthesize-region-paren-list'")
   (if (local-variable-p 'compile-command (current-buffer))
       () ;; already there, do nothing
     (make-local-variable 'compile-command)
-    (setq compile-command 
-	  (concat compile-make-command 
-		  " -k -f " 
-                  (if (buffer-file-name)
-                      (file-name-nondirectory (buffer-file-name))
-                    "")
-                  " "))
+    (setq-default compile-command 
+                  (concat (or dp-sandbox-make-command compile-make-command)
+                          " -k -f " 
+                          (if (buffer-file-name)
+                              (file-name-nondirectory (buffer-file-name))
+                            "")
+                          " "))
                   
     (message "compile command: %s" compile-command))
   (setq dp-cleanup-whitespace-p t)

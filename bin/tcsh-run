@@ -14,15 +14,27 @@ unset eexec_program
 
 exec_file=$(mktemp "$HOME/tmp/${progname}-XXXXXX")
 
-trap_fun()
+dump_exec_file()
 {
-    local sig="${1-}"
-    echo "sig>$sig<"
-    rm -f "$exec_file"
-    exit 1
+    echo "exec_file[$exec_file]>>>>>>>"
+    cat "${exec_file}"
+    echo "<<<<<<<<exec_file[$exec_file]"
 }
 
-for sig in 2 3 4 5 6 7 8 15
+trap_fun()
+{
+    local rc="$?"
+    local sig="${1-}"
+    [ "$rc" = 0 ] || {
+        echo "sig>$sig<"
+        echo "command failed, rc: $rc"
+        dump_exec_file
+    } 1>&2
+    rm -f "$exec_file"
+    exit $rc
+}
+
+for sig in 0 2 3 4 5 6 7 8 15
 do
   trap "trap_fun $sig" $sig
 done
@@ -38,9 +50,9 @@ fi >| "${exec_file}"
 
 chmod +x "${exec_file}"
 
-EExec_verbose_msg "exec_file[$exec_file]>"
-cat $exec_file
-EExec_verbose_msg "<exec_file"
+EExecVerbose_p && {
+    dump_exec_file
+}
 
 EExec "${exec_file}"
 rc=$?

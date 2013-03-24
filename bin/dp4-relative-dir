@@ -1,0 +1,42 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+prefix=
+
+case "${1-}" in
+    --//|--p4) prefix=//; shift;;
+    *);;
+esac
+
+vunsetp "$*" && {
+    echo "Usage: $progname <dir>"
+    exit 1
+} 1>&2
+
+dir="$(normpath ${1})/"
+sb_root="$(normpath $(dp4-sb-root))/"
+vunsetp "${sb_root}" && {
+    echo "$progname: cannot determine which sandbox we are in."
+    exit 1
+} 1>&2
+
+# Snip off the root:
+rel_dir=$(normpath $(echo "${dir}" | sed -r "s!(^${sb_root})(.*$)!\2!"))
+
+[ "${dir}" = "${rel_dir}" ] && {
+    echo "$progname: dir[$dir] is not in this sandbox[$sb_root]"
+    exit 1
+} 1>&2
+
+echo "${prefix}${rel_dir}"

@@ -33,6 +33,11 @@
   (read-kbd-macro
    "RET M: SPC RET T: RET W: RET T: RET F: RET S: RET S: RET 7*<up> 3*<right>"))
 
+(defalias 'dp-add-tgen-debug
+  (read-kbd-macro
+   (concat "<C-prior> C-s sim.pl SPC RET - gdb SPC C-s - chip SPC "
+           "t124 RET _debug C-s libt124_ RET debug_")))
+
 ;;
 ;;
 ;; Simply run on (a copy of) the assignment and whalah[sic]
@@ -2038,15 +2043,48 @@ aa bb(
         t))
     ret))                              ; I'm confused about this whole thing.
 
+;; 
+;; One nvidia style for constructors is to have *leading* commas in the
+;; initializer list. I can actually see some usefulness, especially when
+;; having to delete the last, unused, comma.
+;; 
+;; This can be contolled crudely by putting the member init syntax symbols in
+;; the eol list (trailing commas) or the bol list (leading)
+;; XXX @todo Needs to be conditionalized better.
+;;
+
+(defvar dp-c-member-init-leading-commas t
+  "One nvidia style for constructors is to have *leading* commas in the
+  initializer list. I can actually see some usefulness, especially when
+  having to delete the last, unused, comma.")
+
+(defvar dp-c-add-comma-@-eol-of-regions 
+  '(brace-list-entry arglist-cont arglist-intro 
+    ;;member-init-intro
+    ;;member-init-cont 
+    arglist-cont-nonempty brace-list-intro 
+    brace-list-entry statement-case-intro brace-list-open)
+  "Syntax regions after which we may want to put a comma.")
+
+(defvar dp-c-add-comma-@-bol-of-regions 
+  '(member-init-intro member-init-cont)
+  "Syntax regions before which we may want to put a comma.")
+
+
 (defun dp-c-context-line-break ()
   "Do special things at the end of a line."
   (interactive "*")
-  (if (and (dp-c-in-syntactic-region dp-c-add-comma-@-eol-of-regions)
-           (looking-at "\\s-*$")
-           (save-excursion
-             (not (dp-point-follows-regexp "[-,:\\&;+=|.!@#$%^*(_/?]\\s-*"))))
-      (dp-open-newline)
-    (call-interactively 'c-context-line-break)))
+  (let ((syntactic-region 
+         (dp-c-get-syntactic-region)))
+    (if (and (dp-c-in-syntactic-region dp-c-add-comma-@-eol-of-regions)
+             (looking-at "\\s-*$")
+             (save-excursion
+               (not (dp-point-follows-regexp "[-,:\\&;+=|.!@#$%^*(_/?]\\s-*"))))
+        (dp-open-newline)
+      (call-interactively 'c-context-line-break)
+      (if (and (member syntactic-region dp-c-add-comma-@-bol-of-regions)
+               (dp-looking-back-at "^\\s-*"))
+          (insert ",")))))
 
 (defun* dp-open-above (&optional open-newline-p)
   "Newline before current line."
@@ -3594,7 +3632,8 @@ indices are unchanged.
 
 ;; test: 
 (defun* dp-parenthesize-region (index &optional (trim-ws-p t)  ; <:<::>
-                                &key pre suf
+                                &key pre suf 
+                                (position-after-prefix nil)
                                 (region-bounder-func 'rest-or-all-of-line-p)
                                 (region-bounder-func-args 
                                  '(:ignore-eol-punctuation-p t))
@@ -3614,6 +3653,7 @@ Use another binding? Running out of prefix arg interpretations."
   (interactive "*P")
   ;;(dmessage "lc: %s, tc: %s" last-command this-command)
   (let* ((orig-raw-index index)
+         point-after-prefix
          (iterating-p (or (eq iterating-p t)
                           (eq last-command this-command)))    
          ;; If we're iterating, and not sticky yet, we can stick at the
@@ -3776,12 +3816,14 @@ Use another binding? Running out of prefix arg interpretations."
                pre suf ))
     (when (and stuck-p (not (or sticky-p stick-last-p)))
       (message "Unsticking from  paren set %s , %s."
-               pre suf))))
+               pre suf))
+    (list pre suf)))
 
 (put 'dp-parenthesize-region 'self-insert-defer-undo 
      (* 3 (length dp-parenthesize-region-paren-list)))
 
 ;; test: ()
+;; ( ( ( ( ( ( (  ) ) ) ) ) ) )
 (defun* dp-insert-parentheses (&optional index allow-iteration-p
                                ignore-region-p)
   (interactive "*P")
@@ -3789,18 +3831,23 @@ Use another binding? Running out of prefix arg interpretations."
            (dp-mark-active-p))
       ;;(setq this-command 'dp-parenthesize-region)
       (call-interactively 'dp-parenthesize-region)
-    (let ((iterate-p (or (and allow-iteration-p
+    (let (pre-suf
+          (iterate-p (or (and allow-iteration-p
                               (eq last-command this-command))
                          (setq last-command nil))))
       (when iterate-p
         (forward-char -1))
-      (dp-parenthesize-region index
-                              t
-                              :region-bounder-func 'zero-len-p
-                              :iterating-p (or iterate-p 'no)
-                              :parenthesize-region-list '(("(" . ")")
-                                                          ("[" . "]")))
-      (forward-char 1))))
+      (setq pre-suf
+            (dp-parenthesize-region index
+                                    t
+                                    ;;:pre "( "  ; XXX @todo nvidia c-mode only
+                                    ;;:suf " )"
+                                    :position-after-prefix t
+                                    :region-bounder-func 'zero-len-p
+                                    :iterating-p (or iterate-p 'no)
+                                    :parenthesize-region-list '(("(" . ")")
+                                                                ("[" . "]"))))
+      (forward-char (length (car pre-suf))))))
   
 (defun* dp-undo-while (predicate)
   (interactive)
@@ -3819,7 +3866,13 @@ Use another binding? Running out of prefix arg interpretations."
   (interactive)
   (dp-undo-while 'buffer-modified-p))
 
-(defun dp-dot-h-reinclusion-protection (&optional dont-comment-endif-p)
+(defun* dp-dot-h-reinclusion-protection (comment-endif-p
+                                         &key
+                                         comment
+                                         (prefix "")
+                                         (suffix "_INCLUDED")
+                                         (format-str "%s%s%s")
+                                         formatter)
   "Add reinclusion protection sequence to a header file.
 The sequence looks like this:
 #ifndef xx
@@ -3841,7 +3894,9 @@ Otherwise, the sequence begins at \(point-min) and ends at \(point-max)."
       (if (dp-mark-active-p)
 	  (narrow-to-region (point) (mark)))
       (let* ((filename (upcase (file-relative-name (buffer-file-name))))
-	     (def-name (concat filename "_INCLUDED"))
+	     (def-name (if formatter
+                           (funcall formatter (buffer-file-name) prefix suffix)
+                         (format format-str prefix filename suffix)))
 	     comment-text
              ifdef-start)
 	(goto-char (point-min))
@@ -3857,20 +3912,22 @@ Otherwise, the sequence begins at \(point-min) and ends at \(point-max)."
 	(dp-c-namify-region ifdef-start (point) 'say-dot)
 	(goto-char ifdef-start)
 	(setq comment-text
-	      (if dont-comment-endif-p
-		  ""
-		(concat " /* #ifndef "
-			(buffer-substring (point) (line-end-position))
-                        " Reinclusion protection."
-			" */")))
+	      (if (and comment comment-endif-p)
+                  (concat " /* #ifndef "
+                          (buffer-substring (point) (line-end-position))
+                          " Reinclusion protection."
+                          " */")
+                ""))
 	(insert "#ifndef ")
         (end-of-line)
-        (insert " /* Reinclusion protection. */")
+        (when comment
+          (insert " /* Reinclusion protection. */"))
 	(forward-line 1)
 	;;(beginning-of-line) ; not needed w/forward-line
 	(insert "#define ")
         (end-of-line)
-        (insert " /* Reinclusion protection. */")
+        (when comment
+          (insert " /* Reinclusion protection. */"))
 	(goto-char (point-max))
 	(insert "\n#endif" comment-text "\n"))))
   (dmessage "@todo: Delete any existing ifdef lines first."))
@@ -8769,7 +8826,7 @@ Motivation was the ability to run commands like this \"mpc play\"."
 ;; So we need to determine if name-in has been expanded from the buffer line
 ;; so we can legitimately use the line number.
 ;; Another wrinkle: if the user enters a p4 path, then this routine will NOT see the //.
-(defun dp-ffap-file-finder2 (&optional name-in)
+(defun dp-ffap-file-finder2-0 (&optional name-in)
   "Recognize /file/name:<linenum>.
 Visit /file/name and then goto <linenum>."
   (interactive)
@@ -8798,18 +8855,30 @@ Visit /file/name and then goto <linenum>."
           (setq filename-part (match-string 1 working-filename)
                 line-num-part (match-string 2 working-filename))
         (setq filename-part working-filename))
+      (list filename-part line-num-part))))
+
+(defun* dp-ffap-file-finder2-1 (&optional name-in 
+                                (finder dp-ffap-ffap-file-finder))
+
 ;;      (dmessage "filename-part: %s, line-num-part: %s" filename-part line-num-part)
-      (if (and line-num-part
+  (let* ((ffap-info (dp-ffap-file-finder2-0 name-in))
+         (filename-part (car ffap-info))
+         (line-num-part (cadr ffap-info)))
+    (funcall finder filename-part)
+    (when (and line-num-part
                (file-exists-p filename-part)
                (or (not dp-ffap-ask-to-goto-line)
                    (y-or-n-p (format "goto %s in %s? " 
                                      line-num filename-part))))
-          (progn
-            (funcall dp-ffap-ffap-file-finder filename-part)
-            (if (find-buffer-visiting filename-part)
-                (dp-push-go-back "dp-ffap-file-finder2"))
-            (goto-line (string-to-int line-num-part)))
-        (funcall dp-ffap-ffap-file-finder filename-part)))))
+      (if (find-buffer-visiting filename-part)
+          (dp-push-go-back "dp-ffap-file-finder2"))
+      (goto-line (string-to-int line-num-part)))))
+
+(defun dp-ffap-file-finder2 (&optional name-in)
+  (dp-ffap-file-finder2-1 name-in))
+
+(defun dp-ffap-file-finder2-other-window (&optional name-in)
+  (dp-ffap-file-finder2-1 name-in 'find-file-other-window))
 
 (defun dp-ffap (&optional file-name)
   (interactive "P")
@@ -9494,8 +9563,9 @@ keep the file around."
 (defun dp-meta-minus-other-window (&optional other-window-arg)
   "Go to the specified window and invoke the [\(meta ?-)] function."
   (interactive "p")
-  (other-window (prefix-numeric-value current-prefix-arg))
-  (dp-meta-minus))
+  (save-window-excursion
+    (other-window (prefix-numeric-value current-prefix-arg))
+    (dp-meta-minus)))
 
 (defun dp-maybe-kill-buffer (buffer)
   "Kill buffer if local, else ask to kill for remote files.
@@ -10319,10 +10389,13 @@ Just for informational purposes.")
           ;; cannot remake if there's no target.
           (when (and dp-mru-make-target 
                      (member target '("=" "==" ".")))
-            ;; We won't ask for the target name again so we won't loop
+            ;; We won't ask for the target name again so we won't
             ;; keep recursing.
             (dp-remake)
             (return-from dp-make))
+          (when (and dp-mru-make-target
+                     (member target '("\"\"" "/" "'" "''")))
+            (setq target ""))
           (setq dp-mru-make-target target)
           (with-current-buffer makefile-buffer
             (setq dp-mru-make-makefile (buffer-file-name))
@@ -10405,12 +10478,14 @@ mode but not the new lines themselves.  Hence, this."
   (interactive)
   (dp-push-go-back "dp-chase-file-link")
   (apply (if current-prefix-arg
-             'find-file
-           'find-file-other-window)
-         (list (expand-file-name file-name)))
-  (when regexp
-    (with-saved-match-data
-     (dp-search-with-wrap regexp point limit error))))
+             'dp-ffap-file-finder2
+           'dp-ffap-file-finder2-other-window)
+         (list file-name)))
+;;
+;;         (list (expand-file-name file-name)))
+;;  (when regexp
+;;    (with-saved-match-data
+;;     (dp-search-with-wrap regexp point limit error))))
   
 (defalias 'cfl 'dp-chase-file-link)
 
@@ -11394,6 +11469,7 @@ and for setting up a buffers mode (`dp-set-auto-mode')."
                                        dp-bury-or-kill-buffer))
       (dp-define-buffer-local-keys '([(meta ?-)] 
                                        dp-maybe-kill-this-buffer)))))
+(defalias 'dp-make-primary-makefile 'dp-set-primary-makefile)
 
 (defun 411f (&optional name-regex case-unfold-p)
   "Find NAME-REGEX in phone book."
@@ -13507,7 +13583,7 @@ string's characters.
         (apply 'dp-fake-key-presses (string-to-list k))
       (dispatch-event (make-event 'key-press (list 'key k))))))
 
-(defun dp-delete-frame &optional frame force
+(defun dp-delete-frame (&optional frame force)
   "Confirm deletion because I use C-x 5 0 too often."
   (interactive)
   (if (and dp-confirm-frame-deletion-p
@@ -15519,6 +15595,21 @@ Will fail often, no doubt. Add a condition case or unwind protect or something."
                                        dp-current-sandbox-name)
               dp-p4-stupid-hack-saved-sb sb)
         (dp-maybe-expand-p4-location file sb)))))
+
+(defun dp-show-buffer-file-name (&optional kill-name-p buffer)
+  "Show the BUFFER or current-buffer's file name in echo area.
+KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
+  (interactive "P")
+  (with-current-buffer (or buffer (current-buffer))
+    (message "buffer-file-truename: %s" buffer-file-truename)
+    (if kill-name-p
+        (if (not buffer-file-truename)
+            (dmessage "buffer-file-truename is nil, not putting on kill ring.")
+          (cond 
+           ((Cu-p nil kill-name-p)
+            (kill-new buffer-file-truename))
+            ((Cu--p kill-name-p)
+             (kill-new (file-name-directory buffer-file-truename))))))))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;;

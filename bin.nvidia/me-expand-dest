@@ -18,17 +18,24 @@ me_expand_dest()
 {
     # Args: dest | sb dest
     local dest="${1-sb}"; shift
+    local tdest
     local sb_dest
     # sb_dest[0] is sandbox
     # sb_dest[1] is dest
-    if [ -n "${1-}" ]           # sb dest, dest is really sb
+    if vsetp "${1-}"            # sb dest, dest is really sb
     then
-        sb_dest=("${dest}" "${1}")
+        tdest="${1}"
+        case "${tdest}" in
+            .) # Go to the same place in the new sandbox.
+               tdest="$(dp4-location ${PWD})";;
+            /) tdest="sb";;     # Root
+        esac
+        sb_dest=("${dest}" "${tdest}")
     else
         sb_dest=($(echo "${dest}" | sed -r "s/^(${sep})(.*)(${sep})(.*)$/\2 \4/"))
     fi
     #echo 1>&2 "sb_dest>${sb_dest[@]}<"
-    if [ -z "${dest}" ]
+    if vunsetp "${dest}" 
     then
         dest="tot"
     elif [ -n "${sb_dest[*]}" ]

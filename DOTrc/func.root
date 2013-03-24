@@ -234,9 +234,19 @@ grep_var_log_messages()
 
 page_of_history()
 {
-    local lines=$((${LINES:-25} - 2))
-    fc -l -$lines
+    if [[ -z "$*" ]]; then
+        local lines=$((${LINES:-25} - 2))
+        fc -l -$lines
+    elif    [[ "55" =~ ^[0-9]+$ ]]
+    then
+        fc -l -$1
+    else
+        # What is this?
+        fc "$@"
+    fi
 }
+export -f page_of_history
+typeset -f -x page_of_history
 
 demerge()
 {

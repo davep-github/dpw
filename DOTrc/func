@@ -364,19 +364,6 @@ gr()
     esac
 }
 
-page_of_history()
-{
-    if [[ -z "$*" ]]; then
-        local lines=$((${LINES:-25} - 2))
-        fc -l -$lines
-    elif [[ "$1" =~ "[0-9]+" ]]; then
-        fc -l -$1
-    else
-        # What is this?
-        fc "$@"
-    fi
-}
-
 scanl()
 {
     local lines=$((${LINES:-25} - 2))
@@ -411,7 +398,6 @@ case $TERM in
 esac
 
 typeset -f -x g
-typeset -f -x page_of_history
 
 dp_cd()
 {
