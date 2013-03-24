@@ -1014,8 +1014,8 @@ AddToMenu   "Move-Window" "Move to ..." Title
 + '' Nop
 + '&General'    MoveToDesk 0 0
 + '&SB1'        MoveToDesk 0 1
-+ '&SB2-RTArgs' MoveToDesk 0 2
-+ '&SB3-ME-B1'  MoveToDesk 0 3
++ '&SB2-ME-B1'  MoveToDesk 0 2
++ '&SB3-DEPCPU' MoveToDesk 0 3
 + '&SB4-BARx'   MoveToDesk 0 4
 + '&SB5-EngCpu' MoveToDesk 0 5
 
@@ -1029,12 +1029,12 @@ AddToMenu   "Goto-Window" "Go to ..." Title
 + 'Page &2'     GotoPage 1 0
 + 'Page &4'     GotoPage 1 1
 + '' Nop
-+ '&General'    GotoDesk 0 0
-+ '&SB1'        GotoDesk 0 1
-+ '&SB2-RTArgs' GotoDesk 0 2
-+ '&SB3-ME-B1'  GotoDesk 0 3
-+ '&SB4-BARx'   GotoDesk 0 4
-+ '&SB5-EngCpu' GotoDesk 0 5
++ '&General'       GotoDesk 0 0
++ '&SB1'           GotoDesk 0 1
++ '&SB2-ME-B1'     GotoDesk 0 2
++ '&SB3-ME-DEPCPU' GotoDesk 0 3
++ '&SB4-BARx'      GotoDesk 0 4
++ '&SB5-EngCpu'    GotoDesk 0 5
 
 
 #------------------------------------------------------------------------------

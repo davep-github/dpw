@@ -220,10 +220,10 @@ do_fetch_wget()
     local server="${1}"; shift
     local dest_file="${1}"; shift
 
-    tmp_file=$(mktemp "$HOME/tmp/dp4-review.tmp.XXXXXXX") || {
-        echo "Couldn't make a temp file."
-        exit 1
-    } 1>&2
+#needed?     tmp_file=$(mktemp "$HOME/tmp/dp4-review.tmp.XXXXXXX") || {
+#needed?         echo "Couldn't make a temp file."
+#needed?         exit 1
+#needed?     } 1>&2
     EExec wget --http-user=svcsw \
       "--http-passwd=${password}" \
       -O "${dest_file}" \
@@ -292,6 +292,9 @@ dp4r_upload()
 dp4r_review()
 {
     local f="${1}"
+    [[ "$f" =~ ^[0-9]+$ ]] && {
+        f="cl-${f}.p4r"
+    }
     case "$f" in
         *://*) set -- $(echo "$f" | sed -rn 's!(.*://.*)(/)(.*)$!\1 \3!p');
                f="${2}"

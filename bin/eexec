@@ -165,7 +165,7 @@ EExecVerbose ()
 
 EExecVerbose_p()
 {
-    [ -n "$EExecDashV_opt" ]
+    EExecDashN_p
 }
 
 EExec_verbose_msg()

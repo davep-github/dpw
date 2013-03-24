@@ -1,0 +1,55 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+# 
+# Print detailed information about a sandbox
+#
+
+sb="${1-}"
+if vsetp "$sb"
+then
+    sb="$@"
+else
+    sb=$(basename $(dirname $(me-expand-dest)))
+fi
+
+echo_id sb
+
+for s in $sb
+do
+  case "$s" in
+      sb2) info="Surface_specifier:
+Allows mapping modes to be specified in void SetSharedSurfaceNames().
+Working on adding a parameter to select the mode rather than editing a test.
+Includes MeIterableTest unshelved code.
+"
+      ;;
+      sb3) info="Dependent CPU tests.
+"
+      ;;
+      sb4) info="MeIterableTest (out for review) 
+Suggested to run full(er) regression.
+BAR1/MC tests.
+"
+      ;;
+      sb5) info="EngCpu tests. On ARM tests using EngCpu class and scheduler.
+"
+      ;;
+      *) echo 1>&2 "Unknown sandbox>$sb<"; exit 1;;
+  esac
+  echo "$info"
+  (g "${s}" >/dev/null; echo "sandbox root dir: $(pwd)";  p4 opened)
+done
+
+exit 0

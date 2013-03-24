@@ -93,8 +93,3 @@ if ($?prompt) then
     set prompt=\[`id -nu`@`hostname -s`\]\$\ 
   endif
 endif
-
-### 
-### Local Variables: *** 
-### eval: (dpj-stick-current-journal-file) *** 
-### End: *** 

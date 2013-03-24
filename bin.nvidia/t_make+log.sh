@@ -166,6 +166,8 @@ done
     log_name="${log_dir}/${log_name_base}.$(dp-std-timestamp)"
 }
 
+log_name=$(realpath "$log_name")
+
 mail_results()
 {
     EExecDashN_p && send_mail_on_completion=

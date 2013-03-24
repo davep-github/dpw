@@ -421,9 +421,11 @@ Returns nil if there is no current sandbox."
   (interactive (list (read-from-minibuffer
                       (format "Sandbox name/path%s: "
                               (if dp-current-sandbox-regexp
-                                  (format "[current: %s]"
+                                  (format "[current: %s:%s]"
+                                          dp-current-sandbox-name
                                           dp-current-sandbox-regexp)
-                                "")))))
+                                ""))
+                      nil nil nil nil nil dp-current-sandbox-name)))
 
   (let ((sandbox (if (string= sandbox "")
                      nil
@@ -444,11 +446,14 @@ Returns nil if there is no current sandbox."
         ;; We're a name, find path
         (setq-default dp-current-sandbox-name sandbox
                       dp-current-sandbox-regexp
-                      (concat (dp-me-expand-dest "/" sandbox) "/" )))
-      (setq frame-title-format (concat "["
-                                       dp-current-sandbox-name
-                                       "] "
-                                       dp-frame-title-format)))))
+                      (concat (dp-me-expand-dest "/" sandbox) "/" ))))
+    (setq frame-title-format (concat "["
+                                     (or dp-current-sandbox-name "No SB")
+                                     "] "
+                                     dp-frame-title-format))
+    (when dp-current-sandbox-regexp
+      (define-abbrev dp-manual-abbrev-table 
+         "sb" dp-current-sandbox-regexp))))
 
 (defun dp-sandbox-read-only-p (filename)
   "Determine if a file is in a readonly sandbox.
