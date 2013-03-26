@@ -2603,7 +2603,7 @@ MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
     (funcall original-filter proc string)))
 
 (defun dp-gdb-filter (proc string)
-  (gdb-filter))
+  (gdb-filter proc string))
 ;;  (dp-limiting-process-filter proc string 'gdb-filter
 ;;                              dp-gdb-buffer-max-size))
 
