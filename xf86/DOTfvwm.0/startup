@@ -35,6 +35,8 @@ AddToFunc StartFunction
 #G_M_G 1
 #+ I Module FvwmGtk
 
+AddToFunc StartFunction "I" Module FvwmCommandS
+
 # The InitFunction is used at FVWM start
 
 AddToFunc InitFunction

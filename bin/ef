@@ -182,14 +182,7 @@ process_file ()
         fi
     }
 
-    #
-    # if we're running sawfish, then raise emacs, too.
-    # raise first, since sometimes emacs'll prompt for things
-    # and gnuclient waits in that case until the prompt is responded to.
-    #if [ "$EZEC" != "echo" ] && [ "$have_sawfish" = "0" ]
-    #then
-    #	sawfish-client -f dp-raise-local-emacs > /dev/null
-    #fi
+    attempt-to-raise-emacs
 
     # send the filename to emacs
     [ "$do_wait" = 'y' ] && nowait_opt=

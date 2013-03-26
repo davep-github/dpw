@@ -1,0 +1,28 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+#
+# if we're running sawfish, then raise emacs, too.
+# raise first, since sometimes emacs'll prompt for things
+# and gnuclient waits in that case until the prompt is responded to.
+#if [ "$EZEC" != "echo" ] && [ "$have_sawfish" = "0" ]
+#then
+#	sawfish-client -f dp-raise-local-emacs > /dev/null
+#fi
+
+findprog -s FvwmCommandS && {
+    FvwmCommand 'NextEmacs'
+    exit
+}
+

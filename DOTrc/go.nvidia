@@ -188,3 +188,4 @@ Ee|sgds|barbin|barrun|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/hw/ap_tlit
 Ee|sanitybar1|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile/traces/gpu_multiengine/sanity_gr_disp_syncpt_bar1/
 Ee|sanitybar1|bar1sanity|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile/traces/gpu_multiengine/sanity_gr_disp_syncpt_bar1/
 Ee|goodvic2|       /home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/vic2gpu_display_composite_128x128_A4B4G4R4_bl_1x16x1_gpu_input/2013-03-21T12.48.43-0400.out/tests/kepler_b_ogtest/00/00/01/000001/
+Ee|vic2gpu128x128|vic2ref|       /home/scratch.dpanariti_t124/sb2/hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/vic2gpu_display_composite/2013-03-21T21.11.45-0400.out/tests/kepler_b_ogtest/00/00/05/000005/

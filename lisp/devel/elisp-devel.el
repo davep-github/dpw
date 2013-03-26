@@ -3276,3 +3276,80 @@ Tuesday March 12 2013
 (dp-grep-buffers "loader_0")
 (#<buffer "elisp-devel.el"> #<buffer "sanity_msenc.cpp"> #<buffer "sanity_vde.cpp"> #<buffer "vde_gpu_compositing_by_vic.cpp"> #<buffer "vic2gpu_display_composite.cpp"> #<buffer "vic2gpu_display_composite_256x128_A8B8G8R8_bl_1x16x1_gpu_input_cfg"> #<buffer " *Message-Log*">)
 
+
+========================
+Monday March 25 2013
+--
+(defun dp-gdb (&optional new-p path corefile)
+  "Extension to gdb that:
+. Prefers the most recently used buffer if its process is still live,
+. Else it asks for a buffer using a completion list of other gdb buffers,
+. Else (or if nothing selected above) it starts a new gdb session."
+  (interactive "P")
+  (unless new-p
+    (let* (buf 
+           (mrb (dp-gdb-most-recent-buffer :dead-or-alive-p t)
+           (current-buf-live-p (and mrb 
+                                    (dp-buffer-process-live-p 
+                                     mrb :default-p nil))
+           (get-buffer-interactively-p (or (Cu--p)
+                                           (not current-buf-live-p))))
+      (setq buf
+            (cond 
+             ((not get-buffer-interactively-p)
+              mrb)
+             ((let ((buf (car (dp-gdb-get-buffer-interactively))))
+                (if (not (string= buf "-" ))
+                    ;; Make sure we're true.
+                    (or (dp-visit-or-switch-to-buffer buf) t)
+                  nil))
+
+            (if (and get-buffer-interactively-p
+                     (let ((buf (car (dp-gdb-get-buffer-interactively))))
+                       (if (not (string= buf "-" ))
+                           ;; Make sure we're true.
+                           (or (dp-visit-or-switch-to-buffer buf) t)
+                         nil)))
+                
+                (if current-buf-live-p
+                    mrb)
+                    
+                    
+          (if 
+      
+                
+      (if get-buffer-interactively-p
+           
+    (if (or (dp-buffer-process-live-p (dp-gdb-most-recent-buffer
+                                       :dead-or-alive-p t)
+                                      :default-p nil)
+            )
+        ()
+      (setq new-p t)
+      ;; Toss a buffer with a dead gdb proc.
+      (dp-bury-or-kill-process-buffer (dp-gdb-most-recent-buffer
+                                       :dead-or-alive-p t))))
+  (when new-p                           ; New can be changed above.
+    (if (eq new-p '-)
+        (dp-gdb-naught)
+      ;; Want to get here if new-p or no live proc buffers.
+      (let ((dp-gdb-recursing t))
+        ;; Let's grab the file name our-self, regardless of interactivity, so
+        ;; we can put it into our own history.
+        (setq-ifnil path (read-file-name "Run dp-gdb on file: " nil nil nil nil
+                                         'dp-gdb-file-history))
+        (gdb path corefile)
+        (set-process-filter (get-buffer-process (current-buffer))
+                            'dp-gdb-filter)))
+    (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-dead-buffers)
+    (dp-add-or-update-alist 'dp-gdb-buffers (buffer-name)
+                            (or corefile 'dp-gdb))
+    (dp-add-to-history 'dp-gdb-buffer-history (buffer-name))
+    (when (boundp 'dp-gdb-commands)
+      ;; The node-name from locale-rcs will probably be used most.  But since
+      ;; I have the whole list easily available, I may as well allow gdb
+      ;; commands to be keyed to any of the locales.
+      (loop for key in (cons "." (dp-get-locale-rcs)) do
+        (loop for cmd in (cdr (assoc key dp-gdb-commands)) do
+          (insert cmd)
+          (comint-send-input))))))

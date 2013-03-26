@@ -15,6 +15,7 @@
 Term has more potential, but comint is easier and was around, for me, first
 and so is the most developed.")
 
+
 ;;;###autoload
 (defcustom shell-uninteresting-face 'shell-uninteresting-face
   "Face for shell output which is uninteresting.
@@ -762,12 +763,13 @@ And maybe having a line count print out periodically?
 Or write to a spill file.
 Or both.")
 
-(defun dp-shell-filter-proc (proc string)
-    (dp-limiting-process-filter proc string dp-original-shell-filter-function
-                                ;; Some average ? line length to convert to
-                                ;; characters.
-                                (and dp-shell-output-max-lines
-                                     (* 2 dp-shell-output-max-lines))))
+;; Using comint version.
+;; (defun dp-shell-filter-proc (proc string)
+;;     (dp-limiting-process-filter proc string dp-original-shell-filter-function
+;;                                 ;; Some average ? line length to convert to
+;;                                 ;; characters.
+;;                                 (and dp-shell-output-max-lines
+;;                                      (* 2 dp-shell-output-max-lines))))
   
 (defun dp-set-shell-max-lines (max-lines)
   "Set max lines per shell command output and return it."
@@ -827,8 +829,12 @@ Or both.")
     (dp-maybe-add-compilation-minor-mode)
     ;;(font-lock-set-defaults)
     (dp-maybe-add-ansi-color)
-    (loop for hook in '(comint-strip-ctrl-m dp-shell-lookfor-dir-change)
-      do (add-hook 'comint-output-filter-functions hook)))
+    (loop for hook in '(comint-strip-ctrl-m 
+                        dp-shell-lookfor-dir-change
+                        comint-truncate-buffer)
+      do (add-hook 'comint-output-filter-functions hook))
+    (setq comint-buffer-maximum-size 4096))
+  
   ;; something wipes this out after the call to comint-mode-hook and here,
   ;; so we do it again.
   (dp-shell-refresh-abbrevs)
@@ -2333,7 +2339,7 @@ ARG is numberp:
       ;; Set up a filter to prevent a flood of output from hanging us up.
       (setq dp-original-shell-filter-function 
             (process-filter (dp-get-buffer-process-safe)))
-      (set-process-filter (dp-get-buffer-process-safe) 'dp-shell-filter-proc)
+      ;;(set-process-filter (dp-get-buffer-process-safe) 'dp-shell-filter-proc)
 
       ;; Set the name once. All saves will pile up in the same file.  I've
       ;; added a manual save command and that will go there, too.  If shell
@@ -2597,8 +2603,9 @@ MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
     (funcall original-filter proc string)))
 
 (defun dp-gdb-filter (proc string)
-  (dp-limiting-process-filter proc string 'gdb-filter
-                              dp-gdb-buffer-max-size))
+  (gdb-filter))
+;;  (dp-limiting-process-filter proc string 'gdb-filter
+;;                              dp-gdb-buffer-max-size))
 
 (defun dp-mk-gdb-name (&optional name)
   (let* ((name (concat "gdb-" (or name "naught")))

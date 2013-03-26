@@ -6,6 +6,7 @@
 $pre_delimit = $post_delimit = "";
 $internal_delimit = " ";
 $silent = 0;
+$debug = 0;
 if ($ProgName eq 'findprog')
 {
   $do_kill = 0;
@@ -47,6 +48,10 @@ elsif ($arg0 eq '-d') {
   $pre_delimit = $internal_delimit = $post_delimit = "/";
   shift(@ARGV);
 }
+elsif ($arg0 eq '-D') {
+  ++$debug;
+  shift(@ARGV);
+}
 else
 {
   if  ($arg0 eq '--') {
@@ -59,20 +64,21 @@ chop($OSName = `uname`);
 
 if ($OSName eq 'Linux')
 {
-  # broken, returns (dapanarx) as program name:
-  #  5915 ?        S      0:00 /usr/bin/Xvnc :1 -desktop grape01:1 (dapanarx) -auth /home/dapanarx/.Xauthority -geometry 2048x1536 -rfbwait 30000 -rfbauth /home/dapanarx/.vnc/passwd -rfbport 5901 -fp catalogue:/etc/X11/fontpath.d -pn
   # pattern to find program's pid and executable name
-  # 15355 pts/4    S      0:02 /usr/lib/netscape/netscape-communicator
-  $nameFinder = '^\s*(\d+).*\d+:\d+\s+(\S+)';
+  # 8460 gdb /home/scratch.dpanariti_t124/sb2/hw/hw/nvdiag/mods/mods --command=dbcommands
+  $psCmd = 'ps -u dpanariti -o pid,cmd';
+  $nameFinder = '^\s*(\d+)\s+(\S+)';
+  
   # pattern to find an interpreter's program (i.e. 1st arg)
-  # 27699 pts/0    S      0:00 /bin/bash /usr/libexec/mozilla-launcher -P KDE
-  # 21361 pts/0    S      0:00 /bin/sh /home/davep/bin/ffox
-  $scriptNameFinder = '^\s*(\d+).*\d+:\d+\s+\S+\s+\S+?([^/]+)(\s|$)';
+  # Will break with options to interpreter itself.
+  # 8460 gdb /home/scratch.dpanariti_t124/sb2/hw/hw/nvdiag/mods/mods --command=dbcommands
+  $scriptNameFinder = '^\s*(\d+)\s+(\S+)\s+(\S+)';
     
   # display all processes command
   #$psCmd = 'ps agxww';
   # Now that we're living on shared boxen, don't look at other people's stuff.
-  $psCmd = 'ps u ww x'
+  #$psCmd = 'ps u ww x'
+  # 20950 /usr/bin/SCREEN -O -dR -t rscreen -S rscreen
 }
 elsif ($OSName eq 'FreeBSD')
 {
@@ -81,16 +87,16 @@ elsif ($OSName eq 'FreeBSD')
   $psCmd = 'ps agxww'
 }
 
-#print "OSName>$OSName<, psCmd>$psCmd<, nameFinder>$nameFinder<\n";
+print "OSName>$OSName<, psCmd>$psCmd<, nameFinder>$nameFinder<\n" if ($debug);
 open(PS, $psCmd . " |") || die "canna open ps pipe, $!\n";
 
 %possible_pids = {};
 while ($line = <PS>) {
   chop ($line);
-  #print "line>$line<\n";
+  print "line>$line<\n" if ($debug);
   # snip out fields we are interested in
   ($pid, $name) = $line =~ /$nameFinder/o;
-  #print "  pid>$pid<, name>$name<\n";
+  print "  pid>$pid<, name>$name<\n" if ($debug);
   # loop thru all progs specified on command line
   foreach $prog (@ARGV) {
     if ($prog =~ m!^\d+$!) {
@@ -100,30 +106,30 @@ while ($line = <PS>) {
       }
     }
 
-    #printf("name>$name<, prog>$prog<\n");
+    printf("name>$name<, prog>$prog<\n") if ($debug);
     ($base_name) = $name =~ m!([^/]+$)!;
     # if prog is absolute, then match full, else match basenames.
-    # print "prog>$prog<\n";
+    print "prog>$prog<\n" if ($debug);
     # extract the program's base name (e.g. no path)
     # and check for a match on that
     if ($prog =~ m!^/!) {
       $match_prog = $prog;
       $match_name = $name;
-      #printf("fullname: ");
+      #printf("fullname: ") if ($debug);
     } else {
       ($match_prog) = $prog =~ m!([^/]+$)!;
       $match_name = $base_name;
-      #printf("basename: ");
+      #printf("basename: ") if ($debug);
     }
 
-    #printf("..........match_name>$match_name<, match_prog>$match_prog<\n");
+    #printf("..........match_name>$match_name<, match_prog>$match_prog<\n") if ($debug);
     if ($match_name eq $match_prog) {
       push(@pidList, $pid);
     } elsif ($base_name =~ m!^(([ak]|ba)?sh)$!) {
       # See if we're a shell script
       ($scr_pid, $scr_name, $rest) = $line =~ /$scriptNameFinder/o;
-      #printf("line>$line<\n");
-      #printf("scr_pid>$scr_pid<, scr_name>$scr_name<, rest>$rest<\n");
+      #printf("line>$line<\n") if ($debug);
+      #printf("scr_pid>$scr_pid<, scr_name>$scr_name<, rest>$rest<\n") if ($debug);
       push(@pidList, $scr_pid) if ($scr_name eq $prog);
     }
     # Add support for other interpreters, starting w/Python.
@@ -136,10 +142,10 @@ if (@pidList)
   if ($inquire) {
     kill_interactively (@pidList)
   } else {
-    #print "siggie>$siggie<, pidList>@pidList<\n";
+    #print "siggie>$siggie<, pidList>@pidList<\n" if ($debug);
     print "kill ($siggie, @pidList);\n" if ($verbose);
     print $pre_delimit, join($internal_delimit, @pidList), $post_delimit, "\n" 
-	if ($echo_pids);
+	if ($echo_pids && !$silent);
     $!=0;
     $num = kill ($siggie, @pidList) if ($do_kill);
     $emsg = $!;

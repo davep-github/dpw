@@ -8356,7 +8356,7 @@ Else `(apply pred pred-args)'."
     (find-file (completing-read "Resurrect file: " 
                                 table
                                 nil t nil
-                                'file-name-history))
+                                'dp-recently-killed-files))
     (dp-set-recently-killed-file-list tmp)))
 
 (dp-defaliases 'dp-resurrect 'dprd 'raise-dead 'resurrect 
@@ -8430,7 +8430,7 @@ If BUF-OR-NAME is nil, use the current buffer's name."
              buf-or-name "Neither a buffer nor a name."))))
 
 (defun* dp-buffer-process-live-p (&optional buffer &key (default-p t))
-  "See if BUFFER, def `current-buffer' has a live process. 
+  "If BUFFER, [def `current-buffer'] has a live process, return it else nil.
 BUFFER is name or buffer object."
   (when (or default-p buffer)
     (setq-ifnil buffer (current-buffer))
@@ -15518,7 +15518,7 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
 ;;        (dmessage "dp-restrict-buffer-growth, pt-min: %s, pt: %s, pt-max: %s"
 ;;                  (point-min) (point) (point-max))
  	(delete-region (point-min) (point))
-        (insert "================== 8>< ===================\n")
+;;        (insert "================== 8>< ===================\n")
         ))
 
 (defun dp-warn-if-empty (msg &optional warning-type)
