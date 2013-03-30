@@ -197,6 +197,7 @@ Mouse 3         6       A       All ($c) WindowShade On
 # Key F5		A	MS	RaiseLower
 # Key F6		A	MS	All (Iconic) Raise  # originally Restore
 # Key F7		A	MS	Move
+Key F7                  A	4	Move
 # Key F8		A	MS	Resize
 # Key F9		A	MS	Iconify
 Key F10		A	MS	Maximize 100 100
@@ -210,25 +211,13 @@ Key F11		A	MS	FvwmIdent
 # Key F2		A	MS	Menu Window mouse -1p -1p
 # Key F3		A	MS	WindowList mouse -1p -1p
 
-
 #------------------------------------------------------------------------------
 # The [in]famous Alt-tab binding
 #------------------------------------------------------------------------------
 
-# DestroyFunc my_dbltab2
-# AddToFunc   my_dbltab2
-# + I WindowListFunc $w
-# DestroyFunc my_dbltab_prev
-# AddToFunc   my_dbltab_prev
-# + I Prev my_dbltab2
-
-# Key Tab A M	WindowList Root c c NoGeometry, NoDeskSort, SelectOnRelease Alt_L my_dbltab_prev
-
-# Key Tab A 4	WindowList Root c c NoGeometry, NoDeskSort, SelectOnRelease Alt_L my_dbltab_prev
-#Key Tab A M     WindowList Root c c CurrentDesk
-Key Tab A 4     WindowList Root c c DeskSort, SelectOnRelease 4_L
-Key Tab	A C4	WindowList Root c c NoGeometry, OnlyListSkip, SelectOnRelease
-Key Tab	A CM	WindowList Root c c NoGeometry, OnlyListSkip, SelectOnRelease
+Key      Tab       A     4       WindowList Root c c DeskSort, SelectOnRelease 4_L
+Key      Tab       A     C4      WindowList Root c c NoGeometry, OnlyListSkip, SelectOnRelease
+Key      Tab       A     CM      WindowList Root c c NoGeometry, OnlyListSkip, SelectOnRelease
 
 
 #------------------------------------------------------------------------------
@@ -291,36 +280,36 @@ Key Tab	A CM	WindowList Root c c NoGeometry, OnlyListSkip, SelectOnRelease
 # Keynames:
 # /usr/include/X11/keysymdef.h
 
-Key F1 A 4 GotoDeskAndPage 0 0 0
-Key F2 A 4 GotoDeskAndPage 1 0 0
-Key F3 A 4 GotoDeskAndPage 2 0 0
-Key F4 A 4 GotoDeskAndPage 3 0 0
-Key F5 A 4 GotoDeskAndPage 4 0 0
-Key F6 A 4 GotoDeskAndPage 5 0 0
-Key F7 A 4 GotoDeskAndPage 6 0 0
+Key            F1         A      4     GotoDeskAndPage 1 0 0
+Key            F2         A      4     GotoDeskAndPage 2 0 0
+Key            F3         A      4     GotoDeskAndPage 3 0 0
+Key            F4         A      4     GotoDeskAndPage 4 0 0
+Key            F5         A      4     GotoDeskAndPage 5 0 0
+Key            F6         A      4     GotoDeskAndPage 6 0 0
+Key            F10        A      4     GotoDeskAndPage 0 0 0
 
-Key F1 A S4 GotoDeskAndPage 0 0 1
-Key F2 A S4 GotoDeskAndPage 1 0 1
-Key F3 A S4 GotoDeskAndPage 2 0 1
-Key F4 A S4 GotoDeskAndPage 3 0 1
-Key F5 A S4 GotoDeskAndPage 4 0 1
-Key F6 A S4 GotoDeskAndPage 5 0 1
-Key F7 A S4 GotoDeskAndPage 6 0 1
+Key            F1         A      S4    GotoDeskAndPage 1 0 1
+Key            F2         A      S4    GotoDeskAndPage 2 0 1
+Key            F3         A      S4    GotoDeskAndPage 3 0 1
+Key            F4         A      S4    GotoDeskAndPage 4 0 1
+Key            F5         A      S4    GotoDeskAndPage 5 0 1
+Key            F6         A      S4    GotoDeskAndPage 6 0 1
+Key            F10        A      S4    GotoDeskAndPage 0 0 1
 
-Key Insert A 4  GotoPage 0 0
-Key Delete A 4  GotoPage 0 1
-Key Home   A 4  GotoPage 1 0
-Key End    A 4  GotoPage 1 1
+Key            Insert     A      4     GotoPage 0 0
+Key            Delete     A      4     GotoPage 0 1
+Key            Home       A      4     GotoPage 1 0
+Key            End        A      4     GotoPage 1 1
 
-Mouse 1 W 4 Move-NoRaise-or-RaiseLower
-Mouse 3 W 4 Resize
-Mouse 3 W M Resize
+Mouse          1          W      4     Move-NoRaise-or-RaiseLower
+Mouse          3          W      4     Resize
+Mouse          3          W      M     Resize
 
-Key period A 4 RaiseLower
-Key comma W 4 Next WarpToWindow 12 12
+Key            period     A      4     RaiseLower
+Key            comma      W      4     Next WarpToWindow 12 12
 
 #------------------------------------------------------------------------------
-# Misc Bindings
+# Misc  Bindings
 #------------------------------------------------------------------------------
 #Key e A 4 WindowId (XEmacs@o-xterm) Raise
 #Key e A 4 Next ("XEmacs@o-xterm*") WarpToWindow 33p 33p
@@ -339,3 +328,5 @@ Key y WFST1246 4 Iconify
 
 Key Left A 4 GotoDesk -1
 Key Right A 4 GotoDesk 1
+
+Key t A 4 exec dpxx

@@ -3257,24 +3257,24 @@ nil
 Tuesday March 12 2013
 --
 
-;; elephant = loader_0
-(defun dp-grep-buffers (regexp)
-  (interactive "sregexp? ")
-  (let ((bl (delq nil (mapcar (function
-                               (lambda (buf)
-                                 (with-current-buffer buf
-                                   (save-excursion
-                                     ;; Widen, too.
-                                     (goto-char (point-min))
-                                     ;; Make an igrep, etc, like buffer with
-                                     ;; all matches and line numbers.
-                                     (when (re-search-forward regexp nil t)
-                                       buf)))))
-                              (buffer-list)))))
-        (message "bl>%s<" bl)))
+;;more dev below ;; elephant = loader_0
+;;more dev below (defun dp-grep-buffers (regexp)
+;;more dev below   (interactive "sregexp? ")
+;;more dev below   (let ((matching-buffer-list (delq nil (mapcar (function
+;;more dev below                                (lambda (buf)
+;;more dev below                                  (with-current-buffer buf
+;;more dev below                                    (save-excursion
+;;more dev below                                      ;; Widen, too.
+;;more dev below                                      (goto-char (point-min))
+;;more dev below                                      ;; Make an igrep, etc, like buffer with
+;;more dev below                                      ;; all matches and line numbers.
+;;more dev below                                      (when (re-search-forward regexp nil t)
+;;more dev below                                        buf)))))
+;;more dev below                               (buffer-list)))))
+;;more dev below         (message "matching-buffer-list>%s<" matching-buffer-list)))
 
-(dp-grep-buffers "loader_0")
-(#<buffer "elisp-devel.el"> #<buffer "sanity_msenc.cpp"> #<buffer "sanity_vde.cpp"> #<buffer "vde_gpu_compositing_by_vic.cpp"> #<buffer "vic2gpu_display_composite.cpp"> #<buffer "vic2gpu_display_composite_256x128_A8B8G8R8_bl_1x16x1_gpu_input_cfg"> #<buffer " *Message-Log*">)
+;;more dev below (dp-grep-buffers "loader_0")
+;;more dev below (#<buffer "elisp-devel.el"> #<buffer "sanity_msenc.cpp"> #<buffer "sanity_vde.cpp"> #<buffer "vde_gpu_compositing_by_vic.cpp"> #<buffer "vic2gpu_display_composite.cpp"> #<buffer "vic2gpu_display_composite_256x128_A8B8G8R8_bl_1x16x1_gpu_input_cfg"> #<buffer " *Message-Log*">)
 
 
 ========================
@@ -3353,3 +3353,57 @@ Monday March 25 2013
         (loop for cmd in (cdr (assoc key dp-gdb-commands)) do
           (insert cmd)
           (comint-send-input))))))
+
+========================
+Wednesday March 27 2013
+--
+;; see also above
+
+;; elephant = loader_0
+(defun dp-grep-buffers (regexp &optional buffer-filename-regexp)
+  (interactive "sregexp? ")
+  (setq-ifnil buffer-filename-regexp ".*")
+  (let ((matching-buffer-list 
+         (delq nil (mapcar (function
+                            (lambda (buf)
+                              (with-current-buffer buf
+                                (save-excursion
+                                  ;; Widen, too.
+                                  (goto-char (point-min))
+                                  ;; Make an igrep, etc, like buffer with
+                                  ;; all matches and line numbers.
+                                  (when (re-search-forward regexp nil t)
+                                    (list (point) buf
+                                          ;; filename:num which M-e can
+                                          ;; follow as well as things which
+                                          ;; go to compiler error or grep
+                                          ;; lines.
+                                          (format "%s:%s" 
+                                                  (buffer-file-name)
+                                                  (line-number (point)))))))))
+                           (dp-choose-buffers-file-names buffer-filename-regexp)))))
+    (message "matching-buffer-list>%s<" matching-buffer-list)
+    matching-buffer-list))
+
+
+(dp-grep-buffers "loader_0" ".*\.cpp")
+((5969 #<buffer "dep_cpu_cpu_gpu.cpp"> "/home/scratch.dpanariti_t124/sb2/hw/arch/traces/mobile/traces/gpu_multiengine/dep_cpu_cpu_gpu/dep_cpu_cpu_gpu.cpp:161") (2233 #<buffer "vic2gpu_display_composite.cpp"> "/home/scratch.dpanariti_t124/sb2/hw/arch/traces/mobile/traces/gpu_multiengine/vic2gpu_display_composite/vic2gpu_display_composite.cpp:49") (2228 #<buffer "sanity_vic.cpp"> "/home/scratch.dpanariti_t124/sb2/hw/arch/traces/mobile/traces/gpu_multiengine/sanity_vic/sanity_vic.cpp:50"))
+
+
+
+
+((5969 #<buffer "dep_cpu_cpu_gpu.cpp">) (2233 #<buffer "vic2gpu_display_composite.cpp">) (2228 #<buffer "sanity_vic.cpp">))
+
+(#<buffer "dep_cpu_cpu_gpu.cpp"> #<buffer "vic2gpu_display_composite.cpp"> #<buffer "sanity_vic.cpp">)
+
+nil
+
+(#<buffer "elisp-devel.el"> #<buffer "daily-2013-03.jxt"> #<buffer "dep_cpu_cpu_gpu.cpp"> #<buffer "dep_cpu_cpu_gpu_128x128_A4B4G4R4_bl_1x16x1_gpu_input_cfg"> #<buffer "dep_cpu_cpu_gpu_cfg"> #<buffer "vic2gpu_display_composite_16x16_A8B8G8R8_pitch_gpu_input_cfg"> #<buffer "vic2gpu_display_composite.cpp"> #<buffer "sanity_vic.cpp">)
+
+
+
+(#<buffer "elisp-devel.el"> #<buffer "daily-2013-03.jxt"> #<buffer "dep_cpu_cpu_gpu.cpp"> #<buffer "dep_cpu_cpu_gpu_128x128_A4B4G4R4_bl_1x16x1_gpu_input_cfg"> #<buffer "*shell*<2>"> #<buffer "dep_cpu_cpu_gpu_cfg"> #<buffer "vic2gpu_display_composite_16x16_A8B8G8R8_pitch_gpu_input_cfg"> #<buffer "vic2gpu_display_composite.cpp"> #<buffer "sanity_vic.cpp">)
+
+
+
+//home/scratch.dpanariti_t124/sb2/hw/arch/traces/mobile/traces/gpu_multiengine/dep_cpu_cpu_gpu/dep_cpu_cpu_gpu.cpp:161

@@ -472,6 +472,9 @@ w/tags, cscope, etc.")
 ;;      (subst 'ksh-mode 'sh-mode interpreter-mode-alist))
 
 
+(dp-add-to-list 'folding-mode-marks-alist '(dp-journal-mode "{{{" "}}}"))
+
+
 ;; pull in multiple major mode stuff if available.
 (when (dp-optionally-require 'dp-mmm)
   ;; add our class to journal buffers

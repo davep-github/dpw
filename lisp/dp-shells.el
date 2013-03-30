@@ -833,7 +833,7 @@ Or both.")
                         dp-shell-lookfor-dir-change
                         comint-truncate-buffer)
       do (add-hook 'comint-output-filter-functions hook))
-    (setq comint-buffer-maximum-size 4096))
+    (setq comint-buffer-maximum-size (* 16 1024)))
   
   ;; something wipes this out after the call to comint-mode-hook and here,
   ;; so we do it again.
@@ -2184,7 +2184,7 @@ It isn't pretty."
   "Note, many characters ef-up comint stuff, most seem to have to do with
   it's finding the end of the prompt.  Two in particular: > and #")
 
-(defun dp-shells-delq-buffer ()
+(defun dp-shells-remove-buffer ()
   (setq dp-shells-shell-buffer-list
         (delq (current-buffer) dp-shells-shell-buffer-list)))
 
@@ -2332,7 +2332,7 @@ ARG is numberp:
       (dp-shells-set-most-recent-shell sh-buffer 'shell)
       ;; new shell (I hope!)
       (add-to-list 'dp-shells-shell-buffer-list sh-buffer)
-      (add-local-hook 'kill-buffer-hook 'dp-shells-delq-buffer)
+      (add-local-hook 'kill-buffer-hook 'dp-shells-remove-buffer)
       (add-local-hook 'kill-buffer-hook 
                       (lambda ()
                         (dp-save-shell-buffer-contents-hook nil t)))
@@ -2843,7 +2843,7 @@ running process."
             (add-to-list 'dp-shells-shell-buffer-list (current-buffer))
             (add-local-hook 'kill-buffer-hook 
                             'dp-save-shell-buffer-contents-hook)
-            (add-local-hook 'kill-buffer-hook 'dp-shells-delq-buffer)
+            (add-local-hook 'kill-buffer-hook 'dp-shells-remove-buffer)
             (dp-set-text-color 'dp-ssh-bg-extent 'dp-remote-buffer-face)
             (dp-shells-clear-n-setenv "PS1_prefix" dp-ssh-PS1_prefix)
             (dp-shells-clear-n-setenv 

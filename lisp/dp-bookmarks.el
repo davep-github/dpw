@@ -200,7 +200,7 @@ Add each bookmark-name to the list of bookmarks."
    :quote quote))
 
   
-(dp-deflocal-permanent dp-get-bm-interactive-history '()
+(defvar dp-get-bm-interactive-history '()
   "A variable by any other name...")
 
 ; (defun* dp-add-to-bm-history (bm-name &key save-empty-p)

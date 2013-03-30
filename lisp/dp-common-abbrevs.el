@@ -102,6 +102,8 @@
      dp-manual)
     (("altho" "although")
      dp-manual global)
+    (("provate" "private")
+     dp-manual global)
     (("kb" "keyboard" "KB")
      dp-manual)
     (("eg" "e.g.")
@@ -490,8 +492,6 @@
      dp-manual)
     (("style" "/home/dpanariti/work/doc/code-style.txt")
      dp-manual)
-    (("style" "/home/dpanariti/work/doc/code-style.txt")
-     global)
     ;; Extra quote is really used.
     ((("ctor" "construct" "constructor") 'circular) dp-manual)
     ((("emacs" "xemacs" "XEmacs" "Emacs") 'circular) dp-manual)

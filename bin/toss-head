@@ -3,13 +3,40 @@
 # toss first n lines of stdin
 # exit w/1 if eof hit within first n lines.
 
-num="$1"
+source script-x
 
-while [ "$num" -gt 0 ]
-do
-    read x || exit 1
-    num=$(($num - 1))
-done
+num="$1"; shift
 
-exec cat
-    
+
+# Only works with a file name.
+# +---
+# |
+# | To be tossed
+# |
+# +---   num-to-toss
+# |      \
+# |       |
+# |       |
+# ~        >  num-lines - num-to-toss == number to tail.
+# ~       |
+# |      /
+# +---   wc -l == num-lines    
+
+if [ -n "$*" ]
+then
+    while [ -n "$*" ]
+    do
+      file="$1"; shift
+      num_lines=$(wc -l "${file}" | awk '{print $1}')
+      num_to_tail=$((num_lines - num))
+      tail -n "${num_to_tail}" "${file}"
+    done
+else
+    # ackphhhttt....
+    while [ "$num" -gt 0 ]
+    do
+      read x || exit 1
+      num=$(($num - 1))
+    done
+    exec cat
+fi

@@ -5,25 +5,29 @@ source eexec
 set -u
 progname="$(basename $0)"
 
+: ${mdiag_more=}
+
 # Usage variable usage:
 Usage_args_info=" <tgen-level-test>..."
 Usage_synopsis="Run tgen levels one at a time using a consistent set of vars.
 See also tgen.pl and testgen.pl for additional ops.
 "
 Usage_details="${EExec_parse_usage}
--w -- Wait for completion rather than submitting to LSF.
--T <tgen-opt> -- Add value to an additional string of tgen options.
--C -- Clear clobber opt.
--l <level> -- Specify tgen level file.
--r <trace-root> -- Root for traces.
--c <chip> -- Chip name/type.
--t <target> -- E.g. FMODEL.
--d <???> -- Default is hwApPath=$(pwd)/../../
---wait -- Run synchronously. Implies --nomail. --mail after this will override.
---status -- Print status after a sync run.
---wait-status|--status-wait|--ws -- --wait and --status.
---nomail -- No status/results mail is sent upon completion.
---mail -- Not --nomail.
+-w) Wait for completion rather than submitting to LSF.
+-T <tgen-opt>) Add value to an additional string of tgen options.
+-C) Clear clobber opt.
+-l <level>) Specify tgen level file.
+-r <trace-root>) Root for traces.
+-c <chip>) Chip name/type.
+-t <target>) E.g. FMODEL.
+-d <???>) Default is hwApPath=$(pwd)/../../
+--wait) Run synchronously. Implies --nomail. --mail after this will override.
+--status) Print status after a sync run.
+--wait-status|--status-wait|--ws) --wait and --status.
+--nomail) No status/results mail is sent upon completion.
+--mail) Not --nomail.
+--mdiag-more|--md-more) Speciy mdiag args.
+--dump-images) -dumpImages to trace3d.
 "
 # Example of arg parsing.
 option_str="${EExec_parse_option_str}wT:Cl:r:c:t:d:"
@@ -40,6 +44,9 @@ long_options=("wait"
 "status-wait"
 "wait-status"
 "ws"
+"mdiag-more"
+"md-more"
+"dump-images"
 "nomail"
 "mail")
 
@@ -73,6 +80,8 @@ do
       --log-base) shift; log_dir_base="$1";;
       --wait-status|--status-wait|--ws) wait_opt="-wait"; mail_opt='-nomail';
                                         display_status_p=t;;
+      --mdiag-more|--md-more) shift; mdiag_more="$mdiag_more $1";;
+      --dump-images) mdiag_more="$mdiag_more -dumpImages";;
       --status) display_status_p=t;;
       --nomail) mail_opt=;;
       --mail) mail_opt="-mail";;
@@ -171,7 +180,14 @@ cat last_out_dir" >| latest_out_dir
     else
         only_opt="-only ${test_name}"
     fi
-    cmd="./tgen.pl ${target_opt} ${chip_opt} ${level_opt} ${d_opt} ${traceRoot_opt} ${only_opt} -outDir $out_dir ${wait_opt} ${mail_opt} ${clobber_opt} ${tgen_opts}"
+    if vsetp "$mdiag_more"
+    then
+        mdiag_more_opt="-mdiagArgsMore $mdiag_more"
+    else
+        mdiag_more_opt=
+    fi
+        
+    cmd="./tgen.pl ${target_opt} ${chip_opt} ${level_opt} ${d_opt} ${traceRoot_opt} ${only_opt} -outDir $out_dir ${wait_opt} ${mail_opt} ${clobber_opt} ${mdiag_more_opt} ${tgen_opts}"
     # Can't create out_dir and put this in it because tgen will complain the
     # dir exists if -clobber is not used and if -clobber is used, the
     # directory will be nuked first.

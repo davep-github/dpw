@@ -37,6 +37,7 @@ DestroyMenu  Utilities
 AddToMenu    Utilities "FVWM Root Menu" Title
 #PREF 3
 + "&Terminal(dpxx)"      Exec exec dpxx
++ "&XEmacs(xem)"         Exec exec xem
 + "Mo&ve window"         Popup Move-window
 + "&Goto window"         Popup Goto-window
 + ""                     Nop
@@ -238,7 +239,7 @@ AddToMenu   System
 DestroyMenu Editors
 AddToMenu   Editors
 + "&Emacs"               Exec exec emacs
-+ "&XEmacs"              Exec exec xemacs
++ "&XEmacs"              Exec exec xem
 + "&Gvim"                Exec exec gvim
 + "&Nedit"               Exec exec nedit
 #+ "&Xedit"              Exec exec xedit
@@ -650,16 +651,16 @@ AddToMenu   XsetupScripts
 #PREF 12
 DestroyMenu Edit-Config
 AddToMenu   Edit-Config
-+ "Edit .fvwm2rc" Exec exec xemacs $FVWM_USERDIR/.fvwm2rc
-+ "Edit decorations" Exec exec xemacs $FVWM_USERDIR/decorations
-+ "Edit globalfeel" Exec exec xemacs $FVWM_USERDIR/globalfeel
-+ "Edit startup" Exec exec xemacs $FVWM_USERDIR/startup
-+ "Edit styles" Exec exec xemacs $FVWM_USERDIR/styles
-+ "Edit iconstyles" Exec exec xemacs $FVWM_USERDIR/iconstyles
-+ "Edit functions" Exec exec xemacs $FVWM_USERDIR/functions
-+ "Edit bindings" Exec exec xemacs $FVWM_USERDIR/bindings
-+ "Edit menus" Exec exec xemacs $FVWM_USERDIR/menus
-+ "Edit modules" Exec exec xemacs $FVWM_USERDIR/modules
++ "Edit .fvwm2rc" Exec exec xem $FVWM_USERDIR/.fvwm2rc
++ "Edit decorations" Exec exec xem $FVWM_USERDIR/decorations
++ "Edit globalfeel" Exec exec xem $FVWM_USERDIR/globalfeel
++ "Edit startup" Exec exec xem $FVWM_USERDIR/startup
++ "Edit styles" Exec exec xem $FVWM_USERDIR/styles
++ "Edit iconstyles" Exec exec xem $FVWM_USERDIR/iconstyles
++ "Edit functions" Exec exec xem $FVWM_USERDIR/functions
++ "Edit bindings" Exec exec xem $FVWM_USERDIR/bindings
++ "Edit menus" Exec exec xem $FVWM_USERDIR/menus
++ "Edit modules" Exec exec xem $FVWM_USERDIR/modules
 
 #------------------------------------------------------------------------------
 #--------- Reload config
@@ -806,15 +807,15 @@ AddToMenu Documents MissingSubmenuFunction FuncFvwmMenuDirectory
 
 DestroyMenu MenuBrowser
 #PREF 1
-AddToMenu   MenuBrowser DynamicPopupAction Piperead 'fvwm-menu-directory --reuse --name MenuBrowser --dir $HOME --special-dirs --exec-file ^"xemacs" --xterm=" dpxx -e" --icon-dir=mini.folder.xpm --icon-title=mini.term.xpm --icon-file=mini.file.xpm --icon-app=mini.hex.xpm --check-subdir'
+AddToMenu   MenuBrowser DynamicPopupAction Piperead 'fvwm-menu-directory --reuse --name MenuBrowser --dir $HOME --special-dirs --exec-file ^"xem" --xterm=" dpxx -e" --icon-dir=mini.folder.xpm --icon-title=mini.term.xpm --icon-file=mini.file.xpm --icon-app=mini.hex.xpm --check-subdir'
 
 DestroyMenu MenuBrowserCached
 #PREF 1
-AddToMenu   MenuBrowserCached DynamicPopupAction Piperead 'fvwm-menu-directory --all --reuse --name MenuBrowserCached --dir $HOME --special-dirs --exec-file ^"xemacs" --xterm=" dpxx -e" --icon-dir=mini.folder.xpm --icon-title=mini.term.xpm --icon-file=mini.file.xpm --icon-app=mini.hex.xpm --check-subdir'
+AddToMenu   MenuBrowserCached DynamicPopupAction Piperead 'fvwm-menu-directory --all --reuse --name MenuBrowserCached --dir $HOME --special-dirs --exec-file ^"xem" --xterm=" dpxx -e" --icon-dir=mini.folder.xpm --icon-title=mini.term.xpm --icon-file=mini.file.xpm --icon-app=mini.hex.xpm --check-subdir'
 
 DestroyFunc FuncFvwmMenuDirectory
 #PREF 1
-AddToFunc FuncFvwmMenuDirectory I PipeRead 'fvwm-menu-directory --dir "$0" --exec-file ^"xemacs" --xterm=" dpxx -e" --icon-dir=mini.folder.xpm --icon-title=mini.term.xpm --icon-file=mini.file.xpm --icon-app=mini.hex.xpm --check-subdir'
+AddToFunc FuncFvwmMenuDirectory I PipeRead 'fvwm-menu-directory --dir "$0" --exec-file ^"xem" --xterm=" dpxx -e" --icon-dir=mini.folder.xpm --icon-title=mini.term.xpm --icon-file=mini.file.xpm --icon-app=mini.hex.xpm --check-subdir'
 
 #------------- FvwmManPage
 

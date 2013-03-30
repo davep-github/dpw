@@ -267,7 +267,12 @@ alias unmerge=demerge
 # Linux's /bin/kill does this, but wrap it in case others don't.
 dp_sig_n2n()
 {
-    /bin/kill --list=$(($1 - 128))
+    local sig_num=$(($1 - 128))
+    kill -l "${sig_num}" 2>/dev/null || {
+        /bin/kill --list=$(($1 - 128)) 2>/dev/null || {
+            echo "NUM:${sig_num}"
+        }
+    }
 }
 
 dp_rc_to_text()

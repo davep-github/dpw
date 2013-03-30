@@ -33,7 +33,7 @@
   (read-kbd-macro
    "RET M: SPC RET T: RET W: RET T: RET F: RET S: RET S: RET 7*<up> 3*<right>"))
 
-(defalias 'dp-add-tgen-debug
+(defalias 'dp-tgen-add-debug
   (read-kbd-macro
    (concat "<C-prior> C-s sim.pl SPC RET - gdb SPC C-s - chip SPC "
            "t124 RET _debug C-s libt124_ RET debug_")))
@@ -6069,7 +6069,8 @@ Here, first means the car of the list."
        ((stringp (car (cdr mm))) (setcdr mm (list id)))))))
 
 
-(dp-deflocal dp-last-line-or-bm "1" "Last line or bookmark gone to.")
+(defvar dp-goto-line-last-destination "1"
+  "Last line or bookmark gone to.")
 
 ;; @todo Allow man suffixen, and allow n < 0 to mean backwards n: 
 ;; {f -> defuns, l -> lines, s -> statements, S -> sentences, ...} and
@@ -6079,14 +6080,14 @@ Here, first means the car of the list."
 \[0-9]+c ==> goto that char."
   (interactive (dp-get-bm-interactive 
                 (format "line# (or w/suffix: c -> char) or bm (%s): " 
-                        dp-last-line-or-bm)
+                        dp-goto-line-last-destination)
                 :completions (dp-bm-rebuild-completion-list)))
   (let ((starting-point (point)))
     (dp-push-go-back "dp-goto-line")
     (dp-set-zmacs-region-stays t)
     (if (string-equal "" line-or-bm)
-        (setq line-or-bm dp-last-line-or-bm)
-      (setq dp-last-line-or-bm line-or-bm))
+        (setq line-or-bm dp-goto-line-last-destination)
+      (setq dp-goto-line-last-destination line-or-bm))
     (cond
      ((string-match "\\(^[0-9]+c$\\)\\|\\(^[.#][0-9]+$\\)" line-or-bm)
       (if (match-string 1 line-or-bm)
@@ -6746,13 +6747,18 @@ It greps through all of my current rc files.")
     (when find-word-p
       (dp-search-re-with-wrap word-regexp))))
 
+(defvar dp-use-OEM-switch-to-buffer-p t
+  "Should I use my hacked up \"optimized/DWIM\" buffer switcher or the
+  standard one.")
+
 (defun dp-switch-to-buffer (bufname &optional find-word-p)
   "Switch to another buffer *my* way.
 If `current-prefix-arg` is 0 then force file to be in the current window.
 Otherwise, if `current-prefix-arg` is non-nil then don't search for the
 current word in the switched-to buffer."
   (interactive "Bdp:Switch-to-buf: \nP")
-  (if (eq find-word-p 0)
+  (if (or dp-use-OEM-switch-to-buffer-p
+          (eq find-word-p 0))
       (switch-to-buffer bufname)
     (dp-switch-to-buffer0 bufname find-word-p)))
 
@@ -8849,7 +8855,10 @@ Visit /file/name and then goto <linenum>."
                                         (dp-maybe-expand-p4-location+ 
                                          ffap-filename
                                          t))
-                                   name-in)))
+                                   (if (string-match (format "%s:[0-9]+" name-in)
+                                                     ffap-filename)
+                                       ffap-filename
+                                     name-in))))
            line-num-part)
       (if (string-match "\\(.*\\)[@:]\\([0-9][0-9]*\\)?$" working-filename)
           (setq filename-part (match-string 1 working-filename)
@@ -10145,6 +10154,7 @@ If BUFFER-LIST is nil, get the buffer list with `buffer-list'."
 
 (defun dp-choose-buffers-names (pred-or-regexp &optional buffer-list
                                 &rest pred-args)
+  "Choose buffers (see `dp-choose-buffers') and return a list of their names."
   (interactive "sreg-exp: ")
   (mapcar (function
            (lambda (buf)
@@ -15610,6 +15620,24 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
             (kill-new buffer-file-truename))
             ((Cu--p kill-name-p)
              (kill-new (file-name-directory buffer-file-truename))))))))
+
+(defun dp-grep-buffers (regexp &optional buffer-filename-regexp)
+  (interactive "sregexp? ")
+  (setq-ifnil buffer-filename-regexp ".*")
+  (let ((matching-buffer-list 
+         (delq nil (mapcar (function
+                            (lambda (buf)
+                              (with-current-buffer buf
+                                (save-excursion
+                                  ;; Widen, too.
+                                  (goto-char (point-min))
+                                  ;; Make an igrep, etc, like buffer with
+                                  ;; all matches and line numbers.
+                                  (when (re-search-forward regexp nil t)
+                                    (list (point )buf))))))
+                           (dp-choose-buffers-file-names buffer-filename-regexp)))))
+    (message "matching-buffer-list>%s<" matching-buffer-list)
+    matching-buffer-list))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;;

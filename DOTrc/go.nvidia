@@ -54,6 +54,7 @@ E|diag__ME_src|              hw/ap_tlit1/diag/
 E|tg__ME_src|                hw/ap_tlit1/diag/testgen/
 E|tgen__ME_src|              hw/ap_tlit1/diag/testgen/
 E|testgen__ME_src|           hw/ap_tlit1/diag/testgen/
+E|tgdp__ME_src|              hw/ap_tlit1/diag/testgen/dp-run-tgens.d/
 E|drv__ME_src|               hw/ap_tlit1/drv/
 E|drvapi__ME_src|            hw/ap_tlit1/drv/drvapi/
 E|runtestcommon__ME_src|     hw/ap_tlit1/drv/drvapi/runtest_common
@@ -62,6 +63,8 @@ E|me__ME_src|                hw/ap_tlit1/drv/multiengine/
 E|meng__ME_src|              hw/ap_tlit1/drv/multiengine/
 E|multi__ME_src|             hw/ap_tlit1/drv/multiengine/
 E|drvme__ME_src|             hw/ap_tlit1/drv/multiengine/
+E|objlinux__ME_src|          hw/ap_tlit1/drv/multiengine/t124_debug/ObjLinux
+E|objlinuxnd__ME_src|        hw/ap_tlit1/drv/multiengine/t124/ObjLinux
 E|multienginefw__ME_src|     hw/ap_tlit1/drv/multiengine/framework
 E|mefw__ME_src|              hw/ap_tlit1/drv/multiengine/framework
 E|gpumultienginefw__ME_src|  arch/traces/mobile/traces/gpu_multiengine/framework
@@ -82,13 +85,21 @@ E|troot__ME_src|             arch/traces/
 E|mobiletraces__ME_src|      arch/traces/mobile/traces/
 E|mtraces__ME_src|           arch/traces/mobile/traces/
 E|gpumetraces__ME_src|       arch/traces/mobile/traces/gpu_multiengine
+E|traces__ME_src|            arch/traces/mobile/traces/gpu_multiengine
+E|gputraces__ME_src|         arch/traces/mobile/traces/gpu_multiengine
 E|gmetraces__ME_src|         arch/traces/mobile/traces/gpu_multiengine
 E|sanity__ME_src|            arch/traces/mobile/traces/gpu_multiengine
 E|gmesanity__ME_src|         arch/traces/mobile/traces/gpu_multiengine
 E|gmet__ME_src|              arch/traces/mobile/traces/gpu_multiengine
 E|gme__ME_src|               arch/traces/mobile/traces/gpu_multiengine
 E|gmefw__ME_src|             arch/traces/mobile/traces/gpu_multiengine/framework
+E|nongputraces__ME_src|      arch/traces/mobile/traces/nongpu_multiengine/data_src
+E|ngtraces__ME_src|          arch/traces/mobile/traces/nongpu_multiengine/data_src
+Ee|nongpudatadrc|            arch/traces/mobile/traces/nongpu_multiengine/data_src
+Ee|yuvimages|                arch/traces/mobile/traces/nongpu_multiengine/data_src/yuv_image/
 
+E|modstraces|trace3dtraces|t3dtraces|   /home/scratch.traces02/arch/traces/
+E|ogtest|                               ${t3dtraces}kepler_b/ogtest/
 
 #######################################################################
 
@@ -121,31 +132,31 @@ Ee|scratch1|scr1|sc1|                                            /home/scratch.d
 # Ee|levels1|lev1|                                                 ${testgen1}config/levels/tegra/
 
 |/home/scratch.dpanariti_t124/sb2/hw/| sb2
-Ee|sandbox2|sbox2|sb2|workspace2|ws2|                            ${scratch0}sb2/hw/
-Ee|sandbox2hw|sbox2hw|sb2hw|workspace2hw|ws2hw|hw2|              ${workspace2}hw/
-Ee|sandbox2ap|sbox2ap|sb2ap|workspace2ap|ws2ap|ap2|tot2|         ${workspace2hw}ap_tlit1/
-Ee|sandbox2diag|sbox2diag|sb2diag|workspace2diag|ws2diag|diag2|  ${tot2}diag/
-Ee|sandbox2tg|sbox2tg|sb2tg|workspace2tg|ws2tg|tgen2|tg2|testgen2| ${workspace2diag}testgen/
-Ee|sandbox2testgen|sbox2testgen|sb2testgen|workspace2testgen|ws2testgen| ${testgen2}
-Ee|drv2|                                                         ${tot2}drv/
-Ee|drvapi2|                                                      ${drv2}drvapi/
-Ee|me2|                                                          ${drv2}multiengine/
-Ee|msenc2|                                                       ${me2}drvapi/msenc/
-Ee|runtestcommon2|rtc2|                                          ${drvapi2}/runtest_common/
-Ee|levels2|lev2|                                                 ${testgen2}config/levels/tegra/
+#use mecd Ee|sandbox2|sbox2|sb2|workspace2|ws2|                            ${scratch0}sb2/hw/
+#use mecd Ee|sandbox2hw|sbox2hw|sb2hw|workspace2hw|ws2hw|hw2|              ${workspace2}hw/
+#use mecd Ee|sandbox2ap|sbox2ap|sb2ap|workspace2ap|ws2ap|ap2|tot2|         ${workspace2hw}ap_tlit1/
+#use mecd Ee|sandbox2diag|sbox2diag|sb2diag|workspace2diag|ws2diag|diag2|  ${tot2}diag/
+#use mecd Ee|sandbox2tg|sbox2tg|sb2tg|workspace2tg|ws2tg|tgen2|tg2|testgen2| ${workspace2diag}testgen/
+#use mecd Ee|sandbox2testgen|sbox2testgen|sb2testgen|workspace2testgen|ws2testgen| ${testgen2}
+#use mecd Ee|drv2|                                                         ${tot2}drv/
+#use mecd Ee|drvapi2|                                                      ${drv2}drvapi/
+#use mecd Ee|me2|                                                          ${drv2}multiengine/
+#use mecd Ee|msenc2|                                                       ${me2}drvapi/msenc/
+#use mecd Ee|runtestcommon2|rtc2|                                          ${drvapi2}/runtest_common/
+#use mecd Ee|levels2|lev2|                                                 ${testgen2}config/levels/tegra/
 
 Ee|sandbox3|sbox3|sb3|workspace3|ws3|sbrtargs|                   ${scratch1}sb3/sb3hw/
-Ee|sandbox3hw|sbox3hw|sb3hw|workspace3hw|ws3hw|hw3|              ${workspace3}hw/
-Ee|sandbox3ap|sbox3ap|sb3ap|workspace3ap|ws3ap|ap3|tot3|         ${workspace3hw}ap_tlit1/
-Ee|sandbox3diag|sbox3diag|sb3diag|workspace3diag|ws3diag|diag3|  ${tot3}diag/
-Ee|sandbox3tg|sbox3tg|sb3tg|workspace3tg|ws3tg|tgen3|tg3|testgen3| ${workspace3diag}testgen/
-Ee|sandbox3testgen|sbox3testgen|sb3testgen|workspace3testgen|ws3testgen| ${testgen3}
-Ee|drv3|                                                         ${tot3}drv/
-Ee|drvapi3|                                                      ${drv3}drvapi/
-Ee|me3|                                                          ${drv3}multiengine/
-Ee|msenc3|                                                       ${me3}drvapi/msenc/
-Ee|runtestcommon3|rtc3|                                          ${drvapi3}/runtest_common/
-Ee|levels3|lev3|                                                 ${testgen3}config/levels/tegra/
+#use mecd Ee|sandbox3hw|sbox3hw|sb3hw|workspace3hw|ws3hw|hw3|              ${workspace3}hw/
+#use mecd Ee|sandbox3ap|sbox3ap|sb3ap|workspace3ap|ws3ap|ap3|tot3|         ${workspace3hw}ap_tlit1/
+#use mecd Ee|sandbox3diag|sbox3diag|sb3diag|workspace3diag|ws3diag|diag3|  ${tot3}diag/
+#use mecd Ee|sandbox3tg|sbox3tg|sb3tg|workspace3tg|ws3tg|tgen3|tg3|testgen3| ${workspace3diag}testgen/
+#use mecd Ee|sandbox3testgen|sbox3testgen|sb3testgen|workspace3testgen|ws3testgen| ${testgen3}
+#use mecd Ee|drv3|                                                         ${tot3}drv/
+#use mecd Ee|drvapi3|                                                      ${drv3}drvapi/
+#use mecd Ee|me3|                                                          ${drv3}multiengine/
+#use mecd Ee|msenc3|                                                       ${me3}drvapi/msenc/
+#use mecd Ee|runtestcommon3|rtc3|                                          ${drvapi3}/runtest_common/
+#use mecd Ee|levels3|lev3|                                                 ${testgen3}config/levels/tegra/
 
 Ee|sandbox4|sbox4|sb4|workspace4|ws4|sbbar0|sbbar1|sbbarx|sbbar| ${scratch1}sb4/sb4hw/
 Ee|sandbox4hw|sbox4hw|sb4hw|workspace4hw|ws4hw|hw4|              ${workspace4}hw/
@@ -189,3 +200,12 @@ Ee|sanitybar1|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile
 Ee|sanitybar1|bar1sanity|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile/traces/gpu_multiengine/sanity_gr_disp_syncpt_bar1/
 Ee|goodvic2|       /home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/vic2gpu_display_composite_128x128_A4B4G4R4_bl_1x16x1_gpu_input/2013-03-21T12.48.43-0400.out/tests/kepler_b_ogtest/00/00/01/000001/
 Ee|vic2gpu128x128|vic2ref|       /home/scratch.dpanariti_t124/sb2/hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/vic2gpu_display_composite/2013-03-21T21.11.45-0400.out/tests/kepler_b_ogtest/00/00/05/000005/
+Ee|depcpu2|       /home/scratch.dpanariti_t124/sb2/hw/arch/traces/mobile/traces/gpu_multiengine/dep_cpu_cpu_gpu/
+
+###########################################################################
+#
+# Local Variables: ***
+# fill-column: 999 ***
+# comment-start: "#" ***
+# comment-end: "" ***
+# End: ***
