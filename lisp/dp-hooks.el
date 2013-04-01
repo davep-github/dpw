@@ -8,7 +8,7 @@
 
 (defconst meduseld-c-style
   '((c-tab-always-indent           . t)
-    (c-basic-offset                . 2)
+    (c-basic-offset                . 4)
     (c-comment-only-line-offset    . 0)
     (c-cleanup-list                . (scope-operator
 				      empty-defun-braces
@@ -879,6 +879,7 @@ main(
   (local-set-key [(meta ?u)] 'dp-c++-mode-undo)
   (local-set-key [(control ?c) (control meta ?s)] 'dp-c-get-syntactic-region)
   (local-set-key [(meta ?s)] 'dp-c++-member-init)
+  (local-set-key [?:] 'dp-c-electric-colon)
   (global-set-key [(control ?\\)] 'dp-eval-naked-embedded-lisp)
   (when (fboundp 'eassist-list-methods)
     (local-set-key [(control c) ?, ?.] 'eassist-list-methods))

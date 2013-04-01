@@ -273,18 +273,10 @@ g++: Why does it act exactly the same in spite of my changes.
   (when (dp-shell-vc-commit-p str)
     (save-some-buffers)))
 
-(defun dp-shell-lookfor-g-a-cmd (str)
-  "WTF? is this? An insane way to find a g(lobal)?.*a(bbrev)? command."
-  (interactive)
-  ;; Disabled. This seems to be a bad context for running things like this.
-  (when (and nil
-             (string-match "^\\s-*g\\s-*-a" str)
-             (y-or-n-p "Make abbrevs"))
-;;    (add-one-shot-hook 'post-command-hook 'dp-abbrevs nil t)))
-    (add-one-shot-hook 'comint-output-filter-functions 'dp-abbrevs t t)))
-
-
 (defun dp-shell-dirty-buffer-cmd-p (str)
+  "Is STR a command which should see the contents modified buffers?
+Examples are things like make, cc, etc. We would like these commands to
+operate on the most current file contents."
   (string-match dp-shell-dirty-buffer-cmds str))
 
 (defun dp-shell-lookfor-dirty-buffer-cmds (str)

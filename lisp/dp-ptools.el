@@ -386,7 +386,9 @@ Oddly, it doesn't handle structs.")
   "A special makefile for using in sandbox. E.g. mmake @ nvidia.")
 
 (defsubst dp-sandbox-p (filename)
-  (string-match dp-sandbox-regexp filename))
+  (and filename
+       dp-sandbox-regexp
+       (string-match dp-sandbox-regexp filename)))
 
 (defvar dp-current-sandbox-regexp nil
   "Regexp to detect the current sandbox.")

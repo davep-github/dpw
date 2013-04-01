@@ -1,18 +1,15 @@
+// -*- mode: C++; c-file-style: "meduseld-c-style" -*- 
 // WTF
 /*
  */
-(12  )
 
-(  )
 struct S_t
 {
     S_t()
-        : m_a(1)
-        ,
-        , m_b(2)
-          
-        
-          
+        : a()
+    {}
+};
+
 // @todo XXX 
 extern int common_arg_handler(
     int arg_char,

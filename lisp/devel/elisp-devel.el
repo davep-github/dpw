@@ -3407,3 +3407,14 @@ nil
 
 
 //home/scratch.dpanariti_t124/sb2/hw/arch/traces/mobile/traces/gpu_multiengine/dep_cpu_cpu_gpu/dep_cpu_cpu_gpu.cpp:161
+
+========================
+Saturday March 30 2013
+--
+
+(defun dp-c-electric-colon (arg)
+  (interactive "*P")
+  (c-electric-colon arg)
+  (when (and (dp-syntax-c++-member-init-p)
+             (dp-looking-back-at ":"))
+    (insert " ")))

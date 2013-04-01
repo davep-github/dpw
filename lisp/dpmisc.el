@@ -4575,6 +4575,10 @@ PREFIX: Doxygen comment indicator \"!@\"."
   (interactive "*")
   (dp-insert-for-comment+ "Just for now. Remove ASA fixed."))
 
+(defsubst dp-syntax-c++-member-init-p (&optional syntax)
+  (memq (or syntax (dp-c-get-syntactic-region))
+        '(member-init-intro member-init-cont)))
+
 (defun dp-c-electric-brace (reindent-p)
   "Insert a brace \"intelligently.\"  
 By this I mean if I put a brace in the ``proper'' place (on a line by
@@ -4588,6 +4592,13 @@ control construct)"
           here
           mbeg
           mend)
+      
+      ;; If we're in a C++ member init section and we're using the funky (but
+      ;; kind of nice) leading , style, then we clear out the , and then
+      ;; proceed .
+      (when (and (dp-syntax-c++-member-init-p syntax)
+                 (dp-looking-back-at ",\\s-*"))
+        (replace-match ""))
       ;;
       ;; basically, let the c-electric-brace command run and then
       ;; replace the { and all preceding ws (incl newlines) 
