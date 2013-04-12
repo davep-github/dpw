@@ -10,4 +10,13 @@ clientOpt=
 [ -n "$kwa_client" ] && {
     clientOpt="-c $kwa_client"
 }
+
+# List the shelved lists?
+# p4 changes -u <USERNAME> -s shelved
+if [ "${1-}" = '-s' ]
+then
+    shift
+    kwa_changeType=shelved
+fi
+
 p4 changes ${kwa_p4Options} "$@" -u${USER} -s${kwa_changeType} ${clientOpt}

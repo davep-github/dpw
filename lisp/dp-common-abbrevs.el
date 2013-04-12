@@ -392,6 +392,8 @@
      dp-manual global)
     ((("lib" "libs")
       "library" "libraries"))
+    ((("oaoo" "OaOO" "OAOO")
+      "OaOO" "Once and Only Once" "Once and only once" "once and only once"))
     (("buncha" "bunch of")
      dp-manual)
     (("TMMW" "to make matters worse")

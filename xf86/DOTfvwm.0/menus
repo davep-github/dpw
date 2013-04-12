@@ -37,7 +37,9 @@ DestroyMenu  Utilities
 AddToMenu    Utilities "FVWM Root Menu" Title
 #PREF 3
 + "&Terminal(dpxx)"      Exec exec dpxx
++ "&Qsub terminal"       Popup XqsubMenu
 + "&XEmacs(xem)"         Exec exec xem
++ "x&orpie"              Exec exec xorpie
 + "Mo&ve window"         Popup Move-window
 + "&Goto window"         Popup Goto-window
 + ""                     Nop
@@ -50,6 +52,12 @@ AddToMenu    Utilities "FVWM Root Menu" Title
 + "&Restart"             Popup Restart
 + "&Exit FVWM"           FvwmForm FvwmForm-QuitVerify
 
+DestroyMenu XqsubMenu
+AddToMenu   XqsubMenu "Interactive FARM xterm" Title
++ "&xqsub"            Exec exec xqsub
++ "xqsub&4"           Exec exec xqsub4
++ "xqsub&8"           Exec exec xqsub8
++ "&xqsub&16"         Exec exec xqsub16
 
 #------------------------------------------------------------------------------
 #--------- SHELLS
@@ -1015,8 +1023,8 @@ AddToMenu   "Move-Window" "Move to ..." Title
 + '' Nop
 + '&General'    MoveToDesk 0 0
 + '&SB1'        MoveToDesk 0 1
-+ '&SB2-ME-B1'  MoveToDesk 0 2
-+ '&SB3-DEPCPU' MoveToDesk 0 3
++ '&SB2-DEPCPU'  MoveToDesk 0 2
++ '&SB3-Avail' MoveToDesk 0 3
 + '&SB4-BARx'   MoveToDesk 0 4
 + '&SB5-EngCpu' MoveToDesk 0 5
 
@@ -1032,8 +1040,8 @@ AddToMenu   "Goto-Window" "Go to ..." Title
 + '' Nop
 + '&General'       GotoDesk 0 0
 + '&SB1'           GotoDesk 0 1
-+ '&SB2-ME-B1'     GotoDesk 0 2
-+ '&SB3-ME-DEPCPU' GotoDesk 0 3
++ '&SB2-ME-DEPCPU'     GotoDesk 0 2
++ '&SB3-ME-Avail' GotoDesk 0 3
 + '&SB4-BARx'      GotoDesk 0 4
 + '&SB5-EngCpu'    GotoDesk 0 5
 

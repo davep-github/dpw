@@ -163,7 +163,7 @@ if __name__ == "__main__":
     options, args = getopt.getopt(sys.argv[1:], options)
     for o, v in options:
         if o == '-i':
-            var_dict["tick_interval"] = ticker_lib.sizeWithUnits(v)
+            var_dict["tick_interval"] = dp_lib.numWithUnits(v)
             continue
         if o == '-h':
             usage()

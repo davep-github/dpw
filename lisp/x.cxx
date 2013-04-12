@@ -5,9 +5,10 @@
 
 struct S_t
 {
-    S_t()
-        : a()
-    {}
+  S_t()
+    : a()
+    , b()
+  {}
 };
 
 // @todo XXX 

@@ -1,0 +1,33 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${tgen_files=mods linsim}
+: ${kill_sig=}
+: ${sleep_time=5}
+
+pids=$(findprog ${tgen_files}) || {
+    echo "Looking for: ${tgen_files}"
+    echo "No pids found... hope that's OK."
+    exit 0
+} 1>&2
+
+EExec_verbose_msg "1st set of pids>${pids}<"
+
+while [ -n "${pids}" ]
+do
+  EExec kill ${kill_sig} ${pids}
+  EExec -y sleep "${sleep_time}"
+  pids=$(findprog ${tgen_files})
+  EExec_verbose_msg "In loop set of pids>${pids}<"
+done

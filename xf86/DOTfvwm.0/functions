@@ -440,3 +440,8 @@ DestroyFunc NextEmacs
 AddToFunc NextEmacs
 + I Next  ("*XEmacs@o-xterm*", CurrentPage) FocusRaiseAndStuff
 
+DestroyFunc  MoveAndGotoPage
+AddToFunc    MoveAndGotoPage
++ I MoveToPage $0 $1
++ I GotoPage   $0 $1
+

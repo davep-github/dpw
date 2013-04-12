@@ -301,6 +301,11 @@ Key            Delete     A      4     GotoPage 0 1
 Key            Home       A      4     GotoPage 1 0
 Key            End        A      4     GotoPage 1 1
 
+Key            Insert     A      S4    MoveAndGotoPage 0 0
+Key            Delete     A      S4    MoveAndGotoPage 0 1
+Key            Home       A      S4    MoveAndGotoPage 1 0
+Key            End        A      S4    MoveAndGotoPage 1 1
+
 Mouse          1          W      4     Move-NoRaise-or-RaiseLower
 Mouse          3          W      4     Resize
 Mouse          3          W      M     Resize
@@ -322,11 +327,14 @@ Key e A 4 NextEmacs
 Key Tab A M  CycleWindows
 
 #
-# Everything but root.
-Key z WFST1246 4 Maximize 90 90
-Key y WFST1246 4 Iconify
+# If on root, the focused window is raised. I like that.
+Key z          A        4       Maximize 90 90
+Key y          A        4       Iconify
 
-Key Left A 4 GotoDesk -1
-Key Right A 4 GotoDesk 1
+Key Left       A        4       GotoDesk -1
+Key Right      A        4       GotoDesk 1
 
-Key t A 4 exec dpxx
+Key t          A        4       exec dpxx
+
+# Wander around with the cursor keys.
+Key v          A	4	Move

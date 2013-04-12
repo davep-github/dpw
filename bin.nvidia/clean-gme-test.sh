@@ -1,5 +1,4 @@
 #!/bin/sh
-# More natural name for demangling
 
 source script-x
 set -u
@@ -13,4 +12,13 @@ do
 done
 unset eexec_program
 
-exec c++filt "$@"
+: ${FILES_TO_NUKE="
+CMakeCache.txt 
+CMakeFiles/ 
+cmake_install.cmake 
+install_manifest.txt 
+Makefile 
+*.so"}
+
+EExec rm -rf ${FILES_TO_NUKE}
+

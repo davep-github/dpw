@@ -1658,12 +1658,16 @@ Returns the buffer created."
                           (dp-deactivated-key)))
   (message "deactivated key: %s" (key-description key)))
   
-(defun dp-toggle-mark ()
-  "Toggle the mark activation state."
-  (interactive)
-  (if (dp-mark-active-p)
-      (dp-deactivate-mark)
-    (dp-set-mark (point))))
+(defun dp-toggle-mark (&optional mark-to-eol-p)
+  "Toggle the mark activation state. MARK-TO-EOL-P say to mark to end of line.
+This is just a shortcut to `dp-mark-to-end-of-line'. There's no good way to
+pass args to it because we use the prefix arg."
+  (interactive "_P")
+  (if mark-to-eol-p
+      (dp-mark-to-end-of-line)
+    (if (dp-mark-active-p)
+        (dp-deactivate-mark)
+      (dp-set-mark (point)))))
 
 (defun dp-get-char-previous-line ()
   "Copy character from the line above the cursor to point."
@@ -2743,9 +2747,10 @@ It is initialized to #if 0"
            (tss-prefix (if tss-prefix
                            (concat tss-prefix " ")
                          ""))
-           (tss-comment (format " /* %s%s */"
+           (tss-comment (format " /* %s%s by: %s */"
                                 tss-prefix
-                                (dp-timestamp-string)))) ; Keep 'em identical.
+                                (dp-timestamp-string)
+                                (getenv "LOGNAME")))) ; Keep 'em identical.
       (setq io-end-text (format "#endif /* %s */" 
                                 (dp-simple-C-uncomment io-start-text)))
       (save-excursion
@@ -6320,135 +6325,6 @@ new one."
        (t (error "Unknown val type in dp-maybe-set-face")))))
 
 ;; old Python defs in VC.
-
-(defvar doxy-c-class-member-comment-elements '(
-" /*********************************************************************/" > "
- /*!" > "
-  * @brief " (P "brief desc: " desc nil) > "
-  */" > % >)
-  "Elements of a class function comment template")
-
-(defvar doxy-c-function-comment-elements '("
- /*********************************************************************/" > "
- /*!" > "
-  * @brief " (P "brief desc: " desc nil) > "
-  */" > % >)
-  "Elements of a C/C++ function comment template")
-
-(defvar doxy-c-class-comment-elements '("
- /*********************************************************************/" > "
- /*!" > "
- * @class " p > "
- * @brief " (P "brief desc: " desc nil) > "
- */" > % >)
-  "Elements of a C/C++ class comment template")
-
-(defvar doxy-c-file-comment-elements '("
- /*********************************************************************/" > "
- /*!" > "
- * @file " p > "
- * @brief " (P "brief desc: " desc nil) > "
- */" > % >)
-  "Elements of a C/C++ file comment template")
-          
-(tempo-define-template "doxy-c-class-member-comment"
-		        doxy-c-class-member-comment-elements)
-(tempo-define-template "doxy-c-function-comment"
-		        doxy-c-function-comment-elements)
-(tempo-define-template "doxy-c-class-comment"
-		        doxy-c-class-comment-elements)
-(tempo-define-template "doxy-c-file-comment"
-		        doxy-c-file-comment-elements)
-
-(defun dp-insert-tempo-template-comment (template-func &optional 
-                                         no-indent no-bol indent-to
-                                         beginning-of-statement)
-  "Use TEMPLATE-FUNC to add a comment. Typically a tempo template.
-Often context sensitive.
-Please enter a brief description of the function at the prompt.
-If NO-INDENT is non-nil (interactively with prefix arg) then
-do not indent the newly inserted comment block."
-  (or no-bol
-      (and beginning-of-statement
-           (goto-char beginning-of-statement))
-      (end-of-line)
-      (if (dp-in-c)
-          (dp-c-beginning-of-statement)))
-  
-  ;; '% in tempo handles adding a newline
-  ;;   (if (not (looking-at "^\\s-*$"))
-  ;;      (save-excursion (insert "\n")))
-  (let ((beg (dp-mk-marker))
-        (end (dp-mk-marker (1+ (point)))))
-    (funcall template-func)
-    (when (and (not no-indent)
-	       (fboundp 'c-indent-region))
-      (indent-region beg (1- end) indent-to)))
-  (setq beg nil end nil))
-
-(defun dp-c-tempo-insert-member-comment (&optional no-indent)
-  "Add a tempo class function comment."
-  (interactive "*")
-  (dp-insert-tempo-template-comment 
-   'tempo-template-doxy-c-class-member-comment no-indent))
-(dp-defaliases 'tcfc 'tcmc 'dp-c-tempo-insert-member-comment)
-
-(defun dp-c-tempo-insert-function-comment (&optional no-indent)
-  "Add a tempo function comment."
-  (interactive "*")
-  (dp-insert-tempo-template-comment 
-   'tempo-template-doxy-c-function-comment no-indent))
-(defalias 'tfc0 'dp-c-tempo-insert-function-comment)
-
-(defun dp-c-insert-class-comment ()
-  "Insert a tempo class comment, using the class name from the current line."
-  (save-match-data
-    (save-excursion
-      (beginning-of-line)
-      ;; find the class name
-      ;; @todo templates *WILL* break this.
-      ;; Apparently not. 
-      (re-search-forward 
-       "\\s-*\\(enum\\|class\\|struct\\)\\s-+\\(\\S-+?\\)\\s-*\\(:\\|{\\|$\\)"))
-    (let ((class-name (match-string 2)))
-      ;;(tempo-template-doxy-c-class-comment)
-      (dp-insert-tempo-template-comment 
-       'tempo-template-doxy-c-class-comment nil
-       nil nil (match-beginning 0))
-      (insert class-name)
-      (tempo-forward-mark))))
-
-(defun dp-c-tempo-insert-file-comment (&optional no-indent)
-  "Add a tempo file comment."
-  (interactive "*")
-  (dp-insert-tempo-template-comment 
-   'tempo-template-doxy-c-file-comment no-indent))
-(dp-defaliases 'cifc 'ifc 'tifc 'dp-c-tempo-insert-file-comment)
-
-(defun dp-c-insert-tempo-comment (&optional no-indent-p)
-  "Insert a C/C++ mode tempo comment in a syntax sensitive manner."
-  (interactive "*P")
-  (if (dp-in-c++-class)
-      (dp-c-tempo-insert-member-comment)
-    (if (save-excursion
-          (beginning-of-line)
-          (looking-at "\\s-*\\(enum\\|class\\|struct\\|template\\)"))
-        (dp-c-insert-class-comment)
-      ;; not in C++, just insert a function comment
-      (dp-c-tempo-insert-function-comment))))
-
-(dp-deflocal dp-insert-tempo-comment-func nil
-  "Function to call when adding a tempo template based comment.")
-
-(defun dp-insert-tempo-comment (&optional no-indent-p)
-  "Add a tempo comment.
-Insert a context sensitive comment using a tempo template.
-This is vectored via the buffer local variable `dp-insert-tempo-comment-func' 
-so each mode can have its own logic."
-  (interactive "*P")
-  (when dp-insert-tempo-comment-func
-    (funcall dp-insert-tempo-comment-func no-indent-p)))
-(defalias 'tc 'dp-insert-tempo-comment)
 
 (defun pyman ()
   "Browse the python docs."
@@ -10495,13 +10371,16 @@ mode but not the new lines themselves.  Hence, this."
     (goto-char p)
     (search-forward "\"")))
 
-(defun dp-chase-file-link (file-name point &optional regexp limit error)
+(defun dp-chase-file-link (file-name point &optional id-text limit error)
   (interactive)
   (dp-push-go-back "dp-chase-file-link")
   (apply (if current-prefix-arg
              'dp-ffap-file-finder2
            'dp-ffap-file-finder2-other-window)
-         (list file-name)))
+         (list file-name))
+  (goto-char point)
+  (beginning-of-line)
+  (search-forward id-text))
 ;;
 ;;         (list (expand-file-name file-name)))
 ;;  (when regexp

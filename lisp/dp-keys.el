@@ -246,11 +246,11 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(iso-left-tab)] 'dp-indent-line-and-move-down)
 (global-set-key [(meta iso-left-tab)] 'dp-delete-indentation-and-move-down)
 (global-set-key [(insert)] 'dp-yank)
-(global-set-key [(meta y)] 'dp-yank)
-(global-set-key [(control y)] 'yank-pop)
+(global-set-key [(meta ?y)] 'dp-yank)
+(global-set-key [(control ?y)] 'yank-pop)
 ;; this works better with more X progs, aterm in particular.
 (global-set-key [(shift insert)] 'dp-x-insert-selection)
-(global-set-key [(meta m)] 'back-to-indentation)
+(global-set-key [(meta ?m)] 'back-to-indentation)
 (global-set-key [(meta space)] 'dp-select-thing) 
 ;; I've never really used it.  Give it a less comfortable binding and free up
 ;; a more comfortable one.
@@ -262,12 +262,13 @@ Bind any keys in KEYS via `dp-define-keys'."
 ; I always mark first
 ;;;(global-set-key [(control meta c)] 'dp-copy-sexp)
 ;;;(global-set-key [(control meta c)] 'dp-copy-rectangle-as-killed)
-(global-set-key [(control x) r (meta o)] 'dp-copy-rectangle-as-killed)
-(global-set-key [(meta c)] 'dp-toggle-capitalization)
+(global-set-key [(control ?x) ?r (meta ?o)] 'dp-copy-rectangle-as-killed)
+(global-set-key [(meta ?c)] 'dp-toggle-capitalization)
+(global-set-key [(meta ?C)] 'dp-change-one-hump)
 
 ;;(global-set-key [(control =)] 'dp-dump-char)
-(global-set-key [(control =)] 'what-cursor-position)
-(global-set-key [(meta j)] 'join-line)
+(global-set-key [(control ?=)] 'what-cursor-position)
+(global-set-key [(meta ?j)] 'join-line)
 (global-set-key [(meta ?9)] 'dp-insert-parentheses)
 (global-set-key [(meta ?0)] 'up-list)
 (global-set-key [(control meta ?0)] (kb-lambda

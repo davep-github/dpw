@@ -1,0 +1,32 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${STASH_HOME:=$HOME/tmp}
+
+split_name_and_ext()
+{
+    basename="${1}"; shift
+    echo "${basename}" | sed -rn 's/(^[^.]*)(.*$)/\1 \2/p'
+}
+    
+for f in "$@"
+do
+  basename=$(basename "${f}")
+  EExec mkdir -p "${STASH_HOME}/${basename}"
+  parts=($(split_name_and_ext "$basename"))
+  echo "parts[0]>${parts[0]}<"
+  echo "parts[1]>${parts[1]}<"
+done
+  
+

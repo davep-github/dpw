@@ -96,8 +96,9 @@ on-o-xterm-p && vunsetp "${o_xterm_ok_p}" && {
 
 # @todo XXX Look for logger. If not look for ${logger}_log. If not, set to cat.
 
-depth=$(depth)
-EExec ${depth}/bin/make "$@" 2>&1 | $logger
+bin_dir="$(me-expand-dest tot)/bin"
+
+EExec ${bin_dir}/make "$@" 2>&1 | $logger
 
 vsetp "${send_mail_on_completion-}" && {
     mail -s "$progname is done" "${USER}" < /dev/null >/dev/null 2>&1

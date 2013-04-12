@@ -71,4 +71,7 @@ At nVIDIA, the answer is HELL YES!")
 		     `(("\\(^\\|/\\)regress_tegra_gpu_multiengine$" .
                         dp-make-no-wrap-stupidly)))
 
+(defvar dp-p4-default-depot-completion-prefix "//"
+  "Depot root.")
+
 (provide 'dp-dot-emacs.nvidia.el)

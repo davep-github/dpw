@@ -1817,17 +1817,22 @@ cscope discovery.
       (call-interactively 'undo-all-changes)
     ad-do-it))
 
+(defun dp-prefer-horizontal-split ()
+  "Determine if we want a horizontal split when just `split' is requested."
+  t)
+
 (defvar dp-called-by-split-vertically nil
   "Icky hack to allow `split-window-vertically' to work.")
 (defadvice split-window (before dp-advised-split-window 
                          (&optional window size horflag) activate)
   (interactive)
-  (when (and (not (active-minibuffer-window))
-             (dp-wide-enough-for-2-windows-p)
-             (= (length (window-list)) 1)
-             (not size)                 ; Skip action if a size is specified.
-             (not dp-called-by-split-vertically))
-    (setq horflag t))
+  ;; Set `horflag' on a per-call basis so it can change dynamically.
+  (setq horflag (and (dp-prefer-horizontal-split)
+                     (not (active-minibuffer-window))
+                     (dp-wide-enough-for-2-windows-p)
+                     (= (length (window-list)) 1)
+                     (not size)        ; Skip action if a size is specified.
+                     (not dp-called-by-split-vertically)))
   (setq dp-called-by-split-vertically nil))
 
 (defadvice split-window-vertically (before 
@@ -2189,6 +2194,14 @@ changed."
   (interactive)
   (dp-revert-hook)
   (dp-colorize-found-file-buffer))
+
+(defun dp-revert-buffer (&rest revert-buffer-args)
+  (interactive)
+  (call-interactively 'revert-buffer)
+  ;; XXX @todo some of this will be called twice. That's better than being
+  ;; called 0 times, but it needs correcting.
+  (dp-revert-hook)
+  (dp-after-revert-hook))
 
 ;; Dum, dee, dum, dum, dada, do, dum... PERL SUCKS! dee, dum, dum...
 (defun dp-cperl-mode-hook ()

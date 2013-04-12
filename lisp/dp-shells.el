@@ -123,10 +123,10 @@ prompt.  We don't want to stomp on them.")
      ;; compiler warnings
      '("^[-_.\"A-Za-z0-9/+]+\\(:\\|, line \\)[0-9]+: \\([wW]arning:\\).*$" 
        . font-lock-keyword-face)
-     ;; grep hits
+     ;; greppish -n  hits: a name a colon and a number.
      '("^[-_.\"A-Za-z0-9/+]+\\(: *\\|, line \\)[0-9]+:.*$" 
        . font-lock-function-name-face)
-     ;; name part of a grep hit
+     ;; name part of a greppish -n hit.
      '("\\(^[-_.\"A-Za-z0-9/+]+\\)\\(: *\\|, line \\)[0-9]+" 1 
        shell-output-2-face t)
      ;; line number of grep hit
@@ -182,7 +182,8 @@ prompt.  We don't want to stomp on them.")
     (clsx)))
 
 (defcustom dp-shell-magic-ls-pattern
-  "^[ 	]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\(?:\\s-*\\)\\($\\|.*\\)$"
+  "this needs to be deleted when the ls and dimensions crap is resolved."
+;;  "^[ 	]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\(?:\\s-*\\)\\($\\|.*\\)$"
 ;;"^[ \t]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\($\\|\\(?:[ \t]+\\)\\)\\(.*\\)$"
   "*Match this pattern for magic ls functionality!"
   :group 'dp-vars
@@ -192,12 +193,14 @@ prompt.  We don't want to stomp on them.")
   "Are we using a bash-like shell?"
   (string-match "/\\(ba\\)?sh" (getenv "SHELL")))
 
-(defun dp-shell-lookfor-ls (str)
-  (when (string-match dp-shell-magic-ls-pattern str)
-    (dp-magic-columns-ls 
-     (match-string 1 str)
-     (match-string 2 str)
-     nil)))                             ;Do I like this? 'no-echo
+;; finish fixing this.
+(defun dp-shell-lookfor-ls (str))
+
+;;   (when (string-match dp-shell-magic-ls-pattern str)
+;;     (dp-magic-columns-ls 
+;;      (match-string 1 str)
+;;      (match-string 2 str)
+;;      nil)))                             ;Do I like this? 'no-echo
 
 (defvar dp-shell-vc-cmds '("cvs" "svn" "git" "hg")
   "Version control commands that can cause problems if they are used and
@@ -226,7 +229,7 @@ prompt.  We don't want to stomp on them.")
 
 
 (defvar dp-shell-dirty-buffer-cmds
-  (concat "^\\s-*"
+  (concat "^\\s-*\\(.?/?\\)?"
           (dp-concat-regexps-grouped
            (append (list (regexp-opt '("make"
                                        "gcc"
@@ -254,6 +257,7 @@ prompt.  We don't want to stomp on them.")
                                        "libtoolize"
                                        "automake"
                                        "tgbme"  ; Build multiengine test util.
+                                       "build_gpu_multiengine.pl"
                                        "xemacs")))
                    '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(cia\\|stash\\|status\\|diff\\|stat\\)")
                    '("\\(.*/\\)\\(t_make\\|build_gpu_multiengine.*\\.pl\\)")
@@ -593,10 +597,9 @@ Called when shell, inferior-lisp-process, etc. are entered."
                          comint-dynamic-complete-functions)))
   (loop for hook in '(dp-shell-lookfor-cls
                       dp-shell-lookfor-clsx
-                      dp-shell-lookfor-ls
+;;                      dp-shell-lookfor-ls
                       dp-shell-lookfor-shell-max-lines
                       dp-shell-lookfor-vc-cmd
-                      dp-shell-lookfor-g-a-cmd
                       dp-shell-lookfor-dirty-buffer-cmds
                       dp-shell-lookfor-*TAGS-changer) 
     do (add-hook (dp-sls variant '-input-filter-functions)
@@ -825,7 +828,7 @@ Or both.")
                         dp-shell-lookfor-dir-change
                         comint-truncate-buffer)
       do (add-hook 'comint-output-filter-functions hook))
-    (setq comint-buffer-maximum-size (* 16 1024)))
+    (setq comint-buffer-maximum-size (* 4 1024)))
   
   ;; something wipes this out after the call to comint-mode-hook and here,
   ;; so we do it again.
@@ -1055,6 +1058,31 @@ NIL --> no limit.")
   "*What, ultimately, do we send our input with?
 This allows us to do our fancy stuff and still call the correct sender.")
 
+(defun dp-send-export-command (var val proc)
+  (comint-simple-send proc
+                      (format "export %s='%s'" var val)))
+
+(defun dp-shells-export-terminal-dimensions (&optional cols lines)
+  (if t
+      nil
+    ;; Need a way to send these commands without mucking up the history and input line.
+    (let* ((shell-buf (if (posix-string-match "\\*.*sh\\(ell\\)?.*\\*"
+                                              (buffer-name))
+                          (current-buffer)
+                        (get-buffer "*shell*")))
+           (shell-proc (get-buffer-process shell-buf))
+           (shell-win (get-buffer-window shell-buf)))
+      (dp-send-export-command "COLUMNS"
+                              (format "%s"
+                                      (or cols
+                                          (- (window-width shell-win) 5)))
+                              shell-proc)
+      (dp-send-export-command "LINES"
+                              (format "%s"
+                                      (or lines
+                                          (/ (* 4 (window-displayed-height)) 5)))
+                              shell-proc))))
+
 (defun* dp-shell-send-input (variant
                              &key 
                              (dp-ef-before-pmark-func 
@@ -1077,6 +1105,12 @@ xxx-send-input as a last resort."
       (funcall dp-ef-before-pmark-func current-prefix-arg)
     ;; save the position in the buffer where the latest command was issued.
     (dp-save-last-command-pos)
+    ;; Set the environment variables telling the terminal dimensions before
+    ;; every command.  It would be best to set it only when the window config
+    ;; changes, but I don't know if there's a single place, a hook, or
+    ;; whatever to do it. Setting environment variable for every command
+    ;; isn't too onerous.
+    (dp-shells-export-terminal-dimensions)
     (setq dp-shell-output-line-count 0)
     ;; try to call the original binding, trying the more specific buffer local
     ;; function variable before the default mode -> func mapping.
@@ -2308,6 +2342,7 @@ ARG is numberp:
       (setenv "PS1_host_suffix"
               (format "%s" (dp-shells-guess-suffix sh-name "")))
       (setenv "PS1_bang_suff" (format dp-shells-shell-num-fmt pnv))
+      (setenv "dp_emacs_shell_num" (format "%s" pnv))
       (save-window-excursion/mapping (shell sh-buffer))
       (dp-visit-or-switch-to-buffer sh-buffer switch-window-func)
       ;;
@@ -2380,7 +2415,8 @@ ARG is numberp:
         (delete-region (mark) (point))
       ad-do-it)))
 
-(defvar dp-comint-discard-regexp "^[ \t]*\\(cls\\|ls\\|ltl\\|lsl\\|lth\\)\\>"
+;; \\|ls\\|ltl\\|lsl\\|lth
+(defvar dp-comint-discard-regexp "^[ \t]*\\(cls\\)\\>"
   "Don't send anything that matches to the comint process.")
 
 (dp-deflocal dp-orig-comint-input-sender nil
@@ -2394,7 +2430,7 @@ ARG is numberp:
 (defun dp-magic-columns-ls (ls-cmd &optional args cols echo-p lines)
   "Do an ls-like command in the *shell* buffer with COL columns.
 COL defaults the the width of the window in which the first *shell* buffer is
-displayed."
+displayed if we're not in a recognizable shell buffer."
   (interactive "P")
   (when args
     (if (C-u-p)
@@ -2414,19 +2450,17 @@ displayed."
            ;; Space --> Don't put command in the history.  Well, we do want
            ;; the rest of the line and I don't want to lose that.
            ;; 
-           (cmd (format "COLUMNS=%s LINES=%s %s%s"
-                        (or cols
-                            (- (window-width shell-win) 5))
-                        (or lines
-                            (/ (* 4 (window-displayed-height)) 5))
-                        ls-cmd
-                        args)))
+           (cmd (format "%s%s" ls-cmd args)))
       (when (and shell-buf shell-win shell-proc)
         (dp-save-last-command-pos)
         (when echo-p
           (setq echo (format "echo '%s'; " cmd)))
         (setq cmd (format "%s%s" echo cmd))
         (dmessage "dp-magic-columns-ls, cmd>%s<" cmd)
+        (dp-shells-export-terminal-dimensions)
+        ;; XXX @todo use a more common sender, one where
+        ;; `dp-shells-export-terminal-dimensions' can be sure to be done for
+        ;; all commands.
         (comint-simple-send shell-proc cmd)))))
 
 ;; dp-ssh (id), host-name = f(id): f is currently a format-string. NEEDS to
@@ -2599,9 +2633,23 @@ MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
 ;;  (dp-limiting-process-filter proc string 'gdb-filter
 ;;                              dp-gdb-buffer-max-size))
 
-(defun dp-mk-gdb-name (&optional name)
-  (let* ((name (concat "gdb-" (or name "naught")))
-         (buffer-name (generate-new-buffer-name name)))
+(defvar dp-tacked-gdb-uniquifier 0
+  "Gives each tacked on gdb buffer a unique name.
+The gdb naming is embedded inside the function, so I need to uniqify it this
+way.")
+
+(defun* dp-mk-gdb-name (&optional name (uniquify-p t))
+  (let (buffer-name)
+    (setq name
+          (if name
+              (concat "gdb-" name)
+            ;; Always uniquify when no name is specified.
+            (setq uniquify-p t)
+            "gdb-nemo"))
+    (when uniquify-p
+      (setq name (format "%s-%s" name dp-tacked-gdb-uniquifier))
+      (incf dp-tacked-gdb-uniquifier))
+    (setq buffer-name (generate-new-buffer-name name))
     (cons buffer-name (concat "*" buffer-name "*"))))
 
 ;;;###autoload
@@ -2612,8 +2660,7 @@ MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
     (switch-to-buffer buffer)
     (unless (eq new-buffer-name t)
       (dp-gdb-issue-command "set annotate 1" nil (current-buffer))
-      (rename-buffer (cdr (dp-mk-gdb-name (or new-buffer-name
-                                              "tacked-gdb")))))
+      (rename-buffer (cdr (dp-mk-gdb-name new-buffer-name))))
     (set-process-filter (get-buffer-process buffer) 'dp-gdb-filter)
     (set-process-sentinel (get-buffer-process buffer) 'gdb-sentinel)
     (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-dead-buffers)
@@ -2622,7 +2669,8 @@ MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
     ;; XEmacs change: turn on gdb mode after setting up the proc filters
     ;; for the benefit of shell-font.el
     (gdb-mode)
-    (gdb-set-buffer)))
+    (gdb-set-buffer)
+    (goto-char (point-max))))
 
 
 ;;;###autoload
@@ -2631,7 +2679,7 @@ MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
 Useful for creating a gdb session from which you can attach to another
 running process."
   (interactive)
-  (let* ((names (dp-mk-gdb-name name))
+  (let* ((names (dp-mk-gdb-name (or name "naught")))
          (buffer-name (car names))
          (gdb-buffer-name (cdr names)))
     ;; This is really stupid. We have to mimic the name make-comint will

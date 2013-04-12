@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import os, sys, string, types
-
+import gzip
 import dp_utils, ticker_lib
 
 # Regular variable names are strings. So we'll use a non-string for some
@@ -13,7 +13,7 @@ def identity(x, *args, **kw_args):
 	return [x] + args
     return x
 
-class Option_info_t:
+class Option_info_t(object):
     def __init__(self, name, evaluator, evaluator2, doc_string,
                  *eval_args, **eval_kw_args):
         self.name = name
@@ -76,9 +76,6 @@ def handle_c(char, *args, **kw_args):
     #print "char:", char
     return ({CTOR: ticker_lib.Char_ticker_t}, {"tick_char": char})
 
-def handle_dots(v, *args, **kw_args):
-    return handle_c(".")
-
 def handle_DOTS(v, *args, **kw_args):
     vdu, cku = handle_dots("unused")
     vdu.update({"tick_interval": eval(v)})
@@ -92,19 +89,42 @@ def handle_char_wise_and_char(char, *args, **kw_args):
     vdu.update({"char_wise_p": True})
     return (vdu, cku)
 
+def handle_dots(v, *args, **kw_args):
+    return handle_c(".")
+
+def handle_char_wise_dots(v, *args, **kw_args):
+    return handle_char_wise_and_char(".")
+
 def handle_pipe_mode(v, *args, **kw_args):
     return ({"pipe_mode_p": True}, None)
 
+def true(v, *args, **kw_args):
+    return "True"
+
+def eval_with_units(num):
+    if (num == "-1"):
+        return False                    # No limit
+    return dp_utils.numWithUnits(num, allow_fractions_p=True)
+    
 Opt_map = {
-    '-I': Option_info_t('increment', eval, None, "increment"),
+    '-u': Option_info_t('tick_show_units_p', true, None,
+                        "Ticker count shows units {k, m, g, t, etc}"),
+    '-I': Option_info_t('increment', eval_with_units, None, "increment"),
+    '-m': Option_info_t('max_output_units_before_newline', eval_with_units,
+                        None,
+                        "Limit line length to this many units (lines or chars)"),
+    '-M': Option_info_t('max_output_units_before_exit', eval_with_units,
+                        None,
+                        "Limit execution to this many units (lines or chars)"),
     '-P': Option_info_t('init_string', identity, None, "prefix string"),
     '-C': Option_info_t('comma', identity, None, "count separator char"),
-    '-z': Option_info_t('init_count', eval, None, "init_count"),
+    '-z': Option_info_t('init_count', eval_with_units, None, "init_count"),
     '-c': Option_info_t('tick_char', None, handle_c, "tick character"),
     '-t': Option_info_t('twiddle', None, handle_twiddle,
                         "use twiddle[twiddle-id]"),
     "-d": Option_info_t('dots', None, handle_dots, "expand me: dots"),
-    "-.": Option_info_t('dots', None, handle_dots, "expand me: dots"),
+    "-.": Option_info_t('dots', None, handle_char_wise_dots,
+                        "Use char_wise mode with '.' as the char."),
     "-D": Option_info_t('DOTS', None, handle_DOTS, "expand me: DOTS"),
     "-g": Option_info_t('grand_total_p', eval, None,
                         "Print grand total when done"),
@@ -153,19 +173,22 @@ if __name__ == "__main__":
     no_clobber_p = False
     openMode = 'w'
     outputStreams = []
+    compress_p = False
+    ## Each -Z adds one, and we want a single -Z to yield max compression.
+    compression_level = 8;
 
     # tick_interval, increment=1, init_string="counting: ", comma=", ",
     # init_count=0, tick_char
-    options = 'i:I:P:C:z:c:t:TdD:kphgaK:.lsL:S:A'
+    options = 'i:I:P:C:z:c:t:TdD:kphgaK:.lsL:S:Aum:M:Z'
     ctor_keywords = {}
     var_dict = {CTOR: ticker_lib.Ticker_t,
                 "tick_interval": def_tick_interval,
                 "char_wise_p": False,}
-
+    ctor_keywords["max_output_units_before_newline"] = 80 * 100
     options, args = getopt.getopt(sys.argv[1:], options)
     for o, v in options:
         if o == '-i':
-            var_dict["tick_interval"] = dp_utils.numWithUnits(v)
+            var_dict["tick_interval"] = eval_with_units(v)
             continue
         if o == '-h':
             usage()
@@ -182,11 +205,16 @@ if __name__ == "__main__":
         if o == '-A':
             no_clobber_p = True
             continue
+        if o == '-Z':
+            compress_p = True
+            compression_level = ((compression_level + 1) % 9) + 1
+            continue
 
         # tee(1) compatibility.
         if o == '-a':
             openMode = 'a'
             continue
+
 
         oi = Opt_map.get(o, None)
         if oi:
@@ -208,7 +236,14 @@ if __name__ == "__main__":
             if os.path.exists(a):
                 print >>sys.stderr, "File [%s] exists: not clobbering" % (a,)
                 sys.exit(1)
-        outputStreams.append(open(a, openMode))
+        if compress_p:
+            # zipfile.ZipFile(file[, mode[, compression[, allowZip64]]])
+            fobj = gzip.open(a + ".gz", openMode, compression_level)
+        else:
+            fobj = open(a, openMode)
+
+        # I *love* duck typing.
+        outputStreams.append(fobj)
 
     #!<@todo Check for twiddle ticker request and handle that.
     #print "ctor_keywords:", ctor_keywords
@@ -238,6 +273,7 @@ if __name__ == "__main__":
         ctor_keywords["unit_name"] = 'line'
         ctor_keywords["comma"] = ""     # Line will end with newline.
 
+    print "max_output_units_before_newline", ctor_keywords["max_output_units_before_newline"]
     ticker = var_dict[CTOR](var_dict["tick_interval"], **ctor_keywords)
     if pipe_mode_p:
         outputStreams.append(pipe_stream)

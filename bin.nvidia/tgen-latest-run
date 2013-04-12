@@ -1,0 +1,31 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+if [ "${1-}" = "-r" ]
+then
+    shift
+    printor=realpath
+else
+    printor=echo
+fi
+
+
+: ${kepler=kepler_b_ogtest}
+
+dir_num="${1-1}"
+first_dir_num=$(printf "%02d" "${dir_num}")
+second_dir_num=$(printf "%06d" "${dir_num}")
+latest_out_dir=$(latest_out_dir)
+dest="${latest_out_dir}/tests/${kepler}/00/00/${first_dir_num}/${second_dir_num}"
+"${printor}" "${dest}"

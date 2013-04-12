@@ -312,7 +312,6 @@ Oddly, it doesn't handle structs.")
     (interactive)
     (gtags-select-tag)
     (dp-one-window++))
-  (setq gtags-global-command "ranking-global-gtags.py")
 
   (defun dp-visit-gtags-select-buffer (&optional other-window-p)
     (interactive "P")
@@ -398,6 +397,9 @@ Oddly, it doesn't handle structs.")
 (defvar dp-current-sandbox-name nil
   "Name of the current sandbox.")
 
+(defvar dp-current-sandbox-read-only-p nil
+  "See `dp-set-sandbox' for the meaning of this variable.")
+
 (defsubst dp-current-sandbox-p (filename)
   "Return non-nil if we are in the current sandbox dir.
 Returns nil if there is no current sandbox."
@@ -405,21 +407,17 @@ Returns nil if there is no current sandbox."
        dp-current-sandbox-regexp
        (string-match dp-current-sandbox-regexp filename)))
 
-;;old (defun dp-set-sandbox (regexp)
-;;old   "Setup things for a singular, unique sandbox."
-;;old   (interactive (list (read-from-minibuffer 
-;;old                       (format "Sandbox regexp%s: "
-;;old                               (if dp-current-sandbox-regexp
-;;old                                   (format "[current: %s]"
-;;old                                           dp-current-sandbox-regexp)
-;;old                                 "")))))
-;;old   (setq-default dp-current-sandbox-regexp (if (string= regexp "")
-;;old                                               nil
-;;old                                             regexp)
-;;old                 dp-current-sandbox-name dp-current-sandbox-regexp))
+(defun dp-set-sandbox (sandbox &optional read-only-p)
+  "Setup things for a singular, unique SANDBOX.
+Files from other sandboxes are read only to prevent editing in the wrong
+place. It is preferable to have one editor per sandbox. In addition, the
+current sandbox is used for some defaults.
 
-(defun dp-set-sandbox (sandbox)
-  "Setup things for a singular, unique sandbox."
+READ-ONLY-P says to keep the sandbox read only. This is good for editors on
+non-o-xterm machines. They will often be working in the same sandbox as the
+primary editor, and it is better to allow only one instance to modify the
+files. Setting the sandbox on these machines is useful for the places where
+the current sandbox is used for defaults, etc."
   (interactive (list (read-from-minibuffer
                       (format "Sandbox name/path%s: "
                               (if dp-current-sandbox-regexp
@@ -427,8 +425,9 @@ Returns nil if there is no current sandbox."
                                           dp-current-sandbox-name
                                           dp-current-sandbox-regexp)
                                 ""))
-                      nil nil nil nil nil dp-current-sandbox-name)))
-
+                      nil nil nil nil nil dp-current-sandbox-name)
+                     current-prefix-arg))
+  (setq dp-current-sandbox-read-only-p read-only-p)
   (let ((sandbox (if (string= sandbox "")
                      nil
                    sandbox)))
@@ -459,17 +458,163 @@ Returns nil if there is no current sandbox."
 
 (defun dp-sandbox-read-only-p (filename)
   "Determine if a file is in a readonly sandbox.
-An RO sandbox is one that is not the current one. This is done to prevent a
+An RO sandbox is one that is not the current one or has
+`dp-current-sandbox-read-only-p' non-nil. This is done to prevent a
 modification to the wrong file when several sandboxes \(NOT good but
 necessary) are in play.  For additional safety, all sandboxes are read only
 if there is no current one set."
   (dmessage "dp-sandbox-read-only-p, filename>%s<" filename)
   (dmessage "dp-sandbox-read-only-p, regexp>%s<" dp-current-sandbox-regexp)
-  (and (dp-sandbox-p filename)
+  (and (dp-sandbox-p filename)         ; Are we talking about a sandbox file?
        (or (not dp-current-sandbox-regexp)
-           (not (dp-current-sandbox-p filename)))))
+           (not (dp-current-sandbox-p filename))
+           ;; We're only here if the file is in the current sandbox.
+           ;; dp-current-sandbox-read-only-p only affects the current sandbox
+           ;; (hence the name)
+           dp-current-sandbox-read-only-p)))
   
 (add-hook 'dp-detect-read-only-file-hook 'dp-sandbox-read-only-p)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Tempo comment support.
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;finish-me (defvar dp-c-doxy-comment-introduction 
+;;finish-me   (format "/*%s*/" (make-string (- fill-column 4) ?*))
+;;finish-me   "First line of a doxy commment.
+;;finish-me XXX @todo This should be dynamically computed based on the current indent.")
+
+
+(defvar doxy-c-class-member-comment-elements '(
+" /*********************************************************************/" > "
+ /*!" > "
+  * @brief " (P "brief desc: " desc nil) > "
+  */" > % >)
+  "Elements of a class function comment template")
+
+(defvar doxy-c-function-comment-elements '("
+ /*********************************************************************/" > "
+ /*!" > "
+  * @brief " (P "brief desc: " desc nil) > "
+  */" > % >)
+  "Elements of a C/C++ function comment template")
+
+(defvar doxy-c-class-comment-elements '("
+ /*********************************************************************/" > "
+ /*!" > "
+ * @class " p > "
+ * @brief " (P "brief desc: " desc nil) > "
+ */" > % >)
+  "Elements of a C/C++ class comment template")
+
+(defvar doxy-c-file-comment-elements '("
+ /*********************************************************************/" > "
+ /*!" > "
+ * @file " p > "
+ * @brief " (P "brief desc: " desc nil) > "
+ */" > % >)
+  "Elements of a C/C++ file comment template")
+          
+(tempo-define-template "doxy-c-class-member-comment"
+		        doxy-c-class-member-comment-elements)
+(tempo-define-template "doxy-c-function-comment"
+		        doxy-c-function-comment-elements)
+(tempo-define-template "doxy-c-class-comment"
+		        doxy-c-class-comment-elements)
+(tempo-define-template "doxy-c-file-comment"
+		        doxy-c-file-comment-elements)
+
+(defun dp-insert-tempo-template-comment (template-func &optional 
+                                         no-indent no-bol indent-to
+                                         beginning-of-statement)
+  "Use TEMPLATE-FUNC to add a comment. Typically a tempo template.
+Often context sensitive.
+Please enter a brief description of the function at the prompt.
+If NO-INDENT is non-nil (interactively with prefix arg) then
+do not indent the newly inserted comment block."
+  (or no-bol
+      (and beginning-of-statement
+           (goto-char beginning-of-statement))
+      (end-of-line)
+      (if (dp-in-c)
+          (dp-c-beginning-of-statement)))
+  
+  ;; '% in tempo handles adding a newline
+  ;;   (if (not (looking-at "^\\s-*$"))
+  ;;      (save-excursion (insert "\n")))
+  (let ((beg (dp-mk-marker))
+        (end (dp-mk-marker (1+ (point)))))
+    (funcall template-func)
+    (when (and (not no-indent)
+	       (fboundp 'c-indent-region))
+      (indent-region beg (1- end) indent-to)))
+  (setq beg nil end nil))
+
+(defun dp-c-tempo-insert-member-comment (&optional no-indent)
+  "Add a tempo class function comment."
+  (interactive "*")
+  (dp-insert-tempo-template-comment 
+   'tempo-template-doxy-c-class-member-comment no-indent))
+(dp-defaliases 'tcfc 'tcmc 'dp-c-tempo-insert-member-comment)
+
+(defun dp-c-tempo-insert-function-comment (&optional no-indent)
+  "Add a tempo function comment."
+  (interactive "*")
+  (dp-insert-tempo-template-comment 
+   'tempo-template-doxy-c-function-comment no-indent))
+(defalias 'tfc0 'dp-c-tempo-insert-function-comment)
+
+(defun dp-c-insert-class-comment ()
+  "Insert a tempo class comment, using the class name from the current line."
+  (save-match-data
+    (save-excursion
+      (beginning-of-line)
+      ;; find the class name
+      ;; @todo templates *WILL* break this.
+      ;; Apparently not. 
+      (re-search-forward 
+       "\\s-*\\(enum\\|class\\|struct\\)\\s-+\\(\\S-+?\\)\\s-*\\(:\\|{\\|$\\)"))
+    (let ((class-name (match-string 2)))
+      ;;(tempo-template-doxy-c-class-comment)
+      (dp-insert-tempo-template-comment 
+       'tempo-template-doxy-c-class-comment nil
+       nil nil (match-beginning 0))
+      (insert class-name)
+      (tempo-forward-mark))))
+
+(defun dp-c-tempo-insert-file-comment (&optional no-indent)
+  "Add a tempo file comment."
+  (interactive "*")
+  (dp-insert-tempo-template-comment 
+   'tempo-template-doxy-c-file-comment no-indent))
+(dp-defaliases 'cifc 'ifc 'tifc 'dp-c-tempo-insert-file-comment)
+
+(defun dp-c-insert-tempo-comment (&optional no-indent-p)
+  "Insert a C/C++ mode tempo comment in a syntax sensitive manner."
+  (interactive "*P")
+  (if (dp-in-c++-class)
+      (dp-c-tempo-insert-member-comment)
+    (if (save-excursion
+          (beginning-of-line)
+          (looking-at "\\s-*\\(enum\\|class\\|struct\\|template\\)"))
+        (dp-c-insert-class-comment)
+      ;; not in C++, just insert a function comment
+      (dp-c-tempo-insert-function-comment))))
+
+(dp-deflocal dp-insert-tempo-comment-func nil
+  "Function to call when adding a tempo template based comment.")
+
+(defun dp-insert-tempo-comment (&optional no-indent-p)
+  "Add a tempo comment.
+Insert a context sensitive comment using a tempo template.
+This is vectored via the buffer local variable `dp-insert-tempo-comment-func' 
+so each mode can have its own logic."
+  (interactive "*P")
+  (when dp-insert-tempo-comment-func
+    (funcall dp-insert-tempo-comment-func no-indent-p)))
+(defalias 'tc 'dp-insert-tempo-comment)
+
 
 (provide 'dp-ptools)
 (dmessage "done loading dp-ptools.el...")

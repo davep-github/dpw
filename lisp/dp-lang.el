@@ -1079,6 +1079,19 @@ Needs to be fixed when subclassing.")
 ;; And I like: margin>|static void
 ;;             margin>|verifyIndex(void)
 
+(defun dp-change-one-hump ()
+  (interactive)
+  (when (looking-at "_")
+    (forward-char 1))
+  (if (dp-looking-back-at "_\\w*")
+      (progn
+        (goto-char (dp-toggle-capitalization 1))
+        (backward-char-command)
+        (delete-backward-char))
+    (dmessage-ding "Not looking at humpworthy text.")))
+
+(defalias 'one-hump 'dp-change-one-hump)
+
 (defun dp-c-camel-to-classic-str (string)
     "Very crudely convert camel case (xxYy) to classic vars (xx_yy).
 Will miss many cases and do it in comments, too.
@@ -1093,7 +1106,33 @@ Uses strict definition of camel case."
                            string)))
     string))
 
-(defun* dp-c-classic-to-camel (&optional (capitalize-p nil))
+;; There's no simple C/C++ token regexp.
+(defvar dp-default-hump-selector "[a-zA-Z_]+_[a-zA-Z0-9_]*"
+  "What to look for when no hump pattern is provided... a language token.
+This doesn't suck too much.")
+
+(defun* dp-hump-region (&optional (selector-pattern dp-default-hump-selector) 
+                        query-p capitalize-p)
+  (interactive "sName: \nP")
+  (when (string= "" selector-pattern)
+    (setq selector-pattern dp-default-hump-selector))
+  (let (hump hump-end)
+    ;; We can use the selector to make sure that we are always positioned at
+    ;; the name we want to change. The following search will always find our
+    ;; target..
+    (while (re-search-forward selector-pattern nil t)
+      (when (or (not query-p)
+                (y-or-n-p (format "Hump %s " (match-string 0))))
+        (goto-char (match-beginning 0))
+        (setq hump-end (dp-mk-marker(match-end 0)))
+        (while (re-search-forward "_\\(.\\)" hump-end t)
+          ;; x_y --> xY
+          (replace-match (upcase (match-string 1)))
+          (when capitalize-p
+            (save-excursion
+              (capitalize-word))))))))
+
+(defun* dp-c-classic-to-camel (&optional query-p (capitalize-p nil))
   "Very crudely convert classic vars (xx_yy) to camel case (xxYy).
 Will miss many instances and do it in comments, too. "
   (interactive "P")
@@ -1101,13 +1140,7 @@ Will miss many instances and do it in comments, too. "
     (save-restriction
       (dp-narrow-to-region-or... :bounder 'rest-of-buffer-p)
       (goto-char(point-min))
-      (let (hump)
-        (while (re-search-forward "_\\(.\\)" nil t)
-          ;; x_y --> xY
-          (replace-match (upcase (match-string 1)))
-          (when capitalize-p
-            (save-excursion
-              (capitalize-word))))))))
+      (dp-hump-region query-p nil capitalize-p))))
 
 (defun dp-c-camel-to-classic (&optional keep-beginning-capital-p)
   "Very crudely convert camel case (xxYy) to classic vars (xx_yy).
@@ -1242,6 +1275,13 @@ E.g. \"some_var\" --> \"m_some_var(some_var)\"."
     (insert "m_")
     (forward-char (length symbol-name))
     (insert "(" symbol-name ")")))
+
+(defun dp-c-electric-colon (arg)
+  (interactive "*P")
+  (c-electric-colon arg)
+  (when (and (dp-syntax-c++-member-init-p)
+             (dp-looking-back-at ":"))
+    (insert " ")))
 
 ;;-----------------------------------------------------------------------------
 ;;

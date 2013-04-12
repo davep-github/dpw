@@ -305,7 +305,7 @@ the init files.")
 (cond 
  ((and dp-use-gtags-p 
        (dp-optionally-require 'gtags))
-  (dmessage "gtags'ing.")
+  (dmessage "gtags'ing, move all init to dp-ptools.el")
   (define-key gtags-select-mode-map [?o] 'gtags-select-tag-other-window)
   (define-key gtags-select-mode-map [??] 'describe-mode)
   (define-key gtags-select-mode-map [(control ?o)] 'dp-one-window++)
@@ -315,6 +315,7 @@ the init files.")
   (define-key gtags-mode-map "\e." 'dp-tag-find)
   (define-key gtags-mode-map [(control meta ?.)] 'dp-tag-find-other-window)
   (define-key gtags-mode-map [(meta ?,)] 'dp-tag-pop)
+  (setq gtags-global-command "ranking-global-gtags.py")
 )
  ;; @todo put defaults here:
  (t nil))				; Make it easy to add others.

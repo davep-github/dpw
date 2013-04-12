@@ -1,5 +1,4 @@
 #!/bin/sh
-# More natural name for demangling
 
 source script-x
 set -u
@@ -13,4 +12,12 @@ do
 done
 unset eexec_program
 
-exec c++filt "$@"
+[ "$#" = 2 ] || {
+    echo "$progname: Usage: old-name new-name"
+    exit 1
+} 1>&2
+
+old_file="${1}"; shift
+new_file="${1}"; shift
+
+p4 integrate "${old_file}" "${new_file}"

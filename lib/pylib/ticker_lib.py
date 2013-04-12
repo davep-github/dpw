@@ -11,6 +11,9 @@ class Ticker_t(object):
                  comma=", ", init_count=0, ostream=sys.stdout, forward=False,
                  unit_name="line",
                  printor=Ticker_printf,
+                 tick_show_units_p=False,
+                 max_output_units_before_newline=False,
+                 max_output_units_before_exit=False,
                  grand_total_p=True):
         self.tick_interval = tick_interval
         self.increment = increment
@@ -22,6 +25,10 @@ class Ticker_t(object):
         self.printor = printor
         self.ostream = ostream
         self.grand_total_p = grand_total_p
+        self.tick_show_units_p = tick_show_units_p
+        self.max_output_units_before_newline = max_output_units_before_newline
+        self.max_output_units_before_exit = max_output_units_before_exit
+        self.count_at_last_newline = 0
 
     def twiddling_p(self):
         return False
@@ -34,13 +41,19 @@ class Ticker_t(object):
         if not tick:
             tick=call_tick
         #print "self.sep_string>%s<, tick>%s<\n" % (self.sep_string, tick)
+        if self.tick_show_units_p:
+            tick = dp_utils.numPlusUnits(float(self.counter),
+                                         allow_fractions_p=True,
+                                         powers_of_two_p=False)
         self.printor(self, "%s%s", self.sep_string, tick)
         self.sep_string = self.comma
 
-    def fini(self, force_grand_total_p=False):
+    def fini(self, force_grand_total_p=False, reason=""):
         if force_grand_total_p or self.grand_total_p:
-            print "\nTotal:", self.counter, dp_utils.pluralize(self.unit_name,
-                                                               self.counter)
+            print "\n%sTotal: %s %s" % (reason,
+                                        self.counter,
+                                        dp_utils.pluralize(self.unit_name,
+                                                           self.counter))
 
     def tick_not_ready(self):
         pass
@@ -57,21 +70,39 @@ class Ticker_t(object):
             else:
                 self.tick_not_ready()
             self.counter += increment or self.increment
-
+        if ((self.max_output_units_before_exit is not False)
+            and self.counter >= self.max_output_units_before_exit):
+            self.fini(reason="%s limit reached[%d], exiting\n" % (
+                self.unit_name,
+                int(self.max_output_units_before_exit)))
+            # Indicate successful failure.
+            sys.exit(2)
+        if self.max_output_units_before_newline is not False:
+            count_since_last_newline = self.counter - self.count_at_last_newline
+            if count_since_last_newline >= self.max_output_units_before_newline:
+                self.sep_string = "\n"
+                self.count_at_last_newline = self.counter
 
 class Char_ticker_t(Ticker_t):
     def __init__(self, tick_interval, tick_char='.', increment=1,
                  init_string="", comma="", init_count=0, ostream=sys.stdout,
                  unit_name="line",
+                 max_output_units_before_newline=False,
+                 max_output_units_before_exit=False,
+                 tick_show_units_p=False,
                  printor=Ticker_printf):
-        super(Char_ticker_t, self).__init__(tick_interval=tick_interval,
-                                            increment=increment,
-                                            init_string=init_string,
-                                            comma=comma,
-                                            init_count=init_count,
-                                            ostream=ostream,
-                                            unit_name=unit_name,
-                                            printor=printor)
+        super(Char_ticker_t, self).__init__(
+            tick_interval=tick_interval,
+            increment=increment,
+            init_string=init_string,
+            comma=comma,
+            max_output_units_before_newline=max_output_units_before_newline,
+            max_output_units_before_exit=max_output_units_before_exit,
+            init_count=init_count,
+            ostream=ostream,
+            unit_name=unit_name,
+            tick_show_units_p=tick_show_units_p,
+            printor=printor)
         self.tick_char = tick_char
 
     def make_tick(self, *args, **keys):
@@ -123,6 +154,8 @@ class Twiddle_ticker_t(Ticker_t):
     def __init__(self, tick_interval, twiddle_chars=2,
                  increment=1, init_string="", ostream=sys.stdout,
                  unit_name="line",
+                 max_output_units_before_newline=False,
+                 max_output_units_before_exit=False,
                  comma="", init_count=0, printor=Ticker_printf):
         super(Twiddle_ticker_t, self).__init__(tick_interval=tick_interval,
                                                increment=increment,
@@ -130,6 +163,7 @@ class Twiddle_ticker_t(Ticker_t):
                                                comma=comma,
                                                ostream=ostream,
                                                init_count=init_count,
+                                               max_output_units_before_exit=False,
                                                unit_name=unit_name,
                                                printor=printor)
 ###        print "twiddle_chars>%s<, type(twiddle_chars): %s" % (twiddle_chars, type(twiddle_chars))

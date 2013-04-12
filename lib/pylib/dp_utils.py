@@ -1,7 +1,7 @@
 """utils.py
 Some helpful utility functions."""
 
-import os, sys, string, stat, pprint, types, re
+import os, sys, string, stat, pprint, types, re, math
 
 class DP_UTILS_RT_Exception(RuntimeError):
     def __init__(self, fmt, *args, **keys):
@@ -308,36 +308,57 @@ def system (command, msg=True, exit_p=True, exit_code=1, debug_p=False,
     return False
 
 
-def nWithUnits(s):
+def nWithUnits(s, allow_fractions_p=False, powers_of_two_p=True, base=None):
+    if base is None:
+         if powers_of_two_p:
+             base = 1024
+         else:
+             base = 1000
+    s = "%s" % (s,)
     m = re.search("^(\d+(\.\d+)?)\s*([kKmMgGtT]?)$", s)
     if not m:
-        print >>sys.stderr, "Warning: sizeWithUnits: no match."
+        print >>sys.stderr, "Warning: numWithUnits: no match for>%s<." % (s,)
         return 0                   # Or should it be an error with no digits?
-    n = eval(m.group(1))
+    n = float(eval(m.group(1)))
+    if not allow_fractions_p:
+        n = int(n)
     suffix = m.group(3)
     if suffix:
         suffix = suffix.lower()
         exp = {'k': 1, 'm': 2, 'g': 3, 't': 4}[suffix]
     else:
         exp = 0
-    mult = math.pow(1024, exp)
+    mult = math.pow(base, exp)
     val = n * mult
-    if int(n) == n:
+    if not allow_fractions_p:
         val = int(val)
     return val
 numWithUnits = nWithUnits
 
 import string, os, sys, re, math
 
-def nPlusUnits(n, allow_fractions_p=False):
-     exp = 0
-     if (allow_fractions_p):
-          n = float(n)
-     while (n >= 1024) and (allow_fractions_p or ((n % 1024) == 0)):
-          n = n / 1024
-          exp = exp + 1
-     suffix = ("", "K", "M", "G", "T")[exp]
-     return "%s%s" % (n, suffix)
+def nPlusUnits(n, allow_fractions_p=False, powers_of_two_p=True, base=None):
+    if n == 0:
+        return "0"
+    exp = 0
+    if base is None:
+        if powers_of_two_p:
+            base = 1024
+        else:
+            base = 1000
+    n = int(n)
+    if (allow_fractions_p):
+         n = float(n)
+#    while (n >= base) and (allow_fractions_p or ((n % base) == 0)):
+#         n = n / base
+#         exp = exp + 1
+    exp = math.log(n) / math.log(base)
+    exp = int(exp)
+    n = n / math.pow(base, exp)
+    if not allow_fractions_p:
+        n = int(n)
+    suffix = ("", "K", "M", "G", "T")[exp]
+    return "%s%s" % (n, suffix)
 numPlusUnits = nPlusUnits
 
 #######################################################################

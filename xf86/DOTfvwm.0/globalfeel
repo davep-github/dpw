@@ -51,10 +51,13 @@ Style * SloppyFocus
 #Style * MouseFocusClickRaises
 
 #
-# MinOverlapPlacement places window automatically in a way that attempts to be
-# place windows 'intelligent'.
+# MinOverlapPlacement places window automatically in a way that attempts to
+# place windows with minimum overlap.
 #
-#Style * MinOverlapPlacement
+#Style "*"  MinOverlapPlacement
+Style "*"  MinOverlapPercentPlacement
+#Style "*"  SmartPlacement, RandomPlacement
+
 
 #
 # NoPPosition instructs FVWM to ignore the PPosition field in window

@@ -1,0 +1,31 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${send_mail_p=t}
+: ${sleep_time=2}
+
+[ "${1-}" = "--no-mail" ] && {
+    send_mail_p=
+    shift
+}
+
+for file in "$@"
+do
+  EExec_verbose_msg "waiting for file>${file}<"
+  while ! [ -e "${file}" ]
+  do
+    EExec sleep "${sleep_time}"
+  done
+  EExec email-yopp "${file} now exists"
+done

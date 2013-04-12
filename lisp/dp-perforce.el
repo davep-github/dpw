@@ -62,7 +62,6 @@ This mode uses tabs, so the line too long regexp fails.")
   (interactive)
   (p4-file-change-log "changes" (list "-s" "pending" "-u"
 				      (user-login-name))))
-
 ; p4-mode-hook to fix common frustrations
 (add-hook 'p4-mode-hook
           (function 
@@ -70,8 +69,11 @@ This mode uses tabs, so the line too long regexp fails.")
              (setq
               ;; Configure backup files
               make-backup-files p4-make-backup-files
+              
               ;; Our depot root
-              p4-default-depot-completion-prefix "//eng/"
+              p4-default-depot-completion-prefix 
+              dp-p4-default-depot-completion-prefix 
+              
               ;; Always follow symlinks to perforce files
               p4-follow-symlinks t
               )

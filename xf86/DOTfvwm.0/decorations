@@ -166,7 +166,6 @@ ClickTime 750
 
 Style "*"           	BorderWidth 7, HandleWidth 7
 Style "*"           	Icon unknown1.xpm, Color Black/grey
-Style "*"           	SmartPlacement, RandomPlacement
 Style "*"           	MWMFunctions,MWMDecor,HintOverride
 Style "*"           	DecorateTransient
 Style "*"		IconBox -210 320 -1 -1, IconFill t r

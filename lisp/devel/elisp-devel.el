@@ -3412,9 +3412,43 @@ nil
 Saturday March 30 2013
 --
 
-(defun dp-c-electric-colon (arg)
-  (interactive "*P")
-  (c-electric-colon arg)
-  (when (and (dp-syntax-c++-member-init-p)
-             (dp-looking-back-at ":"))
-    (insert " ")))
+========================
+Thursday April 04 2013
+--
+
+static const char* g_MappingModeName = "";
+
+static const NvU32 g_DefaultNumLines = 4;
+static const char* k_InjectFaultsKeyword = "inject_faults";
+static bool g_InjectFaults_p;
+static NvU32 g_NumInjected_faults = 0;
+static NvU32 g_NumMismatches = 0;
+static bool g_Unexpected_mismatches = false;
+static bool g_Unexpected_number_of_mismatches = false;
+static NvU32 PIXEL_INCREMENT;
+
+
+static const char* k_InjectFaultsKeyword = "inject_faults";
+
+static NvU32 PIXEL_INCREMENT;
+
+static const char* k_Inject_faultsKeyword = "inject_faults";
+
+
+()
+(format-kbd-macro 'one-hump)
+"M-c <backspace>"
+
+  (read-kbd-macro "M-c <backspace>"))
+[(meta ?c) backspace]
+
+;;installed (defun dp-change-one-hump ()
+;;installed   (interactive)
+;;installed   (when (looking-at "_")
+;;installed       (forward-char 1))
+;;installed   (if (dp-looking-back-at "_")
+;;installed     (progn 
+;;installed       (dp-toggle-capitalization 1)
+;;installed       (delete-backward-char))
+;;installed     (dmessage-ding "Not looking at humpworthy text.")))
+;;installed (defalias 'one-hump 'dp-change-one-hump)

@@ -67,6 +67,9 @@ E|objlinux__ME_src|          hw/ap_tlit1/drv/multiengine/t124_debug/ObjLinux
 E|objlinuxnd__ME_src|        hw/ap_tlit1/drv/multiengine/t124/ObjLinux
 E|multienginefw__ME_src|     hw/ap_tlit1/drv/multiengine/framework
 E|mefw__ME_src|              hw/ap_tlit1/drv/multiengine/framework
+E|fwutils__ME_src|           hw/ap_tlit1/drv/multiengine/framework/utilities
+E|fwloader__ME_src|          hw/ap_tlit1/drv/multiengine/framework/utilities/loader
+E|loader__ME_src|            hw/ap_tlit1/drv/multiengine/framework/utilities/loader
 E|gpumultienginefw__ME_src|  arch/traces/mobile/traces/gpu_multiengine/framework
 E|gmefw__ME_src|             arch/traces/mobile/traces/gpu_multiengine/framework
 E|drvme__ME_src|             hw/ap_tlit1/drv/multiengine/
@@ -84,19 +87,22 @@ E|tracesroot__ME_src|        arch/traces/
 E|troot__ME_src|             arch/traces/
 E|mobiletraces__ME_src|      arch/traces/mobile/traces/
 E|mtraces__ME_src|           arch/traces/mobile/traces/
-E|gpumetraces__ME_src|       arch/traces/mobile/traces/gpu_multiengine
-E|traces__ME_src|            arch/traces/mobile/traces/gpu_multiengine
-E|gputraces__ME_src|         arch/traces/mobile/traces/gpu_multiengine
-E|gmetraces__ME_src|         arch/traces/mobile/traces/gpu_multiengine
-E|sanity__ME_src|            arch/traces/mobile/traces/gpu_multiengine
-E|gmesanity__ME_src|         arch/traces/mobile/traces/gpu_multiengine
-E|gmet__ME_src|              arch/traces/mobile/traces/gpu_multiengine
-E|gme__ME_src|               arch/traces/mobile/traces/gpu_multiengine
-E|gmefw__ME_src|             arch/traces/mobile/traces/gpu_multiengine/framework
-E|nongputraces__ME_src|      arch/traces/mobile/traces/nongpu_multiengine/data_src
-E|ngtraces__ME_src|          arch/traces/mobile/traces/nongpu_multiengine/data_src
-Ee|nongpudatadrc|            arch/traces/mobile/traces/nongpu_multiengine/data_src
-Ee|yuvimages|                arch/traces/mobile/traces/nongpu_multiengine/data_src/yuv_image/
+E|gpumetraces__ME_src|       arch/traces/mobile/traces/gpu_multiengine/
+E|traces__ME_src|            arch/traces/mobile/traces/gpu_multiengine/
+E|gputraces__ME_src|         arch/traces/mobile/traces/gpu_multiengine/
+E|gmetraces__ME_src|         arch/traces/mobile/traces/gpu_multiengine/
+E|sanity__ME_src|            arch/traces/mobile/traces/gpu_multiengine/
+E|gmesanity__ME_src|         arch/traces/mobile/traces/gpu_multiengine/
+E|gmet__ME_src|              arch/traces/mobile/traces/gpu_multiengine/
+E|gme__ME_src|               arch/traces/mobile/traces/gpu_multiengine/
+E|gmefw__ME_src|             arch/traces/mobile/traces/gpu_multiengine/framework/
+E|nongputraces__ME_src|      arch/traces/mobile/traces/nongpu_multiengine/data_src/
+E|nongpudatasrc__ME_src|     arch/traces/mobile/traces/nongpu_multiengine/data_src/
+E|datasrc__ME_src|           arch/traces/mobile/traces/nongpu_multiengine/data_src/
+E|ngtraces__ME_src|          arch/traces/mobile/traces/nongpu_multiengine/data_src/
+Ee|nongpudatadrc__ME_src|    arch/traces/mobile/traces/nongpu_multiengine/data_src/
+Ee|yuvimages__ME_src|        arch/traces/mobile/traces/nongpu_multiengine/data_src/yuv_image/
+Ee|rgbimages__ME_src|        arch/traces/mobile/traces/nongpu_multiengine/data_src/rgb_image/
 
 E|modstraces|trace3dtraces|t3dtraces|   /home/scratch.traces02/arch/traces/
 E|ogtest|                               ${t3dtraces}kepler_b/ogtest/
@@ -209,3 +215,5 @@ Ee|depcpu2|       /home/scratch.dpanariti_t124/sb2/hw/arch/traces/mobile/traces/
 # comment-start: "#" ***
 # comment-end: "" ***
 # End: ***
+Ee|sb2loader|       /home/scratch.dpanariti_t124/sb2/hw/hw/ap_tlit1/drv/multiengine/framework/utilities/loader/
+Ee|surf4|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile/traces/gpu_multiengine/surface_write_read/

@@ -62,12 +62,13 @@ do
     shift
 done
 
-: ${kwa_log_root:=$(dp4-get-root)}
+: ${sandbox_root:=$(dp4-get-root)}
+: ${kwa_log_root:=${sandbox_root}/${progname}}
 : ${kwa_log_base:=${progname}}
 : ${kwa_log_dir:=${kwa_log_root}/${kwa_log_base}-$(dp-std-timestamp)}
 : ${kwa_log_file:=${kwa_log_dir}/${progname}.out}
 EExec -y mkdir -p "${kwa_log_dir}"
-EExec -y cd "${kwa_log_root}"
+EExec -y cd "${sandbox_root}"
 EExec_verbose_msg "Sync'ing in >$(pwd)<"
 
 echo "log dir>${kwa_log_dir}<"
@@ -94,5 +95,11 @@ $@" >| "${save_args_file}"
 } 2>&1 | EExec -y tee -a "${kwa_log_file}"
 
 echo "log dir>${kwa_log_dir}<"
-dp4-sync-post-processor
+
+EExecDashN_p && {
+    echo "EExecDashN_p is true, deleting log dir."
+    EExec -y rm -rf "${kwa_log_dir}"
+} 1>&2
+
+EExec dp4-sync-post-processor
 exit
