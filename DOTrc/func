@@ -1008,13 +1008,17 @@ echo_name_and_val()
     local anno=""
     local noAnno=
     local prefix=""
+    local suffix=""
+    local pre_limiter=">"
+    local post_limiter="<"
 
     while [[ "${1-}" =~ ^- ]]
     do
       arg="$1"
       case "$arg" in
           -q) noAnno=t;;
-          -p) prefix="$2"; shift;;
+          -p) shift; prefix="$1";;
+          -s) shift; suffix="$1";;
           *) echo 1>&2 "echo_name_and_val: unknown option: $arg";
              return 1;;
       esac
@@ -1034,7 +1038,7 @@ echo_name_and_val()
                 eval val="\${$__use_a_name_like_this_and_you_get_what_you_deserve__[@]}";;
             *) eval val="\$$__use_a_name_like_this_and_you_get_what_you_deserve__";;
         esac
-        echo "$prefix$__use_a_name_like_this_and_you_get_what_you_deserve__$type_suffix>$val<${anno}"
+        echo "$prefix$__use_a_name_like_this_and_you_get_what_you_deserve__$type_suffix${pre_limiter}$val${post_limiter}${anno}${suffix}"
     done
 }
 export -f echo_name_and_val
@@ -1056,6 +1060,12 @@ echo_id2()
 {
     echo_id_err "$@"
 }
+
+echo_id_ornate()
+{
+    echo_id -p "===== " -s " ===========" "$@"
+}
+
 
 export -f echo_id
 # I NEED to factor out as much as possible when running non-interactive shells.

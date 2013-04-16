@@ -387,14 +387,21 @@ the init files.")
 ;; !<@todo XXX things like save-2 don't work, but save2 do. The [] expr is
 ;; suspect.
 (defvar dp-default-mode-transparent-suffix-regexp
-  (concat "\\([.,-]\\(historical\\|save\\|hide\\|no-index\\|pristine"
+  (concat "\\([.,-]\\("
+          "historical\\|save\\|hide\\|no-index\\|pristine"
+          "HISTORICAL\\|SAVE\\|HIDE\\|NO-INDEX\\|PRISTINE"
           ;; Stuff being hidden from version control
           "\\|novc\\|junk"
+          "\\|NOVC\\|JUNK"
           ;; In development, works in progress, being developed.
           "\\|wip\\|exp\\|dev"
+          "\\|WIP\\|EXP\\|DEV"
           ;; Old but broken or out-of-date.
           "\\|stale\\|bad\\|b0rked\\|broken?\\|hosed\\|fubar"
-          "\\|merged?\\|obs\\|olde?\\|orig\\)\\([.,-]?\\([0-9]*\\)\\)?\\)?$")
+          "\\|STALE\\|BAD\\|B0RKED\\|BROKEN?\\|HOSED\\|FUBAR"
+          "\\|merged?\\|obs\\|olde?\\|orig"
+          "\\|MERGED?\\|OBS\\|OLDE?\\|ORIG"
+          "\\)\\([.,-]?\\([0-9]*\\)\\)?\\)?$")
   "Suffixes which can be added after a regular extension and are ignored
 for the purpose of mode setting.  At this time, these are also visited read
 only.

@@ -336,5 +336,9 @@ Key Right      A        4       GotoDesk 1
 
 Key t          A        4       exec dpxx
 
+# Go to an IPython if possible.
+# Better would be to bring it to us.
+Key i          A        4       Next  ("*ipython@*") FocusRaiseAndStuff
+
 # Wander around with the cursor keys.
 Key v          A	4	Move

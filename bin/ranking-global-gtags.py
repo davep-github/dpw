@@ -5,6 +5,7 @@ import sys, os, re, subprocess
 ## Make this environment specific
 ## In order of rank.
 Top_ranking_regexps = [
+    re.compile("hw/ap_tlit1/drv/drvapi/runtest_surface"),
     re.compile("hw/ap_tlit1/drv/drvapi/"),
     re.compile("hw/ap_tlit1/drv/multiengine/"),
     re.compile("hw/ap_tlit1/drv/"),

@@ -109,94 +109,26 @@ E|ogtest|                               ${t3dtraces}kepler_b/ogtest/
 
 #######################################################################
 
-Ee|scratch0|scr0|sc0|                                            /home/scratch.dpanariti_t124/
-# Ee|sandbox0|sbox0|sb0|workspace0|ws0|                            ${scratch0}t124_0/
-# Ee|sandbox0hw|sbox0hw|sb0hw|workspace0hw|ws0hw|hw0|              ${workspace0}hw/
-# Ee|sandbox0ap|sbox0ap|sb0ap|workspace0ap|ws0ap|ap0|tot0|         ${workspace0hw}ap/
-# Ee|sandbox0diag|sbox0diag|sb0diag|workspace0diag|ws0diag|diag0|  ${workspace0ap}diag/
-# Ee|sandbox0tg|sbox0tg|sb0tg|workspace0tg|ws0tg|tgen0|tg0|testgen0| ${workspace0diag}testgen/
-# Ee|sandbox0testgen|sbox0testgen|sb0testgen|workspace0testgen|ws0testgen| ${testgen0}
-# Ee|drv0|                                                         ${tot0}drv/
-# Ee|drvapi0|                                                      ${drv0}drvapi/
-# Ee|me0|                                                          ${drv0}multiengine/
-# Ee|msenc0|                                                       ${me0}drvapi/msenc/
-# Ee|runtestcommon0|rtc0|                                          ${drvapi0}/runtest_common/
-# Ee|levels0|lev0|                                                 ${testgen0}config/levels/tegra/
+Ee|scratch0|scr0|sc0|                         /home/scratch.dpanariti_t124/
+Ee|scratch1|scr1|sc1|                         /home/scratch.dpanariti_t124_1/
+Ee|scratch2|scr2|sc2|                         /home/scratch.dpanariti_t124_2/
 
-Ee|scratch1|scr1|sc1|                                            /home/scratch.dpanariti_t124_1/
-# Ee|sandbox1|sbox1|sb1|workspace1|ws1|                            ${scratch1}t124_1/
-# Ee|sandbox1hw|sbox1hw|sb1hw|workspace1hw|ws1hw|hw1|              ${workspace1}hw/
-# Ee|sandbox1ap|sbox1ap|sb1ap|workspace1ap|ws1ap|ap1|tot1|         ${workspace1hw}ap/
-# Ee|sandbox1diag|sbox1diag|sb1diag|workspace1diag|ws1diag|diag1|  ${tot1}diag/
-# Ee|sandbox1tg|sbox1tg|sb1tg|workspace1tg|ws1tg|tgen1|tg1|testgen1| ${workspace1diag}testgen/
-# Ee|sandbox1testgen|sbox1testgen|sb1testgen|workspace1testgen|ws1testgen| ${testgen1}
-# Ee|drv1|                                                         ${tot1}drv/
-# Ee|drvapi1|                                                      ${drv1}drvapi/
-# Ee|me1|                                                          ${drv1}multiengine/
-# Ee|msenc1|                                                       ${me1}drvapi/msenc/
-# Ee|runtestcommon1|rtc1|                                          ${drvapi1}/runtest_common/
-# Ee|levels1|lev1|                                                 ${testgen1}config/levels/tegra/
+Ee|sandbox0|sbox0|sb0|workspace0|ws0|         ${scratch0}t124_0/
+Ee|sandbox1|sbox1|sb1|workspace1|ws1|         ${scratch1}t124_1/
+Ee|sandbox2|sbox2|sb2|workspace2|ws2|         ${scratch0}sb2/hw/
+Ee|sandbox3|sbox3|sb3|workspace3|ws3|         ${scratch1}sb3/sb3hw/
+Ee|sandbox4|sbox4|sb4|workspace4|ws4|         ${scratch1}sb4/sb4hw/
+Ee|sandbox5|sbox5|sb5|workspace5|ws5|         ${scratch2}sb5/sb5hw/
 
-|/home/scratch.dpanariti_t124/sb2/hw/| sb2
-#use mecd Ee|sandbox2|sbox2|sb2|workspace2|ws2|                            ${scratch0}sb2/hw/
-#use mecd Ee|sandbox2hw|sbox2hw|sb2hw|workspace2hw|ws2hw|hw2|              ${workspace2}hw/
-#use mecd Ee|sandbox2ap|sbox2ap|sb2ap|workspace2ap|ws2ap|ap2|tot2|         ${workspace2hw}ap_tlit1/
-#use mecd Ee|sandbox2diag|sbox2diag|sb2diag|workspace2diag|ws2diag|diag2|  ${tot2}diag/
-#use mecd Ee|sandbox2tg|sbox2tg|sb2tg|workspace2tg|ws2tg|tgen2|tg2|testgen2| ${workspace2diag}testgen/
-#use mecd Ee|sandbox2testgen|sbox2testgen|sb2testgen|workspace2testgen|ws2testgen| ${testgen2}
-#use mecd Ee|drv2|                                                         ${tot2}drv/
-#use mecd Ee|drvapi2|                                                      ${drv2}drvapi/
-#use mecd Ee|me2|                                                          ${drv2}multiengine/
-#use mecd Ee|msenc2|                                                       ${me2}drvapi/msenc/
-#use mecd Ee|runtestcommon2|rtc2|                                          ${drvapi2}/runtest_common/
-#use mecd Ee|levels2|lev2|                                                 ${testgen2}config/levels/tegra/
-
-Ee|sandbox3|sbox3|sb3|workspace3|ws3|sbrtargs|                   ${scratch1}sb3/sb3hw/
-#use mecd Ee|sandbox3hw|sbox3hw|sb3hw|workspace3hw|ws3hw|hw3|              ${workspace3}hw/
-#use mecd Ee|sandbox3ap|sbox3ap|sb3ap|workspace3ap|ws3ap|ap3|tot3|         ${workspace3hw}ap_tlit1/
-#use mecd Ee|sandbox3diag|sbox3diag|sb3diag|workspace3diag|ws3diag|diag3|  ${tot3}diag/
-#use mecd Ee|sandbox3tg|sbox3tg|sb3tg|workspace3tg|ws3tg|tgen3|tg3|testgen3| ${workspace3diag}testgen/
-#use mecd Ee|sandbox3testgen|sbox3testgen|sb3testgen|workspace3testgen|ws3testgen| ${testgen3}
-#use mecd Ee|drv3|                                                         ${tot3}drv/
-#use mecd Ee|drvapi3|                                                      ${drv3}drvapi/
-#use mecd Ee|me3|                                                          ${drv3}multiengine/
-#use mecd Ee|msenc3|                                                       ${me3}drvapi/msenc/
-#use mecd Ee|runtestcommon3|rtc3|                                          ${drvapi3}/runtest_common/
-#use mecd Ee|levels3|lev3|                                                 ${testgen3}config/levels/tegra/
-
-Ee|sandbox4|sbox4|sb4|workspace4|ws4|sbbar0|sbbar1|sbbarx|sbbar| ${scratch1}sb4/sb4hw/
-Ee|sandbox4hw|sbox4hw|sb4hw|workspace4hw|ws4hw|hw4|              ${workspace4}hw/
-Ee|sandbox4ap|sbox4ap|sb4ap|workspace4ap|ws4ap|ap4|tot4|         ${workspace4hw}ap_tlit1/
-Ee|sandbox4diag|sbox4diag|sb4diag|workspace4diag|ws4diag|diag4|  ${tot4}diag/
-Ee|sandbox4tg|sbox4tg|sb4tg|workspace4tg|ws4tg|tgen4|tg4|testgen4| ${workspace4diag}testgen/
-Ee|sandbox4testgen|sbox4testgen|sb4testgen|workspace4testgen|ws4testgen| ${testgen4}
-Ee|drv4|                                                         ${tot4}drv/
-Ee|drvapi4|                                                      ${drv4}drvapi/
-Ee|me4|                                                          ${drv4}multiengine/
-Ee|msenc4|                                                       ${me4}drvapi/msenc/
-Ee|runtestcommon4|rtc4|                                          ${drvapi4}/runtest_common/
-Ee|levels4|lev4|                                                 ${testgen4}config/levels/tegra/
-
-Ee|scratch2|scr2|sc2|                                            /home/scratch.dpanariti_t124_2/
-Ee|sandbox5|sbox5|sb5|workspace5|ws5|sbengcpu|                   ${scratch2}sb5/sb5hw/
-Ee|sandbox5hw|sbox5hw|sb5hw|workspace5hw|ws5hw|hw5|              ${workspace5}hw/
-Ee|sandbox5ap|sbox5ap|sb5ap|workspace5ap|ws5ap|ap5|tot5|         ${workspace5hw}ap_tlit1/
-Ee|sandbox5diag|sbox5diag|sb5diag|workspace5diag|ws5diag|diag5|  ${tot5}diag/
-Ee|sandbox5tg|sbox5tg|sb5tg|workspace5tg|ws5tg|tgen5|tg5|testgen5| ${workspace5diag}testgen/
-Ee|sandbox5testgen|sbox5testgen|sb5testgen|workspace5testgen|ws5testgen| ${testgen5}
-Ee|drv5|                                                         ${tot5}drv/
-Ee|drvapi5|                                                      ${drv5}drvapi/
-Ee|me5|                                                          ${drv5}multiengine/
-Ee|msenc5|                                                       ${me5}drvapi/msenc/
-Ee|runtestcommon5|rtc5|                                          ${drvapi5}/runtest_common/
-Ee|levels5|lev5|                                                 ${testgen5}config/levels/tegra/
+# Transient conveniences, names of current tasks and their sandboxes.
+Ee|depcpu|                                    ${sb2}
+Ee|sbbar0|sbbar1|sbbarx|sbbar|barx|           ${sb4}
+Ee|sbengcpu|                                  ${sb5}
 
 #
 # Some direct accesses for objects which are way too overloaded.
 # sb4 /home/scratch.dpanariti_t124_1/sb4/sb4hw/
 #
-Ee|surfacep4| //hw/ap_tlit1/drv/drvapi/include/runtest_surface.h:740
-Ee|surface|   ${sb4}hw/ap_tlit1/drv/drvapi/include/runtest_surface.h:740
 Ee|t3dAlloc|  ${sb4}hw/ap_tlit1/drv/drvapi/runtest_common/runtest_exec.cpp:267
 #
 # Temp stuff for most active tasks.
@@ -206,7 +138,13 @@ Ee|sanitybar1|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile
 Ee|sanitybar1|bar1sanity|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile/traces/gpu_multiengine/sanity_gr_disp_syncpt_bar1/
 Ee|goodvic2|       /home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/vic2gpu_display_composite_128x128_A4B4G4R4_bl_1x16x1_gpu_input/2013-03-21T12.48.43-0400.out/tests/kepler_b_ogtest/00/00/01/000001/
 Ee|vic2gpu128x128|vic2ref|       /home/scratch.dpanariti_t124/sb2/hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/vic2gpu_display_composite/2013-03-21T21.11.45-0400.out/tests/kepler_b_ogtest/00/00/05/000005/
-Ee|depcpu2|       /home/scratch.dpanariti_t124/sb2/hw/arch/traces/mobile/traces/gpu_multiengine/dep_cpu_cpu_gpu/
+Ee|depcpu2|     /home/scratch.dpanariti_t124/sb2/hw/arch/traces/mobile/traces/gpu_multiengine/dep_cpu_cpu_gpu/
+
+Ee|sb2loader|   ${sb2}hw/hw/ap_tlit1/drv/multiengine/framework/utilities/loader/
+Ee|surf4|       ${sb4}arch/traces/mobile/traces/gpu_multiengine/surface_write_read/
+
+Ee|surfacep4| //hw/ap_tlit1/drv/drvapi/include/runtest_surface.h:740
+Ee|surface|   ${sb4}hw/ap_tlit1/drv/drvapi/include/runtest_surface.h:740
 
 ###########################################################################
 #
@@ -215,5 +153,4 @@ Ee|depcpu2|       /home/scratch.dpanariti_t124/sb2/hw/arch/traces/mobile/traces/
 # comment-start: "#" ***
 # comment-end: "" ***
 # End: ***
-Ee|sb2loader|       /home/scratch.dpanariti_t124/sb2/hw/hw/ap_tlit1/drv/multiengine/framework/utilities/loader/
-Ee|surf4|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile/traces/gpu_multiengine/surface_write_read/
+Ee|workprototypes|wprotos|protos|       /home/dpanariti/work/prototypes/

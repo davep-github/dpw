@@ -2336,15 +2336,19 @@ from simple.el"
   (interactive "*")
   (delete-region (point) (line-end-position)))
 
-(defun* dp-mark-to-end-of-line (&optional from-beginning-p (no-newline-p t))
+(defun* dp-mark-to-end-of-line (&optional from-beginning-p (no-newline-p t)
+                                (all-if-@-eolp t))
   "Mark rest of line.  Leaves region active.
-if FROM-BEGINNING-P, mark entire line. Leaves cursor @ end-of-region."
+if FROM-BEGINNING-P, mark entire line. Leaves cursor @ end-of-region.
+By default, if we're @ end of line, mark to beginning.  Many 
+\"manual macros\" end up @ eol or otherwise find it convenient to mark the 
+preceding line."
   (interactive "_P")
   (let ((region (dp-bound-rest-of-line :from-beginning-p from-beginning-p
-                                       :no-newline-p no-newline-p)))
+                                       :no-newline-p no-newline-p
+                                       :all-if-@-eolp all-if-@-eolp)))
     (dp-set-mark (car region))
     (goto-char (cdr region))))
-  
 
 (defun dp-copy-to-end-of-line (&optional beginning include-newline)
   "Copy chars from point to the end of the current line to the kill ring.
@@ -2750,7 +2754,7 @@ It is initialized to #if 0"
            (tss-comment (format " /* %s%s by: %s */"
                                 tss-prefix
                                 (dp-timestamp-string)
-                                (getenv "LOGNAME")))) ; Keep 'em identical.
+                                (user-login-name)))) ; Keep 'em identical.
       (setq io-end-text (format "#endif /* %s */" 
                                 (dp-simple-C-uncomment io-start-text)))
       (save-excursion
@@ -2792,10 +2796,11 @@ E.g.
   (setq excuse (dp-c-namify-string excuse))
   (dp-mark-line-if-no-mark)
   (io-region (mark) (point) 
-             (format "#if %sdefined(%s) && 0 /* @todo as of %s :dp */"
+             (format "#if %sdefined(%s) && 0 /* @todo as of %s :%s */"
                      not
                      (dp-c-namify-string excuse)
-                     (dp-timestamp-string))
+                     (dp-timestamp-string)
+                     (user-login-name))
              (format "#endif /* %s %s */" not excuse)))
 (defalias 'iob 'dp-ifdef-region-because)
 
@@ -4764,27 +4769,33 @@ ARGS are passed thru to `dp-timestamp-string'."
   (insert (apply 'dp-timestamp-string args)))
 (defalias 'dits 'dp-insert-timestamp)
 
-(defun dp-insert-for-comment-as-of ()
-  (interactive)
-  "Add something along the lines of 'as of: <timestamp>"
-  (dp-insert-for-comment+ (concat " [as of: " (dp-timestamp-string) "]") ""))
-(dp-defaliases 'dpao 'dpasof 'dp-as/of 'as/of 'asof 
-               'dp-insert-for-comment-as-of)
-
+;; unused
 (defun dp-at-this-time-string ()
   (interactive)
   (concat "at this time: " (dp-timestamp-string)))
 
+(defun dp-insert-for-comment-as-of0 (fmt)
+  (interactive)
+  "Add something along the lines of 'as of: <timestamp>"
+  (let ((s (format fmt (dp-timestamp-string))))
+    (if (dp-in-c)
+        (dp-insert-for-comment+ s "")
+      (insert s))))
+
+(defun dp-insert-for-comment-as-of ()
+  (interactive)
+  (dp-insert-for-comment-as-of0 "[ as of: %s ]"))
+
+(dp-defaliases 'dpao 'dpasof 'dp-as/of 'as/of 'asof 
+               'dp-insert-for-comment-as-of)
+
 (defun dp-insert-for-comment-at-this-time ()
   (interactive)
-  "Add something along the lines of 'at this time: <timestamp>"
-  (if (dp-in-c)
-      (dp-insert-for-comment+ (dp-at-this-time-string))
-    (insert (dp-at-this-time-string))))
-  
+  (dp-insert-for-comment-as-of0 "[ at this time: %s ]"))
 
 (dp-defaliases 'dp-at-this-time 'dp-att 'att
                'dp-insert-for-comment-at-this-time)
+
 
 (defvar dp-timestamp-len
   (length (dp-timestamp-string)))
@@ -8742,7 +8753,9 @@ Visit /file/name and then goto <linenum>."
                                         (dp-maybe-expand-p4-location+ 
                                          ffap-filename
                                          t))
-                                   (if (string-match (format "%s:[0-9]+" name-in)
+                                   (if (string-match (format 
+                                                      "%s:[0-9]+" 
+                                                      (regexp-quote name-in))
                                                      ffap-filename)
                                        ffap-filename
                                      name-in))))

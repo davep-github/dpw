@@ -438,7 +438,7 @@ AddToFunc CycleWindows
 # FlipFocus
 DestroyFunc NextEmacs
 AddToFunc NextEmacs
-+ I Next  ("*XEmacs@o-xterm*", CurrentPage) FocusRaiseAndStuff
++ I Next  ("*XEmacs@*", CurrentPage) FocusRaiseAndStuff
 
 DestroyFunc  MoveAndGotoPage
 AddToFunc    MoveAndGotoPage

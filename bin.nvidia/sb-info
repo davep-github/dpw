@@ -19,7 +19,10 @@ unset eexec_program
 sb="${1-}"
 if vsetp "$sb"
 then
-    sb="$@"
+    case "${sb}" in
+        -|*|all|everything) sb="sb1 sb2 sb3 sb4 sb5";;
+        *) sb="$@";;
+    esac
 else
     sb=$(basename $(dirname $(me-expand-dest)))
 fi
@@ -28,6 +31,19 @@ echo_id sb
 
 for s in $sb
 do
+  echo_id_ornate s
+  set +u
+  eval sb_dir=\$$s
+  set -u
+  echo_id sb_dir
+  vunsetp $sb_dir && {
+      echo "$s doesn't seem to be defined."
+      echo -------
+      echo
+      continue
+  } 1>&2
+  df -h "${sb_dir}"
+  
   case "$s" in
       sb2) info="Surface_specifier:
 Allows mapping modes to be specified in void SetSharedSurfaceNames().
