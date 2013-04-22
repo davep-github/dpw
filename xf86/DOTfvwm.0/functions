@@ -435,6 +435,16 @@ AddToFunc CycleWindows
     echo 'SetEnv NDIRECTION Prev'`
 + I Schedule 700 134000 SetEnv DIRECTION $[NDIRECTION]
 
+# ???????
+#DestroyFunc CycleWindowsReverse
+#AddToFunc CycleWindowsReverse
+#+ I $[DIRECTION] (CurrentPage, !Iconic, !CirculateSkip) FocusRaiseAndStuff
+#+ I Deschedule 134000
+#+ I PipeRead `[ "$[DIRECTION]" == "Prev" ] && \
+#    echo 'SetEnv NDIRECTION Next' || \
+#    echo 'SetEnv NDIRECTION Prev'`
+#+ I Schedule 700 134000 SetEnv DIRECTION $[NDIRECTION]
+
 # FlipFocus
 DestroyFunc NextEmacs
 AddToFunc NextEmacs

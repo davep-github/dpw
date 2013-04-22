@@ -61,7 +61,9 @@ At nVIDIA, the answer is HELL YES!")
 (setq dp-sandbox-make-command "mmake")
 
 ;; 
-;; Since I cannot add variable hacks to files, I'll do it another way.
+;; Since I cannot add variable hacks to files, I'll do it another way, using
+;; the auto-mode-alist mechanism.
+;; XXX @todo ? Should I trim that list? There are many bad matches already.
 ;;
 
 (defun dp-make-no-wrap-stupidly ()
@@ -69,7 +71,9 @@ At nVIDIA, the answer is HELL YES!")
 
 (dp-add-list-to-list 'auto-mode-alist
 		     `(("\\(^\\|/\\)regress_tegra_gpu_multiengine$" .
-                        dp-make-no-wrap-stupidly)))
+                        dp-make-no-wrap-stupidly)
+                       ("/tests/kepler_b_ogtest/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{6\\}/.*\\.\\(cfg\\|sh\\)" .
+                       dp-make-no-wrap-stupidly)))
 
 (defvar dp-p4-default-depot-completion-prefix "//"
   "Depot root.")

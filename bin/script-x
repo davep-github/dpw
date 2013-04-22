@@ -47,7 +47,7 @@ DP_SCRIPT_X_PROG_LOG_FILE_STDALL="${DP_SCRIPT_X_PROG_LOG_DIR}/log.stdall"
 : ${DP_NO_DASH_XQ=}
 # Or change these to something non-conflicting.
 : ${DP_SCRIPT_X_DASH_X_STR="-x"}
-: ${DP_SCRIPT_X_DASH_XQ_STR="-xq"}
+: ${DP_SCRIPT_X_DASH_XQ_STR="-${DP_SCRIPT_X_DASH_X_STR}q"}
 : ${DP_SCRIPT_X_DASH_X=}        # Or fire off by environment variable only
 : ${DP_SCRIPT_X_DASH_XQ=}       # Or fire off by environment variable only
 : ${DP_SCRIPT_X_EXTRA_ARGSES=}
@@ -78,8 +78,8 @@ vsetp "$SCRIPT_X_EXEC" && {
     # Ditto for -xq.
     DP_NO_DASH_XQ=t
     # Or change these to something non-conflicting.
-    DP_SCRIPT_X_DASH_X_STR="-x"
-    DP_SCRIPT_X_DASH_XQ_STR="-xq"
+    : ${DP_SCRIPT_X_DASH_X_STR="-x"}
+    : ${DP_SCRIPT_X_DASH_XQ_STR="-${DP_SCRIPT_X_DASH_X_STR}q"}
     DP_SCRIPT_X_DASH_X=         # Or fire off by environment variable only
     DP_SCRIPT_X_DASH_XQ=        # Or fire off by environment variable only
     DP_SCRIPT_X_EXTRA_ARGSES=
@@ -109,7 +109,8 @@ DP_SCRIPT_X_echo_id=":"
 # DP_SCRIPT_X_DEBUG_INITIATOR before sourcing this file.
 #echo 1>&2 "0:DP_SCRIPT_X_DEBUG_INITIATOR_N>$DP_SCRIPT_X_DEBUG_INITIATOR_N<"
 if vunsetp "$DP_NO_DASH_X" ; then
-    if [ "${1-}" = "-x" ] || vsetp "$DP_SCRIPT_X_DEBUG_INITIATOR_N"
+    if [ "${1-}" = "${DP_SCRIPT_X_DASH_X_STR}" ] \
+         || vsetp "$DP_SCRIPT_X_DEBUG_INITIATOR_N"
     then
         # -xq means to only activate the other, quiet, debug features.
         # All this, simply for the following ~99% of the time.
@@ -124,7 +125,7 @@ if vunsetp "$DP_NO_DASH_X" ; then
     fi
     DP_SCRIPT_X_DOLLAR1="$DP_SCRIPT_X_PRISTINE_DOLLAR1"
     case "$DP_SCRIPT_X_DOLLAR1" in
-        -x*l*) mkdir -p "$DP_SCRIPT_X_PROG_LOG_DIR" || {
+        "${DP_SCRIPT_X_DASH_X_STR}"*l*) mkdir -p "$DP_SCRIPT_X_PROG_LOG_DIR" || {
                dp_die "$?" \
                    "Could not make DP_SCRIPT_X_LOG_DIR>$DP_SCRIPT_X_LOG_DIR<"
                } 
@@ -133,7 +134,8 @@ if vunsetp "$DP_NO_DASH_X" ; then
 
     # Set lots of stuff that does nothing if not in debug mode to things that
     # do in debug mode.
-    if [ "$DP_SCRIPT_X_DOLLAR1" = "-xq" -o "$DP_SCRIPT_X_DOLLAR1" = "-x" ]; then
+    if [ "$DP_SCRIPT_X_DOLLAR1" = "${DP_SCRIPT_X_DASH_XQ_STR}" \
+          -o "$DP_SCRIPT_X_DOLLAR1" = "${DP_SCRIPT_X_DASH_X_STR}" ]; then
         shift
         DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT="echo"
         DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR="DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT_func"

@@ -41,6 +41,7 @@ verbose=
 VERBOSE=:
 amper='&'
 do_renice=
+: ${set_sandbox_p=t}
 
 case "$prog" in
     xem) prefix='xem';;
@@ -80,11 +81,24 @@ do
 	-M) main_macs=n;;       # prevent startup of appointments and server
         -v) verbose=y; VERBOSE=echo;;
         -F) amper=;;            # Run in foreground.
+        -s) set_sandbox_p=;;
 	--) shift; break;;
 	*) echo 1>&2 "Illegal xem option>$1<"; exit 1 ;;
     esac
     shift
 done
+
+invocation_dir="${PWD}"
+
+vsetp "${set_sandbox_p}" && current_sb=$(dp4-sb-root -S) && {
+    SB_SET_EXPR=("-eval (dp-set-sandbox\"$current_sb\")")
+
+    echo "[0]>${SB_SET_EXPR[0]}<"
+    echo "[1]>${SB_SET_EXPR[1]}<"
+    echo "[@]>${SB_SET_EXPR[@]}<"
+    aaa=$(echo "${SB_SET_EXPR[@]}")
+eko "$aaa"
+}
 
 [ -z "$did_cd" ] && cd $HOME
 
@@ -146,10 +160,7 @@ vsetp $XEM_XFT_FONT && {
     echo "[0]>${FONT_SET_EXPR[0]}<"
     echo "[1]>${FONT_SET_EXPR[1]}<"
     echo "[@]>${FONT_SET_EXPR[@]}<"
-eko "${FONT_SET_EXPR[@]}"
-    
 }
-
 
 if [ -z "$OPTS" ]
 then
@@ -166,7 +177,7 @@ fi
 
     
 [ -n "$PRE_CMD" ] && eval "$PRE_CMD"
-cmd_args="$OPTS $BG_COLOR $MAIN_MACS_RC $emacs_opts"
+cmd_args="$OPTS $BG_COLOR $MAIN_MACS_RC $aaa $emacs_opts"
 $VERBOSE echo exec $BIN $cmd_args
 [ -n "$verbose" ] && eko exec $BIN $cmd
 
@@ -191,4 +202,5 @@ else
     # why this ?echo $BIN -font "$font" $cmd_args 2>&1 | tee --append $log_file
     # instead of the below?
     eval echo $cmd 2>&1 | tee --append $log_file
+    eval eko $cmd 2>&1 | tee --append $log_file
 fi

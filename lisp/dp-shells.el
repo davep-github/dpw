@@ -166,6 +166,27 @@ prompt.  We don't want to stomp on them.")
           (setq default-directory 
                 (concat (match-string 1 s) "/")))))))
 
+;; XXX @todo fix this, make it work.
+;; Debugger entered--Lisp error: (invalid-argument "Marker does not point anywhere")
+;;   ansi-color-filter-region(#<marker in no buffer 0x6e80> #<marker at 594 in *gdb-nemo-2* 0x6d35>)
+;;   ansi-color-process-output("(gdb) ")
+;;   run-hook-with-args(ansi-color-process-output "(gdb) ")
+;;   comint-output-filter(#<process "bash" pid 17415 state:run> "(gdb) ")
+
+(dp-deflocal dp-dont-ask-to-tack-on-gdb-mode-p nil
+  "Do not ask if the user want to ser gdb mode when we see a gdb-mode prompt.
+Can be set after the first prompting.")
+
+(defun dp-shell-lookfor-gdb (str)
+  (when (and (not (eq major-mode 'gdb-mode))
+             (not dp-dont-ask-to-tack-on-gdb-mode-p)
+             (string-match dp-gdb-prompt-regexp str))
+    (setq dp-dont-ask-to-tack-on-gdb-mode-p t)
+    (when (y-or-n-p "Tack on gdb mode?")
+      ;; The ansi-color filter get hosed so we turn it off here.
+      (ansi-color-for-comint-mode-off)
+      (dp-tack-on-gdb-mode))))
+
 (defun dp-shell-lookfor-shell-max-lines (str)
   (when (string-match "DP_SML=\\(-?[0-9]*\\)" str)
     (let ((num-lines (match-string 1 str)))
@@ -536,8 +557,12 @@ dir-tracker has become lost.
                       :before-pmark-fun 'dp-shell-delete-line
                       ;; mark active, where ever:
                       :mark-active-fun 'dp-shell-delete-line
-                      :empty-line-fun 'dirs
-                      :end-of-line-fun 'dp-shell-dirs-or-delete-line)))))
+                      ;; XXX @todo make M-d a simple dp-shell-delete-line binding
+;;                      :empty-line-fun 'dirs
+                      :empty-line-fun 'dp-shell-delete-line
+;;                      :end-of-line-fun 'dp-shell-dirs-or-delete-line
+                      :end-of-line-fun 'dp-shell-delete-line
+)))))
   
   ;; ??? Why did I do the C-c thing? Testing?
   (local-set-key [(control ?c) (meta ?o)] 'dp-shell-magic-kill-ring-save)
@@ -581,7 +606,7 @@ dir-tracker has become lost.
     )
   (local-set-key [(control ?g)] 'keyboard-quit))
 
-(defun dp-shell-common-hook (variant)
+(defun* dp-shell-common-hook (&optional (variant dp-default-variant))
   "Sets up personal shell-like mode bindings.
 Called when shell, inferior-lisp-process, etc. are entered."
   (dp-shell-bind-common-keys)
@@ -809,7 +834,7 @@ Or both.")
       (ansi-color-for-comint-mode-off))))
   
 ;;;###autoload
-(defun dp-shell-mode-hook ()
+(defun* dp-shell-mode-hook (&optional (variant dp-default-variant))
   "Sets up shell mode specific options."
   (interactive)
   (if-boundp 'semantic-mrub-push-disable-p
@@ -826,8 +851,11 @@ Or both.")
     (dp-maybe-add-ansi-color)
     (loop for hook in '(comint-strip-ctrl-m 
                         dp-shell-lookfor-dir-change
+                        dp-shell-lookfor-gdb
                         comint-truncate-buffer)
-      do (add-hook 'comint-output-filter-functions hook))
+    do (add-hook (dp-sls variant '-output-filter-functions)
+                 hook nil t))
+
     (setq comint-buffer-maximum-size (* 4 1024)))
   
   ;; something wipes this out after the call to comint-mode-hook and here,
@@ -2656,7 +2684,11 @@ way.")
 (defun dp-tack-on-gdb-mode (&optional buffer-or-name new-buffer-name)
   "Major hack to change a shell buffer which is running gdb into a gdb-mode buffer."
   (interactive)
-  (let ((buffer (dp-get-buffer buffer-or-name)))
+  (let ((buffer (dp-get-buffer buffer-or-name))
+        ;; This gets set to nil somewhere within this function (?why?) and
+        ;; nil causes a problem when we first change windows. So we just
+        ;; propagate the existing value. Seems to work.
+        (tmp-font-lock-cache-position font-lock-cache-position))
     (switch-to-buffer buffer)
     (unless (eq new-buffer-name t)
       (dp-gdb-issue-command "set annotate 1" nil (current-buffer))
@@ -2670,6 +2702,7 @@ way.")
     ;; for the benefit of shell-font.el
     (gdb-mode)
     (gdb-set-buffer)
+    (setq font-lock-cache-position tmp-font-lock-cache-position)
     (goto-char (point-max))))
 
 

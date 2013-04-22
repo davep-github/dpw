@@ -384,25 +384,33 @@ the init files.")
 ;; for debugging
 (defvar dp-orig-auto-mode-alist auto-mode-alist)
 
+(defvar dp-default-mode-transparent-r/w-suffix-regexp
+          "wip\\|exp\\|dev\\|WIP\\|EXP\\|DEV"
+"In development, works in progress, being developed.")
+
 ;; !<@todo XXX things like save-2 don't work, but save2 do. The [] expr is
 ;; suspect.
-(defvar dp-default-mode-transparent-suffix-regexp
-  (concat "\\([.,-]\\("
-          "historical\\|save\\|hide\\|no-index\\|pristine"
-          "HISTORICAL\\|SAVE\\|HIDE\\|NO-INDEX\\|PRISTINE"
+(defvar dp-default-mode-transparent-r/o-suffix-regexp
+  (concat "historical\\|save\\|hide\\|no-index\\|pristine"
+          "\\|HISTORICAL\\|SAVE\\|HIDE\\|NO-INDEX\\|PRISTINE"
           ;; Stuff being hidden from version control
           "\\|novc\\|junk"
           "\\|NOVC\\|JUNK"
-          ;; In development, works in progress, being developed.
-          "\\|wip\\|exp\\|dev"
-          "\\|WIP\\|EXP\\|DEV"
           ;; Old but broken or out-of-date.
           "\\|stale\\|bad\\|b0rked\\|broken?\\|hosed\\|fubar"
           "\\|STALE\\|BAD\\|B0RKED\\|BROKEN?\\|HOSED\\|FUBAR"
           "\\|merged?\\|obs\\|olde?\\|orig"
-          "\\|MERGED?\\|OBS\\|OLDE?\\|ORIG"
+          "\\|MERGED?\\|OBS\\|OLDE?\\|ORIG")
+          
+  "Read only part of dp-default-mode-transparent-suffix-regexp (q.v.)")
+
+(defvar dp-default-mode-transparent-suffix-regexp
+  (concat "\\([.,-]\\("
+          dp-default-mode-transparent-r/o-suffix-regexp
+          "\\|"
+          dp-default-mode-transparent-r/w-suffix-regexp
           "\\)\\([.,-]?\\([0-9]*\\)\\)?\\)?$")
-  "Suffixes which can be added after a regular extension and are ignored
+"Suffixes which can be added after a regular extension and are ignored
 for the purpose of mode setting.  At this time, these are also visited read
 only.
 So, for example, if I don't want `make check' to look at a work in progress,

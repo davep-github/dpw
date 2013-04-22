@@ -86,7 +86,7 @@
   "Turn whitespace cleanup off everywhere.")
 
 (defvar dp-global-master-cleanup-whitespace-pred-fun nil
-  "Call this to determine if we want to clean up whitespace.")
+  "Call through this to determine if we want to clean up whitespace.")
 
 (dp-deflocal dp-cleanup-whitespace-p nil
   "Should trailing whitespace be cleaned up in this buffer?
@@ -920,7 +920,7 @@ main(
   "Set up ruby-mode *my* way."
   (interactive)
   (dp-add-line-too-long-font 'ruby-font-lock-keywords)
-  (setq dp-cleanup-whitespace-p t)
+  (setq dp-cleanup-whitespace-p nil)
   (dp-add-to-font-patterns '(ruby-font-lock-keywords)
                             ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
 )
@@ -1001,7 +1001,7 @@ See `dp-parenthesize-region-paren-list'")
   (local-set-key [(meta s)] 'dp-py-insert-self?)
   (local-set-key [(meta q)] 'dp-fill-paragraph-or-region-with-no-prefix)
   (dp-add-line-too-long-font 'python-font-lock-keywords)
-  (setq dp-cleanup-whitespace-p t)
+  (setq dp-cleanup-whitespace-p nil)
   (dp-add-to-font-patterns '(python-font-lock-keywords)
                             ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
 )
@@ -1921,7 +1921,7 @@ and then business as usual."
   (dp-add-line-too-long-font '(sh-font-lock-keywords
                                sh-font-lock-keywords-1
                                sh-font-lock-keywords-2))
-  (setq dp-cleanup-whitespace-p t)
+  (setq dp-cleanup-whitespace-p nil)
   (dp-add-to-font-patterns '(sh-font-lock-keywords
                              sh-font-lock-keywords-1
                              sh-font-lock-keywords-2)
@@ -2214,7 +2214,7 @@ changed."
   (dp-add-line-too-long-font '(perl-font-lock-keywords
                                perl-font-lock-keywords-1
                                perl-font-lock-keywords-2))
-  (setq dp-cleanup-whitespace-p t)
+  (setq dp-cleanup-whitespace-p nil)
   (dp-add-to-font-patterns '(perl-font-lock-keywords
                                perl-font-lock-keywords-1
                                perl-font-lock-keywords-2)
