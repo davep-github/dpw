@@ -3452,3 +3452,51 @@ static const char* k_Inject_faultsKeyword = "inject_faults";
 ;;installed       (delete-backward-char))
 ;;installed     (dmessage-ding "Not looking at humpworthy text.")))
 ;;installed (defalias 'one-hump 'dp-change-one-hump)
+
+========================
+Tuesday April 23 2013
+--
+
+(let ((arg 0)
+      use-most-recent-p prompt-p new-p)
+  (cond
+   ((eq arg nil) (setq use-most-recent-p t) "==nil")
+   ((Cu-p nil arg) (setq prompt-p t) "==C-u")
+   ((equal arg 0) (setq new-p 0) "==0")
+   ((Cu--p arg) (setq new-p t) "=='-")))
+"==0"
+
+"==C-u"
+
+"=='-"
+
+nil
+
+"=='-"
+
+"==t"
+
+nil
+
+nil
+
+"==nil"
+
+(Cu-p '(4))
+nil
+
+(Cu-val '0)
+0
+(dp-identity 'bubba)
+bubba
+
+nil
+
+0
+
+
+(dp-gdb-most-recent-buffer
+                                        :dead-or-alive-p t)
+nil
+
+

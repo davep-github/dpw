@@ -400,7 +400,7 @@ For now this must be < the error col.")
 (defface dp-default-line-way-too-long-face
   '((((class color)
       (background light))
-     (:background "lavender")))
+     (:background "aliceblue")))
   "Face for buffer lines which get too long."
   :group 'faces
   :group 'dp-vars)

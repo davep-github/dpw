@@ -387,6 +387,7 @@ string containing their values."
 
 (defun dp-identity (&rest rest)
   ;; Remove effects of &rest
+  (interactive)
   (car rest))
 
 (defun dp-nop (&rest r))

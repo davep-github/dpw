@@ -26,7 +26,7 @@ Usage_details="${EExec_parse_usage}
 --wait-status|--status-wait|--ws) --wait and --status.
 --nomail) No status/results mail is sent upon completion.
 --mail) Not --nomail.
---mdiag-more|--md-more) Speciy mdiag args.
+--mdiag-more|--md-more) <arg> Speciy mdiag args.
 --dump-images) -dumpImages to trace3d.
 "
 # Example of arg parsing.
@@ -44,10 +44,13 @@ long_options=("wait"
 "status-wait"
 "wait-status"
 "ws"
-"mdiag-more"
-"md-more"
+"mdiag-more:"
+"md-more:"
 "dump-images"
 "nomail"
+"all-but-run"
+"abr"
+"no-run"
 "mail")
 
 : ${default_level=$(pwd)/config/levels/tegra/regress_tegra_gpu_multiengine}
@@ -75,6 +78,7 @@ do
       -r|--trace-root) shift; traceRoot_opt="$1";;
       -c|--chip) shift; chip_opt="$1";;
       -t|--target) shift; target_opt="$1";;
+      --all-but-run|--abr|--no-run) all_but_run_opt="-allButRun";;
       -d) shift; d_opt="$1";;
       --log-dir) shift; user_log_dir="$1";;
       --log-base) shift; log_dir_base="$1";;
@@ -111,6 +115,7 @@ done
 : ${log_dir_base=dp-run-tgens.d}
 : ${log_dir=${user_log_dir}}
 : ${display_status_p=}
+: ${all_but_run_opt=}
 
 # Common timestamp
 timestamp=$(dp-std-timestamp)
@@ -187,7 +192,7 @@ cat last_out_dir" >| latest_out_dir
         mdiag_more_opt=
     fi
         
-    cmd="./tgen.pl ${target_opt} ${chip_opt} ${level_opt} ${d_opt} ${traceRoot_opt} ${only_opt} -outDir $out_dir ${wait_opt} ${mail_opt} ${clobber_opt} ${mdiag_more_opt} ${tgen_opts}"
+    cmd="./tgen.pl ${target_opt} ${all_but_run_opt} ${chip_opt} ${level_opt} ${d_opt} ${traceRoot_opt} ${only_opt} -outDir $out_dir ${wait_opt} ${mail_opt} ${clobber_opt} ${mdiag_more_opt} ${tgen_opts}"
     # Can't create out_dir and put this in it because tgen will complain the
     # dir exists if -clobber is not used and if -clobber is used, the
     # directory will be nuked first.

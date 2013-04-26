@@ -204,9 +204,9 @@ Can be set after the first prompting.")
   (when (string-match "^[ \t]*clsx[ \t]*$" str)
     (clsx)))
 
+;;  "this needs to be deleted when the ls and dimensions crap is resolved."
 (defcustom dp-shell-magic-ls-pattern
-  "this needs to be deleted when the ls and dimensions crap is resolved."
-;;  "^[ 	]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\(?:\\s-*\\)\\($\\|.*\\)$"
+  "^[ 	]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\(?:\\s-*\\)\\($\\|.*\\)$"
 ;;"^[ \t]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\($\\|\\(?:[ \t]+\\)\\)\\(.*\\)$"
   "*Match this pattern for magic ls functionality!"
   :group 'dp-vars
@@ -622,7 +622,7 @@ Called when shell, inferior-lisp-process, etc. are entered."
                          comint-dynamic-complete-functions)))
   (loop for hook in '(dp-shell-lookfor-cls
                       dp-shell-lookfor-clsx
-;;                      dp-shell-lookfor-ls
+                      dp-shell-lookfor-ls
                       dp-shell-lookfor-shell-max-lines
                       dp-shell-lookfor-vc-cmd
                       dp-shell-lookfor-dirty-buffer-cmds
@@ -2443,8 +2443,7 @@ ARG is numberp:
         (delete-region (mark) (point))
       ad-do-it)))
 
-;; \\|ls\\|ltl\\|lsl\\|lth
-(defvar dp-comint-discard-regexp "^[ \t]*\\(cls\\)\\>"
+(defvar dp-comint-discard-regexp "^[ \t]*\\(cls\\|ls\\|ltl\\|lsl\\|lth\\)\\>"
   "Don't send anything that matches to the comint process.")
 
 (dp-deflocal dp-orig-comint-input-sender nil
@@ -2458,7 +2457,7 @@ ARG is numberp:
 (defun dp-magic-columns-ls (ls-cmd &optional args cols echo-p lines)
   "Do an ls-like command in the *shell* buffer with COL columns.
 COL defaults the the width of the window in which the first *shell* buffer is
-displayed if we're not in a recognizable shell buffer."
+displayed."
   (interactive "P")
   (when args
     (if (C-u-p)
@@ -2478,17 +2477,19 @@ displayed if we're not in a recognizable shell buffer."
            ;; Space --> Don't put command in the history.  Well, we do want
            ;; the rest of the line and I don't want to lose that.
            ;; 
-           (cmd (format "%s%s" ls-cmd args)))
+           (cmd (format "COLUMNS=%s LINES=%s %s%s"
+                        (or cols
+                            (- (window-width shell-win) 5))
+                        (or lines
+                            (/ (* 4 (window-displayed-height)) 5))
+                        ls-cmd
+                        args)))
       (when (and shell-buf shell-win shell-proc)
         (dp-save-last-command-pos)
         (when echo-p
           (setq echo (format "echo '%s'; " cmd)))
         (setq cmd (format "%s%s" echo cmd))
         (dmessage "dp-magic-columns-ls, cmd>%s<" cmd)
-        (dp-shells-export-terminal-dimensions)
-        ;; XXX @todo use a more common sender, one where
-        ;; `dp-shells-export-terminal-dimensions' can be sure to be done for
-        ;; all commands.
         (comint-simple-send shell-proc cmd)))))
 
 ;; dp-ssh (id), host-name = f(id): f is currently a format-string. NEEDS to

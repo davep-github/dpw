@@ -121,7 +121,7 @@ do
               }
               ;;
       # t_make won't accept -only and -skip*
-      --skiprtl) shift; rtl_opt="-skiprtl"
+      --skiprtl) rtl_opt="-skiprtl"
                  [ -n "${only_opt}" ] && {
                      echo 1>&2 "-skiprtl disabling  ${only_opt}"
                      only_opt=

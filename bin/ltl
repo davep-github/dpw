@@ -6,20 +6,25 @@ source script-x
 : ${kwa_LTL_SHOW_DATE:=t}
 : ${kwa_LTL_NUM_LINES:=-1}
 : ${kwa_LTL_LS_OPTS:=-Flt} # Why did I use -o before?
-{ 
-    [ -n "$kwa_LTL_SHOW_DATE" ] && {
-        echo "** Now: $(date)"
-        : $((--kwa_LTL_NUM_LINES))
-    }
-    [ -n "$kwa_LTL_BLATHER" ] && {
-        echo "** argv: $@"
-        : $((--kwa_LTL_NUM_LINES))
-    }
-    if [ $kwa_LTL_NUM_LINES -gt 0 ]
-        then
-        kwa_LTL_NUM_LINES="-n $kwa_LTL_NUM_LINES"
-    else
-        kwa_LTL_NUM_LINES=""
-    fi
+blather=
+date_str=
+[ -n "$kwa_LTL_SHOW_DATE" ] && {
+    date_str="** Now: $(date)"
+    ((--kwa_LTL_NUM_LINES))
+}
+[ -n "$kwa_LTL_BLATHER" ] && {
+    blather="** argv: $@"
+    ((--kwa_LTL_NUM_LINES))
+}
+if [ $kwa_LTL_NUM_LINES -gt 0 ]
+then
+    kwa_LTL_NUM_LINES="-n $kwa_LTL_NUM_LINES"
+else
+    kwa_LTL_NUM_LINES=""
+fi
+
+{
+    vsetp "$date_str" && echo "$date_str"
+    vsetp "$blather" && echo "$blather"
     ls ${kwa_LTL_LS_OPTS} ${kwa_LTL_COLOR} "$@"
 } | ${PAGER} ${kwa_LTL_NUM_LINES}

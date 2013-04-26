@@ -1,0 +1,38 @@
+#!/bin/sh
+
+export DP_SCRIPT_X_DASH_X_STR=-SCRIPT_X
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+reroot()
+{
+    dp4-reroot .
+}
+
+extract()
+{
+    dp4-extract-pathname
+}
+
+: ${rerooter=cat}
+
+one="${1-}"
+
+case "${one}" in
+    -r) shift; rerooter=reroot;;
+    -e|-x) shift; rerooter=extract;;
+    *) ;;
+esac
+
+p4 opened "$@" | $rerooter
+

@@ -52,3 +52,12 @@ mecd()
 
 }
 export -f mecd
+
+tgen_go_latest_run()
+{
+    mecd testgen
+    cd $(tgen-latest-run "$@")
+}
+export -f tgen_go_latest_run
+
+true
