@@ -180,12 +180,14 @@ Can be set after the first prompting.")
 (defun dp-shell-lookfor-gdb (str)
   (when (and (not (eq major-mode 'gdb-mode))
              (not dp-dont-ask-to-tack-on-gdb-mode-p)
-             (string-match dp-gdb-prompt-regexp str))
+             (string-match (concat dp-gdb-prompt-regexp "$") str))
     (setq dp-dont-ask-to-tack-on-gdb-mode-p t)
-    (when (y-or-n-p "Tack on gdb mode?")
+    (when (y-or-n-p "Tack on gdb mode? ")
       ;; The ansi-color filter get hosed so we turn it off here.
-      (ansi-color-for-comint-mode-off)
-      (dp-tack-on-gdb-mode))))
+      ;; I think this is fixed in dp-tack-on-gdb-mode. 
+      ;; (ansi-color-for-comint-mode-off)
+      (dp-tack-on-gdb-mode)
+      (ansi-color-for-comint-mode-filter))))
 
 (defun dp-shell-lookfor-shell-max-lines (str)
   (when (string-match "DP_SML=\\(-?[0-9]*\\)" str)
@@ -214,14 +216,12 @@ Can be set after the first prompting.")
   "Are we using a bash-like shell?"
   (string-match "/\\(ba\\)?sh" (getenv "SHELL")))
 
-;; finish fixing this.
-(defun dp-shell-lookfor-ls (str))
-
-;;   (when (string-match dp-shell-magic-ls-pattern str)
-;;     (dp-magic-columns-ls 
-;;      (match-string 1 str)
-;;      (match-string 2 str)
-;;      nil)))                             ;Do I like this? 'no-echo
+(defun dp-shell-lookfor-ls (str)
+  (when (string-match dp-shell-magic-ls-pattern str)
+    (dp-magic-columns-ls
+     (match-string 1 str)
+     (match-string 2 str)
+     nil)))                             ;Do I like this? 'no-echo
 
 (defvar dp-shell-vc-cmds '("cvs" "svn" "git" "hg")
   "Version control commands that can cause problems if they are used and
@@ -2530,20 +2530,23 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
   "Get the current list of gdb buffers, predicating on DEAD-OR-ALIVE-P."
   ;; `dp-choose-buffers' uses `buffer-list<f>' if the incoming buffer-list is nil."
   (when dp-gdb-buffers
-    (setq dp-gdb-buffers 
-          (dp-choose-buffers (function 
-                              (lambda (buf-cons)
-                                (when (or dead-or-alive-p
-                                          (dp-buffer-process-live-p 
-                                           (car buf-cons)))
-                                  buf-cons)))
-                             dp-gdb-buffers))))
+    (dp-choose-buffers (function
+                        (lambda (buf-cons)
+                          (when (or dead-or-alive-p
+                                    (dp-buffer-process-live-p
+                                     (car buf-cons)))
+                            buf-cons)))
+                       dp-gdb-buffers)))
 
 ;; Aliased because, currently, they do the same thing.
 (defalias 'dp-gdb-buffer-completion-list 'dp-gdb-get-buffers)
 
-;; Aliased because, currently, they do the same thing.
-(defalias 'dp-gdb-clear-dead-buffers 'dp-gdb-get-buffers)
+(defun dp-gdb-clear-dead-buffers ()
+  (interactive)
+  ;; Get all living gdb buffers and make that the current list of gdb buffers.
+  (setq dp-gdb-buffers 
+        (delete (cons (buffer-name) 'dp-gdb)
+                (dp-gdb-get-buffers :dead-or-alive-p nil))))
 
 (defun* dp-gdb-most-recent-buffer (&rest dead-or-alive-p)
   (caar (apply 'dp-gdb-buffer-completion-list dead-or-alive-p)))
@@ -2551,15 +2554,23 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 (defun dp-num-gdb-buffers ()
   (length (dp-gdb-buffer-completion-list)))
 
-(defun dp-gdb-get-buffer-interactively ()
+(defun dp-gdb-get-buffer-interactively (&optional use-most-recent-p)
   (list 
    (let ((prompt (if (dp-gdb-most-recent-buffer)
                      (format "gdb buffer name (default %s): " 
                              (dp-gdb-most-recent-buffer))
-                   "gdb buffer name: ")))
-     (completing-read  prompt (dp-gdb-buffer-completion-list)
-                       nil nil nil 
-                       'dp-gdb-buffer-history (dp-gdb-most-recent-buffer)))))
+                   "gdb buffer name: "))
+         (completion-list (dp-gdb-buffer-completion-list))
+         (most-recent-buffer (dp-gdb-most-recent-buffer
+                              :dead-or-alive-p t)))
+     (dp-gdb-clear-dead-buffers)
+     (if (and use-most-recent-p
+              (dp-buffer-process-live-p most-recent-buffer
+                                        :default-p nil))
+         most-recent-buffer
+       (completing-read  prompt (dp-gdb-buffer-completion-list)
+                         nil nil nil 
+                         'dp-gdb-buffer-history (dp-gdb-most-recent-buffer))))))
 
 (defun* dp-get-locale-rcs (&optional (env-var-name "locale_rcs"))
   (let ((rcs (getenv env-var-name)))
@@ -2597,25 +2608,25 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 (defvar dp-gdb-recursing nil)
 
 ;;;###autoload
-(defun dp-gdb-old (&optional new-p path corefile)
-  (interactive "P")
-  (unless new-p
-    (if (dp-buffer-process-live-p (dp-gdb-most-recent-buffer))
-        (dp-visit-or-switch-to-buffer (car (dp-gdb-get-buffer-interactively)))
-      (setq new-p t)
-      (if (dp-buffer-live-p (dp-gdb-most-recent-buffer))
-          (dp-maybe-kill-buffer (dp-gdb-most-recent-buffer)))))
-  (when new-p
-    ;; Want to get here if new-p or no live proc buffers.
-    (let ((dp-gdb-recursing t))
-      (call-interactively 'gdb))
-    (dp-add-or-update-alist 'dp-gdb-buffers (buffer-name) (or corefile 'dp-gdb))
-    (dp-add-to-history 'dp-gdb-buffer-history (buffer-name))
-    (when (boundp 'dp-gdb-commands)
-      (loop for key in (cons "." (dp-get-locale-rcs)) do
-        (loop for cmd in (cdr (assoc key dp-gdb-commands)) do
-          (insert cmd)
-          (comint-send-input))))))
+;;needed? (defun dp-gdb-old (&optional new-p path corefile)
+;;needed?   (interactive "P")
+;;needed?   (unless new-p
+;;needed?     (if (dp-buffer-process-live-p (dp-gdb-most-recent-buffer))
+;;needed?         (dp-visit-or-switch-to-buffer (car (dp-gdb-get-buffer-interactively)))
+;;needed?       (setq new-p t)
+;;needed?       (if (dp-buffer-live-p (dp-gdb-most-recent-buffer))
+;;needed?           (dp-maybe-kill-buffer (dp-gdb-most-recent-buffer)))))
+;;needed?   (when new-p
+;;needed?     ;; Want to get here if new-p or no live proc buffers.
+;;needed?     (let ((dp-gdb-recursing t))
+;;needed?       (call-interactively 'gdb))
+;;needed?     (dp-add-or-update-alist 'dp-gdb-buffers (buffer-name) (or corefile 'dp-gdb))
+;;needed?     (dp-add-to-history 'dp-gdb-buffer-history (buffer-name))
+;;needed?     (when (boundp 'dp-gdb-commands)
+;;needed?       (loop for key in (cons "." (dp-get-locale-rcs)) do
+;;needed?         (loop for cmd in (cdr (assoc key dp-gdb-commands)) do
+;;needed?           (insert cmd)
+;;needed?           (comint-send-input))))))
 
 (defvar dp-gdb-file-history '()
   "Files on which we've run `dp-gdb'.")
@@ -2692,18 +2703,26 @@ way.")
     (switch-to-buffer buffer)
     (unless (eq new-buffer-name t)
       (dp-gdb-issue-command "set annotate 1" nil (current-buffer))
-      (rename-buffer (cdr (dp-mk-gdb-name new-buffer-name))))
-    (set-process-filter (get-buffer-process buffer) 'dp-gdb-filter)
-    (set-process-sentinel (get-buffer-process buffer) 'gdb-sentinel)
-    (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-dead-buffers)
+      (rename-buffer (cdr (dp-mk-gdb-name (or new-buffer-name
+                                              "tacky")))))
     (dp-add-or-update-alist 'dp-gdb-buffers (buffer-name) 'dp-gdb)
     (dp-add-to-history 'dp-gdb-buffer-history (buffer-name))
+    ;; If we exit gdb directly, we'll be back in the shell we started and the
+    ;; gdb-mode hooks will be gone.
+    (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-dead-buffers)
     ;; XEmacs change: turn on gdb mode after setting up the proc filters
     ;; for the benefit of shell-font.el
     (gdb-mode)
+    ;; gdb-mode, incredibly rudely, replaces this hook entirely.
+    (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-dead-buffers)
+    (set-process-filter (get-buffer-process buffer) 'dp-gdb-filter)
+    (set-process-sentinel (get-buffer-process buffer) 'gdb-sentinel)
     (gdb-set-buffer)
     (setq font-lock-cache-position tmp-font-lock-cache-position)
-    (goto-char (point-max))))
+    (goto-char (point-max))
+    ;; Some markers were made before the buffer was renamed which makes them
+    ;; invalid.
+    (set-marker comint-last-output-start (point))))
 
 
 ;;;###autoload
@@ -2736,17 +2755,31 @@ running process."
     (gdb-set-buffer)))
 
 ;;;###autoload
-(defun dp-gdb (&optional new-p path corefile)
+(defun dp-gdb (&optional interactive-only-arg path 
+               corefile use-most-recent-p new-p prompt-p)
   "Extension to gdb that:
 . Prefers the most recently used buffer if its process is still live,
 . Else it asks for a buffer using a completion list of other gdb buffers,
-. Else (or if nothing selected above) it starts a new gdb session."
+. Else (or if nothing selected above) it starts a new gdb session.
+ARG == nil  --> Use most recent session
+ARG == '(4) --> Prompt for buffer
+ARG == '-   --> Create new session
+ARG == 0    --> New `dp-gdb-naught' session."
   (interactive "P")
+  (when (interactive-p)
+    (cond
+     ((eq interactive-only-arg nil) (setq use-most-recent-p t))
+     ((Cu-p nil interactive-only-arg) (setq prompt-p t))
+     ((equal interactive-only-arg 0) (setq new-p 0))
+     ((Cu--p interactive-only-arg) (setq new-p t))))
+
   (unless new-p
     (if (and (dp-buffer-process-live-p (dp-gdb-most-recent-buffer
                                         :dead-or-alive-p t)
                                        :default-p nil)
-             (let ((buf (car (dp-gdb-get-buffer-interactively))))
+             (let ((buf (car (dp-gdb-get-buffer-interactively
+                              (and (not prompt-p)
+                                   use-most-recent-p)))))
                (if (not (string= buf "-" ))
                    ;; Make sure we're true.
                    (or (dp-visit-or-switch-to-buffer buf) t)
@@ -2756,10 +2789,10 @@ running process."
       ;; Toss a buffer with a dead gdb proc.
       (dp-bury-or-kill-process-buffer (dp-gdb-most-recent-buffer
                                        :dead-or-alive-p t))))
-  (when new-p                           ; New can be changed above.
-    (if (eq new-p '-)
+  (when new-p                           ; New could have been changed above.
+    (if (equal new-p 0)
         (dp-gdb-naught)
-      ;; Want to get here if new-p or no live proc buffers.
+      ;; Want to get here if arg or no live proc buffers.
       (let ((dp-gdb-recursing t))
         ;; Let's grab the file name our-self, regardless of interactivity, so
         ;; we can put it into our own history.
@@ -2780,6 +2813,10 @@ running process."
         (loop for cmd in (cdr (assoc key dp-gdb-commands)) do
           (insert cmd)
           (comint-send-input))))))
+
+(defun dp-gdb-most-recent-session ()
+  (interactive)
+  (dp-gdb nil nil nil t))
 
 (defadvice gdb (around dp-advised-gdb activate)
   (dmessage "YOPP!")
