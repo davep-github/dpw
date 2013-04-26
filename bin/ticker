@@ -174,12 +174,14 @@ if __name__ == "__main__":
     openMode = 'w'
     outputStreams = []
     compress_p = False
+    file_suffix = ""
+    U_extension = ".log"
     ## Each -Z adds one, and we want a single -Z to yield max compression.
     compression_level = 8;
 
     # tick_interval, increment=1, init_string="counting: ", comma=", ",
     # init_count=0, tick_char
-    options = 'i:I:P:C:z:c:t:TdD:kphgaK:.lsL:S:Aum:M:Z'
+    options = 'i:I:P:C:z:c:t:TdD:kphgaK:.lsL:S:Aum:M:ZUE:'
     ctor_keywords = {}
     var_dict = {CTOR: ticker_lib.Ticker_t,
                 "tick_interval": def_tick_interval,
@@ -209,6 +211,13 @@ if __name__ == "__main__":
             compress_p = True
             compression_level = ((compression_level + 1) % 9) + 1
             continue
+        if o == '-U':
+            # Unique log file
+            file_suffix = "." + dp_utils.bq("dp-std-timestamp") + U_extension
+            continue
+        if o == '-E':
+            U_extension = v
+            continue
 
         # tee(1) compatibility.
         if o == '-a':
@@ -232,6 +241,7 @@ if __name__ == "__main__":
             raise RuntimeError("No action for option>%s<" % (o,))
 
     for a in args:
+        a = a + file_suffix
         if no_clobber_p:
             if os.path.exists(a):
                 print >>sys.stderr, "File [%s] exists: not clobbering" % (a,)

@@ -198,14 +198,17 @@ def file_len(file):
     stat_buf = os.stat(file)
     return stat_buf[stat.ST_SIZE]
 
-def bq(cmd):
+def bq(cmd, hack_newline=True):
     """bq(cmd) : backquote cmd as in the shell's `cmd`.
     Return the output as a string."""
     #fds = os.popen4(cmd)
     #ret = fds[1].read()
     #fds[0].close()
     #fds[1].close()
-    return os.popen(cmd).read()
+    ret = os.popen(cmd).read()
+    if hack_newline:
+        ret = ret[:-1]
+    return ret
 
 def repr_dict(id, od):
     '''Convert a dict to a dict containing reprs of each element.'''
