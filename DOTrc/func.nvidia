@@ -60,4 +60,29 @@ tgen_go_latest_run()
 }
 export -f tgen_go_latest_run
 
+xx()
+{
+    xterm_sized  "$@" -e tcsh -l &
+}
+alias xh="xterm_sized -fg black -bg white &"
+alias xs="nohup xterm_sized & ; exit"
+xn()
+{
+    xterm_sized -title "$@"
+}
+xxd()
+{
+    DISPLAY="$@" xx ; sleep 2 ; exit
+}
+
+cdtglr()
+{
+    cd $(tgen-latest-run "$@")
+}
+
+gtglr()
+{
+    g $(tgen-latest-run "$@")
+}    
+
 true

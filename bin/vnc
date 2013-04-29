@@ -5,6 +5,7 @@
 # provides some insulation from those differences.
 # It also allows for node specific configuration. Shared home directories are
 # not perfect for every need.
+# NB: Crappy per-host code in git.
 #
 
 source script-x
@@ -18,20 +19,10 @@ do
 done
 unset eexec_program
 
-#bogus # A good env.<host> candidate?
-#bogus # Or better tied, somehow, to client.
-#bogus : ${VNC_DIR:=$HOME/.vnc}
-#bogus : ${VNC_CONFIG_DIR:=$HOME/.vnc/config.d/${HOST}}
-#bogus EExec mkdir -p "${VNC_CONFIG_DIR}"
-#bogus : ${VNC_PASSWORD_DEFAULT_FILE=vnc-passwd.default}
-#bogus : ${VNC_PASSWORD_FILE=vnc-passwd.$HOST}
+case "${1-}" in
+    -l|--l|-ls|--ls) shift; ls "$@" ~/.vnc/*.pid; exit 0;;
+    *) ;;
+esac
 
-#bogus EExec -y cd "${VNC_DIR}"
-
-#bogus [ -e "${VNC_PASSWORD_FILE}" ] || {
-#bogus     EExec ln -s "${VNC_PASSWORD_DEFAULT_FILE}" "${VNC_PASSWORD_FILE}"
-#bogus }
-
-#: ${VNC_GEOMETRY:=1280x1024}
 : ${VNC_GEOMETRY:=1920x1080}
 EExec vncserver -geometry ${VNC_GEOMETRY} -depth 24 "$@"

@@ -11,21 +11,4 @@ alias wx="winterm -geometry 80x24"
 
 alias nvgrep=/home/nv/toolroot/bin/nvgrep
 
-# @todo XXX move to func.nvidia
-
-xx()
-{
-    xterm_sized  "$@" -e tcsh -l &
-}
-alias xh="xterm_sized -fg black -bg white &"
-alias xs="nohup xterm_sized & ; exit"
-xn()
-{
-    xterm_sized -title "$@"
-}
-xxd()
-{
-    DISPLAY="$@" xx ; sleep 2 ; exit
-}
-
 true

@@ -12,6 +12,9 @@ do
 done
 unset eexec_program
 
+: ${kepler=kepler_b_ogtest}
+: ${no_cd=}
+
 if [ "${1-}" = "-r" ]
 then
     shift
@@ -20,12 +23,13 @@ else
     printor=echo
 fi
 
-
-: ${kepler=kepler_b_ogtest}
+vunsetp "${no_cd}" && {
+    mecd testgen
+}
 
 dir_num="${1-1}"
 first_dir_num=$(printf "%02d" "${dir_num}")
 second_dir_num=$(printf "%06d" "${dir_num}")
 latest_out_dir=$(latest_out_dir)
-dest="${latest_out_dir}/tests/${kepler}/00/00/${first_dir_num}/${second_dir_num}"
+dest="${PWD}/${latest_out_dir}/tests/${kepler}/00/00/${first_dir_num}/${second_dir_num}"
 "${printor}" "${dest}"
