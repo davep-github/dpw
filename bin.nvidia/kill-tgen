@@ -12,7 +12,7 @@ do
 done
 unset eexec_program
 
-: ${tgen_files=mods linsim}
+: ${tgen_files=mods linsim sockserv32 cosim}
 : ${kill_sig=}
 : ${sleep_time=5}
 

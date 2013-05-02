@@ -889,7 +889,7 @@ with no args, if that value is non-nil."
         (> (prefix-numeric-value forces) 0)))
   (if gtags-mode
       (add-hook 'after-save-hook 'gtags-auto-update)
-      (remove-hook 'after-save-hook 'gtags-auto-update))
+    (remove-hook 'after-save-hook 'gtags-auto-update))
   (run-hooks 'gtags-mode-hook)
 )
 

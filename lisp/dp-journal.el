@@ -204,15 +204,25 @@ e.g. URLs.")
 ; 	    (throw 'done t)))
 ;       (set-match-data nil))))
 
-
 (when (featurep 'filladapt)
+  ;; This was in dpmacs.el, but it doesn't really belong there unless there
+  ;; was some dependency or some such issues.
+  (defvar dpj-filladapt-token-table-additions 
+    '(("[!?@$]+[ 	]" dpj-action-item)
+      ("\\(~~\\|==\\)>[ 	]" dpj-action-item-resolution))
+    "Things I'd like filladapt to know about.
+This associates a regexp with a symbol name. The symbol names are used by
+`fill-adapt-token-match-table'.")
+  (dp-add-list-to-list 'filladapt-token-table 
+                       dpj-filladapt-token-table-additions)
+
   (defvar dpj-filladapt-token-match-table-additions
     '((dpj-action-item dpj-action-item)
       (dpj-action-item-resolution dpj-action-item-resolution))
     "Inform filladapt about my journal mode tokens.")
   (dp-add-list-to-list 'filladapt-token-match-table 
                        dpj-filladapt-token-match-table-additions))
-  
+
 (defun dpj-alt-0 (limit)
   "Helps to determine if chars in a sequence can be considered even.
 Things like (sub-)?topics in an outline:
@@ -2876,6 +2886,10 @@ exist to move from one topic record to the next or previous.
   ;; We make these variables buffer local and lower 'em into the paranoid zone.
   (setq auto-save-interval 200
         auto-save-timeout 30)
+  
+  ;; Text mode turns this on, and it does many things I don't like. Perhaps I
+  ;; am not using it correctly, esp in relation to filladapt.
+  (auto-fill-mode -1)
 
   ;;
   ;; this make line up/down movement commands skip over invisible

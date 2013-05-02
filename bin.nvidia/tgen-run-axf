@@ -1,0 +1,23 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+EExec ./tgen.pl \
+          -target FMODEL \
+          -chip t124 \
+          -level `pwd`/config/levels/tegra/regress_tegra_gpu_multiengine \
+          -d hwApPath=`pwd`/../../ \
+          -outDir redline_sockchip \
+          -mdiagArgs "-force_sockserv -reserve_sysmem 258 -top -plugin `pwd`/../../clib/Linux/cpu_red_line.axf -sec_elf_name `pwd`/../../drv/mpcore/t124/ObjLinux_MPCoreXC/boot_page_table.axf" \
+          -only comp_one_tri_redline
+

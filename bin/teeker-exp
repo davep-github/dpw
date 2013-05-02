@@ -162,7 +162,7 @@ def usage():
     dp_util.Twiddle_twiddles()
 
 if __name__ == "__main__":
-    import getopt
+    import optparse
     def_tick_interval = 100
     ostream = sys.stdout
     def_pipe_stream = sys.stdout
@@ -184,13 +184,60 @@ if __name__ == "__main__":
 
     # tick_interval, increment=1, init_string="counting: ", comma=", ",
     # init_count=0, tick_char
-    options = 'i:I:P:C:z:c:t:TdD:kphGaK:.lsL:S:Aum:M:ZUE:g:q'
+
+    oparser = optparse.OptionParser()
+    oparser.disable_interspersed_args()
+    oparser.add_option("-i", "--tick-interval",
+                       dest="tick_interval", action="store", type="int",
+                       help="Set ticker's tick interval.")
+    oparser.add_option("-T", "--show-twiddles",
+                       dest="show_twiddles_p",
+                       default=False, action='store_true',
+                       help="Show list of available twiddles.")
+    oparser.add_option("-l", "-s", "--sample-lines",
+                       dest="sample_lines_tick_p",
+                       default=False, action='store_true',
+                       help="Tick with input line samples.")
+    oparser.add_option("-L", "-S", "--sample-lines-prefix",
+                       dest="sample_lines_tick_prefix", action="store",
+                       default="th-line>",
+                       help="Prefix for sampled lines.")
+    oparser.add_option("-A", "--no-clobber",
+                       dest="no_clobber_p", default=False, action='store_true',
+                       help="Don't clobber existing files. Exit.")
+    oparser.add_option("-Z", "--compression-level",
+                       dest="compression_level", default=-1,
+                       action="store", type="int",
+                       help="Compression level.")
+    oparser.add_option("-U", "--timestamp",
+                       dest="add_timestamp_p", default=False,
+                       action='store_true',
+                       help="Add uniquifying timestamp to output file name.")
+    oparser.add_option("-E", "--extension",
+                       dest="U_extension", default=".log",
+                       action="store", type="string",
+                       help="Addition output file extension. Added last, after timestamp [if present].")
+    oparser.add_option("-a", "--append",
+                       help="Append data.")
+
+    options, args = oparser.parse_args()
+
+    compress_p = options.compression_level >= 0
+    print "compress_p:", compress_p
+    print "options>%s<" % (options,)
+    print "dir(options)>%s<" % (dir(options),)
+#    for key, value in options.items():
+#        print "%s>%s<" % (key, value)
+    for o in oparser.option_list:
+        print "o>%s<" % (o,)
+    sys.exit(99)
+#    options = 'I:P:C:z:c:t:dD:kpGaK:.um:M:g:q'
     ctor_keywords = {}
     var_dict = {CTOR: ticker_lib.Ticker_t,
                 "tick_interval": def_tick_interval,
                 "char_wise_p": False,}
     ctor_keywords["max_output_units_before_newline"] = 80 * 100
-    options, args = getopt.getopt(sys.argv[1:], options)
+    # options, args = getopt.getopt(sys.argv[1:], options)
     for o, v in options:
         if o == '-i':
             var_dict["tick_interval"] = eval_with_units(v)

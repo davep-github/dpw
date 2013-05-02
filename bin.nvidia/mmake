@@ -4,6 +4,7 @@ source script-x
 source eexec
 set -u
 progname="$(basename $0)"
+echo "0: \$@>$@<"
 
 : ${o_xterm_ok_p=}
 
@@ -58,7 +59,9 @@ Usage_details="${EExec_parse_usage}
 option_str="${EExec_parse_option_str}"
 long_options=("logger:" "log-file:" "null" "override" "o-xterm-ok" "tee" "cat"
 "mail" "notify")
+echo "1: \$@>$@<"
 source dp-getopt+.sh
+echo "2: \$@>$@<"
 for i in "$@"
 do
   # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.

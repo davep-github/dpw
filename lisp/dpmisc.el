@@ -583,7 +583,8 @@ interactive \"Flanking char:\" prompt.")
 
 (defun dp-insert-flanked-string (text-in flanker
                                  desired-width)
-  "Insert a string flanked by equal matching string: === Str ==="
+  "Insert a string flanked by equal matching string: === TEXT-IN ===
+Interactively, DESIRED-WIDTH can be set using the prefix-arg."
   (interactive "sString: \ncFlanking char: \nP")
   (when (and (interactive-p)
              (eq flanker ?\r))
@@ -2211,7 +2212,7 @@ Then fix any comments, and move to then next line."
         (dp-fix-comment))))
   (forward-line 1))
 
-(defun dp-delete-word (arg)
+(defun dp-delete-word-forward (arg)
   "Delete characters forward until encountering the end of a word.
 With argument, do this that many times.  Main change is to allow a
 sequence of white-space at point to be deleted with this command.
@@ -2251,7 +2252,7 @@ Based (now, loosely) on kill-word from simple.el"
 With argument, do this that many times.  Based on backward-kill-word
 from simple.el"
   (interactive "*p")
-  (dp-delete-word (- arg)))
+  (dp-delete-word-forward (- arg)))
 
 (defun dp-point-to-top (arg)
   "Put line containing point at the top of the window."
@@ -3877,9 +3878,9 @@ Use another binding? Running out of prefix arg interpretations."
   (interactive)
   (dp-undo-while 'buffer-modified-p))
 
-(defun* dp-dot-h-reinclusion-protection (comment-endif-p
+(defun* dp-dot-h-reinclusion-protection (dont-comment-endif-p
                                          &key
-                                         comment
+                                         (comment t)
                                          (prefix "")
                                          (suffix "_INCLUDED")
                                          (format-str "%s%s%s")
@@ -3904,7 +3905,8 @@ Otherwise, the sequence begins at \(point-min) and ends at \(point-max)."
     (save-restriction
       (if (dp-mark-active-p)
 	  (narrow-to-region (point) (mark)))
-      (let* ((filename (upcase (file-relative-name (buffer-file-name))))
+      (let* ((comment-endif-p (not dont-comment-endif-p))
+             (filename (upcase (file-relative-name (buffer-file-name))))
 	     (def-name (if formatter
                            (funcall formatter (buffer-file-name) prefix suffix)
                          (format format-str prefix filename suffix)))
@@ -6234,6 +6236,10 @@ to see if it's alive as well."
   (and-boundp 'gnuserv-process
     (eq (process-status gnuserv-process) 'run)))
 
+(defun dp-kill-editing-server ()
+  (interactive)
+  (gnuserv-start 'dont-start-a-new-one))
+
 ;;
 ;; Finalize the editing server. If one is running, remove the IPC file.
 ;;
@@ -8257,12 +8263,18 @@ Else `(apply pred pred-args)'."
 (defun* dp-revisit-killed-file (&optional (pred ".*") pred-args)
   (interactive)
   (let* ((tmp (dp-get-recently-killed-file-list))
-	 (table (dp-mk-completion-list tmp)))
-    (find-file (completing-read "Resurrect file: " 
+	 (table (dp-mk-completion-list tmp))
+         (dead-file (completing-read "Resurrect file: " 
                                 table
                                 nil t nil
-                                'dp-recently-killed-files))
-    (dp-set-recently-killed-file-list tmp)))
+                                'dp-recently-killed-files)))
+    (dmessage "dead-file>%s<" dead-file)
+    (when (and dead-file 
+               (not (string= "" dead-file)))
+      (find-file dead-file)
+      ;; Nuke the file. It'll be added again when killed in a more temporally
+      ;; correct fashion.
+      (dp-set-recently-killed-file-list (delete dead-file tmp)))))
 
 (dp-defaliases 'dp-resurrect 'dprd 'raise-dead 'resurrect 
                'dp-revisit-killed-file)
@@ -8522,8 +8534,6 @@ If region is active, set width to that of the longest line in the region."
                    (+ pad (car (dp-longest-line-in-region))))))
       (sfw ll)
       (message "new width: %s" ll))))
-
-
 
 (defsubst sfw-fit-file ()
   (interactive)
@@ -11012,6 +11022,12 @@ split.")
                        split-window-horizontally)
                      -1))
 
+(defun dp-getenv-numeric(var-name)
+  (interactive "sEnv var name: ")
+  (let ((val (getenv var-name)))
+    (when val
+      (string-to-int val))))
+
 ;; 
 ;; | |, | - one window
 ;; |-|, : - two horizontal
@@ -11023,10 +11039,13 @@ Frame width may be increased but will never be decreased.
 Uses `dp-2w-frame-width' to increase width.
 || or :
 If wide enough: | | |, otherwise: |-|"
-  (interactive)
+  (interactive "P")
   (delete-other-windows)
-  (when (< (frame-width) (or frame-width dp-2w-frame-width))
-    (dp-set-frame-width (or frame-width dp-2w-frame-width)))
+  (setq-ifnil frame-width (or (dp-getenv-numeric "DP_XEM_FRAME_WIDTH")
+                              dp-2w-frame-width))
+  (when (or (= 0 frame-width)
+            (< (frame-width) frame-width))
+    (dp-set-frame-width frame-width))
   (dp-set-frame-height)
   (if horizontal-p
       (split-window-vertically)
@@ -15312,6 +15331,23 @@ See `dp-shell-*TAGS-changers' rant. "
              (delete-file file-name))
            (message status-msg)))))
 
+(defvar dp-whitespace-cleanup-after-these-commands '(dp-open-newline
+                                                     dp-c-context-line-break
+                                                     dp-py-open-newline
+                                                     py-newline-and-indent)
+                                                     
+  "Clean up whitespace after executing one of these commands.
+We'll lump everything together rather than using buffer local or mode
+specific lists. This should be ok because mode specific commands should have
+been used in buffers in the given mode.")
+
+(defun dp-whitespace-following-a-cleanup-command-p ()
+  "What the name says. 
+Making it a function makes it easier to use as a value for a predicate
+variable."
+  (let ((tmp last-command))
+    (memq last-command dp-whitespace-cleanup-after-these-commands)))
+
 (defun dp-next-line (count)
   "Add trailing white space removal functionality."
   (interactive "_p")
@@ -15319,7 +15355,7 @@ See `dp-shell-*TAGS-changers' rant. "
       (progn
         (call-interactively 'next-line)
         (setq this-command 'next-line))
-    (let ((gating-pred 'dp-true))
+    (let ((gating-pred 'dp-whitespace-following-a-cleanup-command-p))
       (when (< count 0)
         (setq count (- count)
               gating-pred 'eolp))

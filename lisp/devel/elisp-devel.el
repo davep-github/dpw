@@ -3500,3 +3500,64 @@ nil
 nil
 
 
+
+========================
+Tuesday April 30 2013
+--
+
++----+----+
+| a  | b  |
++----+----+
+| d  | c  |
++----+----+
+
+prev: a->b->c->d->a...
+
+a: (1, 1)
+b: (2, 1)
+c: (2, 2)
+d: (1, 2)
+
+(x0 < x1) && (y0 < y1)
+
+a < b:  10 <= 20 && 10 <= 10 --> t
+
+x * 100 + y
+
+a: 100 + 1 == 101.
+b: 200 + 1 == 201.
+c: 200 + 2 == 202.
+d: 100 + 2 == 102,
+
+a, d, b, c
+
+
+;;installed (defun* dp-mk-mode-r/o-transparent-regexp (extension &optional
+;;installed                                           extra-suffix-regexp
+;;installed                                           (dot "."))
+;;installed   (dp-mk-mode-transparent-regexp extension
+;;installed                                  dp-default-mode-transparent-r/o-suffix-regexp
+;;installed                                  extra-suffix-regexp
+;;installed                                  dot))
+
+;;installed (defun* dp-mk-mode-r/w-transparent-regexp (extension &optional
+;;installed                                           extra-suffix-regexp
+;;installed                                           (dot "."))
+;;installed   (dp-mk-mode-transparent-regexp extension
+;;installed                                  dp-default-mode-transparent-r/w-suffix-regexp
+;;installed                                  extra-suffix-regexp
+;;installed                                  dot))
+  
+
+(dp-mk-mode-r/o-transparent-regexp nil)
+"historical\\|save\\|hide\\|no-index\\|pristine\\|HISTORICAL\\|SAVE\\|HIDE\\|NO-INDEX\\|PRISTINE\\|KEEP\\|keep\\|REFERENCE\\|reference\\|novc\\|junk\\|NOVC\\|JUNK\\|stale\\|bad\\|b0rked\\|broken?\\|hosed\\|fubar\\|STALE\\|BAD\\|B0RKED\\|BROKEN?\\|HOSED\\|FUBAR\\|merged?\\|obs\\|olde?\\|orig\\|MERGED?\\|OBS\\|OLDE?\\|ORIG"
+
+"historical\\|save\\|hide\\|no-index\\|pristine\\|HISTORICAL\\|SAVE\\|HIDE\\|NO-INDEX\\|PRISTINE\\|KEEP\\|keep\\|REFERENCE\\|reference\\|novc\\|junk\\|NOVC\\|JUNK\\|stale\\|bad\\|b0rked\\|broken?\\|hosed\\|fubar\\|STALE\\|BAD\\|B0RKED\\|BROKEN?\\|HOSED\\|FUBAR\\|merged?\\|obs\\|olde?\\|orig\\|MERGED?\\|OBS\\|OLDE?\\|ORIG"
+
+
+(dp-mk-mode-r/w-transparent-regexp nil)
+"wip\\|exp\\|dev\\|WIP\\|EXP\\|DEV"
+
+"wip\\|exp\\|dev\\|WIP\\|EXP\\|DEV"
+
+

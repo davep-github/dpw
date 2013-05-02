@@ -26,7 +26,8 @@ unset eexec_program
 : ${get_mods_p=a}
 : ${build_me_p=a}
 : ${debug_opt=-debug=1}
-: ${purge_opt=purge}
+: ${me_purge_opt=purge}
+: ${me_clean_opt=}
 : ${send_mail_on_completion=t}
 
 t_make_args=
@@ -42,7 +43,6 @@ Usage_details="${EExec_parse_usage}
 --no-leavelogs) Tell t_make not to leave previous log files about.
 --no-catlog) Do not cat the log after a failure.
 --quiet) tee <log-file> > /dev/null. Log w/o output.
--c) Do a -clean first
 -r) Do NOT use -skiprtl. Build the RTL
 --rtl) ibid
 --only <target>) Only make <target>
@@ -52,8 +52,11 @@ Usage_details="${EExec_parse_usage}
 --build-me) Do build the me tests.
 --no-build-me) Do not build the me tests.
 --no-debug) Build me tests W/O debug.
---purge) Purge me tests.
---no-purge) Don't purge me tests.
+--me-purge) Purge me tests.
+--no-me-purge) Don't purge me tests.
+-c) Do a -clean first
+--clean) Clean me tests.
+--no-clean) Don't clean me tests.
 --mm|--mme|--gb|--get-build|--all) Get mods AND make me tests.
 -nn) Don't get mods or make me tests.
 -m|--no-make|--no-build) Don't do the basic bin/t_make(s)
@@ -81,8 +84,10 @@ long_options=("out-file:"
     "no-build-me"
     "no-debug"
     "debug"
-    "purge"
-    "no-purge"
+    "me-purge"
+    "no-me-purge"
+    "me-clean"
+    "no-me-clean"
     "mm" "mme" "gb" "get-build" "all"
     "nn"
     "mail" "no-mail"
@@ -134,8 +139,10 @@ do
       --no-get-mods) get_mods_p=;;
       --no-debug) debug_opt=;;
       --debug) debug_opt="-debug=1";;
-      --no-purge) purge_opt=;;
-      --purge) purge_opt="purge";;
+      --no-me-purge) me_purge_opt=;;
+      --me-purge) me_purge_opt="purge";;
+      --no-me-clean) me_clean_opt=;;
+      --me-clean) me_clean_opt="clean";;
       --mm|--mme|--gb|--get-build|--all) get_mods_p=t; build_me_p=t;;
       --nn) get_mods_p=; build_me_p=;;
       --mail) send_mail_on_completion=t;;
@@ -156,6 +163,11 @@ done
 #    exit 1
 #} 1>&2
 
+
+rtl_required_p && [ "${rtl_opt}" == "-skiprtl" ] && {
+    echo "This sandbox cannot skip rtl"
+    exit 1
+}
 
 [ -z "${log_dir}" ] && {
     echo "log_dir is not set. Using cwd"
@@ -287,8 +299,11 @@ EExec mkdir -p "${log_dir}"
 
     if [ -n "${build_me_p}" ]
     then
-        [ -n "${purge_opt}" ] && {
-            EExec ./build_gpu_multiengine.pl ${purge_opt}
+        [ -n "${me_purge_opt}" ] && {
+            EExec ./build_gpu_multiengine.pl ${me_purge_opt}
+        }
+        [ -n "${me_clean_opt}" ] && {
+            EExec ./build_gpu_multiengine.pl ${me_clean_opt}
         }
         EExec ./build_gpu_multiengine.pl ${debug_opt}
     fi

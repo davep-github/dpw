@@ -204,7 +204,7 @@ Can be set after the first prompting.")
   (when (string-match "^[ \t]*clsx[ \t]*$" str)
     (clsx)))
 
-;;  "this needs to be deleted when the ls and dimensions crap is resolved."
+;;  "?this needs to be deleted when the ls and dimensions crap is resolved?"
 (defcustom dp-shell-magic-ls-pattern
   "^[ 	]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\(?:\\s-*\\)\\($\\|.*\\)$"
 ;;"^[ \t]*\\<\\(ls1?\\|ltl\\|lsl\\|lth\\)\\>\\($\\|\\(?:[ \t]+\\)\\)\\(.*\\)$"
@@ -212,9 +212,8 @@ Can be set after the first prompting.")
   :group 'dp-vars
   :type 'string)
 
-(defun* dp-bash-like-p (&optional (shell-name (getenv "SHELL")))
-  "Are we using a bash-like shell?"
-  (string-match "/\\(ba\\)?sh" (getenv "SHELL")))
+(defvar dp-comint-discard-regexp "^[ \t]*\\(cls\\|ls\\|ltl\\|lsl\\|lth\\)\\>"
+  "Don't send anything that matches to the comint process.")
 
 (defun dp-shell-lookfor-ls (str)
   (when (string-match dp-shell-magic-ls-pattern str)
@@ -222,6 +221,10 @@ Can be set after the first prompting.")
      (match-string 1 str)
      (match-string 2 str)
      nil)))                             ;Do I like this? 'no-echo
+
+(defun* dp-bash-like-p (&optional (shell-name (getenv "SHELL")))
+  "Are we using a bash-like shell?"
+  (string-match "/\\(ba\\)?sh" (getenv "SHELL")))
 
 (defvar dp-shell-vc-cmds '("cvs" "svn" "git" "hg")
   "Version control commands that can cause problems if they are used and
@@ -744,7 +747,7 @@ being refreshed as the current-buffer."
   (dp-shell-line-mode-bindings variant bind-position-aware-keys-p))
 
 ;;;###autoload
-(defun dp-comint-mode-hook ()
+(defun* dp-comint-mode-hook (&optional (variant dp-default-variant))
   "Sets up personal comint mode options.
 Called when shell, inferior-lisp-process, etc. are entered."
   ;; @todo XXX ??? do we need this here and in the comint-hook?
@@ -756,8 +759,8 @@ Called when shell, inferior-lisp-process, etc. are entered."
   (unless (dp-shell-ignored-buffer-p (buffer-name))
     (message "dp-comint-mode-hook, (not ignored) (major-mode-str)>%s<, bn>%s<" 
              (major-mode-str) (buffer-name))
-    (dp-shell-common-hook 'comint)
-    (dp-bind-comint-line-mode-bindings)
+    (dp-shell-common-hook variant)
+    (dp-bind-comint-line-mode-bindings variant)
 
     ;; @todo make this work for other term mode
     (local-set-key [(control ?a)] 'dp-shell-home)
@@ -1093,7 +1096,8 @@ This allows us to do our fancy stuff and still call the correct sender.")
 (defun dp-shells-export-terminal-dimensions (&optional cols lines)
   (if t
       nil
-    ;; Need a way to send these commands without mucking up the history and input line.
+    ;; Need a way to send these commands without mucking up the history and
+    ;; input line.
     (let* ((shell-buf (if (posix-string-match "\\*.*sh\\(ell\\)?.*\\*"
                                               (buffer-name))
                           (current-buffer)
@@ -2443,9 +2447,6 @@ ARG is numberp:
         (delete-region (mark) (point))
       ad-do-it)))
 
-(defvar dp-comint-discard-regexp "^[ \t]*\\(cls\\|ls\\|ltl\\|lsl\\|lth\\)\\>"
-  "Don't send anything that matches to the comint process.")
-
 (dp-deflocal dp-orig-comint-input-sender nil
   "RTFN.")
 
@@ -2872,6 +2873,14 @@ ARG == 0    --> New `dp-gdb-naught' session."
   (and (listp stat)
        (memq 'run stat)))
 
+(defun dp-bash-history-file-name (&optional host-name extry)
+  (setq-ifnil extry "")
+  (let ((name (or (getenv "HISTORY")
+                  (concat (or (getenv "HOME") "~")
+                          "/.bash_history." (or host-name
+                                                (dp-short-hostname))))))
+    (concat name extry)))
+
 ;;;###autoload
 (defun dp-ssh (&optional shell-id)
   "Find/create a shell buf, an existing ssh buf or create a ssh buf."
@@ -2961,9 +2970,8 @@ ARG == 0    --> New `dp-gdb-naught' session."
              "PS1_host_suffix"
              (format "'%s'" (dp-shells-guess-suffix (buffer-name) "")))
             (setq dp-shell-isa-shell-buf-p '(dp-ssh ssh))
-            (setq comint-input-ring-file-name
-		  (or (getenv "HOME") "~")
-                  (concat "/.bash_history." host-name))
+            (setq comint-input-ring-file-name 
+                  (dp-bash-history-file-name host-name))
             (dp-define-buffer-local-keys  
              (list [tab] (lambda () 
                            (interactive)

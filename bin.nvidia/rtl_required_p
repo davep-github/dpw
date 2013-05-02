@@ -1,0 +1,27 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+sb=$(dp4-sb-root -s)
+#echo_id sb
+#echo_id RTL_SANDBOXES
+vsetp "${RTL_SANDBOXES-}" && {
+    case "${RTL_SANDBOXES}" in
+        :$sb:) exit 0;;
+    esac
+}
+ 
+mecd ap
+[ -e DP_RTL_SB ] && exit 0
+
+exit 1   

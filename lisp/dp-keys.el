@@ -119,7 +119,7 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(meta ?o)] 'dp-kill-ring-save)
 (global-set-key [(control meta ?o)] 'dp-kill-ring-save-append)
 (global-set-key [(meta ?p)] 'dp-parenthesize-region)
-(global-set-key [(meta backspace)] 'dp-delete-word)
+(global-set-key [(meta backspace)] 'dp-delete-word-forward)
 (global-set-key [(control backspace)] 'dp-backward-delete-word)
 (global-set-key [(control ?o)] 'dp-one-window++)
 (global-set-key [(control ?x) ?1] 'dp-one-window++)

@@ -393,6 +393,8 @@ the init files.")
 (defvar dp-default-mode-transparent-r/o-suffix-regexp
   (concat "historical\\|save\\|hide\\|no-index\\|pristine"
           "\\|HISTORICAL\\|SAVE\\|HIDE\\|NO-INDEX\\|PRISTINE"
+          "\\|KEEP\\|keep"
+          "\\|REFERENCE\\|reference"
           ;; Stuff being hidden from version control
           "\\|novc\\|junk"
           "\\|NOVC\\|JUNK"
@@ -428,6 +430,22 @@ this but when I edit it, I get it in (shudder) Perl mode.")
           (dp-regexp-concat 
            (append (list suffix-regexp) extra-suffix-regexp))))
 
+(defun* dp-mk-mode-transparent-r/o-regexp (extension &optional
+                                          extra-suffix-regexp
+                                          (dot "."))
+  (dp-mk-mode-transparent-regexp extension
+                                 dp-default-mode-transparent-r/o-suffix-regexp
+                                 extra-suffix-regexp
+                                 dot))
+
+(defun* dp-mk-mode-transparent-r/w-regexp (extension &optional
+                                          extra-suffix-regexp
+                                          (dot "."))
+  (dp-mk-mode-transparent-regexp extension
+                                 dp-default-mode-transparent-r/w-suffix-regexp
+                                 extra-suffix-regexp
+                                 dot))
+  
 (defun dp-mk-mode-transparent-auto-mode-alist (mode extensions)
   (mapcar (lambda (ext)
             (cons (dp-mk-mode-transparent-regexp ext) mode))
@@ -778,17 +796,11 @@ This can be callable.")
 
 
 ;;; ********************
-;;; Filladapt is a paragraph filling package.  When it is enabled it
+;;; "Filladapt is a paragraph filling package.  When it is enabled it
 ;;; makes filling (e.g. using M-q) much much smarter about paragraphs
-;;; that are indented and/or are set off with semicolons, dashes, etc.
+;;; that are indented and/or are set off with semicolons, dashes, etc."
 ;;; (copped from sample.init.el)
 (when (dp-optionally-require 'filladapt)
-  (defvar dp-filladapt-token-table-additions 
-    '(("[!?@$]+[ 	]" dpj-action-item)
-      ("\\(~~\\|==\\)>[ 	]" dpj-action-item-resolution))
-    "Things I'd like filladapt to know about.")
-  (dp-add-list-to-list 'filladapt-token-table 
-                       dp-filladapt-token-table-additions)
   (setq-default filladapt-mode t)
   (add-hook 'outline-mode-hook 'turn-off-filladapt-mode)
   (setq filladapt-mode-line-string " Fa"))

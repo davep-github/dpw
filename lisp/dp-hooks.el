@@ -82,8 +82,10 @@
 ;;   (c-set-style "vanu-c-style"))
 ;;
 
-(defvar dp-global-master-cleanup-whitespace-p nil
-  "Turn whitespace cleanup off everywhere.")
+(defvar dp-global-master-cleanup-whitespace-p t
+  "Control whitespace cleanup off everywhere.
+If this is a non-nil list, don't disable if it contains the current major
+mode.")
 
 (defvar dp-global-master-cleanup-whitespace-pred-fun nil
   "Call through this to determine if we want to clean up whitespace.")
@@ -100,8 +102,11 @@ eol-only - Only clean lines when cursor it at the end of a line.
 
 (defun dp-cleanup-whitespace-p ()
   "Do we wish to be anal about whitespace?"
-  (and dp-global-master-cleanup-whitespace-p
-       dp-cleanup-whitespace-p))
+  (when dp-global-master-cleanup-whitespace-p
+    (cond
+     ((and (and-listp dp-global-master-cleanup-whitespace-p)
+           (memq major-mode dp-global-master-cleanup-whitespace-p)))
+     (dp-cleanup-whitespace-p))))
 
 (defvar dp-enable-minibuffer-marking nil
   "Prevents any minibuffer marking from happening.")
@@ -239,6 +244,8 @@ Make it buffer local since there can be >1 minibuffers.")
 (defun dp-kill-emacs-hook ()
   "Do my finalization procedures when xemacs exits."
   (let ((debug-on-error nil))
+    ;; emacs'll kill the editing server itself, so we just need to clean up
+    ;; the ipc file.
     (dp-finalize-editing-server))
     (when (featurep 'saveconf)
         (dp-save-context)))
@@ -390,7 +397,7 @@ For C/C++ source code.")
 (defun dp-mk-c*-debug-like-patterns ()
   (dp-mk-debug-like-patterns dp-c*-debug-like-patterns))
 
-(dp-deflocal dp-line-too-long-warning-column 79
+(dp-deflocal dp-line-too-long-warning-column 77
   "Begin complaining (new face) when going beyond this column.
 For now this must be < the error col.")
 
@@ -686,8 +693,8 @@ c-hanging-braces-alist based upon these values.")
       (and (fboundp 'gtags-mode)
            (dmessage "not featurep 'gtags, but gtags-mode defined."))))
 
-(defvar dp-default-c-like-mode-cleanup-whitespace-p nil
-  "Turn it all on or off here.")
+(defvar dp-default-c-like-mode-cleanup-whitespace-p t
+  "Turn it all on or off for all C like modes here.")
 
 (defun dp-c-like-mode-common-hook ()
   "Sets up personal C/C++ mode options."
@@ -716,7 +723,7 @@ c-hanging-braces-alist based upon these values.")
   (when (and (buffer-name)
              (dp-file-name-implies-readonly-p 
               (buffer-name)
-              (dp-mk-mode-transparent-regexp nil)))
+              (dp-mk-mode-transparent-r/o-regexp nil)))
     (ding)                              ; !<@todo XXX 
     (toggle-read-only 1))
   (when (dp-gtags-p)
@@ -1001,10 +1008,10 @@ See `dp-parenthesize-region-paren-list'")
   (local-set-key [(meta s)] 'dp-py-insert-self?)
   (local-set-key [(meta q)] 'dp-fill-paragraph-or-region-with-no-prefix)
   (dp-add-line-too-long-font 'python-font-lock-keywords)
-  (setq dp-cleanup-whitespace-p nil)
-  (dp-add-to-font-patterns '(python-font-lock-keywords)
-                            ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
-)
+  (setq dp-cleanup-whitespace-p t)
+  ;; @todo XXX conditionalize this properly
+  ;; dp-trailing-whitespace-font-lock-element
+  (dp-add-to-font-patterns '(python-font-lock-keywords))
 
   ;; !<@todo XXX Add this to a new file hook?
   (dp-auto-it?)
@@ -1077,7 +1084,7 @@ Arr... beware the hooks! "
   ;; experiment to see if I like this.
   ;;(turn-on-eldoc-mode)  ; too intrusive
   (local-set-key [(control tab)] 'lisp-complete-symbol)
-  (local-set-key [(meta backspace)] 'dp-delete-word)
+  (local-set-key [(meta backspace)] 'dp-delete-word-forward)
   ;; eldoc on demand.
   (local-set-key [(control ?/)] 'eldoc-doc)
   (local-set-key [(control meta return)] (kb-lambda (end-of-line)

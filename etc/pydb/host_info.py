@@ -312,7 +312,7 @@ e(
     ref=[home_family, OSDB['linux'], default]
 )
 
-NV_GEOMETRY = '-geometry 81x72-42+6'
+NV_GEOMETRY = '-geometry 81x73-0+0'
 #
 # FAMILY entry for NVIDIA-LINUX
 nvidia_family = e(
@@ -356,7 +356,7 @@ e(
     'family': 'nv-l-sim',
     'comment': 'o-xterm-boxen @ nvidia.',
     'host-pattern': 'l-sim-|sc-sim',
-    'xem_opts': '-eval (2w) ' + NV_GEOMETRY,
+    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + NV_GEOMETRY,
     'xterm_bg': NVIDIA_LSIM_BG_COLOR,
     'xterm_fg': NVIDIA_LSIM_FG_COLOR,
     'xem_bg_color': NVIDIA_LSIM_BG_COLOR,
@@ -498,7 +498,7 @@ e(
 #    'xterm_bin': 'xterm',
 #    'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
     'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
-    'xem_opts': '-eval (2w) -geometry  81x69-1+0',
+    'xem_opts': '-eval (dp-2-v-or-h-windows) -geometry  81x69-1+0',
     #'xem_font': '-*-Terminus-medium-r-*-*-*-120-*-*-*-*-iso8859-*',
     # magically changed from 120 being right to 160 being right.
     # update of terminus font?

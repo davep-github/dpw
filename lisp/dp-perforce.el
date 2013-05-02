@@ -2,6 +2,7 @@
 ;;
 ;; Permabit p4.el configuration and extensions
 ;; Initial code kindly donated by Alex Lawson.
+;; XXX @todo Needs cleanup. Way too much was done too quickly and on the sly.
 ;;
 
 (require 'p4)

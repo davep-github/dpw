@@ -200,7 +200,10 @@ cat last_out_dir" >| latest_out_dir
     EExec_verbose_echo_id out_dir
     command_line_log="${out_dir}.command-line"
     EExec_verbose_echo_id command_line_log
-    echo "$cmd" > "${command_line_log}"
+    EExecDashN_p || {
+        echo "$cmd" > "${command_line_log}"
+    }
+
     EExec $cmd
     
     [ -n "$display_status_p" ] && {
