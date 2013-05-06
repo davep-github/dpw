@@ -232,10 +232,10 @@ if __name__ == "__main__":
             continue
 
         if o == '-q':
-            # Just be a pass through. Useful with -g?
+            # Just be a pass through. Useful with -g.
             sample_lines_tick_p = 1
             var_dict["tick_interval"] = 1
-            sample_lines_tick_prefix = ""
+            sample_lines_tick_prefix = False
             continue
 
         oi = Opt_map.get(o, None)
@@ -333,7 +333,12 @@ if __name__ == "__main__":
         else:
             if sample_lines_tick_p:
                 # @todo XXX allow a format to be used (dictionary type)
-                tick = "%8d%s" % (ticker.counter, sample_lines_tick_prefix + l)
+                if sample_lines_tick_prefix is not False:
+                    tick = "%8d%s"  % (ticker.counter,
+                                       sample_lines_tick_prefix)
+                else:
+                    tick = ""
+                tick += l
             else:
                 tick = None
             ticker(tick=tick)
