@@ -81,6 +81,8 @@
     "^You've already clocked in"
     "^Place cursor inside tag to be searched for"
     ".* does not belong to a gnuserv client$"
+    "^set-fill-column requires an explicit argument$"
+
     
     ;;XEmacs
     "^No preceding item in "

@@ -1,165 +1,60 @@
 #!/usr/bin/env python
 
 import os, sys, string, types, re
-import gzip
+import gzip, argparse
 import dp_utils, ticker_lib
 
 # Regular variable names are strings. So we'll use a non-string for some
 # special, internal codes. This `var' holds the constructor of the chosen
 # Ticker*_t
 CTOR = ("special var", "constructor")
+
 def identity(x, *args, **kw_args):
     if args:
 	return [x] + args
     return x
 
-class Option_info_t(object):
-    def __init__(self, name, evaluator, evaluator2, doc_string,
-                 *eval_args, **eval_kw_args):
-        self.name = name
-        self.evaluator = evaluator
-        self.evaluator2 = evaluator2
-        self.eval_args = eval_args
-        self.eval_kw_args = eval_kw_args
-        self.doc_string = doc_string
-        self.doc_stream = sys.stderr
+def true(*args, **kwargs):
+    return True
 
-    def eval(self, arg):
-        if not self.evaluator:
-            raise RuntimeError("1st evaluator isn't set.")
-        return self.evaluator(arg, *self.eval_args, **self.eval_kw_args)
+def false(*args, **kwargs):
+    return False
 
-    def eval2(self, arg):
-        if not self.evaluator2:
-            raise RuntimeError("2nd evaluator isn't set.")
-        return self.evaluator2(arg, *self.eval_args, **self.eval_kw_args)
-
-    def usage(self, ostream=None):
-        os = ostream or self.doc_stream
-        os.write("%s" % self)
-
-    def doc(self):
-        docstr()
-
-    def docstr(self, ostream=None):
-        os = ostream or self.doc_stream
-        os.write(self.doc_string)
-
-    def __str_str(self):
-        return "name[%s], doc_string[%s]" % (self.name,
-                                             self.doc_string)
-    def __repr__(self):
-        return "<Option: %s>" % (self.__str_str())
-
-    def __str__(self):
-        return self.__str_str()
-
-# -class Option_info_t:
-def eval_twiddle(twiddle_chars):
-    is_numeric = True
-    if  twiddle_chars[0] in ('-', "0","1","2","3","4","5","6","7","8","9"):
-        for c in twiddle_chars[1:]:
-            if not c in ("0","1","2","3","4","5","6","7","8","9"):
-                is_numeric = False
-                break
-    else:
-        is_numeric = True
-    if is_numeric:
-        return eval(twiddle_chars)
-    return twiddle_chars
-
-def handle_twiddle(v, *args, **kw_args):
-    return ({CTOR: ticker_lib.Twiddle_ticker_t},
-            {"twiddle_chars": eval_twiddle(v)})
-
-def handle_c(char, *args, **kw_args):
-    #print "char:", char
-    return ({CTOR: ticker_lib.Char_ticker_t}, {"tick_char": char})
-
-def handle_DOTS(v, *args, **kw_args):
-    vdu, cku = handle_dots("unused")
-    vdu.update({"tick_interval": eval(v)})
-    return (vdu, cku)
-
-def handle_char_wise(v, *args, **kw_args):
-    return ({"char_wise_p": True}, None)
-
-def handle_char_wise_and_char(char, *args, **kw_args):
-    vdu, cku = handle_c(char)
-    vdu.update({"char_wise_p": True})
-    return (vdu, cku)
-
-def handle_dots(v, *args, **kw_args):
-    return handle_c(".")
-
-def handle_char_wise_dots(v, *args, **kw_args):
-    return handle_char_wise_and_char(".")
-
-def handle_pipe_mode(v, *args, **kw_args):
-    return ({"pipe_mode_p": True}, None)
-
-def true(v, *args, **kw_args):
-    return "True"
-
-def eval_with_units(num):
+def eval_with_units(num, allow_fractions_p=False):
     if (num == "-1"):
         return False                    # No limit
-    return dp_utils.numWithUnits(num, allow_fractions_p=True)
+    return dp_utils.numWithUnits(num, allow_fractions_p=allow_fractions_p)
+
+def eval_with_units_fractions_ok(num):
+    return eval_with_units(num, allow_fractions_p=True)
+
+def add_to_dict_action(actor, dictionary, parser, namespace, values,
+                       option_string=None):
+    print 'dest: %s, ns: %r, values: %r, ostr: %r' % (actor.dest,
+                                                      namespace,
+                                                      values,
+                                                      option_string)
+    dictionary[actor.dest] = values
     
-Opt_map = {
-    '-u': Option_info_t('tick_show_units_p', true, None,
-                        "Ticker count shows units {k, m, g, t, etc}"),
-    '-I': Option_info_t('increment', eval_with_units, None, "increment"),
-    '-m': Option_info_t('max_output_units_before_newline', eval_with_units,
-                        None,
-                        "Limit line length to this many units (lines or chars)"),
-    '-M': Option_info_t('max_output_units_before_exit', eval_with_units,
-                        None,
-                        "Limit execution to this many units (lines or chars)"),
-    '-P': Option_info_t('init_string', identity, None, "prefix string"),
-    '-C': Option_info_t('comma', identity, None, "count separator char"),
-    '-z': Option_info_t('init_count', eval_with_units, None, "init_count"),
-    '-c': Option_info_t('tick_char', None, handle_c, "tick character"),
-    '-t': Option_info_t('twiddle', None, handle_twiddle,
-                        "use twiddle[twiddle-id]"),
-    "-d": Option_info_t('dots', None, handle_dots, "expand me: dots"),
-    "-.": Option_info_t('dots', None, handle_char_wise_dots,
-                        "Use char_wise mode with '.' as the char."),
-    "-D": Option_info_t('DOTS', None, handle_DOTS, "expand me: DOTS"),
-    "-G": Option_info_t('grand_total_p', eval, None,
-                        "Print grand total when done"),
-    "-k": Option_info_t('char-wise', None, handle_char_wise,
-                        "count chars vs lines (the default)"),
-    "-K": Option_info_t('char-wise-plus-char', None, handle_char_wise_and_char,
-                        "count chars vs lines (the default) and set the char"),
-    ## Pipe mode sends ticks to stderr so you can pipe through tikker and not
-    ## pollute the stdout stream.
-    "-p": Option_info_t('pipe-mode', None, handle_pipe_mode,
-                        "send ticks to stderr (and forward stdin to stdout"),
-    "-e": Option_info_t('pipe-mode', None, handle_pipe_mode, "same as -p"),
-    }
+Ctor_arg_dict = {}
+class Ctor_arg_action(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        add_to_dict_action(self, Ctor_arg_dict, parser, namespace,
+                           values, option_string)
 
-# MOVE to dp_utils
+class Ctor_arg_action_true(Ctor_arg_action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        add_to_dict_action(self, Ctor_arg_dict, parser, namespace, True,
+                           option_string=None)
+    
 
-def thereis_short_opt(options, opt_char):
-    """None if opt_char is not a short option,
-    True if opt has an arg, else False."""
-    if len(opt_char) != 1:
-        raise RuntimeError(
-            "This function is for one character options, opt_char>%s<." %
-            opt_char)
-    off = string.find(options, opt_char)
-    if off >= 0:
-        return (off < len(options)) and (options[off+1] == ':')
-    else:
-        return None
+App_arg_dict = {}
+class App_arg_action(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        add_to_dict_action(self, App_arg_dict, parser, namespace,
+                           values, option_string)
+        
 
-def usage():
-    keys = Opt_map.keys()
-    keys.sort()
-    for key in keys:
-        print key+":", Opt_map[key]
-    dp_util.Twiddle_twiddles()
 
 if __name__ == "__main__":
     import optparse
@@ -179,126 +74,162 @@ if __name__ == "__main__":
     grep_patterns = []
     grepped_lines = []
     line_number = 0
+    ctor_keywords = {}
+    ctor_keywords["max_output_units_before_newline"] = 80 * 100
+    var_dict = {CTOR: ticker_lib.Ticker_t, "tick_interval": 1}
+    append_p = False
     ## Each -Z adds one, and we want a single -Z to yield max compression.
-    compression_level = 8;
 
     # tick_interval, increment=1, init_string="counting: ", comma=", ",
     # init_count=0, tick_char
 
-    oparser = optparse.OptionParser()
-    oparser.disable_interspersed_args()
-    oparser.add_option("-i", "--tick-interval",
-                       dest="tick_interval", action="store", type="int",
-                       help="Set ticker's tick interval.")
-    oparser.add_option("-T", "--show-twiddles",
-                       dest="show_twiddles_p",
-                       default=False, action='store_true',
-                       help="Show list of available twiddles.")
-    oparser.add_option("-l", "-s", "--sample-lines",
-                       dest="sample_lines_tick_p",
-                       default=False, action='store_true',
-                       help="Tick with input line samples.")
-    oparser.add_option("-L", "-S", "--sample-lines-prefix",
-                       dest="sample_lines_tick_prefix", action="store",
-                       default="th-line>",
-                       help="Prefix for sampled lines.")
-    oparser.add_option("-A", "--no-clobber",
-                       dest="no_clobber_p", default=False, action='store_true',
-                       help="Don't clobber existing files. Exit.")
-    oparser.add_option("-Z", "--compression-level",
-                       dest="compression_level", default=-1,
-                       action="store", type="int",
-                       help="Compression level.")
-    oparser.add_option("-U", "--timestamp",
-                       dest="add_timestamp_p", default=False,
-                       action='store_true',
-                       help="Add uniquifying timestamp to output file name.")
-    oparser.add_option("-E", "--extension",
-                       dest="U_extension", default=".log",
-                       action="store", type="string",
-                       help="Addition output file extension. Added last, after timestamp [if present].")
-    oparser.add_option("-a", "--append",
-                       help="Append data.")
+    oparser = argparse.ArgumentParser()
 
-    options, args = oparser.parse_args()
+    oparser.add_argument("-i", "--tick-interval",
+                         dest="tick_interval", type=eval_with_units,
+                         action=Ctor_arg_action,
+                         help="Set ticker's tick interval.")
+    oparser.add_argument("-T", "--show-twiddles",
+                         dest="show_twiddles_p",
+                         default=False, action='store_true',
+                         help="Show list of available twiddles.")
+    oparser.add_argument("-l", "-s", "--sample-lines",
+                         dest="sample_lines_tick_p",
+                         default=False, action='store_true',
+                         help="Tick with input line samples.")
+    oparser.add_argument("-L", "-S", "--sample-lines-prefix",
+                         dest="sample_lines_tick_prefix", action="store",
+                         default="th-line>",
+                         help="Prefix for sampled lines.")
+    oparser.add_argument("-A", "--no-clobber",
+                         dest="no_clobber_p", default=False,
+                         action='store_true',
+                         help="Don't clobber existing files. Exit.")
+    oparser.add_argument("-Z", "--compression-level",
+                         dest="compression_level", type=int,
+                         help="Compression level.")
+    oparser.add_argument("-u", "--timestamp",
+                         dest="add_timestamp_p", default=False,
+                         action='store_true',
+                         help="Add uniquifying timestamp to output file name.")
+    oparser.add_argument("-E", "--extension",
+                         dest="U_extension", default=".log",
+                         action="store",
+                         help="Addition output file extension. Added last, after timestamp [if present].")
+    oparser.add_argument("-U", "--show-units",
+                         dest="show_tick_units_p",
+                         nargs=0,
+                         action=Ctor_arg_action_true,
+                         help="Print units [chars, lines] with output.")
+    oparser.add_argument("-I", "--increment",
+                         dest="increment", type=eval_with_units,
+                         action=Ctor_arg_action,
+                         help="Increment")
+##     oparser.add_argument("-m", "--max-output-line-len",
+##                          dest="max_output_units_before_newline", type="string",
+##                          action="callback",
+##                          callback=constructor_arg_callback_eval_with_units,
+##                          help="Maximum ticks per line")
+##     oparser.add_argument("-M", "--max-output",
+##                          dest="max_output_units_before_exit", type="string",
+##                          action="callback",
+##                          callback=constructor_arg_callback_eval_with_units,
+##                          help="Maximum ticks before exiting.")
+##     oparser.add_argument("-P", "--prefix", "--initial-string",
+##                          dest="init_string", type="string",
+##                          action="callback",
+##                          callback=constructor_arg_callback,
+##                          help="Initial prefix string.")
+##     oparser.add_argument("-C", "--comma", "--count-separator", "--separator",
+##                          dest="comma", type="string",
+##                          action="callback",
+##                          callback=constructor_arg_callback)
+##     oparser.add_argument("-z", "--initial-count",
+##                          dest="init_count", type="string",
+##                          action="callback",
+##                          callback=constructor_arg_callback_eval_with_units,
+##                          help="Initial count [number of units]")
+##     oparser.add_argument("-c", "--tick-char",
+##                          dest="tick_char", type="string",
+##                          action="callback",
+##                          callback=constructor_arg_callback_char,
+##                          help="""Tick character. Mutually exclusive with twiddle.
+## Implies Char_ticker_t""")
+##     oparser.add_argument("-d", "--dots",
+##                          action="callback",
+##                          callback=constructor_arg_callback_dots,
+##                          dest="tick_char",
+##                          help="Use dots for tick char. Implies Char_ticker_t.")
+##     oparser.add_argument("-.", "--char-dots",
+##                          dest="tick_char",
+##                          action="callback",
+##                          callback=constructor_arg_callback_dots_and_char_wise,
+##                          help="Char_ticker_t, count chars, tick with '.'.")
+##     oparser.add_argument("-D", "--DOTS",
+##                          dest="tick_char", type="string",
+##                          action="callback",
+##                          callback=constructor_arg_callback_DOTS,
+##                          help="Like --dots + tick interval.")
+##     oparser.add_argument("-t", "--twiddle",
+##                          dest="twiddle_chars",
+##                          type="int",
+##                          action="callback",
+##                          callback=constructor_arg_callback_twiddle,
+##                          help="Set twiddle chars. Implies Twiddle_ticker_t")
+##     oparser.add_argument("-G", "--print-grand-total",
+##                          dest="grand_total_p",
+##                          action="callback",
+##                          callback=constructor_arg_callback_true,
+##                          help="Print grand total at end.")
+##     oparser.add_argument("-k", "--char-wise",
+##                          dest="char_wise_p",
+##                          action="callback",
+##                          callback=teeker_arg_callback_true,
+##                          help="Count chars vs lines [the default].")
+##     oparser.add_argument("-K", "--char-wise-char", "--char-tick-char",
+##                          dest="tick_char", type="string",
+##                          action="callback",
+##                          callback=constructor_arg_callback_char_and_char_wise,
+##                          help="Count chars vs lines [the default] and set tick char.")
+##     oparser.add_argument("-p", "-e", "--pipe-mode", "--output-to-stderr",
+##                          "--tick-to-stderr",
+##                          dest="pipe_mode_p",
+##                          default=False, action="store_true",
+##                          help="Send ticks to stderr and input to stdout.")
 
+##     # tee(1) compatibility.
+##     oparser.add_argument("-a", "--append",
+##                          dest="append_p",
+##                          action="store_true",
+##                          default=False,
+##                          help="Append data to output file(s).")
+
+    args = oparser.parse_args()
+
+    print "args:", args
+    print "Ctor_arg_dict:", Ctor_arg_dict
+
+    sys.exit(99)
+#    print "oparser.ticker_ctor_kwargs>%s<" % (oparser.ticker_ctor_kwargs,)
+
+    print "compression:", options.compression_level
     compress_p = options.compression_level >= 0
     print "compress_p:", compress_p
-    print "options>%s<" % (options,)
-    print "dir(options)>%s<" % (dir(options),)
+#    print "options>%s<" % (options,)
+#    print "dir(options)>%s<" % (dir(options),)
 #    for key, value in options.items():
 #        print "%s>%s<" % (key, value)
-    for o in oparser.option_list:
-        print "o>%s<" % (o,)
-    sys.exit(99)
-#    options = 'I:P:C:z:c:t:dD:kpGaK:.um:M:g:q'
-    ctor_keywords = {}
-    var_dict = {CTOR: ticker_lib.Ticker_t,
-                "tick_interval": def_tick_interval,
-                "char_wise_p": False,}
-    ctor_keywords["max_output_units_before_newline"] = 80 * 100
-    # options, args = getopt.getopt(sys.argv[1:], options)
-    for o, v in options:
-        if o == '-i':
-            var_dict["tick_interval"] = eval_with_units(v)
-            continue
-        if o == '-h':
-            usage()
-            sys.exit(0)
-        if o == '-T':
-            dp_utils.Twiddle_twiddles()
-            sys.exit(0)
-        if o in ('-l', '-s'):
-            sample_lines_tick_p = not sample_lines_tick_p
-            continue
-        if o in ('-L', '-S'):
-            sample_lines_tick_prefix = v
-            continue
-        if o == '-A':
-            no_clobber_p = True
-            continue
-        if o == '-Z':
-            compress_p = True
-            compression_level = ((compression_level + 1) % 9) + 1
-            continue
-        if o == '-U':
-            # Unique log file
-            file_suffix = "." + dp_utils.bq("dp-std-timestamp") + U_extension
-            continue
-        if o == '-E':
-            U_extension = v
-            continue
+#    for o in oparser.option_list:
+#        print "o>%s<" % (o,)
+    for key, value in ctor_keywords.items():
+        print "ctor_kw: %s>%s<" % (key, value)
+    
 
-        # tee(1) compatibility.
-        if o == '-a':
-            openMode = 'a'
-            continue
-
-        if o == '-g':
-            grep_patterns.append(re.compile(v))
-            continue
-
-        if o == '-q':
-            # Just be a pass through. Useful with -g?
-            sample_lines_tick_p = 1
-            var_dict["tick_interval"] = 1
-            sample_lines_tick_prefix = ""
-            continue
-
-        oi = Opt_map.get(o, None)
-        if oi:
-            if oi.evaluator:
-                ctor_keywords[oi.name] = oi.eval(v)
-            elif oi.evaluator2:
-                vdu, cku = oi.eval2(v)
-                #print "vdu:", vdu
-                #print "cku:", cku
-                if vdu:
-		    var_dict.update(vdu)
-                if cku:
-                    ctor_keywords.update(cku)
-        else:
-            raise RuntimeError("No action for option>%s<" % (o,))
+    if options.show_twiddles_p:
+        ticker_lib.Twiddle_twiddles()
+        sys.exit(0)
+    if options.append_p:
+        openMode = "a"
 
     for a in args:
         a = a + file_suffix
@@ -308,18 +239,20 @@ if __name__ == "__main__":
                 sys.exit(1)
         if compress_p:
             # zipfile.ZipFile(file[, mode[, compression[, allowZip64]]])
-            fobj = gzip.open(a + ".gz", openMode, compression_level)
+            print "compression:", options.compression_level
+            fobj = gzip.open(a + ".gz", openMode, options.compression_level)
         else:
             fobj = open(a, openMode)
 
         # I *love* duck typing.
         outputStreams.append(fobj)
 
+
     #!<@todo Check for twiddle ticker request and handle that.
     #print "ctor_keywords:", ctor_keywords
     # pipe mode: Ticks go to stderr and lines go to stdout.
     pipe_mode_p, char_wise_p = (var_dict.get("pipe_mode_p", False),
-                                var_dict["char_wise_p"])
+                                var_dict.get("char_wise_p", False))
 
     #if ctor_keywords.get("twiddle_chars", False) != False:
     #    ctor_keywords["init_string"] = ""
@@ -339,7 +272,7 @@ if __name__ == "__main__":
 
     if sample_lines_tick_p:
         ctor_keywords["init_string"] = "Sampling every %sth line\n" % \
-                                       (var_dict["tick_interval"],)
+                                       (options.ticker_ctor_kwargs["tick_interval"])
         ctor_keywords["unit_name"] = 'line'
         ctor_keywords["comma"] = ""     # Line will end with newline.
 

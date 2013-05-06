@@ -325,7 +325,7 @@ Key e A 4 NextEmacs
 # XXX @todo I want to do a cycle windows where each one is raised as I cycle
 # over it.
 Key    Tab      A       M  CycleWindows
-# ??? # Key    Tab      A       M  CycleWindowsReverse
+# ??? # Key    Tab      A       MS  CycleWindowsReverse
 
 #
 # If on root, the focused window is raised. I like that.

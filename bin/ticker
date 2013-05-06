@@ -101,10 +101,10 @@ def handle_pipe_mode(v, *args, **kw_args):
 def true(v, *args, **kw_args):
     return "True"
 
-def eval_with_units(num):
+def eval_with_units(num, allow_fractions_p=False):
     if (num == "-1"):
         return False                    # No limit
-    return dp_utils.numWithUnits(num, allow_fractions_p=True)
+    return dp_utils.numWithUnits(num, allow_fractions_p=allow_fractions_p)
     
 Opt_map = {
     '-u': Option_info_t('tick_show_units_p', true, None,
@@ -199,7 +199,7 @@ if __name__ == "__main__":
             usage()
             sys.exit(0)
         if o == '-T':
-            dp_utils.Twiddle_twiddles()
+            ticker_lib.Twiddle_twiddles()
             sys.exit(0)
         if o in ('-l', '-s'):
             sample_lines_tick_p = not sample_lines_tick_p
