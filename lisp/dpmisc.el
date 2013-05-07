@@ -14677,25 +14677,26 @@ find-file\(-at-point) and then, if it fails, this function??"
   (load "br-start")
   (global-set-key "\C-c\C-o" 'oo-browser))
 
-(defvar dp-cxfer-separator "================="
+(defvar dp-xfer-section-separator "================="
   "Just so happened.")
 
-(defun cxfer (&optional add-new-p timestamp-p)
+(defun dp-edit-xfer-file (add-new-p timestamp-p file-name dir)
   (interactive "P")
   (dp-push-go-back "cxfer")
-  (dp-find-file (expand-file-name "cx-xfer.txt" "~"))
+  (dp-find-file (expand-file-name file-name dir))
   (dp-define-buffer-local-keys '([(meta ?-)] dp-bury-or-kill-buffer))
   (setq-ifnil timestamp-p (Cup> 1))
-  (if (not dp-cxfer-separator)
+  (if (not dp-xfer-section-separator)
       (goto-char (point-max))
     (goto-char (point-min))
-    (search-forward dp-cxfer-separator)
+    (search-forward dp-xfer-section-separator nil t)
     (beginning-of-line)
     (when add-new-p
-      (previous-line 1)
-      (end-of-line)
-      (newline)
-      (insert dp-cxfer-separator)
+      (unless (bobp)
+        (previous-line 1))
+      (beginning-of-line)
+      ;;(newline)
+      (insert dp-xfer-section-separator)
       (newline))
     (when timestamp-p
       (unless (bolp)
@@ -14704,8 +14705,13 @@ find-file\(-at-point) and then, if it fails, this function??"
       (dp-open-above t)
       (dp-timestamp))))
 
+(defun cxfer (&optional add-new-p timestamp-p)
+  (interactive "P")
+  (dp-edit-xfer-file add-new-p timestamp-p "cx-xfer.txt" "~"))
 
-
+(defun wwxfer (&optional add-new-p timestamp-p)
+  (interactive "P")
+  (dp-edit-xfer-file add-new-p timestamp-p "wwxfer.txt" "~/inb"))
 
                                         ; does it work in lisp? does the
                                         ; newly added filling via the binding

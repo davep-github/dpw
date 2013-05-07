@@ -2,6 +2,15 @@
 source script-x
 progname="$(basename $0)"
 source eexec
+set -u
+
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
 
 
 # Use my teeker program which saves stdin into a file like tee, but simply
@@ -26,15 +35,19 @@ teeer()
 }
 
 : ${save_args_p=t}
-: ${sync_dash_n=}
+: ${p4_sync_dash_n=}
+: ${send_mail_on_completion_p:=t}
+: ${tee_append_opt=}
+
 tee_func=teekerer_sample
 teeker_opts=
 teeker_interval=100
 std_options=""
 option_str="nvqtsk:i:"
 long_options=("teeker-opts:" "tee-func:" "teeker-interval:"
-    "sync-dash-n"
+    "p4-sync-dash-n"
     "sample" "tee" "teeker"
+    "mail" "notify-on-completion" "email-on-completion" "yopp" "send-mail"
     "no-save-args")
 
 source dp-getopt+.sh
@@ -52,7 +65,9 @@ do
       --tee-func) shift; tee_func="$1";;
       --sample) tee_func=teekerer_sample;;
       --teeker) tee_func=teekerer;;
-      --sync-dash-n) sync_dash_n=-n;;
+      --p4-sync-dash-n) p4_sync_dash_n=-n;;
+      --mail|--notify-on-completion|--email-on-completion|--yopp|--send-mail) 
+                  send_mail_on_completion_p=t;;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";
@@ -80,7 +95,7 @@ echo "log dir>${kwa_log_dir}<"
         echo "p4 sync args:
 $@" >| "${save_args_file}"
     }
-    EExec p4 sync $sync_dash_n "$@" 
+    EExec p4 sync $p4_sync_dash_n "$@" 
 } 2>&1 | EExec -y $tee_func "${kwa_log_file}"
 {
     echo
@@ -102,4 +117,10 @@ EExecDashN_p && {
 } 1>&2
 
 EExec dp4-sync-post-processor
+
+vsetp "${send_mail_on_completion_p-}" && ! EExecDashN_p && {
+    mail -s "$progname is done" "${USER}" < /dev/null >/dev/null 2>&1
+}
+
+
 exit

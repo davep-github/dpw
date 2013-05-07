@@ -296,7 +296,6 @@ if __name__ == "__main__":
         ctor_keywords["unit_name"] = 'line'
         ctor_keywords["comma"] = ""     # Line will end with newline.
 
-    print "max_output_units_before_newline", ctor_keywords["max_output_units_before_newline"]
     ticker = var_dict[CTOR](var_dict["tick_interval"], **ctor_keywords)
     if pipe_mode_p:
         outputStreams.append(pipe_stream)

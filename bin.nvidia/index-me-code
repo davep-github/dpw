@@ -85,6 +85,6 @@ echo "cwd: $(pwd)"
 
 EExec -y index-code $EExecDashN_opt $EExecDashV_opt $dirs_of_interest
 
-vsetp "${send_mail_on_completion-}" && ! EExecDashN_p {
+vsetp "${send_mail_on_completion-}" && ! EExecDashN_p && {
     mail -s "$progname is done" "${USER}" < /dev/null >/dev/null 2>&1
 }

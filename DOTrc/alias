@@ -112,7 +112,10 @@ then
         alias fgrep="fgrep -n"
     }
     export -f dp_emacs_dash_n_greps
-        
+    
+    unalias ls
+    alias ls='ls_no_color'
+
     #
     # give certain programs more emacs friendly/useful options
     #
@@ -158,7 +161,7 @@ then
 #    alias ls1='kwa_LSL_COLOR="--color=never" lsl'
 #    alias lth='kwa_LSL_COLOR="--color=never" lth'
     
-    alias ltl='ls -lt'         # xemacs makes an OK less.
+    alias ltl='ls -lt'          # xemacs makes an OK less.
     alias lrl='ls -ltr'         # xemacs makes an OK less.
 # ?? WTF??    alias lssz='kwa_LSL_COLOR="--color=never" lssz'
 
