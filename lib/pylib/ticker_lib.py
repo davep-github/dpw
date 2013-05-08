@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-import sys, dp_utils, types, re
-
+import sys, types, re
+import dp_utils, dp_time
 def Ticker_printf(ticker, fmt, *args):
     from dp_io import fprintf
     fprintf(ticker.ostream, fmt, *args)
@@ -14,6 +14,8 @@ class Ticker_t(object):
                  tick_show_units_p=False,
                  max_output_units_before_newline=False,
                  max_output_units_before_exit=False,
+                 timestamp_p=False,
+                 timestamp_separator_string=": ",
                  grand_total_p=True):
         self.tick_interval = tick_interval
         self.increment = increment
@@ -29,6 +31,8 @@ class Ticker_t(object):
         self.max_output_units_before_newline = max_output_units_before_newline
         self.max_output_units_before_exit = max_output_units_before_exit
         self.count_at_last_newline = 0
+        self.timestamp_p = timestamp_p
+        self.timestamp_separator_string = timestamp_separator_string
 
     def twiddling_p(self):
         return False
@@ -45,7 +49,10 @@ class Ticker_t(object):
             tick = dp_utils.numPlusUnits(float(self.counter),
                                          allow_fractions_p=True,
                                          powers_of_two_p=False)
-        self.printor(self, "%s%s", self.sep_string, tick)
+        ts_string = ""
+        if self.timestamp_p:
+            ts_string = dp_time.std_timestamp() + self.timestamp_separator_string
+        self.printor(self, "%s%s%s", self.sep_string, ts_string, tick)
         self.sep_string = self.comma
 
     def fini(self, force_grand_total_p=False, reason=""):

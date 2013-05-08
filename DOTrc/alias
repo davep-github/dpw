@@ -113,6 +113,7 @@ then
     }
     export -f dp_emacs_dash_n_greps
     
+    # How to make this dependent on my dp-shells lisp flags so the always match up?
     unalias ls
     alias ls='ls_no_color'
 
@@ -165,9 +166,6 @@ then
     alias lrl='ls -ltr'         # xemacs makes an OK less.
 # ?? WTF??    alias lssz='kwa_LSL_COLOR="--color=never" lssz'
 
-    # How to make this dependent on my dp-shells lisp flags so the always match up?
-    alias ls=ls_with_color
-    
 fi
 
 alias npg=port-grep

@@ -14,6 +14,8 @@ Ee|nvenv|envnv|               ${rsee}env.nvidia/
 Ee|nvalias|aliasnv|           ${rsee}alias.nvidia/
 Ee|nvfunc|funcnv|             ${rsee}func.nvidia/
 Ee|bnv|nvb|nvbin|binnv|binv|  ${gohome}bin.nvidia/
+# My fingers often type this, so I'll make it work.
+Ee|vnb|vbn|                   ${nvbin}
 Ee|p4r|                       ${gohome}sw/sw/main/apps/p4review/
 Ee|status|stat|               ${gohome}work/status/
 Ee|global|                    ${gohome}davep/build/global-6.2.7/

@@ -2866,25 +2866,25 @@ E.g.
   (interactive)
   (dp-ifdef-region-because "XXX_@Todo"))
 
-(defun xxx()
+(defun xxx ()
   (interactive)
-  (if (dp-in-c)
-      (if (dp-region-active-p)
-          (dp-io-xxx)
-        ;; The doxygen element syntax is different when it comes after a line vs
-        ;; before it.
-        ;; e.g.
-        ;; /*!
-        ;;  *!@todo blah
-        ;;  */
-        ;; vs:
-        ;; bad_thing(tm);   //!<@todo.
-        ;; So fix it.
-        (dp-insert-for-comment+ "XXX " "@todo " :sep-char ""
-                                :doxy-prefix (if (dp-in-a-c*-comment)
-                                                 ""
-                                               "!<")))
-    (insert "XXX @todo ")))
+  (if (dp-region-active-p)
+      (dp-io-xxx)
+    ;; The doxygen element syntax is different when it comes after a line vs
+    ;; before it.
+    ;; e.g.
+    ;; /*!
+    ;;  *!@todo blah
+    ;;  */
+    ;; vs:
+    ;; bad_thing(tm);   //!<@todo.
+    ;; So fix it.
+    (let ((doxy-prefix (if (or (not (dp-in-c))
+                               (dp-in-a-c*-comment))
+                           ""
+                         "!<")))
+      (dp-insert-for-comment+ "XXX " "@todo " :sep-char ""
+                              :doxy-prefix doxy-prefix))))
 
 (defvar dp-ifdef-debug-level 0
   "Current debug level to use in debug ifdefs.")
@@ -3137,17 +3137,17 @@ newline."
 (defun dp-in-a-c*-comment (&optional intro-too c-syntax c-syntax-ignore-list)
   "Determine if we are inside a C/C++ comment."
   (save-match-data
-    (setq-ifnil c-syntax (dp-c-get-syntactic-region c-syntax-ignore-list))
-    (and (dp-in-c)
-         (or (memq (buffer-syntactic-context) '(comment block-comment))
-             (memq c-syntax dp-c-comment-syntax-list)
-             (c-got-face-at (point) '(font-lock-comment-face))
-             (and (dmessage "C") nil)
-             (save-excursion 
-               (beginning-of-line)
-               (looking-at "^\\s-*//"))
-             (and intro-too
-                  (dp-c-in-syntactic-region '(comment-intro)))))))
+    (when (dp-in-c)
+      (setq-ifnil c-syntax (dp-c-get-syntactic-region c-syntax-ignore-list))
+      (or (memq (buffer-syntactic-context) '(comment block-comment))
+          (memq c-syntax dp-c-comment-syntax-list)
+          (c-got-face-at (point) '(font-lock-comment-face))
+          (and (dmessage "C") nil)
+          (save-excursion 
+            (beginning-of-line)
+            (looking-at "^\\s-*//"))
+          (and intro-too
+               (dp-c-in-syntactic-region '(comment-intro)))))))
 
 ;; cc-mode does this itself now
 ;; a bit more sophisticatedly, too.
@@ -8239,6 +8239,8 @@ Else `(apply pred pred-args)'."
       (goto-char (dp-killed-file-state-point (cdr state))))))
 
 (defun dp-push-killed-file-name (buffer-file-name)
+  "Push the file name onto a stack of kill files' names.
+Remove any other copies of the name."
   ;; Remove any existing copies of this name
   (setq dp-recently-killed-files 
         (delete buffer-file-name dp-recently-killed-files))
@@ -8279,13 +8281,16 @@ Else `(apply pred pred-args)'."
 (dp-defaliases 'dp-resurrect 'dprd 'raise-dead 'resurrect 
                'dp-revisit-killed-file)
 
-
-(defun dp-kill-this-buffer ()
+(defun dp-kill-buffer-hook ()
   "Undedicates window, saves file name in `dp-recently-killed-files' and kills current buffer."
   (set-window-dedicated-p (dp-get-buffer-window) nil)
   (when buffer-file-name
     (dp-save-killed-file-state (current-buffer))
-    (dp-push-killed-file-name buffer-file-name))
+    (dp-push-killed-file-name buffer-file-name)))
+
+(add-hook 'kill-buffer-hook 'dp-kill-buffer-hook)
+
+(defun dp-kill-this-buffer ()
   ;; Buffer local which will go away with the buffer.
   ;; Also means there's no need to clear the variable.
   (let ((saved-win-conf dp-saved-window-config))
