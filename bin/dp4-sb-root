@@ -38,7 +38,7 @@ vsetp "${1-}" && {
     shift
 }
     
-: ${p4config:=$P4CONFIG}
+: ${p4config:=${P4CONFIG-.p4config}}
 f=$(EExec -q find-up "$@" "${p4config}") && {
     # Prevent a '.' when using EExec -n
     # f is "", but there is no error and dirname "" --> '.'
