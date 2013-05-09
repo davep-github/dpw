@@ -12,7 +12,7 @@ do
 done
 unset eexec_program
 
-: ${kepler=kepler_b_ogtest}
+###: ${kepler=kepler_b_ogtest}
 : ${no_cd=}
 
 if [ "${1-}" = "-r" ]
@@ -29,7 +29,15 @@ vunsetp "${no_cd}" && {
 
 dir_num="${1-1}"
 first_dir_num=$(printf "%02d" "${dir_num}")
-second_dir_num=$(printf "%06d" "${dir_num}")
+second_dir_num=$(printf "%06d" "${dir_num}" | sed -r 's/(.*)([0-9]{6})/\2/')
+
 latest_out_dir=$(latest_out_dir)
-dest="${PWD}/${latest_out_dir}/tests/${kepler}/00/00/${first_dir_num}/${second_dir_num}"
+some_path_component=$(echo $(cat last_out_dir)/tests/*)
+case "${some_path_component}" in
+    *\ *) echo 1>&2 "Multiple test type dirs exist."; exit 1;;
+    *) ;;
+esac
+some_path_component=$(basename $some_path_component)
+
+dest="${PWD}/${latest_out_dir}/tests/${some_path_component}/00/00/${first_dir_num}/${second_dir_num}"
 "${printor}" "${dest}"

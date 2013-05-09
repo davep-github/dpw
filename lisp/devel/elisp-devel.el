@@ -3561,3 +3561,31 @@ a, d, b, c
 "wip\\|exp\\|dev\\|WIP\\|EXP\\|DEV"
 
 
+
+========================
+Tuesday May 07 2013
+--
+;;installed (defun xxx ()
+  (interactive)
+  (if (dp-region-active-p)
+      (dp-io-xxx)
+    ;; The doxygen element syntax is different when it comes after a line vs
+    ;; before it.
+    ;; e.g.
+    ;; /*!
+    ;;  *!@todo blah
+    ;;  */
+    ;; vs:
+    ;; bad_thing(tm);   //!<@todo.
+    ;; So fix it.
+    (let ((doxy-prefix (if (or (not (dp-in-c))
+                               (dp-in-a-c*-comment))
+                           ""
+                         "!<")))
+      (dp-insert-for-comment+ "XXX " "@todo " :sep-char ""
+                              :doxy-prefix doxy-prefix))))
+
+;; !<@todo XXX 
+;; @todo XXX 
+;; @todo XXX 
+;; @todo XXX 

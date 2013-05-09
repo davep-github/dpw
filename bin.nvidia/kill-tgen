@@ -16,7 +16,12 @@ unset eexec_program
 : ${kill_sig=}
 : ${sleep_time=5}
 
-pids=$(findprog ${tgen_files}) || {
+[ -z "${DP_NV_TGEN_PROCESS_NAMES-}" ] && {
+    echo "$progname: No process names to kill."
+    exit 1
+} 1>&2
+
+pids=$(findprog ${DP_NV_TGEN_PROCESS_NAMES}) || {
     echo "Looking for: ${tgen_files}"
     echo "No pids found... hope that's OK."
     exit 0

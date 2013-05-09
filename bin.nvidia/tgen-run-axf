@@ -1,23 +1,14 @@
 #!/bin/sh
 
 source script-x
-set -u
-progname="$(basename $0)"
-source eexec
-eexec_program=$(EExec_parse "$@")
-for op in $eexec_program
-do
-  $op
-  shift
-done
-unset eexec_program
 
-EExec ./tgen.pl \
-          -target FMODEL \
-          -chip t124 \
-          -level `pwd`/config/levels/tegra/regress_tegra_gpu_multiengine \
-          -d hwApPath=`pwd`/../../ \
-          -outDir redline_sockchip \
-          -mdiagArgs "-force_sockserv -reserve_sysmem 258 -top -plugin `pwd`/../../clib/Linux/cpu_red_line.axf -sec_elf_name `pwd`/../../drv/mpcore/t124/ObjLinux_MPCoreXC/boot_page_table.axf" \
-          -only comp_one_tri_redline
+#eg EExec ./tgen.pl \
+#eg           -target FMODEL \
+#eg           -chip t124 \
+#eg           -level `pwd`/config/levels/tegra/regress_tegra_gpu_multiengine \
+#eg           -d hwApPath=`pwd`/../../ \
+#eg           -outDir surf_wr_axf-$(dp-std-timestamp).d \
+#eg           -mdiagArgs "-force_sockserv -reserve_sysmem 258 -top -plugin `pwd`/../../clib/Linux/cpu_red_line.axf -sec_elf_name `pwd`/../../drv/mpcore/t124/ObjLinux_MPCoreXC/boot_page_table.axf -cpu_model 0" \
+#eg           -only cpu_surface_write_read_axf
 
+tgen-run-one --mdiag-args="-force_sockserv -reserve_sysmem 258 -top -plugin `pwd`/../../clib/Linux/cpu_red_line.axf -sec_elf_name `pwd`/../../drv/mpcore/t124/ObjLinux_MPCoreXC/boot_page_table.axf -cpu_model 0" "$@"

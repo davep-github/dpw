@@ -222,7 +222,21 @@ def month_num_to_name(num):
     if num > 12 or num < 1:
         raise ValueError
     return month_abbrevs[num]
-    
+
+############################################################                
+def std_timestamp(time_tuple=None, replace_colons_p=True,
+                  replace_colons_with=".", date_time_separator="T"):
+    # Are they serious? You can't pass None in order to get the default
+    # behavior for time tuple?
+    format_string = "%F" + date_time_separator + "%T"
+    if time_tuple:
+        stamp = time.strftime(format_string, time_tuple)
+    else:
+        stamp = time.strftime(format_string)
+    if replace_colons_p:
+        stamp = stamp.replace(":", replace_colons_with)
+    return stamp
+
 ############################################################                
 if __name__ == '__main__':
     import sys, getopt

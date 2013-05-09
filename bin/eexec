@@ -147,6 +147,11 @@ EExecDashN_p()
     [ -n "$EExecDashN_opt" ]
 }
 
+EExecDashV_p()
+{
+    [ -n "$EExecDashV_opt" ]
+}
+
 # Should be named something like EExecSetVerbose (EExec_set_verbose)
 EExecVerbose ()
 {
@@ -165,7 +170,7 @@ EExecVerbose ()
 
 EExecVerbose_p()
 {
-    EExecDashN_p
+    EExecDashV_p
 }
 
 EExec_verbose_msg()
@@ -295,7 +300,6 @@ EExec()
       esac
       shift
     done
-
     # $eexecEcho is a command to do our echoing
     [ -n "$eexecEcho" ] && "$eexecEcho" "${eexecShowPrefix}""$@"
     # run the command

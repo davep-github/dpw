@@ -5,7 +5,7 @@
 if [ -n "$*" ]; then
     for evn in "$@"; do
         case "$evn" in
-            .|=|\?|\$\*) env;;
+            --all|.|=|\?|\$\*) env;;
             *) eval evv="\$$evn"; echo "$evn>$evv<";;
         esac
     done

@@ -426,6 +426,9 @@ AddToFunc FocusRaiseAndStuff
 
 SetEnv DIRECTION Next
 
+# This is *no longer!* staying on the same page.
+# It seems to switch focus to another emacs on another page. It then stays on
+# *that* page.
 DestroyFunc CycleWindows
 AddToFunc CycleWindows
 + I $[DIRECTION] (CurrentPage, !Iconic, !CirculateSkip) FocusRaiseAndStuff
@@ -435,7 +438,7 @@ AddToFunc CycleWindows
     echo 'SetEnv NDIRECTION Prev'`
 + I Schedule 700 134000 SetEnv DIRECTION $[NDIRECTION]
 
-# ???????
+# ??????? How to reverse this, i.e. make Shift-Meta-Tab cycle in reverse order.
 #DestroyFunc CycleWindowsReverse
 #AddToFunc CycleWindowsReverse
 #+ I $[DIRECTION] (CurrentPage, !Iconic, !CirculateSkip) FocusRaiseAndStuff
@@ -448,7 +451,7 @@ AddToFunc CycleWindows
 # FlipFocus
 DestroyFunc NextEmacs
 AddToFunc NextEmacs
-+ I Next  ("*XEmacs@*", CurrentPage) FocusRaiseAndStuff
++ I Next  ("*XEmacs@o-xterm*", CurrentPage) FocusRaiseAndStuff
 
 DestroyFunc  MoveAndGotoPage
 AddToFunc    MoveAndGotoPage
