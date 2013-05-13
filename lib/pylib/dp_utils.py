@@ -375,6 +375,10 @@ def pluralize(name, num, singular="", plural="s"):
         suffix = plural
     return name + suffix
 
+#######################################################################
+##
+## @brief Make the values of indict, keys in outdict.
+## 
 def invert_dict(indict):
     outdict = {}
     for k, v in indict.items():
@@ -384,4 +388,15 @@ def invert_dict(indict):
 
     for k, v in out_dict:
         print "k:", h, "vals:", v
-    
+
+#######################################################################
+##
+## @brief Compile a regexp following the case convention.
+## All lowercase --> case insensitive match.
+## Any uppercase --> case sensitive match
+## 
+def re_compile_case_convention(regexp):
+    flags=0
+    if regexp.islower():
+        flags = re.IGNORECASE
+    return re.compile(regexp, flags)

@@ -1,15 +1,33 @@
 #!/usr/bin/env python
 
-import os, sys, string, types, re
+import os, sys, string, types, re, exceptions
 import gzip, argparse
-import dp_utils, ticker_lib
+import dp_utils, ticker_lib, dp_io
+
+## @todo XXX Add prefix status string.
+## E.g. track number of grep hits (or just the fact that any have occurred).
+## Right now there is the ability to add a timestamp, sampled line count and
+## sample prefix.
+## A prefix format string driven by a dictionary. Roughly:
+## "%(timestamp)s %(sample_count)s %(sample_prefix)" just as a starting point.
+## Use %(x)s so that we can use strings to pad when something isn't used.
+## E.g.  if we're not timestamping, then prefix_dict["timestamp"] = " " *
+## timestamp_field_width.
+## It'll be annoying to have to update the dict for rapidly changing values
+## like sample count or grep hits. There may be a better way.
+## @todo XXX Add prefix status string.
+
+## @todo XXX Add remote control via signals or other method.
+## Motivation: Send a signal and have it dump all current grep hits.
+## @todo XXX Add remote control via signals or other method.
 
 # Regular variable names are strings. So we'll use a non-string for some
 # special, internal codes. This `var' holds the constructor of the chosen
 # Ticker*_t
+# There cannot be an accidental name collision this way.
 class CTOR_t:
     def __init__(self):
-        self.info = "I am the index of the constructor."
+        self.info = "I am the key of the appropriate ticker constructor."
 
 CTOR = CTOR_t()
 
@@ -108,6 +126,12 @@ class App_arg_action_DOTS(argparse.Action):
         # Set tick char = '.'
         add_to_dict_action(self, Ctor_arg_dict, parser, namespace, ".",
                            dest="tick_char")
+class App_arg_action_catlike(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        # Just be a pass through. Useful with -g.
+        setattr(namespace, "sample_lines_tick_p", true)
+        setattr(namespace, "tick_interval", 1)
+        setattr(namespace, "sample_lines_tick_prefix", False)
 
 Convenience_opts = (("U_extension", ".log"), ("add_timestamp_p", True))
 
@@ -151,12 +175,13 @@ if __name__ == "__main__":
     import optparse
     def_tick_interval = 100
     ostream = sys.stdout
+    default_match_ostream = sys.stdout
     def_pipe_stream = sys.stdout
     pipe_stream = def_pipe_stream
-    openMode = 'w'
+    open_mode = 'w'
     outputStreams = []
     file_suffix = ""
-    grepped_lines = []
+    matching_lines = []
     line_number = 0
     Ctor_arg_dict["max_output_units_before_newline"] = 80 * 100
     append_p = False
@@ -169,7 +194,7 @@ if __name__ == "__main__":
     oparser = argparse.ArgumentParser()
 
     oparser.add_argument("--debug",
-                         dest="debug", type=int, default=0)
+                         dest="debug_level", type=int, default=0)
     oparser.add_argument("-i", "--tick-interval",
                          dest="tick_interval", type=eval_with_units,
                          default=def_tick_interval,
@@ -205,7 +230,8 @@ if __name__ == "__main__":
     oparser.add_argument("-E", "--extension",
                          dest="U_extension", default="",
                          type=str,
-                         help="Addition output file extension. Added last, after timestamp [if present].")
+                         help=("Addition output file extension. "
+                         "Added last, after timestamp [if present]."))
     oparser.add_argument("-l", "--log-file",
                          dest="U_extension", const=".log",
                          action="store_const",
@@ -226,7 +252,7 @@ if __name__ == "__main__":
                          nargs=0,
                          action=Ctor_arg_action_true,
                          help="Print units [chars, lines] with output.")
-    oparser.add_argument("--timestamp",
+    oparser.add_argument("--timestamp", "--ts",
                          dest="timestamp_p", default=False,
                          nargs=0,
                          action=Ctor_arg_action_true,
@@ -282,7 +308,7 @@ Implies Char_ticker_t""")
                          dest="twiddle_chars", type=int,
                          action=Ctor_arg_action_twiddle,
                          help="Set twiddle chars. Implies Twiddle_ticker_t")
-    oparser.add_argument("-G", "--print-grand-total",
+    oparser.add_argument("-G", "--print-grand-total", "--grand-total",
                          dest="grand_total_p", default=True,
                          nargs=0,
                          action=Ctor_arg_action_false,
@@ -302,11 +328,28 @@ Implies Char_ticker_t""")
                          dest="pipe_mode_p", default=False,
                          action="store_true",
                          help="Send ticks to stderr and input to stdout.")
-    oparser.add_argument("-g", "--grep", "--regexp",
+    oparser.add_argument("-g", "--grep", "--regexp", "--re",
                          dest="regexp_patterns",
                          action="append", default=[],
                          help='Grep for these patterns and treat "specially".')
+    oparser.add_argument("--go", "--grep-ostream", "--grep-ofile", "--reo",
+                         "--regexp-ostream", "--re-ostream", "--match-ofile",
+                         dest="match_ostream",
+                         default=None,
+                         help='Print matching lines to this stream.')
+    oparser.add_argument("--max-matches", "--max-hits", "--mm",
+                         dest="max_regexp_matches_before_exit",
+                         type=int, default=0)  # == 0 --> unlimited.
+    oparser.add_argument("-q", "--cat-like", "--copy",
+                         nargs=0,
+                         action=App_arg_action_catlike,
+                         help="Just be a pass through. Useful when grepping.")
     oparser.add_argument("--highlight-grep", "--highlight-matches",
+                         "--high-grep", "--high_matches",
+                         "--hl-grep", "--hl-matches",
+                         "--hi-grep", "--hi-matches",
+                         "--hgrep", "--hmatches",
+                         "--hg", "--hm",
                          dest="highlight_grep_matches_p", default=False,
                          action="store_true",
                          help="Show matches as they occur.")
@@ -325,48 +368,58 @@ Implies Char_ticker_t""")
 
     app_args = oparser.parse_args()
 
-    if app_args.debug:
-        print "app_args:", app_args
-        print "Ctor_arg_dict:", Ctor_arg_dict
-        print "App_arg_dict:", App_arg_dict
+    print "app_args.debug level:", app_args.debug_level
+    dp_io.set_debug_level(app_args.debug_level, enable_debugging_p=True)
+    print "debug level:", dp_io.get_debug_level()
+    dp_io.cdebug(1, "app_args: %s\n", app_args)
+    dp_io.cdebug(1, "Ctor_arg_dict: %s\n", Ctor_arg_dict)
+    dp_io.cdebug(1, "App_arg_dict: %s\n", App_arg_dict)
 
     ticker_constructor = App_arg_dict.pop(CTOR)
 
     compress_p = app_args.compression_level >= 0
+
+    if app_args.match_ostream is None:
+        app_args.match_ostream = default_match_ostream
+    else:
+        mos = eval(app_args.match_ostream)
+        os_type = type(mos)
+        if os_type == types.StringType:
+            app_args.match_ostream = open(app_args.mos, "w")
+        elif os_type == types.FileType:
+            app_args.match_ostream = mos
+        else:
+            raise exceptions.TypeError
 
     if app_args.show_twiddles_p:
         ticker_lib.Twiddle_twiddles()
         sys.exit(0)
 
     if app_args.append_p:
-        openMode = "a"
+        open_mode = "a"
 
     if app_args.add_timestamp_p:
         file_suffix = "." + dp_utils.bq("dp-std-timestamp")
     file_suffix += app_args.U_extension
 
-    if app_args.debug:
-        print "app_args.output_files>%s<" % (app_args.output_files,)
+    dp_io.cdebug(1, "app_args.output_files>%s<\n", app_args.output_files)
     if len(app_args.output_files) == 0 and app_args.output_files_required_p:
-        print >>sys.stderr, "Log files are required with your other options."
+        dp_io.eprintf("One or more log file names are required.\n")
         sys.exit(1)
         
     for a in app_args.output_files:
-        if app_args.debug > 1:
-            print "a>%s<" % (a,)
+        dp_io.cdebug(2,"log file name>%s<\n", a)
         a = a + file_suffix
-        if app_args.debug:
-            print "output_file>%s<" % (a,)
+        dp_io.cdebug(2,"output file name>%s<\n", a)
         if app_args.no_clobber_p:
             if os.path.exists(a):
-                print >>sys.stderr, "File [%s] exists: not clobbering" % (a,)
+                dp_io.eprintf("File [%s] exists: not clobbering\n", a)
                 sys.exit(1)
         if compress_p:
-            if app_args.debug:
-                print "compression:", app_args.compression_level
-            fobj = gzip.open(a + ".gz", openMode, app_args.compression_level)
+            dp_io.cdebug(2, "compression: %d\n", app_args.compression_level)
+            fobj = gzip.open(a + ".gz", open_mode, app_args.compression_level)
         else:
-            fobj = open(a, openMode)
+            fobj = open(a, open_mode)
 
         # I *love* duck typing.
         outputStreams.append(fobj)
@@ -375,8 +428,7 @@ Implies Char_ticker_t""")
     #!<@todo Check for twiddle ticker request and handle that.
     #print "Ctor_arg_dict:", Ctor_arg_dict
     # pipe mode: Ticks go to stderr and lines go to stdout.
-    pipe_mode_p, char_wise_p = (app_args.pipe_mode_p,
-                                app_args.char_wise_p)
+    pipe_mode_p, char_wise_p = (app_args.pipe_mode_p, app_args.char_wise_p)
 
     #if Ctor_arg_dict.get("twiddle_chars", False) != False:
     #    Ctor_arg_dict["init_string"] = ""
@@ -400,8 +452,7 @@ Implies Char_ticker_t""")
         Ctor_arg_dict["unit_name"] = 'line'
         Ctor_arg_dict["comma"] = ""     # Line will end with newline.
 
-    if app_args.debug:
-        print "final Ctor_arg_dict:", Ctor_arg_dict
+    dp_io.cdebug(1, "Final Ctor_arg_dict: %s\n", Ctor_arg_dict)
     ticker = ticker_constructor(app_args.tick_interval, **Ctor_arg_dict)
     if pipe_mode_p:
         outputStreams.append(pipe_stream)
@@ -410,16 +461,21 @@ Implies Char_ticker_t""")
     # Help speed up the loop.
     compiled_regexps = []
     for regexp in app_args.regexp_patterns:
-        compiled_regexps.append(re.compile(regexp))
-    sample_prefix = app_args.sample_lines_tick_prefix
+        compiled_regexps.append(dp_utils.re_compile_case_convention(regexp))
+    sampled_line_prefix = app_args.sample_lines_tick_prefix or ""
+    dp_io.cdebug(2, "sampled_line_prefix>%s<\n", sampled_line_prefix)
+    dp_io.cdebug(2, "app_args.sample_lines_tick_prefix>%s<\n",
+                 app_args.sample_lines_tick_prefix)
+    max_hits = app_args.max_regexp_matches_before_exit
     while True:
 	input_line = sys.stdin.readline()
-	if not input_line:
-            if app_args.match_summary_p and grepped_lines:
+	if (not input_line or
+            (max_hits and (len(matching_lines) >= max_hits))):
+            if app_args.match_summary_p and matching_lines:
                 print "\n================="
-                print "Num matching lines:", len(grepped_lines)
+                print "Num matching lines:", len(matching_lines)
                 tlos = outputStreams.append(sys.stdout)
-                for lt in  grepped_lines:
+                for lt in  matching_lines:
                     for o in outputStreams:
                         o.write("Matching line: %s: %s\n" % (lt[1],
                                                              lt[0][:-1]))
@@ -431,24 +487,28 @@ Implies Char_ticker_t""")
             o.write(input_line)
         for regexp in compiled_regexps:
             if regexp.search(input_line):
-                grepped_lines.append((input_line, line_number))
+                matching_lines.append((input_line, line_number))
                 if app_args.highlight_grep_matches_p:
                     # XXX @todo Add ANSI color options?
-                    print "line:", line_number, "***", input_line[:-1], "***"
+                    dp_io.fprintf(app_args.match_ostream,
+                                  "\n*** line: %d, >%s< ***\n",
+                                  line_number, input_line[:-1])
                 break
         if char_wise_p:
             # Iterate for each char in the line.
             for c in input_line:
                 if app_args.sample_lines_tick_p:
-                    tick = sample_prefix + c
+                    tick = sampled_line_prefix + c
                 else:
                     tick = None
                 ticker(tick=tick)
         else:
             if app_args.sample_lines_tick_p:
                 # @todo XXX allow a format to be used (dictionary type)
-                tick = "%8d%s" % (ticker.counter,
-                                  sample_prefix + input_line)
+                tick = ""
+                if app_args.sample_lines_tick_prefix is not False:
+                    tick =  "%8d" % (ticker.counter,)
+                tick += sampled_line_prefix + input_line
             else:
                 tick = None
             ticker(tick=tick)

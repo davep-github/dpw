@@ -16,41 +16,21 @@ unset eexec_program
 
 me_expand_dest()
 {
-    # Args: dest | sb dest
+# NO, this is stupid    # Args: dest | sb dest ??? Why did I do it this way?
+    # Do dest [sb]
     local dest="${1-sb}"; shift
-    local tdest
-    local sb_dest
-    # sb_dest[0] is sandbox
-    # sb_dest[1] is dest
-    if vsetp "${1-}"            # sb dest, dest is really sb
+    local sb="${1-}"
+    # Some useful special cases.
+    case "${dest}" in
+           .) # Go to the same place in the new sandbox.
+              dest="$(dp4-location ${PWD})";;
+           /) dest="sb";;     # Root
+    esac
+
+    if vsetp "${sb}"
     then
-        tdest="${1}"
-        case "${tdest}" in
-            .) # Go to the same place in the new sandbox.
-               tdest="$(dp4-location ${PWD})";;
-            /) tdest="sb";;     # Root
-        esac
-        sb_dest=("${dest}" "${tdest}")
-    else
-        sb_dest=($(echo "${dest}" | sed -r "s/^(${sep})(.*)(${sep})(.*)$/\2 \4/"))
+        EExec -y cd $(dogo "$sb")  # All sb roots need to be known to dogo.
     fi
-    #echo 1>&2 "sb_dest>${sb_dest[@]}<"
-    if vunsetp "${dest}" 
-    then
-        dest="tot"
-    elif [ -n "${sb_dest[*]}" ]
-    then
-        # Assume only one element means just the dest was specified.
-        if [ "${#sb_dest[@]}" = 2 ]
-        then
-            sb="${sb_dest[0]}"
-            EExec -y cd $(dogo "$sb")  # All sb roots need to be known to dogo.
-            dest="${sb_dest[1]}"
-        else
-            dest="${sb_dest[0]}"
-        fi
-    fi
-    
     local rc
     case "${dest}" in
         //*) dest=$(echo "${dest}" | dp4-reroot); rc="$?";;

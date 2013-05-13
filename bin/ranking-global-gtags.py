@@ -4,13 +4,17 @@ import sys, os, re, subprocess
 
 ## Make this environment specific
 ## In order of rank.
-Top_ranking_regexps = [
-    re.compile("hw/ap_tlit1/drv/drvapi/runtest_surface"),
-    re.compile("hw/ap_tlit1/drv/drvapi/"),
-    re.compile("hw/ap_tlit1/drv/multiengine/"),
-    re.compile("hw/ap_tlit1/drv/"),
-    re.compile("hw/tools/mods/trace_3d/plugin/"),
+Top_ranking_regexp_strings = [
+    "hw/ap_tlit1/drv/drvapi/runtest_surface",
+    "hw/ap_tlit1/drv/drvapi/",
+    "hw/ap_tlit1/drv/multiengine/",
+    "hw/ap_tlit1/drv/chiplib/chiplib2/",
+    "hw/ap_tlit1/drv/",
+    "hw/tools/mods/trace_3d/plugin/",
     ]
+
+Top_ranking_regexps = [ re.compile(regexp)
+                        for regexp in Top_ranking_regexp_strings ]
 
 Bottom_ranking_regexps = []
 def rank_lines(lines):

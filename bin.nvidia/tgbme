@@ -81,7 +81,8 @@ done
 vsetp "${go_p}" && {
     if vsetp "${sb}"
     then
-        EExec -y mecd "${sb}" testgen
+# change to dir [sb]        EExec -y mecd "${sb}" testgen
+        EExec -y mecd testgen ${sb}
     else
         EExec -y mecd testgen
     fi

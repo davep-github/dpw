@@ -209,8 +209,11 @@ dprintf = debug                         # alias
 def cdebug(level, fmt, *args):
     '''conditional debug.
     print if debugging is on AND level >= debug_level'''
-    #print debug_level, level
-    if debug_level >= level or level == True:
+    #print "debug_level:", debug_level, "level:", level
+    #print "debug_level >= level:", (debug_level >= level)
+    # NB: True == 1, but 1 is not True
+    if (debug_level >= level) or (level is True):
+        print "WTF?!?!?!"
         do_debug(fmt, '%s[%02s]' % (debug_leader, level), args)
 
 ldebug = cdebug                         # alias, level debug
@@ -352,10 +355,15 @@ def debug_on():
 def get_debug_level():
     return debug_level
 
-def set_debug_level(level):
+def set_debug_level(level, enable_debugging_p=False,
+                    disable_debugging_p=False):
     global debug_level
     old_level = get_debug_level()
     debug_level = level
+    if enable_debugging_p:
+        debug_on()
+    if disable_debugging_p:
+        debug_off()
     return old_level
 
 ###############################################################

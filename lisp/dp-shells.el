@@ -1174,13 +1174,12 @@ xxx-send-input as a last resort."
 (defun* dp-define-compilation-mode-like-keys (&optional 
                                               (map compilation-minor-mode-map))
   (define-key dp-s-mode-map [?r] 'dp-error-parse-point-to-end)
-  (dp-define-keys map 
-                  `([(meta ?n)] dp-next-error
-                    [(meta ?o)] dp-shell-magic-kill-ring-save
-                    [(control meta return)] dp-error-parse-point-to-end
-                    [(control meta ?j)] dp-shell-resync-dirs
-                    [(control ?c) (control ?c)] 
-                    dp-maybe-kill-process-buffer-and-window)))
+  (dp-define-keys map `([(meta ?n)] dp-next-error
+                        [(meta ?o)] dp-shell-magic-kill-ring-save
+                        [(control meta return)] dp-error-parse-point-to-end
+                        [(control meta ?j)] dp-shell-resync-dirs
+                        [(control ?c) (control ?c)]
+                        dp-maybe-kill-process-buffer-and-window)))
 
 ;;;###autoload
 (defun dp-compilation-mode-hook ()

@@ -70,6 +70,7 @@ more_depot_dirs_of_interest="
 //hw/${ap_dir}/ip/vdec/cmod/
 //hw/${ap_dir}/drv/simfront/
 //hw/${ap_dir}/drv/bootrom/
+//hw/${ap_dir}/drv/chiplib/
 //hw/${ap_dir}/clib/
 //hw/class/
 //hw/tools/mods

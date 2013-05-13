@@ -12,4 +12,4 @@ do
 done
 unset eexec_program
 
-mego "${@}" .
+mego . "${@}"

@@ -6223,11 +6223,10 @@ you've added enough info for set-auto-mode to figure it out.."
   (marker-position (process-mark (get-buffer-process (or buffer
 							 (current-buffer))))))
 
-(defvar dp-editing-server-ipc-file 
+(defun dp-editing-server-ipc-file ()
+  "We get the editing server name in here. The environment variable is consistently stale."  
   (or (getenv "DP_EDITING_SERVER_FILE")
-                        (format "%s/ipc/dp-editing-server" (getenv "HOME")))
-  "We store the editing server name in here. The environment variable is
-consistently stale.")
+      (format "%s/ipc/dp-editing-server" (getenv "HOME"))))
 
 (defun dp-gnuserv-running-p ()
   "Determine if the editing server process exists and is alive.
@@ -6287,7 +6286,7 @@ new one."
       (shell-command-to-string (format "echo %s %d > %s" 
                                        host-name
                                        (emacs-pid)
-                                       dp-editing-server-ipc-file)))))
+                                       (dp-editing-server-ipc-file))))))
   
 (dp-defaliases 'gserv 'xserver 'eserver 'gnuserve 'dp-start-editing-server)
 

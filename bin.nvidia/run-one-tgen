@@ -22,6 +22,10 @@ mecd testgen
 : ${rtl_args_more=}
 : ${clib_linux=$(realpath "$(pwd)/../../clib/Linux")}
 : ${d_opt=hwApPath=$(realpath $(pwd)/../../)}
+: ${last_and_latest_p=t}
+: ${last_out_dir_file_name=last_out_dir}
+: ${latest_out_dir_file_name=latest_out_dir}
+: ${last_and_latest_prefix=}
 
 # Usage variable usage:
 Usage_args_info=" <tgen-level-test>..."
@@ -70,6 +74,9 @@ long_options=("wait"
 "start-record:"
 "queue:"
 "split-waveform" "div-waveform"
+"no-last" "no-latest"
+"last-out-dir:" "latest-out-dir:"
+"last-and-latest-prefix:" "ll-prefix:"
 "mail")
 
 : ${default_level=$(pwd)/config/levels/tegra/regress_tegra_gpu_multiengine}
@@ -116,6 +123,10 @@ do
       --start-record) rtl_args_more="${rtl_args_more} +startrecord+${1}";;
       --split-waveform|--div-waveform) rtl_args_more="${rtl_args_more} +fsdbAutoSwitch";;
       --queue) shift; queue="$1";;
+      --no-last|--no-latest) last_and_latest_p=;;
+      --last-out-dir) shift; last_out_dir_file_name="${1}";;
+      --latest-out-dir) shift; latest_out_dir_file_name="${1}";;
+      --last-and-latest-prefix|--ll-prefix) shift; last_and_latest_prefix="${1}";;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -236,17 +247,31 @@ do
     EExec_verbose_echo_id out_dir
     set -- "$@" -outDir "${out_dir}"
 
+    if [ "${last_and_latest_prefix}" = "." ]
+    then
+        ll_prefix="${test_name}."
+    else
+        ll_prefix="${last_and_latest_prefix}"
+    fi
 
-    EExecDashN_p || {
+    last_out="${ll_prefix}${last_out_dir_file_name}"
+    latest_out="${ll_prefix}${latest_out_dir_file_name}"
+    echo_id last_out
+    echo_id latest_out
+
+    if ! EExecDashN_p
+    then
         EExec mkdir -p $(dirname "${out_dir}")
-        echo "$out_dir" >| last_out_dir
-        echo "#!/bin/sh
-cat last_out_dir" >| latest_out_dir
-        chmod +x latest_out_dir
+        vsetp "${last_and_latest_p}" && {
+            echo "$out_dir" >| "${last_out}"
+            echo "#!/bin/sh
+cat ${last_out_dir_file_name}" >| "${latest_out}"
+            chmod +x "${latest_out}"
+        }
         command_line_log="${out_dir}.command-line"
         EExec_verbose_echo_id command_line_log
         echo "$@" > "${command_line_log}"
-    }
+    fi
     EExecDashV_p && EExec -y -0 eko "EExec eko: $@"
     EExec "$@"
     
@@ -256,3 +281,8 @@ cat last_out_dir" >| latest_out_dir
     echo_id out_dir
   done
 done
+
+vsetp "${all_but_run_opt}" && {
+    echo "$progname: -allButRun was used.
+  Don't forget to run them if you need to."
+} 1>&2

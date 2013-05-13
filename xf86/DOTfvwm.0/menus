@@ -908,6 +908,7 @@ AddToMenu   Restart "Restart Window Manager" Title
 #+ "&fvwm-themes-start"  Restart fvwm-themes-start
 + "&fvwm"                Restart fvwm -s
 + "&fvwm2"               Restart fvwm2 -s
++ "&fvwm2.6.5"           Restart fvwm2.6.5 -s
 #+ "&fvwm95"             Restart fvwm95 -s
 #+ "&AnotherLevel"       Restart AnotherLevel
 #+ "&AnotherLevelUp"     Restart AnotherLevelUp

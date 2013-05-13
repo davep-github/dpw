@@ -417,6 +417,7 @@ export PROJECT_HOME
 [ -n "$YOKEL_BIN"  ] && PATH=$(dp_add_to_path_iff -p "$PATH" $YOKEL_BIN)
 # remove non-existent dirs from path
 ###PATH=$(dp-fix-kde-order.py)
+PATH=$(dp_add_to_path_iff -p "$PATH" "$DAVEP_BIN_DIRS")
 export DP_ENV_BIN_OVERRIDE="$HOME/bin/override"
 PATH=$(dp_add_to_path_iff -p "$PATH" "$DP_ENV_BIN_OVERRIDE")
 PATH=$(dp_add_to_path_iff "$PATH" "$HOME/bin/last-resort")

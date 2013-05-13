@@ -429,6 +429,7 @@ SetEnv DIRECTION Next
 # This is *no longer!* staying on the same page.
 # It seems to switch focus to another emacs on another page. It then stays on
 # *that* page.
+# It is also no longer cycling through all windows.
 DestroyFunc CycleWindows
 AddToFunc CycleWindows
 + I $[DIRECTION] (CurrentPage, !Iconic, !CirculateSkip) FocusRaiseAndStuff

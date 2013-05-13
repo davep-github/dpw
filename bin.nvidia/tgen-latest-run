@@ -23,6 +23,14 @@ else
     printor=echo
 fi
 
+prefix=
+vsetp "${1-}" && {
+    case "${1-}" in
+        [0-9]|"") ;;
+        *) prefix="${1-}."; shift;;
+     esac
+}
+
 vunsetp "${no_cd}" && {
     mecd testgen
 }
@@ -31,7 +39,7 @@ dir_num="${1-1}"
 first_dir_num=$(printf "%02d" "${dir_num}")
 second_dir_num=$(printf "%06d" "${dir_num}" | sed -r 's/(.*)([0-9]{6})/\2/')
 
-latest_out_dir=$(latest_out_dir)
+latest_out_dir=$(${prefix}latest_out_dir)
 some_path_component=$(echo $(cat last_out_dir)/tests/*)
 case "${some_path_component}" in
     *\ *) echo 1>&2 "Multiple test type dirs exist."; exit 1;;
