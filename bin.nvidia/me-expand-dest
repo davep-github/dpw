@@ -16,7 +16,12 @@ unset eexec_program
 
 me_expand_dest()
 {
-# NO, this is stupid    # Args: dest | sb dest ??? Why did I do it this way?
+    # Are we a majick string?
+    a=($(echo "$@" | sed -rn "s/^(${sep})([^${sep}]+)(${sep})([^${sep}]*)(${sep}?)$/\2 \4/p"))
+    [ "${#a}" != 0 ] && {
+        eko "a:" "${a[@]}" 1>&2
+        set -- "${a[@]}"
+    }
     # Do dest [sb]
     local dest="${1-sb}"; shift
     local sb="${1-}"

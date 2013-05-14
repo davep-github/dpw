@@ -1,0 +1,39 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+# as2 describe prefixes modified files with "... "
+# "." is a wildcard.
+export prefix="[.][.][.] "
+
+for bundle in "$@"
+do
+  echo_id bundle
+  files_to_revert=$(as2 describe "${bundle}" | dp4-extract-pathname)
+  echo "files to revert: ${files_to_revert}"
+  ans=
+  while vunsetp "${ans}"
+  do
+    read -e -p "Revert? "
+    case "${REPLY}" in
+        [Yy1t]) ans=y;;
+        [Nn0f]) ans=n;;
+        *) continue;;
+    esac
+  done
+
+  [ "${ans}" = 'n' ] && continue
+
+  echo EExec p4 revert "${files_to_revert}"
+done
+

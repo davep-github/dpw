@@ -502,13 +502,14 @@ abbrev is expanded.")
 (defun* dp-get-special-abbrev (key-string regexp-for-abbrev-text
                                &optional component-split-string)
   (interactive)
-  (when (dp-looking-back-at (concat regexp-for-abbrev-text key-string))
-    (list (match-beginning 2)
-          ;; Include terminating key string.
-          (+ (length key-string) (match-end 2))
-          (if component-split-string
-              (split-string (match-string 2) component-split-string)
-            (match-string 2)))))
+  (let ((regexp (concat regexp-for-abbrev-text key-string)))
+    (when (dp-looking-back-at regexp)
+      (list (match-beginning 2)
+            ;; Include terminating key string.
+            (+ (length key-string) (match-end 2))
+            (if component-split-string
+                (split-string (match-string 2) component-split-string)
+              (match-string 2))))))
 
 (defvar dp-work-rel-abbrev-key-string ";")
 
@@ -543,7 +544,7 @@ abbrev is expanded.")
 
 (defun dp-get-sandbox-rel-abbrev ()
   (interactive)
-  (dp-get-special-abbrev "," "\\(\\(,[^,]*,[^,]+\\)\\)"))
+  (dp-get-special-abbrev "," "\\(\\(,[^,]+,[^,]*\\)\\)"))
 
 (defun dp-expand-sandbox-rel-abbrev ()
   (interactive)

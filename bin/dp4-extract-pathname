@@ -17,10 +17,10 @@ unset eexec_program
 strip_one()
 {
     local x="${1}"
-    echo "${x}" | sed -r 's!('"${prefix}"')([^#]+)(#.*$)!\2!'
+    echo "${x}" | sed -rn 's!('"${prefix}"')([^#]+)(#.*$)!\2!p'
 }
 
-if [ -n "$*" ]
+if vsetp "$*"
 then
     for x in "$@"
     do

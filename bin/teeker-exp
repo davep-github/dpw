@@ -186,6 +186,7 @@ if __name__ == "__main__":
     Ctor_arg_dict["max_output_units_before_newline"] = 80 * 100
     append_p = False
     default_compression_level = 5
+    GZIP_MAX_COMPRESSION_LEVEL = 9
     ## Each -Z adds one, and we want a single -Z to yield max compression.
 
     # tick_interval, increment=1, init_string="counting: ", comma=", ",
@@ -223,6 +224,11 @@ if __name__ == "__main__":
                          const=default_compression_level,
                          action="store_const",
                          help="Set compression level to %s." % (default_compression_level))
+    oparser.add_argument("-9", "--z9", "--gzip9",
+                         dest="compression_level",
+                         const=GZIP_MAX_COMPRESSION_LEVEL,
+                         action="store_const",
+                         help="Set compression level to %s." % (GZIP_MAX_COMPRESSION_LEVEL))
     oparser.add_argument("-u", "--timestamp-log-files",
                          dest="add_timestamp_p", default=False,
                          action="store_true",
@@ -239,6 +245,8 @@ if __name__ == "__main__":
     oparser.add_argument("--log",
                          dest="output_files_required_p", default=False,
                          nargs=0,
+                         # Special action needed because multiple vars are
+                         # being changed.
                          action=App_action_log_file_convenience,
                          help=("Save to log file with useful defaults:\n" +
                                show_convenience_opts()))
@@ -332,6 +340,17 @@ Implies Char_ticker_t""")
                          dest="regexp_patterns",
                          action="append", default=[],
                          help='Grep for these patterns and treat "specially".')
+    oparser.add_argument("--tgen-errors",
+                         default=None, const="Assertion|call stack|stack_trace",
+                         action="store_const",
+                         help="Convenience option for finding common testgen errors. Perhaps change the value of this to an envvar to make it more flexible.  --log-errors-regexp")
+
+    oparser.add_argument("--project-log-errors",
+                         default=None,
+                         const=os.environ.get("TEEKER_PROJECT_LOG_ERROR_REGEXP", None),
+                         action="store_const",
+                         help="Convenience option for finding common testgen errors. Perhaps change the value of this to an envvar to make it more flexible.  --log-errors-regexp")
+
     oparser.add_argument("--go", "--grep-ostream", "--grep-ofile", "--reo",
                          "--regexp-ostream", "--re-ostream", "--match-ofile",
                          dest="match_ostream",
@@ -339,7 +358,8 @@ Implies Char_ticker_t""")
                          help='Print matching lines to this stream.')
     oparser.add_argument("--max-matches", "--max-hits", "--mm",
                          dest="max_regexp_matches_before_exit",
-                         type=int, default=0)  # == 0 --> unlimited.
+                         type=int, default=0, # == 0 --> unlimited.
+                         help="Max regexp matches before exit.")
     oparser.add_argument("-q", "--cat-like", "--copy",
                          nargs=0,
                          action=App_arg_action_catlike,
@@ -460,6 +480,9 @@ Implies Char_ticker_t""")
 
     # Help speed up the loop.
     compiled_regexps = []
+    if app_args.tgen_errors is not None:
+        app_args.highlight_grep_matches_p = True
+        app_args.regexp_patterns.append(app_args.tgen_errors)
     for regexp in app_args.regexp_patterns:
         compiled_regexps.append(dp_utils.re_compile_case_convention(regexp))
     sampled_line_prefix = app_args.sample_lines_tick_prefix or ""
