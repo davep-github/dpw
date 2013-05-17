@@ -740,5 +740,11 @@ unset sudo_bash_env
 dp_set_x_fini
 export DP_BASHRC_EXECUTION_COMPLETED=t
 
+post_bashrc_command=$($HOST_INFO -n '' post_bashrc_command)
+vsetp "${post_bashrc_command}" && {
+    ${post_bashrc_command} $($HOST_INFO -n '' post_bashrc_command_args)
+}
+
+unset post_bashrc_command
 unset EExecProgName
 true

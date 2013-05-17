@@ -12,6 +12,8 @@ do
 done
 unset eexec_program
 
+: ${use_gui_p=t}
+
 # as2 describe prefixes modified files with "... "
 # "." is a wildcard.
 export prefix="[.][.][.] "
@@ -20,6 +22,18 @@ for bundle in "$@"
 do
   echo_id bundle
   files_to_revert=$(as2 describe "${bundle}" | dp4-extract-pathname)
+  vunsetp "${files_to_revert}" && {
+      echo "No files to revert in bundle ${bundle}."
+      continue
+  } 1>&2
+
+  vsetp "${use_gui_p}" && {
+      files_to_revert=$(echo ${files_to_revert} | xlist)
+      vunsetp "${files_to_revert}" && {
+          echo "No files to revert were selected from bundle ${bundle}."
+          continue
+      } 1>&2
+  }
   echo "files to revert: ${files_to_revert}"
   ans=
   while vunsetp "${ans}"

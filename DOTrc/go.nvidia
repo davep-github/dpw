@@ -87,6 +87,9 @@ E|melevels__ME_src|          hw/ap_tlit1/diag/testgen/config/levels/tegra/
 E|manuals__ME_src|           hw/kepler1_gklit3/manuals/
 E|devflushref__ME_src|       hw/kepler1_gklit3/manuals/dev_flush.ref
 E|devflush__ME_src|          hw/kepler1_gklit3/manuals/dev_flush.ref
+E|kepclib__ME_src|           hw/kepler1_gklit3/clib/
+E|kclib__ME_src|             hw/kepler1_gklit3/clib/
+E|klib__ME_src|              hw/kepler1_gklit3/clib/
 
 # /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile/traces/gpu_multiengine
 #                            arch/traces/mobile/traces/gpu_multiengine
@@ -99,6 +102,11 @@ E|gpumetraces__ME_src|       arch/traces/mobile/traces/gpu_multiengine/
 E|traces__ME_src|            arch/traces/mobile/traces/gpu_multiengine/
 E|gputraces__ME_src|         arch/traces/mobile/traces/gpu_multiengine/
 E|gmetraces__ME_src|         arch/traces/mobile/traces/gpu_multiengine/
+E|mtrace__ME_src|           arch/traces/mobile/traces/
+E|gpumetrace__ME_src|       arch/traces/mobile/traces/gpu_multiengine/
+E|trace__ME_src|            arch/traces/mobile/traces/gpu_multiengine/
+E|gputrace__ME_src|         arch/traces/mobile/traces/gpu_multiengine/
+E|gmetrace__ME_src|         arch/traces/mobile/traces/gpu_multiengine/
 E|sanity__ME_src|            arch/traces/mobile/traces/gpu_multiengine/
 E|gmesanity__ME_src|         arch/traces/mobile/traces/gpu_multiengine/
 E|gmet__ME_src|              arch/traces/mobile/traces/gpu_multiengine/
@@ -170,3 +178,4 @@ Ee|kevin|       /home/scratch.dpanariti_t124/sb2/hw/hw/ap_tlit1/diag/testgen/dp-
 # End: ***
 Ee|gooddepcpurun|       /home/scratch.dpanariti_t124/sb2/hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/dep_cpu_cpu_gpu_cpu_mc/2013-04-24T15.06.43-0400.out/tests/kepler_b_ogtest/00/00/01/000001/
 Ee|xebacks|xebacs|       /home/dpanariti/droppings/editors/xemacs/xebacs.d/
+Ee|dpylib|       /home/dpanariti/lib/pylib/

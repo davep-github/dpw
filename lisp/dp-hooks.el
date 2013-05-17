@@ -104,7 +104,7 @@ eol-only - Only clean lines when cursor it at the end of a line.
   "Do we wish to be anal about whitespace?"
   (when dp-global-master-cleanup-whitespace-p
     (cond
-     ((and (and-listp dp-global-master-cleanup-whitespace-p)
+     ((and (listp dp-global-master-cleanup-whitespace-p)
            (memq major-mode dp-global-master-cleanup-whitespace-p)))
      (dp-cleanup-whitespace-p))))
 
@@ -927,7 +927,7 @@ main(
   "Set up ruby-mode *my* way."
   (interactive)
   (dp-add-line-too-long-font 'ruby-font-lock-keywords)
-  (setq dp-cleanup-whitespace-p nil)
+  (setq dp-cleanup-whitespace-p t)
   (dp-add-to-font-patterns '(ruby-font-lock-keywords)
                             ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
 )
@@ -1928,7 +1928,7 @@ and then business as usual."
   (dp-add-line-too-long-font '(sh-font-lock-keywords
                                sh-font-lock-keywords-1
                                sh-font-lock-keywords-2))
-  (setq dp-cleanup-whitespace-p nil)
+  (setq dp-cleanup-whitespace-p t)
   (dp-add-to-font-patterns '(sh-font-lock-keywords
                              sh-font-lock-keywords-1
                              sh-font-lock-keywords-2)
@@ -2221,7 +2221,7 @@ changed."
   (dp-add-line-too-long-font '(perl-font-lock-keywords
                                perl-font-lock-keywords-1
                                perl-font-lock-keywords-2))
-  (setq dp-cleanup-whitespace-p nil)
+  (setq dp-cleanup-whitespace-p t)
   (dp-add-to-font-patterns '(perl-font-lock-keywords
                                perl-font-lock-keywords-1
                                perl-font-lock-keywords-2)

@@ -213,7 +213,6 @@ def cdebug(level, fmt, *args):
     #print "debug_level >= level:", (debug_level >= level)
     # NB: True == 1, but 1 is not True
     if (debug_level >= level) or (level is True):
-        print "WTF?!?!?!"
         do_debug(fmt, '%s[%02s]' % (debug_leader, level), args)
 
 ldebug = cdebug                         # alias, level debug

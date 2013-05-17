@@ -75,17 +75,18 @@ more_depot_dirs_of_interest="
 //hw/class/
 //hw/tools/mods
 //hw/tools/shimlib/
-"
+//hw/kepler1_gklit3/clib/
+//hw/kepler1_gklit3/diag/"
 
 depot_dirs_of_interest="$base_depot_dirs_of_interest $more_depot_dirs_of_interest"
 
 dirs_of_interest=$(dp4-reroot "$p4_root" $depot_dirs_of_interest)
 
-[ -z "${skip_cd-}" ] && EExec mecd sandbox
+[ -z "${skip_cd-}" ] && EExec mecd -y sandbox
 echo "cwd: $(pwd)"
 
 EExec -y index-code $EExecDashN_opt $EExecDashV_opt $dirs_of_interest
 
 vsetp "${send_mail_on_completion-}" && ! EExecDashN_p && {
-    mail -s "$progname is done" "${USER}" < /dev/null >/dev/null 2>&1
+    mail -s "$progname is done in ${PWD}." "${USER}" < /dev/null >/dev/null 2>&1
 }

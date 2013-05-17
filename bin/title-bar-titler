@@ -1,6 +1,6 @@
 #!/bin/sh
 
-titlers="xtitle"
+: ${titlers="xtitle"}
 for titler in $titlers; do
     $titler "$@" && exit 0
 done

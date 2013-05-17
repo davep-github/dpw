@@ -224,8 +224,13 @@ do_fetch_wget()
 #needed?         echo "Couldn't make a temp file."
 #needed?         exit 1
 #needed?     } 1>&2
-    EExec wget --http-user=svcsw \
-      "--http-passwd=${password}" \
+    local password_opt=
+    vsetp "${password}" && {
+        password_opt="--http-passwd=${password}"
+    }
+    EExec wget --auth-no-challenge \
+      --http-user=svcsw \
+      ${password_opt} \
       -O "${dest_file}" \
      "${server}/${fetch_file}"
     echo "${dest_file}"

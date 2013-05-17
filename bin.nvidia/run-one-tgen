@@ -272,7 +272,7 @@ cat ${last_out_dir_file_name}" >| "${latest_out}"
         EExec_verbose_echo_id command_line_log
         echo "$@" > "${command_line_log}"
     fi
-    EExecDashV_p && EExec -y -0 eko "EExec eko: $@"
+    # EExecDashV_p && EExec -y -0 eko "EExec eko: $@"
     EExec "$@"
     
     [ -n "${display_status_p}" ] && {

@@ -5531,6 +5531,14 @@ The newly created list contains just new-el."
   (unless (assoc (car item) (symbol-value list-sym))
     (add-to-list list-sym item)))
 
+(defun dp-get-buffer-window (&optional buffer frames devices)
+  "Like `get-buffer-window' but allows buffer to be a name, too.
+Also allows BUFFER to be nil and will then use `current-buffer'.
+Uses `get-buffer' to get the buffer."
+  (when buffer
+    (setq buffer (get-buffer buffer)))  ; Let "names" work, too.
+  (get-buffer-window (or buffer (current-buffer)) frames devices))
+
 (defun dp-optionally-require (feature &optional file-name)
   "Wrap `require' in condition-case to allow us to
 continue in the case of an error.
@@ -8283,9 +8291,13 @@ Remove any other copies of the name."
 (defun dp-kill-buffer-hook ()
   "Undedicates window, saves file name in `dp-recently-killed-files' and kills current buffer."
   (set-window-dedicated-p (dp-get-buffer-window) nil)
+  ;;(dmessage "entered dp-kill-buffer-hook, buffer-name>%s<" (buffer-name))
   (when buffer-file-name
+    ;;(dmessage "in dp-kill-buffer-hook, buffer-file-name>%s<" buffer-file-name)
     (dp-save-killed-file-state (current-buffer))
-    (dp-push-killed-file-name buffer-file-name)))
+    (dp-push-killed-file-name buffer-file-name))
+    ;;(dmessage "exiting dp-kill-buffer-hook")
+    )
 
 (add-hook 'kill-buffer-hook 'dp-kill-buffer-hook)
 
@@ -9637,6 +9649,9 @@ Can be called directly or by an abbrev's hook.
   (setq saveconf-file-name (concat (saveconf-make-file-name)
                                    "."
                                    (dp-short-hostname))
+;;                                   (if dp-current-sandbox-name
+;;                                       (concat "." dp-current-sandbox-name)
+;;                                     ""))
         saveconf-file-name-prev (concat saveconf-file-name ".prev"))
 
   ;; Keep the data from the last save so it won't be overwritten as current
@@ -13320,14 +13335,6 @@ STRING-JOIN-ARGS are passed through to `dp-string-join'. "
 (defun dp-window-dedicated-p (&optional win buffer)
   (window-dedicated-p (or win (dp-get-buffer-window buffer))))
                        
-(defun dp-get-buffer-window (&optional buffer frames devices)
-  "Like `get-buffer-window' but allows buffer to be a name, too.
-Also allows BUFFER to be nil and will then use `current-buffer'.
-Uses `get-buffer' to get the buffer."
-  (when buffer
-    (setq buffer (get-buffer buffer)))  ; Let "names" work, too.
-  (get-buffer-window (or buffer (current-buffer)) frames devices))
-
 (defun dp-layout-compile-windows-func ()
   "Split the frame into multiple windows based on the current frame width."
   (if (dp-wide-enough-for-2-windows-p)
@@ -14684,7 +14691,8 @@ find-file\(-at-point) and then, if it fails, this function??"
 (defvar dp-xfer-section-separator "================="
   "Just so happened.")
 
-(defun dp-edit-xfer-file (add-new-p timestamp-p file-name dir)
+(defun dp-edit-xfer-file (add-new-p timestamp-p file-name dir 
+                          &optional other-window-p)
   (interactive "P")
   (dp-push-go-back "cxfer")
   (dp-find-file (expand-file-name file-name dir))
@@ -14709,17 +14717,26 @@ find-file\(-at-point) and then, if it fails, this function??"
       (dp-open-above t)
       (dp-timestamp))))
 
-(defun cxfer (&optional add-new-p timestamp-p)
+(defun cxfer (&optional add-new-p timestamp-p other-window-p)
   (interactive "P")
-  (dp-edit-xfer-file add-new-p timestamp-p "cx-xfer.txt" "~"))
+  (dp-edit-xfer-file add-new-p timestamp-p "cx-xfer.txt" "~" other-window-p))
 
-(defun wwxfer (&optional add-new-p timestamp-p)
+(defun cxfer-other-window (&optional add-new-p timestamp-p)
   (interactive "P")
-  (dp-edit-xfer-file add-new-p timestamp-p "wwxfer.txt" "~/inb"))
+  (cxfer add-new-p timestamp-p t))
 
-                                        ; does it work in lisp? does the
-                                        ; newly added filling via the binding
-                                        ; on meta ?q work? We hopes so.
+(defun wwxfer (&optional add-new-p timestamp-p other-window-p)
+  (interactive "P")
+  (dp-edit-xfer-file add-new-p timestamp-p "wwxfer.txt" "~/inb" 
+                     other-window-p))
+
+(defun wwxfer-other-window (&optional add-new-p timestamp-p)
+  (interactive "P")
+  (wwxfer add-new-p timestamp-p 'other-window))
+
+;; does it work in lisp? does the
+;; newly added filling via the binding
+;; on meta ?q work? We hopes so.
 (defun dp-move-too-long-comment-above-current-line ()
   (interactive)
   (beginning-of-line)
@@ -15342,6 +15359,7 @@ See `dp-shell-*TAGS-changers' rant. "
            (message status-msg)))))
 
 (defvar dp-whitespace-cleanup-after-these-commands '(dp-open-newline
+                                                     dp-open-above
                                                      dp-c-context-line-break
                                                      dp-py-open-newline
                                                      py-newline-and-indent)

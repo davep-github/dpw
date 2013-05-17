@@ -82,6 +82,7 @@ EExec_parse()
     do
       case "$1" in
           -n) prog="${prog}EExecDashN ";;
+          -nk) prog="${prog}EExecDashN_k ";;
           -v) prog="${prog}EExecVerbose ";;
           -q) prog="${prog}EExecQuiet ";;
           --) prog="${prog}EExecNOP"; break;; # Allow user to consume a --
@@ -125,7 +126,6 @@ EExecNoExport()
 
 EExecDashN ()
 {
-    
     if [ "${1-}" == "-k" ]
     then
 	${EExecExporter} EExecEcho=EExecStandardErr_eko
@@ -140,6 +140,11 @@ EExecDashN ()
     ${EExecExporter} EExecDashN_opt="-n"
     ${EExecExporter} EExecDash_opts="$EExecDash_opts $EExecDashN_opt"
 
+}
+
+EExecDashN_k()
+{
+    EExecDashN -k "$@"
 }
 
 EExecDashN_p()
@@ -222,7 +227,6 @@ EExecStderrEcho()
 
 EExecStandardErr_eko()
 {
-    echo "PATH>$PATH<" 1>&2
     eko "${EExecEchoPrefix}""$@" 1>&2
 }
 

@@ -100,13 +100,19 @@ $@" >| "${save_args_file}"
 {
     echo
     # Let me know if anything needs merging. -n --> just show problems.
-    echo "******* Running p4 resolve -n "
-    echo "*******   to show anything which may need to be resolved *******"
-    echo "******* Any resolves shown here must be done by hand. *******"
-    echo
-    EExec p4 resolve -n
-    echo
-    echo "*******"
+    files_to_resolve=$(p4 resolve -n) || {
+        echo "$progname: p4 resolve failed."
+        exit 1
+    } 1>&2
+
+    # p4 resolve's message about no files to resolve goes to stderr.
+    vsetp "${files_to_resolve}" && {
+        echo "******* There are files to resolve *******"
+        echo "${files_to_resolve}"
+        echo "These files must be resolved by hand."
+        echo "*******"
+    }
+
 } 2>&1 | EExec -y tee -a "${kwa_log_file}"
 
 echo "log dir>${kwa_log_dir}<"

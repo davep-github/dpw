@@ -1,0 +1,17 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+# Front end to as2 to keep around as2 command history.
+# date: cwd: command
+

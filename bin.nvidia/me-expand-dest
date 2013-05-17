@@ -19,7 +19,6 @@ me_expand_dest()
     # Are we a majick string?
     a=($(echo "$@" | sed -rn "s/^(${sep})([^${sep}]+)(${sep})([^${sep}]*)(${sep}?)$/\2 \4/p"))
     [ "${#a}" != 0 ] && {
-        eko "a:" "${a[@]}" 1>&2
         set -- "${a[@]}"
     }
     # Do dest [sb]

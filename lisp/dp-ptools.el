@@ -363,18 +363,17 @@ Oddly, it doesn't handle structs.")
 ;;         (cons regexp dp-implied-read-only-filename-regexp-list)
 ;;         dp-singlular-write-restricted-regexp regexp))
 
-(defun dp-me-expand-dest (sb-or-abbrev &optional sb)
-  (let ((first sb-or-abbrev) 
-        (second sb) 
-        tmp)
-    (when sb
-      (setq tmp first
-            first second
-            second tmp))
+(defun dp-me-expand-dest (abbrev &optional sb)
+;;   (let ((first sb-or-abbrev) 
+;;         (second sb) 
+;;         tmp)
+;;     (when sb
+;;       (setq tmp first
+;;             first second
+;;             second tmp))
     (dp-nuke-newline
      (shell-command-to-string 
-      (format "me-expand-dest %s %s" 
-              first (or second ""))))))
+      (format "me-expand-dest %s %s" abbrev (or sb "")))))
 
 ;; Set in a spec-macs.
 (defvar dp-sandbox-regexp nil
@@ -421,9 +420,9 @@ the current sandbox is used for defaults, etc."
   (interactive (list (read-from-minibuffer
                       (format "Sandbox name/path%s: "
                               (if dp-current-sandbox-regexp
-                                  (format "[current: %s:%s]"
-                                          dp-current-sandbox-name
-                                          dp-current-sandbox-regexp)
+                                  (format "[current: %s (%s)]"
+                                          dp-current-sandbox-regexp
+                                          dp-current-sandbox-name)
                                 ""))
                       nil nil nil nil nil dp-current-sandbox-name)
                      current-prefix-arg))

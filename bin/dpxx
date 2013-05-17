@@ -25,6 +25,8 @@ xterm_bin=
 window="@$(hostname)"
 host=
 
+# This was so that FARM boxes would get the correct colors.
+# However, this is fixed in the host info file.
 bg="${inherited_dpxx_bg-}"
 fg="${inherited_dpxx_fg-}"
 

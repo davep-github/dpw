@@ -29,6 +29,7 @@ unset eexec_program
 : ${me_purge_opt=purge}
 : ${me_clean_opt=}
 : ${send_mail_on_completion=t}
+: ${teefun:=tee}
 
 t_make_args=
 
@@ -309,6 +310,6 @@ EExec mkdir -p "${log_dir}"
     fi
 
     echo "Log file: ${log_name}"
-} | tee "${log_name}" > "${disp_file}"
+} | $teefun "${log_name}" > "${disp_file}"
 
 exit 0

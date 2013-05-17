@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
-import os, sys, string, types, re, exceptions
+import os, sys, string, types, re, exceptions, signal
 import gzip, argparse
 import dp_utils, ticker_lib, dp_io
+
+Caught_signals = []
 
 ## @todo XXX Add prefix status string.
 ## E.g. track number of grep hits (or just the fact that any have occurred).
@@ -10,7 +12,8 @@ import dp_utils, ticker_lib, dp_io
 ## sample prefix.
 ## A prefix format string driven by a dictionary. Roughly:
 ## "%(timestamp)s %(sample_count)s %(sample_prefix)" just as a starting point.
-## Use %(x)s so that we can use strings to pad when something isn't used.
+## Print everything as a string, i.e. use %(x)s so that we can use strings to
+## pad when something isn't used.
 ## E.g.  if we're not timestamping, then prefix_dict["timestamp"] = " " *
 ## timestamp_field_width.
 ## It'll be annoying to have to update the dict for rapidly changing values
@@ -29,9 +32,48 @@ class CTOR_t:
     def __init__(self):
         self.info = "I am the key of the appropriate ticker constructor."
 
+
+DEFAULT_ERROR_INDICATOR = "E"
+DEFAULT_MATCH_INDICATOR = "m"
+
+tick_counter_prefix_format = "%s%s"
+tick_counter_count_format = "%8d"
+tick_counter_format = tick_counter_prefix_format + tick_counter_count_format
+tick_counter_min_width = len(tick_counter_format % (DEFAULT_ERROR_INDICATOR,
+                                                    DEFAULT_MATCH_INDICATOR,
+                                                    0))
+# The timestamp is generated inside the ticker object.
+# This will need to track that.
+timestamp_width = len("2013-05-16T18.37.54")
+
+## A prefix format string driven by a dictionary. Roughly:
+## "%(timestamp)s %(sample_count)s %(sample_prefix)" just as a starting point.
+## Print everything as a string, i.e. use %(x)s so that we can use strings to
+## pad when something isn't used.
+## E.g.  if we're not timestamping, then prefix_dict["timestamp"] = " " *
+## timestamp_field_width.
+## It'll be annoying to have to update the dict for rapidly changing values
+## like sample count or grep hits. There may be a better way.
+## NB timestamp is printed inside the ticker lib.
+
+Prefix_format_string = """%(egrep_hit)s%(grep_hit)s%(sample_prefix)"""
+
+Prefix_variables = {
+    "egrep_hit": " ",                   # Shows if an error regexp found.
+    "grep_hit": " ",                 # Shows if a non-error regexp was found.
+    "sample_prefix": " " * tick_counter_min_width,
+}    
+    
+
 CTOR = CTOR_t()
 
 parse_debug = 0
+
+def signal_handler(signal, frame):
+    Caught_signals.append("%s" % (signal,))
+
+signal.signal(signal.SIGINT, signal_handler)
+
 
 def identity(x, *args, **kw_args):
     if args:
@@ -126,6 +168,7 @@ class App_arg_action_DOTS(argparse.Action):
         # Set tick char = '.'
         add_to_dict_action(self, Ctor_arg_dict, parser, namespace, ".",
                            dest="tick_char")
+
 class App_arg_action_catlike(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         # Just be a pass through. Useful with -g.
@@ -182,11 +225,15 @@ if __name__ == "__main__":
     outputStreams = []
     file_suffix = ""
     matching_lines = []
+    error_lines = []
+    error_indicator = " "
+    match_indicator = " "
     line_number = 0
     Ctor_arg_dict["max_output_units_before_newline"] = 80 * 100
     append_p = False
     default_compression_level = 5
     GZIP_MAX_COMPRESSION_LEVEL = 9
+    total_bytes_written = 0
     ## Each -Z adds one, and we want a single -Z to yield max compression.
 
     # tick_interval, increment=1, init_string="counting: ", comma=", ",
@@ -196,6 +243,10 @@ if __name__ == "__main__":
 
     oparser.add_argument("--debug",
                          dest="debug_level", type=int, default=0)
+    oparser.add_argument("--quiet",
+                         dest="quiet_p", default=False,
+                         action="store_true",
+                         help="Do not print informative messages.")
     oparser.add_argument("-i", "--tick-interval",
                          dest="tick_interval", type=eval_with_units,
                          default=def_tick_interval,
@@ -279,6 +330,11 @@ if __name__ == "__main__":
                          type=eval_with_units,
                          action=Ctor_arg_action,
                          help="Maximum ticks before exiting.")
+    oparser.add_argument("--max-log-file-size", "--max-bytes-written",
+                         dest="max_output_bytes_before_exit",
+                         default=False,
+                         type=eval_with_units,
+                         help="Maximum bytes before exiting.")
     oparser.add_argument("-P", "--prefix", "--initial-string",
                          dest="init_string",
                          action=Ctor_arg_action,
@@ -344,13 +400,16 @@ Implies Char_ticker_t""")
                          default=None, const="Assertion|call stack|stack_trace",
                          action="store_const",
                          help="Convenience option for finding common testgen errors. Perhaps change the value of this to an envvar to make it more flexible.  --log-errors-regexp")
-
+    oparser.add_argument("-grep-errors", "--errors", "--error-regexps",
+                         "--ere", "--egrep",
+                         dest="error_regexp_patterns",
+                         action="append", default=[],
+                         help="Grep for these patterns and treat as errors.")
     oparser.add_argument("--project-log-errors",
                          default=None,
                          const=os.environ.get("TEEKER_PROJECT_LOG_ERROR_REGEXP", None),
                          action="store_const",
                          help="Convenience option for finding common testgen errors. Perhaps change the value of this to an envvar to make it more flexible.  --log-errors-regexp")
-
     oparser.add_argument("--go", "--grep-ostream", "--grep-ofile", "--reo",
                          "--regexp-ostream", "--re-ostream", "--match-ofile",
                          dest="match_ostream",
@@ -360,6 +419,11 @@ Implies Char_ticker_t""")
                          dest="max_regexp_matches_before_exit",
                          type=int, default=0, # == 0 --> unlimited.
                          help="Max regexp matches before exit.")
+    oparser.add_argument("--max-errors", "--max-error-hits", "--meh",
+                         "--emax",
+                         dest="max_error_regexp_matches_before_exit",
+                         type=int, default=0, # == 0 --> unlimited.
+                         help="Max error regexp matches before exit.")
     oparser.add_argument("-q", "--cat-like", "--copy",
                          nargs=0,
                          action=App_arg_action_catlike,
@@ -370,9 +434,22 @@ Implies Char_ticker_t""")
                          "--hi-grep", "--hi-matches",
                          "--hgrep", "--hmatches",
                          "--hg", "--hm",
-                         dest="highlight_grep_matches_p", default=False,
+                         dest="highlight_grep_matches_p", default=None,
                          action="store_true",
                          help="Show matches as they occur.")
+    oparser.add_argument("--no-highlight-grep", "--no-highlight-matches",
+                         "--no-high-grep", "--no-high_matches",
+                         "--no-hl-grep", "--no-hl-matches",
+                         "--no-hi-grep", "--no-hi-matches",
+                         "--no-hgrep", "--no-hmatches",
+                         "--no-hg", "--no-hm",
+                         dest="highlight_grep_matches_p",
+                         ## Use None as default so we can tell the difference
+                         ## between the default and the option having been
+                         ## specified.
+                         default=None,
+                         action="store_false",
+                         help="Do not show matches as they occur.")
     oparser.add_argument("--no-grep-summary", "--no-match-summary",
                          dest="match_summary_p", default=True,
                          action="store_false",
@@ -388,9 +465,10 @@ Implies Char_ticker_t""")
 
     app_args = oparser.parse_args()
 
-    print "app_args.debug level:", app_args.debug_level
-    dp_io.set_debug_level(app_args.debug_level, enable_debugging_p=True)
-    print "debug level:", dp_io.get_debug_level()
+    if app_args.debug_level:
+        print "app_args.debug level:", app_args.debug_level
+        dp_io.set_debug_level(app_args.debug_level, enable_debugging_p=True)
+        print "dp_io \debug level:", dp_io.get_debug_level()
     dp_io.cdebug(1, "app_args: %s\n", app_args)
     dp_io.cdebug(1, "Ctor_arg_dict: %s\n", Ctor_arg_dict)
     dp_io.cdebug(1, "App_arg_dict: %s\n", App_arg_dict)
@@ -430,7 +508,12 @@ Implies Char_ticker_t""")
     for a in app_args.output_files:
         dp_io.cdebug(2,"log file name>%s<\n", a)
         a = a + file_suffix
-        dp_io.cdebug(2,"output file name>%s<\n", a)
+        if not app_args.quiet_p:
+            compression_message = ""
+            if compress_p:
+                compression_message = ", compression level: %d" % \
+                                      (app_args.compression_level)
+            dp_io.printf("output file name>%s<%s\n", a, compression_message)
         if app_args.no_clobber_p:
             if os.path.exists(a):
                 dp_io.eprintf("File [%s] exists: not clobbering\n", a)
@@ -480,43 +563,103 @@ Implies Char_ticker_t""")
 
     # Help speed up the loop.
     compiled_regexps = []
+    compiled_error_regexps = []
     if app_args.tgen_errors is not None:
-        app_args.highlight_grep_matches_p = True
-        app_args.regexp_patterns.append(app_args.tgen_errors)
+        app_args.error_regexp_patterns.append(app_args.tgen_errors)
+
     for regexp in app_args.regexp_patterns:
         compiled_regexps.append(dp_utils.re_compile_case_convention(regexp))
+
+    highlight_grep_matches_p = app_args.highlight_grep_matches_p
+    grepping_for_errors_p = len(app_args.error_regexp_patterns) != 0
+    # Only set this when there are error regexps and the user has not
+    # explicitly requested no highlighting
+    if grepping_for_errors_p and highlight_grep_matches_p is None:
+        highlight_grep_matches_p = True
+    for regexp in app_args.error_regexp_patterns:
+        dp_io.cdebug(1, "Error regexp: %s\n", regexp)
+        compiled_error_regexps.append(
+            dp_utils.re_compile_case_convention(regexp))
+
     sampled_line_prefix = app_args.sample_lines_tick_prefix or ""
     dp_io.cdebug(2, "sampled_line_prefix>%s<\n", sampled_line_prefix)
     dp_io.cdebug(2, "app_args.sample_lines_tick_prefix>%s<\n",
                  app_args.sample_lines_tick_prefix)
     max_hits = app_args.max_regexp_matches_before_exit
+    max_error_matches = app_args.max_error_regexp_matches_before_exit
     while True:
-	input_line = sys.stdin.readline()
-	if (not input_line or
+        readline_failed_p = False
+        input_line = ""
+        try:
+            input_line = sys.stdin.readline()
+        except Exception, e:
+            dp_io.eprintf("readline() failed: %s", e)
+            readline_failed_p = True
+	if ((not input_line)
+            or
+            readline_failed_p
+            or
+            Caught_signals
+            or
+            (grepping_for_errors_p and max_error_matches and
+             (len(error_lines) >= max_error_matches))
+            or
+            ((app_args.max_output_bytes_before_exit is not False)
+             and
+             (total_bytes_written > app_args.max_output_bytes_before_exit))
+            or
             (max_hits and (len(matching_lines) >= max_hits))):
-            if app_args.match_summary_p and matching_lines:
-                print "\n================="
-                print "Num matching lines:", len(matching_lines)
-                tlos = outputStreams.append(sys.stdout)
-                for lt in  matching_lines:
-                    for o in outputStreams:
-                        o.write("Matching line: %s: %s\n" % (lt[1],
-                                                             lt[0][:-1]))
-                print "================="
+            if app_args.match_summary_p and matching_lines or error_lines:
+                dp_io.printf("\n=================\n")
+                dp_io.printf("Regexp matches: %s, error matches: %s\n",
+                             len(matching_lines), len(error_lines))
+                if matching_lines:
+                    dp_io.printf("matching lines: %s\n", len(matching_lines))
+                    for lt in  matching_lines:
+                        sys.stdout.write("Regexp match: %s: %s\n" % (lt[1],
+                                                                     lt[0][:-1]))
+                        for o in outputStreams:
+                            o.write("Matching line: %s: %s\n" % (lt[1],
+                                                                 lt[0][:-1]))
+                if error_lines:
+                    dp_io.printf("\n=================\n")
+                    dp_io.printf("Num error lines: %s\n", len(error_lines))
+                    for lt in error_lines:
+                        sys.stdout.write("Error match: %s: %s\n" % (lt[1],
+                                                                    lt[0][:-1]))
+                        for o in outputStreams:
+                            o.write("Matching line: %s: %s\n" % (lt[1],
+                                                                 lt[0][:-1]))
+                dp_io.printf("=================\n")
             ticker.fini()
             break
         line_number += 1
         for o in outputStreams:
+            # Since this mostly deals with a disk space issue, count *all*
+            # writes.
+            total_bytes_written += len(input_line)
             o.write(input_line)
+
         for regexp in compiled_regexps:
             if regexp.search(input_line):
                 matching_lines.append((input_line, line_number))
-                if app_args.highlight_grep_matches_p:
+                match_indicator = DEFAULT_MATCH_INDICATOR
+                if highlight_grep_matches_p:
                     # XXX @todo Add ANSI color options?
                     dp_io.fprintf(app_args.match_ostream,
                                   "\n*** line: %d, >%s< ***\n",
                                   line_number, input_line[:-1])
-                break
+
+        for regexp in compiled_error_regexps:
+            if regexp.search(input_line):
+                error_lines.append((input_line, line_number))
+                error_indicator = DEFAULT_ERROR_INDICATOR
+                if highlight_grep_matches_p:
+                    # XXX @todo Add ANSI color options?
+                    dp_io.fprintf(app_args.match_ostream,
+                                  "\n!!!!!! line: %d, >%s< !!!!!!\n",
+                                  line_number, input_line[:-1])
+
         if char_wise_p:
             # Iterate for each char in the line.
             for c in input_line:
@@ -528,11 +671,12 @@ Implies Char_ticker_t""")
         else:
             if app_args.sample_lines_tick_p:
                 # @todo XXX allow a format to be used (dictionary type)
-                tick = ""
+                tick = error_indicator + match_indicator
                 if app_args.sample_lines_tick_prefix is not False:
-                    tick =  "%8d" % (ticker.counter,)
+                    tick += tick_counter_count_format % (ticker.counter,)
                 tick += sampled_line_prefix + input_line
             else:
+                # Let the ticker class do what it will.
                 tick = None
             ticker(tick=tick)
     print

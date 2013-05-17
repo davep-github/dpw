@@ -500,13 +500,22 @@ abbrev is expanded.")
                          dp-modes-wanting-post-alias-spaces)
 
 (defun* dp-get-special-abbrev (key-string regexp-for-abbrev-text
-                               &optional component-split-string)
+                               &optional component-split-string
+                               key-string-optional-p)
   (interactive)
-  (let ((regexp (concat regexp-for-abbrev-text key-string)))
+  ;; optional doesn't work when searching backwards (which we must do)
+  ;; because the optional part, if present, will match the required part and
+  ;; the match will stop there. ??? Skip back all non-abbrev chars and search
+  ;; fwd?
+  (let* ((opt-string (if key-string-optional-p
+                         "?"
+                       ""))
+         (key-regexp (concat "\\(" key-string opt-string "\\)"))
+         (regexp (concat regexp-for-abbrev-text key-regexp)))
     (when (dp-looking-back-at regexp)
       (list (match-beginning 2)
             ;; Include terminating key string.
-            (+ (length key-string) (match-end 2))
+            (+ (length (match-string 3)) (match-end 2))
             (if component-split-string
                 (split-string (match-string 2) component-split-string)
               (match-string 2))))))
@@ -540,11 +549,12 @@ abbrev is expanded.")
                         (format "dogo_work_rel %s" 
                                 (dp-string-join abbrev-strings " ")))))
       (delete-region beg end)
-      (insert expansion))))
+      (insert expansion)
+      t)))
 
 (defun dp-get-sandbox-rel-abbrev ()
   (interactive)
-  (dp-get-special-abbrev "," "\\(\\(,[^,]+,[^,]*\\)\\)"))
+  (dp-get-special-abbrev "," "\\(\\(,[^,]+,[^,]*\\)\\)" nil nil))
 
 (defun dp-expand-sandbox-rel-abbrev ()
   (interactive)
@@ -560,7 +570,8 @@ abbrev is expanded.")
                          abbrev-strings)))
       (when expansion
         (delete-region beg end)
-        (insert expansion "/")))))
+        (insert expansion "/")
+        t))))
 
 (defun dp-get-p4-location ()
   (interactive)
@@ -583,6 +594,7 @@ abbrev is expanded.")
       ;; Are we interested more in dirs or files?
       ;; Time will tell.
       (insert expansion) ;; "/")
+      t
       )))
 
 (defun dp-abbrev-insert-suffix-p ()

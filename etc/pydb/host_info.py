@@ -344,8 +344,8 @@ e(
     kef='family',
     dat={
     'family': 'nv-o-xterm',
-    'comment': 'o-xterm-boxen @ nvidia.',
-    'host-pattern': 'o-xterm-[0-9]+',
+    'comment': 'General, interactive multiuser development machine. No CPU hogging',
+    'host-pattern': '(sc|o)-xterm-[0-9]+',
     },
     ref=[nvidia_family, OSDB['linux'], default]
 )
@@ -354,13 +354,14 @@ e(
     kef='family',
     dat={
     'family': 'nv-l-sim',
-    'comment': 'o-xterm-boxen @ nvidia.',
+    'comment': 'Heavy load machines.',
     'host-pattern': 'l-sim-|sc-sim',
     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + NV_GEOMETRY,
     'xterm_bg': NVIDIA_LSIM_BG_COLOR,
     'xterm_fg': NVIDIA_LSIM_FG_COLOR,
     'xem_bg_color': NVIDIA_LSIM_BG_COLOR,
     'main_macs_opts': '',
+    'post_bashrc_command': 'eval ignoreeof=10',
     },
     ref=[nvidia_family, OSDB['linux'], default]
 )

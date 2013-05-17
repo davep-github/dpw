@@ -160,7 +160,6 @@
     
     ;; copied from emacs
     "^No possible abbreviation preceding point$"
-    "^Current buffer has no process$"
     file-supersession
     "^Cannot switch buffers in a dedicated window$"
     ;; ediff errors
