@@ -33,8 +33,8 @@ class CTOR_t:
         self.info = "I am the key of the appropriate ticker constructor."
 
 
-DEFAULT_ERROR_INDICATOR = "E"
-DEFAULT_MATCH_INDICATOR = "m"
+DEFAULT_ERROR_INDICATOR = "!"
+DEFAULT_MATCH_INDICATOR = "@"
 
 tick_counter_prefix_format = "%s%s"
 tick_counter_count_format = "%8d"
@@ -572,10 +572,10 @@ Implies Char_ticker_t""")
 
     highlight_grep_matches_p = app_args.highlight_grep_matches_p
     grepping_for_errors_p = len(app_args.error_regexp_patterns) != 0
+    # for now, this is a constant
+    highlight_egrep_matches_p = True
     # Only set this when there are error regexps and the user has not
     # explicitly requested no highlighting
-    if grepping_for_errors_p and highlight_grep_matches_p is None:
-        highlight_grep_matches_p = True
     for regexp in app_args.error_regexp_patterns:
         dp_io.cdebug(1, "Error regexp: %s\n", regexp)
         compiled_error_regexps.append(
@@ -610,32 +610,36 @@ Implies Char_ticker_t""")
             or
             (max_hits and (len(matching_lines) >= max_hits))):
             if app_args.match_summary_p and matching_lines or error_lines:
-                dp_io.printf("\n=================\n")
+                all_output_streams = outputStreams + [sys.stdout]
+                wing_size = 7
+                wing = wing_size * "="
+                title = wing + " Matching line summary " + wing
+                sep_line = len(title) * "="
+                dp_io.printf("\n" + title + "\n")
                 dp_io.printf("Regexp matches: %s, error matches: %s\n",
                              len(matching_lines), len(error_lines))
                 if matching_lines:
                     dp_io.printf("matching lines: %s\n", len(matching_lines))
                     for lt in  matching_lines:
-                        sys.stdout.write("Regexp match: %s: %s\n" % (lt[1],
-                                                                     lt[0][:-1]))
-                        for o in outputStreams:
-                            o.write("Matching line: %s: %s\n" % (lt[1],
-                                                                 lt[0][:-1]))
+                        match = lt[1]
+                        line = lt[0][:-1]
+                        for o in all_output_streams:
+                            o.write("Matching line: %s>%s<\n" % (match, line))
+
                 if error_lines:
-                    dp_io.printf("\n=================\n")
+                    dp_io.printf("\n" + sep_line + "\n")
                     dp_io.printf("Num error lines: %s\n", len(error_lines))
                     for lt in error_lines:
-                        sys.stdout.write("Error match: %s: %s\n" % (lt[1],
-                                                                    lt[0][:-1]))
-                        for o in outputStreams:
-                            o.write("Matching line: %s: %s\n" % (lt[1],
-                                                                 lt[0][:-1]))
-                dp_io.printf("=================\n")
+                        match = lt[1]
+                        line = lt[0][:-1]
+                        for o in all_output_streams:
+                            o.write("Matching line: %s>%s<\n" % (match, line))
+                dp_io.printf(sep_line + "\n")
             ticker.fini()
             break
         line_number += 1
         for o in outputStreams:
-            # Since this mostly deals with a disk space issue, count *all*
+            # Since this was motivated by a disk space issue, count *all*
             # writes.
             total_bytes_written += len(input_line)
             o.write(input_line)
@@ -654,7 +658,7 @@ Implies Char_ticker_t""")
             if regexp.search(input_line):
                 error_lines.append((input_line, line_number))
                 error_indicator = DEFAULT_ERROR_INDICATOR
-                if highlight_grep_matches_p:
+                if highlight_egrep_matches_p:
                     # XXX @todo Add ANSI color options?
                     dp_io.fprintf(app_args.match_ostream,
                                   "\n!!!!!! line: %d, >%s< !!!!!!\n",
@@ -663,20 +667,24 @@ Implies Char_ticker_t""")
         if char_wise_p:
             # Iterate for each char in the line.
             for c in input_line:
-                if app_args.sample_lines_tick_p:
-                    tick = sampled_line_prefix + c
-                else:
-                    tick = None
+                # Sampled lines makes no sense with char_wise.
+                #if app_args.sample_lines_tick_p:
+                #    tick = sampled_line_prefix + c
+                #else:
+                #    tick = None
+                tick = None
                 ticker(tick=tick)
         else:
             if app_args.sample_lines_tick_p:
                 # @todo XXX allow a format to be used (dictionary type)
-                tick = error_indicator + match_indicator
+                if error_indicator or match_indicator:
+                    tick_prefix = error_indicator + match_indicator + "|"
+                tick = ""
                 if app_args.sample_lines_tick_prefix is not False:
-                    tick += tick_counter_count_format % (ticker.counter,)
+                    tick = tick_counter_count_format % (ticker.counter,)
                 tick += sampled_line_prefix + input_line
             else:
                 # Let the ticker class do what it will.
                 tick = None
-            ticker(tick=tick)
+            ticker(tick=tick, tick_prefix=tick_prefix)
     print

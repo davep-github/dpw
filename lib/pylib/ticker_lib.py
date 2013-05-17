@@ -41,7 +41,10 @@ class Ticker_t(object):
         self.counter = self.init_count
         self.sep_string = self.init_string
 
-    def make_tick(self, tick=None, call_tick=None):
+    def make_timestamp(self):
+        return dp_time.std_timestamp() + self.timestamp_separator_string
+    
+    def make_tick(self, tick=None, call_tick=None, tick_prefix=""):
         if not tick:
             tick=call_tick
         #print "self.sep_string>%s<, tick>%s<\n" % (self.sep_string, tick)
@@ -51,8 +54,10 @@ class Ticker_t(object):
                                          powers_of_two_p=False)
         ts_string = ""
         if self.timestamp_p:
-            ts_string = dp_time.std_timestamp() + self.timestamp_separator_string
-        self.printor(self, "%s%s%s", self.sep_string, ts_string, tick)
+            ts_string = self.make_timestamp()
+
+        self.printor(self, "%s%s%s%s", self.sep_string, tick_prefix,
+                     ts_string, tick)
         self.sep_string = self.comma
 
     def fini(self, force_grand_total_p=False, reason=""):
@@ -66,14 +71,15 @@ class Ticker_t(object):
         pass
 
     def __call__(self, reset_counter=False, set_n=False,
-                 increment=None, tick=None):
+                 increment=None, tick=None, tick_prefix=""):
         if reset_counter is not False:
             self.reset_counter()
         if set_n is not False:
             self.tick_interval = set_n
         if self.tick_interval is not None:
             if self.counter % self.tick_interval == 0:
-                self.make_tick(tick=tick, call_tick=self.counter)
+                self.make_tick(tick=tick, call_tick=self.counter,
+                               tick_prefix=tick_prefix)
             else:
                 self.tick_not_ready()
             self.counter += increment or self.increment
