@@ -2,9 +2,14 @@
 
 import sys, types, re
 import dp_utils, dp_time
-def Ticker_printf(ticker, fmt, *args):
+def Ticker_printf(ticker, fmt, *args, **kwargs):
     from dp_io import fprintf
+    if kwargs.get("just_flush_p"):
+        ticker.ostream.flush()
+        return
     fprintf(ticker.ostream, fmt, *args)
+    if kwargs.get("flush_p"):
+        ticker.ostream.flush()
 
 class Ticker_t(object):
     def __init__(self, tick_interval, increment=1, init_string="counting: ",
@@ -41,6 +46,9 @@ class Ticker_t(object):
         self.counter = self.init_count
         self.sep_string = self.init_string
 
+    def flush(self):
+        self.printor(self, None, just_flush_p=True)
+
     def make_timestamp(self):
         return dp_time.std_timestamp() + self.timestamp_separator_string
     
@@ -61,6 +69,7 @@ class Ticker_t(object):
         self.sep_string = self.comma
 
     def fini(self, force_grand_total_p=False, reason=""):
+        self.flush()
         if force_grand_total_p or self.grand_total_p:
             print "\n%sTotal: %s %s" % (reason,
                                         self.counter,

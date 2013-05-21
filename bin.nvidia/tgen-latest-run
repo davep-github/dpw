@@ -4,24 +4,53 @@ source script-x
 set -u
 progname="$(basename $0)"
 source eexec
-eexec_program=$(EExec_parse "$@")
-for op in $eexec_program
-do
-  $op
-  shift
-done
-unset eexec_program
 
-###: ${kepler=kepler_b_ogtest}
+: ${test_name=}
 : ${no_cd=}
+: ${printor=echo}
+: ${log_dir_base=dp-run-tgens.d} # This is duplicated from tgen-run-one. Make a tgen.rc type file.
 
-if [ "${1-}" = "-r" ]
-then
+# Usage variable usage:
+Usage_args_info=" [test-number]"
+Usage_synopsis="Show latest run dir made by testgen:
+"
+# Using ) after the args makes copy & paste between here and the 
+# case statement easier.
+Usage_details="${EExec_parse_usage}
+--test-name <name>) Use newest dir in <name>. Name can be a wild-card with one expansion.
+--no-cd|--stay-put|--.|--no-mecd-testgen) Don't mecd to the testgen first.
+--realpath|--rp) Use realpath(1) to show dir.
+"
+# Example of arg parsing.
+option_str="${EExec_parse_option_str}r"
+# long_options=("option-name-without-leading--" ...)
+long_options=("test-name:"
+"no-cd" "stay-put" "." "no-mecd-testgen"
+"realpath")
+
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+
+      # Program options.
+      --test-name) shift; test_name="${1}";;
+      --no-cd|--stay-put|--.|--no-mecd-testgen) no_cd=t;;
+      -r|--realpath) printor=realpath;;
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
     shift
-    printor=realpath
-else
-    printor=echo
-fi
+done
+
 
 prefix=
 vsetp "${1-}" && {
@@ -31,7 +60,7 @@ vsetp "${1-}" && {
      esac
 }
 
-vunsetp "${no_cd}" && {
+vunsetp "${no_cd-}" && {
     mecd testgen
 }
 
@@ -39,13 +68,33 @@ dir_num="${1-1}"
 first_dir_num=$(printf "%02d" "${dir_num}")
 second_dir_num=$(printf "%06d" "${dir_num}" | sed -r 's/(.*)([0-9]{6})/\2/')
 
-latest_out_dir=$(${prefix}latest_out_dir)
-some_path_component=$(echo $(cat last_out_dir)/tests/*)
+if vunsetp "${test_name-}"
+then
+    latest_out_dir=$(${prefix}latest_out_dir)
+else
+    vsetp "${no_cd-}" && {
+        echo "$progname: no_cd is mutually exclusive with test_name"
+        exit 1
+    } 1>&2
+    latest_out_dir=$(ls -t1d ${log_dir_base}/${test_name}/* | \
+        while read
+        do 
+          [ -d "${REPLY}" ] && {
+              echo "${REPLY}"
+              break
+          }
+        done)
+fi
+
+#some_path_component=$(echo $(cat last_out_dir)/tests/*)
+some_path_component=$(echo ${latest_out_dir}/tests/*)
 case "${some_path_component}" in
     *\ *) echo 1>&2 "Multiple test type dirs exist."; exit 1;;
     *) ;;
 esac
 some_path_component=$(basename $some_path_component)
+
+EExec_verbose_echo_id latest_out_dir some_path_component first_dir_num second_dir_num
 
 dest="${PWD}/${latest_out_dir}/tests/${some_path_component}/00/00/${first_dir_num}/${second_dir_num}"
 "${printor}" "${dest}"

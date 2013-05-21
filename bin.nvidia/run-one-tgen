@@ -149,7 +149,7 @@ done
 : ${chip_opt=t124}
 : ${target_opt=FMODEL}
 : ${user_log_dir=}
-: ${log_dir_base=dp-run-tgens.d}
+: ${log_dir_base=dp-run-tgens.d} # This is duplicated in tgen-latest-run. Make a tgen.rc type file.
 : ${log_dir=${user_log_dir}}
 : ${display_status_p=}
 : ${all_but_run_opt=}

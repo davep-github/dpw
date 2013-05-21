@@ -214,6 +214,12 @@ class Ctor_arg_action_twiddle(Ctor_arg_action):
                            option_string, CTOR)
 
 
+def display_match(ostream, line, line_number, prefix="", suffix=""):
+    dp_io.fprintf(ostream, "%s line: %d, >%s< %s",
+                  prefix, line_number, line, suffix)
+    app_args.match_ostream.flush()
+
+    
 if __name__ == "__main__":
     import optparse
     def_tick_interval = 100
@@ -550,8 +556,16 @@ Implies Char_ticker_t""")
         Ctor_arg_dict["ostream"] = ostream
 
     if app_args.sample_lines_tick_p:
-        Ctor_arg_dict["init_string"] = "Sampling every %sth line\n" % (
-            app_args.tick_interval)
+        if app_args.tick_interval == 1:
+            nth = ""
+        elif app_args.tick_interval == 2:
+            nth = "other "
+        elif app_args.tick_interval == 3:
+            nth = "third "
+        else:
+            nth =  "%sth " % (app_args.tick_interval,)
+
+        Ctor_arg_dict["init_string"] = "Sampling every %sline\n" % (nth,)
         Ctor_arg_dict["unit_name"] = 'line'
         Ctor_arg_dict["comma"] = ""     # Line will end with newline.
 
@@ -587,6 +601,7 @@ Implies Char_ticker_t""")
                  app_args.sample_lines_tick_prefix)
     max_hits = app_args.max_regexp_matches_before_exit
     max_error_matches = app_args.max_error_regexp_matches_before_exit
+    ticker.flush()
     while True:
         readline_failed_p = False
         input_line = ""
@@ -609,7 +624,7 @@ Implies Char_ticker_t""")
              (total_bytes_written > app_args.max_output_bytes_before_exit))
             or
             (max_hits and (len(matching_lines) >= max_hits))):
-            if app_args.match_summary_p and matching_lines or error_lines:
+            if app_args.match_summary_p and (matching_lines or error_lines):
                 all_output_streams = outputStreams + [sys.stdout]
                 wing_size = 7
                 wing = wing_size * "="
@@ -650,9 +665,9 @@ Implies Char_ticker_t""")
                 match_indicator = DEFAULT_MATCH_INDICATOR
                 if highlight_grep_matches_p:
                     # XXX @todo Add ANSI color options?
-                    dp_io.fprintf(app_args.match_ostream,
-                                  "\n*** line: %d, >%s< ***\n",
-                                  line_number, input_line[:-1])
+                    display_match(app_args.match_ostream,
+                                  input_line[:-1], line_number,
+                                  "\n***", "***\n")
 
         for regexp in compiled_error_regexps:
             if regexp.search(input_line):
@@ -660,9 +675,9 @@ Implies Char_ticker_t""")
                 error_indicator = DEFAULT_ERROR_INDICATOR
                 if highlight_egrep_matches_p:
                     # XXX @todo Add ANSI color options?
-                    dp_io.fprintf(app_args.match_ostream,
-                                  "\n!!!!!! line: %d, >%s< !!!!!!\n",
-                                  line_number, input_line[:-1])
+                    display_match(app_args.match_ostream,
+                                  input_line[:-1], line_number,
+                                  "\n!!!!", "!!!!\n")
 
         if char_wise_p:
             # Iterate for each char in the line.
@@ -679,9 +694,12 @@ Implies Char_ticker_t""")
                 # @todo XXX allow a format to be used (dictionary type)
                 if error_indicator or match_indicator:
                     tick_prefix = error_indicator + match_indicator + "|"
-                tick = ""
+                else:
+                    tick_prefix = ""
                 if app_args.sample_lines_tick_prefix is not False:
                     tick = tick_counter_count_format % (ticker.counter,)
+                else:
+                    tick = ""
                 tick += sampled_line_prefix + input_line
             else:
                 # Let the ticker class do what it will.
