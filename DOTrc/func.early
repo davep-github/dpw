@@ -1,0 +1,68 @@
+echo_name_and_val()
+{
+    local arg
+    local anno=""
+    local noAnno=
+    local prefix=""
+    local suffix=""
+    local pre_limiter=">"
+    local post_limiter="<"
+
+    while [[ "${1-}" =~ ^- ]]
+    do
+      arg="$1"
+      case "$arg" in
+          -q) noAnno=t;;
+          -p) shift; prefix="$1";;
+          -s) shift; suffix="$1";;
+          *) echo 1>&2 "echo_name_and_val: unknown option: $arg";
+             return 1;;
+      esac
+      shift
+    done
+    [ -z "$noAnno" ] && anno="$1"
+    
+    local type_suffix
+    # This local could hide another with the same name
+    local __use_a_name_like_this_and_you_get_what_you_deserve__
+    for __use_a_name_like_this_and_you_get_what_you_deserve__ in "$@"; do
+        type_suffix=
+        case "$__use_a_name_like_this_and_you_get_what_you_deserve__" in
+            -*) name=$(echo "$__use_a_name_like_this_and_you_get_what_you_deserve__" | sed -r 's/(-)(.*)/\2/')
+                type_suffix='[]'
+                # eval av="\${$name[@]}"
+                eval val="\${$__use_a_name_like_this_and_you_get_what_you_deserve__[@]}";;
+            *) eval val="\$$__use_a_name_like_this_and_you_get_what_you_deserve__";;
+        esac
+        echo "$prefix$__use_a_name_like_this_and_you_get_what_you_deserve__$type_suffix${pre_limiter}$val${post_limiter}${anno}${suffix}"
+    done
+}
+export -f echo_name_and_val
+alias echo_nv=echo_name_and_val
+#too short?# alias ennv=echo_name_and_val    # ???
+#too short?# alias ecnv=echo_name_and_val    # ???
+
+echo_id()
+{
+    echo_name_and_val "$@"
+}
+
+echo_id_err()
+{
+    echo_id "$@" 1>&2
+}
+
+echo_id2()
+{
+    echo_id_err "$@"
+}
+
+echo_id_ornate()
+{
+    echo_id -p "===== " -s " ===========" "$@"
+}
+
+
+export -f echo_id
+
+true

@@ -9,6 +9,7 @@ source eexec
 : ${no_cd=}
 : ${printor=echo}
 : ${log_dir_base=dp-run-tgens.d} # This is duplicated from tgen-run-one. Make a tgen.rc type file.
+: ${print_base_dir_p=}
 
 # Usage variable usage:
 Usage_args_info=" [test-number]"
@@ -18,15 +19,17 @@ Usage_synopsis="Show latest run dir made by testgen:
 # case statement easier.
 Usage_details="${EExec_parse_usage}
 --test-name <name>) Use newest dir in <name>. Name can be a wild-card with one expansion.
---no-cd|--stay-put|--.|--no-mecd-testgen) Don't mecd to the testgen first.
+--no-cd|--stay-put|--.|--no-mecd-testgen) Don't \"mecd testgen\" first.
 --realpath|--rp) Use realpath(1) to show dir.
 "
 # Example of arg parsing.
-option_str="${EExec_parse_option_str}r"
+option_str="${EExec_parse_option_str}rb"
 # long_options=("option-name-without-leading--" ...)
-long_options=("test-name:"
+long_options=("test-name:" "testname:" "name:" "tn:"
 "no-cd" "stay-put" "." "no-mecd-testgen"
-"realpath")
+"realpath"
+"base-dir" "root-dir" "base" "root"
+)
 
 source dp-getopt+.sh
 for i in "$@"
@@ -39,8 +42,9 @@ do
       -q) VERBOSE=":"; EExecQuiet;;
 
       # Program options.
-      --test-name) shift; test_name="${1}";;
+      --test-name|--testname|--name|--tn) shift; test_name="${1}";;
       --no-cd|--stay-put|--.|--no-mecd-testgen) no_cd=t;;
+      -b|--base-dir|--root-dir|--base|--root) print_base_dir_p=t;;
       -r|--realpath) printor=realpath;;
       # Help!
       --help) Usage; exit 0;;
@@ -96,5 +100,10 @@ some_path_component=$(basename $some_path_component)
 
 EExec_verbose_echo_id latest_out_dir some_path_component first_dir_num second_dir_num
 
-dest="${PWD}/${latest_out_dir}/tests/${some_path_component}/00/00/${first_dir_num}/${second_dir_num}"
-"${printor}" "${dest}"
+if vsetp "${print_base_dir_p}"
+then
+    "${printor}" "${latest_out_dir}"
+else
+    dest="${PWD}/${latest_out_dir}/tests/${some_path_component}/00/00/${first_dir_num}/${second_dir_num}"
+    "${printor}" "${dest}"
+fi

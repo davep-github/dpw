@@ -571,6 +571,7 @@ already in there.")
                           [?t] 'gtags-find-tag
                           [?d] 'gtags-find-tag
                           [?v] 'gtags-visit-rootdir
+                          [?u] 'dp-gtags-update-file
                           )
     ;; <:cdd map journal bindings:>
     "Keymap for my tag system commands.")

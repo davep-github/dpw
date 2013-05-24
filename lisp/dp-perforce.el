@@ -20,7 +20,7 @@
      (1 'font-lock-keyword-face)
      (2 'font-lock-variable-name-face))
     ;; User File Descriptions
-    ("\\(.../.*\\)"
+    ("\\(...//.*\\)"
      (1 'dp-journal-medium-question-face))
     ;; Files in ChangeSet
     ("\\(//eng.*\\)[ \t]*#"

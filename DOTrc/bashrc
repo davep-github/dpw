@@ -15,6 +15,7 @@
 # $@ is unset when called for a new/login shell.
 export DP_RC_LIST_OTHERS="$HOME/.rc/bashrc"
 
+source $HOME/.rc/func.early
 # Define setenv to work like export so we can just copy in .cshrc stuff
 setenv () 
 {
@@ -45,6 +46,11 @@ prompt_command()
     :
 }
 export -f prompt_command
+
+# This will only be set once
+: ${DP_ENV_ORIGINAL_PATH:=$PATH}
+export DP_ENV_ORIGINAL_PATH
+PATH="${DP_ENV_ORIGINAL_PATH}"
 
 # We don't want a leading or trailing : to be added.
 # But we do want at least what I consider to be a vital path.
@@ -174,10 +180,8 @@ dp_suggest 'Factor out ALL interactive fiddle-faddle and skip unless interactive
 # DISPLAY unset or NULL tells us something important.
 : ${origDISPLAY=$DISPLAY}; export origDISPLAY
 #[ -z "$origDISPLAY" ] && export origDISPLAY=$DISPLAY
-: ${origPATH=$PATH}; export origPATH
-#[ -z "$origPATH" ] && export origPATH="$PATH"
-PATH="$HOME/bin:$origPATH"    # Start with the original path???
-[ -z "$origPKG_CONFIG_PATH" ] && export origPKG_CONFIG_PATH=$PKG_CONFIG_PATH
+PATH="$HOME/bin:$DP_ENV_ORIGINAL_PATH"    # Start with the original path???
+: ${origPKG_CONFIG_PATH:=$PKG_CONFIG_PATH}; export origPKG_CONFIG_PATH
 export PATHADDBIN=$HOME/bin/pathadd
 # Migrate to this function.
 dp_add_to_path_iff()

@@ -35,6 +35,7 @@ class CTOR_t:
 
 DEFAULT_ERROR_INDICATOR = "!"
 DEFAULT_MATCH_INDICATOR = "@"
+DEFAULT_INDICATOR_SEPARATOR = "|"
 
 tick_counter_prefix_format = "%s%s"
 tick_counter_count_format = "%8d"
@@ -219,6 +220,35 @@ def display_match(ostream, line, line_number, prefix="", suffix=""):
                   prefix, line_number, line, suffix)
     app_args.match_ostream.flush()
 
+def dump_matching_and_error_lines(all_output_streams,
+                                  matching_lines,
+                                  error_lines,
+                                  wing_size=7,
+                                  wing_string="="):
+    all_output_streams = outputStreams + [sys.stdout]
+    wing = wing_size * wing_string
+    title = wing + " Matching line summary " + wing
+    sep_line = len(title) * "="
+    dp_io.printf("\n" + title + "\n")
+    dp_io.printf("Regexp matches: %s, error matches: %s\n",
+                 len(matching_lines), len(error_lines))
+    if matching_lines:
+        dp_io.printf("matching lines: %s\n", len(matching_lines))
+        for lt in  matching_lines:
+            match = lt[1]
+            line = lt[0][:-1]
+            for o in all_output_streams:
+                o.write("Matching line: %s>%s<\n" % (match, line))
+
+    if error_lines:
+        dp_io.printf("\n" + sep_line + "\n")
+        dp_io.printf("Num error lines: %s\n", len(error_lines))
+        for lt in error_lines:
+            match = lt[1]
+            line = lt[0][:-1]
+            for o in all_output_streams:
+                o.write("Matching line: %s>%s<\n" % (match, line))
+    dp_io.printf(sep_line + "\n")
     
 if __name__ == "__main__":
     import optparse
@@ -234,6 +264,7 @@ if __name__ == "__main__":
     error_lines = []
     error_indicator = " "
     match_indicator = " "
+    indicator_separator = " "
     line_number = 0
     Ctor_arg_dict["max_output_units_before_newline"] = 80 * 100
     append_p = False
@@ -285,7 +316,8 @@ if __name__ == "__main__":
                          dest="compression_level",
                          const=GZIP_MAX_COMPRESSION_LEVEL,
                          action="store_const",
-                         help="Set compression level to %s." % (GZIP_MAX_COMPRESSION_LEVEL))
+                         help=("Set compression level to %s." %
+                               (GZIP_MAX_COMPRESSION_LEVEL)))
     oparser.add_argument("-u", "--timestamp-log-files",
                          dest="add_timestamp_p", default=False,
                          action="store_true",
@@ -402,6 +434,14 @@ Implies Char_ticker_t""")
                          dest="regexp_patterns",
                          action="append", default=[],
                          help='Grep for these patterns and treat "specially".')
+    oparser.add_argument("--grep-hit-action",
+                         dest="grep_hit_action", default="",
+                         type=str,
+                         help="Run this when there is a pattern match.")
+    oparser.add_argument("--all-grep-hits-action",
+                         dest="all_grep_hit_actions_p", default=False,
+                         action="store_true",
+                         help="Run the grep hit action on all grep hits.")
     oparser.add_argument("--tgen-errors",
                          default=None, const="Assertion|call stack|stack_trace",
                          action="store_const",
@@ -425,8 +465,8 @@ Implies Char_ticker_t""")
                          dest="max_regexp_matches_before_exit",
                          type=int, default=0, # == 0 --> unlimited.
                          help="Max regexp matches before exit.")
-    oparser.add_argument("--max-errors", "--max-error-hits", "--meh",
-                         "--emax",
+    oparser.add_argument("--max-errors", "--max-errs", "--max-error-hits",
+                         "--meh", "--emax", "--maxe",
                          dest="max_error_regexp_matches_before_exit",
                          type=int, default=0, # == 0 --> unlimited.
                          help="Max error regexp matches before exit.")
@@ -625,31 +665,9 @@ Implies Char_ticker_t""")
             or
             (max_hits and (len(matching_lines) >= max_hits))):
             if app_args.match_summary_p and (matching_lines or error_lines):
-                all_output_streams = outputStreams + [sys.stdout]
-                wing_size = 7
-                wing = wing_size * "="
-                title = wing + " Matching line summary " + wing
-                sep_line = len(title) * "="
-                dp_io.printf("\n" + title + "\n")
-                dp_io.printf("Regexp matches: %s, error matches: %s\n",
-                             len(matching_lines), len(error_lines))
-                if matching_lines:
-                    dp_io.printf("matching lines: %s\n", len(matching_lines))
-                    for lt in  matching_lines:
-                        match = lt[1]
-                        line = lt[0][:-1]
-                        for o in all_output_streams:
-                            o.write("Matching line: %s>%s<\n" % (match, line))
-
-                if error_lines:
-                    dp_io.printf("\n" + sep_line + "\n")
-                    dp_io.printf("Num error lines: %s\n", len(error_lines))
-                    for lt in error_lines:
-                        match = lt[1]
-                        line = lt[0][:-1]
-                        for o in all_output_streams:
-                            o.write("Matching line: %s>%s<\n" % (match, line))
-                dp_io.printf(sep_line + "\n")
+                dump_matching_and_error_lines(outputStreams + [sys.stdout],
+                                              matching_lines,
+                                              error_lines)
             ticker.fini()
             break
         line_number += 1
@@ -663,16 +681,23 @@ Implies Char_ticker_t""")
             if regexp.search(input_line):
                 matching_lines.append((input_line, line_number))
                 match_indicator = DEFAULT_MATCH_INDICATOR
+                indicator_separator = DEFAULT_INDICATOR_SEPARATOR
                 if highlight_grep_matches_p:
                     # XXX @todo Add ANSI color options?
                     display_match(app_args.match_ostream,
                                   input_line[:-1], line_number,
                                   "\n***", "***\n")
+                if app_args.grep_hit_action:
+                    if not app_args.all_grep_hit_actions_p:
+                        app_args.grep_hit_action = None
+                    dp_io.printf("Teach me how to run this grep hit action>%s<\n",
+                                 app_args.grep_hit_action)
 
         for regexp in compiled_error_regexps:
             if regexp.search(input_line):
                 error_lines.append((input_line, line_number))
                 error_indicator = DEFAULT_ERROR_INDICATOR
+                indicator_separator = DEFAULT_INDICATOR_SEPARATOR
                 if highlight_egrep_matches_p:
                     # XXX @todo Add ANSI color options?
                     display_match(app_args.match_ostream,
@@ -690,12 +715,12 @@ Implies Char_ticker_t""")
                 tick = None
                 ticker(tick=tick)
         else:
+            tick_prefix = ""
             if app_args.sample_lines_tick_p:
                 # @todo XXX allow a format to be used (dictionary type)
                 if error_indicator or match_indicator:
-                    tick_prefix = error_indicator + match_indicator + "|"
-                else:
-                    tick_prefix = ""
+                    tick_prefix = (error_indicator + match_indicator
+                                   + indicator_separator)
                 if app_args.sample_lines_tick_prefix is not False:
                     tick = tick_counter_count_format % (ticker.counter,)
                 else:

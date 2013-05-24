@@ -284,6 +284,17 @@ Oddly, it doesn't handle structs.")
 
 ;; XXX @todo Fix this to use a real predicate.
 (when t ;;; (dp-gtags-p)
+  (make-variable-buffer-local 'gtags-auto-update)
+  (setq-default gtags-auto-update nil)
+  (defun dp-gtags-update-file ()
+    (interactive)
+    (let ((gtags-mode t)
+          (gtags-auto-update t))
+      (message "gtags updating...")
+      (gtags-auto-update)
+      (message "done.")))
+  (defalias 'guf 'dp-gtags-update-file)
+
   (defun dp-gtags-select-mode-hook ()
     (dp-define-buffer-local-keys
      `([return] ,(kb-lambda
@@ -306,6 +317,7 @@ Oddly, it doesn't handle structs.")
        [space] dp-gtags-select-tag-one-window
        [?1] dp-gtags-select-tag-one-window
        [(meta return)] gtags-select-tag
+       [?u] dp-gtags-update-file
        [?o] gtags-select-tag-other-window)))
 
   (defun dp-gtags-select-tag-one-window ()

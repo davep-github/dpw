@@ -1,0 +1,61 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${log_file_base_name:=dot-sh}
+: ${teeker_options=--slog -Z9 --ts --hg}
+: ${testname=}
+
+check_test()
+{
+    local testname="$@"
+    local rc=1
+    if test -d "${testname}"
+    then 
+        echo "${testname} is a dir."
+    elif ! test -x "${testname}"
+    then 
+        echo "${testname} is not executable."
+    else
+        rc=0
+    fi
+    return "$rc"
+}
+
+if vunsetp "${testname}"
+then
+    case "${1-}" in 
+        -|.|--) shift;;
+        -*|"") ;;
+        *) testname="${1}"; shift ;;
+    esac
+    vunsetp "${testname}" && {
+        testname=$(ls -1 *.sh | egrep -v '^(command|.*\.cmd)\.sh$')
+        if vunsetp "${testname}" || ! test -x "${testname}" || test -d "${testname}"
+        then
+            echo "$progname: No test name given and cannot guess a good default.
+Usage:  testname [additional-teeker-options]"
+            check_test "${testname}"
+            exit 1
+        fi 1>&2
+        echo "Deduced test name>${testname}<"
+    }
+fi
+check_test "${testname}" 1>&2 || exit 1
+
+# E.g. ./surface_write_read_no_smmu_bar1.sh 2>&1 | teeker --slog -Z9 --ts --grep 'surface_write_read:' --hg dot-sh --egrep 'ERROR: cannot aquire /tmp'; email-yopp
+
+EExec "${testname}" 2>&1 | EExec teeker ${teeker_options} "$@" "${log_file_base_name}"
+
+rc="$?"
+EExec email-yopp "$progname: \"${testname} $@\" is done. RC: $rc"

@@ -72,7 +72,7 @@ At nVIDIA, the answer is HELL YES!")
 (dp-add-list-to-list 'auto-mode-alist
 		     `(("\\(^\\|/\\)regress_tegra_gpu_multiengine$" .
                         dp-make-no-wrap-stupidly)
-                       ("/tests/kepler_b_ogtest/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{6\\}/.*\\.\\(cfg\\|sh\\)" .
+                       ("/tests/[^/]+/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{6\\}/.*\\.\\(cfg\\|sh\\)" .
                        dp-make-no-wrap-stupidly)))
 
 (defvar dp-p4-default-depot-completion-prefix "//"
