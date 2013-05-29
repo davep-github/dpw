@@ -500,6 +500,12 @@ Implies Char_ticker_t""")
                          dest="match_summary_p", default=True,
                          action="store_false",
                          help="Don't show all grep matches at end of run.")
+    oparser.add_argument("--unbuffered-logs",
+                         dest="unbuffered_logs_p", default=False,
+                         action="store_true")
+    oparser.add_argument("--unbuffered-out",
+                         dest="unbuffered_out_p", default=False,
+                         action="store_true")
     
     # tee(1) compatibility.
     oparser.add_argument("-a", "--append",
@@ -550,7 +556,10 @@ Implies Char_ticker_t""")
     if len(app_args.output_files) == 0 and app_args.output_files_required_p:
         dp_io.eprintf("One or more log file names are required.\n")
         sys.exit(1)
-        
+
+    if app_args.unbuffered_out_p:
+        sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+
     for a in app_args.output_files:
         dp_io.cdebug(2,"log file name>%s<\n", a)
         a = a + file_suffix
@@ -568,7 +577,12 @@ Implies Char_ticker_t""")
             dp_io.cdebug(2, "compression: %d\n", app_args.compression_level)
             fobj = gzip.open(a + ".gz", open_mode, app_args.compression_level)
         else:
-            fobj = open(a, open_mode)
+            ## Pass nothing if unbuffered is not set to preserve existing
+            ## operation.
+            if app_args.unbuffered_logs_p:
+                fobj = open(a, open_mode, 0)
+            else:
+                fobj = open(a, open_mode)
 
         # I *love* duck typing.
         outputStreams.append(fobj)

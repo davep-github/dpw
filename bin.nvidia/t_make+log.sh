@@ -48,6 +48,8 @@ Usage_details="${EExec_parse_usage}
 --rtl) ibid
 --only <target>) Only make <target>
 --t_make_arg <arg>) Append <arg> to additional t_make args.
+--t_make-arg <arg>) Append <arg> to additional t_make args.
+--t-make-arg <arg>) Append <arg> to additional t_make args.
 --get-mods) Get the latest mods. 
 --no-get-mods) Get the latest mods.
 --build-me) Do build the me tests.
@@ -92,7 +94,8 @@ long_options=("out-file:"
     "mm" "mme" "gb" "get-build" "all"
     "nn"
     "mail" "no-mail"
-    "only:")
+    "only:"
+    "t_make_arg:" "t_make-arg:" "t-make-arg:")
 
 # Example of arg parsing.
 option_str="${EExec_parse_option_str}o:O:crm"
@@ -134,6 +137,8 @@ do
                  }
                  ;;
       --t_make_arg) shift; t_make_args="$t_make_args $1";;
+      --t_make-arg) shift; t_make_args="$t_make_args $1";;
+      --t-make-arg) shift; t_make_args="$t_make_args $1";;
       --build-me) build_me_p=t;;
       --no-build-me) build_me_p=;;
       --get-mods) get_mods_p=t;;
@@ -312,4 +317,6 @@ EExec mkdir -p "${log_dir}"
     echo "Log file: ${log_name}"
 } | $teefun "${log_name}" > "${disp_file}"
 
-exit 0
+rc="$?"
+echo "Before final exit rc>$rc<"
+exit "$rc"
