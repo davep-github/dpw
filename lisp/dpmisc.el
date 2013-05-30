@@ -15607,6 +15607,11 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
     (message "matching-buffer-list>%s<" matching-buffer-list)
     matching-buffer-list))
 
+(defun dp-verbose-setenv (var &rest rest)
+  (interactive)
+  (apply 'setenv var rest)
+  (message "%s: %s" var (getenv var)))
+
 ;;;;; <:functions: add-new-ones-above:>
 ;;;
 ;;;

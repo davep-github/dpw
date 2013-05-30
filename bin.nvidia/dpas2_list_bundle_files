@@ -1,0 +1,24 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+[ "$#" -lt 1 ] && {
+    echo "$progname: Usage: bundle_id"
+    exit 1
+} 1>&2
+
+bundle_id="${1}"
+
+dp4-reroot . $(as2 describe "${bundle_id}" \
+     | bgrep 'Affected files' 'Differences' \
+     | sed -rn 's/^(\.\.\. )([^#]+)(#.*$)/\2/p')

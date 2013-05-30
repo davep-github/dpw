@@ -87,6 +87,11 @@ def true(*args, **kwargs):
 def false(*args, **kwargs):
     return False
 
+def Catlike_setup(namespace):
+    setattr(namespace, "sample_lines_tick_p", true)
+    setattr(namespace, "tick_interval", 1)
+    setattr(namespace, "sample_lines_tick_prefix", False)
+
 def eval_with_units(num, allow_fractions_p=False):
     if (num == "-1"):
         return False                    # No limit
@@ -173,9 +178,7 @@ class App_arg_action_DOTS(argparse.Action):
 class App_arg_action_catlike(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         # Just be a pass through. Useful with -g.
-        setattr(namespace, "sample_lines_tick_p", true)
-        setattr(namespace, "tick_interval", 1)
-        setattr(namespace, "sample_lines_tick_prefix", False)
+        Catlike_setup(namespace)
 
 Convenience_opts = (("U_extension", ".log"), ("add_timestamp_p", True))
 

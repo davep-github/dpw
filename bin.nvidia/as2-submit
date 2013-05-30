@@ -1,0 +1,37 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+# Stupid protection
+
+confirm=t
+for o in "$@"
+do
+  [ "${o}" = "-h" ] && {
+      confirm=
+      break
+  }
+done
+
+vsetp "${confirm}" && {
+    read -e -p "Not a held bundle. Are you sure? [y/N]? "
+    case "${REPLY}" in
+        [yY]) ;;
+        *) {
+            echo "Skipping operation >$@<"
+            exit 1
+        } 1>&2;;
+    esac
+}
+
+EExec as2 "$@"

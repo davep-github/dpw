@@ -45,7 +45,7 @@ unset eexec_program
 
 for bundle_id in "$@"
 do
-  files=$(dp4-reroot . $(as2 describe "${bundle_id}" | bgrep 'Affected files' 'Differences' | sed -rn 's/^(\.\.\. )([^#]+)(#.*$)/\2/p'))
+  files=$(dpas2_list_bundle_files "${bundle_id}")
   while :
     do
     echo_id files
