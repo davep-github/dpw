@@ -36,6 +36,7 @@ teeer()
 
 : ${save_args_p=t}
 : ${p4_sync_dash_n=}
+: ${p4_sync_dash_f=}
 : ${send_mail_on_completion_p:=t}
 : ${tee_append_opt=}
 
@@ -43,7 +44,7 @@ tee_func=teekerer_sample
 teeker_opts=
 teeker_interval=100
 std_options=""
-option_str="nvqtsk:i:"
+option_str="nvqtsk:i:f"
 long_options=("teeker-opts:" "tee-func:" "teeker-interval:"
     "p4-sync-dash-n"
     "sample" "tee" "teeker"
@@ -61,6 +62,7 @@ do
       -t|--tee) tee_func=teeer;;
       -k|--teeker-opts) shift; teeker_opts="$1";;
       -i|--teeker-interval) shift; teeker_interval="$1";;
+      -f) p4_sync_dash_f="-f";;
       --no-save-args) save_args_p=;;
       --tee-func) shift; tee_func="$1";;
       --sample) tee_func=teekerer_sample;;
@@ -86,6 +88,8 @@ EExec -y mkdir -p "${kwa_log_dir}"
 EExec -y cd "${sandbox_root}"
 EExec_verbose_msg "Sync'ing in >$(pwd)<"
 
+EExec_verbose_msg EExec p4 sync ${p4_sync_dash_n} ${p4_sync_dash_f} "$@" 
+
 echo "log dir>${kwa_log_dir}<"
 {
     # print log name before and after in case it is a long sync.
@@ -95,7 +99,7 @@ echo "log dir>${kwa_log_dir}<"
         echo "p4 sync args:
 $@" >| "${save_args_file}"
     }
-    EExec p4 sync $p4_sync_dash_n "$@" 
+    EExec p4 sync ${p4_sync_dash_n} ${p4_sync_dash_f} "$@" 
 } 2>&1 | EExec -y $tee_func "${kwa_log_file}"
 {
     echo
@@ -108,7 +112,11 @@ $@" >| "${save_args_file}"
     # p4 resolve's message about no files to resolve goes to stderr.
     vsetp "${files_to_resolve}" && {
         echo "******* There are files to resolve *******"
-        echo "${files_to_resolve}"
+        # $() converts newlines to spaces.
+        for ftr in ${files_to_resolve}
+        do
+          echo "${ftr}"
+        done
         echo "These files must be resolved by hand."
         echo "*******"
     }

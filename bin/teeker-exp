@@ -209,6 +209,13 @@ class App_action_log_file_convenience_sampled(argparse.Action):
         setattr(namespace, "sample_lines_tick_p", True)
         setattr(namespace, "output_files_required_p", True)
 
+class App_action_log_file_convenience_sampled_timestamped(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        set_convenience_opts(namespace)
+        setattr(namespace, "sample_lines_tick_p", True)
+        setattr(namespace, "output_files_required_p", True)
+        Ctor_arg_dict["timestamp_p"] = True
+
 class Ctor_arg_action_twiddle(Ctor_arg_action):
     def __call__(self, parser, namespace, values, option_string=None):
         Ctor_arg_action.__call__(self, parser, namespace, values,
@@ -347,6 +354,11 @@ if __name__ == "__main__":
                          nargs=0,
                          action=App_action_log_file_convenience_sampled,
                          help="As --log plus sampled ticking.")
+    oparser.add_argument("--tslog",
+                         dest="output_files_required_p", default=False,
+                         nargs=0,
+                         action=App_action_log_file_convenience_sampled_timestamped,
+                         help="As --slog plus timestamping.")
     oparser.add_argument("-U", "--show-units",
                          dest="show_tick_units_p",
                          nargs=0,
@@ -354,6 +366,11 @@ if __name__ == "__main__":
                          help="Print units [chars, lines] with output.")
     oparser.add_argument("--timestamp", "--ts",
                          dest="timestamp_p", default=False,
+                         nargs=0,
+                         action=Ctor_arg_action_true,
+                         help="Add a timestamp to ticks. Best with sampled output.")
+    oparser.add_argument("--elapsed-timestamp", "--ets",
+                         dest="elapsed_timestamp_p", default=False,
                          nargs=0,
                          action=Ctor_arg_action_true,
                          help="Add a timestamp to ticks. Best with sampled output.")

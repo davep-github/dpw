@@ -12,6 +12,4 @@ do
 done
 unset eexec_program
 
-msg="$progname: in ${PWD}: $@"
-
-echo "${msg}" | EExec mail -s "YOPP! ${msg}" "${USER}"
+time /home/utils/bin/p4 "$@"

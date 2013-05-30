@@ -82,7 +82,7 @@ depot_dirs_of_interest="$base_depot_dirs_of_interest $more_depot_dirs_of_interes
 
 dirs_of_interest=$(dp4-reroot "$p4_root" $depot_dirs_of_interest)
 
-[ -z "${skip_cd-}" ] && EExec mecd -y sandbox
+[ -z "${skip_cd-}" ] && EExec -y mecd sandbox
 echo "cwd: $(pwd)"
 
 EExec -y index-code $EExecDashN_opt $EExecDashV_opt $dirs_of_interest

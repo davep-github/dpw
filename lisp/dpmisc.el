@@ -9482,7 +9482,7 @@ e.g. efs: /davep@sybil:/home/davep/.bashrc.
 This can save bandwidth.  Also good if remote site is down, since we will
 keep the file around."
   (interactive "p")
-  (if (Cu--p)                           ; '-
+  (if (Cu--p)                           ; [(control ?-)]
       (delete-window)
     (if (and current-prefix-arg other-window-count)
         (dp-maybe-kill-other-window-buffer (abs other-window-count))
@@ -15547,7 +15547,8 @@ file."
 
 (defvar dp-p4-stupid-hack-saved-sb nil
   "Stupid way to prevent being prompted for a sandbox name twice.
-Will fail often, no doubt. Add a condition case or unwind protect or something.")
+Will fail often, no doubt. Add a condition case or unwind protect or
+something.")
 
 (defun dp-maybe-expand-p4-location+ (file &optional sb)
   ;; Try w/default Sb, ie nil.

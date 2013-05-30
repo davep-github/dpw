@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, types, re
+import sys, types, re, time
 import dp_utils, dp_time
 def Ticker_printf(ticker, fmt, *args, **kwargs):
     from dp_io import fprintf
@@ -11,6 +11,8 @@ def Ticker_printf(ticker, fmt, *args, **kwargs):
     if kwargs.get("flush_p"):
         ticker.ostream.flush()
 
+time_time = time.time
+
 class Ticker_t(object):
     def __init__(self, tick_interval, increment=1, init_string="counting: ",
                  comma=", ", init_count=0, ostream=sys.stdout, forward=False,
@@ -20,6 +22,7 @@ class Ticker_t(object):
                  max_output_units_before_newline=False,
                  max_output_units_before_exit=False,
                  timestamp_p=False,
+                 elapsed_timestamp_p=False,
                  timestamp_separator_string=": ",
                  grand_total_p=True):
         self.tick_interval = tick_interval
@@ -37,7 +40,10 @@ class Ticker_t(object):
         self.max_output_units_before_exit = max_output_units_before_exit
         self.count_at_last_newline = 0
         self.timestamp_p = timestamp_p
+        self.elapsed_timestamp_p = elapsed_timestamp_p
         self.timestamp_separator_string = timestamp_separator_string
+        self.time0 = int(time_time())
+        self.any_timestamp_p = timestamp_p or elapsed_timestamp_p
 
     def twiddling_p(self):
         return False
@@ -50,7 +56,15 @@ class Ticker_t(object):
         self.printor(self, None, just_flush_p=True)
 
     def make_timestamp(self):
-        return dp_time.std_timestamp() + self.timestamp_separator_string
+        ts_string = ""
+        ts_ts_sep = ""
+        if self.timestamp_p:
+            ts_string = dp_time.std_timestamp()
+            ts_ts_sep = ": "
+        if self.elapsed_timestamp_p:
+            ts_string = "%s%s%8.2f" % (ts_string, ts_ts_sep,
+                                       time_time() - self.time0,)
+        return ts_string + self.timestamp_separator_string
     
     def make_tick(self, tick=None, call_tick=None, tick_prefix=""):
         if not tick:
@@ -61,7 +75,7 @@ class Ticker_t(object):
                                          allow_fractions_p=True,
                                          powers_of_two_p=False)
         ts_string = ""
-        if self.timestamp_p:
+        if self.any_timestamp_p:
             ts_string = self.make_timestamp()
 
         self.printor(self, "%s%s%s%s", self.sep_string, tick_prefix,

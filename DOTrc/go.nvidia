@@ -102,13 +102,15 @@ E|gpumetraces__ME_src|       arch/traces/mobile/traces/gpu_multiengine/
 E|traces__ME_src|            arch/traces/mobile/traces/gpu_multiengine/
 E|gputraces__ME_src|         arch/traces/mobile/traces/gpu_multiengine/
 E|gmetraces__ME_src|         arch/traces/mobile/traces/gpu_multiengine/
-E|mtrace__ME_src|           arch/traces/mobile/traces/
-E|gpumetrace__ME_src|       arch/traces/mobile/traces/gpu_multiengine/
-E|trace__ME_src|            arch/traces/mobile/traces/gpu_multiengine/
-E|gputrace__ME_src|         arch/traces/mobile/traces/gpu_multiengine/
-E|gmetrace__ME_src|         arch/traces/mobile/traces/gpu_multiengine/
+E|mtrace__ME_src|            arch/traces/mobile/traces/
+E|gpumetrace__ME_src|        arch/traces/mobile/traces/gpu_multiengine/
+E|trace__ME_src|             arch/traces/mobile/traces/gpu_multiengine/
+E|gputrace__ME_src|          arch/traces/mobile/traces/gpu_multiengine/
+E|gmetrace__ME_src|          arch/traces/mobile/traces/gpu_multiengine/
 E|sanity__ME_src|            arch/traces/mobile/traces/gpu_multiengine/
 E|gmesanity__ME_src|         arch/traces/mobile/traces/gpu_multiengine/
+E|gmetr__ME_src|             arch/traces/mobile/traces/gpu_multiengine/
+E|trgme__ME_src|             arch/traces/mobile/traces/gpu_multiengine/
 E|gmet__ME_src|              arch/traces/mobile/traces/gpu_multiengine/
 E|gme__ME_src|               arch/traces/mobile/traces/gpu_multiengine/
 E|plex__ME_src|              arch/traces/mobile/traces/gpu_multiengine/plex/
@@ -126,6 +128,11 @@ Ee|rgbimages__ME_src|        arch/traces/mobile/traces/nongpu_multiengine/data_s
 E|modstraces|trace3dtraces|t3dtraces|   /home/scratch.traces02/arch/traces/
 E|ogtest|                               ${t3dtraces}kepler_b/ogtest/
 
+#
+# Somethings which may as well be cross-sandbox
+E|surfwr__ME_src|            arch/traces/mobile/traces/gpu_multiengine/surface_write_read/
+E|depcpu__ME_src|            arch/traces/mobile/traces/gpu_multiengine/dep_cpu_cpu_gpu_cpu/
+
 #######################################################################
 
 Ee|scratch0|scr0|sc0|                         /home/scratch.dpanariti_t124/
@@ -138,11 +145,6 @@ Ee|sandbox2|sbox2|sb2|workspace2|ws2|         ${scratch0}sb2/hw/
 Ee|sandbox3|sbox3|sb3|workspace3|ws3|         ${scratch1}sb3/sb3hw/
 Ee|sandbox4|sbox4|sb4|workspace4|ws4|         ${scratch1}sb4/sb4hw/
 Ee|sandbox5|sbox5|sb5|workspace5|ws5|         ${scratch2}sb5/sb5hw/
-
-# Transient conveniences, names of current tasks and their sandboxes.
-Ee|depcpu|                                    ${sb2}
-Ee|sbbar0|sbbar1|sbbarx|sbbar|barx|           ${sb4}
-Ee|sbengcpu|                                  ${sb5}
 
 #
 # Some direct accesses for objects which are way too overloaded.
@@ -179,3 +181,4 @@ Ee|kevin|       /home/scratch.dpanariti_t124/sb2/hw/hw/ap_tlit1/diag/testgen/dp-
 Ee|gooddepcpurun|       /home/scratch.dpanariti_t124/sb2/hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/dep_cpu_cpu_gpu_cpu_mc/2013-04-24T15.06.43-0400.out/tests/kepler_b_ogtest/00/00/01/000001/
 Ee|xebacks|xebacs|       /home/dpanariti/droppings/editors/xemacs/xebacs.d/
 Ee|dpylib|       /home/dpanariti/lib/pylib/
+Ee|bover|binoverride|       /home/dpanariti/bin/override/

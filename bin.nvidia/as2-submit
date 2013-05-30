@@ -34,4 +34,4 @@ vsetp "${confirm}" && {
     esac
 }
 
-EExec as2 "$@"
+EExec as2 submit "$@"
