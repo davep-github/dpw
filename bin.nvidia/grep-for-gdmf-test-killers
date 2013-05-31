@@ -1,0 +1,44 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+regexps=()
+# Who knows when or where this can happen
+# Error opening surface_write_read.so: /lib/tls/libc.so.6: version `GLIBC_2.4' not found
+regexps+=("Error opening.*\.so:.*lib.*not found")
+
+# ASIM bullshit
+# ERROR: cannot aquire /tmp/asim.X
+regexps+=("ERROR: cannot aquire /tmp/asim.X")
+
+# RTL bullshit
+# something bad happened
+# Yes, that's the message. something. bad. happened.
+regexps+=("something bad happened")
+
+regexp=
+sep=
+
+{
+    EExec_verbose_msg "Looking for these test killing regexps:"
+    for r in "${regexps[@]}"
+    do
+      EExec_verbose_msg " >${r}<"
+      regexp="${regexp}${sep}${r}"
+      sep="|"
+    done
+} 1>&2 
+
+#echo_id 1>&2 regexp
+
+egrep "${regexp}" "$@"
