@@ -124,6 +124,9 @@ echo 1>&2 "Finished creating sandbox $sandbox_name."
 if test "$rc" = 0
 then
     dp4-new-client-post-processor
+    rc="$?"
 fi
+
+echo 1>&2 "Finished creating sandbox $sandbox_name; RC: $rc"
 
 exit "${rc}"

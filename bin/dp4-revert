@@ -30,6 +30,7 @@ done
 
 for f in "$@"
 do
+  export P4DIFF=diff
   num=$(p4 diff "$f" | wc -l)
   if [ "$num" -gt 1 ]
   then

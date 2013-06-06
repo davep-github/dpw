@@ -283,6 +283,7 @@ cat ${last_out_dir_file_name}" >| "${latest_out}"
 done
 
 vsetp "${all_but_run_opt}" && {
-    echo "$progname: -allButRun was used.
+    echo "
+*** $progname: -allButRun was used.
   Don't forget to run them if you need to."
 } 1>&2

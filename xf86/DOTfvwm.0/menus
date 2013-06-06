@@ -40,8 +40,8 @@ AddToMenu    Utilities "FVWM Root Menu" Title
 + "&Qsub terminal"       Popup XqsubMenu
 + "&XEmacs(xem)"         Exec exec xem
 + "x&orpie"              Exec exec xorpie
-+ "Mo&ve window"         Popup Move-window
-+ "&Goto window"         Popup Goto-window
++ "Move &to"             Popup Move-window-to
++ "&Goto page or desk"   Popup Goto-page-or-desk
 + ""                     Nop
 + "&Modules"             Popup Module-Popup
 + "&Settings"            Popup Settings
@@ -57,7 +57,7 @@ AddToMenu   XqsubMenu "Interactive FARM xterm" Title
 + "&xqsub"            Exec exec xqsub
 + "xqsub&4"           Exec exec xqsub4
 + "xqsub&8"           Exec exec xqsub8
-+ "&xqsub&16"         Exec exec xqsub16
++ "xqsub&16"          Exec exec xqsub16
 
 #------------------------------------------------------------------------------
 #--------- SHELLS
@@ -951,8 +951,8 @@ AddToMenu "Window" "Window Operations" Title
 + "&Resize"             Resize
 + "(De)&Iconify"        Iconify
 + "(Un)M&aximize"       Maximize 100 100
-+ "(Un)Max&wide"        Maximize 100 0
-+ "(Un)Max&tall"        Maximize   0 100
++ "(Un)Max&width"       Maximize 100 0
++ "(Un)Max&height"      Maximize   0 100
 + "(Un)&Shade"          WindowShade
 + "(Un)S&tick"          Stick
 + "R&aise"              Raise
@@ -962,7 +962,7 @@ AddToMenu "Window" "Window Operations" Title
 + "&Close"              Close
 + "&Destroy"            Destroy
 + ""                    Nop
-+ "Move to &Page"       Popup Move-window
++ "Move &to"            Popup Move-window-to
 + "&Group Ops"          Popup WindowGroupOps
 + "&Window Style"       Popup WindowStyle
 + "&Rearrange/Scroll"   Popup WinRearrange
@@ -975,15 +975,15 @@ AddToMenu "Window" "Window Operations" Title
 
 DestroyMenu "Window-Ops2"
 AddToMenu "Window-Ops2"
-+ "Move to &Page"               Popup Move-window
++ "Move &to"                    Popup Move-window-to
 + "&Move"                       Move
 + "&Resize"                     Resize
 + "(De)&Iconify"                Iconify
 + "(Un)&Shade"                  WindowShade
 + "(Un)S&tick"                  Stick
 + "(Un)M&aximize"               Maximize 100 100
-+ "(Un)Max&wide"                Maximize 100 0
-+ "(Un)Max&tall"                Maximize   0 100
++ "(Un)Max&width"               Maximize 100 0
++ "(Un)Max&height"              Maximize   0 100
 #+ "R&aiseLower"                RaiseLower
 + ""                            Nop
 + "&Close"                      Close
@@ -997,7 +997,7 @@ AddToMenu "Window-Ops2"
 
 DestroyMenu "Window-Ops3"
 AddToMenu "Window-Ops3"
-+ "Move to &Page"               Popup Move-window
++ "Move &to"                    Popup Move-window-to
 + "&Group Ops"                  Popup WindowGroupOps
 + ""                            Nop
 + "(De)&Iconify"                Iconify
@@ -1015,36 +1015,63 @@ AddToMenu "Window-Ops3"
 #------------------------------------------------------------------------------
 # A "Move Window" menu
 
-DestroyMenu "Move-Window"
-AddToMenu   "Move-Window" "Move to ..." Title
-+ '&o-xterm'     MoveToPage 0 0
-+ '&farm'        MoveToPage 0 1
-+ 'Page &2'      MoveToPage 1 0
-+ 'Page &4'      MoveToPage 1 1
+DestroyMenu "Move-window-to"
+AddToMenu   "Move-window-to" "Move to page..." Title
++ '&o-xterm'              MoveToPage 0 0
++ '&farm'                 MoveToPage 0 1
++ 'Page &Upper Right'     MoveToPage 1 0
++ 'Page &Lower Right'     MoveToPage 1 1
 + '' Nop
-+ '&General'     MoveToDesk 0 0
-+ '&SB1'         MoveToDesk 0 1
-+ '&SB2-DEPCPU'  MoveToDesk 0 2
-+ '&SB3-Avail'   MoveToDesk 0 3
-+ '&SB4-Surf'    MoveToDesk 0 4
-+ '&SB5-SurfRTL' MoveToDesk 0 5
++ 'Move to desk...' Nop
++ "" Nop
++ '&General'              MoveToDesk 0 0
+# Available -skiprtl tree.
++ 'SB&1-no-rtl'           MoveToDesk 0 1
+# RTL tree to test DEP-CPU under RTL
++ 'SB&2-R/DEPCPU'         MoveToDesk 0 2
+# Fresh RTL tree to try to get around RTL "something bad happened" error in SB5.
++ 'SB&3-R/Surf-new'       MoveToDesk 0 3
+# No associated SB
++ 'Desk&4-Unused'         MoveToDesk 0 4
+# Original surface write read test tree
++ 'SB&5-R/Surf-used'      MoveToDesk 0 5
 
 #------------------------------------------------------------------------------
-# A "Goto Window" menu
-
-DestroyMenu "Goto-Window"
-AddToMenu   "Goto-Window" "Go to ..." Title
-+ '&o-xterm'    GotoPage 0 0
-+ '&farm'       GotoPage 0 1
-+ 'Page &2'     GotoPage 1 0
-+ 'Page &4'     GotoPage 1 1
+# A "Goto Desk" menu
+# See "Move-window-to menu for sandbox/tree descriptions.
+DestroyMenu "Goto-page-or-desk"
+AddToMenu   "Goto-page-or-desk" "Go to page..." Title
++ '&o-xterm'              GotoPage 0 0
++ '&farm'                 GotoPage 0 1
++ 'Page &Upper Right'     GotoPage 1 0
++ 'Page &Lower Right'     GotoPage 1 1
 + '' Nop
-+ '&General'     GotoDesk 0 0
-+ '&SB1'         GotoDesk 0 1
-+ '&SB2-DEPCPU'  GotoDesk 0 2
-+ '&SB3-Avail'   GotoDesk 0 3
-+ '&SB4-Surf'    GotoDesk 0 4
-+ '&SB5-SurfRTL' GotoDesk 0 5
++ 'Go to desk...' Nop
++ "" Nop
++ '&General'              GotoDeskAndPage 0 0 0
+# Available -skiprtl tree.
++ 'SB&1-no-rtl'           GotoDeskAndPage 1 0 0
+# RTL tree to test DEP-CPU under RTL
++ 'SB&2-R/DEPCPU'         GotoDeskAndPage 2 0 0
+# Fresh RTL tree to try to get around RTL "something bad happened" error in SB5.
++ 'SB&3-R/Surf-new'       GotoDeskAndPage 3 0 0
+# No associated SB
++ 'Desk&4-Unused'         GotoDeskAndPage 4 0 0
+# Original surface write read test tree
++ 'SB&5-R/Surf-used'      GotoDeskAndPage 5 0 0
+
+# DestroyMenu "Goto-Desk"
+# AddToMenu   "Goto-Desk" "Go to ..." Title
+# # Available -skiprtl tree.
+# + 'SB&1-no-rtl'           GotoDesk 0 1
+# # RTL tree to test DEP-CPU under RTL
+# + 'SB&2-R/DEPCPU'         GotoDesk 0 2
+# # Fresh RTL tree to try to get around RTL "something bad happened" error in SB5.
+# + 'SB&3-R/Surf-new'       GotoDesk 0 3
+# # No associated SB
+# + 'Desk&4-Unused'         GotoDesk 0 4
+# # Original surface write read test tree
+# + 'SB&5-R/Surf-used'      GotoDesk 0 5
 
 
 #------------------------------------------------------------------------------

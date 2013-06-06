@@ -552,9 +552,44 @@ abbrev is expanded.")
       (insert expansion)
       t)))
 
+(defvar dp-sandbox-rel-regexp0
+  (concat
+   "\\("                                ; 1
+   "\\(^\\|/\\|\\s-+\\)"                ; 2
+   ","
+   "\\([^,]+\\)"                        ; 3 -- Abbrev
+   ","
+   "\\([^,]+\\)"                        ; 4
+   "\\(?:,\\{0,1\\}\\)"                 ; 5 -- Sandbox
+   "\\)$")
+  "Finds syntax: ,abbrev,sb,?")
+
+(defvar dp-sandbox-rel-regexp1
+  (concat
+   "\\("                                ; 1
+   "\\(^\\|/\\|\\s-+\\)"                ; 2
+   ","
+   "\\([^,]+\\)"                        ; 3 -- Abbrev
+   "\\(?:,\\{0,2\\}\\)"                 ; 4
+   "\\)$"
+   )
+  "Finds syntax: ,abbrev and ,abbrev, and ,abbrev,,")
+
+
 (defun dp-get-sandbox-rel-abbrev ()
   (interactive)
   (dp-get-special-abbrev "," "\\(\\(,[^,]+,[^,]*\\)\\)" nil nil))
+
+(defun dp-get-sandbox-rel-abbrev ()
+  (interactive)
+  (when (or
+         (dp-looking-back-at dp-sandbox-rel-regexp0)
+         (dp-looking-back-at dp-sandbox-rel-regexp1))
+    (list (match-end 2)
+          (match-end 0)
+          (concat (match-string 3)
+                  " "
+                  (or (match-string 4) "")))))
 
 (defun dp-expand-sandbox-rel-abbrev ()
   (interactive)

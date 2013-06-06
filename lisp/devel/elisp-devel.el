@@ -3589,3 +3589,91 @@ Tuesday May 07 2013
 ;; @todo XXX 
 ;; @todo XXX 
 ;; @todo XXX 
+
+========================
+Thursday June 06 2013
+--
+
+   (^|/|\s-+),.+       --> current sb, after trying regular expansion
+   (^|/|\s-+),.+,      --> current sb
+   (^|/|\s-+),.+,,     --> current sb
+   (^|/|\s-+),.+,.+    --> sb between final 2 ,s. ,dir,sbox,
+   (^|/|\s-+),.+,.+,   --> sb between final 2 ,s. ,dir,sbox,
+
+"\\(^\\|/\\|\\s-+\\),\\([^,]+\\)\\(,\\{0,2\\}\\)$"
+"\\(^\\|/\\|\\s-+\\),\\([^,]+\\),\\([^,]+\\)\\(,\\{0,1\\}\\)$"
+
+(setq dp-tre0
+      (concat
+       "\\("                            ; 1
+       "\\(^\\|/\\|\\s-+\\)"
+       ","
+       "\\([^,]+\\)"                    ; 2
+       ","
+       "\\([^,]+\\)"                    ; 3
+       "\\(?:,\\{0,1\\}\\)"             ; 4
+       "\\)$")
+      dp-tre1
+      (concat
+       "\\("                            ; 1
+       "\\(^\\|/\\|\\s-+\\)"            ; 2
+       ","
+       "\\([^,]+\\)"                    ; 3
+       "\\(?:,\\{0,2\\}\\)"             ; 4
+       "\\)$"
+       ))
+"\\(\\(^\\|/\\|\\s-+\\),\\([^,]+\\)\\(,\\{0,2\\}\\)\\)$"
+
+
+
+
+,abb
+
+,abb,
+
+,abb,,
+
+,abb,sb
+
+,abb,sb,
+
+(135872 135878 ",abb,")
+
+
+(dp-looking-back-at REGEXP &optional LIMIT))
+
+
+(defun dp-tfun ()
+  (interactive)
+  (let (who-matched)
+    (if (dp-looking-back-at dp-tre0)
+        (setq who-matched "dp-tre0")
+      (if (dp-looking-back-at dp-tre1)
+          (setq who-matched "dp-tre1")))
+    (if who-matched
+        (progn
+          (dmessage "m3>%s<" (match-string 3))
+          (dmessage "m4>%s<" (match-string 4))
+          (format "%s matched. matches>%s<" who-matched
+                  (dp-all-match-strings-string :string-join-args '("|" nil nil t))))
+      "No match")))
+dp-tfun
+
+,abb,   --> "dp-tre1 matched. matches>,abb,|,abb,||abb|,<"
+,abb,sb --> "dp-tre0 matched. matches>,abb,sb|,abb,sb||abb|sb|<"
+
+3 --> abbrev name
+4 (if) --> sb name
+
+(defun dp-get-sandbox-rel-abbrev ()
+  (interactive)
+  (when (or
+         (dp-looking-back-at dp-sandbox-rel-regexp0)
+         (dp-looking-back-at dp-sandbox-rel-regexp1))
+    (list (match-beginning 0)
+          (match-end 0)
+          (concat (match-string 3)
+                  " "
+                  (or (match-string 4) "")))))
+
+

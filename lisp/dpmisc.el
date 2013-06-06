@@ -265,8 +265,8 @@ Always return the value from NEW-VAR-VALUE."
 (defun dp-regexp-quote-and-make-word-regexp (string)
   (concat "\\<" (regexp-quote string) "\\>"))
 
-(defun dp-string-join (list-o-strings &optional sep append-one-p prefix-one-p 
-                       number-strings-p
+(defun dp-string-join (list-o-strings &optional sep append-one-p 
+                       prefix-one-p number-strings-p
                        string-pre-proc)
   "Join LIST-O-STRINGS separated with SEP.  SEP defaults to a space.
 APPEND-ONE-P, if non-nil, says to append one SEP to the result.
@@ -6252,7 +6252,8 @@ to see if it's alive as well."
 ;;
 (defun dp-finalize-editing-server ()
   (when (dp-gnuserv-running-p)
-    (shell-command-to-string (format "rm -f %s" dp-editing-server-ipc-file))))
+    (shell-command-to-string (format "rm -f %s" 
+                                     (dp-editing-server-ipc-file)))))
 
 ;;
 ;; Try for more feature filled gnuserv and fall back
@@ -11922,7 +11923,7 @@ BROKEN"
     (set-buffer buffer))
   ;; dp-bury-or-kill-buffer
   ;; Redefine (meta -) to not really kill the buffer.
-  (dp-define-buffer-local-keys '([(meta ?-)] 'dp-bury-or-kill-buffer) buffer))
+  (dp-define-buffer-local-keys '([(meta ?-)] dp-bury-or-kill-buffer) buffer))
 
 (dp-deflocal dp-use-whence-buffers-p nil
   "KEEP NIL... system is b0rked.
@@ -15437,8 +15438,11 @@ anything --> |b|b|"
 (dp-defaliases  '|| '2b '2: '2| 'dp-duplicate-window-horizontally)
 
 (defun dp-duplicate-window-vertically ()
-  "Display the current buffer in 2 horizontal (side-by-side) windows.
-anything --> |b|b|"
+  "Display the current buffer in 2 vertical (B over B) windows.
+anything --> |b|
+             |-|
+             |b|
+"
   (interactive)
   (delete-other-windows)
   (split-window-vertically))

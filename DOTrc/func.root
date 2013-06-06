@@ -20,6 +20,22 @@ truth_p()
     return 1
 }
 
+alias vtruep=truth_p
+
+settrue()
+{
+    local varname="${1}"
+    shift
+    local export=
+    if test "${varname}" = "-e" 
+    then
+        export=export
+        varname="${1}"
+        shift
+    fi
+    eval eval $export \$varname=t
+}
+
 export -f vsetp vunsetp
 
 sed_path()

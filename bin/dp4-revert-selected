@@ -1,0 +1,52 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${use_gui_p=t}
+
+choose_files()
+{
+    xlist
+}
+
+files_to_revert=$(choose_files)
+
+vunsetp "${files_to_revert}" && {
+    echo "No files selected. Exiting."
+    exit 0
+} 1>&2
+
+
+echo "Files selected for reversion:"
+for f in ${files_to_revert}
+do
+  echo "  ${f}"
+done
+
+# Kind of redundant w/selection dialog.
+# ans=
+# while vunsetp "${ans}"
+# do
+#   read -e -p "Revert these files? "
+#   EExec_verbose_msg "REPLY>$REPLY<"
+#   case "${REPLY}" in
+#       [Yy1t]) ans=y;;
+#       [Nn0f]) ans=n;;
+#       *) continue;;
+#   esac
+# done
+
+# [ "${ans}" = 'n' ] && exit 0
+
+EExec dp4-revert -x -n "${files_to_revert}"
+

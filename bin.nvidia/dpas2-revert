@@ -52,27 +52,9 @@ do
       continue
   } 1>&2
 
-  vsetp "${use_gui_p}" && {
-      files_to_revert=$(for f in ${files_to_revert}; do echo "${f}"; done | xlist)
-      vunsetp "${files_to_revert}" && {
-          echo "No files to revert were selected from bundle ${bundle}."
-          continue
-      } 1>&2
-  }
-  echo "files to revert: ${files_to_revert}"
-  ans=
-  while vunsetp "${ans}"
+  for f in ${files_to_revert} 
   do
-    read -e -p "Revert? "
-    case "${REPLY}" in
-        [Yy1t]) ans=y;;
-        [Nn0f]) ans=n;;
-        *) continue;;
-    esac
-  done
-
-  [ "${ans}" = 'n' ] && continue
-
-  EExec p4 revert "${files_to_revert}"
+    echo "${f}"
+  done | dp4-revert-selected
 done
 

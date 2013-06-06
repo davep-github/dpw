@@ -449,10 +449,14 @@ AddToFunc CycleWindows
 #    echo 'SetEnv NDIRECTION Prev'`
 #+ I Schedule 700 134000 SetEnv DIRECTION $[NDIRECTION]
 
-# FlipFocus
+# FlipFocus???
 DestroyFunc NextEmacs
 AddToFunc NextEmacs
-+ I Next  ("*XEmacs@o-xterm*", CurrentPage) FocusRaiseAndStuff
++ I Next  ("*XEmacs@*-xterm*", CurrentPage) FocusRaiseAndStuff
+
+DestroyFunc AnyNextEmacs
+AddToFunc AnyNextEmacs
++ I Next  ("*XEmacs@*-xterm*") FocusRaiseAndStuff
 
 DestroyFunc  MoveAndGotoPage
 AddToFunc    MoveAndGotoPage

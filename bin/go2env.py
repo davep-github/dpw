@@ -7,23 +7,63 @@ emacs_abbrev_table_name = 'dp-go-abbrev-table'
 verbose = 0
 debug = 0
 
+ELISP_OUTPUT_HANDLER_FLAGS = "elisp output handler flags"
+ELISP_EMIT_SETENV = "elisp output setenv"
+
 PERMANENT_PREFIX = ""
 PREFIX = ""
 HOME = os.environ['HOME']
 UGLY_HOME = dp_io.bq('cd $HOME; /bin/pwd')[:-1]
 Shell_type = None                       # None means use $SHELL
 
+#
+# Using a class allows us to differentiate types.
+# Good for arrays, dicts or other collections of mixed types.
+class Keyword_option_t(object):
+    def __init__(self, name, val):
+        self.d_name = name
+        self.d_val = val
+    def name(self):
+        return self.d_name
+    def val(self):
+        return self.d_val
+    def __str__(self):
+        return "<Keyword_option_t, name: %s, val: %s>" % (self.name(),
+                                                          self.val())
+    def __repr__(self):
+        return self.__str__()
+    
 #dp_io.eprintf('HOME>%s<, UGLY_HOME>%s<', HOME, UGLY_HOME)
 
+def handle_env_var(fmt, name, val, **kwargs):
+    flags = kwargs.get(ELISP_OUTPUT_HANDLER_FLAGS, None)
+    emit_setenv_p = False
+    if flags:
+        emit_setenv_p = flags.val()
+    if emit_setenv_p:
+        print '(setenv "%s" "%s")' % (name, val)
+    else:
+        print fmt  % (name, val, name),
+    
 #####################################################################
 def handle_sh(name, val, **kw_args):
-    print '%s="%s"; export %s;\n' % (name, val, name),
+    #
+    # There are two kinds of environment outputs:
+    # 1. Shell
+    # B. elisp setenv calls
+    handle_env_var('%s="%s"; export %s;\n', name, val, **kw_args)
 
 #####################################################################
 def handle_csh(name, val, **kw_args):
-    print 'setenv %s "%s";' % (name, val)
+    #
+    # There are two kinds of environment outputs:
+    # 1. Shell
+    # B. elisp setenv calls
+    # The format to handle_env_var needs to take 3 parameters.
+    # We just suck the 3rd into a comment.
+    handle_env_var('setenv %s "%s"; # %s\n', name, val, **kw_args)
 
-def emacs_pre():
+def emacs_pre(**kwargs):
     print '(setq ' + emacs_abbrev_table_name + ' (make-abbrev-table))'
 
 #####################################################################
@@ -31,8 +71,8 @@ def handle_emacs(name, val, **kw_args):
     """Emacs won't look past non-alpha numeric when expanding aliases,
     so we nuke those chars here."""
     name = re.sub('[^a-zA-Z0-9]', '', name)
-#    print '(define-abbrev %s "%s" "\\"%s\\"" nil 1)' % \
-#          (emacs_abbrev_table_name, name, val)
+    # print '(define-abbrev %s "%s" "\\"%s\\"" nil 1)' % \
+    # (emacs_abbrev_table_name, name, val)
     print '(define-abbrev %s "%s" "%s" nil 1)' % \
           (emacs_abbrev_table_name, name, val)
 
@@ -217,7 +257,8 @@ def expand_files(files, selector, aliases):
 # parse args
 #
 selector = 'e'
-opts, args = getopt.getopt(sys.argv[1:], 'efvdlLs:')
+opts, args = getopt.getopt(sys.argv[1:], 'efvdlLs:E')
+handler_keyword_args = {}
 for opt, val in opts:
     if opt == '-e':
         selector = 'E'
@@ -234,6 +275,11 @@ for opt, val in opts:
         selector = 'L'
     elif opt == '-s':
         Shell_type = val                # Override $SHELL.
+    elif opt == '-E':
+        selector = 'e'
+        # Generate (setenv "bubba" "blah") calls.
+        handler_keyword_args[ELISP_OUTPUT_HANDLER_FLAGS] = \
+            Keyword_option_t(ELISP_EMIT_SETENV, True)
 
 handlers = get_handlers(Shell_type)
 
@@ -270,10 +316,13 @@ keys.sort()
 ##!<@todo Stash away file name for better location purposes.
 
 if handle_pre:
-    handle_pre()
+    handle_pre(**handler_keyword_args)
 
 for k in keys:
-     handle(k, aliases[k][0], **aliases[k][1])
+    kwargs = handler_keyword_args
+    kwargs.update(aliases[k][1])
+    #print >>sys.stderr, "kwargs:", kwargs
+    handle(k, aliases[k][0], **kwargs)
 
 if handle_post:
     handle_post(aliases, keys)

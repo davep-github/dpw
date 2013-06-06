@@ -81,10 +81,10 @@ EExec_parse()
     for i in "$@"
     do
       case "$1" in
-          -n) prog="${prog}EExecDashN ";;
-          -nk) prog="${prog}EExecDashN_k ";;
-          -v) prog="${prog}EExecVerbose ";;
-          -q) prog="${prog}EExecQuiet ";;
+          -n|--eexec-n) prog="${prog}EExecDashN ";;
+          -nk|--eexec-nk) prog="${prog}EExecDashN_k ";;
+          -v|--eexec-v) prog="${prog}EExecVerbose ";;
+          -q|--eexec-q) prog="${prog}EExecQuiet ";;
           --) prog="${prog}EExecNOP"; break;; # Allow user to consume a --
           *) break;;
       esac

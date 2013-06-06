@@ -7,6 +7,8 @@ echo_name_and_val()
     local suffix=""
     local pre_limiter=">"
     local post_limiter="<"
+    local val
+    local name
 
     while [[ "${1-}" =~ ^- ]]
     do
@@ -63,6 +65,6 @@ echo_id_ornate()
 }
 
 
-export -f echo_id
+export -f echo_id echo_id_err echo_id2 echo_id_ornate
 
 true

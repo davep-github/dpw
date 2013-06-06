@@ -418,6 +418,17 @@ Returns nil if there is no current sandbox."
        dp-current-sandbox-regexp
        (string-match dp-current-sandbox-regexp filename)))
 
+;; Begin moving to a sandbox per frame.
+(defsubst dp-set-current-sandbox-read-only-p (read-only-p)
+  (setq dp-current-sandbox-read-only-p read-only-p))
+
+(defsubst dp-set-sandbox-name-and-regexp (name regexp &optional default-p)
+  (if default-p 
+      (setq-default dp-current-sandbox-name name
+                    dp-current-sandbox-regexp regexp)
+    (setq dp-current-sandbox-name name
+          dp-current-sandbox-regexp regexp)))
+
 (defun dp-set-sandbox (sandbox &optional read-only-p)
   "Setup things for a singular, unique SANDBOX.
 Files from other sandboxes are read only to prevent editing in the wrong
@@ -438,27 +449,31 @@ the current sandbox is used for defaults, etc."
                                 ""))
                       nil nil nil nil nil dp-current-sandbox-name)
                      current-prefix-arg))
-  (setq dp-current-sandbox-read-only-p read-only-p)
+  (dp-set-current-sandbox-read-only-p read-only-p)
   (let ((sandbox (if (string= sandbox "")
                      nil
                    sandbox)))
     (if (not sandbox)
-        (setq dp-current-sandbox-regexp nil
-              dp-current-sandbox-name nil)
+        ;; @todo XXX Why isn't this a `setq-default' like the others?
+        (dp-set-sandbox-name-and-regexp nil nil)
       ;; If name, determine path/sandbox
       ;; If path/sandbox, determine name
       (if (string-match "/" sandbox)
           ;; We're a path. find sb name
-          (setq-default dp-current-sandbox-regexp sandbox
-                        dp-current-sandbox-name (file-name-nondirectory
-                                                 (directory-file-name
-                                                  (file-name-directory
-                                                   (directory-file-name 
-                                                    sandbox)))))
+          (dp-set-sandbox-name-and-regexp
+           sandbox
+           (file-name-nondirectory (directory-file-name
+                                    (file-name-directory
+                                     (directory-file-name 
+                                      sandbox))))
+           'set-default)
         ;; We're a name, find path
-        (setq-default dp-current-sandbox-name sandbox
-                      dp-current-sandbox-regexp
-                      (concat (dp-me-expand-dest "/" sandbox) "/" ))))
+        (dp-set-sandbox-name-and-regexp
+         sandbox
+         (if (string= "*" sandbox)
+             ".*"                      ; We're always in the "right" sandbox.
+           (concat (dp-me-expand-dest "/" sandbox) "/" ))
+         'set-default)))
     (setq frame-title-format (concat "["
                                      (or dp-current-sandbox-name "No SB")
                                      "] "

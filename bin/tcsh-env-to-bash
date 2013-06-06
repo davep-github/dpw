@@ -1,0 +1,67 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${check_existence_in_dot_rc_p=}
+: ${check_for_different_values=t}
+: ${list_files_in_dot_rc=}      # Changes option to -l
+: ${rc_grep_option=-q}          #
+: ${emit_different_values=}
+
+VARIABLES_OF_INTEREST=":SNPSLMD_LICENSE_FILE:"
+
+# We will have a tcsh env piped into us
+while read
+do
+  # $REPLY is name=val
+  EExecDashV_p && echo_id REPLY
+  name=$(echo "${REPLY}" | sed -r 's/([^=]+)(=)(.*)/\1/')
+  EExecDashV_p && echo_id2 name
+  if vtruep "${check_existence_in_dot_rc_p}" && \
+            fgrep ${rc_grep_option} "${name}" ~/.rc/*
+  then
+      echo "${name} is in one or more rc file."
+      echo ===
+  fi
+
+  vtruep "${check_for_different_values}" || continue
+
+  tcsh_val=$(echo "${REPLY}" | sed -r 's/([^=]+)(=)(.*)/\3/')
+  EExecDashV_p && echo_id2 tcsh_val
+
+  bash_val=$(eval echo \$$name)
+  EExecDashV_p && {
+      echo_id2 bash_val
+      echo '==='
+  } 1>&2
+
+  iznot="not "
+  [ "${tcsh_val}" != "${bash_val}" ] && {
+      EExec_verbose_msg "****** ${name}: value mismatch: ******"
+      EExec_verbose_msg " tcsh>${tcsh_val}<"
+      EExec_verbose_msg " bash>${bash_val}<"
+      # Emit command fit for a bash
+      if echo "${VARIABLES_OF_INTEREST}" | fgrep -q ":${name}:" 
+      then
+          iznot=""
+      fi
+      EExec_verbose_msg "name>$name< is ${iznot}a VOI"
+  } 1>&2
+  vtruep "${emit_different_values}" && {
+      vtruep "${iznot}" || {
+          echo "export $name=\"$tcsh_val\""
+      }
+  }
+
+done
+  

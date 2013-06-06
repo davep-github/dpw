@@ -1,5 +1,18 @@
 #!/bin/sh
 
+
+vunsetp "${any_shell_p}" && {
+    test $(basename "${SHELL}") = tcsh || {
+        echo "You are not in a c-shell.
+At this time, it is recommended to run tests that environment.
+> ssh localhost
+will get a pristine standard environment."
+    exit 1
+    } 1>&2
+}
+
+echo_id SHELL
+
 source script-x
 set -u
 progname="$(basename $0)"
@@ -12,6 +25,7 @@ do
 done
 unset eexec_program
 
+: ${p4_clib_dir:=//hw/ap_tlit1/clib/Linux}
 : ${log_file_base_name:=dot-sh}
 : ${teeker_options=--slog -Z9 --ts --hg}
 : ${testname=}
@@ -52,6 +66,16 @@ Usage:  testname [additional-teeker-options]"
     }
 fi
 check_test "${testname}" 1>&2 || exit 1
+test_base_name=$(basename "${testname}" .sh)
+cfg_file_name="${test_base_name}.cfg"
+so_name=$(sed -rn "s/(.*-plugin ')([^[:space:]]+)( .*)/\2/p" "${cfg_file_name}").so
+echo_id so_name
+clib_dir=$(me-expand-dest "${p4_clib_dir}")
+so_path="${clib_dir}/${so_name}"
+echo_id so_path
+# Check for no go&^@*(#amn(*#&(#*&$other-*&^#*$&-ing link errors.
+ldd "${so_path}"
+echo "COMPLETE ldd check!"
 
 # E.g. ./surface_write_read_no_smmu_bar1.sh 2>&1 | teeker --slog -Z9 --ts --grep 'surface_write_read:' --hg dot-sh --egrep 'ERROR: cannot aquire /tmp'; email-yopp
 

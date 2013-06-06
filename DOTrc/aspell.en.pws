@@ -1,4 +1,4 @@
-personal_ws-1.1 en 224 
+personal_ws-1.1 en 225 
 BioShock
 Googlegear
 pty
@@ -33,6 +33,7 @@ DASD
 stdin
 xemacs
 XEmacs
+plugin
 args
 phisher
 TNC

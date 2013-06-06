@@ -260,4 +260,6 @@ alias .egrep=dotegrep
 alias .jgrep=dotjgrep
 alias .grep=dotgrep
 
+alias mex=me-expand-dest
+
 true

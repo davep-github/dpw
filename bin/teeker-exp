@@ -2,9 +2,22 @@
 
 import os, sys, string, types, re, exceptions, signal
 import gzip, argparse
-import dp_utils, ticker_lib, dp_io
+import dp_utils, ticker_lib, dp_io, dp_time
 
 Caught_signals = []
+
+## Tickers
+## Tickers count "lines of input." This is really just the number of calls to
+## the ticker instance's __call__() method.
+## A base ticker does it with number of lines.
+## A char ticker does it with characters.
+## A twiddle ticker ticks in one place, cycling through a char set, like
+## bsd's boot ticker.
+
+## Teeker
+## Char wise means split input lines into chars and feed them 1 by 1 into the
+## ticker. This can be any kind of ticker. Each character is one "line" of
+## input to the underlying ticker.
 
 ## @todo XXX Add prefix status string.
 ## E.g. track number of grep hits (or just the fact that any have occurred).
@@ -100,6 +113,7 @@ def eval_with_units(num, allow_fractions_p=False):
 def eval_with_units_fractions_ok(num):
     return eval_with_units(num, allow_fractions_p=True)
 
+# Funnel through here for debugging.
 def add_to_dict_action(actor, dictionary, parser, namespace, values,
                        option_string=None, dest=None, ext_dict=False):
     if parse_debug:
@@ -125,6 +139,15 @@ class Ctor_arg_action(argparse.Action):
         add_to_dict_action(self, Ctor_arg_dict, parser, namespace,
                            values, option_string, dest=dest,
                            ext_dict=ext_dict)
+
+class App_arg_action_ctor(Ctor_arg_action):
+    def __call__(self, parser, namespace, values, option_string=None,
+                 dest=None, ext_dict=False):
+        add_to_dict_action(self, App_arg_dict, parser, namespace,
+                           ticker_lib.Char_ticker_t,
+                           option_string, CTOR)
+        add_to_dict_action(self, App_arg_dict, parser, namespace, True,
+                           dest="char_wise_p")
 
 class Ctor_arg_action_true(Ctor_arg_action):
     def __call__(self, parser, namespace, values, option_string=None):
@@ -225,9 +248,14 @@ class Ctor_arg_action_twiddle(Ctor_arg_action):
                            option_string, CTOR)
 
 
-def display_match(ostream, line, line_number, prefix="", suffix=""):
-    dp_io.fprintf(ostream, "%s line: %d, >%s< %s",
-                  prefix, line_number, line, suffix)
+def display_match(ostream, line, line_number, prefix="", suffix="",
+                  timestamp_p=False):
+    if timestamp_p:
+        ts = dp_time.std_timestamp() + ": "
+    else:
+        ts = ""
+    dp_io.fprintf(ostream, "%s %sline: %d, >%s< %s",
+                  prefix, ts, line_number, line, suffix)
     app_args.match_ostream.flush()
 
 def dump_matching_and_error_lines(all_output_streams,
@@ -408,7 +436,7 @@ if __name__ == "__main__":
                          help="Initial count [number of units]")
     oparser.add_argument("-c", "--tick-char",
                          dest="tick_char", default=None,
-                         action=Ctor_arg_action,
+                         action=Ctor_arg_action_char,
                          help="""Tick character. Mutually exclusive with twiddle.
 Implies Char_ticker_t""")
     oparser.add_argument("-d", "--dots",
@@ -436,10 +464,10 @@ Implies Char_ticker_t""")
                          action=Ctor_arg_action_false,
                          help="Print grand total at end.")
     oparser.add_argument("-k", "--char-wise",
-                         dest="char_wise_p",
-                         nargs=0,
-                         action=Ctor_arg_action_true,
-                         help="Count chars vs lines [the default].")
+                         dest="char_wise_p", default=False,
+                         action="store_true",
+                         help="""Count chars vs lines [the default].
+Split line into chars and feed to ticker.""")
     oparser.add_argument("-K", "--char-wise-char", "--char-tick-char",
                          dest="tick_char",
                          nargs=0,
@@ -569,7 +597,7 @@ Implies Char_ticker_t""")
         open_mode = "a"
 
     if app_args.add_timestamp_p:
-        file_suffix = "." + dp_utils.bq("dp-std-timestamp")
+        file_suffix = "." + dp_time.std_timestamp()
     file_suffix += app_args.U_extension
 
     dp_io.cdebug(1, "app_args.output_files>%s<\n", app_args.output_files)
@@ -649,6 +677,8 @@ Implies Char_ticker_t""")
         outputStreams.append(pipe_stream)
         ostream.write("\n")
 
+    timestamp_p = Ctor_arg_dict.get("timestamp_p", False)
+    
     # Help speed up the loop.
     compiled_regexps = []
     compiled_error_regexps = []
@@ -720,7 +750,8 @@ Implies Char_ticker_t""")
                     # XXX @todo Add ANSI color options?
                     display_match(app_args.match_ostream,
                                   input_line[:-1], line_number,
-                                  "\n***", "***\n")
+                                  prefix="\n***", suffix="***\n",
+                                  timestamp_p=timestamp_p)
                 if app_args.grep_hit_action:
                     if not app_args.all_grep_hit_actions_p:
                         app_args.grep_hit_action = None
@@ -736,7 +767,8 @@ Implies Char_ticker_t""")
                     # XXX @todo Add ANSI color options?
                     display_match(app_args.match_ostream,
                                   input_line[:-1], line_number,
-                                  "\n!!!!", "!!!!\n")
+                                  prefix="\n!!!!", suffix="!!!!\n",
+                                  timestamp_p=timestamp_p)
 
         if char_wise_p:
             # Iterate for each char in the line.
