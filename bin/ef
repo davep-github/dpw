@@ -63,7 +63,7 @@ local_server_p()
 # parameter to force selection of a host.
 # The most up-to-date tends to be kept in the ipc(dp) file:
 # ~/ipc/dp-editing-server which has the format:
-# server-name pid
+# server-name <alist elements of editor id information>
 # If we find no host then we use a new instance.
 #
 find_best_editing_host()

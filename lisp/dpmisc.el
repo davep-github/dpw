@@ -6231,8 +6231,20 @@ you've added enough info for set-auto-mode to figure it out.."
   (marker-position (process-mark (get-buffer-process (or buffer
 							 (current-buffer))))))
 
+(defvar dp-editor-identification-data '()
+  "Anything that might help us ID the correct editor running the server.")
+
+(defsubst dp-add-editor-identification-data (key datum)
+  (dp-add-or-update-alist 'dp-editor-identification-data key datum))
+
+(defsubst dp-remove-editor-identification-data (key)
+  (remove-alist 'dp-editor-identification-data key))
+
+(defsubst dp-editor-identification-string ()
+  (dp-string-join dp-editor-identification-data))
+  
 (defun dp-editing-server-ipc-file ()
-  "We get the editing server name in here. The environment variable is consistently stale."  
+  "Editing server identification info. The environment variable is consistently stale."
   (or (getenv "DP_EDITING_SERVER_FILE")
       (format "%s/ipc/dp-editing-server" (getenv "HOME"))))
 
@@ -6292,9 +6304,10 @@ new one."
                (string-match dp-edting-server-valid-host-regexp
                              host-name))
       ;; Don't clobber existing server advertisement.
-      (shell-command-to-string (format "echo %s %d > %s" 
+      (dp-add-editor-identification-data 'pid (emacs-pid))
+      (shell-command-to-string (format "echo '%s %s' > %s" 
                                        host-name
-                                       (emacs-pid)
+                                       (dp-editor-identification-string)
                                        (dp-editing-server-ipc-file))))))
   
 (dp-defaliases 'gserv 'xserver 'eserver 'gnuserve 'dp-start-editing-server)

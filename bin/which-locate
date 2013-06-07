@@ -47,11 +47,12 @@ Usage()
     echo "Usage: $progname <-c|-i|-b> [<locate-args>]
 Try to give a consistent interface to various locate programs.
 
-Exactly one of -c|-i (or an alias) must be provided.
+Exactly one of -c|-i|--version (or an alias) must be provided.
 -b|--binary|-p|--program -- The real locate's path name.
 -c|--create -- Actually create the database using the correct format.
 -i|--id|--database-id|--ext -- Identify the locator. Useful for extensions to 
                                differentiate databases.
+--version -- Version (type) of locate we think we're using.
 "
 }
     
@@ -67,7 +68,7 @@ case "$version" in
 esac
 
 [ -z "$*" ] && {
-    echo "-c or -i must be specified."
+    echo "-c or -i or --version must be specified."
     Usage
     exit 1
 } 1>&2
@@ -78,6 +79,7 @@ do
       -b|--binary|-p|--program) echo "$LOC_BIN"; exit;;
       -c|--create) shift; $create "$@"; exit;;
       -i|--id|--database-id|--ext) $search "$@"; exit;;
+      -v|--version) $LOC_BIN --version; exit 0;;
       *) Usage; exit 1;;
   esac
 done

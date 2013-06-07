@@ -1,0 +1,68 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+
+# Usage variable usage:
+Usage_args_info=" other-sandbox"
+Usage_synopsis="Compare open files in this sb with the same in another sb...:
+"
+# Using ) after the args makes copy & paste between here and the 
+# case statement easier.
+Usage_details="${EExec_parse_usage}
+-r|--filter|--regexp <regexp>) Filter open files with this regexp.
+-g|--grep <prog>) Program to grep with.
+-d|--diff <diff prog>) Use this for diffing.
+-D|--diff-opts|--diff-options <options>) Pass these options to differ.
+"
+# Example of arg parsing.
+option_str="${EExec_parse_option_str}r:d:D:g:"
+ long_options=(
+"filter:" "regexp:"
+"grep:"
+"diff:"
+"diff-opts:" "diff-options:")
+
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support
+      -n|eexec-n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v|eexec-v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q|eexec-q) VERBOSE=":"; EExecQuiet;;
+
+      # Program options.
+      -r|--regexp|--filter) shift; filter="${1}";;
+      -d|--diff) shift; differ="${1}";;
+      -D|--diff-options|--diff-opts) shift; diff_options="${1}";;
+      -g|--grep) shift; grepper="${1}";;
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+# The following is needed only when args are required.
+[ "$*" = "" ] && Usage
+
+other_sb="${1}"
+shift
+
+: ${filter=".*"}
+: ${grepper:=egrep}
+: ${differ:="diff"}
+: ${diff_options:=""}
+
+p4 opened \
+   | "${grepper}" "${filter}" \
+   | dp4-extract-pathname \
+   | while read
+     do 
+        EExec -0 "${differ}" ${diff_options} "$(me-expand-dest $REPLY)" "$(me-expand-dest $REPLY ${other_sb})"
+     done

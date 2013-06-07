@@ -422,12 +422,14 @@ Returns nil if there is no current sandbox."
 (defsubst dp-set-current-sandbox-read-only-p (read-only-p)
   (setq dp-current-sandbox-read-only-p read-only-p))
 
-(defsubst dp-set-sandbox-name-and-regexp (name regexp &optional default-p)
+(defun dp-set-sandbox-name-and-regexp (name regexp &optional default-p)
+  (dp-remove-editor-identification-data 'sandbox-name)
   (if default-p 
       (setq-default dp-current-sandbox-name name
                     dp-current-sandbox-regexp regexp)
     (setq dp-current-sandbox-name name
-          dp-current-sandbox-regexp regexp)))
+          dp-current-sandbox-regexp regexp))
+    (dp-add-editor-identification-data 'sandbox-name dp-current-sandbox-name))
 
 (defun dp-set-sandbox (sandbox &optional read-only-p)
   "Setup things for a singular, unique SANDBOX.

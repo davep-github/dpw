@@ -52,7 +52,7 @@
   "Do I want the hide ifdef package activated?
 At nVIDIA, the answer is HELL YES!")
 
-(setq dp-edting-server-valid-host-regexp "o-xterm-.*")
+(setq dp-edting-server-valid-host-regexp "\\(o\\|sc\\)-xterm-.*")
 
 ;; For some reason, vc isn't being autoloaded here, but it is @ home.
 (vc-load-vc-hooks)  ; This is being added to the Tools->Version Control menu.

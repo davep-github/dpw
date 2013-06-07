@@ -274,12 +274,13 @@ EExec mkdir -p "${log_dir}"
     # 1
     while [ "${get_mods_p}" = "a" ]
     do
-      read -e -p "Get mods [y/N/q]? "
+      read -e -p "Get mods [y/N/q/c]? "
       case "$REPLY" in
       # Provide way to get args. E.g. set -- $REPLY. First word will be y/n/etc.
       # Shift it off and pass "$@" to get_mods
           [yY]) get_mods_p=t;;
           [nN]|"") get_mods_p=;;
+          [Cc]) get_mods_p=t; build_me_p=t;;  # "Continue" do this and the rest.
           [Qq]) exit 0;;
           *) continue;;
       esac

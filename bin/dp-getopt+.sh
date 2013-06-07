@@ -139,9 +139,9 @@ running_as_script && {
 #e.g.#   # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
 #e.g.#   case $1 in
 #e.g.#       # eexec support
-#e.g.#       -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
-#e.g.#       -v) VERBOSE="echo $progname: "; EExecVerbose;;
-#e.g.#       -q) VERBOSE=":"; EExecQuiet;;
+#e.g.#       -n|--eexec-n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+#e.g.#       -v|--eexec-v) VERBOSE="echo $progname: "; EExecVerbose;;
+#e.g.#       -q|--eexec-q) VERBOSE=":"; EExecQuiet;;
 #e.g.# 
 #e.g.#       # Program options.
 #e.g.#

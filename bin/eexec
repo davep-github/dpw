@@ -289,7 +289,7 @@ EExec()
               ;;
           -c|-k|--keep-going) eexecContinue=t
               ;;
-          -C|-0|--fake-success|--return-zero) eexecContinue=t
+          -C|-0|--fake-success|--return-zero|--rose) eexecContinue=t
               fake_success_p=y
               ;;
           -y|--execute-anyway|--ignore-dash-n) eexecShowOnly=""
