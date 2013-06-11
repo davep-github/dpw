@@ -387,9 +387,21 @@ Oddly, it doesn't handle structs.")
      (shell-command-to-string 
       (format "me-expand-dest %s %s" abbrev (or sb "")))))
 
-;; Set in a spec-macs.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Sandbox support.
+;;; Gives us the ability to make sure we don't edit files in the wrong SB and
+;;; then wonder why things aren't changing, etc.
+;;; Wouldn't be needed if only one SB needed to be used at one time. Ahhh for
+;;; the old days.
+;;;
+
 (defvar dp-sandbox-regexp-private nil
   "Regexp to detect a sandbox.")
+
+;; Use in a spec-macs.
+(defsubst dp-set-sandbox-regexp (regexp)
+  (setq dp-sandbox-regexp-private regexp))
 
 (defsubst dp-sandbox-regexp ()
   dp-sandbox-regexp-private)
@@ -427,8 +439,8 @@ Oddly, it doesn't handle structs.")
   "Return non-nil if we are in the current sandbox dir.
 Returns nil if there is no current sandbox."
   (and (dp-sandbox-p filename)
-       dp-current-sandbox-regexp
-       (string-match dp-current-sandbox-regexp filename)))
+       (dp-current-sandbox-regexp)
+       (string-match (dp-current-sandbox-regexp) filename)))
 
 ;; Begin moving to a sandbox per frame.
 (defsubst dp-set-current-sandbox-read-only-p (read-only-p)
@@ -457,14 +469,14 @@ files. Setting the sandbox on these machines is useful for the places where
 the current sandbox is used for defaults, etc."
   (interactive (list (read-from-minibuffer
                       (format "Sandbox name/path%s: "
-                              (if dp-current-sandbox-regexp
+                              (if (dp-current-sandbox-regexp)
                                   (format "[current: %s (%s)]"
                                           (dp-current-sandbox-regexp)
                                           (dp-current-sandbox-name))
                                 ""))
                       nil nil nil nil nil (dp-current-sandbox-name))
                      current-prefix-arg))
-  ((dp-set-current-sandbox-read-only-p) read-only-p)
+  (dp-set-current-sandbox-read-only-p read-only-p)
   (let ((sandbox (if (string= sandbox "")
                      nil
                    sandbox)))
@@ -476,11 +488,11 @@ the current sandbox is used for defaults, etc."
       (if (string-match "/" sandbox)
           ;; We're a path. find sb name
           (dp-set-sandbox-name-and-regexp
-           sandbox
            (file-name-nondirectory (directory-file-name
                                     (file-name-directory
                                      (directory-file-name 
                                       sandbox))))
+           sandbox
            'set-default)
         ;; We're a name, find path
         (dp-set-sandbox-name-and-regexp
@@ -516,11 +528,16 @@ if there is no current one set."
   
 (add-hook 'dp-detect-read-only-file-hook 'dp-sandbox-read-only-p)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Sandbox support.
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Tempo comment support.
 ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;finish-me (defvar dp-c-doxy-comment-introduction 
 ;;finish-me   (format "/*%s*/" (make-string (- fill-column 4) ?*))
 ;;finish-me   "First line of a doxy commment.
@@ -649,13 +666,17 @@ do not indent the newly inserted comment block."
 (defun dp-insert-tempo-comment (&optional no-indent-p)
   "Add a tempo comment.
 Insert a context sensitive comment using a tempo template.
-This is vectored via the buffer local variable `dp-insert-tempo-comment-func' 
+This is vectored via the buffer local variable `dp-insert-tempo-comment-func'
 so each mode can have its own logic."
   (interactive "*P")
   (when dp-insert-tempo-comment-func
     (funcall dp-insert-tempo-comment-func no-indent-p)))
 (defalias 'tc 'dp-insert-tempo-comment)
 
+;;;
+;;; Tempo comment support.
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (provide 'dp-ptools)
 (dmessage "done loading dp-ptools.el...")
