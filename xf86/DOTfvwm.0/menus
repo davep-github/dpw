@@ -954,6 +954,8 @@ AddToMenu "Window" "Window Operations" Title
 + "(Un)Max&width"       Maximize 100 0
 + "(Un)Max&height"      Maximize   0 100
 + "(Un)&Shade"          WindowShade
++ "(Un)Stick/&Pages"    StickAcrossPages
++ "(Un)Stick/Des&ks"    StickAcrossDesks
 + "(Un)S&tick"          Stick
 + "R&aise"              Raise
 + "&Lower"              Lower
@@ -980,6 +982,8 @@ AddToMenu "Window-Ops2"
 + "&Resize"                     Resize
 + "(De)&Iconify"                Iconify
 + "(Un)&Shade"                  WindowShade
++ "(Un)Stick/&Pages"            StickAcrossPages
++ "(Un)Stick/Des&ks"            StickAcrossDesks
 + "(Un)S&tick"                  Stick
 + "(Un)M&aximize"               Maximize 100 100
 + "(Un)Max&width"               Maximize 100 0

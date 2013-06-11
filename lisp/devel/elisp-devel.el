@@ -3677,3 +3677,91 @@ dp-tfun
                   (or (match-string 4) "")))))
 
 
+
+========================
+Monday June 10 2013
+--
+
+## Make a dp-frame-local-variables obarray.
+(set-frame-property (selected-frame) 'dp-bubba "I am BUBBA!")
+
+(defun dp-set-frame-local-var (var-sym val &optional frame)
+  (setq-ifnil frame (selected-frame))
+  (message "frame: %s, var-sym: %s, val: %s" frame var-sym val)
+  (set-frame-property frame var-sym val))
+
+(defun dp-get-frame-local-var (frame var-sym &optional default)
+  (frame-property (or frame
+                      (selected-frame))
+                  var-sym
+                  ;; User can provide DEFAULT in order to differentiate nil
+                  ;; from the case where the property doesn't exist.
+                  default))
+
+(defmacro dp-setq-frame-local (&rest arglist)
+  (if (not (= 0 (mod (length arglist) 2)))
+      (error "dp-setq-frame-local: arglist len must be a multiple of 2."))
+  (let (arg init-val result)
+    (while arglist
+      (setq arg (car arglist)
+            arglist (cdr arglist)
+            init-val (car arglist)
+            arglist (cdr arglist))
+      (setq new-elem `(dp-set-frame-local-var (quote ,arg) ,init-val))
+      (setq result (cons new-elem result)))
+    (cons 'progn (reverse result))))
+
+;; Default val?
+(defmacro dp-def-frame-local-var (var-name val &rest docstring)
+  `(progn 
+    (put (quote ,var-name) 'dp-frame-local-variable t)
+    (defvar ,var-name ,val ,(car docstring))))
+
+(cl-pe '(dp-def-frame-local-var flv "flvvv" "doc-me-up"))
+
+(progn
+  (put 'flv 'dp-frame-local-variable t)
+  (defvar flv "flvvv" "doc-me-up"))
+flv
+
+(symbol-plist 'flv)
+(variable-documentation "doc-me-up" dp-frame-local-variable t)
+
+
+
+
+
+
+
+(progn
+  (put 'flv 'dp-frame-local-variable t)
+  (defvar flv val nil))nil
+
+
+
+
+(cl-pe '(dp-setq-frame-local qqqa 198 qqqb 199))
+
+(progn
+  (dp-set-frame-local-var 'qqqa 198)
+  (dp-set-frame-local-var 'qqqb 199))
+nil
+
+
+(frame-property (selected-frame) 'yabba-dabba-im-not-set-are-you)
+nil
+
+(dp-get-frame-local-var nil 'qqqaX 'zuzz)
+zuzz
+
+
+
+nil
+
+
+nil
+
+198
+
+
+

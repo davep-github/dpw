@@ -344,6 +344,7 @@ Key t          A        4       exec dpxx
 # Better would be to bring it to us.
 Key i          A        4       Next  ("*ipython@*") FocusRaiseAndStuff
 Key o          A        4       Next  ("*orpie@*") FocusRaiseAndStuff
+Key o          A        M4      exec xorpie
 
 # Wander around with the cursor keys.
 Key v          A	4	Move

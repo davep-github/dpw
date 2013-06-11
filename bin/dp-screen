@@ -45,6 +45,7 @@ dp_screen()
       eval SCREEN_CMD="${SCREEN_CMD}"
   }
   set -v
+  history -a
   exec screen -O -dR -t "${SCREEN_NAME}" -S "${SCREEN_NAME}" ${SCREEN_CMD}
 }
 
