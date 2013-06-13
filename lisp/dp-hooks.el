@@ -2228,6 +2228,15 @@ changed."
                             ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
                            ))
 
+(defun dp-first-change-hook ()
+  (dmessage "in dp-first-change-hook"))
+
+;; All kinds of things change, like minibuf, temp files, message buffer, etc.
+;; Definitely make this a local hook.
+(defun dp-before-change-function (beg end)
+  (dmessage "in dp-before-change-function, buf: %s, beg: %s, end: %s" 
+            (buffer-name) beg end))
+  
 ;; I'm trending away from advice, since I've seen code that really rapes it
 ;; (I'm looking at you, ECB)
 ;;CO; (defadvice find-function-on-key (before dp-find-function-on-key activate)

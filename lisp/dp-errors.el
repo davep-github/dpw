@@ -98,7 +98,7 @@
     "^Empty input ring$"
     "^No history$"
     "^Not found$";; Too common?
-    "^Current buffer has no process$"
+;;    "^Current buffer has no process$"
     
     ;; dabbrev
     "^No dynamic expansion for \".*\" found\\.$"

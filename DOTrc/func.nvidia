@@ -77,7 +77,8 @@ xxd()
 
 cdtglr()
 {
-    cd $(tgen-latest-run "$@")
+    local d=$(tgen-latest-run "$@")
+    vsetp "${d}" && cd "${d}"
 }
 
 gtglr()

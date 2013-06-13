@@ -45,21 +45,25 @@ do
   df -h "${sb_dir}"
   
   case "$s" in
-      sb2) info="Surface_specifier:
-Allows mapping modes to be specified in void SetSharedSurfaceNames().
-Working on adding a parameter to select the mode rather than editing a test.
-Includes MeIterableTest unshelved code.
+      sb1) info="DEP_CPU.
+Looking to verify that -ncoh_tex is being passed to <test>.sh.
+*** Not built with RTL.
+"
+      sb2) info="DEP CPU
+Build with RTL.
+Others to come.
 "
       ;;
-      sb3) info="Dependent CPU tests.
+      sb3) info="Surface_write_read on TOP RTL.
+Replaced sb5 when sb5 had problems running GPU RTL.
+This is now the real Surface_write_read dev dir.
 "
       ;;
-      sb4) info="MeIterableTest (out for review) 
-Suggested to run full(er) regression.
-BAR1/MC tests.
+      sb4) info="Unused.
 "
       ;;
-      sb5) info="EngCpu tests. On ARM tests using EngCpu class and scheduler.
+      sb5) info="Old Surface_write_read on TOP RTL
+Useful for throw away stuff until needed.
 "
       ;;
       *) echo 1>&2 "Unknown sandbox>$sb<"; exit 1;;

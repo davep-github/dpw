@@ -3682,21 +3682,193 @@ dp-tfun
 Monday June 10 2013
 --
 
+(cl-pe '(dp-declare-frame-local-var fl-bubba))
+
+(progn
+  (put 'fl-bubba 'dp-frame-local-variable-p t)
+  (defconst fl-bubba "DECLARED frame local variable" "dp-frame-local-var"))
+fl-bubba
+
+
+
+
+(progn
+  (put 'fl-bubba 'dp-frame-local-variable t)
+  (defconst fl-bubba "DECLARED frame local variable" "dp-frame-local-var"))
+fl-bubba
+
+
+"DECLARED frame local variable"
+
+
+
+
+
+(symbol-plist 'flv-bubba)
+(variable-documentation "dp-frame-local-var" dp-frame-local-variable-p default)
+
+(dp-frame-local-variable-p t variable-documentation "dp-frame-local-var" dp-frame-local-variable t)
+
+(variable-documentation "dp-frame-local-var" dp-frame-local-variable t)
+
+(variable-documentation "dp-frame-local-var" dp-frame-local-variable t)
+
+
+fl-bubba
+"DECLARED frame local variable"
+
+"i am a bubba"
+
+
+fl-bubba
+"i am a bubba"
+
+
+(cl-pe '(dp-get-frame-local bubba))
+
+(dp-get-frame-local bubba)nil
+
+
+
+
+
+
 ## Make a dp-frame-local-variables obarray.
 (set-frame-property (selected-frame) 'dp-bubba "I am BUBBA!")
+
+(dp-setq-frame-local-var 'fl-bubba "val")
+"val"
+
+(cl-pe '(dp-get-frame-local-var fl-bubba))
+
+(progn
+  (dp-assert-frame-local-variable 'fl-bubba)
+  (frame-property (or nil (selected-frame)) 'fl-bubba nil))nil
+
+
+(progn
+  (dp-assert-frame-local-variable 'fl-bubba)
+  (frame-property (or nil (selected-frame)) 'fl-bubba nil))
+"val"
+
+
+
+
+(progn
+  (dp-assert-frame-local-variable var-sym)
+  (frame-property (or nil (selected-frame)) 'fl-bubba nil))nil
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+dp-sandbox-regexp-private
+"DECLARED frame local variable"
+
+(dp-set-sandbox-regexp "/home/scratchX.")
+"/home/scratchX."
+
+"/home/scratch."
+
+
+
+
+
+
+
+(dp-get-frame-local dp-sandbox-regexp-private)
+"/home/scratchX."
+
+"/home/scratch."
+
+(dp-sandbox-regexp)
+"/home/scratchX."
+
+
+(dp-sandbox-p "/home/scratchX.bubba")
+0
+
+nil
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+
+
+
+
+
+(dp-setq-frame-local-var 'fl-bubba "val2")
+"val2"
+
+(dp-get-frame-local fl-bubbaa)
+
+"val2"
+
+
+(cl-pe '(dp-get-frame-local bib))
+
+(dp-get-frame-local fl-bubba)
+"val2"
+
+"val2"
+
+(dp-get-frame-local-var 'fl-bubba nil nil)
+"val2"
+
+
+
+
+
+
+
+
+
+(dp-get-frame-local bib)nil
+
+
+
+
+
+kdjhfkdjhfkj
+
+
+
+(dp-assert-frame-local-variable 'bubba)
+
+
+dp-setq-frame-local-var
+
+(defsubst dp-assert-frame-local-variable (var-sym)
+  (unless (get var-sym 'dp-frame-local-variable-p)
+    (error 'invalid-state (format "`%s' is not frame local" var-sym)))
+  (get var-sym 'dp-frame-local-variable-p))
 
 (defun dp-set-frame-local-var (var-sym val &optional frame)
   (setq-ifnil frame (selected-frame))
   (message "frame: %s, var-sym: %s, val: %s" frame var-sym val)
-  (set-frame-property frame var-sym val))
+  ;; Enforce declaration requirement.
+  (dp-assert-frame-local-variable var-sym)
+  (set-frame-property frame var-sym val)
+  (put var-sym 'dp-frame-local-variable-p t)
+  val)
 
-(defun dp-get-frame-local-var (frame var-sym &optional default)
-  (frame-property (or frame
-                      (selected-frame))
-                  var-sym
-                  ;; User can provide DEFAULT in order to differentiate nil
-                  ;; from the case where the property doesn't exist.
-                  default))
+(defun dp-get-frame-local-var (var-sym &optional frame default)
+    (if (eq (dp-assert-frame-local-variable var-sym) 'default)
+        (symbol-value var-sym)
+      (frame-property (or frame
+                          (selected-frame))
+                      var-sym
+                      ;; User can provide DEFAULT in order to differentiate nil
+                      ;; from the case where the property doesn't exist.
+                      default)))
+
+(defmacro dp-get-frame-local (var-sym &optional frame default)
+  `(dp-get-frame-local-var (quote ,var-sym) ,frame ,default))
 
 (defmacro dp-setq-frame-local (&rest arglist)
   (if (not (= 0 (mod (length arglist) 2)))
@@ -3711,57 +3883,219 @@ Monday June 10 2013
       (setq result (cons new-elem result)))
     (cons 'progn (reverse result))))
 
-;; Default val?
-(defmacro dp-def-frame-local-var (var-name val &rest docstring)
-  `(progn 
-    (put (quote ,var-name) 'dp-frame-local-variable t)
-    (defvar ,var-name ,val ,(car docstring))))
+(defmacro dp-def-frame-local-var (var-name val &optional docstring)
+  (let ((sep (if docstring
+                 ": "
+               ""))
+        (docstring (or docstring "")))
+    (setq docstring (concat "dp-frame-local-var" sep docstring))
+    `(progn
+      ;; Use this as default value until explicitly set.
+      (put (quote ,var-name) 'dp-frame-local-variable-p 'default)
+      (defconst ,var-name ,val ,docstring))))
 
-(cl-pe '(dp-def-frame-local-var flv "flvvv" "doc-me-up"))
+;; (defmacro dp-declare-frame-local-var (var-name &optional docstring)
+;;   (dp-def-frame-local-var var-name
+;;                           "DECLARED frame local variable" docstring))
+
+(dp-def-frame-local-var dp-sandbox-regexp-private nil
+  "Regexp to detect a sandbox.")
+
+;; Use, e.g., in a spec-macs.
+(defsubst dp-set-sandbox-regexp (regexp)
+  (dp-setq-frame-local dp-sandbox-regexp-private regexp))
+
+(defsubst dp-sandbox-regexp ()
+  (dp-get-frame-local dp-sandbox-regexp-private))
+
+;; Set in a spec-macs.
+(defvar dp-sandbox-make-command nil
+  "A special makefile for using in sandbox. E.g. mmake @ nvidia.")
+
+(defsubst dp-sandbox-p (filename)
+  (and filename
+       (dp-sandbox-regexp)
+       (string-match (dp-sandbox-regexp) filename)))
+
+(dp-def-frame-local-var dp-current-sandbox-regexp-private nil
+  "Regexp to detect the current sandbox.")
+
+(defsubst dp-current-sandbox-regexp ()
+  (dp-get-frame-local dp-current-sandbox-regexp-private))
+
+;; XXX @todo I want to allow an abbrev for the name.
+;; It will be expanded and regexp quoted into `dp-current-sandbox-regexp'.
+(dp-def-frame-local-var dp-current-sandbox-name-private nil
+  "Name of the current sandbox.")
+
+(defsubst dp-current-sandbox-name ()
+  (dp-get-frame-local dp-current-sandbox-name-private))
+
+(dp-def-frame-local-var dp-current-sandbox-read-only-private-p nil
+  "See `dp-set-sandbox' for the meaning of this variable.")
+
+(defsubst dp-current-sandbox-read-only-p ()
+  (dp-get-frame-local dp-current-sandbox-read-only-private-p))
+
+;; Begin moving to a sandbox per frame.
+(defsubst dp-set-current-sandbox-read-only-p (read-only-p)
+  (dp-setq-frame-local dp-current-sandbox-read-only-private-p read-only-p))
+
+(defun dp-set-sandbox-name-and-regexp (name regexp &optional default-p)
+  (dp-remove-editor-identification-data 'sandbox-name)
+  (if default-p
+      (progn
+        (dp-setq-frame-local dp-current-sandbox-name-private name)
+        (dp-setq-frame-local dp-current-sandbox-regexp-private regexp))
+    (dp-setq-frame-local dp-current-sandbox-name-private name)
+    (dp-setq-frame-local dp-current-sandbox-regexp-private regexp))
+  (dp-add-editor-identification-data 'sandbox-name 
+                                     (dp-current-sandbox-name)))
+
+
+(defun dp-sandbox-file-before-change-function (ben end)
+  (if (buffer-file-name)
+      (let ((read-only-p (dp-sandbox-read-only-p (buffer-file-name))))
+        (dmessage "ro-p: %s" read-only-p)
+        ;; None of this prevents the initial change from happening.
+        (toggle-read-only read-only-p)  ; We may be going from RO -> RW or RW -> RO.
+        (when read-only-p
+          (error "File is R/O in this frame.")))
+    (dmessage "ro-p: buffer has no file.")))
+
+
+========================
+Tuesday June 11 2013
+--
+
+;; //a/b/c[,sb][,]
+;; //a/b/c[ sb][,]
+(defvar dp-sandbox-rel-regexp2
+  (concat
+   "\\("                                ; 1
+   "\\(^\\|\\s-+\\)"                    ; 2
+   "\\(//[^, ]+\\)"                     ; 3 -- Abbrev
+   "[, ]"
+   "\\([^, ]+?\\)"                      ; 4 -- Sandbox
+   "\\(?:$\\|,\\{0,1\\}\\)"
+   "\\)$")
+  "Finds syntax: //path?")
+
+(defvar dp-sandbox-rel-regexp3
+  (concat
+   "\\("                                ; 1
+   "\\(^\\|\\s-+\\)"                    ; 2
+   "\\(//[^, ]+?\\)"                    ; 3 -- Abbrev
+   "\\(?:$\\|[, ]\\{0,2\\}\\)"          ; 4
+   "\\)$"
+   )
+  "Finds syntax: //path[, ]sb")
 
 (progn
-  (put 'flv 'dp-frame-local-variable t)
-  (defvar flv "flvvv" "doc-me-up"))
-flv
-
-(symbol-plist 'flv)
-(variable-documentation "doc-me-up" dp-frame-local-variable t)
+  (re-search-forward dp-sandbox-rel-regexp3)
+  (message "3>%s<" (match-string 3))
+  (message "4>%s<" (match-string 4)))
 
 
 
 
 
 
+//a/b/c
 
+
+
+(progn"4>nil<"
+"4>nil<"
+
+  (re-search-forward dp-sandbox-rel-regexp2)
+  (message "3>%s<" (match-string 3))
+  (message "4>%s<" (match-string 4)))
+
+
+
+
+
+
+//a/b/c bkah"4>bkah<"
+
+"
+"
+========================
+Wednesday June 12 2013
+--
+
+\\(//\\|,\\)\\([^,]+\\)\\(,[^,]+\\)?,?$
 (progn
-  (put 'flv 'dp-frame-local-variable t)
-  (defvar flv val nil))nil
+  (save-excursion
+    (if (re-search-forward "\\(//\\|,\\)\\([^, \n\t]+\\)\\(,[^, \n\t]+\\)?,?" nil t)
+        (progn
+          (goto-char (point-max))
+          (princf "match0>%s<" (match-string 1)))
+      (goto-char (point-max))
+      (princf "NO matches."))))
+
+(defun dp-ldd-f ()
+  (interactive)
+  (save-excursion
+    (if (dp-looking-back-at "\\(?:/\\| \\|^\\)\\(\\(//\\|[ ,]\\)\\([^, 
+	]+\\)\\([, ][^, 
+	]*\\)?[ ,]?\\)")
+        (progn
+          (goto-char (point-max))
+          (princf "match1>%s<" (match-string 1))
+          (princf "mex>%s<" ())
+      (goto-char (point-max))
+      (princf "NO matches."))))
+
+"\(?:^\| \|/\)\(\(//\|[ ,]\)\([^, 
+	]+\)\([, ][^, 
+	]*\)?[ ,]?\)"
+
+"\\(?:^\\| \\|/\\)\\(\\(//\\|[ ,]\\)\\([^, 	
+]+\\)\\([, ][^, 	
+]*\\)?[ ,]?\\)"
+
+(dp-me-expand-dest ",tg")
+"../../../../../../../../hw/ap_tlit1/diag/testgen"
 
 
 
+ ,tg                    ! mex doesn't recognize this.
+ ,tg,
+ ,tg,sb1
+ ,tg,sb1,
+ ,tg,,
 
-(cl-pe '(dp-setq-frame-local qqqa 198 qqqb 199))
+/,tg
+/,tg,
+/,tg,sb1
+/,tg,sb1,
+/,tg,,
 
-(progn
-  (dp-set-frame-local-var 'qqqa 198)
-  (dp-set-frame-local-var 'qqqb 199))
-nil
+,tg
+,tg,
+,tg,sb1
+,tg,sb1,
+,tg,,
+  
 
++ tg                    ! regexp doesn't match
++ tg sb1                ! ""
 
-(frame-property (selected-frame) 'yabba-dabba-im-not-set-are-you)
-nil
+ //hw/tools
+ //hw/tools sb1
+ //hw/tools,
+ //hw/tools,sb1
 
-(dp-get-frame-local-var nil 'qqqaX 'zuzz)
-zuzz
+///hw/tools
+///hw/tools sb1
+///hw/tools,
+///hw/tools,sb1
 
-
-
-nil
-
-
-nil
-
-198
-
+//hw/tools
+//hw/tools sb1
+//hw/tools,
+//hw/tools,sb1
 
 

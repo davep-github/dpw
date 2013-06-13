@@ -75,12 +75,6 @@ yes_p()
 }
 export -f yes_p
 
-true_p()
-{
-    dp_DEPRECATED "true_p-->yes_p"
-    yes_p "$@"
-}
-
 shell_var_pred_t()
 {
     [ -n "$1" ]
@@ -96,7 +90,7 @@ export -f shell_var_pred_t
 
 nope_p()
 {
-    ! true_p "$1"
+    ! yes_p "$1"
 }
 export -f nope_p
 

@@ -559,8 +559,8 @@ abbrev is expanded.")
    ","
    "\\([^,]+\\)"                        ; 3 -- Abbrev
    ","
-   "\\([^,]+\\)"                        ; 4
-   "\\(?:,\\{0,1\\}\\)"                 ; 5 -- Sandbox
+   "\\([^,]+\\)"                        ; 4 -- Sandbox
+   "\\(?:,\\{0,1\\}\\)"
    "\\)$")
   "Finds syntax: ,abbrev,sb,?")
 
@@ -575,22 +575,64 @@ abbrev is expanded.")
    )
   "Finds syntax: ,abbrev and ,abbrev, and ,abbrev,,")
 
+(defvar dp-sandbox-rel-regexp2
+  (concat
+   "\\("                                ; 1
+   "\\(^\\|\\s-+\\)"                    ; 2
+   "\\(//[^, ]+\\)"                     ; 3 -- Abbrev
+   "[, ]"
+   "\\([^, ]+?\\)"                      ; 4 -- Sandbox
+   "\\(?:$\\|,\\{0,1\\}\\)"
+   "\\)$")
+  "Finds syntax: //path?")
 
+(defvar dp-sandbox-rel-regexp3
+  (concat
+   "\\("                                ; 1
+   "\\(^\\|\\s-+\\)"                    ; 2
+   "\\(//[^, ]+?\\)"                    ; 3 -- Abbrev
+   "\\(?:$\\|[, ]\\{0,2\\}\\)"          ; 4
+   "\\)$"
+   )
+  "Finds syntax: //path[, ]sb")
+
+(defvar dp-sandbox-rel-regexps (list
+                                dp-sandbox-rel-regexp0
+                                dp-sandbox-rel-regexp1
+                                dp-sandbox-rel-regexp2
+                                dp-sandbox-rel-regexp3)
+  "List of regexps to recognize the various syntaxes of sandbox relative
+  abbrevs.")
+
+
+;;old (defun dp-get-sandbox-rel-abbrev ()
+;;old   (interactive)
+;;old   (dp-get-special-abbrev "," "\\(\\(,[^,]+,[^,]*\\)\\)" nil nil))
+
+;;
+;; match item 3 must be the abbrev.
+;; match item 4 must be the sandbox, or nil for the default sb.
+;;
+;;old1 (defun dp-get-sandbox-rel-abbrev ()
+;;old1   (interactive)
+;;old1   (loop for regexp in dp-sandbox-rel-regexps
+;;old1     do
+;;old1     (when (dp-looking-back-at regexp)
+;;old1       (return (list (match-end 2)
+;;old1                     (match-end 0)
+;;old1                     (concat (match-string 3)
+;;old1                             " "
+;;old1                             (or (match-string 4) "")))))))
+
+;; Just get the whole string and let me-expand-dest sort it out.
 (defun dp-get-sandbox-rel-abbrev ()
-  (interactive)
-  (dp-get-special-abbrev "," "\\(\\(,[^,]+,[^,]*\\)\\)" nil nil))
-
-(defun dp-get-sandbox-rel-abbrev ()
-  (interactive)
-  (when (or
-         (dp-looking-back-at dp-sandbox-rel-regexp0)
-         (dp-looking-back-at dp-sandbox-rel-regexp1))
-    (list (match-end 2)
-          (match-end 0)
-          (concat (match-string 3)
-                  " "
-                  (or (match-string 4) "")))))
-
+  (when (dp-looking-back-at "\\(?:/\\| \\|^\\)\\(\\(//\\|[ ,]\\)\\([^, 
+	]+\\)\\([, ][^, 
+	]*\\)?[ ,]?\\)")
+    (list (match-beginning 1)
+          (match-end 1)
+          (match-string 1))))
+  
 (defun dp-expand-sandbox-rel-abbrev ()
   (interactive)
   (let* ((abbrev-data (dp-get-sandbox-rel-abbrev))

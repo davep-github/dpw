@@ -93,7 +93,14 @@ fi
 #some_path_component=$(echo $(cat last_out_dir)/tests/*)
 some_path_component=$(echo ${latest_out_dir}/tests/*)
 case "${some_path_component}" in
-    *\ *) echo 1>&2 "Multiple test type dirs exist."; exit 1;;
+    *\ *) {
+             echo "Multiple test type dirs exist. Don't know which to use:"
+             for d in ${some_path_component}
+             do
+               echo " $(basename $d)"
+             done
+          } 1>&2
+          exit 1;;
     *) ;;
 esac
 some_path_component=$(basename $some_path_component)

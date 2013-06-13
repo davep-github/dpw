@@ -44,11 +44,12 @@ tee_func=teekerer_sample
 teeker_opts=
 teeker_interval=100
 std_options=""
-option_str="nvqtsk:i:f"
+option_str="nvqtsk:i:fN1o"
 long_options=("teeker-opts:" "tee-func:" "teeker-interval:"
     "p4-sync-dash-n"
     "sample" "tee" "teeker"
     "mail" "notify-on-completion" "email-on-completion" "yopp" "send-mail"
+    "no-log-file"
     "no-save-args")
 
 source dp-getopt+.sh
@@ -63,11 +64,13 @@ do
       -k|--teeker-opts) shift; teeker_opts="$1";;
       -i|--teeker-interval) shift; teeker_interval="$1";;
       -f) p4_sync_dash_f="-f";;
+      -N|--p4-sync-dash-n) p4_sync_dash_n=-n;;
+      -1|-o|--no-log-file) kwa_log_file=/dev/null; 
+                           tee_func=teeer;; # stdout is fd[1] and stdOut.
       --no-save-args) save_args_p=;;
       --tee-func) shift; tee_func="$1";;
       --sample) tee_func=teekerer_sample;;
       --teeker) tee_func=teekerer;;
-      --p4-sync-dash-n) p4_sync_dash_n=-n;;
       --mail|--notify-on-completion|--email-on-completion|--yopp|--send-mail) 
                   send_mail_on_completion_p=t;;
       --) shift ; break ;;
@@ -88,7 +91,7 @@ EExec -y mkdir -p "${kwa_log_dir}"
 EExec -y cd "${sandbox_root}"
 EExec_verbose_msg "Sync'ing in >$(pwd)<"
 
-EExec_verbose_msg EExec p4 sync ${p4_sync_dash_n} ${p4_sync_dash_f} "$@" 
+EExec_verbose_msg p4 command: p4 sync ${p4_sync_dash_n} ${p4_sync_dash_f} "$@" 
 
 echo "log dir>${kwa_log_dir}<"
 {

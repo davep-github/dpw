@@ -11,4 +11,7 @@ alias wx="winterm -geometry 80x24"
 
 alias nvgrep=/home/nv/toolroot/bin/nvgrep
 
+# Duuuhhh... 
+alias cdme=mecd
+
 true

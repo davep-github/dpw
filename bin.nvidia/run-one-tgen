@@ -31,6 +31,7 @@ mecd testgen
 Usage_args_info=" <tgen-level-test>..."
 Usage_synopsis="Run tgen levels one at a time using a consistent set of vars.
 See also tgen.pl and testgen.pl for additional ops.
+AXF options apply to all <tgen-level-test>s.
 "
 Usage_details="${EExec_parse_usage}
 -w) Wait for completion rather than submitting to LSF.
@@ -159,14 +160,14 @@ done
 # Common timestamp
 timestamp=$(dp-std-timestamp)
 
-[ -z "$levels}" ] && {
+vunsetp "$levels}" && {
     Usage "At least one level is needed."
     exit 1
 }
 
-[ -z "$user_log_dir" ] && {
+vunsetp "$user_log_dir" && {
 
-    [ -z "$log_dir_base" ] && {
+    vunsetp "$log_dir_base" && {
         log_dir_base="$log_root/${timestamp}"
     }
 
@@ -199,6 +200,7 @@ log_prefix="$log_dir"
 
 EExec_verbose_echo_id levels
 
+base_dollar_at=("$@")
 for level in $levels
 do
   level_opt="-level $level"
@@ -206,7 +208,7 @@ do
   for test_name in "${dollar_at[@]}"
   do
     EExec_verbose_echo_id test_name
-    set -- "$@" -level "${level}"
+    set -- "${base_dollar_at[@]}" -level "${level}"
 
     [ "${test_name}" = 'all' ] || set -- "$@" -only "${test_name}"
     vsetp "$mdiag_more" && set -- "$@" -mdiagArgsMore "${mdiag_more}"
@@ -236,8 +238,8 @@ do
     # dir exists if -clobber is not used and if -clobber is used, the
     # directory will be nuked first.
     # Could put another layer under which the command line file can live next to the tgen output dir.
-    if [ -n "${user_log_dir}" ]
-        then
+    if vsetp "${user_log_dir}"
+    then
         out_dir="${user_log_dir}"
     else
         out_dir="${log_prefix}/${test_name}/${timestamp}${wait_opt}.out"

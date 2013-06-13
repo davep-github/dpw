@@ -45,7 +45,7 @@ export prefix="[.][.][.] "
 for bundle in "$@"
 do
   echo_id bundle
-  ### all files are on one line. files_to_revert=$(dpas2_list_bundle_files "${bundle}")
+  ### all files are on one line. files_to_revert=$(dpas2-list-bundle-files "${bundle}")
   files_to_revert=$(as2 describe "${bundle}" | dp4-extract-pathname)
   vunsetp "${files_to_revert}" && {
       echo "No files to revert in bundle ${bundle}."

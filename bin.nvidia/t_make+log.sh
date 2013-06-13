@@ -24,6 +24,7 @@ unset eexec_program
 : ${catlog_opt=-catlog}
 : ${only_opt=}
 : ${get_mods_p=a}
+: ${get_asim_p=a}
 : ${build_me_p=a}
 : ${debug_opt=-debug=1}
 : ${me_purge_opt=purge}
@@ -83,6 +84,8 @@ long_options=("out-file:"
     "no-catlogs"
     "get-mods"
     "no-get-mods"
+    "get-asim"
+    "no-get-asim"
     "build-me"
     "no-build-me"
     "no-debug"
@@ -143,13 +146,15 @@ do
       --no-build-me) build_me_p=;;
       --get-mods) get_mods_p=t;;
       --no-get-mods) get_mods_p=;;
+      --get-asim) get_asim_p=t;;
+      --no-get-asim) get_asim_p=;;
       --no-debug) debug_opt=;;
       --debug) debug_opt="-debug=1";;
       --no-me-purge) me_purge_opt=;;
       --me-purge) me_purge_opt="purge";;
       --no-me-clean) me_clean_opt=;;
       --me-clean) me_clean_opt="clean";;
-      --mm|--mme|--gb|--get-build|--all) get_mods_p=t; build_me_p=t;;
+      --mm|--mme|--gb|--get-build|--all) get_mods_p=t; build_me_p=t; get_asim_p=t;;
       --nn) get_mods_p=; build_me_p=;;
       --mail) send_mail_on_completion=t;;
       --no-mail) send_mail_on_completion=;;
@@ -280,15 +285,34 @@ EExec mkdir -p "${log_dir}"
       # Shift it off and pass "$@" to get_mods
           [yY]) get_mods_p=t;;
           [nN]|"") get_mods_p=;;
-          [Cc]) get_mods_p=t; build_me_p=t;;  # "Continue" do this and the rest.
+          [Cc]) get_mods_p=t; build_me_p=t; get_asim_p=t;;  # "Continue" do this and the rest.
           [Qq]) exit 0;;
           *) continue;;
       esac
     done
 
-    if [ -n "${get_mods_p}" ]
+    if vtruep "${get_mods_p}"
     then
         EExec --keep-going ./bin/get_mods
+    fi
+
+    while [ "${get_asim_p}" = "a" ]
+    do
+      read -e -p "Get asim [y/N/q/c]? "
+      case "$REPLY" in
+      # Provide way to get args. E.g. set -- $REPLY. First word will be y/n/etc.
+      # Shift it off and pass "$@" to get_mods
+          [yY]) get_asim_p=t;;
+          [nN]|"") get_asim_p=;;
+          [Cc]) get_asim_p=t; build_me_p=t;;  # "Continue" do this and the rest.
+          [Qq]) exit 0;;
+          *) continue;;
+      esac
+    done
+
+    if vtruep "${get_asim_p}"
+    then
+        EExec --keep-going ./bin/get_asim
     fi
 
     EExec -y cd $(me-dogo testgen)

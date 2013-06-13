@@ -45,7 +45,7 @@ unset eexec_program
 
 for bundle_id in "$@"
 do
-  files=$(dpas2_list_bundle_files "${bundle_id}")
+  files=$(dpas2-list-bundle-files "${bundle_id}")
   while :
     do
     echo_id files

@@ -12,7 +12,7 @@ echo $progname: $* 1>&2
 # xcscope/cscope, have been having problems with "File does not have the
 # expected format" errors. Not using -q has, at least once, in at least one
 # case, fixed this >0 times.
-: ${EXTAGTREE_DASH_Q:=-q}
+: ${EXTAGTREE_DASH_Q:=}
 source script-x
 source  eexec
 
@@ -170,7 +170,7 @@ do
             echo -n 1>&2 "$progname: Found simply ctags. "
             if "$EXCTAGS" --help 2>&1 | fgrep -qi "Exuberant" 2>/dev/null
             then
-                echo 1>&2 "It! Looks! Exuberant!"
+                echo 1>&2 "It! Looks! Exuuuuuberaaaaaant!"
             else
                 echo 1>&2 "$progname: May not be exuberant."
             fi
@@ -217,7 +217,7 @@ argses="$@"
 #     $follow_sym_links $dirs | \
 #     filter | tee $v_file >| "$FILES_FILE"
 
-if [ -n "$use_files_file_p" ]
+if vsetp "$use_files_file_p"
 then
     if [ -s "$use_files_file_p" ]
     then

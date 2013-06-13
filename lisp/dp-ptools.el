@@ -473,20 +473,21 @@ the current sandbox is used for defaults, etc."
                                   (format "[current: %s (%s)]"
                                           (dp-current-sandbox-regexp)
                                           (dp-current-sandbox-name))
-                                ""))
-                      nil nil nil nil nil (dp-current-sandbox-name))
+                                "")))
                      current-prefix-arg))
   (dp-set-current-sandbox-read-only-p read-only-p)
-  (let ((sandbox (if (string= sandbox "")
+  (let ((sandbox (if (member sandbox '("" "/" "-" "'" "!"))
                      nil
                    sandbox)))
     (if (not sandbox)
         ;; @todo XXX Why isn't this a `setq-default' like the others?
+        ;; ? Don't want to clear it everywhere?
         (dp-set-sandbox-name-and-regexp nil nil)
       ;; If name, determine path/sandbox
       ;; If path/sandbox, determine name
       (if (string-match "/" sandbox)
           ;; We're a path. find sb name
+          ;; NB: Just "/" implies clear sandbox.
           (dp-set-sandbox-name-and-regexp
            (file-name-nondirectory (directory-file-name
                                     (file-name-directory
@@ -545,21 +546,21 @@ if there is no current one set."
 
 
 (defvar doxy-c-class-member-comment-elements '(
-" /*********************************************************************/" > "
+" /***************************************************************************/" > "
  /*!" > "
   * @brief " (P "brief desc: " desc nil) > "
   */" > % >)
   "Elements of a class function comment template")
 
 (defvar doxy-c-function-comment-elements '("
- /*********************************************************************/" > "
+ /***************************************************************************/" > "
  /*!" > "
   * @brief " (P "brief desc: " desc nil) > "
   */" > % >)
   "Elements of a C/C++ function comment template")
 
 (defvar doxy-c-class-comment-elements '("
- /*********************************************************************/" > "
+ /***************************************************************************/" > "
  /*!" > "
  * @class " p > "
  * @brief " (P "brief desc: " desc nil) > "
@@ -567,7 +568,7 @@ if there is no current one set."
   "Elements of a C/C++ class comment template")
 
 (defvar doxy-c-file-comment-elements '("
- /*********************************************************************/" > "
+ /***************************************************************************/" > "
  /*!" > "
  * @file " p > "
  * @brief " (P "brief desc: " desc nil) > "
