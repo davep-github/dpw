@@ -26,6 +26,7 @@ mecd testgen
 : ${last_out_dir_file_name=last_out_dir}
 : ${latest_out_dir_file_name=latest_out_dir}
 : ${last_and_latest_prefix=}
+: ${hist_file_name=$(basename $0).hist}
 
 # Usage variable usage:
 Usage_args_info=" <tgen-level-test>..."
@@ -165,16 +166,15 @@ vunsetp "$levels}" && {
     exit 1
 }
 
-vunsetp "$user_log_dir" && {
-
-    vunsetp "$log_dir_base" && {
-        log_dir_base="$log_root/${timestamp}"
-    }
-
-    log_dir_base=$(normpath "$log_dir_base")
+if vunsetp "$user_log_dir"
+then
     log_dir="$log_dir_base"
-}
-EExec mkdir -p $(dirname "$log_dir_base")
+else
+    log_dir="${user_log_dir}"
+fi
+log_dir=$(normpath "$log_dir")
+EExec mkdir -p $(dirname "$log_dir")
+hist_file=$(normpath "${log_dir}/${hist_file_name}")
 
 dollar_at=("$@")
 
@@ -199,6 +199,13 @@ log_prefix="$log_dir"
 } 1>&2
 
 EExec_verbose_echo_id levels
+
+if EExecDashN_p
+then
+    eexec_dash_n_prefix="{-}"
+else
+    eexec_dash_n_prefix=""
+fi
 
 base_dollar_at=("$@")
 for level in $levels
@@ -243,8 +250,8 @@ do
         out_dir="${user_log_dir}"
     else
         out_dir="${log_prefix}/${test_name}/${timestamp}${wait_opt}.out"
-        out_dir=$(normpath -r "${out_dir}")
     fi
+    out_dir=$(normpath -r "${out_dir}")
 
     EExec_verbose_echo_id out_dir
     set -- "$@" -outDir "${out_dir}"
@@ -274,6 +281,7 @@ cat ${last_out_dir_file_name}" >| "${latest_out}"
         EExec_verbose_echo_id command_line_log
         echo "$@" > "${command_line_log}"
     fi
+    echo "${eexec_dash_n_prefix}${level}::${test_name} --> ${out_dir}" >> "${hist_file}"
     # EExecDashV_p && EExec -y -0 eko "EExec eko: $@"
     EExec "$@"
     

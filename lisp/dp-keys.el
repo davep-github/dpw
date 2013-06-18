@@ -380,6 +380,7 @@ Bind any keys in KEYS via `dp-define-keys'."
                           [left] 'dp-shift-windows
                           [right] 'dp-shift-windows
                           [(control ?\\)] 'align
+                          [(control ?m)] 'dp-mark-to-string
 
                           ;; <:add-new-ccd-bindings:>
                           )          ; Close paren for `dp-define-key-submap'

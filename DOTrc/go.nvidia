@@ -69,6 +69,8 @@ E|drtg__ME_src|              hw/ap_tlit1/diag/testgen/dp-run-tgens.d/
 E|drt__ME_src|               hw/ap_tlit1/diag/testgen/dp-run-tgens.d/
 E|drtd__ME_src|              hw/ap_tlit1/diag/testgen/dp-run-tgens.d/
 E|dprun__ME_src|             hw/ap_tlit1/diag/testgen/dp-run-tgens.d/
+E|dpr__ME_src|               hw/ap_tlit1/diag/testgen/dp-run-tgens.d/
+E|dprtg__ME_src|             hw/ap_tlit1/diag/testgen/dp-run-tgens.d/
 E|dpruns__ME_src|            hw/ap_tlit1/diag/testgen/dp-run-tgens.d/
 E|drv__ME_src|               hw/ap_tlit1/drv/
 E|drvapi__ME_src|            hw/ap_tlit1/drv/drvapi/
@@ -156,8 +158,8 @@ Ee|scratch3|scr3|sc3|                         /home/scratch.dpanariti_t124_3/
 
 Ee|sandbox1|sbox1|sb1|workspace1|ws1|         ${scratch2}sb1/sb1hw/
 Ee|sandbox2|sbox2|sb2|workspace2|ws2|         ${scratch0}sb2/sb2hw/
-Ee|sandbox4|sbox4|sb4|workspace4|ws4|         ${scratch3}sb4/sb4hw/
 Ee|sandbox3|sbox3|sb3|workspace3|ws3|         ${scratch1}sb3/sb3hw/
+Ee|sandbox4|sbox4|sb4|workspace4|ws4|         ${scratch3}sb4/sb4hw/
 Ee|sandbox5|sbox5|sb5|workspace5|ws5|         ${scratch2}sb5/sb5hw/
 
 #

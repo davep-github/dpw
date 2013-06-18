@@ -2352,6 +2352,15 @@ preceding line."
     (dp-set-mark (car region))
     (goto-char (cdr region))))
 
+(defun dp-mark-to-string (arg str)
+  (interactive "_p\nsMark up to str: ")
+  (dp-set-mark (point))
+  (with-interactive-search-caps-disable-folding
+      str nil
+    (when (search-forward str nil t arg)
+      (backward-char (length str))
+      (point))))
+
 (defun dp-copy-to-end-of-line (&optional beginning include-newline)
   "Copy chars from point to the end of the current line to the kill ring.
 This will *&@^*&^#-ing NOT put the text onto the clipboard.  However, a

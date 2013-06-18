@@ -61,12 +61,13 @@ me_expand_dest()
         cd $(dogo "$sb") >/dev/null 2>&1 || exit 2
     fi
     local rc
+    local original_dest="${dest}"
     case "${dest}" in
         //*) dest=$(echo "${dest}" | dp4-reroot); rc="$?";;
           *) dest=$(me-dogo "${dest}"); rc="$?";;
     esac
     [ "${rc}" = "0" ] || {
-        echo "Cannot find>$@<"
+        echo "Cannot find abbrev>$original_dest<"
         return 1
     } 1>&2
     shift
