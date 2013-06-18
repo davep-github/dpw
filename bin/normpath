@@ -3,7 +3,12 @@
 import sys, os
 
 if __name__ == "__main__":
-    for p in sys.argv[1:]:
-        print os.path.normpath(p)
-
-
+    path_ops = [os.path.normpath]
+    argv = sys.argv[1:]
+    if argv[0] == '-r':
+        argv = argv[1:]
+        path_ops.append(os.path.realpath)
+    for p in argv:
+        for op in path_ops:
+            p = op(p)
+        print p

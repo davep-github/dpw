@@ -203,6 +203,13 @@ class App_arg_action_catlike(argparse.Action):
         # Just be a pass through. Useful with -g.
         Catlike_setup(namespace)
 
+class App_arg_action_add_regexp_and_highlight(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        regexps = getattr(namespace, self.dest)
+        regexps.append(values)
+        setattr(namespace, self.dest, regexps)
+        setattr(namespace, "highlight_grep_matches_p", True) 
+
 Convenience_opts = (("U_extension", ".log"), ("add_timestamp_p", True))
 
 def set_convenience_opts(namespace):
@@ -396,12 +403,12 @@ if __name__ == "__main__":
                          dest="timestamp_p", default=False,
                          nargs=0,
                          action=Ctor_arg_action_true,
-                         help="Add a timestamp to ticks. Best with sampled output.")
+                         help="Add a timestamp to ticks. Nice with sampled output.")
     oparser.add_argument("--elapsed-timestamp", "--ets",
                          dest="elapsed_timestamp_p", default=False,
                          nargs=0,
                          action=Ctor_arg_action_true,
-                         help="Add a timestamp to ticks. Best with sampled output.")
+                         help="Add an elapsed timestamp to ticks. Nice with sampled output.")
     oparser.add_argument("-I", "--increment",
                          dest="increment", type=eval_with_units,
                          action=Ctor_arg_action,
@@ -478,10 +485,14 @@ Split line into chars and feed to ticker.""")
                          dest="pipe_mode_p", default=False,
                          action="store_true",
                          help="Send ticks to stderr and input to stdout.")
-    oparser.add_argument("-g", "--grep", "--regexp", "--re",
+    oparser.add_argument("-g", "--grep", "--regexp", "--re", "--match",
                          dest="regexp_patterns",
                          action="append", default=[],
-                         help='Grep for these patterns and treat "specially".')
+                         help='Grep for these patterns.')
+    oparser.add_argument("--hgrep", "--hregexp", "--hmatch",
+                         dest="regexp_patterns", default=[],
+                         action=App_arg_action_add_regexp_and_highlight,
+                         help='Grep for these patterns and highlight.')
     oparser.add_argument("--grep-hit-action",
                          dest="grep_hit_action", default="",
                          type=str,
@@ -526,7 +537,7 @@ Split line into chars and feed to ticker.""")
                          "--high-grep", "--high_matches",
                          "--hl-grep", "--hl-matches",
                          "--hi-grep", "--hi-matches",
-                         "--hgrep", "--hmatches",
+                         "--hmatches",
                          "--hg", "--hm",
                          dest="highlight_grep_matches_p", default=None,
                          action="store_true",

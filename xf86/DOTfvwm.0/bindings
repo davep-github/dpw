@@ -321,6 +321,7 @@ Key            comma      W      4     Next WarpToWindow 12 12
 
 Key  e   A      4 NextEmacs
 Key  e   A     S4 AnyNextEmacs
+Key  e   A     C4 EditingServer
 #Key n A 4 Next WarpToWindow 12 12
 
 # XXX @todo I want to do a cycle windows where each one is raised as I cycle

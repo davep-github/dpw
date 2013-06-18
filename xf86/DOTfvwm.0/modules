@@ -320,7 +320,7 @@ DestroyModuleConfig FvwmPagerPager: *
 *FvwmPagerPager: Label 1 SB1-no-rtl
 *FvwmPagerPager: Label 2 SB2-R/DEPCPU
 *FvwmPagerPager: Label 3 SB3-R/SWR-new
-*FvwmPagerPager: Label 4 Desk4-NoSB
+*FvwmPagerPager: Label 4 SB4-R/SWR-wave
 *FvwmPagerPager: Label 5 SB5-R/SWR
 *FvwmPagerPager: SmallFont 5x8
 
@@ -346,7 +346,7 @@ DestroyModuleConfig FvwmDesker: *
 *FvwmDesker: Label 1 SB1-no-trl
 *FvwmDesker: Label 2 SB2-R/DEPCPU
 *FvwmDesker: Label 3 SB3-R/SWR-new
-*FvwmDesker: Label 4 Desk4-NoSB
+*FvwmDesker: Label 4 SB4-R/SWR-wave
 *FvwmDesker: Label 5 SB5-R/SWR
 *FvwmDesker: SmallFont 5x8
 

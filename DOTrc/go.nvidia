@@ -64,6 +64,12 @@ E|tg__ME_src|                hw/ap_tlit1/diag/testgen/
 E|tgen__ME_src|              hw/ap_tlit1/diag/testgen/
 E|testgen__ME_src|           hw/ap_tlit1/diag/testgen/
 E|tgdp__ME_src|              hw/ap_tlit1/diag/testgen/dp-run-tgens.d/
+E|dptg__ME_src|              hw/ap_tlit1/diag/testgen/dp-run-tgens.d/
+E|drtg__ME_src|              hw/ap_tlit1/diag/testgen/dp-run-tgens.d/
+E|drt__ME_src|               hw/ap_tlit1/diag/testgen/dp-run-tgens.d/
+E|drtd__ME_src|              hw/ap_tlit1/diag/testgen/dp-run-tgens.d/
+E|dprun__ME_src|             hw/ap_tlit1/diag/testgen/dp-run-tgens.d/
+E|dpruns__ME_src|            hw/ap_tlit1/diag/testgen/dp-run-tgens.d/
 E|drv__ME_src|               hw/ap_tlit1/drv/
 E|drvapi__ME_src|            hw/ap_tlit1/drv/drvapi/
 E|runtestcommon__ME_src|     hw/ap_tlit1/drv/drvapi/runtest_common/
@@ -138,6 +144,7 @@ E|ogtest|                               ${t3dtraces}kepler_b/ogtest/
 #
 # Somethings which may as well be cross-sandbox
 E|surfwr__ME_src|            arch/traces/mobile/traces/gpu_multiengine/surface_write_read/
+E|surf__ME_src|              arch/traces/mobile/traces/gpu_multiengine/surface_write_read/
 E|depcpu__ME_src|            arch/traces/mobile/traces/gpu_multiengine/dep_cpu_cpu_gpu_cpu/
 
 #######################################################################
@@ -145,9 +152,11 @@ E|depcpu__ME_src|            arch/traces/mobile/traces/gpu_multiengine/dep_cpu_c
 Ee|scratch0|scr0|sc0|                         /home/scratch.dpanariti_t124/
 Ee|scratch1|scr1|sc1|                         /home/scratch.dpanariti_t124_1/
 Ee|scratch2|scr2|sc2|                         /home/scratch.dpanariti_t124_2/
+Ee|scratch3|scr3|sc3|                         /home/scratch.dpanariti_t124_3/
 
 Ee|sandbox1|sbox1|sb1|workspace1|ws1|         ${scratch2}sb1/sb1hw/
 Ee|sandbox2|sbox2|sb2|workspace2|ws2|         ${scratch0}sb2/sb2hw/
+Ee|sandbox4|sbox4|sb4|workspace4|ws4|         ${scratch3}sb4/sb4hw/
 Ee|sandbox3|sbox3|sb3|workspace3|ws3|         ${scratch1}sb3/sb3hw/
 Ee|sandbox5|sbox5|sb5|workspace5|ws5|         ${scratch2}sb5/sb5hw/
 
@@ -156,6 +165,9 @@ Ee|sandbox5|sbox5|sb5|workspace5|ws5|         ${scratch2}sb5/sb5hw/
 # sb4 /home/scratch.dpanariti_t124_1/sb4/sb4hw/
 #
 Ee|t3dAlloc|  ${sb4}hw/ap_tlit1/drv/drvapi/runtest_common/runtest_exec.cpp:267
+
+Ee|ccplexso|soccplex|burstaxi|axiburst| /home/scratch.traces02/mobile/traces/system/so/t124/
+# See a15_msel_integ_sanity
 #
 # Temp stuff for most active tasks.
 Ee|asimflow|       /home/scratch.dpanariti_t124_1/sb3/sb3hw/

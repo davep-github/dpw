@@ -46,9 +46,10 @@ do
   
   case "$s" in
       sb1) info="DEP_CPU.
-Looking to verify that -ncoh_tex is being passed to <test>.sh.
+Available.
 *** Not built with RTL.
 "
+      ;;
       sb2) info="DEP CPU
 Build with RTL.
 Others to come.

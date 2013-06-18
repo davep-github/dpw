@@ -1035,8 +1035,7 @@ AddToMenu   "Move-window-to" "Move to page..." Title
 + 'SB&2-R/DEPCPU'         MoveToDesk 0 2
 # Fresh RTL tree to try to get around RTL "something bad happened" error in SB5.
 + 'SB&3-R/Surf-new'       MoveToDesk 0 3
-# No associated SB
-+ 'Desk&4-Unused'         MoveToDesk 0 4
++ 'SB&4-R/SWR-wave'       MoveToDesk 0 4
 # Original surface write read test tree
 + 'SB&5-R/Surf-used'      MoveToDesk 0 5
 
@@ -1060,7 +1059,7 @@ AddToMenu   "Goto-page-or-desk" "Go to page..." Title
 # Fresh RTL tree to try to get around RTL "something bad happened" error in SB5.
 + 'SB&3-R/Surf-new'       GotoDeskAndPage 3 0 0
 # No associated SB
-+ 'Desk&4-Unused'         GotoDeskAndPage 4 0 0
++ 'SB&4-R/SWR-wave'       GotoDeskAndPage 4 0 0
 # Original surface write read test tree
 + 'SB&5-R/Surf-used'      GotoDeskAndPage 5 0 0
 
@@ -1072,8 +1071,7 @@ AddToMenu   "Goto-page-or-desk" "Go to page..." Title
 # + 'SB&2-R/DEPCPU'         GotoDesk 0 2
 # # Fresh RTL tree to try to get around RTL "something bad happened" error in SB5.
 # + 'SB&3-R/Surf-new'       GotoDesk 0 3
-# # No associated SB
-# + 'Desk&4-Unused'         GotoDesk 0 4
+# + 'SB&4-R/SWR-wave'       GotoDesk 0 4
 # # Original surface write read test tree
 # + 'SB&5-R/Surf-used'      GotoDesk 0 5
 

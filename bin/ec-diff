@@ -1,0 +1,31 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+# ec [-w] first second
+
+wait_opt=
+if [ "$1" = "-w" ]
+then
+    wait_opt=-w
+    shift
+fi
+
+diff_cmd="(ediff-files \"$1\" \"$2\")"
+
+# Fix this to use some kind of ipc so the wait actually works.
+#
+# touch wait file.
+# dp-ediff-files removes file when diff session ends?
+EExec ec ${wait_opt} -e "${diff_cmd}"
+# wait for file to disappear.

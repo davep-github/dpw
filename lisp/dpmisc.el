@@ -6231,6 +6231,12 @@ you've added enough info for set-auto-mode to figure it out.."
   (marker-position (process-mark (get-buffer-process (or buffer
 							 (current-buffer))))))
 
+(defun dp-gnuserv-shutdown-hook ()
+  (dmessage "in `dp-gnuserv-shutdown-hook'")
+  (dp-finalize-editing-server 'just-do-it-p))
+
+(add-hook 'gnuserv-shutdown-hook 'dp-gnuserv-shutdown-hook)
+
 (defvar dp-editor-identification-data '()
   "Anything that might help us ID the correct editor running the server.")
 
@@ -6252,18 +6258,24 @@ you've added enough info for set-auto-mode to figure it out.."
   "Determine if the editing server process exists and is alive.
 Standard function simply checks that the process is non-nil without checking
 to see if it's alive as well."
-  (and-boundp 'gnuserv-process
+  (when-and-boundp 'gnuserv-process
     (eq (process-status gnuserv-process) 'run)))
 
-(defun dp-kill-editing-server ()
+(defun dp-kill-editing-server (&optional server-fate)
   (interactive)
-  (gnuserv-start 'dont-start-a-new-one))
+  (gnuserv-start 'dont-start-a-new-one)
+  (when (eq server-fate 'kill-all-p)
+    ;; emacs w/existing server won't know its server is dead... not a real
+    ;; problem?
+    (shell-command (format "dpkillprog %s" gnuserv-program)))
+  (dp-finalize-editing-server))
 
 ;;
 ;; Finalize the editing server. If one is running, remove the IPC file.
 ;;
-(defun dp-finalize-editing-server ()
-  (when (dp-gnuserv-running-p)
+(defun dp-finalize-editing-server (&optional just-do-it-p)
+  (when (or just-do-it-p (dp-gnuserv-running-p))
+    (dp-set-frame-title-format)
     (shell-command-to-string (format "rm -f %s" 
                                      (dp-editing-server-ipc-file)))))
 
@@ -6289,26 +6301,40 @@ not."
 	     (message "using regular server")
 	     (server-start)))))
   
-(defun* dp-start-editing-server (&optional (leave-or-make-dead-p t))
+(defun* dp-start-editing-server (&optional server-fate)
   "Start a server to edit files for remote clients.  Prefer `gnuserv'.
-LEAVE-OR-MAKE-DEAD-P (prefix arg) says nuke any existing server and start a
-new one."
+LEAVE-OR-MAKE-DEAD-P (prefix arg) says nuke any existing child server and 
+start a new one."
   (interactive "P")
-  (when leave-or-make-dead-p
-  ;; Nuke any possible existing server.
-    (dp-start-server t))
-  ;; Start gnu (har, har!) one.
-  (dp-start-server)
-  (let ((host-name (dp-short-hostname)))
-    (when (and (dp-gnuserv-running-p)
-               (string-match dp-edting-server-valid-host-regexp
-                             host-name))
-      ;; Don't clobber existing server advertisement.
-      (dp-add-editor-identification-data 'pid (emacs-pid))
-      (shell-command-to-string (format "echo '%s %s' > %s" 
-                                       host-name
-                                       (dp-editor-identification-string)
-                                       (dp-editing-server-ipc-file))))))
+  (setq server-fate (cond
+                     ;; No arg... choose default *my* way.
+                     ((not server-fate) (if (interactive-p)
+                                            ;; By hand means to force this
+                                            ;; emacs to be a server.
+                                            'kill-all-p
+                                          'kill-local-p))
+                     ((Cu--p server-fate) 'just-kill-p)
+                     (t server-fate)))
+  ;; Nuke any possible existing server and do not start a gnu one. Har!
+  (dp-kill-editing-server server-fate)
+  ;; Start gnu (har, har! It just never gets old) one.
+  (unless (eq server-fate 'just-kill-p)
+    (dp-start-server)
+    (let ((host-name (dp-short-hostname)))
+      (when (and (dp-gnuserv-running-p)
+                 (string-match dp-edting-server-valid-host-regexp
+                               host-name))
+        ;; Don't clobber existing server advertisement.
+        (dp-add-editor-identification-data 'pid (emacs-pid))
+        (setq frame-title-format (concat "["
+                                         (or (dp-current-sandbox-name) "No SB")
+                                         "] "
+                                         dp-frame-title-format))
+        (dp-set-frame-title-format)
+        (shell-command-to-string (format "echo '%s %s' > %s"
+                                         host-name
+                                         (dp-editor-identification-string)
+                                         (dp-editing-server-ipc-file)))))))
   
 (dp-defaliases 'gserv 'xserver 'eserver 'gnuserve 'dp-start-editing-server)
 
@@ -9663,8 +9689,8 @@ Can be called directly or by an abbrev's hook.
   (setq saveconf-file-name (concat (saveconf-make-file-name)
                                    "."
                                    (dp-short-hostname))
-;;                                   (if dp-current-sandbox-name
-;;                                       (concat "." dp-current-sandbox-name)
+;;                                   (if (dp-current-sandbox-name)
+;;                                       (concat "." (dp-current-sandbox-name))
 ;;                                     ""))
         saveconf-file-name-prev (concat saveconf-file-name ".prev"))
 
@@ -15557,7 +15583,8 @@ file."
   (when (dp-p4-location-p file)
     ;; --NV --> Only allow legitimate nVIDIA WORK sandboxes.
     (let ((expansion (dp-expand-p4-location file sb "--NV")))
-      (and expansion ; Put this check early to prevent type probs and needless work.
+      ;; Put this check early to prevent type probs and needless work.
+      (and expansion 
            (stringp expansion)
            (not (string= expansion ""))
            expansion))))
@@ -15572,9 +15599,14 @@ something.")
   (if (eq sb t)
       (setq sb dp-p4-stupid-hack-saved-sb
             dp-p4-stupid-hack-saved-sb nil))
-  (let* ((prompt (format "Workspace:%s "
-                         (if dp-current-sandbox-name
-                             (format " (default %s)" dp-current-sandbox-name)
+  (let* ((file-msg (if (and file (not (string= file "")))
+                       (format " for %s" file)
+                     ""))
+         (prompt (format "Workspace%s:%s "
+                         file-msg
+                         (if (dp-current-sandbox-name)
+                             (format " (default %s)" 
+                                     (dp-current-sandbox-name))
                            "")))
          (need-new-sb (not sb))
          (sb (or sb "."))
@@ -15588,7 +15620,7 @@ something.")
         (message prompt)
         (setq sb (read-from-minibuffer prompt
                                        nil nil nil nil nil
-                                       dp-current-sandbox-name)
+                                       (dp-current-sandbox-name))
               dp-p4-stupid-hack-saved-sb sb)
         (dp-maybe-expand-p4-location file sb)))))
 
@@ -15629,6 +15661,17 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
   (interactive)
   (apply 'setenv var rest)
   (message "%s: %s" var (getenv var)))
+
+(defun dp-make-frame-title-format ()
+  (format "[%s] %s%s" 
+          (or (dp-current-sandbox-name) "No SB")
+          (if (dp-gnuserv-running-p)
+              "Serv/"
+            "")
+          dp-frame-title-format))
+
+(defun dp-set-frame-title-format ()
+  (setq frame-title-format (dp-make-frame-title-format)))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;;

@@ -30,6 +30,7 @@ LOG_FILE="$HOME/log/xemacs/ec-log-file.log"
 
 editing_host_opt=
 editing_host_msg=
+extra_editing_host_msg=
 quiet_p=
 
 date >| $LOG_FILE
@@ -76,6 +77,7 @@ find_best_editing_host()
         set -- $(cat "${DP_EDITING_SERVER_FILE}")
         # $1 == server, $2 == pid, ... rest
         # If server is this host, verify the pid exists and is gnuserv.
+        editing_host_msg="editing server info: $@"
         echo "${1}"
         return 0
     }
@@ -144,7 +146,7 @@ process_file ()
         then
             editing_host_opt="-h $eh"
             [ -z "$quiet_p" ] && {
-                editing_host_msg="editing on host: $eh"
+                : ${editing_host_msg:="editing on host: $eh"}
             }
         else
             prob="Editing server not found"
@@ -152,6 +154,11 @@ process_file ()
        fi
     else
         [ -z "$quiet_p" ] && {
+            # Get all host editing info
+            if find_best_editing_host
+            then
+                extra_editing_host_msg="${editing_host_msg}"
+            fi
             editing_host_msg="editing on localhost: $HOST"
         }
     fi
@@ -187,6 +194,7 @@ process_file ()
     # send the filename to emacs
     [ "$do_wait" = 'y' ] && nowait_opt=
     [ -n "$editing_host_msg" ] && echo "$editing_host_msg"
+    [ -n "$extra_editing_host_msg" ] && echo "$extra_editing_host_msg"
     eval EExec $client $editing_host_opt $nowait_opt $eval_opt "$opts" $file
 }
 

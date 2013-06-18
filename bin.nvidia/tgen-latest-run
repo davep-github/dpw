@@ -111,6 +111,6 @@ if vsetp "${print_base_dir_p}"
 then
     "${printor}" "${latest_out_dir}"
 else
-    dest="${PWD}/${latest_out_dir}/tests/${some_path_component}/00/00/${first_dir_num}/${second_dir_num}"
+    dest="${latest_out_dir}/tests/${some_path_component}/00/00/${first_dir_num}/${second_dir_num}"
     "${printor}" "${dest}"
 fi

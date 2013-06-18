@@ -5,6 +5,8 @@ source eexec
 
 EExecVerbose
 
+: ${diff_opts:=-du}
+
 Usage_args_info=" files..."
 Usage_synopsis="Check each file for changes before reverting.
 
@@ -43,7 +45,7 @@ do
 3|q) quit
 ? "
         case "$REPLY" in
-            [1d]) EExec -y p4 diff "$f"; continue;;
+            [1d]) EExec -y p4 diff ${diff_opts} "$f"; continue;;
             [2r]) break;;
             [3qQxX]) echo 'Exiting.'; exit 0;;
             *) echo "Unsupported option: $REPLY"; continue;;

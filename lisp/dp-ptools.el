@@ -502,10 +502,7 @@ the current sandbox is used for defaults, etc."
              ".*"                      ; We're always in the "right" sandbox.
            (concat (dp-me-expand-dest "/" sandbox) "/" ))
          'set-default)))
-    (setq frame-title-format (concat "["
-                                     (or (dp-current-sandbox-name) "No SB")
-                                     "] "
-                                     dp-frame-title-format))
+    (dp-set-frame-title-format)
     (when (dp-current-sandbox-regexp)
       (define-abbrev dp-manual-abbrev-table 
          "sb" (dp-current-sandbox-regexp)))))

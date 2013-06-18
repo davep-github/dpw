@@ -11,6 +11,29 @@ do
   shift
 done
 unset eexec_program
+Global_rc=1
+
+dp_exit()
+{
+    local err="${1}"
+    shift
+    [ "$err" = "0" ] && exit 0
+    local err_msg
+    if vsetp "$*"
+    then
+        err_msg="dp_exit(): $err: $@"
+    else
+        err_msg="dp_exit(): $err: t_make failed"
+    fi
+    banner "FAIL"
+    echo "${err_msg}"
+    echo
+    Global_rc="${err}"
+    echo "dp_exit $(echo_id Global_rc)"
+    echo
+
+    exit "${Global_rc}"
+}
 
 : ${log_name_base:=t_make}
 : ${log_name:=}
@@ -86,7 +109,8 @@ long_options=("out-file:"
     "no-get-mods"
     "get-asim"
     "no-get-asim"
-    "build-me"
+    "build-me" "bme"
+    "just-build-me" "just-bme" "bme-only" "only-bme"
     "no-build-me"
     "no-debug"
     "debug"
@@ -103,7 +127,7 @@ long_options=("out-file:"
 # Example of arg parsing.
 option_str="${EExec_parse_option_str}o:O:crm"
 source dp-getopt+.sh || {
-    exit 1
+    dp_exit 1 "getopt failed"
 }
 for i in "$@"
 do
@@ -142,7 +166,8 @@ do
       --t_make_arg) shift; t_make_args="$t_make_args $1";;
       --t_make-arg) shift; t_make_args="$t_make_args $1";;
       --t-make-arg) shift; t_make_args="$t_make_args $1";;
-      --build-me) build_me_p=t;;
+      --build-me|--bme) build_me_p=t;;
+      --just-build-me|--bme-only|--just-bme|--only-bme) build_me_p=t; get_mods_p=; get_asim_p=;;
       --no-build-me) build_me_p=;;
       --get-mods) get_mods_p=t;;
       --no-get-mods) get_mods_p=;;
@@ -160,10 +185,10 @@ do
       --no-mail) send_mail_on_completion=;;
 
       # Help!
-      --help) Usage; exit 0;;
+      --help) Usage; dp_exit 0;;
       --) shift ; break ;;
       *) echo 1>&2 "Unsupported option>$1<"
-         exit 1;;
+         dp_exit 1;;
     esac
     shift
 done
@@ -171,13 +196,12 @@ done
 # It's ok... it builds using lsf.
 #on-o-xterm-p && ! EExecDashN_p && {
 #    echo "$progname: Should not do this on an o-xterm box."
-#    exit 1
+#    dp_exit 1
 #} 1>&2
 
 
 rtl_required_p && [ "${rtl_opt}" == "-skiprtl" ] && {
-    echo "This sandbox cannot skip rtl"
-    exit 1
+    dp_exit 1 "This sandbox cannot skip rtl"
 }
 
 [ -z "${log_dir}" ] && {
@@ -204,10 +228,12 @@ mail_results()
 
 trap_fun()
 {
+    echo "trap_fun(): RC: $?"
     {
         local sig="${1-}"; shift
         local log_name="${1}"; shift
-
+        echo "trap_fun $(echo_id Global_rc)"
+        echo_id sig
         EExecDashN_p && {
             echo "${progname}: Running w/-n, removing log file>${log_name}<"
             rm -rf "${log_name}"
@@ -217,9 +243,9 @@ trap_fun()
         then
             echo "${progname}: sig>$sig<"
             trap "" 0
-            exit 1
+            dp_exit 1
         else
-            echo "${progname}: Success"
+            echo "${progname}: trap_fun(): Global_rc: $Global_rc"
         fi
         EExecVerbose_p && vsetp "${log_name}" && {
             echo "==== Log file start: ${log_name} ==="
@@ -251,9 +277,16 @@ EExec mkdir -p "${log_dir}"
     then
         EExec -y cd $(me-dogo tot)
         [ -e "tree.make" ] || {
-            echo "tree.make does not exist."
-            exit 1
+            dp_exit 1 "tree.make does not exist."
         } 1>&2
+
+        echo_id leavelogs_opt
+        vsetp "${leavelogs_opt}" && {
+            dumby=$(ls -d .tmake*) >/dev/null 2>&1 || {
+                dp_exit 1 ".tmake dirs do not exist. ${keeplogs_opt} won't work.
+  Use --no-leavelogs"
+            }
+        }
 
         EExec_verbose_msg "cwd>$(pwd)<"
         EExec_verbose_msg "log_name>${log_name}<"
@@ -265,9 +298,7 @@ EExec mkdir -p "${log_dir}"
 
         #echo "bin/t_make ${keeplogs_opt} ${rtl_opt}" | EExec -y tcsh-run ${EExecDashN_opt}
         run_t_make ${rtl_opt} || {
-            echo "!!!!!!!!!!! t_make failed !!!!!!!!!!!"
-            banner "t_make failed."
-            exit 1
+            dp_exit "$?" run_tmake_failed
         } 1>&2
 
     fi
@@ -286,7 +317,7 @@ EExec mkdir -p "${log_dir}"
           [yY]) get_mods_p=t;;
           [nN]|"") get_mods_p=;;
           [Cc]) get_mods_p=t; build_me_p=t; get_asim_p=t;;  # "Continue" do this and the rest.
-          [Qq]) exit 0;;
+          [Qq]) dp_exit 0;;
           *) continue;;
       esac
     done
@@ -305,7 +336,7 @@ EExec mkdir -p "${log_dir}"
           [yY]) get_asim_p=t;;
           [nN]|"") get_asim_p=;;
           [Cc]) get_asim_p=t; build_me_p=t;;  # "Continue" do this and the rest.
-          [Qq]) exit 0;;
+          [Qq]) dp_exit 0;;
           *) continue;;
       esac
     done
@@ -323,7 +354,7 @@ EExec mkdir -p "${log_dir}"
       case "$REPLY" in
           [nN]) build_me_p=;;
           [yY]|"") build_me_p=t;;
-          [Qq]) exit 0;;
+          [Qq]) dp_exit 0;;
           *) continue;;
       esac
     done
@@ -342,6 +373,6 @@ EExec mkdir -p "${log_dir}"
     echo "Log file: ${log_name}"
 } | $teefun "${log_name}" > "${disp_file}"
 
-rc="$?"
-echo "Before final exit rc>$rc<"
-exit "$rc"
+echo "WTF?"
+Global_rc=0
+dp_exit 0 "Final exit: Global_rc: $Global_rc."

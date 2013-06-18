@@ -1507,13 +1507,21 @@ Default is to switch to a buffer as chosen by `switch-to-buffer'.")
   "Like `gnuserv-edit' except leaves buffer alone rather than killing it."
   (interactive "P")
   ;; count < 0 --> kill ?
-  (let ((dp-gnuserv-done-function dp-gnuserv-done-function))
-    (when (Cu--p)
-      (setq current-prefix-arg 1
-            dp-gnuserv-done-function 'dp-maybe-kill-this-buffer))
-    (let ((gnuserv-done-function dp-gnuserv-done-function))
-      (call-interactively 'gnuserv-edit)
-      (message "Editing complete."))))
+  (let ((gnuserv-done-function dp-gnuserv-done-function)
+        kill-p)
+    (if (Cu--p)
+      ;; Kill
+      (setq current-prefix-arg nil
+            gnuserv-done-function 'dp-maybe-kill-buffer)
+      (if (and (numberp count)
+               (< 0 count))
+          ;; Kill count
+          (setq current-prefix-arg (abs count)
+            gnuserv-done-function 'dp-maybe-kill-buffer)))
+    (call-interactively 'gnuserv-edit)
+    (message "Editing complete.")))
+
+;;(defun dp-gnuserv-edit-and-kill (&optional count))
 
 (defun dp-gnuserv-find-file-function (path)
   "Called when gnuserv edits a file.

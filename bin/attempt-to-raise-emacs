@@ -22,7 +22,6 @@ unset eexec_program
 #fi
 
 findprog -s FvwmCommandS && {
-    FvwmCommand 'NextEmacs'
+    FvwmCommand 'EditingServer'
     exit
 }
-
