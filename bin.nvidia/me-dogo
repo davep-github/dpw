@@ -13,6 +13,17 @@ do
 done
 unset eexec_program
 
+: ${error_msg_opt=}
+: ${error_msgs_p=t}
+
+for i in "$@"
+do
+  case "$1" in
+      -z|--silent|--no-error-message|--quiet-errors) error_msg_opt=--quiet-errors; error_msgs_p=;;
+      *) break;;
+  esac
+done
+
 #: ${sb=""}
 #export go_here_first="$sb"
 export domain="__ME_src"
@@ -21,5 +32,4 @@ relative_to=$(dp4-sb-root) || {
 }
 # XXX @todo STUPID way to pass parameters.
 export relative_to
-EExec relative-dogo "$@"
-
+EExec ${error_msg_opt} relative-dogo "$@"

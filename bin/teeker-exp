@@ -384,12 +384,12 @@ if __name__ == "__main__":
                          action=App_action_log_file_convenience,
                          help=("Save to log file with useful defaults:\n" +
                                show_convenience_opts()))
-    oparser.add_argument("--slog",
+    oparser.add_argument("--slog", "--sampled-log",
                          dest="output_files_required_p", default=False,
                          nargs=0,
                          action=App_action_log_file_convenience_sampled,
                          help="As --log plus sampled ticking.")
-    oparser.add_argument("--tslog",
+    oparser.add_argument("--tslog", "--timestamped-sampled-log",
                          dest="output_files_required_p", default=False,
                          nargs=0,
                          action=App_action_log_file_convenience_sampled_timestamped,

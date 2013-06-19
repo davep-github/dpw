@@ -1503,13 +1503,12 @@ positive. ")
   "What shall we do when we are done editing a gnuserv file?
 Default is to switch to a buffer as chosen by `switch-to-buffer'.")
 
-(defun dp-gnuserv-edit (&optional count)
+(defun dp-gnuserv-edit (&optional count kill-buffer-p)
   "Like `gnuserv-edit' except leaves buffer alone rather than killing it."
   (interactive "P")
   ;; count < 0 --> kill ?
-  (let ((gnuserv-done-function dp-gnuserv-done-function)
-        kill-p)
-    (if (Cu--p)
+  (let ((gnuserv-done-function dp-gnuserv-done-function))
+    (if (or kill-buffer-p (Cu--p))
       ;; Kill
       (setq current-prefix-arg nil
             gnuserv-done-function 'dp-maybe-kill-buffer)
@@ -1520,6 +1519,10 @@ Default is to switch to a buffer as chosen by `switch-to-buffer'.")
             gnuserv-done-function 'dp-maybe-kill-buffer)))
     (call-interactively 'gnuserv-edit)
     (message "Editing complete.")))
+
+(defun dp-gnuserv-edit-kill-buffer (&optional count)
+  (interactive)
+  (dp-gnuserv-done-function count 'kill-buffer-p))
 
 ;;(defun dp-gnuserv-edit-and-kill (&optional count))
 

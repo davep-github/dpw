@@ -561,6 +561,11 @@ abbrev is expanded.")
           (match-end 1)
           (match-string 1))))
   
+;; Expand:
+;; ,<abbrev>,?                    -- Expand abbrev relative to current sb.
+;; ,,<abbrev>,<sb>,?              -- Expand abbrev relative to given sb.
+;; //p4/location/of/file          -- Expand // relative current sb.
+;; //p4/location/of/file,<sb>,?   -- Expand // relative given sb.
 (defun dp-expand-sandbox-rel-abbrev ()
   (interactive)
   (let* ((abbrev-data (dp-get-sandbox-rel-abbrev))
@@ -628,7 +633,7 @@ abbrev is expanded.")
          (length len-or-string)
        len-or-string)))
 
-(defun dp-expand-abbrev (&rest tables)
+(defun dp-expand-abbrev-1 (&rest tables)
   "Try to expand an abbrev using TABLES or `dp-expand-abbrev-default-tables'.
 Tried in order given and first match wins."
   (interactive)
@@ -715,6 +720,12 @@ Tried in order given and first match wins."
                           :current (cdr expansion)
                           :expansion-len (length exp))))
               (return (list abbrev-name expansion table))))))))))
+
+
+(defun dp-expand-abbrev (&rest tables)
+  (interactive)
+  (unless (dp-expand-abbrev-1 tables)
+    (dp-expand-sandbox-rel-abbrev)))
    
 (defun dp-expand-apprev (abbrev-symbol)
   (if (and (boundp abbrev-symbol)

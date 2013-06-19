@@ -9,6 +9,7 @@
 #  where usr.local.etc is /usr/local/etc namified.
 #
 #set -x
+source script-x
 
 #[[ "$PATH" == *yokel/sbin* ]] && source script-x
 
@@ -17,7 +18,8 @@ prog=$(basename $0)
 
 Usage()
 {
-   echo "${prog}: usage: [-$option_str]" 1>&2
+   echo "${prog}: usage: [-$option_str]
+Reads filename from stdin." 1>&2
    exit 1
 }
 

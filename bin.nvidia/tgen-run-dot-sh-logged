@@ -6,7 +6,9 @@ vunsetp "${any_shell_p}" && {
         echo "You are not in a c-shell.
 At this time, it is recommended to run tests that environment.
 > ssh localhost
-will get a pristine standard environment."
+will get a pristine standard environment.
+But if you insist on BASHing your test against the wall, 
+set then environment variable any_shell_p"
     exit 1
     } 1>&2
 }

@@ -383,9 +383,13 @@ Oddly, it doesn't handle structs.")
 ;;       (setq tmp first
 ;;             first second
 ;;             second tmp))
-    (dp-nuke-newline
-     (shell-command-to-string 
-      (format "me-expand-dest %s %s" abbrev (or sb "")))))
+  (let ((ret (dp-nuke-newline
+              (shell-command-to-string 
+               (format "me-expand-dest %s %s 2>/dev/null" 
+                       abbrev (or sb ""))))))
+    (if (string= ret "")
+        nil
+      ret)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

@@ -14,6 +14,8 @@ unset eexec_program
 
 : ${sep:=,}
 : ${verify_p=}
+: ${error_msg_opt=}
+: ${error_msgs_p=t}
 
 me_expand_dest()
 {
@@ -22,6 +24,7 @@ me_expand_dest()
       case "$1" in
           -V|--verify) verify_p=t;;
           -s|--sep|--separator) shift; sep="${1}";;
+          -z|--silent|--no-error-message|--quiet-errors) error_msg_opt=--quiet-errors; error_msgs_p=;;
           *) break;;
       esac
       shift
@@ -64,10 +67,10 @@ me_expand_dest()
     local original_dest="${dest}"
     case "${dest}" in
         //*) dest=$(echo "${dest}" | dp4-reroot); rc="$?";;
-          *) dest=$(me-dogo "${dest}"); rc="$?";;
+          *) dest=$(me-dogo ${error_msg_opt} "${dest}"); rc="$?";;
     esac
     [ "${rc}" = "0" ] || {
-        echo "Cannot find abbrev>$original_dest<"
+        vsetp "${error_msgs_p}" && echo "Cannot find abbrev>$original_dest<"
         return 1
     } 1>&2
     shift
