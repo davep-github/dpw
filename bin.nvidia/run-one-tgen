@@ -21,7 +21,7 @@ mecd testgen
 : ${rtl_args=-simv top_peatrans_gpurtl}
 : ${rtl_args_more=}
 : ${clib_linux=$(realpath "$(pwd)/../../clib/Linux")}
-: ${d_opt=hwApPath=$(realpath $(pwd)/../../)}
+: ${d_opt="hwApPath=$(realpath $(pwd)/../../)"}
 : ${last_and_latest_p=t}
 : ${last_out_dir_file_name=last_out_dir}
 : ${latest_out_dir_file_name=latest_out_dir}

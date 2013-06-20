@@ -2354,12 +2354,14 @@ preceding line."
 
 (defun dp-mark-to-string (arg str)
   (interactive "_p\nsMark up to str: ")
-  (dp-set-mark (point))
-  (with-interactive-search-caps-disable-folding
-      str nil
-    (when (search-forward str nil t arg)
-      (backward-char (length str))
-      (point))))
+  (if (string= str "")
+      (dp-mark-to-end-of-line)
+    (dp-set-mark (point))
+    (with-interactive-search-caps-disable-folding
+        str nil
+      (when (search-forward str nil t arg)
+        (backward-char (length str))
+        (point)))))
 
 (defun dp-copy-to-end-of-line (&optional beginning include-newline)
   "Copy chars from point to the end of the current line to the kill ring.
@@ -9238,7 +9240,8 @@ search."
                be)
         be))))
 
-(defun dp-embedded-lisp-eval@point0 (&optional from-point regexp prefix suffix)
+(defun* dp-embedded-lisp-eval@point0 (&optional (from-point t) regexp 
+                                      prefix suffix)
   "Eval the embedded lisp sexp surrounding point."
   (interactive "P")
   (save-excursion
@@ -9302,7 +9305,7 @@ it can be referred to in other embedded strings."
                                        (dp-embedded-lisp-open-string
                                         no-delimitter))
                               (line-end-position) t))
-         (call-interactively 'dp-embedded-lisp-eval@point0)
+         (dp-embedded-lisp-eval@point0)
        (dp-auto-eval-tagged-lisp beg end))
      (when region-p
        (message "eval'd embedded region."))))
@@ -10471,8 +10474,11 @@ mode but not the new lines themselves.  Hence, this."
            'dp-ffap-file-finder2-other-window)
          (list file-name))
   (goto-char point)
-  (beginning-of-line)
-  (search-forward id-text))
+;;  (beginning-of-line)
+  (if (search-forward id-text nil t)
+      (goto-char (match-beginning 0))
+    (dp-ding-and-message "Cannot find id-text in file.")))
+  
 ;;
 ;;         (list (expand-file-name file-name)))
 ;;  (when regexp
@@ -10888,7 +10894,7 @@ The most common dest is the (most) current journal file."
   "Insert an \"external bookmark\".
 Insert some embedded lisp  which allows for easy visiting of another file.  
 A bookmark, in this context, is:
-1) A filename relative to the buffer that will have the bookmark ins erted,
+1) A filename relative to the buffer that will have the bookmark inserted,
 2) An optimistic file offset (the line may move around.)
 3) A short regexp consisting of characters from the beginning line."
   (interactive "P")
@@ -10907,12 +10913,12 @@ A bookmark, in this context, is:
                 (setq copy-to-kill-p t)
                 nil)))
          (filename (buffer-file-name))
-         (line-len (- (line-end-position) (line-beginning-position)))
-         (id-match-string (buffer-substring (line-beginning-position)
-                                            (+ (line-beginning-position)
+         (offset (point)) ;;(line-beginning-position))
+         (line-len (- (line-end-position) offset))
+         (id-match-string (buffer-substring offset
+                                            (+ offset
                                                (min line-len 32))))
          ;; ^$( *
-         (offset (line-beginning-position))
          (bm-string (format (or fmt 
                                 ":(cfl \"%s\" %d \"%s%s\" %s):\n")
                             (if relative-file-name-p

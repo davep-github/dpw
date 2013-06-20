@@ -9,6 +9,10 @@ source eexec
 
 : ${NO_HDR:=}
 : ${PS_ALL_OPT:=u}
+: 1          2   3    4       5     6   7        8    9       10   11...
+# USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+#9601      3010  0.0  0.0  50980  1728 pts/198  Ss+  Jun19   0:00 /home/dpanariti/yokel/lib/xemacs[K-21.5-b32/x86_64-unknown-linux/gnuserv
+
 : ${PS_O_LONG_FMT="-o user,tty,pid,ppid,pgid,ni,pri,state,psr,policy,args"}
 ##: ${PS_O_USER_FMT=" u"}
 : ${PS_O_FMT="$PS_O_DEF_FMT"}
@@ -16,6 +20,7 @@ source eexec
 : ${PS_WIDTH=ww}
 : ${PS_OPTIONS:="x"}
 : ${GREP_COLOR=--color}
+: ${tty=}
 
 out_line()
 {
@@ -30,7 +35,7 @@ out_pid()
     read
     #set -f                      # WTF?!
     set -- $REPLY
-    echo "$3"
+    echo "$2"
 }
 
 # Add
@@ -51,13 +56,15 @@ Usage_details="Options:
 -c -- Color grep output.            [$GREP_COLOR]
 -C -- Do not color grep output.
 -o <ps-opt> -- Add a ${PS} option.     [$PS_OPTIONS]
+-t -- Restrict matches to the current tty.
+-T <tty> Restrict matches to the specified <tty>
 EExec Options:
 -n -- Show what would happen but don't do it.
 -v -- Be verbose about it.
 -q -- Anti-verbose.
 "
 # Example of arg parsing.
-option_str="nvqpPuUwWcCo:h"
+option_str="nvqpPuUwWcCo:htT:"
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -70,14 +77,20 @@ do
 
 # Program options.
       # We need a known format to put the pid in a known place.
-      -p) printer=out_pid; NO_HDR=t; PS_O_FMT=$PS_O_LONG_FMT;
-          PS_ARGS="-ww x $PS_O_LONG_FMT";;
+      -p) printer=out_pid; NO_HDR=t; #PS_O_FMT=$PS_O_LONG_FMT;
+          #PS_ARGS="-ww x $PS_O_LONG_FMT"
+          ;;
       -P) printer=out_line; NO_HDR=;;
       -u) PS_ALL_OPT="";; ### ??? do I want this? PS_O_FMT=$PS_O_USER_FMT;;
       -U) PS_ALL_OPT='-A'; PS_O_FMT=$PS_O_LONG_FMT;;
       -w) PS_WIDTH="${PS_WIDTH}w";;
       -W) PS_WIDTH="";;
       -o) shift; PS_OPTIONS="${PS_OPTIONS}$1";;
+      -t) tty=$(mytty) || {
+          echo "Cannot determine tty."
+          exit 1
+          } 1>&2 ;;
+      -T) shift; tty="${1}";;
       -h) Usage; exit 0;;
       --) shift ; break ;;
       *) echo 1>&2 "Unsupported option>$1<";
@@ -115,6 +128,7 @@ fi
 #IFS='|'
 got_one=""
 
+#echo_id2 PS_ARGS
 EExec $PS $PS_ARGS | $GREPPER "$@" | sort | uniq | egrep -v "$GREPPER|$PGREP" | \
   while :; do
     # eof
@@ -126,13 +140,17 @@ EExec $PS $PS_ARGS | $GREPPER "$@" | sort | uniq | egrep -v "$GREPPER|$PGREP" | 
         fi
     }
 
-    #echo_id 1>&2 REPLY
+    #echo_id2 REPLY
     # REPLY preserves whitespace, etc.
     [ -n "$hdr" ] && {
         echo "$hdr"
         hdr=
     }
     #$printer "$REPLY"
+    vsetp "${tty}" && {
+        proc_tty=$(echo "${REPLY}" | awk '{print $7}')
+        [ "${tty}" = "${proc_tty}" ] || continue
+    }
     echo "$REPLY" | $printer "$@"
     got_one=t
   done
