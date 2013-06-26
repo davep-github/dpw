@@ -561,6 +561,7 @@ The generated format must agree with this flag."
   :type 'string
   :group 'cscope)
 
+(make-variable-buffer-local 'cscope-perverted-index-option)
 
 (defcustom cscope-do-not-update-database nil
   "*If non-nil, never check and/or update the cscope database when searching.
@@ -2043,7 +2044,8 @@ using the mouse."
 		(not (file-writable-p (file-name-directory database-file)))
 		cscope-do-not-update-database)
 	    (setq options (cons "-d" options)))
-
+        (setq options (cons cscope-directory options))
+        (setq options (cons "-P" options))
 	(goto-char (point-max))
 	(setq cscope-item-start (point))
 	(if (string= base-database-file-name cscope-database-file)
@@ -2052,15 +2054,26 @@ using the mouse."
 	  (insert "\nDatabase directory/file: "
 		  cscope-directory base-database-file-name "\n"
 		  cscope-separator-line))
-        (if cscope-perverted-index-option
-            (setq options (cons cscope-perverted-index-option options))
-          ;; The following doesn't work with -q because the database name is
-          ;; different.  Add the correct database file to search
-          (setq options (cons base-database-file-name options))
-          (setq options (cons "-f" options)))
+	(setq default-directory cscope-directory)
+        ;; If cscope-perverted-index-option is non-nil, it is asking for a
+        ;; perverted index (-q). But we'll ensure the right kind of index
+        ;; exists (cscope.in.out) and not use -q if it's not there.  This
+        ;; allows us to control the perversion by choosing the kind of index
+        ;; to create.
+        ;; Is this needed in later versions of cscope. IIR, it will use the
+        ;; perverted index if it is available.
+        (if (and cscope-perverted-index-option
+                 (file-exists-p "cscope.po.out"))
+            (setq options (cons cscope-perverted-index-option options)))
+        
+        ;; We lose some flexibility by not allowing the db name to be
+        ;; explicit.
+        ;; The following doesn't work with -q because the database
+        ;; name is different.  Add the correct database file to search
+        ;;  (setq options (cons base-database-file-name options))
+        ;;  (setq options (cons "-f" options)))
 
 	(setq cscope-output-start (point))
-	(setq default-directory cscope-directory)
 	(if cscope-filter-func
 	    (progn
 	      (setq cscope-process-output nil

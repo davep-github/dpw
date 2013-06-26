@@ -3,9 +3,8 @@
 #
 #set -x
 source script-x
-dpcheck
-progname="$(basename $0)"
 source eexec
+dpcheck
 
 : ${NO_HDR:=}
 : ${PS_ALL_OPT:=u}
@@ -19,7 +18,7 @@ source eexec
 : ${PS:=ps}
 : ${PS_WIDTH=ww}
 : ${PS_OPTIONS:="x"}
-: ${GREP_COLOR=--color}
+: ${GREP_COLOR=}
 : ${tty=}
 
 out_line()
@@ -129,7 +128,7 @@ fi
 got_one=""
 
 #echo_id2 PS_ARGS
-EExec $PS $PS_ARGS | $GREPPER "$@" | sort | uniq | egrep -v "$GREPPER|$PGREP" | \
+EExec $PS $PS_ARGS | EExec $GREPPER "$@" | sort | uniq | egrep -v " $GREPPER |$PGREP" | \
   while :; do
     # eof
     read || {

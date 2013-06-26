@@ -3,8 +3,6 @@
 source script-x
 progname="$(basename $0)"
 source eexec
-set -u
-
 eexec_program=$(EExec_parse "$@")
 for op in $eexec_program
 do
@@ -12,27 +10,104 @@ do
   shift
 done
 unset eexec_program
+set -u
+
+nvcscope_filter()
+{
+    egrep -v '/ap(_tlit[0-9]/'
+}
+
+no_filter()
+{
+    cat
+}
+
+filter_dirs()
+{
+    local re="$1"
+    shift
+    # Get one per line. I'm sure there're 10^6 better ways to do this. split/cut?
+    for d in "$@"
+    do
+      echo "$d"
+    done | egrep -v "$re"
+}
 
 : ${ap_dir:=}
-: ${p4_root=${1-"."}}
 : ${send_mail_on_completion:=t}
+: ${nvcscope_p=}
+# At the least, just_nvcscope_p prevents me needing to know the nvcscope
+# option name to make symlinks.
+: ${just_nvcscope_p=}
+: ${nvcscope_files=cscope.files cscope.out cscope.out.in cscope.out.po}
 
 [ -z "$ap_dir" ] && {
     ap_dir=$(find-ap-dir)
 }
 
 [ -d "${ap_dir}" ] || {
-    echo "ap_dir>${ap_dir}<, isn't."
+    dp_echo "ap_dir>${ap_dir}<, isn't."
     exit 1
 } 1>&2
 
+link_or_non_existent()
+{
+    local file="${1}"
+    shift
+
+    ! [ -e "${file}" ] || [ -L "${file}" ]
+}
+
+# Usage variable usage:
+Usage_args_info=""
+Usage_synopsis="Index some useful, hard coded source dirs
+Use the nvcscope ap index by default.
+"
+# Using ) after the args makes copy & paste between here and the 
+# case statement easier.
+Usage_details="${EExec_parse_usage}
+-m|--no-nvcscope|--old-sk00l) Mundane usage, just index all dirs into sandbox
+                              root just like the old days.
+--nvcscope|--new-sk00l) Use nvcscope's db for ap tree. Currently problematical 
+                        because GTAGS can only use one db, so the non-ap GTAGS 
+                        needs *all*files.
+-j|--no-me-index|--no-arch-index|--no-other-index) Just set up nvcscope.
+"
+# Example of arg parsing.
+option_str="${EExec_parse_option_str}jm"
+long_options=(
+"mundane" "no-nvcscope"
+"no-me-index" "no-arch-index" "just-nvcscope" "links" "just-links")
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # Program options.
+
+      # Help!
+      -m|--no-nvcscope|--mundane) nvcscope_p=;;
+      --nvcscope|--new-sk00l) nvcscope_p=t;;
+      -j|--no-me-index|--no-arch-index|--no-other-index|--links|--just-links) just_nvcscope_p=t;;
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) dp_echo2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+
+ap_path="${ap_dir}"
 ap_dir=$(basename "${ap_dir}")
+: ${p4_root=${1-"."}}
+
+vtruep "${just_nvcscope_p}" && {
+    nvcscope_p=t
+}
 
 # For T124/132 work, you want 
 # //arch/traces/mobile/traces/gpu_multiengine/sanity_gr_disp_syncpt
 # //hw/ap_tlit1/inf/mods/trace_3d/plugin/1.0/src/t3dplugin.cpp
-
-
 
 #
 # Original suggested minimal set of files to index for MultiEngine Testing..
@@ -49,13 +124,14 @@ ap_dir=$(basename "${ap_dir}")
 ## //hw/${ap_dir}/drv/drvapi
 ## //hw/${ap_dir}/drv/multiengine
 ####
+### Files out of source tree when using /home/scratch.traces02/mobile/traces/system/so/
+### Tried to do it at root, but it makes things relative to root, e.g. /home/x --> home/x
 base_depot_dirs_of_interest="
 //hw/${ap_dir}/drv/drvapi/
 //hw/${ap_dir}/drv/multiengine/
 //hw/${ap_dir}/inf/mods/trace_3d/plugin/
 //arch/traces/mobile/traces/gpu_multiengine/
-//arch/traces/mobile/traces/nongpu_multiengine/
-"
+//arch/traces/mobile/traces/nongpu_multiengine/"
 
 # too big: //hw/${ap_dir}/include/
 # Taken care of with NOTAG files.
@@ -64,14 +140,15 @@ base_depot_dirs_of_interest="
 # !&@^%#&^@%#! //hw/${ap_dir}/include/ works if it is in this order.
 # order dependence sucks.
 
+ap_hw_p4_path="//hw/${ap_dir}"
 # Adding //hw/${ap_dir}/clib causes (error Rerun etags...) problems.
 more_depot_dirs_of_interest="
-//hw/${ap_dir}/include
-//hw/${ap_dir}/ip/vdec/cmod/
-//hw/${ap_dir}/drv/simfront/
-//hw/${ap_dir}/drv/bootrom/
-//hw/${ap_dir}/drv/chiplib/
-//hw/${ap_dir}/clib/
+${ap_hw_p4_path}/include
+${ap_hw_p4_path}/ip/vdec/cmod/
+${ap_hw_p4_path}/drv/simfront/
+${ap_hw_p4_path}/drv/bootrom/
+${ap_hw_p4_path}/drv/chiplib/
+${ap_hw_p4_path}/clib/
 //hw/class/
 //hw/tools/mods
 //hw/tools/shimlib/
@@ -80,10 +157,11 @@ more_depot_dirs_of_interest="
 
 depot_dirs_of_interest="$base_depot_dirs_of_interest $more_depot_dirs_of_interest"
 
+echo_id2 p4_root
 dirs_of_interest=$(dp4-reroot "$p4_root" $depot_dirs_of_interest)
 
 [ -z "${skip_cd-}" ] && EExec -y mecd sandbox
-echo "cwd: $(pwd)"
+dp_echo2 "cwd: $(pwd)"
 
 # These files change and come and go and are mostly copies of existing files.
 # This kind of stuff confuses cscope.
@@ -91,7 +169,38 @@ echo "cwd: $(pwd)"
 # way to control the source code finder from here.
 export EXCLUDE_PAT="/plex/"
 
-EExec -y index-code $EExecDashN_opt $EExecDashV_opt $dirs_of_interest
+if vtruep "${nvcscope_p}"
+then
+    ap_hw_path=$(dp4-reroot "$p4_root" "${ap_hw_p4_path}")
+    # Filter out dirs here so we don't even look inside them.
+    dirs_of_interest=$(filter_dirs "${ap_hw_path}" ${dirs_of_interest})
+    (
+        link_em=t
+        cd "${ap_path}"
+        for cscope_file in ${nvcscope_files}
+        do
+          link_or_non_existent "${cscope_file}" || {
+              link_em=
+              dp_echo2 "$cscope_file exists and is not a link."
+              break;
+          }
+        done
+        if vtruep "${link_em}"
+        then
+            EExec rm -f ${nvcscope_files}
+            EExec nvcscope --link-this-tree-to-prebuilt-indexes
+        else
+            dp_echo2 "Not linking nvcscope files because of errors."
+        fi
+    )
+fi
+
+if ! vtruep "${just_nvcscope_p}"
+then
+    EExec -y index-code $EExecDashN_opt $EExecDashV_opt $dirs_of_interest
+else
+    dp_echo "Not indexing non-nvcscope code."
+fi
 
 vsetp "${send_mail_on_completion-}" && ! EExecDashN_p && {
     mail -s "$progname is done in ${PWD}." "${USER}" < /dev/null >/dev/null 2>&1

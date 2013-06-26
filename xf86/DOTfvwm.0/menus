@@ -40,6 +40,7 @@ AddToMenu    Utilities "FVWM Root Menu" Title
 + "&Qsub terminal"       Popup XqsubMenu
 + "&XEmacs(xem)"         Exec exec xem
 + "x&orpie"              Exec exec xorpie
++ "x&ipython"            Exec exec xipython
 + "Move &to"             Popup Move-window-to
 + "&Goto page or desk"   Popup Goto-page-or-desk
 + ""                     Nop
@@ -1030,7 +1031,7 @@ AddToMenu   "Move-window-to" "Move to page..." Title
 + "" Nop
 + '&General'              MoveToDesk 0 0
 # Available -skiprtl tree.
-+ 'SB&1-no-rtl'           MoveToDesk 0 1
++ 'SB&1-AS2-fail'         MoveToDesk 0 1
 # RTL tree to test DEP-CPU under RTL
 + 'SB&2-R/DEPCPU'         MoveToDesk 0 2
 # Fresh RTL tree to try to get around RTL "something bad happened" error in SB5.
@@ -1053,7 +1054,7 @@ AddToMenu   "Goto-page-or-desk" "Go to page..." Title
 + "" Nop
 + '&General'              GotoDeskAndPage 0 0 0
 # Available -skiprtl tree.
-+ 'SB&1-no-rtl'           GotoDeskAndPage 1 0 0
++ 'SB&1-AS2-fail'         GotoDeskAndPage 1 0 0
 # RTL tree to test DEP-CPU under RTL
 + 'SB&2-R/DEPCPU'         GotoDeskAndPage 2 0 0
 # Fresh RTL tree to try to get around RTL "something bad happened" error in SB5.
@@ -1066,7 +1067,7 @@ AddToMenu   "Goto-page-or-desk" "Go to page..." Title
 # DestroyMenu "Goto-Desk"
 # AddToMenu   "Goto-Desk" "Go to ..." Title
 # # Available -skiprtl tree.
-# + 'SB&1-no-rtl'           GotoDesk 0 1
+# + 'SB&1-AS2-fail'         GotoDesk 0 1
 # # RTL tree to test DEP-CPU under RTL
 # + 'SB&2-R/DEPCPU'         GotoDesk 0 2
 # # Fresh RTL tree to try to get around RTL "something bad happened" error in SB5.

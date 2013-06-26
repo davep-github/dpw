@@ -317,11 +317,11 @@ DestroyModuleConfig FvwmPagerPager: *
 #FVWM 1
 *FvwmPagerPager: WindowColors white grey51 black #92e6ab
 *FvwmPagerPager: Label 0 General
-*FvwmPagerPager: Label 1 SB1-no-rtl
-*FvwmPagerPager: Label 2 SB2-R/DEPCPU
+*FvwmPagerPager: Label 1 SB1-AS2-fail
+*FvwmPagerPager: Label 2 SB2-R/ENGCPU
 *FvwmPagerPager: Label 3 SB3-R/SWR-new
 *FvwmPagerPager: Label 4 SB4-R/SWR-wave
-*FvwmPagerPager: Label 5 SB5-R/SWR
+*FvwmPagerPager: Label 5 SB5-R/Burst
 *FvwmPagerPager: SmallFont 5x8
 
 #------------------------------------------------------------------------------
@@ -344,10 +344,10 @@ DestroyModuleConfig FvwmDesker: *
 #FVWM 1
 *FvwmDesker: Label 0 General
 *FvwmDesker: Label 1 SB1-no-trl
-*FvwmDesker: Label 2 SB2-R/DEPCPU
+*FvwmDesker: Label 2 SB2-R/ENGCPU
 *FvwmDesker: Label 3 SB3-R/SWR-new
 *FvwmDesker: Label 4 SB4-R/SWR-wave
-*FvwmDesker: Label 5 SB5-R/SWR
+*FvwmDesker: Label 5 SB5-R/Burst
 *FvwmDesker: SmallFont 5x8
 
 #------------------------------------------------------------------------------

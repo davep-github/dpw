@@ -7,11 +7,12 @@ progname=`basename $0`
 source eexec
 set -u
 
-echo $progname: $* 1>&2
+EExec_verbose_msg "$@"
 
 # xcscope/cscope, have been having problems with "File does not have the
 # expected format" errors. Not using -q has, at least once, in at least one
 # case, fixed this >0 times.
+# default to off. Can be enabled in the env.<blah> file.
 : ${EXTAGTREE_DASH_Q:=}
 source script-x
 source  eexec
@@ -35,7 +36,7 @@ cscope_tree()
     vunsetp $cs && cs=$(sp -1 dp-cscope)
     if vunsetp $cs
     then
-        echo 1>&2 "Cannot find a cscope program."
+        dp_echo2 "Cannot find a cscope program."
     else
         EExec $cs $EXTAGTREE_DASH_Q -b -i "$files_file" $cscope_flags
     fi
@@ -167,12 +168,12 @@ do
     EXCTAGS=$(sp -1 $tag_prog)
     [ -n "$EXCTAGS" ] && {
 	[[ "$EXCTAGS" = */ctags ]] && {
-            echo -n 1>&2 "$progname: Found simply ctags. "
+            EExec_verbose_msg "$progname: Found simply ctags:"
             if "$EXCTAGS" --help 2>&1 | fgrep -qi "Exuberant" 2>/dev/null
             then
-                echo 1>&2 "It! Looks! Exuuuuuberaaaaaant!"
+                EExec_verbose_msg "  It! Looks!! Exuuuuuberaaaaaant!!!"
             else
-                echo 1>&2 "$progname: May not be exuberant."
+                EExec_verbose_msg "$progname: May not be exuberant."
             fi
 	}
 	break
@@ -184,7 +185,7 @@ then
     FATAL "cannot find exuberant ctags executable"
     exit 1
 else
-    echo "tagger: \`$EXCTAGS'"
+    EExec_verbose_msg "tagger: \`$EXCTAGS'"
 fi
 
 #
@@ -222,11 +223,11 @@ then
     if [ -s "$use_files_file_p" ]
     then
         FILES_FILE="$use_files_file_p"
-        echo "Using files file: $FILES_FILE"
+        EExec_verbose_msg "Using files file: $FILES_FILE"
     else
         {
-            echo "$use_files_file_p doesn't exist or is empty."
-            echo "Will find files and put them in $use_files_file_p."
+            EExec_verbose_msg "$use_files_file_p doesn't exist or is empty."
+            EExec_verbose_msg "Will find files and put them in $use_files_file_p."
         } 1>&2
         FILES_FILE=$use_files_file_p
         use_files_file_p=
@@ -243,8 +244,12 @@ then
     EExec_verbose_msg "$(wc -l $FILES_FILE)"
     chmod a-w "$FILES_FILE"
 fi
+
 [ -s "$FILES_FILE" ] || {
-    echo "Cound not find any files. $FILES_FILE is empty."
+    dp_echo "Could not find any files. $FILES_FILE is empty."
+    EExecDashN_p && {
+        dp_echo "-n requested, no files is probably ok."
+    }
 } 1>&2
 
 TAGFILES=()
@@ -278,9 +283,9 @@ TAGFILES=()
         else
             idutils_opt=""
         fi 
-echo 1>&2 "forcing --idutils for gtags off (WHY? I don't remember)."
-idutils_opt=           
-        EExec gtags ${idutils_opt} --file "${FILES_FILE}"
+dp_echo2 "forcing --idutils for gtags off (WHY? I don't remember)."
+idutils_opt=
+EExec gtags ${idutils_opt} --file "${FILES_FILE}"
     ) &
 }
 

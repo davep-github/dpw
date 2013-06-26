@@ -46,7 +46,9 @@
 ;;(defun dp4-locale-client-setup ())
 (fmakunbound 'dp4-locale-client-setup)
 
-(setq dp-cscope-perverted-index-option nil)
+;;(setq dp-cscope-perverted-index-option nil)
+;; I do it externally or use nvcscope's files.
+(setq cscope-do-not-update-database t)
 
 (defvar dp-wants-hide-ifdef-p t
   "Do I want the hide ifdef package activated?
@@ -77,5 +79,45 @@ At nVIDIA, the answer is HELL YES!")
 
 (defvar dp-p4-default-depot-completion-prefix "//"
   "Depot root.")
+
+
+(defun dp-nvidia-make-cscope-database-regexps ()
+  (let ((ap (dp-me-expand-dest "ap" (dp-current-sandbox-name)))
+        (sb (dp-current-sandbox-regexp)))
+    `(
+      (,sb                              ; If the filename matches this regexp
+       (t)                              ; Search parents for db
+       (,ap)                            ; Search ap (TOT) for db
+       (,sb)                            ; Search sb root.
+       )
+      ("/home/scratch.traces02/mobile/traces/system/so"  ; Non ME type tests.
+       (,sb)
+       )
+      )))
+
+(setq dp-make-cscope-database-regexps-fun
+      'dp-nvidia-make-cscope-database-regexps)
+
+;; Factor into function that takes the expander (e.g. dp-me-expand-dest) as a
+;; parameter.
+(defun dp-nvidia-me-expand-preceding-word (&rest r)
+  (let ((beg-end (dp-preceding-word-bounds))
+        beg end
+        word
+        expansion)
+    (when beg-end
+      (setq beg (car beg-end)
+            end (cdr beg-end)
+            word (buffer-substring beg end))
+      (when word
+        (setq expansion (dp-me-expand-dest word))
+        (when expansion
+          (delete-region beg end)
+          ;; These are most often directory names.
+          (insert expansion "/")
+          t)))))
+
+(setq dp-fallback-expand-abbrev-fun 'dp-nvidia-me-expand-preceding-word)
+
 
 (provide 'dp-dot-emacs.nvidia.el)

@@ -12,6 +12,18 @@ do
 done
 unset eexec_program
 
+RTL_PRESENT_INDICATOR_FILE="DP_RTL_SB"
+
+[ "${1-}" = "--name" ] && {
+    echo "${RTL_PRESENT_INDICATOR_FILE}"
+    exit 0
+}
+
+[ "${1-}" = "--create" ] && {
+    touch "${RTL_PRESENT_INDICATOR_FILE}"
+    exit 0
+}
+
 sb=$(dp4-sb-root -s)
 #echo_id sb
 #echo_id RTL_SANDBOXES
@@ -22,6 +34,6 @@ vsetp "${RTL_SANDBOXES-}" && {
 }
  
 mecd ap
-[ -e DP_RTL_SB ] && exit 0
+[ -e "${RTL_PRESENT_INDICATOR_FILE}" ] && exit 0
 
 exit 1   

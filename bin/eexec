@@ -181,8 +181,10 @@ EExecVerbose_p()
 EExec_verbose_msg()
 {
     local old=${EExecEchoPrefix-}
+    local pname="${progname-some_prog}:"
+    [ "${1-}" = "-P" ] && pname=
     EExecEchoPrefix=v
-    [ -n "$EExec_verbose_func" ] && "$EExec_verbose_func" "$@"
+    [ -n "$EExec_verbose_func" ] && "$EExec_verbose_func" "${pname}" "$@"
     EExecEchoPrefix=$old
 }
 

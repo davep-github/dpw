@@ -580,7 +580,7 @@ abbrev is expanded.")
                          abbrev-strings)))
       (when expansion
         (delete-region beg end)
-        (insert expansion "/")
+        (insert expansion "/")          ; Could add the "/" only if is-dir
         t))))
 
 (defun dp-get-p4-location ()
@@ -633,99 +633,103 @@ abbrev is expanded.")
          (length len-or-string)
        len-or-string)))
 
-(defun dp-expand-abbrev-1 (&rest tables)
+(defun dp-expand-abbrev-from-tables (&rest tables)
   "Try to expand an abbrev using TABLES or `dp-expand-abbrev-default-tables'.
 Tried in order given and first match wins."
   (interactive)
   ;; !<@todo XXX hacky way to have some semblance of functional expansion.
   ;; We can look for particular patterns to give us direction in expanding an
   ;; abbrev.
-
-  (cond
-   ((dp-expand-sandbox-rel-abbrev))
-   ((dp-expand-p4-abbrev))
-   ((dp-expand-work-rel-abbrev)
-    ;; return the expansion if non-nil
-    )
-   (t
-    ;; Is this a consecutive invocation?
-    (if (and (eq last-command this-command)
-             dp-expand-abbrev-state)
-        (let* ((next (or (cdr (dp-expand-abbrev-state-current
+  ;; Is this a consecutive invocation?
+  (if (and (eq last-command this-command)
+           dp-expand-abbrev-state)
+      (let* ((next (or (cdr (dp-expand-abbrev-state-current
+                             dp-expand-abbrev-state))
+                       (dp-expand-abbrev-state-expansions
+                        dp-expand-abbrev-state)))
+             (exp (concat (car next) (dp-abbrev-suffix))))
+        ;; Remove previous expansion
+        (backward-delete-char (dp-expand-abbrev-state-expansion-len
                                dp-expand-abbrev-state))
-                         (dp-expand-abbrev-state-expansions
-                          dp-expand-abbrev-state)))
-               (exp (concat (car next) (dp-abbrev-suffix))))
-          ;; Remove previous expansion
-          (backward-delete-char (dp-expand-abbrev-state-expansion-len 
-                                  dp-expand-abbrev-state))
 
-          (insert exp)
-          (setf (dp-expand-abbrev-state-current dp-expand-abbrev-state) next
-                (dp-expand-abbrev-state-expansion-len dp-expand-abbrev-state) 
-                (length exp)))
-      ;; First go; setup undo.
-      ;;(undo-boundary)                     ; doesn't work.
-      (let* ((tables (cond
-                      ((null tables) dp-expand-abbrev-default-tables)
-                      ;; Check `symbolp' after `null' above since nil is
-                      ;; a symbol.
-                      ;; "Real" nil vs nil --> emacs' defaults
-                      ((symbolp tables) nil)
-                      (t tables)))
-             ;; Terrible function name...  it grabs the "word" near point,
-             ;; hopefully exactly like `expand-abbrev' (a subr) does.
-             (abbrev-name (abbrev-string-to-be-defined nil))
-             ;; Check for a mode specific abbrev table.
-             (mode-table (intern-soft (dp-abbrev-mk-mode-abbrev-table-name))))
-        ;; Set `global-abbrev-table' in the let?
-        ;; expand-abbrev uses some hard coded junk.
-        ;; It may even reference the global table in such a way as to bypass a
-        ;; shadowing definition in a let.
-        (when mode-table
-          ;; Put the mode specific table at the front of the list.
-          (setq tables (cons (symbol-value mode-table) tables)))
-        (dolist (table tables)
-          (let* ((expansion0 (abbrev-expansion abbrev-name table))
-                 ;; This read turns a "normal" abbrev into a symbol.  The
-                 ;; `format' below can fix this, but if the expansion is not
-                 ;; a valid symbol, then we'll die here.
-                 (expansion (if table
-                                (and expansion0 (read expansion0))
-                              expansion0))
-                 (is-list-p (and expansion (listp expansion)))
-                 (exp (if is-list-p (car expansion) expansion)))
-            (if (not expansion)
-                (setq dp-expand-abbrev-state nil)
-              (backward-delete-char (length abbrev-name))
-              ;;(insert (format "from table>%s<\n" table)) format %s will
-              ;; stringify anything. exp can be a symbol.  BUG. expansions
-              ;; with spaces need to be quoted because the read only returns
-              ;; the first word.  However, if they come from the default
-              ;; table (table is nil) then the (read expansion0) isn't done
-              ;; and the encompassing escaped quotes remain. I can't remember
-              ;; why I only do the read if the expansion comes from a
-              ;; non-default (nil) table.  I say symbol in the comment and
-              ;; there is a abbrev-symbol function which I may have used at
-              ;; one time.  The bottom line is that the way it works now, if
-              ;; the expansion comes from the default map then the outer
-              ;; quotes remain, otherwise things are copacetic.
-              (setq exp (format "%s%s" exp (dp-abbrev-suffix)))
-              (insert exp)
-              (setq dp-expand-abbrev-state
-                    (and is-list-p
-                         (setq expansion (cons abbrev-name expansion))
-                         (make-dp-expand-abbrev-state
-                          :expansions expansion
-                          :current (cdr expansion)
-                          :expansion-len (length exp))))
-              (return (list abbrev-name expansion table))))))))))
+        (insert exp)
+        (setf (dp-expand-abbrev-state-current dp-expand-abbrev-state) next
+              (dp-expand-abbrev-state-expansion-len dp-expand-abbrev-state)
+              (length exp)))
+    ;; First go; setup undo.
+    ;;(undo-boundary)                     ; doesn't work.
+    (let* ((tables (cond
+                    ((null tables) dp-expand-abbrev-default-tables)
+                    ;; Check `symbolp' after `null' above since nil is
+                    ;; a symbol.
+                    ;; "Real" nil vs nil --> emacs' defaults
+                    ((symbolp tables) nil)
+                    (t tables)))
+           ;; Terrible function name...  it grabs the "word" near point,
+           ;; hopefully exactly like `expand-abbrev' (a subr) does.
+           (abbrev-name (abbrev-string-to-be-defined nil))
+           ;; Check for a mode specific abbrev table.
+           (mode-table (intern-soft (dp-abbrev-mk-mode-abbrev-table-name))))
+      ;; Set `global-abbrev-table' in the let?
+      ;; expand-abbrev uses some hard coded junk.
+      ;; It may even reference the global table in such a way as to bypass a
+      ;; shadowing definition in a let.
+      (when mode-table
+        ;; Put the mode specific table at the front of the list.
+        (setq tables (cons (symbol-value mode-table) tables)))
+      (dolist (table tables)
+        (let* ((expansion0 (abbrev-expansion abbrev-name table))
+               ;; This read turns a "normal" abbrev into a symbol.  The
+               ;; `format' below can fix this, but if the expansion is not
+               ;; a valid symbol, then we'll die here.
+               (expansion (if table
+                              (and expansion0 (read expansion0))
+                            expansion0))
+               (is-list-p (and expansion (listp expansion)))
+               (exp (if is-list-p (car expansion) expansion)))
+          (if (not expansion)
+              (setq dp-expand-abbrev-state nil)
+            (backward-delete-char (length abbrev-name))
+            ;;(insert (format "from table>%s<\n" table)) format %s will
+            ;; stringify anything. exp can be a symbol.  BUG. expansions
+            ;; with spaces need to be quoted because the read only returns
+            ;; the first word.  However, if they come from the default
+            ;; table (table is nil) then the (read expansion0) isn't done
+            ;; and the encompassing escaped quotes remain. I can't remember
+            ;; why I only do the read if the expansion comes from a
+            ;; non-default (nil) table.  I say symbol in the comment and
+            ;; there is a abbrev-symbol function which I may have used at
+            ;; one time.  The bottom line is that the way it works now, if
+            ;; the expansion comes from the default map then the outer
+            ;; quotes remain, otherwise things are copacetic.
+            (setq exp (format "%s%s" exp (dp-abbrev-suffix)))
+            (insert exp)
+            (setq dp-expand-abbrev-state
+                  (and is-list-p
+                       (setq expansion (cons abbrev-name expansion))
+                       (make-dp-expand-abbrev-state
+                        :expansions expansion
+                        :current (cdr expansion)
+                        :expansion-len (length exp))))
+            (return (list abbrev-name expansion table))))))))
 
+
+(defvar dp-fallback-expand-abbrev-fun nil
+  "Call this if expanding an abbrev the standard way fails.")
 
 (defun dp-expand-abbrev (&rest tables)
   (interactive)
-  (unless (dp-expand-abbrev-1 tables)
-    (dp-expand-sandbox-rel-abbrev)))
+  (unless
+      (cond
+       ((dp-expand-sandbox-rel-abbrev))
+       ((dp-expand-p4-abbrev))
+       ((dp-expand-work-rel-abbrev))
+       ((dp-expand-abbrev-from-tables tables))
+       (t
+        ;; Fall back to an unadorned sb relative name.
+        (dp-funcall-if dp-fallback-expand-abbrev-fun tables)))
+    (ding)))
+
    
 (defun dp-expand-apprev (abbrev-symbol)
   (if (and (boundp abbrev-symbol)

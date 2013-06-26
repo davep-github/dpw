@@ -14,8 +14,6 @@ else
     DP_RC_DIR=$HOME/.rc
 fi
 
-    
-
 dp_source_rc ${DP_RC_DIR}/alias.b0rkd-kb ${DP_RC_DIR}/alias.root
 
 alias ls_no_color="\ls -CF --color=never"
@@ -94,6 +92,7 @@ alias ls1=lsl
 
 #echo "TERM>$TERM<"
 #set -x
+
 if inside_emacs_p
 then
     # --with-filename puts:
@@ -107,12 +106,13 @@ then
     : ${dp_emacs_grep_options:-"-n --with-filename"}
     dp_emacs_dash_n_greps()
     {
-        alias grep="grep -n"
-        alias egrep="egrep -n"
-        alias fgrep="fgrep -n"
+#        source ${DP_RC_DIR}/grep-functions
+        alias grep="grep -n --color=never"
+        alias egrep="egrep -n --color=never"
+        alias fgrep="fgrep -n --color=never"
     }
     export -f dp_emacs_dash_n_greps
-    
+
     # How to make this dependent on my dp-shells lisp flags so the always match up?
     unalias ls
     alias ls='ls_no_color'

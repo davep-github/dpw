@@ -41,7 +41,10 @@ verbose=
 VERBOSE=:
 amper='&'
 do_renice=
-: ${set_sandbox_p=t}
+# This won't work the way I do things now which is to a mnemonic name per SB
+# that changes as things change. E.g. engcpu vs sb2.
+# The sb can be determined from the path, but not the preferred mnemonic.
+: ${set_sandbox_p=}
 
 case "$prog" in
     xem) prefix='xem';;

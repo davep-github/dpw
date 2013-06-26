@@ -2124,6 +2124,7 @@ convenience."
   (dp-shells-find-all-buffers 'dp-shell-ssh-buffer-p))
 
 ;; Can't do it like this.  Use the "static" list.
+;; because the ordering isn't guaranteed.
 ;; (defun dp-shells-next-shell-buffer ()
 ;;   (interactive)
 ;;   (let* ((asb (dp-shells-find-all-shell-buffers))

@@ -1141,9 +1141,13 @@ first and last non-white space on the line."
   (cons (line-beginning-position)
         (+ (line-beginning-position) (current-indentation))))
 
+(defun dp-preceding-word-bounds ()
+  (dp-looking-back-at "\\<.*?\\>"))
+
 (defvar dp-region-function-map 
   '((line-p               . (dp-line-boundaries))
     (indentation-p        . (dp-indentation-boundaries))
+    (preceding-word-p     . (dp-preceding-word-bounds))
     (buffer-p             . ((lambda ()
                                (cons (point-min) (point-max)))))
     (rest-of-line-p       . (dp-bound-rest-of-line))

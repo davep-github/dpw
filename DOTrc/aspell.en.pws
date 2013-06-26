@@ -1,4 +1,4 @@
-personal_ws-1.1 en 225 
+personal_ws-1.1 en 226 
 BioShock
 Googlegear
 pty
@@ -27,6 +27,7 @@ Savella
 SMP
 Fcc
 Novell
+RTL
 SOM
 pSOS
 DASD
@@ -49,8 +50,8 @@ cvs
 DSL
 Amperex
 systray
-svn
 VFS
+svn
 SVR
 DVD
 reverb

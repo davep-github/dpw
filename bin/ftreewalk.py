@@ -625,7 +625,7 @@ if __name__ == "__main__":
     debug_level = -1
     debug_flags = 0
     list_out = 0
-    relativize = False
+    relativize_p = False
     excluded_files_file_obj = DEF_EXCLUDED_FILES_FILE_OBJ
 
     options, args = getopt.getopt(sys.argv[1:], 'xi:d:t:e:E:vDF:mRlX:hc:')
@@ -667,7 +667,7 @@ if __name__ == "__main__":
         if o == '-R':
             # make output names relative.
             # replace arg with ./
-            relativize = True
+            relativize_p = True
             continue
         if o == '-l':
             list_out = 1
@@ -688,8 +688,11 @@ if __name__ == "__main__":
         args = ['.']
 
     for directory in args:
-        abs_dir = os.path.abspath(directory)
-        walker = FileTreeWalker(abs_dir, walk_type,
+        if relativize_p:
+            dir = directory
+        else:
+            dir = os.path.abspath(directory)
+        walker = FileTreeWalker(dir, walk_type,
                                 dir_control_file, tree_control_file,
                                 excluded_files_file_obj=excluded_files_file_obj)
 

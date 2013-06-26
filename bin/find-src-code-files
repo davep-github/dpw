@@ -65,6 +65,7 @@ NB: most are globs, not regexps."
 : ${EXCLUDES:='-e /(doxygen|html|doc|dist-build|retired|,.*|HIDE.*)/d'}
 : ${files_to_cat=""}
 : ${only_cat_files=""}
+: ${relative_opt=}
 
 add_foi_regexp $INTERESTING_FILES
 
@@ -91,6 +92,7 @@ do
         -foi|--foi) add_foi_regexp "$2"; shift;;
         -f|--filter) add_filter_regexp "$2"; shift;;
         -c) add_filter_regexp ".*\.[ch]$";;  # C language files only
+        -R) relative_opt=-R;;   # Pass to ftreewalk.py for relative
 
 	--) shift ; break ;;
 	*) 
@@ -140,8 +142,11 @@ else
     exclude_filter=filter_excludes_egrep
 fi
 
-echo 1>&2 "FtF>${FILES_TO_FILTER_IN[@]}<"
-echo_id EXCLUDE_PAT 1>&2
+{
+    echo_id EXCLUDE_PAT
+    echo "FtF>${FILES_TO_FILTER_IN[@]}<"
+} 1>&2
+
 filter()
 {
     tee /dev/null | \
@@ -159,6 +164,7 @@ filter()
     [ -n "$only_cat_files" ] && exit 0
 
     ftreewalk.py -X NOTAG \
+       ${relative_opt} \
        $EXCLUDED_FILES_FILE_OPT \
        $follow_sym_links $dirs | \
        tee /dev/null

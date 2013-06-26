@@ -1,22 +1,48 @@
 #!/bin/sh
-set -u
 source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
 
 : ${kwa_changeType:=pending}
 : ${kwa_p4Options:=}
 : ${kwa_client=$(dp4-get-client-name)}
+: ${clientOpt=}
 
-clientOpt=
-[ -n "$kwa_client" ] && {
-    clientOpt="-c $kwa_client"
-}
+for i in "$@"
+do
+  case "$1" in
+      --xc) clientOpt="-c $kwa_client";;
+      --xs) kwa_changeType=shelved;;
+      --xp) kwa_changeType=pending;;
+      --x4) shift; kwa_p4Options="${kwa_p4Options} ${1}";;
+      --all|--xa) kwa_changeType=;;
+      --help) echo '
+      --xc) clientOpt="-c $kwa_client";;
+      --xs) kwa_changeType=shelved;;
+      --xp) kwa_changeType=pending;;
+      --x4) shift; kwa_p4Options="${kwa_p4Options} ${1}";;
+      --help) echo 
+' 1>&2
+      exit 0;;
+      *) break
+  esac
+  shift
+done
 
-# List the shelved lists?
-# p4 changes -u <USERNAME> -s shelved
-if [ "${1-}" = '-s' ]
+if vsetp "${kwa_changeType}"
 then
-    shift
-    kwa_changeType=shelved
+    kwa_change_opt="-s${kwa_changeType}"
+else
+    kwa_change_opt=
 fi
+    
 
-p4 changes ${kwa_p4Options} "$@" -u${USER} -s${kwa_changeType} ${clientOpt}
+EExec p4 changes ${kwa_p4Options} "$@" -u${USER} ${kwa_change_opt} ${clientOpt}

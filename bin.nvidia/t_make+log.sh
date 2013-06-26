@@ -38,7 +38,7 @@ dp_exit()
 : ${log_name_base:=t_make}
 : ${log_name:=}
 : ${clean_opt=}
-: ${rtl_opt=-skiprtl}
+: ${dont_build_rtl_opt=-skiprtl}
 : ${disp_file=/proc/self/fd/1}
 : ${make_p=t}
 : ${log_dir=t_make+log.logs}    # Since we cd to tot.
@@ -142,7 +142,7 @@ do
       -o|--out-file) shift; log_name_base="$1";;
       -O|--this-out-file) shift; log_name="$1";;
       -c|--clean) clean_opt="-clean";;
-      -r|--no-skiprtl|--rtl) rtl_opt="";;
+      -r|--no-skiprtl|--rtl) dont_build_rtl_opt="";;
       --no-log) log_name="/dev/null";;
       --quiet) disp_file=/dev/null;;
       -m|--no-make|--no-build) make_p=;;
@@ -151,13 +151,13 @@ do
       --no-catlog) catlog_opt=;;
       # t_make won't accept -only and -skip*
       --only) shift; only_opt="-only $1"
-              [ -n "${rtl_opt}" ] && {
+              [ -n "${dont_build_rtl_opt}" ] && {
                   echo 1>&2 "-only ${1} disabling -skiprtl"
-                  rtl_opt=
+                  dont_build_rtl_opt=
               }
               ;;
       # t_make won't accept -only and -skip*
-      --skiprtl) rtl_opt="-skiprtl"
+      --skiprtl) dont_build_rtl_opt="-skiprtl"
                  [ -n "${only_opt}" ] && {
                      echo 1>&2 "-skiprtl disabling  ${only_opt}"
                      only_opt=
@@ -200,7 +200,7 @@ done
 #} 1>&2
 
 
-rtl_required_p && [ "${rtl_opt}" == "-skiprtl" ] && {
+rtl_required_p && [ "${dont_build_rtl_opt}" == "-skiprtl" ] && {
     dp_exit 1 "This sandbox cannot skip rtl"
 }
 
@@ -280,6 +280,14 @@ EExec mkdir -p "${log_dir}"
             dp_exit 1 "tree.make does not exist."
         } 1>&2
 
+        vsetp "${dont_build_rtl_opt}" || {
+            # If we're building with RTL, mark this dir so we don't
+            # accidentally undo all of the time taken to build the extra RTL
+            # stuff by building w/o it.
+            # If we change our minds, we'll get a very early warning and we
+            # can then remove the file.
+            EExec rtl_required_p --create
+        }
         echo_id leavelogs_opt
         vsetp "${leavelogs_opt}" && {
             dumby=$(ls -d .tmake*) >/dev/null 2>&1 || {
@@ -296,8 +304,8 @@ EExec mkdir -p "${log_dir}"
             #echo "bin/t_make ${keeplogs_opt} ${clean_opt}" | EExec -y tcsh-run ${EExecDashN_opt}
         }
 
-        #echo "bin/t_make ${keeplogs_opt} ${rtl_opt}" | EExec -y tcsh-run ${EExecDashN_opt}
-        run_t_make ${rtl_opt} || {
+        #echo "bin/t_make ${keeplogs_opt} ${dont_build_rtl_opt}" | EExec -y tcsh-run ${EExecDashN_opt}
+        run_t_make ${dont_build_rtl_opt} || {
             dp_exit "$?" run_tmake_failed
         } 1>&2
 

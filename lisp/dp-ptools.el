@@ -507,9 +507,16 @@ the current sandbox is used for defaults, etc."
            (concat (dp-me-expand-dest "/" sandbox) "/" ))
          'set-default)))
     (dp-set-frame-title-format)
-    (when (dp-current-sandbox-regexp)
-      (define-abbrev dp-manual-abbrev-table 
-         "sb" (dp-current-sandbox-regexp)))))
+    (if (dp-current-sandbox-regexp)
+        (progn
+          (when dp-make-cscope-database-regexps-fun
+            (setq cscope-database-regexps
+                  (funcall dp-make-cscope-database-regexps-fun)))
+          (define-abbrev dp-manual-abbrev-table
+            "sb" (dp-current-sandbox-regexp)))
+      (setq cscope-database-regexps nil)
+      (message "Current sandbox cleared."))))
+  
 
 (defun dp-sandbox-read-only-p (filename)
   "Determine if a file is in a readonly sandbox.

@@ -4099,3 +4099,330 @@ Wednesday June 12 2013
 //hw/tools,sb1
 
 
+
+========================
+Friday June 21 2013
+--
+(string-match "/home/scratch\.dpanariti.*/sb.hw\\(/\\|$\\)" "/home/scratch.dpanariti_t124_2/sb1/sb1hw/")
+(string-match "/home/scratch\.dpanariti.*/sb.hw\\/.*hw/ap\\(_tlit[0-9]\\)?" 
+              "/home/scratch.dpanariti_t124_2/sb1/sb1hw/hw/ap_tlit1")
+
+(string-match
+ "/home/scratch\.dpanariti.*/sb.hw\\(/\\|$\\)"
+ "/home/scratch.dpanariti_t124_2/sb1/sb1hw/hw/ap_tlit1/drv/drvapi/runtest_common/runtest_cpu.cpp"
+)
+0
+
+0
+
+nil
+
+
+0
+
+0
+
+
+nil
+
+nil
+
+
+
+/home/scratch.dpanariti_t124_2/sb1/sb1hw/hw/ap_tlit1
+/home/scratch.dpanariti_t124_2/sb1/sb1hw
+
+cscope-database-regexps
+nil
+
+(setq cscope-database-regexps
+      '(
+        ("/home/scratch\.dpanariti.*/sb.hw\\/.*hw/ap\\(_tlit[0-9]\\)?"
+;;         (t)
+         ("/home/scratch\.dpanariti.*/sb.hw\\(/\\|$\\)")
+         )
+         )
+        )
+(("/home/scratch.dpanariti.*/sb.hw\\(/\\|$\\)" (t) ("/home/scratch.dpanariti.*/sb.hw\\/.*hw/ap\\(_tlit[0-9]\\)?")))
+
+((t ("/home/scratch.dpanariti.*/sb.hw\\(/\\|$\\)") ("/home/scratch.dpanariti.*/sb.hw\\/.*hw/ap\\(_tlit[0-9]\\)?")))
+
+        
+;; works for surface_wr? which is odd, because it's not in ap
+(setq cscope-database-regexps
+      '(
+        ( "/home/scratch.dpanariti_t124_2/sb1/sb1hw/hw/ap_tlit1"
+         ( "/home/scratch.dpanariti_t124_2/sb1/sb1hw")
+         )
+         )
+        )
+
+;; works for ap files, not other.
+(setq cscope-database-regexps
+      '(
+        ( "/home/scratch.dpanariti_t124_2/sb1/sb1hw"
+          ( "/home/scratch.dpanariti_t124_2/sb1/sb1hw/hw/ap_tlit1")
+         )
+         )
+        )
+
+;; works for neither.
+(setq cscope-database-regexps
+      '(
+        ( "/home/scratch.dpanariti_t124_2/sb1/sb1hw")
+        ( "/home/scratch.dpanariti_t124_2/sb1/sb1hw/hw/ap_tlit1")
+        )
+      )
+
+;; YOPP!
+;; Create/modify when sandbox changes.
+(setq cscope-database-regexps
+      '(
+        ( "/home/scratch.dpanariti_t124_2/sb1/sb1hw/.*"
+          (t)
+          ("/home/scratch.dpanariti_t124_2/sb1/sb1hw/hw/ap_tlit1/")
+          ( "/home/scratch.dpanariti_t124_2/sb1/sb1hw/")
+          )
+        )
+      )
+
+
+;;installed (defun dp-nv-make-cscope-database-regexps ()
+;;installed   (let ((ap (dp-me-expand-dest "ap" (dp-current-sandbox-name)))
+;;installed         (sb (dp-current-sandbox-regexp)))
+;;installed     `(
+;;installed       (,sb
+;;installed        (t)
+;;installed        (,ap)
+;;installed        (,sb)))))
+
+(cl-pp (dp-nvidia-make-cscope-database-regexps))
+
+
+(("/home/scratch.dpanariti_t124_2/sb1/sb1hw/" (t)
+  ("/home/scratch.dpanariti_t124_2/sb1/sb1hw/hw/ap_tlit1")
+  ("/home/scratch.dpanariti_t124_2/sb1/sb1hw/")))nil
+
+
+
+
+
+(("/home/scratch.dpanariti_t124_2/sb1/sb1hw/" (t)
+  ("/home/scratch.dpanariti_t124_2/sb1/sb1hw/hw/ap_tlit1")
+  ("/home/scratch.dpanariti_t124_2/sb1/sb1hw/")))nil
+
+
+(dp-current-sandbox-regexp)
+"/home/scratch.dpanariti_t124_2/sb1/sb1hw/"
+
+nil
+
+"/home/scratch.dpanariti_t124_2/sb1/sb1hw/"
+
+nil
+
+"/home/scratch.dpanariti_t124_2/sb1/sb1hw/"
+(dp-current-sandbox-name)
+nil
+
+"sb1"
+
+(setq cscope-database-regexps (dp-nv-make-cscope-database-regexps))
+(("/home/scratch.dpanariti_t124_2/sb1/sb1hw/" (t) ("/home/scratch.dpanariti_t124_2/sb1/sb1hw/hw/ap_tlit1") ("/home/scratch.dpanariti_t124_2/sb1/sb1hw/")))
+
+(("/home/scratch.dpanariti_t124_2/sb1/sb1hw/" (t)
+  ("/home/scratch.dpanariti_t124_2/sb1/sb1hw/hw/ap_tlit1")
+  ("/home/scratch.dpanariti_t124_2/sb1/sb1hw/")))
+
+
+(cl-pp cscope-database-regexps)
+
+(("/home/scratch.dpanariti_t124_2/sb1/sb1hw/.*" (t)
+  ("/home/scratch.dpanariti_t124_2/sb1/sb1hw/../ap_tlit1/")
+  ("/home/scratch.dpanariti_t124_2/sb1/sb1hw/")))nil
+
+
+(setq dpl1 '(("x") ("y")))
+(("x") ("y"))
+
+`( (a b)
+   ,dpl1
+)
+((a b) (("x") ("y")))
+
+
+
+
+========================
+Monday June 24 2013
+--
+
+;;works,save (defstruct dp-data-file-ret
+;;works,save   file
+;;works,save   rest-of-list)
+
+;;works,save (defstruct dp-data-file-descriptor
+;;works,save   dir
+;;works,save   app-args
+;;works,save   matching-file                         ; Part of return value.
+;;works,save   )
+
+;;works,save (defstruct dp-data-file-path-element
+;;works,save   cwd-match-regexp                    ; This selects which descriptor to use.
+;;works,save   data-files                ; data file descriptors to search for data files.
+;;works,save   )
+
+;;works,save (defstruct dp-data-file-path-descriptor
+;;works,save   data-file-name                        ; Data file name.
+;;works,save   path-elements                         ; List of path elements.
+;;works,save   )
+
+
+;;works,save (setq dp-test-data-file-path
+;;works,save       (list (make-dp-data-file-path-descriptor
+;;works,save              :data-file-name "dpmacs.el"
+;;works,save              :path-elements (list (make-dp-data-file-path-element
+;;works,save                                    :cwd-match-regexp "/home/dpanariti/lisp/devel/"
+;;works,save                                    :data-files (list (make-dp-data-file-descriptor
+;;works,save                                                       :dir "/home/dpanariti/lisp"
+;;works,save                                                       :app-args nil
+;;works,save                                                       :matching-file 'unset)))))
+;;works,save             (make-dp-data-file-path-descriptor
+;;works,save              :data-file-name "dpmisc.el"
+;;works,save              :path-elements (list (make-dp-data-file-path-element
+;;works,save                                    :cwd-match-regexp "/home/dpanariti/"
+;;works,save                                    :data-files (list (make-dp-data-file-descriptor
+;;works,save                                                       :dir "/home/dpanariti/lisp"
+;;works,save                                                       :app-args nil
+;;works,save                                                       :matching-file 'unset)))))
+;;works,save             ))
+
+;;works,save (defun* dp-find-directory-relative-data-file (path-descriptors &optional start-dir dump-nodes-p)
+;;works,save   "Stolen from the idea of `cscope-database-regexps' in xcscope.el."
+;;works,save   (setq-ifnil start-dir default-directory)
+;;works,save   (let (data-file-name
+;;works,save         potential-data-file
+;;works,save         path-elements
+;;works,save         descriptors)
+;;works,save     (while path-descriptors
+;;works,save       (setq path-descriptor (car path-descriptors)
+;;works,save             path-descriptors (cdr path-descriptors))
+;;works,save       (setq data-file-name (dp-data-file-path-descriptor-data-file-name
+;;works,save                             path-descriptor))
+;;works,save       (setq path-elements (dp-data-file-path-descriptor-path-elements path-descriptor))
+;;works,save       (while path-elements
+;;works,save         (setq path-element (car path-elements)
+;;works,save               path-elements (cdr path-elements))
+;;works,save         (when dump-nodes-p
+;;works,save           (message "path-element: %s" path-element))
+;;works,save         (when (string-match (dp-data-file-path-element-cwd-match-regexp
+;;works,save                              path-element)
+;;works,save                             start-dir)
+;;works,save           (setq descriptors (dp-data-file-path-element-data-files path-element))
+;;works,save           (while descriptors
+;;works,save             (setq descriptor (car descriptors)
+;;works,save                   descriptors (cdr descriptors))
+;;works,save             (when dump-nodes-p
+;;works,save               (message "descriptor: %s" descriptor)
+;;works,save               (setq potential-data-file (expand-file-name
+;;works,save                                          (dp-data-file-path-descriptor-data-file-name
+;;works,save                                           path-descriptor)
+;;works,save                                          (dp-data-file-descriptor-dir descriptor)))
+;;works,save               (when (file-exists-p potential-data-file)
+;;works,save                 (return-from
+;;works,save                     dp-find-directory-relative-data-file
+;;works,save                   (list potential-data-file path-descriptors))))))))))
+
+(defstruct dp-data-file-ret
+  file
+  rest-of-list)
+
+(defstruct dp-data-file-descriptor
+  dir
+  app-args
+  )
+
+(defstruct dp-data-file-path-element
+  cwd-match-regexp                    ; This selects which descriptor to use.
+  data-files                ; data file descriptors to search for data files.
+  )
+
+(defstruct dp-data-file-path-descriptor
+  data-file-name                        ; Data file name.
+  path-elements                         ; List of path elements.
+  )
+
+
+(setq dp-test-data-file-path
+      (list (make-dp-data-file-path-descriptor
+             :data-file-name "dpmacs.el"
+             :path-elements (list (make-dp-data-file-path-element
+                                   :cwd-match-regexp "/home/dpanariti/lisp/devel/"
+                                   :data-files (list (make-dp-data-file-descriptor
+                                                      :dir "/home/dpanariti/lisp"
+                                                      :app-args nil)))))
+            (make-dp-data-file-path-descriptor
+             :data-file-name "dpmisc.el"
+             :path-elements (list (make-dp-data-file-path-element
+                                   :cwd-match-regexp "/home/dpanariti/"
+                                   :data-files (list (make-dp-data-file-descriptor
+                                                      :dir "/home/dpanariti/lisp"
+                                                      :app-args nil)))))
+            ))
+
+
+(defun* dp-find-directory-relative-data-file (path-descriptors &optional start-dir dump-nodes-p)
+  "Stolen from the idea of `cscope-database-regexps' in xcscope.el."
+  (setq-ifnil start-dir default-directory)
+  (let (data-file-name
+        potential-data-file
+        path-elements
+        descriptors)
+    (while path-descriptors
+      (setq path-descriptor (car path-descriptors)
+            path-descriptors (cdr path-descriptors))
+      (setq data-file-name (dp-data-file-path-descriptor-data-file-name
+                            path-descriptor))
+      (setq path-elements (dp-data-file-path-descriptor-path-elements path-descriptor))
+      (while path-elements
+        (setq path-element (car path-elements)
+              path-elements (cdr path-elements))
+        (when dump-nodes-p
+          (message "path-element: %s" path-element))
+        (when (string-match (dp-data-file-path-element-cwd-match-regexp
+                             path-element)
+                            start-dir)
+          (setq descriptors (dp-data-file-path-element-data-files path-element))
+          (while descriptors
+            (setq descriptor (car descriptors)
+                  descriptors (cdr descriptors))
+            (when dump-nodes-p
+              (message "descriptor: %s" descriptor)
+              (setq potential-data-file (expand-file-name
+                                         (dp-data-file-path-descriptor-data-file-name
+                                          path-descriptor)
+                                         (dp-data-file-descriptor-dir descriptor)))
+              (when (file-exists-p potential-data-file)
+                (return-from
+                    dp-find-directory-relative-data-file
+                  (make-dp-data-file-ret
+                   :file potential-data-file 
+                   :rest-of-list path-descriptors))))))))))
+
+(dp-find-directory-relative-data-file dp-test-data-file-path nil t)
+[cl-struct-dp-data-file-ret "/home/dpanariti/lisp/dpmacs.el" 
+                            ([cl-struct-dp-data-file-path-descriptor "dpmisc.el" 
+                                                                     ([cl-struct-dp-data-file-path-element "/HOME/DPANARITI/" 
+                                                                                                           ([cl-struct-dp-data-file-descriptor "/home/dpanariti/lisp" nil unset])])])]
+
+
+("/home/dpanariti/lisp/dpmacs.el" ([cl-struct-dp-data-file-path-descriptor "dpmisc.el" ([cl-struct-dp-data-file-path-element "/home/dpanariti/" ([cl-struct-dp-data-file-descriptor "/home/dpanariti/lisp" nil unset])])]))
+
+
+("/home/dpanariti/lisp/dpmisc.el" nil)
+
+("/home/dpanariti/lisp/dpmisc.el" nil)
+
+
+
+

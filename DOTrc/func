@@ -181,7 +181,7 @@ dp_echo()
 }
 export -f dp_echo
 
-dpe_echo ()
+dp_echo2 ()
 {
     local pname=${DPE_ECHO_PROGNAME:-$(dp_progname)}
     echo 1>&2 "${pname}:" "$@"
@@ -194,6 +194,13 @@ dpe_echo ()
         } >> $DP_ERRLOG
     fi
 }
+
+dpe_echo()
+{
+    dp_echo2 "$@"
+}
+
+export dp_echo2 dpe_echo
 
 # Works via side effects.
 aappend()

@@ -2,21 +2,42 @@
 
 set -x
 
+: ${confirmation_response:="TRUST ME"}
+
 : ${testname:=cpu_surface_write_read}
 : ${testext=.so}
 : ${rundir:=$(depth)}
 : ${EZEC=}
 : ${dump_waves_opt=}
+: ${no_run_p=}
+: ${startrecord=}
+: ${startrecord_opt=}
 
 for i in "$@"
 do
   case "${1}" in
-      -n) EZEC=echo;;
+      -n|--pretend|--dry-run) EZEC=echo; no_run_p=t;;
+      -k|--eko) EZEC=eko; no_run_p=t;;
+      -s|--start|--startrecord|--start-record) shift; startrecord="${1}";;
       -w|--wave|--waves|-wave|-waves) dump_waves_opt=-waves;;
       *) break;;
   esac
   shift
 done
+
+[ -z "${no_run_p}" ] && {
+    [ "${any_shell_p}" != "${confirmation_response}" ] && {
+        test $(basename "${SHELL}") = tcsh || {
+            echo "You are not in a c-shell.
+At this time, it is recommended to run tests that environment.
+> ssh localhost
+will get a pristine standard environment.
+But if you insist on BASHing your test against the wall, 
+set then environment variable any_shell_p to ${confirmation_response}"
+            exit 1
+        } 1>&2
+    }
+}
 
 abspath()
 {
@@ -46,15 +67,20 @@ pushd "${rundir}"
 trace_dir=$(abspath ../../arch/traces/mobile/traces/gpu_multiengine)
 hdr_file=$(abspath ../../arch/traces/mobile/traces/gpu_multiengine/comp_one_tri_redline/test.hdr)
 
+[ -n "${startrecord}" ] && {
+    startrecord_opt="-rtlarg +startrecord+${startrecord}"
+}
+
 pwd
 ${EZEC} ./bin/system_run \
     -mode arm \
     ${dump_waves_opt} \
+    ${startrecord_opt} \
     -P t124 \
     -dir "${logdir}" \
     -o "${logfile}" \
     -noClean \
     -traces "${trace_dir}" \
-    -mods "-top -cpu_rtl -pitch -zt_count_0 -i ${hdr_file} -o TestDir/${testname} -plugin '${testname} num_lines=2 default_door no_check_mem_reg'" \
+    -mods "-top -cpu_rtl -pitch -zt_count_0 -i ${hdr_file} -o TestDir/${testname} -plugin '${testname} num_elements=7 default_door no_check_mem_reg'" \
     "${testname}${testext}" \
     -v top_peatrans_gpurtl

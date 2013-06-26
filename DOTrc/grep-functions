@@ -1,0 +1,27 @@
+unalias egrep 2>/dev/null
+#echo "type egrep>$(type egrep)<"
+egrep()
+{
+    $(sp -1 egrep) -n --color=never "$@"
+}
+#echo "type egrep>$(type egrep)<"
+
+unalias grep 2>/dev/null
+#echo "type grep>$(type grep)<"
+grep()
+{
+    $(sp -1 grep) -n --color=never "$@"
+}
+#echo "type grep>$(type grep)<"
+
+unalias fgrep 2>/dev/null
+#echo "type fgrep>$(type fgrep)<"
+fgrep()
+{
+    $(sp -1 fgrep) -n --color=never "$@"
+}
+#echo "type fgrep>$(type fgrep)<"
+
+export -f egrep grep fgrep
+
+true

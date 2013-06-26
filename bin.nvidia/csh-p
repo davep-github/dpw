@@ -1,0 +1,30 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${confirmation_response=t}
+
+[ "${any_shell_p}" != "${confirmation_response}" ] && {
+    test $(basename "${SHELL}") = tcsh || {
+        echo "You are not in a c-shell.
+At this time, it is recommended to run tests that environment.
+> ssh localhost
+will get a pristine standard environment.
+But if you insist on BASHing your test against the wall, 
+set then environment variable any_shell_p to ${confirmation_response}"
+    exit 1
+    } 1>&2
+}
+
+exit 0
+

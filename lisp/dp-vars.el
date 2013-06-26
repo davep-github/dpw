@@ -274,9 +274,9 @@ nil --> use builtin image of chuck."
     "cscope.in.out"
     "cscope.po.out"
     "ID"
-    "GTAGS"                             ; Sucks
-    "GRTAGS"                            ; utte
-    "GPATH")                            ; rly
+    "GTAGS"
+    "GRTAGS"
+    "GPATH")
   "*Files used to support code indexing, eg: tags, cscope, etc.
 These should be regexp quoted."
   :group 'dp-vars
