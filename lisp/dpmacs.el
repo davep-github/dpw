@@ -581,16 +581,19 @@ And their failure occurs way too often."
 (add-hook 'py-shell-hook 'dp-py-shell-hook)
 (when dp-prefer-ipython-shell-p
   (when (setq ipython-command (executable-find "ipython"))
-    (setq py-python-command-args '("-noautoindent" "-colors" "NoColor"))
+    (setq py-python-command-args '("--no-autoindent" "--colors" "NoColor"))
     (dp-optionally-require 'ipython)
 
-    ;; The string send to ipython to query for all possible completions. I
+    ;; The string sent to ipython to query for all possible completions. I
     ;; (dp) had to remove the comment (#PYTHON-MODE SILENT) from the end of
     ;; the command string."
+;; for older IPythons
+;;    (setq ipython-completion-command-string
+;;          "print ';'.join(__IP.Completer.all_completions('%s'))\n")
     (setq ipython-completion-command-string
-          "print ';'.join(__IP.Completer.all_completions('%s'))\n")
-    
-    (setq py-python-command-args '("-noautoindent" "-colors" "NoColor"))
+          "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+
+    (setq py-python-command-args '("--no-autoindent" "--colors" "NoColor"))
     (when (featurep 'ipython)
       (defun dp-ipython-complete-collector (string)
         "This was a lambda in `ipython-complete', but I've broken it out to
@@ -609,9 +612,7 @@ And their failure occurs way too often."
         (interactive)
         (let* ((ugly-return nil)
                (sep ";")
-               (python-process (or (get-buffer-process (current-buffer))
-                                        ;XXX hack for .py buffers
-                                   (get-process py-which-bufname)))
+               (python-process (dp-python-get-process))
                ;; XXX currently we go backwards to find the beginning of an
                ;; expression part; a more powerful approach in the future
                ;; might be to let ipython have the complete line, so that
@@ -635,13 +636,14 @@ And their failure occurs way too often."
                           dp-ipython-complete-collector))))
           ;;(message (format "#DEBUG pattern: '%s'" pattern))
           (process-send-string python-process
-                               (format ipython-completion-command-string pattern))
+                               (format ipython-completion-command-string 
+                                       pattern))
           (accept-process-output python-process)
           ;;(message (format "DEBUG return: %s" ugly-return))
           (setq completions
-                (let* ((start (1+ (string-match "\n" ugly-return)))
+                (let* ((start (1+ (string-match "'" ugly-return)))
                        (ss (substring ugly-return start))
-                       (end (string-match "\n" ss))
+                       (end (string-match "'" ss))
                        (ss2 (substring ss 0 end)))
                   (split-string ss2 ";")))
           (setq completion-table (loop for str in completions

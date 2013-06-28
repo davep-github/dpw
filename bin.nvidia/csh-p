@@ -14,7 +14,7 @@ unset eexec_program
 
 : ${confirmation_response=t}
 
-[ "${any_shell_p}" != "${confirmation_response}" ] && {
+[ "${any_shell_p-}" != "${confirmation_response}" ] && {
     test $(basename "${SHELL}") = tcsh || {
         echo "You are not in a c-shell.
 At this time, it is recommended to run tests that environment.

@@ -82,7 +82,7 @@ EExec_parse()
     do
       case "$1" in
           -n|--eexec-n) prog="${prog}EExecDashN ";;
-          -nk|--eexec-nk) prog="${prog}EExecDashN_k ";;
+          -nk|--eexec-nk|--eexec-neko) prog="${prog}EExecDashN_k ";;
           -v|--eexec-v) prog="${prog}EExecVerbose ";;
           -q|--eexec-q) prog="${prog}EExecQuiet ";;
           --) prog="${prog}EExecNOP"; break;; # Allow user to consume a --

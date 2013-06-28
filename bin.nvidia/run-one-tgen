@@ -21,7 +21,8 @@ mecd testgen
 : ${rtl_args=-simv top_peatrans_gpurtl}
 : ${rtl_args_more=}
 : ${clib_linux=$(realpath "$(pwd)/../../clib/Linux")}
-: ${d_opt="hwApPath=$(realpath $(pwd)/../../)"}
+: ${d_path="$(pwd)/../../"}
+: ${d_opt=""}
 : ${last_and_latest_p=t}
 : ${last_out_dir_file_name=last_out_dir}
 : ${latest_out_dir_file_name=latest_out_dir}
@@ -107,7 +108,7 @@ do
       -c|--chip) shift; chip_opt="$1";;
       -t|--target) shift; target_opt="$1";;
       --all-but-run|--abr|--no-run) all_but_run_opt="-allButRun";;
-      -d) shift; d_opt="$1";;
+      -d) shift; d_path="$1";;
       --log-dir) shift; user_log_dir="$1";;
       --log-base) shift; log_dir_base="$1";;
       --wait-status|--status-wait|--ws) wait_opt="-wait"; mail_opt='-nomail';
@@ -184,6 +185,11 @@ vsetp "${rtl_p}" && {
     target_opt=RTL
     set -- "$@" ${rtl_args}
 }
+
+vsetp "${d_opt}" || {
+    d_opt="hwApPath=$(realpath ${d_path})"
+}
+d_opt=$(normpath "${d_opt}")/
 
 # Appending to $@ allows for more kinds of quoting to be preserved.
 vsetp "${queue}" && set -- "$@" -queue "${queue}"

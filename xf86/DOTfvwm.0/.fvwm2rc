@@ -137,6 +137,8 @@
 #
 #-----------------------------------------------------------------------------#
 
+#define SB5_DESC R/ENGCPU
+
 Read decorations
 
 Read globalfeel
@@ -152,8 +154,10 @@ Read functions
 Read bindings
 
 Read menus
+#FvwmCpp -I.fvwm/defs.h .fvwm/menus
 
 Read modules
+FvwmCpp -I . .fvwm/modules
 
 #-----------------------------------------------------------------------------#
 #

@@ -339,7 +339,12 @@ Key y          A        4       Iconify
 Key Left       A        4       GotoDesk -1
 Key Right      A        4       GotoDesk 1
 
-Key t          A        4       exec dpxx
+Key d          A        4       exec dpxx
+
+Key s          A        4       PageNextFarmTerm
+Key s          A        4M      DeskNextFarmTerm
+Key s          A        4S      AnyNextFarmTerm
+Key t          A        4       Next  ("*xssh-tunnel@*") FocusRaiseAndStuff
 
 # Go to an IPython if possible.
 # Better would be to bring it to us.
@@ -349,3 +354,5 @@ Key o          A        M4      exec xorpie
 
 # Wander around with the cursor keys.
 Key v          A	4	Move
+
+Key c          A        C4      FvwmCpp /home/dpanariti/.fvwm/.fvwm2rc

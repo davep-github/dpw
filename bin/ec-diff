@@ -14,10 +14,10 @@ unset eexec_program
 
 # ec [-w] first second
 
-wait_opt=
+wait_opt=-w
 if [ "$1" = "-w" ]
 then
-    wait_opt=-w
+    wait_opt=
     shift
 fi
 

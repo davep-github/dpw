@@ -11,7 +11,8 @@ vsetp $qs && queue_size=$qs
 # qsub -q o_pri_interactive_cpu_2G -P t124 -cwd $PWD -Is $SHELL -l
 # dpxx -B linen -- qsub -q o_pri_interactive_cpu_2G -P t124 -cwd $PWD -Is $SHELL -l
 : ${queue_size=2}
-: ${default_queue:=o_pri_interactive_cpu_@QUEUE_SIZE@G}
+#: ${default_queue:=o_pri_interactive_cpu_@QUEUE_SIZE@G}  # Defaults to CentOS 4. Old.
+: ${default_queue:=o_pri_interactive_cpu_rel5_@QUEUE_SIZE@G}
 : ${queue:=$default_queue}
 : ${project:=t124}
 : ${cwd:=${PWD}}

@@ -458,6 +458,18 @@ DestroyFunc AnyNextEmacs
 AddToFunc AnyNextEmacs
 + I Next  ("*XEmacs@*-xterm*") FocusRaiseAndStuff
 
+DestroyFunc PageNextFarmTerm
+AddToFunc PageNextFarmTerm
++ I Next  ("*sc-sim-*", CurrentPage) FocusRaiseAndStuff
+
+DestroyFunc DeskNextFarmTerm
+AddToFunc DeskNextFarmTerm
++ I Next  ("*sc-sim-*", CurrentDesk) FocusRaiseAndStuff
+
+DestroyFunc AnyNextFarmTerm
+AddToFunc AnyNextFarmTerm
++ I Next  ("*sc-sim-*") FocusRaiseAndStuff
+
 DestroyFunc EditingServer
 AddToFunc EditingServer
 + I Next  ("*Serv/*XEmacs@*-xterm*") FocusRaiseAndStuff

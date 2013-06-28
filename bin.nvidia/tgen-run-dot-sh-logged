@@ -16,6 +16,9 @@ unset eexec_program
 
 : ${p4_clib_dir:=//hw/ap_tlit1/clib/Linux}
 : ${log_file_base_name:=dot-sh}
+ # I'm done with bash because the quoting sucks beyond suckage:
+ # --egrep 'ERROR: cannot aquire /tmp/asim.X' 
+ # --egrep 'something bad happened'}
 : ${teeker_options=--slog -Z9 --ts --hg}
 : ${testname=}
 
@@ -64,7 +67,7 @@ so_path="${clib_dir}/${so_name}"
 echo_id so_path
 # Check for no go&^@*(#amn(*#&(#*&$other-*&^#*$&-ing link errors.
 ldd "${so_path}"
-echo "COMPLETE ldd check!"
+echo "Finish writing ldd check!"
 
 # E.g. ./surface_write_read_no_smmu_bar1.sh 2>&1 | teeker --slog -Z9 --ts --grep 'surface_write_read:' --hg dot-sh --egrep 'ERROR: cannot aquire /tmp'; email-yopp
 

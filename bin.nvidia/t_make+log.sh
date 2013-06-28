@@ -65,7 +65,7 @@ Usage_details="${EExec_parse_usage}
 -O <file>) Tee output to log to <file>.
 --no-log) tee /dev/null to show progress but make no log.
 --no-keeplogs) Tell t_make not to keep log files about.
---no-leavelogs) Tell t_make not to leave previous log files about.
+--no-leavelogs|--no-ll) Tell t_make not to leave previous log files about.
 --no-catlog) Do not cat the log after a failure.
 --quiet) tee <log-file> > /dev/null. Log w/o output.
 -r) Do NOT use -skiprtl. Build the RTL
@@ -103,7 +103,7 @@ long_options=("out-file:"
     "no-build"
     "no-log"
     "no-keeplogs"
-    "no-leavelogs"
+    "no-leavelogs" "no-ll"
     "no-catlogs"
     "get-mods"
     "no-get-mods"
@@ -147,7 +147,7 @@ do
       --quiet) disp_file=/dev/null;;
       -m|--no-make|--no-build) make_p=;;
       --no-keeplogs) keeplogs_opt=;;
-      --no-leavelogs) leavelogs_opt=;;
+      --no-leavelogs|--no-ll) leavelogs_opt=;;
       --no-catlog) catlog_opt=;;
       # t_make won't accept -only and -skip*
       --only) shift; only_opt="-only $1"
@@ -290,8 +290,8 @@ EExec mkdir -p "${log_dir}"
         }
         echo_id leavelogs_opt
         vsetp "${leavelogs_opt}" && {
-            dumby=$(ls -d .tmake*) >/dev/null 2>&1 || {
-                dp_exit 1 ".tmake dirs do not exist. ${keeplogs_opt} won't work.
+            dumby=$(ls -d .tmake* >/dev/null 2>&1) || {
+                dp_exit 1 ".tmake dirs do not exist. ${leavelogs_opt} won't work.
   Use --no-leavelogs"
             }
         }

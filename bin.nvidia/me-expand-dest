@@ -32,6 +32,14 @@ me_expand_dest()
 
     # Are we a majick string?
     a=($(echo "$@" | sed -rn "s/^(${sep})([^${sep}]+)((${sep})([^${sep}]*)(${sep}?))?$/\2 \5/p"))
+#    da=("$@")
+# Has a problem with spaces, duh!
+# only do this if t.e. , ?
+#    old_IFS="${IFS}"
+#    IFS=$sep
+#    set -- $1
+#eko '$@' "$@"
+#    IFS="${old_IFS}"
     EExecDashV_p && {
         echo "1st a:"
         eko "${a[@]}"

@@ -67,23 +67,8 @@ local_server_p()
 # server-name <alist elements of editor id information>
 # If we find no host then we use a new instance.
 #
-find_best_editing_host()
-{
-    vsetp "${DP_GNU_EDITING_SERVER-}" && {
-        echo "${DP_GNU_EDITING_SERVER}"
-        return 0
-    }
-    [ -e "${DP_EDITING_SERVER_FILE}" ] && {
-        set -- $(cat "${DP_EDITING_SERVER_FILE}")
-        # $1 == server, $2 == pid, ... rest
-        # If server is this host, verify the pid exists and is gnuserv.
-        editing_host_msg="editing server info: $@"
-        echo "${1}"
-        return 0
-    }
-    return 1
-}
 
+source find_best_editing_host
 
 find_one_of_these_programs()
 {

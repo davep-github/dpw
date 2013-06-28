@@ -47,7 +47,11 @@ class CTOR_t:
 
 
 DEFAULT_ERROR_INDICATOR = "!"
+DEFAULT_EGREP_PREFIX = DEFAULT_ERROR_INDICATOR * 4
+DEFAULT_EGREP_SUFFIX = DEFAULT_ERROR_INDICATOR * 4
 DEFAULT_MATCH_INDICATOR = "@"
+DEFAULT_MATCH_PREFIX = DEFAULT_MATCH_INDICATOR * 3
+DEFAULT_MATCH_SUFFIX = DEFAULT_MATCH_INDICATOR * 3
 DEFAULT_INDICATOR_SEPARATOR = "|"
 
 tick_counter_prefix_format = "%s%s"
@@ -745,7 +749,6 @@ Split line into chars and feed to ticker.""")
                                               error_lines)
             ticker.fini()
             break
-        line_number += 1
         for o in outputStreams:
             # Since this was motivated by a disk space issue, count *all*
             # writes.
@@ -761,7 +764,8 @@ Split line into chars and feed to ticker.""")
                     # XXX @todo Add ANSI color options?
                     display_match(app_args.match_ostream,
                                   input_line[:-1], line_number,
-                                  prefix="\n***", suffix="***\n",
+                                  prefix="\n" + DEFAULT_MATCH_PREFIX,
+                                  suffix=DEFAULT_MATCH_SUFFIX + "\n",
                                   timestamp_p=timestamp_p)
                 if app_args.grep_hit_action:
                     if not app_args.all_grep_hit_actions_p:
@@ -778,7 +782,8 @@ Split line into chars and feed to ticker.""")
                     # XXX @todo Add ANSI color options?
                     display_match(app_args.match_ostream,
                                   input_line[:-1], line_number,
-                                  prefix="\n!!!!", suffix="!!!!\n",
+                                  prefix="\n" + DEFAULT_EGREP_PREFIX,
+                                  suffix=DEFAULT_EGREP_PREFIX + "\n",
                                   timestamp_p=timestamp_p)
 
         if char_wise_p:
@@ -807,4 +812,5 @@ Split line into chars and feed to ticker.""")
                 # Let the ticker class do what it will.
                 tick = None
             ticker(tick=tick, tick_prefix=tick_prefix)
+        line_number += 1
     print

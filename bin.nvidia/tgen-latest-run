@@ -113,4 +113,5 @@ then
 else
     dest="${latest_out_dir}/tests/${some_path_component}/00/00/${first_dir_num}/${second_dir_num}"
     "${printor}" "${dest}"
+    [ -d "${dest}" ] # Print the value, but set status based on its actual existence.
 fi

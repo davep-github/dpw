@@ -1632,6 +1632,19 @@ first file that is `dp-file-readable-p' is used.  Also sets
    ((eq hook-type 'bind-enter)
     (apply 'dp-bind-shell-type-enter-key bind-args))))
 
+
+(defun dp-python-get-process ()
+  (or (get-buffer-process (current-buffer))
+                                        ;XXX hack for .py buffers
+      (get-process py-which-bufname)))
+
+(defun dp-py-completion-setup-stolen ()
+  (let ((python-process (dp-python-get-process)))
+    (process-send-string 
+     python-process
+     "from IPython.core.completerlib import module_completion\n")))
+
+
 ;;;###autoload
 (defun dp-py-shell-hook ()              ;<:psh|pysh:>
   "Set up my python shell mode fiddle-faddle."
@@ -1649,6 +1662,8 @@ first file that is `dp-file-readable-p' is used.  Also sets
                               )
   (when (fboundp 'ipython-complete)
     (local-set-key [tab] 'ipython-complete))
+
+  (dp-py-completion-setup-stolen)
 
   (dp-define-buffer-local-keys 
    '([(meta return)] dp-end-of-line-and-enter

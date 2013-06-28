@@ -35,6 +35,8 @@ Ee|dotvnc|dvnc|vnc|   ${gohome}.vnc/
 # .__ME_src --> ./   lets `mecd sb-name .' work.
 # For tot, the superfluous dot prevents a double slash at the end of the
 # expansion.
+# FUCK! Now I need both an SB relative and ap-tree relative system.
+# <sb>/hw/<ap-tree>/x
 # <:me defs:>
 E|scratch__ME_src|           ../..
 E|scr__ME_src|               ../..
@@ -50,6 +52,7 @@ E|nvdiag__ME_src|            hw/nvdiag/
 E|nvd__ME_src|               hw/nvdiag/
 Ee|mods__ME_src|             hw/nvdiag/mods/
 E|ap1__ME_src|               hw/ap_tlit1/
+E|ap_just_ap__ME_src|        hw/ap_tlit1/
 E|aptlit1__ME_src|           hw/ap_tlit1/
 E|tot__ME_src|               hw/ap_tlit1/
 E|TOT__ME_src|               hw/ap_tlit1/
@@ -159,7 +162,7 @@ Ee|scratch3|scr3|sc3|                         /home/scratch.dpanariti_t124_3/
 # Try to use tree vs sandbox
 # Prefer the mnemonic names
 Ee|sandbox1|sbox1|sb1|workspace1|ws1|         ${scratch2}sb1/sb1hw/
-Ee|as2fail|                                   ${sandbox1}
+Ee|apmerge|                                   ${sandbox1}
 Ee|sandbox2|sbox2|sb2|workspace2|ws2|         ${scratch0}sb2/sb2hw/
 Ee|engcpu|ecpu|cpue|cpueng|                   ${sandbox2}
 Ee|sandbox3|sbox3|sb3|workspace3|ws3|         ${scratch1}sb3/sb3hw/
