@@ -54,7 +54,9 @@ dp_exit()
 : ${me_clean_opt=}
 : ${send_mail_on_completion=t}
 : ${teefun:=tee}
+: ${self_correct=}
 
+## <:new defaults up there:>
 t_make_args=
 
 Usage_args_info=" t_make args..."
@@ -76,7 +78,7 @@ Usage_details="${EExec_parse_usage}
 --t-make-arg <arg>) Append <arg> to additional t_make args.
 --get-mods) Get the latest mods. 
 --no-get-mods) Get the latest mods.
---build-me) Do build the me tests.
+--build-me|--bgme|--bme) Do build the me tests.
 --no-build-me) Do not build the me tests.
 --no-debug) Build me tests W/O debug.
 --me-purge) Purge me tests.
@@ -109,7 +111,7 @@ long_options=("out-file:"
     "no-get-mods"
     "get-asim"
     "no-get-asim"
-    "build-me" "bme"
+    "build-me" "bme" "bgme"
     "just-build-me" "just-bme" "bme-only" "only-bme"
     "no-build-me"
     "no-debug"
@@ -166,7 +168,7 @@ do
       --t_make_arg) shift; t_make_args="$t_make_args $1";;
       --t_make-arg) shift; t_make_args="$t_make_args $1";;
       --t-make-arg) shift; t_make_args="$t_make_args $1";;
-      --build-me|--bme) build_me_p=t;;
+      --build-me|--bme|--bgme) build_me_p=t;;
       --just-build-me|--bme-only|--just-bme|--only-bme) build_me_p=t; get_mods_p=; get_asim_p=;;
       --no-build-me) build_me_p=;;
       --get-mods) get_mods_p=t;;
@@ -291,8 +293,13 @@ EExec mkdir -p "${log_dir}"
         echo_id leavelogs_opt
         vsetp "${leavelogs_opt}" && {
             dumby=$(ls -d .tmake* >/dev/null 2>&1) || {
+                if vfalsep "${self_correct}" 
+                then
+                    ((++self_corrections))
+                else
                 dp_exit 1 ".tmake dirs do not exist. ${leavelogs_opt} won't work.
   Use --no-leavelogs"
+                fi
             }
         }
 

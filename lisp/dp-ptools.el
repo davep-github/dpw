@@ -414,7 +414,7 @@ Oddly, it doesn't handle structs.")
 (defvar dp-sandbox-make-command nil
   "A special makefile for using in sandbox. E.g. mmake @ nvidia.")
 
-(defsubst dp-sandbox-p (filename)
+(defsubst dp-sandbox-file-p (filename)
   (and filename
        (dp-sandbox-regexp)
        (string-match (dp-sandbox-regexp) filename)))
@@ -442,7 +442,7 @@ Oddly, it doesn't handle structs.")
 (defsubst dp-current-sandbox-p (filename)
   "Return non-nil if we are in the current sandbox dir.
 Returns nil if there is no current sandbox."
-  (and (dp-sandbox-p filename)
+  (and (dp-sandbox-file-p filename)
        (dp-current-sandbox-regexp)
        (string-match (dp-current-sandbox-regexp) filename)))
 
@@ -513,7 +513,8 @@ the current sandbox is used for defaults, etc."
             (setq cscope-database-regexps
                   (funcall dp-make-cscope-database-regexps-fun)))
           (define-abbrev dp-manual-abbrev-table
-            "sb" (dp-current-sandbox-regexp)))
+            "sb" (dp-current-sandbox-regexp))
+          (message "sb dir: %s" (dp-current-sandbox-regexp)))
       (setq cscope-database-regexps nil)
       (message "Current sandbox cleared."))))
   
@@ -527,14 +528,14 @@ necessary) are in play.  For additional safety, all sandboxes are read only
 if there is no current one set."
   (dmessage "dp-sandbox-read-only-p, filename>%s<" filename)
   (dmessage "dp-sandbox-read-only-p, regexp>%s<" (dp-current-sandbox-regexp))
-  (and (dp-sandbox-p filename)         ; Are we talking about a sandbox file?
-       (or (not (dp-current-sandbox-regexp))
-           (not (dp-current-sandbox-p filename))
-           ;; We're only here if the file is in the current sandbox.
-           ;; dp-current-sandbox-read-only-p only affects the current sandbox
-           ;; (hence the name)
+  ;; If in another sb (in sb and not in current sb)
+  ;; If in current sb and current sb RO
+  ;; no sb --> not-RO
+  (and (dp-current-sandbox-regexp)
+       (dp-sandbox-file-p filename)
+       (or (not (dp-current-sandbox-p filename))
            (dp-current-sandbox-read-only-p))))
-  
+
 (add-hook 'dp-detect-read-only-file-hook 'dp-sandbox-read-only-p)
 
 ;;;

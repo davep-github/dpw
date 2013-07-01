@@ -1,14 +1,14 @@
-#----------------------------------------------------------------------------#
-#
-# 8. Now define some handy complex functions
-#
-#----------------------------------------------------------------------------#
+##----------------------------------------------------------------------------#
+##
+## 8. Now define some handy complex functions
+##
+##----------------------------------------------------------------------------#
 
-#------------------------------------------------------------------------------
-# This one moves and then raises the window if you drag the mouse,
-# only raises the window if you click, or does a vertical maximize if
-# you double click (full screen maximize would be 'Maximize 100 100')
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## This one moves and then raises the window if you drag the mouse,
+## only raises the window if you click, or does a vertical maximize if
+## you double click (full screen maximize would be 'Maximize 100 100')
+##------------------------------------------------------------------------------
 
 DestroyFunc Move-or-Raise
 AddToFunc Move-or-Raise M Move
@@ -22,9 +22,9 @@ AddToFunc Move-NoRaise-or-RaiseLower M Move
 +                       D Maximize 0 100
 
 
-#------------------------------------------------------------------------------
-# As above but double click shade
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## As above but double click shade
+##------------------------------------------------------------------------------
 
 DestroyFunc Move-or-Raise-or-Shade
 AddToFunc Move-or-Raise-or-Shade M Move
@@ -32,11 +32,11 @@ AddToFunc Move-or-Raise-or-Shade M Move
 +                       C Raise
 +                       D WindowShade
 
-#------------------------------------------------------------------------------
-# This one moves and then lowers the window if you drag the mouse,
-# only lowers the window if you click, or does a RaiseLower if you double
-# click
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## This one moves and then lowers the window if you drag the mouse,
+## only lowers the window if you click, or does a RaiseLower if you double
+## click
+##------------------------------------------------------------------------------
 
 DestroyFunc Move-or-Lower
 AddToFunc Move-or-Lower M Move
@@ -45,31 +45,31 @@ AddToFunc Move-or-Lower M Move
 +                       D RaiseLower
 
 
-#------------------------------------------------------------------------------
-# This one moves or (de)iconifies:
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## This one moves or (de)iconifies:
+##------------------------------------------------------------------------------
 
 DestroyFunc Move-or-Iconify-or-Raise
 AddToFunc Move-or-Iconify-or-Raise M Move
 +			  C Raise
 +                         D Iconify
 
-#------------------------------------------------------------------------------
-# This one maximizes vertically if you click (leaving room for the taskbar
-# at the bottom, or does a full maximization if you double click, or a
-# true full vertical maximization if you just hold the mouse button down.
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## This one maximizes vertically if you click (leaving room for the taskbar
+## at the bottom, or does a full maximization if you double click, or a
+## true full vertical maximization if you just hold the mouse button down.
+##------------------------------------------------------------------------------
 
 DestroyFunc Maximize-Func
 AddToFunc Maximize-Func M	Maximize 0 98
 + 			C	Maximize 0 100
 + 			D	Maximize 100 98
 
-#------------------------------------------------------------------------------
-# This one resizes and then raises the window if you drag the mouse,
-# only raises the window if you click,  or does shade if you double
-# click
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## This one resizes and then raises the window if you drag the mouse,
+## only raises the window if you click,  or does shade if you double
+## click
+##------------------------------------------------------------------------------
 
 DestroyFunc Resize-or-Raise-or-Shade
 AddToFunc Resize-or-Raise-or-Shade M Resize
@@ -78,9 +78,9 @@ AddToFunc Resize-or-Raise-or-Shade M Resize
 +                         D WindowShade
 
 
-#------------------------------------------------------------------------------
-# This one focuses and then 'warps' to the window.
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## This one focuses and then 'warps' to the window.
+##------------------------------------------------------------------------------
 
 
 DestroyFunc FocusAndWarp
@@ -88,54 +88,54 @@ AddToFunc FocusAndWarp I Focus
 +                      I WarpToWindow 1 1
 
 
-#------------------------------------------------------------------------------
-# Like the previous one, but de-iconifies first.
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## Like the previous one, but de-iconifies first.
+##------------------------------------------------------------------------------
 
 DestroyFunc DeiconifyFocusAndWarp
 AddToFunc DeiconifyFocusAndWarp I Iconify off
 +                               I FocusAndWarp
 
-#------------------------------------------------------------------------------
-# Like the previous one, but only Raise.
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## Like the previous one, but only Raise.
+##------------------------------------------------------------------------------
 
 DestroyFunc DeiconifyFocusAndRaise
 AddToFunc DeiconifyFocusAndRaise I Iconify off
 +                               I Focus
 +				I Raise
 
-#------------------------------------------------------------------------------
-# This one is used to modify some style for a window (almost obsolet)
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## This one is used to modify some style for a window (almost obsolet)
+##------------------------------------------------------------------------------
 
 DestroyFunc StyleAndRecapture
 AddToFunc StyleAndRecapture I Style "$0" $1
 + I All ("$0") RecaptureWindow
 
 
-#------------------------------------------------------------------------------
-# A really useful one: de-iconifies, warps to the window
-# or creates it if it doen't exist (often used with mailtools)
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## A really useful one: de-iconifies, warps to the window
+## or creates it if it doen't exist (often used with mailtools)
+##------------------------------------------------------------------------------
 
 DestroyFunc WarpOrExec
 AddToFunc WarpOrExec	   I Next (AcceptsFocus $0) Iconify -1
 +		           I Next (AcceptsFocus $0) FocusAndWarp
 +			   I None (AcceptsFocus $0) Exec $0 $1
 
-#------------------------------------------------------------------------------
-# For the left button
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## For the left button
+##------------------------------------------------------------------------------
 
 DestroyMenu "window_ops_func"
 AddToFunc "window_ops_func" "C" PopUp Window-Ops2
 +              "M" PopUp Window-Ops2
 +              "D" Delete
 
-#------------------------------------------------------------------------------
-# Functions to restart Modules and Restart/Kill FvwmButtons by aliases
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## Functions to restart Modules and Restart/Kill FvwmButtons by aliases
+##------------------------------------------------------------------------------
 
 DestroyFunc RestartModule
 AddToFunc RestartModule
@@ -148,15 +148,15 @@ AddToFunc RestartModuleByAlias
 + I Module $0 $1
 
 
-# This function is for WMakerFvwmButtons (start or iconify id started)
+## This function is for WMakerFvwmButtons (start or iconify id started)
 DestroyFunc MyPanelButtons
 AddToFunc  MyPanelButtons
 + I All ($0) Iconify
 + I None (CirculateHit $0) FvwmButtons -g +$1+$2 $0
 
-#------------------------------------------------------------------------------
-# Functions for FvwmScript-BaseConfig
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## Functions for FvwmScript-BaseConfig
+##------------------------------------------------------------------------------
 
 DestroyFunc BaseConfigOkFunc
 AddToFunc BaseConfigOkFunc I Read styles
@@ -165,10 +165,10 @@ DestroyFunc BaseConfigApplyFunc
 AddToFunc BaseConfigApplyFunc I Read styles
 
 
-#------------------------------------------------------------------------------
-# Functions which start and save state for FvwmAnimate, FvwmEvent, etc ...
-# $1 $2 is used only by FvwmAuto
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## Functions which start and save state for FvwmAnimate, FvwmEvent, etc ...
+## $1 $2 is used only by FvwmAuto
+##------------------------------------------------------------------------------
 
 DestroyFunc ModuleOn
 AddToFunc   ModuleOn
@@ -181,9 +181,9 @@ AddToFunc   ModuleOff
 + I KillModule $0
 + I Exec echo "# Do not start $0" > $FVWM_USERDIR/.start-$0
 
-#------------------------------------------------------------------------------
-# Functions which start and save state for MiniButtons and WinMakerAppButtons
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## Functions which start and save state for MiniButtons and WinMakerAppButtons
+##------------------------------------------------------------------------------
 
 DestroyFunc ButtonsOn
 AddToFunc   ButtonsOn
@@ -196,9 +196,9 @@ AddToFunc   ButtonsOff
 + I All ($1) Close
 + I Exec echo "# Do not start $0" > $FVWM_USERDIR/.start-$0
 
-#------------------------------------------------------------------------------
-# Functions for choosing the "Big" buttons Wharf or BarButtons
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## Functions for choosing the "Big" buttons Wharf or BarButtons
+##------------------------------------------------------------------------------
 
 DestroyFunc ChangeButtonsOn
 AddToFunc  ChangeButtonsOn
@@ -214,9 +214,9 @@ AddToFunc  ChangeButtonsOff
 + I Exec echo "# No Buttons Bar" > $FVWM_USERDIR/.start-FvwmButtons
 + I $0
 
-#------------------------------------------------------------------------------
-# Functions for Raising modules only
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## Functions for Raising modules only
+##------------------------------------------------------------------------------
 
 DestroyFunc StartModulesAutoRaise
 AddToFunc StartModulesAutoRaise
@@ -235,9 +235,9 @@ AddToFunc ModulesAutoRaise
 + I Current (FvwmWharf)   Raise
 + I Current (panel)	  Raise
 
-#------------------------------------------------------------------------------
-# Functions which start and save a background
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## Functions which start and save a background
+##------------------------------------------------------------------------------
 
 DestroyFunc SetBackground
 AddToFunc   SetBackground
@@ -250,9 +250,9 @@ AddToFunc   SetBackgroundOff
 + I KillModule FvwmBacker
 + I Exec echo "# Background disabled" > $FVWM_USERDIR/.start-Background
 
-#------------------------------------------------------------------------------
-# Functions which start and defines which applications manager we use
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## Functions which start and defines which applications manager we use
+##------------------------------------------------------------------------------
 
 DestroyFunc ChangeAppsMan
 AddToFunc  ChangeAppsMan
@@ -276,7 +276,7 @@ DestroyFunc UseIcons
 AddToFunc  UseIcons
 + I Style * Icon
 + I Read iconstyles
-# Need to reaload menus for KDE mini-icons styles
+## Need to reaload menus for KDE mini-icons styles
 + I Read menus
 + I KillModule FvwmTaskBar
 + I KillModule FvwmWinList
@@ -354,9 +354,9 @@ AddToFunc IconBoxGlobal
 + I DestroyModuleConfig FvwmIconBox: Reso*
 + I Module FvwmIconBox
 
-#------------------------------------------------------------------------------
-# Functions for Layers
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## Functions for Layers
+##------------------------------------------------------------------------------
 
 DestroyFunc SetLayers
 AddToFunc SetLayers
@@ -368,20 +368,20 @@ AddToFunc DestroyLayers
 + I StyleAndRecapture $n StaysPut
 + I Exec F=$FVWM_USERDIR; Z=$F/.fvwm-layers; T=$F/.tmp-layers; sed -e "/^Style\ $n\ .*/d" $Z>$T; cat $T>$Z
 
-#------------------------------------------------------------------------------
-# Function for reloading the icons styles
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## Function for reloading the icons styles
+##------------------------------------------------------------------------------
 
 DestroyFunc ReloadIconStylesAndMenus
 AddToFunc ReloadIconStylesAndMenus
 + I Read iconstyles
 + I Read menus
-# Need to reload the NoIcon style
+## Need to reload the NoIcon style
 + I PipeRead 'if grep -qe AddToFunc $FVWM_USERDIR/.start-apps-man; then echo "Style * NoIcon"; fi'
 
-#------------------------------------------------------------------------------
-# Functions for Loading/Saving/Showing Settings
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## Functions for Loading/Saving/Showing Settings
+##------------------------------------------------------------------------------
 
 DestroyFunc SaveAsSettings
 AddToFunc SaveAsSettings
@@ -426,10 +426,10 @@ AddToFunc FocusRaiseAndStuff
 
 SetEnv DIRECTION Next
 
-# This is *no longer!* staying on the same page.
-# It seems to switch focus to another emacs on another page. It then stays on
-# *that* page.
-# It is also no longer cycling through all windows.
+## This is *no longer!* staying on the same page.
+## It seems to switch focus to another emacs on another page. It then stays on
+## *that* page.
+## It is also no longer cycling through all windows.
 DestroyFunc CycleWindows
 AddToFunc CycleWindows
 + I $[DIRECTION] (CurrentPage, !Iconic, !CirculateSkip) FocusRaiseAndStuff
@@ -439,17 +439,17 @@ AddToFunc CycleWindows
     echo 'SetEnv NDIRECTION Prev'`
 + I Schedule 700 134000 SetEnv DIRECTION $[NDIRECTION]
 
-# ??????? How to reverse this, i.e. make Shift-Meta-Tab cycle in reverse order.
-#DestroyFunc CycleWindowsReverse
-#AddToFunc CycleWindowsReverse
-#+ I $[DIRECTION] (CurrentPage, !Iconic, !CirculateSkip) FocusRaiseAndStuff
-#+ I Deschedule 134000
-#+ I PipeRead `[ "$[DIRECTION]" == "Prev" ] && \
-#    echo 'SetEnv NDIRECTION Next' || \
-#    echo 'SetEnv NDIRECTION Prev'`
-#+ I Schedule 700 134000 SetEnv DIRECTION $[NDIRECTION]
+## ??????? How to reverse this, i.e. make Shift-Meta-Tab cycle in reverse order.
+##DestroyFunc CycleWindowsReverse
+##AddToFunc CycleWindowsReverse
+##+ I $[DIRECTION] (CurrentPage, !Iconic, !CirculateSkip) FocusRaiseAndStuff
+##+ I Deschedule 134000
+##+ I PipeRead `[ "$[DIRECTION]" == "Prev" ] && \
+##    echo 'SetEnv NDIRECTION Next' || \
+##    echo 'SetEnv NDIRECTION Prev'`
+##+ I Schedule 700 134000 SetEnv DIRECTION $[NDIRECTION]
 
-# FlipFocus???
+## FlipFocus???
 DestroyFunc NextEmacs
 AddToFunc NextEmacs
 + I Next  ("*XEmacs@*-xterm*", CurrentPage) FocusRaiseAndStuff

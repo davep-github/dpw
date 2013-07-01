@@ -1,0 +1,39 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+RUNNIT="really-run-the-tunnel-this-time"
+: ${other_end=}
+: ${port=}
+
+vsetp "${other_end}" || {
+    echo "Hostname var `other_end' needs to be set."
+    exit 1
+}
+
+vsetp "${port}" || {
+    echo "Port number var `port' needs to be set."
+    exit 1
+}
+
+EExecVerbose
+msg="Creating a  tunnel on port ${port} to $(host ${other_end})"
+width=${#msg}
+
+if [ "${1-}" = "$RUNNIT" ]
+then
+    echo "${msg}"
+    EExec ssh -N -L ${port}:localhost:${port} ${other_end}
+else
+    EExec dpxx -g${width}x3+0-24 -F black -B green $0 "$RUNNIT"
+fi

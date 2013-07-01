@@ -1,0 +1,29 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${all_scratches=scr0 scr1 scr2 scr3}
+
+[ -z "$*" ] && {
+    set -- ${all_scratches}
+}
+
+for s0 in "$@"
+do
+  eval s=\$$s0
+  cd $s
+  df -h .
+  ls -1d sb?
+  echo "================="
+done
+

@@ -1,28 +1,27 @@
-#include "defs.h"
-#-----------------------------------------------------------------------------#
-#
-# 11. Definitions used by the modules
-#     (Alphabetic order is used, but the Form are at the end)
-#-----------------------------------------------------------------------------#
+##-----------------------------------------------------------------------------#
+##
+## 11. Definitions used by the modules
+##     (Alphabetic order is used, but the Form are at the end)
+##-----------------------------------------------------------------------------#
 
-#------------------------------------------------------------------------------
-#------------------ FvwmBacker
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------------ FvwmBacker
+##------------------------------------------------------------------------------
 
 *FvwmBacker: Command(Desk 0, Page * *) -solid Blue
 *FvwmBacker: Command(Desk 1, Page * *) -solid \#7F4B7F
 *FvwmBacker: Command(Desk 2, Page * *) -solid midnightblue
 *FvwmBacker: Command(Desk 3, Page * *) -solid black
 
-#------------------------------------------------------------------------------
-#------------------ FvwmBanner
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------------ FvwmBanner
+##------------------------------------------------------------------------------
 Style FvwmBanner NoTitle, Sticky, StaysOnTop, WindowListSkip, CirculateSkip
 *FvwmBannerTimeout 2
 
-#------------------------------------------------------------------------------
-#------------------ FvwmButtons: BarButtons
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------------ FvwmButtons: BarButtons
+##------------------------------------------------------------------------------
 
 Style BarButtons  NoTitle, NoHandles, Sticky, WindowListSkip,\
                    BorderWidth 4, CirculateSkip
@@ -33,12 +32,12 @@ DestroyModuleConfig BarButtons: *
 *BarButtons: Font -adobe-helvetica-bold-r-*-*-10-*-*-*-*-*-*-*
 *BarButtons: Geometry 100x100+14+0
 *BarButtons: Columns 2
-# Define the buttons to use.....
+## Define the buttons to use.....
 *BarButtons: (2x2, Swallow "FvwmPagerPager" 'FvwmPager FvwmPagerPager * *')
 
-#------------------------------------------------------------------------------
-#------------------ FvwmButtons: MiniButtons
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------------ FvwmButtons: MiniButtons
+##------------------------------------------------------------------------------
 
 Style "MiniButtons"  NoTitle,NoHandles,Sticky,WindowListSkip,BorderWidth 0,\
 	CirculateSkip
@@ -50,7 +49,7 @@ DestroyModuleConfig MiniButtons*
 *MiniButtons: Geometry -2+2
 *MiniButtons: Rows 1
 *MiniButtons: Padding 1 1
-#PREF 3
+##PREF 3
 *MiniButtons: -   mini.term.xpm      Exec exec dpxx
 *MiniButtons: -   mini.filemgr.xpm   Exec exec xfm
 *MiniButtons: -   mini.doc1.xpm	     Exec exec xemacs
@@ -60,40 +59,40 @@ DestroyModuleConfig MiniButtons*
 *MiniButtons: -   mini.happy.xpm     Exec exec xmine
 *MiniButtons: -   mini.bomb.xpm      Destroy
 
-#------------------------------------------------------------------------------
-#------------------ FvwmButtons: DeskerPanelButtons
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------------ FvwmButtons: DeskerPanelButtons
+##------------------------------------------------------------------------------
 
 Style "DeskerPanelButtons" NoTitle, NoHandles, Sticky, WindowListSkip, \
                            NoOnTop, BorderWidth 0, CirculateSkip
-#Style "DeskerPanelButtons"  StayOnTop
+##Style "DeskerPanelButtons"  StayOnTop
 DestroyModuleConfig DeskerPanelButtons: *
 *DeskerPanelButtons: Fore Black
 *DeskerPanelButtons: Back grey57
 *DeskerPanelButtons: Font -adobe-helvetica-bold-r-*-*-10-*-*-*-*-*-*-*
-# This is the geometry of the button to open/close the panel.
-# It was originally [close to?] the height of a Desk pager.
-#*DeskerPanelButtons: Geometry 12x79
+## This is the geometry of the button to open/close the panel.
+## It was originally [close to?] the height of a Desk pager.
+##*DeskerPanelButtons: Geometry 12x79
 *DeskerPanelButtons: Geometry 12x33
 *DeskerPanelButtons: Rows 1
 *DeskerPanelButtons: Frame 1
 *DeskerPanelButtons: Padding 0 0
-#FAST 1
+##FAST 1
 *DeskerPanelButtons: (Panel(right, steps 12, delay 0, position module top, indicator10) "FvwmDesker" 'Module FvwmPager FvwmDesker 0 7')
-#SLOW 1
-#*DeskerPanelButtons: (Panel(right, steps 0, position module top, indicator10) "FvwmDesker" 'Module FvwmPager FvwmDesker 0 3')
+##SLOW 1
+##*DeskerPanelButtons: (Panel(right, steps 0, position module top, indicator10) "FvwmDesker" 'Module FvwmPager FvwmDesker 0 3')
 
-#------------------------------------------------------------------------------
-#------------------ FvwmButtons: WinMakerAppButtons & WinMakerAppPanelCd
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------------ FvwmButtons: WinMakerAppButtons & WinMakerAppPanelCd
+##------------------------------------------------------------------------------
 Style "WinMakerApp*" NoTitle, NoHandles, BorderWidth 0, Sticky, \
 		WindowListSkip, CirculateSkip
 DestroyModuleConfig WinMakerAppButtons: *
 
-#-------------------------------------
-# Buttons:
-# We use "hands panel", the advantage is that we use the applet
-# in the panel only when we need it: Button 3 kill the panel
+##-------------------------------------
+## Buttons:
+## We use "hands panel", the advantage is that we use the applet
+## in the panel only when we need it: Button 3 kill the panel
 
 *WinMakerAppButtons: Geometry +0+120
 *WinMakerAppButtons: Columns 1
@@ -112,8 +111,8 @@ DestroyModuleConfig WinMakerAppButtons: *
     'MyPanelButtons "WinMakerAppPanelCd" $right $top', \
      Action(Mouse 3) 'All (WinMakerAppPanelCd) Close')
 
-#-----------------
-# The Mail Panel
+##-----------------
+## The Mail Panel
 *WinMakerAppPanelMail: Rows 1
 *WinMakerAppPanelMail: Back #c0c0c0
 *WinMakerAppPanelMail: Fore black
@@ -124,8 +123,8 @@ DestroyModuleConfig WinMakerAppButtons: *
 *WinMakerAppPanelMail: (Frame 1, Size 64 64, \
     Swallow  "wmMoonClock" 'Exec exec  wmMoonClock')
 
-#-----------------
-# The PPP Panel
+##-----------------
+## The PPP Panel
 *WinMakerAppPanelPPP: Rows 1
 *WinMakerAppPanelPPP: Back #c0c0c0
 *WinMakerAppPanelPPP: Fore black
@@ -134,8 +133,8 @@ DestroyModuleConfig WinMakerAppButtons: *
 *WinMakerAppPanelPPP: (Frame 1, Size 64 64, \
     Swallow  "wmsysmon" 'Exec exec wmsysmon')
 
-#-----------------
-# The Cd Panel
+##-----------------
+## The Cd Panel
 *WinMakerAppPanelCd: Rows 1
 *WinMakerAppPanelCd: Back #c0c0c0
 *WinMakerAppPanelCd: Fore black
@@ -144,63 +143,63 @@ DestroyModuleConfig WinMakerAppButtons: *
 *WinMakerAppPanelCd: (Frame 1, Size 64 64, \
     Swallow  "wmcdplay" 'Exec exec  wmcdplay -s')
 
-#------------------------------------------------------------------------------
-#------------------ FvwmEvent
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------------ FvwmEvent
+##------------------------------------------------------------------------------
 
 DestroyModuleConfig FvwmEvent: *
 
-# # replace rplay by a sound player that can play .au sound file
-# *FvwmEvent: Cmd "Exec exec rplay "
+## # replace rplay by a sound player that can play .au sound file
+## *FvwmEvent: Cmd "Exec exec rplay "
 
-# *FvwmEvent: StartDelay 3
-# *FvwmEvent: Delay 1
+## *FvwmEvent: StartDelay 3
+## *FvwmEvent: Delay 1
 
-# *FvwmEvent: startup          "/usr/share/sounds/gong.au"
-# *FvwmEvent: add_window       "/usr/share/sounds/wipe.au"
-# *FvwmEvent: destroy_window   "/usr/share/sounds/pook.au"
-# *FvwmEvent: iconify          "/usr/share/sounds/clong.au"
-# *FvwmEvent: deiconify        "/usr/share/sounds/clong.au"
-# *FvwmEvent: windowshade      "/usr/share/sounds/slide.au"
-# *FvwmEvent: dewindowshade    "/usr/share/sounds/slide.au"
-# *FvwmEvent: new_page         "/usr/share/sounds/slide.au"
-# *FvwmEvent: new_desk         "/usr/share/sounds/slide.au"
+## *FvwmEvent: startup          "/usr/share/sounds/gong.au"
+## *FvwmEvent: add_window       "/usr/share/sounds/wipe.au"
+## *FvwmEvent: destroy_window   "/usr/share/sounds/pook.au"
+## *FvwmEvent: iconify          "/usr/share/sounds/clong.au"
+## *FvwmEvent: deiconify        "/usr/share/sounds/clong.au"
+## *FvwmEvent: windowshade      "/usr/share/sounds/slide.au"
+## *FvwmEvent: dewindowshade    "/usr/share/sounds/slide.au"
+## *FvwmEvent: new_page         "/usr/share/sounds/slide.au"
+## *FvwmEvent: new_desk         "/usr/share/sounds/slide.au"
 
-#------------------------------------------------------------------------------
-#------------------ FvwmGtk for GNOME menus
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------------ FvwmGtk for GNOME menus
+##------------------------------------------------------------------------------
 
 
 *FvwmGtk: IconSize 22 22
-#G_SM_G 1
-#*FvwmGtk: Destroy "gnome-sys"
-#G_SM_G 1
-#PipeRead "fvwm-menu-desktop --desktop gnome-sys --install-prefix /usr --type gtk --enable-mini-icons"
-#G_RHM_G 2
-#*FvwmGtk: Destroy "gnome-redhat"
-#PipeRead "fvwm-menu-desktop --desktop gnome-redhat --type gtk --enable-mini-icons"
-#G_UM_G 2
-#*FvwmGtk: Destroy "gnome-user"
-#PipeRead "fvwm-menu-desktop --desktop gnome-user --type gtk --enable-mini-icons"
+##G_SM_G 1
+##*FvwmGtk: Destroy "gnome-sys"
+##G_SM_G 1
+##PipeRead "fvwm-menu-desktop --desktop gnome-sys --install-prefix /usr --type gtk --enable-mini-icons"
+##G_RHM_G 2
+##*FvwmGtk: Destroy "gnome-redhat"
+##PipeRead "fvwm-menu-desktop --desktop gnome-redhat --type gtk --enable-mini-icons"
+##G_UM_G 2
+##*FvwmGtk: Destroy "gnome-user"
+##PipeRead "fvwm-menu-desktop --desktop gnome-user --type gtk --enable-mini-icons"
 
-#------------------------------------------------------------------------------
-#------------------ IconBox
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------------ IconBox
+##------------------------------------------------------------------------------
 Style "FvwmIconBox"   NoTitle, NoHandles, Sticky, WindowListSkip, CirculateSkip
 
 DestroyModuleConfig FvwmIconBox: *
 *FvwmIconBox: Back #c0c0c0
 *FvwmIconBox: Fore  Black
-#WIN 1
-#*FvwmIconBox: IconHiBack Blue4
-#FVWM 1
+##WIN 1
+##*FvwmIconBox: IconHiBack Blue4
+##FVWM 1
 *FvwmIconBox: IconHiBack SlateBlue
 *FvwmIconBox: IconHiFore  white
 *FvwmIconBox: Geometry +0-0
 *FvwmIconBox: MaxIconSize 48x48
 *FvwmIconBox: Font -adobe-helvetica-bold-r-*-*-12-*-*-*-*-*-*-*
 *FvwmIconBox: SortIcons    IconName
-#*FvwmIconBox: SortIcons    ResClass
+##*FvwmIconBox: SortIcons    ResClass
 *FvwmIconBox: Padding 10
 *FvwmIconBox: FrameWidth 0 0
 *FvwmIconBox: Lines 6
@@ -211,94 +210,94 @@ DestroyModuleConfig FvwmIconBox: *
 *FvwmIconBox: HilightFocusWin
 *FvwmIconBox: Resolution  Desk
 *FvwmIconBox: UseSkipList
-# mouse bindings
+## mouse bindings
 *FvwmIconBox: Mouse 1 Click  DeiconifyFocusAndRaise
 *FvwmIconBox: Mouse 1 DoubleClick  DeiconifyFocusAndWarp
 *FvwmIconBox: Mouse 2 Click Iconify
 *FvwmIconBox: Mouse 3 DoubleClick Iconify off
 *FvwmIconBox: Mouse 3 Click Menu Window-Ops3 c+0 -101m
 *FvwmIconBox: Mouse 3 DoubleClick FvwmIdent
-# Key bindings
+## Key bindings
 *FvwmIconBox: Key r RaiseLower
 *FvwmIconBox: Key space Iconify
 *FvwmIconBox: Key d Close
-# FvwmIconBox built-in functions
+## FvwmIconBox built-in functions
 *FvwmIconBox: Key n Next
 *FvwmIconBox: Key p Prev
 *FvwmIconBox: Key h Left
 *FvwmIconBox: Key j Down
 *FvwmIconBox: Key k Up
 *FvwmIconBox: Key l Right
-# animation
+## animation
 *FvwmIconBoxNoIconAction SendToModule FvwmAnimate animate
 
-#------------------------------------------------------------------------------
-#------------------ IconMan
-#------------------------------------------------------------------------------
-# Style "FvwmIconMan"   NoTitle, NoHandles, Sticky, WindowListSkip, CirculateSkip
+##------------------------------------------------------------------------------
+##------------------ IconMan
+##------------------------------------------------------------------------------
+## Style "FvwmIconMan"   NoTitle, NoHandles, Sticky, WindowListSkip, CirculateSkip
 
-# DestroyModuleConfig FvwmIconMan: *
+## DestroyModuleConfig FvwmIconMan: *
 
-# # nbr de manager
-# *FvwmIconMan: *nummanagers 1
-# #global, desk, or page
-# #*FvwmIconMan: *Resolution page
-# *FvwmIconMan: *Resolution global
-# #*FvwmIconMan: *Resolution desk
-# *FvwmIconMan: *background  #c0c0c0
-# *FvwmIconMan: *foreground Black
-# *FvwmIconMan: *plainbutton up Black #c0c0c0
-# *FvwmIconMan: *selectbutton down  Black #c0c0c0
-# #WIN 2
-# #*FvwmIconMan: *focusbutton up white Blue4
-# #*FvwmIconMan: *focusandselectbutton down white Blue4
-# #FVWM 2
-# *FvwmIconMan: *focusbutton up white SlateBlue
-# *FvwmIconMan: *focusandselectbutton down white SlateBlue
-# *FvwmIconMan: *iconbutton down Black grey51
-# *FvwmIconMan: *font  -adobe-times-bold-r-*-*-12-*-*-*-*-*-*-*-
-# *FvwmIconMan: *followfocus true
-# *FvwmIconMan: *usewinlist true
-# *FvwmIconMan: *sort name
-# *FvwmIconMan: *drawicons always
-# *FvwmIconMan: *1*title           "Icon Man"
-# #PREF 4
-# #*FvwmIconMan: *1*title           " xemacs windows"
-# #*FvwmIconMan: *1*iconname        "FvwmIconMan: xemacs"
-# #*FvwmIconMan: *1*format          "%i"
-# #*FvwmIconMan: *1*show            resource=emacs
-# *FvwmIconMan: *1*managergeometry 1x0+0+952
-# ##*FvwmIconMan: *1*managergeometry 1x0+260-0
-# #*FvwmIconMan: *1*buttongeometry 200x20
-# *FvwmIconMan: *1*buttongeometry 250x20
-# # action
-# *FvwmIconMan: *action    Mouse    1 N sendcommand DeiconifyFocusAndRaise
-# *FvwmIconMan: *action    Mouse    2 N sendcommand Iconify
-# *FvwmIconMan: *action    Mouse    3 N sendcommand "Menu Window-Ops3 c+0 -101m "
-# *FvwmIconMan: *action    Key    Left N gotobutton Left, select
-# *FvwmIconMan: *action    Key    Right N gotobutton Right, select
-# *FvwmIconMan: *action    Key    Up N gotobutton Up, select
-# *FvwmIconMan: *action    Key    Down N gotobutton Down, select
-# *FvwmIconMan: *action    Key    q A quit
-# *FvwmIconMan: *action    Key    i A sendcommand Iconify
-# *FvwmIconMan: *action    Key    g A sendcommand IconManGlobal
-# *FvwmIconMan: *action    Key    p A sendcommand IconManPage
-# *FvwmIconMan: *action    Key    d A sendcommand IconManDesk
-# # animation
-# *FvwmIconMan: *NoIconAction "SendToModule FvwmAnimate animate"
+## # nbr de manager
+## *FvwmIconMan: *nummanagers 1
+## #global, desk, or page
+## #*FvwmIconMan: *Resolution page
+## *FvwmIconMan: *Resolution global
+## #*FvwmIconMan: *Resolution desk
+## *FvwmIconMan: *background  #c0c0c0
+## *FvwmIconMan: *foreground Black
+## *FvwmIconMan: *plainbutton up Black #c0c0c0
+## *FvwmIconMan: *selectbutton down  Black #c0c0c0
+## #WIN 2
+## #*FvwmIconMan: *focusbutton up white Blue4
+## #*FvwmIconMan: *focusandselectbutton down white Blue4
+## #FVWM 2
+## *FvwmIconMan: *focusbutton up white SlateBlue
+## *FvwmIconMan: *focusandselectbutton down white SlateBlue
+## *FvwmIconMan: *iconbutton down Black grey51
+## *FvwmIconMan: *font  -adobe-times-bold-r-*-*-12-*-*-*-*-*-*-*-
+## *FvwmIconMan: *followfocus true
+## *FvwmIconMan: *usewinlist true
+## *FvwmIconMan: *sort name
+## *FvwmIconMan: *drawicons always
+## *FvwmIconMan: *1*title           "Icon Man"
+## #PREF 4
+## #*FvwmIconMan: *1*title           " xemacs windows"
+## #*FvwmIconMan: *1*iconname        "FvwmIconMan: xemacs"
+## #*FvwmIconMan: *1*format          "%i"
+## #*FvwmIconMan: *1*show            resource=emacs
+## *FvwmIconMan: *1*managergeometry 1x0+0+952
+## ##*FvwmIconMan: *1*managergeometry 1x0+260-0
+## #*FvwmIconMan: *1*buttongeometry 200x20
+## *FvwmIconMan: *1*buttongeometry 250x20
+## # action
+## *FvwmIconMan: *action    Mouse    1 N sendcommand DeiconifyFocusAndRaise
+## *FvwmIconMan: *action    Mouse    2 N sendcommand Iconify
+## *FvwmIconMan: *action    Mouse    3 N sendcommand "Menu Window-Ops3 c+0 -101m "
+## *FvwmIconMan: *action    Key    Left N gotobutton Left, select
+## *FvwmIconMan: *action    Key    Right N gotobutton Right, select
+## *FvwmIconMan: *action    Key    Up N gotobutton Up, select
+## *FvwmIconMan: *action    Key    Down N gotobutton Down, select
+## *FvwmIconMan: *action    Key    q A quit
+## *FvwmIconMan: *action    Key    i A sendcommand Iconify
+## *FvwmIconMan: *action    Key    g A sendcommand IconManGlobal
+## *FvwmIconMan: *action    Key    p A sendcommand IconManPage
+## *FvwmIconMan: *action    Key    d A sendcommand IconManDesk
+## # animation
+## *FvwmIconMan: *NoIconAction "SendToModule FvwmAnimate animate"
 
-#------------------------------------------------------------------------------
-#------------------ Identify
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------------ Identify
+##------------------------------------------------------------------------------
 Style "FvwmIdent"   Sticky, NoButton 2, NoButton 4, NoButton 6
 
 *FvwmIdent: Back Blue4
 *FvwmIdent: Fore Yellow
 *FvwmIdent: Font -adobe-times-medium-r-*-*-14-*-*-*-*-*-*-*
 
-#------------------------------------------------------------------------------
-#------------------ FvwmPager:  Swallowed by ButtonBar
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------------ FvwmPager:  Swallowed by ButtonBar
+##------------------------------------------------------------------------------
 Style "FvwmPagerPager"   NoTitle, NoHandles, Sticky, WindowListSkip, CirculateSkip
 
 DestroyModuleConfig FvwmPagerPager: *
@@ -310,24 +309,24 @@ DestroyModuleConfig FvwmPagerPager: *
 *FvwmPagerPager: Balloons
 *FvwmPagerPager: BalloonFore black
 *FvwmPagerPager: BalloonBack bisque
-# Change the size of the entire pager... e.g. when put into a panel.
-# See FvwmButtons: BarButtons for resizing the single pager button.
+## Change the size of the entire pager... e.g. when put into a panel.
+## See FvwmButtons: BarButtons for resizing the single pager button.
 *FvwmPagerPager: Geometry 850x79+5000+5000
-#WIN 1
-#*FvwmPagerPager: WindowColors white grey51 white Blue4
-#FVWM 1
+##WIN 1
+##*FvwmPagerPager: WindowColors white grey51 white Blue4
+##FVWM 1
 *FvwmPagerPager: WindowColors white grey51 black #92e6ab
 *FvwmPagerPager: Label 0 General
-*FvwmPagerPager: Label 1 SB1-ap-merge
-*FvwmPagerPager: Label 2 SB2-R/ENGCPU
-*FvwmPagerPager: Label 3 SB3-R/RUNLIMIT
-*FvwmPagerPager: Label 4 SB4-R/SWR-wave
-*FvwmPagerPager: Label 5 SB5-R/Burst
+*FvwmPagerPager: Label 1 SB1-@SB_SB1_DESC@
+*FvwmPagerPager: Label 2 SB2-@SB_SB2_DESC@
+*FvwmPagerPager: Label 3 SB3-@SB_SB3_DESC@
+*FvwmPagerPager: Label 4 SB4-@SB_SB4_DESC@
+*FvwmPagerPager: Label 5 SB5-@SB_SB5_DESC@
 *FvwmPagerPager: SmallFont 5x8
 
-#------------------------------------------------------------------------------
-#------------------ FvwmPager: FvwmDesker, the panel of StartPagerButtons
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------------ FvwmPager: FvwmDesker, the panel of StartPagerButtons
+##------------------------------------------------------------------------------
 Style "FvwmDesker"   NoTitle, NoHandles, Sticky, WindowListSkip, CirculateSkip
 
 DestroyModuleConfig FvwmDesker: *
@@ -340,20 +339,20 @@ DestroyModuleConfig FvwmDesker: *
 *FvwmDesker: Balloons
 *FvwmDesker: BalloonFore black
 *FvwmDesker: BalloonBack bisque
-#WIN 1
-#*FvwmDesker: WindowColors white grey51 white Blue4
-#FVWM 1
+##WIN 1
+##*FvwmDesker: WindowColors white grey51 white Blue4
+##FVWM 1
 *FvwmDesker: Label 0 General
-*FvwmDesker: Label 1 SB1-ap-merge
-*FvwmDesker: Label 2 SB2-R/ENGCPU
-*FvwmDesker: Label 3 SB3-R/RUNLIMIT
-*FvwmDesker: Label 4 SB4-R/SWR-wave
-*FvwmDesker: Label 5 SB5-R/Burst
+*FvwmDesker: Label 1 SB1-@SB_SB1_DESC@
+*FvwmDesker: Label 2 SB2-@SB_SB2_DESC@
+*FvwmDesker: Label 3 SB3-@SB_SB3_DESC@
+*FvwmDesker: Label 4 SB4-@SB_SB4_DESC@
+*FvwmDesker: Label 5 SB5-@SB_SB5_DESC@
 *FvwmDesker: SmallFont 5x8
 
-#------------------------------------------------------------------------------
-#------------------ FvwmScript
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------------ FvwmScript
+##------------------------------------------------------------------------------
 
 *FvwmScript: DefaultFont -adobe-helvetica-bold-r-*-*-12-*-*-*-*-*-*-*
 *FvwmScript: DefaultFore black
@@ -361,13 +360,13 @@ DestroyModuleConfig FvwmDesker: *
 *FvwmScript: DefaultHilight grey100
 *FvwmScript: DefaultShadow grey55
 
-#------------------------------------------------------------------------------
-#------------------ FvwmTaskBar
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------------ FvwmTaskBar
+##------------------------------------------------------------------------------
 
 Style "FvwmTaskBar" NoTitle, Sticky, WindowListSkip, CirculateSkip, \
                     NoHandles, TitleAtBottom, StayssOnTop
-# Note: Title at bottom is for shading.
+## Note: Title at bottom is for shading.
 
 *FvwmTaskBar: Geometry +0-0
 *FvwmTaskBar: Fore Black
@@ -387,14 +386,14 @@ Style "FvwmTaskBar" NoTitle, Sticky, WindowListSkip, CirculateSkip, \
 *FvwmTaskBar: StartIcon mini.penguin.xpm
 *FvwmTaskBar: ShowTips
 *FvwmTaskBar: ShowTransients
-#*FvwmTaskBar: HighlightFocus
+##*FvwmTaskBar: HighlightFocus
 *FvwmTaskBar: AutoHide
 *FvwmTaskBar: DeskOnly
 *FvwmTaskBar: NoIconAction SendToModule FvwmAnimate animate
 
-#------------------------------------------------------------------------------
-#------------------ FvwmWharf
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------------ FvwmWharf
+##------------------------------------------------------------------------------
 
 Style "FvwmWharf"  NoTitle, NoHandles, Sticky, WindowListSkip,\
                      BorderWidth 2,CirculateSkip
@@ -405,7 +404,7 @@ DestroyModuleConfig FvwmWharf: *
 *FvwmWharf: Geometry -2-50
 *FvwmWharf: Columns 1
 *FvwmWharf: Bgcolor Grey
-#*FvwmWharf: ForceSize
+##*FvwmWharf: ForceSize
 *FvwmWharf: FullPush
 
 *FvwmWharf: TextureType 1
@@ -417,7 +416,7 @@ DestroyModuleConfig FvwmWharf: *
 *FvwmWharf Exit	       exit.xpm         FvwmForm FvwmForm-QuitVerify
 *FvwmWharf xlock       Jlock.xpm        Exec exec xlock -nice 10 -mode random
 *FvwmWharf ~Folder
-#PREF 3
+##PREF 3
 *FvwmWharf term         rterm2.xpm      Exec exec dpxx
 *FvwmWharf editor       lemacs.xpm      Exec exec xemacs
 *FvwmWharf filemgr      Xfm.xpm         Exec exec xfm
@@ -434,17 +433,17 @@ DestroyModuleConfig FvwmWharf: *
 		xload -nolabel -update 5  -bg grey51 -geometry -1500-1500
 *FvwmWharf pager nil MaxSwallowModule "FvwmPagerPager" FvwmPager FvwmPagerPager * *
 
-#------------------------------------------------------------------------------
-#------------------ FvwmWinList
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------------ FvwmWinList
+##------------------------------------------------------------------------------
 Style "FvwmWinList" NoTitle, Sticky, WindowListSkip, CirculateSkip
 
 DestroyModuleConfig FvwmWinList: *
 *FvwmWinList: Back #c3c3c3
 *FvwmWinList: Fore Black
-#WIN 1
-#*FvwmWinList: FocusBack Blue4
-#FVWM 1
+##WIN 1
+##*FvwmWinList: FocusBack Blue4
+##FVWM 1
 *FvwmWinList: FocusBack SlateBlue
 *FvwmWinList: FocusFore white
 *FvwmWinList: IconBack grey51

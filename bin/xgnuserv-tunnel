@@ -1,0 +1,22 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+source find_best_editing_host
+: ${other_end=$(find_best_editing_host)}
+export other_end
+: ${port=31091}          # gnuclient/serv
+export port
+
+exec xssh-tunnel
+

@@ -1,12 +1,13 @@
-#-----------------------------------------------------------------------------#
-#
-# 10. Now define the menus
-#
-#-----------------------------------------------------------------------------#
+#include "defs.h"
+##-----------------------------------------------------------------------------#
+##
+## 10. Now define the menus
+##
+##-----------------------------------------------------------------------------#
 
-#------------------------------------------------------------------------------
-#--------- Taskbar's start menu
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##--------- Taskbar's start menu
+##------------------------------------------------------------------------------
 
 DestroyMenu StartMenu
 AddToMenu   StartMenu@side.fvwm2.xpm@^black^
@@ -18,24 +19,24 @@ AddToMenu   StartMenu@side.fvwm2.xpm@^black^
 + "&Documents"                          Popup Documents
 + "&Settings"                           Popup Settings
 + "&Find"                               FvwmScript FvwmScript-Find
-#+ "&Help"                              Exec exec  xman
-#PREF 1
+##+ "&Help"                              Exec exec  xman
+##PREF 1
 + "&Run..."                             Exec exec  dpxx
 + ""                                    Nop
 + "Shut &Down"                          Module FvwmScript FvwmScript-Quit
 
-#------------------------------------------------------------------------------
-# Root Menu: This menu will fire up some very common utilities
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+## Root Menu: This menu will fire up some very common utilities
+##------------------------------------------------------------------------------
 
-###+ "&Top"                 Exec exec xterm -geometry 80x40 -T Top -n Top -e top
-###+ "&shells"              Popup Shells
-###+ "&Programs"            Popup Programs
-###+ ""                     Nop
+####+ "&Top"                 Exec exec xterm -geometry 80x40 -T Top -n Top -e top
+####+ "&shells"              Popup Shells
+####+ "&Programs"            Popup Programs
+####+ ""                     Nop
 
 DestroyMenu  Utilities
 AddToMenu    Utilities "FVWM Root Menu" Title
-#PREF 3
+##PREF 3
 + "&Terminal(dpxx)"      Exec exec dpxx
 + "&Qsub terminal"       Popup XqsubMenu
 + "&XEmacs(xem)"         Exec exec xem
@@ -60,70 +61,70 @@ AddToMenu   XqsubMenu "Interactive FARM xterm" Title
 + "xqsub&8"           Exec exec xqsub8
 + "xqsub&16"          Exec exec xqsub16
 
-#------------------------------------------------------------------------------
-#--------- SHELLS
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##--------- SHELLS
+##------------------------------------------------------------------------------
 DestroyMenu Shells
 AddToMenu   Shells
 + "&Xterm       default" Exec exec xterm
 + "Xterm/&root  default" Exec exec xterm -fg violet -bg black -e su -l
-#+ "&NXterm     default" Exec exec nxterm
-#+ "&Rxvt       default" Exec exec rxvt
-#+ "&Eterm      default" Exec exec Eterm
-#+ "X&iterm     default" Exec exec xiterm
-#+ "&Aterm      default" Exec exec aterm
+##+ "&NXterm     default" Exec exec nxterm
+##+ "&Rxvt       default" Exec exec rxvt
+##+ "&Eterm      default" Exec exec Eterm
+##+ "X&iterm     default" Exec exec xiterm
+##+ "&Aterm      default" Exec exec aterm
 + "&GNOME Term  default" Exec exec gnome-terminal
 + "&Konsole     default" Exec exec konsole
-#+ "&Kvt        default" Exec exec kvt
-#+ "&Dtterm     default" Exec exec /usr/bin/dtterm
+##+ "&Kvt        default" Exec exec kvt
+##+ "&Dtterm     default" Exec exec /usr/bin/dtterm
 + ""                                                Nop
 + "&Xterm       80x40 (7x14 font)" Exec exec xterm  -n $USER@$HOST -T $USER@$HOST -g 80x40 -sb +sk +si -sl 4096 -j -ls -fn 7x14 -fb 7x14bold
 + "Xterm/r&oot  80x40 (7x14 font)" Exec exec xterm  -n root@$HOST  -T root@$HOST  -g 80x40 -sb +sk +si -sl 4096 -j -ls -fn 7x14 -fb 7x14bold -fg violet -bg black -e su -l
-#+ "&NXterm     80x40 (7x14 font)" Exec exec nxterm -n $USER@$HOST -T $USER@$HOST -g 80x40 -sb +sk +si -sl 4096 -j -ls -fn 7x14 -fb 7x14bold
-#+ "&Rxvt       80x40 (7x14 font)" Exec exec rxvt   -n $USER@$HOST -T $USER@$HOST -g 80x40 --loginShell -fn 7x14 -fb 7x14bold
-#+ "&Eterm      80x40 (7x14 font)" Exec exec Eterm  -n $USER@$HOST -T $USER@$HOST -g 80x40 --login-shell --font 7x14 --bold-font 7x14bold
-#+ "X&iterm     80x40 (7x14 font)" Exec exec xiterm -n $USER@$HOST -T $USER@$HOST -g 80x40 -sb +sk +si -sl 4096 -ls -fn 7x14 -fb 7x14bold
-#+ "&Aterm      80x40 (7x14 font)" Exec exec aterm  -n $USER@$HOST -T $USER@$HOST -g 80x40 -sb +sk +si -sl 4096 -ls -fn 7x14 -fb 7x14bold
+##+ "&NXterm     80x40 (7x14 font)" Exec exec nxterm -n $USER@$HOST -T $USER@$HOST -g 80x40 -sb +sk +si -sl 4096 -j -ls -fn 7x14 -fb 7x14bold
+##+ "&Rxvt       80x40 (7x14 font)" Exec exec rxvt   -n $USER@$HOST -T $USER@$HOST -g 80x40 --loginShell -fn 7x14 -fb 7x14bold
+##+ "&Eterm      80x40 (7x14 font)" Exec exec Eterm  -n $USER@$HOST -T $USER@$HOST -g 80x40 --login-shell --font 7x14 --bold-font 7x14bold
+##+ "X&iterm     80x40 (7x14 font)" Exec exec xiterm -n $USER@$HOST -T $USER@$HOST -g 80x40 -sb +sk +si -sl 4096 -ls -fn 7x14 -fb 7x14bold
+##+ "&Aterm      80x40 (7x14 font)" Exec exec aterm  -n $USER@$HOST -T $USER@$HOST -g 80x40 -sb +sk +si -sl 4096 -ls -fn 7x14 -fb 7x14bold
 + "&GNOME Term  80x40 (7x14 font)" Exec exec gnome-terminal --title=$USER@$HOST --geometry=80x40 --login --font=7x14
-#+ "&Kvt        80x40 (7x14 font)" Exec exec kvt    -n $USER@$HOST -T $USER@$HOST -vt_geometry 80x40 -sl 4096 -ls -vt_font 7x14
+##+ "&Kvt        80x40 (7x14 font)" Exec exec kvt    -n $USER@$HOST -T $USER@$HOST -vt_geometry 80x40 -sl 4096 -ls -vt_font 7x14
 + "&Konsole     80x40"             Exec exec konsole -nowelcome -sl 4096 -ls -vt_sz 80x40
-#+ "&Dtterm     80x40 (7x14 font)" Exec exec /usr/dt/bin/dtterm -n $USER@$HOST -T $USER@$HOST -sl 4096 -ls -g 80x40 -fn 7x14 -fb 7x14bold
+##+ "&Dtterm     80x40 (7x14 font)" Exec exec /usr/dt/bin/dtterm -n $USER@$HOST -T $USER@$HOST -sl 4096 -ls -g 80x40 -fn 7x14 -fb 7x14bold
 + ""                                            Nop
 + "Remote &login        ..."          FvwmForm FvwmForm-Rlogin
 
-#------------------------------------------------------------------------------
-#--------- Programs
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##--------- Programs
+##------------------------------------------------------------------------------
 
 DestroyMenu Programs
 AddToMenu   Programs
-#G_SM_G 2
-# AddToMenu Programs "&GNOME Menu"      SendToModule FvwmGtk gnome-sys
-#+ ""   Nop
-#G_SM_F 2
-#AddToMenu Programs  "&GNOME Menu"      Popup gnome-sys
-#+ ""   Nop
-#G_UM_G 2
-#AddToMenu Programs "GNOME &User"       SendToModule FvwmGtk gnome-user
-#+ ""   Nop
-#G_UM_F 2
-#AddToMenu Programs  "GNOME &User"      Popup gnome-user
-#+ ""   Nop
-#G_RHM_G 2
-#AddToMenu Programs "GNOME &RedHat"     SendToModule FvwmGtk gnome-redhat
-#+ ""   Nop
-#G_RHM_F 2
-#AddToMenu Programs  "GNOME &RedHat"    Popup gnome-redhat
-#+ ""   Nop
-#K_SM 2
-#AddToMenu Programs "&KDE Menu"            Popup kde-sys
-#+ ""   Nop
-#K_UM 2
-#AddToMenu Programs "KDE &User%mini.kde.xpm"            Popup kde-user
-#+ ""   Nop
-#CDE 2
-#AddToMenu Programs "&CDE Menu%mini.folder.xpm"         Popup cde-menu
-#+ "" Nop
+##G_SM_G 2
+## AddToMenu Programs "&GNOME Menu"      SendToModule FvwmGtk gnome-sys
+##+ ""   Nop
+##G_SM_F 2
+##AddToMenu Programs  "&GNOME Menu"      Popup gnome-sys
+##+ ""   Nop
+##G_UM_G 2
+##AddToMenu Programs "GNOME &User"       SendToModule FvwmGtk gnome-user
+##+ ""   Nop
+##G_UM_F 2
+##AddToMenu Programs  "GNOME &User"      Popup gnome-user
+##+ ""   Nop
+##G_RHM_G 2
+##AddToMenu Programs "GNOME &RedHat"     SendToModule FvwmGtk gnome-redhat
+##+ ""   Nop
+##G_RHM_F 2
+##AddToMenu Programs  "GNOME &RedHat"    Popup gnome-redhat
+##+ ""   Nop
+##K_SM 2
+##AddToMenu Programs "&KDE Menu"            Popup kde-sys
+##+ ""   Nop
+##K_UM 2
+##AddToMenu Programs "KDE &User%mini.kde.xpm"            Popup kde-user
+##+ ""   Nop
+##CDE 2
+##AddToMenu Programs "&CDE Menu%mini.folder.xpm"         Popup cde-menu
+##+ "" Nop
 AddToMenu Programs
 + "&Accessories"               Popup Accessories
 + "&Applications"              Popup Applications
@@ -136,114 +137,114 @@ AddToMenu Programs
 + "&Multimedia"                    Popup Multimedia
 + "&Games"                      Popup Games
 
-#------------------------------------------------------------------------------
-#--------- KDE, CDE & GNOME "fvwm" menus
+##------------------------------------------------------------------------------
+##--------- KDE, CDE & GNOME "fvwm" menus
 
-# For more informtion man fvwm-menu-desktop
+## For more informtion man fvwm-menu-desktop
 
-#K_SM 1
-#PipeRead 'fvwm-menu-desktop --desktop kde-sys --enable-mini-icons --enable-style'
-#K_UM 1
-#PipeRead 'fvwm-menu-desktop --desktop kde-user --enable-mini-icons'
-#G_SM_F 1
-#PipeRead 'fvwm-menu-desktop --desktop gnome-sys --type fvwm --install-prefix /usr --enable-mini-icons --mini-icons-path '' --icon-toptitle :no::: --icon-title :no::: --icon-folder mini.folder.xpm:ow::: --icon-app mini.gnome.xpm:ow:::'
-#G_UM_F 1
-#PipeRead 'fvwm-menu-desktop --desktop gnome-user --type fvwm --enable-mini-icons --mini-icons-path '' --icon-toptitle :no::: --icon-title :no::: --icon-folder mini.folder.xpm:ow::: --icon-app mini.doc.xpm:ow:::'
-#G_RHM_F 1
-#PipeRead 'fvwm-menu-desktop --desktop gnome-redhat --type fvwm --enable-mini-icons --mini-icons-path '' --icon-toptitle :no::: --icon-title :no::: --icon-folder mini.folder.xpm:ow::: --icon-app mini.ball2.xpm:ow:::'
+##K_SM 1
+##PipeRead 'fvwm-menu-desktop --desktop kde-sys --enable-mini-icons --enable-style'
+##K_UM 1
+##PipeRead 'fvwm-menu-desktop --desktop kde-user --enable-mini-icons'
+##G_SM_F 1
+##PipeRead 'fvwm-menu-desktop --desktop gnome-sys --type fvwm --install-prefix /usr --enable-mini-icons --mini-icons-path '' --icon-toptitle :no::: --icon-title :no::: --icon-folder mini.folder.xpm:ow::: --icon-app mini.gnome.xpm:ow:::'
+##G_UM_F 1
+##PipeRead 'fvwm-menu-desktop --desktop gnome-user --type fvwm --enable-mini-icons --mini-icons-path '' --icon-toptitle :no::: --icon-title :no::: --icon-folder mini.folder.xpm:ow::: --icon-app mini.doc.xpm:ow:::'
+##G_RHM_F 1
+##PipeRead 'fvwm-menu-desktop --desktop gnome-redhat --type fvwm --enable-mini-icons --mini-icons-path '' --icon-toptitle :no::: --icon-title :no::: --icon-folder mini.folder.xpm:ow::: --icon-app mini.ball2.xpm:ow:::'
 
-#CDE 17
-#DestroyMenu cde-menu
-#AddToMenu   cde-menu
-#+ "&Applications Manager" Exec exec /usr/dt/bin/dtaction Dtappmgr
-#+ "&Terminal"            Exec exec /usr/dt/bin/dtterm
-#+ "&File Manager"     Exec exec /usr/dt/bin/dtfile
-#+ "&Trash Can" Exec exec /usr/dt/bin/dtaction Dttrash
-#+ "Text &Editor"         Exec exec /usr/dt/bin/dtpad
-#+ "Desktop &Help"       Exec exec /usr/dt/bin/dthelpview -helpVolume browser
-#+ "Man Pages"           Exec exec /usr/dt/bin/dthelpview -man
-#+ "&Mailer"              Exec exec /usr/dt/bin/dtmail
-#+ "&Calandar%mini.calandar.xpm"         Exec exec /usr/dt/bin/dtcm
-#+ "&Calculator"          Exec exec /usr/dt/bin/dtcalc
-#+ "&Icon Editor"      Exec exec /usr/dt/bin/dticon
-#+ "&Print Manager"       Exec exec /usr/dt/bin/dtprintinfo
-#+ "&Styles Manager"    Exec exec /usr/dt/bin/dtstyle
-#+ "" Nop
-#+ "&Exit CDE"           Exec exec /usr/dt/bin/dtaction ExitSession
+##CDE 17
+##DestroyMenu cde-menu
+##AddToMenu   cde-menu
+##+ "&Applications Manager" Exec exec /usr/dt/bin/dtaction Dtappmgr
+##+ "&Terminal"            Exec exec /usr/dt/bin/dtterm
+##+ "&File Manager"     Exec exec /usr/dt/bin/dtfile
+##+ "&Trash Can" Exec exec /usr/dt/bin/dtaction Dttrash
+##+ "Text &Editor"         Exec exec /usr/dt/bin/dtpad
+##+ "Desktop &Help"       Exec exec /usr/dt/bin/dthelpview -helpVolume browser
+##+ "Man Pages"           Exec exec /usr/dt/bin/dthelpview -man
+##+ "&Mailer"              Exec exec /usr/dt/bin/dtmail
+##+ "&Calandar%mini.calandar.xpm"         Exec exec /usr/dt/bin/dtcm
+##+ "&Calculator"          Exec exec /usr/dt/bin/dtcalc
+##+ "&Icon Editor"      Exec exec /usr/dt/bin/dticon
+##+ "&Print Manager"       Exec exec /usr/dt/bin/dtprintinfo
+##+ "&Styles Manager"    Exec exec /usr/dt/bin/dtstyle
+##+ "" Nop
+##+ "&Exit CDE"           Exec exec /usr/dt/bin/dtaction ExitSession
 
-#------------------------------------------------------------------------------
-#--------- Accessories
+##------------------------------------------------------------------------------
+##--------- Accessories
 
 DestroyMenu Accessories
 AddToMenu   Accessories
 +  "&Calculator"         Exec exec xcalc
 + "&Magnifying glass"    Exec exec xmag
 + "&Font viewer"         Exec exec xfontsel
-#+ "&Xdaliclock"        Exec exec xdaliclock
+##+ "&Xdaliclock"        Exec exec xdaliclock
 + "X&clock"             Exec exec xclock
-#+ "&Rclock"            Exec exec rclock
-#+ "x&apm"            Exec exec xapm
-#+ "&View colormap"    Exec exec xcolormap
-#+ "&Color viewer"     Exec exec xcolorsel
+##+ "&Rclock"            Exec exec rclock
+##+ "x&apm"            Exec exec xapm
+##+ "&View colormap"    Exec exec xcolormap
+##+ "&Color viewer"     Exec exec xcolorsel
 + "&Capture Form"      FvwmForm FvwmForm-Capture
 + "&Screen Dump Script" FvwmScript FvwmScript-ScreenDump
-#+ "X&grab"            Exec exec xgrab
+##+ "X&grab"            Exec exec xgrab
 + "&Ddd"                 Exec exec ddd
-#+ "Xx&gdb"              Exec exec xxgdb
+##+ "Xx&gdb"              Exec exec xxgdb
 + "&Xclipboard"     Exec exec xclipboard
 
-#------------------------------------------------------------------------------
-#--------- Applications
+##------------------------------------------------------------------------------
+##--------- Applications
 
 
 DestroyMenu Applications
 AddToMenu   Applications
-#+ "&Lyx"                                Exec exec lyx
-#+ "&Thot"                       Exec exec thot
-#+ "&Ghostview (Postscript)"       Exec exec ghostview
-#+ "&GV (Postscript)"              Exec exec gv
+##+ "&Lyx"                                Exec exec lyx
+##+ "&Thot"                       Exec exec thot
+##+ "&Ghostview (Postscript)"       Exec exec ghostview
+##+ "&GV (Postscript)"              Exec exec gv
 + "X&dvi"                        Exec exec xdvi
 + "&Acroread (PDF)"               Exec exec acroread
 + "&Xpdf (PDF)"                   Exec exec xpdf
-#+ "&Plan"                       Exec exec plan
+##+ "&Plan"                       Exec exec plan
 
-#------------------------------------------------------------------------------
-#--------- Science
+##------------------------------------------------------------------------------
+##--------- Science
 
 DestroyMenu Science
 AddToMenu   Science
-#+ "Thx-1138"    Exec exec thx-1138
+##+ "Thx-1138"    Exec exec thx-1138
 +  "GNU &plot"  Exec exec xterm -T GNUplot -name GNUplot -e gnuplot
-#+ "&SCILAB"             Exec exec scilab
-#+ "&Maple"            Exec exec xmaple
-#+ "&Mathematica"      Exec exec mathematica
-#+ "&Xaos"            Exec exec xaos
-#+ "&Fractint"                Exec exec xterm -font 7x14 -e xfractint
-#+ "X&ephem"              Exec exec xephem
-#+ "X&tide"               Exec exec xtide
+##+ "&SCILAB"             Exec exec scilab
+##+ "&Maple"            Exec exec xmaple
+##+ "&Mathematica"      Exec exec mathematica
+##+ "&Xaos"            Exec exec xaos
+##+ "&Fractint"                Exec exec xterm -font 7x14 -e xfractint
+##+ "X&ephem"              Exec exec xephem
+##+ "X&tide"               Exec exec xtide
 
-#------------------------------------------------------------------------------
-#--------- System
+##------------------------------------------------------------------------------
+##--------- System
 
 DestroyMenu System
 AddToMenu   System
 + "&Running processes"    Exec exec xterm -g 80x40 -e top
-#+ "&TK processes"                Exec exec tkps
+##+ "&TK processes"                Exec exec tkps
 + "&System load"         Exec exec xload
-#+ "&Xosview"             Exec exec xosview
-#+ "&Memory usage"       Exec exec xmem
-#+ "&XSysStats"           Exec exec XSysStats
+##+ "&Xosview"             Exec exec xosview
+##+ "&Memory usage"       Exec exec xmem
+##+ "&XSysStats"           Exec exec XSysStats
 + "&xconsole"            Exec exec xconsole
 + "Set &Date Script"    FvwmScript FvwmScript-Date
 + "" Nop
 + "&Midnight-Commander" Exec exec xterm -g 80x40 -n Midnight-Commander -T Midnight-Commander -e mc -x
-#+ "X&fm"             Exec exec xfm
-#+ "File &Runer"      Exec exec fr
+##+ "X&fm"             Exec exec xfm
+##+ "File &Runer"      Exec exec fr
 + "&kfm"              Exec exec kfmclient openURL $HOME
-#+ "&gmc"             Exec exec gmc
+##+ "&gmc"             Exec exec gmc
 
-#------------------------------------------------------------------------------
-#--------- Editors
+##------------------------------------------------------------------------------
+##--------- Editors
 
 DestroyMenu Editors
 AddToMenu   Editors
@@ -251,103 +252,103 @@ AddToMenu   Editors
 + "&XEmacs"              Exec exec xem
 + "&Gvim"                Exec exec gvim
 + "&Nedit"               Exec exec nedit
-#+ "&Xedit"              Exec exec xedit
+##+ "&Xedit"              Exec exec xedit
 
-#------------------------------------------------------------------------------
-#--------- Network
+##------------------------------------------------------------------------------
+##--------- Network
 
 DestroyMenu Network
 AddToMenu   Network
 + "&Rlogin"           Module FvwmForm FvwmForm-Rlogin
-#+ "&Vppp"            Exec exec vppp
-#+ "&Ezppp"           Exec exec ezppp
-#+ "&Hifs"               Exec exec xterm -ls -bg #c0c0c0 -fg black -T Hifs -name Hifs -geometry 26x24 -e hifs
+##+ "&Vppp"            Exec exec vppp
+##+ "&Ezppp"           Exec exec ezppp
+##+ "&Hifs"               Exec exec xterm -ls -bg #c0c0c0 -fg black -T Hifs -name Hifs -geometry 26x24 -e hifs
 
-#------------------------------------------------------------------------------
-#--------- Internet
+##------------------------------------------------------------------------------
+##--------- Internet
 
 DestroyMenu Internet
 AddToMenu   Internet
-#+ "&Netscape" Exec exec netscape
-#+ "&Amaya"    Exec exec amaya
+##+ "&Netscape" Exec exec netscape
+##+ "&Amaya"    Exec exec amaya
 + "&Mozilla"   Exec exec mozilla
 + "&Lynx"  Exec exec xterm -g 80x30 -n lynx -T lynx -e lynx
 + ""    Nop
-#+ "Xfmail" Exec exec xfmail
-#+ "&Xmh"  Exec exec xmh
+##+ "Xfmail" Exec exec xfmail
+##+ "&Xmh"  Exec exec xmh
 + "&Mail" Exec exec xterm -g 80x30 -n Mail -T Mail -e mail
-#+ "&Pine" Exec exec xterm -g 80x30 -n Pine -T Pine -e pine
+##+ "&Pine" Exec exec xterm -g 80x30 -n Pine -T Pine -e pine
 + "&Mutt" Exec exec xterm -g 80x30 -n Mutt -T Mutt -e mutt
-#+ "&Elm"        Exec exec xterm -g 80x30 -n Elm -T Elm -e elm
-#+ ""   Nop
-#+ "Nc&FTP" Exec exec xterm -g 80x30 -n NcFtp -T FTP -e ncftp
-#+ "&Xftp"                Exec exec xftp
+##+ "&Elm"        Exec exec xterm -g 80x30 -n Elm -T Elm -e elm
+##+ ""   Nop
+##+ "Nc&FTP" Exec exec xterm -g 80x30 -n NcFtp -T FTP -e ncftp
+##+ "&Xftp"                Exec exec xftp
 + "X-&Chat"      Exec exec xchat
-#+ "Irc"         Exec exec xterm -g 80x30 -n Irc -T Trc -e irc
-#+ "Tkirc"       Exec exec tkirc
-#+ "Lirc"                Exec exec licq
-#+ "&Zircon"   Exec exec zircon
-#+ "X&Gopher"  Exec exec xgopher
-#+ "Minitel"    Exec exec xtel -petit
+##+ "Irc"         Exec exec xterm -g 80x30 -n Irc -T Trc -e irc
+##+ "Tkirc"       Exec exec tkirc
+##+ "Lirc"                Exec exec licq
+##+ "&Zircon"   Exec exec zircon
+##+ "X&Gopher"  Exec exec xgopher
+##+ "Minitel"    Exec exec xtel -petit
 
-#------------------------------------------------------------------------------
-#--------- Graphics
+##------------------------------------------------------------------------------
+##--------- Graphics
 
 DestroyMenu Graphics
 AddToMenu   Graphics
 + "The &Gimp"            Exec exec gimp
-#+ "&XPaint"          Exec exec xpaint
+##+ "&XPaint"          Exec exec xpaint
 + "X&fig"                Exec exec xfig
-#+ "X&Fpovray"            Exec exec xfpovray
+##+ "X&Fpovray"            Exec exec xfpovray
 + "" Nop
 + "&XV"                    Exec exec xv
-#+ "Xbm&Browser"    Exec exec xbmbrowser
+##+ "Xbm&Browser"    Exec exec xbmbrowser
 + "&EE"               Exec exec ee
 
-#------------------------------------------------------------------------------
-#--------- Multimedia
+##------------------------------------------------------------------------------
+##--------- Multimedia
 
 DestroyMenu Multimedia
 AddToMenu   Multimedia
-#+ "&CD player"       Exec exec xplaycd
-#+ "X&mixer"         Exec exec xmixer
-#+ "X&ltwav"            Exec exec xltwavplay
-#+ "FreeAmp"            Exec exec freeamp
-#+ "MiXViews"           Exec exec mxv
+##+ "&CD player"       Exec exec xplaycd
+##+ "X&mixer"         Exec exec xmixer
+##+ "X&ltwav"            Exec exec xltwavplay
+##+ "FreeAmp"            Exec exec freeamp
+##+ "MiXViews"           Exec exec mxv
 
-#------------------------------------------------------------------------------
-#--------- Games and amusements
+##------------------------------------------------------------------------------
+##--------- Games and amusements
 
 DestroyMenu Games
 AddToMenu   Games
-#+ "&Maze"               Exec exec maze
-#+ "&Spider"           Exec exec spider
-#+ "&Chess"              Exec exec xboard
-#+ "&XGammon"              Exec exec xgammon
-#+ "X&lander"         Exec exec xlander
-#+ "X&mahjongg"     Exec exec xmahjongg
-#+ "X&Sokoban"             Exec exec xsokoban
-#+ "X&jewel"           Exec exec xjewel
-#+ "&Hextris"         Exec exec hextris
-#+ "&Maelstrom"       Exec exec Maelstrom
-#+ "Koules"             Exec exec xkoules
-#+ "Quake"    Exec cd /usr/local/games/quake/ ; exec ./stquake
-#+ "Quake2"   Exec cd /usr/local/games/quake2/ ; exec ./quake2 +set vid_ref softx
+##+ "&Maze"               Exec exec maze
+##+ "&Spider"           Exec exec spider
+##+ "&Chess"              Exec exec xboard
+##+ "&XGammon"              Exec exec xgammon
+##+ "X&lander"         Exec exec xlander
+##+ "X&mahjongg"     Exec exec xmahjongg
+##+ "X&Sokoban"             Exec exec xsokoban
+##+ "X&jewel"           Exec exec xjewel
+##+ "&Hextris"         Exec exec hextris
+##+ "&Maelstrom"       Exec exec Maelstrom
+##+ "Koules"             Exec exec xkoules
+##+ "Quake"    Exec cd /usr/local/games/quake/ ; exec ./stquake
+##+ "Quake2"   Exec cd /usr/local/games/quake2/ ; exec ./quake2 +set vid_ref softx
 + ""                                    Nop
 + "&Amusements"         Popup Amusements
 
 DestroyMenu Amusements
 AddToMenu Amusements
-#+ "&Eyes"               Exec exec xeyes
+##+ "&Eyes"               Exec exec xeyes
 + "&X logo"               Exec exec xlogo
-#+ "X&roach"            Exec exec xroach
-#+ "X&snow"             Exec exec xsnow
-#+ "&Stop Xsnow"                Exec exec killall xsnow
-#+ "&Desktop cat"         Exec exec xcat
+##+ "X&roach"            Exec exec xroach
+##+ "X&snow"             Exec exec xsnow
+##+ "&Stop Xsnow"                Exec exec killall xsnow
+##+ "&Desktop cat"         Exec exec xcat
 
-#------------------------------------------------------------------------------
-#--------- Modules
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##--------- Modules
+##------------------------------------------------------------------------------
 
 
 DestroyMenu Module-Popup
@@ -394,9 +395,9 @@ AddToMenu   Kill-Module-Popup
 + "Window &List"        KillModule FvwmWinList
 + "&Wharf"              KillModule FvwmWharf
 
-#------------------------------------------------------------------------------
-#--------- Settings
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##--------- Settings
+##------------------------------------------------------------------------------
 
 
 DestroyMenu Settings
@@ -425,8 +426,8 @@ AddToMenu   Settings
 + "&Bell"                       Popup Bell-Settings
 + "&Screen"                     Popup X-settings
 
-#------------------------------------------------------------------------------
-#--------- Fvwm Config
+##------------------------------------------------------------------------------
+##--------- Fvwm Config
 
 DestroyMenu FvwmConfig
 AddToMenu   FvwmConfig
@@ -437,8 +438,8 @@ AddToMenu   FvwmConfig
 + "&Load Default Sample"         FvwmForm FvwmForm-Setup
 
 
-#------------------------------------------------------------------------------
-#--------- Apps Manager
+##------------------------------------------------------------------------------
+##--------- Apps Manager
 
 DestroyMenu AppsManager
 AddToMenu   AppsManager
@@ -461,8 +462,8 @@ AddToMenu   AppsManager
 + "" Nop
 + "&None"                       AppsManNone
 
-#------------------------------------------------------------------------------
-#--------- Animate  settings
+##------------------------------------------------------------------------------
+##--------- Animate  settings
 
 DestroyMenu Animate-Settings
 AddToMenu   Animate-settings
@@ -470,8 +471,8 @@ AddToMenu   Animate-settings
 + "Animation &off"      ModuleOff FvwmAnimate
 + "Animate &Menu"     Popup MenuFvwmAnimate
 
-#------------------------------------------------------------------------------
-#--------- AutoRaise settings
+##------------------------------------------------------------------------------
+##--------- AutoRaise settings
 
 DestroyMenu AutoRaise-Settings
 AddToMenu   AutoRaise-Settings
@@ -482,8 +483,8 @@ AddToMenu   AutoRaise-Settings
 + "Raise &Modules Only" StartModulesAutoRaise
 + "AutoRaise &off"      ModuleOff FvwmAuto
 
-#------------------------------------------------------------------------------
-#--------- Background  settings
+##------------------------------------------------------------------------------
+##--------- Background  settings
 
 DestroyMenu Background-Settings
 AddToMenu   Background-Settings
@@ -511,9 +512,9 @@ AddToFunc SetBackFromDirectories
 + I PipeRead 'for j in `/bin/ls -d $1`; do echo AddToMenu $0 "`basename $j`:" Title; for i in `/bin/ls $j/*`; do echo AddToMenu $0 "`basename $i`" SetBackground \\"$2 $i\\"; done; done'
 
 
-# Replace $FVWM_USERDIR/images/backgrounds/ by your backgrounds directory
-# and uncomment the next line
-#AddToMenu Back-Personal DynamicPopupAction SetBackFromDirectory 'Back-Personal' '$FVWM_USERDIR/images/backgrounds/*' 'Exec exec xv -root -quit'
+## Replace $FVWM_USERDIR/images/backgrounds/ by your backgrounds directory
+## and uncomment the next line
+##AddToMenu Back-Personal DynamicPopupAction SetBackFromDirectory 'Back-Personal' '$FVWM_USERDIR/images/backgrounds/*' 'Exec exec xv -root -quit'
 
 AddToMenu Back-Site DynamicPopupAction SetBackFromDirectories 'Back-Site' '/usr/share/pixmaps/backgrounds/*' 'Exec exec xv -root -quit'
 
@@ -565,34 +566,34 @@ AddToMenu   Back-Solid
 
 DestroyMenu Back-Gradient
 AddToMenu   Back-Gradient
-#+ "&Red decay" SetBackground 'Exec exec bggen red1 red4  | xv -root -quit  -'
-#+ "&Yellow Orange decay" SetBackground 'Exec exec bggen Yellow1 Orange4  | xv -root -quit  -'
-#+ "&Green decay" SetBackground 'Exec exec bggen green1 DarkGreen  | xv -root -quit  -'
-#+ "&Blue decay" SetBackground 'Exec exec bggen 100 100 255  0 0 100  | xv -root -quit  -'
-#+ "&Magenta decayy" SetBackground 'Exec exec bggen blue magenta | xv -root -quit -'
-#+ "&Blue to Red" SetBackground 'Exec exec bggen blue red | xv -root -quit -'
-#+ "Blue to &Cyan" SetBackground 'Exec exec bggen blue4 Cyan1 | xv -root -quit -'
-#+ "&Cyan to Blue" SetBackground 'Exec exec bggen Cyan Blue4 | xv -root -quit -'
-#+ "&Black/pink/black" SetBackground 'Exec exec bggen black pink black | xv -root -quit -'
-#+ "Black/&red/black" SetBackground 'Exec exec bggen black red black | xv -root -quit -'
-#+ "&Sun Raise 1" SetBackground 'Exec exec bggen black orange black pink| xv -root -quit -'
-#+ "Sun Raise &2" SetBackground 'Exec exec bggen black orange black Blue4| xv -root -quit -'
-#+ "Sun Raise &3" SetBackground 'Exec exec bggen black red black grey60| xv -root -quit -'
-#+ "&Rainbowy" SetBackground 'Exec exec bggen red green blue | xv -root -quit -'
-#+ "&Full Rainbowy" SetBackground 'Exec exec bggen black red yellow green blue purple black | xv -root -quit -'
-#+ "&White to Black" SetBackground 'Exec exec bggen white black | xv -root -quit -'
-#+ "&Black to White" SetBackground 'Exec exec bggen white black | xv -root -quit -'
+##+ "&Red decay" SetBackground 'Exec exec bggen red1 red4  | xv -root -quit  -'
+##+ "&Yellow Orange decay" SetBackground 'Exec exec bggen Yellow1 Orange4  | xv -root -quit  -'
+##+ "&Green decay" SetBackground 'Exec exec bggen green1 DarkGreen  | xv -root -quit  -'
+##+ "&Blue decay" SetBackground 'Exec exec bggen 100 100 255  0 0 100  | xv -root -quit  -'
+##+ "&Magenta decayy" SetBackground 'Exec exec bggen blue magenta | xv -root -quit -'
+##+ "&Blue to Red" SetBackground 'Exec exec bggen blue red | xv -root -quit -'
+##+ "Blue to &Cyan" SetBackground 'Exec exec bggen blue4 Cyan1 | xv -root -quit -'
+##+ "&Cyan to Blue" SetBackground 'Exec exec bggen Cyan Blue4 | xv -root -quit -'
+##+ "&Black/pink/black" SetBackground 'Exec exec bggen black pink black | xv -root -quit -'
+##+ "Black/&red/black" SetBackground 'Exec exec bggen black red black | xv -root -quit -'
+##+ "&Sun Raise 1" SetBackground 'Exec exec bggen black orange black pink| xv -root -quit -'
+##+ "Sun Raise &2" SetBackground 'Exec exec bggen black orange black Blue4| xv -root -quit -'
+##+ "Sun Raise &3" SetBackground 'Exec exec bggen black red black grey60| xv -root -quit -'
+##+ "&Rainbowy" SetBackground 'Exec exec bggen red green blue | xv -root -quit -'
+##+ "&Full Rainbowy" SetBackground 'Exec exec bggen black red yellow green blue purple black | xv -root -quit -'
+##+ "&White to Black" SetBackground 'Exec exec bggen white black | xv -root -quit -'
+##+ "&Black to White" SetBackground 'Exec exec bggen white black | xv -root -quit -'
 
-#------------------------------------------------------------------------------
-#--------- Banner  settings
+##------------------------------------------------------------------------------
+##--------- Banner  settings
 
 DestroyMenu Banner-Settings
 AddToMenu   Banner-Settings
 + "&Banner on"    ModuleOn FvwmBanner
 + "Banner &off" ModuleOff FvwmBanner
 
-#------------------------------------------------------------------------------
-#--------- Buttons  settings
+##------------------------------------------------------------------------------
+##--------- Buttons  settings
 
 DestroyMenu Buttons-Settings
 AddToMenu   Buttons-Settings
@@ -601,24 +602,24 @@ AddToMenu   Buttons-Settings
 + "&None"        ChangeButtonsOff
 
 
-#------------------------------------------------------------------------------
-#--------- MiniButtons  settings
+##------------------------------------------------------------------------------
+##--------- MiniButtons  settings
 
 DestroyMenu MiniButtons-Settings
 AddToMenu   MiniButtons-Settings
 + "&Mini Buttons on"   ButtonsOn FvwmButtons MiniButtons MiniButtons
 + "Mini Buttons &off"   ButtonsOff MiniButtons MiniButtons
 
-#------------------------------------------------------------------------------
-#---------   DeskerPanel settings
+##------------------------------------------------------------------------------
+##---------   DeskerPanel settings
 
 DestroyMenu DeskerPanel-Settings
 AddToMenu   DeskerPanel-Settings
 + "&Desker Panel on"   ButtonsOn FvwmButtons DeskerPanelButtons DeskerPanelButtons
 + "Desker Panel &off"   ButtonsOff DeskerPanelButtons DeskerPanelButtons
 
-#------------------------------------------------------------------------------
-#---------   WMaker Applets settings
+##------------------------------------------------------------------------------
+##---------   WMaker Applets settings
 
 DestroyMenu WinMakerApp-Settings
 AddToMenu   WinMakerApp-Settings
@@ -626,17 +627,17 @@ AddToMenu   WinMakerApp-Settings
 + "WMaker Applets &off" ButtonsOff WinMakerAppButtons WinMakerApp*
 
 
-#------------------------------------------------------------------------------
-#--------- Sound  settings
+##------------------------------------------------------------------------------
+##--------- Sound  settings
 
 DestroyMenu Sound-Settings
 AddToMenu   Sound-Settings
 + "&Sound Effect on" ModuleOn FvwmEvent
 + "Sound Effect &off"   ModuleOff FvwmEvent
-#+ "Sound &card"                Exec exec xmixer
+##+ "Sound &card"                Exec exec xmixer
 
-#------------------------------------------------------------------------------
-#--------- Layers Settings
+##------------------------------------------------------------------------------
+##--------- Layers Settings
 
 DestroyMenu Layers-Settings
 AddToMenu   Layers-Settings
@@ -644,8 +645,8 @@ AddToMenu   Layers-Settings
 + "Stays&Put"      Pick (CirculateHit) DestroyLayers
 + "StaysOn&Bottom" Pick (CirculateHit) SetLayers StaysOnBottom
 
-#------------------------------------------------------------------------------
-#--------- X setup Script
+##------------------------------------------------------------------------------
+##--------- X setup Script
 
 DestroyMenu XsetupScripts
 AddToMenu   XsetupScripts
@@ -654,10 +655,10 @@ AddToMenu   XsetupScripts
 + "&Screen"           FvwmScript FvwmScript-ScreenSetup
 + "&Mouse"              FvwmScript FvwmScript-PointerSetup
 
-#------------------------------------------------------------------------------
-#--------- Edit config
+##------------------------------------------------------------------------------
+##--------- Edit config
 
-#PREF 12
+##PREF 12
 DestroyMenu Edit-Config
 AddToMenu   Edit-Config
 + "Edit .fvwm2rc" Exec exec xem $FVWM_USERDIR/.fvwm2rc
@@ -671,8 +672,8 @@ AddToMenu   Edit-Config
 + "Edit menus" Exec exec xem $FVWM_USERDIR/menus
 + "Edit modules" Exec exec xem $FVWM_USERDIR/modules
 
-#------------------------------------------------------------------------------
-#--------- Reload config
+##------------------------------------------------------------------------------
+##--------- Reload config
 
 DestroyMenu Reload-Config
 AddToMenu   Reload-Config
@@ -684,8 +685,8 @@ AddToMenu   Reload-Config
 + "Reload bindings"      Read bindings
 + "Reload modules"       Read modules
 
-#------------------------------------------------------------------------------
-#--------- Load / Save As settings
+##------------------------------------------------------------------------------
+##--------- Load / Save As settings
 
 DestroyMenu Load-Settings
 AddToMenu   Load-Settings
@@ -703,8 +704,8 @@ AddToMenu   Load-Settings
 + "Setting &3"       SaveAsSettings 3
 + "Setting &4"       SaveAsSettings 4
 
-#------------------------------------------------------------------------------
-#--------- Focus/Paging  settings
+##------------------------------------------------------------------------------
+##--------- Focus/Paging  settings
 
 DestroyMenu Focus-Settings
 AddToMenu   Focus-Settings
@@ -723,8 +724,8 @@ AddToMenu   Focus-Settings
 + "&Full Paging && Edge Wrap" EdgeScroll 100000 100000
 
 
-#------------------------------------------------------------------------------
-#--------- Mouse settings
+##------------------------------------------------------------------------------
+##--------- Mouse settings
 
 DestroyMenu Mouse-Settings
 AddToMenu   Mouse-Settings
@@ -733,25 +734,25 @@ AddToMenu   Mouse-Settings
 + "Mouse &Fast"                   Exec    xset m 4 2
 + "Speedy &Gonzales"              Exec    xset m 10 2
 
-#------------------------------------------------------------------------------
-#--------- Keyboard settings
+##------------------------------------------------------------------------------
+##--------- Keyboard settings
 
 DestroyMenu Keyboard-Settings
 AddToMenu   Keyboard-Settings
 + "&Auto-repeat on"  Exec    xset r on
 + "Auto-repeat &off" Exec    xset r off
 
-#------------------------------------------------------------------------------
-#--------- Sound  settings
+##------------------------------------------------------------------------------
+##--------- Sound  settings
 
 DestroyMenu Bell-Settings
 AddToMenu   Bell-Settings
 + "&Bell on"            Exec xset b on
 + "Bell &off"           Exec xset b off
-#+ "Sound &card"        Exec exec xmixer
+##+ "Sound &card"        Exec exec xmixer
 
-#------------------------------------------------------------------------------
-#--------- X & screen settings
+##------------------------------------------------------------------------------
+##--------- X & screen settings
 
 DestroyMenu X-Settings
 AddToMenu   X-Settings
@@ -759,9 +760,9 @@ AddToMenu   X-Settings
 + "Back &Animation"   Popup Background-Animation
 + "&Root Cursor Form" FvwmForm FvwmForm-RootCursor
 + "&Video tuning"     Exec exec xterm -T Xvidtune -e xvidtune
-#+ "&X configuration" Exec exec xterm -T Xconfig -e Xconfigurator
+##+ "&X configuration" Exec exec xterm -T Xconfig -e Xconfigurator
 
-#--------- Background color
+##--------- Background color
 
 DestroyMenu Backcolor
 AddToMenu   Backcolor
@@ -773,38 +774,38 @@ AddToMenu   Backcolor
 + "&Blue"               Exec exec xsetroot -solid Blue
 + "&Magenta"            Exec exec xsetroot -solid Magenta
 + "&White"              Exec exec xsetroot -solid White
-#+ "&Blue decay"                Exec exec bggen 100 100 255  0 0 100  | xv -root -quit  -
-#+ "&Rainbow" Exec exec bggen red green blue | xv -root -quit -
-#+ "&Full Rainbow" Exec exec bggen black red yellow green blue purple black | xv -root -quit -
-#+ "&Magenta decay" Exec exec bggen blue magenta | xv -root -quit -
+##+ "&Blue decay"                Exec exec bggen 100 100 255  0 0 100  | xv -root -quit  -
+##+ "&Rainbow" Exec exec bggen red green blue | xv -root -quit -
+##+ "&Full Rainbow" Exec exec bggen black red yellow green blue purple black | xv -root -quit -
+##+ "&Magenta decay" Exec exec bggen blue magenta | xv -root -quit -
 
-#--------- Background animation
+##--------- Background animation
 
 DestroyMenu "Background-Animation"
 AddToMenu "Background-Animation"
-#+ "&Braid"     Exec exec xlock -nice 10 -inroot -mode braid
-#+ "&Flame"     Exec exec xlock -nice 10 -inroot -mode flame
-#+ "&Grav"      Exec exec xlock -nice 10 -inroot -mode grav
-#+ "&Pyro"      Exec exec xlock -nice 10 -inroot -mode pyro
-#+ "&Qix"       Exec exec xlock -nice 10 -inroot -mode qix
-#+ "&Rock"      Exec exec xlock -nice 10 -inroot -mode rock
-#+ "&Slip"      Exec exec xlock -nice 10 -inroot -mode spiral
-#+ "&Spline"    Exec exec xlock -nice 10 -inroot -mode spline
-#+ "&Swarm"     Exec exec xlock -nice 10 -inroot -mode swarm
-#+ "&Worm"      Exec exec xlock -nice 10 -inroot -mode worm
-#+ "&Random"    Exec exec xlock -nice 10 -inroot -mode random
+##+ "&Braid"     Exec exec xlock -nice 10 -inroot -mode braid
+##+ "&Flame"     Exec exec xlock -nice 10 -inroot -mode flame
+##+ "&Grav"      Exec exec xlock -nice 10 -inroot -mode grav
+##+ "&Pyro"      Exec exec xlock -nice 10 -inroot -mode pyro
+##+ "&Qix"       Exec exec xlock -nice 10 -inroot -mode qix
+##+ "&Rock"      Exec exec xlock -nice 10 -inroot -mode rock
+##+ "&Slip"      Exec exec xlock -nice 10 -inroot -mode spiral
+##+ "&Spline"    Exec exec xlock -nice 10 -inroot -mode spline
+##+ "&Swarm"     Exec exec xlock -nice 10 -inroot -mode swarm
+##+ "&Worm"      Exec exec xlock -nice 10 -inroot -mode worm
+##+ "&Random"    Exec exec xlock -nice 10 -inroot -mode random
   # Stop the animation in the background
 + "&Stop It"            Exec kill -9 \
                         $(ps aux | grep xlock | grep -v grep | awk '{print $2}')
 
-#------------------------------------------------------------------------------
-#--------- Documents
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##--------- Documents
+##------------------------------------------------------------------------------
 
 DestroyMenu Documents
 AddToMenu   Documents
-#+ "&Xman"         Exec exec xman
-#+ "&FVWM Home Page" Exec exec netscape http://www.hpc.uh.edu/index.html
+##+ "&Xman"         Exec exec xman
+##+ "&FVWM Home Page" Exec exec netscape http://www.hpc.uh.edu/index.html
 + "&Sample 95 MINI-FAQ" Exec exec xterm -bg white -fg black -g 80x35 -n "Sample-95 MINI-FAQ" -T "Sample-95 MINI-FAQ" -e less +?"-- Sample-95 MINI-FAQ --" $FVWM_USERDIR/.fvwm2rc
 + "FVWM &Man Pages"     Popup FvwmManPage
 + ""  Nop
@@ -815,18 +816,18 @@ AddToMenu Documents MissingSubmenuFunction FuncFvwmMenuDirectory
 + "&Home dir" Popup ~
 
 DestroyMenu MenuBrowser
-#PREF 1
+##PREF 1
 AddToMenu   MenuBrowser DynamicPopupAction Piperead 'fvwm-menu-directory --reuse --name MenuBrowser --dir $HOME --special-dirs --exec-file ^"xem" --xterm=" dpxx -e" --icon-dir=mini.folder.xpm --icon-title=mini.term.xpm --icon-file=mini.file.xpm --icon-app=mini.hex.xpm --check-subdir'
 
 DestroyMenu MenuBrowserCached
-#PREF 1
+##PREF 1
 AddToMenu   MenuBrowserCached DynamicPopupAction Piperead 'fvwm-menu-directory --all --reuse --name MenuBrowserCached --dir $HOME --special-dirs --exec-file ^"xem" --xterm=" dpxx -e" --icon-dir=mini.folder.xpm --icon-title=mini.term.xpm --icon-file=mini.file.xpm --icon-app=mini.hex.xpm --check-subdir'
 
 DestroyFunc FuncFvwmMenuDirectory
-#PREF 1
+##PREF 1
 AddToFunc FuncFvwmMenuDirectory I PipeRead 'fvwm-menu-directory --dir "$0" --exec-file ^"xem" --xterm=" dpxx -e" --icon-dir=mini.folder.xpm --icon-title=mini.term.xpm --icon-file=mini.file.xpm --icon-app=mini.hex.xpm --check-subdir'
 
-#------------- FvwmManPage
+##------------- FvwmManPage
 
 DestroyFunc ViewManPage
 AddToFunc   ViewManPage
@@ -875,76 +876,76 @@ AddToMenu   FvwmManPage "FVWM Man Pages" Title
 + "fvwm-menu-headlines" ViewManPage fvwm-menu-headlines
 + "fvwm-menu-xlock"     ViewManPage fvwm-menu-xlock
 
-#------------------------------------------------------------------------------
-#--------- ScreenSaver
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##--------- ScreenSaver
+##------------------------------------------------------------------------------
 
 DestroyMenu Screen
 AddToMenu   Screen
-#+ "&Screensaver" Exec exec xlock -nolock -nice 19 -mode random
-#+ "Screen&lock" Exec exec xlock -nice 19 -mode random
-#+ ""   Nop
-#+ "&Screensaver"  Popup MenuSSaver
-#+ "Sc&reen&lock"     Popup MenuSLock
-#+ "" Nop
+##+ "&Screensaver" Exec exec xlock -nolock -nice 19 -mode random
+##+ "Screen&lock" Exec exec xlock -nice 19 -mode random
+##+ ""   Nop
+##+ "&Screensaver"  Popup MenuSSaver
+##+ "Sc&reen&lock"     Popup MenuSLock
+##+ "" Nop
 + "(Re)start &XscreenSaver" Exec xscreensaver-command -exit ; exec xscreensaver -no-splash
 + "&Stop XscreenSaver" Exec exec xscreensaver-command -exit
 + "XscreenSaver &Demo" Exec xscreensaver-command -exit ; exec xscreensaver; exec xscreensaver-command -demo
-#+ "" Nop
+##+ "" Nop
 + "&Locked XscreenSaver" Exec exec xscreensaver-command -lock
 + "&Activate XscreenSaver" Exec exec xscreensaver-command -activate
 
 
-#PipeRead 'fvwm-menu-xlock -n MenuSSaver -t "Screensaver" -icon-item mini.bball.xpm -- -nice 19 -nolock'
-#PipeRead 'fvwm-menu-xlock -n MenuSLock  -t "Lock Screen" -icon-item mini.rball.xpm -- -nice 19'
+##PipeRead 'fvwm-menu-xlock -n MenuSSaver -t "Screensaver" -icon-item mini.bball.xpm -- -nice 19 -nolock'
+##PipeRead 'fvwm-menu-xlock -n MenuSLock  -t "Lock Screen" -icon-item mini.rball.xpm -- -nice 19'
 
-#------------------------------------------------------------------------------
-#--------- Restart
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##--------- Restart
+##------------------------------------------------------------------------------
 
 DestroyMenu Restart
 AddToMenu   Restart "Restart Window Manager" Title
 + "&Restart Self"        Restart
 + "" Nop
-#+ "&fvwm-themes-start"  Restart fvwm-themes-start
+##+ "&fvwm-themes-start"  Restart fvwm-themes-start
 + "&fvwm"                Restart fvwm -s
 + "&fvwm2"               Restart fvwm2 -s
 + "&fvwm2.6.5"           Restart fvwm2.6.5 -s
-#+ "&fvwm95"             Restart fvwm95 -s
-#+ "&AnotherLevel"       Restart AnotherLevel
-#+ "&AnotherLevelUp"     Restart AnotherLevelUp
+##+ "&fvwm95"             Restart fvwm95 -s
+##+ "&AnotherLevel"       Restart AnotherLevel
+##+ "&AnotherLevelUp"     Restart AnotherLevelUp
 + "" Nop
-#+ "&afterstep"       Restart afterstep
-#+ "&blackbox"        Restart blackbox
-#+ "&enlightenment"   Restart enlightenment
-#+ "&flwm"            Restart flwm
-#+ "&icewm"           Restart icewm
-#+ "&kwm"             Restart kwm
+##+ "&afterstep"       Restart afterstep
+##+ "&blackbox"        Restart blackbox
+##+ "&enlightenment"   Restart enlightenment
+##+ "&flwm"            Restart flwm
+##+ "&icewm"           Restart icewm
+##+ "&kwm"             Restart kwm
 + "&mwm"                  Restart mwm
-#+ "&olvwm"              Restart olvwm
-#+ "&sawfish"         Restart sawfish
-#+ "&sawmill"         Restart sawmill
-#+ "&scwm"            Restart scwm
+##+ "&olvwm"              Restart olvwm
+##+ "&sawfish"         Restart sawfish
+##+ "&sawmill"         Restart sawmill
+##+ "&scwm"            Restart scwm
 + "&twm"                  Restart twm
-#+ "&uwm"             Restart uwm
-#+ "&wm2"             Restart wm2
-#+ "&wmaker"          Restart wmaker
-#+ "&wmx"             Restart wmx
-#+ "&xfwm"            Restart xfwm
+##+ "&uwm"             Restart uwm
+##+ "&wm2"             Restart wm2
+##+ "&wmaker"          Restart wmaker
+##+ "&wmx"             Restart wmx
+##+ "&xfwm"            Restart xfwm
 + "" Nop
 + "Just &xterm"          Restart xterm
-# A bit dangerous in a menu
-#+ ""                                   Nop
-#+ "Halt"                Exec exec shutdown -h now
-#+ "Reboot"    Exec exec shutdown -r now
+## A bit dangerous in a menu
+##+ ""                                   Nop
+##+ "Halt"                Exec exec shutdown -h now
+##+ "Reboot"    Exec exec shutdown -r now
 
 
-#------------------------------------------------------------------------------
-#------------- Windows Operations
-#------------------------------------------------------------------------------
+##------------------------------------------------------------------------------
+##------------- Windows Operations
+##------------------------------------------------------------------------------
 
-#-----------------------------------------------------------------------------
-# The "root" windows ops menu (Mouse 2)
+##-----------------------------------------------------------------------------
+## The "root" windows ops menu (Mouse 2)
 
 DestroyMenu "Window"
 AddToMenu "Window" "Window Operations" Title
@@ -973,8 +974,8 @@ AddToMenu "Window" "Window Operations" Title
 + "&Identify"           Module FvwmIdent
 + "Switch &to..."       WindowList Root c c
 
-#------------------------------------------------------------------------------
-# A trimmed down version of "Window Ops", good for binding to decorations
+##------------------------------------------------------------------------------
+## A trimmed down version of "Window Ops", good for binding to decorations
 
 DestroyMenu "Window-Ops2"
 AddToMenu "Window-Ops2"
@@ -989,16 +990,16 @@ AddToMenu "Window-Ops2"
 + "(Un)M&aximize"               Maximize 100 100
 + "(Un)Max&width"               Maximize 100 0
 + "(Un)Max&height"              Maximize   0 100
-#+ "R&aiseLower"                RaiseLower
+##+ "R&aiseLower"                RaiseLower
 + ""                            Nop
 + "&Close"                      Close
 + ""                            Nop
 + "&Identify"                   Module FvwmIdent
 + "More&..."                    Menu Window This 0 0
 
-#------------------------------------------------------------------------------
-# A trimmed down version of "Window Ops", good for binding to TaskBar,
-# WinList ... buttons
+##------------------------------------------------------------------------------
+## A trimmed down version of "Window Ops", good for binding to TaskBar,
+## WinList ... buttons
 
 DestroyMenu "Window-Ops3"
 AddToMenu "Window-Ops3"
@@ -1017,8 +1018,8 @@ AddToMenu "Window-Ops3"
 + "More&..."                    Menu Window This 0 0
 
 
-#------------------------------------------------------------------------------
-# A "Move Window" menu
+##------------------------------------------------------------------------------
+## A "Move Window" menu
 
 DestroyMenu "Move-window-to"
 AddToMenu   "Move-window-to" "Move to page..." Title
@@ -1030,17 +1031,17 @@ AddToMenu   "Move-window-to" "Move to page..." Title
 + 'Move to desk...' Nop
 + "" Nop
 + '&General'              MoveToDesk 0 0
-# ASIM RUN LIMIT error... ASIM issue?
-+ 'SB&1-ap-merge'         MoveToDesk 0 1
-# RTL tree to test DEP-CPU under RTL
-+ 'SB&2-R/DEPCPU'         MoveToDesk 0 2
-+ 'SB&3-R/RUNLIMIT'       MoveToDesk 0 3
-+ 'SB&4-R/SWR-wave'       MoveToDesk 0 4
-+ 'SB&5-R/burst'          MoveToDesk 0 5
+## ASIM RUN LIMIT error... ASIM issue?
++ 'SB&1 @SB_SB1_DESC@'    MoveToDesk 0 1
+## RTL tree to test DEP-CPU under RTL
++ 'SB&2-@SB_SB2_DESC@'    MoveToDesk 0 2
++ 'SB&3-@SB_SB3_DESC@'    MoveToDesk 0 3
++ 'SB&4-@SB_SB4_DESC@'    MoveToDesk 0 4
++ 'SB&5-@SB_SB5_DESC@'    MoveToDesk 0 5
 
-#------------------------------------------------------------------------------
-# A "Goto Desk" menu
-# See "Move-window-to menu for sandbox/tree descriptions.
+##------------------------------------------------------------------------------
+## A "Goto Desk" menu
+## See "Move-window-to menu for sandbox/tree descriptions.
 DestroyMenu "Goto-page-or-desk"
 AddToMenu   "Goto-page-or-desk" "Go to page..." Title
 + '&o-xterm'              GotoPage 0 0
@@ -1051,16 +1052,16 @@ AddToMenu   "Goto-page-or-desk" "Go to page..." Title
 + 'Go to desk...' Nop
 + "" Nop
 + '&General'              GotoDeskAndPage 0 0 0
-# Available -skiprtl tree.
+## Available -skiprtl tree.
 + 'SB&1-ap-merge'         GotoDeskAndPage 1 0 0
-# RTL tree to test DEP-CPU under RTL
+## RTL tree to test DEP-CPU under RTL
 + 'SB&2-R/DEPCPU'         GotoDeskAndPage 2 0 0
 + 'SB&3-R/RUNLIMIT'       GotoDeskAndPage 3 0 0
 + 'SB&4-R/SWR-wave'       GotoDeskAndPage 4 0 0
 + 'SB&5-R/burst'          GotoDeskAndPage 5 0 0
 
-#------------------------------------------------------------------------------
-# A group version of WindowOps
+##------------------------------------------------------------------------------
+## A group version of WindowOps
 
 DestroyMenu  WindowGroupOps
 AddToMenu    WindowGroupOps "Group Ops" Title
@@ -1126,9 +1127,9 @@ AddToMenu   WinRearrange
 + "&Arrange Icons" All (CurrentDesk Iconic) RecaptureWindow
 + "&Refresh Screen" Refresh
 
-#----------------------------------------------------------------------------
-# Use the winops menus styles for the "Windows Operations Menus"
-# Use it also for big menu
+##----------------------------------------------------------------------------
+## Use the winops menus styles for the "Windows Operations Menus"
+## Use it also for big menu
 
 ChangeMenuStyle winops Window Window-Ops2 Window-Ops3 Move-Window WindowGroupOps WindowStyle WinRearrange Back-Solid Back-Gradient FvwmManPage MenuSSaver MenuSLock
 

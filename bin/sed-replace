@@ -1,0 +1,35 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${sed_sep=!}
+dolat=("$@")
+echo 1>&2 "dolat>${dolat[@]}<"
+sed_script=""
+while read
+do
+  set -- $REPLY
+  script_element="s${sed_sep}${1}${sed_sep}${2}${sed_sep}"
+  sed_script="${sed_script}${script_element}
+"
+done
+echo_id2 sed_script
+
+for infile in "${dolat[@]}"
+do
+  echo_id2 infile
+  file=$(basename "${infile}" .in)
+  chmod u+w "${file}"
+  sed -r "${sed_script}" "${infile}" >| "${file}"
+  chmod a-w "${file}"
+done
