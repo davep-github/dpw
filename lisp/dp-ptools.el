@@ -460,7 +460,7 @@ Returns nil if there is no current sandbox."
     (dp-add-editor-identification-data 'sandbox-name 
                                        (dp-current-sandbox-name)))
 
-(defun dp-set-sandbox (sandbox &optional read-only-p)
+(defun* dp-set-sandbox (sandbox &optional read-only-p)
   "Setup things for a singular, unique SANDBOX.
 Files from other sandboxes are read only to prevent editing in the wrong
 place. It is preferable to have one editor per sandbox. In addition, the
@@ -482,7 +482,8 @@ the current sandbox is used for defaults, etc."
   (dp-set-current-sandbox-read-only-p read-only-p)
   (let ((sandbox (if (member sandbox '("" "/" "-" "'" "!"))
                      nil
-                   sandbox)))
+                   sandbox))
+        expanded-dest)
     (if (not sandbox)
         ;; @todo XXX Why isn't this a `setq-default' like the others?
         ;; ? Don't want to clear it everywhere?
@@ -504,7 +505,12 @@ the current sandbox is used for defaults, etc."
          sandbox
          (if (string= "*" sandbox)
              ".*"                      ; We're always in the "right" sandbox.
-           (concat (dp-me-expand-dest "/" sandbox) "/" ))
+           (if (setq expanded-dest (dp-me-expand-dest "/" sandbox))
+               (concat expanded-dest "/")
+             (dp-ding-and-message "Sandbox not found.")
+             (dp-set-sandbox-name-and-regexp nil nil)
+             (dp-set-frame-title-format)
+             (return-from dp-set-sandbox)))
          'set-default)))
     (dp-set-frame-title-format)
     (if (dp-current-sandbox-regexp)

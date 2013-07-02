@@ -82,6 +82,7 @@ At nVIDIA, the answer is HELL YES!")
 
 
 (defun dp-nvidia-make-cscope-database-regexps ()
+  "Compute value for `cscope-database-regexps'"
   (let ((ap (dp-me-expand-dest "ap" (dp-current-sandbox-name)))
         (sb (dp-current-sandbox-regexp)))
     `(

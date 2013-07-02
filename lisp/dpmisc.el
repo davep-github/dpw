@@ -6341,10 +6341,6 @@ start a new one."
                                host-name))
         ;; Don't clobber existing server advertisement.
         (dp-add-editor-identification-data 'pid (emacs-pid))
-        (setq frame-title-format (concat "["
-                                         (or (dp-current-sandbox-name) "No SB")
-                                         "] "
-                                         dp-frame-title-format))
         (dp-set-frame-title-format)
         (shell-command-to-string (format "echo '%s %s' > %s"
                                          host-name
@@ -15648,7 +15644,11 @@ something.")
 KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
   (interactive "P")
   (with-current-buffer (or buffer (current-buffer))
-    (message "buffer-file-truename: %s" buffer-file-truename)
+    (message "%sbuffer-file-truename: %s"
+             (if kill-name-p
+                 "Copied "
+               "")
+             buffer-file-truename)
     (if kill-name-p
         (if (not buffer-file-truename)
             (dmessage "buffer-file-truename is nil, not putting on kill ring.")
@@ -15681,10 +15681,10 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
   (apply 'setenv var rest)
   (message "%s: %s" var (getenv var)))
 
-(defun dp-make-frame-title-format ()
+(defun* dp-make-frame-title-format (&key gnuserv-running-p)
   (format "[%s] %s%s" 
           (or (dp-current-sandbox-name) "No SB")
-          (if (dp-gnuserv-running-p)
+          (if (or gnuserv-running-p (dp-gnuserv-running-p))
               "Serv/"
             "")
           dp-frame-title-format))

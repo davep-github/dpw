@@ -26,7 +26,7 @@ Error()
     Usage "$@" 1>&2
 }
 
-option_str="nlhc:d:s:"
+option_str="nlhc:d:s:/"
 q=$(getopt -o "$option_str" -- "$@")
 [ $? != 0 ] && Usage 1          # This is a misteak.
 eval set -- "$q" 
@@ -36,7 +36,7 @@ eval set -- "$q"
 for i in $*
 do
     case $1 in
-	-n) no_leading_char=$1 ;;
+	-n|'-/') no_leading_char=t ;;
 	-l) no_leading_char= ;;
         -h) Usage 0;;           # This is a request
 	-c|-d|-s) char=$2; shift;;
@@ -50,7 +50,7 @@ path=$1
 path=$(echo $path | sed 's!//*$!/!')
 base=$(echo $path | sed "s!/!$char!g")
 
-if [ "$no_leading_char" != "-n" ]
+if [ "$no_leading_char" != "t" ]
 then
     echo $base
 else

@@ -278,9 +278,11 @@ do
     then
         EExec mkdir -p $(dirname "${out_dir}")
         vsetp "${last_and_latest_p}" && {
-            echo "$out_dir" >| "${last_out}"
+            # Keep a history with latest last.
+            # The script below now tails the last line.
+            echo "$out_dir" >> "${last_out}"
             echo "#!/bin/sh
-cat ${last_out_dir_file_name}" >| "${latest_out}"
+tail -n1 ${last_out_dir_file_name}" >| "${latest_out}"
             chmod +x "${latest_out}"
         }
         command_line_log="${out_dir}.command-line"

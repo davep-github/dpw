@@ -330,6 +330,7 @@ Key  e   A     C4 EditingServer
 ## ??? # Key    Tab      A       MS  CycleWindowsReverse
 Key Tab          A      M       Next (AcceptsFocus, CurrentPage, !Iconic) FocusRaiseAndStuff
 Key Tab          A      SM      Prev (AcceptsFocus, CurrentPage, !Iconic) FocusRaiseAndStuff
+Key Escape       A      C       WindowList Mouse -1p -1p CurrentDesk
 
 ##
 ## If on root, the focused window is raised. I like that.
@@ -341,9 +342,9 @@ Key Right      A        4       GotoDesk 1
 
 Key d          A        4       exec dpxx
 
-Key s          A        4       PageNextFarmTerm
-Key s          A        4M      DeskNextFarmTerm
-Key s          A        4S      AnyNextFarmTerm
+Key f          A        4       PageNextFarmTerm
+Key f          A        4M      DeskNextFarmTerm
+Key f          A        4S      AnyNextFarmTerm
 Key t          A        4       Next  ("*xssh-tunnel@*") FocusRaiseAndStuff
 
 ## Go to an IPython if possible.
@@ -355,4 +356,12 @@ Key o          A        M4      exec xorpie
 ## Wander around with the cursor keys.
 Key v          A	4	Move
 
-Key c          A        C4      FvwmCpp /home/dpanariti/.fvwm/.fvwm2rc
+# Doesn't seem to work. Reclaim the binding.
+#Key c         A        C4      FvwmCpp /home/dpanariti/.fvwm/.fvwm2rc
+
+# Needs a mouse move after pressing. Fix Me.
+Key Space      A    	4       Function "window_ops_func"
+Key s          A        4       StickAcrossPages
+Key s          A        4S      StickAcrossDesks
+
+

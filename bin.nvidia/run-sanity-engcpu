@@ -1,0 +1,35 @@
+#!/bin/sh
+
+: ${EZEC=}
+: ${no_run_p=}
+
+for i in "$@"
+do
+  case "$1" in
+      -n|--pretend|--dry-run) no_run_p=t; EZEC=echo;;
+      --eko) no_run_p=t; EZEC=eko;;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
+
+$EZEC $(depth)/bin/me_run \
+    -P t124 \
+    -mode arm \
+    -dir sanity_cpu.so_top \
+    -p \
+    -traces /home/scratch.weix_t124/t124_trunk/arch/traces/mobile/traces/nongpu_multiengine/so/ \
+    -rtprint \
+    -noClean \
+    -o sanity_cpu.so_top/simfront.log \
+    -mod nongpu_multiengine \
+    -crc_mode check \
+    -crc_file gold.crc \
+    -tarmac \
+    -noeclk \
+    -boot_mpcore_g \
+    -cfg_file cfg_sanity_cpu_simple \
+    sanity_cpu.so \
+    -v top_peatrans
+

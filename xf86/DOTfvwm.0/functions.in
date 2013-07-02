@@ -460,15 +460,15 @@ AddToFunc AnyNextEmacs
 
 DestroyFunc PageNextFarmTerm
 AddToFunc PageNextFarmTerm
-+ I Next  ("*sc-sim-*", CurrentPage) FocusRaiseAndStuff
++ I Next  ("@KONST_FARM_PATTERN@", CurrentPage) FocusRaiseAndStuff
 
 DestroyFunc DeskNextFarmTerm
 AddToFunc DeskNextFarmTerm
-+ I Next  ("*sc-sim-*", CurrentDesk) FocusRaiseAndStuff
++ I Next  ("@KONST_FARM_PATTERN@", CurrentDesk) FocusRaiseAndStuff
 
 DestroyFunc AnyNextFarmTerm
 AddToFunc AnyNextFarmTerm
-+ I Next  ("*sc-sim-*") FocusRaiseAndStuff
++ I Next  ("@KONST_FARM_PATTERN@") FocusRaiseAndStuff
 
 DestroyFunc EditingServer
 AddToFunc EditingServer

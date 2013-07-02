@@ -12,6 +12,7 @@ set -x
 : ${no_run_p=}
 : ${startrecord=}
 : ${startrecord_opt=}
+: ${rtl_log_file_history:=rtl-log-file-history}
 
 for i in "$@"
 do
@@ -71,7 +72,8 @@ hdr_file=$(abspath ../../arch/traces/mobile/traces/gpu_multiengine/comp_one_tri_
     startrecord_opt="-rtlarg +startrecord+${startrecord}"
 }
 
-pwd
+echo "${logfile}" >> "${rtl_log_file_history}"
+
 ${EZEC} ./bin/system_run \
     -mode arm \
     ${dump_waves_opt} \

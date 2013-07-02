@@ -253,6 +253,7 @@ then
     # Make individual indices in each specified dir.
     for d in $dirs
     do
+      # Must make sure only one proc writes to each files file.
       (cd "$d" && do_taggin) &
     done
     wait

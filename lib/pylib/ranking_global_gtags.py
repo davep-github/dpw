@@ -22,7 +22,7 @@ Top_ranking_regexp_strings = [
 Top_ranking_regexps = [ re.compile(regexp)
                         for regexp in Top_ranking_regexp_strings ]
 
-## Genericize. elisp-devel has a good model.
+## Genericize. elisp-devel has a good model based on xcscope's db scheme.
 
 ##finish class Data_file_return_t(object):
 ##finish     def __init__(self, file, rest_of_list):
@@ -91,19 +91,19 @@ def run_globals_path(argv, path):
         if x:
             return x
 
-def run_globals_uphill(argv, all_p=True):
-    # def find_up(file_name, stop_dir="/", start_dir=None, all_p=False):
-    #print >>sys.stderr, "run_globals_uphill(argv: %s, all_p:%s)" % (argv, all_p)
-    path = find_up.find_up("GTAGS", all_p=all_p)
-    #print >>sys.stderr, "run_globals_uphill(path:%s)" % (path,)
+def run_globals(argv, path=None, all_p=True):
+    if path == None:
+        path = find_up.find_up("GTAGS", all_p=all_p)
     return run_globals_path(argv, path)
 
-def run_globals(argv, path=None):
-    if path == None:
-        return run_globals_uphill(argv)
-    else:
-        return run_globals_path(argv, path)
-
+def top_level_links_only(arg, dirname, fnames):
+    print >>sys.stderr, "arg:", arg, "dirname:", dirname, "fnames:", fnames
+    for fname in fnames:
+        full_name = opath.join(dirname, fname)
+        if opath.islink(full_name):
+            arg.append(full_name)
+    del fnames[:]
+    
 def main(argv):
     import getopt
     filter_p = os.environ.get("BEA_FILTER")
@@ -115,10 +115,15 @@ def main(argv):
     #        filter_p = True
     #        continue
 
+    # @todo XXX Very hard coded. Fix this.
+    path = find_up.find_up("GTAGS", all_p=True)
+    path.extend(Out_of_tree_dbs)
+
     if filter_p:
         lines = get_lines(sys.stdin)
     else:
-        lines = run_globals(argv)
+        #lines = run_globals_path(argv, path)
+        lines = run_globals(argv, path)
     if lines:
         lines = rank_lines(lines)
         for line in lines:
@@ -126,4 +131,3 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv)
-

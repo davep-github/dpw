@@ -40,7 +40,6 @@ filter_dirs()
 # option name to make symlinks.
 : ${just_nvcscope_p=}
 : ${nvcscope_files=cscope.files cscope.out cscope.out.in cscope.out.po}
-: ${skip_cd_p=}
 
 [ -z "$ap_dir" ] && {
     ap_dir=$(find-ap-dir)
@@ -78,8 +77,7 @@ Usage_details="${EExec_parse_usage}
 option_str="${EExec_parse_option_str}jm"
 long_options=(
 "mundane" "no-nvcscope"
-"no-me-index" "no-arch-index" "just-nvcscope" "links" "just-links"
-"skip-cd" "stay-put")
+"no-me-index" "no-arch-index" "just-nvcscope" "links" "just-links")
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -91,7 +89,6 @@ do
       -m|--no-nvcscope|--mundane) nvcscope_p=;;
       --nvcscope|--new-sk00l) nvcscope_p=t;;
       -j|--no-me-index|--no-arch-index|--no-other-index|--links|--just-links) just_nvcscope_p=t;;
-      --skip-cd|--stay-put) skip_cd_p=t;;
       --help) Usage; exit 0;;
       --) shift ; break ;;
       *) dp_echo2 "Unsupported option>$1<"
@@ -160,14 +157,10 @@ ${ap_hw_p4_path}/clib/
 
 depot_dirs_of_interest="$base_depot_dirs_of_interest $more_depot_dirs_of_interest"
 
-other_dirs_of_interest="
-/home/scratch.traces02/mobile/traces/system/so"
-
 echo_id2 p4_root
 dirs_of_interest=$(dp4-reroot "$p4_root" $depot_dirs_of_interest)
-dirs_of_interest="${dirs_of_interest} ${other_dirs_of_interest}"
 
-[ -z "${skip_cd_p}" ] && EExec -y mecd sandbox
+[ -z "${skip_cd-}" ] && EExec -y mecd sandbox
 dp_echo2 "cwd: $(pwd)"
 
 # These files change and come and go and are mostly copies of existing files.

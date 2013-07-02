@@ -1,0 +1,38 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${std_env_func:=su_func}
+
+for i in "$@"
+do
+  case "$1" in
+      --su) std_env_func=su_func;;
+      --ssh) std_env_func=ssh_func;;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
+
+su_func()
+{
+    EExec su -l "${USER}"
+}
+
+ssh_func()
+{
+    EExec ssh "${HOSTNAME-${HOST-localhost}}"
+}
+
+"${std_env_func}" "$@"

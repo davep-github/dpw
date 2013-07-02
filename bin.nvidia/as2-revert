@@ -43,6 +43,13 @@ unset eexec_program
     exit 1
 } 1>&2
 
+[ "${1}" = '--help' ] && {
+    echo "as2-revert bundle-id...
+Revert files changed by the bundle.
+"
+    exit 0
+}
+
 for bundle_id in "$@"
 do
   files=$(dpas2-list-bundle-files "${bundle_id}")
