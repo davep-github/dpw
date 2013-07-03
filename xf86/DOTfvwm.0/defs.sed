@@ -1,4 +1,4 @@
-@SB_SB1_DESC@ ap-merge
+@SB_SB1_DESC@ misc
 @SB_SB2_DESC@ R/ENGCPU
 @SB_SB3_DESC@ R/Bursts
 @SB_SB4_DESC@ R/SWR-wave

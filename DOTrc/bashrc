@@ -32,6 +32,7 @@ export INPUTRC=$HOME/.inputrc
 # Even though tcsh is the shell of choice in the company, it can't hurt to stick it here as
 # well.
 export TMPDIR=/tmp/
+export DP_TMPDIR=$HOME/tmp/
 
 [ "$DP_BYPASS_BASHRC" = "Yes" ] && {
     # ??? Should this value be inherited?

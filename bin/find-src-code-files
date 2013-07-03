@@ -45,7 +45,9 @@ fi
 : ${AUTOMAKE_REGEXP_DEF:="((\.am|\.ac|\.m4)$|^config.*)"}
 : ${AUTOMAKE_REGEXP:="$AUTOMAKE_REGEXP_DEF"}
 : ${FILES_FILE:=cscope.files}
-: ${EXCLUDED_FILES_FILE:="extagtree.excluded-files"}
+
+excluded_files_file_template=$(normpath "${DP_TMPDIR-$TMP}/extagtree.excluded-files.XXXXXXXX")
+: ${EXCLUDED_FILES_FILE:=$(mktemp "${excluded_files_file_template}")}
 # .c .h .cxx .py .java etc.
 : ${INTERESTING_FILES:="\.([chly](xx|pp)?|h-py|cs|cc|hh|py|pm|pl|java)$"}
 : ${DEF_SYSTEM_INCLUDES:=/usr/include}

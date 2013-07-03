@@ -12,6 +12,8 @@ done
 unset eexec_program
 set -u
 
+: ${oot_only_p=}
+
 nvcscope_filter()
 {
     egrep -v '/ap(_tlit[0-9]/'
@@ -33,6 +35,27 @@ filter_dirs()
     done | egrep -v "$re"
 }
 
+OOT_DIR=$HOME/work/out-of-tree-dirs
+# All must be absolute
+out_of_tree_dirs=/home/scratch.traces02/mobile/traces/system/so
+index_out_of_tree_locations()
+{
+    local oot_files_file=$(normpath "${OOT_DIR}/oot.files")
+    EExec find-src-code-files ${out_of_tree_dirs} > "${oot_files_file}"
+    # Places like home.scratch.traces02.mobile.traces.system.so which do
+    # not reside in a checked out tree. I don't know
+    # how/when/why/where/from where these come, but there they are.
+    # Apparently they are ~needed to make it go~.
+    (
+        # gtags can really be a PITA sometimes.
+        EExec cd /
+        EExec gtags -f "${oot_files_file}" "${OOT_DIR}"
+
+        EExec cd "${OOT_DIR}"
+        EExec cscope -q -b -i "${oot_files_file}"
+    )
+}
+
 : ${ap_dir:=}
 : ${send_mail_on_completion:=t}
 : ${nvcscope_p=}
@@ -41,15 +64,6 @@ filter_dirs()
 : ${just_nvcscope_p=}
 : ${nvcscope_files=cscope.files cscope.out cscope.out.in cscope.out.po}
 : ${skip_cd_p=}
-
-[ -z "$ap_dir" ] && {
-    ap_dir=$(find-ap-dir)
-}
-
-[ -d "${ap_dir}" ] || {
-    dp_echo "ap_dir>${ap_dir}<, isn't."
-    exit 1
-} 1>&2
 
 link_or_non_existent()
 {
@@ -73,13 +87,14 @@ Usage_details="${EExec_parse_usage}
                         because GTAGS can only use one db, so the non-ap GTAGS 
                         needs *all*files.
 -j|--no-me-index|--no-arch-index|--no-other-index) Just set up nvcscope.
+-oot) Index out of tree files only.
 "
 # Example of arg parsing.
 option_str="${EExec_parse_option_str}jm"
 long_options=(
 "mundane" "no-nvcscope"
 "no-me-index" "no-arch-index" "just-nvcscope" "links" "just-links"
-"skip-cd" "stay-put")
+"skip-cd" "stay-put" "oot")
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -93,12 +108,29 @@ do
       -j|--no-me-index|--no-arch-index|--no-other-index|--links|--just-links) just_nvcscope_p=t;;
       --skip-cd|--stay-put) skip_cd_p=t;;
       --help) Usage; exit 0;;
+      --oot) oot_only_p=t; nvcscope_p=; just_nvcscope_p=;;
       --) shift ; break ;;
       *) dp_echo2 "Unsupported option>$1<"
          exit 1;;
     esac
     shift
 done
+
+if vtruep "${oot_only_p}"
+then
+    index_out_of_tree_locations
+    dp_echo "Indexing oot only. Exiting."
+    exit
+fi
+
+[ -z "$ap_dir" ] && {
+    ap_dir=$(find-ap-dir)
+}
+
+[ -d "${ap_dir}" ] || {
+    dp_echo "ap_dir>${ap_dir}<, isn't."
+    exit 1
+} 1>&2
 
 ap_path="${ap_dir}"
 ap_dir=$(basename "${ap_dir}")
@@ -134,7 +166,8 @@ base_depot_dirs_of_interest="
 //hw/${ap_dir}/drv/multiengine/
 //hw/${ap_dir}/inf/mods/trace_3d/plugin/
 //arch/traces/mobile/traces/gpu_multiengine/
-//arch/traces/mobile/traces/nongpu_multiengine/"
+//arch/traces/mobile/traces/nongpu_multiengine/
+//hw/kepler1_gklit3/manuals/"
 
 # too big: //hw/${ap_dir}/include/
 # Taken care of with NOTAG files.
@@ -160,8 +193,7 @@ ${ap_hw_p4_path}/clib/
 
 depot_dirs_of_interest="$base_depot_dirs_of_interest $more_depot_dirs_of_interest"
 
-other_dirs_of_interest="
-/home/scratch.traces02/mobile/traces/system/so"
+other_dirs_of_interest=""
 
 echo_id2 p4_root
 dirs_of_interest=$(dp4-reroot "$p4_root" $depot_dirs_of_interest)
@@ -205,14 +237,7 @@ fi
 if ! vtruep "${just_nvcscope_p}"
 then
     EExec -y index-code $EExecDashN_opt $EExecDashV_opt $dirs_of_interest
-    (
-        # Places like home.scratch.traces02.mobile.traces.system.so which do
-        # not reside in a checked out tree. I don't know
-        # how/when/why/where/from where these come, but there they are.
-        # Apparently they are ~needed to make it go~.
-        cd $HOME/work/out-of-tree-dirs
-        index-code home.scratch*
-    )
+    index_out_of_tree_locations
 else
     dp_echo "Not indexing non-nvcscope code."
 fi

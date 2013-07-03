@@ -98,6 +98,11 @@ E|medrvapi__ME_src|          hw/ap_tlit1/drv/multiengine/drvapi/
 E|levelsroot__ME_src|        hw/ap_tlit1/diag/testgen/config/levels/
 E|levels__ME_src|            hw/ap_tlit1/diag/testgen/config/levels/tegra/
 E|melevels__ME_src|          hw/ap_tlit1/diag/testgen/config/levels/tegra/
+E|kepler1gklit3man__ME_src|  hw/kepler1_gklit3/manuals/
+E|keplerman__ME_src|         hw/kepler1_gklit3/manuals/
+E|gkman__ME_src|             hw/kepler1_gklit3/manuals/
+E|kepman__ME_src|            hw/kepler1_gklit3/manuals/
+# May end up being too generic.
 E|manuals__ME_src|           hw/kepler1_gklit3/manuals/
 E|devflushref__ME_src|       hw/kepler1_gklit3/manuals/dev_flush.ref
 E|devflush__ME_src|          hw/kepler1_gklit3/manuals/dev_flush.ref
@@ -162,7 +167,7 @@ Ee|scratch3|scr3|sc3|                         /home/scratch.dpanariti_t124_3/
 # Try to use tree vs sandbox
 # Prefer the mnemonic names
 Ee|sandbox1|sbox1|sb1|workspace1|ws1|                   ${scratch2}sb1/sb1hw/
-Ee|apmerge|                                             ${sandbox1}
+Ee|misc|                                                ${sandbox1}
 
 Ee|sandbox2|sbox2|sb2|workspace2|ws2|                   ${scratch0}sb2/sb2hw/
 Ee|engcpu|ecpu|cpue|cpueng|                             ${sandbox2}

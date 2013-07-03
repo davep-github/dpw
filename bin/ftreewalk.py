@@ -428,9 +428,9 @@ class FileTreeWalker:
         self.dir_control_file = dir_control_file or control_files[0]
         self.tree_control_file = tree_control_file or control_files[1]
 
-        dp_io.vcprintf(1, 'control_files>%s<\n', control_files)
-        dp_io.vcprintf(1, 'dir_control_file>%s<\n', self.dir_control_file)
-        dp_io.vcprintf(1, 'tree_control_file>%s<\n', self.tree_control_file)
+        dp_io.vcprintf(2, 'control_files>%s<\n', control_files)
+        dp_io.vcprintf(2, 'dir_control_file>%s<\n', self.dir_control_file)
+        dp_io.vcprintf(2, 'tree_control_file>%s<\n', self.tree_control_file)
 
 
     ##########################################
@@ -687,12 +687,13 @@ if __name__ == "__main__":
     if args == []:
         args = ['.']
 
-    for directory in args:
+    for arg_dir in args:
         if relativize_p:
-            dir = directory
+            directory = arg_dir
         else:
-            dir = os.path.abspath(directory)
-        walker = FileTreeWalker(dir, walk_type,
+            directory = os.path.abspath(arg_dir)
+        dp_io.vcprintf(1, 'Walking >%s<\n', directory)
+        walker = FileTreeWalker(directory, walk_type,
                                 dir_control_file, tree_control_file,
                                 excluded_files_file_obj=excluded_files_file_obj)
 
@@ -706,6 +707,5 @@ if __name__ == "__main__":
                 dp_io.printf('%s\n', file)
         else:
             walker.walk(file_emitter, None)
-
 
     sys.exit(0)

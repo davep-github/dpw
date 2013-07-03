@@ -162,6 +162,7 @@ do
       -f) shift; finder_opts="$finder_opts $1";;
       -s) shift; RC_STOP_DIR=$1;;  # Stop is more likely to change.
       -S) shift; RC_START_DIR=$1;;  # Stop is more likely to change.
+      -R) shift; tflags="$tflags -R ${1}";;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";
