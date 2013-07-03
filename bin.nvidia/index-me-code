@@ -205,6 +205,14 @@ fi
 if ! vtruep "${just_nvcscope_p}"
 then
     EExec -y index-code $EExecDashN_opt $EExecDashV_opt $dirs_of_interest
+    (
+        # Places like home.scratch.traces02.mobile.traces.system.so which do
+        # not reside in a checked out tree. I don't know
+        # how/when/why/where/from where these come, but there they are.
+        # Apparently they are ~needed to make it go~.
+        cd $HOME/work/out-of-tree-dirs
+        index-code home.scratch*
+    )
 else
     dp_echo "Not indexing non-nvcscope code."
 fi

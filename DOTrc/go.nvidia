@@ -171,7 +171,7 @@ Ee|sandbox3|sbox3|sb3|workspace3|ws3|                   ${scratch1}sb3/sb3hw/
 Ee|runlimit|asim|as2fail|                               ${sandbox3}
 
 Ee|sandbox4|sbox4|sb4|workspace4|ws4|                   ${scratch3}sb4/sb4hw/
-Ee|swrwavefull|swrfullwave|swrfw|swrwf|swrlong|         ${sandbox4}
+Ee|swrwavefull|swrfullwave|swrfw|swrwf|swrlong|swrwave| ${sandbox4}
 
 Ee|sandbox5|sbox5|sb5|workspace5|ws5|                   ${scratch2}sb5/sb5hw/
 Ee|generateburstmodetraffic|burst|                      ${sandbox5}

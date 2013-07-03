@@ -507,7 +507,8 @@ the current sandbox is used for defaults, etc."
              ".*"                      ; We're always in the "right" sandbox.
            (if (setq expanded-dest (dp-me-expand-dest "/" sandbox))
                (concat expanded-dest "/")
-             (dp-ding-and-message "Sandbox not found.")
+             (dp-ding-and-message "Sandbox `%s' not found." sandbox)
+             ;; Leave unchanged?
              (dp-set-sandbox-name-and-regexp nil nil)
              (dp-set-frame-title-format)
              (return-from dp-set-sandbox)))
