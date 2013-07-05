@@ -6316,14 +6316,15 @@ not."
 	     (message "using regular server")
 	     (server-start)))))
   
-(defun* dp-start-editing-server (&optional server-fate)
+(defun* dp-start-editing-server (&optional server-fate force-serving-p)
   "Start a server to edit files for remote clients.  Prefer `gnuserv'.
 LEAVE-OR-MAKE-DEAD-P (prefix arg) says nuke any existing child server and 
 start a new one."
   (interactive "P")
   (setq server-fate (cond
                      ;; No arg... choose default *my* way.
-                     ((not server-fate) (if (interactive-p)
+                     ((not server-fate) (if (or force-serving-p 
+                                                (interactive-p))
                                             ;; By hand means to force this
                                             ;; emacs to be a server.
                                             'kill-all-p
@@ -15342,7 +15343,8 @@ Some examples are:
   (dp-meta-minus)
   (dp-pop-window-config nth-config))
 
-(defun dp-split-and-continue-line0 (&optional sep term replacement no-indent-p)
+(defun dp-split-and-continue-line0 (&optional sep term replacement 
+                                    no-indent-p indent-string)
   "Replace regexp SEP with REPLACEMENT. Add TERM to end of original line.
 Continue to end of region if active, else end of original line.
 Like when you have some long var in a Makefile:
@@ -15375,13 +15377,20 @@ SRCS = a.c \
         (replace-match ""))
       ;; !<@todo XXX run command on TAB?
       (unless no-indent-p
-        (indent-for-tab-command)))
+        (if indent-string
+            (insert indent-string)
+          (indent-for-tab-command))))
     (undo-boundary)
     (align (car b&e) (cdr b&e))))
 
 (defun dp-split-and-continue-line (sep term replacement)
   (interactive "sSep[spaces]: \nsterminator[\\]: \nsreplacement[newline]: ")
   (dp-split-and-continue-line0 sep term replacement))
+
+(defun dp-split-and-continue-sh-line ()
+  (interactive)
+  (dp-split-and-continue-line0 " -" " \\" "
+-" nil "    "))
 
 (defun dp-refresh-tags (&optional preserve-files-p)
   "Jump through hoops the kill the fucking tags buffers.

@@ -1,0 +1,36 @@
+#!/bin/sh
+
+echo_id DP_BASHRC_EXECUTION_COMPLETED
+echo_id DP_BASHRC_COMPLETE
+if [ -n "${DP_BASHRC_EXECUTION_COMPLETED-}" ]
+then
+    source script-x
+    set -u
+    progname="$(basename $0)"
+    source eexec
+    eexec_program=$(EExec_parse "$@")
+    for op in $eexec_program
+    do
+      $op
+      shift
+    done
+    unset eexec_program
+    EEXEC=EExec
+    export any_shell_p=t
+else
+    echo 1>&2 "DP environment not available"
+    EEXEC=
+fi
+
+case "$*" in
+    "");;
+    -n) EEXEC=echo; shift;;
+    *) echo 1>&2 "No args are supported. Try again"; exit 1;;
+esac
+# Run a test looking for common stupid errors that should have been fixed long ago.
+
+# any_shell_p=t defaults to true in my environment.
+echo_id any_shell_p
+$EEXEC tgen-run-dot-sh-logged \
+    --hgrep surface_write_read: \
+    --egrep 'Error opening.*\.so:.*lib.*not found|ERROR: cannot aquire /tmp/asim.X|something bad happened'

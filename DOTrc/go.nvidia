@@ -155,6 +155,7 @@ E|ogtest|                               ${t3dtraces}kepler_b/ogtest/
 # Somethings which may as well be cross-sandbox
 E|surfwr__ME_src|            arch/traces/mobile/traces/gpu_multiengine/surface_write_read/
 E|surf__ME_src|              arch/traces/mobile/traces/gpu_multiengine/surface_write_read/
+E|swr__ME_src|               arch/traces/mobile/traces/gpu_multiengine/surface_write_read/
 E|depcpu__ME_src|            arch/traces/mobile/traces/gpu_multiengine/dep_cpu_cpu_gpu_cpu/
 
 #######################################################################
@@ -170,10 +171,10 @@ Ee|sandbox1|sbox1|sb1|workspace1|ws1|                   ${scratch2}sb1/sb1hw/
 Ee|misc|                                                ${sandbox1}
 
 Ee|sandbox2|sbox2|sb2|workspace2|ws2|                   ${scratch0}sb2/sb2hw/
-Ee|engcpu|ecpu|cpue|cpueng|                             ${sandbox2}
+# pushed Ee|engcpu|ecpu|cpue|cpueng|                             ${sandbox2}
+Ee|runlimit|asim|as2fail|                               ${sandbox2}
 
 Ee|sandbox3|sbox3|sb3|workspace3|ws3|                   ${scratch1}sb3/sb3hw/
-Ee|runlimit|asim|as2fail|                               ${sandbox3}
 
 Ee|sandbox4|sbox4|sb4|workspace4|ws4|                   ${scratch3}sb4/sb4hw/
 Ee|swrwavefull|swrfullwave|swrfw|swrwf|swrlong|swrwave| ${sandbox4}

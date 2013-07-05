@@ -17,7 +17,7 @@ unset eexec_program
 [ "${any_shell_p-}" != "${confirmation_response}" ] && {
     test $(basename "${SHELL}") = tcsh || {
         echo "You are not in a c-shell.
-At this time, it is recommended to run tests that environment.
+At this time, it is recommended to run tests in that environment.
 > ssh localhost
 will get a pristine standard environment.
 But if you insist on BASHing your test against the wall, 

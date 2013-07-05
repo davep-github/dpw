@@ -21,7 +21,7 @@ esac
 
 while :
 do
-  read -e -p "Plain make is discouraged in scratch dirs. Continue [N/y]? "
+  read -e -p "Plain make is dangerous in scratch dirs. Continue [N/y]? "
   case "$REPLY" in
       [Nn]|"") EExec -y exit 0;;
       [Yy]) EExec exec  "${REAL_MAKE}" "$@"; exit 2;;

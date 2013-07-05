@@ -226,6 +226,26 @@ Can be set after the first prompting.")
   "Are we using a bash-like shell?"
   (string-match "/\\(ba\\)?sh" (getenv "SHELL")))
 
+(defvar dp-editing-server-cmd-regexp
+  (concat "^\\s-*\\(.?/?\\)?"
+          (dp-concat-regexps-grouped
+           (append (list (regexp-opt '(
+                                       "ec"
+                                       "ef"
+                                       )))
+                   '("p4\\s-+\\(diff\\|change\\)\\|as2\\s-+submit"))
+           nil 'one-around-all-p)
+          "\\(\\s-+\\|$\\)")
+  "Commands that end up invoking an editor. We may want to ensure that
+  instance with the current shell gets to do the editing.")
+
+(defun dp-shell-lookfor-editing-server-command (str)
+  (interactive)
+  (when (and (string-match dp-editing-server-cmd-regexp str)
+             (not (dp-gnuserv-running-p))
+             (y-or-n-p "Start gnuserv?"))
+    (dp-start-editing-server nil 'force-serving)))
+
 (defvar dp-shell-vc-cmds '("cvs" "svn" "git" "hg")
   "Version control commands that can cause problems if they are used and
   there are dirty buffers.")
@@ -250,7 +270,6 @@ Can be set after the first prompting.")
 (defun dp-shell-vc-commit-p (str)
     (or (posix-string-match dp-shell-vc-commit-cmd-regexp str)
         ))
-
 
 (defvar dp-shell-dirty-buffer-cmds
   (concat "^\\s-*\\(.?/?\\)?"
@@ -609,6 +628,18 @@ dir-tracker has become lost.
     )
   (local-set-key [(control ?g)] 'keyboard-quit))
 
+(defun* dp-add-lookfor-hooks(&optional (variant dp-default-variant))
+  (loop for hook in '(dp-shell-lookfor-cls
+                      dp-shell-lookfor-clsx
+                      dp-shell-lookfor-ls
+                      dp-shell-lookfor-shell-max-lines
+                      dp-shell-lookfor-vc-cmd
+                      dp-shell-lookfor-editing-server-command
+                      dp-shell-lookfor-dirty-buffer-cmds
+                      dp-shell-lookfor-*TAGS-changer) 
+    do (add-hook (dp-sls variant '-input-filter-functions)
+                 hook nil t)))
+
 (defun* dp-shell-common-hook (&optional (variant dp-default-variant))
   "Sets up personal shell-like mode bindings.
 Called when shell, inferior-lisp-process, etc. are entered."
@@ -623,15 +654,7 @@ Called when shell, inferior-lisp-process, etc. are entered."
     ;; So I remove any dupes after the first occurrence.
     (dp-nuniqify-lists '(shell-dynamic-complete-functions 
                          comint-dynamic-complete-functions)))
-  (loop for hook in '(dp-shell-lookfor-cls
-                      dp-shell-lookfor-clsx
-                      dp-shell-lookfor-ls
-                      dp-shell-lookfor-shell-max-lines
-                      dp-shell-lookfor-vc-cmd
-                      dp-shell-lookfor-dirty-buffer-cmds
-                      dp-shell-lookfor-*TAGS-changer) 
-    do (add-hook (dp-sls variant '-input-filter-functions)
-                 hook nil t))
+  (dp-add-lookfor-hooks variant)
   ;;;@todo NEEDED??? (setq local-abbrev-table dp-shell-mode-abbrev-table)
   ;;(make-local-variable 'font-lock-defaults)
   ;;(setq font-lock-defaults '(dp-shell-mode-font-lock-keywords t))

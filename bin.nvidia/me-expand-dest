@@ -41,8 +41,13 @@ me_expand_dest()
 #eko '$@' "$@"
 #    IFS="${old_IFS}"
     EExecDashV_p && {
-        echo "1st a:"
-        eko "${a[@]}"
+        if ! [ "${#a}" = 0 ]
+        then
+            echo "1st a:"
+            eko "${a[@]}"
+        else
+            dp_echo2 'variable "a" is not set.'
+        fi
     }
 
     if [ "${#a}" = 0 ] 
@@ -63,6 +68,7 @@ me_expand_dest()
     case "${dest}" in
            .) # Go to the same place in the new sandbox.
               dest="$(dp4-location ${PWD})";;
+           ~) dest=ap;;
            /) dest="sb";;     # Root
     esac
 

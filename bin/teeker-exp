@@ -671,23 +671,27 @@ Split line into chars and feed to ticker.""")
         Ctor_arg_dict["ostream"] = sys.stderr
     else:
         Ctor_arg_dict["ostream"] = ostream
+    tick_interval = app_args.tick_interval
+    if tick_interval == 0:
+        tick_interval = None
+    else:
+        # No ticking --> no samples.
+        if app_args.sample_lines_tick_p:
+            if tick_interval == 1:
+                nth = ""
+            elif tick_interval == 2:
+                nth = "other "
+            elif tick_interval == 3:
+                nth = "third "
+            else:
+                nth =  "%sth " % (tick_interval,)
 
-    if app_args.sample_lines_tick_p:
-        if app_args.tick_interval == 1:
-            nth = ""
-        elif app_args.tick_interval == 2:
-            nth = "other "
-        elif app_args.tick_interval == 3:
-            nth = "third "
-        else:
-            nth =  "%sth " % (app_args.tick_interval,)
-
-        Ctor_arg_dict["init_string"] = "Sampling every %sline\n" % (nth,)
-        Ctor_arg_dict["unit_name"] = 'line'
-        Ctor_arg_dict["comma"] = ""     # Line will end with newline.
+            Ctor_arg_dict["init_string"] = "Sampling every %sline\n" % (nth,)
+            Ctor_arg_dict["unit_name"] = 'line'
+            Ctor_arg_dict["comma"] = ""     # Line will end with newline.
 
     dp_io.cdebug(1, "Final Ctor_arg_dict: %s\n", Ctor_arg_dict)
-    ticker = ticker_constructor(app_args.tick_interval, **Ctor_arg_dict)
+    ticker = ticker_constructor(tick_interval, **Ctor_arg_dict)
     if pipe_mode_p:
         outputStreams.append(pipe_stream)
         ostream.write("\n")

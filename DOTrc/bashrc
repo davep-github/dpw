@@ -153,6 +153,7 @@ dp_suggest() { dp_LOGGER "$DP_SUGGESTION_BOX" "why not:"; }
 # &>> isn't in all bash versions# dp_BITCH() { echo &>> "$@"; dp_bitch "$@"; }
 dp_BITCH() { dp_bitch "$@"; }
 export -f dp_bitch dp_suggest dp_BITCH
+# Do this now so we can use my tools.
 export DAVEP_ENVIRONMENT_p=t
 
 

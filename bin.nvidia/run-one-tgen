@@ -28,6 +28,7 @@ mecd testgen
 : ${latest_out_dir_file_name=latest_out_dir}
 : ${last_and_latest_prefix=}
 : ${hist_file_name=$(basename $0).hist}
+: ${mailto_opt=}
 
 # Usage variable usage:
 Usage_args_info=" <tgen-level-test>..."
@@ -49,6 +50,8 @@ Usage_details="${EExec_parse_usage}
 --wait-status|--status-wait|--ws) --wait and --status.
 --nomail) No status/results mail is sent upon completion.
 --mail) Not --nomail.
+--mail-to|--mailto <addr>) Set email address.
+--mail-me|--mailme) Add myself back in when --mail-to is used.
 --mdiag-more|--md-more) <arg> Speciy mdiag args.
 --dump-images) -dumpImages to trace3d.
 "
@@ -69,6 +72,8 @@ long_options=("wait"
 "mdiag-more:" "md-more:"
 "dump-images"
 "nomail"
+"mail-to:" "mailto:"
+"mail-me" "mailme"
 "all-but-run" "abr" "no-run"
 "axf"
 "axf-bin:" "axf-exe:" "axf-prog:" "--axf-plugin:"
@@ -119,6 +124,8 @@ do
       --status) display_status_p=t;;
       --nomail) mail_opt=;;
       --mail) mail_opt="-mail";;
+      --mail-to|--mailto) shift; mailto_opt="${mailto_opt} -mailto ${1}";;
+      --mail-me|--mailme) mailto_opt="${mailto_opt} -mailto ${USER}";;
       --axf) axf_p=t;;
       --axf-bin|--axf-exe|--axf-prog|--axf-plugin) shift; axf_plugin_bin="${1}"; axf_p=t;;
       --rtl) rtl_p=t;;
@@ -198,6 +205,7 @@ vsetp "$chip_opt}"  && set -- "$@" -chip "${chip_opt}"
 vsetp "$target_opt}"  && set -- "$@" -target "${target_opt}"
 vsetp "$d_opt}" ] && set -- "$@" -d "${d_opt}"
 vsetp "${all_but_run_opt}" && set -- "$@" "${all_but_run_opt}"
+vsetp "${mailto_opt}" && set -- "$@" ${mailto_opt}
 log_prefix="$log_dir"
 
 [ -n "$display_status_p" -a -z "$wait_opt" ] && {
