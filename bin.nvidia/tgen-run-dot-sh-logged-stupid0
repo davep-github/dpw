@@ -1,9 +1,8 @@
 #!/bin/sh
 
-echo_id DP_BASHRC_EXECUTION_COMPLETED
-echo_id DP_BASHRC_COMPLETE
 if [ -n "${DP_BASHRC_EXECUTION_COMPLETED-}" ]
 then
+    # My environment.
     source script-x
     set -u
     progname="$(basename $0)"
@@ -20,17 +19,24 @@ then
 else
     echo 1>&2 "DP environment not available"
     EEXEC=
-fi
-
-case "$*" in
+    case "$*" in
     "");;
     -n) EEXEC=echo; shift;;
     *) echo 1>&2 "No args are supported. Try again"; exit 1;;
 esac
+
+fi
+
 # Run a test looking for common stupid errors that should have been fixed long ago.
+# And some of mine as well.
+# Check for a (gdb) prompt to let me know if I'm running a test that I've set
+# up to run under gdb. When this happens the test hangs because gdb is
+# waiting for input. I could just send a 'run' command, but I prefer to know
+# and exit so I can do it right.
 
 # any_shell_p=t defaults to true in my environment.
 echo_id any_shell_p
 $EEXEC tgen-run-dot-sh-logged \
     --hgrep surface_write_read: \
-    --egrep 'Error opening.*\.so:.*lib.*not found|ERROR: cannot aquire /tmp/asim.X|something bad happened'
+    --egrep 'Error opening.*\.so:.*lib.*not found|ERROR: cannot aquire /tmp/asim.X|something bad happened|RT_FAIL|\(gdb\)' \
+    "$@"

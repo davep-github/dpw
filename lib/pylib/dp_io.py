@@ -793,6 +793,33 @@ def y_or_n_p(default='n', fmt="", *args):
         ans = default
     return ans in "yY"
 
+class Unbuffered_file_duck(object):
+    def __init__(self, file=None, name=None, *open_args):
+        self.name = name
+        self.opened_p = False
+        if self.name:
+            # Warn if file non None?
+            file = open(name, *open_args)
+            self.opened_p = True
+        self.file = file
+
+    def write(self, arg):
+        self.file.write(arg)
+        self.file.flush()
+
+    def close(self):
+        if self.opened_p:
+            self.file.close()
+            self.opened_p = False
+        else:
+            self.file.flush()
+
+    def __getattr__(self, attr):
+        return getattr(self.file, attr)
+
+def unbuffer_a_file(file_obj):
+    return os.fdopen(file_obj.fileno(), 'w', 0)
+
 #############################################################################
 #############################################################################
 #############################################################################

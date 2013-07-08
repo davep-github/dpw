@@ -621,7 +621,9 @@ Split line into chars and feed to ticker.""")
         sys.exit(1)
 
     if app_args.unbuffered_out_p:
-        sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+        dp_io.unbuffer_a_file(sys.stdout)
+
+    sample_ostream = dp_io.Unbuffered_file_duck(sys.stdout)
 
     for a in app_args.output_files:
         dp_io.cdebug(2,"log file name>%s<\n", a)
@@ -815,6 +817,6 @@ Split line into chars and feed to ticker.""")
             else:
                 # Let the ticker class do what it will.
                 tick = None
-            ticker(tick=tick, tick_prefix=tick_prefix)
+            ticker(tick=tick, tick_prefix=tick_prefix, ostream=sample_ostream)
         line_number += 1
     print

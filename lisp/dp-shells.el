@@ -232,6 +232,8 @@ Can be set after the first prompting.")
            (append (list (regexp-opt '(
                                        "ec"
                                        "ef"
+                                       "ec-diff"
+                                       "ef-diff"
                                        )))
                    '("p4\\s-+\\(diff\\|change\\)\\|as2\\s-+submit"))
            nil 'one-around-all-p)

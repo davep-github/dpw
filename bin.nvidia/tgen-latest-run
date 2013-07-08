@@ -29,6 +29,7 @@ long_options=("test-name:" "testname:" "name:" "tn:"
 "no-cd" "stay-put" "." "no-mecd-testgen"
 "realpath"
 "base-dir" "root-dir" "base" "root"
+"test-type:" "type:" "out:"
 )
 
 source dp-getopt+.sh
@@ -46,6 +47,7 @@ do
       --no-cd|--stay-put|--.|--no-mecd-testgen) no_cd=t;;
       -b|--base-dir|--root-dir|--base|--root) print_base_dir_p=t;;
       -r|--realpath) printor=realpath;;
+      --test-type|--type|--out) shift; some_path_component="${1}";;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -91,7 +93,7 @@ else
 fi
 
 #some_path_component=$(echo $(cat last_out_dir)/tests/*)
-some_path_component=$(echo ${latest_out_dir}/tests/*)
+: ${some_path_component=$(echo ${latest_out_dir}/tests/*)}
 case "${some_path_component}" in
     *\ *) {
              echo "Multiple test type dirs exist. Don't know which to use:"

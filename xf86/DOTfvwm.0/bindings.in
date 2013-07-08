@@ -364,4 +364,7 @@ Key Space      A    	4       Function "window_ops_func"
 Key s          A        4       StickAcrossPages
 Key s          A        4S      StickAcrossDesks
 
+# Maximalizations of the horizontal and vertical variety.
+Key h          A        4       Maximize 0 90
+Key w          A        4       Maximize 100 0
 

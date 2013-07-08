@@ -7,6 +7,9 @@ def Ticker_printf(ticker, fmt, *args, **kwargs):
     if kwargs.get("just_flush_p"):
         ticker.ostream.flush()
         return
+    ticker_ostream = kwargs.get("ticker_ostream")
+    if not ticker_ostream:
+        ticker_ostream = ticker.ostream
     fprintf(ticker.ostream, fmt, *args)
     if kwargs.get("flush_p"):
         ticker.ostream.flush()
@@ -94,7 +97,7 @@ class Ticker_t(object):
         pass
 
     def __call__(self, reset_counter=False, set_n=False,
-                 increment=None, tick=None, tick_prefix=""):
+                 increment=None, tick=None, tick_prefix="", ostream=None):
         if reset_counter is not False:
             self.reset_counter()
         if set_n is not False:

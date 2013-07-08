@@ -1,4 +1,4 @@
-personal_ws-1.1 en 226 
+personal_ws-1.1 en 228 
 BioShock
 Googlegear
 pty
@@ -44,14 +44,15 @@ nanites
 Cirith
 SunOS
 nepomuk
+gdb
 Tegra
 config
 cvs
 DSL
 Amperex
 systray
-VFS
 svn
+VFS
 SVR
 DVD
 reverb
@@ -142,6 +143,7 @@ XBOX
 stderr
 hominem
 withywindle
+OaOO
 FreeBSD
 ifdefs
 namespaces
