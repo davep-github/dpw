@@ -245,7 +245,7 @@ Can be set after the first prompting.")
   (interactive)
   (when (and (string-match dp-editing-server-cmd-regexp str)
              (not (dp-gnuserv-running-p))
-             (y-or-n-p "Start gnuserv?"))
+             (y-or-n-p "Start gnuserv? "))
     (dp-start-editing-server nil 'force-serving)))
 
 (defvar dp-shell-vc-cmds '("cvs" "svn" "git" "hg")

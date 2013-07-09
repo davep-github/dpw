@@ -64,6 +64,10 @@
                 path)))
 
 
+;;
+;; @todo XXX Make this mode specific? How many other languages to I use that
+;; have these kinds of relationships?]
+
 (defvar dp-c++-extensions '("cpp" "cxx" "c++" "cc" "tcc" "c")
   "All known -- to me -- c++ extensions.
 And a plain old C extension.")
@@ -73,11 +77,21 @@ And a plain old C extension.")
 
 (defvar dp-cf-inc-search-path '("../include" "../h" "./inc" "./include" "./h"
                                 "./inc" "../../include" "../../h"
-                                "../../inc" "../common" "./common" "."))
+                                "../../inc" "../common" "./common" ".")
+  "Where to look for a source file's corresponding include file.")
 
+
+;; 
+;; Some stupid layouts have a structure like this:
+;; include/<some-file>.h
+;; <some-file>/<some-file>.cpp
+;; src to inc is a function of file name.
+;; Ah, for closures or currying.
+;; ../../%s ??? Won't work with a file named %s. Boo hoo.
 (defvar dp-cf-src-search-path '("../src" "../source" "../code" "../../src"
-                                "../../source" "../../code" "./src" "./source"
-                                "./code" ".." "."))
+                                "../../source" "../../code" "./src" 
+                                "./source" "./code" ".." ".")
+  "Where to look for an include file's corresponding source file.")
 
 (defstruct dp-cf-file-info
   ;;
@@ -120,7 +134,7 @@ And a plain old C extension.")
 (defun* dp-ext-to-cf-info (ext &optional (fci-list dp-cf-map-to-list))
   (loop for fci in fci-list do
     (let ((l (or (and (dp-cf-file-info-map-to-func fci)
-                      (funcall dp-cf-map-to-func))
+                      (funcall (dp-cf-file-info-map-to-func fci)))
                  (dp-cf-file-info-map-to-list fci))))
       (when (assoc ext l)
         (return (list (cadr (assoc ext l)) ext fci l))))))

@@ -6246,6 +6246,7 @@ you've added enough info for set-auto-mode to figure it out.."
   (marker-position (process-mark (get-buffer-process (or buffer
 							 (current-buffer))))))
 
+;; Called before process is killed.
 (defun dp-gnuserv-shutdown-hook ()
   (dmessage "in `dp-gnuserv-shutdown-hook'")
   (dp-finalize-editing-server 'just-do-it-p))
@@ -6290,7 +6291,9 @@ to see if it's alive as well."
 ;;
 (defun dp-finalize-editing-server (&optional just-do-it-p)
   (when (or just-do-it-p (dp-gnuserv-running-p))
-    (dp-set-frame-title-format)
+    ;; The title formatter uses `dp-gnuserv-running-p' so it can mistakenly
+    ;; set the server indication in the title.
+    (dp-set-frame-title-format :force-no-server-p just-do-it-p)
     (shell-command-to-string (format "rm -f %s" 
                                      (dp-editing-server-ipc-file)))))
 
@@ -15690,16 +15693,18 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
   (apply 'setenv var rest)
   (message "%s: %s" var (getenv var)))
 
-(defun* dp-make-frame-title-format (&key gnuserv-running-p)
+(defun* dp-make-frame-title-format (&key gnuserv-running-p force-no-server-p)
   (format "[%s] %s%s" 
           (or (dp-current-sandbox-name) "No SB")
-          (if (or gnuserv-running-p (dp-gnuserv-running-p))
+          (if (and (not force-no-server-p)
+                   (or gnuserv-running-p (dp-gnuserv-running-p)))
               "Serv/"
             "")
           dp-frame-title-format))
 
-(defun dp-set-frame-title-format ()
-  (setq frame-title-format (dp-make-frame-title-format)))
+(defun dp-set-frame-title-format (&rest r)
+  (setq frame-title-format 
+        (apply 'dp-make-frame-title-format r)))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;;

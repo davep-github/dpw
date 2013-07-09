@@ -10,17 +10,10 @@ opath = os.path
 #ranking_strings = os.environ.get("GLOBAL_TAGS_RANKING_STRINGS")
 # split on ' ' or : or... quoting will be hard.
 
-Top_ranking_regexp_strings = [
-    "hw/ap_tlit1/drv/drvapi/runtest_surface",
-    "hw/ap_tlit1/drv/drvapi/",
-    "hw/ap_tlit1/drv/multiengine/",
-    "hw/ap_tlit1/drv/chiplib/chiplib2/",
-    "hw/ap_tlit1/drv/",
-    "hw/tools/mods/trace_3d/plugin/",
-    ]
+Top_ranking_regexps = [] 
 
-Top_ranking_regexps = [ re.compile(regexp)
-                        for regexp in Top_ranking_regexp_strings ]
+def add_top_ranking_regexp_strings(regexps):
+    Top_ranking_regexps.extend([ re.compile(regexp) for regexp in regexps ])
 
 ## Genericize. elisp-devel has a good model based on xcscope's db scheme.
 

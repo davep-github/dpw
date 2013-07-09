@@ -724,7 +724,7 @@ Tried in order given and first match wins."
        ((dp-expand-sandbox-rel-abbrev))
        ((dp-expand-p4-abbrev))
        ((dp-expand-work-rel-abbrev))
-       ((dp-expand-abbrev-from-tables tables))
+       ((apply 'dp-expand-abbrev-from-tables tables))
        (t
         ;; Fall back to an unadorned sb relative name.
         (dp-funcall-if dp-fallback-expand-abbrev-fun tables)))

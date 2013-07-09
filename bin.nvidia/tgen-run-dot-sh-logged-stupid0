@@ -38,5 +38,6 @@ fi
 echo_id any_shell_p
 $EEXEC tgen-run-dot-sh-logged \
     --hgrep surface_write_read: \
-    --egrep 'Error opening.*\.so:.*lib.*not found|ERROR: cannot aquire /tmp/asim.X|something bad happened|RT_FAIL|\(gdb\)' \
+    --egrep 'Error opening.*\.so:.*lib.*not found|ERROR: cannot aquire /tmp/asim.X|something bad happened|\(gdb\)' \
+    --hgrep 'RT_FAIL' \
     "$@"

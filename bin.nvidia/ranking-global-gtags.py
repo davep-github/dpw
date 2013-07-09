@@ -7,6 +7,18 @@ opath = os.path
 
 Out_of_tree_dbs = ["/home/dpanariti/work/out-of-tree-dirs/GTAGS"]
 
+Top_ranking_regexp_strings = [
+    "hw/ap_tlit1/drv/drvapi/runtest_surface",
+    "hw/ap_tlit1/drv/drvapi/",
+    "hw/ap_tlit1/drv/multiengine/drvapi/cpu",
+    "hw/ap_tlit1/drv/multiengine/",
+    "hw/ap_tlit1/drv/chiplib/chiplib2/",
+    "hw/ap_tlit1/drv/",
+    "hw/tools/mods/trace_3d/plugin/",
+    ]
+
+add_top_ranking_regexp_strings(Top_ranking_regexp_strings)
+
 def main(argv):
     import getopt
     filter_p = os.environ.get("BEA_FILTER")

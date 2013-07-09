@@ -87,6 +87,92 @@ CTOR = CTOR_t()
 
 parse_debug = 0
 
+class Grep_item_t(object):
+    def __init__(self, regexp, prefix="", suffix="", ostream=None,
+                 timestamp_p=False, max_matches_before_exit=0,
+                 max_matches_exit_code=0,
+                 case_convention=None):
+        if type(regexp) == types.StringType:
+            self.original_regexp_string = regexp
+            regexp = re.compile(regexp)
+        else:
+            self.original_regexp_string = None
+        self.d_regexp = regexp
+        if ostream == None:
+            ostream = default_match_ostream
+        self.d_ostream = ostream
+        self.d_prefix = prefix
+        self.d_suffix = suffix
+        self.d_timestamp_p = timestamp_p
+        self.d_max_matches_before_exit = max_matches_before_exit
+        self.d_num_matches = 0
+        self.d_max_matches_exit_code = max_matches_exit_code
+        if case_convention is None:
+            case_convention = dp_utils.re_compile_case_convention(regexp)
+
+        def max_matched_hit(self, exit_code=None):
+            if exit_code is None:
+                exit_code = self.d_max_matches_exit_code
+            sys.exit(exit_code)
+            
+        def display_match(self, line, line_number, prefix=None, suffix=None,
+                          timestamp_p=None, ostream=None):
+            if prefix is None:
+                prefix = self.d_prefix
+            if suffix is None:
+                suffix = self.d_suffix
+            if timestamp_p is None:
+                timestamp_p = self.d_timestamp_p
+            if timestamp_p:
+                ts = dp_time.std_timestamp() + ": "
+            else:
+                ts = ""
+            if ostream == None:
+                ostream = self.d_ostream
+            
+            dp_io.fprintf(ostream, "%s %sline: %d, >%s< %s",
+                          prefix, ts, line_number, line, suffix)
+
+
+    def match(selfline, line_number, prefix=prefix, suffix=suffix,
+              timestamp_p=timestamp_p, ostream=ostream):
+        self.display_match(line, line_number, prefix=prefix,
+                           suffix=suffix, timestamp_p=timestamp_p,
+                           ostream=ostream)
+        self.d_num_matches += 1
+        if self.max_matches_before_exit >= self.d_num_matches:
+            self.max_matches_hit()
+
+    def grep(self, line, line_number, prefix=None, suffix=None,
+             timestamp_p=False, ostream=None):
+        m = self.d_regexp.search(line)
+        if m:
+            self.match(line, line_number, prefix=prefix,
+                       suffix=suffix, timestamp_p=timestamp_p,
+                       ostream=ostream)
+
+class HGrep_item_t(Grep_item_t):
+    def __init__(self, regexp, prefix=None, suffix=None, ostream=None,
+                 timestamp_p=None):
+        if prefix is None:
+            prefix = DEFAULT_MATCH_PREFIX
+        if suffix is None:
+            suffix = DEFAULT_MATCH_SUFFIX
+        Grep_item_t.__init__(self, regexp, prefix=prefix, suffix=suffix,
+                             ostream=ostream, timestamp_p=timestamp_p)
+
+class EGrep_item_t(Grep_item_t):
+    def __init__(self, regexp, prefix=None, suffix=None, ostream=None,
+                 timestamp_p=None, max_matches_before_exit=None):
+        if prefix is None:
+            prefix = DEFAULT_MATCH_PREFIX
+        if suffix is None:
+            suffix = DEFAULT_MATCH_SUFFIX
+        if max_matches_before_exit is None:
+            max_matches_before_exit = app_args.max_error_regexp_matches_before_exit
+        Grep_item_t.__init__(self, regexp, prefix=prefix, suffix=suffix,
+                             ostream=ostream, timestamp_p=timestamp_p)
+        
 def signal_handler(signal, frame):
     Caught_signals.append("%s" % (signal,))
 
@@ -257,17 +343,6 @@ class Ctor_arg_action_twiddle(Ctor_arg_action):
         add_to_dict_action(self, App_arg_dict, parser, namespace,
                            ticker_lib.Twiddle_ticker_t,
                            option_string, CTOR)
-
-
-def display_match(ostream, line, line_number, prefix="", suffix="",
-                  timestamp_p=False):
-    if timestamp_p:
-        ts = dp_time.std_timestamp() + ": "
-    else:
-        ts = ""
-    dp_io.fprintf(ostream, "%s %sline: %d, >%s< %s",
-                  prefix, ts, line_number, line, suffix)
-    app_args.match_ostream.flush()
 
 def dump_matching_and_error_lines(all_output_streams,
                                   matching_lines,
@@ -703,8 +778,7 @@ Split line into chars and feed to ticker.""")
     # Help speed up the loop.
     compiled_regexps = []
     compiled_error_regexps = []
-    if app_args.tgen_errors is not None:
-        app_args.error_regexp_patterns.append(app_args.tgen_errors)
+    app_args.error_regexp_patterns.append(app_args.tgen_errors)  # Can be []
 
     for regexp in app_args.regexp_patterns:
         compiled_regexps.append(dp_utils.re_compile_case_convention(regexp))
