@@ -120,5 +120,9 @@ At nVIDIA, the answer is HELL YES!")
 
 (setq dp-fallback-expand-abbrev-fun 'dp-nvidia-me-expand-preceding-word)
 
+(defun dp-p4-active-here ()
+  (and (not dp-p4-global-disable-detection-p)
+       (dp-sandbox-file-p (buffer-file-name))))
+
 
 (provide 'dp-dot-emacs.nvidia.el)

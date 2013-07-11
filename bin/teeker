@@ -53,6 +53,8 @@ DEFAULT_MATCH_INDICATOR = "@"
 DEFAULT_MATCH_PREFIX = DEFAULT_MATCH_INDICATOR * 3
 DEFAULT_MATCH_SUFFIX = DEFAULT_MATCH_INDICATOR * 3
 DEFAULT_INDICATOR_SEPARATOR = "|"
+DEFAULT_MAX_ERROR_MATCHES = 0
+DEFAULT_LINES_AFTER = -1                # None
 
 tick_counter_prefix_format = "%s%s"
 tick_counter_count_format = "%8d"
@@ -349,7 +351,7 @@ if __name__ == "__main__":
                          dest="sample_lines_tick_prefix", default="th-line>",
                          action=Ctor_arg_action,
                          help="Prefix for sampled lines.")
-    oparser.add_argument("-A", "--no-clobber",
+    oparser.add_argument("--no-clobber",
                          dest="no_clobber_p", default=False,
                          action="store_true",
                          help="Don't clobber existing files. Exit.")
@@ -513,7 +515,7 @@ Split line into chars and feed to ticker.""")
                          "--ere", "--egrep",
                          dest="error_regexp_patterns",
                          action="append", default=[],
-                         help="Grep for these patterns and treat as errors.")
+                         help="Grep for these patterns and treat as errors. --max-errors tells how many error matches to accept before exiting. The default is %s where 0 means no limit." % (DEFAULT_MAX_ERROR_MATCHES,))
     oparser.add_argument("--project-log-errors",
                          default=None,
                          const=os.environ.get("TEEKER_PROJECT_LOG_ERROR_REGEXP", None),
@@ -531,8 +533,13 @@ Split line into chars and feed to ticker.""")
     oparser.add_argument("--max-errors", "--max-errs", "--max-error-hits",
                          "--meh", "--emax", "--maxe",
                          dest="max_error_regexp_matches_before_exit",
-                         type=int, default=0, # == 0 --> unlimited.
+                          # == 0 --> unlimited.
+                         type=int, default=DEFAULT_MAX_ERROR_MATCHES,
                          help="Max error regexp matches before exit.")
+    oparser.add_argument("--lines-after", "-A",
+                         dest="num_lines_to_print_after",
+                         type=int, default=DEFAULT_LINES_AFTER,
+                         help="Print this many more lines if possible (ignoring filters and ticking) when exiting. Default is: %s. (< 0) means none")
     oparser.add_argument("-q", "--cat-like", "--copy",
                          nargs=0,
                          action=App_arg_action_catlike,
@@ -707,7 +714,7 @@ Split line into chars and feed to ticker.""")
         app_args.error_regexp_patterns.append(app_args.tgen_errors)
 
     for regexp in app_args.regexp_patterns:
-        compiled_regexps.append(dp_utils.re_compile_case_convention(regexp))
+        compiled_regexps.append(dp_utils.re_compile_with_case_convention(regexp))
 
     highlight_grep_matches_p = app_args.highlight_grep_matches_p
     grepping_for_errors_p = len(app_args.error_regexp_patterns) != 0
@@ -718,7 +725,7 @@ Split line into chars and feed to ticker.""")
     for regexp in app_args.error_regexp_patterns:
         dp_io.cdebug(1, "Error regexp: %s\n", regexp)
         compiled_error_regexps.append(
-            dp_utils.re_compile_case_convention(regexp))
+            dp_utils.re_compile_with_case_convention(regexp))
 
     sampled_line_prefix = app_args.sample_lines_tick_prefix or ""
     dp_io.cdebug(2, "sampled_line_prefix>%s<\n", sampled_line_prefix)
@@ -727,7 +734,22 @@ Split line into chars and feed to ticker.""")
     max_hits = app_args.max_regexp_matches_before_exit
     max_error_matches = app_args.max_error_regexp_matches_before_exit
     ticker.flush()
+    final_exit_p = False
+    limit_exit_p = False
+
+    def loop_fini():
+        if app_args.match_summary_p and (matching_lines or error_lines):
+            dump_matching_and_error_lines(outputStreams + [sys.stdout],
+                                          matching_lines,
+                                          error_lines)
+        ticker.fini()
+
+    num_lines_to_print_after = app_args.num_lines_to_print_after
+    max_output_bytes_before_exit = app_args.max_output_bytes_before_exit
+    trailing_lines = -1
+    trailing_line_prefix = ""
     while True:
+        #print "top: trailing_lines:", trailing_lines
         readline_failed_p = False
         input_line = ""
         try:
@@ -735,32 +757,41 @@ Split line into chars and feed to ticker.""")
         except Exception, e:
             dp_io.eprintf("readline() failed: %s", e)
             readline_failed_p = True
-	if ((not input_line)
-            or
-            readline_failed_p
-            or
-            Caught_signals
-            or
-            (grepping_for_errors_p and max_error_matches and
-             (len(error_lines) >= max_error_matches))
-            or
-            ((app_args.max_output_bytes_before_exit is not False)
-             and
-             (total_bytes_written > app_args.max_output_bytes_before_exit))
-            or
-            (max_hits and (len(matching_lines) >= max_hits))):
-            if app_args.match_summary_p and (matching_lines or error_lines):
-                dump_matching_and_error_lines(outputStreams + [sys.stdout],
-                                              matching_lines,
-                                              error_lines)
-            ticker.fini()
-            break
+        final_exit_p = ((not input_line)
+                        or readline_failed_p
+                        or Caught_signals)
+
+        limit_exit_p = ((grepping_for_errors_p and max_error_matches and
+                         (len(error_lines) >= max_error_matches))
+                        or ((max_output_bytes_before_exit is not False)
+                            and
+                            (total_bytes_written > max_output_bytes_before_exit))
+                        or (max_hits and (len(matching_lines) >= max_hits)))
+        # *exit* condition
+        # go when (not limit_exit_p) or trailing_lines > 0 is True
+        # exit limit_exit_p and (not trailing_lines > 0) is True
+        if (final_exit_p or limit_exit_p):
+            if final_exit_p or trailing_lines == 0:
+                loop_fini()
+                break
+            if trailing_lines < 0:
+                dp_io.printf("\n" + "=== Post Limit Lines ===" + "\n")
+                trailing_lines = num_lines_to_print_after
+            else:
+                trailing_lines -= 1
+            #print "2: trailing_lines:", trailing_lines
+            #trailing_line_prefix = "Trailing line: "
+        input_line = trailing_line_prefix + input_line
+        #print "3: trailing_lines:", trailing_lines
         for o in outputStreams:
             # Since this was motivated by a disk space issue, count *all*
             # writes.
             total_bytes_written += len(input_line)
             o.write(input_line)
-
+        if trailing_lines > 0:
+            sys.stdout.write(input_line)
+        if limit_exit_p:
+            continue
         for regexp in compiled_regexps:
             if regexp.search(input_line):
                 matching_lines.append((input_line, line_number))

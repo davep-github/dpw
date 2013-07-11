@@ -56,6 +56,10 @@
 ## use the IgnoreModifiers command.
 ##
 ## Modifier 4 works as the Windwoes Key.
+##
+## Keynames:
+## /usr/include/X11/keysymdef.h
+
 
 ##------------------------------------------------------------------------------
 
@@ -277,9 +281,6 @@ Key      Tab       A     CM      WindowList Root c c NoGeometry, OnlyListSkip, S
 ## Pager Bindings
 ##------------------------------------------------------------------------------
 
-## Keynames:
-## /usr/include/X11/keysymdef.h
-
 Key            F1         A      4     GotoDeskAndPage 1 0 0
 Key            F2         A      4     GotoDeskAndPage 2 0 0
 Key            F3         A      4     GotoDeskAndPage 3 0 0
@@ -331,6 +332,7 @@ Key  e   A     C4 EditingServer
 Key Tab          A      M       Next (AcceptsFocus, CurrentPage, !Iconic) FocusRaiseAndStuff
 Key Tab          A      SM      Prev (AcceptsFocus, CurrentPage, !Iconic) FocusRaiseAndStuff
 Key Escape       A      C       WindowList Mouse -1p -1p CurrentDesk
+Key Escape       A      4       WindowList Mouse -1p -1p CurrentDesk
 
 ##
 ## If on root, the focused window is raised. I like that.

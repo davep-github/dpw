@@ -21,6 +21,9 @@ unset eexec_program
 #	sawfish-client -f dp-raise-local-emacs > /dev/null
 #fi
 
+#
+# This needs to pass the current editing server as a parameter.
+# Or xemacs needs to make sure the kill gnuserve hook is called.
 findprog -s FvwmCommandS && {
     FvwmCommand 'EditingServer'
     exit

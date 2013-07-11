@@ -633,7 +633,7 @@ abbrev is expanded.")
          (length len-or-string)
        len-or-string)))
 
-(defun dp-expand-abbrev-from-tables (&rest tables)
+(defun dp-expand-abbrev-from-tables (&optional tables)
   "Try to expand an abbrev using TABLES or `dp-expand-abbrev-default-tables'.
 Tried in order given and first match wins."
   (interactive)
@@ -686,22 +686,28 @@ Tried in order given and first match wins."
                               (and expansion0 (read expansion0))
                             expansion0))
                (is-list-p (and expansion (listp expansion)))
-               (exp (if is-list-p (car expansion) expansion)))
+               ;; ??? Senior moment I think I do the read in case the
+               ;; expansion is a list, which is only legal in my tables. I
+               ;; need to be able to have multi-word expansions, so if this
+               ;; isn't a list then the original expansion0 is what I want.
+               (exp (if is-list-p (car expansion) expansion0)))
           (if (not expansion)
               (setq dp-expand-abbrev-state nil)
             (backward-delete-char (length abbrev-name))
             ;;(insert (format "from table>%s<\n" table)) format %s will
-            ;; stringify anything. exp can be a symbol.  BUG. expansions
-            ;; with spaces need to be quoted because the read only returns
-            ;; the first word.  However, if they come from the default
-            ;; table (table is nil) then the (read expansion0) isn't done
-            ;; and the encompassing escaped quotes remain. I can't remember
-            ;; why I only do the read if the expansion comes from a
-            ;; non-default (nil) table.  I say symbol in the comment and
-            ;; there is a abbrev-symbol function which I may have used at
-            ;; one time.  The bottom line is that the way it works now, if
-            ;; the expansion comes from the default map then the outer
-            ;; quotes remain, otherwise things are copacetic.
+            ;; stringify anything. exp can be a symbol.  
+            ;; XXX @todo BUG. expansions with spaces need to be quoted
+            ;; because the read only returns the first word.  However, if
+            ;; they come from the default table (table is nil) then the (read
+            ;; expansion0) isn't done and the encompassing escaped quotes
+            ;; remain. I can't remember why I only do the read if the
+            ;; expansion comes from a non-default (nil) table.  Perhaps
+            ;; because only my tables can have expansions which are lists? I
+            ;; say symbol in the comment and there is an `abbrev-symbol'
+            ;; function which I may have used at one time.  The bottom line
+            ;; is that the way it works now, if the expansion comes from the
+            ;; default map then the outer quotes remain, otherwise things are
+            ;; copacetic.
             (setq exp (format "%s%s" exp (dp-abbrev-suffix)))
             (insert exp)
             (setq dp-expand-abbrev-state
@@ -717,14 +723,14 @@ Tried in order given and first match wins."
 (defvar dp-fallback-expand-abbrev-fun nil
   "Call this if expanding an abbrev the standard way fails.")
 
-(defun dp-expand-abbrev (&rest tables)
+(defun dp-expand-abbrev (&optional tables)
   (interactive)
   (unless
       (cond
        ((dp-expand-sandbox-rel-abbrev))
        ((dp-expand-p4-abbrev))
        ((dp-expand-work-rel-abbrev))
-       ((apply 'dp-expand-abbrev-from-tables tables))
+       ((dp-expand-abbrev-from-tables tables))
        (t
         ;; Fall back to an unadorned sb relative name.
         (dp-funcall-if dp-fallback-expand-abbrev-fun tables)))

@@ -487,7 +487,10 @@
      dp-manual)
     (("phr" "Prop_handler_ret_t")
      dp-manual)
-    (("faff" "find . -type f -print0 | xargs -r0 fgrep")
+    (("faf" "find . -type f -print0 | xargs -r0 fgrep "
+      ;;Usually it's fgrep or egrep.
+      ;;"find . -type f -print0 | xargs -r0 grep "
+      "find . -type f -print0 | xargs -r0 egrep ")
      dp-go)
     (("cttoi" "come to think of it")
      dp-manual)

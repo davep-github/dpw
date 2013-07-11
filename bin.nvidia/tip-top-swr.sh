@@ -83,6 +83,6 @@ ${EZEC} ./bin/system_run \
     -o "${logfile}" \
     -noClean \
     -traces "${trace_dir}" \
-    -mods "-top -cpu_rtl -pitch -zt_count_0 -i ${hdr_file} -o TestDir/${testname} -plugin '${testname} num_elements=3 default_door no_check_mem_reg'" \
+    -mods "-top -cpu_rtl -pitch -zt_count_0 -i ${hdr_file} -o TestDir/${testname} -plugin '${testname} num_elements=3 num_lines=1 default_door no_check_mem_reg'" \
     "${testname}${testext}" \
     -v top_peatrans_gpurtl

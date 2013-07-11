@@ -235,6 +235,18 @@ editing servers via `dp-editing-server-ipc-file'.")
 ;; links, so I set it up here and let it be overridden in a spec-macs.
 (setq visible-bell t)
 
+(defvar dp-p4-global-disable-detection-p nil
+  "Turn off ALL perforce detection in find file hooks.")
+
+(defun dp-p4-active-here ()
+  "Determine if this file needs to be worried about perforce. (Abstract to any SCM).
+Override in spec-macs.
+Allow us to limit perforce checks to certain dirs. At nVIDIA, a simple p4
+opened can take 10+ minutes. Checking all files for p4-ed-ness adds
+intolerable delays to files not in perforce."
+  ;; let it be on unless forced off.
+  t)
+
 (defvar dp-most-specific-spec-macs nil
   "The most specific dp-dot-emacs*.el file we `load'ed.")
 
@@ -384,8 +396,10 @@ the init files.")
 ;; for debugging
 (defvar dp-orig-auto-mode-alist auto-mode-alist)
 
+;; Prevents these from being indexed, etc. along with other "real" source
+;; files.
 (defvar dp-default-mode-transparent-r/w-suffix-regexp
-          "wip\\|exp\\|dev\\|WIP\\|EXP\\|DEV"
+          "wip\\|exp\\|dev\\|WIP\\|EXP\\|DEV\\hack\\|HACK\\|play\\|PLAY"
 "In development, works in progress, being developed.")
 
 ;; !<@todo XXX things like save-2 don't work, but save2 do. The [] expr is
@@ -401,8 +415,11 @@ the init files.")
           ;; Old but broken or out-of-date.
           "\\|stale\\|bad\\|b0rked\\|broken?\\|hosed\\|fubar"
           "\\|STALE\\|BAD\\|B0RKED\\|BROKEN?\\|HOSED\\|FUBAR"
-          "\\|merged?\\|obs\\|olde?\\|orig"
-          "\\|MERGED?\\|OBS\\|OLDE?\\|ORIG")
+          ;; Perforce uses .original.[0-9]+ to save modified files.  I, too,
+          ;; like to copy a file to a .orig before hacking it up, although
+          ;; I've come to use RCS instead.
+          "\\|merged?\\|obs\\|olde?\\|orig\\(inal\\)?"
+          "\\|MERGED?\\|OBS\\|OLDE?\\|ORIG\\(INAL\\)?")
           
   "Read only part of dp-default-mode-transparent-suffix-regexp (q.v.)")
 
@@ -479,23 +496,24 @@ things like c.cxx-no-index to prevent those files from being indexed
 w/tags, cscope, etc.")
 
 (defconst dp-auto-mode-alist-changes
-  (append dp-mode-transparent-regexps
-          '(
-            ("\\.txt$" . text-mode)
-            ("snd.[0-9]*" . text-mode)  ; elm mail files
-            ("\\.ol$" . outline-mode)   ; outlines
-            ("\\.outline$". outline-mode) ; ibid
-            ("\\.pdb$" . pdb-mode)      ; perl database mode.
-            ("\\.sawfishrc$" . sawfish-mode) ; sawfish lisp files (librep)
-            ;; sawfish lisp files (librep)
-            ("\\.sawfish/custom$" . sawfish-mode)
-            ("\\.jl$" . sawfish-mode)   ; sawfish lisp files (librep)
-            ;; my .rc dir files (mostly bash login stuff)
-            ;; @todo XXX revist blanket application of sh mode.
-            ("/\\.rc/[^/]+$" . shell-script-mode)
-            ("\\.jxt$" . dp-journal-mode) ; dp Journal files.
-            ("\\.g$" . antlr-mode)
-            )))
+  (dp-add-list-to-list 
+   'dp-mode-transparent-regexps
+   '(
+     ("\\.txt$" . text-mode)
+     ("snd.[0-9]*" . text-mode)         ; elm mail files
+     ("\\.ol$" . outline-mode)          ; outlines
+     ("\\.outline$". outline-mode)      ; ibid
+     ("\\.pdb$" . pdb-mode)             ; perl database mode.
+     ("\\.sawfishrc$" . sawfish-mode)   ; sawfish lisp files (librep)
+     ;; sawfish lisp files (librep)
+     ("\\.sawfish/custom$" . sawfish-mode)
+     ("\\.jl$" . sawfish-mode)          ; sawfish lisp files (librep)
+     ;; my .rc dir files (mostly bash login stuff)
+     ;; @todo XXX revist blanket application of sh mode.
+     ("/\\.rc/[^/]+$" . shell-script-mode)
+     ("\\.jxt$" . dp-journal-mode)      ; dp Journal files.
+     ("\\.g$" . antlr-mode)
+     )))
 
 ;; @todo make this -vvvv use that -^^^^
 (dp-add-list-to-list 'auto-mode-alist dp-auto-mode-alist-changes)

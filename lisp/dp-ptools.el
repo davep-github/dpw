@@ -537,6 +537,7 @@ An RO sandbox is one that is not the current one or has
 modification to the wrong file when several sandboxes \(NOT good but
 necessary) are in play.  For additional safety, all sandboxes are read only
 if there is no current one set."
+  (setq filename (expand-file-name filename))
   (dmessage "dp-sandbox-read-only-p, filename>%s<" filename)
   (dmessage "dp-sandbox-read-only-p, regexp>%s<" (dp-current-sandbox-regexp))
   ;; If in another sb (in sb and not in current sb)

@@ -33,3 +33,4 @@ fgrep -q "$hn" "$host_file" && {
 
 EExecDashN_p && host_file=/dev/null
 EExec echo "$hn" >> "$host_file"
+banner 'restart gnuserv!'

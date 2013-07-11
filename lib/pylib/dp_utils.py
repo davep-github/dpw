@@ -395,9 +395,9 @@ def invert_dict(indict):
 ## All lowercase --> case insensitive match.
 ## Any uppercase --> case sensitive match
 ##
-def re_case_convention_flags():
+def re_case_convention_flags(regexp_string):
     flags=0
-    if regexp.islower():
+    if regexp_string.islower():
         flags = re.IGNORECASE
     return flags
 
@@ -410,7 +410,7 @@ def re_case_convention_flags():
 ## Allow flags to be specified to simplify calling code. It prevents the need
 ## for the "if flags is None" everywhere.
 ## 
-def re_compile_with_case_convention(regexp, flags=None):
+def re_compile_with_case_convention(regexp_string, flags=None):
     if flags is None:
-        flags = re_case_convention_flags()
-    return re.compile(regexp, flags)
+        flags = re_case_convention_flags(regexp_string)
+    return re.compile(regexp_string, flags)

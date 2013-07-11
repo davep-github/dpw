@@ -234,17 +234,37 @@ Can be set after the first prompting.")
                                        "ef"
                                        "ec-diff"
                                        "ef-diff"
+                                       "gitcia"
                                        )))
-                   '("p4\\s-+\\(diff\\|change\\)\\|as2\\s-+submit"))
+                   ;; diff needs to be here because I use ec-diff which uses
+                   ;; emacs.
+                   '("p4\\s-+\\(diff\\|change\\|client\\)\\|as2\\s-+submit"))
            nil 'one-around-all-p)
           "\\(\\s-+\\|$\\)")
   "Commands that end up invoking an editor. We may want to ensure that
   instance with the current shell gets to do the editing.")
 
+(defvar dp-editing-server-cmd-regexp-exceptions
+  (concat "^\\s-*\\(.?/?\\)?"
+          (dp-concat-regexps-grouped
+           (append 
+            '("gitcia\\s-+.*-m")
+            ;; diff needs to be here because I use ec-diff which uses
+            ;; emacs.
+            '("p4\\s-+\\(client\\s-+.*-[dois]\\|change\\s-+.*-[odist]\\|submit\\s-+.*-[i]\\)"))
+           nil 'one-around-all-p)
+          "\\(\\s-+\\|$\\)")
+  "Commands that don't end up invoking an editor even though other commands
+  that look like them (and are recognized by `dp-editing-server-cmd-regexp')
+  do.")
+ 
 (defun dp-shell-lookfor-editing-server-command (str)
   (interactive)
   (when (and (string-match dp-editing-server-cmd-regexp str)
              (not (dp-gnuserv-running-p))
+             (not (string-match 
+                   dp-editing-server-cmd-regexp-exceptions
+                   str))
              (y-or-n-p "Start gnuserv? "))
     (dp-start-editing-server nil 'force-serving)))
 
@@ -254,7 +274,8 @@ Can be set after the first prompting.")
 
 (defvar dp-shell-vc-commit-cmds
   '("gitci" "gitcia")
-  "Some aliases or extended functionality versions of checkin commands.")
+  "Some aliases or extended functionality versions of checkin commands.
+No regexps allowed. This will be processed by `regexp-opt'")
 
 (defvar dp-shell-vc-commit-cmd-regexps
   (append
