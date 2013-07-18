@@ -32,7 +32,8 @@ vunsetp "${sb_root}" && {
 } 1>&2
 
 # Snip off the root:
-rel_dir=$(normpath $(echo "${dir}" | sed -r "s!(^${sb_root})(.*$)!\2!"))
+rel_dir=$(echo "${dir}" | sed -r "s!(^${sb_root})(.*$)!\2!")
+vsetp "${rel_dir}" && rel_dir=$(normpath "${rel_dir}")
 
 [ "${dir}" = "${rel_dir}" ] && {
     echo "$progname: dir[$dir] is not in this sandbox[$sb_root]"

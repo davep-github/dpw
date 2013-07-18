@@ -357,7 +357,7 @@ AddToMenu   Module-Popup
 + "A&nimate"              RestartModule FvwmAnimate
 + "&Backer"               RestartModule FvwmBacker
 + "B&anner"               RestartModule FvwmBanner
-+ "B&uttons Bar"          RestartModuleByAlias FvwmButtons BarButtons BarButtons
++ "B&uttons Bar"          RestartModuleByAlias FvwmButtons CurrentDesktopBarButtons CurrentDesktopBarButtons
 + "&Mini button bar"      RestartModuleByAlias FvwmButtons MiniButtons MiniButtons
 + "&WMaker buttons"       RestartModuleByAlias FvwmButtons WinMakerAppButtons WinMakerApp*
 + "Fvwm &Console"         Module FvwmConsole -sb
@@ -380,7 +380,7 @@ AddToMenu   Kill-Module-Popup
 + "A&nimate"            KillModule FvwmAnimate
 + "&Backer"             KillModule FvwmBacker
 + "B&anner"             KillModule FvwmBanner
-+ "B&utton bar"         All (BarButtons) Close
++ "B&utton bar"         All (CurrentDesktopBarButtons) Close
 + "&Mini button bar"    All (MiniButtons) Close
 + "&WMaker buttons"     All (WinMakerApp*) Close
 + "Fvwm &Console"       KillModule FvwmConsole
@@ -597,7 +597,7 @@ AddToMenu   Banner-Settings
 
 DestroyMenu Buttons-Settings
 AddToMenu   Buttons-Settings
-+ "&Buttons Bar" ChangeButtonsOn 'FvwmButtons BarButtons'
++ "&Buttons Bar" ChangeButtonsOn 'FvwmButtons CurrentDesktopBarButtons'
 + "&Wharf"      ChangeButtonsOn  FvwmWharf
 + "&None"        ChangeButtonsOff
 

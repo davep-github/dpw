@@ -4426,3 +4426,89 @@ Monday June 24 2013
 
 
 
+
+========================
+Thursday July 11 2013
+--
+
+(apply 'format "hello" nil)
+"hello"
+
+
+;;installed (defun dp-format-with-date (fmt &rest args)
+;;installed   "Like `format' except %%S will be replace with the current date in yyyy-mm-dd format."
+;;installed   (interactive)
+;;installed   (with-case-folded nil
+;;installed     (when (string-match "%%S" fmt)
+;;installed       (setq fmt (replace-match (time-stamp-yyyy-mm-dd) nil t fmt))))
+;;installed   (apply 'format fmt args))
+
+(dp-format-with-date "%%S.txt")
+"2013-07-11.txt"
+(dp-format-with-date "YADDA-%%S.txt")
+"YADDA-2013-07-11.txt"
+
+"YADDA-2013-07-11.txt"
+"YADDA-2013-07-11.txt"
+(dp-format-with-date "%%s.txt")
+"%s.txt"
+
+"%%s.txt"
+
+"2013-07-11.txt"
+(dp-format-with-date "%S.txt")
+
+"%S.txt"
+
+
+
+
+
+
+"%%S.txt"
+
+"%S.txt"
+
+
+(defun dp-nv-status-report ()
+  (interactive)
+  (let ((date-str (time-stamp-yyyy-mm-dd)))
+    (find-file (format "%sstatus-%s.txt"
+                       (getenv "status")
+                       date-str))
+    (when (dp-buffer-empty-p)
+      (insert-file (format "%stemplate" (getenv "status")))
+      (while (re-search-forward "@DATE@" nil t)
+        (replace-match date-str))
+      (goto-char (point-min))
+      (re-search-forward "0)")
+      (end-of-line)
+      (newline-and-indent)
+      (indent-relative))))
+dp-nv-status-report
+
+
+
+========================
+Wednesday July 17 2013
+--
+"^\\(\\s-*\\)\\(\\S-+\\)\\(\\s-+\\)\\(\\S-+\\)\\(\\s-*$\\)"
+(defvar dp-p4-client-spec-font-lock-keywords
+  (list
+   ;;        1          2          3          4          5
+   (cons "^\\(\\s-*\\)\\(\\S-+\\)\\(\\s-+\\)\\(\\S-+\\)\\(\\s-*$\\)"
+         (list
+          (list 2 'dp-remote-buffer-face nil)
+          (list 4 'dp-journal-selected-face nil)))))
+(cl-pp dp-p4-client-spec-font-lock-keywords)
+
+(("^\\(\\s-*\\)\\(\\S-+\\)\\(\\s-+\\)\\(\\S-+\\)\\(\\s-*$\\)" (2 dp-remote-buffer-face
+                                                                 nil)
+  (4 dp-journal-selected-face nil)))nil
+
+
+
+
+
+
+

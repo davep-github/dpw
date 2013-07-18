@@ -24,6 +24,11 @@
 ;; 2) M-x name-last-kbd-macro
 ;; 3) (format-kbd-macro 'name) on name from step 2.
 ;; 4) Add a `defalias' like below using the string from step 3.
+;;template (defalias '<name>
+;;template   (read-kbd-macro
+;;template    (concat "keys..."
+;;template            " more keys.")))
+
 (defalias 'dp-var-to-initializer    
   (read-kbd-macro
    (concat "C-a C-s ; RET <backspace> , <left> M-a C-r SPC <right>"
@@ -87,11 +92,22 @@
 
 (defalias 'dp-fix-class-dox
   (read-kbd-macro 
-   (concat "C-a C-s @class RET C-T <up> <C-right> <C-backspace> "
-           "class 2*<C-s> RET <C-backspace> brief SPC")))
+   (concat "C-a C-s @class RET C-T <up> <C-right> <C-backspace>"
+           " class 2*<C-s> RET <C-backspace> brief SPC")))
 
 (defalias 'dp-split-command-args
   (read-kbd-macro "C-s SPC - RET <left> RET <left> \\ <down> C-a 3*SPC"))
+
+(defalias 'dp-cpp-remove-inclass-body
+  (read-kbd-macro 
+   (concat "C-s ) RET C-s { RET <left> M-a M-[ <right>"
+           " DEL <C-backspace> ; <down> C-a")))
+
+(defalias 'dp-go-mk-alias
+  (read-kbd-macro
+   (concat "C-a C-s | RET M-a C-s | RET <left> M-o ESC C-s SPC [^ SPC ] RET"
+           " <left> C-s C-w C-y C-s RET M-a 2*<C-r> RET DEL ${ M-y }"
+           " <down> C-a")))
 
 ;;;;;;; end of kbd macros ;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -15705,6 +15721,14 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
 (defun dp-set-frame-title-format (&rest r)
   (setq frame-title-format 
         (apply 'dp-make-frame-title-format r)))
+
+(defun dp-format-with-date (fmt &rest args)
+  "Like `format' plus replace %%S with the current date in yyyy-mm-dd format."
+  (interactive)
+  (with-case-folded nil
+    (when (string-match "%%S" fmt)
+      (setq fmt (replace-match (time-stamp-yyyy-mm-dd) nil t fmt))))
+  (apply 'format fmt args))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;;

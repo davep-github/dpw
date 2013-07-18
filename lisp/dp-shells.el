@@ -265,7 +265,7 @@ Can be set after the first prompting.")
              (not (string-match 
                    dp-editing-server-cmd-regexp-exceptions
                    str))
-             (y-or-n-p "Start gnuserv? "))
+             (y-or-n-p "Start gnuserv in this XEmacs instance? "))
     (dp-start-editing-server nil 'force-serving)))
 
 (defvar dp-shell-vc-cmds '("cvs" "svn" "git" "hg")

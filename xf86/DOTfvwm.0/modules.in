@@ -20,27 +20,27 @@ Style FvwmBanner NoTitle, Sticky, StaysOnTop, WindowListSkip, CirculateSkip
 *FvwmBannerTimeout 2
 
 ##------------------------------------------------------------------------------
-##------------------ FvwmButtons: BarButtons
+##------------------ FvwmButtons: CurrentDesktopBarButtons
 ##------------------------------------------------------------------------------
 
-Style BarButtons  NoTitle, NoHandles, Sticky, WindowListSkip,\
-                   BorderWidth 4, CirculateSkip
+Style CurrentDesktopBarButtons  NoTitle, NoHandles, Sticky, BorderWidth 4, \
+                                WindowListSkip, CirculateSkip
 
-DestroyModuleConfig BarButtons: *
-*BarButtons: Fore Black
-*BarButtons: Back grey57
-*BarButtons: Font -adobe-helvetica-bold-r-*-*-10-*-*-*-*-*-*-*
-*BarButtons: Geometry 100x100+14+0
-*BarButtons: Columns 2
+DestroyModuleConfig CurrentDesktopBarButtons: *
+*CurrentDesktopBarButtons: Fore Black
+*CurrentDesktopBarButtons: Back grey57
+*CurrentDesktopBarButtons: Font -adobe-helvetica-bold-r-*-*-10-*-*-*-*-*-*-*
+*CurrentDesktopBarButtons: Geometry 100x100+14+0
+*CurrentDesktopBarButtons: Columns 2
 ## Define the buttons to use.....
-*BarButtons: (2x2, Swallow "FvwmPagerPager" 'FvwmPager FvwmPagerPager * *')
+*CurrentDesktopBarButtons: (2x2, Swallow "FvwmPagerPager" 'FvwmPager FvwmPagerPager * *')
 
 ##------------------------------------------------------------------------------
 ##------------------ FvwmButtons: MiniButtons
 ##------------------------------------------------------------------------------
 
 Style "MiniButtons"  NoTitle,NoHandles,Sticky,WindowListSkip,BorderWidth 0,\
-	CirculateSkip
+                     CirculateSkip
 
 DestroyModuleConfig MiniButtons*
 *MiniButtons: Fore Black
@@ -310,7 +310,7 @@ DestroyModuleConfig FvwmPagerPager: *
 *FvwmPagerPager: BalloonFore black
 *FvwmPagerPager: BalloonBack bisque
 ## Change the size of the entire pager... e.g. when put into a panel.
-## See FvwmButtons: BarButtons for resizing the single pager button.
+## See FvwmButtons: CurrentDesktopBarButtons for resizing the single pager button.
 *FvwmPagerPager: Geometry 850x79+5000+5000
 ##WIN 1
 ##*FvwmPagerPager: WindowColors white grey51 white Blue4

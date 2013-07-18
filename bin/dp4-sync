@@ -34,21 +34,28 @@ teeer()
     EExec -y tee "$@"
 }
 
+tee_cat()
+{
+    # Ignore arguments.
+    cat
+}
+
 : ${save_args_p=t}
 : ${one_by_one_p=}
 : ${p4_sync_dash_n=}
 : ${p4_sync_dash_f=}
 : ${send_mail_on_completion_p:=t}
 : ${tee_append_opt=}
+: ${stay_in_cwd_p=}
 
 tee_func=teekerer_sample
 teeker_opts=
 teeker_interval=100
 std_options=""
-option_str="nvqtsk:i:fN1o"
+option_str="nvqtsk:i:fN1oc"
 long_options=("teeker-opts:" "tee-func:" "teeker-interval:"
-    "p4-sync-dash-n" "4n" "p4n" "p4-n"
-    "sample" "tee" "teeker"
+    "p4-sync-dash-n" "p4-sync-n" "4n" "p4n" "p4-n"
+    "sample" "tee" "teeker" "cat"
     "one-by-one"
     "mail" "notify-on-completion" "email-on-completion" "yopp" "send-mail"
     "no-log-file"
@@ -62,9 +69,11 @@ do
       -n) EXEC=echo; EExecDashN; tee_func=teeer;; # Don't actually execute stuff
       -v) VERBOSE="echo $progname: "; EExecVerbose;;
       -q) VERBOSE=":"; EExecQuiet;;
+      -c|--cat) tee_func=tee_cat;;
       -t|--tee) tee_func=teeer;;
       -k|--teeker-opts) shift; teeker_opts="$1";;
       -i|--teeker-interval) shift; teeker_interval="$1";;
+      -.) stay_in_cwd_p=t;;
       -f) p4_sync_dash_f="-f";;
       -N|--p4-sync-dash-n|--4n|--p4n|--p4-n) p4_sync_dash_n=-n;;
       -1|-o|--no-log-file) kwa_log_file=/dev/null; 
@@ -90,8 +99,17 @@ done
 : ${kwa_log_base:=${progname}}
 : ${kwa_log_dir:=${kwa_log_root}/${kwa_log_base}-$(dp-std-timestamp)}
 : ${kwa_log_file:=${kwa_log_dir}/${progname}.out}
+
 EExec -y mkdir -p "${kwa_log_dir}"
-EExec -y cd "${sandbox_root}"
+
+# Command line argument implies we're sync'ing a subset so stay where we are.
+vsetp "$*" && {
+    stay_in_cwd_p=t
+}
+
+vfalsep "${stay_in_cwd_p}" && {
+    EExec -y cd "${sandbox_root}"
+}
 EExec_verbose_msg "Sync'ing in >$(pwd)<"
 
 EExec_verbose_msg p4 command: p4 sync ${p4_sync_dash_n} ${p4_sync_dash_f} "$@" 
@@ -116,6 +134,8 @@ $@" >| "${save_args_file}"
     fi
     
 } 2>&1 | EExec -y $tee_func "${kwa_log_file}"
+
+# Show resolve status.
 {
     echo
     # Let me know if anything needs merging. -n --> just show problems.

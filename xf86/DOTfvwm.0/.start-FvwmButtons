@@ -1,1 +1,1 @@
-AddToFunc StartFunction I FvwmButtons BarButtons
+AddToFunc StartFunction I FvwmButtons CurrentDesktopBarButtons

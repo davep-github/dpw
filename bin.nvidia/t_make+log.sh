@@ -331,7 +331,7 @@ EExec mkdir -p "${log_dir}"
       # Shift it off and pass "$@" to get_mods
           [yY]) get_mods_p=t;;
           [nN]|"") get_mods_p=;;
-          [Cc]) get_mods_p=t; build_me_p=t; get_asim_p=t;;  # "Continue" do this and the rest.
+          [CcAa]) get_mods_p=t; build_me_p=t; get_asim_p=t;;  # "Continue" do this and the rest.
           [Qq]) dp_exit 0;;
           *) continue;;
       esac

@@ -1,31 +1,6 @@
 #!/bin/sh
 
-if [ -n "${DP_BASHRC_EXECUTION_COMPLETED-}" ]
-then
-    # My environment.
-    source script-x
-    set -u
-    progname="$(basename $0)"
-    source eexec
-    eexec_program=$(EExec_parse "$@")
-    for op in $eexec_program
-    do
-      $op
-      shift
-    done
-    unset eexec_program
-    EEXEC=EExec
-    export any_shell_p=t
-else
-    echo 1>&2 "DP environment not available"
-    EEXEC=
-    case "$*" in
-    "");;
-    -n) EEXEC=echo; shift;;
-    *) echo 1>&2 "No args are supported. Try again"; exit 1;;
-esac
-
-fi
+source maybe-davep
 
 # Run a test looking for common stupid errors that should have been fixed long ago.
 # And some of mine as well.
@@ -37,6 +12,7 @@ fi
 # any_shell_p=t defaults to true in my environment.
 echo_id any_shell_p
 $EEXEC tgen-run-dot-sh-logged \
+    ${maybe_davep_dash_n} \
     --hgrep surface_write_read: \
     --egrep 'Error opening.*\.so:.*lib.*not found|ERROR: cannot aquire /tmp/asim.X|something bad happened|\(gdb\)' \
     --hgrep 'RT_FAIL' \

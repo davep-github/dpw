@@ -342,7 +342,11 @@ Key y          A        4       Iconify
 Key Left       A        4       GotoDesk -1
 Key Right      A        4       GotoDesk 1
 
-Key d          A        4       exec dpxx
+Key d          A        4C      exec dpxx
+
+# Can't get this to work... Modules must be special.
+#Key d          A        4       PageNextXXXCirculateSkipOK *CurrentDesktopBarButtons*
+#Key d          A        4S      PageNextXXXCirculateSkipOK *DeskerPanelButtons*
 
 Key f          A        4       PageNextFarmTerm
 Key f          A        4M      DeskNextFarmTerm
@@ -362,8 +366,10 @@ Key v          A	4	Move
 #Key c         A        C4      FvwmCpp /home/dpanariti/.fvwm/.fvwm2rc
 
 # Needs a mouse move after pressing. Fix Me.
-Key Space      A    	4       Function "window_ops_func"
-Key s          A        4       StickAcrossPages
+Key Space      A    	4       Function "window_ops_func_I"
+
+# Save unmodified `s' for more common operations.
+Key s          A        4C      StickAcrossPages
 Key s          A        4S      StickAcrossDesks
 
 # Maximalizations of the horizontal and vertical variety.

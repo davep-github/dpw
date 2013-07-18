@@ -173,6 +173,11 @@ EExecVerbose ()
 
 }
 
+EExecDashV()
+{
+    EExecVerbose "$@"
+}
+
 EExecVerbose_p()
 {
     EExecDashV_p

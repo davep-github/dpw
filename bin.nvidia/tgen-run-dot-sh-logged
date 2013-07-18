@@ -14,12 +14,15 @@ do
 done
 unset eexec_program
 
+EExecVerbose
+
 : ${p4_clib_dir:=//hw/ap_tlit1/clib/Linux}
 : ${log_file_base_name:=dot-sh}
- # I'm done with bash because the quoting sucks beyond suckage:
- # --egrep 'ERROR: cannot aquire /tmp/asim.X' 
- # --egrep 'something bad happened'}
-: ${teeker_options=--slog -Z9 --ts --hg}
+# I'm done with bash because the quoting sucks beyond suckage:
+# --egrep 'ERROR: cannot aquire /tmp/asim.X' 
+# --egrep 'something bad happened'}
+# --cflush-every=-1 --> flush to zip every line.
+: ${teeker_options=--slog -Z9 --ts --hg -i100 --cflush-every=-1}
 : ${testname=}
 
 check_test()
@@ -72,6 +75,5 @@ echo "Finish writing ldd check!"
 # E.g. ./surface_write_read_no_smmu_bar1.sh 2>&1 | teeker --slog -Z9 --ts --grep 'surface_write_read:' --hg dot-sh --egrep 'ERROR: cannot aquire /tmp'; email-yopp
 
 EExec "${testname}" 2>&1 | EExec teeker ${teeker_options} "$@" "${log_file_base_name}"
-
 rc="$?"
 EExec email-yopp "$progname: \"${testname} $@\" is done. RC: $rc"

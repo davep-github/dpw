@@ -82,7 +82,6 @@ AddToFunc Resize-or-Raise-or-Shade M Resize
 ## This one focuses and then 'warps' to the window.
 ##------------------------------------------------------------------------------
 
-
 DestroyFunc FocusAndWarp
 AddToFunc FocusAndWarp I Focus
 +                      I WarpToWindow 1 1
@@ -132,6 +131,10 @@ DestroyMenu "window_ops_func"
 AddToFunc "window_ops_func" "C" PopUp Window-Ops2
 +              "M" PopUp Window-Ops2
 +              "D" Delete
+
+DestroyMenu "window_ops_func_I"
+AddToFunc "window_ops_func_I"
++ I PopUp Window-Ops2
 
 ##------------------------------------------------------------------------------
 ## Functions to restart Modules and Restart/Kill FvwmButtons by aliases
@@ -197,19 +200,19 @@ AddToFunc   ButtonsOff
 + I Exec echo "# Do not start $0" > $FVWM_USERDIR/.start-$0
 
 ##------------------------------------------------------------------------------
-## Functions for choosing the "Big" buttons Wharf or BarButtons
+## Functions for choosing the "Big" buttons Wharf or CurrentDesktopBarButtons
 ##------------------------------------------------------------------------------
 
 DestroyFunc ChangeButtonsOn
 AddToFunc  ChangeButtonsOn
-+ I All (BarButtons) Close
++ I All (CurrentDesktopBarButtons) Close
 + I KillModule FvwmWharf
 + I Exec echo "AddToFunc StartFunction I $0" > $FVWM_USERDIR/.start-FvwmButtons
 + I $0
 
 DestroyFunc ChangeButtonsOff
 AddToFunc  ChangeButtonsOff
-+ I All (BarButtons) Close
++ I All (CurrentDesktopBarButtons) Close
 + I KillModule FvwmWharf
 + I Exec echo "# No Buttons Bar" > $FVWM_USERDIR/.start-FvwmButtons
 + I $0
@@ -449,10 +452,22 @@ AddToFunc CycleWindows
 ##    echo 'SetEnv NDIRECTION Prev'`
 ##+ I Schedule 700 134000 SetEnv DIRECTION $[NDIRECTION]
 
+DestroyFunc PageNextXXX
+AddToFunc PageNextXXX
++ I Next  ("$0", CurrentPage) FocusRaiseAndStuff
+
+DestroyFunc PageNextXXXCirculateSkipOK
+AddToFunc PageNextXXXCirculateSkipOK
++ I Next  ("$0", CurrentPage, CirculateSkip) FocusRaiseAndStuff
+
+DestroyFunc DeskNextXXX
+AddToFunc DeskNextXXX
++ I Next  ("$0", CurrentDesk) FocusRaiseAndStuff
+
 ## FlipFocus???
 DestroyFunc NextEmacs
 AddToFunc NextEmacs
-+ I Next  ("*XEmacs@*-xterm*", CurrentPage) FocusRaiseAndStuff
++ I PageNextXXX "*XEmacs@*-xterm*"
 
 DestroyFunc AnyNextEmacs
 AddToFunc AnyNextEmacs
@@ -460,7 +475,7 @@ AddToFunc AnyNextEmacs
 
 DestroyFunc PageNextFarmTerm
 AddToFunc PageNextFarmTerm
-+ I Next  ("@KONST_FARM_PATTERN@", CurrentPage) FocusRaiseAndStuff
++ I PageNextXXX @KONST_FARM_PATTERN@
 
 DestroyFunc DeskNextFarmTerm
 AddToFunc DeskNextFarmTerm

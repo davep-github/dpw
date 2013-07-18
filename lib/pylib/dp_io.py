@@ -565,21 +565,24 @@ def print_vars(*namelist, **kargs):
 
 ###############################################################
 # Sigh. Compatibility.
-# Just because if FOSS doesn't mean everyone can/will/has update[ed].
+# Just because it's FOSS doesn't mean everyone can/will/has update[ed].
 # The popen family was just fine. IMO, subprocess, in this context, adds
-# nothing.
+# nothing. Just recast popen in terms of subprocess.
 if Have_subprocess_module_p:
-    def bq(cmd):
+    def bq(cmd, nuke_newline_p=False):
         """Run a command, capturing stdout and stderr, mixed, into a string.
         Returns that string. CMD is passed straight thru to Popen.  Reads all
         output at once, so beware capturing huge outputs."""
         p = subprocess.Popen(cmd, shell=True,
                              stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                              stderr=subprocess.STDOUT, close_fds=True)
-        return p.stdout.read()          # Joined w/stderr.
+        ret = p.stdout.read()            # Joined w/stderr.
+        if nuke_newline_p:
+            ret = ret[:-1]
+        return ret
 
     ###############################################################
-    def bq_lines(cmd):
+    def bq_lines(cmd, nuke_newline_p=False):
         """Run a command, capturing stdout and stderr, into 2 lists of
         strings.  Returns those lists.  Reads all output at once, so beware
         capturing huge outputs."""
@@ -587,14 +590,23 @@ if Have_subprocess_module_p:
                              stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                              stderr=subprocess.STDOUT, close_fds=True)
         ret = p.stdout.readlines()
+        if nuke_newline_p:
+            ret = [ r[:-1] for r in ret ]
         return ret
 else:
-    def bq(cmd):
-        return os.popen(cmd).read()
+    def bq(cmd, nuke_newline_p=False):
+        ret = os.popen(cmd).read()
+        if nuke_newline_p:
+            ret = ret[:-1]
+        return ret
 
     ###############################################################
-    def bq_lines(cmd):
-        return os.popen(cmd).readlines()
+    def bq_lines(cmd, nuke_newline_p=False):
+        ret = os.popen(cmd).readlines()
+        if nuke_newline_p:
+            ret = [ r[:-1] for r in ret ]
+        return ret
+        
 
 ###############################################################
 def bq_lines_blah(cmd):

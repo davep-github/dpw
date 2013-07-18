@@ -26,8 +26,8 @@ do
   shift
 done
 
-[ -z "${no_run_p}" ] && {
-    [ "${any_shell_p}" != "${confirmation_response}" ] && {
+[ -z "${no_run_p-}" ] && {
+    [ "${any_shell_p-}" != "${confirmation_response}" ] && {
         test $(basename "${SHELL}") = tcsh || {
             echo "You are not in a c-shell.
 At this time, it is recommended to run tests that environment.
@@ -83,6 +83,6 @@ ${EZEC} ./bin/system_run \
     -o "${logfile}" \
     -noClean \
     -traces "${trace_dir}" \
-    -mods "-top -cpu_rtl -pitch -zt_count_0 -i ${hdr_file} -o TestDir/${testname} -plugin '${testname} num_elements=3 num_lines=1 default_door no_check_mem_reg'" \
+    -mods "-top -cpu_rtl -pitch -zt_count_0 -i ${hdr_file} -o TestDir/${testname} -plugin '${testname} num_elements=3 num_lines=1 default_door no_check_mem_reg no_basic_swr'" \
     "${testname}${testext}" \
     -v top_peatrans_gpurtl

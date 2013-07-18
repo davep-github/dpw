@@ -9,6 +9,8 @@
 (defvar p4-make-backup-files t
   "Should emacs make backup files when editing files under p4 control")
 
+(defvar dp-font-lock-depot-prefix-regexp "\\(?:hw\\|arch\\|dev\\)")
+
 ;; Pattern used to highlite P4 ChangeSets
 ;; Some of these faces are defined in add-log.el.
 (defvar p4-changeset-font-lock-keywords
@@ -37,7 +39,7 @@ This mode uses tabs, so the line too long regexp fails.")
 
 ; Pattern used to highlite P4 Clients
 (defvar p4-client-font-lock-keywords
-  '(;; Comments
+  `(;; Comments
     ("^#.*"
      (0 'font-lock-comment-face))
     ;; Client Specification Details
@@ -45,9 +47,12 @@ This mode uses tabs, so the line too long regexp fails.")
      (1 'font-lock-keyword-face)
      (2 'font-lock-variable-name-face))
     ;; Files in ChangeSet
-    ("\\(//eng/.*/...\\)[ \t]*\\(//.*/...\\)"
-     (1 'font-lock-constant-face)
-     (2 'font-lock-string-face))
+    (
+     ,(format "\\(-?\\)\\(//%s/.*/...\\)[ \t]*\\(//.*/...\\)" 
+              dp-font-lock-depot-prefix-regexp)
+     (1 'font-lock-reference-face)
+     (2 'font-lock-constant-face)
+     (3 'font-lock-string-face))
     ) "Regexp used to colorize p4-mode clients")
 
 ; Configure p4 for xxdiff

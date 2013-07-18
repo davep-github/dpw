@@ -183,3 +183,15 @@ def list_intersection(l1, l2):
         if le in l2:
             ret[le] = 1
     return ret.keys()
+
+def maybe_add_to_list(in_list, element):
+    """Add element to LIST iff ELEMENT is not in LIST."""
+    try:
+        in_list.index(element)
+        pass
+    except ValueError:
+        in_list.append(element)
+
+def maybe_add_list_to_list(in_list, add_from_list):
+    for element in add_from_list:
+        maybe_add_to_list(in_list, element)

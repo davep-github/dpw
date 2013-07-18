@@ -1142,4 +1142,55 @@ dpcheck()
     return 0                    # Faster than `true'?
 }
 
+cd_newest()
+{
+    local pushd_p
+    local cd_command=cd
+    local num_dotdots=0
+
+    for i in "$@"
+    do
+      case "$1" in
+          -g|--go|-p|--pushd) cd_command=pushd;;
+          -[0-9]*) num_dotdots=$((0 - ${1}));;
+          *) break;;
+      esac
+      shift
+    done
+    
+    local newest=$(pwd-newest... "$@")
+    vsetp "${newest}" && {
+        "${cd_command}" "${newest}"
+        while ((num_dotdots--))
+        do
+          cd ..
+        done
+    }
+}
+
+go_newest()
+{
+    cd_newest --go "$@"
+}
+
+sed_ap_tree()
+{
+    case "$1" in
+        -|0) newap="ap";;
+        ap*) newap="${1}"; shift;;
+        *) newap="ap_${1}"; shift;
+    esac
+    sed_path '/ap[^/]*/' "/${newap}/"
+}
+
+exchange_ap_tree()
+{
+    local op="${1}"
+    shift
+    "${op}" $(sed_ap_tree "$@")
+}
+export -f exchange_ap_tree
+alias xap='exchange_ap_tree g'
+alias cdap='exchange_ap_tree cd'
+
 true

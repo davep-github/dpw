@@ -58,7 +58,9 @@ index_out_of_tree_locations()
 
 : ${ap_dir:=}
 : ${send_mail_on_completion:=t}
-: ${nvcscope_p=t}
+# Existence of different dirs is one thing, but different names for the same
+# fooking dirs is fooking stoopid. So I can't use it. What a crock.
+: ${nvcscope_p=}
 # At the least, just_nvcscope_p prevents me needing to know the nvcscope
 # option name to make symlinks.
 : ${just_nvcscope_p=}
@@ -211,6 +213,12 @@ export EXCLUDE_PAT="/plex/"
 
 if vtruep "${nvcscope_p}"
 then
+    # St00p1d god damn mother f00ck1ng b00llsh1t a55hole 1d1ocy!
+    # One tree:
+    # //hw/ap_tlit1/drv/multiengine/framework/utils/loader/stream_loader.cpp
+    # Another:
+    # //hw/ap_tlit1/drv/multiengine/framework/utilities/loader/stream_loader.cpp
+    # H0w can any thing be s0 fncking stnpid?
     ap_hw_path=$(dp4-reroot "$p4_root" "${ap_hw_p4_path}")
     #echo_id ap_hw_p4_path
     #echo_id ap_hw_path

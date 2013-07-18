@@ -4,12 +4,17 @@ import sys, os, re, subprocess
 import find_up
 opath = os.path
 
+rgg_log_file = open("/home/dpanariti/log/rgg.log", "a")
+
 ## Make this environment specific
 ## In order of rank.
 ## Something like this.
 #ranking_strings = os.environ.get("GLOBAL_TAGS_RANKING_STRINGS")
 # split on ' ' or : or... quoting will be hard.
 
+# The model [ at this time: 2013-07-12T10:11:37 ] is that this is used as a
+# lib and is imported. The importer sets/overrides the appropriate variables
+# to fit the specific application of this functionality.
 Top_ranking_regexps = [] 
 
 def add_top_ranking_regexp_strings(regexps):
@@ -56,41 +61,63 @@ def rank_lines(lines):
     # XXX @todo hanle bottom rankers here.
     return tops + resid + bottoms
 
-def get_lines(fobj):
+Cxref_realpath_regexp = re.compile("(\S+)\s+(\d+)\s+(\S+)(.*)")
+def get_lines(fobj, cxref_realpath_p=False, start_dir=opath.curdir):
     lines = []
     for line in fobj:
         line = line[:-1]
+        if cxref_realpath_p:
+            m = Cxref_realpath_regexp.search(line)
+            if m:
+                groups = m.groups()
+                #print >>sys.stderr, "g[2]:", groups[2]
+                #print >>sys.stderr, "start_dir:", start_dir
+                p = opath.relpath(opath.realpath(groups[2]), start_dir)
+                #print >>sys.stderr, "p:", p
+                #line = (groups[0] + " " + groups[1] + " " + p)
+                # Format copped from global source.
+                # Needed to delete space before final %s because
+                # Cxref_realpath_regexp grabs all spaces after path name.
+                line = "%-16s %4s %-16s%s" % (groups[0], groups[1], p,
+                                               groups[3])
+                #print >>sys.stderr, "2, line:", line
         lines.append(line)
+    #print >>sys.stderr, "lines:", lines
     return lines
     
-def run_global(argv):
+def run_global(argv, start_dir=opath.curdir):
     #print >>sys.stderr, "run_global(argv: %s)" % (argv,)
     #print >>sys.stderr, "run_global(), cwd: %s" % (opath.realpath(opath.curdir,))
+    rgg_log_file.write("run_global(), cwd: %s\n"
+                       % (opath.realpath(opath.curdir,)))
+    cxref_fmt = "-x" in argv
     glob = subprocess.Popen(["global"] + argv[1:], stdout=subprocess.PIPE)
-    return get_lines(glob.stdout)
+    return get_lines(glob.stdout, cxref_realpath_p=cxref_fmt,
+                     start_dir=start_dir)
 
-def run_globals_path(argv, path):
+def run_globals_path(argv, path, start_dir=opath.curdir):
     """For each dir in path, cd there and try global there. Stop after first
-    success."""
-    start_dir = opath.realpath(opath.curdir)
+    success.
+@todo XXX Keep going? """
+    original_dir = opath.realpath(opath.curdir)
     for p in path:
         p = opath.dirname(p)
         #print >>sys.stderr, "p>%s<" % (p,)
         os.chdir(p)
-        x = run_global(argv)
-        if x:
-            x = [ opath.realpath(p) for p in x ]
-        os.chdir(start_dir)
+        x = run_global(argv, start_dir=start_dir)
+        os.chdir(original_dir)
         if x:
             return x
 
-def run_globals(argv, path=None, all_p=True):
+def run_globals(argv, path=None, all_p=True, start_dir=opath.curdir):
     if path == None:
         path = find_up.find_up("GTAGS", all_p=all_p)
-    return run_globals_path(argv, path)
+    ret = run_globals_path(argv, path, start_dir=start_dir)
+    #print "ret:", ret
+    return ret
 
 def top_level_links_only(arg, dirname, fnames):
-    print >>sys.stderr, "arg:", arg, "dirname:", dirname, "fnames:", fnames
+    #print >>sys.stderr, "arg:", arg, "dirname:", dirname, "fnames:", fnames
     for fname in fnames:
         full_name = opath.join(dirname, fname)
         if opath.islink(full_name):
@@ -116,7 +143,7 @@ def main(argv):
         lines = get_lines(sys.stdin)
     else:
         #lines = run_globals_path(argv, path)
-        lines = run_globals(argv, path)
+        lines = run_globals(argv, path, start_dir=opath.curdir)
     if lines:
         lines = rank_lines(lines)
         for line in lines:

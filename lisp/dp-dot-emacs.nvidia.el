@@ -124,5 +124,4 @@ At nVIDIA, the answer is HELL YES!")
   (and (not dp-p4-global-disable-detection-p)
        (dp-sandbox-file-p (buffer-file-name))))
 
-
 (provide 'dp-dot-emacs.nvidia.el)

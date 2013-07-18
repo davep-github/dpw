@@ -16,6 +16,8 @@ HOME = os.environ['HOME']
 UGLY_HOME = dp_io.bq('cd $HOME; /bin/pwd')[:-1]
 Shell_type = None                       # None means use $SHELL
 
+Evil_globals = {}
+
 #
 # Using a class allows us to differentiate types.
 # Good for arrays, dicts or other collections of mixed types.
@@ -35,15 +37,15 @@ class Keyword_option_t(object):
     
 #dp_io.eprintf('HOME>%s<, UGLY_HOME>%s<', HOME, UGLY_HOME)
 
-def handle_env_var(fmt, name, val, **kwargs):
+def handle_env_var(fmt, name, open_quote,val, close_quote, **kwargs):
     flags = kwargs.get(ELISP_OUTPUT_HANDLER_FLAGS, None)
     emit_setenv_p = False
     if flags:
         emit_setenv_p = flags.val()
     if emit_setenv_p:
-        print '(setenv "%s" "%s")' % (name, val)
+        print '(setenv %s" %s%s%s)' % (name, open_quote, val, close_quote)
     else:
-        print fmt  % (name, val, name),
+        print fmt  % (name, open_quote, val, close_quote, name)
     
 #####################################################################
 def handle_sh(name, val, **kw_args):
@@ -51,7 +53,12 @@ def handle_sh(name, val, **kw_args):
     # There are two kinds of environment outputs:
     # 1. Shell
     # B. elisp setenv calls
-    handle_env_var('%s="%s"; export %s;\n', name, val, **kw_args)
+    quote_char = kw_args.get("quote_char",
+                             Evil_globals.get("quote_char", '"'))
+    handle_env_var('%s=%s%s%s; export %s;',
+                   name,
+                   quote_char, val, quote_char,
+                   **kw_args)
 
 #####################################################################
 def handle_csh(name, val, **kw_args):
@@ -78,6 +85,26 @@ def handle_emacs(name, val, **kw_args):
 
 #####################################################################
 #
+def handle_print(name, val, **kw_args):
+    print val
+
+#####################################################################
+#
+def handle_grep_name(name, val, **kw_args):
+    regexp = kw_args.get("regexp", ".*")
+    if re.search(regexp, name):
+        handle_print(name, val, **kw_args)
+
+#####################################################################
+#
+def handle_grep_val(name, val, **kw_args):
+    regexp = kw_args.get("regexp", ".*")
+    sys.exit(99)
+    if re.search(regexp, val):
+        handle_print(name, val, **kw_args)
+
+#####################################################################
+#
 # mapping from shell name to handler
 # tuple:
 # [0] = handler function
@@ -87,13 +114,21 @@ def handle_emacs(name, val, **kw_args):
 #       a good place for finalization
 sh_handlers = (handle_sh, None, None)
 csh_handlers = (handle_csh, None, None)
+print_handlers = (handle_print, None, None)
+grep_name_handlers = (handle_grep_name, None, None)
+grep_val_handlers = (handle_grep_val, None, None)
 shell_handlers = { 'bash': sh_handlers,
                    'sh': sh_handlers,
                    'ksh': sh_handlers,
                    'csh' : csh_handlers,
                    'tcsh': csh_handlers,
+                   'print': print_handlers,
+                   'grep': grep_name_handlers,
+                   'grep-val': grep_val_handlers,
                    }
 shell_handlers['bash2'] = shell_handlers['bash'] # same as bash
+shell_handlers['grep_name'] = shell_handlers['grep']
+shell_handlers['grep_val'] = shell_handlers['grep-val']
 
 #####################################################################
 def prefix_handler(name, val, **kw_args):
@@ -119,7 +154,7 @@ def environment_var_handler(shell):
     try:
         return shell_handlers[shell_name]
     except:
-        dp_io.eprintf('Unknown shell: %s',  shell)
+        dp_io.eprintf('*** Unknown shell>%s<\n',  shell)
         (None, None, None)
 
 #####################################################################
@@ -134,7 +169,7 @@ def LIST_handler(name, val, file_name, ctl, **kw_args):
 # handlers map.
 # key: selector char in .go file
 # val: list of handlers for selector:
-#   entry, prefix in file, suffix in file selector-regexp
+#   entry, prefix in file, suffix in file, selector-regexp
 def get_handlers(shell_type=None):
     if shell_type == None:
         shell_type = Shell_type
@@ -257,7 +292,8 @@ def expand_files(files, selector, aliases):
 # parse args
 #
 selector = 'e'
-opts, args = getopt.getopt(sys.argv[1:], 'efvdlLs:E')
+grep_regexp = None
+opts, args = getopt.getopt(sys.argv[1:], 'efvdlLs:Eq:g:G:m:')
 handler_keyword_args = {}
 for opt, val in opts:
     if opt == '-e':
@@ -280,6 +316,18 @@ for opt, val in opts:
         # Generate (setenv "bubba" "blah") calls.
         handler_keyword_args[ELISP_OUTPUT_HANDLER_FLAGS] = \
             Keyword_option_t(ELISP_EMIT_SETENV, True)
+    elif opt == '-q':
+        Evil_globals["quote_char"] = val
+    elif opt == '-g':
+        grep_regexp = val
+        Shell_type = "grep"
+    elif opt == '-G':
+        grep_regexp = val
+        Shell_type = "grep-val"
+    elif opt == '-m':
+        # Do this with a front end since it is nvidia ME specific.
+        grep_regexp = "^" + val + "__ME_src$"
+        Shell_type = "grep"
 
 handlers = get_handlers(Shell_type)
 
@@ -292,12 +340,27 @@ handlers = get_handlers(Shell_type)
 # more specific files can override less specific ones.
 # dogo stops at the first match, and this produces the same effect.
 #
+files = []
+names = []
 if args:
-    files = args
-elif os.environ.get('GOPATH'):
-    files = string.split(os.environ.get('GOPATH'), ':')
-else:
-    files = [os.environ.get('HOME') + '/.go']
+    i = 0
+    for arg in args:
+        i += 1
+        if arg == '--':
+            break
+        files.append(arg)
+    args = args[i:]
+    for arg in args:
+        names.append(arg)
+if not files:
+    if os.environ.get('GOPATH'):
+        files = string.split(os.environ.get('GOPATH'), ':')
+    else:
+        files = [os.environ.get('HOME') + '/.go']
+
+if not files:
+    print >>sys.stderr, "No go files. Exiting."
+    sys.exit(1)
 
 files.reverse()
 
@@ -321,9 +384,9 @@ if handle_pre:
 for k in keys:
     kwargs = handler_keyword_args
     kwargs.update(aliases[k][1])
+    kwargs["regexp"] = grep_regexp
     #print >>sys.stderr, "kwargs:", kwargs
     handle(k, aliases[k][0], **kwargs)
 
 if handle_post:
     handle_post(aliases, keys)
-
