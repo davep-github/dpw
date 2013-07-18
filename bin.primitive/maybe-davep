@@ -1,0 +1,34 @@
+#!/bin/sh
+# Source me.
+
+maybe_davep_dash_n=
+
+if [ -n "${DP_BASHRC_EXECUTION_COMPLETED-}" ]
+then
+    # My environment.
+    source script-x
+    set -u
+    progname="$(basename $0)"
+    source eexec
+    eexec_program=$(EExec_parse "$@")
+    for op in $eexec_program
+    do
+      $op
+      shift
+    done
+    unset eexec_program
+    EEXEC=EExec
+    export any_shell_p=t
+    maybe_davep_dash_n=$EExecDashN_opt
+else
+    echo 1>&2 "DP environment not available"
+    EEXEC=
+    case "$*" in
+    "");;
+    -n) EEXEC=echo; shift; maybe_davep_dash_n=t;;
+    --) shift;;
+    *) echo 1>&2 "No args are supported. Try again"; exit 1;;
+esac
+
+fi
+

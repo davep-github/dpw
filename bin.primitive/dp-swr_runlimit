@@ -1,0 +1,11 @@
+#!/bin/sh
+
+source maybe-davep
+
+any_shell_p=t
+tgen-run-dot-sh-logged-stupid0 \
+       ${maybe_davep_dash_n} \
+       -s -i1 \
+       --egrep 'Calling plugin __Startup.. through mailbox protocol.' \
+       --hgrep 'cosim beat' \
+       "$@"
