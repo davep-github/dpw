@@ -520,9 +520,7 @@ the current sandbox is used for defaults, etc."
     (dp-set-frame-title-format)
     (if (dp-current-sandbox-regexp)
         (progn
-          (when dp-make-cscope-database-regexps-fun
-            (setq cscope-database-regexps
-                  (funcall dp-make-cscope-database-regexps-fun)))
+          (dp-cscope-set-cscope-database-regexps)
           (define-abbrev dp-manual-abbrev-table
             "sb" (dp-current-sandbox-regexp))
           (message "sb dir: %s" (dp-current-sandbox-regexp)))

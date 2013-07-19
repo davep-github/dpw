@@ -1585,6 +1585,16 @@ Before visiting means after the command completes."
 (defvar dp-make-cscope-database-regexps-fun nil
   "Call this to generate an appropriate value for
   `cscope-database-regexps'(q.v.)")
+
+(defun dp-cscope-set-cscope-database-regexps ()
+  (interactive)
+  (when dp-make-cscope-database-regexps-fun
+    (setq cscope-database-regexps
+          (funcall dp-make-cscope-database-regexps-fun))))
+
+(when dp-make-cscope-database-regexps-fun
+            (setq cscope-database-regexps
+                  (funcall dp-make-cscope-database-regexps-fun)))
 ;; 
 ;; -C ignore case.
 ;; ????? (setq cscope-command-args '("-C"))

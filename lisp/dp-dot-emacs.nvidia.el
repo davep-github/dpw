@@ -2,8 +2,8 @@
 
 ;; add to post-dpmacs hook.
 (add-hook 'dp-post-dpmacs-hook (lambda ()
-                                 (require 'dp-perforce)
-                                 (p4-use-xxdiff)))
+                                 (require 'dp-perforce)))
+
 
 (setq visible-bell nil)
 (defun dp-define-nvidia-c-style ()
@@ -82,7 +82,9 @@ At nVIDIA, the answer is HELL YES!")
 
 
 (defun dp-nvidia-make-cscope-database-regexps ()
-  "Compute value for `cscope-database-regexps'"
+  "Compute value for `cscope-database-regexps'
+We want to be able to find ap files from other dirs (//arch/...) and other
+files (//arch/...) ap dirs."
   (let ((ap (dp-me-expand-dest "ap" (dp-current-sandbox-name)))
         (sb (dp-current-sandbox-regexp)))
     `(

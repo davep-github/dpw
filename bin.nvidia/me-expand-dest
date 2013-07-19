@@ -16,6 +16,7 @@ unset eexec_program
 : ${verify_p=}
 : ${error_msg_opt=}
 : ${error_msgs_p=t}
+: ${path_echo=realpath}
 
 me_expand_dest()
 {
@@ -25,6 +26,8 @@ me_expand_dest()
           -V|--verify) verify_p=t;;
           -s|--sep|--separator) shift; sep="${1}";;
           -z|--silent|--no-error-message|--quiet-errors) error_msg_opt=--quiet-errors; error_msgs_p=;;
+          -R|--no-realpath|-e|--echo) path_echo=echo;;
+          -r|--realpath) path_echo=realpath;;
           *) break;;
       esac
       shift
@@ -94,7 +97,7 @@ me_expand_dest()
     then
         exit 1
     fi
-    echo "$dest"
+    ${path_echo} "$dest"
     return 0
 }    
 

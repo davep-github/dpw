@@ -13,7 +13,7 @@ progname="$(basename $0)"
 : ${DIFF_PAT:=@DIFF@}
 : ${DIFF_DEFAULT:=${P4DIFF:-xxdiff}}
 : 
-: ${CONFIG_TEMPLATE:=~/work/info/examples/DOTp4config}
+: ${CONFIG_TEMPLATE:=$HOME/work/info/examples/DOTp4config}
 
 Usage()
 {

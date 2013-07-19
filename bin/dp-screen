@@ -2,6 +2,11 @@
 
 . script-x
 
+#
+# NB! nVIDIA's /etc/screenrc sets `hardstatus' which ends up having 2 titles
+# (and more) in the xterm title bar.
+# Switch my scheme to use hardstatus and override or just nuke nVIDIA's?
+#
 dp_screen()
 {
   #echo "hi from dp-screen" 1>&2

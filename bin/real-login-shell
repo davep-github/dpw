@@ -1,0 +1,54 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${std_env_func:=su_func}
+: ${std_env_user:=${USER}}
+
+# Avoid using `localhost' as a last resort because it gets put into
+# known_hosts and then we get errors saying the host info has changed when
+# using `localhost' on another machine.
+: ${std_env_host:="${HOSTNAME-${HOST-}"}
+
+for i in "$@"
+do
+  case "$1" in
+      --su) std_env_func=su_func;;
+      --ssh) std_env_func=ssh_func;;
+      --host) shift; std_env_host="${1}";;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
+
+vsetp "$*" && {
+    std_env_host="$1"
+}
+
+vsetp "${std_env_host}" || {
+    echo "Cannot determine local host name."
+    exit 1
+} 1>&2
+
+su_func()
+{
+    EExec su -l "${std_env_user}"
+}
+
+ssh_func()
+{
+    EExec ssh "${std_env_host}"
+}
+
+"${std_env_func}" "$@"

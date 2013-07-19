@@ -491,10 +491,12 @@
       ;;Usually it's fgrep or egrep.
       ;;"find . -type f -print0 | xargs -r0 grep "
       "find . -type f -print0 | xargs -r0 egrep ")
-     dp-go)
+     dp-manual)
     (("cttoi" "come to think of it")
      dp-manual)
     (("br" "bug report")
+     dp-manual)
+    (("fasb" "for sb in sb1 sb2 sb3 sb4 sb5; do echo_id sb; cd $sb; ")
      dp-manual)
     (("style" "/home/dpanariti/work/doc/code-style.txt")
      dp-manual)

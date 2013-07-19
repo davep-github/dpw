@@ -4469,23 +4469,59 @@ Thursday July 11 2013
 
 "%S.txt"
 
+(progn
+  (setenv "DP_WORK_STATUS_DIR" "/home/dpanariti/work/status")
+  (setenv "DP_WORK_STATUS_TEMPLATE_FILE_NAME" "template")
+  (setenv "DP_WORK_STATUS_FILE_NAME_FORMAT" "status-%s.txt")
+)
 
-(defun dp-nv-status-report ()
-  (interactive)
-  (let ((date-str (time-stamp-yyyy-mm-dd)))
-    (find-file (format "%sstatus-%s.txt"
-                       (getenv "status")
-                       date-str))
-    (when (dp-buffer-empty-p)
-      (insert-file (format "%stemplate" (getenv "status")))
-      (while (re-search-forward "@DATE@" nil t)
-        (replace-match date-str))
-      (goto-char (point-min))
-      (re-search-forward "0)")
-      (end-of-line)
-      (newline-and-indent)
-      (indent-relative))))
-dp-nv-status-report
+(car '(- nil -))
+-
+
+nil
+
+;;installed (defun dp-dated-status-report (&optional date-str status-dir-name template-file-name 
+;;installed                                status-file-name-format)
+;;installed   (interactive "P")
+;;installed   ;; `expand-file-name' only uses the second parameter if the first is not absolute.
+;;installed   (setq-ifnil status-dir-name (or (getenv "DP_WORK_STATUS_DIR")
+;;installed                                   (expand-file-name "~/work/status"))
+;;installed               template-file-name (expand-file-name (or (getenv "DP_WORK_STATUS_TEMPLATE_FILE_NAME")
+;;installed                                                        "template.txt")
+;;installed                                                    status-dir-name)
+;;installed               status-file-name-format (expand-file-name (or (getenv "DP_WORK_STATUS_FILE_NAME_FORMAT")
+;;installed                                                             "%s-status.txt")
+;;installed                                                         status-dir-name))
+;;installed   (setq date-str
+;;installed         (cond
+;;installed          ((eq '- date-str)
+;;installed           (read-from-minibuffer "Date: " (time-stamp-yyyy-mm-dd)))
+;;installed          ((eq nil date-str)
+;;installed           (time-stamp-yyyy-mm-dd))
+;;installed          (t date-str)))
+;;installed   (find-file (format status-file-name-format date-str))
+;;installed   (when (dp-buffer-empty-p)
+;;installed     (insert-file template-file-name)
+;;installed     (while (re-search-forward "@DATE@" nil t)
+;;installed       (replace-match date-str))
+;;installed     (goto-char (point-min))
+;;installed     (re-search-forward "0)")
+;;installed     (end-of-line)
+;;installed     (newline-and-indent)
+;;installed     (indent-relative)))
+dp-dated-status-report
+
+
+
+(dp-dated-status-report '-)
+#<marker in no buffer 0x99bc2>
+
+
+
+
+
+
+
 
 
 
@@ -4508,6 +4544,14 @@ Wednesday July 17 2013
 
 
 
+(expand-file-name "/a/b" "/q/r/s")
+"/a/b"
+
+"/q/r/s/a/b"
+
+"/home/dpanariti/lisp/devel/q/r/s/a/b"
+
+"/a/b"
 
 
 

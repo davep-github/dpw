@@ -8585,7 +8585,7 @@ If region is active, set width to that of the longest line in the region."
 (defvar dp-sfh-to-compile-win-height 4
   "*The part of the frame height used for the compile window.")
 
-(defvar dp-sfh-height 71
+(defvar dp-sfh-height 72
   "*Initial frame height.")
 
 (defun dp-set-frame-height (&optional height frame)
@@ -8593,12 +8593,17 @@ If region is active, set width to that of the longest line in the region."
                        (format "height(current: %s; default: %s): " 
                                (frame-height) dp-sfh-height )
                        'ints-only (format "%s" dp-sfh-height))))
-  (set-frame-height
-   (or frame (selected-frame))
-   (setq dp-sfh-height
-         (or height (dp-maybe-str-to-int dp-sfh-height))))
-  (setq compilation-window-height (/ (frame-height frame)
-                                     dp-sfh-to-compile-win-height)))
+  (let ((env-height (dp-getenv-numeric "DP_XEM_FRAME_HEIGHT")))
+    (set-frame-height
+     (or frame (selected-frame))
+     (setq dp-sfh-height
+           (or height
+               (and env-height
+                    (not (= 0 env-height))
+                    env-height)
+               (dp-maybe-str-to-int dp-sfh-height))))
+    (setq compilation-window-height (/ (frame-height frame)
+                                       dp-sfh-to-compile-win-height))))
 
 (defalias 'sfh 'dp-set-frame-height)
 
@@ -9799,7 +9804,16 @@ specific context file so we can get context from another machine."
   ;; A pretty sensible place to save the context.
   ;; Others would be when a file is unvisited (no hook)
   ;; When a file is saved? I save a **LOT**. But this is pretty lightweight.
-  (loop for hook in '(find-file-hooks after-save-hook 
+  (loop for hook in '(find-file-hooks after-save-hook
+                      ;; We don't want to count on the kill hook, but it can
+                      ;; be useful when, say, another emacs is started up and
+                      ;; I want the saveconf from the older one to be saved
+                      ;; when it exits so I can suck it up into the new
+                      ;; one. This is [only] useful if another emacs has been
+                      ;; started and exited w/o editing any files which
+                      ;; results in an empty saveconf. It may be best in this
+                      ;; (sadly too often) case to just saveconf by hand.
+                      ;;;;;;;; NOT kill-emacs-hook
                       dp-after-kill-this-buffer-hook)
     do (add-hook hook 'dp-save-context)))
 
@@ -15700,7 +15714,8 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
                                   ;; all matches and line numbers.
                                   (when (re-search-forward regexp nil t)
                                     (list (point )buf))))))
-                           (dp-choose-buffers-file-names buffer-filename-regexp)))))
+                           (dp-choose-buffers-file-names 
+                            buffer-filename-regexp)))))
     (message "matching-buffer-list>%s<" matching-buffer-list)
     matching-buffer-list))
 
@@ -15729,6 +15744,36 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
     (when (string-match "%%S" fmt)
       (setq fmt (replace-match (time-stamp-yyyy-mm-dd) nil t fmt))))
   (apply 'format fmt args))
+
+(defun dp-dated-status-report (&optional date-str status-dir-name template-file-name 
+                               status-file-name-format)
+  (interactive "P")
+  ;; `expand-file-name' only uses the second parameter if the first is not absolute.
+  (setq-ifnil status-dir-name (or (getenv "DP_WORK_STATUS_DIR")
+                                  (expand-file-name "~/work/status"))
+              template-file-name (expand-file-name (or (getenv "DP_WORK_STATUS_TEMPLATE_FILE_NAME")
+                                                       "template.txt")
+                                                   status-dir-name)
+              status-file-name-format (expand-file-name (or (getenv "DP_WORK_STATUS_FILE_NAME_FORMAT")
+                                                            "%s-status.txt")
+                                                        status-dir-name))
+  (setq date-str
+        (cond
+         ((eq '- date-str)
+          (read-from-minibuffer "Date: " (time-stamp-yyyy-mm-dd)))
+         ((eq nil date-str)
+          (time-stamp-yyyy-mm-dd))
+         (t date-str)))
+  (find-file (format status-file-name-format date-str))
+  (when (dp-buffer-empty-p)
+    (insert-file template-file-name)
+    (while (re-search-forward "@DATE@" nil t)
+      (replace-match date-str))
+    (goto-char (point-min))
+    (re-search-forward "0)")
+    (end-of-line)
+    (newline-and-indent)
+    (indent-relative)))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;;
