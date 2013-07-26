@@ -50,9 +50,30 @@
 ;; I do it externally or use nvcscope's files.
 (setq cscope-do-not-update-database t)
 
-(defvar dp-wants-hide-ifdef-p t
-  "Do I want the hide ifdef package activated?
-At nVIDIA, the answer is HELL YES!")
+(defun dp-nv-configure-hide-ifdef ()
+  (defvar dp-T3D-hide-ifdef-default-defs
+    '(NV_T3D)
+    "T3D definitions for hide-ifdef-* to show code of interest.")
+
+  (defun dp-setup-hide-ifdef-for-T3D (&optional extras)
+    (interactive)
+    (setq hide-ifdef-lines t
+          hide-ifdef-env nil)
+    (let ((defs (append dp-T3D-hide-ifdef-default-defs extras)))
+      (loop for def in defs do
+        (hide-ifdef-define def)))
+    (hide-ifdef-set-define-alist "t3d"))
+
+  (defun dp-hide-ifdef-for-T3D ()
+    (interactive)
+    (hide-ifdef-mode 1)
+    (hide-ifdef-use-define-alist "t3d")
+    (hide-ifdefs)))
+
+;; Do I want the hide ifdef package activated?
+;; At nVIDIA, the answer is HELL YES!
+(setq dp-wants-hide-ifdef-p t)
+(setq dp-hide-ifdef-configure-function 'dp-nv-configure-hide-ifdef)
 
 (setq dp-edting-server-valid-host-regexp "\\(o\\|sc\\)-xterm-.*")
 
@@ -125,5 +146,9 @@ files (//arch/...) ap dirs."
 (defun dp-p4-active-here ()
   (and (not dp-p4-global-disable-detection-p)
        (dp-sandbox-file-p (buffer-file-name))))
+
+;;
+;; Don't want to edit these stupid fvcking copies.
+(dp-add-force-read-only-regexp "/plex/")
 
 (provide 'dp-dot-emacs.nvidia.el)

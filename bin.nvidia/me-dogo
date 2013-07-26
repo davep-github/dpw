@@ -26,10 +26,11 @@ done
 
 #: ${sb=""}
 #export go_here_first="$sb"
-export domain="__ME_src"
+export domain="__ME_src"        # DUMBASS PARAMETER to relative dogo
 relative_to=$(dp4-sb-root) || {
     relative_to=$(depth)/../..
 }
 # XXX @todo STUPID way to pass parameters.
-export relative_to
-EExec ${error_msg_opt} relative-dogo "$@"
+export relative_to              # DUMBASS PARAMETER to relative dogo
+EExec_verbose_msg "cwd: $PWD"
+EExec ${error_msg_opt} relative-dogo ${DP_SCRIPT_X_DEBUG_PROPAGATOR} "$@"

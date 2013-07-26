@@ -1,6 +1,10 @@
 @SB_SB1_DESC@ misc
 @SB_SB2_DESC@ R/SWR
-@SB_SB3_DESC@ R/Bursts
+@SB_SB3_DESC@ R/MEMTxn
 @SB_SB4_DESC@ R/FullWave
 @SB_SB5_DESC@ R/ENGCPU
-@KONST_FARM_PATTERN@ *-sim-*
+@KONST_XTERM_PATTERN@ *dpanariti*-xterm*
+@KONST_XEMACS_PATTERN@ *XEmacs@*-xterm*
+@KONST_XEMACS_SERVER_PATTERN@ *Serv/*XEmacs@*-xterm*
+@KONST_FARM_XTERM_PATTERN@ *dpanariti*-sim-*
+@KONST_FARM_XEMACS_PATTERN@ *XEmacs*-sim-*

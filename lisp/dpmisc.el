@@ -2161,16 +2161,20 @@ on the go back ring."
   "Some icky language [major modes] simply do not understand how to indent a
   comment on a line of its own using either, in the case of perl, # or ##.")
 
-(defun dp-func-and-move-down (func pred new-this-command &rest func-args)
+(defun* dp-func-and-move-down (func pred 
+                               preserve-column-p
+                               new-this-command 
+                               &rest func-args)
   "Perform an op on a line and move to the next. 
 Motivated by `dp-indent-line-and-move-down'."
   (interactive "*")
   ;;(beginning-of-line)
-  (let ((goal-column nil))
+  (let ((goal-column (and preserve-column-p 
+                          (current-column))))
     (when (or (eq pred t)
               (funcall pred))
       (apply func func-args))
-    (next-line 1))
+    (next-line 1)))
 
   ;; python-mode does different things if the previous command was an indent
   ;; command, so we make sure this isn't true.  This should be OK since this
@@ -2208,6 +2212,7 @@ Tidying includes: re `indent-for-comment' and fixing up white space."
               (dp-fix-comment)))
           (dp-cleanup-line)))
        t
+       'preserve-column
        'forward-line)))
 
 (defun dp-fix-comment-and-move-down ()
@@ -2735,8 +2740,8 @@ ARG is value to use as start text of the ifdef.
 If ARG starts with a DIGIT, you get #if ARG.
 If ARG starts with a LETTER, you get #ifdef ARG.
 If interactive and ARG is C--, prompt for #ifdef TEXT.
-If ARG is 0, e.g. C-0 or C-u0, reset `io-start-text' to `io-start-text-default'.
-   Ditto for end-text.
+If ARG is 0, e.g. C-0 or C-u0, reset `io-start-text' to 
+   `io-start-text-default'. Ditto for end-text.
 Otherwise you get ARG.
 ARG is saved for future use in `io-start-text'.
 It is initialized to #if 0"
@@ -2837,6 +2842,13 @@ E.g.
              (format "#endif /* %s %s */" not excuse)))
 (defalias 'iob 'dp-ifdef-region-because)
 
+(defun dp-ifdef-region-const (const)
+  (interactive "sConst? ")
+  ;; The decision to preserve the values is questionable.
+  (let ((io-start-text io-start-text)
+        (io-end-text io-end-text))
+    (dp-ifdef-region const)))
+  
 (defun dp-ifdef-tag (&optional tag)
   (interactive "sTag: ")
   (dp-ifdef-region-because tag))
@@ -5014,6 +5026,7 @@ other: other is value of initial contents."
           (prompt (if (string-match "%s" prompt)
                       (format prompt default)
                     prompt)))
+    ;; Lots copied from the `interactive' doc string.
     (cond
      ((eq 'f symbol-type)
       ;; We want a file-name
@@ -7875,7 +7888,7 @@ REGEXP-ALIST is a list of (regexp . whatever).  When matched, the cons
 cell is returned."
   (save-match-data
     (dolist (el regexp-alist nil)
-      (when (string-match (car el) (format "%s" key))
+      (when (string-match (format "%s" (car el)) (format "%s" key))
         (return  el)))))
 
 (defun dp-wildcards-exist (wildcards)
@@ -10637,7 +10650,7 @@ end is the end of the last matching line."
                           (dp-c-stack-rest-of-statement)
                         (dp-c-stack-statement nil nil nil nil beg end))))
            (end (dp-mk-marker (car (cdr beg-end))))
-           (max-line-len (dp-c-fill-column max-line-len)))
+           (max-line-len (1- (dp-c-fill-column max-line-len))))
       (while (< (line-end-position) end)
         (join-line)
         (unless (<= (- (line-end-position) (line-beginning-position)) 
@@ -11439,7 +11452,7 @@ basically the union of the args to `find-file-noselect' and
     (dp-find-file file-name :other-window-p t)))
 
 (defun dp-force-read-only-by-file-name-regexp ()
-  "Make file names matching `dp-implied-read-only-filename-regexp-list' READ-ONLY."
+  "Make file names matched by `dp-file-name-implies-readonly-p' READ-ONLY."
   ;; Nothing to do for buffers w/o files.
   (when buffer-file-name
     ;; Force expansion since find-file-use-truenames may not be.
@@ -14446,7 +14459,9 @@ e.g. \"a\" --> '(\"a\")
 
 (defun dp-match-a-regexp (string &rest regexp-list)
   "Each element of REGEXP-LIST can be an atom or nil or a list of regexp atoms.
-REGEXP-LIST can contain nils which are ignored. This makes it easier to use lists from things like `mapcar` which often have nils or the consing of a value that may be nil, like dp-singlular-write-restricted-regexp."
+REGEXP-LIST can contain nils which are ignored. This makes it easier to use
+lists from things like `mapcar` which often have nils or the consing of a
+value that may be nil, like dp-singlular-write-restricted-regexp."
   (loop for regexps in (apply 'dp-listify-things regexp-list)
     thereis (loop for regexp in regexps
               ;; do (princf "regexp>%s<, filename>%s<" regexp string)
@@ -14463,15 +14478,20 @@ REGEXP-LIST can contain nils which are ignored. This makes it easier to use list
 
 (defun* dp-file-name-implies-readonly0-p (filename 
                                           &optional regexp-in 
-                                          (mode-local-list-p t))
+                                          (mode-local-list-p t)
+                                          (mode-local-list-only-p nil))
   "Determine if something in a filename implies the file should be read only.
 MODE-LOCAL-LIST-P allows restricting regexps on a per-mode basis."
+  (setq filename (expand-file-name filename))
+  (when mode-local-list-only-p
+    (setq mode-local-list-p t))
   (and (dp-match-a-regexp filename
                           (if mode-local-list-p
                                (dp-mode-local-value 
-                                'dp-implied-read-only-filename-regexp)
-                            dp-implied-read-only-filename-regexp)
-                          regexp-in)
+                                'dp-implied-read-only-filename-regexp-list))
+                          (unless mode-local-list-only-p
+                            (append dp-implied-read-only-filename-regexp-list
+                                    regexp-in)))
        (< 0 (length (match-string 0 filename)))))
 
 (defun* dp-file-name-implies-readonly-p (filename
@@ -15455,23 +15475,36 @@ See `dp-shell-*TAGS-changers' rant. "
              (delete-file file-name))
            (message status-msg)))))
 
-(defvar dp-whitespace-cleanup-after-these-commands '(dp-open-newline
-                                                     dp-open-above
-                                                     dp-c-context-line-break
-                                                     dp-py-open-newline
-                                                     py-newline-and-indent)
-                                                     
-  "Clean up whitespace after executing one of these commands.
+(defcustom dp-whitespace-cleanup-after-these-commands 
+  '(dp-open-newline
+    dp-open-above
+    dp-c-context-line-break
+    dp-py-open-newline
+    py-newline-and-indent)
+  "*Clean up whitespace after executing one of these commands.
 We'll lump everything together rather than using buffer local or mode
 specific lists. This should be ok because mode specific commands should have
-been used in buffers in the given mode.")
+been used in buffers in the given mode."
+  :group 'dp-whitespace-vars
+  :type '(repeat (symbol :tag "Whitespace cleanup afters")))
+
+
+(defcustom dp-whitespace-cleanup-when-modified-p t
+  "Should we clean up whitespace if the buffer has ever been modified?
+I want to avoid inadvertent modifications if I'm browsing through a file that
+isn't \"mine\". However, if it has already been modified, then go for
+it. Whitespace diffs are easy to ignore during reviews"
+  :group 'dp-whitespace-vars
+  :type 'boolean)
 
 (defun dp-whitespace-following-a-cleanup-command-p ()
   "What the name says. 
 Making it a function makes it easier to use as a value for a predicate
 variable."
   (let ((tmp last-command))
-    (memq last-command dp-whitespace-cleanup-after-these-commands)))
+    (or (and dp-whitespace-cleanup-when-modified-p
+             (buffer-modified-tick))
+        (memq last-command dp-whitespace-cleanup-after-these-commands))))
 
 (defun dp-next-line (count)
   "Add trailing white space removal functionality."
@@ -15490,6 +15523,7 @@ variable."
                      (funcall gating-pred)))
             (dp-func-and-move-down 'dp-cleanup-line
                                    t
+                                   'preserve-column
                                    'next-line)
           (next-line count))))))
 
@@ -15774,6 +15808,15 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
     (end-of-line)
     (newline-and-indent)
     (indent-relative)))
+
+(defun dp-go-setenv ()
+  "Set all of the `go' environment variables.
+This is needed because the new sandbox relative utilities count on environment variables.
+@todo XXX Fix this in the scripts. But for now, doing it here is ttttrivial."
+  (interactive)
+  (with-temp-buffer
+    (call-process "go2env.py" nil t nil "-E")
+    (eval-buffer)))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;;

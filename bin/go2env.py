@@ -43,7 +43,7 @@ def handle_env_var(fmt, name, open_quote,val, close_quote, **kwargs):
     if flags:
         emit_setenv_p = flags.val()
     if emit_setenv_p:
-        print '(setenv %s" %s%s%s)' % (name, open_quote, val, close_quote)
+        print '(setenv "%s" %s%s%s)' % (name, open_quote, val, close_quote)
     else:
         print fmt  % (name, open_quote, val, close_quote, name)
     

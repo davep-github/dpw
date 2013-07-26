@@ -82,13 +82,17 @@
 ;;   (c-set-style "vanu-c-style"))
 ;;
 
-(defvar dp-global-master-cleanup-whitespace-p t
+(defcustom dp-global-master-cleanup-whitespace-p t
   "Control whitespace cleanup off everywhere.
 If this is a non-nil list, don't disable if it contains the current major
-mode.")
+mode."
+  :group 'dp-whitespace-vars
+  :type 'boolean)
 
-(defvar dp-global-master-cleanup-whitespace-pred-fun nil
-  "Call through this to determine if we want to clean up whitespace.")
+(defcustom dp-global-master-cleanup-whitespace-pred-fun nil
+  "Call through this to determine if we want to clean up whitespace."
+  :group 'dp-whitespace-vars
+  :type 'function)
 
 (dp-deflocal dp-cleanup-whitespace-p nil
   "Should trailing whitespace be cleaned up in this buffer?
@@ -443,13 +447,15 @@ far the regexp is concerned.")
   :group 'faces
   :group 'dp-vars)
 
-(defvar dp-trailing-whitespace-regexp "\\s-+$"
+(defcustom dp-trailing-whitespace-regexp "\\s-+$"
   "Regular expression to detect that most egregious of all programming
   problems, that of trailing whitespace. Something so bad, so heinous, so
   unutterably eeveel that it's worth checking out and modifying every single
   hideous violator of that most sacred of all things, the trailing whitespace
   free line. We must spare no effort to return our files to the most holy of
-  all states. And don't get me stahted on macros. MACROS BAAAAAD, grrrrr!")
+  all states. And don't get me stahted on macros. MACROS BAAAAAD, grrrrr!"
+  :group 'dp-whitespace-vars
+  :type 'string)
 
 (defvar dp-trailing-whitespace-font-lock-element
   (list dp-trailing-whitespace-regexp 0 'dp-trailing-whitespace-face 'prepend)
@@ -693,8 +699,10 @@ c-hanging-braces-alist based upon these values.")
       (and (fboundp 'gtags-mode)
            (dmessage "not featurep 'gtags, but gtags-mode defined."))))
 
-(defvar dp-default-c-like-mode-cleanup-whitespace-p t
-  "Turn it all on or off for all C like modes here.")
+(defcustom dp-default-c-like-mode-cleanup-whitespace-p t
+  "Turn it all on or off for all C like modes here."
+  :group 'dp-whitespace-vars
+  :type 'boolean)
 
 (defun dp-c-like-mode-common-hook ()
   "Sets up personal C/C++ mode options."
@@ -723,7 +731,9 @@ c-hanging-braces-alist based upon these values.")
   (when (and (buffer-name)
              (dp-file-name-implies-readonly-p 
               (buffer-name)
-              (dp-mk-mode-transparent-r/o-regexp nil)))
+              (concat "[.,-]\\("
+                      (dp-mk-mode-transparent-r/o-regexp nil)
+                      "\\)")))
     (ding)                              ; !<@todo XXX 
     (toggle-read-only 1))
   (when (dp-gtags-p)

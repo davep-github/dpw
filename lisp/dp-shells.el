@@ -238,7 +238,7 @@ Can be set after the first prompting.")
                                        )))
                    ;; diff needs to be here because I use ec-diff which uses
                    ;; emacs.
-                   '("p4\\s-+\\(diff\\|change\\|client\\)\\|as2\\s-+submit"))
+                   '("p4\\s-+\\(diff\\|change\\|client\\|submit\\)\\|\\(as2\\s-+submit\\)"))
            nil 'one-around-all-p)
           "\\(\\s-+\\|$\\)")
   "Commands that end up invoking an editor. We may want to ensure that
@@ -251,7 +251,7 @@ Can be set after the first prompting.")
             '("gitcia\\s-+.*-m")
             ;; diff needs to be here because I use ec-diff which uses
             ;; emacs.
-            '("p4\\s-+\\(client\\s-+.*-[dois]\\|change\\s-+.*-[odist]\\|submit\\s-+.*-[i]\\)"))
+            '("p4\\s-+\\(client\\s-+.*-[odis]\\|change\\s-+.*-[odist]\\|submit\\s-+.*-[di]\\)"))
            nil 'one-around-all-p)
           "\\(\\s-+\\|$\\)")
   "Commands that don't end up invoking an editor even though other commands

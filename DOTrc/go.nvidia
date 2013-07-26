@@ -30,7 +30,7 @@ Ee|dotvnc|dvnc|vnc|   ${gohome}.vnc/
 #######################################################################
 # Sandbox relative dirs for various places in the source tree.
 # $(depth) --> //hw/ap
-# Our base: $(depth)../../
+# Our base: $(depth)/../../
 # These are best used by a utility because the _ interferes with abbrev
 # expansion.
 # It's really not the ME root, but I'm an ME guy.
@@ -145,9 +145,9 @@ Ee|klib__ME_src|                ${kepclib__ME_src}
 #                              arch/traces/mobile/traces/gpu_multiengine
 Ee|arch__ME_src|                arch/
 Ee|tracesroot__ME_src|          ${arch__ME_src}traces/
-Ee|troot__ME_src|               ${arch__ME_src}traces/
+Ee|troot__ME_src|               ${tracesroot__ME_src}
 
-Ee|mobiletraces__ME_src|        ${tracesroot__ME_src}traces/
+Ee|mobiletraces__ME_src|        ${tracesroot__ME_src}mobile/traces/
 Ee|mtraces__ME_src|             ${mobiletraces__ME_src}
 Ee|mtrace__ME_src|              ${mobiletraces__ME_src}
 
@@ -181,9 +181,15 @@ Ee|ngimages__ME_src|            ${nongputraces__ME_src}
 Ee|yuvimages__ME_src|           ${nongputraces__ME_src}yuv_image/
 Ee|rgbimages__ME_src|           ${nongputraces__ME_src}rgb_image/
 
-Ee|modstraces|trace3dtraces|    /home/scratch.traces02/arch/traces/
-Ee|t3dtraces|                   ${modstraces}
-Ee|ogtest|ogtraces|             ${t3dtraces}kepler_b/ogtest/
+
+Ee|modstraces|trace3dtraces|            /home/scratch.traces02/arch/traces/
+Ee|scratchtraces02|traceso2|t02t|       ${modstraces}
+Ee|t3dtraces|                           ${modstraces}
+Ee|ogtest|ogtraces|                     ${t3dtraces}kepler_b/ogtest/
+Ee|traces2mobiletracessys|t2sys|mt2sys| /home/scratch.traces02/mobile/traces/system/
+Ee|traces2mobiletracesso|t2so|mt2so|    ${traces2mobiletracessys}so/
+Ee|ccplexso|soccplex|memtxnaxi|aximemtxn| ${traces2mobiletracesso}t124/
+
 
 #
 #   Somethings which may as well be cross-sandbox
@@ -210,7 +216,7 @@ Ee|sandbox2|sbox2|sb2|workspace2|ws2|                   ${scratch0}sb2/sb2hw/
 Ee|swr|surfwriteread|                                   ${sandbox2}
 
 Ee|sandbox3|sbox3|sb3|workspace3|ws3|                   ${scratch1}sb3/sb3hw/
-Ee|generateburstmodetraffic|burst|                      ${sandbox5}
+Ee|generatememtxn|memtxn|                               ${sandbox5}
 
 Ee|sandbox4|sbox4|sb4|workspace4|ws4|                   ${scratch3}sb4/sb4hw/
 Ee|swrwavefull|swrfullwave|swrfw|swrwf|swrlong|swrwave| ${sandbox4}
@@ -225,7 +231,6 @@ Ee|engcpu|ecpu|cpue|cpueng| ${sandbox5}
 #
 Ee|t3dAlloc|  ${sb4}hw/ap_tlit1/drv/drvapi/runtest_common/runtest_exec.cpp:267
 
-Ee|ccplexso|soccplex|burstaxi|axiburst| /home/scratch.traces02/mobile/traces/system/so/t124/
 # See a15_msel_integ_sanity
 #
 # Temp stuff for most active tasks.

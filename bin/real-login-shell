@@ -12,13 +12,14 @@ do
 done
 unset eexec_program
 
-: ${std_env_func:=su_func}
+: ${std_env_func:=ssh_func}
 : ${std_env_user:=${USER}}
+: ${dp_xx_cmd=}
 
 # Avoid using `localhost' as a last resort because it gets put into
 # known_hosts and then we get errors saying the host info has changed when
 # using `localhost' on another machine.
-: ${std_env_host:="${HOSTNAME-${HOST-}"}
+: ${std_env_host:=${HOSTNAME-${HOST-}}}
 
 for i in "$@"
 do
@@ -26,15 +27,12 @@ do
       --su) std_env_func=su_func;;
       --ssh) std_env_func=ssh_func;;
       --host) shift; std_env_host="${1}";;
+      --dpxx) dp_xx_cmd=dpxx;;
       --) shift; break;;
       *) break;;
   esac
   shift
 done
-
-vsetp "$*" && {
-    std_env_host="$1"
-}
 
 vsetp "${std_env_host}" || {
     echo "Cannot determine local host name."
@@ -43,12 +41,12 @@ vsetp "${std_env_host}" || {
 
 su_func()
 {
-    EExec su -l "${std_env_user}"
+    EExec ${dp_xx_cmd} su -l "${std_env_user}"
 }
 
 ssh_func()
 {
-    EExec ssh "${std_env_host}"
+    EExec ${dp_xx_cmd} ssh "${std_env_host}"
 }
 
 "${std_env_func}" "$@"

@@ -206,6 +206,11 @@ rtl_required_p && [ "${dont_build_rtl_opt}" == "-skiprtl" ] && {
     dp_exit 1 "This sandbox cannot skip rtl"
 }
 
+EExec -y cd $(realpath $(me-dogo tot))
+[ -e "tree.make" ] || {
+    dp_exit 1 "tree.make does not exist."
+} 1>&2
+
 [ -z "${log_dir}" ] && {
     echo "log_dir is not set. Using cwd"
     log_dir="${PWD}"
@@ -277,11 +282,6 @@ EExec mkdir -p "${log_dir}"
     EExecDashN_p && send_mail_on_completion=
     if [ -n "$make_p" ]
     then
-        EExec -y cd $(me-dogo tot)
-        [ -e "tree.make" ] || {
-            dp_exit 1 "tree.make does not exist."
-        } 1>&2
-
         vsetp "${dont_build_rtl_opt}" || {
             # If we're building with RTL, mark this dir so we don't
             # accidentally undo all of the time taken to build the extra RTL
@@ -361,7 +361,7 @@ EExec mkdir -p "${log_dir}"
         EExec --keep-going ./bin/get_asim
     fi
 
-    EExec -y cd $(me-dogo testgen)
+    EExec -y cd $(realpath $(me-dogo testgen))
 
     while [ "${build_me_p}" = "a" ]
     do

@@ -424,11 +424,13 @@ the init files.")
   "Read only part of dp-default-mode-transparent-suffix-regexp (q.v.)")
 
 (defvar dp-default-mode-transparent-suffix-regexp
-  (concat "\\([.,-]\\("
+  (concat "\\([.,-]"
+          "\\("
           dp-default-mode-transparent-r/o-suffix-regexp
           "\\|"
           dp-default-mode-transparent-r/w-suffix-regexp
-          "\\)\\([.,-]?\\([0-9]*\\)\\)?\\)?$")
+          "\\)"
+          "\\([.,-]?\\([0-9]*\\)\\)?\\)?$")
 "Suffixes which can be added after a regular extension and are ignored
 for the purpose of mode setting.  At this time, these are also visited read
 only.

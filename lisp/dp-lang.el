@@ -1263,6 +1263,7 @@ Becomes:
     (if (eolp)
         (dp-func-and-move-down 'dp-cleanup-line
                                t
+                               'preserve-column
                                'next-line)
       (call-interactively 'next-line))))
 

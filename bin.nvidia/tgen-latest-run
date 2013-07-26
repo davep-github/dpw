@@ -99,7 +99,8 @@ case "${some_path_component}" in
              echo "Multiple test type dirs exist. Don't know which to use:"
              for d in ${some_path_component}
              do
-               echo " $(basename $d)"
+               #echo " $(basename $d)"
+               echo " $(realpath $d)"
              done
           } 1>&2
           exit 1;;

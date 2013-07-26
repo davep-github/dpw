@@ -20,7 +20,7 @@ unset eexec_program
 
 : ${domain=""}
 : ${go_here_first=""}
-: ${relative_to="."}            # Would / be better?
+: ${relative_to="."}            # Would / be better as a default?
 
 [ -n "$go_here_first" ] && {
     cd $(dogo "$go_here_first")

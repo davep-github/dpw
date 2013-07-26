@@ -64,24 +64,24 @@
 ##------------------------------------------------------------------------------
 
 
-##     Button	Context Modifi 	Function
+##     Button   Context Modifi  Function
 
-Mouse 1		R   	A       Menu Utilities mouse -1p -1p
-Mouse 2		R    	A       Menu Window mouse -1p -1p
+Mouse 1         R       A       Menu Utilities mouse -1p -1p
+Mouse 2         R       A       Menu Window mouse -1p -1p
 Mouse 3         R       A       WindowList mouse -1p -1p CurrentDesk
 Mouse 3         R       4       WindowList mouse -1p -1p
 Mouse 3         R       C       WindowList mouse -1p -1p OnlyListSkip
 
-##Mouse 1		W   	M       Menu Utilities mouse -1p -1p
-##Mouse 2		W    	M       Menu Window mouse -1p -1p
+##Mouse 1               W       M       Menu Utilities mouse -1p -1p
+##Mouse 2               W       M       Menu Window mouse -1p -1p
 ##Mouse 3         W       M       WindowList mouse -1p -1p
 ##Mouse 3         W       CM      WindowList mouse -1p -1p OnlyListSkip
 
 
 ##G_SESSION 3 bind Shift Mouse * to gnomebutton
-##Mouse 1		R	S	GnomeButton
-##Mouse 2		R	S	GnomeButton
-##Mouse 3		R	S	GnomeButton
+##Mouse 1               R       S       GnomeButton
+##Mouse 2               R       S       GnomeButton
+##Mouse 3               R       S       GnomeButton
 
 ##------------------------------------------------------------------------------
 ## Now the rest of the frame
@@ -90,30 +90,30 @@ Mouse 3         R       C       WindowList mouse -1p -1p OnlyListSkip
 ##------------------------------------------------------------------------------
 
 ## Button 1 in the corners or sides, with any modifiers, gives resize or raise
-Mouse 1		FS	A	Function "Resize-or-Raise-or-Shade"
+Mouse 1         FS      A       Function "Resize-or-Raise-or-Shade"
 
 ## Button 1 in the title, sides, w/ any modifiers, gives move or raise or shade
-Mouse 1		T	A	Function "Move-or-Raise-or-Shade"
-Mouse 1		FS	C	Function "Move-or-Raise-or-Shade"
+Mouse 1         T       A       Function "Move-or-Raise-or-Shade"
+Mouse 1         FS      C       Function "Move-or-Raise-or-Shade"
 
 ## Button 1 in an icons gives move for a drag, de-iconify for a double-click,
 ## raiselower for a single click
-Mouse 1		I	A	Function "Move-or-Iconify-or-Raise"
+Mouse 1         I       A       Function "Move-or-Iconify-or-Raise"
 ## Alt Button 1 on an icons raise all icons
-Mouse 1		I	M	All (CurrentPage Iconic) Raise
+Mouse 1         I       M       All (CurrentPage Iconic) Raise
 
 ## Button 2 in an icon, w/ any modifiers, gives de-iconify
-Mouse 2		I	A	Iconify
+Mouse 2         I       A       Iconify
 
 ## Button 2 in the corners, sides, or title-bar gives the window ops menu
-Mouse 2		FST	A	Menu Window-Ops2
+Mouse 2         FST     A       Menu Window-Ops2
 
 ## Button 3 anywhere in the non-title-[bar|button]  decoration
 ## does a raise-lower
-Mouse 3		SF	A	RaiseLower
+Mouse 3         SF      A       RaiseLower
 
 ## Button 3 on a icon:
-Mouse 3		I	A	Menu Window-Ops3 c+0 -101m
+Mouse 3         I       A       Menu Window-Ops3 c+0 -101m
 
 ## Button 3 in the window, with the Modifier-1 key (usually alt or diamond)
 ## gives Raise-Lower. Used to use control here, but that interferes with xterm
@@ -129,18 +129,18 @@ Mouse 3         T       A        Popup Window-Ops2
 ##------------------------------------------------------------------------------
 
 
-##     Button	Context Modif 	Function
-Mouse 1		1    	A      	Function "window_ops_func"
-Mouse 2         1	A	Menu WindowGroupOps
+##     Button   Context Modif   Function
+Mouse 1         1       A       Function "window_ops_func"
+Mouse 2         1       A       Menu WindowGroupOps
 Mouse 3         1       A       Menu Move-Window
 Mouse 1         2       A       Close
-Mouse 2		2	A	All ($c) Close
+Mouse 2         2       A       All ($c) Close
 Mouse 3         2       A       Destroy
-Mouse 1		4    	A     	Maximize 100 100
+Mouse 1         4       A       Maximize 100 100
 Mouse 2         4       A       Maximize 0 90
 Mouse 3         4       A       Maximize 100 0
-Mouse 1		6    	A     	Iconify
-Mouse 2		6    	A     	All ($c) Iconify On
+Mouse 1         6       A       Iconify
+Mouse 2         6       A       All ($c) Iconify On
 Mouse 3         6       A       All ($c) WindowShade On
 
 ##------------------------------------------------------------------------------
@@ -151,37 +151,37 @@ Mouse 3         6       A       All ($c) WindowShade On
 ## press arrow + Shift anywhere, and scroll by 1 page
 ##------------------------------------------------------------------------------
 
-##Key Left	A	S	Scroll -100 0
-##Key Right	A	S	Scroll +100 +0
-##Key Up		A	S	Scroll +0   -100
-##Key Down	A	S	Scroll +0   +100
+##Key Left      A       S       Scroll -100 0
+##Key Right     A       S       Scroll +100 +0
+##Key Up                A       S       Scroll +0   -100
+##Key Down      A       S       Scroll +0   +100
 
 ##------------------------------------------------------------------------------
 ## press arrow + Alt key, and scroll by 1/10 of a page
 ##------------------------------------------------------------------------------
 
-##Key Left	A	M	Scroll -10 +0
-##Key Right	A	M	Scroll +10 +0
-##Key Up		A	M	Scroll +0   -10
-##Key Down	A	M	Scroll +0   +10
+##Key Left      A       M       Scroll -10 +0
+##Key Right     A       M       Scroll +10 +0
+##Key Up                A       M       Scroll +0   -10
+##Key Down      A       M       Scroll +0   +10
 
 ##------------------------------------------------------------------------------
 ## press arrow + control-meta anywhere, and move the pointer by 1% of a page
 ##------------------------------------------------------------------------------
 
-##Key Left	A	MC	CursorMove -1 0
-##Key Right	A	MC	CursorMove +1 +0
-##Key Up		A	MC	CursorMove +0   -1
-##Key Down	A	MC	CursorMove +0   +1
+##Key Left      A       MC      CursorMove -1 0
+##Key Right     A       MC      CursorMove +1 +0
+##Key Up                A       MC      CursorMove +0   -1
+##Key Down      A       MC      CursorMove +0   +1
 
 ##------------------------------------------------------------------------------
 ## press arrow + Shift-Alt key, and move the pointer by 1/10 of a page
 ##------------------------------------------------------------------------------
 
-##Key Left	A	SM	CursorMove -10 +0
-##Key Right	A	SM	CursorMove +10 +0
-##Key Up		A	SM	CursorMove +0   -10
-##Key Down	A	SM	CursorMove +0   +10
+##Key Left      A       SM      CursorMove -10 +0
+##Key Right     A       SM      CursorMove +10 +0
+##Key Up                A       SM      CursorMove +0   -10
+##Key Down      A       SM      CursorMove +0   +10
 
 ##------------------------------------------------------------------------------
 ## Page Up/Page Down keys are used to scroll by one desktop page
@@ -189,31 +189,31 @@ Mouse 3         6       A       All ($c) WindowShade On
 ## in root context, just pressing page up/down is OK
 ##------------------------------------------------------------------------------
 
-##Key Next	A       CM      Desk  -1 0 0 3
-##Key Next	R       M       Desk  -1 0 0 3
-##Key Prior	A       CM      Desk  +1 0 0 3
-##Key Prior	R       M       Desk  +1 0 0 3
+##Key Next      A       CM      Desk  -1 0 0 3
+##Key Next      R       M       Desk  -1 0 0 3
+##Key Prior     A       CM      Desk  +1 0 0 3
+##Key Prior     R       M       Desk  +1 0 0 3
 
 ##------------------------------------------------------------------------------
 ## Alt-Shift-Fx window operations
 ##------------------------------------------------------------------------------
-## Key F4		A	MS	Close
-## Key F5		A	MS	RaiseLower
-## Key F6		A	MS	All (Iconic) Raise  # originally Restore
-## Key F7		A	MS	Move
-Key F7                  A	4	Move
-## Key F8		A	MS	Resize
-## Key F9		A	MS	Iconify
-Key F10		A	MS	Maximize 100 100
-Key F11		A	MS	FvwmIdent
-## Key F12		A	MS	FvwmConsole
+## Key F4               A       MS      Close
+## Key F5               A       MS      RaiseLower
+## Key F6               A       MS      All (Iconic) Raise  # originally Restore
+## Key F7               A       MS      Move
+Key F7                  A       4       Move
+## Key F8               A       MS      Resize
+## Key F9               A       MS      Iconify
+Key F10         A       MS      Maximize 100 100
+Key F11         A       MS      FvwmIdent
+## Key F12              A       MS      FvwmConsole
 
 ##------------------------------------------------------------------------------
 ## The menus via Alt-Shift-Fx
 ##------------------------------------------------------------------------------
-## Key F1		A	MS	Menu Utilities mouse -1p -1p
-## Key F2		A	MS	Menu Window mouse -1p -1p
-## Key F3		A	MS	WindowList mouse -1p -1p
+## Key F1               A       MS      Menu Utilities mouse -1p -1p
+## Key F2               A       MS      Menu Window mouse -1p -1p
+## Key F3               A       MS      WindowList mouse -1p -1p
 
 ##------------------------------------------------------------------------------
 ## The [in]famous Alt-tab binding
@@ -234,48 +234,48 @@ Key      Tab       A     CM      WindowList Root c c NoGeometry, OnlyListSkip, S
 ## to consider many sloppy stroke motions for each action.
 
 ##STROKE 2
-##Mouse	3	R	N	StrokeFunc FeedBack DrawMotion
-##Mouse	3 	W 	M 	StrokeFunc FeedBack DrawMotion
+##Mouse 3       R       N       StrokeFunc FeedBack DrawMotion
+##Mouse 3       W       M       StrokeFunc FeedBack DrawMotion
 
 ##STROKE 2 We need to redefine the default bindings
-##Stroke	0		0 	R 	N 	WindowList mouse -1p -1p
-##Stroke	0		0	W	M	WindowList mouse -1p -1p
+##Stroke        0               0       R       N       WindowList mouse -1p -1p
+##Stroke        0               0       W       M       WindowList mouse -1p -1p
 
 ##PREF 11
 ##STROKE 2 A | from the top to the bottom
-##Stroke	N852		0	R	N	Exec exec dpxx
-##Stroke	N852		0	W	M       Exec exec dpxx
+##Stroke        N852            0       R       N       Exec exec dpxx
+##Stroke        N852            0       W       M       Exec exec dpxx
 
 ##STROKE 2 A | from the bottom to the top
-##Stroke	N258		0	R	N	Exec exec xemacs
-##Stroke	N258		0	W	M	Exec exec xemacs
+##Stroke        N258            0       R       N       Exec exec xemacs
+##Stroke        N258            0       W       M       Exec exec xemacs
 
 ##STROKE 2 A / from the bottom to the top
-##Stroke	N159		0	R	N	Exec exec xfm
-##Stroke	N159		0	W	M	Exec exec xfm
+##Stroke        N159            0       R       N       Exec exec xfm
+##Stroke        N159            0       W       M       Exec exec xfm
 
 ##STROKE 2 A C from the top
-##Stroke	N9874123	0	R	N	Exec exec xcalc
-##Stroke	N9874123	0	W	M	Exec exec xcalc
+##Stroke        N9874123        0       R       N       Exec exec xcalc
+##Stroke        N9874123        0       W       M       Exec exec xcalc
 
 ##STROKE 11 A N (from the bottom)
-##Stroke	7415963		0	R	N	Exec exec netscape
-##Stroke	74148963	0	R	N	Exec exec netscape
-##Stroke	74158963	0	R	N	Exec exec netscape
-##Stroke	7418963		0	R	N	Exec exec netscape
-##Stroke	415963		0	R	N	Exec exec netscape
+##Stroke        7415963         0       R       N       Exec exec netscape
+##Stroke        74148963        0       R       N       Exec exec netscape
+##Stroke        74158963        0       R       N       Exec exec netscape
+##Stroke        7418963         0       R       N       Exec exec netscape
+##Stroke        415963          0       R       N       Exec exec netscape
 ##
-##Stroke	7415963		0	W	M	Exec exec netscape
-##Stroke	74148963	0	W	M	Exec exec netscape
-##Stroke	74158963	0	W	M	Exec exec netscape
-##Stroke	7418963		0	W	M	Exec exec netscape
-##Stroke	415963		0	W	M	Exec exec netscape
+##Stroke        7415963         0       W       M       Exec exec netscape
+##Stroke        74148963        0       W       M       Exec exec netscape
+##Stroke        74158963        0       W       M       Exec exec netscape
+##Stroke        7418963         0       W       M       Exec exec netscape
+##Stroke        415963          0       W       M       Exec exec netscape
 
 ##STROKE 4 A clockwise box from the top left
-##Stroke	N78963214	0	R	N	FvwmForm FvwmForm-QuitVerify
-##Stroke	N789632147	0	R	N	FvwmForm FvwmForm-QuitVerify
-##Stroke	N78963214	0	W	M	FvwmForm FvwmForm-QuitVerify
-##Stroke	N789632147	0	W	M	FvwmForm FvwmForm-QuitVerify
+##Stroke        N78963214       0       R       N       FvwmForm FvwmForm-QuitVerify
+##Stroke        N789632147      0       R       N       FvwmForm FvwmForm-QuitVerify
+##Stroke        N78963214       0       W       M       FvwmForm FvwmForm-QuitVerify
+##Stroke        N789632147      0       W       M       FvwmForm FvwmForm-QuitVerify
 
 ##------------------------------------------------------------------------------
 ## Pager Bindings
@@ -317,62 +317,63 @@ Key            comma      W      4     Next WarpToWindow 12 12
 ##------------------------------------------------------------------------------
 ## Misc  Bindings
 ##------------------------------------------------------------------------------
-##Key e A 4 WindowId (XEmacs@o-xterm) Raise
-##Key e A 4 Next ("XEmacs@o-xterm*") WarpToWindow 33p 33p
 
-Key  e   A      4 NextEmacs
-Key  e   A     S4 AnyNextEmacs
-Key  e   A     C4 EditingServer
-##Key n A 4 Next WarpToWindow 12 12
+#   key        context modifiers Action   
+Key e          A       4         PageNextEmacs
+Key e          A       S4        AnyNextEmacs
+Key e          A       C4        AnyEditingServer
 
 ## XXX @todo I want to do a cycle windows where each one is raised as I cycle
 ## over it.
-##Key    Tab      A       M  CycleWindows
-## ??? # Key    Tab      A       MS  CycleWindowsReverse
-Key Tab          A      M       Next (AcceptsFocus, CurrentPage, !Iconic) FocusRaiseAndStuff
-Key Tab          A      SM      Prev (AcceptsFocus, CurrentPage, !Iconic) FocusRaiseAndStuff
-Key Escape       A      C       WindowList Mouse -1p -1p CurrentDesk
-Key Escape       A      4       WindowList Mouse -1p -1p CurrentDesk
+#   key        context modifiers Action   
+Key Tab        A       M         Next (AcceptsFocus, CurrentPage, !Iconic) FocusRaiseAndStuff
+Key Tab        A       SM        Prev (AcceptsFocus, CurrentPage, !Iconic) FocusRaiseAndStuff
+Key Escape     A       C         WindowList Mouse -1p -1p CurrentDesk
+Key Escape     A       4         WindowList Mouse -1p -1p CurrentDesk
 
 ##
 ## If on root, the focused window is raised. I like that.
-Key z          A        4       Maximize 90 90
-Key y          A        4       Iconify
+#   key        context modifiers Action   
+Key z          A       4         Maximize 90 90
+Key y          A       4         Iconify
 
-Key Left       A        4       GotoDesk -1
-Key Right      A        4       GotoDesk 1
+Key Left       A       4         GotoDesk -1
+Key Right      A       4         GotoDesk 1
 
-Key d          A        4C      exec dpxx
+Key d          A       4C        exec dpxx
 
 # Can't get this to work... Modules must be special.
 #Key d          A        4       PageNextXXXCirculateSkipOK *CurrentDesktopBarButtons*
 #Key d          A        4S      PageNextXXXCirculateSkipOK *DeskerPanelButtons*
 
-Key f          A        4       PageNextFarmTerm
-Key f          A        4M      DeskNextFarmTerm
-Key f          A        4S      AnyNextFarmTerm
-Key t          A        4       Next  ("*xssh-tunnel@*") FocusRaiseAndStuff
+#   key        context modifiers Action   
+Key f          A       4         PageNextFarmTerm
+Key f          A       4M        DeskNextFarmTerm
+Key f          A       4S        AnyNextFarmTerm
+Key f          A       4C        PageNextFarmEmacs
+Key t          A       4         Next  ("*xssh-tunnel@*") FocusRaiseAndStuff
 
 ## Go to an IPython if possible.
 ## Better would be to bring it to us.
-Key i          A        4       Next  ("*ipython@*") FocusRaiseAndStuff
-Key o          A        4       Next  ("*orpie@*") FocusRaiseAndStuff
-Key o          A        M4      exec xorpie
+#   key        context modifiers Action   
+Key i          A       4         Next  ("*ipython@*") FocusRaiseAndStuff
+Key o          A       4         Next  ("*orpie@*") FocusRaiseAndStuff
+Key o          A       M4        exec xorpie
 
 ## Wander around with the cursor keys.
-Key v          A	4	Move
-
-# Doesn't seem to work. Reclaim the binding.
-#Key c         A        C4      FvwmCpp /home/dpanariti/.fvwm/.fvwm2rc
+#   key        context modifiers Action   
+Key v          A       4         Move
 
 # Needs a mouse move after pressing. Fix Me.
-Key Space      A    	4       Function "window_ops_func_I"
+#   key        context modifiers Action   
+Key Space      A       4         Function "window_ops_func_I"
 
 # Save unmodified `s' for more common operations.
-Key s          A        4C      StickAcrossPages
-Key s          A        4S      StickAcrossDesks
+#   key        context modifiers Action   
+Key s          A       4C        StickAcrossPages
+Key s          A       4S        StickAcrossDesks
 
 # Maximalizations of the horizontal and vertical variety.
-Key h          A        4       Maximize 0 90
-Key w          A        4       Maximize 100 0
-
+#   key        context modifiers Action   
+Key h          A       4         Maximize 0 90
+Key w          A       4         Maximize 100 0

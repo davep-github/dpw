@@ -336,28 +336,27 @@ Oddly, it doesn't handle structs.")
             (switch-to-buffer buf))
         (dp-ding-and-message "No gtags select buffers."))))
   (add-hook 'gtags-select-mode-hook 'dp-gtags-select-mode-hook))
-  
+
+(defvar dp-wants-hide-ifdef-p nil
+  "Do I want the hide ifdef package activated?")
+
+(defvar dp-hide-ifdef-configure-function nil
+  "What to call to set up the initial hide ifdef configuration.")
+
 (when (and (bound-and-true-p dp-wants-hide-ifdef-p)
            (dp-optionally-require 'hideif))
+  
+;;needs finished Make hide-ifdef-define use the symbol @ point as a default.
+;;needs finished hide-ifdef-define reads the name as a symbol.
+;;needs finished Need to make the string a symbol (intern?)
+;;needs finished   (defun dp-hide-ifdef-mode-hook ()
+;;needs finished     (local-set-key [?d] 'dp-hide-ifdef-define))
+;;needs finished   (add-hook 'hide-ifdef-mode-hook 'dp-hide-ifdef-mode-hook)
+  
   (message "Configuring hide-ifdef...")
-  (defvar dp-T3D-hide-ifdef-default-defs
-    '(NV_T3D)
-    "T3D definitions for hide-ifdef-* to show code of interest.")
-
-  (defun dp-setup-hide-ifdef-for-T3D (&optional extras)
-    (interactive)
-    (setq hide-ifdef-lines t
-          hide-ifdef-env nil)
-    (let ((defs (append dp-T3D-hide-ifdef-default-defs extras)))
-      (loop for def in defs do
-        (hide-ifdef-define def)))
-    (hide-ifdef-set-define-alist "t3d"))
-
-  (defun dp-hide-ifdef-for-T3D ()
-    (interactive)
-    (hide-ifdef-mode 1)
-    (hide-ifdef-use-define-alist "t3d")
-    (hide-ifdefs)))
+  (if dp-hide-ifdef-configure-function
+      (funcall dp-hide-ifdef-configure-function)
+    (message "No hide-ifdef configure function configured.")))
 
 ;;
 ;; Give the ability to prevent writing to certain directory trees.
@@ -526,6 +525,8 @@ the current sandbox is used for defaults, etc."
           (message "sb dir: %s" (dp-current-sandbox-regexp)))
       (setq cscope-database-regexps nil)
       (message "Current sandbox cleared."))))
+
+(dp-safe-aliases 'dp-ssb 'dpsb 'dpssb 'dp-set-sandbox)
   
 
 (defun dp-sandbox-read-only-p (filename)
@@ -643,21 +644,25 @@ do not indent the newly inserted comment block."
    'tempo-template-doxy-c-function-comment no-indent))
 (defalias 'tfc0 'dp-c-tempo-insert-function-comment)
 
-(defun dp-c-insert-class-comment ()
+(defun* dp-c-insert-class-comment (&optional beginning-of-statement 
+                                   template-p)
   "Insert a tempo class comment, using the class name from the current line."
   (save-match-data
     (save-excursion
       (beginning-of-line)
       ;; find the class name
       ;; @todo templates *WILL* break this.
-      ;; Apparently not. 
+      ;; Apparently not.
       (re-search-forward 
        "\\s-*\\(enum\\|class\\|struct\\)\\s-+\\(\\S-+?\\)\\s-*\\(:\\|{\\|$\\)"))
     (let ((class-name (match-string 2)))
+      (when template-p
+        (setq class-name (format "%s <template>" class-name)))
       ;;(tempo-template-doxy-c-class-comment)
       (dp-insert-tempo-template-comment 
        'tempo-template-doxy-c-class-comment nil
-       nil nil (match-beginning 0))
+       nil nil (or beginning-of-statement
+                   (match-beginning 0)))
       (insert class-name)
       (tempo-forward-mark))))
 
@@ -676,7 +681,8 @@ do not indent the newly inserted comment block."
     (if (save-excursion
           (beginning-of-line)
           (looking-at "\\s-*\\(enum\\|class\\|struct\\|template\\)"))
-        (dp-c-insert-class-comment)
+        (dp-c-insert-class-comment (line-beginning-position)
+                                   (string= "template" (match-string 1)))
       ;; not in C++, just insert a function comment
       (dp-c-tempo-insert-function-comment))))
 

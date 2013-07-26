@@ -456,6 +456,10 @@ DestroyFunc PageNextXXX
 AddToFunc PageNextXXX
 + I Next  ("$0", CurrentPage) FocusRaiseAndStuff
 
+## FlipFocus??? vs FocusRaiseAndStuff
+
+### Generic "Next" functions
+
 DestroyFunc PageNextXXXCirculateSkipOK
 AddToFunc PageNextXXXCirculateSkipOK
 + I Next  ("$0", CurrentPage, CirculateSkip) FocusRaiseAndStuff
@@ -464,30 +468,65 @@ DestroyFunc DeskNextXXX
 AddToFunc DeskNextXXX
 + I Next  ("$0", CurrentDesk) FocusRaiseAndStuff
 
-## FlipFocus???
-DestroyFunc NextEmacs
-AddToFunc NextEmacs
-+ I PageNextXXX "*XEmacs@*-xterm*"
+DestroyFunc AnyNextXXX
+AddToFunc AnyNextXXX
++ I Next  ("$0") FocusRaiseAndStuff
+
+### XEmacs
+
+DestroyFunc PageNextEmacs
+AddToFunc PageNextEmacs
++ I PageNextXXX @KONST_XEMACS_PATTERN@
+
+DestroyFunc DeskNextEmacs
+AddToFunc DeskNextEmacs
++ I DeskNextXXX @KONST_XEMACS_PATTERN@
 
 DestroyFunc AnyNextEmacs
 AddToFunc AnyNextEmacs
-+ I Next  ("*XEmacs@*-xterm*") FocusRaiseAndStuff
++ I AnyNextXXX @KONST_XEMACS_PATTERN@
+
+### Farm XEmacs
+
+DestroyFunc PageNextFarmEmacs
+AddToFunc PageNextFarmEmacs
++ I PageNextXXX @KONST_FARM_XEMACS_PATTERN@
+
+DestroyFunc DeskNextFarmEmacs
+AddToFunc DeskNextFarmEmacs
++ I DeskNextXXX @KONST_FARM_XEMACS_PATTERN@
+
+DestroyFunc AnyNextFarmEmacs
+AddToFunc AnyNextFarmEmacs
++ I AnyNextXXX  @KONST_FARM_XEMACS_PATTERN@
+
+### Farm Term
 
 DestroyFunc PageNextFarmTerm
 AddToFunc PageNextFarmTerm
-+ I PageNextXXX @KONST_FARM_PATTERN@
++ I PageNextXXX @KONST_FARM_XTERM_PATTERN@
 
 DestroyFunc DeskNextFarmTerm
 AddToFunc DeskNextFarmTerm
-+ I Next  ("@KONST_FARM_PATTERN@", CurrentDesk) FocusRaiseAndStuff
++ I DeskNextXXX @KONST_FARM_XTERM_PATTERN@
 
 DestroyFunc AnyNextFarmTerm
 AddToFunc AnyNextFarmTerm
-+ I Next  ("@KONST_FARM_PATTERN@") FocusRaiseAndStuff
++ I AnyNextXXX @KONST_FARM_XTERM_PATTERN@
 
-DestroyFunc EditingServer
-AddToFunc EditingServer
-+ I Next  ("*Serv/*XEmacs@*-xterm*") FocusRaiseAndStuff
+### 
+
+DestroyFunc PageEditingServer
+AddToFunc PageEditingServer
++ I PageNextXXX @KONST_XEMACS_SERVER_PATTERN@
+
+DestroyFunc DeskEditingServer
+AddToFunc DeskEditingServer
++ I DeskNextXXX @KONST_XEMACS_SERVER_PATTERN@
+
+DestroyFunc AnyEditingServer
+AddToFunc AnyEditingServer
++ I AnyNextXXX @KONST_XEMACS_SERVER_PATTERN@
 
 DestroyFunc  MoveAndGotoPage
 AddToFunc    MoveAndGotoPage

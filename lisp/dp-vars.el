@@ -11,6 +11,10 @@
   "My personal customizable variables."
   :group 'local)
 
+(defgroup dp-whitespace-vars nil
+  "My vars dealing with whitespace."
+  :group 'dp-vars)
+
 ;;
 ;; email sig stuff
 (defcustom dp-sig-source nil

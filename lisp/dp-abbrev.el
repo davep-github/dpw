@@ -357,32 +357,6 @@ list in my DP-STYLE-ABBREV format (q.v.)"
           dp-emacs-style-abbrev-files)
   (dp-abbrev-refresh-buffers dp-go-abbrev-table))
 
-(defvar dp-num-dp-aliases-tried 0)
-
-;; Operant conditioning.
-(defun dp-aliases (&rest rest)
-  (interactive)
-  (message (format "Use dp-abbrevs%s"
-                   (cond
-                    ((> dp-num-dp-aliases-tried 30)
-                     (format "! OMFG!  I've told you %d times!" 
-                             dp-num-dp-aliases-tried))
-                    ((> dp-num-dp-aliases-tried 20)
-                     " FOOL!")
-                    ((> dp-num-dp-aliases-tried 10)
-                     " you IDIOT!")
-                    ((> dp-num-dp-aliases-tried 5)
-                     " you twit!  I'll do it this time...")
-                    (t "!"))))
-  (incf dp-num-dp-aliases-tried)
-  (ding)
-  (ding)
-  (ding)
-  (ding)
-  (ding)
-  (when (<= dp-num-dp-aliases-tried 5)
-    (apply 'dp-abbrevs rest)))
-
 (defun dp-save-and-redefine-abbrevs (&optional arg1)
   (interactive "P")
   (save-buffer)

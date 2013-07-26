@@ -4556,3 +4556,52 @@ Wednesday July 17 2013
 
 
 
+
+========================
+Wednesday July 24 2013
+--
+
+(dp-shell-command-to-list "go2env.py -E" "
+")
+
+nil
+(getenv "new-test-val1")
+"for-xemacs-test"
+
+nil
+
+"for-xemacs-test"
+
+
+0
+
+
+(eval '("(setenv \"bubba-test\" \"nyuck/\")"
+        "(setenv \"bubba-bubba\" \"I, bubblius\")"))
+
+(eval-region "(setenv \"bubba-test\" \"nyuck/\")")
+"(setenv \"bubba-test\" \"nyuck/\")"
+
+;;installed (defun dp-go-setenv ()
+;;installed   "Set all of the `go' environment variables.
+;;installed This is needed because the new sandbox relative utilities count on environment variables.
+;;installed @todo XXX Fix this in the scripts. But for now, doing it here is ttttrivial."
+;;installed   (interactive)
+;;installed   (with-temp-buffer
+;;installed     (call-process "go2env.py" nil t nil "-E")
+;;installed     (eval-buffer)))
+a
+(dp-listify-things '(a b c) nil 'a)
+((a b c) (a))
+
+(hide-ifdef-define
+(defun dp-hide-ifdef-define (var)
+  (interactive (list (dp-prompt-with-symbol-near-point-as-default 
+                      "#define name:" 
+                      :symbol-type 'S
+                      :require-match-p nil)))
+  (hide-ifdef-define var))
+dp-hide-ifdef-define
+
+
+
