@@ -2174,7 +2174,7 @@ Motivated by `dp-indent-line-and-move-down'."
     (when (or (eq pred t)
               (funcall pred))
       (apply func func-args))
-    (next-line 1)))
+    (next-line 1))
 
   ;; python-mode does different things if the previous command was an indent
   ;; command, so we make sure this isn't true.  This should be OK since this
