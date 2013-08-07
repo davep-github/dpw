@@ -17,7 +17,12 @@ x=`typeset -f`
 
 #
 # determine desktop environment
-[ -z "$DTE" ] && ! DTE=`host-info.py DTE` && {
+echo_id DTE
+HI_DTE=${DTE-$($HOST_INFO -n - DTE)}
+echo_id HI_DTE
+: ${DTE=$HI_DTE}
+echo_id DTE
+[ -z "$DTE" ] && {
     case "$SESS_TYPE" in
 	kdm|kde)
 	    DTE=kde;
@@ -27,17 +32,18 @@ x=`typeset -f`
 	gnome)
 	    DTE=gnome;;
 
-	*)
+	-|*)
 	    DTE=none
     esac
 }
-
+[ "$DTE" = '-' ] && DTE=
 export envDTE=$DTE
-
+echo_id DTE
+echo_id envDTE
 WMD=`host-info.py window_manager`
 WM=${WM:-$ARGWM}
 WM=${WM:-$WMD}
-WM=${WM:-"sawfish"}
+WM=${WM:-"fvwm2"}
 case "$WM" in
     a) WM=afterstep
 	;;

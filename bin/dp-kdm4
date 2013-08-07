@@ -57,9 +57,9 @@ dp_kdm4()
 
     ###dp_kdm4_inhibit_logfiles
     
-    ###running_p=$(pgrep "/usr/kde/.*/bin/kdm")
+    ###running_p=$(dpgrep "/usr/kde/.*/bin/kdm")
     KDM=$(sp -1 kdm)
-    running_p=$(pgrep "$KDM")
+    running_p=$(dpgrep "$KDM")
     #echo 1>&2 "$(date): running_p>$running_p<"
     [ -n "$running_p" ] && {
 	echo -n 1>&2 "$(date): Another kdm is running.  Kill it [Y/n]? "
