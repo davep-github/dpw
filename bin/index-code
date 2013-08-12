@@ -119,12 +119,12 @@ set_all_index_methods()
 iterate_individually_p=
 
 
-option_str="nvdc:t:g:CTkKVo:Gxeiuf:Is:S:Caz"  # <:add new options:>
+option_str="nvdc:t:g:CTkKVo:Gxeiuf:Is:S:Cazh"  # <:add new options:>
 all_options="$option_str"
 
 q=$(getopt -o "$all_options" -- "$@")
 [ $? != 0 ] && Usage
-eval set -- "$q" 
+eval set -- "$q"
 unset q
 
 for i in "$@"
@@ -139,6 +139,7 @@ do
       # -d is really just verbosity
       -d) EExecVerbose; DEBUG="echo 1>&2 $prog: ";;
       -t) tflags="$tflags $2"; shift;;
+      -h) tflags="$tflags -h";;
       -g) if [[ "$2" =~ "^--?$" ]]; then 
              gtflags=""
           else

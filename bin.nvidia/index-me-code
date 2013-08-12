@@ -66,6 +66,7 @@ index_out_of_tree_locations()
 : ${just_nvcscope_p=}
 : ${nvcscope_files=cscope.files cscope.out cscope.out.in cscope.out.po}
 : ${skip_cd_p=}
+: ${follow_links_arg=-h}
 
 link_or_non_existent()
 {
@@ -85,14 +86,14 @@ Use the nvcscope ap index by default.
 Usage_details="${EExec_parse_usage}
 -m|--no-nvcscope|--old-sk00l) Mundane usage, just index all dirs into sandbox
                               root just like the old days.
---nvcscope|--new-sk00l) Use nvcscope's db for ap tree. Currently problematical 
-                        because GTAGS can only use one db, so the non-ap GTAGS 
+--nvcscope|--new-sk00l) Use nvcscope's db for ap tree. Currently problematical
+                        because GTAGS can only use one db, so the non-ap GTAGS
                         needs *all*files.
 -j|--no-me-index|--no-arch-index|--no-other-index) Just set up nvcscope.
 -oot) Index out of tree files only.
 "
 # Example of arg parsing.
-option_str="${EExec_parse_option_str}jm"
+option_str="${EExec_parse_option_str}jmhH"
 long_options=(
 "mundane" "no-nvcscope"
 "no-me-index" "no-arch-index" "just-nvcscope" "links" "just-links"
@@ -108,6 +109,8 @@ do
       -m|--no-nvcscope|--mundane) nvcscope_p=;;
       --nvcscope|--new-sk00l) nvcscope_p=t;;
       -j|--no-me-index|--no-arch-index|--no-other-index|--links|--just-links) just_nvcscope_p=t;;
+      -h) follow_links_arg=-h;;
+      -H) follow_links_arg=;;
       --skip-cd|--stay-put) skip_cd_p=t;;
       --help) Usage; exit 0;;
       --oot) oot_only_p=t; nvcscope_p=; just_nvcscope_p=;;
@@ -144,7 +147,7 @@ vtruep "${just_nvcscope_p}" && {
 
 ap_hw_p4_path="//hw/${ap_dir}"
 
-# For T124/132 work, you want 
+# For T124/132 work, you want
 # //arch/traces/mobile/traces/gpu_multiengine/sanity_gr_disp_syncpt
 # //hw/ap_tlit1/inf/mods/trace_3d/plugin/1.0/src/t3dplugin.cpp
 
@@ -189,6 +192,7 @@ ${ap_hw_p4_path}/drv/bootrom/
 ${ap_hw_p4_path}/drv/chiplib/
 ${ap_hw_p4_path}/clib/
 //hw/class/
+//hw/oot/
 //hw/tools/mods
 //hw/tools/shimlib/
 //hw/kepler1_gklit3/clib/
@@ -249,7 +253,7 @@ fi
 
 if ! vtruep "${just_nvcscope_p}"
 then
-    EExec -y index-code $EExecDashN_opt $EExecDashV_opt $dirs_of_interest
+    EExec -y index-code $EExecDashN_opt $EExecDashV_opt $follow_links_arg $dirs_of_interest
     index_out_of_tree_locations
 else
     dp_echo "Not indexing non-nvcscope code."

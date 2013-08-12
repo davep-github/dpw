@@ -183,6 +183,7 @@
             (if (dp-c-looking-back-at-sans-eos-junk ":\\s-*" 'from-eol-p)
                 ;; Already colon'd
                 ()
+              (dp-c-indent-command)
               (dp-c-replace-statement-end ":"))
             (dmessage "cob: case label")
             t)
@@ -267,6 +268,7 @@
               (let ((starting-point (point))
                     iswhile-p)
                 (dp-c-beginning-of-statement)
+                (set-match-data nil)
                 (and (or (looking-at (concat "\\s-*" 
                                              dp-c*-keywords-with-stmt-blocks))
                          ;; `[dp-]c-beginning-of-statement' works oddly with
@@ -345,8 +347,8 @@
             (let (goto-here ret)
               (save-excursion
                 (when (dp-c-prev-eol-regexp ")" 'goto-eol)
-                  (dmessage "cob: add comma in member-init")
-                  (dp-c-end-of-line)
+                  (dmessage "cob: add comma in member init")
+                  (end-of-line)
                   (if (or (not dp-c-member-init-leading-commas)
                           (dp-c-in-syntactic-region '(func-decl-cont)))
                       (progn 

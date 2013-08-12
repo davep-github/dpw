@@ -528,9 +528,15 @@ abbrev is expanded.")
 
 ;; Just get the whole string and let me-expand-dest sort it out.
 (defun dp-get-sandbox-rel-abbrev ()
-  (when (dp-looking-back-at "\\(?:/\\| \\|^\\)\\(\\(//\\|[ ,]\\)\\([^, 
-	]+\\)\\([, ][^, 
-	]*\\)?[ ,]?\\)")
+  (when (dp-looking-back-at 
+         (concat 
+          "\\(?:/\\| \\|^\\)"
+          ;;"\\(?:[^a-zA-Z]\\|^\\)"
+;;          "\\(\\(//\\|[ ,]\\)\\([^, 
+;;	]+\\)\\([, ][a-zA-Z_0-9]*\\)?[ ,]?\\)"
+          "\\(\\(//\\|[ ,]\\)\\([a-zA-Z_0-9]*[, ]+"
+	"\\)\\([, ][a-zA-Z_0-9]*\\)?[ ,]?\\)"
+))
     (list (match-beginning 1)
           (match-end 1)
           (match-string 1))))

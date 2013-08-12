@@ -174,7 +174,7 @@ class FileTreeWalker:
         dp_io.ldebug(1, "walk_default_include\n")
         root = root or self.root
         ret = []
-        for cwd, dirs, files in os.walk(root):
+        for cwd, dirs, files in os.walk(root, followlinks=FOLLOW_SYMLINKS):
             dp_io.vcprintf(0, 'd')
             cwd = os.path.normpath(cwd)
 
@@ -195,7 +195,7 @@ class FileTreeWalker:
 
             # we shuns the symlinks
             # and its chilluns
-            if os.path.islink(cwd) and FOLLOW_SYMLINKS:
+            if os.path.islink(cwd) and not FOLLOW_SYMLINKS:
                 dp_io.ldebug(2,'shunning symlink cwd>%s<\n', cwd)
                 del dirs[:]
                 dp_io.vcprintf(0, 'S')
@@ -360,7 +360,7 @@ class FileTreeWalker:
         root = root or self.root
         ret = []
         inc_regexp = None
-        for cwd, dirs, files in os.walk(root):
+        for cwd, dirs, files in os.walk(root, followlinks=FOLLOW_SYMLINKS):
             dp_io.vcprintf(0, 'd')
             cwd = os.path.normpath(cwd)
             # we shuns the symlinks

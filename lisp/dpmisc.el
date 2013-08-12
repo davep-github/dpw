@@ -109,6 +109,16 @@
            " <left> C-s C-w C-y C-s RET M-a 2*<C-r> RET DEL ${ M-y }"
            " <down> C-a")))
 
+(defalias 'dp-arg-to-member
+  (read-kbd-macro
+   "C-a TAB C-s SPC RET m_ ESC C-s [=,)] RET <backspace> M-k ; <down> C-a"))
+
+(defalias 'dp-arg-to-initializer
+  (read-kbd-macro
+   (concat "C-a <M-backspace> , SPC ESC C-s [,);] RET"
+           " <left> M-k C-a M-m 2*<right> M-a C-s SPC RET"
+           " DEL M-s <down> C-a")))
+
 ;;;;;;; end of kbd macros ;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -772,7 +782,8 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
               (dp-c-indent-command))
             (dp-open-newline t)
             (dp-c-indent-command)
-            (delete-matching-lines "^\\s-*$")))
+;;             (delete-matching-lines "^\\s-*$")
+            ))
         (when show-help-p
           (message
            ;; default goes with [1] because that is the default argument.
@@ -12919,8 +12930,9 @@ the minibuffer."
   "Buffers usually not associated with a file.  
 If it is indeed a script name <script>-it can be called interactively.")
 
-(defun* dp-script-it (&key interpreter 
+(defun* dp-script-it (interpreter
                       run-with-/usr/bin/env-p
+                      &key
                       (make-executable-p t) 
                       comm-start
                       (add-to-svn-p 'check)
@@ -12950,9 +12962,12 @@ If it is indeed a script name <script>-it can be called interactively.")
       (insert "\n"))
     ;; If we added junk to the file, we'll want to add a newline. Unless we
     ;; don't.
-    (when (eq 'added-junk (or (dp-add-new-file-template template
-                                                        template-args)
-                              added-junk-p))
+    (when (eq 'added-junk
+              (or
+               (and template
+                    (dp-add-new-file-template template
+                                              template-args))
+               added-junk-p))
       (insert "\n")
       (previous-line 1)))                  ; Don't want to be on the [EOF] line
   (when make-executable-p
@@ -12986,17 +13001,17 @@ An `undo-boundary' is done before the template is used."
 
 (defun shit ()
   (interactive)
-  (dp-script-it :interpreter "/bin/sh"
+  (dp-script-it "/bin/sh" nil
                 :template dp-sh-new-file-template))
 
 (defun bashit ()
   (interactive)
-  (dp-script-it :interpreter "/bin/bash"
+  (dp-script-it "/bin/bash" nil
                 :template dp-sh-new-file-template))
 
 (defun perlit ()
   (interactive)
-  (dp-script-it :interpreter "perl" 
+  (dp-script-it "perl" nil
                 :run-with-/usr/bin/env-p 'RUN-WITH-/USR/BIN/ENV-P))
 
 ;;
@@ -13117,8 +13132,7 @@ An `undo-boundary' is done before the template is used."
 Inserts `dp-python-new-file-template' by default."
   (interactive)
   (let ((comment-start "###"))
-    (dp-script-it :interpreter "python" 
-                  :run-with-/usr/bin/env-p t
+    (dp-script-it "python" t
                   :comm-start comment-start
                   :template dp-python-new-file-template)))
 
@@ -13551,8 +13565,8 @@ Where plist has elements:
         (if (plist-get info-plist 'it)
             (let ((it (plist-get info-plist 'it)))
               (apply it (plist-get info-plist 'it-args)))
-          (dp-script-it :interpreter (plist-get info-plist 'i-name) 
-                        :run-with-/usr/bin/env-p (plist-get info-plist 'env-p)
+          (dp-script-it (plist-get info-plist 'i-name) 
+                        (plist-get info-plist 'env-p)
                         :make-executable-p (plist-get info-plist 'make-exe-p t)
                         :comm-start (plist-get info-plist 'comment-start)
                         :template (plist-get info-plist 'template )
@@ -15497,14 +15511,26 @@ it. Whitespace diffs are easy to ignore during reviews"
   :group 'dp-whitespace-vars
   :type 'boolean)
 
+(dp-deflocal dp-white-space-cleanup-disabled-in-this-buffer-p nil
+  "Per-buffer disablement.")
+
+(defun dp-disable-whitespace-cleanup (&optional arg)
+  (dp-toggle-var arg 'dp-white-space-cleanup-disabled-in-this-buffer-p))
+
+(dp-defaliases 'dp-disable-ws-cleanup 'disable-ws-cleanup
+               'dwsc
+               'dp-disable-whitespace-cleanup)
+
 (defun dp-whitespace-following-a-cleanup-command-p ()
   "What the name says. 
 Making it a function makes it easier to use as a value for a predicate
 variable."
   (let ((tmp last-command))
-    (or (and dp-whitespace-cleanup-when-modified-p
-             (buffer-modified-tick))
-        (memq last-command dp-whitespace-cleanup-after-these-commands))))
+    (and (not dp-white-space-cleanup-disabled-in-this-buffer-p)
+         (or (and dp-whitespace-cleanup-when-modified-p
+                  (buffer-modified-tick))
+             (memq last-command 
+                   dp-whitespace-cleanup-after-these-commands)))))
 
 (defun dp-next-line (count)
   "Add trailing white space removal functionality."
@@ -15523,7 +15549,7 @@ variable."
                      (funcall gating-pred)))
             (dp-func-and-move-down 'dp-cleanup-line
                                    t
-                                   'preserve-column
+                                   nil ; 'preserve-column
                                    'next-line)
           (next-line count))))))
 

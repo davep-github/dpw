@@ -695,8 +695,11 @@ the line is blank."
   (save-excursion
     (dp-c-beginning-of-defun 1 'real-bof)
     (beginning-of-line)
-    (if (looking-at "^\\s-*template\\s-*<")
-        (forward-line 1))
+    (when (looking-at "\\(^\\s-*template\\s-*\\)<")
+        (goto-char (match-end 1))
+        (dp-c++-find-matching-paren)
+        (forward-line 1)
+        (beginning-of-line))
     (when (re-search-forward (concat "^\\s-*"
                                      (dp-mk-c++-symbol-regexp "struct\\|class")
                                      "\\s-*\\(\\S-+\\)\\s-*")

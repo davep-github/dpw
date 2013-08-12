@@ -465,6 +465,8 @@
      dp-manual)
     (("ccs" "const char* " "const std::string& ")
      dp-manual)
+    (("vccs" "virtual const char* " "virtual const std::string& ")
+     dp-manual)
     (("css" "const std::string& " "std::string& " "const char* " 
       "const std::string " "std::string ")
      dp-manual)
