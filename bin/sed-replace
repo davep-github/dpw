@@ -12,6 +12,17 @@ do
 done
 unset eexec_program
 
+: ${domain=}
+
+for i in "$@"
+do
+  case "${1-}" in
+      --domain|-d) shift; domain="${1}";;
+      *) break;;
+  esac
+  shift
+done
+
 : ${sed_sep=!}
 dolat=("$@")
 #echo 1>&2 "dolat>${dolat[@]}<"
@@ -23,14 +34,27 @@ do
       EExec_verbose_msg "Skipping blank/comment line>$REPLY<"
       continue
   }
+
+  #echo "before: $(echo_id REPLY)"
+  REPLY=$(echo "${REPLY}" | sed -rn "s/($domain)(@.+@ )(.*$)/\2\3/p")
+  #echo "after : $(echo_id REPLY)"
+  vsetp "${REPLY}" || continue
+
   set -- $REPLY
   script_element="s${sed_sep}${1}${sed_sep}${2}${sed_sep}"
   sed_script="${sed_script}${script_element}
 "
+  #echo_id2 sed_script
 done
 
 #echo_id2 sed_script
 
+# Let no input files act as a request to print the sed script.
+if (("${#dolat[@]}" == 0))
+then
+    echo "$sed_script"
+    exit 0
+fi
 for infile in "${dolat[@]}"
 do
   #echo_id2 infile
