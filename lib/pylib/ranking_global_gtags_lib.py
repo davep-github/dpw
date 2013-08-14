@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
 import sys, os, re, subprocess
-import find_up
+import find_up, dp_io
 opath = os.path
 
-rgg_log_file = open("/home/dpanariti/log/rgg.log", "a")
+log_file = open("/home/dpanariti/log/rgg.log", "a")
 
 ## Make this environment specific
 ## In order of rank.
@@ -15,7 +15,7 @@ rgg_log_file = open("/home/dpanariti/log/rgg.log", "a")
 # The model [ at this time: 2013-07-12T10:11:37 ] is that this is used as a
 # lib and is imported. The importer sets/overrides the appropriate variables
 # to fit the specific application of this functionality.
-Top_ranking_regexps = [] 
+Top_ranking_regexps = []
 
 def add_top_ranking_regexp_strings(regexps):
     Top_ranking_regexps.extend([ re.compile(regexp) for regexp in regexps ])
@@ -41,6 +41,10 @@ def add_top_ranking_regexp_strings(regexps):
 ##finish     def __init__(self, data_file_name, path_elements):
 ##finish         self.d_data_file_name = data_file_name
 ##finish         self.d_path_elements = path_elements
+
+def rgg_parse_args(argv):
+    argv = dp_io.parse_args()
+    pass # for now
 
 Bottom_ranking_regexps = []
 def rank_lines(lines):
@@ -84,11 +88,11 @@ def get_lines(fobj, cxref_realpath_p=False, start_dir=opath.curdir):
         lines.append(line)
     #print >>sys.stderr, "lines:", lines
     return lines
-    
+
 def run_global(argv, start_dir=opath.curdir):
     #print >>sys.stderr, "run_global(argv: %s)" % (argv,)
     #print >>sys.stderr, "run_global(), cwd: %s" % (opath.realpath(opath.curdir,))
-    rgg_log_file.write("run_global(), cwd: %s\n"
+    log_file.write("run_global(), cwd: %s\n"
                        % (opath.realpath(opath.curdir,)))
     cxref_fmt = "-x" in argv
     glob = subprocess.Popen(["global"] + argv[1:], stdout=subprocess.PIPE)

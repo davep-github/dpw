@@ -146,7 +146,7 @@ def sprintf(fmt, *args):
     if args:
         fmt = fmt % args
     return fmt
-    
+
 ###############################################################
 def eprintf(fmt, *args):
     """eprintf - print to stderr or user specified error files."""
@@ -190,7 +190,7 @@ def do_debug(fmt, leader, args, **kw_args):
 def do_ldebug(level, fmt, leader, *args):
     if (debug_level >= level):
         do_debug(fmt, leader, *args)
-    
+
 ###############################################################
 def debug(fmt, *args, **kw_args):
     global debug_leader
@@ -200,11 +200,11 @@ def debug(fmt, *args, **kw_args):
         leader = debug_leader
     elif set_leader_p:
         debug_leader = leader
-        
+
     do_debug(fmt, leader, args)
 
 dprintf = debug                         # alias
-    
+
 ###############################################################
 def cdebug(level, fmt, *args):
     '''conditional debug.
@@ -238,14 +238,14 @@ def debug_mask_all_set(mask):
 
 def debug_mask_any_set(mask):
     return mask & debug_mask
-    
+
 
 def fdebug(mask, fmt, *args):           # flag debug
     if debug_mask_any_set(mask):
         do_debug(fmt, '%s[0x%x]' % (debug_leader, mask), args)
 
 mdebug = fdebug                         # alias, mask debug
-        
+
 
 ###############################################################
 # work better as a set vs a list?
@@ -258,7 +258,7 @@ def add_debug_keyword(keys):
 
 def rm_debug_keyword(keys):
     dp_sequences.del_list_items(debug_keyword_list, keys)
-   
+
 def debug_keyword_all_set_p(keys, kw_list=None):
     if keys == True:
         return True
@@ -280,14 +280,14 @@ def debug_keyword_exact_set_p(keys):
     # all in debug_keyword_list in keys???
     if not debug_keyword_all_set_p(debug_keyword_list, keys):
         return False
-    
+
 
 def debug_keyword_any_set_p(keys):
     #print 'keys>%s<' % keys
     #print 'debug_keyword_list>%s<' % debug_keyword_list
     if keys == True:
         return True
-    
+
     keys = dp_sequences.mklist(keys)
     for k in keys:
         if k in debug_keyword_list:
@@ -316,11 +316,11 @@ def kwexactdebug(keys, fmt, *args):      # keyword debug
 def debug_exec(level, func, *args, **keys):
     if f_debug and (debug_level >= level):
         func(*args, **keys)
-        
+
 ###############################################################
 def verbose_p(level):
     return f_vprint and (verbose_level >= level or level == True)
-    
+
 def vcprintf(level, fmt, *args):
     """vcprintf: Verbose, conditional printf.
     Print messages depending on verbosity level."""
@@ -432,7 +432,7 @@ def YOPPf(fmt, *args):
     if args:
         fmt = fmt % args
     lprint(v_print_files, 'YOPPf: ', fmt)
-    
+
 ###############################################################
 def vprint_off():
     set_vprint(0)
@@ -485,48 +485,48 @@ def reset_ofiles(flist, def_files):
 ###############################################################
 def debug_file(file, append=0):
     set_ofiles(file, v_debug_files, append)
-    
+
 def reset_debug_file():
     set_ofiles(v_debug_files, default_debug_files, append=False)
-    
+
 ###############################################################
 def eprint_file(file, append=0):
     set_ofiles(file, v_eprint_files, append)
 
 def reset_eprint_file():
     set_ofiles(default_eprint_files, v_eprint_files, append=False)
-    
+
 ###############################################################
 def print_file(file, append=0):
     set_ofiles(file, v_print_files, append)
-    
+
 def reset_print_file():
     set_ofiles(default_print_files, v_print_files, append=False)
 
 ###############################################################
 def tprint_file(file, append=0):
     set_ofiles(file, v_tprint_files, append)
-    
+
 def reset_tprint_file():
     set_ofiles(default_tprint_files, v_tprint_files, append=False)
 
 ###############################################################
 def vprint_file(file, append=0):
     set_ofiles(file, v_vprint_files, append)
-    
+
 def reset_vprint_file():
     set_ofiles(default_vprint_files, v_vprint_files, append=False)
 
 ###############################################################
 def dump_vars(*namelist, **kargs):
     """Dump a list of variables by name"""
-    
+
     val_pre=kargs.get('pre', '>')
     val_suf=kargs.get('suf', '<')
     val_sep=kargs.get('sep', ', ')
     g = kargs.get('globs', None)
     l = kargs.get('locs', None)
-    
+
     format = ''
     sep = ''
     for name in namelist:
@@ -549,11 +549,11 @@ def set_debug_leader(s):
 ###############################################################
 def set_debug_leader_sep(s):
     debug_leader_sep = s
-    
+
 ###############################################################
 def set_eprint_leader(s):
     eprint_leader = s
-    
+
 ###############################################################
 def set_print_leader(s):
     print_leader = s
@@ -606,7 +606,7 @@ else:
         if nuke_newline_p:
             ret = [ r[:-1] for r in ret ]
         return ret
-        
+
 
 ###############################################################
 def bq_lines_blah(cmd):
@@ -655,7 +655,7 @@ def dump_array_of_lines_to_str(lines, msg='', prefix2='\n>',
     if not lines:
         printf('%s empty\n', msg+prefix2)
         return
-    
+
     return '%s%s%s' % (msg+prefix2, string.join(lines, separator), postfix)
 
 def dump_array_of_lines(lines, msg='', prefix2='\n>',
@@ -664,17 +664,17 @@ def dump_array_of_lines(lines, msg='', prefix2='\n>',
     if not lines:
         printf('%s empty\n%s', msg+prefix2, postfix)
         return
-    
+
     printf('%s', dump_array_of_lines_to_str(lines, msg, prefix2,
                                             postfix, separator))
-    
+
 def dump_array_of_objects(lines, msg='', prefix2='\n>',
                           postfix='<\n', separator='<\n>'):
     #YOPPf('in dump_array_of_objects(%s, %s)\n', msg, lines)
     olines = []
     for l in lines:
         olines.append(`l`)
-        
+
     dump_array_of_lines(olines, msg, prefix2, postfix, separator)
 
 def func_printer(printer, fmt, *args, **keys):
@@ -723,7 +723,7 @@ def sprintf_called_from(fmt, *args, **keys):
 
 def printf_called_from(fmt, *args):
     printf('%s\n', do_sprintf_called_from(4, fmt, *args))
-    
+
 ########################################################################
 def file_len(fil):
     stat = os.stat(fil.fileno())
@@ -768,7 +768,7 @@ Print_func_to_files_map = {
     debug: v_debug_files,
     cdebug: v_debug_files,
     fdebug: v_debug_files,
-    
+
     eprintf: v_eprint_files,
     eYOPP: v_eprint_files,
     eYOPPf: v_eprint_files,
@@ -790,13 +790,13 @@ def y_or_n_p(default='n', fmt="", *args):
         elif default in "nN":
             n = "N"
     yn = "(%s/%s)? " % (y, n)
-        
+
     while True:
         dp_io.printf(fmt+yn, *args)
         ans = sys.stdin.readline()[:-1]
         if not ans and not default:
             # not default --> require an answer.
-            
+
             continue
         # "" is always in a string.
         if ans in "yYnN":
@@ -831,6 +831,29 @@ class Unbuffered_file_duck(object):
 
 def unbuffer_a_file(file_obj):
     return os.fdopen(file_obj.fileno(), 'w', 0)
+
+def parse_args(argv, only_our_domain_p=True):
+    """Parse and dp_io args in argv."""
+    if only_our_domain_p:
+        (argv, my_args) = dp_sequences.move_from_list(argv, "--dp_io.",
+                                                      remove_prefix_p=True)
+    else:
+        my_args = argv
+
+    oparser = argparse.ArgumentParser()
+
+    oparser.add_argument("--dp_io.debug_level",
+                         dest="debug_level", type=int, default=0)
+    oparser.add_argument("--quiet",
+                         dest="quiet_p", default=False,
+                         action="store_true",
+                         help="Do not print informative messages.")
+
+
+    return argv
+#############################################################################
+
+
 
 #############################################################################
 #############################################################################

@@ -55,14 +55,17 @@ dp_exit()
 : ${send_mail_on_completion=t}
 : ${teefun:=tee}
 : ${self_correct=}
+: ${tot=}
 
 ## <:new defaults up there:>
 t_make_args=
+self_corrections=0
 
 Usage_args_info=" t_make args..."
 Usage_synopsis="Do a t_make at TOT:
 "
 Usage_details="${EExec_parse_usage}
+--tot <tot>) Use tot as TOT.
 -o <file>) Tee output to log to <file>.<time stamp>
 -O <file>) Tee output to log to <file>.
 --no-log) tee /dev/null to show progress but make no log.
@@ -76,7 +79,7 @@ Usage_details="${EExec_parse_usage}
 --t_make_arg <arg>) Append <arg> to additional t_make args.
 --t_make-arg <arg>) Append <arg> to additional t_make args.
 --t-make-arg <arg>) Append <arg> to additional t_make args.
---get-mods) Get the latest mods. 
+--get-mods) Get the latest mods.
 --no-get-mods) Get the latest mods.
 --build-me|--bgme|--bme) Do build the me tests.
 --no-build-me) Do not build the me tests.
@@ -93,7 +96,8 @@ Usage_details="${EExec_parse_usage}
 --no-mail) Don't
 "
 
-long_options=("out-file:" 
+long_options=("tot:"
+    "out-file:"
     "this-out-file:"
     "clean"
     "no-skiprtl"
@@ -141,6 +145,7 @@ do
       -q) VERBOSE=":"; EExecQuiet;;
 
       # Program options.
+      --tot) shift; tot="${1}";;
       -o|--out-file) shift; log_name_base="$1";;
       -O|--this-out-file) shift; log_name="$1";;
       -c|--clean) clean_opt="-clean";;
@@ -201,12 +206,20 @@ done
 #    dp_exit 1
 #} 1>&2
 
+echo_id tot
+vunsetp "${tot}" && {
+    tot=$(realpath $(me-dogo tot))
+}
 
-rtl_required_p && [ "${dont_build_rtl_opt}" == "-skiprtl" ] && {
+EExec -y cd "${tot}"
+echo_id tot
+
+EExec_verbose_msg "Current dir: $PWD"
+
+rtl_required_p --here && [ "${dont_build_rtl_opt}" == "-skiprtl" ] && {
     dp_exit 1 "This sandbox cannot skip rtl"
 }
 
-EExec -y cd $(realpath $(me-dogo tot))
 [ -e "tree.make" ] || {
     dp_exit 1 "tree.make does not exist."
 } 1>&2
@@ -293,11 +306,14 @@ EExec mkdir -p "${log_dir}"
         echo_id leavelogs_opt
         vsetp "${leavelogs_opt}" && {
             dumby=$(ls -d .tmake* >/dev/null 2>&1) || {
-                if vfalsep "${self_correct}" 
+                echo -n 1>&2 ".tmake dirs do not exist: "
+                if vfalsep "${self_correct}"
                 then
                     ((++self_corrections))
+                    leavelogs_opt=
+                    echo 1>&2 " Corrected by removing option."
                 else
-                dp_exit 1 ".tmake dirs do not exist. ${leavelogs_opt} won't work.
+                dp_exit 1 "Exiting because ${leavelogs_opt} won't work.
   Use --no-leavelogs"
                 fi
             }

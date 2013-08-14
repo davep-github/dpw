@@ -57,7 +57,7 @@ Ee|nvdiag__ME_src|              hw/nvdiag/
 Ee|nvd__ME_src|                 ${nvdiag__ME_src}
 Ee|mods__ME_src|                ${nvdiag__ME_src}mods/
 Ee|ap0__ME_src|                 hw/ap/
-Ee|ap_just_ap__ME_src|          ${ap0__ME_src}
+Ee|apjustap__ME_src|            ${ap0__ME_src}
 Ee|aptlit1__ME_src|             hw/ap_tlit1/
 Ee|ap1__ME_src|                 ${aptlit1__ME_src}
 Ee|apt132__ME_src|              hw/ap_t132/
@@ -263,3 +263,4 @@ Ee|xebacks|xebacs|       /home/dpanariti/droppings/editors/xemacs/xebacs.d/
 Ee|dpylib|       /home/dpanariti/lib/pylib/
 Ee|bover|binoverride|       /home/dpanariti/bin/override/
 Ee|sso| /home/scratch.traces02/mobile/traces/system/so
+Ee|stldir| /usr/include/c++/4.1.1

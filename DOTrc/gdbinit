@@ -71,7 +71,7 @@ Delete breakpoint at function/address
 Usage: bpk addr. Fix for multiple args.
 end
 
-define bpc 
+define bpc
  clear $arg0
 end
 document bpc
@@ -120,6 +120,14 @@ end
 document bpm
 Set a read/write breakpoint on address
 Usage: bpm addr
+end
+
+define disen
+ disable
+ enable $arg0 $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8 $arg9
+end
+document disen
+Disable all breakpoint and then enable those passed as arguments.
 end
 
 # ______________process information____________

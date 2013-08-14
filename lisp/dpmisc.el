@@ -144,6 +144,17 @@
 (defsubst nilp (any)
   (null any))
 
+(defsubst dp-pred (pred-fun &rest pred-args)
+  "\"Convenience\" function.
+IF saving space, providing consistency, increasing simplicity and OaOO are
+merely convenient.
+Simplicity and convenience can lead to more full-assed code than
+half-assed."
+  (cond 
+   ((eq pred-fun t) t)
+   ((eq pred-fun nil) nil)
+   (t (apply pred-fun pred-args))))
+
 (defun dp-cons-to-list (cons)
   "Make a list from a cons: \(list (car CONS) (cdr CONS)). nil begets nil.
 I return many things as conses, especially match and regions 
@@ -15522,31 +15533,44 @@ it. Whitespace diffs are easy to ignore during reviews"
                'dp-disable-whitespace-cleanup)
 
 (defun dp-whitespace-following-a-cleanup-command-p ()
-  "What the name says. 
-Making it a function makes it easier to use as a value for a predicate
-variable."
+  "What the name says."
   (let ((tmp last-command))
     (and (not dp-white-space-cleanup-disabled-in-this-buffer-p)
          (or (and dp-whitespace-cleanup-when-modified-p
-                  (buffer-modified-tick))
+                  ;; We can miss cleanups with my rabid saving (e.g. M-ret,
+                  ;; M-w). However it might be better than changing
+                  ;; everything.
+;;                   (buffer-modified-p)
+                  ;; Or not. If I've modified it at all since my first
+                  ;; visitation, then further modification shouldn't be an
+                  ;; issue. Except after commits, etc.
+                  (buffer-modified-tick)
+                  )
              (memq last-command 
                    dp-whitespace-cleanup-after-these-commands)))))
 
-(defun dp-next-line (count)
+(dp-deflocal dp-whitespace-cleanup-current-line-pred 
+    'dp-whitespace-following-a-cleanup-command-p
+"Should we clean up the current *line*?
+Predicate used to tell us whether or not the current line qualifies for
+whitespace eradication.")
+
+(defun dp-next-line (count &optional cleanup-current-line-pred)
   "Add trailing white space removal functionality."
   (interactive "_p")
   (if (not (dp-cleanup-whitespace-p))
       (progn
         (call-interactively 'next-line)
         (setq this-command 'next-line))
-    (let ((gating-pred 'dp-whitespace-following-a-cleanup-command-p))
+    (let ((cleanup-current-line-pred (or cleanup-current-line-pred
+                           dp-whitespace-cleanup-current-line-pred)))
       (when (< count 0)
         (setq count (- count)
-              gating-pred 'eolp))
+              cleanup-current-line-pred 'eolp))
       (loop repeat count do
         (if (or (and (not buffer-read-only)
                      (eq (dp-cleanup-whitespace-p) t)
-                     (funcall gating-pred)))
+                     (funcall cleanup-current-line-pred)))
             (dp-func-and-move-down 'dp-cleanup-line
                                    t
                                    nil ; 'preserve-column

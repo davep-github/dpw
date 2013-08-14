@@ -21,7 +21,9 @@ then
     shift
 fi
 
-diff_cmd="(ediff-files \"$1\" \"$2\")"
+fileA=$(realpath "${1}")
+file2=$(realpath "${2}")
+diff_cmd="(ediff-files \"$fileA\" \"$file2\")"
 
 # Fix this to use some kind of ipc so the wait actually works.
 #

@@ -92,6 +92,10 @@ def stringized_join(lst, sep=None):     # get string.join()'s default sep
     return string.join(stringize_list(lst), sep)
 
 ########################################################################
+def list_to_indented_string(lst, indent_len=2, indent_str=" "):
+    return stringized_join(lst, "\n" + indent_str * indent_len)
+
+########################################################################
 def stringize_args(*args):
     return stringize_list(args)
 
@@ -139,6 +143,7 @@ appear in the pattern.  Old VMS style."""
         closers = closers + ")?"
     return "^" + regexp + closers + "$"
 
+########################################################################
 class Arg_obj_c(object):
     """A namer object: better than x[0] and x[5]"""
     def __init__(self, **kw_args):
@@ -151,14 +156,15 @@ class Arg_obj_c(object):
     def items(self):
         return self.items_v
 
+########################################################################
 def mk_abbrev_map(abbrev_pat_tuples):
     ret = []
     for abbrev_pat, mapped_info in abbrev_pat_tuples:
         ret.append((mk_abbrev_regexp(abbrev_pat), mapped_info))
         
     pass
-    
-    
+
+
 ########################################################################
 def list_get_with_abbrev(map, name, default_stuff=KeyError):
     """Get a tuple (abbrev_pat, stuff) from a list of tuples.
@@ -195,3 +201,45 @@ def maybe_add_to_list(in_list, element):
 def maybe_add_list_to_list(in_list, add_from_list):
     for element in add_from_list:
         maybe_add_to_list(in_list, element)
+
+def move_from_list(from_list, str, regexp_p=False, start=0, end=True,
+                   remove_prefix_p=False, return_prefix=""):
+    pred = None
+##len     if False and regexp_p:              # Problems with length of prefix.
+##len         pass
+##len         def regexp_pred(element, regexp, start, end):
+##len             if end is True:
+##len                 end = len(element)
+##len             element = element[start:end]
+##len             return regexp.search(regexp, element)
+##len         pred = regexp_pred
+##len     else:
+    def str_pred(element, str, start, end):
+        if end is True:
+            end = len(element)
+        ret = element.find(str, start, end)
+        if ret == -1:
+            ret = None
+        return ret
+    pred = str_pred
+
+    print pred
+    to_list = []
+    remainder_list = []
+    str_len = len(str)
+    for element in from_list:
+        print "element>%s<, str>%s<, start>%s<, end>%s<" % (element, str, start, end)
+        if pred(element, str, start, end) != None:
+            if remove_prefix_p:
+                if end is True:
+                    element_len = len(element)
+                else:
+                    element_len = end
+                print "element>%s<, element_len>%s<, start>%s<, str>%s<, str_len>%s<" % (element, element_len, start, str, str_len)
+                element = return_prefix + element[str_len:element_len]
+            print "element>%s<" % (element,)
+            to_list.append(element)
+        else:
+            remainder_list.append(element)
+    return (remainder_list, to_list)
+
