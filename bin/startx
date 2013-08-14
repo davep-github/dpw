@@ -5,12 +5,14 @@ cd ~
 startx="/usr/bin/startx"
 startx_opts=`$HOST_INFO -n '' startx-opts`
 
-LOGFILE="$DP_LOG/X11/xlog.$USER.startx"
+LOGFILE="$DP_LOG/X11/startx.$USER"
 #touch $LOGFILE
 (
-    echo "******* $(realpath $0) begins: $(date) =============================="
+    echo "
+******* $(realpath $0) begins: $(date) =============================="
     echo "startx>$startx<, startx_opts>$startx_opts<, @>$@<"
     #######exec $startx $startx_opts "$@" 
     $startx $startx_opts "$@"
-    echo "%%%%%%% $(realpath $0) finishes: $(date) ============================"
+    echo "%%%%%%% $(realpath $0) finishes: $(date) ============================
+"
 ) >> $LOGFILE 2>&1

@@ -17,28 +17,34 @@ dirname=`dirname $0`
 pwd
 args="$@"
 argone=$1
-
+: ${sess_type=startx}
 ###env
 [ -z "$DP_BASHRC_COMPLETE" -a -f .bash_profile ] && . .bash_profile
-if [ "$progname" = ".xsession" ]
+echo_id sess_type
+if vunsetp "${sess_type}"
 then
-    if dte=`$HOST_INFO DTE`	# explicit?
+    if [ "$progname" = ".xsession" ]
     then
-	sess_type='kdm'
-    # try to guess
-    elif findprog kdm > /dev/null
-    then
-	sess_type='kdm'
-    elif findprog xdm > /dev/null
-    then
-	sess_type='xdm'
+	# Only if undefined.
+        dte=${dte-`$HOST_INFO DTE`}	# explicit?
+	echo_id dte
+        if [ -n "${dte-}" ]
+        then
+	    sess_type='kdm'
+        # try to guess
+        elif findprog kdm > /dev/null
+        then
+	    sess_type='kdm'
+        elif findprog xdm > /dev/null
+        then
+	    sess_type='xdm'
+        else
+	    sess_type='xsession'
+        fi
     else
-	sess_type='xsession'
+        sess_type='startx'
     fi
-else
-    sess_type='startx'
 fi
-
 xinfo=`$HOST_INFO X`
 if [ "$xinfo" = "-" ]
 then
