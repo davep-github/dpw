@@ -12,21 +12,21 @@ do
 done
 unset eexec_program
 
-gme_traces=$(me-expand-dest gmetraces)
-plex_dir=$(me-expand-dest plex)
-
+: ${gme_traces=$(me-expand-dest gmetraces)}
+: ${plex_dir=$(me-expand-dest plex)}
+: ${PROJECT=t132}               # or t124 or...
+: ${TEST_PLUGIN:=cpu_surface_write_read}
 : ${COMP_ONE_TRI_REDLINE=${gme_traces}/comp_one_tri_redline}
+: ${TEST_DIR=${1-${plex_dir}}}
 
 mecd ap
-: ${TEST_PLUGIN:=cpu_surface_write_read}
-TEST_DIR=${1-${plex_dir}}
 
 EExec bin/system_run \
     -mode arm \
-    -P t124 \
-    -dir ${TEST_DIR} \
+    -P "${PROJECT}" \
+    -dir "${TEST_DIR}" \
     -noClean \
-    -o ${TEST_DIR}/test.log \
+    -o "${TEST_DIR}/test.log" \
     -traces ../../arch/traces/mobile/traces/gpu_multiengine \
     -mods "-top -cpu_rtl -pitch -zt_count_0 -i ${COMP_ONE_TRI_REDLINE}/test.hdr -o ${TEST_DIR}/${TEST_PLUGIN} -plugin ${TEST_PLUGIN}" \
     ${TEST_PLUGIN}.so \

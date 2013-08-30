@@ -194,13 +194,10 @@ dp_echo2 ()
         } >> $DP_ERRLOG
     fi
 }
-
-dpe_echo()
-{
-    dp_echo2 "$@"
-}
-
 export dp_echo2 dpe_echo
+
+alias dpe_echo=dp_echo2
+alias dp_echo_err=dp_echo2
 
 # Works via side effects.
 aappend()
@@ -299,7 +296,7 @@ dpe_warning()
 }
 
 export -f expand_source_list source_list dpFATAL dp_die
-export -f dpe_echo dpdbg_echo dpio_echo dpWARN
+export -f dpdbg_echo dpio_echo dpWARN
 export -f dpe_error dpe_warn dpe_warning
 
 inside_emacs_p()

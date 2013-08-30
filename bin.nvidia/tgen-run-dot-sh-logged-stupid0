@@ -17,4 +17,5 @@ $EEXEC tgen-run-dot-sh-logged \
     --egrep 'Error opening.*\.so:.*lib.*not found|ERROR: cannot aquire /tmp/asim.X|something bad happened|\(gdb\)' \
     --hgrep 'RT_FAIL' \
     --hgrep 'call stack' \
+    --hgrep 'KeyError: .OUT.' \
     "$@"

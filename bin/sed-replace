@@ -23,7 +23,7 @@ do
   shift
 done
 
-: ${sed_sep=!}
+: ${sed_sep='`'}
 dolat=("$@")
 #echo 1>&2 "dolat>${dolat[@]}<"
 sed_script=""

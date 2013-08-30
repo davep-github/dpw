@@ -542,10 +542,13 @@ if there is no current one set."
   ;; If in another sb (in sb and not in current sb)
   ;; If in current sb and current sb RO
   ;; no sb --> not-RO
-  (and (dp-current-sandbox-regexp)
-       (dp-sandbox-file-p filename)
-       (or (not (dp-current-sandbox-p filename))
-           (dp-current-sandbox-read-only-p))))
+  (when
+      (and (dp-current-sandbox-regexp)
+           (dp-sandbox-file-p filename)
+           (or (not (dp-current-sandbox-p filename))
+               (dp-current-sandbox-read-only-p)))
+    (dmessage "file in non-current sandbox: %s" filename)
+    t))
 
 (add-hook 'dp-detect-read-only-file-hook 'dp-sandbox-read-only-p)
 
@@ -654,7 +657,7 @@ do not indent the newly inserted comment block."
       ;; @todo templates *WILL* break this.
       ;; Apparently not.
       (re-search-forward 
-       "\\s-*\\(enum\\|class\\|struct\\)\\s-+\\(\\S-+?\\)\\s-*\\(:\\|{\\|$\\)"))
+       "^\\s-*\\(enum\\|class\\|struct\\)\\s-+\\(\\S-+?\\)\\s-*\\(:\\|{\\|$\\)"))
     (let ((class-name (match-string 2)))
       (when template-p
         (setq class-name (format "%s <template>" class-name)))

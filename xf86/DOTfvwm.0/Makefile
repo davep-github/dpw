@@ -16,9 +16,13 @@ FVWM_RC_INFILES := $(addsuffix .in,$(FVWM_RC_FILES))
 
 SED_CFG_FILE := defs.sed
 
-all: $(SED_CFG_FILE)
-	rm -f $(FVWM_RC_FILES)
-	cat $(SED_CFG_FILE) | sed-replace $(FVWM_RC_INFILES)
+all: rc_files
+
+rc_files: $(SED_CFG_FILE) $(FVWM_RC_FILES)
+	rm -rf last-gen
+	mkdir last-gen
+	mv $(FVWM_RC_FILES) last-gen
+	cat $(SED_CFG_FILE) | sed-replace -d "$(DP_DOMAIN)" $(FVWM_RC_INFILES)
 	chmod a-w $(FVWM_RC_FILES)
 
 restart: all

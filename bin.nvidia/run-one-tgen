@@ -29,6 +29,7 @@ mecd testgen
 : ${last_and_latest_prefix=}
 : ${hist_file_name=$(basename $0).hist}
 : ${mailto_opt=}
+: ${sandbox_opt=-nosandbox}
 
 # Usage variable usage:
 Usage_args_info=" <tgen-level-test>..."
@@ -156,7 +157,7 @@ done
 : ${clobber_opt=-clobber}
 : ${levels:=${user_levels:-${default_level}}}
 : ${traceRoot_opt=/home/scratch.traces02/arch/traces/}
-: ${chip_opt=t124}
+: ${chip_opt="?"}
 : ${target_opt=FMODEL}
 : ${user_log_dir=}
 : ${log_dir_base=dp-run-tgens.d} # This is duplicated in tgen-latest-run. Make a tgen.rc type file.
@@ -198,6 +199,17 @@ vsetp "${d_opt}" || {
 }
 d_opt=$(normpath "${d_opt}")/
 
+if [ "${chip_opt}" = '?' ]
+then
+    case "$PWD" in
+        */ap_t132/*) chip_opt=t132;;
+        */ap_t124/*|*/ap_tlit1/*) chip_opt=t124;;
+        *) echo 1>&2 "Cannot guess chip type based on current directory:
+$PWD"
+           exit 1;;
+    esac
+fi
+
 # Appending to $@ allows for more kinds of quoting to be preserved.
 vsetp "${queue}" && set -- "$@" -queue "${queue}"
 vsetp "$traceRoot_opt}" ] && set -- "$@" -traceRoot "${traceRoot_opt}"
@@ -206,6 +218,7 @@ vsetp "$target_opt}"  && set -- "$@" -target "${target_opt}"
 vsetp "$d_opt}" ] && set -- "$@" -d "${d_opt}"
 vsetp "${all_but_run_opt}" && set -- "$@" "${all_but_run_opt}"
 vsetp "${mailto_opt}" && set -- "$@" ${mailto_opt}
+vsetp "${sandbox_opt}" && set -- "$@" ${sandbox_opt}
 log_prefix="$log_dir"
 
 [ -n "$display_status_p" -a -z "$wait_opt" ] && {
@@ -310,6 +323,6 @@ done
 
 vsetp "${all_but_run_opt}" && {
     echo "
-*** $progname: -allButRun was used.
+++++ $progname: -allButRun was used.
   Don't forget to run them if you need to."
 } 1>&2

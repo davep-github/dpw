@@ -38,10 +38,15 @@
   (read-kbd-macro
    "RET M: SPC RET T: RET W: RET T: RET F: RET S: RET S: RET 7*<up> 3*<right>"))
 
-(defalias 'dp-tgen-add-debug
+(defalias 'dp-tgen-add-debug-t124
   (read-kbd-macro
    (concat "<C-prior> C-s sim.pl SPC RET - gdb SPC C-s - chip SPC "
            "t124 RET _debug C-s libt124_ RET debug_")))
+
+(defalias 'dp-tgen-add-debug
+  (read-kbd-macro
+   (concat "<C-prior> C-s sim.pl SPC RET - gdb SPC C-s - chip SPC "
+           "t132 RET _debug C-s libt132_ RET debug_")))
 
 ;;
 ;;
@@ -118,6 +123,12 @@
    (concat "C-a <M-backspace> , SPC ESC C-s [,);] RET"
            " <left> M-k C-a M-m 2*<right> M-a C-s SPC RET"
            " DEL M-s <down> C-a")))
+
+;; Convert calls linke: fun(x, y) into: fun(x=x, y=y)
+(defalias 'dp-py-keywordify
+  (read-kbd-macro
+   "M-a <C-right> M-o = M-y <C-right> <C-left>"))
+
 
 ;;;;;;; end of kbd macros ;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2181,7 +2192,9 @@ on the go back ring."
 
 (dp-deflocal dp-il&md-dont-fix-comments-p nil
   "Some icky language [major modes] simply do not understand how to indent a
-  comment on a line of its own using either, in the case of perl, # or ##.")
+  comment on a line of its own using either, in the case of perl, # or ##.
+Tells `dp-indent-line-and-move-down' to not try to fix comments.
+@todo XXX Perhaps `dp-fix-comment' should ignore comment only lines?")
 
 (defun* dp-func-and-move-down (func pred 
                                preserve-column-p
@@ -4675,7 +4688,7 @@ control construct)"
       ;; kind of nice) leading , style, then we clear out the , and then
       ;; proceed .
       (when (and (dp-syntax-c++-member-init-p syntax)
-                 (dp-looking-back-at ",\\s-*"))
+                 (dp-looking-back-at "^\\s-*,\\s-*"))
         (replace-match ""))
       ;;
       ;; basically, let the c-electric-brace command run and then
@@ -5377,9 +5390,10 @@ Set by motion commands from which one may wish to return from whence they came."
           "\\|"
           ;; <asterisk>name<asterisk>
           "\\(\\*\\("
-          (regexp-opt '("scratch" "shell" "Python" "Hyper Apropos" "cscope"))
+          (regexp-opt '("scratch" "shell" "Python" "Hyper Apropos" "cscope" 
+                        "gdb"))
           ".*\\)\\*\\)")
-  "*Do not push go-backs into these buffers.")
+  "*DO push go-backs into these buffers.")
 
 (defvar dp-go-back-min-distance 120
   "*Minimum distance to push a go back position.")
@@ -5432,6 +5446,11 @@ Set by motion commands from which one may wish to return from whence they came."
 I've been very bad by doing this way too much.
 Like adding this while doing something else that came from somewhere else...")
 
+(dp-deflocal dp-gb-allow-dammit-p nil
+  "Force the push back to happen.
+Do this even if other (probably questionable) logic doesn't want this to
+happen.")
+
 (defun* dp-push-go-back (&optional reason marker allow-dammit-p marker-type
                          (ask-for-context-p dp-gb-ask-for-context-p))
   "Push (or MARKER (point-marker)) onto the go-back-stack."
@@ -5464,11 +5483,13 @@ Like adding this while doing something else that came from somewhere else...")
           ;;;(dmessage "Not pushing duplicate go-back marker.")
           ()
       (let ((buf-name (buffer-name (marker-buffer marker))))
-        (if (or allow-dammit-p
+        (if (or dp-gb-allow-dammit-p
+                allow-dammit-p
                 (and dp-go-back-allow-regexp
                      (string-match dp-go-back-allow-regexp buf-name))
                 (not (and dp-go-back-inhibit-regexp
-                          (string-match dp-go-back-inhibit-regexp buf-name))))
+                          (string-match dp-go-back-inhibit-regexp 
+                                        buf-name))))
             ;;(dmessage "dp-push-go-back")
             ;;(ding)
             (ring-insert dp-go-back-ring (dp-mk-gbi reason marker)))))
@@ -5481,7 +5502,7 @@ Like adding this while doing something else that came from somewhere else...")
 ;; Add flag to gbi that says this item was recalled from a save hist.  Clear
 ;; as files are visited.  Add various global defaults and parameters and
 ;; predicates.
-(defun dp-pop-go-back (&optional arg &key silent-p)
+(defun* dp-pop-go-back (&optional arg &key silent-p)
   "Pop the top of `dp-go-back-ring' and go there.
 If ARG is '- discard the top entry.
 Otherwise, if ARG is non-nil, move forward thru the ring.
@@ -12432,7 +12453,8 @@ I'm not sure what modes are affected."
     (comment-search-forward (line-end-position) t)))
 
 (defun dp-fix-comment ()
-  "Doesn't use `save-excursion'. It doesn't seem to work here."
+  "Doesn't use `save-excursion'. It doesn't seem to work here.
+@todo XXX Perhaps `dp-fix-comment' should ignore comment only lines?"
   ;; `save-excursion' doesn't work here.
   ;; ??? marker vs number?
   (interactive)
@@ -12995,13 +13017,22 @@ source script-x
 set -u
 progname=\"$(basename $0)\"
 source eexec
-eexec_program=$(EExec_parse \"$@\")
+if vsetp \"${eexec_program-}\"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse \"$@\")
+    EEXEC_SHIFT=shift
+fi
+
 for op in $eexec_program
 do
   $op
-  shift
+  ${EEXEC_SHIFT}
 done
 unset eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
 
 "
   "A string to stuff into each new fire created with `dp-script-it'

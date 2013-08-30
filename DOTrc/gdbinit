@@ -124,9 +124,16 @@ end
 
 define disen
  disable
- enable $arg0 $arg1 $arg2 $arg3 $arg4 $arg5 $arg6 $arg7 $arg8 $arg9
+ enable $arg0
 end
 document disen
+Disable all breakpoint and then enable those passed as arguments.
+end
+
+define onebp
+ disen $arg0
+end
+document onebp
 Disable all breakpoint and then enable those passed as arguments.
 end
 

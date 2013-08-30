@@ -1,10 +1,9 @@
 #!/bin/sh
 
-set -x
-
 : ${confirmation_response:="TRUST ME"}
 
 : ${testname:=cpu_surface_write_read}
+: ${test_params="mapping_mode=reflected default_door no_check_mem_reg series_len=4 num_series=1 test=rtmem-rtmem"}
 : ${testext=.so}
 : ${rundir:=$(depth)}
 : ${EZEC=}
@@ -12,15 +11,20 @@ set -x
 : ${no_run_p=}
 : ${startrecord=}
 : ${startrecord_opt=}
+: ${project:=t132}
+
 : ${rtl_log_file_history:=rtl-log-file-history}
 
 for i in "$@"
 do
   case "${1}" in
-      -n|--pretend|--dry-run) EZEC=echo; no_run_p=t;;
+      -n|--pretend|--dry-run) EZEC=echo; no_run_p=t; set -x;;
+      -v|--verbose) set -x;;
+      -q|--quiet) set +x;;
       -k|--eko) EZEC=eko; no_run_p=t;;
       -s|--start|--startrecord|--start-record) shift; startrecord="${1}";;
       -w|--wave|--waves|-wave|-waves) dump_waves_opt=-waves;;
+      -p|--proj|--project) shift; project="${1}";;
       *) break;;
   esac
   shift
@@ -78,11 +82,11 @@ ${EZEC} ./bin/system_run \
     -mode arm \
     ${dump_waves_opt} \
     ${startrecord_opt} \
-    -P t124 \
+    -P "${project}" \
     -dir "${logdir}" \
     -o "${logfile}" \
     -noClean \
     -traces "${trace_dir}" \
-    -mods "-top -cpu_rtl -pitch -zt_count_0 -i ${hdr_file} -o TestDir/${testname} -plugin '${testname} num_elements=3 num_lines=1 default_door no_check_mem_reg no_basic_swr'" \
+    -mods "-top -cpu_rtl -pitch -zt_count_0 -i ${hdr_file} -o TestDir/${testname} -plugin '${testname} ${test_params}'" \
     "${testname}${testext}" \
     -v top_peatrans_gpurtl

@@ -367,7 +367,7 @@ export FAMILY_ZONE
 export WORK_ZONE
 
 # least specific to most so we can override things.
-export locale_rcs=".$OSName .$FAMILY_ZONE .$FAMILY .$HOST .var" # .$WORK_ZONE"
+export locale_rcs=".$OSName .$FAMILY_ZONE .$FAMILY .$HOST .var .early" # .$WORK_ZONE"
 : ${pre_rcs:=$($HOST_INFO -n '' locale_pre)}
 : ${post_rcs:=$($HOST_INFO -n '' locale_post)}
 locale_rcs="$pre_rcs $locale_rcs $post_rcs"

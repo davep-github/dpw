@@ -117,14 +117,14 @@ running_as_script && {
 }
 
 #
-# A snippet/template for ease of use.
+# A snippet/template/example for ease of use.
 #
 
 #e.g.# # Usage variable usage:
 #e.g.# Usage_args_info=" errno..."
 #e.g.# Usage_synopsis="Display various info about errno...:
 #e.g.# "
-#e.g.# # Using ) after the args makes copy & paste between here and the 
+#e.g.# # Using ) after the args makes copy & paste between here and the
 #e.g.# # case statement easier.
 #e.g.# Usage_details="${EExec_parse_usage}
 #e.g.# -o) flag o
@@ -134,13 +134,13 @@ running_as_script && {
 #e.g.# option_str="${EExec_parse_option_str}"
 #e.g.# # long_options=("option-name-without-leading--" ...)
 #e.g.# source dp-getopt+.sh
-#e.g.# for i in "$@"
+#e.g.# while (($# > 0))
 #e.g.# do
 #e.g.#   # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
 #e.g.#   case $1 in
 #e.g.#       # eexec support
 #e.g.#       # Done by EExec_parse and friends.
-#e.g.# 
+#e.g.#
 #e.g.#       # Program options.
 #e.g.#
 #e.g.#       # Help!

@@ -1,5 +1,5 @@
 # .cshrc_layout_tools file
-# $Id: //hw/nv/env/.cshrc_layout_tools#4 $
+# $Id: cshrc_layout_tools,v 1.1 2013-08-19 11:06:08-04 dpanariti Exp dpanariti $
 
 # Layout tools setup
 source "/home/tools/setups/setup_avanti"

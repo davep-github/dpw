@@ -1,5 +1,9 @@
 #!/bin/sh
 
+
+echo 1>&2 "ADD AB2 FETCH SUPPORT."
+echo "ADD AB2 FETCH SUPPORT."
+
 source script-x
 set -u
 progname="$(basename $0)"
@@ -37,14 +41,14 @@ dp_exit()
 
 : ${log_name_base:=t_make}
 : ${log_name:=}
-: ${clean_opt=}
+: ${clobber_opt=}
 : ${dont_build_rtl_opt=-skiprtl}
 : ${disp_file=/proc/self/fd/1}
 : ${make_p=t}
 : ${log_dir=t_make+log.logs}    # Since we cd to tot.
 : ${keeplogs_opt=-keepLogs}
 : ${leavelogs_opt=-leaveLogs}
-: ${catlog_opt=-catlog}
+: ${catlog_opt=}
 : ${only_opt=}
 : ${get_mods_p=a}
 : ${get_asim_p=a}
@@ -56,6 +60,7 @@ dp_exit()
 : ${teefun:=tee}
 : ${self_correct=}
 : ${tot=}
+: ${other_t_make_opts=-keepg -update_all}
 
 ## <:new defaults up there:>
 t_make_args=
@@ -71,6 +76,7 @@ Usage_details="${EExec_parse_usage}
 --no-log) tee /dev/null to show progress but make no log.
 --no-keeplogs) Tell t_make not to keep log files about.
 --no-leavelogs|--no-ll) Tell t_make not to leave previous log files about.
+--catlog) Do not cat the log after a failure.
 --no-catlog) Do not cat the log after a failure.
 --quiet) tee <log-file> > /dev/null. Log w/o output.
 -r) Do NOT use -skiprtl. Build the RTL
@@ -86,9 +92,11 @@ Usage_details="${EExec_parse_usage}
 --no-debug) Build me tests W/O debug.
 --me-purge) Purge me tests.
 --no-me-purge) Don't purge me tests.
--c) Do a -clean first
---clean) Clean me tests.
---no-clean) Don't clean me tests.
+--me-clean) Clean me tests.
+--no-me-clean) Don't clean me tests.
+-c) Do a -clobber first
+--clobber) Clobber tree before build.
+--no-clobber) Don't clobber tree before build.
 --mm|--mme|--gb|--get-build|--all) Get mods AND make me tests.
 -nn) Don't get mods or make me tests.
 -m|--no-make|--no-build) Don't do the basic bin/t_make(s)
@@ -99,7 +107,7 @@ Usage_details="${EExec_parse_usage}
 long_options=("tot:"
     "out-file:"
     "this-out-file:"
-    "clean"
+    "clobber"
     "no-skiprtl"
     "skiprtl"
     "rtl"
@@ -110,7 +118,8 @@ long_options=("tot:"
     "no-log"
     "no-keeplogs"
     "no-leavelogs" "no-ll"
-    "no-catlogs"
+    "no-catlog"
+    "catlog"
     "get-mods"
     "no-get-mods"
     "get-asim"
@@ -148,7 +157,7 @@ do
       --tot) shift; tot="${1}";;
       -o|--out-file) shift; log_name_base="$1";;
       -O|--this-out-file) shift; log_name="$1";;
-      -c|--clean) clean_opt="-clean";;
+      -c|--clobber) clobber_opt="-clobber";;
       -r|--no-skiprtl|--rtl) dont_build_rtl_opt="";;
       --no-log) log_name="/dev/null";;
       --quiet) disp_file=/dev/null;;
@@ -156,22 +165,24 @@ do
       --no-keeplogs) keeplogs_opt=;;
       --no-leavelogs|--no-ll) leavelogs_opt=;;
       --no-catlog) catlog_opt=;;
+      --catlog) catlog_opt="-catlog";;
       # t_make won't accept -only and -skip*
       --only) shift; only_opt="-only $1"
-              [ -n "${dont_build_rtl_opt}" ] && {
+              vsetp "${dont_build_rtl_opt}" && {
                   echo 1>&2 "-only ${1} disabling -skiprtl"
                   dont_build_rtl_opt=
               }
               ;;
       # t_make won't accept -only and -skip*
       --skiprtl) dont_build_rtl_opt="-skiprtl"
-                 [ -n "${only_opt}" ] && {
+                 vsetp "${only_opt}" && {
                      echo 1>&2 "-skiprtl disabling  ${only_opt}"
                      only_opt=
                  }
                  ;;
       --t_make_arg) shift; t_make_args="$t_make_args $1";;
       --t_make-arg) shift; t_make_args="$t_make_args $1";;
+      --t-make_arg) shift; t_make_args="$t_make_args $1";;
       --t-make-arg) shift; t_make_args="$t_make_args $1";;
       --build-me|--bme|--bgme) build_me_p=t;;
       --just-build-me|--bme-only|--just-bme|--only-bme) build_me_p=t; get_mods_p=; get_asim_p=;;
@@ -224,16 +235,17 @@ rtl_required_p --here && [ "${dont_build_rtl_opt}" == "-skiprtl" ] && {
     dp_exit 1 "tree.make does not exist."
 } 1>&2
 
-[ -z "${log_dir}" ] && {
+vunsetp "${log_dir}" && {
     echo "log_dir is not set. Using cwd"
     log_dir="${PWD}"
 } 1>&2
 
-[ -z "$log_name" ] && {
+vunsetp "$log_name" && {
     log_name="${log_dir}/${log_name_base}.$(dp-std-timestamp)"
 }
 
 log_name=$(realpath "$log_name")
+EExec_verbose_msg "$(echo_id log_name)"
 
 mail_results()
 {
@@ -254,11 +266,6 @@ trap_fun()
         local log_name="${1}"; shift
         echo "trap_fun $(echo_id Global_rc)"
         echo_id sig
-        EExecDashN_p && {
-            echo "${progname}: Running w/-n, removing log file>${log_name}<"
-            rm -rf "${log_name}"
-            log_name=
-        }
         if ((sig != 0))
         then
             echo "${progname}: sig>$sig<"
@@ -267,7 +274,7 @@ trap_fun()
         else
             echo "${progname}: trap_fun(): Global_rc: $Global_rc"
         fi
-        EExecVerbose_p && vsetp "${log_name}" && {
+        EExecVerbose_p && vsetp "${log_name}" && ! EExecDashN_p && {
             echo "==== Log file start: ${log_name} ==="
             cat "${log_name}"
             echo "==== Log file end: ${log_name} ==="
@@ -289,11 +296,16 @@ run_t_make()
 # Make this because we tee to a file inside this dir. The tee is part of the
 # following redirection and gets created before any of the commands inside
 # the {} run
-EExec mkdir -p "${log_dir}"
+if EExecDashN_p
+then
+    log_name=/dev/null
+else
+    EExec mkdir -p "${log_dir}"
+fi
 
 {
     EExecDashN_p && send_mail_on_completion=
-    if [ -n "$make_p" ]
+    if vsetp "$make_p"
     then
         vsetp "${dont_build_rtl_opt}" || {
             # If we're building with RTL, mark this dir so we don't
@@ -322,16 +334,16 @@ EExec mkdir -p "${log_dir}"
         EExec_verbose_msg "cwd>$(pwd)<"
         EExec_verbose_msg "log_name>${log_name}<"
         EExec_verbose_msg "disp_file>${disp_file}<"
-        [ -n "${clean_opt}" ] && {
-            run_t_make ${clean_opt}
-            #echo "bin/t_make ${keeplogs_opt} ${clean_opt}" | EExec -y tcsh-run ${EExecDashN_opt}
+        vsetp "${clobber_opt}" && {
+            run_t_make ${clobber_opt}
+            echo '=== Back from build clobber ==='
         }
 
         #echo "bin/t_make ${keeplogs_opt} ${dont_build_rtl_opt}" | EExec -y tcsh-run ${EExecDashN_opt}
         run_t_make ${dont_build_rtl_opt} || {
             dp_exit "$?" run_tmake_failed
         } 1>&2
-
+        echo '=== Back from build ==='
     fi
 
     # Other things useful after a make:
@@ -355,6 +367,7 @@ EExec mkdir -p "${log_dir}"
 
     if vtruep "${get_mods_p}"
     then
+        echo '=== Getting MODS ==='
         EExec --keep-going ./bin/get_mods
     fi
 
@@ -374,6 +387,7 @@ EExec mkdir -p "${log_dir}"
 
     if vtruep "${get_asim_p}"
     then
+        echo '=== Getting ASIM ==='
         EExec --keep-going ./bin/get_asim
     fi
 
@@ -390,20 +404,22 @@ EExec mkdir -p "${log_dir}"
       esac
     done
 
-    if [ -n "${build_me_p}" ]
+    if vsetp "${build_me_p}"
     then
-        [ -n "${me_purge_opt}" ] && {
-            EExec ./build_gpu_multiengine.pl ${me_purge_opt}
+        vsetp "${me_purge_opt}" && {
+            EExec ./build_gpu_multiengine.pl "${me_purge_opt}"
         }
-        [ -n "${me_clean_opt}" ] && {
-            EExec ./build_gpu_multiengine.pl ${me_clean_opt}
+        vsetp "${me_clean_opt}" && {
+            EExec ./build_gpu_multiengine.pl "${me_clean_opt}"
         }
-        EExec ./build_gpu_multiengine.pl ${debug_opt}
+        EExec ./build_gpu_multiengine.pl "${debug_opt}"
     fi
 
     echo "Log file: ${log_name}"
 } | $teefun "${log_name}" > "${disp_file}"
 
-echo "WTF?"
+echo 1>&2 "ADD AB2 FETCH SUPPORT."
+echo "ADD AB2 FETCH SUPPORT."
+
 Global_rc=0
 dp_exit 0 "Final exit: Global_rc: $Global_rc."

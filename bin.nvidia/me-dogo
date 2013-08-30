@@ -27,7 +27,7 @@ done
 #: ${sb=""}
 #export go_here_first="$sb"
 export domain="__ME_src"        # DUMBASS PARAMETER to relative dogo
-relative_to=$(dp4-sb-root) || {
+relative_to=$(dp-sb-root) || {
     relative_to=$(depth)/../..
 }
 # XXX @todo STUPID way to pass parameters.

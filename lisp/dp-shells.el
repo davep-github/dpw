@@ -45,7 +45,19 @@ Should be a color which nearly blends into background."
   :type 'string
   :group 'dp-vars)
 
-(defconst dp-sh-prompt-regexp "^[0-9]+\\([/<][0-9]+\\)?\\([#>]\\|<[0-9]*>\\)"
+;;
+;; currently: [ the 5056/0002> line is what we match. ]
+;; dpanariti@sc-xterm-19:/home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap_t132
+;; 5056/0002>
+;; After an error:
+;; dpanariti@sc-xterm-19:/home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap_t132
+;; 5057/0002<1>
+;; 
+;;(defconst dp-sh-prompt-regexp "^[0-9]+\\([/<][0-9]+\\)?\\([#>]\\|<[0-9]*>\\)"
+(defconst dp-sh-prompt-regexp (concat "^[0-9]+"
+                                      "\\([/<]"
+                                      "\\(?:[0-9]+\\|spayshul\\)"
+                                      "\\)?\\([#>]\\|<[0-9]*>\\)")
   "For bash/sh/etc. Obsolete???")
 
 (defconst dp-gdb-prompt-regexp "^(gdb) "
@@ -67,7 +79,7 @@ Should be a color which nearly blends into background."
 ;;; Why does autoloading C-z (dp-shell) make this autoload necessary?
 ;;;###autoload
 (defvar dp-shells-prompt-font-lock-regexp 
-  "^\\([0-9]+\\)\\(/[0-9]+\\)\\([#>]\\|\\(<[0-9]*>\\)?\\)"
+  "^\\([0-9]+\\)\\(/\\(?:[0-9]+\\|spayshul\\)\\)\\([#>]\\|\\(<[0-9]*>\\)?\\)"
   "*Regular expression to match my shell prompt.  Used for font locking.
 For my multi-line prompt, this is second line.  For most prompts, this will
 be the only line.  Some shells, like IPython's, already colorize their
@@ -141,7 +153,8 @@ prompt.  We don't want to stomp on them.")
   '(progn
     ;; more specific pattern for my prompt so other output is
     ;; less likely to match
-    (setq shell-prompt-pattern-for-font-lock dp-shells-prompt-font-lock-regexp)))
+    (setq shell-prompt-pattern-for-font-lock 
+          dp-shells-prompt-font-lock-regexp)))
 
 (defun dp-comint-pmark ()
   (when (get-buffer-process (current-buffer))
@@ -238,6 +251,7 @@ Can be set after the first prompting.")
                                        )))
                    ;; diff needs to be here because I use ec-diff which uses
                    ;; emacs.
+                   '("sp\\s-+.*-e")
                    '("p4\\s-+\\(diff\\|change\\|client\\|submit\\)\\|\\(as2\\s-+submit\\)"))
            nil 'one-around-all-p)
           "\\(\\s-+\\|$\\)")
@@ -2299,9 +2313,15 @@ It isn't pretty."
     (goto-char (point-max))
     (set-marker pmark (point))))
 
-(defvar dp-shells-shell-num-fmt "/%04d" ; <:shell prompt numeric id part:>
+(defvar dp-shells-shell-num-fmt "/%04s" ; <:shell prompt numeric id part:>
   "Note, many characters ef-up comint stuff, most seem to have to do with
   it's finding the end of the prompt.  Two in particular: > and #")
+
+(defun* dp-shells-display-name (display-id-num &optional format)
+  (setq-ifnil format "%s")
+  (format format (if (equal display-id-num 0)
+                     "spayshul"
+                   display-id-num)))
 
 (defun dp-shells-remove-buffer ()
   (setq dp-shells-shell-buffer-list
@@ -2354,7 +2374,7 @@ It isn't pretty."
       (cdr buf)
     nil))
 
-(defvar dp-shells-shell<0>-names '((4) - nil 0 ; (Cup) (not arg) (Cu0p))
+(defvar dp-shells-primary-shell-names '((4) - 1 nil ; (Cup) (not arg) (Cu0p))
                                    primary 0th zeroth main first 1st)
   "Other names by which shell<0> can be selected.")
 
@@ -2364,16 +2384,17 @@ It isn't pretty."
 ;;;###autoload
 (defun* dp-shell0 (&optional arg &key other-window-p name other-frame-p)
   "Open/visit a shell buffer.
-First shell is numbered 0 by default.
-ARG is numberp:
+First shell is numbered 1 by default. 0 is too far away from the others. Save
+it for something \"speshul\".
+ ARG is numberp:
  ARG is >= 0: switch to that numbered shell.
  ARG is < 0: switch to shell buffer<\(abs ARG)>
- ARG memq `dp-shells-shell<0>-names' shell<0> in other window."
+ ARG memq `dp-shells-primary-shell-names' shell<0> in other window."
   (interactive "P")
   (let* ((specific-buf-requested-p current-prefix-arg)
          (pnv (cond
-               ((member arg dp-shells-shell<0>-names)
-                0)
+               ((member arg dp-shells-primary-shell-names)
+                1)
                (t (prefix-numeric-value arg))))
          (fav-buf0 (dp-shells-get-favored-buffer (current-buffer)))
          (fav-buf (dp-shells-favored-shell-buffer-buffer fav-buf0))
@@ -2395,11 +2416,13 @@ ARG is numberp:
                       (stringp arg)
                       (and arg
                            (or (dp-shells-get-shell-buffer-name pnv)
-                               (format "*shell*<%s>" pnv)))
+                               (format "*shell*<%s>" 
+                                       (dp-shells-display-name pnv "%s"))))
                       (and fav-buf0 fav-buf-name)
                       (and pnv
                            (or (dp-shells-get-shell-buffer-name pnv)
-                               (format "*shell*<%s>" pnv)))
+                               (format "*shell*<%s>" 
+                                       (dp-shells-display-name pnv "%s"))))
                       (and (dp-buffer-live-p 
                             (dp-shells-most-recent-shell-buffer)))))
          ;; Is the shell already in existence?
@@ -2434,7 +2457,8 @@ ARG is numberp:
       (setenv "PS1_prefix" nil 'UNSET)
       (setenv "PS1_host_suffix"
               (format "%s" (dp-shells-guess-suffix sh-name "")))
-      (setenv "PS1_bang_suff" (format dp-shells-shell-num-fmt pnv))
+      (setenv "PS1_bang_suff" 
+              (dp-shells-display-name pnv dp-shells-shell-num-fmt))
       (setenv "dp_emacs_shell_num" (format "%s" pnv))
       (save-window-excursion/mapping (shell sh-buffer))
       (dp-visit-or-switch-to-buffer sh-buffer switch-window-func)

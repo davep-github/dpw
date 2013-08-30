@@ -809,7 +809,7 @@ VERY accurate given my indentation style.")
           (previous-line 1)
           (dp-c-end-of-line)))))
 
-(defun dp-c-beginning-of-defun (&optional arg real-bof)
+(defun dp-c-beginning-of-defun (&optional arg original-cc-mode-bof)
   "If preceeding command was `c-end-of-defun' do a go-back.  
 If ARG is none of C-0, C-u or t then use `c-beginning-of-defun'.  This will
 call the orginal code and currently that takes us back to the beginning of
@@ -817,13 +817,18 @@ the class, not an inlined defun.  Otherwise use a really cheap but not
 entirely ineffective regexp to find the beginning of a defun like construct.
 Also, leave the region active."
   (interactive "_p")
+  ;; This allows this command to ignore `dp-scroll-down' and `dp-scroll-up'
+  ;; as far as returning the the starting point vs going to back to where we
+  ;; were before we went to the function boundary. Same applies to
+  ;; 'dp-c-end-of-defun'.
+  (dp-set-zmacs-region-stays t)
   (if (memq last-command '(dp-c-end-of-defun dp-scroll-down dp-scroll-up))
       (progn
         (dp-pop-go-back)
         (setq this-command nil))
     ;; May want to change sense of arg to mean plain defun when true.
     (cond 
-     ((or real-bof
+     ((or original-cc-mode-bof
           (not (member current-prefix-arg '(0 (4) - t))))
       (dp-push-go-back "`real c-beginning-of-defun'")
       (c-beginning-of-defun 1)
@@ -846,15 +851,16 @@ Also, leave the region active."
      (t (call-interactively 'c-beginning-of-defun)
         (dp-push-go-back "`real c-beginning-of-defun'")))))
 
-(defun dp-c-end-of-defun (&optional arg real-bof)
+(defun dp-c-end-of-defun (&optional arg original-cc-mode-bof)
   "Inverse of `dp-c-beginning-of-defun'."
+  (dp-set-zmacs-region-stays t)
   (interactive "_p")
   (if (memq last-command '(dp-c-beginning-of-defun dp-scroll-down dp-scroll-up))
       (progn
         (dp-pop-go-back)
         (setq this-command nil))
     ;; May want to change sense of arg to mean plain defun when true.
-    (cond ((or real-bof 
+    (cond ((or original-cc-mode-bof 
                (not (member current-prefix-arg '(0 (4) '- t))))
            (dp-push-go-back "`dp-c-end-of-defun'")
            (c-end-of-defun 1)

@@ -72,6 +72,10 @@
     (zmacs-activate-region)))
 
 (defsubst dp-set-zmacs-region-stays (&optional arg)
+  "Written before \(interactive \"_\"\) was discovered. However...
+it keeps the region active in more cases. In particular when using one of my
+d*beginning|end-of-defun functions. When using just \"_\", the region would
+be deactivated when doing a beginning|end followed by an end|beginning."
   (setq zmacs-region-stays arg))
 
 

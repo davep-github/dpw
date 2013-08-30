@@ -119,7 +119,7 @@ set_all_index_methods()
 iterate_individually_p=
 
 
-option_str="nvdc:t:g:CTkKVo:Gxeiuf:Is:S:Cazh"  # <:add new options:>
+option_str="nvdc:t:g:CTkKVo:Gxeiuf:Is:S:CazhR"  # <:add new options:>
 all_options="$option_str"
 
 q=$(getopt -o "$all_options" -- "$@")
@@ -127,7 +127,7 @@ q=$(getopt -o "$all_options" -- "$@")
 eval set -- "$q"
 unset q
 
-for i in "$@"
+while (($# > 0))
 do
   # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
   case $1 in

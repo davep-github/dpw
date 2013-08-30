@@ -990,6 +990,8 @@ See `dp-parenthesize-region-paren-list'")
 (defun dp-python-mode-hook ()
   "Set up python *my* way."
   (interactive)
+  ;; Python has a problem with my  `dp-fix-comments' function.
+  (setq dp-il&md-dont-fix-comments-p t)
   (progn
     (filladapt-mode)
     (dmessage "Added filladapt-mode to python hookL 2012-02-10T14:14:39"))
@@ -1864,17 +1866,25 @@ cscope discovery.
 
 (defvar dp-called-by-split-vertically nil
   "Icky hack to allow `split-window-vertically' to work.")
+
+(defvar dp-called-by-split-horizontally nil
+  "Icky hack to allow `split-window-horizontally' to work.")
+
 (defadvice split-window (before dp-advised-split-window 
                          (&optional window size horflag) activate)
   (interactive)
   ;; Set `horflag' on a per-call basis so it can change dynamically.
-  (setq horflag (and (dp-prefer-horizontal-split)
-                     (not (active-minibuffer-window))
-                     (dp-wide-enough-for-2-windows-p)
-                     (= (length (window-list)) 1)
-                     (not size)        ; Skip action if a size is specified.
-                     (not dp-called-by-split-vertically)))
-  (setq dp-called-by-split-vertically nil))
+  ;; Only calculate this if we're called as `split-window' itself.
+  (if (not 
+       (or dp-called-by-split-horizontally dp-called-by-split-vertically))
+      (setq horflag (and (dp-prefer-horizontal-split)
+                         (not (active-minibuffer-window))
+                         (dp-wide-enough-for-2-windows-p)
+                         (= (length (window-list)) 1)
+                         (not size)     ; Skip action if a size is specified.
+                         (not dp-called-by-split-vertically)))
+    (setq dp-called-by-split-vertically nil
+          dp-called-by-split-horizontally nil)))
 
 (defadvice split-window-vertically (before 
                                     dp-advised-split-window-vertically
@@ -1882,6 +1892,13 @@ cscope discovery.
                                     activate)
   (interactive "P")
   (setq dp-called-by-split-vertically t))
+
+(defadvice split-window-horizontally (before 
+                                    dp-advised-split-window-horizontally
+                                    (&optional arg)
+                                    activate)
+  (interactive "P")
+  (setq dp-called-by-split-horizontally t))
 
 (make-variable-buffer-local 'dp-allow-owner-to-eval-p)
 (setq-default dp-allow-owner-to-eval-p t)

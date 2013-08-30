@@ -14,12 +14,13 @@ unset eexec_program
 
 : ${RTL_PRESENT_INDICATOR_FILE="DP_RTL_SB"}
 : ${build_dir=}
+: ${make_it_p=}
 
 for i in "$@"
 do
   case "$1" in
       --name) echo "${RTL_PRESENT_INDICATOR_FILE}"; exit 0;;
-      --creat|--create) touch "${RTL_PRESENT_INDICATOR_FILE}"; exit 0;;
+      -c|-t|--touch|--creat|--create) make_it_p=t;;
       --build-dir) shift; build_dir="${1}";;
       --here) build_dir=$PWD;;
       *) break;
@@ -27,7 +28,7 @@ do
   shift
 done
 
-sb=$(dp4-sb-root -s)
+sb=$(dp-sb-root -s)
 #echo_id sb
 #echo_id RTL_SANDBOXES
 vsetp "${RTL_SANDBOXES-}" && {
@@ -42,6 +43,12 @@ then
 else
     mecd ap
 fi
+
+vtruep "${make_it_p}" && {
+    touch "${RTL_PRESENT_INDICATOR_FILE}"
+    exit 0
+}
+
 [ -e "${RTL_PRESENT_INDICATOR_FILE}" ] && exit 0
 
 exit 1   

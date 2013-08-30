@@ -2,8 +2,25 @@
 # Make a new perforce sandbox.
 
 source script-x
+set -u
 progname="$(basename $0)"
 source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+unset eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
 
 askForConfirmation=
 revision=
@@ -29,13 +46,13 @@ at_exit()
 export TMP=$HOME/tmp
 export TEMP=$TMP
 
-Usage_synopsis="Make a new perforce(tm) sandbox under work dir [$work_dir] 
+Usage_synopsis="Make a new perforce(tm) sandbox under work dir [$work_dir]
   and optionally populate it."
 Usage_args_info=" <sandbox a.k.a client-name>"
 
 EExecVerbose
 std_options=""
-option_str="anvqw:sr:.t:Ty"
+option_str="aw:sr:.t:Ty"
 long_options=("port:" "diff:")
 
 DPGOP_args_required=t
@@ -46,9 +63,6 @@ do
   # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
   case $1 in
       -a) EExecAsk=t;;
-      -n) DASH_N_OPT=-n; EXEC=echo; EExecDashN;; # Don't actually execute stuff
-      -v) VERBOSE="echo $progname: "; EExecVerbose;;
-      -q) VERBOSE=":"; EExecQuiet;;
       -w) work_dir=$2; shift;;
       -s) sync_p=t;;
       -r) revision="$2"; shift;;
@@ -127,6 +141,6 @@ then
     rc="$?"
 fi
 
-echo 1>&2 "Finished creating sandbox $sandbox_name; RC: $rc"
-
+echo 1>&2 "Finished creating sandbox ${PWD}/${sandbox_name}; RC: $rc"
+echo "${PWD}/${sandbox_name}"
 exit "${rc}"

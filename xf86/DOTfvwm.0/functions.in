@@ -506,6 +506,10 @@ DestroyFunc PageNextFarmTerm
 AddToFunc PageNextFarmTerm
 + I PageNextXXX @KONST_FARM_XTERM_PATTERN@
 
+DestroyFunc PageNextXTerm
+AddToFunc PageNextXTerm
++ I PageNextXXX @KONST_XTERM_PATTERN@
+
 DestroyFunc DeskNextFarmTerm
 AddToFunc DeskNextFarmTerm
 + I DeskNextXXX @KONST_FARM_XTERM_PATTERN@

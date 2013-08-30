@@ -1,0 +1,91 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+#unset eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+export eexec_program
+
+sb_parent()
+{
+    basename $(dirname "$1")
+}
+
+make_one_p=
+post_proc=echo
+
+# Usage variable usage:
+Usage_args_info=" [sb-root-indicator-file-name]"
+Usage_synopsis="Find a root dir or convert the current dir into one.
+"
+# Using ) after the args makes copy & paste between here and the
+# case statement easier.
+Usage_details="${EExec_parse_usage}
+-o) flag o
+-O <val>) set Option to <val>
+"
+# Example of arg parsing.
+option_str="${EExec_parse_option_str}mctsSrSf:"
+long_options=("mk" "make" "creat" "create" "touch"
+"short" "basename" "base"
+"real" "realpath"
+"sb-parent" "sb-parent"
+"file:")
+
+source dp-getopt+.sh
+while (($# > 0))
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support
+      # Done by EExec_parse and friends.
+
+      # Program options.
+      -m|-c|--mk|--make|--creat|--create|-t|--touch) make_one_p=t; shift;;
+      -s|--short|--basename|--base) post_proc=basename;;
+      -r|--real|--realpath) post_proc=realpath;;
+      -S|--sb-parent|--parent) post_proc=sb_parent;;
+      -f|--file) shift; root_file="${1}";;
+
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+
+: ${DP_SB_ROOT_FILE:=DP_SB_ROOT}
+
+: ${root_file="${1-${DP_SB_ROOT_FILE}}"}
+
+if vtruep "${make_one_p}"
+then
+    touch "${root_file}"
+    exit 0
+fi
+
+EExec_verbose_msg "root_file>$root_file<"
+sb_dir=$(find-up "${root_file}") && {
+    dn=$(dirname "${sb_dir}")
+    "${post_proc}" "${dn}"
+    exit 0
+}
+
+exit 1

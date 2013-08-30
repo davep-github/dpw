@@ -10,43 +10,10 @@ do
   $op
   shift
 done
-unset eexec_program
+export eexec_program
 
-sb_name_only()
-{
-    basename $(dirname "$1")
-}
+# find a p4 root by looking for the p4 config file.
 
-if [ "${1-}" = "-s" ]
-then
-    post_proc=basename
-    shift
-elif [ "${1-}" = '-r' ] # Mutually exclusive
-then
-    post_proc=realpath
-    shift
-elif [ "${1-}" = '-S' ] # Mutually exclusive
-then
-    post_proc=sb_name_only
-    shift
-else
-    post_proc=echo
-fi
-
-vsetp "${1-}" && {
-    cd $1
-    shift
-}
-    
 : ${p4config:=${P4CONFIG-.p4config}}
-f=$(EExec -q find-up "$@" "${p4config}") && {
-    # Prevent a '.' when using EExec -n
-    # f is "", but there is no error and dirname "" --> '.'
-    [ -n "$f" ] && {
-        dn=$(dirname "${f}")
-        $post_proc "$dn"
-        exit 0
-    }
-    exit 1
-}
 
+dp-sb-root "${p4config}" "$@"

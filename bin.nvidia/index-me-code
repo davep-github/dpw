@@ -129,7 +129,10 @@ then
 fi
 
 [ -z "$ap_dir" ] && {
-    ap_dir=$(find-ap-dir)
+    ap_dir=$(find-ap-dir) || {
+        echo "Cannot find ap dir."
+        exit 1
+    } 1>&2
 }
 
 [ -d "${ap_dir}" ] || {
@@ -202,11 +205,15 @@ depot_dirs_of_interest="$base_depot_dirs_of_interest $more_depot_dirs_of_interes
 
 other_dirs_of_interest=""
 
+echo_id2 ap_dir
+echo_id2 ap_path
+echo_id2 ap_hw_p4_path
 echo_id2 p4_root
+
 dirs_of_interest=$(dp4-reroot "$p4_root" $depot_dirs_of_interest)
 dirs_of_interest="${dirs_of_interest} ${other_dirs_of_interest}"
 
-[ -z "${skip_cd_p}" ] && EExec -y mecd sandbox
+vsetp "${skip_cd_p}" || EExec -y mecd sandbox
 dp_echo2 "cwd: $(pwd)"
 
 # These files change and come and go and are mostly copies of existing files.

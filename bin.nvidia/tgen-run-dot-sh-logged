@@ -19,7 +19,7 @@ EExecVerbose
 : ${p4_clib_dir:=//hw/ap_tlit1/clib/Linux}
 : ${log_file_base_name:=dot-sh}
 # I'm done with bash because the quoting sucks beyond suckage:
-# --egrep 'ERROR: cannot aquire /tmp/asim.X' 
+# --egrep 'ERROR: cannot aquire /tmp/asim.X'
 # --egrep 'something bad happened'}
 # --cflush-every=-1 --> flush to zip every line.
 : ${teeker_options=--slog -Z9 --ts --hg -i100 --cflush-every=-1}
@@ -29,11 +29,19 @@ check_test()
 {
     local testname="$@"
     local rc=1
-    if test -d "${testname}"
-    then 
+
+    echo "Checking test candidate>$@<"
+    if [ -z "${testname}" ]
+    then
+        echo 'testname is empty'
+    elif (($(echo "$@" | wc -w) > 1))
+    then
+        echo "More than one executable file found."
+    elif test -d "${testname}"
+    then
         echo "${testname} is a dir."
     elif ! test -x "${testname}"
-    then 
+    then
         echo "${testname} is not executable."
     else
         rc=0
@@ -43,24 +51,31 @@ check_test()
 
 if vunsetp "${testname}"
 then
-    case "${1-}" in 
+    case "${1-}" in
         -|.|--) shift;;
         -*|"") ;;
         *) testname="${1}"; shift ;;
     esac
     vunsetp "${testname}" && {
-        testname=$(ls -1 *.sh | egrep -v '^(command|.*\.cmd)\.sh$')
-        if vunsetp "${testname}" || ! test -x "${testname}" || test -d "${testname}"
+        # In a dir like:
+        # /home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap_t132/diag/testgen/dp-run-tgens.d/swr_so_runlimit/2013-08-16T18.26.17-0400.out/tests/kepler_b_ogtest/00/00/01/000001
+        testname=$(pwd | sed -rn 's!(^.*/dp-run-tgens.d/)([^/]+)(/.*)!\2!p')
+        #echo_id testname
+        vsetp "${testname}" && testname="${testname}.sh"
+        if ! check_test "$testname"
         then
-            echo "$progname: No test name given and cannot guess a good default.
+            testname=$(ls -1 *.sh | egrep -v '^(command|.*\.cmd)\.sh$')
+            #echo_id testname
+            if ! check_test "${testname}"
+            then
+                echo "$progname: No test name given and cannot guess a good default.
 Usage:  testname [additional-teeker-options]"
-            check_test "${testname}"
-            exit 1
-        fi 1>&2
+                exit 1
+            fi 1>&2
+        fi
         echo "Deduced test name>${testname}<"
     }
 fi
-check_test "${testname}" 1>&2 || exit 1
 test_base_name=$(basename "${testname}" .sh)
 cfg_file_name="${test_base_name}.cfg"
 so_name=$(sed -rn "s/(.*-plugin ')([^[:space:]]+)( .*)/\2/p" "${cfg_file_name}").so

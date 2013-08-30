@@ -20,8 +20,10 @@ truth_p()
     return 1
 }
 
+alias truep=truth_p
 alias vtruep=truth_p
 alias vfalsep='! truth_p'
+alias falsep=vfalsep
 
 settrue()
 {

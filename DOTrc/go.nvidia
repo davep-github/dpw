@@ -86,10 +86,11 @@ Ee|drtg__ME_src|                ${testgendprundir__ME_src}
 Ee|drt__ME_src|                 ${testgendprundir__ME_src}
 Ee|drtd__ME_src|                ${testgendprundir__ME_src}
 Ee|dprun__ME_src|               ${testgendprundir__ME_src}
+Ee|dpruns__ME_src|              ${testgendprundir__ME_src}
 Ee|tgrun__ME_src|               ${testgendprundir__ME_src}
+Ee|tgruns__ME_src|              ${testgendprundir__ME_src}
 Ee|dpr__ME_src|                 ${testgendprundir__ME_src}
 Ee|dprtg__ME_src|               ${testgendprundir__ME_src}
-Ee|dpruns__ME_src|              ${testgendprundir__ME_src}
 
 Ee|testgendprtldir__ME_src|     ${testgen__ME_src}dp-rtl-tests/
 Ee|tgrtl__ME_src|               ${testgendprtldir__ME_src}
@@ -194,8 +195,11 @@ Ee|ccplexso|soccplex|memtxnaxi|aximemtxn| ${traces2mobiletracesso}t124/
 #
 #   Somethings which may as well be cross-sandbox
 Ee|surfwr__ME_src|              arch/traces/mobile/traces/gpu_multiengine/surface_write_read/
-Ee|surf__ME_src|                arch/traces/mobile/traces/gpu_multiengine/surface_write_read/
-Ee|swr__ME_src|                 arch/traces/mobile/traces/gpu_multiengine/surface_write_read/
+Ee|surf__ME_src|                ${surfwr__ME_src}
+Ee|swr__ME_src|                 ${surfwr__ME_src}
+Ee|memtxn__ME_src|              arch/traces/mobile/traces/gpu_multiengine/mem-txn/
+Ee|mem_txn__ME_src              ${memtxn__ME_src}
+Ee|mtxn__ME_src|                ${memtxn__ME_src}
 
 Ee|depcpu__ME_src|              arch/traces/mobile/traces/gpu_multiengine/dep_cpu_cpu_gpu_cpu/
 
@@ -213,7 +217,6 @@ Ee|misc|                                                ${sandbox1}
 
 Ee|sandbox2|sbox2|sb2|workspace2|ws2|                   ${scratch0}sb2/sb2hw/
 #Ee|runlimit|asim|as2fail|                               ${sandbox2}
-Ee|swr|surfwriteread|                                   ${sandbox2}
 
 Ee|sandbox3|sbox3|sb3|workspace3|ws3|                   ${scratch1}sb3/sb3hw/
 Ee|generatememtxn|memtxn|                               ${sandbox5}
@@ -221,7 +224,9 @@ Ee|generatememtxn|memtxn|                               ${sandbox5}
 Ee|sandbox4|sbox4|sb4|workspace4|ws4|                   ${scratch3}sb4/sb4hw/
 Ee|swrwavefull|swrfullwave|swrfw|swrwf|swrlong|swrwave| ${sandbox4}
 
-Ee|sandbox5|sbox5|sb5|workspace5|ws5| ${scratch2}sb5/sb5hw/ 
+#Ee|sandbox5|sbox5|sb5|workspace5|ws5| ${scratch2}sb5/sb5hw/
+Ee|sandbox5|sbox5|sb5|workspace5|ws5| ${scratch2}sb5/sb5hw/mini_t132/
+
 Ee|engcpu|ecpu|cpue|cpueng| ${sandbox5}
 
 
@@ -229,7 +234,7 @@ Ee|engcpu|ecpu|cpue|cpueng| ${sandbox5}
 # Some direct accesses for objects which are way too overloaded.
 # sb4 /home/scratch.dpanariti_t124_1/sb4/sb4hw/
 #
-Ee|t3dAlloc|  ${sb4}hw/ap_tlit1/drv/drvapi/runtest_common/runtest_exec.cpp:267
+Ee|t3dAlloc|  ${sb4}hw/${TOT__ME_src}/drv/drvapi/runtest_common/runtest_exec.cpp:267
 
 # See a15_msel_integ_sanity
 #
@@ -264,3 +269,5 @@ Ee|dpylib|       /home/dpanariti/lib/pylib/
 Ee|bover|binoverride|       /home/dpanariti/bin/override/
 Ee|sso| /home/scratch.traces02/mobile/traces/system/so
 Ee|stldir| /usr/include/c++/4.1.1
+Ee|miaowhw|       /home/scratch.miaow_t124/miaow_ap_tree1/hw/
+Ee|miaowap|       /home/scratch.miaow_t124/miaow_ap_tree1/

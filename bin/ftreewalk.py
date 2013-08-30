@@ -194,7 +194,7 @@ class FileTreeWalker:
                 dp_io.dprintf('LINK-TO-.rc is cwd.\n')
 
             # we shuns the symlinks
-            # and its chilluns
+            # and its chilluns unless we don't.
             if os.path.islink(cwd) and not FOLLOW_SYMLINKS:
                 dp_io.ldebug(2,'shunning symlink cwd>%s<\n', cwd)
                 del dirs[:]
@@ -260,9 +260,10 @@ class FileTreeWalker:
             for f in files:
                 dp_io.fdebug(DEBUG_SHOW_ALL_FILES, 'f>%s<\n', f)
                 if os.path.islink(f):
-                    dp_io.ldebug(2,'shunning link>%s<\n', f)
-                    dp_io.vcprintf(0, 'S')
-                    continue
+                    if not FOLLOW_SYMLINKS:
+                        dp_io.ldebug(2,'shunning link>%s<\n', f)
+                        dp_io.vcprintf(0, 'S')
+                        continue
                 if not os.path.isfile(f):
                     dp_io.ldebug(2,'shunning non file>%s<\n', f)
                     dp_io.vcprintf(0, 'F')

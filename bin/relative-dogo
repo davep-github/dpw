@@ -36,5 +36,5 @@ do
       esac
   } 1>&2
 
-  echo "${relative_to}/$go_val"
+  echo $(realpath "${relative_to}/$go_val")
 done

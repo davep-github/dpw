@@ -1,42 +1,42 @@
 echo_name_and_val()
 {
-    local arg
-    local anno=""
-    local noAnno=
-    local prefix=""
-    local suffix=""
-    local pre_limiter=">"
-    local post_limiter="<"
-    local val
-    local name
+    local echo_name_and_val_arg
+    local echo_name_and_val_anno=""
+    local echo_name_and_val_noAnno=
+    local echo_name_and_val_prefix=""
+    local echo_name_and_val_suffix=""
+    local echo_name_and_val_pre_limiter=">"
+    local echo_name_and_val_post_limiter="<"
+    local echo_name_and_val_val
+    local echo_name_and_val_name
 
     while [[ "${1-}" =~ ^- ]]
     do
-      arg="$1"
-      case "$arg" in
-          -q) noAnno=t;;
-          -p) shift; prefix="$1";;
-          -s) shift; suffix="$1";;
-          *) echo 1>&2 "echo_name_and_val: unknown option: $arg";
+      echo_name_and_val_arg="$1"
+      case "$echo_name_and_val_arg" in
+          -q) echo_name_and_val_noAnno=t;;
+          -p) shift; echo_name_and_val_prefix="$1";;
+          -s) shift; echo_name_and_val_suffix="$1";;
+          *) echo 1>&2 "echo_name_and_val: unknown option: $echo_name_and_val_arg";
              return 1;;
       esac
       shift
     done
-    [ -z "$noAnno" ] && anno="$1"
-    
+    [ -z "$echo_name_and_val_noAnno" ] && echo_name_and_val_anno="$1"
+
     local type_suffix
     # This local could hide another with the same name
     local __use_a_name_like_this_and_you_get_what_you_deserve__
     for __use_a_name_like_this_and_you_get_what_you_deserve__ in "$@"; do
         type_suffix=
         case "$__use_a_name_like_this_and_you_get_what_you_deserve__" in
-            -*) name=$(echo "$__use_a_name_like_this_and_you_get_what_you_deserve__" | sed -r 's/(-)(.*)/\2/')
+            -*) echo_name_and_val_name=$(echo "$__use_a_name_like_this_and_you_get_what_you_deserve__" | sed -r 's/(-)(.*)/\2/')
                 type_suffix='[]'
-                # eval av="\${$name[@]}"
-                eval val="\${$__use_a_name_like_this_and_you_get_what_you_deserve__[@]}";;
-            *) eval val="\$$__use_a_name_like_this_and_you_get_what_you_deserve__";;
+                # eval av="\${$echo_name_and_val_name[@]}"
+                eval echo_name_and_val_val="\${$__use_a_name_like_this_and_you_get_what_you_deserve__[@]}";;
+            *) eval echo_name_and_val_val="\$$__use_a_name_like_this_and_you_get_what_you_deserve__";;
         esac
-        echo "$prefix$__use_a_name_like_this_and_you_get_what_you_deserve__$type_suffix${pre_limiter}$val${post_limiter}${anno}${suffix}"
+        echo "${echo_name_and_val_prefix}${__use_a_name_like_this_and_you_get_what_you_deserve__}${echo_name_and_val_suffix}${echo_name_and_val_pre_limiter}${echo_name_and_val_val}${echo_name_and_val_post_limiter}${echo_name_and_val_anno}${echo_name_and_val_suffix}"
     done
 }
 export -f echo_name_and_val
