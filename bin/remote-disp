@@ -2,7 +2,8 @@
 #set -x
 source script-x
 
-host=${1:$(myhost)}
+host=${1-$(myhost)}
+echo_id host
 
 #
 # screen(1) adds garbage after a colon to the hostname.

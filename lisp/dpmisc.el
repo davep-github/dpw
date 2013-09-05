@@ -15571,11 +15571,13 @@ it. Whitespace diffs are easy to ignore during reviews"
                   ;; We can miss cleanups with my rabid saving (e.g. M-ret,
                   ;; M-w). However it might be better than changing
                   ;; everything.
-;;                   (buffer-modified-p)
+                  (buffer-modified-p)
                   ;; Or not. If I've modified it at all since my first
                   ;; visitation, then further modification shouldn't be an
-                  ;; issue. Except after commits, etc.
-                  (buffer-modified-tick)
+                  ;; issue. Except after commits, etc.  Something in my
+                  ;; hooks, etc, for (at least) Shell-script mode causes the
+                  ;; tick count to be non-zero (usually 5)
+                  ;;(buffer-modified-tick)
                   )
              (memq last-command 
                    dp-whitespace-cleanup-after-these-commands)))))
@@ -15593,8 +15595,9 @@ whitespace eradication.")
       (progn
         (call-interactively 'next-line)
         (setq this-command 'next-line))
-    (let ((cleanup-current-line-pred (or cleanup-current-line-pred
-                           dp-whitespace-cleanup-current-line-pred)))
+    (let ((cleanup-current-line-pred 
+           (or cleanup-current-line-pred
+               dp-whitespace-cleanup-current-line-pred)))
       (when (< count 0)
         (setq count (- count)
               cleanup-current-line-pred 'eolp))

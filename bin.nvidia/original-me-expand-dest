@@ -70,7 +70,8 @@ me_expand_dest()
     # Some useful special cases.
     case "${dest}" in
            .) # Go to the same place in the new sandbox.
-              dest="$(dp4-location ${PWD})";;
+              dest="$(dp4-location ${PWD})"
+              ;;
            ~) dest=ap;;
            /) dest="sb";;     # Root
     esac
