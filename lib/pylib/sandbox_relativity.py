@@ -30,10 +30,7 @@ def expand_dest(current_sandbox, expand_dest_args, input_sandbox,
     output = StringIO.StringIO()
     abbrev = expand_dest_args
     if abbrev_suffix is None:
-        # The 0th iteration tends to be the model and often needs to be
-        # assumed. But let's limit the amount the assumption fucks us up.
-        abbrev_suffix = os.environ.get("DP_EXPAND_DEST_SUFFIX",
-                                       "__ME_src")
+        abbrev_suffix = os.environ.get("DP_EXPAND_DEST_ABBREV_SUFFIX")
     #
     # Some useful special cases
     #
@@ -118,6 +115,10 @@ def main(argv):
                          dest="input_sandbox",
                          type=str, default=None,
                          help="A user specified sandbox. Defaults to current_sandbox.")
+    oparser.add_argument("--abbrev-suffix",
+                         dest="abbrev_suffix",
+                         type=str, default="",
+                         help="Suffix to add to abbrevs, e.g. __ME_src.")
 
     app_args = oparser.parse_args()
 
@@ -137,7 +138,10 @@ def main(argv):
         input_sandbox = output.getvalue().strip()
 
     if app_args.expand_dest_args:
-        s = expand_dest(current_sandbox, app_args.expand_dest_args, input_sandbox)
+        s = expand_dest(current_sandbox=current_sandbox,
+                        expand_dest_args=app_args.expand_dest_args,
+                        input_sandbox=input_sandbox,
+                        abbrev_suffix=app_args.abbrev_suffix)
         print s
         sys.exit(0)
 
