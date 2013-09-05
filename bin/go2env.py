@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-import os, sys, string, re, getopt, types
-import dp_io, dp_sequences
+import os, sys, string, re, getopt, dp_io, types
 
 ignore_file_not_found = 1
 emacs_abbrev_table_name = 'dp-go-abbrev-table'
@@ -35,7 +34,7 @@ class Keyword_option_t(object):
                                                           self.val())
     def __repr__(self):
         return self.__str__()
-
+    
 #dp_io.eprintf('HOME>%s<, UGLY_HOME>%s<', HOME, UGLY_HOME)
 
 def handle_env_var(fmt, name, open_quote,val, close_quote, **kwargs):
@@ -47,7 +46,7 @@ def handle_env_var(fmt, name, open_quote,val, close_quote, **kwargs):
         print '(setenv "%s" %s%s%s)' % (name, open_quote, val, close_quote)
     else:
         print fmt  % (name, open_quote, val, close_quote, name)
-
+    
 #####################################################################
 def handle_sh(name, val, **kw_args):
     #
@@ -249,6 +248,7 @@ aliases>%s<""", line, selector, aliases)
                                   "ctl": ctl, "aliases": aliases,
                                   "file_name": file_name})
 
+
 #####################################################################
 def expand_file(file, selector, aliases):
     """Expand all aliases in a given file."""
@@ -287,137 +287,106 @@ def expand_files(files, selector, aliases):
     for file in files:
         expand_file(file, selector, aliases)
 
-#####################################################################
-def process_gopath(args):
-    files = []
-    names = []
-    if args:
-        i = 0
-        for arg in args:
-            i += 1
-            if arg == '--':
-                break
-            files.append(arg)
-        args = args[i:]
-        for arg in args:
-            names.append(arg)
-    if not files:
-        if os.environ.get('GOPATH'):
-            files = string.split(os.environ.get('GOPATH'), ':')
-        else:
-            files = [os.environ.get('HOME') + '/.go']
-    if not files:
-        print >>sys.stderr, "No go files. Exiting."
-        sys.exit(1)
-    files.reverse()
-    return files, names
 
+#
+# parse args
+#
+selector = 'e'
+grep_regexp = None
+opts, args = getopt.getopt(sys.argv[1:], 'efvdlLs:Eq:g:G:m:')
+handler_keyword_args = {}
+for opt, val in opts:
+    if opt == '-e':
+        selector = 'E'
+    elif opt == '-f':                   # make file not found fatal
+        ignore_file_not_found = 0
+    elif opt == '-v':
+    	verbose += 1
+    elif opt == '-d':
+        debug += 1
+        dp_io.debug_on()
+    elif opt == "-l":                   # Simple listing
+        selector = 'l'
+    elif opt == "-L":              # Simple listing with file names displayed
+        selector = 'L'
+    elif opt == '-s':
+        Shell_type = val                # Override $SHELL.
+    elif opt == '-E':
+        selector = 'e'
+        # Generate (setenv "bubba" "blah") calls.
+        handler_keyword_args[ELISP_OUTPUT_HANDLER_FLAGS] = \
+            Keyword_option_t(ELISP_EMIT_SETENV, True)
+    elif opt == '-q':
+        Evil_globals["quote_char"] = val
+    elif opt == '-g':
+        grep_regexp = val
+        Shell_type = "grep"
+    elif opt == '-G':
+        grep_regexp = val
+        Shell_type = "grep-val"
+    elif opt == '-m':
+        # Do this with a front end since it is nvidia ME specific.
+        grep_regexp = "^" + val + "__ME_src$"
+        Shell_type = "grep"
 
-#####################################################################
-def init_aliases(args, aliases, selector_regexp):
-    #
-    # find the go path
-    # The gopath looks like this:
-    # /udir/davep/.go.ping:/udir/davep/.go.crl:/udir/davep/.go
-    # most specific to least.  This is good when searching the gopath
-    # directly.  For generating variables, we reverse the list so that
-    # more specific files can override less specific ones.
-    # dogo stops at the first match, and this produces the same effect.
-    #
-    files, names = process_gopath(args)
-    expand_files(files, selector_regexp, aliases)
+handlers = get_handlers(Shell_type)
 
+#
+# find the go path
+# The gopath looks like this:
+# /udir/davep/.go.ping:/udir/davep/.go.crl:/udir/davep/.go
+# most specific to least.  This is good when searching the gopath
+# directly.  For generating variables, we reverse the list so that
+# more specific files can override less specific ones.
+# dogo stops at the first match, and this produces the same effect.
+#
+files = []
+names = []
+if args:
+    i = 0
+    for arg in args:
+        i += 1
+        if arg == '--':
+            break
+        files.append(arg)
+    args = args[i:]
+    for arg in args:
+        names.append(arg)
+if not files:
+    if os.environ.get('GOPATH'):
+        files = string.split(os.environ.get('GOPATH'), ':')
+    else:
+        files = [os.environ.get('HOME') + '/.go']
 
-#####################################################################
-def process_aliases(handle, aliases, handler_keyword_args,
-                    handle_pre, handle_post,
-                    grep_regexps):
-    if handle_pre:
-        handle_pre(**handler_keyword_args)
+if not files:
+    print >>sys.stderr, "No go files. Exiting."
+    sys.exit(1)
 
-    keys = aliases.keys()
-    keys.sort()
-    for regexp in grep_regexps:
-        for k in keys:
-            kwargs = handler_keyword_args
-            kwargs.update(aliases[k][1])
-            kwargs["regexp"] = regexp
-            #print >>sys.stderr, "kwargs:", kwargs
-            handle(k, aliases[k][0], **kwargs)
+files.reverse()
 
-    if handle_post:
-        handle_post(aliases, keys)
+aliases = {}
 
-#####################################################################
-def go2env(args, handlers_type, selector, handler_keyword_args,
-           grep_regexps):
-    """Simple entry-point tailored to command line interface."""
-    handlers = get_handlers(handlers_type)
-    handle, handle_pre, handle_post, selector_regexp = handlers[selector]
-    if type(selector_regexp) == types.StringType:
-        selector_regexp = re.compile(selector_regexp)
-        #print >>sys.stderr, "handle>%s<" % handle
+handle, handle_pre, handle_post, selector_regexp = handlers[selector]
+if type(selector_regexp) == types.StringType:
+    selector_regexp = re.compile(selector_regexp)
+#print >>sys.stderr, "handle>%s<" % handle
 
-    aliases = {}
-    init_aliases(args=args, aliases=aliases, selector_regexp=selector_regexp)
-    ##!<@todo Stash away file name for better location purposes.
+expand_files(files, selector_regexp, aliases)
 
-    process_aliases(handle=handle, aliases=aliases,
-                    handler_keyword_args=handler_keyword_args,
-                    handle_pre=handle_pre, handle_post=handle_post,
-                    grep_regexps=grep_regexps)
+keys = aliases.keys()
+keys.sort()
 
-#####################################################################
-#####################################################################
-if __name__ == "__main__":
-    #
-    # parse args
-    #
-    suffix = ""
-    selector = 'e'
-    grep_regexps = []
-    opts, args = getopt.getopt(sys.argv[1:], 'efvdlLs:Eq:g:G:m:M:S:')
-    handler_keyword_args = {}
-    for opt, val in opts:
-        if opt == '-e':
-            selector = 'E'
-        elif opt == '-f':               # make file not found fatal
-            ignore_file_not_found = 0
-        elif opt == '-v':
-            verbose += 1
-        elif opt == '-d':
-            debug += 1
-            dp_io.debug_on()
-        elif opt == "-l":               # Simple listing
-            selector = 'l'
-        elif opt == "-L":          # Simple listing with file names displayed
-            selector = 'L'
-        elif opt == '-s':
-            Shell_type = val            # Override $SHELL.
-        elif opt == '-E':
-            selector = 'e'
-            handler_keyword_args[ELISP_OUTPUT_HANDLER_FLAGS] = \
-               Keyword_option_t(ELISP_EMIT_SETENV, True)
-        elif opt == '-q':
-            Evil_globals["quote_char"] = val
-        elif opt == '-g':
-            grep_regexps.append(val)
-            Shell_type = "grep"
-        elif opt == '-G':
-            grep_regexps.append(val)
-            Shell_type = "grep-val"
-        elif opt == '-S':
-            suffix = val
-        elif opt == '-M':
-            # @todo XXX Do this with a front end since it is nvidia ME
-            # specific.
-            grep_regexps.append("^" + val + "__ME_src$")
-            Shell_type = "grep"
-        elif opt == '-m':
-            grep_regexps.append("^" + val + suffix + "$")
-            Shell_type = "grep"
+##!<@todo Stash away file name for better location purposes.
 
-    go2env(args=args, handlers_type=Shell_type, selector=selector,
-           handler_keyword_args=handler_keyword_args,
-           grep_regexps=grep_regexps)
+if handle_pre:
+    handle_pre(**handler_keyword_args)
 
+for k in keys:
+    kwargs = handler_keyword_args
+    kwargs.update(aliases[k][1])
+    kwargs["regexp"] = grep_regexp
+    #print >>sys.stderr, "kwargs:", kwargs
+    handle(k, aliases[k][0], **kwargs)
+
+if handle_post:
+    handle_post(aliases, keys)
