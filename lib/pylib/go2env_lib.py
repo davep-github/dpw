@@ -331,6 +331,8 @@ def init_aliases(args, aliases, selector_regexp):
     # more specific files can override less specific ones.
     # dogo stops at the first match, and this produces the same effect.
     #
+    if aliases:
+        return
     files, names = process_gopath(args)
     expand_files(files, selector_regexp, aliases)
 
@@ -338,11 +340,12 @@ def init_aliases(args, aliases, selector_regexp):
 #####################################################################
 def process_aliases(handle, aliases, handler_keyword_args,
                     handle_pre, handle_post,
-                    grep_regexps, ostream=sys.stdout):
+                    grep_regexps=None, ostream=sys.stdout):
     handler_keyword_args["ostream"] = ostream
     if handle_pre:
         handle_pre(**handler_keyword_args)
-
+    if not grep_regexps:
+        grep_regexps = (".*",)
     keys = aliases.keys()
     keys.sort()
     for regexp in grep_regexps:
@@ -373,9 +376,9 @@ def go2env(args, handlers_type, selector, handler_keyword_args,
     aliases = {}
     init_aliases(args=args, aliases=aliases, selector_regexp=selector_regexp)
     ##!<@todo Stash away file name for better location purposes.
-#    print "handle>%s<handle, aliases>%s<aliases, handler_keyword_args>%s<handler_keyword_args, handle_pre>%s<handle_pre, handle_post>%s<handle_post, grep_regexps>%s<grep_regexps, ostream>%s<ostream" \
-#          % (handle, aliases, handler_keyword_args, handle_pre, handle_post,
-#             grep_regexps, ostream)
+##     print "handle>%s<handle, aliases>%s<aliases, handler_keyword_args>%s<handler_keyword_args, handle_pre>%s<handle_pre, handle_post>%s<handle_post, grep_regexps>%s<grep_regexps, ostream>%s<ostream" \
+##           % (handle, "SKIPPING" or aliases, handler_keyword_args, handle_pre, handle_post,
+##              grep_regexps, ostream)
            
     process_aliases(handle=handle, aliases=aliases,
                     handler_keyword_args=handler_keyword_args,
@@ -384,11 +387,18 @@ def go2env(args, handlers_type, selector, handler_keyword_args,
                     ostream=ostream)
 
 ####################################################################
-def simple_lookup(abbrev):
+def simple_lookup(abbrev_regexp, try_environment_p=True):
+    # Regexps with metacharacters probably won't be found.
+    ## @todo XXX Make an environment grep?
+    v = os.environ.get(abbrev_regexp)
+    if v:
+        # Make sure this is fully expanded. Ordering problems can leave
+        # unexpanded variables in values.
+        return v
     output = StringIO.StringIO()
     go2env(args=[], handlers_type="grep", selector="e",
            handler_keyword_args={},
-           grep_regexps=(abbrev,),
+           grep_regexps=(abbrev_regexp,),
            ostream=output)
     return output.getvalue().strip()
     
@@ -398,8 +408,6 @@ if __name__ == "__main__":
     #
     # parse args
     #
-    # Also, if found, try to ensure that it's fully expanded.
-    print >>sys.stderr, "Add ability to try environment variables first."
     suffix = ""
     selector = 'e'
     grep_regexps = []

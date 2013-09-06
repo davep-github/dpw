@@ -10,8 +10,12 @@ opath = os.path
 
 Configuration = {
     "ROOT_INDICATOR_FILE": os.environ.get("DP_SANDBOX_RELATIVITY_ROOT_FILE",
-                                          "DP_SB_ROOT")
+                                          "DP_SB_ROOT"),
+    "MAGICK_STRING_SEPARATOR": os.environ.get("DP_SANDBOX_RELATIVITY_MAGICK_STRING_SEPARATOR", ","),
     }
+
+def magick_string_p(s, magick_string_separator=Configuration["MAGICK_STRING_SEPARATOR"]):
+    return s.find(magick_string_separator) >= 0
 
 ####################################################################
 def emit_path(components, norm_p=True, real_p=True, ostream=sys.stdout,
@@ -27,7 +31,8 @@ def emit_path(components, norm_p=True, real_p=True, ostream=sys.stdout,
 
 ####################################################################
 def expand_dest(current_sandbox, expand_dest_args, input_sandbox,
-                abbrev_suffix=None, magick_string_separator=","):
+                abbrev_suffix=None,
+                magick_string_separator=","):
 ##     print "1: input_sandbox>%s<" % (input_sandbox,)
     # Handle some legacy foolishness
     a = expand_dest_args.split(magick_string_separator)
@@ -135,7 +140,9 @@ def main(argv):
 
     app_args = oparser.parse_args()
 
+    expand_dest_args=app_args.expand_dest_args
     input_sandbox = app_args.input_sandbox
+##     print "0: expand_dest_args>%s<" % (expand_dest_args,)
 ##     print "0: input_sandbox>%s<" % (input_sandbox,)
     current_sandbox = get_current_sandbox()
     if not current_sandbox:
@@ -144,7 +151,7 @@ def main(argv):
             # In this case, we should've gotten a sandbox on the CL.
             # If we have an input_sandbox, we won't treat no current_sandbox
             # as an error.
-        if not input_sandbox:
+        if not input_sandbox and not magick_string_p(expand_dest_args):
             dp_io.eprintf("cannot find root_indicator_file[%s]\n",
                           Configuration["ROOT_INDICATOR_FILE"])
             sys.exit(1)
@@ -155,9 +162,9 @@ def main(argv):
 ##     print "A.1: current_sandbox>%s<" % (current_sandbox,)
 ##     print "B: input_sandbox>%s<" % (input_sandbox,)
 
-    if app_args.expand_dest_args:
+    if expand_dest_args:
         s = expand_dest(current_sandbox=current_sandbox,
-                        expand_dest_args=app_args.expand_dest_args,
+                        expand_dest_args=expand_dest_args,
                         input_sandbox=input_sandbox,
                         abbrev_suffix=app_args.abbrev_suffix)
         print s
