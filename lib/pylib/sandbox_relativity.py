@@ -9,7 +9,8 @@ opath = os.path
 # then pylib/some_config.py
 
 Configuration = {
-    "ROOT_INDICATOR_FILE": "DP_SB_ROOT"
+    "ROOT_INDICATOR_FILE": os.environ.get("DP_SANDBOX_RELATIVITY_ROOT_FILE",
+                                          "DP_SB_ROOT")
     }
 
 ####################################################################
@@ -26,11 +27,25 @@ def emit_path(components, norm_p=True, real_p=True, ostream=sys.stdout,
 
 ####################################################################
 def expand_dest(current_sandbox, expand_dest_args, input_sandbox,
-                abbrev_suffix=None):
-    output = StringIO.StringIO()
-    abbrev = expand_dest_args
+                abbrev_suffix=None, magick_string_separator=","):
+##     print "1: input_sandbox>%s<" % (input_sandbox,)
+    # Handle some legacy foolishness
+    a = expand_dest_args.split(magick_string_separator)
+    if len(a) > 1:
+        abbrev = a[1]
+        input_sandbox = a[2]
+    else:
+        abbrev = expand_dest_args
+
+    # only expand the input sandbox it if it doesn't already look like a
+    # path.
+    if input_sandbox and input_sandbox.find("/") == -1:
+        input_sandbox = go2env_lib.simple_lookup("^" + input_sandbox + "$")
+
     if abbrev_suffix is None:
         abbrev_suffix = os.environ.get("DP_EXPAND_DEST_ABBREV_SUFFIX")
+##     print "abbrev>%s<" % (abbrev,)
+##     print "2: input_sandbox>%s<" % (input_sandbox,)
     #
     # Some useful special cases
     #
@@ -49,12 +64,8 @@ def expand_dest(current_sandbox, expand_dest_args, input_sandbox,
     elif abbrev == "/":
         abbrev = current_sandbox
 
-    output = StringIO.StringIO()
-    go2env_lib.go2env(args=[], handlers_type="grep", selector="e",
-                      handler_keyword_args={},
-                      grep_regexps=("^" + abbrev + abbrev_suffix + "$",),
-                      ostream=output)
-    new_abbrev = output.getvalue().strip()
+    new_abbrev = go2env_lib.simple_lookup("^" + abbrev + abbrev_suffix + "$")
+
     if not new_abbrev:
         new_abbrev = abbrev
 ##     print "new_abbrev>%s<" % (new_abbrev,)
@@ -82,6 +93,8 @@ def get_current_sandbox():
     if current_sandbox:
         current_sandbox = opath.dirname(current_sandbox[0])
         current_sandbox = opath.normpath(opath.realpath(current_sandbox))
+    else:
+        current_sandbox = None
     return current_sandbox
 
 ####################################################################
@@ -122,20 +135,25 @@ def main(argv):
 
     app_args = oparser.parse_args()
 
+    input_sandbox = app_args.input_sandbox
+##     print "0: input_sandbox>%s<" % (input_sandbox,)
     current_sandbox = get_current_sandbox()
     if not current_sandbox:
-        dp_io.eprintf("cannot find root_indicator_file[%s]\n",
-                      Configuration["ROOT_INDICATOR_FILE"])
-    input_sandbox = app_args.input_sandbox
+            # If we are not in a sandbox, we won't be able to find the
+            # ROOT_INDICATOR_FILE.
+            # In this case, we should've gotten a sandbox on the CL.
+            # If we have an input_sandbox, we won't treat no current_sandbox
+            # as an error.
+        if not input_sandbox:
+            dp_io.eprintf("cannot find root_indicator_file[%s]\n",
+                          Configuration["ROOT_INDICATOR_FILE"])
+            sys.exit(1)
+
+##     print "A: input_sandbox>%s<" % (input_sandbox,)
     if  input_sandbox is None:
         input_sandbox = current_sandbox
-    else:
-        output = StringIO.StringIO()
-        go2env_lib.go2env(args=[], handlers_type="grep", selector="e",
-                          handler_keyword_args={},
-                          grep_regexps=["^" + input_sandbox + "$"],
-                          ostream=output)
-        input_sandbox = output.getvalue().strip()
+##     print "A.1: current_sandbox>%s<" % (current_sandbox,)
+##     print "B: input_sandbox>%s<" % (input_sandbox,)
 
     if app_args.expand_dest_args:
         s = expand_dest(current_sandbox=current_sandbox,

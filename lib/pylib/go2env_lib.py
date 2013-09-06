@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, sys, string, re, getopt, types
+import os, sys, string, re, getopt, types, StringIO
 import dp_io, dp_sequences
 
 ignore_file_not_found = 1
@@ -38,6 +38,7 @@ class Keyword_option_t(object):
 
 #dp_io.eprintf('HOME>%s<, UGLY_HOME>%s<', HOME, UGLY_HOME)
 
+#####################################################################
 def handle_env_var(fmt, name, open_quote,val, close_quote, **kw_args):
     flags = kw_args.get(ELISP_OUTPUT_HANDLER_FLAGS, None)
     emit_setenv_p = False
@@ -382,6 +383,15 @@ def go2env(args, handlers_type, selector, handler_keyword_args,
                     grep_regexps=grep_regexps,
                     ostream=ostream)
 
+####################################################################
+def simple_lookup(abbrev):
+    output = StringIO.StringIO()
+    go2env(args=[], handlers_type="grep", selector="e",
+           handler_keyword_args={},
+           grep_regexps=(abbrev,),
+           ostream=output)
+    return output.getvalue().strip()
+    
 #####################################################################
 #####################################################################
 if __name__ == "__main__":

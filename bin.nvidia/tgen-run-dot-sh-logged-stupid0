@@ -3,6 +3,8 @@
 source maybe-davep
 
 # Run a test looking for common stupid errors that should have been fixed long ago.
+# Most are absolutely fatal but don't exit. This often results in a test that runs forever.
+# I really want to cry.
 # And some of mine as well.
 # Check for a (gdb) prompt to let me know if I'm running a test that I've set
 # up to run under gdb. When this happens the test hangs because gdb is
@@ -18,4 +20,5 @@ $EEXEC tgen-run-dot-sh-logged \
     --hgrep 'RT_FAIL' \
     --hgrep 'call stack' \
     --hgrep 'KeyError: .OUT.' \
+    --hgrep 'qemu: could not load kernel' \
     "$@"

@@ -62,7 +62,7 @@ me_expand_dest()
         set -- "${a[@]}"
     fi
 
-    EExecDashV_p && eko "$@"
+    EExecDashV_p && eko "eko'ing \$@: " "$@"
         
     # Do dest [sb]
     local dest="${1-sb}"; shift

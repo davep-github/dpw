@@ -3,7 +3,7 @@
 : ${confirmation_response:="TRUST ME"}
 
 : ${testname:=cpu_surface_write_read}
-: ${test_params="mapping_mode=reflected default_door no_check_mem_reg series_len=4 num_series=1 test=rtmem-rtmem"}
+: ${test_args="mapping_mode=reflected default_door no_check_mem_reg series_len=4 num_series=1 test=rtmem-rtmem"}
 : ${testext=.so}
 : ${rundir:=$(depth)}
 : ${EZEC=}
@@ -24,7 +24,9 @@ do
       -k|--eko) EZEC=eko; no_run_p=t;;
       -s|--start|--startrecord|--start-record) shift; startrecord="${1}";;
       -w|--wave|--waves|-wave|-waves) dump_waves_opt=-waves;;
-      -p|--proj|--project) shift; project="${1}";;
+      -P|--proj|--project) shift; project="${1}";;
+      -p|--prog|--program|--test|--test-name) shift; testname="${1}";;
+      -a|--args|--prog-args|--program-args) shift; test_args="${1}";;
       *) break;;
   esac
   shift
@@ -77,6 +79,10 @@ hdr_file=$(abspath ../../arch/traces/mobile/traces/gpu_multiengine/comp_one_tri_
 }
 
 echo "${logfile}" >> "${rtl_log_file_history}"
+if [ -n "${test_args}" ]
+then
+    test_args=" ${test_args}"
+fi
 
 ${EZEC} ./bin/system_run \
     -mode arm \
@@ -87,6 +93,6 @@ ${EZEC} ./bin/system_run \
     -o "${logfile}" \
     -noClean \
     -traces "${trace_dir}" \
-    -mods "-top -cpu_rtl -pitch -zt_count_0 -i ${hdr_file} -o TestDir/${testname} -plugin '${testname} ${test_params}'" \
+    -mods "-top -cpu_rtl -pitch -zt_count_0 -i ${hdr_file} -o TestDir/${testname} -plugin '${testname}${test_args}'" \
     "${testname}${testext}" \
     -v top_peatrans_gpurtl

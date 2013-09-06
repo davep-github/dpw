@@ -56,6 +56,8 @@ Ee|hw__ME_src|                  hw/
 Ee|nvdiag__ME_src|              hw/nvdiag/
 Ee|nvd__ME_src|                 ${nvdiag__ME_src}
 Ee|mods__ME_src|                ${nvdiag__ME_src}mods/
+Ee|simmgr__ME_src|              ${nvdiag__ME_src}simmgr/
+Ee|asim__ME_src|                ${simmgr__ME_src}
 Ee|ap0__ME_src|                 hw/ap/
 Ee|apjustap__ME_src|            ${ap0__ME_src}
 Ee|aptlit1__ME_src|             hw/ap_tlit1/
@@ -84,6 +86,7 @@ Ee|testgendprundir__ME_src|     ${testgen__ME_src}dp-run-tgens.d/
 Ee|dptg__ME_src|                ${testgendprundir__ME_src}
 Ee|drtg__ME_src|                ${testgendprundir__ME_src}
 Ee|drt__ME_src|                 ${testgendprundir__ME_src}
+Ee|dprt__ME_src|                ${testgendprundir__ME_src}
 Ee|drtd__ME_src|                ${testgendprundir__ME_src}
 Ee|dprun__ME_src|               ${testgendprundir__ME_src}
 Ee|dpruns__ME_src|              ${testgendprundir__ME_src}
