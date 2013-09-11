@@ -2026,6 +2026,11 @@ See `dp-c*-junk-after-eos*'."
 ;;;  "\\s-*\\(const\\)?\\s-*\\($\\|{.*$\\|\\s-*//.*\n[ \n\t]*{\\)"
   "Regular expression to determine if an opening brace is present.")
 
+(defvar dp-chars-which-cannot-follow-a-function-open-brace
+  "[%]"
+  "The name is pretty clear. The % is from mmm-mode's delimiters:
+{%<mode-name>%}
+)
 
 (defun* dp-c-ensure-opening-brace (&key ; <:eob:>
                                    (regexp dp-c-open-brace-present-regexp)  
@@ -2063,7 +2068,11 @@ aa bb(
 "
   (interactive)
   (let ((ret 'unset))
-    (if (looking-at (concat regexp-prefix regexp))
+    (if (and (looking-at (concat regexp-prefix regexp))
+             (save-excursion
+               (goto-char (match-end 0))
+               (not (looking-at 
+                     dp-chars-which-cannot-follow-a-function-open-brace))))
         (progn
           (goto-char (match-end 0))
           (when (= (forward-line 1) 0)

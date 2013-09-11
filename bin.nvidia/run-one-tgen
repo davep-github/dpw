@@ -11,13 +11,14 @@ mecd testgen
     echo "Changed to testgen dir."
 }
 
+: ${chip:=t132}
 : ${mdiag_more=}
 : ${mdiag_args=}
 : ${tgen_prog="./tgen.pl"}
 : ${axf_p=}
 : ${axf_plugin_bin=""}
 : ${axf_cpu_model=0}
-: ${axf_mdiag_args="-force_sockserv -reserve_sysmem 258 -top -sec_elf_name $(realpath $(pwd)/../../drv/mpcore/t124/ObjLinux_MPCoreXC/boot_page_table.axf) -cpu_model ${axf_cpu_model}"}
+: ${axf_mdiag_args="-force_sockserv -reserve_sysmem 258 -top -sec_elf_name $(realpath $(pwd)/../../drv/mpcore/@chip@/ObjLinux_MPCoreXC/boot_page_table.axf) -cpu_model ${axf_cpu_model}"}
 : ${rtl_args=-simv top_peatrans_gpurtl}
 : ${rtl_args_more=}
 : ${clib_linux=$(realpath "$(pwd)/../../clib/Linux")}
@@ -210,6 +211,7 @@ $PWD"
     esac
 fi
 
+
 # Appending to $@ allows for more kinds of quoting to be preserved.
 vsetp "${queue}" && set -- "$@" -queue "${queue}"
 vsetp "$traceRoot_opt}" ] && set -- "$@" -traceRoot "${traceRoot_opt}"
@@ -246,7 +248,10 @@ do
 
     [ "${test_name}" = 'all' ] || set -- "$@" -only "${test_name}"
     vsetp "$mdiag_more" && set -- "$@" -mdiagArgsMore "${mdiag_more}"
-    vsetp "${axf_p}" && mdiag_args="${mdiag_args} ${axf_mdiag_args}"
+    vsetp "${axf_p}" && {
+        mdiag_args="${mdiag_args} ${axf_mdiag_args}"
+        axf_mdiag_args=$(echo "$axf_mdiag_args" | sed -r "s/@chip@/$chip_opt/")
+    }
     vsetp "${axf_plugin_bin}" && {
         case "${axf_plugin_bin}" in
             *.axf) ;;

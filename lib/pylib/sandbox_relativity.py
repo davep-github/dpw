@@ -14,6 +14,7 @@ Configuration = {
     "MAGICK_STRING_SEPARATOR": os.environ.get("DP_SANDBOX_RELATIVITY_MAGICK_STRING_SEPARATOR", ","),
     }
 
+####################################################################
 def magick_string_p(s, magick_string_separator=Configuration["MAGICK_STRING_SEPARATOR"]):
     return s.find(magick_string_separator) >= 0
 
@@ -32,8 +33,9 @@ def emit_path(components, norm_p=True, real_p=True, ostream=sys.stdout,
 ####################################################################
 def expand_dest(current_sandbox, expand_dest_args, input_sandbox,
                 abbrev_suffix=None,
-                magick_string_separator=","):
-##     print "1: input_sandbox>%s<" % (input_sandbox,)
+                magick_string_separator=Configuration["MAGICK_STRING_SEPARATOR"]):
+#    print >>sys.stdout, "1: input_sandbox>{}<".format(input_sandbox)
+#    print >>sys.stdout, "1: expand_dest_args>{}<".format(expand_dest_args)
     # Handle some legacy foolishness
     a = expand_dest_args.split(magick_string_separator)
     if len(a) > 1:
@@ -46,6 +48,10 @@ def expand_dest(current_sandbox, expand_dest_args, input_sandbox,
     # path.
     if input_sandbox and input_sandbox.find("/") == -1:
         input_sandbox = go2env_lib.simple_lookup("^" + input_sandbox + "$")
+
+    if abbrev.find("//") == 0:
+        # p4 path location.
+        return p4_lib.reroot(abbrev, input_sandbox).strip()
 
     if abbrev_suffix is None:
         abbrev_suffix = os.environ.get("DP_EXPAND_DEST_ABBREV_SUFFIX")
@@ -103,6 +109,28 @@ def get_current_sandbox():
     return current_sandbox
 
 ####################################################################
+def get_expand_args(args, input_sandbox,
+                    magick_string_separator=Configuration["MAGICK_STRING_SEPARATOR"]):
+    # Handle some legacy foolishness
+    a = args.split(magick_string_separator)
+    if len(a) > 1:
+        abbrev = a[1]
+        sandbox = a[2]
+    else:
+        sandbox = input_sandbox or get_current_sandbox()
+        abbrev = args
+
+    if not sandbox:
+        return None
+
+    # only expand the input sandbox it if it doesn't already look like a
+    # path.
+    if sandbox and sandbox.find("/") == -1:
+        sandbox = go2env_lib.simple_lookup("^" + sandbox + "$")
+    
+    return abbrev, sandbox
+
+####################################################################
 def main(argv):
     oparser = argparse.ArgumentParser()
     oparser.add_argument("--find-root", "--sb-root",
@@ -144,17 +172,17 @@ def main(argv):
     input_sandbox = app_args.input_sandbox
 ##     print "0: expand_dest_args>%s<" % (expand_dest_args,)
 ##     print "0: input_sandbox>%s<" % (input_sandbox,)
-    current_sandbox = get_current_sandbox()
+    a = get_expand_args(expand_dest_args, input_sandbox)
+    if a:
+        abbrev = a[0]
+        current_sandbox = a[1]
+    else:
+        abbrev = expand_dest_args
+
     if not current_sandbox:
-            # If we are not in a sandbox, we won't be able to find the
-            # ROOT_INDICATOR_FILE.
-            # In this case, we should've gotten a sandbox on the CL.
-            # If we have an input_sandbox, we won't treat no current_sandbox
-            # as an error.
-        if not input_sandbox and not magick_string_p(expand_dest_args):
-            dp_io.eprintf("cannot find root_indicator_file[%s]\n",
-                          Configuration["ROOT_INDICATOR_FILE"])
-            sys.exit(1)
+        dp_io.eprintf("cannot find root_indicator_file[%s]\n",
+                      Configuration["ROOT_INDICATOR_FILE"])
+        sys.exit(1)
 
 ##     print "A: input_sandbox>%s<" % (input_sandbox,)
     if  input_sandbox is None:

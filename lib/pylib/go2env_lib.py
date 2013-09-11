@@ -2,6 +2,7 @@
 
 import os, sys, string, re, getopt, types, StringIO
 import dp_io, dp_sequences
+opath = os.path
 
 ignore_file_not_found = 1
 emacs_abbrev_table_name = 'dp-go-abbrev-table'
@@ -11,6 +12,8 @@ debug = 0
 ELISP_OUTPUT_HANDLER_FLAGS = "elisp output handler flags"
 ELISP_EMIT_SETENV = "elisp output setenv"
 
+GO_DICTIONARY_FILE = opath.join(os.environ["HOME"], "droppings")
+
 PERMANENT_PREFIX = ""
 PREFIX = ""
 HOME = os.environ['HOME']
@@ -18,6 +21,13 @@ UGLY_HOME = dp_io.bq('cd $HOME; /bin/pwd')[:-1]
 Shell_type = None                       # None means use $SHELL
 
 Evil_globals = {}
+
+class Val_in_kwargs(Exception):
+    def __init__(self, s):
+        self.d_s = s
+
+    def __str__(self):
+        return s
 
 #
 # Using a class allows us to differentiate types.
@@ -36,6 +46,34 @@ class Keyword_option_t(object):
     def __repr__(self):
         return self.__str__()
 
+#
+# aliases[name] = (val,
+#                 {"line": line, "selector": selector,
+#                  "ctl": ctl, "aliases": aliases,
+#                  "file_name": file_name})
+#
+#
+class Alias_item_t(object):
+    def __init__(self, val, **kw_args):
+        self.d_val = val
+        keys = kw_args.keys()
+        for k in ("val", "regexp"):
+            if k in keys:
+                raise Alias_reserved_keyword('Cannot use "%s" as a key.' \
+                                             % (k,))
+        self.d_kw_args = kw_args
+        self.d_kw_args['val'] = val
+
+    def get(self, name, default=None):
+        return self.d_kw_args.get(name, default)
+
+    def set(self, name, val):
+        self.d_kw_args[name] = val
+
+    def __call__(self):
+        return self.d_kw_args
+                          
+    
 #dp_io.eprintf('HOME>%s<, UGLY_HOME>%s<', HOME, UGLY_HOME)
 
 #####################################################################
@@ -50,7 +88,8 @@ def handle_env_var(fmt, name, open_quote,val, close_quote, **kw_args):
         print fmt  % (name, open_quote, val, close_quote, name)
 
 #####################################################################
-def handle_sh(name, val, **kw_args):
+def handle_sh(name, alias_item, **kw_args):
+    val = alias_item.get("val")
     #
     # There are two kinds of environment outputs:
     # 1. Shell
@@ -63,7 +102,8 @@ def handle_sh(name, val, **kw_args):
                    **kw_args)
 
 #####################################################################
-def handle_csh(name, val, **kw_args):
+def handle_csh(name, alias_item, **kw_args):
+    val = alias_item.get("val")
     #
     # There are two kinds of environment outputs:
     # 1. Shell
@@ -79,9 +119,10 @@ def emacs_pre(**kw_args):
                   + ' (make-abbrev-table))\n')
 
 #####################################################################
-def handle_emacs(name, val, **kw_args):
+def handle_emacs(name, alias_item, **kw_args):
     """Emacs won't look past non-alpha numeric when expanding aliases,
     so we nuke those chars here."""
+    val = alias_item.get("val")
     name = re.sub('[^a-zA-Z0-9]', '', name)
     # print '(define-abbrev %s "%s" "\\"%s\\"" nil 1)' % \
     # (emacs_abbrev_table_name, name, val)
@@ -97,16 +138,18 @@ def handle_print(name, val, **kw_args):
 
 #####################################################################
 #
-def handle_grep_name(name, val, **kw_args):
-    regexp = kw_args.get("regexp", ".*")
+def handle_grep_name(name, alias_item, **kw_args):
+    val = alias_item.get("val")
+    regexp = alias_item.get("regexp", ".*")
 #    print >>sys.stderr, "regexp>%s<" % (regexp,)
     if re.search(regexp, name):
         handle_print(name, val, **kw_args)
 
 #####################################################################
 #
-def handle_grep_val(name, val, **kw_args):
-    regexp = kw_args.get("regexp", ".*")
+def handle_grep_val(name, alias_item, **kw_args):
+    val = alias_item.get("val")
+    regexp = alias_item.get("regexp", ".*")
     sys.exit(99)
     if re.search(regexp, val):
         handle_print(name, val, **kw_args)
@@ -251,10 +294,14 @@ aliases>%s<""", line, selector, aliases)
                 # also add to the environment so that references
                 # in later entries get expanded properly
                 os.environ[name] = val
-                aliases[name] = (val,
-                                 {"line": line, "selector": selector,
-                                  "ctl": ctl, "aliases": aliases,
-                                  "file_name": file_name})
+                aliases[name] = Alias_item_t(val, line=line,
+                                             selector=selector,
+                                             ctl=ctl, aliases=aliases,
+                                             file_name=file_name)
+##                 aliases[name] = (val,
+##                                  {"line": line, "selector": selector,
+##                                   "ctl": ctl, "aliases": aliases,
+##                                   "file_name": file_name})
 
 #####################################################################
 def expand_file(file, selector, aliases):
@@ -313,12 +360,22 @@ def process_gopath(args):
             files = string.split(os.environ.get('GOPATH'), ':')
         else:
             files = [os.environ.get('HOME') + '/.go']
-    if not files:
+    xfiles = []
+    for f in files:
+        if opath.exists(f):
+            xfiles.append(f)
+    if not xfiles:
         print >>sys.stderr, "No go files. Exiting."
         sys.exit(1)
-    files.reverse()
-    return files, names
+    xfiles.reverse()
+    return xfiles, names
 
+
+#
+# Finish system to write pre-processed aliases to a file.
+#
+def newest_file(files):
+    return GO_DICTIONARY_FILE + "X"
 
 #####################################################################
 def init_aliases(args, aliases, selector_regexp):
@@ -333,9 +390,16 @@ def init_aliases(args, aliases, selector_regexp):
     #
     if aliases:
         return
+    
     files, names = process_gopath(args)
-    expand_files(files, selector_regexp, aliases)
-
+    if newest_file(files + [GO_DICTIONARY_FILE]) == GO_DICTIONARY_FILE:
+        aliases = read_dictionary_file()
+    else:
+        expand_files(files, selector_regexp, aliases)
+        
+    #
+    # aliases is modified directly.
+    #
 
 #####################################################################
 def process_aliases(handle, aliases, handler_keyword_args,
@@ -351,10 +415,9 @@ def process_aliases(handle, aliases, handler_keyword_args,
     for regexp in grep_regexps:
         for k in keys:
             kw_args = handler_keyword_args
-            kw_args.update(aliases[k][1])
-            kw_args["regexp"] = regexp
+            aliases[k].set("regexp", regexp)
             #print >>sys.stderr, "kw_args:", kw_args
-            handle(k, aliases[k][0], **kw_args)
+            handle(k, aliases[k], **kw_args)
 
     if handle_post:
         handle_post(aliases, keys)

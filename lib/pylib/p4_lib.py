@@ -33,6 +33,8 @@ def reroot(line, sb, verify_p=False):
     line = sans_p4_junk(line)
     if not line:
         return
+    if sb[-1] != '/':
+        sb = sb + '/'
     newp = line.replace("//", sb)
     if verify_p:
         print >>sys.stderr, "verify_p not supported."

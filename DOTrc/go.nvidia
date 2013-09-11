@@ -20,7 +20,7 @@ Ee|p4r|                       ${gohome}sw/sw/main/apps/p4review/
 Ee|work_status_dir|           ${gohome}work/status/
 Ee|workstatusdir|             ${work_status_dir}
 Ee|status|stat|               ${work_status_dir}
-Ee|global|                    ${gohome}davep/build/global-6.2.7/
+Ee|globalsrc|                 ${gohome}davep/build/global-6.2.7/
 Ee|fvwm|                      ${gohome}.fvwm/
 
 #
@@ -50,6 +50,9 @@ Ee|ws__ME_src|                  ./
 Ee|sandbox__ME_src|             ./
 Ee|sb__ME_src|                  ./
 Ee|indices__ME_src|             ./
+Ee|index__ME_src|               ${indices__ME_src}
+Ee|indexes__ME_src|             ${indices__ME_src}
+Ee|cscope__ME_src|              ${indices__ME_src}
 Ee|tags__ME_src|                ./
 Ee|___ME_src|                   ./
 Ee|hw__ME_src|                  hw/
