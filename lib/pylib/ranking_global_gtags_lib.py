@@ -16,9 +16,13 @@ log_file = open("/home/dpanariti/log/rgg.log", "a")
 # lib and is imported. The importer sets/overrides the appropriate variables
 # to fit the specific application of this functionality.
 Top_ranking_regexps = []
+Filter_out_regexps = []
 
 def add_top_ranking_regexp_strings(regexps):
     Top_ranking_regexps.extend([ re.compile(regexp) for regexp in regexps ])
+
+def add_filter_out_regexp_strings(regexps):
+    Filter_out_regexps.extend([ re.compile(regexp) for regexp in regexps ])
 
 ## Genericize. elisp-devel has a good model based on xcscope's db scheme.
 
@@ -51,6 +55,18 @@ def rank_lines(lines):
     tops = []
     bottoms = []
     resid = []
+
+    if Filter_out_regexps:
+        filtered_lines = []
+        for line in lines:
+            for regexp in Filter_out_regexps:
+                if regexp.search(line):
+                    line = None
+                    break
+            if line is not None:
+                filtered_lines.append(line)
+        lines = filtered_lines
+    
     ## Find the rankest items.
     for regexp in Top_ranking_regexps:
         resid = []

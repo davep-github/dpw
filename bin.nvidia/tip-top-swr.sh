@@ -52,7 +52,8 @@ abspath()
     ( cd $(dirname "${path}"); echo "${PWD}/$(basename ${path})" )
 }
 
-echo "Rundir >$rundir<"
+echo "Rundir >$rundir<, >$(cd $rundir; pwd)<"
+
 
 logdir="${PWD}/dp-rtl-tests/$(dp-std-timestamp)"
 #logdir="${PWD}/dp-rtl-tests/abs-file-names"

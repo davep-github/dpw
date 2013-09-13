@@ -170,6 +170,7 @@ def main(argv):
 
     expand_dest_args=app_args.expand_dest_args
     input_sandbox = app_args.input_sandbox
+    current_sandbox = None
 ##     print "0: expand_dest_args>%s<" % (expand_dest_args,)
 ##     print "0: input_sandbox>%s<" % (input_sandbox,)
     a = get_expand_args(expand_dest_args, input_sandbox)
@@ -180,8 +181,14 @@ def main(argv):
         abbrev = expand_dest_args
 
     if not current_sandbox:
-        dp_io.eprintf("cannot find root_indicator_file[%s]\n",
+        dp_io.eprintf("Cannot find root_indicator_file>%s<\n",
                       Configuration["ROOT_INDICATOR_FILE"])
+        if input_sandbox:
+            dp_io.eprintf("  Looking in user specified sandbox>%s<\n",
+                          input_sandbox)
+        else:
+            dp_io.eprintf("  Looking in current dir>%s<\n",
+                          opath.realpath(opath.curdir))
         sys.exit(1)
 
 ##     print "A: input_sandbox>%s<" % (input_sandbox,)

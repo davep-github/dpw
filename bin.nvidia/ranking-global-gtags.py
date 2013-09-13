@@ -38,7 +38,12 @@ Top_ranking_regexp_strings = [
     "hw/tools/mods/trace_3d/plugin/",
     ]
 
+Filter_out_regexp_strings = [
+    "cpu_surface_write_read",
+    ]
+
 rgg.add_top_ranking_regexp_strings(Top_ranking_regexp_strings)
+rgg.add_filter_out_regexp_strings(Filter_out_regexp_strings)
 
 def main(argv):
     filter_p = os.environ.get("BEA_FILTER")
