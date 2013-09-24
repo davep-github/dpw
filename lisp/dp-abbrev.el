@@ -565,21 +565,25 @@ abbrev is expanded.")
 
 (defun dp-get-p4-location ()
   (interactive)
-  (dp-get-special-abbrev "'" "\\(\\(^//.*\\)\\)"))
+  (dp-get-special-abbrev "," "\\(\\(\\(?:^\\|\\s-+\\)//.*\\)\\)" nil t))
 
 (defun dp-expand-p4-abbrev ()
   (interactive)
   (let* ((abbrev-data (dp-get-p4-location))
-         beg end abbrev-strings expansion)
+         beg end abbrev-strings expansion abbrev-string)
     (when abbrev-data
       (setq beg (nth 0 abbrev-data)
             end (nth 1 abbrev-data)
-            abbrev-strings (nth 2 abbrev-data)
-            expansion (dp-expand-p4-location
-                       (if (listp abbrev-strings)
-                           (dp-string-join abbrev-strings " ")
-                         abbrev-strings)
-                       "."))
+            abbrev-strings (nth 2 abbrev-data))
+      (setq abbrev-string
+            (if (listp abbrev-strings)
+                (dp-string-join abbrev-strings " ")
+              abbrev-strings))
+      (when (string-match "\\(\\s-+\\)\\(.*\\)" abbrev-string)
+        (setq abbrev-string (match-string 2 abbrev-string)
+              beg (+ beg (length (match-string 1 abbrev-string)))))
+      (setq expansion
+            (dp-expand-p4-location abbrev-string "."))
       (delete-region beg end)
       ;; Are we interested more in dirs or files?
       ;; Time will tell.

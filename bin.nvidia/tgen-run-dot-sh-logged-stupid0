@@ -11,6 +11,11 @@ source maybe-davep
 # waiting for input. I could just send a 'run' command, but I prefer to know
 # and exit so I can do it right.
 
+[ -e "/tmp/asim.*" ] && {
+    echo "The dreaded /tmp/asim.X exists. What is X you ask? Well, it is X."
+    exit 1
+} 1>&2 
+
 # any_shell_p=t defaults to true in my environment.
 echo_id any_shell_p
 $EEXEC tgen-run-dot-sh-logged \

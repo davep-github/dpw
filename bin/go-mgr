@@ -12,6 +12,7 @@ do
 done
 unset eexec_program
 
+DEFAULT_SB_SUFFIX="__ME_src"
 ENV_NAME_MIN_LEN=4
 flags='Ee'
 flags_set_p=
@@ -111,6 +112,20 @@ grep_for_pwdname()
     } | sort | uniq
 }
 
+# Not yet. Search for sandbox relative name
+grep_for_sbpwdname()
+{
+    echo 1>&2 "grep_for_sbpwdname: Not written yet."
+    return 1
+    {
+        # Look for various versions of the current directory name.
+        pat=":($PWD|$(pwd)|$(realpath .))/ "
+        #echo "pat>$pat<"
+        EExec -y -0 grep_for_dirname "" "$pat"
+    } | sort | uniq
+    return 0
+}
+
 delete_item()
 {
     name=${2:?"$progname: no name specified"}
@@ -161,7 +176,7 @@ dump_go_files()
     done
 }
 
-opts="x:a:A:d:lef:g:GE:hw"
+opts="x:a:A:d:lef:g:GE:hws"
 q=$(getopt -o "$opts" -- "$@")
 [ $? != 0 ] && Usage
 eval set -- "$q" 
@@ -194,7 +209,7 @@ do
 
 	-[Aa])
             suffix=
-            [ "$1" = "-A" ] && suffix=__ME_src
+            [ "$1" = "-A" ] && suffix="${DEFAULT_SB_SUFFIX}"
 	    # allow g -a xx     # to mean g -a xx `pwd`
 	    # and   g -a xx yy
 	    # to be specified
@@ -266,11 +281,14 @@ echo 1>&2 "Check len and offer to clear \`e' flag if too short."
 
         -h|-w) shift; grep_for_pwdname;;
 
+        -s) shift; grep_for_sbpwdname;;
+
 	-g)
             shift
 	    egrep "$@" $GOPATH_WITH_SPACES /dev/null
 	    exit $?
 	    ;;
+
 	*)
 	    echo $(basename $0)": unsupported request: $*" 1>&2
 	    exit 1

@@ -2,13 +2,13 @@
 source script-x
 
 # Note, this file is replace by an alias when in an emacs shell buffer.
-: ${kwa_LTL_COLOR:=--color}
-: ${kwa_LTL_BLATHER:=}
-: ${kwa_LTL_SHOW_DATE:=t}
-: ${kwa_LTL_NUM_LINES:=-1}
-: ${kwa_LTL_LS_DEFAULT_OPTS:=-Flt} # Why did I use -o before?
+: ${kwa_LTL_COLOR=--color}
+: ${kwa_LTL_BLATHER=}
+: ${kwa_LTL_SHOW_DATE=t}
+: ${kwa_LTL_NUM_LINES=-1}
+: ${kwa_LTL_LS_DEFAULT_OPTS=-Flt} # Why did I use -o before?
 : ${kwa_LTL_LS_EXTRA_OPTS=}
-: ${kwa_LTL_LS_OPTS:=${kwa_LTL_LS_DEFAULT_OPTS} ${kwa_LTL_LS_EXTRA_OPTS}}
+: ${kwa_LTL_LS_OPTS=${kwa_LTL_LS_DEFAULT_OPTS} ${kwa_LTL_LS_EXTRA_OPTS}}
 blather=
 date_str=
 [ -n "$kwa_LTL_SHOW_DATE" ] && {

@@ -52,13 +52,14 @@ Should be a color which nearly blends into background."
 ;; After an error:
 ;; dpanariti@sc-xterm-19:/home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap_t132
 ;; 5057/0002<1>
-;; 
+;; For shell 0 buffer:
+;; 5002/spayshul> 
 ;;(defconst dp-sh-prompt-regexp "^[0-9]+\\([/<][0-9]+\\)?\\([#>]\\|<[0-9]*>\\)"
 (defconst dp-sh-prompt-regexp (concat "^[0-9]+"
                                       "\\([/<]"
                                       "\\(?:[0-9]+\\|spayshul\\)"
                                       "\\)?\\([#>]\\|<[0-9]*>\\)")
-  "For bash/sh/etc. Obsolete???")
+  "For bash/sh/etc.")
 
 (defconst dp-gdb-prompt-regexp "^(gdb) "
   "For gdb.")

@@ -209,11 +209,21 @@ def environment_var_handler(shell):
         (None, None, None)
 
 #####################################################################
-def list_handler(name, val, file_name, ctl, **kw_args):
+def list_handler(name, alias_item, **kw_args):
     """Simple listing to stdout."""
+    val = alias_item.get("val")
+    ctl = alias_item.get("ctl")
+    file_name = alias_item.get("file_name")
     print val, name, file_name, ctl
 
-def LIST_handler(name, val, file_name, ctl, **kw_args):
+#def handle_sh(name, alias_item, **kw_args):
+#Alias_item_t(val, line=line, selector=selector, ctl=ctl, aliases=aliases, file_name=file_name)
+
+def LIST_handler(name, alias_item, **kw_args):
+    val = alias_item.get("val")
+    ctl = alias_item.get("ctl")
+    file_name = alias_item.get("file_name")
+    
     print "%s:%s" % (file_name,  val), name, file_name, ctl
 
 #

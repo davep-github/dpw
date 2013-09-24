@@ -1,12 +1,11 @@
 (require 'mmm-auto)
 (require 'mmm-vars)
 
-(defun dp-mmm-univ-back (stop)
-  "Match back end of mode delimitter.  We need our own function here
+(defun dp-mmm-back-quoted-regexp (stop)
+  "Match back end of mode delimiter.  We need our own function here
 since we want to regexp-quote the opening delimitter (?for c++?)."
   (let* ((back "{%/~1%}")
 	 (pos (concat "^" (regexp-quote (mmm-format-matches back)))))
-    ;;(dmessage "pos>%s<" pos)
     (mmm-match-and-verify pos nil stop nil)))
 
 (defun dp-mmm-univ-get-mode (string)
@@ -26,12 +25,13 @@ since we want to regexp-quote the opening delimitter (?for c++?)."
   ;;(dmessage "ms>%s<, point>%s<" (match-string 0) (point))
   (match-string 0))
 
+;; Set `mmm-classes-qqalist'
 (mmm-add-classes
  `((dp-universal
     :front "^{%\\([^/].*?\\)%}"
 ;    :front-form dp-mmm-no-regexp-quote-form
-    :back dp-mmm-univ-back
-    :back "{%/~1%}"
+    :back dp-mmm-back-quoted-regexp
+;    :back "{%/~1%}"
     :insert ((?/ dp-universal "Submode: " @ "{%" str "%}" @ "\n" _ "\n"
                  @ "{%/" str "%}" @))
     :match-submode dp-mmm-univ-get-mode
@@ -48,7 +48,7 @@ since we want to regexp-quote the opening delimitter (?for c++?)."
   "Completion list for modes.")
 
 (defun dp-mmm-add-mm (&optional mode)
-  "Add an MMM region.  Uses completion from modes in `dp-mmm-add-mm-mode-list'.
+  "Add an MMM region using completion from modes in `dp-mmm-add-mm-mode-list'.
 Also parses the region after adding the delimitters to get proper mode
 behavior in the new region."
   (interactive)

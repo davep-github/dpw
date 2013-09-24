@@ -1,3 +1,4 @@
+beg>a<, end>bb<, front-pos>ccc<
 
 ========================
 Monday March 05 2012
@@ -4604,4 +4605,568 @@ a
 dp-hide-ifdef-define
 
 
+
+
+========================
+Friday September 20 2013
+--
+(defun* dp-colorize-regexp-matches (regexp &optional color end-regexp
+                                    (shrink-wrap-p 
+                                     dp-colorize-lines-shrink-wrap-p-default)
+                                    roll-colors-p non-matching-p)
+  (interactive "sregexp: ")
+  (when (or (not regexp)
+         (string= regexp ""))
+    (setq regexp isearch-string))
+  (dp-colorize-matching-lines regexp 
+                              color 
+                              end-regexp 
+                              shrink-wrap-p 
+                              roll-colors-p 
+                              non-matching-p
+                              nil))
+
+(defun* mmm-ify
+    (&rest all &key classes handler
+	   submode match-submode
+           (start (point-min)) (stop (point-max))
+           front back save-matches (case-fold-search t)
+           (beg-sticky (not (number-or-marker-p front)))
+           (end-sticky (not (number-or-marker-p back)))
+           include-front include-back
+           (front-offset 0) (back-offset 0)
+	   (front-delim nil) (back-delim nil)
+	   (delimiter-mode mmm-delimiter-mode)
+	   front-face back-face
+           front-verify back-verify
+           front-form back-form
+	   creation-hook
+           face match-face
+	   save-name match-name
+	   (front-match 0) (back-match 0)
+	   end-not-begin
+           ;insert private
+           &allow-other-keys
+           )
+  "Create submode regions from START to STOP according to arguments.
+If CLASSES is supplied, it must be a list of valid CLASSes. Otherwise,
+the rest of the arguments are for an actual class being applied. See
+`mmm-classes-alist' for information on what they all mean."
+  ;; Make sure we get the default values in the `all' list.
+  (setq all (append
+             all
+             (list :start start :stop stop
+		   :beg-sticky beg-sticky :end-sticky end-sticky
+		   :front-offset front-offset :back-offset back-offset
+		   :front-delim front-delim :back-delim back-delim
+		   :front-match 0 :back-match 0
+		   )))
+  (cond
+   ;; If we have a class list, apply them all.
+   (classes
+    (mmm-apply-classes classes :start start :stop stop :face face))
+   ;; Otherwise, apply this class.
+   ;; If we have a handler, call it.
+   (handler
+    (apply handler all))
+   ;; Otherwise, we search from START to STOP for submode regions,
+   ;; continuining over errors, until we don't find any more. If FRONT
+   ;; and BACK are number-or-markers, this should only execute once.
+   (t
+    (progn
+     (goto-char start)
+     (multiple-value-bind
+         (beg end front-pos back-pos matched-front matched-back
+              matched-submode matched-face matched-name invalid-resume
+              ok-resume)
+         (apply #'mmm-match-region :start (point) all)
+       (dmessage "beg>%s<, end>%s<, front-pos>%s<" beg end front-pos)
+
+       (loop
+         while beg
+         if end	       ; match-submode, if present, succeeded.
+         do
+         (condition-case nil
+             (progn
+               (mmm-make-region
+                (or matched-submode submode) beg end
+                :face (or matched-face face)
+                :front front-pos :back back-pos
+                :evaporation 'front
+                :match-front matched-front :match-back matched-back
+                :beg-sticky beg-sticky :end-sticky end-sticky
+                :name matched-name
+                :delimiter-mode delimiter-mode
+                :front-face front-face :back-face back-face
+                :creation-hook creation-hook
+                )
+               (goto-char ok-resume))
+           ;; If our region is invalid, go back to the end of the
+           ;; front match and continue on.
+           (mmm-error (goto-char invalid-resume)))
+         ;; If match-submode was unable to find a match, go back to
+         ;; the end of the front match and continue on.
+         else do (goto-char invalid-resume)))))))
+
+
+(cl-pp mmm-classes-alist)
+
+((dp-universal :front "^{%\\([^/].*?\\)%}" :back "{%/~1%}" :insert ((?/ dp-universal "Submode: " @ "{%" str "%}" @ "
+" _ "
+" @ "{%/" str "%}" @)) :match-submode dp-mmm-univ-get-mode :save-matches 1)
+ (universal :front "{%\\([a-zA-Z-]+\\)%}" :back "{%/~1%}" :insert ((?/ universal "Submode: " @ "{%" str "%}" @ "
+" _ "
+" @ "{%/" str "%}" @)) :match-submode mmm-univ-get-mode :save-matches 1))nil
+
+
+((dp-universal :front "^{%\\([^/].*?\\)%}" :back "{%/~1%}" :insert ((?/ dp-universal "Submode: " @ "{%" str "%}" @ "
+" _ "
+" @ "{%/" str "%}" @)) :match-submode dp-mmm-univ-get-mode :save-matches 1) (universal :front "{%\\([a-zA-Z-]+\\)%}" :back "{%/~1%}" :insert ((?/ universal "Submode: " @ "{%" str "%}" @ "
+" _ "
+" @ "{%/" str "%}" @)) :match-submode mmm-univ-get-mode :save-matches 1) (dp-universal :front "^{%\\([^/].*?\\)%}" :back dp-mmm-univ-back :insert ((?/ dp-universal "Submode: " @ "{%" str "%}" @ "
+" _ "
+" @ "{%/" str "%}" @)) :match-submode dp-mmm-univ-get-mode :save-matches 1))
+
+(progn
+  (setq mmm-classes-alist nil)
+  (mmm-add-classes
+   `((universal
+      :front "{%\\([a-zA-Z-]+\\)%}"
+      :back "{%/~1%}"
+      :insert ((?/ universal "Submode: " @ "{%" str "%}" @ "\n" _ "\n"
+                   @ "{%/" str "%}" @))
+      :match-submode mmm-univ-get-mode
+      :save-matches 1
+      )))
+
+  (mmm-add-classes
+   `((dp-universal
+      :front "^{%\\([^/].*?\\)%}"
+      :back dp-mmm-back-quoted-regexp
+      :insert ((?/ dp-universal "Submode: " @ "{%" str "%}" @ "\n" _ "\n"
+                   @ "{%/" str "%}" @))
+      :match-submode dp-mmm-univ-get-mode
+      :save-matches 1
+      )))
+  mmm-classes-alist)
+((dp-universal :front "^{%\\([^/].*?\\)%}" :back "{%/~1%}" :insert ((?/ dp-universal "Submode: " @ "{%" str "%}" @ "
+" _ "
+" @ "{%/" str "%}" @)) :match-submode dp-mmm-univ-get-mode :save-matches 1) (universal :front "{%\\([a-zA-Z-]+\\)%}" :back "{%/~1%}" :insert ((?/ universal "Submode: " @ "{%" str "%}" @ "
+" _ "
+" @ "{%/" str "%}" @)) :match-submode mmm-univ-get-mode :save-matches 1))
+
+(cl-pe
+ '(multiple-value-bind
+   (beg end front-pos back-pos matched-front matched-back
+        matched-submode matched-face matched-name invalid-resume
+        ok-resume)
+   (values 1 2 3 4)
+   (princf "beg>%s<" beg)))
+
+(let* ((#:G276968 (multiple-value-list-internal 0 11 (values 1 2 3 4)))
+       (beg (prog1 (car #:G276968) (setq #:G276968 (cdr #:G276968))))
+       (end (prog1 (car #:G276968) (setq #:G276968 (cdr #:G276968))))
+       (front-pos (prog1 (car #:G276968) (setq #:G276968 (cdr #:G276968))))
+       (back-pos (prog1 (car #:G276968) (setq #:G276968 (cdr #:G276968))))
+       (matched-front (prog1
+                          (car #:G276968)
+                        (setq #:G276968 (cdr #:G276968))))
+       (matched-back (prog1
+                         (car #:G276968)
+                       (setq #:G276968 (cdr #:G276968))))
+       (matched-submode (prog1
+                            (car #:G276968)
+                          (setq #:G276968 (cdr #:G276968))))
+       (matched-face (prog1
+                         (car #:G276968)
+                       (setq #:G276968 (cdr #:G276968))))
+       (matched-name (prog1
+                         (car #:G276968)
+                       (setq #:G276968 (cdr #:G276968))))
+       (invalid-resume (prog1
+                           (car #:G276968)
+                         (setq #:G276968 (cdr #:G276968))))
+       (ok-resume (prog1 (car #:G276968) (setq #:G276968 (cdr #:G276968)))))
+  (princf "beg>%s<" beg))nil
+
+
+(cl-pe '(multiple-value-list
+        '(1 2 3 4)))
+
+(multiple-value-list
+ (values 1 2 3))
+(1 2 3)
+
+ '(a b))
+((a b))
+
+(multiple-value-list-internal 0 multiple-values-limit '(1 2 3 4))
+((1 2 3 4))
+
+
+
+(1 2 3 4)
+
+(a)
+
+
+
+
+(multiple-value-list-internal 0 8 (values 1 2 3 4))
+(1 2 3 4)
+
+(1 2 3 4)
+
+
+(let ((v (values 1 2 3 4)))
+  (princf "v>%s<" v)
+  (multiple-value-bind
+      (beg end front-pos back-pos matched-front matched-back
+           matched-submode matched-face matched-name invalid-resume
+           ok-resume)
+      v
+    (princf "v>%s<" v)
+    (princf "beg>%s<, end>%s<" beg end)))
+v>1<
+v>1<
+beg>1<, end>nil<
+nil
+
+v>1<
+v>1<
+beg>1<, end>nil<
+nil
+
+
+
+
+
+
+(multiple-value-bind
+   (beg end front-pos back-pos matched-front matched-back
+        matched-submode matched-face matched-name invalid-resume
+        ok-resume)
+   (values (list 'a 'b 'c 'd))
+  (princf "beg>%s<" beg))
+beg>(a b c d)<
+nil
+
+beg>a<
+nil
+
+
+(defun* mmm-match-region
+    (&key start stop front back front-verify back-verify
+          include-front include-back front-offset back-offset
+          front-form back-form save-matches match-submode match-face
+	  front-match back-match end-not-begin
+	  save-name match-name
+          &allow-other-keys)
+  "Find the first valid region between point and STOP.
+Return \(BEG END FRONT-POS BACK-POS FRONT-FORM BACK-FORM SUBMODE FACE
+NAME INVALID-RESUME OK-RESUME) specifying the region.  See
+`mmm-match-and-verify' for the valid values of FRONT and BACK
+\(markers, regexps, or functions).  A nil value for END means that
+MATCH-SUBMODE failed to find a valid submode.  INVALID-RESUME is the
+point at which the search should continue if the region is invalid,
+and OK-RESUME if the region is valid."
+  (when (mmm-match-and-verify front start stop front-verify)
+    (let ((beg (mmm-match->point include-front front-offset front-match))
+	  (front-pos (if front-delim
+			 (mmm-match->point t front-delim front-match)
+		       nil))
+          (invalid-resume (match-end front-match))
+          (front-form (mmm-get-form front-form)))
+      (let ((submode (if match-submode
+                         (condition-case nil
+                             (mmm-save-all
+                              (funcall match-submode front-form))
+                           (mmm-no-matching-submode
+                            (return-from
+                                mmm-match-region
+                              (values beg nil nil nil nil nil nil nil nil
+                                      invalid-resume nil))))
+                       nil))
+	    (name (cond ((functionp match-name)
+			 (mmm-save-all (funcall match-name front-form)))
+			((stringp match-name)
+			 (if save-name
+			     (mmm-format-matches match-name)
+			   match-name))))
+            (face (cond ((functionp match-face)
+                         (mmm-save-all
+                          (funcall match-face front-form)))
+                        (match-face
+                         (cdr (assoc front-form match-face))))))
+        (when (mmm-match-and-verify
+               (if save-matches
+                   (mmm-format-matches back)
+                 back)
+               beg stop back-verify)
+          (let* ((end (mmm-match->point (not include-back)
+					back-offset back-match))
+		 (back-pos (if back-delim
+			       (mmm-match->point nil back-delim back-match)
+			     nil))
+		 (back-form (mmm-get-form back-form))
+		 (ok-resume (if end-not-begin 
+				(match-end back-match)
+			      end)))
+            (values beg end front-pos back-pos front-form back-form
+                                submode face name
+                                invalid-resume ok-resume)))))))
+
+
+(cl-pe
+ '(values 1 2 3 4))
+
+(values 1 2 3 4)nil
+zzz_all_zzz
+(:start 39928 :stop 39952 :front "{%\\([a-zA-Z-]+\\)%}" :back "{%/~1%}" :insert ((?/ universal "Submode: " @ "{%" str "%}" @ "
+" _ "
+" @ "{%/" str "%}" @)) :match-submode mmm-univ-get-mode :save-matches 1 :face nil :start 39928 :stop 39952 :beg-sticky t :end-sticky t :front-offset 0 :back-offset 0 :front-delim nil :back-delim nil :front-match 0 :back-match 0)
+
+(with-current-buffer "daily-2013-09.jxt"
+  (mmm-match-region :start (point) zzz_all_zzz))
+
+nil
+
+nil
+
+nil
+
+nil
+(defun* fuckingfuck
+    (&rest all &key classes handler
+	   submode match-submode
+           (start (point-min)) (stop (point-max))
+           front back save-matches (case-fold-search t)
+           (beg-sticky (not (number-or-marker-p front)))
+           (end-sticky (not (number-or-marker-p back)))
+           include-front include-back
+           (front-offset 0) (back-offset 0)
+	   (front-delim nil) (back-delim nil)
+	   (delimiter-mode mmm-delimiter-mode)
+	   front-face back-face
+           front-verify back-verify
+           front-form back-form
+	   creation-hook
+           face match-face
+	   save-name match-name
+	   (front-match 0) (back-match 0)
+	   end-not-begin
+           ;insert private
+           &allow-other-keys
+           )
+  (setq all (append
+             all
+             (list :start start :stop stop
+		   :beg-sticky beg-sticky :end-sticky end-sticky
+		   :front-offset front-offset :back-offset back-offset
+		   :front-delim front-delim :back-delim back-delim
+		   :front-match 0 :back-match 0
+		   )))
+
+(cond
+ (t (progn
+      (multiple-value-bind
+          (beg end front-pos back-pos matched-front matched-back
+               matched-submode matched-face matched-name invalid-resume
+               ok-resume)
+          (dumbfun)
+        (princf "beg>%s<, end>%s<, front-pos>%s<" beg end front-pos))))))
+fuckingfuck
+
+fuckingfuck
+(fuckingfuck)
+beg>a<, end>bb<, front-pos>ccc<
+nil
+
+beg>a<, end>bb<, front-pos>ccc<
+nil
+
+beg>a<, end>bb<, front-pos>ccc<
+nil
+
+(mmm-ify)
+
+
+
+
+
+(defun* fuckingfuck
+    (&rest all &key classes handler
+	   submode match-submode
+           (start (point-min)) (stop (point-max))
+           front back save-matches (case-fold-search t)
+           (beg-sticky (not (number-or-marker-p front)))
+           (end-sticky (not (number-or-marker-p back)))
+           include-front include-back
+           (front-offset 0) (back-offset 0)
+	   (front-delim nil) (back-delim nil)
+	   (delimiter-mode mmm-delimiter-mode)
+	   front-face back-face
+           front-verify back-verify
+           front-form back-form
+	   creation-hook
+           face match-face
+	   save-name match-name
+	   (front-match 0) (back-match 0)
+	   end-not-begin
+           ;insert private
+           &allow-other-keys
+           )
+  "Create submode regions from START to STOP according to arguments.
+If CLASSES is supplied, it must be a list of valid CLASSes. Otherwise,
+the rest of the arguments are for an actual class being applied. See
+`mmm-classes-alist' for information on what they all mean."
+  ;; Make sure we get the default values in the `all' list.
+  (setq all (append
+             all
+             (list :start start :stop stop
+		   :beg-sticky beg-sticky :end-sticky end-sticky
+		   :front-offset front-offset :back-offset back-offset
+		   :front-delim front-delim :back-delim back-delim
+		   :front-match 0 :back-match 0
+		   )))
+  (cond
+   ;; If we have a class list, apply them all.
+   (classes
+    (mmm-apply-classes classes :start start :stop stop :face face))
+   ;; Otherwise, apply this class.
+   ;; If we have a handler, call it.
+   (handler
+    (apply handler all))
+   ;; Otherwise, we search from START to STOP for submode regions,
+   ;; continuining over errors, until we don't find any more. If FRONT
+   ;; and BACK are number-or-markers, this should only execute once.
+   (t
+    (progn
+     (goto-char start)
+     (multiple-value-bind
+         (beg end front-pos back-pos matched-front matched-back
+              matched-submode matched-face matched-name invalid-resume
+              ok-resume)
+         (apply #'mmm-match-region :start (point) all)
+       (dmessage "beg>%s<, end>%s<, front-pos>%s<" beg end front-pos)
+
+       (loop
+         while beg
+         if end	       ; match-submode, if present, succeeded.
+         do
+         (condition-case nil
+             (progn
+               (mmm-make-region
+                (or matched-submode submode) beg end
+                :face (or matched-face face)
+                :front front-pos :back back-pos
+                :evaporation 'front
+                :match-front matched-front :match-back matched-back
+                :beg-sticky beg-sticky :end-sticky end-sticky
+                :name matched-name
+                :delimiter-mode delimiter-mode
+                :front-face front-face :back-face back-face
+                :creation-hook creation-hook
+                )
+               (goto-char ok-resume))
+           ;; If our region is invalid, go back to the end of the
+           ;; front match and continue on.
+           (mmm-error (goto-char invalid-resume)))
+         ;; If match-submode was unable to find a match, go back to
+         ;; the end of the front match and continue on.
+         else do (goto-char invalid-resume)))))))
+fuckingfuck
+
+
+(fuckingfuck)
+
+
+
+(defun* mmm-ify
+    (&rest all &key classes handler
+	   submode match-submode
+           (start (point-min)) (stop (point-max))
+           front back save-matches (case-fold-search t)
+           (beg-sticky (not (number-or-marker-p front)))
+           (end-sticky (not (number-or-marker-p back)))
+           include-front include-back
+           (front-offset 0) (back-offset 0)
+	   (front-delim nil) (back-delim nil)
+	   (delimiter-mode mmm-delimiter-mode)
+	   front-face back-face
+           front-verify back-verify
+           front-form back-form
+	   creation-hook
+           face match-face
+	   save-name match-name
+	   (front-match 0) (back-match 0)
+	   end-not-begin
+           ;insert private
+           &allow-other-keys
+           )
+  "Create submode regions from START to STOP according to arguments.
+If CLASSES is supplied, it must be a list of valid CLASSes. Otherwise,
+the rest of the arguments are for an actual class being applied. See
+`mmm-classes-alist' for information on what they all mean."
+  ;; Make sure we get the default values in the `all' list.
+  (setq all (append
+             all
+             (list :start start :stop stop
+		   :beg-sticky beg-sticky :end-sticky end-sticky
+		   :front-offset front-offset :back-offset back-offset
+		   :front-delim front-delim :back-delim back-delim
+		   :front-match 0 :back-match 0
+		   )))
+  (cond
+   ;; If we have a class list, apply them all.
+   (classes
+    (mmm-apply-classes classes :start start :stop stop :face face))
+   ;; Otherwise, apply this class.
+   ;; If we have a handler, call it.
+   (handler
+    (apply handler all))
+   ;; Otherwise, we search from START to STOP for submode regions,
+   ;; continuining over errors, until we don't find any more. If FRONT
+   ;; and BACK are number-or-markers, this should only execute once.
+   (t
+    (mmm-save-all
+     (goto-char start)
+     (multiple-value-bind
+         (beg end front-pos back-pos matched-front matched-back
+              matched-submode matched-face matched-name invalid-resume
+              ok-resume)
+         (apply #'mmm-match-region :start (point) all)
+       (dmessage "beg>%s<, end>%s<, front-pos>%s<" beg end front-pos)
+       (loop
+         while beg
+         if end	       ; match-submode, if present, succeeded.
+         do
+         (condition-case nil
+             (let ((b beg))
+               (setq beg nil)
+               (dmessage "looping, beg>%s<" beg)
+               (dmessage "YOPP!")
+               (mmm-make-region
+                (or matched-submode submode) b end
+                :face (or matched-face face)
+                :front front-pos :back back-pos
+                :evaporation 'front
+                :match-front matched-front :match-back matched-back
+                :beg-sticky beg-sticky :end-sticky end-sticky
+                :name matched-name
+                :delimiter-mode delimiter-mode
+                :front-face front-face :back-face back-face
+                :creation-hook creation-hook
+                )
+               (dmessage "YOPP!2")
+               (goto-char ok-resume)
+               (setq beg nil)
+               (dmessage "end of loop, beg>%s<" beg))
+           ;; If our region is invalid, go back to the end of the
+           ;; front match and continue on.
+           (dmessage "mmm-error!")
+           (mmm-error (goto-char invalid-resume)))
+         ;; If match-submode was unable to find a match, go back to
+         ;; the end of the front match and continue on.
+         else do (goto-char invalid-resume)))))))
 

@@ -5,6 +5,8 @@ source script-x
 : ${def_arm_nm:=/home/davep/hostel/xscale/gcc-xscale/bin/arm-none-linux-gnueabi-nm}
 : ${def_x86_nm:=nm}
 : ${grepper:=egrep}
+: ${files_with_matches_opt=}
+
 NM=
 grepper_args=
 nm_args=
@@ -15,10 +17,11 @@ unset regexp
 
 # Parse command line.
 std_options=""
-option_str="ax8ig:N:A:e:n:"
+option_str="ax8ig:N:A:e:n:l"
 long_options=("no-demangle" "demangle" "mangle"
     "extern-only" "no-extern-only"
-    "grep-color" "no-grep-color")
+    "grep-color" "no-grep-color"
+    "files-with-matches")
 
 source dp-getopt+.sh
 for i in "$@"; do
@@ -34,6 +37,7 @@ for i in "$@"; do
         --no-grep-color) grep_color_opt=;;
         -g) grepper_args="$grepper_args $2"; shift;;
         -n) nm_args="$nm_args $2"; shift;;
+        -l|--files-with-matches) files_with_matches_opt=-l;;
         -e) regexp=$2; shift;;
         --) shift; break;;
         *) 
@@ -44,7 +48,8 @@ for i in "$@"; do
     shift
 done
 
-arm_file_glob="*ARM*"
+: ${arm_file_glob="*ARM*"}
+: ${elf_glob="*ELF*"}
 
 guess_nm()
 {
@@ -52,14 +57,16 @@ guess_nm()
     local file="$1"
     local file_says=$(file "$file")
     case "$file_says" in
-        $arm_file_glob) echo $def_arm_nm;;
-        *) echo $def_x86_nm;;
+        $elf_glob) ;;
+        $arm_file_glob) echo $def_arm_nm; return;;
     esac
+    echo $def_x86_nm
 }
 
 get_nm()
 {
-    if [[ -n "$NM" ]]; then
+    if vsetp "$NM"
+    then
         echo "$NM"
     else
         echo $(guess_nm "$1")
@@ -75,10 +82,11 @@ for file in "$@"; do
         ${extern_only_opt} \
         ${nm_args} ${file} \
         | \
-        ${grepper} \
-          ${grep_color_opt} \
-          ${grepper_args} \
-           --label="${file}" \
-          -H \
-          "${regexp}"
+            ${grepper} \
+              ${grep_color_opt} \
+              ${grepper_args} \
+              ${files_with_matches_opt} \
+              --label="${file}" \
+              -H \
+             "${regexp}"
 done

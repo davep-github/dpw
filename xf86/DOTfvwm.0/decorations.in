@@ -34,11 +34,15 @@ Style *                 BorderWidth 4, \
 
 
 ## Inactive windows
-Colorset 1  fg lightgray, bg black, hi black, sh black, \
+Colorset 1  fg lightgray, bg gray, hi gray, sh black, \
 	    fgsh black, RootTransparent buffer, Tint black 65
 ## Active windows
-Colorset 2  fg gray, bg black, hi black, sh black, \
-	    fgsh black, RootTransparent buffer, Tint black 50
+# Colorset 2  fg #e0f0e0, hi #72c67b, sh #709070, \
+# 	    fgsh black, RootTransparent buffer, Tint black 50
+#Colorset 2  bg #a2d6bb, fg Contrast, hi #82c68b
+Colorset 2  bg #a2d6bb
+# , fg red, hi #10ff10, sh #404040
+
 
 DestroyDecor dp_def_decor
 AddToDecor dp_def_decor
@@ -157,6 +161,8 @@ Style "*"		IconBox -210 320 -1 -1, IconFill t r
 Style "*"           	SloppyFocus
 Style "*"           	UseDecor dp_def_decor
 Style "*"           	MiniIcon chuck.xpm
+Style "*"           	BorderColorset 1 
+Style "*"           	HilightBorderColorset 2
 Style "Fvwm*"       	NoTitle, NoHandles, Sticky, WindowListSkip,
 Style "Fvwm*"       	BorderWidth 0,CirculateSkipIcon
 Style "Fvwm Pager"  	BorderWidth 2, StaysOnTop

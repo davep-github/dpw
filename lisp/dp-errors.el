@@ -211,6 +211,7 @@
     "^Version control package .*.el not found. Use vc.el instead$"
     "^The end of the .* buffer has been reached$"
     "^Marker has no buffer$"
+    "^No mark set in this buffer$"
     
     ;; recover-file
     "^Auto-save file .* not current$"

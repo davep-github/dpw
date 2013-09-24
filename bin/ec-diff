@@ -15,11 +15,16 @@ unset eexec_program
 # ec [-w] first second
 
 wait_opt=-w
-if [ "$1" = "-w" ]
-then
-    wait_opt=
-    shift
-fi
+
+while (($# > 0))
+do
+  case "$1" in
+      -w|--no-wait) wait_opt=;;
+      -u) ;; # This is often left over from a regular diff command. Ignore it.
+      *) break;;
+  esac
+  shift
+done
 
 fileA=$(realpath "${1}")
 file2=$(realpath "${2}")

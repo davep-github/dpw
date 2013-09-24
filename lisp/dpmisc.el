@@ -2672,7 +2672,7 @@ often use this kind of command before changing an original value. "
 (dp-safe-alias 'coorig 'dp-comment-out-with-tag-OEM)
 (dp-safe-alias 'corig 'dp-comment-out-with-tag-OEM)
 
-(defun io-region (m p start-text end-text 
+(defun dp-bracket-region (m p start-text end-text 
                   &optional no-complaints-p no-deactivate-mark-p)
   "Ifdef out a region."
   (if (and (not no-complaints-p)
@@ -2711,6 +2711,8 @@ often use this kind of command before changing an original value. "
         (unless no-deactivate-mark-p
           (dp-deactivate-mark))
         (list (cons beg end) a b c)))))
+
+(dp-defaliases 'io-region 'dp-bracket-region)
 
 (defconst io-start-text-default "#if 0"
   "Default value for io-start-text")
@@ -7749,10 +7751,13 @@ We make this t by default because it's easy to force a full line match by
 wrapping the match string in ^.* & .*$
 We also make this a global default so I can change it when the mood strikes.")
 
-(defun* dp-colorize-matching-lines (regexp &optional color end-regexp
+(defun* dp-colorize-matching-lines (regexp &key
+                                    color 
+                                    end-regexp
                                     (shrink-wrap-p 
                                      dp-colorize-lines-shrink-wrap-p-default)
-                                    roll-colors-p non-matching-p
+                                    roll-colors-p 
+                                    non-matching-p
                                     (line-oriented-p t))
   "Colorize lines matching REGEXP.
 SHRINK-WRAP-P says to only colorize the exact match. Add ^.* && .*$ to get
@@ -7790,8 +7795,8 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
                                     (match-end 0)
                                   (line-end-position)))
                             (throw 'up nil))))
-        (dp-colorize-region color match-begin match-end (not roll-colors-p) nil
-                            'dp-func 'dp-colorize-matching-lines
+        (dp-colorize-region color match-begin match-end (not roll-colors-p) 
+                            nil 'dp-func 'dp-colorize-matching-lines
                             'dp-args (list regexp color end-regexp
                                            shrink-wrap-p roll-colors-p))
         ;; Clear color here, so `dp-colorize-region' won't reset its rolled
@@ -7822,13 +7827,15 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
     do (save-excursion 
          (apply 'dp-colorize-matching-lines regexp pass-thru-args))))
 
-(defun dp-colorize-matching-lines-from-isearch ()
+(defun dp-colorize-matching-lines-from-isearch (&optional 
+                                                colorize-each-match-p)
   "Use the last regexp from the last `isearch-\(for\|back\)ward\(-regexp\)?'."
-  (interactive)
+  (interactive "P")
   ;;!<@todo Fix this so we can request shrink wrapping of the string.
   ;; The problem is that colors are specified with the prefix arg.
   ;;(call-interactively 'dp-colorize-matching-lines isearch-string)
-  (dp-colorize-matching-lines isearch-string))
+  (dp-colorize-matching-lines isearch-string 
+                              :line-oriented-p (not colorize-each-match-p)))
 
 (defvar dp-colorize-bracketing-regexps-history nil
   "History for `dp-colorize-bracketing-regexps'.")
@@ -7843,7 +7850,11 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
                       "ending regexp: "
                       nil nil nil dp-colorize-bracketing-regexps-history)
                      (y-or-n-p "roll-colors? ")))
-  (dp-colorize-matching-lines regexp1 color regexp2 nil roll-colors-p))
+  (dp-colorize-matching-lines regexp1 
+                              :color color 
+                              :end-regexp regexp2 
+                              :shrink-wrap-p nil 
+                              :roll-colors-p roll-colors-p))
 (defalias 'dcbr 'dp-colorize-bracketing-regexps)
 
 (defun dp-goto-next-colorized-region ()
@@ -15876,14 +15887,19 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
                                status-file-name-format)
   (interactive "P")
   ;; `expand-file-name' only uses the second parameter if the first is not absolute.
-  (setq-ifnil status-dir-name (or (getenv "DP_WORK_STATUS_DIR")
-                                  (expand-file-name "~/work/status"))
-              template-file-name (expand-file-name (or (getenv "DP_WORK_STATUS_TEMPLATE_FILE_NAME")
-                                                       "template.txt")
-                                                   status-dir-name)
-              status-file-name-format (expand-file-name (or (getenv "DP_WORK_STATUS_FILE_NAME_FORMAT")
-                                                            "%s-status.txt")
-                                                        status-dir-name))
+  (setq-ifnil status-dir-name 
+              (or (getenv "DP_WORK_STATUS_DIR")
+                  (expand-file-name "~/work/status"))
+              template-file-name 
+              (expand-file-name 
+               (or (getenv "DP_WORK_STATUS_TEMPLATE_FILE_NAME")
+                   "template.txt")
+               status-dir-name)
+              status-file-name-format 
+              (expand-file-name (or (getenv "DP_WORK_STATUS_FILE_NAME_FORMAT")
+                                    "%s-status.txt")
+                                status-dir-name)
+              project-name (or getenv "PROJECT_NAME" "t132"))
   (setq date-str
         (cond
          ((eq '- date-str)
@@ -15896,6 +15912,8 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
     (insert-file template-file-name)
     (while (re-search-forward "@DATE@" nil t)
       (replace-match date-str))
+    (while (re-search-forward "@PROJ@" nil t)
+      (replace-match project-name))
     (goto-char (point-min))
     (re-search-forward "0)")
     (end-of-line)

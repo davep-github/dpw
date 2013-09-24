@@ -56,11 +56,13 @@ Ee|cscope__ME_src|              ${indices__ME_src}
 Ee|tags__ME_src|                ./
 Ee|___ME_src|                   ./
 Ee|hw__ME_src|                  hw/
+Ee|sw__ME_src|                  sw/
 Ee|nvdiag__ME_src|              hw/nvdiag/
 Ee|nvd__ME_src|                 ${nvdiag__ME_src}
 Ee|mods__ME_src|                ${nvdiag__ME_src}mods/
 Ee|simmgr__ME_src|              ${nvdiag__ME_src}simmgr/
 Ee|asim__ME_src|                ${simmgr__ME_src}
+Ee|cosim__ME_src|               ${simmgr__ME_src}
 Ee|ap0__ME_src|                 hw/ap/
 Ee|apjustap__ME_src|            ${ap0__ME_src}
 Ee|aptlit1__ME_src|             hw/ap_tlit1/
@@ -81,9 +83,13 @@ Ee|clibl__ME_src|               ${clib__ME_src}Linux/
 Ee|etc__ME_src|                 ${TOT__ME_src}etc/
 
 Ee|diag__ME_src|                ${TOT__ME_src}diag/
-Ee|tg__ME_src|                  ${diag__ME_src}testgen/
-Ee|tgen__ME_src|                ${diag__ME_src}testgen/
 Ee|testgen__ME_src|             ${diag__ME_src}testgen/
+Ee|tg__ME_src|                  ${testgen__ME_src}
+Ee|tgen__ME_src|                ${testgen__ME_src}
+
+Ee|testgen3__ME_src|            ${diag__ME_src}testgen3
+Ee|tg3__ME_src|                 ${testgen3__ME_src}
+Ee|tgen3__ME_src|               ${testgen3__ME_src}
 
 Ee|testgendprundir__ME_src|     ${testgen__ME_src}dp-run-tgens.d/
 Ee|dptg__ME_src|                ${testgendprundir__ME_src}
@@ -172,10 +178,13 @@ Ee|gmetr__ME_src|               ${gpumetraces__ME_src}
 Ee|trgme__ME_src|               ${gpumetraces__ME_src}
 Ee|gmet__ME_src|                ${gpumetraces__ME_src}
 Ee|gme__ME_src|                 ${gpumetraces__ME_src}
+Ee|gmebuild__ME_src|            ${gpumetraces__ME_src}
+Ee|gmebld__ME_src|              ${gpumetraces__ME_src}
+Ee|gmemake__ME_src|             ${gpumetraces__ME_src}
 
 Ee|plex__ME_src|                ${gpumetraces__ME_src}plex/
 
-Ee|gpumultienginefw__ME_src|    arch/traces/mobile/traces/gpu_multiengine/framework/
+Ee|gpumultienginefw__ME_src|    ${gpumetraces__ME_src}framework/
 Ee|gmefw__ME_src|               ${gpumultienginefw__ME_src}
 
 Ee|nongputraces__ME_src|        ${tracesroot_ME_src}nongpu_multiengine/data_src/
@@ -197,17 +206,27 @@ Ee|traces2mobiletracessys|t2sys|mt2sys| /home/scratch.traces02/mobile/traces/sys
 Ee|traces2mobiletracesso|t2so|mt2so|    ${traces2mobiletracessys}so/
 Ee|ccplexso|soccplex|memtxnaxi|aximemtxn| ${traces2mobiletracesso}t124/
 
+Ee|nvdev__ME_src|               dev/
+Ee|asimsrc__ME_src|             ${nvdev__ME_src}cpu/tools/sim/asim/1.0/hw/
 
 #
 #   Somethings which may as well be cross-sandbox
-Ee|surfwr__ME_src|              arch/traces/mobile/traces/gpu_multiengine/surface_write_read/
+Ee|surfwr__ME_src|              ${gpumetraces__ME_src}surface_write_read/
 Ee|surf__ME_src|                ${surfwr__ME_src}
 Ee|swr__ME_src|                 ${surfwr__ME_src}
-Ee|memtxn__ME_src|              arch/traces/mobile/traces/gpu_multiengine/mem-txn/
+Ee|cpusurfwr__ME_src|           ${gpumetraces__ME_src}cpu_surface_write_read/
+Ee|cpusurf__ME_src|             ${cpusurfwr__ME_src}
+Ee|cpuswr__ME_src|              ${cpusurfwr__ME_src}
+Ee|csurf__ME_src|               ${cpusurfwr__ME_src}
+Ee|cswr__ME_src|                ${cpusurfwr__ME_src}
+Ee|memtxn__ME_src|              ${gpumetraces__ME_src}mem-txn/
 Ee|mem_txn__ME_src              ${memtxn__ME_src}
 Ee|mtxn__ME_src|                ${memtxn__ME_src}
+Ee|cpuredline__ME_src|          ${gpumetraces__ME_src}cpu_red_line/
+Ee|cpurl__ME_src|               ${cpuredline__ME_src}
+Ee|crl__ME_src|                 ${cpuredline__ME_src}
 
-Ee|depcpu__ME_src|              arch/traces/mobile/traces/gpu_multiengine/dep_cpu_cpu_gpu_cpu/
+Ee|depcpu__ME_src|              ${gpumetraces__ME_src}dep_cpu_cpu_gpu_cpu/
 
 #######################################################################
 
@@ -222,7 +241,6 @@ Ee|sandbox1|sbox1|sb1|workspace1|ws1|                   ${scratch2}sb1/sb1hw/
 Ee|misc|                                                ${sandbox1}
 
 Ee|sandbox2|sbox2|sb2|workspace2|ws2|                   ${scratch0}sb2/sb2hw/
-#Ee|runlimit|asim|as2fail|                               ${sandbox2}
 
 Ee|sandbox3|sbox3|sb3|workspace3|ws3|                   ${scratch1}sb3/sb3hw/
 Ee|generatememtxn|memtxn|                               ${sandbox5}
@@ -232,8 +250,6 @@ Ee|swrwavefull|swrfullwave|swrfw|swrwf|swrlong|swrwave| ${sandbox4}
 
 #Ee|sandbox5|sbox5|sb5|workspace5|ws5| ${scratch2}sb5/sb5hw/
 Ee|sandbox5|sbox5|sb5|workspace5|ws5| ${scratch2}sb5/sb5hw/mini_t132/
-
-Ee|engcpu|ecpu|cpue|cpueng| ${sandbox5}
 
 
 #

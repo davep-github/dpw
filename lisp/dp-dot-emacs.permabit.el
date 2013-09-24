@@ -73,7 +73,8 @@ And just the command name sans path to make the command name more visible.")
   (interactive)
   (save-excursion
     (goto-char (point-min))
-    (dp-colorize-matching-lines "/[^/]* --index.*" nil nil t)))
+    (dp-colorize-matching-lines "/[^/]* --index.*" nil nil 
+                                :shrink-wrap-p t)))
 
 (defun dp-uds-next-index-command (&optional backwards-p)
   (interactive "P")
@@ -85,7 +86,7 @@ And just the command name sans path to make the command name more visible.")
   "Hide logging statements ($log->) for clarity.
 Make language/subsystem dependent?"
   (interactive)
-  (dp-colorize-matching-lines "\\$log->" 0 nil nil nil))
+  (dp-colorize-matching-lines "\\$log->" :color 0 :shrink-wrap-p nil))
 
 (defvar dpj-private-topic-re-extra
   "\\|ALB-"

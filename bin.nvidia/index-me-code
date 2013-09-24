@@ -199,9 +199,13 @@ ${ap_hw_p4_path}/clib/
 //hw/tools/mods
 //hw/tools/shimlib/
 //hw/kepler1_gklit3/clib/
-//hw/kepler1_gklit3/diag/"
+//hw/kepler1_gklit3/diag/
+//dev/cpu/tools/sim/asim/1.0/"
 
-depot_dirs_of_interest="$base_depot_dirs_of_interest $more_depot_dirs_of_interest"
+sw_depot_dirs_of_interest="
+//sw"
+
+depot_dirs_of_interest="${base_depot_dirs_of_interest} ${more_depot_dirs_of_interest} ${sw_depot_dirs_of_interest}"
 
 other_dirs_of_interest=""
 
