@@ -1,9 +1,25 @@
 #!/bin/sh
 
-. script-x
-
+source script-x
 progname="$(basename $0)"
 source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+#unset eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+export eexec_program
+
 . code-indexing.rc
 set -u
 
@@ -191,17 +207,23 @@ vsetp "$real_paths" && {
 echo_id dirs 
 
 exit_p=
-for d in $dirs
+all_dirs="${dirs}"
+dirs=
+for d in ${all_dirs}
 do
   [ -e "$d" ] || {
-      echo "$d does not exist."
-      exit_p=1
+      continue
+      echo "$d does not exist, ignoring."
+      # Let this be a warning to you. exit_p=1
   } 1>&2
   [ -d "$d" ] || {
-      echo "$d is not a dir."
-      exit_p=1
+      echo "$d is not a dir, ignoring."
+      # Let this be a warning to you. exit_p=1
+      continue
   } 1>&2
+  dirs="${dirs} ${d}"
 done
+
 vsetp $exit_p && {
     exit $exit_p
 }
@@ -211,7 +233,7 @@ vsetp "$ctags_p" && index_files="$index_files TAGS tags"
 vsetp "$gtags_p" && index_files="$index_files GTAGS GRTAGS GPATH"
 vsetp "$cscope_p" && index_files="$index_files cscope.*" 
 
-if [[ -n "$clean" ]]
+if vsetp "$clean"
 then
     chmod_index_files "u+w"
     rm -f $index_files || {
@@ -242,7 +264,7 @@ do_taggin()
     local dirs="$@"
     echo 1>&2 "This program ($(basename $0)), ${tree_tagger} and cscope-indexer need to be reworked.
 They should work off the same set of files."
-    eval ${tree_tagger} $DP_SCRIPT_X_DEBUG_OPT $EExec_opts $tflags $dirs
+    eval EExec -y ${tree_tagger} $DP_SCRIPT_X_DEBUG_OPT $EExec_opts $tflags $dirs
     echo "taggin in $PWD"
     if vsetp "$output_dir"
     then
@@ -264,5 +286,7 @@ else
 fi
 
 chmod_index_files a-w
+
+ls -l ${index_files}
 
 echo "index-code done: $(date)."

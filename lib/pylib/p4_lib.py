@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 import sys, os, re, string
-import dp_io
+import dp_io, dp_misc
+opath = os.path
 
 #
 # Write this all in Python and then have the shell scripts use it.
@@ -10,10 +11,13 @@ import dp_io
 doc = """Definitions:
 p4 location -- //a/path/used/by/perforce
 --
-output of p4 opened:
+There may be crud following the location.
+E.g. output of p4 opened:
 //hw/ap_t132/diag/testgen/build_gpu_multiengine.pl#5 - edit default change (text+kox)
 
 """
+
+LOCATION_ROOT = "//"
 
 def sans_line_num(line):
     m = re.search("(^[^:]+)(:[0-9]*$)?", line)
@@ -33,9 +37,8 @@ def reroot(line, sb, verify_p=False):
     line = sans_p4_junk(line)
     if not line:
         return
-    if sb[-1] != '/':
-        sb = sb + '/'
-    newp = line.replace("//", sb)
+    sb = dp_misc.normpath_plus(sb)
+    newp = line.replace(LOCATION_ROOT, sb)
     if verify_p:
         print >>sys.stderr, "verify_p not supported."
         sys.exit(3)

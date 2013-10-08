@@ -15,17 +15,41 @@ Usage()
     exit 1
 }
 
+dir_filter()
+{
+    [ -d "$1" ] && echo "$1"
+}
+
+file_filter()
+{
+    [ -f "$1" ] && echo "$1"
+}
+
+pan_filter()
+{
+    echo "$1"
+}
+
 list_files()
 {
     local dirOpt=$1; shift
-    local dash_d=
+    local filter
+    local dash_d=-d
     if [ -n "$dirsOnly" ]
     then
-        dirOpt=$(find . -maxdepth 1 -type d)
-        dash_d=-d
+        filter=dir_filter
+    elif [ -n "$filesOnly" ]
+    then
+        filter=file_filter
+    else
+        filter=pan_filter
     fi
 
-    ls "$@" $dash_d $dirOpt
+    vunsetp "${dirOpt}" && dash_d=
+    ls "$@" $dash_d $dirOpt | while read
+    do
+      $filter "$REPLY"
+    done
 }
 
 # init optional vars to defaults here...
@@ -34,12 +58,13 @@ list_files()
 : ${extra_ls_opts:=""}
 : ${allow_cwd=""}               # Return . if newest?
 : ${dirsOnly=""}
+: ${filesOnly=""}
 : ${basename_p=""}
 : ${realpath_p=""}
 
 # see the man page of getopt for inadequacies.
 
-option_str='n:drDo0123456789l:cpbR'
+option_str='n:drDo0123456789l:cpbRf'
 q=$(getopt -o "$option_str" -- "$@")
 eval set -- "$q"
 R=1
@@ -59,6 +84,7 @@ do
         -l) extra_ls_opts="$extra_ls_opts $2"; shift;;
         -c) allow_cwd=t;;
         -p) dirsOnly=t;;
+        -f) filesOnly=t;;
         -b) basename_p=t;;
         -R) realpath_p=t;;
 	--) shift ; break;;

@@ -504,9 +504,17 @@
       (setq prompt (concat "Find gtag: (default " tagname ") "))
      (setq prompt "Find gtag: "))
     (setq input (completing-read prompt 'gtags-completing-gtags
-                  nil nil nil gtags-history-list))
+                  nil nil nil 'gtags-history-list))
     (if (not (equal "" input))
       (setq tagname input))
+    
+;; @todo XXX dp hack. Make into a patch
+;; @todo XXX Also, all uses of `gtags-history-list' needed quoting.
+;; @todo XXX submit patch.
+    (dp-add-to-history 'gtags-history-list 
+                       tagname :remove-empty-p t)
+;; @todo XXX dp hack. Make into a patch
+    
     (gtags-push-context)
     (gtags-goto-tag tagname "" other-win)))
 
@@ -524,7 +532,7 @@
      (setq prompt (concat "Find tag (reference): (default " tagname ") "))
     (setq prompt "Find tag (reference): "))
    (setq input (completing-read prompt 'gtags-completing-grtags
-                 nil nil nil gtags-history-list))
+                 nil nil nil 'gtags-history-list))
    (if (not (equal "" input))
      (setq tagname input))
     (gtags-push-context)
@@ -539,7 +547,7 @@
         (setq prompt (concat "Find symbol: (default " tagname ") "))
       (setq prompt "Find symbol: "))
     (setq input (completing-read prompt 'gtags-completing-gsyms
-                  nil nil nil gtags-history-list))
+                  nil nil nil 'gtags-history-list))
     (if (not (equal "" input)) (setq tagname input))
     (gtags-push-context)
     (gtags-goto-tag tagname "s")))
@@ -557,7 +565,7 @@
     (if tagname
         (setq prompt (concat "Find pattern: (default " tagname ") "))
       (setq prompt "Find pattern: "))
-    (setq input (read-from-minibuffer prompt nil nil nil gtags-history-list))
+    (setq input (read-from-minibuffer prompt nil nil nil 'gtags-history-list))
     (if (not (equal "" input)) (setq tagname input))
     (gtags-push-context)
     (gtags-goto-tag tagname (if gtags-grep-all-text-files "go" "g"))))
@@ -571,7 +579,7 @@
         (setq prompt (concat "Find token: (default " tagname ") "))
       (setq prompt "Find token: "))
     (setq input (completing-read prompt 'gtags-completing-idutils
-                  nil nil nil gtags-history-list))
+                  nil nil nil 'gtags-history-list))
     (if (not (equal "" input)) (setq tagname input))
     (gtags-push-context)
     (gtags-goto-tag tagname "I")))
@@ -582,7 +590,7 @@
   (let (tagname prompt input)
     (setq prompt "Find files: ")
     (setq input (completing-read prompt 'gtags-completing-files
-                  nil nil nil gtags-history-list))
+                  nil nil nil 'gtags-history-list))
     (if (not (equal "" input)) (setq tagname input))
     (gtags-push-context)
     (gtags-goto-tag tagname "Po")))

@@ -345,7 +345,25 @@ Oddly, it doesn't handle structs.")
 
 (when (and (bound-and-true-p dp-wants-hide-ifdef-p)
            (dp-optionally-require 'hideif))
-  
+
+  (defun dp-hideif-assign-defs (def-list name)
+    "Define/undef a list of #define names.
+DEFLIST is a list of pairs (defname operation).
+DEFNAME is the constant name, e.g. DEBUG is in #ifdef DEBUG
+OPERATION is called with the defname as a parameter. Some useful values are 
+`hide-ifdef-define' and `hide-ifdef-undef' to define or undefine defname
+respectively.
+NAME is a short name associated by hideif with the list of defs."
+    (loop for (def op) in def-list do
+      (funcall op def))
+    (hide-ifdef-set-define-alist name))
+
+  (defun dp-hide-ifdefs (name)
+    (interactive)
+    (hide-ifdef-mode 1)
+    (hide-ifdef-use-define-alist "name")
+    (hide-ifdefs))
+
 ;;needs finished Make hide-ifdef-define use the symbol @ point as a default.
 ;;needs finished hide-ifdef-define reads the name as a symbol.
 ;;needs finished Need to make the string a symbol (intern?)

@@ -2029,7 +2029,7 @@ See `dp-c*-junk-after-eos*'."
 (defvar dp-chars-which-cannot-follow-a-function-open-brace
   "[%]"
   "The name is pretty clear. The % is from mmm-mode's delimiters:
-{%<mode-name>%}
+{%<mode-name>%}"
 )
 
 (defun* dp-c-ensure-opening-brace (&key ; <:eob:>
@@ -13050,6 +13050,7 @@ do
   $op
   ${EEXEC_SHIFT}
 done
+EExec_verbose_msg $(echo_id eexec_program)
 unset eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
@@ -15629,7 +15630,7 @@ whitespace eradication.")
                                    t
                                    nil ; 'preserve-column
                                    'next-line)
-          (next-line count))))))
+          (next-line 1))))))
 
 (defun dp-fast-replace-regexp-region (regexp replacement &optional beg end)
   "Do a fast regexp replace as recommended in the doc for `replace-regexp."

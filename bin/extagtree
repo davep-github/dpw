@@ -1,11 +1,28 @@
 #!/usr/bin/env bash
 #set -x
 #set -v
-
 source script-x
-progname=`basename $0`
-source eexec
 set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+
+#unset eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+export eexec_program
 
 EExec_verbose_msg "$@"
 
@@ -14,8 +31,6 @@ EExec_verbose_msg "$@"
 # case, fixed this >0 times.
 # default to off. Can be enabled in the env.<blah> file.
 : ${EXTAGTREE_DASH_Q:=}
-source script-x
-source  eexec
 
 args=("$@")                     # Preserve args across .bashrc execution.
 
@@ -23,6 +38,7 @@ tagtree()
 {
     local files_file="$1"; shift
     local tag_file=${1-$TAGFILE}
+    EExec_verbose_msg "tagtree() $(echo_id eexec_program)"
     eval EExec $SUDO $EXCTAGS $inheritance_opt $etags_opt -L "$files_file" \
       --links=no -o $tag_file \
       $h_OPT $langmap $full_member_names "$py_props" "${EC_XARGS}"

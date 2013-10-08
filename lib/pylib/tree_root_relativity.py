@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 import sys, os, argparse, StringIO
-import dp_io, find_up, go2env_lib, p4_lib
+import dp_io, find_up, p4_lib
+import go2env_lib
+from go2env_lib import Alias_item_t
 opath = os.path
 
 #############################################################################
@@ -36,16 +38,16 @@ def magick_string_p(s, magick_string_separator=Configuration["MAGICK_STRING_SEPA
 #############################################################################
 def emit_path(components, norm_p=True, realpath_p=True, ostream=sys.stdout,
               prefix="", suffix="\n"):
-    dp_io.printf("components>%s<\n", components)
+##     dp_io.printf("components>%s<\n", components)
     p = opath.join(*components)
-    dp_io.printf("p>%s<\n", p)
+##     dp_io.printf("p>%s<\n", p)
     #
     # @todo XXX this probably isn't the best place to convert to realpath.
     if realpath_p:
         p = opath.realpath(p)
     if norm_p:
         p = opath.normpath(p)
-    dp_io.printf("2: p>%s<\n", p)
+##     dp_io.printf("2: p>%s<\n", p)
     ostream.write("%s%s%s" % (prefix, p, suffix))
 
 
@@ -53,9 +55,9 @@ def emit_path(components, norm_p=True, realpath_p=True, ostream=sys.stdout,
 def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
                 abbrev_suffix=None,
                 magick_string_separator=Configuration["MAGICK_STRING_SEPARATOR"],
-                realpath_p=None):
-    print >>sys.stdout, "1: input_tree_root>{}<".format(input_tree_root)
-    print >>sys.stdout, "1: expand_dest_args>{}<".format(expand_dest_args)
+                realpath_p=True):
+##     print >>sys.stdout, "1: input_tree_root>{}<".format(input_tree_root)
+##     print >>sys.stdout, "1: expand_dest_args>{}<".format(expand_dest_args)
     # Handle some legacy foolishness
     a = expand_dest_args.split(magick_string_separator)
     if len(a) > 1:
@@ -67,13 +69,8 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
     # only expand the input tree_root it if it doesn't already look like a
     # path.
     if input_tree_root and input_tree_root.find(opath.sep) == -1:
-        input_tree_root = go2env_lib.simple_lookup("^" + input_tree_root + "$")
-##     else:
-##         # If the tree root is expanded, remove any symlinks, etc, like the
-##         # nvidia ap* symlink `Default_ap_tree' link.
-##         # But only do it if the user didn't specifically set a value.
-##         if realpath_p == None:
-##             realpath_p = True
+        input_tree_root = go2env_lib.simple_lookup(input_tree_root,
+                                                   line_match_p=True)
 
     if abbrev.find(p4_lib.LOCATION_ROOT) == 0:
         # p4 path location.
@@ -81,38 +78,39 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
 
     if abbrev_suffix is None:
         abbrev_suffix = os.environ.get("DP_EXPAND_DEST_ABBREV_SUFFIX")
-    print "abbrev>%s<" % (abbrev,)
-    print "2: input_tree_root>%s<" % (input_tree_root,)
+##     print "abbrev>%s<" % (abbrev,)
+##     print "2: input_tree_root>%s<" % (input_tree_root,)
     #
     # Some useful special cases
     #
     if abbrev == '~':
         abbrev = "ap"
     elif abbrev == ".":
-        print "abbrev>%s<" % (abbrev,)
-        print "current_tree_root>%s<" % (current_tree_root,)
+##         print "abbrev>%s<" % (abbrev,)
+##         print "current_tree_root>%s<" % (current_tree_root,)
         abbrev = relativize(current_tree_root,
                             opath.realpath(opath.normpath(opath.curdir)),
                             p4_location_p=False)
-        print "abbrev>%s<" % (abbrev,)
+##         print "abbrev>%s<" % (abbrev,)
         newd = opath.join(input_tree_root, Abbrev)
-        print "newd>%s<" % (newd,)
+##         print "newd>%s<" % (newd,)
         return newd
     elif abbrev == "/":
         abbrev = current_tree_root
 
-    new_abbrev = go2env_lib.simple_lookup("^" + abbrev + abbrev_suffix + "$")
+    new_abbrev = go2env_lib.simple_lookup(abbrev + abbrev_suffix,
+                                          line_match_p=True)
 
     if not new_abbrev:
         new_abbrev = abbrev
     input_tree_root = opath.normpath(input_tree_root)
-    print "new_abbrev>%s<" % (new_abbrev,)
-    print "3: input_tree_root>%s<" % (input_tree_root,)
+##     print "new_abbrev>%s<" % (new_abbrev,)
+##     print "3: input_tree_root>%s<" % (input_tree_root,)
     output = StringIO.StringIO()
     emit_path((input_tree_root, new_abbrev), realpath_p=realpath_p,
               ostream=output)
     return_expansion = output.getvalue().strip()
-    print "return_expansion>{}<".format(return_expansion)
+##     print "return_expansion>{}<".format(return_expansion)
     return return_expansion
 
 
@@ -151,7 +149,9 @@ def get_expand_args(args, input_tree_root,
         abbrev = a[1]
         tree_root = a[2]
     else:
+        ## print "get_expand_args(): input_tree_root:", input_tree_root
         tree_root = input_tree_root or get_current_tree_root()
+        #  print "get_expand_args(): tree_root:", tree_root
         abbrev = args
 
     if not tree_root:
@@ -160,7 +160,7 @@ def get_expand_args(args, input_tree_root,
     # only expand the input tree_root it if it doesn't already look like a
     # path.
     if tree_root and tree_root.find("/") == -1:
-        tree_root = go2env_lib.simple_lookup("^" + tree_root + "$")
+        tree_root = go2env_lib.simple_lookup(tree_root, line_match_p=True)
     
     return abbrev, tree_root
 
@@ -203,6 +203,10 @@ def main(argv):
                          dest="realpath_p", default=None,
                          action="store_true",
                          help="Emit realpath of resulting expansion.")
+    oparser.add_argument("--no-realpath", "--no-real-path", "--no-rp",
+                         dest="realpath_p", default=None,
+                         action="store_false",
+                         help="Emit realpath of resulting expansion.")
 
     app_args = oparser.parse_args()
 
@@ -235,12 +239,17 @@ def main(argv):
 ##     print "A.1: current_tree_root>%s<" % (current_tree_root,)
 ##     print "B: input_tree_root>%s<" % (input_tree_root,)
 
+    # None vs False allows us to know if the user has set the value one way
+    # or the other.
+    realpath_p = app_args.realpath_p
+    if realpath_p is None:
+        realpath_p = True
     if expand_dest_args:
         s = expand_dest(current_tree_root=current_tree_root,
                         expand_dest_args=expand_dest_args,
                         input_tree_root=input_tree_root,
                         abbrev_suffix=app_args.abbrev_suffix,
-                        realpath_p=app_args.realpath_p)
+                        realpath_p=realpath_p)
         print s
         sys.exit(0)
 

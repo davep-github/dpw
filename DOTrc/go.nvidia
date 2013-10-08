@@ -107,6 +107,10 @@ Ee|dprtg__ME_src|               ${testgendprundir__ME_src}
 Ee|testgendprtldir__ME_src|     ${testgen__ME_src}dp-rtl-tests/
 Ee|tgrtl__ME_src|               ${testgendprtldir__ME_src}
 
+Ee|testgendpt132rtldir__ME_src| ${testgen__ME_src}/
+Ee|tgt132rtl__ME_src|           ${testgendpt132rtldir__ME_src}
+Ee|t132rtl__ME_src|             ${testgendpt132rtldir__ME_src}
+
 Ee|drv__ME_src|                 ${TOT__ME_src}drv/
 Ee|drvapi__ME_src|              ${drv__ME_src}drvapi/
 
@@ -187,7 +191,7 @@ Ee|plex__ME_src|                ${gpumetraces__ME_src}plex/
 Ee|gpumultienginefw__ME_src|    ${gpumetraces__ME_src}framework/
 Ee|gmefw__ME_src|               ${gpumultienginefw__ME_src}
 
-Ee|nongputraces__ME_src|        ${tracesroot_ME_src}nongpu_multiengine/data_src/
+Ee|nongputraces__ME_src|        ${tracesroot__ME_src}nongpu_multiengine/data_src/
 Ee|nongpudatasrc__ME_src|       ${nongputraces__ME_src}
 Ee|datasrc__ME_src|             ${nongputraces__ME_src}
 Ee|ngdatasrc__ME_src|           ${nongputraces__ME_src}
@@ -208,6 +212,7 @@ Ee|ccplexso|soccplex|memtxnaxi|aximemtxn| ${traces2mobiletracesso}t124/
 
 Ee|nvdev__ME_src|               dev/
 Ee|asimsrc__ME_src|             ${nvdev__ME_src}cpu/tools/sim/asim/1.0/hw/
+Ee|t3dsrc|                      ${sw__ME_src}sw/dev/gpu_drv/chips_a/diag/mods/mdiag/tests/gpu/trace_3d/
 
 #
 #   Somethings which may as well be cross-sandbox
@@ -269,6 +274,9 @@ Ee|goodvic2|       /home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap_tlit1/diag/tes
 Ee|vic2gpu128x128|vic2ref|       /home/scratch.dpanariti_t124/sb2/hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/vic2gpu_display_composite/2013-03-21T21.11.45-0400.out/tests/kepler_b_ogtest/00/00/05/000005/
 Ee|depcpu2|     /home/scratch.dpanariti_t124/sb2/hw/arch/traces/mobile/traces/gpu_multiengine/dep_cpu_cpu_gpu_cpu/
 
+Ee|swrrun| /home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-run-tgens.d/swr_runlimit/2013-09-26T14.21.11-0400.out/tests/mobile_traces_gpu_multiengine/00/00/01/000001/
+Ee|swrrossi| /home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-run-tgens.d/swr_runlimit/2013-09-24T19.09.49-0400.out/tests/mobile_traces_gpu_multiengine/00/00/01/000001/
+
 Ee|sb2loader|   ${sb2}hw/hw/ap_tlit1/drv/multiengine/framework/utilities/loader/
 Ee|surf5|       ${sb5}arch/traces/mobile/traces/gpu_multiengine/surface_write_read/
 
@@ -278,13 +286,6 @@ Ee|surface|   ${sb4}hw/ap_tlit1/drv/drvapi/include/runtest_surface.h:740
 Ee|workprototypes|wprotos|protos|       /home/dpanariti/work/prototypes/
 Ee|kevin|       /home/scratch.dpanariti_t124/sb2/hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/dep_cpu_cpu_gpu_dump/2013-04-12T14.49.33-0400.out/tests/kepler_b_ogtest/00/00/02/000002/
 
-###########################################################################
-#
-# Local Variables: ***
-# fill-column: 999 ***
-# comment-start: "#" ***
-# comment-end: "" ***
-# End: ***
 Ee|gooddepcpurun|       /home/scratch.dpanariti_t124/sb2/hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/dep_cpu_cpu_gpu_cpu_mc/2013-04-24T15.06.43-0400.out/tests/kepler_b_ogtest/00/00/01/000001/
 Ee|xebacks|xebacs|       /home/dpanariti/droppings/editors/xemacs/xebacs.d/
 Ee|dpylib|       /home/dpanariti/lib/pylib/
@@ -293,3 +294,12 @@ Ee|sso| /home/scratch.traces02/mobile/traces/system/so
 Ee|stldir| /usr/include/c++/4.1.1/
 Ee|miaowhw|       /home/scratch.miaow_t124/miaow_ap_tree1/hw/
 Ee|miaowap|       /home/scratch.miaow_t124/miaow_ap_tree1/
+Ee|pylib|       /home/dpanariti/lib/pylib/
+
+###########################################################################
+#
+# Local Variables: ***
+# fill-column: 999 ***
+# comment-start: "#" ***
+# comment-end: "" ***
+# End: ***

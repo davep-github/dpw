@@ -5170,3 +5170,22 @@ the rest of the arguments are for an actual class being applied. See
          ;; the end of the front match and continue on.
          else do (goto-char invalid-resume)))))))
 
+
+========================
+Tuesday September 24 2013
+--
+(defun dp-setup-hide-ifdef-for-T3D.so (&optional extras)
+  (interactive)
+  (setq hide-ifdef-lines t
+        hide-ifdef-env nil)
+  (let ((defs (append dp-T3D-hide-ifdef-default-.so-defs extras)))
+    (loop for (def op) in defs do
+      (funcall op def)))
+  (hide-ifdef-set-define-alist "t3d"))
+
+(append '((a b) (c d)) nil (list (list 1 2) (list 8 9)))
+((a b) (c d) (1 2) (8 9))
+
+
+(1 2 3 a b c)
+

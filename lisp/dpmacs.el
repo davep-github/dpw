@@ -224,7 +224,6 @@ editing servers via `dp-editing-server-ipc-file'.")
 (require 'dp-keys) ;; my highly unstandard keybindings.
 (require 'dpmisc)
 (require 'dp-lang)
-(require 'dp-ptools)
 (require 'dp-cf)
 
 ;;
@@ -269,6 +268,9 @@ intolerable delays to files not in perforce."
                                                  'dp-load-spec-macs 
                                                  (dp-specific-extensions))))
       dp-most-specific-spec-macs (car-safe dp-loaded-spec-macsen))
+
+;; This uses spec-macs values.
+(require 'dp-ptools)
 
 ;;
 ;; derived vars from spec-macs specific stuff
@@ -793,7 +795,7 @@ This can be callable.")
 ;; Set lots of variables more to my liking.
 (setq next-line-add-newlines nil
       search-highlight t
-      find-file-use-truenames nil	; I set up the symlinks for a reason.
+      find-file-use-truenames nil	; I set up the symlinks For A Reason.
       find-file-existing-other-name t
       tag-mark-stack-max 128
       compilation-window-height 10

@@ -206,7 +206,9 @@ then
         */ap_t132/*) chip_opt=t132;;
         */ap_t124/*|*/ap_tlit1/*) chip_opt=t124;;
         *) echo 1>&2 "Cannot guess chip type based on current directory:
-$PWD"
+$PWD
+Specify chip with [-c|--chip] <chip>
+"
            exit 1;;
     esac
 fi

@@ -1,14 +1,33 @@
 #!/usr/bin/env python
-
 import sys, os
 
-if __name__ == "__main__":
+def main(argv):
+    import getopt
+    opt_string = "cr"
+    concat_components_p = False
     path_ops = [os.path.normpath]
-    argv = sys.argv[1:]
-    if argv[0] == '-r':
-        argv = argv[1:]
-        path_ops.append(os.path.realpath)
-    for p in argv:
+
+    opts, args = getopt.getopt(argv[1:], opt_string)
+    for o, v in opts:
+        #if o == '-<option-letter>':
+        #    # Handle opt
+        #    continue
+        if o == '-r':
+            path_ops.append(os.path.realpath)
+        elif o == '-c':
+            concat_components_p = True
+        else:
+            print >>sys.stderr, "WTF? option>{}< is unsupported".format(o)
+            sys.exit(1)
+
+    if concat_components_p:
+        path = os.path.join(*args)
+        args = [path]
+        
+    for p in args:
         for op in path_ops:
             p = op(p)
         print p
+
+if __name__ == "__main__":
+    main(sys.argv)

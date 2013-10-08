@@ -483,4 +483,25 @@ __gitdir ()
     fi
 }
 
+xxx_newest()
+{
+    local op="${1}"; shift
+    local dir=$(newest-dir "$@")
+    $op "${dir}"
+}
+
+cd_newest()
+{
+    xxx_newest cd "$@"
+}
+export -f cd_newest
+alias cdnew=cd_newest
+
+go_newest()
+{
+    xxx_newest g "$@"
+}
+export -f go_newest
+alias gonew=go_newest
+
 true

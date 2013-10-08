@@ -1139,7 +1139,7 @@ dpcheck()
     return 0                    # Faster than `true'?
 }
 
-cd_newest()
+cd_newest_deepest()
 {
     local pushd_p
     local cd_command=cd
@@ -1165,9 +1165,9 @@ cd_newest()
     }
 }
 
-go_newest()
+go_newest_deepest()
 {
-    cd_newest --go "$@"
+    cd_newest_deepest --go "$@"
 }
 
 sed_ap_tree()

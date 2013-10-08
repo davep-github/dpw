@@ -503,7 +503,7 @@
     (("style" "/home/dpanariti/work/doc/code-style.txt")
      dp-manual)
     ;; Extra quote is really used.
-    ((("ctor" "construct" "constructor") 'circular) dp-manual)
+    ((("ctor" "constructor" "construct") 'circular) dp-manual)
     ((("emacs" "xemacs" "XEmacs" "Emacs") 'circular) dp-manual)
     ((("ftci" "FTCI" "ftca" "FTCA") 'circular) dp-manual)
     ))

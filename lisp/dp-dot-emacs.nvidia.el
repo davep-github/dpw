@@ -5,7 +5,7 @@
                                  (require 'dp-perforce)))
 
 
-(setq visible-bell nil)
+(setq visible-bell t)
 (defun dp-define-nvidia-c-style ()
   (defconst nvidia-c-style
     '((c-tab-always-indent           . t)
@@ -51,24 +51,50 @@
 (setq cscope-do-not-update-database t)
 
 (defun dp-nv-configure-hide-ifdef ()
-  (defvar dp-T3D-hide-ifdef-default-defs
-    '(NV_T3D)
-    "T3D definitions for hide-ifdef-* to show code of interest.")
+  (defvar dp-T3D-hide-ifdef-default-.so-defs
+    '((NV_T3D hide-ifdef-define)
+      (NV_T3D_XC hide-ifdef-undef)
+      (NV_XC hide-ifdef-undef))
+    "T3D definitions for hide-ifdef-* to show code of interest in .so/x86
+tests.")
 
-  (defun dp-setup-hide-ifdef-for-T3D (&optional extras)
+  (defvar dp-T3D-hide-ifdef-default-.axf-defs
+    '((NV_T3D hide-ifdef-define)
+      (NV_T3D_XC hide-ifdef-define)
+      (NV_XC hide-ifdef-define))
+    "T3D definitions for hide-ifdef-* to show code of interest in ARM .axf
+tests.")
+  
+  (defvar dp-T3D-hide-ifdef-common-undefs
+    '((USE_SW_NVTEST 'hide-ifdef-undef))
+    "We never want these defined. And by never I mean usually.")
+
+  (defun dp-setup-hide-ifdef-for-T3D.so (&optional extras)
     (interactive)
     (setq hide-ifdef-lines t
           hide-ifdef-env nil)
-    (let ((defs (append dp-T3D-hide-ifdef-default-defs extras)))
-      (loop for def in defs do
-        (hide-ifdef-define def)))
-    (hide-ifdef-set-define-alist "t3d"))
+    (dp-hideif-assign-defs (append dp-T3D-hide-ifdef-default-.so-defs extras
+                                   dp-T3D-hide-ifdef-common-undefs)
+                           "t3dso"))
 
-  (defun dp-hide-ifdef-for-T3D ()
+  (defun dp-setup-hide-ifdef-for-T3D.axf (&optional extras)
     (interactive)
-    (hide-ifdef-mode 1)
-    (hide-ifdef-use-define-alist "t3d")
-    (hide-ifdefs)))
+    (setq hide-ifdef-lines t
+          hide-ifdef-env nil)
+    (dp-hideif-assign-defs (append dp-T3D-hide-ifdef-default-.axf-defs extras
+                                   dp-T3D-hide-ifdef-common-undefs)
+                           "t3daxf"))
+
+  (defun dp-hide-ifdef-for-T3D.so ()
+    (interactive)
+    (dp-hide-ifdefs "t3dso"))
+  (dp-defaliases 'hif-t3dso 'hifso 'dp-hide-ifdef-for-T3D.so)
+  
+  (defun dp-hide-ifdef-for-T3D.axf ()
+    (interactive)
+    (dp-hide-ifdefs "t3daxf"))
+  (dp-defaliases 'hif-t3daxf 'hifaxf 'dp-hide-ifdef-for-T3D.axf)
+)
 
 ;; Do I want the hide ifdef package activated?
 ;; At nVIDIA, the answer is HELL YES!
@@ -80,8 +106,11 @@
 ;; For some reason, vc isn't being autoloaded here, but it is @ home.
 (vc-load-vc-hooks)  ; This is being added to the Tools->Version Control menu.
 
-(dp-set-sandbox-regexp "/home/scratch\.")
-(setq dp-sandbox-make-command "mmake")
+(defun dp-nvidia-spec-macs-hook ()
+  (dp-set-sandbox-regexp "/home/scratch\.")
+  (setq dp-sandbox-make-command "mmake"))
+
+(add-hook 'dp-post-dpmacs-hook 'dp-nvidia-spec-macs-hook)
 
 ;; 
 ;; Since I cannot add variable hacks to files, I'll do it another way, using

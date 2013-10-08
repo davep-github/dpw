@@ -12,6 +12,19 @@ do
 done
 unset eexec_program
 
+: ${annotation=}
+
+while (($# > 0))
+do
+  case "$1" in
+      --cron) annotation="cron: ${annotation}";;
+      --anno|--annotation) shift; annotation="${annotation} ${2}";;
+      --) shift; break;;
+      *) break;
+  esac
+  shift
+done
+
 msg="$progname: in ${PWD}: $@"
 
-echo "${msg}" | EExec mail -s "YOPP! ${msg}" "${USER}"
+echo "${msg}" | EExec mail -s "${annotation}YOPP! ${msg}" "${USER}"

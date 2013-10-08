@@ -1,16 +1,25 @@
 #!/bin/sh
 
 source script-x
+set -u
 progname="$(basename $0)"
 source eexec
-eexec_program=$(EExec_parse "$@")
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
 for op in $eexec_program
 do
   $op
-  shift
+  ${EEXEC_SHIFT}
 done
-unset eexec_program
-set -u
+#unset eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+export eexec_program
 
 : ${oot_only_p=}
 
@@ -67,6 +76,7 @@ index_out_of_tree_locations()
 : ${nvcscope_files=cscope.files cscope.out cscope.out.in cscope.out.po}
 : ${skip_cd_p=}
 : ${follow_links_arg=-h}
+: ${cron_opt=}
 
 link_or_non_existent()
 {
@@ -97,7 +107,7 @@ option_str="${EExec_parse_option_str}jmhH"
 long_options=(
 "mundane" "no-nvcscope"
 "no-me-index" "no-arch-index" "just-nvcscope" "links" "just-links"
-"skip-cd" "stay-put" "oot")
+"skip-cd" "stay-put" "oot" "cron")
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -105,15 +115,16 @@ do
   case $1 in
       # Program options.
 
-      # Help!
       -m|--no-nvcscope|--mundane) nvcscope_p=;;
       --nvcscope|--new-sk00l) nvcscope_p=t;;
       -j|--no-me-index|--no-arch-index|--no-other-index|--links|--just-links) just_nvcscope_p=t;;
       -h) follow_links_arg=-h;;
       -H) follow_links_arg=;;
       --skip-cd|--stay-put) skip_cd_p=t;;
-      --help) Usage; exit 0;;
       --oot) oot_only_p=t; nvcscope_p=; just_nvcscope_p=;;
+      --cron) cron_opt="--cron";;
+      # Help!
+      --help) Usage; exit 0;;
       --) shift ; break ;;
       *) dp_echo2 "Unsupported option>$1<"
          exit 1;;
@@ -143,6 +154,7 @@ fi
 ap_path="${ap_dir}"
 ap_dir=$(basename "${ap_dir}")
 : ${p4_root=${1-"."}}
+p4_root=$(realpath "${p4_root}")
 
 vtruep "${just_nvcscope_p}" && {
     nvcscope_p=t
@@ -264,12 +276,12 @@ fi
 
 if ! vtruep "${just_nvcscope_p}"
 then
-    EExec -y index-code $EExecDashN_opt $EExecDashV_opt $follow_links_arg $dirs_of_interest
+    EExec -y index-code $follow_links_arg $dirs_of_interest
     index_out_of_tree_locations
 else
     dp_echo "Not indexing non-nvcscope code."
 fi
 
-vsetp "${send_mail_on_completion-}" && ! EExecDashN_p && {
-    mail -s "$progname is done in ${PWD}." "${USER}" < /dev/null >/dev/null 2>&1
+vsetp "${send_mail_on_completion-}" && {
+    EExec email-yopp ${cron_opt}
 }

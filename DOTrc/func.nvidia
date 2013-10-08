@@ -77,8 +77,21 @@ xxd()
 
 cdtglr()
 {
+    local show_p
+    [ "${1-}" = "-o" ] && {
+        show_p=t
+        shift
+    }
     local d=$(tgen-latest-run "$@")
-    vsetp "${d}" && cd "${d}"
+    vsetp "${d}" &&
+    {
+        if vsetp "${show_p}"
+        then
+            echo "${d}"
+        else
+            cd "${d}"
+        fi
+    }
 }
 
 gtglr()

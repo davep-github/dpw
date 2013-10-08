@@ -211,12 +211,17 @@ Add each bookmark-name to the list of bookmarks."
 ;       (setq dp-get-bm-interactive-history 
 ;             (cons bm-name dp-get-bm-interactive-history)))))
 
-(defun* dp-add-to-history (hist-sym string &key allow-dupes-p pred pred-args)
+(defun* dp-add-to-history (hist-sym string &key allow-dupes-p pred pred-args
+                           remove-empty-p)
   "Add to a history type list.  I.e. don't dupe the 1st item if desired.
 Calling it `dp-add-to-history-if-car-not=' is a bit too much.  Even for me."
   (unless (stringp string)
     (setq string (format "%s" string)))
   (let ((hist (symbol-value hist-sym)))
+    (when (and remove-empty-p
+             (string= (car hist) ""))
+      (set hist-sym (cdr hist))
+      (setq hist (symbol-value hist-sym)))
     (unless  (or (and (not allow-dupes-p)
                       (string= (car hist) string))
                  ;; Allow just giving pred-args to mean to `and' the values
