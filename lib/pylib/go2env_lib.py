@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
 import os, sys, string, re, getopt, types, StringIO
-import dp_io, dp_sequences
+import pprint
 import cPickle as pickle
+
+import dp_io, dp_sequences
 opath = os.path
 
 ignore_file_not_found = 1
@@ -29,10 +31,11 @@ SELECTOR_PERMANENT_PREFIX = 'P'
 SELECTOR_SIMPLE_LIST = 'l'
 SELECTOR_NAMES_LIST = 'L'
 
+DEFAULT_DICT_EXT = "_dict.py"
 DEFAULT_SERIALIZED_FILE_NAME = "go"
 DEFAULT_SERIALIZED_FILE = opath.join(os.environ["HOME"], "var", "db",
                                     DEFAULT_SERIALIZED_FILE_NAME)
-DEFAULT_DICT_FILE = DEFAULT_SERIALIZED_FILE + ".dict"
+DEFAULT_DICT_FILE = DEFAULT_SERIALIZED_FILE + DEFAULT_DICT_EXT
 
 # Use globals so we only need to get them once.
 
@@ -80,29 +83,36 @@ class Keyword_option_t(object):
 #                  "file_name": file_name})
 #
 #
-class Alias_item_t(object):
-    def __init__(self, val, **kw_args):
-        self.d_val = val
-        keys = kw_args.keys()
-        for k in ("val", "regexp"):
-            if k in keys:
-                raise Alias_reserved_keyword('Cannot use "%s" as a key.' \
-                                             % (k,))
-        self.d_kw_args = kw_args
-        self.d_kw_args['val'] = val
+## class Alias_item_t(object):
+##     def __init__(self, val, **kw_args):
+##         if type(val) == Types.StringType:
+##             self.d_val = val
+##             keys = kw_args.keys()
+##             for k in ("val", "regexp"):
+##                 if k in keys:
+##                     raise Alias_reserved_keyword('Cannot use "%s" as a key.' \
+##                                                  % (k,))
+##                 self.d_kw_args = kw_args
+##                 self.d_kw_args['val'] = val
+##         else:
+##             self.d_val = val["val"]
+##             self.d_kw_args = val
+##             self.d_kw_args.update(kw_args)
+                
 
-    def get(self, name, default=None):
-        return self.d_kw_args.get(name, default)
+##     def get(self, name, default=None):
+##         return self.d_kw_args.get(name, default)
 
-    def set(self, name, val):
-        self.d_kw_args[name] = val
+##     def set(self, name, val):
+##         self.d_kw_args[name] = val
 
-    def __call__(self):
-        return self.d_kw_args
+##     def __call__(self):
+##         return self.d_kw_args
 
-    def __repr__(self):
-        return "Alias_item_t({})".format(
-            stringify_argified_dict(self.d_kw_args))
+##     def __repr__(self):
+##         return "Alias_item_t({})".format(
+##             pprint.pformat(self.d_kw_args))
+## #             stringify_argified_dict(self.d_kw_args))
                           
     
 #dp_io.eprintf('HOME>%s<, UGLY_HOME>%s<', HOME, UGLY_HOME)
@@ -361,10 +371,10 @@ aliases>%s<""", line, selector, aliases)
                 # also add to the environment so that references
                 # in later entries get expanded properly
                 os.environ[name] = val
-                aliases[name] = Alias_item_t(val,
-                                             selector=selector,
-                                             ctl=ctl,
-                                             file_name=file_name)
+                aliases[name] = {"val": val,
+                                 "selector": selector,
+                                 "ctl": ctl,
+                                 "file_name": file_name}
 
 #####################################################################
 def expand_file(file, selector, aliases):
@@ -482,32 +492,27 @@ def init_aliases(args, selector_regexp,
     # more specific files can override less specific ones.
     # dogo stops at the first match, and this produces the same effect.
     #
-##     print >>sys.stderr, "in init_aliases():"
     if Get_aliases():
-##         print >>sys.stderr, "in init_aliases(): use existing aliases"
         return
 
     if dict_file is not False:
+        if not dict_file:
+            dict_file = DEFAULT_DICT_FILE
         try:
-##             print >>sys.stderr, "AAA"
-            read_dict()
-##             print >>sys.stderr, "BBB"
+            Set_aliases(read_dict(dict_file))
             if Get_aliases():
-##                 print >>sys.stderr, "WH00T!"
                 return
-        except IOError:
-            print >>sys.stderr, "IOError, pass"
-            pass
-    
+        except Exception, err:
+            print >>sys.stderr, "Exception `{}' reading dict file>{}<, trying pickle".format(err, dict_file)
+
     if serialized_file is not False:
         if not serialized_file:
             serialized_file = DEFAULT_SERIALIZED_FILE
         try:
             Set_aliases(read_aliases(serialized_file))
-##             print >>sys.stderr, "Read aliases."
             return
-        except IOError:
-            pass
+        except Exception, err:
+            print >>sys.stderr, "Exception `{}' reading pickle>{}<, falling back to .go file(s)".format(err, dict_file)
 
     files, names = process_gopath(args)
     Set_aliases(expand_files(files, selector_regexp))
@@ -524,35 +529,45 @@ def serialize_aliases(args, serialized_file=DEFAULT_SERIALIZED_FILE):
         pickle.dump(Get_aliases(), fobj)
         fobj.close()
 
-import pprint
-#####################################################################
-def write_dict(args, dict_file=None):
-    init_aliases(args, ".*", False, False)
-    fobj = open(dict_file, "w")
-    beauty = pprint.pformat(Get_aliases(), indent=4, width=80, depth=None)
-    fobj.write(beauty)
-    fobj.close()
-    #print "beauty:", beauty
-
-#####################################################################
-def read_dict(dict_file=None):
-    if not dict_file:
-        dict_file = DEFAULT_DICT_FILE
-    fobj = open(dict_file, "r")
-    s = fobj.read()
-##     print >>sys.stderr, "s>{}<".format(s)
-##     pprint.pprint(s)
-
-    d = eval(s)
-    Set_aliases(d)
-    fobj.close()
-
 #####################################################################
 def read_aliases(serialized_file=DEFAULT_SERIALIZED_FILE):
     fobj = open(serialized_file, "r")
     ret = pickle.load(fobj)
     fobj.close()
     return ret
+
+#####################################################################
+def write_dict(args, dict_file=None):
+    init_aliases(args, ".*", False, False)
+    fobj = open(dict_file, "w")
+    beauty = pprint.pformat(Get_aliases(), indent=4, width=80, depth=None)
+    fobj.write("aliases = ")
+    fobj.write(beauty)
+    fobj.write("\n")
+    fobj.close()
+
+#####################################################################
+## def read_dict_old(dict_file=None):
+##     if not dict_file:
+##         dict_file = DEFAULT_DICT_FILE
+##     fobj = open(dict_file, "r")
+##     s = fobj.read()
+##     fobj.close()
+##     d = eval(s)
+##     return d
+
+
+#####################################################################
+def read_dict(dict_file=None):
+    import imp
+    if not dict_file:
+        dict_file = DEFAULT_DICT_FILE
+    dict_path = [opath.dirname(dict_file)]
+    dict_name = opath.basename(opath.splitext(dict_file)[0])
+    fobj, p, d = imp.find_module(dict_name, dict_path)
+    z = imp.load_module("alias_file_aliases", fobj, p, d)
+    fobj.close()
+    return z.aliases
 
 #####################################################################
 def process_aliases(handle, handler_keyword_args,
@@ -569,7 +584,7 @@ def process_aliases(handle, handler_keyword_args,
     for regexp in grep_regexps:
         for k in keys:
             kw_args = handler_keyword_args
-            aliases[k].set("regexp", regexp)
+            aliases[k]["regexp"] = regexp
             #print >>sys.stderr, "kw_args:", kw_args
             handle(k, aliases[k], **kw_args)
 
@@ -696,7 +711,7 @@ if __name__ == "__main__":
 
     serialized_file = opath.join(os.environ["HOME"], "var", "db",
                                  serialized_file_name)
-    dict_file = serialized_file + ".dict"
+    dict_file = serialized_file + DEFAULT_DICT_EXT
 
     if serialize_aliases_p:
         serialize_aliases(args, serialized_file)

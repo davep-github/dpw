@@ -3,7 +3,7 @@
 import sys, os, argparse, StringIO
 import dp_io, find_up, p4_lib
 import go2env_lib
-from go2env_lib import Alias_item_t
+#from go2env_lib import Alias_item_t
 opath = os.path
 
 #############################################################################

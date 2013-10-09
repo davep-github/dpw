@@ -1,0 +1,44 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+export eexec_program
+
+client_dir=$(dp4-new-client "$@") || {
+    echo "dp4-new-client failed."
+    exit 1
+} 1>&2
+
+EExec cd "${client_dir}"
+EExec dp-sb-root --create
+
+while :
+do
+  read -e -p "Enter default ap dir name> "
+  vsetp "$REPLY" || {
+      echo "Please enter a name."
+      continue
+  } 1>&2
+
+  [ -d "$REPLY" ] || {
+      echo "Please enter a directory name."
+      continue
+  } 1>&2
+
+  EExec ln -s "${REPLY}" Default_ap_dir
+done
