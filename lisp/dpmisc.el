@@ -6332,7 +6332,10 @@ you've added enough info for set-auto-mode to figure it out.."
 ;; Called before process is killed.
 (defun dp-gnuserv-shutdown-hook ()
   (dmessage "in `dp-gnuserv-shutdown-hook'")
-  (dp-finalize-editing-server 'just-do-it-p))
+  ;; This is called if a server cannot be started, e.g. because another
+  ;; server is running. Forcing finalize to remove the ipc file is almost
+  ;; always wrong in this case.
+  (dp-finalize-editing-server 'just-do-it)) 
 
 (add-hook 'gnuserv-shutdown-hook 'dp-gnuserv-shutdown-hook)
 
@@ -6367,6 +6370,7 @@ to see if it's alive as well."
     ;; emacs w/existing server won't know its server is dead... not a real
     ;; problem?
     (shell-command (format "dpkillprog %s" gnuserv-program)))
+  (dmessage "dp-kill-editing-server")
   (dp-finalize-editing-server))
 
 ;;
@@ -6377,8 +6381,11 @@ to see if it's alive as well."
     ;; The title formatter uses `dp-gnuserv-running-p' so it can mistakenly
     ;; set the server indication in the title.
     (dp-set-frame-title-format :force-no-server-p just-do-it-p)
-    (shell-command-to-string (format "rm -f %s" 
-                                     (dp-editing-server-ipc-file)))))
+    (dmessage "dp-finalize-editing-server, just-do-it-p: %s" just-do-it-p)
+    (unless (dp-gnuserv-running-p)
+      ;; Don't remove another instance's ipc file.
+      (shell-command-to-string (format "rm -f %s" 
+                                       (dp-editing-server-ipc-file))))))
 
 ;;
 ;; Try for more feature filled gnuserv and fall back
@@ -8768,7 +8775,7 @@ If region is active, set width to that of the longest line in the region."
   "Remove newline, if one, @ end of string.
 Extra pred NUKE-P makes this more convenient when called in common circumstances."
   (when string
-    (if (and (< 1 (length string))
+    (if (and (> (length string) 0)
              (string= (substring string -1) "\n")
              nuke-p)
         (substring string 0 -1)
@@ -15867,7 +15874,8 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
   (format "[%s] %s%s" 
           (or (dp-current-sandbox-name) "No SB")
           (if (and (not force-no-server-p)
-                   (or gnuserv-running-p (dp-gnuserv-running-p)))
+                   (or gnuserv-running-p 
+                       (dp-gnuserv-running-p)))
               "Serv/"
             "")
           dp-frame-title-format))

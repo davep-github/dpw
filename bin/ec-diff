@@ -4,27 +4,43 @@ source script-x
 set -u
 progname="$(basename $0)"
 source eexec
-eexec_program=$(EExec_parse "$@")
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
 for op in $eexec_program
 do
   $op
-  shift
+  ${EEXEC_SHIFT}
 done
-unset eexec_program
+#unset eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+export eexec_program
 
 # ec [-w] first second
 
-wait_opt=-w
+wait_opt=
 
 while (($# > 0))
 do
   case "$1" in
-      -w|--no-wait) wait_opt=;;
+      -q|--no-wait) wait_opt=;;
+      -w|--wait) wait_opt='-w';;
       -u) ;; # This is often left over from a regular diff command. Ignore it.
       *) break;;
   esac
   shift
 done
+
+(($# != 2)) && {
+        echo "Two file names are needed."
+        exit 1
+} 1>&2
+
 
 fileA=$(realpath "${1}")
 file2=$(realpath "${2}")
@@ -34,5 +50,15 @@ diff_cmd="(ediff-files \"$fileA\" \"$file2\")"
 #
 # touch wait file.
 # dp-ediff-files removes file when diff session ends?
-EExec ec ${wait_opt} -e "${diff_cmd}"
+# Need to figure out a way to make the diff command wait until the diff
+# session completes.
+# For now, we'll wait for an `Enter'
+# -w here prevents the use of -q (don't wait) flag to gnuclient.
+# -eval (gnuclient) doesn't seem to work with -q
+# 
+EExec ec -w -e "${diff_cmd}"
+if vsetp "${wait_opt}" && ! EExecDashN_p
+then
+    read -e -p "Press enter to continue..."
+fi
 # wait for file to disappear.

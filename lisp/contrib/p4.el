@@ -455,7 +455,7 @@ with output to a dedicated output buffer.
 If successful, adds the P4 menu to the current buffer.
 Does auto re-highlight management (whatever that is)."
     (save-excursion
-      (message "p4-exec-p4...")
+;;       (message "p4-exec-p4...")
       (if (eq major-mode 'dired-mode)
 	  (let ((dir (dired-current-directory)))
 	    (set-buffer output-buffer)
@@ -477,7 +477,11 @@ Does auto re-highlight management (whatever that is)."
 	(if (and p4-running-emacs
 		 (boundp 'hilit-auto-rehighlight))
 	    (setq hilit-auto-rehighlight nil))
-        (message "p4-exec-p4... done.")
+;;         (message "p4-exec-p4: %s %s done." 
+;;                  (p4-check-p4-executable)
+;;                  (dp-string-join (append (list "-d" default-directory)
+;;                                          args))
+;;                  )
 	result)))
   (defun p4-call-p4-here (&rest args)
     "Internal function called by various p4 commands.

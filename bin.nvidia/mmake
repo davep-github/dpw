@@ -101,6 +101,8 @@ on-o-xterm-p && vunsetp "${o_xterm_ok_p}" && {
 
 bin_dir="$(me-expand-dest tot)/bin"
 
+echo "@>$@<"
+
 EExec ${bin_dir}/make "$@" 2>&1 | $logger
 
 vsetp "${send_mail_on_completion-}" && {

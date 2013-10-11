@@ -56,8 +56,9 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
                 abbrev_suffix=None,
                 magick_string_separator=Configuration["MAGICK_STRING_SEPARATOR"],
                 realpath_p=True):
-##     print >>sys.stdout, "1: input_tree_root>{}<".format(input_tree_root)
-##     print >>sys.stdout, "1: expand_dest_args>{}<".format(expand_dest_args)
+##     print >>sys.stderr, "1: current_tree_root>{}<".format(current_tree_root)
+##     print >>sys.stderr, "1: input_tree_root>{}<".format(input_tree_root)
+##     print >>sys.stderr, "1: expand_dest_args>{}<".format(expand_dest_args)
     # Handle some legacy foolishness
     a = expand_dest_args.split(magick_string_separator)
     if len(a) > 1:
@@ -69,8 +70,7 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
     # only expand the input tree_root it if it doesn't already look like a
     # path.
     if input_tree_root and input_tree_root.find(opath.sep) == -1:
-        input_tree_root = go2env_lib.simple_lookup(input_tree_root,
-                                                   line_match_p=True)
+        input_tree_root = go2env_lib.simple_lookup(input_tree_root)
 
     if abbrev.find(p4_lib.LOCATION_ROOT) == 0:
         # p4 path location.
@@ -86,25 +86,25 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
     if abbrev == '~':
         abbrev = "ap"
     elif abbrev == ".":
-##         print "abbrev>%s<" % (abbrev,)
-##         print "current_tree_root>%s<" % (current_tree_root,)
-        abbrev = relativize(current_tree_root,
+##         print >>sys.stderr, "2: abbrev>%s<" % (abbrev,)
+##         print >>sys.stderr, "2: current_tree_root>%s<" % (current_tree_root,)
+        abbrev = relativize(get_current_tree_root(),
                             opath.realpath(opath.normpath(opath.curdir)),
-                            p4_location_p=False)
+                            p4_location_p=False).strip()
 ##         print "abbrev>%s<" % (abbrev,)
-        newd = opath.join(input_tree_root, Abbrev)
+        newd = opath.join(input_tree_root, abbrev)
 ##         print "newd>%s<" % (newd,)
         return newd
     elif abbrev == "/":
         abbrev = current_tree_root
 
-    new_abbrev = go2env_lib.simple_lookup(abbrev + abbrev_suffix,
-                                          line_match_p=True)
+    new_abbrev = go2env_lib.simple_lookup(abbrev + abbrev_suffix)
+
 
     if not new_abbrev:
         new_abbrev = abbrev
     input_tree_root = opath.normpath(input_tree_root)
-##     print "new_abbrev>%s<" % (new_abbrev,)
+##     print "3: new_abbrev>%s<" % (new_abbrev,)
 ##     print "3: input_tree_root>%s<" % (input_tree_root,)
     output = StringIO.StringIO()
     emit_path((input_tree_root, new_abbrev), realpath_p=realpath_p,
@@ -117,14 +117,20 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
 #############################################################################
 def relativize(current_tree_root, name_to_relativize, p4_location_p=False):
     name = opath.normpath(opath.realpath(name_to_relativize))
-    p = name.find(current_tree_root)
+##     print >>sys.stderr, "0, name>{}<".format(name)
+##     print >>sys.stderr, "0, current_tree_root>{}<".format(current_tree_root)
     output = StringIO.StringIO()
+    p = name.find(current_tree_root)
+##     print >>sys.stderr, "0, p>{}<".format(p)
+
     if p == 0:
         name = name[len(current_tree_root) + 1:]
+##         print >>sys.stderr, "1, name>{}<".format(name)
         if p4_location_p:
             name = "//" + name
-        emit_path((name,), norm_p=False, real_p=False, ostream=output)
+        emit_path((name,), norm_p=False, realpath_p=False, ostream=output)
     return output.getvalue()
+
 
 #############################################################################
 #
@@ -160,7 +166,7 @@ def get_expand_args(args, input_tree_root,
     # only expand the input tree_root it if it doesn't already look like a
     # path.
     if tree_root and tree_root.find("/") == -1:
-        tree_root = go2env_lib.simple_lookup(tree_root, line_match_p=True)
+        tree_root = go2env_lib.simple_lookup(tree_root)
     
     return abbrev, tree_root
 
@@ -250,8 +256,11 @@ def main(argv):
                         input_tree_root=input_tree_root,
                         abbrev_suffix=app_args.abbrev_suffix,
                         realpath_p=realpath_p)
-        print s
-        sys.exit(0)
+
+        if opath.exists(s):
+            print s
+            sys.exit(0)
+        sys.exit(1)
 
 
     if app_args.find_root_p:

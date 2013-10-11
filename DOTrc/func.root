@@ -19,6 +19,7 @@ truth_p()
     esac
     return 1
 }
+export -f truth_p
 
 alias truep=truth_p
 alias vtruep=truth_p

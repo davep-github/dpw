@@ -240,10 +240,10 @@ editing servers via `dp-editing-server-ipc-file'.")
 (defun dp-p4-active-here ()
   "Determine if this file needs to be worried about perforce. (Abstract to any SCM).
 Override in spec-macs.
-Allow us to limit perforce checks to certain dirs. At nVIDIA, a simple p4
-opened can take 10+ minutes. Checking all files for p4-ed-ness adds
+Allow us to limit perforce checks to certain dirs. At nVIDIA, a simple 
+`p4 opened' can take 10+ minutes. Checking all files for p4-ed-ness adds
 intolerable delays to files not in perforce."
-  ;; let it be on unless forced off.
+  ;; let it be off unless forced on.
   t)
 
 (defvar dp-most-specific-spec-macs nil

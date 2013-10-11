@@ -46,5 +46,5 @@ vsetp "${replace_default_symlink}" && {
     exp=$(echo "${exp}" | sed -r "s|/Default_ap_tree/|/${replace_default_symlink}/|")
 }
 
-echo "${exp}"
+vsetp "${exp}" && echo "${exp}"
 

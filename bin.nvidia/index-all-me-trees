@@ -21,11 +21,9 @@ done
 # Or export eexec_program to propagate eexec info to a called program.
 export eexec_program
 
-for sb in $sb4 # $sb1 $sb2 $sb3 $sb5
+for sb in $sb4 $sb3 $sb2 $sb1 $sb5
 do
-  EExec -y cd "${sb}"
-  pwd
-  EExec -y index-me-code
+  (EExec -y cd "${sb}"; pwd; EExec -y nice index-me-code) &
 done
 wait
 echo "Indexing done."

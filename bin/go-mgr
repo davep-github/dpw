@@ -236,7 +236,7 @@ do
                 #echo_id a
                 go_file_name=$(dogo -l "${name}")
                 if [ "$(realpath $a)" = "$(realpath $val)" ]; then
-                    echo 1>&2 "Senior moment: ${name} is already in use for this dir in $go_file_name."
+                    echo 1>&2 "Senior moment: \`${name}' is already in use for this dir in \`${go_file_name}'."
                 else
                     echo 1>&2 "${name} is already in use as: ${a} in $go_file_name."
                 fi
@@ -249,10 +249,21 @@ echo 1>&2 "Check len and offer to clear \`e' flag if too short."
                 *e*) flags=$(check_name_len "$name" "$flags");;
                 *);;
             esac
+            tmp_gfile=$(mktemp "$HOME/tmp/${progname}-XXXXXX")
+            gfile=$(go_file)
+            emacs_locals_re='^#.* \*\*\*[[:space:]]*$'
+            grep -v "${emacs_locals_re}" "${gfile}" >| "${tmp_gfile}"
 	    name=$(echo "|$name|" | sed -r 's/\|+/\|/g')
 	    line="${flags}${name}       $val"
-	    echo "$line" >> $(go_file)
-	    echo "$line >> $(go_file)"
+	    echo "$line >> $gfile"
+            echo "# Added $(date)" >> "${tmp_gfile}"
+	    echo "$line" >> "${tmp_gfile}"
+#             echo >> "${tmp_gfile}"
+            grep "${emacs_locals_re}" "${gfile}" >> "${tmp_gfile}"
+            yes y | cp "${tmp_gfile}" "${gfile}" || {
+                echo "cp ${tmp_gfile} ${gfile} failed."
+                exit 1
+            } 1>&2
 	    ;;
 		    
 	-d)

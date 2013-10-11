@@ -168,6 +168,23 @@ Ee|mobiletraces__ME_src|        ${tracesroot__ME_src}mobile/traces/
 Ee|mtraces__ME_src|             ${mobiletraces__ME_src}
 Ee|mtrace__ME_src|              ${mobiletraces__ME_src}
 
+Ee|nongpumetraces__ME_src|      ${mobiletraces__ME_src}nongpu_multiengine/
+Ee|metraces__ME_src|            ${nongpumetraces__ME_src}
+Ee|nongpumetracesso__ME_src|    ${nongpumetraces__ME_src}so/
+Ee|ngmeso__ME_src|              ${nongpumetracesso__ME_src}
+Ee|meso__ME_src|                ${nongpumetracesso__ME_src}
+Ee|sanitycpu__ME_src|           ${nongpumetracesso__ME_src}sanity_cpu/
+
+Ee|nongpumetracesconfig__ME_src| ${nongpumetraces__ME_src}configs/
+Ee|nongpumeconfig__ME_src|      ${nongpumetracesconfig__ME_src}
+Ee|nongpuconfig__ME_src|        ${nongpumetracesconfig__ME_src}
+Ee|meconfig__ME_src|            ${nongpumetracesconfig__ME_src}
+Ee|sanitycpuconfig__ME_src|     ${nongpumetracesconfig__ME_src}
+Ee|nongpumecfg__ME_src|         ${nongpumetracesconfig__ME_src}
+Ee|nongpucfg__ME_src|           ${nongpumetracesconfig__ME_src}
+Ee|mecfg__ME_src|               ${nongpumetracesconfig__ME_src}
+Ee|sanitycpucfg__ME_src|        ${nongpumetracesconfig__ME_src}
+
 Ee|gpumetraces__ME_src|         ${mobiletraces__ME_src}gpu_multiengine/
 Ee|traces__ME_src|              ${gpumetraces__ME_src}
 Ee|gputraces__ME_src|           ${gpumetraces__ME_src}
@@ -212,10 +229,12 @@ Ee|ccplexso|soccplex|memtxnaxi|aximemtxn| ${traces2mobiletracesso}t124/
 
 Ee|nvdev__ME_src|               dev/
 Ee|asimsrc__ME_src|             ${nvdev__ME_src}cpu/tools/sim/asim/1.0/hw/
-Ee|t3dsrc|                      ${sw__ME_src}sw/dev/gpu_drv/chips_a/diag/mods/mdiag/tests/gpu/trace_3d/
+Ee|swdev__ME_src|               ${sw__ME_src}dev/
+Ee|swmods__ME_src|              ${swdev__ME_src}gpu_drv/chips_a/diag/mods/
+Ee|t3dsrc__ME_src|              ${swmods__ME_src}mdiag/tests/gpu/trace_3d/
 
 #
-#   Somethings which may as well be cross-sandbox
+#   Some things which may as well be cross-sandbox
 Ee|surfwr__ME_src|              ${gpumetraces__ME_src}surface_write_read/
 Ee|surf__ME_src|                ${surfwr__ME_src}
 Ee|swr__ME_src|                 ${surfwr__ME_src}
@@ -296,8 +315,12 @@ Ee|miaowhw|       /home/scratch.miaow_t124/miaow_ap_tree1/hw/
 Ee|miaowap|       /home/scratch.miaow_t124/miaow_ap_tree1/
 Ee|pylib|       /home/dpanariti/lib/pylib/
 
-###########################################################################
-#
+# Added Thu Oct 10 10:27:52 EDT 2013
+Ee|blaaah2|       /home/dpanariti/
+# Added Fri Oct 11 10:18:31 EDT 2013
+Ee|notes|       /home/dpanariti/notes/
+########################################################################### ***
+# ***
 # Local Variables: ***
 # fill-column: 999 ***
 # comment-start: "#" ***

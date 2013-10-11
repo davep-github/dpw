@@ -24,8 +24,9 @@ me_dogo_op()
         ;;
         *)
             [ -z "$*" ] && dest="tot"
-            local dest=$(me-expand-dest "$@") || {
-                echo "Cannot find>$@<"
+            local dest=$(me-expand-dest "$@")
+            [ "$?" != 0 ] || ! vsetp "${dest}" && {
+                echo "me_dogo_op(): Cannot find>$@<"
                 return 1
             } 1>&2
             shift

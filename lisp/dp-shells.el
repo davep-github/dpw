@@ -270,7 +270,7 @@ Can be set after the first prompting.")
            nil 'one-around-all-p)
           "\\(\\s-+\\|$\\)")
   "Commands that don't end up invoking an editor even though other commands
-  that look like them (and are recognized by `dp-editing-server-cmd-regexp')
+  that look like them (and are matched by `dp-editing-server-cmd-regexp')
   do.")
  
 (defun dp-shell-lookfor-editing-server-command (str)
@@ -790,12 +790,14 @@ cons --> car is buffer, cdr is overriding other-window-p.")
 (dp-deflocal dp-shell-mode-abbrev-table nil
   "Our shell-mode abbrev table.")
 
-(defun dp-shell-refresh-abbrevs (&optional newest-abbrevs)
+(defun dp-shell-refresh-abbrevs (&optional newest-abbrevs reset-p)
   "Set `dp-shell-mode-abbrev-table' to current table.
 This is called from `dp-abbrevs'.  We save this here so we can set
 `local-abbrev-table' in our mode-hook.  This is called with the shell buffer
 being refreshed as the current-buffer."
   (interactive)
+  (when reset-p
+    (setq dp-shell-mode-abbrev-table nil))
   (setq dp-shell-mode-abbrev-table 
         (dp-find-abbrev-table '(newest-abbrevs dp-shell-mode-abbrev-table))
         local-abbrev-table dp-shell-mode-abbrev-table))
@@ -815,7 +817,7 @@ Called when shell, inferior-lisp-process, etc. are entered."
   (interactive)
   (dp-make-local-hooks '(comint-output-filter-functions
                          comint-input-filter-functions))
-  (dp-shell-refresh-abbrevs)
+  (dp-shell-refresh-abbrevs nil 'reset)
   (setq dp-refresh-my-abbrevs-p 'dp-shell-refresh-abbrevs)
   (unless (dp-shell-ignored-buffer-p (buffer-name))
     (message "dp-comint-mode-hook, (not ignored) (major-mode-str)>%s<, bn>%s<" 
@@ -924,7 +926,7 @@ Or both.")
   
   ;; something wipes this out after the call to comint-mode-hook and here,
   ;; so we do it again.
-  (dp-shell-refresh-abbrevs)
+  (dp-shell-refresh-abbrevs nil 'reset)
   (font-lock-set-defaults)
   (message "dp-shell-mode-hook, (major-mode-str)>%s<, bn>%s<, done." 
            (major-mode-str) (buffer-name)))
@@ -3298,6 +3300,12 @@ It would be nice if there was a global `current-hook' or some such."
        'switch-to-buffer))
       (t 'switch-to-buffer))
      (dp-shell-next-buffer-in-cycle buffer))))
+
+(defun dp-shell-insert-command-output (command-string)
+  "Run COMMAND-STRING in a shell and insert the output.
+Can this really not exist elsewhere?"
+  (interactive (list (read-shell-command "Shell command: ")))
+  (insert (shell-command-to-string command-string)))
 
 ;;;
 ;;;

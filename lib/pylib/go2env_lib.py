@@ -37,6 +37,12 @@ DEFAULT_SERIALIZED_FILE = opath.join(os.environ["HOME"], "var", "db",
                                     DEFAULT_SERIALIZED_FILE_NAME)
 DEFAULT_DICT_FILE = DEFAULT_SERIALIZED_FILE + DEFAULT_DICT_EXT
 
+MATCH_TYPE_LITERAL_DICT = "MATCH_TYPE_LITERAL_DICT"
+MATCH_TYPE_LITERAL_ENV = "MATCH_TYPE_LITERAL_ENV"
+MATCH_TYPE_REGEXP = "MATCH_TYPE_REGEXP"
+MATCH_TYPE_REGEXP_LINE = "MATCH_TYPE_REGEXP_LINE"
+MATCH_TYPE_ANY = "MATCH_TYPE_ANY"
+
 # Use globals so we only need to get them once.
 
 Global_aliases = {}
@@ -153,6 +159,7 @@ def handle_csh(name, alias_item, **kw_args):
     # We just suck the 3rd into a comment.
     handle_env_var('setenv %s "%s"; # %s\n', name, val, **kw_args)
 
+#####################################################################
 def emacs_pre(**kw_args):
     ostream = kw_args.get("ostream", sys.stdout)
     ostream.write('(setq '
@@ -173,27 +180,40 @@ def handle_emacs(name, alias_item, **kw_args):
 
 #####################################################################
 #
-def handle_print(name, val, **kw_args):
+def handle_print(val, name, **kw_args):
     ostream = kw_args.get("ostream", sys.stdout)
-    ostream.write(val + "\n")
+    
+##     ostream.write("{}    {}\n".format(first, second))
+    if kw_args.get("grep-val"):
+        ostream.write("{} -- {}\n".format(val, name))
+    elif kw_args.get("grep-name"):
+        ostream.write("{} -- {}\n".format(name, val))
+    else:
+        ostream.write("{}\n".format(first))
 
 #####################################################################
 #
 def handle_grep_name(name, alias_item, **kw_args):
     val = alias_item.get("val")
     regexp = alias_item.get("regexp", ".*")
-#    print >>sys.stderr, "regexp>%s<" % (regexp,)
+##     print >>sys.stderr, "name regexp>{}<, val>{}<".format(regexp,
+##                                                           name)
     if re.search(regexp, name):
-        handle_print(name, val, **kw_args)
+##         print >>sys.stderr, "name>%s<" % (name,)
+##         print >>sys.stderr, "val>%s<" % (val,)
+        handle_print(val, name, **kw_args)
 
 #####################################################################
 #
 def handle_grep_val(name, alias_item, **kw_args):
     val = alias_item.get("val")
     regexp = alias_item.get("regexp", ".*")
-    sys.exit(99)
+##     print >>sys.stderr, "val regexp>{}<, val>{}<".format(regexp,
+##                                                         val)
     if re.search(regexp, val):
-        handle_print(name, val, **kw_args)
+##         print >>sys.stderr, "name>%s<" % (name,)
+##         print >>sys.stderr, "val>%s<" % (val,)
+        handle_print(val, name, **kw_args)
 
 #####################################################################
 #
@@ -612,7 +632,7 @@ def go2env(args, handlers_type, selector, handler_keyword_args,
 ##     print "handle>%s<handle, aliases>%s<aliases, handler_keyword_args>%s<handler_keyword_args, handle_pre>%s<handle_pre, handle_post>%s<handle_post, grep_regexps>%s<grep_regexps, ostream>%s<ostream" \
 ##           % (handle, "SKIPPING" or aliases, handler_keyword_args, handle_pre, handle_post,
 ##              grep_regexps, ostream)
-           
+
     process_aliases(handle=handle, aliases=Get_aliases(),
                     handler_keyword_args=handler_keyword_args,
                     handle_pre=handle_pre, handle_post=handle_post,
@@ -622,17 +642,36 @@ def go2env(args, handlers_type, selector, handler_keyword_args,
 ####################################################################
 def simple_lookup(abbrev_regexp, try_environment_p=True,
                   selector=SELECTOR_ENV,
-                  line_match_p=False,
+                  match_type=MATCH_TYPE_ANY,
                   serialized_file=DEFAULT_SERIALIZED_FILE):
     # Regexps with metacharacters probably won't be found.
     ## @todo XXX Make an environment grep?
-    if line_match_p:
+
+    init_aliases(args=[], selector_regexp=".*")
+    if match_type in (MATCH_TYPE_LITERAL_DICT, MATCH_TYPE_ANY):
+        ret = Get_aliases().get(abbrev_regexp)
+        if ret:
+##             print >>sys.stderr, "hit"
+            return ret["val"]
+        elif not MATCH_TYPE_ANY:
+            return None
+##
+## Using the environment should be a clear win, but it is usually slower.
+## The environment is also the most likely to be out of date.
+## So, let's skip it.
+        
+##     if match_type in (MATCH_TYPE_LITERAL_ENV, MATCH_TYPE_ANY):
+##         v = os.environ.get(abbrev_regexp)
+##         if v:
+##             # Make sure this is fully expanded. Ordering problems can leave
+##             # unexpanded variables in values.
+##             print >>sys.stderr, "ENV>{}<".format(abbrev_regexp)
+##             return v
+##         elif not MATCH_TYPE_ANY:
+##             return None
+
+    if match_type in (MATCH_TYPE_REGEXP_LINE, MATCH_TYPE_ANY):
         abbrev_regexp = "^" + abbrev_regexp + "$"
-    v = os.environ.get(abbrev_regexp)
-    if v:
-        # Make sure this is fully expanded. Ordering problems can leave
-        # unexpanded variables in values.
-        return v
     output = StringIO.StringIO()
     go2env(args=[], handlers_type="grep", selector=selector,
            handler_keyword_args={},
@@ -687,9 +726,11 @@ if __name__ == "__main__":
             Evil_globals["quote_char"] = val
         elif opt == '-g':
             grep_regexps.append(val)
+            handler_keyword_args["grep-name"] = True
             Shell_type = "grep"
         elif opt == '-G':
             grep_regexps.append(val)
+            handler_keyword_args["grep-val"] = True
             Shell_type = "grep-val"
         elif opt == '-S':
             suffix = val

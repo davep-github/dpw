@@ -250,6 +250,7 @@ Make it buffer local since there can be >1 minibuffers.")
   (let ((debug-on-error nil))
     ;; emacs'll kill the editing server itself, so we just need to clean up
     ;; the ipc file.
+    (dmessage "dp-kill-emacs-hook")
     (dp-finalize-editing-server))
     (when (featurep 'saveconf)
         (dp-save-context)))
