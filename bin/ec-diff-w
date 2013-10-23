@@ -21,24 +21,12 @@ done
 # Or export eexec_program to propagate eexec info to a called program.
 export eexec_program
 
-args=
-while (($# > 0))
-do
-  case "$1" in
-      --) shift; break;;
-      -*) args="${args} ${1}";;
-      *) break;;
-  esac
-  shift
-done
+if [ "${1}" = "--no-wait" ]
+then 
+    wait_opt=
+    shift
+else
+    wait_opt=-w
+fi
 
-vunsetp "$*" && {
-    set -- $sb4 $sb3 $sb2 $sb1 $sb5
-}
-
-for sb in "$@"
-do
-  (EExec -y cd "${sb}" && pwd && EExec nice index-me-code ${args}) &
-done
-wait
-echo "Indexing done."
+ec-diff ${wait_opt} "$@"

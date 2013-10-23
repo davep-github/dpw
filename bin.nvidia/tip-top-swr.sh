@@ -1,5 +1,7 @@
 #!/bin/sh
 
+bindir=$(dirname "$0")
+
 : ${confirmation_response:="TRUST ME"}
 
 : ${testname:=cpu_surface_write_read}
@@ -19,7 +21,9 @@
 : ${run_cmd:=${RUN_CMD}}
 : ${rtl_log_file_history:=rtl-log-file-history}
 
- while (($# > 0))
+original_args=("$@")
+
+while (($# > 0))
 do
   case "${1}" in
       -n|--pretend|--dry-run) EZEC=echo; no_run_p=t; set -x;;
@@ -28,10 +32,10 @@ do
       -k|--eko) EZEC=eko; no_run_p=t;;
       -s|--start|--startrecord|--start-record) shift; startrecord="${1}";;
       -w|--wave|--waves|-wave|-waves) dump_waves_opt=-waves;;
-      -P|--proj|--project|--chip) shift; project="${1}"; echo_id project;;
+      -P|--proj|--project|--chip) shift; project="${1}"; echo "project>${project}<";;
       -p|--prog|--program|--test|--test-name) shift; testname="${1}";;
       -a|--args|--prog-args|--program-args) shift; test_args="${1}";;
-      -d|--denver) run_cmd="${DENVER_RUN_CMD}"; denver_args="${DENVER_ARGS}";;
+      -d|--denver) exec "${bindir}/tip-top-denver.sh" "${original_args[@]}";;
       -*) echo 1>&2 "Unsupported option-looking arg>${1}<";
           break;;
        *) break;;
@@ -67,11 +71,16 @@ echo "Rundir >$rundir<, >$(cd $rundir; pwd)<"
 logdir="${PWD}/dp-rtl-tests/$(dp-std-timestamp)"
 #logdir="${PWD}/dp-rtl-tests/abs-file-names"
 logfile="${logdir}/${testname}.log"
-mkdir -p "${logdir}" || {
-    rc="${?}"
-    echo "Cannot create logdir >$logdir<, RC: ${rc}"
-    exit "${rc}"
-} 1>&2
+if [ -z "${no_run_p}" ]
+then
+    mkdir -p "${logdir}" || {
+        rc="${?}"
+        echo "Cannot create logdir >$logdir<, RC: ${rc}"
+        exit "${rc}"
+    }
+else
+    echo "Not running anything. Not making log dir."
+fi 1>&2
 
 pushd "${rundir}"
 

@@ -252,7 +252,7 @@ Can be set after the first prompting.")
                                        )))
                    ;; diff needs to be here because I use ec-diff which uses
                    ;; emacs.
-                   '("sp\\s-+.*-e")
+                   '("sp\\s-+.*-e\\|dp4-review")
                    '("p4\\s-+\\(diff\\|change\\|client\\|submit\\)\\|\\(as2\\s-+submit\\)"))
            nil 'one-around-all-p)
           "\\(\\s-+\\|$\\)")

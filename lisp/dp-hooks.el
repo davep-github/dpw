@@ -1101,7 +1101,7 @@ Arr... beware the hooks! "
   ;; eldoc on demand.
   (local-set-key [(control ?/)] 'eldoc-doc)
   (local-set-key [(control meta return)] (kb-lambda (end-of-line)
-                                                    (eval-print-last-sexp)))
+                                             (eval-print-last-sexp)))
   (local-set-key [(meta left)] 'dp-beginning-of-defun)
   (local-set-key [(meta right)] 'dp-end-of-defun)
   (local-set-key [(control meta x)] 'dp-eval-defun-or-region)
@@ -1109,11 +1109,12 @@ Arr... beware the hooks! "
   ;; Change `:' syntax so that :prefix<M-/> will complete on prefix.
   ()
 
-  (setq comment-start "; "
-        block-comment-start ";; ")
+  ;; What the GDMFFF? Why the spaces?
+;;   (setq comment-start "; "
+;;         block-comment-start ";; ")
   
   ;;;;;;;;move to dp-flyspell (dp-flyspell-prog-mode)
-)
+  )
 
 (defun dp-lisp-interaction-mode-hook ()
   (dp-elisp-mode-common-hook)
@@ -1567,6 +1568,7 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
                (string-match "/te?mp/" file-name)
                (equal (point-min) (point-max)))
       (dp-ding-and-message "Could be a remote temp file.")))
+  (switch-to-buffer (current-buffer))
   (local-set-key "\C-c\C-c" 'dp-gnuserv-edit))
 
 (when (dp-optionally-require 'igrep)

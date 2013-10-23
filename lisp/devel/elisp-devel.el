@@ -5194,3 +5194,126 @@ Tuesday September 24 2013
 Thursday October 10 2013
 --
 
+
+========================
+Thursday October 17 2013
+--
+
+(cl-pp (dp-nvidia-make-cscope-database-regexps))
+
+(("/home/scratch.dpanariti_t124_3/sb4/sb4hw/" (t)
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132")
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/"))
+ ("/home/scratch.traces02/mobile/traces/system/so" ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/")))nil
+
+
+(cl-pp cscope-database-regexps)
+
+(("/home/scratch.dpanariti_t124_3/sb4/sb4hw/" (t)
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/Default_ap_tree")
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/"))
+ ("/home/scratch.traces02/mobile/traces/system/so" ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/")))nil
+
+
+
+;; (defun dp-me-code-db-locations ()
+;;   (let* ((locstr (or (getenv "DP_NV_ME_DB_LOCS")
+;;                      "//hw/ap_t132 //sw //arch //hw/class //hw/kepler1_gklit3 //dev //hw/tools"))
+;;          (locs (split-string locstr))
+;;          expansion
+;;          result)
+;;     (loop for loc in locs do
+;;       (progn
+;;         (setq expansion (dp-me-expand-dest loc (dp-current-sandbox-name)))
+;;         (setq result
+;;               (cons (list 
+;;                      ".*"               ; match re
+;;                      (list expansion))  ; db loc
+;;                     result))))
+;;     result))
+
+(defun dp-me-code-db-locations ()
+  (let* ((locstr (or (getenv "DP_NV_ME_DB_LOCS")
+                     "//hw/ap_t132 //sw //arch //hw/class //hw/kepler1_gklit3 //dev //hw/tools"))
+         (locs (split-string locstr))
+         expansion
+         result)
+    (loop for loc in locs do
+      (progn
+        (setq expansion (dp-me-expand-dest loc (dp-current-sandbox-name)))
+        (setq result
+              (cons
+               (list expansion)                ; db loc
+              result))))
+    (list
+     `(,(dp-me-expand-dest "sb" (dp-current-sandbox-name))
+       ,@result))))
+dp-me-code-db-locations
+
+(cl-pe (dp-me-code-db-locations))
+
+(
+ ("/home/scratch.dpanariti_t124_3/sb4/sb4hw" 
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/tools")
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/dev")
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/kepler1_gklit3")
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/class")
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/arch")
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/sw")
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132")))nil
+
+
+(cl-pp
+(setq cscope-database-regexps
+      (dp-me-code-db-locations)))
+
+(("/home/scratch.dpanariti_t124_3/sb4/sb4hw" ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/tools")
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/dev")
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/kepler1_gklit3")
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/class")
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/arch")
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/sw")
+  ("/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132")))nil
+
+
+
+;;installed (defun dp-nvidia-make-cscope-database-regexps ()
+;;installed   "Compute value for `cscope-database-regexps'"
+;;installed   (let* ((locstr (or (getenv "DP_NV_ME_DB_LOCS")
+;;installed                      (concat
+;;installed                       "ap sw arch //hw/class"
+;;installed                       ;; NB! Make sure every item is separated by spaces.
+;;installed                       " //hw/kepler1_gklit3 dev //hw/tools")))
+;;installed          (locs (split-string locstr))
+;;installed          (sb-name (dp-current-sandbox-name))
+;;installed          expansion
+;;installed          result)
+;;installed     (list
+;;installed      (append
+;;installed       (list (dp-me-expand-dest "sb" sb-name))
+;;installed       (delq nil (mapcar (function
+;;installed                          (lambda (loc)
+;;installed                            (list (dp-me-expand-dest loc sb-name))))
+;;installed                         locs))))))
+
+;; OLDE
+(defun dp-nvidia-make-cscope-database-regexps ()
+  "Compute value for `cscope-database-regexps'"
+  (let* ((locstr (or (getenv "DP_NV_ME_DB_LOCS")
+                     (concat
+                      "ap sw arch //hw/class"
+                      "//hw/kepler1_gklit3 dev //hw/tools")))
+         (locs (split-string locstr))
+         expansion
+         result)
+    (loop for loc in locs do
+      (progn
+        (setq expansion (dp-me-expand-dest loc (dp-current-sandbox-name)))
+        (setq result
+              (cons
+               (list expansion)         ; db loc
+              result))))
+    (list
+     `(,(dp-me-expand-dest "sb" (dp-current-sandbox-name))
+       ,@result))))
+

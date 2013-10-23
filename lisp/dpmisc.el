@@ -6332,7 +6332,7 @@ you've added enough info for set-auto-mode to figure it out.."
 ;; Called before process is killed.
 (defun dp-gnuserv-shutdown-hook ()
   (dmessage "in `dp-gnuserv-shutdown-hook'")
-  ;; This is called if a server cannot be started, e.g. because another
+  ;; This is also called if a server cannot be started, e.g. because another
   ;; server is running. Forcing finalize to remove the ipc file is almost
   ;; always wrong in this case.
   (dp-finalize-editing-server 'just-do-it)) 
@@ -6371,17 +6371,17 @@ to see if it's alive as well."
     ;; problem?
     (shell-command (format "dpkillprog %s" gnuserv-program)))
   (dmessage "dp-kill-editing-server")
-  (dp-finalize-editing-server))
+  (dp-finalize-editing-server 'just-do-it))
 
 ;;
 ;; Finalize the editing server. If one is running, remove the IPC file.
 ;;
 (defun dp-finalize-editing-server (&optional just-do-it-p)
+  (dmessage "dp-finalize-editing-server, just-do-it-p: %s" just-do-it-p)
+  (dp-set-frame-title-format :force-no-server-p t)
   (when (or just-do-it-p (dp-gnuserv-running-p))
     ;; The title formatter uses `dp-gnuserv-running-p' so it can mistakenly
     ;; set the server indication in the title.
-    (dp-set-frame-title-format :force-no-server-p just-do-it-p)
-    (dmessage "dp-finalize-editing-server, just-do-it-p: %s" just-do-it-p)
     (unless (dp-gnuserv-running-p)
       ;; Don't remove another instance's ipc file.
       (shell-command-to-string (format "rm -f %s" 
@@ -8429,7 +8429,7 @@ Remove any other copies of the name."
 	 (table (dp-mk-completion-list tmp))
          (dead-file (completing-read "Resurrect file: " 
                                 table
-                                nil t nil
+                                nil nil nil
                                 'dp-recently-killed-files)))
     (dmessage "dead-file>%s<" dead-file)
     (when (and dead-file 
@@ -13091,23 +13091,59 @@ An `undo-boundary' is done before the template is used."
 ;; Don't insert the doxy package comment now.  It's better to do it by hand
 ;; when all of tempo prompting and such can help you out.
 
+
+;;replaced below def main(argv):
+;;replaced below     import getopt
+;;replaced below     opt_string = \"\"
+;;replaced below     opts, args = getopt.getopt(argv[1:], opt_string)
+;;replaced below     for o, v in opts:
+;;replaced below         #if o == '-<option-letter>':
+;;replaced below         #    # Handle opt
+;;replaced below         #    continue
+;;replaced below         pass
+
+;;replaced below     for arg in args:
+;;replaced below         # Handle arg
+;;replaced below         pass
+
+;;replaced below if __name__ == \"__main__\":
+;;replaced below     main(sys.argv)
+
 (defcustom dp-python-new-file-template
   "
-import sys, os
+import argparse
+
+class App_arg_action_add_regexp_and_highlight(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        regexps = getattr(namespace, self.dest)
+        regexps.append(values)
+        setattr(namespace, self.dest, regexps)
+        setattr(namespace, \"highlight_grep_matches_p\", True) 
 
 def main(argv):
-    import getopt
-    opt_string = \"\"
-    opts, args = getopt.getopt(argv[1:], opt_string)
-    for o, v in opts:
-        #if o == '-<option-letter>':
-        #    # Handle opt
-        #    continue
-        pass
 
-    for arg in args:
-        # Handle arg
-        pass
+    oparser = argparse.ArgumentParser()
+    oparser.add_argument(\"--debug\",
+                         dest=\"debug_level\",  # Becomes `dest'
+                         type=int,
+                         default=0,
+                         help=\"Set debug level\")
+    oparser.add_argument(\"--quiet\", \"-q\",
+                         dest=\"quiet_p\",
+                         default=False,
+                         action=\"store_true\",
+                         help=\"Do not print informative messages.\")
+    oparser.add_argument(\"--hgrep\", \"--hregexp\", \"--hmatch\",
+                         dest=\"regexp_patterns\", default=[],
+                         action=App_arg_action_add_regexp_and_highlight,
+                         help='Grep for these patterns and highlight.')
+
+    # ...
+
+    app_args = oparser.parse_args()
+    if app_args.quiet_p:
+        print \"I am being quiet.\"
+
 
 if __name__ == \"__main__\":
     main(sys.argv)

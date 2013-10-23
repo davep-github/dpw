@@ -74,6 +74,13 @@ def verbose_push_level(new_level):
 def verbose_pop_level():
     return pop_level(verbose_level_stack)
 
+def fmt_args(fmt, *args):
+    if not args:
+        return fmt
+    if "%s" in fmt:
+        return fmt % args
+    return fmt.format(*args)
+
 osname = os.uname()[0]
 BOLD = ""
 SOUT = ""
@@ -138,6 +145,17 @@ def lprint(files, leader, s):
     for file in files:
         file.write(s)
         file.flush()
+
+###############################################################
+def lprintf(files, leader, fmt, *args):
+    """print leader + s to each file in <files> flushing each file."""
+    fmt = fmt_args(fmt, *args)
+    lprint(files, leader, fmt)
+
+###############################################################
+def clprintf(level, files, leader, fmt, *args):
+    if verbose_p(level):
+        lprintf(files, leader, fmt, *args)
 
 ###############################################################
 def sprintf(fmt, *args):
@@ -226,8 +244,15 @@ def tracef (fmt, *args):
     if args:
         fmt = fmt % args
     lprint(v_tprint_files, tprint_leader, fmt)
-
 tprintf = tracef
+
+###############################################################
+def ctracef(level, fmt, *args):
+    """tracef: conditional trace.
+    Print messages depending on verbosity level."""
+    #print "vc:level>%s<, fmt>%s<, args>%s<" % (level, fmt, args)
+    clprintf(level, v_vprint_files, vprint_leader, fmt, *args)
+ctprintf = ctracef
 
 ###############################################################
 def debug_mask_exact_set(mask):
@@ -391,10 +416,12 @@ def set_debug_mask(mask):
 def get_verbose_level():
     return verbose_level
 
-def set_verbose_level(level):
+def set_verbose_level(level, enable=True):
     global verbose_level
     old_level = get_verbose_level()
     verbose_level = level
+    if enable is not None:
+        set_vprint(enable)
     return old_level
     #print 'verbose_level:', verbose_level, 'level:', level
 
@@ -804,6 +831,12 @@ def y_or_n_p(default='n', fmt="", *args):
     if ans == '':
         ans = default
     return ans in "yY"
+
+class Devnull(object):
+    def __init__(self, *args, **keys):
+        pass
+    def write(self, *args, **keys):
+        return
 
 class Unbuffered_file_duck(object):
     def __init__(self, file=None, name=None, *open_args):

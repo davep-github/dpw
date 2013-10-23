@@ -163,7 +163,7 @@ then
 	name="-name $name -T $name"    
     fi
 fi
-# Konsole has problems with a name being set and using the xterm sequnces
+# Konsole has problems with a name being set and using the xterm sequences
 # to set it... it always leaves the existing name in place
 #options='-j -sb -sl 1024 -ls'
 

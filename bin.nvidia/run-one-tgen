@@ -107,7 +107,7 @@ do
       # Program options.
       # No mail if we're waiting. Can be turned on by a following --mail.
       -w|--wait) wait_opt=-wait; mail_opt="-nomail";;
-      -T|--tegn-opt) shift; user_tgen_opts="$user_tgen_opts $1";;
+      -T|--tgen-opt) shift; user_tgen_opts="$user_tgen_opts $1";;
       -C|--clobber) clobber_opt=;;
       -l|--level) shift; llist=$(echo "$1" | sed -r 's/,/ /g')
                   user_levels="${user_levels} ${llist}";;
@@ -319,6 +319,7 @@ tail -n1 ${last_out_dir_file_name}" >| "${latest_out}"
     fi
     echo "${eexec_dash_n_prefix}${level}::${test_name} --> ${out_dir}" >> "${hist_file}"
     # EExecDashV_p && EExec -y -0 eko "EExec eko: $@"
+    # @todo XXX ??? Check for: testgen.pl: INFO: No tests generated ???
     EExec "$@"
     
     [ -n "${display_status_p}" ] && {

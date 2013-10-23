@@ -54,6 +54,7 @@ cscope_tree()
     then
         dp_echo2 "Cannot find a cscope program."
     else
+        dp_echo2 "cscope>$cs<cscope"
         EExec $cs $EXTAGTREE_DASH_Q -b -i "$files_file" $cscope_flags
     fi
 }

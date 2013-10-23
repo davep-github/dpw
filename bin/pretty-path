@@ -17,28 +17,19 @@ do
   $op
   ${EEXEC_SHIFT}
 done
-#unset eexec_program
+unset eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
-export eexec_program
+# export eexec_program
 
-args=
-while (($# > 0))
+sep=
+for p in "$@"
 do
-  case "$1" in
-      --) shift; break;;
-      -*) args="${args} ${1}";;
-      *) break;;
-  esac
-  shift
+  IFS=:
+  vsetp "${sep}" && echo "${sep}"
+  for elem in ${p}
+  do
+    echo "  ${elem}"
+  done
+  sep=------
 done
 
-vunsetp "$*" && {
-    set -- $sb4 $sb3 $sb2 $sb1 $sb5
-}
-
-for sb in "$@"
-do
-  (EExec -y cd "${sb}" && pwd && EExec nice index-me-code ${args}) &
-done
-wait
-echo "Indexing done."

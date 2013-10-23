@@ -57,40 +57,38 @@ Ee|tags__ME_src|                ./
 Ee|___ME_src|                   ./
 Ee|hw__ME_src|                  hw/
 Ee|sw__ME_src|                  sw/
-Ee|nvdiag__ME_src|              hw/nvdiag/
+Ee|nvdiag__ME_src|              ${hw__ME_src}nvdiag/
 Ee|nvd__ME_src|                 ${nvdiag__ME_src}
 Ee|mods__ME_src|                ${nvdiag__ME_src}mods/
 Ee|simmgr__ME_src|              ${nvdiag__ME_src}simmgr/
 Ee|asim__ME_src|                ${simmgr__ME_src}
 Ee|cosim__ME_src|               ${simmgr__ME_src}
-Ee|ap0__ME_src|                 hw/ap/
+Ee|ap0__ME_src|                 ${hw__ME_src}/ap/
 Ee|apjustap__ME_src|            ${ap0__ME_src}
-Ee|aptlit1__ME_src|             hw/ap_tlit1/
+Ee|aptlit1__ME_src|             ${hw__ME_src}ap_tlit1/
 Ee|ap1__ME_src|                 ${aptlit1__ME_src}
-Ee|apt132__ME_src|              hw/ap_t132/
+Ee|apt132__ME_src|              ${hw__ME_src}ap_t132/
 Ee|ap132__ME_src|               ${apt132__ME_src}
 Ee|t132__ME_src|                ${apt132__ME_src}
-Ee|TOT__ME_src|                 hw/${ME_current_default_ap_tree}
+Ee|TOT__ME_src|                 ${hw__ME_src}${ME_current_default_ap_tree}
 Ee|tot__ME_src|                 ${TOT__ME_src}
 Ee|topoftree__ME_src|           ${TOT__ME_src}
 Ee|ap__ME_src|                  ${TOT__ME_src}
-
-Ee|totmods__ME_src|             ${TOT__ME_src}/mods/
+Ee|totvmod__ME_src|             ${TOT__ME_src}vmod/
+Ee|apvmod__ME_src|              ${totvmod__ME_src}
+Ee|vmod__ME_src|                ${totvmod__ME_src}
+Ee|totmods__ME_src|             ${TOT__ME_src}mods/
 Ee|apmods__ME_src|              ${totmods__ME_src}
-
-Ee|clib__ME_src|                ${TOT__ME_src}/clib/
+Ee|clib__ME_src|                ${TOT__ME_src}clib/
 Ee|clibl__ME_src|               ${clib__ME_src}Linux/
 Ee|etc__ME_src|                 ${TOT__ME_src}etc/
-
 Ee|diag__ME_src|                ${TOT__ME_src}diag/
 Ee|testgen__ME_src|             ${diag__ME_src}testgen/
 Ee|tg__ME_src|                  ${testgen__ME_src}
 Ee|tgen__ME_src|                ${testgen__ME_src}
-
 Ee|testgen3__ME_src|            ${diag__ME_src}testgen3
 Ee|tg3__ME_src|                 ${testgen3__ME_src}
 Ee|tgen3__ME_src|               ${testgen3__ME_src}
-
 Ee|testgendprundir__ME_src|     ${testgen__ME_src}dp-run-tgens.d/
 Ee|dptg__ME_src|                ${testgendprundir__ME_src}
 Ee|drtg__ME_src|                ${testgendprundir__ME_src}
@@ -103,58 +101,50 @@ Ee|tgrun__ME_src|               ${testgendprundir__ME_src}
 Ee|tgruns__ME_src|              ${testgendprundir__ME_src}
 Ee|dpr__ME_src|                 ${testgendprundir__ME_src}
 Ee|dprtg__ME_src|               ${testgendprundir__ME_src}
-
-Ee|testgendprtldir__ME_src|     ${testgen__ME_src}dp-rtl-tests/
+Ee|testgendprtlrundir__ME_src|  ${testgen__ME_src}dp-rtl-tests/
+Ee|testgendprtldir__ME_src|     ${testgendprtlrundir__ME_src}
+Ee|dptgrtl__ME_src|             ${testgendprtlrundir__ME_src}
+Ee|tgrtl__ME_src|               ${testgendprtlrundir__ME_src}
 Ee|tgrtl__ME_src|               ${testgendprtldir__ME_src}
-
-Ee|testgendpt132rtldir__ME_src| ${testgen__ME_src}/
+Ee|testgendpt132rtldir__ME_src| ${testgen__ME_src}
 Ee|tgt132rtl__ME_src|           ${testgendpt132rtldir__ME_src}
 Ee|t132rtl__ME_src|             ${testgendpt132rtldir__ME_src}
-
 Ee|drv__ME_src|                 ${TOT__ME_src}drv/
 Ee|drvapi__ME_src|              ${drv__ME_src}drvapi/
-
-Ee|runtestcommon__ME_src|       ${TOT__ME_src}/drv/drvapi/runtest_common/
+Ee|runtestcommon__ME_src|       ${TOT__ME_src}drv/drvapi/runtest_common/
 Ee|rtc__ME_src|                 ${runtestcommon__ME_src}
-
-Ee|me__ME_src|                  ${TOT__ME_src}/drv/multiengine/
+Ee|me__ME_src|                  ${TOT__ME_src}drv/multiengine/
 Ee|meng__ME_src|                ${me__ME_src}
 Ee|mebld__ME_src|               ${me__ME_src}
 Ee|multi__ME_src|               ${me__ME_src}
 Ee|drvme__ME_src|               ${me__ME_src}
 Ee|drvme__ME_src|               ${me__ME_src}
 Ee|multiengine__ME_src|         ${me__ME_src}
-
 Ee|objlinux__ME_src|            ${me__ME_src}t124_debug/ObjLinux/
 Ee|objlinuxnd__ME_src|          ${me__ME_src}t124/ObjLinux/
-
 Ee|multienginefw__ME_src|       ${me__ME_src}framework/
 Ee|mefw__ME_src|                ${multienginefw__ME_src}
-
-Ee|fwutils__ME_src|             ${TOT__ME_src}/drv/multiengine/framework/utilities/
-
+Ee|fwutils__ME_src|             ${TOT__ME_src}drv/multiengine/framework/utilities/
 Ee|fwloader__ME_src|            ${fwutils__ME_src}loader/
 Ee|loader__ME_src|              ${fwloader__ME_src}
-
-Ee|drvapi__ME_src|              ${TOT__ME_src}/drv/multiengine/drvapi/
+Ee|drvapi__ME_src|              ${TOT__ME_src}drv/multiengine/drvapi/
 Ee|medrvapi__ME_src|            ${drvapi__ME_src}
-
-Ee|levelsroot__ME_src|          ${TOT__ME_src}/diag/testgen/config/levels/
+Ee|levelsroot__ME_src|          ${TOT__ME_src}diag/testgen/config/levels/
 Ee|levels__ME_src|              ${levelsroot__ME_src}tegra/
-
-Ee|melevels__ME_src|            ${TOT__ME_src}/diag/testgen/config/levels/tegra/
-
-Ee|kepler1gklit3man__ME_src|    hw/kepler1_gklit3/manuals/
+Ee|melevels__ME_src|            ${TOT__ME_src}diag/testgen/config/levels/tegra/
+Ee|kepler1gklit3man__ME_src|    ${hw__ME_src}kepler1_gklit3/manuals/
 Ee|keplerman__ME_src|           ${kepler1gklit3man__ME_src}
 Ee|gkman__ME_src|               ${kepler1gklit3man__ME_src}
 Ee|kepman__ME_src|              ${kepler1gklit3man__ME_src}
-#   May end up being too generic.
-Ee|manuals__ME_src|             ${kepler1gklit3man__ME_src}
+
+Ee|fermi1gf100__ME_src|         ${hw__ME_src}fermi1_gf100/
+Ee|fermi1man__ME_src|           ${fermi1gf100__ME_src}manuals/
+Ee|ferman__ME_src|              ${fermi1man__ME_src}
 
 Ee|devflushref__ME_src|         ${kepler1gklit3man__ME_src}dev_flush.ref
 Ee|devflush__ME_src|            ${kepler1gklit3man__ME_src}dev_flush.ref
 
-Ee|kepclib__ME_src|             hw/kepler1_gklit3/clib/
+Ee|kepclib__ME_src|             ${hw__ME_src}kepler1_gklit3/clib/
 Ee|kclib__ME_src|               ${kepclib__ME_src}
 Ee|klib__ME_src|                ${kepclib__ME_src}
 
@@ -231,7 +221,12 @@ Ee|nvdev__ME_src|               dev/
 Ee|asimsrc__ME_src|             ${nvdev__ME_src}cpu/tools/sim/asim/1.0/hw/
 Ee|swdev__ME_src|               ${sw__ME_src}dev/
 Ee|swmods__ME_src|              ${swdev__ME_src}gpu_drv/chips_a/diag/mods/
-Ee|t3dsrc__ME_src|              ${swmods__ME_src}mdiag/tests/gpu/trace_3d/
+Ee|modssrc__ME_src|             ${swmods__ME_src}
+Ee|modsrc__ME_src|              ${swmods__ME_src}
+Ee|modsout__ME_src|             ${swmods__ME_src}output/
+Ee|mdiagsrc__ME_src|            ${swmods__ME_src}mdiag/
+Ee|mdsrc__ME_src|               ${mdiagsrc__ME_src}
+Ee|t3dsrc__ME_src|              ${mdiagsrc__ME_src}tests/gpu/trace_3d/
 
 #
 #   Some things which may as well be cross-sandbox
@@ -272,15 +267,13 @@ Ee|generatememtxn|memtxn|                               ${sandbox5}
 Ee|sandbox4|sbox4|sb4|workspace4|ws4|                   ${scratch3}sb4/sb4hw/
 Ee|swrwavefull|swrfullwave|swrfw|swrwf|swrlong|swrwave| ${sandbox4}
 
-#Ee|sandbox5|sbox5|sb5|workspace5|ws5| ${scratch2}sb5/sb5hw/
-Ee|sandbox5|sbox5|sb5|workspace5|ws5| ${scratch2}sb5/sb5hw/mini_t132/
-
+Ee|sandbox5|sbox5|sb5|workspace5|ws5| ${scratch2}sb5/sb5hw/
 
 #
 # Some direct accesses for objects which are way too overloaded.
 # sb4 /home/scratch.dpanariti_t124_1/sb4/sb4hw/
 #
-Ee|t3dAlloc|  ${sb4}hw/${TOT__ME_src}/drv/drvapi/runtest_common/runtest_exec.cpp:267
+Ee|t3dAlloc|  ${sb4}hw/${TOT__ME_src}drv/drvapi/runtest_common/runtest_exec.cpp:267
 
 # See a15_msel_integ_sanity
 #

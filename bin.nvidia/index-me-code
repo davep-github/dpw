@@ -22,6 +22,11 @@ done
 export eexec_program
 
 : ${oot_only_p=}
+# These are me-expand'd
+# Additional ap type dirs will need to be -a'd.
+source $HOME/.rc/env.nvidia
+: ${db_locs=${DP_NV_ME_DB_LOCS=ap //sw //arch //sw/dev //sw/mods //sw/tools //hw/class //hw/kepler1_gklit3 //hw/tools}}
+: ${db_loc_excludes=}
 
 nvcscope_filter()
 {
@@ -103,11 +108,14 @@ Usage_details="${EExec_parse_usage}
 -oot) Index out of tree files only.
 "
 # Example of arg parsing.
-option_str="${EExec_parse_option_str}jmhH"
+option_str="${EExec_parse_option_str}jmhHe:a:i:"
 long_options=(
 "mundane" "no-nvcscope"
 "no-me-index" "no-arch-index" "just-nvcscope" "links" "just-links"
-"skip-cd" "stay-put" "oot" "cron")
+"skip-cd" "stay-put" "oot" "cron"
+"exclude-db-loc:"
+"add-db-loc:"
+"init-db-loc:")
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -123,6 +131,9 @@ do
       --skip-cd|--stay-put) skip_cd_p=t;;
       --oot) oot_only_p=t; nvcscope_p=; just_nvcscope_p=;;
       --cron) cron_opt="--cron";;
+      -e|--exclude-db-loc) shift; db_loc_excludes="${db_loc_excludes} ${1}";;
+      -a|--add-db-loc) shift; db_locs="${db_locs} ${1}";;
+      -i|--init-db-loc) shift; db_locs="${1}";;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -251,6 +262,7 @@ then
     #echo_id ap_hw_path
     #echo_id dirs_of_interest
     # Filter out dirs here so we don't even look inside them.
+    # Remove the ap tree since nvcscope already handles it.
     dirs_of_interest=$(filter_dirs "${ap_hw_path}" ${dirs_of_interest})
     #echo_id dirs_of_interest
     (
@@ -274,9 +286,53 @@ then
     )
 fi
 
+# Make sure we can match whole words by ensuring " "s for delimiters.
+db_locs=" ${db_locs} "
+for exclude in ${db_loc_excludes}
+do
+  db_locs=$(echo "${db_locs}" | sed -r "s! $exclude !!")
+done
+echo_id db_locs
+#exit 99
+
 if ! vtruep "${just_nvcscope_p}"
 then
-    EExec -y index-code $follow_links_arg $dirs_of_interest
+    all_indexed=
+    all_db_locs=
+    for db_loc in ${db_locs}
+    do
+      index_dirs=
+      #echo_id2 db_loc
+      #db_loc=$(dp4-reroot . "${db_loc}")
+      db_loc=$(me-expand-dest "${db_loc}")
+      #echo_id2 db_loc
+      [ -d "${db_loc}" ] || continue
+      for d in ${dirs_of_interest}
+      do
+        #echo_id2 d
+        case "${d}/" in
+            $db_loc/*) index_dirs="${index_dirs}
+${d}";;
+            *) ;; #echo "no match>$d<";;
+        esac
+      done
+      vunsetp "${index_dirs}" && {
+          dp_echo2 "No dirs for db_loc>$db_loc<"
+          continue
+      }
+#       echo_id db_loc
+#       echo_id index_dirs
+      all_indexed="${all_indexed}
+>${index_dirs}<"
+      cd "${db_loc}"
+      echo_id2 PWD
+      EExec index-code $follow_links_arg $index_dirs
+      all_db_locs="${all_db_locs} ${db_loc}"
+    done
+    echo_id dirs_of_interest
+    echo_id all_indexed
+    echo_id all_db_locs
+
     index_out_of_tree_locations
 else
     dp_echo "Not indexing non-nvcscope code."

@@ -6,8 +6,9 @@ import go2env_lib
 #from go2env_lib import Alias_item_t
 opath = os.path
 
-#############################################################################
+ctracef = dp_io.ctracef
 
+#############################################################################
 #
 # This was originally created to allow relative directory abbreviations to be
 # used in multiple development sandboxes. E.g. `testgen' can be expanded to
@@ -38,17 +39,17 @@ def magick_string_p(s, magick_string_separator=Configuration["MAGICK_STRING_SEPA
 #############################################################################
 def emit_path(components, norm_p=True, realpath_p=True, ostream=sys.stdout,
               prefix="", suffix="\n"):
-##     dp_io.printf("components>%s<\n", components)
+    ctracef(2, "components>{}<\n", components)
     p = opath.join(*components)
-##     dp_io.printf("p>%s<\n", p)
+    ctracef(2, "p>{}<\n", p)
     #
     # @todo XXX this probably isn't the best place to convert to realpath.
     if realpath_p:
         p = opath.realpath(p)
     if norm_p:
         p = opath.normpath(p)
-##     dp_io.printf("2: p>%s<\n", p)
-    ostream.write("%s%s%s" % (prefix, p, suffix))
+    ctracef(2, "2: p>{}<\n", p)
+    ostream.write("{}{}{}".format(prefix, p, suffix))
 
 
 #############################################################################
@@ -56,9 +57,9 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
                 abbrev_suffix=None,
                 magick_string_separator=Configuration["MAGICK_STRING_SEPARATOR"],
                 realpath_p=True):
-##     print >>sys.stderr, "1: current_tree_root>{}<".format(current_tree_root)
-##     print >>sys.stderr, "1: input_tree_root>{}<".format(input_tree_root)
-##     print >>sys.stderr, "1: expand_dest_args>{}<".format(expand_dest_args)
+    ctracef(1, "1: current_tree_root>{}<\n", current_tree_root)
+    ctracef(1, "1: input_tree_root>{}<\n", input_tree_root)
+    ctracef(1, "1: expand_dest_args>{}<\n", expand_dest_args)
     # Handle some legacy foolishness
     a = expand_dest_args.split(magick_string_separator)
     if len(a) > 1:
@@ -74,61 +75,75 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
 
     if abbrev.find(p4_lib.LOCATION_ROOT) == 0:
         # p4 path location.
-        return p4_lib.reroot(abbrev, input_tree_root).strip()
+        ctracef(1, "found p4_lib.LOCATION_ROOT>{}<\n", p4_lib.LOCATION_ROOT)
+        ret = p4_lib.reroot(abbrev, input_tree_root).strip()
+        ctracef(1, "returning>{}<\n", ret)
+        return ret
 
     if abbrev_suffix is None:
         abbrev_suffix = os.environ.get("DP_EXPAND_DEST_ABBREV_SUFFIX")
-##     print "abbrev>%s<" % (abbrev,)
-##     print "2: input_tree_root>%s<" % (input_tree_root,)
+    ctracef(1, "abbrev>{}<\n", abbrev)
+    ctracef(1, "2: input_tree_root>{}<\n", input_tree_root)
     #
     # Some useful special cases
     #
     if abbrev == '~':
         abbrev = "ap"
     elif abbrev == ".":
-##         print >>sys.stderr, "2: abbrev>%s<" % (abbrev,)
-##         print >>sys.stderr, "2: current_tree_root>%s<" % (current_tree_root,)
+        ctracef(1, "2: abbrev>{}<\n", abbrev)
+        ctracef(1, "2: current_tree_root>{}<\n", current_tree_root)
         abbrev = relativize(get_current_tree_root(),
                             opath.realpath(opath.normpath(opath.curdir)),
                             p4_location_p=False).strip()
-##         print "abbrev>%s<" % (abbrev,)
+        ctracef(1, "abbrev>{}<\n", abbrev)
         newd = opath.join(input_tree_root, abbrev)
-##         print "newd>%s<" % (newd,)
+        ctracef(1, "newd>{}<\n", newd)
         return newd
     elif abbrev == "/":
         abbrev = current_tree_root
+    ctracef(1, "2: abbrev>{}<\n", abbrev)
 
-    new_abbrev = go2env_lib.simple_lookup(abbrev + abbrev_suffix)
-
+    try_abbrev = abbrev + abbrev_suffix
+    ctracef(1, "2: try_abbrev>{}<\n", try_abbrev)
+    new_abbrev = go2env_lib.simple_lookup(try_abbrev)
+    ctracef(1, "2: new_abbrev>{}<\n", new_abbrev)
 
     if not new_abbrev:
         new_abbrev = abbrev
+##     new_abbrev = go2env_lib.simple_lookup(try_abbrev)
+##     if not new_abbrev:
+##         return None
+
     input_tree_root = opath.normpath(input_tree_root)
-##     print "3: new_abbrev>%s<" % (new_abbrev,)
-##     print "3: input_tree_root>%s<" % (input_tree_root,)
+    ctracef(1, "3: new_abbrev>{}<\n", new_abbrev)
+    ctracef(1, "3: input_tree_root>{}<\n", input_tree_root)
     output = StringIO.StringIO()
     emit_path((input_tree_root, new_abbrev), realpath_p=realpath_p,
               ostream=output)
     return_expansion = output.getvalue().strip()
-##     print "return_expansion>{}<".format(return_expansion)
+    ctracef(1, "return_expansion>{}<\n", return_expansion)
     return return_expansion
 
 
 #############################################################################
 def relativize(current_tree_root, name_to_relativize, p4_location_p=False):
+    if not current_tree_root:
+        dp_io.eprintf("Current tree root is not set.\n")
+        sys.exit(1)
+    ctracef(1, "0, name_to_relativize>{}<\n", name_to_relativize)
     name = opath.normpath(opath.realpath(name_to_relativize))
-##     print >>sys.stderr, "0, name>{}<".format(name)
-##     print >>sys.stderr, "0, current_tree_root>{}<".format(current_tree_root)
+    ctracef(1, "0, name>{}<\n", name)
+    ctracef(1, "0, current_tree_root>{}<\n", current_tree_root)
     output = StringIO.StringIO()
     p = name.find(current_tree_root)
-##     print >>sys.stderr, "0, p>{}<".format(p)
+    ctracef(1, "0, p>{}<\n", p)
 
     if p == 0:
         name = name[len(current_tree_root) + 1:]
-##         print >>sys.stderr, "1, name>{}<".format(name)
+        ctracef(1, "1, name>{}<\n", name)
         if p4_location_p:
             name = "//" + name
-        emit_path((name,), norm_p=False, realpath_p=False, ostream=output)
+        emit_path((name), norm_p=False, realpath_p=False, ostream=output)
     return output.getvalue()
 
 
@@ -155,9 +170,9 @@ def get_expand_args(args, input_tree_root,
         abbrev = a[1]
         tree_root = a[2]
     else:
-        ## print "get_expand_args(): input_tree_root:", input_tree_root
+        ctracef(1, "get_expand_args(): input_tree_root>{}<\n", input_tree_root)
         tree_root = input_tree_root or get_current_tree_root()
-        #  print "get_expand_args(): tree_root:", tree_root
+        ctracef(1, "get_expand_args(): tree_root>{}<\n", tree_root)
         abbrev = args
 
     if not tree_root:
@@ -213,14 +228,24 @@ def main(argv):
                          dest="realpath_p", default=None,
                          action="store_false",
                          help="Emit realpath of resulting expansion.")
+    oparser.add_argument("-p", "-print-non-existent", "--pne",
+                         dest="print_non_existent_p", default=False,
+                         action="store_true",
+                         help="Print an expansion even if it doesn't exist. Still returns error.")
+    oparser.add_argument("--trace",
+                         dest="trace_level", type=int, default=0,
+                         help="Set trace level 0 == off.")
 
     app_args = oparser.parse_args()
-
+    if app_args.trace_level:
+        dp_io.set_verbose_level(app_args.trace_level)
+    else:
+        dp_io.vprint_off()
     expand_dest_args=app_args.expand_dest_args
     input_tree_root = app_args.input_tree_root
     current_tree_root = None
-##     print "0: expand_dest_args>%s<" % (expand_dest_args,)
-##     print "0: input_tree_root>%s<" % (input_tree_root,)
+    ctracef(1, "0: expand_dest_args>{}<\n", expand_dest_args)
+    ctracef(1, "0: input_tree_root>{}<\n", input_tree_root)
     a = get_expand_args(expand_dest_args, input_tree_root)
     if a:
         abbrev = a[0]
@@ -229,21 +254,21 @@ def main(argv):
         abbrev = expand_dest_args
 
     if not current_tree_root:
-        dp_io.eprintf("Cannot find root_indicator_file>%s<\n",
+        dp_io.eprintf("Cannot find root_indicator_file>{}<\n",
                       Configuration["ROOT_INDICATOR_FILE"])
         if input_tree_root:
-            dp_io.eprintf("  Looking in user specified tree_root>%s<\n",
+            dp_io.eprintf("  Looking in user specified tree_root>{}<\n",
                           input_tree_root)
         else:
-            dp_io.eprintf("  Looking in current dir>%s<\n",
+            dp_io.eprintf("  Looking in current dir>{}<\n",
                           opath.realpath(opath.curdir))
-        sys.exit(1)
+        sys.exit(2)
 
-##     print "A: input_tree_root>%s<" % (input_tree_root,)
+    ctracef(1, "A: input_tree_root>{}<\n", input_tree_root)
     if  input_tree_root is None:
         input_tree_root = current_tree_root
-##     print "A.1: current_tree_root>%s<" % (current_tree_root,)
-##     print "B: input_tree_root>%s<" % (input_tree_root,)
+    ctracef(1, "A.1: current_tree_root>{}<\n", current_tree_root)
+    ctracef(1, "B: input_tree_root>{}<\n", input_tree_root)
 
     # None vs False allows us to know if the user has set the value one way
     # or the other.
@@ -257,17 +282,24 @@ def main(argv):
                         abbrev_suffix=app_args.abbrev_suffix,
                         realpath_p=realpath_p)
 
+        ctracef(1, "s>{}<\n", s)
+        if not s:
+            sys.exit(3)
         if opath.exists(s):
             print s
             sys.exit(0)
-        sys.exit(1)
+        elif app_args.print_non_existent_p:
+            print s
+
+        ctracef(1, "NO GO ON s>{}<\n", s)
+        sys.exit(13)
 
 
     if app_args.find_root_p:
         if current_tree_root:
             emit_path((current_tree_root,))
         else:
-            dp_io.eprintf("Cannot find tree_root root, cwd>%s<\n",
+            dp_io.eprintf("Cannot find tree_root root, cwd>{}<\n",
                           opath.realpath(opath.curdir))
 
     if app_args.name_to_relativize:

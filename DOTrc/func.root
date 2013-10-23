@@ -489,11 +489,13 @@ xxx_newest()
     local op="${1}"; shift
     local dir=$(newest-dir "$@")
     $op "${dir}"
+    return "$?"
 }
 
 cd_newest()
 {
     xxx_newest cd "$@"
+    return "$?"
 }
 export -f cd_newest
 alias cdnew=cd_newest
@@ -501,8 +503,35 @@ alias cdnew=cd_newest
 go_newest()
 {
     xxx_newest g "$@"
+    return "$?"
 }
 export -f go_newest
 alias gonew=go_newest
 
+xxx_newto()
+{
+    local op="${1}"; shift
+    local dest
+    dest=$(cdnewto.sh "$@") || {
+        return "$?"
+    }
+    "${op}" "${dest}"
+    return 0
+}
+export -f xxx_newto
+
+cdnewto()
+{
+    xxx_newto cd "$@"
+    return "$?"
+}
+export -f cdnewto
+
+gnewto()
+{
+    xxx_newto g "$@"
+    return "$?"
+}
+export -f gnewto
+    
 true

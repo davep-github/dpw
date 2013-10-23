@@ -130,23 +130,41 @@ tests.")
 (defvar dp-p4-default-depot-completion-prefix "//"
   "Depot root.")
 
+;; (defun dp-nvidia-make-cscope-database-regexps ()
+;;   "Compute value for `cscope-database-regexps'
+;; We want to be able to find ap files from other dirs (//arch/...) and other
+;; files (//arch/...) ap dirs."
+;;   (let ((ap (dp-me-expand-dest "ap" (dp-current-sandbox-name)))
+;;         (sb (dp-current-sandbox-regexp)))
+;;     `(
+;;       (,sb                              ; If the filename matches this regexp
+;;        (t)                              ; Search parents for db
+;;        (,ap)                            ; Search ap (TOT) for db
+;;        (,sb)                            ; Search sb root.
+;;        )
+;;       ("/home/scratch.traces02/mobile/traces/system/so"  ; Non ME type tests.
+;;        (,sb)
+;;        )
+;;       )))
 
 (defun dp-nvidia-make-cscope-database-regexps ()
-  "Compute value for `cscope-database-regexps'
-We want to be able to find ap files from other dirs (//arch/...) and other
-files (//arch/...) ap dirs."
-  (let ((ap (dp-me-expand-dest "ap" (dp-current-sandbox-name)))
-        (sb (dp-current-sandbox-regexp)))
-    `(
-      (,sb                              ; If the filename matches this regexp
-       (t)                              ; Search parents for db
-       (,ap)                            ; Search ap (TOT) for db
-       (,sb)                            ; Search sb root.
-       )
-      ("/home/scratch.traces02/mobile/traces/system/so"  ; Non ME type tests.
-       (,sb)
-       )
-      )))
+  "Compute value for `cscope-database-regexps'"
+  (let* ((locstr (or (getenv "DP_NV_ME_DB_LOCS")
+                     (concat
+                      "ap sw arch dev"
+                      ;; NB! Make sure every item is separated by spaces.
+                      " //hw/class //hw/kepler1_gklit3 dev //hw/tools")))
+         (locs (split-string locstr))
+         (sb-name (dp-current-sandbox-name))
+         expansion
+         result)
+    (list
+     (append
+      (list (dp-me-expand-dest "sb" sb-name))
+      (delq nil (mapcar (function
+                         (lambda (loc)
+                           (list (dp-me-expand-dest loc sb-name))))
+                        locs))))))
 
 (setq dp-make-cscope-database-regexps-fun
       'dp-nvidia-make-cscope-database-regexps)
@@ -172,9 +190,10 @@ files (//arch/...) ap dirs."
 
 (setq dp-fallback-expand-abbrev-fun 'dp-nvidia-me-expand-preceding-word)
 
-(defun dp-p4-active-here ()
+(defun dp-p4-active-here (&optional file-name)
   (and (not dp-p4-global-disable-detection-p)
-       (dp-sandbox-file-p (buffer-file-name))))
+       (dp-sandbox-file-p (or file-name
+                              (buffer-file-name)))))
 
 ;;
 ;; Don't want to edit these stupid fvcking copies.

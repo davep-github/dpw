@@ -22,6 +22,7 @@ unset eexec_program
 
 
 : ${replace_default_symlink=}
+: ${trr_args=}
 
 [ "${1}" = "--ap" ] && {
     shift
@@ -40,7 +41,7 @@ else
 fi
 # The remainder of argv will be extra args to sandbox_relativity
 
-exp=$(~/lib/pylib/tree_root_relativity.py --expand-dest="${dest}" --abbrev-suffix="__ME_src" $sb_arg "$@")
+exp=$(~/lib/pylib/tree_root_relativity.py ${trr_args} --expand-dest="${dest}" --abbrev-suffix="__ME_src" $sb_arg "$@") || exit
 
 vsetp "${replace_default_symlink}" && {
     exp=$(echo "${exp}" | sed -r "s|/Default_ap_tree/|/${replace_default_symlink}/|")

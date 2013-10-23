@@ -47,6 +47,7 @@ ${EExecExporter} EExecShowPrefix=""
 ${EExecExporter} EExecEcho=""
 ${EExecExporter} EExecEchoPrefixG="+"
 ${EExecExporter} EExec_loaded_p=t
+${EExecExporter} EExecAmpersand='&'
 ${EExecExporter} EExecShowOnly=
 ${EExecExporter} EExecErrorReporter=
 ${EExecExporter} EExec_verbose_func=
@@ -133,6 +134,7 @@ EExecDashN ()
     else
         EExecVerbose
     fi
+    ${EExecExporter} EExecAmpersand=
     ${EExecExporter} EExecShowOnly=y
     ${EExecExporter} EExecShowPrefix="$@"
     ${EExecExporter} EExecEchoPrefixG='-'

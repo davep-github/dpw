@@ -7,9 +7,14 @@ rgg = ranking_global_gtags_lib
 import find_up, p4_lib
 opath = os.path
 
+DP_NV_ME_DB_LOCSTR = os.environ.get("DP_NV_ME_DB_LOCS",
+                                    "ap //sw //arch //hw/class"
+                                    " //hw/kepler1_gklit3 //dev //hw/tools")
+
 # Everything will search up to the sandbox root. There is one other known
 # place and that is TOT
-Database_p4_locations = [ "ap" ]        # Abbrev name.
+# Abbrev or //p4/loc name.
+Database_p4_locations = [ "ap" ] + DP_NV_ME_DB_LOCSTR.split()
 Database_locations = []
 ## Move this into ranking_global_gtags.py
 for dir in Database_p4_locations:
@@ -69,6 +74,7 @@ def main(argv):
         #lines = run_globals_path(argv, path)
         lines = rgg.run_globals(argv, path,
                                 start_dir=opath.realpath(opath.curdir))
+            
     if lines:
         rgg.log_file.write("lines: %s\n" % \
                            dp_sequences.list_to_indented_string(lines))

@@ -60,6 +60,7 @@ do
       --nv|-N) filter_regexp="^/home/scratch\.";;
       --NV) filter_regexp="^/home/scratch\."; verify_p=t; verify_sandbox_p=t;;
       -a|--expand-sb) expand_sb_p=t;;
+      -w|--workspace) shift; workspace=:"${1}";;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;

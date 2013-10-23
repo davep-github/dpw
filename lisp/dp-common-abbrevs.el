@@ -491,6 +491,11 @@
       ;;"find . -type f -print0 | xargs -r0 grep "
       "find . -type f -print0 | xargs -r0 egrep ")
      dp-manual)
+    (("fasf" "find . -type f \\( -name '*.cpp' -o -name '*.h' \\)  -print0 | xargs -r0 fgrep -ni "
+      ;;Usually it's fgrep or egrep.
+      ;;"find . -type f -print0 | xargs -r0 grep "
+      "find . -type f -print0 | xargs -r0 egrep ")
+     dp-manual)
     (("cttoi" "come to think of it")
      dp-manual)
     (("br" "bug report")

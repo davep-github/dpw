@@ -454,35 +454,32 @@ Executes p4 in the current buffer's current directory
 with output to a dedicated output buffer.
 If successful, adds the P4 menu to the current buffer.
 Does auto re-highlight management (whatever that is)."
-    (save-excursion
-;;       (message "p4-exec-p4...")
-      (if (eq major-mode 'dired-mode)
-	  (let ((dir (dired-current-directory)))
-	    (set-buffer output-buffer)
-	    (setq default-directory dir)))
-      (if clear-output-buffer
-	  (progn
-	    (set-buffer output-buffer)
-	    (delete-region (point-min) (point-max))))
-      (let ((result
-	     ;; XXX - call-process has changed from using
-	     ;; p4-null-device to nil as its second argument
-	     ;; in emacs version 21.1.1?? - rv 1/25/2002
-	     (apply 'call-process (p4-check-p4-executable) nil
-		    output-buffer
-		    nil			; update display?
-		    "-d" default-directory  ;override "PWD" env var
-		    args)))
-	(p4-menu-add)
-	(if (and p4-running-emacs
-		 (boundp 'hilit-auto-rehighlight))
-	    (setq hilit-auto-rehighlight nil))
-;;         (message "p4-exec-p4: %s %s done." 
-;;                  (p4-check-p4-executable)
-;;                  (dp-string-join (append (list "-d" default-directory)
-;;                                          args))
-;;                  )
-	result)))
+    (prog1
+        (save-excursion
+          (message "p4-exec-p4...")
+          (if (eq major-mode 'dired-mode)
+              (let ((dir (dired-current-directory)))
+                (set-buffer output-buffer)
+                (setq default-directory dir)))
+          (if clear-output-buffer
+              (progn
+                (set-buffer output-buffer)
+                (delete-region (point-min) (point-max))))
+          (let ((result
+                 ;; XXX - call-process has changed from using
+                 ;; p4-null-device to nil as its second argument
+                 ;; in emacs version 21.1.1?? - rv 1/25/2002
+                 (apply 'call-process (p4-check-p4-executable) nil
+                        output-buffer
+                        nil             ; update display?
+                        "-d" default-directory ;override "PWD" env var
+                        args)))
+            (p4-menu-add)
+            (if (and p4-running-emacs
+                     (boundp 'hilit-auto-rehighlight))
+                (setq hilit-auto-rehighlight nil))
+            result))
+      (message "p4-exec-p4... done.")))
   (defun p4-call-p4-here (&rest args)
     "Internal function called by various p4 commands.
 Executes p4 in the current buffer (generally a temp)."

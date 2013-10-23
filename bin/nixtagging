@@ -32,7 +32,7 @@ do
   [ -d "$dir" ] || {
       EExec mkdir -p "$dir"
   }
-  touch_file="${dir}/${kwa_no_this}"
+  touch_file=$(normpath "${dir}/${kwa_no_this}")
   if [ -e "$touch_file" ]
   then
       echo "$touch_file already exists."

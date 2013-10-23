@@ -392,16 +392,21 @@ NAME is a short name associated by hideif with the list of defs."
 ;;         (cons regexp dp-implied-read-only-filename-regexp-list)
 ;;         dp-singlular-write-restricted-regexp regexp))
 
-(defun dp-me-expand-dest (abbrev &optional sb)
+(defun dp-me-expand-dest0 (abbrev &optional sb)
   (let ((ret (dp-nuke-newline
               (shell-command-to-string 
                (format "me-expand-dest %s %s 2>/dev/null" 
                        abbrev (or sb 
-                                  (dp-current-sandbox-name)
+                                  ;;(dp-current-sandbox-name)
                                   ""))))))
     (if (string= ret "")
         nil
       ret)))
+
+(defun dp-me-expand-dest (abbrev &optional sb)
+  (or (dp-me-expand-dest0 abbrev sb)
+      (and (not sb)
+           (dp-me-expand-dest0 abbrev (dp-current-sandbox-name)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;

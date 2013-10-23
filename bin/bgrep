@@ -7,9 +7,12 @@ if ($ARGV[0] =~ /-o/) {
   $to_stdout = 0;
   shift(@ARGV);
 }
+$max_matches = 0;
 
 $first = shift(@ARGV);
 $second = shift(@ARGV);
+$max_matches = shift(@ARGV);
+printf("max_matches>$max_matches<\n");
 $till_eof = 0;
 
 #print "f>$first<\n";
@@ -19,8 +22,12 @@ $num = 0;
 $base = "out";
 $sep = "";
 $invert_match_sense = 0;
+if (!$max_matches) {
+  $max_matches = 0;
+}
 
-$till_eof = 1 if ($second eq '$^' || $second eq '');
+$till_eof = 1 if ($second eq '$^' || $second eq '.*');
+
 
 $HANDLE_EOF_FLAG = "handle till-eof flag";
 
@@ -66,9 +73,14 @@ while (<>)
       #print $OUT "s2.0: $_<";
       print $OUT "$_";
       if (/$second/o) {
-	  $state = "find-opening-regexp";
-	  close OUT0 if (!$to_stdout);
-	  next;
-	}
+        ++$num_matches;
+        print "!!!!!!!!!!!!!!!!!!! state --> find-opening-regexp\n";
+        $state = "find-opening-regexp";
+        close OUT0 if (!$to_stdout);
+        printf("max_matches>$max_matches<, num_matches>$num_matches<\n");
+        if ($max_matches && ($num_matches >= $max_matches)) {
+          exit(0);
+        }
+      }
     }
 }

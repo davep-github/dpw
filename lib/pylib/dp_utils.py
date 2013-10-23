@@ -2,6 +2,7 @@
 Some helpful utility functions."""
 
 import os, sys, string, stat, pprint, types, re, math
+opath = os.path
 
 class DP_UTILS_RT_Exception(RuntimeError):
     def __init__(self, fmt, *args, **keys):
@@ -414,3 +415,15 @@ def re_compile_with_case_convention(regexp_string, flags=None):
     if flags is None:
         flags = re_case_convention_flags(regexp_string)
     return re.compile(regexp_string, flags)
+
+def newest_file(files):
+    newest_mod_time = 0
+    newest_file = None
+    for f in files:
+        if not opath.exists(f):
+            continue
+        mt = opath.getmtime(f)
+        if mt > newest_mod_time:
+            newest_mod_time = mt
+            newest_file = f
+    return newest_file, newest_mod_time

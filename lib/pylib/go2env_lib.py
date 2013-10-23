@@ -4,7 +4,7 @@ import os, sys, string, re, getopt, types, StringIO
 import pprint
 import cPickle as pickle
 
-import dp_io, dp_sequences
+import dp_io, dp_sequences, dp_utils
 opath = os.path
 
 ignore_file_not_found = 1
@@ -36,6 +36,8 @@ DEFAULT_SERIALIZED_FILE_NAME = "go"
 DEFAULT_SERIALIZED_FILE = opath.join(os.environ["HOME"], "var", "db",
                                     DEFAULT_SERIALIZED_FILE_NAME)
 DEFAULT_DICT_FILE = DEFAULT_SERIALIZED_FILE + DEFAULT_DICT_EXT
+
+KEEP_DICT_UPDATED = "KEEP_DICT_UPDATED"
 
 MATCH_TYPE_LITERAL_DICT = "MATCH_TYPE_LITERAL_DICT"
 MATCH_TYPE_LITERAL_ENV = "MATCH_TYPE_LITERAL_ENV"
@@ -81,6 +83,9 @@ class Keyword_option_t(object):
                                                           self.val())
     def __repr__(self):
         return self.__str__()
+
+def keep_dict_updated():
+    return Evil_globals.get(KEEP_DICT_UPDATED, True)
 
 #
 # aliases[name] = (val,
@@ -481,12 +486,12 @@ def process_gopath(args):
                 break
             files.append(arg)
         args = args[i:]
-        for arg in args:
-            names.append(arg)
+        names.extend(args)
     if not files:
         if os.environ.get('GOPATH'):
             files = string.split(os.environ.get('GOPATH'), ':')
         else:
+            # Default fall back.
             files = [os.environ.get('HOME') + '/.go']
     xfiles = []
     for f in files:
@@ -515,9 +520,18 @@ def init_aliases(args, selector_regexp,
     if Get_aliases():
         return
 
+    go_files, _ = process_gopath(args)
+
     if dict_file is not False:
         if not dict_file:
             dict_file = DEFAULT_DICT_FILE
+        if keep_dict_updated():
+##             print >>sys.stderr, "updating? dict."
+            newest, _ = dp_utils.newest_file(go_files + [dict_file])
+##             print >>sys.stderr, "newest>{}<".format(newest)
+            if newest != dict_file:
+##                 print >>sys.stderr, "writing dict."
+                write_dict(args, dict_file)
         try:
             Set_aliases(read_dict(dict_file))
             if Get_aliases():
@@ -534,8 +548,7 @@ def init_aliases(args, selector_regexp,
         except Exception, err:
             print >>sys.stderr, "Exception `{}' reading pickle>{}<, falling back to .go file(s)".format(err, dict_file)
 
-    files, names = process_gopath(args)
-    Set_aliases(expand_files(files, selector_regexp))
+    Set_aliases(expand_files(go_files, selector_regexp))
 ##     print >>sys.stderr, "expanded files."
 
 #####################################################################
@@ -565,17 +578,6 @@ def write_dict(args, dict_file=None):
     fobj.write(beauty)
     fobj.write("\n")
     fobj.close()
-
-#####################################################################
-## def read_dict_old(dict_file=None):
-##     if not dict_file:
-##         dict_file = DEFAULT_DICT_FILE
-##     fobj = open(dict_file, "r")
-##     s = fobj.read()
-##     fobj.close()
-##     d = eval(s)
-##     return d
-
 
 #####################################################################
 def read_dict(dict_file=None):
@@ -656,7 +658,8 @@ def simple_lookup(abbrev_regexp, try_environment_p=True,
         elif not MATCH_TYPE_ANY:
             return None
 ##
-## Using the environment should be a clear win, but it is usually slower.
+## Using the environment should be a clear win, but oddly it turns out to
+## usually be slower.
 ## The environment is also the most likely to be out of date.
 ## So, let's skip it.
         
@@ -756,9 +759,6 @@ if __name__ == "__main__":
 
     if serialize_aliases_p:
         serialize_aliases(args, serialized_file)
-##         debug
-##         aliases = read_aliases(serialized_file)
-##         dump_dict(aliases)
         sys.exit(0)
     if write_dict_p:
         write_dict(args, dict_file)

@@ -9,7 +9,9 @@
 (defvar p4-make-backup-files t
   "Should emacs make backup files when editing files under p4 control")
 
-(defvar dp-font-lock-depot-prefix-regexp "\\(?:hw\\|arch\\|dev\\)")
+;;(defvar dp-font-lock-depot-prefix-regexp "\\(?:hw\\|sw\\|arch\\|dev\\)")
+;; Don't want to have to add every tree root; unless it turns out we have to.
+(defvar dp-font-lock-depot-prefix-regexp "\\(?:[^/]+\\)")
 
 ;; Pattern used to highlite P4 ChangeSets
 ;; Some of these faces are defined in add-log.el.
@@ -48,10 +50,10 @@ This mode uses tabs, so the line too long regexp fails.")
      (2 'font-lock-variable-name-face))
     ;; Files in ChangeSet
     (
-     ,(format "\\(-?\\)\\(//%s/.*/...\\)[ \t]*\\(//.*/...\\)" 
+     ,(format "\\(-?\\)\\(//%s/.*\\)[ \t]+\\(//.*\\)" 
               dp-font-lock-depot-prefix-regexp)
      (1 'font-lock-reference-face)
-     (2 'font-lock-constant-face)
+     (2 'font-lock-preprocessor-face)
      (3 'font-lock-string-face))
     ) "Regexp used to colorize p4-mode clients")
 
@@ -110,6 +112,7 @@ This mode uses tabs, so the line too long regexp fails.")
 
 (defun dp4-form-hook-common (font-lock-keywords)
   (p4-setup-indent)
+  (flyspell-mode-off)
   (set (make-local-variable 'font-lock-defaults)
        font-lock-keywords)
   (font-lock-fontify-buffer))
