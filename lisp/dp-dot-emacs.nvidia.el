@@ -147,13 +147,14 @@ tests.")
 ;;        )
 ;;       )))
 
-(defun dp-nvidia-make-cscope-database-regexps ()
+(defun dp-nvidia-make-cscope-database-regexps (&optional ignore-env-p)
   "Compute value for `cscope-database-regexps'"
-  (let* ((locstr (or (getenv "DP_NV_ME_DB_LOCS")
+  (let* ((locstr (or (and (not ignore-env-p)
+                          (getenv "DP_NV_ME_DB_LOCS"))
                      (concat
-                      "ap sw arch dev"
+                      "ap //arch //sw/dev //sw/mods //sw/tools //hw/class"
                       ;; NB! Make sure every item is separated by spaces.
-                      " //hw/class //hw/kepler1_gklit3 dev //hw/tools")))
+                      "  //hw/kepler1_gklit3 //hw/tools")))
          (locs (split-string locstr))
          (sb-name (dp-current-sandbox-name))
          expansion
@@ -169,6 +170,11 @@ tests.")
 (setq dp-make-cscope-database-regexps-fun
       'dp-nvidia-make-cscope-database-regexps)
 
+(defun dp-set-cscope-database-regexps (&optional ignore-env-p)
+  (interactive)
+  (setq cscope-database-regexps
+        (dp-nvidia-make-cscope-database-regexps ignore-env-p)))
+  
 ;; Factor into function that takes the expander (e.g. dp-me-expand-dest) as a
 ;; parameter.
 (defun dp-nvidia-me-expand-preceding-word (&rest r)

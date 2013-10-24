@@ -1,20 +1,21 @@
 #!/usr/bin/env python
 
-import sys, os, time
-import ranking_global_gtags_lib, dp_sequences
+import sys, os, time, subprocess
+import ranking_global_gtags_lib, dp_sequences, dp_io
 rgg = ranking_global_gtags_lib
 
 import find_up, p4_lib
 opath = os.path
 
 DP_NV_ME_DB_LOCSTR = os.environ.get("DP_NV_ME_DB_LOCS",
-                                    "ap //sw //arch //hw/class"
-                                    " //hw/kepler1_gklit3 //dev //hw/tools")
+                                    "ap //arch //sw/dev //sw/mods //sw/tools"
+                                    " //hw/class //hw/kepler1_gklit3"
+                                    " //hw/tools")
 
 # Everything will search up to the sandbox root. There is one other known
 # place and that is TOT
 # Abbrev or //p4/loc name.
-Database_p4_locations = [ "ap" ] + DP_NV_ME_DB_LOCSTR.split()
+Database_p4_locations = DP_NV_ME_DB_LOCSTR.split()
 Database_locations = []
 ## Move this into ranking_global_gtags.py
 for dir in Database_p4_locations:
@@ -27,10 +28,18 @@ Out_of_tree_dbs = ["/home/dpanariti/work/out-of-tree-dirs/GTAGS"]
 
 Database_locations.extend(Out_of_tree_dbs)
 
+Database_locations = [ loc for loc in Database_locations
+                       if opath.exists(loc) ]
+
 # Want to search upward from cwd for a db.
 # Then want to search all other databases.
 
-rgg.log_file.write("\n=========\n" + time.ctime() + "\n")
+rgg.log_file.write("\n=========\n" + time.ctime() + "\n"
+                   + opath.realpath(opath.curdir) + "\n")
+rgg.log_file.write("DP_NV_ME_DB_LOCSTR>{}<\n".format(DP_NV_ME_DB_LOCSTR))
+rgg.log_file.write(
+    "Database_locations>{}<\n".format(
+        dp_sequences.list_to_indented_string(Database_locations)))
 
 Top_ranking_regexp_strings = [
     "hw/ap_tlit1/drv/drvapi/include/runtest_surface",
@@ -60,10 +69,29 @@ def main(argv):
     # we need to pass everything to global, verbatim. WHY?
     rgg.log_file.write("argv: %s\n" % \
                        dp_sequences.list_to_indented_string(argv))
+    if argv[1] == '-pr':
+        glob = subprocess.Popen(["global"] + argv[1:],
+                                stdout=subprocess.PIPE)
+        for line in glob.stdout:
+            if line[-1] == '\n':
+                line = line[:-1]
+            if line:
+                print line
+        sys.exit(0)
+
+    # Find this dir's parental db.
     path = find_up.find_up("GTAGS", all_p=True)
     rgg.log_file.write("path: %s\n" % \
                        dp_sequences.list_to_indented_string(path))
+    # Add all other known db locations.
+    # We should only add new elements.
     path.extend(Database_locations)
+    dp_io.ctracef(1, "before uniq: path>{}<\n", "\n ".join(path))
+    rgg.log_file.write("before uniq: path>{}<\n".format("\n ".join(path)))
+    path = dp_sequences.uniquify_list(path)
+    dp_io.ctracef(1, "after uniq: path>{}<\n", "\n ".join(path))
+    rgg.log_file.write("after uniq: path>{}<\n".format("\n ".join(path)))
+
     rgg.log_file.write("extended path: %s\n" % \
                        dp_sequences.list_to_indented_string(path))
 

@@ -37,6 +37,10 @@ def magick_string_p(s, magick_string_separator=Configuration["MAGICK_STRING_SEPA
     return s.find(magick_string_separator) >= 0
 
 #############################################################################
+def split_magick_args(args, magick_string_separator):
+    return [ x for x in args.split(magick_string_separator) if x ]
+
+#############################################################################
 def emit_path(components, norm_p=True, realpath_p=True, ostream=sys.stdout,
               prefix="", suffix="\n"):
     ctracef(2, "components>{}<\n", components)
@@ -61,10 +65,11 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
     ctracef(1, "1: input_tree_root>{}<\n", input_tree_root)
     ctracef(1, "1: expand_dest_args>{}<\n", expand_dest_args)
     # Handle some legacy foolishness
-    a = expand_dest_args.split(magick_string_separator)
+    #a = expand_dest_args.split(magick_string_separator)
+    a = split_magick_args(expand_dest_args, magick_string_separator)
     if len(a) > 1:
-        abbrev = a[1]
-        input_tree_root = a[2]
+        abbrev = a[0]
+        input_tree_root = a[1]
     else:
         abbrev = expand_dest_args
 
@@ -165,10 +170,10 @@ def get_current_tree_root():
 def get_expand_args(args, input_tree_root,
                     magick_string_separator=Configuration["MAGICK_STRING_SEPARATOR"]):
     # Handle some legacy foolishness
-    a = args.split(magick_string_separator)
+    a = split_magick_args(args, magick_string_separator)
     if len(a) > 1:
-        abbrev = a[1]
-        tree_root = a[2]
+        abbrev = a[0]
+        tree_root = a[1]
     else:
         ctracef(1, "get_expand_args(): input_tree_root>{}<\n", input_tree_root)
         tree_root = input_tree_root or get_current_tree_root()

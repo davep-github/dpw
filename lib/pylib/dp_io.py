@@ -183,9 +183,7 @@ def printf(fmt, *args):
         fmt = args[0]
         args = args[1:]
     if f_print:
-        if args:
-            fmt = fmt % args
-        lprint(v_print_files, print_leader, fmt)
+        lprintf(v_print_files, print_leader, fmt, *args)
 
 # visible printf for easy location.  Used for very temporary prints.
 PRINTF = printf
@@ -350,10 +348,7 @@ def vcprintf(level, fmt, *args):
     """vcprintf: Verbose, conditional printf.
     Print messages depending on verbosity level."""
     #print "vc:level>%s<, fmt>%s<, args>%s<" % (level, fmt, args)
-    if verbose_p(level):
-        if args:
-            fmt = fmt % args
-        lprint(v_vprint_files, vprint_leader, fmt)
+    clprintf(level, v_vprint_files, vprint_leader, fmt, *args)
 
 ###############################################################
 def vprintf(fmt, *args):

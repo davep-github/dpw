@@ -1,0 +1,8 @@
+#!/bin/sh
+
+source script-x
+
+# For stupid programs that can't pass flags to diff.
+: ${extra_flags=-u}
+
+exec diff ${extra_flags} "$@"

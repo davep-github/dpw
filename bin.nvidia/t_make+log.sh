@@ -73,33 +73,38 @@ Usage_details="${EExec_parse_usage}
 --tot <tot>) Use tot as TOT.
 -o <file>) Tee output to log to <file>.<time stamp>
 -O <file>) Tee output to log to <file>.
---no-log) tee /dev/null to show progress but make no log.
---no-keeplogs) Tell t_make not to keep log files about.
---no-leavelogs|--no-ll) Tell t_make not to leave previous log files about.
---catlog) Do not cat the log after a failure.
---no-catlog) Do not cat the log after a failure.
---quiet) tee <log-file> > /dev/null. Log w/o output.
+-c) Do a -clobber first
+--clobber) Clobber tree before build.
+--no-clobber) Don't clobber tree before build.
 -r) Do NOT use -skiprtl. Build the RTL
 --rtl) ibid
+--no-log) tee /dev/null to show progress but make no log.
+-m|--no-make|--no-build) Don't do the basic bin/t_make(s)
+--quiet) tee <log-file> > /dev/null. Log w/o output.
+--no-keeplogs) Tell t_make not to keep log files about.
+--no-leavelogs|--no-ll) Tell t_make not to leave previous log files about.
+--no-catlog) Do not cat the log after a failure.
+--catlog) Do not cat the log after a failure.
 --only <target>) Only make <target>
+--skiprtl) Don't build RTL.
 --t_make_arg <arg>) Append <arg> to additional t_make args.
 --t_make-arg <arg>) Append <arg> to additional t_make args.
 --t-make-arg <arg>) Append <arg> to additional t_make args.
---get-mods) Get the latest mods.
---no-get-mods) Get the latest mods.
 --build-me|--bgme|--bme) Do build the me tests.
 --no-build-me) Do not build the me tests.
+--get-mods) Get the latest mods.
+--no-get-mods) Get the latest mods.
+--get-asim) Get the latest ASIM/COSIM.
+--no-get-asim) Don't get the latest ASIM/COSIM.
 --no-debug) Build me tests W/O debug.
+--debug) Build me tests W/debug.
 --me-purge) Purge me tests.
 --no-me-purge) Don't purge me tests.
 --me-clean) Clean me tests.
 --no-me-clean) Don't clean me tests.
--c) Do a -clobber first
---clobber) Clobber tree before build.
---no-clobber) Don't clobber tree before build.
 --mm|--mme|--gb|--get-build|--all) Get mods AND make me tests.
--nn) Don't get mods or make me tests.
--m|--no-make|--no-build) Don't do the basic bin/t_make(s)
+--nn) Don't get mods, asim or make me tests.
+--no-fetch|--just-build|--only-build) Only do builds (TOT && GPU me). Don't fetch anything.
 --mail) Send mail when complete.
 --no-mail) Don't
 "
@@ -135,6 +140,7 @@ long_options=("tot:"
     "no-me-clean"
     "mm" "mme" "gb" "get-build" "all"
     "nn"
+    "no-fetch" "just-build" "only-build" "jb"
     "mail" "no-mail"
     "only:"
     "t_make_arg:" "t_make-arg:" "t-make-arg:")
@@ -185,7 +191,8 @@ do
       --t-make_arg) shift; t_make_args="$t_make_args $1";;
       --t-make-arg) shift; t_make_args="$t_make_args $1";;
       --build-me|--bme|--bgme) build_me_p=t;;
-      --just-build-me|--bme-only|--just-bme|--only-bme) build_me_p=t; get_mods_p=; get_asim_p=;;
+      --just-build-me|--bme-only|--just-bme|--only-bme|--jb) 
+                 build_me_p=t; get_mods_p=; get_asim_p=;;
       --no-build-me) build_me_p=;;
       --get-mods) get_mods_p=t;;
       --no-get-mods) get_mods_p=;;
@@ -193,12 +200,13 @@ do
       --no-get-asim) get_asim_p=;;
       --no-debug) debug_opt=;;
       --debug) debug_opt="-debug=1";;
-      --no-me-purge) me_purge_opt=;;
       --me-purge) me_purge_opt="purge";;
-      --no-me-clean) me_clean_opt=;;
+      --no-me-purge) me_purge_opt=;;
       --me-clean) me_clean_opt="clean";;
+      --no-me-clean) me_clean_opt=;;
       --mm|--mme|--gb|--get-build|--all) get_mods_p=t; build_me_p=t; get_asim_p=t;;
-      --nn) get_mods_p=; build_me_p=;;
+      --nn) get_mods_p=; get_asim_p=; build_me_p=;;
+      --no-fetch|--just-build|--only-build) get_mods_p=; get_asim_p=; build_me_p=t;;
       --mail) send_mail_on_completion=t;;
       --no-mail) send_mail_on_completion=;;
 
@@ -289,8 +297,9 @@ done
 
 run_t_make()
 {
-    echo "${PWD}/bin/t_make ${keeplogs_opt} ${leavelogs_opt} ${t_make_args} ${catlog_opt} ${only_opt} $@" \
-         | EExec -y tcsh-run ${EExecDashN_opt}
+#    echo "${PWD}/bin/t_make ${keeplogs_opt} ${leavelogs_opt} ${t_make_args} ${catlog_opt} ${only_opt} $@" \
+#         | EExec -y tcsh-run ${EExecDashN_opt}
+    EExec ./bin/t_make ${keeplogs_opt} ${leavelogs_opt} ${t_make_args} ${catlog_opt} ${only_opt} "$@"
 }
 
 # Make this because we tee to a file inside this dir. The tee is part of the
@@ -298,6 +307,7 @@ run_t_make()
 # the {} run
 if EExecDashN_p
 then
+    EExec_verbose_msg "-n in force, logging to /dev/null vs ${log_name}."
     log_name=/dev/null
 else
     EExec mkdir -p "${log_dir}"

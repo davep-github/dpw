@@ -182,6 +182,14 @@ Return stuff. See `mk_abbrev_regexp' for abbrev_pat format.
     return default_stuff
 
 ########################################################################
+def uniquify_list(list_in):
+    """Return the list such that each element appears only once."""
+    d = {}
+    for i in list_in:
+        d[i] = 1
+    return d.keys()
+        
+########################################################################
 def list_intersection(l1, l2):
     """Return intersection of elements in l1 and l2 in no particular order."""
     ret = {}

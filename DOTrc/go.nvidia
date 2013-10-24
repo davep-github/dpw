@@ -83,6 +83,9 @@ Ee|clib__ME_src|                ${TOT__ME_src}clib/
 Ee|clibl__ME_src|               ${clib__ME_src}Linux/
 Ee|etc__ME_src|                 ${TOT__ME_src}etc/
 Ee|diag__ME_src|                ${TOT__ME_src}diag/
+Ee|aptools__ME_src|             ${TOT__ME_src}tools/
+Ee|runscript__ME_src|           ${aptools__ME_src}RunScript
+Ee|runs__ME_src|                ${runscript__ME_src}
 Ee|testgen__ME_src|             ${diag__ME_src}testgen/
 Ee|tg__ME_src|                  ${testgen__ME_src}
 Ee|tgen__ME_src|                ${testgen__ME_src}

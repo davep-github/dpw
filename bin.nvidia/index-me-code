@@ -25,7 +25,7 @@ export eexec_program
 # These are me-expand'd
 # Additional ap type dirs will need to be -a'd.
 source $HOME/.rc/env.nvidia
-: ${db_locs=${DP_NV_ME_DB_LOCS=ap //sw //arch //sw/dev //sw/mods //sw/tools //hw/class //hw/kepler1_gklit3 //hw/tools}}
+: ${db_locs=${DP_NV_ME_DB_LOCS=ap //arch //sw/dev //sw/mods //sw/tools //hw/class //hw/kepler1_gklit3 //hw/tools}}
 : ${db_loc_excludes=}
 
 nvcscope_filter()
@@ -162,6 +162,9 @@ fi
     exit 1
 } 1>&2
 
+vsetp "${skip_cd_p}" || EExec -y mecd sandbox
+dp_echo2 "cwd: $(pwd)"
+
 ap_path="${ap_dir}"
 ap_dir=$(basename "${ap_dir}")
 : ${p4_root=${1-"."}}
@@ -211,7 +214,7 @@ ${ap_hw_p4_path}/inf/mods/trace_3d/plugin/
 
 # Adding //hw/${ap_dir}/clib causes (error Rerun etags...) problems.
 more_depot_dirs_of_interest="
-${ap_hw_p4_path}/include
+${ap_hw_p4_path}/include/
 ${ap_hw_p4_path}/ip/vdec/cmod/
 ${ap_hw_p4_path}/drv/simfront/
 ${ap_hw_p4_path}/drv/bootrom/
@@ -226,7 +229,9 @@ ${ap_hw_p4_path}/clib/
 //dev/cpu/tools/sim/asim/1.0/"
 
 sw_depot_dirs_of_interest="
-//sw"
+//sw/dev/
+//sw/mods/
+//sw/tools/"
 
 depot_dirs_of_interest="${base_depot_dirs_of_interest} ${more_depot_dirs_of_interest} ${sw_depot_dirs_of_interest}"
 
@@ -239,9 +244,8 @@ echo_id2 p4_root
 
 dirs_of_interest=$(dp4-reroot "$p4_root" $depot_dirs_of_interest)
 dirs_of_interest="${dirs_of_interest} ${other_dirs_of_interest}"
+echo_id dirs_of_interest
 
-vsetp "${skip_cd_p}" || EExec -y mecd sandbox
-dp_echo2 "cwd: $(pwd)"
 
 # These files change and come and go and are mostly copies of existing files.
 # This kind of stuff confuses cscope.
@@ -309,7 +313,8 @@ then
       [ -d "${db_loc}" ] || continue
       for d in ${dirs_of_interest}
       do
-        #echo_id2 d
+#         echo_id2 d
+#         echo_id2 db_loc
         case "${d}/" in
             $db_loc/*) index_dirs="${index_dirs}
 ${d}";;
@@ -317,7 +322,7 @@ ${d}";;
         esac
       done
       vunsetp "${index_dirs}" && {
-          dp_echo2 "No dirs for db_loc>$db_loc<"
+          dp_echo2 "*** No dirs for db_loc>$db_loc< ***"
           continue
       }
 #       echo_id db_loc
