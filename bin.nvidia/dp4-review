@@ -43,7 +43,7 @@ verbatim_p=
 p4r_debug=
 
 # Usage variable usage:
-Usage_args_info=" .p4r-files..."
+Usage_args_info=" .p4r-files...|change-num"
 Usage_synopsis="p4review the files.
 "
 Usage_details="${EExec_parse_usage}

@@ -24,7 +24,14 @@ unset eexec_program
 #
 # This needs to pass the current editing server as a parameter.
 # Or xemacs needs to make sure the kill gnuserve hook is called.
-findprog -s FvwmCommandS && {
-    FvwmCommand 'AnyEditingServer'
-    exit
-}
+# NB this does not work across multiple machines and is, in any event, fvwm
+#    specific.
+#broken findprog -s FvwmCommandS && {
+#broken     FvwmCommand 'AnyEditingServer'
+#broken     exit
+#broken }
+
+# Drat. I could've been using this for years.
+# If I can use ec (which uses) gnuclient or equivalent, then I can use this
+# to raise the server's frame.
+ec -e '(progn (raise-frame) (dp-focus-frame))'

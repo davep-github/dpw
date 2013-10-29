@@ -1,1 +1,67 @@
-new-me-expand-dest.sh
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+#too slow? source eexec
+#too slow? if vsetp "${eexec_program-}"    # Did the caller provide a program?
+#too slow? then
+#too slow?     EEXEC_SHIFT=:
+#too slow? else
+#too slow?     eexec_program=$(EExec_parse "$@")
+#too slow?     EEXEC_SHIFT=shift
+#too slow? fi
+
+#too slow? for op in $eexec_program
+#too slow? do
+#too slow?   $op
+#too slow?   ${EEXEC_SHIFT}
+#too slow? done
+#too slow? unset eexec_program
+#too slow? # Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+: ${replace_default_symlink=}
+: ${trr_args=}
+: ${realpath=}
+: ${trace_arg=}
+
+while (($# > 0))
+do
+  case "$1" in
+      --ap) shift; replace_default_symlink="${1}";;
+      --trr-arg) shift; trr_args="${trr_args} ${1}";;
+      --realpath|--rp) realpath="--realpath";;
+      --sb|--sandbox) shift; sb_arg="--tree-root ${1}";;
+      --trace) shift; trace_arg="--trace ${1}";;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
+
+dest="${1}"
+shift
+
+if (($# > 0))
+then
+    sb_arg="--tree-root $1"
+    shift
+else
+    sb_arg=''
+fi
+
+# The remainder of argv will be extra args to sandbox_relativity
+exp=$(~/lib/pylib/tree_root_relativity.py \
+        ${trr_args} \
+        ${trace_arg} \
+        --expand-dest="${dest}" \
+        --abbrev-suffix="__ME_src" \
+        $sb_arg "$@") || exit
+
+vsetp "${replace_default_symlink}" && {
+    exp=$(echo "${exp}" | sed -r "s|/Default_ap_tree/|/${replace_default_symlink}/|")
+}
+
+vsetp "${exp}" && echo "${exp}"
+

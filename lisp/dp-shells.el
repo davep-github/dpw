@@ -698,6 +698,8 @@ Called when shell, inferior-lisp-process, etc. are entered."
   ;;(setq font-lock-defaults '(dp-shell-mode-font-lock-keywords t))
   ;;(font-lock-set-defaults)
   (put 'shell-mode 'font-lock-defaults '(dp-shell-mode-font-lock-keywords t))
+  (local-set-key [(control ?x)(control ?n)] 'dp-shell-switch-to-next-buffer)
+  (local-set-key [(control ?x)(control ?p)] 'dp-shell-switch-to-prev-buffer)
   (message "dp-shell-common-hook, (major-mode-str)>%s<, bn>%s< done." 
 	   (major-mode-str) (buffer-name)))
 
@@ -2125,9 +2127,10 @@ Xemacs's view of the pwd often gets confuzed."
   "Is this a shell buffer?  This is a list of symbols which ID the buffer.")
 
 (defsubst* dp-shell-buffer-p (&optional buffer 
-                              (pred dp-shell-isa-shell-buf-p)
+                              pred
                               pred-args)
   (with-current-buffer (or buffer (current-buffer))
+    (setq-ifnil pred dp-shell-isa-shell-buf-p)
     (dp-apply-or-value pred pred-args)))
 
 (defsubst dp-shell-xxx-buffer-p (&optional buffer buffer-id-list)
@@ -3306,6 +3309,41 @@ It would be nice if there was a global `current-hook' or some such."
 Can this really not exist elsewhere?"
   (interactive (list (read-shell-command "Shell command: ")))
   (insert (shell-command-to-string command-string)))
+
+(defun dp-next/prev-shell-buffer (lessp-fun &optional buffer)
+  (interactive)
+  (let* ((shell-buffers (sort (dp-shells-find-matching-shell-buffers 
+                               nil ".*") 
+                              lessp-fun))
+         (this-buf (memq (or buffer (current-buffer)) shell-buffers)))
+    (or (nth 1 this-buf)
+        (car shell-buffers))))
+
+(defun dp-next-shell-buffer (&optional buffer)
+  (interactive)
+  (dp-next/prev-shell-buffer 'dp-buffer-less-by-name-p buffer))
+
+(defun dp-prev-shell-buffer (&optional buffer)
+  (interactive)
+  (dp-next/prev-shell-buffer 'dp-buffer-reverse-less-by-name-p buffer))
+
+(defun dp-shell-switch-to-next-buffer (&optional other-window-p buffer)
+  (interactive "P")
+  (funcall (if other-window-p
+               'switch-to-buffer-other-window
+             'switch-to-buffer)
+           (dp-next-shell-buffer)))
+
+(defun dp-shell-switch-to-prev-buffer (&optional other-window-p buffer)
+  (interactive "P")
+  (funcall (if other-window-p
+               'switch-to-buffer-other-window
+             'switch-to-buffer)
+           (dp-prev-shell-buffer)))
+
+(defun dp-shell-switch-to-prev-buffer (&optional buffer)
+  (interactive)
+  (switch-to-buffer (dp-prev-shell-buffer)))
 
 ;;;
 ;;;

@@ -61,22 +61,32 @@ rc_list="$HOME/.bash_profile $DP_RC_LIST_OTHERS"
 
 EExec_verbose_msg "rc_list>$rc_list<"
 
-for i in $rc_files
-do
-    # check for non-specific files, too.
-    f=$rc_dir/$i
-    [ -r $f ] && rc_list="$rc_list $f"
-
-    # only look in the rc files used by this login... (set in .bash_profile)
-    for j in $locale_rcs
+find_files()
+{
+    for i in $rc_list
     do
+      echo $i
+    done
+    for i in $rc_files
+    do
+      # check for non-specific files, too.
+      f=$rc_dir/$i
+      [ -r $f ] && echo $f
+
+      # only look in the rc files used by this login... (set in .bash_profile)
+      for j in $locale_rcs
+      do
 	f2="$f$j"
 	[ -r "$f2" ] && {
 	    # $VERBOSE "$f2:"
 	    rc_list="$rc_list $f2"
+            echo $f2
 	}
-    done
-done	
+      done
+    done	
+}
+
+rc_list=$(find_files | sort | uniq)
 
 EExec_verbose_msg "searching: $rc_list
 ---"

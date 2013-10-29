@@ -827,7 +827,7 @@ def y_or_n_p(default='n', fmt="", *args):
         ans = default
     return ans in "yY"
 
-class Devnull(object):
+class Null_dev_t(object):
     def __init__(self, *args, **keys):
         pass
     def write(self, *args, **keys):

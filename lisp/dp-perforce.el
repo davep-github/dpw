@@ -93,6 +93,7 @@ This mode uses tabs, so the line too long regexp fails.")
                'dp4-restore-windows-and-frames)
              (define-key p4-opened-map [(control ?c) (control ?c)]
                'dp4-restore-windows-and-frames)
+             (dp-raise-and-focus-frame)
              )))
 
 ;; Setup indentation for p4 buffers

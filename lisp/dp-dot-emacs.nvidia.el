@@ -196,10 +196,15 @@ tests.")
 
 (setq dp-fallback-expand-abbrev-fun 'dp-nvidia-me-expand-preceding-word)
 
+(defvar dp-p4-ignore-dirs-regexp
+  (regexp-opt '("/hw/ap.*/diag/testgen/"))
+  "Deactivate p4 in these dirs.")
+
 (defun dp-p4-active-here (&optional file-name)
+  (setq-ifnil file-name (buffer-file-name))
   (and (not dp-p4-global-disable-detection-p)
-       (dp-sandbox-file-p (or file-name
-                              (buffer-file-name)))))
+       (dp-sandbox-file-p file-name)
+       (string-match dp-p4-ignore-dirs-regexp file-name)))
 
 ;;
 ;; Don't want to edit these stupid fvcking copies.

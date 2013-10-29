@@ -124,7 +124,7 @@ abspath()
 echo "Rundir >$rundir<, >$(cd $rundir; pwd)<"
 
 
-logdir="${PWD}/dp-rtl-tests/$(dp-std-timestamp)"
+logdir="${PWD}/dp-rtl-tests/${config}-$(dp-std-timestamp)"
 #logdir="${PWD}/dp-rtl-tests/abs-file-names"
 logfile="${logdir}/${testname}.log"
 mkdir -p "${logdir}" || {
@@ -168,7 +168,7 @@ ${EZEC} "${run_cmd}" \
     -o "${logfile}" \
     -noClean \
     -traces "${trace_dir}" \
-    -mods "-top -cpu_rtl -pitch -zt_count_0 -i ${hdr_file} -o TestDir/${testname} -plugin '${testname}${test_args}'" \
+    -mods "-top -cpu_rtl -pitch -zt_count_0 -i ${hdr_file} -o ${logdir}/${testname}.mods -plugin '${testname}${test_args}'" \
     "$@" \
     "${testname}${testext}" \
     -v "${config}"

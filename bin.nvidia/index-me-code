@@ -80,7 +80,8 @@ index_out_of_tree_locations()
 : ${just_nvcscope_p=}
 : ${nvcscope_files=cscope.files cscope.out cscope.out.in cscope.out.po}
 : ${skip_cd_p=}
-: ${follow_links_arg=-h}
+: ${follow_links_arg=}
+: ${follow_links_on_command_line=t}
 : ${cron_opt=}
 
 link_or_non_existent()
@@ -143,7 +144,7 @@ do
     shift
 done
 
-if vtruep "${oot_only_p}"
+if truth_p "${oot_only_p}"
 then
     index_out_of_tree_locations
     dp_echo "Indexing oot only. Exiting."
@@ -170,7 +171,7 @@ ap_dir=$(basename "${ap_dir}")
 : ${p4_root=${1-"."}}
 p4_root=$(realpath "${p4_root}")
 
-vtruep "${just_nvcscope_p}" && {
+truth_p "${just_nvcscope_p}" && {
     nvcscope_p=t
 }
 
@@ -253,7 +254,7 @@ echo_id dirs_of_interest
 # way to control the source code finder from here.
 export EXCLUDE_PAT="/plex/"
 
-if vtruep "${nvcscope_p}"
+if truth_p "${nvcscope_p}"
 then
     # St00p1d god damn mother f00ck1ng b00llsh1t a55hole 1d1ocy!
     # One tree:
@@ -280,7 +281,7 @@ then
               break;
           }
         done
-        if vtruep "${link_em}"
+        if truth_p "${link_em}"
         then
             EExec rm -f ${nvcscope_files}
             EExec nvcscope --link-this-tree-to-prebuilt-indexes
@@ -299,7 +300,7 @@ done
 echo_id db_locs
 #exit 99
 
-if ! vtruep "${just_nvcscope_p}"
+if ! true_p "${just_nvcscope_p}"
 then
     all_indexed=
     all_db_locs=

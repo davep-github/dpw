@@ -6387,6 +6387,9 @@ to see if it's alive as well."
       (shell-command-to-string (format "rm -f %s" 
                                        (dp-editing-server-ipc-file))))))
 
+(defun dp-current-frame ()
+  "Return the current frame. There must be a better way."
+  (car (frame-list)))
 ;;
 ;; Try for more feature filled gnuserv and fall back
 ;; to the regular server if gnuserv is not available.
@@ -6400,7 +6403,7 @@ not."
       (progn
 	(require 'gnuserv)
 	(message "using gnuserv")
-	(let ((frame (car (frame-list))))
+	(let ((frame (dp-current-frame)))
           (if (gnuserv-start leave-or-make-dead-p)
               t                         ; Deeniiiiiiied!
             (setq gnuserv-frame frame)
@@ -9840,9 +9843,10 @@ Can be called directly or by an abbrev's hook.
         (with-temp-buffer			;since cd changes buffer's cd
           ;; WTF is this cd stuff? `save-context' uses
           ;; `original-working-directory' as save file's directory.
-          (cd (if save-in-home-p 
-                  (getenv "HOME")
-                default-directory))
+;;           (cd (if save-in-home-p 
+;;                   (getenv "HOME")
+;;                 default-directory)
+;;               )
           (save-context)))))
 
   ;; Recovering context is currently not automatically done.
@@ -10331,7 +10335,7 @@ I like to be more precise in certain cases; such as when deleting things.")
 (dp-safe-alias 'kbbn 'dp-kill-buffers-by-buffer-name)
 
 
-(defun* dp-kill-.el-buffers (&optional (all-p t))
+(defsubst* dp-kill-.el-buffers (&optional (all-p t))
   (interactive "P")
   (dp-kill-buffers-by-file-name "\\.el$" all-p))
     
@@ -10348,6 +10352,10 @@ I like to be more precise in certain cases; such as when deleting things.")
 
 (dp-safe-alias 'kelb 'dp-kill-.el-buffers)
 
+(defsubst* dp-kill-tmp-buffers (&optional (all-p t))
+  (interactive "P")
+  (dp-kill-buffers-by-file-name "/tmp/" all-p))
+
 (defun dp-kill-buffers-by-mode (mode-name-regexp)
   (interactive "sname reg-exp: ")
   (dp-kill-chosen-buffers
@@ -10358,7 +10366,7 @@ I like to be more precise in certain cases; such as when deleting things.")
 ;;              (kill-buffer buf)))
 ;;           (dp-choose-buffers-mode-names mode-name-regexp)))
 
-(defun dp-kill-dired-buffers ()
+(defsubst dp-kill-dired-buffers ()
   (interactive)
   (dp-kill-buffers-by-mode "Dired"))
 
@@ -12013,6 +12021,16 @@ equivalent vertically(horizontally) split set."
   "How many frames are currently open on DEVICE or current device?"
   (length (device-frame-list device)))
 
+(defun dp-focus-frame (&optional frame)
+  (dmessage "dp-focus-frame")
+  (focus-frame (or frame
+                   (dp-current-frame))))
+
+(defun dp-raise-and-focus-frame (&optional frame)
+  (setq-ifnil frame (dp-current-frame))
+  (raise-frame frame)
+  (dp-focus-frame frame))
+
 (defun dp-one-frame-p (&optional Device)
   "Non-nil if only one frame exits on \(or DEVICE <current device>\)."
   (eq 1 (dp-num-frames)))
@@ -13111,6 +13129,7 @@ An `undo-boundary' is done before the template is used."
 
 (defcustom dp-python-new-file-template
   "
+import os, sys
 import argparse
 
 class App_arg_action_add_regexp_and_highlight(argparse.Action):
@@ -15751,11 +15770,11 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
   (interactive)
   (switch-to-buffer-other-window (other-buffer (current-buffer))))
 
-(defun dp-save-buffers-kill-emacs (&optional no-hooks-p)
+(defun dp-save-buffers-kill-emacs (&optional run-no-hooks-p)
   "DUH... Are you sure?"
   (interactive)
   (when (y-or-n-p "DUH... Are you sure? ")
-    (when no-hooks-p
+    (when run-no-hooks-p
       (setq kill-emacs-hook nil))
     (save-buffers-kill-emacs))
   (message "Good thing I asked, huh?"))
@@ -15973,6 +15992,14 @@ This is needed because the new sandbox relative utilities count on environment v
   (with-temp-buffer
     (call-process "go2env.py" nil t nil "-E")
     (eval-buffer)))
+
+(defun dp-buffer-less-by-name-p (buf1 buf2)
+  (string-lessp (buffer-name buf1)
+                (buffer-name buf2)))
+
+(defun dp-buffer-reverse-less-by-name-p (buf1 buf2)
+  (string-lessp (buffer-name buf2)
+                (buffer-name buf1)))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;;

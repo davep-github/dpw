@@ -1569,6 +1569,7 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
                (equal (point-min) (point-max)))
       (dp-ding-and-message "Could be a remote temp file.")))
   (switch-to-buffer (current-buffer))
+  ;; (dp-raise-and-focus-frame)
   (local-set-key "\C-c\C-c" 'dp-gnuserv-edit))
 
 (when (dp-optionally-require 'igrep)

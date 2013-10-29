@@ -5317,3 +5317,59 @@ dp-me-code-db-locations
      `(,(dp-me-expand-dest "sb" (dp-current-sandbox-name))
        ,@result))))
 
+
+========================
+Monday October 28 2013
+--
+
+
+
+dp-shells-shell-buffer-list
+(#<buffer "*shell*<5>">)
+
+
+(sort dp-shells-shell-buffer-list 'dp-buffer-less-p)
+(#<buffer "*shell*<5>">)
+
+
+(dp-shells-find-matching-shell-buffers nil ".*")
+(#<buffer "*shell*<5>"> #<buffer "*shell*<1>"> #<buffer "*shell*<3>"> #<buffer "*shell*<2>"> #<buffer "*shell*<4>">)
+
+(cl-pp (sort (dp-shells-find-matching-shell-buffers nil ".*") 'dp-buffer-less-p))
+
+(#<buffer "*shell*<1>"
+          >
+          #<buffer
+          "*shell*<2>"
+          >
+          #<buffer
+          "*shell*<3>"
+          >
+          #<buffer
+          "*shell*<4>"
+          >
+          #<buffer
+          "*shell*<5>"
+          >)nil
+
+(memq (get-buffer "*shell*<3>")
+      (sort (dp-shells-find-matching-shell-buffers nil ".*") 'dp-buffer-less-p))
+(#<buffer "*shell*<3>"> #<buffer "*shell*<4>"> #<buffer "*shell*<5>">)
+
+(#<buffer "*shell*<5>">)
+
+
+
+(get-buffer "*shell*<5>")
+#<buffer "*shell*<5>">
+
+(dp-shell-buffer-p (get-buffer "*shell*<5>"))
+(dp-shell shell)
+
+(nth 1
+(memq (get-buffer "*shell*<5>")
+      (sort (dp-shells-find-matching-shell-buffers nil ".*") 'dp-buffer-less-p))
+)
+nil
+
+

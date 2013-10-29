@@ -8,6 +8,9 @@ opath = os.path
 
 ctracef = dp_io.ctracef
 
+Error_file = sys.stderr
+Dev_null = dp_io.Null_dev_t()
+
 #############################################################################
 #
 # This was originally created to allow relative directory abbreviations to be
@@ -87,31 +90,32 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
 
     if abbrev_suffix is None:
         abbrev_suffix = os.environ.get("DP_EXPAND_DEST_ABBREV_SUFFIX")
-    ctracef(1, "abbrev>{}<\n", abbrev)
-    ctracef(1, "2: input_tree_root>{}<\n", input_tree_root)
+    ctracef(1, "2.0: abbrev>{}<\n", abbrev)
+    ctracef(1, "2.1: input_tree_root>{}<\n", input_tree_root)
     #
     # Some useful special cases
     #
     if abbrev == '~':
         abbrev = "ap"
     elif abbrev == ".":
-        ctracef(1, "2: abbrev>{}<\n", abbrev)
-        ctracef(1, "2: current_tree_root>{}<\n", current_tree_root)
+        ctracef(1, "2.2: abbrev>{}<\n", abbrev)
+        ctracef(1, "2.3: current_tree_root>{}<\n", current_tree_root)
         abbrev = relativize(get_current_tree_root(),
                             opath.realpath(opath.normpath(opath.curdir)),
                             p4_location_p=False).strip()
-        ctracef(1, "abbrev>{}<\n", abbrev)
+        ctracef(1, "2.4: abbrev>{}<\n", abbrev)
         newd = opath.join(input_tree_root, abbrev)
         ctracef(1, "newd>{}<\n", newd)
         return newd
     elif abbrev == "/":
-        abbrev = current_tree_root
-    ctracef(1, "2: abbrev>{}<\n", abbrev)
+        #abbrev = current_tree_root
+        return opath.normpath(current_tree_root)
+    ctracef(1, "2.5: abbrev>{}<\n", abbrev)
 
     try_abbrev = abbrev + abbrev_suffix
-    ctracef(1, "2: try_abbrev>{}<\n", try_abbrev)
+    ctracef(1, "2.6: try_abbrev>{}<\n", try_abbrev)
     new_abbrev = go2env_lib.simple_lookup(try_abbrev)
-    ctracef(1, "2: new_abbrev>{}<\n", new_abbrev)
+    ctracef(1, "2.7: new_abbrev>{}<\n", new_abbrev)
 
     if not new_abbrev:
         new_abbrev = abbrev
@@ -120,8 +124,8 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
 ##         return None
 
     input_tree_root = opath.normpath(input_tree_root)
-    ctracef(1, "3: new_abbrev>{}<\n", new_abbrev)
-    ctracef(1, "3: input_tree_root>{}<\n", input_tree_root)
+    ctracef(1, "3.0: new_abbrev>{}<\n", new_abbrev)
+    ctracef(1, "3.1: input_tree_root>{}<\n", input_tree_root)
     output = StringIO.StringIO()
     emit_path((input_tree_root, new_abbrev), realpath_p=realpath_p,
               ostream=output)
@@ -145,11 +149,13 @@ def relativize(current_tree_root, name_to_relativize, p4_location_p=False):
 
     if p == 0:
         name = name[len(current_tree_root) + 1:]
+        no_name_p = not name;
         ctracef(1, "1, name>{}<\n", name)
         if p4_location_p:
             name = "//" + name
-        emit_path((name), norm_p=False, realpath_p=False, ostream=output)
-    return output.getvalue()
+    return name
+    #    emit_path((name), norm_p=False, realpath_p=False, ostream=output)
+    #return output.getvalue()
 
 
 #############################################################################
@@ -240,13 +246,42 @@ def main(argv):
     oparser.add_argument("--trace",
                          dest="trace_level", type=int, default=0,
                          help="Set trace level 0 == off.")
+    oparser.add_argument("--print-errors",
+                         dest="print_errors_p", default=False,
+                         action="store_true",
+                         help="Print errors.")
+    oparser.add_argument("--no-print-errors",
+                         dest="print_errors_p", default=False,
+                         action="store_false",
+                         help="Don't print errors.")
 
     app_args = oparser.parse_args()
+    ### Args parsed...
+
+    if app_args.print_errors_p:
+        Error_file = sys.stderr
+    else:
+        Error_file = Dev_null
+
     if app_args.trace_level:
         dp_io.set_verbose_level(app_args.trace_level)
     else:
         dp_io.vprint_off()
     expand_dest_args=app_args.expand_dest_args
+    ctracef(1, "expand_dest_args>{}<\n", expand_dest_args)
+    if expand_dest_args == "/":
+        expand_dest_args = "/"
+        ed_rest = ""
+    else:
+        ed_components = expand_dest_args.split(opath.sep)
+        ctracef(1, "ed_components>{}<\n", ed_components)
+        if len(ed_components) > 1:
+            expand_dest_args = ed_components[0]
+            ed_rest = opath.join(*ed_components[1:])
+            ed_rest = opath.sep + ed_rest
+        else:
+            ed_rest = ""
+    
     input_tree_root = app_args.input_tree_root
     current_tree_root = None
     ctracef(1, "0: expand_dest_args>{}<\n", expand_dest_args)
@@ -267,6 +302,7 @@ def main(argv):
         else:
             dp_io.eprintf("  Looking in current dir>{}<\n",
                           opath.realpath(opath.curdir))
+        print >>Error_file, "Cannot find tree root."
         sys.exit(2)
 
     ctracef(1, "A: input_tree_root>{}<\n", input_tree_root)
@@ -281,6 +317,7 @@ def main(argv):
     if realpath_p is None:
         realpath_p = True
     if expand_dest_args:
+        ctracef(1, "handling expand_dest_args\n")
         s = expand_dest(current_tree_root=current_tree_root,
                         expand_dest_args=expand_dest_args,
                         input_tree_root=input_tree_root,
@@ -289,14 +326,17 @@ def main(argv):
 
         ctracef(1, "s>{}<\n", s)
         if not s:
+            print >>Error_file, "Could not expand>{}<".format(expand_dest_args)
             sys.exit(3)
+        s = s + ed_rest
         if opath.exists(s):
             print s
             sys.exit(0)
-        elif app_args.print_non_existent_p:
-            print s
-
-        ctracef(1, "NO GO ON s>{}<\n", s)
+        else:
+            if app_args.print_non_existent_p:
+                print s
+            print >>Error_file, "Expansion>{}< doesn't exist.".format(s)
+            ctracef(1, "NO GO ON s>{}<\n", s)
         sys.exit(13)
 
 

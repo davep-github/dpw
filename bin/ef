@@ -131,7 +131,7 @@ process_file ()
         then
             editing_host_opt="-h $eh"
             [ -z "$quiet_p" ] && {
-                : ${editing_host_msg:="editing on host: $eh"}
+                : ${editing_host_msg:="using host: $eh"}
             }
         else
             prob="Editing server not found"
@@ -174,7 +174,7 @@ process_file ()
         fi
     }
 
-    attempt-to-raise-emacs
+    vunsetp "${eval_opt}" && attempt-to-raise-emacs
 
     # send the filename to emacs
     [ "$do_wait" = 'y' ] && nowait_opt=
@@ -205,8 +205,8 @@ do
 	-e) eval_opt="$eval_opt $2"; shift;;
 	# read a string to eval from stdin.
 	# getopt WILL NOT preserve spaces! So read funky things from stdin.
-	-E) read x; eval_opt="$eval_opt $x";;
-	-R) read x; CL="$x";;
+	-E) read; eval_opt="$eval_opt ${REPLY}";;
+	-R) read; CL="${REPLY}";;
 	-c) client=$2; shift;;
 	-w) do_wait=y;;
         -1) one_file=y;;
@@ -232,7 +232,8 @@ then
     set -- "$CL"
 fi
 
-# if there's an eval_opt, wrap it in a progn to make it a single expr
+# if there's an eval_opt, wrap it in a progn to make it a single expr. This
+# is fine if it's already a progn
 [ -n "$eval_opt" ] && eval_opt="-eval '(progn $eval_opt)'"
 
 #echo "1>$1<"

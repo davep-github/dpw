@@ -229,9 +229,10 @@ vsetp $exit_p && {
 }
 
 index_files=
-vsetp "$ctags_p" && index_files="$index_files TAGS tags"
-vsetp "$gtags_p" && index_files="$index_files GTAGS GRTAGS GPATH"
-vsetp "$cscope_p" && index_files="$index_files cscope.*" 
+vsetp "$ctags_p" || vsetp "${clean}" && index_files="$index_files TAGS tags"
+vsetp "$gtags_p" || vsetp "${clean}" && index_files="$index_files GTAGS GRTAGS GPATH"
+# ncscope.out is the temp cscope file. If it exists, it indicates a problem.
+vsetp "$cscope_p" || vsetp "${clean}" && index_files="$index_files cscope.* ncscope.out" 
 
 if vsetp "$clean"
 then

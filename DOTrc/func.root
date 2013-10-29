@@ -11,7 +11,7 @@ vunsetp()
 }
 
 DP_TRUTH_VAL=t                  # Preferred
-truth_p()
+true_p()
 {
     case "${1-}" in
         [tTyY1]) return 0;;
@@ -19,11 +19,12 @@ truth_p()
     esac
     return 1
 }
-export -f truth_p
+export -f true_p
 
-alias truep=truth_p
-alias vtruep=truth_p
-alias vfalsep='! truth_p'
+alias truep=true_p
+alias vtruep=true_p
+alias truth_p=true_p
+alias vfalsep='! true_p'
 alias falsep=vfalsep
 
 settrue()

@@ -39,8 +39,9 @@ See also tgen.pl and testgen.pl for additional ops.
 AXF options apply to all <tgen-level-test>s.
 "
 Usage_details="${EExec_parse_usage}
+-k) Run EExec -n using eko rather than echo.
 -w) Wait for completion rather than submitting to LSF.
--T <tgen-opt>) Add value to an additional string of tgen options.
+-T|--tgen-opt <tgen-opt>) Add value to an additional string of tgen options.
 -C) Clear clobber opt.
 -l <level>) Specify tgen level file.
 -r <trace-root>) Root for traces.
@@ -58,9 +59,9 @@ Usage_details="${EExec_parse_usage}
 --dump-images) -dumpImages to trace3d.
 "
 # Example of arg parsing.
-option_str="${EExec_parse_option_str}wT:Cl:r:c:t:d:"
+option_str="${EExec_parse_option_str}wT:Cl:r:c:t:d:k"
 long_options=("wait"
-"tgen-opt:"
+"tgen-opt:" "tgen-arg:"
 "clobber"
 "level:"
 "trace-root:"
@@ -87,7 +88,8 @@ long_options=("wait"
 "no-last" "no-latest"
 "last-out-dir:" "latest-out-dir:"
 "last-and-latest-prefix:" "ll-prefix:"
-"mail")
+"mail"
+"eko")
 
 : ${default_level=$(pwd)/config/levels/tegra/regress_tegra_gpu_multiengine}
 : ${user_levels=}
@@ -103,11 +105,12 @@ do
       -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
       -v) VERBOSE="echo $progname: "; EExecVerbose;;
       -q) VERBOSE=":"; EExecQuiet;;
+      -k|--eko) EExecDashN -k;;
 
       # Program options.
       # No mail if we're waiting. Can be turned on by a following --mail.
       -w|--wait) wait_opt=-wait; mail_opt="-nomail";;
-      -T|--tgen-opt) shift; user_tgen_opts="$user_tgen_opts $1";;
+      -T|--tgen-opt|--tgen-arg) shift; user_tgen_opts="$user_tgen_opts $1";;
       -C|--clobber) clobber_opt=;;
       -l|--level) shift; llist=$(echo "$1" | sed -r 's/,/ /g')
                   user_levels="${user_levels} ${llist}";;
@@ -213,8 +216,8 @@ Specify chip with [-c|--chip] <chip>
     esac
 fi
 
-
 # Appending to $@ allows for more kinds of quoting to be preserved.
+# This might be able to be done with arrays.
 vsetp "${queue}" && set -- "$@" -queue "${queue}"
 vsetp "$traceRoot_opt}" ] && set -- "$@" -traceRoot "${traceRoot_opt}"
 vsetp "$chip_opt}"  && set -- "$@" -chip "${chip_opt}"
@@ -302,6 +305,7 @@ do
     echo_id last_out
     echo_id latest_out
 
+    command_line_log="${out_dir}.command-line"
     if ! EExecDashN_p
     then
         EExec mkdir -p $(dirname "${out_dir}")
@@ -313,13 +317,16 @@ do
 tail -n1 ${last_out_dir_file_name}" >| "${latest_out}"
             chmod +x "${latest_out}"
         }
-        command_line_log="${out_dir}.command-line"
         EExec_verbose_echo_id command_line_log
         echo "$@" > "${command_line_log}"
-    fi
+    else
+        echo "Not running: $@" > "${command_line_log}"
+    fi        
     echo "${eexec_dash_n_prefix}${level}::${test_name} --> ${out_dir}" >> "${hist_file}"
     # EExecDashV_p && EExec -y -0 eko "EExec eko: $@"
     # @todo XXX ??? Check for: testgen.pl: INFO: No tests generated ???
+    vsetp "${tgen_opts}" && set -- "$@" ${tgen_opts}
+
     EExec "$@"
     
     [ -n "${display_status_p}" ] && {

@@ -888,6 +888,7 @@ Split line into chars and feed to ticker.""")
             else:
                 # Let the ticker class do what it will.
                 tick = None
-            ticker(tick=tick, tick_prefix=tick_prefix, ostream=sample_ostream)
+            ticker(tick=tick, tick_prefix=tick_prefix,
+                   ostream=sample_ostream)
         line_number += 1
     print
