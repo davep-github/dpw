@@ -3,9 +3,11 @@
 : ${confirmation_response:="TRUST ME"}
 
 : ${testname:=cpu_surface_write_read}
-: ${test_args="mapping_mode=reflected default_door no_check_mem_reg series_len=1 num_series=1 suite=rtmem-rtreg"}
+: ${test_args="mapping_mode=reflected default_door no_check_mem_reg series_len=1 num_series=1"}
+suites=(rtmem-rtreg)
 : ${testext=.so}
 : ${rundir:=$(depth)}
+: ${timestamp=$(dp-std-timestamp)}
 : ${EZEC=}
 : ${dump_waves_opt=}
 : ${no_run_p=}
@@ -16,13 +18,13 @@
 : ${ddd_opt=}
 : ${debug_opt=}
 : ${debug_level_opt=}
-#: ${config=top_peatrans_gpurtl} # Not for CPU?
+: ${config=top_peatrans_gpurtl} # Not for CPU? NO. Yes for MODS + CPU
 #: ${config=top_gpurtl_t132} # ??? do I need the _t132? NO.
-: ${config=top_gpurtl} # ??? do I need the _t132? NO.
+#: ${config=top_gpurtl} # ??? do I need the _t132? NO.
 
-# Satish's example doesn't use -mode arm, so we'll leave it off by default
-: ${mode_arg=}                  # -mode arm 
+: ${mode_arg=-mode arm}
 : ${RUN_CMD:=./bin/system_run}
+T124_ARGS=()
 : ${DENVER_RUN_CMD:=./bin/denver_system_run}
 DENVER_ARGS=(-allow_error_string "ERROR: \(PLL24G_DYN_PRB_ESD\)  An error in SETUP or power is preventing the PLL from starting" \
     -allow_error_string "0 demoted errors" \
@@ -63,15 +65,7 @@ DENVER_ARGS=(-allow_error_string "ERROR: \(PLL24G_DYN_PRB_ESD\)  An error in SET
 
 #eko "${DENVER_ARGS[@]}"
 
-
-if [ -z "${run_cmd_args}" ]
-then
-    run_cmd_args=("${DENVER_ARGS[@]}")
-fi
-#eko "${run_cmd_args[@]}"
-: ${run_cmd:=${DENVER_RUN_CMD}}
-: ${rtl_log_file_history:=rtl-log-file-history}
-
+run_cmd_args=("${DENVER_ARGS[@]}")
 
 while (($# > 0))
 do
@@ -86,8 +80,14 @@ do
       -p|--prog|--program|--test|--test-name) shift; testname="${1}";;
       -a|--args|--prog-args|--program-args) shift; test_args="${1}";;
       -d|--denver) run_cmd="${DENVER_RUN_CMD}"; run_cmd_args=("${DENVER_ARGS[@]}");;
+      --t124) run_cmd="${RUN_CMD}"; run_cmd_args=("${T124_ARGS[@]}"); mode_arg='-mode arm'
+              project=t124;;
+      -r|--run-cmd-args) shift; run_cmd_args="${1}";;
       -m|--mode) shift; mode_arg="-mode ${1}";;
       --config|-config) shift; config="${1}";;
+      --add-suite) shift; suites+=("${1}");;
+      --no-suites) suites=();;
+      --suites) shift; suites=(${1});;
 #       --rtprint|-rtprint) rtprint_opt="-rtprint";;
 #       --ddd|-ddd) ddd_opt="-ddd";;
 #       --debug|-debug) debug_opt="-debug";;
@@ -98,6 +98,16 @@ do
   esac
   shift
 done
+
+#: ${run_cmd_args=-}
+#if [ "${run_cmd_args}" = '-' ]
+#then
+#    run_cmd_args=${DENVER_ARGS}
+#fi
+#eko "${run_cmd_args[@]}"
+: ${run_cmd:=${DENVER_RUN_CMD}}
+: ${rtl_log_file_history:=rtl-log-file-history}
+
 
 echo "Remaining args after option parsing, \$@>$@<"
 
@@ -124,14 +134,19 @@ abspath()
 echo "Rundir >$rundir<, >$(cd $rundir; pwd)<"
 
 
-logdir="${PWD}/dp-rtl-tests/${config}-$(dp-std-timestamp)"
+logdir="${PWD}/dp-rtl-tests/${config}-${timestamp}"
 #logdir="${PWD}/dp-rtl-tests/abs-file-names"
 logfile="${logdir}/${testname}.log"
-mkdir -p "${logdir}" || {
-    rc="${?}"
-    echo "Cannot create logdir >$logdir<, RC: ${rc}"
-    exit "${rc}"
-} 1>&2
+if [ -z "${no_run_p}" ]
+then
+    mkdir -p "${logdir}" || {
+        rc="${?}"
+        echo "Cannot create logdir >$logdir<, RC: ${rc}"
+        exit "${rc}"
+    } 1>&2
+else
+    echo "Not creating log dir>${logdir}<"
+fi
 
 pushd "${rundir}"
 
@@ -148,10 +163,20 @@ hdr_file=$(abspath ../../arch/traces/mobile/traces/gpu_multiengine/comp_one_tri_
     startrecord_opt="-rtlarg +startrecord+${startrecord}"
 }
 
-echo "${logfile}" >> "${rtl_log_file_history}"
+if test -z "${no_run_p}"
+then
+    hist_prefix="Not running: "
+else
+    hist_prefix=""
+fi
+echo "${logfile}" >> "${hist_prefix}${rtl_log_file_history}"
 if [ -n "${test_args}" ]
 then
     test_args=" ${test_args}"
+    for suite in "${suites[@]}"
+    do
+      test_args="${test_args} suite=${suite}"
+    done
 fi
 
 #use $@ directly     ${rtprint_opt} \

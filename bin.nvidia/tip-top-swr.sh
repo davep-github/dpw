@@ -5,7 +5,7 @@ bindir=$(dirname "$0")
 : ${confirmation_response:="TRUST ME"}
 
 : ${testname:=cpu_surface_write_read}
-: ${test_args="mapping_mode=reflected default_door no_check_mem_reg series_len=1 num_series=1 test=rtmem-rtmem"}
+: ${test_args="mapping_mode=reflected default_door no_check_mem_reg series_len=1 num_series=1 suite=rtmem-rtreg"}
 : ${testext=.so}
 : ${rundir:=$(depth)}
 : ${EZEC=}
@@ -13,7 +13,7 @@ bindir=$(dirname "$0")
 : ${no_run_p=}
 : ${startrecord=}
 : ${startrecord_opt=}
-: ${project:=t132}
+: ${project:=t124}
 : ${RUN_CMD:=./bin/system_run}
 : ${DENVER_RUN_CMD:=./bin/denver_system_run}
 : ${DENVER_ARGS:=-denver_mts -rtapi_denver}
@@ -104,11 +104,11 @@ then
 fi
 
 ${EZEC} "${run_cmd}" \
+    -P "${project}" \
     -mode arm \
     ${dump_waves_opt} \
     ${startrecord_opt} \
     ${denver_args} \
-    -P "${project}" \
     -dir "${logdir}" \
     -o "${logfile}" \
     -noClean \

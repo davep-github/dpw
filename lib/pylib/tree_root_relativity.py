@@ -97,7 +97,7 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
     #
     if abbrev == '~':
         abbrev = "ap"
-    elif abbrev == ".":
+    elif abbrev in (".", "=", "-"):
         ctracef(1, "2.2: abbrev>{}<\n", abbrev)
         ctracef(1, "2.3: current_tree_root>{}<\n", current_tree_root)
         abbrev = relativize(get_current_tree_root(),
@@ -271,6 +271,8 @@ def main(argv):
     ctracef(1, "expand_dest_args>{}<\n", expand_dest_args)
     if expand_dest_args == "/":
         expand_dest_args = "/"
+        ed_rest = ""
+    elif expand_dest_args.find("//") == 0:
         ed_rest = ""
     else:
         ed_components = expand_dest_args.split(opath.sep)

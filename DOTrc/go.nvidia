@@ -74,6 +74,8 @@ Ee|TOT__ME_src|                 ${hw__ME_src}${ME_current_default_ap_tree}
 Ee|tot__ME_src|                 ${TOT__ME_src}
 Ee|topoftree__ME_src|           ${TOT__ME_src}
 Ee|ap__ME_src|                  ${TOT__ME_src}
+Ee|totbin__ME_src|              ${TOT__ME_src}bin/
+Ee|apbin__ME_src|               ${totbin__ME_src}
 Ee|totvmod__ME_src|             ${TOT__ME_src}vmod/
 Ee|apvmod__ME_src|              ${totvmod__ME_src}
 Ee|vmod__ME_src|                ${totvmod__ME_src}

@@ -22,6 +22,10 @@ me_dogo_op()
         -*)
             go-mgr "$@"
         ;;
+        back) dest="${GoBack}"
+              export GoBack="${PWD}"
+              "${op}" "${dest}"
+              ;;
         *)
             [ -z "$*" ] && dest="tot"
             local dest=$(me-expand-dest "$@")

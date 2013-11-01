@@ -40,7 +40,12 @@ do
   shift
 done
 
-dest="${1}"
+if (($# > 0))
+then
+    dest="${1-}"
+else
+    dest="/"
+fi
 shift
 
 if (($# > 0))

@@ -6414,7 +6414,7 @@ not."
   
 (defun* dp-start-editing-server (&optional server-fate force-serving-p)
   "Start a server to edit files for remote clients.  Prefer `gnuserv'.
-LEAVE-OR-MAKE-DEAD-P (prefix arg) says nuke any existing child server and 
+SERVER-FATE (prefix arg) says nuke any existing child server and 
 start a new one."
   (interactive "P")
   (setq server-fate (cond

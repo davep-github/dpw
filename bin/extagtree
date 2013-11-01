@@ -20,6 +20,9 @@ do
 done
 EExec_verbose_msg $(echo_id eexec_program)
 
+# ncscope.out is left over if cscope dies from EFBIG.
+: ${NCSCOPE="ncscope.out"}
+
 #unset eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 export eexec_program
@@ -48,7 +51,7 @@ cscope_tree()
 {
     local files_file="$1"
     local cs=$(sp -1 cscope)
-    
+
     vunsetp $cs && cs=$(sp -1 dp-cscope)
     if vunsetp $cs
     then
@@ -56,6 +59,9 @@ cscope_tree()
     else
         dp_echo2 "cscope>$cs<cscope"
         EExec $cs $EXTAGTREE_DASH_Q -b -i "$files_file" $cscope_flags
+        [ -e "${NCSCOPE}" ] && {
+            echo "WARNING: $(realpath ${NCSCOPE}) exists. Cscope may have failed."
+        } 1>&2
     fi
 }
 

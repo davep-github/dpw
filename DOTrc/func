@@ -1190,4 +1190,15 @@ export -f exchange_ap_tree
 alias xap='exchange_ap_tree g'
 alias cdap='exchange_ap_tree cd'
 
+p4_change_sandbox()
+{
+    (($# < 1)) && {
+        echo "A sandbox name/abbrev is required."
+        return 1
+    } 1>&2
+    mecd . "$@"
+}
+export p4_change_sandbox
+alias chsb=p4_change_sandbox
+
 true

@@ -57,6 +57,7 @@ diff_cmd="(ediff-files \"$fileA\" \"$file2\")"
 # -eval (gnuclient) doesn't seem to work with -q
 # 
 EExec ec -w -e "${diff_cmd}"
+attempt-to-raise-emacs
 if vsetp "${wait_opt}" && ! EExecDashN_p
 then
     read -e -p "${progname}: Press enter to continue..."

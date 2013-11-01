@@ -33,8 +33,12 @@ editing_host_msg=
 extra_editing_host_msg=
 quiet_p=
 
-date >| $LOG_FILE
-echo >> $LOG_FILE "args>$*<"
+now=$(date)
+{
+    echo ">> ${now} ========================================================================"
+    eko "$@"
+} >> $LOG_FILE
+
 for a in "$@"
 do
   echo ">$a<" >> $LOG_FILE
@@ -44,11 +48,9 @@ do
 done
 echo '--' >> $LOG_FILE
 
-prog=`basename $0`
-
 Usage()
 {
-   echo "${prog}: usage: $prog [-q]" 1>&2
+   echo "${progname}: usage: $progname [-q]" 1>&2
    exit 1
 }
 
@@ -180,14 +182,14 @@ process_file ()
     [ "$do_wait" = 'y' ] && nowait_opt=
     [ -n "$editing_host_msg" ] && echo "$editing_host_msg"
     [ -n "$extra_editing_host_msg" ] && echo "$extra_editing_host_msg"
-    eval EExec $client $editing_host_opt $nowait_opt $eval_opt "$opts" $file
+    eval EExec $client $editing_host_opt $nowait_opt $eval_opt "$opts" "$file"
 }
 
 # init optional vars to defaults here...
 
 eval_opt=
 client=
-ECHO="echo $prog: "
+ECHO="echo $progname: "
 CL=
 
 std_options=""
@@ -199,7 +201,7 @@ eval set -- "$q"
 unset q
 [ $? != 0 ] && Usage
 
-for i in "$@"
+while (($# > 0))
 do
     case "$1" in
 	-e) eval_opt="$eval_opt $2"; shift;;
@@ -225,7 +227,7 @@ do
     shift
 done
 
-args="$*"
+args="$@"
 
 if [ -n "$CL" ]
 then
@@ -233,7 +235,7 @@ then
 fi
 
 # if there's an eval_opt, wrap it in a progn to make it a single expr. This
-# is fine if it's already a progn
+# is fine if it's already a progn and it's not worth checking for it.
 [ -n "$eval_opt" ] && eval_opt="-eval '(progn $eval_opt)'"
 
 #echo "1>$1<"
@@ -268,7 +270,8 @@ esac
 findprog -s sawfish
 have_sawfish=$?
 
-#echo "args>$args<"
+echo_id args
+echo_id one_file
 #set -x
 if [ -z "$args" ]
 then
@@ -278,18 +281,24 @@ then
     process_file $args # 2>> ec-w.out
 else
     set -- $args
-    for file in $@
+    for file in "$@"
     do
-        opts=""
-        if [ "${1:0:1}" = "+" ]
-        then
-            opts="$1"
-            shift
-        fi
-        f="$1"
-	process_file "$f" "$opts"
-        shift
+      echo_id file
+      opts=""
+      if [ "${1:0:1}" = "+" ]
+          then
+          opts="$1"
+          shift
+      fi
+      f="$1"
+      process_file "$f" "$opts"
+      shift
     done
 fi
+
+{
+    echo "<< ${now} ========================================================================"
+    echo bubba
+} >> $LOG_FILE
 
 exit 0

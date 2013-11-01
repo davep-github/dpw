@@ -1,0 +1,45 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+: ${clean_p=}
+
+while (($# > 0))
+do
+  case "$1" in
+      --clean) clean_p=t;;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
+
+source $HOME/.rc/env.mods
+
+EExec -y cd "${MODS_BUILD_DIR}"
+
+vsetp "${clean_p}" && {
+    EExec apmake clean_all
+}
+
+EExec apmake build_all

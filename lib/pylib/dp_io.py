@@ -169,9 +169,7 @@ def sprintf(fmt, *args):
 def eprintf(fmt, *args):
     """eprintf - print to stderr or user specified error files."""
     if f_eprint:
-        if args:
-            fmt = fmt % args
-        lprint(v_eprint_files, eprint_leader, fmt)
+        lprintf(v_eprint_files, eprint_leader, fmt, *args)
 
 ###############################################################
 def printf(fmt, *args):
