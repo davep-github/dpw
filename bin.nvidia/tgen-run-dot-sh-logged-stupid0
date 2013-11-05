@@ -24,6 +24,7 @@ $EEXEC tgen-run-dot-sh-logged \
     --egrep 'Error opening.*\.so:.*lib.*not found|ERROR: cannot aquire /tmp/asim.X|something bad happened|\(gdb\)' \
     --egrep 'RT_FAIL' \
     --hgrep 'call stack' \
+    --hgrep 'stack trace' \
     --egrep 'KeyError: .OUT.' \
     --egrep 'qemu: could not load kernel' \
     --hgrep 'waiting for a connection on port [0-9]+' \

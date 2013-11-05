@@ -1032,12 +1032,12 @@ AddToMenu   "Move-window-to" "Move to page..." Title
 + "" Nop
 + '&General'              MoveToDesk 0 0
 ## ASIM RUN LIMIT error... ASIM issue?
-+ 'SB&1 @SB_SB1_DESC@'    MoveToDesk 0 1
++ 'T&1 @SB_SB1_DESC@'    MoveToDesk 0 1
 ## RTL tree to test DEP-CPU under RTL
-+ 'SB&2-@SB_SB2_DESC@'    MoveToDesk 0 2
-+ 'SB&3-@SB_SB3_DESC@'    MoveToDesk 0 3
-+ 'SB&4-@SB_SB4_DESC@'    MoveToDesk 0 4
-+ 'SB&5-@SB_SB5_DESC@'    MoveToDesk 0 5
++ 'T&2-@SB_SB2_DESC@'    MoveToDesk 0 2
++ 'T&3-@SB_SB3_DESC@'    MoveToDesk 0 3
++ 'T&4-@SB_SB4_DESC@'    MoveToDesk 0 4
++ 'T&5-@SB_SB5_DESC@'    MoveToDesk 0 5
 
 ##------------------------------------------------------------------------------
 ## A "Goto Desk" menu
@@ -1053,12 +1053,12 @@ AddToMenu   "Goto-page-or-desk" "Go to page..." Title
 + "" Nop
 + '&General'              GotoDeskAndPage 0 0 0
 ## Available -skiprtl tree.
-+ 'SB&1-ap-merge'         GotoDeskAndPage 1 0 0
++ 'T&1-ap-merge'         GotoDeskAndPage 1 0 0
 ## RTL tree to test DEP-CPU under RTL
-+ 'SB&2-R/DEPCPU'         GotoDeskAndPage 2 0 0
-+ 'SB&3-R/RUNLIMIT'       GotoDeskAndPage 3 0 0
-+ 'SB&4-R/SWR-wave'       GotoDeskAndPage 4 0 0
-+ 'SB&5-R/burst'          GotoDeskAndPage 5 0 0
++ 'T&2-R/DEPCPU'         GotoDeskAndPage 2 0 0
++ 'T&3-R/RUNLIMIT'       GotoDeskAndPage 3 0 0
++ 'T&4-R/SWR-wave'       GotoDeskAndPage 4 0 0
++ 'T&5-R/burst'          GotoDeskAndPage 5 0 0
 
 ##------------------------------------------------------------------------------
 ## A group version of WindowOps

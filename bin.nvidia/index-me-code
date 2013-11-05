@@ -144,7 +144,7 @@ do
     shift
 done
 
-if truth_p "${oot_only_p}"
+if true_p "${oot_only_p}"
 then
     index_out_of_tree_locations
     dp_echo "Indexing oot only. Exiting."
@@ -171,7 +171,7 @@ ap_dir=$(basename "${ap_dir}")
 : ${p4_root=${1-"."}}
 p4_root=$(realpath "${p4_root}")
 
-truth_p "${just_nvcscope_p}" && {
+true_p "${just_nvcscope_p}" && {
     nvcscope_p=t
 }
 
@@ -254,7 +254,7 @@ echo_id dirs_of_interest
 # way to control the source code finder from here.
 export EXCLUDE_PAT="/plex/"
 
-if truth_p "${nvcscope_p}"
+if true_p "${nvcscope_p}"
 then
     # St00p1d god damn mother f00ck1ng b00llsh1t a55hole 1d1ocy!
     # One tree:
@@ -281,7 +281,7 @@ then
               break;
           }
         done
-        if truth_p "${link_em}"
+        if true_p "${link_em}"
         then
             EExec rm -f ${nvcscope_files}
             EExec nvcscope --link-this-tree-to-prebuilt-indexes

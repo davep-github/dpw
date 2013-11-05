@@ -89,7 +89,7 @@ do
         -R) realpath_p=t;;
 	--) shift ; break;;
 	*)
-	    echo 1>&2 "Unsupported option>$1<";
+	    echo 1>&2 "$progname: Unsupported option>$1<";
 	    exit 1 ;;
     esac
     shift

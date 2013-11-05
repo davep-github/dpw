@@ -317,11 +317,11 @@ DestroyModuleConfig FvwmPagerPager: *
 ##FVWM 1
 *FvwmPagerPager: WindowColors white grey51 black #92e6ab
 *FvwmPagerPager: Label 0 General
-*FvwmPagerPager: Label 1 SB1-@SB_SB1_DESC@
-*FvwmPagerPager: Label 2 SB2-@SB_SB2_DESC@
-*FvwmPagerPager: Label 3 SB3-@SB_SB3_DESC@
-*FvwmPagerPager: Label 4 SB4-@SB_SB4_DESC@
-*FvwmPagerPager: Label 5 SB5-@SB_SB5_DESC@
+*FvwmPagerPager: Label 1 T1-@SB_SB1_DESC@
+*FvwmPagerPager: Label 2 T2-@SB_SB2_DESC@
+*FvwmPagerPager: Label 3 T3-@SB_SB3_DESC@
+*FvwmPagerPager: Label 4 T4-@SB_SB4_DESC@
+*FvwmPagerPager: Label 5 T5-@SB_SB5_DESC@
 *FvwmPagerPager: SmallFont 5x8
 
 ##------------------------------------------------------------------------------
@@ -343,11 +343,11 @@ DestroyModuleConfig FvwmDesker: *
 ##*FvwmDesker: WindowColors white grey51 white Blue4
 ##FVWM 1
 *FvwmDesker: Label 0 General
-*FvwmDesker: Label 1 SB1-@SB_SB1_DESC@
-*FvwmDesker: Label 2 SB2-@SB_SB2_DESC@
-*FvwmDesker: Label 3 SB3-@SB_SB3_DESC@
-*FvwmDesker: Label 4 SB4-@SB_SB4_DESC@
-*FvwmDesker: Label 5 SB5-@SB_SB5_DESC@
+*FvwmDesker: Label 1 T1-@SB_SB1_DESC@
+*FvwmDesker: Label 2 T2-@SB_SB2_DESC@
+*FvwmDesker: Label 3 T3-@SB_SB3_DESC@
+*FvwmDesker: Label 4 T4-@SB_SB4_DESC@
+*FvwmDesker: Label 5 T5-@SB_SB5_DESC@
 *FvwmDesker: SmallFont 5x8
 
 ##------------------------------------------------------------------------------

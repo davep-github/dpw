@@ -456,6 +456,12 @@ NAME is a short name associated by hideif with the list of defs."
 (defsubst dp-current-sandbox-read-only-p ()
   dp-current-sandbox-read-only-private-p)
 
+(defvar dp-all-sandboxes-read-only-private-p nil
+  "See `dp-set-sandbox' for the meaning of this variable.")
+
+(defsubst dp-all-sandboxes-read-only-p ()
+  dp-all-sandboxes-read-only-private-p)
+
 (defsubst dp-current-sandbox-p (filename)
   "Return non-nil if we are in the current sandbox dir.
 Returns nil if there is no current sandbox."
@@ -561,10 +567,12 @@ if there is no current one set."
   ;; If in current sb and current sb RO
   ;; no sb --> not-RO
   (when
-      (and (dp-current-sandbox-regexp)
-           (dp-sandbox-file-p filename)
-           (or (not (dp-current-sandbox-p filename))
-               (dp-current-sandbox-read-only-p)))
+      (or (and (dp-sandbox-file-p filename)
+               (dp-all-sandboxes-read-only-p))
+          (and (dp-current-sandbox-regexp)
+               (dp-sandbox-file-p filename)
+               (or (not (dp-current-sandbox-p filename))
+                   (dp-current-sandbox-read-only-p))))
     (dmessage "file in non-current sandbox: %s" filename)
     t))
 

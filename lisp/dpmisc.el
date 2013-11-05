@@ -10377,13 +10377,13 @@ I like to be more precise in certain cases; such as when deleting things.")
                      nil t)
    nil all-p))
 
-(defun dp-kill-sandbox-buffers (sandbox-name &optional all-p)
-  "Kill all buffers visiting files in SANDBOX-NAME."
-  (interactive "ssandbox of buffers to kill: \nP")
-  (dp-kill-buffers-by-file-name
-   (concat "/davep/work/" sandbox-name "/")
-   t all-p))
-(dp-safe-alias 'dp-kill-buffers-by-sandbox 'dp-kill-sandbox-buffers)
+;; (defun dp-kill-sandbox-buffers (sandbox-name &optional all-p)
+;;   "Kill all buffers visiting files in SANDBOX-NAME."
+;;   (interactive "ssandbox of buffers to kill: \nP")
+;;   (dp-kill-buffers-by-file-name
+;;    (concat "/davep/work/" sandbox-name "/")
+;;    t all-p))
+;; (dp-safe-alias 'dp-kill-buffers-by-sandbox 'dp-kill-sandbox-buffers)
 
 (defalias 'dp4-kill-client-buffers 'dp-kill-sandbox-buffers)
 
@@ -15926,7 +15926,11 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
   (message "%s: %s" var (getenv var)))
 
 (defun* dp-make-frame-title-format (&key gnuserv-running-p force-no-server-p)
-  (format "[%s] %s%s" 
+  (format "[%s%s] %s%s"
+          (if (or (dp-current-sandbox-read-only-p)
+                  (dp-all-sandboxes-read-only-p))
+              "!"
+            "")
           (or (dp-current-sandbox-name) "No SB")
           (if (and (not force-no-server-p)
                    (or gnuserv-running-p 

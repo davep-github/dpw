@@ -7,6 +7,7 @@ source eexec
 
 : ${test_name=}
 : ${no_cd=}
+: ${mecd_to=}
 : ${printor=echo}
 : ${log_dir_base=dp-run-tgens.d} # This is duplicated from tgen-run-one. Make a tgen.rc type file.
 : ${print_base_dir_p=}
@@ -30,6 +31,7 @@ long_options=("test-name:" "testname:" "name:" "tn:"
 "realpath"
 "base-dir" "root-dir" "base" "root"
 "test-type:" "type:" "out:"
+"sb:" "sandbox:" "tree:"
 )
 
 source dp-getopt+.sh
@@ -47,6 +49,7 @@ do
       --no-cd|--stay-put|--.|--no-mecd-testgen) no_cd=t;;
       -b|--base-dir|--root-dir|--base|--root) print_base_dir_p=t;;
       -r|--realpath) printor=realpath;;
+      --sb|--sandbox|--tree) shift; mecd_to="${1}";;
       --test-type|--type|--out) shift; some_path_component="${1}";;
       # Help!
       --help) Usage; exit 0;;
@@ -67,7 +70,7 @@ vsetp "${1-}" && {
 }
 
 vunsetp "${no_cd-}" && {
-    mecd testgen
+    mecd testgen ${mecd_to}
 }
 
 dir_num="${1-1}"

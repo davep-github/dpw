@@ -35,7 +35,7 @@ dp_screen()
 #echo "SCREEN_NAME>$SCREEN_NAME<" 1>&2
 #echo "0: DP_MY_SCREEN_NAME>$DP_MY_SCREEN_NAME<"
   if [ "$DP_MY_SCREEN_NAME" == "$SCREEN_NAME" ]; then
-      echo -n "You already seem to be in the ${SCREEN_NAME} screen... continue [y/N]? "
+      echo -n "You already seem to be in the >${SCREEN_NAME}< screen... continue [y/N]? "
       ans=
       read ans
       if [ "$ans" != y ]; then

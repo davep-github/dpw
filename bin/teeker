@@ -564,10 +564,12 @@ Split line into chars and feed to ticker.""")
                           # == 0 --> unlimited.
                          type=int, default=DEFAULT_MAX_ERROR_MATCHES,
                          help="Max error regexp matches before exit.")
-    oparser.add_argument("--lines-after", "-A",
-                         dest="num_lines_to_print_after",
+    oparser.add_argument("--lines-after", "-A", "--extra-lines",
+                         "--trailing-lines", "--residual_lines",
+                         "--num-trailing-lines",
+                         dest="num_trailing_lines",
                          type=int, default=DEFAULT_LINES_AFTER,
-                         help="Print this many more lines if possible (ignoring filters and ticking) when exiting. Default is: %s. (0) means none")
+                         help="Print this many more lines if possible (ignoring filters and ticking) before exiting. Default is: %s. (0) means none")
     oparser.add_argument("-q", "--cat-like", "--copy",
                          nargs=0,
                          action=App_arg_action_catlike,
@@ -613,6 +615,9 @@ Split line into chars and feed to ticker.""")
 
     oparser.add_argument("output_files", nargs="*")
 
+    # End of args. Args end.
+
+    # Parse args.
     app_args = oparser.parse_args()
 
     if app_args.debug_level:
@@ -778,7 +783,7 @@ Split line into chars and feed to ticker.""")
                                           extra_streams=[sys.stdout])
         ticker.fini()
 
-    num_lines_to_print_after = app_args.num_lines_to_print_after
+    num_trailing_lines = app_args.num_trailing_lines
     max_output_bytes_before_exit = app_args.max_output_bytes_before_exit
     trailing_line_prefix = ""
     on_borrowed_time_p = False
@@ -800,22 +805,22 @@ Split line into chars and feed to ticker.""")
                             and
                             (total_bytes_written > max_output_bytes_before_exit))
                         or (max_hits and (len(matching_lines) >= max_hits)))
-        #print "num_lines_to_print_after:", num_lines_to_print_after
+        #print "num_trailing_lines:", num_trailing_lines
         if (final_exit_p or limit_exit_p):
             if (final_exit_p
-                or (num_lines_to_print_after == 0)):
+                or (num_trailing_lines == 0)):
                 loop_fini()
                 break
 
             # if we're here, then limit_exit_p is True and
-            # num_lines_to_print_after is non-zero
+            # num_trailing_lines is non-zero
             if not on_borrowed_time_p:
                 input_line = input_line + ("\n"
                                            + "=== Post Limit Lines ==="
                                            + "\n")
                 on_borrowed_time_p = True
                 dp_sequences.maybe_add_to_list(output_streams, sys.stdout)
-            num_lines_to_print_after -= 1
+            num_trailing_lines -= 1
         input_line = trailing_line_prefix + input_line
         for o in output_streams:
             # Since this was motivated by a disk space issue, count *all*

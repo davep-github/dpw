@@ -79,13 +79,13 @@ fi
 test_base_name=$(basename "${testname}" .sh)
 cfg_file_name="${test_base_name}.cfg"
 so_name=$(sed -rn "s/(.*-plugin ')([^[:space:]]+)( .*)/\2/p" "${cfg_file_name}").so
-echo_id so_name
+#echo_id so_name
 clib_dir=$(me-expand-dest "${p4_clib_dir}")
 so_path="${clib_dir}/${so_name}"
-echo_id so_path
+#echo_id so_path
 # Check for no go&^@*(#amn(*#&(#*&$other-*&^#*$&-ing link errors.
 ldd "${so_path}"
-echo "Finish writing ldd check!"
+#echo "Finish writing ldd check!"
 
 # E.g. ./surface_write_read_no_smmu_bar1.sh 2>&1 | teeker --slog -Z9 --ts --grep 'surface_write_read:' --hg dot-sh --egrep 'ERROR: cannot aquire /tmp'; email-yopp
 

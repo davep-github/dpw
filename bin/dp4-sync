@@ -59,7 +59,9 @@ long_options=("teeker-opts:" "tee-func:" "teeker-interval:"
     "one-by-one"
     "mail" "notify-on-completion" "email-on-completion" "yopp" "send-mail"
     "no-log-file"
-    "no-save-args")
+    "no-save-args"
+    "stay-put" "no-cd"
+)
 
 source dp-getopt+.sh
 for i in "$@"
@@ -73,7 +75,7 @@ do
       -t|--tee) tee_func=teeer;;
       -k|--teeker-opts) shift; teeker_opts="$1";;
       -i|--teeker-interval) shift; teeker_interval="$1";;
-      -.) stay_in_cwd_p=t;;
+      -.|--stay-put|--no-cd) stay_in_cwd_p=t;;
       -f) p4_sync_dash_f="-f";;
       -N|--p4-sync-dash-n|--4n|--p4n|--p4-n) p4_sync_dash_n=-n;;
       -1|-o|--no-log-file) kwa_log_file=/dev/null; 
@@ -94,27 +96,39 @@ do
     shift
 done
 
-: ${sandbox_root:=$(dp4-get-root)}
-: ${kwa_log_root:=${sandbox_root}/${progname}}
-: ${kwa_log_base:=${progname}}
-: ${kwa_log_dir:=${kwa_log_root}/${kwa_log_base}-$(dp-std-timestamp)}
-: ${kwa_log_file:=${kwa_log_dir}/${progname}.out}
-
-EExec -y mkdir -p "${kwa_log_dir}"
-
 # Command line argument implies we're sync'ing a subset so stay where we are.
 vsetp "$*" && {
     stay_in_cwd_p=t
 }
 
 vfalsep "${stay_in_cwd_p}" && {
-    EExec -y cd "${sandbox_root}"
+    # With multiple trees, it makes more sense to simply move up to the
+    # closest .p4config.
+    p4config=$(find-up ".p4config")
+    if [ "$?" != 0 ] || vunsetp "${p4config}"
+    then
+        echo_id p4config
+        echo "Cannot find p4 config file."
+        exit 1
+    fi 1>&2
+    p4config_dir=$(dirname "${p4config}")
+    EExec -y cd "${p4config_dir}"
 }
-EExec_verbose_msg "Sync'ing in >$(pwd)<"
 
+: ${sandbox_root:=$(dp4-get-root)}
+: ${kwa_log_root:=${sandbox_root}/${progname}}
+: ${kwa_log_base:=$(basename "${PWD}")-${progname}}
+: ${kwa_log_dir:=${kwa_log_root}/${kwa_log_base}-$(dp-std-timestamp)}
+: ${kwa_log_file_name:=${kwa_log_base}.out}
+
+EExec -y mkdir -p "${kwa_log_dir}"
+EExec_verbose_msg "Sync'ing in >$(pwd)<"
 EExec_verbose_msg p4 command: p4 sync ${p4_sync_dash_n} ${p4_sync_dash_f} "$@" 
 
-echo "log dir>${kwa_log_dir}<"
+echo_id kwa_log_dir
+#kwa_log_file_name=$(basename "${PWD}" )-"${kwa_log_file_name}"
+kwa_log_file="${kwa_log_dir}/${kwa_log_file_name}"
+echo_id kwa_log_file
 {
     # print log name before and after in case it is a long sync.
     [ -n "$save_args_p" ] && {
@@ -167,9 +181,9 @@ EExecDashN_p && {
 
 EExec dp4-sync-post-processor
 
-vsetp "${send_mail_on_completion_p-}" && ! EExecDashN_p && {
+vsetp "${send_mail_on_completion_p-}" && ! EExecDashN_p && ! vsetp "${p4_sync_dash_n}" && {
+    EExec_verbose_msg "YOPP!ing."
     mail -s "$progname is done" "${USER}" < /dev/null >/dev/null 2>&1
 }
-
 
 exit

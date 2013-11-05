@@ -1,0 +1,58 @@
+#!/bin/sh
+#
+# Simple interface to cscope -l|-L line oriented interface.
+# Mainly allow mnemonic names for fields.
+# 0: Find this C symbol:
+# 1: Find this global definition:
+# 2: Find functions called by this function:
+# 3: Find functions calling this function:
+# 4: Find this text string:
+# 5: Change this text string:
+# 6: Find this egrep pattern:
+# 7: Find this file:
+# 8: Find files #including this file:
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+field_num=
+arg=
+while (($# > 0))
+do
+  case "$1" in
+      --sym|--symbol|--cs|-s) shift; arg="${1}"; field_num=0;;
+      --global|--def|--definition|--global-def|--global-definition) shift; arg="${1}"; field_num=1;;
+      --called|--called-by) shift; arg="${1}"; field_num=2;;
+      --calling|--callers|--calls) shift; arg="${1}"; field_num=3;;
+      --text|--str|--string|--text-string|--text-str|--txt) shift; arg="${1}"; field_num=4;;
+      --change|--change-text|--change-txt) field_num=5;;  # This may require more work.
+      --egrep|--grep|--regexp|--re) shift; arg="${1}"; field_num=6;;
+      --file) shift; arg="${1}"; field_num=7;;
+      --including|--include|--inc|-h) field_num=8;;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
+
+set -- "$@" "${arg}"
+EExec cscope -L -"${field_num}" "${@}"
