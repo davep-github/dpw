@@ -130,23 +130,6 @@ tests.")
 (defvar dp-p4-default-depot-completion-prefix "//"
   "Depot root.")
 
-;; (defun dp-nvidia-make-cscope-database-regexps ()
-;;   "Compute value for `cscope-database-regexps'
-;; We want to be able to find ap files from other dirs (//arch/...) and other
-;; files (//arch/...) ap dirs."
-;;   (let ((ap (dp-me-expand-dest "ap" (dp-current-sandbox-name)))
-;;         (sb (dp-current-sandbox-regexp)))
-;;     `(
-;;       (,sb                              ; If the filename matches this regexp
-;;        (t)                              ; Search parents for db
-;;        (,ap)                            ; Search ap (TOT) for db
-;;        (,sb)                            ; Search sb root.
-;;        )
-;;       ("/home/scratch.traces02/mobile/traces/system/so"  ; Non ME type tests.
-;;        (,sb)
-;;        )
-;;       )))
-
 (defun dp-nvidia-make-cscope-database-regexps (&optional ignore-env-p)
   "Compute value for `cscope-database-regexps'"
   (let* ((locstr (or (and (not ignore-env-p)
@@ -196,16 +179,19 @@ tests.")
 
 (setq dp-fallback-expand-abbrev-fun 'dp-nvidia-me-expand-preceding-word)
 
+;; Nothing in my tgen run dirs need p4.
+;; e.g.: /hw/ap_t132/diag/testgen
 (defvar dp-p4-ignore-dirs-regexp
-  (regexp-opt '("/hw/ap.*/diag/testgen/"))
+  "/hw/ap.*/diag/testgen/"
   "Deactivate p4 in these dirs.")
 
 (defun dp-p4-active-here (&optional file-name)
   (setq-ifnil file-name (buffer-file-name))
   (and (not dp-p4-global-disable-detection-p)
        (dp-sandbox-file-p file-name)
-       (string-match dp-p4-ignore-dirs-regexp file-name)))
+       (not (string-match dp-p4-ignore-dirs-regexp file-name))))
 
+(setq dp-proscribed-sandbox-private-p "/sb4")
 ;;
 ;; Don't want to edit these stupid fvcking copies.
 (dp-add-force-read-only-regexp "/plex/")

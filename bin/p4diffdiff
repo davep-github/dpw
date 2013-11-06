@@ -1,0 +1,5 @@
+#!/bin/sh
+
+: ${differ:=diff}
+
+P4DIFF="${differ}" p4 diff "$@"

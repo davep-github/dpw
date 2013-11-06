@@ -2421,7 +2421,7 @@ preceding line."
     (dp-set-mark (car region))
     (goto-char (cdr region))))
 
-(defun dp-mark-to-string (arg str)
+(defun dp-mark-up-to-string (arg str)
   (interactive "_p\nsMark up to str: ")
   (if (string= str "")
       (dp-mark-to-end-of-line)

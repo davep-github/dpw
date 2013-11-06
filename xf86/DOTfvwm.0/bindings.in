@@ -282,12 +282,25 @@ Key      Tab       A     CM      WindowList Root c c NoGeometry, OnlyListSkip, S
 ##------------------------------------------------------------------------------
 
 Key            F1         A      4     GotoDeskAndPage 1 0 0
+Key            KP_End     A      4     GotoDeskAndPage 1 0 0
+               
 Key            F2         A      4     GotoDeskAndPage 2 0 0
+Key            KP_Down    A      4     GotoDeskAndPage 2 0 0
+
 Key            F3         A      4     GotoDeskAndPage 3 0 0
+Key            KP_Next    A      4     GotoDeskAndPage 3 0 0
+
 Key            F4         A      4     GotoDeskAndPage 4 0 0
+Key            KP_Left    A      4     GotoDeskAndPage 4 0 0
+
 Key            F5         A      4     GotoDeskAndPage 5 0 0
+Key            KP_Begin   A      4     GotoDeskAndPage 5 0 0
+
 Key            F6         A      4     GotoDeskAndPage 6 0 0
+Key            KP_Right   A      4     GotoDeskAndPage 6 0 0
+
 Key            F10        A      4     GotoDeskAndPage 0 0 0
+Key            KP_Insert  A      4     GotoDeskAndPage 0 0 0
 
 Key            F1         A      S4    GotoDeskAndPage 1 0 1
 Key            F2         A      S4    GotoDeskAndPage 2 0 1
@@ -320,9 +333,9 @@ Key            comma      W      4     Next WarpToWindow 12 12
 
 #   key        context modifiers Action   
 Key e          A       4         PageNextEmacs
-Key e          A       S4        AnyNextEmacs
+Key e          A       M4        AnyNextEmacs
 Key e          A       C4        PageNextFarmEmacs
-Key e          A       M4        AnyEditingServer
+Key e          A       S4        AnyEditingServer
 
 
 ## XXX @todo I want to do a cycle windows where each one is raised as I cycle
