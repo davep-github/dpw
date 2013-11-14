@@ -17,27 +17,17 @@ do
   $op
   ${EEXEC_SHIFT}
 done
+EExec_verbose_msg $(echo_id eexec_program)
 unset eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
 
-ap=$(me-expand-dest ap)
-vsetp "${ap}" || {
-    echo "Can't find ap dir."
-    exit 1
-} 1>&2
+prefix="${1-}"
+shift
+suffix="${1-}"
 
-apbin="${ap}/bin"
-[ -d "${apbin}" ] || {
-    echo "${apbin} isn't."
-    exit 1
-} 1>&2
-
-apbinmake="${apbin}/make"
-[ -x "${apbinmake}" ] || {
-    echo "${apbinmake} isn't."
-    exit 1
-} 1>&2
-
-EExec_verbose_msg "PWD>$PWD<"
-EExec "${apbinmake}" "$@"
+stamp="${prefix}$(dp-std-timestamp)${suffix}"
+echo_id2 stamp
+stamp=$(namify-path "${stamp}")
+echo_id2 stamp
+echo "${stamp}"

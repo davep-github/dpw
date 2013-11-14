@@ -2,17 +2,22 @@
 
 import sys, types, re, time
 import dp_utils, dp_time
+from dp_io import fprintf
 def Ticker_printf(ticker, fmt, *args, **kwargs):
-    from dp_io import fprintf
-    if kwargs.get("just_flush_p"):
-        ticker.ostream.flush()
-        return
     ticker_ostream = kwargs.get("ticker_ostream")
     if not ticker_ostream:
         ticker_ostream = ticker.ostream
-    fprintf(ticker.ostream, fmt, *args)
+    #print "ticker_ostream: {}".format(ticker_ostream)
+    if kwargs.get("just_flush_p"):
+        #print "just flushing..."
+        # Seems to do nothing.
+        ticker_ostream.flush()
+        #print "...just flushed."
+        return
+    fprintf(ticker_ostream, fmt, *args)
     if kwargs.get("flush_p"):
-        ticker.ostream.flush()
+        ticker_ostream.flush()
+
 
 time_time = time.time
 
@@ -56,7 +61,9 @@ class Ticker_t(object):
         self.sep_string = self.init_string
 
     def flush(self):
+        #print "enter ticker.flush()"
         self.printor(self, None, just_flush_p=True)
+        #print "exit: ticker.flush()"
 
     def make_timestamp(self):
         ts_string = ""

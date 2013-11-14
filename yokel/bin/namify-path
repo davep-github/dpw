@@ -7,6 +7,7 @@
 . script-x
 char="."
 no_leading_char=""
+: ${clean_up_str="/"}
 
 Usage()
 {
@@ -15,8 +16,9 @@ Replace / characters in <path-name> with <new-char> or '.'
 -h --> Show this message and exit.
 -n --> Nuke a leading / (actually its replacement) from the result.
 -l --> Leave a leading /'s replacement.
--[cds] <char> --> The char which will replace the /."
-    
+-[cds] <char> --> The char which will replace the /.
+--spaces --> Clean up spaces, too."
+
     exit "$1"
 }
 
@@ -27,19 +29,25 @@ Error()
 }
 
 option_str="nlhc:d:s:/"
-q=$(getopt -o "$option_str" -- "$@")
-[ $? != 0 ] && Usage 1          # This is a misteak.
-eval set -- "$q" 
+long_options=(
+    "spaces" 
+    "clean-char:" "acc:"
+)
+source dp-getopt+.sh || {
+    dp_exit 1 "getopt failed"
+}
 
 [ $? != 0 ] && Error 1
 
-for i in $*
+while (($# > 0))
 do
     case $1 in
 	-n|'-/') no_leading_char=t ;;
 	-l) no_leading_char= ;;
         -h) Usage 0;;           # This is a request
 	-c|-d|-s) char=$2; shift;;
+        --add-clean-char|--acc) shift; clean_up_str="${clean_up_str}${1}";;
+        --spaces) clean_up_str="${clean_up_str} ";;
 	--) shift; break ;;
 	*) exit 1 ;;
     esac
@@ -48,7 +56,7 @@ done
 
 path=$1
 path=$(echo $path | sed 's!//*$!/!')
-base=$(echo $path | sed "s!/!$char!g")
+base=$(echo $path | sed "s![${clean_up_str}]!$char!g")
 
 if [ "$no_leading_char" != "t" ]
 then

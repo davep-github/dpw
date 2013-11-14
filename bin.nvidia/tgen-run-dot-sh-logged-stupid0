@@ -20,9 +20,13 @@ source maybe-davep
 echo_id any_shell_p
 $EEXEC tgen-run-dot-sh-logged \
     ${maybe_davep_dash_n} \
-    --hgrep surface_write_read: \
-    --egrep 'Error opening.*\.so:.*lib.*not found|ERROR: cannot aquire /tmp/asim.X|something bad happened|\(gdb\)' \
+    --hgrep 'surface_write_read:' \
+    --egrep 'Error opening.*\.so:.*lib.*not found' \
+    --egrep 'ERROR: cannot aquire /tmp/asim.X' \
+    --egrep 'something bad happened' \
+    --egrep '\(gdb\)' \
     --egrep 'RT_FAIL' \
+    --egrep "Error: LoadPlugin: couldn't load plugin library"
     --hgrep 'call stack' \
     --hgrep 'stack trace' \
     --egrep 'KeyError: .OUT.' \

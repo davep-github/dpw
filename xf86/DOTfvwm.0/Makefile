@@ -15,14 +15,15 @@ FVWM_RC_FILES := \
 FVWM_RC_INFILES := $(addsuffix .in,$(FVWM_RC_FILES))
 
 SED_CFG_FILE := defs.sed
-
+# --dry-run to just see the files.
+DRY_RUN_FLAG :=
 all: rc_files
 
 rc_files: $(SED_CFG_FILE) $(FVWM_RC_FILES)
 	rm -rf last-gen
 	mkdir last-gen
 	mv $(FVWM_RC_FILES) last-gen
-	cat $(SED_CFG_FILE) | sed-replace -d "$(DP_DOMAIN)" $(FVWM_RC_INFILES)
+	cat $(SED_CFG_FILE) | sed-replace $(DRY_RUN_FLAG) -d "$(DP_DOMAIN)" $(FVWM_RC_INFILES)
 	chmod a-w $(FVWM_RC_FILES)
 
 restart: all

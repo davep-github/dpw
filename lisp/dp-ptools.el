@@ -450,11 +450,18 @@ NAME is a short name associated by hideif with the list of defs."
 (defsubst dp-current-sandbox-name ()
   dp-current-sandbox-name-private)
 
+(defvar dp-current-sandbox-path-private nil
+  "Root of the current sandbox.")
+
+(defsubst dp-current-sandbox-path ()
+  dp-current-sandbox-path-private)
+
 (defvar dp-current-sandbox-read-only-private-p nil
   "See `dp-set-sandbox' for the meaning of this variable.")
 
 (defsubst dp-current-sandbox-read-only-p ()
-  dp-current-sandbox-read-only-private-p)
+  (or dp-current-sandbox-read-only-private-p
+      (dp-proscribed-sandbox-p (dp-current-sandbox-path))))
 
 (defvar dp-all-sandboxes-read-only-private-p nil
   "See `dp-set-sandbox' for the meaning of this variable.")
@@ -487,13 +494,18 @@ Returns nil if there is no current sandbox."
 
 (defun dp-set-sandbox-name-and-regexp (name regexp &optional default-p)
   (dp-remove-editor-identification-data 'sandbox-name)
-  (if default-p 
-      (setq-default dp-current-sandbox-name-private name
-                    dp-current-sandbox-regexp-private regexp)
-    (setq dp-current-sandbox-name-private name
-          dp-current-sandbox-regexp-private regexp))
-    (dp-add-editor-identification-data 'sandbox-name 
-                                       (dp-current-sandbox-name)))
+  (let ((path (dp-me-expand-dest "/" name)))
+    (if default-p
+        (setq-default
+         dp-current-sandbox-name-private name
+         dp-current-sandbox-path-private path
+         dp-current-sandbox-regexp-private regexp)
+      (setq-default
+       dp-current-sandbox-name-private name
+       dp-current-sandbox-path-private path
+       dp-current-sandbox-regexp-private regexp)))
+  (dp-add-editor-identification-data 'sandbox-name 
+                                     (dp-current-sandbox-name)))
 
 (defun* dp-set-sandbox (sandbox &optional read-only-p)
   "Setup things for a singular, unique SANDBOX.

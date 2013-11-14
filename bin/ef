@@ -27,25 +27,19 @@ LOG_FILE="$HOME/log/xemacs/ec-log-file.log"
 : ${known_text_mode_editors:="vim vi nvi nano pico"}
 : ${eh=${DP_GNU_EDITING_SERVER}}
 : ${client=}
+: ${raise_and_focus_p=t}
 
 editing_host_opt=
 editing_host_msg=
 extra_editing_host_msg=
-quiet_p=
 
 now=$(date)
 {
     echo ">> ${now} ========================================================================"
+    echo "-1>$0<-1"
     eko "$@"
 } >> $LOG_FILE
 
-for a in "$@"
-do
-  echo ">$a<" >> $LOG_FILE
-  case "$a" in
-      -q|--quiet) quiet_p=t; shift;;
-  esac
-done
 echo '--' >> $LOG_FILE
 
 Usage()
@@ -96,9 +90,9 @@ text_mode_edit()
     } 1>&2
     if [[ "$do_wait" != 'y' ]]
     then
-	echo 1>&2 "Text mode editing doesn't work in the background."
-	echo 1>&2 " Running in foreground instead."
-    fi
+	echo "Text mode editing doesn't work in the background."
+	echo " Running in foreground instead."
+    fi 1>&2 
     eval EExec $textModeEditor $file
 }
 
@@ -109,7 +103,7 @@ process_file ()
     then
         if [ -n "$one_file" ]
         then
-            file=$*
+            file="$@"
         else
             file="$1"
 	fi
@@ -121,7 +115,7 @@ process_file ()
 	file=""
     fi
 
-    local prob=
+    local problem=
     local and=
     # Choose a local server over a remote one.
     if ! local_server_p
@@ -136,7 +130,7 @@ process_file ()
                 : ${editing_host_msg:="using host: $eh"}
             }
         else
-            prob="Editing server not found"
+            problem="Editing server not found"
             and=" AND "
        fi
     else
@@ -152,19 +146,19 @@ process_file ()
 
     if [ -z "$DISPLAY" ]
     then
-        prob="${prob}${and}DISPLAY not set"
+        problem="${problem}${and}DISPLAY not set"
     fi
 
-    [[ -n "$prob" ]] && {
+    [[ -n "$problem" ]] && {
         if [[ "$ask_about_text_mode" == t ]]; then
             local textModeEditor=$(find-bin ${known_text_mode_editors})
 	    echo -n "$progname: "
-            read -e -p "$prob; use $textModeEditor instead[Y/n/f/q]? "
+            read -e -p "$problem; use $textModeEditor instead[Y/n/f/q]? "
             case "$REPLY" in
                 Y|y|'')
                    echo 1>&2 "vi'ing"
                    read -e -p "Do this: $textModeEditor $file? "
-		   text_mode_edit $textModeEditor $file
+		   text_mode_edit "$textModeEditor" "$file"
                    return 0;;
 		# Fake it?  Set up a fake DISPLAY.
                 # Surely this is a good enough guess, isn't it?
@@ -176,13 +170,28 @@ process_file ()
         fi
     }
 
-    vunsetp "${eval_opt}" && attempt-to-raise-emacs
+    #echo_id2 eval_opt
+    vunsetp "${eval_opt}" && {
+        echo_id2 raise_and_focus_p
+        vtruep "${raise_and_focus_p}" && {
+            EExec attempt-to-raise-emacs
+        }
+    }
 
     # send the filename to emacs
     [ "$do_wait" = 'y' ] && nowait_opt=
     [ -n "$editing_host_msg" ] && echo "$editing_host_msg"
     [ -n "$extra_editing_host_msg" ] && echo "$extra_editing_host_msg"
-    eval EExec $client $editing_host_opt $nowait_opt $eval_opt "$opts" "$file"
+    vsetp "${client}" && set -- "${client}"
+    vsetp "${editing_host_opt}" && set -- "$@" "${editing_host_opt}"
+    vsetp "${nowait_opt}" && set -- "$@" "${nowait_opt}"
+    vsetp "${eval_opt}" && set -- "$@" -eval "(progn ${eval_opt})"
+    vsetp "${opts}" && set -- "$@" ${opts}
+    vsetp "${file}" && set -- "$@" "${file}"
+    eko "$@"
+
+    #EExec $client $editing_host_opt $nowait_opt $eval_opt "$opts" \"$file\"
+    EExec "$@"
 }
 
 # init optional vars to defaults here...
@@ -193,7 +202,19 @@ ECHO="echo $progname: "
 CL=
 
 std_options=""
-option_str="Qnqe:c:Ews:R12"
+option_str="Qe:c:Ews:R12"
+long_options=(
+    "eval:" "eval-opt:" "eval-arg:"
+    "eval-stdin" "eval-read" "read-eval"
+    "read-CL" "read-command-line"
+    "client:"
+    "wait"
+    "one-file"
+    "two-windows" "2-windows"
+    "ask-about-text-mode"
+    "no-raise-and-focus" "no-raise" "no-focus"
+    "be-quiet"
+    "sudo-edit" "dse")
 
 q=$(getopt -o "$std_options$option_str" -- "$@")
 [ $? != 0 ] && Usage
@@ -204,17 +225,19 @@ unset q
 while (($# > 0))
 do
     case "$1" in
-	-e) eval_opt="$eval_opt $2"; shift;;
+	-e|--eval|--eval-opt|--eval-arg) eval_opt="$eval_opt $2"; shift;;
 	# read a string to eval from stdin.
 	# getopt WILL NOT preserve spaces! So read funky things from stdin.
-	-E) read; eval_opt="$eval_opt ${REPLY}";;
-	-R) read; CL="${REPLY}";;
-	-c) client=$2; shift;;
-	-w) do_wait=y;;
-        -1) one_file=y;;
-        -2) eval_opt="$eval_opt (progn (2w) (other-window 1))";;
-        -Q) ask_about_text_mode=t;;
-	-s) case "$2" in	# sudo edit the given file
+	-E|--eval-stdin|--eval-read|-read-eval) read; eval_opt="$eval_opt ${REPLY}";;
+	-R|--read-CL|--read-command-line) read; CL="${REPLY}";;
+	-c|--client) client=$2; shift;;
+	-w|--wait) do_wait=y;;
+        -1|--one-file) one_file=y;;
+        -2|--two-windows|--2-windows) eval_opt="$eval_opt (progn (2w) (other-window 1))";;
+        -Q|--ask-about-text-mode) ask_about_text_mode=t;;
+        --no-raise-and-focus|--no-raise|--no-focus) raise_and_focus_p=;;
+        --be_quiet) quiet_p=t;;
+	-s|--sudo-edit|--dse) case "$2" in	# sudo edit the given file
 	    /*) file=$2;;
 	    *)  file="$PWD/$2";;
 	    esac
@@ -227,7 +250,7 @@ do
     shift
 done
 
-args="$@"
+args=("$@")
 
 if [ -n "$CL" ]
 then
@@ -236,7 +259,7 @@ fi
 
 # if there's an eval_opt, wrap it in a progn to make it a single expr. This
 # is fine if it's already a progn and it's not worth checking for it.
-[ -n "$eval_opt" ] && eval_opt="-eval '(progn $eval_opt)'"
+#[ -n "$eval_opt" ] && eval_opt="-eval '(progn $eval_opt)'"
 
 #echo "1>$1<"
 #echo "eval_opt>$eval_opt<"
@@ -270,17 +293,17 @@ esac
 findprog -s sawfish
 have_sawfish=$?
 
-echo_id args
+echo "args>${args[@]}<"
 echo_id one_file
 #set -x
-if [ -z "$args" ]
+if [ "${#args[@]}" = 0 ]
 then
     process_file
 elif [ -n "$one_file" ]
 then
-    process_file $args # 2>> ec-w.out
+    process_file "${args[@]}" # 2>> ec-w.out
 else
-    set -- $args
+    set -- "${args[@]}"
     for file in "$@"
     do
       echo_id file
@@ -298,7 +321,6 @@ fi
 
 {
     echo "<< ${now} ========================================================================"
-    echo bubba
 } >> $LOG_FILE
 
 exit 0

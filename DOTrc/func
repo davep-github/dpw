@@ -1201,4 +1201,32 @@ p4_change_sandbox()
 export p4_change_sandbox
 alias chsb=p4_change_sandbox
 
+lessnew()
+{
+    less $(newest-file "$@")
+}
+export -f lessnew
+
+op_dir()
+{
+    local op="${1}"; shift
+    local dir="${1}"
+    [ -d "${dir}" ] || {
+        dir=$(dirname "${dir}")
+    }
+    "${op}" "${dir}"
+}
+
+cddir()
+{
+    op_dir cd "$@"
+}
+
+gdir()
+{
+    op_dir g "$@"
+}
+
+export -f op_dir cddir gdir
+
 true

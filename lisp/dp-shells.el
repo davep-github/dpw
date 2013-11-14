@@ -2388,7 +2388,10 @@ It isn't pretty."
 
 (dp-deflocal dp-original-shell-filter-function nil
   "So we can use it later.")
-   
+
+(dp-deflocal dp-shell-num nil
+  "Shell number, the number in the <>s")   
+
 ;;;###autoload
 (defun* dp-shell0 (&optional arg &key other-window-p name other-frame-p)
   "Open/visit a shell buffer.
@@ -2469,6 +2472,7 @@ it for something \"speshul\".
               (dp-shells-display-name pnv dp-shells-shell-num-fmt))
       (setenv "dp_emacs_shell_num" (format "%s" pnv))
       (save-window-excursion/mapping (shell sh-buffer))
+      (setq dp-shell-num pnv)
       (dp-visit-or-switch-to-buffer sh-buffer switch-window-func)
       ;;
       ;; We're in the new shell buffer now.
@@ -3312,6 +3316,21 @@ Can this really not exist elsewhere?"
   (interactive (list (read-shell-command "Shell command: ")))
   (insert (shell-command-to-string command-string)))
 
+(defun dp-shell-buffer-num-comp (buf1 buf2 op)
+  (funcall op 
+           (symbol-value-in-buffer 'dp-shell-num buf1)
+           (symbol-value-in-buffer 'dp-shell-num buf2)))
+
+(defun dp-shell-buffer-num-greater-or-equal (buf1 buf2)
+  (funcall '>=
+           (symbol-value-in-buffer 'dp-shell-num buf1)
+           (symbol-value-in-buffer 'dp-shell-num buf2)))
+
+(defun dp-shell-buffer-num-less (buf1 buf2)
+  (funcall '<
+           (symbol-value-in-buffer 'dp-shell-num buf1)
+           (symbol-value-in-buffer 'dp-shell-num buf2)))
+
 (defun dp-next/prev-shell-buffer (lessp-fun &optional buffer)
   (interactive)
   (let* ((shell-buffers (sort (dp-shells-find-matching-shell-buffers 
@@ -3323,11 +3342,11 @@ Can this really not exist elsewhere?"
 
 (defun dp-next-shell-buffer (&optional buffer)
   (interactive)
-  (dp-next/prev-shell-buffer 'dp-buffer-less-by-name-p buffer))
+  (dp-next/prev-shell-buffer 'dp-shell-buffer-num-less buffer))
 
 (defun dp-prev-shell-buffer (&optional buffer)
   (interactive)
-  (dp-next/prev-shell-buffer 'dp-buffer-reverse-less-by-name-p buffer))
+  (dp-next/prev-shell-buffer 'dp-shell-buffer-num-greater-or-equal buffer))
 
 (defun dp-shell-switch-to-next-buffer (&optional other-window-p buffer)
   (interactive "P")

@@ -13,11 +13,13 @@ done
 unset eexec_program
 
 : ${domain=}
+: ${dry_run_p=}
 
 for i in "$@"
 do
   case "${1-}" in
       --domain|-d) shift; domain="${1}";;
+      --dry-run) dry_run_p=t;;
       *) break;;
   esac
   shift
@@ -34,14 +36,18 @@ do
       EExec_verbose_msg "Skipping blank/comment line>$REPLY<"
       continue
   }
+  # remove end of line junk, e.g. comments
+  REPLY=$(echo "${REPLY}" | sed -r 's!(.*)([[:space:]]*(#|;|//).*$)!\1!')
 
   #echo "before: $(echo_id REPLY)"
   REPLY=$(echo "${REPLY}" | sed -rn "s/($domain)(@.+@ )(.*$)/\2\3/p")
-  #echo "after : $(echo_id REPLY)"
+  EExec_verbose_msg "after : $(echo_id REPLY)"
   vsetp "${REPLY}" || continue
 
   set -- $REPLY
-  script_element="s${sed_sep}${1}${sed_sep}${2}${sed_sep}"
+  name="${1}"
+  shift
+  script_element="s${sed_sep}${name}${sed_sep}$@${sed_sep}"
   sed_script="${sed_script}${script_element}
 "
   #echo_id2 sed_script
@@ -58,6 +64,12 @@ fi
 for infile in "${dolat[@]}"
 do
   #echo_id2 infile
-  file=$(basename "${infile}" .in)
+  if vtruep "${dry_run_p}"
+  then
+      file=/proc/self/fd/1
+      echo "=== ${infile} ===" > "${file}"
+  else
+      file=$(basename "${infile}" .in)
+  fi
   sed -r "${sed_script}" "${infile}" >| "${file}"
 done

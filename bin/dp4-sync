@@ -12,6 +12,7 @@ do
 done
 unset eexec_program
 
+timestamp=$(dp-std-timestamp)
 
 # Use my teeker program which saves stdin into a file like tee, but simply
 # ticks off chars to stdout using tikker. Makes for a lot less output but
@@ -101,6 +102,7 @@ vsetp "$*" && {
     stay_in_cwd_p=t
 }
 
+stay_in_cwd_p=t                 # This is broken. Don't do it.
 vfalsep "${stay_in_cwd_p}" && {
     # With multiple trees, it makes more sense to simply move up to the
     # closest .p4config.
@@ -113,22 +115,52 @@ vfalsep "${stay_in_cwd_p}" && {
     fi 1>&2
     p4config_dir=$(dirname "${p4config}")
     EExec -y cd "${p4config_dir}"
+    echo_id PWD
 }
 
 : ${sandbox_root:=$(dp4-get-root)}
-: ${kwa_log_root:=${sandbox_root}/${progname}}
-: ${kwa_log_base:=$(basename "${PWD}")-${progname}}
-: ${kwa_log_dir:=${kwa_log_root}/${kwa_log_base}-$(dp-std-timestamp)}
-: ${kwa_log_file_name:=${kwa_log_base}.out}
+: ${kwa_log_root:=${sandbox_root}/${progname}.d}
+: ${kwa_log_base:=}
+echo_id kwa_log_root
+
+vunsetp "${kwa_log_base}" && {
+    echo "\$@>$@<@"
+    if vunsetp "$*"
+    then
+        pwd=NO_PAT
+    else
+        pwd="${PWD}"
+    fi
+    echo_id PWD
+    rel_dir=$(dp4-relative-dir "${PWD}")
+    echo_id rel_dir
+    kwa_log_base=$(namify-path -c % $(normpath -c "${rel_dir}"))
+}
+echo_id kwa_log_base
+: ${kwa_log_dir:=${kwa_log_root}/${kwa_log_base}-${timestamp}}
+
+echo_id kwa_log_dir
+
+if vunsetp "$*"
+then
+    echo "AAA"
+    suffix=""
+else
+    echo "BBB"
+    suffix=-$(namify-path $(normpath -c "$@"))
+fi
+echo_id suffix
+
+: ${kwa_log_file_name:="${progname}${suffix}.out"}
 
 EExec -y mkdir -p "${kwa_log_dir}"
 EExec_verbose_msg "Sync'ing in >$(pwd)<"
-EExec_verbose_msg p4 command: p4 sync ${p4_sync_dash_n} ${p4_sync_dash_f} "$@" 
+EExec_verbose_msg p4 command: p4 sync ${p4_sync_dash_n} ${p4_sync_dash_f} "$@"
 
-echo_id kwa_log_dir
 #kwa_log_file_name=$(basename "${PWD}" )-"${kwa_log_file_name}"
 kwa_log_file="${kwa_log_dir}/${kwa_log_file_name}"
 echo_id kwa_log_file
+
 {
     # print log name before and after in case it is a long sync.
     [ -n "$save_args_p" ] && {

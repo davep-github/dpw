@@ -150,7 +150,7 @@ option_str="${EExec_parse_option_str}o:O:crm"
 source dp-getopt+.sh || {
     dp_exit 1 "getopt failed"
 }
-for i in "$@"
+while (($# > 0))
 do
   # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
   case $1 in

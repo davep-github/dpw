@@ -5373,3 +5373,19 @@ dp-shells-shell-buffer-list
 nil
 
 
+
+========================
+Tuesday November 12 2013
+--
+
+(#<buffer "*shell*<1>"> #<buffer "*shell*<22>"> #<buffer "*shell*<2>"> #<buffer "*shell*<3>">)
+
+(defun dp-buffer-less-by-name-p (buf1 buf2)
+  (string-lessp (buffer-name buf1)
+                (buffer-name buf2)))
+
+(defun dp-shell-buffer-num-comp (buf1 buf2 op)
+  (funcall op 
+           (symbol-value-in-buffer 'dp-shell-num buf1)
+           (symbol-value-in-buffer 'dp-shell-num buf2)))
+

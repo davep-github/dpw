@@ -24,12 +24,14 @@ export eexec_program
 # ec [-w] first second
 
 wait_opt=
+: ${ediff_func=ediff-files}
 
 while (($# > 0))
 do
   case "$1" in
       -q|--no-wait) wait_opt=;;
       -w|--wait) wait_opt='-w';;
+      --merge) ediff_func="ediff-merge";;
       -u) ;; # This is often left over from a regular diff command. Ignore it.
       *) break;;
   esac
@@ -44,7 +46,7 @@ done
 
 fileA=$(realpath "${1}")
 file2=$(realpath "${2}")
-diff_cmd="(ediff-files \"$fileA\" \"$file2\")"
+diff_lisp="(ediff-files \"$fileA\" \"$file2\")"
 
 # Fix this to use some kind of ipc so the wait actually works.
 #
@@ -56,7 +58,7 @@ diff_cmd="(ediff-files \"$fileA\" \"$file2\")"
 # -w here prevents the use of -q (don't wait) flag to gnuclient.
 # -eval (gnuclient) doesn't seem to work with -q
 # 
-EExec ec -w -e "${diff_cmd}"
+EExec ec -w -e "${diff_lisp}"
 attempt-to-raise-emacs
 if vsetp "${wait_opt}" && ! EExecDashN_p
 then

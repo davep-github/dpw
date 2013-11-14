@@ -154,13 +154,13 @@ This mode uses tabs, so the line too long regexp fails.")
 
 (defalias 'p4p 'dp4-restore-windows-and-frames)
 
-(defun dp4-bind-standard-keys (&optional just-cc-p)
+(defun dp4-bind-standard-keys (&optional just-map-control-C-p)
   ;; Map some common exit type single keys if we're read-only
   (with-current-buffer (or (dp-get-buffer p4-output-buffer-name)
                            (current-buffer))
     (dp-define-buffer-local-keys '([(control ?c) (control ?c)]
                                    dp4-restore-windows-and-frames))
-    (when (and (not just-cc-p)
+    (when (and (not just-map-control-C-p)
                buffer-read-only)
       (dp-define-buffer-local-keys '([?q]
                                      dp4-restore-windows-and-frames
@@ -214,7 +214,7 @@ This mode uses tabs, so the line too long regexp fails.")
   (dp4-bind-standard-keys))
 
 (defadvice p4-make-basic-buffer (after dp-p4-make-basic-buffer activate)
-;;   (dmessage "dp-p4-make-basic-buffer, bn>%s<" (buffer-name))
+   (dmessage "dp-p4-make-basic-buffer, bn>%s<" (buffer-name))
   )
 
 (defadvice p4-revert (after dp-p4-revert activate)
@@ -251,8 +251,9 @@ This mode uses tabs, so the line too long regexp fails.")
 
 (defun dp-p4-emacs-client ()
   "Set up p4 forms we're editing as a server. p4 client, p4 change, ... 
-Things which are edited with ec-p4 which is the value of $P4EDITOR"
-  ;; Is this a client or a change form?
+Things which are edited with ec-p4(dp) which uses this as the value for
+`dp-found-file-post-hook'."
+  ;; Set up things for the current form type.
   (dp4-run-form-type-hooks)
   (setq indent-tabs-mode t))
 

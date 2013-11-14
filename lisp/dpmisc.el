@@ -6382,7 +6382,7 @@ to see if it's alive as well."
   (when (or just-do-it-p (dp-gnuserv-running-p))
     ;; The title formatter uses `dp-gnuserv-running-p' so it can mistakenly
     ;; set the server indication in the title.
-    (unless (dp-gnuserv-running-p)
+    (when (dp-gnuserv-running-p)
       ;; Don't remove another instance's ipc file.
       (shell-command-to-string (format "rm -f %s" 
                                        (dp-editing-server-ipc-file))))))
