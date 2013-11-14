@@ -45,13 +45,19 @@ class CTOR_t:
     def __init__(self):
         self.info = "I am the key of the appropriate ticker constructor."
 
-
+Match_types = {}
 DEFAULT_ERROR_INDICATOR = "!"
 DEFAULT_EGREP_PREFIX = DEFAULT_ERROR_INDICATOR * 4
 DEFAULT_EGREP_SUFFIX = DEFAULT_ERROR_INDICATOR * 4
+
 DEFAULT_MATCH_INDICATOR = "@"
 DEFAULT_MATCH_PREFIX = DEFAULT_MATCH_INDICATOR * 3
 DEFAULT_MATCH_SUFFIX = DEFAULT_MATCH_INDICATOR * 3
+
+DEFAULT_WARNING_INDICATOR = "*"
+DEFAULT_WARNING_PREFIX = DEFAULT_WARNING_INDICATOR * 3
+DEFAULT_WARNING_SUFFIX = DEFAULT_WARNING_INDICATOR * 3
+
 DEFAULT_INDICATOR_SEPARATOR = "|"
 DEFAULT_MAX_ERROR_MATCHES = 0
 DEFAULT_LINES_AFTER = 0                 # None
@@ -84,7 +90,6 @@ Prefix_variables = {
     "sample_prefix": " " * tick_counter_min_width,
 }    
     
-
 CTOR = CTOR_t()
 
 parse_debug = 0
@@ -216,6 +221,12 @@ class App_arg_action_add_regexp_and_highlight(argparse.Action):
         setattr(namespace, self.dest, regexps)
         setattr(namespace, "highlight_grep_matches_p", True) 
 
+class App_arg_action_add_regexp_and_warning_highlight(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        regexps = getattr(namespace, self.dest)
+        regexps.append(values)
+        setattr(namespace, self.dest, regexps)
+
 Convenience_opts = (("U_extension", ".log"), ("add_timestamp_p", True))
 
 def set_convenience_opts(namespace):
@@ -287,7 +298,7 @@ def dump_matching_and_error_lines(output_streams,
     sep_line = len(title) * "="
     if matching_lines:
         header_lines = ["\n" + title + "\n",
-                        ("Regexp matches: %s, error matches: %s\n"
+                        ("Regexp/warning matches: %s, error matches: %s\n"
                          % (len(matching_lines), len(error_lines),)),
                         ("Num matching lines: %s\n" % len(matching_lines))]
         for lt in  header_lines + matching_lines:
@@ -527,6 +538,10 @@ Split line into chars and feed to ticker.""")
                          dest="regexp_patterns", default=[],
                          action=App_arg_action_add_regexp_and_highlight,
                          help='Grep for these patterns and highlight.')
+    oparser.add_argument("--wgrep", "--wregexp", "--wmatch",
+                         dest="warning_regexp_patterns", default=[],
+                         action=App_arg_action_add_regexp_and_warning_highlight,
+                         help='Grep for these warning patterns and highlight as a warning.')
     oparser.add_argument("--grep-hit-action",
                          dest="grep_hit_action", default="",
                          type=str,
@@ -546,7 +561,8 @@ Split line into chars and feed to ticker.""")
                          help="Grep for these patterns and treat as errors. --max-errors tells how many error matches to accept before exiting. The default is %s where 0 means no limit." % (DEFAULT_MAX_ERROR_MATCHES,))
     oparser.add_argument("--project-log-errors",
                          default=None,
-                         const=os.environ.get("TEEKER_PROJECT_LOG_ERROR_REGEXP", None),
+                         const=os.environ.get("TEEKER_PROJECT_LOG_ERROR_REGEXP",
+                                              None),
                          action="store_const",
                          help="Convenience option for finding common testgen errors. Perhaps change the value of this to an envvar to make it more flexible.  --log-errors-regexp")
     oparser.add_argument("--go", "--grep-ostream", "--grep-ofile", "--reo",
@@ -582,7 +598,7 @@ Split line into chars and feed to ticker.""")
                          "--hg", "--hm",
                          dest="highlight_grep_matches_p", default=None,
                          action="store_true",
-                         help="Show matches as they occur.")
+                         help="Turn on showing of matches as they occur.")
     oparser.add_argument("--no-highlight-grep", "--no-highlight-matches",
                          "--no-high-grep", "--no-high_matches",
                          "--no-hl-grep", "--no-hl-matches",
@@ -595,7 +611,7 @@ Split line into chars and feed to ticker.""")
                          ## specified.
                          default=None,
                          action="store_false",
-                         help="Do not show matches as they occur.")
+                         help="Turn off showing of matches as they occur.")
     oparser.add_argument("--no-grep-summary", "--no-match-summary",
                          dest="match_summary_p", default=True,
                          action="store_false",
@@ -746,15 +762,22 @@ Split line into chars and feed to ticker.""")
     timestamp_p = Ctor_arg_dict.get("timestamp_p", False)
     
     # Help speed up the loop.
-    compiled_regexps = []
     compiled_error_regexps = []
     if app_args.tgen_errors is not None:
         app_args.error_regexp_patterns.append(app_args.tgen_errors)
 
+    compiled_regexps = []
     for regexp in app_args.regexp_patterns:
-        compiled_regexps.append(dp_utils.re_compile_with_case_convention(regexp))
+        compiled_regexps.append(
+            dp_utils.re_compile_with_case_convention(regexp))
+
+    compiled_warning_regexps = []
+    for regexp in app_args.warning_regexp_patterns:
+        compiled_warning_regexps.append(
+            dp_utils.re_compile_with_case_convention(regexp))
 
     highlight_grep_matches_p = app_args.highlight_grep_matches_p
+    highlight_warning_matches_p = True
     grepping_for_errors_p = len(app_args.error_regexp_patterns) != 0
     # for now, this is a constant
     highlight_egrep_matches_p = True
@@ -854,6 +877,19 @@ Split line into chars and feed to ticker.""")
                         app_args.grep_hit_action = None
                     dp_io.printf("Teach me how to run this grep hit action>%s<\n",
                                  app_args.grep_hit_action)
+
+        for regexp in compiled_warning_regexps:
+            if regexp.search(input_line):
+                matching_lines.append((input_line, line_number))
+                match_indicator = DEFAULT_WARNING_INDICATOR
+                indicator_separator = DEFAULT_INDICATOR_SEPARATOR
+                if highlight_warning_matches_p:
+                    # XXX @todo Add ANSI color options?
+                    display_match(app_args.match_ostream,
+                                  input_line[:-1], line_number,
+                                  prefix="\n" + DEFAULT_WARNING_PREFIX,
+                                  suffix=DEFAULT_MATCH_SUFFIX + "\n",
+                                  timestamp_p=timestamp_p)
 
         for regexp in compiled_error_regexps:
             if regexp.search(input_line):
