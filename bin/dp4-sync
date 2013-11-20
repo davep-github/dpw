@@ -215,7 +215,7 @@ EExec dp4-sync-post-processor
 
 vsetp "${send_mail_on_completion_p-}" && ! EExecDashN_p && ! vsetp "${p4_sync_dash_n}" && {
     EExec_verbose_msg "YOPP!ing."
-    mail -s "$progname is done" "${USER}" < /dev/null >/dev/null 2>&1
+    email-yopp 
 }
 
 exit

@@ -18,18 +18,8 @@ source maybe-davep
 
 # any_shell_p=t defaults to true in my environment.
 echo_id any_shell_p
+source gdmf-regexps
 $EEXEC tgen-run-dot-sh-logged \
     ${maybe_davep_dash_n} \
-    --hgrep 'surface_write_read:' \
-    --egrep 'Error opening.*\.so:.*lib.*not found' \
-    --egrep 'ERROR: cannot aquire /tmp/asim.X' \
-    --egrep 'something bad happened' \
-    --egrep '\(gdb\)' \
-    --egrep 'RT_FAIL' \
-    --egrep "Error: LoadPlugin: couldn't load plugin library"
-    --hgrep 'call stack' \
-    --hgrep 'stack trace' \
-    --egrep 'KeyError: .OUT.' \
-    --egrep 'qemu: could not load kernel' \
-    --hgrep 'waiting for a connection on port [0-9]+' \
+    "${gdmf_regexps[@]}" \
     "$@"

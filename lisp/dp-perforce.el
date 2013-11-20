@@ -93,7 +93,8 @@ This mode uses tabs, so the line too long regexp fails.")
                'dp4-restore-windows-and-frames)
              (define-key p4-opened-map [(control ?c) (control ?c)]
                'dp4-restore-windows-and-frames)
-             (dp-raise-and-focus-frame)
+             ;; This shouldn't be universal.
+             ;;;(dp-raise-and-focus-frame)
              )))
 
 ;; Setup indentation for p4 buffers
@@ -123,7 +124,8 @@ This mode uses tabs, so the line too long regexp fails.")
 (defun dp4-change-form-hook ()
   (interactive)
   (dp4-form-hook-common '(p4-changeset-font-lock-keywords
-                          t nil nil backward-paragraph)))
+                          t nil nil backward-paragraph))
+  (flyspell-mode-on))
 
 (setq p4-change-hook 'dp4-change-form-hook)
 

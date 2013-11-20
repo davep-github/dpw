@@ -5389,3 +5389,51 @@ Tuesday November 12 2013
            (symbol-value-in-buffer 'dp-shell-num buf1)
            (symbol-value-in-buffer 'dp-shell-num buf2)))
 
+(get-buffer "*shell*<22>")
+#<buffer "*shell*<22>">
+
+(dp-shell-buffer-num-comp (get-buffer "*shell*<22>")
+                          (get-buffer "*shell*<2>")
+                          '>=)
+t
+
+nil
+
+t
+
+t
+
+nil
+
+nil
+
+
+
+
+========================
+Wednesday November 20 2013
+--
+(defun dp-defface-p (face-name)
+  (and (symbolp face-name)
+       (get face-name 'face-defface-spec)
+       (custom-face-get-spec face-name)
+       face-name))
+dp-defface-p
+
+
+              
+(dp-defface-p 'dp-debug-like-face)
+dp-debug-like-face
+
+(dp-colorize-region (dp-defface-p 'dp-debug-like-facex)
+                    (- (point) 100) (point))
+#<extent [190425, 190525) dp-extent-search-key2 dp-extent-search-key dp-colorized-region-color-num dp-colorized-p dp-extent dp-extent-id dp-colorized-region in buffer elisp-devel.el 0x67950>
+
+#<extent [190425, 190525) dp-extent-search-key2 dp-extent-search-key dp-colorized-region-color-num dp-colorized-p dp-extent dp-extent-id dp-colorized-region in buffer elisp-devel.el 0x6792f>
+
+#<extent [190424, 190524) dp-extent-search-key2 dp-extent-search-key dp-colorized-p dp-extent dp-extent-id dp-colorized-region in buffer elisp-devel.el 0x67906>
+
+nil
+
+
+

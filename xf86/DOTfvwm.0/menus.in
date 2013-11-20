@@ -40,6 +40,7 @@ AddToMenu    Utilities "FVWM Root Menu" Title
 + "&Terminal(dpxx)"      Exec exec dpxx
 + "&Qsub terminal"       Popup XqsubMenu
 + "&XEmacs(xem)"         Exec exec xem
++ "&p4v"                 Exec exec p4v
 + "x&orpie"              Exec exec xorpie
 + "x&ipython"            Exec exec xipython
 + "Move &to"             Popup Move-window-to

@@ -26,6 +26,7 @@ else
     case "$*" in
     "");;
     -n) EEXEC=echo; shift; maybe_davep_dash_n=t;;
+    -k) EEXEC=eko; shift; maybe_davep_dash_n=t;;
     --) shift;;
     *) echo 1>&2 "No args are supported. Try again"; exit 1;;
 esac

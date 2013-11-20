@@ -270,7 +270,6 @@ Ee|misc|                                                ${sandbox1}
 Ee|sandbox2|sbox2|sb2|workspace2|ws2|                   ${scratch0}sb2/sb2hw/
 
 Ee|sandbox3|sbox3|sb3|workspace3|ws3|                   ${scratch1}sb3/sb3hw/
-Ee|generatememtxn|memtxn|                               ${sandbox5}
 
 Ee|sandbox4|sbox4|sb4|workspace4|ws4|                   ${scratch3}sb4/sb4hw/
 Ee|swrwavefull|swrfullwave|swrfw|swrwf|swrlong|swrwave| ${sandbox4}

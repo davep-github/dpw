@@ -119,7 +119,7 @@ The regexp is matched against the buffer name.")
 (defun dp-set-font-lock-defaults (mode-symbol defaults)
   (put mode-symbol 'font-lock-defaults defaults))
 
-(defun dp-colorize-buffer-if (pred color &optional uncolorize-if-not-p
+(defun dp-colorize-buffer-if (pred color &optional else-uncolorize-p
                               pred-args beg end)
   "Colourize the current buffer if PRED is non-nil."
   (interactive "P")
@@ -134,7 +134,7 @@ The regexp is matched against the buffer name.")
                             ;; extent is there showing some kind of file
                             ;; state, like read-only or remote.
                             'dp-file-state-colorization t)
-      (when uncolorize-if-not-p
+      (when else-uncolorize-p
         (dp-uncolorize-region beg end t)))))
 
 (defvar dp-remote-buffer-colorization-alist

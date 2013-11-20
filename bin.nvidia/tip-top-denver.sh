@@ -18,6 +18,7 @@ suites=(rtmem-rtreg)
 : ${ddd_opt=}
 : ${debug_opt=}
 : ${debug_level_opt=}
+: ${printout_flag_p=}
 : ${config=top_peatrans_gpurtl} # Not for CPU? NO. Yes for MODS + CPU
 #: ${config=top_gpurtl_t132} # ??? do I need the _t132? NO.
 #: ${config=top_gpurtl} # ??? do I need the _t132? NO.
@@ -77,7 +78,8 @@ do
       -s|--start|--startrecord|--start-record) shift; startrecord="${1}";;
       -w|--wave|--waves|-wave|-waves) dump_waves_opt=-waves;;
       -P|--proj|--project|--chip) shift; project="${1}"; echo_id project;;
-      -p|--prog|--program|--test|--test-name) shift; testname="${1}";;
+      --prog|--program|--test|--test-name) shift; testname="${1}";;
+      -p|--print|--printouts) printout_flag_p=-p;;
       -a|--args|--prog-args|--program-args) shift; test_args="${1}";;
       -d|--denver) run_cmd="${DENVER_RUN_CMD}"; run_cmd_args=("${DENVER_ARGS[@]}");;
       --t124) run_cmd="${RUN_CMD}"; run_cmd_args=("${T124_ARGS[@]}"); mode_arg='-mode arm'
@@ -185,6 +187,7 @@ fi
 #use $@ directly     ${debug_level_opt} \
 ${EZEC} "${run_cmd}" \
     -P "${project}" \
+    ${printout_flag_p} \
     ${mode_arg} \
     ${dump_waves_opt} \
     ${startrecord_opt} \

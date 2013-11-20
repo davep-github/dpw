@@ -23,8 +23,15 @@ filter_regexp="JOBID|${filter_regexp}"
 jids=$(bjobs -w \
      | egrep -v "${filter_regexp}" 2>/dev/null \
      | awk '{print $1}' \
+     | sort \
+     | uniq \
      | egrep "$@")
 
-[ -n "${jids}" ] && {
+if [ -n "${jids}" ]
+then
+    EExec_verbose_msg "Jobs:
+$(bjobs ${jids})"
     EExec bkill ${jids}
-}
+else
+    EExec_verbose_msg "No jids."
+fi

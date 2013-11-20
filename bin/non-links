@@ -21,16 +21,38 @@ unset eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
 
+: ${exclusion_regexp='(fun|map)-defs\.h'}
+: ${invert_p=}
+
+while (($# > 0))
+do
+  case "$1" in
+      --links|--invert) invert_p=t;;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
+
+if vtruep "${invert_p}"
+then
+    link_out=/proc/self/fd/1
+    non_link_out=/dev/null
+else
+    link_out=/dev/null
+    non_link_out=/proc/self/fd/1
+fi
+
 EExec_verbose_msg "cwd: $(pwd)"
 ls -1 "$@" \
-    | egrep -v '(fun|map)-defs\.h' \
+    | egrep -v "${exclusion_regexp}" \
     | while read
     do
         if [ -h "${REPLY}" ]
         then
-            continue
+            echo "${REPLY}" >> "${link_out}"
         else
-            echo "${REPLY}"
+            echo "${REPLY}" >> "${non_link_out}"
         fi
     done
 

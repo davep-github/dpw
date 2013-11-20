@@ -21,6 +21,18 @@ unset eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
 
+: ${yopp_p=}
+
+while (($# > 0))
+do
+  case "$1" in 
+      --yopp|-y) yopp_p=t;;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
+
 ap=$(me-expand-dest ap)
 vsetp "${ap}" || {
     echo "Can't find ap dir."
@@ -41,3 +53,4 @@ apbinmake="${apbin}/make"
 
 EExec_verbose_msg "PWD>$PWD<"
 EExec "${apbinmake}" "$@"
+vtruep "${yopp_p}" && email-yopp apmake: \""${apbinmake}" "$@"\" is done.

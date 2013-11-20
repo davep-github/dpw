@@ -70,7 +70,11 @@ Usage_details="${EExec_parse_usage}
 long_options=("diff:" "server:" "p4r:" "p4r-opt:" "no-fetch" "file" "local"
 "fetch" "just-fetch" "fetch-only" "remote" "password:" "passwd:" "pass:" "pwd:"
 "fetch-to:" "verbatim" "save" "save-to:" "upload" "up" "upload-to:" "up-to:"
-"review" "no-review" "creat" "debug")
+"review" "no-review" "creat" "debug" 
+"no-autoreview" "nar" "no-ar"
+"autoreview" "ar"
+
+)
 option_str="${EExec_parse_option_str}d:s:r:o:lfjp:t:cN"  # <:options:>
 source dp-getopt+.sh
 for i in "$@"
@@ -117,6 +121,8 @@ do
                         ;;
       -N|--no-review) review_p=;;
       --review) review_p=t;;
+      --no-autoreview|--nar|--no-ar) autoreview_opt=;;
+      --autoreview|--ar) autoreview_opt=-autoreview;;
       --verbatim) verbatim_p=t;;
       -c|--creat) creat_p=t; review_p=; save_p=t;;
       --save) save_p=t; review_p=;;
@@ -142,6 +148,7 @@ done
 : ${p4review_program:=${P4_SW_ROOT}/sw/main/apps/p4review/p4review.pl}
 : ${fetch_function:=fetch_wget}
 : ${fetch_cleanup:=cleanup_wget}
+: ${autoreview_opt=}
 
 [ -n "${save_p}" ] && {
     save_opt="-save"
@@ -307,13 +314,13 @@ dp4r_review()
                ;;
         *) repo="${p4review_repository}";;
     esac
-  
+
     f=$($fetch_function "${f}" "${repo}")
-    if [ -z "${just_fetch_p}" ]
+    if vunsetp "${just_fetch_p}"
     then
         EExec perl "$p4review_program" \
            ${p4r_opts} \
-           -diff "${diff_program}" -autoreview "${f}"
+           -diff "${diff_program}" ${autoreview_opt} "${f}"
         $fetch_cleanup "${f}"
     else
         true
@@ -339,7 +346,7 @@ do
       fi
   fi
 
-  if [ -n "$review_p" ]
+  if vsetp "$review_p"
   then
       f=$(basename $f)
       [ -z "${verbatim_p}" ] && {

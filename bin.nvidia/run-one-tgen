@@ -152,7 +152,7 @@ do
 done
 # The following is needed only when non optional args are required.
 [ "$*" = "" ] && {
-    Usage "Test name[s] are required."
+    Usage "Test name[s] are required. Use \"all\" to run all tests."
     exit 1
 }
 
@@ -308,7 +308,11 @@ do
     command_line_log="${out_dir}.command-line"
     if ! EExecDashN_p
     then
-        EExec mkdir -p $(dirname "${out_dir}")
+##        EExec mkdir -p $(dirname "${out_dir}")
+        EExec mkdir -p "${out_dir}"
+        # Save the list of jobs that are running before we start. This will
+        # help us to determine the jobs associated with this run.
+        bjobs >| "${out_dir}/bjobs-${test_name}.before"
         vsetp "${last_and_latest_p}" && {
             # Keep a history with latest last.
             # The script below now tails the last line.
@@ -328,6 +332,9 @@ tail -n1 ${last_out_dir_file_name}" >| "${latest_out}"
     vsetp "${tgen_opts}" && set -- "$@" ${tgen_opts}
 
     EExec "$@"
+
+    # Hopefully, they'll be running by now.
+    bjobs >| "${out_dir}/bjobs-${test_name}.after"
     
     [ -n "${display_status_p}" ] && {
         EExec ./batch_status "${out_dir}"
