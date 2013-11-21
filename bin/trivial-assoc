@@ -21,13 +21,5 @@ EExec_verbose_msg $(echo_id eexec_program)
 unset eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
-
-prefix="${1-}"
-shift
-suffix="${1-}"
-
-stamp="${prefix}$(dp-std-timestamp)${suffix}"
-EExecDashN_p && echo_id2 stamp
-stamp=$(namify-path "${stamp}")
-EExecDashN_p && echo_id2 stamp
-echo "${stamp}"
+field_name="${1}"
+EExec sed -rn "s/(.*)(${field_name})( \. \")([a-zA-Z_0-9-]*)(.*)/\4/p"

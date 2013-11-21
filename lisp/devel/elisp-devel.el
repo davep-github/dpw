@@ -5437,3 +5437,234 @@ nil
 
 
 
+
+========================
+Thursday November 21 2013
+--
+(defun dp-stringize-args (&rest r)
+  (message "YOPP! r>%s<" r)
+  (setq dpv-blah2 (format "%s" r)))
+dp-stringize-args
+(setq dpv-blah (princ "HAHA" 'dp-stringize-args))
+"HAHA"
+
+(1 2 3)
+
+
+
+dpv-blah2
+"(?\\))"
+
+
+(1 2 3)
+(listp dpv-blah)
+t
+
+nil
+
+(1 2 3)
+
+(1 2 3)
+dp-editor-identification-data
+(dp-short-hostname)
+"sc-xterm-19"
+
+(setq dp-editor-identification-data '((host-name . "sc-xterm-19") (sandbox-name . "sb4") (pid . 24789))
+((host-name . "sc-xterm-19") (sandbox-name . "sb4") (pid . 24789))
+
+
+
+(with-temp-file "/home/dpanariti/tmp/with-temp-file"
+  (prin1 dp-editor-identification-data (current-buffer))
+  (insert "\n"))
+nil
+
+((host-name . "bubba") (sandbox-name . "sb4") (pid . 24789))
+
+((host-name . "bubba") (sandbox-name . "sb4") (pid . 24789))
+
+
+((host-name . "bubba") (sandbox-name . "sb4") (pid . 24789))
+
+(dp-with-all-output-to-string
+  (cl-pp dp-editor-identification-data))
+"
+((host-name . \"bubba\")
+ (sandbox-name . \"sb4\")
+ (pid . 24789))
+"
+
+"
+((host-name . \"bubba\")
+ (sandbox-name . \"sb4\")
+ (pid . 24789))
+"
+"
+((host-name . \"bubba\")
+ (sandbox-name . \"sb4\")
+ (pid . 24789))
+"
+
+
+
+"((host-name . bubba) (sandbox-name . sb4) (pid . 24789))"
+
+
+
+  (insert (format "'%s\n" dp-editor-identification-data)))
+nil
+
+nil
+
+"((host-name . bubba) (sandbox-name . sb4) (pid . 24789))"
+
+
+((host-name . "bubba") (sandbox-name . "sb4") (pid . 24789))
+
+((host-name . bubba) (sandbox-name . sb4) (pid . 24789))((host-name . "bubba") (sandbox-name . "sb4") (pid . 24789))
+
+nil
+
+nil
+
+(cons "bubba" dp-editor-identification-data)
+("bubba" (sandbox-name . "sb4") (pid . 24789))
+
+(dp-add-editor-identification-data 'host-name "bubba")
+((host-name . "bubba") (sandbox-name . "sb4") (pid . 24789))
+
+(eval-expr "'(a b)")
+"'(a b)"
+(caar (read-from-string "(a b)"))
+a
+
+quote
+
+(quote (a b))
+
+((quote (a b)) . 6)
+
+"'(a b)"
+eval-expr
+file; ((host-name . bubba) (sandbox-name . sb4) (pid . 24789))
+dp-editor-identification-data
+(equal dp-editor-identification-data
+       '((host-name . "bubba") (sandbox-name . "sb4") (pid . 24789)))
+t
+
+
+(defun dp-compare-ipc-file (file-name)
+  (setq-ifnil file-name (dp-editing-server-ipc-file))
+  (equal (car (read-from-string (dp-read-file-as-string file-name)))
+         dp-editor-identification-data))
+
+(setq dpv-xxx (princ dp-editor-identification-data))
+((host-name . bubba) (sandbox-name . sb4) (pid . 24789))((host-name . "bubba") (sandbox-name . "sb4") (pid . 24789))
+dpv-xxx
+((host-name . "bubba") (sandbox-name . "sb4") (pid . 24789))
+
+(format "%s" dp-editor-identification-data)
+"((host-name . bubba) (sandbox-name . sb4) (pid . 24789))"
+
+
+((host-name . bubba) (sandbox-name . sb4) (pid . 24789))((host-name . "bubba") (sandbox-name . "sb4") (pid . 24789))
+
+((host-name . bubba) (sandbox-name . sb4) (pid . 24789))
+nil
+
+(eval (car (read-from-string (dp-read-file-as-string "/home/dpanariti/tmp/with-temp-file"))))
+
+(list ((host-name . bubba) (sandbox-name . sb4) (pid . 24789)))
+
+(equal 
+ (car (read-from-string (dp-read-file-as-string "/home/dpanariti/tmp/with-temp-file")))
+;;((host-name . "bubba") (sandbox-name . "sb4") (pid . 24789))
+
+
+ dp-editor-identification-data
+;;((host-name . "bubba") (sandbox-name . "sb4") (pid . 24789))
+
+)
+t
+
+nil
+
+nil
+
+(eval dp-editor-identification-data)
+dp-editor-identification-data
+((pid . 24789) (sandbox-name . "sb4") (host-name . "sc-xterm-19"))
+
+
+
+(dp-compare-ipc-file (dp-editing-server-ipc-file))
+nil
+
+dp-
+t
+
+
+
+(dp-creat-editing-server-ipc-file)
+nil
+
+nil
+
+nil
+
+(setq dp-editor-identification-data '((host-name . "sc-xterm-19") (sandbox-name . "sb4") (pid . 24789)))
+((host-name . "sc-xterm-19") (sandbox-name . "sb4") (pid . 24789))
+
+
+((host-name . "sc-xterm-19") (sandbox-name . "sb4") (pid . 24789))
+
+dp-editor-identification-data
+((host-name . "sc-xterm-19") (sandbox-name . "sb4") (pid . 24789))
+
+
+((host-name . "bubba") (sandbox-name . "sb4") (pid . 24789))
+
+
+(dp-creat-editor-identification-data)
+((pid . 24789) (sandbox-name . "sb4") (host-name . "sc-xterm-19"))
+dp-editor-identification-data
+((pid . 24789) (sandbox-name . "sb4") (host-name . "sc-xterm-19"))
+
+dp-editor-identification-data
+((sandbox-name) (pid . 16772) (host-name . "sc-xterm-19"))
+
+((sandbox-name) (pid . 16772) (host-name . "sc-xterm-19"))
+
+((sandbox-name . "sb4") (pid . 16772) (host-name . "sc-xterm-19"))
+
+((sandbox-name . "sb4") (pid . 16772) (host-name . "sc-xterm-19"))
+
+((sandbox-name . "sb3") (pid . 16772) (host-name . "sc-xterm-19"))
+
+((sandbox-name . "sb3") (pid . 16772) (host-name . "sc-xterm-19"))
+
+(dp-creat-editing-server-ipc-file)
+nil
+
+nil
+
+nil
+
+
+(dp-compare-ipc-file)
+t
+dp-editor-identification-data
+((sandbox-name . "sb4") (pid . 16772) (host-name . "sc-xterm-19"))
+
+nil
+
+t
+
+nil
+
+t
+
+t
+
+nil
+

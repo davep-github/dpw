@@ -177,7 +177,7 @@ dpdbg_echo ()
 dp_echo()
 {
     local pname=${DP_ECHO_PROGNAME:-$(dp_progname)}
-    echo "${pname}:" "$@"
+    echo "${dp_echo_prefix-}${pname}:" "$@"
 }
 export -f dp_echo
 

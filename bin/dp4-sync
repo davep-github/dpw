@@ -193,12 +193,13 @@ $@" >| "${save_args_file}"
     # p4 resolve's message about no files to resolve goes to stderr.
     vsetp "${files_to_resolve}" && {
         echo "******* There are files to resolve *******"
+        echo "******* output from p4 resolve -n  *******"
         # $() converts newlines to spaces.
         for ftr in ${files_to_resolve}
         do
           echo "${ftr}"
         done
-        echo "These files must be resolved by hand."
+        echo "These files must be resolved with the p4 resolve command."
         echo "*******"
     }
 

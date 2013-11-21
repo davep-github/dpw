@@ -1,5 +1,10 @@
 #!/bin/sh
 # source me.
+
+#
+# We only define this function.
+# We don't call it.
+#
 find_best_editing_host()
 {
     vsetp "${DP_GNU_EDITING_SERVER-}" && {
@@ -7,11 +12,12 @@ find_best_editing_host()
         return 0
     }
     [ -e "${DP_EDITING_SERVER_FILE}" ] && {
-        set -- $(cat "${DP_EDITING_SERVER_FILE}")
+#        set -- $(cat "${DP_EDITING_SERVER_FILE}")
+        cat "${DP_EDITING_SERVER_FILE}" | trivial-assoc "host-name"
         # $1 == server, $2 == pid, ... rest
         # If server is this host, verify the pid exists and is gnuserv.
-        editing_host_msg="editing server info: $@"
-        echo "${1}"
+#        editing_host_msg="editing server info: $@"
+#        echo "${1}"
         return 0
     }
     return 1

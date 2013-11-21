@@ -1,0 +1,64 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+# args sb file...
+
+sb="${1}"
+shift
+: ${differ:=diff}
+: ${differ_opts=-u}
+
+do_diff()
+{
+    local file="${1}"
+    local here="$(me-expand-dest ${file})"
+    local there="$(me-expand-dest ${file} ${sb})"
+    local bail_p=
+    {
+        vunsetp "${here}" && {
+            echo 'here file does not exist.'
+            bail_p=t
+        }
+        vunsetp "${there}" && {
+            echo 'there file does not exist.'
+            bail_p=t
+        }
+    } 1>&2
+    
+    vtruep "${bail_p}" && return 
+    EExec -0 "${differ}" ${differ_opts}  "${here}" "${there}"
+}
+
+if (($# > 0))
+then
+    for file in "$@"
+    do
+      do_diff "${file}"
+    done
+else
+    while read
+    do
+      do_diff "${REPLY}"
+    done
+fi

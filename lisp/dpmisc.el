@@ -5629,6 +5629,10 @@ The newly created list contains just new-el."
   (unless (assoc (car item) (symbol-value list-sym))
     (add-to-list list-sym item)))
 
+(defun dp-current-frame ()
+  "Return the current frame. There must be a better way."
+  (car (frame-list)))
+
 (defun dp-get-buffer-window (&optional buffer frames devices)
   "Like `get-buffer-window' but allows buffer to be a name, too.
 Also allows BUFFER to be nil and will then use `current-buffer'.
@@ -6335,7 +6339,7 @@ you've added enough info for set-auto-mode to figure it out.."
   ;; This is also called if a server cannot be started, e.g. because another
   ;; server is running. Forcing finalize to remove the ipc file is almost
   ;; always wrong in this case.
-  (dp-finalize-editing-server 'just-do-it)) 
+  (dp-finalize-editing-server 'rm-ipc-if-ours)) 
 
 (add-hook 'gnuserv-shutdown-hook 'dp-gnuserv-shutdown-hook)
 
@@ -6350,7 +6354,37 @@ you've added enough info for set-auto-mode to figure it out.."
 
 (defsubst dp-editor-identification-string ()
   (dp-string-join dp-editor-identification-data))
+
+(defun dp-creat-editor-identification-data (&optional 
+                                            host-name sandbox-name pid
+                                            update-our-data-p)
+  "Order matters, so create all fields first."
+  (let ((write-p (and (dp-compare-ipc-file)
+                      update-our-data-p)))
+    (setq-ifnil host-name (dp-short-hostname)
+                sandbox-name (dp-current-sandbox-name)
+                pid (emacs-pid))
+    (setq dp-editor-identification-data nil)
+    (dp-add-editor-identification-data 'host-name host-name)
+    (dp-add-editor-identification-data 'sandbox-name sandbox-name)
+    (dp-add-editor-identification-data 'pid pid)
+    (when write-p
+      (dp-creat-editing-server-ipc-file))))
+
+(defun* dp-update-editor-identification-data (&key host-name sandbox-name 
+                                              pid update-our-data-p)
+  (let ((write-p (and (dp-compare-ipc-file)
+                      update-our-data-p)))
+    (when host-name
+      (dp-add-editor-identification-data 'host-name host-name))
+    (when sandbox-name
+      (dp-add-editor-identification-data 'sandbox-name sandbox-name))
+    (when pid
+      (dp-add-editor-identification-data 'pid pid))
+    (when write-p
+      (dp-creat-editing-server-ipc-file))))
   
+
 (defun dp-editing-server-ipc-file ()
   "Editing server identification info. The environment variable is consistently stale."
   (or (getenv "DP_EDITING_SERVER_FILE")
@@ -6371,25 +6405,47 @@ to see if it's alive as well."
     ;; problem?
     (shell-command (format "dpkillprog %s" gnuserv-program)))
   (dmessage "dp-kill-editing-server")
-  (dp-finalize-editing-server 'just-do-it))
+  (dp-finalize-editing-server 'rm-ipc-if-ours))
+
+(defun dp-compare-ipc-file (&optional file-name)
+  (setq-ifnil file-name (dp-editing-server-ipc-file))
+  (let* ((file-id-info (dp-read-file-as-string file-name))
+         (id-info (and file-id-info
+                       (read-from-string file-id-info))))
+    (and id-info
+         (equal (car id-info)
+                dp-editor-identification-data))))
+
+(defun dp-rm-editing-server-ipc-file ()
+  "Remove the ipc file only iff it's ours."
+  (when (dp-compare-ipc-file)
+    (shell-command-to-string
+     (format "rm -f %s" 
+             (dp-editing-server-ipc-file)))))
+
+(defun dp-creat-editing-server-ipc-file (&optional host-name)
+  (setq-ifnil host-name (dp-short-hostname))
+  (with-temp-file (dp-editing-server-ipc-file)
+    (prin1 dp-editor-identification-data (current-buffer))
+    (insert "\n")))
 
 ;;
-;; Finalize the editing server. If one is running, remove the IPC file.
+;; Finalize the editing server. If one is running, remove the IPC file.  It
+;; seems there can be timing problems where the new instance can have written
+;; its ipc file before another gets and processes its signal. The signalee's
+;; server is still running, but it shouldn't rm its file.
 ;;
-(defun dp-finalize-editing-server (&optional just-do-it-p)
-  (dmessage "dp-finalize-editing-server, just-do-it-p: %s" just-do-it-p)
+(defun dp-finalize-editing-server (&optional rm-flag)
+  (dmessage "dp-finalize-editing-server, rm-flag: %s" rm-flag)
   (dp-set-frame-title-format :force-no-server-p t)
-  (when (or just-do-it-p (dp-gnuserv-running-p))
+  (when (or (memq rm-flag '(rm))
+            (dp-gnuserv-running-p))
     ;; The title formatter uses `dp-gnuserv-running-p' so it can mistakenly
     ;; set the server indication in the title.
     (when (dp-gnuserv-running-p)
       ;; Don't remove another instance's ipc file.
-      (shell-command-to-string (format "rm -f %s" 
-                                       (dp-editing-server-ipc-file))))))
+      (dp-rm-editing-server-ipc-file))))
 
-(defun dp-current-frame ()
-  "Return the current frame. There must be a better way."
-  (car (frame-list)))
 ;;
 ;; Try for more feature filled gnuserv and fall back
 ;; to the regular server if gnuserv is not available.
@@ -6437,12 +6493,9 @@ start a new one."
                  (string-match dp-edting-server-valid-host-regexp
                                host-name))
         ;; Don't clobber existing server advertisement.
-        (dp-add-editor-identification-data 'pid (emacs-pid))
+        (dp-creat-editor-identification-data)
         (dp-set-frame-title-format)
-        (shell-command-to-string (format "echo '%s %s' > %s"
-                                         host-name
-                                         (dp-editor-identification-string)
-                                         (dp-editing-server-ipc-file)))))))
+        (dp-creat-editing-server-ipc-file)))))
   
 (dp-defaliases 'gserv 'xserver 'eserver 'gnuserve 'dp-start-editing-server)
 
@@ -10323,6 +10376,20 @@ I like to be more precise in certain cases; such as when deleting things.")
       name-regexp (not skip-dired-buffers-p)))))
 
 (dp-safe-alias 'kbfn 'dp-kill-buffers-by-file-name)
+
+(defvar dp-tmp-buffers-regexp
+  (dp-concat-regexps-grouped
+               '(
+                 "^/tmp/tmp\\.[0-9]+\\.[0-9]+$"         ; perforce
+                 ))
+  "Regexp for `dp-kill-tmp-buffers'.
+Application specific names should be made as explicit as possible.")
+
+(defun dp-kill-tmp-buffers ()
+  "Kill tmp buffers by regexp.
+Application specific names should be made as explicit as possible."
+  (interactive)
+  (dp-kill-buffers-by-file-name dp-tmp-buffers-regexp))
 
 (defun* dp-kill-buffers-by-buffer-name (name-regexp &optional (all-p t))
   (interactive "sname regexp: \nP")
@@ -14544,8 +14611,9 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
 
 (defun dp-read-file-as-string (file-name)
   "Return contents of FILE-NAME as a string."
-  (dp-with-all-output-to-string
-   (insert-file file-name)))
+  (when (file-exists-p file-name)
+    (dp-with-all-output-to-string
+     (insert-file file-name))))
 
 (defun dp-fmakunbound (&optional function-name)
   (interactive (list (dp-prompt-with-symbol-near-point-as-default 

@@ -171,7 +171,10 @@ then
 else
     hist_prefix=""
 fi
-echo "${logfile}" >> "${hist_prefix}${rtl_log_file_history}"
+echo "${hist_prefix}${logfile}" | tee -a "${rtl_log_file_history}"
+echo "rtl_log_file_history: $(abspath ${rtl_log_file_history})"
+echo "run_cmd: $(abspath ${run_cmd})"
+
 if [ -n "${test_args}" ]
 then
     test_args=" ${test_args}"

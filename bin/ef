@@ -164,7 +164,7 @@ process_file ()
                 # Surely this is a good enough guess, isn't it?
 		[Ff]) export DISPLAY=":0.0"
 		      ;;
-                [QqXx]) exit 1;;
+                [QqXx]) raise_and_focus_p=;; exit 1;;
                 *) ;;
             esac
         fi
@@ -172,7 +172,7 @@ process_file ()
 
     #echo_id2 eval_opt
     vunsetp "${eval_opt}" && {
-        echo_id2 raise_and_focus_p
+        #echo_id2 raise_and_focus_p
         vtruep "${raise_and_focus_p}" && {
             EExec attempt-to-raise-emacs
         }
@@ -306,7 +306,7 @@ else
     set -- "${args[@]}"
     for file in "$@"
     do
-      echo_id file
+      #echo_id file
       opts=""
       if [ "${1:0:1}" = "+" ]
           then

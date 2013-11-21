@@ -493,7 +493,6 @@ Returns nil if there is no current sandbox."
   (dp-set-current-sandbox-read-only-p (not rw-p)))
 
 (defun dp-set-sandbox-name-and-regexp (name regexp &optional default-p)
-  (dp-remove-editor-identification-data 'sandbox-name)
   (let ((path (dp-me-expand-dest "/" name)))
     (if default-p
         (setq-default
@@ -504,8 +503,9 @@ Returns nil if there is no current sandbox."
        dp-current-sandbox-name-private name
        dp-current-sandbox-path-private path
        dp-current-sandbox-regexp-private regexp)))
-  (dp-add-editor-identification-data 'sandbox-name 
-                                     (dp-current-sandbox-name)))
+  (dp-update-editor-identification-data 
+   :sandbox-name (dp-current-sandbox-name)
+   :update-our-data-p t))
 
 (defun* dp-set-sandbox (sandbox &optional read-only-p)
   "Setup things for a singular, unique SANDBOX.
