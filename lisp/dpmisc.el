@@ -6355,26 +6355,32 @@ you've added enough info for set-auto-mode to figure it out.."
 (defsubst dp-editor-identification-string ()
   (dp-string-join dp-editor-identification-data))
 
-(defun dp-creat-editor-identification-data (&optional 
-                                            host-name sandbox-name pid
-                                            update-our-data-p)
-  "Order matters, so create all fields first."
-  (let ((write-p (and (dp-compare-ipc-file)
-                      update-our-data-p)))
-    (setq-ifnil host-name (dp-short-hostname)
-                sandbox-name (dp-current-sandbox-name)
-                pid (emacs-pid))
-    (setq dp-editor-identification-data nil)
-    (dp-add-editor-identification-data 'host-name host-name)
-    (dp-add-editor-identification-data 'sandbox-name sandbox-name)
-    (dp-add-editor-identification-data 'pid pid)
-    (when write-p
-      (dp-creat-editing-server-ipc-file))))
+(defun dp-compare-ipc-file (&optional file-name)
+  (setq-ifnil file-name (dp-editing-server-ipc-file))
+  (let* ((file-id-info (dp-read-file-as-string file-name))
+         (id-info (and file-id-info
+                       (read-from-string file-id-info))))
+    (and id-info
+         (dp-simple-assoc-cmp (car id-info)
+                              dp-editor-identification-data))))
+
+(defun dp-editing-server-ipc-file ()
+  "Editing server identification info. The environment variable is consistently stale."
+  (or (getenv "DP_EDITING_SERVER_FILE")
+      (format "%s/ipc/dp-editing-server" (getenv "HOME"))))
+
+(defun dp-creat-editing-server-ipc-file (&optional host-name)
+  (setq-ifnil host-name (dp-short-hostname))
+  (with-temp-file (dp-editing-server-ipc-file)
+    (prin1 dp-editor-identification-data (current-buffer))
+    (insert "\n")))
 
 (defun* dp-update-editor-identification-data (&key host-name sandbox-name 
                                               pid update-our-data-p)
-  (let ((write-p (and (dp-compare-ipc-file)
-                      update-our-data-p)))
+  "Update specified fields and optionally write the data."
+  (let ((write-p (or (eq update-our-data-p 'force)
+                     (and update-our-data-p
+                          (dp-compare-ipc-file)))))
     (when host-name
       (dp-add-editor-identification-data 'host-name host-name))
     (when sandbox-name
@@ -6384,11 +6390,12 @@ you've added enough info for set-auto-mode to figure it out.."
     (when write-p
       (dp-creat-editing-server-ipc-file))))
   
-
-(defun dp-editing-server-ipc-file ()
-  "Editing server identification info. The environment variable is consistently stale."
-  (or (getenv "DP_EDITING_SERVER_FILE")
-      (format "%s/ipc/dp-editing-server" (getenv "HOME"))))
+(defun dp-rm-editing-server-ipc-file ()
+  "Remove the ipc file only iff it's ours."
+  (when (dp-compare-ipc-file)
+    (shell-command-to-string
+     (format "rm -f %s" 
+             (dp-editing-server-ipc-file)))))
 
 (defun dp-gnuserv-running-p ()
   "Determine if the editing server process exists and is alive.
@@ -6406,28 +6413,6 @@ to see if it's alive as well."
     (shell-command (format "dpkillprog %s" gnuserv-program)))
   (dmessage "dp-kill-editing-server")
   (dp-finalize-editing-server 'rm-ipc-if-ours))
-
-(defun dp-compare-ipc-file (&optional file-name)
-  (setq-ifnil file-name (dp-editing-server-ipc-file))
-  (let* ((file-id-info (dp-read-file-as-string file-name))
-         (id-info (and file-id-info
-                       (read-from-string file-id-info))))
-    (and id-info
-         (equal (car id-info)
-                dp-editor-identification-data))))
-
-(defun dp-rm-editing-server-ipc-file ()
-  "Remove the ipc file only iff it's ours."
-  (when (dp-compare-ipc-file)
-    (shell-command-to-string
-     (format "rm -f %s" 
-             (dp-editing-server-ipc-file)))))
-
-(defun dp-creat-editing-server-ipc-file (&optional host-name)
-  (setq-ifnil host-name (dp-short-hostname))
-  (with-temp-file (dp-editing-server-ipc-file)
-    (prin1 dp-editor-identification-data (current-buffer))
-    (insert "\n")))
 
 ;;
 ;; Finalize the editing server. If one is running, remove the IPC file.  It
@@ -6493,7 +6478,10 @@ start a new one."
                  (string-match dp-edting-server-valid-host-regexp
                                host-name))
         ;; Don't clobber existing server advertisement.
-        (dp-creat-editor-identification-data)
+        (dp-update-editor-identification-data 
+         :host-name host-name 
+         :sandbox-name (dp-current-sandbox-name)
+         :pid (emacs-pid))
         (dp-set-frame-title-format)
         (dp-creat-editing-server-ipc-file)))))
   
@@ -8007,6 +7995,17 @@ can handle that case."
                          (dp-c-get-current-token)))
         (comment-end ""))
     (dp-lineup-comments begin end)))
+
+(defun dp-simple-assoc-cmp (a1 a2)
+  "Compare two simple alists, independent of order.
+Simple means that the values are comparable with `equal'."
+  (when (equal (length a1) (length a2))
+    (not
+     (loop for a1-el in a1
+       do
+       (unless (equal (cdr a1-el)
+                      (cdr (assoc (car a1-el) a2)))
+         (return 'neq))))))
 
 (defun dp-assoc-regexp (key regexp-alist)
   "Find KEY in REGEXP-ALIST, an alist who's keys are regexps.

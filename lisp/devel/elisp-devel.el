@@ -5668,3 +5668,52 @@ t
 
 nil
 
+(loop for (a b) on '((1 . 2 ) (a . b))
+  do
+  (princf "a>%s<, b>%s<" a b))
+a>(1 . 2)<, b>(a . b)<
+a>(a . b)<, b>nil<
+nil
+
+(loop for c in '((1 . 2 ) (a . b))
+  do
+  (princf "c>%s<" c))
+c>(1 . 2)<
+c>(a . b)<
+nil
+
+c>((1 . 2) (a . b))<
+c>((a . b))<
+nil
+
+
+
+
+
+
+(defun dp-simple-assoc-cmp (a1 a2)
+  "Compare two simple alists, independent of order.
+Simple means that the values are comparable with `equal'."
+  (when (equal (length a1) (length a2))
+    (not
+     (loop for a1-el in a1
+       do
+       (unless (equal (cdr a1-el)
+                      (cdr (assoc (car a1-el) a2)))
+         (return 'neq))))))
+(let
+    ((a1 '((d . b) (1 . 2)))
+     (a2 '((1 . 2) (a . b))))
+  (dp-simple-assoc-cmp a1 a2))
+nil
+
+t
+
+nil
+
+
+neq
+
+
+
+
