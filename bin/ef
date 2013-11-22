@@ -64,7 +64,7 @@ local_server_p()
 # If we find no host then we use a new instance.
 #
 
-source find_best_editing_host
+source find-best-editing-host
 
 find_one_of_these_programs()
 {
@@ -164,7 +164,7 @@ process_file ()
                 # Surely this is a good enough guess, isn't it?
 		[Ff]) export DISPLAY=":0.0"
 		      ;;
-                [QqXx]) raise_and_focus_p=;; exit 1;;
+                [QqXx]) raise_and_focus_p=; exit 1;;
                 *) ;;
             esac
         fi
@@ -180,15 +180,15 @@ process_file ()
 
     # send the filename to emacs
     [ "$do_wait" = 'y' ] && nowait_opt=
-    EExecDashN_p && vsetp "$editing_host_msg" && echo "$editing_host_msg"
-    EExecDashN_p && vsetp "$extra_editing_host_msg" && echo "$extra_editing_host_msg"
+    EExecDashV_p && vsetp "$editing_host_msg" && echo "$editing_host_msg"
+    EExecDashV_p && vsetp "$extra_editing_host_msg" && echo "$extra_editing_host_msg"
     vsetp "${client}" && set -- "${client}"
     vsetp "${editing_host_opt}" && set -- "$@" ${editing_host_opt}
     vsetp "${nowait_opt}" && set -- "$@" "${nowait_opt}"
     vsetp "${eval_opt}" && set -- "$@" -eval "(progn ${eval_opt})"
     vsetp "${opts}" && set -- "$@" ${opts}
     vsetp "${file}" && set -- "$@" "${file}"
-    EExecDashN_p && eko "$@"
+    EExecDashV_p && eko "$@"
 
     #EExec $client $editing_host_opt $nowait_opt $eval_opt "$opts" \"$file\"
     EExec "$@"
@@ -294,7 +294,7 @@ findprog -s sawfish
 have_sawfish=$?
 
 EExec_verbose_msg "args>${args[@]}<"
-EExecDashN_p && echo_id one_file
+EExecDashV_p && echo_id one_file
 #set -x
 if [ "${#args[@]}" = 0 ]
 then
