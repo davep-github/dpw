@@ -9,6 +9,7 @@ gdmf_regexps=(
     "--egrep" 'RT_FAIL'
     "--egrep" '\(gdb\)'
     "--egrep" 'qemu: could not load kernel'
+    "--egrep" 'SIGXFSZ'
     "--egrep" 'something bad happened'
     "--hgrep" 'call stack'
     "--hgrep" 'stack trace'

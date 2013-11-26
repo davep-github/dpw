@@ -1892,11 +1892,15 @@ first file that is `dp-file-readable-p' is used.  Also sets
 (defun dp-shell-beginning-of-line ()
   ;;beginning of command line (after prompt)
   ;; If we're already @ comint-bol, then skip to the next command.
-  (let ((point (point)))
-    (comint-bol nil)
-    (when (= point (point))
-      (beginning-of-line)
-      (setq dp-shell-home-command-ptr (cdr-safe dp-shell-home-command-ptr)))))
+  ;; The context sensitive stuff makes automatic typing DTWT too often.  If I
+  ;; don't notice I'm at comint-bol I'll automatically do 2 C-a and get to
+  ;; then wrong place.
+  (comint-bol nil))
+;;   (let ((point (point)))
+;;     (comint-bol nil)
+;;     (when (= point (point))
+;;       (beginning-of-line)
+;;       (setq dp-shell-home-command-ptr (cdr-safe dp-shell-home-command-ptr)))))
 
 (defvar dp-shell-home-command-list
   '(

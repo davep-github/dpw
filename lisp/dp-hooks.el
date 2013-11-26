@@ -2291,7 +2291,12 @@ changed."
 (defun dp-before-change-function (beg end)
   (dmessage "in dp-before-change-function, buf: %s, beg: %s, end: %s" 
             (buffer-name) beg end))
-  
+
+(defun dp-bookmark-bmenu-mode-hook ()
+  (local-set-key [return] 'bookmark-bmenu-other-window))
+
+(add-hook 'bookmark-bmenu-mode-hook 'dp-bookmark-bmenu-mode-hook)
+
 ;; I'm trending away from advice, since I've seen code that really rapes it
 ;; (I'm looking at you, ECB)
 ;;CO; (defadvice find-function-on-key (before dp-find-function-on-key activate)

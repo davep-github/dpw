@@ -6370,6 +6370,8 @@ you've added enough info for set-auto-mode to figure it out.."
       (format "%s/ipc/dp-editing-server" (getenv "HOME"))))
 
 (defun dp-creat-editing-server-ipc-file (&optional host-name)
+  "Unconditionally write the server ipc file."
+  (dmessage "in dp-creat-editing-server-ipc-file")
   (setq-ifnil host-name (dp-short-hostname))
   (with-temp-file (dp-editing-server-ipc-file)
     (prin1 dp-editor-identification-data (current-buffer))
@@ -6377,22 +6379,33 @@ you've added enough info for set-auto-mode to figure it out.."
 
 (defun* dp-update-editor-identification-data (&key host-name sandbox-name 
                                               pid update-our-data-p)
-  "Update specified fields and optionally write the data."
+  "Update specified fields and optionally write the data.
+Use '(nil) for field name to set it to nil."
   (let ((write-p (or (eq update-our-data-p 'force)
                      (and update-our-data-p
                           (dp-compare-ipc-file)))))
     (when host-name
-      (dp-add-editor-identification-data 'host-name host-name))
+      (dp-add-editor-identification-data 'host-name 
+                                         (if (listp host-name)
+                                             (car host-name)
+                                           host-name)))
     (when sandbox-name
-      (dp-add-editor-identification-data 'sandbox-name sandbox-name))
+      (dp-add-editor-identification-data 'sandbox-name 
+                                         (if (listp sandbox-name)
+                                             (car sandbox-name)
+                                           sandbox-name)))
     (when pid
-      (dp-add-editor-identification-data 'pid pid))
+      (dp-add-editor-identification-data 'pid 
+                                         (if (listp pid)
+                                             (car pid)
+                                           pid)))
     (when write-p
       (dp-creat-editing-server-ipc-file))))
   
-(defun dp-rm-editing-server-ipc-file ()
+(defun dp-rm-editing-server-ipc-file (&optional force-p)
   "Remove the ipc file only iff it's ours."
-  (when (dp-compare-ipc-file)
+  (when (or force-p
+            (dp-compare-ipc-file))
     (shell-command-to-string
      (format "rm -f %s" 
              (dp-editing-server-ipc-file)))))
@@ -6427,9 +6440,7 @@ to see if it's alive as well."
             (dp-gnuserv-running-p))
     ;; The title formatter uses `dp-gnuserv-running-p' so it can mistakenly
     ;; set the server indication in the title.
-    (when (dp-gnuserv-running-p)
-      ;; Don't remove another instance's ipc file.
-      (dp-rm-editing-server-ipc-file))))
+    (dp-rm-editing-server-ipc-file)))
 
 ;;
 ;; Try for more feature filled gnuserv and fall back
@@ -6468,19 +6479,23 @@ start a new one."
                                           'kill-local-p))
                      ((Cu--p server-fate) 'just-kill-p)
                      (t server-fate)))
+  (dmessage "server-fate: %s, force-serving-p: %s" server-fate force-serving-p)
   ;; Nuke any possible existing server and do not start a gnu one. Har!
   (dp-kill-editing-server server-fate)
   ;; Start gnu (har, har! It just never gets old) one.
   (unless (eq server-fate 'just-kill-p)
     (dp-start-server)
+    ;; Allow time for the server to die if there is another one running.
+    (sit-for 0.5) ;
     (let ((host-name (dp-short-hostname)))
       (when (and (dp-gnuserv-running-p)
+                 (or (dmessage "server is running") t)
                  (string-match dp-edting-server-valid-host-regexp
                                host-name))
-        ;; Don't clobber existing server advertisement.
+        ;; Set up newest server advertisement.
         (dp-update-editor-identification-data 
-         :host-name host-name 
-         :sandbox-name (dp-current-sandbox-name)
+         :host-name host-name
+         :sandbox-name (or (dp-current-sandbox-name) "nil")
          :pid (emacs-pid))
         (dp-set-frame-title-format)
         (dp-creat-editing-server-ipc-file)))))
@@ -7999,7 +8014,9 @@ can handle that case."
 (defun dp-simple-assoc-cmp (a1 a2)
   "Compare two simple alists, independent of order.
 Simple means that the values are comparable with `equal'."
-  (when (equal (length a1) (length a2))
+  (when (and (listp a1)
+             (listp s2)
+             (equal (length a1) (length a2)))
     (not
      (loop for a1-el in a1
        do
@@ -13197,6 +13214,10 @@ An `undo-boundary' is done before the template is used."
   "
 import os, sys
 import argparse
+
+#
+# davep's standard new Python file template.
+#
 
 class App_arg_action_add_regexp_and_highlight(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):

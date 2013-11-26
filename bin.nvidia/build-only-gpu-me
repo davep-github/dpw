@@ -1,0 +1,51 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+for i in "$@"
+do
+  case "$i" in
+      -d|--debug) debug=debug_;;
+      -D|--no-debug) debug=;;
+      -m|--mte) target=gpu_mte_build;;
+      -p|--plugin|--plugins) target=plugins;;
+      -f|--fw|--framework) target=framework;;
+      *) break;;
+  esac
+  shift
+done
+
+#
+# Some gpu multi-engine targets:
+#
+# t132_[debug_]gpu_multiengine-gpu_mte_build
+# t132_[debug_]gpu_multiengine-plugins
+# t132_[debug_]gpu_multiengine-framework
+
+: ${chip=t132}
+: ${target=plugins}
+: ${debug=debug_}
+
+case "$debug" in 
+    debug_) ;;
+    debug|_debug|_debug_) debug=debug_;;
+    "");;
+    *) echo 1>&2 "Unsupported debug value>${debug}<"; exit 1;;
+esac
+
+build_only="${chip}_${debug}gpu_multiengine-${target}"
+
+EExec -y mecd tot
+
+EExec bin/t_make -only "${build_only}" "$@"
+

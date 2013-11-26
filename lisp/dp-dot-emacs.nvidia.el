@@ -192,6 +192,7 @@ tests.")
        (not (string-match dp-p4-ignore-dirs-regexp file-name))))
 
 ;;(setq dp-proscribed-sandbox-private-p "/sb4")
+(setq dp-proscribed-sandbox-private-p  nil)
 ;;
 ;; Don't want to edit these stupid fvcking copies.
 (dp-add-force-read-only-regexp "/plex/")

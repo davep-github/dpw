@@ -202,6 +202,8 @@ screendir_data()
     echo "$(screendir_hostroot $@)/data.d"
 }
 export -f screendir_data
+alias screen_data_dir=screendir_data
+alias screen_dir_data=screendir_data
 
 export SCREENDIR_DATA="$(screendir_data)"
 [ -d "$SCREENDIR_DATA" ] || {

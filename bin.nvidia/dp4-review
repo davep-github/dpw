@@ -69,8 +69,11 @@ Usage_details="${EExec_parse_usage}
 # Example of arg parsing.
 long_options=("diff:" "server:" "p4r:" "p4r-opt:" "no-fetch" "file" "local"
 "fetch" "just-fetch" "fetch-only" "remote" "password:" "passwd:" "pass:" "pwd:"
-"fetch-to:" "verbatim" "save" "save-to:" "upload" "up" "upload-to:" "up-to:"
-"review" "no-review" "creat" "debug" 
+"fetch-to:" "verbatim" "save" "save-to:" 
+"upload" "up" "add" "update" "new"
+"upload-to:" "up-to:"
+"review" "no-review" 
+"creat" "debug" 
 "no-autoreview" "nar" "no-ar"
 "autoreview" "ar"
 "upload-review" "up-review" "all"
@@ -128,7 +131,7 @@ do
       -c|--creat) creat_p=t; review_p=; save_p=t;;
       --save) save_p=t; review_p=;;
       --save-to) shift; p4review_repository="${1}"; save_p=t; review_p=;;
-      --upload|--up) save_p=t; upload_p=t; review_p=;;
+      --upload|--up|--add|--update|--new) save_p=t; upload_p=t; review_p=;;
       --upload-review|--up-review|--all|--submit|--sub) save_p=t; upload_p=t; review_p=t;;
       --upload-to|--up-to) shift; p4review_repository="${1}"; upload_p=t;
                            save_p=t
@@ -289,7 +292,7 @@ dp4r_create()
 dp4r_upload()
 {
     local cl="${1}"; shift
-    dp_echo_prefix='*** ' dp_echo "Uploading cl: ${cl}"
+    dp_echo_prefix='^^^ ' dp_echo "Uploading cl: ${cl}"
     verify_my_cl "${cl}" || {
         echo "$progname: Cannot verify changelist number ${cl}"
         exit 1
