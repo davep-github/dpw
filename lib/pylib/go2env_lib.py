@@ -4,7 +4,7 @@ import os, sys, string, re, getopt, types, StringIO
 import pprint
 import cPickle as pickle
 
-import dp_io, dp_sequences, dp_utils
+import dp_io, dp_sequences, dp_utils, dp_misc
 opath = os.path
 
 ignore_file_not_found = 1
@@ -571,6 +571,11 @@ def read_aliases(serialized_file=DEFAULT_SERIALIZED_FILE):
 
 #####################################################################
 def write_dict(args, dict_file=None):
+    if not dict_file:
+        return
+    dname, fname = opath.split(dict_file)
+    if not opath.exists(dict_file):
+        dp_utils.mkpath(dname)
     init_aliases(args, ".*", False, False)
     fobj = open(dict_file, "w")
     beauty = pprint.pformat(Get_aliases(), indent=4, width=80, depth=None)
@@ -584,6 +589,8 @@ def read_dict(dict_file=None):
     import imp
     if not dict_file:
         dict_file = DEFAULT_DICT_FILE
+    if not opath.exists(dict_file):
+        return []
     dict_path = [opath.dirname(dict_file)]
     dict_name = opath.basename(opath.splitext(dict_file)[0])
     fobj, p, d = imp.find_module(dict_name, dict_path)

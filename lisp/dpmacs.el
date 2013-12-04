@@ -249,6 +249,10 @@ intolerable delays to files not in perforce."
 (defvar dp-most-specific-spec-macs nil
   "The most specific dp-dot-emacs*.el file we `load'ed.")
 
+(defun dp-edit-most-specific-spec-macs ()
+  (interactive)
+  (find-file dp-most-specific-spec-macs))
+
 (defvar dp-loaded-spec-macsen '()
   "A list of all of the spec-macs files we loaded. Most specific to least.")
 

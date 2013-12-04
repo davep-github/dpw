@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-### Time-stamp: <13/09/25 09:59:21 dpanariti>
+### Time-stamp: <13/12/04 16:06:16 dpanariti>
 #############################################################################
 ## @package 
 ##
@@ -33,5 +33,4 @@ def any_substring(a, s, first=0, last=None, string_pp=string.lower):
         string_pp = identity
     return string_pp(a) in all_substrings(string_pp(s), first, last)
 
-def normpath_plus(path, plus=opath.sep):
-    return opath.normpath(path) + plus
+        
