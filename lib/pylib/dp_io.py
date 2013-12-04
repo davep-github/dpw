@@ -77,7 +77,8 @@ def verbose_pop_level():
 def fmt_args(fmt, *args):
     if not args:
         return fmt
-    if "%s" in fmt:
+    ## Try to handle legacy formats.
+    if re.search("%[%dsulg]", fmt):
         return fmt % args
     return fmt.format(*args)
 

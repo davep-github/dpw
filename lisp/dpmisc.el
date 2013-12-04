@@ -13049,7 +13049,12 @@ the minibuffer."
 
 ;;(add-hook 'dp-post-dpmacs-hook 'dp-broken-keyboard-bs)
 
-(defun dp-add-new-file-template (&optional template &rest template-args)
+(defun dp-insert-new-file-template (file-name &optional goto-pos)
+  (when goto-pos
+    (goto-char goto-pos))
+  (insert-file file-name))
+
+(defun dp-add-new-file-template (&optional template &optional template-args)
   (interactive "\sname: ")
   ;; template can be a simple string or a list:
   ;; \(function args).
@@ -13095,16 +13100,18 @@ If it is indeed a script name <script>-it can be called interactively.")
                       run-with-/usr/bin/env-p
                       &key
                       (make-executable-p t) 
-                      comm-start
+                      comment-start
                       (add-to-svn-p 'check)
                       template 
-                      template-args)
+                      template-args
+                      (add-shebang-p t))
   (interactive "sinterpreter: \nP")
   (when (string-match dp-script-buffers-to-ignore-regexp
                       (buffer-name))
     (return-from dp-script-it))
   (goto-char (point-min))
-  (unless (re-search-forward (regexp-quote interpreter) (line-end-position) t)
+  (unless (re-search-forward (regexp-quote interpreter) 
+                             (line-end-position) t)
     (unless (string-match interpreter "^#!")
       (insert "#!"))
     (insert (if run-with-/usr/bin/env-p 
@@ -13117,7 +13124,7 @@ If it is indeed a script name <script>-it can be called interactively.")
   (let (added-junk-p)
     (when dp-time-stamps-in-new-file-templates-p
       ;; Don't clobber the real value of comment-start.
-      (let ((comment-start (or comm-start comment-start)))
+      (let ((comment-start (or comment-start comment-start)))
         (dp-insert-time-stamp-field))
       (setq added-junk-p 'added-junk)
       (insert "\n"))
@@ -13210,56 +13217,14 @@ An `undo-boundary' is done before the template is used."
 ;;replaced below if __name__ == \"__main__\":
 ;;replaced below     main(sys.argv)
 
-(defcustom dp-python-new-file-template
-  "
-import os, sys
-import argparse
 
-#
-# davep's standard new Python file template.
-#
-
-class App_arg_action_add_regexp_and_highlight(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        regexps = getattr(namespace, self.dest)
-        regexps.append(values)
-        setattr(namespace, self.dest, regexps)
-        setattr(namespace, \"highlight_grep_matches_p\", True) 
-
-def main(argv):
-
-    oparser = argparse.ArgumentParser()
-    oparser.add_argument(\"--debug\",
-                         dest=\"debug_level\",  # Becomes `dest'
-                         type=int,
-                         default=0,
-                         help=\"Set debug level\")
-    oparser.add_argument(\"--quiet\", \"-q\",
-                         dest=\"quiet_p\",
-                         default=False,
-                         action=\"store_true\",
-                         help=\"Do not print informative messages.\")
-    oparser.add_argument(\"--hgrep\", \"--hregexp\", \"--hmatch\",
-                         dest=\"regexp_patterns\", default=[],
-                         action=App_arg_action_add_regexp_and_highlight,
-                         help='Grep for these patterns and highlight.')
-
-    # ...
-
-    app_args = oparser.parse_args()
-    if app_args.quiet_p:
-        print \"I am being quiet.\"
-
-
-if __name__ == \"__main__\":
-    main(sys.argv)
-
-"
-  "A string to stuff into each new file created with `dp-script-it'
+(defcustom dp-python-new-file-template-file 
+  (expand-file-name "~/bin/templates/python-template.py")
+  "A file to stuff into each new Python file created with `pyit'
 or a list: \(function args).
 An `undo-boundary' is done before the template is used."
   :group 'dp-vars
-  :type '(repeat string))
+  :type 'string)
 
 ;;what was this?; (defun dp-lang-new-file-template-any-old-hack-string-matches (&optional 
 ;;what was this?;                                                               rest-o-hack-line 
@@ -13341,12 +13306,13 @@ An `undo-boundary' is done before the template is used."
 
 (defun pyit ()
   "Set up a buffer as a Python language buffer.
-Inserts `dp-python-new-file-template' by default."
+Inserts `dp-python-new-file-template-file' by default."
   (interactive)
   (let ((comment-start "###"))
     (dp-script-it "python" t
-                  :comm-start comment-start
-                  :template dp-python-new-file-template)))
+                  :comment-start comment-start
+                  :template 'dp-insert-new-file-template
+                  :template-args (list dp-python-new-file-template-file))))
 
 
 (defun* dp-get-buffer-local-value (&optional var buffer 
@@ -13741,8 +13707,7 @@ spec-macsen are used for the completion list."
 
 (defvar dp-major-mode-to-shebang
   ;; Symbol for key, plist for value
-  '((python-mode i-name "python" env-p run-with-/usr/bin/env-p 
-                 comment-start "### " template dp-python-new-file-template)
+  '((python-mode it pyit)
     ;;(sh-mode i-name "/bin/sh")
     (sh-mode it shit)
     (c-mode it dp-c-new-file-template)
@@ -13758,7 +13723,7 @@ Items are a list:
 \(key plist\)
 Where plist has elements:
 'i-name - interpreter name as a string
-'env-p - run interpreter with /usr/bin/env <interpreter-name>
+'run-with-/usr/bin/env-p - run interpreter with /usr/bin/env <interpreter-name>
 'comment-start - for customizing the comment chars preceding the time-stamp
 'make-exe-p - should we make the file executable?")
 
@@ -13780,7 +13745,7 @@ Where plist has elements:
           (dp-script-it (plist-get info-plist 'i-name) 
                         (plist-get info-plist 'env-p)
                         :make-executable-p (plist-get info-plist 'make-exe-p t)
-                        :comm-start (plist-get info-plist 'comment-start)
+                        :comment-start (plist-get info-plist 'comment-start)
                         :template (plist-get info-plist 'template )
                         :template-args (plist-get info-plist 'template-args)))
       (call-interactively 'dp-script-it))
