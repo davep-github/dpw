@@ -57,16 +57,16 @@ pingit()
 #         sep=' '
 #     fi
     ###echo $NEWLINE "Pinging $extra$s"
-    echo $NEWLINE "${extra}ping $s"
+    echo $NEWLINE "${extra}ping $s..."
     if eval ping -c 2 $s $REDIR
     then
 	if [ "$verbose" != 'y' ]
 	then
-	    echo " ...ok."
+	    echo " ok."
             rc=0
 	fi
     else
-	echo " ...ping failed"
+	echo " ping failed"
         rc=1
     fi
 

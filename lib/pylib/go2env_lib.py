@@ -571,6 +571,8 @@ def read_aliases(serialized_file=DEFAULT_SERIALIZED_FILE):
 
 #####################################################################
 def write_dict(args, dict_file=None):
+    if not dict_file:
+        return
     init_aliases(args, ".*", False, False)
     fobj = open(dict_file, "w")
     beauty = pprint.pformat(Get_aliases(), indent=4, width=80, depth=None)
