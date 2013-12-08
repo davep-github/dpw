@@ -47,13 +47,14 @@ tee_cat()
 : ${p4_sync_dash_f=}
 : ${send_mail_on_completion_p:=t}
 : ${tee_append_opt=}
-: ${stay_in_cwd_p=}
+: ${cd_to="."}
+: ${keep_logs_p=}
 
 tee_func=teekerer_sample
 teeker_opts=
 teeker_interval=100
 std_options=""
-option_str="nvqtsk:i:fN1oc"
+option_str="nvqtsk:i:fN1oc."
 long_options=("teeker-opts:" "tee-func:" "teeker-interval:"
     "p4-sync-dash-n" "p4-sync-n" "4n" "p4n" "p4-n"
     "sample" "tee" "teeker" "cat"
@@ -61,7 +62,11 @@ long_options=("teeker-opts:" "tee-func:" "teeker-interval:"
     "mail" "notify-on-completion" "email-on-completion" "yopp" "send-mail"
     "no-log-file"
     "no-save-args"
-    "stay-put" "no-cd"
+    "stay-put" "no-cd" "dot" "."
+    "cd:" 
+    "top" "tot" "ap"
+    "root" "cd-root" "sb-root"
+    "keep-logs"
 )
 
 source dp-getopt+.sh
@@ -76,7 +81,11 @@ do
       -t|--tee) tee_func=teeer;;
       -k|--teeker-opts) shift; teeker_opts="$1";;
       -i|--teeker-interval) shift; teeker_interval="$1";;
-      -.|--stay-put|--no-cd) stay_in_cwd_p=t;;
+      -.|--stay-put|--no-cd|--dot) cd_to=".";;
+      --keep-logs) keep_logs_p=t;;  # Even if -n
+      --cd) shift; cd_to=$(me-expand-dest "${1}") || cd_to="${1}";;
+      --root|--cd-root|--sb-root) cd_to=$(me-expand-dest "/") || exit 11;;
+      --top|--tot|--ap) cd_to=$(me-expand-dest tot) || exit 12;;
       -f) p4_sync_dash_f="-f";;
       -N|--p4-sync-dash-n|--4n|--p4n|--p4-n) p4_sync_dash_n=-n;;
       -1|-o|--no-log-file) kwa_log_file=/dev/null; 
@@ -99,11 +108,11 @@ done
 
 # Command line argument implies we're sync'ing a subset so stay where we are.
 vsetp "$*" && {
-    stay_in_cwd_p=t
+    cd_to="."
 }
 
-stay_in_cwd_p=t                 # This is broken. Don't do it.
-vfalsep "${stay_in_cwd_p}" && {
+if vunsetp "${cd_to}"
+then
     # With multiple trees, it makes more sense to simply move up to the
     # closest .p4config.
     p4config=$(find-up ".p4config")
@@ -116,7 +125,10 @@ vfalsep "${stay_in_cwd_p}" && {
     p4config_dir=$(dirname "${p4config}")
     EExec -y cd "${p4config_dir}"
     echo_id PWD
-}
+else
+    EExec -y cd "${cd_to}"
+    EExec_verbose_msg "$(echo_id cd_to), pwd>$(pwd)<pwd"
+fi
 
 : ${sandbox_root:=$(dp4-get-root)}
 : ${kwa_log_root:=${sandbox_root}/${progname}.d}
@@ -133,6 +145,7 @@ vunsetp "${kwa_log_base}" && {
     fi
     echo_id PWD
     rel_dir=$(dp4-relative-dir "${PWD}")
+    : ${rel_dir:=$(basename "${PWD}")}
     echo_id rel_dir
     kwa_log_base=$(namify-path -c % $(normpath -c "${rel_dir}"))
 }
@@ -162,9 +175,9 @@ kwa_log_file="${kwa_log_dir}/${kwa_log_file_name}"
 echo_id kwa_log_file
 
 {
+    save_args_file="${kwa_log_dir}/dp4-sync.args"
     # print log name before and after in case it is a long sync.
     [ -n "$save_args_p" ] && {
-        save_args_file="${kwa_log_dir}/dp4-sync.args"
         echo_id save_args_file
         echo "p4 sync args:
 $@" >| "${save_args_file}"
@@ -183,31 +196,32 @@ $@" >| "${save_args_file}"
 
 # Show resolve status.
 {
-    echo
     # Let me know if anything needs merging. -n --> just show problems.
-    files_to_resolve=$(p4 resolve -n) || {
-        echo "$progname: p4 resolve failed."
-        exit 1
-    } 1>&2
-
-    # p4 resolve's message about no files to resolve goes to stderr.
-    vsetp "${files_to_resolve}" && {
-        echo "******* There are files to resolve *******"
-        echo "******* output from p4 resolve -n  *******"
+    echo
+    EExecDashN_p || {
+        files_to_resolve=$(p4 resolve -n) || {
+            echo "$progname: p4 resolve failed."
+            exit 1
+        } 1>&2
+        # p4 resolve's message about no files to resolve goes to stderr.
+        vsetp "${files_to_resolve}" && {
+            echo "******* There are files to resolve *******"
+            echo "******* output from p4 resolve -n  *******"
         # $() converts newlines to spaces.
-        for ftr in ${files_to_resolve}
-        do
-          echo "${ftr}"
-        done
-        echo "These files must be resolved with the p4 resolve command."
-        echo "*******"
+            for ftr in ${files_to_resolve}
+              do
+              echo "${ftr}"
+            done
+            echo "These files must be resolved with the p4 resolve command."
+            echo "*******"
+        }
     }
 
 } 2>&1 | EExec -y tee -a "${kwa_log_file}"
 
 echo "log dir>${kwa_log_dir}<"
 
-EExecDashN_p && {
+vunsetp "${keep_logs_p}" && EExecDashN_p && {
     echo "EExecDashN_p is true, deleting log dir."
     EExec -y rm -rf "${kwa_log_dir}"
 } 1>&2

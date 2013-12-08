@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-### Time-stamp: <13/12/03 14:54:02 davep>
+
 #############################################################################
 ## @package
 ##
@@ -43,7 +43,7 @@ def mkpath0(split_path):
         os.mkdir(ppart + opath.sep + dpart)
         return
     mkpath0(opath.split(dpart))
-    
+
 def mkpath(path_string_or_list):
     print >>sys.stderr, "path_string_or_list>{}<".format(path_string_or_list)
     if type(path_string_or_list) == types.StringType:
@@ -64,7 +64,6 @@ def mkpath(path_string_or_list):
             # If p is a file, we'll raise an appropriate error.
             os.mkdir(p)
         p = p + opath.sep + element
-
 
 if __name__ == "__main__":
     mkpath(sys.argv[1])

@@ -488,21 +488,23 @@ __gitdir ()
 xxx_newest()
 {
     local op="${1}"; shift
-    local num=1
+    local depth=1
+    local num=
     while (($# > 0))
     do
       case "${1-}" in
-          -n|--num) shift; num="${1}";;
-          -[0-9]*) num=$(echo "${1}" | sed -rn 's/(-)([0-9]+)(.*)/\2/p');;
+          -n|--num|--depth) shift; depth="${1}";;
+          [0-9]*) depth="${1}";;
+          -[0-9]*) num="${1}";;
           --) shift; break;;
           *) break;;
       esac
       shift
     done
     local dir
-    while ((num-- > 0))
+    while ((depth-- > 0))
     do
-      dir=$(newest-dir "$@") || return $?
+      dir=$(newest-dir ${num} "$@") || return $?
       $op "${dir}" || return $?
     done
     return "$?"

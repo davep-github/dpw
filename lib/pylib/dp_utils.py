@@ -427,3 +427,47 @@ def newest_file(files):
             newest_mod_time = mt
             newest_file = f
     return newest_file, newest_mod_time
+
+def normpath_plus(path, plus=opath.sep):
+    return opath.normpath(path) + plus
+
+def pathcomponents(path):
+    p = opath.normpath(path)
+    p = p.split(opath.sep)
+    return p
+
+def dir_existence(path):
+    return opath.exists(path), opath.isdir(path)
+
+def existing_dir(path):
+    dx = dir_existence(path)
+    return dx[0] and dx[1]
+
+def mkpath(path):
+    if existing_dir(path) or path == opath.sep:
+        return True
+    #path, dir = opath.split(path)
+    components = pathcomponents(path)
+    #print >>sys.stderr, "components>{}<".format(components)
+    p = ''
+    sep = ''
+    for c in components:
+        if c == '':
+            p = '/'
+            continue
+        #print >>sys.stderr, "c>{}<".format(c)
+        p = p + sep + c
+        #print >>sys.stderr, "p>{}<".format(p)
+        if not opath.exists(p):
+            #print >>sys.stderr, "mkdir({})".format(p)
+            os.mkdir(p)
+        elif not opath.isdir(p):
+            os.mkdir(p)                 # Raise the appropriate error.
+        sep = opath.sep
+            
+
+if __name__ == "__main__":
+    for a in sys.argv[1:]:
+        print "a>{}<".format(a)
+        mkpath(a)
+

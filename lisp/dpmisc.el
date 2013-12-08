@@ -6370,6 +6370,8 @@ you've added enough info for set-auto-mode to figure it out.."
       (format "%s/ipc/dp-editing-server" (getenv "HOME"))))
 
 (defun dp-creat-editing-server-ipc-file (&optional host-name)
+  "Unconditionally write the server ipc file."
+  (dmessage "in dp-creat-editing-server-ipc-file")
   (setq-ifnil host-name (dp-short-hostname))
   (with-temp-file (dp-editing-server-ipc-file)
     (prin1 dp-editor-identification-data (current-buffer))
@@ -6377,22 +6379,33 @@ you've added enough info for set-auto-mode to figure it out.."
 
 (defun* dp-update-editor-identification-data (&key host-name sandbox-name 
                                               pid update-our-data-p)
-  "Update specified fields and optionally write the data."
+  "Update specified fields and optionally write the data.
+Use '(nil) for field name to set it to nil."
   (let ((write-p (or (eq update-our-data-p 'force)
                      (and update-our-data-p
                           (dp-compare-ipc-file)))))
     (when host-name
-      (dp-add-editor-identification-data 'host-name host-name))
+      (dp-add-editor-identification-data 'host-name 
+                                         (if (listp host-name)
+                                             (car host-name)
+                                           host-name)))
     (when sandbox-name
-      (dp-add-editor-identification-data 'sandbox-name sandbox-name))
+      (dp-add-editor-identification-data 'sandbox-name 
+                                         (if (listp sandbox-name)
+                                             (car sandbox-name)
+                                           sandbox-name)))
     (when pid
-      (dp-add-editor-identification-data 'pid pid))
+      (dp-add-editor-identification-data 'pid 
+                                         (if (listp pid)
+                                             (car pid)
+                                           pid)))
     (when write-p
       (dp-creat-editing-server-ipc-file))))
   
-(defun dp-rm-editing-server-ipc-file ()
+(defun dp-rm-editing-server-ipc-file (&optional force-p)
   "Remove the ipc file only iff it's ours."
-  (when (dp-compare-ipc-file)
+  (when (or force-p
+            (dp-compare-ipc-file))
     (shell-command-to-string
      (format "rm -f %s" 
              (dp-editing-server-ipc-file)))))
@@ -6427,9 +6440,7 @@ to see if it's alive as well."
             (dp-gnuserv-running-p))
     ;; The title formatter uses `dp-gnuserv-running-p' so it can mistakenly
     ;; set the server indication in the title.
-    (when (dp-gnuserv-running-p)
-      ;; Don't remove another instance's ipc file.
-      (dp-rm-editing-server-ipc-file))))
+    (dp-rm-editing-server-ipc-file)))
 
 ;;
 ;; Try for more feature filled gnuserv and fall back
@@ -6468,19 +6479,23 @@ start a new one."
                                           'kill-local-p))
                      ((Cu--p server-fate) 'just-kill-p)
                      (t server-fate)))
+  (dmessage "server-fate: %s, force-serving-p: %s" server-fate force-serving-p)
   ;; Nuke any possible existing server and do not start a gnu one. Har!
   (dp-kill-editing-server server-fate)
   ;; Start gnu (har, har! It just never gets old) one.
   (unless (eq server-fate 'just-kill-p)
     (dp-start-server)
+    ;; Allow time for the server to die if there is another one running.
+    (sit-for 0.5) ;
     (let ((host-name (dp-short-hostname)))
       (when (and (dp-gnuserv-running-p)
+                 (or (dmessage "server is running") t)
                  (string-match dp-edting-server-valid-host-regexp
                                host-name))
-        ;; Don't clobber existing server advertisement.
+        ;; Set up newest server advertisement.
         (dp-update-editor-identification-data 
-         :host-name host-name 
-         :sandbox-name (dp-current-sandbox-name)
+         :host-name host-name
+         :sandbox-name (or (dp-current-sandbox-name) "nil")
          :pid (emacs-pid))
         (dp-set-frame-title-format)
         (dp-creat-editing-server-ipc-file)))))
@@ -7999,7 +8014,9 @@ can handle that case."
 (defun dp-simple-assoc-cmp (a1 a2)
   "Compare two simple alists, independent of order.
 Simple means that the values are comparable with `equal'."
-  (when (equal (length a1) (length a2))
+  (when (and (listp a1)
+             (listp s2)
+             (equal (length a1) (length a2)))
     (not
      (loop for a1-el in a1
        do
@@ -13032,7 +13049,12 @@ the minibuffer."
 
 ;;(add-hook 'dp-post-dpmacs-hook 'dp-broken-keyboard-bs)
 
-(defun dp-add-new-file-template (&optional template &rest template-args)
+(defun dp-insert-new-file-template (file-name &optional goto-pos)
+  (when goto-pos
+    (goto-char goto-pos))
+  (insert-file file-name))
+
+(defun dp-add-new-file-template (&optional template &optional template-args)
   (interactive "\sname: ")
   ;; template can be a simple string or a list:
   ;; \(function args).
@@ -13078,16 +13100,18 @@ If it is indeed a script name <script>-it can be called interactively.")
                       run-with-/usr/bin/env-p
                       &key
                       (make-executable-p t) 
-                      comm-start
+                      comment-start
                       (add-to-svn-p 'check)
                       template 
-                      template-args)
+                      template-args
+                      (add-shebang-p t))
   (interactive "sinterpreter: \nP")
   (when (string-match dp-script-buffers-to-ignore-regexp
                       (buffer-name))
     (return-from dp-script-it))
   (goto-char (point-min))
-  (unless (re-search-forward (regexp-quote interpreter) (line-end-position) t)
+  (unless (re-search-forward (regexp-quote interpreter) 
+                             (line-end-position) t)
     (unless (string-match interpreter "^#!")
       (insert "#!"))
     (insert (if run-with-/usr/bin/env-p 
@@ -13100,7 +13124,7 @@ If it is indeed a script name <script>-it can be called interactively.")
   (let (added-junk-p)
     (when dp-time-stamps-in-new-file-templates-p
       ;; Don't clobber the real value of comment-start.
-      (let ((comment-start (or comm-start comment-start)))
+      (let ((comment-start (or comment-start comment-start)))
         (dp-insert-time-stamp-field))
       (setq added-junk-p 'added-junk)
       (insert "\n"))
@@ -13193,52 +13217,14 @@ An `undo-boundary' is done before the template is used."
 ;;replaced below if __name__ == \"__main__\":
 ;;replaced below     main(sys.argv)
 
-(defcustom dp-python-new-file-template
-  "
-import os, sys
-import argparse
 
-class App_arg_action_add_regexp_and_highlight(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        regexps = getattr(namespace, self.dest)
-        regexps.append(values)
-        setattr(namespace, self.dest, regexps)
-        setattr(namespace, \"highlight_grep_matches_p\", True) 
-
-def main(argv):
-
-    oparser = argparse.ArgumentParser()
-    oparser.add_argument(\"--debug\",
-                         dest=\"debug_level\",  # Becomes `dest'
-                         type=int,
-                         default=0,
-                         help=\"Set debug level\")
-    oparser.add_argument(\"--quiet\", \"-q\",
-                         dest=\"quiet_p\",
-                         default=False,
-                         action=\"store_true\",
-                         help=\"Do not print informative messages.\")
-    oparser.add_argument(\"--hgrep\", \"--hregexp\", \"--hmatch\",
-                         dest=\"regexp_patterns\", default=[],
-                         action=App_arg_action_add_regexp_and_highlight,
-                         help='Grep for these patterns and highlight.')
-
-    # ...
-
-    app_args = oparser.parse_args()
-    if app_args.quiet_p:
-        print \"I am being quiet.\"
-
-
-if __name__ == \"__main__\":
-    main(sys.argv)
-
-"
-  "A string to stuff into each new file created with `dp-script-it'
+(defcustom dp-python-new-file-template-file 
+  (expand-file-name "~/bin/templates/python-template.py")
+  "A file to stuff into each new Python file created with `pyit'
 or a list: \(function args).
 An `undo-boundary' is done before the template is used."
   :group 'dp-vars
-  :type '(repeat string))
+  :type 'string)
 
 ;;what was this?; (defun dp-lang-new-file-template-any-old-hack-string-matches (&optional 
 ;;what was this?;                                                               rest-o-hack-line 
@@ -13320,12 +13306,13 @@ An `undo-boundary' is done before the template is used."
 
 (defun pyit ()
   "Set up a buffer as a Python language buffer.
-Inserts `dp-python-new-file-template' by default."
+Inserts `dp-python-new-file-template-file' by default."
   (interactive)
   (let ((comment-start "###"))
     (dp-script-it "python" t
-                  :comm-start comment-start
-                  :template dp-python-new-file-template)))
+                  :comment-start comment-start
+                  :template 'dp-insert-new-file-template
+                  :template-args (list dp-python-new-file-template-file))))
 
 
 (defun* dp-get-buffer-local-value (&optional var buffer 
@@ -13720,8 +13707,7 @@ spec-macsen are used for the completion list."
 
 (defvar dp-major-mode-to-shebang
   ;; Symbol for key, plist for value
-  '((python-mode i-name "python" env-p run-with-/usr/bin/env-p 
-                 comment-start "### " template dp-python-new-file-template)
+  '((python-mode it pyit)
     ;;(sh-mode i-name "/bin/sh")
     (sh-mode it shit)
     (c-mode it dp-c-new-file-template)
@@ -13737,7 +13723,7 @@ Items are a list:
 \(key plist\)
 Where plist has elements:
 'i-name - interpreter name as a string
-'env-p - run interpreter with /usr/bin/env <interpreter-name>
+'run-with-/usr/bin/env-p - run interpreter with /usr/bin/env <interpreter-name>
 'comment-start - for customizing the comment chars preceding the time-stamp
 'make-exe-p - should we make the file executable?")
 
@@ -13759,7 +13745,7 @@ Where plist has elements:
           (dp-script-it (plist-get info-plist 'i-name) 
                         (plist-get info-plist 'env-p)
                         :make-executable-p (plist-get info-plist 'make-exe-p t)
-                        :comm-start (plist-get info-plist 'comment-start)
+                        :comment-start (plist-get info-plist 'comment-start)
                         :template (plist-get info-plist 'template )
                         :template-args (plist-get info-plist 'template-args)))
       (call-interactively 'dp-script-it))

@@ -116,6 +116,7 @@ Ee|testgendpt132rtldir__ME_src| ${testgen__ME_src}
 Ee|tgt132rtl__ME_src|           ${testgendpt132rtldir__ME_src}
 Ee|t132rtl__ME_src|             ${testgendpt132rtldir__ME_src}
 Ee|drv__ME_src|                 ${TOT__ME_src}drv/
+Ee|simfront__ME_src|            ${drv__ME_src}simfront/
 Ee|drvapi__ME_src|              ${drv__ME_src}drvapi/
 Ee|drvapinc__ME_src|            ${drvapi__ME_src}include
 Ee|runtestcommon__ME_src|       ${TOT__ME_src}drv/drvapi/runtest_common/

@@ -19,6 +19,8 @@ suites=(rtmem-rtreg)
 : ${debug_opt=}
 : ${debug_level_opt=}
 : ${printout_flag_p=}
+: ${elves='/home/denver/release/sw/components/mts/1.0/cl28625566/debug_arm/denver/bin/mts.elf@0xe0000000:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/drv/mpcore/t132/ObjLinux_MPCoreXC/boot_page_table.axf:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/override.elf@0xe0000000:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/t132/ObjLinux_MPCoreXC/cpu_surface_write_read.Cortex-A8.axf:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/t132/ObjLinux_ARM7TDMIXC/cpu_surface_write_read.ARM7TDMI.axf:'}
+
 : ${config=top_peatrans_gpurtl} # Not for CPU? NO. Yes for MODS + CPU
 #: ${config=top_gpurtl_t132} # ??? do I need the _t132? NO.
 #: ${config=top_gpurtl} # ??? do I need the _t132? NO.
@@ -82,6 +84,7 @@ do
       -p|--print|--printouts) printout_flag_p=-p;;
       -a|--args|--prog-args|--program-args) shift; test_args="${1}";;
       -d|--denver) run_cmd="${DENVER_RUN_CMD}"; run_cmd_args=("${DENVER_ARGS[@]}");;
+      --no-elf) elves="";;
       --t124) run_cmd="${RUN_CMD}"; run_cmd_args=("${T124_ARGS[@]}"); mode_arg='-mode arm'
               project=t124;;
       -r|--run-cmd-args) shift; run_cmd_args="${1}";;
@@ -184,6 +187,12 @@ then
     done
 fi
 
+if [ -n "${elves}" ]
+then
+    elf_load_opt=("-elf_load" "${elves}")
+else
+    elf_load_opt=()
+fi
 #use $@ directly     ${rtprint_opt} \
 #use $@ directly     ${ddd_opt} \
 #use $@ directly     ${debug_opt} \
@@ -199,6 +208,7 @@ ${EZEC} "${run_cmd}" \
     -o "${logfile}" \
     -noClean \
     -traces "${trace_dir}" \
+    "${elf_load_opt[@]}" \
     -mods "-top -cpu_rtl -pitch -zt_count_0 -i ${hdr_file} -o ${logdir}/${testname}.mods -plugin '${testname}${test_args}'" \
     "$@" \
     "${testname}${testext}" \

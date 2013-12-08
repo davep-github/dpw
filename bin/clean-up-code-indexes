@@ -1,0 +1,88 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+: ${maxdepth=4}
+: ${maxdepth_arg=-maxdepth ${maxdepth}}
+: ${index_file_globs:=cscope.* GTAGS GRTAGS GPATH}
+: ${index_finder_file:=cscope.files}
+
+#e.g.# # Usage variable usage:
+#e.g.# Usage_args_info=" errno..."
+Usage_synopsis="Clean up code indexes in the given tree and subtrees:
+"
+#e.g.# # Using ) after the args makes copy & paste between here and the
+#e.g.# # case statement easier.
+Usage_details="${EExec_parse_usage} [flags] [find-root]
+-m|--depth|--maxdepth) maxdepth for find [${maxdepth}]
+--index-file-globs) Index files to rm [${index_file_globs}]
+--index-finder-file) File to identify a dir with indexes [${index_finder_file}]
+
+"
+#e.g.# # Example of arg parsing.
+option_str="${EExec_parse_option_str}m:"
+# long_options=("option-name-without-leading--" ...)
+long_options=(
+"depth:" "maxdepth:"
+"index-file-globs:"
+"index-finder-file:"
+)
+
+source dp-getopt+.sh
+while (($# > 0))
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support
+      # Done by EExec_parse and friends.
+
+      # Program options.
+      -m|--depth|--maxdepth) shift; maxdepth_arg="-maxdepth ${1}";;
+      --index-file-globs) shift; index_file_globs="${1}";;
+      --index-finder-file) shift; index_finder_file="${1}";;
+
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+
+vunsetp "$*" && {
+    set -- '.'
+}
+
+EExec -y find "$@" ${maxdepth_arg} -name "${index_finder_file}" | \
+while read
+do
+  EExecDashV && echo_id REPLY
+  found_file="${REPLY}"
+  dir=$(dirname "${found_file}")
+  pushd "${dir}"
+  EExecDashV && pwd
+  EExec rm -f ${index_file_globs}
+  popd
+done
+

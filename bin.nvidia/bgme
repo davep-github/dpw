@@ -4,48 +4,81 @@ source script-x
 set -u
 progname="$(basename $0)"
 source eexec
-eexec_program=$(EExec_parse "$@")
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
 for op in $eexec_program
 do
   $op
-  shift
+  ${EEXEC_SHIFT}
 done
+EExec_verbose_msg $(echo_id eexec_program)
 unset eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
 
-for i in "$@"
+: ${purge_opt=}
+: ${debug_opt=-debug=1}
+: ${build_prog:=./build_gpu_multiengine.pl}
+: ${yopp_p=t}
+# Usage variable usage:
+Usage_args_info=" bgme [--purge] [--no-debug]"
+Usage_synopsis="Build GPU ME plugins:
+"
+# Using ) after the args makes copy & paste between here and the
+# case statement easier.
+Usage_details="${EExec_parse_usage}
+--purge) Build purge target
+-n|-d|--no-debug) Don't build with -debug=1
+--build) Build program
+-y|--no-yopp) Don't send email when done
+"
+# Example of arg parsing.
+option_str="${EExec_parse_option_str}pnd"
+long_options=(
+"purge"
+"no-debug" "nd"
+"build"
+"no-yopp"
+)
+
+source dp-getopt+.sh
+while (($# > 0))
 do
-  case "$i" in
-      -d|--debug) debug=debug_;;
-      -D|--no-debug) debug=;;
-      -m|--mte) target=gpu_mte_build;;
-      -p|--plugin|--plugins) target=plugins;;
-      -f|--fw|--framework) target=framework;;
-      *) break;;
-  esac
-  shift
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support
+      # Done by EExec_parse and friends.
+
+      # Program options.
+      -p|--purge) purge_opt=purge;;
+      -n|-d|--no-debug|--nd) debug_opt=;;
+      --build) shift; build_prog="${1}";;
+      -y|--no-yopp) yopp_p=;;
+
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
 done
 
-#
-# Some gpu multi-engine targets:
-#
-# t132_[debug_]gpu_multiengine-gpu_mte_build
-# t132_[debug_]gpu_multiengine-plugins
-# t132_[debug_]gpu_multiengine-framework
+mecd testgen
+EExec_verbose_msg "pwd: $(pwd)"
+vsetp "${purge_opt}" && {
+    EExec "${build_prog}" ${purge_opt}
+}
 
-: ${chip=t132}
-: ${target=plugins}
-: ${debug=debug_}
+EExec "${build_prog}" ${debug_opt}
 
-case "$debug" in 
-    debug_) ;;
-    debug|_debug|_debug_) debug=debug_;;
-    "");;
-    *) echo 1>&2 "Unsupported debug value>${debug}<"; exit 1;;
-esac
-
-build_only="${chip}_${debug}gpu_multiengine-${target}"
-
-EExec -y mecd tot
-
-EExec bin/t_make -only "${build_only}" "$@"
+vsetp "${yopp_p}" && {
+    EExec email-yopp "GPU ME build done."
+}
 
