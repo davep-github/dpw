@@ -315,6 +315,7 @@ Bind any keys in KEYS via `dp-define-keys'."
 (defun dp-keys-define-init-submaps ()
   ;; Beginning to use C-cC-d as dp-* command prefix.
   ;; dp prefixed keys; dp keys prefix; dp key prefix
+  ;; <:dp-keys|dpkeys|dp keys:>
   (makunbound 'dp-Ccd-map)
   (defconst dp-Ccd-map
     (dp-define-key-submap 'dp-kb-prefix global-map
@@ -337,7 +338,6 @@ Bind any keys in KEYS via `dp-define-keys'."
                                     (dp-goto-next-dp-extent-from-point '(4)))
 
                           [(control ?p)] 'dp-shell-resync-dirs
-                          [(control ?r)] 'dp-rotate-windows
                           [(control ?s)] 'dp-find-or-create-sb
                           [(control ?v)] 'dp-symbol-info
                           ;; For when I type the wrong thing
@@ -374,6 +374,7 @@ Bind any keys in KEYS via `dp-define-keys'."
                           [?p] 'dp-python-shell
                           [?q] 'dp-calc-eval-region
                           [?r] 'dp-rotate-windows
+                          [(control ?r)] 'dp-resurrect
                           [?v] 'dp-show-variable-value
                           [?x] 'dp-cx-file-mode
                           [?\\] 'dp-split-and-continue-line0
@@ -630,6 +631,7 @@ already in there.")
                           [?+] 'dp-2x2-windows
                           [?=] 'dp-2x2-windows  ; unshifted +
                           [?4] 'dp-2x2-windows
+                          [?|] 'dp-duplicate-window-horizontally
                           ;; Kill HIM, Thunder. -- D.LoPan
                           [?q] 'dp-quit-other-window)
     ;; <:cdd map window bindings:>

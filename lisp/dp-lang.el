@@ -772,13 +772,15 @@ the line is blank."
 (defun dp-c-in-brace-list-p ()
   (dp-c-in-syntactic-region '(brace-list-entry brace-list-intro)))
 
-(defun dp-in-c++-class ()
+(defun dp-c++-in-class-p ()
   "Are we in a C++ class definition?"
   (let ((bpos (c-least-enclosing-brace (c-parse-state))))
     (when bpos
       (save-excursion
         (goto-char bpos)
         (dp-c-in-syntactic-region '(class-open)))))) 
+
+(defalias 'dp-in-c++-class-p 'dp-c++-in-class-p)
 
 (defsubst dp-in-c-arglist ()
   "Are we in a C/C++ function's arglist?
@@ -1288,10 +1290,95 @@ E.g. \"some_var\" --> \"m_some_var(some_var)\"."
 
 (defun dp-c-electric-colon (arg)
   (interactive "*P")
-  (c-electric-colon arg)
+  (when arg
+    (end-of-line))
+  (c-electric-colon nil)
   (when (and (dp-syntax-c++-member-init-p)
              (dp-looking-back-at ":"))
     (insert " ")))
+
+(defvar dp-arglist-syntax-list '(arglist-intro arglist-cont arglist-cont-nonempty
+                                 defun-block-intro
+                                 topmost-intro topmost-intro-cont
+                                 member-init-intro member-init-cont)
+
+  "List of syntax regions that constitute an arg or decl list.")
+
+(defun* dp-c*-in-arglist-p (&key
+                            syntax
+                            c-syntax-ignore-list
+                            class-only-p)
+  (setq-ifnil syntax (dp-c-get-syntactic-region c-syntax-ignore-list))
+  (save-excursion
+    (beginning-of-line)
+    (and (or (not class-only-p)
+             (dp-c++-in-class-p))
+         (dp-c-in-syntactic-region dp-arglist-syntax-list))))
+
+(defun* dp-c*-goto-end-of-arglist (&key
+                                   limit
+                                   class-only-p)
+  (setq-ifnil limit (point-max))
+  (while (and (<= (point) limit)
+              (dp-c*-in-arglist-p)
+              (equal 0 (forward-line 1))))
+  ;; If this is non-nil, then we aborted before we found the end.
+  (let ((in-arglist-p (dp-c*-in-arglist-p)))
+    (unless in-arglist-p
+      (previous-line 1)
+      (dp-c-end-of-line))
+    in-arglist-p))
+    
+
+(defun* dp-c-ensure-opening-brace (&key ; <:eob:>
+                                   (regexp dp-c-open-brace-present-regexp)  
+                                   (newline-before-brace-p t)
+                                   (ignore-eos-junk-p t)
+                                   (regexp-prefix "")
+                                   ;; the following default has problems
+                                   ;; whether nil or non-
+                                   ;; Find the error CALLERS and set
+                                   ;; appropriately.
+                                   (force-newline-after-brace-p nil)
+                                   (ensure-newline-after-brace-p nil)
+                                   (replacement ""))
+  "!<@todo XXX Add a force blank line after brace predicate.
+I added the idea that this would return a valuing telling the caller if
+anything was done to prevent double newlines. I need to determine then this
+is the case.
+non-nil tells the caller there is nothing more to do.
+aa bb(
+    aa,
+    bb,
+    cc)
+{
+    -!-f(1,1);
+If off, point is at f.
+If on, transform to:
+
+aa bb(
+    aa,
+    bb,
+    cc)
+{
+    -!-
+    f(1,1);
+
+"
+  (let ((end-of-arglist-result (dp-c*-goto-end-of-arglist))
+        (bracket-finder "\\(\n\\|\\s-\\)*{"))
+    (if (looking-at bracket-finder)
+        (re-search-forward bracket-finder nil t)
+      (when newline-before-brace-p
+        (newline-and-indent))
+      (insert "{")
+      (dp-c-indent-command)
+      (dp-c-end-of-line))
+    (if (or force-newline-after-brace-p
+            (not (looking-at "\n")))
+        (c-newline-and-indent)
+      (next-line 1))
+    (dp-c-indent-command)))
 
 ;;-----------------------------------------------------------------------------
 ;;
@@ -1327,5 +1414,6 @@ changes."
   (call-interactively 'cperl-indent-for-comment)
   (when (dp-looking-back-at (concat "^\\s-*" comment-start))
     (cperl-indent-command)))
+
 
 (provide 'dp-lang)

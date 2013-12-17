@@ -77,8 +77,9 @@ vsetp "${purge_opt}" && {
 }
 
 EExec "${build_prog}" ${debug_opt}
+rc=$?
 
 vsetp "${yopp_p}" && {
-    EExec email-yopp "GPU ME build done."
+    EExec email-yopp "RC: ${rc}: GPU ME build done."
 }
 

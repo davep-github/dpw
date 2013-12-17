@@ -73,7 +73,7 @@ run_cmd_args=("${DENVER_ARGS[@]}")
 while (($# > 0))
 do
   case "${1}" in
-      -n|--pretend|--dry-run) EZEC=echo; no_run_p=t; set -x;;
+      -n|--pretend|--dry-run) EZEC=echo; no_run_p=t;;
       -v|--verbose) set -x;;
       -q|--quiet) set +x;;
       -k|--eko) EZEC=eko; no_run_p=t;;
@@ -116,19 +116,13 @@ done
 
 echo "Remaining args after option parsing, \$@>$@<"
 
-[ -z "${no_run_p-}" ] && {
-    [ "${any_shell_p-}" != "${confirmation_response}" ] && {
-        test $(basename "${SHELL}") = tcsh || {
-            echo "You are not in a c-shell.
-At this time, it is recommended to run tests that environment.
-> ssh \$HOST
-will get a pristine standard environment.
-But if you insist on BASHing your test against the wall, 
-set then environment variable any_shell_p to ${confirmation_response}"
-            exit 1
-        } 1>&2
-    }
-}
+if [ -z "${no_run_p-}" ]
+then
+    confirmation_response='TRUST ME' csh-p || exit $?
+    run_prefix=
+else
+    run_prefix="{-}"
+fi
 
 abspath()
 {
@@ -138,19 +132,21 @@ abspath()
 
 echo "Rundir >$rundir<, >$(cd $rundir; pwd)<"
 
+runlog="${PWD}/dp-rtl-tests/runlog"
 
 logdir="${PWD}/dp-rtl-tests/${config}-${timestamp}"
-#logdir="${PWD}/dp-rtl-tests/abs-file-names"
 logfile="${logdir}/${testname}.log"
+mk_logdir_command="mkdir -p ${logdir}"
 if [ -z "${no_run_p}" ]
 then
-    mkdir -p "${logdir}" || {
+    ${mk_logdir_command} || {
         rc="${?}"
         echo "Cannot create logdir >$logdir<, RC: ${rc}"
         exit "${rc}"
     } 1>&2
 else
-    echo "Not creating log dir>${logdir}<"
+
+    echo "${run_prefix}${mk_logdir_command}"
 fi
 
 pushd "${rundir}"
@@ -168,15 +164,12 @@ hdr_file=$(abspath ../../arch/traces/mobile/traces/gpu_multiengine/comp_one_tri_
     startrecord_opt="-rtlarg +startrecord+${startrecord}"
 }
 
-if test -z "${no_run_p}"
-then
-    hist_prefix="Not running: "
-else
-    hist_prefix=""
-fi
-echo "${hist_prefix}${logfile}" | tee -a "${rtl_log_file_history}"
+{
+    echo "${run_prefix}${logfile}"
+    echo "${run_prefix}${run_cmd}: $(abspath ${run_cmd})"
+}  | tee -a "${rtl_log_file_history}" | tee "${rtl_log_file_history}.latest"
+
 echo "rtl_log_file_history: $(abspath ${rtl_log_file_history})"
-echo "run_cmd: $(abspath ${run_cmd})"
 
 if [ -n "${test_args}" ]
 then
@@ -185,7 +178,14 @@ then
     do
       test_args="${test_args} suite=${suite}"
     done
+    {
+        echo "${run_prefix}${run_cmd}: $(abspath ${run_cmd})"
+    }  | tee -a "${rtl_log_file_history}" | tee -a "${rtl_log_file_history}.latest"
 fi
+
+echo "--" >> "${rtl_log_file_history}"
+
+exit 99
 
 if [ -n "${elves}" ]
 then

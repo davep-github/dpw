@@ -431,7 +431,7 @@
       "set and" "logical and" "intersection")
      dp-manual)
     ((("ch" "sf" "srcs" "chc")
-      "*.[ch]*" "*.h *.cpp")
+      "*.h *.cpp" "*.[ch]*")
      dp-manual)
     ((("chre" "sfre" "srcre" "chcre")
       ".*\\.[ch]\\(pp\\)?$")

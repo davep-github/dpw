@@ -615,10 +615,10 @@ c-hanging-braces-alist based upon these values.")
                    dp-default-c-style)
                t)
 
-  ;;  (define-key map [(control c) d (meta /)] 'dp-c++-mk-data-section)
-  ;;  (define-key map [(control c) d / ] 'dp-c++-goto-data-section)
-  (define-key dp-Ccd-map [(meta /)]  'dp-c++-mk-data-section)
-  (define-key dp-Ccd-map "/" 'dp-c++-goto-data-section)
+  ;;  (define-key map [(control c) d (meta /)] 'dp-c++-mk-protection-section)
+  ;;  (define-key map [(control c) d / ] 'dp-c++-goto-protection-section)
+  (define-key dp-Ccd-map [(meta /)]  'dp-c++-mk-protection-section)
+  (define-key dp-Ccd-map "/" 'dp-c++-goto-protection-section)
   (define-key dp-Ccd-map  [:] (kb-lambda (dp-c-open-newline 'colon)))
 
   ;; We may just want to put all of this into the c-mode-base-map
@@ -2224,9 +2224,15 @@ and then business as usual."
 
 (defadvice vc-diff (around dp-vc-advice activate)
   (dp-push-window-config)
+  (dp-offer-to-start-editing-server)
   ad-do-it
   (local-set-key [(control ?c) (control ?c)] 
                  'dp-kill-buffer-and-pop-window-config))
+
+(defadvice cperl-electric-delete (around perl-crap activate)
+  (if (dp-region-active-p)
+      (delete-region (mark) (point))
+    ad-do-it))
 
 (defun dp-diff-mode-hook ()
   (interactive)
@@ -2317,6 +2323,7 @@ changed."
 (add-hook 'outline-mode-hook 'dp-outline-hook)
 (add-hook 'emms-playlist-mode-hook 'dp-emms-playlist-mode-hook)
 (add-hook 'diff-mode-hook 'dp-diff-mode-hook)
+(add-hook 'vc-checkout-hook 'dp-set-auto-mode)
 (add-hook 'after-revert-hook 'dp-after-revert-hook)
 (when (functionp 'vc-find-file-hook)
   (add-hook 'after-revert-hook 'vc-find-file-hook))

@@ -117,6 +117,10 @@ Ee|tgt132rtl__ME_src|           ${testgendpt132rtldir__ME_src}
 Ee|t132rtl__ME_src|             ${testgendpt132rtldir__ME_src}
 Ee|drv__ME_src|                 ${TOT__ME_src}drv/
 Ee|simfront__ME_src|            ${drv__ME_src}simfront/
+Ee|chiplibroot__ME_src|         ${drv__ME_src}chiplib/
+Ee|chiplib__ME_src|             ${chiplibroot__ME_src}chiplib/
+Ee|chiplib2__ME_src|            ${chiplibroot__ME_src}chiplib2/
+Ee|cl2__ME_src|                 ${chiplib2__ME_src}
 Ee|drvapi__ME_src|              ${drv__ME_src}drvapi/
 Ee|drvapinc__ME_src|            ${drvapi__ME_src}include
 Ee|runtestcommon__ME_src|       ${TOT__ME_src}drv/drvapi/runtest_common/

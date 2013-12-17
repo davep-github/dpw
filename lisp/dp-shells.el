@@ -1599,7 +1599,8 @@ point to EOB to reduce the amount of parsing that is needed."
                                   (forward-line -2)
                                   (line-beginning-position))
                                 (point-max)
-                                (not force-reparse-p)))
+                                (or (not (interactive-p))
+                                    (not force-reparse-p))))
 
 ;;;###autoload
 (defun dp-shell-goto-this-error (&optional force-reparse-p)
@@ -2475,12 +2476,13 @@ it for something \"speshul\".
       (setenv "PS1_bang_suff" 
               (dp-shells-display-name pnv dp-shells-shell-num-fmt))
       (setenv "dp_emacs_shell_num" (format "%s" pnv))
-      (save-window-excursion/mapping (shell sh-buffer))
-      (setq dp-shell-num pnv)
+      (save-window-excursion/mapping 
+       (shell sh-buffer))
       (dp-visit-or-switch-to-buffer sh-buffer switch-window-func)
       ;;
       ;; We're in the new shell buffer now.
       ;;
+      (setq dp-shell-num pnv)
       (setq dp-shell-isa-shell-buf-p '(dp-shell shell)
             dp-prefer-independent-frames-p t
             other-window-p nil
@@ -3325,15 +3327,13 @@ Can this really not exist elsewhere?"
            (symbol-value-in-buffer 'dp-shell-num buf1)
            (symbol-value-in-buffer 'dp-shell-num buf2)))
 
-(defun dp-shell-buffer-num-greater-or-equal (buf1 buf2)
-  (funcall '>=
-           (symbol-value-in-buffer 'dp-shell-num buf1)
-           (symbol-value-in-buffer 'dp-shell-num buf2)))
-
 (defun dp-shell-buffer-num-less (buf1 buf2)
   (funcall '<
            (symbol-value-in-buffer 'dp-shell-num buf1)
            (symbol-value-in-buffer 'dp-shell-num buf2)))
+
+(defun dp-shell-buffer-num-greater-or-equal (buf1 buf2)
+  (not (dp-shell-buffer-num-less buf1 buf2)))
 
 (defun dp-next/prev-shell-buffer (lessp-fun &optional buffer)
   (interactive)

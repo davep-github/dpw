@@ -43,11 +43,6 @@
    (concat "<C-prior> C-s sim.pl SPC RET - gdb SPC C-s - chip SPC "
            "t124 RET _debug C-s libt124_ RET debug_")))
 
-(defalias 'dp-tgen-add-debug
-  (read-kbd-macro
-   (concat "<C-prior> C-s sim.pl SPC RET - gdb SPC C-s - chip SPC "
-           "t132 RET _debug C-s libt132_ RET debug_")))
-
 ;;
 ;;
 ;; Simply run on (a copy of) the assignment and whalah[sic]
@@ -591,18 +586,22 @@ LESSP defaults to less-than ('<)."
                            &key
                            start end
                            back-char
-                           sep-str prefix
+                           sep-str 
+                           prefix suffix
                            desired-width)
-  (setq-ifnil start (line-beginning-position)
+  (setq-ifnil start 0
               end (if desired-width
                       (+ start desired-width)
                     (current-fill-column))
               back-char front-char
               sep-str " "
-              prefix "")
+              prefix ""
+              suffix "")
   (let* ((desired-width (- end start))
          (required-text (concat sep-str text-in sep-str))
-         (required-width (+ (length prefix) (length required-text)))
+         (required-width (+ (length prefix) 
+                            (length suffix)
+                            (length required-text)))
          (remaining-width (if (> required-width desired-width)
                               0
                             (- desired-width required-width)))
@@ -610,9 +609,9 @@ LESSP defaults to less-than ('<)."
          ;; desired-width is not. Here we recompute it based on current
          ;; values of start/end and the width of any required text. Width is
          ;; expanded to include all required text. But if it was too small,
-         ;; there will be no wings.  The text, prefix and separators are
-         ;; required. The wings are not. The prefix will need to include the
-         ;; equivalent of a sep-str.
+         ;; there will be no wings.  The text, prefix, suffix and separators
+         ;; are required. The wings are not. The prefix will need to include
+         ;; the equivalent of a sep-str.
          ;; E.g. ";;; " vs ";;;<sep-str>
          (flank-len (/ remaining-width 2))
          ;; 1/2 Remaining space, truncated down
@@ -623,7 +622,8 @@ LESSP defaults to less-than ('<)."
     (concat prefix
             front-flank
             required-text
-            back-flank)))
+            back-flank
+            suffix)))
 
 (dp-deflocal dp-default-flanker-char ?#
   "What is used if the user simply presses <Enter> in response to the
@@ -650,30 +650,35 @@ Otherwise, nothing."
   (apply 'c-beginning-of-current-token rrr)
   (dp-set-zmacs-region-stays t))
 
-;;(defvar dp-data-section-id-format 
+;;(defvar dp-protection-section-id-format 
 ;;  " ///////////////// <:%s%sdata:> /////////////////"
 ;;  "String to indicate the location of a class's data.")
 
-(defun* dp-format-data-section-id (name prot-level &optional
-                                   (start-col 4) (end-col 72))
+(defun* dp-format-protection-section-id (name prot-level &key
+                                         (start-col 4) (end-col)
+                                         (section-desc "section"))
+  ;; If end-col is nil, `dp-flanked-string' will use `current-fill-column'.
   
   (setq-ifnil start-col (current-column)
               end-col fill-column)
-  (let* ((name (format "<:%s%sdata:>" name prot-level)))
-    (dp-flanked-string name ?/ :start start-col :end end-col)))
+  ;; It would be better to specify things like "protected data" or 
+  ;; "protected code" rather than a vague "protected section."
+  (let* ((name (format "<:%s%s%s:>" name prot-level section-desc)))
+    (dp-flanked-string name ?* :start start-col :end end-col
+                       :prefix "/" :suffix "/")))
 
-(defvar dp-data-section-id-format 'dp-format-data-section-id)
+(defvar dp-protection-section-id-format 'dp-format-protection-section-id)
 
-(defun dp-c++-make-data-section-id (&optional prot-level)
+(defun dp-c++-make-protection-section-id (&optional prot-level)
   "Make a data section identifier for the current class."
   (interactive "p")
   (let ((name (if (dp-c++-get-class-name)
                   (format "%s: " (cdr (dp-c++-get-class-name)))
                 "")))
-    (if (functionp dp-data-section-id-format)
-        (funcall dp-data-section-id-format name
+    (if (functionp dp-protection-section-id-format)
+        (funcall dp-protection-section-id-format name
                  (concat (dp-prot-level-name prot-level) " "))
-      (format dp-data-section-id-format name 
+      (format dp-protection-section-id-format name 
               (concat (dp-prot-level-name prot-level) " ")))))
 
 (defvar dp-c++-default-data-protection "protected")
@@ -721,7 +726,7 @@ Otherwise, nothing."
 \"\" if <label>: exists (convenient for concatenation to complete label)
 nil otherwise."
   (interactive)
-  (when (and (dp-in-c++-class)
+  (when (and (dp-c++-in-class-p)
              (dp-c-looking-back-at-sans-eos-junk
               (concat "^\\s-*"
                       dp-c++-class-protection-level-regexp
@@ -734,11 +739,12 @@ nil otherwise."
   (when (dp-c++-class-protection-label-p)
    (match-string dp-c++-class-protection-label-match-string-index)))
 
-(defun* dp-c++-mk-data-section (&optional 
-                                (prot-level dp-c++-default-data-protection)
-                                (indent-p t)
-                                (add-protection-label-p t)
-                                (show-help-p t))
+(defun* dp-c++-mk-protection-section (&key
+                                      (prot-level dp-c++-default-data-protection)
+                                      (indent-p t)
+                                      (add-protection-label-p t)
+                                      (stay-put-p nil)
+                                      (show-help-p t))
   "Make a C++ class's data area.  The ultimate in laziness.
 C-u --> ask.
 Default is protected.
@@ -755,16 +761,18 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
                           (format "prot-level (default: %s): " 
                                   dp-c++-default-data-protection)
                           ;; table
-                          (dp-mk-completion-list dp-c++-class-protection-names)
+                          (dp-mk-completion-list 
+                           dp-c++-class-protection-names)
                           nil           ; predicate
                           t             ; require match
                           nil           ; initial contents
                           nil           ; history
                           dp-c++-default-data-protection)))))
-  (if (not (dp-c++-goto-data-section prot-level 'missing-ok))
+  (if (not (dp-c++-goto-protection-section prot-level 'missing-ok 
+                                           stay-put-p))
       (progn
         (dp-c-indent-command)
-        (insert (dp-c++-make-data-section-id prot-level))
+        (insert (dp-c++-make-protection-section-id prot-level))
         (when indent-p
           (beginning-of-line)
           (insert " ") ; No indentation is done if comment is in the 1st col.
@@ -821,23 +829,30 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
       )))
 
 
-(defun dp-c++-find-data-section-id (prot-level)
+(defun* dp-c++-find-protection-section-id (prot-level &key stay-put-p)
   (save-excursion
     ;; We need to get the sec-id before we goto the beginning of the function.
-    (let ((sec-id (dp-c++-make-data-section-id prot-level)))
-      (dp-c-beginning-of-defun 1 'real-bof)
+    (let ((sec-id (dp-c++-make-protection-section-id prot-level)))
+      (unless stay-put-p
+        (dp-c-beginning-of-defun 1 'real-bof))
       (search-forward sec-id nil t))))
 
-(defun* dp-c++-goto-data-section (&optional (prot-level 1) missing-ok-p)
+(defun* dp-c++-goto-protection-section (&optional 
+                                        (prot-level 1) 
+                                        missing-ok-p
+                                        stay-put-p)
   "Goto the current class's data section."
   (interactive "p")
-  (let ((p (dp-c++-find-data-section-id prot-level)))
+  (let ((p (dp-c++-find-protection-section-id prot-level 
+                                              :stay-put-p 
+                                              stay-put-p)))
     (if p
         (progn
-          (dp-push-go-back "dp-c++-goto-data-section")
+          (dp-push-go-back "dp-c++-goto-protection-section")
           (goto-char p))
       (unless missing-ok-p
-        (message "cannot find: %s" (dp-c++-make-data-section-id prot-level))
+        (message "cannot find: %s" 
+                 (dp-c++-make-protection-section-id prot-level))
         (ding)
         nil))))
 
@@ -1270,13 +1285,13 @@ If region is not active, default gettor is `symbol-near-point'."
 ;         (buffer-substring (mark) (point))
 ;       (apply (or or-func 'current-word) rest)))
 
-(defun dp-delete ()
+(defun dp-delete (&optional deletor)
   "Delete the current region if mark is active, else the current character."
   (interactive "*")
   (if (dp-mark-active-p)
       (delete-region (mark) (point))
     ;; @todo univ-arg set --> delete-char does kill. ? Do I like this?
-    (call-interactively 'delete-char)))
+    (call-interactively (or deletor 'delete-char))))
 
 (defun* dp-kill-or-copy (func append-p &optional pre-op post-op 
                          (deactivate-mark-p t)
@@ -1931,7 +1946,7 @@ terminate and eol/nl+indent."
 
 ;;;(defun dp-c-looking-back-at-outermost-closing-paren-p ())
 
-(defun dp-open-newline (&optional open-newline-func)
+(defun dp-open-newline (&optional arg open-newline-func)
   "Add a new line below the current one, ala `o' in vi. Do mucho magick, too.
 Pass t for `open-newline-func' to get the basic open below behavior."
   (interactive "*P")
@@ -1956,7 +1971,7 @@ Pass t for `open-newline-func' to get the basic open below behavior."
                        (condition-case nil
                            (progn
                              (undo-boundary)
-                             (funcall open-newline-func current-prefix-arg))
+                             (funcall open-newline-func arg))
                          (error
                           (undo)
                           t)))))
@@ -3117,11 +3132,11 @@ Also, it will move backwards into a closed class (ie has a };)."
   (if (dp-in-cpp-construct-p)
       ;; If we are already on a cpp line, then don't move off of it.
       (beginning-of-line)
-    (let ((class-state (dp-in-c++-class))
+    (let ((class-state (dp-c++-in-class-p))
           (pos (point)))
       (c-beginning-of-statement)
       (cond 
-       ((not (eq class-state (dp-in-c++-class) ))
+       ((not (eq class-state (dp-c++-in-class-p) ))
         ;; We backed into a class.  This is bad.
         (goto-char pos)
         (beginning-of-line))
@@ -4472,7 +4487,7 @@ XXX: use tempo for this?"
   "Read the function definition comment header block after point."
   (interactive "*")
   (if (and (dp-in-c++)
-	   (dp-in-c++-class))
+	   (dp-c++-in-class-p))
       (cfc)
     (dp-insert-fc dp-function-comment-file)))
 
@@ -5282,7 +5297,7 @@ the one on the previous line."
   
 (defun dp-mk-extern-proto (arg)
   (interactive "*p")
-  (dp-mk-protos arg (if (dp-in-c++-class) nil "extern")))
+  (dp-mk-protos arg (if (dp-c++-in-class-p) nil "extern")))
 (defalias 'dpp 'dp-mk-extern-proto)
 
 (defun dp-mk-ecos-proto (arg)
@@ -8015,7 +8030,7 @@ can handle that case."
   "Compare two simple alists, independent of order.
 Simple means that the values are comparable with `equal'."
   (when (and (listp a1)
-             (listp s2)
+             (listp a2)
              (equal (length a1) (length a2)))
     (not
      (loop for a1-el in a1
@@ -10961,8 +10976,6 @@ is done.")
     (beginning-of-line)
     (setq decl-bounds (dp-c-flatten-func-decl))
     ;; Or skip past any member init before looking for {.
-    (dmessage 
-     "look for \"<ws>*:\" to detect member init and suppress adding \"{\"")
     (unless decl-bounds
       (goto-char old-point)
       (return-from dp-c-format-func-decl nil))
@@ -11009,7 +11022,7 @@ is done.")
                               (search-forward ")" (line-end-position))))))
       (when (and add-opening-brace-p
                  (re-search-forward ")" (line-end-position) t))
-        (dp-c-ensure-opening-brace :force-newline-after-brace-t nil)))
+        (dp-c-ensure-opening-brace :force-newline-after-brace-p nil)))
     (goto-char open-paren-marker)
     ;; Put function name on a line by itself after any preceding type, etc,
     ;; info.
@@ -11019,7 +11032,7 @@ is done.")
       (replace-match "\\1\n")
       (c-indent-line))
     (beginning-of-line)
-    (when (and (dp-in-c++-class)
+    (when (and (dp-c++-in-class-p)
                (re-search-forward (format "%s::" (symbol-near-point))
                                   (line-end-position) t))
       (dmessage "only remove this class's name")
@@ -11037,8 +11050,9 @@ is done.")
       ;; Terminate the statement.
       (dp-c-terminate-function-stmt "\n")
       (return-from dp-c-format-func-decl t))
+    ;; Why did I want to do this twice?
     (when add-opening-brace-p
-      (dp-c-ensure-opening-brace :force-newline-after-brace-t t))
+       (dp-c-ensure-opening-brace :ensure-newline-after-brace-p nil))
     (when align-p
       (align (car decl-bounds) (1+ (cdr decl-bounds)))))
   ;; Unless we know we did nothing, assume we did something.
@@ -12996,58 +13010,6 @@ the minibuffer."
   (interactive)
   (select-frame (make-frame))
   (dp-win-config))
-
-;;<:broken keyboard work arounds:>
-;; (defun dp-broken-keyboard-bs ()
-;;   (interactive)
-
-;;   (global-set-key "\e1" (lambda () (interactive) (insert "e")))
-;;   (global-set-key "\e!" (lambda () (interactive) (insert "E")))
-;;   (global-set-key "\e2" (lambda () (interactive) (insert "c")))
-;;   (global-set-key "\e@" (lambda () (interactive) (insert "C")))
-
-;;   (defun isearch-process-search-char-e ()
-;;     ;; Append the char ?e to the search string, update the message and
-;;     ;; re-search.
-;;     (interactive)
-;;     (isearch-process-search-char ?e))
-;;   (put 'isearch-process-search-char-e 'isearch-command t)
-;;   (defun isearch-process-search-char-c ()
-;;     ;; Append the char ?c to the search string, update the message and
-;;     ;; re-search.
-;;     (interactive)
-;;     (isearch-process-search-char ?c))
-;;   (put 'isearch-process-search-char-c 'isearch-command t)
-;;   (defun isearch-process-search-char-E ()
-;;     ;; Append the char ?E to the search string, update the message and
-;;     ;; re-search.
-;;     (interactive)
-;;     (isearch-process-search-char ?E))
-;;   (put 'isearch-process-search-char-E 'isearch-command t)
-;;   (defun isearch-process-search-char-C ()
-;;     ;; Append the char ?C to the search string, update the message and
-;;     ;; re-search.
-;;     (interactive)
-;;     (isearch-process-search-char ?C))
-;;   (put 'isearch-process-search-char-C 'isearch-command t)
-  
-;;   ;; Each command has to be a symbol so we can put the isearch-command
-;;   ;; property on it.
-;;   (define-key isearch-mode-map "\e1" 'isearch-process-search-char-e)
-;;   (define-key isearch-mode-map "\e2" 'isearch-process-search-char-c)
-;;   (define-key isearch-mode-map "\e!" 'isearch-process-search-char-E)
-;;   (define-key isearch-mode-map "\e@" 'isearch-process-search-char-C)
-
-;;   (defalias 'mdsm 'mew-draft-send-message)
-;;   (defalias 'mdpa 'mew-draft-prepare-attachments)
-;;   (defalias 'mak 'mew-attach-copy)
-;;   (defalias 'mds 'mew-draft-cite)
-;;   (defalias 'msx 'mew-summary-execute-command)
-;;   (defalias 'msks 'mew-summary-kill-subprocess)
-
-;;   (dmessage "EA!"))
-
-;;(add-hook 'dp-post-dpmacs-hook 'dp-broken-keyboard-bs)
 
 (defun dp-insert-new-file-template (file-name &optional goto-pos)
   (when goto-pos
@@ -15826,11 +15788,15 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
 (defun dp-save-buffers-kill-emacs (&optional run-no-hooks-p)
   "DUH... Are you sure?"
   (interactive)
-  (when (y-or-n-p "DUH... Are you sure? ")
-    (when run-no-hooks-p
-      (setq kill-emacs-hook nil))
-    (save-buffers-kill-emacs))
-  (message "Good thing I asked, huh?"))
+  (if (dp-primary-frame-p)
+      (progn
+        (when (y-or-n-p "DUH... Are you sure? ")
+          (when run-no-hooks-p
+            (setq kill-emacs-hook nil))
+          (save-buffers-kill-emacs))
+        (message "Good thing I asked, huh?"))
+    (when (y-or-n-p "Won't exit when in non-primary frame. Close frame instead? ")
+      (dp-delete-frame nil 'force))))
 
 (defun dp-kill-emacs-no-hook ()
   (dp-save-buffers-kill-emacs 'dont-run-kill-emacs-hook))
@@ -15994,7 +15960,8 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
 
 (defun dp-set-frame-title-format (&rest r)
   (setq frame-title-format 
-        (apply 'dp-make-frame-title-format r)))
+        (apply 'dp-make-frame-title-format r))
+  (redisplay-frame))
 
 (defun dp-format-with-date (fmt &rest args)
   "Like `format' plus replace %%S with the current date in yyyy-mm-dd format."
@@ -16043,7 +16010,8 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
 
 (defun dp-go-setenv ()
   "Set all of the `go' environment variables.
-This is needed because the new sandbox relative utilities count on environment variables.
+This is needed because the new sandbox relative utilities count on
+environment variables.
 @todo XXX Fix this in the scripts. But for now, doing it here is ttttrivial."
   (interactive)
   (with-temp-buffer
@@ -16057,6 +16025,24 @@ This is needed because the new sandbox relative utilities count on environment v
 (defun dp-buffer-reverse-less-by-name-p (buf1 buf2)
   (string-lessp (buffer-name buf2)
                 (buffer-name buf1)))
+
+(defvar dp-offer-to-start-editing-server-dont-ask-to-start-p nil
+  "Should `dp-offer-to-start-editing-server' ask for permission?")
+
+(defvar dp-offer-to-start-editing-server-disable-p nil
+  "Should `dp-offer-to-start-editing-server' be disabled everywhere?")
+
+(defun dp-offer-to-start-editing-server (&optional dont-ask-p
+                                         server-fate
+                                         force-serving-p)
+  "Do we want (one way or another) to start an editing server?"
+    (when (and (not (dp-gnuserv-running-p))
+               (not dp-offer-to-start-editing-server-disable-p)
+               (or dont-ask-p
+                   dp-offer-to-start-editing-server-dont-ask-to-start-p
+                   (y-or-n-p "Start gnuserv in this XEmacs instance? ")))
+      (dp-start-editing-server server-fate 
+                               (or force-serving-p 'force-serving))))
 
 ;;;;; <:functions: add-new-ones-above:>
 ;;;

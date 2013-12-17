@@ -19,6 +19,16 @@ do
 done
 EExec_verbose_msg $(echo_id eexec_program)
 unset eexec_program
+
+while (($# > 0))
+do
+  case "$1" in
+      --cd) EExec cd $(depth);;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
 

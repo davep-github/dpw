@@ -95,6 +95,7 @@ do
       -s|--server) shift; p4review_repository="$1";;
       -r|--p4r) shift; p4review_program="$1";;
       -o|--p4r-opt) shift; p4r_opts="$p4r_opts $1";;
+      --p4r-help) p4r_opts="$p4r_opts -help";;
       --debug) p4r_opts="$p4r_opts -debug";;
 
       -l|--no-fetch|--file|--local) p4review_repository=;
@@ -153,6 +154,9 @@ done
 : ${p4review_program:=${P4_SW_ROOT}/sw/main/apps/p4review/p4review.pl}
 : ${fetch_function:=fetch_wget}
 : ${fetch_cleanup:=cleanup_wget}
+# Turning off autoreview makes things better in an emacs buffer because it
+# only does one diff at a time.
+# @todo ? Turn off autoreview if $TERM == emacs ?
 : ${autoreview_opt=}
 
 [ -n "${save_p}" ] && {

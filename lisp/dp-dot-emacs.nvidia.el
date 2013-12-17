@@ -179,12 +179,31 @@ tests.")
 
 (setq dp-fallback-expand-abbrev-fun 'dp-nvidia-me-expand-preceding-word)
 
+(defalias 'dp-tgen-add-debug
+  (read-kbd-macro
+   (concat "<C-prior> C-s sim.pl SPC RET - gdb SPC C-s - chip SPC "
+           "t132 RET _debug C-s libt132_ RET debug_")))
+
+(defvar dp-tgen-elf-load-option 
+  "-chipargs '-elf_load /home/denver/release/sw/components/mts/1.0/cl28625566/debug_arm/denver/bin/mts.elf@0xe0000000:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/drv/mpcore/t132/ObjLinux_MPCoreXC/boot_page_table.axf:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/override.elf@0xe0000000:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/t132/ObjLinux_MPCoreXC/cpu_surface_write_read.Cortex-A8.axf:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/t132/ObjLinux_ARM7TDMIXC/cpu_surface_write_read.ARM7TDMI.axf:' "
+  "tip-top-denver.sh 'needs this to make it go.'")
+;;
+(defalias 'dp-tgen-add-elf-load
+  (read-kbd-macro
+   (concat "<C-prior> C-s idle_ 2*<C-w> RET 3*<right> "
+           (replace-in-string dp-tgen-elf-load-option
+                              " " " SPC ")
+;;           " SPC "
+)))
+
 ;; Nothing in my tgen run dirs need p4.
 ;; e.g.: /hw/ap_t132/diag/testgen
 (defvar dp-p4-ignore-dirs-regexp
   "/hw/ap.*/diag/testgen/"
   "Deactivate p4 in these dirs.")
 
+;;
+;; override the default function
 (defun dp-p4-active-here (&optional file-name)
   (setq-ifnil file-name (buffer-file-name))
   (and (not dp-p4-global-disable-detection-p)

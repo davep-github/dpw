@@ -5717,3 +5717,19 @@ neq
 
 
 
+
+========================
+Monday December 16 2013
+--
+
+(defun dp-looking-at-regexp (regexp &rest rest)
+  (let ((start-pos (point)))
+    (save-excursion
+      (when (and (apply 're-search-forward regexp rest)
+                 (= start-pos (match-beginning 0)))
+        (match-beginning 0)))))
+
+
+
+
+

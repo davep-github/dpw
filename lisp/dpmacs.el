@@ -288,7 +288,7 @@ intolerable delays to files not in perforce."
 
 ;;;
 ;;; normal requires...
-(require 'sendmail)
+;;(require 'sendmail)
 (require 'compile)
 
 ;; This allows me to tack something onto the end of my user name in order to
@@ -818,7 +818,7 @@ This can be callable.")
 (add-to-list 'special-display-regexps "^\\*P4.*\\*$")
 
 ;; configure Emacs' mail subsystem...
-(require 'dp-mail)
+;;(require 'dp-mail)
 
 (require 'dp-makefile-mode)
 

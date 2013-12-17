@@ -13,7 +13,6 @@ gdmf_regexps=(
     "--egrep" 'something bad happened'
     "--hgrep" 'call stack'
     "--hgrep" 'stack trace'
-    "--hgrep" 'surface_write_read:'
     "--hgrep" 'waiting for a connection on port [0-9]+'
 )
 

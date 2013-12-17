@@ -22,4 +22,5 @@ source gdmf-regexps
 $EEXEC tgen-run-dot-sh-logged \
     ${maybe_davep_dash_n} \
     "${gdmf_regexps[@]}" \
+    --hgrep 'surface_write_read:' \
     "$@"

@@ -34,7 +34,8 @@ done
 
 # No sb1 no more.
 vunsetp "$*" && {
-    set -- $sb4 $sb3 $sb2 $sb5
+    # $sb2 
+    set -- $sb4 $sb3 $sb5
 }
 
 for sb in "$@"

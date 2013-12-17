@@ -69,13 +69,11 @@
 (dp-deflocal dp-cob-state (make-dp-cob-state-t)
   "State of last cob modification.")
 
-(defun dp-c-open-newline (&optional mk-c++-init-list-p) ; <:cob:>
+(defun dp-c-open-newline (&optional arg) ; <:cob:>
+  "Open up a new line. ARG is context sensitive."
   (unless (eq last-command this-command)
     (setf (dp-cob-state-t-last-sub-command dp-cob-state) nil))
-      
-  (when mk-c++-init-list-p
-    (end-of-line)
-    (insert "\n:") (dp-c-indent-command))
+
   (let ((last-sub-cmd (dp-cob-state-t-last-sub-command dp-cob-state))
         (p (point))
         result my-sub-cmd
@@ -187,7 +185,20 @@
               (dp-c-replace-statement-end ":"))
             (dmessage "cob: case label")
             t)
-           
+ 
+   ;;;;;;;;;;;;;;;;;
+           ;; Add a ':' to C++ constructors
+           ((and arg 
+                 (dp-c++-in-class-p)
+                 (dp-c-indent-command)
+                 (dp-c-in-syntactic-region '(arglist-intro arglist-cont
+                                             topmost-intro topmost-intro-cont
+                                             arglist-cont-nonempty)))
+              (end-of-line)
+              (insert "\n: ") 
+              (dp-c-indent-command)
+              nil)
+
    ;;;;;;;;;;;;;;;;;
            ;; Clean up function or method:
            ;; add "(void)" if no args are present.  
@@ -235,18 +246,20 @@
             t)                          ; eol/newline/indent.
            
    ;;;;;;;;;;;;;;;;;
-           ((let ((l (save-excursion
-                       (end-of-line)
-                       (dp-c++-class-protection-label))))
-              (if l
+           ((let ((protection-label (save-excursion
+                                      (end-of-line)
+                                      (dp-c++-class-protection-label))))
+              (if protection-label
                   (progn
                     (replace-match "")
-                    (dp-c++-mk-data-section l)
+                    (dp-c++-mk-protection-section :prot-level 
+                                                  protection-label
+                                                  :stay-put-p t)
                     t)
                 nil))
             (setf (dp-cob-state-t-last-sub-command dp-cob-state) 
-                  'mk-data-section)
-            (dmessage "cob: make data section")
+                  'mk-protection-section)
+            (dmessage "cob: make protection section")
             nil)
            
    ;;;;;;;;;;;;;;;;;
@@ -351,7 +364,7 @@
                   (end-of-line)
                   (if (or (not dp-c-member-init-leading-commas)
                           (dp-c-in-syntactic-region '(func-decl-cont)))
-                      (progn 
+                      (progn
                         (insert ",")
                         (setq ret t))
                     (newline-and-indent)
@@ -430,10 +443,10 @@
             nil)))
     (if (eq result 'no-change-p)
         nil
-    (save-excursion
-      (beginning-of-line)
-      (dp-c-fix-comment)
-      result))))
+      (save-excursion
+        (beginning-of-line)
+        (dp-c-fix-comment)
+        result))))
 
 
 (defun* dp-cob-repeat-sub-command-p (cob-state sub-cmd &key l-last-command
