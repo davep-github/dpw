@@ -26,17 +26,19 @@ unset eexec_program
 : ${suffix=.out}
 : ${output_handler=teeker_handler}
 : ${teeker_options=--slog --ts --hg -i100 --cflush-every=-1}
-: ${teeker_gzip_option=-Z9}
+: ${compression_level=9}
+: ${teeker_gzip_option=-Z${compression_level}}
 : ${gzip_p=t}
-: ${gzip_suffix=".gz"
+: ${def_gzip_suffix=".gz"}
+: ${gzip_suffix=${def_gzip_suffix}}
 : ${yopp_p=t}
 : ${zipper=gzip}
 
 teeker_handler()
 {
-    teeker_options="${teeker_gzip_option} ${teeker_options}"
+    teeker_options=(${teeker_gzip_option} ${teeker_options})
 
-    EExec teeker ${teeker_options} "$@"
+    EExec teeker "${teeker_options[@]}" "$@"
 }
 
 cat_handler()
@@ -58,7 +60,7 @@ Usage_details="${EExec_parse_usage}
 "
 
 # Example of arg parsing.
-option_str="${EExec_parse_option_str}p:s:c:"
+option_str="${EExec_parse_option_str}p:s:cz:"
 long_options=(
     "prefix:"
     "suffix:"
@@ -76,11 +78,20 @@ do
       # Program options.
       -p|--prefix) shift; prefix="${1}";;
       -s|--suffix) shift; suffix="${1}";;
-      -c|--no-compress) gzip_p=;
-                        gzip_suffix=;
-                        teeker_gzip_option=;
-                        zipper=cat
-                        ;;
+      -c|--no-compress) 
+          gzip_p=
+          gzip_suffix=
+          teeker_gzip_option=
+          zipper=cat
+          compression_level=
+          ;;
+      -z|--compress-level|--compression-level)
+         gzip_p=t
+         gzip_suffix="${def_gzip_suffix}"
+         shift; compression_level="${1}"
+         teeker_gzip_option="-Z${compression_level}"
+         zipper=cat
+         ;;
       --cat) output_handler=cat_handler;;
       # Help!
       --help) Usage; exit 0;;
@@ -90,7 +101,6 @@ do
     esac
     shift
 done
-# The following is needed only when args are required.
 
 log_file="${prefix}$(dp-std-timestamp)${suffix}${gzip_suffix}"
 

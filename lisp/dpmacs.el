@@ -224,6 +224,7 @@ editing servers via `dp-editing-server-ipc-file'.")
 (require 'dp-keys) ;; my highly unstandard keybindings.
 (require 'dpmisc)
 (require 'dp-lang)
+(require 'dp-lang-c-like)
 (require 'dp-cf)
 
 ;;

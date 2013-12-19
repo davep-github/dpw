@@ -5,52 +5,62 @@ struct Meh_t
     Meh_t(void)
     {}
 
-    ///////////////////// <:Meh_t: private data:> //////////////////////
   private:
-    
+
 };
 
 int f(void)
 {
     blah();
+    while (a < q const) {       // konst, eh?
+    }
 }
 
-class Oh_no_you_di_int_t
+void q();
+{
+    // blah
+}
+
+struct Oh_no_you_di_int_t
 {
     Oh_no_you_di_int_t()
     {}
 
-    int g(void)
-    {}
-    
-    //
-    int f()
+    int g(
+        int a,
+        int b) const
+    {
+
+    }
+
+        //
+    int f(void)
     {
         blah();
     }
 
     int g(
         int a,
-        int b)
+        int b) const
     {
-        goof(a,
-             b,
-             c);
+
+        goof(int a, char b, int c)
+
     }
+
+    private
+    
+
+
+
+
 };
 
 //
 
-int f(
-    int a,
-    int b)
-{}
+int f(int a, int b)
 
-    
-    
-    
-    
-    
+
 
 
 
@@ -66,8 +76,14 @@ struct C_t
     {}
 
     void a(
+        
         int q)
     {}
-    
+
 };
 
+int f(
+    int a) const
+{}
+
+(    

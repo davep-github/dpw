@@ -214,9 +214,7 @@
                  ;; one.  It seems that other types will confuse things now
                  ;; that I've learned that the whiny cry-babies of the ANSI
                  ;; C(++)? spec have reserved _t as a suffix.
-                 (not (dp-looking-back-at (concat "\\(?:[^(]\\)"
-                                                  dp-c-function-type-decl-re 
-                                                  "\\s-*")))
+                 (not (dp-c*-pure-type-line))
                  (not (save-excursion
                         (end-of-line)
                         (dp-c-looking-back-at-sans-eos-junk ";\\s-*")))
@@ -296,13 +294,14 @@
                            (beginning-of-line)
                            (looking-at 
                             (concat "\\s-*" 
-                                    dp-c*-keywords-with-stmt-blocks)))
-                         (setq iswhile-p (string= "while" (match-string 1))))
+                                    dp-c*-keywords-with-stmt-blocks))))
                      (search-forward "(" (line-end-position) t))))
             (goto-char (match-beginning 0))
             (dp-find-matching-paren)
-            (if (dp-c-ensure-opening-brace :newline-before-brace nil
-                                           :regexp-prefix ")")
+            (if (dp-c-ensure-opening-brace
+                 :block-keyword-p t 
+                 :newline-before-brace-p nil)
+                 ;; :regexp-prefix ")"
                 (progn
                   (dmessage "cob: add { to if and friends.")
                   (setf (dp-cob-state-t-last-sub-command dp-cob-state) 

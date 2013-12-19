@@ -2626,7 +2626,7 @@ NO-SUMMARY-P controls whether we insert a summary indicator
 
 (defun dpj-electric-resolve-action-item (resolution-char &optional timestamp-p)
   (interactive)
-  (if (and (dp-point-follows-regexp "^[ 	]*" t) 
+  (if (and (dp-looking-back-at "^[ 	]*" t) 
 	   (looking-at dpj-any-AI-regexp))
       (dpj-resolve-action-item resolution-char 
                                (or timestamp-p current-prefix-arg)

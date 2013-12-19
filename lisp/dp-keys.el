@@ -470,14 +470,14 @@ Hopefully [space] is mnemonic.")
   ;;CO; (defconst dp-c-mode-map dp-c-mode-prefix
   ;;CO;   "Keymap for my C/C++ mode commands.")
   ;;CO; (define-key dp-Ccd-map "\C-c" 'dp-c-mode-prefix)
-  ;;CO; (define-key dp-c-mode-map [?a] 'dp-c-goto-access-label)
+  ;;CO; (define-key dp-c-mode-map [?a] 'dp-c++-goto-access-label)
   ;;CO; (define-key dp-c-mode-map [?d] 'dp-insert-debugging-code-tag)
   (defconst dp-c-mode-map 
     (dp-define-key-submap 'dp-c-mode-prefix dp-Ccd-map 
                           ;; Key in parent map which accesses this map.
                           [(control ?c)]
                           ;; Mappings to define in this map
-                          [?a] 'dp-c-goto-access-label
+                          [?a] 'dp-c++-goto-access-label
                           [?d] 'dp-insert-debugging-code-tag
                           )
     ;; <:cdd map cxx bindings:>
