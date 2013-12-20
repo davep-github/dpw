@@ -28,6 +28,7 @@ export XUSERFILESEARCHPATH="./%N%C.ad:$HOME/app-defaults/%N%C:./%N.ad:$HOME/app-
 export GOPATH=$(mk_go_path)
 export main_display=$(hostname)':0.0'
 export EDITOR='ec-w'
+export MUTT_EDITOR=vim
 export PDB_PATH="$HOME/etc/pdb/*.pdb"
 export BLOCKSIZE=K
 # Closest NWS station.

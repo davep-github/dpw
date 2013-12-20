@@ -7,8 +7,9 @@
 source script-x
 source ping-lib.sh
 
-: ${LAN_GW=$(netstat -r | sed -rn 's/(^default[[:space:]]+)([^[:space:]]+)(.*)/\2/p')}
+#: ${LAN_GW=$(netstat -rn | sed -rn 's/(^default[[:space:]]+)([^[:space:]]+)(.*)/\2/p')}
 
+: ${LAN_GW:=192.168.0.77}
 bad_nodes=
 
 : ${zzz:=0}

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-### Time-stamp: <13/12/04 16:43:22 dpanariti>
+
 #############################################################################
-## @package 
+## @package
 ##
-import sys, os, urllib, string
+import sys, os, urllib, string, types
 opath = os.path
 
 def dotdot_ify_url(url, num_dotdots=0, dotdot_string="", debug=False):
@@ -36,3 +36,34 @@ def any_substring(a, s, first=0, last=None, string_pp=string.lower):
 def normpath_plus(path, plus=opath.sep):
     return opath.normpath(path) + plus
 
+def mkpath0(split_path):
+    ppart = split_path[0]
+    dpart = split_path[1]
+    if os.exists(ppart) and opath.isdir(ppart):
+        os.mkdir(ppart + opath.sep + dpart)
+        return
+    mkpath0(opath.split(dpart))
+
+def mkpath(path_string_or_list):
+    print >>sys.stderr, "path_string_or_list>{}<".format(path_string_or_list)
+    if type(path_string_or_list) == types.StringType:
+        npath = opath.normpath(path_string_or_list)
+        print >>sys.stderr, "npath>{}<".format(npath)
+        elements = npath.split(opath.sep)
+    else:
+        elements = path_string_or_list
+    print >>sys.stderr, "elements>{}<".format(elements)
+    p = elements[0]
+    elements = elements[1:]
+    for element in elements:
+        print >>sys.stderr, "element>{}<".format(element)
+        print >>sys.stderr, "p>{}<".format(p)
+        if opath.exists(p) and opath.isdir(p):
+            pass
+        else:
+            # If p is a file, we'll raise an appropriate error.
+            os.mkdir(p)
+        p = p + opath.sep + element
+
+if __name__ == "__main__":
+    mkpath(sys.argv[1])
