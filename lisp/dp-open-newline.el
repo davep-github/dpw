@@ -150,6 +150,23 @@
             (end-of-line)
             (c-context-line-break)
             nil)
+           
+   ;;;;;;;;;;;;;;;;;
+           ((let ((protection-label (save-excursion
+                                      (end-of-line)
+                                      (dp-c++-class-protection-label))))
+              (if protection-label
+                  (progn
+                    (replace-match "")
+                    (dp-c++-mk-protection-section :prot-level 
+                                                  protection-label
+                                                  :stay-put-p t)
+                    t)
+                nil))
+            (setf (dp-cob-state-t-last-sub-command dp-cob-state) 
+                  'mk-protection-section)
+            (dmessage "cob: make protection section")
+            nil)
 
    ;;;;;;;;;;;;;;;;;
            ;; Find some places where anything special is clearly not
@@ -242,23 +259,6 @@
            ((dp-c-looking-back-at-sans-eos-junk "}\\|^\\s-*" t)
             (dmessage "cob: looking back at } or blankness")
             t)                          ; eol/newline/indent.
-           
-   ;;;;;;;;;;;;;;;;;
-           ((let ((protection-label (save-excursion
-                                      (end-of-line)
-                                      (dp-c++-class-protection-label))))
-              (if protection-label
-                  (progn
-                    (replace-match "")
-                    (dp-c++-mk-protection-section :prot-level 
-                                                  protection-label
-                                                  :stay-put-p t)
-                    t)
-                nil))
-            (setf (dp-cob-state-t-last-sub-command dp-cob-state) 
-                  'mk-protection-section)
-            (dmessage "cob: make protection section")
-            nil)
            
    ;;;;;;;;;;;;;;;;;
            ;;

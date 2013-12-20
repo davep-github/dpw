@@ -272,6 +272,11 @@ Also, leave the region active."
      (t (call-interactively 'c-beginning-of-defun)
         (dp-push-go-back "`real c-beginning-of-defun'")))))
 
+(defun dp-c-beginning-of-defun-pos (&rest rest)
+  (save-excursion
+    (apply 'dp-c-beginning-of-defun rest)
+    (point)))
+  
 (defun dp-c-end-of-defun (&optional arg original-cc-mode-bof)
   "Inverse of `dp-c-beginning-of-defun'."
   (dp-set-zmacs-region-stays t)
@@ -726,9 +731,6 @@ E.g. \"some_var\" --> \"m_some_var(some_var)\"."
     in-arglist-p))
 
 (defun* dp-c-ensure-opening-brace (&key
-                                   (regexp dp-c-open-brace-present-regexp)
-                                   (ignore-eos-junk-p t)
-                                   (regexp-prefix "")
                                    ;; the following default has problems
                                    ;; whether nil or non-
                                    ;; Find the error CALLERS and set
@@ -736,8 +738,7 @@ E.g. \"some_var\" --> \"m_some_var(some_var)\"."
                                    (newline-before-brace-p t)
                                    (block-keyword-p nil)
                                    (force-newline-after-brace-p nil)
-                                   (ensure-newline-after-brace-p nil)
-                                   (replacement ""))
+                                   (ensure-newline-after-brace-p nil))
   "!<@todo XXX Add a force blank line after brace predicate.
 I added the idea that this would return a valuing telling the caller if
 anything was done to prevent double newlines. I need to determine then this
@@ -783,7 +784,8 @@ aa bb(
         (dp-c-indent-command)))
     (end-of-line)
     (if (or force-newline-after-brace-p
-            (not (looking-at "\n")))
+            (and ensure-newline-after-brace-p
+                 (not (looking-at "\n"))))
         (c-newline-and-indent)
       (next-line 1))
     (unless (dp-blank-line-p)
@@ -821,7 +823,7 @@ Otherwise, nothing."
 (defun dp-c++-make-protection-section-id (&optional prot-level)
   "Make a data section identifier for the current class."
   (interactive "p")
-  (let ((name (if (dp-get-class-name)
+  (let ((name (if (dp-c-get-class-name)
                   (format "%s: " (cdr (dp-c-get-class-name)))
                 "")))
     (if (functionp dp-protection-section-id-format)
@@ -888,6 +890,8 @@ nil otherwise."
   (when (dp-c++-class-protection-label-p)
    (match-string dp-c++-class-protection-label-match-string-index)))
 
+;; May need to require being at the protection label to get past many
+;; annoying syntax searches.
 (defun* dp-c++-mk-protection-section (&key
                                       (prot-level 
                                        dp-c++-default-data-protection)
@@ -960,10 +964,10 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
               (previous-line 1))
             (when indent-p
               (dp-c-indent-command))
-            (dp-open-newline t)
-            (dp-c-indent-command)
-;;             (delete-matching-lines "^\\s-*$")
-            ))
+            ;; WTF did I do this?(dp-open-newline t)
+            (end-of-line)
+            (newline-and-indent)
+            (dp-c-indent-command)))
         (when show-help-p
           (message
            ;; default goes with [1] because that is the default argument.
@@ -972,20 +976,22 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
     ;; We're at end of comment line.
     (unless (looking-at (concat "\\s-*\n\\(^\\s-*\n\\)*\\s-*"
                                 dp-c++-class-protection-level-regexp))
-      (insert "\n")
       (insert prot-level ":")
       (dp-c-indent-command)
-      (dp-c-newline-and-indent)
-      )))
+      (dp-c-newline-and-indent))))
 
 
 (defun* dp-c++-find-protection-section-id (prot-level &key stay-put-p)
   (save-excursion
     ;; We need to get the sec-id before we goto the beginning of the function.
-    (let ((sec-id (dp-c++-make-protection-section-id prot-level)))
-      (unless stay-put-p
-        (dp-c-beginning-of-defun 1 'real-bof))
-      (search-forward sec-id nil t))))
+    (let ((sec-id (dp-c++-make-protection-section-id prot-level))
+          (bof (dp-c-beginning-of-defun-pos 1 'real-bof)))
+      (when (if stay-put-p
+                (search-backward sec-id bof t)
+              (goto-char bof)
+              (search-forward sec-id nil t))
+        (next-line 1)
+        (point)))))
 
 (defun* dp-c++-goto-protection-section (&optional 
                                         (prot-level 1) 
@@ -1104,8 +1110,6 @@ terminate and eol/nl+indent."
     (dp-c-beginning-of-statement)
     (dp-c-in-syntactic-region dp-c-statement-syntaxes)))
 
-;;;(defun dp-c-looking-back-at-outermost-closing-paren-p ())
-
 (defvar dp-c++-symbol-regexp-guts
   ;; No open paren of any kind
   "\\(%s\\s_\\|\\sw\\)*\\(%s::\\)?\\(%s\\s_\\|\\sw\\)+")
@@ -1117,13 +1121,14 @@ terminate and eol/nl+indent."
                                                     "%s" "?:" 'LITERAL))
 
 (defun dp-c-find-stmt-closing-paren (&optional limit)  ; <:ctcp:>
+  "LIMIT limits search for the OPENING paren whose closing paren we want."
   (interactive)
   (save-excursion
     (dp-c-beginning-of-statement)
     (when (search-forward "(" limit t)
       (goto-char (match-beginning 0))
       (condition-case nil
-          (dp-find-matching-paren)
+            (dp-find-matching-paren)
         (error
          nil)))))
 
@@ -1140,12 +1145,6 @@ See `dp-c*-junk-after-eos*'."
       (dp-c-end-of-line))
     (dp-looking-back-at (concat regexp dp-c*-junk-after-eos*) limit)))
 
-(defun dp-c-looking-at-sans-eos-junk (regexp &optional from-bol-p limit)
-  (save-excursion
-    (when from-bol-p
-      (beginning-of-line))
-    (looking-at (concat regexp dp-c*-junk-after-eos*))))
-
 (defun* dp-looking-back-at-close-paren-p (&optional final-p)
   (when (dp-c-looking-back-at-sans-eos-junk "\\()\\)")
     (let ((close-paren-pos (match-beginning 0))
@@ -1156,13 +1155,6 @@ See `dp-c*-junk-after-eos*'."
                                     (dp-c-find-stmt-closing-paren)))
            (= close-paren-pos close-paren-pos2)
            close-paren-pos))))
-
-(defvar dp-c-open-brace-present-regexp
-  ;; // handles case where we have a {  // followed by a comment.
-  "\\s-*\\(const\\)?\\s-*\\({.*$\\|\\s-*\\(//.*\\|\\s-*\\)\n[ \n\t]*{\\)"
-;;;  "\\s-*\\(const\\)?\\s-*\\({.*$\\|\\s-*//.*\n[ \n\t]*{\\)"
-;;;  "\\s-*\\(const\\)?\\s-*\\($\\|{.*$\\|\\s-*//.*\n[ \n\t]*{\\)"
-  "Regular expression to determine if an opening brace is present.")
 
 (defvar dp-chars-which-cannot-follow-a-function-open-brace
   "[%]"
@@ -1357,7 +1349,6 @@ newline."
       (or (memq (buffer-syntactic-context) '(comment block-comment))
           (memq c-syntax dp-c-comment-syntax-list)
           (c-got-face-at (point) '(font-lock-comment-face))
-          (and (dmessage "C") nil)
           (save-excursion 
             (beginning-of-line)
             (looking-at "^\\s-*//"))

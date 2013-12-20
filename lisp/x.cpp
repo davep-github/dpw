@@ -16,16 +16,16 @@ int f(void)
     }
 }
 
-void q();
+void q(void)
 {
     // blah
 }
 
 struct Oh_no_you_di_int_t
 {
-    Oh_no_you_di_int_t()
+    Oh_no_you_di_int_t(void)
     {}
-
+    
     int g(
         int a,
         int b) const
@@ -43,26 +43,17 @@ struct Oh_no_you_di_int_t
         int a,
         int b) const
     {
-
-        goof(int a, char b, int c)
-
+        
+        goof(int a, char b, int c);
     }
 
-    private
+    /*************** <:Oh_no_you_di_int_t: private section:> ***************/
+  private:
     
-
-
-
-
+    /*************** <:Oh_no_you_di_int_t: private section:> ***************/
+  private:
+    
 };
-
-//
-
-int f(int a, int b)
-
-
-
-
 
 
 int g(void)

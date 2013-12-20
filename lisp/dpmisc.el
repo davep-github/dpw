@@ -1259,7 +1259,7 @@ matching operation and only if we are on a ?< or ?>."
     (t (apply 'error err-data))))
 
 (defun dp-find-closing-paren-pos (&optional unbalanced-ok-p)
-  "Find a matching \"paren\", which here inclues ?< and ?>"
+  "Find a matching \"paren\", which here includes [], {}, <>"
   (interactive "_P")
   (condition-case err-data
       ;;(dp-find-matching-paren-including-<0 unbalanced-ok-p)
