@@ -157,10 +157,7 @@
                                       (dp-c++-class-protection-label))))
               (if protection-label
                   (progn
-                    (replace-match "")
-                    (dp-c++-mk-protection-section :prot-level 
-                                                  protection-label
-                                                  :stay-put-p t)
+                    (dp-c++-comment-protection-section arg)
                     t)
                 nil))
             (setf (dp-cob-state-t-last-sub-command dp-cob-state) 

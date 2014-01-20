@@ -205,7 +205,7 @@ class Grep_list_t(dp_object):
                 num = TICKER_COUNT_FORMAT.format(lt[1])
                 format = "Matching line: {}>{}<\n".format(num, "{}")
 ##                 print "format>{}<".format(format)
-                s = lt[0][:-1]
+                s = lt[0]
             else:
                 format = "{}"
                 s = lt
@@ -963,7 +963,7 @@ Split line into chars and feed to ticker.""")
     max_output_bytes_before_exit = app_args.max_output_bytes_before_exit
     trailing_line_prefix = ""
     on_borrowed_time_p = False
-    while True:
+    while True:                         # <:main-loop:>
         readline_failed_p = False
         input_line = ""
         try:

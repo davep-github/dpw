@@ -64,6 +64,7 @@ DENVER_ARGS=(-allow_error_string "ERROR: \(PLL24G_DYN_PRB_ESD\)  An error in SET
     -allow_error_string "JSR REDIR SUPP_TH MISMATCH"  \
     -allow_error_string ":E:l2c02roc_req_fill_monitor:check_X_filldata: NCRd or ICRd filldata at byte" \
     -allow_error_string ":E:l2c02roc_req_fill_monitor:check_X_filldata: DRAM/MMIO RD fillData X" \
+    -allow_error_string "Error: \"../../../../../../../../ip/t132/cpu/denver/29274340/ccplex/2.0/stand_sim/ccroc/cd100/../../../dvlib/transactors/cd100/sch/sch_pmc_checker.svh\"" \
     -post_script $(depth)/bin/soc_x_chkr.pl)
 
 #eko "${DENVER_ARGS[@]}"
@@ -184,8 +185,6 @@ then
 fi
 
 echo "--" >> "${rtl_log_file_history}"
-
-exit 99
 
 if [ -n "${elves}" ]
 then

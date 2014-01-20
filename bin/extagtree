@@ -50,7 +50,7 @@ tagtree()
 cscope_tree()
 {
     local files_file="$1"
-    local cs=$(sp -1 cscope)
+    local cs="${DP_CSCOPE_PROGRAM-$(sp -1 cscope)}"
 
     vunsetp $cs && cs=$(sp -1 dp-cscope)
     if vunsetp $cs

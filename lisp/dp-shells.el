@@ -312,7 +312,7 @@ No regexps allowed. This will be processed by `regexp-opt'")
         ))
 
 (defvar dp-shell-dirty-buffer-cmds
-  (concat "^\\s-*\\(.?/?\\)?"
+  (concat "^\\s-*\\(\\.?/?\\)?"
           (dp-concat-regexps-grouped
            (append (list (regexp-opt '("make"
                                        "gcc"

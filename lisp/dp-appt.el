@@ -11,6 +11,10 @@ When exiting `calendar' I reinit the appts.  This removes all appts and then
 creates only those in the diary file.  So we can call these to restore
 non-diary-file appts.")
 
+(defun dp-use-v2-appt-stuff-p ()
+  (or (bound-and-true-p dp-use-new-appt-code-p)
+      (not (fboundp 'appt-frame-announce))))
+
 (defun dp-appt-initialize ()
   "An interactive function for [re]initializing the appointment list."
   (interactive)

@@ -4,7 +4,13 @@ import sys, os, re, subprocess
 import find_up, dp_io
 opath = os.path
 
-log_file = open("/home/dpanariti/log/rgg.log", "a")
+LOG_FILE_NAME = None
+#LOG_FILE_NAME = "/home/dpanariti/log/rgg.log"
+
+if LOG_FILE_NAME is None:
+    log_file = dp_io.Null_dev_t()
+else:
+    log_file = open(LOG_FILE_NAME, "a")
 
 ## Make this environment specific
 ## In order of rank.

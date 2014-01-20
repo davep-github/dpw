@@ -831,6 +831,10 @@ class Null_dev_t(object):
         pass
     def write(self, *args, **keys):
         return
+    def read(self, *args, **keys):
+        return ""
+    def readline(self, *args, **keys):
+        return ""
 
 class Unbuffered_file_duck(object):
     def __init__(self, file=None, name=None, *open_args):

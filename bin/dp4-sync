@@ -131,7 +131,7 @@ else
 fi
 
 : ${sandbox_root:=$(dp4-get-root)}
-: ${kwa_log_root:=${sandbox_root}/${progname}.d}
+: ${kwa_log_root:=${sandbox_root}/${progname}-log.d}
 : ${kwa_log_base:=}
 echo_id kwa_log_root
 
@@ -150,7 +150,7 @@ vunsetp "${kwa_log_base}" && {
     kwa_log_base=$(namify-path -c % $(normpath -c "${rel_dir}"))
 }
 echo_id kwa_log_base
-: ${kwa_log_dir:=${kwa_log_root}/${kwa_log_base}-${timestamp}}
+: ${kwa_log_dir:=${kwa_log_root}/${kwa_log_base}-${timestamp}.d}
 
 echo_id kwa_log_dir
 

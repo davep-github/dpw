@@ -90,8 +90,9 @@ Usage_details="${EExec_parse_usage}
 --t_make_arg <arg>) Append <arg> to additional t_make args.
 --t_make-arg <arg>) Append <arg> to additional t_make args.
 --t-make-arg <arg>) Append <arg> to additional t_make args.
---build-me|--bgme|--bme) Do build the me tests.
---no-build-me) Do not build the me tests.
+--build-me|--bgme|--bme) Do build the GPU ME tests.
+--build-me|--bme|--bgme|--build-gme) Do build the GPU ME tests.
+--no-build-me|--no-bgme|--no-bme) Do not build the GPU ME tests.
 --get-mods) Get the latest mods.
 --no-get-mods) Get the latest mods.
 --get-asim) Get the latest ASIM/COSIM.
@@ -129,9 +130,10 @@ long_options=("tot:"
     "no-get-mods"
     "get-asim"
     "no-get-asim"
-    "build-me" "bme" "bgme"
+    "build-me" "bme" "bgme" "build-gme"
+    "no-build-me" "no-bme" "no-bgme" "no-build-gme"
     "just-build-me" "just-bme" "bme-only" "only-bme"
-    "no-build-me"
+    "just-build-gme" "just-bgme" "bgme-only" "only-bgme"
     "no-debug"
     "debug"
     "me-purge"
@@ -190,10 +192,12 @@ do
       --t_make-arg) shift; t_make_args="$t_make_args $1";;
       --t-make_arg) shift; t_make_args="$t_make_args $1";;
       --t-make-arg) shift; t_make_args="$t_make_args $1";;
-      --build-me|--bme|--bgme) build_me_p=t;;
+      --build-me|--bme|--bgme|--build-gme) build_me_p=t;;
+      --no-build-me|--no-bme|--no-bgme|--no-build-gme) build_me_p=;;
       --just-build-me|--bme-only|--just-bme|--only-bme|--jb) 
                  build_me_p=t; get_mods_p=; get_asim_p=;;
-      --no-build-me) build_me_p=;;
+      --just-build-gme|--bgme-only|--just-bgme|--only-bgme) 
+                 build_me_p=t; get_mods_p=; get_asim_p=;;
       --get-mods) get_mods_p=t;;
       --no-get-mods) get_mods_p=;;
       --get-asim) get_asim_p=t;;
@@ -300,9 +304,11 @@ run_t_make()
 #    echo "${PWD}/bin/t_make ${keeplogs_opt} ${leavelogs_opt} ${t_make_args} ${catlog_opt} ${only_opt} $@" \
 #         | EExec -y tcsh-run ${EExecDashN_opt}
     EExec ./bin/t_make ${keeplogs_opt} ${leavelogs_opt} ${t_make_args} ${catlog_opt} ${only_opt} "$@"
+    # Wait for anything t_make may have started to finish.
+    wait
 }
 
-# Make this because we tee to a file inside this dir. The tee is part of the
+# Make this up here because we tee to a file inside this dir. The tee is part of the
 # following redirection and gets created before any of the commands inside
 # the {} run
 if EExecDashN_p
@@ -323,7 +329,7 @@ fi
             # stuff by building w/o it.
             # If we change our minds, we'll get a very early warning and we
             # can then remove the file.
-            EExec rtl_required_p --create
+            EExec rtl_required_p --auto
         }
         echo_id leavelogs_opt
         vsetp "${leavelogs_opt}" && {

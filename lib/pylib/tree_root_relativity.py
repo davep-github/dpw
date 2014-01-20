@@ -8,9 +8,6 @@ opath = os.path
 
 ctracef = dp_io.ctracef
 
-Error_file = sys.stderr
-Dev_null = dp_io.Null_dev_t()
-
 #############################################################################
 #
 # This was originally created to allow relative directory abbreviations to be
@@ -246,11 +243,11 @@ def main(argv):
     oparser.add_argument("--trace",
                          dest="trace_level", type=int, default=0,
                          help="Set trace level 0 == off.")
-    oparser.add_argument("--print-errors",
+    oparser.add_argument("--print-errors", "--pe",
                          dest="print_errors_p", default=False,
                          action="store_true",
                          help="Print errors.")
-    oparser.add_argument("--no-print-errors",
+    oparser.add_argument("--no-print-errors", "--npe", "--silent",
                          dest="print_errors_p", default=False,
                          action="store_false",
                          help="Don't print errors.")
@@ -258,10 +255,7 @@ def main(argv):
     app_args = oparser.parse_args()
     ### Args parsed...
 
-    if app_args.print_errors_p:
-        Error_file = sys.stderr
-    else:
-        Error_file = Dev_null
+    dp_io.set_eprint(app_args.print_errors_p)
 
     if app_args.trace_level:
         dp_io.set_verbose_level(app_args.trace_level)
@@ -304,7 +298,7 @@ def main(argv):
         else:
             dp_io.eprintf("  Looking in current dir>{}<\n",
                           opath.realpath(opath.curdir))
-        print >>Error_file, "Cannot find tree root."
+        dp_io.eprintf("Cannot find tree root.\n")
         sys.exit(2)
 
     ctracef(1, "A: input_tree_root>{}<\n", input_tree_root)
@@ -328,7 +322,7 @@ def main(argv):
 
         ctracef(1, "s>{}<\n", s)
         if not s:
-            print >>Error_file, "Could not expand>{}<".format(expand_dest_args)
+            dp_io.eprintf("Could not expand>{}<\n", expand_dest_args)
             sys.exit(3)
         s = s + ed_rest
         if opath.exists(s):
@@ -337,10 +331,9 @@ def main(argv):
         else:
             if app_args.print_non_existent_p:
                 print s
-            print >>Error_file, "Expansion>{}< doesn't exist.".format(s)
+            dp_io.eprintf("Expansion>{}< doesn't exist.\n", s)
             ctracef(1, "NO GO ON s>{}<\n", s)
         sys.exit(13)
-
 
     if app_args.find_root_p:
         if current_tree_root:

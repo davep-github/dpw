@@ -250,16 +250,27 @@ alias cdrp='cd $(rpd)'
 alias gorp='cd $(rpd)'
 alias home_addr='eval echo "\$${DP_HOME_MACHINE}_ADDR"'
 alias home_user='eval echo "\$${DP_HOME_MACHINE}_USER"'
-alias dotfgrep='GLOBIGNORE=".:.." ; fgrep'
-alias dotegrep='GLOBIGNORE=".:.." ; egrep'
-alias dotjgrep='GLOBIGNORE=".:.." ; grep' # just grep. Almost never used... egrep is preferred.
-alias dotgrep=dotfgrep          # fgrep is far and away my most common grepper.
+alias dotfgrep='GLOBIGNORE=".:.."  fgrep'
+alias dotegrep='GLOBIGNORE=".:.."  egrep'
+alias dotjgrep='GLOBIGNORE=".:.."  grep' # just grep. Almost never used... egrep is preferred.
+alias dotgrep=dotfgrep        # fgrep is far and away my most common grepper.
 
 alias .fgrep=dotfgrep
 alias .egrep=dotegrep
 alias .jgrep=dotjgrep
 alias .grep=dotgrep
+alias fgrep.=dotfgrep
+alias egrep.=dotegrep
+alias jgrep.=dotjgrep
+alias grep.=dotgrep
 
 alias mex=me-expand-dest
+
+alias dp4-meld='dp4-diff --meld'
+alias sandbox_root_dir='/home/dpanariti/lib/pylib/tree_root_relativity.py --find-root'
+alias sbroot=sandbox_root_dir
+alias treeroot=sandbox_root_dir
+alias sb-root=sandbox_root_dir
+alias tree-root=sandbox_root_dir
 
 true

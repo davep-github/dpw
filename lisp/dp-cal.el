@@ -1,6 +1,80 @@
+(dmessage "eval-ing dp-cal.el...")
+
+(defun dp-calendar-load-hook ()
+  "Set up calendar mode with my preferences."
+  (interactive)
+  (setq mark-diary-entries-in-calendar t)
+  ;; define-key is the recommended method vs local-set-key.
+  (define-key calendar-mode-map [(meta left)] 'calendar-backward-month)
+  (define-key calendar-mode-map [(meta right)] 'calendar-forward-month)
+  (define-key calendar-mode-map [(control left)] 'calendar-backward-week)
+  (define-key calendar-mode-map [(control right)] 'calendar-forward-week)
+  (define-key calendar-mode-map [(meta ?a)] 'calendar-set-mark)
+  (define-key calendar-mode-map [(meta ?d)] 'dp-appt-initialize)
+  (define-key calendar-mode-map [(meta ?i)] 'dp-appt-initialize)
+  (define-key calendar-mode-map [return] 'diary-view-entries)
+  (define-key calendar-mode-map [(control meta a)] 'dp-appt-initialize))
+(add-hook 'calendar-load-hook 'dp-calendar-load-hook)
+(defalias 'cal 'calendar)
+
+;; fancy display is *REQUIRED* to make included files work.
+(add-hook 'diary-display-hook 'fancy-diary-display)
+(add-hook 'list-diary-entries-hook 'include-other-diary-files)
+(add-hook 'mark-diary-entries-hook 'mark-included-diary-files)
+(add-hook 'appt-make-list-hook 'appt-included-diary-entries)
+;; want sort to run after everything else
+(add-hook 'list-diary-entries-hook 'sort-diary-entries 'APPEND)
 
 ;; @todo see if we can use autoloads
 (require 'calendar)
+(require 'appt)
+
+(defun dp-define-diary-file-keys ()
+  (interactive)
+  (dp-define-buffer-local-keys '("\C-c\C-c" dp-complete-diary-edit
+                                 "\C-x#" dp-complete-diary-edit)))
+  
+(defun dp-diary-mode-hook ()
+  (interactive)
+  (dp-define-diary-file-keys))
+
+(add-hook 'diary-mode-hook 'dp-diary-mode-hook)
+
+(defun dp-complete-diary-edit (&optional exit-too-p)
+  "Finish editing the diary, exit and check for new appointments."
+  (interactive)
+  (when (buffer-modified-p)
+    (save-buffer))
+  (dp-appt-initialize)
+  (if exit-too-p
+      (when
+          (call-interactively (key-binding [(meta ?-)])))
+    (bury-buffer)))
+
+(defadvice exit-calendar (before dp-exit-calendar activate)
+  "Check for new appointments before exiting."
+  (dp-appt-initialize))
+
+(add-hook 'diary-hook 'dp-diary-hook)
+(defvar dp-diary-hook-active nil)
+(defun dp-diary-hook ()
+  "Setup diary mode my way."
+  (interactive)
+  ;Make sure any entries are activated.  This by itself is not enough to
+  ;ensure that new appointments are activated, since it is called BEFORE
+  ;changes to the diary.  However it may catch some oversights.
+  ;In the calendar, for convenience, M-d is defined as `dp-appt-initialize'.
+  (unless dp-diary-hook-active
+    (setq dp-diary-hook-active t)
+    (dp-appt-initialize)
+    (setq dp-diary-hook-active nil)))
+;
+; dp-appt-initialize loads the diary file, so this doesn't quite work.
+;(defun dp-diary-kill-buffer-hook ()
+;  (if (string= (expand-file-name (buffer-file-name))
+;               (expand-file-name (dp-find-diary-file)))
+;      (dp-appt-initialize)))
+;(add-hook 'kill-buffer-hook 'dp-diary-kill-buffer-hook)
 
 (autoload 'cal-tex-list-diary-entries "cal-tex"
   "Generate a list of all diary-entries from absolute date D1 to D2." nil)
@@ -234,4 +308,5 @@ notifications to be given via messages in a pop-up frame."
 ;;;
 ;;;
 ;;;
+(dmessage "eval-ing dp-cal.el done.")
 (provide 'dp-cal)

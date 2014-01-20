@@ -5733,3 +5733,42 @@ Monday December 16 2013
 
 
 
+
+========================
+Thursday January 02 2014
+--
+
+(format-kbd-macro 'bubq)
+"C-s booboo: RET M-x bubba RET"
+
+dp-tgen-elf-load-option
+"-chipargs '-elf_load /home/denver/release/sw/components/mts/1.0/cl28625566/debug_arm/denver/bin/mts.elf@0xe0000000:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/drv/mpcore/t132/ObjLinux_MPCoreXC/boot_page_table.axf:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/override.elf@0xe0000000:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/t132/ObjLinux_MPCoreXC/cpu_surface_write_read.Cortex-A8.axf:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/t132/ObjLinux_ARM7TDMIXC/cpu_surface_write_read.ARM7TDMI.axf:' "
+
+"/home/scratch.dpanariti_t124_2/sb5/sb5hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-12-17T07.20.54-0800/cpu_surface_write_read/"
+
+/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/drv/mpcore/t132/objlinux_mpcorexc/boot_page_table.axf
+----------------------------------------
+/home/scratch.dpanariti_t124_3/sb4/sb4hw/
+(dp-current-sandbox-path)
+"/home/scratch.dpanariti_t124_2/sb5/sb5hw"
+
+(getenv "PWD")
+"/home/dpanariti"
+
+default-directory
+"/home/dpanariti/lisp/devel/"
+
+(defun bubba ()
+  (interactive)
+  (with-current-buffer "cpu_surface_write_read.mods.sh"
+    (princf "default-directory>%s<" default-directory)
+    (dp-tgen-generate-elf-load-option dp-vx)))
+
+booboo:
+
+
+========================
+Friday January 17 2014
+--
+
+

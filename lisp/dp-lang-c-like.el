@@ -600,7 +600,6 @@ We say: \" p is a pointer to char\", not
         (delete-char))
       t))
 
-
 (defun dp-c*-electric-space ()
   (interactive)
   (or (dp-c*-make-ugly-pointer-decl)
@@ -626,7 +625,6 @@ We say: \" p is a pointer to char\", not
          (what-sym (intern-soft what-name)))
     (when what-sym
       (funcall what-sym))))
-
 
 (defmacro q.v. (&rest rest)
   "Quote the args in REST and call the q.v. function"
@@ -805,9 +803,9 @@ Otherwise, nothing."
 ;;  " ///////////////// <:%s%sdata:> /////////////////"
 ;;  "String to indicate the location of a class's data.")
 
-(defun* dp-format-protection-section-id (name prot-level &key
+(defun* dp-format-protection-section-id (&key name prot-level
                                          (start-col 4) (end-col)
-                                         (section-desc "section"))
+                                         (section-desc "data"))
   ;; If end-col is nil, `dp-flanked-string' will use `current-fill-column'.
   
   (setq-ifnil start-col (current-column)
@@ -818,21 +816,25 @@ Otherwise, nothing."
     (dp-flanked-string name ?* :start start-col :end end-col
                        :prefix "/" :suffix "/")))
 
-(defvar dp-protection-section-id-format 'dp-format-protection-section-id)
+(defvar dp-protection-section-id-formatter 'dp-format-protection-section-id)
 
-(defun dp-c++-make-protection-section-id (&optional prot-level)
+(defun* dp-c++-make-protection-section-id (&key 
+                                           (prot-level 0) 
+                                           (section-desc "data"))
   "Make a data section identifier for the current class."
   (interactive "p")
   (let ((name (if (dp-c-get-class-name)
                   (format "%s: " (cdr (dp-c-get-class-name)))
                 "")))
-    (if (functionp dp-protection-section-id-format)
-        (funcall dp-protection-section-id-format name
-                 (concat (dp-prot-level-name prot-level) " "))
-      (format dp-protection-section-id-format name 
-              (concat (dp-prot-level-name prot-level) " ")))))
+    (if (functionp dp-protection-section-id-formatter)
+        (funcall dp-protection-section-id-formatter 
+                 :name name
+                 :prot-level (concat (dp-prot-level-name prot-level) " ")
+                 :section-desc section-desc)
+      (format dp-protection-section-id-formatter name 
+              (concat (dp-prot-level-name prot-level) " ") section-desc))))
 
-(defvar dp-c++-default-data-protection "protected")
+(defvar dp-c++-default-data-protection "private")
 
 (defvar dp-c++-class-protection-names '("private" "protected" "public")
   "In order of access.  Order must be maintained.")
@@ -843,6 +845,10 @@ Otherwise, nothing."
                 (length dp-c++-class-protection-names))
            dp-c++-class-protection-names)
     prot-level))
+
+(defun dp-prot-name-level (prot-name)
+  (- (length dp-c++-class-protection-names)
+   (length (member prot-name dp-c++-class-protection-names))))
 
 (defvar dp-c++-class-protection-level-regexp
   ;;         1  |<---------------------[2]--------------------->|    3
@@ -886,15 +892,52 @@ nil otherwise."
         ""
       ":")))
 
-(defun dp-c++-class-protection-label ()
+(defun dp-c++-class-protection-label (&optional skip-empty-lines)
   (when (dp-c++-class-protection-label-p)
    (match-string dp-c++-class-protection-label-match-string-index)))
 
-;; May need to require being at the protection label to get past many
+(defun* dp-c++-comment-protection-section (&optional prompt-for-section-desc 
+                                           &key
+                                           (section-desc "data"))
+  (interactive "_P")
+  (when prompt-for-section-desc
+    (let ((default-section-desc "data"))
+      (setq section-desc (completing-read
+                          (format "Section type (%s): " default-section-desc)
+                          (dp-mk-completion-list '("data" "code"))
+                          nil nil nil nil
+                          default-section-desc))))
+  (beginning-of-line)
+  (when (looking-at "\\(\\s-*\\|\n\\)*\\(public\\|private\\|protected\\)\\(\\s-*:\\)?")
+    (goto-char (match-beginning 2))
+    (let* ((prot-label (match-string 2))
+           (colon (match-string 3))
+           (id (dp-c++-make-protection-section-id
+                :prot-level (dp-prot-name-level prot-label)
+                :section-desc section-desc)))
+      (unless colon
+        (forward-char (length prot-label))
+        (insert ":"))
+      (forward-line -1)
+      (unless (looking-at (concat "^\\s-*" (regexp-quote id)))
+        (unless (dp-blank-line-p)
+          (dp-c-newline-and-indent 1))
+        (insert " " id)
+        (dp-c-indent-command))
+      (forward-line 1)
+      (Simple-forward-line-creating-newline)
+      (if (dp-blank-line-p)
+          (dp-c-indent-command)
+        (forward-line -1)
+        (dp-c-newline-and-indent 1)))))
+
+;; May need to require being at the protection label to avoid many
 ;; annoying syntax searches.
 (defun* dp-c++-mk-protection-section (&key
                                       (prot-level 
                                        dp-c++-default-data-protection)
+                                      (section-desc "data")
+                                      (prompt-for-section-desc nil)
                                       (indent-p t)
                                       (add-protection-label-p t)
                                       (stay-put-p nil)
@@ -922,17 +965,29 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
                           nil           ; initial contents
                           nil           ; history
                           dp-c++-default-data-protection)))))
-  (if (not (dp-c++-goto-protection-section prot-level 'missing-ok 
-                                           stay-put-p))
+  (when prompt-for-section-desc
+    (let ((default-section-desc "data"))
+      (setq section-desc (completing-read 
+                          (format "Section type (%s): " default-section-desc)
+                          (dp-mk-completion-list '("data" "code"))
+                          nil nil nil nil
+                          default-section-desc))))
+
+  (if (not (dp-c++-goto-protection-section 
+            :prot-level prot-level
+            :section-desc section-desc
+            :missing-ok-p 'missing-ok 
+            :stay-put-p stay-put-p))
       (progn
         (dp-c-indent-command)
-        (insert (dp-c++-make-protection-section-id prot-level))
+        (insert (dp-c++-make-protection-section-id 
+                 :prot-level prot-level
+                 :section-desc section-desc))
         (when indent-p
           (beginning-of-line)
           (insert " ") ; No indentation is done if comment is in the 1st col.
           (dp-c-indent-command)
-          (end-of-line)
-          (dp-c-newline-and-indent))
+          (dp-c-newline-and-indent 1))
         (when add-protection-label-p
           (let* ((limit (dp-mk-marker (save-excursion
                                         ;; So we don't do a go-back.
@@ -981,34 +1036,42 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
       (dp-c-newline-and-indent))))
 
 
-(defun* dp-c++-find-protection-section-id (prot-level &key stay-put-p)
+(defun* dp-c++-find-protection-section-id (&key prot-level 
+                                           stay-put-p
+                                           (section-desc "data"))
   (save-excursion
     ;; We need to get the sec-id before we goto the beginning of the function.
-    (let ((sec-id (dp-c++-make-protection-section-id prot-level))
+    (let ((sec-id (dp-c++-make-protection-section-id 
+                   :prot-level prot-level
+                   :section-desc section-desc))
           (bof (dp-c-beginning-of-defun-pos 1 'real-bof)))
       (when (if stay-put-p
                 (search-backward sec-id bof t)
               (goto-char bof)
               (search-forward sec-id nil t))
-        (next-line 1)
+        (forward-line 1)
         (point)))))
 
-(defun* dp-c++-goto-protection-section (&optional 
-                                        (prot-level 1) 
+(defun* dp-c++-goto-protection-section (&key
+                                        (prot-level 1)
+                                        (section-desc "data")
                                         missing-ok-p
                                         stay-put-p)
   "Goto the current class's data section."
   (interactive "p")
-  (let ((p (dp-c++-find-protection-section-id prot-level 
-                                              :stay-put-p 
-                                              stay-put-p)))
+  (let ((p (dp-c++-find-protection-section-id 
+            :prot-level prot-level
+            :section-desc section-desc
+            :stay-put-p stay-put-p)))
     (if p
         (progn
           (dp-push-go-back "dp-c++-goto-protection-section")
           (goto-char p))
       (unless missing-ok-p
         (message "cannot find: %s" 
-                 (dp-c++-make-protection-section-id prot-level))
+                 (dp-c++-make-protection-section-id 
+                  :prot-level prot-level
+                  :section-desc section-desc))
         (ding)
         nil))))
 
@@ -1228,8 +1291,8 @@ e.g. Looking for \")\" followed by dp-c-junk-after-eos is better than just
 looking for \\s-*.  Also, the junk match can be retained so a replace-match
 could, in this case, use: \";\\1\n\" which would leave comments, etc, in
 place.
-NB: You must count any parenthesized groups in your regexp when using functions like
-")
+NB: You must count any parenthesized groups in your regexp when using 
+functions like ???")
 
 (defvar dp-c*-junk-after-eos+
   ;; 1  2          3                        4  x
@@ -1425,13 +1488,6 @@ int8 and uint8 seem to work together.
 A simple `dp-looking-back-at' using `dp-<type>*-regexp' returns nil.
 !<@todo XXX try a simple regexp join rather than opt?")
 
-;; (defvar dp-c-type-list 
-;;   (dp-add-list-to-list
-;;    'dp-c-type-list
-;;    '("auto" "char" "const" "double" "float" "int" "long" "register" "short" 
-;;      "signed" "struct" "union" "unsigned" "void" "volatile" "mutable" "bool"))
-;;    "List of keywords that imply types.")
-  
 (defvar dp-c-function-type-decl-re
     (concat
      "\\(?:"
@@ -1788,8 +1844,7 @@ control construct)"
             (dp-c-end-of-line)
             (insert extra " {")
             (dp-c-fix-comment)
-            (end-of-line)
-            (dp-c-newline-and-indent))
+            (dp-c-newline-and-indent 1))
         (goto-char here)))))
 
 (defun dp-c-close-brace ()
@@ -2301,20 +2356,6 @@ is done.")
               (loop repeat (- (line-end-position) start)
                 always (dp-in-a-c*-comment)
                 do (forward-char 1))))))))
-
-;       (let* ((lep (line-end-position))
-;              (line-has-/*-p (re-search-forward "^\\s-*/\\*" lep t)))
-;         ;; Only a 1 line comment.
-;         (or (re-search-forward "^\\s-*//" lep t)
-;             ;; No opening /* but a */ followed by only ws?
-;             (and (not line-has-/*-p)
-;                  (re-search-forward "\\*/\\s-*$" lep t))
-;             ;; Opening /* and not */?
-;             (and line-has-/*-p
-;                  (or (not (re-search-forward "\\*/" lep t))
-;                      (re-search-forward "\\*/\\s-*$" lep t)))))))
-    
-
 
 (defvar dp-doxy-syntax-map
   '((arglist-intro . "@arg")

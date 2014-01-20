@@ -10,7 +10,6 @@
 (require 'cl)
 (require 'tempo)
 (require 'compile)
-(require 'appt)
 (require 'time-date)
 
 (require 'dp-vars)
@@ -368,10 +367,6 @@ ONE-AROUND-ALL-P wraps the result in [shy] parens."
     (if one-around-all-p
         (format "\\(%s%s\\)" (if shy-p "?:" "") result)
       result)))
-
-(defun dp-use-v2-appt-stuff-p ()
-  (or (bound-and-true-p dp-use-new-appt-code-p)
-      (not (fboundp 'appt-frame-announce))))
 
 (defun* dp-symvals (vsym &key (format "%s: %s") (val-fmt "val: %S")
                     (func-fmt "func: %S")
@@ -3052,7 +3047,7 @@ Use another binding? Running out of prefix arg interpretations."
       (lisp-interaction-mode)
       (font-lock-set-defaults))
     buf))
-  
+
 (defun dp-find-or-create-sb (&optional same-buffer-p)
   "Switch to existing or make a new scratch buffer in 
 lisp-interaction mode."
@@ -3060,7 +3055,7 @@ lisp-interaction mode."
   ;; goes to existing one if there, otherwise creates one with the right mode."
   (if same-buffer-p
       (switch-to-buffer (dp-find-or-create-sb-guts))
-    (sb2)))
+    (dp-find-or-create-sb-same-buffer)))
 (dp-defaliases 'sbo 'sb 'dp-find-or-create-sb)
 
 (defun dp-find-or-create-sb-same-buffer ()
@@ -3068,11 +3063,17 @@ lisp-interaction mode."
   (dp-find-or-create-sb 'same-buffer-p))
 (dp-defaliases 'sb. 'sbd 'sb0 'sb1 'dp-find-or-create-sb-same-buffer)
 
-(defun sb2 ()
+(defun dp-find-or-create-sb-other-buffer ()
   "Split the window, do an `sb' on one of them."
   (interactive)
   ;;(switch-to-buffer-other-window (dp-find-or-create-sb-guts))
   (dp-display-buffer-select (dp-find-or-create-sb-guts) nil nil nil t))
+(dp-defaliases 'sb2 'dp-find-or-create-sb-other-buffer)
+
+(defun sb- (&optional same-window-p)
+  (interactive "P")
+  (dp-duplicate-window-vertically)
+  (dp-find-or-create-sb same-window-p))
 
 (defun pyb ()
   "Create or switch to an IPython buffer."
@@ -8987,7 +8988,6 @@ on interactiveness, but due to cases like this, I'm trending away from
   (dmessage "minor-mode-map-alist>%s<" minor-mode-map-alist)
   (dmessage "overriding-local-map>%s<" overriding-local-map)
   (dmessage "current-local-map>%s<" (current-local-map))
-  (setq overriding-local-map nil)
   (use-local-map nil)
   (setq minor-mode-alist
         (delete '(isearch-mode isearch-mode-line-string) minor-mode-alist)
@@ -9006,6 +9006,8 @@ on interactiveness, but due to cases like this, I'm trending away from
        (extentp isearch-extent)
        (extent-live-p isearch-extent)
        (delete-extent isearch-extent))
+  (setq overriding-local-map nil)
+  (exit-minibuffer)
 )
 
 (defvar orig-tabify 'tabify)
@@ -12488,7 +12490,6 @@ Assumes frame is in assumed configuration."
           (when (< buf-lines (frame-width))
             (set-frame-height (selected-frame) buf-lines)))))))
 
-(require 'dp-appt)
 (when (bound-and-true-p dp-use-timeclock-p)
   (error "AHHHHHHHHHHHHHHHHH!!!!!!!!!!!!!!!!!")
   (require 'dp-timeclock))
@@ -14380,7 +14381,14 @@ environment variables.
       (dp-start-editing-server server-fate 
                                (or force-serving-p 'force-serving))))
 
-;;;;; <:functions: add-new-ones-above:>
+(defun dp-edit-screen-exchange-file (&optional other-window-p)
+  (interactive "P")
+  (let ((sex-file (getenv "SCREENDATA_EXCHANGE")))
+  (if other-window-p
+      (find-file-other-window sex-file)
+    (find-file sex-file))))
+
+;;;;; <:functions: add-new-ones-above|new functions:>
 ;;;
 ;;;
 ;;; @todo Write a loop which advises functions with simple push go back 

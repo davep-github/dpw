@@ -47,17 +47,26 @@ struct Oh_no_you_di_int_t
         goof(int a, char b, int c);
     }
 
-    /*************** <:Oh_no_you_di_int_t: private section:> ***************/
+    /**************** <:Oh_no_you_di_int_t: private data:> *****************/
   private:
-    
-    /*************** <:Oh_no_you_di_int_t: private section:> ***************/
+    int a;
+
+    /**************** <:Oh_no_you_di_int_t: private data:> *****************/
   private:
     
 };
 
 
+
+
+
+
+
+
+
 int g(void)
-{}
+
+        {}
 
 struct C_t
 {
