@@ -76,6 +76,25 @@ vsetp "${purge_opt}" && {
     EExec "${build_prog}" ${purge_opt}
 }
 
+vsetp "${debug_opt}" && {
+    tree_dot_make=$(me-expand-dest tot)/tree.make
+    [ -e "${tree_dot_make}" ] || {
+        echo "${tree_dot_make} does not exist as it should."
+        exit 1
+    } 1>&2
+
+    egrep -q '^[[:space:]]*export[[:space:]]+(NV_)?PROJECTS?.*t132_debug' "${tree_dot_make}"  || {
+        read -e -p "There is no debug project specified in ${tree_dot_make}. 
+Clear flag and continue [y/N]? "
+        case "${REPLY}" in
+            [yYtT1.]) ;;
+            *) echo "Exiting."; exit 0;;
+        esac
+    }
+    echo "Removing ${debug_opt} and continuing."
+    debug_opt=
+}
+
 EExec "${build_prog}" ${debug_opt}
 rc=$?
 

@@ -53,7 +53,7 @@ DEFAULT_ERROR_INDICATOR = "!"
 DEFAULT_EGREP_PREFIX = DEFAULT_ERROR_INDICATOR * 4
 DEFAULT_EGREP_SUFFIX = DEFAULT_ERROR_INDICATOR * 4
 
-DEFAULT_MATCH_INDICATOR = "@"
+DEFAULT_MATCH_INDICATOR = "+"
 DEFAULT_MATCH_PREFIX = DEFAULT_MATCH_INDICATOR * 3
 DEFAULT_MATCH_SUFFIX = DEFAULT_MATCH_INDICATOR * 3
 
@@ -203,7 +203,8 @@ class Grep_list_t(dp_object):
         for lt in  header_lines + matching_lines:
             if type(lt) == types.TupleType:
                 num = TICKER_COUNT_FORMAT.format(lt[1])
-                format = "Matching line: {}>{}<\n".format(num, "{}")
+                format = "Matching line[{}]: {}>{}<\n".format(
+                    self.d_indicator_char, num, "{}")
 ##                 print "format>{}<".format(format)
                 s = lt[0]
             else:

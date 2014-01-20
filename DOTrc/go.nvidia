@@ -241,8 +241,6 @@ Ee|mdiagsrc__ME_src|            ${swmods__ME_src}mdiag/
 Ee|mdsrc__ME_src|               ${mdiagsrc__ME_src}
 Ee|t3dsrc__ME_src|              ${mdiagsrc__ME_src}tests/gpu/trace_3d/
 
-#
-#   Some things which may as well be cross-sandbox
 Ee|surfwr__ME_src|              ${gpumetraces__ME_src}surface_write_read/
 Ee|surf__ME_src|                ${surfwr__ME_src}
 Ee|swr__ME_src|                 ${surfwr__ME_src}
@@ -251,9 +249,18 @@ Ee|cpusurf__ME_src|             ${cpusurfwr__ME_src}
 Ee|cpuswr__ME_src|              ${cpusurfwr__ME_src}
 Ee|csurf__ME_src|               ${cpusurfwr__ME_src}
 Ee|cswr__ME_src|                ${cpusurfwr__ME_src}
+
+Ee|memtxnsurfwr__ME_src|        ${gpumetraces__ME_src}mem_txn_swr/
+Ee|memtxnswr__ME_src|           ${memtxnsurfwr__ME_src}
+Ee|mtxnswr__ME_src|             ${memtxnsurfwr__ME_src}
+Ee|swrmtxn__ME_src|             ${memtxnsurfwr__ME_src}
+Ee|mtswr__ME_src|               ${memtxnsurfwr__ME_src}
+Ee|swrmt__ME_src|               ${memtxnsurfwr__ME_src}
+
 Ee|memtxn__ME_src|              ${gpumetraces__ME_src}mem-txn/
 Ee|mem_txn__ME_src              ${memtxn__ME_src}
 Ee|mtxn__ME_src|                ${memtxn__ME_src}
+
 Ee|cpuredline__ME_src|          ${gpumetraces__ME_src}cpu_red_line/
 Ee|cpurl__ME_src|               ${cpuredline__ME_src}
 Ee|crl__ME_src|                 ${cpuredline__ME_src}

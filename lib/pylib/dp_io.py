@@ -835,6 +835,8 @@ class Null_dev_t(object):
         return ""
     def readline(self, *args, **keys):
         return ""
+    def close(self, *args, **keys):
+        return
 
 class Unbuffered_file_duck(object):
     def __init__(self, file=None, name=None, *open_args):

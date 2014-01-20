@@ -283,33 +283,61 @@ Key      Tab       A     CM      WindowList Root c c NoGeometry, OnlyListSkip, S
 
 # Some of the Windwoes+Key combos fail with num-lock on, but I've defined the
 # num-lock kp_[0-6] bindings anyway.
-Key            F1         A      4     GotoDeskAndPage 1 0 0
-Key            KP_End     A      4     GotoDeskAndPage 1 0 0
-Key            KP_1       A      4     GotoDeskAndPage 1 0 0
+Key            F1         A      4     GotoDesk 0 1
+Key            KP_End     A      4     GotoDesk 0 1
+Key            KP_1       A      4     GotoDesk 0 1
                
-Key            F2         A      4     GotoDeskAndPage 2 0 0
-Key            KP_Down    A      4     GotoDeskAndPage 2 0 0
-Key            KP_2       A      4     GotoDeskAndPage 2 0 0
+Key            F2         A      4     GotoDesk 0 2
+Key            KP_Down    A      4     GotoDesk 0 2
+Key            KP_2       A      4     GotoDesk 0 2
 
-Key            F3         A      4     GotoDeskAndPage 3 0 0
-Key            KP_Next    A      4     GotoDeskAndPage 3 0 0
-Key            KP_3       A      4     GotoDeskAndPage 3 0 0
+Key            F3         A      4     GotoDesk 0 3
+Key            KP_Next    A      4     GotoDesk 0 3
+Key            KP_3       A      4     GotoDesk 0 3
 
-Key            F4         A      4     GotoDeskAndPage 4 0 0
-Key            KP_Left    A      4     GotoDeskAndPage 4 0 0
-Key            KP_4       A      4     GotoDeskAndPage 4 0 0
+Key            F4         A      4     GotoDesk 0 4
+Key            KP_Left    A      4     GotoDesk 0 4
+Key            KP_4       A      4     GotoDesk 0 4
 
-Key            F5         A      4     GotoDeskAndPage 5 0 0
-Key            KP_Begin   A      4     GotoDeskAndPage 5 0 0
-Key            KP_5       A      4     GotoDeskAndPage 5 0 0
+Key            F5         A      4     GotoDesk 0 5
+Key            KP_Begin   A      4     GotoDesk 0 5
+Key            KP_5       A      4     GotoDesk 0 5
 
-Key            F6         A      4     GotoDeskAndPage 6 0 0
-Key            KP_Right   A      4     GotoDeskAndPage 6 0 0
-Key            KP_6       A      4     GotoDeskAndPage 6 0 0
+Key            F6         A      4     GotoDesk 0 6
+Key            KP_Right   A      4     GotoDesk 0 6
+Key            KP_6       A      4     GotoDesk 0 6
 
-Key            F10        A      4     GotoDeskAndPage 0 0 0
-Key            KP_Insert  A      4     GotoDeskAndPage 0 0 0
-Key            KP_0       A      4     GotoDeskAndPage 0 0 0
+Key            F10        A      4     GotoDesk 0 0
+Key            KP_Insert  A      4     GotoDesk 0 0
+Key            KP_0       A      4     GotoDesk 0 0
+
+#trying GotoDesk to see if we stay on the same page. Key            F1         A      4     GotoDeskAndPage 1 0 0
+#trying GotoDesk to see if we stay on the same page. Key            KP_End     A      4     GotoDeskAndPage 1 0 0
+#trying GotoDesk to see if we stay on the same page. Key            KP_1       A      4     GotoDeskAndPage 1 0 0
+               
+#trying GotoDesk to see if we stay on the same page. Key            F2         A      4     GotoDeskAndPage 2 0 0
+#trying GotoDesk to see if we stay on the same page. Key            KP_Down    A      4     GotoDeskAndPage 2 0 0
+#trying GotoDesk to see if we stay on the same page. Key            KP_2       A      4     GotoDeskAndPage 2 0 0
+
+#trying GotoDesk to see if we stay on the same page. Key            F3         A      4     GotoDeskAndPage 3 0 0
+#trying GotoDesk to see if we stay on the same page. Key            KP_Next    A      4     GotoDeskAndPage 3 0 0
+#trying GotoDesk to see if we stay on the same page. Key            KP_3       A      4     GotoDeskAndPage 3 0 0
+
+#trying GotoDesk to see if we stay on the same page. Key            F4         A      4     GotoDeskAndPage 4 0 0
+#trying GotoDesk to see if we stay on the same page. Key            KP_Left    A      4     GotoDeskAndPage 4 0 0
+#trying GotoDesk to see if we stay on the same page. Key            KP_4       A      4     GotoDeskAndPage 4 0 0
+
+#trying GotoDesk to see if we stay on the same page. Key            F5         A      4     GotoDeskAndPage 5 0 0
+#trying GotoDesk to see if we stay on the same page. Key            KP_Begin   A      4     GotoDeskAndPage 5 0 0
+#trying GotoDesk to see if we stay on the same page. Key            KP_5       A      4     GotoDeskAndPage 5 0 0
+
+#trying GotoDesk to see if we stay on the same page. Key            F6         A      4     GotoDeskAndPage 6 0 0
+#trying GotoDesk to see if we stay on the same page. Key            KP_Right   A      4     GotoDeskAndPage 6 0 0
+#trying GotoDesk to see if we stay on the same page. Key            KP_6       A      4     GotoDeskAndPage 6 0 0
+
+#trying GotoDesk to see if we stay on the same page. Key            F10        A      4     GotoDeskAndPage 0 0 0
+#trying GotoDesk to see if we stay on the same page. Key            KP_Insert  A      4     GotoDeskAndPage 0 0 0
+#trying GotoDesk to see if we stay on the same page. Key            KP_0       A      4     GotoDeskAndPage 0 0 0
 
 # Current(est) tree
 Key            KP_Delete  A      4     @KONST_CURRENTEST_SB@

@@ -3042,20 +3042,22 @@ Use another binding? Running out of prefix arg interpretations."
 (defun dp-find-or-create-sb-guts ()
   "Find or create a scratch buffer."
   (let ((buf (get-buffer-create "*scratch*")))
-    (set-buffer buf)
-    (unless (eq major-mode 'lisp-interaction-mode)
-      (lisp-interaction-mode)
-      (font-lock-set-defaults))
-    buf))
+    (with-current-buffer buf
+      (unless (eq major-mode 'lisp-interaction-mode)
+        (lisp-interaction-mode)
+        (font-lock-set-defaults))
+      buf)))
 
 (defun dp-find-or-create-sb (&optional same-buffer-p)
   "Switch to existing or make a new scratch buffer in 
 lisp-interaction mode."
   (interactive "P")
-  ;; goes to existing one if there, otherwise creates one with the right mode."
-  (if same-buffer-p
-      (switch-to-buffer (dp-find-or-create-sb-guts))
-    (dp-find-or-create-sb-same-buffer)))
+  ;; goes to existing one if there, otherwise creates one with the right
+  ;; mode."
+  (let ((scratch-buffer (dp-find-or-create-sb-guts)))
+    (if same-buffer-p
+        (switch-to-buffer scratch-buffer)
+      (switch-to-buffer-other-window scratch-buffer))))
 (dp-defaliases 'sbo 'sb 'dp-find-or-create-sb)
 
 (defun dp-find-or-create-sb-same-buffer ()
