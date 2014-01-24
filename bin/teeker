@@ -693,6 +693,15 @@ Split line into chars and feed to ticker.""")
                          dest="pipe_mode_p", default=False,
                          action="store_true",
                          help="Send ticks to stderr and input to stdout.")
+    oparser.add_argument("--tgen-errors",
+                         default=None, const="Assertion|call stack|stack_trace",
+                         action="store_const",
+                         help="Convenience option for finding common testgen errors. Perhaps change the value of this to an envvar to make it more flexible.  --log-errors-regexp")
+    oparser.add_argument("--grep-errors", "--errors", "--error-regexps",
+                         "--ere", "--egrep", "--err-grep",
+                         dest="error_regexp_patterns",
+                         action="append", default=[],
+                         help="Grep for these patterns and treat as errors. --max-errors tells how many error matches to accept before exiting. The default is %s where 0 means no limit." % (DEFAULT_MAX_ERROR_MATCHES,))
     oparser.add_argument("-g", "--grep", "--regexp", "--re", "--match",
                          dest="regexp_patterns",
                          action="append", default=[],
@@ -713,15 +722,6 @@ Split line into chars and feed to ticker.""")
                          dest="all_grep_hit_actions_p", default=False,
                          action="store_true",
                          help="Run the grep hit action on all grep hits.")
-    oparser.add_argument("--tgen-errors",
-                         default=None, const="Assertion|call stack|stack_trace",
-                         action="store_const",
-                         help="Convenience option for finding common testgen errors. Perhaps change the value of this to an envvar to make it more flexible.  --log-errors-regexp")
-    oparser.add_argument("-grep-errors", "--errors", "--error-regexps",
-                         "--ere", "--egrep",
-                         dest="error_regexp_patterns",
-                         action="append", default=[],
-                         help="Grep for these patterns and treat as errors. --max-errors tells how many error matches to accept before exiting. The default is %s where 0 means no limit." % (DEFAULT_MAX_ERROR_MATCHES,))
     oparser.add_argument("--project-log-errors",
                          default=None,
                          const=os.environ.get("TEEKER_PROJECT_LOG_ERROR_REGEXP",
