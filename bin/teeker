@@ -124,6 +124,7 @@ class Grep_list_t(dp_object):
                  timestamp_p=False,
                  match_suffix=None,
                  max_matches=None,
+                 match_action=None,
                  ostream=None,
                  description="Regexp"):
         self.d_indicator_char = indicator_char
@@ -133,6 +134,7 @@ class Grep_list_t(dp_object):
         self.d_matching_lines = []
         self.d_compiled_p = False
         self.d_num_matches = 0
+        self.d_match_action = match_action
         self.d_ostream = ostream
         if match_prefix == None:
             match_prefix = indicator_char * 3
@@ -150,6 +152,9 @@ class Grep_list_t(dp_object):
 
     def num_matches(self):
         return len(self.d_matching_lines)
+
+    def highlights_p(self):
+        return self.d_indicator_char
 
     def matches(self):
         return self.d_matching_lines
@@ -172,6 +177,9 @@ class Grep_list_t(dp_object):
         self.d_num_matches += 1
         self.print_matches(match=(line, line_number), ostream=ostream,
                            timestamp_p=timestamp_p)
+        if self.d_match_action:
+            self.print_action(dp_io.bq("{} {}".format(self.d_match_action,
+                                                      line)))
         if ((self.d_max_matches is not None)
             and
             (self.d_num_matches > self.d_max_matches)):
@@ -229,6 +237,12 @@ class Grep_list_t(dp_object):
                               suffix=self.d_match_suffix + "\n",
                               timestamp_p=timestamp_p)
 
+    def print_action(self, s, ostream=None, timestamp_p=None):
+        if not ostream:
+            ostream = self.d_ostream
+            dp_io.fprintf(ostream, "{}".format(s))
+
+
 class Hgrep_list_t(Grep_list_t):
     def __init__(self,
                  regexps,
@@ -237,6 +251,7 @@ class Hgrep_list_t(Grep_list_t):
                  timestamp_p=False,
                  match_suffix=None,
                  max_matches=None,
+                 match_action=None,
                  ostream=sys.stdout,
                  description="Highlighted regexp"):
         Grep_list_t.__init__(self,
@@ -247,6 +262,7 @@ class Hgrep_list_t(Grep_list_t):
                              match_suffix=match_suffix,
                              max_matches=max_matches,
                              ostream=ostream,
+                             match_action=match_action,
                              description=description)
 
 class Wgrep_list_t(Hgrep_list_t):
@@ -257,6 +273,7 @@ class Wgrep_list_t(Hgrep_list_t):
                  timestamp_p=False,
                  match_suffix=None,
                  max_matches=None,
+                 match_action=None,
                  ostream=sys.stdout,
                  description="Warning regexp"):
         Hgrep_list_t.__init__(self,
@@ -266,6 +283,7 @@ class Wgrep_list_t(Hgrep_list_t):
                               timestamp_p=timestamp_p,
                               match_suffix=match_suffix,
                               max_matches=max_matches,
+                              match_action=match_action,
                               ostream=ostream,
                               description=description)
 
@@ -277,6 +295,7 @@ class Egrep_list_t(Grep_list_t):
                  timestamp_p=False,
                  match_suffix=None,
                  max_matches=None,
+                 match_action=None,
                  ostream=sys.stderr,
                  description="Error regexp"):
         Grep_list_t.__init__(self,
@@ -286,6 +305,7 @@ class Egrep_list_t(Grep_list_t):
                              timestamp_p=timestamp_p,
                              match_suffix=match_suffix,
                              max_matches=max_matches,
+                             match_action=match_action,
                              ostream=ostream,
                              description=description)
 
@@ -484,8 +504,7 @@ def dump_matching_and_error_lines(output_streams,
     #sep_line = len(title) * "="
     # Dump things so that the most "important" are last so they are the most
     # noticeable.
-    for list_name in REGEXP_LIST_ORDER:
-        regexp_list = regexp_lists[list_name]
+    for regexp_list in regexp_lists:
         title = "{} {} line summary {}".format(wing,
                                                regexp_list.d_description,
                                                wing)
@@ -526,13 +545,17 @@ if __name__ == "__main__":
     oparser.add_argument("-i", "--tick-interval",
                          dest="tick_interval", type=eval_with_units,
                          default=def_tick_interval,
-                         help="Set ticker's tick interval.")
+                         help="Sample all lines (-s -i1).")
     oparser.add_argument("-T", "--show-twiddles",
                          dest="show_twiddles_p", default=False,
                          action="store_true",
                          help="Show list of available twiddles.")
     oparser.add_argument("-s", "--sample-lines",
                          dest="sample_lines_tick_p", default=False,
+                         action="store_true",
+                         help="Tick with input line samples.")
+    oparser.add_argument("--sample-all", "--sall",
+                         dest="sample_ALL_lines_tick_p", default=False,
                          action="store_true",
                          help="Tick with input line samples.")
     oparser.add_argument("-S", "--sample-lines-prefix",
@@ -708,20 +731,34 @@ Split line into chars and feed to ticker.""")
                          help='Grep for these patterns.')
     oparser.add_argument("--hgrep", "--hregexp", "--hmatch",
                          dest="highlight_patterns", default=[],
-                         action=App_arg_action_add_regexp_and_highlight,
+                         action="append",
                          help='Grep for these patterns and highlight.')
     oparser.add_argument("--wgrep", "--wregexp", "--wmatch",
                          dest="warning_regexp_patterns", default=[],
-                         action=App_arg_action_add_regexp_and_warning_highlight,
+                         action="append",
                          help='Grep for these warning patterns and highlight as a warning.')
-    oparser.add_argument("--grep-hit-action",
-                         dest="grep_hit_action", default="",
+
+    oparser.add_argument("--grep-match-action", "--grep-hit-action",
+                         dest="grep_match_action", default="",
                          type=str,
                          help="Run this when there is a pattern match.")
-    oparser.add_argument("--all-grep-hits-action",
-                         dest="all_grep_hit_actions_p", default=False,
+    oparser.add_argument("--egrep-match-action", "--egrep-hit-action",
+                         dest="egrep_match_action", default="",
+                         type=str,
+                         help="Run this when there is an error pattern match.")
+    oparser.add_argument("--hgrep-match-action", "--hgrep-hit-action",
+                         dest="hgrep_match_action", default="",
+                         type=str,
+                         help="Run this when there is a highlight pattern match.")
+    oparser.add_argument("--wgrep-match-action", "--wgrep-hit-action",
+                         dest="wgrep_match_action", default="",
+                         type=str,
+                         help="Run this when there is a warning pattern match.")
+    
+    oparser.add_argument("--any-grep-matche-action","--any-grep-hit-action",
+                         dest="any_grep_match_actions_p", default=False,
                          action="store_true",
-                         help="Run the grep hit action on all grep hits.")
+                         help="Run the grep hit action on any grep hits.")
     oparser.add_argument("--project-log-errors",
                          default=None,
                          const=os.environ.get("TEEKER_PROJECT_LOG_ERROR_REGEXP",
@@ -757,9 +794,9 @@ Split line into chars and feed to ticker.""")
                          "--high-grep", "--high_matches",
                          "--hl-grep", "--hl-matches",
                          "--hi-grep", "--hi-matches",
-                         "--hmatches",
-                         "--hg", "--hm",
-                         dest="highlight_grep_matches_p", default=None,
+                         "--hmatches", "--h-all", "--h-ALL",
+                         "--hg", "--hm", "--ha",
+                         dest="highlight_ALL_grep_matches_p", default=None,
                          action="store_true",
                          help="Turn on showing of matches as they occur.")
     oparser.add_argument("--no-highlight-grep", "--no-highlight-matches",
@@ -897,6 +934,9 @@ Split line into chars and feed to ticker.""")
         Ctor_arg_dict["ostream"] = sys.stderr
     else:
         Ctor_arg_dict["ostream"] = ostream
+    if app_args.sample_ALL_lines_tick_p:
+        app_args.tick_interval = 1
+        app_args.sample_lines_tick_p = True
     tick_interval = app_args.tick_interval
     if tick_interval == 0:
         tick_interval = None
@@ -925,22 +965,35 @@ Split line into chars and feed to ticker.""")
 
     timestamp_p = Ctor_arg_dict.get("timestamp_p", False)
 
-    regexp_lists = {}                   # For finding.
-    if app_args.highlight_grep_matches_p:
+    regexp_list_dict = {}               # For finding by name.
+    regexp_lists = []                   # For finding in order
+    if app_args.highlight_ALL_grep_matches_p:
         app_args.highlight_patterns.extend(app_args.regexp_patterns)
         app_args.regexp_patterns = []
 
-    # The keys must match those in REGEXP_LIST_ORDER.
-    regexp_lists["hgrep"] = Hgrep_list_t(app_args.highlight_patterns)
+    # The matches are dumped in order they are appended.
+    l = Grep_list_t(app_args.regexp_patterns)
+    regexp_list_dict["grep"] = l
+    regexp_lists.append(l)
 
-    regexp_lists["grep"] = Grep_list_t(app_args.regexp_patterns)
+    l = Hgrep_list_t(app_args.highlight_patterns,
+                     match_action=app_args.hgrep_match_action)
+    regexp_list_dict["hgrep"] = l
+    regexp_lists.append(l)
 
     if app_args.tgen_errors is not None:
         app_args.error_regexp_patterns.append(app_args.tgen_errors)
 
-    regexp_lists["egrep"] = Egrep_list_t(app_args.error_regexp_patterns)
+    l = Wgrep_list_t(app_args.warning_regexp_patterns,
+                     match_action=app_args.wgrep_match_action)
+    regexp_list_dict["wgrep"] = l
+    regexp_lists.append(l)
 
-    regexp_lists["wgrep"] = Wgrep_list_t(app_args.warning_regexp_patterns)
+    # Closest to the end is most noticible?
+    l = Egrep_list_t(app_args.error_regexp_patterns,
+                     match_action=app_args.egrep_match_action)
+    regexp_list_dict["egrep"] = l
+    regexp_lists.append(l)
 
     grepping_for_errors_p = len(app_args.error_regexp_patterns) != 0
 
@@ -1014,8 +1067,8 @@ Split line into chars and feed to ticker.""")
                     compressed_file_next_flush += compressed_file_flush_period
         if on_borrowed_time_p:
             continue
-        for list_name in REGEXP_LIST_ORDER:
-            regexp_lists[list_name].match(input_line, line_number)
+        for re_list in regexp_lists:
+            re_list.match(input_line, line_number)
             
         if char_wise_p:
             # Iterate for each char in the line.

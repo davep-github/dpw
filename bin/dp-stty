@@ -44,7 +44,7 @@ for opt in "$@"; do
     case "$opt" in
         -[Aa]) all_settings;;
         -r) reset;;
-        -[zs0]) stty sane;;
+        -[zs0]|--sane|--reset) stty sane;;
         -n) normal_settings;;
 	-q|-d) force_erase_DEL=t; force_erase_Ctl_h=;;
 	-h) force_erase_DEL=; force_erase_Ctl_h=t;;

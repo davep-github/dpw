@@ -354,7 +354,7 @@ aliases>%s<""", line, selector, aliases)
         return
 
     # format of the first part of a line:
-    # ctl|alias0[|alias1...]
+    # ctl|alias0[|alias1...]\s+<expansion>
     # ctl says what kind of alias this is, e.g. emacs or environment
     l = m.group(1)
     val = m.group(2)

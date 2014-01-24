@@ -17,17 +17,20 @@ do
   $op
   ${EEXEC_SHIFT}
 done
-EExec_verbose_msg $(echo_id eexec_program)
+#EExec_verbose_msg $(echo_id eexec_program)
 unset eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
+
+: ${err_file=/proc/self/fd/2}
 
 all_chips="t124
 t132
 t210"
 
 : ${chip_list=${all_chips}}
-: ${tree_dot_make=$(me-expand-dest tot)/tree.make}
+# The following depends on DP_SB_ROOT existing in the right place.
+: ${tree_dot_make=$(dp-sb-root)/hw/Default_ap_tree/tree.make}
 : ${check_debug_p=}
 
 
@@ -35,6 +38,7 @@ while (($# > 0))
 do
   case "$1" in
     --debug) check_debug_p=t;;
+    --silent) err_file=/dev/null;;
     --) shift; break;;
     *) break;;
   esac
@@ -44,25 +48,28 @@ done
 debug_chip=
 chip=
 done_p=
-for tmp_chip in ${chip_list}
-do
-  vtruep "${check_debug_p}" && {
-      egrep -q "^[[:space:]]*export[[:space:]]+(NV_)?PROJECTS?.*${tmp_chip}_debug" "${tree_dot_make}" && {
-          debug_chip="${tmp_chip}_debug"
-          done=t
+
+if [ -e "${tree_dot_make}" ]
+then
+    for tmp_chip in ${chip_list}
+    do
+      vtruep "${check_debug_p}" && {
+          egrep -q "^[[:space:]]*export[[:space:]]+(NV_)?PROJECTS?.*${tmp_chip}_debug" "${tree_dot_make}" && {
+              debug_chip="${tmp_chip}_debug"
+              done=t
+          }
       }
-  }
-  egrep -q "^[[:space:]]*export[[:space:]]+(NV_)?PROJECTS?.*${tmp_chip}([^_]|$)" "${tree_dot_make}"  && {
-      chip="${tmp_chip}"
-      done_p=t
-  }
+      egrep -q "^[[:space:]]*export[[:space:]]+(NV_)?PROJECTS?.*${tmp_chip}([^_]|$)" "${tree_dot_make}"  && {
+          chip="${tmp_chip}"
+          done_p=t
+      }
 
-  vtruep "${done_p}" && {
-      vsetp "${chip}" && echo "${chip}"
-      vsetp "${debug_chip}" && echo "${debug_chip}"
-      exit 0
-  }
-done
-
-echo 1>&2 "Cannot determine chip."
+      vtruep "${done_p}" && {
+          vsetp "${chip}" && echo "${chip}"
+          vsetp "${debug_chip}" && echo "${debug_chip}"
+          exit 0
+      }
+    done
+fi
+echo 1>${err_file} "Cannot determine chip."
 exit 1

@@ -2206,7 +2206,10 @@ changed."
   ;; XXX @todo some of this will be called twice. That's better than being
   ;; called 0 times, but it needs correcting.
   (dp-revert-hook)
-  (dp-after-revert-hook))
+  (dp-after-revert-hook)
+  ;; May want to put this in a more common place like one of the dp-revert
+  ;; hooks.
+  (dp-set-auto-mode))
 
 ;; Dum, dee, dum, dum, dada, do, dum... PERL SUCKS! dee, dum, dum...
 (defun dp-cperl-mode-hook ()

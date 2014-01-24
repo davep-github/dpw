@@ -74,6 +74,15 @@ Ee|TOT__ME_src|                 ${hw__ME_src}${ME_current_default_ap_tree}
 Ee|tot__ME_src|                 ${TOT__ME_src}
 Ee|topoftree__ME_src|           ${TOT__ME_src}
 Ee|ap__ME_src|                  ${TOT__ME_src}
+Ee|apip__ME_src|                ${ap__ME_src}ip/
+
+Ee|apipinf__ME_src|             ${apip__ME_src}inf/
+Ee|inf__ME_src|                 ${apipinf__ME_src}
+Ee|gmeinf10__ME_src|            ${apipinf__ME_src}gpu_multiengine/1.0/
+Ee|gmeinf__ME_src|              ${gmeinf10__ME_src}
+Ee|gmetests__ME_src|            ${gmeinf__ME_src}clib/gpu_multiengine/
+Ee|crl__ME_t210_src|            ${gmetests__ME_src}cpu_red_line/ 
+
 Ee|totbin__ME_src|              ${TOT__ME_src}bin/
 Ee|apbin__ME_src|               ${totbin__ME_src}
 Ee|totvmod__ME_src|             ${TOT__ME_src}vmod/
@@ -141,13 +150,18 @@ Ee|fwloader__ME_src|            ${fwutils__ME_src}loader/
 Ee|loader__ME_src|              ${fwloader__ME_src}
 Ee|drvapi__ME_src|              ${TOT__ME_src}drv/multiengine/drvapi/
 Ee|medrvapi__ME_src|            ${drvapi__ME_src}
-Ee|levelsroot__ME_src|          ${TOT__ME_src}diag/testgen/config/levels/
+Ee|levelsroot__ME_src|          ${testgen__ME_src}config/levels/
+Ee|tegralevels__ME_src|         ${levelsroot__ME_src}tegra/
 Ee|levels__ME_src|              ${levelsroot__ME_src}tegra/
-Ee|melevels__ME_src|            ${TOT__ME_src}diag/testgen/config/levels/tegra/
+Ee|gpumelevels__ME_src|         ${tegralevels__ME_src}/multiengine
+Ee|gmelevels__ME_src|           ${gpumelevels__ME_src}
+Ee|melevels__ME_src|            ${gpumelevels__ME_src}
 Ee|kepler1gklit3man__ME_src|    ${hw__ME_src}kepler1_gklit3/manuals/
 Ee|keplerman__ME_src|           ${kepler1gklit3man__ME_src}
 Ee|gkman__ME_src|               ${kepler1gklit3man__ME_src}
 Ee|kepman__ME_src|              ${kepler1gklit3man__ME_src}
+
+# //hw/ap/diag/testgen/config/levels/tegra/multiengine/gpu_multiengine_ar2
 
 Ee|fermi1gf100__ME_src|         ${hw__ME_src}fermi1_gf100/
 Ee|fermi1man__ME_src|           ${fermi1gf100__ME_src}manuals/

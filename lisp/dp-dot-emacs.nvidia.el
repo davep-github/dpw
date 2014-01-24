@@ -122,14 +122,15 @@ tests.")
   ;; Why did I not use (auto-fill-mode 0) ?
   (setq fill-column 9999))
 
-(dp-add-list-to-list 'auto-mode-alist
-		     `( ;; (regexp . func-to-call-when-loaded)
-                       ("\\(^\\|/\\)regress_tegra_gpu_multiengine$" .
-                        dp-make-no-wrap-stupidly)
-                       ("\\(^\\|/\\)tool_data.config$" .
-                        dp-make-no-wrap-stupidly)
-                       ("/tests/[^/]+/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{6\\}/.*\\.\\(cfg\\|sh\\)" .
-                       dp-make-no-wrap-stupidly)))
+(dp-add-list-to-list 
+ 'auto-mode-alist
+ `( ;; (regexp . func-to-call-when-loaded)
+   ("\\(^\\|/\\)\\(regress_tegra_gpu_multiengine\\|gpu_multiengine_a[rs]2\\)$" .
+    dp-make-no-wrap-stupidly)
+   ("\\(^\\|/\\)tool_data.config$" .
+    dp-make-no-wrap-stupidly)
+   ("/tests/[^/]+/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{6\\}/.*\\.\\(cfg\\|sh\\)" .
+    dp-make-no-wrap-stupidly)))
 
 (defvar dp-p4-default-depot-completion-prefix "//"
   "Depot root.")

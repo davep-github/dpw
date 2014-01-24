@@ -266,8 +266,10 @@ Can be set after the first prompting.")
           (dp-concat-regexps-grouped
            (append 
             '("gitcia\\s-+.*-m")
-            ;; diff needs to be here because I use ec-diff which uses
-            ;; emacs.
+            '("git\\s-+\\(commit\\|.+\\s-+commit\\)")
+            ;; diff needs to be here because I use ec-diff which uses emacs.
+            ;; This re needs to be modified to handle args to p4 itself, like
+            ;; the git commit re above.
             '("p4\\s-+\\(client\\s-+.*-[odis]\\|change\\s-+.*-[odist]\\|submit\\s-+.*-[di]\\)"))
            nil 'one-around-all-p)
           "\\(\\s-+\\|$\\)")
