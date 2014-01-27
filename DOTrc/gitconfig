@@ -3,3 +3,5 @@
 [user]
 	name = David Panariti
 	email = davep.dpw@meduseld.net
+[push]
+	default = matching
