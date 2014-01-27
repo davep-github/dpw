@@ -203,8 +203,15 @@ class myclass
     {
         do_b_like_things();
     }
-    
+
     // data
+    //====================== <:private section:> =======================
+  private:
+    
+    
+    
+    
+    
     int first_thing;		      //!<
     blah;
     int something;		      //!< something 

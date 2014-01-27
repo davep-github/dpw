@@ -829,6 +829,7 @@ command if t.\n"
   "diff" "To diff the current file and topmost depot version, type \\[p4-diff].\n"
   (interactive)
   (let ((args (p4-make-list-from-string p4-default-diff-options)))
+    (dp-offer-to-start-editing-server)
     (if (p4-buffer-file-name-2)
 	(setq args (append args
 			   (list (p4-buffer-file-name-2)))))

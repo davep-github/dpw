@@ -23,7 +23,9 @@ EExecVerbose
 # --egrep 'something bad happened'}
 # --cflush-every=-1 --> flush to zip every line.
 : ${teeker_options=--slog -Z9 --ts --hg -i100 --cflush-every=-1}
+: ${teeker_regexps=--hgrep plugin --hgrep __Startup --hgrep __Initialize --hgrep surface_write_read: --hgrep mem_txn_swr:}
 : ${testname=}
+: ${yopp_p=t}
 
 check_test()
 {
@@ -50,8 +52,10 @@ check_test()
 }
 
 [ -e /tmp/asim.* ] && {
-    echo "/tmp/asim.X exists:"
+    echo
+    echo "ERROR: /tmp/asim.X exists:"
     ls -1 /tmp/asim.*
+    echo
     exit 1
 } 1>&2
 
@@ -83,6 +87,13 @@ Usage:  testname [additional-teeker-options]"
     }
 fi
 test_base_name=$(basename "${testname}" .sh)
+fgrep 1>/dev/null 2>&1 -- ' -gdb ' "${testname}" && {
+    echo
+    echo "ERROR: ${testname} contains a -gdb option. Exiting."
+    echo
+    exit 1
+} 1>&2
+
 cfg_file_name="${test_base_name}.cfg"
 so_name=$(sed -rn "s/(.*-plugin ')([^[:space:]]+)( .*)/\2/p" "${cfg_file_name}").so
 #echo_id so_name
@@ -95,6 +106,12 @@ so_path="${clib_dir}/${so_name}"
 
 # E.g. ./surface_write_read_no_smmu_bar1.sh 2>&1 | teeker --slog -Z9 --ts --grep 'surface_write_read:' --hg dot-sh --egrep 'ERROR: cannot aquire /tmp'; email-yopp
 
-EExec "${testname}" 2>&1 | EExec teeker ${teeker_options} "$@" "${log_file_base_name}"
+EExec "${testname}" 2>&1 | EExec teeker ${teeker_regexps} ${teeker_options} "$@" "${log_file_base_name}"
 rc="$?"
-EExec email-yopp "$progname: \"${testname} $@\" is done. RC: $rc"
+
+if vtruep "${yopp_p}"
+then
+    EExec email-yopp "$progname: \"${testname} $@\" is done. RC: $rc"
+else
+    echo "Not yopp'ing."
+fi

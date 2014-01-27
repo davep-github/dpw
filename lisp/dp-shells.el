@@ -266,8 +266,10 @@ Can be set after the first prompting.")
           (dp-concat-regexps-grouped
            (append 
             '("gitcia\\s-+.*-m")
-            ;; diff needs to be here because I use ec-diff which uses
-            ;; emacs.
+            '("git\\s-+\\(commit\\|.+\\s-+commit\\)")
+            ;; diff needs to be here because I use ec-diff which uses emacs.
+            ;; This re needs to be modified to handle args to p4 itself, like
+            ;; the git commit re above.
             '("p4\\s-+\\(client\\s-+.*-[odis]\\|change\\s-+.*-[odist]\\|submit\\s-+.*-[di]\\)"))
            nil 'one-around-all-p)
           "\\(\\s-+\\|$\\)")
@@ -312,7 +314,7 @@ No regexps allowed. This will be processed by `regexp-opt'")
         ))
 
 (defvar dp-shell-dirty-buffer-cmds
-  (concat "^\\s-*\\(.?/?\\)?"
+  (concat "^\\s-*\\(\\.?/?\\)?"
           (dp-concat-regexps-grouped
            (append (list (regexp-opt '("make"
                                        "gcc"
@@ -1599,7 +1601,8 @@ point to EOB to reduce the amount of parsing that is needed."
                                   (forward-line -2)
                                   (line-beginning-position))
                                 (point-max)
-                                (not force-reparse-p)))
+                                (or (not (interactive-p))
+                                    (not force-reparse-p))))
 
 ;;;###autoload
 (defun dp-shell-goto-this-error (&optional force-reparse-p)
@@ -2475,12 +2478,13 @@ it for something \"speshul\".
       (setenv "PS1_bang_suff" 
               (dp-shells-display-name pnv dp-shells-shell-num-fmt))
       (setenv "dp_emacs_shell_num" (format "%s" pnv))
-      (save-window-excursion/mapping (shell sh-buffer))
-      (setq dp-shell-num pnv)
+      (save-window-excursion/mapping 
+       (shell sh-buffer))
       (dp-visit-or-switch-to-buffer sh-buffer switch-window-func)
       ;;
       ;; We're in the new shell buffer now.
       ;;
+      (setq dp-shell-num pnv)
       (setq dp-shell-isa-shell-buf-p '(dp-shell shell)
             dp-prefer-independent-frames-p t
             other-window-p nil
@@ -3325,15 +3329,13 @@ Can this really not exist elsewhere?"
            (symbol-value-in-buffer 'dp-shell-num buf1)
            (symbol-value-in-buffer 'dp-shell-num buf2)))
 
-(defun dp-shell-buffer-num-greater-or-equal (buf1 buf2)
-  (funcall '>=
-           (symbol-value-in-buffer 'dp-shell-num buf1)
-           (symbol-value-in-buffer 'dp-shell-num buf2)))
-
 (defun dp-shell-buffer-num-less (buf1 buf2)
   (funcall '<
            (symbol-value-in-buffer 'dp-shell-num buf1)
            (symbol-value-in-buffer 'dp-shell-num buf2)))
+
+(defun dp-shell-buffer-num-greater-or-equal (buf1 buf2)
+  (not (dp-shell-buffer-num-less buf1 buf2)))
 
 (defun dp-next/prev-shell-buffer (lessp-fun &optional buffer)
   (interactive)

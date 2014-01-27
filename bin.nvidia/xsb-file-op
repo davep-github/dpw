@@ -37,11 +37,11 @@ do_diff()
     local bail_p=
     {
         vunsetp "${here}" && {
-            echo 'here file does not exist.'
+            echo "here file>$here< does not exist."
             bail_p=t
         }
         vunsetp "${there}" && {
-            echo 'there file does not exist.'
+            echo "there file>$there< does not exist."
             bail_p=t
         }
     } 1>&2

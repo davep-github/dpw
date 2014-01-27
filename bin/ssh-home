@@ -6,12 +6,12 @@ source eexec
 set -u
 
 # File in which variables useful to ssh'ing to home are kept.
-: ${source_file="$HOME/.rc/env.var"}
+: ${var_file="$HOME/.rc/env.var"}
 
 ssh_home()
 {
     local fq_home_box=$(fq_home_box)
-    echo "ssh_home: home[$DP_HOME_MACHINE], fq info: ${fq_home_box}"
+    EExec_verbose_msg "ssh_home: home[$DP_HOME_MACHINE], fq info: ${fq_home_box}"
     EExec ssh "${fq_home_box}"
 }
 
@@ -28,8 +28,8 @@ Usage_details="-n -- Show what would happen but don\'t do it. [eexec]
 # Example of arg parsing.
 Usage_args_info="No args"
 Usage_details="$EExec_parse_option_str
--s -- Do not source $source_file
--S <source-file> -- Do source <source-file> immediately. May be repeated."
+-s -- Do not source $var_file
+-S <source-file> -- Do source <var-file> immediately. May be repeated."
 option_str="nvqsS:"
 source dp-getopt+.sh
 for i in "$@"
@@ -41,7 +41,7 @@ do
       -v) VERBOSE="echo $progname: "; EExecVerbose;;
       -q) VERBOSE=":"; EExecQuiet;;
       # Program options.
-      -s) source_file="";;
+      -s) var_file="";;
       -S) shift; source "$1";;
       --) shift ; break ;;
       *) 
@@ -52,9 +52,9 @@ do
     shift
 done
 
-[ -n "$source_file" ] && {
+[ -n "$var_file" ] && {
     # Make sure we have the latest home ssh variables.
-    source $source_file
+    source $var_file
 }
 
 ssh_home

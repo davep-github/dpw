@@ -315,6 +315,7 @@ Bind any keys in KEYS via `dp-define-keys'."
 (defun dp-keys-define-init-submaps ()
   ;; Beginning to use C-cC-d as dp-* command prefix.
   ;; dp prefixed keys; dp keys prefix; dp key prefix
+  ;; <:dp-keys|dpkeys|dp keys:>
   (makunbound 'dp-Ccd-map)
   (defconst dp-Ccd-map
     (dp-define-key-submap 'dp-kb-prefix global-map
@@ -337,7 +338,6 @@ Bind any keys in KEYS via `dp-define-keys'."
                                     (dp-goto-next-dp-extent-from-point '(4)))
 
                           [(control ?p)] 'dp-shell-resync-dirs
-                          [(control ?r)] 'dp-rotate-windows
                           [(control ?s)] 'dp-find-or-create-sb
                           [(control ?v)] 'dp-symbol-info
                           ;; For when I type the wrong thing
@@ -374,6 +374,7 @@ Bind any keys in KEYS via `dp-define-keys'."
                           [?p] 'dp-python-shell
                           [?q] 'dp-calc-eval-region
                           [?r] 'dp-rotate-windows
+                          [(control ?r)] 'dp-resurrect
                           [?v] 'dp-show-variable-value
                           [?x] 'dp-cx-file-mode
                           [?\\] 'dp-split-and-continue-line0
@@ -469,14 +470,14 @@ Hopefully [space] is mnemonic.")
   ;;CO; (defconst dp-c-mode-map dp-c-mode-prefix
   ;;CO;   "Keymap for my C/C++ mode commands.")
   ;;CO; (define-key dp-Ccd-map "\C-c" 'dp-c-mode-prefix)
-  ;;CO; (define-key dp-c-mode-map [?a] 'dp-c-goto-access-label)
+  ;;CO; (define-key dp-c-mode-map [?a] 'dp-c++-goto-access-label)
   ;;CO; (define-key dp-c-mode-map [?d] 'dp-insert-debugging-code-tag)
   (defconst dp-c-mode-map 
     (dp-define-key-submap 'dp-c-mode-prefix dp-Ccd-map 
                           ;; Key in parent map which accesses this map.
                           [(control ?c)]
                           ;; Mappings to define in this map
-                          [?a] 'dp-c-goto-access-label
+                          [?a] 'dp-c++-goto-access-label
                           [?d] 'dp-insert-debugging-code-tag
                           )
     ;; <:cdd map cxx bindings:>
@@ -630,6 +631,7 @@ already in there.")
                           [?+] 'dp-2x2-windows
                           [?=] 'dp-2x2-windows  ; unshifted +
                           [?4] 'dp-2x2-windows
+                          [?|] 'dp-duplicate-window-horizontally
                           ;; Kill HIM, Thunder. -- D.LoPan
                           [?q] 'dp-quit-other-window)
     ;; <:cdd map window bindings:>

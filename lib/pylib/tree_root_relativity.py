@@ -8,9 +8,6 @@ opath = os.path
 
 ctracef = dp_io.ctracef
 
-Error_file = sys.stderr
-Dev_null = dp_io.Null_dev_t()
-
 #############################################################################
 #
 # This was originally created to allow relative directory abbreviations to be
@@ -89,7 +86,7 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
         return ret
 
     if abbrev_suffix is None:
-        abbrev_suffix = os.environ.get("DP_EXPAND_DEST_ABBREV_SUFFIX")
+        abbrev_suffix = [os.environ.get("DP_EXPAND_DEST_ABBREV_SUFFIX")]
     ctracef(1, "2.0: abbrev>{}<\n", abbrev)
     ctracef(1, "2.1: input_tree_root>{}<\n", input_tree_root)
     #
@@ -112,10 +109,14 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
         return opath.normpath(current_tree_root)
     ctracef(1, "2.5: abbrev>{}<\n", abbrev)
 
-    try_abbrev = abbrev + abbrev_suffix
-    ctracef(1, "2.6: try_abbrev>{}<\n", try_abbrev)
-    new_abbrev = go2env_lib.simple_lookup(try_abbrev)
-    ctracef(1, "2.7: new_abbrev>{}<\n", new_abbrev)
+    new_abbrev = None
+    for suffix in abbrev_suffix:
+        try_abbrev = abbrev + suffix
+        ctracef(1, "2.6: try_abbrev>{}<\n", try_abbrev)
+        new_abbrev = go2env_lib.simple_lookup(try_abbrev)
+        ctracef(1, "2.7: new_abbrev>{}<\n", new_abbrev)
+        if new_abbrev:
+            break
 
     if not new_abbrev:
         new_abbrev = abbrev
@@ -229,7 +230,7 @@ def main(argv):
                          help="A user specified tree_root. Defaults to current_tree_root.")
     oparser.add_argument("--abbrev-suffix",
                          dest="abbrev_suffix",
-                         type=str, default="",
+                         action="append",
                          help="Suffix to add to abbrevs, e.g. __ME_src.")
     oparser.add_argument("--realpath", "--real-path", "--rp",
                          dest="realpath_p", default=None,
@@ -239,18 +240,22 @@ def main(argv):
                          dest="realpath_p", default=None,
                          action="store_false",
                          help="Emit realpath of resulting expansion.")
-    oparser.add_argument("-p", "-print-non-existent", "--pne",
+    oparser.add_argument("--no-print-non-existent", "--npne",
                          dest="print_non_existent_p", default=False,
+                         action="store_false",
+                         help="Don't print an expansion even if it doesn't exist.")
+    oparser.add_argument("-p", "--print-non-existent", "--pne",
+                         dest="print_non_existent_p",
                          action="store_true",
-                         help="Print an expansion even if it doesn't exist. Still returns error.")
+                         help="Print an expansion even if it doesn't exist.")
     oparser.add_argument("--trace",
                          dest="trace_level", type=int, default=0,
                          help="Set trace level 0 == off.")
-    oparser.add_argument("--print-errors",
+    oparser.add_argument("--print-errors", "--pe",
                          dest="print_errors_p", default=False,
                          action="store_true",
                          help="Print errors.")
-    oparser.add_argument("--no-print-errors",
+    oparser.add_argument("--no-print-errors", "--npe", "--silent",
                          dest="print_errors_p", default=False,
                          action="store_false",
                          help="Don't print errors.")
@@ -258,10 +263,7 @@ def main(argv):
     app_args = oparser.parse_args()
     ### Args parsed...
 
-    if app_args.print_errors_p:
-        Error_file = sys.stderr
-    else:
-        Error_file = Dev_null
+    dp_io.set_eprint(app_args.print_errors_p)
 
     if app_args.trace_level:
         dp_io.set_verbose_level(app_args.trace_level)
@@ -304,7 +306,7 @@ def main(argv):
         else:
             dp_io.eprintf("  Looking in current dir>{}<\n",
                           opath.realpath(opath.curdir))
-        print >>Error_file, "Cannot find tree root."
+        dp_io.eprintf("Cannot find tree root.\n")
         sys.exit(2)
 
     ctracef(1, "A: input_tree_root>{}<\n", input_tree_root)
@@ -328,7 +330,7 @@ def main(argv):
 
         ctracef(1, "s>{}<\n", s)
         if not s:
-            print >>Error_file, "Could not expand>{}<".format(expand_dest_args)
+            dp_io.eprintf("Could not expand>{}<\n", expand_dest_args)
             sys.exit(3)
         s = s + ed_rest
         if opath.exists(s):
@@ -337,10 +339,10 @@ def main(argv):
         else:
             if app_args.print_non_existent_p:
                 print s
-            print >>Error_file, "Expansion>{}< doesn't exist.".format(s)
+            dp_io.eprintf("Expansion>{}< doesn't exist.\n", s)
             ctracef(1, "NO GO ON s>{}<\n", s)
+            sys.exit(0)
         sys.exit(13)
-
 
     if app_args.find_root_p:
         if current_tree_root:

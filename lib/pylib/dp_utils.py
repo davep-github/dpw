@@ -428,9 +428,6 @@ def newest_file(files):
             newest_file = f
     return newest_file, newest_mod_time
 
-def normpath_plus(path, plus=opath.sep):
-    return opath.normpath(path) + plus
-
 def pathcomponents(path):
     p = opath.normpath(path)
     p = p.split(opath.sep)

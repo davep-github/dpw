@@ -2,24 +2,27 @@
 
 source script-x
 set -u
-argc=$#
 
 : ${max_count:=1}
 : ${base_rev:=HEAD}
 
 nth="$1"
-shift; ((--argc))
+case "$1" in
+    -[0-9]*) nth=$(echo "$1" | sed -rn 's/^(-)([0-9]*)/\2/p');;
+    -n) shift; nth="${1}";;
+    -n[0-9]*) nth=$(echo "$1" | sed -rn 's/^(-n)([0-9]*)/\2/p');;
+    -|=|.) ;;
+    *) base_rev="${1}";
+esac
+shift;
 file="$1"
-shift; ((--argc))
+shift;
 
-if ((argc > 0))
+if (($# > 0))
 then
-    case "$1" in
-        -|=|.) ;;
-        *) base_rev="${1}";
-    esac
-    shift; ((--argc))
-    if ((argc > 0))
+    echo "1>$1<"
+    shift; 
+    if (($# > 0))
     then
         max_count="${1}"
     fi

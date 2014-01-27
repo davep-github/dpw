@@ -51,6 +51,6 @@ apbinmake="${apbin}/make"
     exit 1
 } 1>&2
 
-EExec_verbose_msg "PWD>$PWD<"
+EExec_verbose_msg "making in PWD>$PWD<"
 EExec "${apbinmake}" "$@"
-vtruep "${yopp_p}" && email-yopp apmake: \""${apbinmake}" "$@"\" is done.
+vtruep "${yopp_p}" && EExec email-yopp apmake: \""${apbinmake}" "$@"\" is done.

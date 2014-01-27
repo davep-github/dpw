@@ -13,14 +13,18 @@ done
 unset eexec_program
 
 : ${RTL_PRESENT_INDICATOR_FILE="DP_RTL_SB"}
+: ${RTL_PRESENT_INDICATOR_FILE_SUFFIX=}
+: ${RTL_PRESENT_INDICATOR_FILE_AUTO_SUFFIX="_AUTO"}
 : ${build_dir=}
 : ${make_it_p=}
+: ${echo_name_p=}
 
 for i in "$@"
 do
   case "$1" in
-      --name) echo "${RTL_PRESENT_INDICATOR_FILE}"; exit 0;;
+      --name) echo_name_p=t;;
       -c|-t|--touch|--creat|--create) make_it_p=t;;
+      -a|--auto) RTL_PRESENT_INDICATOR_FILE_SUFFIX="${RTL_PRESENT_INDICATOR_FILE_AUTO_SUFFIX}"; make_it_p=t;;
       --build-dir) shift; build_dir="${1}";;
       --here) build_dir=$PWD;;
       *) break;
@@ -44,11 +48,20 @@ else
     mecd ap
 fi
 
+rtl_file=$(realpath "${RTL_PRESENT_INDICATOR_FILE}${RTL_PRESENT_INDICATOR_FILE_SUFFIX}")
+
+vtruep "${echo_name_p}" && {
+    echo "${rtl_file}"
+}
+
 vtruep "${make_it_p}" && {
-    touch "${RTL_PRESENT_INDICATOR_FILE}"
+    EExec touch "${rtl_file}"
     exit 0
 }
 
-[ -e "${RTL_PRESENT_INDICATOR_FILE}" ] && exit 0
+for f in ${RTL_PRESENT_INDICATOR_FILE}{,${RTL_PRESENT_INDICATOR_FILE_AUTO_SUFFIX}}
+do
+  [ -e "$f" ] && exit 0
+done
 
 exit 1   

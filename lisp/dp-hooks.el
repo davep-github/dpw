@@ -615,10 +615,10 @@ c-hanging-braces-alist based upon these values.")
                    dp-default-c-style)
                t)
 
-  ;;  (define-key map [(control c) d (meta /)] 'dp-c++-mk-data-section)
-  ;;  (define-key map [(control c) d / ] 'dp-c++-goto-data-section)
-  (define-key dp-Ccd-map [(meta /)]  'dp-c++-mk-data-section)
-  (define-key dp-Ccd-map "/" 'dp-c++-goto-data-section)
+  ;;  (define-key map [(control c) d (meta /)] 'dp-c++-mk-protection-section)
+  ;;  (define-key map [(control c) d / ] 'dp-c++-goto-protection-section)
+  (define-key dp-Ccd-map [(meta /)]  'dp-c++-mk-protection-section)
+  (define-key dp-Ccd-map "/" 'dp-c++-goto-protection-section)
   (define-key dp-Ccd-map  [:] (kb-lambda (dp-c-open-newline 'colon)))
 
   ;; We may just want to put all of this into the c-mode-base-map
@@ -1283,69 +1283,6 @@ isearch while the region is active to locate the end of the region."
 
   (message "dp-w3m-mode-hook done.")
 )
-
-(defun dp-define-diary-file-keys ()
-  (interactive)
-  (dp-define-buffer-local-keys '("\C-c\C-c" dp-complete-diary-edit
-                                 "\C-x#" dp-complete-diary-edit)))
-  
-(defun dp-diary-mode-hook ()
-  (interactive)
-  (dp-define-diary-file-keys))
-
-(add-hook 'diary-mode-hook 'dp-diary-mode-hook)
-
-(defun dp-complete-diary-edit (&optional exit-too-p)
-  "Finish editing the diary, exit and check for new appointments."
-  (interactive)
-  (when (buffer-modified-p)
-    (save-buffer))
-  (dp-appt-initialize)
-  (if exit-too-p
-      (when
-          (call-interactively (key-binding [(meta ?-)])))
-    (bury-buffer)))
-
-(defun dp-calendar-load-hook ()
-  "Set up calendar mode with my preferences."
-  (interactive)
-  ;; define-key is the recommended method vs local-set-key.
-  (define-key calendar-mode-map [(meta left)] 'calendar-backward-month)
-  (define-key calendar-mode-map [(meta right)] 'calendar-forward-month)
-  (define-key calendar-mode-map [(control left)] 'calendar-backward-week)
-  (define-key calendar-mode-map [(control right)] 'calendar-forward-week)
-  (define-key calendar-mode-map [(meta ?a)] 'calendar-set-mark)
-  (define-key calendar-mode-map [(meta ?d)] 'dp-appt-initialize)
-  (define-key calendar-mode-map [(meta ?i)] 'dp-appt-initialize)
-  (define-key calendar-mode-map [(control meta a)] 'dp-appt-initialize))
-(add-hook 'calendar-load-hook 'dp-calendar-load-hook)
-(defalias 'cal 'calendar)
-
-(defadvice exit-calendar (before dp-exit-calendar activate)
-  "Check for new appointments before exiting."
-  (dp-appt-initialize))
-
-(add-hook 'diary-hook 'dp-diary-hook)
-(defvar dp-diary-hook-active nil)
-(defun dp-diary-hook ()
-  "Setup diary mode my way."
-  (interactive)
-  ;Make sure any entries are activated.  This by itself is not enough to
-  ;ensure that new appointments are activated, since it is called BEFORE
-  ;changes to the diary.  However it may catch some oversights.
-  ;In the calendar, for convenience, M-d is defined as `dp-appt-initialize'.
-  (unless dp-diary-hook-active
-    (setq dp-diary-hook-active t)
-    (dp-appt-initialize)
-    (setq dp-diary-hook-active nil)))
-
-;
-; dp-appt-initialize loads the diary file, so this doesn't quite work.
-;(defun dp-diary-kill-buffer-hook ()
-;  (if (string= (expand-file-name (buffer-file-name))
-;               (expand-file-name (dp-find-diary-file)))
-;      (dp-appt-initialize)))
-;(add-hook 'kill-buffer-hook 'dp-diary-kill-buffer-hook)
 
 (defun dp-dired-setup-keys-hook ()
   "Setup dired's key binding *my* way."
@@ -2224,9 +2161,15 @@ and then business as usual."
 
 (defadvice vc-diff (around dp-vc-advice activate)
   (dp-push-window-config)
+  (dp-offer-to-start-editing-server)
   ad-do-it
   (local-set-key [(control ?c) (control ?c)] 
                  'dp-kill-buffer-and-pop-window-config))
+
+(defadvice cperl-electric-delete (around perl-crap activate)
+  (if (dp-region-active-p)
+      (delete-region (mark) (point))
+    ad-do-it))
 
 (defun dp-diff-mode-hook ()
   (interactive)
@@ -2263,7 +2206,10 @@ changed."
   ;; XXX @todo some of this will be called twice. That's better than being
   ;; called 0 times, but it needs correcting.
   (dp-revert-hook)
-  (dp-after-revert-hook))
+  (dp-after-revert-hook)
+  ;; May want to put this in a more common place like one of the dp-revert
+  ;; hooks.
+  (dp-set-auto-mode))
 
 ;; Dum, dee, dum, dum, dada, do, dum... PERL SUCKS! dee, dum, dum...
 (defun dp-cperl-mode-hook ()
@@ -2317,6 +2263,7 @@ changed."
 (add-hook 'outline-mode-hook 'dp-outline-hook)
 (add-hook 'emms-playlist-mode-hook 'dp-emms-playlist-mode-hook)
 (add-hook 'diff-mode-hook 'dp-diff-mode-hook)
+(add-hook 'vc-checkout-hook 'dp-set-auto-mode)
 (add-hook 'after-revert-hook 'dp-after-revert-hook)
 (when (functionp 'vc-find-file-hook)
   (add-hook 'after-revert-hook 'vc-find-file-hook))

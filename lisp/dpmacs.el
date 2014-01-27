@@ -224,7 +224,10 @@ editing servers via `dp-editing-server-ipc-file'.")
 (require 'dp-keys) ;; my highly unstandard keybindings.
 (require 'dpmisc)
 (require 'dp-lang)
+(require 'dp-lang-c-like)
 (require 'dp-cf)
+(require 'dp-cal)
+(require 'dp-appt)
 
 ;;
 ;; Now we can do my kinds of things...
@@ -288,7 +291,7 @@ intolerable delays to files not in perforce."
 
 ;;;
 ;;; normal requires...
-(require 'sendmail)
+;;(require 'sendmail)
 (require 'compile)
 
 ;; This allows me to tack something onto the end of my user name in order to
@@ -818,7 +821,7 @@ This can be callable.")
 (add-to-list 'special-display-regexps "^\\*P4.*\\*$")
 
 ;; configure Emacs' mail subsystem...
-(require 'dp-mail)
+;;(require 'dp-mail)
 
 (require 'dp-makefile-mode)
 
@@ -834,7 +837,6 @@ This can be callable.")
   (setq filladapt-mode-line-string " Fa"))
 
 (require 'dp-hooks)
-
 ;;
 ;; run-lisp sets the keymap *after* entering comint-mode and before
 ;; inferior-lisp-mode-hook is run, so we run the hook again
@@ -849,16 +851,6 @@ This can be callable.")
 (add-hook 'text-mode-hook 'dp-text-mode-hook)
 (add-hook 'help-mode-hook 'dp-help-mode-hook)
 (add-hook 'hyper-apropos-mode-hook 'dp-hyper-apropos-mode-hook)
-
-(add-hook 'calendar-load-hook 'dp-calendar-load-hook)
-;; fancy display is *REQUIRED* to make included files work.
-(add-hook 'diary-display-hook 'fancy-diary-display)
-
-(add-hook 'list-diary-entries-hook 'include-other-diary-files)
-(add-hook 'mark-diary-entries-hook 'mark-included-diary-files)
-(add-hook 'appt-make-list-hook 'appt-included-diary-entries)
-;; want sort to run after everything else
-(add-hook 'list-diary-entries-hook 'sort-diary-entries 'APPEND)
 
 (add-hook 'dired-setup-keys-hook 'dp-dired-setup-keys-hook)
 (add-hook 'dired-mode-hook 'dp-dired-mode-hook)

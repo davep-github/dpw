@@ -39,7 +39,6 @@ class Ticker_t(object):
         self.unit_name = unit_name
         self.comma = comma
         self.init_count = init_count
-        self.reset_counter()
         self.printor = printor
         self.ostream = ostream
         self.grand_total_p = grand_total_p
@@ -52,13 +51,16 @@ class Ticker_t(object):
         self.timestamp_separator_string = timestamp_separator_string
         self.time0 = int(time_time())
         self.any_timestamp_p = timestamp_p or elapsed_timestamp_p
+        self.reset_counter()
 
     def twiddling_p(self):
         return False
 
     def reset_counter(self):
         self.counter = self.init_count
-        self.sep_string = self.init_string
+        if self.init_string:
+            self.printor(self, "%s", self.init_string)
+        self.sep_string = ""
 
     def flush(self):
         #print "enter ticker.flush()"

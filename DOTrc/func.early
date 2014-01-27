@@ -51,7 +51,7 @@ echo_name_and_val()
             echo_name_and_val_suffix=
         }
 
-        "${echo_cmd}" "${echo_name_and_val_prefix}${echo_name_and_val_anno}${echo_name_and_val_suffix}${echo_name_and_val_pre_limiter}${echo_name_and_val_val}${echo_name_and_val_post_limiter}${echo_name_and_val_anno}${echo_name_and_val_suffix}"
+        "${echo_cmd}" "${echo_name_and_val_prefix}${echo_name_and_val_anno}${echo_name_and_val_pre_limiter}${echo_name_and_val_val}${echo_name_and_val_post_limiter}${echo_name_and_val_anno}${echo_name_and_val_suffix}"
     done
 }
 export -f echo_name_and_val

@@ -69,13 +69,11 @@
 (dp-deflocal dp-cob-state (make-dp-cob-state-t)
   "State of last cob modification.")
 
-(defun dp-c-open-newline (&optional mk-c++-init-list-p) ; <:cob:>
+(defun dp-c-open-newline (&optional arg) ; <:cob:>
+  "Open up a new line. ARG is context sensitive."
   (unless (eq last-command this-command)
     (setf (dp-cob-state-t-last-sub-command dp-cob-state) nil))
-      
-  (when mk-c++-init-list-p
-    (end-of-line)
-    (insert "\n:") (dp-c-indent-command))
+
   (let ((last-sub-cmd (dp-cob-state-t-last-sub-command dp-cob-state))
         (p (point))
         result my-sub-cmd
@@ -152,6 +150,20 @@
             (end-of-line)
             (c-context-line-break)
             nil)
+           
+   ;;;;;;;;;;;;;;;;;
+           ((let ((protection-label (save-excursion
+                                      (end-of-line)
+                                      (dp-c++-class-protection-label))))
+              (if protection-label
+                  (progn
+                    (dp-c++-comment-protection-section arg)
+                    t)
+                nil))
+            (setf (dp-cob-state-t-last-sub-command dp-cob-state) 
+                  'mk-protection-section)
+            (dmessage "cob: make protection section")
+            nil)
 
    ;;;;;;;;;;;;;;;;;
            ;; Find some places where anything special is clearly not
@@ -187,7 +199,20 @@
               (dp-c-replace-statement-end ":"))
             (dmessage "cob: case label")
             t)
-           
+ 
+   ;;;;;;;;;;;;;;;;;
+           ;; Add a ':' to C++ constructors
+           ((and arg 
+                 (dp-c++-in-class-p)
+                 (dp-c-indent-command)
+                 (dp-c-in-syntactic-region '(arglist-intro arglist-cont
+                                             topmost-intro topmost-intro-cont
+                                             arglist-cont-nonempty)))
+              (end-of-line)
+              (insert "\n: ") 
+              (dp-c-indent-command)
+              nil)
+
    ;;;;;;;;;;;;;;;;;
            ;; Clean up function or method:
            ;; add "(void)" if no args are present.  
@@ -203,9 +228,7 @@
                  ;; one.  It seems that other types will confuse things now
                  ;; that I've learned that the whiny cry-babies of the ANSI
                  ;; C(++)? spec have reserved _t as a suffix.
-                 (not (dp-looking-back-at (concat "\\(?:[^(]\\)"
-                                                  dp-c-function-type-decl-re 
-                                                  "\\s-*")))
+                 (not (dp-c*-pure-type-line))
                  (not (save-excursion
                         (end-of-line)
                         (dp-c-looking-back-at-sans-eos-junk ";\\s-*")))
@@ -233,21 +256,6 @@
            ((dp-c-looking-back-at-sans-eos-junk "}\\|^\\s-*" t)
             (dmessage "cob: looking back at } or blankness")
             t)                          ; eol/newline/indent.
-           
-   ;;;;;;;;;;;;;;;;;
-           ((let ((l (save-excursion
-                       (end-of-line)
-                       (dp-c++-class-protection-label))))
-              (if l
-                  (progn
-                    (replace-match "")
-                    (dp-c++-mk-data-section l)
-                    t)
-                nil))
-            (setf (dp-cob-state-t-last-sub-command dp-cob-state) 
-                  'mk-data-section)
-            (dmessage "cob: make data section")
-            nil)
            
    ;;;;;;;;;;;;;;;;;
            ;;
@@ -283,13 +291,14 @@
                            (beginning-of-line)
                            (looking-at 
                             (concat "\\s-*" 
-                                    dp-c*-keywords-with-stmt-blocks)))
-                         (setq iswhile-p (string= "while" (match-string 1))))
+                                    dp-c*-keywords-with-stmt-blocks))))
                      (search-forward "(" (line-end-position) t))))
             (goto-char (match-beginning 0))
             (dp-find-matching-paren)
-            (if (dp-c-ensure-opening-brace :newline-before-brace nil
-                                           :regexp-prefix ")")
+            (if (dp-c-ensure-opening-brace
+                 :block-keyword-p t 
+                 :newline-before-brace-p nil)
+                 ;; :regexp-prefix ")"
                 (progn
                   (dmessage "cob: add { to if and friends.")
                   (setf (dp-cob-state-t-last-sub-command dp-cob-state) 
@@ -351,7 +360,7 @@
                   (end-of-line)
                   (if (or (not dp-c-member-init-leading-commas)
                           (dp-c-in-syntactic-region '(func-decl-cont)))
-                      (progn 
+                      (progn
                         (insert ",")
                         (setq ret t))
                     (newline-and-indent)
@@ -430,10 +439,10 @@
             nil)))
     (if (eq result 'no-change-p)
         nil
-    (save-excursion
-      (beginning-of-line)
-      (dp-c-fix-comment)
-      result))))
+      (save-excursion
+        (beginning-of-line)
+        (dp-c-fix-comment)
+        result))))
 
 
 (defun* dp-cob-repeat-sub-command-p (cob-state sub-cmd &key l-last-command

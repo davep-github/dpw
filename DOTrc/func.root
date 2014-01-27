@@ -489,13 +489,13 @@ xxx_newest()
 {
     local op="${1}"; shift
     local depth=1
-    local num=
+    local nth=
     while (($# > 0))
     do
       case "${1-}" in
-          -n|--num|--depth) shift; depth="${1}";;
-          [0-9]*) depth="${1}";;
-          -[0-9]*) num="${1}";;
+          -n|--nth|--depth) shift; depth="${1}";;
+          x[0-9]*|[0-9]*) depth="${1}";;
+          -[0-9]*) nth="${1}";;
           --) shift; break;;
           *) break;;
       esac
@@ -504,7 +504,7 @@ xxx_newest()
     local dir
     while ((depth-- > 0))
     do
-      dir=$(newest-dir ${num} "$@") || return $?
+      dir=$(newest-dir ${nth} "$@") || return $?
       $op "${dir}" || return $?
     done
     return "$?"

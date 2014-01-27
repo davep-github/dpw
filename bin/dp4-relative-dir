@@ -15,7 +15,7 @@ unset eexec_program
 prefix=
 
 case "${1-}" in
-    --//|--p4) prefix=//; shift;;
+    --//|--/|-/|--p4) prefix=//; shift;;
     *);;
 esac
 

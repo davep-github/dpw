@@ -160,7 +160,7 @@ Add each bookmark-name to the list of bookmarks."
            :plist '(embedded-p t)
            :bm-kind "embedded-line"
            :bm-marker (dp-mk-marker 
-                                         (line-beginning-position)))
+                       (line-beginning-position)))
         (loop for s in (save-match-data
                          (split-string (match-string 2) "|")) 
           do

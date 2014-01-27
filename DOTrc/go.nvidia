@@ -74,6 +74,15 @@ Ee|TOT__ME_src|                 ${hw__ME_src}${ME_current_default_ap_tree}
 Ee|tot__ME_src|                 ${TOT__ME_src}
 Ee|topoftree__ME_src|           ${TOT__ME_src}
 Ee|ap__ME_src|                  ${TOT__ME_src}
+Ee|apip__ME_src|                ${ap__ME_src}ip/
+
+Ee|apipinf__ME_src|             ${apip__ME_src}inf/
+Ee|inf__ME_src|                 ${apipinf__ME_src}
+Ee|gmeinf10__ME_src|            ${apipinf__ME_src}gpu_multiengine/1.0/
+Ee|gmeinf__ME_src|              ${gmeinf10__ME_src}
+Ee|gmetests__ME_src|            ${gmeinf__ME_src}clib/gpu_multiengine/
+Ee|crl__ME_t210_src|            ${gmetests__ME_src}cpu_red_line/ 
+
 Ee|totbin__ME_src|              ${TOT__ME_src}bin/
 Ee|apbin__ME_src|               ${totbin__ME_src}
 Ee|totvmod__ME_src|             ${TOT__ME_src}vmod/
@@ -117,6 +126,10 @@ Ee|tgt132rtl__ME_src|           ${testgendpt132rtldir__ME_src}
 Ee|t132rtl__ME_src|             ${testgendpt132rtldir__ME_src}
 Ee|drv__ME_src|                 ${TOT__ME_src}drv/
 Ee|simfront__ME_src|            ${drv__ME_src}simfront/
+Ee|chiplibroot__ME_src|         ${drv__ME_src}chiplib/
+Ee|chiplib__ME_src|             ${chiplibroot__ME_src}chiplib/
+Ee|chiplib2__ME_src|            ${chiplibroot__ME_src}chiplib2/
+Ee|cl2__ME_src|                 ${chiplib2__ME_src}
 Ee|drvapi__ME_src|              ${drv__ME_src}drvapi/
 Ee|drvapinc__ME_src|            ${drvapi__ME_src}include
 Ee|runtestcommon__ME_src|       ${TOT__ME_src}drv/drvapi/runtest_common/
@@ -137,13 +150,18 @@ Ee|fwloader__ME_src|            ${fwutils__ME_src}loader/
 Ee|loader__ME_src|              ${fwloader__ME_src}
 Ee|drvapi__ME_src|              ${TOT__ME_src}drv/multiengine/drvapi/
 Ee|medrvapi__ME_src|            ${drvapi__ME_src}
-Ee|levelsroot__ME_src|          ${TOT__ME_src}diag/testgen/config/levels/
+Ee|levelsroot__ME_src|          ${testgen__ME_src}config/levels/
+Ee|tegralevels__ME_src|         ${levelsroot__ME_src}tegra/
 Ee|levels__ME_src|              ${levelsroot__ME_src}tegra/
-Ee|melevels__ME_src|            ${TOT__ME_src}diag/testgen/config/levels/tegra/
+Ee|gpumelevels__ME_src|         ${tegralevels__ME_src}/multiengine
+Ee|gmelevels__ME_src|           ${gpumelevels__ME_src}
+Ee|melevels__ME_src|            ${gpumelevels__ME_src}
 Ee|kepler1gklit3man__ME_src|    ${hw__ME_src}kepler1_gklit3/manuals/
 Ee|keplerman__ME_src|           ${kepler1gklit3man__ME_src}
 Ee|gkman__ME_src|               ${kepler1gklit3man__ME_src}
 Ee|kepman__ME_src|              ${kepler1gklit3man__ME_src}
+
+# //hw/ap/diag/testgen/config/levels/tegra/multiengine/gpu_multiengine_ar2
 
 Ee|fermi1gf100__ME_src|         ${hw__ME_src}fermi1_gf100/
 Ee|fermi1man__ME_src|           ${fermi1gf100__ME_src}manuals/
@@ -237,8 +255,6 @@ Ee|mdiagsrc__ME_src|            ${swmods__ME_src}mdiag/
 Ee|mdsrc__ME_src|               ${mdiagsrc__ME_src}
 Ee|t3dsrc__ME_src|              ${mdiagsrc__ME_src}tests/gpu/trace_3d/
 
-#
-#   Some things which may as well be cross-sandbox
 Ee|surfwr__ME_src|              ${gpumetraces__ME_src}surface_write_read/
 Ee|surf__ME_src|                ${surfwr__ME_src}
 Ee|swr__ME_src|                 ${surfwr__ME_src}
@@ -247,9 +263,18 @@ Ee|cpusurf__ME_src|             ${cpusurfwr__ME_src}
 Ee|cpuswr__ME_src|              ${cpusurfwr__ME_src}
 Ee|csurf__ME_src|               ${cpusurfwr__ME_src}
 Ee|cswr__ME_src|                ${cpusurfwr__ME_src}
+
+Ee|memtxnsurfwr__ME_src|        ${gpumetraces__ME_src}mem_txn_swr/
+Ee|memtxnswr__ME_src|           ${memtxnsurfwr__ME_src}
+Ee|mtxnswr__ME_src|             ${memtxnsurfwr__ME_src}
+Ee|swrmtxn__ME_src|             ${memtxnsurfwr__ME_src}
+Ee|mtswr__ME_src|               ${memtxnsurfwr__ME_src}
+Ee|swrmt__ME_src|               ${memtxnsurfwr__ME_src}
+
 Ee|memtxn__ME_src|              ${gpumetraces__ME_src}mem-txn/
 Ee|mem_txn__ME_src              ${memtxn__ME_src}
 Ee|mtxn__ME_src|                ${memtxn__ME_src}
+
 Ee|cpuredline__ME_src|          ${gpumetraces__ME_src}cpu_red_line/
 Ee|cpurl__ME_src|               ${cpuredline__ME_src}
 Ee|crl__ME_src|                 ${cpuredline__ME_src}

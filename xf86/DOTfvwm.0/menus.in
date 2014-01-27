@@ -61,6 +61,7 @@ AddToMenu   XqsubMenu "Interactive FARM xterm" Title
 + "xqsub&4"           Exec exec xqsub4
 + "xqsub&8"           Exec exec xqsub8
 + "xqsub&16"          Exec exec xqsub16
++ "xqsub&32"          Exec exec xqsub32
 
 ##------------------------------------------------------------------------------
 ##--------- SHELLS

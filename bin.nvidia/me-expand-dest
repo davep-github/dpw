@@ -25,6 +25,7 @@ progname="$(basename $0)"
 : ${trr_args=}
 : ${realpath=}
 : ${trace_arg=}
+: ${pne_opt=}
 
 while (($# > 0))
 do
@@ -34,6 +35,8 @@ do
       --realpath|--rp) realpath="--realpath";;
       --sb|--sandbox) shift; sb_arg="--tree-root ${1}";;
       --trace) shift; trace_arg="--trace ${1}";;
+      --pne) pne_opt="--print-non-existent";;
+      --npne) pne_opt="--no-print-non-existent";;
       --) shift; break;;
       *) break;;
   esac
@@ -56,11 +59,22 @@ else
     sb_arg=''
 fi
 
+chip=$(guess-chip --silent)
+if vsetp "${chip}"
+then
+    # Suffixes are searched in order of declaration.
+    chip_suffix="--abbrev-suffix=__ME_${chip}_src"
+else
+    chip_suffix=
+fi
+
 # The remainder of argv will be extra args to sandbox_relativity
 exp=$(~/lib/pylib/tree_root_relativity.py \
+        ${pne_opt} \
         ${trr_args} \
         ${trace_arg} \
         --expand-dest="${dest}" \
+        ${chip_suffix} \
         --abbrev-suffix="__ME_src" \
         $sb_arg "$@") || exit
 

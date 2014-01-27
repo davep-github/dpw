@@ -119,13 +119,18 @@ tests.")
 ;;
 
 (defun dp-make-no-wrap-stupidly ()
+  ;; Why did I not use (auto-fill-mode 0) ?
   (setq fill-column 9999))
 
-(dp-add-list-to-list 'auto-mode-alist
-		     `(("\\(^\\|/\\)regress_tegra_gpu_multiengine$" .
-                        dp-make-no-wrap-stupidly)
-                       ("/tests/[^/]+/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{6\\}/.*\\.\\(cfg\\|sh\\)" .
-                       dp-make-no-wrap-stupidly)))
+(dp-add-list-to-list 
+ 'auto-mode-alist
+ `( ;; (regexp . func-to-call-when-loaded)
+   ("\\(^\\|/\\)\\(regress_tegra_gpu_multiengine\\|gpu_multiengine_a[rs]2\\)$" .
+    dp-make-no-wrap-stupidly)
+   ("\\(^\\|/\\)tool_data.config$" .
+    dp-make-no-wrap-stupidly)
+   ("/tests/[^/]+/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{6\\}/.*\\.\\(cfg\\|sh\\)" .
+    dp-make-no-wrap-stupidly)))
 
 (defvar dp-p4-default-depot-completion-prefix "//"
   "Depot root.")
@@ -179,12 +184,50 @@ tests.")
 
 (setq dp-fallback-expand-abbrev-fun 'dp-nvidia-me-expand-preceding-word)
 
+(defalias 'dp-tgen-add-debug
+  (read-kbd-macro
+   (concat "<C-prior> C-s sim.pl SPC RET - gdb SPC C-s - chip SPC "
+           "t132 RET _debug C-s libt132_ RET debug_")))
+
+(defvar dp-tgen-elf-load-option-olde
+  "-chipargs '-elf_load /home/denver/release/sw/components/mts/1.0/cl28625566/debug_arm/denver/bin/mts.elf@0xe0000000:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/drv/mpcore/t132/ObjLinux_MPCoreXC/boot_page_table.axf:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/override.elf@0xe0000000:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/t132/ObjLinux_MPCoreXC/cpu_surface_write_read.Cortex-A8.axf:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/t132/ObjLinux_ARM7TDMIXC/cpu_surface_write_read.ARM7TDMI.axf:' "
+  "tip-top-denver.sh 'needed this to make it go.'")
+
+(defvar dp-tgen-elf-load-option 
+  "-chipargs '-elf_load /home/denver/release/sw/components/mts/1.0/cl28625566/debug_arm/denver/bin/mts.elf@0xe0000000:@SB@/hw/ap_t132/drv/mpcore/t132/ObjLinux_MPCoreXC/boot_page_table.axf:@PWD@override.elf@0xe0000000:@PWD@t132/ObjLinux_MPCoreXC/cpu_surface_write_read.Cortex-A8.axf:@PWD@t132/ObjLinux_ARM7TDMIXC/cpu_surface_write_read.ARM7TDMI.axf:' "
+  "tip-top-denver.sh 'needs this to make it go.'")
+;;
+(defalias 'dp-tgen-add-elf-load
+  (read-kbd-macro
+   (concat "<C-prior> C-s idle_ 2*<C-w> RET 3*<right> "
+           (replace-in-string dp-tgen-elf-load-option-olde
+                              " " " SPC ")
+)))
+
+(defun dp-tgen-generate-elf-load-option (&optional s)
+  (interactive)
+  (setq-ifnil s dp-tgen-elf-load-option)
+   (replace-in-string 
+    (replace-in-string s
+                       "@SB@"
+                       (dp-current-sandbox-path))
+    "@PWD@"
+    default-directory))
+
+(defun dp-tgen-insert-elf-load-option (&optional s)
+  (interactive)
+  (goto-char (point-min))
+  (search-forward "-simtxt 'idle_timeout 150000'\" ")
+  (insert (dp-tgen-generate-elf-load-option s)))
+
 ;; Nothing in my tgen run dirs need p4.
 ;; e.g.: /hw/ap_t132/diag/testgen
 (defvar dp-p4-ignore-dirs-regexp
   "/hw/ap.*/diag/testgen/"
   "Deactivate p4 in these dirs.")
 
+;;
+;; override the default function
 (defun dp-p4-active-here (&optional file-name)
   (setq-ifnil file-name (buffer-file-name))
   (and (not dp-p4-global-disable-detection-p)
