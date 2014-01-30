@@ -48,8 +48,6 @@ mego()
     me_dogo_op pushd "$@"
 }
 export -f mego
-alias mg=mego
-alias gme=mego
 
 mecd() 
 {

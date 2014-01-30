@@ -148,7 +148,7 @@ done
 # The following is needed only when args are required.
 [ "$*" = "" ] && Usage "At least one review file is needed."
 
-: ${diff_program:=${P4DIFF-xxdiff}}
+: ${diff_program:=${P4DIFF-meld}}
 # p4review_repository must be NULL, not just "", for this to work.
 : ${p4review_repository=$DEFAULT_p4review_repository}
 : ${p4review_program:=${P4_SW_ROOT}/sw/main/apps/p4review/p4review.pl}

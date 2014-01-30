@@ -58,6 +58,12 @@ Ee|___ME_src|                   ./
 Ee|hw__ME_src|                  hw/
 Ee|sw__ME_src|                  sw/
 Ee|nvdiag__ME_src|              ${hw__ME_src}nvdiag/
+Ee|hwtools__ME_src|             ${hw__ME_src}tools/
+Ee|mobileswtools__ME_src|       ${hwtools__ME_src}mobile_sw/
+Ee|swtools__ME_src|             ${mobileswtools__ME_src}
+Ee|mobswtools__ME_src|          ${mobileswtools__ME_src}
+Ee|mobsw__ME_src|               ${mobileswtools__ME_src}
+Ee|msw__ME_src|                 ${mobileswtools__ME_src}
 Ee|nvd__ME_src|                 ${nvdiag__ME_src}
 Ee|mods__ME_src|                ${nvdiag__ME_src}mods/
 Ee|simmgr__ME_src|              ${nvdiag__ME_src}simmgr/
@@ -174,8 +180,8 @@ Ee|kepclib__ME_src|             ${hw__ME_src}kepler1_gklit3/clib/
 Ee|kclib__ME_src|               ${kepclib__ME_src}
 Ee|klib__ME_src|                ${kepclib__ME_src}
 
-#   /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile/traces/gpu_multiengine
-#                              arch/traces/mobile/traces/gpu_multiengine
+# /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile/traces/gpu_multiengine
+#                                          arch/traces/mobile/traces/gpu_multiengine
 Ee|arch__ME_src|                arch/
 Ee|tracesroot__ME_src|          ${arch__ME_src}traces/
 Ee|troot__ME_src|               ${tracesroot__ME_src}

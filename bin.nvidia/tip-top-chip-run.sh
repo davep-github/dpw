@@ -7,6 +7,17 @@ vtruep()
     esac
     return 1
 }
+
+vsetp()
+{
+    [ -n "$1" ]
+}
+
+vunsetp()
+{
+    ! vsetp "$@"
+}
+
 : ${confirmation_response:="TRUST ME"}
 
 : ${testname:=cpu_surface_write_read}
@@ -27,20 +38,24 @@ suites=(rtmem-rtreg)
 : ${debug_level_opt=}
 : ${printout_flag_p=}
 : ${no_allow_errors_p=}
-: ${no_elves_p=}
+: ${elves_p=}
 : ${no_csh_check_p=}
-: ${elves='/home/denver/release/sw/components/mts/1.0/cl28625566/debug_arm/denver/bin/mts.elf@0xe0000000:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/drv/mpcore/t132/ObjLinux_MPCoreXC/boot_page_table.axf:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/override.elf@0xe0000000:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/t132/ObjLinux_MPCoreXC/cpu_surface_write_read.Cortex-A8.axf:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/t132/ObjLinux_ARM7TDMIXC/cpu_surface_write_read.ARM7TDMI.axf:'}
+
+echo "Factor t132/Denver stuff into the -t132.sh script and pass Denver specifics as args or variables."
+
+: ${def_t132_elves='/home/denver/release/sw/components/mts/1.0/cl28625566/debug_arm/denver/bin/mts.elf@0xe0000000:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/drv/mpcore/t132/ObjLinux_MPCoreXC/boot_page_table.axf:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/override.elf@0xe0000000:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/t132/ObjLinux_MPCoreXC/cpu_surface_write_read.Cortex-A8.axf:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/t132/ObjLinux_ARM7TDMIXC/cpu_surface_write_read.ARM7TDMI.axf:'}
 
 : ${config=top_peatrans_gpurtl} # Not for CPU? NO. Yes for MODS + CPU
 #: ${config=top_gpurtl_t132} # ??? do I need the _t132? NO.
 #: ${config=top_gpurtl} # ??? do I need the _t132? NO.
 
 : ${mode_arg=-mode arm}
-: ${RUN_CMD:=./bin/system_run}
+: ${T124_RUN_CMD:=./bin/system_run}
+: ${T210_RUN_CMD:=./bin/system_run}
 T124_ARGS=()
 : ${DENVER_RUN_CMD:=./bin/denver_system_run}
 
-ALLOW_ERROR_ARGS=(
+DENVER_ALLOW_ERROR_ARGS=(
     -allow_error_string "ERROR: \(PLL24G_DYN_PRB_ESD\)  An error in SETUP or power is preventing the PLL from starting"
     -allow_error_string "0 demoted errors"
     -allow_error_string "DSIM Warning: DMTRR* applies to both secure and non-secure space; intentional\? failed\:"
@@ -100,17 +115,22 @@ do
       --prog|--program|--test|--test-name) shift; testname="${1}";;
       -p|--print|--printouts) printout_flag_p=-p;;
       -a|--args|--prog-args|--program-args) shift; test_args="${1}";;
-      -d|--denver) run_cmd="${DENVER_RUN_CMD}"; run_cmd_args=("${DENVER_ARGS[@]}");;
-      --no-elves|--no-elf) no_elves_p=t;;
-      --t124) run_cmd="${RUN_CMD}"; run_cmd_args=("${T124_ARGS[@]}"); mode_arg='-mode arm'
+      -d|--[Dd]enver|--t132) project=t132; run_cmd="${DENVER_RUN_CMD}"; 
+                             run_cmd_args=("${DENVER_ARGS[@]}");
+                             elves_p=t; allo_error_strings=;;
+      --elves|--elf) elves_p=t;;
+      --t124) run_cmd="${T124_RUN_CMD}"; run_cmd_args=("${T124_ARGS[@]}"); mode_arg='-mode arm'
               project=t124;;
+      --t210) run_cmd="${T210_RUN_CMD}"; run_cmd_args=("${T210_ARGS[@]}"); mode_arg='-mode arm'
+              project=t210;;
       -r|--run-cmd-args) shift; run_cmd_args=("${1}");;
       -m|--mode) shift; mode_arg="-mode ${1}";;
       --config|-config) shift; config="${1}";;
       --add-suite) shift; suites+=("${1}");;
       --no-suites) suites=();;
-      --no-errors|--no-error|--no-allow|--no-allow-errors) no_allow_errors_p=t;;
-      --no-rtl|--si|--silicon) no_allow_errors_p=t; no_elves_p=t;;
+      --no-errors|--no-error|--no-allow|--no-allow-errors) denver_allow_errors_p=;;
+      --errors|--allow-errors) denver_allow_errors_p=t;;
+      --no-rtl|--si|--silicon) denver_allow_errors_p=; elves_p=;;
       --suites) shift; suites=(${1});;
       --no-csh-check|--no-csh|--bash-ok|--any-shell|--any-sh) no_csh_check_p=t;;
       --dot-sh|--.sh) no_csh_check_p=t;;
@@ -125,23 +145,29 @@ do
   shift
 done
 
-vtruep "${no_allow_errors_p}" && {
-    ALLOW_ERROR_ARGS=()
+vtruep "${denver_allow_errors_p}" || {
+    DENVER_ALLOW_ERROR_ARGS=()
 }
 
-vtruep "${no_elves_p}" && {
-    elves=
+vtruep "${elves_p}" && {
+    elves="${def_t132_elves}"
 }
 
 DENVER_ARGS=(
-    "${ALLOW_ERROR_ARGS[@]}"
+    "${DENVER_ALLOW_ERROR_ARGS[@]}"
     "${DENVER_ARGS0[@]}"
 )
 
 #eko "${DENVER_ARGS[@]}"
 
 # :${x=y} don't work with arrays?
-vunsetp "${run_cmd_args}" && run_cmd_args=("${DENVER_ARGS[@]}")
+vunsetp "${run_cmd_args}" && {
+    case "$project" in
+        t132) run_cmd_args=("${DENVER_ARGS[@]}");;
+        t124) ;;
+        t210) ;;
+    esac
+}
 
 #eko "${run_cmd_args[@]}"
 
@@ -177,7 +203,7 @@ echo "Rundir >$rundir<, >$(cd $rundir; pwd)<"
 
 runlog="${PWD}/dp-rtl-tests/runlog"
 
-logdir="${PWD}/dp-rtl-tests/${config}-${timestamp}"
+logdir="${PWD}/dp-rtl-tests/${project}-${config}-${timestamp}"
 logfile="${logdir}/${testname}.log"
 mk_logdir_command="mkdir -p ${logdir}"
 if [ -z "${no_run_p}" ]

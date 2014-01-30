@@ -8,7 +8,7 @@
 ;;; Last saved: 2012-08-22T18:02:02
 ;;;
 ;;; `manual' abbrevs are more common than global since they are only expanded
-;;; upon request.  Automatic expansion in the wrong place is *veru* amnoying!
+;;; upon request.  Automatic expansion in the wrong place is *very* amnoying!
 ;;; These used to be called `common.' Manual abbrevs can be more ambiguous
 ;;; and `error prone' because they are only expanded where the human has
 ;;; deemed correct. So something like `a' is acceptable as manual but insane
@@ -54,7 +54,7 @@
 ;;; !<@todo ??? Modify data structures to allow a way to add suffixes
 ;;; programmatically. Eg t for a space? 's for pluralization?
 ;;; !<@todo Automatically generate "logical" case mixtures.
-;;; Convenience binding:
+;;; Convenience binding in this file:
 ;;; C-c C-c (dp-save-and-redefine-abbrevs)
 ;;;
 ;;; This information is common between the abbrev file and dp-abbrev.el
@@ -486,7 +486,11 @@
      dp-manual)
     (("phr" "Prop_handler_ret_t")
      dp-manual)
-    (("faf" "find . -type f -print0 | xargs -r0 fgrep "
+    ;; We ignore grep in favor of egrep.
+    (("faf" "find . -type f -print0 | xargs -r0 "
+      "find . -type f -print0 | xargs -r0 egrep ")
+     dp-manual)
+    (("faff" "find . -type f -print0 | xargs -r0 fgrep "
       ;;Usually it's fgrep or egrep.
       ;;"find . -type f -print0 | xargs -r0 grep "
       "find . -type f -print0 | xargs -r0 egrep ")
