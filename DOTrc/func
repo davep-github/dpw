@@ -608,18 +608,20 @@ src_controlled_p ()
     shift
     local sc_name=$1
     shift
-    if [ "$1" = "-q" ]
     local ECHOER
+    if [ "$1" = "-q" ]
     then
         ECHOER=:
     else
 	ECHOER=echo
     fi
-    [ -d "$dir" ] && $ECHOER "$PWD is $sc_name'd"
-    if ! cmd-p "$sc_name"
-    then
-	echo 1>&2 "sc cmd ($sc_name) for this dir ($PWD) isn't"
-    fi
+    [ -d "$dir" ] && {
+        $ECHOER "$PWD is $sc_name'd"
+        if ! cmd-p "$sc_name"
+        then
+            echo 1>&2 "sc cmd ($sc_name) for this dir ($PWD) not found."
+        fi
+    }
 }
 export -f src_controlled_p
 
@@ -635,9 +637,27 @@ svn_p ()
 }
 export -f svn_p
 
-cvsp ()
+cvs_p ()
 {
     src_controlled_p "./CVS" cvs "$@"
+}
+export -f cvs_p
+alias cvsp=cvs_p
+
+perforce_p()
+{
+    find-up .p4config >/dev/null 2>&1 && {
+        sc_name=p4
+        if ! cmd-p "p4"
+        then
+            echo 1>&2 "sc cmd ($sc_name) for this dir ($PWD) not found."
+        fi
+    }
+}
+
+git_p()
+{
+    __gitdir
 }
 
 do_src_control ()

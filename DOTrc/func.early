@@ -9,6 +9,7 @@ echo_name_and_val()
     local echo_name_and_val_post_limiter="<"
     local echo_name_and_val_val
     local echo_name_and_val_name
+    local echo_name_and_val_text
     local echo_cmd=echo
     local bare_p=
 
@@ -17,6 +18,8 @@ echo_name_and_val()
       echo_name_and_val_arg="$1"
       case "$echo_name_and_val_arg" in
           -q) echo_name_and_val_noAnno=t;;
+          -t|--text) shift; echo_name_and_val_text="${1} ";;
+          -T|--TEXT) shift; echo_name_and_val_text="${1}";;
           -p) shift; echo_name_and_val_prefix="$1";;
           -s) shift; echo_name_and_val_suffix="$1";;
           -e|--echo-cmd) shift; echo_cmd="${1}";;
@@ -51,7 +54,8 @@ echo_name_and_val()
             echo_name_and_val_suffix=
         }
 
-        "${echo_cmd}" "${echo_name_and_val_prefix}${echo_name_and_val_anno}${echo_name_and_val_pre_limiter}${echo_name_and_val_val}${echo_name_and_val_post_limiter}${echo_name_and_val_anno}${echo_name_and_val_suffix}"
+        "${echo_cmd}" \
+      "${echo_name_and_val_text}${echo_name_and_val_prefix}${echo_name_and_val_anno}${echo_name_and_val_pre_limiter}${echo_name_and_val_val}${echo_name_and_val_post_limiter}${echo_name_and_val_anno}${echo_name_and_val_suffix}"
     done
 }
 export -f echo_name_and_val

@@ -109,6 +109,17 @@ Then deletes this new configuration from the ring."
 Man, can't these guys agree on *ANYTHING*?  
 This should be set by the emacs specific code.")
 
+(dp-deflocal save-buffers-skip nil
+  "`save-some-buffers' checks this and skips files where it is non-nil. Useful
+for thinks like visited compressed files which consider themselves
+modified. See if there's a way to have this set in a buffer when
+`save-some-buffers' is asking about the file.")
+
+(defun dp-save-buffer-skip ()
+  (interactive)
+  (setq save-buffers-skip t))
+(dp-defaliases 'dp-sbs 'dp-save-buffer-skip)
+
 (defvar dp-ding-backtrace-p t
   "Show a traceback when `ding' is called.  Useful for debugging init stuff.")
 
@@ -125,7 +136,7 @@ This should be set by the emacs specific code.")
               (apply 'backtrace dp-ding-backtrace-args))
           (error nil))
       ))
-  (message "!!!!!!!!!!!!!!!!!ding!!!!!!!!!!!!!!!!!"))
+  (message "!!!!!!!!!!!!!!!!!advised ding!!!!!!!!!!!!!!!!!"))
 
 (defun to-bool (expr)
   "Convert expr to boolean, ie t or nil."

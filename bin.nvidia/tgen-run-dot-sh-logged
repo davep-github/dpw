@@ -23,7 +23,7 @@ EExecVerbose
 # --egrep 'something bad happened'}
 # --cflush-every=-1 --> flush to zip every line.
 : ${teeker_options=--slog -Z9 --ts --hg -i100 --cflush-every=-1}
-: ${teeker_regexps=--hgrep plugin --hgrep __Startup --hgrep __Initialize --hgrep surface_write_read: --hgrep mem_txn_swr:}
+: ${teeker_regexps=--hgrep plugin --hgrep __Startup --hgrep __Initialize --hgrep surface_write_read: --hgrep mem_txn_swr: --hgrep dp-msg:}
 : ${testname=}
 : ${yopp_p=t}
 

@@ -13,6 +13,9 @@ alias nvgrep=/home/nv/toolroot/bin/nvgrep
 
 # Duuuhhh... 
 alias cdme=mecd
+alias mg=mego
+alias gome=mego
+alias gme=mego
 alias tglr=tgen-latest-run
 
 alias xsb='mecd .'

@@ -510,13 +510,13 @@ xxx_newest()
     return "$?"
 }
 
-cd_newest()
+cdnew()
 {
     xxx_newest cd "$@"
     return "$?"
 }
-export -f cd_newest
-alias cdnew=cd_newest
+export -f cdnew
+alias cd_newest=cdnew
 
 go_newest()
 {

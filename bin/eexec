@@ -77,7 +77,7 @@ EExec_parse()
 {
     local prog=""
     # Can NOT use getopt here because if you use ganged variables then
-    # too may args will be shifted.
+    # too many args will be shifted.
     # Until I learn how to return a *properly quoted* "$@"
     for i in "$@"
     do
@@ -138,7 +138,7 @@ EExecDashN ()
     ${EExecExporter} EExecShowOnly=y
     ${EExecExporter} EExecShowPrefix="$@"
     ${EExecExporter} EExecEchoPrefixG='-'
-    # Use this to propagate -n ed ness.
+    # Use this to propagate -n'ed-ness.
     ${EExecExporter} EExecDashN_opt="-n"
     ${EExecExporter} EExecDash_opts="$EExecDash_opts $EExecDashN_opt"
 
@@ -172,7 +172,6 @@ EExecVerbose ()
     # Use this to propagate -n ed ness.
     ${EExecExporter} EExecDashV_opt="-v"
     ${EExecExporter} EExecDash_opts="$EExecDash_opts $EExecDashV_opt"
-
 }
 
 EExecDashV()
@@ -228,7 +227,8 @@ EExecDefErrorReporter ()
 
 EExecStderrEcho()
 {
-    local ep=${EExecEchoPrefix-$EExecEchoPrefixG}
+    #local echo_op="${1-echo}"
+    #local ep=${EExecEchoPrefix-$EExecEchoPrefixG}
     #echo ">$EExecEchoPrefix<" 1>&2
     #echo echo "{$EExecEchoPrefix}$*" '1>&2' 1>&2
     echo "{$EExecEchoPrefix}""$@" 1>&2
@@ -236,7 +236,7 @@ EExecStderrEcho()
 
 EExecStandardErr_eko()
 {
-    eko "${EExecEchoPrefix}""$@" 1>&2
+    eko "{$EExecEchoPrefix}""$@" 1>&2
 }
 
 EExecStdoutStderrEcho()

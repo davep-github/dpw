@@ -14,20 +14,22 @@ gdmf_regexps=(
     "--hgrep" 'call stack'
     "--hgrep" 'stack trace'
     "--hgrep" 'waiting for a connection on port [0-9]+'
+    "--wgrep" 'WARNING:\s-+Git tree does not match\s+\S+\s+version'
 )
 
-# regexp=
-# sep=
-# set -- "${gdmf_regexps[@]}"
-# echo "@>$@<"
-# while (($# > 1))
-# do
-#   #echo "@>$@<"
-#   shift
-#   #echo "@>$@<"
-#   regexp="${regexp}${sep}${1}"
-#   sep="
-# |"
-# done
-# echo_id regexp
-  
+[ "${1-}" = "dump" ] && {
+    regexp=
+    sep=
+    set -- "${gdmf_regexps[@]}"
+    echo "@>$@<"
+    while (($# > 1))
+    do
+      #echo "@>$@<"
+      shift
+      #echo "@>$@<"
+      regexp="${regexp}${sep}${1}"
+      sep="
+|"
+    done
+    echo_id regexp
+}
