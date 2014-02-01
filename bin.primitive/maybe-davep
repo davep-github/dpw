@@ -3,6 +3,12 @@
 
 maybe_davep_dash_n=
 
+echo_and_run()
+{
+    echo "$@"
+    "$@"
+}
+
 if [ -n "${DP_BASHRC_EXECUTION_COMPLETED-}" ]
 then
     # My environment.
@@ -27,6 +33,7 @@ else
     "");;
     -n) EEXEC=echo; shift; maybe_davep_dash_n=t;;
     -k) EEXEC=eko; shift; maybe_davep_dash_n=t;;
+    -y) EEXEC=echo_and_run; shift;;
     --) shift;;
     *) echo 1>&2 "arg \"$*\" is supported. Try again"; exit 1;;
 esac

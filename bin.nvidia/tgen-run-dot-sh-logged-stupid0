@@ -17,9 +17,9 @@ source maybe-davep
 } 1>&2 
 
 # any_shell_p=t defaults to true in my environment.
-echo_id any_shell_p
+echo_id -T "$(basename $0)::" any_shell_p
 source gdmf-regexps
-$EEXEC tgen-run-dot-sh-logged \
-    ${maybe_davep_dash_n} \
+$EEXEC -y tgen-run-dot-sh-logged \
+    ${maybe_davep_dash_n} ${DP_SCRIPT_X_DEBUG_PROPAGATOR-} \
     "${gdmf_regexps[@]}" \
     "$@"

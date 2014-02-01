@@ -14390,6 +14390,11 @@ environment variables.
       (find-file-other-window sex-file)
     (find-file sex-file))))
 
+(defun dp-save-buffer-skip ()
+  (interactive)
+  (setq save-buffers-skip t))
+(dp-defaliases 'dp-sbs 'dp-save-buffer-skip)
+
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;;
 ;;;

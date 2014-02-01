@@ -197,11 +197,7 @@ Can be set after the first prompting.")
              (string-match (concat dp-gdb-prompt-regexp "$") str))
     (setq dp-dont-ask-to-tack-on-gdb-mode-p t)
     (when (y-or-n-p "Tack on gdb mode? ")
-      ;; The ansi-color filter get hosed so we turn it off here.
-      ;; I think this is fixed in dp-tack-on-gdb-mode. 
-      ;; (ansi-color-for-comint-mode-off)
-      (dp-tack-on-gdb-mode)
-      (ansi-color-for-comint-mode-filter))))
+      (dp-tack-on-gdb-mode+))))
 
 (defun dp-shell-lookfor-shell-max-lines (str)
   (when (string-match "DP_SML=\\(-?[0-9]*\\)" str)
@@ -317,6 +313,10 @@ No regexps allowed. This will be processed by `regexp-opt'")
   (concat "^\\s-*\\(\\.?/?\\)?"
           (dp-concat-regexps-grouped
            (append (list (regexp-opt '("make"
+                                       "nvmk"
+                                       "t_make"
+                                       "apmake"
+                                       "cc"
                                        "gcc"
                                        "g++"
                                        "diff"
@@ -341,8 +341,11 @@ No regexps allowed. This will be processed by `regexp-opt'")
                                        "autoconf"
                                        "libtoolize"
                                        "automake"
+                                       "bgme"
                                        "tgbme"  ; Build multiengine test util.
                                        "build_gpu_multiengine.pl"
+                                       "index-me-code"
+                                       "index-code"
                                        "xemacs")))
                    '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(cia\\|stash\\|status\\|diff\\|stat\\)")
                    '("\\(.*/\\)\\(t_make\\|build_gpu_multiengine.*\\.pl\\)")
@@ -352,8 +355,8 @@ No regexps allowed. This will be processed by `regexp-opt'")
   "Commands that may want to have modified buffers saved before running.
 Commands that might want to use files in buffers. Shit that would piss us off
 when we realized that we didn't use the latest modifications.
-svn: Oh, shit. I did a commit w/older file.
-g++: Why does it act exactly the same in spite of my changes.
+svn: Oh, shit. I did a commit w/older file!
+g++: Why does it act exactly the same in spite of my changes?
 
 ;; !<@todo XXX Add ^ and $ to avoid over generalization.")
 
@@ -368,9 +371,22 @@ Examples are things like make, cc, etc. We would like these commands to
 operate on the most current file contents."
   (string-match dp-shell-dirty-buffer-cmds str))
 
+(dp-deflocal dp-shells-save-buffer-flag-p t
+  "Should this buffer be saved when a `dirty buffer' action in a shell window
+is executed? E.g. *grep, make, etc.")
+
+(defun dp-shells-skip-save-buffer (&optional buf)
+  (interactive)
+  (set-symbol-value-in-buffer 'dp-shells-save-buffer-flag-p 
+                              nil
+                              (dp-get-buffer buf)))
+  
+(defun dp-shells-save-buffer-p ()
+  dp-shells-save-buffer-flag-p)
+
 (defun dp-shell-lookfor-dirty-buffer-cmds (str)
   (when (dp-shell-dirty-buffer-cmd-p str)
-    (save-some-buffers)))
+    (save-some-buffers nil 'dp-shells-save-buffer-p)))
 
 (defvar dp-shell-*TAGS-changers
   (concat "^\\s-*"
@@ -2832,6 +2848,14 @@ way.")
     (set-marker comint-last-output-start (point))))
 
 
+(defun dp-tack-on-gdb-mode+ ()
+  ;; The ansi-color filter get hosed so we turn it off here.
+  ;; I think this is fixed in dp-tack-on-gdb-mode. 
+  ;; (ansi-color-for-comint-mode-off)
+  (interactive)
+  (dp-tack-on-gdb-mode)
+  (ansi-color-for-comint-mode-filter))
+  
 ;;;###autoload
 (defun dp-gdb-naught (&optional name)
   "Run gdb on nothing. 

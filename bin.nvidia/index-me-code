@@ -28,10 +28,10 @@ source $HOME/.rc/env.nvidia
 : ${db_locs=${DP_NV_ME_DB_LOCS=ap //arch //sw/dev //sw/mods //sw/tools //hw/class //hw/kepler1_gklit3 //hw/tools}}
 : ${db_loc_excludes=}
 
-nvcscope_filter()
-{
-    egrep -v '/ap(_tlit[0-9]/'
-}
+#WTF? nvcscope_filter()
+#WTF? {
+#WTF?     egrep -v '/ap(_tlit[0-9]/'
+#WTF? }
 
 no_filter()
 {
@@ -259,7 +259,7 @@ echo_id2 p4_root
 
 dirs_of_interest=$(dp4-reroot "$p4_root" $depot_dirs_of_interest)
 dirs_of_interest="${dirs_of_interest} ${other_dirs_of_interest}"
-echo_id dirs_of_interest
+echo_id2 dirs_of_interest
 
 
 # These files change and come and go and are mostly copies of existing files.
@@ -277,13 +277,13 @@ then
     # //hw/ap_tlit1/drv/multiengine/framework/utilities/loader/stream_loader.cpp
     # H0w can any thing be s0 fncking stnpid?
     ap_hw_path=$(dp4-reroot "$p4_root" "${ap_hw_p4_path}")
-    #echo_id ap_hw_p4_path
-    #echo_id ap_hw_path
-    #echo_id dirs_of_interest
+    #echo_id2 ap_hw_p4_path
+    #echo_id2 ap_hw_path
+    #echo_id2 dirs_of_interest
     # Filter out dirs here so we don't even look inside them.
     # Remove the ap tree since nvcscope already handles it.
     dirs_of_interest=$(filter_dirs "${ap_hw_path}" ${dirs_of_interest})
-    #echo_id dirs_of_interest
+    #echo_id2 dirs_of_interest
     (
         link_em=t
         cd "${ap_path}"
@@ -311,7 +311,7 @@ for exclude in ${db_loc_excludes}
 do
   db_locs=$(echo "${db_locs}" | sed -r "s! $exclude !!")
 done
-echo_id db_locs
+echo_id2 db_locs
 #exit 99
 
 if ! true_p "${just_nvcscope_p}"
@@ -326,22 +326,23 @@ then
       db_loc=$(me-expand-dest "${db_loc}")
       #echo_id2 db_loc
       [ -d "${db_loc}" ] || continue
-      for d in ${dirs_of_interest}
+      for doi in ${dirs_of_interest}
       do
-#         echo_id2 d
+#         echo_id2 doi
 #         echo_id2 db_loc
-        case "${d}/" in
+        # Select the dirs of interest under this db_loc
+        case "${doi}/" in
             $db_loc/*) index_dirs="${index_dirs}
-${d}";;
-            *) ;; #echo "no match>$d<";;
+${doi}";;
+            *) ;; #echo "no match>$doi<";;
         esac
       done
       vunsetp "${index_dirs}" && {
           dp_echo2 "*** No dirs for db_loc>$db_loc< ***"
           continue
       }
-#       echo_id db_loc
-#       echo_id index_dirs
+#       echo_id2 db_loc
+#       echo_id2 index_dirs
       all_indexed="${all_indexed}
 >${index_dirs}<"
       cd "${db_loc}"
@@ -349,9 +350,9 @@ ${d}";;
       EExec index-code $follow_links_arg $index_dirs
       all_db_locs="${all_db_locs} ${db_loc}"
     done
-    echo_id dirs_of_interest
-    echo_id all_indexed
-    echo_id all_db_locs
+    echo_id2 dirs_of_interest
+    echo_id2 all_indexed
+    echo_id2 all_db_locs
 
     index_out_of_tree_locations
 else

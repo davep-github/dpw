@@ -81,7 +81,8 @@ Ee|tot__ME_src|                 ${TOT__ME_src}
 Ee|topoftree__ME_src|           ${TOT__ME_src}
 Ee|ap__ME_src|                  ${TOT__ME_src}
 Ee|apip__ME_src|                ${ap__ME_src}ip/
-
+Ee|apcmod__ME_src|              ${ap__ME_src}cmod/
+Ee|cmod__ME_src|                ${apcmod__ME_src}
 Ee|apipinf__ME_src|             ${apip__ME_src}inf/
 Ee|inf__ME_src|                 ${apipinf__ME_src}
 Ee|gmeinf10__ME_src|            ${apipinf__ME_src}gpu_multiengine/1.0/

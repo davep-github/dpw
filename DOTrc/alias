@@ -164,6 +164,8 @@ then
     
     alias ltl='ls -lt'          # xemacs makes an OK less.
     alias lrl='ls -ltr'         # xemacs makes an OK less.
+    alias lsl='ls -1t'          # xemacs makes an OK less.
+    alias lslr='ls -1tr'          # xemacs makes an OK less.
 # ?? WTF??    alias lssz='kwa_LSL_COLOR="--color=never" lssz'
 
 fi

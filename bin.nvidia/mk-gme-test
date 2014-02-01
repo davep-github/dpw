@@ -1,0 +1,127 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+#EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+TIMESTAMP=$(dp-std-timestamp)
+
+: ${def_log_dir=.}
+: ${def_log_file_name="${progname}.${TIMESTAMP}.log"}
+: ${def_log_file=$(normpath "${def_log_dir}/${def_log_file_name}")}
+
+: ${log_dir=${def_log_dir}}
+: ${log_file_name=${def_log_file_name}}
+: ${log_file=${def_log_file_name}}
+
+: ${tee_prog=tee}
+: ${tee_args=}
+
+# Usage variable usage:
+Usage_args_info=" [options...]"
+Usage_synopsis="Build a GPU ME test using nvmk...:
+
+This will use the environment variable NV_BUILD_PLATFORM if set.
+"
+# Using ) after the args makes copy & paste between here and the
+# case statement easier.
+Usage_details="${EExec_parse_usage}
+--rtl) Build an RTL plugin.
+--asim) Build an ASIM plugin.
+--so|--linux) Build a Linux plugin.
+-t|-p|--platform|--target <platform>) Build a <platform> plugin.
+--log-dir <dir>) Put log file in dir [def: ${log_dir}]
+--log-file-name <name>) Put a log file named <name> in log dir [def: ${log_file_name}].
+--log-file <path>) Use <path> as the log file name. Doesn't use log dir [def ${log_file}].
+--teeker) Use teeker as tee program to log output.
+--tee-args <args>) Use args to tee program. Multiple instances are concatenated.
+--tee-prog <prog>) Use <prog> to tee ouput [def: ${tee_prog}].
+"
+# Example of arg parsing.
+option_str="${EExec_parse_option_str}ralst:p:d:n:f:"
+long_options=(
+"rtl"
+"asim"
+"so" "linux"
+"platform:" "target:"
+"log-dir:"
+"log-file-name:"
+"log-file:"
+"teeker"
+"tee-prog:"
+"tee-args:"
+)
+
+source dp-getopt+.sh
+while (($# > 0))
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support
+      # Done by EExec_parse and friends.
+
+      # Program options.
+      -r|--rtl) platform=Linux_MPCoreXC_MTE;;
+      -a|--asim) platform=Linux_MPCoreXC_MTE_ASIM;;
+      -s|--so|--linux) platform=Linux_MTE;;
+      -t|-p|--platform|--target) shift; platform="${1}";;
+      -d|--log-dir) shift; log_dir="${1}";;
+      -n|--log-file-name) shift; log_file_name="${1}";;
+      -f|--log-file) shift; log_file="${1}";;
+      --teeker) tee_prog=teeker; tee_args="--sample -i1";;
+      --tee-args) shift; tee_args="${tee_args} $1";;
+      --tee-prog) shift; tee_prog="${1}";;
+      
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+
+vunsetp "${platform-}" && {
+    echo "A platform name is needed."
+    exit 1
+} 1>&2
+
+if [ "${log_file}" != "${def_log_file}" ]
+then
+    :
+elif [ "${log_dir}" != "${def_log_dir}" ] || \
+     [ "${log_file_name}" != "${def_log_file_name}" ]
+then
+    log_file=$(normpath "${log_dir}/${log_file_name}")
+fi
+
+export NV_BUILD_PLATFORM="${platform}"
+if EExecDashN_p
+then
+    TEE=cat
+else
+    TEE="tee ${log_file}"
+fi
+{
+    echo_id NV_BUILD_PLATFORM
+    EExec nvmk -c. 2>&1
+} | EExec_tee "${log_file}" "${tee_prog}" ${tee_args}
+
