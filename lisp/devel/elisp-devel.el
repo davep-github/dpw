@@ -5777,3 +5777,16 @@ Friday January 17 2014
 Wednesday January 29 2014
 --
 
+
+
+========================
+Thursday January 30 2014
+--
+
+;;installed (dp-deflocal dp-shells-save-buffer-flag-p t
+;;installed   "Should this buffer be saved when a `dirty buffer' action in a shell window is executed.
+;;installed E.g. *grep, make, etc.")
+
+;;installed (defun dp-shells-save-buffer-p ()
+;;installed   dp-shells-save-buffer-flag-p)
+

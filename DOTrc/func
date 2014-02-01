@@ -226,7 +226,7 @@ expand_source_list()
 	    rc[${#rc[@]}]="$src"
 	}
     done
-    echo "${rc[@]}"
+    ((${#rc[@]} > 0)) && echo "${rc[@]}"
 }
 
 source_list()

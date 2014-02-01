@@ -14,10 +14,13 @@
 
 : ${confirmation_response=t}
 : ${any_shell_p=}
+: ${progname=}
 
 [ "${any_shell_p}" != "${confirmation_response}" ] && {
     test $(basename "${SHELL}") = tcsh || {
         vsetp "${any_shell_p}" && {
+            echo "!!!!!!!!!!!!!!!!!!!"
+            echo "csh-p::${progname}"
             echo "any_shell_p is set to >${any_shell_p}<
 but does not match
 confirmation_response>${confirmation_response}<
@@ -26,7 +29,7 @@ confirmation_response>${confirmation_response}<
         echo "You are not in a c-shell.
 At this time, it is recommended to run tests in that environment.
 A pristine nVIDIA environment can be obtained like so:
-> ssh localhost
+> ssh \$HOST
 
 But if you insist on BASHing your test against the wall,
 set then environment variable any_shell_p to ${confirmation_response}"

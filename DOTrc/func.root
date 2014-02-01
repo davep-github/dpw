@@ -1,32 +1,17 @@
 # Shared with root.
 
-vsetp()
-{
-    [ -n "$*" ]
-}
-
-vunsetp()
-{
-    [ -z "$*" ]
-}
-
-DP_TRUTH_VAL=t                  # Preferred
-true_p()
-{
-    case "${1-}" in
-        [tTyY1]|true|yes) return 0;;
-        *) return 1
-    esac
-    return 1
-}
-export -f true_p
-
+#
+# These need to be here so that programs can use them.
+# I need to change all invocations to not use aliases.
+#
 alias truep=true_p
 alias vtruep=true_p
 alias truth_p=true_p
 alias vfalsep='! true_p'
 alias falsep=vfalsep
 
+# vsetp & friends moved to func.early.
+# this is sure to cause problems.
 settrue()
 {
     local varname="${1}"
@@ -40,8 +25,6 @@ settrue()
     fi
     eval eval $export \$varname=t
 }
-
-export -f vsetp vunsetp
 
 sed_path()
 {

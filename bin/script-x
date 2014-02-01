@@ -63,7 +63,7 @@ DP_SCRIPT_X_PROG_LOG_FILE_STDALL="${DP_SCRIPT_X_PROG_LOG_DIR}/log.stdall"
 # Do this here for convenience since there are many cases,
 # e.g. from firefox, KDE's Add Application to Panel, etc.
 # that don't get my environment.
-. ~/.rc/func
+source ~/.rc/func
 
 : ${SCRIPT_X_EXEC=}
 vsetp "$SCRIPT_X_EXEC" && {

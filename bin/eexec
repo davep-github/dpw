@@ -94,6 +94,23 @@ EExec_parse()
     echo "$prog"
 }
 
+EExec_tee()
+{
+    # Simply cat if -n is in effect.
+    local out_file="${1}"
+    shift
+
+    if EExecDashN_p
+    then
+        cat
+    else
+        vunsetp "$*" && set -- tee
+        prog="${1}"
+        shift
+        "${prog}" "${log_file}" "$@"
+    fi
+}
+        
 # Provide a little helper than removes the need to run the annoying
 # eexec_program everywhere. We return the number of ops consumed and the
 # caller can just shift that many times.

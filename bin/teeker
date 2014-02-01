@@ -550,7 +550,7 @@ if __name__ == "__main__":
                          dest="show_twiddles_p", default=False,
                          action="store_true",
                          help="Show list of available twiddles.")
-    oparser.add_argument("-s", "--sample-lines",
+    oparser.add_argument("-s", "--sample-lines", "--sample",
                          dest="sample_lines_tick_p", default=False,
                          action="store_true",
                          help="Tick with input line samples.")

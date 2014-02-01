@@ -1,10 +1,9 @@
 #!/bin/sh
 
-csh-p || exit 1
+export progname="$(basename $0)"
 
 source script-x
 set -u
-progname="$(basename $0)"
 source eexec
 eexec_program=$(EExec_parse "$@")
 for op in $eexec_program
@@ -15,6 +14,36 @@ done
 unset eexec_program
 
 EExecVerbose
+
+csh_check()
+{
+    local confirmation_response="TRUST_ME"
+    while (($# > 0))
+    do
+      case "$1" in
+        --bash|--any|--bash-ok|--any-ok|--any-shell-ok) confirmation_response=t;;
+        --) shift; break;;
+         *) break;;
+      esac
+      shift
+    done
+            
+    [ -n "$*" ] && {
+        echo "$@"
+    }
+    confirmation_response="${confirmation_response}" csh-p || {
+        if EExecDashN_p
+        then
+            echo
+            echo "+++++++ Ignoring csh-p because EExecDashN_p"
+            echo
+        else
+            exit 1
+        fi
+    }
+}
+
+csh_check --bash-ok "First check" || exit 1
 
 : ${p4_clib_dir:=//hw/ap_tlit1/clib/Linux}
 : ${log_file_base_name:=dot-sh}
@@ -86,6 +115,15 @@ Usage:  testname [additional-teeker-options]"
         echo "Deduced test name>${testname}<"
     }
 fi
+
+# The "something bad happened" problem when running RTL
+# (top_peatrans_gpurtl)seems to be related running in my bash environment.
+# So we check for RTL signatures in the dot sh file and csh-p if they're found
+if egrep -q -e "top_peatrans_gpurtl" "${testname}"
+then
+    csh_check "RTL found"
+fi
+
 test_base_name=$(basename "${testname}" .sh)
 fgrep 1>/dev/null 2>&1 -- ' -gdb ' "${testname}" && {
     echo
