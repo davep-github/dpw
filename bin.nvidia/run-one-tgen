@@ -32,8 +32,7 @@ mecd testgen
 : ${rtl_args=-simv top_peatrans_gpurtl}
 : ${rtl_args_more=}
 : ${clib_linux=$(realpath "$(pwd)/../../clib/Linux")}
-: ${d_path="$(pwd)/../../"}
-: ${d_opt=""}
+: ${d_opts=""}
 : ${last_and_latest_p=t}
 : ${last_out_dir_file_name=last_out_dir}
 : ${latest_out_dir_file_name=latest_out_dir}
@@ -43,6 +42,7 @@ mecd testgen
 : ${sandbox_opt=-nosandbox}
 : ${max_file_size_opt=}
 : ${mode=}
+: ${hw_ap_path=$(pwd)/../..}
 
 # Usage variable usage:
 Usage_args_info=" <tgen-level-test>..."
@@ -59,7 +59,7 @@ Usage_details="${EExec_parse_usage}
 -r <trace-root>) Root for traces.
 -c <chip>) Chip name/type.
 -t <target>) E.g. FMODEL.
--d <???>) Default is hwApPath=\$(pwd)/../../ [${d_opt}]
+-d macro=val) An example is: hwApPath=\$(pwd)/../../ [${d_opts}]
 --wait) Run synchronously. Implies --nomail. --mail after this will override.
 --status) Print status after a sync run.
 --wait-status|--status-wait|--ws) --wait and --status.
@@ -141,7 +141,7 @@ do
       -t|--target) shift; target_opt="$1";;
       --d-target) shift; d_TARGET_opt="$1";;
       --all-but-run|--abr|--no-run) all_but_run_opt="-allButRun";;
-      -d) shift; d_path="$1";;
+      -d) shift; d_opts="${d_opts} -d ${1}";;
       --log-dir) shift; user_log_dir="$1";;
       --log-base) shift; log_dir_base="$1";;
       --out-dir-prefix|--odprefix|--odpre) shift; out_dir_prefix="${1}";;
@@ -230,11 +230,6 @@ dollar_at=("$@")
 
 set --
 
-vsetp "${d_opt}" || {
-    d_opt="hwApPath=$(realpath ${d_path})"
-}
-d_opt=$(normpath "${d_opt}")/
-
 case "${chip_opt}" in
     t210)
     traceRoot_opt=
@@ -257,7 +252,8 @@ vsetp "${chip_opt}"  && set -- "$@" -chip "${chip_opt}"
 vsetp "${target_opt}"  && set -- "$@" -target "${target_opt}"
 vsetp "${rtl_p}" && set -- "$@" ${rtl_args}
 vsetp "${d_TARGET_opt}" && set -- "$@" -d TARGET="${d_TARGET_opt}"
-vsetp "${d_opt}" ] && set -- "$@" -d "${d_opt}"
+vsetp "${d_opts}" ] && set -- "$@" ${d_opts}
+vsetp "${hw_ap_path}" && set -- "$@" -d "hwApPath=${hw_ap_path}"
 vsetp "${traceRoot_opt}" && set -- "$@" -traceRoot "${traceRoot_opt}"
 vsetp "${all_but_run_opt}" && set -- "$@" "${all_but_run_opt}"
 vsetp "${mailto_opt}" && set -- "$@" ${mailto_opt}

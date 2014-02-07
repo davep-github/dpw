@@ -167,9 +167,11 @@ def handle_csh(name, alias_item, **kw_args):
 #####################################################################
 def emacs_pre(**kw_args):
     ostream = kw_args.get("ostream", sys.stdout)
-    ostream.write('(setq '
-                  + emacs_abbrev_table_name
-                  + ' (make-abbrev-table))\n')
+##is defining better?     ostream.write('(setq '
+##is defining better?                   + emacs_abbrev_table_name
+##is defining better?                   + ' (make-abbrev-table))\n')
+    ostream.write(
+        "(define-abbrev-table '{} nil)\n".format(emacs_abbrev_table_name))
 
 #####################################################################
 def handle_emacs(name, alias_item, **kw_args):

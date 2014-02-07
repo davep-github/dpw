@@ -491,8 +491,6 @@ Entry to this mode via command dp-sel2:list calls the value of
     ;;(dmessage "ret-index: %d" ret-index)
     (cons ret-index ret-val)))
 
-(defvar dp-sel2:CURRENT-ITEM nil)
-
 (defun dp-sel2:done (fun item &optional no-exit-p)
   "Leave select item mode after calling FUN."
   (interactive)
@@ -503,11 +501,12 @@ Entry to this mode via command dp-sel2:list calls the value of
   (unless no-exit-p
     (dp-sel2:exit)))
 
-(defun dp-sel2:select ()
+(defun dp-sel2:select (&optional current-item)
   "Select the current item.  
 Calls selection callback, if non-nil, then exits mode."
   (interactive)
-  (dp-sel2:done dp-sel2:sel-func dp-sel2:CURRENT-ITEM)
+  (dp-sel2:done dp-sel2:sel-func (or current-item
+                                     (dp-sel2:current-item)))
   (setq this-command 'yank))
 
 (defun dp-sel2:cancel ()
@@ -785,11 +784,24 @@ we started.  The strings are in the same order that a series of
          (copyor `(lambda ()
                     (interactive)
                     (dp-sel2-paste:copy-no-exit nil 
-                                                (quote ,t-item)))))
-    (define-key key-map "c" copyor)
-    (define-key key-map "C" copyor)
-    (define-key key-map "k" copyor)
-    (define-key key-map "K" copyor)
+                                                (quote ,t-item))))
+         (selector `(lambda ()
+                      (interactive)
+                      (kill-this-buffer)
+                      (dp-sel2:select (quote ,t-item)))))
+    (define-key key-map [?c] copyor)
+    (define-key key-map [?C] copyor)
+    (define-key key-map [?k] copyor)
+    (define-key key-map [?K] copyor)
+    (define-key key-map [?\ ] selector)
+    (define-key key-map [?i] selector)
+    (define-key key-map [insert] selector)
+    (define-key key-map [(control ?m)] selector)
+    (define-key key-map [return] selector)
+    (define-key key-map [kp-add] selector)
+    (define-key key-map [?Y] selector)
+    (define-key key-map [?y] selector)
+    (define-key key-map [?g] 'dp-sel2:refresh)
     ;; put buffer local in scope for called functions
     (with-current-buffer view-buf
       (setq dp-sel2:target-marker target-marker))
@@ -843,8 +855,10 @@ yank ring."
                           (do-not-rotate
                            (and (not rotate-only-p)
                                 (or (and (key-press-event-p last-input-event)
-                                         (eq (event-key last-input-event) 'insert)
-                                         (equal (event-modifiers last-input-event)
+                                         (eq (event-key last-input-event) 
+                                             'insert)
+                                         (equal (event-modifiers 
+                                                 last-input-event)
                                                 (list 'meta)))
                                     (and last-command-char
                                          (= last-command-char ?Y))))))
@@ -866,26 +880,30 @@ yank ring."
                  ;; post-mode-hook
                  (function
                   (lambda ()
-                    (local-set-key "r" (kb-lambda
-                                           (let ((dp-sel2:rotate-only-p t))
-                                             (dp-sel2:select))))
-                    (local-set-key "R"
+                    (local-set-key [?r] (kb-lambda
+                                            (let ((dp-sel2:rotate-only-p t))
+                                              (dp-sel2:select))))
+                    (local-set-key [?R]
                                    (kb-lambda
                                        (current-kill
                                         (car (dp-sel2:current-item)))
                                        (dp-sel2:refresh)))
-                    (local-set-key "c" (kb-lambda
-                                           (dp-sel2-paste:copy-no-exit 'copy)))
-                    (local-set-key "k" (kb-lambda
-                                           (dp-sel2-paste:copy-no-exit 'copy)))
-                    (local-set-key "C" (kb-lambda
-                                           (dp-sel2-paste:copy-no-exit 'copy)
-                                           (dp-sel2:exit-mode)))
-                    (local-set-key "K" (kb-lambda
-                                           (dp-sel2-paste:copy-no-exit 'copy)
-                                           (dp-sel2:exit-mode)))
-                    (local-set-key "o" 'dp-sel2-paste:view-item)
-                    (local-set-key "v" 'dp-sel2-paste:view-item))))))
+                    (local-set-key [?c] (kb-lambda
+                                            (dp-sel2-paste:copy-no-exit 
+                                             'copy)))
+                    (local-set-key [?k] (kb-lambda
+                                            (dp-sel2-paste:copy-no-exit '
+                                             copy)))
+                    (local-set-key [?C] (kb-lambda
+                                            (dp-sel2-paste:copy-no-exit 
+                                             'copy)
+                                            (dp-sel2:exit-mode)))
+                    (local-set-key [?K] (kb-lambda
+                                            (dp-sel2-paste:copy-no-exit 
+                                             'copy)
+                                            (dp-sel2:exit-mode)))
+                    (local-set-key [?o] 'dp-sel2-paste:view-item)
+                    (local-set-key [?v] 'dp-sel2-paste:view-item))))))
     (setq this-command 'yank)))
 
 (defun dp-sel2:list-bookmarks ()

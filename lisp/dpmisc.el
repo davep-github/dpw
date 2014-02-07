@@ -14220,10 +14220,9 @@ something.")
                      ""))
          (prompt (format "Workspace%s:%s "
                          file-msg
-                         (if (dp-current-sandbox-name)
-                             (format " (default %s)" 
-                                     (dp-current-sandbox-name))
-                           "")))
+                         (format " (default %s)"
+                                 (or (dp-current-sandbox-name)
+                                     "None"))))
          (need-new-sb (not sb))
          (sb (or sb "."))
          (expansion (dp-maybe-expand-p4-location file sb)))

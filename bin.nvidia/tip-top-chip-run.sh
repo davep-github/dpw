@@ -134,6 +134,8 @@ do
       --suites) shift; suites=(${1});;
       --no-csh-check|--no-csh|--bash-ok|--any-shell|--any-sh) no_csh_check_p=t;;
       --dot-sh|--.sh) no_csh_check_p=t;;
+      --logdir) shift; logdir="{$1}";;
+      --logfile) shift; logfile="${1}";;
 #       --rtprint|-rtprint) rtprint_opt="-rtprint";;
 #       --ddd|-ddd) ddd_opt="-ddd";;
 #       --debug|-debug) debug_opt="-debug";;
@@ -203,9 +205,11 @@ echo "Rundir >$rundir<, >$(cd $rundir; pwd)<"
 
 runlog="${PWD}/dp-rtl-tests/runlog"
 
-logdir="${PWD}/dp-rtl-tests/${project}-${config}-${timestamp}"
-logfile="${logdir}/${testname}.log"
-mk_logdir_command="mkdir -p ${logdir}"
+full_testname="${testname}${testext}"
+
+: ${logdir="${PWD}/dp-rtl-tests/${project}-${config}-${timestamp}"}
+: ${logfile="${logdir}/${testname}.log"}
+mk_logdir_command="mkdir -p ${logdir}/${testname}"
 if [ -z "${no_run_p}" ]
 then
     ${mk_logdir_command} || {
@@ -278,7 +282,7 @@ ${EZEC} "${run_cmd}" \
     "${elf_load_opt[@]}" \
     -mods "-top -cpu_rtl -pitch -zt_count_0 -i ${hdr_file} -o ${logdir}/${testname}.mods -plugin '${testname}${test_args}'" \
     "$@" \
-    "${testname}${testext}" \
+    "${full_testname}" \
     -v "${config}"
 
 exit

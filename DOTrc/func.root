@@ -284,17 +284,21 @@ dp_rc_to_text()
     false
 }
 
-: ${DPBRC_Clear_set_x_p:=t}
-: ${DPBRC_Show_rc_in_prompt_p:=t}
-: ${DPBRC_Verbose_rc_in_prompt_p:=t}
-: ${DPBRC_set_x_post_prompt_command_val:='+x'}
+: ${DPBRC_Clear_set_x_p=t}
+: ${DPBRC_Show_rc_in_prompt_p=t}
+: ${DPBRC_Verbose_rc_in_prompt_p=t}
+#echo_id2 DPBRC_set_x_post_prompt_command_val
+#echo 1>&2 "\$0>$0<"
+: ${DPBRC_set_x_post_prompt_command_val='+x'}
+#echo_id2 DPBRC_set_x_post_prompt_command_val
 
 dp_set_x_fini()
 {
     local set2=${1:-${DPBRC_set_x_post_prompt_command_val}}
     if vsetp $DPBRC_Clear_set_x_p; then
         set +x
-    else
+    elif [ -n "$set2" ]
+    then
         # Set set [-x|+x] as per default
         set "$set2"
     fi

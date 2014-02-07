@@ -142,7 +142,8 @@ tests.")
                      (concat
                       "ap //arch //sw/dev //sw/mods //sw/tools //hw/class"
                       ;; NB! Make sure every item is separated by spaces.
-                      "  //hw/kepler1_gklit3 //hw/tools")))
+;;;                      " //hw/kepler1_gklit3"
+                      " //hw/tools")))
          (locs (split-string locstr))
          (sb-name (dp-current-sandbox-name))
          expansion
@@ -234,8 +235,8 @@ tests.")
        (dp-sandbox-file-p file-name)
        (not (string-match dp-p4-ignore-dirs-regexp file-name))))
 
-;;(setq dp-proscribed-sandbox-private-p  nil)
-(setq dp-proscribed-sandbox-private-p "/sb4")
+;;(setq dp-read-only-sandbox-regexp-private nil)
+(setq dp-read-only-sandbox-regexp-private "/sb[24]")
 
 ;;
 ;; Don't want to edit these stupid fvcking copies.

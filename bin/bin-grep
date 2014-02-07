@@ -20,8 +20,16 @@ do
 done
 unset eexec_program
 
+Usage()
+{
+    echo "Usage: bin-grep <regexp>
+Grep for <regexp> in all files in all bin dirs in \$PATH.
+"
+}
+
 [ -z "$*" ] && {
-    echo "No pattern specific. Bailing."
+    echo "No pattern specified. Bailing."
+    Usage
     exit 1
 } 1>&2
 

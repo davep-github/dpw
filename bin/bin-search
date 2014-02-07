@@ -12,6 +12,13 @@ do
 done
 unset eexec_program
 
+[ "${1-}" = "--help" ] && {
+    echo "usage: bin-search <glob>
+Search all bin dirs in \$PATH for <glob>.
+"
+    exit 0
+}
+
 vunsetp "$*" && {
     echo "A glob is needed."
     exit 1

@@ -586,7 +586,7 @@ case $- in
 		#  can always exit w/exit command.
 		unset ignoreeof
 		case "$IMASCREENINSTANCE" in
-		1|[Yy][Ee][Ss]|[tT]) 
+		1|[Yy][Ee][Ss]|[tT])
 		    ignoreeof=7
 		    typeset +x IMASCREENINSTANCE # Remove export attribute.
                     alias exit="echo 1>&2 I\'m a screen... use \\\\exit or ^XK '(kapital K)' to really exit."

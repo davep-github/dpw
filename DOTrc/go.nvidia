@@ -103,6 +103,7 @@ Ee|etc__ME_src|                 ${TOT__ME_src}etc/
 Ee|diag__ME_src|                ${TOT__ME_src}diag/
 Ee|aptools__ME_src|             ${TOT__ME_src}tools/
 Ee|runscript__ME_src|           ${aptools__ME_src}RunScript
+Ee|totools__ME_src|             ${aptools__ME_src}
 Ee|runs__ME_src|                ${runscript__ME_src}
 Ee|testgen__ME_src|             ${diag__ME_src}testgen/
 Ee|tg__ME_src|                  ${testgen__ME_src}
@@ -356,6 +357,8 @@ Ee|notes|       /home/dpanariti/notes/
 Ee|goodcrl|       /home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-run-tgens.d/cpu_red_line/2013-10-24T19.32.32-0400.out/tests/mobile_traces_gpu_multiengine/00/00/01/000001/
 # Added Fri Oct 25 11:49:16 EDT 2013
 Ee|badswr|       /home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-run-tgens.d/surface_write_read_axf/2013-10-24T19.32.32-0400.out/tests/mobile_traces_gpu_multiengine/00/00/01/000001/
+# Added Tue Feb  4 10:36:14 EST 2014
+Ee|asimcrl|crlasim|t210asim|asimt210|       /home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap/diag/testgen/dp-run-tgens.d/cpu_red_line/2014-01-27T12.12.33-0500.out/tests/mobile_traces_gpu_multiengine/00/00/01/000001/
 ########################################################################### ***
 # ***
 # Local Variables: ***
