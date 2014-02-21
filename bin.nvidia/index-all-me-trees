@@ -1,5 +1,8 @@
 #!/bin/sh
 
+echo 1>&2 'Skipping for tonight'
+exit 
+
 source script-x
 set -u
 progname="$(basename $0)"

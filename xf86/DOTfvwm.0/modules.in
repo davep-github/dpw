@@ -322,6 +322,8 @@ DestroyModuleConfig FvwmPagerPager: *
 *FvwmPagerPager: Label 3 T3-@SB_SB3_DESC@
 *FvwmPagerPager: Label 4 T4-@SB_SB4_DESC@
 *FvwmPagerPager: Label 5 T5-@SB_SB5_DESC@
+*FvwmPagerPager: Label 6 T6-@SB_SB6_DESC@
+*FvwmPagerPager: Label 7 T7-@SB_SB7_DESC@
 *FvwmPagerPager: SmallFont 5x8
 
 ##------------------------------------------------------------------------------
@@ -348,6 +350,8 @@ DestroyModuleConfig FvwmDesker: *
 *FvwmDesker: Label 3 T3-@SB_SB3_DESC@
 *FvwmDesker: Label 4 T4-@SB_SB4_DESC@
 *FvwmDesker: Label 5 T5-@SB_SB5_DESC@
+*FvwmDesker: Label 6 T6-@SB_SB6_DESC@
+*FvwmDesker: Label 7 T7-@SB_SB7_DESC@
 *FvwmDesker: SmallFont 5x8
 
 ##------------------------------------------------------------------------------

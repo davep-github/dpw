@@ -325,17 +325,11 @@ arguments: (&optional IGNORE-EMBEDDED-BOOKMARKS-P)
 
 ;;;***
 
-;;;### (autoloads (dp-ssh-gdb dp-ssh dp-gdb dp-gdb-naught dp-tack-on-gdb-mode dp-gdb-old dp-shell-other-window dp-shell dp-shell0 dp-lterm dp-cterm dp-start-term dp-python-shell dp-ssh-mode-hook dp-gdb-mode-hook dp-py-shell-hook dp-shell-goto-this-error dp-cscope-next-thing dp-next-error dp-set-compile-like-mode-error-function dp-reset-current-error-function dp-set-current-error-function dp-compilation-mode-hook dp-telnet-mode-hook dp-shell-mode-hook dp-comint-mode-hook dp-shells-mk-prompt-font-lock-regexp dp-shells-add-prompt-regexp shell-uninteresting-face) "dp-shells" "lisp/dp-shells.el")
+;;;### (autoloads (dp-ssh-gdb dp-ssh dp-gdb dp-gdb-naught dp-tack-on-gdb-mode dp-shell-other-window dp-shell dp-shell0 dp-lterm dp-cterm dp-start-term dp-python-shell dp-ssh-mode-hook dp-gdb-mode-hook dp-py-shell-hook dp-shell-goto-this-error dp-cscope-next-thing dp-next-error dp-set-compile-like-mode-error-function dp-reset-current-error-function dp-set-current-error-function dp-compilation-mode-hook dp-telnet-mode-hook dp-shell-mode-hook dp-comint-mode-hook dp-shells-mk-prompt-font-lock-regexp shell-uninteresting-face) "dp-shells" "lisp/dp-shells.el")
 
 (defvar shell-uninteresting-face 'shell-uninteresting-face "\
 Face for shell output which is uninteresting.
 Should be a color which nearly blends into background.")
-
-(autoload 'dp-shells-add-prompt-regexp "dp-shells" "\
-
-
-arguments: (REGEXP &optional (MK-IT-P T))
-" nil nil)
 
 (autoload 'dp-shells-mk-prompt-font-lock-regexp "dp-shells" "\
 
@@ -343,7 +337,7 @@ arguments: (REGEXP &optional (MK-IT-P T))
 arguments: (&optional REGEXP-LIST)
 " nil nil)
 
-(defvar dp-shells-prompt-font-lock-regexp "^\\([0-9]+\\)\\(/[0-9]+\\)\\([#>]\\|\\(<[0-9]*>\\)?\\)" "\
+(defvar dp-shells-prompt-font-lock-regexp "^\\([0-9]+\\)\\(/\\(?:[0-9]+\\|spayshul\\)\\)\\([#>]\\|\\(<[0-9]*>\\)?\\)" "\
 *Regular expression to match my shell prompt.  Used for font locking.
 For my multi-line prompt, this is second line.  For most prompts, this will
 be the only line.  Some shells, like IPython's, already colorize their
@@ -355,13 +349,13 @@ prompt.  We don't want to stomp on them.")
 Sets up personal comint mode options.
 Called when shell, inferior-lisp-process, etc. are entered.
 
-arguments: ()
+arguments: (&optional (VARIANT DP-DEFAULT-VARIANT))
 " t nil)
 
 (autoload 'dp-shell-mode-hook "dp-shells" "\
 Sets up shell mode specific options.
 
-arguments: ()
+arguments: (&optional (VARIANT DP-DEFAULT-VARIANT))
 " t nil)
 
 (autoload 'dp-telnet-mode-hook "dp-shells" "\
@@ -481,11 +475,12 @@ arguments: ()
 
 (autoload 'dp-shell0 "dp-shells" "\
 Open/visit a shell buffer.
-First shell is numbered 0 by default.
-ARG is numberp:
+First shell is numbered 1 by default. 0 is too far away from the others. Save
+it for something \"speshul\".
+ ARG is numberp:
  ARG is >= 0: switch to that numbered shell.
  ARG is < 0: switch to shell buffer<(abs ARG)>
- ARG memq `dp-shells-shell<0>-names' shell<0> in other window.
+ ARG memq `dp-shells-primary-shell-names' shell<0> in other window.
 
 arguments: (&optional ARG &key OTHER-WINDOW-P NAME OTHER-FRAME-P)
 " t nil)
@@ -502,11 +497,8 @@ arguments: (&optional ARG &key OTHER-WINDOW-P NAME OTHER-FRAME-P)
 arguments: (&optional ARG)
 " t nil)
 
-(autoload 'dp-gdb-old "dp-shells" "\
-
-
-arguments: (&optional NEW-P PATH COREFILE)
-" t nil)
+(defvar dp-gdb-file-history 'nil "\
+Files on which we've run `dp-gdb'.")
 
 (autoload 'dp-tack-on-gdb-mode "dp-shells" "\
 Major hack to change a shell buffer which is running gdb into a gdb-mode buffer.
@@ -527,8 +519,12 @@ Extension to gdb that:
 . Prefers the most recently used buffer if its process is still live,
 . Else it asks for a buffer using a completion list of other gdb buffers,
 . Else (or if nothing selected above) it starts a new gdb session.
+ARG == nil  --> Use most recent session
+ARG == '(4) --> Prompt for buffer
+ARG == '-   --> Create new session
+ARG == 0    --> New `dp-gdb-naught' session.
 
-arguments: (&optional NEW-P PATH COREFILE)
+arguments: (&optional INTERACTIVE-ONLY-ARG PATH COREFILE USE-MOST-RECENT-P NEW-P PROMPT-P)
 " t nil)
 
 (autoload 'dp-ssh "dp-shells" "\

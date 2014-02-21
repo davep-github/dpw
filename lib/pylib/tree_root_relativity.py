@@ -224,6 +224,17 @@ def main(argv):
                          dest="p4_location_p",
                          action="store_true",
                          help="Give relative dirs a p4 root: //")
+    oparser.add_argument("--normpath",
+                         dest="normpath_p",
+                         action="store_true",
+                         help="Do a final normpath before printing.")
+    oparser.add_argument("--normpath/", "--normpath-slash",
+                         "--normpath-term",
+                         "--normpath-terminate",
+                         "--/",
+                         dest="normpath_slash_p",
+                         action="store_true",
+                         help="Do a final normpath and add a trailing / before printing.")
     oparser.add_argument("-t", "--tree-root",
                          dest="input_tree_root",
                          type=str, default=None,
@@ -231,7 +242,7 @@ def main(argv):
     oparser.add_argument("--abbrev-suffix",
                          dest="abbrev_suffix",
                          action="append",
-                         help="Suffix to add to abbrevs, e.g. __ME_src.")
+                         help="Suffix to add to abbrevs, e.g. __SB_rel.")
     oparser.add_argument("--realpath", "--real-path", "--rp",
                          dest="realpath_p", default=None,
                          action="store_true",
@@ -334,6 +345,10 @@ def main(argv):
             sys.exit(3)
         s = s + ed_rest
         if opath.exists(s):
+            if app_args.normpath_p or app_args.normpath_slash_p:
+                s = opath.normpath(s)
+                if app_args.normpath_slash_p:
+                    s = s + opath.sep
             print s
             sys.exit(0)
         else:

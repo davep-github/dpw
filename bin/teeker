@@ -557,7 +557,7 @@ if __name__ == "__main__":
     oparser.add_argument("--sample-all", "--sall",
                          dest="sample_ALL_lines_tick_p", default=False,
                          action="store_true",
-                         help="Tick with input line samples.")
+                         help="Tick with every input line.")
     oparser.add_argument("-S", "--sample-lines-prefix",
                          dest="sample_lines_tick_prefix", default="th-line>",
                          action=Ctor_arg_action,

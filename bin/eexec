@@ -83,7 +83,7 @@ EExec_parse()
     do
       case "$1" in
           -n|--eexec-n) prog="${prog}EExecDashN ";;
-          -nk|--eexec-nk|--eexec-neko) prog="${prog}EExecDashN_k ";;
+          -nk|--nk|--eexec-nk|--eexec-neko) prog="${prog}EExecDashN_k ";;
           -v|--eexec-v) prog="${prog}EExecVerbose ";;
           -q|--eexec-q) prog="${prog}EExecQuiet ";;
           --) prog="${prog}EExecNOP"; break;; # Allow user to consume a --
@@ -213,14 +213,37 @@ EExec_verbose_msg()
 
 EExec_verbose_echo_id()
 {
-    local msg
+    local prefix=
+    local suffix=
     local sep=
+    local sep2='
+==== '
+    #echo 1>&2 "#>$#<"
+    while (($# > 0))
+    do
+      #echo 1>&2 "ONE>$1<"
+      case "$1" in
+          --prefix|--msg) shift; prefix="${1}";;
+          --suffix) shift; suffix="${1}";;
+          --sep) shift; sep2="${1}";;
+          --sep-nl|--sep-newline) sep2='
+';;
+          --) shift; break;;
+          *) break;;
+      esac
+      shift
+      #echo 1>&2 "@>$@<"
+    done
+    local msg=
     for m in "$@"
     do
-      msg="$msg$sep$(echo_id $m)"
-      sep=", "
+      # echo 1>&2 "m>$m<"
+      # echo 1>&2 "B: msg>$msg<"
+      msg="${msg}${sep}$(echo_id $m)"
+      # echo 1>&2 "A: msg>$msg<"
+      sep="${sep2}"
     done
-    EExec_verbose_msg "$msg"
+    EExec_verbose_msg "$prefix$msg$suffix"
 }
 
 EExecQuiet ()
@@ -293,6 +316,11 @@ EExec_start_tcsh()
     echo "$@" | tcsh -l
 }
 
+EExec_background()
+{
+    "$@" &
+}
+
 EExec()
 {
     # @todo XXX Is it worth it to do a full getopt?
@@ -305,6 +333,9 @@ EExec()
     local eexecErrorReporter="${EExecErrorReporter}"
     local fake_success_p=
     local executor=
+    local make_command_p=
+    local command_file_name=
+    local command_cd_cmd=
     ${EExecExporter} EExecEchoPrefix=$EExecEchoPrefixG
     for i in "$@"
     do
@@ -324,12 +355,28 @@ EExec()
               ;;
           -q|--quiet-errors) eexecErrorReporter=;;
           -x|--executor|--execute-with) shift; executor="$1";;
+          -b|--bg|--background) executor=EExec_background;;
+          --make-cmd|--sh) make_command_p=t;;
+          --make-cmd:|--sh:) shift; command_file_name="${1}"
+                             make_command_p=t;;
+          --cmd-cd|--sh-cd) command_cd_cmd="cd $PWD";;
+          --cmd-cd:|--sh-cd:) shift; command_cd_cmd="${1}";;
           -tcsh) executor=EExec_start_tcsh
                  ;;
          *) break;;
       esac
       shift
     done
+    true_p "${make_command_p}" && {
+        vunsetp "${command_file_name}" && {
+            command_file_name=$(basename "$1")-eexec.sh
+        }
+        echo "#!/bin/sh
+$command_cd_cmd
+$@" >| "${command_file_name}"
+        chmod +x "${command_file_name}"
+    }
+        
     # $eexecEcho is a command to do our echoing
     [ -n "$eexecEcho" ] && "$eexecEcho" "${eexecShowPrefix}""$@"
     # run the command

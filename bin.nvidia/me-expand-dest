@@ -26,6 +26,7 @@ progname="$(basename $0)"
 : ${realpath=}
 : ${trace_arg=}
 : ${pne_opt=}
+: ${normpath_opt=}
 
 while (($# > 0))
 do
@@ -37,6 +38,7 @@ do
       --trace) shift; trace_arg="--trace ${1}";;
       --pne) pne_opt="--print-non-existent";;
       --npne) pne_opt="--no-print-non-existent";;
+      --normpa*) normpath_opt="$1";;
       --) shift; break;;
       *) break;;
   esac
@@ -73,9 +75,10 @@ exp=$(~/lib/pylib/tree_root_relativity.py \
         ${pne_opt} \
         ${trr_args} \
         ${trace_arg} \
+        ${normpath_opt} \
         --expand-dest="${dest}" \
         ${chip_suffix} \
-        --abbrev-suffix="__ME_src" \
+        --abbrev-suffix="__SB_rel" \
         $sb_arg "$@") || exit
 
 vsetp "${replace_default_symlink}" && {

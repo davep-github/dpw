@@ -12,7 +12,7 @@ do
 done
 unset eexec_program
 
-DEFAULT_SB_SUFFIX="__ME_src"
+DEFAULT_SB_SUFFIX="__SB_rel"
 ENV_NAME_MIN_LEN=4
 flags='Ee'
 flags_set_p=

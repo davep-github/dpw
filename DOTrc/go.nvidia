@@ -33,214 +33,226 @@ Ee|dotvnc|dvnc|vnc|   ${gohome}.vnc/
 # Our base: $(depth)/../../
 # These are best used by a utility because the _ interferes with abbrev
 # expansion.
-# It's really not the ME root, but I'm an ME guy.
-# .__ME_src --> ./   lets `mecd sb-name .' work.
+# It's really not the ME root, but I'm an ME guy. :-(
+# Doing: .__SB_rel --> ./   lets `mecd sb-name .' work.
 # For tot, the superfluous dot prevents a double slash at the end of the
 # expansion.
 # FUCK! Now I need both an SB relative and ap-tree relative system.
 # <sb>/hw/<ap-tree>/x
 # <:me defs:>
 # Default_ap_tree is expected to be a symlink to the default ap tree.
-# This allows each tree to have a default ap tree.
+# Ditto for Default_TOT.
+# This allows each sb to have a default ap tree and TOT.
+# With the move to nvlink, it turns out that TOT and ap are not always the same.
+# TOT is project/subsystem/etc/ specific.
 Ee|ME_current_default_ap_tree|  Default_ap_tree/
-Ee|scratch__ME_src|             ../../
-Ee|scr__ME_src|                 ../../
-Ee|workspace__ME_src|           ./
-Ee|ws__ME_src|                  ./
-Ee|sandbox__ME_src|             ./
-Ee|sb__ME_src|                  ./
-Ee|indices__ME_src|             ./
-Ee|index__ME_src|               ${indices__ME_src}
-Ee|indexes__ME_src|             ${indices__ME_src}
-Ee|cscope__ME_src|              ${indices__ME_src}
-Ee|tags__ME_src|                ./
-Ee|___ME_src|                   ./
-Ee|hw__ME_src|                  hw/
-Ee|sw__ME_src|                  sw/
-Ee|nvdiag__ME_src|              ${hw__ME_src}nvdiag/
-Ee|hwtools__ME_src|             ${hw__ME_src}tools/
-Ee|mobileswtools__ME_src|       ${hwtools__ME_src}mobile_sw/
-Ee|swtools__ME_src|             ${mobileswtools__ME_src}
-Ee|mobswtools__ME_src|          ${mobileswtools__ME_src}
-Ee|mobsw__ME_src|               ${mobileswtools__ME_src}
-Ee|msw__ME_src|                 ${mobileswtools__ME_src}
-Ee|nvd__ME_src|                 ${nvdiag__ME_src}
-Ee|mods__ME_src|                ${nvdiag__ME_src}mods/
-Ee|simmgr__ME_src|              ${nvdiag__ME_src}simmgr/
-Ee|asim__ME_src|                ${simmgr__ME_src}
-Ee|cosim__ME_src|               ${simmgr__ME_src}
-Ee|ap0__ME_src|                 ${hw__ME_src}/ap/
-Ee|apjustap__ME_src|            ${ap0__ME_src}
-Ee|aptlit1__ME_src|             ${hw__ME_src}ap_tlit1/
-Ee|ap1__ME_src|                 ${aptlit1__ME_src}
-Ee|apt132__ME_src|              ${hw__ME_src}ap_t132/
-Ee|ap132__ME_src|               ${apt132__ME_src}
-Ee|t132__ME_src|                ${apt132__ME_src}
-Ee|TOT__ME_src|                 ${hw__ME_src}${ME_current_default_ap_tree}
-Ee|tot__ME_src|                 ${TOT__ME_src}
-Ee|topoftree__ME_src|           ${TOT__ME_src}
-Ee|ap__ME_src|                  ${TOT__ME_src}
-Ee|apip__ME_src|                ${ap__ME_src}ip/
-Ee|apcmod__ME_src|              ${ap__ME_src}cmod/
-Ee|cmod__ME_src|                ${apcmod__ME_src}
-Ee|apipinf__ME_src|             ${apip__ME_src}inf/
-Ee|inf__ME_src|                 ${apipinf__ME_src}
-Ee|gmeinf10__ME_src|            ${apipinf__ME_src}gpu_multiengine/1.0/
-Ee|gmeinf__ME_src|              ${gmeinf10__ME_src}
-Ee|gmetests__ME_src|            ${gmeinf__ME_src}clib/gpu_multiengine/
-Ee|crl__ME_t210_src|            ${gmetests__ME_src}cpu_red_line/ 
-
-Ee|totbin__ME_src|              ${TOT__ME_src}bin/
-Ee|apbin__ME_src|               ${totbin__ME_src}
-Ee|totvmod__ME_src|             ${TOT__ME_src}vmod/
-Ee|apvmod__ME_src|              ${totvmod__ME_src}
-Ee|vmod__ME_src|                ${totvmod__ME_src}
-Ee|totmods__ME_src|             ${TOT__ME_src}mods/
-Ee|apmods__ME_src|              ${totmods__ME_src}
-Ee|clib__ME_src|                ${TOT__ME_src}clib/
-Ee|clibl__ME_src|               ${clib__ME_src}Linux/
-Ee|etc__ME_src|                 ${TOT__ME_src}etc/
-Ee|diag__ME_src|                ${TOT__ME_src}diag/
-Ee|aptools__ME_src|             ${TOT__ME_src}tools/
-Ee|runscript__ME_src|           ${aptools__ME_src}RunScript
-Ee|totools__ME_src|             ${aptools__ME_src}
-Ee|runs__ME_src|                ${runscript__ME_src}
-Ee|testgen__ME_src|             ${diag__ME_src}testgen/
-Ee|tg__ME_src|                  ${testgen__ME_src}
-Ee|tgen__ME_src|                ${testgen__ME_src}
-Ee|testgen3__ME_src|            ${diag__ME_src}testgen3
-Ee|tg3__ME_src|                 ${testgen3__ME_src}
-Ee|tgen3__ME_src|               ${testgen3__ME_src}
-Ee|testgendprundir__ME_src|     ${testgen__ME_src}dp-run-tgens.d/
-Ee|dptg__ME_src|                ${testgendprundir__ME_src}
-Ee|drtg__ME_src|                ${testgendprundir__ME_src}
-Ee|drt__ME_src|                 ${testgendprundir__ME_src}
-Ee|dprt__ME_src|                ${testgendprundir__ME_src}
-Ee|drtd__ME_src|                ${testgendprundir__ME_src}
-Ee|dprun__ME_src|               ${testgendprundir__ME_src}
-Ee|tgrun__ME_src|               ${testgendprundir__ME_src}
-Ee|dpruns__ME_src|              ${testgendprundir__ME_src}
-Ee|tgrun__ME_src|               ${testgendprundir__ME_src}
-Ee|tgruns__ME_src|              ${testgendprundir__ME_src}
-Ee|dpr__ME_src|                 ${testgendprundir__ME_src}
-Ee|dprtg__ME_src|               ${testgendprundir__ME_src}
-Ee|testgendprtlrundir__ME_src|  ${testgen__ME_src}dp-rtl-tests/
-Ee|testgendprtldir__ME_src|     ${testgendprtlrundir__ME_src}
-Ee|dptgrtl__ME_src|             ${testgendprtlrundir__ME_src}
-Ee|drtl__ME_src|                ${testgendprtlrundir__ME_src}
-Ee|tgrtl__ME_src|               ${testgendprtlrundir__ME_src}
-Ee|testgendpt132rtldir__ME_src| ${testgen__ME_src}
-Ee|tgt132rtl__ME_src|           ${testgendpt132rtldir__ME_src}
-Ee|t132rtl__ME_src|             ${testgendpt132rtldir__ME_src}
-Ee|drv__ME_src|                 ${TOT__ME_src}drv/
-Ee|simfront__ME_src|            ${drv__ME_src}simfront/
-Ee|chiplibroot__ME_src|         ${drv__ME_src}chiplib/
-Ee|chiplib__ME_src|             ${chiplibroot__ME_src}chiplib/
-Ee|chiplib2__ME_src|            ${chiplibroot__ME_src}chiplib2/
-Ee|cl2__ME_src|                 ${chiplib2__ME_src}
-Ee|drvapi__ME_src|              ${drv__ME_src}drvapi/
-Ee|drvapinc__ME_src|            ${drvapi__ME_src}include
-Ee|runtestcommon__ME_src|       ${TOT__ME_src}drv/drvapi/runtest_common/
-Ee|rtc__ME_src|                 ${runtestcommon__ME_src}
-Ee|me__ME_src|                  ${TOT__ME_src}drv/multiengine/
-Ee|meng__ME_src|                ${me__ME_src}
-Ee|mebld__ME_src|               ${me__ME_src}
-Ee|multi__ME_src|               ${me__ME_src}
-Ee|drvme__ME_src|               ${me__ME_src}
-Ee|drvme__ME_src|               ${me__ME_src}
-Ee|multiengine__ME_src|         ${me__ME_src}
-Ee|objlinux__ME_src|            ${me__ME_src}t124_debug/ObjLinux/
-Ee|objlinuxnd__ME_src|          ${me__ME_src}t124/ObjLinux/
-Ee|multienginefw__ME_src|       ${me__ME_src}framework/
-Ee|mefw__ME_src|                ${multienginefw__ME_src}
-Ee|fwutils__ME_src|             ${TOT__ME_src}drv/multiengine/framework/utilities/
-Ee|fwloader__ME_src|            ${fwutils__ME_src}loader/
-Ee|loader__ME_src|              ${fwloader__ME_src}
-Ee|drvapi__ME_src|              ${TOT__ME_src}drv/multiengine/drvapi/
-Ee|medrvapi__ME_src|            ${drvapi__ME_src}
-Ee|levelsroot__ME_src|          ${testgen__ME_src}config/levels/
-Ee|tegralevels__ME_src|         ${levelsroot__ME_src}tegra/
-Ee|levels__ME_src|              ${levelsroot__ME_src}tegra/
-Ee|gpumelevels__ME_src|         ${tegralevels__ME_src}/multiengine
-Ee|gmelevels__ME_src|           ${gpumelevels__ME_src}
-Ee|melevels__ME_src|            ${gpumelevels__ME_src}
-Ee|kepler1gklit3man__ME_src|    ${hw__ME_src}kepler1_gklit3/manuals/
-Ee|keplerman__ME_src|           ${kepler1gklit3man__ME_src}
-Ee|gkman__ME_src|               ${kepler1gklit3man__ME_src}
-Ee|kepman__ME_src|              ${kepler1gklit3man__ME_src}
+Ee|ME_current_default_TOT|      Default_TOT/
+Ee|scratch__SB_rel|             ../../
+Ee|scr__SB_rel|                 ../../
+Ee|workspace__SB_rel|           ./
+Ee|ws__SB_rel|                  ./
+Ee|sandbox__SB_rel|             ./
+Ee|sb__SB_rel|                  ./
+Ee|indices__SB_rel|             ./
+Ee|index__SB_rel|               ${indices__SB_rel}
+Ee|indexes__SB_rel|             ${indices__SB_rel}
+Ee|cscope__SB_rel|              ${indices__SB_rel}
+Ee|tags__SB_rel|                ./
+Ee|___SB_rel|                   ./
+Ee|hw__SB_rel|                  hw/
+Ee|sw__SB_rel|                  sw/
+Ee|nvgpu__SB_rel|               ${hw__SB_rel}nvgpu/
+Ee|fmod__SB_rel|fmodel__SB_rel| ${nvgpu__SB_rel}fmod/
+Ee|xvetranslator__SB_rel|       ${fmodel__SB_rel}xve_translator/
+Ee|xvexlat__SB_rel|             ${xvetranslator__SB_rel}
+Ee|xve__SB_rel|                 ${xvetranslator__SB_rel}
+Ee|nesstutorial__SB_rel|        ${fmodel__SB_rel}ness-tutorial/
+Ee|nesstut__SB_rel|             ${nesstutorial__SB_rel}
+Ee|nvdiag__SB_rel|              ${hw__SB_rel}nvdiag/
+Ee|hwtools__SB_rel|             ${hw__SB_rel}tools/
+Ee|mobileswtools__SB_rel|       ${hwtools__SB_rel}mobile_sw/
+Ee|swtools__SB_rel|             ${mobileswtools__SB_rel}
+Ee|mobswtools__SB_rel|          ${mobileswtools__SB_rel}
+Ee|mobsw__SB_rel|               ${mobileswtools__SB_rel}
+Ee|msw__SB_rel|                 ${mobileswtools__SB_rel}
+Ee|nvd__SB_rel|                 ${nvdiag__SB_rel}
+Ee|mods__SB_rel|                ${nvdiag__SB_rel}mods/
+Ee|simmgr__SB_rel|              ${nvdiag__SB_rel}simmgr/
+Ee|asim__SB_rel|                ${simmgr__SB_rel}
+Ee|cosim__SB_rel|               ${simmgr__SB_rel}
+Ee|ap0__SB_rel|                 ${hw__SB_rel}/ap/
+Ee|apjustap__SB_rel|            ${ap0__SB_rel}
+Ee|aptlit1__SB_rel|             ${hw__SB_rel}ap_tlit1/
+Ee|ap1__SB_rel|                 ${aptlit1__SB_rel}
+Ee|apt132__SB_rel|              ${hw__SB_rel}ap_t132/
+Ee|ap132__SB_rel|               ${apt132__SB_rel}
+Ee|t132__SB_rel|                ${apt132__SB_rel}
+Ee|TOT__SB_rel|                 ${hw__SB_rel}${ME_current_default_TOT}
+Ee|tot__SB_rel|                 ${TOT__SB_rel}
+Ee|topoftree__SB_rel|           ${TOT__SB_rel}
+Ee|ap__SB_rel|                  ${hw__SB_rel}${ME_current_default_ap_tree}
+Ee|apip__SB_rel|                ${ap__SB_rel}ip/
+Ee|apbin__SB_rel|               ${ap__SB_rel}bin/
+Ee|apcmod__SB_rel|              ${ap__SB_rel}cmod/
+Ee|cmod__SB_rel|                ${apcmod__SB_rel}
+Ee|apipinf__SB_rel|             ${apip__SB_rel}inf/
+Ee|inf__SB_rel|                 ${apipinf__SB_rel}
+Ee|gmeinf10__SB_rel|            ${apipinf__SB_rel}gpu_multiengine/1.0/
+Ee|gmeinf__SB_rel|              ${gmeinf10__SB_rel}
+Ee|gmetests__SB_rel|            ${gmeinf__SB_rel}clib/gpu_multiengine/
+Ee|crl__ME_t210_src|            ${gmetests__SB_rel}cpu_red_line/ 
+Ee|totbin__SB_rel|              ${TOT__SB_rel}bin/
+Ee|totvmod__SB_rel|             ${TOT__SB_rel}vmod/
+Ee|apvmod__SB_rel|              ${totvmod__SB_rel}
+Ee|vmod__SB_rel|                ${totvmod__SB_rel}
+Ee|totmods__SB_rel|             ${TOT__SB_rel}mods/
+Ee|apmods__SB_rel|              ${totmods__SB_rel}
+Ee|clib__SB_rel|                ${TOT__SB_rel}clib/
+Ee|clibl__SB_rel|               ${clib__SB_rel}Linux/
+Ee|etc__SB_rel|                 ${TOT__SB_rel}etc/
+Ee|diag__SB_rel|                ${TOT__SB_rel}diag/
+Ee|aptools__SB_rel|             ${TOT__SB_rel}tools/
+Ee|tottools__SB_rel|            ${aptools__SB_rel}
+Ee|totools__SB_rel|             ${aptools__SB_rel}
+Ee|runscript__SB_rel|           ${aptools__SB_rel}RunScript
+Ee|totools__SB_rel|             ${aptools__SB_rel}
+Ee|runs__SB_rel|                ${runscript__SB_rel}
+Ee|testgen__SB_rel|             ${diag__SB_rel}testgen/
+Ee|tg__SB_rel|                  ${testgen__SB_rel}
+Ee|tgen__SB_rel|                ${testgen__SB_rel}
+Ee|testgen3__SB_rel|            ${diag__SB_rel}testgen3
+Ee|tg3__SB_rel|                 ${testgen3__SB_rel}
+Ee|tgen3__SB_rel|               ${testgen3__SB_rel}
+Ee|testgendprundir__SB_rel|     ${testgen__SB_rel}dp-run-tgens.d/
+Ee|dptg__SB_rel|                ${testgendprundir__SB_rel}
+Ee|drtg__SB_rel|                ${testgendprundir__SB_rel}
+Ee|drt__SB_rel|                 ${testgendprundir__SB_rel}
+Ee|dprt__SB_rel|                ${testgendprundir__SB_rel}
+Ee|drtd__SB_rel|                ${testgendprundir__SB_rel}
+Ee|dprun__SB_rel|               ${testgendprundir__SB_rel}
+Ee|tgrun__SB_rel|               ${testgendprundir__SB_rel}
+Ee|dpruns__SB_rel|              ${testgendprundir__SB_rel}
+Ee|tgrun__SB_rel|               ${testgendprundir__SB_rel}
+Ee|tgruns__SB_rel|              ${testgendprundir__SB_rel}
+Ee|dpr__SB_rel|                 ${testgendprundir__SB_rel}
+Ee|dprtg__SB_rel|               ${testgendprundir__SB_rel}
+Ee|testgendprtlrundir__SB_rel|  ${testgen__SB_rel}dp-rtl-tests/
+Ee|testgendprtldir__SB_rel|     ${testgendprtlrundir__SB_rel}
+Ee|dptgrtl__SB_rel|             ${testgendprtlrundir__SB_rel}
+Ee|drtl__SB_rel|                ${testgendprtlrundir__SB_rel}
+Ee|tgrtl__SB_rel|               ${testgendprtlrundir__SB_rel}
+Ee|testgendpt132rtldir__SB_rel| ${testgen__SB_rel}
+Ee|tgt132rtl__SB_rel|           ${testgendpt132rtldir__SB_rel}
+Ee|t132rtl__SB_rel|             ${testgendpt132rtldir__SB_rel}
+Ee|drv__SB_rel|                 ${TOT__SB_rel}drv/
+Ee|simfront__SB_rel|            ${drv__SB_rel}simfront/
+Ee|chiplibroot__SB_rel|         ${drv__SB_rel}chiplib/
+Ee|chiplib__SB_rel|             ${chiplibroot__SB_rel}chiplib/
+Ee|chiplib2__SB_rel|            ${chiplibroot__SB_rel}chiplib2/
+Ee|cl2__SB_rel|                 ${chiplib2__SB_rel}
+Ee|drvapi__SB_rel|              ${drv__SB_rel}drvapi/
+Ee|drvapinc__SB_rel|            ${drvapi__SB_rel}include
+Ee|runtestcommon__SB_rel|       ${TOT__SB_rel}drv/drvapi/runtest_common/
+Ee|rtc__SB_rel|                 ${runtestcommon__SB_rel}
+Ee|me__SB_rel|                  ${TOT__SB_rel}drv/multiengine/
+Ee|meng__SB_rel|                ${me__SB_rel}
+Ee|mebld__SB_rel|               ${me__SB_rel}
+Ee|multi__SB_rel|               ${me__SB_rel}
+Ee|drvme__SB_rel|               ${me__SB_rel}
+Ee|drvme__SB_rel|               ${me__SB_rel}
+Ee|multiengine__SB_rel|         ${me__SB_rel}
+Ee|objlinux__SB_rel|            ${me__SB_rel}t124_debug/ObjLinux/
+Ee|objlinuxnd__SB_rel|          ${me__SB_rel}t124/ObjLinux/
+Ee|multienginefw__SB_rel|       ${me__SB_rel}framework/
+Ee|mefw__SB_rel|                ${multienginefw__SB_rel}
+Ee|fwutils__SB_rel|             ${TOT__SB_rel}drv/multiengine/framework/utilities/
+Ee|fwloader__SB_rel|            ${fwutils__SB_rel}loader/
+Ee|loader__SB_rel|              ${fwloader__SB_rel}
+Ee|drvapi__SB_rel|              ${TOT__SB_rel}drv/multiengine/drvapi/
+Ee|medrvapi__SB_rel|            ${drvapi__SB_rel}
+Ee|levelsroot__SB_rel|          ${testgen__SB_rel}config/levels/
+Ee|tegralevels__SB_rel|         ${levelsroot__SB_rel}tegra/
+Ee|levels__SB_rel|              ${levelsroot__SB_rel}tegra/
+Ee|gpumelevels__SB_rel|         ${tegralevels__SB_rel}/multiengine
+Ee|gmelevels__SB_rel|           ${gpumelevels__SB_rel}
+Ee|melevels__SB_rel|            ${gpumelevels__SB_rel}
+Ee|kepler1gklit3man__SB_rel|    ${hw__SB_rel}kepler1_gklit3/manuals/
+Ee|keplerman__SB_rel|           ${kepler1gklit3man__SB_rel}
+Ee|gkman__SB_rel|               ${kepler1gklit3man__SB_rel}
+Ee|kepman__SB_rel|              ${kepler1gklit3man__SB_rel}
 
 # //hw/ap/diag/testgen/config/levels/tegra/multiengine/gpu_multiengine_ar2
 
-Ee|fermi1gf100__ME_src|         ${hw__ME_src}fermi1_gf100/
-Ee|fermi1man__ME_src|           ${fermi1gf100__ME_src}manuals/
-Ee|ferman__ME_src|              ${fermi1man__ME_src}
+Ee|fermi1gf100__SB_rel|         ${hw__SB_rel}fermi1_gf100/
+Ee|fermi1man__SB_rel|           ${fermi1gf100__SB_rel}manuals/
+Ee|ferman__SB_rel|              ${fermi1man__SB_rel}
 
-Ee|devflushref__ME_src|         ${kepler1gklit3man__ME_src}dev_flush.ref
-Ee|devflush__ME_src|            ${kepler1gklit3man__ME_src}dev_flush.ref
+Ee|devflushref__SB_rel|         ${kepler1gklit3man__SB_rel}dev_flush.ref
+Ee|devflush__SB_rel|            ${kepler1gklit3man__SB_rel}dev_flush.ref
 
-Ee|kepclib__ME_src|             ${hw__ME_src}kepler1_gklit3/clib/
-Ee|kclib__ME_src|               ${kepclib__ME_src}
-Ee|klib__ME_src|                ${kepclib__ME_src}
+Ee|kepclib__SB_rel|             ${hw__SB_rel}kepler1_gklit3/clib/
+Ee|kclib__SB_rel|               ${kepclib__SB_rel}
+Ee|klib__SB_rel|                ${kepclib__SB_rel}
 
 # /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile/traces/gpu_multiengine
 #                                          arch/traces/mobile/traces/gpu_multiengine
-Ee|arch__ME_src|                arch/
-Ee|tracesroot__ME_src|          ${arch__ME_src}traces/
-Ee|troot__ME_src|               ${tracesroot__ME_src}
+Ee|arch__SB_rel|                arch/
+Ee|tracesroot__SB_rel|          ${arch__SB_rel}traces/
+Ee|troot__SB_rel|               ${tracesroot__SB_rel}
 
-Ee|mobiletraces__ME_src|        ${tracesroot__ME_src}mobile/traces/
-Ee|mtraces__ME_src|             ${mobiletraces__ME_src}
-Ee|mtrace__ME_src|              ${mobiletraces__ME_src}
+Ee|mobiletraces__SB_rel|        ${tracesroot__SB_rel}mobile/traces/
+Ee|mtraces__SB_rel|             ${mobiletraces__SB_rel}
+Ee|mtrace__SB_rel|              ${mobiletraces__SB_rel}
 
-Ee|nongpumetraces__ME_src|      ${mobiletraces__ME_src}nongpu_multiengine/
-Ee|metraces__ME_src|            ${nongpumetraces__ME_src}
-Ee|nongpumetracesso__ME_src|    ${nongpumetraces__ME_src}so/
-Ee|ngmeso__ME_src|              ${nongpumetracesso__ME_src}
-Ee|meso__ME_src|                ${nongpumetracesso__ME_src}
-Ee|sanitycpu__ME_src|           ${nongpumetracesso__ME_src}sanity_cpu/
+Ee|nongpumetraces__SB_rel|      ${mobiletraces__SB_rel}nongpu_multiengine/
+Ee|metraces__SB_rel|            ${nongpumetraces__SB_rel}
+Ee|nongpumetracesso__SB_rel|    ${nongpumetraces__SB_rel}so/
+Ee|ngmeso__SB_rel|              ${nongpumetracesso__SB_rel}
+Ee|meso__SB_rel|                ${nongpumetracesso__SB_rel}
+Ee|sanitycpu__SB_rel|           ${nongpumetracesso__SB_rel}sanity_cpu/
 
-Ee|nongpumetracesconfig__ME_src| ${nongpumetraces__ME_src}configs/
-Ee|nongpumeconfig__ME_src|      ${nongpumetracesconfig__ME_src}
-Ee|nongpuconfig__ME_src|        ${nongpumetracesconfig__ME_src}
-Ee|meconfig__ME_src|            ${nongpumetracesconfig__ME_src}
-Ee|sanitycpuconfig__ME_src|     ${nongpumetracesconfig__ME_src}
-Ee|nongpumecfg__ME_src|         ${nongpumetracesconfig__ME_src}
-Ee|nongpucfg__ME_src|           ${nongpumetracesconfig__ME_src}
-Ee|mecfg__ME_src|               ${nongpumetracesconfig__ME_src}
-Ee|sanitycpucfg__ME_src|        ${nongpumetracesconfig__ME_src}
+Ee|nongpumetracesconfig__SB_rel| ${nongpumetraces__SB_rel}configs/
+Ee|nongpumeconfig__SB_rel|      ${nongpumetracesconfig__SB_rel}
+Ee|nongpuconfig__SB_rel|        ${nongpumetracesconfig__SB_rel}
+Ee|meconfig__SB_rel|            ${nongpumetracesconfig__SB_rel}
+Ee|sanitycpuconfig__SB_rel|     ${nongpumetracesconfig__SB_rel}
+Ee|nongpumecfg__SB_rel|         ${nongpumetracesconfig__SB_rel}
+Ee|nongpucfg__SB_rel|           ${nongpumetracesconfig__SB_rel}
+Ee|mecfg__SB_rel|               ${nongpumetracesconfig__SB_rel}
+Ee|sanitycpucfg__SB_rel|        ${nongpumetracesconfig__SB_rel}
 
-Ee|gpumetraces__ME_src|         ${mobiletraces__ME_src}gpu_multiengine/
-Ee|traces__ME_src|              ${gpumetraces__ME_src}
-Ee|gputraces__ME_src|           ${gpumetraces__ME_src}
-Ee|gmetraces__ME_src|           ${gpumetraces__ME_src}
-Ee|gpumetrace__ME_src|          ${gpumetraces__ME_src}
-Ee|trace__ME_src|               ${gpumetraces__ME_src}
-Ee|gputrace__ME_src|            ${gpumetraces__ME_src}
-Ee|gmetrace__ME_src|            ${gpumetraces__ME_src}
-Ee|sanity__ME_src|              ${gpumetraces__ME_src}
-Ee|gmesanity__ME_src|           ${gpumetraces__ME_src}
-Ee|gmetr__ME_src|               ${gpumetraces__ME_src}
-Ee|trgme__ME_src|               ${gpumetraces__ME_src}
-Ee|gmet__ME_src|                ${gpumetraces__ME_src}
-Ee|gme__ME_src|                 ${gpumetraces__ME_src}
-Ee|gmebuild__ME_src|            ${gpumetraces__ME_src}
-Ee|gmebld__ME_src|              ${gpumetraces__ME_src}
-Ee|gmemake__ME_src|             ${gpumetraces__ME_src}
+Ee|gpumetraces__SB_rel|         ${mobiletraces__SB_rel}gpu_multiengine/
+Ee|traces__SB_rel|              ${gpumetraces__SB_rel}
+Ee|gputraces__SB_rel|           ${gpumetraces__SB_rel}
+Ee|gmetraces__SB_rel|           ${gpumetraces__SB_rel}
+Ee|gpumetrace__SB_rel|          ${gpumetraces__SB_rel}
+Ee|trace__SB_rel|               ${gpumetraces__SB_rel}
+Ee|gputrace__SB_rel|            ${gpumetraces__SB_rel}
+Ee|gmetrace__SB_rel|            ${gpumetraces__SB_rel}
+Ee|sanity__SB_rel|              ${gpumetraces__SB_rel}
+Ee|gmesanity__SB_rel|           ${gpumetraces__SB_rel}
+Ee|gmetr__SB_rel|               ${gpumetraces__SB_rel}
+Ee|trgme__SB_rel|               ${gpumetraces__SB_rel}
+Ee|gmet__SB_rel|                ${gpumetraces__SB_rel}
+Ee|gme__SB_rel|                 ${gpumetraces__SB_rel}
+Ee|gmebuild__SB_rel|            ${gpumetraces__SB_rel}
+Ee|gmebld__SB_rel|              ${gpumetraces__SB_rel}
+Ee|gmemake__SB_rel|             ${gpumetraces__SB_rel}
 
-Ee|plex__ME_src|                ${gpumetraces__ME_src}plex/
+Ee|plex__SB_rel|                ${gpumetraces__SB_rel}plex/
 
-Ee|gpumultienginefw__ME_src|    ${gpumetraces__ME_src}framework/
-Ee|gmefw__ME_src|               ${gpumultienginefw__ME_src}
+Ee|gpumultienginefw__SB_rel|    ${gpumetraces__SB_rel}framework/
+Ee|gmefw__SB_rel|               ${gpumultienginefw__SB_rel}
 
-Ee|nongputraces__ME_src|        ${tracesroot__ME_src}nongpu_multiengine/data_src/
-Ee|nongpudatasrc__ME_src|       ${nongputraces__ME_src}
-Ee|datasrc__ME_src|             ${nongputraces__ME_src}
-Ee|ngdatasrc__ME_src|           ${nongputraces__ME_src}
-Ee|ngtraces__ME_src|            ${nongputraces__ME_src}
-Ee|ngimages__ME_src|            ${nongputraces__ME_src}
+Ee|nongputraces__SB_rel|        ${tracesroot__SB_rel}nongpu_multiengine/data_src/
+Ee|nongpudatasrc__SB_rel|       ${nongputraces__SB_rel}
+Ee|datasrc__SB_rel|             ${nongputraces__SB_rel}
+Ee|ngdatasrc__SB_rel|           ${nongputraces__SB_rel}
+Ee|ngtraces__SB_rel|            ${nongputraces__SB_rel}
+Ee|ngimages__SB_rel|            ${nongputraces__SB_rel}
 
-Ee|yuvimages__ME_src|           ${nongputraces__ME_src}yuv_image/
-Ee|rgbimages__ME_src|           ${nongputraces__ME_src}rgb_image/
+Ee|yuvimages__SB_rel|           ${nongputraces__SB_rel}yuv_image/
+Ee|rgbimages__SB_rel|           ${nongputraces__SB_rel}rgb_image/
 
 
 Ee|modstraces|trace3dtraces|            /home/scratch.traces02/arch/traces/
@@ -251,43 +263,43 @@ Ee|traces2mobiletracessys|t2sys|mt2sys| /home/scratch.traces02/mobile/traces/sys
 Ee|traces2mobiletracesso|t2so|mt2so|    ${traces2mobiletracessys}so/
 Ee|ccplexso|soccplex|memtxnaxi|aximemtxn| ${traces2mobiletracesso}t124/
 
-Ee|nvdev__ME_src|               dev/
-Ee|asimsrc__ME_src|             ${nvdev__ME_src}cpu/tools/sim/asim/1.0/hw/
-Ee|swdev__ME_src|               ${sw__ME_src}dev/
-Ee|swmods__ME_src|              ${swdev__ME_src}gpu_drv/chips_a/diag/mods/
-Ee|modssrc__ME_src|             ${swmods__ME_src}
-Ee|modsrc__ME_src|              ${swmods__ME_src}
-Ee|modsbld__ME_src|             ${swmods__ME_src}
-Ee|modsout__ME_src|             ${swmods__ME_src}output/
-Ee|mdiagsrc__ME_src|            ${swmods__ME_src}mdiag/
-Ee|mdsrc__ME_src|               ${mdiagsrc__ME_src}
-Ee|t3dsrc__ME_src|              ${mdiagsrc__ME_src}tests/gpu/trace_3d/
+Ee|nvdev__SB_rel|               dev/
+Ee|asimsrc__SB_rel|             ${nvdev__SB_rel}cpu/tools/sim/asim/1.0/hw/
+Ee|swdev__SB_rel|               ${sw__SB_rel}dev/
+Ee|swmods__SB_rel|              ${swdev__SB_rel}gpu_drv/chips_a/diag/mods/
+Ee|modssrc__SB_rel|             ${swmods__SB_rel}
+Ee|modsrc__SB_rel|              ${swmods__SB_rel}
+Ee|modsbld__SB_rel|             ${swmods__SB_rel}
+Ee|modsout__SB_rel|             ${swmods__SB_rel}output/
+Ee|mdiagsrc__SB_rel|            ${swmods__SB_rel}mdiag/
+Ee|mdsrc__SB_rel|               ${mdiagsrc__SB_rel}
+Ee|t3dsrc__SB_rel|              ${mdiagsrc__SB_rel}tests/gpu/trace_3d/
 
-Ee|surfwr__ME_src|              ${gpumetraces__ME_src}surface_write_read/
-Ee|surf__ME_src|                ${surfwr__ME_src}
-Ee|swr__ME_src|                 ${surfwr__ME_src}
-Ee|cpusurfwr__ME_src|           ${gpumetraces__ME_src}cpu_surface_write_read/
-Ee|cpusurf__ME_src|             ${cpusurfwr__ME_src}
-Ee|cpuswr__ME_src|              ${cpusurfwr__ME_src}
-Ee|csurf__ME_src|               ${cpusurfwr__ME_src}
-Ee|cswr__ME_src|                ${cpusurfwr__ME_src}
+Ee|surfwr__SB_rel|              ${gpumetraces__SB_rel}surface_write_read/
+Ee|surf__SB_rel|                ${surfwr__SB_rel}
+Ee|swr__SB_rel|                 ${surfwr__SB_rel}
+Ee|cpusurfwr__SB_rel|           ${gpumetraces__SB_rel}cpu_surface_write_read/
+Ee|cpusurf__SB_rel|             ${cpusurfwr__SB_rel}
+Ee|cpuswr__SB_rel|              ${cpusurfwr__SB_rel}
+Ee|csurf__SB_rel|               ${cpusurfwr__SB_rel}
+Ee|cswr__SB_rel|                ${cpusurfwr__SB_rel}
 
-Ee|memtxnsurfwr__ME_src|        ${gpumetraces__ME_src}mem_txn_swr/
-Ee|memtxnswr__ME_src|           ${memtxnsurfwr__ME_src}
-Ee|mtxnswr__ME_src|             ${memtxnsurfwr__ME_src}
-Ee|swrmtxn__ME_src|             ${memtxnsurfwr__ME_src}
-Ee|mtswr__ME_src|               ${memtxnsurfwr__ME_src}
-Ee|swrmt__ME_src|               ${memtxnsurfwr__ME_src}
+Ee|memtxnsurfwr__SB_rel|        ${gpumetraces__SB_rel}mem_txn_swr/
+Ee|memtxnswr__SB_rel|           ${memtxnsurfwr__SB_rel}
+Ee|mtxnswr__SB_rel|             ${memtxnsurfwr__SB_rel}
+Ee|swrmtxn__SB_rel|             ${memtxnsurfwr__SB_rel}
+Ee|mtswr__SB_rel|               ${memtxnsurfwr__SB_rel}
+Ee|swrmt__SB_rel|               ${memtxnsurfwr__SB_rel}
 
-Ee|memtxn__ME_src|              ${gpumetraces__ME_src}mem-txn/
-Ee|mem_txn__ME_src              ${memtxn__ME_src}
-Ee|mtxn__ME_src|                ${memtxn__ME_src}
+Ee|memtxn__SB_rel|              ${gpumetraces__SB_rel}mem-txn/
+Ee|mem_txn__SB_rel              ${memtxn__SB_rel}
+Ee|mtxn__SB_rel|                ${memtxn__SB_rel}
 
-Ee|cpuredline__ME_src|          ${gpumetraces__ME_src}cpu_red_line/
-Ee|cpurl__ME_src|               ${cpuredline__ME_src}
-Ee|crl__ME_src|                 ${cpuredline__ME_src}
+Ee|cpuredline__SB_rel|          ${gpumetraces__SB_rel}cpu_red_line/
+Ee|cpurl__SB_rel|               ${cpuredline__SB_rel}
+Ee|crl__SB_rel|                 ${cpuredline__SB_rel}
 
-Ee|depcpu__ME_src|              ${gpumetraces__ME_src}dep_cpu_cpu_gpu_cpu/
+Ee|depcpu__SB_rel|              ${gpumetraces__SB_rel}dep_cpu_cpu_gpu_cpu/
 
 #######################################################################
 
@@ -295,6 +307,8 @@ Ee|scratch0|scr0|sc0|                         /home/scratch.dpanariti_t124/
 Ee|scratch1|scr1|sc1|                         /home/scratch.dpanariti_t124_1/
 Ee|scratch2|scr2|sc2|                         /home/scratch.dpanariti_t124_2/
 Ee|scratch3|scr3|sc3|                         /home/scratch.dpanariti_t124_3/
+#@todo XXX To become scratch.dpanariti_maxwell
+Ee|scratch4|scr4|sc4|                         /home/scratch.dpanariti/
 
 # Try to use tree vs sandbox
 # Prefer the mnemonic names
@@ -310,11 +324,15 @@ Ee|swrwavefull|swrfullwave|swrfw|swrwf|swrlong|swrwave| ${sandbox4}
 
 Ee|sandbox5|sbox5|sb5|workspace5|ws5| ${scratch2}sb5/sb5hw/
 
+Ee|sandbox7|sbox7|sb7|workspace7|ws7| ${scratch4}sb7/sb7hw/
+
+Ee|sandbox8|sbox8|sb8|workspace8|ws8| ${scratch4}sb8/sb8hw/
+
 #
 # Some direct accesses for objects which are way too overloaded.
 # sb4 /home/scratch.dpanariti_t124_1/sb4/sb4hw/
 #
-Ee|t3dAlloc|  ${sb4}hw/${TOT__ME_src}drv/drvapi/runtest_common/runtest_exec.cpp:267
+Ee|t3dAlloc|  ${sb4}hw/${TOT__SB_rel}drv/drvapi/runtest_common/runtest_exec.cpp:267
 
 # See a15_msel_integ_sanity
 #
@@ -355,10 +373,18 @@ Ee|blaaah2|       /home/dpanariti/
 Ee|notes|       /home/dpanariti/notes/
 # Added Fri Oct 25 11:47:40 EDT 2013
 Ee|goodcrl|       /home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-run-tgens.d/cpu_red_line/2013-10-24T19.32.32-0400.out/tests/mobile_traces_gpu_multiengine/00/00/01/000001/
+# Good RTL run with complete test and output.
+Ee|rtlswr|        /home/scratch.dpanariti_t124/sb2/sb2hw/hw/ap_tlit1/diag/testgen/dp-rtl-tests/2013-10-14T14.21.38-0700/cpu_surface_write_read/
+Ee|swrrtl|        /home/scratch.dpanariti_t124/sb2/sb2hw/hw/ap_tlit1/diag/testgen/dp-rtl-tests/2013-10-14T14.21.38-0700/cpu_surface_write_read/
+Ee|swrtl|         /home/scratch.dpanariti_t124/sb2/sb2hw/hw/ap_tlit1/diag/testgen/dp-rtl-tests/2013-10-14T14.21.38-0700/cpu_surface_write_read/
 # Added Fri Oct 25 11:49:16 EDT 2013
 Ee|badswr|       /home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-run-tgens.d/surface_write_read_axf/2013-10-24T19.32.32-0400.out/tests/mobile_traces_gpu_multiengine/00/00/01/000001/
 # Added Tue Feb  4 10:36:14 EST 2014
 Ee|asimcrl|crlasim|t210asim|asimt210|       /home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap/diag/testgen/dp-run-tgens.d/cpu_red_line/2014-01-27T12.12.33-0500.out/tests/mobile_traces_gpu_multiengine/00/00/01/000001/
+Ee|cpuredlinertl|crlrtl|crtl|     /home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap/diag/testgen/dp-run-tgens.d/cpu_red_line_rtl/2014-01-29T18.32.17-0500.out/tests/mobile_traces_gpu_multiengine/00/00/01/000001
+# Added Thu Feb 13 16:07:50 EST 2014
+Ee|swrtl2|       /home/scratch.dpanariti_t124/sb2/sb2hw/hw/ap_tlit1/diag/testgen/dp-rtl-tests/2013-10-29T13.19.53-0700/cpu_surface_write_read/
+# Added Fri Feb 14 11:59:06 EST 2014
 ########################################################################### ***
 # ***
 # Local Variables: ***

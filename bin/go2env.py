@@ -326,7 +326,7 @@ for opt, val in opts:
         Shell_type = "grep-val"
     elif opt == '-m':
         # Do this with a front end since it is nvidia ME specific.
-        grep_regexp = "^" + val + "__ME_src$"
+        grep_regexp = "^" + val + "__SB_rel$"
         Shell_type = "grep"
 
 handlers = get_handlers(Shell_type)

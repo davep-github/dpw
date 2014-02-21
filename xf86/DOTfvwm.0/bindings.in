@@ -201,7 +201,7 @@ Mouse 3         6       A       All ($c) WindowShade On
 ## Key F5               A       MS      RaiseLower
 ## Key F6               A       MS      All (Iconic) Raise  # originally Restore
 ## Key F7               A       MS      Move
-Key F7                  A       4       Move
+## Key F7                  A       4       Move
 ## Key F8               A       MS      Resize
 ## Key F9               A       MS      Iconify
 Key F10         A       MS      Maximize 100 100
@@ -307,6 +307,10 @@ Key            F6         A      4     GotoDesk 0 6
 Key            KP_Right   A      4     GotoDesk 0 6
 Key            KP_6       A      4     GotoDesk 0 6
 
+Key            F7         A      4     GotoDesk 0 7
+Key            KP_Home    A      4     GotoDesk 0 7
+Key            KP_7       A      4     GotoDesk 0 7
+
 Key            F10        A      4     GotoDesk 0 0
 Key            KP_Insert  A      4     GotoDesk 0 0
 Key            KP_0       A      4     GotoDesk 0 0
@@ -335,6 +339,10 @@ Key            KP_0       A      4     GotoDesk 0 0
 #trying GotoDesk to see if we stay on the same page. Key            KP_Right   A      4     GotoDeskAndPage 6 0 0
 #trying GotoDesk to see if we stay on the same page. Key            KP_6       A      4     GotoDeskAndPage 6 0 0
 
+#trying GotoDesk to see if we stay on the same page. Key            F7         A      4     GotoDeskAndPage 7 0 0
+#trying GotoDesk to see if we stay on the same page. Key            KP_Right   A      4     GotoDeskAndPage 7 0 0
+#trying GotoDesk to see if we stay on the same page. Key            KP_7       A      4     GotoDeskAndPage 7 0 0
+
 #trying GotoDesk to see if we stay on the same page. Key            F10        A      4     GotoDeskAndPage 0 0 0
 #trying GotoDesk to see if we stay on the same page. Key            KP_Insert  A      4     GotoDeskAndPage 0 0 0
 #trying GotoDesk to see if we stay on the same page. Key            KP_0       A      4     GotoDeskAndPage 0 0 0
@@ -349,6 +357,7 @@ Key            F3         A      S4    GotoDeskAndPage 3 0 1
 Key            F4         A      S4    GotoDeskAndPage 4 0 1
 Key            F5         A      S4    GotoDeskAndPage 5 0 1
 Key            F6         A      S4    GotoDeskAndPage 6 0 1
+Key            F7         A      S4    GotoDeskAndPage 7 0 1
 Key            F10        A      S4    GotoDeskAndPage 0 0 1
 
 Key            Insert     A      4     GotoPage 0 0

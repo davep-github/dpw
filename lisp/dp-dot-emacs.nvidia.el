@@ -118,19 +118,32 @@ tests.")
 ;; XXX @todo ? Should I trim that list? There are many bad matches already.
 ;;
 
-(defun dp-make-no-wrap-stupidly ()
+(defun dp-make-no-wrap-stupidly-sh-mode ()
   ;; Why did I not use (auto-fill-mode 0) ?
-  (setq fill-column 9999))
+  (setq fill-column 9999)
+  (sh-mode))
+
+(defun dp-make-no-wrap-stupidly-text-mode ()
+  ;; Why did I not use (auto-fill-mode 0) ?
+  (setq fill-column 9999)
+  (text-mode))
 
 (dp-add-list-to-list 
  'auto-mode-alist
- `( ;; (regexp . func-to-call-when-loaded)
-   ("\\(^\\|/\\)\\(regress_tegra_gpu_multiengine\\|gpu_multiengine_a[rs]2\\)$" .
-    dp-make-no-wrap-stupidly)
-   ("\\(^\\|/\\)tool_data.config$" .
-    dp-make-no-wrap-stupidly)
-   ("/tests/[^/]+/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{6\\}/.*\\.\\(cfg\\|sh\\)" .
-    dp-make-no-wrap-stupidly)))
+ (list ;; (regexp . func-to-call-when-loaded)
+  (cons "\\(^\\|/\\)\\(regress_tegra_gpu_multiengine\\|gpu_multiengine_a[rs]2\\)$"
+        'dp-make-no-wrap-stupidly-text-mode)
+   (cons "\\(^\\|/\\)tool_data.config$"
+         'dp-make-no-wrap-stupidly-text-mode)
+   (cons "/tests/[^/]+/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{6\\}/.*\\.\\(cfg\\|sh\\)"
+         'dp-make-no-wrap-stupidly-sh-mode)
+   ;; We use spec as an extension for NESS [interface] specification files.
+   ;; .spec is also used for rpm-spec-files.
+   ;; Since the regexp for the rpm-spec-files *may* change, we'll just
+   ;; override the mode with something innocuous, until an ness-spec mode is
+   ;; written. Or at least a font locker.
+   ;; For now, another existing mode may be more appropriate.
+   (cons "\\.spec$" 'text-mode)))
 
 (defvar dp-p4-default-depot-completion-prefix "//"
   "Depot root.")

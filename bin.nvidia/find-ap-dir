@@ -13,9 +13,10 @@ done
 unset eexec_program
 
 # Better than depth because it works *anywhere* in the sandbox.
+# e.g. depth in //arch leads to the root.
 
 # Why didn't I do this?
-me-dogo ap && exit 0
+me-expand-dest ap && exit 0
 
 : ${ap_dir_candidates:=hw/ap_tlit1 hw/ap hw/ap_t132}
 

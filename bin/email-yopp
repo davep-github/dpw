@@ -13,18 +13,32 @@ done
 unset eexec_program
 
 : ${annotation=}
+: ${run_cmd_p=}
 
 while (($# > 0))
 do
   case "$1" in
       --cron) annotation="cron: ${annotation}";;
       --anno|--annotation) shift; annotation="${annotation} ${2}";;
+      --run|--exec|--eval|--cmd) run_cmd_p=t;;
       --) shift; break;;
       *) break;
   esac
   shift
 done
 
-msg="$progname: in ${PWD}: $@"
+if vunsetp "$*"
+then
+    type="No msg."
+elif vtruep "${run_cmd_p}"
+then
+    # the message is really a command to run and wait for completion thereof.
+    EExec "$@"
+    type="CMD: "
+else
+    type="MSG: "
+fi
+
+msg="$progname: in ${PWD}: ${type}$@"
 
 echo "${msg}" | EExec mail -s "${annotation}YOPP! ${msg}" "${USER}"

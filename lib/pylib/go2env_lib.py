@@ -91,7 +91,7 @@ def keep_dict_updated():
 # aliases[name] = (val,
 #                 {"line": line, "selector": selector,
 #                  "ctl": ctl, "aliases": aliases,
-#                  "file_name": file_name})
+#                  "src_file_name": file_name})
 #
 #
 ## class Alias_item_t(object):
@@ -281,7 +281,7 @@ def list_handler(name, alias_item, **kw_args):
     """Simple listing to stdout."""
     val = alias_item.get("val")
     ctl = alias_item.get("ctl")
-    file_name = alias_item.get("file_name")
+    file_name = alias_item.get("src_file_name")
     print val, name, file_name, ctl
 
 #def handle_sh(name, alias_item, **kw_args):
@@ -290,7 +290,7 @@ def list_handler(name, alias_item, **kw_args):
 def LIST_handler(name, alias_item, **kw_args):
     val = alias_item.get("val")
     ctl = alias_item.get("ctl")
-    file_name = alias_item.get("file_name")
+    file_name = alias_item.get("src_file_name")
     
     print "%s:%s" % (file_name,  val), name, file_name, ctl
 
@@ -401,7 +401,7 @@ aliases>%s<""", line, selector, aliases)
                 aliases[name] = {"val": val,
                                  "selector": selector,
                                  "ctl": ctl,
-                                 "file_name": file_name}
+                                 "src_file_name": file_name}
 
 #####################################################################
 def expand_file(file, selector, aliases):
@@ -749,7 +749,7 @@ if __name__ == "__main__":
         elif opt == '-M':
             # @todo XXX Do this with a front end since it is nvidia ME
             # specific.
-            grep_regexps.append("^" + val + "__ME_src$")
+            grep_regexps.append("^" + val + "__SB_rel$")
             Shell_type = "grep"
         elif opt == '-m':
             grep_regexps.append("^" + val + suffix + "$")

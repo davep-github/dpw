@@ -595,7 +595,7 @@ if there is no current one set."
         (dp-read-only-sandbox-p filename)
         (not (dp-current-sandbox-file-p filename))
         (dp-current-sandbox-read-only-p)))
-    (dmessage "file in non-current sandbox: %s" filename)
+    (message "!!! File not in current sandbox: %s" filename)
     t))
 
 (add-hook 'dp-detect-read-only-file-hook 'dp-sandbox-read-only-p)

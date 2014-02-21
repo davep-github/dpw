@@ -158,7 +158,7 @@ do
       --mail-me|--mailme) mailto_opt="${mailto_opt} -mailto ${USER}";;
       --axf) axf_p=t;;
       --axf-bin|--axf-exe|--axf-prog|--axf-plugin) shift; axf_plugin_bin="${1}"; axf_p=t;;
-      --rtl) rtl_p=t; d_TARGET_opt=;;
+      --rtl) rtl_p=t; d_TARGET_opt=top_peatrans; target_top=RTL;;
       --rtl-args-more) shift; rtl_args_more="${rtl_args_more} ${2}";;
       --start-record) rtl_args_more="${rtl_args_more} +startrecord+${1}";;
       --split-waveform|--div-waveform) rtl_args_more="${rtl_args_more} +fsdbAutoSwitch";;
@@ -242,12 +242,16 @@ esac
 
 : ${project=${chip_opt}}
 
-vsetp "${rtl_p}" && target_opt=RTL
+if vsetp "${rtl_p}" || [ "$mode" = "arm" ]
+then
+    target_opt=RTL
+fi
 
 # Appending to $@ allows for more kinds of quoting to be preserved.
 # This might be able to be done with arrays.
 vsetp "${queue}" && set -- "$@" -queue "${queue}"
 vsetp "${project}"  && set -- "$@" -project "${project}"
+vsetp "${mode}" && set -- "$@" -mode "${mode}"
 vsetp "${chip_opt}"  && set -- "$@" -chip "${chip_opt}"
 vsetp "${target_opt}"  && set -- "$@" -target "${target_opt}"
 vsetp "${rtl_p}" && set -- "$@" ${rtl_args}
@@ -312,7 +316,6 @@ do
     }
 
     vsetp "${mdiag_args}" && set -- "$@" -mdiagArgs "${mdiag_args}"
-    vsetp "${mode}" && set -- "$@" -mode "${mode}"
     vsetp "${clobber_opt}" && set -- "$@" -clobber
     vsetp "${wait_opt}" && set -- "$@" "${wait_opt}"
     vsetp "${mail_opt}" && set -- "$@" "${mail_opt}"

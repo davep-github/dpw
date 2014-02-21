@@ -33,12 +33,17 @@ revision=
 : ${P4PORT=}
 : ${P4DIFF=}
 
-tmp_file=                # Needs to be non-null so at_exit() is less brittle.
+tmp_file=
 
-at_exit()
+trap_fun()
 {
-    [ -n "$tmp_file" ] && rm -f "$tmp_file"
+    [ -n "${tmp_file-}" ] && rm -f "$tmp_file"
 }
+
+for sig in 0 2 3 4 5 6 7 8 15
+do
+	trap "trap_fun ${sig}" $sig
+done
 
 # We need a shared directory if editing across machines.
 # p4 help environment lists both TMP and TEMP, but I don't know which one has
@@ -52,7 +57,7 @@ Usage_args_info=" <sandbox a.k.a client-name>"
 
 EExecVerbose
 std_options=""
-option_str="aw:sr:.t:Ty"
+option_str="aw:sr:.t:TyN:"
 long_options=("port:" "diff:")
 
 DPGOP_args_required=t
@@ -70,6 +75,7 @@ do
       -t) shift; client_template="$1";;
       -T) client_template=;;
       -y) do_it_anyway_p=-y;;
+      -N) shift; sandbox_name="sb${1}hw";;
       --port) shift; P4PORT="${1}";;
       --diff) shift; P4DIFF="${1}";;
       # Help!
@@ -100,6 +106,7 @@ EExec cd $work_dir
 
 EExec ${do_it_anyway_p} mkdir -p $sandbox_name
 EExec ${do_it_anyway_p} cd $sandbox_name
+EExec ${do_it_anyway_p} touch DP_SB_ROOT
 
 #mk.p4client $DASH_N_OPT -c
 : ${tmp_file:=$(mktemp -p ~/tmp dp4-new-clientXXXXX)}

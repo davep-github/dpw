@@ -51,13 +51,19 @@ echo_name_and_val()
       esac
       shift
     done
-    [ -z "$echo_name_and_val_noAnno" ] && echo_name_and_val_anno="$1"
 
     local type_suffix
     # This local could hide another with the same name
     local __use_a_name_like_this_and_you_get_what_you_deserve__
     for __use_a_name_like_this_and_you_get_what_you_deserve__ in "$@"; do
         type_suffix=
+        if [ -z "$echo_name_and_val_noAnno" ]
+        then 
+            echo_name_and_val_anno="$__use_a_name_like_this_and_you_get_what_you_deserve__"
+        else
+            echo_name_and_val_anno=
+        fi
+
         case "$__use_a_name_like_this_and_you_get_what_you_deserve__" in
             -*) echo_name_and_val_name=$(echo "$__use_a_name_like_this_and_you_get_what_you_deserve__" | sed -r 's/(-)(.*)/\2/')
                 type_suffix='[]'

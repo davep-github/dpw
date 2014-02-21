@@ -35,6 +35,7 @@ do
       -P|--proj|--project|--chip) shift; project="${1}"; echo "project>${project}<";;
       -p|--prog|--program|--test|--test-name) shift; testname="${1}";;
       -a|--args|--prog-args|--program-args) shift; test_args="${1}";;
+      -t|--traces|--trace-dir) shift; trace_dir="${1}";;
       -d|--denver) exec "${bindir}/tip-top-denver.sh" "${original_args[@]}";;
       -*) echo 1>&2 "Unsupported option-looking arg>${1}<";
           break;;
@@ -90,8 +91,11 @@ pushd "${rundir}"
     exit 1
 } 1>&2
 
-trace_dir=$(abspath ../../arch/traces/mobile/traces/gpu_multiengine)
-hdr_file=$(abspath ../../arch/traces/mobile/traces/gpu_multiengine/comp_one_tri_redline/test.hdr)
+
+: ${trace_dir=../../arch/traces/mobile/traces/gpu_multiengine}
+trace_dir=$(abspath "${trace_dir}")
+: ${hdr_file=../../arch/traces/mobile/traces/gpu_multiengine/comp_one_tri_redline/test.hdr}
+hdr_file=$(abspath "${hdr_file}")
 
 [ -n "${startrecord}" ] && {
     startrecord_opt="-rtlarg +startrecord+${startrecord}"

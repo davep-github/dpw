@@ -140,7 +140,7 @@ around with edited text.")
     (setq dp-bm-list (cons bm dp-bm-list))
     bm))
 
-(defun dp-scan-for-embedded-bookmarks (&optional from-point-p)
+(defun dp-scan-for-embedded-bookmarks (&optional from-point-p verbose-p)
   "Scan for all strings of the form <:bookmark-name:>.
 Add each bookmark-name to the list of bookmarks."
   (interactive "P")
@@ -161,12 +161,14 @@ Add each bookmark-name to the list of bookmarks."
            :bm-kind "embedded-line"
            :bm-marker (dp-mk-marker 
                        (line-beginning-position)))
-        (loop for s in (save-match-data
+        (loop for match-string in (save-match-data
                          (split-string (match-string 2) "|")) 
           do
-          (dp-set-or-goto-bm s :reset t
+          (dp-set-or-goto-bm match-string 
+                             :reset t
                              :plist '(embedded-p t)
                              :bm-kind "embedded-text"
+                             :quiet-p (not verbose-p)
                              :bm-marker (dp-mk-marker (match-beginning 0))))))))
 
 (defun* dp-bm-list-sans-embedded (&optional (bm-list dp-bm-list))
@@ -265,6 +267,10 @@ Calling it `dp-add-to-history-if-car-not=' is a bit too much.  Even for me."
          (setq dp-get-bm-interactive-history bubba))
     ret))
 
+(defun dp-get-bm-interactive-for-get-or-set (&rest rest)
+  (let ((ret (apply 'dp-get-bm-interactive rest)))
+    (list (car ret)
+          :reset (cadr ret))))
 (defun dp-pos-str (pos)
     (format "Line=%d, point=%d" (line-number pos) pos))
 
@@ -283,11 +289,12 @@ Calling it `dp-add-to-history-if-car-not=' is a bit too much.  Even for me."
   
 (defun* dp-set-or-goto-bm (bm-name
                            &key reset action-if-non-existent 
-                           (plist nil plist-passed-p)
+                           (plist nil)
                            (colorize-p t)
                            (verbose-p t)
                            bm-kind
-                           (highlight-line-p t)
+                           quiet-p
+                           (highlight-line-p nil)
                            (bm-marker nil bm-marker-passed-p))
   "Set or goto a bookmark.
 If the BM-NAME is in the list, goto it, otherwise, 
@@ -296,7 +303,7 @@ If RESET is t, then set the bookmark location to point.
 If RESET is nil, then use existence of prefix arg as truth value of reset.
 If RESET is other, then use (not existence of prefix arg) as truth value 
 of reset." 
-  (interactive (dp-get-bm-interactive "_bm name: "))
+  (interactive (dp-get-bm-interactive-for-get-or-set "_bm name: "))
   ;;(dp-add-to-bm-history bm-name)
 
   ;;(message (format "bm-name>%s<, reset>%s<, cpa>%s<" bm-name reset
@@ -371,12 +378,17 @@ of reset."
           (progn
             (setq old-bm (dp-bm-copy bm))
             (when (dp-bm-update bm bm-name bm-marker plist)
-              (setq status-msg 
+              (setq status-msg
+                    (if (equal (dp-bm-pos-str old-bm)
+                               (dp-pos-str 
+                                     (marker-position bm-marker)))
+                        nil
                     (concat status-msg 
                             (format "moving %s from %s *to* %s"
                                     bm-msg
                                     (dp-bm-pos-str old-bm)
-                                    (dp-pos-str (marker-position bm-marker)))))))
+                                    (dp-pos-str 
+                                     (marker-position bm-marker))))))))
 	;; otherwise, possibly make a new one
         (if (or (eq action-if-non-existent 'nop)
                 (and (eq action-if-non-existent 'ask)
@@ -384,6 +396,10 @@ of reset."
                            (format "No such bm (%s); create it? " bm-name)))))
             (setq status-msg (format "%s***ignoring non-existent %s " 
                                      status-msg bm-msg))
+          (when highlight-line-p
+            (dp-colorize-region (if (eq highlight-line-p t)
+                                    nil
+                                  highlight-line-p)))
           (setq bm (dp-add-to-bm-list bm-name bm-marker plist)
                 status-msg (concat status-msg (format "created %s at "
                                                       bm-msg)))
@@ -393,11 +409,22 @@ of reset."
 ;                        (marker-position bm-marker)))
       )
     (setq dp-last-bm bm)
-    (message "%s" status-msg)))
+    (when (and status-msg
+               (not quiet-p))
+      (message "%s" status-msg))))
 (put 'dp-set-or-goto-bm 'isearch-command t)
 
 
 (defalias 'gb 'dp-set-or-goto-bm)
+
+(defsubst gbh (name &optional color)
+  (interactive (dp-get-bm-interactive 
+                "Highlighted bm: "
+                :completions (dp-bm-rebuild-completion-list)))
+  (dp-set-or-goto-bm name 
+                     :reset nil 
+                     :action-if-non-existent 'set 
+                     :highlight-line-p (or color t)))
 
 (defun dp-bm-list-clear ()
   "Clear the bookmark list.
@@ -408,6 +435,8 @@ until they get gc'd."
     (while dp-bm-list
       (setq bm (car dp-bm-list)
 	    dp-bm-list (cdr dp-bm-list))
-      (set-marker (cdr bm) nil))))
+      ;;@todo XXX Add code to unhiglight lines.
+      (set-marker (dp-bm-marker bm) nil)))
+  (setq dp-bm-list nil))
 
 (provide 'dp-bookmarks)

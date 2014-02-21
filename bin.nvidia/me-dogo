@@ -26,7 +26,8 @@ done
 
 #: ${sb=""}
 #export go_here_first="$sb"
-export domain="__ME_src"        # DUMBASS PARAMETER to relative dogo
+# DUMBASS PARAMETER to relative dogo. Sometimes I really bug myself.
+export domain="__SB_rel"
 relative_to=$(dp-sb-root) || {
     relative_to=$(depth)/../..
 }

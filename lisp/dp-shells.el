@@ -55,10 +55,13 @@ Should be a color which nearly blends into background."
 ;; For shell 0 buffer:
 ;; 5002/spayshul> 
 ;;(defconst dp-sh-prompt-regexp "^[0-9]+\\([/<][0-9]+\\)?\\([#>]\\|<[0-9]*>\\)"
-(defconst dp-sh-prompt-regexp (concat "^[0-9]+"
-                                      "\\([/<]"
-                                      "\\(?:[0-9]+\\|spayshul\\)"
-                                      "\\)?\\([#>]\\|<[0-9]*>\\)")
+(defconst dp-sh-prompt-regexp 
+  (concat "^[0-9]+"                     ; History number
+          "\\("
+          "[/<]"                        ; hist num separator.
+          "\\(?:[0-9]+\\|spayshul\\)"   ; shell "name"
+          "\\)"
+          "?\\([#>]\\|<[0-9]*>\\)")
   "For bash/sh/etc.")
 
 (defconst dp-gdb-prompt-regexp "^(gdb) "
@@ -68,10 +71,6 @@ Should be a color which nearly blends into background."
   (list dp-sh-prompt-regexp dp-gdb-prompt-regexp)
   "`comint'-y \"clients\" can have font locking regexp for its prompt here.")
 
-;;;###autoload
-(defun* dp-shells-add-prompt-regexp (regexp &optional (mk-it-p t))
-  (add-to-list 'dp-shells-prompt-font-lock-regexp-list)
-  )
 ;;;###autoload
 (defun dp-shells-mk-prompt-font-lock-regexp (&optional regexp-list)
   (dp-concat-regexps-grouped (or regexp-list 
@@ -346,6 +345,7 @@ No regexps allowed. This will be processed by `regexp-opt'")
                                        "build_gpu_multiengine.pl"
                                        "index-me-code"
                                        "index-code"
+                                       "nvrun ness"
                                        "xemacs")))
                    '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(cia\\|stash\\|status\\|diff\\|stat\\)")
                    '("\\(.*/\\)\\(t_make\\|build_gpu_multiengine.*\\.pl\\)")
@@ -2651,7 +2651,8 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 
 (defun* dp-gdb-get-buffers (&key dead-or-alive-p)
   "Get the current list of gdb buffers, predicating on DEAD-OR-ALIVE-P."
-  ;; `dp-choose-buffers' uses `buffer-list<f>' if the incoming buffer-list is nil."
+  ;; `dp-choose-buffers' uses `buffer-list<f>' if the incoming buffer-list is
+  ;; nil."
   (when dp-gdb-buffers
     (dp-choose-buffers (function
                         (lambda (buf-cons)
@@ -2693,7 +2694,8 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
          most-recent-buffer
        (completing-read  prompt (dp-gdb-buffer-completion-list)
                          nil nil nil 
-                         'dp-gdb-buffer-history (dp-gdb-most-recent-buffer))))))
+                         'dp-gdb-buffer-history 
+                         (dp-gdb-most-recent-buffer))))))
 
 (defun* dp-get-locale-rcs (&optional (env-var-name "locale_rcs"))
   (let ((rcs (getenv env-var-name)))
@@ -3348,35 +3350,38 @@ Can this really not exist elsewhere?"
   (interactive (list (read-shell-command "Shell command: ")))
   (insert (shell-command-to-string command-string)))
 
-(defun dp-shell-buffer-num-comp (buf1 buf2 op)
-  (funcall op 
-           (symbol-value-in-buffer 'dp-shell-num buf1)
-           (symbol-value-in-buffer 'dp-shell-num buf2)))
+(defun dp-shell-buffer-name-less (buf1 buf2)
+  "Sort the buffers by name in some useful/comsistent manner.
+The auto-generated names are numeric, and I have plans to allow them to be 
+named. formatting to %s will work for anything 
+reasonable: numbers, strings, symbols."
+  (funcall 'string<
+           (format "%s" 
+                   (symbol-value-in-buffer 'dp-shell-num buf1))
+           (format "%s" 
+                   (symbol-value-in-buffer 'dp-shell-num buf2))))
 
-(defun dp-shell-buffer-num-less (buf1 buf2)
-  (funcall '<
-           (symbol-value-in-buffer 'dp-shell-num buf1)
-           (symbol-value-in-buffer 'dp-shell-num buf2)))
+(defun dp-shell-buffer-name-greater-or-equal (buf1 buf2)
+  (not (dp-shell-buffer-name-less buf1 buf2)))
 
-(defun dp-shell-buffer-num-greater-or-equal (buf1 buf2)
-  (not (dp-shell-buffer-num-less buf1 buf2)))
-
-(defun dp-next/prev-shell-buffer (lessp-fun &optional buffer)
+(defun dp-next/prev-shell-buffer (next/prev &optional buffer)
   (interactive)
   (let* ((shell-buffers (sort (dp-shells-find-matching-shell-buffers 
-                               nil ".*") 
-                              lessp-fun))
+                               nil ".*")
+                              (if (eq next/prev 'prev)
+                                  'dp-shell-buffer-name-greater-or-equal
+                                'dp-shell-buffer-name-less)))
          (this-buf (memq (or buffer (current-buffer)) shell-buffers)))
     (or (nth 1 this-buf)
         (car shell-buffers))))
 
 (defun dp-next-shell-buffer (&optional buffer)
   (interactive)
-  (dp-next/prev-shell-buffer 'dp-shell-buffer-num-less buffer))
+  (dp-next/prev-shell-buffer 'next buffer))
 
 (defun dp-prev-shell-buffer (&optional buffer)
   (interactive)
-  (dp-next/prev-shell-buffer 'dp-shell-buffer-num-greater-or-equal buffer))
+  (dp-next/prev-shell-buffer 'prev buffer))
 
 (defun dp-shell-switch-to-next-buffer (&optional other-window-p buffer)
   (interactive "P")

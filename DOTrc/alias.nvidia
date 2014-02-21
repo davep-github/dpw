@@ -20,4 +20,6 @@ alias tglr=tgen-latest-run
 
 alias xsb='mecd .'
 alias gxsb='mego .'
+
+alias nvpc=nv-pristine-cmd
 true

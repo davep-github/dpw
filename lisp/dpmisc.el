@@ -1927,7 +1927,7 @@ preceding line."
     (dp-set-mark (car region))
     (goto-char (cdr region))))
 
-(defun dp-mark-up-to-string (arg str)
+(defun dp-mark-up-to-string0 (arg str &optional end-of-match-p)
   (interactive "_p\nsMark up to str: ")
   (if (string= str "")
       (dp-mark-to-end-of-line)
@@ -1935,8 +1935,17 @@ preceding line."
     (with-interactive-search-caps-disable-folding
         str nil
       (when (search-forward str nil t arg)
-        (backward-char (length str))
+        (unless end-of-match-p
+          (backward-char (length str)))
         (point)))))
+
+(defun dp-mark-up-to-string (arg str)
+  (interactive "_p\nsMark up to str: ")
+  (dp-mark-up-to-string0 arg str nil))
+
+(defun dp-mark-up-to-string-end (arg str)
+  (interactive "_p\nsMark up to str: ")
+  (dp-mark-up-to-string0 arg str 'end-of-match-p))
 
 (defun dp-copy-to-end-of-line (&optional beginning include-newline)
   "Copy chars from point to the end of the current line to the kill ring.
@@ -6533,19 +6542,25 @@ The region is determined by `dp-region-or...'."
          (prompt-for-others (and current-prefix-arg
                                  (not (eq current-prefix-arg '-))
                                  (or (< pnv 0)
-                                     (listp current-prefix-arg)))))
-    (list (read-from-minibuffer "regexp: "  ;regexp
-                                nil nil nil 
-                                dp-colorize-bracketing-regexps-history)
-          (if prompt-for-others
-              (read-number "color index: " 'ints-only 1)  ; color
-            (cond 
-             ((not current-prefix-arg) nil)
-             ((eq current-prefix-arg '-) '-)
-             (t (abs pnv))))            ;color
-          nil                           ;end-regexp
-          (and prompt-for-others (y-or-n-p "Shrink-wrap? "))
-          (and prompt-for-others (y-or-n-p "Roll colors? ")))))
+                                     (listp current-prefix-arg))))
+         (regexp (read-from-minibuffer 
+                  "regexp: "
+                  nil nil nil 
+                  dp-colorize-bracketing-regexps-history))
+         (others (if prompt-for-others
+                     (list
+                      (progn
+                        (read-number "color index: " 'ints-only 1) ; color
+                        (cond
+                         ((not current-prefix-arg) nil)
+                         ((eq current-prefix-arg '-) '-)
+                         (t (abs pnv)))         ;color
+                        nil                     ;end-regexp
+                        (and prompt-for-others (y-or-n-p "Shrink-wrap? "))
+                        (and prompt-for-others (y-or-n-p "Roll colors? "))))
+                   '(:color nil))))
+    ;; FUBAR'd. All `others' need &key keywords.
+    (append (list regexp) others)))
 
 (defvar dp-colorize-lines-shrink-wrap-p-default t
   "*Should we colorize just the matching text or the entire line?

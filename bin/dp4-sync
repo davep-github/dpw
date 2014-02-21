@@ -127,7 +127,7 @@ then
     echo_id PWD
 else
     EExec -y cd "${cd_to}"
-    EExec_verbose_msg "$(echo_id cd_to), pwd>$(pwd)<pwd"
+    EExec_verbose_echo_id cd_to PWD
 fi
 
 : ${sandbox_root:=$(dp4-get-root)}
@@ -136,17 +136,11 @@ fi
 echo_id kwa_log_root
 
 vunsetp "${kwa_log_base}" && {
-    echo "\$@>$@<@"
-    if vunsetp "$*"
-    then
-        pwd=NO_PAT
-    else
-        pwd="${PWD}"
-    fi
-    echo_id PWD
+    echo "Parameters>$@<@"
+    EExec_verbose_echo_id PWD
     rel_dir=$(dp4-relative-dir "${PWD}")
     : ${rel_dir:=$(basename "${PWD}")}
-    echo_id rel_dir
+    EExec_verbose_echo_id rel_dir
     kwa_log_base=$(namify-path -c % $(normpath -c "${rel_dir}"))
 }
 echo_id kwa_log_base
@@ -156,10 +150,8 @@ echo_id kwa_log_dir
 
 if vunsetp "$*"
 then
-    echo "AAA"
     suffix=""
 else
-    echo "BBB"
     suffix=-$(namify-path $(normpath -c "$@"))
 fi
 echo_id suffix
