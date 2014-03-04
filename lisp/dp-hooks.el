@@ -420,7 +420,7 @@ For now this must be < the error col.")
 (defface dp-default-line-too-long-face
   '((((class color)
       (background light))
-     (:underline t)))
+     (:background "gainsboro")))
   "Face for buffer lines which getting too long."
   :group 'faces
   :group 'dp-vars)
@@ -430,6 +430,7 @@ For now this must be < the error col.")
   (let ((warning-zone-len (- dp-line-too-long-error-column
                              dp-line-too-long-warning-column
                              1)))
+    ;;               +-- 1 -------+  +-- 2 ---------+  +- 3 +
     (list (format "\\(^.\\{%d\\}\\)\\(.\\{%d,%d\\}\\)\\(.*\\)$"
                   dp-line-too-long-warning-column
                   0
@@ -1535,7 +1536,17 @@ Before visiting means after the command completes."
 (defvar dp-bind-xcscope-keys-p t
   "Pretty self-explanatory?")
 
-(defvar dp-make-cscope-database-regexps-fun nil
+(defun dp-default-make-cscope-database-regexps-fun ()
+  "Set a default value for `cscope-database-regexps'.
+This sets the value that will cause cscope to (in the words of cscope):
+  \"In the case of \"( t )\", this specifies that the search is to use the
+  normal hierarchical database search.  This option is used to
+  explicitly search using the hierarchical database search either before
+  or after other cscope database directories.\""
+  '((t)))
+  
+(defvar dp-make-cscope-database-regexps-fun
+  'dp-default-make-cscope-database-regexps-fun
   "Call this to generate an appropriate value for
   `cscope-database-regexps'(q.v.)")
 
@@ -1545,9 +1556,12 @@ Before visiting means after the command completes."
     (setq cscope-database-regexps
           (funcall dp-make-cscope-database-regexps-fun))))
 
-(when dp-make-cscope-database-regexps-fun
-            (setq cscope-database-regexps
-                  (funcall dp-make-cscope-database-regexps-fun)))
+;; Set a default if needed.
+;; @todo XXX Should this be unconditional?
+;; We can use `dp-cscope-set-cscope-database-regexps' for that.
+(setq-if-unbound cscope-database-regexps
+                 (funcall dp-make-cscope-database-regexps-fun))
+
 ;; 
 ;; -C ignore case.
 ;; ????? (setq cscope-command-args '("-C"))
@@ -1623,12 +1637,25 @@ Before visiting means after the command completes."
     (define-key map [(control f12)] 'cscope-prev-file)
     (define-key map [(meta f9)] 'cscope-display-buffer)
     (define-key map [(meta f10)] 'cscope-display-buffer-toggle))
+  
+  (defvar dp-cscope-current-dir-only-regexps nil
+    "The value for `cscope-database-regexps' that will cause us to search the
+    current directory only.
+??? Maybe should be '(t) ??? As per `cscope-database-regexps' doc?")
+
+  (defun dp-cscope-force-current-dir-only (&optional restore-p)
+    (interactive "P")
+    (if restore-p
+        (setq cscope-database-regexps
+              (funcall dp-make-cscope-database-regexps-fun))
+      (setq cscope-database-regexps dp-cscope-current-dir-only-regexps)))
 
   (when (dp-optionally-require 'xcscope)
     ;; defun dp-cscope-minor-mode-hook Something in some files can cause the
     ;; permuted style index (-q) to fail to find things. Currently, there is
     ;; something in the src tree @ nv that causes this.
-    (setq cscope-perverted-index-option dp-cscope-perverted-index-option)
+    (setq cscope-perverted-index-option dp-cscope-perverted-index-option
+          cscope-edit-single-match nil)
     (defun dp-cscope-minor-mode-hook ()
       (interactive)
       (define-key cscope-list-entry-keymap [(meta ?-)] 

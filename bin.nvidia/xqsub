@@ -16,15 +16,19 @@ vsetp $qs && queue_size=$qs
 : ${queue:=$default_queue}
 : ${project:=t124}
 : ${cwd:=${PWD}}
-: ${shell:=${SHELL:=/bin/bash}}
-: ${dash_l=-l}
+: ${command:=${SHELL:=/bin/bash}}
+: ${command_args=}
+: ${dash_l=-l}                  # A command arg when command is a shell.
 : ${dash_m=}
 : ${bg:=linen}
 : ${fg:=black}
 
 long_options=(
     "queue-size:"
-    "q-size:")
+    "q-size:"
+    "command-arg:"
+    "command-args:")
+
 # Usage variable usage:
 Usage_args_info=" extra-qsub-parameters"
 Usage_synopsis="Start a qsub process with useful defaults in a dpxx(dp1) window.
@@ -34,14 +38,16 @@ Usage_details="${EExec_parse_usage}
 -Q <queue> -- qsub queue. Default[$queue].
 --queue-size G -- make the queue size G gig.
 -c <cwd> -- Change dir to <cwd> before running. Default[\$PWD].
--s <shell> -- Use this as the shell.
+-s <command> -- Use this as the command. Default[$command].
 -l -- Do not pass -l to qsub. Default[$dash_l].
 -m <m-opt> -- Pass -m <m-opt> to qsub. Default:[].
 -b <bg-color> -- Use <bg-color> as bg color of the xterm. Default[$bg].
 -f <fg-color> -- Use <fg-color> as fg color of the xterm. Default[$fg].
+-a|--command-arg <a> -- Add <a> to command_args. Default[$command_args].
+-A|--command-args <A> -- Set command_args to A. Clears dash_l. Default[$command_args].
 "
 # Example of arg parsing.
-option_str="q:nvP:Qc:s:lm:b:f:"
+option_str="q:nvP:Qc:s:lm:b:f:a:A:"
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -57,11 +63,13 @@ do
       -q) shift; queue="${1}";;
       --queue-size|--q-size) shift; queue_size="${1}";;
       -c) shift; cwd="${1}";;
-      -s) shift; shell="${1}";;
+      -s) shift; command="${1}"; dash_l=;;
       -l) dash_l=;;
       -m) shift; dash_m="-m ${1}";;
       -b) shift; bg="${1}";;
       -f) shift; fg="${1}";;
+      -a|--command_arg) shift; command_args="${command_args} ${1}";;
+      -A|--command_args) shift; command_args="${1}";;
 
       # Help!
       --help) Usage; exit 0;;
@@ -76,13 +84,22 @@ done
     queue=$(echo "$queue" | sed -r "s/@QUEUE_SIZE@/$queue_size/")
 }
 
+original_command="${command}"
 # For some reason (to be looked into) in a dpxx(dp1) term, $SHELL is "bash",
 # just "bash", which can cause problems. So we add a path if it looks like
 # one is needed.
-case "$shell" in
+case "$command" in
     /*) ;;
-    *) shell=$(sp -1 $shell) || shell=/bin/bash;;
+    =*) command=$(echo "$command" | sed -rn 's/^(=)(.*)$/\2/p');;
+    *) command=$(type -p $command);; # || command=/bin/bash;;
 esac
+
+vunsetp "${command}" && {
+    echo "Cannot find command>$original_command<"
+    exit 1
+} 1>&2
+
+command_args="${command_args} ${dash_l}"
 
 EExec dpxx \
     -B "$bg" \
@@ -92,7 +109,7 @@ EExec dpxx \
        -q "$queue" \
        -P "$project" \
        -cwd "$cwd" \
-       -Is "$shell" \
-       $dash_l \
-       $dash_m \
+       -Is "$command" \
+       ${command_args} \
+       ${dash_m} \
        "$@"

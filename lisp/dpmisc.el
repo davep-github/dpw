@@ -1147,12 +1147,13 @@ the newly copied text."
 (put 'dp-scroll-down-other-window 'isearch-command t)
 
 ;; .if, etc, are for Berkley makefiles.
-(defvar dp-ifx-re-alist 
-  '((dp-if .    "[.#][ 	]*if")		; gets #if, #ifdef and #endif.
-    (dp-else .  "[.#][ 	]*else")
-    (dp-elif .  "[.#][ 	]*elif")	; ignored by the hideif stuff.
-    (dp-endif . "[.#][ 	]*endif")
-    (dp-fi    . "[.#][ 	]*fi")
+;; Makepp uses just ifdef. I don't know if it must be in column 0.
+(defvar dp-ifx-re-alist
+  '((dp-if .    "[ 	]*[.#][ 	]*if") ; gets #if, #ifdef and #endif.
+    (dp-else .  "[ 	]*[.#][ 	]*else")
+    (dp-elif .  "[ 	]*[.#][ 	]*elif") ; ignored by the hideif stuff.
+    (dp-endif . "[ 	]*[.#][ 	]*endif")
+    (dp-fi    . "[ 	]*[.#][ 	]*fi")
 ;;@todo;     (dp-ss-do    . "[ 	]*do")
 ;;@todo;     (dp-ss-done  . "[ 	]*done")
 ;;@todo;     (dp-ss-if    . "[ 	]*if")
@@ -1203,7 +1204,10 @@ Inspired by `vi-find-matching-paren'."
       (dp-matches-paren-p 'forward 'throw-error))
      ((setq ifdef-item (dp-get-ifdef-item re-alist))
       (cond
-       ((memq ifdef-item '(dp-if dp-else dp-elif)) (hif-ifdef-to-endif) t)
+       ((memq ifdef-item '(dp-if dp-else dp-elif))
+        (when (eq ifdef-item 'dp-else)
+          (dp-push-go-back "#else to #endif"))
+        (hif-ifdef-to-endif) t)
        ((eq ifdef-item 'dp-endif) (hif-endif-to-ifdef) t)
        (t (if ding-p (ding)) nil)))
      (t (if ding-p (ding)) nil))))
@@ -1716,7 +1720,7 @@ Tells `dp-indent-line-and-move-down' to not try to fix comments.
                                new-this-command 
                                &rest func-args)
   "Perform an op on a line and move to the next. 
-Motivated by `dp-indent-line-and-move-down'."
+Motivated by abstraction of `dp-indent-line-and-move-down'."
   (interactive "*")
   ;;(beginning-of-line)
   (let ((goal-column (and preserve-column-p 
@@ -3062,7 +3066,7 @@ Use another binding? Running out of prefix arg interpretations."
 lisp-interaction mode."
   (interactive "P")
   ;; goes to existing one if there, otherwise creates one with the right
-  ;; mode."
+  ;; mode.
   (let ((scratch-buffer (dp-find-or-create-sb-guts)))
     (if same-buffer-p
         (switch-to-buffer scratch-buffer)
@@ -11924,8 +11928,8 @@ Uses way too much inside info."
 MATCH-STRING is required when the match data was produced by a string match.
 Optionally use MATCH-DATA instead of the existing match-data."
   (interactive)
-  (let ((match-data (or match-data (match-data)))
-        (access-fun (if match-data
+  (setq-ifnil match-data (match-data))
+  (let ((access-fun (if match-data
                         (lambda (index &rest junk)
                           (nth i match-data))
                       'match-string)))

@@ -240,7 +240,7 @@ editing servers via `dp-editing-server-ipc-file'.")
 (defvar dp-p4-global-disable-detection-p nil
   "Turn off ALL perforce detection in find file hooks.")
 
-(defun dp-p4-active-here ()
+(defun dp-p4-active-here-p ()
   "Determine if this file needs to be worried about perforce. (Abstract to any SCM).
 Override in spec-macs.
 Allow us to limit perforce checks to certain dirs. At nVIDIA, a simple 
@@ -336,7 +336,7 @@ the init files.")
   (define-key gtags-mode-map "\e." 'dp-tag-find)
   (define-key gtags-mode-map [(control meta ?.)] 'dp-tag-find-other-window)
   (define-key gtags-mode-map [(meta ?,)] 'dp-tag-pop)
-  (setq gtags-global-command "ranking-global-gtags.py")
+  (defvar gtags-global-command "ranking-global-gtags.py")
 )
  ;; @todo put defaults here:
  (t nil))				; Make it easy to add others.

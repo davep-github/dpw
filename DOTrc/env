@@ -237,6 +237,10 @@ export MANPAGER=$PAGER
 
 export GNU_SECURE="$HOME/.gnuserv-hosts"
 
+# Fucking A! Finally back to real case sensitive ls and globbing.
+export LC_COLLATE=C
+
+
 # Make sure we're defined but don't change anything.
 : ${DP_GNU_EDITING_SERVER=""}
 

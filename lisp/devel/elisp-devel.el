@@ -5790,3 +5790,66 @@ Thursday January 30 2014
 ;;installed (defun dp-shells-save-buffer-p ()
 ;;installed   dp-shells-save-buffer-flag-p)
 
+
+========================
+Tuesday March 04 2014
+--
+
+(defvar dp-cscope-current-dir-only-regexps
+  nil)
+
+(defvar dp-cscope-force-current-dir-only-old-regexps nil)
+
+(defun dp-cscope-force-current-dir-only (&optional restore-p)
+  (interactive "P")
+  (if restore-p
+      (setq cscope-database-regexps dp-cscope-force-current-dir-only-old-regexps)
+    (setq dp-cscope-force-current-dir-only-old-regexps cscope-database-regexps
+          cscope-database-regexps dp-cscope-current-dir-only-regexps)))
+
+(setq old-cscope-database-regexps cscope-database-regexps)
+(("/home/scratch.dpanariti_t124_2/sb5/sb5hw" ("/home/scratch.dpanariti_t124_2/sb5/sb5hw/hw/ap_t132") ("/home/scratch.dpanariti_t124_2/sb5/sb5hw/arch") ("/home/scratch.dpanariti_t124_2/sb5/sb5hw/sw/dev") ("/home/scratch.dpanariti_t124_2/sb5/sb5hw/sw/mods") ("/home/scratch.dpanariti_t124_2/sb5/sb5hw/sw/tools") ("/home/scratch.dpanariti_t124_2/sb5/sb5hw/hw/class") ("/home/scratch.dpanariti_t124_2/sb5/sb5hw/hw/tools")))
+
+(setq cscope-database-regexps nil)
+nil
+
+(setq dp-cscope-force-current-dir-only-old-regexps old-cscope-database-regexps)
+
+
+
+(cl-pe '(setq-if-unbound blag "blrogh" orgh "bubba"))
+
+(progn
+  (if (boundp 'blag) blag (setq blag "blrogh"))
+  (if (boundp 'orgh) orgh (setq orgh "bubba")))nil
+
+
+
+(if (boundp 'blag) blag (setq blag "blrogh"))nil
+
+
+
+(if (boundp 'blag) blag (setq arg "blrogh"))nil
+
+(cl-pe '(setq-ifnil-or-unbound blag "blrogh"))
+
+(if (progn nil (and (boundp 'blag) blag)) blag (setq arg "blrogh"))nil
+
+
+(cl-pe '(setq-ifnil blag "blrogh"))
+
+(if blag blag (setq blag "blrogh"))nil
+(if blag blag (setq blag "blrogh"))nil
+
+(cl-pe '(setq-if-unbound cscope-database-regexps
+                 (funcall dp-make-cscope-database-regexps-fun)))
+
+(if (boundp 'cscope-database-regexps)
+    cscope-database-regexps
+  (setq cscope-database-regexps (funcall dp-make-cscope-database-regexps-fun)))
+nil
+
+
+
+
+

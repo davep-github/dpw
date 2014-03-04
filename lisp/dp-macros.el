@@ -255,6 +255,22 @@ it as a string."
       (cons 'progn (reverse result))))
 ;;(put 'setq-ifnil 'lisp-indent-function 0)  ; setq uses no special indent
   (defalias 'setq-unless 'setq-ifnil)
+
+  (defmacro setq-if-unbound (&rest arglist)
+    "Setup default values for args which are nil."
+    (if (not (= 0 (mod (length arglist) 2)))
+        (error "setq-ifnil: arglist len must be a multiple of 2."))
+    (let (arg init-val result)
+      (while arglist
+        (setq arg (car arglist)
+              arglist (cdr arglist)
+              init-val (car arglist)
+              arglist (cdr arglist))
+        (setq new-elem `(if (boundp (quote ,arg))
+                         ,arg 
+                         (setq ,arg ,init-val)))
+        (setq result (cons new-elem result)))
+      (cons 'progn (reverse result))))
   
   ;;!<@todo Be there common code twixt this and -ifnil? 
   (defmacro setq-ifnil-or-unbound (&rest arglist)
@@ -271,6 +287,7 @@ it as a string."
                          ,arg (setq arg ,init-val)))
         (setq result (cons new-elem result)))
       (cons 'progn (reverse result))))
+
 
   (defmacro dp-defaliases0 (def-type &rest symbols-followed-by-newdef)
     "Define a list of aliases. SYMBOLS-FOLLOWED-BY-NEWDEF ends with 'newdef.

@@ -35,6 +35,8 @@
   (defvar dp-default-c-style-name "nvidia-c-style")
   (defvar dp-default-c-style nvidia-c-style))
 
+(defconst gtags-global-command "nv-ranking-global-gtags.py")
+
 (defun dp-nvidia-c-style ()
   "Set up C/C++ style."
   (interactive)
@@ -50,7 +52,10 @@
 ;; I do it externally or use nvcscope's files.
 (setq cscope-do-not-update-database t)
 
-(defun dp-nv-configure-hide-ifdef ()
+(defvar dp-default-hide-ifdef-lines nil
+  "*Default value for `hide-ifdef-lines' (q.v.)")
+
+(defun dp-nv-configure-hide-ifdef-GME ()
   (defvar dp-T3D-hide-ifdef-default-.so-defs
     '((NV_T3D hide-ifdef-define)
       (NV_T3D_XC hide-ifdef-undef)
@@ -66,40 +71,40 @@ tests.")
 tests.")
   
   (defvar dp-T3D-hide-ifdef-common-undefs
-    '((USE_SW_NVTEST 'hide-ifdef-undef))
+    '((USE_SW_NVTEST hide-ifdef-undef))
     "We never want these defined. And by never I mean usually.")
 
   (defun dp-setup-hide-ifdef-for-T3D.so (&optional extras)
     (interactive)
-    (setq hide-ifdef-lines t
+    (setq hide-ifdef-lines dp-default-hide-ifdef-lines
           hide-ifdef-env nil)
     (dp-hideif-assign-defs (append dp-T3D-hide-ifdef-default-.so-defs extras
                                    dp-T3D-hide-ifdef-common-undefs)
-                           "t3dso"))
+                           't3dso))
 
   (defun dp-setup-hide-ifdef-for-T3D.axf (&optional extras)
     (interactive)
-    (setq hide-ifdef-lines t
+    (setq hide-ifdef-lines dp-default-hide-ifdef-lines
           hide-ifdef-env nil)
     (dp-hideif-assign-defs (append dp-T3D-hide-ifdef-default-.axf-defs extras
                                    dp-T3D-hide-ifdef-common-undefs)
-                           "t3daxf"))
+                           't3daxf))
 
   (defun dp-hide-ifdef-for-T3D.so ()
     (interactive)
-    (dp-hide-ifdefs "t3dso"))
+    (dp-hide-ifdefs 't3dso))
   (dp-defaliases 'hif-t3dso 'hifso 'dp-hide-ifdef-for-T3D.so)
   
   (defun dp-hide-ifdef-for-T3D.axf ()
     (interactive)
-    (dp-hide-ifdefs "t3daxf"))
+    (dp-hide-ifdefs 't3daxf))
   (dp-defaliases 'hif-t3daxf 'hifaxf 'dp-hide-ifdef-for-T3D.axf)
 )
 
 ;; Do I want the hide ifdef package activated?
 ;; At nVIDIA, the answer is HELL YES!
 (setq dp-wants-hide-ifdef-p t)
-(setq dp-hide-ifdef-configure-function 'dp-nv-configure-hide-ifdef)
+(setq dp-hide-ifdef-configure-function 'dp-nv-configure-hide-ifdef-GME)
 
 (setq dp-edting-server-valid-host-regexp "\\(o\\|sc\\)-xterm-.*")
 
@@ -236,20 +241,24 @@ tests.")
 
 ;; Nothing in my tgen run dirs need p4.
 ;; e.g.: /hw/ap_t132/diag/testgen
-(defvar dp-p4-ignore-dirs-regexp
-  "/hw/ap.*/diag/testgen/"
+(defvar dp-p4-ignore-regexp
+  (dp-concat-regexps-grouped
+   '("/hw/ap.*/diag/testgen/"
+     "generated-.*-defs\\.h"
+     "/plex/"))
   "Deactivate p4 in these dirs.")
 
 ;;
 ;; override the default function
-(defun dp-p4-active-here (&optional file-name)
+(defun dp-p4-active-here-p (&optional file-name)
   (setq-ifnil file-name (buffer-file-name))
   (and (not dp-p4-global-disable-detection-p)
        (dp-sandbox-file-p file-name)
-       (not (string-match dp-p4-ignore-dirs-regexp file-name))))
+       (not (string-match dp-p4-ignore-regexp file-name))))
 
 ;;(setq dp-read-only-sandbox-regexp-private nil)
-(setq dp-read-only-sandbox-regexp-private "/sb[24]")
+;;(setq dp-read-only-sandbox-regexp-private "\\(/sb2\\|/sb4\\)")
+(setq dp-read-only-sandbox-regexp-private "\\(/sb4\\)")
 
 ;;
 ;; Don't want to edit these stupid fvcking copies.

@@ -2730,9 +2730,10 @@ the current value of P4PORT."
   ; Allow us to limit perforce checks to certain dirs. At nVIDIA, a simple p4
   ; opened can take 10+ minutes. Checking all files for p4-ed-ness adds
   ; intolerable delays to files not in perforce.
-  (if (and (dp-p4-active-here)        
+  (if (and (dp-p4-active-here-p)
            (or (getenv "P4CONFIG") (getenv "P4CLIENT")))
-      (p4-detect-p4)))
+      (p4-detect-p4)
+    (message "No p4 check on>%s<" (buffer-file-name))))
 
 (defun p4-refresh-refresh-list (buffile bufname)
   "Refresh the list of files to be refreshed."

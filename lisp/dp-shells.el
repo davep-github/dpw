@@ -1493,6 +1493,11 @@ are kept in the cdr of a cons, e.g. (cons 'args-are-my-cdr real-args).  If
   (dp-set-compile-like-mode-error-function)
   (dp-shell-goto-this-error force-reparse-p))
 
+(defun dp-shell-set-error-func&goto-this-error-other-window (&rest rest)
+  (interactive)
+  (call-interactively 'dp-shell-set-error-func&goto-this-error)
+  (dp-slide-window-next 1))
+
 ;; !<@todo XXX Need to define a local `one-window-p' function and have it
 ;; return 1
 ;;finish later; (defun dp-shell-set-error-func&goto-this-error-this-window ()
@@ -3353,8 +3358,9 @@ Can this really not exist elsewhere?"
 (defun dp-shell-buffer-name-less (buf1 buf2)
   "Sort the buffers by name in some useful/comsistent manner.
 The auto-generated names are numeric, and I have plans to allow them to be 
-named. formatting to %s will work for anything 
-reasonable: numbers, strings, symbols."
+named. formatting with %s will work for anything 
+reasonable: numbers, strings, symbols.
+@todo XXX There will be the classic number sorting issue where 2 is > 100."
   (funcall 'string<
            (format "%s" 
                    (symbol-value-in-buffer 'dp-shell-num buf1))

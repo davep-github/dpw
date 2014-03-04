@@ -528,9 +528,11 @@ the current sandbox is used for defaults, etc."
                                 "")))
                      current-prefix-arg))
   (dp-set-current-sandbox-read-only-p read-only-p)
-  (let ((sandbox (if (member sandbox '("" "/" "-" "'" "!"))
+  (let ((sandbox (if (member sandbox '("/" "-" "'" "!"))
                      nil
-                   sandbox))
+                   (if (member sandbox '("" "." "=" "=="))
+                       (dp-current-sandbox-name)
+                     sandbox)))
         expanded-dest)
     (if (not sandbox)
         ;; @todo XXX Why isn't this a `setq-default' like the others?
@@ -540,7 +542,7 @@ the current sandbox is used for defaults, etc."
       ;; If path/sandbox, determine name
       (if (string-match "/" sandbox)
           ;; We're a path. find sb name
-          ;; NB: Just "/" implies clear sandbox.
+          ;; NB: Just "/" implies clear sandbox and is caught earlier.
           (dp-set-sandbox-name-and-regexp
            (file-name-nondirectory (directory-file-name
                                     (file-name-directory
