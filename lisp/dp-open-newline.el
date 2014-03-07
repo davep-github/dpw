@@ -294,7 +294,7 @@
                                     dp-c*-keywords-with-stmt-blocks))))
                      (search-forward "(" (line-end-position) t))))
             (goto-char (match-beginning 0))
-            (dp-find-matching-paren)
+            ;;(dp-find-matching-paren)
             (if (dp-c-ensure-opening-brace
                  :block-keyword-p t 
                  :newline-before-brace-p nil)

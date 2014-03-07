@@ -65,7 +65,8 @@ chip=$(guess-chip --silent)
 if vsetp "${chip}"
 then
     # Suffixes are searched in order of declaration.
-    chip_suffix="--abbrev-suffix=__ME_${chip}_src"
+    #chip_suffix="--abbrev-suffix=__ME_${chip}_src"
+    chip_suffix="--abbrev-suffix=__SB_rel"
 else
     chip_suffix=
 fi
@@ -78,7 +79,6 @@ exp=$(~/lib/pylib/tree_root_relativity.py \
         ${normpath_opt} \
         --expand-dest="${dest}" \
         ${chip_suffix} \
-        --abbrev-suffix="__SB_rel" \
         $sb_arg "$@") || exit
 
 vsetp "${replace_default_symlink}" && {

@@ -367,7 +367,7 @@ EExec()
       esac
       shift
     done
-    true_p "${make_command_p}" && {
+    truth_p "${make_command_p}" && {
         vunsetp "${command_file_name}" && {
             command_file_name=$(basename "$1")-eexec.sh
         }
@@ -411,10 +411,10 @@ $@" >| "${command_file_name}"
 # preserve historical program name if present,
 # otherwise set up a default
 #
-if vsetp "${prog=}"
+if [ -n "${prog=}" ]
 then
     ${EExecExporter} EExecProgName="$prog"
-elif vsetp "$progname"
+elif [ -n "$progname" ]
 then
     ${EExecExporter} EExecProgName="$progname"
 elif [ -z "$EExecProgName" ]

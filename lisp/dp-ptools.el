@@ -395,7 +395,7 @@ NAME is a short name associated by hideif with the list of defs."
 (defun dp-me-expand-dest0 (abbrev &optional sb)
   (let ((ret (dp-nuke-newline
               (shell-command-to-string 
-               (format "me-expand-dest %s %s 2>/dev/null" 
+               (format "me-expand-dest %s %s" ;;;;;; 2>/dev/null" 
                        abbrev (or sb 
                                   ;;(dp-current-sandbox-name)
                                   ""))))))

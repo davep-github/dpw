@@ -86,7 +86,10 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
         return ret
 
     if abbrev_suffix is None:
-        abbrev_suffix = [os.environ.get("DP_EXPAND_DEST_ABBREV_SUFFIX")]
+        abbrev_suffix = []
+        suf = os.environ.get("DP_EXPAND_DEST_ABBREV_SUFFIX")
+        if suf:
+            abbrev_suffix.append(suf)
     ctracef(1, "2.0: abbrev>{}<\n", abbrev)
     ctracef(1, "2.1: input_tree_root>{}<\n", input_tree_root)
     #
@@ -110,6 +113,7 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
     ctracef(1, "2.5: abbrev>{}<\n", abbrev)
 
     new_abbrev = None
+    ctracef(1, "2.5.1: abbrev_suffix>{}<\n", abbrev_suffix)
     for suffix in abbrev_suffix:
         try_abbrev = abbrev + suffix
         ctracef(1, "2.6: try_abbrev>{}<\n", try_abbrev)
@@ -283,7 +287,6 @@ def main(argv):
     expand_dest_args=app_args.expand_dest_args
     ctracef(1, "expand_dest_args>{}<\n", expand_dest_args)
     if expand_dest_args == "/":
-        expand_dest_args = "/"
         ed_rest = ""
     elif expand_dest_args.find("//") == 0:
         ed_rest = ""
@@ -298,9 +301,12 @@ def main(argv):
             ed_rest = ""
     
     input_tree_root = app_args.input_tree_root
+    ctracef(1, "0.0: input_tree_root>{}<\n", input_tree_root)
+    if input_tree_root in (".", "", "/"):
+        input_tree_root = None
     current_tree_root = None
-    ctracef(1, "0: expand_dest_args>{}<\n", expand_dest_args)
-    ctracef(1, "0: input_tree_root>{}<\n", input_tree_root)
+    ctracef(1, "0.1: expand_dest_args>{}<\n", expand_dest_args)
+    ctracef(1, "0.2: input_tree_root>{}<\n", input_tree_root)
     a = get_expand_args(expand_dest_args, input_tree_root)
     if a:
         abbrev = a[0]

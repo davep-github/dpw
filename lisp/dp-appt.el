@@ -45,6 +45,8 @@ non-diary-file appts.")
 This fixes the original function `appt-frame-announce' 
 by making it display the buffer containing the appointment 
 info in the popped up frame."
+  (dmessage "`dp-appt-frame-announce' called")
+  (warn "`dp-appt-frame-announce' called")
   (appt-frame-announce min-to-app appt)
   (setq dp-appt-frame-appt appt)
   (let ((pop-up-windows nil))

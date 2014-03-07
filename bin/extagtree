@@ -161,7 +161,7 @@ dirs="$@"
 # Put the system includes first so any collisions will be noticeable.
 dirs="$SYSTEM_INCLUDES $dirs"
 
-#if true_p "$ETAGS_P"; then
+#if truth_p "$ETAGS_P"; then
 #    etags_opt="-e"
 #    TAGFILE=$ETAGFILE
 #else

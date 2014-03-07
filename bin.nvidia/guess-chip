@@ -53,7 +53,7 @@ if [ -e "${tree_dot_make}" ]
 then
     for tmp_chip in ${chip_list}
     do
-      vtruep "${check_debug_p}" && {
+      truth_p "${check_debug_p}" && {
           egrep -q "^[[:space:]]*export[[:space:]]+(NV_)?PROJECTS?.*${tmp_chip}_debug" "${tree_dot_make}" && {
               debug_chip="${tmp_chip}_debug"
               done=t
@@ -64,7 +64,7 @@ then
           done_p=t
       }
 
-      vtruep "${done_p}" && {
+      truth_p "${done_p}" && {
           vsetp "${chip}" && echo "${chip}"
           vsetp "${debug_chip}" && echo "${debug_chip}"
           exit 0

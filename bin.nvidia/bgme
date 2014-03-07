@@ -30,6 +30,11 @@ unset eexec_program
 : ${auto_no_debug_p=t}
 : ${allow_debug_p=t}
 
+teeker_output()
+{
+    teeker --test-log "${progname}.out"
+}
+
 # Usage variable usage:
 Usage_args_info=" bgme [--purge] [--no-debug]"
 Usage_synopsis="Build GPU ME plugins:
@@ -51,6 +56,7 @@ long_options=(
 "no-yopp"
 "silent"
 "auto-no-debug"
+"teeker"
 )
 
 source dp-getopt+.sh
@@ -68,6 +74,8 @@ do
       -y|--no-yopp) yopp_p=;;
       --silent) silent_p=t;;
       --no-auto-no-debug) auto_no_debug_p=;;
+      --teeker) output_processor=teeker_output;;
+      --cat)    output_processor=cat;;
 
       # Help!
       --help) Usage; exit 0;;
@@ -112,7 +120,12 @@ Clear flag and continue [Y/n]? "
     debug_opt=
 }
 
-EExec "${build_prog}" ${debug_opt}
+
+: ${output_processor:=cat}
+
+
+
+EExec "${build_prog}" ${debug_opt} 2>&1 | EExec ${output_processor}
 rc=$?
 
 vsetp "${yopp_p}" && {

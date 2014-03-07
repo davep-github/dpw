@@ -14207,9 +14207,10 @@ file."
   (setq-ifnil sb ".")
   (let ((ret (dp-nuke-newline
               (shell-command-to-string
-               (format "dp4-reroot --expand-sb %s %s %s"
+               (format "dp4-reroot %s --expand-sb %s %s"
                        (or extra-expansion-options "")
-                       sb file)))))
+                       sb
+                       file)))))
     ;;(dmessage "dp-expand-p4-location, ret>%s<" ret)
     ret))
 
@@ -14239,9 +14240,10 @@ something.")
                      ""))
          (prompt (format "Workspace%s:%s "
                          file-msg
-                         (format " (default %s)"
-                                 (or (dp-current-sandbox-name)
-                                     "None"))))
+                         (if (dp-current-sandbox-name)
+                             (format " (default %s)"
+                                     (or (dp-current-sandbox-name)))
+                           "")))
          (need-new-sb (not sb))
          (sb (or sb "."))
          (expansion (dp-maybe-expand-p4-location file sb)))

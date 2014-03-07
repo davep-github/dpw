@@ -483,6 +483,21 @@ class App_action_log_file_convenience_sampled_timestamped(argparse.Action):
         setattr(namespace, "output_files_required_p", True)
         Ctor_arg_dict["timestamp_p"] = True
 
+class App_action_log_file_convenience_test_log(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        # --slog -Z9 --ts --hg -i100 --cflush-every=-1
+        # --slog
+        set_convenience_opts(namespace)
+        setattr(namespace, "sample_lines_tick_p", True)
+        setattr(namespace, "output_files_required_p", True)
+
+        setattr(namespace, "compression_level", 9)               # -Z9
+        Ctor_arg_dict["timestamp_p"] = True                      # --ts
+        setattr(namespace, "highlight_ALL_grep_matches_p", True) # --hg
+        setattr(namespace, "tick_interval", 100)                 # -i100
+        setattr(namespace, "compressed_file_flush_period", -1)   # --cflush=-1
+
+
 class Ctor_arg_action_twiddle(Ctor_arg_action):
     def __call__(self, parser, namespace, values, option_string=None):
         Ctor_arg_action.__call__(self, parser, namespace, values,
@@ -625,6 +640,11 @@ if __name__ == "__main__":
                          nargs=0,
                          action=App_action_log_file_convenience_sampled_timestamped,
                          help="As --slog plus timestamping.")
+    oparser.add_argument("--test-log",
+                         dest="output_files_required_p", default=False,
+                         nargs=0,
+                         action=App_action_log_file_convenience_test_log,
+                         help="Good for tracking a test. E.g. --slog -Z9 --ts --hg -i100 --cflush-every=-1.")
     oparser.add_argument("-U", "--show-units",
                          dest="show_tick_units_p",
                          nargs=0,
@@ -805,7 +825,7 @@ Split line into chars and feed to ticker.""")
                          "--no-hi-grep", "--no-hi-matches",
                          "--no-hgrep", "--no-hmatches",
                          "--no-hg", "--no-hm",
-                         dest="highlight_grep_matches_p",
+                         dest="highlight_ALL_grep_matches_p",
                          ## Use None as default so we can tell the difference
                          ## between the default and the option having been
                          ## specified.

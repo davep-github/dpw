@@ -42,7 +42,12 @@ mecd testgen
 : ${sandbox_opt=-nosandbox}
 : ${max_file_size_opt=}
 : ${mode=}
-: ${hw_ap_path=$(pwd)/../..}
+: ${hw_ap_path=$(pwd)/../../}
+
+[ -n "${hw_ap_path}" ] && {
+    hw_ap_path=$(normpath -rp "${hw_ap_path}")
+    echo_id hw_ap_path
+}
 
 # Usage variable usage:
 Usage_args_info=" <tgen-level-test>..."

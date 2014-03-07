@@ -7,10 +7,8 @@ rgg = ranking_global_gtags_lib
 import find_up, p4_lib
 opath = os.path
 
-DP_NV_ME_DB_LOCSTR = os.environ.get("DP_NV_ME_DB_LOCS",
-                                    "ap //arch //sw/dev //sw/mods //sw/tools"
-                                    " //hw/class //hw/kepler1_gklit3"
-                                    " //hw/tools")
+# Use [] so we fail messily if there is nothing defined.
+DP_NV_ME_DB_LOCSTR = os.environ["DP_NV_ME_DB_LOCS"]
 
 # Everything will search up to the sandbox root. There is one other known
 # place and that is TOT
@@ -42,6 +40,7 @@ rgg.log_file.write(
         dp_sequences.list_to_indented_string(Database_locations)))
 
 Top_ranking_regexp_strings = [
+    # Old (yay) ME locations.
     "hw/ap_tlit1/drv/drvapi/include/runtest_surface",
     "hw/ap_tlit1/drv/drvapi/runtest_surface",
     "hw/ap_tlit1/drv/drvapi/",
@@ -50,10 +49,15 @@ Top_ranking_regexp_strings = [
     "hw/ap_tlit1/drv/chiplib/chiplib2/",
     "hw/ap_tlit1/drv/",
     "hw/tools/mods/trace_3d/plugin/",
+
+    # NVLINK locations.
+    "hw/nvgpu/fmod/nvlink_translator",
+    "hw/nvgpu/fmod/xve_translator",
     ]
 
 Filter_out_regexp_strings = [
     "cpu_surface_write_read",
+    "/plex/"
     ]
 
 rgg.add_top_ranking_regexp_strings(Top_ranking_regexp_strings)

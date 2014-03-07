@@ -353,7 +353,7 @@ Bind any keys in KEYS via `dp-define-keys'."
                           [(control ?q)] 'dp-rw/ro-region
                           [(control right)] 'dp-slide-window-right
                           [(meta ?-)] 'dp-meta-minus-other-window
-                          [(meta ?a)] 'dp-auto-it
+                          [(meta ?a)] 'dp-mark-up-to-string
                           [(meta ?v)] 'dp-show-variable-value-and-copy
                           [(meta \')] 'dp-dupe-n-chars-prev-line
                           [(meta \;)] 'dp-comment-out-sexp
@@ -499,11 +499,15 @@ Hopefully [space] is mnemonic.")
                           [(control ?n)] 'dp-goto-next-colorized-region
                           ;; We'll consider invisible a color.
                           [?h] 'dp-hide-region
-                          ;; A space is kind of hidden
+                          ;; A space is kind of hidden; at least it's
+                          ;; invisible.
                           [? ] 'dp-hide-region
+                          ;; Color 0 is invisible.
+                          [?0] 'dp-hide-region
                           [(meta ?h)] 'dp-hide-excluding
                           [(meta ? )] 'dp-hide-excluding
                           [?s] 'dp-show-region
+                          [?1] 'dp-show-region
                           [(control ? )] 'dp-show-region
                           [?u] (kb-lambda
                                    (dp-uncolorize-region nil nil (C-u-p)))

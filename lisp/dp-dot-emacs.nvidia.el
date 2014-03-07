@@ -153,12 +153,16 @@ tests.")
 (defvar dp-p4-default-depot-completion-prefix "//"
   "Depot root.")
 
-(defun dp-nvidia-make-cscope-database-regexps (&optional ignore-env-p)
+(defun dp-nvidia-make-cscope-database-regexps (&optional 
+                                               ignore-env-p 
+                                               db-locations
+                                               include-dotdot-p)
   "Compute value for `cscope-database-regexps'"
-  (let* ((locstr (or (and (not ignore-env-p)
+  (let* ((locstr (or db-locations
+                     (and (not ignore-env-p)
                           (getenv "DP_NV_ME_DB_LOCS"))
                      (concat
-                      "ap //arch //sw/dev //sw/mods //sw/tools //hw/class"
+                      "ap //arch //sw/dev //sw/mods //sw/tools //hw/class fmod"
                       ;; NB! Make sure every item is separated by spaces.
 ;;;                      " //hw/kepler1_gklit3"
                       " //hw/tools")))
@@ -167,20 +171,28 @@ tests.")
          expansion
          result)
     (list
-     (append
-      (list (dp-me-expand-dest "sb" sb-name))
-      (delq nil (mapcar (function
-                         (lambda (loc)
-                           (list (dp-me-expand-dest loc sb-name))))
-                        locs))))))
+     (delete nil 
+             (append
+              (list (dp-me-expand-dest "sb" sb-name))
+              (let ((bubba (mapcar (function
+                                    (lambda (loc)
+                                      (list (dp-me-expand-dest loc sb-name))))
+                                   locs)))
+                (delete nil (delete '(nil) bubba)))
+              (when include-dotdot-p
+                '((t)))
+              )))))
 
 (setq dp-make-cscope-database-regexps-fun
       'dp-nvidia-make-cscope-database-regexps)
 
-(defun dp-set-cscope-database-regexps (&optional ignore-env-p)
+(defun dp-set-cscope-database-regexps (&optional ignore-env-p 
+                                       db-locations include-dotdot-p)
   (interactive)
   (setq cscope-database-regexps
-        (dp-nvidia-make-cscope-database-regexps ignore-env-p)))
+        (funcall dp-make-cscope-database-regexps-fun 
+                 ignore-env-p db-locations 
+                 include-dotdot-p)))
   
 ;; Factor into function that takes the expander (e.g. dp-me-expand-dest) as a
 ;; parameter.

@@ -47,8 +47,8 @@ sep=
 
 {
     EExec_verbose_msg "Looking for these test killing gdmf_regexps:"
+    original_dollar_at=("$@")
     set --  "${gdmf_regexps[@]}"
-    EExec_verbose_msg "@>$@<@"
     while (($# > 1))
     do
       case "${1}" in
@@ -70,5 +70,5 @@ vtruep "${just_print_regexp_p}" && {
 
 EExecDashV_p && echo_id 1>&2 regexp
 
-EExec -0 egrep "${regexp}" "$@"
+EExec -0 egrep "${regexp}" "${original_dollar_at[@]}"
 

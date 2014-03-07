@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 import sys, os
+import dp_misc
 
 def main(argv):
     import getopt
-    opt_string = "cr"
+    opt_string = "crp"
     concat_components_p = False
-    path_ops = [os.path.normpath]
+    path_ops = []
 
     opts, args = getopt.getopt(argv[1:], opt_string)
     for o, v in opts:
@@ -14,6 +15,8 @@ def main(argv):
         #    continue
         if o == '-r':
             path_ops.append(os.path.realpath)
+        elif o == '-p':
+            path_ops.append(dp_misc.normpath_plus)
         elif o == '-c':
             concat_components_p = True
         else:
@@ -23,10 +26,14 @@ def main(argv):
     if concat_components_p:
         path = os.path.join(*args)
         args = [path]
-        
+
+    if not path_ops:
+        path_ops=[os.path.normpath]
     for p in args:
         for op in path_ops:
+            # print "op>{}<".format(op)
             p = op(p)
+            # print "p>{}<".format(p)
         print p
 
 if __name__ == "__main__":

@@ -67,7 +67,7 @@ done
 case "$uniqifier" in
     .|=|-) uniqifier="$(basename $PWD)";;
     "") ;;
-    *) true_p $uniqifier_is_abbrev &&  uniqifier="$(dogo "$uniqifier")" # Allow abbrevs.
+    *) truth_p=true_p $uniqifier_is_abbrev &&  uniqifier="$(dogo "$uniqifier")" # Allow abbrevs.
        uniqifier=$(basename "${uniqifier}");;
 esac
 

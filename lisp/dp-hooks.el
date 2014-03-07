@@ -1543,18 +1543,31 @@ This sets the value that will cause cscope to (in the words of cscope):
   normal hierarchical database search.  This option is used to
   explicitly search using the hierarchical database search either before
   or after other cscope database directories.\""
-  '((t)))
+  '(("^/" (t))))
   
 (defvar dp-make-cscope-database-regexps-fun
   'dp-default-make-cscope-database-regexps-fun
   "Call this to generate an appropriate value for
   `cscope-database-regexps'(q.v.)")
 
-(defun dp-cscope-set-cscope-database-regexps ()
-  (interactive)
-  (when dp-make-cscope-database-regexps-fun
-    (setq cscope-database-regexps
-          (funcall dp-make-cscope-database-regexps-fun))))
+(defvar dp-cscope-memoized-cscope-database-regexps 'unset
+  "Memoized copy of our value for `cscope-database-regexps.
+Use of 'unset allows the legitimate value of nil to be used.")
+
+(defun dp-cscope-set-cscope-database-regexps (&optional
+                                              non-memoized-p
+                                              ignore-env-p
+                                              db-locations 
+                                              include-dotdot-p)
+  (interactive "P")
+  (setq cscope-database-regexps
+        (if (or (eq dp-cscope-memoized-cscope-database-regexps 'unset)
+                non-memoized-p)
+            (funcall dp-make-cscope-database-regexps-fun 
+                     ignore-env-p db-locations 
+                     include-dotdot-p)
+          dp-cscope-memoized-cscope-database-regexps)
+        dp-cscope-memoized-cscope-database-regexps cscope-database-regexps))
 
 ;; Set a default if needed.
 ;; @todo XXX Should this be unconditional?
@@ -1646,8 +1659,7 @@ This sets the value that will cause cscope to (in the words of cscope):
   (defun dp-cscope-force-current-dir-only (&optional restore-p)
     (interactive "P")
     (if restore-p
-        (setq cscope-database-regexps
-              (funcall dp-make-cscope-database-regexps-fun))
+        (dp-cscope-set-cscope-database-regexps 'reset)
       (setq cscope-database-regexps dp-cscope-current-dir-only-regexps)))
 
   (when (dp-optionally-require 'xcscope)
