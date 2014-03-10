@@ -147,7 +147,7 @@ so_path="${clib_dir}/${so_name}"
 EExec "${testname}" 2>&1 | EExec teeker ${teeker_regexps} ${teeker_options} "$@" "${log_file_base_name}"
 rc="$?"
 
-if vtruep "${yopp_p}"
+if true_p "${yopp_p}"
 then
     EExec email-yopp "$progname: \"${testname} $@\" is done. RC: $rc"
 else

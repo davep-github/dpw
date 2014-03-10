@@ -101,7 +101,7 @@ ap_path="${ap_dir}"
 ap_dir=$(basename "${ap_dir}")
 : ${p4_root=${1-"."}}
 
-vtruep "${just_nvcscope_p}" && {
+true_p "${just_nvcscope_p}" && {
     nvcscope_p=t
 }
 
@@ -169,7 +169,7 @@ dp_echo2 "cwd: $(pwd)"
 # way to control the source code finder from here.
 export EXCLUDE_PAT="/plex/"
 
-if vtruep "${nvcscope_p}"
+if true_p "${nvcscope_p}"
 then
     ap_hw_path=$(dp4-reroot "$p4_root" "${ap_hw_p4_path}")
     # Filter out dirs here so we don't even look inside them.
@@ -185,7 +185,7 @@ then
               break;
           }
         done
-        if vtruep "${link_em}"
+        if true_p "${link_em}"
         then
             EExec rm -f ${nvcscope_files}
             EExec nvcscope --link-this-tree-to-prebuilt-indexes
@@ -195,7 +195,7 @@ then
     )
 fi
 
-if ! vtruep "${just_nvcscope_p}"
+if ! true_p "${just_nvcscope_p}"
 then
     EExec -y index-code $EExecDashN_opt $EExecDashV_opt $dirs_of_interest
 else

@@ -63,7 +63,7 @@ done
 
 dirs="$*"
 
-if truth_p "$ETAGS_P"; then
+if true_p "$ETAGS_P"; then
     etags_opt="-e"
     TAGFILE=$ETAGFILE
 else

@@ -50,11 +50,13 @@ fi
 
 rtl_file=$(realpath "${RTL_PRESENT_INDICATOR_FILE}${RTL_PRESENT_INDICATOR_FILE_SUFFIX}")
 
-vtruep "${echo_name_p}" && {
+true_p "${echo_name_p}" && {
+true_p "${echo_name_p}" && {
     echo "${rtl_file}"
 }
 
-vtruep "${make_it_p}" && {
+true_p "${make_it_p}" && {
+true_p "${make_it_p}" && {
     EExec touch "${rtl_file}"
     exit 0
 }

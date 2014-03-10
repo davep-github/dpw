@@ -64,7 +64,7 @@ fi
 for infile in "${dolat[@]}"
 do
   #echo_id2 infile
-  if vtruep "${dry_run_p}"
+  if true_p "${dry_run_p}"
   then
       file=/proc/self/fd/1
       echo "=== ${infile} ===" > "${file}"

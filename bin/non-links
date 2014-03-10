@@ -34,7 +34,7 @@ do
   shift
 done
 
-if vtruep "${invert_p}"
+if true_p "${invert_p}"
 then
     link_out=/proc/self/fd/1
     non_link_out=/dev/null

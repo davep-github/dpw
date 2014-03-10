@@ -104,8 +104,9 @@ FROM inherits `dp-time-hours-from' default value (q.v)."
             (format "log-time -1 %s -d -"
                     (or "Logical"
 		     start-stamp dp-std-start-stamp)))))
-    (posix-string-match "\\(\\(Wed\\|Thu\\|Fri\\|Sat\\|Sun\\|Mon\\|Tue\\).*\\) --"
-                        ts)
+    (posix-string-match 
+     "\\(\\(Wed\\|Thu\\|Fri\\|Sat\\|Sun\\|Mon\\|Tue\\).*\\) --"
+     ts)
     (match-string 1 ts)))
 
 (defun dp-get-first-emacs-start-time ()

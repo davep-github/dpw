@@ -174,7 +174,7 @@ echo_id kwa_log_file
         echo "p4 sync args:
 $@" >| "${save_args_file}"
     }
-    if vtruep "${one_by_one_p}"
+    if true_p "${one_by_one_p}"
     then
         for d in "$@"
         do

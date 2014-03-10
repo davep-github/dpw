@@ -173,7 +173,7 @@ process_file ()
     #echo_id2 eval_opt
     vunsetp "${eval_opt}" && {
         #echo_id2 raise_and_focus_p
-        vtruep "${raise_and_focus_p}" && {
+        true_p "${raise_and_focus_p}" && {
             EExec attempt-to-raise-emacs
         }
     }

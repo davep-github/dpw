@@ -26,7 +26,7 @@ go_lookup()
           IFS=$oldIFS
           # When -m1 is used, the fgrep can exit before the egrep resulting
           # in a pipe error.
-          vtruep "${show_dir_opt}" && {
+          true_p "${show_dir_opt}" && {
               show_dir_opt="--label ${pathEl}"
           }
           tmp=$(egrep -v '^[[:space:]]*[;#]' $pathEl 2>/dev/null | fgrep -m1 $show_dir_opt "|$c|") && {
@@ -76,7 +76,7 @@ case "$1" in
 esac
 
 # see if dest is set as an environment variable
-vtruep "$show_dir_p" || eval y=\$$c 
+true_p "$show_dir_p" || eval y=\$$c 
 case "$y" in
     ""|\$*)     # dest is not an envvar: look it up in the go database
     case "$c" in

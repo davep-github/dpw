@@ -4,11 +4,6 @@
 # These need to be here so that programs can use them.
 # I need to change all invocations to not use aliases.
 #
-alias truep=true_p
-alias vtruep=true_p
-alias truth_p=true_p
-alias vfalsep='! true_p'
-alias falsep=vfalsep
 
 # vsetp & friends moved to func.early.
 # this is sure to cause problems.

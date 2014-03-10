@@ -367,7 +367,7 @@ EExec()
       esac
       shift
     done
-    truth_p "${make_command_p}" && {
+    true_p "${make_command_p}" && {
         vunsetp "${command_file_name}" && {
             command_file_name=$(basename "$1")-eexec.sh
         }

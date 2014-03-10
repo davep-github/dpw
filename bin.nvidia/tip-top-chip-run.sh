@@ -1,6 +1,6 @@
 #!/bin/sh
 
-vtruep()
+true_p()
 {
     case "${1}" in
         [tT1]|true) return 0;
@@ -147,11 +147,11 @@ do
   shift
 done
 
-vtruep "${denver_allow_errors_p}" || {
+true_p "${denver_allow_errors_p}" || {
     DENVER_ALLOW_ERROR_ARGS=()
 }
 
-vtruep "${elves_p}" && {
+true_p "${elves_p}" && {
     elves="${def_t132_elves}"
 }
 
@@ -184,7 +184,7 @@ vunsetp "${run_cmd_args}" && {
 
 echo "Remaining args after option parsing, \$@>$@<"
 
-vtruep "${no_csh_check_p}" || {
+true_p "${no_csh_check_p}" || {
     confirmation_response='TRUST ME' csh-p || exit $?
 }
 

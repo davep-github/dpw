@@ -133,10 +133,10 @@ do
     break
   done
   filename=$dir/$newest
-  if vtruep "${realpath_p}"
+  if true_p "${realpath_p}"
   then
       realpath "${filename}"
-  elif vtruep "${basename_p}"
+  elif true_p "${basename_p}"
   then
       basename "${filename}"
   else

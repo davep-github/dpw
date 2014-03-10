@@ -298,7 +298,7 @@ EExec mkdir -p "${log_dir}"
         echo_id leavelogs_opt
         vsetp "${leavelogs_opt}" && {
             dumby=$(ls -d .tmake* >/dev/null 2>&1) || {
-                if vtruep "${self_correct}" 
+                if true_p "${self_correct}" 
                 then
                     ((++num_self_corrections))
                     leavelogs_opt=
@@ -343,7 +343,7 @@ EExec mkdir -p "${log_dir}"
       esac
     done
 
-    if vtruep "${get_mods_p}"
+    if true_p "${get_mods_p}"
     then
         EExec --keep-going ./bin/get_mods
     fi
@@ -362,7 +362,7 @@ EExec mkdir -p "${log_dir}"
       esac
     done
 
-    if vtruep "${get_asim_p}"
+    if true_p "${get_asim_p}"
     then
         EExec --keep-going ./bin/get_asim
     fi

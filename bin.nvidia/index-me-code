@@ -63,7 +63,7 @@ run_it()
     if vsetp "${script_name}"
     then
         script_opts="--sh-cd --sh: ${script_name}"
-    elif truth_p "${make_script_p}"
+    elif true_p "${make_script_p}"
     then
         script_opts="--sh-cd --sh: ${progname}-eexec.sh"
     fi
@@ -73,7 +73,7 @@ run_it()
     (
         cd "${db_loc}"
         EExec_verbose_echo_id --msg 'Indexing in: ' PWD
-        if truth_p "${bg_p}"
+        if true_p "${bg_p}"
         then
             EExec ${script_opts} "$@" &
         else
@@ -207,7 +207,7 @@ do
     shift
 done
 
-if truth_p "${oot_only_p}"
+if true_p "${oot_only_p}"
 then
     index_out_of_tree_locations
     dp_echo "Indexing oot only. Exiting."
@@ -237,7 +237,7 @@ ap_dir=$(basename "${ap_dir}")
 : ${p4_root=${1-"."}}
 p4_root=$(realpath "${p4_root}")
 
-truth_p "${just_nvcscope_p}" && {
+true_p "${just_nvcscope_p}" && {
     nvcscope_p=t
 }
 
@@ -290,7 +290,7 @@ esac
 ### Tried to do it at root, but it makes things relative to root, e.g. /home/x --> home/x
 depot_dirs_of_interest=""
 
-if vtruep "${hw_ap_p}"
+if true_p "${hw_ap_p}"
 then
     depot_dirs_of_interest="
 ${depot_dirs_of_interest}
@@ -299,12 +299,12 @@ ${ap_hw_p4_path}/drv/multiengine/
 ${ap_hw_p4_path}/inf/mods/trace_3d/plugin/"
 fi
 
-if vtruep "${me_tests_p}"
+if true_p "${me_tests_p}"
 then
     depot_dirs_of_interest=="${depot_dirs_of_interest} ${me_tests}"
 fi
 
-if vtruep "${manuals_p}"
+if true_p "${manuals_p}"
 then
     depot_dirs_of_interest="
 ${depot_dirs_of_interest} 
@@ -319,7 +319,7 @@ fi
 # order dependence sucks.
 
 # Adding //hw/${ap_dir}/clib causes (error Rerun etags...) problems.
-if vtruep "${more_depot_dirs_p}"
+if true_p "${more_depot_dirs_p}"
 then
     depot_dirs_of_interest="
 ${depot_dirs_of_interest}
@@ -333,7 +333,7 @@ ${ap_hw_p4_path}/tools/RunScript/
 ${ap_hw_p4_path}/bin/"
 fi
 
-if vtruep "${hw_dirs_p}"
+if true_p "${hw_dirs_p}"
 then
     depot_dirs_of_interest="
 ${depot_dirs_of_interest}
@@ -346,7 +346,7 @@ ${depot_dirs_of_interest}
 //dev/cpu/tools/sim/asim/1.0/"
 fi
 
-if vtruep "${sw_dirs_p}"
+if true_p "${sw_dirs_p}"
 then
     depot_dirs_of_interest="
 ${depot_dirs_of_interest}
@@ -355,7 +355,7 @@ ${depot_dirs_of_interest}
 //sw/tools/"
 fi
 
-if vtruep "${fmod_dirs_p}"
+if true_p "${fmod_dirs_p}"
 then
     depot_dirs_of_interest="
 ${depot_dirs_of_interest}
@@ -379,7 +379,7 @@ EExec_verbose_echo_id dirs_of_interest
 # way to control the source code finder from here.
 export EXCLUDE_PAT="/plex/"
 
-if truth_p "${nvcscope_p}"
+if true_p "${nvcscope_p}"
 then
     # St00p1d god damn mother f00ck1ng b00llsh1t a55hole 1d1ocy!
     # One tree:
@@ -406,7 +406,7 @@ then
               break;
           }
         done
-        if truth_p "${link_em}"
+        if true_p "${link_em}"
         then
             EExec rm -f ${nvcscope_files}
             EExec nvcscope --link-this-tree-to-prebuilt-indexes
@@ -425,7 +425,7 @@ done
 EExec_verbose_echo_id db_locs
 #exit 99
 
-if ! truth_p "${just_nvcscope_p}"
+if ! true_p "${just_nvcscope_p}"
 then
     all_indexed=
     all_db_locs=

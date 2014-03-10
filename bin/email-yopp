@@ -30,7 +30,7 @@ done
 if vunsetp "$*"
 then
     type="No msg."
-elif vtruep "${run_cmd_p}"
+elif true_p "${run_cmd_p}"
 then
     # the message is really a command to run and wait for completion thereof.
     EExec "$@"

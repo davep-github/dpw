@@ -75,7 +75,7 @@ done
 
 : ${root_file="${1-${DP_SB_ROOT_FILE}}"}
 
-if truth_p "${make_one_p}"
+if true_p "${make_one_p}"
 then
     touch "${root_file}"
     exit 0

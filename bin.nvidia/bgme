@@ -92,17 +92,17 @@ vsetp "${purge_opt}" && {
     EExec "${build_prog}" ${purge_opt}
 }
 
-vsetp "${debug_opt}" && vfalsep "${allow_debug_p}" && {
+vsetp "${debug_opt}" && ! true_p "${allow_debug_p}" && {
     tree_dot_make=$(me-expand-dest tot)/tree.make
     [ -e "${tree_dot_make}" ] || {
-        echo "${tree_dot_make} does not exist as it should."
+        echo "${tree_dot_make} does not exist as should be."
         exit 1
     } 1>&2
 
     egrep -q '^[[:space:]]*export[[:space:]]+(NV_)?PROJECTS?.*t132_debug' "${tree_dot_make}"  || {
-        if vtruep "${auto_no_debug_p}"
+        if true_p "${auto_no_debug_p}"
         then
-            vtruep "${silent_p}" || {
+            true_p "${silent_p}" || {
                 echo
                 echo "Auto clearing debug flag"
                 echo

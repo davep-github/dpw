@@ -63,7 +63,8 @@ sep=
     done
 } 1>&2
 
-vtruep "${just_print_regexp_p}" && {
+true_p "${just_print_regexp_p}" && {
+true_p "${just_print_regexp_p}" && {
     echo "${regexp}"
     exit 0
 }

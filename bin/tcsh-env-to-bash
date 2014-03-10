@@ -27,14 +27,14 @@ do
   EExecDashV_p && echo_id REPLY
   name=$(echo "${REPLY}" | sed -r 's/([^=]+)(=)(.*)/\1/')
   EExecDashV_p && echo_id2 name
-  if vtruep "${check_existence_in_dot_rc_p}" && \
+  if true_p "${check_existence_in_dot_rc_p}" && \
             fgrep ${rc_grep_option} "${name}" ~/.rc/*
   then
       echo "${name} is in one or more rc file."
       echo ===
   fi
 
-  vtruep "${check_for_different_values}" || continue
+  true_p "${check_for_different_values}" || continue
 
   tcsh_val=$(echo "${REPLY}" | sed -r 's/([^=]+)(=)(.*)/\3/')
   EExecDashV_p && echo_id2 tcsh_val
@@ -57,8 +57,8 @@ do
       fi
       EExec_verbose_msg "name>$name< is ${iznot}a VOI"
   } 1>&2
-  vtruep "${emit_different_values}" && {
-      vtruep "${iznot}" || {
+  true_p "${emit_different_values}" && {
+      true_p "${iznot}" || {
           echo "export $name=\"$tcsh_val\""
       }
   }

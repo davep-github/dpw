@@ -381,7 +381,7 @@ fi
       esac
     done
 
-    if vtruep "${get_mods_p}"
+    if true_p "${get_mods_p}"
     then
         echo '=== Getting MODS ==='
         EExec --keep-going ./bin/get_mods
@@ -401,7 +401,7 @@ fi
       esac
     done
 
-    if vtruep "${get_asim_p}"
+    if true_p "${get_asim_p}"
     then
         echo '=== Getting ASIM ==='
         EExec --keep-going ./bin/get_asim

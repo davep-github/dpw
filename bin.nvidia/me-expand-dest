@@ -62,14 +62,17 @@ else
 fi
 
 chip=$(guess-chip --silent)
+abbrev_suffixes=
 if vsetp "${chip}"
 then
     # Suffixes are searched in order of declaration.
-    #chip_suffix="--abbrev-suffix=__ME_${chip}_src"
-    chip_suffix="--abbrev-suffix=__SB_rel"
+    abbrev_suffixes="${abbrev_suffixes} --abbrev-suffix=__ME_${chip}_src"
+    abbrev_suffix="--abbrev-suffix=__SB_rel"
 else
-    chip_suffix=
+    abbrev_suffix=
 fi
+
+abbrev_suffixes="${abbrev_suffixes} --abbrev-suffix=__SB_rel"
 
 # The remainder of argv will be extra args to sandbox_relativity
 exp=$(~/lib/pylib/tree_root_relativity.py \
@@ -78,7 +81,7 @@ exp=$(~/lib/pylib/tree_root_relativity.py \
         ${trace_arg} \
         ${normpath_opt} \
         --expand-dest="${dest}" \
-        ${chip_suffix} \
+        ${abbrev_suffixes} \
         $sb_arg "$@") || exit
 
 vsetp "${replace_default_symlink}" && {

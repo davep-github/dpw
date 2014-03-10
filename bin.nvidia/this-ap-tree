@@ -56,7 +56,7 @@ done
 
 # Duplicate depth(nv) command with realpath capability.
 d=$(depth)
-vtruep "${just_depth_p}" && {
+true_p "${just_depth_p}" && {
     "${path_echo}" "${d}"
     exit 0
 }

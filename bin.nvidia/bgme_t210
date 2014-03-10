@@ -39,10 +39,10 @@ do
   shift
 done
 
-vtruep "${build_framework_p}" && {
+true_p "${build_framework_p}" && {
     NV_MTE_DEVELOPMENT=1 EExec bin/t_make -only t210_gpu_multiengine-framework
 }
 
-vtruep "${build_plugins_p}" && {
+true_p "${build_plugins_p}" && {
     NV_MTE_DEVELOPMENT=1 EExec bin/t_make -only t210_gpu_multiengine-plugins
 }
