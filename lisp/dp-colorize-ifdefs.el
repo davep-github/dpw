@@ -131,12 +131,15 @@
   (let ((extent-num 0))
     (dolist (ext dp-colorize-ifdefs-ret)
       (progn
-        (dp-make-extent (nth 0 ext) (nth 1 ext) 
-                        'dp-cifdef
-                        ;; A common property for all of my colorized regions.
-                        'dp-colorized-p t
-                        'dp-extent-num extent-num
-                        'face (nth 2 ext))
+;;         (dp-make-extent (nth 0 ext) (nth 1 ext) 
+;;                         'dp-cifdef
+;;                         ;; A common property for all of my colorized regions.
+;;                         'dp-colorized-p t
+;;                         'dp-extent-num extent-num
+;;                         'face (nth 2 ext))
+        (dp-colorize-region (nth 2 ext) (nth 0 ext) (nth 1 ext)
+                            nil nil
+                            'dp-extent-num extent-num)
         (incf extent-num)))))
 ;;;
 ;;;

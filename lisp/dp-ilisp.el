@@ -163,7 +163,7 @@
 ;  )
 ;;; This makes reading a Lisp or Scheme file load in ILISP.
 
-(dp-add-list-to-list 'auto-mode-alist
+(dp-add-list-to-list 'dp-auto-mode-alist-additions
 		     '(("\\.lisp$" . lisp-mode)
                        ("\\.lsp$" . lisp-mode)
                        ("\\.cl$" . lisp-mode)))
@@ -171,7 +171,7 @@
 
 (add-hook 'lisp-mode-hook (function (lambda () (require 'ilisp))))
 
-(dp-add-list-to-list 'auto-mode-alist
+(dp-add-list-to-list 'dp-auto-mode-alist-additions
 		     '(("\\.scm$" . scheme-mode)
                        ("\\.ss$" . scheme-mode)
                        ("\\.stk$" . scheme-mode)

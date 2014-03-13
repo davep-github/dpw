@@ -402,8 +402,30 @@ the init files.")
                              ))
       (message "added `savehist' vars."))))
 
-;; for debugging
+;;;
+;;; auto-mode-alist machinations
+;;;
+
+;; For debugging and undoing things.
 (defvar dp-orig-auto-mode-alist auto-mode-alist)
+
+(defvar dp-auto-mode-alist-additions
+  '()
+  "All of my additions in one place. This allows me to restore the original
+  mode is I want to and then re-apply my changes.")
+
+(defun dp-add-auto-mode-alist-additions ()
+  (dp-add-list-to-list 'auto-mode-alist dp-auto-mode-alist-additions))
+(add-hook 'dp-post-dpmacs-hook 'dp-add-auto-mode-alist-additions)
+
+;;@todo XXX Use this more often?
+(defun dp-add-to-dp-auto-mode-alist-additions (extension mode 
+                                               &optional add-transparent-p)
+  (add-to-list 'dp-auto-mode-alist-additions
+               (cons (if add-transparent-p
+                         (dp-mk-mode-transparent-regexp extension)
+                       extension)
+                     mode)))
 
 ;; Prevents these from being indexed, etc. along with other "real" source
 ;; files.
@@ -423,7 +445,7 @@ the init files.")
           "\\|NOVC\\|JUNK"
           ;; Old but broken or out-of-date.
           "\\|stale\\|bad\\|b0rked\\|broken?\\|hosed\\|fubar"
-          "\\|STALE\\|BAD\\|B0RKED\\|BROKEN?\\|HOSED\\|FUBAR"
+          "\\|STALE\\|BAD\\|B[O0]RKED\\|BROKEN?\\|HOSED\\|FUBAR"
           ;; Perforce uses .original.[0-9]+ to save modified files.  I, too,
           ;; like to copy a file to a .orig before hacking it up, although
           ;; I've come to use RCS instead.
@@ -506,28 +528,28 @@ allow some useful additions (e.g. merged, old, orig).  I can also use
 things like c.cxx-no-index to prevent those files from being indexed
 w/tags, cscope, etc.")
 
-(defconst dp-auto-mode-alist-changes
-  (dp-add-list-to-list 
-   'dp-mode-transparent-regexps
-   '(
-     ("\\.txt$" . text-mode)
-     ("snd.[0-9]*" . text-mode)         ; elm mail files
-     ("\\.ol$" . outline-mode)          ; outlines
-     ("\\.outline$". outline-mode)      ; ibid
-     ("\\.pdb$" . pdb-mode)             ; perl database mode.
-     ("\\.sawfishrc$" . sawfish-mode)   ; sawfish lisp files (librep)
-     ;; sawfish lisp files (librep)
-     ("\\.sawfish/custom$" . sawfish-mode)
-     ("\\.jl$" . sawfish-mode)          ; sawfish lisp files (librep)
-     ;; my .rc dir files (mostly bash login stuff)
-     ;; @todo XXX revist blanket application of sh mode.
-     ("/\\.rc/[^/]+$" . shell-script-mode)
-     ("\\.jxt$" . dp-journal-mode)      ; dp Journal files.
-     ("\\.g$" . antlr-mode)
-     )))
+(dp-add-list-to-list
+ 'dp-auto-mode-alist-additions
+ dp-mode-transparent-regexps)
 
-;; @todo make this -vvvv use that -^^^^
-(dp-add-list-to-list 'auto-mode-alist dp-auto-mode-alist-changes)
+(dp-add-list-to-list
+ 'dp-auto-mode-alist-additions
+ '(
+   ("\\.txt$" . text-mode)
+   ("snd.[0-9]*" . text-mode)           ; elm mail files
+   ("\\.ol$" . outline-mode)            ; outlines
+   ("\\.outline$". outline-mode)        ; ibid
+   ("\\.pdb$" . pdb-mode)               ; perl database mode.
+   ("\\.sawfishrc$" . sawfish-mode)     ; sawfish lisp files (librep)
+   ;; sawfish lisp files (librep)
+   ("\\.sawfish/custom$" . sawfish-mode)
+   ("\\.jl$" . sawfish-mode)            ; sawfish lisp files (librep)
+   ;; my .rc dir files (mostly bash login stuff)
+   ;; @todo XXX revist blanket application of sh mode.
+   ("/\\.rc/[^/]+$" . shell-script-mode)
+   ("\\.jxt$" . dp-journal-mode)        ; dp Journal files.
+   ("\\.g$" . antlr-mode)
+   ))
 
 ;; Try alternative to suck-ass `sh-mode' "Shell-script" ksh-mode sucks,
 ;; too. It get errors whereas sh-mode simply fucks up indentation.
@@ -562,7 +584,7 @@ w/tags, cscope, etc.")
 
 ;; case makes C files look like C++
 (if (not (in-windwoes))
-    (add-to-list 'auto-mode-alist 
+    (add-to-list 'dp-auto-mode-alist-additions
 		 '("\\.C$"  . c++-mode)))
 
 (dp-add-list-to-list 'interpreter-mode-alist

@@ -510,7 +510,8 @@ Hopefully [space] is mnemonic.")
                           [?1] 'dp-show-region
                           [(control ? )] 'dp-show-region
                           [?u] (kb-lambda
-                                   (dp-uncolorize-region nil nil (C-u-p)))
+                                   (dp-uncolorize-region nil nil 
+                                                         (not (C-u-p))))
                           [(meta u)] (kb-lambda
                                          (dp-uncolorize-region (point-min) 
                                                                (point-max)

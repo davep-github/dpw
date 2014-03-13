@@ -8,8 +8,8 @@
 ;; for debuggin'...
 (setq dp-orig-load-path load-path)
 
-; (add-to-list 'auto-mode-alist '("\\.wy$" . wisent-grammar-mode))
-; (add-to-list 'auto-mode-alist '("\\.by$" . bovine-grammar-mode))
+; (add-to-list 'dp-auto-mode-alist-additions '("\\.wy$" . wisent-grammar-mode))
+; (add-to-list 'dp-auto-mode-alist-additions '("\\.by$" . bovine-grammar-mode))
 
 ;; so we can get to my lisp files
 ;; we're consing, so last will be first.

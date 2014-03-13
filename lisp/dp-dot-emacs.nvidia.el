@@ -123,25 +123,32 @@ tests.")
 ;; XXX @todo ? Should I trim that list? There are many bad matches already.
 ;;
 
-(defun dp-make-no-wrap-stupidly-sh-mode ()
-  ;; Why did I not use (auto-fill-mode 0) ?
-  (setq fill-column 9999)
-  (sh-mode))
+(defun dp-make-no-fill-stupidly-sh-mode ()
+  (prog1
+      (sh-mode)
+    (auto-fill-mode 0)))
 
-(defun dp-make-no-wrap-stupidly-text-mode ()
+;;    (setq fill-column 9999)))
+
+(defun dp-make-no-fill-stupidly-text-mode ()
   ;; Why did I not use (auto-fill-mode 0) ?
-  (setq fill-column 9999)
-  (text-mode))
+  (prog1
+      (text-mode)
+    (auto-fill-mode 0)))
+
+(defvar dp-generic-sandbox-dir-prefix 
+  "/home/scratch.dpanariti[^/]*/"
+  "All nvidia sandboxes will be rooted under dirs of this form.")
 
 (dp-add-list-to-list 
- 'auto-mode-alist
+ 'dp-auto-mode-alist-additions
  (list ;; (regexp . func-to-call-when-loaded)
-  (cons "\\(^\\|/\\)\\(regress_tegra_gpu_multiengine\\|gpu_multiengine_a[rs]2\\)$"
-        'dp-make-no-wrap-stupidly-text-mode)
-   (cons "\\(^\\|/\\)tool_data.config$"
-         'dp-make-no-wrap-stupidly-text-mode)
-   (cons "/tests/[^/]+/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{6\\}/.*\\.\\(cfg\\|sh\\)"
-         'dp-make-no-wrap-stupidly-sh-mode)
+  (cons (format "%s.*/\\(regress_tegra_gpu_multiengine\\|gpu_multiengine_a[rs]2\\)$" dp-generic-sandbox-dir-prefix)
+        'dp-make-no-fill-stupidly-text-mode)
+   (cons (format "%s.*/tool_data.config$" dp-generic-sandbox-dir-prefix)
+         'dp-make-no-fill-stupidly-text-mode)
+   (cons (format "%s.*/tests/[^/]+/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{6\\}/.*\\.\\(cfg\\|sh\\)" dp-generic-sandbox-dir-prefix)
+         'dp-make-no-fill-stupidly-sh-mode)
    ;; We use spec as an extension for NESS [interface] specification files.
    ;; .spec is also used for rpm-spec-files.
    ;; Since the regexp for the rpm-spec-files *may* change, we'll just
@@ -161,11 +168,12 @@ tests.")
   (let* ((locstr (or db-locations
                      (and (not ignore-env-p)
                           (getenv "DP_NV_ME_DB_LOCS"))
-                     (concat
-                      "ap //arch //sw/dev //sw/mods //sw/tools //hw/class fmod"
-                      ;; NB! Make sure every item is separated by spaces.
+                     (dp-string-join 
+                      '("ap //arch //sw/dev //sw/mods //sw/tools //hw/class"
 ;;;                      " //hw/kepler1_gklit3"
-                      " //hw/tools")))
+                        "//hw/tools"
+                        ;; nvlink stuff
+                        "fmod nvgpuinclude nvgpuclib"))))
          (locs (split-string locstr))
          (sb-name (dp-current-sandbox-name))
          expansion

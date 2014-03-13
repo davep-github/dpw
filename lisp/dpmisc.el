@@ -4358,11 +4358,11 @@ If BOUND is non-nil, then don't let STACK get larger than BOUND."
       (setcdr (nthcdr (- bound 2) stackv) nil))
     (symbol-value stack)))
 
-(defun dp-add-list-to-list (old-list list-of-new-elements)
-  "Add each element of NEW-LIST to OLD-LIST using `add-to-list'."
+(defun dp-add-list-to-list (old-list-var list-of-new-elements)
+  "Add each element of NEW-LIST to OLD-LIST-NAME using `add-to-list'."
   (dolist (list-el (reverse list-of-new-elements))
-    (dp-add-to-list old-list list-el))
-  (symbol-value old-list))
+    (dp-add-to-list old-list-var list-el))
+  (symbol-value old-list-var))
 
 (defun dp-add-to-list (list-sym new-el)
   "Like `add-to-list' except it will create new list if LIST-SYM is void.
@@ -4607,7 +4607,7 @@ function template at point.
 (defun auctex-setup ()
   (interactive)
   (require 'tex-site)
-  (add-to-list 'auto-mode-alist '("\\.latex$" . LaTeX-mode))
+  (add-to-list 'dp-auto-mode-alist-additions '("\\.latex$" . LaTeX-mode))
   (if window-system
       (progn
 	(require 'font-latex)
@@ -6397,7 +6397,7 @@ has value \(cdr region-id), then that extent is matched."
 
 (defvar dp-colorize-region-num-colors (length dp-colorize-region-faces))
 
-(dp-deflocal dp-dont-overwrite-existing-colors nil
+(dp-deflocal dp-colorize-region-overwrite-existing-colors-p nil
   "*What more can I say?")
 
 (defun dp-invisible-color-p (color)
@@ -6459,7 +6459,8 @@ COLOR_INDEX can be <=0 or '- to indicate invisibility."
       (message "No colorized region at pos=%s" pos)
       (ding))))
   
-(defun dp-colorize-region (color &optional beg end no-roll-colors-p overwrite-p
+(defun dp-colorize-region (color &optional beg end no-roll-colors-p 
+                           overwrite-p
                            &rest props)
   "COLOR can be an integer index or a symbol representing a face."
   (interactive "P")
@@ -6472,9 +6473,9 @@ COLOR_INDEX can be <=0 or '- to indicate invisibility."
          (face (cdr color-and-face)))
     ;;(dmessage "beg: %s, end: %s" beg end)
     (setq overwrite-p (or overwrite-p 
-                          (not dp-dont-overwrite-existing-colors)))
+                          dp-colorize-region-overwrite-existing-colors-p))
     (when (or overwrite-p 
-              (dp-region-is-colorized beg end))
+              (not (dp-region-is-colorized beg end)))
       (unless (memq 'priority props)
         (setq props 
               (append props 
@@ -13560,13 +13561,6 @@ No matter what. A DWIM-ish thing."
   (if (eq current-prefix-arg '-)
       (switch-to-next-buffer -1)
     (call-interactively 'switch-to-next-buffer-in-group)))
-
-(defun dp-add-to-auto-mode-alist (extension mode &optional add-transparent-p)
-  (add-to-list 'auto-mode-alist 
-               (cons (if add-transparent-p
-                         (dp-mk-mode-transparent-regexp extension)
-                       extension)
-                     mode)))
 
 (defvar dp-ssh-home-node "VILYA")
 
