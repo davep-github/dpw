@@ -62,10 +62,17 @@ Ee|___SB_rel|                   ./
 Ee|hw__SB_rel|                  hw/
 Ee|sw__SB_rel|                  sw/
 Ee|nvgpu__SB_rel|               ${hw__SB_rel}nvgpu/
+Ee|nvgpuinclude__SB_rel|        ${nvgpu__SB_rel}include/
+Ee|nvgpuinc__SB_rel|            ${nvgpuinclude__SB_rel}
+Ee|nvgpuclib__SB_rel|           ${nvgpu__SB_rel}clib/
 Ee|fmod__SB_rel|fmodel__SB_rel| ${nvgpu__SB_rel}fmod/
 Ee|xvetranslator__SB_rel|       ${fmodel__SB_rel}xve_translator/
 Ee|xvexlat__SB_rel|             ${xvetranslator__SB_rel}
 Ee|xve__SB_rel|                 ${xvetranslator__SB_rel}
+Ee|nvlink1translator__SB_rel|   ${fmodel__SB_rel}nvlink_translator/
+Ee|nvlxlat__SB_rel|             ${nvlink1translator__SB_rel}
+Ee|nvlink1__SB_rel|             ${nvlink1translator__SB_rel}
+Ee|nvl1__SB_rel|                ${nvlink1translator__SB_rel}
 Ee|nesstutorial__SB_rel|        ${fmodel__SB_rel}ness-tutorial/
 Ee|nesstut__SB_rel|             ${nesstutorial__SB_rel}
 Ee|nvdiag__SB_rel|              ${hw__SB_rel}nvdiag/
@@ -385,6 +392,8 @@ Ee|cpuredlinertl|crlrtl|crtl|     /home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap
 # Added Thu Feb 13 16:07:50 EST 2014
 Ee|swrtl2|       /home/scratch.dpanariti_t124/sb2/sb2hw/hw/ap_tlit1/diag/testgen/dp-rtl-tests/2013-10-29T13.19.53-0700/cpu_surface_write_read/
 # Added Fri Feb 14 11:59:06 EST 2014
+# Added Tue Mar 11 10:15:37 EDT 2014
+Ee|weixt210rtl|       /home/scratch.weix_t124/tree2/hw/ap/run_me_test/comp_one_tri_redline/cpu_red_line/
 ########################################################################### ***
 # ***
 # Local Variables: ***

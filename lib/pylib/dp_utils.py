@@ -419,14 +419,17 @@ def re_compile_with_case_convention(regexp_string, flags=None):
 def newest_file(files):
     newest_mod_time = 0
     newest_file = None
+    newest_index = -1
     for f in files:
+        newest_index += 1
         if not opath.exists(f):
             continue
         mt = opath.getmtime(f)
         if mt > newest_mod_time:
             newest_mod_time = mt
             newest_file = f
-    return newest_file, newest_mod_time
+        
+    return newest_file, newest_mod_time, newest_index
 
 def pathcomponents(path):
     p = opath.normpath(path)

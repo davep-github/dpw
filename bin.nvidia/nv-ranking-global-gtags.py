@@ -3,6 +3,7 @@
 import sys, os, time, subprocess
 import ranking_global_gtags_lib, dp_sequences, dp_io
 rgg = ranking_global_gtags_lib
+###rgg.log_file = sys.stderr
 
 import find_up, p4_lib
 opath = os.path
@@ -17,7 +18,9 @@ Database_p4_locations = DP_NV_ME_DB_LOCSTR.split()
 Database_locations = []
 ## Move this into ranking_global_gtags.py
 for dir in Database_p4_locations:
+    rgg.log_file.write("Dir>{}<\n".format(dir))
     dir = p4_lib.p4_sb_location_to_absolute(dir)
+    rgg.log_file.write("Dir>{}<\n".format(dir))
     if dir:
         dir = os.path.join(dir, "GTAGS")
         Database_locations.append(dir)

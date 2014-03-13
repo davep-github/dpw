@@ -359,7 +359,9 @@ if true_p "${fmod_dirs_p}"
 then
     depot_dirs_of_interest="
 ${depot_dirs_of_interest}
-$(me-expand-dest --normpath-term fmod)"
+$(me-expand-dest --normpath-term fmod)
+$(me-expand-dest --normpath-term nvgpuinclude)
+$(me-expand-dest --normpath-term nvgpuclib)"
 fi
 
 other_dirs_of_interest=""

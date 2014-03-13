@@ -1,4 +1,4 @@
-personal_ws-1.1 en 238 
+personal_ws-1.1 en 243 
 BioShock
 Googlegear
 pty
@@ -87,6 +87,7 @@ psionics
 VPN
 Mullard
 EngCpu
+Fullstack
 BlockLinear
 NetWare
 Xedit
@@ -106,6 +107,7 @@ Debian
 Crysis
 Chicxulub
 ncoh
+NVLINK
 WRT
 Compaq
 KDE
@@ -124,6 +126,7 @@ ifdef
 ECMA
 bluetooth
 www
+HSHUB
 elisp
 Thunderbird
 compuserve
@@ -141,8 +144,8 @@ teleport
 Amarok
 AmaroK
 online
-automagic
 globals
+automagic
 VxWorks
 FL
 Solaris
@@ -166,6 +169,7 @@ Functors
 functor
 linsim
 MMU
+loopback
 SPARC
 NT
 lbns
@@ -186,6 +190,7 @@ iterable
 gauge
 nuked
 Tk
+Sysmem
 VM
 RTOS
 strangelove

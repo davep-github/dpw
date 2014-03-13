@@ -21,7 +21,6 @@ $(type dp4_new_client_post)"
         then
         echo 1>&2 "{-}dp4_new_client_post"
     else
-        echo "** Suggested post new client actions:"
         dp4_new_client_post
     fi
 elif vsetp "$post_type"

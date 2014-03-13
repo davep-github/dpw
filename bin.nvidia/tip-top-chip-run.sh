@@ -31,6 +31,8 @@ suites=(rtmem-rtreg)
 : ${no_run_p=}
 : ${startrecord=}
 : ${startrecord_opt=}
+: ${endrecord=}
+: ${endrecord_opt=}
 : ${project:=t132}
 : ${rtprint_opt=}
 : ${ddd_opt=}
@@ -110,6 +112,7 @@ do
       -x) set -x;;
       -k|--eko) EZEC=eko; no_run_p=t; no_csh_check_p=t;;
       -s|--start|--startrecord|--start-record) shift; startrecord="${1}";;
+      -e|--end|--endrecord|--end-record) shift; endrecord="${1}";;
       -w|--wave|--waves|-wave|-waves) dump_waves_opt=-waves;;
       -P|--proj|--project|--chip) shift; project="${1}"; echo_id project;;
       --prog|--program|--test|--test-name) shift; testname="${1}";;
@@ -207,7 +210,7 @@ runlog="${PWD}/dp-rtl-tests/runlog"
 
 full_testname="${testname}${testext}"
 
-: ${logdir="${PWD}/dp-rtl-tests/${project}-${config}-${timestamp}"}
+: ${logdir="${PWD}/dp-rtl-tests/${testname}-${project}-${config}-${timestamp}"}
 : ${logfile="${logdir}/${testname}.log"}
 mk_logdir_command="mkdir -p ${logdir}/${testname}"
 if [ -z "${no_run_p}" ]
@@ -235,6 +238,9 @@ hdr_file=$(abspath ../../arch/traces/mobile/traces/gpu_multiengine/comp_one_tri_
 
 [ -n "${startrecord}" ] && {
     startrecord_opt="-rtlarg +startrecord+${startrecord}"
+}
+[ -n "${endrecord}" ] && {
+    endrecord_opt="-rtlarg +endrecord+${endrecord}"
 }
 
 {
@@ -274,6 +280,7 @@ ${EZEC} "${run_cmd}" \
     ${mode_arg} \
     ${dump_waves_opt} \
     ${startrecord_opt} \
+    ${endrecord_opt} \
     "${run_cmd_args[@]}" \
     -dir "${logdir}" \
     -o "${logfile}" \

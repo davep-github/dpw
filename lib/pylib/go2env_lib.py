@@ -529,7 +529,7 @@ def init_aliases(args, selector_regexp,
             dict_file = DEFAULT_DICT_FILE
         if keep_dict_updated():
 ##             print >>sys.stderr, "updating? dict."
-            newest, _ = dp_utils.newest_file(go_files + [dict_file])
+            newest, _, _ = dp_utils.newest_file(go_files + [dict_file])
 ##             print >>sys.stderr, "newest>{}<".format(newest)
             if newest != dict_file:
 ##                 print >>sys.stderr, "writing dict."
