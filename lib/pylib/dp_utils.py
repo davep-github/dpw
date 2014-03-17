@@ -416,6 +416,9 @@ def re_compile_with_case_convention(regexp_string, flags=None):
         flags = re_case_convention_flags(regexp_string)
     return re.compile(regexp_string, flags)
 
+def make_db_file_name(name):
+    return opath.join(os.environ["HOME"], "var", "db", name)
+
 def newest_file(files):
     newest_mod_time = 0
     newest_file = None
@@ -466,6 +469,37 @@ def mkpath(path):
         sep = opath.sep
             
 
+#####################################################################
+def process_gopath(args=None):
+    files = []
+    names = []
+    if args:
+        i = 0
+        for arg in args:
+            i += 1
+            if arg == '--':
+                break
+            files.append(arg)
+        args = args[i:]
+        names.extend(args)
+    if not files:
+        if os.environ.get('GOPATH'):
+            files = string.split(os.environ.get('GOPATH'), ':')
+        else:
+            # Default fall back.
+            files = [os.environ.get('HOME') + '/.go']
+    xfiles = []
+    for f in files:
+        if opath.exists(f):
+            xfiles.append(f)
+    if not xfiles:
+        print >>sys.stderr, "No go files. Exiting."
+        sys.exit(1)
+    xfiles.reverse()
+    return xfiles, names
+
+
+########################################################################
 if __name__ == "__main__":
     for a in sys.argv[1:]:
         print "a>{}<".format(a)
