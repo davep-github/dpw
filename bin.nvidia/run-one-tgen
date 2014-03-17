@@ -367,7 +367,7 @@ do
             # The script below now tails the last line.
             echo "$out_dir" >> "${last_out}"
             echo "#!/bin/sh
-tail -n1 ${last_out_dir_file_name}" >| "${latest_out}"
+tail -n"'${1-1}'" ${last_out_dir_file_name}" >| "${latest_out}"
             chmod +x "${latest_out}"
         }
         EExec_verbose_echo_id command_line_log

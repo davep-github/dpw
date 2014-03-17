@@ -22,22 +22,24 @@ rgg_memo_file = dp_utils.make_db_file_name("rgg_memo_file")
 go_files, _ = dp_utils.process_gopath()
 newest, _, _ = dp_utils.newest_file(go_files + [rgg_memo_file])
 
-if newest != rgg_memo_file:
-    #print >>sys.stderr, "meh! creating memo file!"
+def create_db_locations(db_memo_file, dependencies, args):
+    db_locations = []
     for dir in Database_p4_locations:
         rgg.log_file.write("Dir>{}<\n".format(dir))
         dir = p4_lib.p4_sb_location_to_absolute(dir)
         rgg.log_file.write("Dir>{}<\n".format(dir))
         if dir:
             dir = os.path.join(dir, "GTAGS")
-            Database_locations.append(dir)
-    f = open(rgg_memo_file, 'w')
-    f.write(`Database_locations`)
-    f.close()
-else:
-    #print >>sys.stderr, "YAY! using memo file!"
-    f = open(rgg_memo_file, 'r')
-    Database_locations = eval(f.read())
+            db_locations.append(dir)
+    return db_locations
+
+Database_locations = dp_utils.cheesy_memoized_file(
+    rgg_memo_file,
+    go_files,
+    creator = create_db_locations,
+    eval_p = True,
+    write_new_p = True)
+
 
 Out_of_tree_dbs = ["/home/dpanariti/work/out-of-tree-dirs/GTAGS"]
 

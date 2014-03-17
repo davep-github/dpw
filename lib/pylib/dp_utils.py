@@ -498,6 +498,36 @@ def process_gopath(args=None):
     xfiles.reverse()
     return xfiles, names
 
+def cheesy_memoized_file(
+    memo_file,
+    dependencies,
+    creator=None,
+    eval_p=True,
+    write_new_p=True,
+    creator_args=None):
+    contents = None
+    newest, _, _ = newest_file(dependencies + [memo_file])
+    if newest == memo_file:
+        #print >>sys.stderr, "YAY! using memo file!"
+        contents = open(memo_file, 'r').read()
+    elif creator:
+        #print >>sys.stderr, "meh. Creating memo data"
+        contents = creator(memo_file, dependencies, creator_args)
+        if contents and write_new_p:
+            #print >>sys.stderr, "Sigh. writing memo data"
+            ## @todo XXX May want to make this more sophisticated, say using
+            ## more capable serialization/de-serialization methods.
+            contents = repr(contents)
+            open(memo_file, 'w').write(contents)
+
+    if contents and eval_p:
+        ## @todo XXX May want to make this more sophisticated, say using
+        ## more capable serialization/de-serialization methods.
+        return eval(contents)
+    else:
+        return contents
+
+
 
 ########################################################################
 if __name__ == "__main__":

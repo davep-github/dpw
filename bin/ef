@@ -173,6 +173,9 @@ process_file ()
     #echo_id2 eval_opt
     vunsetp "${eval_opt}" && {
         #echo_id2 raise_and_focus_p
+        # @todo XXX try to find a way to do this before the file is
+        # edited. It helps when there are issues with eding the file, such as
+        # when an existing file is in a modified buffer.
         true_p "${raise_and_focus_p}" && {
             EExec attempt-to-raise-emacs
         }

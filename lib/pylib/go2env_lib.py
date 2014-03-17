@@ -33,8 +33,8 @@ SELECTOR_NAMES_LIST = 'L'
 
 DEFAULT_DICT_EXT = "_dict.py"
 DEFAULT_SERIALIZED_FILE_NAME = "go"
-DEFAULT_SERIALIZED_FILE = opath.join(os.environ["HOME"], "var", "db",
-                                    DEFAULT_SERIALIZED_FILE_NAME)
+DEFAULT_SERIALIZED_FILE = dp_utils.make_db_file_name(
+    DEFAULT_SERIALIZED_FILE_NAME)
 DEFAULT_DICT_FILE = DEFAULT_SERIALIZED_FILE + DEFAULT_DICT_EXT
 
 KEEP_DICT_UPDATED = "KEEP_DICT_UPDATED"
@@ -477,36 +477,6 @@ def expand_files(files, selector):
     return aliases
 
 #####################################################################
-def process_gopath(args):
-    files = []
-    names = []
-    if args:
-        i = 0
-        for arg in args:
-            i += 1
-            if arg == '--':
-                break
-            files.append(arg)
-        args = args[i:]
-        names.extend(args)
-    if not files:
-        if os.environ.get('GOPATH'):
-            files = string.split(os.environ.get('GOPATH'), ':')
-        else:
-            # Default fall back.
-            files = [os.environ.get('HOME') + '/.go']
-    xfiles = []
-    for f in files:
-        if opath.exists(f):
-            xfiles.append(f)
-    if not xfiles:
-        print >>sys.stderr, "No go files. Exiting."
-        sys.exit(1)
-    xfiles.reverse()
-    return xfiles, names
-
-
-#####################################################################
 def init_aliases(args, selector_regexp,
                  serialized_file=DEFAULT_SERIALIZED_FILE,
                  dict_file=None):
@@ -522,7 +492,7 @@ def init_aliases(args, selector_regexp,
     if Get_aliases():
         return
 
-    go_files, _ = process_gopath(args)
+    go_files, _ = dp_utils.process_gopath(args)
 
     if dict_file is not False:
         if not dict_file:
