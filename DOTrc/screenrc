@@ -5,6 +5,7 @@ autonuke                off
 #term                    linux
 setenv                  IMASCREENINSTANCE 1
 vbell                   on
+ignorecase              on
 defscrollback           ${SCREEN_DEFSCROLLBACK}
 markkeys                "0=^A:$=^E"
 bufferfile              ${SCREENDATA_EXCHANGE}
