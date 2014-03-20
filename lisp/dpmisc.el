@@ -4991,9 +4991,9 @@ Here, first means the car of the list."
                                (match-string 2 line-or-bm) 
                              line-or-bm)
                            :reset nil 
-                           :action-if-non-existent(if current-prefix-arg
-                                                      'set
-                                                    'ask))))
+                           :action-if-non-existent (if current-prefix-arg
+                                                       'set
+                                                     'ask))))
     (unless (equal starting-point (point))
        (dp-what-cursor-position))))
 
@@ -7756,7 +7756,7 @@ Visit /file/name and then goto <linenum>."
     (let* (;; Will include line number, if one.
            (filename-part name-in)
            ;; This is the line ffap is looking at in the current buffer.
-           ;; I may or may not be a filename.
+           ;; It may or may not be a filename.
            (ffap-filename (ffap-string-at-point 'file))
            (working-filename (if (string= (concat "/" name-in) 
                                           (car file-name-history))

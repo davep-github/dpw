@@ -244,6 +244,7 @@ Can be set after the first prompting.")
                                        "ec-diff"
                                        "ef-diff"
                                        "gitcia"
+                                       "hgcia"
                                        )))
                    ;; diff needs to be here because I use ec-diff which uses
                    ;; emacs.
@@ -260,8 +261,8 @@ Can be set after the first prompting.")
   (concat "^\\s-*\\(.?/?\\)?"
           (dp-concat-regexps-grouped
            (append 
-            '("gitcia\\s-+.*-m")
-            '("git\\s-+\\(commit\\|.+\\s-+commit\\)")
+            '("\\(hg\\|gitcia\\)\\s-+.*-m")
+            '("\\(hg\\|git\\)\\s-+\\(commit\\|.+\\s-+commit\\).*-m")
             ;; diff needs to be here because I use ec-diff which uses emacs.
             ;; This re needs to be modified to handle args to p4 itself, like
             ;; the git commit re above.

@@ -2,7 +2,7 @@
 # $Id: dp_io.py,v 1.13 2005/06/15 22:45:16 davep Exp $
 #
 import re, types, os, sys, types, string, select, StringIO
-import dp_sequences, dp_utils
+import dp_sequences, dp_utils, dp_misc
 Have_subprocess_module_p = False
 try:
     import subprocess
@@ -54,6 +54,10 @@ debug_keyword_no_header = False # no header before message
 debug_keyword_print_all = False # Print all regardless of keyword. Obey f_debug
 verbose_level = -1                      # for vdebug
 verbose_level_stack = []
+
+# Motivating idea: add timestamp to prints
+global_pre_writes = [dp_misc.Nop_t()]
+global_post_writes = [dp_misc.Nop_t()]
 
 def push_level(stack, gettor, new_level, settor):
     """Do pushing and setting of the new level here so we can more easily
@@ -140,11 +144,17 @@ then post."""
     return ostr
 
 ###############################################################
-def lprint(files, leader, s):
+def lprint(files, leader, s, pre_write=None, post_write=None):
     """print leader + s to each file in <files> flushing each file."""
     s = leader + s
+    pre_write = pre_write or global_pre_write
+    post_write = post_write or global_post_write
     for file in files:
+        if pre_write:
+            pre_write()
         file.write(s)
+        if post_write:
+            post_write()
         file.flush()
 
 ###############################################################

@@ -35,7 +35,10 @@
   (defvar dp-default-c-style-name "nvidia-c-style")
   (defvar dp-default-c-style nvidia-c-style))
 
-(defconst gtags-global-command "nv-ranking-global-gtags.py")
+(dmessage "featurep gtags: %s" (featurep 'gtags))
+;;(dmessage "B:gtags-global-command>%s<" gtags-global-command)
+(setq gtags-global-command "nv-ranking-global-gtags.py")
+(dmessage "A:gtags-global-command>%s<" gtags-global-command)
 
 (defun dp-nvidia-c-style ()
   "Set up C/C++ style."
@@ -264,6 +267,7 @@ tests.")
 (defvar dp-p4-ignore-regexp
   (dp-concat-regexps-grouped
    '("/hw/ap.*/diag/testgen/"
+     "/\\.hg/"
      "generated-.*-defs\\.h"
      "/plex/"))
   "Deactivate p4 in these dirs.")

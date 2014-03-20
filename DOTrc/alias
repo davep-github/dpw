@@ -247,6 +247,14 @@ alias gitpush='git push'
 alias gitpull='git pull'
 alias githelp='gith'            # Remove ^H bolding/underlining
 
+# Quicksilver versioning service.
+alias hgs='hg status'
+alias hgh='hg help'
+alias hgcia='hg commit --addremove'
+alias hgci='hg commit'
+alias hgbr='hg branch'
+alias hgl='hg log'
+
 alias go=g
 alias cdrp='cd $(rpd)'
 alias gorp='cd $(rpd)'
@@ -269,6 +277,8 @@ alias grep.=dotgrep
 alias mex=me-expand-dest
 
 alias dp4-meld='dp4-diff --meld'
+# p4 diff with diff(1); just diff(1)
+alias p4dd='p4diffdiff'
 alias sandbox_root_dir='/home/dpanariti/lib/pylib/tree_root_relativity.py --find-root'
 alias sbroot=sandbox_root_dir
 alias treeroot=sandbox_root_dir

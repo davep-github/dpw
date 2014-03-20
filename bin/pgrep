@@ -46,6 +46,7 @@ printer=out_line
 Usage_args_info=" [options] <regular-expression>"
 Usage_synopsis="Find processes by regular expression."
 Usage_details="Options:
+-l -- Long format  .                [$PS_O_LONG_FMT]
 -p -- Only show pid.                [$printer]
 -P -- Show entire matched line.
 -w -- Widen display.                [$PS_WIDTH]
@@ -63,7 +64,7 @@ EExec Options:
 -q -- Anti-verbose.
 "
 # Example of arg parsing.
-option_str="nvqpPuUwWcCo:htT:"
+option_str="nvqpPuUwWcCo:htT:l"
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -75,6 +76,7 @@ do
       -q) VERBOSE=":"; EExecQuiet;;
 
 # Program options.
+      -l) PS_O_FMT=$PS_O_LONG_FMT;;
       # We need a known format to put the pid in a known place.
       -p) printer=out_pid; NO_HDR=t; #PS_O_FMT=$PS_O_LONG_FMT;
           #PS_ARGS="-ww x $PS_O_LONG_FMT"

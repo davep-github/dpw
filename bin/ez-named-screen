@@ -6,7 +6,7 @@ named_screen()
 {
     local name="$1"
     shift
-    SCREEN_NAME="$name" dp-screen $DP_SCRIPT_X_DEBUG_OPT "$@"
+    SCREEN_NAME="$name" exec dp-screen $DP_SCRIPT_X_DEBUG_OPT "$@"
 }
 
 if name_is___main__; then

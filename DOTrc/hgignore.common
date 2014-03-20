@@ -1,0 +1,77 @@
+# Use shell glob syntax
+syntax: glob
+
+*.[oa]
+*.so
+*.pyc
+*.pyo
+*.elc
+a.out
+# Cscope files.
+cscope.files
+cscope.out
+cscope.in.out
+cscope.po.out
+# global(1) files.
+GTAGS
+GRTAGS
+GPATH
+
+# Naming conventions to prevent hg's gaze. Can also be used as dirs.
+hghide
+*[.,-]hghide
+hghide[.,-]*
+
+hide
+*[.,-]hide
+hide[.,-]*
+
+novc
+*[.,-]novc
+novc[.,-]*
+
+noscm
+*[.,-]noscm
+noscm[.,-]*
+
+nohg
+*[.,-]nohg
+nohg[.,-]*
+
+HGHIDE
+*[.,-]HGHIDE
+HGHIDE[.,-]*
+
+HIDE
+*[.,-]HIDE
+HIDE[.,-]*
+
+NOVC
+*[.,-]NOVC
+NOVC[.,-]*
+
+NOSCM
+*[.,-]NOSCM
+NOSCM[.,-]*
+
+NOHG
+*[.,-]NOHG
+NOHG[.,-]*
+
+
+# Oft-modified files with transient contents.
+.csh_history*
+.bash_history*
+
+# Invisible dirs
+/@@*
+/*@@
+/JUNK
+/junk
+
+# Other SCMs
+RCS
+CVS
+.svn
+.git
+#.hg

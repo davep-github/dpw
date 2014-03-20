@@ -65,7 +65,10 @@ run_it()
         script_opts="--sh-cd --sh: ${script_name}"
     elif true_p "${make_script_p}"
     then
-        script_opts="--sh-cd --sh: ${progname}-eexec.sh"
+        sh_name=$(toupper "${progname}-eexec")"-${USER}.sh"
+        EExec_verbose_echo_id sh_name
+        script_opts="--sh-cd --sh: ${sh_name}"
+        EExec_verbose_echo_id script_opts
     fi
     
     EExec_verbose_echo_id script_opts

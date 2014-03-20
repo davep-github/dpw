@@ -12,7 +12,7 @@ ssh_home()
 {
     local fq_home_box=$(fq_home_box)
     EExec_verbose_msg "ssh_home: home[$DP_HOME_MACHINE], fq info: ${fq_home_box}"
-    EExec ssh "${fq_home_box}"
+    EExec exec ssh "${fq_home_box}"
 }
 
 [ "${DP__name__=""}" = "__main__" ] || exit 0

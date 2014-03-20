@@ -2,4 +2,9 @@
 
 : ${differ:=diff}
 
+[ -z "$*" ] && {
+    echo 'p4 diff with diff(1); just diff(1)'
+    exit 1
+}
+
 P4DIFF="${differ}" p4 diff "$@"

@@ -21,7 +21,7 @@ vunsetp()
 : ${confirmation_response:="TRUST ME"}
 
 : ${testname:=cpu_surface_write_read}
-: ${test_args="mapping_mode=reflected default_door no_check_mem_reg series_len=32 num_series=1"}
+: ${test_args="mapping_mode=reflected default_door series_len=4 num_series=2"}
 suites=(mtxnburst-mtxnburst)
 : ${testext=.so}
 : ${rundir:=$(depth)}

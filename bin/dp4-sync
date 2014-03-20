@@ -24,7 +24,7 @@ teekerer()
 
 teekerer_sample()
 {
-    EExec -y teeker -s -i $teeker_interval "$@"
+    EExec -y teeker -s -i $teeker_interval $teeker_opts "$@"
 }
 
 teeer()
@@ -51,12 +51,12 @@ tee_cat()
 : ${keep_logs_p=}
 
 tee_func=teekerer_sample
-teeker_opts=
+teeker_opts='--egrep clobber'
 teeker_interval=100
 std_options=""
 option_str="nvqtsk:i:fN1oc."
 long_options=("teeker-opts:" "tee-func:" "teeker-interval:"
-    "p4-sync-dash-n" "p4-sync-n" "4n" "p4n" "p4-n"
+    "p4-sync-dash-n" "p4-sync-n" "4n" "p4n" "p4-n" "nn"
     "sample" "tee" "teeker" "cat"
     "one-by-one"
     "mail" "notify-on-completion" "email-on-completion" "yopp" "send-mail"
@@ -87,7 +87,7 @@ do
       --root|--cd-root|--sb-root) cd_to=$(me-expand-dest "/") || exit 11;;
       --top|--tot|--ap) cd_to=$(me-expand-dest tot) || exit 12;;
       -f) p4_sync_dash_f="-f";;
-      -N|--p4-sync-dash-n|--4n|--p4n|--p4-n) p4_sync_dash_n=-n;;
+      -N|--nn|--p4-sync-dash-n|--4n|--p4n|--p4-n) p4_sync_dash_n=-n;;
       -1|-o|--no-log-file) kwa_log_file=/dev/null; 
                            tee_func=teeer;; # stdout is fd[1] and stdOut.
       --no-save-args) save_args_p=;;
@@ -159,8 +159,8 @@ echo_id suffix
 : ${kwa_log_file_name:="${progname}${suffix}.out"}
 
 EExec -y mkdir -p "${kwa_log_dir}"
-EExec_verbose_msg "Sync'ing in >$(pwd)<"
-EExec_verbose_msg p4 command: p4 sync ${p4_sync_dash_n} ${p4_sync_dash_f} "$@"
+echo "Sync'ing in >$(pwd)<"
+echo "p4 command: p4 sync ${p4_sync_dash_n} ${p4_sync_dash_f}" "$@"
 
 #kwa_log_file_name=$(basename "${PWD}" )-"${kwa_log_file_name}"
 kwa_log_file="${kwa_log_dir}/${kwa_log_file_name}"
@@ -204,8 +204,10 @@ $@" >| "${save_args_file}"
               do
               echo "${ftr}"
             done
+            echo "******* There are files to resolve *******"
             echo "These files must be resolved with the p4 resolve command."
             echo "*******"
+            echo
         }
     }
 

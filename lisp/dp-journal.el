@@ -269,7 +269,7 @@ This way we can get alternating colors on journal mode structure in the text:
    (cons "^[ 	]*\\$\\$\\$+ .*$" 'dp-journal-high-info-face)
    (cons "^[ 	]*\\$\\$ .*$" 'dp-journal-medium-info-face)
    (cons "^[ 	]*\\$ .*$" 'dp-journal-low-info-face)
-   (cons "^[ 	]*[Ff][Yy][Ii]:? .*$" ''dp-journal-medium-info-face)
+   (cons "^[ 	]*[Ff][Yy][Ii]:? .*$" 'dp-journal-medium-info-face)
    (cons "^[ 	]*>>>>+ .*$" 'dp-journal-extra-emphasis-face)
    (cons "^[ 	]*>>> .*$" 'dp-journal-high-info-face)
    (cons "^[ 	]*>> .*$" 'dp-journal-medium-info-face)

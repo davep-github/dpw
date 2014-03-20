@@ -23,7 +23,21 @@ def listlike_p(l_or_t):
 ########################################################################
 def mklist(*args, **keys):
     ret = []
+    #
+    # If args[i] is a list, what should we do?
+    # literal --> add the list as ret[i],
+    # otherwise extend the return with args[i].
+    #
     literal = keys.get('literal') or []
+    listify_none_p = keys.get('listify_none_p', False)
+    listify_empty_p = keys.get('listify_empty_p', False)
+    if args is None and not listify_none_p:
+        # None --> None
+        return args
+    if is_listlike(args) and not args and not listify_none_p:
+        # () --> ()
+        # [] --> []
+        return args
     for a in args:
         if not literal and type(a) in listlikes:
             ret.extend(a)

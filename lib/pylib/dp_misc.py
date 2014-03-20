@@ -65,5 +65,13 @@ def mkpath(path_string_or_list):
             os.mkdir(p)
         p = p + opath.sep + element
 
+########################################################################
+class Nop_t(object):
+    def __init__(self):
+        pass
+    def __call__(self, *args, **keywords):
+        return None
+
+########################################################################
 if __name__ == "__main__":
     mkpath(sys.argv[1])
