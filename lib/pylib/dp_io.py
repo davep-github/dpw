@@ -56,8 +56,9 @@ verbose_level = -1                      # for vdebug
 verbose_level_stack = []
 
 # Motivating idea: add timestamp to prints
-global_pre_writes = [dp_misc.Nop_t()]
-global_post_writes = [dp_misc.Nop_t()]
+## @todo XXX Make these lists and apply them in order.
+global_pre_write = dp_misc.Nop_t()
+global_post_write = dp_misc.Nop_t()
 
 def push_level(stack, gettor, new_level, settor):
     """Do pushing and setting of the new level here so we can more easily

@@ -508,19 +508,19 @@ def cheesy_memoized_file(
     contents = None
     newest, _, _ = newest_file(dependencies + [memo_file])
     if newest == memo_file:
-        print >>sys.stderr, "YAY! using memo file!"
+        #print >>sys.stderr, "YAY! using memo file!"
         contents = open(memo_file, 'r').read()
     elif creator:
-        print >>sys.stderr, "meh. Creating memo data"
+        #print >>sys.stderr, "meh. Creating memo data"
         contents = creator(memo_file, dependencies, creator_args)
         if contents and write_new_p:
-            print >>sys.stderr, "Sigh. writing memo data"
+            #print >>sys.stderr, "Sigh. writing memo data"
             ## @todo XXX May want to make this more sophisticated, say using
             ## more capable serialization/de-serialization methods.
             contents = repr(contents)
             open(memo_file, 'w').write(contents)
 
-    print >>sys.stderr, "contents>{}<".format(contents)
+    #print >>sys.stderr, "contents>{}<".format(contents)
     if contents and eval_p:
         ## @todo XXX May want to make this more sophisticated, say using
         ## more capable serialization/de-serialization methods.

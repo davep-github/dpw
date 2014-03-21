@@ -108,9 +108,15 @@ def display_match(ostream, line, line_number, prefix="", suffix="",
         ts = dp_time.std_timestamp() + ": "
     else:
         ts = ""
-    dp_io.fprintf(ostream, "{} {}line: {}, >{}< {}".format(prefix, ts,
-                                                           line_number,
-                                                           line, suffix))
+    pline = "{} {}line: {}, >{}< {}".format(prefix,
+                                            ts,
+                                            line_number,
+                                            line,
+                                            suffix)
+    if pline[-1] != "\n":
+        pline = pline + "\n"
+    dp_io.fprintf(ostream, "{}".format(pline))
+
 ##     dp_io.fprintf(sys.stderr, "prefix>{}<, ts>{}<, line: num>{}<, >{}< suf>{}<".format(prefix, ts,
 ##                                                            line_number,
 ##                                                            line, suffix))

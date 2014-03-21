@@ -163,15 +163,15 @@ tests.")
 (defvar dp-p4-default-depot-completion-prefix "//"
   "Depot root.")
 
-(defun dp-nvidia-make-cscope-database-regexps (&optional 
-                                               ignore-env-p 
+(defun dp-nvidia-make-cscope-database-regexps (&optional
+                                               ignore-env-p
                                                db-locations
                                                include-dotdot-p)
   "Compute value for `cscope-database-regexps'"
   (let* ((locstr (or db-locations
                      (and (not ignore-env-p)
                           (getenv "DP_NV_ME_DB_LOCS"))
-                     (dp-string-join 
+                     (dp-string-join
                       '("ap //arch //sw/dev //sw/mods //sw/tools //hw/class"
 ;;;                      " //hw/kepler1_gklit3"
                         "//hw/tools"
@@ -179,20 +179,27 @@ tests.")
                         "fmod nvgpuinclude nvgpuclib"))))
          (locs (split-string locstr))
          (sb-name (dp-current-sandbox-name))
+         (ticker "dp-nvidia-make-cscope-database-regexps: ")
          expansion
          result)
     (list
-     (delete nil 
-             (append
-              (list (dp-me-expand-dest "sb" sb-name))
-              (let ((bubba (mapcar (function
-                                    (lambda (loc)
-                                      (list (dp-me-expand-dest loc sb-name))))
-                                   locs)))
-                (delete nil (delete '(nil) bubba)))
-              (when include-dotdot-p
-                '((t)))
-              )))))
+     (prog1
+         (delete nil
+                 (append
+                  (list (dp-me-expand-dest "sb" sb-name))
+                  (let ((bubba (mapcar (function
+                                        (lambda (loc)
+                                          (dmessage "%s." ticker)
+                                          (prog1
+                                              (list (dp-me-expand-dest loc sb-name))
+                                            (setq ticker
+                                                  (dmessage "%s+" ticker)))))
+                                       locs)))
+                    (delete nil (delete '(nil) bubba)))
+                  (when include-dotdot-p
+                    '((t)))
+                  ))
+       (dmessage "dp-nvidia-make-cscope-database-regexps: done.")))))
 
 (setq dp-make-cscope-database-regexps-fun
       'dp-nvidia-make-cscope-database-regexps)
