@@ -25,7 +25,7 @@ xterm_bin=
 window="@$(hostname)"
 host=
 
-: ${EXEC:exec}
+: ${EXEC:=exec}
 
 # This was so that FARM boxes would get the correct colors.
 # However, this is fixed in the host info file.

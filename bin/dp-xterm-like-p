@@ -1,8 +1,8 @@
 #!/bin/sh
 
-. script-x
+source script-x
 
-if [ "$DISPLAY" != "" ]
+if [ "$DISPLAY" != "" -o "${1-}" != "" ]
 then
 	case $TERM in
 	*xterm*|vt100|rxvt|screen) 

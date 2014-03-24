@@ -14,11 +14,6 @@ unset eexec_program
 
 : ${host_file=$HOME/.gnuserv-hosts}
 
-[ -f "$host_file" ] || {
-    echo "$host_file not found."
-    exit 1
-} 1>&2
-
 : ${hn:=$(hostname --short)}
 
 [ -z "$hn" ] && {
@@ -26,9 +21,11 @@ unset eexec_program
     exit 1
 } 1>&2
 
-fgrep -q "$hn" "$host_file" && {
-    echo "$hn is already in $host_file"
-    exit 0
+[ -f "$host_file" ] && {
+    fgrep -q "$hn" "$host_file" && {
+        echo "$hn is already in $host_file"
+        exit 0
+    }
 }
 
 EExecDashN_p && host_file=/dev/null
