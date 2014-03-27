@@ -42,7 +42,7 @@ class Oddity_c(object):
         return self.reply_prompt
 
     def confirmed_p(self, reply):
-        return dp_misc.any_substring(reply, "yes")
+        return dp_utils.any_substring(reply, "yes")
 
     def extend(self, fmt, *args, **kw_args):
         sep = kw_args.get("sep", "\n")

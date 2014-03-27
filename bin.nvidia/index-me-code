@@ -280,10 +280,30 @@ chip=$(guess-chip)
 EExec_verbose_msg "guessed $(echo_id chip)"
 case "${chip}" in
     t210) me_tests="${t210_me_tests}";;
-    t124|t132) me_tests="${pre_t210_gpu_tests}";;
+    t124|t132) me_tests="${pre_t210_gpu_tests-}";;
     *) echo 1>&2 "Unknown chip>${chip}<, bagging me_tests."
        me_tests_p=;;
 esac
+
+on_exit()
+{
+    local signum="${1-}"; shift
+
+    vsetp "${send_mail_on_completion-}" && {
+        EExec email-yopp "on_exit: rc: $rc; ${cron_opt}"
+    }
+}
+
+on_error()
+{
+    local rc="${1-}"; shift
+    vsetp "${send_mail_on_completion-}" && {
+        EExec email-yopp "on_error: rc: $rc; ${cron_opt}"
+    }
+}
+
+trap "on_exit 0" 0
+trap "on_error \$?" 0
 
 #
 # New layout:
@@ -486,6 +506,4 @@ fi
 
 wait
 
-vsetp "${send_mail_on_completion-}" && {
-    EExec email-yopp ${cron_opt}
-}
+exit

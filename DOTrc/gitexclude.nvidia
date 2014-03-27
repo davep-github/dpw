@@ -2,7 +2,9 @@
 *.pyc
 *.pyo
 *.elc
+*.so
 a.out
+
 # Cscope files.
 cscope.files
 cscope.out
@@ -12,7 +14,6 @@ cscope.po.out
 GTAGS
 GRTAGS
 GPATH
-
 
 # Naming conventions to prevent git's gaze. Can also be used as dirs.
 githide
@@ -41,6 +42,13 @@ NOGIT[.,-]*
 .csh_history*
 .bash_history*
 
+# Output type directories.
+doxygen.out
+doxygen.out.d
+CMakeFiles
+
+# Control files
+NOTAG
 
 # Invisible dirs
 /@@*

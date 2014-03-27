@@ -4,7 +4,7 @@ import os, sys, string, re, getopt, types, StringIO
 import pprint
 import cPickle as pickle
 
-import dp_io, dp_sequences, dp_utils, dp_misc
+import dp_io, dp_sequences, dp_utils
 opath = os.path
 
 ignore_file_not_found = 1

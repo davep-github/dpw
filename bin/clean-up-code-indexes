@@ -23,7 +23,6 @@ unset eexec_program
 # export eexec_program
 
 : ${maxdepth=4}
-: ${maxdepth_arg=-maxdepth ${maxdepth}}
 : ${index_file_globs:=cscope.* GTAGS GRTAGS GPATH}
 : ${index_finder_file:=cscope.files}
 
@@ -43,7 +42,7 @@ Usage_details="${EExec_parse_usage} [flags] [find-root]
 option_str="${EExec_parse_option_str}m:"
 # long_options=("option-name-without-leading--" ...)
 long_options=(
-"depth:" "maxdepth:"
+"md:" "depth:" "maxdepth:"
 "index-file-globs:"
 "index-finder-file:"
 )
@@ -57,7 +56,7 @@ do
       # Done by EExec_parse and friends.
 
       # Program options.
-      -m|--depth|--maxdepth) shift; maxdepth_arg="-maxdepth ${1}";;
+      -m|--md|--depth|--maxdepth) shift; maxdepth="${1}";;
       --index-file-globs) shift; index_file_globs="${1}";;
       --index-finder-file) shift; index_finder_file="${1}";;
 
@@ -74,15 +73,22 @@ vunsetp "$*" && {
     set -- '.'
 }
 
+if [ -n "${maxdepth}" ]
+then
+    maxdepth_arg="-maxdepth ${maxdepth}"
+else
+    maxdepth_arg=
+fi
+
 EExec -y find "$@" ${maxdepth_arg} -name "${index_finder_file}" | \
 while read
 do
-  EExecDashV && echo_id REPLY
+  EExec_verbose_echo_id REPLY
   found_file="${REPLY}"
   dir=$(dirname "${found_file}")
-  pushd "${dir}"
-  EExecDashV && pwd
-  EExec rm -f ${index_file_globs}
-  popd
+  pushd "${dir}" > /dev/null
+  EExec_verbose_echo_id PWD
+  EExec index-code -k
+  popd >/dev/null
 done
 

@@ -42,7 +42,7 @@ def split_magick_args(args, magick_string_separator):
 
 #############################################################################
 def emit_path(components, norm_p=True, realpath_p=True, ostream=sys.stdout,
-              prefix="", suffix="\n"):
+              prefix="", suffix="\n", basename_p=False, dirname_p=False):
     ctracef(2, "components>{}<\n", components)
     p = opath.join(*components)
     ctracef(2, "p>{}<\n", p)
@@ -52,6 +52,10 @@ def emit_path(components, norm_p=True, realpath_p=True, ostream=sys.stdout,
         p = opath.realpath(p)
     if norm_p:
         p = opath.normpath(p)
+    if basename_p:
+        p = opath.basename(p)
+    elif dirname_p:
+        p = opath.dirname(p)
     ctracef(2, "2: p>{}<\n", p)
     ostream.write("{}{}{}".format(prefix, p, suffix))
 
@@ -274,10 +278,19 @@ def main(argv):
                          dest="print_errors_p", default=False,
                          action="store_false",
                          help="Don't print errors.")
+    oparser.add_argument("--dirname",
+                         dest="dirname_p", default=False,
+                         action="store_true",
+                         help="Display directory name of output.")
+    oparser.add_argument("--basename",
+                         dest="basename_p", default=False,
+                         action="store_true",
+                         help="Display base name of output.")
 
     app_args = oparser.parse_args()
     ### Args parsed...
 
+    ## God, this all sucks. WhoTF wrote it?
     dp_io.set_eprint(app_args.print_errors_p)
 
     if app_args.trace_level:
@@ -367,7 +380,9 @@ def main(argv):
 
     if app_args.find_root_p:
         if current_tree_root:
-            emit_path((current_tree_root,))
+            emit_path((current_tree_root,),
+                      dirname_p=app_args.dirname_p,
+                      basename_p=app_args.basename_p)
         else:
             dp_io.eprintf("Cannot find tree_root root, cwd>{}<\n",
                           opath.realpath(opath.curdir))

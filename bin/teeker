@@ -453,7 +453,7 @@ class App_arg_action_add_regexp_and_warning_highlight(argparse.Action):
         regexps.append(values)
         setattr(namespace, self.dest, regexps)
 
-Convenience_opts = (("U_extension", ".log"), ("add_timestamp_p", True))
+Convenience_opts = (("U_extension", ".log"), ("timestamp_log_file_names_p", True))
 
 def set_convenience_opts(namespace):
     for name, val in Convenience_opts:
@@ -616,7 +616,7 @@ if __name__ == "__main__":
                          help=("Flush periodically after this many bytes: %s. 0 means use libz's default. -1 means every line."
                                % (DEFAULT_FLUSH_BYTES,)))
     oparser.add_argument("-u", "--timestamp-log-files",
-                         dest="add_timestamp_p", default=False,
+                         dest="timestamp_log_file_names_p", default=False,
                          action="store_true",
                          help="Add uniquifying timestamp to output file name.")
     oparser.add_argument("-E", "--extension",
@@ -645,7 +645,7 @@ if __name__ == "__main__":
                          dest="output_files_required_p", default=False,
                          nargs=0,
                          action=App_action_log_file_convenience_sampled_timestamped,
-                         help="As --slog plus timestamping.")
+                         help="As --slog plus timestamps on sampled lines.")
     oparser.add_argument("--test-log",
                          dest="output_files_required_p", default=False,
                          nargs=0,
@@ -893,7 +893,7 @@ Split line into chars and feed to ticker.""")
     if app_args.append_p:
         open_mode = "a"
 
-    if app_args.add_timestamp_p:
+    if app_args.timestamp_log_file_names_p:
         file_suffix = "." + dp_time.std_timestamp()
     file_suffix += app_args.U_extension
 

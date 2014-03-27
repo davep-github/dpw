@@ -249,6 +249,7 @@ Can be set after the first prompting.")
                    ;; diff needs to be here because I use ec-diff which uses
                    ;; emacs.
                    '("sp\\s-+.*-e\\|dp4-review")
+                   '("\\(hg\\|git\\)\\s-+\\(commit\\|.+\\s-+commit\\)")
                    ;; Resolve doesn't always result in an edit, but when it
                    ;; does, it sucks to poke around for the right instance.
                    '("p4\\s-+\\(resolve\\|diff\\|change\\|client\\|submit\\)\\|\\(as2\\s-+submit\\)"))
@@ -262,7 +263,7 @@ Can be set after the first prompting.")
           (dp-concat-regexps-grouped
            (append 
             '("\\(hg\\|gitcia\\)\\s-+.*-m")
-            '("\\(hg\\|git\\)\\s-+\\(commit\\|.+\\s-+commit\\).*-m")
+            '("\\(hg\\|git\\)\\s-+\\(commit\\|.+\\s-+commit\\s-+\\).*-m")
             ;; diff needs to be here because I use ec-diff which uses emacs.
             ;; This re needs to be modified to handle args to p4 itself, like
             ;; the git commit re above.
@@ -349,6 +350,7 @@ No regexps allowed. This will be processed by `regexp-opt'")
                                        "nvrun ness"
                                        "xemacs")))
                    '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(cia\\|stash\\|status\\|diff\\|stat\\)")
+                   '("index-code.*")
                    '("\\(.*/\\)\\(t_make\\|build_gpu_multiengine.*\\.pl\\)")
                    dp-shell-vc-commit-cmd-regexps)
            nil 'one-around-all-p)
@@ -374,7 +376,9 @@ operate on the most current file contents."
 
 (dp-deflocal dp-shells-save-buffer-flag-p t
   "Should this buffer be saved when a `dirty buffer' action in a shell window
-is executed? E.g. *grep, make, etc.")
+is executed? E.g. *grep, make, etc.  Annoyingly, buffers visiting compressed,
+tar, etc., type buffers are marked as modified when, overwhelmingly, they are
+not destined to be saved.  ")
 
 (defun dp-shells-skip-save-buffer (&optional buf)
   (interactive)

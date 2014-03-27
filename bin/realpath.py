@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys, os
-import dp_misc
+import dp_utils
 
 def relpath_translator(pathname, relpath):
     rp = os.path.relpath(pathname, relpath)
@@ -29,7 +29,7 @@ def main(argv):
             translator = os.path.relpath
             continue
         if o == '-n':
-            translator = dp_misc.normpath_plus
+            translator = dp_utils.normpath_plus
             continue
 
     for fileName in args:

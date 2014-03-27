@@ -274,7 +274,7 @@ tests.")
 (defvar dp-p4-ignore-regexp
   (dp-concat-regexps-grouped
    '("/hw/ap.*/diag/testgen/"
-     "/\\.hg/"
+     "/\\.\\(git\\|hg\\)"
      "generated-.*-defs\\.h"
      "/plex/"))
   "Deactivate p4 in these dirs.")

@@ -66,7 +66,7 @@ DP_SCRIPT_X_PROG_LOG_FILE_STDALL="${DP_SCRIPT_X_PROG_LOG_DIR}/log.stdall"
 source ~/.rc/func
 
 : ${SCRIPT_X_EXEC=}
-vsetp "$SCRIPT_X_EXEC" && {
+[ -n "$SCRIPT_X_EXEC" ] && {
 
     # Change DP_NO_LOG=t to DP_NO_LOG="t"
     DP_SETUP_ENV_ONLY="t-from-script-x" DP_NO_LOG="t-from-script-x" \
@@ -110,7 +110,7 @@ DP_SCRIPT_X_echo_id=":"
 #echo 1>&2 "0:DP_SCRIPT_X_DEBUG_INITIATOR_N>$DP_SCRIPT_X_DEBUG_INITIATOR_N<"
 if vunsetp "$DP_NO_DASH_X" ; then
     if [ "${1-}" = "${DP_SCRIPT_X_DASH_X_STR}" ] \
-         || vsetp "$DP_SCRIPT_X_DEBUG_INITIATOR_N"
+         || [ -n "$DP_SCRIPT_X_DEBUG_INITIATOR_N" ]
     then
         # -xq means to only activate the other, quiet, debug features.
         # All this, simply for the following ~99% of the time.

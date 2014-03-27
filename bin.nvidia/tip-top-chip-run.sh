@@ -20,9 +20,10 @@ vunsetp()
 
 : ${confirmation_response:="TRUST ME"}
 
-: ${testname:=cpu_surface_write_read}
-: ${test_args="mapping_mode=reflected default_door series_len=4 num_series=2"}
+: ${testname:=cpu_mem_txn_swr}
+: ${test_args="mapping_mode=reflected default_door series_len=64 num_series=1"}
 suites=(mtxnburst-mtxnburst)
+rtlargs=()
 : ${testext=.so}
 : ${rundir:=$(depth)}
 : ${timestamp=$(dp-std-timestamp)}
@@ -102,9 +103,21 @@ DENVER_ARGS0=(
 
 #eko "${DENVER_ARGS[@]}"
 
+distribute_args()
+{
+    local opt_name="${1}"; shift
+    local result=()
+    for o in "$@"
+    do
+      result+=("$opt_name" "$o")
+    done
+    #eko "result@" "${result[@]}" 1>&2
+    echo "${result[@]}"
+}
 
 while (($# > 0))
 do
+  echo "1>${1}<"
   case "${1}" in
       -n|--pretend|--dry-run) EZEC=echo; no_run_p=t; no_csh_check_p=t;;
       -v|--verbose) set -x;;
@@ -129,12 +142,15 @@ do
       -r|--run-cmd-args) shift; run_cmd_args=("${1}");;
       -m|--mode) shift; mode_arg="-mode ${1}";;
       --config|-config) shift; config="${1}";;
-      --add-suite) shift; suites+=("${1}");;
+      --suites) shift; suites=(${1});;
+      --add-suites) shift; suites+=("${1}");;
       --no-suites) suites=();;
+      --rtlargs) shift; rtlargs=($(distribute_args -rtlarg ${1}));;
+      --add-rtlargs|--rtlarg) shift; rtlargs+=($(distribute_args -rtlarg ${1}));;
+      --no-rtlargs) rtlargs=();;
       --no-errors|--no-error|--no-allow|--no-allow-errors) denver_allow_errors_p=;;
       --errors|--allow-errors) denver_allow_errors_p=t;;
       --no-rtl|--si|--silicon) denver_allow_errors_p=; elves_p=;;
-      --suites) shift; suites=(${1});;
       --no-csh-check|--no-csh|--bash-ok|--any-shell|--any-sh) no_csh_check_p=t;;
       --dot-sh|--.sh) no_csh_check_p=t;;
       --logdir) shift; logdir="{$1}";;
@@ -163,7 +179,7 @@ DENVER_ARGS=(
     "${DENVER_ARGS0[@]}"
 )
 
-#eko "${DENVER_ARGS[@]}"
+#eko "DENVER_ARGS@" "${DENVER_ARGS[@]}"
 
 # :${x=y} don't work with arrays?
 vunsetp "${run_cmd_args}" && {
@@ -174,7 +190,9 @@ vunsetp "${run_cmd_args}" && {
     esac
 }
 
-#eko "${run_cmd_args[@]}"
+#eko "rtlargs@" "${rtlargs[@]}"
+run_cmd_args+=("${rtlargs[@]}")
+#eko "run_cmd_args@" "${run_cmd_args[@]}"
 
 #: ${run_cmd_args=-}
 #if [ "${run_cmd_args}" = '-' ]

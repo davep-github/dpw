@@ -2,7 +2,7 @@
 # $Id: dp_io.py,v 1.13 2005/06/15 22:45:16 davep Exp $
 #
 import re, types, os, sys, types, string, select, StringIO
-import dp_sequences, dp_utils, dp_misc
+import dp_sequences, dp_utils
 Have_subprocess_module_p = False
 try:
     import subprocess
@@ -57,8 +57,8 @@ verbose_level_stack = []
 
 # Motivating idea: add timestamp to prints
 ## @todo XXX Make these lists and apply them in order.
-global_pre_write = dp_misc.Nop_t()
-global_post_write = dp_misc.Nop_t()
+global_pre_write = dp_utils.Nop_t()
+global_post_write = dp_utils.Nop_t()
 
 def push_level(stack, gettor, new_level, settor):
     """Do pushing and setting of the new level here so we can more easily

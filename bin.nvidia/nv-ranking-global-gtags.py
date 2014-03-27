@@ -18,7 +18,8 @@ Database_p4_locations = DP_NV_ME_DB_LOCSTR.split()
 Database_locations = []
 ## Move this into ranking_global_gtags.py???
 
-rgg_memo_file = dp_utils.make_db_file_name("rgg_memo_file")
+rgg_memo_file_name = "rgg_memo_file." + dp_utils.bq("dp4-get-root --basename")
+rgg_memo_file = dp_utils.make_db_file_name(rgg_memo_file_name)
 go_files, _ = dp_utils.process_gopath()
 newest, _, _ = dp_utils.newest_file(go_files + [rgg_memo_file])
 

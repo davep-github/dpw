@@ -11526,8 +11526,27 @@ do
 done
 EExec_verbose_msg $(echo_id eexec_program)
 unset eexec_program
+#export eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
+
+# Useful traps
+on_exit()
+{
+    local rc=\"$?\"
+    local signum=\"${1-}\"; shift
+
+    echo \"on_exit: rc: $rc; ${cron_opt}\"
+}
+
+on_error()
+{
+    local rc=\"${1-}\"; shift
+
+    echo \"on_exit: rc: $rc; ${cron_opt}\"
+    trap '' 0
+}
+
 
 "
   "A string to stuff into each new fire created with `dp-script-it'

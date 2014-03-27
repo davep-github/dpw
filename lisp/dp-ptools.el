@@ -729,7 +729,7 @@ do not indent the newly inserted comment block."
 (defun dp-c-insert-tempo-comment (&optional no-indent-p)
   "Insert a C/C++ mode tempo comment in a syntax sensitive manner."
   (interactive "*P")
-  (if (dp-in-c++-class)
+  (if (dp-in-c++-class-p)
       (dp-c-tempo-insert-member-comment)
     (if (save-excursion
           (beginning-of-line)

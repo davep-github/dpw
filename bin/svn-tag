@@ -89,7 +89,7 @@ def make_branch(new_dir="branches", tag="working", suffix=None,
     suffix = convert_spaces(suffix)
     src_url = get_url()
 #    src_url = dp_svn_lib.ups_in_url_space((url_parent_count, src_url))
-    u = dp_misc.dotdot_ify_url(src_url, url_parent_count, "")
+    u = dp_utils.dotdot_ify_url(src_url, url_parent_count, "")
     dst_url = make_dest_name(u, new_dir=new_dir, tag=tag, suffix=suffix)
 
     print "old_url>%s<" % src_url

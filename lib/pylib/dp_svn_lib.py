@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys, os, types, re, string
-import dp_misc, dp_io
+import dp_utils, dp_io
 opath = os.path
 URL_regexp = re.compile("\s*URL:\s+(.*)$")
 
@@ -203,7 +203,7 @@ def up_in_url_space(path_name, num_dotdots, dotdot_string):
         else:
             emsg = "get_url_from_file(%s) failed." % (`rp`, )
     if u:
-        u = dp_misc.dotdot_ify_url(u, num_dotdots, dotdot_string)
+        u = dp_utils.dotdot_ify_url(u, num_dotdots, dotdot_string)
     return Modified_url(path_name, u, emsg)
 
 def ups_in_url_space(path_names, num_dotdots, dotdot_string):

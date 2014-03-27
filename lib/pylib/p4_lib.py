@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys, os, re, string
-import dp_io, dp_misc
+import dp_io, dp_utils
 opath = os.path
 
 #
@@ -37,7 +37,7 @@ def reroot(line, sb, verify_p=False):
     line = sans_p4_junk(line)
     if not line:
         return
-    sb = dp_misc.normpath_plus(sb)
+    sb = dp_utils.normpath_plus(sb)
     newp = line.replace(LOCATION_ROOT, sb)
     if verify_p:
         print >>sys.stderr, "verify_p not supported."
