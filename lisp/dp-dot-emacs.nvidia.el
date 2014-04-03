@@ -170,7 +170,7 @@ tests.")
   "Compute value for `cscope-database-regexps'"
   (let* ((locstr (or db-locations
                      (and (not ignore-env-p)
-                          (getenv "DP_NV_ME_DB_LOCS"))
+                          (getenv "DP_NV_SRC_INDEX_DB_LOCS"))
                      (dp-string-join
                       '("ap //arch //sw/dev //sw/mods //sw/tools //hw/class"
 ;;;                      " //hw/kepler1_gklit3"

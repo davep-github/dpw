@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-### Time-stamp: <08/07/31 23:40:56 davep>
+### Time-stamp: <14/04/02 19:51:07 dpanariti>
 #############################################################################
 ## @package 
 ##
@@ -43,4 +43,4 @@ def flatten_iterables(*iters):
         pass
     return the_list_so_far
 
-print flatten_iterables((1,2,3))
+#print flatten_iterables((1,2,3))

@@ -4,13 +4,18 @@ import sys, os, re, subprocess
 import find_up, dp_io
 opath = os.path
 
-LOG_FILE_NAME = None
-#LOG_FILE_NAME = "/home/dpanariti/log/rgg.log"
-
-if LOG_FILE_NAME is None:
-    log_file = dp_io.Null_dev_t()
-else:
-    log_file = open(LOG_FILE_NAME, "a")
+try:
+    if log_file is not None:
+        pass
+except NameError:
+    try:
+        if LOG_FILE_NAME is None:
+            log_file = dp_io.Null_dev_t()
+        else:
+            log_file = open(LOG_FILE_NAME, "a")
+    except NameError:
+        LOG_FILE_NAME = None
+        log_file = dp_io.Null_dev_t()
 
 ## Make this environment specific
 ## In order of rank.
@@ -62,6 +67,7 @@ def rank_lines(lines):
     bottoms = []
     resid = []
 
+    log_file.write("rank_lines, lines>{}<\n".format(lines))
     if Filter_out_regexps:
         filtered_lines = []
         for line in lines:
@@ -121,11 +127,20 @@ def run_global(argv, start_dir=opath.curdir):
     return get_lines(glob.stdout, cxref_realpath_p=cxref_fmt,
                      start_dir=start_dir)
 
-def run_globals_path(argv, path, start_dir=opath.curdir):
+def run_globals_over_path(argv, path, start_dir=opath.curdir,
+                          all_matches_p=True,
+                          first_db=0,
+                          num_dbs=None):
     """For each dir in path, cd there and try global there. Stop after first
     success.
 @todo XXX Keep going? """
     original_dir = opath.realpath(opath.curdir)
+    if num_dbs is None:
+        num_dbs = len(path)
+    log_file.write("run_globals_over_path(): BEFORE: path>{}<\n".format(path))
+    path = path[first_db:num_dbs]
+    log_file.write("run_globals_over_path(): AFTER: path>{}<\n".format(path))
+    ret = []
     for p in path:
         p = opath.dirname(p)
         #print >>sys.stderr, "p>%s<" % (p,)
@@ -133,12 +148,15 @@ def run_globals_path(argv, path, start_dir=opath.curdir):
         x = run_global(argv, start_dir=start_dir)
         os.chdir(original_dir)
         if x:
-            return x
+            ret.extend(x)
+            if not all_matches_p:
+                break
+    return ret
 
 def run_globals(argv, path=None, all_p=True, start_dir=opath.curdir):
     if path == None:
         path = find_up.find_up("GTAGS", all_p=all_p)
-    ret = run_globals_path(argv, path, start_dir=start_dir)
+    ret = run_globals_over_path(argv, path, start_dir=start_dir)
     #print "ret:", ret
     return ret
 
@@ -168,7 +186,7 @@ def main(argv):
     if filter_p:
         lines = get_lines(sys.stdin)
     else:
-        #lines = run_globals_path(argv, path)
+        #lines = run_globals_over_path(argv, path)
         lines = run_globals(argv, path, start_dir=opath.curdir)
     if lines:
         lines = rank_lines(lines)

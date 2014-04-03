@@ -145,14 +145,15 @@ do
       --suites) shift; suites=(${1});;
       --add-suites) shift; suites+=("${1}");;
       --no-suites) suites=();;
-      --rtlargs) shift; rtlargs=($(distribute_args -rtlarg ${1}));;
-      --add-rtlargs|--rtlarg) shift; rtlargs+=($(distribute_args -rtlarg ${1}));;
+      --rtlargs) shift; rtlargs=(${1});;
+      --add-rtlargs|--rtlarg) shift; rtlargs+=(${1});;
       --no-rtlargs) rtlargs=();;
       --no-errors|--no-error|--no-allow|--no-allow-errors) denver_allow_errors_p=;;
       --errors|--allow-errors) denver_allow_errors_p=t;;
       --no-rtl|--si|--silicon) denver_allow_errors_p=; elves_p=;;
       --no-csh-check|--no-csh|--bash-ok|--any-shell|--any-sh) no_csh_check_p=t;;
       --dot-sh|--.sh) no_csh_check_p=t;;
+      --wrap-monitor|--monitor-wrap) rtlargs+=(+fmif_checker.enable=1 +tbLoggerOpts=*:error+warn+info);;
       --logdir) shift; logdir="{$1}";;
       --logfile) shift; logfile="${1}";;
 #       --rtprint|-rtprint) rtprint_opt="-rtprint";;
@@ -190,6 +191,9 @@ vunsetp "${run_cmd_args}" && {
     esac
 }
 
+[ "${#rtlargs[@]}" = 0 ] || {
+    rtlargs=($(distribute_args -rtlarg "${rtlargs[@]}"))
+}
 #eko "rtlargs@" "${rtlargs[@]}"
 run_cmd_args+=("${rtlargs[@]}")
 #eko "run_cmd_args@" "${run_cmd_args[@]}"

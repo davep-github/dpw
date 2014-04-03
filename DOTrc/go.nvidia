@@ -78,6 +78,8 @@ Ee|nvlx__SB_rel|                ${nvlink1translator__SB_rel}
 Ee|nvlink1__SB_rel|             ${nvlink1translator__SB_rel}
 Ee|nvl1__SB_rel|                ${nvlink1translator__SB_rel}
 Ee|nvlt__SB_rel|                ${nvlink1translator__SB_rel}
+Ee|c11dummy__SB_rel|            ${fmodel__SB_rel}c11_dummy/
+Ee|hwbase__SB_rel|              ${fmodel__SB_rel}base/
 Ee|hshub__SB_rel|               ${fmodel__SB_rel}hshub/
 Ee|nesstutorial__SB_rel|        ${fmodel__SB_rel}ness-tutorial/
 Ee|nesstut__SB_rel|             ${nesstutorial__SB_rel}

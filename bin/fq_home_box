@@ -31,8 +31,23 @@ get_fq_home_box()
         return 1
     } 1>&2
 
-    echo "${home_user}@${home_addr}"
+    local did_something_p=
+    while (($# > 0))
+    do
+      case "$1" in
+          --user) echo "${home_user}"; did_something_p=t;;
+          --addr|--ip|--host) echo "${home_addr}"; did_something_p=t;;
+          --) shift; break;;
+          *) break
+      esac
+      shift
+    done
+    true_p "${did_something_p}" || {
+        echo "${home_user}@${home_addr}"
+    }
 }
 
-get_fq_home_box
+[ "${DP__name__-""}" = "__main__" ] || exit 0
+
+get_fq_home_box "$@"
 

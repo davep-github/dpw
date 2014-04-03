@@ -1,20 +1,34 @@
 #!/usr/bin/env python
 
 import sys, os, time, subprocess
-import ranking_global_gtags_lib, dp_sequences, dp_io, dp_utils
+import dp_sequences, dp_io, dp_utils
+
+import ranking_global_gtags_lib
 rgg = ranking_global_gtags_lib
-###rgg.log_file = sys.stderr
+#rgg.log_file = sys.stderr
+rgg_log_file_name = os.environ.get("rgg_log_file_name", None)
+if rgg_log_file_name:
+    if rgg_log_file_name == '-':
+        rgg.log_file = sys.stderr
+    elif rgg_log_file_name == '--':
+        rgg.log_file = sys.stdout
+    else:
+        rgg_log_file_name = os.path.join(os.environ["HOME"], "var/log",
+                                         rgg_log_file_name)
+        rgg.log_file = open(rgg_log_file_name, 'a')
+
+rgg.log_file.write("==== {} ====\n".format(time.ctime()))
 
 import find_up, p4_lib
 opath = os.path
 
 # Use [] so we fail messily if there is nothing defined.
-DP_NV_ME_DB_LOCSTR = os.environ["DP_NV_ME_DB_LOCS"]
+DP_NV_DB_LOCSTR = os.environ["DP_NV_SRC_INDEX_DB_LOCS"]
 
 # Everything will search up to the sandbox root. There is one other known
 # place and that is TOT
 # Abbrev or //p4/loc name.
-Database_p4_locations = DP_NV_ME_DB_LOCSTR.split()
+Database_p4_locations = DP_NV_DB_LOCSTR.split()
 Database_locations = []
 ## Move this into ranking_global_gtags.py???
 
@@ -52,9 +66,7 @@ Database_locations = [ loc for loc in Database_locations
 # Want to search upward from cwd for a db.
 # Then want to search all other databases.
 
-rgg.log_file.write("\n=========\n" + time.ctime() + "\n"
-                   + opath.realpath(opath.curdir) + "\n")
-rgg.log_file.write("DP_NV_ME_DB_LOCSTR>{}<\n".format(DP_NV_ME_DB_LOCSTR))
+rgg.log_file.write("DP_NV_DB_LOCSTR>{}<\n".format(DP_NV_DB_LOCSTR))
 rgg.log_file.write(
     "Database_locations>{}<\n".format(
         dp_sequences.list_to_indented_string(Database_locations)))
@@ -77,6 +89,7 @@ Top_ranking_regexp_strings = [
 
 Filter_out_regexp_strings = [
     "cpu_surface_write_read",
+    "cpu_mem_txn_swr",
     "/plex/"
     ]
 

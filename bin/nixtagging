@@ -29,9 +29,16 @@ done
 
 for dir in "$@"
 do
-  [ -d "$dir" ] || {
+  if test -e "$dir"
+  then
+      if ! test -d "$dir"
+      then
+          echo "$dir is not a directory. Skipping."
+          continue
+      fi 1>&2
+  else
       EExec mkdir -p "$dir"
-  }
+  fi
   touch_file=$(normpath "${dir}/${kwa_no_this}")
   if [ -e "$touch_file" ]
   then

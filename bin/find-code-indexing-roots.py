@@ -114,7 +114,7 @@ def main(argv):
                          action="store_true",
                          help="Do not print informative messages.")
     oparser.add_argument("--env-var", "--hregexp", "--hmatch",
-                         dest="env_var", default="DP_NV_ME_DB_LOCS",
+                         dest="env_var", default="DP_NV_ME_LOCS",
                          help='Try this env var for extra roots.')
     oparser.add_argument("--root-indicator-file", "--root-indicator",
                          dest="root_indicator_file", default="DP_INDEX_ROOT",
@@ -132,10 +132,10 @@ def main(argv):
 
     app_args = oparser.parse_args()
 
-    DP_NV_ME_DB_LOCSTR = os.environ.get("DP_NV_ME_DB_LOCS", "")
+    DP_NV_DB_LOCSTR = os.environ.get("DP_NV_SRC_INDEX_DB_LOCS", "")
     env_roots = []
-    if DP_NV_ME_DB_LOCSTR:
-        env_roots = DP_NV_ME_DB_LOCS.split()
+    if DP_NV_DB_LOCSTR:
+        env_roots = DP_NV_DB_LOCS.split()
     found_roots = find_roots(root=app_args.start_dir,
                              root_indicator_file=app_args.root_indicator_file,
                              followlinks=app_args.follow_links_p,
