@@ -1,21 +1,26 @@
 #!/bin/sh
 
 source script-x
+set -u
 progname="$(basename $0)"
 source eexec
-set -u
-
-# File in which variables useful to ssh'ing to home are kept.
-: ${var_file="$HOME/.rc/env.var"}
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
 
 ssh_home()
 {
-    local fq_home_box=$(fq_home_box)
+    local fq_home_box=$(EExec fq_home_box "$@")
     EExec_verbose_msg "ssh_home: home[$DP_HOME_MACHINE], fq info: ${fq_home_box}"
     EExec exec ssh "${fq_home_box}"
 }
 
 [ "${DP__name__=""}" = "__main__" ] || exit 0
+
+: ${source_var_file_p=t}
 
 #Usage variable usage:
 Usage_args_info=" [<eexec-opts>]"
@@ -28,7 +33,7 @@ Usage_details="-n -- Show what would happen but don\'t do it. [eexec]
 # Example of arg parsing.
 Usage_args_info="No args"
 Usage_details="$EExec_parse_option_str
--s -- Do not source $var_file
+-s -- Do not source most recent vars
 -S <source-file> -- Do source <var-file> immediately. May be repeated."
 option_str="nvqsS:"
 source dp-getopt+.sh
@@ -41,7 +46,7 @@ do
       -v) VERBOSE="echo $progname: "; EExecVerbose;;
       -q) VERBOSE=":"; EExecQuiet;;
       # Program options.
-      -s) var_file="";;
+      -s) export source_var_file_p=;;
       -S) shift; source "$1";;
       --) shift ; break ;;
       *) 
@@ -52,9 +57,4 @@ do
     shift
 done
 
-[ -n "$var_file" ] && {
-    # Make sure we have the latest home ssh variables.
-    source $var_file
-}
-
-ssh_home
+ssh_home "$@"

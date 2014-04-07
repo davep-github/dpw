@@ -12,6 +12,10 @@ do
 done
 unset eexec_program
 
+# File in which variables useful to ssh'ing to home are kept.
+: ${var_file="$HOME/.rc/env.var"}
+: ${source_var_file_p=t}
+
 get_fq_home_box()
 {
     local home_addr
@@ -37,6 +41,7 @@ get_fq_home_box()
       case "$1" in
           --user) echo "${home_user}"; did_something_p=t;;
           --addr|--ip|--host) echo "${home_addr}"; did_something_p=t;;
+          --no-source|--no-dot|--old-vars|-s) source_var_file_p=;;
           --) shift; break;;
           *) break
       esac
@@ -46,6 +51,16 @@ get_fq_home_box()
         echo "${home_user}@${home_addr}"
     }
 }
+
+true_p "${source_var_file_p}" && {
+    EExec_verbose_msg "Var file sourcing requested."
+    [ -n "$var_file" ] && {
+    # Make sure we have the latest home ssh variables.
+        EExec_verbose_msg "Sourcing var_file>$var_file<."
+        source $var_file
+    }
+}
+
 
 [ "${DP__name__-""}" = "__main__" ] || exit 0
 

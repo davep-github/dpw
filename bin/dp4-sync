@@ -49,6 +49,7 @@ tee_cat()
 : ${tee_append_opt=}
 : ${cd_to="."}
 : ${keep_logs_p=}
+: ${note=Empty}
 
 tee_func=teekerer_sample
 teeker_opts='--egrep clobber'
@@ -66,7 +67,8 @@ long_options=("teeker-opts:" "tee-func:" "teeker-interval:"
     "cd:" 
     "top" "tot" "ap"
     "root" "cd-root" "sb-root"
-    "keep-logs"
+    "keep-logs" "keep" "kl"
+    "note:"
 )
 
 source dp-getopt+.sh
@@ -82,7 +84,7 @@ do
       -k|--teeker-opts) shift; teeker_opts="$1";;
       -i|--teeker-interval) shift; teeker_interval="$1";;
       -.|--stay-put|--no-cd|--dot) cd_to=".";;
-      --keep-logs) keep_logs_p=t;;  # Even if -n
+      --keep-logs|--keep|--kl) keep_logs_p=t;;  # Even if -n
       --cd) shift; cd_to=$(me-expand-dest "${1}") || cd_to="${1}";;
       --root|--cd-root|--sb-root) cd_to=$(me-expand-dest "/") || exit 11;;
       --top|--tot|--ap) cd_to=$(me-expand-dest tot) || exit 12;;
@@ -97,6 +99,7 @@ do
       --teeker) tee_func=teekerer;;
       --mail|--notify-on-completion|--email-on-completion|--yopp|--send-mail) 
                   send_mail_on_completion_p=t;;
+      --note) shift; note="${1}";;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";
@@ -166,12 +169,25 @@ echo "p4 command: p4 sync ${p4_sync_dash_n} ${p4_sync_dash_f}" "$@"
 kwa_log_file="${kwa_log_dir}/${kwa_log_file_name}"
 echo_id kwa_log_file
 
+vsetp "${note-}" && {
+    note_file="${kwa_log_dir}/dp4-sync.note"
+    if [ "${note}" = '-' ]
+    then
+        {
+            echo "================="
+            echo "Enter note (C-d when done):"
+        } 1>&2
+        cat
+    else
+        echo "${note}"
+    fi > "${note_file}"
+}
 {
     save_args_file="${kwa_log_dir}/dp4-sync.args"
     # print log name before and after in case it is a long sync.
     [ -n "$save_args_p" ] && {
         echo_id save_args_file
-        echo "p4 sync args:
+        echo "args:
 $@" >| "${save_args_file}"
     }
     if true_p "${one_by_one_p}"

@@ -8,6 +8,7 @@ $num_to_print = -1;
 $capture_output_p = 1;
 $sudo = "";
 $look_in_cwd = 0;
+$files_only_p = 1;
 
 sub usage {
     printf("usage: sp [-{0-9}+] [-l[l]] [-r] [-L] [-S] [-X cmd [args]] [-x cmd] file...\n");
@@ -66,6 +67,9 @@ while (($opt, $opt_arg) = ($ARGV[0] =~ /^-(\S)(\S*)/)) {
     $cmd = "vim";
     $num_to_print = 1;
     $capture_output_p = 0;
+  } elsif ($opt eq "F") {
+    $files_only_p = 0;
+    $capture_output_p = 0;
   } elsif ($opt eq "e") {
     $cmd = "ec";
     $num_to_print = 1;
@@ -119,6 +123,7 @@ foreach $arg (@ARGV) {
     #printf("targlist>%s<\n", join("\n", @targlist));
     foreach $targ (@targlist) {
       #print "1, targ>$targ<\n";
+      next if ($files_only_p && -d $targ);
       if ($func_name) {
         #&echo($cmd_args);
         eval("&$func_name(\"real: \", \$cmd_args);");
