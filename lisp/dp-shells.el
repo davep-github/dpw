@@ -2496,6 +2496,7 @@ it for something \"speshul\".
               (rename-buffer (format "%s%s" fav-buf-name fan-buf-name)))
             (message "Using fav buf: %s" fav-buf0))
           (dmessage "point: %s, window-point: %s" (point) (window-point)))
+      ;; "else"
       ;;;;;;;;;;;;;;;;;;;;; EA! ;;;;;;;;;;;;;;;;;;;;;
       ;; Handle new shell case. We may have a name already.
       (setenv "PS1_prefix" nil 'UNSET)
@@ -2553,14 +2554,14 @@ it for something \"speshul\".
         shell-buf)
     (if (equal current-prefix-arg '(4)) ; One plain C-u
         (dp-shell-cycle-buffers -1)
-    (dp-shell0 arg :other-window-p other-window-p :name name
-               :other-frame-p other-frame-p)
-    ;; WTF??;;(setq shell-buf (current-buffer))
-    ;; we're now in the new shell buffer
-    ;; Set the previous buffer
-    (when whence-buf
-      ;; Don't save a shell buffer as a whence.
-      (setq dp-shell-whence-buf whence-buf)))))
+      (dp-shell0 arg :other-window-p other-window-p :name name
+                 :other-frame-p other-frame-p)
+      ;; WTF??;;(setq shell-buf (current-buffer))
+      ;; we're now in the new shell buffer
+      ;; Set the previous buffer
+      (when whence-buf
+        ;; Don't save a shell buffer as a whence.
+        (setq dp-shell-whence-buf whence-buf)))))
 
 ;;;###autoload
 (defun dp-shell-other-window (&optional arg)
