@@ -39,6 +39,9 @@ def main(argv):
 
     # ...
 
+    # For non-option args
+    oparser.add_argument("input_files", nargs="*")
+
     app_args = oparser.parse_args()
     if app_args.quiet_p:
         print "I am being quiet."

@@ -2450,7 +2450,7 @@ it for something \"speshul\".
                              (and pnv (< pnv 0) (setq pnv (abs pnv)))
                              other-window-p
                              fav-flags
-                             (Cup)))
+                             (nCu-p)))
          (switch-window-func (cond
                               ((functionp other-window-p) other-window-p)
                               (other-window-p 'switch-to-buffer-other-window)
@@ -2593,7 +2593,7 @@ COL defaults the the width of the window in which the first *shell* buffer is
 displayed."
   (interactive "P")
   (when args
-    (if (C-u-p)
+    (if (nCu-p)
         (setq args (concat (read-string "Args? " "" nil "") " ")
               cols (read-number "Cols? " t 78))))
   (save-excursion
@@ -2913,9 +2913,9 @@ ARG == 0    --> New `dp-gdb-naught' session."
   (when (interactive-p)
     (cond
      ((eq interactive-only-arg nil) (setq use-most-recent-p t))
-     ((Cu-p nil interactive-only-arg) (setq prompt-p t))
+     ((nCu-p nil interactive-only-arg) (setq prompt-p t))
      ((equal interactive-only-arg 0) (setq new-p 0))
-     ((Cu--p interactive-only-arg) (setq new-p t))))
+     ((Cu--p nil interactive-only-arg) (setq new-p t))))
 
   (unless new-p
     (if (and (dp-buffer-process-live-p (dp-gdb-most-recent-buffer

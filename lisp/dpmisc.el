@@ -1636,7 +1636,7 @@ Pass t for `open-newline-func' to get the basic open below behavior."
                                 (bound-and-true-p dp-open-newline-func)))
          (do-default (if (or (and open-newline-func (listp open-newline-func))
                              (Cu0p open-newline-func)
-                             (Cu--p open-newline-func)
+                             (Cu--p nil open-newline-func)
                              (memq open-newline-func '(t nil default 
                                                        eol-newline-and-indent)))
                          t
@@ -2294,7 +2294,7 @@ Used and set by \\[io] and used by \\[io-region].")
   "Previously read #ifdef args.")
 
 (defun dp-ifdef-region-read-arg ()
-  (list (if (Cu--p current-prefix-arg)
+  (list (if (Cu--p nil current-prefix-arg)
             (read-string "#ifdef text: " 
                          nil 'dp-ifdef-region-read-arg-history)
           (prefix-numeric-value current-prefix-arg))))
@@ -2849,7 +2849,7 @@ Use another binding? Running out of prefix arg interpretations."
                         stuck-p))
          (stick-last-p (and iterating-p (not stuck-p)
                             ;; Single [(control ?u)] (()
-                            (or (C-u-p) (Cu--p))
+                            (or (nCu-p) (Cu--p))
                             (setq this-command nil stick-p t)
                             t))
          (shrinking-p (and iterating-p
@@ -7682,7 +7682,7 @@ ALL trailing white space is nuked.
 Really only useful for commands with 0 or 1 line of output.
 Motivation was the ability to run commands like this \"mpc play\"."
   (interactive (list (read-from-minibuffer "shell cmd> "
-                                       (if (Cup)
+                                       (if (nCu-p)
                                            ""
                                          "mpc "))))
   (let ((white-space-stripper (concat "\\(^.*\\)\\("
@@ -7798,6 +7798,7 @@ Visit /file/name and then goto <linenum>."
       (goto-line (string-to-int line-num-part)))))
 
 (defun dp-ffap-file-finder2 (&optional name-in)
+  (interactive)
   (dp-ffap-file-finder2-1 name-in))
 
 (defun dp-ffap-file-finder2-other-window (&optional name-in)
@@ -7808,10 +7809,13 @@ Visit /file/name and then goto <linenum>."
   (cond
    ((not (interactive-p))
     (find-file file-name))
-   ((Cu--p)                             ; Just call find-file
-    (call-interactively 'find-file))
+   ((Cu--p 0)                           ; Just call find-file
+    (find-file (read-file-name "dp-ffap[0]: ")))
    ((Cu--p)
     (call-interactively 'dp-search-path))
+   ((Cu--p 4)
+    (dp-with-prefix-arg nil
+      (call-interactively dp-file-finder-other-window)))
    ;; Here's where we should add our crap.
    (t (call-interactively dp-file-finder)))
 ;;   (dp-restore-file-state)
@@ -10313,7 +10317,7 @@ Ignore repeated requests to set the same properties. Idempotentize."
   (and (listp prefix-arg)        ; Ensure it's a list ==> true C-u vs C-<num>
        (truncate (dp-log-base-b 4 (prefix-numeric-value prefix-arg)))))
 
-(defun* C-u-p (&optional num-C-u prefix-arg (op 'eq))
+(defun* nCu-p (&optional num-C-u prefix-arg (op 'eq))
   "Return non-nil if number of C-us in `current-prefix-arg' == NUM-C-U.
 If PREFIX-ARG is non-nil, use that instead of `current-prefix-arg'.
 Essentially return whether log base4 of `current-prefix-arg' == NUM-C-U."
@@ -10324,19 +10328,18 @@ Essentially return whether log base4 of `current-prefix-arg' == NUM-C-U."
                   (if (listp a)
                       (car a)
                     a)))))
-(dp-defaliases 'Cu-p 'Cup 'C-u-p)
 
-(defun Cup> (num &optional prefix-arg)
-  (C-u-p num prefix-arg '<))
+(defun nCu-p> (num &optional prefix-arg)
+  (nCu-p num prefix-arg '<))
 
-(defun Cup< (num &optional prefix-arg)
-  (C-u-p num prefix-arg '>))
+(defun nCu-p< (num &optional prefix-arg)
+  (nCu-p num prefix-arg '>))
 
-(defun Cup>= (num &optional prefix-arg)
-  (C-u-p num prefix-arg '<=))
+(defun nCu-p>= (num &optional prefix-arg)
+  (nCu-p num prefix-arg '<=))
 
-(defun Cup<= (num &optional prefix-arg)
-  (C-u-p num prefix-arg '>=))
+(defun nCu-p<= (num &optional prefix-arg)
+  (nCu-p num prefix-arg '>=))
 
 (defun Cu0p (&optional prefix-arg n)
   "Check to see if the numeric value of the prefix arg is N.
@@ -10344,15 +10347,16 @@ Most used to check for C-0 as a command flag."
   (setq-ifnil prefix-arg current-prefix-arg)
   (eq (prefix-numeric-value prefix-arg) (or n 0)))
 
-(defun Cu--p (&optional prefix-arg)
+(defun Cu--p (&optional arg prefix-arg)
   "See if current-prefix-arg `equal' ARG. ARG defaults to '-"
   (setq-ifnil prefix-arg current-prefix-arg)
-  (equal '- prefix-arg))
+  (equal (or arg '-) 
+         (or prefix-arg current-prefix-arg)))
 
-(defun Cu-val (&optional prefix-arg)
+(defun Cu-numeric-val (&optional prefix-arg)
   (prefix-numeric-value (or prefix-arg current-prefix-arg)))
 
-(defun Cu*p (memq-list &optional prefix-arg)
+(defun Cu-memq (memq-list &optional prefix-arg)
   "Return non-nil if CURRENT-PREFIX-ARG or PREFIX-ARG is in MEMQ-LIST.
 The return value is the result of `memq' on MEMQ-LIST"
   (interactive)
@@ -11846,7 +11850,7 @@ hook? A minus is needing to use a special accessor.
   (when (or prompt-p (and (interactive-p) current-prefix-arg))
     (setq symbol-name-regexp (dp-prompt-with-symbol-near-point-as-default
                               "symbol regexp"))
-    (when (Cup 2)
+    (when (nCu-p 2)
       (setq pred
             (read-function (format "symbol pred (default: #'%s)" 
                                    pred) 
@@ -12735,7 +12739,7 @@ the next session."
       (setq eval-it-p t
             allow-replace-command-p nil
             ask-about-replace-p nil))
-     ((Cu--p skip-sarah-p)
+     ((Cu--p nil skip-sarah-p)
       (setq allow-replace-command-p t
             force-replace-command-p t
             eval-it-p t
@@ -13121,7 +13125,7 @@ the kill ring rather than adding many number to the ring.
          (exact-repeated-command (and repeated-kill-command repeated-arg))
          (suffix "."))
     (when (cond
-           ((Cu--p select-p)            ; To kill ring, unconditionally.
+           ((Cu--p nil select-p)        ; To kill ring, unconditionally.
             (kill-new (format "%s" indentation))
             (setq suffix "; kill-new'd.")
             t)                          ; Show indentation
@@ -14277,20 +14281,25 @@ something.")
   "Show the BUFFER or current-buffer's file name in echo area.
 KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
   (interactive "P")
-  (with-current-buffer (or buffer (current-buffer))
-    (message "%sbuffer-file-truename: %s"
+  (let ((name (or buffer-file-truename
+                  "<buffer-file-truename is nil>"))
+        (name-type "buffer-file-truename"))
+    (with-current-buffer (or buffer (current-buffer))
+      (if kill-name-p
+          (when buffer-file-truename
+            (cond
+             ((nCu-p nil kill-name-p)
+              (kill-new buffer-file-truename))
+             ((Cu--p nil kill-name-p)
+              (setq name (file-name-directory buffer-file-truename)
+                    name-type "buffer-dir-truename")
+              (kill-new name))))))
+    (message "%s%s: %s"
              (if kill-name-p
                  "Copied "
                "")
-             buffer-file-truename)
-    (if kill-name-p
-        (if (not buffer-file-truename)
-            (dmessage "buffer-file-truename is nil, not putting on kill ring.")
-          (cond 
-           ((Cu-p nil kill-name-p)
-            (kill-new buffer-file-truename))
-            ((Cu--p kill-name-p)
-             (kill-new (file-name-directory buffer-file-truename))))))))
+             name-type
+             name)))
 
 (defun dp-grep-buffers (regexp &optional buffer-filename-regexp)
   (interactive "sregexp? ")

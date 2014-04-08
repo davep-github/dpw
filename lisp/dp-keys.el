@@ -511,11 +511,11 @@ Hopefully [space] is mnemonic.")
                           [(control ? )] 'dp-show-region
                           [?u] (kb-lambda
                                    (dp-uncolorize-region nil nil 
-                                                         (not (C-u-p))))
+                                                         (not (nCu-p))))
                           [(meta u)] (kb-lambda
                                          (dp-uncolorize-region (point-min) 
                                                                (point-max)
-                                                               nil (C-u-p)))
+                                                               nil (nCu-p)))
                           [?p] 'dp-set-colorized-extent-priority
                           [?a] 'dp-uncolorize-all)
     ;; <:cdd map colorization bindings:>

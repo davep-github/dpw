@@ -1836,7 +1836,7 @@ cscope discovery.
   (interactive "*p")
   ;; Use \C-- as our flag since it isn't useful as a count for the real
   ;; `undo'."
-  (if (Cu--p current-prefix-arg)
+  (if (Cu--p nil current-prefix-arg)
       (call-interactively 'undo-all-changes)
     ad-do-it))
 
@@ -1891,7 +1891,7 @@ cscope discovery.
     (message "Allowing file's owner to auto eval Local Variables.")))
 ; (defadvice eval-defun (around dp-eval-defun activate)
 ;   (dmessage "this-command>%s<" this-command)
-;   (if (and (C-u-p)
+;   (if (and (nCu-p)
 ;             (not (eq this-command 'eval-defun))
 ;       (eval-defun nil))
 ;     ad-do-it))
@@ -1909,7 +1909,7 @@ cscope discovery.
 ;;   (defadvice delete-frame (around dp-advised-delete-frame activate)
 ;;     "Ask the user if they really meant to delete the frame rather than change to another."
 ;;     ;; Twice in a row actually does it.
-;;     (if (or (C-u-p) (eq last-command 'delete-frame))
+;;     (if (or (nCu-p) (eq last-command 'delete-frame))
 ;;         ad-do-it
 ;;       ;; Not second in a row, so ask the user really wanted to do an
 ;;       ;; `other-frame'.
@@ -1973,7 +1973,7 @@ and then business as usual."
                                      activate)
   "Allow prefix args C-0 or C-- to limit filling to the current line and below."
   (let ((current-prefix-arg current-prefix-arg))
-    (if (not (Cu*p '(- 0)))
+    (if (not (Cu-memq '(- 0)))
         ad-do-it
       (setq current-prefix-arg nil)
       (save-restriction
@@ -2137,7 +2137,7 @@ and then business as usual."
   (push-window-configuration))
 
 (defadvice describe-variable (around dp-desc-var activate)
-  (if (Cu*p '(0 -))
+  (if (Cu-memq '(0 -))
       (dp-show-variable-value (ad-get-arg 0))
     ad-do-it))
 

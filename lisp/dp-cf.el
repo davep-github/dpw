@@ -308,7 +308,7 @@ Eg, via `hack-local-variables', hook, magic.")
         (message "Returning whence we came.")
         (dp-ecf-return-whence)
         (setq dp-ecf-whence-marker whence))
-    (when (C-u-p 2 find-symbol-p)
+    (when (nCu-p 2 find-symbol-p)
       (setq dp-ecf-whence-marker nil
             find-symbol-p t))
     (dp-find-corresponding-file nil (or find-file-func 'dp-find-file-this-window)

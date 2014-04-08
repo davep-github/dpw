@@ -8,9 +8,9 @@ rgg = ranking_global_gtags_lib
 #rgg.log_file = sys.stderr
 rgg_log_file_name = os.environ.get("rgg_log_file_name", None)
 if rgg_log_file_name:
-    if rgg_log_file_name == '-':
+    if rgg_log_file_name == '--err':
         rgg.log_file = sys.stderr
-    elif rgg_log_file_name == '--':
+    elif rgg_log_file_name == '--out':
         rgg.log_file = sys.stdout
     else:
         rgg_log_file_name = os.path.join(os.environ["HOME"], "var/log",

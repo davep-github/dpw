@@ -285,4 +285,5 @@ alias treeroot=sandbox_root_dir
 alias sb-root=sandbox_root_dir
 alias tree-root=sandbox_root_dir
 
+alias myvncs='ls -l ~/.vnc/*.pid'
 true

@@ -339,9 +339,10 @@ def false(*args, **kwargs):
     return False
 
 def Catlike_setup(namespace):
-    setattr(namespace, "sample_lines_tick_p", true)
+    setattr(namespace, "sample_lines_tick_p", True)
     setattr(namespace, "tick_interval", 1)
     setattr(namespace, "sample_lines_tick_prefix", False)
+    setattr(namespace, "tee_p", True)
 
 def eval_with_units(num, allow_fractions_p=False):
     if (num == "-1"):
@@ -812,10 +813,10 @@ Split line into chars and feed to ticker.""")
                          dest="num_trailing_lines",
                          type=int, default=DEFAULT_LINES_AFTER,
                          help="Print this many more lines if possible (ignoring filters and ticking) before exiting. Default is: %s. (0) means none")
-    oparser.add_argument("-q", "--cat-like", "--copy",
+    oparser.add_argument("-q", "--cat-like", "--copy", "--tee",
                          nargs=0,
                          action=App_arg_action_catlike,
-                         help="Just be a pass through. Useful when grepping.")
+                         help="Just be a pass through like tee(1).")
     oparser.add_argument("--highlight-grep", "--highlight-matches",
                          "--high-grep", "--high_matches",
                          "--hl-grep", "--hl-matches",
@@ -869,6 +870,11 @@ Split line into chars and feed to ticker.""")
     dp_io.cdebug(1, "app_args: %s\n", app_args)
     dp_io.cdebug(1, "Ctor_arg_dict: %s\n", Ctor_arg_dict)
     dp_io.cdebug(1, "App_arg_dict: %s\n", App_arg_dict)
+    try:
+        tee_p = app_args.tee_p
+    except AttributeError:
+        tee_p = False
+    print "tee_p:", tee_p
 
     ticker_constructor = App_arg_dict.pop(CTOR)
 

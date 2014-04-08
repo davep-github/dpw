@@ -634,6 +634,12 @@ FORMS complete."
   (put 'with-case-folded
        'lisp-indent-function (get 'let 'lisp-indent-function))
   
+  (defmacro dp-with-prefix-arg (arg &rest body)
+    `(let ((current-prefix-arg ,arg))
+      ,@body))
+  (put 'dp-with-prefix-arg
+       'lisp-indent-function (get 'let 'lisp-indent-function))
+
   (defmacro dp-car&cycle-list (list-name new-list)
     `(if (or ,list-name
              (setf ,list-name ,new-list)
