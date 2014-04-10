@@ -824,7 +824,7 @@ This can be callable.")
 ;; Set lots of variables more to my liking.
 (setq next-line-add-newlines nil
       search-highlight t
-      find-file-use-truenames nil	; I set up the symlinks For A Reason.
+      find-file-use-truenames nil	; I set up the symlinks For A REASON.
       find-file-existing-other-name t
       tag-mark-stack-max 128
       compilation-window-height 10

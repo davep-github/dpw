@@ -35,6 +35,10 @@ EExec_verbose_msg "$@"
 # default to off. Can be enabled in the env.<blah> file.
 : ${EXTAGTREE_DASH_Q:=}
 
+
+(($# == 0)) && {
+        set -- .
+}
 args=("$@")                     # Preserve args across .bashrc execution.
 
 tagtree()
@@ -44,7 +48,7 @@ tagtree()
     EExec_verbose_msg "tagtree() $(echo_id eexec_program)"
     eval EExec $SUDO $EXCTAGS $inheritance_opt $etags_opt -L "$files_file" \
       --links=no -o $tag_file \
-      $h_OPT $langmap $full_member_names "$py_props" "${EC_XARGS}"
+      $h_OPT $langmap $full_member_names "$py_props" "$nv_spec_files" "${EC_XARGS}"
 }
 
 cscope_tree()
@@ -225,6 +229,8 @@ else
     py1="'--regex-python=/[ \t]*([_A-Za-z][_A-Za-z0-9]*)[ \t]*=[ \t]*property/\1/'"
     py2="'--regex-python=/^([A-Z_][A-Z0-9_]).*=/\1/'"
     py_props="$py1 $py2"
+    # Make this location specific.
+    nv_spec_files="--langdef=spec --langmap='spec:.spec' '--regex-spec=/^[ \t]*#[ \t]*define[ \t]+([^ \t]*).*$/\1/'"
 fi
 
 # List of directories in which to look for source files.

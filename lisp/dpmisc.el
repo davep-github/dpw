@@ -7813,7 +7813,7 @@ Visit /file/name and then goto <linenum>."
     (find-file (read-file-name "dp-ffap[0]: ")))
    ((Cu--p)
     (call-interactively 'dp-search-path))
-   ((Cu--p 4)
+   ((Cu-p)
     (dp-with-prefix-arg nil
       (call-interactively dp-file-finder-other-window)))
    ;; Here's where we should add our crap.
@@ -10329,6 +10329,9 @@ Essentially return whether log base4 of `current-prefix-arg' == NUM-C-U."
                       (car a)
                     a)))))
 
+(defsubst Cu-p (&optional prefix-arg)
+  (nCu-p 1 prefix-arg))
+
 (defun nCu-p> (num &optional prefix-arg)
   (nCu-p num prefix-arg '<))
 
@@ -10344,8 +10347,9 @@ Essentially return whether log base4 of `current-prefix-arg' == NUM-C-U."
 (defun Cu0p (&optional prefix-arg n)
   "Check to see if the numeric value of the prefix arg is N.
 Most used to check for C-0 as a command flag."
-  (setq-ifnil prefix-arg current-prefix-arg)
-  (eq (prefix-numeric-value prefix-arg) (or n 0)))
+  (eq (prefix-numeric-value (or prefix-arg
+                                current-prefix-arg) 
+                            (or n 0))))
 
 (defun Cu--p (&optional arg prefix-arg)
   "See if current-prefix-arg `equal' ARG. ARG defaults to '-"

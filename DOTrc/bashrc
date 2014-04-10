@@ -367,6 +367,7 @@ export FAMILY_ZONE
 export WORK_ZONE
 
 # least specific to most so we can override things.
+export locale_rcs_fields=".OSName .FAMILY_ZONE .FAMILY .HOST .var .early" # .$WORK_ZONE"
 export locale_rcs=".$OSName .$FAMILY_ZONE .$FAMILY .$HOST .var .early" # .$WORK_ZONE"
 : ${pre_rcs:=$($HOST_INFO -n '' locale_pre)}
 : ${post_rcs:=$($HOST_INFO -n '' locale_post)}
@@ -385,6 +386,7 @@ export PATH=$(dp_add_to_path_iff -p "$PATH" \
     $HOME/bin.$OSName \
     $HOME/bin.$FAMILY \
     $HOME/bin.$FAMILY_ZONE)
+#echo "0:PATH>$PATH<"
 
 # Project stuff:
 PROJECT_WORK=$HOME/work
@@ -423,6 +425,9 @@ export PROJECT_HOME
 [ -n "${YOKEL_BIN-}"  ] && PATH=$(dp_add_to_path_iff -p "$PATH" $YOKEL_BIN)
 # remove non-existent dirs from path
 ###PATH=$(dp-fix-kde-order.py)
+#echo "1:PATH>$PATH<"
+#echo "1:DAVEP_BIN_DIRS>$DAVEP_BIN_DIRS<"
+
 PATH=$(dp_add_to_path_iff -p "$PATH" "$DAVEP_BIN_DIRS")
 export DP_ENV_BIN_OVERRIDE="$HOME/bin/override"
 PATH=$(dp_add_to_path_iff -p "$PATH" "$DP_ENV_BIN_OVERRIDE")

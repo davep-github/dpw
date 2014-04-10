@@ -9,8 +9,6 @@ alias wx="winterm -geometry 80x24"
   alias bslowcase="bsub -q primetime4g slowcase"
 }
 
-alias nvgrep=/home/nv/toolroot/bin/nvgrep
-
 # Duuuhhh... 
 alias cdme=mecd
 alias mg=mego

@@ -49,7 +49,14 @@ fi
 excluded_files_file_template=$(normpath "${DP_TMPDIR-$TMP}/extagtree.excluded-files.XXXXXXXX")
 : ${EXCLUDED_FILES_FILE:=$(mktemp "${excluded_files_file_template}")}
 # .c .h .cxx .py .java etc.
-: ${INTERESTING_FILES:="\.([chly](xx|pp)?|h-py|cs|cc|hh|py|pm|pl|java)$"}
+: ${INTERESTING_FILES:="[chly](xx|pp)?|h-py|cs|cc|hh|py|pm|pl|java"}
+vsetp "${SITE_INTERESTING_SRC_FILE_REGEXP-}" && {
+    INTERESTING_FILES="${INTERESTING_FILES}|${SITE_INTERESTING_SRC_FILE_REGEXP}"
+}
+INTERESTING_FILES="\.(${INTERESTING_FILES})$"
+
+echo_id2 INTERESTING_FILES
+
 : ${DEF_SYSTEM_INCLUDES:=/usr/include}
 SYSTEM_INCLUDES=
 FILES_OF_INTEREST=()

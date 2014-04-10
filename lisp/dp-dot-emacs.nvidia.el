@@ -48,6 +48,21 @@
 
 (dp-nvidia-c-style)
 
+(defun dp-nvgrep+ (command-args)
+  "NVGrep current tree"
+  (interactive
+   (list (read-shell-command
+	  "nvgrep+: "
+	  (format "nvgrep+ %c%s%c "
+                  ?\'
+                  (dp-get--as-string--region-or...)
+                  ?\')
+	  'dp-grep-history)))
+  (save-some-buffers)
+  (grep command-args))
+
+(dp-safe-aliases 'nvg 'dp-nvgrep+)
+
 ;;(defun dp4-locale-client-setup ())
 (fmakunbound 'dp4-locale-client-setup)
 

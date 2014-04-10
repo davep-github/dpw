@@ -1,0 +1,44 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+dp4_file_p()
+{
+    local file="${1}"
+    shift
+    
+    p4 sizes "${file}" 2>&1 >/dev/null | fgrep -q 'no such file'
+}
+
+for f in "$@"
+do
+  rc=0
+  if ! dp4_file_p "${f}"
+  then
+      echo "${f}"
+      rc=0
+  else
+      rc=1
+  fi
+done
+exit $rc

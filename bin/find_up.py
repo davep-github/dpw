@@ -79,8 +79,13 @@ def main(args):
     placeholder = ""
     global canonicalize_path
     global All_p
-    opts, args = getopt.getopt(sys.argv[1:], 'hs:S:pP:arA')
+    print_results_p = True
+    opts, args = getopt.getopt(sys.argv[1:], 'hs:S:pP:arAq')
     for o, v in opts:
+        if o == '-q':
+            # Just produce a return code.
+            print_results_p = False
+            continue
         if o == '-h':
             highest_p = not highest_p
             continue
@@ -114,17 +119,17 @@ def main(args):
             num_not_found += 1
         if n:
             matches.extend(n)
-    return num_not_found, matches
 
-if __name__ == "__main__":
-    num_not_found, matches = main(sys.argv)
     if len(matches) > 0:
         match_string = "\n".join(matches)
     else:
         match_string = None
 
-    if match_string:
+    if print_results_p and match_string:
         print match_string
 
-    sys.exit(num_not_found)
+    return num_not_found
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))
 

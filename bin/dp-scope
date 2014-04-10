@@ -38,6 +38,13 @@ unset eexec_program
 
 field_num=
 arg=
+db_opt=
+
+: ${find_up_p=t}
+: ${db_finder_file=cscope.out}
+: ${db=}
+
+
 while (($# > 0))
 do
   case "$1" in
@@ -50,11 +57,24 @@ do
       --egrep|--grep|--regexp|--re) shift; arg="${1}"; field_num=6;;
       --file) shift; arg="${1}"; field_num=7;;
       --including|--include|--inc|-h) field_num=8;;
+      --find-up|--fup) find_up_p=t;;
+      --use-dot|--dot-only|--no-find-up) find_up_p=;;
       --) shift; break;;
       *) break;;
   esac
   shift
 done
 
+vsetp "${find_up_p}" && {
+    # look for a cscope db above us.
+    db=$(find-up "${db_finder_file}")
+}
+
+EExec_verbose_echo_id db
+
+vsetp "${db}" && {
+    db_opt=-"-f${db}"
+}
+
 set -- "$@" "${arg}"
-EExec cscope ${EXTAGTREE_DASH_Q} -L -"${field_num}" "${@}"
+EExec cscope ${EXTAGTREE_DASH_Q} ${db_opt} -L -"${field_num}" "${@}"

@@ -620,6 +620,10 @@ if __name__ == "__main__":
                          dest="timestamp_log_file_names_p", default=False,
                          action="store_true",
                          help="Add uniquifying timestamp to output file name.")
+    oparser.add_argument("-U", "--no-timestamp-log-files",
+                         dest="timestamp_log_file_names_p", default=False,
+                         action="store_false",
+                         help="Do not add uniquifying timestamp to output file name.")
     oparser.add_argument("-E", "--extension",
                          dest="U_extension", default="",
                          type=str,
@@ -874,7 +878,6 @@ Split line into chars and feed to ticker.""")
         tee_p = app_args.tee_p
     except AttributeError:
         tee_p = False
-    print "tee_p:", tee_p
 
     ticker_constructor = App_arg_dict.pop(CTOR)
 

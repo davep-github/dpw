@@ -725,6 +725,13 @@ Called when shell, inferior-lisp-process, etc. are entered."
   (put 'shell-mode 'font-lock-defaults '(dp-shell-mode-font-lock-keywords t))
   (local-set-key [(control ?x)(control ?n)] 'dp-shell-switch-to-next-buffer)
   (local-set-key [(control ?x)(control ?p)] 'dp-shell-switch-to-prev-buffer)
+  (local-set-key [(control ?x) ?4 ?n]
+                 (kb-lambda
+                     (dp-shell-switch-to-next-buffer t)))
+  (local-set-key [(control ?x) ?4 ?p]
+                 (kb-lambda
+                     (dp-shell-switch-to-prev-buffer t)))
+
   (message "dp-shell-common-hook, (major-mode-str)>%s<, bn>%s< done." 
 	   (major-mode-str) (buffer-name)))
 
@@ -3409,9 +3416,9 @@ reasonable: numbers, strings, symbols.
              'switch-to-buffer)
            (dp-prev-shell-buffer)))
 
-(defun dp-shell-switch-to-prev-buffer (&optional buffer)
-  (interactive)
-  (switch-to-buffer (dp-prev-shell-buffer)))
+;;WTF?! (defun dp-shell-switch-to-prev-buffer (&optional buffer)
+;;WTF?!   (interactive)
+;;WTF?!   (switch-to-buffer (dp-prev-shell-buffer)))
 
 ;;;
 ;;;
