@@ -16,20 +16,23 @@ unset eexec_program
 : ${kwa_client=$(dp4-get-client-name)}
 : ${clientOpt=}
 
-for i in "$@"
+while (($# > 0))
 do
   case "$1" in
       --xc) clientOpt="-c $kwa_client";;
       --xs) kwa_changeType=shelved;;
       --xp) kwa_changeType=pending;;
-      --x4) shift; kwa_p4Options="${kwa_p4Options} ${1}";;
-      --all|--xa) kwa_changeType=;;
+      --change-status|-s) shift; kwa_changeType="${1}";;
+      --x4|--p4-opt) shift; kwa_p4Options="${kwa_p4Options} ${1}";;
+      --all|--xa|--all-change-types) kwa_changeType=;;
       --help) echo '
       --xc) clientOpt="-c $kwa_client";;
       --xs) kwa_changeType=shelved;;
       --xp) kwa_changeType=pending;;
+      --change-status) shift; kwa_changeType="${1}";;
       --x4) shift; kwa_p4Options="${kwa_p4Options} ${1}";;
-      --help) echo 
+      --all|--xa|--all-change-types) kwa_changeType=;;
+      --help) Show this.
 ' 1>&2
       exit 0;;
       *) break

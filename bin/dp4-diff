@@ -38,6 +38,8 @@ diff_all_opened()
     done
 }
 
+P4DIFF=diff
+
 while (($# > 0))
 do
   case "$1" in
@@ -53,7 +55,7 @@ do
   shift
 done
 
-vfalsep "${loop_and_ask_p}" && {
+true_p "${loop_and_ask_p}" || {
     p4 diff "$@"
     exit
 }

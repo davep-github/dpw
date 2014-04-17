@@ -1,7 +1,7 @@
 #!/bin/sh
 
-echo 1>&2 'Skipping for tonight'
-exit 
+#echo 1>&2 'Skipping for tonight'
+#exit 
 
 source script-x
 set -u
@@ -38,7 +38,7 @@ done
 # No sb1 no more.
 vunsetp "$*" && {
     # $sb2 
-    set -- $sb4 $sb3 $sb5
+    set -- $sb2 $sb3 $sb5 $sb7
 }
 
 for sb in "$@"

@@ -37,13 +37,15 @@ disp_realpath()
 : ${number_lines_opt=-n}
 : ${realpath_p=t}
 : ${tot_p=t}
+: ${tot=TOT}                    # An SB_REL abbrev
 
 while (($# > 0))
 do
   case "$1" in
       --sandbox|--sb) shift; sandbox="${1}";;
       --no-tot) tot_p=;;
-      --tot) tot_p=t;;
+      --to-tot) tot_p=t;;
+      --tot) shift; tot=${1}; tot_p=t;;
       --no-number-lines|--no-line-numbers|--nn) number_lines_opt=;;
       --number-lines|--line-numbers|--nl) number_lines_opt=t;;
       --relpath|--rel-path|--relative-path) realpath_p=;;
@@ -55,7 +57,7 @@ do
 done
 
 true_p "${tot_p}" && {
-    mecd tot || {
+    mecd "${tot}" || {
         echo "Cannot find TOT."
         exit 1
     } 1>&2

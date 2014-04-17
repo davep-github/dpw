@@ -61,7 +61,7 @@
   (save-some-buffers)
   (grep command-args))
 
-(dp-safe-aliases 'nvg 'dp-nvgrep+)
+(dp-safe-aliases 'nvg 'nvgrep 'dp-nvgrep+)
 
 ;;(defun dp4-locale-client-setup ())
 (fmakunbound 'dp4-locale-client-setup)
@@ -291,8 +291,10 @@ tests.")
    '("/hw/ap.*/diag/testgen/"
      "/\\.\\(git\\|hg\\)"
      "generated-.*-defs\\.h"
+     "\\.log\\.retry"
+     "/diag/testgen/.*/[0-9]\\{2\\}/[0-9]\\{2\\}/[0-9]\\{6\\}/"
      "/plex/"))
-  "Deactivate p4 in these dirs.")
+  "Deactivate p4 for fileses what match this regexp.")
 
 ;;
 ;; override the default function
@@ -308,6 +310,10 @@ tests.")
 
 ;;
 ;; Don't want to edit these stupid fvcking copies.
-(dp-add-force-read-only-regexp "/plex/")
+(dp-add-force-read-only-regexp
+ (dp-concat-regexps-grouped
+  '("/plex/"
+    "failed-attempt\\(ed\\)?-0")))
+
 
 (provide 'dp-dot-emacs.nvidia.el)

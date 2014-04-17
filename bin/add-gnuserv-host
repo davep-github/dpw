@@ -14,6 +14,8 @@ unset eexec_program
 
 : ${host_file=$HOME/.gnuserv-hosts}
 
+
+: ${hn:=${1-}}
 : ${hn:=$(hostname --short)}
 
 [ -z "$hn" ] && {

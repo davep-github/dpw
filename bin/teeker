@@ -656,7 +656,7 @@ if __name__ == "__main__":
                          nargs=0,
                          action=App_action_log_file_convenience_test_log,
                          help="Good for tracking a test. E.g. --slog -Z9 --ts --hg -i100 --cflush-every=-1.")
-    oparser.add_argument("-U", "--show-units",
+    oparser.add_argument("--show-units",
                          dest="show_tick_units_p",
                          nargs=0,
                          action=Ctor_arg_action_true,

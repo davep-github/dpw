@@ -1166,12 +1166,13 @@ document tip_display
 Tips on automatically displaying values when a program stops.
 end
 
-# ________ nVIDIA Multiengine specific _________
+# ??? is there include functionality?
+# ________ Begin: nVIDIA specific _________
 define initb
   break GpuTrace::ReadHeader
 end
 document initb
-Set initial break after some .so,s have been loaded allowing other subsystem breaks.
+Set initial break after some ME .so,s have been loaded with more defined more symbols.
 end
 
 define tinitb
@@ -1194,6 +1195,31 @@ define meinit
 end
 document meinit
 Initialize for Multiengine debugging.
+end
+
+# nvidia bane of debu
+define hook-stop
+handle SIGALRM nopass
+end
+
+define hook-run
+handle SIGALRM pass
+end
+
+define hook-continue
+handle SIGALRM pass
+end
+
+# ___________________ fmodel __________________
+# break main
+# break Gpu::Initialize
+
+define fmodrunb
+  break GpuTrace::ReadHeader
+  run
+end
+document fmodrunb
+Set initial break after some fmodel .so,s have been loaded with more defined more symbols.
 end
 
 # __________________gdb options_________________

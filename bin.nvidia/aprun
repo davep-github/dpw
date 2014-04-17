@@ -21,7 +21,7 @@ EExec_verbose_msg $(echo_id eexec_program)
 unset eexec_program
 
 cd_p=
-ap=$(me-expand-dest ap)
+bin_parent=$(me-expand-dest TOT)
 bin_dir="./bin/"
 
 while (($# > 0))
@@ -36,10 +36,17 @@ do
   shift
 done
 
+
+bin_path="${bin_parent}/${bin_dir}"
+[ -e "${bin_path}/TOT" ] && {
+    echo "TOT not in this dir. Run this some other way. I'll add an override later."
+    exit 1
+}
+
 if vsetp "${cd_p}"
 then
-    EExec cd "${ap}"
+    EExec cd "${bin_parent}"
     EExec "${bin_dir}""$@"
 else
-    EExec "${ap}${bin_dir}""$@"
+    EExec "${bin_path}""$@"
 fi

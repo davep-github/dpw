@@ -2192,11 +2192,11 @@ often use this kind of command before changing an original value. "
 (dp-safe-alias 'corig 'dp-comment-out-with-tag-OEM)
 
 (defun dp-bracket-region (m p start-text end-text 
-                  &optional no-complaints-p no-deactivate-mark-p)
+                          &optional need-not-be-in-c-p no-deactivate-mark-p)
   "Ifdef out a region."
-  (if (and (not no-complaints-p)
+  (if (and (not need-not-be-in-c-p)
            (not (dp-in-c))
-           (not (y-or-n-p "Buffer does not look C-like, continue?")))
+           (not (y-or-n-p "Buffer does not look C-like, continue? ")))
       (message "Canceled,")
     (save-excursion
       (let* (a b c
@@ -2313,7 +2313,8 @@ It is initialized to #if 0"
   (interactive (dp-ifdef-region-read-arg))
   (if (and (not (dp-in-c))
            (not (and 
-                 (y-or-n-p "Buffer does not look C-like, comment out? ")
+                 (y-or-n-p 
+                  "Buffer does not look C-like, comment out instead? ")
                  (progn 
                    (call-interactively 'dp-comment-out-region)
                    (return-from dp-ifdef-region))))
@@ -2363,9 +2364,11 @@ It is initialized to #if 0"
       (save-excursion
         (dp-mark-line-if-no-mark)
         ;;(message (format "using %s" io-start-text))
-        (io-region (mark) (point) 
+        (io-region (mark) 
+                   (point) 
                    (concat io-start-text tss-comment else-string)
-                   (concat io-end-text tss-comment))))))
+                   (concat io-end-text tss-comment)
+                   'need-not-be-in-c)))))
 
 (defun dp-ifdef-out (&optional arg)
   (interactive (dp-ifdef-region-read-arg))
@@ -10348,8 +10351,8 @@ Essentially return whether log base4 of `current-prefix-arg' == NUM-C-U."
   "Check to see if the numeric value of the prefix arg is N.
 Most used to check for C-0 as a command flag."
   (eq (prefix-numeric-value (or prefix-arg
-                                current-prefix-arg) 
-                            (or n 0))))
+                                current-prefix-arg))
+      (or n 0)))
 
 (defun Cu--p (&optional arg prefix-arg)
   "See if current-prefix-arg `equal' ARG. ARG defaults to '-"

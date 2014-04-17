@@ -24,15 +24,29 @@ extract()
     dp4-extract-pathname
 }
 
+sans_junk()
+{
+    dp4-sans-junk
+}
+
 : ${rerooter=cat}
+
+stdin_p=
 
 one="${1-}"
 
 case "${one}" in
     -r) shift; rerooter=reroot;;
+    --sans-junk) rerooter=sans_junk;;
     -e|-x) shift; rerooter=extract;;
+    --stdin) stdin_p=t;;
     *) ;;
 esac
 
-p4 opened "$@" | $rerooter
+if vsetp "${stdin_p}"
+then
+    cat
+else
+    p4 opened "$@" 
+fi | $rerooter
 

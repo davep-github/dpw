@@ -68,16 +68,32 @@ Ee|ssimhshub__SB_rel|           ${standsim__SB_rel}hshub/
 Ee|nvgpuinclude__SB_rel|        ${nvgpu__SB_rel}include/
 Ee|nvgpuinc__SB_rel|            ${nvgpuinclude__SB_rel}
 Ee|nvgpuclib__SB_rel|           ${nvgpu__SB_rel}clib/
+Ee|nvgpudefs__SB_rel|           ${nvgpu__SB_rel}defs/
 Ee|fmodel__SB_rel|fmod__SB_rel| ${nvgpu__SB_rel}fmod/
+
 Ee|xvetranslator__SB_rel|       ${fmodel__SB_rel}xve_translator/
 Ee|xvexlat__SB_rel|             ${xvetranslator__SB_rel}
 Ee|xve__SB_rel|                 ${xvetranslator__SB_rel}
+
 Ee|nvlink1translator__SB_rel|   ${fmodel__SB_rel}nvlink_translator/
 Ee|nvlxlat__SB_rel|             ${nvlink1translator__SB_rel}
 Ee|nvlx__SB_rel|                ${nvlink1translator__SB_rel}
 Ee|nvlink1__SB_rel|             ${nvlink1translator__SB_rel}
 Ee|nvl1__SB_rel|                ${nvlink1translator__SB_rel}
 Ee|nvlt__SB_rel|                ${nvlink1translator__SB_rel}
+
+Ee|fcnvlinktranslator__SB_rel|  ${fmodel__SB_rel}fc_nvlink_translator/
+Ee|fcnvlxlat__SB_rel|           ${fcnvlinktranslator__SB_rel}
+Ee|fcnvlx__SB_rel|              ${fcnvlinktranslator__SB_rel}
+Ee|fcnvlink__SB_rel|            ${fcnvlinktranslator__SB_rel}
+Ee|fcnvl__SB_rel|               ${fcnvlinktranslator__SB_rel}
+Ee|fcnvlt__SB_rel|              ${fcnvlinktranslator__SB_rel}
+
+Ee|fmodelliblinux8664__SB_rel|  ${fmodel__SB_rel}lib/Linux_x86_64/
+Ee|fmodlib64__SB_rel|           ${fmodelliblinux8664__SB_rel}
+Ee|fmodlib__SB_rel|             ${fmodelliblinux8664__SB_rel}
+Ee|fml__SB_rel|                 ${fmodelliblinux8664__SB_rel}
+
 Ee|c11dummy__SB_rel|            ${fmodel__SB_rel}c11_dummy/
 Ee|hwbase__SB_rel|              ${fmodel__SB_rel}base/
 Ee|hshub__SB_rel|               ${fmodel__SB_rel}hshub/
@@ -321,7 +337,7 @@ Ee|depcpu__SB_rel|              ${gpumetraces__SB_rel}dep_cpu_cpu_gpu_cpu/
 Ee|scratch0|scr0|sc0|                         /home/scratch.dpanariti_t124/
 Ee|scratch1|scr1|sc1|                         /home/scratch.dpanariti_t124_1/
 Ee|scratch2|scr2|sc2|                         /home/scratch.dpanariti_t124_2/
-Ee|scratch3|scr3|sc3|                         /home/scratch.dpanariti_t124_3/
+Ee|scratch3|scr3|sc3|                         /home/scratch.dpanariti_nvgpu/
 #@todo XXX To become scratch.dpanariti_maxwell
 Ee|scratch4|scr4|sc4|                         /home/scratch.dpanariti/
 
@@ -341,7 +357,7 @@ Ee|sandbox5|sbox5|sb5|workspace5|ws5| ${scratch2}sb5/sb5hw/
 
 Ee|sandbox7|sbox7|sb7|workspace7|ws7| ${scratch4}sb7/sb7hw/
 
-Ee|sandbox8|sbox8|sb8|workspace8|ws8| ${scratch4}sb8/sb8hw/
+Ee|sandbox8|sbox8|sb8|workspace8|ws8| ${scratch3}sb8/sb8hw/
 
 #
 # Some direct accesses for objects which are way too overloaded.
@@ -402,6 +418,8 @@ Ee|swrtl2|       /home/scratch.dpanariti_t124/sb2/sb2hw/hw/ap_tlit1/diag/testgen
 # Added Fri Feb 14 11:59:06 EST 2014
 # Added Tue Mar 11 10:15:37 EDT 2014
 Ee|weixt210rtl|       /home/scratch.weix_t124/tree2/hw/ap/run_me_test/comp_one_tri_redline/cpu_red_line/
+# Added Mon Apr 14 14:12:12 EDT 2014
+Ee|fa0|       /home/scratch.dpanariti/sb7/sb7hw/failed-attempted-0/
 ########################################################################### ***
 # ***
 # Local Variables: ***
