@@ -238,16 +238,19 @@ editing servers via `dp-editing-server-ipc-file'.")
 (setq visible-bell t)
 
 (defvar dp-p4-global-disable-detection-p nil
-  "Turn off ALL perforce detection in find file hooks.")
+  "*Turn off ALL perforce detection in find file hooks.")
 
-(defun dp-p4-active-here-p ()
-  "Determine if this file needs to be worried about perforce. (Abstract to any SCM).
+(defun dp-p4-active-here-p (&optional file-name)
+  "*Determine if this file needs to be worried about perforce. (Abstract to any SCM).
 Override in spec-macs.
 Allow us to limit perforce checks to certain dirs. At nVIDIA, a simple 
 `p4 opened' can take 10+ minutes. Checking all files for p4-ed-ness adds
 intolerable delays to files not in perforce."
   ;; let it be off unless forced on.
-  t)
+  (setq-ifnil file-name (buffer-file-name))
+  (and (not dp-p4-global-disable-detection-p)
+       (dp-sandbox-file-p file-name)
+       (not (string-match dp-p4-ignore-regexp file-name))))
 
 (defvar dp-most-specific-spec-macs nil
   "The most specific dp-dot-emacs*.el file we `load'ed.")

@@ -9259,9 +9259,11 @@ Application specific names should be made as explicit as possible."
   (interactive)
   (let* ((def-makefile (or makefile
                            (and-boundp 'dp-default-makefile-name
+                             dp-default-makefile-name
                              (stringp dp-default-makefile-name)
                              (expand-file-name dp-default-makefile-name))
                            (and-boundp 'dp-default-makefile-name
+                             dp-default-makefile-name
                              (listp dp-default-makefile-name)
                              (run-hook-with-args-until-success 
                               'dp-default-makefile-name))
@@ -14223,6 +14225,8 @@ file."
   "This matches a perforce type pathname (//blah)")
 
 (defsubst dp-p4-location-p (path)
+  "Return non-nil if PATH is in the for of a p4 location.
+Uses `dp-p4-location-regexp' (q.v.)"
   (string-match dp-p4-location-regexp path))
 
 (defun dp-expand-p4-location (file &optional sb extra-expansion-options)

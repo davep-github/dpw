@@ -1734,7 +1734,8 @@ XXX: use tempo for this?"
   "Indent region if active, otherwise indent if in indentation space, otherwise tabdent."
   (interactive "*")
   (if (dp-mark-active-p)
-      (if (and-boundp 'dp-c-indent-region-line-by-line t)
+      (if (and-boundp 'dp-c-indent-region-line-by-line
+            dp-c-indent-region-line-by-line)
           (dp-indent-region-line-by-line (mark) (point) 'c-indent-line)
         (let ((ordered (dp-region-boundaries-ordered)))
           (setq beg (dp-mk-marker (car ordered))

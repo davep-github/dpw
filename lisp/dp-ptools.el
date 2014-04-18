@@ -485,6 +485,9 @@ Returns nil if there is no current sandbox."
        (dp-current-sandbox-regexp)
        (string-match (dp-current-sandbox-regexp) filename)))
 
+(defsubst dp-current-sandbox-dir-p (dirname)
+  (dp-current-sandbox-file-p (concat dirname "/")))
+
 ;; Begin moving to a sandbox per frame.
 (defsubst dp-set-current-sandbox-read-only-p (read-only-p)
   (setq dp-current-sandbox-read-only-private-p read-only-p))

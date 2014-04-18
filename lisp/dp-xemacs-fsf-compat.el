@@ -42,7 +42,7 @@
   (setq zmacs-regions (/= arg 0)))
 
 (defun dp-dont-count-outside-minibuffer-p nil
-  "Don't consider the region to be active if it isn't inside the minibuf.")
+  "*Don't consider the region to be active if it isn't inside the minibuf.")
 
 (defsubst dp-mark-active-p (&optional dont-count-outside-minibuffer-p)
   "Emulate fsf emacs' transient mark activation w/zmacs-regions"

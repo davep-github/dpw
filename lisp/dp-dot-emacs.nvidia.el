@@ -296,14 +296,6 @@ tests.")
      "/plex/"))
   "Deactivate p4 for fileses what match this regexp.")
 
-;;
-;; override the default function
-(defun dp-p4-active-here-p (&optional file-name)
-  (setq-ifnil file-name (buffer-file-name))
-  (and (not dp-p4-global-disable-detection-p)
-       (dp-sandbox-file-p file-name)
-       (not (string-match dp-p4-ignore-regexp file-name))))
-
 ;;(setq dp-read-only-sandbox-regexp-private nil)
 ;;(setq dp-read-only-sandbox-regexp-private "\\(/sb2\\|/sb4\\)")
 (setq dp-read-only-sandbox-regexp-private "\\(/sb4\\)")

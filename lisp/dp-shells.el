@@ -177,7 +177,11 @@ prompt.  We don't want to stomp on them.")
 ]+\\)" s)
           ;; Just set it, no sense in comparing to see if it changed.
           (setq default-directory 
-                (concat (match-string 1 s) "/")))))))
+                (concat (match-string 1 s) "/"))
+          (unless (dp-current-sandbox-dir-p default-directory)
+            (save-excursion
+              (beginning-of-line)
+              (insert "!SB!"))))))))
 
 ;; XXX @todo fix this, make it work.
 ;; Debugger entered--Lisp error: (invalid-argument "Marker does not point anywhere")

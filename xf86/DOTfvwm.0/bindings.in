@@ -311,6 +311,14 @@ Key            F7         A      4     GotoDesk 0 7
 Key            KP_Home    A      4     GotoDesk 0 7
 Key            KP_7       A      4     GotoDesk 0 7
 
+Key            F8         A      4     GotoDesk 0 8
+Key            KP_Up      A      4     GotoDesk 0 8
+Key            KP_8       A      4     GotoDesk 0 8
+
+Key            F9         A      4     GotoDesk 0 9
+Key            KP_Prior   A      4     GotoDesk 0 9
+Key            KP_9       A      4     GotoDesk 0 9
+
 Key            F10        A      4     GotoDesk 0 0
 Key            KP_Insert  A      4     GotoDesk 0 0
 Key            KP_0       A      4     GotoDesk 0 0

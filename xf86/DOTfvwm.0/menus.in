@@ -1042,6 +1042,8 @@ AddToMenu   "Move-window-to" "Move to page..." Title
 + 'T&5-@SB_SB5_DESC@'    MoveToDesk 0 5
 + 'T&6-@SB_SB6_DESC@'    MoveToDesk 0 6
 + 'T&7-@SB_SB7_DESC@'    MoveToDesk 0 7
++ 'T&8-@SB_SB8_DESC@'    MoveToDesk 0 8
++ 'T&9-@SB_SB9_DESC@'    MoveToDesk 0 9
 
 ##------------------------------------------------------------------------------
 ## A "Goto Desk" menu
