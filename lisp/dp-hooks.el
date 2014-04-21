@@ -1455,15 +1455,19 @@ positive. ")
   "What shall we do when we are done editing a gnuserv file?
 Default is to switch to a buffer as chosen by `switch-to-buffer'.")
 
-(defun dp-gnuserv-edit (&optional count kill-buffer-p)
-  "Like `gnuserv-edit' except leaves buffer alone rather than killing it."
+(defun dp-gnuserv-edit (&optional count keep-buffer-p)
+  "Like `gnuserv-edit' except leaves buffer alone rather than killing it.
+\\[universal-argument] eq `-' or non-nil KEEP-BUFFER-P means to kill the 
+buffer.
+WTF did I do this? I think it had to do with IPython edit buffers.
+In a later version of IPython (1.1.0), the file name is formatted thus:
+/tmp/ipython_edit_<rand-junk>"
   (interactive "P")
-  ;; count < 0 --> kill ?
   (let ((gnuserv-done-function dp-gnuserv-done-function))
-    (if (or kill-buffer-p (Cu--p))
-      ;; Kill
-      (setq current-prefix-arg nil
-            gnuserv-done-function 'dp-maybe-kill-buffer)
+    (if (not (or keep-buffer-p (Cu--p)))
+        ;; Kill
+        (setq current-prefix-arg nil
+              gnuserv-done-function 'dp-maybe-kill-buffer)
       (if (and (numberp count)
                (< 0 count))
           ;; Kill count
