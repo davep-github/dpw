@@ -51,6 +51,9 @@ source $HOME/.rc/env.nvidia
 : ${make_script_p=t}
 : ${script_name=}
 : ${bg_p=}
+: ${index_option_desc=Indexing}
+: ${clean_opt=}
+: ${just_show_db_locs_p=}
 
 run_it()
 {
@@ -59,6 +62,7 @@ run_it()
     local run_dir="${1}"
     shift
     local script_opts=
+    local op="Indexing"
 
     if vsetp "${script_name}"
     then
@@ -75,7 +79,7 @@ run_it()
 
     (
         cd "${db_loc}"
-        EExec_verbose_echo_id --msg 'Indexing in: ' PWD
+        EExec_verbose_echo_id --msg "${index_option_desc} in: " PWD
         if true_p "${bg_p}"
         then
             EExec ${script_opts} "$@" &
@@ -129,7 +133,7 @@ index_out_of_tree_locations()
 }
 
 : ${ap_dir:=}
-: ${send_mail_on_completion:=t}
+: ${send_mail_on_completion_p:=t}
 # Existence of different dirs is one thing, but different names for the same
 # fooking dirs is fooking stoopid. So I can't use it. What a crock.
 : ${nvcscope_p=}
@@ -138,7 +142,7 @@ index_out_of_tree_locations()
 : ${just_nvcscope_p=}
 : ${nvcscope_files=cscope.files cscope.out cscope.out.in cscope.out.po}
 : ${skip_cd_p=}
-: ${follow_links_arg=}
+: ${follow_links_opt=}
 : ${follow_links_on_command_line=t}
 : ${cron_opt=}
 
@@ -153,7 +157,7 @@ link_or_non_existent()
 # Usage variable usage:
 Usage_args_info=""
 Usage_synopsis="Index some useful, hard coded source dirs
-Use the nvcscope ap index by default.
+Don't use the nvcscope ap index by default.
 "
 # Using ) after the args makes copy & paste between here and the 
 # case statement easier.
@@ -162,12 +166,15 @@ Usage_details="${EExec_parse_usage}
                               root just like the old days.
 --nvcscope|--new-sk00l) Use nvcscope's db for ap tree. Currently problematical
                         because GTAGS can only use one db, so the non-ap GTAGS
-                        needs *all*files.
+                        needs *all*files. TODO: clean cscope_p in index-code so 
+                        only global indices will be generated.
 -j|--no-me-index|--no-arch-index|--no-other-index) Just set up nvcscope.
+-k|--clean) Clean up indexes.
+--just-show-dbs|--dbs) Just show the db locations and exit.
 -oot) Index out of tree files only.
 "
 # Example of arg parsing.
-option_str="${EExec_parse_option_str}jmhHe:a:i:"
+option_str="${EExec_parse_option_str}jmhHe:a:i:k"
 long_options=(
 "mundane" "no-nvcscope"
 "no-me-index" "no-arch-index" "just-nvcscope" "links" "just-links"
@@ -176,6 +183,8 @@ long_options=(
 "add-db-loc:"
 "init-db-loc:"
 "bg"
+"clean"
+"just-show-dbs" "dbs"
 "make-script"
 "no-script" "no-make-script"
 "script-name")
@@ -189,8 +198,8 @@ do
       -m|--no-nvcscope|--mundane) nvcscope_p=;;
       --nvcscope|--new-sk00l) nvcscope_p=t;;
       -j|--no-me-index|--no-arch-index|--no-other-index|--links|--just-links) just_nvcscope_p=t;;
-      -h) follow_links_arg=-h;;
-      -H) follow_links_arg=;;
+      -h) follow_links_opt=-h;;
+      -H) follow_links_opt=;;
       --skip-cd|--stay-put) skip_cd_p=t;;
       --oot) oot_only_p=t; nvcscope_p=; just_nvcscope_p=;;
       --cron) cron_opt="--cron";;
@@ -201,6 +210,8 @@ do
       --make-script) make_script_p=t;;
       --no-script|--no-make-script) make_script_p=;;
       --script-name) shift; script_name="${1}"; make_script_p=t;;
+      -k|--clean) clean_opt=-k; index_option_desc="Cleaning";;
+      --just-show-dbs|--dbs) just_show_db_locs_p=t; send_mail_on_completion_p=;;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -289,7 +300,7 @@ on_exit()
 {
     local signum="${1-}"; shift
 
-    vsetp "${send_mail_on_completion-}" && {
+    vsetp "${send_mail_on_completion_p-}" && {
         EExec email-yopp "on_exit: rc: $rc; ${cron_opt}"
     }
 }
@@ -297,7 +308,7 @@ on_exit()
 on_error()
 {
     local rc="${1-}"; shift
-    vsetp "${send_mail_on_completion-}" && {
+    vsetp "${send_mail_on_completion_p-}" && {
         EExec email-yopp "on_error: rc: $rc; ${cron_opt}"
     }
 }
@@ -448,7 +459,15 @@ do
   db_locs=$(echo "${db_locs}" | sed -r "s! $exclude !!")
 done
 EExec_verbose_echo_id db_locs
-#exit 99
+true_p "${just_show_db_locs_p}" && {
+    echo "Database locations:"
+    for db in ${db_locs}
+    do
+      vsetp "${db}" || continue
+      echo "  $(realpath ${db})"
+    done
+    exit 0
+}
 
 if ! true_p "${just_nvcscope_p}"
 then
@@ -492,7 +511,7 @@ ${doi}";;
       EExec_verbose_echo_id index_dirs
       all_indexed="${all_indexed}
 >${index_dirs}<"
-      run_it "${bg_p}" "${db_loc}" index-code $follow_links_arg $index_dirs
+      run_it "${bg_p}" "${db_loc}" index-code ${clean_opt} $follow_links_opt $index_dirs
       all_db_locs="${all_db_locs} ${db_loc}"
     done
     EExec_verbose_echo_id dirs_of_interest
