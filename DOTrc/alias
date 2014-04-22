@@ -227,14 +227,14 @@ alias gitco='git checkout'
 alias gitci='git commit'
 alias gitcia='git commit -a'
 alias gits='git status'
+alias gitstat='git status'
 alias gitadd='git add'
 alias git+='git add'
 # NTMs: there is a real git revert command that is very different.
 alias gitrevert='git checkout --'  # Alternates use exact command.
 alias gitrescue='git checkout --'
-alias gitsub='git checkout --'  # Add. Subtract, get it?
+alias gitsub='git checkout --'  # Add. Subtract, get it? OppOsite of add.
 alias git-='git checkout --'
-alias gitstat='git status'
 alias gitdiff='git diff'        # Oooo 1 char... but gives us completion.
 alias gittag='git tag'
 alias gitconf='git config'

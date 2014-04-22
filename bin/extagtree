@@ -3,6 +3,10 @@
 #set -v
 source script-x
 set -u
+
+#echo "@>$@<"
+#exit 99
+
 progname="$(basename $0)"
 source eexec
 if vsetp "${eexec_program-}"    # Did the caller provide a program?
@@ -101,9 +105,9 @@ source code-indexing.rc
 : ${finder_opts=}
 : ${use_files_file_p=}
 : ${cscope_p=t}
-: ${etag_p=}
-: ${ctag_p=}
-: ${gtag_p=t}                   # Only this now that it seems to work.
+: ${etags_p=}
+: ${ctags_p=}
+: ${gtags_p=t}                  # Only this tagger now that it seems to work.
 
 
 SYSTEM_INCLUDES=
@@ -131,6 +135,22 @@ v=
 
 set -- "${args[@]}"
 
+option_str="ist:T:p:hIf:rR:CTecg"  # <:add new options:>
+
+long_options=(
+"cscope"
+"no-cscope"
+"just-cscope"
+"gtags"
+"no-gtags"
+"ctags"
+"no-ctags"
+"etags"
+"no-etags"
+)
+
+source dp-getopt+.sh
+
 while (($# > 0))
 do
     case $1 in
@@ -147,13 +167,17 @@ do
         -f) finder_opts="$finder_opts $2"; shift;;
         -r) use_files_file_p=$FILES_FILE;;
         -R) shift; use_files_file_p=$1;;
-        -C) cscope_p=;;
-        -T) etag_p=; ctag_p=;;
-        -e) etag_p=t;;
-        -c) ctag_p=t;;
-        -g) gtag_p=t;;
+        --cscope) cscope_p=t;;
+        -C|--no-cscope) cscope_p=;;
+        -T|--just-cscope) etags_p=; ctags_p=;;
+        -e|--etags) etags_p=t;;
+        --no-etags) etags_p=;;
+        -c|--ctags) ctags_p=t;;
+        --no-ctags) ctags_p=;;
+        -g|--gtags) gtags_p=t;;
+        --no-gtags) gtags_p=;;
 	--) shift ; break ;;
-	*) 
+	*)
             break ;;
 	    #echo 1>&2 "Unsupported option>$1<";
 	    #exit 1 ;;
@@ -198,7 +222,7 @@ do
             EExec_verbose_msg "$progname: Found simply ctags:"
             if "$EXCTAGS" --help 2>&1 | fgrep -qi "Exuberant" 2>/dev/null
             then
-                EExec_verbose_msg "  It! Looks!! Exuuuuuberaaaaaant!!!"
+                EExec_verbose_msg "  It! Looks!! ExuuUUUberAAAAAANT!!!"
             else
                 EExec_verbose_msg "$progname: May not be exuberant."
             fi
@@ -282,7 +306,8 @@ fi
 } 1>&2
 
 TAGFILES=()
-[ -n "$etag_p" ] && {
+[ -n "$etags_p" ] && {
+    EExec_verbose_msg "etagging"
     TAGFILE="$ETAGFILE"
     TAGFILES+=($TAGFILE)
     (
@@ -292,7 +317,8 @@ TAGFILES=()
     ) &
 }
 
-[ -n "$ctag_p" ] && {
+[ -n "$ctags_p" ] && {
+    EExec_verbose_msg "ctagging"
     TAGFILE="$CTAGFILE"
     TAGFILES+=($TAGFILE)
     (
@@ -302,7 +328,8 @@ TAGFILES=()
     ) &
 }
 
-[ -n "$gtag_p" ] && {
+[ -n "$gtags_p" ] && {
+    EExec_verbose_msg "gtagging"
     TAGFILES+=($GTAGFILES)
     (
         # subshell
@@ -328,6 +355,7 @@ then
 fi
 
 vsetp "$cscope_p" && {
+    EExec_verbose_msg "cscoping"
     cscope_tree "$FILES_FILE" &
 }
 

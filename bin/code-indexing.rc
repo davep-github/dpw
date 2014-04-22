@@ -6,8 +6,8 @@ source script-x
 # This whole thing is fucked. Hideous way to set flags.
 # Plus my non-"" --> true, "" --> false 
 # := means this can't be used to turn the flags off.
-: ${gtags_p:=t}; export gtags_p;
+: ${gtags_p:=--gtags}; export gtags_p;
 : ${ctags_p:=}; export ctags_p;
 : ${etags_p:=}; export etags_p;
-: ${cscope_p:=t}; export cscope_p;
+: ${cscope_p:=--cscope}; export cscope_p;
 

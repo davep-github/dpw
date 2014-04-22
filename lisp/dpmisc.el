@@ -6400,7 +6400,7 @@ has value \(cdr region-id), then that extent is matched."
 
 (defvar dp-colorize-region-num-colors (length dp-colorize-region-faces))
 
-(dp-deflocal dp-colorize-region-overwrite-existing-colors-p nil
+(dp-deflocal dp-colorize-region-overwrite-existing-colors-p t
   "*What more can I say?")
 
 (defun dp-invisible-color-p (color)

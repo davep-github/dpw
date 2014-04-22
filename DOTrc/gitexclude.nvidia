@@ -55,3 +55,7 @@ NOTAG
 /*@@
 /JUNK
 /junk
+
+# Makepp droppings
+.makepp_log
+.makepp_log.enc

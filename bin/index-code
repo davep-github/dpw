@@ -26,7 +26,6 @@ set -u
 midix=
 vsetp ${PROJECT-} && midix=.${PROJECT}
 
-
 : ${RC_FILE_OVERRIDE=}
 : ${RC_FILE_NAMES=".../DOTindex-code.rc .../DOTindex-code${midix}.rc"}
 : ${RC_EXTRA_FILE_NAMES=}
@@ -127,21 +126,30 @@ MV=$(sp -1 mv) || {             # Avoid -i type aliaii
 
 set_all_index_methods()
 {
-    ctags_p=t
-    gtags_p=t
-    cscope_p=t
+    cscope_p=--cscope
+    ctags_p=--ctags
+    etags_p=--etags
+    gtags_p=--gtags
 }
 
 iterate_individually_p=
 
+# x and e were used to toggle their respective options.
+option_str="nvdc:t:g:CTkKVo:Giuf:Is:S:CazhR"  # <:add new options:>
 
-option_str="nvdc:t:g:CTkKVo:Gxeiuf:Is:S:CazhR"  # <:add new options:>
-all_options="$option_str"
+long_options=(
+"cscope"
+"no-cscope"
+"gtags"
+"no-gtags"
+"ctags"
+"no-ctags"
+"etags"
+"no-etags"
+"just-cscope"
+)
 
-q=$(getopt -o "$all_options" -- "$@")
-[ $? != 0 ] && Usage
-eval set -- "$q"
-unset q
+source dp-getopt+.sh
 
 while (($# > 0))
 do
@@ -168,10 +176,7 @@ do
       -K) clean="$AND_INDEX";;
       -k) clean=t;;
       -C) clean=;;
-      -G) gtags_p=;;
       -o) output_dir=$(realpath $2); shift;;
-      -x) ctags_p=$(invert_flag $ctags_p);;
-      -e) etags_p=$(invert_flag $etags_p);;
       -i) SYSTEM_INCLUDES="$DEF_SYSTEM_INCLUDES";;
       -u) export src_code_finder=uds-files;;
       -a) set_all_index_methods;;
@@ -180,6 +185,15 @@ do
       -s) shift; RC_STOP_DIR=$1;;  # Stop is more likely to change.
       -S) shift; RC_START_DIR=$1;;  # Stop is more likely to change.
       -R) shift; tflags="$tflags -R ${1}";;
+      --just-cscope) cscope_p=--just-cscope;;
+      --cscope) cscope_p=--cscope;;
+      --no-cscope) cscope_p=;;
+      --gtags) gtags_p=--gtags;;
+      -G|--no-gtags) gtags_p=;;
+      --ctags) ctags_p=--ctags;;
+      --no-ctags) ctags_p=;;
+      --etags) etags_p=--etags;;
+      --no-etags) etags_p=;;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";
@@ -265,7 +279,13 @@ do_taggin()
     local dirs="$@"
     echo 1>&2 "This program ($(basename $0)), ${tree_tagger} and cscope-indexer need to be reworked.
 They should work off the same set of files."
-    eval EExec -y ${tree_tagger} $DP_SCRIPT_X_DEBUG_OPT $EExec_opts $tflags $dirs
+    eval EExec -y ${tree_tagger} $DP_SCRIPT_X_DEBUG_OPT $EExec_opts \
+       ${ctags_p} \
+       ${etags_p} \
+       ${gtags_p} \
+       ${cscope_p} \
+       $tflags \
+       $dirs
     echo "taggin in $PWD"
     if vsetp "$output_dir"
     then
