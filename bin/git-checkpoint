@@ -1,0 +1,73 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${cron_opt}"
+}
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${cron_opt}"
+    trap '' 0
+}
+
+: ${message="no-message"}
+: ${tagname="checkpoint"}
+: ${timestamp_p=t}
+tagname_set_p=
+
+option_str="m:t:s"
+long_options=(
+"msg:" "message:"
+"tag:"
+"no-stamp" "no-timestamp"
+)
+source dp-getopt+.sh
+
+while (($# > 0))
+do
+  case "$1" in
+      -m|--msg|--message) shift; message="${1}";;
+      -t|--tag) shift; tagname="${1}"; tagname_set_p=t;;
+      -s|--no-stamp|--no-timestamp) timestamp_p=;;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
+
+# timestamp first so we sort usefully.
+vsetp "${timestamp_p}" && tagname="$(dp-std-timestamp)-${tagname}"
+tagname=$(echo "${tagname}" | sed -r 's/[[:space:]]+/_/g')
+
+EExec git tag -m "${message}" "${tagname}"
+

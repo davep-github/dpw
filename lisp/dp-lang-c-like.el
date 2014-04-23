@@ -790,7 +790,8 @@ aa bb(
       (beginning-of-line)
       (newline-and-indent)
       (previous-line 1))
-    (dp-c-indent-command)))
+    (dp-c-indent-command))
+  (point))
 
 (defun dp-c-beginning-of-current-token (&rest rrr)
   "Just insulation from `c-beginning-of-current-token'.
@@ -1998,10 +1999,20 @@ the boundaries region if it is active."
       (beginning-of-line)
       (dp-c-indent-command))))
 
-(defun dp-c-stack-statement (&optional split-at-regexp repl 
-                             before-p after-first-p
-                             beg end)
-  "Split statement at split-at-regexp, before regexp else before if before-p non nil."
+(defun* dp-c-stack-statement (&key split-at-regexp repl 
+                              before-p after-first-p
+                              beg end
+                              vertical-p)
+  "Split statement at split-at-regexp, before regexp else before if before-p non nil.
+BEFORE-P says to split like we do in a c-tor initialization list:
+C::C(
+  int a,
+  char* b,
+  : m_a(a)
+  , m_b(b)
+{}
+This makes it much easier to add and remove initializers.
+"
   (interactive "*")
   (let* ((split-at-regexp (or split-at-regexp "\\s-*,\\s-*"))
          (repl (or repl ","))
@@ -2013,8 +2024,14 @@ the boundaries region if it is active."
     (dp-c-flatten-statement beg end)
     (save-excursion
       (goto-char beg)
-      (if after-first-p
+      (when after-first-p
           (dp-re-search-forward-not-in-a-string split-at-regexp end t))
+      ;; @todo XXX We should add a regexp used to find where we want to do
+      ;; the initial split. For example, a funcall needs a "(" an io-stream
+      ;; would use a space, e.g cout -!-<<
+      (when (and vertical-p
+                 (dp-re-search-forward-not-in-a-string "(" end t))
+        (dp-c-newline-and-indent))
       (while (dp-re-search-forward-not-in-a-string split-at-regexp end t)
         (save-excursion
           (replace-match repl)
@@ -2025,19 +2042,39 @@ the boundaries region if it is active."
 
 (defun dp-c-stack-rest-of-statement (&optional end beg)
   (interactive)
-  (dp-c-stack-statement nil nil
-                        nil nil 
-                        (or beg (point))
-                        (or end (save-excursion
-                                  (c-end-of-statement)
-                                  (point)))))
+  (dp-c-stack-statement
+   :beg (or beg (point))
+   :end (or end (save-excursion
+                  (c-end-of-statement)
+                  (point)))))
 
-(defun dp-c-stack-iostream ()
-  (interactive "*")
-  (dp-c-stack-statement "\\s-*\\(<<\\|>>\\)\\s-*" "\\1 " 'before 'after-first))
+(defun dp-c-stack-iostream (&optional vertical-p)
+  (interactive "*P")
+  (dp-c-stack-statement 
+   :split-at-regexp "\\s-*\\(<<\\|>>\\)\\s-*" 
+   :repl "\\1 " 
+   :before-p 'before 
+   :after-first-p 'after-first
+   :vertical-p vertical-p))
+
 (defalias 'csi 'dp-c-stack-iostream)
 
-(defun dp-c-fill-statement (&optional max-line-len rest-of-statement beg end)
+(defvar dp-c-fill-statement-vertically t
+  "Stack statements:
+g()
+{
+    some_function_i_need_to_call(
+        int a,
+        int b);
+}"
+)
+
+(defun* dp-c-fill-statement (&optional 
+                             max-line-len 
+                             rest-of-statement 
+                             beg 
+                             end 
+                             (vertical-p dp-c-fill-statement-vertically))
   (interactive)
   (dmessage "HANDLE spaces after opening (")
   (save-excursion
@@ -2048,14 +2085,19 @@ the boundaries region if it is active."
                         (dp-c-stack-iostream)
                       (if rest-of-statement
                           (dp-c-stack-rest-of-statement)
-                        (dp-c-stack-statement nil nil nil nil beg end))))
+                        (dp-c-stack-statement 
+                         :beg beg 
+                         :end end
+                         :vertical-p vertical-p))))
            (end (dp-mk-marker (car (cdr beg-end))))
            (max-line-len (1- (dp-c-fill-column max-line-len))))
-      (while (< (line-end-position) end)
-        (join-line)
-        (unless (<= (- (line-end-position) (line-beginning-position)) 
-                    max-line-len)
-          (c-context-line-break))))))
+      (unless vertical-p
+        (while (< (line-end-position) end)
+          (join-line)
+          (unless (<= (- (line-end-position) (line-beginning-position))
+                      max-line-len)
+            (c-context-line-break)))))))
+
 (defalias 'cfs 'dp-c-fill-statement)
     
 
@@ -2142,6 +2184,7 @@ is done.")
         old-point
         decl-bounds
         is-decl-p
+        pos-after-ensured-brace
         open-paren-marker close-paren-marker)
     (end-of-line)
     ;; Don't do anything if we backup into a different syntactic region.
@@ -2226,7 +2269,8 @@ is done.")
                               (search-forward ")" (line-end-position))))))
       (when (and add-opening-brace-p
                  (re-search-forward ")" (line-end-position) t))
-        (dp-c-ensure-opening-brace :force-newline-after-brace-p nil)))
+        (setq pos-after-ensured-brace
+              (dp-c-ensure-opening-brace :force-newline-after-brace-p nil))))
     (goto-char open-paren-marker)
     ;; Put function name on a line by itself after any preceding type, etc,
     ;; info.
@@ -2255,8 +2299,12 @@ is done.")
       (dp-c-terminate-function-stmt "\n")
       (return-from dp-c-format-func-decl t))
     ;; Why did I want to do this twice?
+    ;; Let's find out what breaks...
+    ;; --> we get stuck on the opening brace.
     (when add-opening-brace-p
-       (dp-c-ensure-opening-brace :ensure-newline-after-brace-p nil))
+      (if pos-after-ensured-brace
+          (goto-char pos-after-ensured-brace)
+        (dp-c-ensure-opening-brace :ensure-newline-after-brace-p nil)))
     (when align-p
       (align (car decl-bounds) (1+ (cdr decl-bounds)))))
   ;; Unless we know we did nothing, assume we did something.

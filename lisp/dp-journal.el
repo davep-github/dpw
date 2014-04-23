@@ -350,6 +350,8 @@ This way we can get alternating colors on journal mode structure in the text:
 	  (list 1 'dp-journal-deemphasized-face t)
 	  (list 2 'dp-journal-deemphasized-face t)
 	  (list 3 'dp-journal-deemphasized-face nil)))
+   (cons "^[ 	]*--+ .*$" 'dp-journal-deemphasized-face)
+
    ;; Alternating colors based on a numeric prefix.
    ;; E.g. 
    ;; 1) sjdhjsdh     <<<< color 1

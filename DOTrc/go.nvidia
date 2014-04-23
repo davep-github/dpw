@@ -61,6 +61,9 @@ Ee|tags__SB_rel|                ./
 Ee|___SB_rel|                   ./
 Ee|hw__SB_rel|                  hw/
 Ee|sw__SB_rel|                  sw/
+Ee|sbtmp__SB_rel|               tmp/
+Ee|stmp__SB_rel|                ${sbtmp__SB_rel}
+Ee|ttmp__SB_rel|                ${sbtmp__SB_rel}
 Ee|nvgpu__SB_rel|               ${hw__SB_rel}nvgpu/
 Ee|standsim__SB_rel|            ${nvgpu__SB_rel}stand_sim/
 Ee|ssim__SB_rel|                ${standsim__SB_rel}
@@ -80,14 +83,20 @@ Ee|nvlxlat__SB_rel|             ${nvlink1translator__SB_rel}
 Ee|nvlx__SB_rel|                ${nvlink1translator__SB_rel}
 Ee|nvlink1__SB_rel|             ${nvlink1translator__SB_rel}
 Ee|nvl1__SB_rel|                ${nvlink1translator__SB_rel}
-Ee|nvlt__SB_rel|                ${nvlink1translator__SB_rel}
+Ee|nvtl1__SB_rel|               ${nvlink1translator__SB_rel}
+Ee|nvtl__SB_rel|                ${nvlink1translator__SB_rel}
+
 
 Ee|fcnvlinktranslator__SB_rel|  ${fmodel__SB_rel}fc_nvlink_translator/
 Ee|fcnvlxlat__SB_rel|           ${fcnvlinktranslator__SB_rel}
 Ee|fcnvlx__SB_rel|              ${fcnvlinktranslator__SB_rel}
 Ee|fcnvlink__SB_rel|            ${fcnvlinktranslator__SB_rel}
+Ee|fcnvtl__SB_rel|              ${fcnvlinktranslator__SB_rel}
 Ee|fcnvl__SB_rel|               ${fcnvlinktranslator__SB_rel}
-Ee|fcnvlt__SB_rel|              ${fcnvlinktranslator__SB_rel}
+Ee|nvtlfc__SB_rel|              ${fcnvlinktranslator__SB_rel}
+Ee|nvlfc__SB_rel|               ${fcnvlinktranslator__SB_rel}
+Ee|nvtl2__SB_rel|               ${fcnvlinktranslator__SB_rel}
+Ee|nvl2__SB_rel|                ${fcnvlinktranslator__SB_rel}
 
 Ee|fmodelliblinux8664__SB_rel|  ${fmodel__SB_rel}lib/Linux_x86_64/
 Ee|fmodlib64__SB_rel|           ${fmodelliblinux8664__SB_rel}

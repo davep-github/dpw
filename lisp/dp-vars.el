@@ -468,12 +468,13 @@ int some_descriptive_function_name(
 Lovely, isn't it?
 
 
-And for tasteless heathens, nil yields:
+And for vile, tasteless heathens, nil yields:
 int some_descriptive_function_name(int a,
                                    const char* some_string_for_some_arcane_purpose_which_is_too_complex,
                                    Some_arcane_type_t& for_some_even_more arcane_purpose)
 {
   blah()
+An offense to the senses.
 "
   :type 'boolean
   :group 'dp-vars)
