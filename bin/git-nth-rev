@@ -5,16 +5,43 @@ set -u
 
 : ${max_count:=1}
 : ${base_rev:=HEAD}
+: ${oldest_p=}
+: ${file_p=}
+: ${sep=}
 
-nth="$1"
-case "$1" in
-    -[0-9]*) nth=$(echo "$1" | sed -rn 's/^(-)([0-9]*)/\2/p');;
-    -n) shift; nth="${1}";;
-    -n[0-9]*) nth=$(echo "$1" | sed -rn 's/^(-n)([0-9]*)/\2/p');;
-    -|=|.) ;;
-    *) base_rev="${1}";
-esac
-shift;
+tail_dash_n_1()
+{
+    tail -n1
+}
+
+tailer=tail_dash_n_1
+
+nths=()
+while (($# > 0))
+do
+  case "$1" in
+      -[0-9]*) nths+=($(echo "$1" | sed -rn 's/^(-)([0-9]*)/\2/p'));;
+      -n) shift; nths+=("${1}");;
+      -n[0-9]*) nths+=($(echo "$1" | sed -rn 's/^(-n)([0-9]*)/\2/p'));;
+      --oldest|--original|--initial|--earliest) nths+=(oldest);;
+      --file|--file-first) file_p=first;;
+      --file-last) file_p=last;;
+      --base-rev|--base) shift; base_rev="${1}";;
+      --all) nths+=(all); tailer=cat;;
+      --sep) shift; sep="${1}";;
+      -m|--max-count|--num-revs|--for) shift; max_count="${1}";;
+      --) shift; break;;
+      *) break;;
+   esac
+   shift;
+done
+
+if vunsetp "${nths[*]}"
+then
+    echo "Please provide a relative revision number."
+    exit 0
+fi 2>&1
+
 file="$1"
 shift;
 
@@ -28,4 +55,27 @@ then
     fi
 fi
 
-git rev-list --max-count=${max_count} --skip="$nth" "$base_rev" "$file"
+
+for nth in "${nths[@]}"
+do
+  vsetp "${sep}" && echo "${nth} ${sep}"
+  if [ "${nth}" = "oldest" -o "${nth}" = "all" ]
+  then
+      case "$nth" in
+          oldest) tailer=tail_dash_n_1;;
+          *) tailer=cat;;
+      esac
+      revs=$(git rev-list "$base_rev" "$file" | $tailer)
+  else
+      revs=$(git rev-list --max-count=${max_count} --skip="$nth" "$base_rev" "$file")
+  fi
+
+  for rev in ${revs}
+  do
+    case "$file_p" in
+        first) echo "${file}" "${rev}";;
+        last)  echo "${rev}" "${file}";;
+        *) echo "${rev}";;
+    esac
+  done
+done

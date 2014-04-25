@@ -5,3 +5,6 @@
 	email = davep.dpw@meduseld.net
 [push]
 	default = matching
+
+[difftool "ec-diff"]
+	cmd = ec-diff $LOCAL $REMOTE

@@ -1,4 +1,5 @@
 #!/bin/sh
+
 source script-x
 set -u
 progname="$(basename $0)"
@@ -39,27 +40,13 @@ on_error()
     trap '' 0
 }
 
-git_hist_diff_file()
-{
-    local commit="$1"
-    local file="$2"
-    EExec git diff $REPLY -- "$file"
-}
+if (($# > 0))
+then
+    line_num="$1"
+else
+    line_num=0
+fi
 
-[ $# = 0 ] && {
-    echo 1>&2 "usage: commit=<COMMIT> $(basename $0) files...
-For all files, diff them against all specs in rev-list COMMIT"
-}
-
-revs=
-
-
-EExec -y git-nth-rev --all --file-last "$@" | while read
-do
-#   echo_id REPLY
-  set -- ${REPLY}
-  echo "=============================================================================
-======================= file: $2
-======================= commit: $1"
-  EExec git_hist_diff_file ${REPLY}
-done
+# -n & -N can be overridden. -T could, I suppose, by setting all of the options it
+# clears.
+pr -n' 5' -T -N0 "$@"

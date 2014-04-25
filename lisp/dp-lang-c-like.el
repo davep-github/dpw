@@ -739,9 +739,9 @@ E.g. \"some_var\" --> \"m_some_var(some_var)\"."
                                    (ensure-newline-after-brace-p nil))
   "!<@todo XXX Add a force blank line after brace predicate.
 I added the idea that this would return a valuing telling the caller if
-anything was done to prevent double newlines. I need to determine then this
+anything was done to prevent double newlines. I need to determine when this
 is the case.
-non-nil tells the caller there is nothing more to do.
+Returns the `point' where things ended up.
 aa bb(
     aa,
     bb,
@@ -1374,6 +1374,8 @@ newline."
     (when (looking-at dp-c*-keywords-needing-parens)
       (return-from dp-c-terminate-function-stmt)))
   (dp-c-end-of-line)
+  ;;;; This helps with multi-line statements, but sucks otherwise.
+  ;;;; (c-end-of-statement) 
   (when (dp-looking-back-at-close-paren-p 'final)
     (replace-match (format "\\1;%s%s" ; 1st %s: The ) and other eol-junk above
                            (if (> (length (match-string (1+ dp-c*-junk-ws))) 1)
@@ -2002,9 +2004,10 @@ the boundaries region if it is active."
 (defun* dp-c-stack-statement (&key split-at-regexp repl 
                               before-p after-first-p
                               beg end
-                              vertical-p)
+                              minimal-indentation-p)
   "Split statement at split-at-regexp, before regexp else before if before-p non nil.
-BEFORE-P says to split like we do in a c-tor initialization list:
+BEFORE-P says to split like we do in a c-tor initialization list, 
+with commas first:
 C::C(
   int a,
   char* b,
@@ -2012,6 +2015,16 @@ C::C(
   , m_b(b)
 {}
 This makes it much easier to add and remove initializers.
+MINIMAL-INDENTATION-P says to use minimal indentation per line; it's not the
+best term, but so it goes. It acts thus:
+afunction(a, b, c)
+becomes:
+afunction(
+    a, 
+    b, 
+    c);
+The indentation is minimal, but nothing in the name implies that there is one
+arg per line, although that is implied by the name of the function.
 "
   (interactive "*")
   (let* ((split-at-regexp (or split-at-regexp "\\s-*,\\s-*"))
@@ -2029,7 +2042,7 @@ This makes it much easier to add and remove initializers.
       ;; @todo XXX We should add a regexp used to find where we want to do
       ;; the initial split. For example, a funcall needs a "(" an io-stream
       ;; would use a space, e.g cout -!-<<
-      (when (and vertical-p
+      (when (and minimal-indentation-p
                  (dp-re-search-forward-not-in-a-string "(" end t))
         (dp-c-newline-and-indent))
       (while (dp-re-search-forward-not-in-a-string split-at-regexp end t)
@@ -2048,18 +2061,18 @@ This makes it much easier to add and remove initializers.
                   (c-end-of-statement)
                   (point)))))
 
-(defun dp-c-stack-iostream (&optional vertical-p)
+(defun dp-c-stack-iostream (&optional minimal-indentation-p)
   (interactive "*P")
   (dp-c-stack-statement 
    :split-at-regexp "\\s-*\\(<<\\|>>\\)\\s-*" 
    :repl "\\1 " 
    :before-p 'before 
    :after-first-p 'after-first
-   :vertical-p vertical-p))
+   :minimal-indentation-p minimal-indentation-p))
 
 (defalias 'csi 'dp-c-stack-iostream)
 
-(defvar dp-c-fill-statement-vertically t
+(defvar dp-c-fill-statement-minimal-indentation-p t
   "Stack statements:
 g()
 {
@@ -2074,7 +2087,8 @@ g()
                              rest-of-statement 
                              beg 
                              end 
-                             (vertical-p dp-c-fill-statement-vertically))
+                             (minimal-indentation-p 
+                              dp-c-fill-statement-minimal-indentation-p))
   (interactive)
   (dmessage "HANDLE spaces after opening (")
   (save-excursion
@@ -2088,10 +2102,11 @@ g()
                         (dp-c-stack-statement 
                          :beg beg 
                          :end end
-                         :vertical-p vertical-p))))
+                         :minimal-indentation-p minimal-indentation-p))))
            (end (dp-mk-marker (car (cdr beg-end))))
            (max-line-len (1- (dp-c-fill-column max-line-len))))
-      (unless vertical-p
+      (unless minimal-indentation-p
+        ;; Pack things into maximally filled lines.
         (while (< (line-end-position) end)
           (join-line)
           (unless (<= (- (line-end-position) (line-beginning-position))

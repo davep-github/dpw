@@ -41,7 +41,7 @@ on_error()
 }
 
 : ${message="no-message"}
-: ${tagname="checkpoint"}
+: ${tagname=}
 : ${timestamp_p=t}
 tagname_set_p=
 
@@ -64,6 +64,15 @@ do
   esac
   shift
 done
+
+vunsetp "${tagname}" && {
+    if (($# > 0))
+    then
+        tagname="$@"
+    else
+        tagname="checkpoint"
+    fi
+}
 
 # timestamp first so we sort usefully.
 vsetp "${timestamp_p}" && tagname="$(dp-std-timestamp)-${tagname}"

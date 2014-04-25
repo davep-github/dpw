@@ -21,7 +21,8 @@ def main(argv):
                          dest="debug_level",
                          type=int,
                          default=-1,
-                         help="Set debug level")
+                         help="Set debug level. Use with, e.g. "
+                         "dp_io.cdebug(<n>, fmt [, ...])")
     oparser.add_argument("--verbose-level",
                          dest="verbose_level",
                          type=int,
@@ -47,9 +48,8 @@ def main(argv):
         print "I am being quiet."
     if app_args.debug_level >= 0:
         dp_io.set_debug_level(app_args.debug_level, enable_debugging_p=True)
-    if app_args.debug_level >= 0:
-        dp_io.set_debug_level(app_args.verbose_level, enable_debugging_p=True)
-    
+    if app_args.verbose_level > 0:
+        dp_io.set_verbose_level(app_args.verbose_level, enable=True)
 
 
 if __name__ == "__main__":

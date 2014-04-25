@@ -1107,7 +1107,7 @@ Arr... beware the hooks! "
   (local-set-key [(meta right)] 'dp-end-of-defun)
   (local-set-key [(control meta x)] 'dp-eval-defun-or-region)
   (local-set-key [(meta s)] 'dp-upcase-preceding-symbol)
-  ;; Change `:' syntax so that :prefix<M-/> will complete on prefix.
+  ;; Change `:' syntax so that :keyword-prefix<M-/> will complete on prefix.
   ()
 
   ;; What the GDMFFF? Why the spaces?

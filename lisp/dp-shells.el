@@ -3372,10 +3372,19 @@ Can this really not exist elsewhere?"
   (interactive (list (read-shell-command "Shell command: ")))
   (insert (shell-command-to-string command-string)))
 
-(defun dp-shell-buffer-name-less (buf1 buf2)
+(defun dp-shell-dp-shell-num-less-p (buf1 buf2)
+  "Sort the buffers by dp-shell-buf-num."
+  (funcall '<
+           (symbol-value-in-buffer 'dp-shell-num buf1)
+           (symbol-value-in-buffer 'dp-shell-num buf2)))
+
+(defun dp-shell-dp-shell-num-greater-or-equal-p (buf1 buf2)
+  (not (dp-shell-dp-shell-num-less-p buf1 buf2)))
+
+(defun dp-shell-buffer-name-less-p (buf1 buf2)
   "Sort the buffers by name in some useful/comsistent manner.
 The auto-generated names are numeric, and I have plans to allow them to be 
-named. formatting with %s will work for anything 
+named. formatting with %s will not cause an error for anything 
 reasonable: numbers, strings, symbols.
 @todo XXX There will be the classic number sorting issue where 2 is > 100."
   (funcall 'string<
@@ -3384,16 +3393,16 @@ reasonable: numbers, strings, symbols.
            (format "%s" 
                    (symbol-value-in-buffer 'dp-shell-num buf2))))
 
-(defun dp-shell-buffer-name-greater-or-equal (buf1 buf2)
-  (not (dp-shell-buffer-name-less buf1 buf2)))
+(defun dp-shell-buffer-name-greater-or-equal-p (buf1 buf2)
+  (not (dp-shell-buffer-name-less-p buf1 buf2)))
 
 (defun dp-next/prev-shell-buffer (next/prev &optional buffer)
   (interactive)
   (let* ((shell-buffers (sort (dp-shells-find-matching-shell-buffers 
                                nil ".*")
                               (if (eq next/prev 'prev)
-                                  'dp-shell-buffer-name-greater-or-equal
-                                'dp-shell-buffer-name-less)))
+                                  'dp-shell-dp-shell-num-greater-or-equal-p
+                                'dp-shell-dp-shell-num-less-p)))
          (this-buf (memq (or buffer (current-buffer)) shell-buffers)))
     (or (nth 1 this-buf)
         (car shell-buffers))))

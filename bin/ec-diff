@@ -40,6 +40,9 @@ done
 
 (($# != 2)) && {
         echo "Two file names are needed."
+        echo "@>$@<"
+        echo_id LOCAL
+        echo_id REMOTE
         exit 1
 } 1>&2
 

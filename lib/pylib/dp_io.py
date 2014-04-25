@@ -209,8 +209,7 @@ def fprintf(ofiles, fmt, *args):
 ###############################################################
 def do_debug(fmt, leader, args, **kw_args):
     if f_debug:
-        if args:
-            fmt = fmt % args
+        fmt = fmt_args(fmt, args)
         lprint(v_debug_files, leader+debug_leader_sep, fmt)
 
 def do_ldebug(level, fmt, leader, *args):

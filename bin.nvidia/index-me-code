@@ -39,7 +39,12 @@ export eexec_program
 # These are me-expand'd
 # Additional ap type dirs will need to be -a'd.
 source $HOME/.rc/env.nvidia
+#
+# NB!!!!!!!
+# This may (might, should) be set inside an rc file. E.g. env.nvidia
 : ${db_locs=${DP_NV_SRC_INDEX_DB_LOCS=ap //arch //sw/dev //sw/mods //sw/tools //hw/class //hw/kepler1_gklit3 //hw/tools}}
+# This may (might, should) be set inside an rc file. E.g. env.nvidia
+# NB!!!!!!!
 : ${db_loc_excludes=}
 : ${hw_ap_p=t}
 : ${me_tests_p=t}
@@ -394,6 +399,7 @@ then
     depot_dirs_of_interest="
 ${depot_dirs_of_interest}
 $(me-expand-dest --normpath-term fmod)
+$(me-expand-dest --normpath-term nvgpudefs)
 $(me-expand-dest --normpath-term nvgpuinclude)
 $(me-expand-dest --normpath-term nvgpuclib)"
 fi
