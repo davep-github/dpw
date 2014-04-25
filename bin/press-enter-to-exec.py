@@ -47,6 +47,14 @@ def main(argv):
                          default=False,
                          action="store_true",
                          help="Show command in prompt string.")
+    oparser.add_argument("--yes", "--auto", "--auto-yes", "--all", "--doit",
+                         dest="auto_yes_p",
+                         default=False,
+                         action="store_true",
+                         help="Don't ask. Kind of against the philosophy of"
+                         " the program, but it can be useful to just add"
+                         " --auto to command you'd just like to start doing"
+                         " things unconditionally.")
 ##e.g.     oparser.add_argument("--app-action", "--aa",
 ##e.g.                          dest="app_action_stuff", default=[],
 ##e.g.                          action=App_arg_action,
@@ -82,26 +90,27 @@ def main(argv):
     for line in lines:
         dp_io.cdebug("line>{}<\n", line)
         cmd_line = cmd + line
-        if app_args.show_cmd_p:
-            prompt = app_args.prompt + "[" + cmd_line + "]"
-        else:
-            prompt = app_args.prompt
-        sys.stdout.write(prompt + ": ")
-        input_line = kb.readline()
-        if not input_line:              # ^D
-            break
-        else:
-            input_line = input_line[:-1]
-            if input_line in ("q", "quit", "x", "exit", "bye"):
-                break
-            elif input_line in ("n", "next", "skip", "s",
-                              "iter", "iterate"):
-                continue
-            elif input_line in ("", "y", "yes", "exec", "run"):
-                pass
+        if not app_args.auto_yes_p:
+            if app_args.show_cmd_p:
+                prompt = app_args.prompt + "[" + cmd_line + "]"
             else:
-                dp_io.eprintf("Unrecognized response>{}<\n", input_line)
-                sys.exit(1)
+                prompt = app_args.prompt
+            sys.stdout.write(prompt + ": ")
+            input_line = kb.readline()
+            if not input_line:              # ^D
+                break
+            else:
+                input_line = input_line[:-1]
+                if input_line in ("q", "quit", "x", "exit", "bye"):
+                    break
+                elif input_line in ("n", "next", "skip", "s",
+                                  "iter", "iterate"):
+                    continue
+                elif input_line in ("", "y", "yes", "exec", "run"):
+                    pass
+                else:
+                    dp_io.eprintf("Unrecognized response>{}<\n", input_line)
+                    sys.exit(1)
         dp_io.cdebug(1, "cmd_line>{}<\n", cmd_line)
         os.system(cmd_line)
         dp_io.cdebug("input_line>{}<\n", input_line)
