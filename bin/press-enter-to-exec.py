@@ -42,10 +42,20 @@ def main(argv):
                          default="Press enter to exec",
                          type=str,
                          help="Prompt with this string.")
-    oparser.add_argument("-s", "--show-cmd",
-                         dest="show_cmd_p",
+    oparser.add_argument("-H", "--header",
+                         dest="header",
+                         default="",
+                         type=str,
+                         help="Print this before the prompt.")
+    oparser.add_argument("--header-full",
+                         dest="header_full_p",
                          default=False,
                          action="store_true",
+                         help="Print this before the prompt.")
+    oparser.add_argument("-S", "--no-show-cmd", "--hide-cmd", "--no-show",
+                         dest="show_cmd_p",
+                         default=True,
+                         action="store_false",
                          help="Show command in prompt string.")
     oparser.add_argument("--yes", "--auto", "--auto-yes", "--all", "--doit",
                          dest="auto_yes_p",
@@ -53,8 +63,8 @@ def main(argv):
                          action="store_true",
                          help="Don't ask. Kind of against the philosophy of"
                          " the program, but it can be useful to just add"
-                         " --auto to command you'd just like to start doing"
-                         " things unconditionally.")
+                         " --auto to command you'd like to start doing"
+                         " unconditionally.")
 ##e.g.     oparser.add_argument("--app-action", "--aa",
 ##e.g.                          dest="app_action_stuff", default=[],
 ##e.g.                          action=App_arg_action,
@@ -87,6 +97,7 @@ def main(argv):
         lines.append(input_line[:-1])
 
     kb = open("/dev/tty", 'r')
+    header = app_args.header
     for line in lines:
         dp_io.cdebug("line>{}<\n", line)
         cmd_line = cmd + line
@@ -95,7 +106,12 @@ def main(argv):
                 prompt = app_args.prompt + "[" + cmd_line + "]"
             else:
                 prompt = app_args.prompt
-            sys.stdout.write(prompt + ": ")
+            prompt = prompt + ": "
+            if app_args.header_full_p:
+                header = len(prompt) * "="
+            if header:
+                sys.stdout.write(header + "\n")
+            sys.stdout.write(prompt)
             input_line = kb.readline()
             if not input_line:              # ^D
                 break
