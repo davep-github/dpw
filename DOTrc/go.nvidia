@@ -1,9 +1,13 @@
+# the home of go, not the admonition.
 Ee|gohome|                    /home/dpanariti/
 Ee|dotrc|rsee|rcee|drc|       ${gohome}.rc/
 Ee|lastresort|                ${gohome}bin/last-resort/
 Ee|rsee|                      ${gohome}.rc/
 Ee|etc|                       ${gohome}etc/
 Ee|dpsw|                      ${gohome}sw/
+Ee|dplib|                     ${gohome}lib/
+Ee|dpylib|                    ${dplib}/pylib/
+
 Ee|work|                      ${gohome}work/
 Ee|workinfo|winfo|            ${work}info/
 Ee|workdoc|wdoc|              ${work}doc/
@@ -64,7 +68,13 @@ Ee|sw__SB_rel|                  sw/
 Ee|sbtmp__SB_rel|               tmp/
 Ee|stmp__SB_rel|                ${sbtmp__SB_rel}
 Ee|ttmp__SB_rel|                ${sbtmp__SB_rel}
+
+# + nvlink fc_nvlink nvlink_translator fc_nvlink_translator/ fmodel fmod
 Ee|nvgpu__SB_rel|               ${hw__SB_rel}nvgpu/
+Ee|nvgpucommon__SB_rel|         ${nvgpu__SB_rel}common/
+Ee|fcnvlcommon__SB_rel|         ${nvgpucommon__SB_rel}
+Ee|nvlcommon__SB_rel|           ${nvgpucommon__SB_rel}
+Ee|nvgpuetc__SB_rel|            ${nvgpu__SB_rel}etc/
 Ee|standsim__SB_rel|            ${nvgpu__SB_rel}stand_sim/
 Ee|ssim__SB_rel|                ${standsim__SB_rel}
 Ee|ssimhshub__SB_rel|           ${standsim__SB_rel}hshub/
@@ -72,6 +82,8 @@ Ee|nvgpuinclude__SB_rel|        ${nvgpu__SB_rel}include/
 Ee|nvgpuinc__SB_rel|            ${nvgpuinclude__SB_rel}
 Ee|nvgpuclib__SB_rel|           ${nvgpu__SB_rel}clib/
 Ee|nvgpudefs__SB_rel|           ${nvgpu__SB_rel}defs/
+Ee|nvtldefs__SB_rel|            ${nvgpu__SB_rel}defs/
+Ee|memdefs__SB_rel|             ${nvgpudefs__SB_rel}/memory/
 Ee|fmodel__SB_rel|fmod__SB_rel| ${nvgpu__SB_rel}fmod/
 
 Ee|xvetranslator__SB_rel|       ${fmodel__SB_rel}xve_translator/
@@ -85,7 +97,6 @@ Ee|nvlink1__SB_rel|             ${nvlink1translator__SB_rel}
 Ee|nvl1__SB_rel|                ${nvlink1translator__SB_rel}
 Ee|nvtl1__SB_rel|               ${nvlink1translator__SB_rel}
 Ee|nvtl__SB_rel|                ${nvlink1translator__SB_rel}
-
 
 Ee|fcnvlinktranslator__SB_rel|  ${fmodel__SB_rel}fc_nvlink_translator/
 Ee|fcnvlxlat__SB_rel|           ${fcnvlinktranslator__SB_rel}
@@ -108,6 +119,8 @@ Ee|hwbase__SB_rel|              ${fmodel__SB_rel}base/
 Ee|hshub__SB_rel|               ${fmodel__SB_rel}hshub/
 Ee|nesstutorial__SB_rel|        ${fmodel__SB_rel}ness-tutorial/
 Ee|nesstut__SB_rel|             ${nesstutorial__SB_rel}
+# - nvlink fc_nvlink nvlink_translator fc_nvlink_translator/ fmodel fmod
+
 Ee|nvdiag__SB_rel|              ${hw__SB_rel}nvdiag/
 Ee|hwtools__SB_rel|             ${hw__SB_rel}tools/
 Ee|mobileswtools__SB_rel|       ${hwtools__SB_rel}mobile_sw/
@@ -377,6 +390,7 @@ Ee|t3dAlloc|  ${sb4}hw/${TOT__SB_rel}drv/drvapi/runtest_common/runtest_exec.cpp:
 # See a15_msel_integ_sanity
 #
 # Temp stuff for most active tasks.
+EE|rltree|rl|      /home/scratch.rl_t30/trees/maxwell_tree_2/hw/nvgpu/
 Ee|asimflow|       /home/scratch.dpanariti_t124_1/sb3/sb3hw/
 Ee|sgds|barbin|barrun|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/sanity_gr_disp_syncpt/2013-03-01T15.52.30-0500.out/tests/kepler_b_ogtest/00/00/01/000001/
 Ee|sanitybar1|       /home/scratch.dpanariti_t124_1/sb4/sb4hw/arch/traces/mobile/traces/gpu_multiengine/sanity_gr_disp_syncpt_bar1/
@@ -399,13 +413,11 @@ Ee|kevin|       /home/scratch.dpanariti_t124/sb2/hw/hw/ap_tlit1/diag/testgen/dp-
 
 Ee|gooddepcpurun|       /home/scratch.dpanariti_t124/sb2/hw/hw/ap_tlit1/diag/testgen/dp-run-tgens.d/dep_cpu_cpu_gpu_cpu_mc/2013-04-24T15.06.43-0400.out/tests/kepler_b_ogtest/00/00/01/000001/
 Ee|xebacks|xebacs|       /home/dpanariti/droppings/editors/xemacs/xebacs.d/
-Ee|dpylib|       /home/dpanariti/lib/pylib/
 Ee|bover|binoverride|       /home/dpanariti/bin/override/
 Ee|sso| /home/scratch.traces02/mobile/traces/system/so
 Ee|stldir| /usr/include/c++/4.1.1/
 Ee|miaowhw|       /home/scratch.miaow_t124/miaow_ap_tree1/hw/
 Ee|miaowap|       /home/scratch.miaow_t124/miaow_ap_tree1/
-Ee|pylib|       /home/dpanariti/lib/pylib/
 
 # Added Thu Oct 10 10:27:52 EDT 2013
 Ee|blaaah2|       /home/dpanariti/

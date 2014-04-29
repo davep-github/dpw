@@ -21,7 +21,7 @@
 ;; Simple way to make these:
 ;; 1) Record kbd macro
 ;; 2) M-x name-last-kbd-macro
-;; 3) (format-kbd-macro 'name) on name from step 2.
+;; 3) (format-kbd-macro 'name) on name from step 2 in temp buffer.
 ;; 4) Add a `defalias' like below using the string from step 3.
 ;;template (defalias '<name>
 ;;template   (read-kbd-macro
@@ -93,6 +93,13 @@
   (read-kbd-macro
    "M-a <C-right> M-o = M-y <C-right> <C-left>"))
 
+;; Copy a __SB_rel go entry so it can be used as a base/parent of a following
+;; entry.
+(defalias 'dp-add-sbrel-subdir
+  (read-kbd-macro
+   (concat
+    "C-a C-s | RET M-a C-s | <left> M-o C-e RET Ee|__SB_rel| 12*SPC ${ M-y }"
+    " C-a 3*<right>")))
 
 ;;;;;;; end of kbd macros ;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13924,9 +13931,15 @@ Assume it's in the corresponding header file."
 Different functions are used depending on some context such as minor-mode.
 Some examples are:
 `dp-maybe-kill-this-buffer', `dp-bury-or-kill-buffer', etc.")
+
 (defun dp-meta-minus ()
   (interactive)
   (call-interactively dp-kill-buffer-func))
+
+(dp-defaliases 
+ 'dp-call-function-on-meta-minus 
+ 'dp-call-meta-minus 
+ 'dp-meta-minus)
   
   
 (defun dp-kill-buffer-and-pop-window-config (&optional nth-config)

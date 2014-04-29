@@ -1539,33 +1539,39 @@ are kept in the cdr of a cons, e.g. (cons 'args-are-my-cdr real-args).  If
   (dp-set-current-error-function 'dp-do-next-compile-like-error nil))
 
 ;;;###autoload      
-(defun dp-next-error (&optional previous-error-p)
+(defun dp-next-error (&optional kill-buffer-first-p)
   "Find next error in shell buffer.
 This key is globally bound.  It does special things only if it is
 invoked inside a shell type buffer.  In this case, it ensures the
 buffer is in compilation minor-mode and reparses errors if it detects
 that a new command has been sent since the last parse.
-@todo Use/write i/f to `previous-error-p' to make us go backwards."
+KILL-BUFFER-FIRST-P says to kill the current buffer first. Useful when
+examining a bunch of hits in a bunch of files to prevent ending up with tons
+of open files.
+NB! KILL-BUFFER-FIRST-P does not work. Don't use it. Seriously."
   (interactive "P")
   (if (let ((bss (buffer-substring (line-beginning-position) 
                                    (line-end-position))))
                                         ;(dmessage "1: bss>%s<" bss)
         (string-match "grep\\s-+finish"
-                      (buffer-substring (line-beginning-position) 
+                      (buffer-substring (line-beginning-position)
                                         (line-end-position))))
       (dmessage "1: dp-next-error DONE")
     (unless (eq last-command 'dp-next-error)
       (dp-push-go-back "Going to next error"))
     (let ((starting-point (point-marker))
+          (starting-buffer (current-buffer))
           (args (cdr dp-current-error-function-args)))
       (if (symbolp args)
           (funcall dp-current-error-function)
         (apply dp-current-error-function args))
+      (when (and kill-buffer-first-p
+                 (not (equal (current-buffer) starting-buffer)))
+        (with-current-buffer starting-buffer
+          (dp-meta-minus)))
       (when (not (equal starting-point (point-marker)))
-        (dp-highlight-point-until-next-command 
-         :colors dp-next-error-other-buffer-faces))))
-  (dmessage 
-   "@todo Write a `dp-previous-error' to go back to previous error."))
+        (dp-highlight-point-until-next-command
+         :colors dp-next-error-other-buffer-faces)))))
   
 (defvar dp-dont-set-latest-function nil)
 

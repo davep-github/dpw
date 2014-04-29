@@ -32,6 +32,8 @@ revision=
 : ${client_template=${DP_P4_CLIENT_TEMPLATE}}
 : ${P4PORT=}
 : ${P4DIFF=}
+: ${P4ROOT=}
+: ${ROOT_PAT=@ROOT@}
 
 tmp_file=
 
@@ -116,18 +118,34 @@ client_name=$(dp4-mk-client-name)
     export DIFF_DEFAULT="${P4DIFF}"
     EExec -y dp4-mk-config "${client_name}" >| $tmp_file
     EExecVerbose_p && {
+        echo "------ ${tmp_file} ------"
         echo_id tmp_file
         cat "${tmp_file}"
-        echo "------"
+        echo "------ ${tmp_file} ------"
+
     } 1>&2
 )
-EExec /bin/cp -f $tmp_file $P4CONFIG
+
+intermediate_config_file="${P4CONFIG}.i"
+EExec /bin/cp -f $tmp_file "${intermediate_config_file}"
 EExec rm -f $tmp_file
 
 template_opt=
 [ -n "$client_template" ] && template_opt="-T $client_template"
 
 EExec dp4-client $template_opt
+
+p4root=$(p4 client -o | sed -rn 's/(^Root:[[:space:]]+)([^[:space:]]+)(.*$)/\2/p')
+EExec_verbose_echo_id p4root
+EExec_verbose_msg "PWD>$PWD<"
+sed -r "s!${ROOT_PAT}!${p4root}!" "${intermediate_config_file}" >| "${P4CONFIG}"
+rm -f "${intermediate_config_file}"
+EExecVerbose_p && {
+    echo "------ ${P4CONFIG} ------"
+    echo_id P4CONFIG
+    cat "${P4CONFIG}"
+    echo "------ ${P4CONFIG} ------"
+} 1>&2
 
 rc=
 if [ "$sync_p" == 't' ]

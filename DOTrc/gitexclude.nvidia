@@ -37,6 +37,7 @@ NOVC[.,-]*
 NOGIT
 *[.,-]NOGIT
 NOGIT[.,-]*
+*.OLDE
 
 # Oft-modified files with transient contents.
 .csh_history*

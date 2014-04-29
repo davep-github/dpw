@@ -52,6 +52,16 @@ def main(argv):
                          default=True,
                          action="store_false",
                          help="Show command in prompt string.")
+    oparser.add_argument("--no-prompt",
+                         dest="print_prompt_p",
+                         default=True,
+                         action="store_false",
+                         help="Don't show a prompt.")
+    oparser.add_argument("--bare",
+                         dest="bare_p",
+                         default=False,
+                         action="store_true",
+                         help="Don't show anything.")
     oparser.add_argument("--yes", "--auto", "--auto-yes", "--all", "--doit",
                          "--no-ask", "--ask-not", "--dont-ask",
                          dest="auto_yes_p",
@@ -85,7 +95,15 @@ def main(argv):
 
     cmd = " ".join(app_args.cmd_args) + " "
     dp_io.cdebug(1, "cmd>{}<\n", cmd)
+
+    if app_args.bare_p:
+        app_args.auto_yes_p = True
+        app_args.show_cmd_p = False
+        app_args.header_full_p = False
+        app_args.header = None
+        app_args.print_prompt_p = False
         
+
     # Slurp up the lines
     lines = []
     while True:
@@ -108,10 +126,12 @@ def main(argv):
         if app_args.header_full_p:
             header = len(prompt) * "="
         if header:
-            sys.stdout.write(header + "\n")
-        sys.stdout.write(prompt)
+            dp_io.printf("{}\n", header)
+        if app_args.print_prompt_p:
+            dp_io.printf("{}", prompt)
         if app_args.auto_yes_p:
-            sys.stdout.write("\n")
+            if not app_args.bare_p:
+                dp_io.printf("\n")
             input_line = "\n"
         else:
             input_line = kb.readline()
@@ -120,9 +140,11 @@ def main(argv):
         else:
             input_line = input_line[:-1]
             if input_line in ("q", "quit", "x", "exit", "bye"):
+                dp_io.printf('"{}" --> Quitting.\n', input_line)
                 break
             elif input_line in ("n", "next", "skip", "s",
                               "iter", "iterate"):
+                dp_io.printf('"{}" --> Skipping.\n', input_line)
                 continue
             elif input_line in ("", "y", "yes", "exec", "run"):
                 pass
