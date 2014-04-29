@@ -4,6 +4,17 @@
 ;;; Extensions and modifications to buff-menu.el
 ;;;
 
+(defvar buffers-menu-predicate 'buffers-menu-files-only-predicate-func
+  "*Filtering predicate for `list-buffers-internal'.
+Defaults to `buffers-menu-files-only-predicate-func'.
+Passed to `list-buffers-internal' by `list-buffers-noselect'.")
+
+(defvar buffers-menu-predicate-args nil
+  "*Arguments passed to `buffers-menu-predicate'.
+Passed to `list-buffers-internal' by `list-buffers-noselect' if non-nil.
+If nil, `list-buffers-noselect' will use \(list files-only\)
+as the predicate args passed to `list-buffers-internal'.")
+
 (defcustom dp-bmm-visible-major-modes 
   '(dired-mode
     debugger-mode
@@ -246,3 +257,50 @@ Gets the buffer as input.")
 		      'help-echo 
 		      (or file
 			  "No file.")))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Hack in here for now until I redo the patch.
+;;
+
+(unless (fboundp 'buffers-menu-files-only-predicate-func)
+  (defun buffers-menu-files-only-predicate-func (b files-only)
+    "Default filtering predicate.
+Default value of `buffers-menu-predicate'.
+Predicate functions receive as parameters a buffer and
+whatever PREDICATE-ARGS are passed to `list-buffers-internal'.
+See also `buffers-menu-predicate-args'."
+    (let ((n (buffer-name b)))
+      (cond ((and (/= 0 (length n))
+                  (= (aref n 0) ?\ ))
+             ;;don't mention if starts with " "
+             nil)
+            (files-only
+             (buffer-file-name b))
+            (t
+             t)))))
+
+;;@todo XXX Override here. Rebuild patch.
+(defun list-buffers-noselect (&optional files-only)
+  "Create and return a buffer with a list of names of existing buffers.
+The buffer is named `*Buffer List*'.
+Note that buffers with names starting with spaces are omitted.
+Non-nil optional arg FILES-ONLY means mention only file buffers.
+
+The M column contains a * for buffers that are modified.
+The R column contains a % for buffers that are read-only."
+  (let ((buffer (get-buffer-create "*Buffer List*")))
+    (list-buffers-internal buffer
+			   (if (memq files-only '(t nil))
+			       (progn
+				 (setq pred-args
+				       (or buffers-menu-predicate-args
+					   (list files-only)))
+				 buffers-menu-predicate)
+			     files-only)
+			   pred-args)
+
+    buffer))
+
+
