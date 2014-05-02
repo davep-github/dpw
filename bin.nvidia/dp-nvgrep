@@ -33,8 +33,9 @@ disp_realpath()
     echo "${file_name}:${line_num}${rest_o_line}"
 }
  
+: ${nvgrep_number_lines_opt=-n}
 : ${sandbox=}
-: ${number_lines_opt=-n}
+: ${number_lines_opt=$nvgrep_number_lines_opt}
 : ${realpath_p=t}
 : ${tot_p=t}
 : ${tot=TOT}                    # An SB_REL abbrev
@@ -47,7 +48,7 @@ do
       --to-tot) tot_p=t;;
       --tot) shift; tot=${1}; tot_p=t;;
       --no-number-lines|--no-line-numbers|--nn) number_lines_opt=;;
-      --number-lines|--line-numbers|--nl) number_lines_opt=t;;
+      --number-lines|--line-numbers|--nl) number_lines_opt=$nvgrep_number_lines_opt;;
       --relpath|--rel-path|--relative-path) realpath_p=;;
       --realpath|--rp) realpath_p=t;;
       --) shift; break;;
@@ -57,7 +58,7 @@ do
 done
 
 true_p "${tot_p}" && {
-    mecd "${tot}" || {
+    EExec -y mecd "${tot}" || {
         echo "Cannot find TOT."
         exit 1
     } 1>&2

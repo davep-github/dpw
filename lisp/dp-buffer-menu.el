@@ -264,6 +264,71 @@ Gets the buffer as input.")
 ;; Hack in here for now until I redo the patch.
 ;;
 
+;; This needs to be dumped, so we'll just redefine it here.
+(defun list-buffers-internal (output &optional predicate predicate-args)
+  (let ((current (current-buffer))
+        (buffers (buffer-list)))
+    (save-excursion
+      (set-buffer output)
+      (setq buffer-read-only nil)
+      (erase-buffer)
+      (buffer-disable-undo output)
+      (insert list-buffers-header-line)
+
+      (while buffers
+        (let* ((col1 19)
+               (buffer (car buffers))
+               (name (buffer-name buffer))
+	       this-buffer-line-start)
+          (setq buffers (cdr buffers))
+          (cond ((null name))           ;deleted buffer
+                ((and predicate
+                      (not (if (stringp predicate)
+                               (string-match predicate name)
+			     (apply predicate (cons buffer predicate-args)))))
+                 nil)
+                (t
+                 (set-buffer buffer)
+                 (let ((ro buffer-read-only)
+                       (id list-buffers-identification))
+                   (set-buffer output)
+		   (setq this-buffer-line-start (point))
+                   (insert (if (eq buffer current)
+                               (progn (setq current (point)) ?\.)
+			     ?\ ))
+                   (insert (if (buffer-modified-p buffer)
+                               ?\*
+			     ?\ ))
+                   (insert (if ro
+                               ?\%
+			     ?\ ))
+                   (if (string-match "[\n\"\\ \t]" name)
+                       (let ((print-escape-newlines t))
+                         (prin1 name output))
+		     (insert ?\  name))
+                   (indent-to col1 1)
+                   (cond ((stringp id)
+                          (insert id))
+                         (id
+                          (set-buffer buffer)
+                          (condition-case e
+                              (funcall id output)
+                            (error
+                             (princ "***" output) (prin1 e output)))
+                          (set-buffer output)
+                          (goto-char (point-max)))))
+		 (put-nonduplicable-text-property this-buffer-line-start
+						  (point)
+						  'buffer-name name)
+		 (put-nonduplicable-text-property this-buffer-line-start
+						  (point)
+						  'highlight t)
+                 (insert ?\n)))))
+      
+      (Buffer-menu-mode)
+      (if (not (bufferp current))
+          (goto-char current)))))
+
 (unless (fboundp 'buffers-menu-files-only-predicate-func)
   (defun buffers-menu-files-only-predicate-func (b files-only)
     "Default filtering predicate.

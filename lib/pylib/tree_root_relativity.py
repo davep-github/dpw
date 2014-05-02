@@ -345,6 +345,9 @@ def main(argv):
     ctracef(1, "A.1: current_tree_root>{}<\n", current_tree_root)
     ctracef(1, "B: input_tree_root>{}<\n", input_tree_root)
 
+    if app_args.name_to_relativize in ("-",):
+        app_args.name_to_relativize = expand_dest_args
+        expand_dest_args = None
     # None vs False allows us to know if the user has set the value one way
     # or the other.
     realpath_p = app_args.realpath_p

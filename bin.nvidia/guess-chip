@@ -26,11 +26,13 @@ unset eexec_program
 
 all_chips="t124
 t132
-t210"
+t210
+gp100
+gp10b"
 
 : ${chip_list=${all_chips}}
 # The following depends on DP_SB_ROOT existing in the right place.
-: ${tree_dot_make=$(dp-sb-root)/hw/Default_ap_tree/tree.make}
+: ${tree_dot_make=$(dp-sb-root)/hw/Default_TOT/tree.make}
 : ${check_debug_p=}
 
 
@@ -49,10 +51,13 @@ debug_chip=
 chip=
 done_p=
 
+EExec_verbose_echo_id tree_dot_make
+
 if [ -e "${tree_dot_make}" ]
 then
     for tmp_chip in ${chip_list}
     do
+      EExec_verbose_echo_id tmp_chip
       true_p "${check_debug_p}" && {
           egrep -q "^[[:space:]]*export[[:space:]]+(NV_)?PROJECTS?.*${tmp_chip}_debug" "${tree_dot_make}" && {
               debug_chip="${tmp_chip}_debug"

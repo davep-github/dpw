@@ -26,14 +26,20 @@ unset eexec_program
 
 sb="${1}"
 shift
-: ${differ:=diff}
-: ${differ_opts=-u}
+: ${xsb_program:=diff}
+: ${xsb_program_opts=-u}
 
-do_diff()
+run_xsb_program()
 {
     local file="${1}"
+    local file_dirname
+    case "${file}" in
+        */*) file_dirname=$(dirname ${file});;
+        *) file="./${file}"; file_dirname=.;;
+    esac
     local here="$(me-expand-dest ${file})"
-    local there="$(me-expand-dest ${file} ${sb})"
+    local there=$(me-expand-dest "${file_dirname}" "${sb}")/$(basename "${file}")
+
     local bail_p=
     {
         vunsetp "${here}" && {
@@ -45,20 +51,20 @@ do_diff()
             bail_p=t
         }
     } 1>&2
-    
-    true_p "${bail_p}" && return 
-    EExec -0 "${differ}" ${differ_opts}  "${here}" "${there}"
+
+    true_p "${bail_p}" && return
+    EExec -0 "${xsb_program}" ${xsb_program_opts}  "${here}" "${there}"
 }
 
 if (($# > 0))
 then
     for file in "$@"
     do
-      do_diff "${file}"
+      run_xsb_program "${file}"
     done
 else
     while read
     do
-      do_diff "${REPLY}"
+      run_xsb_program "${REPLY}"
     done
 fi

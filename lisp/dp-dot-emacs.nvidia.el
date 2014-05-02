@@ -301,10 +301,12 @@ tests.")
 (setq dp-read-only-sandbox-regexp-private "\\(/sb4\\)")
 
 ;;
-;; Don't want to edit these stupid fvcking copies.
+
 (dp-add-force-read-only-regexp
  (dp-concat-regexps-grouped
+  ;; Don't want to edit these stupid fvcking copies.
   '("/plex/"
+    "/fc_nvlink_translator/"            ; Whilst I'm working in fcnvl
     "failed-attempt\\(ed\\)?-0")))
 
 

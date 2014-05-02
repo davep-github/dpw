@@ -119,7 +119,7 @@ def main(argv):
         dp_io.cdebug("line>{}<\n", line)
         cmd_line = cmd + line
         if app_args.show_cmd_p:
-            prompt = app_args.prompt + "[" + cmd_line + "]"
+            prompt = app_args.prompt + ": [{}]".format(cmd_line)
         else:
             prompt = app_args.prompt
         prompt = prompt + ": "

@@ -27,14 +27,18 @@ progname="$(basename $0)"
 : ${trace_arg=}
 : ${pne_opt=}
 : ${normpath_opt=}
+: ${relativize_opt=}
 
+EZEC=
 while (($# > 0))
 do
   case "$1" in
+      -n) EZEC=echo;;
       --ap) shift; replace_default_symlink="${1}";;
       --trr-arg) shift; trr_args="${trr_args} ${1}";;
       --realpath|--rp) realpath="--realpath";;
       --sb|--sandbox) shift; sb_arg="--tree-root ${1}";;
+      --sb-rel|--relativize) relativize_opt='--relativize=-';;
       --trace) shift; trace_arg="--trace ${1}";;
       --pne) pne_opt="--print-non-existent";;
       --npne) pne_opt="--no-print-non-existent";;
@@ -75,11 +79,12 @@ fi
 abbrev_suffixes="${abbrev_suffixes} --abbrev-suffix=__SB_rel"
 
 # The remainder of argv will be extra args to sandbox_relativity
-exp=$(~/lib/pylib/tree_root_relativity.py \
+exp=$($EZEC ~/lib/pylib/tree_root_relativity.py \
         ${pne_opt} \
         ${trr_args} \
         ${trace_arg} \
         ${normpath_opt} \
+        ${relativize_opt} \
         --expand-dest="${dest}" \
         ${abbrev_suffixes} \
         $sb_arg "$@") || exit

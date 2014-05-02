@@ -5,15 +5,6 @@ source eexec
 set -u
 progname="$(basename $0)"
 
-chip_opt=$(guess-chip) || {
-    echo "Cannot guess chip type based on current directory:
-$PWD
-Specify chip with [-c|--chip] <chip>
-"
-    exit 1
-} 1>&2
-echo_id chip_opt
-
 was=$(pwd)
 mecd testgen
 [ "${was}" = "$(pwd)" ] || {
@@ -43,6 +34,7 @@ mecd testgen
 : ${max_file_size_opt=}
 : ${mode=}
 : ${hw_ap_path=$(pwd)/../../}
+: ${debug_chip_opt=}
 
 [ -n "${hw_ap_path}" ] && {
     hw_ap_path=$(normpath -rp "${hw_ap_path}")
@@ -114,6 +106,8 @@ long_options=("wait"
 "mail"
 "mode:"
 "eko"
+"debug-chip"
+"no-debug-chip"
 )
 
 
@@ -174,6 +168,8 @@ do
       --last-and-latest-prefix|--ll-prefix) shift; last_and_latest_prefix="${1}";;
       --max-file-size) shift; max_file_size_opt="${1}";;
       --mode) shift; mode="${1}";;
+      --debug-chip) debug_chip_opt='--debug';;
+      --no-debug-chip) debug_chip_opt='';;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -188,12 +184,27 @@ done
     exit 1
 }
 
+vunsetp "${chip_opt-}" && {
+    chip_opt=$(guess-chip ${debug_chip_opt}) || {
+        echo "Cannot guess chip type based on current directory:
+$PWD
+It can be specified chip with [-c|--chip] <chip>
+"
+    }
+} 1>&2
+echo_id chip_opt
+
+
 case "$chip_opt" in
     t210) level_file=$(pwd)/config/levels/tegra/multiengine/gpu_multiengine_ar2;;
-    *) level_file=$(pwd)/config/levels/tegra/regress_tegra_gpu_multiengine;;
+    t124|t132) level_file=$(pwd)/config/levels/tegra/regress_tegra_gpu_multiengine;;
+    gp100|gp10b) vunsetp "${user_levels-}" && {
+        echo "For $chip_opt you must specify a level with --level=<level>"
+        exit 1
+    } 1>&2 
 esac
 
-: ${default_level=${level_file}}
+: ${default_level=${level_file-}}
 : ${wait_opt=}
 : ${tgen_opts=${user_tgen_opts}}
 : ${clobber_opt=-clobber}

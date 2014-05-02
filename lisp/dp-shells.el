@@ -354,6 +354,7 @@ No regexps allowed. This will be processed by `regexp-opt'")
                                        "nvrun ness"
                                        "xemacs")))
                    '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(cia\\|stash\\|status\\|diff\\|stat\\)")
+                   '("p4\\s-+\\(diff\\)")
                    '("index-code.*")
                    '("\\(.*/\\)\\(t_make\\|build_gpu_multiengine.*\\.pl\\)")
                    dp-shell-vc-commit-cmd-regexps)

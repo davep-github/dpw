@@ -224,6 +224,9 @@ handing to a completing read."
       (dp-goto-marker dp-ecf-whence-marker)
     (dp-find-similar-file (or prompt "Whence-less; file: ") file)))
 
+(defun dp-ecf-set-whence (whence)
+  (setq dp-ecf-whence-marker whence))
+
 (defvar dp-ecf-dummy-history-var nil
   "Needed for `completing-read' and friends.")
 
@@ -265,21 +268,22 @@ Eg, via `hack-local-variables', hook, magic.")
           (progn
             (dp-ecf-return-whence)
             (return-from dp-find-corresponding-file))
-        (setq co-file (completing-read "No corresponding file found. File name: "
-                                       (cdr co-file) ; completion table
-                                       nil ; predicate
-                                       nil ; require match
-                                       (caar co-file) ; Initial contents
-                                       (progn ; history
-                                         (setq dp-ecf-dummy-history-var
-                                               (cdr (append (mapcar 'car co-file)
-                                                            file-name-history)))
-                                         'dp-ecf-dummy-history-var)))))
+        (setq co-file (completing-read 
+                       "No corresponding file found. File name: "
+                       (cdr co-file)    ; completion table
+                       nil              ; predicate
+                       nil              ; require match
+                       (caar co-file)   ; Initial contents
+                       (progn           ; history
+                         (setq dp-ecf-dummy-history-var
+                               (cdr (append (mapcar 'car co-file)
+                                            file-name-history)))
+                         'dp-ecf-dummy-history-var)))))
     (when co-file
       (unless (memq last-command '(ecf ecf2))
         (dp-push-go-back "ecf"))
       (funcall find-file-func co-file)
-      (setq dp-ecf-whence-marker whence)
+      (dp-ecf-set-whence whence)
       (when search-re
         (beginning-of-line)
         (dp-search-re-with-wrap search-re)))))
@@ -296,6 +300,11 @@ Eg, via `hack-local-variables', hook, magic.")
 
 (dp-add-corresponding-file-pair "dpmisc.el" "dpmacs.el")
 
+(defun dp-add-corresponding-file file-name ()
+  "Make a correspondence between this file and another FILE-NAME."
+  (dp-add-corresponding-file-pair (file-name-nondirectory buffer-file-truename)
+                                  file-name))
+
 (defun dp-edit-corresponding-file (&optional find-symbol-p find-file-func)
   "Call `dp-find-corresponding-file' using `find-file' for FIND-FILE-FUNC.
 1 C-u says look for symbol at point in the current file, in the new file.
@@ -311,7 +320,8 @@ Eg, via `hack-local-variables', hook, magic.")
     (when (nCu-p 2 find-symbol-p)
       (setq dp-ecf-whence-marker nil
             find-symbol-p t))
-    (dp-find-corresponding-file nil (or find-file-func 'dp-find-file-this-window)
+    (dp-find-corresponding-file nil 
+                                (or find-file-func 'dp-find-file-this-window)
                                 (when find-symbol-p
                                   (format "\\<\\(%s\\)\\>" 
                                           (symbol-near-point))))))

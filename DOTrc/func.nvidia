@@ -102,4 +102,10 @@ gtglr()
     g $(tgen-latest-run "$@")
 }    
 
+nvgrep()
+{
+    local bin=$(sp -1 nvgrep)
+    cd $(me-expand-dest tot)
+    "${bin}" "$@"
+}
 true

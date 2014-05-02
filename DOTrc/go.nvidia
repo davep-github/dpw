@@ -223,12 +223,21 @@ Ee|fwloader__SB_rel|            ${fwutils__SB_rel}loader/
 Ee|loader__SB_rel|              ${fwloader__SB_rel}
 Ee|drvapi__SB_rel|              ${TOT__SB_rel}drv/multiengine/drvapi/
 Ee|medrvapi__SB_rel|            ${drvapi__SB_rel}
+
 Ee|levelsroot__SB_rel|          ${testgen__SB_rel}config/levels/
 Ee|tegralevels__SB_rel|         ${levelsroot__SB_rel}tegra/
-Ee|levels__SB_rel|              ${levelsroot__SB_rel}tegra/
+Ee|tlevels__SB_rel|             ${tegralevels__SB_rel}
+
+Ee|nvlinklevels__SB_rel|        ${levelsroot__SB_rel}nvlink/
+Ee|nvlevels__SB_rel|            ${nvlinklevels__SB_rel}
+
+# default for duration of this project.
+Ee|levels__SB_rel|              ${nvlinklevels__SB_rel}
+
 Ee|gpumelevels__SB_rel|         ${tegralevels__SB_rel}/multiengine
 Ee|gmelevels__SB_rel|           ${gpumelevels__SB_rel}
 Ee|melevels__SB_rel|            ${gpumelevels__SB_rel}
+
 Ee|kepler1gklit3man__SB_rel|    ${hw__SB_rel}kepler1_gklit3/manuals/
 Ee|keplerman__SB_rel|           ${kepler1gklit3man__SB_rel}
 Ee|gkman__SB_rel|               ${kepler1gklit3man__SB_rel}

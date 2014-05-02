@@ -78,7 +78,7 @@ DestroyModuleConfig DeskerPanelButtons: *
 *DeskerPanelButtons: Frame 1
 *DeskerPanelButtons: Padding 0 0
 ##FAST 1
-*DeskerPanelButtons: (Panel(right, steps 12, delay 0, position module top, indicator10) "FvwmDesker" 'Module FvwmPager FvwmDesker 0 7')
+*DeskerPanelButtons: (Panel(right, steps 12, delay 0, position module top, indicator10) "FvwmDesker" 'Module FvwmPager FvwmDesker 0 8')
 ##SLOW 1
 ##*DeskerPanelButtons: (Panel(right, steps 0, position module top, indicator10) "FvwmDesker" 'Module FvwmPager FvwmDesker 0 3')
 

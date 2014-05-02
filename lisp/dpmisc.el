@@ -13748,6 +13748,7 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
     (message "%d whitespace %s." num (dp-pluralize-num num nil "es" "fix"))))
 
 (defun dp-whitespace-cleanup-buffer (&optional ask-per-line-p)
+  "Clean up whitespace in this buffer from point to EOF."
   (interactive "P")
   (dp-whitespace-cleanup-line-by-line ask-per-line-p t)
   (dp-pop-go-back nil :silent-p t))
@@ -13828,9 +13829,11 @@ values must be passed in as stings."
     (message "%s" num))
   num)
 
-(defun dp-add-force-read-only-regexp (regexp)
+(defun dp-add-force-read-only-regexp (regexp &optional clear-list-p)
   "Add a regexp to the list of regexps which determine if a file is read only."
   (interactive "sRegexp: ")
+  (when clear-list-p
+    (setq dp-implied-read-only-filename-regexp-list nil))
   (add-to-list 'dp-implied-read-only-filename-regexp-list regexp))
 
 (defun dp-delete-force-read-only-regexp (regexp)
