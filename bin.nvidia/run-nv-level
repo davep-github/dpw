@@ -1,0 +1,80 @@
+#!/bin/sh
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${cron_opt}"
+}
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${cron_opt}"
+    trap '' 0
+}
+
+: ${abr_opt=}
+: ${level=nvlink/bringup_new_features_medium}
+: ${only_opt=}
+: ${mail_opt=-mail}             # Default on, can turn off w/opt.
+
+
+while (($#))
+do
+  case "${1}" in
+      --abr) abr_opt="-allButRun";;
+      --level) shift; level="${1}";;
+      --only) shift; only_test="${1}"; only_opt="-only ${only_test}";;
+      --wait) wait_opt="-wait";;
+      --nomail|--no-mail) mail_opt=;;
+      --) shift;;
+      *) break;;
+  esac
+  shift
+done
+
+: ${only_test:=ALL}
+
+: ${out_dir:=$(normpath "dp-run-tgens.d/${level}/${only_test}/$(dp-std-timestamp)")}
+
+EExec tgen.pl \
+    -project gp100 \
+    -level "${level}" \
+    -outDir "${out_dir}"  \
+    -noclobber \
+    -nosandbox \
+    -cacheLevels \
+    -maxFileSize 0 \
+    -queue o_cpu_rel5_4G_8H \
+    -traceroot /home/scratch.traces02 \
+    ${only_opt} \
+    ${abr_opt} \
+    ${mail_opt} \
+    "$@"
