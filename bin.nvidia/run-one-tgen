@@ -198,10 +198,9 @@ echo_id chip_opt
 case "$chip_opt" in
     t210) level_file=$(pwd)/config/levels/tegra/multiengine/gpu_multiengine_ar2;;
     t124|t132) level_file=$(pwd)/config/levels/tegra/regress_tegra_gpu_multiengine;;
-    gp100|gp10b) vunsetp "${user_levels-}" && {
-        echo "For $chip_opt you must specify a level with --level=<level>"
-        exit 1
-    } 1>&2 
+    gp100|gp10b) echo 1>&2 "********* Changing gp10b to gp100!"
+                 chip_opt=gp100; level_file=nvlink/bringup_new_features_medium;;
+    *) echo 1>&2 "Unknown chip_opt>${chip_opt}<... prepare for a wild ride.";;
 esac
 
 : ${default_level=${level_file-}}
@@ -353,7 +352,7 @@ do
     EExec_verbose_echo_id out_dir
     set -- "$@" -outDir "${out_dir}"
 
-    if [ "${last_and_latest_prefix}" = "." ]
+    if [ "${last_and_latest_prefix-}" = "." ]
     then
         ll_prefix="${test_name}."
     else

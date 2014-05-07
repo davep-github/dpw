@@ -80,6 +80,7 @@ def verbose_pop_level():
     return pop_level(verbose_level_stack)
 
 def fmt_args(fmt, *args):
+    #print >>sys.stderr, "fmt>{}<, args>{}<".format(fmt, args)
     if not args:
         return fmt
     ## Try to handle legacy formats.
@@ -209,7 +210,7 @@ def fprintf(ofiles, fmt, *args):
 ###############################################################
 def do_debug(fmt, leader, args, **kw_args):
     if f_debug:
-        fmt = fmt_args(fmt, args)
+        fmt = fmt_args(fmt, *args)
         lprint(v_debug_files, leader+debug_leader_sep, fmt)
 
 def do_ldebug(level, fmt, leader, *args):

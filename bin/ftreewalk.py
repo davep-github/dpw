@@ -79,22 +79,23 @@ DEBUG_SHOW_FILTERED_FILES =             0x08
 DEBUG_SHOW_ALL_EXCLUDES =               0x10
 DEBUG_SHOW_FILE_TYPE_FILTERING =        0x20
 
-# e.g., binary files, libs, etc.
+# e.g., binary files, libs, etc.  HUGE bug fixed. We need to make sure that
+# these things don't match part of the file name.
 DEFAULT_FILE_TYPE_EXCLUSIONS = [
     "ELF.*(relocatable|executable|shared object),",
     #"executable", catches Bourne shell script text executable
-    "x86 boot sector",
-    "gzip",
-    "archive",
-    "JPEG",
-    "RPM",
-    "MS-DOS executable",
-    "Debian binary package",
-    "data",
-    "Berkeley DB",
-    "PDF document",
-    "Netpbm",
-    "pixmap",
+    "^.+: .*x86 boot sector",
+    "^.+: .*gzip",
+    "^.+: .*archive",
+    "^.+: .*JPEG",
+    "^.+: .*RPM",
+    "^.+: .*MS-DOS executable",
+    "^.+: .*Debian binary package",
+    "^.+: data",
+    "^.+: .*Berkeley DB",
+    "^.+: .*PDF document",
+    "^.+: .*Netpbm",
+    "^.+: .*pixmap",
     ]
 
 FOLLOW_SYMLINKS = False
@@ -549,6 +550,7 @@ class FileTreeWalker:
 
             dp_io.ldebug(-1, 'file_cmd_str>%s<\n', file_cmd_str)
             rs = dp_io.bq_lines(file_cmd_str)
+            dp_io.ldebug(-1, 'file command results>%s<\n', rs)
             dp_io.fdebug(DEBUG_SHOW_FILE_TYPE_FILTERING, 'f[%d]', len(rs))
 
             for r in rs:
@@ -561,9 +563,9 @@ class FileTreeWalker:
 
                 dp_io.ldebug(3, 'file_i: %5d, r>%s<\n', file_i, r)
                 accepted = not regexp.search(r)
-                dp_io.ldebug(2, 'filter_global_file_types>%s< %s\n',
+                dp_io.ldebug(2, 'filter_global_file_types>{}< {}\n',
                              files[file_i], accepted)
-                dp_io.ldebug(3, '  file said: %s\n', r)
+                dp_io.ldebug(3, '  file command said: %s\n', r)
                 if accepted:
                     ret.append(files[file_i])
                     dp_io.vcprintf(0, 't')

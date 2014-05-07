@@ -8,3 +8,6 @@
 
 [difftool "ec-diff"]
 	cmd = ec-diff $LOCAL $REMOTE
+
+[difftool "meld"]
+	cmd = meld $LOCAL $REMOTE

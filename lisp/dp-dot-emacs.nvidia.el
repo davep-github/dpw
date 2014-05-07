@@ -178,10 +178,10 @@ tests.")
 (defvar dp-p4-default-depot-completion-prefix "//"
   "Depot root.")
 
-(defun dp-nvidia-make-cscope-database-regexps (&optional
-                                               ignore-env-p
-                                               db-locations
-                                               include-dotdot-p)
+(defun* dp-nvidia-make-cscope-database-regexps (&optional
+                                                ignore-env-p
+                                                db-locations
+                                                (hierarchical-search-p t))
   "Compute value for `cscope-database-regexps'"
   (let* ((locstr (or db-locations
                      (and (not ignore-env-p)
@@ -202,6 +202,8 @@ tests.")
          (delete nil
                  (append
                   (list (dp-me-expand-dest "sb" sb-name))
+                  (when hierarchical-search-p
+                    '((t)))
                   (let ((bubba (mapcar (function
                                         (lambda (loc)
                                           (dmessage "%s." ticker)
@@ -211,21 +213,20 @@ tests.")
                                                   (dmessage "%s+" ticker)))))
                                        locs)))
                     (delete nil (delete '(nil) bubba)))
-                  (when include-dotdot-p
-                    '((t)))
                   ))
        (dmessage "dp-nvidia-make-cscope-database-regexps: done.")))))
 
 (setq dp-make-cscope-database-regexps-fun
       'dp-nvidia-make-cscope-database-regexps)
 
-(defun dp-set-cscope-database-regexps (&optional ignore-env-p 
-                                       db-locations include-dotdot-p)
+(defun* dp-set-cscope-database-regexps (&optional ignore-env-p 
+                                        db-locations 
+                                        (hierarchical-search-p t))
   (interactive)
   (setq cscope-database-regexps
         (funcall dp-make-cscope-database-regexps-fun 
                  ignore-env-p db-locations 
-                 include-dotdot-p)))
+                 hierarchical-search-p)))
   
 ;; Factor into function that takes the expander (e.g. dp-me-expand-dest) as a
 ;; parameter.
@@ -306,7 +307,7 @@ tests.")
  (dp-concat-regexps-grouped
   ;; Don't want to edit these stupid fvcking copies.
   '("/plex/"
-    "/fc_nvlink_translator/"            ; Whilst I'm working in fcnvl
+    ;; "/fc_nvlink_translator/"            ; Whilst I'm working in fcnvl
     "failed-attempt\\(ed\\)?-0")))
 
 

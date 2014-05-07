@@ -405,6 +405,7 @@ the init files.")
                              ))
       (message "added `savehist' vars."))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; auto-mode-alist machinations
 ;;;

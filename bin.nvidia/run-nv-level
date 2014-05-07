@@ -1,5 +1,7 @@
 #!/bin/sh
 
+dolat=("$@")
+
 source script-x
 set -u
 progname="$(basename $0)"
@@ -45,24 +47,68 @@ on_error()
 : ${only_opt=}
 : ${mail_opt=-mail}             # Default on, can turn off w/opt.
 
-
+option_str="${EExec_parse_option_str}o:"
+long_options=(
+"abr"
+"level:"
+"only:"
+"wait"
+"nomail" "no-mail"
+)
+source dp-getopt+.sh
 while (($#))
 do
   case "${1}" in
       --abr) abr_opt="-allButRun";;
       --level) shift; level="${1}";;
-      --only) shift; only_test="${1}"; only_opt="-only ${only_test}";;
+      -o|--only) shift; only_test="${1}"; only_opt="-only ${only_test}";;
       --wait) wait_opt="-wait";;
       --nomail|--no-mail) mail_opt=;;
-      --) shift;;
-      *) break;;
-  esac
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+ esac
   shift
 done
 
 : ${only_test:=ALL}
 
-: ${out_dir:=$(normpath "dp-run-tgens.d/${level}/${only_test}/$(dp-std-timestamp)")}
+: ${out_dir:=$(normpath -r "dp-run-tgens.d/${level}/${only_test}/$(dp-std-timestamp)")}
+
+: ${latest_out_dir_file_name=latest_out_dir}
+: ${last_and_latest_p=t}
+
+: ${last_and_latest_prefix=}
+if [ "${last_and_latest_prefix}" = "." ]
+then
+    ll_prefix="${test_name}."
+else
+    ll_prefix="${last_and_latest_prefix}"
+fi
+
+: ${last_out_dir_file_name=last_out_dir}
+last_out="${ll_prefix}${last_out_dir_file_name}"
+latest_out="${ll_prefix}${latest_out_dir_file_name}"
+command_line_log="${out_dir}.command-line"
+
+if ! EExecDashN_p
+then
+    vsetp "${last_and_latest_p}" && {
+        # Keep a history with latest last.
+        # The script below now tails the last line.
+        echo "$out_dir" >> "${last_out}"
+        echo "#!/bin/sh
+tail -n"'${1-1}'" ${last_out_dir_file_name}" >| "${latest_out}"
+            chmod +x "${latest_out}"
+    }
+    EExec_verbose_echo_id command_line_log
+else
+    echo "Not running: $@"
+fi        
+
+EExec_verbose_echo_id last_out
+EExec_verbose_echo_id latest_out
 
 EExec tgen.pl \
     -project gp100 \
@@ -78,3 +124,9 @@ EExec tgen.pl \
     ${abr_opt} \
     ${mail_opt} \
     "$@"
+
+EExecDashN_p && command_line_log=/proc/self/fd/1
+echo "Script to recreate test:"
+echo "!#/bin/sh
+$0 ${dolat[@]}" > "${command_line_log}"
+[ -f "${command_line_log}" ] && chmod +x "${command_line_log}"

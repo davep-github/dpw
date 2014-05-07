@@ -9014,7 +9014,9 @@ on interactiveness, but due to cases like this, I'm trending away from
 
 (defun dp-try-to-fix-effin-isearch (&optional keep-ext)
   (interactive "P")
-  (call-interactively 'describe-bindings)
+  ;;(call-interactively 'describe-bindings)
+  (setq overriding-local-map nil)
+
 ;   (with-current-buffer (get-buffer "*scratch*")
 ;     (dp-end-of-buffer)
 ;     (ts)
@@ -14463,6 +14465,13 @@ environment variables.
   (interactive)
   (setq save-buffers-skip t))
 (dp-defaliases 'dp-sbs 'dp-save-buffer-skip)
+
+(defun dp-unmodify+ro ()
+  (interactive)
+  (set-buffer-modified-p nil)
+  (toggle-read-only 1))
+
+(dp-defaliases 'unfuck-gz 'dp-unmodify+ro)
 
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;;

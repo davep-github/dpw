@@ -391,8 +391,18 @@ not destined to be saved.  ")
                               nil
                               (dp-get-buffer buf)))
   
+(defvar dp-shells-files-to-not-save 
+  '("\\.gz$"
+    "\\.bz2$"
+    "\\.zip$"
+    "\\.tar")
+"Don't save these. XEmacs stupidly considers expanded files as dirty.")
+  
 (defun dp-shells-save-buffer-p ()
-  dp-shells-save-buffer-flag-p)
+  (and dp-shells-save-buffer-flag-p
+       (not (dp-match-a-regexp (buffer-file-name) 
+                               dp-shells-files-to-not-save))))
+       
 
 (defun dp-shell-lookfor-dirty-buffer-cmds (str)
   (when (dp-shell-dirty-buffer-cmd-p str)
@@ -405,6 +415,8 @@ not destined to be saved.  ")
                                "udstags"
                                "cscope"
                                "index-code"
+                               "index-me-code"
+                               "index-all-me-trees"
                                "extagtree"))
                  '(".*tags.*"))
            nil 'one-around-all-p))

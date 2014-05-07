@@ -1,0 +1,71 @@
+#!/bin/sh
+
+# rcs-stash [--name|--rcs-dir|-d <name-dir>] [--suffix|--rcs-suffix|-s <rcs-suffix> files...
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${cron_opt}"
+}
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${cron_opt}"
+    trap '' 0
+}
+
+: ${rcs_stash_prefix=rcs-stash.}
+: ${rcs_dir=}
+: ${rcs_suffix=,v}
+
+while (($#))
+do
+  case "$1" in
+      -d|--name|--rcs-dir) shift; rcs_dir="${1}";;
+      -s|--suffix|--rcs-suffix) shift; rcs_suffix="${1}";;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
+
+case "$rcs_dir" in
+    /*) ;;
+    "") rcs_dir=.;;
+    *) rcs_dir="${rcs_stash_prefix}${rcs_dir}";;
+esac
+
+rcs_dir=$(normpath "${rcs_dir}/RCS")
+EExec mkdir -p "${rcs_dir}"
+for file in "$@"
+do
+  EExec ci -l $(normpath "${rcs_dir}/${file}${rcs_suffix}")
+done

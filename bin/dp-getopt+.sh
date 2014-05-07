@@ -131,7 +131,7 @@ running_as_script && {
 #e.g.# -O <val>) set Option to <val>
 #e.g.# "
 #e.g.# # Example of arg parsing.
-#e.g.# option_str="${EExec_parse_option_str}"
+#e.g.# option_str=""
 #e.g.# # long_options=("option-name-without-leading--" ...)
 #e.g.# source dp-getopt+.sh
 #e.g.# while (($# > 0))

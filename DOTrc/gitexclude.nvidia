@@ -15,6 +15,15 @@ GTAGS
 GRTAGS
 GPATH
 
+# Other VCSs
+/RCS
+/.hg
+/CVS
+/.svn
+
+# VCS hidey hole:
+/rcs-stash.
+
 # Naming conventions to prevent git's gaze. Can also be used as dirs.
 githide
 *[.,-]githide

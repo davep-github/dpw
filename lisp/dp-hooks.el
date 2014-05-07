@@ -1558,18 +1558,18 @@ This sets the value that will cause cscope to (in the words of cscope):
   "Memoized copy of our value for `cscope-database-regexps.
 Use of 'unset allows the legitimate value of nil to be used.")
 
-(defun dp-cscope-set-cscope-database-regexps (&optional
-                                              non-memoized-p
-                                              ignore-env-p
-                                              db-locations 
-                                              include-dotdot-p)
+(defun* dp-cscope-set-cscope-database-regexps (&optional
+                                               non-memoized-p
+                                               ignore-env-p
+                                               db-locations
+                                               (hierarchical-search-p t))
   (interactive "P")
   (setq cscope-database-regexps
         (if (or (eq dp-cscope-memoized-cscope-database-regexps 'unset)
                 non-memoized-p)
             (funcall dp-make-cscope-database-regexps-fun 
                      ignore-env-p db-locations 
-                     include-dotdot-p)
+                     hierarchical-search-p)
           dp-cscope-memoized-cscope-database-regexps)
         dp-cscope-memoized-cscope-database-regexps cscope-database-regexps))
 
