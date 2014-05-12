@@ -206,3 +206,19 @@
 ------ File: automake.info.gz  Node: Top  Line: 0
 <<am-top>>
 ------
+
+------ File: gdb.info.gz  Node: Top  Line: 0
+<<gdb>>
+------
+
+------ File: gdb.info.gz  Node: Breakpoints  Line: 0
+<<gdbbp>>
+------
+
+------ File: gdb.info.gz  Node: Breakpoints  Line: 0
+<<gdb-bp>>
+------
+
+------ File: gdb.info.gz  Node: Breakpoints  Line: 0
+<<bp>>
+------

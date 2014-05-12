@@ -71,8 +71,14 @@ Ee|ttmp__SB_rel|                ${sbtmp__SB_rel}
 
 # + nvlink fc_nvlink nvlink_translator fc_nvlink_translator/ fmodel fmod
 Ee|nvgpu__SB_rel|               ${hw__SB_rel}nvgpu/
+Ee|nvgpuinf__SB_rel|            ${nvgpu__SB_rel}inf/
+Ee|nvsimroot__SB_rel|           ${nvgpuinf__SB_rel}nvsim/
+Ee|nvsimclib__SB_rel|           ${nvsimroot__SB_rel}2.1/clib/
+Ee|nvsimsrc__SB_rel|            ${nvsimclib__SB_rel}nvsim/
+Ee|nvsim__SB_rel|               ${nvsimsrc__SB_rel}
 Ee|nvgpucommon__SB_rel|         ${nvgpu__SB_rel}common/
 Ee|fcnvlcommon__SB_rel|         ${nvgpucommon__SB_rel}
+Ee|fcnvltlcommon__SB_rel|       ${nvgpucommon__SB_rel}
 Ee|nvlcommon__SB_rel|           ${nvgpucommon__SB_rel}
 Ee|nvgpuetc__SB_rel|            ${nvgpu__SB_rel}etc/
 Ee|standsim__SB_rel|            ${nvgpu__SB_rel}stand_sim/
@@ -83,6 +89,9 @@ Ee|nvgpuinc__SB_rel|            ${nvgpuinclude__SB_rel}
 Ee|nvgpuclib__SB_rel|           ${nvgpu__SB_rel}clib/
 Ee|nvgpudefs__SB_rel|           ${nvgpu__SB_rel}defs/
 Ee|nvtldefs__SB_rel|            ${nvgpu__SB_rel}defs/
+Ee|nvltldefs__SB_rel|           ${nvgpu__SB_rel}defs/
+Ee|fcnvtldefs__SB_rel|          ${nvgpu__SB_rel}defs/
+Ee|fcnvltldefs__SB_rel|         ${nvgpu__SB_rel}defs/
 Ee|memdefs__SB_rel|             ${nvgpudefs__SB_rel}/memory/
 Ee|fmodel__SB_rel|fmod__SB_rel| ${nvgpu__SB_rel}fmod/
 
@@ -104,6 +113,7 @@ Ee|fcnvlx__SB_rel|              ${fcnvlinktranslator__SB_rel}
 Ee|fcnvlink__SB_rel|            ${fcnvlinktranslator__SB_rel}
 Ee|fcnvtl__SB_rel|              ${fcnvlinktranslator__SB_rel}
 Ee|fcnvl__SB_rel|               ${fcnvlinktranslator__SB_rel}
+Ee|fcnvltl__SB_rel|             ${fcnvlinktranslator__SB_rel}
 Ee|nvtlfc__SB_rel|              ${fcnvlinktranslator__SB_rel}
 Ee|nvlfc__SB_rel|               ${fcnvlinktranslator__SB_rel}
 Ee|nvtl2__SB_rel|               ${fcnvlinktranslator__SB_rel}
@@ -387,6 +397,7 @@ Ee|swrwavefull|swrfullwave|swrfw|swrwf|swrlong|swrwave| ${sandbox4}
 Ee|sandbox5|sbox5|sb5|workspace5|ws5| ${scratch2}sb5/sb5hw/
 
 Ee|sandbox7|sbox7|sb7|workspace7|ws7| ${scratch4}sb7/sb7hw/
+Ee|sandbox9|sbox9|sb9|workspace9|ws9| ${scratch4}sb9/sb9hw/
 
 Ee|sandbox8|sbox8|sb8|workspace8|ws8| ${scratch3}sb8/sb8hw/
 

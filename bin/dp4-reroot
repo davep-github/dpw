@@ -10,6 +10,7 @@ verify_verbose_p=
 verify_p=
 filter_regexp=".*"
 expand_sb_p=
+do_p4_opened_p=
 
 [ "${1-}" = "-v" ] && {
     verify_sandbox_p=t
@@ -40,6 +41,7 @@ long_options=(
     "nv"
     "NV"
     "expand-sb"
+    "opened"
 )
 source dp-getopt+.sh
 for i in "$@"
@@ -61,6 +63,7 @@ do
       --NV) filter_regexp="^/home/scratch\."; verify_p=t; verify_sandbox_p=t;;
       -a|--expand-sb) expand_sb_p=t;;
       -w|--workspace) shift; workspace=:"${1}";;
+      --opened) do_p4_opened_p=t;;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -130,14 +133,21 @@ reroot_one()
     echo "$newp"
 }
 
-rc=0
-
-if [ -z "$*" ]
-then
+reroot_stdin()
+{
     while read
     do
       reroot_one "${REPLY}"
     done
+}
+rc=0
+
+if true_p "${do_p4_opened_p}"
+then
+    p4 opened | reroot_stdin
+elif [ -z "$*" ]
+then
+    reroot_stdin
 else
     for p in "$@"
     do

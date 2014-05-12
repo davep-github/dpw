@@ -902,7 +902,7 @@ Or both.")
 
 ;; Using comint version.
 ;; (defun dp-shell-filter-proc (proc string)
-;;     (dp-limiting-process-filter proc string dp-original-shell-filter-function
+;;     (dp-file-size-limiting-process-filter proc string dp-original-shell-filter-function
 ;;                                 ;; Some average ? line length to convert to
 ;;                                 ;; characters.
 ;;                                 (and dp-shell-output-max-lines
@@ -911,7 +911,7 @@ Or both.")
 (defun dp-set-shell-max-lines (max-lines)
   "Set max lines per shell command output and return it."
   (interactive 
-   "sMaximum number of output lines per shell command (nil or < 0 --> unlimited; 0 --> default; 'fh --> current frame height)? ")
+   "sMaximum number of output lines per shell (nil or < 0 --> unlimited; 0 --> default; 'fh --> current frame height)? ")
   (when (stringp max-lines)
     (setq max-lines (eval (read max-lines))))
   (setq dp-shell-output-max-lines
@@ -926,9 +926,11 @@ Or both.")
                    (< dp-shell-output-max-lines 0))
                " (unlimited)"
              ""))
-  dp-shell-output-max-lines)
+  (setq comint-buffer-maximum-size
+        dp-shell-output-max-lines))
 
-(defalias 'sml 'dp-set-shell-max-lines)
+(dp-defaliases 'sml 'ssml 'dp-shell-set-max-lines 'dp-shells-set-max-lines 
+               'dp-set-shell-max-lines)
 
 (defun* dp-maybe-add-ansi-color (&optional force-it-p (filter-it-p t))
   (interactive)
@@ -973,7 +975,9 @@ Or both.")
     do (add-hook (dp-sls variant '-output-filter-functions)
                  hook nil t))
 
-    (setq comint-buffer-maximum-size (* 4 1024)))
+    (setq comint-buffer-maximum-size 
+          (* 4 1024)
+          ))
   
   ;; something wipes this out after the call to comint-mode-hook and here,
   ;; so we do it again.
@@ -1725,7 +1729,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
                                 (list comint-input-ring-file-name)))
   (dmessage "dp-maybe-read-input-ring, history-file>%s<" history-file)
   (unless dp-input-ring-has-been-read-p
-    (dmessage "input ring unread as of yet.")
+    (dmessage "input ring>%s< unread as of yet." history-file)
     (if (not history-file)
         (progn
           (ding)
@@ -2527,8 +2531,10 @@ it for something \"speshul\".
             (message "Using fav buf: %s" fav-buf0))
           (dmessage "point: %s, window-point: %s" (point) (window-point)))
       ;; "else"
-      ;;;;;;;;;;;;;;;;;;;;; EA! ;;;;;;;;;;;;;;;;;;;;;
+      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; EA! ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
       ;; Handle new shell case. We may have a name already.
+      ;; These go into the editor's environment which will then be inherited
+      ;; by the new shell.
       (setenv "PS1_prefix" nil 'UNSET)
       (setenv "PS1_host_suffix"
               (format "%s" (dp-shells-guess-suffix sh-name "")))
@@ -2800,7 +2806,7 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 (dp-deflocal dp-gdb-buffer-max-size (* 45 3000)
   "How big can the gdb buffer get?")
 
-;; (defun dp-limiting-process-filter (proc string original-filter
+;; (defun dp-file-size-limiting-process-filter (proc string original-filter
 ;;                                    max-size &optional max-percentage)
 ;;   "A process filter which limits the size of the process output buffer.
 ;; PROC is the process, STRING is the string to filter, ORIGINAL-FILTER is the
@@ -2817,8 +2823,8 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 ;;         (with-current-buffer (process-buffer proc)
 ;;           (dp-restrict-buffer-growth max-size max-percentage))))))
 
-(defun dp-limiting-process-filter (proc string original-filter
-                                   max-size &optional max-percentage)
+(defun dp-file-size-limiting-process-filter (proc string original-filter
+                                             max-size &optional max-percentage)
   "A process filter which limits the size of the process output buffer.
 PROC is the process, STRING is the string to filter, ORIGINAL-FILTER is the
 filter that would normally be called, MAX-SIZE is the maximum size in chars
@@ -2835,7 +2841,7 @@ MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
 
 (defun dp-gdb-filter (proc string)
   (gdb-filter proc string))
-;;  (dp-limiting-process-filter proc string 'gdb-filter
+;;  (dp-file-size-limiting-process-filter proc string 'gdb-filter
 ;;                              dp-gdb-buffer-max-size))
 
 (defvar dp-tacked-gdb-uniquifier 0
@@ -3009,7 +3015,7 @@ ARG == 0    --> New `dp-gdb-naught' session."
 ;;     (gdb file pid)))
 
 (defun dp-shells-clear-n-setenv (var val)
-  "Clear, then set if non-nil VAL."
+  "Clear, then set if VAL is non-nil."
   (when val
     (dp-shells-setenv var val))
   ;; This environment isn't passed to ssh shell clients.

@@ -29,7 +29,7 @@ esac
 
 
 [ -z "$*" ] && {
-    echo 1>&2 "Usage: git-cat commit file+"
+    echo 1>&2 "Usage: git-cat [commit|-n[0-9]+|-[0-9]+|--oldest|--original|--earliest] file+"
     exit 1
 }
 for f in "$@"

@@ -4151,18 +4151,36 @@ Set by motion commands from which one may wish to return from whence they came."
 ;;;(make-variable-buffer-local 'dp-go-back-stack)
 
 ;; something like this: "^[ 	]*\\*"
-(defvar dp-system-buffer-regexp "^[ 	]*\\*")
-(defvar dp-go-back-inhibit-regexp dp-system-buffer-regexp
-  "*Do not push go-backs into these buffers.")
+(defvar dp-system-hidden-buffer-regexp "^[ 	]+\\*")
+(defvar dp-system-buffer-regexp "^\\*")
 
-(defvar dp-go-back-allow-regexp 
-  (concat (regexp-opt '("Man:" "GTAGS SELECT"))
-          "\\|"
-          ;; <asterisk>name<asterisk>
-          "\\(\\*\\("
-          (regexp-opt '("scratch" "shell" "Python" "Hyper Apropos" "cscope" 
-                        "gdb"))
-          ".*\\)\\*\\)")
+(defvar dp-go-back-inhibit-regexp 
+  (dp-concat-regexps-grouped 
+   (list dp-system-hidden-buffer-regexp
+         "\\*p4 output"
+         "\\*shell command output"
+         "\\*journal-topics\\*"
+         "\\*vc\\*"
+         "\\*hyper \\(apropos\\|help\\)\\*"
+         "\\*buffer list\\*"
+         "\\*cscope-info\\*$"
+         "\\*macro expansion\\*"
+         "\\*.*grep"
+         "\\*scratch\\*"
+         "\\*help: "))
+  "*Don't add push back markers in these buffers unless otherwise directed.")
+
+(defvar dp-go-back-allow-regexp
+  nil
+;; I'd rather leave a go-back into an undesirable file than lose my place in
+;; an important one. So I'll use explicit disables rather than enables.
+;;   (concat (regexp-opt '("Man:" "GTAGS SELECT"))
+;;           "\\|"
+;;           ;; <asterisk>name<asterisk>
+;;           "\\(\\*\\("
+;;           (regexp-opt '("scratch" "shell" "Python" "Hyper Apropos" "cscope" 
+;;                         "gdb"))
+;;           ".*\\)\\*\\)")
   "*DO push go-backs into these buffers.")
 
 (defvar dp-go-back-min-distance 120
@@ -14160,7 +14178,7 @@ anything --> |b|
   (interactive)
   (delete-other-windows)
   (split-window-vertically))
-(dp-defaliases '_- '-_ 'ddv 'dwv '1/1 '1=1'dp-duplicate-window-vertically)
+(dp-defaliases '== '_- '-_ 'ddv 'dwv '1/1 '1=1'dp-duplicate-window-vertically)
 
 
 (defsubst dp-mk-buffer-position (pos &optional mk-marker-p)
@@ -14467,6 +14485,10 @@ environment variables.
 (dp-defaliases 'dp-sbs 'dp-save-buffer-skip)
 
 (defun dp-unmodify+ro ()
+  "Set buffer as unmodified and make read only.
+One use is to stop `save-some-buffers' from asking to save *&^#$)(*)-ing
+compressed files which emacs marks as modified when it reads and decompresses
+them. Q.v. `unfuck-gz'"
   (interactive)
   (set-buffer-modified-p nil)
   (toggle-read-only 1))

@@ -131,11 +131,19 @@ case $shell_name in
         maybe_shopt gnu_errfmt -s gnu_errfmt
         # Force case matching ON.
         maybe_shopt nocasematch -u nocasematch
+        export GDBHISTFILE="$HOME/.gdb_history.$HOST"
 	export HISTSIZE=5000
 	export HISTFILESIZE=10000
         export HISTTIMEFORMAT="%FT%T "
         export HISTFILE="$HOME/.bash_history.$HOST"
-        export GDBHISTFILE="$HOME/.gdb_history.$HOST"
+        #################################
+        # This doesn't work because we load in the base HISTFILE for the
+        # HOST, so up arrow, etc, work; but h, hgrep, etc use the new hist
+        # file name.
+        #[ -n "${dp_emacs_shell_num}" ] && {
+        #    HISTFILE="${HISTFILE}.emacs_shell.${dp_emacs_shell_num}"
+        #}
+        #################################
 esac
 
 # Setup vars pointing to the host at which we are typing.

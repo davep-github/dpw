@@ -88,9 +88,11 @@ cdtglr()
     local d=$(tgen-latest-run "$@")
     vsetp "${d}" &&
     {
+        echo "${d}"
         if vsetp "${show_p}"
         then
-            echo "${d}"
+            # echo "${d}"
+            :
         else
             cd "${d}"
         fi

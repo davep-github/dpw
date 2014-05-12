@@ -146,10 +146,10 @@ AmaroK
 online
 globals
 automagic
+Raghu
 VxWorks
 FL
 Solaris
-Raghu
 XBOX
 standsim
 stderr
@@ -168,7 +168,6 @@ http
 Ungol
 Sennheiser
 functors
-Functors
 functor
 linsim
 MMU
@@ -193,6 +192,7 @@ iterable
 gauge
 nuked
 Tk
+sysmem
 Sysmem
 VM
 RTOS

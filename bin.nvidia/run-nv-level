@@ -1,6 +1,11 @@
 #!/bin/sh
 
-dolat=("$@")
+if vsetp "$*"
+then
+    dolat=("$@")
+else
+    dolat=("--")
+fi
 
 source script-x
 set -u
@@ -90,7 +95,8 @@ fi
 : ${last_out_dir_file_name=last_out_dir}
 last_out="${ll_prefix}${last_out_dir_file_name}"
 latest_out="${ll_prefix}${latest_out_dir_file_name}"
-command_line_log="${out_dir}.command-line"
+command_line_log_file="${progname}.command-line-log"
+command_line_script_file="${out_dir}.command-line"
 
 if ! EExecDashN_p
 then
@@ -102,7 +108,7 @@ then
 tail -n"'${1-1}'" ${last_out_dir_file_name}" >| "${latest_out}"
             chmod +x "${latest_out}"
     }
-    EExec_verbose_echo_id command_line_log
+    EExec_verbose_echo_id command_line_script_file
 else
     echo "Not running: $@"
 fi        
@@ -125,8 +131,28 @@ EExec tgen.pl \
     ${mail_opt} \
     "$@"
 
-EExecDashN_p && command_line_log=/proc/self/fd/1
-echo "Script to recreate test:"
-echo "!#/bin/sh
-$0 ${dolat[@]}" > "${command_line_log}"
-[ -f "${command_line_log}" ] && chmod +x "${command_line_log}"
+command_line="$0 ${dolat[@]}"
+command_script="!#/bin/sh
+pushd ${PWD}
+${command_line}"
+
+EExecDashN_p && {
+    command_line_script_file="/proc/self/fd/1"
+    command_line_log_file="/dev/null"
+}
+
+echo "${command_script}" > "${command_line_script_file}"
+[ -f "${command_line_script_file}" ] && chmod +x "${command_line_script_file}"
+
+if EExecDashN_p
+then
+    echo 1>&2 "Removing outDir>${out_dir}<"
+    rm -rf "${out_dir}"
+else
+    echo "out_dir: ${out_dir}"
+fi
+
+EExec_verbose_echo_id command_line_log_file
+echo "=======  On $(dp-std-timestamp), ${USER} ran: =======
+outDir>${out_dir}<
+${command_line}" | tee -a "${command_line_log_file}"

@@ -171,7 +171,7 @@ Add each bookmark-name to the list of bookmarks."
                              :quiet-p (not verbose-p)
                              :bm-marker (dp-mk-marker (match-beginning 0))))))))
 
-(defun* dp-bm-list-sans-embedded (&optional (bm-list dp-bm-list))
+(defun* dp-bm-list-filter-embedded (&optional (bm-list dp-bm-list))
   (delq nil (mapcar (function 
                      (lambda (bm)
                        (if (dp-bm-embedded-p bm)
@@ -195,7 +195,6 @@ Add each bookmark-name to the list of bookmarks."
                                        from-point-p
                                        (quote nil)
                                        (bm-list dp-bm-list))
-  (setq dp-bm-list (dp-bm-list-sans-embedded bm-list))
   (dp-mk-bm-completion-list 
    :ignore-embedded-bookmarks-p ignore-embedded-bookmarks-p 
    :from-point-p from-point-p

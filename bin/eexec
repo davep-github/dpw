@@ -223,6 +223,11 @@ EExec_verbose_msg()
     EExecEchoPrefix=$old
 }
 
+EExec_verbose_echo()
+{
+    EExec_verbose_msg "$@"
+}
+
 EExec_verbose_echo_id()
 {
     local prefix=

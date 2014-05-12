@@ -22,7 +22,7 @@ GPATH
 /.svn
 
 # VCS hidey hole:
-/rcs-stash.
+/rcs-stash.*
 
 # Naming conventions to prevent git's gaze. Can also be used as dirs.
 githide

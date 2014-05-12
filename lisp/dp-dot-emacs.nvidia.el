@@ -204,15 +204,18 @@ tests.")
                   (list (dp-me-expand-dest "sb" sb-name))
                   (when hierarchical-search-p
                     '((t)))
-                  (let ((bubba (mapcar (function
-                                        (lambda (loc)
-                                          (dmessage "%s." ticker)
-                                          (prog1
-                                              (list (dp-me-expand-dest loc sb-name))
-                                            (setq ticker
-                                                  (dmessage "%s+" ticker)))))
-                                       locs)))
-                    (delete nil (delete '(nil) bubba)))
+                  (when sb-name
+                    (let ((bubba (mapcar (function
+                                          (lambda (loc)
+                                            (dmessage "%s." ticker)
+                                            (prog1
+                                                (list (dp-me-expand-dest 
+                                                       loc sb-name))
+                                              (setq ticker
+                                                    (dmessage "%s+" 
+                                                              ticker)))))
+                                         locs)))
+                      (delete nil (delete '(nil) bubba))))
                   ))
        (dmessage "dp-nvidia-make-cscope-database-regexps: done.")))))
 
@@ -307,8 +310,7 @@ tests.")
  (dp-concat-regexps-grouped
   ;; Don't want to edit these stupid fvcking copies.
   '("/plex/"
-    ;; "/fc_nvlink_translator/"            ; Whilst I'm working in fcnvl
+;;    "/fc_nvlink_translator/"            ; Whilst I'm working in fcnvl
     "failed-attempt\\(ed\\)?-0")))
-
 
 (provide 'dp-dot-emacs.nvidia.el)

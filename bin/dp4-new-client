@@ -60,7 +60,17 @@ Usage_args_info=" <sandbox a.k.a client-name>"
 EExecVerbose
 std_options=""
 option_str="aw:sr:.t:TyN:"
-long_options=("port:" "diff:")
+long_options=("port:" "diff:"
+"template:"
+"no-template"
+"force"
+"sync"
+"revision:" "rev:"
+"work-dir:"
+"sandbox-name:" "name:"
+"dot-is-name" "name-is-dot"
+"ask"
+)
 
 DPGOP_args_required=t
 source dp-getopt+.sh || exit 1
@@ -69,15 +79,15 @@ for i in "$@"
 do
   # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
   case $1 in
-      -a) EExecAsk=t;;
-      -w) work_dir=$2; shift;;
-      -s) sync_p=t;;
-      -r) revision="$2"; shift;;
-      -.) sandbox_name=$(basename $PWD);;
-      -t) shift; client_template="$1";;
-      -T) client_template=;;
-      -y) do_it_anyway_p=-y;;
-      -N) shift; sandbox_name="sb${1}hw";;
+      -a|--ask) EExecAsk=t;;
+      -w|--work-dir) work_dir=$2; shift;;
+      -s|--sync) sync_p=t;;
+      -r|--revision|--rev) revision="$2"; shift;;
+      -.|--dot-is-name|--name-is-dot) sandbox_name=$(basename $PWD);;
+      -t|--template) shift; client_template="$1";;
+      -T|--no-template) client_template=;;
+      -y|--force) do_it_anyway_p=-y;;
+      -N|--name) shift; sandbox_name="sb${1}hw";;
       --port) shift; P4PORT="${1}";;
       --diff) shift; P4DIFF="${1}";;
       # Help!

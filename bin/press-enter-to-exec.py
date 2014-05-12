@@ -116,44 +116,56 @@ def main(argv):
     kb = open("/dev/tty", 'r')
     header = app_args.header
     for line in lines:
-        dp_io.cdebug("line>{}<\n", line)
-        cmd_line = cmd + line
-        if app_args.show_cmd_p:
-            prompt = app_args.prompt + ": [{}]".format(cmd_line)
-        else:
-            prompt = app_args.prompt
-        prompt = prompt + ": "
-        if app_args.header_full_p:
-            header = len(prompt) * "="
-        if header:
-            dp_io.printf("{}\n", header)
-        if app_args.print_prompt_p:
-            dp_io.printf("{}", prompt)
-        if app_args.auto_yes_p:
-            if not app_args.bare_p:
-                dp_io.printf("\n")
-            input_line = "\n"
-        else:
-            input_line = kb.readline()
-        if not input_line:              # ^D
-            break
-        else:
-            input_line = input_line[:-1]
-            if input_line in ("q", "quit", "x", "exit", "bye"):
-                dp_io.printf('"{}" --> Quitting.\n', input_line)
-                break
-            elif input_line in ("n", "next", "skip", "s",
-                              "iter", "iterate"):
-                dp_io.printf('"{}" --> Skipping.\n', input_line)
-                continue
-            elif input_line in ("", "y", "yes", "exec", "run"):
-                pass
+        cont = True
+        while cont:
+            cont = False
+            dp_io.cdebug("line>{}<\n", line)
+            cmd_line = cmd + line
+            if app_args.show_cmd_p:
+                prompt = app_args.prompt + ": [{}]".format(cmd_line)
             else:
-                dp_io.eprintf("Unrecognized response>{}<\n", input_line)
-                sys.exit(1)
-        dp_io.cdebug(1, "cmd_line>{}<\n", cmd_line)
-        os.system(cmd_line)
-        dp_io.cdebug("input_line>{}<\n", input_line)
+                prompt = app_args.prompt
+            prompt = prompt + ": "
+            if app_args.header_full_p:
+                header = len(prompt) * "="
+            if header:
+                dp_io.printf("{}\n", header)
+            if app_args.print_prompt_p:
+                dp_io.printf("{}", prompt)
+            if app_args.auto_yes_p:
+                if not app_args.bare_p:
+                    dp_io.printf("\n")
+                input_line = "\n"
+            else:
+                input_line = kb.readline()
+                if not input_line:              # ^D
+                    break
+                quit_keywords = ("Quit", ("q", "quit", "x", "exit", "bye"))
+                skip_keywords = ("Skip current item",
+                                 ("n", "next", "skip", "s", "iter", "iterate"))
+                exec_keywords = ("Exec", ("<enter>", "y", "yes", "exec", "run"))
+                input_line = input_line[:-1]
+                if input_line in ("h", "help", "?", "wtf"):
+                    if input_line in ("h", "help", "?", "wtf"):
+                        for blurb, kwl in (skip_keywords, quit_keywords,
+                                           exec_keywords):
+                            dp_io.printf("{}: {}\n", blurb, ", ".join(kwl))
+                        cont = True
+                        continue
+                elif input_line in quit_keywords[1]:
+                    dp_io.printf('"{}" --> Quitting.\n', input_line)
+                    break
+                elif input_line in skip_keywords[1]:
+                    dp_io.printf('"{}" --> Skipping.\n', input_line)
+                    continue
+                elif input_line in ("", ) + exec_keywords[1]:
+                    pass
+                else:
+                    dp_io.eprintf("Unrecognized response>{}<\n", input_line)
+                    sys.exit(1)
+            dp_io.cdebug(1, "cmd_line>{}<\n", cmd_line)
+            os.system(cmd_line)
+            dp_io.cdebug("input_line>{}<\n", input_line)
 
 if __name__ == "__main__":
     main(sys.argv)
