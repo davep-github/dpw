@@ -10648,9 +10648,9 @@ BROKEN"
   ;; Redefine (meta -) to not really kill the buffer.
   (dp-define-buffer-local-keys '([(meta ?-)] dp-bury-or-kill-buffer) buffer))
 
-(dp-deflocal dp-use-whence-buffers-p nil
-  "KEEP NIL... system is b0rked.
-Should certain commands remember an return to the buffers they were in
+(dp-deflocal dp-use-whence-buffers-p t
+  "[?KEEP NIL... system is b0rked.?]
+Should certain commands remember and return to the buffers they were in
 when the command was issued?")
 
 (defun dp-visit-whence (whence-buf &optional arg)

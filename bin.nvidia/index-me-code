@@ -382,7 +382,11 @@ ${depot_dirs_of_interest}
 //hw/tools/shimlib/
 //hw/kepler1_gklit3/clib/
 //hw/kepler1_gklit3/diag/
-//dev/cpu/tools/sim/asim/1.0/"
+//dev/cpu/tools/sim/asim/1.0/
+//hw/nvgpu/inf/nvsim/2.1/clib/csl/
+//hw/nvgpu/inf/nvsim/2.1/clib/include/
+//hw/nvgpu/inf/nvsim/2.1/clib/nvsim/
+//hw/nvgpu/inf/nvsim/2.1/clib/run_nvsim/"
 fi
 
 if true_p "${sw_dirs_p}"

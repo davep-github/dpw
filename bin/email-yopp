@@ -34,7 +34,7 @@ elif true_p "${run_cmd_p}"
 then
     # the message is really a command to run and wait for completion thereof.
     EExec --keep-going "$@"
-    type="CMD[$?]: "
+    type="CMD[RC: $?]: "
 else
     type="MSG: "
 fi

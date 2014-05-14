@@ -22,6 +22,8 @@ unset eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
 
+: ${diff_tool=}
+
 # Useful traps
 on_exit()
 {
@@ -43,7 +45,12 @@ git_hist_diff_file()
 {
     local commit="$1"
     local file="$2"
-    EExec git diff $REPLY -- "$file"
+    if vsetp "${diff_tool}"
+    then
+        EExec git difftool --tool="${difftool}" $REPLY -- "$file"
+    else
+        EExec git diff $REPLY -- "$file"
+    fi
 }
 
 [ $# = 0 ] && {

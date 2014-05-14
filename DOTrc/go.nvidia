@@ -397,7 +397,7 @@ Ee|swrwavefull|swrfullwave|swrfw|swrwf|swrlong|swrwave| ${sandbox4}
 Ee|sandbox5|sbox5|sb5|workspace5|ws5| ${scratch2}sb5/sb5hw/
 
 Ee|sandbox7|sbox7|sb7|workspace7|ws7| ${scratch4}sb7/sb7hw/
-Ee|sandbox9|sbox9|sb9|workspace9|ws9| ${scratch4}sb9/sb9hw/
+Ee|sandbox9|sbox9|sb9|workspace9|ws9| ${scratch4}sb9/
 
 Ee|sandbox8|sbox8|sb8|workspace8|ws8| ${scratch3}sb8/sb8hw/
 

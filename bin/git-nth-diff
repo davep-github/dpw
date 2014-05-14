@@ -10,6 +10,8 @@ set -u
 } 1>&2
 
 : ${base_rev=HEAD}
+: ${diff_tool=}
+
 export base_rev
 
 nth=${1-}
@@ -30,5 +32,10 @@ do
       continue
   fi 1>&2
 
-  git diff "$rev" "$file"
+  if vsetp "${diff_tool}"
+  then
+      git difftool --tool="${difftool}" "$rev" "$file"
+  else
+      git diff "$rev" "$file"
+  fi
 done

@@ -115,10 +115,11 @@ def main(argv):
 
     kb = open("/dev/tty", 'r')
     header = app_args.header
+    quit_p = False
     for line in lines:
-        cont = True
-        while cont:
-            cont = False
+        cont_p = True
+        while cont_p:
+            cont_p = False
             dp_io.cdebug("line>{}<\n", line)
             cmd_line = cmd + line
             if app_args.show_cmd_p:
@@ -139,21 +140,25 @@ def main(argv):
             else:
                 input_line = kb.readline()
                 if not input_line:              # ^D
+                    quit_p = True
+                    dp_io.printf("\n")
                     break
-                quit_keywords = ("Quit", ("q", "quit", "x", "exit", "bye"))
-                skip_keywords = ("Skip current item",
+                quit_keywords = ("Quit", ("^d", "q", "quit", "x", "exit", "bye"))
+                skip_keywords = ("Skip",
                                  ("n", "next", "skip", "s", "iter", "iterate"))
                 exec_keywords = ("Exec", ("<enter>", "y", "yes", "exec", "run"))
                 input_line = input_line[:-1]
                 if input_line in ("h", "help", "?", "wtf"):
                     if input_line in ("h", "help", "?", "wtf"):
-                        for blurb, kwl in (skip_keywords, quit_keywords,
+                        for blurb, kwl in (skip_keywords,
+                                           quit_keywords,
                                            exec_keywords):
                             dp_io.printf("{}: {}\n", blurb, ", ".join(kwl))
-                        cont = True
+                        cont_p = True
                         continue
                 elif input_line in quit_keywords[1]:
                     dp_io.printf('"{}" --> Quitting.\n', input_line)
+                    quit_p = True
                     break
                 elif input_line in skip_keywords[1]:
                     dp_io.printf('"{}" --> Skipping.\n', input_line)
@@ -166,7 +171,9 @@ def main(argv):
             dp_io.cdebug(1, "cmd_line>{}<\n", cmd_line)
             os.system(cmd_line)
             dp_io.cdebug("input_line>{}<\n", input_line)
-
+        if quit_p:
+            break
+        
 if __name__ == "__main__":
     main(sys.argv)
 

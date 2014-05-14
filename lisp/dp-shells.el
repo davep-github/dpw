@@ -3445,14 +3445,17 @@ reasonable: numbers, strings, symbols.
   (funcall (if other-window-p
                'switch-to-buffer-other-window
              'switch-to-buffer)
-           (dp-next-shell-buffer)))
+           (dp-next-shell-buffer))
+  (dp-shells-set-most-recent-shell (current-buffer) 'shell))
 
 (defun dp-shell-switch-to-prev-buffer (&optional other-window-p buffer)
   (interactive "P")
   (funcall (if other-window-p
                'switch-to-buffer-other-window
              'switch-to-buffer)
-           (dp-prev-shell-buffer)))
+           (dp-prev-shell-buffer))
+  (dp-shells-set-most-recent-shell (current-buffer) 'shell))
+
 
 ;;WTF?! (defun dp-shell-switch-to-prev-buffer (&optional buffer)
 ;;WTF?!   (interactive)

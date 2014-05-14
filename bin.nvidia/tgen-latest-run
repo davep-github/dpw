@@ -30,7 +30,7 @@ option_str="${EExec_parse_option_str}rbg:"
 long_options=("test-name:" "testname:" "name:" "tn:"
 "no-cd" "stay-put" "." "no-mecd-testgen"
 "realpath"
-"base-dir" "root-dir" "base" "root"
+"base-dir" "root-dir" "base" "root" "test-dir"
 "test-type:" "type:" "out:"
 "sb:" "sandbox:" "tree:"
 "test-dir-glob:"
@@ -49,7 +49,7 @@ do
       # Program options.
       --test-name|--testname|--name|--tn) shift; test_name="${1}";;
       --no-cd|--stay-put|--.|--no-mecd-testgen) no_cd=t;;
-      -b|--base-dir|--root-dir|--base|--root) print_base_dir_p=t;;
+      -b|--base-dir|--root-dir|--base|--root|--test-dir) print_base_dir_p=t;;
       -r|--realpath) printor=realpath;;
       --sb|--sandbox|--tree) shift; mecd_to="${1}";;
       --test-type|--type|--out) shift; some_path_component="${1}";;
@@ -98,6 +98,12 @@ else
         done)
 fi
 
+if vsetp "${print_base_dir_p}"
+then
+    "${printor}" "${latest_out_dir}"
+    exit 0
+fi
+
 #some_path_component=$(echo $(cat last_out_dir)/tests/*)
 vunsetp "${some_path_component-}" && {
     some_path_component=$(find ${latest_out_dir}/tests -type d)
@@ -143,11 +149,8 @@ some_path_component=$(basename $some_path_component)
 
 EExec_verbose_echo_id latest_out_dir some_path_component first_dir_num second_dir_num
 
-if vsetp "${print_base_dir_p}"
-then
-    "${printor}" "${latest_out_dir}"
-else
-    vunsetp "${dest}" && dest="${latest_out_dir}/tests/${some_path_component}/00/00/${first_dir_num}/${second_dir_num}"
-    "${printor}" "${dest}"
-    [ -d "${dest}" ] # Print the value, but set status based on its actual existence.
-fi
+vunsetp "${dest}" && dest="${latest_out_dir}/tests/${some_path_component}/00/00/${first_dir_num}/${second_dir_num}"
+"${printor}" "${dest}"
+ # Always print the value, but set status based on its actual existence.
+[ -d "${dest}" ]
+

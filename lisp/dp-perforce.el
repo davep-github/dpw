@@ -125,6 +125,10 @@ This mode uses tabs, so the line too long regexp fails.")
   (interactive)
   (dp4-form-hook-common '(p4-changeset-font-lock-keywords
                           t nil nil backward-paragraph))
+  (goto-char (point-min))
+  (re-search-forward "^Description:")
+  (forward-line 1)
+  (back-to-indentation)
   (flyspell-mode-on))
 
 (setq p4-change-hook 'dp4-change-form-hook)

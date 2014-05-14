@@ -47,10 +47,16 @@ on_error()
     trap '' 0
 }
 
+basic_level=nvlink/bringup_new_features_basic_nvlink_sysmem
+medium_level=nvlink/bringup_new_features_medium
 : ${abr_opt=}
-: ${level=nvlink/bringup_new_features_medium}
+: ${level=${medium_level}}
 : ${only_opt=}
 : ${mail_opt=-mail}             # Default on, can turn off w/opt.
+: ${queue:=o_cpu_rel5_4G_8H}    # Another example: o_cpu_16G
+: ${fc_csl="+fc_nvlink_translator_egress.cpp,+fc_nvlink_translator.cpp,+fc_nvlink_translator.h,+fc_nvlink_translator.cpp,+fc_nvlink_translator_ingress.cpp"}
+: ${hsh_csl="+hshub_xbar.cpp,+hshub_nvlink_main.cpp,+hshub_nvlink_xbar_handler.cpp"}
+: ${CSL=}
 
 option_str="${EExec_parse_option_str}o:"
 long_options=(
@@ -58,7 +64,15 @@ long_options=(
 "level:"
 "only:"
 "wait"
+"basic"
+"medium"
 "nomail" "no-mail"
+"queue:"
+"csl:"
+"fc-csl"
+"hsh-csl"
+"all-fc-csl"
+"env:"
 )
 source dp-getopt+.sh
 while (($#))
@@ -69,13 +83,31 @@ do
       -o|--only) shift; only_test="${1}"; only_opt="-only ${only_test}";;
       --wait) wait_opt="-wait";;
       --nomail|--no-mail) mail_opt=;;
+      --queue) shift; queue="${1}";;
+      --basic) level=${basic_level};;
+      --medium) level=${medium_level};;
       --help) Usage; exit 0;;
+      --csl) shift; CSL="${1}";;
+      --fc-csl) CSL="${CSL},${fc_csl}";;
+      --hshs-csl) CSL="${CSL},${hsh_csl}";;
+      --all-fc-csl) CSL="${CSL},${fc_csl},${hsh_csl}";;
+      --env) shift; e="${1}"
+             # Given the options: --env 'x1="jjdj djdj 123"'
+             # e is 'x1="jjdj djdj 123"
+             eval export $e;
+             envgrep FC_NVLINK_;;
       --) shift ; break ;;
       *) echo 1>&2 "Unsupported option>$1<"
          exit 1;;
  esac
   shift
 done
+
+# trim a possible leading comma:
+EExec_verbose_echo_id CSL
+CSL=$(echo "${CSL}" | sed -rn 's/^(,?)(.*)/\2/p')
+EExec_verbose_echo_id CSL
+export CSL
 
 : ${only_test:=ALL}
 
@@ -124,7 +156,7 @@ EExec tgen.pl \
     -nosandbox \
     -cacheLevels \
     -maxFileSize 0 \
-    -queue o_cpu_rel5_4G_8H \
+    -queue "${queue}" \
     -traceroot /home/scratch.traces02 \
     ${only_opt} \
     ${abr_opt} \
@@ -133,6 +165,7 @@ EExec tgen.pl \
 
 command_line="$0 ${dolat[@]}"
 command_script="!#/bin/sh
+export CSL='${CSL}'
 pushd ${PWD}
 ${command_line}"
 

@@ -36,7 +36,7 @@ do
    shift;
 done
 
-if vunsetp "${nths[*]}"
+if ((${#nths} == 0))
 then
     echo "Please provide a relative revision number."
     exit 0
