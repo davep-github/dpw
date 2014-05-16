@@ -311,6 +311,7 @@ tests.")
   ;; Don't want to edit these stupid fvcking copies.
   '("/plex/"
 ;;    "/fc_nvlink_translator/"            ; Whilst I'm working in fcnvl
+    "/fcnvl"            ; Whilst I'm working in real dev dir
     "failed-attempt\\(ed\\)?-0")))
 
 (provide 'dp-dot-emacs.nvidia.el)

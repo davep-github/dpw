@@ -129,6 +129,7 @@ This mode uses tabs, so the line too long regexp fails.")
   (re-search-forward "^Description:")
   (forward-line 1)
   (back-to-indentation)
+  (dp-push-go-back "Easy return to change description")
   (flyspell-mode-on))
 
 (setq p4-change-hook 'dp4-change-form-hook)

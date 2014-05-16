@@ -95,7 +95,7 @@
 
 ;; Copy a __SB_rel go entry so it can be used as a base/parent of a following
 ;; entry.
-(defalias 'dp-add-sbrel-subdir
+(defalias 'dp-go-add-sbrel-subdir
   (read-kbd-macro
    (concat
     "C-a C-s | RET M-a C-s | <left> M-o C-e RET Ee|__SB_rel| 12*SPC ${ M-y }"

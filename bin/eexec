@@ -384,6 +384,9 @@ EExec()
       esac
       shift
     done
+    # This should probably be initially predicated on EExecDashN_p, then
+    # overridable via make_command_p, but it's convenient to be able to drop
+    # the individual indexing scripts.
     true_p "${make_command_p}" && {
         vunsetp "${command_file_name}" && {
             command_file_name=$(basename "$1")-eexec.sh

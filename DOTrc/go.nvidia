@@ -71,6 +71,10 @@ Ee|ttmp__SB_rel|                ${sbtmp__SB_rel}
 
 # + nvlink fc_nvlink nvlink_translator fc_nvlink_translator/ fmodel fmod
 Ee|nvgpu__SB_rel|               ${hw__SB_rel}nvgpu/
+Ee|chiptools__SB_rel|           ${nvgpu__SB_rel}/chip_tools
+Ee|chiptoolsglobal__SB_rel|     ${chiptools__SB_rel}/global
+Ee|ctglob__SB_rel|              ${chiptoolsglobal__SB_rel}
+
 Ee|nvgpuinf__SB_rel|            ${nvgpu__SB_rel}inf/
 Ee|nvsimroot__SB_rel|           ${nvgpuinf__SB_rel}nvsim/
 Ee|nvsimclib__SB_rel|           ${nvsimroot__SB_rel}2.1/clib/

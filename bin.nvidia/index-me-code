@@ -53,6 +53,7 @@ source $HOME/.rc/env.nvidia
 : ${hw_dirs_p=t}
 : ${sw_dirs_p=t}
 : ${fmod_dirs_p=t}
+: ${chip_tools_dirs_p=t}
 : ${make_script_p=t}
 : ${script_name=}
 : ${bg_p=}
@@ -306,7 +307,9 @@ on_exit()
     local signum="${1-}"; shift
 
     vsetp "${send_mail_on_completion_p-}" && {
-        EExec email-yopp "on_exit: rc: $rc; ${cron_opt}"
+        EExecDashN_p || {
+            EExec email-yopp "on_exit: rc: $rc; ${cron_opt}"
+        }
     }
 }
 
@@ -327,6 +330,14 @@ trap "on_error \$?" 0
 #
 ### Files out of source tree when using /home/scratch.traces02/mobile/traces/system/so/
 ### Tried to do it at root, but it makes things relative to root, e.g. /home/x --> home/x
+
+# The depot_dirs_of_interest are directories we wish to have indexed.
+# They will be indexed into an index dir that matches the leading part of the
+# index's dir name.
+# e.g. given a db dir of /a/b/c
+# dirs /a/b/c/d/e/q/... and /a/b/c/z/...
+# will be indexed into /a/b/c's index.
+# /a/b/d won't.
 depot_dirs_of_interest=""
 
 if true_p "${hw_ap_p}"
@@ -406,6 +417,17 @@ $(me-expand-dest --normpath-term fmod)
 $(me-expand-dest --normpath-term nvgpudefs)
 $(me-expand-dest --normpath-term nvgpuinclude)
 $(me-expand-dest --normpath-term nvgpuclib)"
+fi
+
+if true_p "${chip_tools_dirs_p}"
+then
+    chip_tools_dir=$(me-expand-dest chiptools)
+    depot_dirs_of_interest="
+${depot_dirs_of_interest}
+${chip_tools_dir}/gmlit4
+${chip_tools_dir}/gplit1
+${chip_tools_dir}/common
+${chip_tools_dir}/global"
 fi
 
 other_dirs_of_interest=""

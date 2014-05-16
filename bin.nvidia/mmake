@@ -37,7 +37,7 @@ tee_log()
 }
 
 case "${PWD}" in
-    /home/scratch.dpanariti_*);;
+    /home/scratch.dpanariti*);;
     *) echo "INFO: you are not in a sandbox." 1>&2;;
 esac
 
@@ -103,7 +103,19 @@ bin_dir="$(me-expand-dest tot)/bin"
 
 echo "@>$@<"
 
-EExec ${bin_dir}/make "$@" 2>&1 | $logger
+make_bin="${bin_dir}/make"
+if [ -e "${make_bin}" ]
+then
+    if ! [ -x "${make_bin}" ]
+    then
+        echo ">${make_bin}< exists, but isn't executable."
+        exit 1
+    fi
+else
+    echo ">${make_bin}< doesn't exist."
+fi 1>&2
+
+EExec  "$@" 2>&1 | $logger
 
 vsetp "${send_mail_on_completion-}" && {
     mail -s "$progname is done" "${USER}" < /dev/null >/dev/null 2>&1

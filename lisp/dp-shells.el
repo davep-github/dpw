@@ -648,6 +648,19 @@ dir-tracker has become lost.
                     :before-pmark-fun 'next-line
                     ;; mark active: down
                     :mark-active-fun 'next-line))
+       [(meta return)] (lambda ()
+                         (interactive)
+                         (dp-shell-xxx-input
+                          ;; at: next input
+                          :at-pmark-fun 'dp-open-newline
+                          ;; after: next input
+                          :after-pmark-fun 'dp-open-newline
+                          ;; before: down
+                          :before-pmark-fun 
+                          'dp-error-force-reparse-point-to-end 
+                          ;; mark active: down
+                          :mark-active-fun 
+                          'dp-error-force-reparse-point-to-end))
        [(meta ?d)] (lambda ()
                      (interactive)
                      (dp-shell-xxx-input
@@ -1294,7 +1307,9 @@ xxx-send-input as a last resort."
   (define-key dp-s-mode-map [?r] 'dp-error-parse-point-to-end)
   (dp-define-keys map `([(meta ?n)] dp-next-error
                         [(meta ?o)] dp-shell-magic-kill-ring-save
-                        [(control meta return)] dp-error-parse-point-to-end
+                        [(control meta return)] 
+                        (kb-lambda 
+                            (dp-error-parse-point-to-end 'force-reparse))
                         [(control meta ?j)] dp-shell-resync-dirs
                         [(control ?c) (control ?c)]
                         dp-maybe-kill-process-buffer-and-window)))
@@ -1663,6 +1678,10 @@ point to EOB to reduce the amount of parsing that is needed."
                                 (point-max)
                                 (or (not (interactive-p))
                                     (not force-reparse-p))))
+
+(defun dp-error-force-reparse-point-to-end ()
+  (interactive)
+  (dp-error-parse-point-to-end 'force-reparse))
 
 ;;;###autoload
 (defun dp-shell-goto-this-error (&optional force-reparse-p)
