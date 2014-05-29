@@ -231,12 +231,27 @@ grep_var_log_messages()
     sudo $last_grep "$@" $first $last
 }
 
+page_tail()
+{
+    local lines
+    if [[ "$1" =~ ^[0-9]+$ ]]
+    then
+        lines="$1"
+        shift
+    else
+        # Deduct 2 for my prompt.
+        lines=$((${LINES:-25} - 2))
+    fi
+    
+    tail -n "${lines}" "$@"
+}
+
 page_of_history()
 {
     if [[ -z "$*" ]]; then
         local lines=$((${LINES:-25} - 2))
         fc -l -$lines
-    elif    [[ "55" =~ ^[0-9]+$ ]]
+    elif [[ "$1" =~ ^[0-9]+$ ]]
     then
         fc -l -$1
     else

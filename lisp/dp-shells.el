@@ -194,12 +194,17 @@ prompt.  We don't want to stomp on them.")
   "Do not ask if the user want to ser gdb mode when we see a gdb-mode prompt.
 Can be set after the first prompting.")
 
+(defvar dp-shell-auto-tack-on-gdb-mode-p t
+  "Should we automatically tack on gdb mode when we encounter the gdb prompt
+  `dp-gdb-prompt-regexp'?")
+
 (defun dp-shell-lookfor-gdb (str)
   (when (and (not (eq major-mode 'gdb-mode))
              (not dp-dont-ask-to-tack-on-gdb-mode-p)
              (string-match (concat dp-gdb-prompt-regexp "$") str))
     (setq dp-dont-ask-to-tack-on-gdb-mode-p t)
-    (when (y-or-n-p "Tack on gdb mode? ")
+    (when (or dp-shell-auto-tack-on-gdb-mode-p
+              (y-or-n-p "Tack on gdb mode? "))
       (dp-tack-on-gdb-mode+))))
 
 (defun dp-shell-lookfor-shell-max-lines (str)

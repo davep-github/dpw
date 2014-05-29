@@ -54,7 +54,7 @@ NOGIT[.,-]*
 
 # Output type directories.
 doxygen.out
-doxygen.out.d
+doxygen.out.d*
 CMakeFiles
 
 # Control files

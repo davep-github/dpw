@@ -449,5 +449,5 @@ Key s          A       C4        StickAcrossDesks
 
 # Maximalizations of the horizontal and vertical variety.
 #   key        context modifiers Action   
-Key h          A       4         Maximize 0 90
-Key w          A       4         Maximize 100 0
+Key h          A       4         Maximize 0 99
+Key w          A       4         Maximize 99 0

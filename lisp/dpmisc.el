@@ -507,6 +507,10 @@ string containing their values."
                                           dp-ws+newline)
   "Whitespace chars including newline regexp, one or more.")
 
+(defvar dp-ws+newline-regexp*-not (format "[^%s]*"
+                                          dp-ws+newline)
+  "Whitespace chars including newline regexp, 0 or more.")
+
 
 (defsubst dp-order-cons (cons &optional lessp)
   "Return CONS' elements ordered in some way as determined by LESSP.
@@ -14257,8 +14261,15 @@ file."
                          (when (eq mode major-mode)
                            buf)))))
 
-(defvar dp-p4-location-regexp "^//[^:]+"
+(defvar dp-p4-location-regexp "^//[^:#]+"
   "This matches a perforce type pathname (//blah)")
+
+(defvar dp-p4-location-regexp-ext 
+  (concat "\\(//[^:#]+\\)"
+          "\\("
+          dp-ws+newline-regexp*-not
+          "\\)"))
+  "This matches a perforce type pathname and suffix(//blah#suffix)")
 
 (defsubst dp-p4-location-p (path)
   "Return non-nil if PATH is in the for of a p4 location.

@@ -79,7 +79,7 @@ def main(argv):
     # ...
 
     # For non-option args
-    oparser.add_argument("cmd_args", nargs="+")
+    oparser.add_argument("cmd_args", nargs=argparse.REMAINDER)
 
     app_args = oparser.parse_args()
     if app_args.quiet_p:

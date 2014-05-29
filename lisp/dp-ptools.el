@@ -764,5 +764,47 @@ so each mode can have its own logic."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;; Crappy perforce crap.
+;;;
+
+(defun dp-p4-delimit-p4-loc (&optional dont-stop-at-bol-p)
+  (interactive "P")
+  (when (or (looking-at dp-p4-location-regexp)
+            (re-search-backward dp-p4-location-regexp-ext
+                                (if dont-stop-at-bol-p
+                                    nil
+                                  (line-beginning-position)) t))
+    (re-search-forward dp-p4-location-regexp-ext (line-end-position) t)
+;;     (message "p4 loc: %s, ms0: %s ms1: %s ms2: %s"
+;;              (match-string 1)
+;;              (match-string 0)
+;;              (match-string 1)
+;;              (match-string 2))
+    ;; `re-search-forward' should return non-nil, but this ensures the proper
+    ;; return value in case there is ever any code added before the end of
+    ;; the `when'
+    t))
+
+(defun dp-p4-copy-p4-loc (&optional dont-stop-at-bol-p)
+  (interactive "P")
+  (let ((starting-point (point)))
+    (if (dp-p4-delimit-p4-loc dont-stop-at-bol-p)
+        (progn
+          (if (not (= (line-number starting-point)
+                      (line-number (match-end 1))))
+              (dp-push-go-back "back to perforce location" starting-point))
+          (goto-char (match-end 1))
+          (kill-new (match-string 1)))
+    (message "Cannot find p4 location%s." (if dont-stop-at-bol-p
+                                              ""
+                                            " on this line")))))
+
+;;;
+;;; Crappy perforce crap.
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (provide 'dp-ptools)
 (dmessage "done loading dp-ptools.el...")

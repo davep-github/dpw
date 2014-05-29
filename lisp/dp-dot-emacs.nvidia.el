@@ -225,7 +225,7 @@ tests.")
 (defun* dp-set-cscope-database-regexps (&optional ignore-env-p 
                                         db-locations 
                                         (hierarchical-search-p t))
-  (interactive)
+  (interactive "P")
   (setq cscope-database-regexps
         (funcall dp-make-cscope-database-regexps-fun 
                  ignore-env-p db-locations 

@@ -13,7 +13,7 @@ done
 
 ssh_home()
 {
-    local fq_home_box=$(EExec fq_home_box "$@")
+    local fq_home_box=$(EExec -y fq_home_box "$@")
     EExec_verbose_msg "ssh_home: home[$DP_HOME_MACHINE], fq info: ${fq_home_box}"
     EExec exec ssh "${fq_home_box}"
 }

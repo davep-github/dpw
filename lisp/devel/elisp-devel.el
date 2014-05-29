@@ -5853,3 +5853,38 @@ nil
 
 
 
+
+========================
+Wednesday May 28 2014
+--
+
+"//[^:#]+[^ 	
+]"
+dp-ws+newline-regexp-not
+"[^ 	
+]"
+dp-p4-location-regexp-ext
+"\\(//[^:#]+\\)\\([^ 	
+]*\\)"
+
+dp-p4-location-regexp
+"//[^:#]+"
+
+
+(progn
+  (re-search-forward (concat dp-p4-location-regexp-ext))
+  (princf "ms0: %s, ms1: %s, ms2: %s" 
+          (match-string 0) 
+          (match-string 1)
+          (match-string 2))) //perforce/sucks#3
+
+ //perforce/sucks#3
+(progn
+  (condition-case nil
+      (error 'error)
+    (error
+     (message "Don't cry.")))
+  (princf "I made it."))
+I made it.
+nil
+

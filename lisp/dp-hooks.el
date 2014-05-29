@@ -1517,7 +1517,14 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
 (when (dp-optionally-require 'igrep)
   (defadvice igrep (after dp-igrep activate)
     "Do a `dp-push-go-back' before we visit the matches returned by `igrep'.
-Before visiting means after the command completes."
+Before visiting means after the command completes because the sequence is:
+1) igrep
+2) examine list
+3) M-n for next match or goto a match by hand.
+This means pushing a go back works after the command is just fine.
+If we did it before, then an error in igrep would leave a kind of useless
+place on the go back stack.
+Wow: That's over commenting."
     (dp-push-go-back "advised igrep"))
   
   (defvar dp-orig-igrep-regex-default igrep-regex-default

@@ -1,5 +1,6 @@
 #!/bin/sh
 
+dollar_at=("$@")
 source script-x
 set -u
 progname="$(basename $0)"
@@ -22,24 +23,54 @@ unset eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
 
+: ${build_p=t}
 : ${clean_p=}
+: ${yopp_p=t}
+: ${MAKE_prog=/usr/bin/make}
+: ${MAKE=qsub}
 
 while (($# > 0))
 do
   case "$1" in
       --clean) clean_p=t;;
+      --just-clean) clean_p=t; build_p=;;
+      --no-build) build_p=;;
+      --no-yopp) yopp_p=;;
       --) shift; break;;
       *) break;;
   esac
   shift
 done
 
+maker()
+{
+    if [ "${MAKE}" = 'qsub' ]
+    then
+        EExec qsub -P gp100 -Is -m rel5 -q o_cpu_2G "make -j4 ${1}"
+    else
+        EExec "${MAKE_prog}" -j4 "${1}"
+    fi
+}
+
 source $HOME/.rc/env.mods
 
 EExec -y cd "${MODS_BUILD_DIR}"
 
+RC=0
 vsetp "${clean_p}" && {
-    EExec apmake clean_all
+    rm -rf output
+    maker clean_all
+    RC=$?
 }
 
-EExec apmake build_all
+vsetp "${build_p}" && {
+    [ -d output ] || {
+        EExec mkdir output
+    }
+    maker build_all
+    RC=$?
+}
+
+true_p "${yopp_p}" && {
+    EExec email-yopp "$progname ${dollar_at[@]}: completed, RC: $RC"
+}
