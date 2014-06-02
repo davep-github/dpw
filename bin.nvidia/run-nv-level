@@ -49,6 +49,7 @@ on_error()
 
 basic_level=nvlink/bringup_new_features_basic_nvlink_sysmem
 medium_level=nvlink/bringup_new_features_medium
+medium_ce_sanity_level=nvlink/bringup_new_features_medium_ce_sanity
 : ${abr_opt=}
 : ${level=${medium_level}}
 : ${only_opt=}
@@ -77,6 +78,7 @@ long_options=(
 "all-csl"
 "env:"
 "env-grep:" "grep-env:" "envgrep:" "grepenv:"
+"ce-sanity"
 )
 source dp-getopt+.sh
 while (($#))
@@ -91,6 +93,7 @@ do
       --big-queue|--big-q|--bigq) queue="${big_queue}";;
       --basic) level=${basic_level};;
       --medium) level=${medium_level};;
+      --ce-sanity) level=${medium_ce_sanity_level};;
       --help) Usage; exit 0;;
       --csl) shift; CSL="${1}";;
       --fc-csl) CSL="${CSL},${fc_csl}";;

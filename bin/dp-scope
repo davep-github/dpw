@@ -77,4 +77,4 @@ vsetp "${db}" && {
 }
 
 set -- "$@" "${arg}"
-EExec cscope ${EXTAGTREE_DASH_Q} ${db_opt} -L -"${field_num}" "${@}"
+EExec cscope ${EXTAGTREE_DASH_Q} ${db_opt} -L -"${field_num}" "$@"

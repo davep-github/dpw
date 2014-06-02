@@ -34,4 +34,4 @@ unset eexec_program
 # Drat. I could've been using this for years.
 # If I can use ec (which uses) gnuclient or equivalent, then I can use this
 # to raise the server's frame.
-ec -e '(progn (raise-frame) (dp-focus-frame))'
+ec "$@" -e '(progn (raise-frame) (dp-focus-frame))'

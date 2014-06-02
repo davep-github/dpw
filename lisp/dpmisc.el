@@ -11549,60 +11549,19 @@ If it is indeed a script name <script>-it can be called interactively.")
   ;; nothing to lose.
   (set-buffer-modified-p nil))
 
-(defcustom dp-sh-new-file-template
-  "
-source script-x
-set -u
-progname=\"$(basename $0)\"
-source eexec
-if vsetp \"${eexec_program-}\"    # Did the caller provide a program?
-then
-    EEXEC_SHIFT=:
-else
-    eexec_program=$(EExec_parse \"$@\")
-    EEXEC_SHIFT=shift
-fi
-
-for op in $eexec_program
-do
-  $op
-  ${EEXEC_SHIFT}
-done
-EExec_verbose_msg $(echo_id eexec_program)
-unset eexec_program
-#export eexec_program
-# Or export eexec_program to propagate eexec info to a called program.
-# export eexec_program
-
-# Useful traps
-on_exit()
-{
-    local rc=\"$?\"
-    local signum=\"${1-}\"; shift
-
-    echo \"on_exit: rc: $rc; ${cron_opt}\"
-}
-
-on_error()
-{
-    local rc=\"${1-}\"; shift
-
-    echo \"on_exit: rc: $rc; ${cron_opt}\"
-    trap '' 0
-}
-
-
-"
-  "A string to stuff into each new fire created with `dp-script-it'
+(defcustom dp-sh-new-file-template-file 
+  (expand-file-name "~/bin/templates/sh-template.sh")
+  "A file to stuff into each new Python file created with `shit'
 or a list: \(function args).
 An `undo-boundary' is done before the template is used."
   :group 'dp-vars
-  :type '(repeat string))
+  :type 'string)
 
 (defun shit ()
   (interactive)
   (dp-script-it "/bin/sh" nil
-                :template dp-sh-new-file-template))
+                :template 'dp-insert-new-file-template
+                :template-args (list dp-sh-new-file-template-file)))
 
 (defun bashit ()
   (interactive)

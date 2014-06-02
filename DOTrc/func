@@ -94,12 +94,6 @@ nope_p()
 }
 export -f nope_p
 
-false_p()
-{
-    dp_DEPRECATED "false_p-->nope_p"
-}
-export -f false_p
-
 invert_shell_var_pred()
 {
     if [ -z "$1" ]; then

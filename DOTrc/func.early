@@ -20,6 +20,12 @@ true_p()
 }
 export -f true_p
 
+false_p()
+{
+    ! true_p "$@"
+}
+export -f false_p
+
 echo_name_and_val()
 {
     local echo_name_and_val_arg=

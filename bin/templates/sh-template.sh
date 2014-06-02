@@ -1,5 +1,3 @@
-#!/bin/sh
-
 source script-x
 set -u
 progname="$(basename $0)"
@@ -19,19 +17,26 @@ do
 done
 EExec_verbose_msg $(echo_id eexec_program)
 unset eexec_program
+#export eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
 
-file_name="${1}"
-shift
-ret=
-sep=
-while (($# > 0))
-do
-  field_name="${1}"
-  val=$(cat "${file_name}" | EExec sed -rn "s/(.*)(${field_name})( \. \")([a-zA-Z_0-9-]*)(.*)/\4/p")
-  ret="${ret}${sep}${val}"
-  sep=" "
-  shift
-done
-echo $ret
+trap_exit_msg=
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+}
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+    trap '' 0
+}
+

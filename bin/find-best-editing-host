@@ -7,13 +7,14 @@
 #
 find_best_editing_host()
 {
+    (($# == 0)) && set -- "host-name"
     vsetp "${DP_GNU_EDITING_SERVER-}" && {
         echo "${DP_GNU_EDITING_SERVER}"
         return 0
     }
     [ -e "${DP_EDITING_SERVER_FILE}" ] && {
-        # No need to install guild for this ;->
-        cat "${DP_EDITING_SERVER_FILE}" | trivial-assoc "host-name"
+        # No need to install guile for this ;->
+        trivial-assoc "${DP_EDITING_SERVER_FILE}" "$@"
         return 0
     }
     return 1
