@@ -2927,7 +2927,8 @@ exist to move from one topic record to the next or previous.
 				  "Clone current topic")
   (dpj-define-key-and-add-to-menu "\C-ch" 'dpj-highlight-topic
 				  "Highlight topic")
-  (dpj-define-key-and-add-to-menu "\C-cs" 'dpj-show-topic-command "Show topic")
+  (dpj-define-key-and-add-to-menu "\C-c\C-s" 
+                                  'dpj-show-topic-command "Show topic")
   (dpj-add-menu-item "Show current topic" 'dpj-show-current)
 
   ;; use outline mode's show-all binding.

@@ -43,7 +43,8 @@ KEYS is a list: \(key def key2 def2 ...\)."
 ;;reference; NB: C-dC-c is a prefix for C/C++ commands.
 ;;reference; NB: C-dc is a prefix for colorization commands.")
 ;; Combined becomes -->
-(defun dp-define-key-submap (prefix-sym parent-map map-root-key-seq &rest keys)
+(defun dp-define-key-submap (prefix-sym parent-map map-root-key-seq 
+                             &rest keys)
   "Define a key submap under PARENT-MAP accessed by MAP-ROOT-KEY-SEQ.
 Bind any keys in KEYS via `dp-define-keys'."
   (define-prefix-command prefix-sym)

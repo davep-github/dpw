@@ -23,24 +23,53 @@ unset eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
 
+trap_msg=
+in_file=
+
+clean_up()
+{
+    local msg=${1-}
+    [ -z "${in_file}" ] && [ -n "${tmp_file}" ] && [ -e "${tmp_file}" ] && {
+        EExec_verbose_msg "${progname}: ${msg}Removing tmp_file>${tmp_file}<"
+        rm -f "${tmp_file}"
+    }
+}
+
 # Useful traps
 on_exit()
 {
     local rc="$?"
     local signum="${1-}"; shift
 
-    echo "on_exit: rc: $rc; ${cron_opt}"
+    clean_up "on_exit: "
+
+    EExec_verbose_msg "on_exit: rc: $rc; ${trap_msg}"
 }
 
 on_error()
 {
+    local sig="${1}"
     local rc="${1-}"; shift
 
-    echo "on_exit: rc: $rc; ${cron_opt}"
+    clean_up "on_error: "
+
+    EExec_verbose_msg "on_error: sig: $sig, rc: $rc; ${trap_msg}"
     trap '' 0
 }
 
+trap on_exit EXIT
+for sig in 2 3 4 5 6 7 8 15
+do
+	trap "on_error $sig" $sig
+done
+
 : ${status_regexp=.*}
+tmp_file=$(mktemp "$HOME/tmp/tgen-batch-status.tmp.XXXXXXX") || {
+    echo "Couldn't make a temp file."
+    exit 1
+} 1>&2
+
+EExec_verbose_echo_id tmp_file
 
 option_str="t:r:fdps:"
 long_options=(
@@ -48,15 +77,19 @@ long_options=(
     "test-dir:" "test-root:"
     "files"
     "dirs"
-    "full-path"
-    "status-regexp:"
-    "srv" "status-not-regexp" "not-status-regexp" "status-regexp-v"
+    "full-path" "path" "real-path" "rp"
+    "status-regexp:" "sre:"
+    "srv:" "status-not-regexp:" "not-status-regexp:" "status-regexp-v:"
     "not-running" "done" "exited" "finished"
+    "running"
+    "not-done"
+    "failed"
+    "in-file:" "in:" "if:"
 )
 
 test_name_opt=
 test_dir=
-output_filter=test_dir_only
+output_filter=full_path
 invert_flag=
 
 source dp-getopt+.sh
@@ -72,10 +105,15 @@ do
       -r|--test-dir|--test-root) shift; test_dir="${1}";;
       -f|--files) output_filter=cat;;
       -d|--dirs) output_filter=test_dir_only;;
-      -p|--full-path) output_filter=full_path;;
-      -s|--status-regexp) shift; status_regexp="${1}";;
+      -p|--full-path|--path) output_filter=full_path;;
+      --real-path|--rp) output_filter=real_path;;
+      -s|--status-regexp|--sre) shift; status_regexp="${1}";;
       --srv|--status-not-regexp|--not-status-regexp|--status-regexp-v) shift; status_regexp="${1}"; invert_flag='-v';;
-      --not-running|--done|--exited|--finished) status_regexp="^RUNNING"; invert_flag='-v';;
+      --not-running|--done|--exited|--finished) status_regexp="^(RUNNING|NOTRUN)"; invert_flag='-v';;
+      --failed) status_regexp="^(RUNNING|PASS_(GOLD|LEAD))"; invert_flag='-v';;
+      --running) status_regexp="^RUNNING";;
+      --not-done) status_regexp="^(RUNNING|NOTRUN)";;
+      --in-file|--in|--if) shift; in_file="${1}";;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -84,6 +122,8 @@ do
     esac
     shift
 done
+
+EExec_verbose_echo_id output_filter
 
 test_dir_only()
 {
@@ -95,13 +135,32 @@ rel_test_dir=$(realpath -r "${test_dir}")
 
 full_path()
 {
-#    read
-#    set -- $REPLY
-#    # PASS_GOLD     d1b4649ac4e62e7cf56037a5cee63004     tests/non3d_maxwell_dma_copy_a_directed_sanity/00/03/36/000336/sema1
-#    echo $REPLY | sed -rn "s!$3!${test_dir}${3}!p" | test_dir_only
     sed -rn "s!tests/!${rel_test_dir}/tests/!p" | test_dir_only
 }
 
+real_path()
+{
+    sed -rn "s!tests/!${rel_test_dir}/tests/!p" | dp-realpath -v
+#    dp-realpath -v
+}
+
+num_lines=0
+OPWD="${PWD}"
 EExec -y cd $(me-expand-dest "testgen")
 echo "Getting status for ${test_dir}"
-EExec ./batch_status "${test_dir}" | "${output_filter}" | egrep ${invert_flag} "${status_regexp}"
+
+if vsetp "${in_file}"
+then
+    tmp_file="${in_file}"
+else
+    EExec ./batch_status "${test_dir}" >| "${tmp_file}"
+fi
+
+EExec cat "${tmp_file}" | EExec "${output_filter}" \
+            | EExec egrep ${invert_flag} "${status_regexp}"
+EExec_verbose_msg "Total number of lines: $(wc -l ${tmp_file})"
+rc=$?
+#rm -f "${tmp_file}"
+#tmp_file=
+
+exit $rc

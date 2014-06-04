@@ -6568,7 +6568,8 @@ with prop if set else 'dp-extent."
   "Remove all of my colors in the region. 
 The region is determined by `dp-region-or...'."
   (interactive)
-  (dp-unextent-region (or region-id 'dp-colorized-region) beg end nil 'line-p)
+  (dp-unextent-region (or region-id 'dp-colorized-region) 
+                      beg end nil 'line-p)
   (unless preserve-current-color-p
     (setq dp-colorize-region-default-color-index 0)))
 
@@ -14227,7 +14228,7 @@ file."
   (concat "\\(//[^:#]+\\)"
           "\\("
           dp-ws+newline-regexp*-not
-          "\\)"))
+          "\\)")
   "This matches a perforce type pathname and suffix(//blah#suffix)")
 
 (defsubst dp-p4-location-p (path)

@@ -494,6 +494,7 @@ state and then applies changes. This is good... sometimes."
 original state and then applies changes. This is good... sometimes."
   (interactive "Smode's font lock var? ")
   (unless (listp font-lock-var-syms)
+    ;; Listify the input.
     (setq font-lock-var-syms (list font-lock-var-syms)))
   (when buffer-local-p
     (loop for v in font-lock-var-syms do
@@ -568,9 +569,11 @@ original state and then applies changes. This is good... sometimes."
   "My hanging braces values.  We will edit or append to
 c-hanging-braces-alist based upon these values.")
 
-(defun* dp-c*-add-extra-faces (&key (use-too-long-face-p
-                                     (dp-val-if-boundp
-				      dp-global-c*-use-too-long-face)))
+(defun* dp-c*-add-extra-faces (&key
+                               (buffer-local-p nil)
+                               (use-too-long-face-p
+                                (dp-val-if-boundp
+                                 dp-global-c*-use-too-long-face)))
   (interactive)
   (let ((extras
          (list ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
@@ -587,10 +590,14 @@ c-hanging-braces-alist based upon these values.")
     ;; Add some extra types to the xemacs gaudy setting.  Rebuild the
     ;; list each time rather than adding to the existing value.  This
     ;; makes reinitializing cleaner.
-    (dp-save-orig-n-set-new 'c-font-lock-keywords-3 
-                            'dp-append-to-list-symbol nil extras)
-    (dp-save-orig-n-set-new 'c++-font-lock-keywords-3 
-                            'dp-append-to-list-symbol nil extras)))
+    (dp-add-line-too-long-font '(c-font-lock-keywords-3
+                                 c-font-lock-keywords-3)
+                               :buffer-local-p buffer-local-p)))
+
+;;replaced with dp-add-...     (dp-save-orig-n-set-new 'c-font-lock-keywords-3 
+;;replaced with dp-add-...                             'dp-append-to-list-symbol nil extras)
+;;replaced with dp-add-...     (dp-save-orig-n-set-new 'c++-font-lock-keywords-3 
+;;replaced with dp-add-...                             'dp-append-to-list-symbol nil extras)))
 
 (defvar dp-c-like-modes '(c++-mode c-mode)
   "This list holds the modes that can benefit, att, from `dp-open-newline'.")
@@ -685,12 +692,6 @@ c-hanging-braces-alist based upon these values.")
     
     ;; 'C-;'
     (define-key map [(control 59)] (kb-lambda (insert ";" )))
-    (dp-c*-add-extra-faces)
-    ;; This line seems to wipe out the extra faces.
-    ;; Because it modifies the original value, not the current.
-    ;; `dp-save-orig-n-set-new' saves that variable the first time it is
-    ;; called and applies all other changes to that copy.  Hence, this
-    ;; returns us to the original value and adds the line-too-long stuff.
     ))
 
 (eval-after-load "cc-mode"
@@ -745,10 +746,20 @@ c-hanging-braces-alist based upon these values.")
     (c-setup-filladapt)
     (filladapt-mode 1)
     (dmessage "Trying c-setup-filladapt in hook. If things get fucked up (as-of 2010-05-23T17:37:13, then check this."))
-  (message "dp-c-like-mode-common-hook, fontifying%s" 
-           (if dp-fontify-p
-               "."
-             "... NOT!")))
+
+  ;; Do the too long fontification so I can turn it on or off on a per file
+  ;; basis. Too many dumb-asses use 100s chars/line very, very often and the
+  ;; files become nigh unreadable.
+  (let ((fontification-msg "."))
+    (if dp-fontify-p
+        ;; This line seems to wipe out the extra faces.
+        ;; Because it modifies the original value, not the current.
+        ;; `dp-save-orig-n-set-new' saves that variable the first time it is
+        ;; called and applies all other changes to that copy.  Hence, this
+        ;; returns us to the original value and adds the line-too-long stuff.
+        (dp-c*-add-extra-faces :buffer-local-p t)
+      (setq fontification-msg "... NOT!"))
+    (message "dp-c-like-mode-common-hook, fontifying%s" fontification-msg)))
 
 
 ; (defadvice c-end-of-defun (around dp-c-end-of-defun act)
