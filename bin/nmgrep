@@ -24,8 +24,9 @@ long_options=("no-demangle" "demangle" "mangle"
     "files-with-matches")
 
 source dp-getopt+.sh
-for i in "$@"; do
-    case "$1" in
+while (($# > 0))
+do
+  case "$1" in
         -a) NM=$def_arm_nm;;
         -[x8i]) NM=$def_x86_nm;;
         -[NA]) NM=$2; shift;;
@@ -73,9 +74,11 @@ get_nm()
     fi
 }
 
-: ${regexp=$1}                  # Set only if void.
-shift
+echo "@>$@<"
 
+: ${regexp=${1-}}                  # Set only if void.
+shift
+echo_id regexp
 for file in "$@"; do
     $(get_nm "$file") \
         ${demangle_opt} \

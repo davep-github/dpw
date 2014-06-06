@@ -105,8 +105,8 @@ do
       --ce-peer|--medium-ce-peer) level="${medium_ce_peer_level}";;
       --link-type) shift; link_info="${1}";
                    EExec_verbose_echo_id link_info
-                   link_num=$(echo "${link_info}" | cut -d, -f 1)
-                   link_type=$(echo "${link_info}" | cut -d, -f 2)
+                   link_num=$(echo "${link_info}" | cut -d/ -f 1)
+                   link_type=$(echo "${link_info}" | cut -d/ -f 2)
                    EExec_verbose_echo_id link_num
                    EExec_verbose_echo_id link_type
                    case "${link_type}" in
@@ -181,7 +181,7 @@ then
         # The script below now tails the last line.
         echo "$out_dir" >> "${last_out}"
         echo "#!/bin/sh
-tail -n"'${1-1}'" ${last_out_dir_file_name}" >| "${latest_out}"
+nth-line "'${1-0}'" ${last_out_dir_file_name}" >| "${latest_out}"
             chmod +x "${latest_out}"
     }
     EExec_verbose_echo_id command_line_script_file

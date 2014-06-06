@@ -134,7 +134,7 @@ index_out_of_tree_locations()
         EExec gtags -f "${oot_files_file}" "${OOT_DIR}"
 
         EExec cd "${OOT_DIR}"
-        EExec cscope -q -b -i "${oot_files_file}"
+        EExec ${DP_CSCOPE_PROGRAM-cscope} -q -b -i "${oot_files_file}"
     )
 }
 

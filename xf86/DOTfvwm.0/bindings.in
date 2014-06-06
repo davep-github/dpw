@@ -282,7 +282,7 @@ Key      Tab       A     CM      WindowList Root c c NoGeometry, OnlyListSkip, S
 ##------------------------------------------------------------------------------
 
 # Some of the Windwoes+Key combos fail with num-lock on, but I've defined the
-# num-lock kp_[0-6] bindings anyway.
+# num-lock kp_[0-9] bindings anyway.
 Key            F1         A      4     GotoDesk 0 1
 Key            KP_End     A      4     GotoDesk 0 1
 Key            KP_1       A      4     GotoDesk 0 1

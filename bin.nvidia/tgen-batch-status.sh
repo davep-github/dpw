@@ -63,6 +63,8 @@ do
 	trap "on_error $sig" $sig
 done
 
+: ${run_num=0}
+
 : ${status_regexp=.*}
 tmp_file=$(mktemp "$HOME/tmp/tgen-batch-status.tmp.XXXXXXX") || {
     echo "Couldn't make a temp file."
@@ -83,8 +85,9 @@ long_options=(
     "not-running" "done" "exited" "finished"
     "running"
     "not-done"
-    "failed"
+    "failed" "b0rked" "error" "fail"
     "in-file:" "in:" "if:"
+    "nth:" "run-num"
 )
 
 test_name_opt=
@@ -110,10 +113,11 @@ do
       -s|--status-regexp|--sre) shift; status_regexp="${1}";;
       --srv|--status-not-regexp|--not-status-regexp|--status-regexp-v) shift; status_regexp="${1}"; invert_flag='-v';;
       --not-running|--done|--exited|--finished) status_regexp="^(RUNNING|NOTRUN)"; invert_flag='-v';;
-      --failed) status_regexp="^(RUNNING|PASS_(GOLD|LEAD))"; invert_flag='-v';;
+      --failed|--b0rked|--error|fail) status_regexp="^(NOTRUN|RUNNING|PASS_(GOLD|LEAD))"; invert_flag='-v';;
       --running) status_regexp="^RUNNING";;
       --not-done) status_regexp="^(RUNNING|NOTRUN)";;
       --in-file|--in|--if) shift; in_file="${1}";;
+      --nth|--run-num) shift; run_num="${1}";;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -130,7 +134,7 @@ test_dir_only()
     sed -rn 's!(.*)(/[^/]*$)!\1!p'
 }
 
-: ${test_dir:=$(tgen-latest-run --test-dir ${test_name_opt})}
+: ${test_dir:=$(tgen-latest-run --run-num "${run_num}" --test-dir ${test_name_opt})}
 rel_test_dir=$(realpath -r "${test_dir}")
 
 full_path()

@@ -8,6 +8,20 @@ shift
 [ -z "$*" ] && set -- -
 for f in "$@"
 do
-  head -n $line $f | tail -n 1
+  if [ "${line}" = 0 -o "${line}" = '-' ]
+  then
+      tail -n 1 $f
+  elif ((line > 0))
+  then
+      head -n $line $f | tail -n 1
+  elif ((line < 0))
+  then
+      # let -1 --> n-1th
+      line=$((0 - line + 1))
+      tail -n $line $f | head -n 1
+  else
+      echo 1>&2 "Can't handle line number>$line<"
+      exit 0
+  fi
 done
 
