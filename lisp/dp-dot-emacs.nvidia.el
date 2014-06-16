@@ -257,6 +257,13 @@ tests.")
    (concat "<C-prior> C-s sim.pl SPC RET - gdb SPC C-s - chip SPC "
            "t132 RET _debug C-s libt132_ RET debug_")))
 
+(defalias 'dp-fcnvl-add-config-params
+  (read-kbd-macro
+   (concat
+    "C-s hshub_config0 RET <right> M-a <C-right> M-o SPC - chipargs SPC "
+    "-nvlink_configuration0= M-y C-s hshub_config1 RET <right> "
+    "M-a <C-right> M-o SPC - chipargs SPC -nvlink_configuration1= M-y")))
+
 (defvar dp-tgen-elf-load-option-olde
   "-chipargs '-elf_load /home/denver/release/sw/components/mts/1.0/cl28625566/debug_arm/denver/bin/mts.elf@0xe0000000:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/drv/mpcore/t132/ObjLinux_MPCoreXC/boot_page_table.axf:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/override.elf@0xe0000000:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/t132/ObjLinux_MPCoreXC/cpu_surface_write_read.Cortex-A8.axf:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/t132/ObjLinux_ARM7TDMIXC/cpu_surface_write_read.ARM7TDMI.axf:' "
   "tip-top-denver.sh 'needed this to make it go.'")
@@ -312,6 +319,7 @@ tests.")
   '("/plex/"
 ;;    "/fc_nvlink_translator/"            ; Whilst I'm working in fcnvl
     "/fcnvl"            ; Whilst I'm working in real dev dir
+    "/g\\(plit*\\|gmlit*\\)"
     "failed-attempt\\(ed\\)?-0")))
 
 (provide 'dp-dot-emacs.nvidia.el)

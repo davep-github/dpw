@@ -105,15 +105,15 @@ process_file ()
     local opts=""
     if [ -n "${1-}" ]
     then
-        if [ -n "$one_file" ]
+        if [ -n "${one_file-}" ]
         then
             file="$@"
         else
-            file="$1"
+            file="${1-}"
 	fi
-        if [ -n "$2" ]
+        if [ -n "${2-}" ]
         then
-            opts="$2"
+            opts="${2-}"
         fi
     else
 	file=""

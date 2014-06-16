@@ -56,7 +56,7 @@ do
       --change|--change-text|--change-txt) field_num=5;;  # This may require more work.
       --egrep|--grep|--regexp|--re) shift; arg="${1}"; field_num=6;;
       --file) shift; arg="${1}"; field_num=7;;
-      --including|--include|--inc|-h) field_num=8;;
+      -i|--including|--include|--inc|-h|--includes) field_num=8;;
       --find-up|--fup) find_up_p=t;;
       --use-dot|--dot-only|--no-find-up) find_up_p=;;
       --) shift; break;;

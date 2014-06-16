@@ -769,17 +769,21 @@ aa bb(
         (progn
           (goto-char (match-end 0))
           (end-of-line))
-      (if newline-before-brace-p
-          (unless (= (forward-line) 0)
-            (end-of-line)
-            (newline-and-indent)))
+;;      (end-of-line)
+;;      (call-interactively 'dp-c-electric-brace ?{)
+      (when newline-before-brace-p
+        (end-of-line)
+        (newline-and-indent))
       (if (looking-at brace-finder)
           (progn
             (goto-char (match-end 0))
             (end-of-line))
         (insert " {")
+        (newline-and-indent)
+        (forward-line -1)
         (dp-c-fix-comment)
-        (dp-c-indent-command)))
+        (dp-c-indent-command))
+      )
     (end-of-line)
     (if (or force-newline-after-brace-p
             (and ensure-newline-after-brace-p
@@ -1646,7 +1650,7 @@ off of the closing #endif
 If the region is active, then the sequence is placed around the region.
 Otherwise, the sequence begins at \(point-min) and ends at \(point-max)."
   (interactive "*P")
-  (save-excursion
+  (let (old-pos)
     (save-restriction
       (if (dp-mark-active-p)
 	  (narrow-to-region (point) (mark)))
@@ -1687,7 +1691,10 @@ Otherwise, the sequence begins at \(point-min) and ends at \(point-max)."
         (when comment
           (insert " /* Reinclusion protection. */"))
 	(goto-char (point-max))
-	(insert "\n#endif" comment-text "\n"))))
+        (setq old-pos (dp-mk-marker))
+	(insert "\n#endif" comment-text "\n")))
+    (goto-char old-pos)
+    (forward-line -1))
   (dmessage "@todo: Delete any existing ifdef lines first."))
 (dp-safe-alias 'idef 'dp-dot-h-reinclusion-protection)
 

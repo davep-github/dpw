@@ -1283,16 +1283,19 @@ xxx-send-input as a last resort."
     ;; try to call the original binding, trying the more specific buffer local
     ;; function variable before the default mode -> func mapping.
     (call-interactively (or 
-                         (interactive-functionp dp-shell-original-enter-binding)
+                         (interactive-functionp 
+                          dp-shell-original-enter-binding)
                          ;; This will always fail with v2 code.
                          (interactive-functionp 
-                          (cdr (assoc (major-mode-str) dp-shell-enter-alist)))
+                          (cdr (assoc (major-mode-str) 
+                                      dp-shell-enter-alist)))
                          (and (message 
                                "No func assoc w/mode %s, trying defaults." 
                                (major-mode-str))
                               nil)
                          (interactive-functionp dp-shell-send-input-sender)
-                         (interactive-functionp (dp-sls variant '-send-input))
+                         (interactive-functionp 
+                          (dp-sls variant '-send-input))
                          (interactive-functionp (default-value 
                                                   'comint-input-sender))
                          'comint-simple-send))
@@ -1530,7 +1533,7 @@ return t if we are in a shell type buffer, false otherwise."
       (message "not shell type buf")
       nil)))
 
-(defvar dp-current-error-function nil
+(defvar dp-current-error-function 'dp-do-next-compile-like-error)
   "Most recently called function for which we'd like to use \\[dp-next-error] to go to the next result.
 E.g. a compile, igrep or cscope results buffer.")
 

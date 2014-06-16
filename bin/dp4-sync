@@ -237,10 +237,10 @@ vunsetp "${keep_logs_p}" && EExecDashN_p && {
 } 1>&2
 
 EExec dp4-sync-post-processor
-
+RC=$?
 vsetp "${send_mail_on_completion_p-}" && ! EExecDashN_p && ! vsetp "${p4_sync_dash_n}" && {
     EExec_verbose_msg "YOPP!ing."
-    email-yopp 
+    email-yopp "$@: RC: ${RC}"
 }
 
 exit

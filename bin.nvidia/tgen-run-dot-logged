@@ -67,7 +67,7 @@ check_test()
         echo 'testname is empty'
     elif (($(echo "$@" | wc -w) > 1))
     then
-        echo "More than one executable file found."
+        echo "More than one executable file found. Please specify one."
     elif test -d "${testname}"
     then
         echo "${testname} is a dir."
@@ -96,8 +96,10 @@ then
         *) testname="${1}"; shift ;;
     esac
     vunsetp "${testname}" && {
-        # In a dir like:
+        # In a dir like, e.g.:
         # /home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap_t132/diag/testgen/dp-run-tgens.d/swr_so_runlimit/2013-08-16T18.26.17-0400.out/tests/kepler_b_ogtest/00/00/01/000001
+        # try the convention that the name is encoded in the path, e.g. swr_so_runlimit.
+        # Which is now invalid, even with a single test.
         testname=$(pwd | sed -rn 's!(^.*/dp-run-tgens.d/)([^/]+)(/.*)!\2!p')
         #echo_id testname
         vsetp "${testname}" && testname="${testname}.sh"

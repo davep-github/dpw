@@ -53,15 +53,23 @@ to have buffer-menu show non-file buffers."
       (Buffer-menu-this-window)
       (bury-buffer bmm-buf))))
 
-(defun dp-bmm-save-immed ()
+(defun dp-bmm-immed-cmd (fun &optional fun-arg-list)
   (interactive)
   (let ((buf (Buffer-menu-buffer nil))
 	(pt (point)))
     (with-current-buffer buf
-      (save-buffer)
+      (apply fun fun-arg-list)
       ;; refresh the buffer
       (list-buffers t))
     (goto-char pt)))
+
+(defun dp-bmm-save-immed ()
+  (interactive)
+  (dp-bmm-immed-cmd 'save-buffer))
+
+(defun dp-bmm-unmodify+ro-immed ()
+  (interactive)
+   (dp-bmm-immed-cmd 'dp-unmodify+ro))
 
 (defun dp-buffer-menu-id-file ()
   (let ((file-name (dp-extent-with-property-exists 'help-echo 
@@ -77,6 +85,7 @@ to have buffer-menu show non-file buffers."
   (local-set-key [?W] 'dp-bmm-save-immed)
   (local-set-key [?S] 'dp-bmm-save-immed)
   (local-set-key [(meta ?w)] 'dp-bmm-save-immed)
+  (local-set-key [?U] 'dp-bmm-unmodify+ro-immed)
   (local-set-key [return] 'dp-bmm-visit)
   (local-set-key [(meta return)] 'Buffer-menu-1-window)
   (local-set-key [(control return)] 'Buffer-menu-1-window)

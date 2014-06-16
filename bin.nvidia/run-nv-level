@@ -47,7 +47,9 @@ on_error()
     trap '' 0
 }
 
-basic_level=nvlink/bringup_new_features_basic_nvlink_sysmem
+#basic_level=nvlink/bringup_new_features_basic_nvlink_sysmem
+basic_level=nvlink/bringup_new_features_medium_gpc_sysmem
+med_gpc_peer_level=nvlink/bringup_new_features_medium_gpc_peer
 medium_level=nvlink/bringup_new_features_medium
 medium_ce_sanity_level=nvlink/bringup_new_features_medium_ce_sanity
 medium_ce_peer_level=nvlink/bringup_new_features_medium_ce_peer
@@ -70,6 +72,7 @@ long_options=(
 "only:"
 "wait"
 "basic"
+"med-gpc-peer"
 "medium"
 "nomail" "no-mail"
 "queue:"
@@ -103,6 +106,7 @@ do
       --medium) level=${medium_level};;
       --ce-sanity) level="${medium_ce_sanity_level}";;
       --ce-peer|--medium-ce-peer) level="${medium_ce_peer_level}";;
+      --med-gpc-peer) level="${med_gpc_peer_level}";;
       --link-type) shift; link_info="${1}";
                    EExec_verbose_echo_id link_info
                    link_num=$(echo "${link_info}" | cut -d/ -f 1)

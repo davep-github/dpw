@@ -73,7 +73,7 @@ tmp_file=$(mktemp "$HOME/tmp/tgen-batch-status.tmp.XXXXXXX") || {
 
 EExec_verbose_echo_id tmp_file
 
-option_str="t:r:fdps:"
+option_str="t:r:fdps:0123456789"
 long_options=(
     "test:" "test-name:"
     "test-dir:" "test-root:"
@@ -104,6 +104,7 @@ do
       # Done by EExec_parse and friends.
 
       # Program options.
+      -[0-9]) run_num="${1}";;  # More than -9 will require --nth, et. al.
       -t|--test|--test-name) shift; test_name_opt="--test-name ${1}";;
       -r|--test-dir|--test-root) shift; test_dir="${1}";;
       -f|--files) output_filter=cat;;
