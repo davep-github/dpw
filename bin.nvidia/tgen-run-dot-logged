@@ -47,12 +47,16 @@ csh_check --bash-ok "First check" || exit 1
 
 : ${p4_clib_dir:=//hw/ap_tlit1/clib/Linux}
 : ${log_file_base_name:=dot-sh}
+: ${log_file_uniq_name=${lfun-}}
+vsetp "${log_file_uniq_name}" && {
+    log_file_uniq_name="-${log_file_uniq_name}"
+}
 # I'm done with bash because the quoting sucks beyond suckage:
 # --egrep 'ERROR: cannot aquire /tmp/asim.X'
 # --egrep 'something bad happened'}
 # --cflush-every=-1 --> flush to zip every line.
 : ${teeker_options=--slog -Z9 --ts --hg -i100 --cflush-every=-1}
-: ${teeker_regexps=--hgrep plugin --hgrep __Startup --hgrep __Initialize --hgrep surface_write_read: --hgrep mem_txn_swr: --hgrep dp-msg:}
+: ${teeker_regexps=--hgrep plugin --hgrep __Startup --hgrep __Initialize --hgrep surface_write_read: --hgrep mem_txn_swr: --hgrep dp-msg: --hgrep clogging}
 : ${testname=}
 : ${yopp_p=t}
 
@@ -146,7 +150,7 @@ so_path="${clib_dir}/${so_name}"
 
 # E.g. ./surface_write_read_no_smmu_bar1.sh 2>&1 | teeker --slog -Z9 --ts --grep 'surface_write_read:' --hg dot-sh --egrep 'ERROR: cannot aquire /tmp'; email-yopp
 
-EExec "${testname}" 2>&1 | EExec teeker ${teeker_regexps} ${teeker_options} "$@" "${log_file_base_name}"
+EExec "${testname}" 2>&1 | EExec teeker ${teeker_regexps} ${teeker_options} "$@" "${log_file_base_name}${log_file_uniq_name}"
 rc="$?"
 
 if true_p "${yopp_p}"

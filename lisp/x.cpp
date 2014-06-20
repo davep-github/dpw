@@ -84,6 +84,10 @@ struct C_t
 
 int f(
     int a) const
-{}
+{
+    if (a) {
+        blah();
+    } else if (kkd) {
+        
+}
 
-(    

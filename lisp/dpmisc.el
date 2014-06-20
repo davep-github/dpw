@@ -854,6 +854,9 @@ non-white space on the line."
         (setq bol (1- bol))))
       (cons bol (point)))))
 
+(defun dp-line-sans-newline-p ()
+  (dp-line-boundaries nil t (line-beginning-position)))
+
 (defun dp-line-boundaries-as-list (&rest r)
   (interactive)
   (dp-cons-to-list (apply 'dp-line-boundaries r)))
@@ -946,8 +949,9 @@ first and last non-white space on the line."
     (dp-bound-rest-of-line :text-only-p text-only-p
                            :no-newline-p no-newline-p
                            :ignore-eol-punctuation-p ignore-eol-punctuation-p
-                           :from-beginning-p (eq from-pos 
-                                                 (line-beginning-position)))))
+                           :from-beginning-p (or 
+                                              from-pos 
+                                              (line-beginning-position)))))
 
 (defun dp-indentation-boundaries ()
   (cons (line-beginning-position)
@@ -958,6 +962,7 @@ first and last non-white space on the line."
 
 (defvar dp-region-function-map 
   '((line-p               . (dp-line-boundaries))
+    (line-sans-newline-p  . (dp-line-sans-newline-p))
     (indentation-p        . (dp-indentation-boundaries))
     (preceding-word-p     . (dp-preceding-word-bounds))
     (buffer-p             . ((lambda ()
@@ -2850,6 +2855,7 @@ Use another binding? Running out of prefix arg interpretations."
   ;;(dmessage "lc: %s, tc: %s" last-command this-command)
   (let* ((orig-raw-index index)
          point-after-prefix
+         c-mode-pos
          (iterating-p (or (eq iterating-p t)
                           (eq last-command this-command)))    
          ;; If we're iterating, and not sticky yet, we can stick at the
@@ -2973,7 +2979,8 @@ Use another binding? Running out of prefix arg interpretations."
             (save-excursion
               (goto-char beg)
               (when (and trim-ws-p
-                         (re-search-forward ".*?\\(!+\\)$" (line-end-position) t))
+                         (re-search-forward ".*?\\(!+\\)$" 
+                                            (line-end-position) t))
                 (setq end (dp-mk-marker (match-beginning 1) nil t))
                 (replace-match "" nil nil nil 1)
                 ;;               (setq end (+ 2 (line-end-position)))
@@ -2985,14 +2992,26 @@ Use another binding? Running out of prefix arg interpretations."
         (when iterating-p
           (delete-char (dp-parenthesize-region-info-pre-len 
                         dp-current-parenthesize-region-info)))
-        (insert pre)
+;; exp w/self insert ?( to get c cleanup.        (insert pre)
+        ;;@todo XXX This almost works, but the `save-excursion' puts us back
+        ;;at the wrong spot.
+        (if (and (string= pre "(")
+                 (dp-in-c))
+            (let ((last-command-char ?\())
+              (c-electric-paren nil))
+          (insert pre))
         (goto-char end)
         (if iterating-p
             (delete-char (- 0 (dp-parenthesize-region-info-suf-len
                                dp-current-parenthesize-region-info))))
         (insert suf)
         (when (dp-in-c)
-          (c-indent-region beg (point)))))
+          (setq c-mode-pos (dp-mk-marker))
+          (c-indent-region beg (point))))
+      (when c-mode-pos
+        (goto-char c-mode-pos)
+        (backward-char (+ 1 (length pre)))))
+
     (setq dp-current-parenthesize-region-info
           (make-dp-parenthesize-region-info
            :sticky-p (or sticky-p stick-last-p)
@@ -3009,9 +3028,9 @@ Use another binding? Running out of prefix arg interpretations."
     (when (or stick-last-p sticky-p)
       (message "%s at paren set %s , %s.  Use C-0 to reset."
                (if stick-last-p "Sticking" "Stuck")
-               pre suf ))
+               pre suf))
     (when (and stuck-p (not (or sticky-p stick-last-p)))
-      (message "Unsticking from  paren set %s , %s."
+      (message "Unsticking from paren set %s , %s."
                pre suf))
     (list pre suf)))
 
@@ -3036,8 +3055,8 @@ Use another binding? Running out of prefix arg interpretations."
       (setq pre-suf
             (dp-parenthesize-region index
                                     t
-                                    ;;:pre "( "  ; XXX @todo nvidia c-mode only
-                                    ;;:suf " )"
+;;;                                    :pre "( "  ; XXX @todo nvidia c-mode only
+;;;                                    :suf " )"
                                     :position-after-prefix t
                                     :region-bounder-func 'zero-len-p
                                     :iterating-p (or iterate-p 'no)
@@ -6247,7 +6266,7 @@ matching ones."
           nil)))))
 
 (defun dp-goto-next-dp-extent-from-point (arg)
-  (interactive "P")
+  (interactive "_P")
   (let ((extent (dp-next-dp-extent-from-point arg))
         col)
     (when extent
@@ -6438,13 +6457,18 @@ has value \(cdr region-id), then that extent is matched."
        (eq color '-)))
 
 (defun dp-colorize-roll-colors (&optional color)
-  (interactive)
-  (when (not (dp-invisible-color-p color))
-    (when color
-      (setq dp-colorize-region-default-color-index color))
-    (setq dp-colorize-region-default-color-index
-          (mod (1+ dp-colorize-region-default-color-index) 
-               dp-colorize-region-num-colors))))
+  (interactive "P")
+  (if (interactive-p)
+      (setq dp-colorize-region-default-color-index
+            (if color
+                (prefix-numeric-value current-prefix-arg)
+              0))
+    (when (not (dp-invisible-color-p color))
+      (when color
+        (setq dp-colorize-region-default-color-index color))
+      (setq dp-colorize-region-default-color-index
+            (mod (1+ dp-colorize-region-default-color-index)
+                 dp-colorize-region-num-colors)))))
 
 (defun dp-invisible-face-p (face)
   (or (memq (car face) '(invisible invis))
@@ -6496,7 +6520,7 @@ COLOR_INDEX can be <=0 or '- to indicate invisibility."
                            &rest props)
   "COLOR can be an integer index or a symbol representing a face."
   (interactive "P")
-  (let* ((beg-end (dp-region-or... :bounder 'line-p))
+  (let* ((beg-end (dp-region-or... :bounder 'rest-or-all-of-line-p))
          (beg (or beg (car beg-end)))
          (end (or end (cdr beg-end)))
          (color-and-face (dp-get-color-and-face color))
@@ -6613,6 +6637,7 @@ We also make this a global default so I can change it when the mood strikes.")
                                      dp-colorize-lines-shrink-wrap-p-default)
                                     roll-colors-p 
                                     non-matching-p
+                                    quote-regexp-p
                                     (line-oriented-p t))
   "Colorize lines matching REGEXP.
 SHRINK-WRAP-P says to only colorize the exact match. Add ^.* && .*$ to get
@@ -6631,6 +6656,8 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
         match-region
         match-begin
         match-end)
+    (when quote-regexp-p
+      (setq regexp (regexp-quote regexp)))
     (catch 'up
       (while (setq match-region 
                    (dp-match-contiguous-lines regexp shrink-wrap-p))
@@ -6689,7 +6716,8 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
   ;;!<@todo Fix this so we can request shrink wrapping of the string.
   ;; The problem is that colors are specified with the prefix arg.
   ;;(call-interactively 'dp-colorize-matching-lines isearch-string)
-  (dp-colorize-matching-lines isearch-string 
+  (dp-colorize-matching-lines isearch-string
+                              :quote-regexp-p (not isearch-regexp)
                               :line-oriented-p (not colorize-each-match-p)))
 
 (defvar dp-colorize-bracketing-regexps-history nil
