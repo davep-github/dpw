@@ -88,6 +88,14 @@ int f(
     if (a) {
         blah();
     } else if (kkd) {
+    }
+
+    if (q) {
+        blah();
+    } else if (yadda) {
+        dadda();
+    }
+    
         
 }
 

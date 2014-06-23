@@ -2835,7 +2835,7 @@ indices are unchanged.
 (defun* dp-parenthesize-region (index &optional (trim-ws-p t)  ; <:<::>
                                 &key pre suf 
                                 (position-after-prefix nil)
-                                (region-bounder-func 'rest-or-all-of-line-p)
+                                (region-bounder-func 'rest-of-line-p)
                                 (region-bounder-func-args 
                                  '(:ignore-eol-punctuation-p t))
                                 iterating-p sticky-p
@@ -14347,6 +14347,7 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
              name-type
              name)))
 
+
 (defun dp-grep-buffers (regexp &optional buffer-filename-regexp)
   (interactive "sregexp? ")
   (setq-ifnil buffer-filename-regexp ".*")
@@ -14360,11 +14361,26 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
                                   ;; Make an igrep, etc, like buffer with
                                   ;; all matches and line numbers.
                                   (when (re-search-forward regexp nil t)
-                                    (list (point )buf))))))
+                                    (list (point) buf))))))
                            (dp-choose-buffers-file-names 
                             buffer-filename-regexp)))))
     (message "matching-buffer-list>%s<" matching-buffer-list)
     matching-buffer-list))
+
+(defun dp-grep-buffers-files (regexp &optional buffer-filename-regexp)
+  (interactive "sregexp? \nsfilename regexp? ")
+  (when (member buffer-filename-regexp '(nil ""))
+    (setq buffer-filename-regexp ".*"))
+  (let* ((fileses (delq nil (mapcar
+                             (function
+                              (lambda (buf-info)
+                                (file-relative-name
+                                 (buffer-file-name (cadr buf-info)))))
+                             (dp-grep-buffers regexp 
+                                              buffer-filename-regexp)))))
+    (igrep igrep-program regexp fileses igrep-options)))
+;;    (when buf
+;;      (switch-to-buffer buf))))
 
 (defun dp-verbose-setenv (var &rest rest)
   (interactive)
