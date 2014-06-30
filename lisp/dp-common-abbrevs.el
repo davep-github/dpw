@@ -509,6 +509,10 @@
      dp-manual)
     (("phr" "Prop_handler_ret_t")
      dp-manual)
+    ((("xargsr0" "xargs") "xargs -r0 ")
+     dp-manual)
+    ((("pxargs" "xargsp") "| xargs -r0 ")
+     dp-manual)
     ;; We ignore grep in favor of egrep.
     (("faf" "find . -type f -print0 | xargs -r0 "
       "find . -type f -print0 | xargs -r0 egrep ")

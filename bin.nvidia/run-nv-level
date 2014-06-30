@@ -64,6 +64,7 @@ medium_ce_peer_level=nvlink/bringup_new_features_medium_ce_peer
 : ${big_queue:=o_cpu_16G}
 : ${small_queue:=o_cpu_rel5_4G_8H}
 : ${queue:=${big_queue}}
+: ${seq_file_option=}
 
 option_str="${EExec_parse_option_str}o:"
 long_options=(
@@ -90,6 +91,12 @@ long_options=(
 "ce-sanity"
 "ce-peer" "medium-ce-peer"
 "link-type:"
+"GFake_ingress_interface_with_socket:"
+"fii"
+"no-fii"
+"seq-file:"
+"server-port:" "sport:"
+"client-port:" "cport:"
 )
 source dp-getopt+.sh
 while (($#))
@@ -138,6 +145,15 @@ do
       --all-fc-csl|--csl-fc-all) CSL="${CSL},${fc_csl},${hsh_csl}";;
       # The definition of all may change.
       --all-csl|--csl-all) CSL="${CSL},${fc_csl},${hsh_csl}";;
+      --GFake_ingress_interface_with_socket) shift;
+        export GFake_ingress_interface_with_socket="${1}";;
+      --fii)
+        export GFake_ingress_interface_with_socket=1;;
+      --no-fii)
+        export GFake_ingress_interface_with_socket=0;;
+      --seq-file) shift; seq_file_option="-runSeq ${1}";;
+      --server-port|--sport) shift; export FCNVL_SERVER_PORT="${1}";;
+      --client-port|--cport) shift; export FCNVL_CLIENT_PORT="${1}";;
       --env) shift; e="${1}"
              # Given the options: --env 'x1="jjdj djdj 123"'
              # e is 'x1="jjdj djdj 123"
@@ -212,6 +228,7 @@ EExec tgen.pl \
     ${only_opt} \
     ${abr_opt} \
     ${mail_opt} \
+    ${seq_file_option} \
     "$@"
 
 command_line="$0 ${dolat[@]}"

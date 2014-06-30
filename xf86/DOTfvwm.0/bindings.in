@@ -368,10 +368,11 @@ Key            F6         A      S4    GotoDeskAndPage 6 0 1
 Key            F7         A      S4    GotoDeskAndPage 7 0 1
 Key            F10        A      S4    GotoDeskAndPage 0 0 1
 
-Key            Insert     A      4     GotoPage 0 0
-Key            Delete     A      4     GotoPage 0 1
-Key            Home       A      4     GotoPage 1 0
-Key            End        A      4     GotoPage 1 1
+Key            Delete     A      4     GotoPage 0 0
+Key            Home       A      4     GotoPage 0 0
+Key            End        A      4     GotoPage 0 1
+Key            Page_Up    A      4     GotoPage 1 0
+Key            Page_Down  A      4     GotoPage 1 1
 
 Key            Insert     A      S4    MoveAndGotoPage 0 0
 Key            Delete     A      S4    MoveAndGotoPage 0 1

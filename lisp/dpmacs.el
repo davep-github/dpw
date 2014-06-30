@@ -1019,16 +1019,19 @@ This can be callable.")
   "`defvar' allows us to save the original version once, unless eval'd interactively.")
 
 ;; Make the password hider work with some other programs.
-(loop for prompt in '("Enter passphrase for" 
-                      "Enter password"
-                      "[sudo] password for dapanarx")
-  do (unless (posix-string-match (concat "^" prompt "$")
-              comint-password-prompt-regexp)
-       (setq comint-password-prompt-regexp 
-             (concat comint-password-prompt-regexp
-                     (concat "\\|\\("
-                             (regexp-quote prompt)
-                             ".*: \\)")))))
+;;till-fixed (loop for prompt in '("Enter passphrase for" 
+;;till-fixed                       "Enter password"
+;;till-fixed                       "[sudo] password for dapanarx")
+;;till-fixed   do (unless (posix-string-match (concat "^" prompt "$")
+;;till-fixed               comint-password-prompt-regexp)
+;;till-fixed        (setq comint-password-prompt-regexp 
+;;till-fixed              (concat comint-password-prompt-regexp
+;;till-fixed                      (concat "\\|\\("
+;;till-fixed                              (regexp-quote prompt)
+;;till-fixed                              ".*: \\)")))))
+
+(setq comint-password-prompt-regexp
+"\\(\\([Oo]ld \\|[Nn]ew \\|^\\)?[Pp]assword\\|pass ?phrase\\):?\\s *\\'\\|\\(Enter passphrase for.*: \\)\\|\\(Enter password.*: \\)\\|\\(\\[sudo\\] password for \\(davep\\||dpanariti\\|dapanarx.*\\):? \\)")
 
 (when dp-wants-emms-p
   (require 'dp-emms))

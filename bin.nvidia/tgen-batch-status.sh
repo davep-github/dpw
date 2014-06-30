@@ -86,6 +86,7 @@ long_options=(
     "running"
     "not-done"
     "failed" "b0rked" "error" "fail"
+    "passed" "success" "good" "pass"
     "in-file:" "in:" "if:"
     "nth:" "run-num"
 )
@@ -115,6 +116,7 @@ do
       --srv|--status-not-regexp|--not-status-regexp|--status-regexp-v) shift; status_regexp="${1}"; invert_flag='-v';;
       --not-running|--done|--exited|--finished) status_regexp="^(RUNNING|NOTRUN)"; invert_flag='-v';;
       --failed|--b0rked|--error|fail) status_regexp="^(NOTRUN|RUNNING|PASS_(GOLD|LEAD))"; invert_flag='-v';;
+      --passed|--success|--good|--pass) status_regexp="^(NOTRUN|RUNNING|PASS_(GOLD|LEAD))";;
       --running) status_regexp="^RUNNING";;
       --not-done) status_regexp="^(RUNNING|NOTRUN)";;
       --in-file|--in|--if) shift; in_file="${1}";;

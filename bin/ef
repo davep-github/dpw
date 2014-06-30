@@ -127,7 +127,7 @@ process_file ()
         if vsetp "$eh"
         then
             editing_host_opt="-h $eh"
-            ${editing_host_msg:="using host: $eh"}
+            : ${editing_host_msg:="using host: $eh"}
         else
             problem="Editing server not found"
             and=" AND "

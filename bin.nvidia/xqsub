@@ -109,7 +109,8 @@ EExec dpxx \
        -q "$queue" \
        -P "$project" \
        -cwd "$cwd" \
-       -Is "$command" \
+       -Is \
+       "$command" \
        ${command_args} \
        ${dash_m} \
        "$@"

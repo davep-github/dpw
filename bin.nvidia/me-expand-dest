@@ -28,6 +28,7 @@ progname="$(basename $0)"
 : ${pne_opt=}
 : ${normpath_opt=}
 : ${relativize_opt=}
+: ${p4_loc_opt=}
 
 EZEC=
 while (($# > 0))
@@ -42,6 +43,7 @@ do
       --trace) shift; trace_arg="--trace ${1}";;
       --pne) pne_opt="--print-non-existent";;
       --npne) pne_opt="--no-print-non-existent";;
+      --p4-loc|--//) p4_loc_opt='--p4';;
       --normpa*) normpath_opt="$1";;
       --) shift; break;;
       *) break;;
@@ -87,6 +89,7 @@ exp=$($EZEC ~/lib/pylib/tree_root_relativity.py \
         ${relativize_opt} \
         --expand-dest="${dest}" \
         ${abbrev_suffixes} \
+        ${p4_loc_opt} \
         $sb_arg "$@") || exit
 
 vsetp "${replace_default_symlink}" && {

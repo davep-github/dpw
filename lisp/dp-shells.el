@@ -1533,7 +1533,7 @@ return t if we are in a shell type buffer, false otherwise."
       (message "not shell type buf")
       nil)))
 
-(defvar dp-current-error-function 'dp-do-next-compile-like-error)
+(defvar dp-current-error-function 'dp-do-next-compile-like-error
   "Most recently called function for which we'd like to use \\[dp-next-error] to go to the next result.
 E.g. a compile, igrep or cscope results buffer.")
 

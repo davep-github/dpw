@@ -69,7 +69,8 @@ DPGOP_Usage()
     fi
     set -u                      # XXX @todo unICK!
 
-    echo -n "Usage: ${progname} [-$all_options]${loo}$DPGOP_Usage_args_info
+    echo -n "Usage: ${progname} [-$all_options]${loo}
+$DPGOP_Usage_args_info
 $DPGOP_Usage_synopsis
 $DPGOP_Usage_details"
 }

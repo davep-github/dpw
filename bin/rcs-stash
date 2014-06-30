@@ -46,16 +46,35 @@ on_error()
 : ${rcs_dir=}
 : ${rcs_suffix=,v}
 
-while (($#))
+option_str="d:s:"
+long_options=(
+    "name:" "rcs-dir:"
+    "suffix:" "--rcs-suffix"
+)
+
+source dp-getopt+.sh
+
+while (($# > 0))
 do
   case "$1" in
       -d|--name|--rcs-dir) shift; rcs_dir="${1}";;
       -s|--suffix|--rcs-suffix) shift; rcs_suffix="${1}";;
-      --) shift; break;;
-      *) break;;
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
   esac
   shift
 done
+
+# "Helpful" hack: if the --name, et. al. hasn't been used to set rcs_dir,
+# then assume the user specified it as the first parameter.
+# Of course, this does make sense as a good default.
+vunsetp "${rcs_dir}" && {
+    echo 1>&2 "Using first arg>${1}< as stash dir. Hope this is what you want."
+    rcs_dir="${1}"
+    shift
+}
 
 case "$rcs_dir" in
     /*) ;;
@@ -65,6 +84,7 @@ esac
 
 rcs_dir=$(normpath "${rcs_dir}/RCS")
 EExec mkdir -p "${rcs_dir}"
+EExec nixtagging "${rcs_dir}"
 for file in "$@"
 do
   EExec ci -l $(normpath "${rcs_dir}/${file}${rcs_suffix}")
