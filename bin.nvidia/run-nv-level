@@ -74,8 +74,8 @@ long_options=(
 "only:"
 "wait"
 "basic"
-"med-gpc-peer"
-"med-gpc-sysmem"
+"med-gpc-peer" "medium-gpc-peer"
+"med-gpc-sysmem" "medium-gpc-sysmem"
 "medium"
 "nomail" "no-mail"
 "queue:"
@@ -89,7 +89,7 @@ long_options=(
 "env:"
 "env-grep:" "grep-env:" "envgrep:" "grepenv:"
 "ce-sanity"
-"ce-peer" "medium-ce-peer"
+"ce-peer" "medium-ce-peer" "med-ce-peer"
 "link-type:"
 "GFake_ingress_interface_with_socket:"
 "fii"
@@ -115,8 +115,8 @@ do
       --medium) level=${medium_level};;
       --ce-sanity) level="${medium_ce_sanity_level}";;
       --ce-peer|--medium-ce-peer) level="${medium_ce_peer_level}";;
-      --med-gpc-peer) level="${med_gpc_peer_level}";;
-      --med-gpc-sysmem) level="${med_gpc_sysmem_level}";;
+      --med-gpc-peer|--medium-gpc-peer) level="${med_gpc_peer_level}";;
+      --med-gpc-sysmem|--medium-gpc-sysmem) level="${med_gpc_sysmem_level}";;
       --link-type) shift; link_info="${1}";
                    EExec_verbose_echo_id link_info
                    link_num=$(echo "${link_info}" | cut -d/ -f 1)

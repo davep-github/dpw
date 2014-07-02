@@ -99,3 +99,34 @@ int f(
         
 }
 
+
+
+/***************************************************************************/
+/*!
+ * @class blah_t <template>
+ * @brief slkd;l
+ */
+template <class k>
+struct blah_t
+{
+    blah_t(void)
+    {}
+};
+
+
+/***************************************************************************/
+/*!
+ * @brief bllkas
+ */
+template <class K>
+int fofk(void)
+{}
+
+
+void vv(void)
+{
+    if (!qq()) {
+        vv();
+    }
+}
+

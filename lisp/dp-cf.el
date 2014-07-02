@@ -65,7 +65,7 @@
 
 
 ;;
-;; @todo XXX Make this mode specific? How many other languages to I use that
+;; @todo XXX Make this mode specific? How many other languages do I use that
 ;; have these kinds of relationships?]
 
 (defvar dp-c++-extensions '("cpp" "cxx" "c++" "cc" "tcc" "c")
@@ -82,6 +82,7 @@ And a plain old C extension.")
 
 
 ;; 
+;; @todo XXX 
 ;; Some stupid layouts have a structure like this:
 ;; include/<some-file>.h
 ;; <some-file>/<some-file>.cpp
@@ -89,9 +90,23 @@ And a plain old C extension.")
 ;; Ah, for closures or currying.
 ;; ../../%s ??? Won't work with a file named %s. Boo hoo.
 (defvar dp-cf-src-search-path '("../src" "../source" "../code" "../../src"
-                                "../../source" "../../code" "./src" 
+                                "../../source" "../../code" "./src"
+                                "../%s" "../../%s"
                                 "./source" "./code" ".." ".")
   "Where to look for an include file's corresponding source file.")
+
+(defun dp-get-file-info-to-path (cfi-path file-name)
+  "Return list of cf search path elements with replaced %s"
+  (interactive)                         ; For testing.
+  (let ((file-basename
+         (file-name-sans-extension
+          (file-name-nondirectory file-name))))
+    (mapcar (function 
+             (lambda (path)
+               (if (string-match "\\(^\\|[^%]\\)%s" path)
+                   (format path file-basename)
+                 (replace-in-string path "%%s" "%s"))))
+            cfi-path)))
 
 (defstruct dp-cf-file-info
   ;;
@@ -188,7 +203,9 @@ handing to a completing read."
             (let* ((cfi (nth 2 cf-xi))
                    (existing-path (dp-path-filter:existing 
                                    (or search-path 
-                                       (dp-cf-file-info-to-path cfi))))
+                                       (dp-get-file-info-to-path
+                                        (dp-cf-file-info-to-path cfi)
+                                        file-name))))
                    (first-cf-ext (caar cf-xi))
                    (all-names (dp-cross-file-name-and-dirs
                                just-name ext existing-path new-name-format)))

@@ -2181,6 +2181,26 @@ g()
       (goto-char beg)
       (cons beg end))))
 
+(defun dp-c*-delimit-template-construct ()
+  "Delimit a template<a b> construct. \(point\) is @ t in template."
+  (save-excursion
+    (let ((beg (point))
+          end)
+      (when (search-forward "<" nil t)
+        (goto-char (match-beginning 0))
+        (dp-find-matching-paren)
+        (forward-char 1)
+        (cons beg (point))))))
+
+(defun dp-c*-break-after-template ()
+  (when (looking-at "template")
+    (let ((limits (dp-c*-delimit-template-construct)))
+      (when limits
+        (goto-char (cdr limits))
+        (insert "\n")
+        (dp-c-indent-command)
+        limits))))
+
 (defvar dp-c-format-func-decl-align-p-default nil
   "Should the args be lined up with `align'?")
 
@@ -2244,6 +2264,9 @@ is done.")
     ;;  (return-from dp-c-format-func-decl nil))
     (beginning-of-line)
     (setq decl-bounds (dp-c-flatten-func-decl))
+    ;; Handle template <xxx>
+    (when (looking-at "template")
+      (dp-c*-break-after-template))
     ;; Or skip past any member init before looking for {.
     (unless decl-bounds
       (goto-char old-point)

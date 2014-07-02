@@ -240,7 +240,7 @@ EExec dp4-sync-post-processor
 RC=$?
 vsetp "${send_mail_on_completion_p-}" && ! EExecDashN_p && ! vsetp "${p4_sync_dash_n}" && {
     EExec_verbose_msg "YOPP!ing."
-    email-yopp "$@: RC: ${RC}"
+    email-yopp "${progname}: $@: RC: ${RC}"
 }
 
 exit

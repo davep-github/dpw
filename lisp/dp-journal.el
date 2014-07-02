@@ -546,15 +546,16 @@ This variable is used to identify things like view bufs.")
 
 ;; NB: must retain side effect of moving point to topic start!!!
 (defsubst dpj-get-current-timestamp-pos ()
-  (dpj-goto-current-topic-start)
-  (- (point) dp-timestamp-len 1))
+  (when (dpj-goto-current-topic-start)
+    (- (point) dp-timestamp-len 1)))
   
 (defun dpj-get-current-timestamp ()
   "Pluck the timestamp from the current topic.
 Return CONS (ts-text . ts-position)."
   (save-excursion
     (let ((ts-start (dpj-get-current-timestamp-pos)))
-      (cons (buffer-substring ts-start (1- (point))) ts-start))))
+      (when ts-start
+        (cons (buffer-substring ts-start (1- (point))) ts-start)))))
 
 (defun dpj-find-topic (searchf movef skip-current &optional topic-re count
 			       skip-re)

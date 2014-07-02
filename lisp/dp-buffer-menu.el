@@ -355,7 +355,7 @@ See also `buffers-menu-predicate-args'."
             (t
              t)))))
 
-;;@todo XXX Override here. Rebuild patch.
+;;@todo XXX Override `list-buffers-noselect' here. Rebuild patch file.
 (defun list-buffers-noselect (&optional files-only)
   "Create and return a buffer with a list of names of existing buffers.
 The buffer is named `*Buffer List*'.

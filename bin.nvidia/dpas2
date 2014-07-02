@@ -1,17 +1,135 @@
 #!/bin/sh
-
 source script-x
 set -u
 progname="$(basename $0)"
 source eexec
-eexec_program=$(EExec_parse "$@")
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
 for op in $eexec_program
 do
   $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+: ${AS2_HIST_FILE:=}
+: ${AS2_HIST_FILE_NAME=AS2_HIST_FILE}
+
+vunsetp "${AS2_HIST_FILE}" && {
+    AS2_HIST_FILE="$(me-expand-dest tot)/${AS2_HIST_FILE_NAME}"
+}
+
+trap_exit_msg=
+
+AS2=$(sp as2 | fgrep -v "$HOME" | head -n1)
+vsetp "$AS2" || {
+    echo "Cannot find the real as2"
+    exit 1
+} 1>&2
+
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+}
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+    trap '' 0
+}
+
+#     cancel              Terminate a bundle that's in process
+#     cleanup             Revert unchanged files and delete empty changelists
+#     client              Print a client for the named AS2 target
+#     describe            List files and changes from a pending bundle
+#     help                Print this help message
+#     help <cmd>          Print additional help for a command
+#     hold                Hold the tree of a failed build
+#     modify              Modify parameters of an existing bundle
+#     notify              Receive email on a bundle
+#     pending             List all queued bundles
+#     resubmit            Resubmit a bundle that failed
+#     retrieve            Fetch a queued/rejected bundle into the local client
+#     status              Get detailed status of a pending bundle
+#     submit              Submit open files to the server, like p4 submit
+#     test                Test access to the autosubmit-2 server
+#     totstat             Get status of a task at TOT
+
+describe_p=
+#
+# find the bundle id
+# format: A1083803
+bundle_id=
+command=
+saved_args=("$@")
+while (($# > 0))
+do
+  case "${1}" in
+      -*) ;;
+      A[0-9][0-9][0-9][0-9][0-9][0-9][0-9]) bundle_id="${1}"
+          break;;
+      *) vsetp "${command}" && {
+          echo "Found a second command like parameter:
+first>${command}<, this>${1}<
+bailing."
+          exit 1
+          } 1>&2
+          command="${1}";;
+  esac
   shift
 done
-unset eexec_program
+set -- "${saved_args[@]}"
+#
+# Don't save info about simple commands or commands that don't affect the
+# current tree.
+vsetp "${command}" || {
+    echo "Could not determine command given command line:
+$@"
+    exit 1
+} 1>&2
 
-# Front end to as2 to keep around as2 command history.
-# date: cwd: command
+EExec_verbose_echo_id command
+case "${command}" in
+    help|client|describe|pending|status|test|totstat)
+        AS2_HIST_FILE=/dev/null;;
+    retrieve) describe_p=t;;
+    *) ;;
+esac
+
+EExecDashN_p && AS2_HIST_FILE=/dev/null
+
+{
+    echo "======== $(date) ========"
+    echo "Command line:"
+    eko "$@"
+    true_p "${describe_p}" && {
+        echo "======== begin: describe ${bundle_id} ========"
+        if vunsetp "${bundle_id}"
+        then
+            echo "Bundle id is not set; cannot describe it."
+        else
+            EExec "${AS2}" describe "${bundle_id}"
+        fi
+        echo "======== end: describe ${bundle_id} ========"
+    }
+    echo "======== begin: command output ========"
+    EExec "${AS2}" "$@"
+    echo "======== end: command output ========"
+} 2>&1 | tee -a "${AS2_HIST_FILE}"
 

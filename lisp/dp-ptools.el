@@ -238,7 +238,14 @@ Oddly, it doesn't handle structs.")
 
 (defun dp-tag-find (&rest r)
   (interactive)
-  (call-interactively 'gtags-find-tag))
+  (cond
+   ((looking-at "(")
+    (dp-eval-naked-embedded-lisp))
+   ((looking-at ":(")
+    (dp-eval-embedded-lisp-region))
+   (t
+    (call-interactively 'gtags-find-tag))))
+
 ;;   (condition-case err
 ;;       (let ((handler-list (dp-get-*TAGS-handler-list)))
 ;;         (if handler-list

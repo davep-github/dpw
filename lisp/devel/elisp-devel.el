@@ -5888,3 +5888,26 @@ dp-p4-location-regexp
 I made it.
 nil
 
+
+========================
+Wednesday July 02 2014
+--
+(defun dp-get-file-info-to-path (cfi-path file-name)
+  (interactive)                         ; For testing.
+  (let ((file-basename (file-name-nondirectory file-name)))
+    (mapcar (function 
+             (lambda (path)
+               (if (string-match "\\(^\\|[^%]\\)%s" path)
+                   (format path file-basename)
+                 (replace-in-string path "%%s" "%s"))))
+            cfi-path)))
+
+(dp-get-file-info-to-path '("a/b" "/%s/b" "a%%sb") "BUBBA")
+("a/b" "/BUBBA/b" "a%sb")
+
+
+(replace-in-string "123a" "a" "QQQ")
+"123QQQ"
+
+nil
+
