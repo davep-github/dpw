@@ -279,8 +279,6 @@ intolerable delays to files not in perforce."
                                                  (dp-specific-extensions))))
       dp-most-specific-spec-macs (car-safe dp-loaded-spec-macsen))
 
-;; This uses spec-macs values.
-(require 'dp-ptools)
 
 ;;
 ;; derived vars from spec-macs specific stuff
@@ -862,34 +860,7 @@ This can be callable.")
   (add-hook 'outline-mode-hook 'turn-off-filladapt-mode)
   (setq filladapt-mode-line-string " Fa"))
 
-(require 'dp-hooks)
-;;
-;; run-lisp sets the keymap *after* entering comint-mode and before
-;; inferior-lisp-mode-hook is run, so we run the hook again
-;; to get our keys
-(add-hook 'inferior-lisp-mode-hook 'dp-comint-mode-hook)
-(add-hook 'lisp-interaction-mode-hook 'dp-lisp-interaction-mode-hook)
-(add-hook 'emacs-lisp-mode-hook 'dp-emacs-lisp-mode-hook)
-(add-hook 'minibuffer-setup-hook 'dp-minibuffer-setup-hook)
-(add-hook 'c-mode-common-hook 'dp-c-like-mode-common-hook)
-(add-hook 'c++-mode-hook 'dp-c++-mode-hook)
-(add-hook 'buffer-menu-mode-hook 'dp-buffer-menu-mode-hook)
-(add-hook 'text-mode-hook 'dp-text-mode-hook)
-(add-hook 'help-mode-hook 'dp-help-mode-hook)
-(add-hook 'hyper-apropos-mode-hook 'dp-hyper-apropos-mode-hook)
-
-(add-hook 'dired-setup-keys-hook 'dp-dired-setup-keys-hook)
-(add-hook 'dired-mode-hook 'dp-dired-mode-hook)
-(add-hook 'Info-mode-hook 'dp-Info-mode-hook)
-(add-hook 'Manual-mode-hook 'dp-manual-mode-hook)
-(add-hook 'sh-mode-hook 'dp-sh-mode-hook)
-
-;; put new hooks up there ^
-
 ;;;;;(require 'dp-shells)
-
-;;; @todo autoload-ify the main entry points.
-(dp-setup-cscope)
 
 (defun dp-mk-remote-files-precious (&optional buffer pred)
   (setq-ifnil buffer (current-buffer)
@@ -993,14 +964,19 @@ This can be callable.")
 (setq search-ring-max 64
       regexp-search-ring-max 64)
 
-;; Do these at run-time vs load-time.
+;; Do these more like at run-time vs load-time.
+;; This hook is run at the end of dpmacs.el
 (add-hook 'dp-post-dpmacs-hook
           (function 
            (lambda ()
              ;;;(require 'psvn) ; Just let vc take care of everything?
              (require 'dp-faces)
+             (require 'dp-ptools)
              (add-hook 'isearch-mode-hook 'dp-isearch-mode-hook)
              (add-hook 'isearch-mode-end-hook 'dp-isearch-mode-end-hook)
+             ;; @todo autoload-ify the main entry points.
+             (require 'dp-hooks)
+             (dp-setup-cscope)
              (paren-activate))))
 
 (when (paths-file-readable-directory-p dp-site-package-info)

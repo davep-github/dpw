@@ -123,6 +123,11 @@ int fofk(void)
 {}
 
 
+my_type_t fff(void)
+{
+    bobalo();
+}
+
 void vv(void)
 {
     if (!qq()) {

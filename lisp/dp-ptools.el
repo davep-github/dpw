@@ -290,7 +290,7 @@ Oddly, it doesn't handle structs.")
   "Does this buffer want gtags key mappings?")
 
 ;; XXX @todo Fix this to use a real predicate.
-(when t ;;; (dp-gtags-p)
+(when t ;;(dp-gtags-p)
   (make-variable-buffer-local 'gtags-auto-update)
   (setq-default gtags-auto-update nil)
   (defun dp-gtags-update-file ()

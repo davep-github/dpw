@@ -36,7 +36,12 @@
 ;;; those that make sense given the syntax guess, or all. Or, of course,
 ;;; both. Hacking in a cycle mode should be easy-ish. There is already some
 ;;; code to do it. It can also make a better improvement sooner.
-;;; !<@todo XXX Make a meta-level cycler using mode specific data.
+;;; !<@todo XXX Make a meta-level cycler using mode specific data, e.g.
+;;; font-lock-comment-face
+;;; font-lock-type-face
+;;; font-lock-function-name-face
+;;; etc...
+;;; do icky things like (while xxx-face-p() (forward-char -1))
 ;;;
 ;;; Add a set of mode specific bindings to do specific cases.
 ;;; [C-d M-return +
@@ -432,7 +437,7 @@
    ;;;;;;;;;;;;;;;;;
            (t
             (dmessage "cob: in default clause")
-            ;;; XXX (barfolal)
+            ;;; XXX (barfola)
             ;;; !<@todo XXX (end-of-line) 
             (dp-c-context-line-break)
             ;; !<@todo XXX "return" 'no-change-p

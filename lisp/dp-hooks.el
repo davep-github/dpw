@@ -697,11 +697,6 @@ c-hanging-braces-alist based upon these values.")
 (eval-after-load "cc-mode"
   (dp-after-load-cc-mode))
 
-(defun dp-gtags-p ()
-  (or (featurep 'gtags )
-      (and (fboundp 'gtags-mode)
-           (dmessage "not featurep 'gtags, but gtags-mode defined."))))
-
 (defcustom dp-default-c-like-mode-cleanup-whitespace-p t
   "Turn it all on or off for all C like modes here."
   :group 'dp-whitespace-vars
@@ -2329,8 +2324,29 @@ changed."
 (when (functionp 'vc-find-file-hook)
   (add-hook 'after-revert-hook 'vc-find-file-hook))
 (add-hook 'before-revert-hook 'dp-before-revert-hook)
+;;
+;; run-lisp sets the keymap *after* entering comint-mode and before
+;; inferior-lisp-mode-hook is run, so we run the hook again
+;; to get our keys
+(add-hook 'inferior-lisp-mode-hook 'dp-comint-mode-hook)
+(add-hook 'lisp-interaction-mode-hook 'dp-lisp-interaction-mode-hook)
+(add-hook 'emacs-lisp-mode-hook 'dp-emacs-lisp-mode-hook)
+(add-hook 'minibuffer-setup-hook 'dp-minibuffer-setup-hook)
+(add-hook 'c-mode-common-hook 'dp-c-like-mode-common-hook)
+(add-hook 'c++-mode-hook 'dp-c++-mode-hook)
+(add-hook 'buffer-menu-mode-hook 'dp-buffer-menu-mode-hook)
+(add-hook 'text-mode-hook 'dp-text-mode-hook)
+(add-hook 'help-mode-hook 'dp-help-mode-hook)
+(add-hook 'hyper-apropos-mode-hook 'dp-hyper-apropos-mode-hook)
+
+(add-hook 'dired-setup-keys-hook 'dp-dired-setup-keys-hook)
+(add-hook 'dired-mode-hook 'dp-dired-mode-hook)
+(add-hook 'Info-mode-hook 'dp-Info-mode-hook)
+(add-hook 'Manual-mode-hook 'dp-manual-mode-hook)
+(add-hook 'sh-mode-hook 'dp-sh-mode-hook)
 
 ;; <:add-new-`add-hooks'-up-there:>
+;; put new hooks up there ^
 
 (provide 'dp-hooks)
 
