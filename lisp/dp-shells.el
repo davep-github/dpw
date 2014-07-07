@@ -3456,6 +3456,7 @@ reasonable: numbers, strings, symbols.
                                   'dp-shell-dp-shell-num-greater-or-equal-p
                                 'dp-shell-dp-shell-num-less-p)))
          (this-buf (memq (or buffer (current-buffer)) shell-buffers)))
+    ;; Handle wrapping.
     (or (nth 1 this-buf)
         (car shell-buffers))))
 
@@ -3469,19 +3470,28 @@ reasonable: numbers, strings, symbols.
 
 (defun dp-shell-switch-to-next-buffer (&optional other-window-p buffer)
   (interactive "P")
-  (funcall (if other-window-p
-               'switch-to-buffer-other-window
-             'switch-to-buffer)
-           (dp-next-shell-buffer))
-  (dp-shells-set-most-recent-shell (current-buffer) 'shell))
+  ;; It would be nice if there was someplace higher up that we could put the
+  ;; no more buffers check but there's no clean way to do it since those
+  ;; functions shouldn't consider no more buffers as an error.
+  (let ((next-buffer (dp-next-shell-buffer)))
+    (if (eq next-buffer (current-buffer))
+        (dp-ding-and-message "No more shell buffers.")
+      (funcall (if other-window-p
+                   'switch-to-buffer-other-window
+                 'switch-to-buffer)
+               next-buffer)
+      (dp-shells-set-most-recent-shell (current-buffer) 'shell))))
 
 (defun dp-shell-switch-to-prev-buffer (&optional other-window-p buffer)
   (interactive "P")
-  (funcall (if other-window-p
-               'switch-to-buffer-other-window
-             'switch-to-buffer)
-           (dp-prev-shell-buffer))
-  (dp-shells-set-most-recent-shell (current-buffer) 'shell))
+  (let ((next-buffer (dp-next-shell-buffer)))
+    (if (eq next-buffer (current-buffer))
+        (dp-ding-and-message "No more shell buffers.")
+      (funcall (if other-window-p
+                   'switch-to-buffer-other-window
+                 'switch-to-buffer)
+               (dp-prev-shell-buffer))
+      (dp-shells-set-most-recent-shell (current-buffer) 'shell))))
 
 
 ;;WTF?! (defun dp-shell-switch-to-prev-buffer (&optional buffer)

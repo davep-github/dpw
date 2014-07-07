@@ -1735,16 +1735,21 @@ Tells `dp-indent-line-and-move-down' to not try to fix comments.
                                preserve-column-p
                                new-this-command 
                                &rest func-args)
-  "Perform an op on a line and move to the next. 
+  "Apply FUNC to FUNC-ARGS when PRED to the current line and move down.
 Motivated by abstraction of `dp-indent-line-and-move-down'."
   (interactive "*")
   ;;(beginning-of-line)
-  (let ((goal-column (and preserve-column-p 
-                          (current-column))))
+  ;; `preserve-column-p' vs not results in some very different behavior, the
+  ;; details of which I cannot remember. I just know that each case had
+  ;; suck-ass problems.
+  (let ((goal-column goal-column))
+    (unless preserve-column-p 
+      (setq goal-column (current-column)))
     (when (or (eq pred t)
               (funcall pred))
       (apply func func-args))
-    (next-line 1))
+    (next-line 1)
+    )
 
   ;; python-mode does different things if the previous command was an indent
   ;; command, so we make sure this isn't true.  This should be OK since this
@@ -1793,6 +1798,7 @@ Tidying includes: re `indent-for-comment' and fixing up white space."
       (dp-with-saved-point nil
         (dp-fix-comment))))
    t
+   'preserve-column
    'forward-line))
 
 (defun dp-delete-indentation-and-move-down (&optional arg)
@@ -14117,9 +14123,10 @@ whitespace eradication.")
                      (funcall cleanup-current-line-pred)))
             (dp-func-and-move-down 'dp-cleanup-line
                                    t
-                                   nil ; 'preserve-column
+                                   'preserve-column
                                    'next-line)
-          (next-line 1))))))
+          (next-line 1)
+          (setq this-command 'next-line))))))
 
 (defun dp-fast-replace-regexp-region (regexp replacement &optional beg end)
   "Do a fast regexp replace as recommended in the doc for `replace-regexp."

@@ -33,7 +33,24 @@ struct Oh_no_you_di_int_t
 
     }
 
-        //
+    int i(void)
+    {}
+
+    int j(
+        int a,
+        char b)
+    {}
+
+    virtual void blah1(
+        int q)
+    {}
+
+    void a1(
+        int bubba) const
+    {}
+
+    
+    //
     int f(void)
     {
         blah();

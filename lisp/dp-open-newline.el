@@ -328,7 +328,8 @@
                        (dp-mk-c++-symbol-regexp "else")
                        "\\)"
                        "\\(\\s-*\\)")))
-            (dmessage "matches: %s" (dp-string-join (dp-all-match-strings) "|"))
+            (dmessage "matches: %s" (dp-string-join (dp-all-match-strings) 
+                                                    "|"))
             (replace-match (format "\\2 {%s\\4"
                                    (if (> (length (match-string 3)) 2)
                                        (substring (match-string 3) 2)
@@ -393,7 +394,8 @@
                      (progn
                        (dp-c-end-of-line)
                        (or (and (dp-in-c-statement)
-                                (not (dp-looking-back-at-close-paren-p 'final)))
+                                (not (dp-looking-back-at-close-paren-p 
+                                      'final)))
                            (dp-c-in-syntactic-region
                             dp-c-add-comma-@-eol-of-regions))))
                  (progn

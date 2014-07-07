@@ -36,7 +36,6 @@ Caught_signals = []
 
 ## @todo XXX Add remote control via signals or other method.
 ## Motivation: Send a signal and have it dump all current grep hits.
-## @todo XXX Add remote control via signals or other method.
 
 # Regular variable names are strings. So we'll use a non-string for some
 # special, internal codes. This `var' holds the constructor of the chosen
@@ -747,15 +746,23 @@ Split line into chars and feed to ticker.""")
                          dest="pipe_mode_p", default=False,
                          action="store_true",
                          help="Send ticks to stderr and input to stdout.")
+    # Get names like this (perhaps as an envvar named like
+    # <app-name>_specific_opt="--tgen-errors".  And
+    # <app-name>_specific_opt_val="Blah"
+    # Meh. Methinks tis not worth the effort given the need to provide
+    # actions. There would need to be a kind of processor for each group of
+    # variables.  Much easier to use wrapper scripts to provide the
+    # values. And more flexible since each wrapper can provide its own set of
+    # defaults.
     oparser.add_argument("--tgen-errors",
                          default=None, const="Assertion|call stack|stack_trace",
                          action="store_const",
-                         help="Convenience option for finding common testgen errors. Perhaps change the value of this to an envvar to make it more flexible.  --log-errors-regexp")
+                         help="Convenience option for finding common testgen errors. This should be modified to make it more flexible and less nvidia specific. Maybe an environment variable  --log-errors-regexp")
     oparser.add_argument("--grep-errors", "--errors", "--error-regexps",
                          "--ere", "--egrep", "--err-grep",
                          dest="error_regexp_patterns",
                          action="append", default=[],
-                         help="Grep for these patterns and treat as errors. --max-errors tells how many error matches to accept before exiting. The default is %s where 0 means no limit." % (DEFAULT_MAX_ERROR_MATCHES,))
+                         help="Grep for these patterns and treat matches as errors. --max-errors tells how many error matches to accept before exiting. The default is %s where 0 means no limit." % (DEFAULT_MAX_ERROR_MATCHES,))
     oparser.add_argument("-g", "--grep", "--regexp", "--re", "--match",
                          dest="regexp_patterns",
                          action="append", default=[],
@@ -816,7 +823,7 @@ Split line into chars and feed to ticker.""")
                          "--num-trailing-lines",
                          dest="num_trailing_lines",
                          type=int, default=DEFAULT_LINES_AFTER,
-                         help="Print this many more lines if possible (ignoring filters and ticking) before exiting. Default is: %s. (0) means none")
+                         help="Print this many more lines if possible (ignoring filters and ticking) before exiting. Default is: %s. Zero means none." % (DEFAULT_LINES_AFTER,))
     oparser.add_argument("-q", "--cat-like", "--copy", "--tee",
                          nargs=0,
                          action=App_arg_action_catlike,

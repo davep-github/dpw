@@ -41,4 +41,6 @@ on_error()
     trap '' 0
 }
 
-EExec yoppr nvmk fmodel 2>&1 | teeker --tee --hgrep 'The job whose output file'
+EExec mecd tot
+# @todo XXX collect other regexps of interest.
+EExec yoppr nvmk fmodel 2>&1 | teeker --tee --wgrep 'The job whose output file' "$@"
