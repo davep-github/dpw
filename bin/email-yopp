@@ -29,6 +29,7 @@ do
   shift
 done
 
+RC=-
 if vunsetp "$*"
 then
     type="No msg."
@@ -42,10 +43,7 @@ else
     type="MSG: "
 fi
 
-prefix=
-vsetp "${RC}" && {
-    prefix="RC: ${RC}: "
-}
+prefix="RC: ${RC}: "
 msg="$progname: in ${PWD}: ${type}$@"
 
 echo "${msg}" | EExec mail -s "${prefix}${annotation}YOPP! ${msg}" "${USER}"

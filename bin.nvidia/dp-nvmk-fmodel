@@ -23,6 +23,34 @@ unset eexec_program
 # export eexec_program
 
 trap_exit_msg=
+cleanall_p=
+
+# Usage variable usage:
+Usage_synopsis="yopp'ing build fmodel.
+"
+# Example of arg parsing.
+option_str="c"
+long_options=(
+    "clean" "cleanall"
+)
+source dp-getopt+.sh
+while (($# > 0))
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support
+      # Done by EExec_parse and friends.
+
+      # Program options.
+      -c|--clean|--cleanall) cleanall_p=t;;
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
+done
 
 # Useful traps
 on_exit()
@@ -42,5 +70,9 @@ on_error()
 }
 
 EExec mecd tot
+
+true_p "${cleanall_p}" && {
+    EExec yoppr nvmk cleanall
+}
 # @todo XXX collect other regexps of interest.
 EExec yoppr nvmk fmodel 2>&1 | teeker --tee --wgrep 'The job whose output file' "$@"

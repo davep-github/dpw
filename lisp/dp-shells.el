@@ -168,7 +168,8 @@ prompt.  We don't want to stomp on them.")
 ;; Current prompt style: NO / @ end
 ;; dpanariti@o-xterm-34:/home/scratch.dpanariti_t124/sb2/hw/hw
 (defun dp-shell-lookfor-dir-change (str)
-  (let ((regexp (format "^%s@%s:\\(/.*[^/]$\\)"
+  ;;(dmessage "dir-change, str>%s<" str)
+  (let ((regexp (format "^%s@%s:\\([~/].*[^/]$\\)"
                         (user-login-name) (dp-short-hostname))))
     ;;(message "regexp>%s<" regexp)
     (when (string-match regexp str)
@@ -177,7 +178,8 @@ prompt.  We don't want to stomp on them.")
 ]+\\)" s)
           ;; Just set it, no sense in comparing to see if it changed.
           (setq default-directory 
-                (concat (match-string 1 s) "/"))
+                (expand-file-name
+                 (concat (match-string 1 s) "/")))
           (unless (dp-current-sandbox-dir-p default-directory)
             (save-excursion
               (beginning-of-line)

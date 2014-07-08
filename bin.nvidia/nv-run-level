@@ -24,7 +24,7 @@ do
   $op
   ${EEXEC_SHIFT}
 done
-EExec_verbose_msg $(echo_id eexec_program)
+EExec_verbose_echo_id echo_id eexec_program
 unset eexec_program
 #export eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
@@ -60,7 +60,8 @@ medium_ce_peer_level=nvlink/bringup_new_features_medium_ce_peer
 : ${mail_opt=-mail}             # Default on, can turn off w/opt.
 : ${fc_csl="+fc_nvlink_translator_egress.cpp,+fc_nvlink_translator.cpp,+fc_nvlink_translator.h,+fc_nvlink_translator.cpp,+fc_nvlink_translator_ingress.cpp"}
 : ${hsh_csl="+hshub_xbar.cpp,+hshub_nvlink_main.cpp,+hshub_nvlink_xbar_handler.cpp"}
-: ${CSL=}
+: ${ALL_CSL="${fc_csl},${hsh_csl}"}
+: ${CSL=${ALL_CSL}}
 : ${big_queue:=o_cpu_16G}
 : ${small_queue:=o_cpu_rel5_4G_8H}
 : ${queue:=${big_queue}}
@@ -86,6 +87,9 @@ long_options=(
 "hsh-csl"
 "all-fc-csl" "csl-all-fc"
 "all-csl" "csl-all"
+"no-csl"
+"csl:"
+"add-csl:"
 "env:"
 "env-grep:" "grep-env:" "envgrep:" "grepenv:"
 "ce-sanity"
@@ -144,7 +148,10 @@ do
       --hshs-csl) CSL="${CSL},${hsh_csl}";;
       --all-fc-csl|--csl-fc-all) CSL="${CSL},${fc_csl},${hsh_csl}";;
       # The definition of all may change.
-      --all-csl|--csl-all) CSL="${CSL},${fc_csl},${hsh_csl}";;
+      --all-csl|--csl-all) CSL="${ALL_CSL}";;
+      --no-csl) CSL=;;
+      --csl) shift; CSL="${1}";;
+      --add-csl) shift; CSL="${CSL},${1}";;  # N.B. We add the ,
       --GFake_ingress_interface_with_socket) shift;
         export GFake_ingress_interface_with_socket="${1}";;
       --fii)
@@ -170,9 +177,10 @@ do
   shift
 done
 
-# trim a possible leading comma:
+# trim possible leading commas left over from concatenation process.
+EExec_verbose "Trimming possible leading commas."
 EExec_verbose_echo_id CSL
-CSL=$(echo "${CSL}" | sed -rn 's/^(,?)(.*)/\2/p')
+CSL=$(echo "${CSL}" | sed -rn 's/^(,*)(.*)/\2/p')
 EExec_verbose_echo_id CSL
 export CSL
 

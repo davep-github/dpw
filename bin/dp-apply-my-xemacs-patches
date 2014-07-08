@@ -37,11 +37,12 @@ VERSION_ID="$1"
 echo "Looking for >$VERSION_ID< in >$PWD<"
 case "$PWD" in
   *$VERSION_ID*) ;;
-  *) echo 1>&2 "You don't seem to be in $VERSION_ID'S dir."; exit 2;;
+  *) echo 1>&2 "You don't seem to be in $VERSION_ID's dir."; exit 2;;
 esac
 
 # Patch lisp first.
 # We should be some VERSION_ID'y lisp place.
+echo "Looking for >*$VERSION_ID*/lisp< in >$PWD<"
 case "$PWD" in
   *$VERSION_ID*/lisp) ;;
   *) echo 1>&2 "You don't seem to be in $VERSION_ID's lisp dir."; exit 3;;

@@ -20,4 +20,6 @@ alias xsb='mecd .'
 alias gxsb='mego .'
 
 alias nvpc=nv-pristine-cmd
+
+alias as2=dpas2
 true

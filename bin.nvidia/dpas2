@@ -77,10 +77,12 @@ describe_p=
 # format: A1083803
 bundle_id=
 command=
+
 saved_args=("$@")
 while (($# > 0))
 do
   case "${1}" in
+      -c) shift;;               # consume(hide) non-option looking number
       -*) ;;
       A[0-9][0-9][0-9][0-9][0-9][0-9][0-9]) bundle_id="${1}"
           break;;
