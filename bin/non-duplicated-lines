@@ -74,6 +74,12 @@ do
     shift
 done
 
+if (($# > 0))
+then
+    cat "$@"
+else
+    cat
+fi | \
 if true_p "${sort_p}"
 then
     sort

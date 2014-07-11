@@ -366,6 +366,7 @@ EExec()
           -C|-0|--fake-success|--return-zero|--rose) eexecContinue=t
               fake_success_p=y
               ;;
+          --no-errors) eexecErrorReporter=; eexecContinue=t;;
           -y|--execute-anyway|--ignore-dash-n) eexecShowOnly=""
               eexecShowPrefix=""
               ${EExecExporter} EExecEchoPrefix="y"
