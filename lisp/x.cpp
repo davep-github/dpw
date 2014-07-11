@@ -11,6 +11,7 @@ struct Meh_t
 
 int f(void)
 {
+    cout << blah << std::endl;
     blah();
     while (a < q const) {       // konst, eh?
     }

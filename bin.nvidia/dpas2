@@ -28,6 +28,8 @@ vunsetp "${AS2_HIST_FILE}" && {
     AS2_HIST_FILE="$(me-expand-dest tot)/${AS2_HIST_FILE_NAME}"
 }
 
+EExec_verbose_echo_id AS2_HIST_FILE
+
 trap_exit_msg=
 
 AS2=$(sp as2 | fgrep -v "$HOME" | head -n1)
@@ -83,6 +85,7 @@ while (($# > 0))
 do
   case "${1}" in
       -c) shift;;               # consume(hide) non-option looking number
+      -u) shift;;
       -*) ;;
       A[0-9][0-9][0-9][0-9][0-9][0-9][0-9]) bundle_id="${1}"
           break;;
@@ -115,9 +118,9 @@ case "${command}" in
 esac
 
 EExecDashN_p && AS2_HIST_FILE=/dev/null
-
+command_date=$(date)
 {
-    echo "======== $(date) ========"
+    echo "======== begin as2 operation: ${command}: ${command_date} ========"
     echo "Command line:"
     eko "$@"
     true_p "${describe_p}" && {
@@ -128,10 +131,10 @@ EExecDashN_p && AS2_HIST_FILE=/dev/null
         else
             EExec "${AS2}" describe "${bundle_id}"
         fi
-        echo "======== end: describe ${bundle_id} ========"
+        echo "======== finis: describe ${bundle_id} ========"
     }
     echo "======== begin: command output ========"
     EExec "${AS2}" "$@"
-    echo "======== end: command output ========"
+    echo "======== finis: as2 operation: ${command}: ${command_date} ========"
 } 2>&1 | tee -a "${AS2_HIST_FILE}"
 

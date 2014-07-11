@@ -127,7 +127,12 @@ process_file ()
         if vsetp "$eh"
         then
             editing_host_opt="-h $eh"
-            : ${editing_host_msg:="using host: $eh"}
+            sb_name=$(find_best_editing_host sandbox-name)
+            local extra=
+            vsetp "${sb_name}" && {
+                extra=", sandbox: ${sb_name}"
+            }
+            editing_host_msg="editing on host: ${eh}${extra}"
         else
             problem="Editing server not found"
             and=" AND "

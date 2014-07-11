@@ -694,6 +694,11 @@ c-hanging-braces-alist based upon these values.")
     (define-key map [(control 59)] (kb-lambda (insert ";" )))
     ))
 
+(defun dp-gtags-p ()
+  (or (featurep 'gtags )
+      (and (fboundp 'gtags-mode)
+           (dmessage "not featurep 'gtags, but gtags-mode defined."))))
+
 (eval-after-load "cc-mode"
   (dp-after-load-cc-mode))
 

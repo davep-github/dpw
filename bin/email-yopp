@@ -14,7 +14,7 @@ unset eexec_program
 
 : ${annotation=}
 : ${run_cmd_p=}
-RC=
+RC=-
 
 while (($# > 0))
 do
@@ -22,14 +22,13 @@ do
       --cron) annotation="cron: ${annotation}";;
       --anno|--annotation) shift; annotation="${annotation} ${2}";;
       --run|--exec|--eval|--cmd) run_cmd_p=t;;
-      --rc) shift; RC="${1}";;
+      --rc|--RC) shift; RC="${1}";;
       --) shift; break;;
       *) break;
   esac
   shift
 done
 
-RC=-
 if vunsetp "$*"
 then
     type="No msg."
@@ -43,7 +42,12 @@ else
     type="MSG: "
 fi
 
+# HOW?!
+# RC: -: YOPP! email-yopp: in /home/scratch.dpanariti_nvgpu/sb8/sb8hw/hw/nvgpu: MSG: dp4-sync: RC: 0
 prefix="RC: ${RC}: "
 msg="$progname: in ${PWD}: ${type}$@"
 
-echo "${msg}" | EExec mail -s "${prefix}${annotation}YOPP! ${msg}" "${USER}"
+{
+    echo "On $(date)"
+    echo "${msg}"
+} | EExec mail -s "${prefix}${annotation}YOPP! ${msg}" "${USER}"

@@ -34,14 +34,16 @@ sans_junk()
 stdin_p=
 
 one="${1-}"
-
+shift_p=t
 case "${one}" in
     -r) shift; rerooter=reroot;;
-    --sans-junk) rerooter=sans_junk;;
+    --sans-junk|-j) rerooter=sans_junk;;
     -e|-x) shift; rerooter=extract;;
     --stdin) stdin_p=t;;
-    *) ;;
+    *) shift_p=t;;
 esac
+
+true_p "${shift_p}" && shift
 
 if vsetp "${stdin_p}"
 then

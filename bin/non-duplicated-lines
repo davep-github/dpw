@@ -23,34 +23,6 @@ unset eexec_program
 # export eexec_program
 
 trap_exit_msg=
-cleanall_p=
-
-# Usage variable usage:
-Usage_synopsis="yopp'ing build fmodel.
-"
-# Example of arg parsing.
-option_str="c"
-long_options=(
-    "clean" "cleanall"
-)
-source dp-getopt+.sh
-while (($# > 0))
-do
-  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
-  case $1 in
-      # eexec support
-      # Done by EExec_parse and friends.
-
-      # Program options.
-      -c|--clean|--cleanall) cleanall_p=t;;
-      # Help!
-      --help) Usage; exit 0;;
-      --) shift ; break ;;
-      *) echo 1>&2 "Unsupported option>$1<"
-         exit 1;;
-    esac
-    shift
-done
 
 # Useful traps
 on_exit()
@@ -69,11 +41,42 @@ on_error()
     trap '' 0
 }
 
-EExec mecd tot
+sort_p=t
+# Usage variable usage:
+Usage_args_info=" errno..."
+Usage_synopsis="Display various info about errno...:
+"
+# Using ) after the args makes copy & paste between here and the
+# case statement easier.
+# Example of arg parsing.
+option_str="sS"
+long_options=(
+    "sort"
+    "no-sort"
+)
+source dp-getopt+.sh
+while (($# > 0))
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support
+      # Done by EExec_parse and friends.
 
-true_p "${cleanall_p}" && {
-    EExec yoppr nvmk cleanall
-}
+      # Program options.
+      -s|--sort) sort_p=t;;
+      -S|--no-sort) sort_p=;;
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
+done
 
-# @todo XXX collect other regexps of interest.
-EExec yoppr nvmk fmodel 2>&1 | teeker --tee --wgrep 'The job whose output file' "$@"
+if true_p "${sort_p}"
+then
+    sort
+else
+    cat
+fi | uniq -c | sed -rn 's/(^[[:space:]]*1[[:space:]]*)(.*)/\2/p'

@@ -78,8 +78,11 @@ xxd()
     DISPLAY="$@" xx ; sleep 2 ; exit
 }
 
-cdtglr()
+go_or_cdtglr()
 {
+    local op="${1}"
+    shift
+
     local show_p
     [ "${1-}" = "-o" ] && {
         show_p=t
@@ -94,15 +97,20 @@ cdtglr()
             # echo "${d}"
             :
         else
-            cd "${d}"
+            "${op}" "${d}"
         fi
     }
 }
 
+cdtglr()
+{
+    go_or_cdtglr cd "$@"
+}
+
 gtglr()
 {
-    g $(tgen-latest-run "$@")
-}    
+    go_or_cdtglr g "$@"
+}
 
 nvgrep()
 {

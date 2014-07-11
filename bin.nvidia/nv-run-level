@@ -24,7 +24,7 @@ do
   $op
   ${EEXEC_SHIFT}
 done
-EExec_verbose_echo_id echo_id eexec_program
+EExec_verbose_echo_id eexec_program
 unset eexec_program
 #export eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
@@ -47,6 +47,7 @@ on_error()
     trap '' 0
 }
 
+# bringup_new_features_medium_peer_atomics
 #basic_level=nvlink/bringup_new_features_basic_nvlink_sysmem
 basic_level=nvlink/bringup_new_features_medium_gpc_sysmem
 med_gpc_peer_level=nvlink/bringup_new_features_medium_gpc_peer
@@ -54,14 +55,15 @@ med_gpc_sysmem_level=nvlink/bringup_new_features_medium_gpc_sysmem
 medium_level=nvlink/bringup_new_features_medium
 medium_ce_sanity_level=nvlink/bringup_new_features_medium_ce_sanity
 medium_ce_peer_level=nvlink/bringup_new_features_medium_ce_peer
+medium_peer_atomics=nvlink/bringup_new_features_medium_peer_atomics
 : ${abr_opt=}
 : ${level=${medium_level}}
 : ${only_opt=}
 : ${mail_opt=-mail}             # Default on, can turn off w/opt.
-: ${fc_csl="+fc_nvlink_translator_egress.cpp,+fc_nvlink_translator.cpp,+fc_nvlink_translator.h,+fc_nvlink_translator.cpp,+fc_nvlink_translator_ingress.cpp"}
+: ${fc_csl="+fc_nvlink_translator_egress.cpp,+fc_nvlink_translator_egress.h,+fc_nvlink_translator.cpp,+fc_nvlink_translator.h,+fc_nvlink_translator_ingress.cpp,+fc_nvlink_translator_ingress.h,+fc_nvlink_config.cpp,+fc_nvlink_config.h,+fc_nvlink_fs_comm.cpp,+fc_nvlink_fs_comm.h"}
 : ${hsh_csl="+hshub_xbar.cpp,+hshub_nvlink_main.cpp,+hshub_nvlink_xbar_handler.cpp"}
 : ${ALL_CSL="${fc_csl},${hsh_csl}"}
-: ${CSL=${ALL_CSL}}
+: ${CSL=${fc_csl}}              # It's all about me.
 : ${big_queue:=o_cpu_16G}
 : ${small_queue:=o_cpu_rel5_4G_8H}
 : ${queue:=${big_queue}}
@@ -83,13 +85,14 @@ long_options=(
 "big-queue" "big-q" "bigq" "bq"
 "small-queue" "small-q" "smallq" "sq"
 "csl:"
-"fc-csl"
-"hsh-csl"
+"fc-csl" "csl-fc"
+"hsh-csl" "csl-hsh"
 "all-fc-csl" "csl-all-fc"
 "all-csl" "csl-all"
 "no-csl"
 "csl:"
-"add-csl:"
+"add-csl:" "append-csl:"
+"push-csl:" "prepend-csl:"
 "env:"
 "env-grep:" "grep-env:" "envgrep:" "grepenv:"
 "ce-sanity"
@@ -101,6 +104,7 @@ long_options=(
 "seq-file:"
 "server-port:" "sport:"
 "client-port:" "cport:"
+"med-peer-atomics"
 )
 source dp-getopt+.sh
 while (($#))
@@ -121,6 +125,7 @@ do
       --ce-peer|--medium-ce-peer) level="${medium_ce_peer_level}";;
       --med-gpc-peer|--medium-gpc-peer) level="${med_gpc_peer_level}";;
       --med-gpc-sysmem|--medium-gpc-sysmem) level="${med_gpc_sysmem_level}";;
+      --med-peer-atomics) level="${medium_peer_atomics}";;
       --link-type) shift; link_info="${1}";
                    EExec_verbose_echo_id link_info
                    link_num=$(echo "${link_info}" | cut -d/ -f 1)
@@ -144,14 +149,15 @@ do
                    ;;
       --help) Usage; exit 0;;
       --csl) shift; CSL="${1}";;
-      --fc-csl) CSL="${CSL},${fc_csl}";;
-      --hshs-csl) CSL="${CSL},${hsh_csl}";;
+      --fc-csl|--csl-fc) CSL="${fc_csl}";;
+      --hsh-csl|--csl-hsh) CSL="${hsh_csl}";;
       --all-fc-csl|--csl-fc-all) CSL="${CSL},${fc_csl},${hsh_csl}";;
       # The definition of all may change.
       --all-csl|--csl-all) CSL="${ALL_CSL}";;
       --no-csl) CSL=;;
       --csl) shift; CSL="${1}";;
-      --add-csl) shift; CSL="${CSL},${1}";;  # N.B. We add the ,
+      --add-csl|--append-csl) shift; CSL="${CSL},${1}";;  # N.B. We add the ,
+      --push-csl|--prepend-csl) shift; CSL="${1},${CSL}";;  # N.B. We add the ,
       --GFake_ingress_interface_with_socket) shift;
         export GFake_ingress_interface_with_socket="${1}";;
       --fii)
@@ -178,7 +184,7 @@ do
 done
 
 # trim possible leading commas left over from concatenation process.
-EExec_verbose "Trimming possible leading commas."
+EExec_verbose_msg "Trimming possible leading commas."
 EExec_verbose_echo_id CSL
 CSL=$(echo "${CSL}" | sed -rn 's/^(,*)(.*)/\2/p')
 EExec_verbose_echo_id CSL
@@ -186,7 +192,7 @@ export CSL
 
 : ${only_test:=ALL}
 
-: ${out_dir:=$(normpath -r "dp-run-tgens.d/${level}/${only_test}/$(dp-std-timestamp)")}
+: ${out_dir:=$(normpath -r "dp-run-tgens.d/${level}/${only_test}/$(dp-std-timestamp).d")}
 
 : ${latest_out_dir_file_name=latest_out_dir}
 : ${last_and_latest_p=t}

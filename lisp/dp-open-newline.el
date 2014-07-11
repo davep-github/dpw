@@ -219,6 +219,16 @@
               nil)
 
    ;;;;;;;;;;;;;;;;;
+           ;; Add stream operator?
+           ((setq stream-op (dp-in-c-iostream-statement-p))
+            (c-newline-and-indent)
+            (insert stream-op " ")
+            (c-indent-line)
+            (dmessage "cob: auto <<|>>")
+            (setf (dp-cob-state-t-last-sub-command dp-cob-state) 'stream-op)
+            nil)
+           
+   ;;;;;;;;;;;;;;;;;
            ;; Clean up function or method:
            ;; add "(void)" if no args are present.  
            ;; replace () with void
@@ -234,11 +244,14 @@
                  ;; that I've learned that the whiny cry-babies of the ANSI
                  ;; C(++)? spec have reserved _t as a suffix.
                  (not (dp-c*-pure-type-line))
-                 (not (save-excursion
-                        (end-of-line)
-                        (dp-c-looking-back-at-sans-eos-junk ";\\s-*")))
-                 (not (dp-c-looking-back-at-sans-eos-junk "};\\s-*" 
+;;add stream op above enough?                  (not (save-excursion
+;;add stream op above enough?                         (beginning-of-line)
+;;add stream op above enough?                         (looking-at "\\s-*\\(<<\\|>>\\)")))
+                 (not (dp-c-looking-back-at-sans-eos-junk ";\\s-*"
                                                           'from-eol-p))
+;;                  (not (dp-c-looking-back-at-sans-eos-junk "};\\s-*" 
+;;                                                           'from-eol-p)
+;;                       )
                  ;; We *may not* end up wanting to format ourselves as a
                  ;; function decl. `dp-c-format-func-decl' tells us if it did
                  ;; so. If it did, we're done. Else we try something else.
@@ -425,16 +438,6 @@
             (setf (dp-cob-state-t-last-sub-command dp-cob-state) 
                   'add-semi-function)
             t)
-           
-   ;;;;;;;;;;;;;;;;;
-           ;; Add stream operator?
-           ((setq stream-op (dp-in-c-iostream-statement-p))
-            (c-newline-and-indent)
-            (insert stream-op " ")
-            (c-indent-line)
-            (dmessage "cob: auto <<|>>")
-            (setf (dp-cob-state-t-last-sub-command dp-cob-state) 'stream-op)
-            nil)
            
    ;;;;;;;;;;;;;;;;;
            (t

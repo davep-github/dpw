@@ -242,11 +242,11 @@ vsetp "${send_mail_on_completion_p-}" && ! EExecDashN_p && {
     EExec_verbose_msg "YOPP!ing."
     if vsetp "$*"
     then
-        at="$@: "
+        at="$@"
     else
         at=
     fi
-    email-yopp "${progname}: ${at}RC: ${RC}"
+    email-yopp --rc "${RC}" "${progname}: ${at}"
 }
 
 exit

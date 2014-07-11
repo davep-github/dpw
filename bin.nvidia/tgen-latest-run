@@ -34,7 +34,7 @@ long_options=("test-name:" "testname:" "name:" "tn:"
 "base-dir" "root-dir" "base" "root" "test-dir" "td" "bd"
 "test-type:" "type:" "out:"
 "sb:" "sandbox:" "tree:"
-"test-dir-glob:"
+"test-dir-glob:" "tgd" "glob"
 "nth:" "run-num:"
 )
 
@@ -56,7 +56,7 @@ do
       --sb|--sandbox|--tree) shift; mecd_to="${1}";;
       --test-type|--type|--out) shift; some_path_component="${1}";;
       -g) shift; test_dir_glob="*${1}*";;
-      --test-dir-glob) shift; test_dir_glob="${1}";;
+      --test-dir-glob|--tdg|--glob) shift; test_dir_glob="${1}";;
       --nth|--run-num) shift; run_num="${1}";;
       # Help!
       --help) Usage; exit 0;;
@@ -119,10 +119,12 @@ case "${some_path_component}" in
     0) echo 1>&2 "Cannot find any components under ${latest_out_dir}/tests"; exit 1;;
     1) break;;
     *) {
-             echo "Multiple test type dirs exist. Don't know which to use:"
+             echo -n "Multiple test type dirs exist."
              if vsetp "${test_dir_glob}"
              then
                  echo "   Will select first match of>${test_dir_glob}<."
+             else
+                 echo " Don't know which to use:"
              fi
              for d in ${some_path_component}
              do
@@ -141,7 +143,7 @@ case "${some_path_component}" in
              done
           } 1>&2
           vunsetp "${tmp_some_path_component}" && {
-              echo "*** Try a unique glob: --test-dir-glob <glob>"
+              echo "*** Try a unique glob: --test-dir-glob|-g|--tgd|--glob <glob>"
               exit 1
        }
        some_path_component="${tmp_some_path_component}"

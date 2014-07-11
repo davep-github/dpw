@@ -77,8 +77,11 @@ option_str="t:r:fdps:0123456789"
 long_options=(
     "test:" "test-name:"
     "test-dir:" "test-root:"
-    "files"
-    "dirs"
+    "files" "show-test-file-names"
+    "dirs" "dirname" "dname" "dn"
+    "just-path"
+    "just-logs"
+    "just-scripts" "just-sh"
     "full-path" "path" "real-path" "rp"
     "status-regexp:" "sre:"
     "srv:" "status-not-regexp:" "not-status-regexp:" "status-regexp-v:"
@@ -90,12 +93,21 @@ long_options=(
     "passed" "success" "good" "pass"
     "in-file:" "in:" "if:"
     "nth:" "run-num"
+    "log"
+    "script" "sh"
+    "no-post-process" "npp"
+    "post-process-arg:" "ppa:"
+    "add-suffix:" "add-extension:" "add-ext:"
+    "raw"
 )
 
 test_name_opt=
 test_dir=
 output_filter=full_path
 invert_flag=
+post_process=add_dot_log
+just_path=cat
+post_process_arg=
 
 source dp-getopt+.sh
 while (($# > 0))
@@ -109,8 +121,11 @@ do
       -[0-9]) run_num="${1}";;  # More than -9 will require --nth, et. al.
       -t|--test|--test-name) shift; test_name_opt="--test-name ${1}";;
       -r|--test-dir|--test-root) shift; test_dir="${1}";;
-      -f|--files) output_filter=cat;;
-      -d|--dirs) output_filter=test_dir_only;;
+      -f|--files|--show-test-file-names) output_filter=cat;;
+      -d|--dirs|--dirname|--dname|--dn) post_process=dirname_only;;
+      --just-path) just_path=just_path;;
+      --just-logs) just_path=just_path; post_process=add_dot_log;;
+      --just-scripts|--just-sh) just_path-just_path; post_process=add_dot_sh;;
       -p|--full-path|--path) output_filter=full_path;;
       --real-path|--rp) output_filter=real_path;;
       -s|--status-regexp|--sre) shift; status_regexp="${1}";;
@@ -124,6 +139,20 @@ do
       --not-done) status_regexp="^(RUNNING|NOTRUN)";;
       --in-file|--in|--if) shift; in_file="${1}";;
       --nth|--run-num) shift; run_num="${1}";;
+      --log) post_process=add_dot_log;;
+      --script|--sh) post_process=add_dot_sh;;
+      --no-post-process|--npp) post_process=cat;;
+      --post-process-arg|--ppa) shift; post_process_arg="${1}";;
+      --add-suffix|--add-extension|--add-ext)
+          shift; post_process_arg="${1}"
+          post_process=add_suffix
+          ;;
+      --raw) output_filter=cat
+             post_process=cat
+             post_process_arg=
+             just_path=cat
+             ;;
+                                             
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -135,9 +164,35 @@ done
 
 EExec_verbose_echo_id output_filter
 
-test_dir_only()
+dirname_only()
 {
+    # like dirname, but it works with stdin.
     sed -rn 's!(.*)(/[^/]*$)!\1!p'
+}
+
+just_path()
+{
+    sed -rn 's/(.*[[:space:]])([^[:space:]]+$)/\2/p'
+}
+
+
+add_suffix()
+{
+    local suffix="${1}"
+    shift
+    sed -rn "s/(.*)/\1${suffix}/p"
+}
+
+add_dot_log()
+{
+#    sed -rn 's/(.*)/\1.log/p'
+    add_suffix ".log"
+}
+
+add_dot_sh()
+{
+#    sed -rn 's/(.*)/\1.log/p'
+    add_suffix ".sh"
 }
 
 : ${test_dir:=$(tgen-latest-run --run-num "${run_num}" --test-dir ${test_name_opt})}
@@ -145,7 +200,7 @@ rel_test_dir=$(realpath -r "${test_dir}")
 
 full_path()
 {
-    sed -rn "s!tests/!${rel_test_dir}/tests/!p" | test_dir_only
+    sed -rn "s!tests/!${rel_test_dir}/tests/!p"
 }
 
 real_path()
@@ -166,8 +221,17 @@ else
     EExec ./batch_status "${test_dir}" >| "${tmp_file}"
 fi
 
-EExec cat "${tmp_file}" | EExec "${output_filter}" \
-            | EExec egrep ${invert_flag} "${status_regexp}"
+# Lines look like this:
+# ERROR_SIM     a5ea8e9ada2a405c4d9060aad5112aa0     a-test-path/00/01/50/000150/atom35_64_maxs64
+# Usually with lots of white space at the end of the line.
+
+EExec cat "${tmp_file}" \
+            | strip-white-space.py \
+            | EExec "${output_filter}" \
+            | EExec -0 egrep ${invert_flag} "${status_regexp}" \
+            | EExec "${post_process}" ${post_process_arg} \
+            | EExec "${just_path}"
+
 EExec_verbose_msg "Total number of lines: $(wc -l ${tmp_file})"
 rc=$?
 

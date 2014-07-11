@@ -253,6 +253,7 @@ Can be set after the first prompting.")
                                        "ec"
                                        "ef"
                                        "ec-diff"
+                                       "ec-merge"
                                        "ef-diff"
                                        "gitcia"
                                        "hgcia"
@@ -2478,8 +2479,8 @@ It isn't pretty."
       (cdr buf)
     nil))
 
-(defvar dp-shells-primary-shell-names '((4) - 1 nil ; (Cup) (not arg) (Cu0p))
-                                   primary 0th zeroth main first 1st)
+(defvar dp-shells-primary-shell-names '(- 1 nil ; (Cup) (not arg) (Cu0p))
+                                        primary 0th zeroth main first 1st)
   "Other names by which shell<0> can be selected.")
 
 (dp-deflocal dp-original-shell-filter-function nil
@@ -2520,7 +2521,11 @@ it for something \"speshul\".
                               (t nil)))
          ;; Ordered by priority.
          (sh-name (or name
-                      (stringp arg)
+                      (and
+                       (stringp arg)
+                       arg)
+                      (and (equal arg '(4))
+                           (read-from-minibuffer "Shell buffer name: "))
                       (and arg
                            (or (dp-shells-get-shell-buffer-name pnv)
                                (format "*shell*<%s>" 
@@ -2617,7 +2622,7 @@ it for something \"speshul\".
   (let ((whence-buf (unless (dp-shell-buffer-p) 
                       (current-buffer)))
         shell-buf)
-    (if (equal current-prefix-arg '(4)) ; One plain C-u
+    (if nil ; (equal current-prefix-arg '(4)) ; One plain C-u
         (dp-shell-cycle-buffers -1)
       (dp-shell0 arg :other-window-p other-window-p :name name
                  :other-frame-p other-frame-p)
