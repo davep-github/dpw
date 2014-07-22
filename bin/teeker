@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, sys, string, types, re, exceptions, signal
+import os, sys, string, types, re, exceptions, signal, time
 import gzip, argparse
 import dp_utils, ticker_lib, dp_io, dp_time, dp_sequences
 from dp_object import dp_object
@@ -563,6 +563,10 @@ if __name__ == "__main__":
                          dest="quiet_p", default=False,
                          action="store_true",
                          help="Do not print informative messages.")
+    oparser.add_argument("--no-preamble", "--no-pre",
+                         dest="preamble_p", default=True,
+                         action="store_false",
+                         help="Do not print detail before beginning the loop.")
     oparser.add_argument("-i", "--tick-interval",
                          dest="tick_interval", type=eval_with_units,
                          default=def_tick_interval,
@@ -886,6 +890,9 @@ Split line into chars and feed to ticker.""")
     except AttributeError:
         tee_p = False
 
+    if app_args.preamble_p:
+        print "Start time: {}".format(time.ctime())
+
     ticker_constructor = App_arg_dict.pop(CTOR)
 
     compress_p = app_args.compression_level >= 0
@@ -1141,3 +1148,7 @@ Split line into chars and feed to ticker.""")
                    ostream=sample_ostream)
         line_number += 1
     print
+    if app_args.preamble_p:
+        print "End time: {}".format(time.ctime())
+
+

@@ -299,7 +299,7 @@ tests.")
 ;; e.g.: /hw/ap_t132/diag/testgen
 (defvar dp-p4-ignore-regexp
   (dp-concat-regexps-grouped
-   '("/hw/ap.*/diag/testgen/"
+   '("/hw/.*/diag/testgen/"
      "/\\.\\(git\\|hg\\)"
      "generated-.*-defs\\.h"
      "\\.log\\.retry"

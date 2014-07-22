@@ -12,7 +12,7 @@ dpcheck
 # USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
 #9601      3010  0.0  0.0  50980  1728 pts/198  Ss+  Jun19   0:00 /home/dpanariti/yokel/lib/xemacs[K-21.5-b32/x86_64-unknown-linux/gnuserv
 
-: ${PS_O_LONG_FMT="-o user,tty,pid,ppid,pgid,ni,pri,state,psr,policy,args"}
+: ${PS_O_LONG_FMT="-o user,tty,pid,ppid,pgid,ni,pri,state,psr,policy,cmd,args"}
 ##: ${PS_O_USER_FMT=" u"}
 : ${PS_O_FMT="$PS_O_DEF_FMT"}
 : ${PS:=ps}

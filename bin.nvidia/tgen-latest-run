@@ -115,7 +115,7 @@ EExec_verbose_echo_id some_path_component
 EExec_verbose_msg "some_path_component glob: >${latest_out_dir}/tests/*<"
 tmp_some_path_component=
 num_components=$(echo "${some_path_component}" | wc -l)
-case "${some_path_component}" in
+case "${num_components}" in
     0) echo 1>&2 "Cannot find any components under ${latest_out_dir}/tests"; exit 1;;
     1) break;;
     *) {
@@ -128,6 +128,7 @@ case "${some_path_component}" in
              fi
              for d in ${some_path_component}
              do
+               echo "  $d"
                EExec_verbose_echo_id d
                #echo " $(basename $d)"
                dir_rp="$(realpath $d)"

@@ -88,7 +88,12 @@ go_or_cdtglr()
         show_p=t
         shift
     }
-    local d=$(tgen-latest-run "$@")
+    local d
+    d=$(tgen-latest-run "$@") || {
+        local rc=$?
+        echo "tgen-latest-run $@ failed, rc: $rc"
+        return 1
+    }
     vsetp "${d}" &&
     {
         echo "${d}"

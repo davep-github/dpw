@@ -5911,3 +5911,8 @@ Wednesday July 02 2014
 
 nil
 
+========================
+2014-07-16T16:32:17
+--
+
+(defun dp-shell-command-to-echo-area)

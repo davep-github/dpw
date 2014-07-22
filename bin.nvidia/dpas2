@@ -80,10 +80,21 @@ describe_p=
 bundle_id=
 command=
 
+pass_thru_to_as2()
+{
+    EExec exec "${AS2}" "$@"
+}
+
 saved_args=("$@")
 while (($# > 0))
 do
   case "${1}" in
+      --pass-thru|--real|--orig|--standard)
+          shift
+          pass_thru_to_as2 "$@"
+          exit;;
+      help) pass_thru_to_as2 "$@"
+            exit;;
       -c) shift;;               # consume(hide) non-option looking number
       -u) shift;;
       -*) ;;
@@ -109,13 +120,28 @@ $@"
     exit 1
 } 1>&2
 
+outputter=tee_to_hist
+
+tee_to_hist()
+{
+    tee -a "${AS2_HIST_FILE}"
+}
+
+to_screen()
+{
+    cat
+}
+
 EExec_verbose_echo_id command
 case "${command}" in
-    help|client|describe|pending|status|test|totstat)
-        AS2_HIST_FILE=/dev/null;;
+    help|client|describe|pending|test|totstat|status)
+        pass_thru_to_as2 "$@"
+        exit;;
     retrieve) describe_p=t;;
     *) ;;
 esac
+
+EExec_verbose_echo_id outputter
 
 EExecDashN_p && AS2_HIST_FILE=/dev/null
 command_date=$(date)
@@ -136,5 +162,5 @@ command_date=$(date)
     echo "======== begin: command output ========"
     EExec "${AS2}" "$@"
     echo "======== finis: as2 operation: ${command}: ${command_date} ========"
-} 2>&1 | tee -a "${AS2_HIST_FILE}"
+} 2>&1 | "${outputter}"
 

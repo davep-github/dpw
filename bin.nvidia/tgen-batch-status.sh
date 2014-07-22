@@ -25,6 +25,7 @@ unset eexec_program
 
 trap_msg=
 in_file=
+no_header=
 
 clean_up()
 {
@@ -73,7 +74,7 @@ tmp_file=$(mktemp "$HOME/tmp/tgen-batch-status.tmp.XXXXXXX") || {
 
 EExec_verbose_echo_id tmp_file
 
-option_str="t:r:fdps:0123456789"
+option_str="t:r:fdps:0123456789i:"
 long_options=(
     "test:" "test-name:"
     "test-dir:" "test-root:"
@@ -99,11 +100,14 @@ long_options=(
     "post-process-arg:" "ppa:"
     "add-suffix:" "add-extension:" "add-ext:"
     "raw"
+    "just-test-name" "just-test" "jtn" "short" "terse" "simple" "basic"
+    "no-header" "noh" "no-hdr"
+    "header" "hdr"
 )
 
 test_name_opt=
 test_dir=
-output_filter=full_path
+output_transform=full_path
 invert_flag=
 post_process=add_dot_log
 just_path=cat
@@ -121,23 +125,23 @@ do
       -[0-9]) run_num="${1}";;  # More than -9 will require --nth, et. al.
       -t|--test|--test-name) shift; test_name_opt="--test-name ${1}";;
       -r|--test-dir|--test-root) shift; test_dir="${1}";;
-      -f|--files|--show-test-file-names) output_filter=cat;;
+      -f|--files|--show-test-file-names) output_transform=cat;;
       -d|--dirs|--dirname|--dname|--dn) post_process=dirname_only;;
-      --just-path) just_path=just_path;;
-      --just-logs) just_path=just_path; post_process=add_dot_log;;
-      --just-scripts|--just-sh) just_path-just_path; post_process=add_dot_sh;;
-      -p|--full-path|--path) output_filter=full_path;;
-      --real-path|--rp) output_filter=real_path;;
+      --just-path) just_path=just_path; no_header=t;;
+      --just-test-name|--just-test|--jtn|--short|--terse|--simple|--basic) just_path=just_test_name; post_process=cat; no_header=t;;
+      --just-logs) just_path=just_path; post_process=add_dot_log; no_header=t;;
+      --just-scripts|--just-sh) just_path=just_path; post_process=add_dot_sh;;
+      -p|--full-path|--path) output_transform=full_path;;
+      --real-path|--rp) output_transform=real_path;;
       -s|--status-regexp|--sre) shift; status_regexp="${1}";;
       --srv|--status-not-regexp|--not-status-regexp|--status-regexp-v) shift; status_regexp="${1}"; invert_flag='-v';;
       --not-running|--done|--exited|--finished) status_regexp="^(RUNNING|NOTRUN)"; invert_flag='-v';;
       --failed|--b0rked|--error|--fail) status_regexp="^(NOTRUN|RUNNING|PASS_(GOLD|LEAD))"; invert_flag='-v';;
       --no-failed|--not-b0rked|--not-error|--not-fail) status_regexp="^(NOTRUN|RUNNING|PASS_(GOLD|LEAD))";;
-
       --passed|--success|--good|--pass) status_regexp="^(PASS_(GOLD|LEAD))";;
       --running) status_regexp="^RUNNING";;
       --not-done) status_regexp="^(RUNNING|NOTRUN)";;
-      --in-file|--in|--if) shift; in_file="${1}";;
+      -i|--in-file|--in|--if) shift; in_file="${1}";;
       --nth|--run-num) shift; run_num="${1}";;
       --log) post_process=add_dot_log;;
       --script|--sh) post_process=add_dot_sh;;
@@ -147,12 +151,15 @@ do
           shift; post_process_arg="${1}"
           post_process=add_suffix
           ;;
-      --raw) output_filter=cat
+      --raw) output_transform=cat
              post_process=cat
              post_process_arg=
              just_path=cat
+             no_header=t
              ;;
-                                             
+      --no-header|--noh|--no-hdr) no_header=t;;
+      --header|--hdr) no_header=;;
+
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -162,7 +169,7 @@ do
     shift
 done
 
-EExec_verbose_echo_id output_filter
+EExec_verbose_echo_id output_transform
 
 dirname_only()
 {
@@ -170,11 +177,22 @@ dirname_only()
     sed -rn 's!(.*)(/[^/]*$)!\1!p'
 }
 
+basename_only()
+{
+    # like basename, but it works with stdin.
+    sed -rn 's!(.*?)/([^/]+)$!\2!p'
+}
+
+# No script or log name.
 just_path()
 {
     sed -rn 's/(.*[[:space:]])([^[:space:]]+$)/\2/p'
 }
 
+just_test_name()
+{
+    sed -rn 's!([[:space:]]*)([^[:space:]]+)([[:space:]]+)((.*?)/([^/]+)$)!\2 \t \6!p'
+}    
 
 add_suffix()
 {
@@ -212,11 +230,17 @@ real_path()
 num_lines=0
 OPWD="${PWD}"
 EExec -y cd $(me-expand-dest "testgen")
-echo "Getting status for ${test_dir}"
+
+vunsetp "${no_header}" && echo "Getting status for ${test_dir}"
 
 if vsetp "${in_file}"
 then
-    tmp_file="${in_file}"
+    if [ "${in_file}" = '-' ]
+    then
+        tmp_file=/proc/self/fd/0
+    else
+        tmp_file="${in_file}"
+    fi
 else
     EExec ./batch_status "${test_dir}" >| "${tmp_file}"
 fi
@@ -227,7 +251,7 @@ fi
 
 EExec cat "${tmp_file}" \
             | strip-white-space.py \
-            | EExec "${output_filter}" \
+            | EExec "${output_transform}" \
             | EExec -0 egrep ${invert_flag} "${status_regexp}" \
             | EExec "${post_process}" ${post_process_arg} \
             | EExec "${just_path}"

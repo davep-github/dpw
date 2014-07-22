@@ -5233,6 +5233,8 @@ to see if it's alive as well."
   (dmessage "dp-kill-editing-server")
   (dp-finalize-editing-server 'rm-ipc-if-ours))
 
+(defalias 'dp-stop-editing-server 'dp-kill-editing-server)
+
 ;;
 ;; Finalize the editing server. If one is running, remove the IPC file.  It
 ;; seems there can be timing problems where the new instance can have written

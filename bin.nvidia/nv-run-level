@@ -47,16 +47,15 @@ on_error()
     trap '' 0
 }
 
-# bringup_new_features_medium_peer_atomics
-#basic_level=nvlink/bringup_new_features_basic_nvlink_sysmem
 basic_level=nvlink/bringup_new_features_medium_gpc_sysmem
-med_gpc_peer_level=nvlink/bringup_new_features_medium_gpc_peer
-med_gpc_sysmem_level=nvlink/bringup_new_features_medium_gpc_sysmem
+medium_gpc_peer_level=nvlink/bringup_new_features_medium_gpc_peer
+medium_gpc_sysmem_level=nvlink/bringup_new_features_medium_gpc_sysmem
 medium_level=nvlink/bringup_new_features_medium
 medium_ce_sanity_level=nvlink/bringup_new_features_medium_ce_sanity
 medium_ce_peer_level=nvlink/bringup_new_features_medium_ce_peer
 medium_peer_atomics=nvlink/bringup_new_features_medium_peer_atomics
 : ${abr_opt=}
+levels=()
 : ${level=${medium_level}}
 : ${only_opt=}
 : ${mail_opt=-mail}             # Default on, can turn off w/opt.
@@ -77,8 +76,8 @@ long_options=(
 "only:"
 "wait"
 "basic"
-"med-gpc-peer" "medium-gpc-peer"
-"med-gpc-sysmem" "medium-gpc-sysmem"
+"med-gpc-peer" "medium-gpc-peer" "mgp"
+"med-gpc-sysmem" "medium-gpc-sysmem" "mgs"
 "medium"
 "nomail" "no-mail"
 "queue:"
@@ -104,28 +103,28 @@ long_options=(
 "seq-file:"
 "server-port:" "sport:"
 "client-port:" "cport:"
-"med-peer-atomics"
+"med-peer-atomics" "mpa"
 )
 source dp-getopt+.sh
 while (($#))
 do
   case "${1}" in
       --abr) abr_opt="-allButRun";;
-      --level) shift; level="${1}";;
-      --nvlevel) shift; level="nvlink/${1}";;
+      --level) shift; levels+=("${1}");;
+      --nvlevel) shift; levels+=("nvlink/${1}");;
       -o|--only) shift; only_test="${1}"; only_opt="-only ${only_test}";;
       --wait) wait_opt="-wait";;
       --nomail|--no-mail) mail_opt=;;
       --queue) shift; queue="${1}";;
       --big-queue|--big-q|--bigq|--bq) queue="${big_queue}";;
       --small-queue|--small-q|--smallq|--sq) queue="${small_queue}";;
-      --basic) level=${basic_level};;
-      --medium) level=${medium_level};;
-      --ce-sanity) level="${medium_ce_sanity_level}";;
-      --ce-peer|--medium-ce-peer) level="${medium_ce_peer_level}";;
-      --med-gpc-peer|--medium-gpc-peer) level="${med_gpc_peer_level}";;
-      --med-gpc-sysmem|--medium-gpc-sysmem) level="${med_gpc_sysmem_level}";;
-      --med-peer-atomics) level="${medium_peer_atomics}";;
+      --basic) levels+=(${basic_level});;
+      --medium) levels+=(${medium_level});;
+      --ce-sanity) levels+=("${medium_ce_sanity_level}");;
+      --ce-peer|--medium-ce-peer|--med-ce-peer) level+=("${medium_ce_peer_level}");;
+      --med-gpc-peer|--medium-gpc-peer|--mgp) levels+=("${medium_gpc_peer_level}");;
+      --med-gpc-sysmem|--medium-gpc-sysmem|--mgs) levels+=("${medium_gpc_sysmem_level}");;
+      --med-peer-atomics|--mpa) levels+=("${medium_peer_atomics}");;
       --link-type) shift; link_info="${1}";
                    EExec_verbose_echo_id link_info
                    link_num=$(echo "${link_info}" | cut -d/ -f 1)
@@ -190,9 +189,10 @@ CSL=$(echo "${CSL}" | sed -rn 's/^(,*)(.*)/\2/p')
 EExec_verbose_echo_id CSL
 export CSL
 
-: ${only_test:=ALL}
+((${#levels} == 0)) && levels=("${level}")
 
-: ${out_dir:=$(normpath -r "dp-run-tgens.d/${level}/${only_test}/$(dp-std-timestamp).d")}
+
+: ${only_test:=ALL}
 
 : ${latest_out_dir_file_name=latest_out_dir}
 : ${last_and_latest_p=t}
@@ -204,32 +204,36 @@ then
 else
     ll_prefix="${last_and_latest_prefix}"
 fi
-
 : ${last_out_dir_file_name=last_out_dir}
+
 last_out="${ll_prefix}${last_out_dir_file_name}"
 latest_out="${ll_prefix}${latest_out_dir_file_name}"
 command_line_log_file="${progname}.command-line-log"
-command_line_script_file="${out_dir}.command-line"
 
-if ! EExecDashN_p
-then
-    vsetp "${last_and_latest_p}" && {
+for level in "${levels[@]}"
+do
+  out_dir=$(normpath -r "dp-run-tgens.d/${level}/${only_test}/$(dp-std-timestamp).d")
+  command_line_script_file="${out_dir}.command-line"
+
+  if ! EExecDashN_p
+  then
+      vsetp "${last_and_latest_p}" && {
         # Keep a history with latest last.
         # The script below now tails the last line.
-        echo "$out_dir" >> "${last_out}"
-        echo "#!/bin/sh
+          echo "$out_dir" >> "${last_out}"
+          echo "#!/bin/sh
 nth-line "'${1-0}'" ${last_out_dir_file_name}" >| "${latest_out}"
-            chmod +x "${latest_out}"
-    }
-    EExec_verbose_echo_id command_line_script_file
-else
-    echo "Not running: $@"
-fi        
+          chmod +x "${latest_out}"
+      }
+      EExec_verbose_echo_id command_line_script_file
+  else
+      echo "Not running: $@"
+  fi        
 
-EExec_verbose_echo_id last_out
-EExec_verbose_echo_id latest_out
+  EExec_verbose_echo_id last_out
+  EExec_verbose_echo_id latest_out
 
-EExec tgen.pl \
+  EExec tgen.pl \
     -project gp100 \
     -level "${level}" \
     -outDir "${out_dir}"  \
@@ -245,29 +249,30 @@ EExec tgen.pl \
     ${seq_file_option} \
     "$@"
 
-command_line="$0 ${dolat[@]}"
-command_script="!#/bin/sh
+  command_line="$0 ${dolat[@]}"
+  command_script="!#/bin/sh
 export CSL='${CSL}'
 pushd ${PWD}
 ${command_line}"
 
-EExecDashN_p && {
-    command_line_script_file="/proc/self/fd/1"
-    command_line_log_file="/dev/null"
-}
+  EExecDashN_p && {
+      command_line_script_file="/proc/self/fd/1"
+      command_line_log_file="/dev/null"
+  }
 
-echo "${command_script}" > "${command_line_script_file}"
-[ -f "${command_line_script_file}" ] && chmod +x "${command_line_script_file}"
+  echo "${command_script}" > "${command_line_script_file}"
+  [ -f "${command_line_script_file}" ] && chmod +x "${command_line_script_file}"
 
-if EExecDashN_p
-then
-    echo 1>&2 "Removing outDir>${out_dir}<"
-    rm -rf "${out_dir}"
-else
-    echo "out_dir: ${out_dir}"
-fi
+  if EExecDashN_p
+  then
+      echo 1>&2 "Removing outDir>${out_dir}<"
+      rm -rf "${out_dir}"
+  else
+      echo "out_dir: ${out_dir}"
+  fi
 
-EExec_verbose_echo_id command_line_log_file
-echo "=======  On $(dp-std-timestamp), ${USER} ran: =======
+  EExec_verbose_echo_id command_line_log_file
+  echo "=======  On $(dp-std-timestamp), ${USER} ran: =======
 outDir>${out_dir}<
 ${command_line}" | tee -a "${command_line_log_file}"
+done

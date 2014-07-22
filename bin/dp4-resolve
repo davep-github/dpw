@@ -6,12 +6,18 @@ source eexec
 # Run perforce resolve.
 # First shelve everything for disaster recovery.
 
-shelveOpts=
-resolveOpts=
+shelve_opts=
+resolve_opts=
+shelve_p=
+cleanup_p="ask"
 
 EExecVerbose
 std_options=""
 option_str="anvqr:R:s:S:"
+long_options=(
+    "shelve" 
+    "no-shelve"
+)
 DPGOP_args_required=t
 source dp-getopt+.sh || exit 1
 
@@ -23,12 +29,17 @@ do
       -n) DASHN=t; EXEC=echo; EExecDashN;; # Don't actually execute stuff
       -v) VERBOSE="echo $progname: "; EExecVerbose;;
       -q) VERBOSE=":"; EExecQuiet;;
-      -r) resolveOpts="$resolveOpts $2"; shift;;
-      -R) resolveOpts="$2"; shift;;
-      -s) shelveOpts="$shelveOpts $2"; shift;;
-      -S) shelveOpts="$2"; shift;;
+      -r) resolve_opts="$resolve_opts $2"; shift;;
+      -R) resolve_opts="$2"; shift;;
+      --shelve) shelve_p=t;;
+      --no-shelve) shelve_p=;;
+      -s) shelve_opts="$shelve_opts $2"; shift;;
+      -S) shelve_opts="$2"; shift;;
+      --cleanup) cleanup_p=t;;
+      --no-cleanup) cleanup_p=no;;
+
       --) shift ; break ;;
-      *) 
+      *)
       echo 1>&2 "Unsupported option>$1<";
       Usage
       exit 1 ;;
@@ -36,7 +47,34 @@ do
     shift
 done
 
-EExec p4 shelve $shelveOpts
+if true_p "${shelve_p}"
+then
+    EExec p4 shelve $shelve_opts
+fi
 
-EExec p4 resolve $resolveOpts
+EExec p4 resolve $resolve_opts
 
+if [ "${cleanup_p}" == "ask" ]
+then
+    while :
+    do
+      read -e -p "Run as2 cleanup? " || {
+          echo "
+got rc $0 from read."
+          exit 1
+      }
+      
+      EExec_verbose_msg "\$0: $?"
+      EExec_verbose_echo_id REPLY
+      case "$REPLY" in
+          [0nN]|[Nn][Oo]) cleanup_p=no; break;;
+          ""|[1yYt]|[Yy][Ee][Ss]) cleanup_p=t; break;;
+          *) echo 1>&2 "Go \`${REPLY}' yourself. Try again."
+      esac
+    done
+fi
+
+if true_p "${cleanup_p}"
+then
+    EExec as2 cleanup
+fi

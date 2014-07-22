@@ -132,6 +132,9 @@ Ee|nvtlfc__SB_rel|              ${fcnvlinktranslator__SB_rel}
 Ee|nvlfc__SB_rel|               ${fcnvlinktranslator__SB_rel}
 Ee|nvtl2__SB_rel|               ${fcnvlinktranslator__SB_rel}
 Ee|nvl2__SB_rel|                ${fcnvlinktranslator__SB_rel}
+# Keep the common usage short and the less so longer.
+Ee|nvl__SB_rel|                 ${fcnvlinktranslator__SB_rel}
+Ee|fcxl__SB_rel|                ${fcnvlinktranslator__SB_rel}fc_nvlink_translator_
 
 Ee|fmodelliblinux8664__SB_rel|  ${fmodel__SB_rel}lib/Linux_x86_64/
 Ee|fmodlib64__SB_rel|           ${fmodelliblinux8664__SB_rel}
@@ -213,6 +216,10 @@ Ee|tgrun__SB_rel|               ${testgendprundir__SB_rel}
 Ee|tgruns__SB_rel|              ${testgendprundir__SB_rel}
 Ee|dpr__SB_rel|                 ${testgendprundir__SB_rel}
 Ee|dprtg__SB_rel|               ${testgendprundir__SB_rel}
+Ee|testgennvlink__SB_rel|       ${testgendprundir__SB_rel}nvlink/
+Ee|tgnvlink__SB_rel|            ${testgennvlink__SB_rel}
+Ee|tgnvl__SB_rel|               ${testgennvlink__SB_rel}
+Ee|nvltg__SB_rel|               ${testgennvlink__SB_rel}
 Ee|testgendprtlrundir__SB_rel|  ${testgen__SB_rel}dp-rtl-tests/
 Ee|testgendprtldir__SB_rel|     ${testgendprtlrundir__SB_rel}
 Ee|dptgrtl__SB_rel|             ${testgendprtlrundir__SB_rel}
@@ -414,6 +421,9 @@ Ee|sandbox7|sbox7|sb7|workspace7|ws7| ${scratch4}sb7/sb7hw/
 Ee|sandbox9|sbox9|sb9|workspace9|ws9| ${scratch4}sb9/
 
 Ee|sandbox8|sbox8|sb8|workspace8|ws8| ${scratch3}sb8/sb8hw/
+
+# I am so effing tired of typing this... underscores so suck.
+E|xlat|xl|  fc_nvlink_translator_
 
 #
 # Some direct accesses for objects which are way too overloaded.

@@ -139,7 +139,7 @@ running_as_script && {
 #e.g.# do
 #e.g.#   # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
 #e.g.#   case $1 in
-#e.g.#       # eexec support
+#e.g.#       # eexec support: -n -v -q, etc. q.v. ~/bin/eexec
 #e.g.#       # Done by EExec_parse and friends.
 #e.g.#
 #e.g.#       # Program options.

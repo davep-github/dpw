@@ -37,14 +37,19 @@ then
     # the message is really a command to run and wait for completion thereof.
     EExec --keep-going "$@"
     RC="$?"
-    type="CMD[RC: $?]: "
+    type="CMD[RC: $RC]: "
 else
-    type="MSG: "
+    if [ "${RC}" = "-" ]
+    then
+        prefix=
+        rcpart=
+    else
+        rcpart="[RC: $RC]"
+    fi
+    type="MSG${rcpart}: "
 fi
 
-# HOW?!
-# RC: -: YOPP! email-yopp: in /home/scratch.dpanariti_nvgpu/sb8/sb8hw/hw/nvgpu: MSG: dp4-sync: RC: 0
-prefix="RC: ${RC}: "
+: ${prefix="RC: ${RC}: "}
 msg="$progname: in ${PWD}: ${type}$@"
 
 {

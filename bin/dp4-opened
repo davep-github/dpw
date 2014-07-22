@@ -37,7 +37,7 @@ one="${1-}"
 shift_p=t
 case "${one}" in
     -r) shift; rerooter=reroot;;
-    --sans-junk|-j) rerooter=sans_junk;;
+    --sans-junk|-j|-s|--clean) rerooter=sans_junk;;
     -e|-x) shift; rerooter=extract;;
     --stdin) stdin_p=t;;
     *) shift_p=t;;

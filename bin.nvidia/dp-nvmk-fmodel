@@ -24,25 +24,35 @@ unset eexec_program
 
 trap_exit_msg=
 cleanall_p=
+dos_p=
+dos_project=gp100
 
 # Usage variable usage:
 Usage_synopsis="yopp'ing build fmodel.
 "
 # Example of arg parsing.
-option_str="c"
+option_str="cwp:"
 long_options=(
     "clean" "cleanall"
+    "win" "windwoes" "windows" "win32" "dos"
+    "debug"
+    "no-debug"
+    "dos-project:"
 )
 source dp-getopt+.sh
 while (($# > 0))
 do
   # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
   case $1 in
-      # eexec support
+      # eexec support: -n -v -q, etc. q.v. ~/bin/eexec
       # Done by EExec_parse and friends.
 
       # Program options.
       -c|--clean|--cleanall) cleanall_p=t;;
+      -w|--win|--windwoes|--windows|--win32|--dos) dos_p=t;;
+      --debug) dos_project=gp100_debug;;
+      --no-debug) dos_project=gp100_debug;;
+      -p|--dos-project) shift; dos_project="${1}";;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -76,4 +86,9 @@ true_p "${cleanall_p}" && {
 }
 
 # @todo XXX collect other regexps of interest.
-EExec yoppr nvmk fmodel 2>&1 | teeker --tee --wgrep 'The job whose output file' "$@"
+if true_p "${dos_p}"
+then
+    EExec bin/t_make -buildWin32Fmod -project "${dos_project}" -skipweld -skipmanuals -leaveLogs -q o_cpu_4G -catlog
+else
+    EExec yoppr nvmk fmodel 
+fi 2>&1 | teeker --tee --wgrep 'The job whose output file' "$@"
