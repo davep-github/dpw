@@ -636,6 +636,15 @@ if __name__ == "__main__":
                          dest="U_extension", const=".log",
                          action="store_const",
                          help="Add .log suffix.")
+    oparser.add_argument("-add-log-file-name",
+                         dest="optional_log_file_names",
+                         action="append", default=[],
+                         help="Add file names via an option to allow overriding.")
+
+    oparser.add_argument("--log-file-name",
+                         dest="optional_log_file_name",  default="",
+                         help="Add file name via an option to allow overriding.")
+
     oparser.add_argument("--log",
                          dest="output_files_required_p", default=False,
                          nargs=0,
@@ -878,6 +887,11 @@ Split line into chars and feed to ticker.""")
     # Parse args.
     app_args = oparser.parse_args()
 
+    output_files = app_args.output_files
+    if app_args.optional_log_file_name:
+        output_files.append(app_args.optional_log_file_name)
+    output_files.extend(app_args.optional_log_file_names)
+
     if app_args.debug_level:
         print "app_args.debug level:", app_args.debug_level
         dp_io.set_debug_level(app_args.debug_level, enable_debugging_p=True)
@@ -920,8 +934,8 @@ Split line into chars and feed to ticker.""")
         file_suffix = "." + dp_time.std_timestamp()
     file_suffix += app_args.U_extension
 
-    dp_io.cdebug(1, "app_args.output_files>%s<\n", app_args.output_files)
-    if len(app_args.output_files) == 0 and app_args.output_files_required_p:
+    dp_io.cdebug(1, "output_files>%s<\n", output_files)
+    if len(output_files) == 0 and output_files_required_p:
         dp_io.eprintf("One or more log file names are required.\n")
         sys.exit(1)
 
@@ -932,7 +946,7 @@ Split line into chars and feed to ticker.""")
     compressed_file_next_flush = 0
     compressed_file_flush_period = app_args.compressed_file_flush_period
 
-    for a in app_args.output_files:
+    for a in output_files:
         dp_io.cdebug(2,"log file name>%s<\n", a)
         a = a + file_suffix
         if not app_args.quiet_p:
