@@ -3,6 +3,8 @@ source script-x
 set -u
 progname="$(basename $0)"
 source eexec
+
+# dp-nvmk-fmodel [options] [-- teeker-options]
 if vsetp "${eexec_program-}"    # Did the caller provide a program?
 then
     EEXEC_SHIFT=:
@@ -25,20 +27,34 @@ unset eexec_program
 trap_exit_msg=
 cleanall_p=
 dos_p=
-dos_project=gp100
+clobber_p=
+Clobber_p=
+dos_project=gp105
+build_dir=tot
+build_targets=("fmodel")
 
 # Usage variable usage:
 Usage_synopsis="yopp'ing build fmodel.
 "
 # Example of arg parsing.
-option_str="cwp:"
+option_str="cwp:C"
 long_options=(
     "clean" "cleanall"
     "win" "windwoes" "windows" "win32" "dos"
     "debug"
     "no-debug"
     "dos-project:"
+    "tot"
+    "build-dir:" "bd:"
+    "manuals" "man"
+    "and-manuals" "and-man"
+    "pre-target:"
+    "post-target:"
+    "clobber"
+    "Clobber"
+    "no-build" "nada"
 )
+
 source dp-getopt+.sh
 while (($# > 0))
 do
@@ -53,10 +69,22 @@ do
       --debug) dos_project=gp100_debug;;
       --no-debug) dos_project=gp100_debug;;
       -p|--dos-project) shift; dos_project="${1}";;
+      --tot) build_dir=tot;;
+      --build-dir|--bd) shift; build_dir="${1}";;
+      --manuals|--man) build_targets=("manuals");;
+      --and-manuals|--and-man) build_targets=("manuals" "${build_targets[@]}");;
+      --pre-target) shift; build_tagets=("${1}" "${build_targets[@]}");;
+      --post-target) shift; build_tagets=("${build_targets[@]}" "${1}");;
+      --clobber) clobber_p=t;;
+      -C|--Clobber) Clobber_p=t;;
+      --no-build|--nada) build_targets=();;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
-      *) echo 1>&2 "Unsupported option>$1<"
+      # getopt will barf about unknown options.
+      # Here we barf about known options that we have forgotten to handle.
+      # It too one day for this to clearly catch a problem.
+      *) echo 1>&2 "Unhandled option>$1<"
          exit 1;;
     esac
     shift
@@ -79,16 +107,29 @@ on_error()
     trap '' 0
 }
 
-EExec mecd tot
+EExec -y mecd "${build_dir}"
+EExec_verbose_echo_id PWD
 
 true_p "${cleanall_p}" && {
     EExec yoppr nvmk cleanall
 }
 
 # @todo XXX collect other regexps of interest.
-if true_p "${dos_p}"
-then
-    EExec bin/t_make -buildWin32Fmod -project "${dos_project}" -skipweld -skipmanuals -leaveLogs -q o_cpu_4G -catlog
-else
-    EExec yoppr nvmk fmodel 
-fi 2>&1 | teeker --tee --wgrep 'The job whose output file' "$@"
+{
+    if true_p "${dos_p}"
+    then
+        EExec yoppr bin/t_make -buildWin32Fmod -project "${dos_project}" -skipweld -skipmanuals -leaveLogs -q o_cpu_4G -catlog
+    elif true_p "${clobber_p}"
+    then
+        EExec yoppr bin/t_make -clobber
+    elif true_p "${Clobber_p}"
+    then
+        EExec make Clobber
+    fi
+    (("${#build_targets[@]}" > 0)) && {
+        for target in "${build_targets[@]}"
+        do
+          EExec yoppr nvmk "${target}"
+        done
+    }
+} 2>&1 | teeker --tee --wgrep 'The job whose output file' "$@"

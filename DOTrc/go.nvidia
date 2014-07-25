@@ -135,6 +135,7 @@ Ee|nvl2__SB_rel|                ${fcnvlinktranslator__SB_rel}
 # Keep the common usage short and the less so longer.
 Ee|nvl__SB_rel|                 ${fcnvlinktranslator__SB_rel}
 Ee|fcxl__SB_rel|                ${fcnvlinktranslator__SB_rel}fc_nvlink_translator_
+Ee|nvlfc__SB_rel|               ${fcxl__SB_rel}
 
 Ee|fmodelliblinux8664__SB_rel|  ${fmodel__SB_rel}lib/Linux_x86_64/
 Ee|fmodlib64__SB_rel|           ${fmodelliblinux8664__SB_rel}
@@ -423,7 +424,10 @@ Ee|sandbox9|sbox9|sb9|workspace9|ws9| ${scratch4}sb9/
 Ee|sandbox8|sbox8|sb8|workspace8|ws8| ${scratch3}sb8/sb8hw/
 
 # I am so effing tired of typing this... underscores so suck.
-E|xlat|xl|  fc_nvlink_translator_
+E|xlat|xl|fc|  fc_nvlink_translator_
+E|fce|   fc_nvlink_translator_egress.
+E|fci|   fc_nvlink_translator_ingress.
+E|fcfs|  fc_nvlink_fs_comm.
 
 #
 # Some direct accesses for objects which are way too overloaded.

@@ -146,7 +146,7 @@ EExec_verbose_echo_id outputter
 EExecDashN_p && AS2_HIST_FILE=/dev/null
 command_date=$(date)
 {
-    echo "======== begin as2 operation: ${command}: ${command_date} ========"
+    echo "======== begin: as2 operation: ${AS2} $@: ${command_date} ========"
     echo "Command line:"
     eko "$@"
     true_p "${describe_p}" && {
@@ -161,6 +161,6 @@ command_date=$(date)
     }
     echo "======== begin: command output ========"
     EExec "${AS2}" "$@"
-    echo "======== finis: as2 operation: ${command}: ${command_date} ========"
+    echo "======== finis: as2 operation: ${AS2} $@: ${command_date} ========"
 } 2>&1 | "${outputter}"
 

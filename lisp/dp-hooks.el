@@ -475,8 +475,10 @@ state and then applies changes. This is good... sometimes."
   (loop for mode in list-o-modes do
     (dp-save-orig-n-set-new mode 
                             (function (lambda (save-sym)
-                                        (append (symbol-value save-sym)
-                                                list-o-keys))))))
+                                        (append 
+                                         (symbol-value save-sym)
+                                         list-o-keys
+                                         ))))))
 
 (defun dp-add-to-font-patterns (list-o-modes &rest list-o-keys)
   "Add the keyword patterns in LIST-O-KEYS to each mode in LIST-O-MODES.
@@ -569,7 +571,33 @@ original state and then applies changes. This is good... sometimes."
   "My hanging braces values.  We will edit or append to
 c-hanging-braces-alist based upon these values.")
 
-(defun* dp-c*-add-extra-faces (&key
+(defun* dp-c++-add-extra-faces (&key
+                               (buffer-local-p nil)
+                               (use-too-long-face-p
+                                (dp-val-if-boundp
+                                 dp-global-c*-use-too-long-face)))
+  (interactive)
+  (let ((extras
+         (list ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
+               (cons
+                (dp-mk-font-lock-type-re dp-c-font-lock-extra-types)
+                font-lock-type-face)
+               (cons (dp-mk-c*-debug-like-patterns)
+                     ;; ??? Which is better; just the match or the whole
+                     ;;     line?
+                     (list 1 'dp-debug-like-face t)))))
+    (when (and use-too-long-face-p)
+      (setq extras (cons dp-font-lock-line-too-long-element extras)))
+    ;;
+    ;; Add some extra types to the xemacs gaudy setting.  Rebuild the
+    ;; list each time rather than adding to the existing value.  This
+    ;; makes reinitializing cleaner.
+    (dp-add-line-too-long-font '(c++-font-lock-keywords-3
+                                 c++-font-lock-keywords-2
+                                 c++-font-lock-keywords-1)
+                               :buffer-local-p buffer-local-p)))
+
+(defun* dp-c-add-extra-faces (&key
                                (buffer-local-p nil)
                                (use-too-long-face-p
                                 (dp-val-if-boundp
@@ -591,7 +619,8 @@ c-hanging-braces-alist based upon these values.")
     ;; list each time rather than adding to the existing value.  This
     ;; makes reinitializing cleaner.
     (dp-add-line-too-long-font '(c-font-lock-keywords-3
-                                 c-font-lock-keywords-3)
+                                 c-font-lock-keywords-2
+                                 c-font-lock-keywords-1)
                                :buffer-local-p buffer-local-p)))
 
 ;;replaced with dp-add-...     (dp-save-orig-n-set-new 'c-font-lock-keywords-3 
@@ -757,7 +786,13 @@ c-hanging-braces-alist based upon these values.")
         ;; `dp-save-orig-n-set-new' saves that variable the first time it is
         ;; called and applies all other changes to that copy.  Hence, this
         ;; returns us to the original value and adds the line-too-long stuff.
-        (dp-c*-add-extra-faces :buffer-local-p t)
+        (when (and
+               (not buffer-read-only)
+               (if-and-fboundp 'dp-use-line-too-long-font-p
+                   (dp-use-line-too-long-font-p)
+                 t))                    ; default to using it.
+          (dp-c-add-extra-faces :buffer-local-p t)
+          (dp-c++-add-extra-faces :buffer-local-p t))
       (setq fontification-msg "... NOT!"))
     (message "dp-c-like-mode-common-hook, fontifying%s" fontification-msg)))
 
@@ -1978,16 +2013,17 @@ and then business as usual."
 (defun dp-sh-mode-hook ()
   (interactive)
   (local-set-key [(meta left)] 'beginning-of-defun)
+  (setq dp-cleanup-whitespace-p t)
   (dp-add-line-too-long-font '(sh-font-lock-keywords
                                sh-font-lock-keywords-1
                                sh-font-lock-keywords-2))
-  (setq dp-cleanup-whitespace-p t)
   (dp-add-to-font-patterns '(sh-font-lock-keywords
                              sh-font-lock-keywords-1
                              sh-font-lock-keywords-2)
                             ;; @todo XXX conditionalize this properly
                             ;; dp-trailing-whitespace-font-lock-element
                            )
+
   (dp-auto-it?))
 
 
@@ -2285,8 +2321,8 @@ changed."
                                perl-font-lock-keywords-2))
   (setq dp-cleanup-whitespace-p t)
   (dp-add-to-font-patterns '(perl-font-lock-keywords
-                               perl-font-lock-keywords-1
-                               perl-font-lock-keywords-2)
+                             perl-font-lock-keywords-1
+                             perl-font-lock-keywords-2)
                             ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
                            ))
 

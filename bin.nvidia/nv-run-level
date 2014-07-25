@@ -47,6 +47,14 @@ on_error()
     trap '' 0
 }
 
+num_sort()
+{
+    for a in "$@"
+    do
+      echo "$a"
+    done | sort -n
+}
+
 basic_level=nvlink/bringup_new_features_medium_gpc_sysmem
 medium_gpc_peer_level=nvlink/bringup_new_features_medium_gpc_peer
 medium_gpc_sysmem_level=nvlink/bringup_new_features_medium_gpc_sysmem
@@ -209,6 +217,15 @@ fi
 last_out="${ll_prefix}${last_out_dir_file_name}"
 latest_out="${ll_prefix}${latest_out_dir_file_name}"
 command_line_log_file="${progname}.command-line-log"
+
+free_space_warning=10G
+free_space=$(df -h . | tail -n1 | awk '{print $3}')
+min_space=$(num_sort "${free_space_warning}" "${free_space}" | head -n1)
+if [ "${min_space}" != "${free_space_warning}" ]
+then
+    echo "*** Warning: Only ${free_space} remains."
+    df -h .
+fi 1>&2
 
 for level in "${levels[@]}"
 do

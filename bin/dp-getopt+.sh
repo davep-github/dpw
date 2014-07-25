@@ -147,7 +147,9 @@ running_as_script && {
 #e.g.#       # Help!
 #e.g.#       --help) Usage; exit 0;;
 #e.g.#       --) shift ; break ;;
-#e.g.#       *) echo 1>&2 "Unsupported option>$1<"
+#e.g.#       # getopt will barf about unknown options.
+#e.g.#       # Here we barf about known options that we have forgotten to handle.
+#e.g.#       *) echo 1>&2 "Unhandled option>$1<"
 #e.g.#          exit 1;;
 #e.g.#     esac
 #e.g.#     shift

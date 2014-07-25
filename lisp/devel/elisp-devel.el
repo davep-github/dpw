@@ -5916,3 +5916,115 @@ nil
 --
 
 (defun dp-shell-command-to-echo-area)
+
+========================
+Thursday July 24 2014
+--
+(defun dp-use-line-too-long-font-p ()
+  nil)
+(dp-use-line-too-long-font-p)
+nil
+
+
+
+
+(cl-pe '
+(when (and
+       t
+       (dp-funcall-if 'dp-use-line-too-long-font-p
+           nil
+         'q)))
+
+)
+
+(when (and t
+           (if (functionp 'dp-use-line-too-long-font-p)
+               (funcall 'dp-use-line-too-long-font-p)
+             'q))
+  'ayup)
+nil
+
+anope
+
+ayup
+
+ayup
+
+nil
+
+nil
+
+nil
+
+
+
+
+(if (and t
+         (if (functionp 'dp-use-line-too-long-font-p)
+             (funcall 'dp-use-line-too-long-font-p)
+           'q))
+    'yopp
+  'yipp)
+yopp
+
+
+
+(if (and t
+         (if (functionp 'dp-use-line-too-long-font-p)
+             (funcall 'dp-use-line-too-long-font-p quote a)
+           'q))
+    nil)nil
+
+
+
+
+(fboundp 'anddlfkd)
+nil
+
+
+(cl-pe '
+(if-and-fboundp 'orxxdcx
+    'then
+'else))
+
+(if (and (fboundp 'orxxdcx) (symbol-function 'orxxdcx)) 'then 'else)
+else
+
+
+
+(if (and (fboundp 'or) (symbol-function 'or)) 'then 'else)
+then
+
+
+
+(if (and (fboundp 'dp-next-line) (symbol-function 'dp-next-line)) 'then 'else)
+then
+
+
+
+
+(symbol-function 'x)
+
+
+
+else
+
+(cl-pe '(when (and
+               (not buffer-read-only)
+               (if-and-fboundp 'dp-use-line-too-long-font-p
+                   (dp-use-line-too-long-font-p)
+                 t))                    ; default to using it.
+         'when))
+
+(if (and (not buffer-read-only)
+         (if (and (fboundp 'dp-use-line-too-long-font-p)
+                  (symbol-function 'dp-use-line-too-long-font-p))
+             (dp-use-line-too-long-font-p)
+           t))
+    'when)
+nil
+
+
+
+
+

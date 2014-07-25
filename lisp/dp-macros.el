@@ -370,7 +370,7 @@ VAR must be a symbol."
 
   (defmacro if-and-fboundp (fun then &rest else)
     "If FUN is `fboundp' and non-nil do THEN else do ELSE. See `if' for details."
-    `(if (and (fboundp ,fun) (symbol-value ,fun))
+    `(if (and (fboundp ,fun) (symbol-function ,fun))
       ,then
       ,@else))
   (put 'if-and-fboundp 'lisp-indent-function lisp-body-indent)
@@ -393,7 +393,7 @@ VAR must be a symbol."
               (apply (quote message) (concat ,prefix-str fmt) args))))))
 )
 
-;; There is some *very* bizzare parenthesis closing proble up there.
+;; There is some *very* bizzare parenthesis closing problem up there.
 ;; e.g. (defmacro foo (fargs) "I am a fucked up file" (stuff))
 ;; has a close paren problem with the eval-when-compile up there, but
 ;; (defmacro foo (fargs) "I a") fucked up file...
@@ -418,7 +418,8 @@ Forms in BODY can use /CWD/."
     "`funcall' FUNC with unquoted list FUNC-ARGS if FUNC is bound and a function,
 otherwise do ELSE.
 E.g.
-\(dp-funcall-if 'good-things \(puppy-dogs rainbows)
+\(dp-funcall-if 'good-things 
+    \(puppy-dogs rainbows)
   \(woe-is-me)
   \(ho-ho-ho-to-the-bottle-I-go))
 

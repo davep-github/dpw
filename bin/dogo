@@ -51,6 +51,10 @@ go_lookup()
 
 for o in "$@"
 do
+  [ -d "${o}" ] && {
+      echo "${o}"
+      exit 0
+  }
   case "$1" in
       -l) show_dir_p="t"; SHIFT=: ;;
       -L) shift; fini $(go_lookup "$1"); exit;;

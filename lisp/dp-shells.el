@@ -253,6 +253,8 @@ Can be set after the first prompting.")
                                        "ec"
                                        "ef"
                                        "ec-diff"
+                                       "git-diff-ec"
+                                       "git-ec-diff"
                                        "ec-merge"
                                        "ef-diff"
                                        "gitcia"

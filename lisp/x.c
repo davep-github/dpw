@@ -4,6 +4,8 @@
  * llkjslkjd
  */
 
+float f = 0.0;
+typedef zuzz xxx;
 // recommend
 // block-comment-start
 /* * this file is used for testing c-mode things.
@@ -44,7 +46,7 @@ int fuck_fuck_fuck;
 
 typedef struct blah_s
 {
-
+    bool z = false;
 }
 blah_t;
 

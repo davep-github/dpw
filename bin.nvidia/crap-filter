@@ -1,0 +1,97 @@
+#!/bin/sh
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+trap_exit_msg=
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+}
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+    trap '' 0
+}
+
+#           1                   2                               3             4    5          6
+match_expr='(^Debug\([0-9]+\): )(\[[[:space:]]+nvclk=-?[0-9]+ \. )([[:space:]]*)(.* )([0-9]+ \])(.*)'
+replace_expr_default='\4\5\6'
+replace_expr_sans_line_num='\4\6'
+replace_expr="${replace_expr_default}"
+# Usage variable usage:
+Usage_args_info=" file..."
+Usage_synopsis="Strip variable crap out of log files...:
+"
+# Using ) after the args makes copy & paste between here and the
+# case statement easier.
+Usage_details="${EExec_parse_usage}
+-o) flag o
+-O <val>) set Option to <val>
+"
+# Example of arg parsing.
+option_str="m:r:"
+long_options=(
+    "line-number" "line-num" "line-no" "lnum"
+    "no-line-number" "no-line-num" "no-line-no" "no-lnum" "nln"
+      "sans-line-number" "sans-line-num" "sans-line-no" "sans-lnum" "sln"
+      "sans"
+    "match-expr:" "mex:"
+    "replace-expr:" "rex:"
+)
+
+source dp-getopt+.sh
+while (($# > 0))
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support: -n -v -q, etc. q.v. ~/bin/eexec
+      # Done by EExec_parse and friends.
+
+      # Program options.
+      --line-number|--line-num|--line-no|--lnum) 
+           replace_expr="${replace_expr_default}";;
+      --no-line-number|--no-line-num|--no-line-no|--no-lnum|--nln|--sans-line-number|--sans-line-num|--sans-line-no|--sans-lnum|--sln|--sans)
+           replace_expr="${replace_expr_sans_line_num}";;
+      --match-expr|--mex) shift; match_expr="${1}";;
+      --replace-expr|--rex) shift; replace_expr="${1}";;
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      # getopt will barf about unknown options.
+      # Here we barf about known options that we have forgotten to handle.
+      *) echo 1>&2 "Unhandled option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+
+sed -rn "s!${match_expr}!${replace_expr}!p"
+
