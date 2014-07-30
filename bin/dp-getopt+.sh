@@ -134,7 +134,7 @@ running_as_script && {
 #e.g.# # Example of arg parsing.
 #e.g.# option_str=""
 #e.g.# # long_options=("option-name-without-leading--" ...)
-#e.g.# source dp-getopt+.sh
+#e.g.# source dp-getopt+.sh || exit 1
 #e.g.# while (($# > 0))
 #e.g.# do
 #e.g.#   # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.

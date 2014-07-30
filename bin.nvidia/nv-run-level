@@ -70,7 +70,8 @@ levels=()
 : ${fc_csl="+fc_nvlink_translator_egress.cpp,+fc_nvlink_translator_egress.h,+fc_nvlink_translator.cpp,+fc_nvlink_translator.h,+fc_nvlink_translator_ingress.cpp,+fc_nvlink_translator_ingress.h,+fc_nvlink_config.cpp,+fc_nvlink_config.h,+fc_nvlink_fs_comm.cpp,+fc_nvlink_fs_comm.h"}
 : ${hsh_csl="+hshub_xbar.cpp,+hshub_nvlink_main.cpp,+hshub_nvlink_xbar_handler.cpp"}
 : ${ALL_CSL="${fc_csl},${hsh_csl}"}
-: ${CSL=${fc_csl}}              # It's all about me.
+#: ${CSL=${fc_csl}}              # It's all about me.
+: ${CSL=}                       # Silence is golden.
 : ${big_queue:=o_cpu_16G}
 : ${small_queue:=o_cpu_rel5_4G_8H}
 : ${queue:=${big_queue}}
@@ -92,7 +93,7 @@ long_options=(
 "big-queue" "big-q" "bigq" "bq"
 "small-queue" "small-q" "smallq" "sq"
 "csl:"
-"fc-csl" "csl-fc"
+"fc-csl" "csl-fc" "nvl-csl" "csl-nvl"
 "hsh-csl" "csl-hsh"
 "all-fc-csl" "csl-all-fc"
 "all-csl" "csl-all"
@@ -156,7 +157,7 @@ do
                    ;;
       --help) Usage; exit 0;;
       --csl) shift; CSL="${1}";;
-      --fc-csl|--csl-fc) CSL="${fc_csl}";;
+      --fc-csl|--csl-fc|--nvl-csl|--csl-nvl) CSL="${fc_csl}";;
       --hsh-csl|--csl-hsh) CSL="${hsh_csl}";;
       --all-fc-csl|--csl-fc-all) CSL="${CSL},${fc_csl},${hsh_csl}";;
       # The definition of all may change.

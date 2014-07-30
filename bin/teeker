@@ -453,7 +453,8 @@ class App_arg_action_add_regexp_and_warning_highlight(argparse.Action):
         regexps.append(values)
         setattr(namespace, self.dest, regexps)
 
-Convenience_opts = (("U_extension", ".log"), ("timestamp_log_file_names_p", True))
+Convenience_opts = (("U_extension", ".log"),
+                    ("timestamp_log_file_names_p", True))
 
 def set_convenience_opts(namespace):
     for name, val in Convenience_opts:
@@ -502,6 +503,13 @@ class App_action_log_file_convenience_test_log(argparse.Action):
         setattr(namespace, "highlight_ALL_grep_matches_p", True) # --hg
         setattr(namespace, "tick_interval", 100)                 # -i100
         setattr(namespace, "compressed_file_flush_period", -1)   # --cflush=-1
+
+class App_action_log_file_convenience_zlog(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        Catlike_setup(namespace)
+        setattr(namespace, "compression_level", 9)               # -Z9
+        setattr(namespace, "compressed_file_flush_period", -1)   # --cflush=-1
+        setattr(namespace, "output_files_required_p", True)
 
 
 class Ctor_arg_action_twiddle(Ctor_arg_action):
@@ -841,6 +849,10 @@ Split line into chars and feed to ticker.""")
                          nargs=0,
                          action=App_arg_action_catlike,
                          help="Just be a pass through like tee(1).")
+    oparser.add_argument("--zlog",
+                         nargs=0,
+                         action=App_action_log_file_convenience_zlog,
+                         help="Catlike + required log names which will be compressed.")
     oparser.add_argument("--highlight-grep", "--highlight-matches",
                          "--high-grep", "--high_matches",
                          "--hl-grep", "--hl-matches",
@@ -935,7 +947,7 @@ Split line into chars and feed to ticker.""")
     file_suffix += app_args.U_extension
 
     dp_io.cdebug(1, "output_files>%s<\n", output_files)
-    if len(output_files) == 0 and output_files_required_p:
+    if (len(output_files) == 0) and app_args.output_files_required_p:
         dp_io.eprintf("One or more log file names are required.\n")
         sys.exit(1)
 

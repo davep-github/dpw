@@ -8,7 +8,7 @@ shift
 [ -z "$*" ] && set -- -
 for f in "$@"
 do
-  if [ "${line}" = 0 -o "${line}" = '-' ]
+  if [ "${line}" = 0 -o "${line}" = '-0' -o "${line}" = '-' ]
   then
       tail -n 1 $f
   elif ((line > 0))

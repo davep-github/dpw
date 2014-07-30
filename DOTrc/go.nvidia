@@ -69,18 +69,26 @@ Ee|sw__SB_rel|                  sw/
 Ee|sbtmp__SB_rel|               tmp/
 Ee|stmp__SB_rel|                ${sbtmp__SB_rel}
 Ee|ttmp__SB_rel|                ${sbtmp__SB_rel}
+Ee|rde__SB_rel|                 RDE
+Ee|RDD__SB_rel|                 ${rde__SB_rel}
 
 # + nvlink fc_nvlink nvlink_translator fc_nvlink_translator/ fmodel fmod
 Ee|nvgpu__SB_rel|               ${hw__SB_rel}nvgpu/
-#Ee|nvgpuXXX__SB_rel|            ${nvgpu__SB_rel}/XXX
 
-Ee|nvgpumanuals__SB_rel|        ${nvgpu__SB_rel}/manuals
+Ee|nvgpuip__SB_rel|             ${nvgpu__SB_rel}ip
+Ee|nvgip__SB_rel|               ${nvgpuip__SB_rel}
+Ee|nvgpunvif__SB_rel|           ${nvgip__SB_rel}
+Ee|nvgif__SB_rel|               ${nvgpunvif__SB_rel}
+Ee|nvltlif__SB_rel|             ${nvgpunvif__SB_rel}nvltl
+Ee|nvlif__SB_rel|               ${nvltlif__SB_rel}
+Ee|nvgpumanuals__SB_rel|        ${nvgpu__SB_rel}manuals
 Ee|nvgpumans__SB_rel|           ${nvgpumanuals__SB_rel}
 Ee|nvlmanuals__SB_rel|          ${nvgpumanuals__SB_rel}
+Ee|nvlman__SB_rel|              ${nvgpumanuals__SB_rel}
 Ee|manuals__SB_rel|             ${nvgpumanuals__SB_rel}
 Ee|mans__SB_rel|                ${nvgpumanuals__SB_rel}
-Ee|chiptools__SB_rel|           ${nvgpu__SB_rel}/chip_tools
-Ee|chiptoolsglobal__SB_rel|     ${chiptools__SB_rel}/global
+Ee|chiptools__SB_rel|           ${nvgpu__SB_rel}chip_tools
+Ee|chiptoolsglobal__SB_rel|     ${chiptools__SB_rel}global
 Ee|ctglob__SB_rel|              ${chiptoolsglobal__SB_rel}
 
 Ee|nvgpuinf__SB_rel|            ${nvgpu__SB_rel}inf/
@@ -104,11 +112,16 @@ Ee|nvtldefs__SB_rel|            ${nvgpu__SB_rel}defs/
 Ee|nvltldefs__SB_rel|           ${nvgpu__SB_rel}defs/
 Ee|fcnvtldefs__SB_rel|          ${nvgpu__SB_rel}defs/
 Ee|fcnvltldefs__SB_rel|         ${nvgpu__SB_rel}defs/
-Ee|memdefs__SB_rel|             ${nvgpudefs__SB_rel}/memory/
+Ee|memdefs__SB_rel|             ${nvgpudefs__SB_rel}memory/
 Ee|fmodel__SB_rel|fmod__SB_rel| ${nvgpu__SB_rel}fmod/
 
 Ee|fmodelinclude__SB_rel|       ${fmodel__SB_rel}include/
-Ee|fmodinc__SB_rel|             ${fmodelinclude__SB_rel}/
+Ee|fmodelincludehost__SB_rel|   ${fmodelinclude__SB_rel}host/
+Ee|hostinc__SB_rel|             ${fmodelincludehost__SB_rel}
+Ee|fmihost__SB_rel|             ${fmodelincludehost__SB_rel}
+Ee|fmih__SB_rel|                ${fmodelincludehost__SB_rel}
+Ee|fmodinc__SB_rel|             ${fmodelinclude__SB_rel}
+Ee|fminc__SB_rel|               ${fmodelinclude__SB_rel}
 Ee|xvetranslator__SB_rel|       ${fmodel__SB_rel}xve_translator/
 Ee|xvexlat__SB_rel|             ${xvetranslator__SB_rel}
 Ee|xve__SB_rel|                 ${xvetranslator__SB_rel}
@@ -161,7 +174,7 @@ Ee|mods__SB_rel|                ${nvdiag__SB_rel}mods/
 Ee|simmgr__SB_rel|              ${nvdiag__SB_rel}simmgr/
 Ee|asim__SB_rel|                ${simmgr__SB_rel}
 Ee|cosim__SB_rel|               ${simmgr__SB_rel}
-Ee|ap0__SB_rel|                 ${hw__SB_rel}/ap/
+Ee|ap0__SB_rel|                 ${hw__SB_rel}ap/
 Ee|apjustap__SB_rel|            ${ap0__SB_rel}
 Ee|aptlit1__SB_rel|             ${hw__SB_rel}ap_tlit1/
 Ee|ap1__SB_rel|                 ${aptlit1__SB_rel}
@@ -266,7 +279,7 @@ Ee|nvlevels__SB_rel|            ${nvlinklevels__SB_rel}
 # default for duration of this project.
 Ee|levels__SB_rel|              ${nvlinklevels__SB_rel}
 
-Ee|gpumelevels__SB_rel|         ${tegralevels__SB_rel}/multiengine
+Ee|gpumelevels__SB_rel|         ${tegralevels__SB_rel}multiengine
 Ee|gmelevels__SB_rel|           ${gpumelevels__SB_rel}
 Ee|melevels__SB_rel|            ${gpumelevels__SB_rel}
 
@@ -419,7 +432,7 @@ Ee|swrwavefull|swrfullwave|swrfw|swrwf|swrlong|swrwave| ${sandbox4}
 Ee|sandbox5|sbox5|sb5|workspace5|ws5| ${scratch2}sb5/sb5hw/
 
 Ee|sandbox7|sbox7|sb7|workspace7|ws7| ${scratch4}sb7/sb7hw/
-Ee|sandbox9|sbox9|sb9|workspace9|ws9| ${scratch4}sb9/
+Ee|sandbox9|sbox9|sb9|workspace9|ws9| ${scratch4}sb9/sb9hw/
 
 Ee|sandbox8|sbox8|sb8|workspace8|ws8| ${scratch3}sb8/sb8hw/
 

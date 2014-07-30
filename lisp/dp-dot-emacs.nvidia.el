@@ -222,6 +222,7 @@ tests.")
 (setq dp-make-cscope-database-regexps-fun
       'dp-nvidia-make-cscope-database-regexps)
 
+;; Define per-locale???
 (defun* dp-set-cscope-database-regexps (&optional ignore-env-p 
                                         db-locations 
                                         (hierarchical-search-p t))

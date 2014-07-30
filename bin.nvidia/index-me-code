@@ -122,6 +122,12 @@ OOT_DIR=$HOME/work/out-of-tree-dirs
 out_of_tree_dirs=/home/scratch.traces02/mobile/traces/system/so
 index_out_of_tree_locations()
 {
+    if vunsetp "${out_of_tree_dirs}" \
+         || ! test -d ${out_of_tree_dirs} \
+         || ! test -d "${OOT_DIR}"
+    then
+        return 0
+    fi
     local oot_files_file=$(normpath "${OOT_DIR}/oot.files")
     EExec find-src-code-files ${out_of_tree_dirs} > "${oot_files_file}"
     # Places like home.scratch.traces02.mobile.traces.system.so which do

@@ -594,7 +594,8 @@ c-hanging-braces-alist based upon these values.")
     ;; makes reinitializing cleaner.
     (dp-add-line-too-long-font '(c++-font-lock-keywords-3
                                  c++-font-lock-keywords-2
-                                 c++-font-lock-keywords-1)
+                                 c++-font-lock-keywords-1
+                                 c++-font-lock-keywords)
                                :buffer-local-p buffer-local-p)))
 
 (defun* dp-c-add-extra-faces (&key
@@ -777,8 +778,8 @@ c-hanging-braces-alist based upon these values.")
     (dmessage "Trying c-setup-filladapt in hook. If things get fucked up (as-of 2010-05-23T17:37:13, then check this."))
 
   ;; Do the too long fontification so I can turn it on or off on a per file
-  ;; basis. Too many dumb-asses use 100s chars/line very, very often and the
-  ;; files become nigh unreadable.
+  ;; basis. Too many dumb-asses use 100s (not 100+, but n * 100) chars/line
+  ;; very, very often and the files become nigh unreadable.
   (let ((fontification-msg "."))
     (if dp-fontify-p
         ;; This line seems to wipe out the extra faces.
@@ -986,10 +987,6 @@ main(
   (interactive)
   (dp-add-line-too-long-font 'ruby-font-lock-keywords)
   (setq dp-cleanup-whitespace-p t)
-  (dp-add-to-font-patterns '(ruby-font-lock-keywords)
-                            ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
-)
-
   (local-set-key [(meta right)] 'ruby-end-of-block)
   (local-set-key [(meta left)] 'dp-beginning-of-def-or-class)
   (dp-auto-it?))
@@ -1071,7 +1068,6 @@ See `dp-parenthesize-region-paren-list'")
   (setq dp-cleanup-whitespace-p t)
   ;; @todo XXX conditionalize this properly
   ;; dp-trailing-whitespace-font-lock-element
-  (dp-add-to-font-patterns '(python-font-lock-keywords))
 
   ;; !<@todo XXX Add this to a new file hook?
   (dp-auto-it?)
@@ -1621,7 +1617,8 @@ Use of 'unset allows the legitimate value of nil to be used.")
         (if (or (eq dp-cscope-memoized-cscope-database-regexps 'unset)
                 non-memoized-p)
             (funcall dp-make-cscope-database-regexps-fun 
-                     ignore-env-p db-locations 
+                     ignore-env-p 
+                     db-locations 
                      hierarchical-search-p)
           dp-cscope-memoized-cscope-database-regexps)
         dp-cscope-memoized-cscope-database-regexps cscope-database-regexps))
@@ -1718,6 +1715,7 @@ Use of 'unset allows the legitimate value of nil to be used.")
     (if restore-p
         (dp-cscope-set-cscope-database-regexps 'reset)
       (setq cscope-database-regexps dp-cscope-current-dir-only-regexps)))
+  (dp-defaliases 'dp-cscope-. 'dp-cscope. 'dp-cscope-force-current-dir-only)
 
   (when (dp-optionally-require 'xcscope)
     ;; defun dp-cscope-minor-mode-hook Something in some files can cause the
@@ -2017,12 +2015,12 @@ and then business as usual."
   (dp-add-line-too-long-font '(sh-font-lock-keywords
                                sh-font-lock-keywords-1
                                sh-font-lock-keywords-2))
-  (dp-add-to-font-patterns '(sh-font-lock-keywords
-                             sh-font-lock-keywords-1
-                             sh-font-lock-keywords-2)
-                            ;; @todo XXX conditionalize this properly
-                            ;; dp-trailing-whitespace-font-lock-element
-                           )
+;;don't add anal trailing ws font   (dp-add-to-font-patterns '(sh-font-lock-keywords
+;;don't add anal trailing ws font                              sh-font-lock-keywords-1
+;;don't add anal trailing ws font                              sh-font-lock-keywords-2)
+;;don't add anal trailing ws font                             ;; @todo XXX conditionalize this properly
+;;don't add anal trailing ws font                             ;; dp-trailing-whitespace-font-lock-element
+;;don't add anal trailing ws font                            )
 
   (dp-auto-it?))
 

@@ -4,7 +4,7 @@ set -u
 progname="$(basename $0)"
 source eexec
 
-# dp-nvmk-fmodel [options] [-- teeker-options]
+# dp-Nevsky-fmodel [options] [-- teeker-options]
 if vsetp "${eexec_program-}"    # Did the caller provide a program?
 then
     EEXEC_SHIFT=:
@@ -25,13 +25,14 @@ unset eexec_program
 # export eexec_program
 
 trap_exit_msg=
-cleanall_p=
 dos_p=
-clobber_p=
-Clobber_p=
 dos_project=gp105
 build_dir=tot
-build_targets=("fmodel")
+nvmk_targets=("fmodel")
+t_make_targets=("")
+T_MAKE=./bin/t_make
+cleaners=("")
+# <:vars:>
 
 # Usage variable usage:
 Usage_synopsis="yopp'ing build fmodel.
@@ -40,6 +41,11 @@ Usage_synopsis="yopp'ing build fmodel.
 option_str="cwp:C"
 long_options=(
     "clean" "cleanall"
+    "t_make-clean" "tm-clean"
+    "t_make-cleaner" "tm-cleaner"
+    "t_make-clean-only" "tm-clean-only"
+    "pristine"
+    "Clobber"
     "win" "windwoes" "windows" "win32" "dos"
     "debug"
     "no-debug"
@@ -50,9 +56,10 @@ long_options=(
     "and-manuals" "and-man"
     "pre-target:"
     "post-target:"
-    "clobber"
-    "Clobber"
+    "t_make-pre-target:" "tmpre:"
+    "t_make-post-target:" "tmpost:"
     "no-build" "nada"
+    "wtf-this-cant-be-necessary" "wtf" "you-are-shitting-me" "cleanse"
 )
 
 source dp-getopt+.sh
@@ -64,27 +71,35 @@ do
       # Done by EExec_parse and friends.
 
       # Program options.
-      -c|--clean|--cleanall) cleanall_p=t;;
+      -c|--clean|--cleanall) cleaners+=(cleanall);;
+      --t_make-clean|--tm-clean) cleaners+=(t_make-clean);;
+      --t_make-cleaner|--tm-cleaner) cleaners+=(t_make-cleaner);;  # AKA clobber.
+      --t_make-clean-only|--tm-clean-only) cleaners+=(t_make-clean-only);;
+      --pristine) cleaners+=(pristine);;
+      -C|--Clobber) cleaners+=(Clobber);;
+      --wtf-this-cant-be-necessary|--wtf|--you-are-shitting-me|--cleanse)
+          cleaners=(cleanall t_make-clean-only Clobber)
+          ;;
       -w|--win|--windwoes|--windows|--win32|--dos) dos_p=t;;
       --debug) dos_project=gp100_debug;;
       --no-debug) dos_project=gp100_debug;;
       -p|--dos-project) shift; dos_project="${1}";;
       --tot) build_dir=tot;;
       --build-dir|--bd) shift; build_dir="${1}";;
-      --manuals|--man) build_targets=("manuals");;
-      --and-manuals|--and-man) build_targets=("manuals" "${build_targets[@]}");;
-      --pre-target) shift; build_tagets=("${1}" "${build_targets[@]}");;
-      --post-target) shift; build_tagets=("${build_targets[@]}" "${1}");;
-      --clobber) clobber_p=t;;
-      -C|--Clobber) Clobber_p=t;;
-      --no-build|--nada) build_targets=();;
+      --manuals|--man) nvmk_targets=("manuals");;
+      --and-manuals|--and-man) nvmk_targets=("manuals" "${nvmk_targets[@]}");;
+      --pre-target) shift; nvmk_targets=("${1}" "${nvmk_targets[@]}");;
+      --post-target) shift; nvmk_targets=("${nvmk_targets[@]}" "${1}");;
+      --t_make-pre-target|--tmpre) shift; t_make_targets=("${1}" "${t_make_targets[@]}");;
+      --t_make-post-target|--tmpost) shift; t_make_targets=("${t_make_targets[@]}" "${1}");;
+      --no-build|--nada) nvmk_targets=();;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
       # getopt will barf about unknown options.
       # Here we barf about known options that we have forgotten to handle.
       # It too one day for this to clearly catch a problem.
-      *) echo 1>&2 "Unhandled option>$1<"
+      *) echo 1>&2 "dp: Unhandled option>$1<"
          exit 1;;
     esac
     shift
@@ -110,26 +125,50 @@ on_error()
 EExec -y mecd "${build_dir}"
 EExec_verbose_echo_id PWD
 
-true_p "${cleanall_p}" && {
-    EExec yoppr nvmk cleanall
-}
+# This allows the cleaners to be specified in order
+# <:cleaners:>
+for cleaner in "${cleaners[@]}"
+do
+  case "${cleaner}" in
+      cleanall) EExec yoppr nvmk cleanall;;
+      Clobber) EExec yoppr \make Clobber;;
+      t_make-cleaner) EExec yoppr "${T_MAKE}" -cleaner;;
+      t_make-clean) EExec yoppr "${T_MAKE}" -clean;;
+      t_make-clean-only) EExec yoppr "${T_MAKE}" -clean_only;;
+      pristine) EExec yoppr "${T_MAKE}" -pristine;;
+      "");;
+      *) {
+          echo_id -t "unsupported cleaner" cleaner
+          exit 1
+      } 1>&2
+  esac
+done
 
 # @todo XXX collect other regexps of interest.
 {
     if true_p "${dos_p}"
     then
         EExec yoppr bin/t_make -buildWin32Fmod -project "${dos_project}" -skipweld -skipmanuals -leaveLogs -q o_cpu_4G -catlog
-    elif true_p "${clobber_p}"
-    then
-        EExec yoppr bin/t_make -clobber
-    elif true_p "${Clobber_p}"
-    then
-        EExec make Clobber
+    else
+        if (("${#t_make_targets[@]}" > 0))
+        then
+            for target in "${t_make_targets[@]}"
+            do
+              vunsetp "${target}" && continue
+              EExec yoppr ./bin/t_make "${target}"
+            done
+        else
+            EExec_verbose_msg "No t_make targets"
+        fi
+
+        if (("${#nvmk_targets[@]}" > 0))
+        then
+            for target in "${nvmk_targets[@]}"
+            do
+              EExec yoppr nvmk "${target}"
+            done
+        else
+            EExec_verbose_msg "No nvmk targets"
+        fi
     fi
-    (("${#build_targets[@]}" > 0)) && {
-        for target in "${build_targets[@]}"
-        do
-          EExec yoppr nvmk "${target}"
-        done
-    }
 } 2>&1 | teeker --tee --wgrep 'The job whose output file' "$@"

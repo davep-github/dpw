@@ -1,0 +1,95 @@
+#!/bin/sh
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+trap_exit_msg=
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+}
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+    trap '' 0
+}
+
+# Usage variable usage:
+Usage_args_info=" regex files..."
+Usage_synopsis="Find files... that have no regexp matches.
+"
+# Example of arg parsing.
+option_str="efg:"
+long_options=(
+    "egrep"
+    "fgrep"
+    "grepper:"
+    "grep-opts:"
+)
+
+: ${grepper:=fgrep}
+grep_opts='-q'
+
+source dp-getopt+.sh
+while (($# > 0))
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support
+      # Done by EExec_parse and friends.
+
+      # Program options.
+      -e|--egrep) grepper=egrep;;
+      -f|--fgrep) grepper=fgrep;;
+      -g|--grepper) shift; grepper="${1}";;
+      -g|--grep-opts) shift; grep_opts="${1}";;
+
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+
+regexp="${1}"
+shift
+
+for f in "$@"
+do
+  if EExec --no-errors "${grepper}" ${grep_opts} "${regexp}" "${f}"
+  then
+      # This is a match. We don't want to see it.
+      :
+  else
+      echo "${f}"
+  fi
+done

@@ -30,7 +30,11 @@ no_header=
 clean_up()
 {
     local msg=${1-}
-    [ -z "${in_file}" ] && [ -n "${tmp_file}" ] && [ -e "${tmp_file}" ] && {
+    [ -z "${in_file}" ] \
+      && vsetp "${tmp_file}" \
+      && [ -e "${tmp_file}" ] \
+      && vunsetp "${keep_tmp_p}" \
+      && {
         EExec_verbose_msg "${progname}: ${msg}Removing tmp_file>${tmp_file}<"
         rm -f "${tmp_file}"
     }
@@ -74,7 +78,7 @@ tmp_file=$(mktemp "$HOME/tmp/tgen-batch-status.tmp.XXXXXXX") || {
 
 EExec_verbose_echo_id tmp_file
 
-option_str="t:r:fdps:0123456789i:"
+option_str="t:r:fdps0123456789i:c"
 long_options=(
     "test:" "test-name:"
     "test-dir:" "test-root:"
@@ -89,9 +93,11 @@ long_options=(
     "not-running" "done" "exited" "finished"
     "running"
     "not-done"
-    "failed" "b0rked" "error" "fail"
+    "failed" "b0rked" "error" "errors" "fail"
     "not-failed" "not-b0rked" "not-error" "not-fail"
     "passed" "success" "good" "pass"
+    "gold"
+    "killed"
     "in-file:" "in:" "if:"
     "nth:" "run-num"
     "log"
@@ -103,6 +109,13 @@ long_options=(
     "just-test-name" "just-test" "jtn" "short" "terse" "simple" "basic"
     "no-header" "noh" "no-hdr"
     "header" "hdr"
+    "invert" "invert-flag" "not" "not-flag"
+    "vert" "vert-flag"
+    "count" "wcl" "wc" "wc-l"
+    "keep-raw-output" "keep-tmp-file"
+    "no-trep"
+    "keep-trep"
+    "run-dir" "rd"
 )
 
 test_name_opt=
@@ -112,8 +125,13 @@ invert_flag=
 post_process=add_dot_log
 just_path=cat
 post_process_arg=
-
-source dp-getopt+.sh
+counter=cat
+keep_tmp_p=
+trep_filter=strip_trep
+just_run_dir_p=
+count_p=
+# <:vars:>
+source dp-getopt+.sh || exit 1
 while (($# > 0))
 do
   # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
@@ -128,20 +146,23 @@ do
       -f|--files|--show-test-file-names) output_transform=cat;;
       -d|--dirs|--dirname|--dname|--dn) post_process=dirname_only;;
       --just-path) just_path=just_path; no_header=t;;
-      --just-test-name|--just-test|--jtn|--short|--terse|--simple|--basic) just_path=just_test_name; post_process=cat; no_header=t;;
+      -s|--just-test-name|--just-test|--jtn|--short|--terse|--simple|--basic) just_path=just_test_name; post_process=cat; no_header=t;;
       --just-logs) just_path=just_path; post_process=add_dot_log; no_header=t;;
       --just-scripts|--just-sh) just_path=just_path; post_process=add_dot_sh;;
       -p|--full-path|--path) output_transform=full_path;;
-      --real-path|--rp) output_transform=real_path;;
-      -s|--status-regexp|--sre) shift; status_regexp="${1}";;
+      --real-path|--rp) 
+          output_transform=real_path;;
+      --status-regexp|--sre) shift; status_regexp="${1-}";;
       --srv|--status-not-regexp|--not-status-regexp|--status-regexp-v) shift; status_regexp="${1}"; invert_flag='-v';;
       --not-running|--done|--exited|--finished) status_regexp="^(RUNNING|NOTRUN)"; invert_flag='-v';;
-      --failed|--b0rked|--error|--fail) status_regexp="^(NOTRUN|RUNNING|PASS_(GOLD|LEAD))"; invert_flag='-v';;
+      --failed|--b0rked|--error|--errors|--fail) status_regexp="^(NOTRUN|RUNNING|PASS_(GOLD|LEAD))"; invert_flag='-v';;
       --no-failed|--not-b0rked|--not-error|--not-fail) status_regexp="^(NOTRUN|RUNNING|PASS_(GOLD|LEAD))";;
       --passed|--success|--good|--pass) status_regexp="^(PASS_(GOLD|LEAD))";;
+      --gold) status_regexp="^(PASS_GOLD)";;
+      --killed) status_regexp="^(ERROR_KILL)";;
       --running) status_regexp="^RUNNING";;
       --not-done) status_regexp="^(RUNNING|NOTRUN)";;
-      -i|--in-file|--in|--if) shift; in_file="${1}";;
+      -i|--in-file|--in|--if) shift; in_file=$(realpath "${1}");;
       --nth|--run-num) shift; run_num="${1}";;
       --log) post_process=add_dot_log;;
       --script|--sh) post_process=add_dot_sh;;
@@ -157,9 +178,15 @@ do
              just_path=cat
              no_header=t
              ;;
+      --keep-tmp|--keep-tmp-file|--keep-raw|--keep-raw-file) keep_tmp_p=t;;
       --no-header|--noh|--no-hdr) no_header=t;;
       --header|--hdr) no_header=;;
-
+      --invert|--invert-flag|--not|--not-flag) invert_flag=t;;
+      --vert|--vert-flag) invert_flag=t;;
+      -c|--count|--wcl|--wc|--wc-l) count_p=t; counter=wc_counter;;
+      --no-trep) trep_filter=strip_trep;;
+      --keep-trep) trep_filter=cat;;
+      --run-dir|--rd) just_run_dir_p=t;;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -218,20 +245,37 @@ rel_test_dir=$(realpath -r "${test_dir}")
 
 full_path()
 {
-    sed -rn "s!tests/!${rel_test_dir}/tests/!p"
+    sed -rn "s|tests/|${test_dir}/tests/|p"
 }
 
 real_path()
 {
-    sed -rn "s!tests/!${rel_test_dir}/tests/!p" | dp-realpath -v
-#    dp-realpath -v
+    sed -rn "s!tests/!$(realpath ${rel_test_dir})/tests/!p"
+}
+
+wc_counter()
+{
+    wc -l
+}
+
+strip_trep()
+{
+    awk '{print $1 " " $3}'
 }
 
 num_lines=0
 OPWD="${PWD}"
-EExec -y cd $(me-expand-dest "testgen")
 
-vunsetp "${no_header}" && echo "Getting status for ${test_dir}"
+true_p "${just_run_dir_p}" && {
+    echo "${test_dir}"
+    exit 0
+}
+
+vunsetp "${no_header}" \
+&& vunsetp "${count_p}" \
+&& {
+    echo "Getting status for ${test_dir}"
+}
 
 if vsetp "${in_file}"
 then
@@ -242,7 +286,10 @@ then
         tmp_file="${in_file}"
     fi
 else
-    EExec ./batch_status "${test_dir}" >| "${tmp_file}"
+    (
+        EExec -y cd $(me-expand-dest "testgen")
+        EExec ./batch_status "${test_dir}" >| "${tmp_file}"
+    )
 fi
 
 # Lines look like this:
@@ -251,13 +298,19 @@ fi
 
 EExec cat "${tmp_file}" \
             | strip-white-space.py \
+            | EExec "${trep_filter}" \
             | EExec "${output_transform}" \
             | EExec -0 egrep ${invert_flag} "${status_regexp}" \
             | EExec "${post_process}" ${post_process_arg} \
-            | EExec "${just_path}"
+            | EExec "${just_path}" \
+            | EExec "${counter}"
 
 EExec_verbose_msg "Total number of lines: $(wc -l ${tmp_file})"
 rc=$?
+
+true_p "${keep_tmp_p}" && {
+    echo_id -t "Keeping tmp file: " tmp_file
+}
 
 # Let the exit handler do this.
 #rm -f "${tmp_file}"
