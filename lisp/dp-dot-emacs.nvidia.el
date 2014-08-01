@@ -324,4 +324,20 @@ tests.")
     "fc_nvlink_translator/.*/"          ; Any subdir.
     "failed-attempt\\(ed\\)?-0")))
 
+(defun dp-raison-d-etre (&optional
+                         other-buffer-p
+                         sb-name
+                         file-name-abbrev)
+  "Visit file describing the primary purpose of this sandbox?"
+  (interactive "P")
+  (setq-ifnil sb-name (dp-current-sandbox-name)
+              file-name-abbrev "rde")
+  (let ((rde (dp-me-expand-dest file-name-abbrev sb-name)))
+    (when rde
+      (funcall (if other-buffer-p
+                   'find-file-other-window
+                 'find-file)
+               rde))))
+(defalias 'rde 'dp-raison-d-etre)
+
 (provide 'dp-dot-emacs.nvidia.el)

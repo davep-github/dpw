@@ -53,7 +53,7 @@ do
   {
       echo "${1}"
       echo i
-      echo "**** line number: ${1} ${2}"
+      echo "${2}"
       echo .
       echo w
   } | ed "${file}" >/dev/null 2>&1

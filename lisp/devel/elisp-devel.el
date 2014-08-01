@@ -6028,3 +6028,56 @@ nil
 
 
 
+
+========================
+Tuesday July 29 2014
+--
+(defun dp-cscope-sb-db-dir (loc sb-name)
+  (let ((expanded-loc (dp-me-expand-dest loc sb-name)))
+    (and expanded-loc
+         (file-exists-p )
+      ()
+      )
+    
+
+========================
+Friday August 01 2014
+--
+;;installed (defun dp-shells-next-shell-buf-num ()
+;;installed   (interactive)
+;;installed   (let* ((shell-buffers (sort (dp-shells-find-matching-shell-buffers 
+;;installed                                 nil ".*")
+;;installed                               'dp-shell-dp-shell-num-greater-or-equal-p))
+;;installed          (shell-num (symbol-value-in-buffer 
+;;installed                      'dp-shell-num 
+;;installed                      (car shell-buffers))))
+;;installed     (1+ shell-num)))
+dp-shells-next-shell-buf-num
+
+(dp-shells-next-shell-buf-num)
+3
+
+
+2
+
+2
+
+;;installed (defun dp-shells-create-next-shell (&optional other-window-p)
+;;installed   (interactive "P")
+;;installed   (dp-shell (dp-shells-next-shell-buf-num)
+;;installed             :other-window-p other-window-p))
+dp-shells-create-next-shell
+
+(dp-shells-create-next-shell)
+#<buffer "elisp-devel.el">
+
+
+  
+(dp-shells-find-matching-shell-buffers 
+                                nil ".*")
+(#<buffer "*shell*<2>"> #<buffer "*shell*<1>">)
+
+
+
+
+

@@ -763,6 +763,7 @@ Called when shell, inferior-lisp-process, etc. are entered."
   ;;(setq font-lock-defaults '(dp-shell-mode-font-lock-keywords t))
   ;;(font-lock-set-defaults)
   (put 'shell-mode 'font-lock-defaults '(dp-shell-mode-font-lock-keywords t))
+  (local-set-key [(control ?x)(control ?c)] 'dp-shell-create-next-shell-buffer)
   (local-set-key [(control ?x)(control ?n)] 'dp-shell-switch-to-next-buffer)
   (local-set-key [(control ?x)(control ?p)] 'dp-shell-switch-to-prev-buffer)
   (local-set-key [(control ?x) ?4 ?n]
@@ -3457,6 +3458,16 @@ reasonable: numbers, strings, symbols.
 (defun dp-shell-buffer-name-greater-or-equal-p (buf1 buf2)
   (not (dp-shell-buffer-name-less-p buf1 buf2)))
 
+(defun dp-shells-next-shell-buf-num ()
+  (interactive)
+  (let* ((shell-buffers (sort (dp-shells-find-matching-shell-buffers 
+                                nil ".*")
+                              'dp-shell-dp-shell-num-greater-or-equal-p))
+         (shell-num (symbol-value-in-buffer 
+                     'dp-shell-num 
+                     (car shell-buffers))))
+    (1+ shell-num)))
+
 (defun dp-next/prev-shell-buffer (next/prev &optional buffer)
   (interactive)
   (let* ((shell-buffers (sort (dp-shells-find-matching-shell-buffers 
@@ -3506,6 +3517,11 @@ reasonable: numbers, strings, symbols.
 ;;WTF?! (defun dp-shell-switch-to-prev-buffer (&optional buffer)
 ;;WTF?!   (interactive)
 ;;WTF?!   (switch-to-buffer (dp-prev-shell-buffer)))
+
+(defun dp-shell-create-next-shell-buffer (&optional other-window-p)
+  (interactive "P")
+  (dp-shell (dp-shells-next-shell-buf-num)
+            :other-window-p other-window-p))
 
 ;;;
 ;;;

@@ -783,6 +783,12 @@ This is NOT idempotent, so we skip if KEY-SEQ and NEW-DEF are bound."
 (global-set-key [(control ?x) ?4 ?b] 'dp-switch-to-buffer-other-window)
 (add-hook 'dp-post-dpmacs-hook (lambda ()
                                  (global-set-key [(control ?x) (control ?c)] 
+                                   (kb-lambda 
+                                       (dp-kb-binding-moved 
+                                        arg 
+                                        'dp-save-buffers-kill-emacs)))
+                                 (global-set-key 
+                                     [(control ?x) (control ?C)] 
                                    'dp-save-buffers-kill-emacs)))
 
 

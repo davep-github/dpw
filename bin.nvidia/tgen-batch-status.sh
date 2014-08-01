@@ -107,7 +107,7 @@ long_options=(
     "add-suffix:" "add-extension:" "add-ext:"
     "raw"
     "just-test-name" "just-test" "jtn" "short" "terse" "simple" "basic"
-    "no-header" "noh" "no-hdr"
+    "no-header" "noh" "no-hdr" "nh"
     "header" "hdr"
     "invert" "invert-flag" "not" "not-flag"
     "vert" "vert-flag"
@@ -179,7 +179,7 @@ do
              no_header=t
              ;;
       --keep-tmp|--keep-tmp-file|--keep-raw|--keep-raw-file) keep_tmp_p=t;;
-      --no-header|--noh|--no-hdr) no_header=t;;
+      --no-header|--noh|--no-hdr|--nh) no_header=t;;
       --header|--hdr) no_header=;;
       --invert|--invert-flag|--not|--not-flag) invert_flag=t;;
       --vert|--vert-flag) invert_flag=t;;
