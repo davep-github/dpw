@@ -1015,6 +1015,9 @@ Split line into chars and feed to ticker.""")
     tick_interval = app_args.tick_interval
     if tick_interval == 0:
         tick_interval = None
+        dp_io.printf("Tick interval is 0. Don't expect to see much.\n")
+        if len(output_files) == 0:
+            dp_io.printf("  And doesn't make much sense w/o output files.\n")
     else:
         # No ticking --> no samples.
         if app_args.sample_lines_tick_p:

@@ -3521,7 +3521,8 @@ reasonable: numbers, strings, symbols.
 (defun dp-shell-create-next-shell-buffer (&optional other-window-p)
   (interactive "P")
   (dp-shell (dp-shells-next-shell-buf-num)
-            :other-window-p other-window-p))
+            ;; the `when' converts non-nil to t
+            :other-window-p (when other-window-p t)))
 
 ;;;
 ;;;

@@ -76,9 +76,15 @@ done
 
 if (($# > 0))
 then
-    cat "$@"
+    for f in "$@"
+    do
+      # uniq here prevents duplicates in a file from looking like duplicates
+      # across files.
+      uniq "${f}"
+    done
 else
-    cat
+    # Be a philtre.
+    uniq
 fi | \
 if true_p "${sort_p}"
 then

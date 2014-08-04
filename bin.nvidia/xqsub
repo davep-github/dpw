@@ -22,12 +22,17 @@ vsetp $qs && queue_size=$qs
 : ${dash_m=}
 : ${bg:=linen}
 : ${fg:=black}
+# qsub does accounting based on where it is started.
+# can't work w/o more info.
+: ${run_dir=${DP_NV_QSUB_DEFAULT_RUN_LOC-}}
 
 long_options=(
     "queue-size:"
     "q-size:"
     "command-arg:"
-    "command-args:")
+    "command-args:"
+    "run-dir:"
+)
 
 # Usage variable usage:
 Usage_args_info=" extra-qsub-parameters"
@@ -70,6 +75,7 @@ do
       -f) shift; fg="${1}";;
       -a|--command_arg) shift; command_args="${command_args} ${1}";;
       -A|--command_args) shift; command_args="${1}";;
+      --run-dir) shift; run_dir="${1}";;
 
       # Help!
       --help) Usage; exit 0;;
