@@ -14358,8 +14358,11 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
 
 
 (defun dp-grep-buffers (regexp &optional buffer-filename-regexp)
-  (interactive "sregexp? ")
-  (setq-ifnil buffer-filename-regexp ".*")
+  "Search for REGEXP in all buffers matching BUFFER-FILENAME-REGEXP.
+BUFFER-FILENAME-REGEXP defaults to .*"
+  (interactive "sregexp? \nsbuffer name regexp: ")
+  (when (member buffer-filename-regexp '(nil ""))
+    (setq buffer-filename-regexp ".*"))
   (let ((matching-buffer-list 
          (delq nil (mapcar (function
                             (lambda (buf)
@@ -14377,6 +14380,7 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
     matching-buffer-list))
 
 (defun dp-grep-buffers-files (regexp &optional buffer-filename-regexp)
+  "Search for REGEXP in all *files* of buffers matching BUFFER-FILENAME-REGEXP."
   (interactive "sregexp? \nsfilename regexp? ")
   (when (member buffer-filename-regexp '(nil ""))
     (setq buffer-filename-regexp ".*"))

@@ -67,9 +67,8 @@ Database_locations = [ loc for loc in Database_locations
 # Then want to search all other databases.
 
 rgg.log_file.write("DP_NV_DB_LOCSTR>{}<\n".format(DP_NV_DB_LOCSTR))
-rgg.log_file.write(
-    "Database_locations>{}<\n".format(
-        dp_sequences.list_to_indented_string(Database_locations)))
+pretty_db_string = dp_sequences.list_to_indented_string(Database_locations)
+rgg.log_file.write("Database_locations>{}<\n".format(pretty_db_string))
 
 Top_ranking_regexp_strings = [
     # Old (yay) ME locations.
@@ -102,6 +101,11 @@ def main(argv):
     rgg_argv = os.environ.get("RGG_ARGV")
     if (rgg_argv):
         rgg.parse_args(rgg_argv)
+
+    if argv[1] == '-d':
+        for d in Database_locations:
+            print "{}".format(opath.dirname(d))
+        sys.exit(0)
 
     # we need to pass everything to global, verbatim. WHY?
     rgg.log_file.write("argv: %s\n" % \

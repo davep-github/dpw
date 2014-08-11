@@ -43,7 +43,7 @@ vunsetp "$*" && {
 
 for sb in "$@"
 do
-  (EExec -y cd "${sb}" && pwd && EExec nice index-me-code ${args}) &
+  (EExec -y cd "${sb}" && pwd && EExec -y nice index-me-code ${args}) &
 done
 wait
 echo "Indexing done."

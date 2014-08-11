@@ -52,7 +52,10 @@ tagtree()
     EExec_verbose_msg "tagtree() $(echo_id eexec_program)"
     eval EExec $SUDO $EXCTAGS $inheritance_opt $etags_opt -L "$files_file" \
       --links=no -o $tag_file \
-      $h_OPT $langmap $full_member_names "$py_props" "$nv_spec_files" "${EC_XARGS}"
+      $h_OPT $langmap $full_member_names "$py_props" 
+      "$nv_spec_files" \
+      "$nv_ref_files" \
+      "${EC_XARGS}"
 }
 
 cscope_tree()
@@ -255,6 +258,7 @@ else
     py_props="$py1 $py2"
     # Make this location specific.
     nv_spec_files="--langdef=spec --langmap='spec:.spec' '--regex-spec=/^[ \t]*#[ \t]*define[ \t]+([^ \t]*).*$/\1/'"
+    nv_ref_files="--langdef=ref --langmap='ref:.rev' '--regex-ref=/^[ \t]*#[ \t]*define[ \t]+([^ \t]*).*$/\1/'"
 fi
 
 # List of directories in which to look for source files.

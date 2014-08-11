@@ -75,13 +75,15 @@ Ee|RDD__SB_rel|                 ${rde__SB_rel}
 # + nvlink fc_nvlink nvlink_translator fc_nvlink_translator/ fmodel fmod
 Ee|nvgpu__SB_rel|               ${hw__SB_rel}nvgpu/
 
-Ee|nvgpuip__SB_rel|             ${nvgpu__SB_rel}ip
+Ee|nvgpuip__SB_rel|             ${nvgpu__SB_rel}ip/
 Ee|nvgip__SB_rel|               ${nvgpuip__SB_rel}
-Ee|nvgpunvif__SB_rel|           ${nvgip__SB_rel}
+Ee|nvgpunvif__SB_rel|           ${nvgip__SB_rel}nvif/
+Ee|nvgpuif__SB_rel|             ${nvgpunvif__SB_rel}
 Ee|nvgif__SB_rel|               ${nvgpunvif__SB_rel}
-Ee|nvltlif__SB_rel|             ${nvgpunvif__SB_rel}nvltl
+Ee|nvltlif__SB_rel|             ${nvgpunvif__SB_rel}nvltl/
 Ee|nvlif__SB_rel|               ${nvltlif__SB_rel}
 Ee|nvgpumanuals__SB_rel|        ${nvgpu__SB_rel}manuals
+Ee|nvgpuman__SB_rel|            ${nvgpumanuals__SB_rel}
 Ee|nvgpumans__SB_rel|           ${nvgpumanuals__SB_rel}
 Ee|nvlmanuals__SB_rel|          ${nvgpumanuals__SB_rel}
 Ee|nvlman__SB_rel|              ${nvgpumanuals__SB_rel}
