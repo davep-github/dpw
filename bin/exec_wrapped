@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 : ${WRAPPED_LOG_FILE:="$DP_LOG/exec_wrapped/exec_wrapped.log"}
 {

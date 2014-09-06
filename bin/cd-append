@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: cd-append,v 1.1 2004/03/02 07:29:39 davep Exp $
 #set -x
 : ${dev:='0,2,0'}

@@ -1,1 +1,25 @@
-save-bree-metadata
+#!/usr/bin/env bash
+# $Id: save-bree-metadata,v 1.1 2005/04/02 22:43:39 davep Exp $
+set -v
+
+progname=`basename $0`
+
+META=$HOME/bree-metadata/$(basename $PWD)
+
+# @todo allow conf to be an option (and a list)
+CONF=${1:-config.status config.log}
+
+for conf in $CONF
+do
+    [ -f "$conf" ] || dpFATAL 1 "$conf doesn't exist in this dir."
+done
+
+if [ -d "$META" ]
+then
+    dpWARN "metadata dir ($META) already exists."
+else
+    mkdir -p $META
+fi
+
+cp -i $CONF $META
+

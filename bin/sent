@@ -12,7 +12,7 @@ X-Attribution: davep
 Status: RO
 
 
-#!/bin/sh
+#!/bin/bash
 
 /usr/sbin/pppd lock debug connect '/usr/bin/chat -v -f $HOME/bin/chat2.script' /dev/cuaa1 crtscts modem defaultroute 16.11.0.213: 57600
 

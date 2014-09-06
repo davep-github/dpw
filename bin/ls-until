@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: ls-until,v 1.1 2003/10/13 02:30:32 davep Exp $
 
 exclude=n

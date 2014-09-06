@@ -12,12 +12,12 @@
 	("~/lisp/" . "~/lisp/")))
 
 ;;
-;; set up a titlebar format.  sawfish will look for this in order to
-;; jump to the main emacs window.
+;; set up a titlebar format.  Various window things will look for this in
+;; order to jump to the main emacs window.
 (defconst dp-frame-title-format (format "%%S@%s: %%f" (dp-short-hostname))
   "*Base frame title format.")
 
-(setq frame-title-format (concat "[No SB] " dp-frame-title-format))
+;;(setq frame-title-format (concat "[No SB] " dp-frame-title-format))
 
 ;; ftp.[ca|us].xemacs.org are faster.
 ;; ca --> /pub/Mirror/xemacs/packages   (@ ualberta)

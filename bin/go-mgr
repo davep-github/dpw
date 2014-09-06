@@ -236,9 +236,9 @@ do
                 #echo_id a
                 go_file_name=$(dogo -l "${name}")
                 if [ "$(realpath $a)" = "$(realpath $val)" ]; then
-                    echo 1>&2 "Senior moment: \`${name}' is already in use for this dir in \`${go_file_name}'."
+                    echo 1>&2 "Senior moment? \`${name}' is already in use for this dir in \`${go_file_name}'."
                 else
-                    echo 1>&2 "${name} is already in use as: ${a} in $go_file_name."
+                    echo 1>&2 "${name} is already in use as: \"${a}\" in \"$go_file_name.\""
                 fi
 		exit 1
 	    }

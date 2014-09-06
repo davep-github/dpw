@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 pfile=/tmp/printlog
 date >> $pfile
 echo $* >> $pfile

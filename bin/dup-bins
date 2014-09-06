@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #set -x
 #
 # Find binary files that exist in >1 places.

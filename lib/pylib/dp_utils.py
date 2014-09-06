@@ -455,10 +455,11 @@ def mkpath(path):
     p = ''
     sep = ''
     for c in components:
+        #print >>sys.stderr, "c>{}<".format(c)
         if c == '':
+	    #print >>sys.stderr, "c was ''"
             p = '/'
             continue
-        #print >>sys.stderr, "c>{}<".format(c)
         p = p + sep + c
         #print >>sys.stderr, "p>{}<".format(p)
         if not opath.exists(p):
@@ -583,26 +584,26 @@ def mkpath0(split_path):
         return
     mkpath0(opath.split(dpart))
 
-def mkpath(path_string_or_list):
-    print >>sys.stderr, "path_string_or_list>{}<".format(path_string_or_list)
-    if type(path_string_or_list) == types.StringType:
-        npath = opath.normpath(path_string_or_list)
-        print >>sys.stderr, "npath>{}<".format(npath)
-        elements = npath.split(opath.sep)
-    else:
-        elements = path_string_or_list
-    print >>sys.stderr, "elements>{}<".format(elements)
-    p = elements[0]
-    elements = elements[1:]
-    for element in elements:
-        print >>sys.stderr, "element>{}<".format(element)
-        print >>sys.stderr, "p>{}<".format(p)
-        if opath.exists(p) and opath.isdir(p):
-            pass
-        else:
-            # If p is a file, we'll raise an appropriate error.
-            os.mkdir(p)
-        p = p + opath.sep + element
+#def mkpath(path_string_or_list):
+    #print >>sys.stderr, "path_string_or_list>{}<".format(path_string_or_list)
+    #if type(path_string_or_list) == types.StringType:
+        #npath = opath.normpath(path_string_or_list)
+        #print >>sys.stderr, "npath>{}<".format(npath)
+        #elements = npath.split(opath.sep)
+    #else:
+        #elements = path_string_or_list
+    #print >>sys.stderr, "elements>{}<".format(elements)
+    #p = elements[0]
+    #elements = elements[1:]
+    #for element in elements:
+        #print >>sys.stderr, "element>{}<".format(element)
+        #print >>sys.stderr, "p>{}<".format(p)
+        #if opath.exists(p) and opath.isdir(p):
+            #pass
+        #else:
+            ## If p is a file, we'll raise an appropriate error.
+            #os.mkdir(p)
+        #p = p + opath.sep + element
 
 ########################################################################
 class Nop_t(object):

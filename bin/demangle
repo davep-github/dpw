@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # More natural name for demangling
 
 source script-x

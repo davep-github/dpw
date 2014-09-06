@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #set -x
 if mh_dir=$(fgrep Path: $HOME/.mh_profile) 
 then

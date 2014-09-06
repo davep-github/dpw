@@ -341,6 +341,39 @@ nvidia_family = e(
     ref=[OSDB['linux'], default]
 )
 
+
+SKAION_XEM_GEOMETRY = '-geometry 81x70-0+0'
+SKAION_BG_COLOR = 'lavender'
+SKAION_FG_COLOR = 'black'
+SKAION_LSIM_FG_COLOR = 'black'
+SKAION_LSIM_BG_COLOR = 'linen'
+skaion_family = e(
+    kef='family',
+    dat={
+    'host-pattern': '.*',
+    'family': 'skaion-linux',
+    'family_zone': 'skaion',
+    'comment': 'My linux boxen at skaion.',
+    'DTE': 'kde',
+    'main_macs_opts': '-eval (dp-main-rc+2w)',
+    'xem_opts': SKAION_XEM_GEOMETRY,
+    # This is OK, but O0{}[]() : no slashed 0. O & 0 are distinguishable.
+    #'xem_font': '''-*-Lucidatypewriter-medium-r-*-*-*-120-*-*-*-*-*-*''',
+    # May be less legible in the long run, but 0 is slashed.
+    'xem_font': '''-*-Fxd-medium-r-*-*-*-120-*-*-*-*-*-*''',
+    #'xem_font': '''-*-fixed-medium-r-*-*-*-140-*-*-*-*-iso8859-*''',
+    "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
+    "xem_font": '''-*-Fixed-medium-r-*-*-*-120-*-*-*-*-*-*''',
+    'work-zone': 'skaion',
+    'xterm_bg': SKAION_BG_COLOR,
+    'xterm_fg': SKAION_FG_COLOR,
+    'xem_bg_color': SKAION_BG_COLOR,
+
+    },
+    # These are searched in the order given.
+    ref=[OSDB['linux'], default]
+)
+
 #
 # FAMILY entry for o-xterm
 e(

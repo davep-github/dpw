@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -x
 #export PYTHONHOME=$HOME/yokel
 #PY=$PYTHONHOME/bin/python2.0

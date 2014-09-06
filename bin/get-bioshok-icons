@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 base_url="http://www.2kgames.com/cultofrapture/features/icons"
 

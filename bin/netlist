@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ypcat hosts | while read ypline
 do

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 source script-x
 # /dumps should be on another disk than one
 # holding by the backed up data.

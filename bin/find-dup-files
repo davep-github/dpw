@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 srcdir=$1
 dstdir=$2

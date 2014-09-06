@@ -1,1 +1,234 @@
-sed-rename
+#!/bin/bash
+#
+# $Id: sed-rename,v 1.10 2005/06/12 08:20:10 davep Exp $
+#
+#set -x
+#echo '******** sed-rename *********'
+
+
+. script-x
+
+all_options="CNPRVacdghlm:npqr:svz"
+ln_s_p=
+MV_CMD=
+MV_OPTS=
+prog=`basename $0`
+if [ "$prog" == "sed-ln-s" ]
+then
+    ln_s_p=t
+    MV_CMD=ln
+    MV_OPTS=-s
+elif [ "$prog" == "sed-cp" ]
+then
+    MV_CMD=cp
+fi
+
+#echo $prog: $* 1>&2
+query=
+verbose=0
+ECHO=echo
+show_cmds=n
+dash_i='-i'
+dash_dash='--'
+ropt=-r
+zippit=
+substitute_opt=
+first_arg_is_not_regexp=
+dash_n_prefix='[-n]: '
+# Ignore any iffy renames.
+paranoid_p="auto_exit"
+Usage()
+{
+   echo "${prog}: usage: $prog [-$all_options] 's/ed-/expr/' [files...]" 1>&2
+}
+
+has_spaces_p()
+{
+    local paranoid_p="$1"
+    shift
+    if [[ "$1" == *\ * ]]; then
+        echo "WARNING: space in file name [$a]; consider passing args thru stdin."
+        [[ -n "$paranoid_p" ]] && {
+            [[ "$paranoid_p" == "auto_exit" ]] && {
+                echo "Exiting."
+                exit 2
+            }
+            echo -n "Quit now?  Bizarre things may occur [Y/n/s] "
+            read
+            case "$REPLY" in
+                y|Y) exit 1;;
+                n|N) return 0;;
+                s|S) "Don't handle skip_bad yet."; exit 3;;
+            esac
+       } 1>&2
+    fi
+    return 1
+}
+
+risky_p()
+{
+    has_spaces_p $paranoid_p "$1" && return 1
+}
+    
+if [ "$1" = "-G" ]
+then
+    shift
+    verbose=1;
+else
+    q=$(getopt -o "$all_options" -- "$@")
+    [ $? != 0 ] && {
+        Usage
+        exit 1
+    }
+    eval set -- "$q"
+    unset q
+    #eko "$@"
+
+    #eko "$@"
+    for i in "$@"
+    do
+	case $1 in
+            -R) ropt=;;
+	    -n) skip_if_dest_exists_p=y; verbose=1; dash_n=y;;
+            -N) dash_n_prefix=""; skip_if_dest_exists_p=y; verbose=1; dash_n=y;;
+	    -q) query=y;;
+	    -v) verbose=1;;
+	    -V) verbose=1; ECHO=eko;;
+            -d) : $((++verbose));;
+            -m) MV_CMD=$2; shift;;
+            -l) MV_CMD=ln; MV_OPTS='-s';;
+            -c) show_cmds=y;;
+            -C) show_cmds=;;
+            -a) skip_if_dest_exists_p=y;;
+            -s) show_cmds=y; dash_i=''; dash_dash=''; MV_CMD='svn mv';;
+            -g) show_cmds=y; dash_i=''; dash_dash=''; MV_CMD='git mv';;
+            -p) paranoid_p=;;
+            -P) paranoid_p="auto_exit";;
+            -z) zippit=t;;
+                # Make regexp an option as well.
+            -r) sed_expr="$2"; shift;;
+            -h) Usage; exit 0;;
+	    --) shift ; break ;;
+	    *) 
+		echo 1>&2 "Unsupported option>$1<";
+		exit 1 ;;
+	esac
+	shift
+    done
+fi
+
+pristine_args=("$@")
+
+[[ -n "$paranoid_p" && -n "$dash_n" ]] && {
+    echo "Clearing paranoid since we aren't doing anything anyway."
+    paranoid_p=""
+} 1>&2
+
+args="$pristine_args[@]"
+
+[[ -n "$paranoid_p" ]] && {
+    if vunsetp $sed_expr
+    then
+        # remove regexp from space checking.
+        shift
+    fi
+    for a in "$@"
+    do
+#      echo "a>$a<"
+      risky_p "$a" && {
+          echo "Space in a \$n var [$a]. getopt looks to have worked."
+      } 1>&2
+    done
+    # Restore "$@"
+    set -- "${pristine_args[@]}"
+}
+
+sed_renamer()
+{
+    local sed_expr="$1"
+    case "$sed_expr" in
+        */) ;;
+	*/g) ;;
+	*) sed_expr="$sed_expr/";;
+    esac
+    local f="$2"
+    [[ "$verbose" > 1 ]] && echo "echo $f | sed $ropt -e $sed_expr"
+    newname=$(echo "$f" | sed $ropt -e "$sed_expr")
+    if [ "$f" = "$newname" ]
+    then
+        vsetp $zippit || {
+            echo 1>&2 "WARNING: sed changed nothing, rename skipped for:"
+            echo 1>&2 " \"$f\""
+            continue
+        }
+    fi
+    cmd='$MV_CMD $MV_OPTS $dash_i $dash_dash "$f"   "$newname"'
+    [ "$show_cmds" = "y" ] && {
+        eval echo "$cmd"
+        return
+    }
+    if [ -n "$query" ]
+    then
+	verbose=0
+	eval echo -n "$cmd, do it?"; echo -n " "
+	read line
+	case "$line" in
+	1|[yY]|[Yy][Ee][Ss]|[tT]|[Oo][Kk]) skip_if_dest_exists_p=; dash_i='';;
+	*) skip_if_dest_exists_p=y;;
+	esac
+    fi
+    [[ "$verbose" == 1 && -z "$dash_n" ]] && eval $ECHO $cmd
+    # file exists ?
+    if [ -f "$newname" ]
+    then
+        if [ -n "$skip_if_dest_exists_p" ]
+        then
+            [ -z "$zippit" ] && echo 1>&2 "dest($newname) exists. skipping."
+        elif [ -n "$dash_n" ]
+        then
+            eval echo "${dash_n_prefix}${cmd}"
+        else
+            eval $cmd
+        fi
+    else
+        if [ -n "$dash_n" ]
+        then
+            eval echo "${dash_n_prefix}${cmd}"
+        else
+            eval $cmd
+        fi
+    fi
+}
+
+# allow cmd to be passed via *environment* to circumvent getopt parsing
+# problems. It can also be passed as an argument.
+if [ -z "$sed_expr" ] 
+then
+    sed_expr="$1"
+    shift
+fi
+: ${MV_CMD:=mv}
+
+[[ "$verbose" > 1 ]] && echo "sed_expr>$sed_expr<"
+
+#echo "\$@>""$@""<"
+
+if [ "$1" != "" ]
+then
+    [[ "$verbose" > 2 ]] && echo "loop over argv"
+    for f in "$@"
+    do
+        [[ "$verbose" > 2 ]] && echo "@>$f<"
+        sed_renamer "$sed_expr" "$f"
+    done
+else
+    # No file names on command line.
+    [[ "$verbose" > 2 ]] && echo "loop over files from stdin"
+    while read f
+    do
+        [[ "$verbose" > 2 ]] && echo "read>$f<"
+        sed_renamer "$sed_expr" "$f"
+    done
+fi
+
+exit 0

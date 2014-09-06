@@ -1,1 +1,20 @@
-clrfb
+#!/bin/bash
+set -x
+# $Id: clrfb,v 1.9 2005/05/23 08:20:10 davep Exp $
+
+ver=".mozilla/firefox"
+
+for dir in ~/$ver/*.davep ~/$ver/*.dp2
+do
+    cd $dir
+    rm -rf Cache
+    mkdir Cache
+    rm -f cookies.txt 
+    rm -f history.dat 
+    rm -f downloads.rdf
+    rm -f formhistory.dat
+    rm -f *.bak *.old
+    
+    sed -i 's/^user_pref.*"browser\.download\.lastDir".*$//' prefs.js
+    sed -i 's/^user_pref.*"browser\.download\.dir".*$//' prefs.js
+done

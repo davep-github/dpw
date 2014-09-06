@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #set -x
 # $Id: handle-spam.sh,v 1.4 2004/03/08 09:20:06 davep Exp $
 #

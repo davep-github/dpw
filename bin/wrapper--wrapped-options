@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # DEFS:
 # An arg is anything passed into a program.

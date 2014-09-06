@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 source script-x
 
@@ -7,7 +7,7 @@ progname=$(basename "$0")
 Usage_msg()
 {
     # Not all usages are an evil.
-    echo "$progname: Usage: name [start [stop]]
+    echo "$progname: Usage: name [start-dir [stop-dir]]
 [start=$PWD]
 [stop=$HOME]
 

@@ -377,6 +377,7 @@ locale_rcs="$pre_rcs $locale_rcs $post_rcs"
 # has to worry about it.
 set -- $locale_rcs
 locale_rcs="$@"
+set --
 
 #
 # add some locale specific dirs...

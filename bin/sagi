@@ -1,0 +1,13 @@
+#!/bin/sh
+
+sagi()
+{
+    sudo apt-get install "$@"
+}
+
+if [ "$1" = "---y" ]
+then
+    yes | sagi "$@"
+else
+    sagi "$@"
+fi

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: rx-cis-mail,v 1.1.1.1 2001/01/17 22:22:29 davep Exp $
 
 # -n to get mail packet via telNet

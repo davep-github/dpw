@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # smi --> sudo make install
 # useful shortcut, especially in the ports tree.
 #set -x

@@ -22,9 +22,10 @@ dp_add_default_keys()
 # Really start or connect to ssh agent
 dp_start_ssh_agent()
 {
-    # See if there's a running agent to which we can attach.
+    env | fgrep SSH
+    # See if there's a running agent to which we are attached.
     dp_add_default_keys && return 0
-    
+
     # See if we can attach to one started elsewhere.
     [ -e "$SSH_AGENT_RC" ] && {
         # Use last set of agent variables.
@@ -36,7 +37,7 @@ dp_start_ssh_agent()
     # configured in this shell nor one whose configuration info is in the
     # "$SSH_AGENT_RC"
     # So start one and save the configuration variables.
-    ssh-agent | fgrep -v echo >| "$SSH_AGENT_RC"
+    ssh-agent | \fgrep -v echo >| "$SSH_AGENT_RC"
     # set those variables.
     source "$SSH_AGENT_RC" || return 3
     # If we can't set the keys, we're doomed.

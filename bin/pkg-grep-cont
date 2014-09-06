@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: pkg-grep-cont,v 1.5 2004/08/30 06:11:12 davep Exp $
 #
 # grep the contents of packages.

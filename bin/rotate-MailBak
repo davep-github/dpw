@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 newsyslog -f /home/davep/etc/newsyslog-mail.conf -r -v "$@"
 

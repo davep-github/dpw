@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 date >| ~/tmp/dp-xearth.log
 echo ">$*<" >> ~/tmp/dp-xearth.log

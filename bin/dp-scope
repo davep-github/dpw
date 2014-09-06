@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Simple interface to cscope -l|-L line oriented interface.
 # Mainly allow mnemonic names for fields.

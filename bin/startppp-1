@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 /usr/sbin/pppd lock debug connect '/usr/bin/chat -v -f $HOME/bin/chat1.script' /dev/cuaa1 crtscts modem mru 296 defaultroute 57600
 

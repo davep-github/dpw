@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 LOG=/tmp/dp_logging_mv.log
 

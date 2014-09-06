@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 BS=4K
 temp_file=

@@ -1,1 +1,158 @@
-pgrep
+#!/bin/bash
+# $id$
+#
+#set -x
+source script-x
+source eexec
+dpcheck
+
+: ${NO_HDR:=}
+: ${PS_ALL_OPT:=u}
+: 1          2   3    4       5     6   7        8    9       10   11...
+# USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+#9601      3010  0.0  0.0  50980  1728 pts/198  Ss+  Jun19   0:00 /home/dpanariti/yokel/lib/xemacs[K-21.5-b32/x86_64-unknown-linux/gnuserv
+
+: ${PS_O_LONG_FMT="-o user,tty,pid,ppid,pgid,ni,pri,state,psr,policy,cmd,args"}
+##: ${PS_O_USER_FMT=" u"}
+: ${PS_O_FMT="$PS_O_DEF_FMT"}
+: ${PS:=ps}
+: ${PS_WIDTH=ww}
+: ${PS_OPTIONS:="x"}
+: ${GREP_COLOR=}
+: ${tty=}
+
+out_line()
+{
+    # Colors don't seem to make it through the preceding parts of the pipeline.
+    egrep $GREP_COLOR "$@"
+    #echo "$*"
+}
+
+out_pid()
+{
+    #local s="$1"
+    read
+    #set -f                      # WTF?!
+    set -- $REPLY
+    echo "$2"
+}
+
+# Add
+# formats=(f1 f2... fn)
+# and -f <n>
+printer=out_line
+
+# Usage variable usage:
+Usage_args_info=" [options] <regular-expression>"
+Usage_synopsis="Find processes by regular expression."
+Usage_details="Options:
+-l -- Long format  .                [$PS_O_LONG_FMT]
+-p -- Only show pid.                [$printer]
+-P -- Show entire matched line.
+-w -- Widen display.                [$PS_WIDTH]
+-W -- Narrow display.
+-u -- Show only user processes.     [$PS_ALL_OPT]
+-U -- Show all processes
+-c -- Color grep output.            [$GREP_COLOR]
+-C -- Do not color grep output.
+-o <ps-opt> -- Add a ${PS} option.     [$PS_OPTIONS]
+-t -- Restrict matches to the current tty.
+-T <tty> Restrict matches to the specified <tty>
+EExec Options:
+-n -- Show what would happen but don't do it.
+-v -- Be verbose about it.
+-q -- Anti-verbose.
+"
+# Example of arg parsing.
+option_str="nvqpPuUwWcCo:htT:l"
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      # eexec support
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+
+# Program options.
+      -l) PS_O_FMT=$PS_O_LONG_FMT;;
+      # We need a known format to put the pid in a known place.
+      -p) printer=out_pid; NO_HDR=t; #PS_O_FMT=$PS_O_LONG_FMT;
+          #PS_ARGS="-ww x $PS_O_LONG_FMT"
+          ;;
+      -P) printer=out_line; NO_HDR=;;
+      -u) PS_ALL_OPT="";; ### ??? do I want this? PS_O_FMT=$PS_O_USER_FMT;;
+      -U) PS_ALL_OPT='-A'; PS_O_FMT=$PS_O_LONG_FMT;;
+      -w) PS_WIDTH="${PS_WIDTH}w";;
+      -W) PS_WIDTH="";;
+      -o) shift; PS_OPTIONS="${PS_OPTIONS}$1";;
+      -t) tty=$(mytty) || {
+          echo "Cannot determine tty."
+          exit 1
+          } 1>&2 ;;
+      -T) shift; tty="${1}";;
+      -h) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<";
+         exit 1 ;;
+    esac
+    shift
+done
+# The following is needed only when non optional args are required.
+[ "$*" = "" ] && {
+    echo "Regular expression required."
+    Usage
+    exit 1
+} 1>&2
+
+: ${PS_ARGS="$PS_ALL_OPT $PS_WIDTH $PS_OPTIONS $PS_O_FMT"}
+
+#GREPPER=egrep
+: ${GREPPER:='egrep'}
+#PGREP='/home/davep/yokel/bin/pgrep'
+PGREP=$0
+
+$DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "NO_HDR>$NO_HDR<"
+if [ -z "$NO_HDR" ]
+then
+    # We'll only show this header if there is any other output.
+    # this doesn't work?!?!?! $PS $PS_ARGS | read
+    hdr=$($PS $PS_ARGS | head -n1)
+else
+    hdr=
+fi
+
+#echo "@>$@<"
+#set -v
+#old_IFS="$IFS"
+#IFS='|'
+got_one=""
+
+#echo_id2 PS_ARGS
+EExec $PS $PS_ARGS | EExec $GREPPER "$@" | sort | uniq | egrep -v " $GREPPER |$PGREP" | \
+  while :; do
+    # eof
+    read || {
+        if [ -n "$got_one" ]; then
+            exit 0
+        else
+            exit 1
+        fi
+    }
+
+    #echo_id2 REPLY
+    # REPLY preserves whitespace, etc.
+    [ -n "$hdr" ] && {
+        echo "$hdr"
+        hdr=
+    }
+    #$printer "$REPLY"
+    vsetp "${tty}" && {
+        proc_tty=$(echo "${REPLY}" | awk '{print $7}')
+        [ "${tty}" = "${proc_tty}" ] || continue
+    }
+    echo "$REPLY" | $printer "$@"
+    got_one=t
+  done
+exit

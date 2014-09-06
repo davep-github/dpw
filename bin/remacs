@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 font=`$HOST_INFO -n '9x15' xem_font`
 host=$1

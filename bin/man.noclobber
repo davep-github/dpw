@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 old_clobber=$noclobber
 unset noclobber
 /usr/bin/man "$@"

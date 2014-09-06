@@ -1,1 +1,94 @@
-non-duplicated-lines
+#!/bin/bash
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+trap_exit_msg=
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+}
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+    trap '' 0
+}
+
+sort_p=t
+# Usage variable usage:
+Usage_args_info=" errno..."
+Usage_synopsis="Display various info about errno...:
+"
+# Using ) after the args makes copy & paste between here and the
+# case statement easier.
+# Example of arg parsing.
+option_str="sS"
+long_options=(
+    "sort"
+    "no-sort"
+)
+source dp-getopt+.sh
+while (($# > 0))
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support
+      # Done by EExec_parse and friends.
+
+      # Program options.
+      -s|--sort) sort_p=t;;
+      -S|--no-sort) sort_p=;;
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+
+if (($# > 0))
+then
+    for f in "$@"
+    do
+      # uniq here prevents duplicates in a file from looking like duplicates
+      # across files.
+      uniq "${f}"
+    done
+else
+    # Be a philtre.
+    uniq
+fi | \
+if true_p "${sort_p}"
+then
+    sort
+else
+    cat
+fi | uniq -c | sed -rn 's/(^[[:space:]]*1[[:space:]]*)(.*)/\2/p'

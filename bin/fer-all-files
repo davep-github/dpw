@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: fer-all-files,v 1.12 2004/12/03 09:20:04 davep Exp $
 #set -x
 

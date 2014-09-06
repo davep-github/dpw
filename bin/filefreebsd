@@ -1,2 +1,2 @@
-#!/bin/sh
+#!/bin/bash
 file-mail.py -i -r ~/.file-freebsd.py

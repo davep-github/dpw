@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Header: $HOME/yokel/archive-cvsroot/davep/bin/kill_me_later,v 1.1.1.1 2001/01/17 22:22:28 davep Exp $
 # kill a list of process ids after waiting a specified interval
 

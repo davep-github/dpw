@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # run inc+proc0.sh and capture stderr to an output file
 

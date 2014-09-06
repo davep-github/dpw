@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 prog=$(basename $0)
 tmpfile=gunzipinplace.$$
 for file in $*

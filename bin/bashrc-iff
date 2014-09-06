@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Currently these do the same thing, but using this prepares us for when
 # things begin to diverge.
 source $HOME/etc/crontab.rc

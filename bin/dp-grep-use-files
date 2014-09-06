@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Early debug.
 # Put the check for this bizarre parameter first is a program requires a `-x'

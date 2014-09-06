@@ -131,11 +131,11 @@ case $shell_name in
         maybe_shopt gnu_errfmt -s gnu_errfmt
         # Force case matching ON.
         maybe_shopt nocasematch -u nocasematch
-        export GDBHISTFILE="$HOME/.gdb_history.$HOST"
+        export GDBHISTFILE=$(mk-persistent-dropping-name.sh gdb_history)
 	export HISTSIZE=5000
 	export HISTFILESIZE=10000
         export HISTTIMEFORMAT="%FT%T "
-        export HISTFILE="$HOME/.bash_history.$HOST"
+        export HISTFILE=$(mk-persistent-dropping-name.sh)
         #################################
         # This doesn't work because we load in the base HISTFILE for the
         # HOST, so up arrow, etc, work; but h, hgrep, etc use the new hist

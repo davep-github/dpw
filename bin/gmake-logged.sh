@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 LOG=/tmp/cmd-logger.log
 eko "$@" >> $LOG

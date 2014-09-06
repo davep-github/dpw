@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Move some stuff over there, and make links so that it still looks like it's
 # here.

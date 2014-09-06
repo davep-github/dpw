@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ####################################################
 # Script to add package names to package.keywords. #
 # Originally by Tekmanx, re-written by Hackeron    #

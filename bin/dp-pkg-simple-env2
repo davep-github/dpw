@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 : ${list_of_files:=$HOME/dp-simple-env.files}
 : ${pkg_dest:=$HOME/inb}

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 find . -name '*' -type l -exec rm '{}' \;
 

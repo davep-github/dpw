@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # rcs-stash [--name|--rcs-dir|-d <name-dir>] [--suffix|--rcs-suffix|-s <rcs-suffix> files...
 

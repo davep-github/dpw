@@ -1,1 +1,18 @@
-dp-oprof-cmd
+#!/bin/bash
+
+dolat=("$@")
+
+source script-x
+
+: ${OPROFILE_SESSION_DIR:=/u1/oprofile/s1}
+
+name=$(basename "$0")
+op_name=$(echo "$name" | sed -r 's/^(d)(.*)/\2/')
+
+case "$@" in
+    *--session-dir*) SESSION_OPT=;;
+    *) SESSION_OPT="--session-dir=$OPROFILE_SESSION_DIR";;
+esac
+
+exec $op_name $SESSION_OPT "${dolat[@]}"
+

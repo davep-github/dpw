@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 DISPLAY_is_ssh_p()
 {

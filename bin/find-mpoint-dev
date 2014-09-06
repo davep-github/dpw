@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # mount ==>
 # /dev/hdc3 on / type ext3 (rw,errors=remount-ro)

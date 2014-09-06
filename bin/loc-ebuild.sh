@@ -1,3 +1,3 @@
-#!/bin/sh
+#!/bin/bash
 
 locate "*/${1}*ebuild"

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 . script-x
 #set -x; DP_SCRIPT_X_DEBUG_OPT=-x

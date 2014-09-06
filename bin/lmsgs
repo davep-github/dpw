@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 source script-x
 case "$1" in
      [0-9]) suffix=.$1.gz

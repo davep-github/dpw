@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 session_dir="/home/davep/log/shell-sessions"
 egrep "$@" $session_dir/*

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # convert gen-xxx to xxx
 xxx=`basename $0 | cut -c5-`
 qdb -r @$HOME/bin/$xxx.pdbx

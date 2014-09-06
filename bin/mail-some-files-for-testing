@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 recip=$1
 shift

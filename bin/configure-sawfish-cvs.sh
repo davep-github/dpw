@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -x
 patch < wm-spec.jl.patch
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 . script-x
 : ${ffprof:=$($HOST_INFO firefox-profile)}
 : ${ffbin:=$($HOST_INFO firefox-bin)}

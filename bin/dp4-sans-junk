@@ -1,1 +1,34 @@
-dp4-extract-pathname
+#!/bin/bash
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${prefix=""}
+
+strip_one()
+{
+    local x="${1}"
+    echo "${x}" | sed -rn 's!('"${prefix}"')([^#]+)(#.*$)!\2!p'
+}
+
+if vsetp "$*"
+then
+    for x in "$@"
+    do
+      strip_one "${x}"
+    done
+else
+    while read
+    do
+      strip_one "${REPLY}"
+    done
+fi

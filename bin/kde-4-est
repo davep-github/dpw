@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 : ${KDE_HOME:=/usr/kde}
 : ${KDE_MAJOR_GLOB:=$KDE_HOME/4.[0-9]}
 : ${LS:=$(sp -1 ls)}

@@ -1,3 +1,3 @@
-#!/bin/sh
+#!/bin/bash
 
 WM=e16 DTE=none startx

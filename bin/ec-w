@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 . script-x
 #echo 1>&2 "$0: @>$@<"

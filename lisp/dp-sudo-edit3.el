@@ -296,8 +296,7 @@ current."
       (goto-char point))))
 
 ;;;###autoload
-(defalias 'dsed 'dp-sudo-edit-devert)
-(defalias 'devert 'dp-sudo-edit-devert)
+(dp-defaliases 'ddse 'dedse 'dsed 'devert 'dp-sudo-edit-devert)
 
 ;;;###autoload
 (defun dp-dired-sudo-edit ()

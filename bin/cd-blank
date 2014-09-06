@@ -1,1 +1,117 @@
-cd-erase
+#!/bin/bash
+
+source script-x
+
+argses=("$@")
+
+if [[ "$PATH" != *yokel/sbin* ]]
+then
+    rcfile="$HOME/.bashrc"
+    [ -f $rcfile ] && source $rcfile
+fi
+
+. eexec
+EExecEcho=EExecStderrEcho
+
+set_dev()
+{
+    dev=$($HOST_INFO cdrw-dev)
+    if [ "$dev" = "-" ]
+    then
+	echo 1>&2 "No cdrw device defined."
+	exit 1
+    fi
+    echo "$dev"
+}
+
+speed=4
+erase_counts="/usr/yokel/etc/cdrw-erase-counts"
+dev='-'
+cd_name=
+dummy=
+write_fsid=
+erase=y
+
+
+std_options=""
+option_str="d:N:s:nfE"
+source dp-getopt+.sh            # Runs when sourced.
+for i in $*
+do
+    case $1 in
+	-d) dev=$2; shift;;
+	-N) cd_name=$2; shift;;
+	-s) speed=$2; shift;;
+	-n) dummy="-dummy"; EExecShowOnly=y; show_only=y;;
+	-f) write_fsid=y;;
+	-E) erase=n;;
+	--) shift; break;;
+    esac
+    shift
+done
+
+case "$dev" in
+    .) dev_opt="dev=$(set_dev)";;
+    -) dev_opt=;;
+    *) dev_opt="dev=$dev";;
+esac
+
+[ -z "$cd_name" ] && {
+    echo -n "Disc's name? "
+    read cd_name
+}
+
+if [ "$write_fsid" = 'y' -a "$cd_name" = '' ]
+then
+    EEdie "Write fsid requested but no disc name provided."
+fi
+
+date=$(date)
+echo "BEGIN: $date"
+
+if [ "$erase" = 'y' ]
+then
+    if [ -n "$cd_name" ]
+    then
+	EExec date-level-log.py -f "$erase_counts" -i "\<${cd_name}-erase-count\>"
+    fi
+
+    EExec cdrecord $dummy blank=all speed=$speed $dev_opt
+
+elif [ -n "$dummy" ]
+then
+    echo "Not even pretending to erase."
+else
+    echo "Not erasing."
+fi
+
+if [ "$write_fsid" = 'y' ]
+then
+    if [ -n "$dummy" ]
+    then
+	fsid=/dev/tty
+    else
+	tmpdir=$(mktemp -d /tmp/CDBLANKXXXXX)
+	chmod 755 $tmpdir
+	fsid="$tmpdir/fsid"
+    fi
+    echo > $fsid "args>${argses[@]}<"
+    echo >> $fsid "name: >$cd_name<"
+    echo >> $fsid "erase date: $date"
+
+    #echo 'ECHOING-ONLY: mkisofs -R $tmpdir | cd-burn -'
+    EExec mkisofs -R $tmpdir | EExec cd-burn -
+
+    if [ -z "$dummy" ]
+    then
+	echo "contents of fsid>>"
+	cat $fsid
+	echo "<<contents of fsid"
+    fi
+
+    rm -rf $tmpdir
+fi
+
+echo "END: $(date)"
+
+exit 0

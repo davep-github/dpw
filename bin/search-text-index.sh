@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: search-text-index.sh,v 1.2 2003/12/23 08:30:06 davep Exp $
 #set -x
 

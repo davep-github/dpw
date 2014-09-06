@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id$
 # pipe funky filenames (one at a time) to ec
 #

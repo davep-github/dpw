@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -x
 #$Id: less-more,v 1.1 2003/04/18 17:23:42 davep Exp $
 #

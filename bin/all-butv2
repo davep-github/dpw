@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 source script-x
 
 # $Id: toss-lines,v 1.1 2005/03/20 09:20:12 davep Exp $

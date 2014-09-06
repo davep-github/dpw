@@ -5,7 +5,7 @@ import dp_io
 
 opath = os.path
 
-#!/bin/sh
+#!/bin/bash
 
 args="$@"
 : ${yn:='n'}

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 type script-x >/dev/null 2>&1 && source script-x
 set -u

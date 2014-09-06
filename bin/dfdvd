@@ -1,1 +1,23 @@
-dfcdrw
+#!/bin/bash
+#set -x
+
+if [ "$1" = "-" ]
+then
+    DF_OPT=""
+else
+    DF_OPT="-h"
+fi
+
+FS=$($HOST_INFO -n booger cd-writer-fs)
+
+if [ "`id -u`" = "0" ]
+then
+    SUDO=
+else
+    SUDO=sudo
+fi
+
+$SUDO mount $FS
+df $DF_OPT $FS
+$SUDO ls $FS
+$SUDO umount $FS

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 rem_hosts=$@
 : ${rem_hosts:=tc-le4}

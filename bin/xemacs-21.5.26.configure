@@ -1,3 +1,3 @@
-#!/bin/sh
+#!/bin/bash
 
 ./configure --enable-debug --disable-error-checking --with-x11 --enable-mule --x-includes=/usr/X11R6/include --x-libraries=/usr/X11R6/lib --with-site-libraries=/usr/local/lib --with-site-includes=/usr/X11R6/include/X11:/usr/include/db4.3 --with-xface --enable-sound=native --with-site-lisp --with-pop --with-xfs --with-jpeg --with-png --with-gif --with-tiff --with-infopath=/usr/local/lib/xemacs/info:/usr/local/info:/usr/X11R6/info:/usr/info:/usr/local/lib/texmf/doc/info:/usr/lib/texmf/doc:/usr/share/info --enable-clash-detection --enable-xpm --enable-xim=xlib --enable-athena=3d --enable-menubars=lucid --enable-scrollbars=lucid --enable-dialogs=athena --enable-widgets=athena --with-canna=no --with-wnn=no --with-wnn6=no --x-libraries=/usr/X11R6/lib --x-includes=/usr/X11R6/include --prefix=/usr/local --enable-toolbars=no --enable-pdump

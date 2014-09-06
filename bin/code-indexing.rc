@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Source me since I set variables and such.
 
 source script-x

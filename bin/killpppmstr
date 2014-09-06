@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -x
 for proc in "/usr/local/bin/pppmstr cis" "/usr/local/bin/dialppp" "sleep 60" "expect -f /home/davep/.ppp/cis.expect"
 do

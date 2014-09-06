@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: mew-inc-maildir.sh,v 1.1 2004/12/31 09:20:04 davep Exp $
 #
 set -x

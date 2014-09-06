@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -x
 sudo /usr/kde/current/bin/kdm > $HOME/log/X11/kde/kdm/kdm-dp.log 2>&1
 

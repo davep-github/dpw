@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # py-compile - Compile a Python program
 
 scriptversion=2004-12-05.17

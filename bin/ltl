@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 source script-x
 
 # Note, this file is replace by an alias when in an emacs shell buffer.

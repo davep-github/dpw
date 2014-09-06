@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # *roff a page w/output suitable for an emacs buffer
 

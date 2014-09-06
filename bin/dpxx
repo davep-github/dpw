@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # WAS: xx since late 80s. Now dpxx due to name clash @ nVIDIA.
 # More convenient way to start up an xterm with my preferences.

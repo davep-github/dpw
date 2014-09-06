@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 dcop knotes KNotesIface newNote "$1" "$2"
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # I have many utils that are wrappers around other programs, like *grep.
 # E.g. rcgrep.  This greps all of my currently active bash rc files.

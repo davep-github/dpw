@@ -1144,7 +1144,7 @@ gith()
 dpcheck()
 {
     case "$(basename $0)" in
-        dp*) break;;
+        dp*) ;;
         *) echo 1>&2 "Try migrating to the dp* commands!";
            [ "${1-}" = '-f' ] && return 1
            [ "${1-}" = '-F' ] && exit 1
