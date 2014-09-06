@@ -1,1 +1,5 @@
-newest-dir
+#!/bin/bash
+
+source script-x
+
+newest-file -p "$@"

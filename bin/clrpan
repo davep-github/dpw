@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 cp -f ~/etc/Pan.template ~/.gnome/Pan
 rm -f ~/pan/data/dp/*

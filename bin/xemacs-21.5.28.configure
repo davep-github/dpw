@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ./configure --enable-debug --disable-error-checking --with-x11 --enable-mule --x-includes=/usr/include/X11 --x-libraries=/usr/lib --with-site-libraries=/usr/local/lib --with-xface --with-site-lisp --without-pop --with-xfs --with-jpeg --with-png --with-gif --with-tiff --with-infopath=/usr/local/lib/xemacs/info:/usr/local/info:/usr/X11R6/info:/usr/info:/usr/local/lib/texmf/doc/info:/usr/lib/texmf/doc:/usr/share/info --enable-clash-detection --enable-xpm --enable-xim=xlib --enable-athena=3d --enable-menubars=lucid --enable-scrollbars=lucid --enable-dialogs=athena --enable-widgets=athena --with-canna=no --with-wnn=no --with-wnn6=no --prefix=/home/davep/yokel --enable-toolbars=no --enable-pdump \
 	--without-ncurses \

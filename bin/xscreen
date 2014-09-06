@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 screen_id=$(screen -ls | sed -n 's!^[ \t][ \t]*\([^ \t]*\).*$!\1!p' | xlist)
 

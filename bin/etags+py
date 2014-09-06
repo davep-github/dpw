@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # add a simple regexp to locate python def statements.

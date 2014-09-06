@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: build-patches.sh,v 1.3 2002/11/27 08:30:10 davep Exp $
 # build-patches.sh [dest]
 # 

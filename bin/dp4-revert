@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Do a p4 diff first as a paranoia check.
 source script-x
 source eexec

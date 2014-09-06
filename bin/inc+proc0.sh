@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: inc+proc0.sh,v 1.1 2004/08/06 13:38:45 davep Exp $
 #
 # NB: mew gets grumpy if this script returns extraneous info

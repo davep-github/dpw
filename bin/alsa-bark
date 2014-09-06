@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 source script-x
 
 : ${tfile:=/usr/local/lib/xemacs/xemacs-packages/etc/sounds/bark.au}

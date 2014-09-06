@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # cat a file using the value of LESSOPEN to interpret it.
 # LESSOPEN looks like this: |lesspipe-new.sh %s

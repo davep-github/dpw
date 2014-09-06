@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 : ${DP_WAITFOR_PROG_SLEEP_TIME:=3}
 DP_WAITFOR_PROG_SLEEP_TIME="$DP_WAITFOR_PROG_SLEEP_TIME" waitfor-prog kicker

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 : ${X_DRIVERS:=nvidia-drivers xf86-input-evdev xf86-input-keyboard xf86-input-mouse}
 emerge "$@" ${X_DRIVERS}

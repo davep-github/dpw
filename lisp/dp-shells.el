@@ -180,10 +180,11 @@ prompt.  We don't want to stomp on them.")
           (setq default-directory 
                 (expand-file-name
                  (concat (match-string 1 s) "/")))
-          (unless (dp-current-sandbox-dir-p default-directory)
-            (save-excursion
-              (beginning-of-line)
-              (insert "!SB!"))))))))
+;;           (unless (dp-current-sandbox-dir-p default-directory)
+;;             (save-excursion
+;;               (beginning-of-line)
+;;               (insert "!SB!")))
+          )))))
 
 ;; XXX @todo fix this, make it work.
 ;; Debugger entered--Lisp error: (invalid-argument "Marker does not point anywhere")
@@ -3091,6 +3092,8 @@ ARG == 0    --> New `dp-gdb-naught' session."
 (defun dp-bash-history-file-name (&optional host-name extry)
   (setq-ifnil extry "")
   (let ((name (or (getenv "HISTORY")
+                  (dp-nuke-newline (shell-command-to-string 
+                                    "mk-persistent-dropping-name.sh"))
                   (concat (or (getenv "HOME") "~")
                           "/.bash_history." (or host-name
                                                 (dp-short-hostname))))))

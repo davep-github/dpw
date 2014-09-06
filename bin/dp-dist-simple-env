@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 dist_list='fx1-portal.fx.intel.com 10.230.25.5'
 for h in $dist_list

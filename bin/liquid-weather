@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 cd ~/.karamba/liquid_weather_plus
 superkaramba ./liquid_weather.theme >/dev/null 2>&1 &

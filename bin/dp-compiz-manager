@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -x
 # Can this be made non-executable,
 # or to barf from a command line?

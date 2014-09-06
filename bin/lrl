@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: lrl,v 1.2 2003/11/12 08:30:16 davep Exp $
 # lrl - ls -ltR | less
 #

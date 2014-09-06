@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # source this file and it will stick ps information into a file that may help
 # us to find the caller. Or at least when it runs.

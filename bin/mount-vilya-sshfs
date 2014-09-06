@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # How to mount by hand...
 # e.g. sshfs vilya:$(dp_get_vilya_mp3) mp3

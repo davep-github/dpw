@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if ( df | egrep -q "$@"); then
     df | egrep "$@" | awk '{print $6}'

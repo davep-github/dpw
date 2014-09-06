@@ -712,7 +712,7 @@ Tried in order given and first match wins."
   (unless
       (cond
        ((dp-expand-abbrev-from-tables tables))
-       ((dp-expand-sandbox-rel-abbrev))
+;;       ((dp-expand-sandbox-rel-abbrev))
        ((dp-expand-p4-abbrev))
        ((dp-expand-work-rel-abbrev))
        (t

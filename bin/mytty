@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 case $OSName in
    HP-UX|Solaris|AIX|FreeBSD|OSF1|Linux) pidField=1 ; ttyField=2 ; psOpt="" ;;

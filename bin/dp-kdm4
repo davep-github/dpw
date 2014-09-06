@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 . script-x
 progname=$(basename "$0")
 log_file_so=${DP_LOG:-$HOME/log}/kde/$progname.stdout

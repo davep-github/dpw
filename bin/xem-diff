@@ -1,1 +1,78 @@
-ec-diff
+#!/bin/bash
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+#unset eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+export eexec_program
+
+# ec [-w] first second
+
+wait_opt=
+: ${ediff_func=ediff-files}
+
+while (($# > 0))
+do
+  case "$1" in
+      -q|--no-wait) wait_opt=;;
+      -w|--wait) wait_opt='-w';;
+      --merge) ediff_func="ediff-merge";;
+      -u) ;; # This is often left over from a regular diff command. Ignore it.
+      *) break;;
+  esac
+  shift
+done
+
+(($# != 2)) && {
+        echo "Two file names are needed."
+        echo "@>$@<"
+        echo_id LOCAL
+        echo_id REMOTE
+        exit 1
+} 1>&2
+
+
+fileA=$(realpath "${1}")
+file2=$(realpath "${2}")
+diff_lisp="(ediff-files \"$fileA\" \"$file2\")"
+merge_lisp="(ediff-merge-files \"$fileA\" \"$file2\")"
+
+case "${ediff_func}" in
+    ediff-diff|ediff-files) eval_lisp="${diff_lisp}";;
+    ediff-merge) eval_lisp="${merge_lisp}";;
+    *) echo 1>&2 "unsupported ediff_func>${ediff_func}<"
+       exit 1;;
+esac
+
+# Fix this to use some kind of ipc so the wait actually works.
+#
+# touch wait file.
+# dp-ediff-files removes file when diff session ends?
+# Need to figure out a way to make the diff command wait until the diff
+# session completes.
+# For now, we'll wait for an `Enter'
+# -w here prevents the use of -q (don't wait) flag to gnuclient.
+# -eval (gnuclient) doesn't seem to work with -q
+#
+EExec ec -w -e "${eval_lisp}"
+EExec attempt-to-raise-emacs
+if vsetp "${wait_opt}" && ! EExecDashN_p
+then
+    read -e -p "${progname}: Press enter to continue..."
+fi
+# wait for file to disappear.

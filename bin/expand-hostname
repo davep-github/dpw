@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #set -x
 # XXX !<@todo Make this use host-info stuff.
 host=$1

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 OWD="$PWD"
 for f in "$@"

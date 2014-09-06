@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: eman,v 1.2 2002/04/02 08:30:05 davep Exp $
 #
 # Ask emacs to display manual pages

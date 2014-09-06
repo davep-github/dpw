@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export DP_SCRIPT_X_DASH_X_STR=-SCRIPT_X
 

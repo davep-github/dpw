@@ -1,1 +1,51 @@
-dp4-sb-changes
+#!/bin/bash
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${kwa_changeType:=pending}
+: ${kwa_p4Options:=}
+: ${kwa_client=$(dp4-get-client-name)}
+: ${clientOpt=}
+
+while (($# > 0))
+do
+  case "$1" in
+      --xc) clientOpt="-c $kwa_client";;
+      --xs) kwa_changeType=shelved;;
+      --xp) kwa_changeType=pending;;
+      --change-status|-s) shift; kwa_changeType="${1}";;
+      --x4|--p4-opt) shift; kwa_p4Options="${kwa_p4Options} ${1}";;
+      --all|--xa|--all-change-types) kwa_changeType=;;
+      --help) echo '
+      --xc) clientOpt="-c $kwa_client";;
+      --xs) kwa_changeType=shelved;;
+      --xp) kwa_changeType=pending;;
+      --change-status) shift; kwa_changeType="${1}";;
+      --x4) shift; kwa_p4Options="${kwa_p4Options} ${1}";;
+      --all|--xa|--all-change-types) kwa_changeType=;;
+      --help) Show this.
+' 1>&2
+      exit 0;;
+      *) break
+  esac
+  shift
+done
+
+if vsetp "${kwa_changeType}"
+then
+    kwa_change_opt="-s${kwa_changeType}"
+else
+    kwa_change_opt=
+fi
+    
+
+EExec p4 changes ${kwa_p4Options} "$@" -u${USER} ${kwa_change_opt} ${clientOpt}

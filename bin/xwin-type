@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 : ${TYPE_VAR="^_NET_WM_WINDOW_TYPE"x}
 

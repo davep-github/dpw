@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 [[ ins =~ "(i|ins?|install)$" ]] && install_p=t
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ddir=/usr/yokel/etc
 [ "$1" = "-f" ] && {
 	force=1

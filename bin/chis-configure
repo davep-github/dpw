@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
  ./configure --host=arm-none-linux-gnueabi --prefix=$HOME/xscale/vanuinc-xscale/ \
      PKG_CONFIG_PATH=$HOME/xscale/lib/pkgconfig:$HOME/xscale/vanuinc-xscale/lib/pkgconfig \

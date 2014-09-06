@@ -1,1 +1,181 @@
-dp4-new-client
+#!/bin/bash
+# Make a new perforce sandbox.
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+unset eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+askForConfirmation=
+revision=
+
+: ${work_dir:=.}
+: ${sync_p=}
+: ${DASH_N_OPT=}
+: ${P4CONFIG=.p4config}
+: ${client_template=${DP_P4_CLIENT_TEMPLATE}}
+: ${P4PORT=}
+: ${P4DIFF=}
+: ${P4ROOT=}
+: ${ROOT_PAT=@ROOT@}
+
+tmp_file=
+
+trap_fun()
+{
+    [ -n "${tmp_file-}" ] && rm -f "$tmp_file"
+}
+
+for sig in 0 2 3 4 5 6 7 8 15
+do
+	trap "trap_fun ${sig}" $sig
+done
+
+# We need a shared directory if editing across machines.
+# p4 help environment lists both TMP and TEMP, but I don't know which one has
+# priority if both are set.
+export TMP=$HOME/tmp
+export TEMP=$TMP
+
+Usage_synopsis="Make a new perforce(tm) sandbox under work dir [$work_dir]
+  and optionally populate it."
+Usage_args_info=" <sandbox a.k.a client-name>"
+
+EExecVerbose
+std_options=""
+option_str="aw:sr:.t:TyN:"
+long_options=("port:" "diff:"
+"template:"
+"no-template"
+"force"
+"sync"
+"revision:" "rev:"
+"work-dir:"
+"sandbox-name:" "name:"
+"dot-is-name" "name-is-dot"
+"ask"
+)
+
+DPGOP_args_required=t
+source dp-getopt+.sh || exit 1
+
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -a|--ask) EExecAsk=t;;
+      -w|--work-dir) work_dir=$2; shift;;
+      -s|--sync) sync_p=t;;
+      -r|--revision|--rev) revision="$2"; shift;;
+      -.|--dot-is-name|--name-is-dot) sandbox_name=$(basename $PWD);;
+      -t|--template) shift; client_template="$1";;
+      -T|--no-template) client_template=;;
+      -y|--force) do_it_anyway_p=-y;;
+      -N|--name) shift; sandbox_name="sb${1}hw";;
+      --port) shift; P4PORT="${1}";;
+      --diff) shift; P4DIFF="${1}";;
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+: ${sandbox_name:=${1-}}
+shift
+[ -z "$sandbox_name" ] && {
+    read -e -p "I need a sandbox name: " sandbox_name
+}
+
+${do_it_anyway_p=}
+
+EExec cd $work_dir
+
+[ -d "$sandbox_name" ] && {
+    echo "sandbox \`$sandbox_name' already exists."
+    exit 1
+} 1>&2
+
+EExec ${do_it_anyway_p} mkdir -p $sandbox_name
+EExec ${do_it_anyway_p} cd $sandbox_name
+EExec ${do_it_anyway_p} touch DP_SB_ROOT
+
+#mk.p4client $DASH_N_OPT -c
+: ${tmp_file:=$(mktemp -p ~/tmp dp4-new-clientXXXXX)}
+client_name=$(dp4-mk-client-name)
+(
+    export PORT_DEFAULT="${P4PORT}"
+    export DIFF_DEFAULT="${P4DIFF}"
+    EExec -y dp4-mk-config "${client_name}" >| $tmp_file
+    EExecVerbose_p && {
+        echo "------ ${tmp_file} ------"
+        echo_id tmp_file
+        cat "${tmp_file}"
+        echo "------ ${tmp_file} ------"
+
+    } 1>&2
+)
+
+intermediate_config_file="${P4CONFIG}.i"
+EExec /bin/cp -f $tmp_file "${intermediate_config_file}"
+EExec rm -f $tmp_file
+
+template_opt=
+[ -n "$client_template" ] && template_opt="-T $client_template"
+
+EExec dp4-client $template_opt
+
+p4root=$(p4 client -o | sed -rn 's/(^Root:[[:space:]]+)([^[:space:]]+)(.*$)/\2/p')
+EExec_verbose_echo_id p4root
+EExec_verbose_msg "PWD>$PWD<"
+sed -r "s!${ROOT_PAT}!${p4root}!" "${intermediate_config_file}" >| "${P4CONFIG}"
+rm -f "${intermediate_config_file}"
+EExecVerbose_p && {
+    echo "------ ${P4CONFIG} ------"
+    echo_id P4CONFIG
+    cat "${P4CONFIG}"
+    echo "------ ${P4CONFIG} ------"
+} 1>&2
+
+rc=
+if [ "$sync_p" == 't' ]
+then
+    EExec p4 sync $revision
+    rc=$?
+    echo 1>&2 "p4 sunk"
+else
+    true
+fi
+
+rc="$?"
+echo 1>&2 "Finished creating sandbox $sandbox_name."
+
+if test "$rc" = 0
+then
+    dp4-new-client-post-processor
+    rc="$?"
+fi
+
+echo 1>&2 "Finished creating sandbox ${PWD}/${sandbox_name}; RC: $rc"
+echo "${PWD}/${sandbox_name}"
+exit "${rc}"

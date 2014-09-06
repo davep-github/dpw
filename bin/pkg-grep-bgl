@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # TODO: make specific versions (e.g. .../pkg/DEPENDS,
 # or /usr/portage) that call this after setting the

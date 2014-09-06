@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: cron-getmail,v 1.5 2005/04/26 07:11:16 davep Exp $
 #
 #date >> /tmp/cron-getmail.log

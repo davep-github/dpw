@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 tfile=`dp-mk-tmp-file $HOME/tmp/ydec-view-tmp.XXXXXXXX`

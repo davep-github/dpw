@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 . script-x
 
 : ${long_rem_host:=$(host-info.py "work-ssh-host")}

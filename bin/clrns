@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 rm ~/.netscape/history.*
 rm -rf ~/.netscape/cache/*
 rm -f ~/.netscape/cookies

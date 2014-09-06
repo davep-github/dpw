@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # cd to a path that is some sed op on the current dir
 # e.g. 

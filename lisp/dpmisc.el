@@ -11603,7 +11603,8 @@ An `undo-boundary' is done before the template is used."
 (defun bashit ()
   (interactive)
   (dp-script-it "/bin/bash" nil
-                :template dp-sh-new-file-template))
+                :template 'dp-insert-new-file-template
+                :template-args (list dp-sh-new-file-template-file)))
 
 (defun perlit ()
   (interactive)
@@ -12090,7 +12091,7 @@ spec-macsen are used for the completion list."
   ;; Symbol for key, plist for value
   '((python-mode it pyit)
     ;;(sh-mode i-name "/bin/sh")
-    (sh-mode it shit)
+    (sh-mode it bashit)
     (c-mode it dp-c-new-file-template)
     (c++-mode it dp-c-new-file-template)
     ;; Just point to a *it function
@@ -14210,12 +14211,14 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
   "DUH... Are you sure?"
   (interactive)
   (if (dp-primary-frame-p)
-      (progn
-        (when (y-or-n-p "DUH... Are you sure? ")
-          (when run-no-hooks-p
-            (setq kill-emacs-hook nil))
-          (save-buffers-kill-emacs))
-        (message "Good thing I asked, huh?"))
+;;       (progn
+;;         ;; Not really needed since we changed the key mapping that gets us
+;;         ;; here.
+;;         (when (and nil (y-or-n-p "DUH... Are you sure? "))
+;;           (when run-no-hooks-p
+;;             (setq kill-emacs-hook nil))
+;;           (save-buffers-kill-emacs))
+;;         (message "Good thing I asked, huh?"))
     (when (y-or-n-p "Won't exit when in non-primary frame. Close frame instead? ")
       (dp-delete-frame nil 'force))))
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 : ${GDB_CMD:=gdb}
 sudo ${GDB_CMD} "$@"

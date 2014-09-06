@@ -1,1 +1,159 @@
-killprog
+#!/usr/bin/env perl
+# $Id: killprog,v 1.7 2004/03/24 12:44:07 davep Exp $
+
+($ProgName) = $0 =~ m!([^/]+$)!;
+
+$pre_delimit = $post_delimit = "";
+$internal_delimit = " ";
+$silent = 0;
+$debug = 0;
+if ($ProgName eq 'findprog')
+{
+  $do_kill = 0;
+  $verbose = 0;
+  $echo_pids = 1;
+  $kop = "Find"
+}
+else
+{
+  $do_kill = 1;
+  $verbose = 1;
+  $echo_pids = 0;
+  $kop = "Kill";
+}
+
+$arg0 = $ARGV[0];
+
+if ($arg0 =~ /^-(\d{1,2})/)
+{
+  $siggie = $1;
+  shift(@ARGV);
+
+}
+elsif ($arg0 =~ '-[sq]')
+{
+  $silent = 1;
+  shift(@ARGV);
+}
+elsif ($arg0 =~ '-p')
+{
+  $parent_pids = 1;
+  shift(@ARGV);
+}
+elsif ($arg0 eq '-i') {
+  $inquire = 1;
+  shift(@ARGV);
+}
+elsif ($arg0 eq '-d') {
+  $pre_delimit = $internal_delimit = $post_delimit = "/";
+  shift(@ARGV);
+}
+elsif ($arg0 eq '-D') {
+  ++$debug;
+  shift(@ARGV);
+}
+else
+{
+  if  ($arg0 eq '--') {
+    shift (@ARGV);
+  }
+  $siggie = "TERM";
+}
+
+chop($OSName = `uname`);
+
+if ($OSName eq 'Linux')
+{
+  # pattern to find program's pid and executable name
+  # 8460 gdb /home/scratch.dpanariti_t124/sb2/hw/hw/nvdiag/mods/mods --command=dbcommands
+  $psCmd = "ps -u $ENV{USER} -o pid,cmd";
+  $nameFinder = '^\s*(\d+)\s+(\S+)';
+  
+  # pattern to find an interpreter's program (i.e. 1st arg)
+  # Will break with options to interpreter itself.
+  # 8460 gdb /home/scratch.dpanariti_t124/sb2/hw/hw/nvdiag/mods/mods --command=dbcommands
+  $scriptNameFinder = '^\s*(\d+)\s+(\S+)\s+(\S+)';
+    
+  # display all processes command
+  #$psCmd = 'ps agxww';
+  # Now that we're living on shared boxen, don't look at other people's stuff.
+  #$psCmd = 'ps u ww x'
+  # 20950 /usr/bin/SCREEN -O -dR -t rscreen -S rscreen
+}
+elsif ($OSName eq 'FreeBSD')
+{
+  # FreeBSD ps line:   "21  ??  IWs    0:00.03 adjkerntz -i"
+  $nameFinder = '^\s*(\d+).*\d+:\d+\.\d+\s+(\S+)';
+  $psCmd = 'ps agxww'
+}
+
+print "OSName>$OSName<, psCmd>$psCmd<, nameFinder>$nameFinder<\n" if ($debug);
+open(PS, $psCmd . " |") || die "canna open ps pipe, $!\n";
+
+%possible_pids = {};
+while ($line = <PS>) {
+  chop ($line);
+  print "line>$line<\n" if ($debug);
+  # snip out fields we are interested in
+  ($pid, $name) = $line =~ /$nameFinder/o;
+  print "  pid>$pid<, name>$name<\n" if ($debug);
+  # loop thru all progs specified on command line
+  foreach $prog (@ARGV) {
+    if ($prog =~ m!^\d+$!) {
+      if (!$possible_pids[$prog]) {
+	warn "******* prog is >$prog<, did you mean `kill $prog'? *******\n";
+	$possible_pids[$prog] = 1;
+      }
+    }
+
+    printf("name>$name<, prog>$prog<\n") if ($debug);
+    ($base_name) = $name =~ m!([^/]+$)!;
+    # if prog is absolute, then match full, else match basenames.
+    print "prog>$prog<\n" if ($debug);
+    # extract the program's base name (e.g. no path)
+    # and check for a match on that
+    if ($prog =~ m!^/!) {
+      $match_prog = $prog;
+      $match_name = $name;
+      #printf("fullname: ") if ($debug);
+    } else {
+      ($match_prog) = $prog =~ m!([^/]+$)!;
+      $match_name = $base_name;
+      #printf("basename: ") if ($debug);
+    }
+
+    #printf("..........match_name>$match_name<, match_prog>$match_prog<\n") if ($debug);
+    if ($match_name eq $match_prog) {
+      push(@pidList, $pid);
+    } elsif ($base_name =~ m!^(([ak]|ba)?sh)$!) {
+      # See if we're a shell script
+      ($scr_pid, $scr_name, $rest) = $line =~ /$scriptNameFinder/o;
+      #printf("line>$line<\n") if ($debug);
+      #printf("scr_pid>$scr_pid<, scr_name>$scr_name<, rest>$rest<\n") if ($debug);
+      push(@pidList, $scr_pid) if ($scr_name eq $prog);
+    }
+    # Add support for other interpreters, starting w/Python.
+  }
+}
+close(PS);
+
+if (@pidList)
+{
+  if ($inquire) {
+    kill_interactively (@pidList)
+  } else {
+    #print "siggie>$siggie<, pidList>@pidList<\n" if ($debug);
+    print "kill ($siggie, @pidList);\n" if ($verbose);
+    print $pre_delimit, join($internal_delimit, @pidList), $post_delimit, "\n" 
+	if ($echo_pids && !$silent);
+    $!=0;
+    $num = kill ($siggie, @pidList) if ($do_kill);
+    $emsg = $!;
+    #print "\$!>$!<\n";
+    print STDERR "$ProgName: $kop had problems: $emsg.\n" if ($emsg && !$silent);
+    exit $!
+  }
+} else {
+  print STDERR "$ProgName: No matches on any arg.\n" if (! $silent);
+}
+exit 1

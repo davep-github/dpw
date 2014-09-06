@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Start up a vnc server using my preferred defaults.
 # There are a number of vnc servers, and versions, out there and this

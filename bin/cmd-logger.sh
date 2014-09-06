@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 progname=$(basename=$0)
 :${LOG:=/home/davep/log}

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 : ${EMREM_TO:=davep.reminders@meduseld.net}
 

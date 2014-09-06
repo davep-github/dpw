@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ###svn log dpmisc.el | sed -rn 's/^(r[0-9]+)(.*)$/\1/p' | head -n 40 | while read r; do echo "rev: $r"; svn cat -$r dpmisc.el | fgrep mapatoms && break; done
 

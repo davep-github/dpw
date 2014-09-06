@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 : ${awn_cleanse:=t}
 

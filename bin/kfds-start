@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export DP_ORIGINAL_START_COMMAND="$0"
 export DP_ORIGINAL_START_COMMAND_ARGS="$@"

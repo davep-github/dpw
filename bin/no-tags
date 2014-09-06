@@ -1,1 +1,60 @@
-nixtagging
+#!/bin/bash
+
+source script-x
+progname="$(basename $0)"
+source eexec
+
+: ${kwa_nix_file=NOTAG}
+
+mkdir_p=
+
+std_options=""
+option_str="nvqt:m"
+long_options=(
+    "mkdir"
+)
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+      -t) shift; kwa_nix_file="$1";;
+      -m|--mkdir) mkdir_p=t;;
+      --) shift ; break ;;
+      *) 
+      echo 1>&2 "Unsupported option>$1<";
+      Usage
+      exit 1 ;;
+    esac
+    shift
+done
+
+for dir in "$@"
+do
+  if test -e "$dir"
+  then
+      if ! test -d "$dir"
+      then
+          echo "$dir is not a directory. Skipping."
+          continue
+      fi 1>&2
+  elif true_p "${mkdir_p}"
+  then
+      EExec mkdir -p "$dir"
+  else
+      echo "Dir>${dir} doesn't exist. Skipping.
+    Use --mkdir|-m to create dirs if they don't exist."
+      continue
+  fi
+  touch_file=$(normpath "${dir}/${kwa_nix_file}")
+  if [ -e "$touch_file" ]
+  then
+      echo "$touch_file already exists."
+  else
+      EExec touch "$touch_file"
+  fi
+done
+

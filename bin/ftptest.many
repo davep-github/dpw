@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 machine=${1:-tnc_demo2}
 while :

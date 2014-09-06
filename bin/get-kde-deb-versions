@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 kdestable=`lynx -dump http://packages.debian.org/stable/x11/kde | grep Package: | sed -e 's/.*(\([^\)]*\).*)/\1/'`
 kdetesting=`lynx -dump http://packages.debian.org/testing/kde/kdebase | grep Package: | sed -e 's/.*(\([^\)]*\).*)/\1/'`

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if type -p beagle-ping > /dev/null && ! beagle-ping > /dev/null
 then

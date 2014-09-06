@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: lmake,v 1.1 2003/08/04 20:04:31 davep Exp $
 # lmake - logging make
 #

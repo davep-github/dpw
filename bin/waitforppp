@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Header: /home/davep/yokel/archive-cvsroot/davep/bin/waitforppp,v 1.2 2004/01/28 04:15:22 davep Exp $
 #set -x
 sleep_time=2

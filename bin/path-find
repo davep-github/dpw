@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 source script-x 
 : ${GREPPER:=egrep}
@@ -7,8 +7,12 @@ source script-x
 
 grep_em()
 {
+    local oldIFS="${IFS}"
     local IFS=":"
-    find $PATH -type f -print0 | $GREPPETH "$@"
+    local spaced_path=$(echo $PATH)
+    echo_id spaced_path
+    IFS="${oldIFS}"
+    find $spaced_path -type f -print0 | xargs -r0 $GREPPETH "$@"
 }
 
 grep_em "$@"

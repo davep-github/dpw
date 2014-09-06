@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 if [ -x /usr/bin/ssh-keygen ]; then
     if [ ! -f /etc/ssh/ssh_host_key ]; then
 	echo ' creating ssh1 RSA host key';

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # from man wget
 # Log in to the server.  This can be done only once.

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # Major change to use this as a front-end to mv-ln(dp)

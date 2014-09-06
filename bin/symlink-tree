@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 #set -x
 
 ## cmd dst src glob
 
-#!/bin/sh
+#!/bin/bash
 #
 # sh script template
 #

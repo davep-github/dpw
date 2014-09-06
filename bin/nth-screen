@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Emit nth screen -ls screen name.
 # rc: 0: screen name or "" if eof

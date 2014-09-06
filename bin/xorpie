@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 [ -z "$DP_BASHRC_COMPLETE" -a -f .bash_profile ] && . $HOME/.bash_profile
 

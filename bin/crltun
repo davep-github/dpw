@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 CMD=crl-on+route-kicker.sh
 
 if [ "$1" = "-x" ]

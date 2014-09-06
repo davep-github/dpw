@@ -1,2 +1,2 @@
-#!/bin/sh
+#!/bin/bash
 tail -f /home/davep/bin/z

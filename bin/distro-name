@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 uname -a | fgrep -q gentoo && {
     echo "gentoo"

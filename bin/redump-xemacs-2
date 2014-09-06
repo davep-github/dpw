@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #set -x
 #
 # $Id: redump-xemacs-2,v 1.2 2005/05/31 08:20:11 davep Exp $

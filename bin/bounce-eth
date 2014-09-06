@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 eth=${1:-eth1}	# the problem child.
 ip=${2:-192.168.1.5}

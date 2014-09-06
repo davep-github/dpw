@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: killkdm,v 1.1 2004/12/17 09:20:04 davep Exp $
 . script-x
 

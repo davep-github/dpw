@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 export DP_VPN2LL_XX=no
 exec vpn2ll

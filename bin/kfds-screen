@@ -1,1 +1,60 @@
-dp-screen
+#!/bin/bash
+
+. script-x
+
+#
+# NB! nVIDIA's /etc/screenrc sets `hardstatus' which ends up having 2 titles
+# (and more) in the xterm title bar.
+# Switch my scheme to use hardstatus and override or just nuke nVIDIA's?
+#
+dp_screen()
+{
+  #echo "hi from dp-screen" 1>&2
+  : ${SCREEN_CMD:=}             # WTF? Why set it like this?
+  [ -n "$SCREEN" ] && {
+    dp_DEPRECATED "env-param SCREEN [$SCREEN] used. As should not have been"'!'
+    echo 1>&2 "env-param SCREEN is being deprecated."
+    echo "env-param SCREEN is being deprecated."
+  }
+  : ${SCREEN_NAME:=$(basename $0)}
+  # !<@todo XXX Nuke the use of the SCREEN environment variable ASAP.
+  : ${SCREEN:=$SCREEN_NAME}
+  : ${SANITIZER:=\~}
+  # Exorcise eeveeil spatses.
+  [ -n "$SANITIZE" ] && {
+      SCREEN_NAME=$(echo "$SCREEN_NAME" | sed -r 's/ /'"$SANITIZER"'/g')
+  }
+  #echo "bye from dp-screen" 1>&2
+
+  if [ "$*" = "" ]; then
+      :
+  else
+      SCREEN_CMD="$@"
+  fi
+#echo "SCREEN_CMD>$SCREEN_CMD<" 1>&2
+#echo "SCREEN_NAME>$SCREEN_NAME<" 1>&2
+#echo "0: DP_MY_SCREEN_NAME>$DP_MY_SCREEN_NAME<"
+  if [ "$DP_MY_SCREEN_NAME" == "$SCREEN_NAME" ]; then
+      echo -n "You already seem to be in the >${SCREEN_NAME}< screen... continue [y/N]? "
+      ans=
+      read ans
+      if [ "$ans" != y ]; then
+          echo "Excellent choice."
+          exit 1
+      fi
+  fi
+  export DP_MY_SCREEN_NAME="${SCREEN_NAME}"
+  #echo "1: DP_MY_SCREEN_NAME>$DP_MY_SCREEN_NAME<"
+  #screen -wipe >/dev/null 2>&1
+  [ -n "$SCREEN_CMD" ] && {
+      eval SCREEN_CMD="${SCREEN_CMD}"
+  }
+  set -v
+  history -a
+  exec screen -O -dR -t "${SCREEN_NAME}" -S "${SCREEN_NAME}" ${SCREEN_CMD}
+}
+
+dp_ima_script && {
+  dp_screen "$@"
+} 
+#2>&1 | tee "$DP_SCRIPT_X_PROG_LOG_FILE_STDALL"

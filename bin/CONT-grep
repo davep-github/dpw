@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 . script-x
 : ${CONTENT_FILE:=CONTENTS}
 : ${GREPPER:=egrep}

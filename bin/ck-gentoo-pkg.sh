@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: ck-gentoo-pkg.sh,v 1.1 2004/09/30 08:20:02 davep Exp $
 
 # e.g.

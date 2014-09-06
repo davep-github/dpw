@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 awk '{print $1}' /var/log/httpd-access.log | sort -n | uniq | while read a
 do

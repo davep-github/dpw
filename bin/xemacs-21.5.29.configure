@@ -1,15 +1,18 @@
-#!/bin/sh
+#!/bin/bash
 
 source script-x
 # WARN more vigorously (require yes vs y?) 
 # when backup dirs are not present.
 if [ -d "dp-patches-Originals" ]
 then
-   read -e -p "Don't forget about any patches.  Continue [Y/n]? "
-   case "$REPLY" in
-       ""|[Yy]) continue;;
-       *) exit 0;;
-   esac
+   while :
+   do
+   	read -e -p "Don't forget about any patches.  Continue [Y/n]? "
+   	case "$REPLY" in
+       	    ""|[Yy]) break;;
+            *) exit 0;;
+   	esac
+   done
 else
    while :
    do
@@ -63,10 +66,11 @@ fi
 
 # the lib64 library is needed to build on the o-xterm-* machines at
 # nVIDIA
+# --x-libraries=/usr/X11R6/lib64 \
 ${DS_CONFIGURE} \
     ${FUCKEDUP_CONFIG} \
-    --x-libraries=/usr/X11R6/lib64 \
     --without-debug             \
+    --without-tty               \
     --with-error-checking=none  \
     --with-optimization         \
     --disable-kkcc              \

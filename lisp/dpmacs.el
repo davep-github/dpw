@@ -345,9 +345,12 @@ the init files.")
 ;; <:savehist stuff | save history | save variables:>
 
 ;; Save it on a per-node basis.
-(setq savehist-file (dp-mk-pathname (list (dp-lisp-dir) 
-                                          (concat "history." 
-                                                  (dp-short-hostname)))))
+(setq savehist-file (dp-nuke-newline (shell-command-to-string 
+                                    "mk-persistent-dropping-name.sh emacs-history")))
+;;(dp-mk-pathname (list (dp-lisp-dir) 
+;;                                          (concat "history." 
+;;
+;;                                                 (dp-short-hostname)))))
 ;; How often we dump out the history.
 (setq savehist-autosave-interval (* 1 60))
 

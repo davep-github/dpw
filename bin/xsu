@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 user=${1:-root}
 exec dpxx -g 80x7+0-0 -F yellow -B darkred -n '-root-' sudo bash &

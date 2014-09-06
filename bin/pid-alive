@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 pid=$1
 prog=$2

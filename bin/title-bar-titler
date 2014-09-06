@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 : ${titlers="xtitle"}
 for titler in $titlers; do

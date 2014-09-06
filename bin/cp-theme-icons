@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: cp-theme-icons,v 1.8 2004/10/06 08:20:03 davep Exp $
 #set -x
 

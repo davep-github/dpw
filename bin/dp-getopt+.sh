@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Overly baroque getopt extensions.
 # Keep this file non-executable since it must be `source'd to work.

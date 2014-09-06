@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Front end to make sed-rename easier to use w/ icky file names.
 

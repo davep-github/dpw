@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 realpath=$(realpath $0)
 progname=$(basename $realpath)

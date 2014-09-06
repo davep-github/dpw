@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 archive=${1:-/dev/null}
 shift

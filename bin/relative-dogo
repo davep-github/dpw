@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Do a go relative to the current source tree.
 source script-x

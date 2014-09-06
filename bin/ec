@@ -1,1 +1,344 @@
-ef
+#!/bin/bash
+# $Id: ef,v 1.20 2005/04/07 08:20:11 davep Exp $
+#
+# Find a client for emacs, send command, defaulting to edit.
+#set -x
+
+source script-x
+progname="$(basename $0)"
+source eexec
+
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+source find-best-editing-host
+
+LOG_FILE="$HOME/log/xemacs/ec-log-file.log"
+
+: ${ask_if_no_display:=t}
+: ${ask_about_text_mode:=${ask_if_no_display}}
+# The known_* vars are searched in order, so that can be used to specify a
+# preference order.
+: ${known_servers:=gnuserv}
+: ${known_clients:="gnuclient emacsclient"}
+: ${known_text_mode_editors:="vim vi nvi nano pico"}
+: ${eh=$(find_best_editing_host)}
+: ${client=}
+: ${raise_and_focus_p=t}
+: ${quiet_p=}
+: ${one_file=}
+: ${do_wait=}
+
+editing_host_opt=
+editing_host_msg=
+extra_editing_host_msg=
+
+now=$(date)
+{
+    echo ">> ${now} ========================================================================"
+    echo "-1>$0<-1"
+    eko "$@"
+} >> $LOG_FILE
+
+echo '--' >> $LOG_FILE
+
+Usage()
+{
+   echo "${progname}: usage: $progname [-q]" 1>&2
+   exit 1
+}
+
+local_server_p()
+{
+    findprog -s ${known_servers}
+}
+
+#
+# Find the best editing server.
+# An environment variable, DP_GNU_EDITING_SERVER, is most authoritative, but
+# tends to be the most out-of-date. It really should just be used as a
+# parameter to force selection of a host.
+# The most up-to-date tends to be kept in the ipc(dp) file:
+# ~/ipc/dp-editing-server which has the format:
+# server-name <alist elements of editor id information>
+# If we find no host then we use a new instance.
+#
+
+find_one_of_these_programs()
+{
+    while (($# > 0))
+    do
+      if sp "$1" > /dev/null
+      then
+          echo $1
+          return 0
+      fi
+      shift
+    done
+    return 1
+}
+
+text_mode_edit()
+{
+    local textModeEditor="$1"; shift
+    local file="$@"
+
+    [ -z "$textModeEditor" ] && {
+        echo "Cannot find a text mode editor from $known_text_mode_editors."
+        exit 1
+    } 1>&2
+    if [[ "$do_wait" != 'y' ]]
+    then
+	echo "Text mode editing doesn't work in the background."
+	echo " Running in foreground instead."
+    fi 1>&2 
+    eval EExec $textModeEditor $file
+}
+
+process_file ()
+{
+    local opts=""
+    if [ -n "${1-}" ]
+    then
+        if [ -n "${one_file-}" ]
+        then
+            file="$@"
+        else
+            file="${1-}"
+	fi
+        if [ -n "${2-}" ]
+        then
+            opts="${2-}"
+        fi
+    else
+	file=""
+    fi
+
+    local problem=
+    local and=
+    # Choose a local server over a remote one.
+    if ! local_server_p
+    then
+        if vsetp "$eh"
+        then
+            editing_host_opt="-h $eh"
+            sb_name=$(find_best_editing_host sandbox-name)
+            local extra=
+            vsetp "${sb_name}" && {
+                extra=", sandbox: ${sb_name}"
+            }
+            editing_host_msg="editing on host: ${eh}${extra}"
+        else
+            problem="Editing server not found"
+            and=" AND "
+       fi
+    else
+        # Get all host editing info
+        editing_host_msg="editing on localhost: $HOST"
+        sb_name=$(find_best_editing_host sandbox-name)
+        #echo_id sb_name
+        if vsetp "${sb_name}"
+        then
+            editing_host_msg="${editing_host_msg}, sandbox: ${sb_name}"
+        fi
+    fi
+
+    if [ -z "$DISPLAY" ]
+    then
+        problem="${problem}${and}DISPLAY not set"
+    fi
+
+    [[ -n "$problem" ]] && {
+        if [[ "$ask_about_text_mode" == t ]]; then
+            local textModeEditor=$(find-bin ${known_text_mode_editors})
+	    echo -n "$progname: "
+            read -e -p "$problem; use $textModeEditor instead[Y/n/f/q]? "
+            case "$REPLY" in
+                Y|y|'')
+                   echo 1>&2 "vi'ing"
+                   read -e -p "Do this: $textModeEditor $file? "
+		   text_mode_edit "$textModeEditor" "$file"
+                   return 0;;
+		# Fake it?  Set up a fake DISPLAY.
+                # Surely this is a good enough guess, isn't it?
+		[Ff]) export DISPLAY=":0.0"
+		      ;;
+                [QqXx]) raise_and_focus_p=; exit 1;;
+                *) ;;
+            esac
+        fi
+    }
+
+    #echo_id2 eval_opt
+    vunsetp "${eval_opt}" && {
+        #echo_id2 raise_and_focus_p
+        # @todo XXX try to find a way to do this before the file is
+        # edited. It helps when there are issues with eding the file, such as
+        # when an existing file is in a modified buffer.
+        true_p "${raise_and_focus_p}" && {
+            if true_p "${quiet_p}"
+            then 
+                quiet_arg='--be-quiet'
+            else
+                quiet_arg=
+            fi
+            EExec attempt-to-raise-emacs ${quiet_arg}
+        }
+    }
+
+    # send the filename to emacs
+    [ "$do_wait" = 'y' ] && nowait_opt=
+    if vsetp "$editing_host_msg"
+    then
+        if EExecDashV_p || ! true_p "${quiet_p}"
+        then
+            echo "$editing_host_msg"
+        fi
+    fi
+    EExecDashV_p && vsetp "$extra_editing_host_msg" && echo "$extra_editing_host_msg"
+    vsetp "${client}" && set -- "${client}"
+    vsetp "${editing_host_opt}" && set -- "$@" ${editing_host_opt}
+    vsetp "${nowait_opt}" && set -- "$@" "${nowait_opt}"
+    vsetp "${eval_opt}" && set -- "$@" -eval "(progn ${eval_opt})"
+    vsetp "${opts}" && set -- "$@" ${opts}
+    vsetp "${file}" && set -- "$@" "${file}"
+    EExecDashV_p && eko "$@"
+
+    #EExec $client $editing_host_opt $nowait_opt $eval_opt "$opts" \"$file\"
+    EExec "$@"
+}
+
+# init optional vars to defaults here...
+
+eval_opt=
+client=
+ECHO="echo $progname: "
+CL=
+
+std_options=""
+option_str="Qe:c:Ews:R12"
+long_options=(
+    "eval:" "eval-opt:" "eval-arg:"
+    "eval-stdin" "eval-read" "read-eval"
+    "read-CL" "read-command-line"
+    "client:"
+    "wait"
+    "one-file"
+    "two-windows" "2-windows"
+    "ask-about-text-mode"
+    "no-raise-and-focus" "no-raise" "no-focus"
+    "be-quiet"
+    "be-silent"
+    "be-quiet" "be-silent"
+    "sudo-edit" "dse")
+
+source dp-getopt+.sh
+
+while (($# > 0))
+do
+    case "$1" in
+	-e|--eval|--eval-opt|--eval-arg) eval_opt="$eval_opt $2"; shift;;
+	# read a string to eval from stdin.
+	# getopt WILL NOT preserve spaces! So read funky things from stdin.
+	-E|--eval-stdin|--eval-read|-read-eval) read; eval_opt="$eval_opt ${REPLY}";;
+	-R|--read-CL|--read-command-line) read; CL="${REPLY}";;
+	-c|--client) client=$2; shift;;
+	-w|--wait) do_wait=y;;
+        -1|--one-file) one_file=y;;
+        -2|--two-windows|--2-windows) eval_opt="$eval_opt (progn (2w) (other-window 1))";;
+        -Q|--ask-about-text-mode) ask_about_text_mode=t;;
+        --no-raise-and-focus|--no-raise|--no-focus) raise_and_focus_p=;;
+        --be-quiet|--be-silent) quiet_p=t;;
+        --be-not-quiet|--be-not-silent|--no-silent|--no-quiet) quiet_p=;;
+	-s|--sudo-edit|--dse) case "$2" in	# sudo edit the given file
+	    /*) file=$2;;
+	    *)  file="$PWD/$2";;
+	    esac
+	    eval_opt="$eval_opt (dp-sudo-edit \"$file\")"; shift;;
+	--) shift ; break ;;
+	*)
+	    echo 1>&2 "Unsupported option>$1<";
+	    exit 1 ;;
+    esac
+    shift
+done
+
+args=("$@")
+
+if [ -n "$CL" ]
+then
+    set -- "$CL"
+fi
+
+# if there's an eval_opt, wrap it in a progn to make it a single expr. This
+# is fine if it's already a progn and it's not worth checking for it.
+#[ -n "$eval_opt" ] && eval_opt="-eval '(progn $eval_opt)'"
+
+#echo "1>$1<"
+#echo "eval_opt>$eval_opt<"
+if [ -z "$client" ]
+then
+    client=$(find_one_of_these_programs ${known_clients}) || {
+        echo "Cannot find an editing client of $(echo_id known_clients)"
+        exit 1
+    } 1>&2
+    opts=${1-}
+fi
+
+case "$client" in
+    emacsclient)
+	nowait_opt='--no-wait'
+	if [ -n "$eval_opt" ]
+	then
+	    echo 1>&2 "cannot use eval arg with $client"
+	    exit 1
+	fi
+	;;
+    gnuclient)
+	nowait_opt='-q'
+	;;
+    "")
+	echo 1>&2 "Cannot find an emacs client in >${known_clients}<"
+	exit 1
+	;;
+esac
+
+findprog -s sawfish
+have_sawfish=$?
+
+#EExec_verbose_msg "args>${args[@]}<"
+EExecDashV_p && echo_id one_file
+#set -x
+if [ "${#args[@]}" = 0 ]
+then
+    process_file
+elif [ -n "$one_file" ]
+then
+    process_file "${args[@]}" # 2>> ec-w.out
+else
+    set -- "${args[@]}"
+    for file in "$@"
+    do
+      #echo_id file
+      opts=""
+      if [ "${1:0:1}" = "+" ]
+          then
+          opts="$1"
+          shift
+      fi
+      f="$1"
+      process_file "$f" "$opts"
+      shift
+    done
+fi
+
+{
+    echo "<< ${now} ========================================================================"
+} >> $LOG_FILE
+
+exit 0

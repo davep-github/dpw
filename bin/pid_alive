@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #set -x
 # Linux only hack... actually /proc/<pid> type system hack.
 pid_alive()

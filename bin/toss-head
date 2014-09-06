@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: toss-lines,v 1.1 2005/03/20 09:20:12 davep Exp $
 # toss first n lines of stdin
 # exit w/1 if eof hit within first n lines.

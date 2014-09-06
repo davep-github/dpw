@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 prog=$(basename $0)
 mh_prog=$(echo $prog | cut -f2 -d-)

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Red Hat Linux VNC session startup script
 unset SESSION_MANAGER

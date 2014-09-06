@@ -19,10 +19,10 @@ SED_CFG_FILE := defs.sed
 DRY_RUN_FLAG :=
 all: rc_files
 
-rc_files: $(SED_CFG_FILE) $(FVWM_RC_FILES)
+rc_files: $(SED_CFG_FILE) $(FVWM_RC_INFILES)
 	rm -rf last-gen
 	mkdir last-gen
-	mv $(FVWM_RC_FILES) last-gen
+	- mv -f $(FVWM_RC_FILES) last-gen
 	cat $(SED_CFG_FILE) | sed-replace $(DRY_RUN_FLAG) -d "$(DP_DOMAIN)" $(FVWM_RC_INFILES)
 	chmod a-w $(FVWM_RC_FILES)
 

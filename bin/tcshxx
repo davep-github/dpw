@@ -1,1 +1,25 @@
-xxtcsh
+#!/bin/bash
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+: ${login_shell_opt=-l}
+: ${shell_opt:=tcsh}
+
+[ "${1-}" = "-l" ] && login_shell_opt=
+
+EExec dpxx \
+   -F white \
+   -B gray40 \
+   -- \
+   ${shell_opt} \
+   ${login_shell_opt}

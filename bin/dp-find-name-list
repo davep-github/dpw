@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ### No options yet.
 #eko "$@" 1>&2

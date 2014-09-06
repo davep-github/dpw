@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: lessmod,v 1.1 2004/03/17 09:20:06 davep Exp $
 
 lsmod "$@" | $PAGER

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # $Id: mail-test.sh,v 1.14 2005/05/04 08:20:11 davep Exp $
 #
 #set -x

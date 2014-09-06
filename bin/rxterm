@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # conceived before xon was seen, but beginning to steal ideas from it.
 #set -x
 # rxterm [-n name] [host [prog [prog_args...]]]
