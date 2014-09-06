@@ -4,7 +4,7 @@
 . script-x
 
 dummy=
-option_str='nd:s:DM'
+option_str='nvd:s:DM'
 
 #echo "PATH>$PATH<"
 # needed on Linux when called from my account with sudo,e.g.:
@@ -23,7 +23,7 @@ PATH="/usr/yokel/sbin:/usr/yokel/bin:$HOME/bin:$PATH"
 
 Usage()
 {
-    locat rc=$1
+    local rc=$1
     echo 1>&2 "placeholder
 $(basename $0) [-[$option_str]]"
     exit $rc
@@ -38,17 +38,18 @@ EExecEcho=echo
 . cdrw.conf
 
 ##obs#args=$( getopt $option_str $* )
-q=$(getopt $getopt_args -o "$all_options" -- "$@")
+q=$(getopt $getopt_args -o "$option_str" -- "$@")
 [ $? != 0 ] && Usage
 eval set -- "$q"
 
 [ $? != 0 ] && Usage
 
-set -- $args
 for i in $*
 do
+    echo "i>$i<"
     case $1 in
 	-n) EExecDashN;;
+	-v) EExecDashV;;
 	-d) dev=$2; shift;;
 	-D) dummy='-dummy';;
 	-M) multi='';;

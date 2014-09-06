@@ -5,9 +5,9 @@ source ~/.exrc
 set backup
 set bex=.bak
 set mouse=a
-set softtabstop=4
-set shiftwidth=4
+set softtabstop=8
+set shiftwidth=8
 set noexpandtab
 colorscheme delek
 set spell spelllang=en_us
-set spellfile=~/.vim/spell/dp.utf-8.add
+syntax off

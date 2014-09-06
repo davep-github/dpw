@@ -432,7 +432,9 @@ the init files.")
 ;; Prevents these from being indexed, etc. along with other "real" source
 ;; files.
 (defvar dp-default-mode-transparent-r/w-suffix-regexp
-          "wip\\|exp\\|dev\\|WIP\\|EXP\\|DEV\\hack\\|HACK\\|play\\|PLAY"
+  (regexp-opt '(
+   "wip" "exp" "dev" "WIP" "EXP" "DEV" "hack" "HACK" "play" "PLAY"
+   "emerged" "merged" "emerge" "merge"))
 "In development, works in progress, being developed.")
 
 ;; !<@todo XXX things like save-2 don't work, but save2 do. The [] expr is

@@ -1,0 +1,29 @@
+#!/bin/sh
+
+#
+# Typical overblown front end to something.  In this case, the primary
+# function is to preprocess the startup files to make them specific to the
+# current environment.
+
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+eexec_program=$(EExec_parse "$@")
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
+
+cpp_defs=()
+if [ "${USER}" = "davep" ] && [ "${HOST}" = "vilya" ]
+then
+    cpp_defs+=("-DDP_FVWM_LOCALE_HOME")
+elif [ "${USER}" = "dpanariti" ]
+then
+    cpp_defs+=("-DDP_FVWM_LOCAL_NVIDIA")
+fi
+    
+

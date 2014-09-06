@@ -39,7 +39,7 @@ dash_n_prefix='[-n]: '
 paranoid_p="auto_exit"
 Usage()
 {
-   echo "${prog}: usage: $prog [-$all_options] 's/ed-/expr/' [files...]" 1>&2
+   echo "${prog}: usage: $prog [-$all_options] 's!ed-!expr!' [files...]" 1>&2
 }
 
 has_spaces_p()
@@ -147,9 +147,9 @@ sed_renamer()
 {
     local sed_expr="$1"
     case "$sed_expr" in
-        */) ;;
-	*/g) ;;
-	*) sed_expr="$sed_expr/";;
+        *!) ;;
+	*!g) ;;
+	*) sed_expr="$sed_expr!";;
     esac
     local f="$2"
     [[ "$verbose" > 1 ]] && echo "echo $f | sed $ropt -e $sed_expr"
