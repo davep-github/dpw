@@ -914,7 +914,7 @@ export -f ps1
 mutt()
 {
     cd ~
-    EDITOR=${EDITOR=$MUTT_EDITOR} $(sp -1 mutt) -f $MUTT_INBOX "$@"
+    EDITOR=${MUTT_EDITOR-${EDITOR-vi}} $(sp -1 mutt) -f $MUTT_INBOX "$@"
 }
 
 pmutt()

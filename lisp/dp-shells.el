@@ -179,12 +179,7 @@ prompt.  We don't want to stomp on them.")
           ;; Just set it, no sense in comparing to see if it changed.
           (setq default-directory 
                 (expand-file-name
-                 (concat (match-string 1 s) "/")))
-;;           (unless (dp-current-sandbox-dir-p default-directory)
-;;             (save-excursion
-;;               (beginning-of-line)
-;;               (insert "!SB!")))
-          )))))
+                 (concat (match-string 1 s) "/"))))))))
 
 ;; XXX @todo fix this, make it work.
 ;; Debugger entered--Lisp error: (invalid-argument "Marker does not point anywhere")

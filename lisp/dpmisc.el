@@ -11594,7 +11594,7 @@ An `undo-boundary' is done before the template is used."
   :group 'dp-vars
   :type 'string)
 
-(defun shit ()
+(defun __shit ()
   (interactive)
   (dp-script-it "/bin/sh" nil
                 :template 'dp-insert-new-file-template
@@ -12090,7 +12090,6 @@ spec-macsen are used for the completion list."
 (defvar dp-major-mode-to-shebang
   ;; Symbol for key, plist for value
   '((python-mode it pyit)
-    ;;(sh-mode i-name "/bin/sh")
     (sh-mode it bashit)
     (c-mode it dp-c-new-file-template)
     (c++-mode it dp-c-new-file-template)
@@ -14211,14 +14210,12 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
   "DUH... Are you sure?"
   (interactive)
   (if (dp-primary-frame-p)
-;;       (progn
-;;         ;; Not really needed since we changed the key mapping that gets us
-;;         ;; here.
-;;         (when (and nil (y-or-n-p "DUH... Are you sure? "))
-;;           (when run-no-hooks-p
-;;             (setq kill-emacs-hook nil))
-;;           (save-buffers-kill-emacs))
-;;         (message "Good thing I asked, huh?"))
+      (progn
+        (when (or t(y-or-n-p "DUH... Are you sure? "))
+          (when run-no-hooks-p
+            (setq kill-emacs-hook nil))
+          (save-buffers-kill-emacs))
+        (message "Good thing I asked, huh?"))
     (when (y-or-n-p "Won't exit when in non-primary frame. Close frame instead? ")
       (dp-delete-frame nil 'force))))
 
@@ -14404,12 +14401,7 @@ BUFFER-FILENAME-REGEXP defaults to .*"
   (message "%s: %s" var (getenv var)))
 
 (defun* dp-make-frame-title-format (&key gnuserv-running-p force-no-server-p)
-  (format "[%s%s] %s%s"
-          (if (or (dp-current-sandbox-read-only-p)
-                  (dp-all-sandboxes-read-only-p))
-              "!"
-            "")
-          (or (dp-current-sandbox-name) "No SB")
+  (format "%s%s"
           (if (and (not force-no-server-p)
                    (or gnuserv-running-p 
                        (dp-gnuserv-running-p)))

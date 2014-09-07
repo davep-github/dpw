@@ -37,3 +37,7 @@ source ~/.mutt-colors
 
 alternative_order text/plain text/html
 auto_view text/html
+
+set sendmail="/usr/bin/msmtp"
+set from=davep@meduseld.netyy
+
