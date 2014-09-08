@@ -8,7 +8,10 @@ rc=0
     echo "id: $(id)"
     echo "tilde: " ~
     echo "HOME>$HOME<"
-    /usr/bin/getmail -q -r /usr/yokel/etc/getmail/verizon.rc 2>&1
+    /usr/bin/getmail -q \
+	--getmaildir=/usr/yokel/etc/getmail \
+	-r /usr/yokel/etc/getmail/verizon.rc \
+	2>&1
     rc=$?
 } | egrep -v -e 'FutureWarning
 return \("<%s at 0x%x: %r>"

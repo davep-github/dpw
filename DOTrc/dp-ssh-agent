@@ -22,7 +22,7 @@ dp_add_default_keys()
 # Really start or connect to ssh agent
 dp_start_ssh_agent()
 {
-    env | fgrep SSH
+#    env | fgrep SSH
     # See if there's a running agent to which we are attached.
     dp_add_default_keys && return 0
 
