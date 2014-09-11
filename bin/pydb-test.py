@@ -1,6 +1,6 @@
 #!/bin/bash
 
-host=${1:-$HOST}
+host=${1:-$HOSTNAME}
 
 do_it()
 {

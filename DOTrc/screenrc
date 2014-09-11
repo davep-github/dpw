@@ -6,10 +6,10 @@ autonuke                off
 setenv                  IMASCREENINSTANCE 1
 vbell                   on
 ignorecase              on
-defscrollback           ${SCREEN_DEFSCROLLBACK}
+defscrollback           4000
 markkeys                "0=^A:$=^E"
-bufferfile              ${SCREENDATA_EXCHANGE}
-hardcopydir             ${SCREENDATA_HARDCOPY_DIR}
+bufferfile              ${HOME}/.screen/generic.d/data.d/screen-exchange
+hardcopydir             ${HOME}/.screen/generic.d/data.d/hardcopy.d
 bind ^/ help
 bind ^h help
 bind ^e quit

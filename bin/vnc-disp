@@ -18,5 +18,5 @@ then
     exit 1
 fi
 
-echo "$HOST$x"
+echo "$HOSTNAME$x"
 exit 0

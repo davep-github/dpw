@@ -18,7 +18,7 @@ done
 unset eexec_program
 
 cpp_defs=()
-if [ "${USER}" = "davep" ] && [ "${HOST}" = "vilya" ]
+if [ "${USER}" = "davep" ] && [ "${HOSTNAME-$}" = "vilya" ]
 then
     cpp_defs+=("-DDP_FVWM_LOCALE_HOME")
 elif [ "${USER}" = "dpanariti" ]

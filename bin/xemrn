@@ -24,6 +24,7 @@ log_file="$HOME/log/xemacs/xem-run.log"
     echo "PATH>$PATH<"
     echo "USER>$USER<"
     echo "HOST>$HOST<"
+    echo "HOSTNAME>$HOSTNAME<"
     echo "HOST_INFO>$HOST_INFO<"
     host-info.py -n AHHHHHHHHHHHHHH xem_bg_color
     $HOST_INFO -n AHHHHHHHHHHHHHH xem_bg_color
@@ -167,7 +168,7 @@ vsetp $XEM_XFT_FONT && {
 
 if [ -z "$OPTS" ]
 then
-    case $HOST in
+    case $HOSTNAME in
 	clove*)
 	    disp=`echo $DISPLAY | sed 's/0\.0/0\.1/'`
 	    OPTS="-display $disp -geometry 80x54+20+8"

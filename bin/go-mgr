@@ -21,7 +21,7 @@ if [ -n "$FAMILY_ZONE" -a "$FAMILY_ZONE" != "none-default-family-zone" ]
 then
     ext=".$FAMILY_ZONE"
 else
-    ext=.${GO_DOMAIN:-$HOST}	# default to current host's list
+    ext=.${GO_DOMAIN:-$HOSTNAME}	# default to current host's list
 fi
 
 maybe_fix_flags()

@@ -87,16 +87,22 @@ def dump_all(info_list):
 ############################################################################
 def match_family_by_host(host):
     # XXX @todo Will need to preserver order somehow.
+
+    def strcmp(s1, s2):
+        return s1 == s2
+
     node_name = host_db.get(dppydb.famDB_to_node_name(), None)
     if node_name:
         famDB = node_name.get_item('db')
-        pattern_field_name = "host-pattern"
-        families_with_host_patterns = famDB.grep_fields(pattern_field_name)
-        for fam in families_with_host_patterns:
-            pat = fam.get_item(pattern_field_name)
-            m = re.search(pat, host)
-            if m:
-                return (RC_OK, (fam,))
+        # check for exact matches first.
+        for (field_name, cmp_fun) in (("host", strcmp),
+                                      ("host-pattern", re.search)):
+            families = famDB.grep_fields(field_name)
+            for fam in families:
+                field_value = fam.get_item(field_name)
+                if cmp_fun(field_value, host):
+                    return (RC_OK, (fam,))
+
     return RC_NO_SUCH_HOST, RC_NO_SUCH_HOST  # Need to return a tuple
     
 ############################################################################

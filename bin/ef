@@ -139,7 +139,7 @@ process_file ()
        fi
     else
         # Get all host editing info
-        editing_host_msg="editing on localhost: $HOST"
+        editing_host_msg="editing on localhost: $HOSTNAME"
         sb_name=$(find_best_editing_host sandbox-name)
         #echo_id sb_name
         if vsetp "${sb_name}"

@@ -12,8 +12,9 @@ do
       just_show=-N
       continue
   }
+
   host=$(expand-hostname $i)
-  full_host=$(full-hostname $host) || dpFATAL 1 "full-hostname $host failed"
+  full_host=$(full-hostname $host) # || dpFATAL 1 "getting full-hostname for >$host< failed"
   hname=${full_host:-$host}
   shost=$(echo $hname | cut -d. -f1)
   title_base=$(rx_name rlogin $hname)

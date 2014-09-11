@@ -6,15 +6,15 @@ from socket import *
 from select import *
 import string
 
-def main(HOST="", PORT=8080, 
+def main(HOSTNAME="", PORT=8080, 
 	 SERVER="panariti.ne.mediaone.net", SPORT=80,
 	 BACKLOG=5):
     
-    print "want to listen on port %s (%s, %s)" % (PORT, `HOST`, BACKLOG)
+    print "want to listen on port %s (%s, %s)" % (PORT, `HOSTNAME`, BACKLOG)
     csock = socket(AF_INET, SOCK_STREAM)
-    csock.bind(HOST, PORT)
+    csock.bind(HOSTNAME, PORT)
     csock.listen(BACKLOG)
-    print "listening on port %s (%s, %s)" % (PORT, `HOST`, BACKLOG)
+    print "listening on port %s (%s, %s)" % (PORT, `HOSTNAME`, BACKLOG)
     
     while 1:
 	print "awaiting connection"

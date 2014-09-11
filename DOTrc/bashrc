@@ -1,18 +1,41 @@
 # @(#)bash/ksh profile   -*-Shell-script-*-
 # $Id: bashrc,v 1.55 2005/06/25 08:20:21 davep Exp $
 # NB: all non-bash code is old, crufty and untested in a long time.
-#set -x
 # Suppress any other means of enabling this.  NB: may break some stuff.
 #set +x
-#set -x
 #echo "PS1:0>$PS1<"
 #echo "\$0>$0<"
 #echo "\$@>$@<"
 #echo "\$PS1:0 | hd:"
 #echo "$PS1" | ~/yokel/bin/hd
 #echo "dp_NH:-1>$dp_NH<"
-
 # $@ is unset when called for a new/login shell.
+#echo "@>$@<"
+#echo "DP_NO_DP_ENV>${DP_NO_DP_ENV}<"
+# if test "${1}" = "DP_NO_DP_ENV_P" -o -n "${DP_NO_DP_ENV_P}"
+# then
+#     : "${USER:=davep}"; export USER
+#     : "${LOGNAME:=davep}"; export LOGNAME
+#     : "${HOME=/home/${USER}}"; export HOME
+#     . $HOME/.rc/env.pristine
+#     return 0
+# fi
+
+#echo "LC>${LC_DP_YES_DP_ENV_P}<"
+#echo "LC_DP_NO_DP_ENV_P>$LC_DP_NO_DP_ENV_P<"
+
+dp_no_dp_env_p_file="$HOME/ipc/dp-no-dp-env-${HOSTNAME}-p"
+#ls -l "${dp_no_dp_env_p_file}"
+
+if [ -z "${LC_DP_YES_DP_ENV_P}" ]
+then
+    [ -e "${dp_no_dp_env_p_file}" -o -n "$LC_DP_NO_DP_ENV_P" ] && {
+        source "$HOME/.rc/env.pristine"
+        PS1="[np]$PS1"
+        return 0
+    }
+fi
+
 export DP_RC_LIST_OTHERS="$HOME/.rc/bashrc"
 
 source $HOME/.rc/func.early
@@ -234,8 +257,9 @@ do
 	break
     }
 done)
-export HOST=$(/bin/hostname | $CUTBIN -f1 -d.) # short host name
-export DOMAIN=$(/bin/hostname | $CUTBIN -f2- -d.)
+echo
+export HOST=${HOSTNAME-$(/bin/hostname | $CUTBIN -f1 -d.)} # short host name
+export DOMAIN=$(/bin/hostname --fqdn | $CUTBIN -f2- -d.)
 
 # Pull in some useful functions. func has a dependency on PATH???
 . $RC_DIR/func
@@ -243,11 +267,11 @@ export DOMAIN=$(/bin/hostname | $CUTBIN -f2- -d.)
 # bin dirs from most specific to least
 if vsetp $genericArch_bin
 then
-    DAVEP_BIN_VARIANTS=",$genericArch_bin.$HOST,$genericArch_bin"
+    DAVEP_BIN_VARIANTS=",$genericArch_bin.$HOSTNAME,$genericArch_bin"
 else
     DAVEP_BIN_VARIANTS=
 fi
-DAVEP_BIN_VARIANTS="$arch_os_bin.$HOST,$arch_os_bin,$arch_bin.$HOST,$arch_bin,bin.$HOST,$DAVEP_BIN_VARIANTS,sbin,bin"
+DAVEP_BIN_VARIANTS="$arch_os_bin.$HOSTNAME,$arch_os_bin,$arch_bin.$HOSTNAME,$arch_bin,bin.$HOSTNAME,$DAVEP_BIN_VARIANTS,sbin,bin"
 #echo_id DAVEP_BIN_VARIANTS
 #exit 99
 DAVEP_BIN_DIRS="$(eval echo $HOME/{$DAVEP_BIN_VARIANTS} \
@@ -331,7 +355,7 @@ then
 elif [ -n "${BASH_VERSION-}" ]
 then
     shell_name=bash
-elif [ "$HOST" = "darkstar" -o "$HOST"  = "rock" ]	# bleagh :-(
+elif [ "$HOSTNAME" = "darkstar" -o "$HOSTNAME"  = "rock" ]	# bleagh :-(
 then
     shell_name="ksh"
 #elif [ -n "${.sh.version}" ]
@@ -346,10 +370,10 @@ export shell_name
 # take precedence over anything coming from $HOST_INFO
 # this allows us to function in the absence of python.
 FAMILY= FAMILY_ZONE= pre_rcs= post_rcs= WORK_ZONE=
-HOST_CONF="$RC_DIR/$HOST.conf"
+HOST_CONF="$RC_DIR/$HOSTNAME.conf"
 [ -f  $HOST_CONF ] && source $HOST_CONF
 
-case $HOST in
+case $HOSTNAME in
     # quabbin is so old that the shell functions cause
     # syntax errors... it is ULTRIX!
     # just bail here.  all we use quabbin for is inc'ing
@@ -367,8 +391,8 @@ export FAMILY_ZONE
 export WORK_ZONE
 
 # least specific to most so we can override things.
-export locale_rcs_fields=".OSName .FAMILY_ZONE .FAMILY .HOST .var .early" # .$WORK_ZONE"
-export locale_rcs=".$OSName .$FAMILY_ZONE .$FAMILY .$HOST .var .early" # .$WORK_ZONE"
+export locale_rcs_fields=".OSName .FAMILY_ZONE .FAMILY .HOSTNAME .var .early" # .$WORK_ZONE"
+export locale_rcs=".$OSName .$FAMILY_ZONE .$FAMILY .$HOSTNAME .var .early" # .$WORK_ZONE"
 : ${pre_rcs:=$($HOST_INFO -n '' locale_pre)}
 : ${post_rcs:=$($HOST_INFO -n '' locale_post)}
 locale_rcs="$pre_rcs $locale_rcs $post_rcs"
@@ -552,7 +576,7 @@ case $- in
 		# This is primarily (?only?) needed when we are screen'ing.
                 : ${PS1_title_prefix:='-'} ; export PS1_title_prefix
                 : ${PS1_title_suffix:=""} ; export PS1_title_suffix
-                export XTerm_title='${PS1_title_prefix}'"${scr_pre}"'${TTY}'"${scr_suf}"'-${PS1_1}${USER}@${HOST}:${PWD}${PS1_title_suffix}'
+                export XTerm_title='${PS1_title_prefix}'"${scr_pre}"'${TTY}'"${scr_suf}"'-${PS1_1}${USER}@${HOSTNAME}:${PWD}${PS1_title_suffix}'
                 # set LS_COLORS dir ls file coloring
 		# Predicate color palette based on term type, background type
 		# (loosely grouping colors into {light... dark} sets for ease
@@ -713,7 +737,7 @@ source_bash_completion_code()
 
 login_times=$HOME/log/login-times
 [ -e $login_times ] && {
-    echo "$HOST -- $(date)" >> $login_times
+    echo "$HOSTNAME -- $(date)" >> $login_times
 }
 unset login_times
 [ -n "${login_times-}" ] && echo "WHAT THE FUCK???"

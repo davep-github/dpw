@@ -1012,8 +1012,16 @@ This can be callable.")
 ;;till-fixed                              ".*: \\)")))))
 
 (setq comint-password-prompt-regexp
-"\\(\\([Oo]ld \\|[Nn]ew \\|^\\)?[Pp]assword\\|pass ?phrase\\):?\\s *\\'\\|\\(Enter passphrase for.*: \\)\\|\\(Enter password.*: \\)\\|\\(\\[sudo\\] password for \\(davep\\||dpanariti\\|dapanarx.*\\):? \\)")
-
+      (concat
+       "\\(\\([Oo]ld \\|[Nn]ew \\|^\\)?[Pp]assword\\|pass[ _-]?phrase\\):?\\s-*\\'"
+       "\\|"
+       "\\(Enter passphrase for.*: \\)"
+       "\\|"
+       "\\(Enter password.*:\\s-+\\)"
+       "\\|"
+       "\\(\\(\\[sudo\\] \\)?[Pp]assword for .*"
+       "\\(davep\\||dpanariti\\|dapanarx.*\\).*:? \\)")
+      )
 (when dp-wants-emms-p
   (require 'dp-emms))
 

@@ -27,7 +27,7 @@ else
 fi
 
 . script-x
-if [ "$HOST" = "vilya" ]
+if [ "$HOSTNAME" = "vilya" ]
 then
 	: ${PREFIX:=$HOME/bree}
 else

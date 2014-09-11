@@ -189,7 +189,7 @@ export SCREENDIR_ROOT="${HOME}/.screen"
 
 screendir_hostroot()
 {
-    local host=${1-$HOST}
+    local host=${1-$HOSTNAME}
     echo "${SCREENDIR_ROOT}/${host}.d"
 }
 export -f screendir_hostroot

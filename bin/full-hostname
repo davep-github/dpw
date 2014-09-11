@@ -10,7 +10,7 @@ fi
 
 name=$1
 # nslookup is going away in linux, so we'll use host
-try=`host $name 2>/dev/null` || {
+try=$(host $name 2>/dev/null) || {
     # cannot lookup name, use ''
     echo ''
     exit 1

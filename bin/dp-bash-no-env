@@ -41,15 +41,6 @@ on_error()
     trap '' 0
 }
 
-: ${DOT=}
-: ${creat_p=t}
-: ${persist_p=}
-: ${mkdir_only_p=}
-persist=
-true_p "${persist_p}" && persist=persist/
-
-dir_name="$HOME/droppings/${persist}${DOT}${1-bash-history}"
-true_p "${creat_p}" || true_p "${mkdir_only_p}" && mkdir -p "${dir_name}"
-true_p "${mkdir_only_p}" && exit
-name="${dir_name}/${HOSTNAME}"
-echo "${name}"
+export LC_DP_NO_DP_ENV_P=t
+[ -z "$*" ] && set -- localhost
+ssh "${@}"

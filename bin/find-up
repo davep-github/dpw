@@ -25,6 +25,7 @@ def make_path_from_components(components):
 canonicalize_path = abs_canonicalize_path
 
 All_p = False
+Dirs_too_p = True
 
 def find_up(file_name, stop_dir="/", start_dir=None, all_p=False):
     global All_p
@@ -55,11 +56,13 @@ def find_up(file_name, stop_dir="/", start_dir=None, all_p=False):
         pn_comps = [pwd, file_name]
         path_name = make_path_from_components(pn_comps)
         #print >>sys.stderr, "path_name>%s<" % (path_name,)
-        if opath.isfile(path_name):
+        if (opath.isfile(path_name)
+            or
+            (Dirs_too_p and opath.isdir(path_name))):
             if not all_p:
                 return [path_name]
             else:
-                #print >>sys.stderr, "Adding path_name>%s<" % (path_name,)
+                ##print >>sys.stderr, "Adding path_name>%s<" % (path_name,)
                 ret.append(path_name)
         #print >>sys.stderr, "pwd>%s<" % (pwd,)
         #print >>sys.stderr, "stop_dir>%s<" % (stop_dir,)
@@ -79,8 +82,9 @@ def main(args):
     placeholder = ""
     global canonicalize_path
     global All_p
+    global Dirs_too_p
     print_results_p = True
-    opts, args = getopt.getopt(sys.argv[1:], 'hs:S:pP:arAq')
+    opts, args = getopt.getopt(sys.argv[1:], 'hs:S:pP:arAqd')
     for o, v in opts:
         if o == '-q':
             # Just produce a return code.
@@ -109,6 +113,10 @@ def main(args):
             continue
         if o == '-A':
             All_p = True
+            continue
+        if o == '-d':
+            Dirs_too_p = False
+            continue
 
     num_not_found = 0
     matches = []

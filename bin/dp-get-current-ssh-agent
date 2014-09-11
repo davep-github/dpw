@@ -51,6 +51,6 @@ dp_find_ssh_agent()
     return 0
 }
 
-[ -n "${runme-}" -o "$(basename -- $0)" = dp-find-ssh-agent ] && {
+[ -n "${runme-}" -o "$(basename -- $0)" = dp-get-current-ssh-agent ] && {
     dp_find_ssh_agent
 }

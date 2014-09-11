@@ -30,7 +30,7 @@ Ee|testA|testB|testC| 	value-for-testABC
 #Ee|faff|                find . -type f -print0 | xargs -r0 fgrep 
 #Ee|fafe|                find . -type f -print0 | xargs -r0 egrep
 
-Ee|dpworld|dpw|              ${HOME}/davep/dpw/
-Ee|dpwgit|                   ${HOME}/davep/dpw/
+Ee|dpworld|dpw|              ${HOME}/dpw/
+Ee|dpwgit|                   ${HOME}/dpw/dpw.git
 Ee|dpwbuild|dpwbld|dpwbld|   ${dpworld}build/
 

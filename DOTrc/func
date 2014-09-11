@@ -188,7 +188,7 @@ dp_echo2 ()
         } >> $DP_ERRLOG
     fi
 }
-export dp_echo2 dpe_echo
+export -f dp_echo2
 
 alias dpe_echo=dp_echo2
 alias dp_echo_err=dp_echo2
@@ -253,7 +253,7 @@ dpFATAL()
 {
     local rc=$1
     shift
-    dpe_echo "dpFATAL: rc: $rc:" "$@"
+    dp_echo2 "dpFATAL: rc: $rc:" "$@"
     exit $rc
 }
 
@@ -270,13 +270,13 @@ dpe_error()
     shift
     rc=$((- $rc))               # PoPT!
     [[ "$rc" == "0" ]] || rc_msg="rc: $rc: "
-    dpe_echo "ERROR:" "$rc_msg""$@"
+    dp_echo2 "ERROR:" "$rc_msg""$@"
     return $rc
 }
 
 dpWARN()
 {
-    dpe_echo "WARNING:" "$@"
+    ep_echo2 "WARNING:" "$@"
 }
 
 dpe_warn()
@@ -516,7 +516,7 @@ vi()
     done
     if [ -z "$vi" ]
     then
-	DPE_ECHO_PROGNAME="(func) vi" dpe_error 0 "cannot find vi-like ($VI_ALIKES) editor."
+	EP_ECHO2_PROGNAME="(func) vi" dpe_error 0 "cannot find vi-like ($VI_ALIKES) editor."
 	return 1
     else
 	$vi "$@"
@@ -897,9 +897,9 @@ spg()
     local progname=spg
 
     if [[ "$rc" != 0 ]]; then
-        dpe_echo "$cmd failed: $rc"
+        ep_echo2 "$cmd failed: $rc"
     elif [[ -z "$todir" ]]; then
-        dpe_echo "$cmd returned an empty string"
+        ep_echo2 "$cmd returned an empty string"
     else
         pushd "$todir"
     fi

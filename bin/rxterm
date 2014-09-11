@@ -56,7 +56,7 @@ case $host in
 		rem_sh=sh
 		;;
 	l|\.|localhost)  remote_xterm="$DEFAULT_XTERM"
-		host=$HOST;
+		host=$HOSTNAME;
 		rsh=
 		rem_sh=
 		;;

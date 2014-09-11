@@ -9,22 +9,35 @@ Ee|vet|       /home/davep/work/vet/
 # Added Tue Sep  2 13:20:38 EDT 2014
 Ee|vetdoc|       /home/davep/work/vet/doc/
 # Added Tue Sep  2 14:40:38 EDT 2014
-Ee|yocto|       /home/davep/work/vet/yocto/
+Ee|vet_work_dir| /usr/local/work_vet/
+Ee|yocto|yocto_work_dir|        /local/work/vet/yocto/
 # Added Tue Sep  2 14:40:52 EDT 2014
-Ee|poky|       /home/davep/work/vet/yocto/poky/
+Ee|poky|       ${yocto_work_dir}/poky/
 # Added Thu Sep  4 16:25:19 EDT 2014
 Ee|quasar|       /shared/vet/isi/quasar/
 # Added Thu Sep  4 18:16:52 EDT 2014
-Ee|uboot|       /home/davep/work/vet/uboot/
+Ee|uboot|       ${vet_work_dir}uboot/
 # Added Fri Sep  5 09:52:26 EDT 2014
-Ee|yoc2|       /home/davep/work/vet/yoctwo/
+Ee|yoc2|       ${vet_work_dir}yoctwo/
 # Added Fri Sep  5 12:20:20 EDT 2014
-Ee|nand|       /home/davep/work/vet/yoctwo/yocto/build/tmp/work/overo-poky-linux-gnueabi/linux-gumstix/3.5.7-r2/git/drivers/mtd/nand/
+Ee|nand|       ${yocto_work_dir}build/tmp/work/overo-poky-linux-gnueabi/linux-gumstix/3.5.7-r2/git/drivers/mtd/nand/
 # Added Fri Sep  5 12:21:28 EDT 2014
-Ee|phase1|       /home/davep/work/vet/phase-1/
+Ee|phase1|       ${vet_work_dir}phase-1/
 # Added Fri Sep  5 16:12:26 EDT 2014
-Ee|yoc2y|       /home/davep/work/vet/yoctwo/yocto/
+Ee|yoc2y|       ${yocto_work_dir}
 # Added Fri Sep  5 16:12:37 EDT 2014
-Ee|yoc2bld|       /home/davep/work/vet/yoctwo/yocto/build/
+Ee|yoc2bld|       ${yocto_work_dir}build/
 # Added Fri Sep  5 16:13:03 EDT 2014
-Ee|yoc2img|       /home/davep/work/vet/yoctwo/yocto/build/tmp/deploy/images/
+Ee|yoc2img|       ${yocto_work_dir}build/tmp/deploy/images/
+# Added Mon Sep  8 10:41:04 EDT 2014
+Ee|dpgit|       /home/davep/dpw/dpw.git/
+# Added Mon Sep  8 14:28:02 EDT 2014
+E|dl|       /home/davep/Downloads/
+# Added Mon Sep  8 14:29:41 EDT 2014
+Ee|shared|       /shared/
+# Added Mon Sep  8 14:29:58 EDT 2014
+Ee|sharedvet|shvet|       /shared/vet/
+# Added Mon Sep  8 14:30:21 EDT 2014
+Ee|vetphase1|vetp1|       /shared/vet/phase-1/
+# Added Mon Sep  8 14:31:08 EDT 2014
+Ee|sharedquasar|shquasar|       /shared/vet/isi/quasar/

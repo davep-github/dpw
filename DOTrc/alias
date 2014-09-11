@@ -73,7 +73,7 @@ case $shell_name in
 	;;
 esac
 
-[ -f $RC_DIR/alias.${HOST} ] && . $RC_DIR/alias.${HOST}
+[ -f $RC_DIR/alias.${HOSTNAME} ] && . $RC_DIR/alias.${HOSTNAME}
 alias rm='rm -i'
 alias mv='mv -i'
 alias cp='cp -i'

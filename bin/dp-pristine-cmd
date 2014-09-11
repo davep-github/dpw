@@ -1,0 +1,4 @@
+#!/bin/sh
+
+[ "$*" = "" ] && set -- dplaptop
+LC_DP_NO_DP_ENV_P=t dpxx ssh "$@"

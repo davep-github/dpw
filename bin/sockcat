@@ -1,13 +1,13 @@
 #!/usr/bin/env python
-# Time-stamp: <08/08/24 23:08:31 davep>
+# Time-stamp: <14/09/11 09:44:29 davep>
 
 import sys, os
 import socket
 
-HOST = 'localhost'                     # Symbolic name meaning the local host
+HOSTNAME = 'localhost'                 # Symbolic name meaning the local host
 PORT = 6600                             # Arbitrary non-privileged port
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((HOST, PORT))
+s.bind((HOSTNAME, PORT))
 s.listen(1)
 
 while 1:

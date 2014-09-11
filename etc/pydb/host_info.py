@@ -354,7 +354,7 @@ skaion_family = e(
     'family': 'skaion-linux',
     'family_zone': 'skaion',
     'comment': 'My linux boxen at skaion.',
-    'DTE': 'kde',
+    'DTE': 'lxde',                      # sigh.
     'main_macs_opts': '-eval (dp-main-rc+2w)',
     'xem_opts': SKAION_XEM_GEOMETRY,
     # This is OK, but O0{}[]() : no slashed 0. O & 0 are distinguishable.
@@ -373,6 +373,27 @@ skaion_family = e(
     # These are searched in the order given.
     ref=[OSDB['linux'], default]
 )
+
+e(
+    kef='host',
+    dat={
+    'host': 'dplaptop',
+    'DTE': 'lxde',                      # or none
+    'comment': 'Laptop running unadulterated ubuntu.',
+    'nick': 'vet-build',
+    'xterm_bin': 'xterm',
+    'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
+    'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
+    'xem_opts': '-eval (dp-2-v-or-h-windows) -geometry  81x69-1+0',
+    "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
+    """xem-xft-font""": '''"Inconsolata-12"''',
+    'xterm_bg': 'linen',
+    'xterm_fg': 'black',
+    'xem_bg_color': 'linen',
+
+    # NB! using the version number can cause extreme weirdness with fonts!
+    },
+    ref=famDB['skaion-linux'])
 
 #
 # FAMILY entry for o-xterm
@@ -526,7 +547,6 @@ e(
     kef='host',
     dat={
     'host': 'vilya',
-    'work-zone': 'vanu',
     'DTE': 'kde',                       # or none
     'comment': 'My main box at home.',
     'nick': 'home',

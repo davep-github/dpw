@@ -335,8 +335,8 @@ prompt_command_errno()
 prompt_command()
 {
     # Status is still set from the last command.
-    rc="$?"
-    PS1_path_suffix=$(__git_ps1)
+    local rc="$?"
+    PS1_path_suffix= # $(__git_ps1) ??? source of much slowness???
     PS1_terminator="$BASE_PS1_terminator"
     # Have 0, the most common rc, be plain and simple.
     if [ "$rc" != 0 ]; then
