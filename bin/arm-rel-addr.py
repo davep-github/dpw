@@ -67,7 +67,7 @@ def main(argv):
     src = get_op(argv[1], app_args.hex_p) / 4
     dst = get_op(argv[2], app_args.hex_p) / 4
     delta_inst = dst - src
-    print "%8s (instructions, no pipe)" % (delta_inst,)
+    print "num inst, disregarding pipelined instructions: %8x" % (delta_inst,)
 
     src += 2
     delta = (dst - src)
@@ -77,6 +77,7 @@ def main(argv):
     else:
         dir = 'forwards'
         o3 = hex(delta)
+
     print "%6s (24bit offset)" % (o3,)
 
 if __name__ == "__main__":
