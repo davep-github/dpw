@@ -5303,7 +5303,7 @@ start a new one."
         ;; Set up newest server advertisement.
         (dp-update-editor-identification-data 
          :host-name host-name
-         :sandbox-name (or (dp-current-sandbox-name) "nil")
+         :sandbox-name (or "nil" (dp-current-sandbox-name) "nil")
          :pid (emacs-pid))
         (dp-set-frame-title-format)
         (dp-creat-editing-server-ipc-file)))))

@@ -1,0 +1,84 @@
+#!/bin/bash
+
+set -u
+
+EZEC=
+: ${repo:=${HOME}/davep/dpw.git}
+: ${reporc:=${repo}/.rc}
+
+while (($# > 0 ))
+do
+    case "$1" in
+        -n) EZEC="echo - ";;
+	-x)  set -x;;
+	--) shift; break;;
+        *) break;;
+    esac
+    shift
+done
+
+ln_dotrc()
+{
+    for fuckyou in "$@"
+    do
+	${EZEC} ln -s ".rc/${fuckyou}" ".${fuckyou}"
+    done
+}
+
+repo_ln()
+{
+    for eatshit in "$@"
+    do
+        ${EZEC} ln -s "${repo}/${eatshit}" .
+    done
+}
+
+cd "${HOME}"
+${EZEC} ln -s "${repo}/DOTrc" .rc
+${EZEC} ln -s ".rc/exuberant-ctags.conf" .ctags
+
+repo_ln \
+    bin \
+    bin.exp \
+    bin.primitive \
+    yokel \
+    etc \
+    lib \
+    lisp \
+    xf86 \
+    patches
+
+ln_dotrc \
+	alias \
+	gdbinit \
+	gitconfig \
+	gitexclude \
+	go \
+	go.emacs \
+	inputrc \
+	lessrc \
+	muttrc \
+	screenrc \
+	vimrc \
+        exrc \
+	bash_logout
+
+for f in .bash_login .bashrc
+do
+	${EZEC} ln -s .rc/bashrc $f
+done
+
+${EZEC} ln -s lisp .xemacs
+${EZEC} ln -s .rc/procmailrc.vilya .procmailrc
+${EZEC} mkdir log
+${EZEC} mkdir log/{boot,kde,login-rc,xemacs,shell-sessions}
+${EZEC} mkdir -p "log/auto-rotate-c10-50K"
+${EZEC} mkdir ipc
+${EZEC} mkdir -p "droppings/editors/xemacs/xebacs.d"
+${EZEC} mkdir -p "droppings/editors/xemacs/auto-saves.d"
+${EZEC} mkdir -p "droppings/editors/xemacs/session-auto-saves.d"
+${EZEC} mkdir -p "droppings/editors/xemacs/xebacs.d"
+${EZEC} mkdir -p "droppings/editors/xemacs/tramp.d/auto-saves.d"
+${EZEC} mkdir -p "droppings/persist/bash-history"
+${EZEC} mkdir -p "droppings/persist/emacs-history"
+${EZEC} mkdir -p "droppings/persist/gdb_history"

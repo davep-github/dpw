@@ -8,6 +8,6 @@ set mouse=a
 set softtabstop=8
 set shiftwidth=8
 set noexpandtab
-colorscheme delek
-set spell spelllang=en_us
-syntax off
+colorscheme elflord
+" set spell spelllang=en_us
+" syntax off

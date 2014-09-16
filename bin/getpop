@@ -17,7 +17,8 @@ EExecVerbose
 
 : ${getmail_dot_rc:=verizon}
 
-getmail_dot_rc="$HOME/yokel/etc/getmail/${getmail_dot_rc}.rc"
+##getmail_dot_rc="$HOME/yokel/etc/getmail/${getmail_dot_rc}.rc"
+getmail_dot_rc="/yokel/yokel/etc/getmail/${getmail_dot_rc}.rc"
 
 # The LL VPN disables all other network connections, so we don't check and
 # end up w/tons of error messages.
