@@ -7573,6 +7573,7 @@ If region is active, set width to that of the longest line in the region."
                        (format "height(current: %s; default: %s): " 
                                (frame-height) dp-sfh-height )
                        'ints-only (format "%s" dp-sfh-height))))
+  ;;@todo XXX Fix this douche bag way of setting the height.
   (let ((env-height (dp-getenv-numeric "DP_XEM_FRAME_HEIGHT")))
     (set-frame-height
      (or frame (selected-frame))
@@ -8573,7 +8574,8 @@ keep the file around."
     (dp-maybe-kill-this-buffer)))
 
 (defun dp-parse-prompt-regexp (&optional ssh-prefix user-name)
-  (format "^\\(%s\\)?\\(\\(%s\\)@\\(.*\\):\\([~/].*$\\)\\)"
+  ;; I removed a $ afterhere                      V
+  (format "^\\(%s\\|\\[[^]+\\]\\)?\\(\\(%s\\)@\\(.*\\):\\([~/].*\\)\\)"
           (or ssh-prefix dp-ssh-PS1_prefix)
           (or user-name
               (user-login-name)
@@ -10117,9 +10119,9 @@ basically the union of the args to `find-file-noselect' and
 (defun dp-colorize-found-file-buffer ()
   "Set a buffer's color after the file has been loaded into it."
   (dp-remove-file-state-colorization)
-  (dp-colorize-buffer-if-remote nil t)
   ;;(dmessage-todo "Name the colors in my palette!!!")
-  (dp-colorize-buffer-if-readonly nil t))
+  (dp-colorize-buffer-if-readonly nil t)
+  (dp-colorize-buffer-if-remote nil t))
 
 (defvar dp-found-file-pre-hook nil
   "A one shot hook to call on the next found file.
@@ -11594,6 +11596,14 @@ An `undo-boundary' is done before the template is used."
   :group 'dp-vars
   :type 'string)
 
+(defcustom dp-bash-new-file-template-file 
+  (expand-file-name "~/bin/templates/bash-template.sh")
+  "A file to stuff into each new Python file created with `shit'
+or a list: \(function args).
+An `undo-boundary' is done before the template is used."
+  :group 'dp-vars
+  :type 'string)
+
 (defun __shit ()
   (interactive)
   (dp-script-it "/bin/sh" nil
@@ -11602,14 +11612,14 @@ An `undo-boundary' is done before the template is used."
 
 (defun bashit ()
   (interactive)
-  (dp-script-it "/bin/bash" nil
+  (dp-script-it "bash" 'run-with-/usr/bin/env-p
                 :template 'dp-insert-new-file-template
-                :template-args (list dp-sh-new-file-template-file)))
+                :template-args (list dp-bash-new-file-template-file)))
+
 
 (defun perlit ()
   (interactive)
-  (dp-script-it "perl" nil
-                :run-with-/usr/bin/env-p 'RUN-WITH-/USR/BIN/ENV-P))
+  (dp-script-it "perl" 'run-with-/usr/bin/env-p))
 
 ;;
 ;; #############################################################################
@@ -14507,7 +14517,14 @@ environment variables.
   (setq save-buffers-skip t))
 (dp-defaliases 'dp-sbs 'dp-save-buffer-skip)
 
-(defun dp-unmodify+ro ()
+(defun dp-set-unmodified ()
+  "Clear the file modified state."
+  (interactive)
+  (set-buffer-modified-p nil))
+
+(dp-defaliases 'dp-sun 'dpsun 'dpun 'dp-set-unmodified)
+
+(defun dp-set-unmodify+ro ()
   "Set buffer as unmodified and make read only.
 One use is to stop `save-some-buffers' from asking to save *&^#$)(*)-ing
 compressed files which emacs marks as modified when it reads and decompresses
@@ -14516,7 +14533,7 @@ them. Q.v. `unfuck-gz'"
   (set-buffer-modified-p nil)
   (toggle-read-only 1))
 
-(dp-defaliases 'unfuck-gz 'dp-unmodify+ro)
+(dp-defaliases 'unfuck-gz 'dp-set-unmodify+ro)
 
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;;

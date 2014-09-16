@@ -350,7 +350,7 @@ SKAION_LSIM_BG_COLOR = 'linen'
 skaion_family = e(
     kef='family',
     dat={
-    'host-pattern': '.*',
+    'host-default-pattern': '.*',
     'family': 'skaion-linux',
     'family_zone': 'skaion',
     'comment': 'My linux boxen at skaion.',
@@ -377,7 +377,7 @@ skaion_family = e(
 e(
     kef='host',
     dat={
-    'host': 'dplaptop',
+    'host-pattern': 'dplaptop|bld',
     'DTE': 'lxde',                      # or none
     'comment': 'Laptop running unadulterated ubuntu.',
     'nick': 'vet-build',

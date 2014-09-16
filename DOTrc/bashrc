@@ -11,20 +11,13 @@
 #echo "dp_NH:-1>$dp_NH<"
 # $@ is unset when called for a new/login shell.
 #echo "@>$@<"
-#echo "DP_NO_DP_ENV>${DP_NO_DP_ENV}<"
-# if test "${1}" = "DP_NO_DP_ENV_P" -o -n "${DP_NO_DP_ENV_P}"
-# then
-#     : "${USER:=davep}"; export USER
-#     : "${LOGNAME:=davep}"; export LOGNAME
-#     : "${HOME=/home/${USER}}"; export HOME
-#     . $HOME/.rc/env.pristine
-#     return 0
-# fi
 
 #echo "LC>${LC_DP_YES_DP_ENV_P}<"
 #echo "LC_DP_NO_DP_ENV_P>$LC_DP_NO_DP_ENV_P<"
 
-dp_no_dp_env_p_file="$HOME/ipc/dp-no-dp-env-${HOSTNAME}-p"
+# defecated
+## dp_no_dp_env_p_file="$HOME/ipc/dp-no-dp-env-${HOSTNAME}-p"
+dp_no_dp_env_p_file="$HOME/ipc/dp-no-dp-env-p_${HOSTNAME}"
 #ls -l "${dp_no_dp_env_p_file}"
 
 if [ -z "${LC_DP_YES_DP_ENV_P}" ]
@@ -257,7 +250,7 @@ do
 	break
     }
 done)
-echo
+
 export HOST=${HOSTNAME-$(/bin/hostname | $CUTBIN -f1 -d.)} # short host name
 export DOMAIN=$(/bin/hostname --fqdn | $CUTBIN -f2- -d.)
 
@@ -278,7 +271,8 @@ DAVEP_BIN_DIRS="$(eval echo $HOME/{$DAVEP_BIN_VARIANTS} \
     $HOME/{local,yokel}/{$DAVEP_BIN_VARIANTS})
     $HOME/lib/pylib \
     $HOME/bree/bin \
-    $HOME/bree/sbin"
+    $HOME/bree/sbin \
+    $HOME/bin.primitive"
 
 # Push some important stuff onto the path.  It can be useful to add locale
 # specific dirs early with no "harm" because PATH is filtered such that

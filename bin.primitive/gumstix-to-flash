@@ -1,0 +1,91 @@
+#!/bin/bash
+
+: ${SRC:=$HOME/inb}
+: ${MOUNT_POINT:="/mnt/vet-sd-card"}
+: ${DEV:=/dev/vet-sd-card}
+: ${EZEC=}
+
+: ${umount_p=t}
+: ${tar_verbose_option=v}
+
+cd "${SRC}"
+
+while (($# > 0))
+do
+  case "$1" in
+      -n) EZEC="echo -";;
+      --) shift; break;;
+      -u) umount_p=;;
+      --tar-quiet|--tar-hush|--tq) tar_verbose_option=;;
+      *) break;;
+  esac
+  shift
+done
+
+FILES=(
+    "MLO"
+    "u-boot.img"
+    "uImage"
+    "gumstix-console-image-vet-overo.ubi"
+)
+
+TAR_BALL="gumstix-console-image-vet-overo.tar.bz2"
+ALL_FILES=("${FILES[@]}" "${TAR_BALL}")
+
+exit_p=
+for f in "${ALL_FILES[@]}"
+do
+  [ -e "${f}" ] || {
+      echo "${f} does not exist."
+      exit_p=t
+  }
+done 1>&2
+
+[ "${exit_p}" = t ] && {
+    echo "Some files were not found, nothing copied."
+    exit 1
+}
+
+mount | fgrep -q '/mnt/vet-sd-cart' >/dev/null 2>&1 || {
+    echo "SD card is not mounted. Setting it up"
+    # -p prevents barfage if dirs exist.
+    ${EZEC} sudo mkdir -p "${MOUNT_POINT}"/{boot,rootfs} || {
+        echo "mkdir of mount points failed."
+        exit 2
+    }
+    mp="${MOUNT_POINT}"/boot
+    ${EZEC} sudo mount "${mp}" || {
+        RC=$?
+        echo "mount ${mp} failed: $?"
+        exit $RC
+    }
+    mp="${MOUNT_POINT}/rootfs"
+    ${EZEC} sudo mount "${mp}" || {
+        RC=$?
+        echo "mount ${mp} failed: $?"
+        exit $RC
+    }
+} 1>&2
+
+${EZEC} sudo cp MLO "${MOUNT_POINT}"/boot/MLO
+${EZEC} sudo cp u-boot.img "${MOUNT_POINT}"/boot/u-boot.img
+${EZEC} sudo cp uImage "${MOUNT_POINT}"/boot/uImage
+${EZEC} sudo tar -xj${tar_verbose_option}f \
+             gumstix-console-image-vet-overo.tar.bz2 -C "${MOUNT_POINT}"/rootfs
+${EZEC} sudo cp "${FILES}" "${MOUNT_POINT}"/rootfs/home/root
+
+[ "${umount_p}" = 't' ] && {
+    mp="${MOUNT_POINT}"/boot
+    ${EZEC} sudo umount "${mp}" || {
+        RC=$?
+        echo "umount ${mp} failed: $?"
+        exit $RC
+    }
+    mp="${MOUNT_POINT}/rootfs"
+    ${EZEC} sudo umount "${mp}" || {
+        RC=$?
+        echo "umount ${mp} failed: $?"
+        exit $RC
+    }
+} 1>&2
+

@@ -40,18 +40,19 @@ char *MemMapAddr = NULL;
 */
 Usage()
 {
-  fprintf(stderr, "Usage: [-G n] [-g n] [-hbrtanv] [-s seed] file [offset] [string...]\n");
+  fprintf(stderr, "Usage: [-G n] [-g n] [-hbrtanvf] [-s seed] file [offset] [src...]\n");
   fprintf(stderr, "Writes to offset in a file.\n"
-   "Each string in [string...] is written with a separate write() call.\n"
+   "Each src in [src...] is written with a separate write() call.\n"
    "Options:\n");
-  fprintf(stderr, "\tG n\t- gen n random integers at offset.\n");
-  fprintf(stderr, "\tg n\t- gen n random bytes at offset.\n");
-  fprintf(stderr, "\th\t- interpret each string... as hex bytes.\n");
-  fprintf(stderr, "\tb\t- interpret each string... as a byte w/C number conventions.\n");
-  fprintf(stderr, "\tr\t- generate random sequences.\n");
-  fprintf(stderr, "\tt\t- truncate file.\n");
-  fprintf(stderr, "\ta\t- append strings... Do not use offset.\n");
-  fprintf(stderr, "\tn\t- open file w/ O_NDELAY flag\n");
+  fprintf(stderr, "\t-G n\t- gen n random integers at offset.\n");
+  fprintf(stderr, "\t-g n\t- gen n random bytes at offset.\n");
+  fprintf(stderr, "\t-h\t- interpret each src... as a string of hex bytes.\n");
+  fprintf(stderr, "\t-b\t- interpret each src... as a byte w/C number conventions.\n");
+  fprintf(stderr, "\t-b\t- interpret each src... as a file with previously set characteristics.\n");
+  fprintf(stderr, "\t-r\t- generate random sequences.\n");
+  fprintf(stderr, "\t-t\t- truncate file.\n");
+  fprintf(stderr, "\t-a\t- append strings... Do not use offset.\n");
+  fprintf(stderr, "\t-n\t- open file w/ O_NDELAY flag\n");
   fprintf(stderr, "\n");
   
   exit (1);
@@ -71,22 +72,21 @@ void GenInts(int fd, unsigned long num, unsigned long offset)
   unsigned long numBytes;
   
   numBytes = num * sizeof (int);
-  
-  if ((buf = (int *)malloc(numBytes)) == NULL)
-  {
+
+  if ((buf = (int *)malloc(numBytes)) == NULL) {
     fprintf(stderr, "Cannot malloc(%lu)\n", num);
     exit(1);
   }
-  
-  if (Random)
-    for (i = 0; i < num; i++)
-      buf[i] = rand() * rand();
-  else
-    for (i = 0; i < num; i++)
-      buf[i] = i + offset;
-  
-  if (write(fd, buf, numBytes) != numBytes)
-  {
+
+  if (Random) {
+      for (i = 0; i < num; i++)
+          buf[i] = rand() * rand();
+  } else {
+      for (i = 0; i < num; i++)
+          buf[i] = i + offset;
+  }
+
+  if (write(fd, buf, numBytes) != numBytes) {
     perror("GenInts() write failed");
     exit(1);
   }
@@ -110,12 +110,11 @@ Write(
   size_t   num)
 {
 #if defined(ENV_OS_AIX)
-  if (MemMapWrite)
-  {
+  if (MemMapWrite) {
     off_t off;
-    
+
     off = lseek(fd, 0, SEEK_CUR);
-    
+
     memcpy(MemMapAddr + off, buf, num);
     return (num);
   }
@@ -141,13 +140,11 @@ void  WriteBytes(
   unsigned char  byt;
   char *p;
   
-  while (optind < argc)
-  {
+  while (optind < argc) {
     byt = strtoul(argv[optind++], &p, Base);
     if (Verbose)
       printf("%02x ", byt);
-    if (Write(fd, &byt, 1) != strlen(argv[optind]))
-    {
+    if (Write(fd, &byt, 1) != strlen(argv[optind])) {
       perror("Write error");
       exit(1);
     }
@@ -178,17 +175,15 @@ void GenBytes(int fd, unsigned long num, unsigned long offset)
       buf[i] = rand();
       if (Verbose)
 	printf("%02x ", buf[i]);
-    }
-  else
-    for (i = 0; i < num; i++)
-    {
-      buf[i] = i + offset;
-      if (Verbose)
-	printf("%02x ", buf[i]);
-    }
+    } else {
+      for (i = 0; i < num; i++) {
+          buf[i] = i + offset;
+          if (Verbose)
+              printf("%02x ", buf[i]);
+      }
+  }
   
-  if (Write(fd, buf, num) != num)
-  {
+  if (Write(fd, buf, num) != num) {
     perror("GenBytes() Write failed");
     exit(1);
   }
@@ -294,16 +289,14 @@ main(int argc, char *argv[])
   
   if ((fd = open(argv[optind++], openFlags,
 		 S_IRUSR | S_IWUSR | S_IRGRP |
-		 S_IWGRP | S_IROTH | S_IWOTH)) == -1)
-  {
+		 S_IWGRP | S_IROTH | S_IWOTH)) == -1) {
     perror("canna open file");
     exit(1);
   }
   
 #if defined(ENV_OS_AIX)
   MemMapAddr = shmat(fd, NULL, SHM_MAP);
-  if (MemMapAddr == (char *)-1)
-  {
+  if (MemMapAddr == (char *)-1) {
     perror("shmat failed");
     exit(1);
   }
@@ -320,20 +313,19 @@ main(int argc, char *argv[])
     }
   }
   
-  if (bytesToGen)
-    GenBytes(fd, bytesToGen, offset);
-  
-  if (intsToGen)
-    GenInts(fd, intsToGen, offset);
-  
-  if (writeBytes)
-    WriteBytes(argc, argv, optind, fd);
-  else
-  {
-    for (i = optind; i < argc; i++)
-    {
-      if (Write(fd, argv[i], strlen(argv[i])) != strlen(argv[i]))
-      {
+  if (bytesToGen) {
+      GenBytes(fd, bytesToGen, offset);
+  }
+
+  if (intsToGen) {
+      GenInts(fd, intsToGen, offset);
+  }
+
+  if (writeBytes) {
+      WriteBytes(argc, argv, optind, fd);
+  } else {
+    for (i = optind; i < argc; i++) {
+      if (Write(fd, argv[i], strlen(argv[i])) != strlen(argv[i])) {
 	perror("Write error");
 	exit(1);
       }

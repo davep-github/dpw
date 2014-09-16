@@ -96,7 +96,8 @@ def match_family_by_host(host):
         famDB = node_name.get_item('db')
         # check for exact matches first.
         for (field_name, cmp_fun) in (("host", strcmp),
-                                      ("host-pattern", re.search)):
+                                      ("host-pattern", re.search),
+                                      ("host-default-pattern", re.search)):
             families = famDB.grep_fields(field_name)
             for fam in families:
                 field_value = fam.get_item(field_name)

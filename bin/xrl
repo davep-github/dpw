@@ -1,20 +1,64 @@
 #!/usr/bin/env bash
-
 source script-x
 set -u
 progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+trap_exit_msg=
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+}
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+    trap '' 0
+}
+
+#
+# template ends.
+########################################################################
 
 
 just_show=
 for i in $*
 do
-  [ "$i" = "-n" ] && {
+  # Apply -N to next arg only. Multiple -Ns may be specified.
+  [ "$i" = "-N" ] && {
       just_show=-N
       continue
   }
 
   host=$(expand-hostname $i)
+  EExec_verbose_echo_id host
   full_host=$(full-hostname $host) # || dpFATAL 1 "getting full-hostname for >$host< failed"
+  EExec_verbose_echo_id full_host
   hname=${full_host:-$host}
   shost=$(echo $hname | cut -d. -f1)
   title_base=$(rx_name rlogin $hname)
@@ -23,9 +67,8 @@ do
   xrl_xterm_bin=${XRL_XTERM_BIN:-$($HOST_INFO -n 'xterm' xrl_xterm_bin)}
   font=${XRL_XTERM_FONT:-$($HOST_INFO -n "${DEFONT-}" xrl_xterm_font)}
   [ -z "$font" ] && font=9x15
-  #echo "dpxx -N -h $host -n $title_base $rsh_bin $host"
-  #echo "FONT>$font<"
-  dpxx $just_show -h $host -n $title_base -f $font \
-	-- $rsh_bin $host
+
+  EExec dpxx $just_show -h $host -n $title_base -f $font \
+        -- $rsh_bin $host
   just_show=
 done

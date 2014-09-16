@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec sudo screen /dev/ttyUSB0 115200

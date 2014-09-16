@@ -56,3 +56,6 @@ done
 # only if non optional args required
 #[ "$@" = "" ] && Usage
 
+#
+# End of template.
+########################################################################
