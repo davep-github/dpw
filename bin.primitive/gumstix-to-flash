@@ -3,10 +3,14 @@
 : ${SRC:=$HOME/inb}
 : ${MOUNT_POINT:="/mnt/vet-sd-card"}
 : ${DEV:=/dev/vet-sd-card}
+DEV="/dev/$(readlink ${DEV})"
+echo "DEV>$DEV<"
+
 : ${EZEC=}
 
 : ${umount_p=t}
 : ${tar_verbose_option=v}
+: ${prep_t=t}
 
 cd "${SRC}"
 
@@ -17,6 +21,8 @@ do
       --) shift; break;;
       -u) umount_p=;;
       --tar-quiet|--tar-hush|--tq) tar_verbose_option=;;
+      --mk2partsd|--prep|--partition) prop_p=t;;
+      --dev) shift; DEV="${1}";;
       *) break;;
   esac
   shift
@@ -46,7 +52,9 @@ done 1>&2
     exit 1
 }
 
-mount | fgrep -q '/mnt/vet-sd-cart' >/dev/null 2>&1 || {
+${EZEC} mk2partsd "${DEV}"
+
+mount | fgrep -q "${MOUNT_POINT}" >/dev/null 2>&1 || {
     echo "SD card is not mounted. Setting it up"
     # -p prevents barfage if dirs exist.
     ${EZEC} sudo mkdir -p "${MOUNT_POINT}"/{boot,rootfs} || {

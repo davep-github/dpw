@@ -7,7 +7,7 @@
 # http://processors.wiki.ti.com/index.php/How_to_Make_3_Partition_SD_Card
 #
 # example usage: $ sudo mk2partsd /dev/sdb
-
+set -x
 (($# < 1)) && {
         echo "A device name is needed."
         exit 1
@@ -15,27 +15,27 @@
 
 DRIVE=$1
 
-dd if=/dev/zero of=$DRIVE bs=1024 count=1024
+sudo dd if=/dev/zero of=$DRIVE bs=1024 count=1024
 
-SIZE=`fdisk -l $DRIVE | grep Disk | awk '{print $5}'`
+SIZE=$(sudo fdisk -l $DRIVE | grep "Disk.*bytes" | head -n1 | awk '{print $5}')
 
 echo DISK SIZE - $SIZE bytes
 
 CYLINDERS=`echo $SIZE/255/63/512 | bc`
 
-sfdisk --force -D -uS -H 255 -S 63 -C $CYLINDERS $DRIVE << EOF
+sudo sfdisk --force -D -uS -H 255 -S 63 -C $CYLINDERS $DRIVE << EOF
 128,130944,0x0C,*
 131072,,,-
 EOF
 
 if [ -b ${1}1 ]; then
-	mkfs.vfat -F 32 -n "boot" ${DRIVE}1 
-else 
-	mkfs.vfat -F 32 -n "boot" ${DRIVE}p1
+	sudo mkfs.vfat -F 32 -n "boot" ${DRIVE}1 || exit 1
+else
+	sudo mkfs.vfat -F 32 -n "boot" ${DRIVE}p1 || exit 2
 fi
 
 if [ -b ${1}2 ]; then
-	mkfs.ext3 -L "rootfs" ${DRIVE}2
-else 
-	mkfs.ext3 -L "rootfs" ${DRIVE}p2
+	sudo mkfs.ext3 -L "rootfs" ${DRIVE}2 || exit 3
+else
+	sudo mkfs.ext3 -L "rootfs" ${DRIVE}p2 || exit 4
 fi
