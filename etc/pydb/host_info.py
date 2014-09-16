@@ -42,6 +42,7 @@ import os
 
 HOME = os.environ["HOME"]
 BREE = os.environ.get("BREE", os.path.join(HOME, "bree"))
+BREE_BIN = os.path.join(BREE, "bin")
 YOKEL = os.path.join(HOME, "yokel")
 YOKEL_BIN = os.path.join(YOKEL, "bin")
 HOME_LOCAL = os.path.join(HOME, "local")
@@ -550,6 +551,7 @@ e(
     # Font menu is fucked, but this works:
     # (set-default-font "Inconsolata-12")
     """xem-xft-font""": '''"Inconsolata-12"''',
+    'xem_bin': os.path.join(BREE_BIN, "xemacs"),
 
     # NB! using the version number can cause extreme weirdness with fonts!
     'tunnel-ip': '16.11.64.97',

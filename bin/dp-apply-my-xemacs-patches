@@ -3,6 +3,24 @@
 source script-x
 progname="$(basename $0)"
 source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
 
 : ${XEM_ORIGINALS_DIR:=../dp-patches-Originals}
 
@@ -66,10 +84,15 @@ patch_em()
 {
   local originals_dir="$1"
   shift
+  local patch_p=
   # With at least one bash, using local breaks the array usage.
   patch_files=("$@")
   for patch_file in "${patch_files[@]}"; do
     echo_id patch_file
+    ls $patch_file 2>/dev/null || {
+	echo "No matching patch files."
+	continue
+    } 1>&2
     patch_file_base=$(basename $patch_file)
     fname=$(head -n2 $patch_file | tail -n1 | sed -rn 's/(\+\+\+ )([^ \t]+)(.*)$/\2/p')
     [ -z "$fname" ] && {
@@ -92,12 +115,14 @@ patch_em()
       fi
       read -e -p "Assume we're already patched and continue(Y/n/q)? "
       case "$REPLY" in
-        [nNqQ]) exit 2;;
+        [qQ]) exit 2;;
+        [nN]) patch_p=t;;
+        *) patch_p=;;
       esac
     } 1>&2
 
-    [ -e "$orig_file_name" ] || {
-      EExec cp $fname $orig_file_name
+    [ ! -e "$orig_file_name" -o -n "${patch_p}" ] && {
+      EExec cp -f $fname $orig_file_name
       yes n | EExec patch < $patch_file
       # Just in case the patch is now a few lines off.  Files names will be
       # different, so some code will be needed to diff the diffs w/o
