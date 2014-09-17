@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -u
+progname="$(basename $0)"
+
+hex_prefix="0x"
+leading_zeroes="0"
+width=8
+
+while (($# > 0))
+do
+  case "$1" in
+      --0x|-x) hex_prefix="0x";;
+      --0X|-X) hex_prefix="0X";;
+      --no-0x|--nox) hex_prefix="";;
+      -z|--zeroes) leading_zeroes="0";;
+      --nz|--no-zeroes|--no0|--no-0) leading_zeroes=; width='';;
+      -8|--long|--32) leading_zeroes="0"; width=8;;
+      -w|--width) shift; width="${1}";;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
+
+for n in "$@"
+do
+  printf "${hex_prefix}%${leading_zeroes}${width}x\n" "${n}"
+done

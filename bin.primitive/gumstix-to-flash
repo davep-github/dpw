@@ -2,6 +2,8 @@
 
 : ${SRC:=$HOME/inb}
 : ${MOUNT_POINT:="/mnt/vet-sd-card"}
+: ${MOUNT_POINT_BOOT:="/mnt/vet-sd-card/boot"}
+: ${MOUNT_POINT_ROOTFS:="/mnt/vet-sd-card/rootfs"}
 : ${DEV:=/dev/vet-sd-card}
 DEV="/dev/$(readlink ${DEV})"
 echo "DEV>$DEV<"
@@ -14,6 +16,12 @@ echo "DEV>$DEV<"
 
 cd "${SRC}"
 
+mount | egrep "${MOUNT_POINT_BOOT}|${MOUNT_POINT_ROOTFS}" && {
+    echo "Some gumstix partitions are mounted."
+    echo "It's probably best for you to unmount them."
+    exit 1
+} 1>&2
+
 while (($# > 0))
 do
   case "$1" in
@@ -21,7 +29,8 @@ do
       --) shift; break;;
       -u) umount_p=;;
       --tar-quiet|--tar-hush|--tq) tar_verbose_option=;;
-      --mk2partsd|--prep|--partition) prop_p=t;;
+      --mk2partsd|--prep|--partition) prep_p=t;;
+      --no-mk2partsd|--no-prep|--no-partition) prep_p=;;
       --dev) shift; DEV="${1}";;
       *) break;;
   esac
@@ -52,7 +61,12 @@ done 1>&2
     exit 1
 }
 
-${EZEC} mk2partsd "${DEV}"
+if [ -z "${prep_p}" ]
+then
+    ${EZEC} mk2partsd "${DEV}"
+else
+    echo "** Not partitioning/formatting dev>${DEV}<"
+fi
 
 mount | fgrep -q "${MOUNT_POINT}" >/dev/null 2>&1 || {
     echo "SD card is not mounted. Setting it up"
@@ -61,13 +75,13 @@ mount | fgrep -q "${MOUNT_POINT}" >/dev/null 2>&1 || {
         echo "mkdir of mount points failed."
         exit 2
     }
-    mp="${MOUNT_POINT}"/boot
+    mp="${MOUNT_POINT_BOOT}"
     ${EZEC} sudo mount "${mp}" || {
         RC=$?
         echo "mount ${mp} failed: $?"
         exit $RC
     }
-    mp="${MOUNT_POINT}/rootfs"
+    mp="${MOUNT_POINT_ROOTFS}"
     ${EZEC} sudo mount "${mp}" || {
         RC=$?
         echo "mount ${mp} failed: $?"

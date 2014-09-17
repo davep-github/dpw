@@ -1,3 +1,19 @@
 #!/bin/bash
 
-exec sudo screen /dev/ttyUSB0 115200
+set -u
+
+: ${tty:=/dev/gumstix}
+: ${baud:=115200}
+
+while (($# > 0))
+do
+  case "${1}" in
+      --tty) shift; tty-"${1}";;
+      --baud) shift; baud="${1}";;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
+
+exec sudo screen "${tty}" "${baud}"
