@@ -1,0 +1,4 @@
+#!/bin/bash
+
+set -u
+screen -t "${1}" -S "${1}"
