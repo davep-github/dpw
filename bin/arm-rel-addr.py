@@ -17,7 +17,11 @@ import dp_io
 
 def get_op(a, hex_p=True):
     if hex_p:
-        a = "0x" + a
+        print "a>%s<" % (a,)
+        prefix = a[0:2]
+        print "prefix>%s<" % (prefix,)
+        if prefix not in ("0x", "0X"):
+            a = "0x" + a
     a = eval(a)
     return a
 
@@ -41,6 +45,11 @@ def main(argv):
                          default=False,
                          action="store_true",
                          help="Do not print informative messages.")
+    oparser.add_argument("-b", "--make-branch",
+                         dest="make_branch_p",
+                         default=False,
+                         action="store_true",
+                         help="Add the branch op code.")
     oparser.add_argument("--dec",
                          dest="hex_p",
                          default=True,
@@ -54,7 +63,7 @@ def main(argv):
     # ...
 
     # For non-option args
-    oparser.add_argument("addrs", nargs="*")
+    oparser.add_argument("addr", nargs=2)
 
     app_args = oparser.parse_args()
     if app_args.quiet_p:
@@ -64,21 +73,37 @@ def main(argv):
     if app_args.verbose_level > 0:
         dp_io.set_verbose_level(app_args.verbose_level, enable=True)
 
-    src = get_op(argv[1], app_args.hex_p) / 4
-    dst = get_op(argv[2], app_args.hex_p) / 4
+#    for i in range(len(app_args.addrs)):
+#        print "argv[{}]>{}<".format(i, app_args.addrs[i])
+#    sys.exit(99)
+
+    addrs = app_args.addr
+    src = get_op(addrs[0], app_args.hex_p) / 4
+    dst = get_op(addrs[1], app_args.hex_p) / 4
     delta_inst = dst - src
-    print "num inst, disregarding pipelined instructions: %8x" % (delta_inst,)
+    abs_delt = abs(delta_inst)
+    if delta_inst < 0:
+        sign = '-'
+    else:
+        sign = ''
+    print "num inst, sans pipe: %s0x%08x (%d)" % (sign, abs_delt, delta_inst)
 
     src += 2
     delta = (dst - src)
     if delta < 0:
         dir = 'backwards'
-        o3 = hex((delta) + 2**32)
+        delta = delta + 2**32
     else:
         dir = 'forwards'
-        o3 = hex(delta)
+        # delta = delta
+    delta = delta & 0x00ffffff
+    o3 = hex(delta)
 
-    print "%6s (24bit offset)" % (o3,)
+    print "0x%08x (low 24 bits)" % (delta,)
+    if app_args.make_branch_p:
+        inst = 0xea000000 + delta
+        print "branch: 0x%08x" % (inst,)
+
 
 if __name__ == "__main__":
     main(sys.argv)

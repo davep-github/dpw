@@ -53,7 +53,8 @@ else
           then
           name=$(basename $rc_file)
           rc_files=$(files-here-and-up "$name" $RC_START_DIR $RC_STOP_DIR) || {
-              echo 1>&2 "$progname: Error finding ancestral list of rc files."
+              echo 1>&2 "$progname: Error finding ancestral list of rc files:
+$RC_START_DIR $RC_STOP_DIR"
               exit 1
           }
           for rcf in $rc_files

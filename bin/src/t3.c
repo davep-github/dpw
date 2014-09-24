@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <getopt.h>
 #if defined(ENV_OS_AIX)
 #include <sys/mode.h>
 #endif
@@ -22,6 +23,7 @@ typedef unsigned short  u_short;
 int Base = 0;
 int Random = 0;
 int Verbose = 0;
+int Debug = 0;
 
 #if defined(ENV_OS_AIX)
 #include <sys/types.h>
@@ -41,7 +43,7 @@ char *MemMapAddr = NULL;
 */
 void Usage(void)
 {
-    fprintf(stderr, "Usage: [-G n] [-g n] [-hbrtanvf] [-s seed] file [offset] [src...]\n");
+    fprintf(stderr, "Usage: [-G n] [-g n] [-hbrtanvfd] [-s seed] file [offset] [src...]\n");
     fprintf(stderr, "Writes to offset in a file.\n"
             "Each src in [src...] is written with a separate write() call.\n"
             "Options:\n");
@@ -51,9 +53,11 @@ void Usage(void)
     fprintf(stderr, "\t-b\t- interpret each src... as a byte w/C number conventions.\n");
     fprintf(stderr, "\t-f\t- interpret each src... as a file with previously set characteristics.\n");
     fprintf(stderr, "\t-r\t- generate random sequences.\n");
-    fprintf(stderr, "\t-t\t- truncate file.\n");
+    fprintf(stderr, "\t-t\t- O_TRUNC file.\n");
     fprintf(stderr, "\t-a\t- append strings... Do not use offset.\n");
     fprintf(stderr, "\t-n\t- open file w/ O_NDELAY flag\n");
+    fprintf(stderr, "\t-v\t- Add verbosity\n");
+    fprintf(stderr, "\t-d\t- Add debugging\n");
     fprintf(stderr, "\n");
 
     exit (1);
@@ -170,13 +174,14 @@ void GenBytes(int fd, unsigned long num, unsigned long offset)
         exit(1);
     }
 
-    if (Random)
+    if (Random) {
         for (i = 0; i < num; i++)
         {
             buf[i] = rand();
             if (Verbose)
                 printf("%02x ", buf[i]);
-        } else {
+        }
+    } else {
         for (i = 0; i < num; i++) {
             buf[i] = i + offset;
             if (Verbose)
@@ -210,7 +215,9 @@ int write_file_contents(
     } else {
         infile = fopen(input_file_name, "r");
         if (infile == NULL) {
-            perror("open of @ file failed\n");
+            fprintf(stderr, "open of @ file >%s< failed: ",
+                    input_file_name);
+            perror("");
             exit(1);
         }
         close_p = 1;
@@ -232,6 +239,10 @@ int write_file_contents(
         }
     }
 
+    if (Verbose) {
+        printf("\n");
+    }
+    
     if (close_p) {
         fclose(infile);
     }
@@ -246,14 +257,16 @@ int write_file_contents(
 *
 ***********************************************************************
 */
-main(int argc, char *argv[])
+main(
+    int argc,
+    char *argv[])
 {
     int fd;
     int i;
-    unsigned long	l;
-    unsigned long	bytesToGen = 0;
-    unsigned long	intsToGen = 0;
-    long offset;
+    unsigned long l;
+    unsigned long bytesToGen = 0;
+    unsigned long intsToGen = 0;
+    long offset = 0;
     char *p;
     int option;
     int writeBytes = 0;
@@ -269,7 +282,14 @@ main(int argc, char *argv[])
 
     opterr = 1;
 
-    while ((option = getopt(argc, argv, "vG:g:bhrs:tano:m")) != EOF)
+    if (getenv("T3_DEBUG")) {
+        int j;
+        for (j = 0; j < argc; ++j) {
+            printf("argv[%d]>%s<\n", j, argv[j]);
+        }
+    }
+    
+    while ((option = getopt(argc, argv, "vdG:g:bhrs:tano:m")) != EOF)
     {
         switch (option)
         {
@@ -280,7 +300,11 @@ main(int argc, char *argv[])
 #endif
 
             case 'v':
-                Verbose = 1;
+                ++Verbose;
+                break;
+
+            case 'd':
+                ++Debug;
                 break;
 
             case 'o':
@@ -356,6 +380,9 @@ main(int argc, char *argv[])
             perror("seek error");
             exit(1);
         }
+    } else {
+        fprintf(stderr, "Appending, set offset to file len.\n");
+        exit(1);
     }
 
     if (bytesToGen) {
@@ -370,7 +397,13 @@ main(int argc, char *argv[])
         WriteBytes(argc, argv, optind, fd);
     } else {
         int rc = -1;
-        for (i = optind; i < argc; i++) {
+        i = optind;
+        if (Debug) {
+            // bs gdb doesn't seem to increment this.
+            printf("4, optind: %d, i: %d, argc: %d\n", optind, i, argc);
+        }
+        
+        for (; i < argc; i++) {
             const char* argp = argv[i];
             if (argp[0] == '@') {
                 rc = write_file_contents(fd, argp + 1);

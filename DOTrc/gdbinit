@@ -877,6 +877,13 @@ end
 #  end
 # end
 
+define remqemu
+target remote compute2:3456
+end
+document remqemu
+Connect to qemu process running on compute2 (for vet/gumstix)
+end
+
 define nasm_assemble
 printf "Hit Ctrl-D to start, type code to assemble, hit Ctrl-D when done.\n"
 printf "It is recommended to start with\n"
@@ -1225,7 +1232,9 @@ end
 # __________________gdb options_________________
 ### I use GDBHISTFILE #set history filename /
 set history save
-set history expansion on
+# Expansion uses ! and that conflict w/C's !
+# As if they couldn't use another char in gdb.
+##set history expansion on
 # hist is saved but isn't reloaded.
 #printf "bite me, history.\n"
 ###set confirm off

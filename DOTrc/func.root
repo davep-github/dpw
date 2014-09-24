@@ -248,16 +248,20 @@ page_tail()
 
 page_of_history()
 {
+    local lines
     if [[ -z "$*" ]]; then
         local lines=$((${LINES:-25} - 2))
-        fc -l -$lines
+
     elif [[ "$1" =~ ^[0-9]+$ ]]
     then
-        fc -l -$1
+        lines="$1"
+
     else
         # What is this?
         fc "$@"
+        return 1
     fi
+    fc -l -$lines
 }
 export -f page_of_history
 typeset -f -x page_of_history

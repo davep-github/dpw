@@ -1,7 +1,7 @@
 export YOCTO_DIR=$(pwd)
 TEMPLATECONF=meta-vet/conf source $YOCTO_DIR/poky/oe-init-build-env
 PS1="[bb]$PS1"
-POKY_TOOLS_DIR="/local/work/vet/yocto/build/tmp/sysroots/x86_64-linux/usr/bin/armv7a-vfp-neon-poky-linux-gnueabi"
+POKY_TOOLS_DIR="/local/work/vet/yocto/build/tmp/sysroots/x86_64-linux/usr/bin/armv7a-poky-linux-gnueabi"
 PATH="${POKY_TOOLS_DIR}:${PATH}"
 alias bb_all='bitbake -v gumstix-console-image-vet'
 alias bb_compile='bitbake -v -f -c compile linux-gumstix'

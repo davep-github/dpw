@@ -18,7 +18,7 @@ def flip_list(numbers, sep = "", num_per_line = 4):
     num_on_this_line = 0
     for num in numbers:
         #print "num>%s<, type: %s" % (num, type(num))
-        prefix = num[0:1]
+        prefix = num[0:2]
         if prefix not in ("0x", "0X"):
             num = "0x" + num
         n = eval(num)

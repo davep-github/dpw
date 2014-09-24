@@ -2336,6 +2336,13 @@ changed."
 (defun dp-bookmark-bmenu-mode-hook ()
   (local-set-key [return] 'bookmark-bmenu-other-window))
 
+(defun dp-asm-mode-hook()
+  (interactive)
+  (setq comment-start "@"
+        comment-end ""
+        block-comment-start "/*"
+        block-comment-end "*/"))
+
 (add-hook 'bookmark-bmenu-mode-hook 'dp-bookmark-bmenu-mode-hook)
 
 ;; I'm trending away from advice, since I've seen code that really rapes it
@@ -2383,7 +2390,7 @@ changed."
 (add-hook 'Info-mode-hook 'dp-Info-mode-hook)
 (add-hook 'Manual-mode-hook 'dp-manual-mode-hook)
 (add-hook 'sh-mode-hook 'dp-sh-mode-hook)
-
+(add-hook 'asm-mode-hook 'dp-asm-mode-hook)
 ;; <:add-new-`add-hooks'-up-there:>
 ;; put new hooks up there ^
 

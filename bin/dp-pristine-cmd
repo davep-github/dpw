@@ -1,4 +1,6 @@
 #!/bin/sh
 
 [ "$*" = "" ] && set -- dplaptop
-LC_DP_NO_DP_ENV_P=t dpxx ssh "$@"
+export LC_DP_YES_DP_ENV_P= 
+export LC_DP_NO_DP_ENV_P=t
+xrl "$@"

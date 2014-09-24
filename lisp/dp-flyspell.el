@@ -23,6 +23,7 @@
     cperl-mode-hook
     ruby-mode-hook
     makefile-mode-hook
+    asm-mode-hook
     )
   "List of hooks to add `flyspell-prog-mode' to.
 Flyspell programming mode only checks spelling in strings and comments."

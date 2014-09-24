@@ -43,13 +43,14 @@ on_error()
 
 git_hist_diff_file()
 {
+
     local commit="$1"
     local file="$2"
     if vsetp "${diff_tool}"
     then
-        EExec git difftool --tool="${difftool}" $REPLY -- "$file"
+        EExec git difftool --tool="${difftool}" $commit -- "$file"
     else
-        EExec git diff $REPLY -- "$file"
+        EExec git diff $commit -- "$file"
     fi
 }
 
@@ -68,5 +69,5 @@ do
   echo "=============================================================================
 ======================= file: $2
 ======================= commit: $1"
-  EExec git_hist_diff_file ${REPLY}
+  EExec -y git_hist_diff_file ${REPLY}
 done

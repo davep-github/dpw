@@ -378,7 +378,7 @@ skaion_family = e(
 e(
     kef='host',
     dat={
-    'host-pattern': 'dplaptop|bld',
+    'host-pattern': 'dplaptop|bld|shodanbld',
     'DTE': 'lxde',                      # or none
     'comment': 'Laptop running unadulterated ubuntu.',
     'nick': 'vet-build',
@@ -390,6 +390,27 @@ e(
     """xem-xft-font""": '''"Inconsolata-12"''',
     'xterm_bg': 'linen',
     'xterm_fg': 'black',
+    'xem_bg_color': 'linen',
+
+    # NB! using the version number can cause extreme weirdness with fonts!
+    },
+    ref=famDB['skaion-linux'])
+
+e(
+    kef='host',
+    dat={
+    'host-pattern': 'compute2',
+    'DTE': 'lxde',                      # or none
+    'comment': 'Node with working qemu for overo linux.',
+    'nick': 'qemu',
+    'xterm_bin': 'xterm',
+    'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
+    'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
+    'xem_opts': '-eval (dp-2-v-or-h-windows) -geometry  81x69-1+0',
+    "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
+    """xem-xft-font""": '''"Inconsolata-12"''',
+    'xterm_bg': 'grey20',
+    'xterm_fg': 'lightgrey',
     'xem_bg_color': 'linen',
 
     # NB! using the version number can cause extreme weirdness with fonts!

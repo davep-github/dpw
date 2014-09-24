@@ -693,11 +693,11 @@ do_src_control ()
 }
 export -f do_src_control
 
-cvs()
-{
-    do_src_control cvs $(sp cvs | head -n1) "$@"
-}
-export -f cvs
+#just plain stupid cvs()
+#just plain stupid {
+#just plain stupid     do_src_control cvs $(sp cvs | head -n1) "$@"
+#just plain stupid }
+#just plain stupid export -f cvs
 
 # For some reason, when running scripts via cron, variables exported in
 # .bashrc are not set and so this isn't set which causes an error. Cron is
