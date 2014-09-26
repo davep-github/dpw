@@ -72,6 +72,11 @@ ${EZEC} ln -s lisp .xemacs
 ${EZEC} ln -s .rc/procmailrc.vilya .procmailrc
 ${EZEC} mkdir log
 ${EZEC} mkdir log/{boot,kde,login-rc,xemacs,shell-sessions}
+${EZEC} mkdir log/auto-rotate-c5-50K
+(
+	cd log
+	${EZEC} ln -s auto-rotate-c5-50K procmail
+)
 ${EZEC} mkdir -p "log/auto-rotate-c10-50K"
 ${EZEC} mkdir ipc
 ${EZEC} mkdir -p "droppings/editors/xemacs/xebacs.d"
