@@ -3,8 +3,13 @@
 set -u
 
 EZEC=
-: ${repo:=${HOME}/davep/dpw.git}
+: ${repo:=dpw/dpw.git}
 : ${reporc:=${repo}/.rc}
+
+cd "${HOME}" || {
+    echo "Cannot cd to home>${HOME}<"
+    exit 1
+} 1>&2
 
 while (($# > 0 ))
 do

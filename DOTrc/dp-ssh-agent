@@ -3,7 +3,7 @@
 #source script-x
 
 # These were clobbering each other across hosts.
-SSH_AGENT_RC="$HOSTNAME/.ssh/acmds.$HOSTNAME"
+SSH_AGENT_RC="$HOME/.ssh/acmds.$HOSTNAME"
 SSH_AGENT_RC_STDERR="${SSH_AGENT_RC}.stderr"
 export SSH_AGENT_RC_umask=0077
 export SSH_AGENT_RC_STDERR_umask=${SSH_AGENT_RC_umask}

@@ -1,0 +1,16 @@
+#!/bin/bash
+source script-x
+source eexec
+set -u
+: ${dump_dir=$PWD}
+: ${dump_fses='/ /mathoms /yokel'}
+
+[ "${1-}"  = '-n' ] && {
+    EExecDashN
+    shift
+}
+
+level=${1:-0}
+echo "$(date): dump_dir=${dump_dir} dump_fses=${dump_fses} EExec trivial-yokel-dump $level" >> std-bup.log
+set -x
+dump_dir="${dump_dir}" dump_fses="${dump_fses}" EExec trivial-yokel-dump $level

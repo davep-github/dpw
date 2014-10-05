@@ -1,0 +1,40 @@
+--- _retrieverbases.py.OEM	2014-09-15 22:04:48.192739873 -0400
++++ _retrieverbases.py	2014-09-15 22:06:23.295544269 -0400
+@@ -838,10 +838,14 @@
+         try:
+             line = data[self.envrecipname][self.envrecipnum]
+         except (KeyError, IndexError), unused:
+-            raise getmailConfigurationError(
+-                'envelope_recipient specified header missing (%s)'
+-                % self.conf['envelope_recipient']
+-            )
++            try:
++                line = data[self.envrecipname][0]
++            except (KeyError, IndexError), unused:
++                # This is a major problem with non-compliant mail.
++                # at least deliver it to *someone*
++                # ??? is there a variable for a postmaster or some other
++                # sensible recipient??? <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
++                line = "Delivered-To: getmail.postmaster@meduseld.net"
+         msg.recipient = address_no_brackets(line.strip())
+         return msg
+ 
+@@ -1442,10 +1446,14 @@
+         try:
+             line = data[self.envrecipname][self.envrecipnum]
+         except (KeyError, IndexError), unused:
+-            raise getmailConfigurationError(
+-                'envelope_recipient specified header missing (%s)'
+-                % self.conf['envelope_recipient']
+-            )
++            try:
++                line = data[self.envrecipname][0]
++            except (KeyError, IndexError), unused:
++                # This is a major problem with non-compliant mail.
++                # at least deliver it to *someone*
++                # ??? is there a variable for a postmaster or some other
++                # sensible recipient??? <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
++                line = "Delivered-To: getmail.postmaster@meduseld.net"
+         msg.recipient = address_no_brackets(line.strip())
+         return msg
+ 
