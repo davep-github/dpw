@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #source script-x
-
+#set -x
 # These were clobbering each other across hosts.
 SSH_AGENT_RC="$HOME/.ssh/acmds.$HOSTNAME"
 SSH_AGENT_RC_STDERR="${SSH_AGENT_RC}.stderr"
@@ -22,7 +22,8 @@ dp_add_default_keys()
 # Really start or connect to ssh agent
 dp_start_ssh_agent()
 {
-#    env | fgrep SSH
+    #env | fgrep SSH
+    #echo_id SSH_AGENT_RC
     # See if there's a running agent to which we are attached.
     dp_add_default_keys && return 0
 
