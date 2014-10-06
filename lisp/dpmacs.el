@@ -880,11 +880,13 @@ This can be callable.")
 ;;;
 (defun dp-setup-tramp ()
   (interactive)
-  (setq tramp-persistency-file-name (concat (dp-mk-dropping-dir 
-                                             "/tramp.d" 'no-change) 
-                                            "/cache")
+  (setq tramp-persistency-file-name (concat 
+                                     (dp-mk-dropping-dir "/tramp.d" 
+                                                         'no-change) 
+                                     "/cache")
         tramp-auto-save-directory (dp-mk-dropping-dir 
-                                   "/tramp.d/auto-saves.d" 'no-change))
+                                   "/tramp.d/auto-saves.d" 
+                                   'no-change))
   (dmessage "0:tramp-auto-save-directory>%s<" tramp-auto-save-directory)
   
   (when (dp-optionally-require 'tramp)

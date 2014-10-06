@@ -3,7 +3,7 @@
 # DESCRIPTION: A user-friendly gdb configuration file.
 #
 # REVISION : 6.1-gentoo
-#
+# 
 # CONTRIBUTORS: mammon_, elaine, pusillus, mong
 #
 # FEEDBACK: http://board.anticrack.de/viewforum.php?f=35
@@ -13,7 +13,7 @@
 #
 # CHANGELOG:
 #	Version 6.1-gentoo
-#	 made gas the default. some content censored to be *cough*
+#	 made gas the default. some content censored to be *cough* 
 #	 politically correct. -solar
 #	Version 6.1
 #        fixed filename in step_to_call so it points to /dev/null
@@ -38,13 +38,19 @@
 #	* add dump, append, set write, etc commands
 #	* more tips!
 
-
 # ______________breakpoint aliases_____________
 define bpl
  info breakpoints
 end
 document bpl
 List breakpoints
+end
+
+define ib
+ info breakpoints
+end
+document ib
+List info about breakpoints
 end
 
 define bp
@@ -161,31 +167,91 @@ document framex
 Print stack frame
 end
 
-define func
+define flags
+ if (($eflags >> 0xB) & 1 )
+  printf "O "
+ else
+  printf "o "
+ end
+ if (($eflags >> 0xA) & 1 )
+  printf "D "
+ else
+  printf "d "
+ end
+ if (($eflags >> 9) & 1 )
+  printf "I "
+ else
+  printf "i "
+ end
+ if (($eflags >> 8) & 1 )
+  printf "T "
+ else
+  printf "t "
+ end
+ if (($eflags >> 7) & 1 )
+  printf "S "
+ else
+  printf "s "
+ end
+ if (($eflags >> 6) & 1 )
+  printf "Z "
+ else
+  printf "z "
+ end
+ if (($eflags >> 4) & 1 )
+  printf "A "
+ else
+  printf "a "
+ end
+ if (($eflags >> 2) & 1 )
+  printf "P "
+ else
+  printf "p "
+ end
+ if ($eflags & 1)
+  printf "C "
+ else
+  printf "c "
+ end
+ printf "\n"
+end
+document flags
+Print flags register
+end
+
+define ireg
+# "For now"
+info reg
+end
+document ireg
+Print CPU registers
+end
+
+define ifunc
  info functions
 end
-document func
+document ifunc
 Print functions in target
 end
 
-define var
+define ivar
  info variables
 end
-document var
+document ivar
 Print variables (symbols) in target
 end
 
-define lib
+define ilib
  info sharedlibrary
 end
-document lib
+document ilib
 Print shared libraries linked to target
 end
 
-define sig
+define isig
  info signals
 end
-document sig
+document isig
 Print signal actions for target
 end
 
@@ -196,6 +262,13 @@ document threadx
 Print threads in target
 end
 
+define ithreads
+ info threads
+end
+document ithreads
+Print threads in target
+end
+
 define u
  info udot
 end
@@ -203,13 +276,31 @@ document u
 Print kernel 'user' struct for target
 end
 
-# define dis
-#  disassemble $arg0
-# end
-# document dis
-# Disassemble address
-# Usage: dis addr
-# end
+define disem
+ x/10i $pc
+end
+document disem
+Disassemble address
+Usage: disem addr
+end
+
+define dasm
+ x/10i $pc
+end
+document dasm
+Disassemble address
+Usage: disem addr
+end
+
+define dsm
+ dsm $arg0
+end
+document dsm
+Disassemble address
+Usage: dsm addr
+end
+
+
 
 # ________________hex/ascii dump an address______________
 define ascii_char
@@ -259,6 +350,7 @@ define hexdump
  ascii_char ((char*)$arg0+0xD)
  ascii_char ((char*)$arg0+0xE)
  ascii_char ((char*)$arg0+0xF)
+
  printf "\n"
 end
 document hexdump
@@ -438,9 +530,108 @@ Run program; break on main()
 end
 
 # ________________eflags commands_______________
+define cfc
+ if ($eflags & 1)
+  set $eflags = $eflags&~1
+ else
+  set $eflags = $eflags|1
+ end
+end
+document cfc
+change Carry Flag
+end
+
+define cfp
+ if (($eflags >> 2) & 1 )
+  set $eflags = $eflags&~0x4
+ else
+  set $eflags = $eflags|0x4
+ end
+end
+document cfp
+change Carry Flag
+end
+
+define cfa
+ if (($eflags >> 4) & 1 )
+  set $eflags = $eflags&~0x10
+ else
+  set $eflags = $eflags|0x10
+ end
+end
+document cfa
+change Auxiliary Carry Flag
+end
+
+define cfz
+ if (($eflags >> 6) & 1 )
+  set $eflags = $eflags&~0x40
+ else
+  set $eflags = $eflags|0x40
+ end
+end
+document cfz
+change Zero Flag
+end
+
+define cfs
+ if (($eflags >> 7) & 1 )
+  set $eflags = $eflags&~0x80
+ else
+  set $eflags = $eflags|0x80
+ end
+end
+document cfs
+change Sign Flag
+end
+
+define cft
+ if (($eflags >>8) & 1 )
+  set $eflags = $eflags&100
+ else
+  set $eflags = $eflags|100
+ end
+end
+document cft
+change Trap Flag
+end
+
+define cfi
+ if (($eflags >> 9) & 1 )
+  set $eflags = $eflags&~0x200
+ else
+  set $eflags = $eflags|0x200
+ end
+end
+document cfi
+change Interrupt Flag
+end
+
+define cfd
+ if (($eflags >>0xA ) & 1 )
+  set $eflags = $eflags&~0x400
+ else
+  set $eflags = $eflags|0x400
+ end
+end
+document cfd
+change Direction Flag
+end
+
+define cfo
+ if (($eflags >> 0xB) & 1 )
+  set $eflags = $eflags&~0x800
+ else
+  set $eflags = $eflags|0x800
+ end
+end
+document cfo
+change Overflow Flag
+end
+
 # --------------------patch---------------------
 define nop
- set * (unsigned char *) $arg0 = 0xe1a00000
+ set * (unsigned char *) $arg0 = 0x90
 end
 document nop
 Patch byte at address arg0 to a NOP insn
@@ -455,7 +646,95 @@ Patch byte at address arg0 to  NULL
 Usage: null addr
 end
 
+define int3
+ set * (unsigned char *) $arg0 = 0xCC
+end
+document int3
+Patch byte at address arg0 to an INT3 insn
+Usage: int3 addr
+end
+
 # --------------------cflow---------------------
+define print_insn_type
+ if ($arg0 == 0)
+  printf "UNKNOWN";
+ end
+ if ($arg0 == 1)
+  printf "JMP";
+ end
+ if ($arg0 == 2)
+  printf "JCC";
+ end
+ if ($arg0 == 3)
+  printf "CALL";
+ end
+ if ($arg0 == 4)
+  printf "RET";
+ end
+ if ($arg0 == 5)
+  printf "INT";
+ end
+end
+document print_insn_type
+This prints the human-readable mnemonic for the instruction typed passed as
+a parameter (usually $INSN_TYPE).
+end
+
+define get_insn_type
+ set $INSN_TYPE = 0
+ set $_byte1=*(unsigned char *)$arg0
+ if ($_byte1 == 0x9A || $_byte1 == 0xE8 )
+  # "call"
+  set $INSN_TYPE=3
+ end
+ if ($_byte1 >= 0xE9 && $_byte1 <= 0xEB)
+  # "jmp"
+  set $INSN_TYPE=1
+ end
+ if ($_byte1 >= 0x70 && $_byte1 <= 0x7F)
+  # "jcc"
+  set $INSN_TYPE=2
+ end
+ if ($_byte1 >= 0xE0 && $_byte1 <= 0xE3 )
+  # "jcc"
+  set $INSN_TYPE=2
+ end
+ if ($_byte1 == 0xC2 || $_byte1 == 0xC3 || $_byte1 == 0xCA || $_byte1 == 0xCB || $_byte1 == 0xCF)
+  # "ret"
+  set $INSN_TYPE=4		
+ end
+ if ($_byte1 >= 0xCC && $_byte1 <= 0xCE)
+  # "int"
+  set $INSN_TYPE=5
+ end
+ if ($_byte1 == 0x0F )
+  # two-byte opcode
+  set $_byte2=*(unsigned char *)($arg0 +1)
+  if ($_byte2 >= 0x80 && $_byte2 <= 0x8F)
+   # "jcc"
+   set $INSN_TYPE=2
+  end
+ end
+ if ($_byte1 == 0xFF )	
+  # opcode extension
+  set $_byte2=*(unsigned char *)($arg0 +1)
+  set $_opext=($_byte2 & 0x38)
+  if ($_opext == 0x10 || $_opext == 0x18) 
+   # "call"
+   set $INSN_TYPE=3
+  end
+  if ($_opext == 0x20 || $_opext == 0x28)
+   # "jmp"
+   set $INSN_TYPE=1
+  end
+ end
+end
+document get_insn_type
+This takes an address as a parameter and sets the global $INSN_TYPE variable
+to 0, 1, 2, 3, 4, 5 if the instruction at the address is unknown, a jump,
+a conditional jump, a call, a return, or an interrupt.
+end
+
 define step_to_call
  set $_saved_ctx = $SHOW_CONTEXT
  set $SHOW_CONTEXT = 0
@@ -622,7 +901,7 @@ define assemble
 printf "Type code to assemble, hit Ctrl-D until results appear :)\n"
 printf "Note that this command uses GAS (AT&T syntax) to assemble.\n"
 shell as -o ~/__gdb_tmp.bin
-shell objdump -d -j .text --adjust-vma=$arg0 ~/__gdb_tmp.bin
+shell objdump -d -j .text --adjust-vma=$arg0 ~/__gdb_tmp.bin 
 shell rm ~/__gdb_tmp.bin
 end
 document assemble
@@ -638,7 +917,7 @@ end
 #	0x4008e0b3 <malloc+15>: add    $0xa3f6e,%ebx
 # At 0x4008e0b3, %ebx contains the address that has just been allocated
 # The bp_alloc macro generates this breakpoint and *should* work for
-# the forseeable future ... but if it breaks, set a breakpoint on
+# the forseeable future ... but if it breaks, set a breakpoint on 
 # __libc_malloc and look for where where the return value gets popped.
 
 define bp_alloc
@@ -666,7 +945,7 @@ document dump_binfile
 Write a range of memory to a binary file.
 Usage:	dump_binfile filename start_addr end_addr
 end
-
+	
 # _________________tips_________________
 # The 'tips' command is used to provide tutorial-like info to the user
 define tips
@@ -677,7 +956,139 @@ define tips
 	printf "\ttip_syntax  : ATT vs Intel syntax\n"
 end
 document tips
-Provide a list of tips from users on various topics.
+Provide a list of tips from users on various topics. 
+end
+
+#
+# Base commands
+# NB: Can always use 0x<num> to specify a hex number.
+#
+define base10
+ set input-radix 0x0a
+ set output-radix 0x0a
+end
+document base10
+Set input and output radices to decimal.
+end
+
+define b10
+ set input-radix 0x0a
+ set output-radix 0x0a
+end
+document b10
+Set input and output radices to decimal.
+end
+
+define deco
+ set output-radix 0x0a
+end
+document deco
+Set output radix to decimal.
+end
+
+define o10
+ set output-radix 0x0a
+end
+document o10
+Set output radix to decimal.
+end
+
+define deci
+ set input-radix 0x0a
+end
+document deci
+Set input radix to decimal.
+end
+
+define i10
+ set input-radix 0x0a
+end
+document i10
+Set input radix to decimal.
+end
+
+define hexo
+ set output-radix 0x10
+end
+document hexo
+Set output radix to hexadecimal.
+end
+
+define o16
+ set output-radix 0x10
+end
+document o16
+Set output radix to hexadecimal.
+end
+
+define hexi
+ set input-radix 0x10
+end
+document hexi
+Set input radix to hexadecimal.
+end
+
+define i16
+ set input-radix 0x10
+end
+document i16
+Set input radix to hexadecimal.
+end
+
+define base16
+ set input-radix 0x10
+ set output-radix 0x10
+end
+document base16
+Set input and output radices to hex.
+end
+
+define b16
+ set input-radix 0x10
+ set output-radix 0x10
+end
+document b16
+Set input and output radices to hex.
+end
+
+define base1016
+ set input-radix 0x0a
+ set output-radix 0x10
+end
+document base1016
+Set input base to 10 (we can still use 0x) and output to hex.
+end
+
+define base1610
+ set input-radix 0x10
+ set output-radix 0x0a
+end
+document base1610
+Set input base to hex and output to decimal.
+end
+
+define i10o16
+ set input-radix 0x0a
+ set output-radix 0x10
+end
+document i10o16
+Set input base to decimal and output to hex.
+end
+
+define dec_in_hex_out
+ set input-radix 0x0a
+ set output-radix 0x10
+end
+document dec_in_hex_out
+Set input base to decimal and output to hex.
+end
+
+define i16o10
+ set input-radix 0x10
+ set output-radix 0x0a
+end
+document i16o10
+Set input base to 16 and output to decimal.
 end
 
 define tip_patch
@@ -724,7 +1135,7 @@ end
 define tip_syntax
 	printf "\n"
 	printf "\t    INTEL SYNTAX                        AT&T SYNTAX\n"
-	printf "\tmnemonic dest, src, imm            mnemonic src, dest, imm\n"
+	printf "\tmnemonic dest, src, imm            mnemonic src, dest, imm\n" 
 	printf "\t[base+index*scale+disp]            disp(base, index, scale)\n"
 	printf "\tregister:      eax                 register:      %%eax\n"
 	printf "\timmediate:     0xFF                immediate:     $0xFF\n"
@@ -762,5 +1173,125 @@ end
 document tip_display
 Tips on automatically displaying values when a program stops.
 end
+
+# ??? is there include functionality?
+# ________ Begin: nVIDIA specific _________
+define initb
+  break GpuTrace::ReadHeader
+end
+document initb
+Set initial break after some ME .so,s have been loaded with more defined more symbols.
+end
+
+define tinitb
+  tbreak GpuTrace::ReadHeader
+end
+document tinitb
+Set as initb but using a tbreak. It is usually not useful after the initial break.
+end
+
+define inittb
+  tbreak GpuTrace::ReadHeader
+end
+document inittb
+Set as initb but using a tbreak. It is usually not useful after the initial break.
+end
+
+define meinit
+  initb
+  run
+end
+document meinit
+Initialize for Multiengine debugging.
+end
+
+# nvidia bane of debu
+define hook-stop
+handle SIGALRM nopass
+end
+
+define hook-run
+handle SIGALRM pass
+end
+
+define hook-continue
+handle SIGALRM pass
+end
+
+# ___________________ fmodel __________________
+# break main
+# break Gpu::Initialize
+
+define fmodrunb
+  break GpuTrace::ReadHeader
+  run
+end
+document fmodrunb
+Set initial break after some fmodel .so,s have been loaded with more defined more symbols.
+end
+
+# __________________gdb options_________________
+### I use GDBHISTFILE #set history filename /
+set history save
+# Expansion uses ! and that conflict w/C's !
+# As if they couldn't use another char in gdb.
+##set history expansion on
+# hist is saved but isn't reloaded.
+#printf "bite me, history.\n"
+###set confirm off
+###set verbose off
+###set prompt gdb>  I use (gdb) for beginning of command line.
+set output-radix 0x10
+set input-radix 0x10
+# These make gdb never pause in its output
+set height 0
+set width 0
+# why do these not work???
+set $SHOW_CONTEXT = 1
+set $SHOW_NEST_INSN=0
+
+#
+# Set default in/out bases
+dec_in_hex_out
+
+define iregs
+ info reg
+end
+document iregs
+Show info about registers
+end
+
+define disp_pc_on
+display/i $pc
+end
+document disp_pc_on
+Add display of pc on every bp.
+To turn off: use "display" or "info display" to show all dnums and select the one to disable/delete.
+end
+
+# __________________gdb options_________________
+### I use GDBHISTFILE #set history filename /
+set history save
+# Expansion uses ! and that conflict w/C's !
+# As if they couldn't use another char in gdb.
+##set history expansion on
+# hist is saved but isn't reloaded.
+#printf "bite me, history.\n"
+###set confirm off
+###set verbose off
+###set prompt gdb>  I use (gdb) for beginning of command line.
+set output-radix 0x10
+set input-radix 0x10
+# These make gdb never pause in its output
+set height 0
+set width 0
+# why do these not work???
+set $SHOW_CONTEXT = 1
+
+set $SHOW_NEST_INSN=0
+
+#
+# Set default in/out bases
+dec_in_hex_out
 
 #EOF

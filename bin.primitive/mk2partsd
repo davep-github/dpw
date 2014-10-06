@@ -13,7 +13,11 @@ set -x
         exit 1
 } 1>&2
 
-DRIVE=$1
+DRIVE="${1}"
+[ -L "${DRIVE}" ] && {
+    DRIVE=/dev/$(readlink "$DRIVE")
+}
+echo "DRIVE>${DRIVE}<"
 
 sudo dd if=/dev/zero of=$DRIVE bs=1024 count=1024
 
@@ -23,9 +27,10 @@ echo DISK SIZE - $SIZE bytes
 
 CYLINDERS=`echo $SIZE/255/63/512 | bc`
 
-sudo sfdisk --force -D -uS -H 255 -S 63 -C $CYLINDERS $DRIVE << EOF
-128,130944,0x0C,*
-131072,,,-
+sudo sfdisk --force -D -uM -H 255 -S 63 -C $CYLINDERS $DRIVE << EOF
+0,128,0x0c,*
+134,,,-
+0,0,,
 EOF
 
 if [ -b ${1}1 ]; then
@@ -35,7 +40,7 @@ else
 fi
 
 if [ -b ${1}2 ]; then
-	sudo mkfs.ext3 -L "rootfs" ${DRIVE}2 || exit 3
+	sudo mke2fs -j -L "rootfs" ${DRIVE}2 || exit 3
 else
 	sudo mkfs.ext3 -L "rootfs" ${DRIVE}p2 || exit 4
 fi

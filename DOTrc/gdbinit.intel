@@ -1,0 +1,301 @@
+define iflags
+ if (($eflags >> 0xB) & 1 )
+  printf "O "
+ else
+  printf "o "
+ end
+ if (($eflags >> 0xA) & 1 )
+  printf "D "
+ else
+  printf "d "
+ end
+ if (($eflags >> 9) & 1 )
+  printf "I "
+ else
+  printf "i "
+ end
+ if (($eflags >> 8) & 1 )
+  printf "T "
+ else
+  printf "t "
+ end
+ if (($eflags >> 7) & 1 )
+  printf "S "
+ else
+  printf "s "
+ end
+ if (($eflags >> 6) & 1 )
+  printf "Z "
+ else
+  printf "z "
+ end
+ if (($eflags >> 4) & 1 )
+  printf "A "
+ else
+  printf "a "
+ end
+ if (($eflags >> 2) & 1 )
+  printf "P "
+ else
+  printf "p "
+ end
+ if ($eflags & 1)
+  printf "C "
+ else
+  printf "c "
+ end
+ printf "\n"
+end
+document iflags
+Print intel flags register
+end
+
+define eflags
+ printf "     OF <%d>  DF <%d>  IF <%d>  TF <%d>",\
+        (($eflags >> 0xB) & 1 ), (($eflags >> 0xA) & 1 ), \
+        (($eflags >> 9) & 1 ), (($eflags >> 8) & 1 )
+ printf "  SF <%d>  ZF <%d>  AF <%d>  PF <%d>  CF <%d>\n",\
+        (($eflags >> 7) & 1 ), (($eflags >> 6) & 1 ),\
+        (($eflags >> 4) & 1 ), (($eflags >> 2) & 1 ), ($eflags & 1)
+ printf "     ID <%d>  VIP <%d> VIF <%d> AC <%d>",\
+        (($eflags >> 0x15) & 1 ), (($eflags >> 0x14) & 1 ), \
+        (($eflags >> 0x13) & 1 ), (($eflags >> 0x12) & 1 )
+ printf "  VM <%d>  RF <%d>  NT <%d>  IOPL <%d>\n",\
+        (($eflags >> 0x11) & 1 ), (($eflags >> 0x10) & 1 ),\
+        (($eflags >> 0xE) & 1 ), (($eflags >> 0xC) & 3 )
+end
+document eflags
+Print entire eflags register
+end
+
+define reg
+ printf "     eax:%08X ebx:%08X  ecx:%08X ",  $eax, $ebx, $ecx
+ printf " edx:%08X     eflags:%08X\n",  $edx, $eflags
+ printf "     esi:%08X edi:%08X  esp:%08X ",  $esi, $edi, $esp
+ printf " ebp:%08X     eip:%08X\n", $ebp, $eip
+ printf "     cs:%04X  ds:%04X  es:%04X", $cs, $ds, $es
+ printf "  fs:%04X  gs:%04X  ss:%04X    ", $fs, $gs, $ss
+ flags
+end
+document reg
+Print CPU registers
+end
+
+define cfc
+ if ($eflags & 1)
+  set $eflags = $eflags&~1
+ else
+  set $eflags = $eflags|1
+ end
+end
+document cfc
+change Carry Flag
+end
+
+define cfp
+ if (($eflags >> 2) & 1 )
+  set $eflags = $eflags&~0x4
+ else
+  set $eflags = $eflags|0x4
+ end
+end
+document cfp
+change Carry Flag
+end
+
+define cfa
+ if (($eflags >> 4) & 1 )
+  set $eflags = $eflags&~0x10
+ else
+  set $eflags = $eflags|0x10
+ end
+end
+document cfa
+change Auxiliary Carry Flag
+end
+
+define cfz
+ if (($eflags >> 6) & 1 )
+  set $eflags = $eflags&~0x40
+ else
+  set $eflags = $eflags|0x40
+ end
+end
+document cfz
+change Zero Flag
+end
+
+define cfs
+ if (($eflags >> 7) & 1 )
+  set $eflags = $eflags&~0x80
+ else
+  set $eflags = $eflags|0x80
+ end
+end
+document cfs
+change Sign Flag
+end
+
+define cft
+ if (($eflags >>8) & 1 )
+  set $eflags = $eflags&100
+ else
+  set $eflags = $eflags|100
+ end
+end
+document cft
+change Trap Flag
+end
+
+define cfi
+ if (($eflags >> 9) & 1 )
+  set $eflags = $eflags&~0x200
+ else
+  set $eflags = $eflags|0x200
+ end
+end
+document cfi
+change Interrupt Flag
+end
+
+define cfd
+ if (($eflags >>0xA ) & 1 )
+  set $eflags = $eflags&~0x400
+ else
+  set $eflags = $eflags|0x400
+ end
+end
+document cfd
+change Direction Flag
+end
+
+define cfo
+ if (($eflags >> 0xB) & 1 )
+  set $eflags = $eflags&~0x800
+ else
+  set $eflags = $eflags|0x800
+ end
+end
+document cfo
+change Overflow Flag
+end
+
+define nop
+ set * (unsigned char *) $arg0 = 0x90
+end
+document nop
+Patch byte at address arg0 to a NOP insn
+Usage: nop addr
+end
+
+define int3
+ set * (unsigned char *) $arg0 = 0xCC
+end
+document int3
+Patch byte at address arg0 to an INT3 insn
+Usage: int3 addr
+end
+
+define print_insn_type
+ if ($arg0 == 0)
+  printf "UNKNOWN";
+ end
+ if ($arg0 == 1)
+  printf "JMP";
+ end
+ if ($arg0 == 2)
+  printf "JCC";
+ end
+ if ($arg0 == 3)
+  printf "CALL";
+ end
+ if ($arg0 == 4)
+  printf "RET";
+ end
+ if ($arg0 == 5)
+  printf "INT";
+ end
+end
+document print_insn_type
+This prints the human-readable mnemonic for the instruction typed passed as
+a parameter (usually $INSN_TYPE).
+end
+
+define get_insn_type
+ set $INSN_TYPE = 0
+ set $_byte1=*(unsigned char *)$arg0
+ if ($_byte1 == 0x9A || $_byte1 == 0xE8 )
+  # "call"
+  set $INSN_TYPE=3
+ end
+ if ($_byte1 >= 0xE9 && $_byte1 <= 0xEB)
+  # "jmp"
+  set $INSN_TYPE=1
+ end
+ if ($_byte1 >= 0x70 && $_byte1 <= 0x7F)
+  # "jcc"
+  set $INSN_TYPE=2
+ end
+ if ($_byte1 >= 0xE0 && $_byte1 <= 0xE3 )
+  # "jcc"
+  set $INSN_TYPE=2
+ end
+ if ($_byte1 == 0xC2 || $_byte1 == 0xC3 || $_byte1 == 0xCA || $_byte1 == 0xCB || $_byte1 == 0xCF)
+  # "ret"
+  set $INSN_TYPE=4
+ end
+ if ($_byte1 >= 0xCC && $_byte1 <= 0xCE)
+  # "int"
+  set $INSN_TYPE=5
+ end
+ if ($_byte1 == 0x0F )
+  # two-byte opcode
+  set $_byte2=*(unsigned char *)($arg0 +1)
+  if ($_byte2 >= 0x80 && $_byte2 <= 0x8F)
+   # "jcc"
+   set $INSN_TYPE=2
+  end
+ end
+ if ($_byte1 == 0xFF )
+  # opcode extension
+  set $_byte2=*(unsigned char *)($arg0 +1)
+  set $_opext=($_byte2 & 0x38)
+  if ($_opext == 0x10 || $_opext == 0x18)
+   # "call"
+   set $INSN_TYPE=3
+  end
+  if ($_opext == 0x20 || $_opext == 0x28)
+   # "jmp"
+   set $INSN_TYPE=1
+  end
+ end
+end
+document get_insn_type
+This takes an address as a parameter and sets the global $INSN_TYPE variable
+to 0, 1, 2, 3, 4, 5 if the instruction at the address is unknown, a jump,
+a conditional jump, a call, a return, or an interrupt.
+end
+
+define nasm_assemble
+printf "Hit Ctrl-D to start, type code to assemble, hit Ctrl-D when done.\n"
+printf "It is recommended to start with\n"
+printf "\tBITS 32\n"
+printf "Note that this command uses NASM (Intel syntax) to assemble.\n"
+shell nasm -f bin -o /dev/stdout /dev/stdin | od -v -t x1 -w16 -A n
+end
+document nasm_assemble
+Assemble Intel x86 instructions to binary opcodes. Uses nasm.
+Usage: nasm_assemble
+end
+
+define bp_alloc
+ tbreak *(*__libc_malloc + F) if $ebx == $arg0
+end
+document bp_alloc
+This sets a temporary breakpoint on the allocation of $arg0.
+It works by setting a breakpoint on a specific address in __libc_malloc().
+USE WITH CAUTION -- it is extremely platform dependent.
+Usage: bp_alloc addr
+end
+
+

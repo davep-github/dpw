@@ -1,9 +1,11 @@
 #!/bin/bash
 
 cd $YOCTO_DIR/build/tmp/deploy/images
-DEST=$HOME/inb
+DEST=$HOME/inb/staging
 : ${EZEC=}
 : ${compare_p=t}
+: ${UBOOT_IMG:="u-boot.img"}
+: ${UBOOT_DST_NAME:="u-boot.img"}
 
 while (($# > 0))
 do
@@ -11,7 +13,9 @@ do
       -n) EZEC="echo -";;
       --no-compare) echo YOPP; compare_p=;
                     echo "compare_p>$compare_p<"
-                 ;;
+                    ;;
+      --skuboot|--sku) UBOOT_IMG=skaion/u-boot.img
+                       ;;
       --) shift; break;;
       *) break;;
   esac
@@ -21,7 +25,7 @@ echo "compare_p>$compare_p<"
 
 FILES=(
     "MLO"
-    "u-boot.img"
+    "${UBOOT_IMG}"
     "uImage"
     "gumstix-console-image-vet-overo.ubi"
 )
@@ -46,7 +50,7 @@ done 1>&2
 echo "compare_p>$compare_p<"
 for f in "${ALL_FILES[@]}"
 do
-  dst="${DEST}/${f}"
+  dst="${DEST}/$(basename ${f})"
   echo "Copying: ${f} to ${dst}"
   $EZEC rsync -L -c "${f}" "${dst}"
   [ "${compare_p}" = "t" ] && {

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+rm -f $HOME/.mozilla/firefox/wynrlde9.default/.parentlock

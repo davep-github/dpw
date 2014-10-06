@@ -200,7 +200,7 @@ for eno in "$@"; do
         [0-9]*) pat="${mws}#${mws}define${ws}${nws}${ws}$eno(${ws}|$|/)";;
         *) pat="${mws}#${mws}define${ws}${eno}${ws}${nws}(${ws}|$|/)";;
     esac
-    errno_line=$(egrep "$pat" $ERRNO_FILES)
+    errno_line=$(egrep -i "$pat" $ERRNO_FILES)
 
 #    errno_line=$(egrep "${mws}#${mws}define${ws}${nws}${ws}$eno(${ws}|$|/)" \
 #        $ERRNO_FILES)

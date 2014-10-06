@@ -4,15 +4,7 @@ source script-x
 
 args=("$@")
 
-add_foi_regexp()
-{
-    #echo 1>&2 "B:FOI>${FILES_OF_INTEREST[@]}<"
-    for pat in "$@"; do
-        FILES_OF_INTEREST[${#FILES_OF_INTEREST[@]}]="-e"
-        FILES_OF_INTEREST[${#FILES_OF_INTEREST[@]}]="$pat"
-    done
-    #echo 1>&2 "A: FOI>${FILES_OF_INTEREST[@]}<"
-}                  
+dash_x_files="-X NOTAG"
 
 add_foi_regexp()
 {
@@ -32,7 +24,7 @@ add_filter_regexp()
         FILES_TO_FILTER_IN[${#FILES_OF_INTEREST[@]}]="$pat"
     done
     #echo 1>&2 "A: FOI>${FILES_TO_FILTER_IN[@]}<"
-}                  
+}
 
 # {gentoo|libranet}'s default sudo define SECURE_PATH and so our binaries
 # are inaccessible.
@@ -49,7 +41,7 @@ fi
 excluded_files_file_template=$(normpath "${DP_TMPDIR-$TMP}/extagtree.excluded-files.XXXXXXXX")
 : ${EXCLUDED_FILES_FILE:=$(mktemp "${excluded_files_file_template}")}
 # .c .h .cxx .py .java etc.
-: ${INTERESTING_FILES:="[chly](xx|pp)?|h-py|cs|cc|hh|py|pm|pl|java"}
+: ${INTERESTING_FILES:="[chly](xx|pp)?|h-py|cs|cc|hh|py|pm|pl|java|[Ss]"}
 vsetp "${SITE_INTERESTING_SRC_FILE_REGEXP-}" && {
     INTERESTING_FILES="${INTERESTING_FILES}|${SITE_INTERESTING_SRC_FILE_REGEXP}"
 }
@@ -87,7 +79,7 @@ fi
 v=
 
 set -- "${args[@]}"
-for i in "$@"
+while (($# > 0))
 do
     case $1 in
         -i) SYSTEM_INCLUDES=$DEF_SYSTEM_INCLUDES;;
@@ -95,6 +87,7 @@ do
 	-T) tag_args="$2 $tag_args"; shift;;
         -p) EXCLUDE_PAT=$2; shift;;
         -h) follow_sym_links="-h";;
+        -X) shift; dash_x_files="${dash_x_files} -X ${1}";;
 
         -I) EXCLUDES="-e /\/include\//d $EXCLUDES";;  
         -E) EXCLUDES="$2 $EXCLUDES"; shift;;
@@ -173,7 +166,7 @@ filter()
     }
     [ -n "$only_cat_files" ] && exit 0
 
-    ftreewalk.py -X NOTAG \
+    ftreewalk.py ${dash_x_files} \
        ${relative_opt} \
        $EXCLUDED_FILES_FILE_OPT \
        $follow_sym_links $dirs | \

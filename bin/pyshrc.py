@@ -128,6 +128,11 @@ def dexl(*args):
     """convert list of ints or strings containing hex ints to decimal"""
     for i in args:
         if type(i) == types.StringType:
+            ## Remove commas; they make numbers more readable.
+            ## Don't enforce any kind of grouping
+            i = i.replace(",", "")
+            # Oh, hell, let 'em use dots, too.
+            i = i.replace(".", "")
             i = eval(i)
         print "%d" % (i,)
 
