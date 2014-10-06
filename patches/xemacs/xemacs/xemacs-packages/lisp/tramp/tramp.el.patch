@@ -1,0 +1,12 @@
+--- tramp.el.OEM	2014-10-01 15:15:30.781617303 -0400
++++ tramp.el	2014-10-01 15:16:43.423616486 -0400
+@@ -3907,6 +3907,9 @@
+ 	 multi-method method user host
+ 	 9 "Inserting local temp file `%s'..." local-copy)
+ 	(setq result (insert-file-contents local-copy nil beg end replace))
++        ;; dp The local buffer shouldn't be considered to be modified because
++        ;; it matches the file from whence it came.
++        (set-buffer-modified-p nil)
+ 	;; Now `last-coding-system-used' has right value.  Remember it.
+ 	(when (boundp 'last-coding-system-used)
+ 	  (setq coding-system-used (symbol-value 'last-coding-system-used)))
