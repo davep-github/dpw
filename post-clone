@@ -63,6 +63,8 @@ ln_dotrc \
 	inputrc \
 	lessrc \
 	muttrc \
+	mutt-colors \
+	mutt-aliases \
 	screenrc \
 	vimrc \
         exrc \
