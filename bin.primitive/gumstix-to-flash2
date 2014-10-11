@@ -1,0 +1,253 @@
+#!/bin/bash
+#set -x
+: ${SRC:=$HOME/inb}
+: ${GOLD_DIR:="${SRC}/gold"}
+: ${GOLD_SD_DIR:="${GOLD_DIR}/gumstix-console-image-vet-sd-2_0"}
+: ${MOUNT_POINT:="/mnt/vet-sdcard"}
+: ${MOUNT_POINT_BOOT:="/mnt/vet-sdcard/boot"}
+: ${MOUNT_POINT_ROOTFS:="/mnt/vet-sdcard/rootfs"}
+: ${DEV:=/dev/vet-sdcard}
+: ${GOLD_ROOT_FS_TARBALL:=gumstix-console-image-vet-sd-overo.rootfs.tar.bz2}
+: ${GOLD_CONSOLE_IMG:=gumstix-console-image-vet-nand-2_0-golden.img}
+: ${LEAD_ROOT_FS_TARBALL:="gumstix-console-image-vet-overo.tar.bz2"}
+: ${ROOT_FS_TARBALL:=${LEAD_ROOT_FS_TARBALL}}
+: ${SRC_DIR=su-boot}
+: ${MLO:="MLO"}
+: ${ubootimg:="u-boot.img"}
+: ${uimage:="uImage"}
+: ${console:="gumstix-console-image-vet-overo.ubi"}
+DEV="/dev/$(readlink ${DEV})"
+echo "DEV>$DEV<"
+
+
+: ${EZEC=}
+
+: ${umount_p=t}
+: ${eject_p=t}
+: ${tar_verbose_option=v}
+: ${prep_t=t}
+: ${no_files_p=}
+: ${gold_p=t}
+: ${cp_golden_img_p=}
+
+cd "${SRC}"
+
+gs_umount()
+{
+    local mp="${1}"
+
+    mp="${mp}"
+    ${EZEC} sudo umount "${mp}" || {
+        RC=$?
+        echo "umount ${mp} failed: $?"
+        exit $RC
+    }
+}
+
+#
+# A flash device needs to be ejected after being umounted in order to
+# guarantee everything has actually reached stable storage.
+# Some tales even say that eject isn't enough and one should use the GUI to
+# "safely remove..." or a function on something like dolphin.
+# I think that ensuring that the device is no longer present [in /dev] should work as well.
+gs_eject()
+{
+    local dev="${1}"
+    ${EZEC} sudo eject "${dev}" || {
+        RC=$?
+        echo "eject ${dev} failed: $?"
+        exit $RC
+    }
+
+#    if [ "${EZEC}" != "Non_EZECer" ]
+#    then
+        local sec=4
+        local count=3
+        while [ -b "${dev}1" -o -b "${dev}2" ] && ((count > 0))
+        do
+          echo "${count}: ${dev} still exists. Sleeping for ${sec} seconds."
+          sleep "${sec}"
+          ((--count))
+        done
+#    fi
+}
+
+# to narrow: "${MOUNT_POINT_BOOT}|${MOUNT_POINT_ROOTFS}" && {
+mount | egrep "${MOUNT_POINT}" && {
+    echo "Some gumstix partitions are mounted."
+    echo "It's probably best for you to unmount them."
+    exit 1
+} 1>&2
+
+
+Non_EZECer()
+{
+    echo "- $@" 1>&2
+}
+
+Verbose_EZECer()
+{
+    echo "+ $@"
+    "$@"
+}
+
+
+
+while (($# > 0))
+do
+  case "$1" in
+      -n) EZEC="Non_EZECer";;
+      -v) EZEC="Verbose_EZECer";;
+      -x) set -x;;
+      -u) umount_p=;;
+      -u) eject_p=;;
+      --ue|--eu) umount_p=; eject_p=;;
+      --nu-boot|--nu) IMG_ROOT="nu-boot";;
+      --su-boot|--su) IMG_ROOT="su-boot";;
+      --qu-boot|--qu) IMG_ROOT="qu-boot";;
+      --au-boot|--au) IMG_ROOT="au-boot";;
+      -i|--img|--gold.img|--gold-img) cp_golden_img_p=t;;
+      --no-files) no_files_p=t;;
+      --gold) gold_p=t;;
+      --lead) gold_p=;;
+      --tar-quiet|--tar-hush|--tq) tar_verbose_option=;;
+      --mk2partsd|--prep|--partition) prep_p=t;;
+      --no-mk2partsd|--no-prep|--no-partition) prep_p=;;
+      --dev) shift; DEV="${1}";;
+      --) shift; break;;
+      *) echo 1>&2 "Unsupported arg>$1<"; exit 1;;
+  esac
+  shift
+done
+
+echo "1: IMG_ROOT>${IMG_ROOT}<"
+SRC_DIR="${IMG_ROOT}/gumstix-console-image-vet-nand-2_0"
+echo "2: SRC_DIR>${SRC_DIR}<"
+echo "gold_p>${gold_p}<"
+HOME_ROOT_FILES=()
+
+ROOT_FS_TARBALL="${GOLD_SD_DIR}/${GOLD_ROOT_FS_TARBALL}"
+echo "1: ROOT_FS_TARBALL>${ROOT_FS_TARBALL}<"
+
+GOLD_IMG_PATH="${GOLD_DIR}/${GOLD_CONSOLE_IMG}"
+HOME_ROOT_FILES=("${GOLD_IMG_PATH}")
+ALL_FILES=("${HOME_ROOT_FILES[@]}" "${ROOT_FS_TARBALL}")
+echo "ALL_FILES>${ALL_FILES[@]}<"
+
+exit_p=
+for f in "${ALL_FILES[@]}"
+do
+  ff="${f}"
+  [ -e "${ff}" ] || {
+      echo "${ff} does not exist."
+      exit_p=t
+  }
+done 1>&2
+
+[ "${exit_p}" = t ] && {
+    echo "Some files were not found, nothing copied."
+    exit 1
+}
+
+if [ -z "${prep_p}" ]
+then
+    ${EZEC} mk2partsd "${DEV}"
+else
+    echo "** Not partitioning/formatting dev>${DEV}<"
+fi
+
+#set -x
+mount | fgrep -q "${MOUNT_POINT}" >/dev/null 2>&1 || {
+    echo "SD card is not mounted. Setting it up"
+    # -p prevents barfage if dirs exist.
+    ${EZEC} sudo mkdir -p "${MOUNT_POINT}"/{boot,rootfs} || {
+        echo "mkdir of mount points failed."
+        exit 2
+    }
+
+    # NB: Can't use -t <type> <mnt-point>. ? because they're in the fstab and
+    # already have a type specified?
+    mp="${MOUNT_POINT_BOOT}"
+    ${EZEC} sudo mount "${mp}" || {
+        RC=$?
+        echo "mount ${mp} failed: $?"
+        exit $RC
+    }
+    mp="${MOUNT_POINT_ROOTFS}"
+    ${EZEC} sudo mount "${mp}" || {
+        RC=$?
+        echo "mount ${mp} failed: $?"
+        exit $RC
+    }
+} 1>&2
+
+mnt_boot="${MOUNT_POINT}/boot/"
+
+${EZEC} sudo cp "${GOLD_SD_DIR}/MLO" "${mnt_boot}"
+${EZEC} sudo cp "${GOLD_SD_DIR}/${ubootimg}" "${mnt_boot}"
+${EZEC} sudo cp "${GOLD_SD_DIR}/uImage" "${mnt_boot}"
+
+
+nand_dir="${SRC_DIR}/nand"
+
+[ -d "${nand_dir}" ] || {
+    echo "Cannot find nand dir>${nand_dir}<
+  in $PWD.
+  Exiting."
+    exit 1
+} 1>&2
+
+${EZEC} sudo cp -rf  "${nand_dir}/" "${mnt_boot}"
+
+[ "${umount_p}" = 't' ] && {
+    mp="${MOUNT_POINT}/boot"
+        gs_umount "${mp}" || {
+            RC=$?
+            echo "gs_umount ${mp} failed: $?"
+            exit $RC
+        } 1>&2
+}
+
+mnt_rootfs="${MOUNT_POINT}/rootfs"
+rm -f  ~/tmp/g2f.tar-log
+${EZEC} sudo tar -xj${tar_verbose_option}f \
+             "${ROOT_FS_TARBALL}" \
+             -C "${mnt_rootfs}" \
+    | \
+    while read
+    do
+       echo "$REPLY" >> ~/tmp/g2f.tar-log
+       echo -n .
+    done
+echo
+echo "tar completed."
+
+root_dir="${mnt_rootfs}/home/root"
+[ -n "${cp_golden_img_p}" ] && {
+    ${EZEC} sudo cp "${HOME_ROOT_FILES[@]}" "${root_dir}"
+}
+
+# This lets us know after the fact, what is on this gumstix.
+${EZEC} sudo ls "${mnt_rootfs}/var"
+# /var seems to be [re]initialized when linux boots.
+#${EZEC} sudo touch "${mnt_rootfs}/var/IMG_ROOT-${IMG_ROOT}"
+${EZEC} sudo ls "${mnt_rootfs}/var"
+
+[ "${umount_p}" = 't' ] && {
+        mp="${mnt_rootfs}"
+        gs_umount "${mp}" || {
+            RC=$?
+            echo "gs_umount ${mp} failed: $?"
+            exit $RC
+        } 1>&2
+}
+
+[ "${eject_p}" = 't' ] && {
+        gs_eject "${DEV}" || {
+            RC=$?
+            echo "gs_eject ${DEV} failed: $?"
+            exit $RC
+        }
+} 1>&2
+
+email-yopp "$0 done."

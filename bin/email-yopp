@@ -55,4 +55,4 @@ msg="$progname: in ${PWD}: ${type}$@"
 {
     echo "On $(date)"
     echo "${msg}"
-} | EExec mail -s "${prefix}${annotation}YOPP! ${msg}" "${USER}"
+} | EExec send-mail-command-line.sh -s "${prefix}${annotation}YOPP! ${msg}" "${USER}@skaion.com"

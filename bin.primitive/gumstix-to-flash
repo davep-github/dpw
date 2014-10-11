@@ -25,6 +25,7 @@ echo "DEV>$DEV<"
 : ${prep_t=t}
 : ${no_files_p=}
 : ${gold_p=}
+: ${verbose_p=}
 
 cd "${SRC}"
 
@@ -39,10 +40,17 @@ while (($# > 0))
 do
   case "$1" in
       -n) EZEC="echo -";;
+      -v|--verbose) verbose_p=t;;
+      -q|--quiet) verbose_p=;;
+      --set-x|--setx|-x) set -x;;
       --) shift; break;;
 #      --ubootimg|--uboot) shift; ubootimg="${1}";;
 #      --golduboot) ubootimg="gold/${ubootimg}";;
       -u) umount_p=;;
+      --nu-boot|--su) ubootimg="nu-boot.img";;
+      --su-boot|--su) ubootimg="su-boot.img";;
+      --qu-boot|--qu) ubootimg="qu-boot.img";;
+      --u-boot|--ub) ubootimg="u-boot.img";;
       --no-files) no_files_p=t;;
       --gold) gold_p=t;;
       --lead) gold_p=;;
@@ -70,7 +78,6 @@ then
     ROOT_FS_TARBALL="${SRC_DIR}/${LEAD_ROOT_FS_TARBALL}"
     HOME_ROOT_FILES=(
         "${SRC_DIR}/${MLO}"
-        "${SRC_DIR}/${ubootimg}"
         "${SRC_DIR}/${uimage}"
         "${SRC_DIR}/${console}"
     )
@@ -128,8 +135,9 @@ mount | fgrep -q "${MOUNT_POINT}" >/dev/null 2>&1 || {
 
 mnt_boot="${MOUNT_POINT}/boot/"
 ${EZEC} sudo cp "${SRC_DIR}/MLO" "${mnt_boot}"
-${EZEC} sudo cp "${SRC_DIR}/u-boot.img" "${mnt_boot}"
+${EZEC} sudo cp "${SRC_DIR}/${ubootimg}" "${mnt_boot}/u-boot.img"
 ${EZEC} sudo cp "${SRC_DIR}/uImage" "${mnt_boot}"
+
 nand_dir="${SRC_DIR}/nand"
 [ -d "${nand_dir}" ] && {
     ${EZEC} sudo cp -rf  "${nand_dir}/" "${mnt_boot}"
@@ -139,7 +147,10 @@ mnt_rootfs="${MOUNT_POINT}/rootfs/"
 ${EZEC} sudo tar -xj${tar_verbose_option}f \
              "${ROOT_FS_TARBALL}" \
              -C "${mnt_rootfs}"
-${EZEC} sudo cp "${HOME_ROOT_FILES[@]}" "${mnt_rootfs}/home/root"
+#${EZEC} sudo cp "${HOME_ROOT_FILES[@]}" "${mnt_rootfs}/home/root"
+${EZEC} sudo cp "${SRC_DIR}/${ubootimg}" "${mnt_rootfs}/home/root/u-boot.img"
+
+        
 
 [ "${umount_p}" = 't' ] && {
     mp="${MOUNT_POINT}/boot"
@@ -156,3 +167,6 @@ ${EZEC} sudo cp "${HOME_ROOT_FILES[@]}" "${mnt_rootfs}/home/root"
     }
 } 1>&2
 
+[ -n "$verbose_p" ] && {
+    figlet "DONE"
+}

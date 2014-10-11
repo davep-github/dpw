@@ -7,7 +7,7 @@
 # http://processors.wiki.ti.com/index.php/How_to_Make_3_Partition_SD_Card
 #
 # example usage: $ sudo mk2partsd /dev/sdb
-set -x
+#set -x
 (($# < 1)) && {
         echo "A device name is needed."
         exit 1

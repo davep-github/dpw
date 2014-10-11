@@ -7,7 +7,7 @@ set -u
 #echo "@>$@<"
 #exit 99
 
-: ${skip_tagged_dirs="-X cscope.files"}
+: ${skip_tagged_dirs=""} # tree walker cannot handle >1 -X params. "-X cscope.files"}
 
 progname="$(basename $0)"
 source eexec

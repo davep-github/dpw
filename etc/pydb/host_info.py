@@ -344,10 +344,8 @@ nvidia_family = e(
 
 
 SKAION_XEM_GEOMETRY = '-geometry 81x70-0+0'
-SKAION_BG_COLOR = 'lavender'
-SKAION_FG_COLOR = 'black'
-SKAION_LSIM_FG_COLOR = 'black'
-SKAION_LSIM_BG_COLOR = 'linen'
+SKAION_BG_COLOR = 'rgb:24/00/68'
+SKAION_FG_COLOR = 'white'
 skaion_family = e(
     kef='family',
     dat={
@@ -369,7 +367,7 @@ skaion_family = e(
     'xterm_bg': SKAION_BG_COLOR,
     'xterm_fg': SKAION_FG_COLOR,
     'xem_bg_color': SKAION_BG_COLOR,
-
+    '''command-line-mailer''': '''mutt''',
     },
     # These are searched in the order given.
     ref=[OSDB['linux'], default]
@@ -378,7 +376,7 @@ skaion_family = e(
 e(
     kef='host',
     dat={
-    'host-pattern': 'dplaptop|bld|shodanbld',
+    'host-pattern': 'dplaptop|bld|shodanbld|dpure|mundane|simp(le)?|prim(itive)?',
     'DTE': 'lxde',                      # or none
     'comment': 'Laptop running unadulterated ubuntu.',
     'nick': 'vet-build',

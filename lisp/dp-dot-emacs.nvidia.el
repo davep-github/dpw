@@ -141,19 +141,6 @@ tests.")
 ;; XXX @todo ? Should I trim that list? There are many bad matches already.
 ;;
 
-(defun dp-make-no-fill-stupidly-sh-mode ()
-  (prog1
-      (sh-mode)
-    (auto-fill-mode 0)))
-
-;;    (setq fill-column 9999)))
-
-(defun dp-make-no-fill-stupidly-text-mode ()
-  ;; Why did I not use (auto-fill-mode 0) ?
-  (prog1
-      (text-mode)
-    (auto-fill-mode 0)))
-
 (defvar dp-generic-sandbox-dir-prefix 
   "/home/scratch.dpanariti[^/]*/"
   "All nvidia sandboxes will be rooted under dirs of this form.")

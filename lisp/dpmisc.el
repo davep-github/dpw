@@ -14535,6 +14535,20 @@ them. Q.v. `unfuck-gz'"
 
 (dp-defaliases 'unfuck-gz 'dp-set-unmodify+ro)
 
+(defun dp-make-no-fill-stupidly-sh-mode ()
+  (prog1
+      (sh-mode)
+    (auto-fill-mode 0)))
+
+;;    (setq fill-column 9999)))
+
+(defun dp-make-no-fill-stupidly-text-mode ()
+  ;; Why did I not use (auto-fill-mode 0) ?
+  (prog1
+      (text-mode)
+    (auto-fill-mode 0)))
+
+
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;;
 ;;;

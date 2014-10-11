@@ -24,7 +24,7 @@ if [ -z "${LC_DP_YES_DP_ENV_P}" ]
 then
     [ -e "${dp_no_dp_env_p_file}" -o -n "$LC_DP_NO_DP_ENV_P" ] && {
         source "$HOME/.rc/env.pristine"
-        PS1="[np]$PS1"
+        PS1='\u@\h:\w\n[prim]\!> '
         return 0
     }
 fi
