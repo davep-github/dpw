@@ -15,10 +15,10 @@ EExecVerbose
 
 # Filtering for `FutureWarning's in earlier revisions.
 
-: ${getmail_dot_rc:=verizon}
+: ${getmaildir:=/yokel/yokel/etc/getmail}
+: ${getmail_host:=verizon}
 
-##getmail_dot_rc="$HOME/yokel/etc/getmail/${getmail_dot_rc}.rc"
-getmail_dot_rc="/yokel/yokel/etc/getmail/${getmail_dot_rc}.rc"
+getmail_dot_rc="${getmaildir}/${getmail_host}.rc"
 
 # The LL VPN disables all other network connections, so we don't check and
 # end up w/tons of error messages.
@@ -26,7 +26,12 @@ if ~davep/bin/getmail-inhibited-p
 then
     exit 1                      # No can do, Jonny. We're VPN'd or something.
 else
-    EExec sudo /usr/bin/getmail -v -v -r "$getmail_dot_rc" "$@" \
+    EExec sudo /usr/bin/getmail \
+	-v \
+	-v \
+	-r "$getmail_dot_rc" \
+	--getmaildir="${getmaildir}" \
+	"$@" \
         | tee /dev/tty $log_file | egrep -q '^[[:space:]]+0 messages' && {
         exit 2
     }

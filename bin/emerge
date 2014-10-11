@@ -2,6 +2,8 @@
 
 source script-x
 
+: ${extra_options:=--nospinner --autounmask-write}
+
 #dol_at=("$@")
 EMERGE_LOG_FILE="$DP_LOG/emerge/emerge.log"
 do_it()
@@ -10,7 +12,7 @@ do_it()
     echo "$(date): ==========================="
     echo_id exec_cmd 
     echo '   $@: '"$@"
-    exec_cmd="$exec_cmd" sudo_pristine $DP_SCRIPT_X_DEBUG_OPT --nospinner "$@"
+    exec_cmd="$exec_cmd" sudo_pristine $DP_SCRIPT_X_DEBUG_OPT ${extra_options} "$@"
     local rc=$?
     echo "exec_cmd rc  $(echo_id rc): "
     return $rc

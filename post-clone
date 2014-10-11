@@ -3,8 +3,13 @@
 set -u
 
 EZEC=
-: ${repo:=${HOME}/davep/dpw.git}
+: ${repo:=dpw/dpw.git}
 : ${reporc:=${repo}/.rc}
+
+cd "${HOME}" || {
+    echo "Cannot cd to home>${HOME}<"
+    exit 1
+} 1>&2
 
 while (($# > 0 ))
 do
@@ -58,6 +63,8 @@ ln_dotrc \
 	inputrc \
 	lessrc \
 	muttrc \
+	mutt-colors \
+	mutt-aliases \
 	screenrc \
 	vimrc \
         exrc \
@@ -72,6 +79,11 @@ ${EZEC} ln -s lisp .xemacs
 ${EZEC} ln -s .rc/procmailrc.vilya .procmailrc
 ${EZEC} mkdir log
 ${EZEC} mkdir log/{boot,kde,login-rc,xemacs,shell-sessions}
+${EZEC} mkdir log/auto-rotate-c5-50K
+(
+	cd log
+	${EZEC} ln -s auto-rotate-c5-50K procmail
+)
 ${EZEC} mkdir -p "log/auto-rotate-c10-50K"
 ${EZEC} mkdir ipc
 ${EZEC} mkdir -p "droppings/editors/xemacs/xebacs.d"

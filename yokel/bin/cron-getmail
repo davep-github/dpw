@@ -4,8 +4,12 @@
 #date >> /tmp/cron-getmail.log
 #set -x
 rc=0
+getmail_rc_dir=/usr/yokel/etc/getmail
 /home/davep/bin/vpn-connected-p || {
-    /usr/bin/getmail -q -r /usr/yokel/etc/getmail/verizon.rc 2>&1
+    /usr/bin/getmail \
+	-q 
+	-r ${getmail_rc_dir}/verizon.rc 
+	--getmaildir="${getmail_rc_dir}" 2>&1
     rc=$?
 } | egrep -v -e 'FutureWarning
 return \("<%s at 0x%x: %r>"

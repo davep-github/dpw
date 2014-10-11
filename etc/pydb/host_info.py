@@ -590,7 +590,7 @@ e(
     # Font menu is fucked, but this works:
     # (set-default-font "Inconsolata-12")
     """xem-xft-font""": '''"Inconsolata-12"''',
-    'xem_bin': os.path.join(BREE_BIN, "xemacs"),
+    'xem_bin': os.path.join(HOME_LOCAL_BIN, "xemacs"),
 
     # NB! using the version number can cause extreme weirdness with fonts!
     'tunnel-ip': '16.11.64.97',

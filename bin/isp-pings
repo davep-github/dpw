@@ -20,10 +20,13 @@ bad_nodes=
 # incoming.$ISP, outgoing.$ISP, news.$ISP don't respond to pings.
 
 # (news|incoming). ISP==verizon doesn't respond to pings.
-other_places=(www.$ISP outgoing.$ISP
-	    www.mit.edu www.ucsd.edu www.yahoo.com 
-	    www.google.com
-	    www.buy.com)
+other_places=(
+    www.$ISP 
+    outgoing.$ISP
+    www.mit.edu 
+    www.ucsd.edu 
+    www.yahoo.com 
+    www.ibm.com)
 
 add_failure()
 {
