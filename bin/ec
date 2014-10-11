@@ -148,7 +148,7 @@ process_file ()
         fi
     fi
 
-    if [ -z "$DISPLAY" ]
+    if [ -z "${DISPLAY-}" ]
     then
         problem="${problem}${and}DISPLAY not set"
     fi
