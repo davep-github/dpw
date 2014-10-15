@@ -335,7 +335,8 @@ nvidia_family = e(
     'work-zone': 'nvidia',
     'xterm_bg': NVIDIA_BG_COLOR,
     'xterm_fg': NVIDIA_FG_COLOR,
-    'xem_bg_color': NVIDIA_BG_COLOR,
+    'xem_bg_color': 'gray80',
+
 
     },
     # These are searched in the order given.
@@ -366,7 +367,7 @@ skaion_family = e(
     'work-zone': 'skaion',
     'xterm_bg': SKAION_BG_COLOR,
     'xterm_fg': SKAION_FG_COLOR,
-    'xem_bg_color': SKAION_BG_COLOR,
+    'xem_bg_color': NVIDIA_BG_COLOR,
     '''command-line-mailer''': '''mutt''',
     },
     # These are searched in the order given.

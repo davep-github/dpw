@@ -7,7 +7,7 @@ source eexec
 dpcheck
 
 : ${NO_HDR:=}
-: ${PS_ALL_OPT:=u}
+: ${PS_ALL_OPT:=-A}
 : 1          2   3    4       5     6   7        8    9       10   11...
 # USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
 #9601      3010  0.0  0.0  50980  1728 pts/198  Ss+  Jun19   0:00 /home/dpanariti/yokel/lib/xemacs[K-21.5-b32/x86_64-unknown-linux/gnuserv
@@ -82,7 +82,7 @@ do
           #PS_ARGS="-ww x $PS_O_LONG_FMT"
           ;;
       -P) printer=out_line; NO_HDR=;;
-      -u) PS_ALL_OPT="";; ### ??? do I want this? PS_O_FMT=$PS_O_USER_FMT;;
+      -u) PS_ALL_OPT="u";; ### ??? do I want this? PS_O_FMT=$PS_O_USER_FMT;;
       -U) PS_ALL_OPT='-A'; PS_O_FMT=$PS_O_LONG_FMT;;
       -w) PS_WIDTH="${PS_WIDTH}w";;
       -W) PS_WIDTH="";;

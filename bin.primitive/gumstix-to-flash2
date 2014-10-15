@@ -14,22 +14,25 @@
 : ${SRC_DIR=su-boot}
 : ${MLO:="MLO"}
 : ${ubootimg:="u-boot.img"}
+: ${GOLD_UBOOT_IMAGE:=${GOLD_SD_DIR}/${ubootimg}}
+: ${boot_ubootimg:="${GOLD_UBOOT_IMAGE}"}
+: ${uimage:="uImage"}
 : ${uimage:="uImage"}
 : ${console:="gumstix-console-image-vet-overo.ubi"}
 DEV="/dev/$(readlink ${DEV})"
 echo "DEV>$DEV<"
 
-
-: ${EZEC=}
+source $(dirname "$0")/ezec.sh
 
 : ${umount_p=t}
 : ${eject_p=t}
 : ${tar_verbose_option=v}
-: ${prep_t=t}
+: ${prep_p=t}
 : ${no_files_p=}
 : ${gold_p=t}
 : ${cp_golden_img_p=}
-
+: ${no_exec_p=}
+: ${nand_ubi_p=}
 cd "${SRC}"
 
 gs_umount()
@@ -55,21 +58,28 @@ gs_eject()
     local dev="${1}"
     ${EZEC} sudo eject "${dev}" || {
         RC=$?
-        echo "eject ${dev} failed: $?"
+        echo "eject command on ${dev} failed: $?"
         exit $RC
     }
 
-#    if [ "${EZEC}" != "Non_EZECer" ]
-#    then
+   if [ -z "${no_exec_p}" ]
+   then
         local sec=4
         local count=3
+        sleep 1
         while [ -b "${dev}1" -o -b "${dev}2" ] && ((count > 0))
         do
           echo "${count}: ${dev} still exists. Sleeping for ${sec} seconds."
-          sleep "${sec}"
           ((--count))
         done
-#    fi
+        ((count <= 0)) && {
+            echo "Could not eject ${dev}"
+            return 1
+        }
+        true
+   else
+       echo "Not polling for ejection because no_exec_p is t."
+   fi
 }
 
 # to narrow: "${MOUNT_POINT_BOOT}|${MOUNT_POINT_ROOTFS}" && {
@@ -79,40 +89,31 @@ mount | egrep "${MOUNT_POINT}" && {
     exit 1
 } 1>&2
 
-
-Non_EZECer()
-{
-    echo "- $@" 1>&2
-}
-
-Verbose_EZECer()
-{
-    echo "+ $@"
-    "$@"
-}
-
-
+HOME_ROOT_FILES=()
 
 while (($# > 0))
 do
   case "$1" in
-      -n) EZEC="Non_EZECer";;
+      -n) EZEC="Non_EZECer"; no_exec_p=t;;
       -v) EZEC="Verbose_EZECer";;
       -x) set -x;;
       -u) umount_p=;;
-      -u) eject_p=;;
+      -e) eject_p=;;
+      --ubi) shift; boot_ubootimg="${1}";;
+      --nand-ubi) nand_ubi_p=t;;
       --ue|--eu) umount_p=; eject_p=;;
       --nu-boot|--nu) IMG_ROOT="nu-boot";;
       --su-boot|--su) IMG_ROOT="su-boot";;
       --qu-boot|--qu) IMG_ROOT="qu-boot";;
       --au-boot|--au) IMG_ROOT="au-boot";;
+      --hr-file) shift; HOME_ROOT_FILES+=("${1}");;
       -i|--img|--gold.img|--gold-img) cp_golden_img_p=t;;
       --no-files) no_files_p=t;;
       --gold) gold_p=t;;
       --lead) gold_p=;;
       --tar-quiet|--tar-hush|--tq) tar_verbose_option=;;
       --mk2partsd|--prep|--partition) prep_p=t;;
-      --no-mk2partsd|--no-prep|--no-partition) prep_p=;;
+      --no-mk2partsd|--no-prep|--no-partition|--np) prep_p=;;
       --dev) shift; DEV="${1}";;
       --) shift; break;;
       *) echo 1>&2 "Unsupported arg>$1<"; exit 1;;
@@ -124,13 +125,11 @@ echo "1: IMG_ROOT>${IMG_ROOT}<"
 SRC_DIR="${IMG_ROOT}/gumstix-console-image-vet-nand-2_0"
 echo "2: SRC_DIR>${SRC_DIR}<"
 echo "gold_p>${gold_p}<"
-HOME_ROOT_FILES=()
 
 ROOT_FS_TARBALL="${GOLD_SD_DIR}/${GOLD_ROOT_FS_TARBALL}"
 echo "1: ROOT_FS_TARBALL>${ROOT_FS_TARBALL}<"
 
 GOLD_IMG_PATH="${GOLD_DIR}/${GOLD_CONSOLE_IMG}"
-HOME_ROOT_FILES=("${GOLD_IMG_PATH}")
 ALL_FILES=("${HOME_ROOT_FILES[@]}" "${ROOT_FS_TARBALL}")
 echo "ALL_FILES>${ALL_FILES[@]}<"
 
@@ -149,7 +148,7 @@ done 1>&2
     exit 1
 }
 
-if [ -z "${prep_p}" ]
+if [ -n "${prep_p}" ]
 then
     ${EZEC} mk2partsd "${DEV}"
 else
@@ -183,11 +182,6 @@ mount | fgrep -q "${MOUNT_POINT}" >/dev/null 2>&1 || {
 
 mnt_boot="${MOUNT_POINT}/boot/"
 
-${EZEC} sudo cp "${GOLD_SD_DIR}/MLO" "${mnt_boot}"
-${EZEC} sudo cp "${GOLD_SD_DIR}/${ubootimg}" "${mnt_boot}"
-${EZEC} sudo cp "${GOLD_SD_DIR}/uImage" "${mnt_boot}"
-
-
 nand_dir="${SRC_DIR}/nand"
 
 [ -d "${nand_dir}" ] || {
@@ -196,6 +190,16 @@ nand_dir="${SRC_DIR}/nand"
   Exiting."
     exit 1
 } 1>&2
+
+[ -n "${nand_ubi_p}" ] && {
+    boot_ubootimg="${nand_dir}/${ubootimg}"
+}
+
+echo "boot_ubootimg>${boot_ubootimg}<"
+
+${EZEC} sudo cp "${GOLD_SD_DIR}/MLO" "${mnt_boot}"
+${EZEC} sudo cp "${boot_ubootimg}" "${mnt_boot}"
+${EZEC} sudo cp "${GOLD_SD_DIR}/uImage" "${mnt_boot}"
 
 ${EZEC} sudo cp -rf  "${nand_dir}/" "${mnt_boot}"
 
@@ -222,16 +226,20 @@ ${EZEC} sudo tar -xj${tar_verbose_option}f \
 echo
 echo "tar completed."
 
-root_dir="${mnt_rootfs}/home/root"
+home_root_dir="${mnt_rootfs}/home/root"
 [ -n "${cp_golden_img_p}" ] && {
-    ${EZEC} sudo cp "${HOME_ROOT_FILES[@]}" "${root_dir}"
+    ${EZEC} sudo cp "${GOLD_IMG_PATH}" "${home_root_dir}"
 }
 
-# This lets us know after the fact, what is on this gumstix.
-${EZEC} sudo ls "${mnt_rootfs}/var"
+(( "${#HOME_ROOT_FILES}" > 0 )) && {
+    ${EZEC} sudo cp "${HOME_ROOT_FILES[@]}" "${home_root_dir}"
+}
+
+# This lets us know after the fact, what is on this gumstix, but doesn't.
+#${EZEC} sudo ls "${mnt_rootfs}/var"
 # /var seems to be [re]initialized when linux boots.
 #${EZEC} sudo touch "${mnt_rootfs}/var/IMG_ROOT-${IMG_ROOT}"
-${EZEC} sudo ls "${mnt_rootfs}/var"
+#${EZEC} sudo ls "${mnt_rootfs}/var"
 
 [ "${umount_p}" = 't' ] && {
         mp="${mnt_rootfs}"
@@ -242,12 +250,22 @@ ${EZEC} sudo ls "${mnt_rootfs}/var"
         } 1>&2
 }
 
+
+echo "eject_p>$eject_p<"
 [ "${eject_p}" = 't' ] && {
-        gs_eject "${DEV}" || {
-            RC=$?
-            echo "gs_eject ${DEV} failed: $?"
-            exit $RC
-        }
+    echo "Ejecting ${DEV}"
+    gs_eject "${DEV}" || {
+        RC=$?
+        echo "gs_eject ${DEV} failed: $?"
+        exit $RC
+    }
 } 1>&2
 
-email-yopp "$0 done."
+if [ -x email-yopp ]
+then
+    echo "YOPP!ing."
+    email-yopp "$0 done."
+else
+    true
+fi
+
