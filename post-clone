@@ -68,7 +68,9 @@ ln_dotrc \
 	screenrc \
 	vimrc \
         exrc \
-	bash_logout
+	bash_logout \
+        go.home \
+        mailrc
 
 for f in .bash_login .bashrc
 do

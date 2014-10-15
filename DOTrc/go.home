@@ -291,13 +291,6 @@ Ee|xf86|       ${davep}xf86
 ### above which is "A nice place to bring your kids up."
 ### @todo Fix this.
 ###
-### Local Variables: ***
-### tab-width: 2 ***
-### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***
-### indent-tabs-mode: nil ***
-### comment-start: "#" ***
-### comment-end: "" ***
-### End: ***
 Ee|kdebase|       /usr/portage/kde-base/
 Ee|kdeb|       /usr/portage/kde-base/
 Ee|MH|       /home/davep/MH/
@@ -312,3 +305,12 @@ Ee|wipsrc|       /home/davep/work-is-play/src/
 Ee|wipi|       /home/davep/work-is-play/
 Ee|xdrop|       /home/davep/droppings/editors/xemacs/
 Ee|edrop|       /home/davep/droppings/editors/
+# Added Fri Oct 10 23:52:26 EDT 2014
+Ee|dpwg|       /home/davep/dpw/dpw.git/
+### Local Variables: ***
+### tab-width: 2 ***
+### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***
+### indent-tabs-mode: nil ***
+### comment-start: "#" ***
+### comment-end: "" ***
+### End: ***
