@@ -31,6 +31,7 @@ on_exit()
 
     echo "on_exit: rc: $rc; ${trap_exit_msg}"
 }
+# trap 'on_exit' 0
 
 on_error()
 {
@@ -39,6 +40,23 @@ on_error()
     echo "on_exit: rc: $rc; ${trap_exit_msg}"
     trap '' 0
 }
+# trap 'on_error' ERR
+
+sig_exit ()
+{
+    {
+        local sig_num=$1; shift
+        echo
+        echo "sig_exit, sig_num: $sig_num"
+        dump_bad_nodes $bad_nodes
+        exit 1
+    } 1>&2
+}
+
+# for sig in 2 3 4 5 6 7 8 15
+# do
+#     trap "sig_exit $sig" $sig
+# done
 
 #
 # template ends.

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# see ~/bin/ltrh
+# But just show one screen full.
+#
+source script-x
+
+if [ -n "$n" ]
+then
+    nlines="$n"
+else
+    nlines="$((${LINES:-24} - 2))"
+fi
+
+kwa_LTRH_NUM_LINES=$nlines PAGER="tail" ltrl "$@"
