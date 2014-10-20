@@ -41,7 +41,7 @@ setenv ()
 # If, e.g., I run "bash" in a tcsh, SHELL remains tcsh.
 # Even though the parent shell is tcsh, this file is only run by a bash 
 # and some things it calls (e.g. go2env) use SHELL.
-export SHELL=bash
+#export SHELL=bash
 export INPUTRC=$HOME/.inputrc
 
 # XXX something in the vVIDIA build process barfs if there is no trailing /.
@@ -690,6 +690,15 @@ cd ~				# go home
 DP_SOURCED_BASH_COMPLETION_FILES=
 source_bash_completion_code()
 {
+    # NB this requires some system changes.
+    # for now, a symlink must be created by hand:
+    # ~/.bash_completion.d -> /usr/share/bash-completion/
+    local sys_completion="/etc/profile.d/bash-completion.sh"
+    [ -f "${sys_completion}" ] && {
+        source "${sys_completion}"
+        DP_SOURCED_BASH_COMPLETION_FILES="${sys_completion}"
+	return 0
+    }
     local bc
     local BASH_COMPLETION
     local BASH_COMPLETION_DIR
@@ -719,7 +728,7 @@ source_bash_completion_code()
     run_ssh_agent_p && dp_start_ssh_agent
     ## Run completion by hand if we're in the odd situation described above
     ## the definition of `source_bash_completion_code'.
-    ## [ -z "$BASH_COMPLETION" ] && source_bash_completion_code
+    [ -z "$BASH_COMPLETION" ] && source_bash_completion_code
     ##dp_rc_logger "sourcing extras: $(expand_source_list $RC_DIR/extra_bash_completion_code "" $locale_rcs)"
     ##source_list $RC_DIR/extra_bash_completion_code "" $locale_rcs
 }

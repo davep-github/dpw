@@ -58,7 +58,7 @@ fi
 source eexec
 EExecContinue=1
 
-PRUNEDIRS="RCS CVS ,RCS-HIDE, .svn"
+PRUNEDIRS="RCS CVS ,RCS-HIDE, .svn .git .hg"
 excludes=
 or=
 for dir in $PRUNEDIRS

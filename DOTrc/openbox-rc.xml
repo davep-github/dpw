@@ -336,12 +336,6 @@
         <command>wmctrl -a "XEmacs@"</command>
       </action>
     </keybind>
-    <!-- Select and raise a window on compute2 which is used for qemu. -->
-    <keybind key="W-q">
-      <action name="Execute">
-        <command>wmctrl -a "root@compute2"</command>
-      </action>
-    </keybind>
     <!-- Select and raise a web browser (att: firefox) window. -->
     <keybind key="W-w">
       <action name="Execute">
@@ -529,7 +523,7 @@
       </mousebind>
     </context>
     <context name="Client">
-      <mousebind button="Left" action="Press">
+      <mousebind button="W-Left" action="Press">
         <action name="Focus"/>
         <action name="Raise"/>
       </mousebind>
