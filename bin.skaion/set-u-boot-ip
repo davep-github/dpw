@@ -57,15 +57,15 @@ on_error()
 }
 
 : ${GS_ORIG_ADDR:=192.168.001.030}
-: ${TH_ORIG_ADDR:=192.168.001.019}
+: ${VH_ORIG_ADDR:=192.168.001.019}
 
 # This addr was given to my laptop by DHCP.
 : ${GS_NEW_ADDR:=192.168.114.153}
-: ${TH_NEW_ADDR:=192.168.114.037}
+: ${VH_NEW_ADDR:=192.168.114.037}
 : ${IMG_FILE:=u-boot.img}
 
 
 EExec sed -r -b -f - "${IMG_FILE}" <<EOF
 s/${GS_ORIG_ADDR}/${GS_NEW_ADDR}/
-s/${TH_ORIG_ADDR}/${TH_NEW_ADDR}/
+s/${VH_ORIG_ADDR}/${VH_NEW_ADDR}/
 EOF

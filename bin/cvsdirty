@@ -1,20 +1,27 @@
 #!/bin/bash
 # $Id: cvsdirty,v 1.1 2001/07/24 07:30:07 davep Exp $
 #set -x
+set -u
 
-if [ "$1" = "-a" ]
-then
-    ignore_pat=''
-    all_pat='*'
-    shift
-else
-    ignore_pat='*/obj|*/talismon/src/datecode.c|*/talismon/include/datecode.h|*/modldargs.pl|*.sym'
-    ignore_pat='*/obj|*/talismon/src/datecode.c'
-    all_pat=''
-fi
+: ${ignore_pat='*/obj|*/talismon/src/datecode.c|*/talismon/include/datecode.h|*/modldargs.pl|*.sym'}
+: ${ignore_pat='*/obj|*/talismon/src/datecode.c'}
+: ${all_pat=''}
+: ${dirty_only_p=t}
 
-dir=${1:-$sb}
-dir=${dir:-/talisman/sb}
+while (($# > 0))
+do
+  case "$1" in
+      -a) ignore_pat=''; all_pat='*';;
+      -d) dirty_only_p=t;;
+      -u) dirty_only_p=;;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
+
+dir=${1:-${sb-}}
+dir=${dir:-.}
 
 cd $dir || {
     echo "canna cd" 
@@ -40,7 +47,9 @@ do
 	echo "$line"
 	;;
     \?*) 
-	echo "$line"
+        [ -n "${dirty_only_p}" ] || {
+            echo "$line"
+        }
 	;;
 
     esac

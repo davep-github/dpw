@@ -27,7 +27,7 @@ source $(dirname "$0")/ezec.sh
 : ${umount_p=t}
 : ${eject_p=t}
 : ${tar_verbose_option=v}
-: ${prep_p=t}
+: ${prep_p=}
 : ${no_files_p=}
 : ${gold_p=t}
 : ${cp_golden_img_p=}
@@ -97,7 +97,7 @@ do
       -n) EZEC="Non_EZECer"; no_exec_p=t;;
       -v) EZEC="Verbose_EZECer";;
       -x) set -x;;
-      -u) umount_p=;;
+      -u) umount_p=; eject_p=;;
       -e) eject_p=;;
       --ubi) shift; boot_ubootimg="${1}";;
       --nand-ubi) nand_ubi_p=t;;
@@ -129,7 +129,7 @@ echo "gold_p>${gold_p}<"
 ROOT_FS_TARBALL="${GOLD_SD_DIR}/${GOLD_ROOT_FS_TARBALL}"
 echo "1: ROOT_FS_TARBALL>${ROOT_FS_TARBALL}<"
 
-GOLD_IMG_PATH="${GOLD_DIR}/${GOLD_CONSOLE_IMG}"
+GOLD_DOT_IMG_PATH="${GOLD_DIR}/${GOLD_CONSOLE_IMG}"
 ALL_FILES=("${HOME_ROOT_FILES[@]}" "${ROOT_FS_TARBALL}")
 echo "ALL_FILES>${ALL_FILES[@]}<"
 
@@ -228,18 +228,12 @@ echo "tar completed."
 
 home_root_dir="${mnt_rootfs}/home/root"
 [ -n "${cp_golden_img_p}" ] && {
-    ${EZEC} sudo cp "${GOLD_IMG_PATH}" "${home_root_dir}"
+    ${EZEC} sudo cp "${GOLD_DOT_IMG_PATH}" "${home_root_dir}"
 }
 
 (( "${#HOME_ROOT_FILES}" > 0 )) && {
     ${EZEC} sudo cp "${HOME_ROOT_FILES[@]}" "${home_root_dir}"
 }
-
-# This lets us know after the fact, what is on this gumstix, but doesn't.
-#${EZEC} sudo ls "${mnt_rootfs}/var"
-# /var seems to be [re]initialized when linux boots.
-#${EZEC} sudo touch "${mnt_rootfs}/var/IMG_ROOT-${IMG_ROOT}"
-#${EZEC} sudo ls "${mnt_rootfs}/var"
 
 [ "${umount_p}" = 't' ] && {
         mp="${mnt_rootfs}"
