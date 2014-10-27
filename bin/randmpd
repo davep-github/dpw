@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+trap_exit_msg=
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+}
+# trap 'on_exit' 0
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+    trap '' 0
+}
+# trap 'on_error' ERR
+
+sig_exit ()
+{
+    {
+        local sig_num=$1; shift
+        echo
+        echo "sig_exit, sig_num: $sig_num"
+        dump_bad_nodes $bad_nodes
+        exit 1
+    } 1>&2
+}
+
+# for sig in 2 3 4 5 6 7 8 15
+# do
+#     trap "sig_exit $sig" $sig
+# done
+
+#
+# template ends.
+########################################################################
+append_p=false
+play_p=true
+
+# Usage variable usage:
+Usage_args_info=" [-a|--append|-A|--no-append|--play|--no-play]"
+Usage_synopsis="Select/add a random album to mpd
+"
+# Using ) after the args makes copy & paste between here and the
+# case statement easier.
+Usage_details="${EExec_parse_usage}
+-a|--append) Add the random album w/o clearing the playlist.
+--no-play) Don't issue play command.
+"
+# Example of arg parsing.
+option_str="aApP"
+long_options=(
+    "append"
+)
+source dp-getopt+.sh || exit 1
+while (($# > 0))
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support: -n -v -q, etc. q.v. ~/bin/eexec
+      # Done by EExec_parse and friends.
+
+      # Program options.
+      -a|--append) append_p=true;;
+      -A|--no-append) append_p=false;;
+      -p|--play) play_p=true;;
+      -P|--no-play) play_p=false;;
+
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      # getopt will barf about unknown options.
+      # Here we barf about known options that we have forgotten to handle.
+      *) echo 1>&2 "Unhandled option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+
+$append_p || EExec mpc clean
+mpc search album "$(mpc list album | shuf -n1)" | EExec mpc add
+$play_p && EExec mpc play
