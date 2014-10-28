@@ -419,12 +419,12 @@ it loads."
 ;;;
 ;;; Emms
 ;;;
-(defcustom dp-wants-emms-p nil ; XXX @todo change back to: t
+(defcustom dp-wants-emms-p t ; XXX @todo change back to: t
   "*Should the Emacs Multimedia System be enabled?"
   :type 'boolean
   :group 'dp-vars)
 
-(defcustom dp-wants-emms-started-at-startup-p nil ; ibid t
+(defcustom dp-wants-emms-started-at-startup-p t ; ibid t
   "*Should the Emacs Multimedia System be started?"
   :type 'boolean
   :group 'dp-vars)

@@ -56,9 +56,9 @@ ${EExecExporter} EExecDashN_opt=
 ${EExecExporter} EExecDashV_opt=
 ${EExecExporter} EExecDash_opts=
 
-EExec_parse_usage="-n -- Show what would happen but don't do it. [eexec]
--v -- Be verbose about it. [eexec]
--q -- Anti-verbose. [eexec]"
+EExec_parse_usage="-n) Show what would happen but don't do it. [eexec]
+-v) Be verbose about it. [eexec]
+-q) Anti-verbose. [eexec]"
 
 EExec_parse_option_str="nvq"
 

@@ -3206,7 +3206,7 @@ lisp-interaction mode."
   (dp-timestamp)
   (dp-set-or-goto-bm "mbbm" :reset t))
 
-(defvar dp-ephemeral-dir (expand-file-name "~/ephemeral.d"))
+(defvar dp-ephemeral-dir (dp-mk-dropping-dir "ephemeral.d"))
 (defvar dp-lisp-dir (expand-file-name "~/lisp"))
 (defvar dp-current-elisp-devel-filename nil
   "Last elisp devel filename visited.")

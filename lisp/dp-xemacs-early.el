@@ -20,6 +20,9 @@
 ;;
 (defun* dp-mk-dropping-dir (subdir &optional dont-change-subdir-name-p 
                             (create-p t))
+  "Make SUBDIR in `dp-xemacs-droppings' to hold file droppings.
+Things like backup files, auto-saves, etc.
+Some are ephemeral and some are longer term."
   (unless dont-change-subdir-name-p
     (if (or (< (length subdir) 2)
             (not (string= (substring subdir -2) ".d")))

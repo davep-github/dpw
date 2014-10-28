@@ -671,6 +671,7 @@ already in there.")
                             [?i] 'emms-player-mpd-show
                             [?S] 'emms-player-mpd-stop
                             [?s] 'emms-player-mpd-start
+                            [?r] 'dp-emms-random-album
                             ;; <: dp music player bindings :>
                             )
       "Keymap to control my music player. using MPD as of: 2010-05-21T17:45:13")

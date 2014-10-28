@@ -262,8 +262,10 @@ echo 1>&2 "Check len and offer to clear \`e' flag if too short."
             grep "${emacs_locals_re}" "${gfile}" >> "${tmp_gfile}"
             yes y | cp "${tmp_gfile}" "${gfile}" || {
                 echo "cp ${tmp_gfile} ${gfile} failed."
+                rm -f "${tmp_gfile}"
                 exit 1
             } 1>&2
+            rm -f "${tmp_gfile}"
 	    ;;
 		    
 	-d)

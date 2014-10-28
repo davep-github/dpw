@@ -10,7 +10,7 @@
         "Could not `require' `emms-setup'."
         (interactive)
         ;; Closure really needed.
-        ;; I hate this or that is broken, with no way tell which.
+        ;; I hate `this or that' is broken, with no way tell which or what.
         (ding)
         (dmessage "The emms system enabled: %s; emms package present: %s."
                   dp-emms-enable-p (dp-optionally-require 'emms-setup)))
@@ -41,7 +41,8 @@
         ;; value of "music_directory" from your MusicPD config.  There are
         ;; additional options available as well, but the defaults should be
         ;; sufficient for most uses.
-        (setq emms-player-mpd-music-directory "/home/davep/Mvsik/"
+        (setq emms-player-mpd-music-directory (concat 
+                                               (getenv "HOME") "/Music/")
               emms-playlist-buffer-name "*Mvsik*")))
       
     ;; You can set `emms-player-mpd-sync-playlist' to nil if your master
@@ -58,10 +59,10 @@
           emms-player-mpd-server-port "6600"
           emms-show-format "Now playing: %s"
           emms-mode-line-mode-line-function nil
-          emms-mode-line-titlebar-function 'emms-mode-line-playlist-current
           ;; Put the song name on the title bar only. 
           ;; It's too long for the mode line.
-          emms-mode-line-titlebar-function 'emms-mode-line-playlist-current
+          ;; emms-mode-line-titlebar-function 'emms-mode-line-playlist-current
+          emms-mode-line-titlebar-function nil
           ;; Looks like some mvsikal notes?
           ;;emms-mode-line-format "  q_q_ %s  _p_p" ;
           ;;emms-mode-line-format "  -=|[ %s ]|=- "
@@ -70,6 +71,15 @@
           )
     (add-hook 'emms-player-started-hook 'emms-show))
     
+  (defun dp-emms-random-album (&optional arg)
+    "Choose a random album."
+    (interactive "P")
+    (let ((args (if arg
+                    (read-from-minibuffer "args: ")
+                  "")))
+      (shell-command-to-string (format "randmpd %s" args))
+      (emms-player-mpd-connect)))
+  
   (defun dp-emms-startup ()
     "Start up the previously set up emms."
     (dp-emms-setup)
@@ -77,7 +87,7 @@
     ;; Turn the mode-line off around our call to `emms-player-mpd-connect'
     (emms-mode-line 0) 
     (emms-player-mpd-connect)
-    (emms-mode-line 1))))               ; "We need this to make it go." )
+    (emms-mode-line 1)))                ; "We need this to make it go." )
 
 ;; Keeping this out here gives us more control and makes debugging a bit
 ;; easier.
@@ -88,9 +98,9 @@
   (error "EMMS had start-up problems. Please try again later." )))
 
 (defun dp-emms-playlist-mode-go ()
-(interactive)
-(emms-player-mpd-connect)
-(call-interactively 'emms-playlist-mode-go))
+  (interactive)
+  (emms-player-mpd-connect)
+  (call-interactively 'emms-playlist-mode-go))
                           
 ;;
 ;; These are globally bound emms keys.
@@ -102,6 +112,7 @@
 (global-set-key [(control meta ?p)] 'emms-player-mpd-pause)
 (global-set-key [(control meta ?P)] 'dp-emms-playlist-mode-go)
 (define-key emms-playlist-mode-map [?g] 'emms-player-mpd-connect)
+(define-key emms-playlist-mode-map [?R] 'dp-emms-random-album)
 ;; Too many modes have good bindings for C-p
 ;;(global-set-key [(control ?p)] 'emms-player-mpd-pause)
 
