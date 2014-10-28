@@ -17,9 +17,10 @@ do
   ${EEXEC_SHIFT}
 done
 EExec_verbose_msg $(echo_id eexec_program)
-#unset eexec_program
-### Pass to mk-mpd-shuffled-album-playlist
-export eexec_program
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
 
 trap_exit_msg=
 
@@ -61,29 +62,34 @@ sig_exit ()
 #
 # template ends.
 ########################################################################
-append_p=false
-post_op=play
+
+#mpc search album "$(mpc list album | shuf -n1)" | EExec mpc add
 
 # Usage variable usage:
-Usage_args_info=" [-a|--append|-A|--no-append|--play|--no-play]"
-Usage_synopsis="Select/add a random album to mpd
+Usage_args_info=""
+Usage_synopsis="Create list of files from shuffled list of albums:
 "
 # Using ) after the args makes copy & paste between here and the
 # case statement easier.
 Usage_details="${EExec_parse_usage}
--a|--append) Add the random album w/o clearing the playlist first.
---no-play) Don't issue play command.
+--cat|--out|--list) Put list on stdout
+--mpc-add|--add|--queue) Queue/add to mpd current playlist
+-z|--zap|--clear|--empty|--mt|--no-append) Clear existing playlist first.
+-a|--append) Do not clear existing playlist.
+--num-albums|--num) Number of albums to use.
+-j|--just-album-names|--just-albums|--album-names|--jan) Guess...
 "
+
 # Example of arg parsing.
-option_str="aApPs"
+option_str="zaj"
 long_options=(
+    "cat" "out" "list"
+    "mpc-add" "add" "queue"
+    "zap" "clear" "empty" "mt"
     "append"
-    "no-append"
-    "play"
-    "no-play"
-    "stop"
-    "nop"
+    "num-albums:" "num:"
 )
+
 source dp-getopt+.sh || exit 1
 while (($# > 0))
 do
@@ -93,12 +99,12 @@ do
       # Done by EExec_parse and friends.
 
       # Program options.
-      -a|--append) append_p=true;;
-      -A|--no-append) append_p=false;;
-      -P|--play) post_op=play;;
-      -p|--no-play) post_op=stop;;
-      -s|--stop) post_op=stop;;
-      --nop) post_op=;;
+      --cat|--out|--list) handler=cat_handler;;
+      --mpc-add|--add|--queue) handler=mpc_add_handler;;
+      -z|--zap|--clear|--empty|--mt|--no-append) clear_p=true;;
+      -a|--append) clear_p=false;;
+      --num-albums|--num) shift; num="${1}";;
+      -j|--just-album-names|--just-albums|--album-names|--jan) just_album_names_p=true;;
 
       # Help!
       --help) Usage; exit 0;;
@@ -111,12 +117,34 @@ do
     shift
 done
 
-EExec mpc stop
-#$append_p || EExec mpc clear
-#mpc search album "$(mpc list album | shuf -n1)" | EExec mpc add
-mk-mpd-shuffled-album-playlist \
-  "${DP_SCRIPT_X_DEBUG_PROPAGATOR}" \
-  --num 1 \
-  --mpc-add \
-  "$@"
-[ -n "${post_op}" ] && EExec mpc "${post_op}"
+: ${handler:=cat_handler}
+: ${clear_p=true}
+: ${num=-0}
+: ${just_album_names_p=false}
+
+cat_handler()
+{
+    cat
+}
+
+mpc_add_handler()
+{
+    if EExecDashN_p
+    then
+        echo "{-} mpc add..."
+        cat
+    else
+        EExec mpc add
+    fi
+}
+
+"${clear_p}" && EExec mpc clear
+mpc list album | shuf | head -n "${num}" | while read
+do
+  if "${just_album_names_p}"
+  then
+      echo "${REPLY}"
+  else
+      mpc search album "${REPLY}" | "${handler}"
+  fi
+done
