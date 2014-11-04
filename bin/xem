@@ -189,7 +189,7 @@ $VERBOSE echo ">>>>>>>>>>>>>>>>>>>>>>$log_file<<<<<<<<<<<<<<<<<<<<<<"
 niceness="-20"
 nice_cmd="sudo nice -n $niceness"
 renice_cmd="sudo renice -n $niceness"
-cmd='$BIN -font "$font"  '${FONT_SET_EXPR[@]}' $cmd_args'
+cmd='$BIN ${font_arg}  '${FONT_SET_EXPR[@]}' $cmd_args'
 if [ "$just_show" != 'y' ]
 then
     #echo "dir>$PWD<"

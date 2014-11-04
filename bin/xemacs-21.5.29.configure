@@ -36,7 +36,7 @@ fi
 
 : ${LOCAL:=/usr/local}
 : ${DS_CONFIGURE:=./configure}
-: ${xft_opt_val=--with-xft}
+: ${xft_opt_val=--with-xft=emacs,menubars}
 : ${xft_opt=${xft_opt_val}}
 
 [ "${xft_opt}" = "${xft_opt_val}" ] && {

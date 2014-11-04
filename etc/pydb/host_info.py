@@ -360,11 +360,13 @@ skaion_family = e(
     # This is OK, but O0{}[]() : no slashed 0. O & 0 are distinguishable.
     #'xem_font': '''-*-Lucidatypewriter-medium-r-*-*-*-120-*-*-*-*-*-*''',
     # May be less legible in the long run, but 0 is slashed.
-    'xem_font': '''-*-Fxd-medium-r-*-*-*-120-*-*-*-*-*-*''',
+#    'xem_font': '''-*-Fxd-medium-r-*-*-*-120-*-*-*-*-*-*''',
     #'xem_font': '''-*-fixed-medium-r-*-*-*-140-*-*-*-*-iso8859-*''',
-    "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
-    "xem_font": '''-*-Fixed-medium-r-*-*-*-120-*-*-*-*-*-*''',
+#    "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
+#    "xem_font": '''-*-Fixed-medium-r-*-*-*-120-*-*-*-*-*-*''',
+    'xem_font': '',
     'work-zone': 'skaion',
+    """xem-xft-font""": '''"Inconsolata-13"''',
     'xterm_bg': SKAION_BG_COLOR,
     'xterm_fg': SKAION_FG_COLOR,
     'xem_bg_color': NVIDIA_BG_COLOR,
