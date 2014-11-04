@@ -78,16 +78,19 @@ Usage_details="${EExec_parse_usage}
 -a|--append) Do not clear existing playlist.
 --num-albums|--num) Number of albums to use.
 -j|--just-album-names|--just-albums|--album-names|--jan) Guess...
+-p <playlist> |--playlist <playlist>) Put list into <playlist>.
 "
 
 # Example of arg parsing.
-option_str="zaj"
+option_str="zajp:"
 long_options=(
     "cat" "out" "list"
     "mpc-add" "add" "queue"
     "zap" "clear" "empty" "mt"
     "append"
     "num-albums:" "num:"
+    "all"
+    "pl:" "play-list:" "playlist:"
 )
 
 source dp-getopt+.sh || exit 1
@@ -105,6 +108,9 @@ do
       -a|--append) clear_p=false;;
       --num-albums|--num) shift; num="${1}";;
       -j|--just-album-names|--just-albums|--album-names|--jan) just_album_names_p=true;;
+      -p|--pl|--play-list|--playlist) shift; playlist="${1}"; handler=playlist_handler;;
+      -a|--all) num=-0;;
+
 
       # Help!
       --help) Usage; exit 0;;
@@ -127,6 +133,11 @@ cat_handler()
     cat
 }
 
+playlist_handler()
+{
+    cat >| "${playlist}"
+}
+
 mpc_add_handler()
 {
     if EExecDashN_p
@@ -138,6 +149,11 @@ mpc_add_handler()
     fi
 }
 
+EExecDashN_p && handler=cat_handler
+
+[ "${handler}" = "mpc_add_handler" ] || {
+    clear_p=false
+}
 "${clear_p}" && EExec mpc clear
 mpc list album | shuf | head -n "${num}" | while read
 do

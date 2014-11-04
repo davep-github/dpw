@@ -34,16 +34,17 @@
 (unless (bound-and-true-p dp-default-c-style-name)
   (defvar dp-default-c-style-name "meduseld-c-style"))
 
-(defcustom dp-default-c-style 
-  (symbol-value (intern-soft dp-default-c-style-name))
-  "*Default C[++] style."
-  :group 'dp-vars
-  :type 'symbol)
 
 (defun meduseld-style ()
   "Set up home (Meduseld.net) C style."
   (interactive)
   (c-set-style "meduseld-c-style"))
+
+(defcustom dp-default-c-style 
+  (symbol-value (intern-soft dp-default-c-style-name))
+  "*Default C[++] style."
+  :group 'dp-vars
+  :type 'symbol)
 
 (defun dp-cc-mode-activate-style (&optional style-name)
   "Set up a C/C++ style. Use the default by default."

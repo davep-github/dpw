@@ -77,7 +77,7 @@
     (let ((args (if arg
                     (read-from-minibuffer "args: ")
                   "")))
-      (shell-command-to-string (format "randmpd %s" args))
+      (shell-command-to-string (format "mpc-random-album %s" args))
       (emms-player-mpd-connect)))
   
   (defun dp-emms-startup ()
@@ -108,9 +108,8 @@
 ;; bind them regardless of emms' state. This will cause errors if emms is not
 ;; set up and started. A better thing would be to bind to something that
 ;; gives a clue as to what's up.
-(global-set-key [(control meta ?m)] 'emms-player-mpd-pause)
+(global-set-key [(control meta ?m)] 'dp-emms-playlist-mode-go)
 (global-set-key [(control meta ?p)] 'emms-player-mpd-pause)
-(global-set-key [(control meta ?P)] 'dp-emms-playlist-mode-go)
 (define-key emms-playlist-mode-map [?g] 'emms-player-mpd-connect)
 (define-key emms-playlist-mode-map [?R] 'dp-emms-random-album)
 ;; Too many modes have good bindings for C-p

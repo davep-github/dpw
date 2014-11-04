@@ -36,6 +36,15 @@ fi
 
 : ${LOCAL:=/usr/local}
 : ${DS_CONFIGURE:=./configure}
+: ${xft_opt_val=--with-xft}
+: ${xft_opt=${xft_opt_val}}
+
+[ "${xft_opt}" = "${xft_opt_val}" ] && {
+    athena_type=xaw
+}
+: ${athena_type=3d}             # we want 3d, but not with xft.
+: ${athena_opt=--enable-athena=${athena_type}}
+
 # And I quote:
 # The configure script has been rebuilt with autoconf 2.63.  This
 # version fixed a bug which can cause the script to hang or fail
@@ -79,19 +88,20 @@ ${DS_CONFIGURE} \
     --with-zlib                 \
     --with-x11                  \
     --with-database=none        \
-    --with-infodock  \
-    --with-mule  \
-    --with-canna=no  \
-    --with-wnn=no  \
-    --with-wnn6=no  \
-    --enable-toolbars=no  \
-    --prefix=$PREFIX  \
-    --with-site-lisp=yes  \
-    --with-site-modules=yes  \
-    --with-infopath=$PREFIX/lib/xemacs/info:$PREFIX/info:/usr/info/X11:/usr/info:$LOCAL/lib/texmf/doc/info:/usr/lib/texmf/doc:/usr/share/info  \
-    --enable-clash-detection  \
-    --enable-athena=3d  \
-    --enable-toolbars=no  \
+    ${xft_opt}                  \
+    --with-infodock             \
+    --with-mule                 \
+    --with-canna=no             \
+    --with-wnn=no               \
+    --with-wnn6=no              \
+    --enable-toolbars=no        \
+    --prefix=$PREFIX            \
+    --with-site-lisp=yes        \
+    --with-site-modules=yes     \
+    --with-infopath=$PREFIX/lib/xemacs/info:$PREFIX/info:/usr/info/X11:/usr/info:$LOCAL/lib/texmf/doc/info:/usr/lib/texmf/doc:/usr/share/info   \
+    --enable-clash-detection    \
+    ${athena_opt}               \
+    --enable-toolbars=no        \
     --enable-pdump
 
 rc=$?

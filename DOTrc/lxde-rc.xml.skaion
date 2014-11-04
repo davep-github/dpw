@@ -178,6 +178,12 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
             <command>mpc-toggle-play</command>
         </action>
     </keybind>    
+    <!-- Keybinding for toggling mdp random album -->
+    <keybind key="W-C-p">
+        <action name="Execute">
+            <command>mpc-random-album</command>
+        </action>
+    </keybind>    
     <!-- Keybinding for Volume management -->
     <keybind key="XF86AudioRaiseVolume">
       <action name="Execute">

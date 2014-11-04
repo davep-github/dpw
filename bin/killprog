@@ -7,6 +7,10 @@ $pre_delimit = $post_delimit = "";
 $internal_delimit = " ";
 $silent = 0;
 $debug = 0;
+$user_only_p = 0;
+$user_option = "-e";
+$siggie = "TERM";
+
 if ($ProgName eq 'findprog')
 {
   $do_kill = 0;
@@ -52,6 +56,24 @@ elsif ($arg0 eq '-D') {
   ++$debug;
   shift(@ARGV);
 }
+elsif ($arg0 eq '-u') {
+  $user_only_p = 1;
+  $user_option="-u davep";
+  shift(@ARGV);
+}
+elsif ($arg0 eq '-U') {
+  $user_only_p = 0;
+  $user_option="-e";
+  shift(@ARGV);
+}
+elsif ($arg0 eq '-k') {
+  $do_kill = 0;
+  shift(@ARGV);
+}
+elsif ($arg0 eq '-K') {
+  $do_kill = 1;
+  shift(@ARGV);
+}
 else
 {
   if  ($arg0 eq '--') {
@@ -66,7 +88,7 @@ if ($OSName eq 'Linux')
 {
   # pattern to find program's pid and executable name
   # 8460 gdb /home/scratch.dpanariti_t124/sb2/hw/hw/nvdiag/mods/mods --command=dbcommands
-  $psCmd = 'ps -u davep -o pid,cmd';
+  $psCmd = "ps $user_option -o pid,cmd";
   $nameFinder = '^\s*(\d+)\s+(\S+)';
   
   # pattern to find an interpreter's program (i.e. 1st arg)

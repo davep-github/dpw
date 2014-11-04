@@ -63,6 +63,7 @@ sig_exit ()
 ########################################################################
 append_p=false
 post_op=play
+num=1
 
 # Usage variable usage:
 Usage_args_info=" [-a|--append|-A|--no-append|--play|--no-play]"
@@ -83,6 +84,7 @@ long_options=(
     "no-play"
     "stop"
     "nop"
+    "num-albums:" "num:"
 )
 source dp-getopt+.sh || exit 1
 while (($# > 0))
@@ -99,6 +101,7 @@ do
       -p|--no-play) post_op=stop;;
       -s|--stop) post_op=stop;;
       --nop) post_op=;;
+      --num-albums|--num) shift; num="${1}";;
 
       # Help!
       --help) Usage; exit 0;;
@@ -116,7 +119,7 @@ EExec mpc stop
 #mpc search album "$(mpc list album | shuf -n1)" | EExec mpc add
 mk-mpd-shuffled-album-playlist \
   "${DP_SCRIPT_X_DEBUG_PROPAGATOR}" \
-  --num 1 \
+  --num "${num}" \
   --mpc-add \
   "$@"
 [ -n "${post_op}" ] && EExec mpc "${post_op}"
