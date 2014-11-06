@@ -63,13 +63,14 @@ Emacs.default.attributeBackground:	rgb:f3/f3/f3
 Emacs.default.attributeForeground:	black
 
 ! Set the modeline colors.
-Emacs.modeline*attributeForeground:	Blue
+Emacs.modeline*attributeForeground:	Green
 ! bronze color scheme
-!Emacs.modeline*attributeBackground:	rgb:f1/df/d4
-Emacs.modeline*attributeBackground:	rgb:f1/f1/f1
+Emacs.modeline*attributeBackground:	rgb:f1/df/d4
+!Emacs.modeline*attributeBackground:	rgb:f1/f1/f1
 
 ! Set the color of the text cursor.
-Emacs.text-cursor*attributeBackground:	Red3
+!Emacs.text-cursor*attributeBackground:	Red3
+Emacs.text-cursor*attributeBackground:	Blue
 
 ! If you want to set the color of the mouse pointer, do this:
 ! Emacs.pointer*attributeForeground:	Black

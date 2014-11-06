@@ -97,11 +97,11 @@ invocation_dir="${PWD}"
 vsetp "${set_sandbox_p}" && current_sb=$(dp4-sb-root -S) && {
     SB_SET_EXPR=("-eval (dp-set-sandbox\"$current_sb\")")
 
-    echo "[0]>${SB_SET_EXPR[0]}<"
-    echo "[1]>${SB_SET_EXPR[1]}<"
-    echo "[@]>${SB_SET_EXPR[@]}<"
+#    echo "[0]>${SB_SET_EXPR[0]}<"
+#    echo "[1]>${SB_SET_EXPR[1]}<"
+#    echo "[@]>${SB_SET_EXPR[@]}<"
     aaa=$(echo "${SB_SET_EXPR[@]}")
-eko "$aaa"
+#eko "$aaa"
 }
 
 [ -z "$did_cd" ] && cd $HOME
@@ -161,9 +161,9 @@ PRE_CMD=$($HOST_INFO -n '' ${prefix}_pre_cmd)
 XEM_XFT_FONT=$($HOST_INFO -n '' 'xem-xft-font')
 vsetp $XEM_XFT_FONT && {
     FONT_SET_EXPR=("-eval" "'" "(set-default-font $XEM_XFT_FONT)" "'")
-    echo "[0]>${FONT_SET_EXPR[0]}<"
-    echo "[1]>${FONT_SET_EXPR[1]}<"
-    echo "[@]>${FONT_SET_EXPR[@]}<"
+#    echo "[0]>${FONT_SET_EXPR[0]}<"
+#    echo "[1]>${FONT_SET_EXPR[1]}<"
+#    echo "[@]>${FONT_SET_EXPR[@]}<"
 }
 
 if [ -z "$OPTS" ]
