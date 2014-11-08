@@ -73,8 +73,8 @@ default = dppydb.Entry({
     #
     'fsf_xem_bin': 'emacs',
     #'xem_bin': '/usr/local/bin/xemacs',
-    'xem_bin': os.path.join(YOKEL_BIN, "xemacs"),
-    'lem_bin': os.path.join(YOKEL_BIN, "xemacs"),
+    'xem_bin': os.path.join(HOME_LOCAL_BIN, "xemacs"),
+    'lem_bin': os.path.join(HOME_LOCAL_BIN, "xemacs"),
     'lem_opts': '-eval (dp-laptop-rc)',
     'main_macs_opts': '-eval (dp-main-rc)',
     #'xem_font': '''-font -*-courier-medium-r-*-*-*-140-*-*-*-*-iso8859-*''',

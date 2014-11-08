@@ -29,13 +29,16 @@ fi
 . script-x
 if [ "$HOSTNAME" = "vilya" ]
 then
-	: ${PREFIX:=$HOME/bree}
+    banner "Move xemacs destination to ~/yokel"
+    : ${PREFIX:=$HOME/bree}
 else
-	: ${PREFIX:=$HOME/yokel}
+    # I am now using ~/local for things I build that I don't necessarily want to foist on everyone (say on a work machine), but that I want but don't consider to be 'mine' in any way (like I do for stuff in ~/yokel). This works at home as well, so there's no reason not to use it as the default.
+    : ${PREFIX:=$HOME/local}
 fi
 
 : ${LOCAL:=/usr/local}
 : ${DS_CONFIGURE:=./configure}
+# Soooo purty...
 : ${xft_opt_val=--with-xft=emacs,menubars}
 : ${xft_opt=${xft_opt_val}}
 
