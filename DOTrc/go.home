@@ -287,7 +287,7 @@ Ee|upkb|       /usr/portage/kde-base/
 Ee|xf86|       ${davep}xf86
 
 ### There *must* be 3 octothorpes, e.g. "^###" in order for g -a to work.
-### New entries are added after this mess and should occasional be moved
+### New entries are added after this mess and should occasionally be moved
 ### above which is "A nice place to bring your kids up."
 ### @todo Fix this.
 ###

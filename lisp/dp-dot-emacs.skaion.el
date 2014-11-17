@@ -1,6 +1,10 @@
-
 ;; Never remove passwords from cache.
 (setq password-cache-expiry nil)
+
+;; For some reason, vc isn't being autoloaded here, but it is @ home.
+;; Home must be the odd one, since this is the 3rd place (sigh) I've had to
+;; do this.
+(vc-load-vc-hooks)  ; This is being added to the Tools->Version Control menu.
 
 
 (dp-add-list-to-list 

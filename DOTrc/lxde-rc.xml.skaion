@@ -184,7 +184,9 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
             <command>mpc-random-album</command>
         </action>
     </keybind>    
+
     <!-- Keybinding for Volume management -->
+<!--
     <keybind key="XF86AudioRaiseVolume">
       <action name="Execute">
           <command>amixer -q sset Master 3%+</command>
@@ -202,10 +204,17 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
           <command>amixer -q sset Master toggle</command>
       </action>
     </keybind>
-
+-->
     <keybind key="XF86WWW">
       <action name="Execute">
           <command>x-terminal-emulator</command>
+      </action>
+    </keybind>
+
+    <!-- Just a free key -->
+    <keybind key="XF86Sleep">
+      <action name="Execute">
+          <command>mpc-random-album</command>
       </action>
     </keybind>
 

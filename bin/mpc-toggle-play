@@ -63,10 +63,12 @@ sig_exit ()
 # template ends.
 ########################################################################
 
-if mpc-playing-p
-then
-    mpc pause >/dev/null 2>&1
-else
-    mpc play >/dev/null 2>&1
-fi
+#RTFM if mpc-playing-p
+#RTFM then
+#RTFM     mpc pause >/dev/null 2>&1
+#RTFM else
+#RTFM     mpc play >/dev/null 2>&1
+#RTFM fi
+
+mpc toggle >/dev/null 2>&1
 
