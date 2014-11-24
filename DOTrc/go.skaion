@@ -99,3 +99,6 @@ Ee|mfrid|rfidss|ta2rfid|rfidta2|        ${ta2rfidscenarioskaion}
 Ee|openboxconfig|obconfig|obcfg|       /home/davep/.config/openbox/lxde-rc.xml
 # Added Thu Nov 13 12:57:59 EST 2014
 Ee|dpwdist|       /home/davep/dpw/dist/
+Ee|cont1|         root@controller1
+# Added Mon Nov 24 12:20:27 EST 2014
+Ee|ta2|       /home/davep/work/vet/ta2-scalability/

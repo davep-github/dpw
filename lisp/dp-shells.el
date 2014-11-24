@@ -401,14 +401,14 @@ not destined to be saved.  ")
   '("\\.gz$"
     "\\.bz2$"
     "\\.zip$"
+    "\\.xz$"
     "\\.tar")
 "Don't save these. XEmacs stupidly considers expanded files as dirty.")
-  
+
 (defun dp-shells-save-buffer-p ()
   (and dp-shells-save-buffer-flag-p
-       (not (dp-match-a-regexp (buffer-file-name) 
+       (not (dp-match-a-regexp (buffer-file-name)
                                dp-shells-files-to-not-save))))
-       
 
 (defun dp-shell-lookfor-dirty-buffer-cmds (str)
   (when (dp-shell-dirty-buffer-cmd-p str)

@@ -110,7 +110,7 @@
     <firstdesk>1</firstdesk>
     <names>
       <name>Local</name>
-      <name>Remote</name>
+      <name>OpenStack</name>
       <name>Vetting</name>
     </names>
     <popupTime>875</popupTime>
@@ -170,23 +170,7 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
         <desktop>yes</desktop>
       </action>
     </keybind>
-    --><keybind key="W-S-x"><action name="Execute"><startupnotify><enabled>true</enabled><name>dpxx</name></startupnotify><command>dpxx</command></action></keybind><keybind key="W-Tab"><action name="ShowMenu"><menu>client-list-combined-menu</menu></action></keybind><!-- Select and raise emacs editing server. --><keybind key="W-S-e"><action name="Execute"><command>wmctrl -a "Serv/XEmacs@"</command></action></keybind><!-- Select and raise an emacs window. --><keybind key="W-e"><action name="Execute"><command>wmctrl -a "XEmacs@"</command></action></keybind><!-- Select and raise a window on compute2 which is used for qemu. --><keybind key="W-q"><action name="Execute"><command>wmctrl -a "root@compute2"</command></action></keybind><!-- Select and raise a web browser (att: firefox) window. --><keybind key="W-w"><action name="Execute"><command>wmctrl -a "Mozilla Firefox"</command></action></keybind><!-- Select and raise an email client window. Thunderbird, ATT. --><keybind key="W-m"><action name="Execute"><command>wmctrl -a "Mozilla Thunderbird"</command></action></keybind><!-- Select and raise an IPython window. --><keybind key="W-p"><action name="Execute"><command>wmctrl -a "~ : python"</command></action></keybind><!-- Keybinding for PrintScreen Key --><keybind key="Print"><action name="Execute"><execute>scrot</execute></action></keybind><keybind key="A-Print"><action name="Execute"><execute>scrot -s</execute></action></keybind><!-- Select and raise emacs editing server. --><keybind key="W-period"><action name="Focus"/><action name="Raise"/></keybind>
-
-    <!-- Keybinding for toggling mdp play pause -->
-    <keybind key="W-p">
-        <action name="Execute">
-            <command>mpc-toggle-play</command>
-        </action>
-    </keybind>    
-    <!-- Keybinding for toggling mdp random album -->
-    <keybind key="W-C-p">
-        <action name="Execute">
-            <command>mpc-random-album</command>
-        </action>
-    </keybind>    
-
-    <!-- Keybinding for Volume management -->
-<!--
+    --><keybind key="W-S-x"><action name="Execute"><startupnotify><enabled>true</enabled><name>dpxx</name></startupnotify><command>dpxx</command></action></keybind><keybind key="W-Tab"><action name="ShowMenu"><menu>client-list-combined-menu</menu></action></keybind><!-- Select and raise emacs editing server. --><keybind key="W-S-e"><action name="Execute"><command>wmctrl -a "Serv/XEmacs@"</command></action></keybind><!-- Select and raise an emacs window. --><keybind key="W-e"><action name="Execute"><command>wmctrl -a "XEmacs@"</command></action></keybind><!-- Select and raise a window on compute2 which is used for qemu. --><keybind key="W-q"><action name="Execute"><command>wmctrl -a "root@compute2"</command></action></keybind><!-- Select and raise a web browser (att: firefox) window. --><keybind key="W-w"><action name="Execute"><command>wmctrl -a "Mozilla Firefox"</command></action></keybind><!-- Select and raise an email client window. Thunderbird, ATT. --><keybind key="W-m"><action name="Execute"><command>wmctrl -a "Mozilla Thunderbird"</command></action></keybind><!-- Select and raise an IPython window. --><keybind key="W-p"><action name="Execute"><command>wmctrl -a "~ : python"</command></action></keybind><!-- Keybinding for PrintScreen Key --><keybind key="Print"><action name="Execute"><execute>scrot</execute></action></keybind><keybind key="A-Print"><action name="Execute"><execute>scrot -s</execute></action></keybind><!-- Select and raise emacs editing server. --><keybind key="W-period"><action name="Focus"/><action name="Raise"/></keybind><!-- Keybinding for toggling mdp play pause --><keybind key="W-p"><action name="Execute"><command>mpc-toggle-play</command></action></keybind><!-- Keybinding for toggling mdp random album --><keybind key="W-C-p"><action name="Execute"><command>mpc-random-album</command></action></keybind><!-- Keybinding for Volume management --><!--
     <keybind key="XF86AudioRaiseVolume">
       <action name="Execute">
           <command>amixer -q sset Master 3%+</command>

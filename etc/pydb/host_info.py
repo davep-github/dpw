@@ -400,7 +400,7 @@ e(
 e(
     kef='host',
     dat={
-    'host-pattern': 'compute2',
+    'host-pattern': '^(.*@)?(compute[123]|controller1)$',
     'DTE': 'lxde',                      # or none
     'comment': 'Node with working qemu for overo linux.',
     'nick': 'qemu',
