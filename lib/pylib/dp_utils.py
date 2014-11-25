@@ -152,17 +152,26 @@ def locate_rc_file(name, path=None):
 #
 # convert a number to 0 padded binary
 #
-def cbin(val, width=0):
+def cbin(val, sep=False, sep_str=" ", width=8):
     """cbin(val, width=0)
 Convert val to a binary string.  Pad to width bits if specified."""
     s = ''
+    num_bits = 0
+    if width and not sep:
+        sep = True
+    if (type(sep) == types.IntType) and sep != 1:
+        width = sep
+
     while val:
+        if sep and num_bits and ((num_bits % width) == 0):
+            s = sep_str + s
         if val & 1:
             s = '1' + s
         else:
             s = '0' + s
         val = val >> 1
         val &= ~0x80000000
+        num_bits += 1
 
     while len(s) < width:
         s = '0' + s
@@ -612,7 +621,51 @@ class Nop_t(object):
     def __call__(self, *args, **keywords):
         return None
 
+########################################################################
+#
+# Some simple network translations.
+#
 
+def dotted_to_bin(dotted_str, dot="."):
+    """xxx.xxx.xxx.xxx to uint32"""
+    xs = dotted_str.split(dot)
+    num_octets = len(xs)
+    if num_octets != 4:
+        dp_io.eprintf("Wrong number of octets (%d) in>%s<\n",
+                      num_octets, dotted_str)
+        return None
+    uint32 = 0
+    octet_num = 3
+    for x in xs:
+        try:
+            if x[0] in "0123456789":
+                n = eval(x)
+        except ValueError, e:
+            dp_io.eprintf("Bad octet>%s<\n", x)
+            return None
+            
+        uint32 = uint32 * 256
+        if (n < 0) or (n > 255):
+            dp_io.eprintf("octet %d is bad>%s<\n", octet_num, x)
+            return None
+        uint32 += n
+        octet_num -= 1
+    return uint32
+
+def dotted_to_bits(dotted_str, sep=False, sep_str=" ", width=8, dot="."):
+    uint32 = dotted_to_bin(dotted_str, dot=dot)
+    if uint32 is None:
+        return None
+    return cbin(uint32, sep=sep, sep_str=sep_str, width=width)
+
+def bin_to_dotted(uint32, dot):
+    """32 bit unsigned integet to dotted notation."""
+    parts = []
+    for i in (0, 1, 2, 3):
+        part = uint32 & 0xff
+        parts.insert(0, str(part))
+        uint32 = uint32 >> 8
+    return dot.join(parts)
 
 ########################################################################
 if __name__ == "__main__":

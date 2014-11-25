@@ -1761,8 +1761,9 @@ first file that is `dp-file-readable-p' is used.  Also sets
     (dmessage "input ring>%s< unread as of yet." history-file)
     (if (not history-file)
         (progn
-          (ding)
-          (message "No history file to read."))
+;;py-shell always sends nil           (ding)
+;;py-shell always sends nil           (message "No history file to read.")
+          )
       (when (setq comint-input-ring-file-name
                   (when history-file
                     (loop for h-file in (if (listp history-file) 

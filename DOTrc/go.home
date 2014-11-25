@@ -257,6 +257,8 @@ Ee|dppythonlibdev|      ${dppythonlib}devel/
 Ee|pylibdev|dpylibdev|  ${dppythonlib}devel/
 Ee|pyldev|dpyldev|      ${dppythonlib}devel/
 Ee|pyld|dpyld|          ${dppythonlib}devel/
+Ee|foadyall|            eff-oh-ay-dee-y-all
+Ee|theskway|            gmafb
 #############################################################################
 Ee|dfx|                   /bfd2/usr/local/portage/layman/desktop-effects/
 Ee|kdeconfig|kconf|kcfg|  /home/davep/.kde/share/config/

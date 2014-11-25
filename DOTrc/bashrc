@@ -313,6 +313,7 @@ esac
 # need this here so host-info, et.al. work
 export PYTHONPATH=$(dp_add_to_path_iff "${PYTHONPATH-}" "$PATH:${PYTHONPATH_POST-}")
 PYTHONPATH=$(dp_add_to_path_iff -p "${PYTHONPATH-}" "${PYTHONPATH_PRE-}")
+PYTHONPATH=$(dp_add_to_path_iff -p "${PYTHONPATH-}" "$HOME/lib/pylib")
 PYTHONPATH=$(path-verify -d "${PYTHONPATH-}")
 
 export DP_shell_options=''

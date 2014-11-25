@@ -33,4 +33,4 @@ Ee|testA|testB|testC| 	value-for-testABC
 Ee|dpworld|dpw|              ${HOME}/dpw/
 Ee|dpwgit|                   ${HOME}/dpw/dpw.git
 Ee|dpwbuild|dpwbld|dpwbld|   ${dpworld}build/
-
+Ee|dpylib|                   ${HOME}/lib/pylib/

@@ -313,7 +313,7 @@ mk_go_path()
     local gp=""
     local sep=""
     # Put global/default file ("") first so others can override values.
-    for l in "" $locale_rcs; do
+    for l in "" .home $locale_rcs; do
         gf=$HOME/.go$l
         #echo 1>&2 "l>$l<, gf>$gf<"
         [ -f $gf ] && {
