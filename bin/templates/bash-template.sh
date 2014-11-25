@@ -48,7 +48,6 @@ sig_exit ()
         local sig_num=$1; shift
         echo
         echo "sig_exit, sig_num: $sig_num"
-        dump_bad_nodes $bad_nodes
         exit 1
     } 1>&2
 }
@@ -57,6 +56,29 @@ sig_exit ()
 # do
 #     trap "sig_exit $sig" $sig
 # done
+
+display_stderr()
+{
+    echo 1>&2 "$progname: $@"
+}
+
+status_msg()
+{
+    display_stderr "$@"
+}
+
+fatal_error()
+{
+    local error="${1}"
+    shift
+    display_stderr "$@"
+    exit "${error}"
+}
+
+Usage_error()
+{
+    fatal_error 1 "$@"
+}
 
 #
 # template ends.
