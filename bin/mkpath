@@ -1,36 +1,38 @@
 #!/bin/bash
 set -x
 
-progname=`basename $0`
-. eexec
-args=$*
-rc=0
-for dst in "$@"
-do
-    echo "dst>$dst<"
-	[ -d "$dst" ] && {
-		rc=2
-		echo $progname: $dst exists 1>&2
-		continue
-	}
+exec mkdir -p "$@"
 
-	oldIFS=$IFS
-	IFS='/'
-	set -- $dst
-	IFS=$oldIFS
-	case $dst in
-		/*) path="/$1" ;;
-		*)  path="$1"  ;;
-	esac
-	shift
-	for i in "$@"
-	do
-		[ -d "$path" ] || EExec mkdir "$path"
-		path="$path/$i"
-	done
+#they're catching up. progname=`basename $0`
+#they're catching up. . eexec
+#they're catching up. args=$*
+#they're catching up. rc=0
+#they're catching up. for dst in "$@"
+#they're catching up. do
+#they're catching up.     echo "dst>$dst<"
+#they're catching up. 	[ -d "$dst" ] && {
+#they're catching up. 		rc=2
+#they're catching up. 		echo $progname: $dst exists 1>&2
+#they're catching up. 		continue
+#they're catching up. 	}
 
-	EExec mkdir "$path"
+#they're catching up. 	oldIFS=$IFS
+#they're catching up. 	IFS='/'
+#they're catching up. 	set -- $dst
+#they're catching up. 	IFS=$oldIFS
+#they're catching up. 	case $dst in
+#they're catching up. 		/*) path="/$1" ;;
+#they're catching up. 		*)  path="$1"  ;;
+#they're catching up. 	esac
+#they're catching up. 	shift
+#they're catching up. 	for i in "$@"
+#they're catching up. 	do
+#they're catching up. 		[ -d "$path" ] || EExec mkdir "$path"
+#they're catching up. 		path="$path/$i"
+#they're catching up. 	done
 
-done
+#they're catching up. 	EExec mkdir "$path"
 
-exit $rc
+#they're catching up. done
+
+#they're catching up. exit $rc

@@ -242,12 +242,12 @@ source dp-getopt+.sh
 while (($# > 0))
 do
     case "$1" in
-	-e|--eval|--eval-opt|--eval-arg) eval_opt="$eval_opt $2"; shift;;
+	-e|--eval|--eval-opt|--eval-arg) shift; eval_opt="$eval_opt $1";;
 	# read a string to eval from stdin.
 	# getopt WILL NOT preserve spaces! So read funky things from stdin.
 	-E|--eval-stdin|--eval-read|-read-eval) read; eval_opt="$eval_opt ${REPLY}";;
 	-R|--read-CL|--read-command-line) read; CL="${REPLY}";;
-	-c|--client) client=$2; shift;;
+	-c|--client) shift; client="${1}";;
 	-w|--wait) do_wait=y;;
         -1|--one-file) one_file=y;;
         -2|--two-windows|--2-windows) eval_opt="$eval_opt (progn (2w) (other-window 1))";;

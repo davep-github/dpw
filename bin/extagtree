@@ -39,7 +39,7 @@ EExec_verbose_msg "$@"
 # expected format" errors. Not using -q has, at least once, in at least one
 # case, fixed this >0 times.
 # default to off. Can be enabled in the env.<blah> file.
-: ${EXTAGTREE_DASH_Q:=}
+: ${EXTAGTREE_DASH_Q:=-q}
 
 
 (($# == 0)) && {
@@ -71,7 +71,7 @@ cscope_tree()
         dp_echo2 "Cannot find a cscope program."
     else
         dp_echo2 "cscope>$cs<cscope"
-        EExec $cs $EXTAGTREE_DASH_Q -b -i "$files_file" $cscope_flags
+        EExec ${cs} ${EXTAGTREE_DASH_Q} -b -i "${files_file}" ${cscope_flags}
         [ -e "${NCSCOPE}" ] && {
             echo "WARNING: $(realpath ${NCSCOPE}) exists. Cscope may have failed."
         } 1>&2

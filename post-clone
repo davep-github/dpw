@@ -72,7 +72,30 @@ ln_dotrc \
         go.home \
         mailrc
 
-for f in .bash_login .bashrc
+#
+# Reference all of the bash_completion code.
+BASH_COMPLETION_DIR=.bash_completion.d
+RC_BASH_COMPLETION_DIR=.rc/DOTbash_completions.d
+SYS_BASH_COMPLETION_DIR=/usr/share/bash-completion
+[ -d "${SYS_BASH_COMPLETION_DIR}" ] && {
+    # This doesn't allow us to put new completion scripts in the standard
+    # completion location.  ln -s "${SYS_BASH_COMPLETION_DIR}"
+    # "${BASH_COMPLETION_DIR}"
+    mkdir -p "${BASH_COMPLETION_DIR}"
+    (
+        cd "${BASH_COMPLETION_DIR}" || {
+            echo 1>&2 "Could not cd to ${BASH_COMPLETION_DIR}"
+            exit 1
+        }
+        ${EZEC} ln -s "${SYS_BASH_COMPLETION_DIR}"/* .
+        ${EZEC} ln -s "../.rc/DOTbash_completions.d"/* .
+    ) || {
+        echo 1>&2 "Could not perform all bash completion setup operations."
+        exit 1
+    }
+}
+
+for f in .bash_login .bashrc .bash_profile
 do
 	${EZEC} ln -s .rc/bashrc $f
 done

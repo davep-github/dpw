@@ -12,7 +12,7 @@ else
 fi
 
 rip "$encoder" --trayclose --tag --cddb --superlazy --verbose --paranoia \
-    --dev /dev/hdd \
+    --dev /dev/cdrom \
     --format '%N-%S' "$@"
 
 # They really mess with the terminal.
