@@ -171,7 +171,7 @@ EExecDashN_k()
 
 EExecDashN_p()
 {
-    [ -n "${EExecDashN_opt}" -o -n "${DP_GLOBAL_DASH_P}" ]
+    [ -n "${EExecDashN_opt-}" -o -n "${DP_GLOBAL_DASH_P-}" ]
 }
 
 EExecDashV_p()
