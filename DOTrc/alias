@@ -172,7 +172,7 @@ fi
 
 alias npg=port-grep
 alias nmg=mgrep
-alias isascreen='isascreen "$IMASCREENINSTANCE" "$ignoreeof"'
+###alias isascreen='isascreen "$IMASCREENINSTANCE" "$ignoreeof"'
 alias imascreen=isascreen
 alias go2rc='eval $(go2env)'
 alias evalgo2env="go2rc"

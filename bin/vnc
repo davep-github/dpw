@@ -19,6 +19,23 @@ do
 done
 unset eexec_program
 
+if isascreen -q
+then
+    echo "You are in a screen. All shells in this session will think
+they are in a screen session when they are in fact not."
+    while true
+    do
+      read -e -p "1) Clear screen vars.
+2) Abort
+[1]? "
+      case "$REPLY" in
+          1|"") unset IMASCREENINSTANCE DP_MY_SCREEN_NAME; break;;
+          2) exit 0;;
+          *) "Unsupported choice.";;
+      esac
+    done
+fi
+
 case "${1-}" in
     -l|--l|-ls|--ls) shift; ls "$@" ~/.vnc/*.pid; exit 0;;
     *) ;;

@@ -185,6 +185,8 @@ cmd_args="$OPTS $BG_COLOR $MAIN_MACS_RC $aaa $emacs_opts"
 $VERBOSE echo exec $BIN $cmd_args
 [ -n "$verbose" ] && eko exec $BIN $cmd
 
+unset IMASCREENINSTANCE DP_MY_SCREEN_NAME
+
 $VERBOSE echo ">>>>>>>>>>>>>>>>>>>>>>$log_file<<<<<<<<<<<<<<<<<<<<<<"
 niceness="-20"
 nice_cmd="sudo nice -n $niceness"

@@ -18,5 +18,6 @@ source ~/.rc/func
 PS1='? '
 dp-xterm-like-p && do_xtitle 'Screen instance'
 
+export IMASCREENINSTANCE=yes
 real_bin=$(sp screen | egrep -v "$USER|yokel" | head -n 1)
 exec $real_bin $args

@@ -12,14 +12,12 @@ _dp_sp()
             _command_offset $i
             return
         fi
-        if [[ ${COMP_WORDS[i]} == -e ]]; then
-            break
-        fi
         [[ ${COMP_WORDS[i]} == -@([0-9]|l|ll|r|x|f|v|F|e|L|g|G|d|S) ]] && ((i++))
     done
 
     case "$prev" in
         -x)
+            ## COMPREPLY=( $( compgen -c -- "$cur" ) )
             COMPREPLY=( $( compgen -c -- "$cur" ) )
             return
             ;;
@@ -31,7 +29,8 @@ _dp_sp()
 
     if [[ "$cur" == -* ]]; then
         COMPREPLY=( $( compgen -W '-1 -2 -3 -4 -5 -6 -7 -8 -9
-            -l -ll -r -f -v -F -e -g -G -d -s' -- "$cur" ) )
+            -x -X -f
+            -l -ll -r -v -F -e -g -G -d -s' -- "$cur" ) )
         return
     fi
 } && complete -F _dp_sp sp

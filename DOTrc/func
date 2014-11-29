@@ -1243,4 +1243,10 @@ gdir()
 
 export -f op_dir cddir gdir
 
+de_screenify()
+{
+    unset IMASCREENINSTANCE DP_MY_SCREEN_NAME
+}
+export -f de_screenify
+
 true

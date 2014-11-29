@@ -5,6 +5,8 @@
 # exit w/TRUE if a screen is running here
 #set -x
 
+source script-x
+
 isascreen()
 {
     [ -n "$1" ] && return 0
@@ -12,13 +14,33 @@ isascreen()
     return 1
 }
 
+quiet_p=
+use_env_p=t
+
+while (($# > 0))
+do
+  case "$1" in
+      -q) quiet_p=y;;
+      --env|--check-env|--use-env) use_env_p=t;;
+      --args|--no-env|--no-check-env|--no-use-env) use_env_p=;;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
+
+(($# == 0)) && use_env_p=t
 if [ "$1" = "-q" ]
 then
     shift
-    quiet=y
+    quiet_p=y
 fi
 
 # $IMASCREENINSTANCE $ignoreeof
+vsetp "${use_env_p}" &&
+{
+    set -- "${IMASCREENINSTANCE}${DP_MY_SCREEN_NAME}" "${ignoreeof}"
+}
 isascreen ${1:-""} ${2:-0}
 rc=$?
 
@@ -27,5 +49,10 @@ case "$rc" in
     *) msg=no;;
 esac
 
-[ -z "$quiet" ] && echo "$msg"
+if [ -z "$quiet_p" ]
+then
+    echo "$msg"
+else
+    true
+fi
 exit $rc

@@ -7,3 +7,9 @@ buf-tee: buf-tee.cxx
 
 eko: eko.c
 	$(CXX) -o $@ $<
+
+hd: hd.c
+	$(CXX) -o $@ $<
+
+install: eko hd
+	cp $^ ~/bin
