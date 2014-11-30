@@ -276,7 +276,7 @@ dpe_error()
 
 dpWARN()
 {
-    ep_echo2 "WARNING:" "$@"
+    dp_echo2 "WARNING:" "$@"
 }
 
 dpe_warn()

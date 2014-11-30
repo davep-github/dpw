@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[ -z "$DP_BASHRC_COMPLETE" -a -f .bash_profile ] && . $HOME/.bash_profile
+[ -z "${DP_BASHRC_EXECUTION_COMPLETED}" -a -f $HOME/.bash_profile ] && . $HOME/.bash_profile
 
 source script-x
 

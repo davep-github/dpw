@@ -32,7 +32,6 @@ def_msg='rcsed_by_rcstree'
 just_show=n
 TOUCH_REF_FILE="${tmp:-/tmp}/$prog.touch-ref-file"
 
-# see the man page of getopt for inadequacies.
 option_str='r:m:t:nqv'
 #args=` getopt $option_str $* `
 q=$(getopt $getopt_args -o "$option_str" -- "$@")
@@ -106,22 +105,28 @@ do
     case $doit in
 	1)
             # save times...
-            touch -r "$work_file" "$TOUCH_REF_FILE"
+            touch -r "$work_file" "$TOUCH_REF_FILE" || {
+                    echo "before ci, failed to touch>${work_file}< in >$PWD<"
+                }
 	    EExec ci "-t-$text" "-m$msg" "$work_file" "$rcs_file"
             (
                 cd $(dirname "$work_file")
                 # don't change rcs info, e.g. $Id$
                 EExec co -T -l -ko "$rcs_file"
-                touch -r "$TOUCH_REF_FILE" "$work_file"
             )
+            touch -r "$TOUCH_REF_FILE" "$work_file" || {
+                echo "after co, failed to touch>${work_file}< in >$PWD<"
+            }
             rm -f "$TOUCH_REF_FILE"
 	    ;;
 	2)
+            # Do not do data/binary/compiled/etc files.
+            # @todo XXX check for just "*compiled*" ?
 	    set -- $(file $work_file)
 	    shift
 	    file_type="$*"
 	    case "$file_type" in
-		data|*ELF*|*executable*) 
+		data|*ELF*|*executable*|"Compiled terminfo entry") 
 		    echo 1>&2 "$file is \`$file_type', skipping"
 		    ;;
 		*) 

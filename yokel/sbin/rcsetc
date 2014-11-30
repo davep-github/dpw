@@ -13,7 +13,7 @@ else
     ECHO=
 fi
 
-if [[ "$PATH" != *yokel/sbin* ]] || [ -z "$DP_BASHRC_COMPLETE" ]
+if [ -z "${DP_BASHRC_EXECUTION_COMPLETED}" ]
 then
     rcfile="$HOME/.bashrc"
     [ -f $rcfile ] && {
@@ -28,8 +28,19 @@ echo "rcs_base>$rcs_base<"
     exit 1
 }
 
-dirs='/etc /usr/local/etc /root /usr/X11R6/etc /usr/X11R6/lib/X11/etc /usr/yokel/etc /usr/kde/*/share/config
-/var/lib/iptables /var/lib/portage'
+#
+# X11 dirs don't exist any more, but leave 'em in since they are safely
+# skipped and who knows if they'll come back into fashion one day/
+dirs='/etc
+    /usr/local/etc
+    /root
+    /usr/X11R6/etc
+    /usr/X11R6/lib/X11/etc
+    /usr/yokel/etc
+    /usr/share/kde*
+    /var/lib/iptables
+    /var/lib/portage'
+
 # @todo find other files that need excluding.  Things that have no critical,
 # user provided data
 ex_files='-x drift -x dumpdates'
