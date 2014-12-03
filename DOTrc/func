@@ -897,9 +897,9 @@ spg()
     local progname=spg
 
     if [[ "$rc" != 0 ]]; then
-        ep_echo2 "$cmd failed: $rc"
+        dp_echo2 "$cmd failed: $rc"
     elif [[ -z "$todir" ]]; then
-        ep_echo2 "$cmd returned an empty string"
+        dp_echo2 "$cmd returned an empty string"
     else
         pushd "$todir"
     fi
