@@ -1,0 +1,157 @@
+#!/usr/bin/env bash
+# $Id: daily,v 1.61 2007/08/28 08:20:12 davep Exp $
+#set -x
+
+. $HOME/etc/crontab.rc
+
+echo ""
+echo "Removing old backup files:"
+find $HOME/ \( -name '*~'  -o -name '*.bak' \) -atime +2 -print0 \
+	| xargs -0 rm -f 
+echo "done."
+echo ""
+
+echo "Removing old core files:"
+find $HOME/ -name '*.core' -atime +7 -print0 | xargs -0 rm -f 
+echo "done."
+echo ""
+
+# Now they [also] look so:
+# wc-p:8963,u:8084,s:3,t:1188285380.CR
+# <executable-name>-p:<pid>,u:<uid>,s:<signal>,t:<ugly but short time>.CR
+nuke-core-files $HOME/
+echo "done."
+echo ""
+
+# Present deprecated shell functions that have been used.
+echo 'Checking for use of deprecated shell functions...'
+[ -e ${dp_DEPRECATED_log} ] && {
+    echo "Found some:"
+    cat ${dp_DEPRECATED_log}
+}
+echo "done."
+
+#echo "Removing MH deleted files:"
+#find `mhpath +` -name '#*' -atime +2 -print0 | xargs -0 rm -f 
+#echo "done."
+#echo ""
+
+#echo "Removing Mew draft droppings:"
+#find "`mhpath +`/mew-drafts" -atime +4 -print0 | xargs -0 rm -f 
+#echo "done."
+#echo ""
+
+#echo "Removing Mew attach droppings:"
+#find "`mhpath +`/attach" -name '[0-9]*' -type d -atime +4 -print0 | \
+#    xargs -0 rm -rf 
+#echo "done."
+#echo ""
+
+echo "Finding all subversion commit messages. It's up to you to delete them."
+find $HOME/ -name 'svn-commit*tmp*'
+echo "done."
+echo ""
+
+#echo "Removing old log files:"
+#find $HOME/log-files -name '*' -type f -atime +7 -print | xargs rm -f 
+
+# they look like this: ./.saves-426-baloo.meduseld.net
+#find $HOME/ -name ".saves-*-$(hostname)" -atime +7 -print -a -exec rm -f {} \;
+
+echo "Clear Netscape Cache:"
+clrns 2>&1
+
+echo 'Archive home...'
+echo "CHANGE OVER TO USING GIT!
+cd to dpw.git and update from there.
+save a copy of the git status output before the commit.
+Tag every night? They are lightweight. Or just keep a copy of SHAs on my own?
+Each tag is a file containing the SHA. That's a bit heavier than I'd like.
+A file of SHA tags is better. SHA first because it has a regular representation. Rest of line got tag-name. Where is the tag value?
+"
+
+###archive-home 2>&1
+echo '...done'
+echo ""
+
+
+#
+# packing causes a lot of filesystem changes and hence a lot more
+# will need to be backed up by dump.
+# Plus there is not much advantage to packing (that I can think of)
+#
+#echo "Pack MH folders:"
+#folders -pack			# anal, eh?
+
+# [re]init the indexes at end-o-month
+dom=`date +%d`
+if [ "$dom" = '28' ]
+then
+    init_opt='-I'
+else
+    init_opt=''
+fi
+
+# HUGE, plus some dirs are foolishly make with to high permissions
+# I sure hope *I* didn't write the comment above this line.
+# echo "Index ports:"		# indexes are getting a bit large
+# Also, not needed under linux, is done w/eupdate, used by
+# index-ports $init_opt 2>&1
+# @todo Add pkg/deb/etc index/db updates here.
+
+#
+# @todo check mod time on parent dir and don't rebuild if there are no changes.
+# or make in temp area, cmp and copy only if different.
+#
+#echo "Make Robin's pic dir"
+#mk-html-dir.pl /usr/local/www/data/daughter/pics > /usr/local/www/data/daughter/pics/dir.html 2>&1
+
+#echo "Update GNU Cash Stock Prices"
+#gnc-prices ~/finances/p2k 2>&1
+# gnucash --add-price-quotes ~/finances/p2k
+
+export ETC=$HOME/etc
+
+# rotate personal log files...
+echo "Rotate logs..."
+dp-rotate-logs
+echo '...done'
+echo ""
+
+
+#echo "Remake playlists..."
+#mk-album-playlists.py /media/audio/music
+
+# clear pan's cache
+echo 'Clear pan cache...'
+cp -f ~/etc/Pan.template ~/.gnome/Pan
+
+# and clear firefox's
+#echo 'Clear ff cache...'
+#clrff
+
+echo 'Clear mplayer cache...'
+clrmp
+
+echo "******* SKIPPING: Index MH dirs:"
+#index-mail $init_opt 2>&1
+#echo "done."
+#echo ""
+
+
+echo "******* SKIPPING: Index notes:"
+#index-notes $init_opt 2>&1
+#echo "done."
+#echo ""
+
+
+echo "******* SKIPPING: Update locdb for music files:"
+#update-mp3db
+#echo "done."
+#echo ""
+
+echo ""
+echo "daily done."
+echo "==========================="
+
+

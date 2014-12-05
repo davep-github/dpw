@@ -84,7 +84,10 @@ for i in "$@"; do
     shift
 done
 
+at_least_one_fail=0
 for f in "$@"
 do
-  "$git_fun" "$f"
+  "$git_fun" "$f" || at_least_one_fail=1
 done
+
+exit "${at_least_one_fail}"
