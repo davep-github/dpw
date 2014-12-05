@@ -2031,13 +2031,18 @@ first file that is `dp-file-readable-p' is used.  Also sets
        (setq dp-latest-py-shell-buffer nil)))
 
 ;;;###autoload
-(defun dp-python-shell (&optional args)
+(defun* dp-python-shell (&optional args)
   "Start up python shell and then run my shell-mode-hook since they
 set the key-map after the hook has run."
   (interactive "P")
-  ;;Hide history file... we'll manage it oursefs.
+  ;; Hide history file... we'll manage it oursefs.
   ;; Hack around for python-mode bug:
-  ;; It `py-shell' sets mode name before switching to the Python buffer.
+  ;; It, `py-shell', sets mode name before switching to the Python buffer.
+  (let ((py-buf (get-buffer "*Python*")))
+    (when py-buf
+      (dp-visit-or-switch-to-buffer py-buf)
+      (return-from dp-python-shell)))
+    
   (let ((dp-real-comint-read-input-ring (symbol-function 
                                          'comint-read-input-ring))
         mode-name input-ring-name)

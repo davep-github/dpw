@@ -1,5 +1,4 @@
-
-# davep specific code -------------8><------------------
+#!/usr/bin/env bash
 source script-x
 set -u
 progname="$(basename $0)"
@@ -22,21 +21,6 @@ unset eexec_program
 #export eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
-
-# davep specific code -------------8><------------------
-
-#mutually exclusive with real EExec# EExec=
-#mutually exclusive with real EExec# no_exec_p=
-#mutually exclusive with real EExec# Non_EExecer()
-#mutually exclusive with real EExec# {
-#mutually exclusive with real EExec#     echo "{-} $@" 1>&2
-#mutually exclusive with real EExec# }
-
-#mutually exclusive with real EExec# Verbose_EExecer()
-#mutually exclusive with real EExec# {
-#mutually exclusive with real EExec#     echo "{+} $@"
-#mutually exclusive with real EExec#     "$@"
-#mutually exclusive with real EExec# }
 
 trap_exit_msg=
 
@@ -100,4 +84,39 @@ Usage_error()
 #
 # template ends.
 ########################################################################
+#
+# Motivation: convert responses from multicast ping to host names.
+# E.g.:
+# > ping 224.0.0.1
+# PING 224.0.0.1 (224.0.0.1) 56(84) bytes of data.
+# 64 bytes from 192.168.114.31: icmp_req=1 ttl=64 time=1.07 ms
+# 64 bytes from 192.168.115.95: icmp_req=1 ttl=64 time=1.44 ms (DUP!)
 
+# This more better because it use /etc/hosts if nsswitch is configured
+# aright.
+do_getent()
+{
+    getent hosts "$@" | awk '{print $2}'
+}
+
+do_host()
+{
+    host "$@" | awk '{print $5}'
+}
+
+if type -t getent >/dev/null 2>&1
+then
+    resolver=do_getent
+else
+    resolver=do_host
+fi
+
+fgrep 'bytes from' \
+| awk '{print $4}' \
+| sed -rn 's/([^:]+)(:)/\1/p' \
+| sort \
+| uniq \
+| while read
+do
+    "${resolver}" "${REPLY}"
+done

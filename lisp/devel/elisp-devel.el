@@ -6078,6 +6078,11 @@ dp-shells-create-next-shell
 (#<buffer "*shell*<2>"> #<buffer "*shell*<1>">)
 
 
+(get-buffer "KSJDHKJHx")
+nil
+(get-buffer "*Python*")
+#<buffer "*Python*">
+
 
 
 

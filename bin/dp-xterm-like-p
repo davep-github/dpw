@@ -2,12 +2,13 @@
 
 source script-x
 
-if [ "$DISPLAY" != "" -o "${1-}" != "" ]
-then
+# ??? Why did I make this contitional? ?2014-12-02T10:38:15?
+#if [ "$DISPLAY" != "" -o "${1-}" != "" ]
+#then
 	case $TERM in
-	*xterm*|vt100|rxvt|screen) 
+	*xterm*|vt100|rxvt|screen)
 		exit 0;;
 	esac
-fi
+#fi
 
 exit 1

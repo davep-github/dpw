@@ -356,19 +356,16 @@ skaion_family = e(
     'comment': 'My linux boxen at skaion.',
     'DTE': 'lxde',                      # sigh.
     'main_macs_opts': '-eval (dp-main-rc+2w)',
-    'xem_opts': SKAION_XEM_GEOMETRY,
-    # This is OK, but O0{}[]() : no slashed 0. O & 0 are distinguishable.
-    #'xem_font': '''-*-Lucidatypewriter-medium-r-*-*-*-120-*-*-*-*-*-*''',
-    # May be less legible in the long run, but 0 is slashed.
-#    'xem_font': '''-*-Fxd-medium-r-*-*-*-120-*-*-*-*-*-*''',
-    #'xem_font': '''-*-fixed-medium-r-*-*-*-140-*-*-*-*-iso8859-*''',
-#    "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
-#    "xem_font": '''-*-Fixed-medium-r-*-*-*-120-*-*-*-*-*-*''',
+    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + SKAION_XEM_GEOMETRY,
+    "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
     'xem_font': '',
+    'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
     'work-zone': 'skaion',
     """xem-xft-font""": '''"Inconsolata-13"''',
+    'xterm_bin': 'xterm',
     'xterm_bg': SKAION_BG_COLOR,
     'xterm_fg': SKAION_FG_COLOR,
+    'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
     'xem_bg_color': NVIDIA_BG_COLOR,
     '''command-line-mailer''': '''mutt''',
     },
@@ -376,22 +373,19 @@ skaion_family = e(
     ref=[OSDB['linux'], default]
 )
 
+# We'd like the xterm and xemacs to have the same background to help us tell
+# one machine from another.
+#SKAION_LAPTOP_BG = 'darkblue'
+SKAION_LAPTOP_BG = "rgb:27/00/2c"
 e(
     kef='host',
     dat={
-    'host-pattern': 'dplaptop|bld|shodanbld|dpure|mundane|simp(le)?|prim(itive)?',
-    'DTE': 'lxde',                      # or none
-    'comment': 'Laptop running unadulterated ubuntu.',
+    'host-pattern': 'dplaptop|bld|dplt|shodanbld|dpure|mundane|simp(le)?|prim(itive)?',
+    'comment': 'Laptop running unadulterated ubuntu 12.04.',
     'nick': 'vet-build',
-    'xterm_bin': 'xterm',
-    'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
-    'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
-    'xem_opts': '-eval (dp-2-v-or-h-windows) -geometry  81x69-1+0',
-    "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
-    """xem-xft-font""": '''"Inconsolata-12"''',
-    'xterm_bg': 'linen',
-    'xterm_fg': 'black',
-    'xem_bg_color': 'linen',
+    'xterm_bg': SKAION_LAPTOP_BG,
+    'xterm_fg': 'white',
+    'xem_bg_color': SKAION_LAPTOP_BG,
 
     # NB! using the version number can cause extreme weirdness with fonts!
     },
@@ -404,13 +398,24 @@ e(
     'DTE': 'lxde',                      # or none
     'comment': 'Node with working qemu for overo linux.',
     'nick': 'qemu',
-    'xterm_bin': 'xterm',
-    'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
-    'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
-    'xem_opts': '-eval (dp-2-v-or-h-windows) -geometry  81x69-1+0',
-    "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
-    """xem-xft-font""": '''"Inconsolata-12"''',
     'xterm_bg': 'grey20',
+    'xterm_fg': 'lightgrey',
+    'xem_bg_color': 'linen',
+
+    # NB! using the version number can cause extreme weirdness with fonts!
+    },
+    ref=famDB['skaion-linux'])
+
+# My openstack datanet which connects to the outside world.
+SKAION_DP_OPENSTACK_HOST_REGEXP = '^(.*@)?(10\.9\.8\.[0-9]{1,3})$'
+e(
+    kef='host',
+    dat={
+    'host-pattern': SKAION_DP_OPENSTACK_HOST_REGEXP,
+    'DTE': 'lxde',                      # or none
+    'comment': 'Externally accessible openstack nodes',
+    'nick': 'openstack',
+    'xterm_bg': 'rgb:39/00/53',
     'xterm_fg': 'lightgrey',
     'xem_bg_color': 'linen',
 
@@ -420,31 +425,31 @@ e(
 
 #
 # FAMILY entry for o-xterm
-e(
-    kef='family',
-    dat={
-    'family': 'nv-o-xterm',
-    'comment': 'General, interactive multiuser development machine. No CPU hogging',
-    'host-pattern': '(sc|o)-xterm-[0-9]+',
-    },
-    ref=[nvidia_family, OSDB['linux'], default]
-)
+## e(
+##     kef='family',
+##     dat={
+##     'family': 'nv-o-xterm',
+##     'comment': 'General, interactive multiuser development machine. No CPU hogging',
+##     'host-pattern': '(sc|o)-xterm-[0-9]+',
+##     },
+##     ref=[nvidia_family, OSDB['linux'], default]
+## )
 
-e(
-    kef='family',
-    dat={
-    'family': 'nv-l-sim',
-    'comment': 'Heavy load machines.',
-    'host-pattern': 'l-sim-|sc-sim',
-    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + NV_GEOMETRY,
-    'xterm_bg': NVIDIA_LSIM_BG_COLOR,
-    'xterm_fg': NVIDIA_LSIM_FG_COLOR,
-    'xem_bg_color': NVIDIA_LSIM_BG_COLOR,
-    'main_macs_opts': '',
-    'post_bashrc_command': 'eval ignoreeof=10',
-    },
-    ref=[nvidia_family, OSDB['linux'], default]
-)
+## e(
+##     kef='family',
+##     dat={
+##     'family': 'nv-l-sim',
+##     'comment': 'Heavy load machines.',
+##     'host-pattern': 'l-sim-|sc-sim',
+##     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + NV_GEOMETRY,
+##     'xterm_bg': NVIDIA_LSIM_BG_COLOR,
+##     'xterm_fg': NVIDIA_LSIM_FG_COLOR,
+##     'xem_bg_color': NVIDIA_LSIM_BG_COLOR,
+##     'main_macs_opts': '',
+##     'post_bashrc_command': 'eval ignoreeof=10',
+##     },
+##     ref=[nvidia_family, OSDB['linux'], default]
+## )
 
 #
 # build the host records

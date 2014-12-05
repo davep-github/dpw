@@ -10009,7 +10009,7 @@ current window."
        ;; We always want to visit the buffer where it is already
        ;; visible. `display-buffer' does this, but I think my wankish logic
        ;; here screws that up, so force it here.
-       ;; But do try if they call has specified anything "extra."
+       ;; But do try if the call has specified anything "extra."
        (dp-display-buffer-if-visible buffer))
       (if (and dp-simple-buffer-select-p
                (not (or not-this-window-p override-frame shrink-to-fit 

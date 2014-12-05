@@ -42,6 +42,8 @@
 # MUST be set before sourcing or this will NOT work.
 # On by default. Call EExecNoExport to disable exportation.
 : ${EExecExporter:=export}
+# as of: 2014-12-04T18:12:50, use ${EExec} (NO quotes) vs EExec
+${EExecExporter} EExec="EExec"
 ${EExecExporter} EExecShowCommand=EExecStderrEcho
 ${EExecExporter} EExecShowPrefix=""
 ${EExecExporter} EExecEcho=""

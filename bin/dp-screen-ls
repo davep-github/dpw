@@ -77,7 +77,9 @@ for i in "$@"; do
     esac
     shift
 done
-if vsetp "${repl[*]}"; then
+#if vsetp "${repl[*]}"; then
+n="${#repl}"
+if ((n > 0)); then
     repl_exp=$(for e in "${repl[@]}"; do echo -n "$e"; done;)
 else
     repl_exp=${DP_SCREEN_LS_REPL}
