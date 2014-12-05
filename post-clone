@@ -119,3 +119,9 @@ ${EZEC} mkdir -p "droppings/editors/xemacs/tramp.d/auto-saves.d"
 ${EZEC} mkdir -p "droppings/persist/bash-history"
 ${EZEC} mkdir -p "droppings/persist/emacs-history"
 ${EZEC} mkdir -p "droppings/persist/gdb_history"
+
+echo "Other new Linux installation actions:
+1) samba: I need to find the old instructions for this.
+2) kernel core pattern: 
+   To /etc/sysctl.conf, add: kernel.core_pattern = %e-p:%p,u:%u,s:%s,t:%t.CR
+"
