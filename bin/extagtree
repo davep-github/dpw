@@ -303,7 +303,7 @@ then
     # another file to prevent tagging which allows us to not duplicate index files
     # when indexing a parent dir.
     # We don't want to exclude the tree currently being tagged, so we use another name.
-    EExec ${src_code_finder} "${skip_tagged_dirs}" $finder_opts $argses | tee "$v_file" >| "${WORK_FILES_FILE}"
+    EExec ${src_code_finder} ${skip_tagged_dirs} $finder_opts $argses | tee "$v_file" >| "${WORK_FILES_FILE}"
     EExec_verbose_msg "$(ls -l ${WORK_FILES_FILE})"
     EExec_verbose_msg "$(wc -l ${WORK_FILES_FILE})"
     EExec rm -f "${FILES_FILE}"
