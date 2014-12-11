@@ -11,7 +11,7 @@ set -u
 while (($# > 0))
 do
   case "$1" in
-      -a) ignore_pat=''; all_pat='*';;
+      -a) ignore_pat=''; dirty_only_p=; all_pat='*';;
       -d) dirty_only_p=t;;
       -u) dirty_only_p=;;
       --) shift; break;;
@@ -47,7 +47,7 @@ do
 	echo "$line"
 	;;
     \?*) 
-        [ -n "${dirty_only_p}" ] || {
+        [ -z "${dirty_only_p}" ] && {
             echo "$line"
         }
 	;;
