@@ -124,4 +124,8 @@ echo "Other new Linux installation actions:
 1) samba: I need to find the old instructions for this.
 2) kernel core pattern: 
    To /etc/sysctl.conf, add: kernel.core_pattern = %e-p:%p,u:%u,s:%s,t:%t.CR
+3) in ~/bin/src: [automate this]
+   1) gcc eko.cpp ../eko
+   2) gcc utmpdump.c ../utmpdump
+   +) gcc $f ../$(basename .c|.cpp|???)
 "

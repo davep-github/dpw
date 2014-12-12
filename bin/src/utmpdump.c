@@ -31,8 +31,8 @@ void dump(
 	for(f = 0; f <  UT_NAMESIZE; f++)
             if (ut.ut_name[f] == ' ') ut.ut_name[f] = '_';
 	tm = ut.ut_time;
-	printf("[%d] [%05d] [%05d] [%-12.12s] [%-8.8s] [%-22.22s] "
-               "[%-15.15s]\n",
+	printf("[%d] [%05d] [%05d] [%s] [%s] [%s] "
+               "[%s]\n",
 	       0, 0, 0, ut.ut_name, ut.ut_line,
 	       ut.ut_host, 4 + ctime(&tm));
     }
