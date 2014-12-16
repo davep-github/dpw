@@ -68,7 +68,7 @@
     (("plisttest" "a test of the plist type table.")
      (table-name dp-manual tmp t)
      (table-name dp-plists))
-    (("cs" "c_str()" "char*")
+    (("cs" "c_str()" "char* ")
      (table-name dp-c++-mode))
     (("nn" "non-nil")
      dp-manual)

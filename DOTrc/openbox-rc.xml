@@ -40,7 +40,7 @@
     <center>yes</center>
   </placement>
   <theme>
-    <name>Surreal_Gentoo</name>
+    <name>Bear2</name>
     <titleLayout>NDLIMC</titleLayout>
     <!--
       available characters are NDSLIMC, each can occur at most once.
@@ -55,12 +55,12 @@
     <keepBorder>yes</keepBorder>
     <animateIconify>yes</animateIconify>
     <font place="ActiveWindow">
-      <name>sans</name>
+      <name>Crillee Medium</name>
       <size>8</size>
       <!-- font size in points -->
-      <weight>bold</weight>
+      <weight>Normal</weight>
       <!-- 'bold' or 'normal' -->
-      <slant>normal</slant>
+      <slant>Normal</slant>
       <!-- 'italic' or 'normal' -->
     </font>
     <font place="InactiveWindow">
@@ -180,49 +180,49 @@
     <keybind key="C-A-Left">
       <action name="GoToDesktop">
         <to>left</to>
-        <wrap>no</wrap>
+        <wrap>yes</wrap>
       </action>
     </keybind>
     <keybind key="C-A-Right">
       <action name="GoToDesktop">
         <to>right</to>
-        <wrap>no</wrap>
+        <wrap>yes</wrap>
       </action>
     </keybind>
     <keybind key="C-A-Up">
       <action name="GoToDesktop">
         <to>up</to>
-        <wrap>no</wrap>
+        <wrap>yes</wrap>
       </action>
     </keybind>
     <keybind key="C-A-Down">
       <action name="GoToDesktop">
         <to>down</to>
-        <wrap>no</wrap>
+        <wrap>yes</wrap>
       </action>
     </keybind>
     <keybind key="S-A-Left">
       <action name="SendToDesktop">
         <to>left</to>
-        <wrap>no</wrap>
+        <wrap>yes</wrap>
       </action>
     </keybind>
     <keybind key="S-A-Right">
       <action name="SendToDesktop">
         <to>right</to>
-        <wrap>no</wrap>
+        <wrap>yes</wrap>
       </action>
     </keybind>
     <keybind key="S-A-Up">
       <action name="SendToDesktop">
         <to>up</to>
-        <wrap>no</wrap>
+        <wrap>yes</wrap>
       </action>
     </keybind>
     <keybind key="S-A-Down">
       <action name="SendToDesktop">
         <to>down</to>
-        <wrap>no</wrap>
+        <wrap>yes</wrap>
       </action>
     </keybind>
     <keybind key="W-F1">
@@ -313,17 +313,10 @@
         <direction>down</direction>
       </action>
     </keybind>
-    <!-- Keybindings for running applications -->
-    <keybind key="W-e">
-      <action name="Execute">
-        <startupnotify>
-          <enabled>true</enabled>
-          <name>Konqueror</name>
-        </startupnotify>
-        <command>kfmclient openProfile filemanagement</command>
-      </action>
+    <!-- davep bindings -->
+    <keybind key="W-F12">
+      <action name="Restart"/>
     </keybind>
-    <!-- My bindings -->
     <!-- Select and raise emacs editing server. -->
     <keybind key="W-S-e">
       <action name="Execute">
@@ -361,6 +354,54 @@
     </keybind>
     <keybind key="W-F12">
       <action name="Restart"/>
+    </keybind>
+    <keybind key="W-Left">
+      <action name="DesktopLeft">
+        <dialog>no</dialog>
+        <wrap>yes</wrap>
+      </action>
+    </keybind>
+    <keybind key="W-Right">
+      <action name="DesktopRight">
+        <dialog>no</dialog>
+        <wrap>yes</wrap>
+      </action>
+    </keybind>
+    <keybind key="C-W-Up">
+      <action name="DesktopUp">
+        <dialog>no</dialog>
+        <wrap>yes</wrap>
+      </action>
+    </keybind>
+    <keybind key="C-W-Down">
+      <action name="DesktopDown">
+        <dialog>no</dialog>
+        <wrap>yes</wrap>
+      </action>
+    </keybind>
+    <keybind key="S-A-Left">
+      <action name="SendToDesktopLeft">
+        <dialog>no</dialog>
+        <wrap>yes</wrap>
+      </action>
+    </keybind>
+    <keybind key="S-A-Right">
+      <action name="SendToDesktopRight">
+        <dialog>no</dialog>
+        <wrap>yes</wrap>
+      </action>
+    </keybind>
+    <keybind key="S-A-Up">
+      <action name="SendToDesktopUp">
+        <dialog>no</dialog>
+        <wrap>yes</wrap>
+      </action>
+    </keybind>
+    <keybind key="S-A-Down">
+      <action name="SendToDesktopDown">
+        <dialog>no</dialog>
+        <wrap>yes</wrap>
+      </action>
     </keybind>
   </keyboard>
   <mouse>

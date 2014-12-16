@@ -120,7 +120,7 @@ Ee|bld|               /sundry/build/
 Ee|xemb|              ${bld}xemacs/xemacs-${xemver}/
 Ee|xbld|              ${bld}xemacs-${xemver}/
 Ee|mewb|              ${bld}mew/cvs/mew/
-Ee|dl|                ${HOME}/Downloads
+Ee|dl|                ${HOME}/Downloads/
 Ee|wdl|dlw|           ${dl}windwoes/
 Ee|dlk|               ${dl}kde/
 Ee|dlki|              ${dl}kde/icons/

@@ -1,39 +1,124 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
+# davep specific code -------------8><------------------
 source script-x
 set -u
 progname="$(basename $0)"
 source eexec
-eexec_program=$(EExec_parse "$@")
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
 for op in $eexec_program
 do
   $op
-  shift
+  ${EEXEC_SHIFT}
 done
+EExec_verbose_msg $(echo_id eexec_program)
 unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+trap_exit_msg=
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+}
+# trap 'on_exit' 0
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+    trap '' 0
+}
+# trap 'on_error' ERR
+
+sig_exit ()
+{
+    {
+        local sig_num=$1; shift
+        echo
+        echo "sig_exit, sig_num: $sig_num"
+        exit 1
+    } 1>&2
+}
+
+# for sig in 2 3 4 5 6 7 8 15
+# do
+#     trap "sig_exit $sig" $sig
+# done
+
+display_stderr()
+{
+    echo 1>&2 "$progname: $@"
+}
+
+status_msg()
+{
+    display_stderr "$@"
+}
+
+fatal_error()
+{
+    local error="${1}"
+    shift
+    display_stderr "$@"
+    exit "${error}"
+}
+
+Usage_error()
+{
+    fatal_error 1 "$@"
+}
+
+#
+# template ends.
+########################################################################
 
 RUNNIT="really-run-the-tunnel-this-time"
-: ${other_end=}
-: ${port=}
-
+set -a
+: ${other_end:=}
+: ${other_port:=}
+: ${this_port:=}
+: ${host:=localhost}
+: ${geometry:=-g47x3+0-24}
+: ${foreground:=black}
+: ${background:=green}
+set +a
 vsetp "${other_end}" || {
-    echo "Hostname var `other_end' needs to be set."
+    echo "Hostname var \`other_end' needs to be set."
     exit 1
 }
 
-vsetp "${port}" || {
-    echo "Port number var `port' needs to be set."
+vsetp "${this_port}" || {
+    echo "Port number var \`this_port' needs to be set."
     exit 1
 }
+
+vsetp "${other_port-}" || {
+    EExec_verbose_msg "\`other_port' is unset and will be set to this_port[${this_port}]"
+    other_port="${this_port}"
+}
+
 
 EExecVerbose
-msg="Creating a  tunnel on port ${port} to $(host ${other_end})"
-width=${#msg}
-
 if [ "${1-}" = "$RUNNIT" ]
 then
-    echo "${msg}"
-    EExec ssh -N -L ${port}:localhost:${port} ${other_end}
+    echo "Creating a tunnel from ${host}:${this_port} to ${other_end}:${other_port}"
+    EExec ssh -N -L "${this_port}:%{host}:${other_port}" "${other_end}"
 else
-    EExec dpxx -g${width}x3+0-24 -F black -B green $0 "$RUNNIT"
+    EExec xx "${geometry}" -F "${foreground}" -B "${background}" $0 "$RUNNIT"
 fi
+
