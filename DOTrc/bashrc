@@ -175,19 +175,19 @@ export DAVEP_ENVIRONMENT_p=t
 
 # (ba)?sh on owls.vanu.com is old.  It canna grok [[, at the least,
 # hence `case' for wild card handling.
-primary_host="timberwolves"
+: ${bounce_p=t}
 case "$(hostname)" in
-    owls*) owls=y;;
-    *) ;;
+    owls*) primary_host="timberwolves";;
+    arthur*) primary_host="shodan";;
+    *) bounce_p=;;
 esac
-if [ -n "${DP_ENV_INTERACTIVE}" -a -n "${owls-}" ]; then
-    echo  
+if [ -n "${DP_ENV_INTERACTIVE}" -a -n "${bounce_p}" ]; then
+    echo
     bm="******* Bouncing to $primary_host"
     echo "$bm"
     dp_rc_logger "$bm"
     exec ssh "$primary_host"
 fi
-unset owls
 
 export SP_BIN="$HOME/yokel/bin/sp"
 dp_suggest 'Fix settings of "orig" vars to only be iff NULL???'
