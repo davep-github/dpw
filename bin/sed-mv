@@ -69,6 +69,13 @@ risky_p()
 {
     has_spaces_p $paranoid_p "$1" && return 1
 }
+
+WHINE()
+{
+    [ -z "${dash_n}" ] && {
+        echo 1>&2 "$@"
+    }
+}
     
 if [ "$1" = "-G" ]
 then
@@ -120,7 +127,7 @@ fi
 pristine_args=("$@")
 
 [[ -n "$paranoid_p" && -n "$dash_n" ]] && {
-    echo "Clearing paranoid since we aren't doing anything anyway."
+    #echo "Clearing paranoid since we aren't doing anything anyway."
     paranoid_p=""
 } 1>&2
 
@@ -157,8 +164,8 @@ sed_renamer()
     if [ "$f" = "$newname" ]
     then
         vsetp $zippit || {
-            echo 1>&2 "WARNING: sed changed nothing, rename skipped for:"
-            echo 1>&2 " \"$f\""
+            WHINE "WARNING: sed changed nothing, rename skipped for:
+\"$f\""
             continue
         }
     fi
