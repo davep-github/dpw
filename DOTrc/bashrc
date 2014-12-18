@@ -113,6 +113,18 @@ pbit_farm_machine_p()
     esac
 }
 
+# goddamn linux assholes... gotta fuck with *everything*
+CUTBIN=$(for cutter in /usr/bin/cut /bin/cut
+do
+    [ -x "$cutter" ] && {
+	echo $cutter
+	break
+    }
+done)
+
+export HOST=${HOSTNAME-$(/bin/hostname | $CUTBIN -f1 -d.)} # short host name
+export DOMAIN=$(/bin/hostname --fqdn | $CUTBIN -f2- -d.)
+
 # This can be re-defined in a more specific rc file.
 # Run ssh-agent unless directed not to.
 run_ssh_agent_p()
@@ -178,12 +190,18 @@ export DAVEP_ENVIRONMENT_p=t
 : ${bounce_p=t}
 case "$(hostname)" in
     owls*) primary_host="timberwolves";;
-    arthur*) primary_host="shodan";;
+# No way to get to arthur which occasionally needs to be done.
+#    arthur*) primary_host="shodan";;
     *) bounce_p=;;
 esac
-if [ -n "${DP_ENV_INTERACTIVE}" -a -n "${bounce_p}" ]; then
+
+# XXX @todo This needs to know the name of the connecting
+# host (i.e. the one that is ssh'ing; but this is being executed
+# on the ssh'd to host.
+if [ -n "${DP_ENV_INTERACTIVE}" -a -n "${bounce_p}"  \
+     -a "${HOST}" != "${primary_host}" ]; then
     echo
-    bm="******* Bouncing to $primary_host"
+    bm="******* Bouncing from $(hostname) to $primary_host"
     echo "$bm"
     dp_rc_logger "$bm"
     exec ssh "$primary_host"
@@ -242,17 +260,6 @@ then
     export TERM=xterm
 fi
 
-# goddamn linux assholes... gotta fuck with *everything*
-CUTBIN=$(for cutter in /usr/bin/cut /bin/cut
-do
-    [ -x "$cutter" ] && {
-	echo $cutter
-	break
-    }
-done)
-
-export HOST=${HOSTNAME-$(/bin/hostname | $CUTBIN -f1 -d.)} # short host name
-export DOMAIN=$(/bin/hostname --fqdn | $CUTBIN -f2- -d.)
 
 # Pull in some useful functions. func has a dependency on PATH???
 . $RC_DIR/func
