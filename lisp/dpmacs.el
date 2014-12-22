@@ -445,6 +445,8 @@ the init files.")
 (defvar dp-default-mode-transparent-r/o-suffix-regexp
   (concat "historical\\|save\\|hide\\|no-index\\|pristine"
           "\\|HISTORICAL\\|SAVE\\|HIDE\\|NO-INDEX\\|PRISTINE"
+          "\\|\\TMP[.-]HIDE"
+          "\\|\\HIDE[.-]TMP"
           "\\|KEEP\\|keep"
           "\\|REFERENCE\\|reference"
           ;; Stuff being hidden from version control
