@@ -57,7 +57,8 @@ export DP_EDITING_SERVER_FILE="$DP_IPC_DIR/dp-editing-server"
     # Broken.  One binary option, apparently used by auto (`ne') is being
     # used.
     #export GREP_OPTIONS='--color=auto'
-    export GREP_OPTIONS='--color=never'
+    #export GREP_OPTIONS='--color=never'
+    unset GREP_OPTIONS
 }
 
 [ -f /etc/timezone ] || export TZ=EST5EDT

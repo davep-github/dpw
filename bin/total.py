@@ -15,7 +15,7 @@ def sum_stream(istream, field_num=0, separator=None, num_to_skip=0):
             break
         num_to_skip -= 1
         line = line [:-1]
-        #print >>sys.stderr, "skip line>%s<" % line
+        print >>sys.stderr, "skip line>%s<" % line
         line = istream.readline()
 
     if not line:
@@ -26,14 +26,14 @@ def sum_stream(istream, field_num=0, separator=None, num_to_skip=0):
             return total
 
         line = line [:-1]
-        #print >>sys.stderr, "sum line>%s<" % (line,)
+        print >>sys.stderr, "sum line>%s<" % (line,)
 
         field = string.split(line, separator)[field_num]
         m = cre.search(field)
         if m:
             num, mult = m.group(0), m.group(1)
-            #print >>sys.stderr, "groups:", m.groups()
-            #print >>sys.stderr, "m.g1:", m.group(0), "m.g2:", m.group(1)
+            print >>sys.stderr, "groups:", m.groups()
+            print >>sys.stderr, "m.g1:", m.group(0), "m.g2:", m.group(1)
             if mult:
                 mult = multipliers.get(mult, 1)
             else:

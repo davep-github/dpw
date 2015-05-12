@@ -8,8 +8,10 @@ vbell                   on
 ignorecase              on
 defscrollback           4000
 markkeys                "0=^A:$=^E"
-bufferfile              ${HOME}/.screen/generic.d/data.d/screen-exchange
-hardcopydir             ${HOME}/.screen/generic.d/data.d/hardcopy.d
+# bufferfile              ${HOME}/.screen/generic.d/data.d/screen-exchange
+bufferfile              ${SCREENDATA_EXCHANGE}
+# hardcopydir             ${HOME}/.screen/generic.d/data.d/hardcopy.d
+hardcopydir             ${SCREENDATA_HARDCOPY_DIR}
 bind ^/ help
 bind ^h help
 bind ^e quit
