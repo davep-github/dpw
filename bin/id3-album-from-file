@@ -102,56 +102,14 @@ Usage_error()
 # template ends.
 ########################################################################
 
-# Usage variable usage:
-Usage_args_info=" files-to-number"
-Usage_synopsis="Set id3 tag TRACK_NUMBER from file-name...:
-"
-# Using ) after the args makes copy & paste between here and the
-# case statement easier.
-Usage_details="${EExec_parse_usage}
--p|--prefix <prefix>) Prefix numbers with PREFIX (e.g. to add leading 0.
-"
-
-: ${prefix=""}
-
-# Example of arg parsing.
-option_str="p:"
-long_options=("prefix")
-source dp-getopt+.sh || exit 1
-while (($# > 0))
-do
-  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
-  case $1 in
-      # eexec support: -n -v -q, etc. q.v. ~/bin/eexec
-      # Done by EExec_parse and friends.
-
-      # Program options.
-      -p|--prefix) shift; prefix="${1}";;
-
-      # Help!
-      --help) Usage; exit 0;;
-      --) shift ; break ;;
-      # getopt will barf about unknown options.
-      # Here we barf about known options that we have forgotten to handle.
-      *) echo 1>&2 "Unhandled option>$1<"
-         exit 1;;
-    esac
-    shift
-done
-# The following is needed only when args are required.
-[ "$*" = "" ] && {
-    echo "Please specify some files."
-    exit 1
-} 1>&2
-
 for f in "$@"
 do
-  num=$(echo "$f" | sed -rn 's/([0-9]+)(.*)/\1/p')
-  echo_id num
-  if [ -n "$num" ]
+  rpf=$(realpath "${f}")
+  dirname=$(basename $(dirname "${rpf}"))
+  dirname=$(echo "${dirname}" | sed -r 's/_/ /g')
+  echo_id dirname
+  if [ -n "$dirname" ]
   then
-      num="${prefix}${num}"
-      echo_id num
-      EExec id3 -T "$num" "$f"
+      EExec id3 -A "$dirname" "$f"
   fi
 done
