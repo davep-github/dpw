@@ -109,14 +109,16 @@ Usage_synopsis="Set id3 tag TRACK_NUMBER from file-name...:
 # Using ) after the args makes copy & paste between here and the
 # case statement easier.
 Usage_details="${EExec_parse_usage}
--p|--prefix <prefix>) Prefix numbers with PREFIX (e.g. to add leading 0.
+-p|--prefix <prefix>) Prefix numbers with PREFIX (Use -w for leading 0s)
+-w|--width <width>) Pad track number to <width> with 0s.
 "
 
 : ${prefix=""}
+: ${width="2"}
 
 # Example of arg parsing.
-option_str="p:"
-long_options=("prefix")
+option_str="p:w:"
+long_options=("prefix:" "width:")
 source dp-getopt+.sh || exit 1
 while (($# > 0))
 do
@@ -127,6 +129,7 @@ do
 
       # Program options.
       -p|--prefix) shift; prefix="${1}";;
+      -w|--width) shift; width="${1}";;
 
       # Help!
       --help) Usage; exit 0;;
@@ -146,12 +149,13 @@ done
 
 for f in "$@"
 do
-  num=$(echo "$f" | sed -rn 's/([0-9]+)(.*)/\1/p')
-  echo_id num
+  num=$(echo "$f" | sed -rn 's/(0*)([0-9]+)(.*)/\2/p')
+  num=$(printf "%0${width}d" "${num}")
+  EExec_verbose_echo_id num
   if [ -n "$num" ]
   then
       num="${prefix}${num}"
-      echo_id num
+      EExec_verbose_echo_id num
       EExec id3 -T "$num" "$f"
   fi
 done
