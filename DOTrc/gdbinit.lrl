@@ -1,0 +1,37 @@
+source ~/.rc/gdbinit-cpu-agnostic
+source ~/.rc/gdbinit.arm
+
+define haddr
+ set *((int*) $arg0) = $arg1
+end
+
+# vet stuff; pretty stale [ at this time: 2014-09-30T10:27:47 ]
+define loadcc
+ restore /tmp/x.srec 0xc1000000
+end
+
+define cctramp
+ set *((int*) 0xc02cc448) = 0xea34cef4
+end
+
+define docc
+ loadcc
+ cctramp
+end
+
+define hack_nand_write
+ set *((int*) 0xc02cabbc) = 0xe292480a
+ set *((int*) 0xc02cabc0) = 0xe2a35000
+end
+
+define hack_nand_read
+ set *((int*) 0xc02cc40c) = 0xe292480a
+ set *((int*) 0xc02cc410) = 0xe2a35000
+end
+
+define bp_nen
+ b *0xc028bdf4
+end
+
+define hack_nand_erase
+
