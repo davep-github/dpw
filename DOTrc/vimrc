@@ -10,4 +10,4 @@ set shiftwidth=8
 set noexpandtab
 colorscheme elflord
 " set spell spelllang=en_us
-" syntax off
+syntax off

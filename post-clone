@@ -102,6 +102,7 @@ done
 
 ${EZEC} ln -s lisp .xemacs
 ${EZEC} ln -s .rc/procmailrc.vilya .procmailrc
+${EZEC} ln -s lisp/Makefile .
 ${EZEC} mkdir log
 ${EZEC} mkdir log/{boot,kde,login-rc,xemacs,shell-sessions}
 ${EZEC} mkdir log/auto-rotate-c5-50K
@@ -120,7 +121,7 @@ ${EZEC} mkdir -p "droppings/persist/bash-history"
 ${EZEC} mkdir -p "droppings/persist/emacs-history"
 ${EZEC} mkdir -p "droppings/persist/gdb_history"
 
-echo "Other new Linux installation actions:
+echo 'Other new Linux installation actions:
 1) samba: I need to find the old instructions for this.
 2) kernel core pattern: 
    To /etc/sysctl.conf, add: kernel.core_pattern = %e-p:%p,u:%u,s:%s,t:%t.CR
@@ -128,4 +129,4 @@ echo "Other new Linux installation actions:
    1) gcc eko.cpp ../eko
    2) gcc utmpdump.c ../utmpdump
    +) gcc $f ../$(basename .c|.cpp|???)
-"
+'

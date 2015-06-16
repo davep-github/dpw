@@ -17,6 +17,7 @@ else
    while :
    do
       read -e -p "Patch dir is not present.  Continue [yes/N]? "
+      echo 'run dp-apply-my-xemacs-patches'
       case "$REPLY" in
           [Yy]) echo 'Enter "yes" to confirm'; continue;;
 	  [yY][eE][sS]) echo 'Continuing.'; break;;

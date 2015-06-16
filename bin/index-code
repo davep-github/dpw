@@ -273,7 +273,7 @@ fi
 # extagtree defaults to making etags compatible files.  -E inverts this.
 # [ -n "$ctags_p" ] && EExec eval ${tree_tagger} -E $tflags $dirs $amper
 # [ -n "$etags_p" ] && EExec eval ${tree_tagger} $tflags $dirs $amper
-# EExec eval '( rm -f cscope.* && cscope-indexer $cscope_indexer_verbose -r $ciflags $dirs )'
+# EExec eval '( rm -f cscope.* && EExec cscope-indexer $cscope_indexer_verbose -r $ciflags $dirs )'
 # [ "$amper" = "&" ] && {
 #     echo "waiting for procs to complete..."
 #     wait

@@ -344,27 +344,27 @@ nvidia_family = e(
 )
 
 
-SKAION_XEM_GEOMETRY = '-geometry 81x70-0+0'
-SKAION_BG_COLOR = 'rgb:24/00/68'
-SKAION_FG_COLOR = 'white'
-skaion_family = e(
+LRL_XEM_GEOMETRY = '-geometry 81x70-0+0'
+LRL_BG_COLOR = 'rgb:24/00/68'
+LRL_FG_COLOR = 'white'
+lrl_family = e(
     kef='family',
     dat={
     'host-default-pattern': '.*',
-    'family': 'skaion-linux',
-    'family_zone': 'skaion',
-    'comment': 'My linux boxen at skaion.',
+    'family': 'lrl-linux',
+    'family_zone': 'lrl',
+    'comment': 'My linux boxen at lrl.',
     'DTE': 'lxde',                      # sigh.
     'main_macs_opts': '-eval (dp-main-rc+2w)',
-    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + SKAION_XEM_GEOMETRY,
+    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + LRL_XEM_GEOMETRY,
     "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
     'xem_font': '',
     'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
-    'work-zone': 'skaion',
+    'work-zone': 'lrl',
     """xem-xft-font""": '''"Inconsolata-13"''',
     'xterm_bin': 'xterm',
-    'xterm_bg': SKAION_BG_COLOR,
-    'xterm_fg': SKAION_FG_COLOR,
+    'xterm_bg': LRL_BG_COLOR,
+    'xterm_fg': LRL_FG_COLOR,
     'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
     'xem_bg_color': NVIDIA_BG_COLOR,
     '''command-line-mailer''': '''mutt''',
@@ -375,21 +375,21 @@ skaion_family = e(
 
 # We'd like the xterm and xemacs to have the same background to help us tell
 # one machine from another.
-#SKAION_LAPTOP_BG = 'darkblue'
-SKAION_LAPTOP_BG = "rgb:27/00/2c"
+#LRL_LAPTOP_BG = 'darkblue'
+LRL_LAPTOP_BG = "rgb:27/00/2c"
 e(
     kef='host',
     dat={
     'host-pattern': 'dplaptop|bld|dplt|shodanbld|dpure|mundane|simp(le)?|prim(itive)?',
     'comment': 'Laptop running unadulterated ubuntu 12.04.',
     'nick': 'vet-build',
-    'xterm_bg': SKAION_LAPTOP_BG,
+    'xterm_bg': LRL_LAPTOP_BG,
     'xterm_fg': 'white',
-    'xem_bg_color': SKAION_LAPTOP_BG,
+    'xem_bg_color': LRL_LAPTOP_BG,
 
     # NB! using the version number can cause extreme weirdness with fonts!
     },
-    ref=famDB['skaion-linux'])
+    ref=famDB['lrl-linux'])
 
 e(
     kef='host',
@@ -404,14 +404,14 @@ e(
 
     # NB! using the version number can cause extreme weirdness with fonts!
     },
-    ref=famDB['skaion-linux'])
+    ref=famDB['lrl-linux'])
 
 # My openstack datanet which connects to the outside world.
-SKAION_DP_OPENSTACK_HOST_REGEXP = '^(.*@)?(10\.9\.8\.[0-9]{1,3})$'
+LRL_DP_OPENSTACK_HOST_REGEXP = '^(.*@)?(10\.9\.8\.[0-9]{1,3})$'
 e(
     kef='host',
     dat={
-    'host-pattern': SKAION_DP_OPENSTACK_HOST_REGEXP,
+    'host-pattern': LRL_DP_OPENSTACK_HOST_REGEXP,
     'DTE': 'lxde',                      # or none
     'comment': 'Externally accessible openstack nodes',
     'nick': 'openstack',
@@ -421,7 +421,7 @@ e(
 
     # NB! using the version number can cause extreme weirdness with fonts!
     },
-    ref=famDB['skaion-linux'])
+    ref=famDB['lrl-linux'])
 
 #
 # FAMILY entry for o-xterm

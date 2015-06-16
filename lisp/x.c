@@ -4,6 +4,7 @@
  * llkjslkjd
  */
 
+
 float f = 0.0;
 typedef zuzz xxx;
 // recommend
@@ -22,7 +23,8 @@ int func(int a,
   byte * bp;
   if (a) {
     func(++a, b/2, c);
-  }
+  } else {
+      bubba_is_a_good_man();
 }
 
 int fuck_fuck_fuck;
