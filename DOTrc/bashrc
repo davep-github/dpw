@@ -15,6 +15,11 @@
 #echo "LC>${LC_DP_YES_DP_ENV_P}<"
 #echo "LC_DP_NO_DP_ENV_P>$LC_DP_NO_DP_ENV_P<"
 
+if [ -n  "$GREP_OPTIONS" ]
+then
+    echo "GREP_OPTIONS is set, do a clean login."
+fi
+
 # defecated
 ## dp_no_dp_env_p_file="$HOME/ipc/dp-no-dp-env-${HOSTNAME}-p"
 dp_no_dp_env_p_file="$HOME/ipc/dp-no-dp-env-p_${HOSTNAME}"

@@ -32,7 +32,7 @@ add_failure()
 {
     local node=$1; shift
 
-    bad_nodes=$(pathadd "$bad_nodes" "$node")
+    bad_nodes=$(pathadd -s ', ' "$bad_nodes" "$node")
     num_failures=$((num_failures + 1))
     prefix='***'"[$num_failures]"'***'
 }
