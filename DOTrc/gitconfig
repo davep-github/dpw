@@ -4,7 +4,7 @@
 	name = David Panariti
 	email = davep.dpw@meduseld.net
 [push]
-	default = matching
+	default = simple
 
 [difftool "ec-diff"]
 	cmd = ec-diff $LOCAL $REMOTE
