@@ -110,6 +110,7 @@ done
 
 #GREPPER=egrep
 : ${GREPPER:='egrep'}
+: ${GREPPAT:=[ef]?grep(( -.)+)?}
 #PGREP='/home/davep/yokel/bin/pgrep'
 PGREP=$0
 
@@ -130,7 +131,7 @@ fi
 got_one=""
 
 #echo_id2 PS_ARGS
-EExec $PS $PS_ARGS | EExec $GREPPER "$@" | sort | uniq | egrep -v " $GREPPER |$PGREP" | \
+EExec $PS $PS_ARGS | EExec $GREPPER "$@" | sort | uniq | egrep -v "[[:space:]]+$GREPPAT |$PGREP" | \
   while :; do
     # eof
     read || {

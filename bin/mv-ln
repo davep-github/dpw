@@ -82,11 +82,20 @@ mv_one()
     local link_target="${dst}${sep}${link_name}"
     if [ -e "$link_target" ]
     then
-        read -e -p "$link_target[$link_target] exists.  Continue[y/N]? "
-        case "$REPLY" in
-            [Yy]) ;;
-            *) echo 1>&2 "Exiting."; exit 1;;
-        esac
+        # This isn't quite right because the following ops result in errors
+        # that don't make sense because we are in a mode where there may be
+        # an error and yet it doesn't matter because we aren't doing anything
+        # anyway.
+        if false && EExecDashN_p
+        then
+            echo "Link target[$link_target] exists."
+        else
+            read -e -p "Link target[$link_target] exists.  Continue[y/N]? "
+            case "$REPLY" in
+                [Yy]) ;;
+                *) echo 1>&2 "Exiting."; exit 1;;
+            esac
+        fi
     fi
     if [ -L "$src" ]
     then

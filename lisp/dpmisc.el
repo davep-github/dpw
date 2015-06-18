@@ -3440,12 +3440,16 @@ Use exec-path if PATH is nil."
     (dmessage "Searching for spelling program.")
     (let ((spellr (dp-find-first-exe dp-spell-programs)))
       (if spellr
-          (setq ispell-program-name spellr)
+          (progn
+            (setq ispell-program-name spellr)
+            (dmessage "1: ispell-program-name>%s<" ispell-program-name))
         ;; We couldn't find one in our preferred list, so try the default
         ;; specified in the ispell package.
         (dmessage "checking default ispell program: %s" ispell-program-name)
-        (unless (executable-find ispell-program-name)
-          (dmessage "No spelling program found. *spell is disabled.")
+        (if (executable-find ispell-program-name)
+            (dmessage "2: ispell-program-name>%s<" ispell-program-name)
+          (dmessage "Spelling program>%s< found. *spell is disabled."
+                    ispell-program-name)
           (setq ispell-program-name nil)
           ;; @todo XXX Are there any other spell modes we need to handle here?
           (setq dp-use-flyspell-p nil)) ;no spellr --> canna flyspel.

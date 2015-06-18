@@ -24,6 +24,8 @@ action_list="clean kernel modules_install install"
 #echo "0: actions>$actions<"
 #echo "1: actions>$actions<"
 dash_n=
+: ${genkernel_p=t}
+
 canonicalize()
 {
     local op=$1
@@ -51,22 +53,34 @@ canonicalize_list()
 }
 
 $DP_SCRIPT_X_DASH_X_ON
-while [[ "$1" == -* ]]
+while (($# > 0))
 do
-    # Nukes leading `-' from the option.
-    ops=$(echo -- "$1" | sed -r 's/^([[:space:]]*)(--)([[:space:]]+)(-)(.+)/\5/')
-    # Splits >1 option char into string of option chars.
-    ops=$(echo $ops | sed -r 's/(.)/\1 /g')
-    for op in $ops
-    do
-	#echo_id 1>&2 op
-	#echo_id 1>&2 action_list
-	[ "$op" = "n" ] && { dash_n=y; continue; }
-	action_list="$action_list $(canonicalize $op)"
-    done
-    shift
+  case "$1" in
+      --make) genkernel_p=;;
+      --genk*) genkernel_p=t;;
+      --) break;;
+      -*)
+            # Nukes leading `-' from the option.
+            ops=$(echo -- "$1" | sed -r 's/^([[:space:]]*)(--)([[:space:]]+)(-)(.+)/\5/')
+            # Splits >1 option char into string of option chars.
+            ops=$(echo $ops | sed -r 's/(.)/\1 /g')
+            for op in $ops
+            do
+	        #echo_id 1>&2 op
+	        #echo_id 1>&2 action_list
+	        [ "$op" = "n" ] && { dash_n=y; continue; }
+	        action_list="$action_list $(canonicalize $op)"
+            done
+            ;;
+  esac
+  shift
 done
 #echo_id 1>&2 action_list
+
+vsetp "${genkernel_p}" && {
+    genkernel_p "$@"
+    exit
+}
 
 # Add space for checking entire action in been_done list
 actions=" $action_list $(canonicalize_list $@) "	
