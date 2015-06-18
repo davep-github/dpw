@@ -343,7 +343,6 @@ nvidia_family = e(
     ref=[OSDB['linux'], default]
 )
 
-
 LRL_XEM_GEOMETRY = '-geometry 81x70-0+0'
 LRL_BG_COLOR = 'rgb:24/00/68'
 LRL_FG_COLOR = 'white'
@@ -373,88 +372,25 @@ lrl_family = e(
     ref=[OSDB['linux'], default]
 )
 
-# We'd like the xterm and xemacs to have the same background to help us tell
-# one machine from another.
-#LRL_LAPTOP_BG = 'darkblue'
-LRL_LAPTOP_BG = "rgb:27/00/2c"
-e(
-    kef='host',
-    dat={
-    'host-pattern': 'dplaptop|bld|dplt|shodanbld|dpure|mundane|simp(le)?|prim(itive)?',
-    'comment': 'Laptop running unadulterated ubuntu 12.04.',
-    'nick': 'vet-build',
-    'xterm_bg': LRL_LAPTOP_BG,
-    'xterm_fg': 'white',
-    'xem_bg_color': LRL_LAPTOP_BG,
-
-    # NB! using the version number can cause extreme weirdness with fonts!
-    },
-    ref=famDB['lrl-linux'])
+LRL_AVOCADO_FG_COLOR = 'black'
+LRL_AVOCADO_BG_COLOR = 'linen'
 
 e(
-    kef='host',
+    kef='family',
     dat={
-    'host-pattern': '^(.*@)?(compute[123]|controller1)$',
-    'DTE': 'lxde',                      # or none
-    'comment': 'Node with working qemu for overo linux.',
-    'nick': 'qemu',
-    'xterm_bg': 'grey20',
-    'xterm_fg': 'lightgrey',
-    'xem_bg_color': 'linen',
-
-    # NB! using the version number can cause extreme weirdness with fonts!
+    'family': 'lrl_family',
+    'comment': 'A work machine.',
+    'host-pattern': 'avocado',
+    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + NV_GEOMETRY,
+    'xterm_bg': LRL_AVOCADO_BG_COLOR,
+    'xterm_fg': LRL_AVOCADO_FG_COLOR,
+    'xem_bg_color': LRL_AVOCADO_BG_COLOR,
+    'main_macs_opts': '',
     },
-    ref=famDB['lrl-linux'])
+    ref=[lrl_family, OSDB['linux'], default]
+)
 
-# My openstack datanet which connects to the outside world.
-LRL_DP_OPENSTACK_HOST_REGEXP = '^(.*@)?(10\.9\.8\.[0-9]{1,3})$'
-e(
-    kef='host',
-    dat={
-    'host-pattern': LRL_DP_OPENSTACK_HOST_REGEXP,
-    'DTE': 'lxde',                      # or none
-    'comment': 'Externally accessible openstack nodes',
-    'nick': 'openstack',
-    'xterm_bg': 'rgb:39/00/53',
-    'xterm_fg': 'lightgrey',
-    'xem_bg_color': 'linen',
 
-    # NB! using the version number can cause extreme weirdness with fonts!
-    },
-    ref=famDB['lrl-linux'])
-
-#
-# FAMILY entry for o-xterm
-## e(
-##     kef='family',
-##     dat={
-##     'family': 'nv-o-xterm',
-##     'comment': 'General, interactive multiuser development machine. No CPU hogging',
-##     'host-pattern': '(sc|o)-xterm-[0-9]+',
-##     },
-##     ref=[nvidia_family, OSDB['linux'], default]
-## )
-
-## e(
-##     kef='family',
-##     dat={
-##     'family': 'nv-l-sim',
-##     'comment': 'Heavy load machines.',
-##     'host-pattern': 'l-sim-|sc-sim',
-##     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + NV_GEOMETRY,
-##     'xterm_bg': NVIDIA_LSIM_BG_COLOR,
-##     'xterm_fg': NVIDIA_LSIM_FG_COLOR,
-##     'xem_bg_color': NVIDIA_LSIM_BG_COLOR,
-##     'main_macs_opts': '',
-##     'post_bashrc_command': 'eval ignoreeof=10',
-##     },
-##     ref=[nvidia_family, OSDB['linux'], default]
-## )
-
-#
-# build the host records
-# the host entries are keyed by the hostname
-#
 
 # create the db.
 DB = dppydb.PythonDataBase()
