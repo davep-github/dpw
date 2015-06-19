@@ -2,16 +2,40 @@ source ~/.mutt-aliases
 my_hdr X-Attribution: davep
 set alias_file = ~/.mutt-aliases
 set attribution  = "On %d, %n wrote:"
-set record = sent
-set move = no
-set hostname = meduseld.net
-set mbox_type = Maildir
-set folder = ~/Maildir/
+
+### IMAP config
+# from: http://dev.mutt.org/trac/wiki/MuttGuide/UseIMAP
+# Original:
+# Automatically log in to this mailbox at startup
+# set spoolfile="imaps://johndoe:p455w0rd@mail.example.com/INBOX"
+# # Define the = shortcut, and the entry point for the folder browser (c?)
+# set folder="imaps://mail.example.com/INBOX"
+# set record="=Sent"
+# set postponed="=Drafts"
+
+# Automatically log in to this mailbox at startup
+set spoolfile="imap://davep@localhost"
+# Define the = shortcut, and the entry point for the folder browser (c?)
+set folder="imap://davep@localhost"
+set record="=Sent"
+set postponed="=Drafts"
+set ssl_starttls=no
+
+## From an earlier imap attempt:
 #set imap_user = davep@vilya.meduseld.net
 ##set imap_password =
 ##??##ssl_starttls = no
 #set folder = "imap://davep@vilya.meduseld.net:143"
 #set spoolfile = "+INBOX"
+
+### Maildir config
+#set record = sent
+#set move = no
+#set hostname = meduseld.net
+#set mbox_type = Maildir
+#set folder = ~/Maildir/
+
+
 set sort = reverse-date-received
 set sort_aux = reverse-date-received
 set tmpdir=~/tmp                 # Temporary files aren't stored in public places.
@@ -39,5 +63,4 @@ alternative_order text/plain text/html
 auto_view text/html
 
 set sendmail="/usr/bin/msmtp"
-#set from=davep@meduseld.net
 

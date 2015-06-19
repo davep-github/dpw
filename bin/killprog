@@ -83,11 +83,13 @@ else
 }
 
 chop($OSName = `uname`);
+print "OSName>$OSName<, user_option>$user_option<\n" if ($debug);
 
 if ($OSName eq 'Linux')
 {
   # pattern to find program's pid and executable name
   # 8460 gdb /home/scratch.dpanariti_t124/sb2/hw/hw/nvdiag/mods/mods --command=dbcommands
+  print "OSName>$OSName<, user_option>$user_option<\n" if ($debug);
   $psCmd = "ps $user_option -o pid,cmd";
   $nameFinder = '^\s*(\d+)\s+(\S+)';
   

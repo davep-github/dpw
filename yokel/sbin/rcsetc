@@ -1,8 +1,8 @@
 #!/bin/sh
 #set -x
 
-progname=`basename $0`
-dirname=`dirname $0`
+progname=$(basename $0)
+dirname=$(dirname $0)
 
 #source script-x
 
