@@ -20,4 +20,8 @@ dp-xterm-like-p && do_xtitle 'Screen instance'
 
 export IMASCREENINSTANCE=yes
 real_bin=$(sp screen | egrep -v "$USER|yokel" | head -n 1)
+vsetp "${real_bin}" || {
+    echo "Could not find a real instance of screen. Is it installed?"
+    exit 1
+} 1>&2
 exec $real_bin $args

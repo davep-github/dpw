@@ -256,7 +256,9 @@ echo 1>&2 "Check len and offer to clear \`e' flag if too short."
 	    name=$(echo "|$name|" | sed -r 's/\|+/\|/g')
 	    line="${flags}${name}       $val"
 	    echo "$line >> $gfile"
-            echo "# Added $(date)" >> "${tmp_gfile}"
+            vsetp "${ADD_DATE_P-}" && {
+                echo "# Added $(date)" >> "${tmp_gfile}"
+            }
 	    echo "$line" >> "${tmp_gfile}"
 #             echo >> "${tmp_gfile}"
             grep "${emacs_locals_re}" "${gfile}" >> "${tmp_gfile}"
