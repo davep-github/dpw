@@ -50,3 +50,10 @@
 
 (defvar dp-default-c-style-name "lrl-c-style")
 
+(dp-add-force-read-only-regexp
+ (dp-concat-regexps-grouped
+  ;; Don't want to edit these stupid fvcking copies.
+  '("/home/davep/work/dpu/external/build/snort-2.9.7.3"))
+ t                                      ; Should the list be cleared first?
+)
+
