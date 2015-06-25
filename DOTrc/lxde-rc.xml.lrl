@@ -7,12 +7,12 @@
     <screen_edge_strength>20</screen_edge_strength>
   </resistance>
   <focus>
-    <focusNew>no</focusNew>
+    <focusNew>yes</focusNew>
     <!-- always try to focus new windows when they appear. other rules do
        apply -->
     <followMouse>yes</followMouse>
     <!-- move focus to a window when you move the mouse into it -->
-    <focusLast>yes</focusLast>
+    <focusLast>no</focusLast>
     <!-- focus the last used window when changing desktops, instead of the one
        under the mouse pointer. when followMouse is enabled -->
     <underMouse>yes</underMouse>
@@ -25,20 +25,20 @@
        mouse into it, also raise the window -->
   </focus>
   <placement>
-    <policy>Smart</policy>
+    <policy>UnderMouse</policy>
     <!-- 'Smart' or 'UnderMouse' -->
     <center>yes</center>
     <!-- whether to place windows in the center of the free area found or
        the top left corner -->
-    <monitor>Any</monitor>
+    <monitor>Mouse</monitor>
     <!-- with Smart placement on a multi-monitor system, try to place new windows
        on: 'Any' - any monitor, 'Mouse' - where the mouse is, 'Active' - where
        the active window is -->
-    <primaryMonitor/>
+    <primaryMonitor>3</primaryMonitor>
   </placement>
   <theme>
-    <name>Bear2</name>
-    <titleLayout>NDLIMC</titleLayout>
+    <name>Onyx</name>
+    <titleLayout>NLIMC</titleLayout>
     <!--
       available characters are NDSLIMC, each can occur at most once.
       N: window icon
@@ -106,13 +106,13 @@
 
        use obconf if you want to change these without having to log out
        and back in -->
-    <number>4</number>
+    <number>2</number>
     <firstdesk>1</firstdesk>
     <names>
-      <name>Local</name>
-      <name>OpenStack</name>
-      <name>Vet (spos)</name>
-      <name>mwooh</name>
+      <!-- set names up here if you want to, like this:
+    <name>desktop 1</name>
+    <name>desktop 2</name>
+    -->
     </names>
     <popupTime>875</popupTime>
     <!-- The number of milliseconds to show the popup for when switching
@@ -122,7 +122,7 @@
     <drawContents>yes</drawContents>
     <popupShow>Always</popupShow>
     <!-- 'Always', 'Never', or 'Nonpixel' (xterms and such) -->
-    <popupPosition>Top</popupPosition>
+    <popupPosition>Center</popupPosition>
     <!-- 'Center', 'Top', or 'Fixed' -->
     <popupFixedPosition>
       <!-- these are used if popupPosition is set to 'Fixed' -->
@@ -162,25 +162,7 @@
     <moveButton>Middle</moveButton>
     <!-- 'Left', 'Middle', 'Right' -->
   </dock>
-  <keyboard><chainQuitKey>C-g</chainQuitKey><!-- Keybindings for desktop switching --><keybind key="W-F12"><action name="Restart"/></keybind><keybind key="W-Left"><action name="DesktopLeft"><dialog>no</dialog><wrap>yes</wrap></action></keybind><keybind key="W-Right"><action name="DesktopRight"><dialog>no</dialog><wrap>yes</wrap></action></keybind><keybind key="C-W-Up"><action name="DesktopUp"><dialog>no</dialog><wrap>yes</wrap></action></keybind><keybind key="C-W-Down"><action name="DesktopDown"><dialog>no</dialog><wrap>yes</wrap></action></keybind><keybind key="S-A-Left"><action name="SendToDesktopLeft"><dialog>no</dialog><wrap>yes</wrap></action></keybind><keybind key="S-A-Right"><action name="SendToDesktopRight"><dialog>no</dialog><wrap>yes</wrap></action></keybind><keybind key="S-A-Up"><action name="SendToDesktopUp"><dialog>no</dialog><wrap>yes</wrap></action></keybind><keybind key="S-A-Down"><action name="SendToDesktopDown"><dialog>no</dialog><wrap>yes</wrap></action></keybind><keybind key="W-F1"><action name="Desktop"><desktop>1</desktop></action></keybind><keybind key="W-F2"><action name="Desktop"><desktop>2</desktop></action></keybind><keybind key="W-F3"><action name="Desktop"><desktop>3</desktop></action></keybind><keybind key="W-F4"><action name="Desktop"><desktop>4</desktop></action></keybind><keybind key="W-d"><action name="ToggleShowDesktop"/></keybind><keybind key="C-W-d"><action name="ToggleShowDesktop"/></keybind><!-- Keybindings for windows --><keybind key="A-F4"><action name="Close"/></keybind><keybind key="A-Escape"><action name="Lower"/><action name="FocusToBottom"/><action name="Unfocus"/></keybind><keybind key="W-space"><action name="ShowMenu"><menu>client-menu</menu></action></keybind><!-- Keybindings for window switching --><keybind key="A-Tab"><action name="NextWindow"/></keybind><keybind key="A-S-Tab"><action name="PreviousWindow"/></keybind><keybind key="C-W-Tab"><action name="NextWindow"><panels>yes</panels><desktop>yes</desktop></action></keybind><!-- Keybindings for running applications --><keybind key="W-f"><action name="Execute"><startupnotify><enabled>true</enabled><name>PCManFM</name></startupnotify><command>pcmanfm</command></action></keybind><!--keybindings for LXPanel --><keybind key="W-r"><action name="Execute"><command>lxpanelctl run</command></action></keybind><keybind key="A-F2"><action name="Execute"><command>lxpanelctl
-run</command></action></keybind><keybind key="C-Escape"><action name="Execute"><command>lxpanelctl
-menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscreen"/></keybind><!-- Launch Task Manager with Ctrl+Alt+Del --><keybind key="A-C-Delete"><action name="Execute"><command>lxtask</command></action></keybind><!-- Fast access to Terminal --><keybind key="C-W-T"><action name="Execute"><command>lxterminal</command></action></keybind><!-- Fast access to filemanager --><keybind key="C-W-D"><action name="Execute"><startupnotify><enabled>true</enabled><name>PCManFM</name></startupnotify><command>pcmanfm</command></action></keybind><!-- Next window on all desktops --><!-- Does not work. Neither does C-A-Tab, above.
-    <keybind key="W-Tab">
-      <action name="NextWindow">
-        <panels>no</panels>
-        <desktop>yes</desktop>
-      </action>
-    </keybind>
-    --><keybind key="W-Tab"><action name="DesktopRight"><dialog>no</dialog><wrap>yes</wrap></action></keybind><keybind key="W-S-x"><action name="Execute"><startupnotify><enabled>true</enabled><name>dpxx</name></startupnotify><command>dpxx</command></action></keybind><keybind key="W-Escape"><action name="ShowMenu"><menu>client-list-combined-menu</menu></action></keybind><!-- Select and raise emacs editing server. --><keybind key="W-S-e"><action name="Execute"><command>wmctrl -a "Serv/XEmacs@"</command></action></keybind><!-- Select and raise an emacs window. --><keybind key="W-e"><action name="Execute"><command>wmctrl -a "XEmacs@"</command></action></keybind><!-- Select and raise a window on compute2 which is used for qemu. --><keybind key="W-q"><action name="Execute"><command>wmctrl -a "root@compute2"</command></action></keybind><!-- Select and raise a web browser (att: firefox) window. --><keybind key="W-w"><action name="Execute"><command>wmctrl -a "Mozilla Firefox"</command></action></keybind><!-- Select and raise an email client window. Thunderbird, ATT. --><keybind key="W-m"><action name="Execute"><command>wmctrl -a "Mozilla Thunderbird"</command></action></keybind><!-- Select and raise an IPython window. --><keybind key="W-p"><action name="Execute"><command>wmctrl -a "~ : python"</command></action></keybind><!-- Keybinding for PrintScreen Key --><keybind key="Print"><action name="Execute"><execute>scrot</execute></action></keybind><keybind key="A-Print"><action name="Execute"><execute>scrot -s</execute></action></keybind><!-- Select and raise emacs editing server. --><keybind key="W-period"><action name="Focus"/><action name="Raise"/></keybind><!-- Keybinding for toggling mdp play pause --><keybind key="W-p"><action name="Execute"><command>mpc-toggle-play</command></action></keybind><!-- Keybinding for toggling mdp random album --><keybind key="W-C-p"><action name="Execute"><command>mpc-random-album</command></action></keybind>
-
-    <!-- Select and raise term cpnnected to home box. -->
-    <keybind key="W-h">
-      <action name="Execute">
-        <command>wmctrl -a "davep@vilya"</command>
-      </action>
-    </keybind>
-
-    <!-- Keybinding for Volume management --><!--
+  <keyboard><chainQuitKey>C-g</chainQuitKey><!-- Keybindings for desktop switching --><keybind key="C-A-Left"><action name="DesktopLeft"><dialog>no</dialog><wrap>no</wrap></action></keybind><keybind key="C-A-Right"><action name="DesktopRight"><dialog>no</dialog><wrap>no</wrap></action></keybind><keybind key="C-A-Up"><action name="DesktopUp"><dialog>no</dialog><wrap>no</wrap></action></keybind><keybind key="C-A-Down"><action name="DesktopDown"><dialog>no</dialog><wrap>no</wrap></action></keybind><keybind key="S-A-Left"><action name="SendToDesktopLeft"><dialog>no</dialog><wrap>no</wrap></action></keybind><keybind key="S-A-Right"><action name="SendToDesktopRight"><dialog>no</dialog><wrap>no</wrap></action></keybind><keybind key="S-A-Up"><action name="SendToDesktopUp"><dialog>no</dialog><wrap>no</wrap></action></keybind><keybind key="S-A-Down"><action name="SendToDesktopDown"><dialog>no</dialog><wrap>no</wrap></action></keybind><keybind key="W-F1"><action name="Desktop"><desktop>1</desktop></action></keybind><keybind key="W-F2"><action name="Desktop"><desktop>2</desktop></action></keybind><keybind key="W-F3"><action name="Desktop"><desktop>3</desktop></action></keybind><keybind key="W-F4"><action name="Desktop"><desktop>4</desktop></action></keybind><keybind key="W-d"><action name="ToggleShowDesktop"/></keybind><keybind key="C-A-d"><action name="ToggleShowDesktop"/></keybind><!-- Keybindings for windows --><keybind key="A-F4"><action name="Close"/></keybind><keybind key="A-Escape"><action name="Lower"/><action name="FocusToBottom"/><action name="Unfocus"/></keybind><keybind key="A-C-space"><action name="ShowMenu"><menu>client-menu</menu></action></keybind><!-- Keybindings for window switching --><keybind key="A-Tab"><action name="NextWindow"/></keybind><keybind key="A-S-Tab"><action name="PreviousWindow"/></keybind><keybind key="C-A-Tab"><action name="NextWindow"><panels>yes</panels><desktop>yes</desktop></action></keybind><!-- Keybindings for running applications --><keybind key="W-C-e"><action name="Execute"><startupnotify><enabled>true</enabled><name>PCManFM</name></startupnotify><command>pcmanfm</command></action></keybind><!--keybindings for LXPanel --><keybind key="W-r"><action name="Execute"><command>lxpanelctl run</command></action></keybind><keybind key="A-F2"><action name="Execute"><command>lxpanelctl run</command></action></keybind><keybind key="C-Escape"><action name="Execute"><command>lxpanelctl menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscreen"/></keybind><!-- Launch Task Manager with Ctrl+Alt+Del --><keybind key="A-C-Delete"><action name="Execute"><command>lxtask</command></action></keybind><!-- Fast access to Terminal --><keybind key="C-A-T"><action name="Execute"><command>lxterminal</command></action></keybind><!-- Fast access to filemanager --><keybind key="C-A-D"><action name="Execute"><startupnotify><enabled>true</enabled><name>PCManFM</name></startupnotify><command>pcmanfm</command></action></keybind><!-- Keybinding for PrintScreen Key --><keybind key="Print"><action name="Execute"><execute>scrot</execute></action></keybind><keybind key="A-Print"><action name="Execute"><execute>scrot -s</execute></action></keybind><!-- Keybinding for Volume management -->
     <keybind key="XF86AudioRaiseVolume">
       <action name="Execute">
           <command>amixer -q sset Master 3%+</command>
@@ -198,18 +180,10 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
           <command>amixer -q sset Master toggle</command>
       </action>
     </keybind>
---><keybind key="W-c"><action name="Execute"><command>wmctrl -a "::current"</command></action></keybind>
 
     <keybind key="XF86WWW">
       <action name="Execute">
           <command>x-terminal-emulator</command>
-      </action>
-    </keybind>
-
-    <!-- Just a free key -->
-    <keybind key="XF86Sleep">
-      <action name="Execute">
-          <command>mpc-random-album</command>
       </action>
     </keybind>
 
@@ -231,11 +205,27 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
       </action>
     </keybind>
 
+    <!-- davep bindings -->
+    <keybind key="W-F12"><action name="Restart"/></keybind>
+    <!-- Select and raise emacs editing server. -->
+    <keybind key="W-S-e"><action name="Execute"><command>wmctrl -a "Serv/XEmacs@"</command></action></keybind>
+    <!-- Select and raise mvsik player. -->
+    <keybind key="W-a"><action name="Execute"><command>wmctrl -a "rhythmbox"</command></action></keybind>
+    <!-- Select and raise an emacs window. -->
+    <keybind key="W-e"><action name="Execute"><command>wmctrl -a "XEmacs@"</command></action></keybind>
+    <!-- Select and raise a web browser (att: firefox) window. -->
+    <keybind key="W-w"><action name="Execute"><command>wmctrl -a "Mozilla Firefox"</command></action></keybind>
+    <!-- Select and raise an email client window. Thunderbird, ATT. -->
+    <keybind key="W-m"><action name="Execute"><command>wmctrl -a "mutt"</command></action></keybind>
+    <!-- Select and raise an IPython window. -->
+    <keybind key="W-p"><action name="Execute"><command>wmctrl -a "~ : python"</command></action></keybind>
+    <!-- Select and raise the window under the pointer. -->
+    <keybind key="W-period"><action name="Focus"/><action name="Raise"/></keybind>
 </keyboard>
   <mouse>
     <dragThreshold>8</dragThreshold>
     <!-- number of pixels the mouse must move before a drag begins -->
-    <doubleClickTime>570</doubleClickTime>
+    <doubleClickTime>200</doubleClickTime>
     <!-- in milliseconds (1000 = 1 second) -->
     <screenEdgeWarpTime>400</screenEdgeWarpTime>
     <!-- Time before changing desktops when the pointer touches the edge of the
@@ -271,10 +261,10 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
       <mousebind button="A-Down" action="Click">
         <action name="DesktopNext"/>
       </mousebind>
-      <mousebind button="C-W-Up" action="Click">
+      <mousebind button="C-A-Up" action="Click">
         <action name="DesktopPrevious"/>
       </mousebind>
-      <mousebind button="C-W-Down" action="Click">
+      <mousebind button="C-A-Down" action="Click">
         <action name="DesktopNext"/>
       </mousebind>
       <mousebind button="A-S-Up" action="Click">
@@ -414,7 +404,7 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
       </mousebind>
     </context>
     <context name="Client">
-      <mousebind button="W-Left" action="Press">
+      <mousebind button="Left" action="Press">
         <action name="Focus"/>
         <action name="Raise"/>
       </mousebind>
@@ -521,10 +511,10 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
       <mousebind button="A-Down" action="Click">
         <action name="DesktopNext"/>
       </mousebind>
-      <mousebind button="C-W-Up" action="Click">
+      <mousebind button="C-A-Up" action="Click">
         <action name="DesktopPrevious"/>
       </mousebind>
-      <mousebind button="C-W-Down" action="Click">
+      <mousebind button="C-A-Down" action="Click">
         <action name="DesktopNext"/>
       </mousebind>
       <mousebind button="Left" action="Press">
@@ -568,7 +558,7 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
     <!-- You can specify more than one menu file in here and they are all loaded,
        just don't make menu ids clash or, well, it'll be kind of pointless -->
     <!-- default menu file (or custom one in $HOME/.config/openbox/) -->
-    <file>/usr/share/lxde/openbox/menu.xml</file>
+    <file>/home/davep/.config/openbox/menu.xml</file>
     <hideDelay>200</hideDelay>
     <!-- if a press-release lasts longer than this setting (in milliseconds), the
        menu is hidden again -->

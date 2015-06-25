@@ -8,3 +8,11 @@
 *.bak
 JUNK,
 *.CR
+GPATH
+GRTAGS
+GSYMS
+GTAGS
+cscope.files
+cscope.in.out
+cscope.out
+cscope.po.out

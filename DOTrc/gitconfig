@@ -3,8 +3,6 @@
 [user]
 	name = David Panariti
 	email = davep.dpw@meduseld.net
-[push]
-	default = simple
 
 [difftool "ec-diff"]
 	cmd = ec-diff $LOCAL $REMOTE

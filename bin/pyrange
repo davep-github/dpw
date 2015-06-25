@@ -23,7 +23,7 @@ def main(argv):
                      16: ("%x", "0x"),
                      }
     import getopt
-    opt_string = "b:pf:rsR:"
+    opt_string = "b:pf:eR:s:oc"
     opts, args = getopt.getopt(argv[1:], opt_string)
     base = 10
     print_format = None
@@ -31,6 +31,7 @@ def main(argv):
     prefix = ""
     rangeStream = None
     closeStream = False
+    separator = '\n'
     for o, v in opts:
         #print "o:", o, "v:", v
         if o == '-b':
@@ -42,16 +43,21 @@ def main(argv):
         if o == '-f':
             print_format = v
             continue
-        if o == '-r':
+        if o in ('-e'):
             rangeStream = sys.stderr
             continue
-        if o == '-s':
+        if o in ('-o'):
             rangeStream = sys.stdout
             continue
         if o == '-R':
             rangeStream = open(v)
             closeStream = True
             continue
+        if o == '-s':
+            separator = v
+            continue
+        if o == '-c':
+            separator = ', '
 
     #print "print_base_p:", print_base_p
     if not print_format:
@@ -60,7 +66,7 @@ def main(argv):
             base_prefix = ""
         print_format = "%s%s" % (base_prefix, base_fmt)
         #print "print_format>%s<" % print_format
-        
+
     start = 0
     step = 1
     argc = len(args)
@@ -90,7 +96,10 @@ def main(argv):
             sys.stdout.write(print_format % n)
         else:
             print_format(n, print_base_p)
-        sys.stdout.write("\n")
+        if n == stop - 1:
+            sys.stdout.write('\n')
+        else:
+            sys.stdout.write(separator)
         
 if __name__ == "__main__":
     main(sys.argv)

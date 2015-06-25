@@ -4,5 +4,5 @@ Ee|dpucompiler|dpuc|                    ${dpuroot}compiler/
 
 Ee|hwdpu|dpuhw|                         ${dpuroot}hw/dpu/
 Ee|an690|                               ${dpuhw}an690/
-Ee|dpuhwdoc|                            ${dpuhw}doc/
+Ee|dpuhwdoc|hwdpudoc|                   ${dpuhw}doc/
 Ee|testdriver|                          ${dpuhw}testdriver/

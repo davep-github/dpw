@@ -134,7 +134,7 @@ export DOMAIN=$(/bin/hostname --fqdn | $CUTBIN -f2- -d.)
 # Run ssh-agent unless directed not to.
 run_ssh_agent_p()
 {
-    true
+    false
 }
     
 cut_and_run_host_p()

@@ -376,20 +376,37 @@ LRL_AVOCADO_FG_COLOR = 'black'
 LRL_AVOCADO_BG_COLOR = 'linen'
 
 e(
-    kef='family',
+    kef='host',
     dat={
     'family': 'lrl_family',
     'comment': 'A work machine.',
     'host-pattern': 'avocado',
-    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + NV_GEOMETRY,
+    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + LRL_XEM_GEOMETRY,
     'xterm_bg': LRL_AVOCADO_BG_COLOR,
     'xterm_fg': LRL_AVOCADO_FG_COLOR,
     'xem_bg_color': LRL_AVOCADO_BG_COLOR,
-    'main_macs_opts': '',
     },
     ref=[lrl_family, OSDB['linux'], default]
 )
 
+LRL_KIWI_FG_COLOR = 'black'
+LRL_KIWI_BG_COLOR = 'lavender'
+
+e(
+    kef='host',
+    dat={
+    'family': 'lrl_family',
+    'comment': 'A work machine.',
+    'host-pattern': 'kiwi',
+    # Good for portrait, landscape, laptop
+    #'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70+0+0',
+    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70+1922+0',
+    'xterm_bg': LRL_KIWI_BG_COLOR,
+    'xterm_fg': LRL_KIWI_FG_COLOR,
+    'xem_bg_color': LRL_KIWI_BG_COLOR,
+    },
+    ref=[lrl_family, OSDB['linux'], default]
+)
 
 
 # create the db.

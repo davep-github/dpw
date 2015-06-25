@@ -27,6 +27,7 @@
 ;; ??? How to specify the following???
 ;; Debugger entered--Lisp error: (wrong-type-argument window-live-p #<window 0xf5be74c>)
 ;;
+;; Debugger entered--Lisp error: (error "Don't know where `:minibufferp' is defined")
 ;; Don't know how to ignore the error string after 'invalid-operation.
 ;; e.g.: Debugger entered--Lisp error: (invalid-operation "Keyboard ...")
 ;; ??? Try using 'invalid-operation?  But how to specify the exact error?
@@ -82,6 +83,7 @@
     "^Place cursor inside tag to be searched for"
     ".* does not belong to a gnuserv client$"
     "^set-fill-column requires an explicit argument$"
+    "^Don't know where `.*' is defined"
 
     
     ;;XEmacs

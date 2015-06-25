@@ -112,7 +112,7 @@ else
     dirs="$@"
 fi    
 
-echo_id dirs
+#echo_id dirs
 # Put the system includes first so any collisions will be noticeable.
 dirs="$SYSTEM_INCLUDES $dirs"
 

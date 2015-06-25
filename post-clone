@@ -112,6 +112,7 @@ ${EZEC} mkdir log/auto-rotate-c5-50K
 )
 ${EZEC} mkdir -p "log/auto-rotate-c10-50K"
 ${EZEC} mkdir ipc
+${EZEC} mkdir tmp
 ${EZEC} mkdir -p "droppings/editors/xemacs/xebacs.d"
 ${EZEC} mkdir -p "droppings/editors/xemacs/auto-saves.d"
 ${EZEC} mkdir -p "droppings/editors/xemacs/session-auto-saves.d"

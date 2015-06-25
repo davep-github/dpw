@@ -293,4 +293,6 @@ alias myvncs='ls -l ~/.vnc/*.pid'
 alias grep="grep --color=never $grep_options"
 alias egrep="grep -E $grep_options"
 alias fgrep="grep -F $grep_options"
+
+alias sagi='sudo apt-get install'
 true
