@@ -6,3 +6,8 @@ Ee|hwdpu|dpuhw|                         ${dpuroot}hw/dpu/
 Ee|an690|                               ${dpuhw}an690/
 Ee|dpuhwdoc|hwdpudoc|                   ${dpuhw}doc/
 Ee|testdriver|                          ${dpuhw}testdriver/
+Ee|obconf|       /home/davep/.config/openbox/
+Ee|dpudoc|       /home/davep/work/dpu/hw/dpu/doc/
+Ee|rhelsrc|       /home/davep/Downloads/kernel/linux-3.10.0-229.1.2.el7/
+Ee|dputd|       /home/davep/work/dpu/hw/dpu/testdriver/
+Ee|tddpu|       /home/davep/work/dpu/hw/dpu/testdriver/

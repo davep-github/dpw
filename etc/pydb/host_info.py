@@ -373,14 +373,14 @@ lrl_family = e(
 )
 
 LRL_AVOCADO_FG_COLOR = 'black'
-LRL_AVOCADO_BG_COLOR = 'linen'
+LRL_AVOCADO_BG_COLOR = 'rgb:f0/ff/c0'
 
 e(
     kef='host',
     dat={
+    'host-pattern': 'avocado',
     'family': 'lrl_family',
     'comment': 'A work machine.',
-    'host-pattern': 'avocado',
     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + LRL_XEM_GEOMETRY,
     'xterm_bg': LRL_AVOCADO_BG_COLOR,
     'xterm_fg': LRL_AVOCADO_FG_COLOR,
@@ -395,12 +395,14 @@ LRL_KIWI_BG_COLOR = 'lavender'
 e(
     kef='host',
     dat={
+    'host-pattern': 'kiwi',
     'family': 'lrl_family',
     'comment': 'A work machine.',
-    'host-pattern': 'kiwi',
-    # Good for portrait, landscape, laptop
+    # Good for portrait, on BAM.
     #'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70+0+0',
-    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70+1922+0',
+    # below is for middle portrait monitor.
+    #'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70+1922+0',
+    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70-0+0',
     'xterm_bg': LRL_KIWI_BG_COLOR,
     'xterm_fg': LRL_KIWI_FG_COLOR,
     'xem_bg_color': LRL_KIWI_BG_COLOR,
@@ -551,7 +553,6 @@ e(
     # Font menu is fucked, but this works:
     # (set-default-font "Inconsolata-12")
     """xem-xft-font""": '''"Inconsolata-12"''',
-    'xem_bin': os.path.join(HOME_LOCAL_BIN, "xemacs"),
 
     # NB! using the version number can cause extreme weirdness with fonts!
     'tunnel-ip': '16.11.64.97',

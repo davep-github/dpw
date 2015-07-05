@@ -36,7 +36,8 @@ do
    shift;
 done
 
-if ((${#nths} == 0))
+# ${#db_files[@]-0}
+if ((${#nths[@]-0} == 0))
 then
     echo "Please provide a relative revision number."
     exit 0

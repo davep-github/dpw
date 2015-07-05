@@ -80,17 +80,22 @@ def rank_lines(lines):
         lines = filtered_lines
     
     ## Find the rankest items.
-    for regexp in Top_ranking_regexps:
-        resid = []
-        for line in lines:
-            if regexp.search(line):
-                tops.append(line)
-            else:
-                resid.append(line)
-        if not resid:
-            return tops + bottoms
-        lines = resid
-    # XXX @todo hanle bottom rankers here.
+    if not Top_ranking_regexps:
+        # If there are no toppesting regexps, then these lines are at least
+        # resid.
+        resid.extend(lines)
+    else:
+        for regexp in Top_ranking_regexps:
+            resid = []
+            for line in lines:
+                if regexp.search(line):
+                    tops.append(line)
+                else:
+                    resid.append(line)
+            if not resid:
+                return tops + bottoms
+            lines = resid
+    # XXX @todo handle bottom rankers here.
     return tops + resid + bottoms
 
 Cxref_realpath_regexp = re.compile("(\S+)\s+(\d+)\s+(\S+)(.*)")
@@ -140,6 +145,7 @@ def run_globals_over_path(argv, path, start_dir=opath.curdir,
     log_file.write("run_globals_over_path(): BEFORE: path>{}<\n".format(path))
     path = path[first_db:num_dbs]
     log_file.write("run_globals_over_path(): AFTER: path>{}<\n".format(path))
+    log_file.write("run_globals_over_path(): argv>{}<\n".format(argv))
     ret = []
     for p in path:
         p = opath.dirname(p)

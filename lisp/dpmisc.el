@@ -2424,8 +2424,9 @@ E.g.
   (setq excuse (dp-c-namify-string excuse))
   (dp-mark-line-if-no-mark)
   (io-region (mark) (point) 
-             (format "#if %sdefined(%s) && 0 /* @todo as of %s :%s */"
+             (format "#if %sdefined(%s) && %s /* @todo as of %s :%s */"
                      not
+                     (dp-c-namify-string excuse)
                      (dp-c-namify-string excuse)
                      (dp-timestamp-string)
                      (user-login-name))
@@ -9675,6 +9676,12 @@ A bookmark, in this context, is:
       ;; 2 windows w/80 col and decorations
       (or threshold-width dp-default-2-window-min-width)))
 
+(defun dp-tall-enough-for-2-windows-p (&optional current-hieght
+                                       threshold-height)
+  (>= (or current-hieght (frame-height))
+      ;; 2 windows w/80 col and decorations
+      (or threshold-height dp-default-2-window-min-height)))
+
 (defun dp-primary-frame-width ()
   (frame-width (dp-primary-frame)))
 
@@ -14561,6 +14568,23 @@ them. Q.v. `unfuck-gz'"
     (auto-fill-mode 0)))
 
 
+(defun dp-hide-single-ifdef (&optional hide-directives-p)
+  "Mark and hide the ifdef @ point."
+  (interactive "P")
+  (beginning-of-line)
+  (let ((end-o-ifdef (dp-mk-marker
+                      (save-excursion
+                        (dp-find-matching-paren)
+                        (if hide-directives-p
+                            (next-line 1)
+                          (next-line -1))
+                        (beginning-of-line)
+                        (point)))))
+    (unless hide-directives-p
+      (next-line 1)
+      (beginning-of-line))
+    (dp-hide-region (point) end-o-ifdef)))
+  
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;;
 ;;;

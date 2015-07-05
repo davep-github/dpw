@@ -58,4 +58,4 @@ xrdbload
 xmodmap_load
 
 export CVS_RSH=ssh
-xem $dash_x_opt -l -m "$args"
+xem $dash_x_opt -l -M "$args"

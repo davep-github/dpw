@@ -1915,6 +1915,7 @@ cscope discovery.
        (or dp-called-by-split-horizontally dp-called-by-split-vertically))
       (setq horflag (and (dp-prefer-horizontal-split)
                          (not (active-minibuffer-window))
+                         (not (dp-tall-enough-for-2-windows-p))
                          (dp-wide-enough-for-2-windows-p)
                          (= (length (window-list)) 1)
                          (not size)     ; Skip action if a size is specified.

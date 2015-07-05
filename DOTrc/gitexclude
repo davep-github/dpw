@@ -7,6 +7,12 @@
 *.py[co]
 *.bak
 JUNK,
+HIDE
+KEEP
+TMP
+RCS
+CVS
+.svn
 *.CR
 GPATH
 GRTAGS
@@ -16,3 +22,4 @@ cscope.files
 cscope.in.out
 cscope.out
 cscope.po.out
+a.out
