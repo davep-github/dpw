@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+: ${ofile=/dev/null}
+
+exec "$@" > "${ofile}" 2>&1 &
