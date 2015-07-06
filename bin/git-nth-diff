@@ -21,7 +21,12 @@ if [ "$nth" = 1 ]
 then
     th="st"
 else
-    th="th"
+    if [ "$nth" = 2 ]
+    then
+        th="nd"
+    else
+        th="th"
+    fi
 fi
 for file in "$@"
 do

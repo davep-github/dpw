@@ -308,7 +308,10 @@ then
     EExec_verbose_msg "$(wc -l ${WORK_FILES_FILE})"
     EExec rm -f "${FILES_FILE}"
     mv "${WORK_FILES_FILE}" "${FILES_FILE}"
-    chmod a-w "${FILES_FILE}"
+    # Making the db file read-only prevents cscope from rebuilding the
+    # database.  
+    # @todo XXX this should have an option.
+    #chmod a-w "${FILES_FILE}"
 fi
 
 [ -s "$FILES_FILE" ] || {

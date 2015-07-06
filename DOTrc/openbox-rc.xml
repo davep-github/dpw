@@ -352,9 +352,6 @@
       <action name="Focus"/>
       <action name="Raise"/>
     </keybind>
-    <keybind key="W-F12">
-      <action name="Restart"/>
-    </keybind>
     <keybind key="W-Left">
       <action name="DesktopLeft">
         <dialog>no</dialog>

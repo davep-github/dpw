@@ -13,6 +13,8 @@
 
 source script-x
 
+eko "$@"
+
 set -u
 
 #font="7x13"

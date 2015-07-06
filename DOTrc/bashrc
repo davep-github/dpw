@@ -36,7 +36,7 @@ fi
 
 export DP_RC_LIST_OTHERS="$HOME/.rc/bashrc"
 
-source $HOME/.rc/func.early
+. $HOME/.rc/func.early
 # Define setenv to work like export so we can just copy in .cshrc stuff
 setenv () 
 {
@@ -134,7 +134,7 @@ export DOMAIN=$(/bin/hostname --fqdn | $CUTBIN -f2- -d.)
 # Run ssh-agent unless directed not to.
 run_ssh_agent_p()
 {
-    true
+    false
 }
     
 cut_and_run_host_p()

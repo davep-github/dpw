@@ -343,7 +343,6 @@ nvidia_family = e(
     ref=[OSDB['linux'], default]
 )
 
-
 LRL_XEM_GEOMETRY = '-geometry 81x70-0+0'
 LRL_BG_COLOR = 'rgb:24/00/68'
 LRL_FG_COLOR = 'white'
@@ -373,39 +372,43 @@ lrl_family = e(
     ref=[OSDB['linux'], default]
 )
 
-# We'd like the xterm and xemacs to have the same background to help us tell
-# one machine from another.
-#LRL_LAPTOP_BG = 'darkblue'
-LRL_LAPTOP_BG = "rgb:27/00/2c"
-e(
-    kef='host',
-    dat={
-    'host-pattern': 'dplaptop|bld|dplt|shodanbld|dpure|mundane|simp(le)?|prim(itive)?',
-    'comment': 'Laptop running unadulterated ubuntu 12.04.',
-    'nick': 'vet-build',
-    'xterm_bg': LRL_LAPTOP_BG,
-    'xterm_fg': 'white',
-    'xem_bg_color': LRL_LAPTOP_BG,
-
-    # NB! using the version number can cause extreme weirdness with fonts!
-    },
-    ref=famDB['lrl-linux'])
+LRL_AVOCADO_FG_COLOR = 'black'
+LRL_AVOCADO_BG_COLOR = 'rgb:f0/ff/c0'
 
 e(
     kef='host',
     dat={
-    'host-pattern': '^(.*@)?(compute[123]|controller1)$',
-    'DTE': 'lxde',                      # or none
-    'comment': 'Node with working qemu for overo linux.',
-    'nick': 'qemu',
-    'xterm_bg': 'grey20',
-    'xterm_fg': 'lightgrey',
-    'xem_bg_color': 'linen',
-
-    # NB! using the version number can cause extreme weirdness with fonts!
+    'host-pattern': 'avocado',
+    'family': 'lrl_family',
+    'comment': 'A work machine.',
+    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + LRL_XEM_GEOMETRY,
+    'xterm_bg': LRL_AVOCADO_BG_COLOR,
+    'xterm_fg': LRL_AVOCADO_FG_COLOR,
+    'xem_bg_color': LRL_AVOCADO_BG_COLOR,
     },
-    ref=famDB['lrl-linux'])
+    ref=[lrl_family, OSDB['linux'], default]
+)
 
+LRL_KIWI_FG_COLOR = 'black'
+LRL_KIWI_BG_COLOR = 'lavender'
+
+e(
+    kef='host',
+    dat={
+    'host-pattern': 'kiwi',
+    'family': 'lrl_family',
+    'comment': 'A work machine.',
+    # Good for portrait, on BAM.
+    #'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70+0+0',
+    # below is for middle portrait monitor.
+    #'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70+1922+0',
+    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70-0+0',
+    'xterm_bg': LRL_KIWI_BG_COLOR,
+    'xterm_fg': LRL_KIWI_FG_COLOR,
+    'xem_bg_color': LRL_KIWI_BG_COLOR,
+    },
+    ref=[lrl_family, OSDB['linux'], default]
+)
 #
 # FAMILY entry for o-xterm
 ## e(
@@ -434,10 +437,6 @@ e(
 ##     ref=[nvidia_family, OSDB['linux'], default]
 ## )
 
-#
-# build the host records
-# the host entries are keyed by the hostname
-#
 
 # create the db.
 DB = dppydb.PythonDataBase()
@@ -581,7 +580,6 @@ e(
     # Font menu is fucked, but this works:
     # (set-default-font "Inconsolata-12")
     """xem-xft-font""": '''"Inconsolata-12"''',
-    'xem_bin': os.path.join(HOME_LOCAL_BIN, "xemacs"),
 
     # NB! using the version number can cause extreme weirdness with fonts!
     'tunnel-ip': '16.11.64.97',

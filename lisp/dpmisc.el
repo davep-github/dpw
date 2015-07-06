@@ -2424,8 +2424,9 @@ E.g.
   (setq excuse (dp-c-namify-string excuse))
   (dp-mark-line-if-no-mark)
   (io-region (mark) (point) 
-             (format "#if %sdefined(%s) && 0 /* @todo as of %s :%s */"
+             (format "#if %sdefined(%s) && %s /* @todo as of %s :%s */"
                      not
+                     (dp-c-namify-string excuse)
                      (dp-c-namify-string excuse)
                      (dp-timestamp-string)
                      (user-login-name))
@@ -5233,7 +5234,7 @@ to see if it's alive as well."
   (when (eq server-fate 'kill-all-p)
     ;; emacs w/existing server won't know its server is dead... not a real
     ;; problem?
-    (shell-command (format "dpkillprog %s" gnuserv-program)))
+    (shell-command (format "dpkillprog -q %s" gnuserv-program)))
   (dmessage "dp-kill-editing-server")
   (dp-finalize-editing-server 'rm-ipc-if-ours))
 
@@ -7578,7 +7579,7 @@ If region is active, set width to that of the longest line in the region."
                                (frame-height) dp-sfh-height )
                        'ints-only (format "%s" dp-sfh-height))))
   ;;@todo XXX Fix this douche bag way of setting the height.
-  (let ((env-height (dp-getenv-numeric "DP_XEM_FRAME_HEIGHT")))
+  (let ((env-height (dp-get-frame-dimension "HEIGHT")))
     (set-frame-height
      (or frame (selected-frame))
      (setq dp-sfh-height
@@ -9673,7 +9674,13 @@ A bookmark, in this context, is:
                                        threshold-width)
   (>= (or current-width (frame-width))
       ;; 2 windows w/80 col and decorations
-      (or threshold-width 164)))
+      (or threshold-width dp-default-2-window-min-width)))
+
+(defun dp-tall-enough-for-2-windows-p (&optional current-hieght
+                                       threshold-height)
+  (>= (or current-hieght (frame-height))
+      ;; 2 windows w/80 col and decorations
+      (or threshold-height dp-default-2-window-min-height)))
 
 (defun dp-primary-frame-width ()
   (frame-width (dp-primary-frame)))
@@ -9804,6 +9811,14 @@ split.")
     (when val
       (string-to-int val))))
 
+(defvar dp-monitor-orientation "_PORTRAIT")
+
+(defun dp-get-frame-dimension (env-var-name &optional vertical-or-horizontal)
+  (dp-getenv-numeric (format "DP_XEM_FRAME_%s%s" env-var-name 
+                     (or vertical-or-horizontal
+                         (or (getenv "DP_XEM_MONITOR_ORIENTATION"))
+                             dp-monitor-orientation))))
+
 ;; 
 ;; | |, | - one window
 ;; |-|, : - two horizontal
@@ -9817,7 +9832,7 @@ Uses `dp-2w-frame-width' to increase width.
 If wide enough: | | |, otherwise: |-|"
   (interactive "P")
   (delete-other-windows)
-  (setq-ifnil frame-width (or (dp-getenv-numeric "DP_XEM_FRAME_WIDTH")
+  (setq-ifnil frame-width (or (dp-get-frame-dimension "WIDTH")
                               dp-2w-frame-width))
   (when (or (= 0 frame-width)
             (< (frame-width) frame-width))
@@ -14553,6 +14568,23 @@ them. Q.v. `unfuck-gz'"
     (auto-fill-mode 0)))
 
 
+(defun dp-hide-single-ifdef (&optional hide-directives-p)
+  "Mark and hide the ifdef @ point."
+  (interactive "P")
+  (beginning-of-line)
+  (let ((end-o-ifdef (dp-mk-marker
+                      (save-excursion
+                        (dp-find-matching-paren)
+                        (if hide-directives-p
+                            (next-line 1)
+                          (next-line -1))
+                        (beginning-of-line)
+                        (point)))))
+    (unless hide-directives-p
+      (next-line 1)
+      (beginning-of-line))
+    (dp-hide-region (point) end-o-ifdef)))
+  
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;;
 ;;;

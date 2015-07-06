@@ -39,7 +39,7 @@ Usage_details="${EExec_parse_usage} [flags] [find-root]
 
 "
 #e.g.# # Example of arg parsing.
-option_str="${EExec_parse_option_str}m:"
+option_str="${EExec_parse_option_str}m:d:"
 # long_options=("option-name-without-leading--" ...)
 long_options=(
 "md:" "depth:" "maxdepth:"
@@ -56,7 +56,7 @@ do
       # Done by EExec_parse and friends.
 
       # Program options.
-      -m|--md|--depth|--maxdepth) shift; maxdepth="${1}";;
+      -m|-d|--md|--depth|--maxdepth) shift; maxdepth="${1}";;
       --index-file-globs) shift; index_file_globs="${1}";;
       --index-finder-file) shift; index_finder_file="${1}";;
 

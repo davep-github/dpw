@@ -10,7 +10,6 @@ Ee|yokelsbin|ysb|       ${yokel}sbin/
 Ee|yokeletc|ye|         ${yokel}etc/
 Ee|yokellib|yl|         ${yokel}lib/
 q|noway|		no-way-we-see-this-since-selector-is-q
-Ee|ksrc|		/slice5/usr/src/sys/
 Ee|pdb|			${HOME}/etc/pdb/
 Ee|pydb|		${HOME}/etc/pydb/
 Ee|doc|			${HOME}/doc/

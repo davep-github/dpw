@@ -50,7 +50,7 @@ do
       --global|--def|--definition|--global-def|--global-definition) shift; arg="${1}"; field_num=1;;
       --called|--called-by) shift; arg="${1}"; field_num=2;;
       --calling|--callers|--calls) shift; arg="${1}"; field_num=3;;
-      --text|--str|--string|--text-string|--text-str|--txt) shift; arg="${1}"; field_num=4;;
+      -t|--text|--str|--string|--text-string|--text-str|--txt) shift; arg="${1}"; field_num=4;;
       --change|--change-text|--change-txt) field_num=5;;  # This may require more work.
       --egrep|--grep|--regexp|--re) shift; arg="${1}"; field_num=6;;
       --file) shift; arg="${1}"; field_num=7;;
@@ -66,11 +66,12 @@ do
   shift
 done
 
-((${#db_files} == 0)) || vsetp "${find_up_p}" || {
-    # look for a cscope db above us.
-    EExec_verbose_msg "finding up"
-    db_files=($(find-up "${db_finder_file}"))
-}
+# ((${#db_files[@]-0} == 0)) || vsetp "${find_up_p}" || {
+#     # look for a cscope db above us.
+#     EExec_verbose_msg "finding up"
+#     db_files=($(find-up "${db_finder_file}"))
+# }
+db_files=($(find-up "${db_finder_file}"))
 
 EExec_verbose_msg "db_files[@]>${db_files[@]}<"
 
@@ -84,5 +85,5 @@ fi
 for db_file in "${db_files[@]}"
 do
     EExec -0 ${DP_CSCOPE_PROGRAM-cscope} -d ${EXTAGTREE_DASH_Q} \
-        -f"${db_file}/${db_finder_file}" -L -"${field_num}" "$@"
+        -f"${db_file}" -L -"${field_num}" "$@"
 done  

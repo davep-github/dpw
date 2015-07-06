@@ -337,7 +337,7 @@ the init files.")
   (define-key gtags-mode-map "\e." 'dp-tag-find)
   (define-key gtags-mode-map [(control meta ?.)] 'dp-tag-find-other-window)
   (define-key gtags-mode-map [(meta ?,)] 'dp-tag-pop)
-  (defvar gtags-global-command "ranking-global-gtags.py")
+  (defconst gtags-global-command "ranking-global-gtags.py")
 )
  ;; @todo put defaults here:
  (t nil))				; Make it easy to add others.
