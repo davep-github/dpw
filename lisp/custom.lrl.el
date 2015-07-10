@@ -1,4 +1,4 @@
-(message "custom[.nvidia].el...")
+(message "custom[.lrl].el...")
 (custom-set-variables
  '(auto-raise-frame nil)
  '(browse-url-gnome-moz-arguments '("--raise")

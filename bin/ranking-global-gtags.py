@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os, time, subprocess
+import sys, os, time, subprocess, re
 import dp_sequences, dp_io, dp_utils
 
 import ranking_global_gtags_lib
@@ -81,6 +81,7 @@ rgg.add_filter_out_regexp_strings(Filter_out_regexp_strings)
 
 def main(argv):
     filter_p = os.environ.get("BEA_FILTER")
+    uniqify_p = True
 
     rgg_argv = os.environ.get("RGG_ARGV")
     if (rgg_argv):
@@ -104,6 +105,17 @@ def main(argv):
                 print line
         sys.exit(0)
 
+    opt_cre = re.compile("--rgg-(.*)$")
+    for arg in argv[1:]:
+        opt = opt_cre.search(arg)
+        if not opt:
+            break
+        opt = opt.group(1)
+        if opt_name == "no-uniq":
+            uniqify_p = False
+            argv.delete(arg)
+            continue
+
     #@todo XXX This should do this in every db searched.
 #    if argv[1] in ('-u' '--update'):
 #        sys.exit(subprocess.call(["global"] + argv[1:]))
@@ -117,7 +129,7 @@ def main(argv):
     path.extend(Database_locations)
     dp_io.ctracef(1, "before uniq: path>{}<\n", "\n ".join(path))
     rgg.log_file.write("before uniq: path>{}<\n".format("\n ".join(path)))
-    path = dp_sequences.uniquify_list(path)
+    path = dp_sequences.uniqify_list(path)
     dp_io.ctracef(1, "after uniq: path>{}<\n", "\n ".join(path))
     rgg.log_file.write("after uniq: path>{}<\n".format("\n ".join(path)))
 
@@ -131,15 +143,20 @@ def main(argv):
         #lines = run_globals_path(argv, path)
         lines = rgg.run_globals(argv, path,
                                 start_dir=opath.realpath(opath.curdir))
-            
+
     if lines:
+        if uniqify_p:
+            lines = rgg.uniqify_matches(lines)
+            
         rgg.log_file.write("lines: %s\n" % \
                            dp_sequences.list_to_indented_string(lines))
         lines = rgg.rank_lines(lines)
         rgg.log_file.write("ranked lines: %s\n" % \
                            dp_sequences.list_to_indented_string(lines))
+        rgg.log_file.write("output >>>>>>>>>>>>>>\n")
         for line in lines:
             print line
+        rgg.log_file.write("<<<<<<<<<<<<<< output\n")
         rc = 0
     else:
         rgg.log_file.write("No matching lines.\n")

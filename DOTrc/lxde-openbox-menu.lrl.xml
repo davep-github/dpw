@@ -11,6 +11,11 @@
 				<command>pcmanfm</command>
 			</action>
 		</item>
+		<item label="Home win">
+			<action name="Execute">
+				<command>home-win.ubuntu-sucks</command>
+			</action>
+		</item>
 		<item label="dpxx">
 			<action name="Execute">
 				<command>dpxx.sh</command>
@@ -31,14 +36,9 @@
 				<command>firefox</command>
 			</action>
 		</item>
-		<item label="Rhythmbox">
+		<item label="Mvsik (ario)">
 			<action name="Execute">
 				<command>ario</command>
-			</action>
-		</item>
-		<item label="Home win">
-			<action name="Execute">
-				<command>home-win</command>
 			</action>
 		</item>
 	</menu>

@@ -15,5 +15,5 @@ fi
 bash --login -c "dpxx -g '+2800+384'" &
 bash --login -c xem &
 bash --login -c home-win &
-xit gmpc
+xit ario --minimized
 xit firefox

@@ -220,28 +220,28 @@ Calling it `dp-add-to-history-if-car-not=' is a bit too much.  Even for me."
     (setq string (format "%s" string)))
   (let ((hist (symbol-value hist-sym)))
     (when (and remove-empty-p
-             (string= (car hist) ""))
+               (string= (car hist) ""))
       (set hist-sym (cdr hist))
       (setq hist (symbol-value hist-sym)))
-    (unless  (or (and (not allow-dupes-p)
-                      (string= (car hist) string))
-                 ;; Allow just giving pred-args to mean to `and' the values
-                 ;; together so simple vars can be passed.  e.g. (stupid ex):
-                 ;; (dp-add-to-history 'h :pred-args (list h add-to-h-p))
-                 ;; Will result in h being modified if it is non-nil and the
-                 ;; flag add-to-h-p is non-nil.
-                 (and (or pred
-                          ;; pred is nil... set pred to `and' if pred-args.
-                          ;; 
-                          (and pred-args 
-                               ;; pred nil, pred-args --> `and' all of the args
-                               (setq pred 'and)
-                               nil      ; So we fall thru to the apply below.
-                               ))
-                      (not (apply pred hist-sym string pred-args))))
+    (unless (or (and (not allow-dupes-p)
+                     (string= (car hist) string))
+                ;; Allow just giving pred-args to mean to `and' the values
+                ;; together so simple vars can be passed.  e.g. (stupid ex):
+                ;; (dp-add-to-history 'h :pred-args (list h add-to-h-p))
+                ;; Will result in h being modified if it is non-nil and the
+                ;; flag add-to-h-p is non-nil.
+                (and (or pred
+                         ;; pred is nil... set pred to `and' if pred-args.
+                         ;;
+                         (and pred-args
+                              ;; pred nil, pred-args --> `and' all of the args
+                              (setq pred 'and)
+                              nil       ; So we fall thru to the apply below.
+                              ))
+                     (not (apply pred hist-sym string pred-args))))
       (set hist-sym (cons string hist)))))
 
-(defun* dp-get-bm-interactive (prompt &key completions 
+(defun* dp-get-bm-interactive (prompt &key completions
                                (add-to-history-p t)
                                (toss-empty-p t))
   ;;completing-read don't like buffer locals.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys, os, re, subprocess
-import find_up, dp_io
+import find_up, dp_io, dp_sequences
 opath = os.path
 
 try:
@@ -61,6 +61,22 @@ def rgg_parse_args(argv):
     argv = dp_io.parse_args()
     pass # for now
 
+def uniqify_matches(lines):
+    # Our use of global causes it to return multiple matches on the same
+    # file:line.  However, for some reason, the lines have different amounts
+    # of white space, even though they match the same line in the same file.
+    # Let's uniqify the list.  First try is to just compress white space and
+    # uniqify.  If this doesn't work (i.e if the white space is significant)
+    # then we'll uniqify based on the compressed lines and return the
+    # original lines.
+    # Squished lines seem to work.
+    new_lines = []
+    for line in lines:
+        line = " ".join(line.split())
+        new_lines.append(line)
+    lines = dp_sequences.uniqify_list(new_lines)
+    return lines
+
 Bottom_ranking_regexps = []
 def rank_lines(lines):
     tops = []
@@ -78,7 +94,7 @@ def rank_lines(lines):
             if line is not None:
                 filtered_lines.append(line)
         lines = filtered_lines
-    
+
     ## Find the rankest items.
     if not Top_ranking_regexps:
         # If there are no toppesting regexps, then these lines are at least
@@ -96,7 +112,8 @@ def rank_lines(lines):
                 return tops + bottoms
             lines = resid
     # XXX @todo handle bottom rankers here.
-    return tops + resid + bottoms
+    all_lines =  tops + resid + bottoms
+    return lines
 
 Cxref_realpath_regexp = re.compile("(\S+)\s+(\d+)\s+(\S+)(.*)")
 def get_lines(fobj, cxref_realpath_p=False, start_dir=opath.curdir):

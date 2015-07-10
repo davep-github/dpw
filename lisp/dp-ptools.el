@@ -302,12 +302,15 @@ Oddly, it doesn't handle structs.")
       (message "done.")))
   (defalias 'guf 'dp-gtags-update-file)
 
+  (defun dp-gtags-select-tag-other-window ()
+    (interactive)
+    (dp-push-go-back&call-interactively
+     'gtags-select-tag-other-window
+     nil nil "dp-gtags-select-mode-hook"))
+  
   (defun dp-gtags-select-mode-hook ()
     (dp-define-buffer-local-keys
-     `([return] ,(kb-lambda
-                     (dp-push-go-back&call-interactively
-                      'gtags-select-tag-other-window
-                      nil nil "dp-gtags-select-mode-hook"))
+     `([return] dp-gtags-select-tag-other-window
        [(meta ?-)] dp-bury-or-kill-buffer
        [?h] gtags-display-browser
        [?P] gtags-find-file

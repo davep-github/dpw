@@ -102,7 +102,7 @@ source code-indexing.rc
 : ${FILES_FILE:=cscope.files}
 : ${ETAGFILE:=TAGS}
 : ${CTAGFILE:=tags}
-: ${GTAGFILES:=GTAGS GRTAGS GPATH}
+: ${GTAGFILES:=GTAGS GRTAGS GPATH GSYMS}
 : ${EXCLUDED_FILES_FILE:="extagtree.excluded-files"}
 : ${DEF_SYSTEM_INCLUDES:="/usr/include"}
 : ${src_code_finder:=find-src-code-files}
@@ -311,7 +311,10 @@ then
     # Making the db file read-only prevents cscope from rebuilding the
     # database.  
     # @todo XXX this should have an option.
-    #chmod a-w "${FILES_FILE}"
+    if truth_p "${read_only_index_files-}"
+    then
+        chmod a-w "${FILES_FILE}"
+    fi
 fi
 
 [ -s "$FILES_FILE" ] || {

@@ -145,7 +145,7 @@ def main(argv):
     # Filter out non-existent dirs.
     roots = [ r for r in roots if opath.exists(r) ]
     # Ensure only one copy of each.
-    roots = dp_sequences.uniquify_list(roots)
+    roots = dp_sequences.uniqify_list(roots)
 
     for r in roots:
         print r
