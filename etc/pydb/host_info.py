@@ -372,8 +372,10 @@ lrl_family = e(
     ref=[OSDB['linux'], default]
 )
 
+
 LRL_AVOCADO_FG_COLOR = 'black'
-LRL_AVOCADO_BG_COLOR = 'rgb:f0/ff/c0'
+#LRL_AVOCADO_BG_COLOR = 'rgb:f0/ff/c0'
+LRL_AVOCADO_BG_COLOR = 'rgb:d9/de/97'
 
 e(
     kef='host',
@@ -389,8 +391,26 @@ e(
     ref=[lrl_family, OSDB['linux'], default]
 )
 
+LRL_MANGO_FG_COLOR = 'black'
+#FFE79E
+LRL_MANGO_BG_COLOR = 'rgb:ff/e7/9e'
+
+e(
+    kef='host',
+    dat={
+    'host-pattern': 'mango',
+    'family': 'lrl_family',
+    'comment': 'A work machine.',
+    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + LRL_XEM_GEOMETRY,
+    'xterm_bg': LRL_MANGO_BG_COLOR,
+    'xterm_fg': LRL_MANGO_FG_COLOR,
+    'xem_bg_color': LRL_MANGO_BG_COLOR,
+    },
+    ref=[lrl_family, OSDB['linux'], default]
+)
+
 LRL_KIWI_FG_COLOR = 'black'
-LRL_KIWI_BG_COLOR = 'lavender'
+LRL_KIWI_BG_COLOR = 'rgb:d2/d0/b0'
 
 e(
     kef='host',
