@@ -9506,6 +9506,7 @@ Return t if there is only one frame."
     (search-forward "\"")))
 
 (defun dp-chase-file-link (file-name point &optional id-text limit error)
+  "Follow a file link.  Note that this is inserted as lisp text to be eval'd."
   (interactive)
   (dp-push-go-back "dp-chase-file-link")
   (apply (if current-prefix-arg
