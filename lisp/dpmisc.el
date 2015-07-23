@@ -162,11 +162,12 @@ beginnings and ends."
 (defsubst dp-and-consp (x)
   (and x (consp x)))
 
-(defun dp-write-this (this &rest args)
+(defun dp-write-this (&optional this &rest args)
   "Add an admonishment to write THIS function.  Used as an unforgettable placeholder."
   ;; @note: concept: active development comment: things which don't let you
   ;; forget to handle them.  A more noticeable thing than the old XXX.
   (interactive)
+  (setq-ifnil this "function -- too lazy for a name")
   (dmessage "Write this: %s" (apply 'format this args))
   (ding)
   nil)
@@ -9079,6 +9080,13 @@ on interactiveness, but due to cases like this, I'm trending away from
 ;        (dp-push-go-back "beginning-of-defun" pt))))
 
 (defun dp-try-to-fix-effin-isearch (&optional keep-ext)
+  "What's in a name?
+If something bad happens while in isearch mode (for some definition of bad),
+some internal settings don't get reset and then we get stuck in that mode and
+life begins to suck more than usual. When I try to do a M-x command, I get a
+traceback and things work until I back out of it.
+This is a just bunch of crap I've tried and it has worked at least once.  I'm
+not sure how many are actually needed."
   (interactive "P")
   ;;(call-interactively 'describe-bindings)
   (setq overriding-local-map nil)
@@ -14211,6 +14219,27 @@ anything --> |b|
   (split-window-vertically))
 (dp-defaliases '== '_- '-_ 'ddv 'dwv '1/1 '1=1'dp-duplicate-window-vertically)
 
+(defun dp-3-vertical-windows ()
+  "Display the current buffer in 2 vertical (B over B) windows.
+anything --> |b|
+             |-|
+             |b|
+             |-|
+             |b|
+"
+  (interactive)
+  (delete-other-windows)
+  (split-window-vertically)
+  (split-window-vertically)
+  (balance-windows))
+(dp-defaliases '== '/// '3vw '3w 'dp-3-vertical-windows)
+
+(defun dp-split-window-vertically-and-balance ()
+  (interactive)
+  (split-window-vertically)
+  (balance-windows))
+
+(dp-defaliases '2vb 'svb 'dp-split-window-vertically-and-balance)
 
 (defsubst dp-mk-buffer-position (pos &optional mk-marker-p)
   (funcall (if mk-marker-p
