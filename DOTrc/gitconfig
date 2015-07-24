@@ -9,5 +9,8 @@
 
 [difftool "meld"]
 	cmd = meld $LOCAL $REMOTE
+
+[difftool "sdiff"]
+	cmd = sdiff $LOCAL $REMOTE
 [push]
 	default = simple

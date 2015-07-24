@@ -164,10 +164,10 @@ then
 #    alias ls1='kwa_LSL_COLOR="--color=never" lsl'
 #    alias lth='kwa_LSL_COLOR="--color=never" lth'
     
-    alias ltl='ls -lt'          # xemacs makes an OK less.
-    alias lrl='ls -ltr'         # xemacs makes an OK less.
-    alias lsl='ls -1t'          # xemacs makes an OK less.
-    alias lslr='ls -1tr'          # xemacs makes an OK less.
+    alias ltl='ls -lt'          # xemacs makes a decent less.
+    alias lrl='ls -ltr'         # xemacs makes a decent less.
+    alias lsl='ls -1t'          # xemacs makes a decent less.
+    alias lslr='ls -1tr'        # xemacs makes a decent less.
 # ?? WTF??    alias lssz='kwa_LSL_COLOR="--color=never" lssz'
 
 fi

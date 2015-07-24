@@ -306,6 +306,11 @@ if inside_emacs_p; then
         /usr/bin/man "$@" | col -b
     }
     export -f emacs_man
+    
+    make()
+    {
+        /usr/bin/make "$@" |& ul -t dumb
+    }
 fi
 
 mk_go_path()

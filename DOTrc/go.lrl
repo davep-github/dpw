@@ -16,3 +16,5 @@ Ee|vlmusic|       /var/lib/mpd/music/
 Ee|snortdetplug|       /home/davep/work/dpu/snort/src/detection-plugins/
 Ee|snortdetdpu|       /home/davep/work/dpu/snort/src/detection-plugins/
 Ee|snortdpu|       /home/davep/work/dpu/snort/src/detection-plugins/
+E|dmc|dpuc| dpu-mmap-common.h
+E|dmt|dput| dpu-mmap-test.c
