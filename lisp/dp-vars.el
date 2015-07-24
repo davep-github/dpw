@@ -489,13 +489,13 @@ other-window functions to select it. Perhaps there's... another way."
   :group 'dp-vars)
   
 
-(defcustom dp-default-2-window-min-width 164
+(defcustom dp-default-2-window-min-width 180
   "*Min width to allow splitting into 2 vertical windows."
   :group 'dp-vars
   :type 'integer)
 
 (defcustom dp-default-2-window-min-height 150
-  "*Min width to allow splitting into 2 vertical windows."
+  "*Min height to allow splitting into 2 horizontal windows."
   :group 'dp-vars
   :type 'integer)
 

@@ -23,7 +23,7 @@ import find_up, p4_lib
 opath = os.path
 
 # Use [] so we fail messily if there is nothing defined.
-DP_NV_DB_LOCSTR = os.environ.get("DP_NV_SRC_INDEX_DB_LOCS", "")
+DP_NV_DB_LOCSTR = os.environ.get("WORK_INDEX_DB_LOCS", "")
 
 # Everything will search up to the sandbox root. There is one other known
 # place and that is TOT
@@ -56,7 +56,8 @@ Database_locations = dp_utils.cheesy_memoized_file(
     write_new_p = True)
 
 
-Out_of_tree_dbs = ["/home/davep/Downloads/kernel/linux-3.10.0-229.1.2.el7/GTAGS"]
+Out_of_tree_dbs = ["/home/davep/work/dpu/external/kernel/linux-3.10.0-229.1.2.el7/GTAGS",
+                   "/home/davep/work/dpu/local/build/pcap-stuff/GTAGS"]
 
 Database_locations.extend(Out_of_tree_dbs)
 

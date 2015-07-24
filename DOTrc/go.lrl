@@ -8,7 +8,7 @@ Ee|dpuhwdoc|hwdpudoc|                   ${dpuhw}doc/
 Ee|testdriver|                          ${dpuhw}testdriver/
 Ee|obconf|       /home/davep/.config/openbox/
 Ee|dpudoc|       /home/davep/work/dpu/hw/dpu/doc/
-Ee|rhelsrc|       /home/davep/Downloads/kernel/linux-3.10.0-229.1.2.el7/
+Ee|rhelsrc|       /home/davep/work/dpu/external/kernel/linux-3.10.0-229.1.2.el7
 Ee|dputd|       /home/davep/work/dpu/hw/dpu/testdriver/
 Ee|tddpu|       /home/davep/work/dpu/hw/dpu/testdriver/
 Ee|vlmpdmusic|       /var/lib/mpd/music/
@@ -16,3 +16,4 @@ Ee|vlmusic|       /var/lib/mpd/music/
 Ee|snortdetplug|       /home/davep/work/dpu/snort/src/detection-plugins/
 Ee|snortdetdpu|       /home/davep/work/dpu/snort/src/detection-plugins/
 Ee|snortdpu|       /home/davep/work/dpu/snort/src/detection-plugins/
+E|dmc|   dpu-mmap-common.h
