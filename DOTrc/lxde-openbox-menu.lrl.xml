@@ -42,10 +42,30 @@
 			</action>
 		</item>
 	</menu>
+        <menu id="xrls" label="Remote Logins">
+	        <item label="Home win">
+		      <action name="Execute">
+			      <command>home-win.ubuntu-sucks</command>
+		      </action>
+	        </item>
+                <item label="xrl mango">
+                      <action name="Execute">
+			      <command>ubuntu-sucks xrl mango</command>
+		      </action>
+	        </item>
+                <item label="xrl avocado">
+                      <action name="Execute">
+			      <command>ubuntu-sucks xrl avocado</command>
+		      </action>
+	        </item>
+        </menu>
+
 	<menu id="root-menu" label="LXDE">
 		<separator label="LXDE"/>
 		<menu id="apps-menu"/>
 		<separator/>
+                <menu id="xrls"/>
+                <separator/>
 		<menu id="client-list-menu"/>
 		<separator/>
 		<item label="Desktop Settings">

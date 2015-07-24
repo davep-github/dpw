@@ -1,0 +1,13 @@
+[core]
+	excludesfile = ~/.gitexclude
+[user]
+	name = David Panariti
+	email = davep.lrl@meduseld.net
+
+[difftool "ec-diff"]
+	cmd = ec-diff $LOCAL $REMOTE
+
+[difftool "meld"]
+	cmd = meld $LOCAL $REMOTE
+[push]
+	default = simple

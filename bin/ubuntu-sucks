@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 ########################################################################
 #
 # template begin.
@@ -103,4 +104,7 @@ Usage_error()
 #
 # template end.
 ########################################################################
+
+# yes, $*. -c wants one arg, despite the man page's assertion.
+exec bash --login -c "$*" &
 

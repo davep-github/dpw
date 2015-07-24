@@ -410,7 +410,8 @@ e(
 )
 
 LRL_KIWI_FG_COLOR = 'black'
-LRL_KIWI_BG_COLOR = 'rgb:d2/d0/b0'
+##LRL_KIWI_BG_COLOR = 'rgb:d2/d0/b0'
+LRL_KIWI_BG_COLOR = 'lavender'
 
 e(
     kef='host',

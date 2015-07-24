@@ -763,4 +763,6 @@ document tip_display
 Tips on automatically displaying values when a program stops.
 end
 
+source ~/.rc/gdbinit-cpu-agnostic
+
 #EOF

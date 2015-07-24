@@ -60,11 +60,18 @@
 
 (setq cscope-database-regexps
       '(
+        ("^/home/davep/work/dpu/local/build/pcap-stuff/"
+         (t)
+         )
+        ("^/home/davep/work/dpu/snort/"
+         ("/home/davep/work/dpu/")
+         (t)
+         )
         ("^/"
          ( "/home/davep/work/dpu/hw/dpu/testdriver/" )
          ( "/home/davep/work/dpu/")
-         t
-         ("/home/davep/Downloads/kernel/linux-3.10.0-229.1.2.el7/")
+         (t)
+         ("/home/davep/work/dpu/external/kernel/linux-3.10.0-229.1.2.el7/")
          )))
 
 ;; (dp-add-corresponding-file-pair "dpu-mmap.c" "altera_dma.h")
