@@ -3441,11 +3441,7 @@ Use exec-path if PATH is nil."
     ;; Look for the first existing spelling program.
     (dmessage "Searching for spelling program.")
     (let ((spellr (dp-find-first-exe dp-spell-programs)))
-      (if (and spellr
-               (not
-                (string-equal
-                 (shell-command-to-string "echo hi | aspell -a 2>/dev/null")
-                 "")))
+      (if spellr
           (progn
             (setq ispell-program-name spellr)
             (dmessage "1: ispell-program-name>%s<" ispell-program-name))
