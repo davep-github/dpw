@@ -24,3 +24,6 @@ cscope.out
 cscope.po.out
 a.out
 .~lock*
+*.log.gz
+*.log.bz2
+*.log.xz
