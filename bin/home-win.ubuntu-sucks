@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#!/bin/sh
+
+bash --login -c "home-win" &
+

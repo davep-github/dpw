@@ -3440,7 +3440,11 @@ Use exec-path if PATH is nil."
     ;; Look for the first existing spelling program.
     (dmessage "Searching for spelling program.")
     (let ((spellr (dp-find-first-exe dp-spell-programs)))
-      (if spellr
+      (if (and spellr
+               (not
+                (string-equal
+                 (shell-command-to-string "echo hi | aspell -a 2>/dev/null")
+                 "")))
           (progn
             (setq ispell-program-name spellr)
             (dmessage "1: ispell-program-name>%s<" ispell-program-name))
@@ -8771,7 +8775,7 @@ Can be called directly or by an abbrev's hook.
     "Recover our file context.
 Periodically, the list of files, windows, etc are saved so that context can
 be restored. When we start up, the current context file is copied so that it
-becomes the previous context.. In general, that is what we are interested
+becomes the previous context. In general, that is what we are interested
 because it represents the previous context. By doing it this way, we have a
 context even if we exit in an unpleasant manner. This is better than counting
 on our exit hook saving to the previous context. We need 2 context files
@@ -9506,6 +9510,7 @@ Return t if there is only one frame."
     (search-forward "\"")))
 
 (defun dp-chase-file-link (file-name point &optional id-text limit error)
+  "Follow a file link.  Note that this is inserted as lisp text to be eval'd."
   (interactive)
   (dp-push-go-back "dp-chase-file-link")
   (apply (if current-prefix-arg

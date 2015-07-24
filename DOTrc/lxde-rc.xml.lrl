@@ -180,6 +180,17 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
       </action>
     </keybind>
 
+    <!-- Select and raise term connected to home box. -->
+    <keybind key="A-W-h">
+      <action name="Execute">
+        <command>home-win.ubuntu-sucks</command>
+      </action>
+    </keybind>
+
+    <keybind key="W-Down">
+      <action name="Iconify"/>
+    </keybind>
+
     <!-- Keybinding for Volume management -->
 <!--
     <keybind key="XF86AudioRaiseVolume">

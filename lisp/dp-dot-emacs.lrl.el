@@ -67,3 +67,5 @@
          ("/home/davep/Downloads/kernel/linux-3.10.0-229.1.2.el7/")
          )))
 
+;; (dp-add-corresponding-file-pair "dpu-mmap.c" "altera_dma.h")
+

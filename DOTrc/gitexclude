@@ -23,3 +23,4 @@ cscope.in.out
 cscope.out
 cscope.po.out
 a.out
+.~lock*
