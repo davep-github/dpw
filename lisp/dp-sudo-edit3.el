@@ -52,7 +52,7 @@
   (dp-sudo-authenticate)
   (apply 'call-process (or program dp-sudo-edit-sudoer)
          infile buffer displayp args-to-sudoer)
-         (append dp-sudo-edit-sudo-password-args args-to-sudoer))
+  (append dp-sudo-edit-sudo-password-args args-to-sudoer))
   
 (defun dp-sudo-edit-mk-handler-alist-entry (file-name)
   "Create an entry for the `file-name-handler-alist'."
