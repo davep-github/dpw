@@ -1,6 +1,6 @@
 Ee|dpuroot|dpu|workdpu|dpuwork|         /home/davep/work/dpu/
 Ee|dpusnort|                            ${dpuroot}snort/
-Ee|dpucompiler|dpuc|                    ${dpuroot}compiler/
+Ee|dpucompiler|dpucc|                   ${dpuroot}compiler/
 
 Ee|hwdpu|dpuhw|                         ${dpuroot}hw/dpu/
 Ee|an690|                               ${dpuhw}an690/
