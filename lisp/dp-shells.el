@@ -1869,8 +1869,9 @@ first file that is `dp-file-readable-p' is used.  Also sets
   (interactive)
   (dmessage "in dp-gdb-mode-hook")
   (dp-specialized-shell-setup (list
-                               (format ".gdb_history.%s" (dp-short-hostname))
-                               ".gdb_history")
+                               (format 
+                                "/home/davep/droppings/persist/gdb_history/%s"
+                                (dp-short-hostname)))
                               'bind-enter
                               :keymap (current-local-map)
                               :dp-ef-before-pmark-func nil)
@@ -2956,7 +2957,7 @@ running process."
     ;; This is really stupid. We have to mimic the name make-comint will
     ;; use, Make it, switch to it, do junk, make the comint which will
     ;; make the same buffer name and switch to it.  This is NOT mine. It
-    ;; is copped from `gdb'. LISP is, IIR a *functional* language.
+    ;; is copped from `gdb'. LISP is, IIR, a *functional* language.
     (switch-to-buffer (get-buffer-create gdb-buffer-name))
     (or (bolp) (newline))
     (insert "Current directory is " default-directory "\n")

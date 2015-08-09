@@ -1091,6 +1091,20 @@ document i16o10
 Set input base to 16 and output to decimal.
 end
 
+define pdec
+  printf "%d\n", $arg0
+end
+document pdec
+Print arg as decimal
+end
+
+define phex
+  printf "0x%08x\n", $arg0
+end
+document phex
+Print arg as hex
+end
+
 define tip_patch
 	printf "\n"
 	printf "                   PATCHING MEMORY\n"
