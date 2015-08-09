@@ -364,7 +364,7 @@ EExec()
               eexecShowPrefix="+"
               eexecEcho=${EExecEcho-EExecStderrEcho}
               ;;
-          -c|-k|--keep-going|--no-exit) eexecContinue=t
+          -c|-k|--keep-going|--no-exit|--error-ok) eexecContinue=t
               ;;
           -C|-0|--fake-success|--return-zero|--rose) eexecContinue=t
               fake_success_p=y

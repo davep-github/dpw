@@ -187,6 +187,13 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
       </action>
     </keybind>
 
+    <!-- Select and raise term connected to kiwi. -->
+    <keybind key="W-A-m">
+      <action name="Execute">
+        <command>wmctrl -a "davep@mango"</command>
+      </action>
+    </keybind>
+
     <keybind key="W-Home">
         <action name="ShowMenu">
           <menu>root-menu</menu>
@@ -204,10 +211,17 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
       <action name="Iconify"/>
     </keybind>
 
-    <!-- Keybinding for toggling mdp random album -->
+    <!-- Keybinding for toggling mdp playing -->
     <keybind key="W-p">
       <action name="Execute">
          <command>mpc-toggle-play</command>
+      </action>
+    </keybind>
+
+    <!-- Keybinding for selecting random album -->
+    <keybind key="W-A-p">
+      <action name="Execute">
+         <command>mpc-random-album</command>
       </action>
     </keybind>
 
@@ -231,6 +245,7 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
       </action>
     </keybind>
 COMMENTED OUT -->
+
     <keybind key="XF86AudioPlay">
       <action name="Execute">
           <command>mpc-toggle-play</command>
@@ -287,6 +302,7 @@ COMMENTED OUT -->
     </keybind>
     <!-- Select and raise mvsik player. -->
     <keybind key="W-a"><action name="Execute"><command>wmctrl -a "Ario"</command></action></keybind>
+    <keybind key="XF86Tools"><action name="Execute"><command>wmctrl -a "Ario"</command></action></keybind>
     <!-- Select and raise an emacs window. -->
     <keybind key="W-e"><action name="Execute"><command>wmctrl -a "XEmacs@"</command></action></keybind>
     <!-- Select and raise an emacs window on mango. -->
@@ -298,7 +314,7 @@ COMMENTED OUT -->
     <!-- Select and raise an IPython window. -->
     <keybind key="W-A-p"><action name="Execute"><command>wmctrl -a "~ : python"</command></action></keybind>
     <!-- Select and raise the window under the pointer. -->
-    <keybind key="W-period"><action name="Focus"/><action name="Raise"/></keybind>
+    <keybind key="W-."><action name="Focus"/><action name="RaiseLower"/></keybind>
 </keyboard>
   <mouse>
     <dragThreshold>8</dragThreshold>

@@ -59,8 +59,8 @@
            " C-e <\" <down> C-a")))
 
 ;; Convert a Makefile variable into a line that displays it.
-;; ^MISC_PROG_NAMES$
-;; [ tab ]@echo "MISC_PROGS>$(MISC_PROGS)<"
+;; ^MISC_VARIABLE_NAMES$
+;; [ tab ]@echo "MISC_VARS>$(MISC_VARS)<"
 (defalias 'mak-=-to-echo1
   (read-kbd-macro 
    (concat "C-a TAB C-a <M-backspace> TAB @echo SPC \" M-a C-e M-o > $ M-9 M-y"
@@ -14217,7 +14217,8 @@ anything --> |b|
   (interactive)
   (delete-other-windows)
   (split-window-vertically))
-(dp-defaliases '== '_- '-_ 'ddv 'dwv '1/1 '1=1'dp-duplicate-window-vertically)
+(dp-defaliases '== '2- '_- '-_ 'ddv 'dwv '1/1 '1=1
+               'dp-duplicate-window-vertically)
 
 (defun dp-3-vertical-windows ()
   "Display the current buffer in 2 vertical (B over B) windows.
@@ -14232,7 +14233,7 @@ anything --> |b|
   (split-window-vertically)
   (split-window-vertically)
   (balance-windows))
-(dp-defaliases '== '/// '3vw '3w 'dp-3-vertical-windows)
+(dp-defaliases '=== '/// '3- '3vw '3w 'dp-3-vertical-windows)
 
 (defun dp-split-window-vertically-and-balance ()
   (interactive)

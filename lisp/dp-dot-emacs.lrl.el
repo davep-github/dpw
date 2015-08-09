@@ -53,8 +53,8 @@
 (dp-add-force-read-only-regexp
  (dp-concat-regexps-grouped
   ;; Don't want to edit these stupid fvcking copies.
-  '("/home/davep/work/dpu/external/build/snort-2.9.7.3"
-    "/home/davep/Downloads/kernel/linux-3.10.0-229.1.2.el7"))
+  '("^/home/davep/work/dpu/snort/src/detection-plugins/dpu.[ch]$"
+    "^/home/davep/work/dpu/external/kernel/linux-3.10.0-229.1.2.el7"))
  t                                      ; Should the list be cleared first?
 )
 

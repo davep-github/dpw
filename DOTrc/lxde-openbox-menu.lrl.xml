@@ -36,6 +36,11 @@
 				<command>firefox</command>
 			</action>
 		</item>
+		<item label="Thunderbird">
+			<action name="Execute">
+				<command>thunderbird</command>
+			</action>
+		</item>
 		<item label="Mvsik (ario)">
 			<action name="Execute">
 				<command>ario</command>
