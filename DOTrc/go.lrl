@@ -1,6 +1,6 @@
 Ee|dpuroot|dpu|workdpu|dpuwork|         /home/davep/work/dpu/
 Ee|dpusnort|                            ${dpuroot}snort/
-Ee|dpucompiler|dpuc|                    ${dpuroot}compiler/
+Ee|dpucompiler|dpucc|                   ${dpuroot}compiler/
 
 Ee|hwdpu|dpuhw|                         ${dpuroot}hw/dpu/
 Ee|an690|                               ${dpuhw}an690/
@@ -18,4 +18,4 @@ Ee|snortdetdpu|       /home/davep/work/dpu/snort/src/detection-plugins/
 Ee|snortdpu|       /home/davep/work/dpu/snort/src/detection-plugins/
 E|dmc|dpuc| dpu-mmap-common.h
 E|dmt|dput| dpu-mmap-test.c
->>>>>>> dfa08434198c67d987b24daff3e23c4854aa725e
+Ee|dputp|       /home/davep/work/dpu/hw/dpu/testdriver/testpatt2/

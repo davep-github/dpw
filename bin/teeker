@@ -558,6 +558,7 @@ if __name__ == "__main__":
     default_compression_level = 5
     GZIP_MAX_COMPRESSION_LEVEL = 9
     total_bytes_written = 0
+    num_matching_lines = 0
     ## Each -Z adds one, and we want a single -Z to yield max compression.
 
     # tick_interval, increment=1, init_string="counting: ", comma=", ",
@@ -1112,7 +1113,7 @@ Split line into chars and feed to ticker.""")
                         or ((max_output_bytes_before_exit is not False)
                             and
                             (total_bytes_written > max_output_bytes_before_exit))
-                        or (max_hits and (len(matching_lines) >= max_hits)))
+                        or (max_hits and num_matching_lines >= max_hits))
         #print "num_trailing_lines:", num_trailing_lines
         if (final_exit_p or limit_exit_p):
             if (final_exit_p
@@ -1145,8 +1146,10 @@ Split line into chars and feed to ticker.""")
                     compressed_file_next_flush += compressed_file_flush_period
         if on_borrowed_time_p:
             continue
+        num_matching_lines = 0
         for re_list in regexp_lists:
             re_list.match(input_line, line_number)
+            num_matching_lines = num_matching_lines + re_list.num_matches()
             
         if char_wise_p:
             # Iterate for each char in the line.

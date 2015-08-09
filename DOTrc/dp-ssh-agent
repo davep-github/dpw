@@ -23,6 +23,10 @@ dp_add_default_keys()
 dp_start_ssh_agent()
 {
     # Until I fix this whole concept.
+    [ -z "${SSH_AGENT_PID}" ] && {
+        eval $(ssh-agent)
+        export SSH_AGENT_PID
+    }
     [ -n "${SSH_AGENT_PID}" ] && {
         ssh-add -l > /dev/null 2>&1
         local rc=$?

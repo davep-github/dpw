@@ -837,7 +837,7 @@ non-white space on the line."
       (when text-only-p
         (setq skip-backward-chars (concat skip-backward-chars dp-ws)))
       (when no-eol-punctuation-p
-        (setq skip-backward-chars (concat skip-backward-chars ";,:")))
+        (setq skip-backward-chars (concat skip-backward-chars ";,: {")))
       (beginning-of-line)
       (if text-only-p
           (skip-chars-forward dp-ws (line-end-position)))
@@ -14614,7 +14614,15 @@ them. Q.v. `unfuck-gz'"
       (next-line 1)
       (beginning-of-line))
     (dp-hide-region (point) end-o-ifdef)))
-  
+
+(defun dp-read-comint-history-ring (file-name)
+  "Read a comint history ring file, possibly prompting for the name."
+  (interactive "fhist-file: ")
+  (let ((comint-input-ring-file-name 
+         file-name)) 
+    (comint-read-input-ring)))
+
+
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;;
 ;;;
