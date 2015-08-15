@@ -21,6 +21,11 @@
 				<command>dpxx.sh</command>
 			</action>
 		</item>
+		<item label="IPython">
+			<action name="Execute">
+				<command>dp-ipython.sh</command>
+			</action>
+		</item>
 		<item label="Xterm">
 			<action name="Execute">
 				<command>xterm</command>
