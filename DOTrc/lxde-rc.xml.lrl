@@ -187,10 +187,17 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
       </action>
     </keybind>
 
-    <!-- Select and raise term connected to kiwi. -->
+    <!-- Select and raise term connected to mango. -->
     <keybind key="A-W-m">
       <action name="Execute">
         <command>wmctrl -a "davep@mango"</command>
+      </action>
+    </keybind>
+
+    <!-- Select and raise an overnight test screen (ONT) on mango. -->
+    <keybind key="W-o">
+      <action name="Execute">
+        <command>wmctrl -a "dma-test-ont"</command>
       </action>
     </keybind>
 

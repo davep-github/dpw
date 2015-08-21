@@ -2492,6 +2492,11 @@ E.g.
   (dp-ifdef-region-because "is this needed?"))
 (dp-defaliases 'ioneeded 'dp-io-needed)
 
+(defun dp-io-for-testing ()
+  (interactive)
+  (dp-ifdef-region-because "testing. Remove or restore."))
+(dp-defaliases 'iotesting 'iotest 'dp-io-for-testing)
+
 (defun dp-io-nuking ()
   (interactive)
   (dp-ifdef-region-because "Nuking. Remove ASAP?"))

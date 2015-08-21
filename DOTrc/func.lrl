@@ -7,17 +7,18 @@ ont()
 {
     [ "${OVERNIGHT_DIR}" = "$(realpath ${PWD}" ] && {
         echo "Already in overnight dir."
-        exit 1
+        return 1
     } 1>&2
     make OVERNIGHT_DIR=${OVERNIGHT_DIR} ont || {
         echo "make failed."
-        exit 1
+        return 1
     } 1>&2
     pushd "${OVERNIGHT_DIR}" || {
         echo "cd to ${OVERNIGHT_DIR} failed."
-        exit 1
+        return 1
     } 1>&2
     export LD_LIBRARY_PATH="$PWD"
+    return 0
 }    
 export -f ont
     
