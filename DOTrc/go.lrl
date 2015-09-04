@@ -1,6 +1,6 @@
 Ee|dpuroot|dpu|workdpu|dpuwork|         /home/davep/work/dpu/
 Ee|dpusnort|                            ${dpuroot}snort/
-Ee|dpucompiler|dpucc|                   ${dpuroot}compiler/
+Ee|dpucompiler|dpucc|dpudc|             ${dpuroot}compiler/
 
 Ee|hwdpu|dpuhw|                         ${dpuroot}hw/dpu/
 Ee|an690|                               ${dpuhw}an690/
@@ -19,3 +19,11 @@ Ee|snortdpu|       /home/davep/work/dpu/snort/src/detection-plugins/
 E|dmc|dpuc| dpu-mmap-common.h
 E|dmt|dput| dpu-mmap-test.c
 Ee|dputp|       /home/davep/work/dpu/hw/dpu/testdriver/testpatt2/
+Ee|dpupkg|       /home/davep/work/dpu/local/packages/
+Ee|dpulocal|       /home/davep/work/dpu/local/
+Ee|daqsrc|       /home/davep/work/dpu/local/build/pcap-stuff/daq-2.0.6/
+Ee|libtracesrc|       /home/davep/work/dpu/local/build/pcap-stuff/libtrace-3.0.22/
+Ee|libpcapsrc|       /home/davep/work/dpu/local/build/pcap-stuff/libpcap-1.7.4/
+Ee|tcpdumpsrc|       /home/davep/work/dpu/local/build/pcap-stuff/tcpdump-4.7.4/
+Ee|dpudata|       /home/davep/work/dpu/data/
+Ee|ont|       /home/davep/tmp/testdriver/

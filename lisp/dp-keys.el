@@ -139,6 +139,7 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(meta ?z)] 'dp-shell-cycle-buffers)
 
 (global-set-key [(control ?c) ?g] 'dp-gdb)
+(global-set-key [(control ?x) ?4 ?g] 'dp-gdb-other-window)
 
 ;;(global-set-key "\C-z" 'dp-lterm)
 

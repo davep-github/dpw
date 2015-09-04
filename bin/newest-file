@@ -58,7 +58,7 @@ list_files()
 : ${extra_ls_opts:=""}
 : ${allow_cwd=""}               # Return . if newest?
 : ${dirsOnly=""}
-: ${filesOnly=""}
+: ${filesOnly="t"}
 : ${basename_p=""}
 : ${realpath_p=""}
 
@@ -83,8 +83,8 @@ do
         -D) extra_ls_opts="$extra_ls_opts -d";;
         -l) extra_ls_opts="$extra_ls_opts $2"; shift;;
         -c) allow_cwd=t;;
-        -p) dirsOnly=t;;
-        -f) filesOnly=t;;
+        -p) dirsOnly=t; filesOnly=;;
+        -f) filesOnly=t; dirsOnly=;;
         -b) basename_p=t;;
         -R) realpath_p=t;;
 	--) shift ; break;;
