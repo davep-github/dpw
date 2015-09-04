@@ -28,6 +28,11 @@
 ;;template    (concat "keys..."
 ;;template            " more keys.")))
 
+(defalias 'dp-protoize
+  (read-kbd-macro
+   (concat "C-a C-s ( RET <left> M-[ <down> C-a M-a M-["
+           " <down> DEL <up> C-e ; <right> <down>")))
+
 (defalias 'dp-var-to-initializer    
   (read-kbd-macro
    (concat "C-a C-s ; RET <backspace> , <left> M-a C-r SPC <right>"
