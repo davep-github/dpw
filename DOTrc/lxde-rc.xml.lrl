@@ -194,6 +194,13 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
       </action>
     </keybind>
 
+    <!-- Select and raise nscreen bubba connected to mango. -->
+    <keybind key="A-W-b">
+      <action name="Execute">
+        <command>wmctrl -a ":bubba"</command>
+      </action>
+    </keybind>
+
     <!-- Select and raise an overnight test screen (ONT) on mango. -->
     <keybind key="W-o">
       <action name="Execute">

@@ -9,7 +9,7 @@ Usage()
 {
     echo 1>&2 "${prog}: usage: [-$option_str] [dirs...]"
     echo 1>&2 "  Print newest file in each of dirs..."
-    echo 1>&2 "  no dirs/files... --> cwd"
+    echo 1>&2 "  If no dirs/files given, use cwd"
     echo 1>&2 "  -n   - print nth newest file Newest is 0."
     echo 1>&2 "  -o   - all things relative to oldest vs newest files."
     exit 1
@@ -58,7 +58,7 @@ list_files()
 : ${extra_ls_opts:=""}
 : ${allow_cwd=""}               # Return . if newest?
 : ${dirsOnly=""}
-: ${filesOnly=""}
+: ${filesOnly="t"}
 : ${basename_p=""}
 : ${realpath_p=""}
 

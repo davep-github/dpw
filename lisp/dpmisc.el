@@ -11415,10 +11415,11 @@ Sometimes quoted lists are easier to make when most/all elements are quoted."
 ;; !<@todo XXX Make the 'here' to run-to-here kind of command by putting a
 ;; tbreak on the current line and issuing a 'c' command. Look to `gdb-break'
 ;; to see how to stuff commands into a running gdb process.
-(defun* dp-copy-breakpoint-command-as-kill (&optional tmp-p &key 
+(defun* dp-copy-breakpoint-command-as-kill (&optional perm-p &key 
                                             (fmt "%s %s:%s") (pos (point)))
   (interactive "P")
-  (kill-new (message (dp-mk-breakpoint-command tmp-p :fmt fmt :pos pos))))
+  (kill-new (message 
+             (dp-mk-breakpoint-command (not tmp-p) :fmt fmt :pos pos))))
 
 
 ;;
