@@ -224,6 +224,9 @@
     ;; shell-resync-dirs will cause this if there are non-existent
     ;; directories on the dirstack.
     "^No such directory: "
+    
+    ;; cscope errors
+    "^There is no unique cscope database directory!$"
     )
   "*My list of ignored signals.  These will not cause an entry into the
 debugger if encountered when `debug-on-error' is non-nil.

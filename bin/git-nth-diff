@@ -36,10 +36,12 @@ do
       echo "$file has no ${nth}${th} previous rev."
       continue
   fi 1>&2
+  
+  echo "xxx ${rev} ${file}"
 
   if vsetp "${diff_tool}"
   then
-      git difftool --tool="${difftool}" "$rev" "$file"
+      git difftool --tool="${diff_tool}" "$rev" "$file"
   else
       git diff "$rev" "$file"
   fi

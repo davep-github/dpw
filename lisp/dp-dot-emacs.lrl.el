@@ -64,21 +64,33 @@
  t                                      ; Should the list be cleared first?
 )
 
+;;trying a new one (setq cscope-database-regexps
+;;trying a new one       '(
+;;trying a new one         ("^/home/davep/work/dpu/local/build/pcap-stuff/"
+;;trying a new one          (t)
+;;trying a new one          )
+;;trying a new one         ("^/home/davep/work/dpu/snort/"
+;;trying a new one          ("/home/davep/work/dpu/")
+;;trying a new one          (t)
+;;trying a new one          )
+;;trying a new one         ("^/"
+;;trying a new one          ( "/home/davep/work/dpu/hw/dpu/testdriver/" )
+;;trying a new one          ( "/home/davep/work/dpu/")
+;;trying a new one          (t)
+;;trying a new one          ("/home/davep/work/dpu/external/kernel/linux-3.10.0-229.1.2.el7/")
+;;trying a new one          )))
+
 (setq cscope-database-regexps
       '(
-        ("^/home/davep/work/dpu/local/build/pcap-stuff/"
-         (t)
-         )
-        ("^/home/davep/work/dpu/snort/"
-         ("/home/davep/work/dpu/")
-         (t)
-         )
-        ("^/"
-         ( "/home/davep/work/dpu/hw/dpu/testdriver/" )
-         ( "/home/davep/work/dpu/")
-         (t)
-         ("/home/davep/work/dpu/external/kernel/linux-3.10.0-229.1.2.el7/")
-         )))
+        ( "^/home/davep/work/dpu"
+          ("/home/davep/work/dpu/hw/dpu/testdriver")
+          t
+          ("//home/davep/work/dpu/snort")
+          t
+          ("/home/davep/work/dpu/local/build/pcap-stuff")
+          t
+          ("/home/davep/work/dpu/external/kernel/linux-3.10.0-229.1.2.el7/")
+          )))
 
 ;; (dp-add-corresponding-file-pair "dpu-mmap.c" "altera_dma.h")
 

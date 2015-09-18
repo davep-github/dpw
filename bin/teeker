@@ -925,9 +925,11 @@ Split line into chars and feed to ticker.""")
                          action="store_false",
                          help="Don't show all grep matches at end of run.")
     oparser.add_argument("--unbuffered-logs",
+                         '--nb-logs', '--ub-logs', '--ubl', '--nbl',
                          dest="unbuffered_logs_p", default=False,
                          action="store_true")
     oparser.add_argument("--unbuffered-out",
+                         '--nb-out', '--ub-out', '--ubo', '--nbo',
                          dest="unbuffered_out_p", default=False,
                          action="store_true")
     
@@ -996,8 +998,8 @@ Split line into chars and feed to ticker.""")
         dp_io.eprintf("One or more log file names are required.\n")
         sys.exit(1)
 
-    if app_args.unbuffered_out_p:
-        dp_io.unbuffer_a_file(sys.stdout)
+#    if app_args.unbuffered_out_p:
+#        dp_io.unbuffer_a_file(sys.stdout)
 
     sample_ostream = dp_io.Unbuffered_file_duck(sys.stdout)
     compressed_file_next_flush = 0

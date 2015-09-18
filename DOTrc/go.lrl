@@ -41,8 +41,6 @@ Ee|snortdpu|       /home/davep/work/dpu/snort/src/detection-plugins/
 E|dmc|dpuc| dpu-mmap-common.h
 E|dmt|dput| dpu-mmap-test.c
 Ee|dputp|       /home/davep/work/dpu/hw/dpu/testdriver/testpatt2/
-=======
->>>>>>> 1de643625617831d34b3c8ffa463aaf9ff74b849
 Ee|dpupkg|       /home/davep/work/dpu/local/packages/
 Ee|dpulocal|       /home/davep/work/dpu/local/
 Ee|daqsrc|       /home/davep/work/dpu/local/build/pcap-stuff/daq-2.0.6/

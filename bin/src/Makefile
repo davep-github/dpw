@@ -11,5 +11,8 @@ eko: eko.c
 hd: hd.c
 	$(CXX) -o $@ $<
 
+t3: t3.c
+	$(CXX) -o $@ $<
+
 install: eko hd
 	cp $^ ~/bin

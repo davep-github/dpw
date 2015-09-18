@@ -366,6 +366,7 @@ prompt_command()
     return $rc
 }
 export PROMPT_COMMAND=prompt_command
+export -f prompt_command
 
 pathff()
 {
