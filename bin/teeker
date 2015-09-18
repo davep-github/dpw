@@ -925,9 +925,11 @@ Split line into chars and feed to ticker.""")
                          action="store_false",
                          help="Don't show all grep matches at end of run.")
     oparser.add_argument("--unbuffered-logs",
+                         '--nb-logs', '--ub-logs', '--ubl', '--nbl',
                          dest="unbuffered_logs_p", default=False,
                          action="store_true")
     oparser.add_argument("--unbuffered-out",
+                         '--nb-out', '--ub-out', '--ubo', '--nbo',
                          dest="unbuffered_out_p", default=False,
                          action="store_true")
     
