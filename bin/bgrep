@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 $to_stdout = 1;
-$debug = 0;
+$debug = 1;
 
 if ($ARGV[0] =~ /-o/) {
   $to_stdout = 0;
@@ -15,8 +15,8 @@ $max_matches = shift(@ARGV);
 printf("max_matches>$max_matches<\n");
 $till_eof = 0;
 
-#print "f>$first<\n";
-#print "s>$second<\n";
+print "f>$first<\n";
+print "s>$second<\n";
 $state = "find-opening-regexp";
 $num = 0;
 $base = "out";
