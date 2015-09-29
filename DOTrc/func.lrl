@@ -1,7 +1,9 @@
 
-: ${OVERNIGHT_DIR=$HOME/tmp/testdriver}
-OVERNIGHT_DIR=$(realpath ${OVERNIGHT_DIR})
-export OVERNIGHT_DIR
+: ${OVERNIGHT_DIR:=$HOME/tmp/testdriver}
+[ -d "${OVERNIGHT_DIR}" ] && {
+    OVERNIGHT_DIR=$(realpath ${OVERNIGHT_DIR})
+    export OVERNIGHT_DIR
+}
 
 ont()
 {

@@ -14,3 +14,13 @@
 	cmd = sdiff $LOCAL $REMOTE
 [push]
 	default = simple
+[alias]
+	co = checkout
+	cof = checkout --
+	br = branch
+	ci = commit
+	st = status
+        ldf = log --decorate=full -n 5
+        ld = log --decorate -n 5
+        dn = diff --name-only
+        df = diff --name-only

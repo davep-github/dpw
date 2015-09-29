@@ -350,14 +350,20 @@ of reset."
 	;; existing bm and no reset requested, go to it.
 	(let ((pos (dp-bm-pos bm))
               old-bm)
-	  ;;(message (format "going to %d" pos))
+	  ;; (message (format "going to %d" pos))
 	  (setq status-msg 
-                (concat status-msg (format "went to %s @ %s" 
-					   bm-msg (dp-bm-pos-str bm))))
+                (concat status-msg (format 
+                                    "went %s to %s @ %s"
+                                    (cond
+                                     ((< pos (point)) "back")
+                                     ((> pos (point)) "forward")
+                                     ((= pos (point)) "Nowhere")
+                                     (t "Who knows where?"))
+                                    bm-msg (dp-bm-pos-str bm))))
 	  (dp-push-go-back "dp-set-or-goto-bm")
 	  (goto-char pos)
 	  (dp-set-zmacs-region-stays t))
-      
+
       ;; non-existent bm or reset is requested.
       ;; either way, set the bm to point
       ;; Unless the bm is currently ro

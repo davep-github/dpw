@@ -7222,7 +7222,14 @@ QUIT-KEYS, if neq t, are added to this map."
 	  (not (setq dp-bm-ring-ptr (cdr dp-bm-ring-ptr)))) ; wrap?
       (setq dp-bm-ring-ptr dp-bm-list))
   (let ((pos (dp-bm-pos (car dp-bm-ring-ptr))))
-    (message "went to %d" pos)
+    (message "went %s to %d"
+             (cond
+              ((< pos (point)) "back")
+              ((> pos (point)) "forward")
+              ((= pos (point)) "Nowhere")
+              (t "Who knows where?"))
+             pos)
+
     (unless (eq last-command 'dp-bm-cycle)
       (dp-push-go-back "dp-bm-cycle"))
     (goto-char pos)))
@@ -10405,7 +10412,8 @@ Ignore repeated requests to set the same properties. Idempotentize."
 
 (defun* dp-hide-region (&optional from to 
                         (keymap dp-hidden-region-keymap ) &rest props)
-  "Hide region by setting color to 0, aka invis."
+  "Invisibles region by setting color to 0. Goes nicely with `dp-show-region'
+Sort of \"Yes, he said invisibling\"."
   (interactive)
   ;; Add keymap to allow for easy un-hiding
   (apply 'dp-colorize-region 0 from to 'no-roll-colors nil 
@@ -10416,6 +10424,7 @@ Ignore repeated requests to set the same properties. Idempotentize."
 (defalias 'dhr 'dp-hide-region)
 
 (defun dp-show-region ()
+  "Make region visible again.  Goes nicely with `dp-hide-region'."
   (interactive)
   (dp-unextent-region (dp-make-highlight-region-extent-id "dp-hidden")))
 (dp-defaliases 'dp-unhide-region 'dur 'dsr 'dv 'dp-show-region)
