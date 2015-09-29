@@ -2060,7 +2060,7 @@ using the mouse."
         ;; exists (cscope.in.out) and not use -q if it's not there.  This
         ;; allows us to control the perversion by choosing the kind of index
         ;; to create.
-        ;; Is this needed in later versions of cscope. IIR, it will use the
+        ;; Is this needed in later versions of cscope? IIR, it will use the
         ;; perverted index if it is available.
         (if (and cscope-perverted-index-option
                  (file-exists-p "cscope.po.out"))

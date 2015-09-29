@@ -1,0 +1,31 @@
+
+: ${OVERNIGHT_DIR:=$HOME/tmp/testdriver}
+[ -d "${OVERNIGHT_DIR}" ] && {
+    OVERNIGHT_DIR=$(realpath ${OVERNIGHT_DIR})
+    export OVERNIGHT_DIR
+}
+
+ont()
+{
+    if ! isascreen > /dev/null
+    then
+        echo "You're not in a screen... being in one is highly recommended."
+    fi 1>&2
+
+    [ "${OVERNIGHT_DIR}" = "$(realpath ${PWD})" ] && {
+        echo "Already in overnight dir."
+        return 1
+    } 1>&2
+    make OVERNIGHT_DIR=${OVERNIGHT_DIR} ont || {
+        echo "make failed."
+        return 1
+    } 1>&2
+    pushd "${OVERNIGHT_DIR}" || {
+        echo "cd to ${OVERNIGHT_DIR} failed."
+        return 1
+    } 1>&2
+    export LD_LIBRARY_PATH="$PWD"
+    return 0
+}    
+export -f ont
+    

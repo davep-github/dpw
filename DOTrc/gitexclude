@@ -2,9 +2,31 @@
 # Lines that start with '#' are comments.
 # For a project mostly in C, the following would be a good set of
 # exclude patterns (uncomment them if you want to use them):
-*.[oa]
+*.[oai]
+*.so
+*.core
 *~
 *.py[co]
 *.bak
 JUNK,
+HIDE
+KEEP
+TMP
+RCS
+CVS
+.svn
 *.CR
+GPATH
+GRTAGS
+GSYMS
+GTAGS
+cscope.files
+cscope.in.out
+cscope.out
+cscope.po.out
+a.out
+.~lock*
+*.log.gz
+*.log.bz2
+*.log.xz
+gmon.out

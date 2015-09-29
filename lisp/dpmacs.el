@@ -337,7 +337,7 @@ the init files.")
   (define-key gtags-mode-map "\e." 'dp-tag-find)
   (define-key gtags-mode-map [(control meta ?.)] 'dp-tag-find-other-window)
   (define-key gtags-mode-map [(meta ?,)] 'dp-tag-pop)
-  (defvar gtags-global-command "ranking-global-gtags.py")
+  (defconst gtags-global-command "ranking-global-gtags.py")
 )
  ;; @todo put defaults here:
  (t nil))				; Make it easy to add others.
@@ -1017,7 +1017,7 @@ This can be callable.")
 
 (setq comint-password-prompt-regexp
       (concat
-       "\\(\\([Oo]ld \\|[Nn]ew \\|^\\)?[Pp]assword\\|pass[ _-]?phrase\\):?\\s-*\\'"
+       "\\(\\([Oo]ld \\|[Bb]ad \\|[Nn]ew \\|^\\)?[Pp]assword\\|pass[ _-]?phrase\\):?\\s-*\\'"
        "\\|"
        "\\(Enter passphrase for.*: \\)"
        "\\|"
@@ -1026,6 +1026,19 @@ This can be callable.")
        "\\(\\(\\[sudo\\] \\)?[Pp]assword for .*"
        "\\(davep\\||dpanariti\\|dapanarx.*\\).*:? \\)")
       )
+
+;;matches everything (setq comint-password-prompt-regexp
+;;matches everything       (concat
+;;matches everything        "\\(\\([Oo]ld \\|[Bb]ad \\|[Nn]ew \\|^\\)?[Pp]ass\\(word\\|-?phrase\\)\\):?"
+;;matches everything        "\\s-*\\'"
+;;matches everything        "\\|"
+;;matches everything        "\\(Enter passphrase for.*: \\)"
+;;matches everything        "\\|"
+;;matches everything        "\\(Enter password.*:\\s-+\\)"
+;;matches everything        "\\|"
+;;matches everything        "\\(\\(\\[sudo\\] \\)?[Pp]assword for .*"
+;;matches everything        "\\(davep\\||dpanariti\\|dapanarx.*\\).*:? \\)?"))
+
 (when dp-wants-emms-p
   (require 'dp-emms))
 

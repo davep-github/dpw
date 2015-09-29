@@ -18,7 +18,7 @@ unsigned long	num)
 
    while (num)
    {
-      printf("%08x: ", data);
+       printf("%p: ", data);
 
       oldNum = num;
 

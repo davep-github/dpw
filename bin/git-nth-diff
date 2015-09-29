@@ -21,7 +21,12 @@ if [ "$nth" = 1 ]
 then
     th="st"
 else
-    th="th"
+    if [ "$nth" = 2 ]
+    then
+        th="nd"
+    else
+        th="th"
+    fi
 fi
 for file in "$@"
 do
@@ -31,10 +36,12 @@ do
       echo "$file has no ${nth}${th} previous rev."
       continue
   fi 1>&2
+  
+  echo "xxx ${rev} ${file}"
 
   if vsetp "${diff_tool}"
   then
-      git difftool --tool="${difftool}" "$rev" "$file"
+      git difftool --tool="${diff_tool}" "$rev" "$file"
   else
       git diff "$rev" "$file"
   fi

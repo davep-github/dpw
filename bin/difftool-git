@@ -41,4 +41,4 @@ on_error()
 }
 
 
-git difftool -t meld "$@"
+git difftool -t "$@"

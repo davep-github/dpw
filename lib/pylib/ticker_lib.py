@@ -61,6 +61,7 @@ class Ticker_t(object):
         if self.init_string:
             self.printor(self, "%s", self.init_string)
         self.sep_string = ""
+        self.num_ticks = 0
 
     def flush(self):
         #print "enter ticker.flush()"
@@ -115,6 +116,7 @@ class Ticker_t(object):
             if self.counter % self.tick_interval == 0:
                 self.make_tick(tick=tick, call_tick=self.counter,
                                tick_prefix=tick_prefix)
+                self.num_ticks += 1
             else:
                 self.tick_not_ready()
             self.counter += increment or self.increment
@@ -126,10 +128,12 @@ class Ticker_t(object):
             # Indicate successful failure.
             sys.exit(2)
         if self.max_output_units_before_newline is not False:
-            count_since_last_newline = self.counter - self.count_at_last_newline
+            count_since_last_newline = self.num_ticks - self.count_at_last_newline
+#            print "num_ticks: %s, count: %s, max_output_units_before_newline: %s\n" % (
+#                self.num_ticks, self.count, self.max_output_units_before_newline)
             if count_since_last_newline >= self.max_output_units_before_newline:
                 self.sep_string = "\n"
-                self.count_at_last_newline = self.counter
+                self.count_at_last_newline = self.num_ticks
 
 class Char_ticker_t(Ticker_t):
     def __init__(self, tick_interval, tick_char='.', increment=1,

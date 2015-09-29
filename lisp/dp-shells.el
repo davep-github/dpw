@@ -1869,8 +1869,9 @@ first file that is `dp-file-readable-p' is used.  Also sets
   (interactive)
   (dmessage "in dp-gdb-mode-hook")
   (dp-specialized-shell-setup (list
-                               (format ".gdb_history.%s" (dp-short-hostname))
-                               ".gdb_history")
+                               (format 
+                                "/home/davep/droppings/persist/gdb_history/%s"
+                                (dp-short-hostname)))
                               'bind-enter
                               :keymap (current-local-map)
                               :dp-ef-before-pmark-func nil)
@@ -2956,7 +2957,7 @@ running process."
     ;; This is really stupid. We have to mimic the name make-comint will
     ;; use, Make it, switch to it, do junk, make the comint which will
     ;; make the same buffer name and switch to it.  This is NOT mine. It
-    ;; is copped from `gdb'. LISP is, IIR a *functional* language.
+    ;; is copped from `gdb'. LISP is, IIR, a *functional* language.
     (switch-to-buffer (get-buffer-create gdb-buffer-name))
     (or (bolp) (newline))
     (insert "Current directory is " default-directory "\n")
@@ -2975,7 +2976,8 @@ running process."
 
 ;;;###autoload
 (defun dp-gdb (&optional interactive-only-arg path 
-               corefile use-most-recent-p new-p prompt-p)
+               corefile use-most-recent-p new-p prompt-p
+               other-window-p force-interactive-p)
   "Extension to gdb that:
 . Prefers the most recently used buffer if its process is still live,
 . Else it asks for a buffer using a completion list of other gdb buffers,
@@ -2985,9 +2987,12 @@ ARG == '(4) --> Prompt for buffer
 ARG == '-   --> Create new session
 ARG == 0    --> New `dp-gdb-naught' session."
   (interactive "P")
-  (when (interactive-p)
+  (when (or (interactive-p)
+            force-interactive-p)
     (cond
      ((eq interactive-only-arg nil) (setq use-most-recent-p t))
+     ((Cu-p) (setq other-window-p 'switch-to-buffer-other-window
+                   use-most-recent-p t))
      ((nCu-p nil interactive-only-arg) (setq prompt-p t))
      ((equal interactive-only-arg 0) (setq new-p 0))
      ((Cu--p nil interactive-only-arg) (setq new-p t))))
@@ -3001,7 +3006,11 @@ ARG == 0    --> New `dp-gdb-naught' session."
                                    use-most-recent-p)))))
                (if (not (string= buf "-" ))
                    ;; Make sure we're true.
-                   (or (dp-visit-or-switch-to-buffer buf) t)
+                   (or (dp-visit-or-switch-to-buffer 
+                        buf
+                        (and other-window-p
+                             'switch-to-buffer-other-window)
+                        ) t)
                  nil)))
         ()
       (setq new-p t)
@@ -3032,6 +3041,12 @@ ARG == 0    --> New `dp-gdb-naught' session."
         (loop for cmd in (cdr (assoc key dp-gdb-commands)) do
           (insert cmd)
           (comint-send-input))))))
+
+;;;###autoload
+(defun dp-gdb-other-window (&rest r)
+  (interactive)
+  (let ((current-prefix-arg '(4)))
+    (call-interactively 'dp-gdb)))
 
 (defun dp-gdb-most-recent-session ()
   (interactive)

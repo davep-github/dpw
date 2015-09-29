@@ -27,6 +27,7 @@
 ;; ??? How to specify the following???
 ;; Debugger entered--Lisp error: (wrong-type-argument window-live-p #<window 0xf5be74c>)
 ;;
+;; Debugger entered--Lisp error: (error "Don't know where `:minibufferp' is defined")
 ;; Don't know how to ignore the error string after 'invalid-operation.
 ;; e.g.: Debugger entered--Lisp error: (invalid-operation "Keyboard ...")
 ;; ??? Try using 'invalid-operation?  But how to specify the exact error?
@@ -82,6 +83,7 @@
     "^Place cursor inside tag to be searched for"
     ".* does not belong to a gnuserv client$"
     "^set-fill-column requires an explicit argument$"
+    "^Don't know where `.*' is defined"
 
     
     ;;XEmacs
@@ -222,6 +224,9 @@
     ;; shell-resync-dirs will cause this if there are non-existent
     ;; directories on the dirstack.
     "^No such directory: "
+    
+    ;; cscope errors
+    "^There is no unique cscope database directory!$"
     )
   "*My list of ignored signals.  These will not cause an entry into the
 debugger if encountered when `debug-on-error' is non-nil.

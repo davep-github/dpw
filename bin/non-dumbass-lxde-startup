@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Make it executable rather than some bogus config file with no clear advantages.
+# This is probably not true, but I can't see them as of now.
+
+# Or just set path.  This needs to be set here so that things like menu
+# commands can see things in my environment.
+if ! type davep_env_p >/dev/null 2>&1; then
+    source $HOME/.bashrc
+fi
+
+# Set up my monitors.
+#~/.screenlayout/lAb.sh # moved to ~/.xprofile
+# Start up a terminal.
+bash --login -c "dpxx -g '+2800+384'" &
+bash --login -c xem &
+bash --login -c home-win &
+xit ario --minimized
+xit firefox

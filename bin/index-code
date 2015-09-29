@@ -247,9 +247,10 @@ vsetp $exit_p && {
     exit $exit_p
 }
 
+# Put index file names in a single place.
 index_files=
 vsetp "$ctags_p" || vsetp "${clean}" && index_files="$index_files TAGS tags"
-vsetp "$gtags_p" || vsetp "${clean}" && index_files="$index_files GTAGS GRTAGS GPATH"
+vsetp "$gtags_p" || vsetp "${clean}" && index_files="$index_files GTAGS GRTAGS GPATH GSYMS"
 # ncscope.out is the temp cscope file. If it exists, it indicates a problem.
 vsetp "$cscope_p" || vsetp "${clean}" && index_files="$index_files cscope.* ncscope.out" 
 
@@ -284,6 +285,7 @@ do_taggin()
     local dirs="$@"
     echo 1>&2 "This program ($(basename $0)), ${tree_tagger} and cscope-indexer need to be reworked.
 They should work off the same set of files."
+    echo "taggin $dirs"
     eval EExec -y ${tree_tagger} $DP_SCRIPT_X_DEBUG_OPT $EExec_opts \
        ${ctags_p} \
        ${etags_p} \
@@ -291,7 +293,6 @@ They should work off the same set of files."
        ${cscope_p} \
        $tflags \
        $dirs
-    echo "taggin in $PWD"
     if vsetp "$output_dir"
     then
         EExec $MV $index_files "$output_dir"
@@ -311,8 +312,13 @@ else
     do_taggin $dirs
 fi
 
-chmod_index_files a-w
-
+if truth_p "${read_only_index_files-}"
+then
+    chmod_index_files a-w
+else
+    chmod_index_files a+w
+fi
+    
 ls -l ${index_files}
 
 echo "index-code done: $(date)."

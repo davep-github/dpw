@@ -196,7 +196,7 @@ Return stuff. See `mk_abbrev_regexp' for abbrev_pat format.
     return default_stuff
 
 ########################################################################
-def uniquify_list(list_in):
+def uniqify_list(list_in):
     """Return the list such that each element appears only once."""
     d = {}
     for i in list_in:

@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
 ########################################################################
 #
 # template begin.
@@ -105,51 +104,4 @@ Usage_error()
 #
 # template end.
 ########################################################################
-
-git_diff_or_cat()
-{
-    local commit="$1"; shift
-    local file="$1"; shift
-    # This will, by default, cat its 2nd parameter, the name of the temp file
-    # extracted from the given commit by git for doing the diff.
-    export GIT_EXTERNAL_DIFF=$HOME/bin/dp-cat-some
-    # sadly git doesn't seem to invoke the diff program if the files are
-    # identical.
-    if EExec -y git diff "$commit" -- "$file" | grep -q .
-    then
-        EExec git diff "$commit" -- "$file"
-    else
-        # The files are identical, so show the existing one.
-        EExec cat "$file"
-    fi
-}
-
-nth=
-commit="$1"; shift
-EExec_verbose_echo_id commit
-case "$commit" in
-    -n*|-[0-9]*|--oldest|--original|--initial|--earliest) nth="${commit}"; commit=;;
-    *);;
-esac
-
-
-[ -z "$*" ] && {
-    echo 1>&2 "Usage: git-cat [commit|-n[0-9]+|-[0-9]+|--oldest|--original|--earliest] file+"
-    exit 1
-}
-for f in "$@"
-do
-  if [ -n "$nth" ]
-  then
-      commit=$(git-nth-rev "$nth" "$f")
-      EExec_verbose_echo_id commit
-      [ -z "${commit}" ] && {
-          echo "Cannot find commit for >${nth}<"
-          exit 1
-      } 2>& 1
-  fi
-#  echo_id2 commit
-#  echo_id2 f
-#  exit 99
-  EExec -y git_diff_or_cat "$commit" "$f"
-done
+ubuntu-sucks dpxx ipython

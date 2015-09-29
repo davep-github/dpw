@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys, os, re, subprocess
-import find_up, dp_io
+import find_up, dp_io, dp_sequences
 opath = os.path
 
 try:
@@ -61,6 +61,22 @@ def rgg_parse_args(argv):
     argv = dp_io.parse_args()
     pass # for now
 
+def uniqify_matches(lines):
+    # Our use of global causes it to return multiple matches on the same
+    # file:line.  However, for some reason, the lines have different amounts
+    # of white space, even though they match the same line in the same file.
+    # Let's uniqify the list.  First try is to just compress white space and
+    # uniqify.  If this doesn't work (i.e if the white space is significant)
+    # then we'll uniqify based on the compressed lines and return the
+    # original lines.
+    # Squished lines seem to work.
+    new_lines = []
+    for line in lines:
+        line = " ".join(line.split())
+        new_lines.append(line)
+    lines = dp_sequences.uniqify_list(new_lines)
+    return lines
+
 Bottom_ranking_regexps = []
 def rank_lines(lines):
     tops = []
@@ -78,20 +94,26 @@ def rank_lines(lines):
             if line is not None:
                 filtered_lines.append(line)
         lines = filtered_lines
-    
+
     ## Find the rankest items.
-    for regexp in Top_ranking_regexps:
-        resid = []
-        for line in lines:
-            if regexp.search(line):
-                tops.append(line)
-            else:
-                resid.append(line)
-        if not resid:
-            return tops + bottoms
-        lines = resid
-    # XXX @todo hanle bottom rankers here.
-    return tops + resid + bottoms
+    if not Top_ranking_regexps:
+        # If there are no toppesting regexps, then these lines are at least
+        # resid.
+        resid.extend(lines)
+    else:
+        for regexp in Top_ranking_regexps:
+            resid = []
+            for line in lines:
+                if regexp.search(line):
+                    tops.append(line)
+                else:
+                    resid.append(line)
+            if not resid:
+                return tops + bottoms
+            lines = resid
+    # XXX @todo handle bottom rankers here.
+    all_lines =  tops + resid + bottoms
+    return lines
 
 Cxref_realpath_regexp = re.compile("(\S+)\s+(\d+)\s+(\S+)(.*)")
 def get_lines(fobj, cxref_realpath_p=False, start_dir=opath.curdir):
@@ -140,17 +162,20 @@ def run_globals_over_path(argv, path, start_dir=opath.curdir,
     log_file.write("run_globals_over_path(): BEFORE: path>{}<\n".format(path))
     path = path[first_db:num_dbs]
     log_file.write("run_globals_over_path(): AFTER: path>{}<\n".format(path))
+    log_file.write("run_globals_over_path(): argv>{}<\n".format(argv))
     ret = []
     for p in path:
         p = opath.dirname(p)
         #print >>sys.stderr, "p>%s<" % (p,)
         os.chdir(p)
         x = run_global(argv, start_dir=start_dir)
+        log_file.write("run_globals_over_path(): result[x]>{}<\n".format(x))
         os.chdir(original_dir)
         if x:
             ret.extend(x)
             if not all_matches_p:
                 break
+    log_file.write("run_globals_over_path(): ret>{}<\n".format(ret))
     return ret
 
 def run_globals(argv, path=None, all_p=True, start_dir=opath.curdir):

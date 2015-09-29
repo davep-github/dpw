@@ -52,6 +52,9 @@ DEFAULT_ERROR_INDICATOR = "!"
 DEFAULT_EGREP_PREFIX = DEFAULT_ERROR_INDICATOR * 4
 DEFAULT_EGREP_SUFFIX = DEFAULT_ERROR_INDICATOR * 4
 
+DEFAULT_XGREP_PREFIX = "OMFG!!!"
+DEFAULT_XGREP_SUFFIX = ""
+
 DEFAULT_MATCH_INDICATOR = "+"
 DEFAULT_MATCH_PREFIX = DEFAULT_MATCH_INDICATOR * 3
 DEFAULT_MATCH_SUFFIX = DEFAULT_MATCH_INDICATOR * 3
@@ -65,7 +68,7 @@ DEFAULT_MAX_ERROR_MATCHES = 0
 DEFAULT_LINES_AFTER = 0                 # None
 DEFAULT_FLUSH_BYTES = 0
 
-REGEXP_LIST_ORDER = ("grep", "hgrep", "wgrep", "egrep")
+REGEXP_LIST_ORDER = ("grep", "hgrep", "wgrep", "egrep", "xgrep")
 #tick_counter_count_format = "%8d"
 
 # '{:.>30}'.format(9)
@@ -77,6 +80,8 @@ TICKER_COUNT_FORMAT = ("{:"
                        + TICKER_COUNT_JUSTIFICATION
                        + str(TICKER_COUNT_WIDTH)
                        + "}")
+
+All_output_streams = []
 
 # The timestamp is generated inside the ticker object.
 # This will need to track that.
@@ -171,17 +176,21 @@ class Grep_list_t(dp_object):
             self.d_compiled_regexps.append(re.compile(regexp))
 
     def max_matches_handler(self, line, line_number):
-        fmt = "Default Max matches handler, line: >{}<, line_number: {}"
-        print >>self.d_ostream, fmt.format(line, line_number)
+        fmt = "{} Max matches handler, line: >{}<, line_number: {}"
+        print >>self.d_ostream, fmt.format(self.d_description,
+                                           line, line_number)
+
         return False
 
     def match_handler(self, match_object, line, line_number, ostream=None,
                       timestamp_p=None):
+        ret = True
         Match_types[self.d_description] = self.d_indicator_char
         self.d_matching_lines.append((line, line_number))
         self.d_num_matches += 1
         self.print_matches(match=(line, line_number), ostream=ostream,
                            timestamp_p=timestamp_p)
+
         if self.d_match_action:
             self.print_action(dp_io.bq("{} {}".format(self.d_match_action,
                                                       line)))
@@ -189,19 +198,20 @@ class Grep_list_t(dp_object):
             and
             (self.d_num_matches > self.d_max_matches)):
             ret = self.max_matches_handler(line, line_number)
-        return True
+        return ret
 
     def match(self, line, line_number, ostream=None, timestamp_p=None):
         appended_p = False
         continue_p = True
         ret = False                     # Did we overflow?
         line = line[:-1]
+        rets = []
         for regexp in self.d_compiled_regexps:
             m = regexp.search(line)
             if m:
-                ret = self.match_handler(m, line, line_number, ostream,
-                                         timestamp_p)
-        return ret
+                rets.append(self.match_handler(m, line, line_number,
+                                               ostream, timestamp_p))
+        return rets
 
     def dump_matches(self, all_output_streams, title, matching_lines=None,
                      dump_empty_lists_p=False):
@@ -233,14 +243,15 @@ class Grep_list_t(dp_object):
             matches = [match]
         else:
             matches = self.d_matching_lines
-        if ostream:
-            if timestamp_p == None:
-                timestamp_p = self.d_timestamp_p
-            for line, line_number in matches:
-                display_match(ostream, line, line_number,
-                              prefix="\n" + self.d_match_prefix,
-                              suffix=self.d_match_suffix + "\n",
-                              timestamp_p=timestamp_p)
+        if not ostream:
+            return
+        if timestamp_p == None:
+            timestamp_p = self.d_timestamp_p
+        for line, line_number in matches:
+            display_match(ostream, line, line_number,
+                          prefix="\n" + self.d_match_prefix,
+                          suffix=self.d_match_suffix + "\n",
+                          timestamp_p=timestamp_p)
 
     def print_action(self, s, ostream=None, timestamp_p=None):
         if not ostream:
@@ -297,7 +308,7 @@ class Egrep_list_t(Grep_list_t):
                  regexps,
                  indicator_char=DEFAULT_ERROR_INDICATOR,
                  match_prefix=None,
-                 timestamp_p=False,
+                 timestamp_p=True,
                  match_suffix=None,
                  max_matches=None,
                  match_action=None,
@@ -314,17 +325,34 @@ class Egrep_list_t(Grep_list_t):
                              ostream=ostream,
                              description=description)
 
-    def max_matches_handler(self, line, line_number):
-        print >>self.d_ostream, "Max error matches exceeded."
-        return True
-    
+class Fatal_grep_list_t(Grep_list_t):
+    def __init__(self,
+                 regexps,
+                 indicator_char=DEFAULT_ERROR_INDICATOR,
+                 match_prefix=DEFAULT_XGREP_PREFIX,
+                 timestamp_p=True,
+                 match_suffix=DEFAULT_XGREP_SUFFIX,
+                 max_matches=0,
+                 match_action="sys.exit",
+                 ostream=sys.stderr,
+                 description="FATAL regexp"):
+        Grep_list_t.__init__(self,
+                             regexps=regexps,
+                             indicator_char=indicator_char,
+                             match_prefix=match_prefix,
+                             timestamp_p=timestamp_p,
+                             match_suffix=match_suffix,
+                             max_matches=max_matches,
+                             match_action=match_action,
+                             ostream=ostream,
+                             description=description)
+
 parse_debug = 0
 
 def signal_handler(signal, frame):
-    Caught_signals.append("%s" % (signal,))
+    Caught_signals.append((("%s" % (signal,)), signal, frame))
 
 signal.signal(signal.SIGINT, signal_handler)
-
 
 def identity(x, *args, **kw_args):
     if args:
@@ -538,7 +566,13 @@ def dump_matching_and_error_lines(output_streams,
                                                regexp_list.d_description,
                                                wing)
         regexp_list.dump_matches(all_output_streams, title)
-    
+
+##
+def fini_streams(output_streams=All_output_streams):
+    for fobj in output_streams:
+        if not fobj.closed and fobj not in (sys.stdout, sys.stderr):
+            fobj.close()
+
 if __name__ == "__main__":
     import optparse
     def_tick_interval = 100
@@ -558,6 +592,7 @@ if __name__ == "__main__":
     default_compression_level = 5
     GZIP_MAX_COMPRESSION_LEVEL = 9
     total_bytes_written = 0
+    num_matching_lines = 0
     ## Each -Z adds one, and we want a single -Z to yield max compression.
 
     # tick_interval, increment=1, init_string="counting: ", comma=", ",
@@ -661,7 +696,8 @@ if __name__ == "__main__":
                          action=App_action_log_file_convenience,
                          help=("Save to log file with useful defaults:\n" +
                                show_convenience_opts()))
-    oparser.add_argument("--slog", "--sampled-log",
+    oparser.add_argument("--slog", "--sampled-log", "--sampled-with-log",
+                         '--sampled-and-log',
                          dest="output_files_required_p", default=False,
                          nargs=0,
                          action=App_action_log_file_convenience_sampled,
@@ -784,6 +820,12 @@ Split line into chars and feed to ticker.""")
                          dest="error_regexp_patterns",
                          action="append", default=[],
                          help="Grep for these patterns and treat matches as errors. --max-errors tells how many error matches to accept before exiting. The default is %s where 0 means no limit." % (DEFAULT_MAX_ERROR_MATCHES,))
+    oparser.add_argument("--grep-fatal-errors", "--fatals",
+                         "--fatal-regexps",
+                         "--fre", "--xgrep", "--fatal-grep",
+                         dest="fatal_regexp_patterns",
+                         action="append", default=[],
+                         help="Grep for these patterns and treat matches as fatal and exit. --max-errors tells how many error matches to accept before exiting. The default is %s where 0 means no limit." % (DEFAULT_MAX_ERROR_MATCHES,))
     oparser.add_argument("-g", "--grep", "--regexp", "--re", "--match",
                          dest="regexp_patterns",
                          action="append", default=[],
@@ -796,17 +838,20 @@ Split line into chars and feed to ticker.""")
                          dest="warning_regexp_patterns", default=[],
                          action="append",
                          help='Grep for these warning patterns and highlight as a warning.')
-
     oparser.add_argument("--grep-match-action", "--grep-hit-action",
                          dest="grep_match_action", default="",
                          type=str,
                          help="Run this when there is a pattern match.")
+    oparser.add_argument("--hgrep-match-action", "--hgrep-hit-action",
+                         dest="hgrep_match_action", default="",
+                         type=str,
+                         help="Run this when there is a highlighted pattern match.")
     oparser.add_argument("--egrep-match-action", "--egrep-hit-action",
                          dest="egrep_match_action", default="",
                          type=str,
                          help="Run this when there is an error pattern match.")
-    oparser.add_argument("--hgrep-match-action", "--hgrep-hit-action",
-                         dest="hgrep_match_action", default="",
+    oparser.add_argument("--xgrep-match-action", "--xgrep-hit-action",
+                         dest="xgrep_match_action", default="",
                          type=str,
                          help="Run this when there is a highlight pattern match.")
     oparser.add_argument("--wgrep-match-action", "--wgrep-hit-action",
@@ -880,9 +925,11 @@ Split line into chars and feed to ticker.""")
                          action="store_false",
                          help="Don't show all grep matches at end of run.")
     oparser.add_argument("--unbuffered-logs",
+                         '--nb-logs', '--ub-logs', '--ubl', '--nbl',
                          dest="unbuffered_logs_p", default=False,
                          action="store_true")
     oparser.add_argument("--unbuffered-out",
+                         '--nb-out', '--ub-out', '--ubo', '--nbo',
                          dest="unbuffered_out_p", default=False,
                          action="store_true")
     
@@ -951,8 +998,8 @@ Split line into chars and feed to ticker.""")
         dp_io.eprintf("One or more log file names are required.\n")
         sys.exit(1)
 
-    if app_args.unbuffered_out_p:
-        dp_io.unbuffer_a_file(sys.stdout)
+#    if app_args.unbuffered_out_p:
+#        dp_io.unbuffer_a_file(sys.stdout)
 
     sample_ostream = dp_io.Unbuffered_file_duck(sys.stdout)
     compressed_file_next_flush = 0
@@ -1073,6 +1120,11 @@ Split line into chars and feed to ticker.""")
     regexp_list_dict["egrep"] = l
     regexp_lists.append(l)
 
+    l = Fatal_grep_list_t(app_args.fatal_regexp_patterns,
+                          match_action=(app_args.xgrep_match_action))
+    regexp_list_dict["xgrep"] = l
+    regexp_lists.append(l)
+
     grepping_for_errors_p = len(app_args.error_regexp_patterns) != 0
 
     sampled_line_prefix = app_args.sample_lines_tick_prefix or ""
@@ -1090,6 +1142,7 @@ Split line into chars and feed to ticker.""")
                                       regexp_lists,
                                       extra_streams=[sys.stdout])
         ticker.fini()
+        fini_streams(output_streams)
 
     num_trailing_lines = app_args.num_trailing_lines
     max_output_bytes_before_exit = app_args.max_output_bytes_before_exit
@@ -1112,7 +1165,7 @@ Split line into chars and feed to ticker.""")
                         or ((max_output_bytes_before_exit is not False)
                             and
                             (total_bytes_written > max_output_bytes_before_exit))
-                        or (max_hits and (len(matching_lines) >= max_hits)))
+                        or (max_hits and num_matching_lines >= max_hits))
         #print "num_trailing_lines:", num_trailing_lines
         if (final_exit_p or limit_exit_p):
             if (final_exit_p
@@ -1145,8 +1198,17 @@ Split line into chars and feed to ticker.""")
                     compressed_file_next_flush += compressed_file_flush_period
         if on_borrowed_time_p:
             continue
+        num_matching_lines = 0
+        big_break = False
         for re_list in regexp_lists:
-            re_list.match(input_line, line_number)
+            rets = re_list.match(input_line, line_number)
+            if (rets is False) or (False in rets):
+                loop_fini()
+                big_break = True
+                break
+            num_matching_lines = num_matching_lines + re_list.num_matches()
+        if big_break:
+            break
             
         if char_wise_p:
             # Iterate for each char in the line.
@@ -1179,5 +1241,3 @@ Split line into chars and feed to ticker.""")
     print
     if app_args.preamble_p:
         print "End time: {}".format(time.ctime())
-
-

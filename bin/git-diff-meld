@@ -1,0 +1,4 @@
+#!/bin/bash
+
+exec difftool-git meld "$@"
+

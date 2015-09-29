@@ -63,6 +63,20 @@ void Usage(void)
     exit (1);
 }
 
+long filelength(
+    int fd)
+{
+    struct stat     sBuf;
+    int                     rc;
+  
+    if ((rc = fstat(fd, &sBuf)) != 0)
+    {
+        perror("cannot stat");
+        exit(1);
+    }
+  
+    return (sBuf.st_size);
+}
 /*
 ***********************************************************************
 *
@@ -272,6 +286,7 @@ main(
     int writeBytes = 0;
     int seed = 0;
     int openFlags = O_WRONLY | O_CREAT;
+    size_t num_iterations = 1;
 
     extern int opterr;
     extern char *optarg;
@@ -289,7 +304,7 @@ main(
         }
     }
     
-    while ((option = getopt(argc, argv, "vdG:g:bhrs:tano:m")) != EOF)
+    while ((option = getopt(argc, argv, "vdG:g:bhrs:tano:mi:")) != EOF)
     {
         switch (option)
         {
@@ -349,6 +364,10 @@ main(
                 intsToGen = strtoul(optarg, &p, 0);
                 break;
 
+            case 'i':
+                num_iterations = strtoul(optarg, &p, 0);
+                break;
+
             default:
                 Usage();
         }
@@ -363,6 +382,18 @@ main(
         exit(1);
     }
 
+    if (openFlags & O_APPEND) {
+        offset = filelength(fd);
+    } else {
+        offset = strtoul(argv[optind++], &p, 0);
+    }
+
+    if (lseek(fd, offset, SEEK_SET) != offset)
+    {
+        perror("seek error");
+        exit(1);
+    }
+
 #if defined(ENV_OS_AIX)
     MemMapAddr = shmat(fd, NULL, SHM_MAP);
     if (MemMapAddr == (char *)-1) {
@@ -371,48 +402,37 @@ main(
     }
 #endif
 
-    if (!(openFlags & O_APPEND))
-    {
-        offset = strtoul(argv[optind++], &p, 0);
+    while (num_iterations--) {
 
-        if (lseek(fd, offset, SEEK_SET) != offset)
-        {
-            perror("seek error");
-            exit(1);
+        if (bytesToGen) {
+            GenBytes(fd, bytesToGen, offset);
         }
-    } else {
-        fprintf(stderr, "Appending, set offset to file len.\n");
-        exit(1);
-    }
 
-    if (bytesToGen) {
-        GenBytes(fd, bytesToGen, offset);
-    }
-
-    if (intsToGen) {
-        GenInts(fd, intsToGen, offset);
-    }
-
-    if (writeBytes) {
-        WriteBytes(argc, argv, optind, fd);
-    } else {
-        int rc = -1;
-        i = optind;
-        if (Debug) {
-            // bs gdb doesn't seem to increment this.
-            printf("4, optind: %d, i: %d, argc: %d\n", optind, i, argc);
+        if (intsToGen) {
+            GenInts(fd, intsToGen, offset);
         }
-        
-        for (; i < argc; i++) {
-            const char* argp = argv[i];
-            if (argp[0] == '@') {
-                rc = write_file_contents(fd, argp + 1);
-            } else {
-                rc = Write(fd, argp, strlen(argv[i])) != strlen(argp);
+
+        if (writeBytes) {
+            WriteBytes(argc, argv, optind, fd);
+        } else {
+            int rc = -1;
+            i = optind;
+            if (Debug) {
+                // bs gdb doesn't seem to increment this.
+                printf("4, optind: %d, i: %d, argc: %d\n", optind, i, argc);
             }
-            if (rc) {
-                fprintf(stderr, "write(s) failed.\n");
-                return 1;
+
+            for (; i < argc; i++) {
+                const char* argp = argv[i];
+                if (argp[0] == '@') {
+                    rc = write_file_contents(fd, argp + 1);
+                } else {
+                    rc = Write(fd, argp, strlen(argv[i])) != strlen(argp);
+                }
+                if (rc) {
+                    fprintf(stderr, "write(s) failed.\n");
+                    return 1;
+                }
             }
         }
     }

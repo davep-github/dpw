@@ -372,24 +372,91 @@ lrl_family = e(
     ref=[OSDB['linux'], default]
 )
 
+
 LRL_AVOCADO_FG_COLOR = 'black'
-LRL_AVOCADO_BG_COLOR = 'linen'
+#LRL_AVOCADO_BG_COLOR = 'rgb:f0/ff/c0'
+LRL_AVOCADO_BG_COLOR = 'rgb:d9/de/97'
 
 e(
-    kef='family',
+    kef='host',
     dat={
+    'host-pattern': 'avocado',
     'family': 'lrl_family',
     'comment': 'A work machine.',
-    'host-pattern': 'avocado',
-    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + NV_GEOMETRY,
+    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + LRL_XEM_GEOMETRY,
     'xterm_bg': LRL_AVOCADO_BG_COLOR,
     'xterm_fg': LRL_AVOCADO_FG_COLOR,
     'xem_bg_color': LRL_AVOCADO_BG_COLOR,
-    'main_macs_opts': '',
     },
     ref=[lrl_family, OSDB['linux'], default]
 )
 
+LRL_MANGO_FG_COLOR = 'black'
+#FFE79E
+LRL_MANGO_BG_COLOR = 'rgb:ff/e7/9e'
+
+e(
+    kef='host',
+    dat={
+    'host-pattern': 'mango',
+    'family': 'lrl_family',
+    'comment': 'A work machine.',
+    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + LRL_XEM_GEOMETRY,
+    'xterm_bg': LRL_MANGO_BG_COLOR,
+    'xterm_fg': LRL_MANGO_FG_COLOR,
+    'xem_bg_color': LRL_MANGO_BG_COLOR,
+    },
+    ref=[lrl_family, OSDB['linux'], default]
+)
+
+LRL_KIWI_FG_COLOR = 'black'
+##LRL_KIWI_BG_COLOR = 'rgb:d2/d0/b0'
+LRL_KIWI_BG_COLOR = 'lavender'
+
+e(
+    kef='host',
+    dat={
+    'host-pattern': 'kiwi',
+    'family': 'lrl_family',
+    'comment': 'A work machine.',
+    # Good for portrait, on BAM.
+    #'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70+0+0',
+    # below is for middle portrait monitor.
+    #'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70+1922+0',
+    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70-0+0',
+    'xterm_bg': LRL_KIWI_BG_COLOR,
+    'xterm_fg': LRL_KIWI_FG_COLOR,
+    'xem_bg_color': LRL_KIWI_BG_COLOR,
+    },
+    ref=[lrl_family, OSDB['linux'], default]
+)
+#
+# FAMILY entry for o-xterm
+## e(
+##     kef='family',
+##     dat={
+##     'family': 'nv-o-xterm',
+##     'comment': 'General, interactive multiuser development machine. No CPU hogging',
+##     'host-pattern': '(sc|o)-xterm-[0-9]+',
+##     },
+##     ref=[nvidia_family, OSDB['linux'], default]
+## )
+
+## e(
+##     kef='family',
+##     dat={
+##     'family': 'nv-l-sim',
+##     'comment': 'Heavy load machines.',
+##     'host-pattern': 'l-sim-|sc-sim',
+##     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + NV_GEOMETRY,
+##     'xterm_bg': NVIDIA_LSIM_BG_COLOR,
+##     'xterm_fg': NVIDIA_LSIM_FG_COLOR,
+##     'xem_bg_color': NVIDIA_LSIM_BG_COLOR,
+##     'main_macs_opts': '',
+##     'post_bashrc_command': 'eval ignoreeof=10',
+##     },
+##     ref=[nvidia_family, OSDB['linux'], default]
+## )
 
 
 # create the db.
@@ -534,7 +601,6 @@ e(
     # Font menu is fucked, but this works:
     # (set-default-font "Inconsolata-12")
     """xem-xft-font""": '''"Inconsolata-12"''',
-    'xem_bin': os.path.join(HOME_LOCAL_BIN, "xemacs"),
 
     # NB! using the version number can cause extreme weirdness with fonts!
     'tunnel-ip': '16.11.64.97',
