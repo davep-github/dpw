@@ -3630,22 +3630,27 @@ PREFIX: Doxygen comment indicator \"!@\"."
 (defun* dp-interactive-insert-for-comment+ (string)
   "Insert a comment meant to draw attention."
   (interactive "sinsert: ")
-  (dp-insert-for-comment+ string))
+  (dp-insert-for-comment+ string ""))
+
+(defun* dp-nb (&optional (msg "NB: "))
+  (interactive)
+  (dp-insert-for-comment+ msg ""))
+(dp-defaliases 'nb 'dp-nb)
 
 (defun* wtf (&optional (msg "WTF is going on!!??"))
   (interactive)
-  (dp-insert-for-comment+ msg))
+  (dp-insert-for-comment+ msg ""))
 
 (defun* ick (&optional (msg "ick! Fix this ASAP!!"))
   (interactive)
-  (dp-insert-for-comment+ msg))
+  (dp-insert-for-comment+ msg ""))
 
 ;; !<@todo XXX!<@todo XXX!<@todoXXX dslkdjlskjdlskjdlsjd
 ;;    !<@todo XXX ubbakdflkdfj  ldkjflkdf  ldkjflkj 
 ;; !<@todo XXX 
 (defun dp-comment-experimental-code (&optional prompt-for-message-p)
   (interactive "P")
-  (dp-insert-for-comment+ "dp:experimental: "))
+  (dp-insert-for-comment+ "dp:experimental: " ""))
 
 (defalias 'exp 'dp-comment-experimental-code)
 
@@ -3653,7 +3658,7 @@ PREFIX: Doxygen comment indicator \"!@\"."
   (interactive "*")
   (dp-insert-for-comment+ "Just for now. Remove ASA fixed."))
   
-(defvar dp-debugging-code-tag (format "@todo:debug:REMOVE:%s"
+(defvar dp-debugging-code-tag (format "XXX @todo:debug:REMOVE ASAP:%s"
                                       (user-login-name))
   "Intro to debug code identifying comment.")
 

@@ -231,7 +231,7 @@ alias gitcia='git commit -a'
 alias gits='git status'
 alias gitstat='git status'
 alias gitadd='git add'
-alias git+='git add'
+alias git+='git add'            # git+, git add.
 # NTMs: there is a real git revert command that is very different.
 alias gitrevert='git checkout --'  # Alternates use exact command.
 alias gitrescue='git checkout --'
@@ -248,6 +248,7 @@ alias gitremote='git remote'
 alias gitpush='git push'
 alias gitpull='git pull'
 alias githelp='gith'            # Remove ^H bolding/underlining
+alias gdn='git diff --name-only' # Just the file names only.
 
 # Quicksilver versioning service.
 alias hgs='hg status'

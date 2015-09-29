@@ -50,3 +50,5 @@ Ee|tcpdumpsrc|       /home/davep/work/dpu/local/build/pcap-stuff/tcpdump-4.7.4/
 Ee|dpudata|       /home/davep/work/dpu/data/
 Ee|ont|       /home/davep/tmp/testdriver/
 Ee|pcapsrc|       /home/davep/work/dpu/local/build/pcap-stuff/libpcap-1.7.4/
+Ee|dpusnortsrc|snortsrc|snsrc|       /home/davep/work/dpu/snort/src/
+Ee|daqosrc|       /home/davep/work/dpu/local/build/pcap-stuff/daq-2.0.6/os-daq-modules/

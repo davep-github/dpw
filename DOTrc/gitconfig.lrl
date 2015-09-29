@@ -3,11 +3,34 @@
 [user]
 	name = David Panariti
 	email = davep.lrl@meduseld.net
+[color]
+        ui=auto
 
 [difftool "ec-diff"]
 	cmd = ec-diff $LOCAL $REMOTE
 
 [difftool "meld"]
 	cmd = meld $LOCAL $REMOTE
+
+[difftool "diffuse"]
+	cmd = diffuse $LOCAL $REMOTE
+
 [push]
 	default = simple
+
+[alias]
+	co = checkout
+	cof = checkout --
+	br = branch
+	ci = commit
+	st = status
+        ldf = log --decorate=full -n 5
+        ld = log --decorate -n 5
+        dfo = diff --name-only
+        dfn = diff --name-only
+        dno = diff --name-only
+        mnc = merge --no-commit
+        mffo = merge --ff-only --no-commit
+        dtm = difftool --tool=meld
+        dtd = difftool --tool=diffuse
+        dte = difftool --tool=ec-diff

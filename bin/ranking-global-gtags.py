@@ -7,6 +7,7 @@ import ranking_global_gtags_lib
 rgg = ranking_global_gtags_lib
 #rgg.log_file = sys.stderr
 rgg_log_file_name = os.environ.get("rgg_log_file_name", None)
+rgg_log_file_name = "bubba"
 if rgg_log_file_name:
     if rgg_log_file_name == '--err':
         rgg.log_file = sys.stderr
@@ -33,12 +34,16 @@ Database_locations = []
 ## Move this into ranking_global_gtags.py???
 
 rgg_memo_file_name = "rgg_memo_file." + dp_utils.bq("dp4-get-root --basename")
+rgg.log_file.write("rgg_memo_file_name>{}<\n".format(rgg_memo_file_name))
 rgg_memo_file = dp_utils.make_db_file_name(rgg_memo_file_name)
+rgg.log_file.write("rgg_memo_file>{}<\n".format(rgg_memo_file))
 go_files, _ = dp_utils.process_gopath()
 newest, _, _ = dp_utils.newest_file(go_files + [rgg_memo_file])
 
 def create_db_locations(db_memo_file, dependencies, args):
     db_locations = []
+    rgg.log_file.write("Hullo<\n")
+
     for dir in Database_p4_locations:
         rgg.log_file.write("Dir>{}<\n".format(dir))
         dir = p4_lib.p4_sb_location_to_absolute(dir)
@@ -55,9 +60,8 @@ Database_locations = dp_utils.cheesy_memoized_file(
     eval_p = True,
     write_new_p = True)
 
-
-Out_of_tree_dbs = ["/home/davep/work/dpu/external/kernel/linux-3.10.0-229.1.2.el7/GTAGS",
-                   "/home/davep/work/dpu/local/build/pcap-stuff/GTAGS"]
+Out_of_tree_dbs = os.environ.get("WORK_INDEX_DB_LOCS", "")
+Out_of_tree_dbs = Out_of_tree_dbs.split()
 
 Database_locations.extend(Out_of_tree_dbs)
 
@@ -68,6 +72,7 @@ Database_locations = [ loc for loc in Database_locations
 # Then want to search all other databases.
 
 rgg.log_file.write("DP_NV_DB_LOCSTR>{}<\n".format(DP_NV_DB_LOCSTR))
+rgg.log_file.write("Database_p4_locations>{}<\n".format(Database_p4_locations))
 pretty_db_string = dp_sequences.list_to_indented_string(Database_locations)
 rgg.log_file.write("Database_locations>{}<\n".format(pretty_db_string))
 
