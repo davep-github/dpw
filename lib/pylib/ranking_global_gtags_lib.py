@@ -169,11 +169,13 @@ def run_globals_over_path(argv, path, start_dir=opath.curdir,
         #print >>sys.stderr, "p>%s<" % (p,)
         os.chdir(p)
         x = run_global(argv, start_dir=start_dir)
+        log_file.write("run_globals_over_path(): result[x]>{}<\n".format(x))
         os.chdir(original_dir)
         if x:
             ret.extend(x)
             if not all_matches_p:
                 break
+    log_file.write("run_globals_over_path(): ret>{}<\n".format(ret))
     return ret
 
 def run_globals(argv, path=None, all_p=True, start_dir=opath.curdir):

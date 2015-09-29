@@ -194,6 +194,13 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
       </action>
     </keybind>
 
+    <!-- Select and raise term connected to avocado. -->
+    <keybind key="C-W-a">
+      <action name="Execute">
+        <command>wmctrl -a "davep@avocado"</command>
+      </action>
+    </keybind>
+
     <!-- Select and raise nscreen bubba connected to mango. -->
     <keybind key="A-W-b">
       <action name="Execute">
@@ -318,9 +325,11 @@ COMMENTED OUT -->
     <keybind key="W-a"><action name="Execute"><command>wmctrl -a "Ario"</command></action></keybind>
     <keybind key="XF86Tools"><action name="Execute"><command>wmctrl -a "Ario"</command></action></keybind>
     <!-- Select and raise an emacs window. -->
-    <keybind key="W-e"><action name="Execute"><command>wmctrl -a "XEmacs@"</command></action></keybind>
+    <keybind key="W-e"><action name="Execute"><command>wmctrl -a "XEmacs@kiwi"</command></action></keybind>
     <!-- Select and raise an emacs window on mango. -->
     <keybind key="C-W-e"><action name="Execute"><command>wmctrl -a "XEmacs@mango"</command></action></keybind>
+    <!-- Select and raise an emacs window on avocado. -->
+    <keybind key="A-W-e"><action name="Execute"><command>wmctrl -a "XEmacs@avocado"</command></action></keybind>
     <!-- Select and raise a web browser (att: firefox) window. -->
     <keybind key="W-w"><action name="Execute"><command>wmctrl -a "Mozilla Firefox"</command></action></keybind>
     <!-- Select and raise an email client window. Thunderbird, ATT. -->

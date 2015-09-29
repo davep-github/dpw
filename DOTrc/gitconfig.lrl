@@ -6,6 +6,9 @@
 [color]
         ui=auto
 
+[color]
+        ui = auto
+
 [difftool "ec-diff"]
 	cmd = ec-diff $LOCAL $REMOTE
 
@@ -22,10 +25,13 @@
 	co = checkout
 	cof = checkout --
 	br = branch
+        cob = checkout -b
+        newbr = checkout -b
 	ci = commit
 	st = status
         ldf = log --decorate=full -n 5
         ld = log --decorate -n 5
+        log5 = log -n 5
         dfo = diff --name-only
         dfn = diff --name-only
         dno = diff --name-only
@@ -34,3 +40,4 @@
         dtm = difftool --tool=meld
         dtd = difftool --tool=diffuse
         dte = difftool --tool=ec-diff
+	aliases = config --get-regexp ^alias\\.

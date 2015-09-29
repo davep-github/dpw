@@ -24,12 +24,12 @@ import find_up, p4_lib
 opath = os.path
 
 # Use [] so we fail messily if there is nothing defined.
-DP_NV_DB_LOCSTR = os.environ.get("WORK_INDEX_DB_LOCS", "")
+WORK_INDEX_DB_LOCS = os.environ.get("WORK_INDEX_DB_LOCS", "")
 
 # Everything will search up to the sandbox root. There is one other known
 # place and that is TOT
 # Abbrev or //p4/loc name.
-Database_p4_locations = DP_NV_DB_LOCSTR.split()
+Database_p4_locations = WORK_INDEX_DB_LOCS.split()
 Database_locations = []
 ## Move this into ranking_global_gtags.py???
 
@@ -71,8 +71,7 @@ Database_locations = [ loc for loc in Database_locations
 # Want to search upward from cwd for a db.
 # Then want to search all other databases.
 
-rgg.log_file.write("DP_NV_DB_LOCSTR>{}<\n".format(DP_NV_DB_LOCSTR))
-rgg.log_file.write("Database_p4_locations>{}<\n".format(Database_p4_locations))
+rgg.log_file.write("WORK_INDEX_DB_LOCS>{}<\n".format(WORK_INDEX_DB_LOCS))
 pretty_db_string = dp_sequences.list_to_indented_string(Database_locations)
 rgg.log_file.write("Database_locations>{}<\n".format(pretty_db_string))
 

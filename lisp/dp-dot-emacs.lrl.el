@@ -85,7 +85,7 @@
         ( "^/home/davep/work/dpu"
           ("/home/davep/work/dpu/hw/dpu/testdriver")
           t
-          ("//home/davep/work/dpu/snort")
+          ("/home/davep/work/dpu/snort")
           t
           ("/home/davep/work/dpu/local/build/pcap-stuff")
           t

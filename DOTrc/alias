@@ -296,4 +296,6 @@ alias egrep="grep -E $grep_options"
 alias fgrep="grep -F $grep_options"
 
 alias sagi='sudo apt-get install'
+
+alias nocolor='ul -t dumb'
 true
