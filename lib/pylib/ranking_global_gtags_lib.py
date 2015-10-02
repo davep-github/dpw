@@ -142,6 +142,8 @@ def get_lines(fobj, cxref_realpath_p=False, start_dir=opath.curdir):
 def run_global(argv, start_dir=opath.curdir):
     #print >>sys.stderr, "run_global(argv: %s)" % (argv,)
     #print >>sys.stderr, "run_global(), cwd: %s" % (opath.realpath(opath.curdir,))
+    if not opath.isfile("GTAGS"):
+        return []
     log_file.write("run_global(), cwd: %s\n"
                        % (opath.realpath(opath.curdir,)))
     cxref_fmt = "-x" in argv
@@ -167,21 +169,26 @@ def run_globals_over_path(argv, path, start_dir=opath.curdir,
     for p in path:
         p = opath.dirname(p)
         #print >>sys.stderr, "p>%s<" % (p,)
-        os.chdir(p)
-        x = run_global(argv, start_dir=start_dir)
-        log_file.write("run_globals_over_path(): result[x]>{}<\n".format(x))
-        os.chdir(original_dir)
-        if x:
-            ret.extend(x)
-            if not all_matches_p:
-                break
+        if opath.isdir(p):
+            os.chdir(p)
+            x = run_global(argv, start_dir=start_dir)
+            log_file.write("run_globals_over_path(): result[x]>{}<\n".format(x))
+            os.chdir(original_dir)
+            if x:
+                ret.extend(x)
+                if not all_matches_p:
+                    break
     log_file.write("run_globals_over_path(): ret>{}<\n".format(ret))
     return ret
 
 def run_globals(argv, path=None, all_p=True, start_dir=opath.curdir):
     if path == None:
         path = find_up.find_up("GTAGS", all_p=all_p)
-    ret = run_globals_over_path(argv, path, start_dir=start_dir)
+
+    if path != None:
+        ret = run_globals_over_path(argv, path, start_dir=start_dir)
+    else:
+        ret = []
     #print "ret:", ret
     return ret
 

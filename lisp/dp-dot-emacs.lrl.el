@@ -50,20 +50,6 @@
 
 (defvar dp-default-c-style-name "lrl-c-style")
 
-(dp-add-force-read-only-regexp
- (dp-concat-regexps-grouped
-  ;; Don't want to edit these stupid fvcking copies.
-  '(
-    ;; sometimes we do edit these legitimately, such as when integration is
-    ;; happening.
-    ;; "^/home/davep/work/dpu/snort/src/detection-plugins/dpu.[ch]$"
-    "^/home/davep/work/dpu/external/build/snort-2.9.7.3"
-    "^/home/davep/work/dpu/external/kernel/linux-3.10.0-229.1.2.el7"
-    "^/home/davep/tmp/testdriver"
-    ))
- t                                      ; Should the list be cleared first?
-)
-
 ;;trying a new one (setq cscope-database-regexps
 ;;trying a new one       '(
 ;;trying a new one         ("^/home/davep/work/dpu/local/build/pcap-stuff/"
@@ -89,8 +75,25 @@
           t
           ("/home/davep/work/dpu/local/build/pcap-stuff")
           t
-          ("/home/davep/work/dpu/external/kernel/linux-3.10.0-229.1.2.el7/")
+;; Add back when/if kernel source becomes useful again.    
+;;          ("/home/davep/work/dpu/external/kernel/linux-3.10.0-229.1.2.el7/")
           )))
+
+
+
+(dp-add-force-read-only-regexp
+ (dp-concat-regexps-grouped
+  ;; Don't want to edit these stupid fvcking copies.
+  '(
+    ;; sometimes we do edit these legitimately, such as when integration is
+    ;; happening.
+    ;; "^/home/davep/work/dpu/snort/src/detection-plugins/dpu.[ch]$"
+    "^/home/davep/work/dpu/external/build/snort-2.9.7.3"
+    "^/home/davep/work/dpu/external/kernel/linux-3.10.0-229.1.2.el7"
+    "^/home/davep/tmp/testdriver"
+    ))
+ t                                      ; Should the list be cleared first?
+)
 
 ;; (dp-add-corresponding-file-pair "dpu-mmap.c" "altera_dma.h")
 

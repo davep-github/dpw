@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, sys, string, types, re, exceptions, signal, time
+import os, sys, string, types, re, exceptions, signal, time, stat
 import gzip, argparse
 import dp_utils, ticker_lib, dp_io, dp_time, dp_sequences
 from dp_object import dp_object
@@ -572,6 +572,9 @@ def fini_streams(output_streams=All_output_streams):
     for fobj in output_streams:
         if not fobj.closed and fobj not in (sys.stdout, sys.stderr):
             fobj.close()
+            if app_args.write_protect_p:
+                os.chmod(fobj.name, stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH);
+                
 
 if __name__ == "__main__":
     import optparse
@@ -630,7 +633,7 @@ if __name__ == "__main__":
                          dest="sample_lines_tick_prefix", default="th-line>",
                          action=Ctor_arg_action,
                          help="Prefix for sampled lines.")
-    oparser.add_argument("--no-clobber",
+    oparser.add_argument("--no-clobber", "--o-excl", "--oexcl",
                          dest="no_clobber_p", default=False,
                          action="store_true",
                          help="Don't clobber existing files. Exit.")
@@ -931,6 +934,10 @@ Split line into chars and feed to ticker.""")
     oparser.add_argument("--unbuffered-out",
                          '--nb-out', '--ub-out', '--ubo', '--nbo',
                          dest="unbuffered_out_p", default=False,
+                         action="store_true")
+
+    oparser.add_argument("--write-protect", "--ro", "--wp",
+                         dest="write_protect_p", default=False,
                          action="store_true")
     
     # tee(1) compatibility.

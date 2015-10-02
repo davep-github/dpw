@@ -66,7 +66,7 @@ Out_of_tree_dbs = Out_of_tree_dbs.split()
 Database_locations.extend(Out_of_tree_dbs)
 
 Database_locations = [ loc for loc in Database_locations
-                       if opath.exists(loc) ]
+                       if opath.isfile(loc) ]
 
 # Want to search upward from cwd for a db.
 # Then want to search all other databases.
@@ -100,8 +100,13 @@ def main(argv):
     # we need to pass everything to global, verbatim. WHY?
     rgg.log_file.write("argv: %s\n" % \
                        dp_sequences.list_to_indented_string(argv))
-    if argv[1] == '-pr':
-        glob = subprocess.Popen(["global"] + argv[1:],
+    if argv[1] == '-pr' or argv[1] == '-rp':
+        arg = '-p'
+        # args = [arg] + argv[2:]
+        args = argv[1:]
+        # print "[arg] + argv[2:]>%s<" % (args,)
+        # sys.exit(99)
+        glob = subprocess.Popen(["global"] + args,
                                 stdout=subprocess.PIPE)
         for line in glob.stdout:
             if line[-1] == '\n':
@@ -161,6 +166,7 @@ def main(argv):
         rgg.log_file.write("output >>>>>>>>>>>>>>\n")
         for line in lines:
             print line
+        rgg.log_file.write(line + "\n")
         rgg.log_file.write("<<<<<<<<<<<<<< output\n")
         rc = 0
     else:

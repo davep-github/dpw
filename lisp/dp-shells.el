@@ -2752,7 +2752,7 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 ;; Aliased because, currently, they do the same thing.
 (defalias 'dp-gdb-buffer-completion-list 'dp-gdb-get-buffers)
 
-(defun dp-gdb-clear-dead-buffers ()
+(defun dp-gdb-clear-killed-buffer ()
   (interactive)
   ;; Get all living gdb buffers and make that the current list of gdb buffers.
   (setq dp-gdb-buffers 
@@ -2774,7 +2774,9 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
          (completion-list (dp-gdb-buffer-completion-list))
          (most-recent-buffer (dp-gdb-most-recent-buffer
                               :dead-or-alive-p t)))
-     (dp-gdb-clear-dead-buffers)
+     ;; WTF was this for?  It just ends up removing the current gdb buffer if
+     ;; you're in it when you type C-g.
+     ;;     (dp-gdb-clear-killed-buffer)
      (if (and use-most-recent-p
               (dp-buffer-process-live-p most-recent-buffer
                                         :default-p nil))
@@ -2921,12 +2923,12 @@ way.")
     (dp-add-to-history 'dp-gdb-buffer-history (buffer-name))
     ;; If we exit gdb directly, we'll be back in the shell we started and the
     ;; gdb-mode hooks will be gone.
-    (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-dead-buffers)
+    (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-killed-buffer)
     ;; XEmacs change: turn on gdb mode after setting up the proc filters
     ;; for the benefit of shell-font.el
     (gdb-mode)
     ;; gdb-mode, incredibly rudely, replaces this hook entirely.
-    (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-dead-buffers)
+    (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-killed-buffer)
     (set-process-filter (get-buffer-process buffer) 'dp-gdb-filter)
     (set-process-sentinel (get-buffer-process buffer) 'gdb-sentinel)
     (gdb-set-buffer)
@@ -3029,7 +3031,7 @@ ARG == 0    --> New `dp-gdb-naught' session."
         (gdb path corefile)
         (set-process-filter (get-buffer-process (current-buffer))
                             'dp-gdb-filter)))
-    (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-dead-buffers)
+    (add-local-hook 'kill-buffer-hook 'dp-gdb-clear-killed-buffer)
     (dp-add-or-update-alist 'dp-gdb-buffers (buffer-name)
                             (or corefile 'dp-gdb))
     (dp-add-to-history 'dp-gdb-buffer-history (buffer-name))
