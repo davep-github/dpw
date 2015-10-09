@@ -30,3 +30,4 @@ a.out
 *.log.bz2
 *.log.xz
 gmon.out
+NOTAG
