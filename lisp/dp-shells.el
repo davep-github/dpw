@@ -359,7 +359,7 @@ No regexps allowed. This will be processed by `regexp-opt'")
                                        "index-code"
                                        "nvrun ness"
                                        "xemacs")))
-                   '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(cia\\|stash\\|status\\|diff\\|stat\\)")
+                   '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(cia\\|st\\|diff\\)")
                    '("p4\\s-+\\(diff\\)")
                    '("index-code.*")
                    '("\\(.*/\\)\\(t_make\\|build_gpu_multiengine.*\\.pl\\)")

@@ -42,4 +42,6 @@
         dtd = difftool --tool=diffuse
         dte = difftool --tool=ec-diff
         hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+        dotgit = rev-parse --git-dir
+        gdir = rev-parse --git-dir
 	aliases = config --get-regexp ^alias\\.
