@@ -9,6 +9,7 @@ source eexec
 : ${mv_opts:="-i"}
 : ${ln_opts:=""}
 : ${ln_name_transform=""}
+: ${suffix=""}
 
 #e.g.# # Usage variable usage:
 Usage_args_info=" src dst"
@@ -24,7 +25,7 @@ Usage_details="-n -- Show what would happen but don't do it. [eexec]
          Used to move dot files to my dotfile [.rc] dir.
 "
 # Example of arg parsing.
-option_str="nvqp:rd"
+option_str="nvqp:rd:s:"
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -37,6 +38,7 @@ do
 
       # Program options.
       -p) shift; ln_name_transform=$1;;
+      -s) shift; suffix="${1}";;
       -r|-d) ln_name_transform='s/^(\.)(.*)$/\2/';;
       # Help!
       --help) Usage; exit 0;;
@@ -52,11 +54,12 @@ mv_one()
     local src="$1"; shift
     local dst="$1"; shift
     local link_name="$1"; shift
+    local suffix="${1}"; shift
     local sep="/"
 
     src=$(normpath "$src")
     dst=$(normpath "$dst")
-    link_name=$(normpath "$link_name")
+    link_name=$(normpath "$link_name")"${suffix}"
     realpath_src=$(realpath "$src")
     EExec_verbose_msg "realpath_src>$realpath_src<"
 
@@ -105,7 +108,7 @@ mv_one()
             *) echo 1>&2 "Exiting."; exit 1;;
         esac
     fi
-        
+
     # ln syntax: mv src link-name
     # ln syntax: mv src... dir
     # mv-ln .mozilla-crap /bfd3/davep   # will go into /bfd3/davep/.mozilla-crap
@@ -135,7 +138,7 @@ do
   else
       link_name="$src"
   fi
-      
-  mv_one "$src" "$dst" "$link_name"
+
+  mv_one "$src" "${dst}" "$link_name" "${suffix}"
 done
 
