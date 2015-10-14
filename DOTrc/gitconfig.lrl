@@ -32,6 +32,7 @@
         ldf = log --decorate=full -n 5
         ld = log --decorate -n 5
         log5 = log -n 5
+        l11 = log -n 11
         dfo = diff --name-only
         dfn = diff --name-only
         dno = diff --name-only
@@ -40,4 +41,5 @@
         dtm = difftool --tool=meld
         dtd = difftool --tool=diffuse
         dte = difftool --tool=ec-diff
+        hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 	aliases = config --get-regexp ^alias\\.

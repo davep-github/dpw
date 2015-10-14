@@ -1,0 +1,68 @@
+#!/usr/bin/env perl
+
+$to_stdout = 0;
+$debug = 0;
+
+if ($ARGV[0] =~ /-o/) {
+  $to_stdout = 0;
+  shift(@ARGV);
+}
+$max_matches = 0;
+
+$first = shift(@ARGV);
+$second = shift(@ARGV);
+$max_matches = shift(@ARGV);
+printf("max_matches>$max_matches<\n");
+$till_eof = 0;
+
+print "f>$first<\n";
+print "s>$second<\n";
+$state = "find-opening-regexp";
+$num = 0;
+$base = "out";
+$sep = "";
+$invert_match_sense = 0;
+if (!$max_matches) {
+  $max_matches = 0;
+}
+
+$till_eof = 1 if ($second eq '$^' || $second eq '.*');
+
+
+$HANDLE_EOF_FLAG = "handle till-eof flag";
+
+$old_state = "perl bites";
+
+while (<>) {
+  chomp;
+  if ($debug && !($old_state eq $state)) {
+#    print STDERR "state $state>$_<\n" if ($debug);
+    $old_state = $state;
+  }
+  if ($state eq "find-opening-regexp") {
+    if (/$first/o) {
+      print STDERR "-first>$_<\n" if ($debug);
+      $state = $HANDLE_EOF_FLAG;
+      next;
+    }
+    print "$_\n";
+    print STDERR "+>$_<\n" if ($debug);
+    next;
+  }
+  if ($state eq $HANDLE_EOF_FLAG) {
+    #print $OUT "s1.0: $_<\n";
+    if ($till_eof) {
+      next
+    }
+    $state = "find-closing-regexp";
+  }
+  if ($state eq "find-closing-regexp") {
+    if (/$second/o) {
+      $state = "find-opening-regexp";
+      print STDERR "-second>$_<\n" if ($debug);
+      next;
+    }
+    print STDERR "->$_<\n" if ($debug);
+
+  }
+}
