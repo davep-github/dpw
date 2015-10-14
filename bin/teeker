@@ -52,7 +52,7 @@ DEFAULT_ERROR_INDICATOR = "!"
 DEFAULT_EGREP_PREFIX = DEFAULT_ERROR_INDICATOR * 4
 DEFAULT_EGREP_SUFFIX = DEFAULT_ERROR_INDICATOR * 4
 
-DEFAULT_XGREP_PREFIX = "OMFG!!!"
+DEFAULT_XGREP_PREFIX = "OMFG!!! XGREP:"
 DEFAULT_XGREP_SUFFIX = ""
 
 DEFAULT_MATCH_INDICATOR = "+"
@@ -927,13 +927,12 @@ Split line into chars and feed to ticker.""")
                          dest="match_summary_p", default=True,
                          action="store_false",
                          help="Don't show all grep matches at end of run.")
+    oparser.add_argument("--buffered-logs", "--buf", '--bl',
+                         dest="unbuffered_logs_p", default=True,
+                         action="store_false")
     oparser.add_argument("--unbuffered-logs",
                          '--nb-logs', '--ub-logs', '--ubl', '--nbl',
-                         dest="unbuffered_logs_p", default=False,
-                         action="store_true")
-    oparser.add_argument("--unbuffered-out",
-                         '--nb-out', '--ub-out', '--ubo', '--nbo',
-                         dest="unbuffered_out_p", default=False,
+                         dest="unbuffered_logs_p", default=True,
                          action="store_true")
 
     oparser.add_argument("--write-protect", "--ro", "--wp",

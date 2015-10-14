@@ -91,6 +91,8 @@
     "^/home/davep/work/dpu/external/build/snort-2.9.7.3"
     "^/home/davep/work/dpu/external/kernel/linux-3.10.0-229.1.2.el7"
     "^/home/davep/tmp/testdriver"
+    ;; I've renamed this file and don't want to accidentally edit it.
+    "^/home/davep/work/dpu/hw/dpu/testdriver/dpu-context.[ch]"
     ))
  t                                      ; Should the list be cleared first?
 )

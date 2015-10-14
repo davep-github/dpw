@@ -1,0 +1,12 @@
+# -*-Shell-script-*-
+###
+### lrl specific rc commands.
+###
+
+ulimit -c unlimited
+
+[ -d "$HOME/work/WORK" ] || {
+    sudo mount -v -t nfs kiwi:/home/davep/work $HOME/work -overs=3
+}
+
+true
