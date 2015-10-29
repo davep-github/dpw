@@ -10,3 +10,5 @@ set shiftwidth=8
 set noexpandtab
 colorscheme elflord
 syntax off
+set nohlsearch
+set t_Co=0
