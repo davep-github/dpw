@@ -228,6 +228,12 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
       </action>
     </keybind>
 
+    <keybind key="W-c">
+      <action name="Execute">
+        <command>wmctrl -a "galculator"</command>
+      </action>
+    </keybind>
+
     <keybind key="W-Down">
       <action name="Iconify"/>
     </keybind>
@@ -285,9 +291,11 @@ COMMENTED OUT -->
       </action>
     </keybind>
 
+<!-- COMMENTED OUT: What was it for?
     <keybind key="W-c">
       <action name="Execute"><command>wmctrl -a "::current"</command>
     </action></keybind>
+COMMENTED OUT -->
 
     <keybind key="XF86WWW">
       <action name="Execute">

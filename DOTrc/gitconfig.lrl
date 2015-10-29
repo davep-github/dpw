@@ -9,8 +9,24 @@
 [color]
         ui = auto
 
+[merge]
+	keepBackup = true;
+	tool = p4merge
+
+[mergetool "p4merge"]
+	cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+	keepTemporaries = false
+	trustExitCode = false
+	keepBackup = true
+
+[difftool "p4diff"]
+	cmd = p4diff.git $LOCAL $REMOTE
+
 [difftool "ec-diff"]
 	cmd = ec-diff $LOCAL $REMOTE
+
+[difftool "ec-merge"]
+	cmd = ec-merge $LOCAL $REMOTE
 
 [difftool "meld"]
 	cmd = meld $LOCAL $REMOTE
@@ -41,6 +57,9 @@
         dtm = difftool --tool=meld
         dtd = difftool --tool=diffuse
         dte = difftool --tool=ec-diff
+        dtem = difftool --tool=ec-merge
+        dtp4v = difftool --tool=p4diff
+        dtp4 = difftool --tool=p4diff
         hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         dotgit = rev-parse --git-dir
         gdir = rev-parse --git-dir

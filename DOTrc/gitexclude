@@ -4,7 +4,9 @@
 # exclude patterns (uncomment them if you want to use them):
 *.[oai]
 *.so
-*.core
+# Try to avoid unfortunate collisions.
+[0-9][0-9][0-9]*.core
+core.[0-9][0-9][0-9]*
 *~
 *.py[co]
 *.bak
