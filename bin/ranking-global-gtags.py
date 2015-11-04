@@ -7,7 +7,8 @@ import ranking_global_gtags_lib
 rgg = ranking_global_gtags_lib
 #rgg.log_file = sys.stderr
 rgg_log_file_name = os.environ.get("rgg_log_file_name", None)
-rgg_log_file_name = "bubba"
+#rgg_log_file_name = "bubba"
+rgg_log_file_name = None
 if rgg_log_file_name:
     if rgg_log_file_name == '--err':
         rgg.log_file = sys.stderr
