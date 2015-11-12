@@ -44,6 +44,7 @@
         cob = checkout -b
         newbr = checkout -b
 	ci = commit
+        cia = commit -a
 	st = status
         ldf = log --decorate=full -n 5
         ld = log --decorate -n 5
