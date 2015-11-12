@@ -5,7 +5,8 @@
 
 ulimit -c unlimited
 
-[ -d "$HOME/work/WORK" ] || {
+
+[ -e "$HOME/work/HOST/kiwi" ] || {
     sudo mount -v -t nfs kiwi:/home/davep/work $HOME/work -overs=3
 }
 
