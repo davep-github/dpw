@@ -92,4 +92,7 @@ regexp="$regexp_prefix$last_arg"
 
 abs_lists=$(absify ${deb_pkg_dir} ${lists})
 
-$grepper $grepper_dash_n $args "$regexp" $abs_lists /dev/null
+#$grepper $grepper_dash_n $args "$regexp" $abs_lists /dev/null
+# D'OH!
+# but I think this will only search things that are "officially" installed?
+apt-cache search "$@"

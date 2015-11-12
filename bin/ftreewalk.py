@@ -61,6 +61,7 @@ DEFAULT_EXCLUDE_DIR_REGEXPS = [
     "\.4D$",
     # My hidey holes
     "^(.*-HIDE|.*-IGNORE|HIDE|HIDE-.*IGNORE|IGNORE-.*|SKIP)$",
+    "^(JUNK|KEEP|TMP|[A-Z]+--|NOTAG)$",
     # Junky stuff
     "^(.*-junk|junk|junk-.*|,.*|te?mp|te?mp-.*|TE?MP|TE?MP-.*)$",
     # Dev/learning/experimental. Often will be used to figure things out

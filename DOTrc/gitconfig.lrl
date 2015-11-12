@@ -54,13 +54,23 @@
         dno = diff --name-only
         mnc = merge --no-commit
         mffo = merge --ff-only --no-commit
+        dtmeld = difftool --tool=meld
         dtm = difftool --tool=meld
+        dtdiffuse = difftool --tool=diffuse
         dtd = difftool --tool=diffuse
+        dtecdiff = difftool --tool=ec-diff
         dte = difftool --tool=ec-diff
+        dtec = difftool --tool=ec-diff
+        dtecmerge = difftool --tool=ec-merge
         dtem = difftool --tool=ec-merge
+# Graphical diff tool de employer
+        dtgraphical = difftool --tool=meld
+        dtg = difftool --tool=meld
+
         dtp4v = difftool --tool=p4diff
         dtp4 = difftool --tool=p4diff
         hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         dotgit = rev-parse --git-dir
         gdir = rev-parse --git-dir
 	aliases = config --get-regexp ^alias\\.
+	undo-commit = reset --soft HEAD^
