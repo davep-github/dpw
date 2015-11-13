@@ -54,6 +54,7 @@
         dfn = diff --name-only
         dno = diff --name-only
         mnc = merge --no-commit
+        pffo = pull --ff-only --no-commit
         mffo = merge --ff-only --no-commit
         dtmeld = difftool --tool=meld
         dtm = difftool --tool=meld
@@ -64,7 +65,7 @@
         dtec = difftool --tool=ec-diff
         dtecmerge = difftool --tool=ec-merge
         dtem = difftool --tool=ec-merge
-# Graphical diff tool de employer
+# Graphical diff tool employer/environment de jure
         dtgraphical = difftool --tool=meld
         dtg = difftool --tool=meld
 
