@@ -622,6 +622,13 @@ class Nop_t(object):
         return None
 
 ########################################################################
+class Nop_zero_t(object):
+    def __init__(self):
+        pass
+    def __call__(self, *args, **keywords):
+        return 0
+
+########################################################################
 #
 # Some simple network translations.
 #
