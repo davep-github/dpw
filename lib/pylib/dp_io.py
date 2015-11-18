@@ -57,8 +57,8 @@ verbose_level_stack = []
 
 # Motivating idea: add timestamp to prints
 ## @todo XXX Make these lists and apply them in order.
-global_pre_write = dp_utils.Nop_t()
-global_post_write = dp_utils.Nop_t()
+global_pre_write = dp_utils.Nop_zero_t()
+global_post_write = dp_utils.Nop_zero_t()
 
 def push_level(stack, gettor, new_level, settor):
     """Do pushing and setting of the new level here so we can more easily
@@ -151,24 +151,27 @@ def lprint(files, leader, s, pre_write=None, post_write=None):
     s = leader + s
     pre_write = pre_write or global_pre_write
     post_write = post_write or global_post_write
+    llen = 0
     for file in files:
         if pre_write:
-            pre_write()
+            llen += pre_write()
         file.write(s)
+        llen += len(s)
         if post_write:
-            post_write()
+            llen += post_write()
         file.flush()
+    return llen / len(files)
 
 ###############################################################
 def lprintf(files, leader, fmt, *args):
     """print leader + s to each file in <files> flushing each file."""
     fmt = fmt_args(fmt, *args)
-    lprint(files, leader, fmt)
+    return lprint(files, leader, fmt)
 
 ###############################################################
 def clprintf(level, files, leader, fmt, *args):
     if verbose_p(level):
-        lprintf(files, leader, fmt, *args)
+        return lprintf(files, leader, fmt, *args)
 
 ###############################################################
 def sprintf(fmt, *args):
@@ -182,7 +185,7 @@ def sprintf(fmt, *args):
 def eprintf(fmt, *args):
     """eprintf - print to stderr or user specified error files."""
     if f_eprint:
-        lprintf(v_eprint_files, eprint_leader, fmt, *args)
+        return lprintf(v_eprint_files, eprint_leader, fmt, *args)
 
 ###############################################################
 def printf(fmt, *args):
@@ -194,7 +197,7 @@ def printf(fmt, *args):
         fmt = args[0]
         args = args[1:]
     if f_print:
-        lprintf(v_print_files, print_leader, fmt, *args)
+        return lprintf(v_print_files, print_leader, fmt, *args)
 
 # visible printf for easy location.  Used for very temporary prints.
 PRINTF = printf
@@ -205,13 +208,13 @@ def fprintf(ofiles, fmt, *args):
     if f_print:
         if args:
             fmt = fmt % args
-        lprint(ofiles, print_leader, fmt)
+        return lprint(ofiles, print_leader, fmt)
 
 ###############################################################
 def do_debug(fmt, leader, args, **kw_args):
     if f_debug:
         fmt = fmt_args(fmt, *args)
-        lprint(v_debug_files, leader+debug_leader_sep, fmt)
+        return lprint(v_debug_files, leader+debug_leader_sep, fmt)
 
 def do_ldebug(level, fmt, leader, *args):
     if (debug_level >= level):
@@ -251,7 +254,7 @@ def tracef (fmt, *args):
     #cdebug (True, fmt, *args)
     if args:
         fmt = fmt % args
-    lprint(v_tprint_files, tprint_leader, fmt)
+    return lprint(v_tprint_files, tprint_leader, fmt)
 tprintf = tracef
 
 ###############################################################
@@ -259,7 +262,7 @@ def ctracef(level, fmt, *args):
     """tracef: conditional trace.
     Print messages depending on verbosity level."""
     #print "vc:level>%s<, fmt>%s<, args>%s<" % (level, fmt, args)
-    clprintf(level, v_vprint_files, vprint_leader, fmt, *args)
+    return clprintf(level, v_vprint_files, vprint_leader, fmt, *args)
 ctprintf = ctracef
 
 ###############################################################
@@ -358,7 +361,7 @@ def vcprintf(level, fmt, *args):
     """vcprintf: Verbose, conditional printf.
     Print messages depending on verbosity level."""
     #print "vc:level>%s<, fmt>%s<, args>%s<" % (level, fmt, args)
-    clprintf(level, v_vprint_files, vprint_leader, fmt, *args)
+    return clprintf(level, v_vprint_files, vprint_leader, fmt, *args)
 
 ###############################################################
 def vprintf(fmt, *args):
@@ -458,12 +461,12 @@ def eYOPP():
 def eYOPPf(fmt, *args):
     if args:
         fmt = fmt % args
-    lprint(v_eprint_files, 'eYOPPf: ', fmt)
+    return lprint(v_eprint_files, 'eYOPPf: ', fmt)
 
 def YOPPf(fmt, *args):
     if args:
         fmt = fmt % args
-    lprint(v_print_files, 'YOPPf: ', fmt)
+    return lprint(v_print_files, 'YOPPf: ', fmt)
 
 ###############################################################
 def vprint_off():
