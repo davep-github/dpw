@@ -734,11 +734,17 @@ if __name__ == "__main__":
                          dest="increment", type=eval_with_units,
                          action=Ctor_arg_action,
                          help="Increment")
-    oparser.add_argument("-m", "--max-output-line-len",
+    oparser.add_argument("-m", "--max-output-units-before-newline",
                          dest="max_output_units_before_newline",
                          type=eval_with_units,
                          action=Ctor_arg_action,
                          help="Maximum ticks per line")
+    oparser.add_argument("--max-output-line-len", "--max-line-len", "--moll",
+                         "--mll",
+                         dest="max_output_line_len_before_newline",
+                         type=eval_with_units,
+                         action=Ctor_arg_action,
+                         help="Maximum output line len before printing a newline.  Especially nice for char tickers.")
     oparser.add_argument("-M", "--max-output",
                          dest="max_output_units_before_exit",
                          type=eval_with_units,
@@ -1057,6 +1063,8 @@ Split line into chars and feed to ticker.""")
         else:
             Ctor_arg_dict["init_string"] = "Counting lines: "
             Ctor_arg_dict["unit_name"] = 'line'
+    if Ctor_arg_dict.get("max_output_line_len_before_newline", False) == 0:
+        Ctor_arg_dict["max_output_line_len_before_newline"] = os.environ.get("COLUMNS", 80)
 
     if pipe_mode_p:
         Ctor_arg_dict["ostream"] = sys.stderr

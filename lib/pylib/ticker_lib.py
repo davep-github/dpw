@@ -8,15 +8,17 @@ def Ticker_printf(ticker, fmt, *args, **kwargs):
     if not ticker_ostream:
         ticker_ostream = ticker.ostream
     #print "ticker_ostream: {}".format(ticker_ostream)
+    llen = 0
     if kwargs.get("just_flush_p"):
         #print "just flushing..."
         # Seems to do nothing.
         ticker_ostream.flush()
         #print "...just flushed."
-        return
-    fprintf(ticker_ostream, fmt, *args)
-    if kwargs.get("flush_p"):
-        ticker_ostream.flush()
+    else:
+        llen = fprintf(ticker_ostream, fmt, *args)
+        if kwargs.get("flush_p"):
+            ticker_ostream.flush()
+    return llen
 
 
 time_time = time.time
@@ -28,6 +30,7 @@ class Ticker_t(object):
                  printor=Ticker_printf,
                  tick_show_units_p=False,
                  max_output_units_before_newline=False,
+                 max_output_line_len_before_newline=False,
                  max_output_units_before_exit=False,
                  timestamp_p=False,
                  elapsed_timestamp_p=False,
@@ -44,6 +47,7 @@ class Ticker_t(object):
         self.grand_total_p = grand_total_p
         self.tick_show_units_p = tick_show_units_p
         self.max_output_units_before_newline = max_output_units_before_newline
+        self.max_output_line_len_before_newline = max_output_line_len_before_newline
         self.max_output_units_before_exit = max_output_units_before_exit
         self.count_at_last_newline = 0
         self.timestamp_p = timestamp_p
@@ -51,21 +55,33 @@ class Ticker_t(object):
         self.timestamp_separator_string = timestamp_separator_string
         self.time0 = int(time_time())
         self.any_timestamp_p = timestamp_p or elapsed_timestamp_p
+        self.output_line_len = 0
+        # Keep last as it will use variables that need to have already been
+        # defined.
         self.reset_counter()
 
     def twiddling_p(self):
         return False
 
+    def do_printor(self, *args, **kwargs):
+        llen = self.printor(*args, **kwargs)
+        # print >>sys.stderr, "do_printor: llen: %d" % (llen,)
+        self.output_line_len += llen
+        # print >>sys.stderr, "do_printor: self.output_line_len: %d" % (self.output_line_len,)
+
     def reset_counter(self):
         self.counter = self.init_count
         if self.init_string:
-            self.printor(self, "%s", self.init_string)
+            self.do_printor(self, "%s", self.init_string)
+            # print >>sys.stderr, "reset_counter: self.output_line_len: %d" % (self.output_line_len, )
         self.sep_string = ""
         self.num_ticks = 0
 
     def flush(self):
         #print "enter ticker.flush()"
-        self.printor(self, None, just_flush_p=True)
+        self.do_printor(self, None, just_flush_p=True)
+        # print >>sys.stderr, "flush: self.output_line_len: %d" % (self.output_line_len,)
+ #       cause_a_traceback += 1
         #print "exit: ticker.flush()"
 
     def make_timestamp(self):
@@ -90,9 +106,9 @@ class Ticker_t(object):
         ts_string = ""
         if self.any_timestamp_p:
             ts_string = self.make_timestamp()
-
-        self.printor(self, "%s%s%s%s", self.sep_string, tick_prefix,
-                     ts_string, tick)
+        output_str = "%s%s%s%s" % (self.sep_string, tick_prefix,
+                                   ts_string, tick)
+        self.do_printor(self, "%s", output_str)
         self.sep_string = self.comma
 
     def fini(self, force_grand_total_p=False, reason=""):
@@ -106,40 +122,59 @@ class Ticker_t(object):
     def tick_not_ready(self):
         pass
 
+    def tick_ready(self, tick, tick_prefix, forced_p=False):
+        self.make_tick(tick=tick, call_tick=self.counter,
+                       tick_prefix=tick_prefix)
+        if not forced_p:
+            self.num_ticks += 1
+
     def __call__(self, reset_counter=False, set_n=False,
-                 increment=None, tick=None, tick_prefix="", ostream=None):
+                 increment=None, tick=None, tick_prefix="",
+                 force_tick_p=False, ostream=None):
+        if force_tick_p:
+            self.tick_ready(tick=tick, tick_prefix=tick_prefix,
+                            forced_p=force_tick_p)
+            return
         if reset_counter is not False:
             self.reset_counter()
         if set_n is not False:
             self.tick_interval = set_n
         if self.tick_interval is not None:
-            if self.counter % self.tick_interval == 0:
-                self.make_tick(tick=tick, call_tick=self.counter,
-                               tick_prefix=tick_prefix)
-                self.num_ticks += 1
+            if (self.counter % self.tick_interval) == 0:
+                self.tick_ready(tick=tick, tick_prefix=tick_prefix)
             else:
                 self.tick_not_ready()
             self.counter += increment or self.increment
         if ((self.max_output_units_before_exit is not False)
-            and self.counter >= self.max_output_units_before_exit):
+            and (self.counter >= self.max_output_units_before_exit)):
             self.fini(reason="%s limit reached[%d], exiting\n" % (
                 self.unit_name,
                 int(self.max_output_units_before_exit)))
             # Indicate successful failure.
             sys.exit(2)
         if self.max_output_units_before_newline is not False:
-            count_since_last_newline = self.num_ticks - self.count_at_last_newline
+            count_since_last_newline = (self.num_ticks
+                                        - self.count_at_last_newline)
 #            print "num_ticks: %s, count: %s, max_output_units_before_newline: %s\n" % (
 #                self.num_ticks, self.count, self.max_output_units_before_newline)
             if count_since_last_newline >= self.max_output_units_before_newline:
                 self.sep_string = "\n"
                 self.count_at_last_newline = self.num_ticks
+        if ((self.max_output_line_len_before_newline is not False)
+            and (self.output_line_len
+                 >= self.max_output_line_len_before_newline)):
+            # print >>sys.stderr, "__call__(): self.output_line_len: %d" % (self.output_line_len)
+            self.sep_string = "\n"
+            # The newline gets charged to the next line, so compensate for
+            # that.
+            self.output_line_len = -len(self.sep_string)
 
 class Char_ticker_t(Ticker_t):
     def __init__(self, tick_interval, tick_char='.', increment=1,
                  init_string="", comma="", init_count=0, ostream=sys.stdout,
                  unit_name="line",
                  max_output_units_before_newline=False,
+                 max_output_line_len_before_newline=False,
                  max_output_units_before_exit=False,
                  tick_show_units_p=False,
                  printor=Ticker_printf):
@@ -149,6 +184,7 @@ class Char_ticker_t(Ticker_t):
             init_string=init_string,
             comma=comma,
             max_output_units_before_newline=max_output_units_before_newline,
+            max_output_line_len_before_newline=max_output_line_len_before_newline,
             max_output_units_before_exit=max_output_units_before_exit,
             init_count=init_count,
             ostream=ostream,
