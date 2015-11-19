@@ -113,14 +113,24 @@ ${EZEC} mkdir log/auto-rotate-c5-50K
 ${EZEC} mkdir -p "log/auto-rotate-c10-50K"
 ${EZEC} mkdir ipc
 ${EZEC} mkdir tmp
-${EZEC} mkdir -p "droppings/editors/xemacs/xebacs.d"
-${EZEC} mkdir -p "droppings/editors/xemacs/auto-saves.d"
-${EZEC} mkdir -p "droppings/editors/xemacs/session-auto-saves.d"
-${EZEC} mkdir -p "droppings/editors/xemacs/xebacs.d"
-${EZEC} mkdir -p "droppings/editors/xemacs/tramp.d/auto-saves.d"
-${EZEC} mkdir -p "droppings/persist/bash-history"
-${EZEC} mkdir -p "droppings/persist/emacs-history"
-${EZEC} mkdir -p "droppings/persist/gdb_history"
+
+
+droppings="droppings/bash-history \
+droppings/editors/xemacs \
+droppings/editors/xemacs/session-auto-saves.d \
+droppings/editors/xemacs/tramp.d \
+droppings/editors/xemacs/tramp.d/auto-saves.d \
+droppings/editors/xemacs/xebacs.d \
+droppings/editors/xemacs/ephemeral.d \
+droppings/editors/xemacs/auto-saves.d \
+droppings/persist/gdb_history \
+droppings/persist/emacs-history \
+droppings/persist/bash-history"
+
+for dropping in ${droppings}
+do
+  ${EZEC} mkdir -p "${dropping}"
+done
 
 echo 'Other new Linux installation actions:
 1) samba: I need to find the old instructions for this.
