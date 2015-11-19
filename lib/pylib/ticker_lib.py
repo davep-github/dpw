@@ -106,6 +106,7 @@ class Ticker_t(object):
         ts_string = ""
         if self.any_timestamp_p:
             ts_string = self.make_timestamp()
+        # Line breaks (newlines) happen here.
         output_str = "%s%s%s%s" % (self.sep_string, tick_prefix,
                                    ts_string, tick)
         self.do_printor(self, "%s", output_str)

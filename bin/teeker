@@ -55,23 +55,23 @@ DEFAULT_EGREP_SUFFIX = DEFAULT_ERROR_INDICATOR * 4
 DEFAULT_XGREP_PREFIX = "OMFG!!! XGREP:"
 DEFAULT_XGREP_SUFFIX = ""
 
-DEFAULT_MATCH_INDICATOR = "+"
+DEFAULT_MATCH_INDICATOR = "="
 DEFAULT_MATCH_PREFIX = DEFAULT_MATCH_INDICATOR * 3
 DEFAULT_MATCH_SUFFIX = DEFAULT_MATCH_INDICATOR * 3
+
+DEFAULT_HIGHLIGHT_INDICATOR = "+"
+DEFAULT_MATCH_PREFIX = DEFAULT_HIGHLIGHT_INDICATOR * 3
+DEFAULT_MATCH_SUFFIX = DEFAULT_HIGHLIGHT_INDICATOR * 3
 
 DEFAULT_WARNING_INDICATOR = "*"
 DEFAULT_WARNING_PREFIX = DEFAULT_WARNING_INDICATOR * 3
 DEFAULT_WARNING_SUFFIX = DEFAULT_WARNING_INDICATOR * 3
 
-DEFAULT_INDICATOR_SEPARATOR = "|"
+DEFAULT_MATCH_INDICATOR_TERMINATOR = "|"
 DEFAULT_MAX_ERROR_MATCHES = 0
 DEFAULT_LINES_AFTER = 0                 # None
 DEFAULT_FLUSH_BYTES = 0
 
-REGEXP_LIST_ORDER = ("grep", "hgrep", "wgrep", "egrep", "xgrep")
-#tick_counter_count_format = "%8d"
-
-# '{:.>30}'.format(9)
 TICKER_COUNT_WIDTH = 8
 TICKER_COUNT_FILL_CHAR = "."
 TICKER_COUNT_JUSTIFICATION = ">"
@@ -81,6 +81,8 @@ TICKER_COUNT_FORMAT = ("{:"
                        + str(TICKER_COUNT_WIDTH)
                        + "}")
 
+REGEXP_LIST_ORDER = ("grep", "hgrep", "wgrep", "egrep", "xgrep")
+
 All_output_streams = []
 
 # The timestamp is generated inside the ticker object.
@@ -89,22 +91,24 @@ timestamp_width = len("2013-05-16T18.37.54")
 
 CTOR = CTOR_t()
 
-def make_tick_prefix():
+def make_sample_tick_prefix():
     if len(Match_types):
         match_indicators = Match_types.values()
         match_indicators.sort()
-        return "".join(match_indicators) + DEFAULT_INDICATOR_SEPARATOR
+        return "".join(match_indicators) + DEFAULT_MATCH_INDICATOR_TERMINATOR
     return ""
 
-def make_sample_tick(num, width=8, fill_char=".",
-                     prefix="", suffix=""):
-    num_string = "{}".format(num)
-    rem = width - len(num_string)
-    if (rem > 0):
-        fill = fill_char * rem
+def make_sample_tick(sample_lines_tick_prefix,
+                     input_line):
+    # @todo XXX allow a format to be used (dictionary type)
+    if sample_lines_tick_prefix is not False:
+        tick = TICKER_COUNT_FORMAT.format(ticker.counter)
+        tick_prefix = make_sample_tick_prefix()
     else:
-        fill = ""
-    return prefix + fill + num_string + suffix
+        tick = ""
+    tick += (sample_lines_tick_prefix or "") + input_line
+    tick_prefix = make_sample_tick_prefix()
+    return tick, tick_prefix
     
 def display_match(ostream, line, line_number, prefix="", suffix="",
                   timestamp_p=False):
@@ -129,7 +133,7 @@ def display_match(ostream, line, line_number, prefix="", suffix="",
 class Grep_list_t(dp_object):
     def __init__(self,
                  regexps,
-                 indicator_char="",
+                 indicator_char=DEFAULT_MATCH_INDICATOR,
                  match_prefix=None,
                  timestamp_p=False,
                  match_suffix=None,
@@ -183,7 +187,7 @@ class Grep_list_t(dp_object):
         return False
 
     def match_handler(self, match_object, line, line_number, ostream=None,
-                      timestamp_p=None):
+                      timestamp_p=None, force_match_p=False):
         ret = True
         Match_types[self.d_description] = self.d_indicator_char
         self.d_matching_lines.append((line, line_number))
@@ -194,9 +198,11 @@ class Grep_list_t(dp_object):
         if self.d_match_action:
             self.print_action(dp_io.bq("{} {}".format(self.d_match_action,
                                                       line)))
-        if ((self.d_max_matches is not None)
-            and
-            (self.d_num_matches > self.d_max_matches)):
+        if (((self.d_max_matches is not None)
+             and
+             (self.d_num_matches > self.d_max_matches))
+            or
+            force_match_p):
             ret = self.max_matches_handler(line, line_number)
         return ret
 
@@ -262,7 +268,7 @@ class Grep_list_t(dp_object):
 class Hgrep_list_t(Grep_list_t):
     def __init__(self,
                  regexps,
-                 indicator_char=DEFAULT_MATCH_INDICATOR,
+                 indicator_char=DEFAULT_HIGHLIGHT_INDICATOR,
                  match_prefix=None,
                  timestamp_p=False,
                  match_suffix=None,
@@ -733,12 +739,12 @@ if __name__ == "__main__":
     oparser.add_argument("-I", "--increment",
                          dest="increment", type=eval_with_units,
                          action=Ctor_arg_action,
-                         help="Increment")
+                         help="Number of input units before tick.")
     oparser.add_argument("-m", "--max-output-units-before-newline",
                          dest="max_output_units_before_newline",
                          type=eval_with_units,
                          action=Ctor_arg_action,
-                         help="Maximum ticks per line")
+                         help="Maximum ticks per line.")
     oparser.add_argument("--max-output-line-len", "--max-line-len", "--moll",
                          "--mll",
                          dest="max_output_line_len_before_newline",
@@ -767,12 +773,12 @@ if __name__ == "__main__":
                          dest="init_count",
                          type=eval_with_units,
                          action=Ctor_arg_action,
-                         help="Initial count [number of units]")
+                         help="Initial count [number of units].")
     oparser.add_argument("-c", "--tick-char",
                          dest="tick_char", default=None,
                          action=Ctor_arg_action_char,
                          help="""Tick character. Mutually exclusive with twiddle.
-Implies Char_ticker_t""")
+Implies Char_ticker_t.""")
     oparser.add_argument("-d", "--dots",
                          dest="tick_char",
                          nargs=0,
@@ -791,7 +797,7 @@ Implies Char_ticker_t""")
     oparser.add_argument("-t", "--twiddle",
                          dest="twiddle_chars", type=int,
                          action=Ctor_arg_action_twiddle,
-                         help="Set twiddle chars. Implies Twiddle_ticker_t")
+                         help="Set twiddle chars. Implies Twiddle_ticker_t.")
     oparser.add_argument("-G", "--print-grand-total", "--grand-total",
                          dest="grand_total_p", default=True,
                          nargs=0,
@@ -823,7 +829,7 @@ Split line into chars and feed to ticker.""")
     oparser.add_argument("--tgen-errors",
                          default=None, const="Assertion|call stack|stack_trace",
                          action="store_const",
-                         help="Convenience option for finding common testgen errors. This should be modified to make it more flexible and less nvidia specific. Maybe an environment variable  --log-errors-regexp")
+                         help="Convenience option for finding common testgen errors. This should be modified to make it more flexible and less nvidia specific. Maybe an environment variable  --log-errors-regexp.")
     oparser.add_argument("--grep-errors", "--errors", "--error-regexps",
                          "--ere", "--egrep", "--err-grep",
                          dest="error_regexp_patterns",
@@ -847,37 +853,33 @@ Split line into chars and feed to ticker.""")
                          dest="warning_regexp_patterns", default=[],
                          action="append",
                          help='Grep for these warning patterns and highlight as a warning.')
+    action_help = "Print `ACTION` when there is a{}pattern match."
     oparser.add_argument("--grep-match-action", "--grep-hit-action",
                          dest="grep_match_action", default="",
                          type=str,
-                         help="Run this when there is a pattern match.")
+                         help=action_help.format(" "))
     oparser.add_argument("--hgrep-match-action", "--hgrep-hit-action",
                          dest="hgrep_match_action", default="",
                          type=str,
-                         help="Run this when there is a highlighted pattern match.")
+                         help=action_help.format(" highlighted "))
     oparser.add_argument("--egrep-match-action", "--egrep-hit-action",
                          dest="egrep_match_action", default="",
                          type=str,
-                         help="Run this when there is an error pattern match.")
+                         help=action_help.format("n error "))
     oparser.add_argument("--xgrep-match-action", "--xgrep-hit-action",
                          dest="xgrep_match_action", default="",
                          type=str,
-                         help="Run this when there is a highlight pattern match.")
+                         help=action_help.format(" fatal error "))
     oparser.add_argument("--wgrep-match-action", "--wgrep-hit-action",
                          dest="wgrep_match_action", default="",
                          type=str,
-                         help="Run this when there is a warning pattern match.")
-    
-    oparser.add_argument("--any-grep-matche-action","--any-grep-hit-action",
-                         dest="any_grep_match_actions_p", default=False,
-                         action="store_true",
-                         help="Run the grep hit action on any grep hits.")
+                         help=action_help.format(" warning "))
     oparser.add_argument("--project-log-errors",
                          default=None,
                          const=os.environ.get("TEEKER_PROJECT_LOG_ERROR_REGEXP",
                                               None),
                          action="store_const",
-                         help="Convenience option for finding common testgen errors. Perhaps change the value of this to an envvar to make it more flexible.  --log-errors-regexp")
+                         help="Convenience option for finding common testgen errors. Perhaps change the value of this to an envvar to make it more flexible.  --log-errors-regexp.")
     oparser.add_argument("--go", "--grep-ostream", "--grep-ofile", "--reo",
                          "--regexp-ostream", "--re-ostream", "--match-ofile",
                          dest="match_ostream",
@@ -944,7 +946,12 @@ Split line into chars and feed to ticker.""")
     oparser.add_argument("--write-protect", "--ro", "--wp",
                          dest="write_protect_p", default=False,
                          action="store_true")
-    
+
+    oparser.add_argument("--tick-on-match", "--tom",
+                         dest="tick_on_match", default=False,
+                         action="store_true",
+                         help="Do a tick operation when a match is detected.")
+
     # tee(1) compatibility.
     oparser.add_argument("-a", "--append",
                          dest="append_p", default=False,
@@ -1078,7 +1085,7 @@ Split line into chars and feed to ticker.""")
         tick_interval = None
         dp_io.printf("Tick interval is 0. Don't expect to see much.\n")
         if len(output_files) == 0:
-            dp_io.printf("  And doesn't make much sense w/o output files.\n")
+            dp_io.printf("  And it doesn't make much sense w/o output files.\n")
     else:
         # No ticking --> no samples.
         if app_args.sample_lines_tick_p:
@@ -1238,14 +1245,9 @@ Split line into chars and feed to ticker.""")
             tick_prefix = ""
             if app_args.sample_lines_tick_p:
                 # @todo XXX allow a format to be used (dictionary type)
-                tick_prefix = make_tick_prefix()
-                if app_args.sample_lines_tick_prefix is not False:
-                    #tick = tick_counter_count_format % (ticker.counter,)
-                    # very stupidtick = make_sample_tick(ticker.counter)
-                    tick = TICKER_COUNT_FORMAT.format(ticker.counter)
-                else:
-                    tick = ""
-                tick += sampled_line_prefix + input_line
+                tick, tick_prefix = make_sample_tick(
+                    app_args.sample_lines_tick_prefix,
+                    input_line)
             else:
                 # Let the ticker class do what it will.
                 tick = None
