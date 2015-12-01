@@ -106,6 +106,7 @@ ${DS_CONFIGURE} \
     --enable-clash-detection    \
     ${athena_opt}               \
     --enable-toolbars=no        \
+    --x-libraries=/usr/lib64 \
     --enable-pdump
 
 rc=$?

@@ -1,7 +1,0 @@
-230400    0 lrwxr-xr-x    1 davep            wheel                   7 Jun  1  2000 ./.xsession -> xinitrc
-230500    0 lrwxr-xr-x    1 davep            wheel                  22 Oct  6 16:52 ./.Xresources.baloo -> .Xresources.HOME_BOX_0
-230501    0 lrwxr-xr-x    1 davep            wheel                  22 Oct  6 16:52 ./.Xresources.h0000f806dfda -> .Xresources.HOME_BOX_0
-230502    0 lrwxr-xr-x    1 davep            wheel                  19 Oct  6 16:54 ./.Xmodmap.baloo -> .Xmodmap.HOME_BOX_0
-230503    0 lrwxr-xr-x    1 davep            wheel                  19 Oct  6 16:54 ./.Xmodmap.h0000f806dfda -> .Xmodmap.HOME_BOX_0
-230498    0 lrwxr-xr-x    1 davep            wheel                  20 Oct  6 16:50 ./.Xclients.h0000f806dfda -> .Xclients.HOME_BOX_0
-230499    0 lrwxr-xr-x    1 davep            wheel                  20 Oct  6 16:50 ./.Xclients.baloo -> .Xclients.HOME_BOX_0

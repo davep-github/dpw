@@ -2,6 +2,11 @@
 
 set -u
 
+# Use "real" symlinks on Windwoes/cygwin.
+# Set this unconditionally since it shouldn't hurt in a real environment.
+# NB this doesn't work in a git/bash since that is a minGW app, not cygwin.
+export CYGWIN="winsymlinks:nativestrict"
+
 EZEC=
 : ${repo:=dpw/dpw.git}
 : ${reporc:=${repo}/.rc}
@@ -113,7 +118,8 @@ ${EZEC} mkdir log/auto-rotate-c5-50K
 ${EZEC} mkdir -p "log/auto-rotate-c10-50K"
 ${EZEC} mkdir ipc
 ${EZEC} mkdir tmp
-
+${EZEC} mkdir .screen
+${EZEC} mkdir notes
 
 droppings="droppings/bash-history \
 droppings/editors/xemacs \

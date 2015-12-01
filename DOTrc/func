@@ -309,7 +309,7 @@ if inside_emacs_p; then
     
     make()
     {
-        /usr/bin/make "$@" |& ul -t dumb
+        /usr/bin/make "$@" 2>&1 | ul -t dumb
     }
 fi
 

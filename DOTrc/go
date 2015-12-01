@@ -1,6 +1,7 @@
 # ${HOME} is special in that it does not end with a /
 Ee|elm|			${HOME}/.elm/
 Ee|jobs|		${HOME}/jobs/
+Ee|ssh|			${HOME}/.ssh/
 Ee|pine|		${HOME}/pine/
 Ee|ppp|			${HOME}/.ppp/
 Ee|ulb|			/usr/local/bin/

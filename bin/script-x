@@ -108,14 +108,14 @@ DP_SCRIPT_X_echo_id=":"
 # For now, a hack to ignore inheritance is to always unset
 # DP_SCRIPT_X_DEBUG_INITIATOR before sourcing this file.
 #echo 1>&2 "0:DP_SCRIPT_X_DEBUG_INITIATOR_N>$DP_SCRIPT_X_DEBUG_INITIATOR_N<"
-if vunsetp "$DP_NO_DASH_X" ; then
+if [ -z "$DP_NO_DASH_X" ]; then
     if [ "${1-}" = "${DP_SCRIPT_X_DASH_X_STR}" ] \
          || [ -n "$DP_SCRIPT_X_DEBUG_INITIATOR_N" ]
     then
         # -xq means to only activate the other, quiet, debug features.
         # All this, simply for the following ~99% of the time.
         set -x
-        if vunsetp "$DP_SCRIPT_X_DEBUG_INITIATOR_N"; then
+        if [ -z "$DP_SCRIPT_X_DEBUG_INITIATOR_N" ]; then
             # We've just activated the -x stuff
             DP_SCRIPT_X_DEBUG_INITIATOR=()
             export DP_SCRIPT_X_DEBUG_INITIATOR_N="${#DP_SCRIPT_X_DEBUG_INITIATOR[@]}"

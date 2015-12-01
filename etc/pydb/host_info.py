@@ -313,57 +313,27 @@ e(
     ref=[home_family, OSDB['linux'], default]
 )
 
-NV_GEOMETRY = '-geometry 81x72-0+0'
-#
-# FAMILY entry for NVIDIA-LINUX
-nvidia_family = e(
-    kef='family',
-    dat={
-    'family': 'nvidia-linux',
-    'family_zone': 'nvidia',
-    'comment': 'My linux boxen at nVIDIA.',
-    'DTE': 'kde',
-    'main_macs_opts': '-eval (dp-main-rc+2w)',
-    'xem_opts': NV_GEOMETRY,
-    # This is OK, but O0{}[]() : no slashed 0. O & 0 are distinguishable.
-    #'xem_font': '''-*-Lucidatypewriter-medium-r-*-*-*-120-*-*-*-*-*-*''',
-    # May be less legible in the long run, but 0 is slashed.
-    'xem_font': '''-*-Fxd-medium-r-*-*-*-120-*-*-*-*-*-*''',
-    #'xem_font': '''-*-fixed-medium-r-*-*-*-140-*-*-*-*-iso8859-*''',
-    "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
-    "xem_font": '''-*-Fixed-medium-r-*-*-*-120-*-*-*-*-*-*''',
-    'work-zone': 'nvidia',
-    'xterm_bg': NVIDIA_BG_COLOR,
-    'xterm_fg': NVIDIA_FG_COLOR,
-    'xem_bg_color': 'gray80',
-
-
-    },
-    # These are searched in the order given.
-    ref=[OSDB['linux'], default]
-)
-
-LRL_XEM_GEOMETRY = '-geometry 81x70-0+0'
-LRL_BG_COLOR = 'rgb:24/00/68'
-LRL_FG_COLOR = 'white'
-lrl_family = e(
+AMD_XEM_GEOMETRY = '-geometry 81x70-0+0'
+AMD_BG_COLOR = 'rgb:24/00/68'
+AMD_FG_COLOR = 'white'
+amd_family = e(
     kef='family',
     dat={
     'host-default-pattern': '.*',
-    'family': 'lrl-linux',
-    'family_zone': 'lrl',
-    'comment': 'My linux boxen at lrl.',
-    'DTE': 'lxde',                      # sigh.
+    'family': 'amd-linux',
+    'family_zone': 'amd',
+    'comment': 'My linux boxen at amd.',
+    'DTE': 'kde',
     'main_macs_opts': '-eval (dp-main-rc+2w)',
-    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + LRL_XEM_GEOMETRY,
+    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + AMD_XEM_GEOMETRY,
     "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
     'xem_font': '',
     'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
-    'work-zone': 'lrl',
-    """xem-xft-font""": '''"Inconsolata-13"''',
+    'work-zone': 'amd',
+#    """xem-xft-font""": '''"Inconsolata-13"''',
     'xterm_bin': 'xterm',
-    'xterm_bg': LRL_BG_COLOR,
-    'xterm_fg': LRL_FG_COLOR,
+    'xterm_bg': AMD_BG_COLOR,
+    'xterm_fg': AMD_FG_COLOR,
     'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
     'xem_bg_color': NVIDIA_BG_COLOR,
     '''command-line-mailer''': '''mutt''',
@@ -372,64 +342,140 @@ lrl_family = e(
     ref=[OSDB['linux'], default]
 )
 
-
-LRL_AVOCADO_FG_COLOR = 'black'
-#LRL_AVOCADO_BG_COLOR = 'rgb:f0/ff/c0'
-LRL_AVOCADO_BG_COLOR = 'rgb:d9/de/97'
-
-e(
-    kef='host',
-    dat={
-    'host-pattern': 'avocado',
-    'family': 'lrl_family',
-    'comment': 'A work machine.',
-    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + LRL_XEM_GEOMETRY,
-    'xterm_bg': LRL_AVOCADO_BG_COLOR,
-    'xterm_fg': LRL_AVOCADO_FG_COLOR,
-    'xem_bg_color': LRL_AVOCADO_BG_COLOR,
-    },
-    ref=[lrl_family, OSDB['linux'], default]
-)
-
-LRL_MANGO_FG_COLOR = 'black'
-#FFE79E
-LRL_MANGO_BG_COLOR = 'rgb:ff/e7/9e'
+AMD_ATLR5N4_0680_FG_COLOR = 'black'
+##AMD_ATLR5N4_0680_BG_COLOR = 'rgb:d2/d0/b0'
+AMD_ATLR5N4_0680_BG_COLOR = 'lavender'
 
 e(
     kef='host',
     dat={
-    'host-pattern': 'mango',
-    'family': 'lrl_family',
+    'host-pattern': 'atlr5n4-0680',
+    'family': 'amd_family',
     'comment': 'A work machine.',
-    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + LRL_XEM_GEOMETRY,
-    'xterm_bg': LRL_MANGO_BG_COLOR,
-    'xterm_fg': LRL_MANGO_FG_COLOR,
-    'xem_bg_color': LRL_MANGO_BG_COLOR,
-    },
-    ref=[lrl_family, OSDB['linux'], default]
-)
-
-LRL_KIWI_FG_COLOR = 'black'
-##LRL_KIWI_BG_COLOR = 'rgb:d2/d0/b0'
-LRL_KIWI_BG_COLOR = 'lavender'
-
-e(
-    kef='host',
-    dat={
-    'host-pattern': 'kiwi',
-    'family': 'lrl_family',
-    'comment': 'A work machine.',
-    # Good for portrait, on BAM.
-    #'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70+0+0',
-    # below is for middle portrait monitor.
-    #'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70+1922+0',
     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70-0+0',
-    'xterm_bg': LRL_KIWI_BG_COLOR,
-    'xterm_fg': LRL_KIWI_FG_COLOR,
-    'xem_bg_color': LRL_KIWI_BG_COLOR,
+    'xterm_bg': AMD_ATLR5N4_0680_BG_COLOR,
+    'xterm_fg': AMD_ATLR5N4_0680_FG_COLOR,
+    'xem_bg_color': AMD_ATLR5N4_0680_BG_COLOR,
     },
-    ref=[lrl_family, OSDB['linux'], default]
+    ref=[amd_family, OSDB['linux'], default]
 )
+
+##legacy NV_GEOMETRY = '-geometry 81x72-0+0'
+##legacy #
+##legacy # FAMILY entry for NVIDIA-LINUX
+##legacy nvidia_family = e(
+##legacy     kef='family',
+##legacy     dat={
+##legacy     'family': 'nvidia-linux',
+##legacy     'family_zone': 'nvidia',
+##legacy     'comment': 'My linux boxen at nVIDIA.',
+##legacy     'DTE': 'kde',
+##legacy     'main_macs_opts': '-eval (dp-main-rc+2w)',
+##legacy     'xem_opts': NV_GEOMETRY,
+##legacy     # This is OK, but O0{}[]() : no slashed 0. O & 0 are distinguishable.
+##legacy     #'xem_font': '''-*-Lucidatypewriter-medium-r-*-*-*-120-*-*-*-*-*-*''',
+##legacy     # May be less legible in the long run, but 0 is slashed.
+##legacy     'xem_font': '''-*-Fxd-medium-r-*-*-*-120-*-*-*-*-*-*''',
+##legacy     #'xem_font': '''-*-fixed-medium-r-*-*-*-140-*-*-*-*-iso8859-*''',
+##legacy     "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
+##legacy     "xem_font": '''-*-Fixed-medium-r-*-*-*-120-*-*-*-*-*-*''',
+##legacy     'work-zone': 'nvidia',
+##legacy     'xterm_bg': NVIDIA_BG_COLOR,
+##legacy     'xterm_fg': NVIDIA_FG_COLOR,
+##legacy     'xem_bg_color': 'gray80',
+
+
+##legacy     },
+##legacy     # These are searched in the order given.
+##legacy     ref=[OSDB['linux'], default]
+##legacy )
+
+##legacy LRL_XEM_GEOMETRY = '-geometry 81x70-0+0'
+##legacy LRL_BG_COLOR = 'rgb:24/00/68'
+##legacy LRL_FG_COLOR = 'white'
+##legacy lrl_family = e(
+##legacy     kef='family',
+##legacy     dat={
+##legacy     'host-default-pattern': '.*',
+##legacy     'family': 'lrl-linux',
+##legacy     'family_zone': 'lrl',
+##legacy     'comment': 'My linux boxen at lrl.',
+##legacy     'DTE': 'lxde',                      # sigh.
+##legacy     'main_macs_opts': '-eval (dp-main-rc+2w)',
+##legacy     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + LRL_XEM_GEOMETRY,
+##legacy     "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
+##legacy     'xem_font': '',
+##legacy     'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
+##legacy     'work-zone': 'lrl',
+##legacy     """xem-xft-font""": '''"Inconsolata-13"''',
+##legacy     'xterm_bin': 'xterm',
+##legacy     'xterm_bg': LRL_BG_COLOR,
+##legacy     'xterm_fg': LRL_FG_COLOR,
+##legacy     'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
+##legacy     'xem_bg_color': NVIDIA_BG_COLOR,
+##legacy     '''command-line-mailer''': '''mutt''',
+##legacy     },
+##legacy     # These are searched in the order given.
+##legacy     ref=[OSDB['linux'], default]
+##legacy )
+
+##legacy LRL_AVOCADO_FG_COLOR = 'black'
+##legacy #LRL_AVOCADO_BG_COLOR = 'rgb:f0/ff/c0'
+##legacy LRL_AVOCADO_BG_COLOR = 'rgb:d9/de/97'
+
+##legacy e(
+##legacy     kef='host',
+##legacy     dat={
+##legacy     'host-pattern': 'avocado',
+##legacy     'family': 'lrl_family',
+##legacy     'comment': 'A work machine.',
+##legacy     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + LRL_XEM_GEOMETRY,
+##legacy     'xterm_bg': LRL_AVOCADO_BG_COLOR,
+##legacy     'xterm_fg': LRL_AVOCADO_FG_COLOR,
+##legacy     'xem_bg_color': LRL_AVOCADO_BG_COLOR,
+##legacy     },
+##legacy     ref=[lrl_family, OSDB['linux'], default]
+##legacy )
+
+##legacy LRL_MANGO_FG_COLOR = 'black'
+##legacy #FFE79E
+##legacy LRL_MANGO_BG_COLOR = 'rgb:ff/e7/9e'
+
+##legacy e(
+##legacy     kef='host',
+##legacy     dat={
+##legacy     'host-pattern': 'mango',
+##legacy     'family': 'lrl_family',
+##legacy     'comment': 'A work machine.',
+##legacy     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + LRL_XEM_GEOMETRY,
+##legacy     'xterm_bg': LRL_MANGO_BG_COLOR,
+##legacy     'xterm_fg': LRL_MANGO_FG_COLOR,
+##legacy     'xem_bg_color': LRL_MANGO_BG_COLOR,
+##legacy     },
+##legacy     ref=[lrl_family, OSDB['linux'], default]
+##legacy )
+
+##legacy LRL_KIWI_FG_COLOR = 'black'
+##legacy ##LRL_KIWI_BG_COLOR = 'rgb:d2/d0/b0'
+##legacy LRL_KIWI_BG_COLOR = 'lavender'
+
+##legacy e(
+##legacy     kef='host',
+##legacy     dat={
+##legacy     'host-pattern': 'kiwi',
+##legacy     'family': 'lrl_family',
+##legacy     'comment': 'A work machine.',
+##legacy     # Good for portrait, on BAM.
+##legacy     #'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70+0+0',
+##legacy     # below is for middle portrait monitor.
+##legacy     #'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70+1922+0',
+##legacy     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70-0+0',
+##legacy     'xterm_bg': LRL_KIWI_BG_COLOR,
+##legacy     'xterm_fg': LRL_KIWI_FG_COLOR,
+##legacy     'xem_bg_color': LRL_KIWI_BG_COLOR,
+##legacy     },
+##legacy     ref=[lrl_family, OSDB['linux'], default]
+##legacy )
 #
 # FAMILY entry for o-xterm
 ## e(

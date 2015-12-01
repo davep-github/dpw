@@ -183,9 +183,6 @@ static char * chuck_xpm[] = {
 ; (setq grep-find-command 
 ;       (replace-in-string grep-find-command "-e" "" 'literal-true))
 
-;; chuck is too tall, and can be very annoying.  So default is now a simple
-;; string: [EOF].
-(add-hook 'find-file-hooks 'dp-add-default-buffer-endicator)
 
 ;; nice in general and needed for appointment stuff
 (display-time)
@@ -299,7 +296,12 @@ static char * delete_xpm[] = {
 \".................................\"};" (or color "red"))
 			 ]))
 
+(defun dp-setup-invisible-glyph (&optional file color)
+)
 (if (featurep 'xpm)
+    ;; chuck is too tall, and can be very annoying.  So default is now a simple
+    ;; string: [EOF].
+    (add-hook 'find-file-hooks 'dp-add-default-buffer-endicator)
     (let ((file (expand-file-name "recycle2.xpm" data-directory)))
       (if (condition-case nil
 	      ;; check to make sure we can use the pointer.

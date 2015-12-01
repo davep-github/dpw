@@ -1,9 +1,0 @@
-#!/bin/sh
-set -x
-
-XX_X=${1:-0}
-
-start-x-terms $XX_X
-
-#xem # -o $XX_X
-# Started now by a desktop file in kde startup.

@@ -18,7 +18,7 @@ Ee|notes|             ${davep}notes/
 Ee|etc|               ${davep}etc/
 Ee|crond|             ${etc}cron.d/
 Ee|crontab|           ${etc}crontab
-Ee|tmp|               /home/davep/tmp/
+Ee|tmp|               ${davep}tmp/
 Ee|rc|                ${davep}.rc/
 Ee|patches|           ${davep}patches/
 Ee|wdylan|            ${davep}work/dylan/
@@ -224,21 +224,21 @@ E|dp2|sdp|                      ${sundrydavep}
 E|doc2|d2|                      ${sundrydavep}doc/
 #############################################################################
 Ee|mpdd|        /var/tmp/portage/media-sound/mpd-0.12.2/work/mpd-0.12.2/
-Ee|lllisp|      /home/davep/lisp.d/to-ll/lisp/
-Ee|l|           /home/davep/lisp/
-Ee|play|        /home/davep/play/
-Ee|cedet|       /home/davep/lisp/contrib/cedet/
-Ee|dok|         /home/davep/doc/
+Ee|lllisp|      ${davep}/lisp.d/to-ll/lisp/
+Ee|l|           ${davep}/lisp/
+Ee|play|        ${davep}/play/
+Ee|cedet|       ${davep}/lisp/contrib/cedet/
+Ee|dok|         ${davep}/doc/
 Ee|bfd2t|       /bfd2/tmp/
 Ee|atidvr|      /bfd2/tmp/ati/
 Ee|bft2|        /bfd2/tmp/
-Ee|wrk|         /home/davep/work/
+Ee|wrk|         ${davep}/work/
 Ee|ptmp|        /bfd2/var/tmp/portage/
-Ee|x11|        /home/davep/issues/x11/
+Ee|x11|        ${davep}/issues/x11/
 Ee|initd|inid|  /etc/init.d/
 Ee|inid|        /etc/init.d/
 Ee|ulptg|       /bfd2/usr/local/portage/
-Ee|sap|         /home/davep/work/ll/sapient/
+Ee|sap|         ${davep}/work/ll/sapient/
 E|pud|          /usr/portage/profiles/use.desc
 E|puld|         /usr/portage/profiles/use.local.desc
 Ee|bft|         /bfd/tmp/
@@ -261,10 +261,10 @@ Ee|foadyall|            eff-oh-ay-dee-y-all
 Ee|theskway|            gmafb
 #############################################################################
 Ee|dfx|                   /bfd2/usr/local/portage/layman/desktop-effects/
-Ee|kdeconfig|kconf|kcfg|  /home/davep/.kde/share/config/
+Ee|kdeconfig|kconf|kcfg|  ${davep}/.kde/share/config/
 Ee|kdecompizrc|kczrc|     ${kdeconfig}compizrc
 Ee|rbutil|       /usr/portage/tmp/portage/dev-util/rbutil-9999/work/rbutil-9999/rbutil/rbutilqt/
-Ee|ffoxcfg|       /home/davep/.mozilla/firefox/adi7ooz7.KDE/
+Ee|ffoxcfg|       ${davep}/.mozilla/firefox/adi7ooz7.KDE/
 Ee|run3|       /tmp/run3/
 Ee|bglfiles|       /collections/indices/beagle/davep/beagle/
 Ee|mairixdoc|       /usr/share/doc/mairix-0.21/
@@ -274,13 +274,13 @@ Ee|xorglog0|         /var/log/Xorg.0.log
 Ee|xorglog|          ${xorglog0}
 E|xol0|x0l|xol|      ${xorglog0}
 
-Ee|vmmail|       /home/davep/eMail/vm.el/
-Ee|vmfolders|       /home/davep/eMail/vm.el/folders/
-Ee|vmicache|       /home/davep/eMail/vm.el/IMAP-cache/
-Ee|vmimapcache|       /home/davep/eMail/vm.el/IMAP-cache/
-Ee|xebacs|       /home/davep/droppings/editors/xemacs/xebacs.d/
-Ee|xemacsautosaves|       /home/davep/droppings/editors/xemacs/auto-saves.d/
-Ee|asaves|       /home/davep/droppings/editors/xemacs/auto-saves.d/
+Ee|vmmail|       ${davep}/eMail/vm.el/
+Ee|vmfolders|       ${davep}/eMail/vm.el/folders/
+Ee|vmicache|       ${davep}/eMail/vm.el/IMAP-cache/
+Ee|vmimapcache|       ${davep}/eMail/vm.el/IMAP-cache/
+Ee|xebacs|       ${davep}/droppings/editors/xemacs/xebacs.d/
+Ee|xemacsautosaves|       ${davep}/droppings/editors/xemacs/auto-saves.d/
+Ee|asaves|       ${davep}/droppings/editors/xemacs/auto-saves.d/
 Ee|mbsunk|       /collections/mail/davep/mbsunk/
 Ee|mbsyncdirs|       /collections/mail/davep/mbsunk/
 E|mbs|       /collections/mail/davep/mbsunk/
@@ -295,30 +295,30 @@ Ee|xf86|       ${davep}xf86
 ###
 Ee|kdebase|       /usr/portage/kde-base/
 Ee|kdeb|       /usr/portage/kde-base/
-Ee|MH|       /home/davep/MH/
-E|sp|       /home/davep/MH/singlepower/
+Ee|MH|       ${davep}/MH/
+E|sp|       ${davep}/MH/singlepower/
 Ee|envd|       /etc/env.d/
 Ee|bashcomp|       /usr/share/bash-completion/
-E|wip|       /home/davep/work-is-play/
-Ee|wiph|wipinc|       /home/davep/work-is-play/include/
+E|wip|       ${davep}/work-is-play/
+Ee|wiph|wipinc|       ${davep}/work-is-play/include/
 E|usd|       /usr/share/doc/
-Ee|wips|       /home/davep/work-is-play/src/
-Ee|wipsrc|       /home/davep/work-is-play/src/
-Ee|wipi|       /home/davep/work-is-play/
-Ee|xdrop|       /home/davep/droppings/editors/xemacs/
-Ee|edrop|       /home/davep/droppings/editors/
+Ee|wips|       ${davep}/work-is-play/src/
+Ee|wipsrc|       ${davep}/work-is-play/src/
+Ee|wipi|       ${davep}/work-is-play/
+Ee|xdrop|       ${davep}/droppings/editors/xemacs/
+Ee|edrop|       ${davep}/droppings/editors/
 # Added Fri Oct 10 23:52:26 EDT 2014
-Ee|dpwg|       /home/davep/dpw/dpw.git/
+Ee|dpwg|       ${davep}/dpw/dpw.git/
 # Added Sun Oct 19 12:21:31 EDT 2014
 Ee|vlmpd|       /var/lib/mpd/
 # Added Wed Nov 26 15:56:42 EST 2014
-Ee|worksk|       /home/davep/work/skaion/
+Ee|worksk|       ${davep}/work/skaion/
 # Added Wed Nov 26 15:56:48 EST 2014
-Ee|skwork|       /home/davep/work/skaion/
+Ee|skwork|       ${davep}/work/skaion/
 # Added Thu Nov 27 11:55:03 EST 2014
 Ee|yokeldavep|ydavep|ydp|davepy|       .
 # Added Wed Dec 17 16:45:03 EST 2014
-Ee|ta2|       /home/davep/work/skaion/ta2-scaling/
+Ee|ta2|       ${davep}/work/skaion/ta2-scaling/
 # Added Sat Apr 25 10:22:27 EDT 2015
 Ee|mpdm|       /var/lib/mpd/music/mvsik/
 # Added Sat Apr 25 10:22:31 EDT 2015

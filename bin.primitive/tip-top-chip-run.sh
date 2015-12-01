@@ -1,1 +1,0 @@
-../bin.nvidia/tip-top-chip-run.sh

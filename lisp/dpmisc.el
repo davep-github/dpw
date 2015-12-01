@@ -10280,7 +10280,7 @@ nil says to use the default builtin image."
   :type 'string
   :group 'dp-vars)
 
-(defcustom dp-dont-use-invisible-text-glyph nil
+(defcustom dp-dont-use-invisible-text-glyph t
   "*Flag telling whether or not to use our own value for
 `invisible-text-glyph'."
   :type 'boolean
