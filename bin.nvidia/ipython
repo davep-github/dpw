@@ -1,5 +1,0 @@
-#!/bin/sh
-
-cd /home/utils/ipython-1.1.0/
-#exec ipython.py "$@"
-exec python IPython "$@"
