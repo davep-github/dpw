@@ -37,9 +37,10 @@ fg="${inherited_dpxx_fg-}"
 set_var()
 {
 set +u
-    vname=$1			# variable's name
-    db_val=$2			# value from the host-info db
-    default=$3			# default value if host-info had no value
+    local vname=$1			# variable's name
+    local db_val=$2			# value from the host-info db
+    local default=$3			# default value if host-info had no value
+    local vval
     eval vval=\$$vname
     case $vval in
 	"")

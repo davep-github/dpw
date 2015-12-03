@@ -1,0 +1,12 @@
+[core]
+	excludesfile = ~/.gitexclude
+
+[color]
+        ui = auto
+
+[merge]
+	keepBackup = true;
+	tool = p4merge
+
+[push]
+        default = simple

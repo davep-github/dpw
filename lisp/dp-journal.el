@@ -122,7 +122,8 @@ positives, but funky enough to minimize them.")
   :type 'string
   :group 'dp-vars)
 
-(defcustom dp-journal-invisible-text-glyph-file nil
+(defcustom dp-journal-invisible-text-glyph-file (and (featurep 'xpm) 
+                                                     nil)
   "*File from which to make the `invisible-text-glyph'.  
 nil says to use the default builtin image."
   :type '(file :must-match t)
@@ -133,7 +134,8 @@ nil says to use the default builtin image."
   :type 'string
   :group 'dp-vars)
 
-(defcustom dp-journal-use-invisible-text-glyph-p t
+(defcustom dp-journal-use-invisible-text-glyph-p (and (featurep 'xpm)
+                                                      t)
   "*Flag telling whether or not to use our own value for
 `invisible-text-glyph'."
   :type 'boolean

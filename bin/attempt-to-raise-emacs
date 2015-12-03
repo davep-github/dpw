@@ -34,4 +34,12 @@ unset eexec_program
 # Drat. I could've been using this for years.
 # If I can use ec (which uses) gnuclient or equivalent, then I can use this
 # to raise the server's frame.
-ec "$@" -e '(progn (raise-frame) (dp-focus-frame))'
+
+if type wmctrl >/dev/null 2>&1
+then
+    wmctrl -a "Serv/XEmacs@"
+else
+    # This doesn't work in my AMD vdi sessions.
+    # Perhaps due the way I had to build xemacs?
+    ec "$@" -e '(progn (raise-frame) (dp-focus-frame))'
+fi

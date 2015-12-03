@@ -267,9 +267,10 @@ Turn off if on-off < 0 (e.g. C-u - interactively)"
 
 (defun dp-setup-invisible-glyph (&optional file color)
   "Set up the glyph to use to indicate invisible text."
-  (if file
-      `[xpm :file ,file]
-    `[xpm :data ,(format "\
+  (if (featurep 'xpm)
+      (if file
+          `[xpm :file ,file]
+        `[xpm :data ,(format "\
 /* XPM */
 static char * delete_xpm[] = {
 /* width height num_colors chars_per_pixel */
@@ -293,22 +294,22 @@ static char * delete_xpm[] = {
 \".....XXX ......X ..XXX..XXX..XXX.\",
 \"......X ............XXX..XXX..XXX\",
 \"................X ...X ...X ...X \",
-\".................................\"};" (or color "red"))
-			 ]))
+\".................................\"}  ;" (or color "red"))
+          ])
+    (dp-ding-and-message "xpm not supported.")))
 
 (defun dp-setup-invisible-glyph (&optional file color)
-)
-(if (featurep 'xpm)
-    ;; chuck is too tall, and can be very annoying.  So default is now a simple
-    ;; string: [EOF].
-    (add-hook 'find-file-hooks 'dp-add-default-buffer-endicator)
+  (if (featurep 'xpm)
+      ;; chuck is too tall, and can be very annoying.  So default is now a simple
+      ;; string: [EOF].
+      (add-hook 'find-file-hooks 'dp-add-default-buffer-endicator)
     (let ((file (expand-file-name "recycle2.xpm" data-directory)))
       (if (condition-case nil
 	      ;; check to make sure we can use the pointer.
 	      (make-image-instance file nil
 				   '(pointer))
 	    (error nil))		; returns nil if an error occurred.
-	  (set-glyph-image gc-pointer-glyph file))))
+	  (set-glyph-image gc-pointer-glyph file)))))
 
 (add-hook 'gdb-mode-hook (function (lambda () (require 'gdb-highlight))))
 

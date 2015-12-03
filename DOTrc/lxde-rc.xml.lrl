@@ -171,40 +171,19 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
         <desktop>yes</desktop>
       </action>
     </keybind>
-    --><keybind key="W-Tab"><action name="DesktopRight"><dialog>no</dialog><wrap>yes</wrap></action></keybind><keybind key="S-W-x"><action name="Execute"><startupnotify><enabled>true</enabled><name>dpxx</name></startupnotify><command>dpxx</command></action></keybind><keybind key="W-Escape"><action name="ShowMenu"><menu>client-list-combined-menu</menu></action></keybind><!-- Select and raise emacs editing server. --><keybind key="S-W-e"><action name="Execute"><command>wmctrl -a "Serv/XEmacs@"</command></action></keybind><!-- Select and raise a window on compute2 which is used for qemu. --><keybind key="W-q"><action name="Execute"><command>wmctrl -a "root@compute2"</command></action></keybind><!-- Select and raise a web browser (att: firefox) window. --><keybind key="W-w"><action name="Execute"><command>wmctrl -a "Mozilla Firefox"</command></action></keybind><!-- Select and raise an email client window. Thunderbird, ATT. --><keybind key="W-m"><action name="Execute"><command>wmctrl -a "Mozilla Thunderbird"</command></action></keybind><!-- Keybinding for PrintScreen Key --><keybind key="Print"><action name="Execute"><execute>scrot</execute></action></keybind><keybind key="A-Print"><action name="Execute"><execute>scrot -s</execute></action></keybind><!-- Select and raise emacs editing server. --><!-- Keybinding for toggling mdp play pause -->
+    --><keybind key="W-Tab"><action name="DesktopRight"><dialog>no</dialog><wrap>yes</wrap></action></keybind><keybind key="S-W-x"><action name="Execute"><startupnotify><enabled>true</enabled><name>dpxx</name></startupnotify><command>dpxx</command></action></keybind><keybind key="W-Escape"><action name="ShowMenu"><menu>client-list-combined-menu</menu></action></keybind><!-- Select and raise emacs editing server. --><keybind key="S-W-e"><action name="Execute"><command>wmctrl -a "Serv/XEmacs@"</command></action></keybind><!-- Select and raise a window on compute2 which is used for qemu. --><keybind key="W-q"><action name="Execute"><command>wmctrl -a "root@compute2"</command></action></keybind><!-- Select and raise a web browser (att: firefox) window. --><keybind key="W-n"><action name="Execute"><command>wmctrl -a "Mozilla Firefox"</command></action></keybind><!-- Select and raise an email client window. Thunderbird, ATT. --><keybind key="W-m"><action name="Execute"><command>wmctrl -a "Mozilla Thunderbird"</command></action></keybind><!-- Keybinding for PrintScreen Key --><keybind key="Print"><action name="Execute"><execute>scrot</execute></action></keybind><keybind key="A-Print"><action name="Execute"><execute>scrot -s</execute></action></keybind><!-- Select and raise emacs editing server. --><!-- Keybinding for toggling mdp play pause -->
 
     <!-- Select and raise term connected to home box. -->
     <keybind key="W-h">
       <action name="Execute">
-        <command>wmctrl -a "davep@vilya"</command>
+        <command>wmctrl -a "dpanarit@atlr"</command>
       </action>
     </keybind>
 
-    <!-- Select and raise term connected to kiwi. -->
-    <keybind key="W-k">
+    <!-- Select and raise nscreen work. -->
+    <keybind key="W-w">
       <action name="Execute">
-        <command>wmctrl -a "davep@kiwi"</command>
-      </action>
-    </keybind>
-
-    <!-- Select and raise term connected to mango. -->
-    <keybind key="A-W-m">
-      <action name="Execute">
-        <command>wmctrl -a "davep@mango"</command>
-      </action>
-    </keybind>
-
-    <!-- Select and raise term connected to avocado. -->
-    <keybind key="C-W-a">
-      <action name="Execute">
-        <command>wmctrl -a "davep@avocado"</command>
-      </action>
-    </keybind>
-
-    <!-- Select and raise nscreen bubba connected to mango. -->
-    <keybind key="A-W-b">
-      <action name="Execute">
-        <command>wmctrl -a ":bubba"</command>
+        <command>wmctrl -a ": work"</command>
       </action>
     </keybind>
 
@@ -329,15 +308,8 @@ COMMENTED OUT -->
           <command>wmctrl -a "Serv/XEmacs@"</command>
       </action>
     </keybind>
-    <!-- Select and raise mvsik player. -->
-    <keybind key="W-a"><action name="Execute"><command>wmctrl -a "Ario"</command></action></keybind>
-    <keybind key="XF86Tools"><action name="Execute"><command>wmctrl -a "Ario"</command></action></keybind>
     <!-- Select and raise an emacs window. -->
-    <keybind key="W-e"><action name="Execute"><command>wmctrl -a "XEmacs@kiwi"</command></action></keybind>
-    <!-- Select and raise an emacs window on mango. -->
-    <keybind key="C-W-e"><action name="Execute"><command>wmctrl -a "XEmacs@mango"</command></action></keybind>
-    <!-- Select and raise an emacs window on avocado. -->
-    <keybind key="A-W-e"><action name="Execute"><command>wmctrl -a "XEmacs@avocado"</command></action></keybind>
+    <keybind key="W-e"><action name="Execute"><command>wmctrl -a "XEmacs@atlr"</command></action></keybind>
     <!-- Select and raise a web browser (att: firefox) window. -->
     <keybind key="W-w"><action name="Execute"><command>wmctrl -a "Mozilla Firefox"</command></action></keybind>
     <!-- Select and raise an email client window. Thunderbird, ATT. -->
@@ -675,7 +647,7 @@ COMMENTED OUT -->
     <!-- You can specify more than one menu file in here and they are all loaded,
        just don't make menu ids clash or, well, it'll be kind of pointless -->
     <!-- default menu file (or custom one in $HOME/.config/openbox/) -->
-    <file>/home/davep/.config/openbox/lxde-menu.xml</file>
+    <file>/home/dpanarit/.config/openbox/menu.xml</file>
     <hideDelay>200</hideDelay>
     <!-- if a press-release lasts longer than this setting (in milliseconds), the
        menu is hidden again -->

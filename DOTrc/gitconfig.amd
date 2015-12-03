@@ -1,80 +1,29 @@
-[core]
-	excludesfile = ~/.gitexclude
+[include]
+        path = .rc/gitconfig.diff-n-merge-tools
+
+[include]
+        path = .rc/gitconfig.aliases
+
+[include]
+        path = .rc/gitconfig.nice-defaults
+
 [user]
-	name = David Panariti
-	email = david.panariti@amd.com
-[color]
-        ui=auto
+        name = David Panariti
+	email = David.Panariti@amd.com
 
-[color]
-        ui = auto
+[init]
+	templatedir = /home/dpanarit/.git_template
 
-[merge]
-	keepBackup = true;
-	tool = p4merge
-
-[mergetool "p4merge"]
-	cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
-	keepTemporaries = false
-	trustExitCode = false
-	keepBackup = true
-
-[difftool "p4diff"]
-	cmd = p4diff.git $LOCAL $REMOTE
-
-[difftool "ec-diff"]
-	cmd = ec-diff $LOCAL $REMOTE
-
-[difftool "ec-merge"]
-	cmd = ec-merge $LOCAL $REMOTE
-
-[difftool "meld"]
-	cmd = meld $LOCAL $REMOTE
-
-[difftool "diffuse"]
-	cmd = diffuse $LOCAL $REMOTE
 [url "ssh://gerritgitmaster/"]
 	pushInsteadOf = ssh://gerritgit/
 
-[push]
-	default = simple
+[review "git.amd.com:8080"]
+        username = dpanarit
+        uploadtopic = true
 
-[alias]
-	co = checkout
-	cof = checkout --
-	br = branch
-        cob = checkout -b
-        newbr = checkout -b
-	ci = commit
-        cia = commit -a
-	st = status
-        ldf = log --decorate=full -n 5
-        ld = log --decorate -n 5
-        log5 = log -n 5
-        l11 = log -n 11
-        dfo = diff --name-only
-        dfn = diff --name-only
-        dno = diff --name-only
-        mnc = merge --no-commit
-        pffo = pull --ff-only --no-commit
-        mffo = merge --ff-only --no-commit
-        dtmeld = difftool --tool=meld
-        dtm = difftool --tool=meld
-        dtdiffuse = difftool --tool=diffuse
-        dtd = difftool --tool=diffuse
-        dtecdiff = difftool --tool=ec-diff
-        dte = difftool --tool=ec-diff
-        dtec = difftool --tool=ec-diff
-        dtecmerge = difftool --tool=ec-merge
-        dtem = difftool --tool=ec-merge
-# Graphical diff tool employer/environment de jure
-        dtgraphical = difftool --tool=meld
-        dtg = difftool --tool=meld
-
-        dtp4v = difftool --tool=p4diff
-        dtp4 = difftool --tool=p4diff
-        hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-        dotgit = rev-parse --git-dir
-        gdir = rev-parse --git-dir
-	aliases = config --get-regexp ^alias\\.
-	undo-commit = reset --soft HEAD^
+[review "atlvgits01.amd.com:8888"]
+        username = dpanarit
+        uploadtopic = true
+        
+[color]
+	ui = auto

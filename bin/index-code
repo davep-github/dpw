@@ -312,7 +312,7 @@ else
     do_taggin $dirs
 fi
 
-if truth_p "${read_only_index_files-}"
+if true_p "${read_only_index_files-}"
 then
     chmod_index_files a-w
 else

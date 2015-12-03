@@ -275,25 +275,31 @@ fi
 # bin dirs from most specific to least
 if vsetp $genericArch_bin
 then
-    DAVEP_BIN_VARIANTS=",$genericArch_bin.$HOSTNAME,$genericArch_bin"
+    DAVEP_BIN_VARIANTSx="$genericArch_bin.$HOSTNAME,$genericArch_bin"
 else
-    DAVEP_BIN_VARIANTS=
+    DAVEP_BIN_VARIANTSx=
 fi
-DAVEP_BIN_VARIANTS="$arch_os_bin.$HOSTNAME,$arch_os_bin,$arch_bin.$HOSTNAME,$arch_bin,bin.$HOSTNAME,$DAVEP_BIN_VARIANTS,sbin,bin"
+#echo_id arch_bin
+DAVEP_BIN_VARIANTS="$arch_os_bin.$HOSTNAME,$arch_os_bin,$arch_bin.$HOSTNAME,$arch_bin,bin.$HOSTNAME,$DAVEP_BIN_VARIANTSx,sbin,bin"
 #echo_id DAVEP_BIN_VARIANTS
+#echo_id DAVEP_BIN_VARIANTSx
+#eval echo $HOME/{$DAVEP_BIN_VARIANTS}
 #exit 99
 DAVEP_BIN_DIRS="$(eval echo $HOME/{$DAVEP_BIN_VARIANTS} \
     $HOME/{local,yokel}/{$DAVEP_BIN_VARIANTS})
     $HOME/lib/pylib \
     $HOME/bree/bin \
     $HOME/bree/sbin \
-    $HOME/bin.primitive"
-
+    $HOME/bin.primitive \
+    $HOME/bin.local \
+    $HOME/bin.alternatives"
+#echo_id DAVEP_BIN_DIRS
+#exit 99
+unset DAVEP_BIN_VARIANTSx
 # Push some important stuff onto the path.  It can be useful to add locale
 # specific dirs early with no "harm" because PATH is filtered such that
 # nonexistent dirs are discarded.
 export PATH=$(dp_add_to_path_iff -p "$PATH" \
-    $DAVEP_BIN_DIRS \
     /etc/alternatives \
     /opt/kde3/bin \
     /usr/local/bin \
@@ -415,12 +421,12 @@ set --
 
 #
 # add some locale specific dirs...
-export PATH=$(dp_add_to_path_iff -p "$PATH" \
-    $HOME/bin.$WORK_ZONE \
-    $HOME/bin.$PROJECT_BIN \
-    $HOME/bin.$OSName \
-    $HOME/bin.$FAMILY \
-    $HOME/bin.$FAMILY_ZONE)
+export HOST_INFO_PATH="
+    $HOME/bin.$WORK_ZONE
+    $HOME/bin.$PROJECT_BIN
+    $HOME/bin.$OSName
+    $HOME/bin.$FAMILY
+    $HOME/bin.$FAMILY_ZONE"
 #echo "0:PATH>$PATH<"
 
 # Project stuff:
@@ -463,7 +469,11 @@ export PROJECT_HOME
 #echo "1:PATH>$PATH<"
 #echo "1:DAVEP_BIN_DIRS>$DAVEP_BIN_DIRS<"
 
-PATH=$(dp_add_to_path_iff -p "$PATH" "$DAVEP_BIN_DIRS")
+PATH=$(dp_add_to_path_iff -p "$PATH" \
+    "$HOST_INFO_PATH
+$DAVEP_BIN_DIRS
+$DAVEP_BIN_DIRS"
+)
 export DP_ENV_BIN_OVERRIDE="$HOME/bin/override"
 PATH=$(dp_add_to_path_iff -p "$PATH" "$DP_ENV_BIN_OVERRIDE")
 PATH=$(dp_add_to_path_iff "$PATH" "$HOME/bin/last-resort")

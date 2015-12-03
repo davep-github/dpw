@@ -1,12 +1,19 @@
 #!/bin/bash
 #set -x
-if [[ "$1" == -d ]]
-then
-    op=-d
-    shift
-else
-    op=-f
-fi
+
+no_dot_p=t
+op=-f
+while (($# > 0))
+do
+  case "$1" in
+      -d) op="-d";;
+      -D) no_dot_p=;;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
+
 oldIFS=$IFS
 IFS=":"
 
@@ -15,6 +22,11 @@ sep=
 for el in $*
 do
     [ -z "$el" ] && el=.
+    if [[ -n "$no_dot_p" && "${el}" == "." ]]
+    then
+        continue
+    fi
+
     [ $op $el ] && { 
 	opath="$opath$sep$el"; 
 	sep=":" 
