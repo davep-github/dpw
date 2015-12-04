@@ -49,7 +49,7 @@
 (defun dp-cc-mode-activate-style (&optional style-name)
   "Set up a C/C++ style. Use the default by default."
   (interactive)
-  (c-set-style (or style-name dp-default-c-style-name)))
+  (c-set-style (or style-name dp-default-c-style-name)) t)
 
 (setq c-default-style `((other . ,dp-default-c-style-name)
                         ;;(other . "meduseld-c-style")
@@ -468,7 +468,7 @@ far the regexp is concerned.")
   (append (symbol-value save-sym)
           list-o-keys))
 
-(defun dp-add-font-patterns (list-o-modes &rest list-o-keys)
+(defun dp-add-font-patterns-old (list-o-modes &rest list-o-keys)
   "Add the keyword patterns in LIST-O-KEYS to each mode in LIST-O-MODES.
 This function uses a mechanism which restores a variable to its original
 state and then applies changes. This is good... sometimes."
@@ -481,6 +481,26 @@ state and then applies changes. This is good... sometimes."
                                          list-o-keys
                                          ))))))
 
+(defun dp-add-font-patterns (list-o-modes buffer-local-p list-o-keys)
+  "Add the keyword patterns in LIST-O-KEYS to each mode in LIST-O-MODES.
+This function uses a mechanism which restores a variable to its original
+state and then applies changes. This is good... sometimes."
+  ;; Icky... the lambda uses variables from the current environment.
+  (dp-listify-thing list-o-modes)
+  (dp-listify-thing list-o-keys)
+  (loop for mode in list-o-modes do
+    (progn
+      (when buffer-local-p
+        (make-variable-buffer-local mode))
+      (dp-save-orig-n-set-new mode
+                              (function
+                               (lambda (save-sym)
+                                 (append
+                                  (symbol-value save-sym)
+                                  list-o-keys
+                                  )))))))
+
+
 (defun dp-add-to-font-patterns (list-o-modes &rest list-o-keys)
   "Add the keyword patterns in LIST-O-KEYS to each mode in LIST-O-MODES.
 This function uses a mechanism which restores a variable to its original
@@ -490,7 +510,7 @@ state and then applies changes. This is good... sometimes."
     (loop for key in list-o-keys do
       (add-to-list mode key t))))
 
-(defun* dp-add-line-too-long-font (font-lock-var-syms
+(defun* dp-add-line-too-long-font-old (font-lock-var-syms
                                    &key buffer-local-p)
   "WARNING: This function uses `dp-add-font-patterns' which resets the fonts.
 `dp-add-font-patterns' uses a mechanism which restores a variable to its
@@ -502,8 +522,19 @@ original state and then applies changes. This is good... sometimes."
   (when buffer-local-p
     (loop for v in font-lock-var-syms do
       (make-variable-buffer-local v)))
+  (dp-add-font-patterns-old font-lock-var-syms
+                            dp-font-lock-line-too-long-element))
+
+(defun* dp-add-line-too-long-fontX (font-lock-var-syms
+                                   &key buffer-local-p)
+  "WARNING: This function uses `dp-add-font-patterns' which resets the fonts.
+`dp-add-font-patterns' uses a mechanism which restores a variable to its
+original state and then applies changes. This is good... sometimes."
+  (interactive "Smode's font lock var? ")
   (dp-add-font-patterns font-lock-var-syms
+                        buffer-local-p
                         dp-font-lock-line-too-long-element))
+
 
 (defun dp-muck-with-fontification ()
   ;; Reset things to original state.
@@ -580,24 +611,24 @@ c-hanging-braces-alist based upon these values.")
   (interactive)
   (let ((extras
          (list ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
-               (cons
-                (dp-mk-font-lock-type-re dp-c-font-lock-extra-types)
-                font-lock-type-face)
-               (cons (dp-mk-c*-debug-like-patterns)
-                     ;; ??? Which is better; just the match or the whole
-                     ;;     line?
-                     (list 1 'dp-debug-like-face t)))))
+          (cons
+           (dp-mk-font-lock-type-re dp-c-font-lock-extra-types)
+           font-lock-type-face)
+          (cons (dp-mk-c*-debug-like-patterns)
+                ;; ??? Which is better; just the match or the whole
+                ;;     line?
+                (list 1 'dp-debug-like-face t)))))
     (when (and use-too-long-face-p)
       (setq extras (cons dp-font-lock-line-too-long-element extras)))
     ;;
     ;; Add some extra types to the xemacs gaudy setting.  Rebuild the
     ;; list each time rather than adding to the existing value.  This
     ;; makes reinitializing cleaner.
-    (dp-add-line-too-long-font '(c++-font-lock-keywords-3
-                                 c++-font-lock-keywords-2
-                                 c++-font-lock-keywords-1
-                                 c++-font-lock-keywords)
-                               :buffer-local-p buffer-local-p)))
+    (dp-add-line-too-long-font-old '(c++-font-lock-keywords-3
+                                     c++-font-lock-keywords-2
+                                     c++-font-lock-keywords-1
+                                     c++-font-lock-keywords)
+                                   :buffer-local-p buffer-local-p)))
 
 (defun* dp-c-add-extra-faces (&key
                                (buffer-local-p nil)
@@ -606,24 +637,27 @@ c-hanging-braces-alist based upon these values.")
                                  dp-global-c*-use-too-long-face)))
   (interactive)
   (let ((extras
-         (list ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
-               (cons
-                (dp-mk-font-lock-type-re dp-c-font-lock-extra-types)
-                font-lock-type-face)
-               (cons (dp-mk-c*-debug-like-patterns)
-                     ;; ??? Which is better; just the match or the whole
-                     ;;     line?
-                     (list 1 'dp-debug-like-face t)))))
-    (when (and use-too-long-face-p)
-      (setq extras (cons dp-font-lock-line-too-long-element extras)))
+         (delq nil
+               (list
+                dp-trailing-whitespace-font-lock-element
+                (when use-too-long-face-p
+                  dp-font-lock-line-too-long-element)
+                (cons
+                 (dp-mk-font-lock-type-re dp-c-font-lock-extra-types)
+                 font-lock-type-face)
+                (cons (dp-mk-c*-debug-like-patterns)
+                      ;; ??? Which is better; just the match or the whole
+                      ;;     line?
+                      (list 1 'dp-debug-like-face t))))))
     ;;
     ;; Add some extra types to the xemacs gaudy setting.  Rebuild the
     ;; list each time rather than adding to the existing value.  This
     ;; makes reinitializing cleaner.
-    (dp-add-line-too-long-font '(c-font-lock-keywords-3
-                                 c-font-lock-keywords-2
-                                 c-font-lock-keywords-1)
-                               :buffer-local-p buffer-local-p)))
+    (dp-add-font-patterns '(c-font-lock-keywords-3
+                            c-font-lock-keywords-2
+                            c-font-lock-keywords-1)
+                          buffer-local-p
+                          extras)))
 
 ;;replaced with dp-add-...     (dp-save-orig-n-set-new 'c-font-lock-keywords-3 
 ;;replaced with dp-add-...                             'dp-append-to-list-symbol nil extras)
@@ -738,6 +772,15 @@ c-hanging-braces-alist based upon these values.")
   :group 'dp-whitespace-vars
   :type 'boolean)
 
+(defcustom dp-c-like-mode-default-indent-tabs-mode nil
+  "How should we treat indentation: with chars or tabs.
+kernel coding style be damned, indentation and tabs are two different things.
+Also, spaces will *always* result in the same indentation size, regardless of
+tab setting, font or phase of the moon."
+  :group 'dp-vars
+  :type 'boolean)
+
+
 (defun dp-c-like-mode-common-hook ()
   "Sets up personal C/C++ mode options."
   (interactive)
@@ -752,7 +795,7 @@ c-hanging-braces-alist based upon these values.")
   (c-toggle-auto-state 1)               ;set c-auto-newline
   (dp-turn-off-auto-fill)
   (setq dp-cleanup-whitespace-p dp-default-c-like-mode-cleanup-whitespace-p)
-  (setq indent-tabs-mode nil
+  (setq indent-tabs-mode dp-c-like-mode-default-indent-tabs-mode
         c-recognize-knr-p nil
         dp-insert-tempo-comment-func 'dp-c-insert-tempo-comment)
 
@@ -829,7 +872,7 @@ are too general, e.g. queue."
   :group 'dp-vars 
   :type '(repeat (string :tag "std:: symbol")))
 
-(dp-deflocal dp-c++-mode-add-namespace-disabled nil
+(dp-deflocal dp-c++-mode-add-namespace-disabled t
   "*Per-buffer override.")
 
 (defun dp-maybe-add-c++-namespace (&optional namespace)
