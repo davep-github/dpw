@@ -1,1 +1,1 @@
-custom.lrl.el
+custom.amd.el
