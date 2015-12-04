@@ -582,8 +582,12 @@ Will miss many cases and do it in comments, too. "
   (setq dp-<type>*-regexp-memo
         (concat "\\("
                 "[a-zA-Z_][a-zA-Z_0-9]*_[tse]"
-                "\\|" (regexp-opt dp-c-type-list 'paren) 
-                "\\|" (regexp-opt dp-c*-additional-type-list 'paren)
+                (if dp-c-type-list
+                    (concat "\\|" (regexp-opt dp-c-type-list 'paren))
+                  "")
+                (if dp-c*-additional-type-list
+                    (concat "\\|" (regexp-opt dp-c*-additional-type-list 'paren))
+                  "")
                 "\\)"
                 "\\(\\*\\)"
                 )))
@@ -1471,6 +1475,8 @@ a comment add a comment prefix to the line."
 	     (= (match-end 0) (point)))
 	    (progn
 	      (replace-match "*/")
+              (when (looking-at "[ \t]*\\*/[ \t]*$")
+                (kill-line))
               (when dp-c-electric-slash-fills
                 (save-excursion
                   (beginning-of-line)
