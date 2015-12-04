@@ -99,6 +99,7 @@ def main(argv):
         sys.exit(0)
 
     # we need to pass everything to global, verbatim. WHY?
+    rgg.log_file.write("PWD>%s<\n" % (os.environ.get("PWD", "//NO PWD//"),))
     rgg.log_file.write("argv: %s\n" % \
                        dp_sequences.list_to_indented_string(argv))
     if argv[1] == '-pr' or argv[1] == '-rp':
