@@ -108,6 +108,8 @@ done
 ${EZEC} ln -s lisp .xemacs
 ${EZEC} ln -s .rc/procmailrc.vilya .procmailrc
 ${EZEC} ln -s lisp/Makefile .
+${EZEC} mkdir var
+${EZEC} mkdir var/log
 ${EZEC} mkdir log
 ${EZEC} mkdir log/{boot,kde,login-rc,xemacs,shell-sessions}
 ${EZEC} mkdir log/auto-rotate-c5-50K
