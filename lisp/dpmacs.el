@@ -520,10 +520,13 @@ this but when I edit it, I get it in (shudder) Perl mode.")
 
 (defvar dp-mode-transparent-regexps
   (dp-mk-mode-transparent-alist-from-mode-ext-lists
-   (list (cons 'c++-mode
-               (append dp-c-source-file-extensions
-                       dp-c-include-file-extensions
+   (list (cons 'c-mode
+               (append dp-c-just-c-source-file-extensions
+                       dp-c-just-c-include-file-extensions
                        '("y" "x")))
+         (cons 'c++-mode
+               (append dp-cxx-source-file-extensions
+                       dp-cxx-include-file-extensions))
          '(emacs-lisp-mode "emacs" "abbrev_defs")
          '(python-mode "py" "pydb")
          '(perl-mode "pm" "pl" "pdbx")

@@ -1,9 +1,28 @@
-(defconst dp-c-source-file-extensions '("cpp" "cxx" "cc" "c" "c++" "C" "tcc"
-                                        "inl" "impl" "tcc")
-  "Name says it all.")
+(defconst dp-c-just-c-source-file-extensions '("c")
+  "Real, pure genuine c extensions. Just c. Not Zoot.")
 
-(defconst dp-c-include-file-extensions '("h" "hh" "hxx" "h++" "H" "thh" "hpp")
-  "Name says it all.")
+(defconst dp-cxx-source-file-extensions 
+  '("cpp" "cxx" "cc" "c++" "C" "tcc" "inl" "impl" "tcc")
+  "C++ type extensions.")
+
+(defconst dp-c-source-file-extensions 
+  (append
+   dp-c-just-c-source-file-extensions
+   dp-cxx-source-file-extensions)
+   "All c-like c like extensions.")
+
+(defconst dp-c-just-c-include-file-extensions '("h")
+  "Real, pure genuine h files. Just h. Not Zhoot.")
+
+(defconst dp-cxx-include-file-extensions 
+  '("hh" "hxx" "h++" "H" "thh" "hpp")
+  "Extensions of includes for C++ type files.")
+
+(defconst dp-c-include-file-extensions
+  (append 
+   dp-c-just-c-include-file-extensions
+   dp-cxx-include-file-extensions)
+  "All c-like c like header file extensions.")
 
 (defconst dp-c-source-file-extension-regexp
   (concat "\\." 
