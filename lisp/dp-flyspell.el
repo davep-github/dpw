@@ -34,6 +34,16 @@ Flyspell programming mode only checks spelling in strings and comments."
 (defun dp-flyspell-setup0 (hook-list default-mode-func &optional force)
   (interactive)
   (dmessage "dp-flyspell-setup0: hook-list>%s<" hook-list)
+  ;; start up the spelling process now.  And wait a bit.
+  ;; This fixes a problem with 21.5.16
+  ;; My theory is that when *scratch* is edited and goes into flyspell-prog
+  ;; mode the process isn't initialized yet, and something looks into the
+  ;; process buffer (? for a version ?) something gets an args out of range
+  ;; error.  seems ok w/o sit-for...
+  (flyspell-mode-on)
+  ;;(sit-for 0.5)
+  (flyspell-mode-off)
+
   (when (or force (dp-using-flyspell-p))
     (dmessage "force: %s" force)
     (dolist (hook-var hook-list)
@@ -47,14 +57,6 @@ Flyspell programming mode only checks spelling in strings and comments."
 	(when hook-val
 	  (dmessage "var: %s, val: %s" hook-var hook-val)
 	  (add-hook hook-var hook-val))))
-    ;; start up the spelling process now.  And wait a bit.
-    ;; This fixes a problem with 21.5.16
-    ;; My theory is that when *scratch* is edited and goes into flyspell-prog
-    ;; mode the process isn't initialized yet, and something looks into the
-    ;; process buffer (? for a version ?) something gets an args out of range
-    ;; error.  seems ok w/o sit-for...
-    (flyspell-mode-on)
-    ;;(sit-for 0.5)
     )
   )
 
