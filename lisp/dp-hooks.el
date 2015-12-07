@@ -372,7 +372,8 @@ _str: looks too much like string
 (defvar dp-debug-like-patterns
   (concat (regexp-opt `("@tmp@" "@dbg@" "@rmv@" "@mark@" "WTF"
                         "@todo"))
-          "\\|N[.]?B[.]?!*\\|<<<<<?\\|"
+          "\\|"
+          "N[.]?B[.]?!*\\([^a-zA-Z_0-9]\\|$\\)\\|<<<<<?\\|"
           "XXXX*!*\\|!!!!*\\|\\?\\?\\?\\?*!*")
   "A regexp that recognizes things that are temporary/debug-like in nature.
 These can then be font-locked to make them easier to find and remove.

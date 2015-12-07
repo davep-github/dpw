@@ -76,16 +76,15 @@ rgg.log_file.write("WORK_INDEX_DB_LOCS>{}<\n".format(WORK_INDEX_DB_LOCS))
 pretty_db_string = dp_sequences.list_to_indented_string(Database_locations)
 rgg.log_file.write("Database_locations>{}<\n".format(pretty_db_string))
 
-Top_ranking_regexp_strings = [
-    ]
+def rank_init(
+    top_ranking_regexp_strings,
+    filter_out_regexp_strings):
 
-Filter_out_regexp_strings = [
-    ]
+    rgg.add_top_ranking_regexp_strings(top_ranking_regexp_strings)
+    rgg.add_filter_out_regexp_strings(filter_out_regexp_strings)
 
-rgg.add_top_ranking_regexp_strings(Top_ranking_regexp_strings)
-rgg.add_filter_out_regexp_strings(Filter_out_regexp_strings)
 
-def main(argv):
+def rank_main(argv):
     filter_p = os.environ.get("BEA_FILTER")
     uniqify_p = True
 
@@ -179,6 +178,3 @@ def main(argv):
     rgg.log_file.write("=" * 17 + "\n")
     rgg.log_file.close()
     return rc
-
-if __name__ == "__main__":
-    sys.exit(main(sys.argv))
