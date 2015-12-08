@@ -339,12 +339,18 @@ COMMENTED OUT -->
       <mousebind button="A-Left" action="Drag">
         <action name="Move"/>
       </mousebind>
+      <mousebind button="W-Middle" action="Drag">
+        <action name="Move"/>
+      </mousebind>
       <mousebind button="A-Right" action="Press">
         <action name="Focus"/>
         <action name="Raise"/>
         <action name="Unshade"/>
       </mousebind>
       <mousebind button="A-Right" action="Drag">
+        <action name="Resize"/>
+      </mousebind>
+      <mousebind button="W-Right" action="Drag">
         <action name="Resize"/>
       </mousebind>
       <mousebind button="A-Middle" action="Press">
