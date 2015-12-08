@@ -1,17 +1,16 @@
 #!/usr/bin/env python
 
-#
-# davep's standard new Python file template.
-#
-
 import os, sys
-import argparse
-import dp_io
 
 import ranking_global_gtags_main
 rgg = ranking_global_gtags_main
 
-# /proj/ras_arch/users/dpanarit/work/ras/edc/linux/drivers/...
+# Add regexps that allow multiple GNU global matches to be ranked in some
+# useful manner.  For example, a subtree's definition of a function is
+# probably more useful and should be placed higher in the list (although one
+# should argue that using name spaces in C++ or some kind of prefix scheme in
+# C would be the better method.).
+# Redefinitions, unless for polymorphism tend to be troublesome.
 Top_ranking_regexp_strings = [
     "gpu/drm/amd/amdkfd/",
     "gpu/drm/amd/amdgpu/",
