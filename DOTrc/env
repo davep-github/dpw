@@ -7,6 +7,7 @@ export DP__name__=__main__
 # the Name of the home machine's address variable.
 export DP_HOME_MACHINE=VILYA
 export VILYA_USER=davep
+export DP_HOME_MACHINE_SSH_PORT=22
 
 if inside_emacs_p
 then

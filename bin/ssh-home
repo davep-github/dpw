@@ -11,11 +11,13 @@ do
   shift
 done
 
+: ${ssh_port=${DP_HOME_MACHINE_SSH_PORT=22}}
+
 ssh_home()
 {
     local fq_home_box=$(EExec -y fq_home_box "$@")
     EExec_verbose_msg "ssh_home: home[$DP_HOME_MACHINE], fq info: ${fq_home_box}"
-    EExec exec ssh "${fq_home_box}"
+    EExec exec ssh -p "${ssh_port}" "${fq_home_box}"
 }
 
 [ "${DP__name__=""}" = "__main__" ] || exit 0
@@ -35,7 +37,7 @@ Usage_args_info="No args"
 Usage_details="$EExec_parse_option_str
 -s -- Do not source most recent vars
 -S <source-file> -- Do source <var-file> immediately. May be repeated."
-option_str="nvqsS:"
+option_str="nvqsS:p:"
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -47,7 +49,8 @@ do
       -q) VERBOSE=":"; EExecQuiet;;
       # Program options.
       -s) export source_var_file_p=;;
-      -S) shift; source "$1";;
+      -S) shift; source "${1}";;
+      -p) shift; ssh_port="${1}";;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";
