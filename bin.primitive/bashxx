@@ -2,4 +2,9 @@
 
 source $HOME/.bashrc
 
-exec $HOME/bin/dpxx
+: ${GEOMETRY=160x50+200+200}
+if [ -n "${GEOMETRY}" ]
+then
+    geo_opt="-g ${GEOMETRY}"
+fi
+exec $HOME/bin/dpxx ${geo_opt}
