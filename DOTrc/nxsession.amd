@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+eval $(ssh-agent -s)
+#{
+    #date
+    #env
+    #echo "======================================"
+    ##ssh-agent
+    #echo "======================================"
+    #export WHY_BE_NORMAL="x"
+#} >> $HOME/nxlog
+
+exec /bin/bash -c /tool/pandora/bin/openbox-kde-session
