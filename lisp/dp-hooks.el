@@ -541,7 +541,7 @@ state and then applies changes. This is good... sometimes."
       (add-to-list mode key t))))
 
 (defun* dp-add-line-too-long-font-old (font-lock-var-syms
-                                   &key buffer-local-p)
+                                       &key (buffer-local-p t))
   "WARNING: This function uses `dp-add-font-patterns' which resets the fonts.
 `dp-add-font-patterns' uses a mechanism which restores a variable to its
 original state and then applies changes. This is good... sometimes."
@@ -556,15 +556,14 @@ original state and then applies changes. This is good... sometimes."
                             dp-font-lock-line-too-long-element))
 
 (defun* dp-add-line-too-long-font (font-lock-var-syms
-                                   &key buffer-local-p)
+                                   &key (buffer-local-p t))
   "WARNING: This function uses `dp-add-font-patterns' which resets the fonts.
 `dp-add-font-patterns' uses a mechanism which restores a variable to its
 original state and then applies changes. This is good... sometimes."
   (interactive "Smode's font lock var? ")
   (dp-add-font-patterns font-lock-var-syms
                         buffer-local-p
-                        dp-font-lock-line-too-long-element))
-
+                        (list dp-font-lock-line-too-long-element)))
 
 (defun dp-muck-with-fontification ()
   ;; Reset things to original state.
