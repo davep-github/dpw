@@ -4,3 +4,4 @@ history.*
 #.emacs_dpanariti.*
 #.emacs_davep.*
 .emacs_*.*
+/devel/
