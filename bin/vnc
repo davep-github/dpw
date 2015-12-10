@@ -43,5 +43,6 @@ esac
 
 # This results in no scroll bars when not in full screen mode.
 : ${VNC_GEOMETRY="1831x1030"}
+: ${VNC_SERVER=vncserver}
 
-EExec vncserver -geometry ${VNC_GEOMETRY} -depth 24 "$@"
+EExec "${VNC_SERVER}" -geometry ${VNC_GEOMETRY} -depth 24 "$@"
