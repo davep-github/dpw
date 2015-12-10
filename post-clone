@@ -10,11 +10,6 @@ export CYGWIN="winsymlinks:nativestrict"
 EZEC=
 : ${repo:=dpw/dpw.git}
 
-cd "${HOME}" || {
-    echo "Cannot cd to home>${HOME}<"
-    exit 1
-} 1>&2
-
 while (($# > 0 ))
 do
     case "$1" in
@@ -28,7 +23,17 @@ do
     shift
 done
 
+case "${repo}" in
+    /*) repo=$(${repo}/bin/last-resort/realpath -R ${HOME} ${repo});;
+    *) ;;
+esac
+
 : ${reporc:=${repo}/.rc}
+
+cd "${HOME}" || {
+    echo "Cannot cd to home>${HOME}<"
+    exit 1
+} 1>&2
 
 ln_dotrc()
 {
