@@ -4,12 +4,11 @@ set -u
 
 # Use "real" symlinks on Windwoes/cygwin.
 # Set this unconditionally since it shouldn't hurt in a real environment.
-# NB this doesn't work in a git/bash since that is a minGW app, not cygwin.
+# NB this doesn't work in a "Git Bash" since that is a minGW app, not cygwin.
 export CYGWIN="winsymlinks:nativestrict"
 
 EZEC=
 : ${repo:=dpw/dpw.git}
-: ${reporc:=${repo}/.rc}
 
 cd "${HOME}" || {
     echo "Cannot cd to home>${HOME}<"
@@ -20,12 +19,16 @@ while (($# > 0 ))
 do
     case "$1" in
         -n) EZEC="echo - ";;
+        -r|--repo) shift; repo="$1";;
+        -h|--repo-here|--repo.) repo="${PWD}";;
 	-x)  set -x;;
 	--) shift; break;;
         *) break;;
     esac
     shift
 done
+
+: ${reporc:=${repo}/.rc}
 
 ln_dotrc()
 {
