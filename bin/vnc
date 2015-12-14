@@ -42,7 +42,10 @@ case "${1-}" in
 esac
 
 # This results in no scroll bars when not in full screen mode.
-: ${VNC_GEOMETRY="1831x1030"}
+#: ${VNC_GEOMETRY="1831x1030"}
+#: ${VNC_GEOMETRY="1920x1178"}
+#: ${VNC_GEOMETRY="1900x1168"}
+: ${VNC_GEOMETRY="1904x1144"}
 : ${VNC_SERVER=vncserver}
 
 EExec "${VNC_SERVER}" -geometry ${VNC_GEOMETRY} -depth 24 "$@"

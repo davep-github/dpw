@@ -6,7 +6,7 @@ vncconfig -iconified &
 autocutsel -selection PRIMARY &
 
 #: ${W_MANAGER:=/usr/bin/gnome-session}
-: ${W_MANAGER:=fvwm2}
+: ${W_MANAGER:=openbox}
 
 source $HOME/.bashrc
 echo "PATH>$PATH<"

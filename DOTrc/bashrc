@@ -15,7 +15,6 @@
 #echo "LC>${LC_DP_YES_DP_ENV_P}<"
 #echo "LC_DP_NO_DP_ENV_P>$LC_DP_NO_DP_ENV_P<"
 
-export SHELL='/tool/pandora64/bin/bash'
 source $HOME/.rc/func.early
 
 if [ -n  "$GREP_OPTIONS" ]
