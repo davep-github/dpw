@@ -10,6 +10,7 @@ $debug = 0;
 $user_only_p = 0;
 $user_option = "-e";
 $siggie = "TERM";
+$USER = $ENV{'USER'};
 
 if ($ProgName eq 'findprog')
 {
@@ -58,7 +59,7 @@ elsif ($arg0 eq '-D') {
 }
 elsif ($arg0 eq '-u') {
   $user_only_p = 1;
-  $user_option="-u davep";
+  $user_option="-u $USER";
   shift(@ARGV);
 }
 elsif ($arg0 eq '-U') {

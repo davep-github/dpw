@@ -839,7 +839,8 @@ hist_grep()
     # &*@JH@GHG#!!!!
     # For some reason, in xemacs, the aliases aren't used.
     # The variable? Ayup.
-    local hist_file_glob="$HOME/.bash_history*"
+    local hist_file_dir=$(dirname "$HISTFILE")
+    local hist_file_glob="$hist_file_dir/*"
     local hist_files=$(echo $hist_file_glob)
     [ "$hist_files" == "$hist_files1" ] && {
             # No expansion of glob --> no files of interest.

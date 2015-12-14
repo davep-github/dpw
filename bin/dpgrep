@@ -33,8 +33,9 @@ out_pid()
     #local s="$1"
     read
     #set -f                      # WTF?!
+    #echo 1>&2 "REPLY>${REPLY}<"
     set -- $REPLY
-    echo "$2"
+    echo "$1"
 }
 
 # Add

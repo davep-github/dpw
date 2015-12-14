@@ -34,3 +34,6 @@ Ee|dpworld|dpw|              ${HOME}/dpw/
 Ee|dpwgit|                   ${HOME}/dpw/dpw.git
 Ee|dpwbuild|dpwbld|dpwbld|   ${dpworld}build/
 Ee|dpylib|                   ${HOME}/lib/pylib/
+/home/dpanarit/.go.amd:Ee|obconf|      ${HOME}/.config/openbox/
+/home/dpanarit/.go.amd:Ee|obrc|        ${obconf}/rc.xml
+/home/dpanarit/.go.amd:Ee|obmenu|      ${obconf}/menu.xml
