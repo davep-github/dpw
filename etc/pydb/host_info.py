@@ -326,8 +326,8 @@ amd_family = e(
     'DTE': 'kde',
     'main_macs_opts': '-eval (dp-main-rc+2w)',
     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + AMD_XEM_GEOMETRY,
-    "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
-    'xem_font': '',
+#    "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
+    "xem_font": "",
     'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
     'work-zone': 'amd',
 #    """xem-xft-font""": '''"Inconsolata-13"''',
@@ -356,6 +356,26 @@ e(
     'xterm_bg': AMD_ATLR5N4_0680_BG_COLOR,
     'xterm_fg': AMD_ATLR5N4_0680_FG_COLOR,
     'xem_bg_color': AMD_ATLR5N4_0680_BG_COLOR,
+    },
+    ref=[amd_family, OSDB['linux'], default]
+)
+
+PIGEONHAWKFG_COLOR = 'black'
+# #BAC1D1
+#PIGEONHAWK_BG_COLOR = 'rgb:ba/c1/d1'
+#PIGEONHAWK_BG_COLOR = 'rgb:57/a2/71'
+#PIGEONHAWK_BG_COLOR = 'rgb:C7/E3/D2'
+
+e(
+    kef='host',
+    dat={
+    'host-pattern': 'p(igeon)?hawk',
+    'family': 'amd_family',
+    'comment': 'A work/dev machine.',
+    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70-0+0',
+    'xterm_bg': PIGEONHAWK_BG_COLOR,
+    'xterm_fg': PIGEONHAWKFG_COLOR,
+    'xem_bg_color': PIGEONHAWK_BG_COLOR,
     },
     ref=[amd_family, OSDB['linux'], default]
 )
