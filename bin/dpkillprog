@@ -1,12 +1,17 @@
 #!/usr/bin/env perl
 # $Id: killprog,v 1.7 2004/03/24 12:44:07 davep Exp $
-
+#
+# ???!!!XXX!!!??? Why TF did I clone killprog and make the minor changes
+# rather than doing it in one file?
 ($ProgName) = $0 =~ m!([^/]+$)!;
 
 $pre_delimit = $post_delimit = "";
 $internal_delimit = " ";
 $silent = 0;
 $debug = 0;
+$siggie = "TERM";
+$USER = $ENV{'USER'};
+
 if ($ProgName eq 'findprog')
 {
   $do_kill = 0;
@@ -66,7 +71,7 @@ if ($OSName eq 'Linux')
 {
   # pattern to find program's pid and executable name
   # 8460 gdb /home/scratch.dpanariti_t124/sb2/hw/hw/nvdiag/mods/mods --command=dbcommands
-  $psCmd = 'ps -u dpanariti -o pid,cmd';
+  $psCmd = "ps -u $USER -o pid,cmd";
   $nameFinder = '^\s*(\d+)\s+(\S+)';
   
   # pattern to find an interpreter's program (i.e. 1st arg)
@@ -142,7 +147,7 @@ if (@pidList)
   if ($inquire) {
     kill_interactively (@pidList)
   } else {
-    #print "siggie>$siggie<, pidList>@pidList<\n" if ($debug);
+    print "siggie>$siggie<, pidList>@pidList<\n" if ($debug);
     print "kill ($siggie, @pidList);\n" if ($verbose);
     print $pre_delimit, join($internal_delimit, @pidList), $post_delimit, "\n" 
 	if ($echo_pids && !$silent);
