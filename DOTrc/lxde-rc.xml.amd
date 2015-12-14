@@ -179,6 +179,12 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
       </action>
     </keybind>
 
+    <keybind key="W-p">
+      <action name="Execute">
+        <command>wmctrl -a "@pigeonhawk"</command>
+      </action>
+    </keybind>
+
     <!-- Select and raise nscreen work. -->
     <keybind key="W-w">
       <action name="Execute">
@@ -215,89 +221,6 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
     <keybind key="W-Down">
       <action name="Iconify"/>
     </keybind>
-
-    <!-- Keybinding for toggling mdp playing -->
-    <keybind key="W-p">
-      <action name="Execute">
-         <command>mpc-toggle-play</command>
-      </action>
-    </keybind>
-
-    <!-- Keybinding for selecting random album -->
-    <keybind key="A-W-p">
-      <action name="Execute">
-         <command>mpc-random-album</command>
-      </action>
-    </keybind>
-
-    <!-- Keybinding for Volume management -->
-<!-- COMMENTED OUT: Why?
-    <keybind key="XF86AudioRaiseVolume">
-      <action name="Execute">
-          <command>amixer -q sset Master 3%+</command>
-      </action>
-    </keybind>
-
-    <keybind key="XF86AudioLowerVolume">
-      <action name="Execute">
-          <command>amixer -q sset Master 3%-</command>
-      </action>
-    </keybind>
-
-    <keybind key="XF86AudioMute">
-      <action name="Execute">
-          <command>amixer -q sset Master toggle</command>
-      </action>
-    </keybind>
-COMMENTED OUT -->
-
-    <keybind key="XF86AudioPlay">
-      <action name="Execute">
-          <command>mpc-toggle-play</command>
-      </action>
-    </keybind>
-
-    <keybind key="XF86AudioNext">
-      <action name="Execute">
-          <command>mpc next</command>
-      </action>
-    </keybind>
-
-    <keybind key="XF86AudioPrev">
-      <action name="Execute">
-          <command>mpc prev</command>
-      </action>
-    </keybind>
-
-<!-- COMMENTED OUT: What was it for?
-    <keybind key="W-c">
-      <action name="Execute"><command>wmctrl -a "::current"</command>
-    </action></keybind>
-COMMENTED OUT -->
-
-    <keybind key="XF86WWW">
-      <action name="Execute">
-          <command>x-terminal-emulator</command>
-      </action>
-    </keybind>
-
-    <keybind key="XF86Calculator">
-      <action name="Execute">
-          <command>galculator</command>
-      </action>
-    </keybind>
-
-    <keybind key="XF86MyComputer">
-      <action name="Execute">
-          <command>pcmanfm</command>
-      </action>
-    </keybind>
-
-    <keybind key="XF86Terminal">
-      <action name="Execute">
-          <command>x-terminal-emulator</command>
-      </action>
-    </keybind>
 
     <!-- davep bindings -->
     <keybind key="W-F12"><action name="Restart"/></keybind>
