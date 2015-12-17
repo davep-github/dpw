@@ -349,7 +349,7 @@ AMD_ATLR5N4_0680_BG_COLOR = 'lavender'
 e(
     kef='host',
     dat={
-    'host-pattern': 'atlr5n4-0680',
+    'host-pattern': 'atlr5n4-[0-9]+$',
     'family': 'amd_family',
     'comment': 'A work machine.',
     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70-0+0',

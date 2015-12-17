@@ -32,9 +32,16 @@ int fuck_fuck_fuck;
       /* comment */
 /* comment */
                       /* comment */
-
+struct abcd *poopie;
+class blahx3 *mehx10;
+int *blah;
+int			*blah;
+const char		*sss;
+int			*iiinnnttt;
+int      		*ixnay;
 /*
  * speling no bying cheched in this buffer?
+ * In teh commentts.
  */
 
 #include "x.h"

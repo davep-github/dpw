@@ -536,7 +536,7 @@ LESSP defaults to less-than ('<)."
     (list (car cons) (cdr cons))))
 
 (defun dp-ding-and-message (flag-or-format &optional format-string &rest args)
-  "Display message and `ding'."
+  "Display message and `ding'. Returns what `message' returns."
   (interactive)
   (let* ((ding-first-p (not (stringp flag-or-format)))
          (args (cons format-string args))
@@ -545,9 +545,10 @@ LESSP defaults to less-than ('<)."
                         (cons flag-or-format args))))
     (when ding-first-p
       (ding))
-    (apply 'message format-args)
-    (unless ding-first-p
-      (ding))))
+    (prog1
+        (apply 'message format-args)
+      (unless ding-first-p
+        (ding)))))
 
 (defalias 'dingm 'dp-ding-and-message)
 

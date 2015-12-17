@@ -485,6 +485,16 @@ the warning zone logic (or bag it.)")
   :group 'dp-whitespace-vars
   :type 'string)
 
+(defcustom dp-space-before-tab-regexp " +[\t]"
+  "Regular expression to detect that most egregious of all programming
+  problems, that of trailing whitespace. Something so bad, so heinous, so
+  unutterably eeveel that it's worth checking out and modifying every single
+  hideous violator of that most sacred of all things, the trailing whitespace
+  free line. We must spare no effort to return our files to the most holy of
+  all states. And don't get me stahted on macros. MACROS BAAAAAD, grrrrr!"
+  :group 'dp-whitespace-vars
+  :type 'string)
+
 (defcustom dp-trailing-whitespace-use-trailing-ws-font-p nil
   "Highlight trailing white space with its own font? Yay!"
   :group 'dp-whitespace-vars
@@ -492,6 +502,15 @@ the warning zone logic (or bag it.)")
 
 (defvar dp-trailing-whitespace-font-lock-element
   (list dp-trailing-whitespace-regexp 0 'dp-trailing-whitespace-face 'prepend)
+  "A font-lock element to pick out trailing whitespace.")
+
+(defcustom dp-use-space-before-tab-font-lock-p nil
+  "Highlight space before tab sequence. Kernel coding standard no-no!"
+  :group 'dp-whitespace-vars
+  :type 'boolean)
+
+(defvar dp-space-before-tab-font-lock-element
+  (list dp-space-before-tab-regexp 0 'dp-trailing-whitespace-face 'prepend)
   "A font-lock element to pick out trailing whitespace.")
 
 (defun dp-blah-blah (save-sym)
@@ -648,6 +667,8 @@ c-hanging-braces-alist based upon these values.")
                   dp-trailing-whitespace-font-lock-element)
                 (when use-too-long-face-p
                   dp-font-lock-line-too-long-element)
+                (when dp-use-space-before-tab-font-lock-p
+                  dp-space-before-tab-font-lock-element)
                 (cons
                  (dp-mk-font-lock-type-re dp-c-font-lock-extra-types)
                  font-lock-type-face)

@@ -1056,6 +1056,8 @@ Return a list of the chosen topic/re and the current-prefix-arg."
   "Global topic file")
 (defvar dpj-local-pdict (format "%s/%s" dp-note-base-dir "j-dict")
   "Global topic file")
+(defvar dpj-topic-file-id-magic ";; dp-journal topics file")
+(defvar dpj-topic-file-id-magic-OLDE ";; topics")
 
 (defun dpj-topic-file-mod-time ()
   "Return the topic file's modification time.
@@ -1064,7 +1066,6 @@ Also, will create the topic file if it does not exist."
     (unless fmod
       ;; no file... create it
       ;; 
-      (dpj-visit-topic-file)
       (dpj-write-topic-file)
       (setq fmod (file-attributes dpj-topic-file)))
     (nth 5 fmod)))
@@ -1089,7 +1090,14 @@ on disk."
   "Read the global topic list into a lisp variable."
   (save-excursion
     (dpj-visit-topic-file)
-    (eval-region (point-min) (point-max))))
+    ;; Here, the specificity is good since we're ID'in the file.
+    (goto-line 2)
+    (if (or (search-forward dpj-topic-file-id-magic (line-end-position) t)
+            (and (search-forward dpj-topic-file-id-magic-OLDE 
+                                 (line-end-position) t)
+                 (dp-ding-and-message "Found old topic file ID line.")))
+        (eval-region (point-min) (point-max))
+      (dp-ding-and-message "Not eval'ing topic file."))))
 
 (defun dpj-get-topic-file-list ()
   "Get the global topic list, re-reading the topic file if needed."
@@ -1134,7 +1142,7 @@ on disk."
 	      dpj-abbrev-list-modified-p)
       (erase-buffer)
       (insert ";; -*-emacs-lisp-*-\n")
-      (insert ";; topics\n")
+      (insert dpj-topic-file-id-magic "\n")
       (let ((standard-output (current-buffer)))
 	(pprint `(setq dpj-topic-list (quote ,dpj-topic-list))))
       (insert "\n; topic abbrevs\n")

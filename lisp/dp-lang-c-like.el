@@ -582,35 +582,51 @@ Will miss many cases and do it in comments, too. "
   (setq dp-<type>*-regexp-memo
         (concat "\\("
                 "[a-zA-Z_][a-zA-Z_0-9]*_[tse]"
+                "\\|"
+                "\\(?:struct\\\\|class\\)\\s-+[a-zA-Z_][a-zA-Z0-9_]+"
                 (if dp-c-type-list
                     (concat "\\|" (regexp-opt dp-c-type-list 'paren))
                   "")
                 (if dp-c*-additional-type-list
                     (concat "\\|" (regexp-opt dp-c*-additional-type-list 'paren))
                   "")
+                "\\s-*"
                 "\\)"
-                "\\(\\*\\)"
+                "\\("
+                "\\*"
+                "\\s-*"
+                "\\)"
                 )))
 
-(defun dp-c*-make-ugly-pointer-decl ()
+(defun dp-c*-make-ugly-pointer-decl (post-func &rest post-func-args)
   "Convert proper code, to improper, eg: char* p --> char *p.
 We say: \" p is a pointer to char\", not 
 \"p is a variable which when dereferenced is a char.\""
   (interactive)
   (when (dp-looking-back-at (or dp-<type>*-regexp-memo
                                 (dp-<type>*-regexp)))
-      (replace-match "\\1 *")
-      (when (looking-at " ")
-        (delete-char))
+    (replace-match "\\1")
+    (apply post-func post-func-args)
+    (insert "*")
+;;      (when (looking-at " ")
+;;        (delete-char))
       t))
 
 (defun dp-c*-electric-space ()
   (interactive)
-  (or (dp-c*-make-ugly-pointer-decl)
+  (or (dp-c*-make-ugly-pointer-decl
+       'insert " ")
       ;; Add other things to try here. We will stop after the first non-nil
       ;; return.
       (insert " ")))
 
+(defun dp-c*-electric-tab ()
+  (interactive)
+  (or (dp-c*-make-ugly-pointer-decl
+       'call-interactively 'c-indent-command)
+      ;; Add other things to try here. We will stop after the first non-nil
+      ;; return.
+      (c-indent-command)))
 ;;
 ;; Doc stuff
 ;;
@@ -1512,7 +1528,7 @@ A simple `dp-looking-back-at' using `dp-<type>*-regexp' returns nil.
      "\\|"
      (regexp-opt dp-c-type-list 'paren)
      "\\|"
-     "\\(?:\\sw\\|\\s_\\)+_[ta]"
+     "\\(?:\\sw\\|\\s_\\)+_[tase]"
      "\\)"
      "\\>"
      "\\)+")
@@ -1758,18 +1774,18 @@ XXX: use tempo for this?"
                 end (dp-mk-marker (cdr ordered)))
           (c-indent-region beg end)))
     (if (not dp-c-stupid-indent-p)
-        (c-indent-line)
+        (c-indent-command)
       (if (and dp-c-stupid-indent-p
                (not c-tab-always-indent))
           ;; try to make the indenter smarter.  I like using TAB to space out
           ;; vars from types, e.g. int  x;
           ;; but it's a pain to indent a line properly.
-          ;; this tried to do an indent if on non-space and tab over if 
+          ;; this tries to do an indent if on non-space and tab over if 
           ;; over a space.  But there are times when this is wrong, so I
           ;; punt for now.
           (if (or (not (dp-isa-type-line-p))
                   (dp-in-indentation-p))
-              (c-indent-line)             ;simple indentation
+              (c-indent-line)           ; simple indentation
             ;; not so simple case...
             ;; lets try:
             ;; If over non-whitespace:

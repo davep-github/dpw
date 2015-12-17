@@ -1,5 +1,7 @@
 (message "custom[.lrl].el...")
 (custom-set-variables
+ '(align-c++-modes '(c++-mode c-mode java-mode)
+)
  '(auto-raise-frame nil)
  '(browse-url-gnome-moz-arguments '("--raise")
 )
@@ -21,8 +23,8 @@
  '(ediff-diff-options "")
  '(ediff-make-buffers-readonly-at-startup nil)
  '(ediff-merge-split-window-function 'split-window-vertically)
- '(efs-auto-save 1)
- '(efs-auto-save-remotely nil)
+ '(efs-auto-save 1 t)
+ '(efs-auto-save-remotely nil t)
  '(efs-ftp-program-args '("-e" "-i" "-n" "-g" "-v" "-p")
 )
  '(efs-pty-check-retry-time 60)
