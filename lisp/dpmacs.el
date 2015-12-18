@@ -228,6 +228,7 @@ editing servers via `dp-editing-server-ipc-file'.")
 (require 'dp-cf)
 (require 'dp-cal)
 (require 'dp-appt)
+(require 'dp-c-like-styles)
 
 ;;
 ;; Now we can do my kinds of things...
