@@ -576,20 +576,21 @@ Will miss many cases and do it in comments, too. "
 
 (dp-defaliases 'dp-kill-camel 'dp-fix-symbol 'kill-camel 'kamel 
                'dpkc 'dp-c-camel-to-classic)
-
 (defvar dp-<type>*-regexp-memo nil)
 (defun dp-<type>*-regexp ()
   (setq dp-<type>*-regexp-memo
         (concat "\\("
-                "[a-zA-Z_][a-zA-Z_0-9]*_[tse]"
+                "\\("
+                "[a-zA-Z_][a-zA-Z_0-9]*_[tase]"
                 "\\|"
-                "\\(?:struct\\\\|class\\)\\s-+[a-zA-Z_][a-zA-Z0-9_]+"
+                "\\(?:\\(?:struct\\|class\\)\\s-+[a-zA-Z_][a-zA-Z0-9_]*\\)"
                 (if dp-c-type-list
                     (concat "\\|" (regexp-opt dp-c-type-list 'paren))
                   "")
                 (if dp-c*-additional-type-list
                     (concat "\\|" (regexp-opt dp-c*-additional-type-list 'paren))
                   "")
+                "\\)"
                 "\\s-*"
                 "\\)"
                 "\\("
@@ -1525,6 +1526,8 @@ A simple `dp-looking-back-at' using `dp-<type>*-regexp' returns nil.
      ;;   "\\(?:\\(?:static\\|virtual\\|explicit\\)\\<\\S_+\\)?"
      "\\(?:"
      "\\(?:\\(?:static\\|virtual\\|explicit\\)\\>\\)"
+     "\\|"
+     "\\(?:struct\\|class\\)\\s-+[a-zA-Z_][a-zA-Z0-9_]*"
      "\\|"
      (regexp-opt dp-c-type-list 'paren)
      "\\|"

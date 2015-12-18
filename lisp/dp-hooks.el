@@ -34,7 +34,6 @@
 (unless (bound-and-true-p dp-default-c-style-name)
   (defvar dp-default-c-style-name "meduseld-c-style"))
 
-
 (defun meduseld-style ()
   "Set up home (Meduseld.net) C style."
   (interactive)
