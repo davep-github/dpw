@@ -11,7 +11,7 @@ do
   shift
 done
 
-: ${ssh_port=${DP_HOME_MACHINE_SSH_PORT=22}}
+: ${ssh_port=${DP_SSH_HOME_MACHINE_PORT=22}}
 
 ssh_home()
 {

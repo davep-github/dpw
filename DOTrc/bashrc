@@ -133,8 +133,8 @@ export HOST=${HOSTNAME-$(/bin/hostname | $CUTBIN -f1 -d.)} # short host name
 export DOMAIN=$(/bin/hostname --fqdn | $CUTBIN -f2- -d.)
 
 # This can be re-defined in a more specific rc file.
-# Run ssh-agent unless directed not to.
-run_ssh_agent_p()
+# Don't run ssh-agent unless directed to.
+dp_ssh_run_agent_p()
 {
     false
 }
@@ -750,7 +750,7 @@ source_bash_completion_code()
 
 [ "$DP_ENV_INTERACTIVE" = 'y' ] && {
     source $HOME/.rc/dp-ssh-agent
-    run_ssh_agent_p && dp_start_ssh_agent
+    dp_ssh_run_agent_p && dp_ssh_start_agent
     ## Run completion by hand if we're in the odd situation described above
     ## the definition of `source_bash_completion_code'.
     [ -z "$BASH_COMPLETION" ] && source_bash_completion_code
