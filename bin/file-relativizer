@@ -1,0 +1,191 @@
+#!/usr/bin/env bash
+########################################################################
+#
+# template begin.
+
+# davep specific code -------------8><------------------
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+# davep specific code -------------8><------------------
+
+#mutually exclusive with real EExec# EExec=
+#mutually exclusive with real EExec# no_exec_p=
+#mutually exclusive with real EExec# Non_EExecer()
+#mutually exclusive with real EExec# {
+#mutually exclusive with real EExec#     echo "{-} $@" 1>&2
+#mutually exclusive with real EExec# }
+
+#mutually exclusive with real EExec# Verbose_EExecer()
+#mutually exclusive with real EExec# {
+#mutually exclusive with real EExec#     echo "{+} $@"
+#mutually exclusive with real EExec#     "$@"
+#mutually exclusive with real EExec# }
+
+trap_exit_msg=
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+}
+# trap 'on_exit' 0
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+    trap '' 0
+}
+# trap 'on_error' ERR
+
+sig_exit ()
+{
+    {
+        local sig_num=$1; shift
+        echo
+        echo "sig_exit, sig_num: $sig_num"
+        exit 1
+    } 1>&2
+}
+
+# for sig in 2 3 4 5 6 7 8 15
+# do
+#     trap "sig_exit $sig" $sig
+# done
+
+display_stderr()
+{
+    echo 1>&2 "$progname: $@"
+}
+
+status_msg()
+{
+    display_stderr "$@"
+}
+
+fatal_error()
+{
+    local error="${1}"
+    shift
+    display_stderr "$@"
+    exit "${error}"
+}
+
+Usage_error()
+{
+    fatal_error 1 "$@"
+}
+
+#
+# template end.
+########################################################################
+
+: ${post_processor_processor:=absolutizer}
+
+#e.g.# # Usage variable usage:
+Usage_args_info=" git args to 'git status'"
+#e.g.# Usage_synopsis="Manky Scottish git.
+#e.g.# They'll do you up a treat!"
+# Using ) after the args makes copy & paste between here and the
+# case statement easier.
+Usage_details="${EExec_parse_usage}
+-r|--rel|--relative) Use relative path names [$post_processor_processor].
+-a|-p|-l|--abs|--absolute|--pwd) Use absolute (no symlink) path names [$post_processor_processor].
+-R|--rp|--real|--realpath) Use realpath [$post_processor_processor].
+"
+option_str="raRpl"
+long_options=(
+"relative" "rel"
+"absolute" "abs" "pwd"
+"real" "realpath" "rp"
+)
+
+source dp-getopt+.sh || exit 1
+while (($# > 0))
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support: -n -v -q, etc. q.v. ~/bin/eexec
+      # Done by EExec_parse and friends.
+
+      # Program options.
+      -r|--rel|--relative) post_processor_processor=relativizer;;
+      -a|-p|-l|--abs|--absolute|--pwd) post_processor_processor=absolutizer;;
+      -R|--rp|--real|--realpath) post_processor_processor=realpathizer;;
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      # getopt will barf about unknown options.
+      # Here we barf about known options that we have forgotten to handle.
+      *) echo 1>&2 "Unhandled option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+
+# > git status -s
+#  M bin/dp-getopt+.sh
+# ?? bin/.#git-modified-files
+# ?? bin/git-modified-files
+
+relativizer()
+{
+    EExec_verbose_echo_id PWD
+    EExec dp-realpath -r "$@"
+}
+
+absolutizer()
+{
+    EExec echo "$PWD/$@"
+}
+
+realpathizer()
+{
+    EExec realpath "$@"
+}
+
+post_processor()
+{
+    while read
+    do
+      EExec_verbose_echo_id post_processor_processor REPLY
+      "${post_processor_processor}" "${REPLY}"
+    done
+}
+
+EExec_verbose_echo_id PWD
+if (($# > 0))
+then
+    for a in "$@"
+    do
+      echo "$a"
+    done
+else
+    cat
+fi | post_processor
+
