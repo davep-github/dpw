@@ -359,7 +359,9 @@ No regexps allowed. This will be processed by `regexp-opt'")
                                        "index-code"
                                        "nvrun ness"
                                        "xemacs")))
-                   '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(cia\\|st\\|diff\\)")
+;;                   '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(cia\\|st\\|diff\\)")
+                   ;; Any git looking command.  Better a false + than false -
+                   '("\\(dp-\\)?git\\(-\\S-+\\)")
                    '("p4\\s-+\\(diff\\)")
                    '("index-code.*")
                    '("\\(.*/\\)\\(t_make\\|build_gpu_multiengine.*\\.pl\\)")
@@ -3514,6 +3516,7 @@ reasonable: numbers, strings, symbols.
   ;; It would be nice if there was someplace higher up that we could put the
   ;; no more buffers check but there's no clean way to do it since those
   ;; functions shouldn't consider no more buffers as an error.
+  ;; Pass a no error flag?
   (let ((next-buffer (dp-next-shell-buffer)))
     (if (eq next-buffer (current-buffer))
         (dp-ding-and-message "No more shell buffers.")

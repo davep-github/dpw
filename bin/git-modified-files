@@ -105,16 +105,30 @@ Usage_error()
 # template end.
 ########################################################################
 
+argv=()
+while (($# > 0))
+do
+  if [ "${1}" == '--' ]
+  then
+      break
+  fi
+  argv+=("${1}")
+  shift
+done
 
-if (($# > 0))
+args=("$@")
+
+(("${#args[@]}" > 0)) && set -- "${args[@]}"
+
+if (("${#args[@]}" > 0))
 then
     # very simple testing.
-    for a in "$@"
+    for a in "${args[@]}"
     do
       echo "$a"
     done
 else
-    git status -s "$@"
+    git status -s
 fi \
     | sed -rn 's/(^[[:space:]]+M )(.*)$/\2/p' \
-    | cat
+    | file-relativizer "$@"
