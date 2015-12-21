@@ -122,9 +122,9 @@ running_as_script && {
 #
 
 #e.g.# # Usage variable usage:
-#e.g.# Usage_args_info=" errno..."
-#e.g.# Usage_synopsis="Display various info about errno...:
-#e.g.# "
+#e.g.# Usage_args_info=" Lookit the names!"
+#e.g.# Usage_synopsis="Manky Scottish git.
+#e.g.# They'll do you up a treat!"
 #e.g.# # Using ) after the args makes copy & paste between here and the
 #e.g.# # case statement easier.
 #e.g.# Usage_details="${EExec_parse_usage}
@@ -156,4 +156,3 @@ running_as_script && {
 #e.g.# done
 #e.g.# # The following is needed only when args are required.
 #e.g.# [ "$*" = "" ] && Usage
-

@@ -43,6 +43,7 @@ struct amdgpu_vm_manager {
 struct moo
 {
 	int					blah;
+	/* Space before tab... eeveeel. */
 	bool 		 			enabled;
 	const struct amdgpu_vm_pte_funcs	*vm_pte_funcs;
         suzz_t                                  *sztp;

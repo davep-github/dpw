@@ -26,6 +26,8 @@
         dtec = difftool --tool=ec-diff
         dtecmerge = difftool --tool=ec-merge
         dtem = difftool --tool=ec-merge
+        pull = pull --ff-only
+        pppull = pull
 # Graphical diff tool employer/environment de jure
         dtgraphical = difftool --tool=meld
         dtg = difftool --tool=meld
@@ -37,3 +39,9 @@
         gdir = rev-parse --git-dir
 	aliases = config --get-regexp ^alias\\.
 	undo-commit = reset --soft HEAD^
+	uncommit = reset --soft HEAD^
+# reset
+        unstage = reset HEAD    # remove files from index (tracking)
+        filelog = log -u        # show changes to a file
+        flog = log -u           # show changes to a file
+        

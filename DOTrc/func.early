@@ -26,6 +26,28 @@ false_p()
 }
 export -f false_p
 
+tf_name()
+{
+    if true_p "$@"
+    then
+        echo true
+    else
+        echo false
+    fi
+}
+export -f tf_name
+
+tfnot_name()
+{
+    if true_p "$@"
+    then
+        echo false
+    else
+        echo true
+    fi
+}
+export -f tfnot_name
+
 echo_name_and_val()
 {
     local echo_name_and_val_arg=
