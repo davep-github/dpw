@@ -384,7 +384,7 @@ export shell_name
 # load a conf file if one exists.  the values in it will
 # take precedence over anything coming from $HOST_INFO
 # this allows us to function in the absence of python.
-FAMILY= FAMILY_ZONE= pre_rcs= post_rcs= WORK_ZONE=
+FAMILY= FAMILY_ZONE= pre_rcs= post_rcs= WORK_ZONE= PROJECT=
 HOST_CONF="$RC_DIR/$HOSTNAME.conf"
 [ -f  $HOST_CONF ] && source $HOST_CONF
 
@@ -399,15 +399,17 @@ case $HOSTNAME in
 	: ${FAMILY:=$(host-family)}
 	: ${FAMILY_ZONE:=$(host-family-zone)}
 	: ${WORK_ZONE:=$($HOST_INFO -n '-' work-zone)}
+        : ${PROJECT:=$($HOST_INFO -n '-' project)}
 	;;
 esac
 export FAMILY
 export FAMILY_ZONE
 export WORK_ZONE
+export PROJECT
 
 # least specific to most so we can override things.
-export locale_rcs_fields=".OSName .FAMILY_ZONE .FAMILY .HOSTNAME .var .early" # .$WORK_ZONE"
-export locale_rcs=".$OSName .$FAMILY_ZONE .$FAMILY .$HOSTNAME .var .early" # .$WORK_ZONE"
+export locale_rcs_fields=".OSName .FAMILY_ZONE .FAMILY .HOSTNAME .PROJECT .var .early" # .$WORK_ZONE"
+export locale_rcs=".$OSName .$FAMILY_ZONE .$FAMILY .$HOSTNAME .$PROJECT .var .early" # .$WORK_ZONE"
 : ${pre_rcs:=$($HOST_INFO -n '' locale_pre)}
 : ${post_rcs:=$($HOST_INFO -n '' locale_post)}
 locale_rcs="$pre_rcs $locale_rcs $post_rcs"
@@ -421,6 +423,7 @@ set --
 #
 # add some locale specific dirs...
 export HOST_INFO_PATH="
+    $HOME/bin.$PROJECT
     $HOME/bin.$WORK_ZONE
     $HOME/bin.$PROJECT_BIN
     $HOME/bin.$OSName

@@ -110,13 +110,13 @@ e = OSDB.add
 e(
     kef='osname',
     dat={
-    'osname': 'freebsd',
+        'osname': 'freebsd',
     })
 
 e(
     kef='osname',
     dat={
-    'osname': 'linux',
+        'osname': 'linux',
     })
 
 #
@@ -254,34 +254,34 @@ namazu_base_dir = os.path.join(HOME, 'stuff/indices/')
 home_family = e(
     kef='family',
     dat={
-    'family': 'home',
-    'comment': 'Common things for home unix like machines.',
-    'network-name': 'meduseld',
-    'ISP': 'verizon.net',
-    'family_zone': 'home',
-    'xterm_bg': HOME_BG_COLOR,
-    'xterm_fg': HOME_FG_COLOR,
-    'xterm_bin': "xterm",
-    'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
-    #'xterm_font': "*NONE*",
-    'cdrw-dev': '1001,1,0',             # dvd, etc. rw
-    'cdrw-speed': '4',                  # 4x write speed, max for CDRWs
-    'namazu-dir-base': namazu_base_dir, # look up before this e()
-    'notes-index-dir': os.path.join(namazu_base_dir, 'notes'),
-    'notes-index-enable': 'yes',
-    'ports-index-dir': os.path.join(namazu_base_dir, 'ports'),
-    'ports-index-enable': 'yes',
-    'mail-index-dir': os.path.join(namazu_base_dir, 'mh'),
-    'mail-index-enable': 'yes',
-    # only colors scrollbar and menubar.
-    # other colors in ~/xf86/Xresources.huan
-    # except eit window bg, that is xterm_bg, above
-    #'xem_bg_color': 'rgb:f1/df/d4',
-    #'xem_bg_color': 'rgb:f1/f1/f1',
-    # Too close to other terms' colors.
-    #'xem_bg_color': 'rgb:f3/f3/f7',
-    #'xem_bg_color': 'rgb:FF/FB/EC',
-    'xem_bg_color': 'gray80',
+        'family': 'home',
+        'comment': 'Common things for home unix like machines.',
+        'network-name': 'meduseld',
+        'ISP': 'verizon.net',
+        'family_zone': 'home',
+        'xterm_bg': HOME_BG_COLOR,
+        'xterm_fg': HOME_FG_COLOR,
+        'xterm_bin': "xterm",
+        'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
+        #'xterm_font': "*NONE*",
+        'cdrw-dev': '1001,1,0',             # dvd, etc. rw
+        'cdrw-speed': '4',                  # 4x write speed, max for CDRWs
+        'namazu-dir-base': namazu_base_dir, # look up before this e()
+        'notes-index-dir': os.path.join(namazu_base_dir, 'notes'),
+        'notes-index-enable': 'yes',
+        'ports-index-dir': os.path.join(namazu_base_dir, 'ports'),
+        'ports-index-enable': 'yes',
+        'mail-index-dir': os.path.join(namazu_base_dir, 'mh'),
+        'mail-index-enable': 'yes',
+        # only colors scrollbar and menubar.
+        # other colors in ~/xf86/Xresources.huan
+        # except eit window bg, that is xterm_bg, above
+        #'xem_bg_color': 'rgb:f1/df/d4',
+        #'xem_bg_color': 'rgb:f1/f1/f1',
+        # Too close to other terms' colors.
+        #'xem_bg_color': 'rgb:f3/f3/f7',
+        #'xem_bg_color': 'rgb:FF/FB/EC',
+        'xem_bg_color': 'gray80',
     },
 )
 
@@ -290,11 +290,11 @@ home_family = e(
 e(
     kef='family',
     dat={
-    'family': 'home-freebsd',
-    'comment': 'FreeBSD boxen at home.',
-    'startx-opts': '-listen_tcp',
-    'cd-writer-dev': '/dev/cdrw',
-    'cd-writer-fs': '/cdrw',
+        'family': 'home-freebsd',
+        'comment': 'FreeBSD boxen at home.',
+        'startx-opts': '-listen_tcp',
+        'cd-writer-dev': '/dev/cdrw',
+        'cd-writer-fs': '/cdrw',
     },
     ref=[home_family, OSDB['freebsd'], default]
 )
@@ -304,11 +304,11 @@ e(
 e(
     kef='family',
     dat={
-    'family': 'home-linux',
-    'comment': 'Linux boxen at home.',
-    'cd-writer-dev': '/dev/cdrom',
-    'cd-writer-fs': '/cdrom',
-    'work-ssh-host': "sentinels.vanu.com",
+        'family': 'home-linux',
+        'comment': 'Linux boxen at home.',
+        'cd-writer-dev': '/dev/cdrom',
+        'cd-writer-fs': '/cdrom',
+        'work-ssh-host': "sentinels.vanu.com",
     },
     ref=[home_family, OSDB['linux'], default]
 )
@@ -319,24 +319,25 @@ AMD_FG_COLOR = 'white'
 amd_family = e(
     kef='family',
     dat={
-    'host-default-pattern': '.*',
-    'family': 'amd-linux',
-    'family_zone': 'amd',
-    'comment': 'My linux boxen at amd.',
-    'DTE': 'kde',
-    'main_macs_opts': '-eval (dp-main-rc+2w)',
-    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + AMD_XEM_GEOMETRY,
-#    "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
-    "xem_font": "",
-    'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
-    'work-zone': 'amd',
-#    """xem-xft-font""": '''"Inconsolata-13"''',
-    'xterm_bin': 'xterm',
-    'xterm_bg': AMD_BG_COLOR,
-    'xterm_fg': AMD_FG_COLOR,
-    'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
-    'xem_bg_color': NVIDIA_BG_COLOR,
-    '''command-line-mailer''': '''mutt''',
+        'host-default-pattern': '.*',
+        'family': 'amd-linux',
+        'family_zone': 'amd',
+        'project': 'brahma',
+        'comment': 'My linux boxen at amd.',
+        'DTE': 'kde',
+        'main_macs_opts': '-eval (dp-main-rc+2w)',
+        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + AMD_XEM_GEOMETRY,
+        #    "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
+        "xem_font": "",
+        'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
+        'work-zone': 'amd',
+        #    """xem-xft-font""": '''"Inconsolata-13"''',
+        'xterm_bin': 'xterm',
+        'xterm_bg': AMD_BG_COLOR,
+        'xterm_fg': AMD_FG_COLOR,
+        'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
+        'xem_bg_color': NVIDIA_BG_COLOR,
+        '''command-line-mailer''': '''mutt''',
     },
     # These are searched in the order given.
     ref=[OSDB['linux'], default]
@@ -349,13 +350,13 @@ AMD_ATLR5N4_0680_BG_COLOR = 'lavender'
 e(
     kef='host',
     dat={
-    'host-pattern': 'atlr5n4-[0-9]+$',
-    'family': 'amd_family',
-    'comment': 'A work machine.',
-    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70-0+0',
-    'xterm_bg': AMD_ATLR5N4_0680_BG_COLOR,
-    'xterm_fg': AMD_ATLR5N4_0680_FG_COLOR,
-    'xem_bg_color': AMD_ATLR5N4_0680_BG_COLOR,
+        'host-pattern': 'atlr5n4-[0-9]+$',
+        'family': 'amd_family',
+        'comment': 'A work machine.',
+        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70-0+0',
+        'xterm_bg': AMD_ATLR5N4_0680_BG_COLOR,
+        'xterm_fg': AMD_ATLR5N4_0680_FG_COLOR,
+        'xem_bg_color': AMD_ATLR5N4_0680_BG_COLOR,
     },
     ref=[amd_family, OSDB['linux'], default]
 )
@@ -369,13 +370,13 @@ PIGEONHAWK_BG_COLOR = 'rgb:ba/c1/d1'
 e(
     kef='host',
     dat={
-    'host-pattern': 'p(igeon)?hawk',
-    'family': 'amd_family',
-    'comment': 'A work/dev machine.',
-    'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70-0+0',
-    'xterm_bg': PIGEONHAWK_BG_COLOR,
-    'xterm_fg': PIGEONHAWKFG_COLOR,
-    'xem_bg_color': PIGEONHAWK_BG_COLOR,
+        'host-pattern': 'p(igeon)?hawk',
+        'family': 'amd_family',
+        'comment': 'A work/dev machine.',
+        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70-0+0',
+        'xterm_bg': PIGEONHAWK_BG_COLOR,
+        'xterm_fg': PIGEONHAWKFG_COLOR,
+        'xem_bg_color': PIGEONHAWK_BG_COLOR,
     },
     ref=[amd_family, OSDB['linux'], default]
 )
@@ -539,7 +540,7 @@ e = DB.add
 e(
     kef='host',
     dat={
-    'host': dppydb.default_to_node_name()
+        'host': dppydb.default_to_node_name()
     },
     ref=default
     )
@@ -567,7 +568,7 @@ for fam in famDB:
     e(
         kef='host',
         dat={
-        'host': fhost,
+            'host': fhost,
         },
         ref=fam)
 
@@ -609,91 +610,91 @@ for fam in famDB:
 e(
     kef='host',
     dat={
-    'host': 'huan',
-    'DTE': 'kde',                       # or none
-    'comment': 'My main box at home.',
-    'nick': 'home',
-    'xterm_bin': 'aterm',            # hangs, selection sucks.
-    #'xterm_opts': '--ls',              # konsole's opts
+        'host': 'huan',
+        'DTE': 'kde',                       # or none
+        'comment': 'My main box at home.',
+        'nick': 'home',
+        'xterm_bin': 'aterm',            # hangs, selection sucks.
+        #'xterm_opts': '--ls',              # konsole's opts
 
-    #'lem_bg_color': """#d3d3da""",
-    #'xem_bg_color': 'lavenderblush',
-    #'xem_opts': '-geometry 80x62-1+0',
-    # when using gnome & panel.
-    #'xem_opts': '-geometry 80x62+453+0 '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS,
-    #'lem_opts': '-eval (dp-laptop-rc) -geometry 80x64+428+0',
-    # evo
-    'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
-    # notebook
-    #'lem_opts': '-eval (dp-laptop-rc) -geometry 80x52-1+0',
-    # old: '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS
-    # was part of xem_opts.
-    #'xem_opts': '-geometry 80x69-1+0', #digital 17in
-    #'xem_opts': '-geometry  80x74-30+0',
-    'xem_opts': '-geometry  80x69-1+0',
-    'xem_font': '-*-Terminus-medium-r-*-*-*-120-*-*-*-*-iso8859-*',
-    # with KDE setting colors of non-KDE apps, this only affects
-    #  menubar and scrollbar (?would toolbar be set, too?)
-    # use home_family's
-    #'xem_bg_color': 'rgb:c5/ca/e6',     # consider: #F2F0FF
-    'tunnel-ip': '16.11.64.97',
+        #'lem_bg_color': """#d3d3da""",
+        #'xem_bg_color': 'lavenderblush',
+        #'xem_opts': '-geometry 80x62-1+0',
+        # when using gnome & panel.
+        #'xem_opts': '-geometry 80x62+453+0 '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS,
+        #'lem_opts': '-eval (dp-laptop-rc) -geometry 80x64+428+0',
+        # evo
+        'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
+        # notebook
+        #'lem_opts': '-eval (dp-laptop-rc) -geometry 80x52-1+0',
+        # old: '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS
+        # was part of xem_opts.
+        #'xem_opts': '-geometry 80x69-1+0', #digital 17in
+        #'xem_opts': '-geometry  80x74-30+0',
+        'xem_opts': '-geometry  80x69-1+0',
+        'xem_font': '-*-Terminus-medium-r-*-*-*-120-*-*-*-*-iso8859-*',
+        # with KDE setting colors of non-KDE apps, this only affects
+        #  menubar and scrollbar (?would toolbar be set, too?)
+        # use home_family's
+        #'xem_bg_color': 'rgb:c5/ca/e6',     # consider: #F2F0FF
+        'tunnel-ip': '16.11.64.97',
     },
     ref=famDB['home-linux'])
 
 e(
     kef='host',
     dat={
-    'host': 'vilya',
-    'DTE': 'kde',                       # or none
-    'comment': 'My main box at home.',
-    'nick': 'home',
-    #'xterm_bin': 'aterm',            # hangs, selection sucks.
-    '#xterm_bin': 'konsole',             # xx uses -T which konsole hates.
-#    'xterm_bin': 'xterm',
-#    'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
-    'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
-    'xem_opts': '-eval (dp-2-v-or-h-windows) -geometry  81x69-1+0',
-    #'xem_font': '-*-Terminus-medium-r-*-*-*-120-*-*-*-*-iso8859-*',
-    # magically changed from 120 being right to 160 being right.
-    # update of terminus font?
-    # Terminus is nice, but curlies and brackets are nigh indistinguishable.
-    #'xem_font': '-*-Terminus-medium-r-*-*-*-160-*-*-*-*-iso8859-*',
-    # Wish there were other sizes.
-    #'xem_font': '-*-bitstream vera sans mono-*-r-*-*-*-120-*-*-*-*-*-*',
-    #'xem_font': '-b&h-lucidatypewriter-medium-*-*-*-*-100-*-*-*-*-*-*',
-    # Vera got very high marks in a legibility survey.
-    "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
-    # I am playing with --with-xft. Font selection is "better" and really sucks.
-    # Font menu is fucked, but this works:
-    # (set-default-font "Inconsolata-12")
-    """xem-xft-font""": '''"Inconsolata-12"''',
+        'host': 'vilya',
+        'DTE': 'kde',                       # or none
+        'comment': 'My main box at home.',
+        'nick': 'home',
+        #'xterm_bin': 'aterm',            # hangs, selection sucks.
+        '#xterm_bin': 'konsole',             # xx uses -T which konsole hates.
+        #    'xterm_bin': 'xterm',
+        #    'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
+        'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
+        'xem_opts': '-eval (dp-2-v-or-h-windows) -geometry  81x69-1+0',
+        #'xem_font': '-*-Terminus-medium-r-*-*-*-120-*-*-*-*-iso8859-*',
+        # magically changed from 120 being right to 160 being right.
+        # update of terminus font?
+        # Terminus is nice, but curlies and brackets are nigh indistinguishable.
+        #'xem_font': '-*-Terminus-medium-r-*-*-*-160-*-*-*-*-iso8859-*',
+        # Wish there were other sizes.
+        #'xem_font': '-*-bitstream vera sans mono-*-r-*-*-*-120-*-*-*-*-*-*',
+        #'xem_font': '-b&h-lucidatypewriter-medium-*-*-*-*-100-*-*-*-*-*-*',
+        # Vera got very high marks in a legibility survey.
+        "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
+        # I am playing with --with-xft. Font selection is "better" and really sucks.
+        # Font menu is fucked, but this works:
+        # (set-default-font "Inconsolata-12")
+        """xem-xft-font""": '''"Inconsolata-12"''',
 
-    # NB! using the version number can cause extreme weirdness with fonts!
-    'tunnel-ip': '16.11.64.97',
-    'SVN_ROOT': '''file:///usr/yokel/svn/my-world''',
-    'SVNROOT': '''file:///usr/yokel/svn/my-world''',
-    'firefox-profile': "KDE",
-    'firefox-bin': "firefox",
+        # NB! using the version number can cause extreme weirdness with fonts!
+        'tunnel-ip': '16.11.64.97',
+        'SVN_ROOT': '''file:///usr/yokel/svn/my-world''',
+        'SVNROOT': '''file:///usr/yokel/svn/my-world''',
+        'firefox-profile': "KDE",
+        'firefox-bin': "firefox",
     },
     ref=famDB['home-linux'])
 
 e(
     kef='host',
     dat={
-    'host': 'laptop',
-    'DTE': 'none',                      # or none
-    'comment': 'Laptop running debian.',
-    'nick': 'laptop',
-    'xterm_bin': 'aterm',
-    #'lem_bg_color': """#d3d3da""",
-    #'xem_bg_color': 'lavenderblush',
-    #'xem_opts': '-geometry 80x62-1+0',
-    # when using gnome & panel.
-    #'xem_opts': '-geometry 80x62+453+0 '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS,
-    'xem_font': '''-*-Fixed-medium-r-*-*-*-120-*-*-*-*-iso8859-*''',
-    'xem_opts': """-geometry 80x52-1+0 """+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS,
-    'xem_bg_color': 'honeydew2',
-    'startx-opts': '',
+        'host': 'laptop',
+        'DTE': 'none',                      # or none
+        'comment': 'Laptop running debian.',
+        'nick': 'laptop',
+        'xterm_bin': 'aterm',
+        #'lem_bg_color': """#d3d3da""",
+        #'xem_bg_color': 'lavenderblush',
+        #'xem_opts': '-geometry 80x62-1+0',
+        # when using gnome & panel.
+        #'xem_opts': '-geometry 80x62+453+0 '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS,
+        'xem_font': '''-*-Fixed-medium-r-*-*-*-120-*-*-*-*-iso8859-*''',
+        'xem_opts': """-geometry 80x52-1+0 """+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS,
+        'xem_bg_color': 'honeydew2',
+        'startx-opts': '',
     },
     ref=famDB['home-linux'])
 
