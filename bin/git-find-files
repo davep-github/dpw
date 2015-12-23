@@ -1,0 +1,1 @@
+find .git/[a-n]* .git/[p-z]*
