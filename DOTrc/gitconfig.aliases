@@ -17,6 +17,8 @@
         mnc = merge --no-commit
         pffo = pull --ff-only --no-commit
         mffo = merge --ff-only --no-commit
+        # Merge after fetch.
+        maf = merge FETCH_HEAD
         dtmeld = difftool --tool=meld
         dtm = difftool --tool=meld
         dtdiffuse = difftool --tool=diffuse
