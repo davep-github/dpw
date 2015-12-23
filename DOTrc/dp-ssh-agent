@@ -57,6 +57,7 @@ dp_ssh_add_keys()
 # Really start or connect to ssh agent
 dp_ssh_start_agent()
 {
+#set -x
 # Until I fix this whole concept.
 #what-was-wrong-before?     [ -z "${SSH_AGENT_PID}" ] && {
 #what-was-wrong-before?         eval $(ssh-agent)
