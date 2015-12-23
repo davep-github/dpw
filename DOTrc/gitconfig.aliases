@@ -10,6 +10,8 @@
         ldf = log --decorate=full -n 5
         ld = log --decorate -n 5
         log5 = log -n 5
+        l5 = log -n 5
+        log11 = log -n 11
         l11 = log -n 11
         dfo = diff --name-only
         dfn = diff --name-only
