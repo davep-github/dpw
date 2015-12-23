@@ -12,8 +12,14 @@ do
 done
 unset eexec_program
 
-: ${mail_to:=$USER}
+: ${mail_to:=${EMAIL_YOPP_ADDR}}
 : ${subject:="$1 completed"}
+
+[ -z "${mail_to}" ] && {
+    echo "I need an email addr to send to.
+export EMAIL_YOPP_ADDR or use mail_to=<addr> prefix on command line."
+    exit 1
+} 1>&2
 
 command="$@"
 "$@"

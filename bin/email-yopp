@@ -15,6 +15,7 @@ unset eexec_program
 : ${annotation=}
 : ${run_cmd_p=}
 RC=-
+: ${mail_to:=${EMAIL_YOPP_ADDR}}
 
 while (($# > 0))
 do
@@ -23,11 +24,18 @@ do
       --anno|--annotation) shift; annotation="${annotation} ${2}";;
       --run|--exec|--eval|--cmd) run_cmd_p=t;;
       --rc|--RC) shift; RC="${1}";;
+      --mail-to|--mailto|--addr|--yoppee) shift; mail_to="${1}";;
       --) shift; break;;
       *) break;
   esac
   shift
 done
+
+[ -z "${mail_to}" ] && {
+    echo "I need an email addr to send to.
+export EMAIL_YOPP_ADDR or use --mail-to <yoppee> option."
+    exit 1
+} 1>&2
 
 if vunsetp "$*"
 then
@@ -55,4 +63,4 @@ msg="$progname: in ${PWD}: ${type}$@"
 {
     echo "On $(date)"
     echo "${msg}"
-} | EExec send-mail-command-line.sh -s "${prefix}${annotation}YOPP! ${msg}" "${USER}@skaion.com"
+} | EExec send-mail-command-line.sh -s "${prefix}${annotation}YOPP! ${msg}" "${EMAIL_YOPP_ADDR}"
