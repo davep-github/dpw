@@ -39,3 +39,5 @@
 			  "\\*?[A-Za-z_][0-9A-Za-z:_]*\\s-*\\(\\()\\|"
 			  "=[^=\n].*\\|(.*)\\|\\(\\[.*\\]\\)*\\)?"
 			  "\\s-*[;,]\\|)\\s-*$\\)"))
+
+(defvar dp-edit-parallel-tramp-file-default-location "/[pigeonhawk]")

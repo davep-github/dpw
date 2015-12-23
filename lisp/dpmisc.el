@@ -14649,6 +14649,19 @@ them. Q.v. `unfuck-gz'"
          file-name)) 
     (comint-read-input-ring)))
 
+(defvar dp-edit-parallel-tramp-file-default-location nil)
+
+(defun dp-edit-parallel-tramp-file (&optional tramp-location)
+  (interactive "P")
+  (if (or (Cu-p)
+          (and (not tramp-location)
+               (not dp-edit-parallel-tramp-file-default-location)))
+      (setq tramp-location
+            (dp-prompt-with-symbol-near-point-as-default "tramp host prefix")))
+  (setq-ifnil tramp-location dp-edit-parallel-tramp-file-default-location)
+  (let ((file-name (concat tramp-location (buffer-file-name))))
+    (message "tramping>%s<" file-name)
+    (find-file file-name)))
 
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;;
