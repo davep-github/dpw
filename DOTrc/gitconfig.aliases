@@ -18,7 +18,9 @@
         pffo = pull --ff-only --no-commit
         mffo = merge --ff-only --no-commit
         # Merge after fetch.
-        maf = merge FETCH_HEAD
+        mfh = merge FETCH_HEAD
+        difffh = diff FETCH_HEAD
+        dfh = diff FETCH_HEAD
         dtmeld = difftool --tool=meld
         dtm = difftool --tool=meld
         dtdiffuse = difftool --tool=diffuse
@@ -30,6 +32,9 @@
         dtem = difftool --tool=ec-merge
         pull = pull --ff-only
         pppull = pull
+        pulljustpull = pull	# q.v. Zoot
+        pjp = pull		# q.v. Zoot
+
 # Graphical diff tool employer/environment de jure
         dtgraphical = difftool --tool=meld
         dtg = difftool --tool=meld
