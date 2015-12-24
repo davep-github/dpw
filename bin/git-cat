@@ -113,19 +113,9 @@ git_diff_or_cat()
     local file="$1"; shift
     EExec_verbose_echo_id commit
     EExec_verbose_echo_id file
-    EExec git show "${commit}:$(git-relative-filename ${file})"
-#FTFM first     # This will, by default, cat its 2nd parameter, the name of the temp file
-#FTFM first     # extracted from the given commit by git for doing the diff.
-#FTFM first     export GIT_EXTERNAL_DIFF=$HOME/bin/dp-cat-some
-#FTFM first     # sadly git doesn't seem to invoke the diff program if the files are
-#FTFM first     # identical.
-#FTFM first     if EExec -y git diff "$commit" -- "$file" | grep -q .
-#FTFM first     then
-#FTFM first         EExec git diff "$commit" -- "$file"
-#FTFM first     else
-#FTFM first         # The files are identical, so show the existing one.
-#FTFM first         EExec cat "$file"
-#FTFM first     fi
+    local grf=$(EExec git-relative-filename ${file})
+    EExec_verbose_echo_id grf
+    EExec git show "${commit}:${grf}"
 }
 
 nth=
