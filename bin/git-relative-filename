@@ -108,5 +108,5 @@ git_dotgit=$(git rev-parse --git-dir)
 git_root=$(dirname "${git_dotgit}")
 for f in "$@"
 do
-  realpath --relative-to="${git_root}" "${f}"
+  EExec dp-realpath -R "${git_root}" "${f}"
 done
