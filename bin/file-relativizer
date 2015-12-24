@@ -109,7 +109,7 @@ Usage_error()
 
 #e.g.# # Usage variable usage:
 Usage_args_info=" git args to 'git status'"
-#e.g.# Usage_synopsis="Manky Scottish git.
+#e.g.# Usage_synopsis="Manky Scott's git.
 #e.g.# They'll do you up a treat!"
 # Using ) after the args makes copy & paste between here and the
 # case statement easier.
@@ -142,7 +142,7 @@ do
       --) shift ; break ;;
       # getopt will barf about unknown options.
       # Here we barf about known options that we have forgotten to handle.
-      *) echo 1>&2 "Unhandled option>$1<"
+      *) echo 1>&2 "Unsupported option>$1<"
          exit 1;;
     esac
     shift
