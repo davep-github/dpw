@@ -803,7 +803,9 @@ aa bb(
         (newline-and-indent)
         (forward-line -1)
         (dp-c-fix-comment)
-        (dp-c-indent-command))
+        (save-excursion
+          (back-to-indentation)
+          (dp-c-indent-command)))
       )
     (end-of-line)
     (if (or force-newline-after-brace-p
