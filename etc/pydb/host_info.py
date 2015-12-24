@@ -11,6 +11,8 @@
 # and saved as a .pyc file which will speed up subsequent accesses.
 #
 
+# N.B. See earlier commit(s) (like f80a23d0286b7c95917a3a4d127c0cac824eb715)
+# For many, many retired entries.
 
 #
 # host is hostname
@@ -95,7 +97,8 @@ default = dppydb.Entry({
     'lem_bg_color': '',
     'xxlem_pre_cmd': '''DISPLAY=`myhost`:0.0; export DISPLAY''',
     'x_html_browser': 'xkonq',
-    'text_html_browser': 'w3m'
+    'text_html_browser': 'w3m',
+    'command-line-mailer': 'mail',      # Must support mail(1) args.
     })
 
 #
@@ -165,90 +168,6 @@ WORK_BG_COLOR = VANU_BG_COLOR
 #
 
 #
-# FAMILY entry for CRL-DUNIX
-## e(
-##     kef='family',
-##     dat={
-##     'family': 'crl-dunix',
-##     'comment': 'digital unix boxen around the lab',
-##     'X': 'CDE',
-##     'family_zone': 'crl',
-##     'xterm_bg': "'"+CRL_BG_COLOR+"'",   # family colors help distinguish
-##     'xterm_fg': 'black',                # who's who when many windows are up
-##     'rinc_host': 'goliath',             # from where do we inc mail?
-##     'xem_bin': 'emacs',  # B.O.E
-##     'xrl_rsh_bin': 'rsh',               # we're usually tunneled in
-##     },
-##     ref=default
-## )
-
-#
-# FAMILY entry for CRL-LINUX
-## e(
-##     kef='family',
-##     dat={
-##     'family': 'crl-linux',
-##     'family_zone': 'crl',
-##     'comment': 'My linux boxen at CRL.',
-##     'DTE': 'kde',
-##     'xterm_bg': "'"+CRL_BG_COLOR+"'",
-##     'xterm_fg': 'black',
-##     'xem_bg_color': "'"+CRL_BG_COLOR+"'",
-##     'rinc_host': 'goliath',    # since linux boxen can't mount the mail spool
-##     'xterm_opts': """'-sb -sl 1024 -ls -sr +si -sk'""", # no fade support
-##     'xem_opts': '-geometry 81x74+753+0',
-##     'xns_dir': '/usr/lib/netscape',
-##     'xns_bin': 'netscape-communicator',
-##     'xrl_rsh_bin': 'rsh',               # we're usually tunneled in
-##     },
-##     # These are searched in the order given.
-##     ref=[OSDB['linux'], default]
-## )
-
-#
-# FAMILY entry for VANU-LINUX
-## e(
-##     kef='family',
-##     dat={
-##     'family': 'vanu-linux',
-##     'family_zone': 'vanu',
-##     'comment': 'My linux boxen at Vanu.',
-##     'DTE': 'kde',
-##     'xterm_bg': "'"+VANU_BG_COLOR+"'",
-##     'xterm_fg': "'"+VANU_FG_COLOR+"'",
-##     'xem_bg_color': "'"+VANU_BG_COLOR+"'",
-##     'xem_opts': '-geometry 81x74+753+0',
-##     'xns_dir': '/home/davep',
-##     'xns_bin': 'ffox',
-##     'work-zone': 'vanu',
-##     },
-##     # These are searched in the order given.
-##     ref=[OSDB['linux'], default]
-## )
-
-#
-# FAMILY entry for CRL-NETBSD
-## e(
-##     kef='family',
-##     dat={
-##     'family': 'crl-netbsd',
-##     'comment': 'CRL netbsd boxes.',
-##     'shell': 'tcsh'
-##     },
-##     ref=default
-## )
-
-#
-# FAMILY entry for CRL-DOZE
-## e(
-##     kef='family',
-##     dat={
-##     'family': 'crl-doze',
-##     'shell': 'cmd',
-##     'family_zone': 'crl',
-##     })
-
-#
 # FAMILY entry.  Common home (meduseld.net) stuff
 namazu_base_dir = os.path.join(HOME, 'stuff/indices/')
 home_family = e(
@@ -286,20 +205,6 @@ home_family = e(
 )
 
 #
-# FAMILY entry for HOME-FREEBSD
-e(
-    kef='family',
-    dat={
-        'family': 'home-freebsd',
-        'comment': 'FreeBSD boxen at home.',
-        'startx-opts': '-listen_tcp',
-        'cd-writer-dev': '/dev/cdrw',
-        'cd-writer-fs': '/cdrw',
-    },
-    ref=[home_family, OSDB['freebsd'], default]
-)
-
-#
 # FAMILY entry for HOME-LINUX
 e(
     kef='family',
@@ -308,7 +213,7 @@ e(
         'comment': 'Linux boxen at home.',
         'cd-writer-dev': '/dev/cdrom',
         'cd-writer-fs': '/cdrom',
-        'work-ssh-host': "sentinels.vanu.com",
+        #'work-ssh-host': "sentinels.vanu.com",
     },
     ref=[home_family, OSDB['linux'], default]
 )
@@ -337,15 +242,14 @@ amd_family = e(
         'xterm_fg': AMD_FG_COLOR,
         'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
         'xem_bg_color': NVIDIA_BG_COLOR,
-        '''command-line-mailer''': '''mutt''',
     },
     # These are searched in the order given.
     ref=[OSDB['linux'], default]
 )
 
-AMD_ATLR5N4_0680_FG_COLOR = 'black'
-##AMD_ATLR5N4_0680_BG_COLOR = 'rgb:d2/d0/b0'
-AMD_ATLR5N4_0680_BG_COLOR = 'lavender'
+AMD_ATLR5N4_FG_COLOR = 'black'
+##AMD_ATLR5N4_BG_COLOR = 'rgb:d2/d0/b0'
+AMD_ATLR5N4_BG_COLOR = 'lavender'
 
 e(
     kef='host',
@@ -354,9 +258,9 @@ e(
         'family': 'amd_family',
         'comment': 'A work machine.',
         'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70-0+0',
-        'xterm_bg': AMD_ATLR5N4_0680_BG_COLOR,
-        'xterm_fg': AMD_ATLR5N4_0680_FG_COLOR,
-        'xem_bg_color': AMD_ATLR5N4_0680_BG_COLOR,
+        'xterm_bg': AMD_ATLR5N4_BG_COLOR,
+        'xterm_fg': AMD_ATLR5N4_FG_COLOR,
+        'xem_bg_color': AMD_ATLR5N4_BG_COLOR,
     },
     ref=[amd_family, OSDB['linux'], default]
 )
@@ -380,150 +284,6 @@ e(
     },
     ref=[amd_family, OSDB['linux'], default]
 )
-
-##legacy NV_GEOMETRY = '-geometry 81x72-0+0'
-##legacy #
-##legacy # FAMILY entry for NVIDIA-LINUX
-##legacy nvidia_family = e(
-##legacy     kef='family',
-##legacy     dat={
-##legacy     'family': 'nvidia-linux',
-##legacy     'family_zone': 'nvidia',
-##legacy     'comment': 'My linux boxen at nVIDIA.',
-##legacy     'DTE': 'kde',
-##legacy     'main_macs_opts': '-eval (dp-main-rc+2w)',
-##legacy     'xem_opts': NV_GEOMETRY,
-##legacy     # This is OK, but O0{}[]() : no slashed 0. O & 0 are distinguishable.
-##legacy     #'xem_font': '''-*-Lucidatypewriter-medium-r-*-*-*-120-*-*-*-*-*-*''',
-##legacy     # May be less legible in the long run, but 0 is slashed.
-##legacy     'xem_font': '''-*-Fxd-medium-r-*-*-*-120-*-*-*-*-*-*''',
-##legacy     #'xem_font': '''-*-fixed-medium-r-*-*-*-140-*-*-*-*-iso8859-*''',
-##legacy     "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
-##legacy     "xem_font": '''-*-Fixed-medium-r-*-*-*-120-*-*-*-*-*-*''',
-##legacy     'work-zone': 'nvidia',
-##legacy     'xterm_bg': NVIDIA_BG_COLOR,
-##legacy     'xterm_fg': NVIDIA_FG_COLOR,
-##legacy     'xem_bg_color': 'gray80',
-
-
-##legacy     },
-##legacy     # These are searched in the order given.
-##legacy     ref=[OSDB['linux'], default]
-##legacy )
-
-##legacy LRL_XEM_GEOMETRY = '-geometry 81x70-0+0'
-##legacy LRL_BG_COLOR = 'rgb:24/00/68'
-##legacy LRL_FG_COLOR = 'white'
-##legacy lrl_family = e(
-##legacy     kef='family',
-##legacy     dat={
-##legacy     'host-default-pattern': '.*',
-##legacy     'family': 'lrl-linux',
-##legacy     'family_zone': 'lrl',
-##legacy     'comment': 'My linux boxen at lrl.',
-##legacy     'DTE': 'lxde',                      # sigh.
-##legacy     'main_macs_opts': '-eval (dp-main-rc+2w)',
-##legacy     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + LRL_XEM_GEOMETRY,
-##legacy     "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
-##legacy     'xem_font': '',
-##legacy     'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
-##legacy     'work-zone': 'lrl',
-##legacy     """xem-xft-font""": '''"Inconsolata-13"''',
-##legacy     'xterm_bin': 'xterm',
-##legacy     'xterm_bg': LRL_BG_COLOR,
-##legacy     'xterm_fg': LRL_FG_COLOR,
-##legacy     'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
-##legacy     'xem_bg_color': NVIDIA_BG_COLOR,
-##legacy     '''command-line-mailer''': '''mutt''',
-##legacy     },
-##legacy     # These are searched in the order given.
-##legacy     ref=[OSDB['linux'], default]
-##legacy )
-
-##legacy LRL_AVOCADO_FG_COLOR = 'black'
-##legacy #LRL_AVOCADO_BG_COLOR = 'rgb:f0/ff/c0'
-##legacy LRL_AVOCADO_BG_COLOR = 'rgb:d9/de/97'
-
-##legacy e(
-##legacy     kef='host',
-##legacy     dat={
-##legacy     'host-pattern': 'avocado',
-##legacy     'family': 'lrl_family',
-##legacy     'comment': 'A work machine.',
-##legacy     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + LRL_XEM_GEOMETRY,
-##legacy     'xterm_bg': LRL_AVOCADO_BG_COLOR,
-##legacy     'xterm_fg': LRL_AVOCADO_FG_COLOR,
-##legacy     'xem_bg_color': LRL_AVOCADO_BG_COLOR,
-##legacy     },
-##legacy     ref=[lrl_family, OSDB['linux'], default]
-##legacy )
-
-##legacy LRL_MANGO_FG_COLOR = 'black'
-##legacy #FFE79E
-##legacy LRL_MANGO_BG_COLOR = 'rgb:ff/e7/9e'
-
-##legacy e(
-##legacy     kef='host',
-##legacy     dat={
-##legacy     'host-pattern': 'mango',
-##legacy     'family': 'lrl_family',
-##legacy     'comment': 'A work machine.',
-##legacy     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + LRL_XEM_GEOMETRY,
-##legacy     'xterm_bg': LRL_MANGO_BG_COLOR,
-##legacy     'xterm_fg': LRL_MANGO_FG_COLOR,
-##legacy     'xem_bg_color': LRL_MANGO_BG_COLOR,
-##legacy     },
-##legacy     ref=[lrl_family, OSDB['linux'], default]
-##legacy )
-
-##legacy LRL_KIWI_FG_COLOR = 'black'
-##legacy ##LRL_KIWI_BG_COLOR = 'rgb:d2/d0/b0'
-##legacy LRL_KIWI_BG_COLOR = 'lavender'
-
-##legacy e(
-##legacy     kef='host',
-##legacy     dat={
-##legacy     'host-pattern': 'kiwi',
-##legacy     'family': 'lrl_family',
-##legacy     'comment': 'A work machine.',
-##legacy     # Good for portrait, on BAM.
-##legacy     #'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70+0+0',
-##legacy     # below is for middle portrait monitor.
-##legacy     #'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70+1922+0',
-##legacy     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70-0+0',
-##legacy     'xterm_bg': LRL_KIWI_BG_COLOR,
-##legacy     'xterm_fg': LRL_KIWI_FG_COLOR,
-##legacy     'xem_bg_color': LRL_KIWI_BG_COLOR,
-##legacy     },
-##legacy     ref=[lrl_family, OSDB['linux'], default]
-##legacy )
-#
-# FAMILY entry for o-xterm
-## e(
-##     kef='family',
-##     dat={
-##     'family': 'nv-o-xterm',
-##     'comment': 'General, interactive multiuser development machine. No CPU hogging',
-##     'host-pattern': '(sc|o)-xterm-[0-9]+',
-##     },
-##     ref=[nvidia_family, OSDB['linux'], default]
-## )
-
-## e(
-##     kef='family',
-##     dat={
-##     'family': 'nv-l-sim',
-##     'comment': 'Heavy load machines.',
-##     'host-pattern': 'l-sim-|sc-sim',
-##     'xem_opts': '-eval (dp-2-v-or-h-windows) ' + NV_GEOMETRY,
-##     'xterm_bg': NVIDIA_LSIM_BG_COLOR,
-##     'xterm_fg': NVIDIA_LSIM_FG_COLOR,
-##     'xem_bg_color': NVIDIA_LSIM_BG_COLOR,
-##     'main_macs_opts': '',
-##     'post_bashrc_command': 'eval ignoreeof=10',
-##     },
-##     ref=[nvidia_family, OSDB['linux'], default]
-## )
 
 
 # create the db.
@@ -572,75 +332,6 @@ for fam in famDB:
         },
         ref=fam)
 
-## e(
-##     kef='host',
-##     dat={
-##     'host': 'baloo',
-##     'DTE': 'kde',                       # or none
-##     'comment': 'My main box at home.',
-##     'nick': 'home',
-##     #'xterm_bin': 'konsole',            # hangs, selection sucks.
-##     #'xterm_opts': '--ls',              # konsole's opts
-
-##     #'lem_bg_color': """#d3d3da""",
-##     #'xem_bg_color': 'lavenderblush',
-##     #'xem_opts': '-geometry 80x62-1+0',
-##     # when using gnome & panel.
-##     #'xem_opts': '-geometry 80x62+453+0 '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS,
-##     #'lem_opts': '-eval (dp-laptop-rc) -geometry 80x64+428+0',
-##     # evo
-##     'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
-##     # notebook
-##     #'lem_opts': '-eval (dp-laptop-rc) -geometry 80x52-1+0',
-##     # old: '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS
-##     # was part of xem_opts.
-##     #'xem_opts': '-geometry 80x69-1+0', #digital 17in
-##     #'xem_opts': '-geometry  80x74-30+0',
-##     'xem_opts': '-geometry  80x69-77+0',
-##     'xem_font': '-*-Terminus-medium-r-*-*-*-120-*-*-*-*-iso8859-*',
-##     # with KDE setting colors of non-KDE apps, this only affects
-##     #  menubar and scrollbar (?would toolbar be set, too?)
-##     #'xem_bg_color': 'rgb:c5/ca/e6',     # consider: #F2F0FF
-##     'xem_bg_color': 'rgb:f1/e8/d8',     # consider: #F2F0FF
-##     'tunnel-ip': '16.11.64.97',
-##     },
-##     ref=famDB['home-freebsd'])
-
-#    'xterm_bin': 'konsole',
-e(
-    kef='host',
-    dat={
-        'host': 'huan',
-        'DTE': 'kde',                       # or none
-        'comment': 'My main box at home.',
-        'nick': 'home',
-        'xterm_bin': 'aterm',            # hangs, selection sucks.
-        #'xterm_opts': '--ls',              # konsole's opts
-
-        #'lem_bg_color': """#d3d3da""",
-        #'xem_bg_color': 'lavenderblush',
-        #'xem_opts': '-geometry 80x62-1+0',
-        # when using gnome & panel.
-        #'xem_opts': '-geometry 80x62+453+0 '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS,
-        #'lem_opts': '-eval (dp-laptop-rc) -geometry 80x64+428+0',
-        # evo
-        'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
-        # notebook
-        #'lem_opts': '-eval (dp-laptop-rc) -geometry 80x52-1+0',
-        # old: '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS
-        # was part of xem_opts.
-        #'xem_opts': '-geometry 80x69-1+0', #digital 17in
-        #'xem_opts': '-geometry  80x74-30+0',
-        'xem_opts': '-geometry  80x69-1+0',
-        'xem_font': '-*-Terminus-medium-r-*-*-*-120-*-*-*-*-iso8859-*',
-        # with KDE setting colors of non-KDE apps, this only affects
-        #  menubar and scrollbar (?would toolbar be set, too?)
-        # use home_family's
-        #'xem_bg_color': 'rgb:c5/ca/e6',     # consider: #F2F0FF
-        'tunnel-ip': '16.11.64.97',
-    },
-    ref=famDB['home-linux'])
-
 e(
     kef='host',
     dat={
@@ -677,190 +368,3 @@ e(
         'firefox-bin': "firefox",
     },
     ref=famDB['home-linux'])
-
-e(
-    kef='host',
-    dat={
-        'host': 'laptop',
-        'DTE': 'none',                      # or none
-        'comment': 'Laptop running debian.',
-        'nick': 'laptop',
-        'xterm_bin': 'aterm',
-        #'lem_bg_color': """#d3d3da""",
-        #'xem_bg_color': 'lavenderblush',
-        #'xem_opts': '-geometry 80x62-1+0',
-        # when using gnome & panel.
-        #'xem_opts': '-geometry 80x62+453+0 '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS,
-        'xem_font': '''-*-Fixed-medium-r-*-*-*-120-*-*-*-*-iso8859-*''',
-        'xem_opts': """-geometry 80x52-1+0 """+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS,
-        'xem_bg_color': 'honeydew2',
-        'startx-opts': '',
-    },
-    ref=famDB['home-linux'])
-
-
-#
-# FAMILY entry for CRL-REDNET-LINUX
-## e(
-##     kef='family',
-##     dat={
-##     'family': 'crl-rednet-linux',
-##     'comment': 'CRL machines on the rednet',
-##     'xem_bg_color': REDNET_BG_COLOR,
-##     'xterm_bg': REDNET_BG_COLOR,
-##     'xterm_bin': 'aterm',
-##     'xterm_opts': """'-sb -sl 1024 -ls -sr +si -sk'""",
-##     'xem_opts': '-geometry 80x74+553+0',
-##     },
-##     ref=famDB['crl-linux']
-##     )
-
-## e(
-##     kef='host',
-##     dat={
-##     'host': 'sybil',
-##     'comment': 'My main box at CRL.',
-##     'xem_opts': '-geometry 80x74+753+0 '+XEM_RUN_SERVER+' '+ XEM_RUN_APPTS,
-##     'distribution': 'Mandrake',
-##     },
-##     ref=famDB['crl-linux'])
-
-## e(
-##     kef='host',
-##     dat={
-##     'host': 'walrus',
-##     'comment': '2nd linux box @ work.',
-##     'distribution': 'Mandrake',
-##     'xterm_bg': 'linen',
-##     'xterm_fg': 'black',
-##     },
-##     ref=famDB['crl-linux'])
-
-## e(
-##     kef='host',
-##     dat={
-##     'host': 'highwind',
-##     },
-##     ref=famDB['crl-linux'])
-
-## e(
-##     kef='host',
-##     dat={
-##     'host': 'thorin',
-##     'xterm_bg': REDNET_BG_COLOR,
-##     'xrl_rsh_bin': 'ssh',               # used by xrl
-##     },
-##     ref=famDB['crl-linux'])
-
-## e(
-##     kef='host',
-##     dat={
-##     'host': 'foehammer',                # glamdring from the outside
-##     'xterm_bg': REDNET_BG_COLOR,
-##     'xrl_rsh_bin': 'ssh',               # used by xrl
-##     },
-##     ref=famDB['crl-linux'])
-
-## #
-## # my alpha test cluster
-## PP_BG_COLOR='cornsilk'
-## for h in ('ping', 'pong'):              # test hosts, linux 2-way alphas
-##     e(
-##         kef='host',
-##         dat={
-##         'host': h,
-##         'xterm_bg': PP_BG_COLOR,
-##         'xem_bg_color': PP_BG_COLOR,
-##         },
-##         ref=famDB['crl-linux'])
-
-
-#
-# misc digital unix hosts around the lab
-## e(
-##     kef='host',
-##     dat={
-##     'host': 'mammoth',
-##     'comment': 'a BIG alpha server',
-##     'xterm_opts': """'-sb -sl 1024 -ls -sr +si -sk'""",
-##     'xem_bin': 'emacs',
-##     'xem_opts': '-geometry 80x76+440+0',
-##     'xem_bg_color': 'white',
-##     'xrl_rsh_bin': 'rsh',               # used by xrl
-##     },
-##     ref=famDB['crl-dunix'])
-
-## for h in ('wishbone', 'rowdy', 'gil', 'scout', # rawhide cluster
-##           'mustang', 'goliath'):        # useful servers
-##     e(
-##         kef='host',
-##         dat={
-##         'host': h,
-##         },
-##         ref=famDB['crl-dunix'])
-
-## e(
-##     kef='host',
-##     dat={
-##     'host': 'well',                     # terminal server
-##     'xterm_bg': 'aquamarine',           # it is a well, after all
-##     },
-##     ref=famDB['crl-dunix'])
-
-
-#
-# some net-bsd boxen
-## for h in ('marvin', 'c3po',
-##           'sand', 'dogfish'
-##           ):
-##     e(
-##         kef='host',
-##         dat={
-##         'host': h,
-##         'shell': 'tcsh',
-##         },
-##         ref=famDB['crl-netbsd'])
-
-#
-# add the rednet nodes
-## for x in xrange(1, 8):
-##     e(
-##         kef='host',
-##         dat={
-##         'host': 'alpha%d' % x,
-##         },
-##         ref=famDB['crl-rednet-linux'])
-
-#
-# Vanu, Inc. hosts.
-## e(
-##     kef='host',
-##     dat={
-##     'host': 'timberwolves',
-##     'distribution': 'debian etch',
-##     'xterm_bg': 'linen',
-##     'xterm_fg': 'black',
-##     'firefox-profile': "",
-##     'firefox-bin': "iceweasel",
-##     },
-##     ref=famDB['vanu-linux'])  ## !!! Make Vanu vamily.
-
-## e(
-##     kef='host',
-##     dat={
-##     'host': 'sentinels',
-##     "comment": "Immediately ssh's over to timberwolves, but I need it defined here so I get the correct setup.",
-##     'distribution': 'debian etch',
-##     'xterm_bg': 'moccasin',
-##     'xterm_fg': 'black',
-##     'firefox-profile': "",
-##     },
-##     ref=famDB['vanu-linux'])  ## !!! Make Vanu vamily.
-
-
-############################ nVIDIA Hosts Begin #############################
-#
-# There are many, all identical save name:
-# o-xterm-[0-9][0-9]+ (don't know full range.)
-# They can be handled by a single family entry.
-#
