@@ -15,7 +15,7 @@ unset eexec_program
 : ${annotation=}
 : ${run_cmd_p=}
 RC=-
-: ${mail_to:=${EMAIL_YOPP_ADDR}}
+: ${mail_to:=${EMAIL_YOPP_ADDR-}}
 
 while (($# > 0))
 do
