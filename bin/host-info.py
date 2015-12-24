@@ -86,7 +86,7 @@ def dump_all(info_list):
 
 ############################################################################
 def match_family_by_host(host):
-    # XXX @todo Will need to preserver order somehow.
+    # XXX @todo Will need to preserve order somehow.
 
     def strcmp(s1, s2):
         return s1 == s2
