@@ -135,6 +135,7 @@ for f in "$@"
 do
   if [ -n "$nth" ]
   then
+      EExec_verbose_echo_id nth f
       commit=$(git-nth-rev "$nth" "$f")
       EExec_verbose_echo_id commit
       [ -z "${commit}" ] && {

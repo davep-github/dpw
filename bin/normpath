@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import sys, os
-import dp_utils
+import dp_utils, dp_sequences
 
 def main(argv):
     import getopt
@@ -29,7 +29,13 @@ def main(argv):
 
     if not path_ops:
         path_ops=[os.path.normpath]
-    for p in args:
+
+    if len(args) == 0:
+        # read lines and discard newlines.
+        path_args = dp_sequences.Chomped_file(sys.stdin)
+    else:
+        path_args = args
+    for p in path_args:
         for op in path_ops:
             # print "op>{}<".format(op)
             p = op(p)

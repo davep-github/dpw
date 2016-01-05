@@ -3,9 +3,26 @@
 
 source script-x
 set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
 
 [ "$*" = "" ] && {
-    echo "Usage: $(basename $0) nth files..."
+    echo "Usage: ${progname} nth files..."
     exit 1
 } 1>&2
 
@@ -37,7 +54,8 @@ do
       continue
   fi 1>&2
   
-  echo "xxx ${rev} ${file}"
+  # sha1 is fixed length so putting it first lines things up.
+  EExec_verbose_msg "sha1: ${rev} file: ${file}"
 
   if vsetp "${diff_tool}"
   then

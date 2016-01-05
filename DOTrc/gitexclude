@@ -33,3 +33,7 @@ a.out
 *.log.xz
 gmon.out
 NOTAG
+*.giti
+*.gitignore
+*.nogit
+*.,,

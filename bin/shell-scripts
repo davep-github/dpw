@@ -105,35 +105,13 @@ Usage_error()
 # template end.
 ########################################################################
 
-optv=()
-filter_mode_p=
-while (($# > 0))
-do
-  case "${1}" in
-      -p|--filter) filter_mode_p=t;;
-      --) shift; break;;
-      *) optv+=("${1}");;
-  esac
-  shift
-done
-
-args=("$@")
-
-(("${#args[@]}" > 0)) && set -- "${args[@]}"
-
-if (("${#args[@]}" > 0))
+if (($# == 0))
 then
-    # very simple testing.
-    for a in "${args[@]}"
-    do
-      echo "$a"
-    done
-elif true_p "${filter_mode_p}"
-then
-    cat
+    file -f -
 else
-    git status -s
-fi \
-    | sed -rn 's/(^[[:space:]]+M )(.*)$/\2/p' \
-    | file-relativizer "$@" \
-    | normpath
+    case "${1-}" in
+        -p|--pipe|--filter) cat;;
+        --names|--run-file) file -f -;;
+        *) file "$@";;
+    esac 
+fi | sed -rn 's/^(.*)(:[[:space:]]+)(.*shell.*script.*)/\1/p'

@@ -627,7 +627,35 @@ We say: \" p is a pointer to char\", not
        'call-interactively 'c-indent-command)
       ;; Add other things to try here. We will stop after the first non-nil
       ;; return.
+      (and-boundp dp-c-using-kernel-style-p
+        (dp-kernel-style-var-name-align))
+      ;; default.
       (c-indent-command)))
+
+(defun dp-kernel-style-var-name-align ()
+  (interactive)
+  ;;@todo XXX Breaks if first tab takes us past the type...name indentation.
+  (unless (dp-in-indentation-p)
+    (let ((next-char (dp-get-char-previous-line))
+          (did-something-p nil))
+      ;; tab past the preceding variable type.
+      (while (and (not (eq ?\n next-char))
+                  (not (member
+                        next-char
+                        (list ?\ ?\t))))
+        (insert ?\t)
+        (setq next-char (dp-get-char-previous-line)
+              did-something-p t))
+      ;; tab past the preceding type... name indentation.
+      (while (and (not (eq ?\n next-char))
+                  (member
+                   (dp-get-char-previous-line)
+                   (list ?\ ?\t)))
+        (dp-dupe-char-prev-line)
+        (setq next-char (dp-get-char-previous-line)
+              did-something-p t))
+      did-something-p)))
+
 ;;
 ;; Doc stuff
 ;;

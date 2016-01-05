@@ -1,14 +1,14 @@
-[include]
-        path = ~/.gitconfig.diff-n-merge-tools
+# This, ideally, can be [include]'d first and things can be added or
+# overridden.
 
 [include]
-        path = ~/.gitconfig.aliases
+        path = ~/.rc/gitconfig.diff-n-merge-tools
 
 [include]
-        path = ~./gitconfig.nice-defaults
+        path = ~/.rc/gitconfig.aliases
 
-[user]
-        path = ~./gitconfig.user
+[include]
+        path = ~/.rc/gitconfig.nice-defaults
 
 [color]
 	ui = auto

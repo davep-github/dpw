@@ -60,7 +60,20 @@ struct moo
         FILE                                    *f1;
         x_t                                     *xp;
         class bubba                             *bp;
-        volatile                                *v1p;
+	;
+        volati	xx;
+	x
+	x	xxx;
         x_t                                     *bubba;
         int                                     *iiiiiiip;
+	x	                                d;
 };
+
+int boo(
+	int x,
+	int y)
+{
+	int	x1;
+	char    char0;
+	long_type_name	blah;
+	stm

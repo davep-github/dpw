@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # $Id: dp_sequences.py,v 1.6 2005/05/24 19:12:56 davep Exp $
 #
-import types, re, string
+import sys, types, re, string
 import dp_io
 
 listlikes = (types.ListType, types.TupleType)
@@ -170,6 +170,24 @@ class Arg_obj_c(object):
     def items(self):
         return self.items_v
 
+class Chomped_file(object):
+    def __init__(self, file_object = sys.stdin):
+        self.d_file_object = file_object
+        self.d_file_object_iter = file_object.__iter__()
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        # We'll pass the StopIteration exception buck up hill.
+        line = self.d_file_object_iter.next()
+        if line:
+            if line[-1] == "\n":
+                return line[0:-1]
+            else:
+                return line
+        raise StopIteration
+
 ########################################################################
 def mk_abbrev_map(abbrev_pat_tuples):
     ret = []
@@ -264,4 +282,3 @@ def move_from_list(from_list, str, regexp_p=False, start=0, end=True,
         else:
             remainder_list.append(element)
     return (remainder_list, to_list)
-

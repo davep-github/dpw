@@ -243,7 +243,9 @@ Bind any keys in KEYS via `dp-define-keys'."
 
 (global-set-key [(shift tab)] 'dp-indent-line-and-move-down)
 (global-set-key [(meta shift tab)] 'dp-delete-indentation-and-move-down)
-(global-set-key [(control tab)] 'dp-one-tab)
+(global-set-key [(control tab)] 'dp-phys-tab)
+;; @todo XXX C-M-tab conflicts with window manager stuff.
+;; Move offending WM binding to <Win> key where it belongs.
 (global-set-key [(control meta tab)] 'dp-phys-tab)
 (global-set-key [(iso-left-tab)] 'dp-indent-line-and-move-down)
 (global-set-key [(meta iso-left-tab)] 'dp-delete-indentation-and-move-down)

@@ -28,6 +28,8 @@
 ;; };
 
 ;; The former matches the (ridiculous) kernel style.
+;; The latter the utterly idiotic, ugly, lazy and just plain annoying
+;; permabit style.
 ;; Both are like jet engines: they suck and they blow.
 (require 'align)
 (setcdr

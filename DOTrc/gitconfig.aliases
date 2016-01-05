@@ -1,3 +1,5 @@
+# Dumbassery:
+# (currently, as of git 1.5.6.1) non-git alias are executed from the top-level dir of a repo
 [alias]
 	co = checkout
 	cof = checkout --
@@ -16,6 +18,11 @@
         dfo = diff --name-only
         dfn = diff --name-only
         dno = diff --name-only
+        # (currently, as of git 1.5.6.1) non-git alias are executed from the
+        # top-level dir of a repo
+        # The final dash is so that arguments start with $1, not with $0. 
+        diffnp = !sh -c 'git --no-pager diff "$@"' -
+        dnp = !sh -c 'git --no-pager diff "$@"' -
         mnc = merge --no-commit
         pffo = pull --ff-only --no-commit
         mffo = merge --ff-only --no-commit
@@ -33,9 +40,10 @@
         dtecmerge = difftool --tool=ec-merge
         dtem = difftool --tool=ec-merge
         pull = pull --ff-only
-        pppull = pull
-        pulljustpull = pull	# q.v. Zoot
-        pjp = pull		# q.v. Zoot
+        # q.v. Zoot
+        pulljustpull = pull
+        pjpull = pull
+        pjp = pull
 
 # Graphical diff tool employer/environment de jure
         dtgraphical = difftool --tool=meld
@@ -49,6 +57,7 @@
 	aliases = config --get-regexp ^alias\\.
 	undo-commit = reset --soft HEAD^
 	uncommit = reset --soft HEAD^
+
 # reset
         unstage = reset HEAD    # remove files from index (tracking)
         filelog = log -u        # show changes to a file

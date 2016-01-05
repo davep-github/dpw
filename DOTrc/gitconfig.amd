@@ -1,11 +1,5 @@
 [include]
-        path = .rc/gitconfig.diff-n-merge-tools
-
-[include]
-        path = .rc/gitconfig.aliases
-
-[include]
-        path = .rc/gitconfig.nice-defaults
+        path = ~/.rc/gitconfig
 
 [user]
         name = David Panariti

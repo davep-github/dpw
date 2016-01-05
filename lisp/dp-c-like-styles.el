@@ -6,6 +6,7 @@
 
 (defconst kernel-c-style
   '(
+    (dp-c-using-kernel-style-p                     . t)
     (dp-c-fill-statement-minimal-indentation-p     . nil)
     (dp-c-like-mode-default-indent-tabs-mode       . t)
     (dp-lang-use-c-new-file-template-p             . nil)
