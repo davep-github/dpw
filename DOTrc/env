@@ -162,6 +162,8 @@ then
     export PAGER=cat
     export TERMINFO=$HOME/.terminfo
     export DP_HIST_GREP_GREPPER=egrep
+    export GIT_PAGER=cat
+    LESS="-MM -X --ignore-case"
 fi
 
 MAILDIR="$HOME/Maildir"
@@ -170,12 +172,6 @@ MAILDIR="$HOME/Maildir"
     export MAILDIR
 }
 export LS_OPTIONS='--quoting-style=shell'
-
-# overrides
-if [ "$TERM" = "emacs" -o "$TERM" = "eterm" ]
-then
-    LESS="-MM -X --ignore-case"
-fi
 
 BGLQ_LOG=$DP_LOG/bglq
 FFOX_BIN=firefox
