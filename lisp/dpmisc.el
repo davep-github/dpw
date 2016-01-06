@@ -1535,11 +1535,11 @@ pass args to it because we use the prefix arg."
       ; then we've moved up to the character *after* the virtual
       ; space printed when a tab is expanded on the screen,
       ; so we fake things by returning a space
-      (if( and
+      (if (and
            (< col (current-column))		; We've upped to a tab.
            (not preserve-tabs))
-	  (setq gotChar ?\ )s))
-	(setq gotChar (following-char))))
+	  (setq gotChar ?\ ))
+	(setq gotChar (following-char)))
     (setq temporary-goal-column oldgCol)
     gotChar))
 
@@ -1547,7 +1547,7 @@ pass args to it because we use the prefix arg."
   "`dp-get-char-previous-line' and insert @ point."
   (interactive "*")
   (let ((ch (dp-get-char-previous-line)))
-    (insert-char (dp-get-char-previous-line) 1)
+    (insert-char ch 1)
     ch))
 
 (defun dp-dupe-chars-prev-line (&optional arg action)
