@@ -131,7 +131,7 @@ ${EZEC} mkdir tmp
 ${EZEC} mkdir .screen
 ${EZEC} mkdir notes
 
-droppings="droppings/bash-history \
+droppings="droppings/bash_history \
 droppings/editors/xemacs \
 droppings/editors/xemacs/session-auto-saves.d \
 droppings/editors/xemacs/tramp.d \
@@ -140,8 +140,7 @@ droppings/editors/xemacs/xebacs.d \
 droppings/editors/xemacs/ephemeral.d \
 droppings/editors/xemacs/auto-saves.d \
 droppings/persist/gdb_history \
-droppings/persist/emacs-history \
-droppings/persist/bash-history"
+droppings/persist/emacs-history"
 
 for dropping in ${droppings}
 do
