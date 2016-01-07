@@ -1,0 +1,63 @@
+#!/usr/bin/env python
+
+import sys, os
+
+def emit_result(result, verbose_p=False):
+    print result,
+    if verbose_p:
+        print >>sys.stderr, "dp-realpath, result>%s<" % (result,),
+
+def relpath_translator(pathname, relpath):
+    rp = os.path.relpath(pathname, relpath)
+    return rp
+
+def main(argv):
+    import getopt
+    terminator = "\n"
+    opt_string = "zrR:nv"
+    translator = os.path.realpath
+    translator_args = []
+    normath_plus_p = False
+    istream = sys.stdin
+    verbose_p = False
+    opts, args = getopt.getopt(argv[1:], opt_string)
+    for o, v in opts:
+        if o == '-v':
+            verbose_p = True
+            continue
+        if o == '-z':
+            # Handle opt
+            # for, say, xargs -0
+            terminator = "\000"
+            continue
+        if o == '-R':
+            translator_args.append(v)
+            translator = relpath_translator
+            continue
+        if o == '-r':
+            translator = os.path.relpath
+            continue
+        if o == '-n':
+            import dp_utils
+            translator = dp_utils.normpath_plus
+            continue
+
+    if args:
+        for fileName in args:
+            rp = translator(fileName, *translator_args)
+            result = '%s%s' % (rp, terminator)
+            emit_result(result, verbose_p=verbose_p)
+
+    else:
+        while True:
+            fileName = istream.readline()
+            fileName = fileName[0:-1]
+            if not fileName:
+                break
+            print >>sys.stderr, "fileName: ", fileName
+            rp = translator(fileName, *translator_args)
+            result = '%s%s' % (rp, terminator)
+            emit_result(result, verbose_p=verbose_p)
+
+if __name__ == "__main__":
+    main(sys.argv)

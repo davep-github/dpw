@@ -24,7 +24,7 @@ do
 done
 
 case "${repo}" in
-    /*) repo=$(${repo}/bin/last-resort/realpath -R ${HOME} ${repo});;
+    /*) repo=$(./dp-realpath -R ${HOME} ${repo});;
     *) ;;
 esac
 
