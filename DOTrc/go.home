@@ -307,8 +307,6 @@ Ee|wipsrc|       ${davep}/work-is-play/src/
 Ee|wipi|       ${davep}/work-is-play/
 Ee|xdrop|       ${davep}/droppings/editors/xemacs/
 Ee|edrop|       ${davep}/droppings/editors/
-# Added Fri Oct 10 23:52:26 EDT 2014
-Ee|dpwg|       ${davep}/dpw/dpw.git/
 # Added Sun Oct 19 12:21:31 EDT 2014
 Ee|vlmpd|       /var/lib/mpd/
 # Added Wed Nov 26 15:56:42 EST 2014

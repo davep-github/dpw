@@ -31,7 +31,7 @@ Ee|testA|testB|testC| 	value-for-testABC
 #Ee|fafe|                find . -type f -print0 | xargs -r0 egrep
 
 Ee|dpworld|dpw|              ${HOME}/dpw/
-Ee|dpwgit|                   ${HOME}/dpw/dpw.git
+Ee|dpwgit|dpwg|              ${HOME}/dpw/dpw
 Ee|dpwbuild|dpwbld|dpwbld|   ${dpworld}build/
 Ee|dpylib|                   ${HOME}/lib/pylib/
 /home/dpanarit/.go.amd:Ee|obconf|      ${HOME}/.config/openbox/
