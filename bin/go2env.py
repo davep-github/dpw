@@ -150,6 +150,7 @@ def environment_var_handler(shell):
     the proper environment setting handler."""
     if not shell:
         shell = os.environ.get('SHELL', 'sh')
+        print >>sys.stderr, "SHELL>%s<" % (shell,)
     shell_name = os.path.basename(shell)
     try:
         return shell_handlers[shell_name]
