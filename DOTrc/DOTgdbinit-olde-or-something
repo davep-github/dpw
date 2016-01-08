@@ -1188,37 +1188,9 @@ Tips on automatically displaying values when a program stops.
 end
 
 # ??? is there include functionality?
-# ________ Begin: nVIDIA specific _________
-define initb
-  break GpuTrace::ReadHeader
-end
-document initb
-Set initial break after some ME .so,s have been loaded with more defined more symbols.
-end
-
-define tinitb
-  tbreak GpuTrace::ReadHeader
-end
-document tinitb
-Set as initb but using a tbreak. It is usually not useful after the initial break.
-end
-
-define inittb
-  tbreak GpuTrace::ReadHeader
-end
-document inittb
-Set as initb but using a tbreak. It is usually not useful after the initial break.
-end
-
-define meinit
-  initb
-  run
-end
-document meinit
 Initialize for Multiengine debugging.
 end
 
-# nvidia bane of debu
 define hook-stop
 handle SIGALRM nopass
 end
@@ -1229,18 +1201,6 @@ end
 
 define hook-continue
 handle SIGALRM pass
-end
-
-# ___________________ fmodel __________________
-# break main
-# break Gpu::Initialize
-
-define fmodrunb
-  break GpuTrace::ReadHeader
-  run
-end
-document fmodrunb
-Set initial break after some fmodel .so,s have been loaded with more defined more symbols.
 end
 
 # __________________gdb options_________________

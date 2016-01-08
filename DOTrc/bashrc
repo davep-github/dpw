@@ -817,7 +817,6 @@ vsetp "${post_bashrc_command}" && {
     ${post_bashrc_command} $($HOST_INFO -n '' post_bashrc_command_args)
 }
 
-# nVIDIA's login stuff doesn't export this.
 # It should be benign in other cases, but it's vital that it be exported.
 export LD_LIBRARY_PATH
 unset post_bashrc_command

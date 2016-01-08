@@ -9,7 +9,7 @@
 #  the current host.  Useful for differentiating xterms connected to
 #  other hosts (see xrl)
 #
-#env | sort >| ~/Esaw.s
+env | sort >| ~/Esaw.s
 
 source script-x
 
