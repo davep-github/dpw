@@ -4,18 +4,35 @@ source script-x
 # holding by the backed up data.
 : ${dump_fses:=/yokel}
 : ${dump_dir:=/bfd2/dumps}
-: ${EZEC:=vezec}
+: ${EZEC:=eexec}
 
 # e.g.
 # dump_dir=/bfd2/dumps/ddd dump_fses='/mathoms /yokel /' EExec trivial-yokel-dump 0
-vezec()
+vsudo()
 {
     echo "$@"
     sudo "$@"
 }
+
+eexec()
+{
+    echo "$@"
+    "$@"
+}
+
 [ "$1" = "-n" ] && {
     shift
     EZEC=echo
+}
+
+[ "$1" = "-v" ] && {
+    shift
+    EZEC=eexec
+}
+
+[ "$1" = "-s" ] && {
+    shift
+    EZEC=vsudo
 }
 
 [ "$1" = "-q" ] && {
@@ -38,6 +55,14 @@ vsetp $* && dump_fses="$@"
 # Make sure all dump files have the same date if we start one dump before mignight
 # and the next after.
 date_stamp=$(dp-std-date)
+[ "${dump_dir}" = '.' ] && {
+    ${EZEC} mkdir "${date_stamp}"
+    [ -d "${date_stamp}" ] && {
+        cd "${date_stamp}"
+    }
+    dump_dir="$PWD"
+}
+
 for dump_fs in ${dump_fses}
 do
     # Single /s and none @ end.
