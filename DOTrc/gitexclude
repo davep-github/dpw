@@ -7,6 +7,14 @@
 # Try to avoid unfortunate collisions.
 [0-9][0-9][0-9]*.core
 core.[0-9][0-9][0-9]*
+# patch(1) reject files
+# restrict it to source files
+# Actually, these should be left to annoy me until I do something about them.
+#*.[ch].rej
+#*.cpp.rej
+#*.cpp.rej
+#*.c++.rej
+#*.cc.rej
 *~
 *.py[co]
 *.bak
