@@ -8,7 +8,8 @@ MOTD=/etc/motd
 MOTDer="figlet"
 cleanup_sep='!!!! Do not Forget New Kernel Cleanup (try: new-kernel-fini) !!!!'
 date="$(dp-std-date).$$"
-log_dir="/var/log/bk"
+: ${log_dir:="/var/log/bk"}
+mkdir -p "${log_dir}" || exit 1
 build_dir=$(basename $(realpath .))
 bw_log="$log_dir/bw.out-$build_dir.$date"
 bk_log="$log_dir/bk.out-$build_dir.$date"
@@ -24,7 +25,19 @@ action_list="clean kernel modules_install install"
 #echo "0: actions>$actions<"
 #echo "1: actions>$actions<"
 dash_n=
-: ${genkernel_p=t}
+if [ "$HOST" = "vilya" ] 
+then
+    ${genkernel_p=t}
+else
+    ${genkernel_p=}
+fi
+
+fix_realtek()
+{
+    do_cmd cd ${brahmaec}/cz-stuff/realtek
+    pwd
+    do_cmd ./autorun.sh
+}
 
 canonicalize()
 {
@@ -78,7 +91,7 @@ done
 #echo_id 1>&2 action_list
 
 vsetp "${genkernel_p}" && {
-    genkernel_p "$@"
+    genkernel "$@"
     exit
 }
 
@@ -160,7 +173,7 @@ do_cmd()
     then
         echo 1>&2 "+ $@"
     else
-        $@
+        "$@"
     fi
     return 0
 }
@@ -232,6 +245,10 @@ build_kernel()
         bk_done="!FAILED! $bk_done FAILED!"
         echo "rc: $rc"
     fi
+    case "${PWD}" in
+        *brahma*) fix_realtek;;
+        *) ;;
+    esac
     echo "$bk_done"
     if [ "$rc" = 0 ]
     then
