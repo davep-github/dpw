@@ -8,7 +8,7 @@ MOTD=/etc/motd
 MOTDer="figlet"
 cleanup_sep='!!!! Do not Forget New Kernel Cleanup (try: new-kernel-fini) !!!!'
 date="$(dp-std-date).$$"
-: ${log_dir:="/var/log/bk"}
+: ${log_dir:="$PWD/bk.log"}
 mkdir -p "${log_dir}" || exit 1
 build_dir=$(basename $(realpath .))
 bw_log="$log_dir/bw.out-$build_dir.$date"
@@ -19,9 +19,7 @@ fail_file=/tmp/bk.sh.banner-FAIL.$$
 stat_files="$ok_file $fail_file"
 # make: clean, kernel, modules_install, install
 all_actions="ckmi"
-action_list="clean kernel modules_install install"
-: ${def_actions:="ckmi"}
-##### non needed for new style actions=${1:-$def_actions}
+: ${action_list="clean kernel modules_install install"}
 #echo "0: actions>$actions<"
 #echo "1: actions>$actions<"
 dash_n=
@@ -171,7 +169,7 @@ do_cmd()
 {
     if [[ $dash_n == [yY1tT] ]]
     then
-        echo 1>&2 "+ $@"
+        echo 1>&2 "++ $@"
     else
         "$@"
     fi
@@ -185,6 +183,7 @@ mk_target()
         echo 1>&2 "***** make ${target} failed, \$?: $?"
         exit 1
     }
+    echo "made ${target}."
 }
 
 remove_cmd()
@@ -246,7 +245,7 @@ build_kernel()
         echo "rc: $rc"
     fi
     case "${PWD}" in
-        *brahma*) fix_realtek;;
+        NOT_NOW*brahma*) fix_realtek;;
         *) ;;
     esac
     echo "$bk_done"
@@ -265,6 +264,7 @@ build_kernel()
         } >| $MOTD
         echo "$bk_done"
     fi
+
 }
 
 build_kernel 2>&1 | tee -a $bk_log

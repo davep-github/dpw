@@ -117,18 +117,25 @@ g++
 openssh-server
 dump
 openssl
-openssl-dev
 libssl-dev
-libcurl4-openssh-dev
+libcurl4-openssl-dev
 gcolor2
-ncurses
-ncurses-dev
+libncurses5
+libncurses5-dbg
+libncurses5-dev
+ncurses-base
+ncurses-bin
+ncurses-doc
+ncurses-examples
+ncurses-term
+ncurses-hexedit
 figlet
 screen
 cscope
 vim
 diffuse
-gitk"
+gitk
+lsscsi"
 
 for p in ${packages}
 do
