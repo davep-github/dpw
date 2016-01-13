@@ -1,5 +1,7 @@
 #!/bin/sh
 #set -x
+# Programming when you're bored and have nothing else to do can result in
+# overly baroque and incomprehensible code.  Tsk.
 source script-x
 $DP_SCRIPT_X_DASH_X_OFF
 
@@ -7,13 +9,13 @@ MOTD=/etc/motd
 #MOTDer="/home/davep/bin.Linux.i686/lcursive"
 MOTDer="figlet"
 cleanup_sep='!!!! Do not Forget New Kernel Cleanup (try: new-kernel-fini) !!!!'
-date="$(dp-std-date).$$"
-: ${log_dir:="$PWD/bk.log"}
+timestamp="$(dp-std-timestamp).$$"
+: ${log_dir:="$PWD/,bk.log,"}
 mkdir -p "${log_dir}" || exit 1
 build_dir=$(basename $(realpath .))
-bw_log="$log_dir/bw.out-$build_dir.$date"
-bk_log="$log_dir/bk.out-$build_dir.$date"
-bwk_log="$log_dir/bwk.out-$build_dir.$date"
+bw_log="$log_dir/bw.out-$build_dir.$timestamp"
+bk_log="$log_dir/bk.out-$build_dir.$timestamp"
+bwk_log="$log_dir/bwk.out-$build_dir.$timestamp"
 ok_file=/tmp/bk.sh.banner-OK.$$
 fail_file=/tmp/bk.sh.banner-FAIL.$$
 stat_files="$ok_file $fail_file"
@@ -149,9 +151,32 @@ else
 fi
 
 {
-    date
-    pwd
-}    >> $bk_log
+    echo "Build begins: ${timestamp}:
+id:
+$(id)
+in PWD:
+$PWD
+realpath of PWD:
+$(realpath $PWD)
+fs info:
+$(df -h .)
+"
+    if [ -e Makefile ] && gitted -q Makefile
+    then
+        echo '#############################################################################
+git status:'
+        git status
+        echo '#############################################################################
+git log:'
+        git log -n 5 --pretty=short
+        echo '#############################################################################
+git branch:'
+        git branch
+        echo '#############################################################################
+this file:'
+        echo $bk_log
+    fi
+} >> $bk_log
 
 for sig in 2 3 4 5 6 7 8 15
 do
@@ -197,8 +222,6 @@ num=0
 bk_linux()
 {
     vsetp $dash_n && echo_id actions
-    # @todo make this cross-linux
-    bk_log=~davep/log-files/linux-kernel-build/$bk_log
     local been_done=""
     for a in $actions
     do
