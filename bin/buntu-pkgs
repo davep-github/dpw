@@ -105,7 +105,7 @@ Usage_error()
 # template end.
 ########################################################################
 
-packages="meld
+packages=(meld
 realpath
 git
 make
@@ -135,9 +135,14 @@ cscope
 vim
 diffuse
 gitk
-lsscsi"
+lsscsi)
 
-for p in ${packages}
+num_pkgs="${#packages[@]}"
+pkg_num=1
+
+for p in "${packages[@]}"
 do
-  EExec sudo apt-get install "${p}"
+  EExec_verbose_msg "Installing ${pkg_num} of ${num_pkgs}"
+  EExec sudo apt-get --assume-yes install "${p}"
+  ((++pkg_num))
 done
