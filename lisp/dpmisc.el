@@ -5445,9 +5445,13 @@ command-line argument to XEmacs, e.g. -eval \(dp-main-rc)."
   ;; the -geometry arg doesn't work quite right under kde.
   (message "dp-main-rc()...finished."))
 
-(defun dp-main-rc+2w ()
+(defun dp-main-rc+2w (&optional height width)
   (dp-main-rc)
-  (dp-2-v-or-h-windows))
+  (when width
+    (setq dp-sfw-width width))
+  (when height
+    (setq dp-sfh-height height))
+  (dp-2-v-or-h-windows nil height width))
 
 ;;;??? why did I add this here?  (dp-run-post-dpmacs-hooks))
 ;;; For one thing, it fixed the window config that was set in the hook var
@@ -7606,17 +7610,18 @@ If region is active, set width to that of the longest line in the region."
                                (frame-height) dp-sfh-height )
                        'ints-only (format "%s" dp-sfh-height))))
   ;;@todo XXX Fix this douche bag way of setting the height.
-  (let ((env-height (dp-get-frame-dimension "HEIGHT")))
-    (set-frame-height
-     (or frame (selected-frame))
-     (setq dp-sfh-height
-           (or height
-               (and env-height
-                    (not (= 0 env-height))
-                    env-height)
-               (dp-maybe-str-to-int dp-sfh-height))))
-    (setq compilation-window-height (/ (frame-height frame)
-                                       dp-sfh-to-compile-win-height))))
+  (let* ((env-height (dp-get-frame-dimension "HEIGHT"))
+         (height (or height
+                     (and env-height
+                          (not (= 0 env-height))
+                          env-height)
+                     (dp-maybe-str-to-int dp-sfh-height))))
+    (when height
+      (set-frame-height
+       (or frame (selected-frame))
+       (setq dp-sfh-height height))
+      (setq compilation-window-height (/ (frame-height frame)
+                                         dp-sfh-to-compile-win-height)))))
 
 (defalias 'sfh 'dp-set-frame-height)
 
@@ -9859,7 +9864,7 @@ split.")
 ;; |-|, : - two horizontal
 ;; |||, || - two vertical
 ;; 
-(defun dp-2-v-or-h-windows (&optional horizontal-p frame-width)
+(defun dp-2-v-or-h-windows (&optional horizontal-p frame-width height)
   "Make 2 windows whose arrangement is determined by the frame-width.
 Frame width may be increased but will never be decreased.
 Uses `dp-2w-frame-width' to increase width.
@@ -9872,11 +9877,15 @@ If wide enough: | | |, otherwise: |-|"
   (when (or (= 0 frame-width)
             (< (frame-width) frame-width))
     (dp-set-frame-width frame-width))
-  (dp-set-frame-height)
+  (dp-set-frame-height height)
   (if horizontal-p
       (split-window-vertically)
     (split-window-horizontally)))
 (dp-defaliases '2w 'dp-2-vertical-windows 'dp-2-v-or-h-windows)
+
+(defun dp-2-v-or-h-windows-keep-geometry ()
+  (setq dp-sfw-width (frame-width))
+  (setq dp-sfh-height(frame-height)))
 
 (defun dp-2-horizontal-windows (&optional width)
   (interactive)
