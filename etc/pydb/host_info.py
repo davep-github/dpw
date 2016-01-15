@@ -147,17 +147,6 @@ HOME_FG_COLOR = 'rgb:2f/06/5e'
 REDNET_BG_COLOR = 'LavenderBlush1'      # reddish for rednet.
 VANU_BG_COLOR = 'rgb:cb/d9/ee'       #cbd9ee # looks very nice w/golden colors
 VANU_FG_COLOR = 'black'
-#NVIDIA_BG_COLOR = 'gray40'
-#NVIDIA_FG_COLOR = 'white'
-
-#NVIDIA_BG_COLOR = 'honeydew'
-#NVIDIA_BG_COLOR = 'azure'
-#NVIDIA_BG_COLOR = 'AliceBlue'
-NVIDIA_BG_COLOR = 'lavender'
-NVIDIA_FG_COLOR = 'black'
-NVIDIA_LSIM_FG_COLOR = 'black'
-NVIDIA_LSIM_BG_COLOR = 'linen'
-
 
 XEM_RUN_SERVER="""-eval (dp-start-server)"""
 XEM_RUN_APPTS="""-eval (dp-activate-appts)"""
@@ -219,7 +208,7 @@ e(
 )
 
 AMD_XEM_GEOMETRY = '-geometry 81x70-0+0'
-AMD_BG_COLOR = 'rgb:24/00/68'
+AMD_BG_COLOR = 'rgb:0/33/60'
 AMD_FG_COLOR = 'white'
 amd_family = e(
     kef='family',
@@ -238,10 +227,10 @@ amd_family = e(
         'work-zone': 'amd',
         #    """xem-xft-font""": '''"Inconsolata-13"''',
         'xterm_bin': 'xterm',
-        'xterm_bg': AMD_BG_COLOR,
-        'xterm_fg': AMD_FG_COLOR,
+        'xterm_bg': "BLACK",
+        'xterm_fg': "WHITE",
         'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
-        'xem_bg_color': NVIDIA_BG_COLOR,
+        'xem_bg_color': AMD_BG_COLOR,
     },
     # These are searched in the order given.
     ref=[OSDB['linux'], default]
@@ -265,22 +254,23 @@ e(
     ref=[amd_family, OSDB['linux'], default]
 )
 
-PIGEONHAWKFG_COLOR = 'black'
+CZ_FP4_FG_COLOR = 'white'
 # #BAC1D1
-PIGEONHAWK_BG_COLOR = 'rgb:ba/c1/d1'
-#PIGEONHAWK_BG_COLOR = 'rgb:57/a2/71'
-#PIGEONHAWK_BG_COLOR = 'rgb:C7/E3/D2'
+#CZ_FP4_BG_COLOR = 'rgb:ba/c1/d1'
+CZ_FP4_BG_COLOR = 'rgb:24/00/68'
+#CZ_FP4_BG_COLOR = 'rgb:57/a2/71'
+#CZ_FP4_BG_COLOR = 'rgb:C7/E3/D2'
 
 e(
     kef='host',
     dat={
-        'host-pattern': 'p(igeon)?hawk',
+        'host-pattern': 'cz-fp4',
         'family': 'amd_family',
-        'comment': 'A work/dev machine.',
-        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70-0+0',
-        'xterm_bg': PIGEONHAWK_BG_COLOR,
-        'xterm_fg': PIGEONHAWKFG_COLOR,
-        'xem_bg_color': PIGEONHAWK_BG_COLOR,
+        'comment': 'A BETTONG Carrizo dev system (on my desk).',
+        'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 174x74-0+0',
+        'xterm_bg': CZ_FP4_BG_COLOR,
+        'xterm_fg': CZ_FP4_FG_COLOR,
+        'xem_bg_color': AMD_ATLR5N4_BG_COLOR, # CZ_FP4_BG_COLOR,
     },
     ref=[amd_family, OSDB['linux'], default]
 )
