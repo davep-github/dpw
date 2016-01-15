@@ -165,10 +165,10 @@ $(df -h .)
     then
         echo '#############################################################################
 git status:'
-        git status
+        git --no-pager status
         echo '#############################################################################
 git log:'
-        git log -n 5 --pretty=short
+        git --no-pager log -n 5 --pretty=short
         echo '#############################################################################
 git branch:'
         git branch
@@ -192,19 +192,31 @@ bk_freebsd()
 
 do_cmd()
 {
+    local sudo=
+    if [ "$1" = '--sudo' ]
+    then
+        sudo=sudo
+        shift
+    fi
     if [[ $dash_n == [yY1tT] ]]
     then
         echo 1>&2 "++ $@"
     else
-        "$@"
+        $sudo "$@"
     fi
     return 0
 }
 
 mk_target()
 {
+    local sudo=
+    if [ "$1" = '--sudo' ]
+    then
+        sudo=sudo
+        shift
+    fi
     target="$@"
-    echo "***** making: ${target}..." && do_cmd make $target || {
+    echo "***** making: ${target}..." && do_cmd $sudo make "$@" || {
         echo 1>&2 "***** make ${target} failed, \$?: $?"
         exit 1
     }
@@ -237,9 +249,9 @@ bk_linux()
       case "$a" in
           c*) echo "$a: clean."; mk_target clean;;
           [bk]*) echo "$a: build_kernel."; mk_target;;
-          m*) echo "$a: modules_install."; mk_target modules_install;;
+          m*) echo "$a: modules_install."; mk_target --sudo modules_install;;
              # make install not specified in gentoo build guide
-          i*) echo "$a: install."; mk_target install ;;
+          i*) echo "$a: install."; mk_target --sudo install ;;
           *) action_error $a;;
       esac
       been_done="$been_done $a "
