@@ -16,6 +16,8 @@ build_dir=$(basename $(realpath .))
 bw_log="$log_dir/bw.out-$build_dir.$timestamp"
 bk_log="$log_dir/bk.out-$build_dir.$timestamp"
 bwk_log="$log_dir/bwk.out-$build_dir.$timestamp"
+: ${bk_serial_num_file:=bk-serial-num}
+: ${serialize_kernels_p=}
 ok_file=/tmp/bk.sh.banner-OK.$$
 fail_file=/tmp/bk.sh.banner-FAIL.$$
 stat_files="$ok_file $fail_file"
@@ -31,6 +33,16 @@ then
 else
     ${genkernel_p=}
 fi
+
+[ -e "${bk_serial_num_file}" ] || {
+    echo 0 >| "${bk_serial_num_file}"
+}
+
+# For backup .config file name (sed -i)
+old_serial_num=$(cat "${bk_serial_num_file}")
+serial_num=$((old_serial_num + 1))
+bk_log="${bk_log}.${serial_num}"
+config_file=.config
 
 fix_realtek()
 {
@@ -79,10 +91,13 @@ do
             ops=$(echo $ops | sed -r 's/(.)/\1 /g')
             for op in $ops
             do
-	        #echo_id 1>&2 op
-	        #echo_id 1>&2 action_list
-	        [ "$op" = "n" ] && { dash_n=y; continue; }
-	        action_list="$action_list $(canonicalize $op)"
+	      #echo_id 1>&2 op
+	      #echo_id 1>&2 action_list
+              case "${op}" in
+                  n) dash_n=y;;
+                  s) serialize_kernels_p=t;;
+                  *) action_list="$action_list $(canonicalize $op)";;
+              esac
             done
             ;;
   esac
@@ -195,10 +210,10 @@ do_cmd()
     if [[ $dash_n == [yY1tT] ]]
     then
         echo 1>&2 "++ $@"
+        true
     else
         "$@"
     fi
-    return 0
 }
 
 mk_target()
@@ -218,7 +233,17 @@ remove_cmd()
     cmds="$@"
     echo $cmds | sed -r "s/$cmd//g"
 }
-num=0
+
+build_kernel_target()
+{
+    # CONFIG_LOCAL_VERSION="-edc.dp"
+    local new_ver=-edc.${serial_num}
+    local old_ver=-edc.${old_serial_num}
+    sed -i".${old_ver}" -rn "s/(CONFIG_LOCAL_VERSION=)(.*)/\1${new_ver}/p"
+    mk_target kernel
+    echo "${serial_num}" >| "${bk_serial_num_file}"
+}
+
 bk_linux()
 {
     vsetp $dash_n && echo_id actions
@@ -236,7 +261,7 @@ bk_linux()
 
       case "$a" in
           c*) echo "$a: clean."; mk_target clean;;
-          [bk]*) echo "$a: build_kernel."; mk_target;;
+          [bk]*) echo "$a: build_kernel."; build_kernel_target;;
           m*) echo "$a: modules_install."; mk_target modules_install;;
              # make install not specified in gentoo build guide
           i*) echo "$a: install."; mk_target install ;;
