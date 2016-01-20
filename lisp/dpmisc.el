@@ -9920,7 +9920,7 @@ If wide enough: | | |, otherwise: |-|"
                        (other-window -1))
                      nil))
                      
-(dp-defaliases '1:2 '1,2 '1x2 '1+2 '1|2 'dp-1x2 'dp-1+2-wins)
+(dp-defaliases '|- '|: '1:2 '1,2 '1x2 '1+2 '1|2 'dp-1x2 'dp-1+2-wins)
 
 (defun dp-2+1-wins ()
   "Set up a 1+2 window arrangement: |-| |"
