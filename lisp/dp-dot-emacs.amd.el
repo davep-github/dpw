@@ -42,4 +42,19 @@
 			  "=[^=\n].*\\|(.*)\\|\\(\\[.*\\]\\)*\\)?"
 			  "\\s-*[;,]\\|)\\s-*$\\)"))
 
-(defvar dp-edit-parallel-tramp-file-default-location "/[pigeonhawk]")
+(defvar dp-edit-parallel-tramp-file-default-location "/[cz-fp4-bdc]")
+
+;; Keep in sync w/ ~/bin.amd/amd-index-edc-linux
+(setq cscope-database-regexps
+      '(
+        ("^/"
+         (t)
+;;         t
+         ("/proj/ras_arch/ras/edc/brahma/ec/drm")
+         ("/proj/ras_arch/ras/edc/brahma/ec/linux/drivers/gpu/drm/amd/amdgpu")
+         ("/proj/ras_arch/ras/edc/brahma/ec/linux/drivers")
+;;         t
+         ("/proj/ras_arch/ras/edc/brahma/ec/linux")
+;;         t
+         ("/proj/ras_arch/ras/edc/brahma/ec"))))
+
