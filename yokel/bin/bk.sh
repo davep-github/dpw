@@ -34,14 +34,16 @@ else
     ${genkernel_p=}
 fi
 
-[ -e "${bk_serial_num_file}" ] || {
-    echo 0 >| "${bk_serial_num_file}"
-}
+[ "${serialize_kernels_p}" = 't' ] && {
+    [ -e "${bk_serial_num_file}" ] || {
+        echo 0 >| "${bk_serial_num_file}"
+    }
 
-# For backup .config file name (sed -i)
-old_serial_num=$(cat "${bk_serial_num_file}")
-serial_num=$((old_serial_num + 1))
-bk_log="${bk_log}.${serial_num}"
+    # For backup .config file name (sed -i)
+    old_serial_num=$(cat "${bk_serial_num_file}")
+    serial_num=$((old_serial_num + 1))
+    bk_log="${bk_log}.${serial_num}"
+}
 config_file=.config
 
 fix_realtek()
@@ -208,16 +210,19 @@ bk_freebsd()
 do_cmd()
 {
     local sudo=
+    local sudo_str=
     if [ "$1" = '--sudo' ]
     then
         sudo=sudo
+        sudo_str="sudo "
         shift
     fi
     if [[ $dash_n == [yY1tT] ]]
     then
-        echo 1>&2 "++ $@"
+        echo "-- ${sudo_str}$@"
         true
     else
+        echo "++ ${sudo_str}$@"
         $sudo "$@"
     fi
 }
@@ -249,11 +254,18 @@ remove_cmd()
 build_kernel_target()
 {
     # CONFIG_LOCAL_VERSION="-edc.dp"
-    local new_ver=-edc.${serial_num}
-    local old_ver=-edc.${old_serial_num}
-    sed -i".${old_ver}" -rn "s/(CONFIG_LOCAL_VERSION=)(.*)/\1${new_ver}/p"
+    if [ "${serialize_kernels_p}" = 't' ]
+    then
+        local new_ver=-edc.${serial_num}
+        local old_ver=-edc.${old_serial_num}
+        sed -i".${old_ver}" -rn "s/(CONFIG_LOCAL_VERSION=)(.*)/\1${new_ver}/p" "${config_file}"
+    fi
     mk_target kernel
-    echo "${serial_num}" >| "${bk_serial_num_file}"
+    # Inc version number if make succeeded.
+    if [ "${serialize_kernels_p}" = 't' ]
+    then
+        echo "${serial_num}" >| "${bk_serial_num_file}"
+    fi
 }
 
 bk_linux()
