@@ -384,6 +384,8 @@ EExec()
           --cmd-cd:|--sh-cd:) shift; command_cd_cmd="${1}";;
           -tcsh) executor=EExec_start_tcsh
                  ;;
+          -*) EEdie0 1 "Bad option passed to EExec()"
+                 ;;
          *) break;;
       esac
       shift
