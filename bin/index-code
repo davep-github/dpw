@@ -319,6 +319,7 @@ else
     chmod_index_files a+w
 fi
     
-ls -l ${index_files}
+echo "$PWD:
+$(ls -l ${index_files})"
 
 echo "index-code done: $(date)."
