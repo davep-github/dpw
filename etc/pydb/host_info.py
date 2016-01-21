@@ -231,7 +231,8 @@ amd_family = e(
         'xterm_fg': "WHITE",
         'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
         'xem_bg_color': AMD_BG_COLOR,
-    },
+        'command-line-mailer': 'mutt', # Must support mail(1) args.
+ },
     # These are searched in the order given.
     ref=[OSDB['linux'], default]
 )
