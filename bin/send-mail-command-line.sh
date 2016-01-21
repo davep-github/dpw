@@ -47,4 +47,4 @@ on_error()
 
 
 : ${mailer=$($HOST_INFO -n mutt command-line-mailer )}
-"${mailer}" "$@"
+EExec "${mailer}" "$@"
