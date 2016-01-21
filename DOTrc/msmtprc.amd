@@ -1,0 +1,25 @@
+# Set default values for all following accounts.
+defaults
+tls on
+#tls_trust_file /etc/ssl/certs/ca-certificates.crt
+tls_certcheck off
+tls_starttls on
+logfile ~/log/msmtp.log
+
+account amd
+host atlsmtp10.amd.com
+from david.panariti@amd.com
+auth on
+user dpanarit
+password 3!415QTPi
+
+# The SMTP server of the provider.
+account provider
+host mail.provider.example
+from smithjoe@provider.example
+auth on
+user 123456789
+passwordeval gpg -d ~/.msmtp.password.gpg
+
+# Set a default account
+account default : amd
