@@ -236,11 +236,19 @@ mk_target()
         shift
     fi
     target="$@"
-    echo "***** making: ${target}..." && do_cmd $sudo make "$@" || {
-        echo 1>&2 "***** make ${target} failed, \$?: $?"
+    target_name="${target}"
+    if [ "${target}" = 'kernel' ]
+    then
+        # make kernel doesn't do what it used to.  
+        # However, make w/o target DTRT.
+        target_name="~kernel~"
+        target=
+    fi
+    echo "***** making: ${target_name}..." && do_cmd $sudo make ${target} || {
+        echo 1>&2 "***** make ${target_name} failed, \$?: $?"
         exit 1
     }
-    echo "made ${target}."
+    echo "made ${target_name}."
 }
 
 remove_cmd()
