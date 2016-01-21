@@ -169,9 +169,15 @@
 run</command></action></keybind><keybind key="C-Escape"><action name="Execute"><command>lxpanelctl
 menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscreen"/></keybind><!-- Launch Task Manager with Ctrl+Alt+Del --><keybind key="A-C-Delete"><action name="Execute"><command>lxtask</command></action></keybind><!-- Fast access to Terminal --><keybind key="C-W-T"><action name="Execute"><command>lxterminal</command></action></keybind>
 
-<!-- Fast access to filemanager -->
-
+<!-- Fast access to existing filemanager -->
 <keybind key="W-d">
+    <action name="Execute">
+        <command>wmctrl -a "Documents"</command>
+    </action>
+</keybind>
+
+<!-- Start new filemanager -->
+<keybind key="S-W-d">
     <action name="Execute">
         <startupnotify><enabled>true</enabled>
             <name>PCManFM</name>
