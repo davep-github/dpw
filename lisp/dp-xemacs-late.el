@@ -298,18 +298,18 @@ static char * delete_xpm[] = {
           ])
     (dp-ding-and-message "xpm not supported.")))
 
-(defun dp-setup-invisible-glyph (&optional file color)
-  (if (featurep 'xpm)
-      ;; chuck is too tall, and can be very annoying.  So default is now a simple
-      ;; string: [EOF].
-      (add-hook 'find-file-hooks 'dp-add-default-buffer-endicator)
-    (let ((file (expand-file-name "recycle2.xpm" data-directory)))
-      (if (condition-case nil
-	      ;; check to make sure we can use the pointer.
-	      (make-image-instance file nil
-				   '(pointer))
-	    (error nil))		; returns nil if an error occurred.
-	  (set-glyph-image gc-pointer-glyph file)))))
+;;when did the name change? (defun dp-setup-invisible-glyph (&optional file color)
+;;when did the name change?   (if (featurep 'xpm)
+;;when did the name change?       ;; chuck is too tall, and can be very annoying.  So default is now a simple
+;;when did the name change?       ;; string: [EOF].
+;;when did the name change?       (add-hook 'find-file-hooks 'dp-add-default-buffer-endicator)
+;;when did the name change?     (let ((file (expand-file-name "recycle2.xpm" data-directory)))
+;;when did the name change?       (if (condition-case nil
+;;when did the name change? 	      ;; check to make sure we can use the pointer.
+;;when did the name change? 	      (make-image-instance file nil
+;;when did the name change? 				   '(pointer))
+;;when did the name change? 	    (error nil))		; returns nil if an error occurred.
+;;when did the name change? 	  (set-glyph-image gc-pointer-glyph file)))))
 
 (add-hook 'gdb-mode-hook (function (lambda () (require 'gdb-highlight))))
 
