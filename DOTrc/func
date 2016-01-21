@@ -917,10 +917,21 @@ ps1()
 }
 export -f ps1
 
+mutt_with_inbox()
+{
+    local inbox="${1-}"
+    shift
+    cd ~
+    local inbox_opt=
+    [ -n "${inbox}" ] && {
+        inbox_opt="-f ${inbox}"
+    }
+    EDITOR=${MUTT_EDITOR-${EDITOR-vi}} $(sp -1 mutt) ${inbox_opt} "$@"
+}
+
 mutt()
 {
-    cd ~
-    EDITOR=${MUTT_EDITOR-${EDITOR-vi}} $(sp -1 mutt) -f $MUTT_INBOX "$@"
+    mutt_with_inbox "${MUTT_INBOX-}" "$@"
 }
 
 pmutt()
@@ -928,8 +939,7 @@ pmutt()
     echo 1>&2 B0rked
     echo 1 B0rked
     exit 1
-    cd ~
-    EDITOR=${EDITOR=$MUTT_EDITOR} $(sp -1 mutt) -f $PRISTINE_MUTT_INBOX "$@"
+    mutt_with_inbox "${PRISTINE_MUTT_INBOX-}"
 }
 
 psa()
