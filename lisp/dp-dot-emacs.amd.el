@@ -45,16 +45,73 @@
 (defvar dp-edit-parallel-tramp-file-default-location "/[cz-fp4-bdc]")
 
 ;; Keep in sync w/ ~/bin.amd/amd-index-edc-linux
+;; (setq cscope-database-regexps
+;;       '(
+;;         ("^/"
+;;          ("/proj/ras_arch/ras/edc/brahma/ec/drm")
+;;          ("/proj/ras_arch/ras/edc/brahma/ec/linux/drivers/gpu/drm/amd/amdgpu")
+;;          ("/proj/ras_arch/ras/edc/brahma/ec/linux/drivers")
+;;          t
+;;          ("/proj/ras_arch/ras/edc/brahma/ec/linux")
+;;          t
+;;          ("/proj/ras_arch/ras/edc/brahma/ec")
+;;          )
+;;         ))
+
+;;
+;; NB!
+;; `cscope-stop-at-first-match-dir' MUST be non-nil for `t' to be able to stop
+;; searches after a match is made.
+;; (setq cscope-database-regexps
+;;       '(
+;;         ;; Only search the big dbs if we're in their directories.
+;;         (
+;;          "^/proj/ras_arch/ras/edc/brahma/ec/linux$"
+;;          ("/proj/ras_arch/ras/edc/brahma/ec/linux")
+;;          t)
+
+;;         (
+;;          "^/proj/ras_arch/ras/edc/brahma/ec$"
+;;          ("/proj/ras_arch/ras/edc/brahma/ec")
+;;          t)
+
+;;         (
+;;          "^/proj/ras_arch/ras/edc/brahma/ec/"
+;;          ("/proj/ras_arch/ras/edc/brahma/ec/linux/drivers/gpu/drm/amd/amdgpu")
+;;          t
+;;          ("/proj/ras_arch/ras/edc/brahma/ec/linux/drivers")
+;;          t
+;;          ("/proj/ras_arch/ras/edc/brahma/ec/drm")
+;;          t
+;;          ("/proj/ras_arch/ras/edc/brahma/ec/linux")
+;;          t
+;;          ("/proj/ras_arch/ras/edc/brahma/ec")
+;;          )))
+
+;; Auto updating (of gtags) sucks with multiple databases.
+;; Avoid having multiple databases in a single path.
 (setq cscope-database-regexps
       '(
-        ("^/"
-         (t)
-;;         t
-         ("/proj/ras_arch/ras/edc/brahma/ec/drm")
-         ("/proj/ras_arch/ras/edc/brahma/ec/linux/drivers/gpu/drm/amd/amdgpu")
-         ("/proj/ras_arch/ras/edc/brahma/ec/linux/drivers")
-;;         t
+        ;; Only search the big dbs if we're in their directories.
+        (
+         "^/proj/ras_arch/ras/edc/brahma/ec/linux$"
          ("/proj/ras_arch/ras/edc/brahma/ec/linux")
-;;         t
-         ("/proj/ras_arch/ras/edc/brahma/ec"))))
+         t)
 
+        (
+         "^/proj/ras_arch/ras/edc/brahma/ec$"
+         ("/proj/ras_arch/ras/edc/brahma/ec")
+         t)
+
+        (
+         "^/proj/ras_arch/ras/edc/brahma/ec/"
+         ("/proj/ras_arch/ras/edc/brahma/ec/linux/drivers/gpu/drm")
+         t
+         ("/proj/ras_arch/ras/edc/brahma/ec/drm")
+         t
+         ;; These will get stale, but the stuff we'll be looking for will be
+         ;; under more up-to-date dbs.
+         ("/proj/ras_arch/ras/edc/brahma/ec/linux")
+         t
+         ("/proj/ras_arch/ras/edc/brahma/ec")
+         )))

@@ -7,7 +7,7 @@ import ranking_global_gtags_lib
 rgg = ranking_global_gtags_lib
 #rgg.log_file = sys.stderr
 rgg_log_file_name = os.environ.get("rgg_log_file_name", None)
-#rgg_log_file_name = "bubba"
+rgg_log_file_name = "bubba"
 rgg_log_file_name = None
 if rgg_log_file_name:
     if rgg_log_file_name == '--err':
@@ -84,7 +84,16 @@ def rank_init(
     rgg.add_filter_out_regexp_strings(filter_out_regexp_strings)
 
 
+# If we see one of these options, punt to global(1)
+Passthrough_options = ["-u", "--single-update" ]
+
 def rank_main(argv):
+    for arg in argv:
+        if arg in Passthrough_options:
+            system_cmd = "global " + " ".join(argv[1:])
+            print >>sys.stderr, "system_cmd>%s<" % (system_cmd,)
+            sys.exit(os.system(system_cmd))
+
     filter_p = os.environ.get("BEA_FILTER")
     uniqify_p = True
 

@@ -229,6 +229,7 @@ alias gitco='git checkout'
 alias gitci='git commit'
 alias gitcia='git commit -a'
 alias gits='git status'
+alias gitsno='git status -uno'
 alias gitstat='git status'
 alias gitadd='git add'
 alias git+='git add'            # git+, git add.

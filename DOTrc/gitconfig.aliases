@@ -9,6 +9,7 @@
 	ci = commit
         cia = commit -a
 	st = status
+        sno = status -uno
         ldf = log --decorate=full -n 5
         ld = log --decorate -n 5
         log5 = log -n 5

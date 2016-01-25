@@ -98,6 +98,7 @@ do
               case "${op}" in
                   n) dash_n=y;;
                   s) serialize_kernels_p=t;;
+                  z) action_list=;;
                   *) action_list="$action_list $(canonicalize $op)";;
               esac
             done
