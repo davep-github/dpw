@@ -2,13 +2,23 @@
 # (currently, as of git 1.5.6.1) non-git alias are executed from the top-level dir of a repo
 [alias]
 	co = checkout
+        # See which alias sticks and remove the rest.
 	cof = checkout --
+        recover-file = checkout --
+        rec = checkout --
+        restore-file = checkout --
+        rest = checkout --
+        rfile = checkout --
+        rf = checkout --
+
 	br = branch
         cob = checkout -b
         newbr = checkout -b
+        newbranch = checkout -b
 	ci = commit
         cia = commit -a
 	st = status
+	s = status
         sno = status -uno
         ldf = log --decorate=full -n 5
         ld = log --decorate -n 5
@@ -22,8 +32,10 @@
         # (currently, as of git 1.5.6.1) non-git alias are executed from the
         # top-level dir of a repo
         # The final dash is so that arguments start with $1, not with $0. 
-        diffnp = !sh -c 'git --no-pager diff "$@"' -
-        dnp = !sh -c 'git --no-pager diff "$@"' -
+        diffnp = !sh -c 'git --no-pager diff "$@"'
+        dnp = !sh -c 'git --no-pager diff "$@"'
+        diffcat = !sh -c 'git --no-pager diff "$@"'
+        dcat = !sh -c 'git --no-pager diff "$@"'
         mnc = merge --no-commit
         pffo = pull --ff-only --no-commit
         mffo = merge --ff-only --no-commit
@@ -52,12 +64,18 @@
 
         dtp4v = difftool --tool=p4diff
         dtp4 = difftool --tool=p4diff
+        hist5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+        hist20 = log -n 20 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         dotgit = rev-parse --git-dir
         gdir = rev-parse --git-dir
-	aliases = config --get-regexp ^alias\\.
+        # there is now a git alias command, but 'tis called alias.
+	#aliases = config --get-regexp ^alias\\.
+        
 	undo-commit = reset --soft HEAD^
 	uncommit = reset --soft HEAD^
+        amend = commit --amend
+        rank = shortlog -sn --no-merges
 
 # reset
         unstage = reset HEAD    # remove files from index (tracking)

@@ -646,7 +646,8 @@ original state and then applies changes. This is good... sometimes."
 (when dp-fontify-p
   (add-hook 'dp-post-dpmacs-hook 'dp-muck-with-fontification))
 
-(defvar dp-hanging-brace-alist '((brace-list-close after))
+;; ;;(brace-list-close . after)
+(defvar dp-hanging-brace-alist '((brace-list-close . ignore))
   "My hanging braces values.  We will edit or append to
 c-hanging-braces-alist based upon these values.")
 

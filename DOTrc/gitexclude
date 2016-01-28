@@ -42,8 +42,8 @@ a.out
 *.log.xz
 gmon.out
 NOTAG
-*.giti
-*.gitignore
 *.nogit
+*,NOVC
 *.,,
 ,*,
+000-cscope-db-root*.c

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Allows you to create a file with something like sudo.
+
+# If you use redirection on a command line using sudo, it will create it as
+# the sudoer, not as the sudoee.
+# Also nice for eexec, since -n will actually make it not do anything.
+: ${of_arg=}
+
+(($# > 0)) && {
+    of_arg="of=${1}"
+}
+dd status=none ${of_arg} 

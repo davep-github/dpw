@@ -4,11 +4,13 @@
   "Set up C/C++ style."
   (interactive)
   (setq dp-default-c-style-name "amd-c-style")
-  (c-add-style "amd-c-style" kernel-c-style t))
+  (c-add-style "amd-c-style" dp-kernel-c-style t))
 
 ;;Meh.
 (add-hook 'c-mode-common-hook (lambda ()
                                 (dp-add-amd-c-style)
+                                ;; Some files use this and I can't find it.
+                                (defalias 'linux-c-mode 'c-mode)
                                 (dp-define-local-keys
                                  '(
                                    [tab] dp-c*-electric-tab
@@ -104,10 +106,14 @@
          t)
 
         (
+         "^/proj/ras_arch/ras/edc/brahma/ec/drm"
+         ("/proj/ras_arch/ras/edc/brahma/ec/drm")
+         (t)
+         t)
+
+        (
          "^/proj/ras_arch/ras/edc/brahma/ec/"
          ("/proj/ras_arch/ras/edc/brahma/ec/linux/drivers/gpu/drm")
-         t
-         ("/proj/ras_arch/ras/edc/brahma/ec/drm")
          t
          ;; These will get stale, but the stuff we'll be looking for will be
          ;; under more up-to-date dbs.

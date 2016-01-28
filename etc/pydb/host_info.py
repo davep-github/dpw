@@ -268,7 +268,7 @@ e(
         'host-pattern': 'cz-fp4',
         'family': 'amd_family',
         'comment': 'A BETTONG Carrizo dev system (on my desk).',
-        'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 174x74-0+0',
+        'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 180x74-0+0',
         'xterm_bg': CZ_FP4_BG_COLOR,
         'xterm_fg': CZ_FP4_FG_COLOR,
         'xem_bg_color': AMD_ATLR5N4_BG_COLOR, # CZ_FP4_BG_COLOR,
