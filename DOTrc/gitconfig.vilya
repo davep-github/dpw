@@ -1,0 +1,6 @@
+[include]
+        path = ~/.rc/gitconfig
+
+[include]
+        path = ~/.rc/gitconfig.davep
+
