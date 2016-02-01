@@ -35,9 +35,10 @@ unset eexec_program
 # export eexec_program
 
 : ${EXTAGTREE_DASH_Q:=}
+: ${POST_PROCESSOR:=post_format}
 
-field_num=
-arg=
+field_num=0
+arg=${1-}
 
 : ${find_up_p=t}
 : ${db_finder_file=cscope.out}
@@ -50,6 +51,8 @@ do
       --global|--def|--definition|--global-def|--global-definition) shift; arg="${1}"; field_num=1;;
       --called|--called-by) shift; arg="${1}"; field_num=2;;
       --calling|--callers|--calls) shift; arg="${1}"; field_num=3;;
+      --raw) POST_PROCESSOR=post_raw;;
+      --format|--gcc|--grep) POST_PROCESSOR=post_format;;
       -t|--text|--str|--string|--text-string|--text-str|--txt) shift; arg="${1}"; field_num=4;;
       --change|--change-text|--change-txt) field_num=5;;  # This may require more work.
       --egrep|--grep|--regexp|--re) shift; arg="${1}"; field_num=6;;
@@ -76,14 +79,31 @@ db_files=($(find-up "${db_finder_file}"))
 EExec_verbose_msg "db_files[@]>${db_files[@]}<"
 
 set -- "$@" "${arg}"
+
+[ -z "$*" ] && {
+    echo "No arguments were provided. Thanks for playing."
+    exit 1
+} 1>&2
+
 if ((${#db_files[@]} == 0))
 then
     EExec ${DP_CSCOPE_PROGRAM-cscope} -d ${EXTAGTREE_DASH_Q} -L -"${field_num}" "$@"
     exit
 fi
 
+post_raw()
+{
+    cat
+}
+
+post_format()
+{
+    # Sigh. No $<fnum0>...$<fnumN>.
+    awk '{printf "%s:%d\t ", $1, $3; $1=$2=$3=""; print $0}'
+}
+
 for db_file in "${db_files[@]}"
 do
     EExec -0 ${DP_CSCOPE_PROGRAM-cscope} -d ${EXTAGTREE_DASH_Q} \
-        -f"${db_file}" -L -"${field_num}" "$@"
+        -f"${db_file}" -L -"${field_num}" "$@" | "${POST_PROCESSOR}"
 done  
