@@ -13,8 +13,8 @@
 [difftool "ec-merge"]
 	cmd = ec-merge -w $LOCAL $REMOTE
 
-[difftool "meld"]
-	cmd = meld $LOCAL $REMOTE
+#[difftool "meld"]
+#	cmd = meld $LOCAL $REMOTE
 
 [difftool "diffuse"]
         cmd = diffuse $LOCAL $REMOTE
