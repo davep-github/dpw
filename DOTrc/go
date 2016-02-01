@@ -30,8 +30,10 @@ Ee|testA|testB|testC| 	value-for-testABC
 #Ee|faff|                find . -type f -print0 | xargs -r0 fgrep 
 #Ee|fafe|                find . -type f -print0 | xargs -r0 egrep
 
-Ee|dpworld|dpw|              ${HOME}/dpw/
+# dpw git dir (dpw/dpw) is visited *FAR* more often than dpw (dpw), so remove
+# dpwg and just use dpw for what was dpwg.
 Ee|dpwgit|dpwg|              ${HOME}/dpw/dpw
+Ee|dpworld|dpw|              ${dpwgit}
 Ee|dpwbuild|dpwbld|dpwbld|   ${dpworld}build/
 Ee|dpylib|                   ${HOME}/lib/pylib/
 Ee|obconf|                   ${HOME}/.config/openbox/
