@@ -6,6 +6,9 @@ source script-x
 $DP_SCRIPT_X_DASH_X_OFF
 
 MOTD=/etc/motd
+[ -w "${MOTD}" ] || {
+    MOTD=/dev/null
+}
 #MOTDer="/home/davep/bin.Linux.i686/lcursive"
 MOTDer="figlet"
 cleanup_sep='!!!! Do not Forget New Kernel Cleanup (try: new-kernel-fini) !!!!'
@@ -23,7 +26,10 @@ fail_file=/tmp/bk.sh.banner-FAIL.$$
 stat_files="$ok_file $fail_file"
 # make: clean, kernel, modules_install, install
 all_actions="ckmi"
-: ${action_list="clean kernel modules_install install"}
+: ${action_list_all="clean kernel modules_install install"}
+# Useful default for kernel dev.
+: ${action_list_dev="build_kernel modules_install install"}
+: ${action_list=${action_list_dev}}
 #echo "0: actions>$actions<"
 #echo "1: actions>$actions<"
 dash_n=
@@ -63,6 +69,7 @@ canonicalize()
 	[bk]*) echo "build_kernel";;
 	m*) echo "modules_install";;
 	i*) echo "install";;
+        d*) echo "dev ops";;
 	*) echo 1>&2 "Bogus: $(echo_id op)"
 	    exit 1;;
     esac
@@ -83,8 +90,10 @@ $DP_SCRIPT_X_DASH_X_ON
 while (($# > 0))
 do
   case "$1" in
-      --make) genkernel_p=;;
-      --genk*) genkernel_p=t;;
+      --make) genkernel_p=; break;;
+      --genk*) genkernel_p=t; break;;
+      --all) action_list="${action_list_all}"; break;;
+      --dev) action_list="${action_list_dev}"; break;;
       --) break;;
       -*)
             # Nukes leading `-' from the option.
@@ -99,6 +108,8 @@ do
                   n) dash_n=y;;
                   s) serialize_kernels_p=t;;
                   z) action_list=;;
+                  a) action_list="${action_list_all}";;
+                  d) action_list="${action_list_dev}";;
                   *) action_list="$action_list $(canonicalize $op)";;
               esac
             done
