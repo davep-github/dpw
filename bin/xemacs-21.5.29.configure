@@ -28,7 +28,7 @@ else
 fi
 
 . script-x
-if [ "$HOSTNAME" = "vilya" ]
+if [ "$HOSTNAME" = "vilyaXXXXX" ]
 then
     banner "Move xemacs destination to ~/yokel"
     : ${PREFIX:=$HOME/bree}
