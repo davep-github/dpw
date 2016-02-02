@@ -199,6 +199,8 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
     <keybind key="S-W-e"><action name="Execute"><command>wmctrl -a "Serv/XEmacs@"</command></action></keybind>
     <!-- Select and raise an emacs window. -->
     <keybind key="W-e"><action name="Execute"><command>wmctrl -a "XEmacs@"</command></action></keybind>
+    <!-- Start an xem session. -->
+    <keybind key="C-W-e"><action name="Execute"><command>~/bin/ubuntu-sucks xem</command></action></keybind>
     <!-- Select and raise a web browser (att: firefox) window. -->
     <keybind key="W-w"><action name="Execute"><command>wmctrl -a "Mozilla Firefox"</command></action></keybind>
     <!-- Select and raise an email client window. Thunderbird, ATT. -->

@@ -30,10 +30,14 @@ Ee|testA|testB|testC| 	value-for-testABC
 #Ee|faff|                find . -type f -print0 | xargs -r0 fgrep 
 #Ee|fafe|                find . -type f -print0 | xargs -r0 egrep
 
-Ee|dpworld|dpw|              ${HOME}/dpw/
+# dpw git dir (dpw/dpw) is visited *FAR* more often than dpw (dpw), so remove
+# dpwg and just use dpw for what was dpwg.
 Ee|dpwgit|dpwg|              ${HOME}/dpw/dpw
+Ee|dpworld|dpw|              ${dpwgit}
 Ee|dpwbuild|dpwbld|dpwbld|   ${dpworld}build/
 Ee|dpylib|                   ${HOME}/lib/pylib/
-/home/dpanarit/.go.amd:Ee|obconf|      ${HOME}/.config/openbox/
-/home/dpanarit/.go.amd:Ee|obrc|        ${obconf}/rc.xml
-/home/dpanarit/.go.amd:Ee|obmenu|      ${obconf}/menu.xml
+Ee|obconf|                   ${HOME}/.config/openbox/
+Ee|obrc|                     ${obconf}/rc.xml
+Ee|obmenu|                   ${obconf}/menu.xml
+Ee|cscopedbroot|             000-cscope-db-root
+Ee|csdb|                     ${cscopedbroot}

@@ -1265,4 +1265,23 @@ de_screenify()
 }
 export -f de_screenify
 
+re_screenify()
+{
+    IMASCREENINSTANCE=1
+    [ -n "${1-}" ] && {
+        DP_MY_SCREEN_NAME="${1}"
+    }
+
+    [ -z "${DP_MY_SCREEN_NAME-}" ] && {
+        if [ -z "${1-}" ]
+        then
+            echo "DP_MY_SCREEN_NAME isn't set, and no argument was passed.
+Invoke this function with a name as an argument."
+            return 1
+        fi
+    }
+    dp_setup_prompt
+}
+export -f re_screenify
+
 true

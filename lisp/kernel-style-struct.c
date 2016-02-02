@@ -1,5 +1,16 @@
 /* -*- mode: C; c-file-style: "amd-c-style" -*-  */
 
+struct mesion a[] = {
+        { 1,2,3 },
+        { blah },
+        { yadda },
+        { 1,2,3}
+};
+        
+                
+                
+                
+
 struct amdgpu_vm_manager {
 	struct {
 		struct fence	*active;

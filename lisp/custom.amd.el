@@ -12,6 +12,7 @@
  '(browse-url-xterm-program "xx")
  '(buffers-menu-sort-function 'sort-buffers-menu-alphabetically)
  '(cal-tex-diary t)
+ '(cscope-stop-at-first-match-dir t)
  '(cvs-allow-dir-commit t)
  '(dabbrev-ignored-buffer-regexps '("\\(TAGS\\|tags\\|ETAGS\\|etags\\|GTAGS\\|GRTAGS\\|GPATH\\|cscope.*\\)\\(<[0-9]+>\\)?")
 )

@@ -196,7 +196,7 @@ def handle_print(val, name, **kw_args):
     elif kw_args.get("grep-name"):
         ostream.write("{} -- {}\n".format(name, val))
     else:
-        ostream.write("{}\n".format(first))
+        ostream.write("{}\n".format(val))
 
 #####################################################################
 #

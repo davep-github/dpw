@@ -511,6 +511,77 @@ add_to_sudo_bash_env()
     running_as_root_p || echo "$@" >> "$sudo_bash_env"
 }
 
+dp_setup_prompt()
+{
+    # set up our prompt.
+    # we want username, host and path in the term prompt,
+    # and if we're in an xterm, we want that info plus
+    # the tty in the window's title.  We also set the
+    # icon name.
+
+    #echo "TERM>$TERM<"
+
+    scr_pre=''
+    scr_suf=''
+    _bashrc_set_ps1_path=''
+        # screen's term type is vt100, but it can (?now?) set
+        # title bar names.  But only when we're in an xterm, which
+        # we infer from having a DISPLAY var set.
+    case "$IMASCREENINSTANCE" in
+    1|[Yy][Ee][Ss]|[tT])
+            if [ -n "$DISPLAY" ]; then
+    	_bashrc_set_ps1_path=X
+        else
+    	_bashrc_set_ps1_path=terminal
+        fi
+            ;;
+    esac
+
+    case $TERM in
+        [Xx][Tt][Ee][Rr][Mm]*|[Rr][Xx][Vv][Tt])
+    	case $shell_name in
+    	    bash|pdksh|93ksh|ksh)
+    		# xterm --> X
+                        _bashrc_set_ps1_path=X
+    	esac	# $shell_name
+                #xmodmap -e "keysym Alt_L = Meta_L Alt_L"
+    	;;
+    esac		# $TERM
+    if [ "$_bashrc_set_ps1_path" == terminal ]; then
+        source setemph
+            # @todo XXX make this work.
+        PS1_pre_history="${emph}scrn!$norm"
+        fi
+        #echo "IMASCREENINSTANCE>$IMASCREENINSTANCE<"
+        if [ -n "$IMASCREENINSTANCE" ]; then
+            # Set the XTerm title bar stuff so that we'll see screen
+            # names even if they were started in a non-XTerm,
+            # e.g. a console.
+            # sequence to set the name in the titlebar.
+            # needs work, screen TERM is vt100
+            # DISPLAY is set, tho.
+            scr_pre='Scrn\('
+            scr_suf="::$DP_MY_SCREEN_NAME\)"
+        else
+            scr_pre=
+            scr_suf=
+        fi
+    # We save all title bar information regardless of whether or not
+    # it can be used in the terminal in which we reside.  If we ever
+    # come to reside in a terminal in which the info is useful wer
+    # can use it..
+    # This is primarily (?only?) needed when we are screen'ing.
+        : ${PS1_title_prefix:='-'} ; export PS1_title_prefix
+        : ${PS1_title_suffix:=""} ; export PS1_title_suffix
+        export XTerm_title='${PS1_title_prefix}'"${scr_pre}"'${TTY}'"${scr_suf}"'-${PS1_1}${USER}@${HOSTNAME}:${PWD}${PS1_title_suffix}'
+        # set LS_COLORS dir ls file coloring
+    # Predicate color palette based on term type, background type
+    # (loosely grouping colors into {light... dark} sets for ease
+    # of determing best palette.  Eg: white, very light
+    # {grey,blue,etc} can be approximated as light.
+    ####eval export `dircolors ~/.rc/dp-gold-color.rc`
+}
+
 #
 # interactive mode stuff
 case $- in
@@ -537,74 +608,7 @@ case $- in
 	    *:no_ps_path:*)
 		# echo 'no titler set'
 		;;
-	    *)
-		# set up our prompt.
-		# we want username, host and path in the term prompt,
-		# and if we're in an xterm, we want that info plus
-		# the tty in the window's title.  We also set the
-		# icon name.
-
-		#echo "TERM>$TERM<"
-
-                scr_pre=''
-                scr_suf=''
-                _bashrc_set_ps1_path=''
-                # screen's term type is vt100, but it can (?now?) set
-                # title bar names.  But only when we're in an xterm, which
-                # we infer from having a DISPLAY var set.
-		case "$IMASCREENINSTANCE" in
-		1|[Yy][Ee][Ss]|[tT]) 
-                    if [ -n "$DISPLAY" ]; then  
-			_bashrc_set_ps1_path=X
-		    else
-			_bashrc_set_ps1_path=terminal
-		    fi
-                    ;;
-		esac
-
-		case $TERM in
-		    [Xx][Tt][Ee][Rr][Mm]*|[Rr][Xx][Vv][Tt])
-			case $shell_name in
-			    bash|pdksh|93ksh|ksh)
-				# xterm --> X
-                                _bashrc_set_ps1_path=X
-			esac	# $shell_name
-                        #xmodmap -e "keysym Alt_L = Meta_L Alt_L"
-			;;
-		esac		# $TERM
-		if [ "$_bashrc_set_ps1_path" == terminal ]; then
-		    source setemph
-                    # @todo XXX make this work.
-		    PS1_pre_history="${emph}scrn!$norm"
-                fi
-                #echo "IMASCREENINSTANCE>$IMASCREENINSTANCE<"
-                if [ -n "$IMASCREENINSTANCE" ]; then
-                    # Set the XTerm title bar stuff so that we'll see screen
-                    # names even if they were started in a non-XTerm,
-                    # e.g. a console.
-                    # sequence to set the name in the titlebar.
-                    # needs work, screen TERM is vt100
-                    # DISPLAY is set, tho.
-                    scr_pre='Scrn\('
-                    scr_suf="::$DP_MY_SCREEN_NAME\)"
-                else
-                    scr_pre=
-                    scr_suf=
-                fi
-		# We save all title bar information regardless of whether or not
-		# it can be used in the terminal in which we reside.  If we ever
-		# come to reside in a terminal in which the info is useful wer
-		# can use it..
-		# This is primarily (?only?) needed when we are screen'ing.
-                : ${PS1_title_prefix:='-'} ; export PS1_title_prefix
-                : ${PS1_title_suffix:=""} ; export PS1_title_suffix
-                export XTerm_title='${PS1_title_prefix}'"${scr_pre}"'${TTY}'"${scr_suf}"'-${PS1_1}${USER}@${HOSTNAME}:${PWD}${PS1_title_suffix}'
-                # set LS_COLORS dir ls file coloring
-		# Predicate color palette based on term type, background type
-		# (loosely grouping colors into {light... dark} sets for ease
-		# of determing best palette.  Eg: white, very light
-		# {grey,blue,etc} can be approximated as light.
-                ####eval export `dircolors ~/.rc/dp-gold-color.rc`
+	    *) dp_setup_prompt;;
 	esac			# $DP_shell_options
 
 	case $shell_name in
