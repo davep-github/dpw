@@ -1803,6 +1803,7 @@ Use of 'unset allows the legitimate value of nil to be used.")
     "The value for `cscope-database-regexps' that will cause us to search the
     current directory only.
 ??? Maybe should be '(t) ??? As per `cscope-database-regexps' doc?")
+(defvar dp-cscope-db-update-required-p nil)
 
   (defun dp-cscope-force-current-dir-only (&optional restore-p)
     (interactive "P")
