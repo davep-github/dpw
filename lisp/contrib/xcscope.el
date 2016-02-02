@@ -2040,10 +2040,13 @@ using the mouse."
 
 	;; The database file and the directory containing the database file
 	;; must both be writable.
-	(if (or (not (file-writable-p database-file))
-		(not (file-writable-p (file-name-directory database-file)))
-		cscope-do-not-update-database)
-	    (setq options (cons "-d" options)))
+	(if (or
+             (not dp-cscope-db-update-required-p)
+             (not (file-writable-p database-file))
+             (not (file-writable-p (file-name-directory database-file)))
+             cscope-do-not-update-database)
+            (setq options (cons "-d" options))
+          (setq dp-cscope-db-update-required-p nil))
         (setq options (cons cscope-directory options))
         (setq options (cons "-P" options))
 	(goto-char (point-max))
