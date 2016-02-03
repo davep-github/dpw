@@ -1,98 +1,104 @@
 #!/bin/bash
+########################################################################
+#
+# template begin.
 
-. script-x
+# See old icky version in repo hist <= af572b083bec3142b7ce9dd8319350ec9b751d54
+
+# davep specific code -------------8><------------------
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+# davep specific code -------------8><------------------
+
+trap_exit_msg=
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+}
+# trap 'on_exit' 0
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+    trap '' 0
+}
+# trap 'on_error' ERR
+
+sig_exit ()
+{
+    {
+        local sig_num=$1; shift
+        echo
+        echo "sig_exit, sig_num: $sig_num"
+        exit 1
+    } 1>&2
+}
+
+# for sig in 2 3 4 5 6 7 8 15
+# do
+#     trap "sig_exit $sig" $sig
+# done
+
+display_stderr()
+{
+    echo 1>&2 "$progname: $@"
+}
+
+status_msg()
+{
+    display_stderr "$@"
+}
+
+fatal_error()
+{
+    local error="${1}"
+    shift
+    display_stderr "$@"
+    exit "${error}"
+}
+
+Usage_error()
+{
+    fatal_error 1 "$@"
+}
+
+#
+# template end.
+########################################################################
 
 prog=`basename $0`
 def_grepper=egrep
 grepper=$def_grepper
-Usage()
-{
-   {
-       echo "${prog}: usage: [-$all_options] [-- $grepper options] regexp
-    -e --> Don't prepend default regexp prefix: [$def_regexp_prefix].
-    -f<list> --> Add <list> to front of def_lists: [$def_lists].
-                 Can be used >= 0 times.
-    -a<list> --> Append <list> to def_lists: [$def_lists]
-                 Can be used >= 0 times.
-    -F --> Clear existing lists.
-    -g<grepper> --> Use <grepper> instead of default: [$def_grepper].
-"
-   } 1>&2
-   
-   exit 1
-}
-
-absify()
-{
-    local dir=$1; shift
-    #echo 1>&2 "@>$@<"
-    for l in "$@"
-      do
-      #echo_id 1>&2 l
-      case "$l" in
-          /*) echo "$l";;
-          *) echo "${dir}/$l";;
-      esac
-    done
-}
-
-: ${deb_pkg_dir:=/var/lib/apt/lists}
-# Crappy default...
-builtin_def_lists="${deb_pkg_dir}/debmirror.vanu.com_debian_dists_etch_main_binary-i386_Packages"
-def_lists=$(host-info.py -n "$builtin_def_lists" deb-packages)
-lists="$def_lists"
-
-grepper_dash_n=
-def_regexp_prefix="^Package: "
-regexp_prefix=$def_regexp_prefix
-std_options=""
-option_str="ef:Fa:g:n"
-all_options="$option_str$std_options"
-
-[[ $# == 0 ]] && Usage
-
-# New style getopt... fixes ugly quoting problems.
-q=$(getopt -o "$all_options" -- "$@")
-[ $? != 0 ] && Usage
-eval set -- "$q" 
-unset q
-for i in "$@"
-do
-  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
-  case $1 in
-      -e) regexp_prefix="";;
-      -f) lists="$2 $lists"; shift;;
-      -a) lists="$lists $2"; shift;;
-      -F) lists="";;
-      -g) grepper=$2; shift;;
-      -n) grepper_dash_n="-n";;
-      --) shift ; break ;;
-      *) 
-      echo 1>&2 "Unsupported option>$1<";
-      Usage
-      exit 1 ;;
-    esac
-    shift
-done
-
-if ! type "$grepper" >/dev/null 2>&1; then
-    echo 1>&2 "grepper \`$grepper' cannot be found."
-    exit 1
-fi
-last_arg=$(eval echo \$$#)
-prev=""
-args=""
-#echo "$0: @>$@<"
-for x in "$@"; do
-    args="$args $prev"
-    prev="$x"
-done
-args="$args"                    # HUH!?
-regexp="$regexp_prefix$last_arg"
-
-abs_lists=$(absify ${deb_pkg_dir} ${lists})
 
 #$grepper $grepper_dash_n $args "$regexp" $abs_lists /dev/null
 # D'OH!
 # but I think this will only search things that are "officially" installed?
-apt-cache search "$@"
+EExec apt-cache search "$@"
