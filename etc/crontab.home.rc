@@ -14,7 +14,7 @@ then
     }
 fi
 
-ETC_BIN_DIR=$HOME/etc
+ETC_BIN_DIR=~/etc
 dp_enable_beagle_p=             # Don't use beagle.
 
 true
