@@ -40,9 +40,10 @@
     (c-hanging-semi&comma-criteria dp-c-semi&comma-nada)
     (c-echo-syntactic-information-p . nil)
     (c-indent-comments-syntactically-p . t)
-    (c-hanging-braces-alist         . ((brace-list-open . ignore)
-                                       (brace-list-close . ignore)
-                                       (brace-entry-open . ignore)))
+    (c-hanging-braces-alist         . ((brace-list-open   . ignore)
+                                       (brace-list-close  . ignore)
+                                       (substatement-open . (after))
+                                       (brace-entry-open  . ignore)))
 
     (c-hanging-colons-alist         . ((member-init-intro . (before))))
     )
