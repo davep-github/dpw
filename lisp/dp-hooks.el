@@ -1803,7 +1803,16 @@ Use of 'unset allows the legitimate value of nil to be used.")
     "The value for `cscope-database-regexps' that will cause us to search the
     current directory only.
 ??? Maybe should be '(t) ??? As per `cscope-database-regexps' doc?")
-(defvar dp-cscope-db-update-required-p nil)
+  (defvar dp-cscope-db-update-required-p nil)
+
+  (defun dp-cscope-minor-mode-p ()
+    "Return non-nil if `cscope-minor-mode' is in effect."
+    (assq 'cscope-minor-mode minor-mode-map-alist))
+
+  (defun dp-cscope-set-db-update-required ()
+    (setq dp-cscope-db-update-required-p
+          (and (dp-in-c)
+               (dp-cscope-minor-mode-p))))
 
   (defun dp-cscope-force-current-dir-only (&optional restore-p)
     (interactive "P")
@@ -1835,6 +1844,8 @@ Use of 'unset allows the legitimate value of nil to be used.")
                         "d" cscope-find-global-definition)))
     
     (add-hook 'cscope-minor-mode-hooks 'dp-cscope-minor-mode-hook)
+    (add-hook 'after-save-hook 'dp-cscope-set-db-update-required)
+
     ;; defun cs
     (defun dp-cscope-buffer (&optional no-select)
       "Switch to cscope results buffer, if it exists."
@@ -2436,7 +2447,7 @@ changed."
   (interactive)
   (setq comment-start "@"
         comment-end ""
-        block-comment-start "/*"
+        block-comment-start "/* "
         block-comment-end "*/"))
 
 (add-hook 'bookmark-bmenu-mode-hook 'dp-bookmark-bmenu-mode-hook)
