@@ -14,12 +14,12 @@ user dpanarit
 password 3!415QTPi
 
 # The SMTP server of the provider.
-account provider
-host mail.provider.example
-from smithjoe@provider.example
-auth on
-user 123456789
-passwordeval gpg -d ~/.msmtp.password.gpg
+#eg account provider
+#eg host mail.provider.example
+#eg from smithjoe@provider.example
+#eg auth on
+#eg user 123456789
+#eg passwordeval gpg -d ~/.msmtp.password.gpg
 
 # Set a default account
 account default : amd

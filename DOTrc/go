@@ -41,3 +41,4 @@ Ee|obrc|                     ${obconf}/rc.xml
 Ee|obmenu|                   ${obconf}/menu.xml
 Ee|cscopedbroot|             000-cscope-db-root
 Ee|csdb|                     ${cscopedbroot}
+Ee|ipystartup|ipyup|ipyrc|   ${HOME}/.config/ipython/profile_default/startup/

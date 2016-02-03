@@ -299,4 +299,7 @@ alias fgrep="grep -F $grep_options"
 alias sagi='sudo apt-get install'
 
 alias nocolor='ul -t dumb'
+
+alias hinfo='host-info.py'
+alias dpmailer='send-mail-command-line.sh'
 true

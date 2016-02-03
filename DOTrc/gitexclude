@@ -47,4 +47,4 @@ NOTAG
 *,NOVC
 *.,,
 ,*,
-000-cscope-db-root*.c
+000-cscope-db-root.*.c
