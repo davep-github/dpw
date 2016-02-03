@@ -156,3 +156,5 @@ echo 'Other new Linux installation actions:
    2) gcc utmpdump.c ../utmpdump
    +) gcc $f ../$(basename .c|.cpp|???)
 '
+
+echo "TODO! Try to link ~/.rc/xxx.<host> and then ~/.rc/xxx into ~"

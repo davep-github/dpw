@@ -135,6 +135,10 @@ cscope
 vim
 diffuse
 gitk
+xorg-dev
+mpd
+msmtp
+mutt
 lsscsi)
 
 num_pkgs="${#packages[@]}"
