@@ -88,6 +88,7 @@ int boo(
 	char    char0;
 	long_type_name	blah;
 
+        /* q */
 	switch (what_an_ugly_style) {
 	case 'x':
 		printf("It hurts my I and eye want to cry.\n");
