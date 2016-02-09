@@ -750,6 +750,7 @@ source_bash_completion_code()
                       bc_type=local;;
           esac
           DP_SOURCED_BASH_COMPLETION_FILES="$bc:$bc_type"
+          readonly DP_SOURCED_BASH_COMPLETION_FILES
           return
       }
     done
@@ -758,9 +759,16 @@ source_bash_completion_code()
 [ "$DP_ENV_INTERACTIVE" = 'y' ] && {
     source $HOME/.rc/dp-ssh-agent
     dp_ssh_run_agent_p && dp_ssh_start_agent
-    ## Run completion by hand if we're in the odd situation described above
-    ## the definition of `source_bash_completion_code'.
-    [ -z "$BASH_COMPLETION" ] && source_bash_completion_code
+    ## Run completion explicitly if we're in the odd situation described above
+    ## in the definition of `source_bash_completion_code'.
+    ## `BASH_COMPLETION_COMPAT_DIR' is used (at least) by lubuntu by the
+    ## completion setup code.  It is used as an indicator as to whether
+    ## completion has been done yet.
+    [ -z "$BASH_COMPLETION_COMPAT_DIR" \
+      -a \
+      -z "${DP_SOURCED_BASH_COMPLETION_FILES}" ] && {
+        source_bash_completion_code
+    }
     ##dp_rc_logger "sourcing extras: $(expand_source_list $RC_DIR/extra_bash_completion_code "" $locale_rcs)"
     ##source_list $RC_DIR/extra_bash_completion_code "" $locale_rcs
 }
