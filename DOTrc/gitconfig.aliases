@@ -37,6 +37,7 @@
         dnp = !sh -c 'git --no-pager diff "$@"'
         diffcat = !sh -c 'git --no-pager diff "$@"'
         dcat = !sh -c 'git --no-pager diff "$@"'
+        fdr = fetch --dry-run
         mnc = merge --no-commit
         pffo = pull --ff-only --no-commit
         mffo = merge --ff-only --no-commit
