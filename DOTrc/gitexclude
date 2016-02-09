@@ -19,15 +19,28 @@ core.[0-9][0-9][0-9]*
 *.elc
 *.py[co]
 *.bak
+a.out
+.~lock*
+gmon.out
+
 .#*#
-JUNK
-HIDE
-KEEP
-TMP
-RCS
-CVS
-.svn
+
+# Hidey holes
+JUNK/
+HIDE/
+KEEP/
+TMP/
+NOTAG/
+
+# other SCMs
+RCS/
+CVS/
+.svn/
+
+# My core file pattern
 *.CR
+
+# code index files
 GPATH
 GRTAGS
 GSYMS
@@ -36,15 +49,15 @@ cscope.files
 cscope.in.out
 cscope.out
 cscope.po.out
-a.out
-.~lock*
+
 *.log.gz
 *.log.bz2
 *.log.xz
-gmon.out
-NOTAG
-*.nogit
+*,nogit
+*,NOGIT
+*,novc
 *,NOVC
+
 *.,,
 ,*,
 000-cscope-db-root.*.c
