@@ -1148,6 +1148,8 @@ githh()
     if inside_emacs_p
     then
         git help "$@" | ul -t dumb | head -n "$dash_n"
+    else
+        git help "$@"
     fi
 }
 
