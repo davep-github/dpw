@@ -70,12 +70,14 @@
         conflicts = diff --name-only --diff-filter=U
 
 # Graphical diff tool employer/environment de jure
-        dtgraphical = difftool --tool=meld
+        dtgraphical = difftool --tool=diffuse
+        dtdejour = difftool --tool=diffuse
         dtg = difftool --tool=meld
 
         dtp4v = difftool --tool=p4diff
         dtp4 = difftool --tool=p4diff
-        hist5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+        hist = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+        h = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         hn = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short -n
         hist20 = log -n 20 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
