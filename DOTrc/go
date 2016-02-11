@@ -19,6 +19,7 @@ E|rc|                   ${HOME}/.rc/
 Ee|bin|			${HOME}/bin/
 Ee|lisp|		${HOME}/lisp/
 Ee|dpbuild|dpbld|       ${HOME}/davep/build/
+Ee|usdoc|usd|           /usr/share/doc/
 
 #E|elisponly|           a test which should not match because of comment
 Ee|testA|testB|testC| 	value-for-testABC

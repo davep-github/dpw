@@ -494,6 +494,13 @@ the warning zone logic (or bag it.)")
   :group 'dp-whitespace-vars
   :type 'string)
 
+(defcustom dp-too-many-spaces-in-a-row-regexp " \\{8,80\\}"
+  "Sometimes (although it may be fixed) AMD/Kernel c*-mode starts up without
+  forcing the use of tabs.  Hopefully this will slap me in the face about it
+  so the spatse-Nazis don't get me. "
+  :group 'dp-whitespace-vars :type
+  'string)
+
 (defcustom dp-trailing-whitespace-use-trailing-ws-font-p nil
   "Highlight trailing white space with its own font? Yay!"
   :group 'dp-whitespace-vars
@@ -511,6 +518,18 @@ the warning zone logic (or bag it.)")
 (defvar dp-space-before-tab-font-lock-element
   (list dp-space-before-tab-regexp 0 'dp-trailing-whitespace-face 'prepend)
   "A font-lock element to pick out trailing whitespace.")
+
+(defvar dp-too-many-spaces-in-a-row-font-lock-element
+  (list dp-too-many-spaces-in-a-row-regexp
+        0 
+        'dp-trailing-whitespace-face 'prepend)
+  "A font-lock element to pick out too many spaces in a row.")
+
+(defcustom dp-use-too-many-spaces-font-p nil
+  "Highlight too many spaces in a row (missing tabs)?"
+  :group 'dp-whitespace-vars
+  :type 'boolean)
+
 
 (defun dp-blah-blah (save-sym)
   (append (symbol-value save-sym)
@@ -656,6 +675,10 @@ c-hanging-braces-alist based upon these values.")
                                    (buffer-local-p nil)
                                    (use-trailing-ws-font-p
                                     dp-trailing-whitespace-use-trailing-ws-font-p)
+                                   (use-too-many-spaces-font-p
+                                    dp-use-too-many-spaces-font-p)
+                                   (use-space-before-tab-font-p
+                                    dp-use-space-before-tab-font-lock-p)
                                    (use-too-long-face-p
                                     (dp-val-if-boundp
                                      dp-global-c*-use-too-long-face)))
@@ -663,12 +686,14 @@ c-hanging-braces-alist based upon these values.")
   (let ((extras
          (delq nil
                (list
-                (when dp-trailing-whitespace-use-trailing-ws-font-p
+                (when use-trailing-ws-font-p
                   dp-trailing-whitespace-font-lock-element)
                 (when use-too-long-face-p
                   dp-font-lock-line-too-long-element)
-                (when dp-use-space-before-tab-font-lock-p
+                (when use-space-before-tab-font-p
                   dp-space-before-tab-font-lock-element)
+                (when use-too-many-spaces-font-p
+                  dp-too-many-spaces-in-a-row-font-lock-element)
                 (cons
                  (dp-mk-font-lock-type-re dp-c-font-lock-extra-types)
                  font-lock-type-face)
@@ -688,7 +713,7 @@ c-hanging-braces-alist based upon these values.")
                               (buffer-local-p nil)
                               (use-trailing-ws-font-p
                                dp-trailing-whitespace-use-trailing-ws-font-p)
-                              (use-too-long-face-p
+                              (dp-use-too-long-face-p
                                (dp-val-if-boundp
                                 dp-global-c*-use-too-long-face)))
   (dp-c-like-add-extra-faces
@@ -697,7 +722,7 @@ c-hanging-braces-alist based upon these values.")
      c++-font-lock-keywords-1)
    :buffer-local-p buffer-local-p
    :use-trailing-ws-font-p use-trailing-ws-font-p
-   :use-too-long-face-p use-too-long-face-p))
+   :use-too-long-face-p dp-use-too-long-face-p))
 
 (defun* dp-c-add-extra-faces (&key
                               (buffer-local-p nil)

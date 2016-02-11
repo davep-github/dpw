@@ -59,6 +59,7 @@
         pulljustpull = pull
         pjpull = pull
         pjp = pull
+        conflicts = diff --name-only --diff-filter=U
 
 # Graphical diff tool employer/environment de jure
         dtgraphical = difftool --tool=meld

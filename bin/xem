@@ -187,6 +187,9 @@ $VERBOSE echo exec $BIN $cmd_args
 
 unset IMASCREENINSTANCE DP_MY_SCREEN_NAME
 
+export LANG=C
+unset XMODIFIERS
+
 $VERBOSE echo ">>>>>>>>>>>>>>>>>>>>>>$log_file<<<<<<<<<<<<<<<<<<<<<<"
 niceness="-20"
 nice_cmd="sudo nice -n $niceness"

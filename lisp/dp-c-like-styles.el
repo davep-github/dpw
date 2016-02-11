@@ -12,6 +12,7 @@
     (dp-lang-use-c-new-file-template-p             . nil)
     (dp-trailing-whitespace-use-trailing-ws-font-p . t)
     (dp-use-space-before-tab-font-lock-p           . t)
+    (dp-use-too-many-spaces-font-p                 . t)
     ;; see `c-indent-command'
     (c-tab-always-indent                           . nil)
     (c-basic-offset                                . 8)
