@@ -107,10 +107,12 @@ Usage_error()
 
 optv=()
 filter_mode_p=
+status_opts=
 while (($# > 0))
 do
   case "${1}" in
       -p|--filter) filter_mode_p=t;;
+      --uno) status_opts="-uno ${status_opts}";;
       --) shift; break;;
       *) optv+=("${1}");;
   esac
@@ -132,7 +134,7 @@ elif true_p "${filter_mode_p}"
 then
     cat
 else
-    git status -s
+    EExec git status -s ${status_opts}
 fi \
     | sed -rn 's/(^[[:space:]]+M )(.*)$/\2/p' \
     | file-relativizer "$@" \
