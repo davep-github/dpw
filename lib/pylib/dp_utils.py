@@ -155,6 +155,8 @@ def locate_rc_file(name, path=None):
 def cbin(val, sep=False, sep_str=" ", width=8):
     """cbin(val, width=0)
 Convert val to a binary string.  Pad to width bits if specified."""
+    if type(val) == types.StringType:
+        val = eval(val)
     s = ''
     num_bits = 0
     if width and not sep:
@@ -185,24 +187,36 @@ Print the binary string of val after calling cbin(q.v.)"""
     print cbin(val, width)
 
 
-def cbinh(val, width=0):
-    """cbinh(val, width=0)
+def cbinh(val, width=8, sep_str=" ", sep=False):
+    """cbinh(val, width=8, sep_str=" ", sep=False)
 Convert val to binary as per cbin.  Add a bit index header for easy viewing."""
-    s = cbin(val, width)
+    s0 = cbin(val, width=width, sep_str=sep_str, sep=sep)
+    l0 = len(s0)
+    s = s0
     l = len(s)
+    bit_num = -1
+    for c in s0:
+        if c in "01":
+            bit_num = bit_num + 1
     th = ''
     bh = ''
-    for b in xrange(l, 0, -1):
-        b = b - 1
-        q, r = divmod(b, 10)
+    for b in s:
+        if b not in "01":
+            if sep_str == None:
+                q, r = b, b
+            else:
+                q, r = sep_str, sep_str
+        else:
+            q, r = divmod(bit_num, 10)
+            bit_num = bit_num - 1
         th = '%s%s' % (th, q)
         bh = '%s%s' % (bh, r)
-    uline = '-' * l
+    uline = '-' * l0
     return (th, bh, uline, s)
 
-def pbinh(val, width=0):
+def pbinh(val, width=8, sep_str=" ", sep=False):
     """print a cbinh string"""
-    print string.join(cbinh(val, width), '\n')
+    print string.join(cbinh(val, width=width, sep_str=sep_str, sep=sep), '\n')
 
 def file_len(file):
     stat_buf = os.stat(file)
