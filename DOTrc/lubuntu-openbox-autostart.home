@@ -20,7 +20,7 @@ progname=$(basename $0)
 # Whoa Nellie! Cool your jets, flyboy!
 {
     set -x
-    echo date
+    date
     xset m 20/30 10
     xset q | fgrep -i accel
     echo "done"
