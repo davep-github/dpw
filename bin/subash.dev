@@ -1,0 +1,18 @@
+#!/bin/sh
+
+[ -n "${1-}" ] && {
+    CMD="$(sp -1 ${1})"
+    if [ -n "${CMD-}" ]
+    then
+        shift
+        CMD="${CMD} $@"
+        eko "${CMD}"
+        C='-c'
+    else
+        CMD=
+        C=
+    fi
+
+}
+
+eko sudo "${SHELL-bash}" ${C} "$CMD"
