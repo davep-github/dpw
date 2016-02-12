@@ -1,0 +1,32 @@
+# Example for a system wide configuration file
+
+# A system wide configuration file is optional.
+# If it exists, it usually defines a default account.
+# This allows msmtp to be used like /usr/sbin/sendmail.
+
+# The SMTP smarthost.
+account verizon
+host smtp.verizon.net
+port 465
+from panariti@verizon.net
+user panariti
+password  31415QTPi
+auth plain
+
+# Construct envelope-from addresses of the form "user@oursite.example".
+auto_from on
+maildomain meduseld.net
+
+# Use TLS. 
+# Verizon doesn't support this [as of: 2012-12-16T00:48:10] 
+tls on
+#tls_trust_file /etc/ssl/certs/ca-certificates.crt
+tls_starttls off
+tls_certcheck off
+
+# Syslog logging with facility LOG_MAIL instead of the default LOG_USER.
+syslog LOG_MAIL
+###logfile /tmp/msmtp.log
+
+#
+account default : verizon

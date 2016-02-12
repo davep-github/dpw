@@ -9,8 +9,8 @@ rc=0
     echo "tilde: " ~
     echo "HOME>$HOME<"
     /usr/bin/getmail -q \
-	--getmaildir=/usr/yokel/etc/getmail \
-	-r /usr/yokel/etc/getmail/verizon.rc \
+	--getmaildir=/yokel/yokel/etc/getmail \
+	-r /yokel/yokel/etc/getmail/verizon.rc \
 	2>&1
     rc=$?
 } | egrep -v -e 'FutureWarning
