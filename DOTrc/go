@@ -37,6 +37,7 @@ Ee|dpwgit|dpwg|              ${HOME}/dpw/dpw
 Ee|dpworld|dpw|              ${dpwgit}
 Ee|dpwbuild|dpwbld|dpwbld|   ${dpworld}build/
 Ee|dpylib|                   ${HOME}/lib/pylib/
+Ee|lubuntuconf|lubconf|      ${HOME}/.config/lxsession/Lubuntu/
 Ee|obconf|                   ${HOME}/.config/openbox/
 Ee|obrc|                     ${obconf}/rc.xml
 Ee|obmenu|                   ${obconf}/menu.xml

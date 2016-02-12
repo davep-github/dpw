@@ -102,15 +102,12 @@ text_mode_edit()
 
 process_file ()
 {
+eko "$@"
+#exit 99
     local opts=""
     if [ -n "${1-}" ]
     then
-        if [ -n "${one_file-}" ]
-        then
-            file="$@"
-        else
-            file="${1-}"
-	fi
+        file="${1-}"
         if [ -n "${2-}" ]
         then
             opts="${2-}"
@@ -317,9 +314,6 @@ EExecDashV_p && echo_id one_file
 if [ "${#args[@]}" = 0 ]
 then
     process_file
-elif [ -n "$one_file" ]
-then
-    process_file "${args[@]}" # 2>> ec-w.out
 else
     set -- "${args[@]}"
     for file in "$@"
@@ -333,6 +327,7 @@ else
       fi
       f="$1"
       process_file "$f" "$opts"
+      [ -n "$one_file" ] && break
       shift
     done
 fi
