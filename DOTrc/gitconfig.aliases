@@ -20,12 +20,19 @@
 	st = status
 	s = status
         sno = status -uno
+        ss = status -s
+
         ldf = log --decorate=full -n 5
         ld = log --decorate -n 5
         log5 = log -n 5
         l5 = log -n 5
         log11 = log -n 11
         l11 = log -n 11
+        filelog = log -u        # show changes to a file
+        flog = log -u           # show changes to a file
+        logfiles = log --name-status
+        lf = log --name-status
+
         dfo = diff --name-only
         dfn = diff --name-only
         dno = diff --name-only
@@ -36,11 +43,7 @@
         dnp = !sh -c 'git --no-pager diff "$@"'
         diffcat = !sh -c 'git --no-pager diff "$@"'
         dcat = !sh -c 'git --no-pager diff "$@"'
-        mnc = merge --no-commit
-        pffo = pull --ff-only --no-commit
-        mffo = merge --ff-only --no-commit
-        # Merge after fetch.
-        mfh = merge FETCH_HEAD
+
         difffh = diff FETCH_HEAD
         dfh = diff FETCH_HEAD
         dtmeld = difftool --tool=meld
@@ -57,14 +60,24 @@
         pulljustpull = pull
         pjpull = pull
         pjp = pull
+        fdr = fetch --dry-run
+        mnc = merge --no-commit
+        pffo = pull --ff-only --no-commit
+        mffo = merge --ff-only --no-commit
+        # Merge after fetch.
+        mfh = merge FETCH_HEAD
+
+        conflicts = diff --name-only --diff-filter=U
 
 # Graphical diff tool employer/environment de jure
-        dtgraphical = difftool --tool=meld
+        dtgraphical = difftool --tool=diffuse
+        dtdejour = difftool --tool=diffuse
         dtg = difftool --tool=meld
 
         dtp4v = difftool --tool=p4diff
         dtp4 = difftool --tool=p4diff
-        hist5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+        hist = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+        h = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         hn = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short -n
         hist20 = log -n 20 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
@@ -80,6 +93,4 @@
 
 # reset
         unstage = reset HEAD    # remove files from index (tracking)
-        filelog = log -u        # show changes to a file
-        flog = log -u           # show changes to a file
         

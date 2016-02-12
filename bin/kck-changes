@@ -1,9 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ########################################################################
 #
 # template begin.
-
-# See old icky version in repo hist <= af572b083bec3142b7ce9dd8319350ec9b751d54
 
 # davep specific code -------------8><------------------
 source script-x
@@ -30,6 +28,19 @@ unset eexec_program
 # export eexec_program
 
 # davep specific code -------------8><------------------
+
+#mutually exclusive with real EExec# EExec=
+#mutually exclusive with real EExec# no_exec_p=
+#mutually exclusive with real EExec# Non_EExecer()
+#mutually exclusive with real EExec# {
+#mutually exclusive with real EExec#     echo "{-} $@" 1>&2
+#mutually exclusive with real EExec# }
+
+#mutually exclusive with real EExec# Verbose_EExecer()
+#mutually exclusive with real EExec# {
+#mutually exclusive with real EExec#     echo "{+} $@"
+#mutually exclusive with real EExec#     "$@"
+#mutually exclusive with real EExec# }
 
 trap_exit_msg=
 
@@ -94,11 +105,12 @@ Usage_error()
 # template end.
 ########################################################################
 
-prog=`basename $0`
-def_grepper=egrep
-grepper=$def_grepper
-
-#$grepper $grepper_dash_n $args "$regexp" $abs_lists /dev/null
-# D'OH!
-# but I think this will only search things that are "officially" installed?
-EExec apt-cache search "$@"
+git-modified-files --uno | egrep '\.c$' | while read
+do
+  file="${REPLY}"
+  dir=$(dirname "${file}")
+  EExec -y cd "${dir}"
+  obj=$(echo $(basename "${file}") | sed -rn 's/(.*)(\.c)$/\1/p').o
+  echo_id obj
+  EExec kmk "${obj}"
+done

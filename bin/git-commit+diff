@@ -105,37 +105,53 @@ Usage_error()
 # template end.
 ########################################################################
 
-optv=()
-filter_mode_p=
-status_opts=
+: ${diff_opts=}
+: ${ci_opts=}
+: ${git_args=}
+: ${commit_msg=}
+: ${differ:=dtdejour}
+
+# skeleton to allow args to this script to be separated from args to checkin.
 while (($# > 0))
 do
   case "${1}" in
-      -p|--filter) filter_mode_p=t;;
-      --uno) status_opts="-uno ${status_opts}";;
+      -m) shift; commit_msg="${1}";;
       --) shift; break;;
-      *) optv+=("${1}");;
+      *) break;;
   esac
   shift
 done
 
-args=("$@")
+commit_opt=
+[ -n "${commit_msg}" ] && commit_opt='-m "${commit_msg}"'
 
-(("${#args[@]}" > 0)) && set -- "${args[@]}"
+for file in "${@}"
+do
+  answer=
+  echo "file: ${file}"
+  EExec git ${git_args} "${differ}" ${diff_opts} "${file}"
+  done_p=
+  while [ -z "${done_p}" ]
+  do
+    done_p=t
+    read -e -p "Commit file [Y/n/q]? "
+    [ "$?" = 0 ] || {
+        echo
+        [ "$REPLY" = "" ] && {
+            echo "EOF. Exiting."
+            exit 0
+        }
+        echo "read error. Exiting"
+        exit 1
+    } 2>&1
 
-if (("${#args[@]}" > 0))
-then
-    # very simple testing.
-    for a in "${args[@]}"
-    do
-      echo "$a"
-    done
-elif true_p "${filter_mode_p}"
-then
-    cat
-else
-    EExec git status -s ${status_opts}
-fi \
-    | sed -rn 's/(^[[:space:]]+M )(.*)$/\2/p' \
-    | file-relativizer "$@" \
-    | normpath
+    case "$REPLY" in
+        [yY]|"") answer=y; break;;
+        [nN]) answer=n; break;;
+        [qQ]) exit 0;;
+        *) done_p=
+    esac
+  done
+  [ "${answer}" = 'n' ] && continue
+  eval EExec git ${git_args} commit ${commit_opt} ${ci_opts} "${file}"
+done

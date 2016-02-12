@@ -78,7 +78,11 @@ db_files=($(find-up "${db_finder_file}"))
 
 EExec_verbose_msg "db_files[@]>${db_files[@]}<"
 
-set -- "$@" "${arg}"
+perverted_index_option=-q
+[ -e "cscope.po.out" ] || {
+    perverted_index_option=
+}
+set -- "$@" "${arg}" ${perverted_index_option}
 
 [ -z "$*" ] && {
     echo "No arguments were provided. Thanks for playing."

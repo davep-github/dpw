@@ -1,1 +1,6 @@
 mailiases.el
+# This will be a symlink, and it may not be good to have it pointing
+# somewhere it shouldn't in a new environment.
+cron.d
+crontab.amd
+cron.d.amd

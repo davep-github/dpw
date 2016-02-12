@@ -142,4 +142,4 @@ def dexl(*args):
 
 readline_stuff()
 
-print 'pysh ready.'
+#print 'pysh ready.'

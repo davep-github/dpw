@@ -229,6 +229,7 @@ alias gitco='git checkout'
 alias gitci='git commit'
 alias gitcia='git commit -a'
 alias gits='git status'
+alias gitss='git status -s'
 alias gitsno='git status -uno'
 alias gitstat='git status'
 alias gitadd='git add'
@@ -299,4 +300,7 @@ alias fgrep="grep -F $grep_options"
 alias sagi='sudo apt-get install'
 
 alias nocolor='ul -t dumb'
+
+alias hinfo='host-info.py'
+alias dpmailer='send-mail-command-line.sh'
 true

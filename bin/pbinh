@@ -1,0 +1,4 @@
+#!/usr/bin/env python
+import os, sys, dp_utils
+
+apply(dp_utils.pbinh, sys.argv[1:])

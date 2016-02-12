@@ -12,6 +12,7 @@
     (dp-lang-use-c-new-file-template-p             . nil)
     (dp-trailing-whitespace-use-trailing-ws-font-p . t)
     (dp-use-space-before-tab-font-lock-p           . t)
+    (dp-use-too-many-spaces-font-p                 . t)
     ;; see `c-indent-command'
     (c-tab-always-indent                           . nil)
     (c-basic-offset                                . 8)
@@ -40,9 +41,10 @@
     (c-hanging-semi&comma-criteria dp-c-semi&comma-nada)
     (c-echo-syntactic-information-p . nil)
     (c-indent-comments-syntactically-p . t)
-    (c-hanging-braces-alist         . ((brace-list-open . ignore)
-                                       (brace-list-close . ignore)
-                                       (brace-entry-open . ignore)))
+    (c-hanging-braces-alist         . ((brace-list-open   . ignore)
+                                       (brace-list-close  . ignore)
+                                       (substatement-open . (after))
+                                       (brace-entry-open  . ignore)))
 
     (c-hanging-colons-alist         . ((member-init-intro . (before))))
     )

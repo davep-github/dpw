@@ -1,12 +1,13 @@
 [include]
         path = ~/.rc/gitconfig
 
+[init]
+	templatedir = /home/dpanarit/.git_template
+
+# AMD brahma/gerrit specific
 [user]
         name = David Panariti
 	email = David.Panariti@amd.com
-
-[init]
-	templatedir = /home/dpanarit/.git_template
 
 [url "ssh://gerritgitmaster/"]
 	pushInsteadOf = ssh://gerritgit/
