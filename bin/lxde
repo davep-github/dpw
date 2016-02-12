@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-# Useful in passwd to make an account that starts LXDE with no fuss.
-service lightdm "${1-start}"
