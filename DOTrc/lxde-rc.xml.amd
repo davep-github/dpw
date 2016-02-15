@@ -208,7 +208,7 @@ menu</command></action></keybind><keybind key="F11"><action name="ToggleFullscre
     <!-- Select and raise an IPython window. -->
     <keybind key="C-W-p"><action name="Execute"><command>wmctrl -a "python@"</command></action></keybind>
     <!-- Select and raise the window under the pointer. -->
-    <keybind key="W-."><action name="Focus"/><action name="RaiseLower"/></keybind>
+    <keybind key="W-period"><action name="Focus"/><action name="RaiseLower"/></keybind>
 </keyboard>
   <mouse>
     <dragThreshold>8</dragThreshold>
