@@ -18,10 +18,11 @@ progname=$(basename $0)
 #xfce-mcs-manager &
 
 # Whoa Nellie! Cool your jets, flyboy!
-{
-    set -x
-    date
-    xset m 20/30 10
-    xset q | fgrep -i accel
-    echo "done"
-} >| "$HOME/tmp/${progname}" 2>&1
+date
+xset m 20/30 10
+xset q | fgrep -i accel
+
+ubuntu-sucks xem
+ubuntu-sucks dpxx -g 141x31+99+16 nscreen screen1
+ubuntu-sucks dpxx -g 141x31+99-56 nscreen screen2
+ubuntu-sucks xit ario --minimized
