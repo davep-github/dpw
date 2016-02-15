@@ -9848,16 +9848,20 @@ split.")
 (defun dp-getenv-numeric(var-name)
   (interactive "sEnv var name: ")
   (let ((val (getenv var-name)))
-    (when val
+    (when (and val
+               (not (string= "" val))
+               (not (string= "-" val)))
       (string-to-int val))))
 
 (defvar dp-monitor-orientation "_PORTRAIT")
 
 (defun dp-get-frame-dimension (env-var-name &optional vertical-or-horizontal)
-  (dp-getenv-numeric (format "DP_XEM_FRAME_%s%s" env-var-name 
-                     (or vertical-or-horizontal
-                         (or (getenv "DP_XEM_MONITOR_ORIENTATION"))
-                             dp-monitor-orientation))))
+  (or
+   (dp-getenv-numeric (format "DP_XEM_FRAME_%s%s" env-var-name 
+                              (or vertical-or-horizontal
+                                  (or (getenv "DP_XEM_MONITOR_ORIENTATION"))
+                                  dp-monitor-orientation)))
+   (dp-getenv-numeric (format "DP_XEM_FRAME_%s" env-var-name))))
 
 ;; 
 ;; | |, | - one window
