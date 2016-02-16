@@ -108,6 +108,7 @@ do
                   n) dash_n=y;;
                   s) serialize_kernels_p=t;;
                   z) action_list=;;
+                  m) action_list=modules_install;;
                   a) action_list="${action_list_all}";;
                   d) action_list="${action_list_dev}";;
                   *) action_list="$action_list $(canonicalize $op)";;
@@ -179,6 +180,7 @@ else
     echo "FAIL FAIL FAIL" >| $fail_file
 fi
 
+write_log_header()
 {
     echo "Build begins: ${timestamp}:
 id:
@@ -205,7 +207,7 @@ git branch:'
 this file:'
         echo $bk_log
     fi
-} >> $bk_log
+}
 
 for sig in 2 3 4 5 6 7 8 15
 do
@@ -320,6 +322,8 @@ bk_linux()
 build_kernel()
 {
     echo "Requested actions: \"$actions\""
+
+    write_log_header() >> $bk_log
     
     if [ "$OSName" = "FreeBSD" ]
     then
