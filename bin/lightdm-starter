@@ -1,3 +1,8 @@
 #!/bin/sh
-
-exec /etc/init.d/lightdm "${1-start}"
+set -x
+if [ "$HOSTNAME" = 'cz-fp4-bdc' ]
+then
+    exec service lightdm "${1-start}"
+else
+    exec /etc/init.d/lightdm "${1-start}"
+fi
