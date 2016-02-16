@@ -153,5 +153,7 @@ do
     esac
   done
   [ "${answer}" = 'n' ] && continue
+  
+  # Prompt: message/use cl arg/edit
   eval EExec git ${git_args} commit ${commit_opt} ${ci_opts} "${file}"
 done
