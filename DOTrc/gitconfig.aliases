@@ -11,6 +11,8 @@
         rfile = checkout --
         rf = checkout --
 
+        rem = remote
+
 	br = branch
         cob = checkout -b
         newbr = checkout -b
@@ -28,10 +30,17 @@
         l5 = log -n 5
         log11 = log -n 11
         l11 = log -n 11
-        filelog = log -u        # show changes to a file
-        flog = log -u           # show changes to a file
+        # Height of laziness: saving -n<space>
+        ln = log -n
+        # These are longer than the actual command to compensate for all of
+        # the shorter ones.
+        filediffs = log -u        # show changes to a file
+        filepatches = log -u      # show changes to a file
         logfiles = log --name-status
-        lf = log --name-status
+        lfiles = log --name-status
+        logfull = log --pretty=medium
+        logmed = log --pretty=medium
+        logmsg = log --pretty=medium
 
         dfo = diff --name-only
         dfn = diff --name-only
@@ -61,6 +70,7 @@
         pjpull = pull
         pjp = pull
         fdr = fetch --dry-run
+        fetch-n = fetch --dry-run
         mnc = merge --no-commit
         pffo = pull --ff-only --no-commit
         mffo = merge --ff-only --no-commit
