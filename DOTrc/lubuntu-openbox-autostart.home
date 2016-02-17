@@ -20,7 +20,6 @@ progname=$(basename $0)
 # Whoa Nellie! Cool your jets, flyboy!
 date
 xset m 20/30 10
-xset q | fgrep -i accel
 
 ubuntu-sucks xem
 ubuntu-sucks dpxx -g 141x31+99+16 nscreen screen1

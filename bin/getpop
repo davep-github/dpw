@@ -3,15 +3,11 @@
 # use getmail to retrieve mail
 #set -x
 
-. eexec
-EExecVerbose
-
 # {+}sudo /usr/bin/getmail -v -v -r /home/davep/yokel/etc/getmail/verizon.rc
 # getmail version 4.13.0
 # Copyright (C) 1998-2009 Charles Cazabon.  Licensed under the GNU GPL version 2.
 # MultidropPOP3Retriever:panariti@incoming.verizon.net:110:
 #   0 messages (0 bytes) retrieved, 0 skipped
-
 
 # Filtering for `FutureWarning's in earlier revisions.
 
@@ -24,9 +20,10 @@ getmail_dot_rc="${getmaildir}/${getmail_host}.rc"
 # end up w/tons of error messages.
 if ~davep/bin/getmail-inhibited-p
 then
+    echo 1>&2 "getmail inhibited; VPN active?"
     exit 1                      # No can do, Jonny. We're VPN'd or something.
 else
-    EExec sudo /usr/bin/getmail \
+    sudo /usr/bin/getmail \
 	-v \
 	-v \
 	-r "$getmail_dot_rc" \

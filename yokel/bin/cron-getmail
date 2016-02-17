@@ -4,7 +4,7 @@
 #date >> /tmp/cron-getmail.log
 #set -x
 rc=0
-getmail_rc_dir=/usr/yokel/etc/getmail
+getmail_rc_dir=$HOME/yokel/etc/getmail
 /home/davep/bin/vpn-connected-p || {
     /usr/bin/getmail \
 	-q 
