@@ -13780,7 +13780,7 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
 (defun dp-looking-at-whitespace-violation ()
   (or (car-safe
        (dp-extents-at-with-prop 'face '(blah . dp-trailing-whitespace-face)))
-      (looking-at dp-trailing-whitespace-regexp)))
+      (looking-at dp-whitespace-violation-regexp)))
 
 ;; (defun dp-whitespace-next-violation ()
 ;;   (interactive)
@@ -13798,7 +13798,7 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
   ;; that logic everywhere will be bad.
   ;; The fact that fontifying is largely based on regular expressions means
   ;; using the WSV regexp won't cause cats to live with dogs and vice-versa.
-  (when (re-search-forward dp-trailing-whitespace-regexp nil t)
+  (when (re-search-forward dp-whitespace-violation-regexp nil t)
     (goto-char (match-beginning 0))))
 
 (defun dp-whitespace-cleanup-line ()
@@ -13806,7 +13806,7 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
   (interactive)
   (save-excursion
     (beginning-of-line)
-    (when (re-search-forward dp-trailing-whitespace-regexp 
+    (when (re-search-forward dp-whitespace-violation-regexp 
                              (line-end-position) t)
       (replace-match ""))))
 
