@@ -41,6 +41,8 @@
         logfull = log --pretty=medium
         logmed = log --pretty=medium
         logmsg = log --pretty=medium
+        logr = log --graph
+        lgr = log --graph
 
         dfo = diff --name-only
         dfn = diff --name-only
