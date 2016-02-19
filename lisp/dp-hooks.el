@@ -531,6 +531,11 @@ the warning zone logic (or bag it.)")
   :type 'boolean)
 
 
+(defvar dp-whitespace-violation-regexp
+  (dp-regexp-concat (list dp-trailing-whitespace-regexp
+                          dp-space-before-tab-regexp
+                          dp-too-many-spaces-in-a-row-regexp)))
+                      
 (defun dp-blah-blah (save-sym)
   (append (symbol-value save-sym)
           list-o-keys))
