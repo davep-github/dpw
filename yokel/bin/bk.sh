@@ -33,6 +33,7 @@ all_actions="ckmi"
 #echo "0: actions>$actions<"
 #echo "1: actions>$actions<"
 dash_n=
+mk_header_p=t
 if [ "$HOST" = "vilya" ] 
 then
     ${genkernel_p=t}
@@ -90,10 +91,10 @@ $DP_SCRIPT_X_DASH_X_ON
 while (($# > 0))
 do
   case "$1" in
-      --make) genkernel_p=; break;;
+      --make) genkernel_p=; shift; break;;
       --genk*) genkernel_p=t; break;;
-      --all) action_list="${action_list_all}"; break;;
-      --dev) action_list="${action_list_dev}"; break;;
+      --all) action_list="${action_list_all}"; shift; break;;
+      --dev) action_list="${action_list_dev}"; shift; break;;
       --) break;;
       -*)
             # Nukes leading `-' from the option.
@@ -106,6 +107,7 @@ do
 	      #echo_id 1>&2 action_list
               case "${op}" in
                   n) dash_n=y;;
+                  N) dash_n=y; mk_header_p=;;
                   s) serialize_kernels_p=t;;
                   z) action_list=;;
                   m) action_list=modules_install;;
@@ -195,8 +197,8 @@ $(df -h .)
     if [ -e Makefile ] && gitted -q Makefile
     then
         echo '#############################################################################
-git status:'
-        git --no-pager status
+git status -uno:'
+        git --no-pager status -uno
         echo '#############################################################################
 git log:'
         git --no-pager log -n 5 --pretty=short
@@ -323,7 +325,7 @@ build_kernel()
 {
     echo "Requested actions: \"$actions\""
 
-    write_log_header() >> $bk_log
+    [ -n "${mk_header_p}" ] && write_log_header >> $bk_log
     
     if [ "$OSName" = "FreeBSD" ]
     then
