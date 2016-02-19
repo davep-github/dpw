@@ -565,8 +565,14 @@ def read_dict(dict_file=None):
     if not opath.exists(dict_file):
         return []
     dict_path = [opath.dirname(dict_file)]
+    dp_io.dprintf("""read_dict(): dict_path>%s<\n""", dict_path)
     dict_name = opath.basename(opath.splitext(dict_file)[0])
+    dp_io.dprintf("""read_dict(): dict_name>%s<\n""", dict_name)
     fobj, p, d = imp.find_module(dict_name, dict_path)
+    dp_io.dprintf("""read_dict(): fobj>%s<, p>%s<, d>%s<\n""",
+                  dict_name, p, d)
+
+
     z = imp.load_module("alias_file_aliases", fobj, p, d)
     fobj.close()
     return z.aliases
