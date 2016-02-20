@@ -119,10 +119,11 @@ ${EZEC} ln -s lisp/Makefile .
 ${EZEC} mkdir var
 ${EZEC} mkdir var/log
 ${EZEC} mkdir log
-${EZEC} mkdir log/{boot,kde,login-rc,xemacs,shell-sessions}
-${EZEC} mkdir log/auto-rotate-c5-50K
 (
 	cd log
+        ${EZEC} mkdir {boot,kde,login-rc,xemacs,shell-sessions}
+        ${EZEC} mkdir auto-rotate-c5-50K
+        ${EZEC} mkdir shell-sessions/home/dpanarit/log/shell-sessions
 	${EZEC} ln -s auto-rotate-c5-50K procmail
 )
 ${EZEC} mkdir -p "log/auto-rotate-c10-50K"

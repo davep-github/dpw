@@ -699,7 +699,7 @@ already in there.")
 (global-set-key [(control ?c) (control ?z)] 
   (kb-lambda 
       (dp-kb-binding-moved arg 'dp-python-shell)))
-(global-set-key [(control meta n)] 
+(global-set-key [(control meta ?n)] 
   (kb-lambda
       (dp-goto-next-dp-extent-from-point '(4))))
 (global-set-key [(meta ?Q)] 'align)

@@ -157,6 +157,8 @@ def cbin(val, sep=False, sep_str=" ", width=8):
 Convert val to a binary string.  Pad to width bits if specified."""
     if type(val) == types.StringType:
         val = eval(val)
+    if type(width) == types.StringType:
+        width = eval(width)
     s = ''
     num_bits = 0
     if width and not sep:

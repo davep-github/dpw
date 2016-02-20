@@ -220,6 +220,16 @@ def uniqify_list(list_in):
     for i in list_in:
         d[i] = 1
     return d.keys()
+
+def uniqify_list_ordered(list_in):
+    """Return the list such that each element appears only once."""
+    l = []
+    for i in list_in:
+        if i not in l:
+            l.append(i)
+        # print >>sys.stderr, "l>%s<" % (l,)
+
+    return l
         
 ########################################################################
 def list_intersection(l1, l2):

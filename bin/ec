@@ -102,8 +102,6 @@ text_mode_edit()
 
 process_file ()
 {
-eko "$@"
-#exit 99
     local opts=""
     if [ -n "${1-}" ]
     then

@@ -214,11 +214,26 @@ expand_source_list()
     rc=()
     for suff in "$@"
     do
-	src=${base}${suff}
-	[ -f $src ] && {
-	    #rc+=("$src") # The bash which supports this isn't as widespread as one would wish.
-	    rc[${#rc[@]}]="$src"
-	}
+        sep=
+        #echo_id suff
+        if [ -d "${suff}" ]
+        then
+            suffs=($(ls "${suff}"))
+            sep="/"
+        else
+            suffs=("${suff}")
+        fi
+        for suff in "${suffs[@]}"
+        do
+            #echo_id suff
+            src="${base}${sep}${suff}"
+            #echo_id src
+            [ -f $src ] && {
+	      #rc+=("$src") # The bash which supports this isn't as widespread as one would wish.
+                #echo_id src
+                rc[${#rc[@]}]="$src"
+            }
+        done
     done
     ((${#rc[@]} > 0)) && echo "${rc[@]}"
 }
@@ -239,8 +254,11 @@ source_list()
 	verbose=":"
     fi
     local dprc_rc=0
-    for src in $(expand_source_list "$@")
+    sources=$(expand_source_list "$@")
+    #echo_id sources
+    for src in $sources
     do
+        #echo_id src
         $verbose "source_list: sourcing>$src<"
         dp_source_rc $src
         ((++ dprc_rc))
