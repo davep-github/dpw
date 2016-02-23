@@ -1790,12 +1790,14 @@ Tidying includes: re `indent-for-comment' and fixing up white space."
           ;; cause the buffer to be modified. Otherwise, the tab + remove
           ;; trailing white space modifies the buffer.
           (unless (dp-empty-line-p)
-            (dp-press-tab-key))
+            (dp-cleanup-line)
+            (unless (dp-empty-line-p)
+              (dp-press-tab-key)))
           (unless (or (Cu--p)
                       dp-il&md-dont-fix-comments-p)
             (dp-with-saved-point nil
               (dp-fix-comment)))
-          (dp-cleanup-line)))
+          ))
        t
        'preserve-column
        'forward-line)))
@@ -14143,7 +14145,7 @@ been used in buffers in the given mode."
   :type '(repeat (symbol :tag "Whitespace cleanup afters")))
 
 
-(defcustom dp-whitespace-cleanup-when-modified-p t
+(defcustom dp-whitespace-cleanup-when-modified-p nil
   "Should we clean up whitespace if the buffer has ever been modified?
 I want to avoid inadvertent modifications if I'm browsing through a file that
 isn't \"mine\". However, if it has already been modified, then go for
@@ -14189,7 +14191,7 @@ whitespace eradication.")
 (defun dp-next-line (count &optional cleanup-current-line-pred)
   "Add trailing white space removal functionality."
   (interactive "_p")
-  (if (not (dp-cleanup-whitespace-p))
+  (if (not (dp-cleanup-whitespace-on-next-line-p))
       (progn
         (call-interactively 'next-line)
         (setq this-command 'next-line))

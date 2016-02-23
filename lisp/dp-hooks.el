@@ -96,7 +96,15 @@ mode."
 
 (dp-deflocal dp-cleanup-whitespace-p nil
   "Should trailing whitespace be cleaned up in this buffer?
-In particular, should `dp-next-line' do it?
+Values:
+nil      - NO.
+t        - Just do it(tm)
+eol-only - Only clean lines when cursor it at the end of a line.
+           This makes it easy to leave the whitespace alone.
+@todo XXX better to default to t or eol-only?")
+
+(dp-deflocal dp-cleanup-whitespace-on-next-line-p t
+  "Should trailing whitespace be cleaned up in this buffer on `next-line?
 Values:
 nil      - NO.
 t        - Just do it(tm)
@@ -107,6 +115,15 @@ eol-only - Only clean lines when cursor it at the end of a line.
 (defun dp-cleanup-whitespace-p ()
   "Do we wish to be anal about whitespace?"
   (when dp-global-master-cleanup-whitespace-p
+    (cond
+     ((and (listp dp-global-master-cleanup-whitespace-p)
+           (memq major-mode dp-global-master-cleanup-whitespace-p)))
+     (dp-cleanup-whitespace-p))))
+
+(defun dp-cleanup-whitespace-on-next-line-p ()
+  "Do we wish to be really anal about whitespace?"
+  (when (and dp-global-master-cleanup-whitespace-p
+             dp-cleanup-whitespace-on-next-line-p)
     (cond
      ((and (listp dp-global-master-cleanup-whitespace-p)
            (memq major-mode dp-global-master-cleanup-whitespace-p)))
