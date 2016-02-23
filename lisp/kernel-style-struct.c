@@ -9,7 +9,11 @@ struct mesion a[] = {
 
  z;
 
-
+/*
+  error col (80)----------------------------------------------------------------V
+  warning col (77)-----------------------------------------------------------V
+mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+*/
 
 struct amdgpu_vm_manager {
 	  x;

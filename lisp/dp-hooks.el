@@ -96,7 +96,15 @@ mode."
 
 (dp-deflocal dp-cleanup-whitespace-p nil
   "Should trailing whitespace be cleaned up in this buffer?
-In particular, should `dp-next-line' do it?
+Values:
+nil      - NO.
+t        - Just do it(tm)
+eol-only - Only clean lines when cursor it at the end of a line.
+           This makes it easy to leave the whitespace alone.
+@todo XXX better to default to t or eol-only?")
+
+(dp-deflocal dp-cleanup-whitespace-on-next-line-p t
+  "Should trailing whitespace be cleaned up in this buffer on `next-line?
 Values:
 nil      - NO.
 t        - Just do it(tm)
@@ -107,6 +115,15 @@ eol-only - Only clean lines when cursor it at the end of a line.
 (defun dp-cleanup-whitespace-p ()
   "Do we wish to be anal about whitespace?"
   (when dp-global-master-cleanup-whitespace-p
+    (cond
+     ((and (listp dp-global-master-cleanup-whitespace-p)
+           (memq major-mode dp-global-master-cleanup-whitespace-p)))
+     (dp-cleanup-whitespace-p))))
+
+(defun dp-cleanup-whitespace-on-next-line-p ()
+  "Do we wish to be really anal about whitespace?"
+  (when (and dp-global-master-cleanup-whitespace-p
+             dp-cleanup-whitespace-on-next-line-p)
     (cond
      ((and (listp dp-global-master-cleanup-whitespace-p)
            (memq major-mode dp-global-master-cleanup-whitespace-p)))
@@ -410,19 +427,19 @@ For now this must be < the error col.")
 (dp-deflocal dp-line-too-long-error-column 80
   "Become enraged (new face) when going beyond this column.")
 
-(defface dp-default-line-way-too-long-face
-  '((((class color)
-      (background light))
-     (:background "aliceblue")))
-  "Face for buffer lines which get too long."
-  :group 'faces
-  :group 'dp-vars)
-
-(defface dp-default-line-too-long-face
+(defface dp-default-line-too-long-error-face
   '((((class color)
       (background light))
      (:background "gainsboro")))
-  "Face for buffer lines which getting too long."
+  "Face for buffer lines which have gotten too long."
+  :group 'faces
+  :group 'dp-vars)
+
+(defface dp-default-line-too-long-warning-face
+  '((((class color)
+      (background light))
+     (:background "aliceblue")))
+  "Face for buffer lines which are getting too long."
   :group 'faces
   :group 'dp-vars)
 
@@ -437,13 +454,13 @@ For now this must be < the error col.")
                   0
 ;; !<@todo XXX make this handle warning-col >= error-col. (if < 0) 0
                   warning-zone-len)
-          (list 2 'dp-default-line-too-long-face 'append)
-          (list 3 'dp-default-line-way-too-long-face 'append)))
+          (list 2 'dp-default-line-too-long-warning-face 'append)
+          (list 3 'dp-default-line-too-long-error-face 'append)))
   "Font-lock component to highlight lines that are too long.
 NB This is broken when real tabs are used, since they count as one char as
 far the regexp is concerned.")
 
-(defvar dp-font-lock-line-too-long-element-for-tabs
+(defvar dp-font-lock-line-too-long-error-element-for-tabs
   (list
    (format
     "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
@@ -456,16 +473,37 @@ far the regexp is concerned.")
         (format ".\\{%d\\}" rem))))
    (list
     2                                  ; line tail
-    'dp-default-line-too-long-face
+    'dp-default-line-too-long-error-face
    'append))
+  "As above, but works with tabs.")
 
-  "As above, but works with tabs; however, there is no warning zone yet.")
+(defvar dp-font-lock-line-too-long-warning-element-for-tabs
+  (list
+   (format
+    "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
+    tab-width
+    (1- tab-width)
+    (/ dp-line-too-long-warning-column tab-width)
+    (let ((rem (% dp-line-too-long-warning-column tab-width)))
+      (if (zerop rem)
+          ""
+        (format ".\\{%d\\}" rem))))
+   (list
+    2                                  ; line tail
+    'dp-default-line-too-long-warning-face
+   'append))
+  "As above, but handles the warning zone.")
 
-(defvar dp-font-lock-line-too-long-element
-  dp-font-lock-line-too-long-element-for-tabs
+(defvar dp-font-lock-line-too-long-error-element
+  dp-font-lock-line-too-long-error-element-for-tabs
+  "NB: Add mechanism for selecting (tabs or no), or make one element that
+  works for both.")
+
+(defvar dp-font-lock-line-too-long-warning-element
+  dp-font-lock-line-too-long-warning-element-for-tabs
   "NB: Add mechanism for selecting, or make one element that works for both.
 The tabs version will work w/o tabs but I need to figure out how to handle
-the warning zone logic (or bag it.)")
+the warning zone logic (or bag it.) Using brute force.")
 
 (defface dp-trailing-whitespace-face
   '((((class color) (background light)) 
@@ -595,7 +633,7 @@ original state and then applies changes. This is good... sometimes."
     (loop for v in font-lock-var-syms do
       (make-variable-buffer-local v)))
   (dp-add-font-patterns-old font-lock-var-syms
-                            dp-font-lock-line-too-long-element))
+                            dp-font-lock-line-too-long-error-element))
 
 (defun* dp-add-line-too-long-font (font-lock-var-syms
                                    &key (buffer-local-p t))
@@ -605,7 +643,8 @@ original state and then applies changes. This is good... sometimes."
   (interactive "Smode's font lock var? ")
   (dp-add-font-patterns font-lock-var-syms
                         buffer-local-p
-                        (list dp-font-lock-line-too-long-element)))
+                        (list dp-font-lock-line-too-long-error-element
+                              dp-font-lock-line-too-long-warning-element)))
 
 (defun dp-muck-with-fontification ()
   ;; Reset things to original state.
@@ -694,7 +733,9 @@ c-hanging-braces-alist based upon these values.")
                 (when use-trailing-ws-font-p
                   dp-trailing-whitespace-font-lock-element)
                 (when use-too-long-face-p
-                  dp-font-lock-line-too-long-element)
+                  dp-font-lock-line-too-long-error-element)
+                (when use-too-long-face-p
+                  dp-font-lock-line-too-long-warning-element)
                 (when use-space-before-tab-font-p
                   dp-space-before-tab-font-lock-element)
                 (when use-too-many-spaces-font-p
