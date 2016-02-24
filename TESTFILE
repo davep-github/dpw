@@ -16,3 +16,4 @@ stashed == hidden!!!
 how to signoff
 test git-commit+diff
 test git-commit+diff w/ "" as reply
+test w/ -m in replay
