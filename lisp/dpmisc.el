@@ -14184,8 +14184,9 @@ it. Whitespace diffs are easy to ignore during reviews"
                    dp-whitespace-cleanup-after-these-commands)))))
 
 (defun dp-whitespace-cleanup-current-line-default-pred ()
-  (or (dp-whitespace-following-a-cleanup-command-p)
-      (dp-blank-line-p)))
+  (and (buffer-modified-p)
+       (or (dp-whitespace-following-a-cleanup-command-p)
+           (dp-blank-line-p))))
 
 (dp-deflocal dp-whitespace-cleanup-current-line-pred 
     'dp-whitespace-cleanup-current-line-default-pred
