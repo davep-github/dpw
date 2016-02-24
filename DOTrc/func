@@ -773,9 +773,9 @@ alias pick-screen=pick_screen
 # copy .go* items into environment
 do_go2env()
 {
-    if [ -x $HOME/bin/go2env.py ]
+    if [ -x $HOME/bin/go2env ]
     then
-        eval $(go2env.py)
+        eval $(go2env)
     fi
 }
 export -f do_go2env
