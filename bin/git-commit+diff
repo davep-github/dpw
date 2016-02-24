@@ -115,7 +115,6 @@ Usage_error()
 while (($# > 0))
 do
   case "${1}" in
-      -m) shift; commit_msg="${1}";;
       --) shift; break;;
       *) break;;
   esac
@@ -125,16 +124,23 @@ done
 commit_opt=
 [ -n "${commit_msg}" ] && commit_opt='-m "${commit_msg}"'
 
-for file in "${@}"
+if [ -n "$*" ]
+then
+    files=("$@")
+else
+    files=("$(git-modified-files)")
+fi
+for file in "${files[@]}"
 do
   answer=
+  commit_opt=
   echo "file: ${file}"
-  EExec git ${git_args} "${differ}" ${diff_opts} "${file}"
+  EExec -y git ${git_args} "${differ}" ${diff_opts} "${file}"
   done_p=
   while [ -z "${done_p}" ]
   do
     done_p=t
-    read -e -p "Commit file [Y/n/q]? "
+    read -e -p "Commit file [Y/n/q/<msg>|'']? "
     [ "$?" = 0 ] || {
         echo
         [ "$REPLY" = "" ] && {
@@ -146,14 +152,20 @@ do
     } 2>&1
 
     case "$REPLY" in
-        [yY]|"") answer=y; break;;
+        [yY]) answer=y; break;;
         [nN]) answer=n; break;;
         [qQ]) exit 0;;
-        *) done_p=
+        "") commit_msg=;;       # prompt
+        *)  commit_msg="${REPLY}";;
     esac
   done
   [ "${answer}" = 'n' ] && continue
-  
-  # Prompt: message/use cl arg/edit
-  eval EExec git ${git_args} commit ${commit_opt} ${ci_opts} "${file}"
+
+  if [ -n "${REPLY}" ]
+  then
+      REPLY=$(echo "$REPLY" | sed -rn 's/(-m *)?(.*)/\2/p')
+      commit_opt="-m \"${REPLY}\""
+  fi
+
+  eval EExec git ${git_args} commit ${commit_opt}  ${ci_opts} "${file}"
 done
