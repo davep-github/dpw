@@ -436,10 +436,10 @@ PROJECT_WORK=$HOME/work
 
 # load locale specific functions
 EXTRA_RCS=''			# list of files other rcs want us to run
-source_list -l $RC_DIR/rc $locale_rcs
-source_list -l $RC_DIR/func $locale_rcs
-source_list -l $RC_DIR/env "" $locale_rcs
-source_list -l $RC_DIR/alias "" $locale_rcs
+source_list -l $RC_DIR/rc $locale_rcs .work
+source_list -l $RC_DIR/func $locale_rcs .work
+source_list -l $RC_DIR/env "" $locale_rcs .work
+source_list -l $RC_DIR/alias "" $locale_rcs .work
 
 # run any RC files that other RC files have requested.
 # this lets things like host RCs ask for, say, a project RC
@@ -834,3 +834,4 @@ export LD_LIBRARY_PATH
 unset post_bashrc_command
 unset EExecProgName
 true
+export AMDAPPSDKROOT="/home/dpanarit/AMDAPPSDK-3.0"

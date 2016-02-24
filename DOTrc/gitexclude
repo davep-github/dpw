@@ -23,6 +23,7 @@ a.out
 .~lock*
 gmon.out
 
+/DOTrc/*.work
 .#*#
 
 # Hidey holes

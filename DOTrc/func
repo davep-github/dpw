@@ -214,26 +214,11 @@ expand_source_list()
     rc=()
     for suff in "$@"
     do
-        sep=
-        #echo_id suff
-        if [ -d "${suff}" ]
-        then
-            suffs=($(ls "${suff}"))
-            sep="/"
-        else
-            suffs=("${suff}")
-        fi
-        for suff in "${suffs[@]}"
-        do
-            #echo_id suff
-            src="${base}${sep}${suff}"
-            #echo_id src
-            [ -f $src ] && {
-	      #rc+=("$src") # The bash which supports this isn't as widespread as one would wish.
-                #echo_id src
-                rc[${#rc[@]}]="$src"
-            }
-        done
+	src=${base}${suff}
+	[ -f $src ] && {
+	    #rc+=("$src") # The bash which supports this isn't as widespread as one would wish.
+	    rc[${#rc[@]}]="$src"
+	}
     done
     ((${#rc[@]} > 0)) && echo "${rc[@]}"
 }
