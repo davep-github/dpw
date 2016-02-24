@@ -96,7 +96,7 @@
         dotgit = rev-parse --git-dir
         gdir = rev-parse --git-dir
         # there is now a git alias command, but 'tis called alias.
-	#aliases = config --get-regexp ^alias\\.
+	aliases = config --get-regexp ^alias\\.
         
 	undo-commit = reset --soft HEAD^
 	uncommit = reset --soft HEAD^

@@ -722,38 +722,47 @@ cd ~				# go home
 DP_SOURCED_BASH_COMPLETION_FILES=
 source_bash_completion_code()
 {
+    [ -n "$BASH_COMPLETION_COMPAT_DIR" ] && return
     # NB this requires some system changes.
     # for now, a symlink must be created by hand:
     # ~/.bash_completion.d -> /usr/share/bash-completion/
-    local sys_completion="/etc/profile.d/bash-completion.sh"
-    [ -f "${sys_completion}" ] && {
-        source "${sys_completion}"
-        DP_SOURCED_BASH_COMPLETION_FILES="${sys_completion}"
-	return 0
-    }
-    local bc
+#    local sys_completion
+#    local sys_completions="
+#/etc/profile.d/bash_completion.sh
+#/etc/profile.d/bash-completion.sh"
+#    for sys_completion in ${sys_completions}
+#    do
+#      [ -f "${sys_completion}" ] && {
+#source "${sys_completion}"
+#DP_SOURCED_BASH_COMPLETION_FILES="${sys_completion}"
+#return 0
+#      }
+#    done
+    local bc_dir
     local BASH_COMPLETION
-    local BASH_COMPLETION_DIR
     local bc_type
-    for bc in /etc $HOME/etc $HOME/.rc
+    local bc
+    for bc_dir in /etc /etc/profile.d $HOME/etc $HOME/.rc
     do
       # Allow specific files to be specified.
-      [ -d "$bc" ] && bc="$bc/bash[-._]completion.sh"
-      dp_rc_logger "source_bash_completion_code: trying >$bc<"
-      [ -f "$bc" ] && {
-          BASH_COMPLETION=$bc BASH_COMPLETION_DIR=${bc}.d
-          source "$bc"
-          case "$bc" in
-              /etc/*) dp_rc_logger "source_bash_completion_code: sourced system bash completion >$bc<";
-                      bc_type=system;;
-              *) dp_rc_logger "source_bash_completion_code: sourced NON-system bash completion >$bc<";
-                      bc_type=local;;
-          esac
-          DP_SOURCED_BASH_COMPLETION_FILES="$bc:$bc_type"
-          readonly DP_SOURCED_BASH_COMPLETION_FILES
-          return
-      }
+      [ -d "$bc_dir" ] || continue
+      for bc in ${bc_dir}/bash[-._]completion.sh
+      do
+        dp_rc_logger "source_bash_completion_code: trying >$bc<"
+        [ -f "$bc" ] || continue
+        source "$bc"
+        case "$bc" in
+            /etc/*) dp_rc_logger "source_bash_completion_code: sourced system bash completion >$bc<";
+                    bc_type=system;;
+                 *) dp_rc_logger "source_bash_completion_code: sourced NON-system bash completion >$bc<";
+                    bc_type=local;;
+        esac
+        DP_SOURCED_BASH_COMPLETION_FILES="$bc:$bc_type"
+        readonly DP_SOURCED_BASH_COMPLETION_FILES
+        return 0
+      done
     done
+    return 1
 }
 
 [ "$DP_ENV_INTERACTIVE" = 'y' ] && {
