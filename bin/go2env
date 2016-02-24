@@ -363,9 +363,11 @@ aliases>%s<""", line, selector, aliases)
     var_name = val
     ##print >> sys.stderr, "l>%s<" % (l,)
     l = string.split(l, '|')
-    ##print >> sys.stderr, "split l>%s<" % (l,)
+    #print >> sys.stderr, "split | result l>%s<" % (l,)
     ctl = l[0]
-    if re.search(selector, ctl):
+    m = re.search(selector, ctl)
+    #print >> sys.stderr, "ctl>%s<, selector>%s<, m>%s<" % (ctl, selector, m)
+    if m:
         # get list of all aliases
         names = l[1:-1]
         val = os.path.expandvars(string.strip(val))
