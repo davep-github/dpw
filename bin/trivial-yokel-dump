@@ -3,7 +3,7 @@ source script-x
 # /dumps should be on another disk than one
 # holding by the backed up data.
 : ${dump_fses:=/yokel}
-: ${dump_dir:=.}
+: ${dump_dir:=%}
 : ${EZEC:=eexec}
 
 # e.g.
@@ -55,7 +55,7 @@ vsetp $* && dump_fses="$@"
 # Make sure all dump files have the same date if we start one dump before
 # mignight and the next after.
 date_stamp=$(dp-std-timestamp)
-[ "${dump_dir}" = '.' ] && {
+[ "${dump_dir}" = '%' ] && {
     ${EZEC} mkdir "${date_stamp}"
     [ -d "${date_stamp}" ] && {
         cd "${date_stamp}"
@@ -73,5 +73,6 @@ do
 	# There should only be one leading, but...
       *) name=$(echo $dump_fs | sed -r -e 's,^//*,,' -e 's,/,%,g')
   esac
+  echo "PWD>$PWD<" 
   ${EZEC} dump $lvl -f ${dump_dir}/${name}-on-${date_stamp}.lvl${lvl}.dump -j7 -u ${dump_fs}
 done
