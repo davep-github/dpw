@@ -14135,6 +14135,7 @@ See `dp-shell-*TAGS-changers' rant. "
   '(dp-open-newline
     dp-open-above
     dp-c-context-line-break
+    dp-c-close-brace
     dp-py-open-newline
     py-newline-and-indent)
   "*Clean up whitespace after executing one of these commands.
@@ -14182,8 +14183,12 @@ it. Whitespace diffs are easy to ignore during reviews"
              (memq last-command 
                    dp-whitespace-cleanup-after-these-commands)))))
 
+(defun dp-whitespace-cleanup-current-line-default-pred ()
+  (or (dp-whitespace-following-a-cleanup-command-p)
+      (dp-blank-line-p)))
+
 (dp-deflocal dp-whitespace-cleanup-current-line-pred 
-    'dp-whitespace-following-a-cleanup-command-p
+    'dp-whitespace-cleanup-current-line-default-pred
 "Should we clean up the current *line*?
 Predicate used to tell us whether or not the current line qualifies for
 whitespace eradication.")
