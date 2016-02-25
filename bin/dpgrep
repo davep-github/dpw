@@ -19,12 +19,18 @@ dpcheck
 : ${PS_WIDTH=ww}
 : ${PS_OPTIONS:="x"}
 : ${GREP_COLOR=}
+: ${GREP_ARGS=}
 : ${tty=}
+: ${PS_ARGS="$PS_ALL_OPT $PS_WIDTH $PS_OPTIONS $PS_O_FMT"}
+
+: ${GREPPER:='egrep'}
+: ${GREPPAT:=[ef]?grep(( -.)+)?}
+: ${PGREP:=$0}
 
 out_line()
 {
     # Colors don't seem to make it through the preceding parts of the pipeline.
-    egrep $GREP_COLOR "$@"
+    "${GREPPER}" ${GREP_ARGS} $GREP_COLOR "$@"
     #echo "$*"
 }
 
@@ -59,13 +65,14 @@ Usage_details="Options:
 -o <ps-opt> -- Add a ${PS} option.     [$PS_OPTIONS]
 -t -- Restrict matches to the current tty.
 -T <tty> Restrict matches to the specified <tty>
+-i -- Case insensitive grep.
 EExec Options:
 -n -- Show what would happen but don't do it.
 -v -- Be verbose about it.
 -q -- Anti-verbose.
 "
 # Example of arg parsing.
-option_str="nvqpPuUwWcCo:htT:l"
+option_str="nvqpPuUwWcCo:htT:li"
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -93,6 +100,7 @@ do
           exit 1
           } 1>&2 ;;
       -T) shift; tty="${1}";;
+      -i) GREP_ARGS="${GREP_ARGS} -i";;
       -h) Usage; exit 0;;
       --) shift ; break ;;
       *) echo 1>&2 "Unsupported option>$1<";
@@ -106,14 +114,6 @@ done
     Usage
     exit 1
 } 1>&2
-
-: ${PS_ARGS="$PS_ALL_OPT $PS_WIDTH $PS_OPTIONS $PS_O_FMT"}
-
-#GREPPER=egrep
-: ${GREPPER:='egrep'}
-: ${GREPPAT:=[ef]?grep(( -.)+)?}
-#PGREP='/home/davep/yokel/bin/pgrep'
-PGREP=$0
 
 $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "NO_HDR>$NO_HDR<"
 if [ -z "$NO_HDR" ]
@@ -132,7 +132,7 @@ fi
 got_one=""
 
 #echo_id2 PS_ARGS
-EExec $PS $PS_ARGS | EExec $GREPPER "$@" | sort | uniq | egrep -v "[[:space:]]+$GREPPAT |$PGREP" | \
+EExec $PS $PS_ARGS | EExec $GREPPER ${GREP_ARGS} "$@" | sort | uniq | egrep -v "[[:space:]]+$GREPPAT | $PGREP" | \
   while :; do
     # eof
     read || {
