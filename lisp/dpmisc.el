@@ -13779,10 +13779,14 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
         (call-interactively fun)
       (funcall fun file-name))))
 
+;; (defun dp-looking-at-whitespace-violation ()
+;;   (or (car-safe
+;;        (dp-extents-at-with-prop 'face '(blah . dp-trailing-whitespace-face)))
+;;       (looking-at dp-whitespace-violation-regexp)))
+
 (defun dp-looking-at-whitespace-violation ()
-  (or (car-safe
-       (dp-extents-at-with-prop 'face '(blah . dp-trailing-whitespace-face)))
-      (looking-at dp-whitespace-violation-regexp)))
+  (save-excursion
+    (re-search-forward dp-whitespace-violation-regexp nil t)))
 
 ;; (defun dp-whitespace-next-violation ()
 ;;   (interactive)
@@ -13790,7 +13794,8 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
 ;;     (dp-goto-next-matching-extent 'face '(t . whitespace-highlight-face))
 ;;     (when (= start (point))
 ;;       (message "No more whitespace violations."))))
-(defun dp-whitespace-next-violation ()
+
+(defun dp-whitespace-next-violation0 ()
   "Replacement for whitespace package's function."
   (interactive)
   ;; Search for the evil regexp. An older implementation searched for the
@@ -13800,8 +13805,23 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
   ;; that logic everywhere will be bad.
   ;; The fact that fontifying is largely based on regular expressions means
   ;; using the WSV regexp won't cause cats to live with dogs and vice-versa.
-  (when (re-search-forward dp-whitespace-violation-regexp nil t)
-    (goto-char (match-beginning 0))))
+  (when (dp-looking-at-whitespace-violation)
+    (goto-char (match-beginning 0))
+    t))
+
+(defun dp-whitespace-next-violation ()
+  "Replacement for whitespace package's function."
+  (interactive)
+  (let ((start (point)))
+    ;; Did we not move?
+    (when (and (dp-whitespace-next-violation0)
+               (= (point) start))
+        (progn
+          ;; Go to end of the current violation.
+          (goto-char (match-end 0))
+          ;; And try again.
+          (dp-whitespace-next-violation0)))
+    (dp-looking-at-whitespace-violation)))
 
 (defun dp-whitespace-cleanup-line ()
   "Clean up trailing whitespace on the current line. Uses my whitespace hack."
