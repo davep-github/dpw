@@ -843,4 +843,3 @@ export LD_LIBRARY_PATH
 unset post_bashrc_command
 unset EExecProgName
 true
-export AMDAPPSDKROOT="/home/dpanarit/AMDAPPSDK-3.0"
