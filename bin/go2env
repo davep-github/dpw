@@ -4,6 +4,10 @@ import os, sys, string, re, getopt, types, StringIO
 import pprint
 import cPickle as pickle
 
+debug_file = sys.stderr
+verbose_file = sys.stderr
+warning_file = sys.stderr
+
 import dp_io, dp_sequences, dp_utils
 opath = os.path
 
@@ -491,39 +495,67 @@ def init_aliases(args, selector_regexp,
     # more specific files can override less specific ones.
     # dogo stops at the first match, and this produces the same effect.
     #
+
     if Get_aliases():
         return
 
     go_files, _ = dp_utils.process_gopath(args)
 
-    if dict_file is not False:
-        if not dict_file:
-            dict_file = DEFAULT_DICT_FILE
-        if keep_dict_updated():
-##             print >>sys.stderr, "updating? dict."
-            newest, _, _ = dp_utils.newest_file(go_files + [dict_file])
-##             print >>sys.stderr, "newest>{}<".format(newest)
-            if newest != dict_file:
-##                 print >>sys.stderr, "writing dict."
-                write_dict(args, dict_file)
-        try:
-            Set_aliases(read_dict(dict_file))
-            if Get_aliases():
+    keep_looping = 2
+    while keep_looping:
+        #print >>debug_file, "keep_looping:", keep_looping
+        keep_looping = keep_looping - 1
+        # Try to read the compiled dict file (e.g. go_dict.pyc)
+        if dict_file is not False:
+            if not dict_file:
+                dict_file = DEFAULT_DICT_FILE
+            if keep_dict_updated() or force_update_p:
+                print >>sys.stderr, "updating? dict."
+                newest, _, _ = dp_utils.newest_file(go_files + [dict_file])
+                print >>sys.stderr, "newest>{}<".format(newest)
+                if newest != dict_file:
+                    print >>sys.stderr, "writing dict."
+                    write_dict(args, dict_file)
+            try:
+                Set_aliases(read_dict(dict_file))
+                if Get_aliases():
+                    return
+            except AttributeError, err:
+                # This right, without looping BS?
+                print >>sys.stderr, "XXXException `{}' XXXreading dict file>{}<, trying pickle".format(err, dict_file)
+                pyc_file = "%sc" % (dict_file,)
+                print >>sys.stderr, "pyc_file>%s<" % (pyc_file)
+                os.system("rm -f %s" % (pyc_file,))
+                if keep_looping == 1:
+                    break
+                keep_looping = keep_looping -1
+                continue
+                print >>sys.stderr, "AAException `{}' AAreading dict file>{}<, trying pickle".format(err, dict_file)
+            except Exception, err:
+                print >>sys.stderr, "BBException `{}' BBreading dict file>{}<, trying pickle".format(err, dict_file)
+
+        # Try for something pickled.
+        if serialized_file is not False:
+            if not serialized_file:
+                serialized_file = DEFAULT_SERIALIZED_FILE
+            try:
+                Set_aliases(read_aliases(serialized_file))
                 return
-        except Exception, err:
-            print >>sys.stderr, "Exception `{}' reading dict file>{}<, trying pickle".format(err, dict_file)
+            except Exception, err:
+                # try to write what we know.
+                serialized_file = None
+                if keep_looping == 1:
+                    print >>sys.stderr, "Exception `{}' reading pickle>{}<, falling back to .go file(s)".format(err, dict_file)
+                    keep_looping = 0
+                else:
+                    keep_looping = keep_looping - 1
+                    force_update_p = True
+        break
 
-    if serialized_file is not False:
-        if not serialized_file:
-            serialized_file = DEFAULT_SERIALIZED_FILE
-        try:
-            Set_aliases(read_aliases(serialized_file))
-            return
-        except Exception, err:
-            print >>sys.stderr, "Exception `{}' reading pickle>{}<, falling back to .go file(s)".format(err, dict_file)
-
+    # Slurp it out of the .go[.*] files.
+    # It should be saved later.
     Set_aliases(expand_files(go_files, selector_regexp))
-##     print >>sys.stderr, "expanded files."
+##     print >>sys.stderr, "expanded files>%s<." %(go_files,)
 
 #####################################################################
 def serialize_aliases(args, serialized_file=DEFAULT_SERIALIZED_FILE):
@@ -548,7 +580,7 @@ def write_dict(args, dict_file=None):
     if not dict_file:
         return
     dname, fname = opath.split(dict_file)
-    #print >>sys.stderr, "dict_file: {}, dname: {}, fname: {}".format(dict_file, dname, fname)
+    #print >>debug_file, "dict_file: {}, dname: {}, fname: {}".format(dict_file, dname, fname)
     if not opath.exists(dict_file):
         dp_utils.mkpath(dname)
     init_aliases(args, ".*", False, False)
