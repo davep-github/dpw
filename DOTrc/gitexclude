@@ -63,3 +63,4 @@ cscope.po.out
 ,*,
 000-cscope-db-root.*.c
 ===-cscope-db-root.*.c
+etc/AMD/
