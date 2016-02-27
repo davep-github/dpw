@@ -2521,6 +2521,10 @@ changed."
         block-comment-start "/* "
         block-comment-end "*/"))
 
+(defadvice jka-compr-insert-file-contents 
+  (after dp-advised-jka-compr-insert-file-contents act)
+  (dp-set-unmodified))
+
 (add-hook 'bookmark-bmenu-mode-hook 'dp-bookmark-bmenu-mode-hook)
 
 ;; I'm trending away from advice, since I've seen code that really rapes it

@@ -7,6 +7,10 @@ import os, sys
 import argparse
 import dp_io
 
+debug_file = sys.stderr
+verbose_file = sys.stderr
+warning_file = sys.stderr
+
 ##e.g. class App_arg_action(argparse.Action):
 ##e.g.     def __call__(self, parser, namespace, values, option_string=None):
 ##e.g.         regexps = getattr(namespace, self.dest)

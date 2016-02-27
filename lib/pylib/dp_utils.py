@@ -177,8 +177,9 @@ Convert val to a binary string.  Pad to width bits if specified."""
         val &= ~0x80000000
         num_bits += 1
 
-    while len(s) < width:
-        s = '0' + s
+    pad_num = width - len(s)
+    if pad_num > 0:
+        s = '0' * pad_num + s
 
     return s
 

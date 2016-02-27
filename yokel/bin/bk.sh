@@ -95,6 +95,7 @@ do
       --genk*) genkernel_p=t; break;;
       --all) action_list="${action_list_all}"; shift; break;;
       --dev) action_list="${action_list_dev}"; shift; break;;
+      --mii) action_list="modules_install install";;
       --) break;;
       -*)
             # Nukes leading `-' from the option.
