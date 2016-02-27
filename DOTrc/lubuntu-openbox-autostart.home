@@ -19,7 +19,7 @@ progname=$(basename $0)
 
 # Whoa Nellie! Cool your jets, flyboy!
 date
-xset m 20/30 10
+xset m 20/35 10
 
 ubuntu-sucks xem
 ubuntu-sucks dpxx -g 141x31+99+16 nscreen screen1
