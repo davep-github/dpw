@@ -157,7 +157,7 @@ Ee|dx2s|        ${dx2}System
 Ee|dx|          /smb/chicxulub/bfd/DeusEx/
 Ee|dxs|         ${dx}System
 Ee|cvc|         /sundry/downloads/vpn/cvc/
-Ee|dumps|       /media/dumps/
+Ee|Hdumps|       /media/dumps/
 Ee|ubin|ub|     /usr/bin
 Ee|usbin|       /usr/sbin
 
