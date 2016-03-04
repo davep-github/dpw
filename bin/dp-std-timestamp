@@ -1,11 +1,32 @@
 #!/bin/bash
 
+: ${use_colons_p=}
 date_str=$(date --iso-8601=seconds)
 
-if [ -z "$1" ]
+while (($# > 0))
+do
+  case "$1" in
+      -c|--colons|--use-colons) use_colons_p=t;;
+      --) shift;;
+      *) break;;
+  esac
+  shift
+done
+
+if [ -z "${use_colons_p}" ]
 then
-    echo $date_str | sed 's!:!\.!g'
-else
-    echo $date_str
+    date_str=$(echo "${date_str}" | sed 's!:!\.!g')
 fi
+
+prefix=
+sep=
+while (($# > 0))
+do
+  prefix="${prefix}${sep}${1}"
+  sep='-'
+  shift
+done
+
+echo "${prefix}${sep}${date_str}"
+
 #
