@@ -236,6 +236,11 @@ Oddly, it doesn't handle structs.")
   (interactive)
   (call-interactively (dp-*TAGS-handler-finder (dp-get-*TAGS-handler))))
 
+(defun dp-gtags-current-token ()
+  (if (dp-mark-active-p)
+      (buffer-substring (mark) (point))
+    (gtags-current-token)))
+
 (defun dp-tag-find (&rest r)
   (interactive)
   (cond
