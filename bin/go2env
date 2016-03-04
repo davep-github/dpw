@@ -510,11 +510,11 @@ def init_aliases(args, selector_regexp,
             if not dict_file:
                 dict_file = DEFAULT_DICT_FILE
             if keep_dict_updated() or force_update_p:
-                print >>sys.stderr, "updating? dict."
+                # print >>sys.stderr, "updating? dict."
                 newest, _, _ = dp_utils.newest_file(go_files + [dict_file])
-                print >>sys.stderr, "newest>{}<".format(newest)
+                # print >>sys.stderr, "newest>{}<".format(newest)
                 if newest != dict_file:
-                    print >>sys.stderr, "writing dict."
+                    #print >>sys.stderr, "writing dict."
                     write_dict(args, dict_file)
             try:
                 Set_aliases(read_dict(dict_file))
@@ -522,17 +522,17 @@ def init_aliases(args, selector_regexp,
                     return
             except AttributeError, err:
                 # This right, without looping BS?
-                print >>sys.stderr, "XXXException `{}' XXXreading dict file>{}<, trying pickle".format(err, dict_file)
+                print >>sys.stderr, "Exception `{}' reading dict file>{}<".format(err, dict_file)
                 pyc_file = "%sc" % (dict_file,)
                 print >>sys.stderr, "pyc_file>%s<" % (pyc_file)
                 os.system("rm -f %s" % (pyc_file,))
                 if keep_looping == 1:
                     break
                 keep_looping = keep_looping -1
+                print >>sys.stderr, "   removed file and retrying."
                 continue
-                print >>sys.stderr, "AAException `{}' AAreading dict file>{}<, trying pickle".format(err, dict_file)
             except Exception, err:
-                print >>sys.stderr, "BBException `{}' BBreading dict file>{}<, trying pickle".format(err, dict_file)
+                print >>sys.stderr, "Exception `{}' reading dict file>{}<, trying pickle".format(err, dict_file)
 
         # Try for something pickled.
         if serialized_file is not False:
