@@ -36,8 +36,15 @@
         # the shorter ones.
         filediffs = log -u        # show changes to a file
         filepatches = log -u      # show changes to a file
+        
+        # See what sticks.
         logfiles = log --name-status
         lfiles = log --name-status
+        lns = log --name-status
+        lls = log --name-status
+        lf = log --name-status
+        logf = log --name-status
+
         logfull = log --pretty=medium
         logmed = log --pretty=medium
         logmsg = log --pretty=medium
@@ -91,7 +98,8 @@
         hist = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         hn = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short -n
-        hist20 = log -n 20 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+        h20 = log -n 20 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+        h5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         dotgit = rev-parse --git-dir
         gdir = rev-parse --git-dir
