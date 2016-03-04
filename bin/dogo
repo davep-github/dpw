@@ -9,7 +9,9 @@ SHIFT=shift
 fini()
 {
     o_val="$*$two"
+    [ -f "${o_val}" ] && o_val=$(dirname "${o_val}")
     echo $o_val
+    # All of our lookup attempts failed.
     [ "$o_val" = "$argWas" ] && exit 1
     exit 0
 }
@@ -51,6 +53,8 @@ go_lookup()
 
 for o in "$@"
 do
+  # change to an existing dir with the arg's name.
+  # @todo XXX This can be a PITA.  Do I really want it?
   [ -d "${o}" ] && {
       echo "${o}"
       exit 0
