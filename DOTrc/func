@@ -343,9 +343,15 @@ g()
 {
     case "$1" in
 	-*)
-	    go-mgr $* ;;
+	    go-mgr "$@" ;;
 	*)
-	    gOcWd=$PWD; pushd "$(dogo $@)" && export GoBack=$gOcWd ;;
+            if [ -f "${1}" ]
+            then
+                dir=$(dirname "${1}")
+            else
+                dir="${1}"
+            fi
+	    gOcWd=$PWD; pushd $(dogo "${dir}") && export GoBack=$gOcWd ;;
     esac
 }
 
@@ -1128,6 +1134,14 @@ git_change_sandbox()
     then
         git branch
     else
+        # Prevent braino of using gcd instead of cd if arg is a dir.
+        [ -d "${1}" ] && {
+            read -e -p "${1} is a dir. Continue [y/N]? "
+            case "${REPLY}" in
+                [yY]) ;;
+                ""|[Nn]) echo 1>&2 "Bailing."; return 1;;
+            esac
+        }
         git checkout "$@"
     fi
 }
