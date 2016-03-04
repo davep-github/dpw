@@ -57,13 +57,15 @@ FILES_TO_FILTER_IN=()
 # It may be easier to specify excludes in some cases rather than including
 # everything else. Things like all c files except test.c
 : ${EXCLUDE_PAT:=''}
-### NB: !!! THESE ARE REGEXPs, NOT GLOBS! * is not the same as .* !!!!
+### NB: !!! THESE ARE REGEXPs, NO
+T GLOBS! * is not the same as .* !!!!
 VC_EXCLUDES='-e /^.*\/?(\.obs\.|\.svn|CVS|RCS|\.4D|\/\.git|\.hg)\/?.*/d'
 
 echo 1>&2 "Read various ignore files like, .(cvs|git)ignore, ~/.gitexcludes,
 ./.git/info/exclude, etc, and make a sed expression to ignore them.
-NB: most are globs, not regexps."
-: ${EXCLUDES:='-e /(doxygen|html|doc|dist-build|retired|,.*|HIDE.*)/d'}
+NB: most are globs, not regexps.
+Excludes are sed -r regexps"
+: ${EXCLUDES:='-e /(doxygen|html|doc|dist-build|retired|^,|,$|^HIDE\.|\.HIDE$|^HIDE^|^[jJ][uU][nN][kK]$|cscope-db-root|,novc$|,NOVC$|\.merged?|q.([ch](\+\+)?$)|q[0-9]?\..?$)/d'}
 : ${files_to_cat=""}
 : ${only_cat_files=""}
 : ${relative_opt=}
