@@ -28,8 +28,10 @@ stat_files="$ok_file $fail_file"
 all_actions="ckmi"
 : ${action_list_all="clean build_kernel modules_install install"}
 # Useful default for kernel dev.
-: ${action_list_dev="build_kernel modules_install install"}
+: ${action_list_bk="build_kernel modules_install install"}
+: ${action_list_dev="modules_install install"}
 : ${action_list=${action_list_dev}}
+: ${what_am_i_doing_p=}
 #echo "0: actions>$actions<"
 #echo "1: actions>$actions<"
 dash_n=
@@ -93,9 +95,10 @@ do
   case "$1" in
       --make) genkernel_p=; shift; break;;
       --genk*) genkernel_p=t; break;;
-      --all) action_list="${action_list_all}"; shift; break;;
-      --dev) action_list="${action_list_dev}"; shift; break;;
+      --all) action_list="${action_list_all}";;
+      --dev) action_list="${action_list_dev}";;
       --mii) action_list="modules_install install";;
+      --bk) action_list="${action_list_bk}";;
       --) break;;
       -*)
             # Nukes leading `-' from the option.
@@ -107,6 +110,7 @@ do
 	      #echo_id 1>&2 op
 	      #echo_id 1>&2 action_list
               case "${op}" in
+                  w) what_am_i_doing_p=t;;
                   n) dash_n=y;;
                   N) dash_n=y; mk_header_p=;;
                   s) serialize_kernels_p=t;;
@@ -130,6 +134,11 @@ vsetp "${genkernel_p}" && {
 
 # Add space for checking entire action in been_done list
 actions=" $action_list $(canonicalize_list $@) "	
+
+vsetp "${what_am_i_doing_p}" && {
+    echo "actions>${actions}<"
+    exit 0
+}
 
 vsetp "$dash_n" && {
     echo "dash_n>$dash_n<"
