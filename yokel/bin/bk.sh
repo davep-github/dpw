@@ -27,9 +27,9 @@ stat_files="$ok_file $fail_file"
 # make: clean, kernel, modules_install, install
 all_actions="ckmi"
 : ${action_list_all="clean build_kernel modules_install install"}
+: ${action_list_bk="build_kernel modules modules_install install"}
 # Useful default for kernel dev.
-: ${action_list_bk="build_kernel modules_install install"}
-: ${action_list_dev="modules_install install"}
+: ${action_list_dev="modules modules_install install"}
 : ${action_list=${action_list_dev}}
 : ${what_am_i_doing_p=}
 #echo "0: actions>$actions<"
@@ -65,12 +65,15 @@ fix_realtek()
 canonicalize()
 {
     local op=$1
-    #echo 1>&2 "canon... @>$@<"
-    #echo 1>&2 "canon... $(echo_id op)"
+    echo 1>&2 "canon... @>$@<"
+    echo 1>&2 "canon... @>$@<"
+    echo "canon... $(echo_id op)"
+    echo "canon... $(echo_id op)"
     case "$op" in
 	c*) echo "clean";;
 	[bk]*) echo "build_kernel";;
-	m*) echo "modules_install";;
+	M*) echo "modules_install";;
+	m*) echo "modules";;
 	i*) echo "install";;
         d*) echo "dev ops";;
 	*) echo 1>&2 "Bogus: $(echo_id op)"
@@ -83,7 +86,7 @@ canonicalize_list()
     local clist=""
     for op in "$@"
     do
-	#echo 1>&2 "canon...list $(echo_id op)"
+	echo 1>&2 "canon...list $(echo_id op)"
 	clist="$clist $(canonicalize $op)"
     done
     echo "$clist"
@@ -115,7 +118,8 @@ do
                   N) dash_n=y; mk_header_p=;;
                   s) serialize_kernels_p=t;;
                   z) action_list=;;
-                  m) action_list=modules_install;;
+                  M) action_list=modules_install;;
+                  m) action_list=modules;;
                   a) action_list="${action_list_all}";;
                   d) action_list="${action_list_dev}";;
                   *) action_list="$action_list $(canonicalize $op)";;
@@ -320,7 +324,8 @@ bk_linux()
       case "$a" in
           c*) echo "$a: clean."; mk_target clean;;
           [bk]*) echo "$a: build_kernel."; build_kernel_target;;
-          m*) echo "$a: modules_install."; mk_target --sudo modules_install;;
+          modules_install) echo "$a: modules_install."; mk_target --sudo modules_install;;
+          modules) echo "$a: modules."; mk_target modules;;
              # make install not specified in gentoo build guide
           i*) echo "$a: install."; mk_target --sudo install ;;
           *) action_error $a;;
