@@ -454,6 +454,11 @@ For now (2010-05-22T08:26:49) I'm just using the symbols corresponding to the Em
   :type 'boolean
   :group 'dp-vars)
 
+(defcustom dp-global-c*-use-too-long-warning-face nil
+  "*Use a special face to highlight overlong as they are about to become overlong."
+  :type 'boolean
+  :group 'dp-vars)
+
 (defcustom dp-c-add-nl-after-open-paren-default-p t
   "*Should a newline be added after the open parenthesis of a function definition?. 
 This provided for uniform parameter indentation and maximum space for each

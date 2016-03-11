@@ -420,12 +420,12 @@ For C/C++ source code.")
 (defun dp-mk-c*-debug-like-patterns ()
   (dp-mk-debug-like-patterns dp-c*-debug-like-patterns))
 
+(dp-deflocal dp-line-too-long-error-column 80
+  "Become enraged (new face) when going beyond this column.")
+
 (dp-deflocal dp-line-too-long-warning-column 77
   "Begin complaining (new face) when going beyond this column.
 For now this must be < the error col.")
-
-(dp-deflocal dp-line-too-long-error-column 80
-  "Become enraged (new face) when going beyond this column.")
 
 (defface dp-default-line-too-long-error-face
   '((((class color)
@@ -652,6 +652,7 @@ original state and then applies changes. This is good... sometimes."
 ;   (dp-save-orig-n-set-new 'c++-font-lock-keywords-3 c++-font-lock-keywords-3)
 ;   (setq c-font-lock-keywords-3 dp-orig-c-font-lock-keywords-3)
   ;; fix up the loudest setting.
+  (dmessage "in dp-muck-with-fontification")
   (if (dp-xemacs-p)
       ;; All font junk is now done in the cc-mode's `eval-after-load'
       ()                                
@@ -725,8 +726,15 @@ c-hanging-braces-alist based upon these values.")
                                     dp-use-space-before-tab-font-lock-p)
                                    (use-too-long-face-p
                                     (dp-val-if-boundp
-                                     dp-global-c*-use-too-long-face)))
+                                     dp-global-c*-use-too-long-face))
+                                    (use-too-long-warning-face-p
+                                     (dp-val-if-boundp
+                                     dp-global-c*-use-too-long-warning-face)))
   (interactive)
+  (dmessage "in dp-c-like-add-extra-faces")
+  (dmessage "in dp-c-like-add-extra-faces: dp-twsp: %s, utlf: %s, utlwf: %s"
+            dp-trailing-whitespace-use-trailing-ws-font-p
+            use-too-long-face-p use-too-long-warning-face-p)
   (let ((extras
          (delq nil
                (list
@@ -734,7 +742,7 @@ c-hanging-braces-alist based upon these values.")
                   dp-trailing-whitespace-font-lock-element)
                 (when use-too-long-face-p
                   dp-font-lock-line-too-long-error-element)
-                (when use-too-long-face-p
+                (when use-too-long-warning-face-p
                   dp-font-lock-line-too-long-warning-element)
                 (when use-space-before-tab-font-p
                   dp-space-before-tab-font-lock-element)
@@ -762,6 +770,7 @@ c-hanging-braces-alist based upon these values.")
                               (dp-use-too-long-face-p
                                (dp-val-if-boundp
                                 dp-global-c*-use-too-long-face)))
+  (dmessage "in dp-c++-add-extra-faces")
   (dp-c-like-add-extra-faces
    '(c++-font-lock-keywords-3
      c++-font-lock-keywords-2
@@ -777,6 +786,7 @@ c-hanging-braces-alist based upon these values.")
                               (use-too-long-face-p
                                (dp-val-if-boundp
                                 dp-global-c*-use-too-long-face)))
+  (dmessage "in dp-c-add-extra-faces")
   (dp-c-like-add-extra-faces
    '(c-font-lock-keywords-3
      c-font-lock-keywords-2
@@ -808,7 +818,6 @@ c-hanging-braces-alist based upon these values.")
                         current-project-c++-mode-style)
                    dp-default-c-style)
                t)
-
   ;;  (define-key map [(control c) d (meta /)] 'dp-c++-mk-protection-section)
   ;;  (define-key map [(control c) d / ] 'dp-c++-goto-protection-section)
   (define-key dp-Ccd-map [(meta /)]  'dp-c++-mk-protection-section)
@@ -864,7 +873,9 @@ c-hanging-braces-alist based upon these values.")
     (define-key map [(control \;)] (kb-lambda (dp-c-open-newline 'colon)))
     (define-key map [(control meta return)] (kb-lambda 
                                                 (dp-c-open-newline 'colon)))
-    
+    ;; Why just straight c-mode?
+    ;; @todo XXX For some reason, things go blammo if these defines are moved
+    ;; outside of the loop. dp-mk-extern-proto is claimed to be void.
     ;;??(define-key map "\C-cdfd" 'dp-c-format-func-decl)
     (define-key dp-c-mode-map "d" 'dp-c-format-func-decl)
     ;;??(define-key map "\C-cdfc" 'dp-c-format-func-call)
@@ -878,7 +889,8 @@ c-hanging-braces-alist based upon these values.")
     
     ;; 'C-;'
     (define-key map [(control 59)] (kb-lambda (insert ";" )))
-    ))
+    )
+)
 
 (defun dp-gtags-p ()
   (or (featurep 'gtags )
@@ -893,7 +905,7 @@ c-hanging-braces-alist based upon these values.")
   :group 'dp-whitespace-vars
   :type 'boolean)
 
-(defcustom dp-c-like-mode-default-indent-tabs-mode nil
+(defcustom dp-c-like-mode-default-indent-tabs-mode t
   "How should we treat indentation: with chars or tabs.
 kernel coding style be damned, indentation and tabs are two different things.
 Also, spaces will *always* result in the same indentation size, regardless of
@@ -905,6 +917,7 @@ tab setting, font or phase of the moon."
 (defun dp-c-like-mode-common-hook ()
   "Sets up personal C/C++ mode options."
   (interactive)
+  (dmessage "in dp-c-like-mode-common-hook")
   ;;
   ;;(message "in dp-c-like-mode-common-hook")
   ;; c-mode turns this on to get some keyword expansion, but it 

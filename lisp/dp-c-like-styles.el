@@ -53,6 +53,7 @@
 
 (defun linux-c-mode ()
   "C mode with Linux kernel defaults"
+  (dmessage "in linux-c-mode.")
   (interactive)
   (c-mode)
   (c-set-style "dp-kernel-c-style"))
