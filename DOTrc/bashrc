@@ -591,7 +591,8 @@ case $- in
         DP_ENV_INTERACTIVE=y
 	dp-stty			# set tty mode
 	fortune_path="/usr/games/fortune"
-	[ "$OSName" = "FreeBSD" ] && fortune_option=-a
+	#[ "$OSName" = "FreeBSD" ] && 
+        fortune_option=-a
 	for i in $fortune_path
 	do
 	    [ -x $i ] && {
