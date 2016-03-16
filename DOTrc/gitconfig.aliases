@@ -17,8 +17,10 @@
         cob = checkout -b
         newbr = checkout -b
         newbranch = checkout -b
-	ci = commit
-        cia = commit -a
+	ci = commit -s
+        cia = commit -a -s
+        commit = commit -s
+        real-commit = commit
 	st = status
 	s = status
         sno = status -uno
