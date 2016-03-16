@@ -137,7 +137,6 @@
  '(dp-python-indent-face-5 ((((class color) (background light)) (:background "paleturquoise"))))
  '(dp-sel2:squish-newline-face ((((class color) (background light)) (:background "lightblue3"))))
  '(dp-sudo-edit-bg-face ((((class color) (background light)) (:background "thistle2"))))
- '(dp-trailing-whitespace-face ((((class color) (background light)) (:background "aquamarine" :bold nil))))
  '(dp-wp-face ((((class color) (background light)) (:background "lightsalmon2"))))
  '(flyspell-duplicate-face ((((class color)) (:foreground "red" :bold nil :underline t))))
  '(font-lock-doc-string-face ((((class color) (background light)) (:foreground "seagreen" :bold t))))
