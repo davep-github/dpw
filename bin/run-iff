@@ -1,4 +1,5 @@
-#!/bin/bash########################################################################
+#!/bin/bash
+########################################################################
 #
 # template begin.
 
@@ -89,9 +90,24 @@ Usage_error()
 ########################################################################
 
 : ${PGREP_REGEXP:=}
+: ${raise_p=}
+
+while (($# > 0))
+do
+  case "${1}" in
+      -r|--raise) raise_p=t;;
+      -n|--name) shift; win_name="${1}";;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
 
 prog="$1"
 shift
+pname=$(basename "${prog}")
+
+: ${win_name:=$pname}
 
 default_progname()
 {
@@ -105,13 +121,19 @@ running_p()
     # Run prog if we fail to find it.
     if [ -n "${PGREP_REGEXP}" ]; then
         # 0 --> fail, n --> num matches 
-        NO_HDR=t pgrep $DP_SCRIPT_X_DEBUG_OPT "${PGREP_REGEXP}" | fgrep -vq "$0" &&  exit 1
+        NO_HDR=t pgrep $DP_SCRIPT_X_DEBUG_OPT "${PGREP_REGEXP}" \
+                 | fgrep -vq "$0" &&  exit 1
         true
     else
         # findprog returns success if it finds anything.
-        findprog "$(basename $prog)" >/dev/null && exit 1
+        findprog -q "${pname}" >/dev/null 2>&1 && {
+            [ -n "${raise_p}" ] && {
+                wmctrl -a "${win_name}"
+            }
+            exit 0
+        }
         true
-    fi && (exec "$prog" "$@" &)
+    fi && (xit "$prog" "$@" &)
 }
 running_p "$@"
 exit 1
