@@ -153,9 +153,9 @@ do
 
     case "$REPLY" in
         [yY]) answer=y; break;;
-        [nN]) answer=n; break;;
+        [nNsS]) answer=n; break;;
         [qQ]) exit 0;;
-        "") commit_msg=;;       # prompt
+        "") commit_msg=;;       # fire up editor.
         *)  commit_msg="${REPLY}";;
     esac
   done
