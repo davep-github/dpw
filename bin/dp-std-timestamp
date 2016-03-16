@@ -2,11 +2,16 @@
 
 : ${use_colons_p=}
 date_str=$(date --iso-8601=seconds)
+: ${prefix=}
+: ${ext=}
+: ${sep=}
 
 while (($# > 0))
 do
   case "$1" in
       -c|--colons|--use-colons) use_colons_p=t;;
+      -p|--prefix) shift; prefix="${1}";;
+      -e|--ext) shift ext="${1}";;
       --) shift;;
       *) break;;
   esac
@@ -18,15 +23,15 @@ then
     date_str=$(echo "${date_str}" | sed 's!:!\.!g')
 fi
 
-prefix=
-sep=
-while (($# > 0))
-do
-  prefix="${prefix}${sep}${1}"
-  sep='-'
-  shift
-done
+(($# > 0)) && {
+    # ?? "${1}-"
+    prefix="${1}"
+    shift
+}
 
-echo "${prefix}${sep}${date_str}"
-
-#
+(($# > 0)) && {
+    # ?? ".${1}"
+    ext="${1}"
+    shift
+}
+echo "${prefix}${sep}${date_str}${ext}"
