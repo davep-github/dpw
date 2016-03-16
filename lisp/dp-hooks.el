@@ -507,7 +507,7 @@ the warning zone logic (or bag it.) Using brute force.")
 
 (defface dp-trailing-whitespace-face
   '((((class color) (background light)) 
-     (:background "aquamarine" :bold nil))) 
+     (:background "aliceblue" :bold nil))) 
   "Face for buffer lines which have trailing whitespace."
   :group 'faces
   :group 'dp-vars)
