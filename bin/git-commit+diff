@@ -128,7 +128,7 @@ if [ -n "$*" ]
 then
     files=("$@")
 else
-    files=("$(git-modified-files)")
+    files=($(git-modified-files))
 fi
 for file in "${files[@]}"
 do
@@ -140,7 +140,7 @@ do
   while [ -z "${done_p}" ]
   do
     done_p=t
-    read -e -p "Commit file [Y/n/q/<msg>|'']? "
+    read -e -p "Commit file [y/n/q/r/<msg>|'']? "
     [ "$?" = 0 ] || {
         echo
         [ "$REPLY" = "" ] && {
@@ -155,11 +155,16 @@ do
         [yY]) answer=y; break;;
         [nNsS]) answer=n; break;;
         [qQ]) exit 0;;
+        [rRcC]) answer=r; break;;
         "") commit_msg=;;       # fire up editor.
         *)  commit_msg="${REPLY}";;
     esac
   done
   [ "${answer}" = 'n' ] && continue
+  [ "${answer}" = 'r' ] && {
+      EExec -v git checkout -- "${file}"
+      continue
+  }
 
   if [ -n "${REPLY}" ]
   then
