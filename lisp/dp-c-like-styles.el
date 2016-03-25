@@ -43,6 +43,7 @@
     (c-indent-comments-syntactically-p . t)
     (c-hanging-braces-alist         . ((brace-list-open   . ignore)
                                        (brace-list-close  . ignore)
+                                       (brace-list-intro  . ignore)
                                        (substatement-open . (after))
                                        (brace-entry-open  . ignore)))
 
