@@ -1884,6 +1884,7 @@ control construct)"
       ;; with a single { and then do a newline and indent.
       (unless (and reindent-p
                    (not (dp-looking-back-at "\s-+" (line-beginning-position))))
+        ;; Sure wish I'd'a commented this. WTF a spatse?
         (insert " "))
       (c-electric-brace reindent-p)
       (setq here (point))
