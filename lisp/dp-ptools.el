@@ -391,6 +391,20 @@ NAME is a short name associated by hideif with the list of defs."
       (funcall dp-hide-ifdef-configure-function)
     (message "No hide-ifdef configure function configured.")))
 
+(defun dp-show-if1 ()
+  "Set up hide-ifdef to show all #if 1 code. Activates the mode.
+Mostly used for the side effect of hiding #if 0.
+It does hide everything else, but that can be controlled by, duh, 
+defining other constants.
+@todo XXX Make a function to [un]define symbol @ point."
+  (interactive)
+  (hide-ifdef-mode 1)
+  (hide-ifdef-define '\1)
+  (hide-ifdefs))
+
+;; Not really hide if0, but kind of.
+(dp-defaliases 'dp-hide-if0 'hif0 'dp-show-if1)
+
 ;;
 ;; Give the ability to prevent writing to certain directory trees.
 ;;
