@@ -327,6 +327,7 @@ No regexps allowed. This will be processed by `regexp-opt'")
                                        "nvmk"
                                        "t_make"
                                        "apmake"
+                                       "kmk"  ; Make .o, .ko, etc in kernel tree.
                                        "cc"
                                        "gcc"
                                        "g++"
@@ -382,7 +383,7 @@ g++: Why does it act exactly the same in spite of my changes?
     (save-some-buffers)))
 
 (defun dp-shell-dirty-buffer-cmd-p (str)
-  "Is STR a command which should see the contents modified buffers?
+  "Is STR a command which should see the contents modified buffers? message.
 Examples are things like make, cc, etc. We would like these commands to
 operate on the most current file contents."
   (string-match dp-shell-dirty-buffer-cmds str))
