@@ -479,6 +479,8 @@
      dp-manual)
     (("mem" "memory")
      dp-manual)
+    (("sb" "*scratch*")
+     dp-manual)
     (("shmem" "shared memory")
      dp-manual)
     (("proc" "process" "processor")
