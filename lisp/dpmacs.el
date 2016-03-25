@@ -403,7 +403,8 @@ the init files.")
                              wconfig-names
                              dp-killed-file-states
                              dp-recently-killed-files
-                             ;; <:new vars variables to save:>
+                             gtags-buffer-stack
+                             ;; <:add new vars variables to save here:>
                              ))
       (message "added `savehist' vars."))))
 
@@ -457,12 +458,12 @@ the init files.")
           "\\|stale\\|bad\\|b0rked\\|broken?\\|hosed\\|fubar"
           "\\|STALE\\|BAD\\|B[O0]RKED\\|BROKEN?\\|HOSED\\|FUBAR"
           "\\|davep\\|" (user-login-name)
+          "\\|noindex\\|NOINDEX\\|noidx\\|NOIDX"
           ;; Perforce uses .original.[0-9]+ to save modified files.  I, too,
           ;; like to copy a file to a .orig before hacking it up, although
           ;; I've come to use RCS instead.
-          "\\|merged?\\|obs\\|olde?\\|orig\\(inal\\)?\\|OEM\\|oem"
-          "\\|MERGED?\\|OBS\\|OLDE?\\|ORIG\\(INAL\\)?")
-          
+          "\\|obs\\|olde?\\|orig\\(inal\\)?\\|OEM\\|oem"
+          "\\|OBS\\|OLDE?\\|ORIG\\(INAL\\)?")
   "Read only part of dp-default-mode-transparent-suffix-regexp (q.v.)")
 
 (defvar dp-default-mode-transparent-suffix-regexp
