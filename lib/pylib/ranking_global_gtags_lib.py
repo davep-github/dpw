@@ -84,6 +84,8 @@ def rank_lines(lines):
     resid = []
 
     log_file.write("rank_lines, lines>{}<\n".format(lines))
+    log_file.write("Filter_out_regexps>{}<\n".format(Filter_out_regexps))
+    log_file.write("Top_ranking_regexps>{}<\n".format(Top_ranking_regexps))
     if Filter_out_regexps:
         filtered_lines = []
         for line in lines:
@@ -102,18 +104,24 @@ def rank_lines(lines):
         resid.extend(lines)
     else:
         for regexp in Top_ranking_regexps:
+            log_file.write("regexp>{}<\n".format(regexp.pattern))
             resid = []
             for line in lines:
+                #log_file.write("line>{}<\n".format(line))
                 if regexp.search(line):
+                    log_file.write("line to tops>{}<\n".format(line))
                     tops.append(line)
                 else:
+                    log_file.write("line to resid>{}<\n".format(line))
                     resid.append(line)
             if not resid:
                 return tops + bottoms
             lines = resid
     # XXX @todo handle bottom rankers here.
-    all_lines =  tops + resid + bottoms
-    return lines
+    all_lines = tops + resid + bottoms
+    #log_file.write("all_lines>{}<\n".format(all_lines)
+
+    return all_lines
 
 Cxref_realpath_regexp = re.compile("(\S+)\s+(\d+)\s+(\S+)(.*)")
 def get_lines(fobj, cxref_realpath_p=False, start_dir=opath.curdir):

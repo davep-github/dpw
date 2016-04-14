@@ -6,9 +6,9 @@ import dp_sequences, dp_io, dp_utils
 import ranking_global_gtags_lib
 rgg = ranking_global_gtags_lib
 #rgg.log_file = sys.stderr
-rgg_log_file_name = os.environ.get("rgg_log_file_name", None)
 rgg_log_file_name = "bubba"
 rgg_log_file_name = None
+rgg_log_file_name = os.environ.get("rgg_log_file_name", None)
 if rgg_log_file_name:
     if rgg_log_file_name == '--err':
         rgg.log_file = sys.stderr
@@ -176,7 +176,7 @@ def rank_main(argv):
         rgg.log_file.write("output >>>>>>>>>>>>>>\n")
         for line in lines:
             print line
-        rgg.log_file.write(line + "\n")
+            rgg.log_file.write("line>" + line + "<" + "\n")
         rgg.log_file.write("<<<<<<<<<<<<<< output\n")
         rc = 0
     else:
