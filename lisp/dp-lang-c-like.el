@@ -633,9 +633,18 @@ We say: \" p is a pointer to char\", not
       (c-indent-command)))
 
 (defun dp-kernel-style-var-name-align ()
+  "Do a indentation tab or tab over to the preceding line's variable name.
+<tab>--->if (kernel_mode_sucks)
+struct kernel_mode_sucks {
+  some_longish_type_name_t   x;
+  int                        I_am_a_stupid_indentation_style;
+  char*<tab>---------------->stupid_var_name;
+*Very* hackish.
+"
   (interactive)
   ;;@todo XXX Breaks if first tab takes us past the type...name indentation.
-  (unless (dp-in-indentation-p)
+  (unless (or (dp-in-indentation-p)
+              (not (eolp)))
     (let ((next-char (dp-get-char-previous-line))
           (did-something-p nil))
       ;; tab past the preceding variable type.
@@ -1619,15 +1628,28 @@ Current annotations are:
         (dp-c*-insert-doxy-comment)
       (dp-indent-for-comment arg))))
 
+(defun dp-c-statement-syntax ()
+  (interactive)                         ; For testing
+  (let ((region (dp-mark-active-p)))
+    (save-excursion
+      (if region
+          (progn
+            (goto-char (car region))
+            (end-of-line))
+        (dp-c-beginning-of-statement))
+      (dp-c-get-syntactic-region))))
+
 (defun* dp-c-fill-paragraph (&optional arg)
   "Fill according to C/C++ syntactical context."
   (interactive "*P")
   (let* ((region (dp-mark-active-p))
          (beg-end-list (and region (dp-region-boundaries-ordered-list)))
-         (syntax (save-excursion
-                   (when region (goto-char (car region)))
-                   (end-of-line)
-                   (dp-c-get-syntactic-region))))
+         (syntax (dp-c-statement-syntax)))
+;;does the above work better                  (save-excursion
+;;does the above work better                    (when region 
+;;does the above work better                      (goto-char (car region)))
+;;does the above work better                    (end-of-line)
+;;does the above work better                    (dp-c-get-syntactic-region))))
     (when (and region
                (apply 'dp-c*-in-doxy-comment beg-end-list))
       (apply 'dp-c*-align beg-end-list)
@@ -1647,17 +1669,17 @@ Current annotations are:
             (c-fill-paragraph)))
          ((memq syntax '(member-init-intro))
           (dp-c-fill-statement nil 'rest-of-statement))
-         ;; Function definition?
-         ((dp-c-in-syntactic-region 
-           '(topmost-intro topmost-intro-cont arglist-intro arglist-cont
-             func-decl-cont))
-          (dp-c-format-func-decl))
          ;; Function call?
          ((memq syntax 
                 '(statement statement-block-intro defun-block-intro 
                   statement-case-intro
                   arglist-cont-nonempty substatement stream-op))  
           (dp-c-fill-statement))
+         ;; Function definition?
+         ((dp-c-in-syntactic-region 
+           '(topmost-intro topmost-intro-cont arglist-intro arglist-cont
+             func-decl-cont))
+          (dp-c-format-func-decl))
          ;; Other.
          (t (ding) (message "dp-c-fill-paragraph, syntax: %s" syntax)
             (call-interactively 'c-fill-paragraph)))))))
@@ -2068,9 +2090,9 @@ the boundaries region if it is active."
                               before-p after-first-p
                               beg end
                               minimal-indentation-p)
-  "Split statement at split-at-regexp, before regexp else before if before-p non nil.
+  "Split statement at SPLIT-AT-REGEXP, before regexp else before if BEFORE-P non nil.
 BEFORE-P says to split like we do in a c-tor initialization list, 
-with commas first:
+that is with commas first:
 C::C(
   int a,
   char* b,
@@ -2135,7 +2157,7 @@ arg per line, although that is implied by the name of the function.
 
 (defalias 'csi 'dp-c-stack-iostream)
 
-(defvar dp-c-fill-statement-minimal-indentation-p t
+(dp-deflocal dp-c-fill-statement-minimal-indentation-p 'auto
   "Stack statements:
 g()
 {
@@ -2149,11 +2171,15 @@ g()
                              max-line-len 
                              rest-of-statement 
                              beg 
-                             end 
+                             end
                              (minimal-indentation-p 
                               dp-c-fill-statement-minimal-indentation-p))
   (interactive)
-  (dmessage "HANDLE spaces after opening (")
+  (dmessage "TODO: HANDLE spaces after opening (")
+  (when (eq minimal-indentation-p 'auto)
+    (setq minimal-indentation-p 
+          (dp-looking-back-at (concat "^" dp-ws-regexp*))))
+
   (save-excursion
     (unless rest-of-statement
       (end-of-line)
@@ -2172,8 +2198,7 @@ g()
         ;; Pack things into maximally filled lines.
         (while (< (line-end-position) end)
           (join-line)
-          (unless (<= (- (line-end-position) (line-beginning-position))
-                      max-line-len)
+          (when (> (dp-last-column-on-line) max-line-len)
             (c-context-line-break)))))))
 
 (defalias 'cfs 'dp-c-fill-statement)

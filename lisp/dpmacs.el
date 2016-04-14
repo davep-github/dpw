@@ -404,6 +404,7 @@ the init files.")
                              dp-killed-file-states
                              dp-recently-killed-files
                              gtags-buffer-stack
+                             killed-rectangle
                              ;; <:add new vars variables to save here:>
                              ))
       (message "added `savehist' vars."))))

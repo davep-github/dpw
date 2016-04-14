@@ -7,12 +7,12 @@
 (defconst dp-kernel-c-style
   '(
     (dp-c-using-kernel-style-p                     . t)
-    (dp-c-fill-statement-minimal-indentation-p     . nil)
     (dp-c-like-mode-default-indent-tabs-mode       . t)
     (dp-lang-use-c-new-file-template-p             . nil)
     (dp-trailing-whitespace-use-trailing-ws-font-p . t)
     (dp-use-space-before-tab-font-lock-p           . t)
     (dp-use-too-many-spaces-font-p                 . t)
+    (c-insert-tab-function                         . dp-phys-tab)
     ;; see `c-indent-command'
     (c-tab-always-indent                           . nil)
     (c-basic-offset                                . 8)

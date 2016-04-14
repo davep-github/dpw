@@ -1769,6 +1769,13 @@ Motivated by abstraction of `dp-indent-line-and-move-down'."
   ;; `this-command' would not be an indent function.
   (when new-this-command
     (setq this-command new-this-command)))
+
+(defun dp-reindent-line ()
+  (interactive)
+  (unless (dp-empty-line-p)
+    (dp-cleanup-line)
+    (unless (dp-empty-line-p)
+      (dp-press-tab-key))))
 ;;
 ;; A bunch of these often works better than indent-region.
 ;; I've seen indent-region get confused and make mistakes,
@@ -1791,10 +1798,7 @@ Tidying includes: re `indent-for-comment' and fixing up white space."
           ;; Not operating on an empty line is useful because it doesn't
           ;; cause the buffer to be modified. Otherwise, the tab + remove
           ;; trailing white space modifies the buffer.
-          (unless (dp-empty-line-p)
-            (dp-cleanup-line)
-            (unless (dp-empty-line-p)
-              (dp-press-tab-key)))
+          (dp-reindent-line)
           (unless (or (Cu--p)
                       dp-il&md-dont-fix-comments-p)
             (dp-with-saved-point nil
@@ -2651,7 +2655,7 @@ With BACKWARDS-TOO-P, nuke white space before `point'."
   (dp-nuke-nearby-whitespace (not just-forwards-p))
   (insert "\t"))
 ;;  (dp-tabdent))
-(dp-defaliases '1t 'ot 'dp-one-tab 'dp-tab...just-tab)
+(dp-defaliases '1t 'ot 'dp-tab...just-tab 'dp-one-tab)
 
 (defstruct dp-parenthesize-region-info
   (first "I'm first")
@@ -14710,6 +14714,9 @@ them. Q.v. `unfuck-gz'"
   (let ((file-name (concat tramp-location (buffer-file-name))))
     (message "tramping>%s<" file-name)
     (find-file file-name)))
+
+(defun dp-last-column-on-line ()
+  (dp-column-at (line-end-position)))
 
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;;
