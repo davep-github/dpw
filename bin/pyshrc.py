@@ -114,18 +114,10 @@ No args says to used the last set of args"""
 ########################################################################
 #
 ########################################################################
-def hexl(*args):
-    """convert list of ints or strings containing ints to hex"""
-    for i in args:
-        if type(i) == types.StringType:
-            i = eval(i)
-        print hex(i)
-
-########################################################################
-#
-########################################################################
 def dexl(*args):
-    """convert list of ints or strings containing hex ints to decimal"""
+    """convert list of ints or strings containing C-type ints to decimal.
+Basically massage the input and eval it.
+"""
     for i in args:
         if type(i) == types.StringType:
             ## Remove commas; they make numbers more readable.
@@ -135,6 +127,23 @@ def dexl(*args):
             i = i.replace(".", "")
             i = eval(i)
         print "%d" % (i,)
+
+########################################################################
+#
+########################################################################
+def hexl(*args):
+    """convert list of ints or strings containing C-type ints to hex.
+Basically massage the input and eval it.
+"""
+    for i in args:
+        if type(i) == types.StringType:
+            ## Remove commas; they make numbers more readable.
+            ## Don't enforce any kind of grouping
+            i = i.replace(",", "")
+            # Oh, hell, let 'em use dots, too. Silly Europeans.
+            i = i.replace(".", "")
+            i = eval(i)
+        print hex(i)
 
 ########################################################################
 # awaaaay we go!
