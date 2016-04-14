@@ -149,25 +149,27 @@ def locate_rc_file(name, path=None):
             pass
 
 
-#
-# convert a number to 0 padded binary
-#
-def cbin(val, sep=False, sep_str=" ", width=8):
-    """cbin(val, width=0)
-Convert val to a binary string.  Pad to width bits if specified."""
+def cbin(val, sep=False, sep_str=" ", field_width=4, word_size=32):
+    """cbin(val, field_width=0)
+Convert val to a binary string.  Pad to field_width bits if specified."""
     if type(val) == types.StringType:
         val = eval(val)
-    if type(width) == types.StringType:
-        width = eval(width)
+    if type(field_width) == types.StringType:
+        field_width = eval(field_width)
     s = ''
     num_bits = 0
-    if width and not sep:
+    if field_width and not sep:
         sep = True
     if (type(sep) == types.IntType) and sep != 1:
-        width = sep
+        field_width = sep
+    if word_size is None:
+        word_size = field_width
 
-    while val:
-        if sep and num_bits and ((num_bits % width) == 0):
+    #print >>debug_out, "field_width: ", field_width, "sep_str: ", sep_str, "sep: ", sep
+
+    for b in range(word_size):
+        #print >>debug_out, "sep>%s<" % (sep, ), ", num_bits:", num_bits
+        if sep and num_bits and ((num_bits % field_width) == 0):
             s = sep_str + s
         if val & 1:
             s = '1' + s
@@ -177,23 +179,25 @@ Convert val to a binary string.  Pad to width bits if specified."""
         val &= ~0x80000000
         num_bits += 1
 
-    pad_num = width - len(s)
+    # This can end up with a big contiguous block of leading 0s.  I think I
+    # like this because it clearly shows that there are no ones "up there."
+    pad_num = word_size - len(s)
     if pad_num > 0:
-        s = '0' * pad_num + s
+        s = '.' * pad_num + s
 
     return s
 
 
-def pbin(val, width=0):
-    """pbin(val, width=0)
+def pbin(val, field_width=0, sep_str=" ", sep=False):
+    """pbin(val, field_width=0)
 Print the binary string of val after calling cbin(q.v.)"""
-    print cbin(val, width)
+    print cbin(val, field_width=field_width, sep_str=sep_str, sep=sep)
 
-
-def cbinh(val, width=8, sep_str=" ", sep=False):
-    """cbinh(val, width=8, sep_str=" ", sep=False)
+def cbinh(val, field_width=4, sep_str=" ", sep=False):
+    """cbinh(val, field_width=4, sep_str=" ", sep=False)
 Convert val to binary as per cbin.  Add a bit index header for easy viewing."""
-    s0 = cbin(val, width=width, sep_str=sep_str, sep=sep)
+    s0 = cbin(val, field_width=field_width, sep_str=sep_str, sep=sep)
+    # print >>debug_out, "cbinh>%s<" % (s0,)
     l0 = len(s0)
     s = s0
     l = len(s)
@@ -204,6 +208,7 @@ Convert val to binary as per cbin.  Add a bit index header for easy viewing."""
     th = ''
     bh = ''
     for b in s:
+        # Assumption: cbin separator string will not be "0" or "1"
         if b not in "01":
             if sep_str == None:
                 q, r = b, b
@@ -217,9 +222,12 @@ Convert val to binary as per cbin.  Add a bit index header for easy viewing."""
     uline = '-' * l0
     return (th, bh, uline, s)
 
-def pbinh(val, width=8, sep_str=" ", sep=False):
+def pbinh(val, field_width=4, sep_str=" ", sep=False):
     """print a cbinh string"""
-    print string.join(cbinh(val, width=width, sep_str=sep_str, sep=sep), '\n')
+#    field_width=4                       #####################################
+    #print >>debug_out, "field_width: ", field_width, "sep_str: ", sep_str, "sep: ", sep
+    print string.join(cbinh(val, field_width=field_width,
+                            sep_str=sep_str, sep=sep), '\n')
 
 def file_len(file):
     stat_buf = os.stat(file)
