@@ -521,6 +521,7 @@ dp_setup_prompt()
 
     #echo "TERM>$TERM<"
 
+    export PS1_1=''
     scr_pre=''
     scr_suf=''
     _bashrc_set_ps1_path=''
