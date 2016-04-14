@@ -76,7 +76,7 @@ done
 # }
 db_files=($(find-up "${db_finder_file}"))
 
-EExec_verbose_msg "db_files[@]>${db_files[@]}<"
+EExec_verbose_msg "db_files[@]>${db_files[@]-}<"
 
 perverted_index_option=-q
 [ -e "cscope.po.out" ] || {
