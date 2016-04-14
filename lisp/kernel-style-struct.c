@@ -58,7 +58,7 @@ struct amdgpu_vm_manager {
 
 struct moo
 {
-	/* Toooo many spaces in a row */
+	/* Toooooo many spaces in a row */
         int                                     boo_hoo_too_many_spatses;
 	int					blah;
 	/* Space before tab... eeveeel. */
@@ -79,9 +79,10 @@ struct moo
 	x_t					*xp;
 	class bubba				*bp;
 	;
-	volati	xx;
-	x
-	x	xxx;
+	volati					xx;
+	x					xx
+	y  
+	x					xxx;
 	x_t					*bubba;
 	int					*iiiiiiip;
 	x					d;

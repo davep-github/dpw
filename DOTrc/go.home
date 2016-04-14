@@ -31,8 +31,7 @@ Ee|stuff|             ${davep}stuff/
 Ee|kderc|             ${davep}.kde/share/config/
 Ee|mp3db|             ${davep}stuff/indices/mp3-db/
 Ee|indices|           ${davep}stuff/indices/
-Ee|diags|             ${davep}work/rincon/sandboxen/test/cc/diags/
-Ee|dptmp|htmp|tmp     ${davep}tmp/
+Ee|dptmp|htmp|tmp|    ${davep}tmp/
 Ee|kdecfg|            ${davep}.kde3.3/share/config/
 Ee|taxes|             ${davep}finances/taxes/
 Ee|merge|             ${davep}tmp/merge/
