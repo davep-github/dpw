@@ -318,8 +318,9 @@ Bind any keys in KEYS via `dp-define-keys'."
 ;; major-mode'ed temp buffers.
 (defun dp-keys-define-init-submaps ()
   ;; Beginning to use C-cC-d as dp-* command prefix.
+  ;; Prefer C-cd prefix.  Defecate C-cC-d prefix.
   ;; dp prefixed keys; dp keys prefix; dp key prefix
-  ;; <:dp-keys|dpkeys|dp keys:>
+  ;; <:dp-keys|dpkeys|dp keys|ccd-map|cccd-map|dp-map:>
   (makunbound 'dp-Ccd-map)
   (defconst dp-Ccd-map
     (dp-define-key-submap 'dp-kb-prefix global-map
