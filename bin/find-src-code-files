@@ -65,7 +65,7 @@ echo 1>&2 "Read various ignore files like, .(cvs|git)ignore, ~/.gitexcludes,
 ./.git/info/exclude, etc, and make a sed expression to ignore them.
 NB: most are globs, not regexps.
 Excludes are sed -r regexps"
-: ${EXCLUDES:='-e /(doxygen|html|doc|dist-build|retired|^,|,$|^HIDE\.|\.HIDE$|^HIDE^|^[jJ][uU][nN][kK]$|cscope-db-root|,novc$|,NOVC$|[.-]TMP($|.)|\.merged?|(^|\/)q.([ch](\+\+)?$)|(^|\/)q[0-9]?\..?$)/d'}
+: ${EXCLUDES:='-e /(doxygen|html|doc|dist-build|retired|^,|,$|^HIDE\.|\.HIDE$|^HIDE^|^[jJ][uU][nN][kK]$|cscope-db-root|,novc$|,NOVC$|[.-]TMP($|.)|\.merged?|(^|\/)q\..*(\.[ch](\+\+)?$)|(^|\/)q[0-9]?\..?$)/d'}
 : ${files_to_cat=""}
 : ${only_cat_files=""}
 : ${relative_opt=}
