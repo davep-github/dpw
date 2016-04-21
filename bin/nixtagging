@@ -7,6 +7,7 @@ source eexec
 : ${kwa_nix_file=NOTAG}
 
 mkdir_p=
+read_only_p=t
 
 std_options=""
 option_str="nvqt:m"
@@ -23,6 +24,7 @@ do
       -q) VERBOSE=":"; EExecQuiet;;
       -t) shift; kwa_nix_file="$1";;
       -m|--mkdir) mkdir_p=t;;
+      --rw) read_only_p=;;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";
@@ -55,6 +57,9 @@ do
       echo "$touch_file already exists."
   else
       EExec touch "$touch_file"
+      [ "${read_only_p}" = 't' ] && {
+          EExec chmod a-w "${touch_file}"
+      }
   fi
 done
 
