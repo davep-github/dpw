@@ -2526,9 +2526,11 @@ changed."
 
 (defun dp-bookmark-bmenu-mode-hook ()
   (local-set-key [return] 'bookmark-bmenu-other-window)
-  (local-set-key [ ?. ] 'bookmark-bmenu-this-window)
-  (local-set-key [ ?= ] 'bookmark-bmenu-this-window)
-)
+  (local-set-key [?.] 'bookmark-bmenu-this-window)
+  (local-set-key [?v] 'bookmark-bmenu-switch-other-window)
+  (local-set-key [(control ?o)] (kb-lambda 
+                                    (dp-one-window++ -1)
+                                    (bookmark-bmenu-select))))
 
 (defun dp-bookmark-load-hook ()
   (global-set-key [(control ?c) ?b] 'bookmark-map)
