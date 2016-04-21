@@ -138,6 +138,7 @@ set_all_index_methods()
 }
 
 iterate_individually_p=
+iterate_and_do_dot=
 
 # x and e were used to toggle their respective options.
 option_str="nvdc:t:g:CTkKVo:Giuf:Is:S:CazhR"  # <:add new options:>
@@ -152,6 +153,7 @@ long_options=(
 "etags"
 "no-etags"
 "just-cscope"
+"iterate-and-do-dot" "iid"
 )
 
 source dp-getopt+.sh
@@ -161,6 +163,8 @@ do
   # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
   case $1 in
       -I) iterate_individually_p=t;;
+      --iterate-and-do-dot|-iid) iterate_individually_p=t;
+                                 iterate_and_do_dot_p=t;;
       # Don't actually execute stuff
       -n) EXEC=echo; EExecDashN; EExec_opts="$EExec_opts $1";;
       -v) VERBOSE="echo $prog: "; EExecVerbose; EExec_opts="$EExec_opts $1";;
