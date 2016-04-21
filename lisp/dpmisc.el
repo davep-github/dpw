@@ -10536,46 +10536,53 @@ The return value is the result of `memq' on MEMQ-LIST"
 
 (defun* dp-one-window++ (&optional (arg 1))
   "Toggle between one window and previously saved window configurations.
-Saves window configurations in registers. Default is reg `\(int-to-char 1\)'
+Saves window configurations in registers. Default is reg `\(int-to-char ARG\)'
+If ARG is <, save configuration to abs(ARG) and make a single window.
+this case.
 @todo ??? Save last used register as default?"
   (interactive "_p")
   (let* ((force-set-p (< arg 0))
          (arg (if current-prefix-arg (abs arg) dp-one-window++-last-register))
          (reg (int-to-char arg))
          (reg-val (car-safe (get-register reg))))
-      (if (and reg-val 
-               (one-window-p 'nomini)
-               (not force-set-p))
-          (if (window-configuration-p reg-val)
-              (progn
-                (set-window-configuration reg-val)
-                (unless (eq arg 1)
-                  (message "Used window config in register %s (0%o, %d, 0x%x)" 
-                           reg arg arg arg)))
-            (ding)
-            (message "register %s does not contain a window configuration."
-                     reg))
-        (if (and (or t (/= 1 reg))      ; !<@todo XXX ??? or t ???
-                 reg-val
-                 (not (window-configuration-p reg-val))
-                 (not (y-or-n-p 
-                       (format 
-                        "Reg %s isn't empty and isn't a win cfg; Continue? "
-                        reg))))
-            (message "Not setting window config.")
-          (window-configuration-to-register reg)
-          (setq dp-one-window++-last-register arg)
-          (unless (eq arg 1)
-            (message "Saved window config to register %s (0%o, %d, 0x%x)" 
-                     reg arg arg arg))
-          (delete-other-windows)))))
+    ;; Do we have a single window and a possible previous window configuration?
+    (if (and reg-val
+             (one-window-p 'nomini)
+             (not force-set-p))
+        (if (window-configuration-p reg-val)
+            (progn
+              ;; Yep, yep, switch to that configuration.
+              (set-window-configuration reg-val)
+              (unless (eq arg 1)
+                (message 
+                 "Used window configuration in register %s (0%o, %d, 0x%x)" 
+                 reg arg arg arg)))
+          (ding)
+          (message "register %s does not contain a window configuration."
+                   reg))
+      ;; else ...
+      (if (and (or t (/= 1 reg))        ; !<@todo XXX ??? or t ???
+               reg-val
+               (not (window-configuration-p reg-val))
+               (not (y-or-n-p 
+                     (format 
+                      "Reg %s isn't empty and isn't a win cfg; Continue? "
+                      reg))))
+          (message "Not setting window configuration.")
+        ;; Save configuration and make current window the only one.
+        (window-configuration-to-register reg)
+        (setq dp-one-window++-last-register arg)
+        (unless (eq arg 1)
+          (message "Saved window configuration to register %s (0%o, %d, 0x%x)"
+           reg arg arg arg))
+        (delete-other-windows)))))
 (put 'dp-one-window++ 'isearch-command t)
 
 
 (defun dp-get-file-owner (file-name)
   "Get a file's owner"
   (interactive "fFile name? ")
-  (dp-nuke-newline (shell-command-to-string 
+  (dp-nuke-newline (shell-command-to-string
                     (format dp-get-file-owner-program file-name))))
 
 (defun dp-user-owns-this-file-p (&optional file-name user-name)

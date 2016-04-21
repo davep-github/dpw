@@ -2525,7 +2525,17 @@ changed."
             (buffer-name) beg end))
 
 (defun dp-bookmark-bmenu-mode-hook ()
-  (local-set-key [return] 'bookmark-bmenu-other-window))
+  (local-set-key [return] 'bookmark-bmenu-other-window)
+  (local-set-key [ ?. ] 'bookmark-bmenu-this-window)
+  (local-set-key [ ?= ] 'bookmark-bmenu-this-window)
+)
+
+(defun dp-bookmark-load-hook ()
+  (global-set-key [(control ?c) ?b] 'bookmark-map)
+
+  ;; C-cbb is easy typin'
+  (define-key bookmark-map "b" 'bookmark-set)
+  )
 
 (defun dp-asm-mode-hook()
   (interactive)
@@ -2538,8 +2548,6 @@ changed."
   (after dp-advised-jka-compr-insert-file-contents act)
   (dp-set-unmodified))
 
-(add-hook 'bookmark-bmenu-mode-hook 'dp-bookmark-bmenu-mode-hook)
-
 ;; I'm trending away from advice, since I've seen code that really rapes it
 ;; (I'm looking at you, ECB)
 ;;CO; (defadvice find-function-on-key (before dp-find-function-on-key activate)
@@ -2547,6 +2555,7 @@ changed."
 
 ;; Moved from dpmacs.el. They were grouped like this right after dp-hooks was
 ;; required.  They belong here.
+(add-hook 'bookmark-bmenu-mode-hook 'dp-bookmark-bmenu-mode-hook)
 (add-hook 'comint-mode-hook 'dp-comint-mode-hook)
 (add-hook 'shell-mode-hook 'dp-shell-mode-hook)
 (add-hook 'telnet-mode-hook 'dp-telnet-mode-hook)

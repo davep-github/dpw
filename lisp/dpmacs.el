@@ -958,6 +958,18 @@ This can be callable.")
 
 (require 'dp-ilisp)
 
+;; This needs to be done before we're required because the hook is called
+;; just before the file exits.
+(defun dp-setup-bookmarks ()
+  (interactive)
+  (add-hook 'bookmark-load-hook 'dp-bookmark-load-hook)
+  (require 'bookmark)
+  (setq bookmark-save-flag 1)
+  (setq bookmark-default-file
+        (dp-nuke-newline (shell-command-to-string
+                          "mk-persistent-dropping-name.sh emacs.bmk"))))
+(add-hook 'dp-post-dpmacs-hook 'dp-setup-bookmarks)
+
 ;; turn flyspell on everywhere for certain major modes
 ;; (see dp-flyspell.el :: dp-flyspell-hooks)
 (dp-flyspell-setup)
