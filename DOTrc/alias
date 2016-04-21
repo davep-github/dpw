@@ -64,7 +64,7 @@ for i in bind env alias func rc bashrc
 do
   # What in NGC714's name was I thinking of?
   #alias_iff "${i}rc" '"source_list $RC_DIR/$i \"\" \$locale_rcs"; true'
-  eval alias ${i}rc='"source_list $RC_DIR/$i \"\" \$locale_rcs"; true'
+  eval alias ${i}rc='"source_list $RC_DIR/$i \"\" \$locale_rcs .work"; true'
 done
 case $shell_name in
     bash)
