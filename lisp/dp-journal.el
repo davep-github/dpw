@@ -2802,14 +2802,24 @@ RETURN buffer that was visiting the journal, or nil."
 ;;;###autoload
 (defalias 'dj2 'dp-journal2)
 
-;;;###autoload
-(defalias 'dj1 'dp-journal)
-;;;###autoload
-(defalias 'dj0 'dp-journal)
+;;;;;;;;;;;;;;;;;;;;;;;;;;###autoload
+;;;(defalias 'dj1 'dp-journal)
+
 ;;;###autoload
 (defalias 'dj. 'dp-journal)
+
 ;;;###autoload
 (defalias 'djd 'dp-journal)
+
+;;;###autoload
+(defun dp-journal-one-window ()
+  "Journal in a single window."
+  (interactive)
+  (dp-one-window++ -1)
+  (dp-journal))
+
+;;;###autoload
+(dp-defaliases 'dj1 'dj0 'djone 'djo 'dp-journal-one-window)
 
 ;;;###autoload
 (defun dpj-visit-other-journal-file (file-name &optional other-window-p)
