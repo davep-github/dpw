@@ -41,7 +41,7 @@ fi
 excluded_files_file_template=$(normpath "${DP_TMPDIR-$TMP}/extagtree.excluded-files.XXXXXXXX")
 : ${EXCLUDED_FILES_FILE:=$(mktemp "${excluded_files_file_template}")}
 # .c .h .cxx .py .java etc.
-: ${INTERESTING_FILES:="[chly](xx|pp)?|h-py|cs|cc|hh|py|pm|pl|java|[Ss]"}
+: ${INTERESTING_FILES:="[chly](xx|pp)?|h-py|cs|cc|hh|py|pm|pl|java|[Ss]|asm|ASM|nasm|NASM"}
 vsetp "${SITE_INTERESTING_SRC_FILE_REGEXP-}" && {
     INTERESTING_FILES="${INTERESTING_FILES}|${SITE_INTERESTING_SRC_FILE_REGEXP}"
 }
@@ -57,8 +57,7 @@ FILES_TO_FILTER_IN=()
 # It may be easier to specify excludes in some cases rather than including
 # everything else. Things like all c files except test.c
 : ${EXCLUDE_PAT:=''}
-### NB: !!! THESE ARE REGEXPs, NO
-T GLOBS! * is not the same as .* !!!!
+### NB: !!! THESE ARE REGEXPs, NOT GLOBS! * is not the same as .* !!!!
 VC_EXCLUDES='-e /^.*\/?(\.obs\.|\.svn|CVS|RCS|\.4D|\/\.git|\.hg)\/?.*/d'
 
 echo 1>&2 "Read various ignore files like, .(cvs|git)ignore, ~/.gitexcludes,
