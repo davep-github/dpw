@@ -240,7 +240,7 @@ def list_intersection(l1, l2):
             ret[le] = 1
     return ret.keys()
 
-def maybe_add_to_list(in_list, element):
+def add_to_list_iff_uniq(in_list, element):
     """Add element to LIST iff ELEMENT is not in LIST."""
     try:
         in_list.index(element)
@@ -248,9 +248,13 @@ def maybe_add_to_list(in_list, element):
     except ValueError:
         in_list.append(element)
 
-def maybe_add_list_to_list(in_list, add_from_list):
+maybe_add_to_list = add_to_list_iff_uniq
+
+def add_uniq_list_items_to_list(in_list, add_from_list):
     for element in add_from_list:
-        maybe_add_to_list(in_list, element)
+        add_to_list_iff_uniq(in_list, element)
+
+maybe_add_list_to_list = add_uniq_list_items_to_list
 
 def move_from_list(from_list, str, regexp_p=False, start=0, end=True,
                    remove_prefix_p=False, return_prefix=""):
