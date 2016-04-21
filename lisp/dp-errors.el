@@ -84,7 +84,7 @@
     ".* does not belong to a gnuserv client$"
     "^set-fill-column requires an explicit argument$"
     "^Don't know where `.*' is defined"
-
+    "Buffer not visiting a file or directory"
     
     ;;XEmacs
     "^No preceding item in "
