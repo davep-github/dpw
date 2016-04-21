@@ -2689,7 +2689,7 @@ displayed."
            ;; Space --> Don't put command in the history.  Well, we do want
            ;; the rest of the line and I don't want to lose that.
            ;; 
-           (cmd (format "COLUMNS=%s LINES=%s ; %s%s"
+           (cmd (format "export COLUMNS=%s LINES=%s ; %s%s"
                         (or cols
                             (- (window-width shell-win) 5))
                         (or lines
