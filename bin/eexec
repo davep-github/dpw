@@ -360,17 +360,17 @@ EExec()
     for i in "$@"
     do
       case "$1" in
-          -n) eexecShowOnly=y
+          -n|--just-show) eexecShowOnly=y
               eexecShowPrefix="+"
               eexecEcho=${EExecEcho-EExecStderrEcho}
               ;;
-          -c|-k|--keep-going|--no-exit|--error-ok) eexecContinue=t
+          -c|-k|--keep-going|--no-exit|--error-ok|--ignore-errors) eexecContinue=t
               ;;
           -C|-0|--fake-success|--return-zero|--rose) eexecContinue=t
               fake_success_p=y
               ;;
           --no-errors) eexecErrorReporter=; eexecContinue=t;;
-          -y|--execute-anyway|--ignore-dash-n) eexecShowOnly=""
+          -y|--execute-anyway|--ignore-dash-n|--show) eexecShowOnly=""
               eexecShowPrefix=""
               ${EExecExporter} EExecEchoPrefix="y"
               ;;
