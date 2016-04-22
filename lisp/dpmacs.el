@@ -967,7 +967,38 @@ This can be callable.")
   (setq bookmark-save-flag 1)
   (setq bookmark-default-file
         (dp-nuke-newline (shell-command-to-string
-                          "mk-persistent-dropping-name.sh emacs.bmk"))))
+                          "mk-persistent-dropping-name.sh emacs.bmk")))
+  (defun dp-bookmark-mk-location-str (bookmark &optional no-history)
+    "Insert the name of the file associated with BOOKMARK.
+Optional second arg NO-HISTORY means don't record this in the
+minibuffer history list `bookmark-history'."
+    (interactive (bookmark-completing-read "Insert bookmark location"))
+    (or no-history (bookmark-maybe-historicize-string bookmark))
+    (let ((start (point)))
+      (prog1
+          ;; *Return this line*
+          (format "%s:%sc"
+                          (bookmark-location bookmark)
+                          (bookmark-get-position bookmark))
+        (if window-system
+            (put-text-property start
+                               (save-excursion (re-search-backward
+                                                "[^ \t]")
+                                               (1+ (point)))
+                               'mouse-face 'highlight)))))
+  (defun dp-bookmark-insert-location (&rest r)
+    (interactive)
+    (insert (call-interactively 'dp-bookmark-mk-location-str)))
+
+  (defun dp-bookmark-bmenu-locate ()
+  "Display location of this bookmark.  Displays in the minibuffer."
+  (interactive)
+  (if (bookmark-bmenu-check-position)
+      (let ((bmrk (bookmark-bmenu-bookmark)))
+        (message (dp-bookmark-mk-location-str bmrk)))))
+
+)
+
 (add-hook 'dp-post-dpmacs-hook 'dp-setup-bookmarks)
 
 ;; turn flyspell on everywhere for certain major modes

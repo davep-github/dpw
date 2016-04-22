@@ -5056,8 +5056,9 @@ Here, first means the car of the list."
 ;; {f -> defuns, l -> lines, s -> statements, S -> sentences, ...} and
 ;; other units that emacs understands.
 (defun dp-goto-line (line-or-bm &optional nada) ;<:dgl|goto line:>
-  "Save current position on go-back stack, then goto line or bookmark.
-\[0-9]+c ==> goto that char."
+  "Goto line, char pos or bookmark. Saves current position on go-back first.
+Append \"c\" to LINE-OR-BM or prefix with [=.#] to use it as a point value vs
+a line number."
   (interactive (dp-get-bm-interactive 
                 (format "line# (or w/suffix: c -> char) or bm (%s): " 
                         dp-goto-line-last-destination)
@@ -7890,7 +7891,7 @@ Visit /file/name and then goto <linenum>."
                                        ffap-filename
                                      name-in))))
            line-num-part)
-      (if (string-match "\\(.*\\)[@:]\\([0-9][0-9]*\\)?$" working-filename)
+      (if (string-match "\\(.*\\)[@:]\\([=.]?[0-9][0-9]*[cp]?\\)?$" working-filename)
           (setq filename-part (match-string 1 working-filename)
                 line-num-part (match-string 2 working-filename))
         (setq filename-part working-filename))
@@ -7903,6 +7904,7 @@ Visit /file/name and then goto <linenum>."
   (let* ((ffap-info (dp-ffap-file-finder2-0 name-in))
          (filename-part (car ffap-info))
          (line-num-part (cadr ffap-info)))
+    (dp-push-go-back "dp-ffap-file-finder2-0: starting file.")
     (funcall finder filename-part)
     (when (and line-num-part
                (file-exists-p filename-part)
@@ -7911,7 +7913,7 @@ Visit /file/name and then goto <linenum>."
                                      line-num filename-part))))
       (if (find-buffer-visiting filename-part)
           (dp-push-go-back "dp-ffap-file-finder2"))
-      (goto-line (string-to-int line-num-part)))))
+      (dp-goto-line line-num-part))))
 
 (defun dp-ffap-file-finder2 (&optional name-in)
   (interactive)

@@ -2528,7 +2528,8 @@ changed."
   (local-set-key [return] 'bookmark-bmenu-other-window)
   (local-set-key [?.] 'bookmark-bmenu-this-window)
   (local-set-key [?v] 'bookmark-bmenu-switch-other-window)
-  (local-set-key [(control ?o)] (kb-lambda 
+  (local-set-key [?w] 'dp-bookmark-bmenu-locate)
+  (local-set-key [(control ?o)] (kb-lambda
                                     (dp-one-window++ -1)
                                     (bookmark-bmenu-select))))
 
@@ -2537,6 +2538,10 @@ changed."
 
   ;; C-cbb is easy typin'
   (define-key bookmark-map "b" 'bookmark-set)
+  ;; This is more betterer.
+  ;;    <big-gold-letters>"I have the best words.</big-gold-letters>"
+  ;; -- DD (aka) DT
+  (define-key bookmark-map "f" 'dp-bookmark-insert-location)
   )
 
 (defun dp-asm-mode-hook()
