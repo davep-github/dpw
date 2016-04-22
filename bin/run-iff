@@ -116,12 +116,12 @@ default_progname()
     echo $(basename $prog) | sed -rn 's/(.*?)([.-]?iff)/\1/p'
 }
 
-running_p()
+run_iff_fun()
 {
     # Run prog if we fail to find it.
     if [ -n "${PGREP_REGEXP}" ]; then
         # 0 --> fail, n --> num matches 
-        NO_HDR=t pgrep $DP_SCRIPT_X_DEBUG_OPT "${PGREP_REGEXP}" \
+        NO_HDR=t EExec -y pgrep $DP_SCRIPT_X_DEBUG_OPT "${PGREP_REGEXP}" \
                  | fgrep -vq "$0" &&  exit 1
         true
     else
@@ -133,7 +133,7 @@ running_p()
             exit 0
         }
         true
-    fi && (xit "$prog" "$@" &)
+    fi && (EExec xit "$prog" "$@" &)
 }
-running_p "$@"
+run_iff_fun "$@"
 exit 1
