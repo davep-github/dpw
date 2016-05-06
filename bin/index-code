@@ -141,7 +141,7 @@ iterate_individually_p=
 iterate_and_do_dot=
 
 # x and e were used to toggle their respective options.
-option_str="nvdc:t:g:CTkKVo:Giuf:Is:S:CazhR"  # <:add new options:>
+option_str="nvdc:t:g:CTkKVo:Giuf:Is:S:CazhRr"  # <:add new options:>
 
 long_options=(
 "cscope"
@@ -154,6 +154,7 @@ long_options=(
 "no-etags"
 "just-cscope"
 "iterate-and-do-dot" "iid"
+"use-files-file"
 )
 
 source dp-getopt+.sh
@@ -173,6 +174,7 @@ do
       -d) EExecVerbose; DEBUG="echo 1>&2 $prog: ";;
       -t) tflags="$tflags $2"; shift;;
       -h) tflags="$tflags -h";;
+      -r|--use-files-file) tflags="$tflags -r";;
       -g) if [[ "$2" =~ "^--?$" ]]; then 
              gtflags=""
           else
