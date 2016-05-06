@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ "$*" = "" ] && set -- dplaptop
+[ "$*" = "" ] && set -- ${DP_PRISTINE_HOST-cz}
 export LC_DP_YES_DP_ENV_P= 
 export LC_DP_NO_DP_ENV_P=t
 xrl "$@"
