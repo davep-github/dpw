@@ -101,4 +101,6 @@ grepper=$def_grepper
 #$grepper $grepper_dash_n $args "$regexp" $abs_lists /dev/null
 # D'OH!
 # but I think this will only search things that are "officially" installed?
+eko "$@"
+EExec eko "$@"
 EExec apt-cache search "$@"
