@@ -136,7 +136,10 @@ do
   if [ -n "$nth" ]
   then
       EExec_verbose_echo_id nth f
-      commit=$(git-nth-rev "$nth" "$f")
+      if [ -n "${nth}" ]
+      then
+          commit=$(git-nth-rev "$nth" "$f")
+      fi
       EExec_verbose_echo_id commit
       [ -z "${commit}" ] && {
           echo "Cannot find commit for >${nth}<"
