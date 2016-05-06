@@ -89,6 +89,14 @@
         mfh = merge FETCH_HEAD
 
         conflicts = diff --name-only --diff-filter=U
+        # Using <command> --continue will end up displaying the conflicting file.
+        # This works fine if you're just working your way through the
+        # cherry-pick or rebase.
+
+        cpc = cherry-pick --continue
+        rebc = rebase --continue
+        
+        cpick = cherry-pick
 
 # Graphical diff tool employer/environment de jure
         dtgraphical = difftool --tool=diffuse
