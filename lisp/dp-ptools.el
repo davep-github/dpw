@@ -61,8 +61,8 @@
 The name appearing first in FILE-NAMES will win in the case of a tie.  We'll
 \(apply FINAL-PRED MAX-STRING FINAL-PRED-ARGS\) to the final candidate.  We
 want to prevent things like running into \"~/TAGS\" when looking for files
-in, say, \"~/work/some/important/stuff\", so by default I make sure that
-we're under a directory named work."
+in, say, \"~/work/some/important/stuff\", so by default FINAL_PRED makes sure
+that we're under a directory named work."
   (setq-ifnil start-dir default-directory)
   (let* ((path-lists (mapcar 
                       (function 
@@ -89,7 +89,7 @@ we're under a directory named work."
                           (or (member max dp-ok-tags-files)
                               (and 
                                (y-or-n-p (format 
-                                          "Doesn't look workish: %s; accept? "
+                                          "That doesn't sound workish to me: %s; accept? "
                                           max))
                                (add-to-list 'dp-ok-tags-files max)))))))
         max

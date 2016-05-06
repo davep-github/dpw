@@ -1693,12 +1693,12 @@ Pass t for `open-newline-func' to get the basic open below behavior."
     concat (format "\\%d" i)))
 
 (defun* dp-open-above (&optional open-newline-p)
-  "Newline before current line."
+  "Newline before current line. Try to be clever if OPEN-NEWLINE-P is non-nil."
   (interactive (list (not current-prefix-arg)))
-  (if open-newline-p
-      (progn
-        (forward-line -1)
-        (dp-open-newline))
+  (unless (and open-newline-p
+               (when (equal (forward-line -1) 0)
+                 (dp-open-newline)
+                 t))
     (beginning-of-line)
     (if (dp-in-c)
         (c-context-line-break)

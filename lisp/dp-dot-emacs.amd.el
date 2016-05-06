@@ -94,10 +94,10 @@
 ;; Avoid having multiple databases in a single path.
 (setq cscope-database-regexps
       '(
-        ;; Only search the big dbs if we're in their directories.
+        ;; Only search the big dbs if we're in their directory.
         (
-         "^/proj/ras_arch/ras/edc/brahma/ec/linux$"
-         ("/proj/ras_arch/ras/edc/brahma/ec/linux")
+         "^/proj/ras_arch/ras/edc/brahma/ec/kgd/linux$"
+         ("/proj/ras_arch/ras/edc/brahma/ec/kgd/linux")
          t)
 
         (
@@ -112,12 +112,15 @@
          t)
 
         (
-         "^/proj/ras_arch/ras/edc/brahma/ec/"
-         ("/proj/ras_arch/ras/edc/brahma/ec/linux/drivers/gpu/drm")
+         "^/proj/ras_arch/ras/edc/brahma/ec/kgd/"
+         ("/proj/ras_arch/ras/edc/brahma/ec/kgd/linux/drivers/gpu/drm")
          t
          ;; These will get stale, but the stuff we'll be looking for will be
          ;; under more up-to-date dbs.
-         ("/proj/ras_arch/ras/edc/brahma/ec/linux")
+         ("/proj/ras_arch/ras/edc/brahma/ec/kgd/linux")
          t
          ("/proj/ras_arch/ras/edc/brahma/ec")
          )))
+
+(setq auto-mode-alist (cons '("\\.cl$" . c-mode) auto-mode-alist))
+
