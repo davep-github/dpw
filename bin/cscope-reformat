@@ -1,0 +1,112 @@
+#!/usr/bin/env python
+
+#
+# Convert an emacs cscope buffer to something compile mode can use.
+# from:
+# *** <file-name>:
+# <func-name,etc>[line-num] Matching text
+# to:
+# <file-name>:<line-num> Matching text
+#
+
+#
+# davep's standard new Python file template.
+#
+
+import os, sys, types, re
+import argparse
+import dp_io
+
+debug_file = sys.stderr
+verbose_file = sys.stderr
+warning_file = sys.stderr
+
+##e.g. class App_arg_action(argparse.Action):
+##e.g.     def __call__(self, parser, namespace, values, option_string=None):
+##e.g.         regexps = getattr(namespace, self.dest)
+##e.g.         regexps.append(values)
+##e.g.         setattr(namespace, self.dest, regexps)
+##e.g.         setattr(namespace, "highlight_grep_matches_p", True) 
+
+def reformat_files(input_files):
+    file_name = None
+    for f in input_files:
+        if type(f) == types.StringType:
+            close_p = True
+            f = open(f)
+        else:
+            close_p = False
+
+        dp_io.cdebug(1, "f>%s<\n", f)
+
+        for line in f:
+            dp_io.cdebug(3, "line>%s<\n", line)
+            # Toss empties
+            if re.search("(^\s*$)|(-{20})|(Search complete)", line):
+                continue
+            # Look for a filename
+            if line[0:3] == "***":
+                # New file
+                file_name = line[4:-2]
+                dp_io.cdebug(2, "new file name>%s<\n", file_name)
+                continue
+            # There can be junk before the first filename, so don't generate
+            # errors until we've seen the first name.
+            if file_name is None:
+                continue
+            m = re.search("<[^>]*>\[(\d+)\]\s+.(.*$)", line)
+            if m:
+                print "%s:%s\t%s" % (file_name, m.group(1), m.group(2))
+            else:
+                print >>sys.stderr, "Unknown line format>%s<" % (line)
+        if close_p:
+            f.close()
+
+def main(argv):
+
+    oparser = argparse.ArgumentParser()
+    oparser.add_argument("--debug",
+                         dest="debug_level",
+                         type=int,
+                         default=-1,
+                         help="Set debug level. Use with, e.g. "
+                         "dp_io.cdebug(<n>, fmt [, ...])")
+    oparser.add_argument("--verbose-level",
+                         dest="verbose_level",
+                         type=int,
+                         default=-1,
+                         help="Set verbose/trace level")
+    oparser.add_argument("-q", "--quiet",
+                         dest="quiet_p",
+                         default=False,
+                         action="store_true",
+                         help="Do not print informative messages.")
+##e.g.     oparser.add_argument("--app-action", "--aa",
+##e.g.                          dest="app_action_stuff", default=[],
+##e.g.                          action=App_arg_action,
+##e.g.                          help="Something normal actions can't handle.")
+
+    # ...
+
+    # For non-option args
+    oparser.add_argument("input_files", nargs="*")
+
+    app_args = oparser.parse_args()
+    if app_args.quiet_p:
+        print "I am being quiet."
+    if app_args.debug_level >= 0:
+        dp_io.set_debug_level(app_args.debug_level, enable_debugging_p=True)
+    if app_args.verbose_level > 0:
+        dp_io.set_verbose_level(app_args.verbose_level, enable=True)
+
+    if len(app_args.input_files) == 0:
+        input_files = [sys.stdin]
+    else:
+        input_files = app_args.input_files
+
+    reformat_files(input_files)
+
+if __name__ == "__main__":
+    main(sys.argv)
+
+
