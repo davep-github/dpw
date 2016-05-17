@@ -14685,7 +14685,6 @@ them. Q.v. `unfuck-gz'"
       (text-mode)
     (auto-fill-mode 0)))
 
-
 (defun dp-hide-single-ifdef (&optional hide-directives-p)
   "Mark and hide the ifdef @ point."
   (interactive "P")
