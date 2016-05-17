@@ -2,15 +2,29 @@
 
 : ${pathin:=${PATH}}
 
-if [[ "$1" == -[1p] ]]
+if [[ "$1" == -[1ps] ]]
 then
-    IFS=:
-    for elem in $pathin
-    do
-	echo "  $elem"
-    done
+    one_per_line=t
+    shift
 else
-    echo $PATH
+    one_per_line=
 fi
+
+[ -z "$*" ] && {
+    set -- "${PATH}"
+}
+for p in "$@"
+do
+  if [ "${one_per_line}" = t ]
+  then
+      IFS=:
+      for elem in $p
+      do
+	echo "  $elem"
+      done
+  else
+      echo "${p}"
+  fi
+done
 
 exit 0

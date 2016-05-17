@@ -40,8 +40,9 @@ unspace()
 action>$action<"
 	# [ -"$&-*;<>?-@]
 	# 's/[ -"$&-*;<>?-@]/'
+        # sed_expr needs to use ! as separators.
 	echo "$REPLY" | \
-	    sed_expr='s/[ "$&*;<>?@]/'"$sed_repl"'/g' \
+	    sed_expr='s![ "$&*;<>?@]!'"$sed_repl"'!g' \
             $action $action_opts $mv_d_opt
     done
 }
