@@ -103,11 +103,13 @@ source code-indexing.rc
 : ${ETAGFILE:=TAGS}
 : ${CTAGFILE:=tags}
 : ${GTAGFILES:=GTAGS GRTAGS GPATH GSYMS}
+: ${IDFILES:=ID}
 : ${EXCLUDED_FILES_FILE:="extagtree.excluded-files"}
 : ${DEF_SYSTEM_INCLUDES:="/usr/include"}
 : ${src_code_finder:=find-src-code-files}
 : ${cscope_flags=}
-: ${use_id=}
+: ${use_id_p=}
+: ${use_global_id_p=t}
 : ${finder_opts=}
 : ${use_files_file_p=}
 : ${cscope_p=t}
@@ -182,6 +184,7 @@ do
         --no-ctags) ctags_p=;;
         -g|--gtags) gtags_p=t;;
         --no-gtags) gtags_p=;;
+        -G) use_global_id_p=t;;
 	--) shift ; break ;;
 	*)
             break ;;
@@ -352,19 +355,21 @@ TAGFILES=()
     TAGFILES+=($GTAGFILES)
     (
         # subshell
-        if sp mkid > /dev/null 2>&1
+        if [ -n "${use_global_id_p-}" ] && type mkid >/dev/null 2>&1
         then
+            TAGFILES+=($IDFILES)
             idutils_opt="--idutils"
+            dp_echo2 "Trying --idutils with gtags again."
         else
             idutils_opt=""
+            dp_echo2 "forcing --idutils for gtags off (WHY? I don't remember)."
         fi 
-dp_echo2 "forcing --idutils for gtags off (WHY? I don't remember)."
-idutils_opt=
-EExec gtags ${idutils_opt} --file "${FILES_FILE}"
+        EExec gtags ${idutils_opt} --file "${FILES_FILE}"
     ) &
 }
 
-if [ -n "$use_id" ] && type mkid >/dev/null 2>&1
+# Come on, dumbass, HOW is it broken wrt gtags && idutils?
+if [ -n "$use_id_p" ] && type mkid >/dev/null 2>&1
 then
     echo BROKEN wrt gtags and --idutils.
     exit 88

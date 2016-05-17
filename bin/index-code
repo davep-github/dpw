@@ -256,7 +256,7 @@ vsetp $exit_p && {
 # Put index file names in a single place.
 index_files=
 vsetp "$ctags_p" || vsetp "${clean}" && index_files="$index_files TAGS tags"
-vsetp "$gtags_p" || vsetp "${clean}" && index_files="$index_files GTAGS GRTAGS GPATH GSYMS"
+vsetp "$gtags_p" || vsetp "${clean}" && index_files="$index_files GTAGS GRTAGS GPATH GSYMS ID"
 # ncscope.out is the temp cscope file. If it exists, it indicates a problem.
 vsetp "$cscope_p" || vsetp "${clean}" && index_files="$index_files cscope.* ncscope.out" 
 
