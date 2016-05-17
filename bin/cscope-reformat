@@ -13,13 +13,16 @@
 # davep's standard new Python file template.
 #
 
-import os, sys, types, re
+import os, sys, types, re, errno
 import argparse
 import dp_io
 
 debug_file = sys.stderr
 verbose_file = sys.stderr
 warning_file = sys.stderr
+
+BROKEN_PIPE_RC = 1
+IOERROR_RC = 1
 
 ##e.g. class App_arg_action(argparse.Action):
 ##e.g.     def __call__(self, parser, namespace, values, option_string=None):
@@ -28,42 +31,39 @@ warning_file = sys.stderr
 ##e.g.         setattr(namespace, self.dest, regexps)
 ##e.g.         setattr(namespace, "highlight_grep_matches_p", True) 
 
-def reformat_files(input_files):
+def reformat_file(file):
     file_name = None
-    for f in input_files:
-        if type(f) == types.StringType:
-            close_p = True
-            f = open(f)
+    dp_io.cdebug(1, "file>%s<\n", file)
+    for line in file:
+        dp_io.cdebug(3, "line>%s<\n", line)
+        # Toss empties
+        if re.search("(^\s*$)|(-{20})|(Search complete)", line):
+            continue
+        # Look for a filename
+        if line[0:3] == "***":
+            # New file
+            file_name = line[4:-2]
+            dp_io.cdebug(2, "new file name>%s<\n", file_name)
+            continue
+        # There can be junk before the first filename, so don't generate
+        # errors until we've seen the first name.
+        if file_name is None:
+            continue
+        m = re.search("[^[]*\[(\d+)\]\s+(.*$)", line)
+        if m:
+            print "%s:%s\t%s" % (file_name, m.group(1), m.group(2))
         else:
-            close_p = False
+            print >>sys.stderr, "Unknown line format>%s<" % (line)
 
-        dp_io.cdebug(1, "f>%s<\n", f)
-
-        for line in f:
-            dp_io.cdebug(3, "line>%s<\n", line)
-            # Toss empties
-            if re.search("(^\s*$)|(-{20})|(Search complete)", line):
-                continue
-            # Look for a filename
-            if line[0:3] == "***":
-                # New file
-                file_name = line[4:-2]
-                dp_io.cdebug(2, "new file name>%s<\n", file_name)
-                continue
-            # There can be junk before the first filename, so don't generate
-            # errors until we've seen the first name.
-            if file_name is None:
-                continue
-            m = re.search("<[^>]*>\[(\d+)\]\s+.(.*$)", line)
-            if m:
-                print "%s:%s\t%s" % (file_name, m.group(1), m.group(2))
-            else:
-                print >>sys.stderr, "Unknown line format>%s<" % (line)
-        if close_p:
-            f.close()
+def reformat_files(input_files):
+    dp_io.cdebug(2, "input_files>%s<\n", input_files)
+    for fname in input_files:
+        dp_io.cdebug(1, "fname>%s<\n", fname)
+        f = open(fname)
+        reformat_file(f)
+        f.close()
 
 def main(argv):
-
     oparser = argparse.ArgumentParser()
     oparser.add_argument("--debug",
                          dest="debug_level",
@@ -89,7 +89,7 @@ def main(argv):
     # ...
 
     # For non-option args
-    oparser.add_argument("input_files", nargs="*")
+    oparser.add_argument("non_option_args", nargs="*")
 
     app_args = oparser.parse_args()
     if app_args.quiet_p:
@@ -99,14 +99,23 @@ def main(argv):
     if app_args.verbose_level > 0:
         dp_io.set_verbose_level(app_args.verbose_level, enable=True)
 
-    if len(app_args.input_files) == 0:
-        input_files = [sys.stdin]
-    else:
-        input_files = app_args.input_files
+    dp_io.cdebug(2, "app_args.non_option_args>%s<\n", app_args.non_option_args)
 
-    reformat_files(input_files)
+    if len(app_args.non_option_args) == 0:
+        reformat_file(sys.stdin)
+    else:
+        reformat_files(app_args.non_option_args)
 
 if __name__ == "__main__":
-    main(sys.argv)
+    # Try, except nice for filters.
+    try:
+        main(sys.argv)
+    except IOError, e:
+        # We're quite often a filter reading or writing to a pipe.
+        if e.errno == errno.EPIPE:
+            print >>sys.stderr, ":Broken PIPE:"
+            sys.exit(BROKEN_PIPE_RC)
+        print >>sys.stderr, "IOError>%s<" % (e,)
+        sys.exit(IOERROR_RC)
 
 
