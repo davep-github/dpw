@@ -11,6 +11,9 @@ debug_file = sys.stderr
 verbose_file = sys.stderr
 warning_file = sys.stderr
 
+BROKEN_PIPE_RC = 1
+IOERROR_RC = 1
+
 ##e.g. class App_arg_action(argparse.Action):
 ##e.g.     def __call__(self, parser, namespace, values, option_string=None):
 ##e.g.         regexps = getattr(namespace, self.dest)
@@ -31,7 +34,8 @@ def main(argv):
                          dest="verbose_level",
                          type=int,
                          default=-1,
-                         help="Set verbose/trace level")
+                         help="Set verbose/trace level. Use with, e.g. "
+                         "dp_io.ctracef(<n>, fmt [, ...])")
     oparser.add_argument("-q", "--quiet",
                          dest="quiet_p",
                          default=False,
@@ -45,7 +49,7 @@ def main(argv):
     # ...
 
     # For non-option args
-    oparser.add_argument("input_files", nargs="*")
+    oparser.add_argument("non_option_args", nargs="*")
 
     app_args = oparser.parse_args()
     if app_args.quiet_p:
@@ -57,5 +61,16 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    # try:... except: nice for filters.
+    try:
+        main(sys.argv)
+    except IOError:
+        # We're quite often a filter reading or writing to a pipe.
+        if e.errno == errno.EPIPE:
+            # Ya see, the colon looks like a broken pipe, heh, heh.
+            # : |
+            print >>sys.stderr, ":Broken PIPE:"
+            sys.exit(BROKEN_PIPE_RC)
+        print >>sys.stderr, "IOError>%s<" % (e,)
+        sys.exit(IOERROR_RC)
 
