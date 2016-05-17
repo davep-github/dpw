@@ -3,7 +3,7 @@
 ;(setq debug-on-error t)
 ;;
 ;; Copyright (c) 1997, 1998, 1999, 2000, 2006, 2007, 2008, 2009, 2010
-;;		2011, 2012
+;;		2011, 2012, 2013
 ;;	Tama Communications Corporation
 ;;
 ;; This file is part of GNU GLOBAL.
@@ -24,7 +24,7 @@
 
 ;; GLOBAL home page is at: http://www.gnu.org/software/global/
 ;; Author: Tama Communications Corporation
-;; Version: 3.7
+;; Version: 3.9
 ;; Keywords: tools
 
 ;; Gtags-mode is implemented as a minor mode so that it can work with any
@@ -67,6 +67,34 @@
 ;; If 'gtags-suggested-key-mapping' is not set, any key mapping is not done.
 ;; If 'gtags-disable-pushy-mouse-mapping' is set, any mouse mapping is not done.
 ;;
+;; Here is an example of initial file.
+;; It assumed that gtags.el is installed into '$HOME/.emacs.d/lisp'.
+;;
+;; $ cp /usr/local/share/gtags/gtags.el $HOME/.emacs.d/lisp
+;; $ vi $HOME/.emacs.d/init.el
+;;
+;; [$HOME/.emacs.d/init.el]
+;; +----------------------------------------------------------------
+;; |(add-to-list 'load-path "~/.emacs.d/lisp")
+;; |(autoload 'gtags-mode "gtags" "" t)
+;; |(add-hook 'gtags-mode-hook
+;; |  '(lambda ()
+;; |        ; Local customization (overwrite key mapping)
+;; |        (define-key gtags-mode-map "\C-f" 'scroll-up)
+;; |        (define-key gtags-mode-map "\C-b" 'scroll-down)
+;; |))
+;; |(add-hook 'gtags-select-mode-hook
+;; |  '(lambda ()
+;; |        (setq hl-line-face 'underline)
+;; |        (hl-line-mode 1)
+;; |))
+;; |(add-hook 'c-mode-hook
+;; |  '(lambda ()
+;; |        (gtags-mode 1)))
+;; |; Customization
+;; |(setq gtags-suggested-key-mapping t)
+;; |(setq gtags-auto-update t)
+;; +----------------------------------------------------------------
 
 ;;; Code
 
@@ -128,6 +156,11 @@
 
 (defcustom gtags-grep-all-text-files nil
   "*If non-nil, gtags-find-with-grep command searchs all text files."
+  :group 'gtags
+  :type 'boolean)
+
+(defcustom gtags-find-all-text-files t
+  "*If non-nil, gtags-find-file command finds all text files."
   :group 'gtags
   :type 'boolean)
 
@@ -419,7 +452,7 @@
 (defun gtags-completing (flag string predicate code)
   ; The purpose of using the -n option for the -P command is to exclude
   ; dependence on the execution directory.
-  (let ((option (cond ((eq flag 'files)   "-cPo")
+  (let ((option (cond ((eq flag 'files)   (if gtags-find-all-text-files "-cPo" "-cP"))
                       ((eq flag 'grtags)  "-cr")
                       ((eq flag 'gsyms)   "-cs")
                       ((eq flag 'idutils) "-cI")
@@ -482,13 +515,22 @@
 (defun gtags-visit-rootdir ()
   "Tell tags commands the root directory of source tree."
   (interactive)
-  (let (path input)
+  (let (path input default-path)
     (setq path gtags-rootdir)
     (if (not path)
         (setq path (gtags-get-rootpath)))
     (if (not path)
         (setq insert-default-directory (if (string-match gtags-tramp-path-regexp default-directory) nil t)))
-    (setq input (read-file-name "Visit root directory: " path path t))
+    ;
+    ; 19.6.5 Reading File Names (GNU Emacs Lisp Reference Manual)
+    ; If both default and initial are nil and the buffer is visiting a file,
+    ; read-file-name uses the absolute file name of that file as default. 
+    ;
+    (setq default-path
+        (if (and insert-default-directory (not path))
+            default-directory
+            path))
+    (setq input (read-file-name "Visit root directory: " path default-path t))
     (if (equal "" input) nil
       (if (not (file-directory-p input))
         (message "%s is not directory." input)
@@ -593,7 +635,7 @@
                   nil nil nil 'gtags-history-list))
     (if (not (equal "" input)) (setq tagname input))
     (gtags-push-context)
-    (gtags-goto-tag tagname "Po")))
+    (gtags-goto-tag tagname (if gtags-find-all-text-files "Po" "P"))))
 
 (defun gtags-parse-file ()
   "Input file name and show the list of tags in it."
@@ -677,26 +719,30 @@
   (gtags-push-context)
   (gtags-select-it nil))
 
-(defun gtags-pop-stack ()
+;; dp hack: other win
+(defun gtags-pop-stack (&optional other-win-p)
   "Move to previous point on the stack."
-  (interactive)
-  (let (delete context)
+  (interactive "P")
+  (let ((buf-switcher (if other-win-p
+                          'switch-to-buffer-other-window
+                        'switch-to-buffer))
+        delete context)
     (if (and (not (equal gtags-current-buffer nil))
              (buffer-live-p gtags-current-buffer)
              (not (equal gtags-current-buffer (current-buffer))))
-         (switch-to-buffer gtags-current-buffer)
+         (funcall buf-switcher  gtags-current-buffer)
          ; By default, the buffer of the referred file is left.
          ; If gtags-pop-delete is set to t, the file is deleted.
          ; Gtags select mode buffer is always deleted.
-         (if (and (or gtags-pop-delete (equal mode-name "Gtags-Select"))
-                  (not (gtags-exist-in-stack (current-buffer))))
-	     (setq delete t))
+      (if (and (or gtags-pop-delete (equal mode-name "Gtags-Select"))
+               (not (gtags-exist-in-stack (current-buffer))))
+          (setq delete t))
       (setq context (gtags-pop-context))
       (if (not context)
 	  (message "The tags stack is empty.")
         (if delete
 	    (kill-buffer (current-buffer)))
-        (switch-to-buffer (nth 0 context))
+        (funcall buf-switcher (nth 0 context))
         (setq gtags-current-buffer (current-buffer))
         (goto-char (nth 1 context))))))
 
