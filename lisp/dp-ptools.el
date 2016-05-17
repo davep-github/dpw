@@ -273,6 +273,10 @@ Oddly, it doesn't handle structs.")
 ;;         (call-interactively (dp-*TAGS-handler-returner handler))
 ;;       (dp-ding-and-message "No tags on dp tag stack."))))
 
+(defun dp-tag-pop-other-win ()
+  (interactive)
+  (gtags-pop-stack t))
+
 (defun dp-tag-find-other-window (&rest r)
   (interactive)
   (call-interactively 'gtags-find-tag-other-window))
@@ -285,6 +289,7 @@ Oddly, it doesn't handle structs.")
         (call-interactively 'dp-tag-find))))
 (global-set-key [(control meta ?.)] 'dp-tag-find-other-window)
 (global-set-key [(meta ?,)] 'dp-tag-pop)  ; "\e,"
+(global-set-key [(control meta ?,)] 'dp-tag-pop-other-win)
 ;;
 ;; fsf wants nil t to go to the next tag,
 ;; xemacs wants nil nil ""
