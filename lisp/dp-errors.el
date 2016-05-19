@@ -85,6 +85,7 @@
     "^set-fill-column requires an explicit argument$"
     "^Don't know where `.*' is defined"
     "Buffer not visiting a file or directory"
+    "Mismatched #ifdef #endif pair"
     
     ;;XEmacs
     "^No preceding item in "
