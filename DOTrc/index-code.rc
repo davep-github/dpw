@@ -1,0 +1,30 @@
+#!/bin/bash
+# Source me since I set variables and such.
+
+source script-x
+
+# This whole thing is fucked. Hideous way to set flags.
+# Plus my non-"" --> true, "" --> false 
+# := means this can't be used to turn the flags off.
+
+: ${GLOBAL_IS_EVERYTHING_p=t}
+if [ "${GLOBAL_IS_EVERYTHING_p}" = t ]
+then
+# GLOBAL can be set up to use any tagger, e.g. exuberant ctags, universal
+# ctags as well as simulate cscope using the GLOBAL database.  So all we need
+# in this case is gtags, since the DB is shared twixt gtags-cscope and gtags.
+: ${gtags_p:=--gtags}
+: ${ctags_p:=}
+: ${etags_p:=}
+: ${cscope_p:=}
+else
+: ${gtags_p:=--gtags}
+: ${ctags_p:=}
+: ${etags_p:=}
+: ${cscope_p:=--cscope}
+fi
+
+export gtags_p
+export ctags_p
+export etags_p
+export cscope_p
