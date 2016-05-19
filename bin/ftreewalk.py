@@ -20,6 +20,9 @@ EXCLUDE_DIRS_WITH_THIS_FILE = 'DP_NO_RCS_DIR'
 EXCLUDE_TREES_WITH_THIS_FILE = 'DP_NO_RCS_TREE'
 EXCLUDE_PER_DIR_FILE_NAME = "DP_RCS_EXCLUDE_FILES"
 
+FILE_NAME_CLOSE_QUOTE = ''
+FILE_NAME_OPEN_QUOTE = ''
+
 # RCS the control files so we don't lose them when we recreate the tree.
 DEFAULT_EXCLUDE_FILE_REGEXPS = [
     #INCLUDE_DIRS_WITH_THIS_FILE, INCLUDE_TREES_WITH_FILE,
@@ -116,9 +119,15 @@ def list_collector(fname, walk_data):
     if walk_data:
         walk_data.files.append(fname)
 
+def quoted_file_name_emitter(fname):
+    dp_io.printf("""%s%s%s\n""",
+                 FILE_NAME_OPEN_QUOTE,
+                 fname,
+                 FILE_NAME_CLOSE_QUOTE)
+
 ##########################################
 def file_emitter(fname, walk_data):
-    dp_io.printf('%s\n', fname)
+    quoted_file_name_emitter(fname)
 
 ##########################################
 def escape_single_quoted_filename(filename):
@@ -632,7 +641,7 @@ if __name__ == "__main__":
     relativize_p = False
     excluded_files_file_obj = DEF_EXCLUDED_FILES_FILE_OBJ
 
-    options, args = getopt.getopt(sys.argv[1:], 'xi:d:t:e:E:vDF:mRlX:hc:')
+    options, args = getopt.getopt(sys.argv[1:], 'xi:d:t:e:E:vDF:mRlX:hc:q')
     for o, v in options:
         if o == '-c':
             excluded_files_file_name = v
@@ -682,6 +691,10 @@ if __name__ == "__main__":
         if o == '-h':
             FOLLOW_SYMLINKS = True
             continue
+        if o == '-q':
+            FILE_NAME_OPEN_QUOTE = """'"""
+            FILE_NAME_CLOSE_QUOTE = """'"""
+            continue
 
     dp_io.set_debug_level(debug_level)
     dp_io.v_vprint_files = [sys.stderr]
@@ -708,7 +721,7 @@ if __name__ == "__main__":
             walker.walk(list_collector, walk_data)
             files = walk_data.files
             for file in files:
-                dp_io.printf('%s\n', file)
+                quoted_file_name_emitter(file)
         else:
             walker.walk(file_emitter, None)
 

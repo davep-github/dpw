@@ -20,7 +20,10 @@ done
 # Or export eexec_program to propagate eexec info to a called program.
 export eexec_program
 
-. code-indexing.rc
+meister_indexing_rc="${RC_DIR}/index-code.rc"
+[ -e "${meister_indexing_rc}" ] && {
+    source "${meister_indexing_rc}"
+}
 set -u
 
 midix=
@@ -137,6 +140,32 @@ set_all_index_methods()
     gtags_p=--gtags
 }
 
+on_off()
+{
+    local var="${1}"
+    shift
+    local msg="${1}"
+    shift
+    local v
+    eval v="\$$var"
+    echo -en "${msg}:\t"
+    if [ -n "${v-}" ] 
+    then
+        echo " ON"
+    else
+        echo " off"
+    fi
+}
+
+
+dump_indexing_methods()
+{
+    on_off gtags_p gtags
+    on_off cscope_p cscope
+    on_off ctags_p ctags
+    on_off etags_p etags
+}
+
 iterate_individually_p=
 iterate_and_do_dot=
 
@@ -154,7 +183,7 @@ long_options=(
 "no-etags"
 "just-cscope"
 "iterate-and-do-dot" "iid"
-"use-files-file"
+"use-files-file" "uff"
 )
 
 source dp-getopt+.sh
@@ -162,6 +191,7 @@ source dp-getopt+.sh
 while (($# > 0))
 do
   # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  EExec_verbose_msg "Main option loop, \$1>$1<"
   case $1 in
       -I) iterate_individually_p=t;;
       --iterate-and-do-dot|-iid) iterate_individually_p=t;
@@ -174,7 +204,7 @@ do
       -d) EExecVerbose; DEBUG="echo 1>&2 $prog: ";;
       -t) tflags="$tflags $2"; shift;;
       -h) tflags="$tflags -h";;
-      -r|--use-files-file) tflags="$tflags -r";;
+      -r|--use-files-file|--uff) tflags="$tflags -r";;
       -g) if [[ "$2" =~ "^--?$" ]]; then 
              gtflags=""
           else
@@ -292,7 +322,7 @@ do_taggin()
     echo 1>&2 "This program ($(basename $0)), ${tree_tagger} and cscope-indexer need to be reworked.
 They should work off the same set of files."
     echo "taggin $dirs"
-    eval EExec -y ${tree_tagger} $DP_SCRIPT_X_DEBUG_OPT $EExec_opts \
+    EExec -y eval ${tree_tagger} $DP_SCRIPT_X_DEBUG_OPT $EExec_opts \
        ${ctags_p} \
        ${etags_p} \
        ${gtags_p} \
@@ -304,6 +334,10 @@ They should work off the same set of files."
         EExec $MV $index_files "$output_dir"
     fi
 }
+
+echo "Indexing methods:"
+dump_indexing_methods
+echo
 
 if vsetp $iterate_individually_p
 then
