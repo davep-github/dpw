@@ -46,6 +46,10 @@ GPATH
 GRTAGS
 GSYMS
 GTAGS
+TAGS
+ctags
+etags
+tags
 cscope.files
 cscope.in.out
 cscope.out
