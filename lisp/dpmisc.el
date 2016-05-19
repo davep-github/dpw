@@ -1174,11 +1174,11 @@ the newly copied text."
 ;; .if, etc, are for Berkley makefiles.
 ;; Makepp uses just ifdef. I don't know if it must be in column 0.
 (defvar dp-ifx-re-alist
-  '((dp-if .    "[ 	]*[.#][ 	]*if") ; gets #if, #ifdef and #endif.
-    (dp-else .  "[ 	]*[.#][ 	]*else")
-    (dp-elif .  "[ 	]*[.#][ 	]*elif") ; ignored by the hideif stuff.
-    (dp-endif . "[ 	]*[.#][ 	]*endif")
-    (dp-fi    . "[ 	]*[.#][ 	]*fi")
+  '((dp-if .    "[ 	]*[.#]?[ 	]*if") ; gets #if, #ifdef and #endif.
+    (dp-else .  "[ 	]*[.#]?[ 	]*else")
+    (dp-elif .  "[ 	]*[.#]?[ 	]*elif") ; ignored by the hideif stuff.
+    (dp-endif . "[ 	]*[.#]?[ 	]*endif")
+    (dp-fi    . "[ 	]*[.#]?[ 	]*fi")
 ;;@todo;     (dp-ss-do    . "[ 	]*do")
 ;;@todo;     (dp-ss-done  . "[ 	]*done")
 ;;@todo;     (dp-ss-if    . "[ 	]*if")
@@ -8813,16 +8813,18 @@ Can be called directly or by an abbrev's hook.
   (defun dp-recover-context (&optional file-flag)
     "Recover our file context.
 Periodically, the list of files, windows, etc are saved so that context can
-be restored. When we start up, the current context file is copied so that it
-becomes the previous context. In general, that is what we are interested
-because it represents the previous context. By doing it this way, we have a
-context even if we exit in an unpleasant manner. This is better than counting
-on our exit hook saving to the previous context. We need 2 context files
-because as soon as we begin operating, we begin writing to the current
-context file, which will obliterate the previous one. Context files are host
-specific, so if we move to another machine, we may want to recover the
-context from the previous machine. This function allows us to specify a
-specific context file so we can get context from another machine."
+be restored later. When we start up, the current context file is copied so
+that it becomes the previous context. In general, that is what we are
+interested because it represents the previous context. By doing it this way,
+we have a context even if we exit in an unpleasant manner. This is better
+than counting on our exit hook saving to the previous context. We need 2
+context files because as soon as we begin operating, we begin writing to the
+current context file, which will obliterate the previous one. This is bad if
+we do some work before we decide to recover a previous context.  Context
+files are host specific, so if we move to another machine, we may want to
+recover the context from the previous machine. This function allows us to
+specify a specific context file so we can get context from another machine.
+@todo XXX ??? Keep n previous contexts?"
     (interactive "P")
     (cond 
      ((not file-flag) (dp-recover-context-from-file saveconf-file-name-prev))

@@ -59,16 +59,10 @@ See `dp-parenthesize-region-paren-list'")
 
 (defalias 'make 'dp-make)
 
-(defvar dp-makefile-mode-ifx-re-alist 
-  '((dp-if . "[.]?[ 	]*if")		; gets #if, #ifdef and #ifndef.
-    (dp-else . "[.]?[ 	]*else")
-    (dp-elif . "[.]?[ 	]*elif")	; ignored by the hideif stuff.
-    (dp-endif . "[.]?[ 	]*endif"))
-  "alist of regexps to find and identify CPP conditional directives")
-
 (defun dp-makefile-mode-find-matching-paren ()
   "Find matching makefile conditional (e.g. ifdef/endif)."
   (interactive "_")
+  ;; These hif-* vars override the constants in the hif-* functions.
   (let* ((hif-ifndef-regexp "^[.]?ifndef")
 	 (hif-ifx-regexp "^[.]?if\\(n?\\(def\\|eq\\)\\)?[ \t]*")
 	 (hif-else-regexp "^[.]?else")
@@ -76,7 +70,7 @@ See `dp-parenthesize-region-paren-list'")
 	 (hif-ifx-else-endif-regexp
 	  (concat hif-ifx-regexp "\\|" 
 		  hif-else-regexp "\\|" hif-endif-regexp)))
-    (dp-find-matching-paren dp-makefile-mode-ifx-re-alist)))
+    (dp-find-matching-paren0 nil)))
 (put 'dp-makefile-mode-find-matching-paren 'isearch-command t)
 
 (provide 'dp-makefile-mode)
