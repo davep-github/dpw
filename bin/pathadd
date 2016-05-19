@@ -68,6 +68,8 @@ do
 	esac
     }
     [ -n "$el" ] && {
+        # Strip trailing /s.
+        el=$(echo "${el}" | perl -pe 's|(.*?)(/+)$|\1|')
 	path="$path$sep$el"
 	sep=$DEF_SEP
     }
@@ -79,8 +81,9 @@ path2=$path
 for new_el in $newargs
 do
     [ -z "$new_el" ] && new_el=. # fix null entry
+    new_el=$(echo "${new_el}" | perl -pe 's|(.*?)(/+)$|\1|')
     case "$DEF_SEP$path2$DEF_SEP" in
-	*$DEF_SEP$new_el$DEF_SEP*) # Element is already in then path.
+	*$DEF_SEP$new_el$DEF_SEP*) # Element is already in the path.
 	    [ "$prepend" != "y" ] && new_el=
 	    ;;
     esac
