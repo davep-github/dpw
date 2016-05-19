@@ -89,7 +89,10 @@ fi
 #
 # specify some extra options for exuberant ctags
 #
-source code-indexing.rc
+meister_indexing_rc="${RC_DIR}/index-code.rc"
+[ -e "${meister_indexing_rc}" ] && {
+    source "${meister_indexing_rc}"
+}
 : ${EXCTAGS:=exctags}
 : ${EMACS_OPT:=-e}
 : ${SUDO=}
@@ -109,7 +112,7 @@ source code-indexing.rc
 : ${src_code_finder:=find-src-code-files}
 : ${cscope_flags=}
 : ${use_id_p=}
-: ${use_global_id_p=t}
+: ${use_global_id_p=}
 : ${finder_opts=}
 : ${use_files_file_p=}
 : ${cscope_p=t}
@@ -362,7 +365,8 @@ TAGFILES=()
             dp_echo2 "Trying --idutils with gtags again."
         else
             idutils_opt=""
-            dp_echo2 "forcing --idutils for gtags off (WHY? I don't remember)."
+            # Makes gtags just plain not work? G* files are empty.
+            dp_echo2 "forcing --idutils for gtags off."
         fi 
         EExec gtags ${idutils_opt} --file "${FILES_FILE}"
     ) &
