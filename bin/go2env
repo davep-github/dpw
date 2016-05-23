@@ -271,6 +271,12 @@ def permanent_prefix_handler(name, val, **kw_args):
 def environment_var_handler(shell):
     """Figure out what shell we are using so we can select
     the proper environment setting handler."""
+    b = os.environ.get("BASH", False)
+    if b:
+        os.environ["SHELL"] = b
+    else:
+        if os.environ.get("DP_BASHRC"):
+            os.environ["SHELL"] = "bash"
     if not shell:
         shell = os.environ.get('SHELL', 'sh')
     shell_name = os.path.basename(shell)
