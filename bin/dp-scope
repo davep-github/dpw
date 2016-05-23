@@ -35,14 +35,22 @@ unset eexec_program
 # export eexec_program
 
 : ${EXTAGTREE_DASH_Q:=}
-: ${POST_PROCESSOR:=post_format}
-
+: ${POST_PROCESSOR:=compile_mode_ify}
+: ${DP_CSCOPE_PROGRAM-cscope}
 field_num=0
 arg=${1-}
 
 : ${find_up_p=t}
-: ${db_finder_file=cscope.out}
 : ${db_files=()}
+
+[ -z "${db_finder-}" ] && {
+    if [ "${DP_CSCOPE_PROGRAM}" = "gtags-cscope" ]
+    then
+        db_finder_file=GTAGS
+    else
+        db_finder_file=cscope.out
+    fi
+}
 
 if (($# == 0))
 then
@@ -98,7 +106,7 @@ set -- "$@" "${arg}" ${perverted_index_option}
 
 if ((${#db_files[@]} == 0))
 then
-    EExec ${DP_CSCOPE_PROGRAM-cscope} -d ${EXTAGTREE_DASH_Q} -L -"${field_num}" "$@"
+    EExec "${DP_CSCOPE_PROGRAM}" -d ${EXTAGTREE_DASH_Q} -L -"${field_num}" "$@"
     exit
 fi
 
@@ -107,7 +115,7 @@ post_raw()
     cat
 }
 
-post_format()
+compile_mode_ify()
 {
     # Convert output to a form that compile mode can use:
     # <path-name>:<line-num> <line-text>
@@ -117,6 +125,10 @@ post_format()
 
 for db_file in "${db_files[@]}"
 do
-    EExec -0 ${DP_CSCOPE_PROGRAM-cscope} -d ${EXTAGTREE_DASH_Q} \
-        -f"${db_file}" -L -"${field_num}" "$@" | "${POST_PROCESSOR}"
+  # -f reffile doesn't work with gtags-cscope,
+  # so we'll visit all of the dirs.
+  pushd $(dirname "${db_file}")
+  EExec -0 "${DP_CSCOPE_PROGRAM}" -d ${EXTAGTREE_DASH_Q} \
+    -L -"${field_num}" "$@" | EExec "${POST_PROCESSOR}"
+  popd
 done  
