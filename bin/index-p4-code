@@ -39,7 +39,7 @@ filter_dirs()
 # At the least, just_nvcscope_p prevents me needing to know the nvcscope
 # option name to make symlinks.
 : ${just_nvcscope_p=}
-: ${nvcscope_files=cscope.files cscope.out cscope.out.in cscope.out.po}
+: ${nvcscope_files=cscope.files cscope.out cscope.out.in cscope.out.po ${DP_CODE_INDEX_FINDER_FILE}}
 
 [ -z "$ap_dir" ] && {
     ap_dir=$(find-ap-dir)

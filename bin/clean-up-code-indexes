@@ -24,7 +24,7 @@ unset eexec_program
 
 : ${maxdepth=4}
 : ${index_file_globs:=cscope.* GTAGS GRTAGS GPATH}
-: ${index_finder_file:=cscope.files}
+: ${index_finder_file:=${DP_CODE_INDEX_FINDER_FILE}}
 
 #e.g.# # Usage variable usage:
 #e.g.# Usage_args_info=" errno..."

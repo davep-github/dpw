@@ -36,7 +36,7 @@ fi
 
 : ${AUTOMAKE_REGEXP_DEF:="((\.am|\.ac|\.m4)$|^config.*)"}
 : ${AUTOMAKE_REGEXP:="$AUTOMAKE_REGEXP_DEF"}
-: ${FILES_FILE:=cscope.files}
+: ${FILES_FILE:=${DP_CODE_INDEX_FINDER_FILE}}
 
 excluded_files_file_template=$(normpath "${DP_TMPDIR-$TMP}/extagtree.excluded-files.XXXXXXXX")
 : ${EXCLUDED_FILES_FILE:=$(mktemp "${excluded_files_file_template}")}

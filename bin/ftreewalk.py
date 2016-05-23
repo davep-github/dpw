@@ -39,6 +39,7 @@ DEFAULT_EXCLUDE_FILE_REGEXPS = [
     '.*\.pyc$', '.*\.pyo$',
     '.*\.dvi$',
     '^n?cscope.out$', '^n?cscope.files$',
+    "^" + os.environ["DP_CODE_INDEX_FINDER_FILE"] + "$",
     '^n?cscope.out.in$', '^n?cscope.po.out$',
     '^n?cscope.in.out$', '^n?cscope.po.out$',
     '^.xsession-errors$', '^.newsrc$',
