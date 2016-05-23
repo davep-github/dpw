@@ -65,15 +65,23 @@
             (if (listp l1) l1 (list l1)))
     olist))
 
+;;del after tested (defun dp-set-cross-to-alist-old (l1 l2)
+;;del after tested   (nreverse
+;;del after tested    (let (olist)
+;;del after tested      (mapcar (lambda (l1e)
+;;del after tested                (mapcar (lambda (l2e)
+;;del after tested                          (setq olist (cons (list l1e l2e) olist)))
+;;del after tested                        l2))
+;;del after tested              (if (listp l1) l1 (list l1)))
+;;del after tested      olist)))
+
 (defun dp-set-cross-to-alist (l1 l2)
-  (nreverse
-   (let (olist)
-     (mapcar (lambda (l1e)
-               (mapcar (lambda (l2e)
-                         (setq olist (cons (list l1e l2e) olist)))
-                       l2))
-             (if (listp l1) l1 (list l1)))
-     olist)))
+  "Cross product of concatenation of elements into an alist."
+  (mapcan (lambda (d)
+            (mapcar (lambda (f)
+                      (list d f))
+                    l2))
+          l1))
 
 (defun dp-path-filter (path pred)
   (delq nil
@@ -94,12 +102,19 @@ And a plain old C extension.")
 (defvar dp-c++-include-extensions '("h" "hh" "hxx" "h++" "hpp" "hpp") 
   "All known -- to me -- c++ include file extensions")
 
-(defvar dp-cf-inc-search-path '("../include" "../h" "./inc" "./include" "./h"
-                                "./inc" "../../include" "../../h"
-                                "../../inc" "../common" "./common" ".")
+;; (dp-cross-cat-string-lists
+;;                                '("." ".." "../..")
+;;                                '("include" "h" "common" "inc"))
+
+;; '("../include" "../h" "./inc" "./include" "./h"
+;;   "./inc" "../../include" "../../h"
+;;   "../../inc" "../common" "./common" ".") 
+
+(defvar dp-cf-inc-search-path (dp-cross-cat-string-lists
+                               '("." ".." "../..")
+                               '("" "include" "h" "common" "inc"))
   "Where to look for a source file's corresponding include file.")
-
-
+	
 ;; 
 ;; @todo XXX 
 ;; Some stupid layouts have a structure like this:
