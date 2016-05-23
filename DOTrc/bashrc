@@ -3,6 +3,7 @@
 # NB: all non-bash code is old, crufty and untested in a long time.
 # Suppress any other means of enabling this.  NB: may break some stuff.
 #set +x
+#set -x
 #echo "PS1:0>$PS1<"
 #echo "\$0>$0<"
 #echo "\$@>$@<"
@@ -15,6 +16,7 @@
 #echo "LC>${LC_DP_YES_DP_ENV_P}<"
 #echo "LC_DP_NO_DP_ENV_P>$LC_DP_NO_DP_ENV_P<"
 
+export DP_BASHRC=t
 source $HOME/.rc/func.early
 
 if [ -n  "$GREP_OPTIONS" ]
@@ -51,7 +53,7 @@ setenv ()
 #export SHELL=bash
 export INPUTRC=$HOME/.inputrc
 
-# XXX something in the vVIDIA build process barfs if there is no trailing /.
+# XXX something in the a certain build process barfs if there is no trailing /.
 # Even though tcsh is the shell of choice in the company, it can't hurt to stick it here as
 # well.
 export TMPDIR=/tmp/
@@ -292,13 +294,14 @@ DAVEP_BIN_DIRS="$(eval echo $HOME/{$DAVEP_BIN_VARIANTS} \
     $HOME/bin.primitive \
     $HOME/bin.local \
     $HOME/bin.alternatives"
-#echo_id DAVEP_BIN_DIRS
+echo_id >| ~/tmp/dp-path DAVEP_BIN_DIRS
 #exit 99
 unset DAVEP_BIN_VARIANTSx
 # Push some important stuff onto the path.  It can be useful to add locale
 # specific dirs early with no "harm" because PATH is filtered such that
 # nonexistent dirs are discarded.
 export PATH=$(dp_add_to_path_iff -p "$PATH" \
+    $DAVEP_BIN_DIRS \
     /etc/alternatives \
     /opt/kde3/bin \
     /usr/local/bin \
@@ -307,6 +310,9 @@ export PATH=$(dp_add_to_path_iff -p "$PATH" \
     /sbin \
     /usr/sbin \
     /usr/local/sbin)
+
+echo >> "========================================================================"
+echo >> ~/tmp/dp-path "PATH>${PATH}<"
 
 # Append some less important stuff if it exists.
 export PATH=$(dp_add_to_path_iff "$PATH" \
@@ -431,6 +437,8 @@ export HOST_INFO_PATH="
     $HOME/bin.$FAMILY_ZONE"
 #echo "0:PATH>$PATH<"
 
+PATH=$(dp_add_to_path_iff -p "$PATH" $HOST_INFO_PATH)
+
 # Project stuff:
 PROJECT_WORK=$HOME/work
 
@@ -471,14 +479,10 @@ export PROJECT_HOME
 #echo "1:PATH>$PATH<"
 #echo "1:DAVEP_BIN_DIRS>$DAVEP_BIN_DIRS<"
 
-PATH=$(dp_add_to_path_iff -p "$PATH" \
-    "$HOST_INFO_PATH
-$DAVEP_BIN_DIRS
-$DAVEP_BIN_DIRS"
-)
+PATH=$(dp_add_to_path_iff -p "$PATH" $HOST_INFO_PATH)
 export DP_ENV_BIN_OVERRIDE="$HOME/bin/override"
-PATH=$(dp_add_to_path_iff -p "$PATH" "$DP_ENV_BIN_OVERRIDE")
-PATH=$(dp_add_to_path_iff "$PATH" "$HOME/bin/last-resort")
+PATH=$(dp_add_to_path_iff -p "$PATH" $DP_ENV_BIN_OVERRIDE)
+PATH=$(dp_add_to_path_iff "$PATH" $HOME/bin/last-resort)
 
 PATH=$(path-verify -d "$PATH")
 
@@ -805,7 +809,11 @@ case "${IMASCREENINSTANCE-}" in
         ;;
 esac
 
+echo >> ~/tmp/dp-path "before do_go2env========================================================================"
+echo >> ~/tmp/dp-path "PATH>${PATH}<"
+echo >> ~/tmp/dp-path
 do_go2env
+type python >> ~/tmp/dp-path 
 #echo "PS1:1>$PS1<"
 #echo "dp_NH:0>$dp_NH<"
 # !!! What the Motherfucking what??!?!?
