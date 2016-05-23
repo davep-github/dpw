@@ -12490,8 +12490,8 @@ width is 8, then the number of chars to get to column 8 is 1 (the TAB)."
       (- (point) (line-beginning-position)))))
 
 (defun dp-non-empty-string (str)
-  "Returns non-nil (str) if str is a str that is not \"\".
-This is different than a nil \"string\"."
+  "Returns non-nil (STR) if STR is a str that is not \"\".
+This is different than a nil \"string\" or a pure whitespace string."
   (and str (stringp str)
        (not (string= "" str))
        str))
@@ -14727,6 +14727,26 @@ them. Q.v. `unfuck-gz'"
 
 (defun dp-last-column-on-line ()
   (dp-column-at (line-end-position)))
+
+;; Originally designed for (dirnames X basenames)
+;; e.g. '("." "..") X '("include" "h")
+;; -->
+;; '("./include ./h" "../include ../h")
+;; Where originally "include" and "h" were final subdirs, but that isn't a
+;; requirement.
+(defun* dp-cross-cat-string-lists (l1 l2
+                                   &optional
+                                   (sep0 "/" ))
+  "Cross product of concatenation of elements of L1 SEP L2.
+Return elements of L1 when element of L2 are nil or \"\", i.e. no trailing separators"
+  (mapcan (lambda (d)
+            (mapcar (lambda (f)
+                      (if (and f
+                               (string= f ""))
+                          d
+                        (concat d sep0 f)))
+                    l2))
+          l1))
 
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;;
