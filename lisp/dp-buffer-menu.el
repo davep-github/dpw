@@ -104,6 +104,7 @@ to have buffer-menu show non-file buffers."
   (local-set-key [down] (kb-lambda 
 			  (call-interactively 'dp-down-with-wrap)
 			  (dp-buffer-menu-id-file)))
+  (local-set-key [?v] 'Buffer-menu-switch-other-window)
   ;;(dmessage "mmh: buf-name>%s<" (buffer-name))
 )
 
