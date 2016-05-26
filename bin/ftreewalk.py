@@ -58,7 +58,7 @@ MAX_FILE_SIZE = -1                      # >0 ==> limit in bytes
 # @todo Add switches for various {in|ex}clusions
 
 DEFAULT_EXCLUDE_DIR_REGEXPS = [
-    '^RCS$', '^SCCS$', '^CVS$', '^\.(svn|git|hg)$' ,
+    '^RCS$', '^SCCS$', '^CVS$', '^\.(svn|git|hg)$',
     # Auto(conf|make) stuff.
     "^autom4te.cache$",
     # Imagix stuff.
@@ -75,6 +75,7 @@ DEFAULT_EXCLUDE_DIR_REGEXPS = [
     "^(exp|EXP|ddddev)$",               #duh-duh-duh-dev
     # Old, but of historical interest. But not for indexing.
     "^(deprecated|retired|RETIRED|olde?|OLDE?)$",
+    "SNDB4",
     ]
 
 DEBUG_SHOW_ALL_DIRS =                   0x01

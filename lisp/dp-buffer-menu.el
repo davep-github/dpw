@@ -99,10 +99,10 @@ to have buffer-menu show non-file buffers."
   (local-set-key [?D] 'dp-buffer-menu-mark-for-kill-matching-buffers)
   (local-set-key [(meta ?D)] 'dp-buffer-menu-mark-for-kill-matching-buffers)
   (local-set-key [up] (kb-lambda 
-			(call-interactively 'dp-up-with-wrap)
+			(call-interactively 'dp-up-with-wrap-non-empty)
 			(dp-buffer-menu-id-file)))
   (local-set-key [down] (kb-lambda 
-			  (call-interactively 'dp-down-with-wrap)
+			  (call-interactively 'dp-down-with-wrap-non-empty)
 			  (dp-buffer-menu-id-file)))
   (local-set-key [?v] 'Buffer-menu-switch-other-window)
   ;;(dmessage "mmh: buf-name>%s<" (buffer-name))

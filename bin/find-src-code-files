@@ -2,6 +2,23 @@
 
 source script-x
 
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+
 args=("$@")
 
 dash_x_files="-X NOTAG"
@@ -48,7 +65,7 @@ vsetp "${SITE_INTERESTING_SRC_FILE_REGEXP-}" && {
 }
 INTERESTING_FILES="\.(${INTERESTING_FILES})'?$"
 
-echo_id2 INTERESTING_FILES
+EExec_verbose_echo_id INTERESTING_FILES
 
 : ${DEF_SYSTEM_INCLUDES:=/usr/include}
 SYSTEM_INCLUDES=
@@ -61,7 +78,7 @@ FILES_TO_FILTER_IN=()
 ### NB: !!! THESE ARE REGEXPs, NOT GLOBS! * is not the same as .* !!!!
 VC_EXCLUDES='-e /^.*\/?(\.obs\.|\.svn|CVS|RCS|\.4D|\/\.git|\.hg)\/?.*/d'
 
-echo 1>&2 "Read various ignore files like, .(cvs|git)ignore, ~/.gitexcludes,
+EExec_verbose_msg "Read various ignore files like, .(cvs|git)ignore, ~/.gitexcludes,
 ./.git/info/exclude, etc, and make a sed expression to ignore them.
 NB: most are globs, not regexps.
 Excludes are sed -r regexps"
@@ -114,7 +131,7 @@ else
     dirs="$@"
 fi    
 
-#echo_id dirs
+EExec_verbose_echo_id dirs
 # Put the system includes first so any collisions will be noticeable.
 dirs="$SYSTEM_INCLUDES $dirs"
 
@@ -148,8 +165,8 @@ else
 fi
 
 {
-    echo_id EXCLUDE_PAT
-    echo "FtF>${FILES_TO_FILTER_IN[@]}<"
+    EExec_verbose_echo_id EXCLUDE_PAT
+    EExec_verbose_msg "FtF>${FILES_TO_FILTER_IN[@]}<"
 } 1>&2
 
 filter()

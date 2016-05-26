@@ -7659,6 +7659,15 @@ If region is active, set width to that of the longest line in the region."
   (interactive)
   (mark-whole-buffer)
   (sfw-fit-region))
+
+(defun dp-up/down-with-wrap-non-empty (arg upper-downer &optional args)
+  (interactive "p")
+  (apply upper-downer arg args)
+  (let (line-num)
+        (while (and (not (equal line-num (line-number)))
+                    (dp-empty-line-p))
+          (apply upper-downer arg args)
+          (setq line-num (line-number)))))
       
 (defun dp-up-with-wrap (arg &optional command args)
   (interactive "p")
@@ -7689,6 +7698,14 @@ If region is active, set width to that of the longest line in the region."
 	 (move-to-column col)))))
   (if command
       (apply command args)))
+
+(defun dp-up-with-wrap-non-empty (arg &rest rest)
+  (interactive "p")
+  (apply 'dp-up/down-with-wrap-non-empty arg 'dp-up-with-wrap rest))
+
+(defun dp-down-with-wrap-non-empty (arg &rest rest)
+  (interactive "p")
+  (apply 'dp-up/down-with-wrap-non-empty arg 'dp-down-with-wrap rest))
 
 ;; useful in mew-draft-mode, since the fill results in the citation being
 ;; the fill prefix.
@@ -13459,13 +13476,13 @@ find-file\(-at-point) and then, if it fails, this function??"
                        file-name))
 
 ;; hyperbole/oobrowser locations and vars
-(defvar dp-oo-browser-dir (dp-mk-site-package-lisp-dir "oo-browser")
-  "oo-browser's home.")
+;;(defvar dp-oo-browser-dir (dp-mk-site-package-lisp-dir "oo-browser")
+;;  "oo-browser's home.")
 
 (defun dp-setup-ootags ()
   "Set up ootags source browsing system."
   (interactive)
-  (add-to-list 'load-path dp-oo-browser-dir) 
+;;  (add-to-list 'load-path dp-oo-browser-dir) 
   ;;;(add-to-list 'load-path (concat dp-oo-browser-dir "/hypb"))
   (load "br-start")
   (global-set-key "\C-c\C-o" 'oo-browser))

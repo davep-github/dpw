@@ -52,7 +52,7 @@ arg=${1-}
     fi
 }
 
-if (($# == 0))
+if (($# == 1))
 then
     arg="${1}"
     shift
@@ -100,7 +100,7 @@ perverted_index_option=-q
 set -- "$@" "${arg}" ${perverted_index_option}
 
 [ -z "$*" ] && {
-    echo "No arguments were provided. Thanks for playing."
+    echo "No arguments were provided, but thanks for playing."
     exit 1
 } 1>&2
 
@@ -127,8 +127,8 @@ for db_file in "${db_files[@]}"
 do
   # -f reffile doesn't work with gtags-cscope,
   # so we'll visit all of the dirs.
-  pushd $(dirname "${db_file}")
+  pushd $(dirname "${db_file}") >& /dev/null
   EExec -0 "${DP_CSCOPE_PROGRAM}" -d ${EXTAGTREE_DASH_Q} \
     -L -"${field_num}" "$@" | EExec "${POST_PROCESSOR}"
-  popd
+  popd >& /dev/null
 done  

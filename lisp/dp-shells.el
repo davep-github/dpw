@@ -423,6 +423,7 @@ not destined to be saved.  ")
            (cons (regexp-opt '("code-indexer"
                                "udstags"
                                "cscope"
+                               "gtags"
                                "index-code"
                                "index-me-code"
                                "index-all-me-trees"

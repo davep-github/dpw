@@ -14,11 +14,13 @@ then
 # ctags as well as simulate cscope using the GLOBAL database.  So all we need
 # in this case is gtags, since the DB is shared twixt gtags-cscope and gtags.
 : ${gtags_p:=--gtags}
+: ${use_global_id_p:=--global-idutils}
 : ${ctags_p:=}
 : ${etags_p:=}
 : ${cscope_p:=}
 else
 : ${gtags_p:=--gtags}
+: ${use_global_id_p:=--global-idutils}
 : ${ctags_p:=}
 : ${etags_p:=}
 : ${cscope_p:=--cscope}

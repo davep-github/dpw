@@ -53,7 +53,10 @@ repo_ln()
 
 cd "${HOME}"
 ${EZEC} ln -s "${repo}/DOTrc" .rc
-${EZEC} ln -s ".rc/exuberant-ctags.conf" .ctags
+
+# This should be compatible with exuberant-ctags since universal-ctags is the
+# resurrection of exuberant-ctags.
+${EZEC} ln -s ".rc/universal-ctags.conf" .ctags
 
 repo_ln \
     bin \

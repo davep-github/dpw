@@ -84,7 +84,9 @@ def rank_init(
     rgg.add_filter_out_regexp_strings(filter_out_regexp_strings)
 
 
-# If we see one of these options, punt to global(1)
+# If we see *any* one of these options, punt to global(1)
+## @todo XXX We want to handle at least --single-update so that we can update
+## all ancestral data bases.
 Passthrough_options = ["-u", "--single-update" ]
 
 def rank_main(argv):
@@ -96,6 +98,8 @@ def rank_main(argv):
 
     filter_p = os.environ.get("BEA_FILTER")
     uniqify_p = True
+    all_p = True
+    all_matches_p = False
 
     rgg_argv = os.environ.get("RGG_ARGV")
     if (rgg_argv):
@@ -135,13 +139,33 @@ def rank_main(argv):
             uniqify_p = False
             argv.delete(arg)
             continue
+        if opt_name == "first-db":
+            all_p = False
+            argv.delete(arg)
+            continue
+        if opt_name == "all-db":
+            all_p = True
+            argv.delete(arg)
+            continue
+        if ((opt_name == "stop-after-first")
+            or
+            (opt_name == "first-match")
+            or
+            (opt_name == "not-all-matches")):
+             all_matches_p = False
+             argv.delete(arg)
+             continue
+        if opt_name == "all-matches":
+            all_matches_p = True
+            argv.delete(arg)
+            continue
 
     #@todo XXX This should do this in every db searched.
 #    if argv[1] in ('-u' '--update'):
 #        sys.exit(subprocess.call(["global"] + argv[1:]))
 
     # Find this dir's parental db.
-    path = find_up.find_up("GTAGS", all_p=True)
+    path = find_up.find_up("GTAGS", all_p=all_p)
     rgg.log_file.write("path: %s\n" % \
                        dp_sequences.list_to_indented_string(path))
     # Add all other known db locations.
@@ -162,7 +186,8 @@ def rank_main(argv):
     else:
         #lines = run_globals_path(argv, path)
         lines = rgg.run_globals(argv, path,
-                                start_dir=opath.realpath(opath.curdir))
+                                start_dir=opath.realpath(opath.curdir),
+                                all_matches_p=all_matches_p)
 
     if lines:
         if uniqify_p:

@@ -578,6 +578,7 @@ already in there.")
                           [?f] 'gtags-parse-file
                           [?g] 'gtags-find-with-grep
                           [?I] 'gtags-find-with-idutils
+                          [?i] 'gtags-find-with-idutils
                           [?s] 'gtags-find-symbol
                           [?r] 'gtags-find-rtag
                           [?t] 'gtags-find-tag

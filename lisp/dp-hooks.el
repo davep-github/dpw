@@ -896,6 +896,44 @@ c-hanging-braces-alist based upon these values.")
       (and (fboundp 'gtags-mode)
            (dmessage "not featurep 'gtags, but gtags-mode defined."))))
 
+
+(when (dp-optionally-require 'xgtags)
+  (defun dp-setup-xgtags ()
+    (interactive)
+    (defadvice xgtags--find-with (before dp-xgtags-go-back-stuff activate)
+      "Push go back before doing an xgtags operation.
+This seems to be a fairly common routine that is run before most commands.
+It gives us a common point to save our position before going off after a
+xgtags discovery.
+*** Look at new xcscope.el. It has some mark stack capability now."
+      (dp-push-go-back "go-back advised xgtags--find-with"))
+
+    (dp-current-error-function-advisor 'xgtags-select-next-tag
+                                       'dp-xgtags-go-back-stuff)
+    (dp-current-error-function-advisor 'xgtags-select-prev-tag
+                                       'dp-xgtags-next-thing)
+    (dp-current-error-function-advisor 'xgtags-switch-to-buffer-other-window
+                                       'dp-xgtags-next-thing
+                                       'xgtags-select-next-tag)
+    (dp-current-error-function-advisor 'xgtags-select-tag-near-point
+                                       'dp-xgtags-next-thing
+                                       'xgtags-select-next-tag)
+    (dp-current-error-function-advisor 'xgtags-select-tag-by-event
+                                       'dp-xgtags-next-thing
+                                       'xgtags-select-next-tag)
+
+
+    (defun dp-xgtags-next-thing (func)
+      (interactive)
+      ;; Don't set the next error function here.
+      ;; Only let it be set when the functions are called directly.
+      (let ((dp-dont-set-latest-function t))
+        (call-interactively func)
+        (display-buffer (xgtags--get-buffer) t)))
+    )
+  (dp-setup-xgtags)
+)
+
 (eval-after-load "cc-mode"
   (dp-after-load-cc-mode))
 
@@ -911,7 +949,6 @@ Also, spaces will *always* result in the same indentation size, regardless of
 tab setting, font or phase of the moon."
   :group 'dp-vars
   :type 'boolean)
-
 
 (defun dp-c-like-mode-common-hook ()
   "Sets up personal C/C++ mode options."
@@ -948,6 +985,8 @@ tab setting, font or phase of the moon."
     (toggle-read-only 1))
   (when (dp-gtags-p)
     (gtags-mode 1))
+  (when (featurep 'xgtags)
+    (xgtags-mode 1))
   (dp-auto-it?)
   (progn
     (c-setup-filladapt)

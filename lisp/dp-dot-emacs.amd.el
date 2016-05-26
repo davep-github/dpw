@@ -90,7 +90,7 @@
 ;;          ("/proj/ras_arch/ras/edc/brahma/ec")
 ;;          )))
 
-;; Auto updating (of gtags) sucks with multiple databases.
+;; Auto updating (of gtags) works poorly with multiple databases.
 ;; Avoid having multiple databases in a single path.
 (setq cscope-database-regexps
       '(

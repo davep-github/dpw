@@ -160,7 +160,7 @@ def run_global(argv, start_dir=opath.curdir):
                      start_dir=start_dir)
 
 def run_globals_over_path(argv, path, start_dir=opath.curdir,
-                          all_matches_p=True,
+                          all_matches_p=False,
                           first_db=0,
                           num_dbs=None):
     """For each dir in path, cd there and try global there. Stop after first
@@ -189,12 +189,14 @@ def run_globals_over_path(argv, path, start_dir=opath.curdir,
     log_file.write("run_globals_over_path(): ret>{}<\n".format(ret))
     return ret
 
-def run_globals(argv, path=None, all_p=True, start_dir=opath.curdir):
+def run_globals(argv, path=None, all_p=True, start_dir=opath.curdir,
+                all_matches_p=False):
     if path == None:
         path = find_up.find_up("GTAGS", all_p=all_p)
 
     if path != None:
-        ret = run_globals_over_path(argv, path, start_dir=start_dir)
+        ret = run_globals_over_path(argv, path, start_dir=start_dir,
+                                    all_matches_p=all_matches_p)
     else:
         ret = []
     #print "ret:", ret

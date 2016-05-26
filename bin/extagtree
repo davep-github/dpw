@@ -24,7 +24,7 @@ do
   $op
   ${EEXEC_SHIFT}
 done
-EExec_verbose_msg $(echo_id eexec_program)
+EExec_verbose_echo_id eexec_program
 
 # ncscope.out is left over if cscope dies from EFBIG.
 : ${NCSCOPE="ncscope.out"}
@@ -101,7 +101,7 @@ meister_indexing_rc="${RC_DIR}/index-code.rc"
 : ${EC_XARGS=''}
 : ${FPAT='.*'}
 : ${v:=''}
-echo_id DP_CODE_INDEX_FINDER_WORK_FILE
+EExec_verbose_echo_id DP_CODE_INDEX_FINDER_WORK_FILE
 : ${WORK_FILES_FILE:=${DP_CODE_INDEX_FINDER_WORK_FILE}}
 : ${FILES_FILE:=${DP_CODE_INDEX_FINDER_FILE}}
 : ${ETAGFILE:=TAGS}
@@ -113,14 +113,14 @@ echo_id DP_CODE_INDEX_FINDER_WORK_FILE
 : ${src_code_finder:=find-src-code-files}
 : ${cscope_flags=}
 : ${use_id_p=}
-: ${use_global_id_p=}
+: ${use_global_id_p=t}
 : ${finder_opts=}
 : ${use_files_file_p=}
 : ${cscope_p=t}
 : ${etags_p=}
 : ${ctags_p=}
-: ${gtags_p=t}                  # Only this tagger now that it seems to work.
-
+: ${gtags_p=t}      # By default, only this tagger now that it seems to work.
+: ${gtags_opts=}
 
 SYSTEM_INCLUDES=
 ###
@@ -159,6 +159,9 @@ long_options=(
 "no-ctags"
 "etags"
 "no-etags"
+"global-idutils"
+"no-global-idutils"
+"gtagslabel:" "gtl:" "gtagger:"
 )
 
 source dp-getopt+.sh
@@ -188,7 +191,11 @@ do
         --no-ctags) ctags_p=;;
         -g|--gtags) gtags_p=t;;
         --no-gtags) gtags_p=;;
+        --global-idutils) use_global_id_p=t;;
+        --no-global-idutils) use_global_id_p=;;
         -G) use_global_id_p=t;;
+        --gtagslabel|--gtl|--gtagger) shift; 
+                                      gtags_opts="$gtags_opts --gtagslabel ${1}";;
 	--) shift ; break ;;
 	*)
             break ;;
@@ -258,6 +265,7 @@ then
     h_OPT=
     langmap=
     full_member_names=
+    py_props=
 else
     # tell tagger that .inl files are headers.
     h_OPT='-h +.inl'
@@ -303,8 +311,8 @@ fi
 
 if [ -z "$use_files_file_p" ]
 then
-    echo_id finder_opts
-    echo_id argses
+    EExec_verbose_echo_id finder_opts
+    EExec_verbose_echo_id argses
     [ -e "${WORK_FILES_FILE}" ] && chmod a+w "${WORK_FILES_FILE}"
     # find to file named anything but ${DP_CODE_INDEX_FINDER_FILE}. This
     # allows us to use that as another file to prevent tagging which allows
@@ -370,7 +378,7 @@ TAGFILES=()
             # Makes gtags just plain not work? G* files are empty.
             dp_echo2 "forcing --idutils for gtags off."
         fi 
-        EExec gtags ${idutils_opt} --file "${FILES_FILE}"
+        EExec gtags ${idutils_opt} --file "${FILES_FILE}" ${gtags_opts}
     ) &
 }
 
@@ -380,7 +388,7 @@ then
     echo BROKEN wrt gtags and --idutils.
     exit 88
     prunes=$(untagged-dirs $argses)
-    #echo_id prunes
+    EExec_verbose_echo_id prunes
     EExec mkid $prunes &
 fi
 

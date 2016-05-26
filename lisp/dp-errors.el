@@ -156,6 +156,7 @@
     "^No more entries containing "
     "No more tag marks on stack"
     "Buffer has no associated tag tables"
+    "The beginning of the \\*xgtags\\* buffer has been reached"
     
     ;; BBDB
     "^no previous record$"

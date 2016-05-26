@@ -338,7 +338,11 @@ Oddly, it doesn't handle structs.")
        [?1] dp-gtags-select-tag-one-window
        [(meta return)] gtags-select-tag
        [?u] dp-gtags-update-file
-       [?o] gtags-select-tag-other-window)))
+       [?o] gtags-select-tag-other-window
+       [up] ,(kb-lambda 
+                (call-interactively 'dp-up-with-wrap-non-empty))
+       [down] ,(kb-lambda 
+                  (call-interactively 'dp-down-with-wrap-non-empty)))))
 
   (defun dp-gtags-select-tag-one-window ()
     (interactive)
@@ -355,6 +359,48 @@ Oddly, it doesn't handle structs.")
               (switch-to-buffer-other-window buf)
             (switch-to-buffer buf))
         (dp-ding-and-message "No gtags select buffers."))))
+
+  (defun dp-setup-gtags-next-error ()
+    (interactive)
+    (defadvice gtags-goto-tag (before auto-go-back-stuff activate)
+      "Push go back before doing a gtags operation.
+This seems to be a fairly common routine that is run before most commands.
+It gives us a common point to save our position before going off after a
+xgtags discovery."
+      (dp-push-go-back "go-back advised gtags-goto-tag"))
+
+    (dp-current-error-function-advisor 'dp-gtags-select-tag-one-window
+                                       'dp-gtags-next-thing)
+    (dp-current-error-function-advisor 'dp-gtags-select-tag-other-window
+                                       'dp-gtags-next-thing)
+    (dp-current-error-function-advisor 'gtags-find-with-idutils
+                                       'dp-gtags-next-thing)
+    (dp-current-error-function-advisor 'gtags-find-with-grep
+                                       'dp-gtags-next-thing)
+    (dp-current-error-function-advisor 'gtags-find-with-file
+                                       'dp-gtags-next-thing)
+    (dp-current-error-function-advisor 'gtags-find-tag
+                                       'dp-gtags-next-thing)
+    (dp-current-error-function-advisor 'gtags-find-symbol
+                                       'dp-gtags-next-thing)
+    (dp-current-error-function-advisor 'gtags-find-rtag
+                                       'dp-gtags-next-thing)
+    (dp-current-error-function-advisor 'gtags-select-tag
+                                       'dp-gtags-next-thing)
+
+    (defun dp-gtags-next-thing (&optional func)
+      (interactive "P")
+      ;; Don't set the next error function here.
+      ;; Only let it be set when the functions are called directly.
+      (let ((dp-dont-set-latest-function t))
+        (dp-visit-gtags-select-buffer 'other-window)
+        (dp-down-with-wrap-non-empty 1)
+        (gtags-select-tag-other-window)
+        ;; (call-interactively func)
+        ))
+    )
+  (dp-setup-gtags-next-error)
+
   (add-hook 'gtags-select-mode-hook 'dp-gtags-select-mode-hook))
 
 (defvar dp-wants-hide-ifdef-p nil

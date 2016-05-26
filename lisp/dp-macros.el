@@ -391,6 +391,17 @@ VAR must be a symbol."
           ,func-docstr
           (if ,var
               (apply (quote message) (concat ,prefix-str fmt) args))))))
+  
+  (defmacro dp-current-error-function-advisor (fun next-thing &optional next-thing-arg)
+    (setq next-thing-arg (or (eval next-thing-arg) fun))
+    (let ((efunc (eval fun))
+          (enext-thing (eval next-thing)))
+      `(defadvice ,efunc
+        (before next-error-function-stuff activate)
+        (dp-set-current-error-function ,next-thing
+                                       nil
+                                       ,next-thing-arg))))
+
 )
 
 ;; There is some *very* bizzare parenthesis closing problem up there.

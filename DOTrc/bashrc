@@ -311,7 +311,6 @@ export PATH=$(dp_add_to_path_iff -p "$PATH" \
     /usr/sbin \
     /usr/local/sbin)
 
-echo >> "========================================================================"
 echo >> ~/tmp/dp-path "PATH>${PATH}<"
 
 # Append some less important stuff if it exists.
