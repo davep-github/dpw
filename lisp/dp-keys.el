@@ -4,6 +4,8 @@
 ;;; My general/global keybindings.
 ;;;
 
+(message "Loading dp-keys...")
+
 ;;
 ;; use, e.g., (read-kbd-macro "C-c C-a")
 ;; to show key sequences.
@@ -578,7 +580,7 @@ already in there.")
                           [?f] 'gtags-parse-file
                           [?g] 'gtags-find-with-grep
                           [?I] 'gtags-find-with-idutils
-                          [?i] 'gtags-find-with-idutils
+                          [?i] 'xgtags-find-with-idutils
                           [?s] 'gtags-find-symbol
                           [?r] 'gtags-find-rtag
                           [?t] 'gtags-find-tag
@@ -799,3 +801,4 @@ This is NOT idempotent, so we skip if KEY-SEQ and NEW-DEF are bound."
 
 
 (provide 'dp-keys)
+(message "Loading dp-keys...done")

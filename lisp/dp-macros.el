@@ -1,4 +1,4 @@
-(message "dp-macros.el loading...")
+(message "Loading dp-macros...")
 
 (defvar dp-macros-obarray (make-vector 32 0)
   "We intern generated symbol names used in macros here.")
@@ -392,15 +392,16 @@ VAR must be a symbol."
           (if ,var
               (apply (quote message) (concat ,prefix-str fmt) args))))))
   
-  (defmacro dp-current-error-function-advisor (fun next-thing &optional next-thing-arg)
-    (setq next-thing-arg (or (eval next-thing-arg) fun))
-    (let ((efunc (eval fun))
-          (enext-thing (eval next-thing)))
+  (defmacro dp-current-error-function-advisor (fun next-thing 
+                                               &optional next-thing-arg)
+    (let* ((efunc (eval fun))
+           (next-thing-arg (or (eval next-thing-arg) efunc))
+           (enext-thing (eval next-thing)))
       `(defadvice ,efunc
         (before next-error-function-stuff activate)
         (dp-set-current-error-function ,next-thing
                                        nil
-                                       ,next-thing-arg))))
+                                       (quote ,next-thing-arg)))))
 
 )
 
@@ -679,5 +680,5 @@ FORMS complete."
 
 (provide 'dp-macros)
 
-(message "dp-macros.el loaded.")
+(message "Loading dp-macros...done")
 
