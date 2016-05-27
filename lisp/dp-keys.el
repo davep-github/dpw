@@ -570,23 +570,24 @@ already in there.")
                           [?J] 'dpj-'dpj-edit-journal-file)
     ;; <:cdd map journal bindings:>
     "Keymap for my journal commands.")
-  
+
+  ;; Tags related.
   (defconst dp-tag-system-map
     (dp-define-key-submap 'dp-journal-prefix dp-Ccd-map
                           [?t]
-                          [?b] 'dp-visit-gtags-select-buffer
-                          [?h] 'gtags-display-browser
-                          [?P] 'gtags-find-file
-                          [?f] 'gtags-parse-file
-                          [?g] 'gtags-find-with-grep
                           [?I] 'gtags-find-with-idutils
-                          [?i] 'xgtags-find-with-idutils
+                          [?P] 'gtags-find-file
+                          [?b] 'dp-visit-gtags-select-buffer
+                          [?d] 'dp-tag-find
+                          [?f] 'gtags-parse-file
+                          [?g] 'dp-tag-find-with-grep
+                          [?h] 'gtags-display-browser
+                          [?i] 'dp-tag-find-with-idutils
+                          [?r] 'dp-tag-find-rtag
                           [?s] 'gtags-find-symbol
-                          [?r] 'gtags-find-rtag
-                          [?t] 'gtags-find-tag
-                          [?d] 'gtags-find-tag
-                          [?v] 'gtags-visit-rootdir
+                          [?t] 'dp-tag-find
                           [?u] 'dp-gtags-update-file
+                          [?v] 'gtags-visit-rootdir
                           )
     ;; <:cdd map journal bindings:>
     "Keymap for my tag system commands.")
@@ -599,7 +600,7 @@ already in there.")
                           [?w]
                           ;; Yeah, I should do a buncha submaps, but I won't.
                           ;; Nope.  I refuse. Not gun duit.  Read my lips: "No
-                          ;; new mapses.
+                          ;; new mapses."
                           ;; Some of these bindings are longer than some
                           ;; abbreviated commands
                           [(control next)] 'dp-eob-all-windows

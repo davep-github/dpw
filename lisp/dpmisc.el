@@ -4481,22 +4481,6 @@ Uses `get-buffer' to get the buffer."
     (setq buffer (get-buffer buffer)))  ; Let "names" work, too.
   (get-buffer-window (or buffer (current-buffer)) frames devices))
 
-(defun dp-optionally-require (feature &optional file-name)
-  "Wrap `require' in condition-case to allow us to
-continue in the case of an error.
-Prints a warning if anything goes wrong.  Useful for trying to load
-features which may have missing dependencies, etc.
-Return t if successful, nil otherwise."
-  (interactive)
-  (condition-case error-info
-      (progn
-	(require feature file-name)
-	t)
-    (error 
-     (message "**** Problem in (require %s %s): %s" 
-	      feature file-name error-info)
-     nil)))
-
 (defface dp-less-bg-face
   '((((class color) (background light)) 
      (:background "linen"))) 

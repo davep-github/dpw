@@ -123,6 +123,10 @@ that we're under a directory named work."
         (setq ad-return-value (buffer-substring (mark) (point)))
       ad-do-it))
 
+  (defun dp-cscope-list-entry-hook ()
+    (define-key cscope-list-entry-keymap "i" 'dp-tag-find-with-idutils))
+  (add-hook 'cscope-list-entry-hook 'dp-cscope-list-entry-hook)
+
   (defun dp-cscope-select-entry-this-window ()
     "Visit the current entry in the cscope buffer window."
     (interactive)
@@ -134,35 +138,32 @@ that we're under a directory named work."
     ;;
     (define-key map [f5]  'cscope-find-this-symbol)
     (define-key map [f6]  'cscope-find-global-definition)
-    (define-key map "\C-css" 'cscope-find-this-symbol)
-    (define-key map "\C-csd" 'cscope-find-global-definition)
-    (define-key map "\C-csg" 'cscope-find-global-definition)
-    (define-key map "\C-csG" 'cscope-find-global-definition-no-prompting)
-    (define-key map "\C-csc" 'cscope-find-functions-calling-this-function)
-    (define-key map "\C-csC" 'cscope-find-called-functions)
-    (define-key map "\C-cst" 'cscope-find-this-text-string)
-    (define-key map "\C-cse" 'cscope-find-egrep-pattern)
-    (define-key map "\C-csf" 'cscope-find-this-file)
-    (define-key map "\C-csi" 'cscope-find-files-including-file)
-    ;; --- (The '---' indicates that this line corresponds to a menu separator.)
-    (define-key map "\C-csb" 'cscope-display-buffer)
-    (define-key map "\C-csB" 'cscope-display-buffer-toggle)
-    (define-key map "\C-csn" 'cscope-next-symbol)
-    (define-key map "\C-csN" 'cscope-next-file)
-    (define-key map "\C-csp" 'cscope-prev-symbol)
-    (define-key map "\C-csP" 'cscope-prev-file)
-    (define-key map "\C-csu" 'cscope-pop-mark)
-    ;; ---
-    (define-key map "\C-csa" 'cscope-set-initial-directory)
-    (define-key map "\C-csA" 'cscope-unset-initial-directory)
-    ;; ---
-    (define-key map "\C-csL" 'cscope-create-list-of-files-to-index)
-    (define-key map "\C-csI" 'cscope-index-files)
-    (define-key map "\C-csE" 'cscope-edit-list-of-files-to-index)
-    (define-key map "\C-csW" 'cscope-tell-user-about-directory)
-    (define-key map "\C-csS" 'cscope-tell-user-about-directory)
-    (define-key map "\C-csT" 'cscope-tell-user-about-directory)
-    (define-key map "\C-csD" 'cscope-dired-directory)
+    (define-key map [(control ?c) ?s ?A] 'cscope-unset-initial-directory)
+    (define-key map [(control ?c) ?s ?B] 'cscope-display-buffer-toggle)
+    (define-key map [(control ?c) ?s ?C] 'cscope-find-called-functions)
+    (define-key map [(control ?c) ?s ?D] 'cscope-dired-directory)
+    (define-key map [(control ?c) ?s ?E] 'cscope-edit-list-of-files-to-index)
+    (define-key map [(control ?c) ?s ?G] 'cscope-find-global-definition-no-prompting)
+    (define-key map [(control ?c) ?s ?L] 'cscope-create-list-of-files-to-index)
+    (define-key map [(control ?c) ?s ?N] 'cscope-next-file)
+    (define-key map [(control ?c) ?s ?P] 'cscope-prev-file)
+    (define-key map [(control ?c) ?s ?S] 'dp-tag-find-with-idutils)
+    (define-key map [(control ?c) ?s ?T] 'cscope-tell-user-about-directory)
+    (define-key map [(control ?c) ?s ?W] 'cscope-tell-user-about-directory)
+    (define-key map [(control ?c) ?s ?a] 'cscope-set-initial-directory)
+    (define-key map [(control ?c) ?s ?b] 'cscope-display-buffer)
+    (define-key map [(control ?c) ?s ?c] 'cscope-find-functions-calling-this-function)
+    (define-key map [(control ?c) ?s ?d] 'cscope-find-global-definition)
+    (define-key map [(control ?c) ?s ?e] 'cscope-find-egrep-pattern)
+    (define-key map [(control ?c) ?s ?f] 'cscope-find-this-file)
+    (define-key map [(control ?c) ?s ?g] 'cscope-find-global-definition)
+    (define-key map [(control ?c) ?s ?i] 'dp-tag-find-with-idutils)
+    (define-key map [(control ?c) ?s ?n] 'cscope-next-symbol)
+    (define-key map [(control ?c) ?s ?p] 'cscope-prev-symbol)
+    (define-key map [(control ?c) ?s ?s] 'cscope-find-this-symbol)
+    (define-key map [(control ?c) ?s ?t] 'cscope-find-this-text-string)
+    (define-key map [(control ?c) ?s ?u] 'cscope-pop-mark)
+    (global-set-key [(control ?c) ?s ?I] 'cscope-find-files-including-file)
     ;; The previous line corresponds to be end of the "Cscope" menu.
     ;; ---
     ;; 'o' is Buffer-menu-other-window, 'o' is dired-find-file-other-window
@@ -451,11 +452,6 @@ Oddly, it doesn't handle structs.")
   (interactive)
   (call-interactively (dp-*TAGS-handler-finder (dp-get-*TAGS-handler))))
 
-(defun dp-gtags-current-token ()
-  (if (dp-mark-active-p)
-      (buffer-substring (mark) (point))
-    (gtags-current-token)))
-
 (defun dp-tag-find (&rest r)
   (interactive)
   (cond
@@ -463,8 +459,42 @@ Oddly, it doesn't handle structs.")
     (dp-eval-naked-embedded-lisp))
    ((looking-at ":(")
     (dp-eval-embedded-lisp-region))
+   ((dp-xgtags-p)
+    (call-interactively 'xgtags-find-tag))
+   ((dp-gtags-p)
+    (call-interactively 'gtags-find-tag))
    (t
-    (call-interactively 'gtags-find-tag))))
+    (error "No tag finder."))))
+
+(defun dp-tag-find-rtag (&rest r)
+  (interactive)
+  (cond
+   ((dp-xgtags-p)
+    (call-interactively 'xgtags-find-rtag))
+   ((dp-gtags-p)
+    (call-interactively 'gtags-find-rtag))
+   (t
+    (error "No tag finder."))))
+
+(defun dp-tag-find-with-grep (&rest r)
+  (interactive)
+  (cond
+   ((dp-xgtags-p)
+    (call-interactively 'xgtags-find-with-grep))
+   ((dp-gtags-p)
+    (call-interactively 'gtags-find-with-grep))
+   (t
+    (error "No tag grep finder."))))
+
+(defun dp-tag-find-with-idutils (&rest r)
+  (interactive)
+  (cond
+   ((dp-xgtags-p)
+    (call-interactively 'xgtags-find-with-idutils))
+   ((dp-gtags-p)
+    (call-interactively 'gtags-find-with-idutils))
+   (t
+    (error "No tag idutils finder."))))
 
 ;;   (condition-case err
 ;;       (let ((handler-list (dp-get-*TAGS-handler-list)))
@@ -482,11 +512,13 @@ Oddly, it doesn't handle structs.")
 
 (defun dp-tag-pop (&rest r)
   (interactive)
-  (call-interactively 'gtags-pop-stack))
-;;   (let ((handler (dp-*TAGS-pop-handler)))
-;;     (if handler
-;;         (call-interactively (dp-*TAGS-handler-returner handler))
-;;       (dp-ding-and-message "No tags on dp tag stack."))))
+  (cond
+   ((dp-xgtags-p)
+    (call-interactively 'xgtags-pop-stack))
+   ((dp-gtags-p)
+    (call-interactively 'gtags-pop-stack))
+   (t
+    (error "No tag popper."))))
 
 (defun dp-tag-pop-other-win ()
   (interactive)
@@ -511,21 +543,11 @@ Oddly, it doesn't handle structs.")
 ;;(global-set-key [(control ?.)] (kb-lambda (find-tag nil (not (dp-xemacs-p)))))
 ;; When gtagsing, this will be it's prefix.
 
-(defun dp-gtags-p ()
-  (or (featurep 'gtags )
-      (and (fboundp 'gtags-mode)
-           (dmessage "not featurep 'gtags, but gtags-mode defined."))))
-
-(defun dp-xgtags-p ()
-  (or (featurep 'xgtags )
-      (and (fboundp 'xgtags-mode)
-           (dmessage "not featurep 'gtags, but gtags-mode defined."))))
-
 (dp-deflocal dp-gtags-suggested-key-mapping t
   "Does this buffer want gtags key mappings?")
 
 ;; XXX @todo Fix this to use a real predicate.
-(when t ;;(dp-gtags-p)
+(when (dp-gtags-p)
   (make-variable-buffer-local 'gtags-auto-update)
   (setq-default gtags-auto-update nil)
   (defun dp-gtags-update-file ()
@@ -537,6 +559,11 @@ Oddly, it doesn't handle structs.")
       (message "done.")))
   (defalias 'guf 'dp-gtags-update-file)
 
+  (defun dp-gtags-current-token ()
+    (if (dp-mark-active-p)
+        (buffer-substring (mark) (point))
+      (gtags-current-token)))
+
   (defun dp-gtags-select-tag-other-window ()
     (interactive)
     (dp-push-go-back&call-interactively
@@ -547,24 +574,24 @@ Oddly, it doesn't handle structs.")
     (dp-define-buffer-local-keys
      `([return] dp-gtags-select-tag-other-window
        [(meta ?-)] dp-bury-or-kill-buffer
-       [?h] gtags-display-browser
+       [(meta return)] gtags-select-tag
+       [?.] gtags-select-tag
+       [?1] dp-gtags-select-tag-one-window
+       [?=] gtags-select-tag
+       [?I] gtags-find-with-idutils
        [?P] gtags-find-file
+       [?d] gtags-find-tag
        [?f] gtags-parse-file
        [?g] gtags-find-with-grep
-       [?I] gtags-find-with-idutils
-       [?s] gtags-find-symbol
-       [?r] gtags-find-rtag
-       [?t] gtags-find-tag
-       [?d] gtags-find-tag
-       [?v] gtags-visit-rootdir
-       [?.] gtags-select-tag
-       [?=] gtags-select-tag
-       [space] dp-gtags-select-tag-one-window
-       [?1] dp-gtags-select-tag-one-window
-       [(meta return)] gtags-select-tag
-       [?u] dp-gtags-update-file
+       [?h] gtags-display-browser
        [?o] gtags-select-tag-other-window
-       [up] ,(kb-lambda 
+       [?r] gtags-find-rtag
+       [?s] gtags-find-symbol
+       [?t] gtags-find-tag
+       [?u] dp-gtags-update-file
+       [?v] gtags-visit-rootdir
+       [space] dp-gtags-select-tag-one-window
+       [up] ,(kb-lambda
                 (call-interactively 'dp-up-with-wrap-non-empty))
        [down] ,(kb-lambda 
                   (call-interactively 'dp-down-with-wrap-non-empty)))))
@@ -624,30 +651,87 @@ gtags discovery."
         ;; (call-interactively func)
         ))
     )
-  (dp-setup-gtags-next-error)
 
   (add-hook 'gtags-select-mode-hook 'dp-gtags-select-mode-hook))
 
-(when (dp-optionally-require 'xgtags)
-  (defun dp-setup-xgtags ()
+(when (dp-gtags-p)
+    (dp-setup-xgtags-next-error))
+
+(when (dp-xgtags-p)
+  (make-variable-buffer-local 'xgtags-update-db)
+  (setq-default xgtags-update-db nil)
+  (setq xgtags-goto-tag 'unique)
+  (defun dp-xgtags-update-file ()
     (interactive)
-    
-    (defun dp-xgtags-select-mode-hook ()
-      (local-set-key [up] (kb-lambda 
-                              (call-interactively 'dp-up-with-wrap-non-empty)))
-      (local-set-key [down] (kb-lambda 
-                                (call-interactively 'dp-down-with-wrap-non-empty))))
-    (add-hook 'xgtags-select-mode-hook 'dp-xgtags-select-mode-hook)
+    (let ((xgtags-mode t)
+          (xgtags-update-db t))
+      (message "xgtags updating...")
+      (xgtags--update-db xgtags-rootdir)
+      (message "done.")))
+  (defalias 'guf 'dp-xgtags-update-file)
 
-    (defun dp-xgtags-next-thing (func)
-      (interactive)
-      ;; Don't set the next error function here.
-      ;; Only let it be set when the functions are called directly.
-      (let ((dp-dont-set-latest-function t))
-        (call-interactively func)
-        (display-buffer (xgtags--get-buffer) t)))
-    )
+  (defun dp-xgtags-select-tag-other-window ()
+    (interactive)
+    (xgtags--follow-tag xgtags--selected-tag t))
+  
+  (defun dp-xgtags-select-tag-other-window-cmd ()
+    (interactive)
+    (setq xgtags--selected-tag (xgtags--find-tag-near-point))
+    (dp-push-go-back&call-interactively
+     'dp-xgtags-select-tag-other-window
+     nil nil "dp-xgtags-select-tag-other-window-cmd"))
 
+  (defun dp-xgtags-select-mode-hook ()
+    (dp-define-buffer-local-keys
+     `([return] dp-xgtags-select-tag-other-window-cmd
+       [(meta ?-)] dp-bury-or-kill-buffer
+       [(meta return)] gtags-select-tag
+       [?.] xgtags-select-tag-near-point
+       [?1] dp-xgtags-select-tag-one-window
+       [?=] xgtags-select-tag-near-point
+       [?I] xgtags-find-with-idutils
+       [?P] xgtags-find-file
+       [?d] xgtags-find-tag
+       [?f] xgtags-parse-file
+       [?g] xgtags-find-with-grep
+       [?h] xgtags-display-browser
+       [?o] dp-gtags-select-tag-other-window-cmd
+       [?r] xgtags-find-rtag
+       [?s] xgtags-find-symbol
+       [?t] xgtags-find-tag
+       [?u] dp-xgtags-update-file
+       [?v] xgtags-visit-rootdir
+       [space] dp-xgtags-select-tag-one-window
+       [up] ,(kb-lambda
+                 (call-interactively 'dp-up-with-wrap-non-empty))
+       [down] ,(kb-lambda
+                   (call-interactively 'dp-down-with-wrap-non-empty)))))
+
+  (defun dp-xgtags-select-tag-one-window ()
+    (interactive)
+    (xgtags-select-tag-near-point)
+    (dp-one-window++))
+
+  (defun dp-xgtags-next-thing (func)
+    (interactive)
+    ;; Don't set the next error function here.
+    ;; Only let it be set when the functions are called directly.
+    (let ((dp-dont-set-latest-function t))
+      (call-interactively func)
+      (display-buffer (xgtags--get-buffer) t)))
+
+  (defun dp-visit-xgtags-select-buffer (&optional other-window-p)
+    (interactive "P")
+    (let ((buf (dp-get-buffer (car-safe (dp-choose-buffers-by-major-mode
+                                         'xgtags-select-mode))
+                              'nil-if-nil)))
+      (if buf
+          (if other-window-p
+              (switch-to-buffer-other-window buf)
+            (switch-to-buffer buf))
+        (dp-ding-and-message "No xgtags select buffers."))))
+
+  (defun dp-setup-xgtags-next-error ()
     (defadvice xgtags--find-with (before dp-xgtags-go-back-stuff activate)
       "Push go back before doing an xgtags operation.
 This seems to be a fairly common routine that is run before most commands.
@@ -656,6 +740,10 @@ xgtags discovery.
 *** Look at new xcscope.el. It has some mark stack capability now."
       (dp-push-go-back "go-back advised xgtags--find-with"))
 
+    (dp-current-error-function-advisor 'xgtags-find-with-idutils
+                                       'dp-xgtags-next-thing)
+    (dp-current-error-function-advisor 'xgtags-find-with-grep
+                                       'dp-xgtags-next-thing)
     (dp-current-error-function-advisor 'xgtags-select-next-tag
                                        'dp-xgtags-next-thing)
     (dp-current-error-function-advisor 'xgtags-select-prev-tag
@@ -669,10 +757,11 @@ xgtags discovery.
     (dp-current-error-function-advisor 'xgtags-select-tag-by-event
                                        'dp-xgtags-next-thing
                                        'xgtags-select-next-tag)
-)
 
-(when (dp-xgtags-p)
-    (dp-setup-xgtags))
+    )
+  (dp-setup-xgtags-next-error)
+
+  (add-hook 'xgtags-select-mode-hook 'dp-xgtags-select-mode-hook))
 
 (defvar dp-wants-hide-ifdef-p nil
   "Do I want the hide ifdef package activated?")

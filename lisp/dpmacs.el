@@ -220,7 +220,23 @@ way.")
   "Only hosts which match this regexp will be allowed to be advertised as
 editing servers via `dp-editing-server-ipc-file'.")
 
+(dp-optionally-require 'xgtags)
+(defun dp-xgtags-p ()
+  (and dp-use-xgtags-p
+       (or (featurep 'xgtags )
+           (and (fboundp 'xgtags-mode)
+                (dmessage "not featurep 'gtags, but gtags-mode defined.")))))
 
+(when dp-use-gtags-p 
+  (dp-optionally-require 'gtags))
+(defun dp-gtags-p ()
+  (and dp-use-gtags-p
+       (or (featurep 'gtags )
+           (and (fboundp 'gtags-mode)
+                (dmessage "not featurep 'gtags, but gtags-mode defined.")))))
+
+;; Load these first so I can navigate somewhat better when I hose another rc
+;; file.
 (require 'dp-keys) ;; my highly unstandard keybindings.
 (require 'dpmisc)
 (require 'dp-lang)

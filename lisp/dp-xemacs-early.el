@@ -6,6 +6,7 @@
 ;;; This is loaded before dp-misc, so it cannot use anything provided
 ;;; there.
 ;;; 
+(message "Loading dp-xemacs-early...")
 
 (defun dp-timestamp-string (&optional time new-style-p)
   "Return a consistently formatted and sensibly sortable and succinct timestamp string."
@@ -158,7 +159,23 @@ The regexp is matched against the buffer name.")
   (dp-colorize-buffer-if 'dp-remote-file-p 
                          (or color 
                              (dp-bmm-get-color-for-buf-name (current-buffer)))))
-  
+
+(defun dp-optionally-require (feature &optional file-name)
+  "Wrap `require' in condition-case to allow us to
+continue in the case of an error.
+Prints a warning if anything goes wrong.  Useful for trying to load
+features which may have missing dependencies, etc.
+Return t if successful, nil otherwise."
+  (interactive)
+  (condition-case error-info
+      (progn
+	(require feature file-name)
+	t)
+    (error 
+     (message "**** Problem in (require %s %s): %s" 
+	      feature file-name error-info)
+     nil)))
+
 ;; @todo experimenting with this.
 ;; similar functionality built in now.
 ;(require 'fdb)
@@ -168,3 +185,4 @@ The regexp is matched against the buffer name.")
 ;;;
 ;;;
 (provide 'dp-xemacs-early)
+(message "Loading dp-xemacs-early...done")
