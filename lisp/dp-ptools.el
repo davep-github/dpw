@@ -124,7 +124,7 @@ that we're under a directory named work."
       ad-do-it))
 
   (defun dp-cscope-list-entry-hook ()
-    (define-key cscope-list-entry-keymap "i" 'dp-tag-find-with-idutils))
+    (define-key cscope-list-entry-keymap "i" 'dp-tag-find-with-idutils-bury-first))
   (add-hook 'cscope-list-entry-hook 'dp-cscope-list-entry-hook)
 
   (defun dp-cscope-select-entry-this-window ()
@@ -496,6 +496,13 @@ Oddly, it doesn't handle structs.")
    (t
     (error "No tag idutils finder."))))
 
+(defun dp-tag-find-with-idutils-bury-first ()
+  (interactive)
+  (let ((window (dp-get-buffer-window)))
+    (dp-tag-find-with-idutils)
+    (delete-window window))
+)
+
 ;;   (condition-case err
 ;;       (let ((handler-list (dp-get-*TAGS-handler-list)))
 ;;         (if handler-list
@@ -578,7 +585,7 @@ Oddly, it doesn't handle structs.")
        [?.] gtags-select-tag
        [?1] dp-gtags-select-tag-one-window
        [?=] gtags-select-tag
-       [?I] gtags-find-with-idutils
+       [?i] gtags-find-with-idutils
        [?P] gtags-find-file
        [?d] gtags-find-tag
        [?f] gtags-parse-file
@@ -689,13 +696,14 @@ gtags discovery."
        [?.] xgtags-select-tag-near-point
        [?1] dp-xgtags-select-tag-one-window
        [?=] xgtags-select-tag-near-point
-       [?I] xgtags-find-with-idutils
+       [?i] xgtags-find-with-idutils
        [?P] xgtags-find-file
        [?d] xgtags-find-tag
        [?f] xgtags-parse-file
        [?g] xgtags-find-with-grep
        [?h] xgtags-display-browser
        [?o] dp-gtags-select-tag-other-window-cmd
+       [?q] bury-buffer
        [?r] xgtags-find-rtag
        [?s] xgtags-find-symbol
        [?t] xgtags-find-tag
@@ -741,13 +749,17 @@ xgtags discovery.
       (dp-push-go-back "go-back advised xgtags--find-with"))
 
     (dp-current-error-function-advisor 'xgtags-find-with-idutils
-                                       'dp-xgtags-next-thing)
+                                       'dp-xgtags-next-thing
+                                       'xgtags-select-next-tag)
     (dp-current-error-function-advisor 'xgtags-find-with-grep
-                                       'dp-xgtags-next-thing)
+                                       'dp-xgtags-next-thing
+                                       'xgtags-select-next-tag)
+    
     (dp-current-error-function-advisor 'xgtags-select-next-tag
                                        'dp-xgtags-next-thing)
     (dp-current-error-function-advisor 'xgtags-select-prev-tag
                                        'dp-xgtags-next-thing)
+    
     (dp-current-error-function-advisor 'xgtags-switch-to-buffer-other-window
                                        'dp-xgtags-next-thing
                                        'xgtags-select-next-tag)
