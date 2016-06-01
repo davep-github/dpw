@@ -11477,7 +11477,7 @@ Sometimes quoted lists are easier to make when most/all elements are quoted."
                                             (fmt "%s %s:%s") (pos (point)))
   (interactive "P")
   (kill-new (message 
-             (dp-mk-breakpoint-command (not tmp-p) :fmt fmt :pos pos))))
+             (dp-mk-breakpoint-command (not perm-p) :fmt fmt :pos pos))))
 
 
 ;;
