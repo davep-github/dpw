@@ -541,6 +541,14 @@ document cfc
 change Carry Flag
 end
 
+define null
+ set * (unsigned char *) $arg0 = 0
+end
+document null
+Patch byte at address arg0 to  NULL
+Usage: null addr
+end
+
 define cfp
  if (($eflags >> 2) & 1 )
   set $eflags = $eflags&~0x4
@@ -630,21 +638,6 @@ change Overflow Flag
 end
 
 # --------------------patch---------------------
-define nop
- set * (unsigned char *) $arg0 = 0x90
-end
-document nop
-Patch byte at address arg0 to a NOP insn
-Usage: nop addr
-end
-
-define null
- set * (unsigned char *) $arg0 = 0
-end
-document null
-Patch byte at address arg0 to  NULL
-Usage: null addr
-end
 
 define int3
  set * (unsigned char *) $arg0 = 0xCC
@@ -885,55 +878,22 @@ document remqemu
 Connect to qemu process running on compute2 (for vet/gumstix)
 end
 
-define nasm_assemble
+define nasm_iassemble
 printf "Hit Ctrl-D to start, type code to assemble, hit Ctrl-D when done.\n"
 printf "It is recommended to start with\n"
 printf "\tBITS 32\n"
 printf "Note that this command uses NASM (Intel syntax) to assemble.\n"
 shell nasm -f bin -o /dev/stdout /dev/stdin | od -v -t x1 -w16 -A n
 end
-document nasm_assemble
+document nasm_iassemble
 Assemble Intel x86 instructions to binary opcodes. Uses nasm.
-Usage: nasm_assemble
+Usage: nasm_iassemble
 end
 
-define assemble
-printf "Type code to assemble, hit Ctrl-D until results appear :)\n"
-printf "Note that this command uses GAS (AT&T syntax) to assemble.\n"
-shell as -o ~/__gdb_tmp.bin
-shell objdump -d -j .text --adjust-vma=$arg0 ~/__gdb_tmp.bin 
-shell rm ~/__gdb_tmp.bin
-end
-document assemble
-Assemble Intel x86 instructions to binary opcodes using gas and objdump
-Usage: assemble address
-end
-
-# !scary bp_alloc macro!
-# The idea behind this macro is to break on the following code:
-#	0x4008e0aa <malloc+6>:  sub    $0xc,%esp
-#	0x4008e0ad <malloc+9>:  call   0x4008e0b2 <malloc+14>
-#	0x4008e0b2 <malloc+14>: pop    %ebx
-#	0x4008e0b3 <malloc+15>: add    $0xa3f6e,%ebx
-# At 0x4008e0b3, %ebx contains the address that has just been allocated
-# The bp_alloc macro generates this breakpoint and *should* work for
-# the forseeable future ... but if it breaks, set a breakpoint on 
-# __libc_malloc and look for where where the return value gets popped.
-
-define bp_alloc
- tbreak *(*__libc_malloc + F) if $ebx == $arg0
-end
-document bp_alloc
-This sets a temporary breakpoint on the allocation of $arg0.
-It works by setting a breakpoint on a specific address in __libc_malloc().
-USE WITH CAUTION -- it is extremely platform dependent.
-Usage: bp_alloc addr
-end
-
-define dump_hexfile
+define dump_ihexfile
  dump ihex memory $arg0 $arg1 $arg2
 end
-document dump_hexfile
+document dump_ihexfile
 Write a range of memory to a file in Intel ihex (hexdump) format.
 Usage:	dump_hexfile filename start_addr end_addr
 end
@@ -945,7 +905,7 @@ document dump_binfile
 Write a range of memory to a binary file.
 Usage:	dump_binfile filename start_addr end_addr
 end
-	
+
 # _________________tips_________________
 # The 'tips' command is used to provide tutorial-like info to the user
 define tips
@@ -1132,29 +1092,6 @@ document tip_strip
 Tips on dealing with stripped binaries
 end
 
-define tip_syntax
-	printf "\n"
-	printf "\t    INTEL SYNTAX                        AT&T SYNTAX\n"
-	printf "\tmnemonic dest, src, imm            mnemonic src, dest, imm\n" 
-	printf "\t[base+index*scale+disp]            disp(base, index, scale)\n"
-	printf "\tregister:      eax                 register:      %%eax\n"
-	printf "\timmediate:     0xFF                immediate:     $0xFF\n"
-	printf "\tdereference:   [addr]              dereference:   addr(,1)\n"
-	printf "\tabsolute addr: addr                absolute addr: *addr\n"
-	printf "\tbyte insn:     mov byte ptr        byte insn:     movb\n"
-	printf "\tword insn:     mov word ptr        word insn:     movw\n"
-	printf "\tdword insn:    mov dword ptr       dword insn:    movd\n"
-	printf "\tfar call:      call far            far call:      lcall\n"
-	printf "\tfar jump:      jmp far             far jump:      ljmp\n"
-	printf "\n"
-	printf "Note that order of operands in reversed, and that AT&T syntax\n"
-	printf "requires that all instructions referencing memory operands \n"
-	printf "use an operand size suffix (b, w, d, q).\n"
-	printf "\n"
-end
-document tip_syntax
-Summary of Intel and AT&T syntax differences
-end
 
 define tip_display
 printf "\n"
