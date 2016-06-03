@@ -169,6 +169,29 @@ fi
     EExec_verbose_msg "FtF>${FILES_TO_FILTER_IN[@]}<"
 } 1>&2
 
+taggable_dirs=
+untaggable_dirs=
+for d in $dirs
+do
+  notag="${d}/NOTAG"
+  if [ -e "${notag}" ]
+  then
+      echo "!!! ${notag} will prevent all indexing in this tree."
+      untaggable_dirs="${untaggable_dirs} ${d}"
+  else
+      taggable_dirs="${taggable_dirs} ${d}"
+  fi 1>&2
+done
+
+if [ -z "${taggable_dirs}" ]
+then
+    echo "No taggable directories, bailing."
+    exit 1
+elif [ -n "${untaggable_dirs}" ]
+then
+    echo "Only tagging in ${taggable_dirs}"
+fi 1>&2
+
 filter()
 {
     tee /dev/null | \
