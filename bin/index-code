@@ -123,6 +123,7 @@ AND_INDEX="and index"
 : ${finder_opts:=} # Bad design: this is a parameter to the source code finder.
 export finder_opts
 : ${keep_files_file_p:='$^'}    # Never matches
+: ${gtags_tagger=}
 
 SYSTEM_INCLUDES=
 # init optional vars to defaults here...
@@ -163,7 +164,8 @@ on_off()
 dump_indexing_methods()
 {
     on_off gtags_p gtags
-    on_off use_global_id_p global-idutils
+    [ -n "${gtags_tagger-}" ] && echo "  tagger: ${gtags_tagger}"
+    [ -n "${use_global_id_p}" ] && echo "  global-idutils"
     on_off cscope_p cscope
     on_off ctags_p ctags
     on_off etags_p etags
@@ -245,7 +247,8 @@ do
       --no-etags) etags_p=;;
       --global-idutils) use_global_id_p=--use_global_id_p;;
       --no-global-idutils) use_global_id_p=;;
-      --gtagslabel|--gtl|--gtagger) shift; tflags="$tflags --gtagslabel ${1}";;
+      --gtagslabel|--gtl|--gtagger) shift; tflags="$tflags --gtagslabel ${1}"
+                                    gtags_tagger="${1}";;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";
