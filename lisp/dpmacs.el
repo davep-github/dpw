@@ -220,7 +220,8 @@ way.")
   "Only hosts which match this regexp will be allowed to be advertised as
 editing servers via `dp-editing-server-ipc-file'.")
 
-(dp-optionally-require 'xgtags)
+(when dp-use-xgtags-p 
+  (dp-optionally-require 'xgtags))
 (defun dp-xgtags-p ()
   (and dp-use-xgtags-p
        (or (featurep 'xgtags )

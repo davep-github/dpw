@@ -940,11 +940,14 @@ tab setting, font or phase of the moon."
                       "\\)")))
     (ding)                              ; !<@todo XXX 
     (toggle-read-only 1))
+  ;; xor modes?
   (when (dp-gtags-p)
     (gtags-mode 1))
-  (when (featurep 'xgtags)
+  (when (dp-xgtags-p)
     (xgtags-mode 1))
   (dp-auto-it?)
+  (dp-global-set-tags-keys)
+
   (progn
     (c-setup-filladapt)
     (filladapt-mode 1)

@@ -448,6 +448,314 @@ Oddly, it doesn't handle structs.")
            (t (dmessage "Caught condition: %s in dp-*TAGS-try-handler-funcs"
                         err))))))
 
+;;
+;; fsf wants nil t to go to the next tag,
+;; xemacs wants nil nil ""
+;;(global-set-key [(control ?.)] (kb-lambda (find-tag nil (not (dp-xemacs-p)))))
+;; When gtagsing, this will be it's prefix.
+
+(dp-deflocal dp-gtags-suggested-key-mapping t
+  "Does this buffer want gtags key mappings?")
+
+(when (dp-gtags-p)
+  (make-variable-buffer-local 'gtags-auto-update)
+  (setq-default gtags-auto-update nil)
+  (defun dp-gtags-update-file ()
+    (interactive)
+    (let ((gtags-mode t)
+          (gtags-auto-update t))
+      (message "gtags updating...")
+      (gtags-auto-update)
+      (message "done.")))
+  (defalias 'guf 'dp-gtags-update-file)
+
+  (defun dp-gtags-current-token ()
+    (if (dp-mark-active-p)
+        (buffer-substring (mark) (point))
+      (gtags-current-token)))
+
+  (defun dp-gtags-select-tag-other-window ()
+    (interactive)
+    (dp-push-go-back&call-interactively
+     'gtags-select-tag-other-window
+     nil nil "dp-gtags-select-mode-hook"))
+  
+  (defun dp-gtags-select-mode-hook ()
+    (dp-define-buffer-local-keys
+     `([return] dp-gtags-select-tag-other-window
+       [(meta ?-)] dp-bury-or-kill-buffer
+       [(meta return)] gtags-select-tag
+       [?.] gtags-select-tag
+       [?1] dp-gtags-select-tag-one-window
+       [?=] gtags-select-tag
+       [?i] gtags-find-with-idutils
+       [?P] gtags-find-file
+       [?d] gtags-find-tag
+       [?f] gtags-parse-file
+       [?g] gtags-find-with-grep
+       [?h] gtags-display-browser
+       [?o] gtags-select-tag-other-window
+       [?r] gtags-find-rtag
+       [?s] gtags-find-symbol
+       [?t] gtags-find-tag
+       [?u] dp-gtags-update-file
+       [?v] gtags-visit-rootdir
+       [space] dp-gtags-select-tag-one-window
+       [up] ,(kb-lambda
+                (call-interactively 'dp-up-with-wrap-non-empty))
+       [down] ,(kb-lambda 
+                  (call-interactively 'dp-down-with-wrap-non-empty)))))
+
+  (defun dp-gtags-select-tag-one-window ()
+    (interactive)
+    (gtags-select-tag)
+    (dp-one-window++))
+
+  (defun dp-visit-gtags-select-buffer (&optional other-window-p)
+    (interactive "P")
+    (let ((buf (dp-get-buffer (car-safe (dp-choose-buffers-by-major-mode
+                                         'gtags-select-mode))
+                              'nil-if-nil)))
+      (if buf
+          (if other-window-p
+              (switch-to-buffer-other-window buf)
+            (switch-to-buffer buf))
+        (dp-ding-and-message "No gtags select buffers."))))
+
+  (defun dp-gtags-setup-next-error ()
+    (interactive)
+    (defadvice gtags-goto-tag (before auto-go-back-stuff activate)
+      "Push go back before doing a gtags operation.
+This seems to be a fairly common routine that is run before most commands.
+It gives us a common point to save our position before going off after a
+gtags discovery."
+      (dp-push-go-back "go-back advised gtags-goto-tag"))
+
+    (dp-current-error-function-advisor 
+     'dp-gtags-select-tag-one-window
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'dp-gtags-select-tag-other-window
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-with-idutils
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-with-grep
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-with-file
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-tag
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-symbol
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-rtag
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-select-tag
+     'dp-gtags-next-thing)
+
+    (defun dp-gtags-next-thing (&optional func)
+      (interactive "P")
+      ;; Don't set the next error function here.
+      ;; Only let it be set when the functions are called directly.
+      (let ((dp-dont-set-latest-function t))
+        (dp-visit-gtags-select-buffer 'other-window)
+        (dp-down-with-wrap-non-empty 1)
+        (gtags-select-tag-other-window)
+        ;; (call-interactively func)
+        ))
+    )
+
+  (dp-gtags-setup-next-error)
+
+  (add-hook 'gtags-select-mode-hook 'dp-gtags-select-mode-hook))
+
+(when (dp-xgtags-p)
+  (make-variable-buffer-local 'xgtags-update-db)
+  ;; Need this (or something like it) to 1) handle C++ scopy things (::) and
+  ;; 2) make sure that the entire word is grabbed.  For completion purposes.
+  ;;(setq xgtags--symbol-regexp "^[~A-Za-z_]\\([A-Za-z_0-9.]\\(::\\)?\\)*")
+
+  (setq-default xgtags-update-db nil)
+  (setq xgtags-goto-tag 'unique)
+  (defun dp-xgtags-update-file ()
+    (interactive)
+    (let ((xgtags-mode t)
+          (xgtags-update-db t))
+      (message "xgtags updating...")
+      (xgtags--update-db xgtags-rootdir)
+      (message "done.")))
+  (defalias 'guf 'dp-xgtags-update-file)
+
+  (defun* dp-xgtags-get-token (&optional
+                               (dflt-prompt "xgtags token: ")
+                               (get-token 'xgtags--token-at-point)
+                               (history xgtags--history-list))
+    (interactive)
+    (let* ((tagname (funcall get-token))
+           (prompt (if tagname
+                       (concat dflt-prompt " (default " tagname ") ")
+                     (concat dflt-prompt " "))))
+      (completing-read prompt xgtags--completition-table
+                       nil nil nil history tagname)))
+
+  (defun dp-xgtags-find-tag-other-window ()
+    (interactive)
+    (let ((tagname (dp-xgtags-get-token "other window token: "))
+          (xgtags-goto-tag 'always))
+      (xgtags--goto-tag tagname)))
+
+  (defun dp-xgtags-select-selected-tag-other-window (&optional args)
+    (interactive)
+    (xgtags--follow-tag xgtags--selected-tag))
+
+  (defun dp-xgtags-select-selected-tag-other-window-cmd ()
+    "Works only in select buffer."
+    (interactive)
+    (setq xgtags--selected-tag (xgtags--find-tag-near-point))
+    (other-window 1)
+    (dp-push-go-back&call-interactively
+     'dp-xgtags-select-selected-tag-other-window
+     nil nil "dp-xgtags-select-selected-tag-other-window-cmd"))
+
+  (defun dp-xgtags-select-mode-hook ()
+    (dp-define-buffer-local-keys
+     `([return] dp-xgtags-select-selected-tag-other-window-cmd
+       [(meta ?-)] dp-bury-or-kill-buffer
+       [(meta return)] gtags-select-tag
+       [?.] xgtags-select-tag-near-point
+       [?1] dp-xgtags-select-tag-one-window
+       [?=] xgtags-select-tag-near-point
+       [?i] xgtags-find-with-idutils
+       [?P] xgtags-find-file
+       [?d] xgtags-find-tag
+       [?f] xgtags-parse-file
+       [?g] xgtags-find-with-grep
+       [?h] xgtags-display-browser
+       [?o] dp-xgtags-select-selected-tag-other-window-cmd
+       [?q] bury-buffer
+       [?r] xgtags-find-rtag
+       [?s] xgtags-find-symbol
+       [?t] xgtags-find-tag
+       [?u] dp-xgtags-update-file
+       [?v] xgtags-visit-rootdir
+       [space] dp-xgtags-select-tag-one-window
+       [up] ,(kb-lambda
+                 (call-interactively 'dp-up-with-wrap-non-empty))
+       [down] ,(kb-lambda
+                   (call-interactively 'dp-down-with-wrap-non-empty)))))
+
+  (defun dp-xgtags-select-tag-one-window ()
+    (interactive)
+    (xgtags-select-tag-near-point)
+    (dp-one-window++))
+
+  (defun dp-xgtags-next-thing (func)
+    (interactive)
+    ;; Don't set the next error function here.
+    ;; Only let it be set when the functions are called directly.
+    (let ((dp-dont-set-latest-function t))
+      (call-interactively func)
+      (display-buffer (xgtags--get-buffer) t)))
+
+  (defun dp-visit-xgtags-select-buffer (&optional other-window-p)
+    (interactive "P")
+    (let ((buf (dp-get-buffer (car-safe (dp-choose-buffers-by-major-mode
+                                         'xgtags-select-mode))
+                              'nil-if-nil)))
+      (if buf
+          (if other-window-p
+              (switch-to-buffer-other-window buf)
+            (switch-to-buffer buf))
+        (dp-ding-and-message "No xgtags select buffers."))))
+
+  (defun dp-xgtags-setup-next-error ()
+    (defadvice xgtags--find-with (before dp-xgtags-go-back-stuff activate)
+      "Push go back before doing an xgtags operation.
+This seems to be a fairly common routine that is run before most commands.
+It gives us a common point to save our position before going off after a
+xgtags discovery.
+*** Look at new xcscope.el. It has some mark stack capability now."
+      (dp-push-go-back "go-back advised xgtags--find-with"))
+
+    (dp-current-error-function-advisor 
+     'xgtags-find-with-idutils
+     'dp-xgtags-next-thing
+     'xgtags-select-next-tag)
+
+    (dp-current-error-function-advisor 
+     'xgtags-find-with-grep
+     'dp-xgtags-next-thing
+     'xgtags-select-next-tag)
+    
+    (dp-current-error-function-advisor 
+     'xgtags-select-next-tag
+     'dp-xgtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'xgtags-select-prev-tag
+     'dp-xgtags-next-thing)
+    
+    (dp-current-error-function-advisor 
+     'xgtags-switch-to-buffer-other-window
+     'dp-xgtags-next-thing
+     'xgtags-select-next-tag)
+
+    (dp-current-error-function-advisor 
+     'xgtags-select-tag-near-point
+     'dp-xgtags-next-thing
+     'xgtags-select-next-tag)
+
+    (dp-current-error-function-advisor 
+     'xgtags-select-tag-by-event
+     'dp-xgtags-next-thing
+     'xgtags-select-next-tag)
+    )
+
+  (dp-xgtags-setup-next-error)
+
+  (add-hook 'xgtags-select-mode-hook 'dp-xgtags-select-mode-hook))
+
+(defun dp-gtags-ripped-of-completor (patteren &optional predicate code)
+  "Needs to rip off more!"
+  (interactive (list (dp-prompt-with-symbol-near-point-as-default 
+                      "Symbol to complete")))
+  ;;(gtags-completing 'bubba patteren nil t))
+
+  (let ((complete-list (make-vector 511 0))
+        options)
+    (if patteren
+        (setq options (cons "-c" (list patteren)))
+      (setq options (list "-c")))
+    (with-temp-buffer
+      (apply 'call-process "global" nil t nil "-c" options)
+      (goto-char (point-min))
+      (while (re-search-forward xgtags--symbol-regexp nil t)
+        (intern (match-string-no-properties 0) complete-list)))
+    (cond ((eq code nil)
+           (try-completion string complete-list predicate))
+          ((eq code t)
+           (all-completions string complete-list predicate))
+          ((eq code 'lambda)
+           (if (intern-soft string complete-list) t nil)))))
+
+(defun dp-gtags-completing-read-completor (string predicate meh)
+  ;;(dmessage "string>%s<, predicate>%s<, meh>%s<" string predicate meh)
+  (dp-gtags-ripped-of-completor string predicate meh))
+
 (defun dp-tag-find-old (&rest r)
   (interactive)
   (call-interactively (dp-*TAGS-handler-finder (dp-get-*TAGS-handler))))
@@ -541,292 +849,20 @@ Oddly, it doesn't handle structs.")
    (t
     (error "No find tag other windower."))))
 
-(global-set-key [(meta ?.)] 'dp-tag-find)
-(global-set-key [(control ?x) (control ?.)]
-  (kb-lambda 
-      (let ((current-prefix-arg '(4)))
-        (call-interactively 'dp-tag-find))))
-(global-set-key [(control meta ?.)] 'dp-tag-find-other-window)
-(global-set-key [(meta ?,)] 'dp-tag-pop)  ; "\e,"
-(global-set-key [(control meta ?,)] 'dp-tag-pop-other-win)
-;;
-;; fsf wants nil t to go to the next tag,
-;; xemacs wants nil nil ""
-;;(global-set-key [(control ?.)] (kb-lambda (find-tag nil (not (dp-xemacs-p)))))
-;; When gtagsing, this will be it's prefix.
+(defun dp-global-set-tags-keys ()
+  (global-set-key [(meta ?.)] 'dp-tag-find)
+  (global-set-key [(control ?x) (control ?.)]
+    (kb-lambda
+        (let ((current-prefix-arg '(4)))
+          (call-interactively 'dp-tag-find))))
+  (global-set-key [(control meta ?.)] 'dp-tag-find-other-window)
+  (global-set-key [(meta ?,)] 'dp-tag-pop) ; "\e,"
+  (global-set-key [(control meta ?,)] 'dp-tag-pop-other-win))
 
-(dp-deflocal dp-gtags-suggested-key-mapping t
-  "Does this buffer want gtags key mappings?")
-
-;; XXX @todo Fix this to use a real predicate.
-(when (dp-gtags-p)
-  (make-variable-buffer-local 'gtags-auto-update)
-  (setq-default gtags-auto-update nil)
-  (defun dp-gtags-update-file ()
-    (interactive)
-    (let ((gtags-mode t)
-          (gtags-auto-update t))
-      (message "gtags updating...")
-      (gtags-auto-update)
-      (message "done.")))
-  (defalias 'guf 'dp-gtags-update-file)
-
-  (defun dp-gtags-current-token ()
-    (if (dp-mark-active-p)
-        (buffer-substring (mark) (point))
-      (gtags-current-token)))
-
-  (defun dp-gtags-select-tag-other-window ()
-    (interactive)
-    (dp-push-go-back&call-interactively
-     'gtags-select-tag-other-window
-     nil nil "dp-gtags-select-mode-hook"))
-  
-  (defun dp-gtags-select-mode-hook ()
-    (dp-define-buffer-local-keys
-     `([return] dp-gtags-select-tag-other-window
-       [(meta ?-)] dp-bury-or-kill-buffer
-       [(meta return)] gtags-select-tag
-       [?.] gtags-select-tag
-       [?1] dp-gtags-select-tag-one-window
-       [?=] gtags-select-tag
-       [?i] gtags-find-with-idutils
-       [?P] gtags-find-file
-       [?d] gtags-find-tag
-       [?f] gtags-parse-file
-       [?g] gtags-find-with-grep
-       [?h] gtags-display-browser
-       [?o] gtags-select-tag-other-window
-       [?r] gtags-find-rtag
-       [?s] gtags-find-symbol
-       [?t] gtags-find-tag
-       [?u] dp-gtags-update-file
-       [?v] gtags-visit-rootdir
-       [space] dp-gtags-select-tag-one-window
-       [up] ,(kb-lambda
-                (call-interactively 'dp-up-with-wrap-non-empty))
-       [down] ,(kb-lambda 
-                  (call-interactively 'dp-down-with-wrap-non-empty)))))
-
-  (defun dp-gtags-select-tag-one-window ()
-    (interactive)
-    (gtags-select-tag)
-    (dp-one-window++))
-
-  (defun dp-visit-gtags-select-buffer (&optional other-window-p)
-    (interactive "P")
-    (let ((buf (dp-get-buffer (car-safe (dp-choose-buffers-by-major-mode
-                                         'gtags-select-mode))
-                              'nil-if-nil)))
-      (if buf
-          (if other-window-p
-              (switch-to-buffer-other-window buf)
-            (switch-to-buffer buf))
-        (dp-ding-and-message "No gtags select buffers."))))
-
-  (defun dp-setup-gtags-next-error ()
-    (interactive)
-    (defadvice gtags-goto-tag (before auto-go-back-stuff activate)
-      "Push go back before doing a gtags operation.
-This seems to be a fairly common routine that is run before most commands.
-It gives us a common point to save our position before going off after a
-gtags discovery."
-      (dp-push-go-back "go-back advised gtags-goto-tag"))
-
-    (dp-current-error-function-advisor 
-     'dp-gtags-select-tag-one-window
-     'dp-gtags-next-thing)
-
-    (dp-current-error-function-advisor 
-     'dp-gtags-select-tag-other-window
-     'dp-gtags-next-thing)
-
-    (dp-current-error-function-advisor 
-     'gtags-find-with-idutils
-     'dp-gtags-next-thing)
-
-    (dp-current-error-function-advisor 
-     'gtags-find-with-grep
-     'dp-gtags-next-thing)
-
-    (dp-current-error-function-advisor 
-     'gtags-find-with-file
-     'dp-gtags-next-thing)
-
-    (dp-current-error-function-advisor 
-     'gtags-find-tag
-     'dp-gtags-next-thing)
-
-    (dp-current-error-function-advisor 
-     'gtags-find-symbol
-     'dp-gtags-next-thing)
-
-    (dp-current-error-function-advisor 
-     'gtags-find-rtag
-     'dp-gtags-next-thing)
-
-    (dp-current-error-function-advisor 
-     'gtags-select-tag
-     'dp-gtags-next-thing)
-
-    (defun dp-gtags-next-thing (&optional func)
-      (interactive "P")
-      ;; Don't set the next error function here.
-      ;; Only let it be set when the functions are called directly.
-      (let ((dp-dont-set-latest-function t))
-        (dp-visit-gtags-select-buffer 'other-window)
-        (dp-down-with-wrap-non-empty 1)
-        (gtags-select-tag-other-window)
-        ;; (call-interactively func)
-        ))
-    )
-
-  (add-hook 'gtags-select-mode-hook 'dp-gtags-select-mode-hook))
-
-(when (dp-gtags-p)
-    (dp-setup-xgtags-next-error))
-
-(when (dp-xgtags-p)
-  (make-variable-buffer-local 'xgtags-update-db)
-  (setq-default xgtags-update-db nil)
-  (setq xgtags-goto-tag 'unique)
-  (defun dp-xgtags-update-file ()
-    (interactive)
-    (let ((xgtags-mode t)
-          (xgtags-update-db t))
-      (message "xgtags updating...")
-      (xgtags--update-db xgtags-rootdir)
-      (message "done.")))
-  (defalias 'guf 'dp-xgtags-update-file)
-
-  (defun* dp-xgtags-get-token (&optional
-                               (dflt-prompt "xgtags token: ")
-                               (get-token 'xgtags--token-at-point)
-                               (history xgtags--history-list))
-    (interactive)
-    (let* ((tagname (funcall get-token))
-           (prompt (if tagname
-                       (concat dflt-prompt " (default " tagname ") ")
-                     (concat dflt-prompt " "))))
-      (completing-read prompt xgtags--completition-table
-                       nil nil nil history tagname)))
-
-  (defun dp-xgtags-find-tag-other-window ()
-    (interactive)
-    (let ((tagname (dp-xgtags-get-token "other window token"))
-          (xgtags-goto-tag 'always))
-      (xgtags--goto-tag tagname)))
-
-  (defun dp-xgtags-select-selected-tag-other-window (&optional args)
-    (interactive)
-    (xgtags--follow-tag xgtags--selected-tag))
-
-  (defun dp-xgtags-select-selected-tag-other-window-cmd ()
-    "Works only in select buffer."
-    (interactive)
-    (setq xgtags--selected-tag (xgtags--find-tag-near-point))
-    (dp-push-go-back&call-interactively
-     'dp-xgtags-select-selected-tag-other-window
-     nil nil "dp-xgtags-select-selected-tag-other-window-cmd"))
-
-  (defun dp-xgtags-select-mode-hook ()
-    (dp-define-buffer-local-keys
-     `([return] dp-xgtags-select-selected-tag-other-window-cmd
-       [(meta ?-)] dp-bury-or-kill-buffer
-       [(meta return)] gtags-select-tag
-       [?.] xgtags-select-tag-near-point
-       [?1] dp-xgtags-select-tag-one-window
-       [?=] xgtags-select-tag-near-point
-       [?i] xgtags-find-with-idutils
-       [?P] xgtags-find-file
-       [?d] xgtags-find-tag
-       [?f] xgtags-parse-file
-       [?g] xgtags-find-with-grep
-       [?h] xgtags-display-browser
-       [?o] dp-gtags-select-tag-other-window-cmd
-       [?q] bury-buffer
-       [?r] xgtags-find-rtag
-       [?s] xgtags-find-symbol
-       [?t] xgtags-find-tag
-       [?u] dp-xgtags-update-file
-       [?v] xgtags-visit-rootdir
-       [space] dp-xgtags-select-tag-one-window
-       [up] ,(kb-lambda
-                 (call-interactively 'dp-up-with-wrap-non-empty))
-       [down] ,(kb-lambda
-                   (call-interactively 'dp-down-with-wrap-non-empty)))))
-
-  (defun dp-xgtags-select-tag-one-window ()
-    (interactive)
-    (xgtags-select-tag-near-point)
-    (dp-one-window++))
-
-  (defun dp-xgtags-next-thing (func)
-    (interactive)
-    ;; Don't set the next error function here.
-    ;; Only let it be set when the functions are called directly.
-    (let ((dp-dont-set-latest-function t))
-      (call-interactively func)
-      (display-buffer (xgtags--get-buffer) t)))
-
-  (defun dp-visit-xgtags-select-buffer (&optional other-window-p)
-    (interactive "P")
-    (let ((buf (dp-get-buffer (car-safe (dp-choose-buffers-by-major-mode
-                                         'xgtags-select-mode))
-                              'nil-if-nil)))
-      (if buf
-          (if other-window-p
-              (switch-to-buffer-other-window buf)
-            (switch-to-buffer buf))
-        (dp-ding-and-message "No xgtags select buffers."))))
-
-  (defun dp-setup-xgtags-next-error ()
-    (defadvice xgtags--find-with (before dp-xgtags-go-back-stuff activate)
-      "Push go back before doing an xgtags operation.
-This seems to be a fairly common routine that is run before most commands.
-It gives us a common point to save our position before going off after a
-xgtags discovery.
-*** Look at new xcscope.el. It has some mark stack capability now."
-      (dp-push-go-back "go-back advised xgtags--find-with"))
-
-    (dp-current-error-function-advisor 
-     'xgtags-find-with-idutils
-     'dp-xgtags-next-thing
-     'xgtags-select-next-tag)
-
-    (dp-current-error-function-advisor 
-     'xgtags-find-with-grep
-     'dp-xgtags-next-thing
-     'xgtags-select-next-tag)
-    
-    (dp-current-error-function-advisor 
-     'xgtags-select-next-tag
-     'dp-xgtags-next-thing)
-
-    (dp-current-error-function-advisor 
-     'xgtags-select-prev-tag
-     'dp-xgtags-next-thing)
-    
-    (dp-current-error-function-advisor 
-     'xgtags-switch-to-buffer-other-window
-     'dp-xgtags-next-thing
-     'xgtags-select-next-tag)
-
-    (dp-current-error-function-advisor 
-     'xgtags-select-tag-near-point
-     'dp-xgtags-next-thing
-     'xgtags-select-next-tag)
-
-    (dp-current-error-function-advisor 
-     'xgtags-select-tag-by-event
-     'dp-xgtags-next-thing
-     'xgtags-select-next-tag)
-    )
-
-  (dp-setup-xgtags-next-error)
-
-  (add-hook 'xgtags-select-mode-hook 'dp-xgtags-select-mode-hook))
-
+;;;
+;;; end *tags support
+;;; begin hide ifdef support
+;;;
 (defvar dp-wants-hide-ifdef-p nil
   "Do I want the hide ifdef package activated?")
 

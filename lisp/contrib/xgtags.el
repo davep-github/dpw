@@ -868,9 +868,13 @@ a list with those."
          (prompt (if tagname
                      (concat dflt-prompt " (default " tagname ") ")
                    (concat dflt-prompt " ")))
-         (input (completing-read prompt xgtags--completition-table
-                                 nil nil nil history tagname)))
+         (input (completing-read prompt 
+                                 (or ;; 'gtags-completing-gtags
+                                     xgtags--completition-table
+                                     'dp-gtags-completing-read-completor)
+                                 nil nil nil history (or tagname ""))))
     (xgtags--goto-tag input option)))
+
 
 (defun xgtags-find-tag ()
   "Input tag name and move to the definition."
@@ -1000,7 +1004,7 @@ for each tag."
           (with-temp-buffer
             (call-process "global" nil t nil "-c")
             (goto-char (point-min))
-            (while (looking-at xgtags--symbol-regexp)
+            (while (re-search-forward xgtags--symbol-regexp nil t)
               (intern (match-string-no-properties 0) xgtags--completition-table)
               (forward-line)))))))
     (message "Making completion list ... Done")))
