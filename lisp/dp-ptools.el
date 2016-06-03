@@ -533,9 +533,14 @@ Oddly, it doesn't handle structs.")
 
 (defun dp-tag-find-other-window (&rest r)
   (interactive)
-  (call-interactively 'gtags-find-tag-other-window))
-;;   (call-interactively (dp-*TAGS-handler-other-window-finder 
-;;                        (dp-get-*TAGS-handler))))
+  (cond
+   ((dp-xgtags-p)
+    (call-interactively 'dp-xgtags-find-tag-other-window))
+   ((dp-gtags-p)
+    (call-interactively 'gtags-find-tag-other-window))
+   (t
+    (error "No find tag other windower."))))
+
 (global-set-key [(meta ?.)] 'dp-tag-find)
 (global-set-key [(control ?x) (control ?.)]
   (kb-lambda 
@@ -628,24 +633,41 @@ It gives us a common point to save our position before going off after a
 gtags discovery."
       (dp-push-go-back "go-back advised gtags-goto-tag"))
 
-    (dp-current-error-function-advisor 'dp-gtags-select-tag-one-window
-                                       'dp-gtags-next-thing)
-    (dp-current-error-function-advisor 'dp-gtags-select-tag-other-window
-                                       'dp-gtags-next-thing)
-    (dp-current-error-function-advisor 'gtags-find-with-idutils
-                                       'dp-gtags-next-thing)
-    (dp-current-error-function-advisor 'gtags-find-with-grep
-                                       'dp-gtags-next-thing)
-    (dp-current-error-function-advisor 'gtags-find-with-file
-                                       'dp-gtags-next-thing)
-    (dp-current-error-function-advisor 'gtags-find-tag
-                                       'dp-gtags-next-thing)
-    (dp-current-error-function-advisor 'gtags-find-symbol
-                                       'dp-gtags-next-thing)
-    (dp-current-error-function-advisor 'gtags-find-rtag
-                                       'dp-gtags-next-thing)
-    (dp-current-error-function-advisor 'gtags-select-tag
-                                       'dp-gtags-next-thing)
+    (dp-current-error-function-advisor 
+     'dp-gtags-select-tag-one-window
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'dp-gtags-select-tag-other-window
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-with-idutils
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-with-grep
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-with-file
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-tag
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-symbol
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-rtag
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-select-tag
+     'dp-gtags-next-thing)
 
     (defun dp-gtags-next-thing (&optional func)
       (interactive "P")
@@ -677,20 +699,39 @@ gtags discovery."
       (message "done.")))
   (defalias 'guf 'dp-xgtags-update-file)
 
-  (defun dp-xgtags-select-tag-other-window ()
+  (defun* dp-xgtags-get-token (&optional
+                               (dflt-prompt "xgtags token: ")
+                               (get-token 'xgtags--token-at-point)
+                               (history xgtags--history-list))
     (interactive)
-    (xgtags--follow-tag xgtags--selected-tag t))
-  
-  (defun dp-xgtags-select-tag-other-window-cmd ()
+    (let* ((tagname (funcall get-token))
+           (prompt (if tagname
+                       (concat dflt-prompt " (default " tagname ") ")
+                     (concat dflt-prompt " "))))
+      (completing-read prompt xgtags--completition-table
+                       nil nil nil history tagname)))
+
+  (defun dp-xgtags-find-tag-other-window ()
+    (interactive)
+    (let ((tagname (dp-xgtags-get-token "other window token"))
+          (xgtags-goto-tag 'always))
+      (xgtags--goto-tag tagname)))
+
+  (defun dp-xgtags-select-selected-tag-other-window (&optional args)
+    (interactive)
+    (xgtags--follow-tag xgtags--selected-tag))
+
+  (defun dp-xgtags-select-selected-tag-other-window-cmd ()
+    "Works only in select buffer."
     (interactive)
     (setq xgtags--selected-tag (xgtags--find-tag-near-point))
     (dp-push-go-back&call-interactively
-     'dp-xgtags-select-tag-other-window
-     nil nil "dp-xgtags-select-tag-other-window-cmd"))
+     'dp-xgtags-select-selected-tag-other-window
+     nil nil "dp-xgtags-select-selected-tag-other-window-cmd"))
 
   (defun dp-xgtags-select-mode-hook ()
     (dp-define-buffer-local-keys
-     `([return] dp-xgtags-select-tag-other-window-cmd
+     `([return] dp-xgtags-select-selected-tag-other-window-cmd
        [(meta ?-)] dp-bury-or-kill-buffer
        [(meta return)] gtags-select-tag
        [?.] xgtags-select-tag-near-point
@@ -748,29 +789,40 @@ xgtags discovery.
 *** Look at new xcscope.el. It has some mark stack capability now."
       (dp-push-go-back "go-back advised xgtags--find-with"))
 
-    (dp-current-error-function-advisor 'xgtags-find-with-idutils
-                                       'dp-xgtags-next-thing
-                                       'xgtags-select-next-tag)
-    (dp-current-error-function-advisor 'xgtags-find-with-grep
-                                       'dp-xgtags-next-thing
-                                       'xgtags-select-next-tag)
-    
-    (dp-current-error-function-advisor 'xgtags-select-next-tag
-                                       'dp-xgtags-next-thing)
-    (dp-current-error-function-advisor 'xgtags-select-prev-tag
-                                       'dp-xgtags-next-thing)
-    
-    (dp-current-error-function-advisor 'xgtags-switch-to-buffer-other-window
-                                       'dp-xgtags-next-thing
-                                       'xgtags-select-next-tag)
-    (dp-current-error-function-advisor 'xgtags-select-tag-near-point
-                                       'dp-xgtags-next-thing
-                                       'xgtags-select-next-tag)
-    (dp-current-error-function-advisor 'xgtags-select-tag-by-event
-                                       'dp-xgtags-next-thing
-                                       'xgtags-select-next-tag)
+    (dp-current-error-function-advisor 
+     'xgtags-find-with-idutils
+     'dp-xgtags-next-thing
+     'xgtags-select-next-tag)
 
+    (dp-current-error-function-advisor 
+     'xgtags-find-with-grep
+     'dp-xgtags-next-thing
+     'xgtags-select-next-tag)
+    
+    (dp-current-error-function-advisor 
+     'xgtags-select-next-tag
+     'dp-xgtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'xgtags-select-prev-tag
+     'dp-xgtags-next-thing)
+    
+    (dp-current-error-function-advisor 
+     'xgtags-switch-to-buffer-other-window
+     'dp-xgtags-next-thing
+     'xgtags-select-next-tag)
+
+    (dp-current-error-function-advisor 
+     'xgtags-select-tag-near-point
+     'dp-xgtags-next-thing
+     'xgtags-select-next-tag)
+
+    (dp-current-error-function-advisor 
+     'xgtags-select-tag-by-event
+     'dp-xgtags-next-thing
+     'xgtags-select-next-tag)
     )
+
   (dp-setup-xgtags-next-error)
 
   (add-hook 'xgtags-select-mode-hook 'dp-xgtags-select-mode-hook))
