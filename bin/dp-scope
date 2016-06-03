@@ -43,14 +43,7 @@ arg=${1-}
 : ${find_up_p=t}
 : ${db_files=()}
 
-[ -z "${db_finder-}" ] && {
-    if [ "${DP_CSCOPE_PROGRAM}" = "gtags-cscope" ]
-    then
-        db_finder_file=GTAGS
-    else
-        db_finder_file=cscope.out
-    fi
-}
+: ${db_finder:=cscope.out}
 
 if (($# == 1))
 then
@@ -77,6 +70,8 @@ else
           -i|--including|--include|--inc|-h|--includes) field_num=8;;
           --find-up|--fup) find_up_p=t;;
           --use-dot|--dot-only|--no-find-up) find_up_p=;;
+          # for convenience, let us do a global completion here.
+          -c|--complete) shift; global-complete "$@"; exit;;
           --) shift; break;;
           *) break;;
       esac
