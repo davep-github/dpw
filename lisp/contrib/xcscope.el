@@ -2084,6 +2084,7 @@ using the mouse."
 	      (setq cscope-process-output nil
 		    cscope-last-file nil
 		    )
+              (dmessage "default-directory>%s<" default-directory)
               (dmessage "cscope: %s %s %s %s %s" cscope-program nil outbuf t options)
 	      (setq cscope-process
 		    (apply 'start-process "cscope" outbuf

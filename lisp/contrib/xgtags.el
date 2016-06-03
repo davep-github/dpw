@@ -256,7 +256,7 @@ another."
   :type 'function
   :group 'xgtags)
 
-(defcustom xgtags-kill-buffers t
+(defcustom xgtags-kill-buffers nil
   "*Should the current buffer be killed when the stack entry is
 popped?  Be careful: even buffers not opened by xgtags itself will be
 killed!"
@@ -549,7 +549,8 @@ representation and move point to the beginning of TAG."
     (when update
       (xgtags--update-tag old-sel)
       (xgtags--update-tag xgtags--selected-tag)
-      (goto-char (car (xgtags--find-tag-region xgtags--selected-tag)))
+      (goto-char (or (car (xgtags--find-tag-region xgtags--selected-tag))
+                     (point)))
       (when (get-buffer-window (current-buffer))
         (set-window-point (get-buffer-window (current-buffer)) (point))))))
 
@@ -938,8 +939,10 @@ a list with those."
     (when delete
       (kill-buffer (current-buffer)))
     (xgtags--update-buffer context)
-    (switch-to-buffer (xgtags--context-buffer context))
-    (goto-char (xgtags--context-point context))))
+    (let ((buf (xgtags--context-buffer context)))
+      (when (buffer-live-p buf)
+        (switch-to-buffer buf)
+        (goto-char (xgtags--context-point context))))))
 
 (defun xgtags-query-replace-regexp (to-string)
   "Run over the current *xgtags* buffer and to `query-replace-regexp'
