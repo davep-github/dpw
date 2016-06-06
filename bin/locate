@@ -130,10 +130,10 @@ do
       while [ -n "${keep_on_keepin_on_p}" ]
       do
         echo 1>&2 -n "You are in a sub-directory of ${p}.
-  Do you want to continue [Y/n/<locator>]? "  
+  Do you want to continue with default locate [Y/n/<locator>]? "  
         read
         case "${REPLY}" in
-            [yYtT1]) EExec exec "${real_locate}" "$@";;
+            [yYtT1]|"") EExec exec "${real_locate}" "$@";;
             [nNfF0qQxX]) exit 0;;
             *) EExec "${REPLY}" "$@"; exit;;
         esac
