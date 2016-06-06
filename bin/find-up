@@ -79,11 +79,13 @@ def main(args):
     stop_dir = "/"
     start_dir = None                    # Use pwd.
     # Print this when file is not found to provide positional info about failure.
-    placeholder = ""
     global canonicalize_path
     global All_p
     global Dirs_too_p
     print_results_p = True
+    # colon separated (if > 1 and print_results_p) path of dirs in which
+    # found file(s) exist(s).
+    print_as_path_p = False
     opts, args = getopt.getopt(sys.argv[1:], 'hs:S:pP:arAqd')
     for o, v in opts:
         if o == '-q':
@@ -100,7 +102,10 @@ def main(args):
             start_dir = v
             continue
         if o == '-p':
-            placeholder = "//"
+            # No sense in printing as a path unless we are searching for all
+            # instances.
+            print_as_path_p = True
+            All_p = True
             continue
         if o == '-P':
             placeholder = v
@@ -128,12 +133,13 @@ def main(args):
         if n:
             matches.extend(n)
 
-    if len(matches) > 0:
-        match_string = "\n".join(matches)
-    else:
-        match_string = None
-
-    if print_results_p and match_string:
+    if print_results_p and len(matches) > 0:
+        if print_as_path_p:
+            matches = [opath.dirname(m) for m in matches]
+            sep = ":"
+        else:
+            sep = "\n"
+        match_string = sep.join(matches)
         print match_string
 
     return num_not_found
