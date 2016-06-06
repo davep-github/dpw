@@ -273,6 +273,11 @@ killed!"
   :type 'string
   :group 'xgtags)
 
+(defcustom xgtags-global-program "ranking-global-gtags.py"
+  "*Name of `global' executable."
+  :type 'string
+  :group 'xgtags)
+
 (defconst xgtags--symbol-regexp "[A-Za-z_][A-Za-z_0-9]*"
   "Regexp matching tag name.")
 (defconst xgtags--definition-regexp "#[ \t]*define[ \t]+\\|ENTRY(\\|ALTENTRY("
@@ -719,7 +724,7 @@ with the previous query results."
           (when xgtags-update-db
             (xgtags--update-db xgtags-rootdir))
           (with-temp-buffer
-            (if (zerop (apply #'call-process "global" nil t nil
+            (if (zerop (apply #'call-process xgtags-global-program nil t nil
                               (xgtags--list-sans-nil
                                "--cxref"
                                (xgtags--option-string option)
@@ -851,7 +856,7 @@ a list with those."
   (unless xgtags-rootdir
     (with-temp-buffer
       (setq xgtags-rootdir
-            (if (zerop (call-process "global" nil t nil "-pr"))
+            (if (zerop (call-process xgtags-global-program nil t nil "-pr"))
                 (file-name-as-directory (buffer-substring (point-min)
                                                           (1- (point-max))))
               default-directory))))
@@ -1002,7 +1007,7 @@ for each tag."
        (let ((xgtags-rootdir (and dir (file-name-as-directory dir))))
          (with-xgtags-environment
           (with-temp-buffer
-            (call-process "global" nil t nil "-c")
+            (call-process xgtags-global-program nil t nil "-c")
             (goto-char (point-min))
             (while (re-search-forward xgtags--symbol-regexp nil t)
               (intern (match-string-no-properties 0) xgtags--completition-table)
