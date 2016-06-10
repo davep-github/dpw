@@ -269,6 +269,7 @@ class FileTreeWalker:
 
             whither = os.getcwd()
             os.chdir(cwd)
+            num_files = 0
             flist = []
             for f in files:
                 dp_io.fdebug(DEBUG_SHOW_ALL_FILES, 'f>%s<\n', f)
@@ -304,8 +305,11 @@ class FileTreeWalker:
                 # saddens me to think of the extra memory use and concomitant
                 # energy waste and we glumly observe that this choice of file
                 # name is hastening the demise of our planet through global
-                # warning.
+                # warming.
                 flist.append('./%s' % f)
+##finish this                 num_files += 1
+##finish this                 if ((num_files > 1000) and (num_files % 1000)) == 0:
+##finish this                     dp_io.fprintf(sys.stderr, "Num files so far: %d\n", num_files)
 
             if flist:
                 flist = self.filter_global_file_types(flist)
