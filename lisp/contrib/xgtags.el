@@ -85,6 +85,8 @@
 (defvar xgtags-mode-map nil
   "Keymap used in xgtags minor mode.")
 
+(defvar icky-global-tag-name nil)
+(defvar icky-directory-from-which-we-are-tag-searching nil)
 
 ;;; Faces
 
@@ -276,6 +278,11 @@ killed!"
 (defcustom xgtags-global-program "ranking-global-gtags.py"
   "*Name of `global' executable."
   :type 'string
+  :group 'xgtags)
+
+(defcustom xgtags-global-program-args '()
+  "*`global' executable's args."
+  :type '(repeat string)
   :group 'xgtags)
 
 (defconst xgtags--symbol-regexp "[A-Za-z_][A-Za-z_0-9]*"
@@ -489,6 +496,12 @@ killed!"
   "This function recieves a list of tags, erases the current buffer
 and then inserts the tags nicely."
   (erase-buffer)
+  (when icky-global-tag-name
+    (insert (format "Finding symbol: %s\n" icky-global-tag-name))
+    (setq icky-global-tag-name nil))
+  (when icky-directory-from-which-we-are-tag-searching
+    (setq default-directory icky-directory-from-which-we-are-tag-searching
+          icky-directory-from-which-we-are-tag-searching nil))
   (let ((current-file nil))
     (dolist (tag tags)
       (let ((file (xgtags--tag-file tag)))
@@ -641,7 +654,7 @@ funcalls FUNC with the match as argument."
 ;;; handling the selection buffer
 
 (defun xgtags--get-buffer ()
-  "Return the selection buffer. If it was kill recreate and fill it
+  "Return the selection buffer. If it was killed recreate and fill it
 with the previous query results."
   (let ((buffer (get-buffer xgtags-select-buffer-name)))
     (unless buffer
@@ -725,12 +738,16 @@ with the previous query results."
             (xgtags--update-db xgtags-rootdir))
           (with-temp-buffer
             (if (zerop (apply #'call-process xgtags-global-program nil t nil
-                              (xgtags--list-sans-nil
-                               "--cxref"
-                               (xgtags--option-string option)
-                               (unless (eq xgtags-show-paths 'relative)
-                                 "--absolute")
-                               tagname)))
+                              (append
+                               (if (nCu-p 2)
+                                   '("--rgg-all-matches"))
+                               xgtags-global-program-args
+                               (xgtags--list-sans-nil
+                                "--cxref"
+                                (xgtags--option-string option)
+                                (unless (eq xgtags-show-paths 'relative)
+                                  "--absolute")
+                                tagname))))
                 (setq tags (append tags (xgtags--collect-tags-in-buffer)))
               (message (buffer-substring (point-min)(1- (point-max))))))))))
     (message "Searching %s done" tagname)
@@ -821,6 +838,7 @@ a list with those."
          (num-tags (length tags)))
     (if (= num-tags 0)
         (message (xgtags--option-error-msg option) tagname)
+      (message "Searching %s done, %d matches" tagname num-tags)
       (xgtags--push-context)
       (xgtags--update-minor-mode-text)
       (with-xgtags-buffer (:save-excursion t :read-only nil)
@@ -878,6 +896,7 @@ a list with those."
                                      xgtags--completition-table
                                      'dp-gtags-completing-read-completor)
                                  nil nil nil history (or tagname ""))))
+    (setq icky-global-tag-name input)
     (xgtags--goto-tag input option)))
 
 
@@ -905,7 +924,7 @@ a list with those."
 (defun xgtags-find-with-idutils ()
   "Input pattern, search with id-utils(1) and move to the locations."
   (interactive)
-  (xgtags--find-with "Find pattern:" :option 'idutils))
+  (xgtags--find-with "Find pattern (idutils):" :option 'idutils))
 
 (defun xgtags-find-file ()
   "Input pattern and move to the top of the file."
