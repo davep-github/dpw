@@ -250,6 +250,6 @@ export LC_COLLATE=C
 # Make sure we're defined but don't change anything.
 : ${DP_GNU_EDITING_SERVER=""}
 
-export DP_CODE_INDEX_FINDER_FILE=cscope.*
+export DP_CODE_INDEX_FINDER_FILE=cscope.files
 export DP_CODE_INDEX_FINDER_WORK_FILE=${DP_CODE_INDEX_FINDER_FILE}.work
 true
