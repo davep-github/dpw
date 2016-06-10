@@ -169,6 +169,7 @@ def run_globals_over_path(argv, path, start_dir=opath.curdir,
     original_dir = opath.realpath(opath.curdir)
     if num_dbs is None:
         num_dbs = len(path)
+    log_file.write("run_globals_over_path(): all_matches_p: {}\n".format(all_matches_p))
     log_file.write("run_globals_over_path(): BEFORE: path>{}<\n".format(path))
     path = path[first_db:num_dbs]
     log_file.write("run_globals_over_path(): AFTER: path>{}<\n".format(path))
@@ -176,7 +177,7 @@ def run_globals_over_path(argv, path, start_dir=opath.curdir,
     ret = []
     for p in path:
         p = opath.dirname(p)
-        #print >>sys.stderr, "p>%s<" % (p,)
+        log_file.write("run_globals_over_path(): p>{}<\n".format(p))
         if opath.isdir(p):
             os.chdir(p)
             x = run_global(argv, start_dir=start_dir)
@@ -193,7 +194,7 @@ def run_globals(argv, path=None, all_p=True, start_dir=opath.curdir,
                 all_matches_p=False):
     if path == None:
         path = find_up.find_up("GTAGS", all_p=all_p)
-
+    log_file.write("run_globals(): all_p: {}, path>{}<\n".format(all_p, path))
     if path != None:
         ret = run_globals_over_path(argv, path, start_dir=start_dir,
                                     all_matches_p=all_matches_p)

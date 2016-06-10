@@ -6,8 +6,8 @@ import dp_sequences, dp_io, dp_utils
 import ranking_global_gtags_lib
 rgg = ranking_global_gtags_lib
 #rgg.log_file = sys.stderr
-rgg_log_file_name = "bubba"
-rgg_log_file_name = None
+#rgg_log_file_name = "bubba"
+#rgg_log_file_name = None
 rgg_log_file_name = os.environ.get("rgg_log_file_name", None)
 if rgg_log_file_name:
     if rgg_log_file_name == '--err':
@@ -130,37 +130,48 @@ def rank_main(argv):
         sys.exit(0)
 
     opt_cre = re.compile("--rgg-(.*)$")
-    for arg in argv[1:]:
+    # So we don't remove elements from the iteration list
+    argv_copy = argv[0:]
+    for arg in argv_copy[1:]:
         opt = opt_cre.search(arg)
+        #print >>sys.stderr, "arg>{}<, opt>{}<".format(arg, opt)
+
         if not opt:
             break
-        opt = opt.group(1)
+        opt_name = opt.group(1)
+        #print >>sys.stderr, "opt>{}<, opt_name>{}<".format(opt, opt_name)
         if opt_name == "no-uniq":
             uniqify_p = False
-            argv.delete(arg)
+            argv.remove(arg)
             continue
         if opt_name == "first-db":
             all_p = False
-            argv.delete(arg)
+            argv.remove(arg)
             continue
         if opt_name == "all-db":
             all_p = True
-            argv.delete(arg)
+            argv.remove(arg)
             continue
-        if ((opt_name == "stop-after-first")
-            or
-            (opt_name == "first-match")
-            or
-            (opt_name == "not-all-matches")):
+        # This means all matches from first DB that has matches
+        if opt_name in ("stop-after-first",
+                        "first-match",
+                        "first-db-match",
+                        "first-db-matches",
+                        "not-all_matches_p"):
              all_matches_p = False
-             argv.delete(arg)
+             argv.remove(arg)
              continue
         if opt_name == "all-matches":
             all_matches_p = True
-            argv.delete(arg)
+            argv.remove(arg)
             continue
 
-    #@todo XXX This should do this in every db searched.
+
+    #@todo XXX We should do this in every db searched.
+    #@todo XXX Why was it commented out?
+    #@todo XXX Pass an update flag to run_globals_over_path()?  This way we
+    #@todo XXX hit only those dbs we search.
+    #@todo XXX Or do we always want to do them all?
 #    if argv[1] in ('-u' '--update'):
 #        sys.exit(subprocess.call(["global"] + argv[1:]))
 
@@ -173,7 +184,7 @@ def rank_main(argv):
     path.extend(Database_locations)
     dp_io.ctracef(1, "before uniq: path>{}<\n", "\n ".join(path))
     rgg.log_file.write("before uniq: path>{}<\n".format("\n ".join(path)))
-    path = dp_sequences.uniqify_list(path)
+    path = dp_sequences.uniqify_list_ordered(path)
     dp_io.ctracef(1, "after uniq: path>{}<\n", "\n ".join(path))
     rgg.log_file.write("after uniq: path>{}<\n".format("\n ".join(path)))
 

@@ -108,10 +108,15 @@ Usage_error()
 M=${M-$PWD}
 if [ -z "${KDIR-}" ]
 then
-    KDIR=/home/dpanarit/work/ras/edc/brahma/ec/linux/
+    KDIR=/home/dpanarit/work/ras/edc/brahma/ec/kgd/linux/
     echo "Using hardcoded kernel dir (KDIR):
 >${KDIR}<
   Please set in, say, ~/.rc/env.<PROJECT>"
 fi 1>&2
 
-EExec exec bash -c "make -C $KDIR M=${M} $@"
+[ -d "${KDIR}" ] || {
+    echo "KDIR>${KDIR}< does not exist."
+    exit 1
+} 1>&2
+
+EExec exec bash -c "/usr/bin/make -C $KDIR M=${M} $@"
