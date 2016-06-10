@@ -10466,15 +10466,15 @@ Sort of \"Yes, he said invisibling\"."
   (dp-unextent-region (dp-make-highlight-region-extent-id "dp-hidden")))
 (dp-defaliases 'dp-unhide-region 'dur 'dsr 'dv 'dp-show-region)
 
-(defun dp-log-base-b (base num)
+(defun dp-log-base-b (num &optional base)
   (interactive)
-  (/ (log num) (log base)))
+  (/ (log num) (log (or base 2))))
 
 (defun dp-num-C-u (&optional prefix-arg)
   (interactive "P")
   (setq-ifnil prefix-arg current-prefix-arg)
   (and (listp prefix-arg)        ; Ensure it's a list ==> true C-u vs C-<num>
-       (truncate (dp-log-base-b 4 (prefix-numeric-value prefix-arg)))))
+       (truncate (dp-log-base-b (prefix-numeric-value prefix-arg) 4))))
 
 (defun* nCu-p (&optional num-C-u prefix-arg (op 'eq))
   "Return non-nil if number of C-us in `current-prefix-arg' == NUM-C-U.
@@ -14482,7 +14482,7 @@ something.")
               dp-p4-stupid-hack-saved-sb sb)
         (dp-maybe-expand-p4-location file sb)))))
 
-(defun dp-show-buffer-file-name (&optional kill-name-p buffer)
+(defun dp-get-buffer-file-name-info (&optional kill-name-p buffer)
   "Show the BUFFER or current-buffer's file name in echo area.
 KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
   (interactive "P")
@@ -14499,13 +14499,27 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
               (setq name (file-name-directory buffer-file-truename)
                     name-type "buffer-dir-truename")
               (kill-new name))))))
+    (cons name name-type)))
+
+(defun dp-get-buffer-file-name (&optional kill-name-p buffer)
+  (interactive "P")
+  (car (dp-get-buffer-file-name-info kill-name-p buffer)))
+
+(defun dp-get-buffer-dir-name (&optional kill-name-p buffer)
+  (interactive "P")
+  (let ((filename (dp-get-buffer-file-name kill-name-p buffer)))
+    (when filename
+      (file-name-directory filename))))
+
+(defun dp-show-buffer-file-name (&optional kill-name-p buffer)
+  (interactive "P")
+  (let ((name-name-type (dp-get-buffer-file-name-info kill-name-p buffer)))
     (message "%s%s: %s"
              (if kill-name-p
                  "Copied "
                "")
-             name-type
-             name)))
-
+             (cdr name-name-type)
+             (car name-name-type))))
 
 (defun dp-grep-buffers (regexp &optional buffer-filename-regexp)
   "Search for REGEXP in all buffers matching BUFFER-FILENAME-REGEXP.
