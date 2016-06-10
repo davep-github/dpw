@@ -616,6 +616,7 @@ gtags discovery."
     (interactive)
     (let ((tagname (dp-xgtags-get-token "other window token: "))
           (xgtags-goto-tag 'always))
+      ;;(other-window 1)
       (xgtags--goto-tag tagname)))
 
   (defun dp-xgtags-select-selected-tag-other-window (&optional args)
@@ -689,6 +690,8 @@ This seems to be a fairly common routine that is run before most commands.
 It gives us a common point to save our position before going off after a
 xgtags discovery.
 *** Look at new xcscope.el. It has some mark stack capability now."
+      (setq icky-directory-from-which-we-are-tag-searching
+            (dp-get-buffer-dir-name))
       (dp-push-go-back "go-back advised xgtags--find-with"))
 
     (dp-current-error-function-advisor 
