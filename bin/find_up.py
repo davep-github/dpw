@@ -29,8 +29,9 @@ All_p = False
 def find_up(file_name, stop_dir="/", start_dir=None, all_p=False):
     global All_p
     All_p = all_p
-    #print >>sys.stderr, "start_dir>%s<" % (start_dir,)
-    #print >>sys.stderr, "stop_dir>%s<" % (stop_dir,)
+    # print >>sys.stderr, "start_dir>%s<" % (start_dir,)
+    # print >>sys.stderr, "stop_dir>%s<" % (stop_dir,)
+    # print >>sys.stderr, "all_p>%s<" % (all_p,)
     if not start_dir:
         start_dir = os.environ["PWD"]   # This preserves link names.
     start_dir = canonicalize_path(start_dir)
@@ -49,9 +50,9 @@ def find_up(file_name, stop_dir="/", start_dir=None, all_p=False):
 
     ret = []
     while components:
-        #print >>sys.stderr, "components>%s<" % (components,)
+        # print >>sys.stderr, "components>%s<" % (components,)
         pwd = make_path_from_components(components)
-        #print >>sys.stderr, "pwd>%s<" % (pwd,)
+        # print >>sys.stderr, "pwd>%s<" % (pwd,)
         pn_comps = [pwd, file_name]
         path_name = make_path_from_components(pn_comps)
         #print >>sys.stderr, "path_name>%s<" % (path_name,)
@@ -61,13 +62,13 @@ def find_up(file_name, stop_dir="/", start_dir=None, all_p=False):
             else:
                 #print >>sys.stderr, "Adding path_name>%s<" % (path_name,)
                 ret.append(path_name)
-        #print >>sys.stderr, "pwd>%s<" % (pwd,)
-        #print >>sys.stderr, "stop_dir>%s<" % (stop_dir,)
+        # print >>sys.stderr, "pwd>%s<" % (pwd,)
+        # print >>sys.stderr, "stop_dir>%s<" % (stop_dir,)
         if pwd == stop_dir:
-            #print >>sys.stderr, "stopping loop"
-            return ret
+            # print >>sys.stderr, "stopping loop"
+            break
         components = components[:-1]
-    #print >>sys.stderr, "exiting loop"
+    # print >>sys.stderr, "exiting loop, ret>%s<" % (ret,)
     return ret
 
 def main(args):
