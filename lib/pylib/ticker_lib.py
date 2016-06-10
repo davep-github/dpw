@@ -5,8 +5,10 @@ import dp_utils, dp_time
 from dp_io import fprintf
 def Ticker_printf(ticker, fmt, *args, **kwargs):
     ticker_ostream = kwargs.get("ticker_ostream")
+    #print >>sys.stderr, "[ticker_ostream]:", ticker_ostream
     if not ticker_ostream:
         ticker_ostream = ticker.ostream
+        #print >>sys.stderr, "ticker.ostream:", ticker_ostream
     #print "ticker_ostream: {}".format(ticker_ostream)
     llen = 0
     if kwargs.get("just_flush_p"):
@@ -95,9 +97,14 @@ class Ticker_t(object):
                                        time_time() - self.time0,)
         return ts_string + self.timestamp_separator_string
     
-    def make_tick(self, tick=None, call_tick=None, tick_prefix=""):
+    def make_tick(self, tick=None, call_tick=None, tick_prefix="",
+                  ostream=None):
+        #print >>sys.stderr, "make_tick::ostream:", ostream
         if not tick:
             tick=call_tick
+        if ostream is None:
+            ostream = self.ostream
+        #print >>sys.stderr, "make_tick::ostream[2]:", ostream
         #print "self.sep_string>%s<, tick>%s<\n" % (self.sep_string, tick)
         if self.tick_show_units_p:
             tick = dp_utils.numPlusUnits(float(self.counter),
@@ -109,7 +116,7 @@ class Ticker_t(object):
         # Line breaks (newlines) happen here.
         output_str = "%s%s%s%s" % (self.sep_string, tick_prefix,
                                    ts_string, tick)
-        self.do_printor(self, "%s", output_str)
+        self.do_printor(self, "%s", output_str, ticker_ostream=ostream)
         self.sep_string = self.comma
 
     def fini(self, force_grand_total_p=False, reason=""):
@@ -123,18 +130,24 @@ class Ticker_t(object):
     def tick_not_ready(self):
         pass
 
-    def tick_ready(self, tick, tick_prefix, forced_p=False):
+    def tick_ready(self, tick, tick_prefix, forced_p=False, ostream=None):
+        #print >>sys.stderr, "ticker_ready::ostream:", ostream
+
+        if not ostream:
+            ostream = self.ostream
         self.make_tick(tick=tick, call_tick=self.counter,
-                       tick_prefix=tick_prefix)
+                       tick_prefix=tick_prefix, ostream=ostream)
         if not forced_p:
             self.num_ticks += 1
 
     def __call__(self, reset_counter=False, set_n=False,
                  increment=None, tick=None, tick_prefix="",
                  force_tick_p=False, ostream=None):
+        #print >>sys.stderr, "__call__::ostream:", ostream
+
         if force_tick_p:
             self.tick_ready(tick=tick, tick_prefix=tick_prefix,
-                            forced_p=force_tick_p)
+                            forced_p=force_tick_p, ostream=ostream)
             return
         if reset_counter is not False:
             self.reset_counter()
@@ -142,7 +155,7 @@ class Ticker_t(object):
             self.tick_interval = set_n
         if self.tick_interval is not None:
             if (self.counter % self.tick_interval) == 0:
-                self.tick_ready(tick=tick, tick_prefix=tick_prefix)
+                self.tick_ready(tick=tick, tick_prefix=tick_prefix, ostream=ostream)
             else:
                 self.tick_not_ready()
             self.counter += increment or self.increment
