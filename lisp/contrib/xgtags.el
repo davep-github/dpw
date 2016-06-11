@@ -732,24 +732,26 @@ with the previous query results."
      (lambda (dir)
        (when dir
          (message "Searching %s in %s ..." tagname dir))
-       (let ((xgtags-rootdir (and dir (file-name-as-directory dir))))
+       (let ((xgtags-rootdir (and dir (file-name-as-directory dir)))
+             (global-args (append
+                           (if (nCu-p 2)
+                               '("--rgg-all-matches"))
+                           xgtags-global-program-args
+                           (xgtags--list-sans-nil
+                            "--cxref"
+                            (xgtags--option-string option)
+                            (unless (eq xgtags-show-paths 'relative)
+                              "--absolute")
+                            tagname))))
+         (message "global-args>%s<" global-args)
          (with-xgtags-environment
-          (when xgtags-update-db
-            (xgtags--update-db xgtags-rootdir))
-          (with-temp-buffer
-            (if (zerop (apply #'call-process xgtags-global-program nil t nil
-                              (append
-                               (if (nCu-p 2)
-                                   '("--rgg-all-matches"))
-                               xgtags-global-program-args
-                               (xgtags--list-sans-nil
-                                "--cxref"
-                                (xgtags--option-string option)
-                                (unless (eq xgtags-show-paths 'relative)
-                                  "--absolute")
-                                tagname))))
-                (setq tags (append tags (xgtags--collect-tags-in-buffer)))
-              (message (buffer-substring (point-min)(1- (point-max))))))))))
+           (when xgtags-update-db
+             (xgtags--update-db xgtags-rootdir))
+           (with-temp-buffer
+             (if (zerop (apply #'call-process xgtags-global-program nil t nil
+                               global-args))
+                 (setq tags (append tags (xgtags--collect-tags-in-buffer)))
+               (message (buffer-substring (point-min)(1- (point-max))))))))))
     (message "Searching %s done" tagname)
     tags))
 

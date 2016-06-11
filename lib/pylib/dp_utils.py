@@ -13,7 +13,6 @@ class DP_UTILS_RT_Exception(RuntimeError):
         self.init_args = args
         self.init_keys = keys
 
-
 __NS__ = None
 __GLOBALS__ = None
 def utils_init(export_ns, global_ns):
