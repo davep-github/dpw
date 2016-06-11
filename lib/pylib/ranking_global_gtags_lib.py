@@ -4,6 +4,7 @@ import sys, os, re, subprocess
 import find_up, dp_io, dp_sequences
 opath = os.path
 
+GLOBAL_PROGRAM_NAME = "global"
 try:
     if log_file is not None:
         pass
@@ -16,6 +17,31 @@ except NameError:
     except NameError:
         LOG_FILE_NAME = None
         log_file = dp_io.Null_dev_t()
+
+Rgg_log_file_name = os.environ.get("rgg_log_file_name", None)
+
+def setup_logging(log_file_name=None):
+    #rgg.log_file = sys.stderr
+    #rgg_log_file_name = "bubba"
+    #rgg_log_file_name = None
+    global Rgg_log_file_name
+    global log_file
+    if log_file_name:
+        Rgg_log_file_name = log_file_name
+    if Rgg_log_file_name:
+        if Rgg_log_file_name == '--err':
+            log_file = sys.stderr
+        elif Rgg_log_file_name == '--out':
+            log_file = sys.stdout
+        else:
+            Rgg_log_file_name = os.path.join(os.environ["HOME"], "var/log",
+                                             Rgg_log_file_name)
+    if not log_file:
+        if Rgg_log_file_name:
+            log_file = open(Rgg_log_file_name, 'a')
+        else:
+            log_file = dp_io.Null_dev_t()
+    return log_file
 
 ## Make this environment specific
 ## In order of rank.
@@ -155,9 +181,10 @@ def run_global(argv, start_dir=opath.curdir):
     log_file.write("run_global(), cwd: %s\n"
                        % (opath.realpath(opath.curdir,)))
     cxref_fmt = "-x" in argv
-    glob = subprocess.Popen(["global"] + argv[1:], stdout=subprocess.PIPE)
-    return get_lines(glob.stdout, cxref_realpath_p=cxref_fmt,
-                     start_dir=start_dir)
+    glob = subprocess.Popen([GLOBAL_PROGRAM_NAME] + argv[1:], stdout=subprocess.PIPE)
+    lines = get_lines(glob.stdout, cxref_realpath_p=cxref_fmt,
+                      start_dir=start_dir)
+    return lines
 
 def run_globals_over_path(argv, path, start_dir=opath.curdir,
                           all_matches_p=False,

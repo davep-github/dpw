@@ -5,21 +5,9 @@ import dp_sequences, dp_io, dp_utils
 
 import ranking_global_gtags_lib
 rgg = ranking_global_gtags_lib
-#rgg.log_file = sys.stderr
-#rgg_log_file_name = "bubba"
-#rgg_log_file_name = None
-rgg_log_file_name = os.environ.get("rgg_log_file_name", None)
-if rgg_log_file_name:
-    if rgg_log_file_name == '--err':
-        rgg.log_file = sys.stderr
-    elif rgg_log_file_name == '--out':
-        rgg.log_file = sys.stdout
-    else:
-        rgg_log_file_name = os.path.join(os.environ["HOME"], "var/log",
-                                         rgg_log_file_name)
-        rgg.log_file = open(rgg_log_file_name, 'a')
-
-rgg.log_file.write("==== {} ====\n".format(time.ctime()))
+log_file = rgg.setup_logging()
+hdr_fmt = "==== {}: {} " + (47 * "=") + "\n"
+rgg.log_file.write(hdr_fmt.format("begin", time.ctime()))
 
 import find_up, p4_lib
 opath = os.path
@@ -89,11 +77,12 @@ def rank_init(
 ## all ancestral data bases.
 Passthrough_options = ["-u", "--single-update" ]
 
-def rank_main(argv):
+def rank_main1(argv):
+    rgg.log_file.write("rank_main({})\n".format(argv))
     for arg in argv:
         if arg in Passthrough_options:
             system_cmd = "global " + " ".join(argv[1:])
-            print >>sys.stderr, "system_cmd>%s<" % (system_cmd,)
+            rgg.log_file.write("system_cmd>{}<".format(system_cmd))
             sys.exit(os.system(system_cmd))
 
     filter_p = os.environ.get("BEA_FILTER")
@@ -220,6 +209,21 @@ def rank_main(argv):
         #rc = 1
         ## emacs' gtags doesn't like non-0 return code.
         rc = 0
-    rgg.log_file.write("=" * 17 + "\n")
+    rgg.log_file.write(hdr_fmt.format("finish", time.ctime()))
+
+    return rc
+
+def rank_main(argv):
+    try:
+        rc = rank_main1(argv)
+        rgg.log_file.write("All good.\n")
+
+    except Exception, e:
+        rgg.log_file.write("Error.\n")
+        rgg.log_file.write("Failed, exception: {}\n".format(e))
+        rgg.log_file.write("sys.exc_type: {}\n".format(sys.exc_type))
+        rgg.log_file.write("sys.exc_value: {}\n".format(sys.exc_value))
+        rgg.log_file.write("Error.\n")
+        rc = 1
     rgg.log_file.close()
     return rc

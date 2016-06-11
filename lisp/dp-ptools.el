@@ -223,17 +223,19 @@ that we're under a directory named work."
         (kb-lambda (dp-func-or-kill-buffer 
                     'cscope-bury-buffer)))
       (dp-define-keys cscope-list-entry-keymap 
-                      '("." dp-cscope-select-entry-this-window
-                        "v" cscope-show-entry-other-window
-                        "o" cscope-select-entry-other-window
+                      '([?.] dp-cscope-select-entry-this-window
+                        [?v] cscope-show-entry-other-window
+                        [?o] cscope-select-entry-other-window
                         [return] cscope-select-entry-other-window
-                        " " cscope-select-entry-one-window
-                        "1" cscope-select-entry-one-window
+                        [? ] cscope-select-entry-one-window
+                        [?1] cscope-select-entry-one-window
                         [(tab)] cscope-next-symbol
-                        "\C-i" cscope-next-symbol
-                        "d" cscope-find-global-definition)))
+                        [(control ?i)] cscope-next-symbol
+                        [?d] cscope-find-global-definition)))
     
     (add-hook 'cscope-minor-mode-hooks 'dp-cscope-minor-mode-hook)
+    ;; @todo XXX This should actually DO SOMETHING... it's only acting as a
+    ;; predicate.
     (add-hook 'after-save-hook 'dp-cscope-set-db-update-required)
 
     ;; defun cs
@@ -457,7 +459,9 @@ Oddly, it doesn't handle structs.")
 (dp-deflocal dp-gtags-suggested-key-mapping t
   "Does this buffer want gtags key mappings?")
 
-(when (dp-gtags-p)
+;;
+;; We make xgtags use this.
+(when (or (dp-gtags-p) (dp-xgtags-p))
   (make-variable-buffer-local 'gtags-auto-update)
   (setq-default gtags-auto-update nil)
   (defun dp-gtags-update-file ()
@@ -467,7 +471,9 @@ Oddly, it doesn't handle structs.")
       (message "gtags updating...")
       (gtags-auto-update)
       (message "done.")))
-  (defalias 'guf 'dp-gtags-update-file)
+  (defalias 'guf 'dp-gtags-update-file))
+
+(when (dp-gtags-p)
 
   (defun dp-gtags-current-token ()
     (if (dp-mark-active-p)
@@ -478,7 +484,7 @@ Oddly, it doesn't handle structs.")
     (interactive)
     (dp-push-go-back&call-interactively
      'gtags-select-tag-other-window
-     nil nil "dp-gtags-select-mode-hook"))
+     nil nil "gtags-select-tag-other-window"))
   
   (defun dp-gtags-select-mode-hook ()
     (dp-define-buffer-local-keys
@@ -600,6 +606,29 @@ gtags discovery."
       (message "done.")))
   (defalias 'guf 'dp-xgtags-update-file)
 
+  ;;
+  ;; Ganked from gtags.el to make xgtags less sucky.  xgtags has a better
+  ;; display of hits.  May be better to move display code to gtags.
+
+  (defcustom gtags-auto-update nil
+    "*If non-nil, tag files are updated whenever a file is saved."
+    :type 'boolean
+    :group 'gtags)
+
+  ;;
+  ;; Invoked on saving a file.
+  ;;
+  (defun gtags-buffer-file-name ()
+    ;; real gtags-buffer-file-name has tramp awareness.
+    buffer-file-name)
+
+  (defun gtags-auto-update ()
+    (if (and xgtags-mode gtags-auto-update buffer-file-name)
+        (progn
+          (call-process xgtags-global-program
+                        nil nil nil 
+                        "-u" (concat "--single-update=" (gtags-buffer-file-name))))))
+
   (defun* dp-xgtags-get-token (&optional
                                (dflt-prompt "xgtags token: ")
                                (get-token 'xgtags--token-at-point)
@@ -658,6 +687,12 @@ gtags discovery."
                  (call-interactively 'dp-up-with-wrap-non-empty))
        [down] ,(kb-lambda
                    (call-interactively 'dp-down-with-wrap-non-empty)))))
+
+  (defun dp-xgtags-mode-hook ()
+    (if xgtags-mode
+        (add-hook 'after-save-hook 'gtags-auto-update)
+      (remove-hook 'after-save-hook 'gtags-auto-update)))
+  (add-hook 'xgtags-mode-hook 'dp-xgtags-mode-hook)
 
   (defun dp-xgtags-select-tag-one-window ()
     (interactive)
