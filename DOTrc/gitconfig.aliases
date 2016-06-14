@@ -64,6 +64,8 @@
         diffcat = !sh -c 'git --no-pager diff "$@"'
         dcat = !sh -c 'git --no-pager diff "$@"'
 
+        # I keep "thinking" ahead to the next command.
+        FETCH = fetch
         difffh = diff FETCH_HEAD
         dfh = diff FETCH_HEAD
         dtmeld = difftool --tool=meld
