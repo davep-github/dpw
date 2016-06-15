@@ -85,8 +85,8 @@
 (defvar xgtags-mode-map nil
   "Keymap used in xgtags minor mode.")
 
-(defvar icky-global-tag-name nil)
-(defvar icky-directory-from-which-we-are-tag-searching nil)
+(defvar icky-global-tag-buf-header nil)
+(defvar icky-global-directory-from-which-we-are-tag-searching nil)
 
 ;;; Faces
 
@@ -496,12 +496,12 @@ killed!"
   "This function recieves a list of tags, erases the current buffer
 and then inserts the tags nicely."
   (erase-buffer)
-  (when icky-global-tag-name
-    (insert (format "Finding symbol: %s\n" icky-global-tag-name))
-    (setq icky-global-tag-name nil))
-  (when icky-directory-from-which-we-are-tag-searching
-    (setq default-directory icky-directory-from-which-we-are-tag-searching
-          icky-directory-from-which-we-are-tag-searching nil))
+  (when icky-global-tag-buf-header
+    (insert icky-global-tag-buf-header)
+    (setq icky-global-tag-buf-header nil))
+  (when icky-global-directory-from-which-we-are-tag-searching
+    (setq default-directory icky-global-directory-from-which-we-are-tag-searching
+          icky-global-directory-from-which-we-are-tag-searching nil))
   (let ((current-file nil))
     (dolist (tag tags)
       (let ((file (xgtags--tag-file tag)))
@@ -898,7 +898,8 @@ a list with those."
                                      xgtags--completition-table
                                      'dp-gtags-completing-read-completor)
                                  nil nil nil history (or tagname ""))))
-    (setq icky-global-tag-name input)
+    (setq-ifnil icky-global-tag-buf-header 
+                (format "%s %s\n" dflt-prompt input))
     (xgtags--goto-tag input option)))
 
 
