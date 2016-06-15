@@ -620,7 +620,7 @@ gtags discovery."
   ;;
   (defun gtags-buffer-file-name ()
     ;; real gtags-buffer-file-name has tramp awareness.
-    buffer-file-name)
+    buffer-file-truename)
 
   (defun gtags-auto-update ()
     (if (and xgtags-mode gtags-auto-update buffer-file-name)
