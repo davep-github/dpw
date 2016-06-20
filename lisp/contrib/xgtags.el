@@ -972,7 +972,8 @@ a list with those."
     (xgtags--update-buffer context)
     (let ((buf (xgtags--context-buffer context)))
       (when (buffer-live-p buf)
-        (switch-to-buffer buf)
+        ;;(switch-to-buffer buf)
+        (dp-visit-or-switch-to-buffer buf)
         (goto-char (xgtags--context-point context))))))
 
 (defun xgtags-query-replace-regexp (to-string)
