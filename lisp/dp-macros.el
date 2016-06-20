@@ -402,6 +402,17 @@ VAR must be a symbol."
         (dp-set-current-error-function ,next-thing
                                        nil
                                        (quote ,next-thing-arg)))))
+  
+  (defmacro dp-current-error-function-advisor-after (fun next-thing
+                                               &optional next-thing-arg)
+    (let* ((efunc (eval fun))
+           (next-thing-arg (or (eval next-thing-arg) efunc))
+           (enext-thing (eval next-thing)))
+      `(defadvice ,efunc
+        (after next-error-function-stuff-after activate)
+        (dp-set-current-error-function ,next-thing
+                                       nil
+                                       (quote ,next-thing-arg)))))
 
 )
 
