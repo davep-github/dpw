@@ -1,0 +1,5 @@
+#!/bin/sh
+
+sudo service lightdm stop
+sleep 1
+sudo service lightdm start
