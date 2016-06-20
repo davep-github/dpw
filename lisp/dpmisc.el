@@ -5947,6 +5947,10 @@ When beginning a sequence, (point) is saved.  This can be pushed onto
 	(dp-push-go-back (or reason "dp-push-go-back&apply") pmarker))
     (error (message "%s" (car-safe (cdr error))))))
 
+(defun dp-push-go-back&apply-rest (reason func &rest r)
+  (interactive)
+  (dp-push-go-back&apply reason func r))
+
 (defun dp-find-function ()
   "Add some useful stuff wrapped about `find-function'."
   (interactive)
