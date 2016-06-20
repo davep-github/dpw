@@ -147,7 +147,12 @@ that we're under a directory named work."
     (define-key map [(control ?c) ?s ?L] 'cscope-create-list-of-files-to-index)
     (define-key map [(control ?c) ?s ?N] 'cscope-next-file)
     (define-key map [(control ?c) ?s ?P] 'cscope-prev-file)
-    (define-key map [(control ?c) ?s ?S] 'dp-tag-find-with-idutils)
+    ;; Annoyingly, this could change whenever I change gtags tagging backend.
+    ;; With `native', cscope can do references.
+    ;; ex-ctags and uctags can't, but can do other things better.
+    (define-key map [(control ?c) ?s ?S] 'cscope-find-this-symbol)
+    (define-key map [(control ?c) ?s ?s] 'dp-tag-find-with-idutils)
+
     (define-key map [(control ?c) ?s ?T] 'cscope-tell-user-about-directory)
     (define-key map [(control ?c) ?s ?W] 'cscope-tell-user-about-directory)
     (define-key map [(control ?c) ?s ?a] 'cscope-set-initial-directory)
@@ -160,7 +165,6 @@ that we're under a directory named work."
     (define-key map [(control ?c) ?s ?i] 'dp-tag-find-with-idutils)
     (define-key map [(control ?c) ?s ?n] 'cscope-next-symbol)
     (define-key map [(control ?c) ?s ?p] 'cscope-prev-symbol)
-    (define-key map [(control ?c) ?s ?s] 'cscope-find-this-symbol)
     (define-key map [(control ?c) ?s ?t] 'cscope-find-this-text-string)
     (define-key map [(control ?c) ?s ?u] 'cscope-pop-mark)
     (global-set-key [(control ?c) ?s ?I] 'cscope-find-files-including-file)
@@ -648,18 +652,19 @@ gtags discovery."
       ;;(other-window 1)
       (xgtags--goto-tag tagname)))
 
-  (defun dp-xgtags-select-selected-tag-other-window (&optional args)
+  (defun dp-xgtags-select-selected-tag-other-window (&optional tag)
     (interactive)
-    (xgtags--follow-tag xgtags--selected-tag))
+    (xgtags--select-and-follow-tag tag))
 
   (defun dp-xgtags-select-selected-tag-other-window-cmd ()
     "Works only in select buffer."
     (interactive)
-    (setq xgtags--selected-tag (xgtags--find-tag-near-point))
-    (other-window 1)
-    (dp-push-go-back&call-interactively
-     'dp-xgtags-select-selected-tag-other-window
-     nil nil "dp-xgtags-select-selected-tag-other-window-cmd"))
+    (let ((tag (xgtags--find-tag-near-point)))
+      (other-window 1)
+      (dp-push-go-back&apply-rest
+       "dp-xgtags-select-selected-tag-other-window-cmd-v2"
+       'dp-xgtags-select-selected-tag-other-window
+       tag)))
 
   (defun dp-xgtags-select-mode-hook ()
     (dp-define-buffer-local-keys
@@ -704,8 +709,12 @@ gtags discovery."
     ;; Don't set the next error function here.
     ;; Only let it be set when the functions are called directly.
     (let ((dp-dont-set-latest-function t))
-      (call-interactively func)
-      (display-buffer (xgtags--get-buffer) t)))
+      (if (bobp (xgtags--get-buffer))
+          (progn 
+            (setq xgtags--selected-tag (xgtags--find-tag-near-point))
+            (call-interactively 'dp-xgtags-select-selected-tag-other-window-cmd))
+        (call-interactively func)
+        (display-buffer (xgtags--get-buffer) t))))
 
   (defun dp-visit-xgtags-select-buffer (&optional other-window-p)
     (interactive "P")
@@ -718,6 +727,12 @@ gtags discovery."
             (switch-to-buffer buf))
         (dp-ding-and-message "No xgtags select buffers."))))
 
+;;needs work   (defun dp-xgtags--find-with (&rest r)
+;;needs work     (interactive)
+;;needs work     (call-interactively 'xgtags--find-with)
+;;needs work     (dp-beginning-of-buffer)
+;;needs work     (xgtags--find-tag-near-point))
+
   (defun dp-xgtags-setup-next-error ()
     (defadvice xgtags--find-with (before dp-xgtags-go-back-stuff activate)
       "Push go back before doing an xgtags operation.
@@ -728,6 +743,12 @@ xgtags discovery.
       (setq icky-directory-from-which-we-are-tag-searching
             (dp-get-buffer-dir-name))
       (dp-push-go-back "go-back advised xgtags--find-with"))
+
+    ;; Start with next error function setup so we can M-n immediately after a
+    ;; search operation.
+;;needs work     (dp-current-error-function-advisor-after
+;;needs work      'xgtags--find-with
+;;needs work      'dp-xgtags--find-with)
 
     (dp-current-error-function-advisor 
      'xgtags-find-with-idutils
