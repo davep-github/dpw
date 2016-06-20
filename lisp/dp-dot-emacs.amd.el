@@ -124,3 +124,31 @@
 
 (setq auto-mode-alist (cons '("\\.cl$" . c-mode) auto-mode-alist))
 
+;; (setq dp-<type>*-regexp-list
+;;       (dp-add-to-list
+;;        'dp-<type>*-regexp-list
+;;        (concat
+;;         "struct\\s-+"
+;;         "\\("
+;;         "amdgpu_device"
+;;         "\\|amdgpu_ring"
+;;         "\\|amdgpu_ib"
+;;         "\\|amdgpu_irq_src_funcs"
+;;         "\\|amdgpu_ring_funcs"
+;;         "\\|amd_ip_funcs"
+;;         "\\|amdgpu_irq_src"
+;;         "\\|amdgpu_iv_entry"
+;;         "\\|drm_device"
+;;         "\\|device"
+;;         "\\|device_attribute"
+;;         "\\|amdgpu_gds_reg_offset"
+;;         "\\|fence"
+;;         "\\|reg32_counter_name_map"
+;;         "\\|pid"
+;;         "\\|task_struct"
+;;         "\\|edc_dump_count_info_t"
+;;         "\\|amdgpu_cu_info"
+;;         "\\|dentry"
+;;         "\\|file_operations"
+;;         "\\|debug_file_info"
+;;         "\\)")))
