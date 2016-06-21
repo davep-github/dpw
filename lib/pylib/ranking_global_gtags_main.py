@@ -31,7 +31,6 @@ newest, _, _ = dp_utils.newest_file(go_files + [rgg_memo_file])
 
 def create_db_locations(db_memo_file, dependencies, args):
     db_locations = []
-    rgg.log_file.write("Hullo<\n")
 
     for dir in Database_p4_locations:
         rgg.log_file.write("Dir>{}<\n".format(dir))
@@ -79,11 +78,11 @@ Passthrough_options = ["-u", "--single-update" ]
 
 def rank_main1(argv):
     rgg.log_file.write("rank_main({})\n".format(argv))
-    for arg in argv:
-        if arg in Passthrough_options:
-            system_cmd = "global " + " ".join(argv[1:])
-            rgg.log_file.write("system_cmd>{}<".format(system_cmd))
-            sys.exit(os.system(system_cmd))
+    #for arg in argv:
+    #    if arg in Passthrough_options:
+    #        system_cmd = "global " + " ".join(argv[1:])
+    #        rgg.log_file.write("system_cmd>{}<".format(system_cmd))
+    #        sys.exit(os.system(system_cmd))
 
     filter_p = os.environ.get("BEA_FILTER")
     uniqify_p = True
@@ -122,6 +121,12 @@ def rank_main1(argv):
     # So we don't remove elements from the iteration list
     argv_copy = argv[0:]
     for arg in argv_copy[1:]:
+        # This make not passing in args easier.  E.g.
+        # (or dp-gtags-auto-update-flags "")
+        # since `call-process' wants strings
+        # and this is easy to do.
+        if arg in ('', '--nop', '--noop'):
+            argv.remove(arg)
         opt = opt_cre.search(arg)
         #print >>sys.stderr, "arg>{}<, opt>{}<".format(arg, opt)
 
@@ -144,6 +149,7 @@ def rank_main1(argv):
         # This means all matches from first DB that has matches
         if opt_name in ("stop-after-first",
                         "first-match",
+                        "first-db",
                         "first-db-match",
                         "first-db-matches",
                         "not-all_matches_p"):
@@ -155,7 +161,7 @@ def rank_main1(argv):
             argv.remove(arg)
             continue
 
-
+    print >>sys.stderr, "argv>%s<" % (argv,)
     #@todo XXX We should do this in every db searched.
     #@todo XXX Why was it commented out?
     #@todo XXX Pass an update flag to run_globals_over_path()?  This way we
