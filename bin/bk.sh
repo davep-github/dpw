@@ -26,7 +26,7 @@ fail_file=/tmp/bk.sh.banner-FAIL.$$
 stat_files="$ok_file $fail_file"
 # make: clean, kernel, modules_install, install
 all_actions="ckmi"
-: ${action_list_all="clean build_kernel modules_install install"}
+: ${action_list_all="clean build_kernel modules modules_install install"}
 : ${action_list_bk="build_kernel modules modules_install install"}
 # Useful default for kernel dev.
 : ${action_list_dev="modules modules_install install"}
@@ -179,7 +179,25 @@ EXIT: "
     fi
     exit $rc
 }
-    
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    if [ "$rc" = 0 ]
+    then
+    echo 1>&2 "SUCCESS"
+    else
+        echo 1>&2 "FAILURE: $rc"
+    fi
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+}
+trap 'on_exit' 0
+
+
 # Verify each command char.
 #action_set="[$all_actions]"
 #for a in $actions
@@ -230,7 +248,6 @@ do
   trap "echo; echo $0: Got sig $sig, exiting.; cleanup; exit $((128+$sig))" \
       $sig
 done
-trap "exit_sig \$?" EXIT
 
 bk_freebsd()
 {
