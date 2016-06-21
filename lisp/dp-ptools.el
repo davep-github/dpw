@@ -468,6 +468,8 @@ Oddly, it doesn't handle structs.")
 (when (or (dp-gtags-p) (dp-xgtags-p))
   (make-variable-buffer-local 'gtags-auto-update)
   (setq-default gtags-auto-update nil)
+  (make-variable-buffer-local 'dp-gtags-auto-update-flags)
+  (setq-default dp-gtags-auto-update-flags "--rgg-first-db")
   (defun dp-gtags-update-file ()
     (interactive)
     (let ((gtags-mode t)
@@ -630,7 +632,8 @@ gtags discovery."
     (if (and xgtags-mode gtags-auto-update buffer-file-name)
         (progn
           (call-process xgtags-global-program
-                        nil nil nil 
+                        nil nil nil
+                        dp-gtags-auto-update-flags
                         "-u" (concat "--single-update=" (gtags-buffer-file-name))))))
 
   (defun* dp-xgtags-get-token (&optional
