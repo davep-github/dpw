@@ -1725,6 +1725,7 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
     ;; client and server. Things which like to edit temp files in temp dirs
     ;; don't work.
     (when (and file-name
+               (not (dp-match-a-regexp file-name dp-known-temp-file-re-list))
                (string-match "/te?mp/" file-name)
                (equal (point-min) (point-max)))
       (dp-ding-and-message "Could be a remote temp file.")))
