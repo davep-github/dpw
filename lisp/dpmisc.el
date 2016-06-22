@@ -11821,11 +11821,13 @@ An `undo-boundary' is done before the template is used."
   "Set up a buffer as a Python language buffer.
 Inserts `dp-python-new-file-template-file' by default."
   (interactive)
-  (let ((comment-start "###"))
-    (dp-script-it "python" t
-                  :comment-start comment-start
-                  :template 'dp-insert-new-file-template
-                  :template-args (list dp-python-new-file-template-file))))
+  (when (and buffer-file-name
+             (not (string-match dp-ipython-temp-file-re buffer-file-name))
+    (let ((comment-start "###"))
+      (dp-script-it "python" t
+                    :comment-start comment-start
+                    :template 'dp-insert-new-file-template
+                    :template-args (list dp-python-new-file-template-file))))))
 
 
 (defun* dp-get-buffer-local-value (&optional var buffer 
