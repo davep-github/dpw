@@ -75,19 +75,35 @@ def rank_init(
 ## @todo XXX We want to handle at least --single-update so that we can update
 ## all ancestral data bases.
 Passthrough_options = ["-u", "--single-update" ]
-
+# (one_db_p-Value, all_matches_p-Value)
+All_matches_map = { "-u":
+                    (True, True),
+                    "--single-update":
+                    (True, True),
+                    "-c":
+                    (False, True)}
 def rank_main1(argv):
     rgg.log_file.write("rank_main({})\n".format(argv))
-    #for arg in argv:
-    #    if arg in Passthrough_options:
-    #        system_cmd = "global " + " ".join(argv[1:])
-    #        rgg.log_file.write("system_cmd>{}<".format(system_cmd))
-    #        sys.exit(os.system(system_cmd))
+    all_matches_p = False
+    one_db_p = False
 
+    ## Check args to determine default way to handle all_matches_p.  The
+    ## value can always be set using explicit args.
+    for arg in argv:
+        try:
+            one_db_p, all_matches_p = All_matches_map[arg]
+            print >>sys.stderr, "one_db_p:", one_db_p, ", all_matches_p:", all_matches_p
+            break
+        except KeyError:
+            continue
+
+    if all_matches_p is None:
+        all_matches_p = False
+
+    rgg.log_file.write("all_matches_p: {}, one_db_p: {}\n".format(all_matches_p,
+                                                                  one_db_p))
     filter_p = os.environ.get("BEA_FILTER")
     uniqify_p = True
-    all_p = True
-    all_matches_p = False
 
     rgg_argv = os.environ.get("RGG_ARGV")
     if (rgg_argv):
@@ -138,12 +154,8 @@ def rank_main1(argv):
             uniqify_p = False
             argv.remove(arg)
             continue
-        if opt_name == "first-db":
-            all_p = False
-            argv.remove(arg)
-            continue
-        if opt_name == "all-db":
-            all_p = True
+        if opt_name == "one-db":
+            one_db_p = True
             argv.remove(arg)
             continue
         # This means all matches from first DB that has matches
@@ -152,12 +164,21 @@ def rank_main1(argv):
                         "first-db",
                         "first-db-match",
                         "first-db-matches",
-                        "not-all_matches_p"):
+                        "one-p",
+                        "not-all-matches-p"):
              all_matches_p = False
              argv.remove(arg)
              continue
-        if opt_name == "all-matches":
+        if opt_name in ("all-matches",
+                        "all-match",
+                        "all-db",
+                        "all-dbs",
+                        "all-p",
+                        "all-db-match",
+                        "all-db-matches",
+                        "all-matches-p"):
             all_matches_p = True
+            one_db_p = False
             argv.remove(arg)
             continue
 
@@ -170,9 +191,9 @@ def rank_main1(argv):
 #    if argv[1] in ('-u' '--update'):
 #        sys.exit(subprocess.call(["global"] + argv[1:]))
 
-    # Find this dir's parental db.
-    path = find_up.find_up("GTAGS", all_p=all_p)
-    rgg.log_file.write("path: %s\n" % \
+    # Find this dir's parental db(s).
+    path = find_up.find_up("GTAGS", all_p = not one_db_p)
+    rgg.log_file.write("find_up(): path: %s\n" % \
                        dp_sequences.list_to_indented_string(path))
     # Add all other known db locations.
     # We should only add new elements.
