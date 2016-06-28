@@ -1,5 +1,13 @@
 #!/bin/sh
 
-sudo service lightdm stop
+case "$(hostname)" in
+    vilya) element="/home/davep";;
+    *) element="/home/dpanarit";;
+esac
+
+PATH="${PATH}:${element}"
+export PATH
+
+sudo $(dirname $0)/lightdm-stopper
 sleep 1
-sudo service lightdm start
+sudo $(dirname $0)/lightdm-starter
