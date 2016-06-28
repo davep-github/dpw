@@ -462,14 +462,22 @@ Oddly, it doesn't handle structs.")
 
 (dp-deflocal dp-gtags-suggested-key-mapping t
   "Does this buffer want gtags key mappings?")
+(dp-deflocal dp-gtags-ripped-off-completor-args "--rgg-all-dbs"
+  "Mer stuff to mak compler do teh rite things.")
+(dp-deflocal dp-gtags-auto-update-extra-args nil
+  "Extry stuff to send when askin fer to flobal to date the bases.")
+;; [sic]
 
 ;;
 ;; We make xgtags use this.
 (when (or (dp-gtags-p) (dp-xgtags-p))
   (make-variable-buffer-local 'gtags-auto-update)
   (setq-default gtags-auto-update nil)
-  (make-variable-buffer-local 'dp-gtags-auto-update-flags)
-  (setq-default dp-gtags-auto-update-flags "--rgg-first-db")
+  (make-variable-buffer-local 'dp-gtags-auto-update-db-flag)
+  ;; It's kind of slow (in the 4.4 linux kernel tree anyway) to update all of
+  ;; the dbs up to the root.  So we just do the one for the dir we're in,
+  ;; which should be the dir of the file we're saving.
+  (setq-default dp-gtags-auto-update-db-flag "--rgg-one-db")
   (defun dp-gtags-update-file ()
     (interactive)
     (let ((gtags-mode t)
@@ -477,6 +485,41 @@ Oddly, it doesn't handle structs.")
       (message "gtags updating...")
       (gtags-auto-update)
       (message "done.")))
+
+  (global-set-key [(meta ?W)] 'dp-gtags-save-file-and-update-all-dbs)
+
+  (defun dp-gtags-save-file-and-update-all-dbs (&optional args)
+    (interactive)
+
+    (let ((dp-gtags-auto-update-db-flag "--rgg-all-dbs"))
+      (call-interactively 'save-buffer)))
+
+  (defun dp-gtags-ripped-off-completor (patteren &optional predicate code)
+    "Needs to rip off more!"
+    (interactive (list (dp-prompt-with-symbol-near-point-as-default
+                        "Symbol to complete")))
+    ;;(gtags-completing 'bubba patteren nil t))
+
+    (let ((complete-list (make-vector 511 0))
+          options)
+      (when patteren
+          (setq options (list patteren)))
+      (with-temp-buffer
+        (apply 'call-process "global" nil t nil "-c" options)
+        (goto-char (point-min))
+        (while (re-search-forward xgtags--symbol-regexp nil t)
+          (intern (match-string-no-properties 0) complete-list)))
+      (cond ((eq code nil)
+             (try-completion string complete-list predicate))
+            ((eq code t)
+             (all-completions string complete-list predicate))
+            ((eq code 'lambda)
+             (if (intern-soft string complete-list) t nil)))))
+
+  (defun dp-gtags-completing-read-completor (string predicate meh)
+    ;;(dmessage "string>%s<, predicate>%s<, meh>%s<" string predicate meh)
+    (dp-gtags-ripped-off-completor string predicate meh))
+
   (defalias 'guf 'dp-gtags-update-file))
 
 (when (dp-gtags-p)
@@ -629,12 +672,13 @@ gtags discovery."
     buffer-file-truename)
 
   (defun gtags-auto-update ()
-    (if (and xgtags-mode gtags-auto-update buffer-file-name)
-        (progn
-          (call-process xgtags-global-program
-                        nil nil nil
-                        dp-gtags-auto-update-flags
-                        "-u" (concat "--single-update=" (gtags-buffer-file-name))))))
+    (when (and xgtags-mode gtags-auto-update buffer-file-name)
+      (message "Updating tags(%s)..." dp-gtags-auto-update-db-flag)
+      (call-process xgtags-global-program
+                    nil nil nil
+                    dp-gtags-auto-update-db-flag
+                    "-u" (concat "--single-update=" (gtags-buffer-file-name)))
+      (message "Updating tags(%s)...done" dp-gtags-auto-update-db-flag)))
 
   (defun* dp-xgtags-get-token (&optional
                                (dflt-prompt "xgtags token: ")
@@ -790,33 +834,6 @@ xgtags discovery.
   (dp-xgtags-setup-next-error)
 
   (add-hook 'xgtags-select-mode-hook 'dp-xgtags-select-mode-hook))
-
-(defun dp-gtags-ripped-of-completor (patteren &optional predicate code)
-  "Needs to rip off more!"
-  (interactive (list (dp-prompt-with-symbol-near-point-as-default 
-                      "Symbol to complete")))
-  ;;(gtags-completing 'bubba patteren nil t))
-
-  (let ((complete-list (make-vector 511 0))
-        options)
-    (if patteren
-        (setq options (cons "-c" (list patteren)))
-      (setq options (list "-c")))
-    (with-temp-buffer
-      (apply 'call-process "global" nil t nil "-c" options)
-      (goto-char (point-min))
-      (while (re-search-forward xgtags--symbol-regexp nil t)
-        (intern (match-string-no-properties 0) complete-list)))
-    (cond ((eq code nil)
-           (try-completion string complete-list predicate))
-          ((eq code t)
-           (all-completions string complete-list predicate))
-          ((eq code 'lambda)
-           (if (intern-soft string complete-list) t nil)))))
-
-(defun dp-gtags-completing-read-completor (string predicate meh)
-  ;;(dmessage "string>%s<, predicate>%s<, meh>%s<" string predicate meh)
-  (dp-gtags-ripped-of-completor string predicate meh))
 
 (defun dp-tag-find-old (&rest r)
   (interactive)
