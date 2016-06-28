@@ -20,7 +20,7 @@ except NameError:
 
 Rgg_log_file_name = os.environ.get("rgg_log_file_name",
                                    None)
-Rgg_log_file_name = 'rgg.log'
+#Rgg_log_file_name = 'rgg.log'
 
 def setup_logging(log_file_name=None):
     #rgg.log_file = sys.stderr
@@ -28,22 +28,24 @@ def setup_logging(log_file_name=None):
     #rgg_log_file_name = None
     global Rgg_log_file_name
     global log_file
-    if log_file_name:
-        Rgg_log_file_name = log_file_name
-    if Rgg_log_file_name:
-        if Rgg_log_file_name == '--err':
-            log_file = sys.stderr
-        elif Rgg_log_file_name == '--out':
-            log_file = sys.stdout
-        else:
-            Rgg_log_file_name = os.path.join(os.environ["HOME"], "var/log",
-                                             Rgg_log_file_name)
 
+    #print >>sys.stderr, "Rgg_log_file_name>%s<" % (Rgg_log_file_name,)
     if type(log_file) != "dp_io.Null_dev_t":
+        if log_file_name:
+            Rgg_log_file_name = log_file_name
         if Rgg_log_file_name:
-            log_file = open(Rgg_log_file_name, 'a')
-        else:
+            print >>sys.stderr, "Rgg_log_file_name>%s<" % (Rgg_log_file_name,)
+            if Rgg_log_file_name == '--err':
+                log_file = sys.stderr
+            elif Rgg_log_file_name == '--out':
+                log_file = sys.stdout
+            else:
+                Rgg_log_file_name = os.path.join(os.environ["HOME"], "var/log",
+                                                 Rgg_log_file_name)
+                log_file = open(Rgg_log_file_name, 'a')
+        if not log_file:
             log_file = dp_io.Null_dev_t()
+    #print >>sys.stderr, "log_file>%s<" % (log_file,)
     return log_file
 
 ## Make this environment specific
@@ -182,7 +184,7 @@ def run_global(argv, start_dir=opath.curdir):
     #print >>sys.stderr, "run_global(), cwd: %s" % (opath.realpath(opath.curdir,))
     if not opath.isfile("GTAGS"):
         return []
-    log_file.write("run_global(), cwd: %s\n"
+    log_file.write("run_global(): cwd: %s\n"
                        % (opath.realpath(opath.curdir,)))
     cxref_fmt = "-x" in argv
     log_file.write("run_global()cmdline>%s<\n" % ([GLOBAL_PROGRAM_NAME] + argv[1:]),)
@@ -202,6 +204,8 @@ def run_globals_over_path(argv, path, start_dir=opath.curdir,
     if num_dbs is None:
         num_dbs = len(path)
     log_file.write("run_globals_over_path(): all_matches_p: {}\n".format(all_matches_p))
+    log_file.write("run_globals_over_path(): first_db: {}\n".format(first_db))
+    log_file.write("run_globals_over_path(): num_dbs: {}\n".format(num_dbs))
     log_file.write("run_globals_over_path(): BEFORE: path>{}<\n".format(path))
     path = path[first_db:num_dbs]
     log_file.write("run_globals_over_path(): AFTER: path>{}<\n".format(path))
@@ -225,11 +229,11 @@ def run_globals_over_path(argv, path, start_dir=opath.curdir,
     log_file.write("run_globals_over_path(): ret>{}<\n".format("\n".join(ret)))
     return ret
 
-def run_globals(argv, path=None, all_p=True, start_dir=opath.curdir,
+def run_globals(argv, path=None, start_dir=opath.curdir,
                 all_matches_p=False):
     if path == None:
-        path = find_up.find_up("GTAGS", all_p=all_p)
-    log_file.write("run_globals(): all_p: {}, path>{}<\n".format(all_p, path))
+        path = find_up.find_up("GTAGS", True)
+    log_file.write("run_globals(): all_matches_p: {}\n".format(all_matches_p))
     if path != None:
         ret = run_globals_over_path(argv, path, start_dir=start_dir,
                                     all_matches_p=all_matches_p)
