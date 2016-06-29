@@ -27,7 +27,6 @@ def zcat_file(istream, ostream=sys.stdout):
         line = line[:-1]
         dp_io.fprintf(ostream, "%s%c", line, 0)
 
-
 def main(argv):
 
     oparser = argparse.ArgumentParser()

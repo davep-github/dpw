@@ -203,6 +203,7 @@ e(
         'comment': 'Linux boxen at home.',
         'cd-writer-dev': '/dev/cdrom',
         'cd-writer-fs': '/cdrom',
+        'new-wan-ip-email-addr': "david.panariti@amd.com",
         #'work-ssh-host': "sentinels.vanu.com",
     },
     ref=[home_family, OSDB['linux'], default]
