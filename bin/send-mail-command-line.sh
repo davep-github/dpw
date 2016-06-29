@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+ #!/usr/bin/env bash
 source script-x
 set -u
 progname="$(basename $0)"
@@ -45,6 +45,22 @@ on_error()
 # template ends.
 ########################################################################
 
+MAIL_POSSIBILITIES="mail mutt"
 
 : ${mailer=$($HOST_INFO -n mutt command-line-mailer )}
-EExec "${mailer}" "$@"
+find_mailer()
+{
+    for m in "${mailer}" ${MAIL_POSSIBILITIES}
+      do
+      type -t "${m}" >/dev/null 2>&1 && {
+          echo "${m}"
+          return 0
+      }
+    done
+}
+m=$(find_mailer) || {
+    echo "Cannot find a command line mailer."
+    exit 1
+} 1>&2
+
+EExec "${m}" "$@"

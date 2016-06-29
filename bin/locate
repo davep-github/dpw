@@ -110,6 +110,10 @@ real_locate=$(sp locate | fgrep -v $HOME | head -1)
 
 EExec_verbose_echo_id DP_NON_STANDARD_LOC_DBS
 
+[ -z "${DP_NON_STANDARD_LOC_DBS}" ] && {
+    EExec exec "${real_locate}" "$@"
+}
+
 for p in ${DP_NON_STANDARD_LOC_DBS}
 do
   p=$(realpath "${p}")

@@ -6,6 +6,7 @@ import os, sys, re, string, time
 log_file = '/home/davep/log/auto-rotate-c10-50K/' + \
            os.path.basename(sys.argv[0]) + '.log'
 
+mailer = "mutt"
 def check_for_ping(istr, ostr, log):
     # Make sure there's an @ in the return addr part.  Search for a
     # Subject-like line with the key string 'ping-back:' And make sure that
@@ -33,7 +34,7 @@ def check_for_ping(istr, ostr, log):
             log.write("==== " + time.ctime() + " ===\n")
             # Create mail back command based on regexp search results.
             # Backslashing to continue lines SUCKS!
-            cmd = "mail -s ping-back %s < /dev/null >/dev/null 2>&1" % \
+            cmd = mailer + " -s ping-back %s < /dev/null >/dev/null 2>&1" % \
                   m.group(1)
             log.write("line>%s<\n" % l[:-1])
             log.write("cmd: %s\n" % cmd)

@@ -22,6 +22,11 @@ IOERROR_RC = 1
 ##e.g.         setattr(namespace, self.dest, regexps)
 ##e.g.         setattr(namespace, "highlight_grep_matches_p", True) 
 
+def zcat_in(istream, ostream=sys.stdout):
+    for line in istream:
+        line = line[:-1]
+        dp_io.fprintf(ostream, "%s%c", line, 0)
+
 def main(argv):
 
     oparser = argparse.ArgumentParser()
@@ -60,9 +65,13 @@ def main(argv):
     if app_args.verbose_level > 0:
         dp_io.set_verbose_level(app_args.verbose_level, enable=True)
 
-    for line in sys.stdin:
-        line = line[:-1]
-        dp_io.printf("%s%c", line, 0)
+    if app_args.non_option_args:
+        for file in app_args.non_option_args:
+            istream = open(file)
+            zcat_in(istream)
+            istream.close()
+    else:
+        istream(sys.stdin)
 
 if __name__ == "__main__":
     # try:... except: nice for filters.
