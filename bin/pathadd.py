@@ -22,11 +22,6 @@ IOERROR_RC = 1
 ##e.g.         setattr(namespace, self.dest, regexps)
 ##e.g.         setattr(namespace, "highlight_grep_matches_p", True) 
 
-def zcat_file(istream, ostream=sys.stdout):
-    for line in istream:
-        line = line[:-1]
-        dp_io.fprintf(ostream, "%s%c", line, 0)
-
 def main(argv):
 
     oparser = argparse.ArgumentParser()
@@ -47,6 +42,21 @@ def main(argv):
                          default=False,
                          action="store_true",
                          help="Do not print informative messages.")
+    oparser.add_argument("-p", "--prepend",
+                         dest="prepend_p",
+                         default=False,
+                         action="store_true",
+                         help="Prepend path items.")
+    oparser.add_argument("-s", "--separator",
+                         dest="separator",
+                         default=":",
+                         type=str,
+                         help="What to separate path elements with.")
+    oparser.add_argument("-S", "--separate-with-spaces",
+                         dest="separate_with_spaces_p",
+                         default=False,
+                         action="store_true",
+                         help="Separate with spaces.")
 ##e.g.     oparser.add_argument("--app-action", "--aa",
 ##e.g.                          dest="app_action_stuff", default=[],
 ##e.g.                          action=App_arg_action,
@@ -65,13 +75,27 @@ def main(argv):
     if app_args.verbose_level > 0:
         dp_io.set_verbose_level(app_args.verbose_level, enable=True)
 
-    if app_args.non_option_args:
-        for f in app_args.non_option_args:
-            istream = open(f)
-            zcat_file(istream)
-            istream.close()
+    nargv = app_args.non_option_args
+    sep = app_args.separator
+    if app_args.prepend_p:
+        car_elements = nargv[1:]
+        cdr_elements = nargv[0].split(sep)
     else:
-        zcat_file(sys.stdin)
+        car_elements = nargv[0].split(sep)
+        cdr_elements = nargv[1:]
+
+    for i in range(car_elements.count('')):
+        car_elements.remove('')
+
+    for i in range(cdr_elements.count('')):
+        cdr_elements.remove('')
+
+    # remove duplicates of elements in car from cdr
+    for d in car_elements:
+        if d in cdr_elements:
+            cdr_elements.remove(d)
+
+    print sep.join(car_elements + cdr_elements)
 
 if __name__ == "__main__":
     # try:... except: nice for filters.

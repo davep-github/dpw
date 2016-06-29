@@ -4,6 +4,7 @@ import sys, os, re, subprocess
 import find_up, dp_io, dp_sequences
 opath = os.path
 
+GLOBAL_PROGRAM_NAME = "global"
 try:
     if log_file is not None:
         pass
@@ -16,6 +17,36 @@ except NameError:
     except NameError:
         LOG_FILE_NAME = None
         log_file = dp_io.Null_dev_t()
+
+Rgg_log_file_name = os.environ.get("rgg_log_file_name",
+                                   None)
+#Rgg_log_file_name = 'rgg.log'
+
+def setup_logging(log_file_name=None):
+    #rgg.log_file = sys.stderr
+    #rgg_log_file_name = "bubba"
+    #rgg_log_file_name = None
+    global Rgg_log_file_name
+    global log_file
+
+    #print >>sys.stderr, "Rgg_log_file_name>%s<" % (Rgg_log_file_name,)
+    if type(log_file) != "dp_io.Null_dev_t":
+        if log_file_name:
+            Rgg_log_file_name = log_file_name
+        if Rgg_log_file_name:
+            print >>sys.stderr, "Rgg_log_file_name>%s<" % (Rgg_log_file_name,)
+            if Rgg_log_file_name == '--err':
+                log_file = sys.stderr
+            elif Rgg_log_file_name == '--out':
+                log_file = sys.stdout
+            else:
+                Rgg_log_file_name = os.path.join(os.environ["HOME"], "var/log",
+                                                 Rgg_log_file_name)
+                log_file = open(Rgg_log_file_name, 'a')
+        if not log_file:
+            log_file = dp_io.Null_dev_t()
+    #print >>sys.stderr, "log_file>%s<" % (log_file,)
+    return log_file
 
 ## Make this environment specific
 ## In order of rank.
@@ -74,7 +105,7 @@ def uniqify_matches(lines):
     for line in lines:
         line = " ".join(line.split())
         new_lines.append(line)
-    lines = dp_sequences.uniqify_list(new_lines)
+    lines = dp_sequences.uniqify_list_ordered(new_lines)
     return lines
 
 Bottom_ranking_regexps = []
@@ -83,7 +114,8 @@ def rank_lines(lines):
     bottoms = []
     resid = []
 
-    log_file.write("rank_lines, lines>{}<\n".format(lines))
+    #log_file.write("rank_lines, lines>{}<\n".format(lines))
+    log_file.write("rank_lines, lines>{}<\n".format("\n".join(lines)))
     log_file.write("Filter_out_regexps>{}<\n".format(Filter_out_regexps))
     log_file.write("Top_ranking_regexps>{}<\n".format(Top_ranking_regexps))
     if Filter_out_regexps:
@@ -152,12 +184,14 @@ def run_global(argv, start_dir=opath.curdir):
     #print >>sys.stderr, "run_global(), cwd: %s" % (opath.realpath(opath.curdir,))
     if not opath.isfile("GTAGS"):
         return []
-    log_file.write("run_global(), cwd: %s\n"
+    log_file.write("run_global(): cwd: %s\n"
                        % (opath.realpath(opath.curdir,)))
     cxref_fmt = "-x" in argv
-    glob = subprocess.Popen(["global"] + argv[1:], stdout=subprocess.PIPE)
-    return get_lines(glob.stdout, cxref_realpath_p=cxref_fmt,
-                     start_dir=start_dir)
+    log_file.write("run_global()cmdline>%s<\n" % ([GLOBAL_PROGRAM_NAME] + argv[1:]),)
+    glob = subprocess.Popen([GLOBAL_PROGRAM_NAME] + argv[1:], stdout=subprocess.PIPE)
+    lines = get_lines(glob.stdout, cxref_realpath_p=cxref_fmt,
+                      start_dir=start_dir)
+    return lines
 
 def run_globals_over_path(argv, path, start_dir=opath.curdir,
                           all_matches_p=False,
@@ -169,6 +203,9 @@ def run_globals_over_path(argv, path, start_dir=opath.curdir,
     original_dir = opath.realpath(opath.curdir)
     if num_dbs is None:
         num_dbs = len(path)
+    log_file.write("run_globals_over_path(): all_matches_p: {}\n".format(all_matches_p))
+    log_file.write("run_globals_over_path(): first_db: {}\n".format(first_db))
+    log_file.write("run_globals_over_path(): num_dbs: {}\n".format(num_dbs))
     log_file.write("run_globals_over_path(): BEFORE: path>{}<\n".format(path))
     path = path[first_db:num_dbs]
     log_file.write("run_globals_over_path(): AFTER: path>{}<\n".format(path))
@@ -176,24 +213,27 @@ def run_globals_over_path(argv, path, start_dir=opath.curdir,
     ret = []
     for p in path:
         p = opath.dirname(p)
-        #print >>sys.stderr, "p>%s<" % (p,)
+        log_file.write("run_globals_over_path(): p>{}<\n".format(p))
         if opath.isdir(p):
             os.chdir(p)
             x = run_global(argv, start_dir=start_dir)
-            log_file.write("run_globals_over_path(): result[x]>{}<\n".format(x))
+            #log_file.write("run_globals_over_path(): result[x]>{}<\n".format(x))
+            log_file.write(
+                "run_globals_over_path(): result[x]>{}<\n".format("\n".join(x)))
             os.chdir(original_dir)
             if x:
                 ret.extend(x)
                 if not all_matches_p:
                     break
-    log_file.write("run_globals_over_path(): ret>{}<\n".format(ret))
+    #log_file.write("run_globals_over_path(): ret>{}<\n".format(ret))
+    log_file.write("run_globals_over_path(): ret>{}<\n".format("\n".join(ret)))
     return ret
 
-def run_globals(argv, path=None, all_p=True, start_dir=opath.curdir,
+def run_globals(argv, path=None, start_dir=opath.curdir,
                 all_matches_p=False):
     if path == None:
-        path = find_up.find_up("GTAGS", all_p=all_p)
-
+        path = find_up.find_up("GTAGS", True)
+    log_file.write("run_globals(): all_matches_p: {}\n".format(all_matches_p))
     if path != None:
         ret = run_globals_over_path(argv, path, start_dir=start_dir,
                                     all_matches_p=all_matches_p)

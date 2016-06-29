@@ -43,14 +43,9 @@ arg=${1-}
 : ${find_up_p=t}
 : ${db_files=()}
 
-[ -z "${db_finder-}" ] && {
-    if [ "${DP_CSCOPE_PROGRAM}" = "gtags-cscope" ]
-    then
-        db_finder_file=GTAGS
-    else
-        db_finder_file=cscope.out
-    fi
-}
+: ${DP_CODE_INDEX_FINDER_FILE=cscope.*}
+
+: ${db_finder:=cscope.out}
 
 if (($# == 1))
 then
@@ -77,6 +72,8 @@ else
           -i|--including|--include|--inc|-h|--includes) field_num=8;;
           --find-up|--fup) find_up_p=t;;
           --use-dot|--dot-only|--no-find-up) find_up_p=;;
+          # for convenience, let us do a global completion here.
+          -c|--complete) shift; global-complete "$@"; exit;;
           --) shift; break;;
           *) break;;
       esac
@@ -87,9 +84,9 @@ fi
 # ((${#db_files[@]-0} == 0)) || vsetp "${find_up_p}" || {
 #     # look for a cscope db above us.
 #     EExec_verbose_msg "finding up"
-#     db_files=($(find-up "${db_finder_file}"))
+#     db_files=($(find-up "${DP_CODE_INDEX_FINDER_FILE}"))
 # }
-db_files=($(find-up "${db_finder_file}"))
+db_files=($(find-up "${DP_CODE_INDEX_FINDER_FILE}"))
 
 EExec_verbose_msg "db_files[@]>${db_files[@]-}<"
 

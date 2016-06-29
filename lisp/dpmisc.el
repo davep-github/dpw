@@ -5947,6 +5947,10 @@ When beginning a sequence, (point) is saved.  This can be pushed onto
 	(dp-push-go-back (or reason "dp-push-go-back&apply") pmarker))
     (error (message "%s" (car-safe (cdr error))))))
 
+(defun dp-push-go-back&apply-rest (reason func &rest r)
+  (interactive)
+  (dp-push-go-back&apply reason func r))
+
 (defun dp-find-function ()
   "Add some useful stuff wrapped about `find-function'."
   (interactive)
@@ -10466,15 +10470,15 @@ Sort of \"Yes, he said invisibling\"."
   (dp-unextent-region (dp-make-highlight-region-extent-id "dp-hidden")))
 (dp-defaliases 'dp-unhide-region 'dur 'dsr 'dv 'dp-show-region)
 
-(defun dp-log-base-b (base num)
+(defun dp-log-base-b (num &optional base)
   (interactive)
-  (/ (log num) (log base)))
+  (/ (log num) (log (or base 2))))
 
 (defun dp-num-C-u (&optional prefix-arg)
   (interactive "P")
   (setq-ifnil prefix-arg current-prefix-arg)
   (and (listp prefix-arg)        ; Ensure it's a list ==> true C-u vs C-<num>
-       (truncate (dp-log-base-b 4 (prefix-numeric-value prefix-arg)))))
+       (truncate (dp-log-base-b (prefix-numeric-value prefix-arg) 4))))
 
 (defun* nCu-p (&optional num-C-u prefix-arg (op 'eq))
   "Return non-nil if number of C-us in `current-prefix-arg' == NUM-C-U.
@@ -11477,7 +11481,7 @@ Sometimes quoted lists are easier to make when most/all elements are quoted."
                                             (fmt "%s %s:%s") (pos (point)))
   (interactive "P")
   (kill-new (message 
-             (dp-mk-breakpoint-command (not tmp-p) :fmt fmt :pos pos))))
+             (dp-mk-breakpoint-command (not perm-p) :fmt fmt :pos pos))))
 
 
 ;;
@@ -11817,11 +11821,13 @@ An `undo-boundary' is done before the template is used."
   "Set up a buffer as a Python language buffer.
 Inserts `dp-python-new-file-template-file' by default."
   (interactive)
-  (let ((comment-start "###"))
-    (dp-script-it "python" t
-                  :comment-start comment-start
-                  :template 'dp-insert-new-file-template
-                  :template-args (list dp-python-new-file-template-file))))
+  (when (and buffer-file-name
+             (not (string-match dp-ipython-temp-file-re buffer-file-name))
+    (let ((comment-start "###"))
+      (dp-script-it "python" t
+                    :comment-start comment-start
+                    :template 'dp-insert-new-file-template
+                    :template-args (list dp-python-new-file-template-file))))))
 
 
 (defun* dp-get-buffer-local-value (&optional var buffer 
@@ -14482,7 +14488,7 @@ something.")
               dp-p4-stupid-hack-saved-sb sb)
         (dp-maybe-expand-p4-location file sb)))))
 
-(defun dp-show-buffer-file-name (&optional kill-name-p buffer)
+(defun dp-get-buffer-file-name-info (&optional kill-name-p buffer)
   "Show the BUFFER or current-buffer's file name in echo area.
 KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
   (interactive "P")
@@ -14499,13 +14505,27 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
               (setq name (file-name-directory buffer-file-truename)
                     name-type "buffer-dir-truename")
               (kill-new name))))))
+    (cons name name-type)))
+
+(defun dp-get-buffer-file-name (&optional kill-name-p buffer)
+  (interactive "P")
+  (car (dp-get-buffer-file-name-info kill-name-p buffer)))
+
+(defun dp-get-buffer-dir-name (&optional kill-name-p buffer)
+  (interactive "P")
+  (let ((filename (dp-get-buffer-file-name kill-name-p buffer)))
+    (when filename
+      (file-name-directory filename))))
+
+(defun dp-show-buffer-file-name (&optional kill-name-p buffer)
+  (interactive "P")
+  (let ((name-name-type (dp-get-buffer-file-name-info kill-name-p buffer)))
     (message "%s%s: %s"
              (if kill-name-p
                  "Copied "
                "")
-             name-type
-             name)))
-
+             (cdr name-name-type)
+             (car name-name-type))))
 
 (defun dp-grep-buffers (regexp &optional buffer-filename-regexp)
   "Search for REGEXP in all buffers matching BUFFER-FILENAME-REGEXP.

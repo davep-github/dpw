@@ -318,12 +318,12 @@ against the list of regexps."
   :group 'dp-vars
   :type 'boolean)
 
-(defcustom dp-use-gtags-p nil
+(defcustom dp-use-xgtags-p t
   "*A rose is a rose."
   :group 'dp-vars
   :type 'boolean)
 
-(defcustom dp-use-xgtags-p (not dp-use-gtags-p)
+(defcustom dp-use-gtags-p (not dp-use-xgtags-p)
   "*A rose is a rose."
   :group 'dp-vars
   :type 'boolean)

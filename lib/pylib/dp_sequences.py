@@ -222,7 +222,8 @@ def uniqify_list(list_in):
     return d.keys()
 
 def uniqify_list_ordered(list_in):
-    """Return the list such that each element appears only once."""
+    """Return the list such that order is preserved and each element appears
+    only once."""
     l = []
     for i in list_in:
         if i not in l:

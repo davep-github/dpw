@@ -1,0 +1,13 @@
+#!/bin/sh
+
+case "$(hostname)" in
+    vilya) element="/home/davep";;
+    *) element="/home/dpanarit";;
+esac
+
+PATH="${PATH}:${element}"
+export PATH
+
+sudo $(dirname $0)/lightdm-stopper
+sleep 1
+sudo $(dirname $0)/lightdm-starter

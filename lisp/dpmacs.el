@@ -51,6 +51,15 @@ Then deletes this new configuration from the ring."
                                            (concat "realpath " dp-$HOME)) 0 -1)
   "The `realpath(1)' of the aforementioned $HOME variable.")
 
+(defvar dp-ipython-temp-file-re "ipython_edit_.*\\.py$"
+  "Name ipython uses when %edit'ing something.")
+
+(defvar dp-known-temp-file-re-list 
+  (list 
+   dp-ipython-temp-file-re)
+  "List of known temp file regexps, so `dp-gnuserv-visit-hook' doesn't muse about 
+its temp-ness.")
+
 ;;; Dummy hooks: Define these here so that when I make changes that
 ;;; break everything, I can exit w/o having these defuns be unbound
 ;;; and causing errors.  I guess I should really look at doing some
@@ -220,7 +229,8 @@ way.")
   "Only hosts which match this regexp will be allowed to be advertised as
 editing servers via `dp-editing-server-ipc-file'.")
 
-(dp-optionally-require 'xgtags)
+(when dp-use-xgtags-p 
+  (dp-optionally-require 'xgtags))
 (defun dp-xgtags-p ()
   (and dp-use-xgtags-p
        (or (featurep 'xgtags )

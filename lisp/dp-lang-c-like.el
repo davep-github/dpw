@@ -576,28 +576,54 @@ Will miss many cases and do it in comments, too. "
 
 (dp-defaliases 'dp-kill-camel 'dp-fix-symbol 'kill-camel 'kamel 
                'dpkc 'dp-c-camel-to-classic)
+
+(defvar dp-c-type-list 
+  '("auto" "char" "const" "double" "float" "int" "long" "register" "short" 
+    "signed" "struct" "union" "unsigned" "void" "volatile" "mutable" "bool"
+    "byte" "FILE"
+    "int8" "int16" "int32" "int64")
+"List of keywords that imply types.
+Using both uint16 and int16 break the regexp when this list is passed to 
+`regexp-opt'. Same for 32 and 64.
+int8 and uint8 seem to work together.
+A simple `dp-looking-back-at' using `dp-<type>*-regexp' returns nil.
+!<@todo XXX try a simple regexp join rather than opt?")
+
+(defvar dp-<type>*-regexp-list-init
+  (list
+   (concat "\\(?:"
+           "\\("
+           "\\("
+           "[a-zA-Z_][a-zA-Z_0-9]*_[tase]"
+           "\\|"
+           "\\(?:\\(?:struct\\|class\\)\\s-+[a-zA-Z_][a-zA-Z0-9_]*\\)"
+           (if dp-c-type-list
+               (concat "\\|" (regexp-opt dp-c-type-list 'paren))
+             "")
+           (if dp-c*-additional-type-list
+               (concat "\\|" (regexp-opt dp-c*-additional-type-list 'paren))
+             "")
+           "\\)"
+           "\\s-*"
+           "\\)"
+           "\\("
+           "\\*"
+           "\\s-*"
+           "\\)"
+           "\\)"
+           ))
+  "Default list of regexp strings that describe types.")
+
+(defvar dp-<type>*-regexp-list nil
+  "A list of regexp strings that describe types.")
+
 (defvar dp-<type>*-regexp-memo nil)
+
 (defun dp-<type>*-regexp ()
   (setq dp-<type>*-regexp-memo
-        (concat "\\("
-                "\\("
-                "[a-zA-Z_][a-zA-Z_0-9]*_[tase]"
-                "\\|"
-                "\\(?:\\(?:struct\\|class\\)\\s-+[a-zA-Z_][a-zA-Z0-9_]*\\)"
-                (if dp-c-type-list
-                    (concat "\\|" (regexp-opt dp-c-type-list 'paren))
-                  "")
-                (if dp-c*-additional-type-list
-                    (concat "\\|" (regexp-opt dp-c*-additional-type-list 'paren))
-                  "")
-                "\\)"
-                "\\s-*"
-                "\\)"
-                "\\("
-                "\\*"
-                "\\s-*"
-                "\\)"
-                )))
+        (dp-regexp-concat
+         (append dp-<type>*-regexp-list
+                 dp-<type>*-regexp-list-init))))
 
 (defun dp-c*-make-ugly-pointer-decl (post-func &rest post-func-args)
   "Convert proper code, to improper, eg: char* p --> char *p.
@@ -606,6 +632,7 @@ We say: \" p is a pointer to char\", not
   (interactive)
   (when (dp-looking-back-at (or dp-<type>*-regexp-memo
                                 (dp-<type>*-regexp)))
+    (dmessage (dp-all-match-strings-string))
     (replace-match "\\1")
     (apply post-func post-func-args)
     (insert "*")
@@ -1320,9 +1347,15 @@ See `dp-c*-junk-after-eos*'."
                (not (dp-looking-back-at "[-,:\\&;+=|.!@#$%^*(_/?]\\s-*"))))
         (dp-open-newline)
       (call-interactively 'c-context-line-break)
-      (if (and (member syntactic-region dp-c-add-comma-@-bol-of-regions)
+      (cond 
+       ((and (member syntactic-region dp-c-add-comma-@-bol-of-regions)
                (dp-looking-back-at "^\\s-*"))
-          (insert ",")))))
+        (insert ","))
+       ((and (dp-in-a-c-/**/-comment)
+             (looking-at "\\s-*\\*/")
+             (dp-looking-back-at "^\\s-*\\*\\s-*"))
+        (delete-region (match-beginning 0) (match-end 0))
+        (dp-c*-electric-tab))))))
 
 (defun dp-c-mark-current-token ()
   (interactive "_")
@@ -1544,18 +1577,6 @@ a comment add a comment prefix to the line."
 (defvar dp-c-control-keywords "\\(if\\|else\\|while\\|for\\|return\\|do\\)")
 (defvar dp-c-control-keywords-bounded 
   (concat "\\<" dp-c-control-keywords "\\>"))
-
-(defvar dp-c-type-list 
-  '("auto" "char" "const" "double" "float" "int" "long" "register" "short" 
-    "signed" "struct" "union" "unsigned" "void" "volatile" "mutable" "bool"
-    "byte" "FILE"
-    "int8" "int16" "int32" "int64")
-"List of keywords that imply types.
-Using both uint16 and int16 break the regexp when this list is passed to 
-`regexp-opt'. Same for 32 and 64.
-int8 and uint8 seem to work together.
-A simple `dp-looking-back-at' using `dp-<type>*-regexp' returns nil.
-!<@todo XXX try a simple regexp join rather than opt?")
 
 (defvar dp-c-function-type-decl-re
     (concat

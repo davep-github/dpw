@@ -5,21 +5,9 @@ import dp_sequences, dp_io, dp_utils
 
 import ranking_global_gtags_lib
 rgg = ranking_global_gtags_lib
-#rgg.log_file = sys.stderr
-rgg_log_file_name = "bubba"
-rgg_log_file_name = None
-rgg_log_file_name = os.environ.get("rgg_log_file_name", None)
-if rgg_log_file_name:
-    if rgg_log_file_name == '--err':
-        rgg.log_file = sys.stderr
-    elif rgg_log_file_name == '--out':
-        rgg.log_file = sys.stdout
-    else:
-        rgg_log_file_name = os.path.join(os.environ["HOME"], "var/log",
-                                         rgg_log_file_name)
-        rgg.log_file = open(rgg_log_file_name, 'a')
-
-rgg.log_file.write("==== {} ====\n".format(time.ctime()))
+log_file = rgg.setup_logging()
+hdr_fmt = "==== {}: {} " + (47 * "=") + "\n"
+rgg.log_file.write(hdr_fmt.format("begin", time.ctime()))
 
 import find_up, p4_lib
 opath = os.path
@@ -43,7 +31,6 @@ newest, _, _ = dp_utils.newest_file(go_files + [rgg_memo_file])
 
 def create_db_locations(db_memo_file, dependencies, args):
     db_locations = []
-    rgg.log_file.write("Hullo<\n")
 
     for dir in Database_p4_locations:
         rgg.log_file.write("Dir>{}<\n".format(dir))
@@ -88,18 +75,35 @@ def rank_init(
 ## @todo XXX We want to handle at least --single-update so that we can update
 ## all ancestral data bases.
 Passthrough_options = ["-u", "--single-update" ]
+# (one_db_p-Value, all_matches_p-Value)
+All_matches_map = { "-u":
+                    (True, True),
+                    "--single-update":
+                    (True, True),
+                    "-c":
+                    (False, True)}
+def rank_main1(argv):
+    rgg.log_file.write("rank_main({})\n".format(argv))
+    all_matches_p = False
+    one_db_p = False
 
-def rank_main(argv):
+    ## Check args to determine default way to handle all_matches_p.  The
+    ## value can always be set using explicit args.
     for arg in argv:
-        if arg in Passthrough_options:
-            system_cmd = "global " + " ".join(argv[1:])
-            print >>sys.stderr, "system_cmd>%s<" % (system_cmd,)
-            sys.exit(os.system(system_cmd))
+        try:
+            one_db_p, all_matches_p = All_matches_map[arg]
+            print >>sys.stderr, "one_db_p:", one_db_p, ", all_matches_p:", all_matches_p
+            break
+        except KeyError:
+            continue
 
+    if all_matches_p is None:
+        all_matches_p = False
+
+    rgg.log_file.write("all_matches_p: {}, one_db_p: {}\n".format(all_matches_p,
+                                                                  one_db_p))
     filter_p = os.environ.get("BEA_FILTER")
     uniqify_p = True
-    all_p = True
-    all_matches_p = False
 
     rgg_argv = os.environ.get("RGG_ARGV")
     if (rgg_argv):
@@ -130,50 +134,73 @@ def rank_main(argv):
         sys.exit(0)
 
     opt_cre = re.compile("--rgg-(.*)$")
-    for arg in argv[1:]:
+    # So we don't remove elements from the iteration list
+    argv_copy = argv[0:]
+    for arg in argv_copy[1:]:
+        # This make not passing in args easier.  E.g.
+        # (or dp-gtags-auto-update-flags "")
+        # since `call-process' wants strings
+        # and this is easy to do.
+        if arg in ('', '--nop', '--noop'):
+            argv.remove(arg)
         opt = opt_cre.search(arg)
+        #print >>sys.stderr, "arg>{}<, opt>{}<".format(arg, opt)
+
         if not opt:
             break
-        opt = opt.group(1)
+        opt_name = opt.group(1)
+        #print >>sys.stderr, "opt>{}<, opt_name>{}<".format(opt, opt_name)
         if opt_name == "no-uniq":
             uniqify_p = False
-            argv.delete(arg)
+            argv.remove(arg)
             continue
-        if opt_name == "first-db":
-            all_p = False
-            argv.delete(arg)
+        if opt_name == "one-db":
+            one_db_p = True
+            argv.remove(arg)
             continue
-        if opt_name == "all-db":
-            all_p = True
-            argv.delete(arg)
-            continue
-        if ((opt_name == "stop-after-first")
-            or
-            (opt_name == "first-match")
-            or
-            (opt_name == "not-all-matches")):
+        # This means all matches from first DB that has matches
+        if opt_name in ("stop-after-first",
+                        "first-match",
+                        "first-db",
+                        "first-db-match",
+                        "first-db-matches",
+                        "one-p",
+                        "not-all-matches-p"):
              all_matches_p = False
-             argv.delete(arg)
+             argv.remove(arg)
              continue
-        if opt_name == "all-matches":
+        if opt_name in ("all-matches",
+                        "all-match",
+                        "all-db",
+                        "all-dbs",
+                        "all-p",
+                        "all-db-match",
+                        "all-db-matches",
+                        "all-matches-p"):
             all_matches_p = True
-            argv.delete(arg)
+            one_db_p = False
+            argv.remove(arg)
             continue
 
-    #@todo XXX This should do this in every db searched.
+    print >>sys.stderr, "argv>%s<" % (argv,)
+    #@todo XXX We should do this in every db searched.
+    #@todo XXX Why was it commented out?
+    #@todo XXX Pass an update flag to run_globals_over_path()?  This way we
+    #@todo XXX hit only those dbs we search.
+    #@todo XXX Or do we always want to do them all?
 #    if argv[1] in ('-u' '--update'):
 #        sys.exit(subprocess.call(["global"] + argv[1:]))
 
-    # Find this dir's parental db.
-    path = find_up.find_up("GTAGS", all_p=all_p)
-    rgg.log_file.write("path: %s\n" % \
+    # Find this dir's parental db(s).
+    path = find_up.find_up("GTAGS", all_p = not one_db_p)
+    rgg.log_file.write("find_up(): path: %s\n" % \
                        dp_sequences.list_to_indented_string(path))
     # Add all other known db locations.
     # We should only add new elements.
     path.extend(Database_locations)
     dp_io.ctracef(1, "before uniq: path>{}<\n", "\n ".join(path))
     rgg.log_file.write("before uniq: path>{}<\n".format("\n ".join(path)))
-    path = dp_sequences.uniqify_list(path)
+    path = dp_sequences.uniqify_list_ordered(path)
     dp_io.ctracef(1, "after uniq: path>{}<\n", "\n ".join(path))
     rgg.log_file.write("after uniq: path>{}<\n".format("\n ".join(path)))
 
@@ -209,6 +236,21 @@ def rank_main(argv):
         #rc = 1
         ## emacs' gtags doesn't like non-0 return code.
         rc = 0
-    rgg.log_file.write("=" * 17 + "\n")
+    rgg.log_file.write(hdr_fmt.format("finish", time.ctime()))
+
+    return rc
+
+def rank_main(argv):
+    try:
+        rc = rank_main1(argv)
+        rgg.log_file.write("All good.\n")
+
+    except Exception, e:
+        rgg.log_file.write("Error.\n")
+        rgg.log_file.write("Failed, exception: {}\n".format(e))
+        rgg.log_file.write("sys.exc_type: {}\n".format(sys.exc_type))
+        rgg.log_file.write("sys.exc_value: {}\n".format(sys.exc_value))
+        rgg.log_file.write("Error.\n")
+        rc = 1
     rgg.log_file.close()
     return rc

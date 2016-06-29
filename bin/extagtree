@@ -121,6 +121,7 @@ EExec_verbose_echo_id DP_CODE_INDEX_FINDER_WORK_FILE
 : ${ctags_p=}
 : ${gtags_p=t}      # By default, only this tagger now that it seems to work.
 : ${gtags_opts=}
+: ${gtags_tagger=}
 
 SYSTEM_INCLUDES=
 ###
@@ -195,7 +196,8 @@ do
         --no-global-idutils) use_global_id_p=;;
         -G) use_global_id_p=t;;
         --gtagslabel|--gtl|--gtagger) shift; 
-                                      gtags_opts="$gtags_opts --gtagslabel ${1}";;
+                                      gtags_opts="$gtags_opts --gtagslabel ${1}"
+                                      gtags_tagger="${1}";;
 	--) shift ; break ;;
 	*)
             break ;;
@@ -335,9 +337,12 @@ fi
 
 [ -s "$FILES_FILE" ] || {
     dp_echo "Could not find any files. $FILES_FILE is empty."
-    EExecDashN_p && {
+    if EExecDashN_p
+    then
         dp_echo "-n requested, no files is probably ok."
-    }
+    else
+        exit 1
+    fi
 } 1>&2
 
 TAGFILES=()
