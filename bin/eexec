@@ -364,6 +364,10 @@ EExec()
               eexecShowPrefix="+"
               eexecEcho=${EExecEcho-EExecStderrEcho}
               ;;
+          --eko) eexecShowOnly=y
+              eexecShowPrefix="+"
+              eexecEcho=EExecStandardErr_eko
+              ;;
           -c|-k|--keep-going|--no-exit|--error-ok|--ignore-errors) eexecContinue=t
               ;;
           -C|-0|--fake-success|--return-zero|--rose) eexecContinue=t
