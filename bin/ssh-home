@@ -39,7 +39,7 @@ Usage_details="$EExec_parse_option_str
 -S <source-file> -- Do source <var-file> immediately. May be repeated."
 option_str="nvqsS:p:"
 source dp-getopt+.sh
-for i in "$@"
+while (($# > 0))
 do
   # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
   case $1 in
