@@ -698,6 +698,22 @@ def bin_to_dotted(uint32, dot):
         uint32 = uint32 >> 8
     return dot.join(parts)
 
+def realpwd():
+    return opath.realpath(opath.curdir)
+
+def extend_path_list_from_env(list_in, env_name, sep=":", def_env=None):
+    env_val = os.environ.get(env_name, def_env)
+    if env_val:
+        list_in.extend(env_val.split(":"))
+    return list_in
+
+def match_a_regexp(regexp_list, string):
+    for r in regexp_list:
+        m = re.search(r, string)
+        if m:
+            return m
+    return None
+
 ########################################################################
 if __name__ == "__main__":
     for a in sys.argv[1:]:
