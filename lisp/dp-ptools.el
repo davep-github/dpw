@@ -486,11 +486,10 @@ Oddly, it doesn't handle structs.")
       (gtags-auto-update)
       (message "done.")))
 
-  (global-set-key [(meta ?W)] 'dp-gtags-save-file-and-update-all-dbs)
+  (global-set-key [(meta ?W)] 'dp-gtags-save-buffer-and-update-all-dbs)
 
-  (defun dp-gtags-save-file-and-update-all-dbs (&optional args)
+  (defun dp-gtags-save-buffer-and-update-all-dbs (&optional args)
     (interactive)
-
     (let ((dp-gtags-auto-update-db-flag "--rgg-all-dbs"))
       (call-interactively 'save-buffer)))
 
