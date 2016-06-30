@@ -3,6 +3,11 @@
 [alias]
 	co = checkout
         # See which alias sticks and remove the rest.
+        # Too bad there's already a revert command that is:
+        # 1) unintuitively named, IMHO
+        # 2) usurps an already established and common meaning.
+        # Conventions are good.  "Hmmm, I think I'll have my program reopen
+        # stderr to live on fd 37."  Wrong, but thanks for playing.
 	cof = checkout --
         recover-file = checkout --
         rec = checkout --
@@ -10,10 +15,19 @@
         rest = checkout --
         rfile = checkout --
         rf = checkout --
+        backout = reset --hard
+        rewind = reset --hard
+        undo-changes = reset --hard
+        unchange = reset --hard
+        undo-dirty = reset --hard
+        undirty = reset --hard
+        undo-all = reset --hard
 
         rem = remote
 
 	br = branch
+        current-branch = rev-parse --abbrev-ref=strict HEAD
+        cbr = rev-parse --abbrev-ref=strict HEAD
         cob = checkout -b
         newbr = checkout -b
         newbranch = checkout -b
@@ -32,6 +46,10 @@
         l5 = log -n 5
         log11 = log -n 11
         l11 = log -n 11
+        lone5 = log -n 5 --oneline
+        loneog11 = log -n 11 --oneline
+        l11 = log -n 11
+        lonen = log --oneline -n
         # Height of laziness: saving -n<space>
         ln = log -n
         # These are longer than the actual command to compensate for all of
@@ -118,6 +136,7 @@
         # there is now a git alias command, but 'tis called alias.
 	aliases = config --get-regexp ^alias\\.
         
+        # Reset to *previous* commit.
 	undo-commit = reset --soft HEAD^
 	uncommit = reset --soft HEAD^
         amend = commit --amend
