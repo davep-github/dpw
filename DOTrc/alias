@@ -225,6 +225,7 @@ alias md-p='mkdir -p'
 
 # Dirty rotten two-faced gits...
 alias gitbr='git branch'
+alias gcb='git-current-branch'
 alias gitco='git checkout'
 alias gitci='git commit'
 alias gitcia='git commit -a'
