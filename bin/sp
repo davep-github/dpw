@@ -9,6 +9,7 @@ $capture_output_p = 1;
 $sudo = "";
 $look_in_cwd = 0;
 $files_only_p = 1;
+$quiet_p = 0;                   # Just return status.
 
 sub usage {
     printf("usage: sp [-{0-9}+] [-l[l]] [-r] [-L] [-S] [-X cmd [args]] [-x cmd] file...\n");
@@ -94,8 +95,9 @@ while (($opt, $opt_arg) = ($ARGV[0] =~ /^-(\S)(\S*)/)) {
     $sudo = "sudo";
   } elsif ($opt eq ".") {
     unshift(@path, ".")
+  } elsif ($opt eq "q") {
+    $quiet_p = 1;
   }
-
 
   shift(@ARGV);
   #printf("2, LX: opt>$opt<, cmd_args>$cmd_args<\n");
@@ -128,6 +130,7 @@ foreach $arg (@ARGV) {
         #&echo($cmd_args);
         eval("&$func_name(\"real: \", \$cmd_args);");
       } elsif (-x $targ) {
+        exit(0) if $quiet_p;
         ++$num_printed if $num_to_print >= 0;
         if ($cmd) {
           $qmd = sprintf("%s %s %s%s%s", $sudo, $cmd,
