@@ -15,7 +15,7 @@ def main(nargv):
     while argi < nargs:
         a = nargv[argi]
         #print >>sys.stderr, "examining>%s<, type(a): %s" % (a, type(a))
-        if a[0] != '-':
+        if (len(a) == 0) or (a[0] != '-'):
             break
         argi += 1
         if a == '-p':
