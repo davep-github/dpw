@@ -139,7 +139,10 @@ xorg-dev
 mpd
 msmtp
 mutt
-lsscsi)
+lsscsi
+xclip
+firefox
+thunderbird)
 
 num_pkgs="${#packages[@]}"
 pkg_num=1
