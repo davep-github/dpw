@@ -11030,15 +11030,17 @@ when the command was issued?")
 (defun dp-serialized-name (prefix format &rest rest)
   (interactive)
   (let ((el (assoc prefix dp-serialized-name-alist))
-        n)
+        n 
+        new-el)
     (if el
         (setq n (incf (cadr el)))
-      (setq n 0
-            dp-serialized-name-alist (cons (list prefix n 
-                                                 'rest: rest 
-                                                 'maj-mode: (major-mode-str)
-                                                 'bufname: (buffer-name))
-                                           dp-serialized-name-alist)))
+      (setq n 0))
+    (dp-add-or-update-alist 'dp-serialized-name-alist
+                            prefix (list
+                                    n
+                                    'rest: rest 
+                                    'maj-mode: (major-mode-str)
+                                    'bufname: (buffer-name)))
     (format (or format "%s%s") prefix n)))
 
 (defun dp-buffer-syntactic-context-hack-around (&optional buffer)

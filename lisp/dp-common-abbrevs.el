@@ -526,20 +526,20 @@
     (("faf" "find . -type f -print0 | xargs -r0 "
       "find . -type f -print0 | xargs -r0 egrep ")
      dp-manual)
-    (("faff" "find . -type f -print0 | xargs -r0 fgrep "
+    (("faff" "find . -type f -print0 | xargs -r0 fgrep -n "
       ;;Usually it's fgrep or egrep.
       ;;"find . -type f -print0 | xargs -r0 grep "
-      "find . -type f -print0 | xargs -r0 egrep ")
+      "find . -type f -print0 | xargs -r0 egrep -n ")
      dp-manual)
-    (("fafe" "find . -type f -print0 | xargs -r0 egrep "
+    (("fafe" "find . -type f -print0 | xargs -r0 egrep -n "
       ;;Usually it's fgrep or egrep.
       ;;"find . -type f -print0 | xargs -r0 grep "
-      "find . -type f -print0 | xargs -r0 fgrep ")
+      "find . -type f -print0 | xargs -r0 fgrep -n ")
      dp-manual)
     (("fasf" "find . -type f \\( -name '*.cpp' -o -name '*.h' \\)  -print0 | xargs -r0 fgrep -ni "
       ;;Usually it's fgrep or egrep.
       ;;"find . -type f -print0 | xargs -r0 grep "
-      "find . -type f -print0 | xargs -r0 egrep ")
+      "find . -type f -print0 | xargs -r0 egrep -ni ")
      dp-manual)
     (("cttoi" "come to think of it")
      dp-manual)

@@ -2,4 +2,9 @@
 
 source script-x
 
-git branch 2>/dev/null | sed -rn 's/^(\* )(.*)/\2/p'
+#git branch 2>/dev/null | sed -rn 's/^(\* )(.*)/\2/p'
+
+# ?Don't rely on git aliases.  Keep them for interactive use only?
+# This will be available as long as there is a git installation.  My aliases
+# may not be.
+git rev-parse --abbrev-ref=strict HEAD
