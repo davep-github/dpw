@@ -3022,6 +3022,7 @@ exist to move from one topic record to the next or previous.
   (make-local-hook 'after-save-hook)
   (add-hook 'after-save-hook (function 
 			      (lambda ()
+                                (dpj-set-current-journal-file (buffer-file-name))
 				(dpj-merge-all-topics nil 'write-em)))
 	    nil 'local)
 
