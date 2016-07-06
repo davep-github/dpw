@@ -22,6 +22,7 @@
 
 [grep]
         patternType = perl
+
 # Is there more advicey advice?
 #[advice]
 #  statusHints = false
