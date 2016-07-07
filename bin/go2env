@@ -764,7 +764,6 @@ if __name__ == "__main__":
         elif opt == '-S':
             suffix = val
         elif opt == '-M':
-            # @todo XXX Do this with a front end since it is nvidia ME
             # specific.
             grep_regexps.append("^" + val + "__SB_rel$")
             Shell_type = "grep"

@@ -1051,6 +1051,8 @@ minibuffer history list `bookmark-history'."
 (setq search-ring-max 64
       regexp-search-ring-max 64)
 
+(dp-set-frame-title-format)
+
 ;; Do these more like at run-time vs load-time.
 ;; This hook is run at the end of dpmacs.el
 (add-hook 'dp-post-dpmacs-hook
