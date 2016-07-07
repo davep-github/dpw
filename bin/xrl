@@ -56,6 +56,10 @@ do
   }
 
   host=$(expand-hostname $i)
+  case "$host" in
+      *@) host="${host}localhost";;
+      *) ;;
+  esac
   EExec_verbose_echo_id host
   full_host=$(full-hostname $host) # || dpFATAL 1 "getting full-hostname for >$host< failed"
   EExec_verbose_echo_id full_host
