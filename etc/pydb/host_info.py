@@ -229,7 +229,7 @@ amd_family = e(
         'work-zone': 'amd',
         #    """xem-xft-font""": '''"Inconsolata-13"''',
         'xterm_bin': 'xterm',
-        'xterm_bg': "BLACK",
+        'xterm_bg': "grey25",
         'xterm_fg': "WHITE",
         'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
         'xem_bg_color': AMD_BG_COLOR,
