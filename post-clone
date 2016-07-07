@@ -8,14 +8,15 @@ set -u
 export CYGWIN="winsymlinks:nativestrict"
 
 EZEC=
-: ${repo:=dpw/dpw.git}
-
+: ${default_parent:=dpw}
+: ${default_repo:=dpw/dpw}
+: ${repo:="${default_parent}/$(basename ${PWD})";;
 while (($# > 0 ))
 do
     case "$1" in
         -n) EZEC="echo - ";;
         -r|--repo) shift; repo="$1";;
-        -h|--repo-here|--repo.) repo="${PWD}";;
+        -d|--default-repo) repo="${default_repo}";;
 	-x)  set -x;;
 	--) shift; break;;
         *) break;;
@@ -111,8 +112,15 @@ SYS_BASH_COMPLETION_DIR=/usr/share/bash-completion
     }
 }
 
+OEM_DIR="${HOME}/.oem-dot-files"
+mkdir -p "${OEM_DIR}"
 for f in .bash_login .bashrc .bash_profile
 do
+	[ -h "${f}" ] && continue
+	oem_file_name="${OEM_DIR}/DOT${f}"
+	[ -e "${oem_file_name}" ] || {
+	    ${EZEC} mv "${f}" "${oem_file_name}"
+	}
 	${EZEC} ln -s .rc/bashrc $f
 done
 

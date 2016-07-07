@@ -139,7 +139,10 @@ xorg-dev
 mpd
 msmtp
 mutt
-lsscsi)
+lsscsi
+xclip
+firefox
+thunderbird)
 
 num_pkgs="${#packages[@]}"
 pkg_num=1
@@ -150,3 +153,16 @@ do
   EExec sudo apt-get --assume-yes install "${p}"
   ((++pkg_num))
 done
+
+echo "FUCK DASH!!!"
+echo "FUCK DASH!!!"
+echo "FUCK DASH!!!"
+echo "FUCK DASH!!!"
+echo "FUCK DASH!!!"
+echo "FUCK DASH!!!"
+echo "FUCK DASH!!!"
+echo "FUCK DASH!!!"
+echo "FUCK DASH!!!"
+echo "FUCK DASH!!!"
+echo "FUCK DASH!!!"
+echo "FUCK DASH!!!"

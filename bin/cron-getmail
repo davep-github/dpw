@@ -2,15 +2,27 @@
 # $Id: cron-getmail,v 1.5 2005/04/26 07:11:16 davep Exp $
 #
 #date >> /tmp/cron-getmail.log
-set -x
+#set -x
+
 rc=0
+rc_file=/home/davep/verizon.rc
+export TMP=/home/davep/tmp
+export TEMP=/home/davep/tmp
+export TMPDIR=/home/davep/tmp
+export TEMPDIR=/home/davep/tmp
+: ${getmaildir:=/yokel/yokel/etc/getmail}
+: ${getmail_host:=verizon}
+#######getmail_dot_rc="${getmaildir}/${getmail_host}.rc"
+## Until root drive is fixed.
+getmail_dot_rc="/home/davep/${getmail_host}.rc"
+
 /home/davep/bin/vpn-connected-p || {
     echo "id: $(id)"
     echo "tilde: " ~
     echo "HOME>$HOME<"
     /usr/bin/getmail -q \
-	--getmaildir=/yokel/yokel/etc/getmail \
-	-r /yokel/yokel/etc/getmail/verizon.rc \
+	-r "$getmail_dot_rc" \
+	--getmaildir="${getmaildir}" \
 	2>&1
     rc=$?
 } | egrep -v -e 'FutureWarning
