@@ -848,14 +848,21 @@ unset sudo_bash_env
 dp_set_x_fini
 export DP_BASHRC_EXECUTION_COMPLETED=t
 
+xterm_ls_colors=$($HOST_INFO -n '' "xterm-ls-colors")
+[ -n "${xterm_ls_colors-}" ] && {
+    source "${xterm_ls_colors}"
+}
+unset xterm_ls_colors
+
+
 post_bashrc_command=$($HOST_INFO -n '' post_bashrc_command)
 vsetp "${post_bashrc_command}" && {
     ${post_bashrc_command} $($HOST_INFO -n '' post_bashrc_command_args)
 }
+unset post_bashrc_command
 
 # It should be benign in other cases, but it's vital that it be exported.
 export LD_LIBRARY_PATH
-unset post_bashrc_command
 unset EExecProgName
 unset DP_BASHRC_IN_PROGRESS
 true
