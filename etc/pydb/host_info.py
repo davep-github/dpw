@@ -35,6 +35,7 @@ import dppydb
 #db=dbt
 
 import os
+opath = os.path
 #
 # create a default entry with some noticable values so we can know when
 # we're getting this.
@@ -278,30 +279,27 @@ e(
     ref=[amd_family, OSDB['linux'], default]
 )
 
-NMI_TEST_BOX_FG_COLOR = 'white'
-# #BAC1D1
-#NMI_TEST_BOX_BG_COLOR = 'rgb:ba/c1/d1'
-NMI_TEST_BOX_BG_COLOR = 'rgb:24/00/68'
-#NMI_TEST_BOX_BG_COLOR = 'rgb:57/a2/71'
-#NMI_TEST_BOX_BG_COLOR = 'rgb:C7/E3/D2'
-
+# #E8FBF8
+NMI_TEST_BOX_FG_COLOR = 'black'
+NMI_TEST_BOX_BG_COLOR = 'azure'
+NMI_TEST_BOX_XEM_BG_COLOR = 'rgb:e8:fb:f8'
 e(
     kef='host',
     dat={
-        'host-pattern': 'nmi-test',
+        'host-pattern': 'nmi-test|bambleweeny|bambleweeny-57|bw57',
         'family': 'amd_family',
         'comment': """A big ol' server box under my desk for NMI work.""",
         'xem_opts': '-geometry 88x61-0+0',
         'main_macs_opts': '-eval (dp-start-editing-server)',
         'xterm_bg': NMI_TEST_BOX_BG_COLOR,
         'xterm_fg': NMI_TEST_BOX_FG_COLOR,
-        'xem_bg_color': AMD_ATLR5N4_BG_COLOR, # NMI_TEST_BOX_BG_COLOR,
+        'xterm-ls-colors': opath.join(HOME, '.rc/ls-colors-for-light-bg'),
+        'xem_bg_color': NMI_TEST_BOX_XEM_BG_COLOR,
         'dpxx-auto-opts-auto1': '-g 124x31+86+0',
         'dpxx-auto-opts-auto2': '-g 124x31+86+513',
     },
     ref=[amd_family, OSDB['linux'], default]
 )
-
 
 # create the db.
 DB = dppydb.PythonDataBase()
