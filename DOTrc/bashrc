@@ -844,14 +844,16 @@ vsetp "${dp_NH-}" && {	# It needs "{" to make it go.
 
 unset sudo_bash_env
 
-# Clear any resijule(Tremors) boulders... um, debug settings.
-dp_set_x_fini
 export DP_BASHRC_EXECUTION_COMPLETED=t
 
 xterm_ls_colors=$($HOST_INFO -n '' "xterm-ls-colors")
-[ -n "${xterm_ls_colors-}" ] && {
+if [ -n "${xterm_ls_colors-}" ]
+then
     source "${xterm_ls_colors}"
-}
+else
+    unset LS_COLORS
+fi
+
 unset xterm_ls_colors
 
 
@@ -860,6 +862,9 @@ vsetp "${post_bashrc_command}" && {
     ${post_bashrc_command} $($HOST_INFO -n '' post_bashrc_command_args)
 }
 unset post_bashrc_command
+
+# Clear any resijule boulders... um, debug settings.
+dp_set_x_fini
 
 # It should be benign in other cases, but it's vital that it be exported.
 export LD_LIBRARY_PATH
