@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Just branches, no marking of the current branch.
 ########################################################################
 #
 # template begin.
@@ -105,67 +106,5 @@ Usage_error()
 # template end.
 ########################################################################
 
-packages=(meld
-realpath
-git
-git-extra
-make
-wmctrl
-vnc4server
-ctags
-gcc
-g++
-openssh-server
-dump
-openssl
-libssl-dev
-libcurl4-openssl-dev
-gcolor2
-libncurses5
-libncurses5-dbg
-libncurses5-dev
-ncurses-base
-ncurses-bin
-ncurses-doc
-ncurses-examples
-ncurses-term
-ncurses-hexedit
-figlet
-screen
-cscope
-vim
-diffuse
-gitk
-xorg-dev
-mpd
-msmtp
-mutt
-lsscsi
-xclip
-firefox
-thunderbird
-pcregrep
-)
-
-num_pkgs="${#packages[@]}"
-pkg_num=1
-
-for p in "${packages[@]}"
-do
-  EExec_verbose_msg "Installing ${pkg_num} of ${num_pkgs}"
-  EExec sudo apt-get --assume-yes install "${p}"
-  ((++pkg_num))
-done
-
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
+EExec git branch --no-color "$@" \
+    | EExec sed -rn 's/(^(\*| ) )([^[:space:]]+$)/\3/p'

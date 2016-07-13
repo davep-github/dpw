@@ -93,7 +93,8 @@ else
 fi
 export -f prompt_command
 
-DP_LOG=$HOME/log
+DP_LOG=$HOME/var/log
+export DP_LOG_DIR="$DP_LOG"
 DP_BITCH_LOG="$DP_LOG/bitches"
 DP_SUGGESTION_BOX="$DP_LOG/suggestions"
 

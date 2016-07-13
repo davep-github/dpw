@@ -117,12 +117,15 @@ Usage_details="${EExec_parse_usage}
 -r|--rel|--relative) Use relative path names [$post_processor_processor].
 -a|-p|-l|--abs|--absolute|--pwd) Use absolute (no symlink) path names [$post_processor_processor].
 -R|--rp|--real|--realpath) Use realpath [$post_processor_processor].
+-p|--pass-thru|--passthru|--pt|--nada) Don't change anything.
 "
-option_str="raRpl"
+option_str="raRplp"
 long_options=(
 "relative" "rel"
 "absolute" "abs" "pwd"
 "real" "realpath" "rp"
+"pass-thru" "passthru" "pt" "nada"
+"XXX"
 )
 
 source dp-getopt+.sh || exit 1
@@ -135,8 +138,10 @@ do
 
       # Program options.
       -r|--rel|--relative) post_processor_processor=relativizer;;
-      -a|-p|-l|--abs|--absolute|--pwd) post_processor_processor=absolutizer;;
-      -R|--rp|--real|--realpath) post_processor_processor=realpathizer;;
+      -a|-l|--abs|--absolute|--pwd) post_processor_processor=absolutizer;;
+      -R|--rp|--real|--realpath) post_processor_processor=realpathalizer;;
+      -p|--pass-thru|--passthru|--pt|--nada) post_processor_processor=passthrualizer;;
+      --XXX);;
       # Help!
       --help) Usage; exit 0;;
       --) shift ; break ;;
@@ -164,16 +169,22 @@ absolutizer()
     EExec echo "$PWD/$@"
 }
 
-realpathizer()
+realpathalizer()
 {
     EExec realpath "$@"
+}
+
+passthrualizer()
+{
+    echo "$@"
 }
 
 post_processor()
 {
     while read
     do
-      EExec_verbose_echo_id post_processor_processor REPLY
+      EExec_verbose_echo_id post_processor_processor
+      EExec_verbose_echo_id REPLY
       "${post_processor_processor}" "${REPLY}"
     done
 }

@@ -47,11 +47,18 @@ on_error()
 
 
 just_show=
+X_opt=-X
 for i in $*
 do
   # Apply -N to next arg only. Multiple -Ns may be specified.
   [ "$i" = "-N" ] && {
       just_show=-N
+      continue
+  }
+
+  # Apply -X to next arg only. Multiple -Xs may be specified.
+  [ "$i" = "-X" ] && {
+      X_opt=
       continue
   }
 
@@ -73,6 +80,7 @@ do
   [ -z "$font" ] && font=9x15
 
   EExec dpxx $just_show -h $host -n $title_base -f $font \
-        -- $rsh_bin $host
+        -- ${rsh_bin} ${X_opt} ${host}
   just_show=
+  X_opt=-X
 done

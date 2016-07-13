@@ -38,10 +38,7 @@ export ARCHIE_HOST=archie.rutgers.edu
 export DP_NOTE_INDEX_DIR=$($HOST_INFO -n 'DP_NOTE_INDEX_DIR_NOT_SET!!!' \
 					'notes-index-dir')
 export MEWTMP='/usr/tmp/mew'
-# sigh. I'll never use these consistently.
-export LOG="$HOME/log"
-export DP_LOG="$LOG"
-export DP_LOG_DIR="$DP_LOG"
+# Sigh. I'll never use these consistently.
 export RUBYLIB="$HOME/lib/rblib"
 #export TMPDIR="$HOME/tmp"
 export TMPDIR="/tmp"
@@ -62,8 +59,8 @@ export DP_EDITING_SERVER_FILE="$DP_IPC_DIR/dp-editing-server"
     unset GREP_OPTIONS
 }
 
+# Override this in a more specific env file.
 [ -f /etc/timezone ] || export TZ=EST5EDT
-#[ -f /etc/timezone ] || export TZ=PST8PDT
 
 #
 

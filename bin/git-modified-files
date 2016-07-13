@@ -22,8 +22,8 @@ do
   ${EEXEC_SHIFT}
 done
 EExec_verbose_msg $(echo_id eexec_program)
-unset eexec_program
-#export eexec_program
+#unset eexec_program
+export eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
 
@@ -134,8 +134,9 @@ elif true_p "${filter_mode_p}"
 then
     cat
 else
-    EExec git status -s ${status_opts}
+    # short status and skip untracked files.
+    EExec git status -s -uno ${status_opts}
 fi \
-    | sed -rn 's/(^[[:space:]]+M )(.*)$/\2/p' \
-    | file-relativizer "$@" \
-    | normpath
+    | EExec sed -rn 's/(^[[:space:]]+M )(.*)$/\2/p' \
+    | EExec file-relativizer "${optv[@]}" \
+    | EExec normpath

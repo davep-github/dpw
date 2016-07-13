@@ -78,7 +78,7 @@ for i in "$@"; do
     shift
 done
 #if vsetp "${repl[*]}"; then
-n="${#repl}"
+n="${#repl[@]}"
 if ((n > 0)); then
     repl_exp=$(for e in "${repl[@]}"; do echo -n "$e"; done;)
 else

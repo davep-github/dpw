@@ -89,7 +89,7 @@ EExec_parse()
           -v|--eexec-v) prog="${prog}EExecVerbose ";;
           -vk|--vk|--eexec-vk) prog="${prog}EExecVerbose_k ";;
           -q|--eexec-q) prog="${prog}EExecQuiet ";;
-          --eexec-last-option) shift; break;;
+          --eexec-last-option|--eexec--) shift; break;;
           --) prog="${prog}EExecNOP"; break;; # Allow user to consume a --
           *) break;;
       esac

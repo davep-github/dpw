@@ -14289,7 +14289,7 @@ whitespace eradication.")
   (let ((git-man-page (concat "git-" topic)))
     (funcall (if other-window-p '2man 'manual-entry)
              git-man-page)))
-(dp-defaliases 'gith 'githelp 'gitman 'dp-git-manual-entry)
+(dp-defaliases 'gith 'githelp 'gitman 'gman 'dp-git-manual-entry)
 
 (defun dp-git-manual-entry-other-window (topic &optional other-window-p)
   (interactive "sgit help on: \nP")

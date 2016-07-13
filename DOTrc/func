@@ -1348,4 +1348,23 @@ dp_ctags_etags_complete()
         dp_ctags_etags_expand "${cur}"
 }
 
+dp_mk_log_file()
+{
+    local name="${1}"
+    local dir=
+    shift
+    if (($# > 0))
+    then
+        dir="${1}"
+        shift
+    else
+        dir="${DP_LOG_DIR}"
+    fi
+    local path_name="${dir}/${name}"
+    ! [ -e "${path_name}" ] && {
+        touch "${path_name}"
+    }
+    echo "${path_name}"
+}
+   
 true
