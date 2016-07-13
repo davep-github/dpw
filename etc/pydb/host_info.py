@@ -44,13 +44,13 @@ opath = os.path
 #
 
 HOME = os.environ["HOME"]
-BREE = os.environ.get("BREE", os.path.join(HOME, "bree"))
-BREE_BIN = os.path.join(BREE, "bin")
-YOKEL = os.path.join(HOME, "yokel")
-YOKEL_BIN = os.path.join(YOKEL, "bin")
-HOME_LOCAL = os.path.join(HOME, "local")
-HOME_LOCAL_BIN = os.path.join(HOME_LOCAL, "bin")
-
+BREE = os.environ.get("BREE", opath.join(HOME, "bree"))
+BREE_BIN = opath.join(BREE, "bin")
+YOKEL = opath.join(HOME, "yokel")
+YOKEL_BIN = opath.join(YOKEL, "bin")
+HOME_LOCAL = opath.join(HOME, "local")
+HOME_LOCAL_BIN = opath.join(HOME_LOCAL, "bin")
+LIGHT_BG_LS_COLORS = opath.join(HOME, '.rc/ls-colors-for-light-bg'),
 default = dppydb.Entry({
     'pydb_type:': 'host-info',
 
@@ -76,8 +76,8 @@ default = dppydb.Entry({
     #
     'fsf_xem_bin': 'emacs',
     #'xem_bin': '/usr/local/bin/xemacs',
-    'xem_bin': os.path.join(HOME_LOCAL_BIN, "xemacs"),
-    'lem_bin': os.path.join(HOME_LOCAL_BIN, "xemacs"),
+    'xem_bin': opath.join(HOME_LOCAL_BIN, "xemacs"),
+    'lem_bin': opath.join(HOME_LOCAL_BIN, "xemacs"),
     'lem_opts': '-eval (dp-laptop-rc)',
     'main_macs_opts': '-eval (dp-main-rc)',
     #'xem_font': '''-font -*-courier-medium-r-*-*-*-140-*-*-*-*-iso8859-*''',
@@ -160,7 +160,7 @@ WORK_BG_COLOR = VANU_BG_COLOR
 
 #
 # FAMILY entry.  Common home (meduseld.net) stuff
-namazu_base_dir = os.path.join(HOME, 'stuff/indices/')
+namazu_base_dir = opath.join(HOME, 'stuff/indices/')
 home_family = e(
     kef='family',
     dat={
@@ -177,11 +177,11 @@ home_family = e(
         'cdrw-dev': '1001,1,0',             # dvd, etc. rw
         'cdrw-speed': '4',                  # 4x write speed, max for CDRWs
         'namazu-dir-base': namazu_base_dir, # look up before this e()
-        'notes-index-dir': os.path.join(namazu_base_dir, 'notes'),
+        'notes-index-dir': opath.join(namazu_base_dir, 'notes'),
         'notes-index-enable': 'yes',
-        'ports-index-dir': os.path.join(namazu_base_dir, 'ports'),
+        'ports-index-dir': opath.join(namazu_base_dir, 'ports'),
         'ports-index-enable': 'yes',
-        'mail-index-dir': os.path.join(namazu_base_dir, 'mh'),
+        'mail-index-dir': opath.join(namazu_base_dir, 'mh'),
         'mail-index-enable': 'yes',
         # only colors scrollbar and menubar.
         # other colors in ~/xf86/Xresources.huan
@@ -233,7 +233,7 @@ amd_family = e(
         'xterm_bg': "grey25",
         'xterm_fg': "WHITE",
         'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
-        'xem_bg_color': AMD_BG_COLOR,
+        #'xem_bg_color': AMD_BG_COLOR,
         'command-line-mailer': 'mutt', # Must support mail(1) args.
  },
     # These are searched in the order given.
@@ -280,21 +280,22 @@ e(
 )
 
 # #E8FBF8
-NMI_TEST_BOX_FG_COLOR = 'black'
-NMI_TEST_BOX_BG_COLOR = 'azure'
-NMI_TEST_BOX_XEM_BG_COLOR = 'rgb:e8:fb:f8'
+NMI_TEST_BOX_FG_COLOR = 'white'
+NMI_TEST_BOX_BG_COLOR = 'rgb:26/0C/4C'
 e(
     kef='host',
     dat={
         'host-pattern': 'nmi-test|bambleweeny|bambleweeny-57|bw57',
         'family': 'amd_family',
         'comment': """A big ol' server box under my desk for NMI work.""",
-        'xem_opts': '-geometry 88x61-0+0',
+        #'xem_opts': '-geometry 88x64-0+0',
+        'xem_opts': ('-eval (dp-2-v-or-h-windows-keep-geometry) '
+                     + '-geometry 180x64-0+0'),
         'main_macs_opts': '-eval (dp-start-editing-server)',
+###        'main_macs_opts': '-eval (progn (dp-start-editing-server) (dp-main-rc+2w))',
         'xterm_bg': NMI_TEST_BOX_BG_COLOR,
         'xterm_fg': NMI_TEST_BOX_FG_COLOR,
-        'xterm-ls-colors': opath.join(HOME, '.rc/ls-colors-for-light-bg'),
-        'xem_bg_color': NMI_TEST_BOX_XEM_BG_COLOR,
+        ### 'xterm-ls-colors': LIGHT_BG_LS_COLORS,
         'dpxx-auto-opts-auto1': '-g 124x31+86+0',
         'dpxx-auto-opts-auto2': '-g 124x31+86+513',
     },
