@@ -22,5 +22,9 @@ def git_current_branch(dir = None):
     except:
         return False
 
-    
+def git_dotgit():
+    dg = dp_io.bq("git-dotgit")
+    if dg and dg[-1] == "\n":
+        dg = dg[:-1]
+    return dg
     
