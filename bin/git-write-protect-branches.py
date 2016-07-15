@@ -7,6 +7,7 @@
 import os, sys
 import argparse
 import dp_io, dp_git_helper_lib, dp_utils
+opath = os.path
 
 debug_file = sys.stderr
 verbose_file = sys.stderr
@@ -15,23 +16,34 @@ warning_file = sys.stderr
 BROKEN_PIPE_RC = 1
 IOERROR_RC = 1
 
+FORBIDDEN_BRANCHES_FILE_NAME = "read-only-branches"
+
 # if not in FORBIDDEN_BRANCHES and (not ALLOWED_BRANCHES or in ALLOWED_BRANCHES)
 # @todo XXX Should we make this a list of regexps?  "^...$" makes a string match.
 FORBIDDEN_BRANCHES = []
 ALLOWED_BRANCHES = []
 
-FORBIDDEN_BRANCH_REGEXPS = []
+FORBIDDEN_BRANCH_REGEXPS = ["[._,-]NC$", "^NC[._,-]"]
 ALLOWED_BRANCH_REGEXPS = []
 
-dp_utils.extend_path_list_from_env(FORBIDDEN_BRANCHES, "GIT_FORBIDDEN_BRANCHES")
-dp_utils.extend_path_list_from_env(ALLOWED_BRANCHES, "GIT_ALLOWED")
+dp_utils.extend_list_from_env_path(FORBIDDEN_BRANCHES, "GIT_FORBIDDEN_BRANCHES")
+dp_utils.extend_list_from_env_path(ALLOWED_BRANCHES, "GIT_ALLOWED")
+local_branches_file = dp_git_helper_lib.git_dotgit()
+if not local_branches_file:
+    print >>sys.error, "Cannot git repo root"
+    sys.exit(1)
+local_branches_file = opath.join(local_branches_file, "..",
+                                 FORBIDDEN_BRANCHES_FILE_NAME)
+LOCAL_FORBIDDEN_BRANCHES = dp_utils.list_from_file_lines(local_branches_file)
 
-def is_forbidden_p(branch):
+FORBIDDEN_BRANCHES.extend(LOCAL_FORBIDDEN_BRANCHES)
+
+def forbidden_p(branch):
     return ((branch in FORBIDDEN_BRANCHES)
             or
-            (match_a_regexp(FORBIDDEN_BRANCH_REGEXPS, branch)))
+            (dp_utils.match_a_regexp(FORBIDDEN_BRANCH_REGEXPS, branch)))
 
-def is_allowed_p(branch):
+def allowed_p(branch):
     # If there is nothing listed, then we are allowed
     if (not (ALLOWED_BRANCHES_REGEXPS and ALLOWED_BRANCHES)):
         return True
@@ -53,7 +65,7 @@ def main(argv):
                          default=-1,
                          help="Set debug level. Use with, e.g. "
                          "dp_io.cdebug(<n>, fmt [, ...])")
-    oparser.add_argument("--verbose-level",
+    oparser.add_argument("--verbose-level", "--vl",
                          dest="verbose_level",
                          type=int,
                          default=-1,
@@ -85,24 +97,31 @@ def main(argv):
     if app_args.verbose_level > 0:
         dp_io.set_verbose_level(app_args.verbose_level, enable=True)
 
+    dp_io.ctracef(2, "FORBIDDEN_BRANCHES>%s<\n", FORBIDDEN_BRANCHES)
+    dp_io.ctracef(2, "ALLOWED_BRANCHES>%s<\n", ALLOWED_BRANCHES)
+    dp_io.ctracef(2, "FORBIDDEN_BRANCH_REGEXPS>%s<\n", FORBIDDEN_BRANCH_REGEXPS)
+    dp_io.ctracef(2, "ALLOWED_BRANCH_REGEXPS>%s<\n", ALLOWED_BRANCH_REGEXPS)
+    dp_io.ctracef(2, "LOCAL_FORBIDDEN_BRANCHES>%s<\n", LOCAL_FORBIDDEN_BRANCHES)
+    dp_io.ctracef(2, "local_branches_file>%s<\n", local_branches_file)
+
     if app_args.git_repo:
         os.chdir(app_args.git_repo)
 
     branch = app_args.branch
     if not branch:
         branch = dp_git_helper_lib.git_current_branch()
-
-    dp_io.vcprintf(2, "FORBIDDEN_BRANCHES>{}<\n", FORBIDDEN_BRANCHES)
-    dp_io.vcprintf(2, "ALLOWED_BRANCHES>{}<\n", ALLOWED_BRANCHES)
-
+    dp_io.vcprintf(2, "branch>{}<\n", branch)
+    
     # Forbidden if:
     # in FORBIDDEN_BRANCHES
     # or (ALLOWED_BRANCHES and not in ALLOWED_BRANCHES)
-    if ((branch in FORBIDDEN_BRANCHES)
+    if (forbidden_p(branch)
         or
-        (ALLOWED_BRANCHES and (branch not in ALLOWED_BRANCHES))):
+        (ALLOWED_BRANCHES and not allowed_p(branch))):
         print >>sys.stderr
-        print >>sys.stderr, " You are trying to commit on the {} branch.".format(branch)
+        print >>sys.stderr, " ! COMMIT PROTECTED BRANCH !"
+        print >>sys.stderr
+        print >>sys.stderr, " You are trying to commit on the `{}' branch.".format(branch)
         print >>sys.stderr, " And it is NOT to be committed to."
         print >>sys.stderr
         print >>sys.stderr, " If you insist, force the commit by adding --no-verify to the command."
