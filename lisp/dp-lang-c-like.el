@@ -630,8 +630,9 @@ A simple `dp-looking-back-at' using `dp-<type>*-regexp' returns nil.
 We say: \" p is a pointer to char\", not 
 \"p is a variable which when dereferenced is a char.\""
   (interactive)
-  (when (dp-looking-back-at (or dp-<type>*-regexp-memo
-                                (dp-<type>*-regexp)))
+  (when (and dp-use-ugly-ass-pointer-style-p
+             (dp-looking-back-at (or dp-<type>*-regexp-memo
+                                (dp-<type>*-regexp))))
     (dmessage (dp-all-match-strings-string))
     (replace-match "\\1")
     (apply post-func post-func-args)
