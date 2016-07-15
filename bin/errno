@@ -142,7 +142,17 @@ Usage_details="-n name only.
 "
 
 # The real meat...
-option_str="nstdvpNxX:hm+"
+option_str="nstdvpNxX:hm+e"
+long_options=(
+    desc
+    verbose-emitter verbose
+    terse
+    pristine
+    hex 0x 16
+    negate
+    abs
+    errno-files show-errno-files
+)
 #echo "0:DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT>$DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT<"
 $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT "0:@>$@<"
 source dp-getopt+.sh            # Runs when sourced.
@@ -153,19 +163,22 @@ for i in "$@"; do
     case "$1" in
         -n|-s) errno_emitter=errno_emit_name;;
         -N) errno_emitter=errno_emit_name_no_newline;;
-	-d) errno_emitter=errno_emit_desc;;
-	-v) errno_emitter=errno_emit_verbose;;
-	-t) if vunsetp $terse_p; then terse_p=t; else terse_p=; fi ; ;;
-	-p) errno_emitter=errno_emit_pristine_args;;
+	-d|--desc) errno_emitter=errno_emit_desc;;
+	-v|--verbose-emitter|--verbose) errno_emitter=errno_emit_verbose;;
+	-t|--terse) if vunsetp $terse_p; then terse_p=t; else terse_p=; fi ; ;;
+	-p|--pristine) errno_emitter=errno_emit_pristine_args;;
         -x) return_exit_code_p=t;
             return_exit_code_index=1
             errno_emitter=errno_emit___not;;
         -X) return_exit_code_p=t;
             return_exit_code_index=$2; shift
             errno_emitter=errno_emit___not;;
-        -h) use_hex_p=t;;
-        -m) make_negative_p=t;;
-        -+) make_positive_p=t;;
+        -h|--hex|--0x|--16) use_hex_p=t;;
+        -m|--negate) make_negative_p=t;;
+        -+|--abs) make_positive_p=t;;
+        -e|--errno-files|--show-errno-files)
+             echo "${ERRNO_FILES}"
+             exit 0;;
         --) shift; break;;
     esac
     shift
