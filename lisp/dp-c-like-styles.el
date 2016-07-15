@@ -12,6 +12,7 @@
     (dp-trailing-whitespace-use-trailing-ws-font-p . t)
     (dp-use-space-before-tab-font-lock-p           . t)
     (dp-use-too-many-spaces-font-p                 . t)
+    (dp-use-ugly-ass-pointer-style-p               . t)
     (c-insert-tab-function                         . dp-phys-tab)
     ;; see `c-indent-command'
     (c-tab-always-indent                           . nil)
