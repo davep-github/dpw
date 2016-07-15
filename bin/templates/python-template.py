@@ -30,7 +30,7 @@ def main(argv):
                          default=-1,
                          help="Set debug level. Use with, e.g. "
                          "dp_io.cdebug(<n>, fmt [, ...])")
-    oparser.add_argument("--verbose-level",
+    oparser.add_argument("--verbose-level", "--vl",
                          dest="verbose_level",
                          type=int,
                          default=-1,
