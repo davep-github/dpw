@@ -104,7 +104,7 @@ Usage_error()
 #
 # template end.
 ########################################################################
-git_dotgit=$(git rev-parse --git-dir)
+git_dotgit=$(git-dotgit)
 git_root=$(dirname "${git_dotgit}")
 for f in "$@"
 do
