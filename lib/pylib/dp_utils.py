@@ -701,11 +701,37 @@ def bin_to_dotted(uint32, dot):
 def realpwd():
     return opath.realpath(opath.curdir)
 
-def extend_path_list_from_env(list_in, env_name, sep=":", def_env=None):
-    env_val = os.environ.get(env_name, def_env)
-    if env_val:
-        list_in.extend(env_val.split(":"))
+def extend_list_from_path(list_in, path_in, sep=":"):
+    if path_in:
+        list_in.extend(path_in.split(sep))
     return list_in
+
+def extend_list_from_env_path(list_in, env_name, sep=":", def_env=None):
+    env_val = os.environ.get(env_name, def_env)
+    return extend_list_from_path(list_in, env_val, sep=sep)
+
+def list_from_fobj_lines(fobj, sep=None):
+    # If sep != None assume each line may be a path.
+    lines = []
+    for line in fobj:
+        if line[-1] == '\n':
+            line = line[:-1]
+        lines.append(line)
+    if not sep:
+        return lines
+    ret = []
+    for l in lines:
+        extend_list_from_path(ret, l, sep)
+    return ret
+
+def list_from_file_lines(file_name, sep=None):
+    try:
+        fobj = open(file_name)
+    except IOError:
+        return []
+    ret = list_from_fobj_lines(fobj, sep)
+    fobj.close()
+    return ret
 
 def match_a_regexp(regexp_list, string):
     for r in regexp_list:
