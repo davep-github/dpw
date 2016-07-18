@@ -240,9 +240,9 @@ amd_family = e(
     ref=[OSDB['linux'], default]
 )
 
-AMD_ATLR5N4_FG_COLOR = 'black'
+AMD_ATLR5N4_FG_COLOR = 'white'
 ##AMD_ATLR5N4_BG_COLOR = 'rgb:d2/d0/b0'
-AMD_ATLR5N4_BG_COLOR = 'lavender'
+AMD_ATLR5N4_BG_COLOR = 'rgb:2F/19/3A'
 
 e(
     kef='host',
@@ -281,11 +281,11 @@ e(
 
 # #E8FBF8
 NMI_TEST_BOX_FG_COLOR = 'white'
-NMI_TEST_BOX_BG_COLOR = 'rgb:26/0C/4C'
+NMI_TEST_BOX_BG_COLOR = 'rgb:00/32/3D'
 e(
     kef='host',
     dat={
-        'host-pattern': 'nmi-test|bambleweeny|bambleweeny-57|bw57',
+        'host-pattern': 'nmi-test|bambleweeny|bambleweeny-57|bw(57)?',
         'family': 'amd_family',
         'comment': """A big ol' server box under my desk for NMI work.""",
         #'xem_opts': '-geometry 88x64-0+0',
