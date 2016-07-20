@@ -274,7 +274,7 @@ e(
         'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 180x74-0+0',
         'xterm_bg': CZ_FP4_BG_COLOR,
         'xterm_fg': CZ_FP4_FG_COLOR,
-        'xem_bg_color': AMD_ATLR5N4_BG_COLOR, # CZ_FP4_BG_COLOR,
+        'xem_bg_color': "grey80",
     },
     ref=[amd_family, OSDB['linux'], default]
 )
