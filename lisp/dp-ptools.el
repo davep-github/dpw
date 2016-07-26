@@ -672,12 +672,15 @@ gtags discovery."
 
   (defun gtags-auto-update ()
     (when (and xgtags-mode gtags-auto-update buffer-file-name)
-      (message "Updating tags(%s)..." dp-gtags-auto-update-db-flag)
-      (call-process xgtags-global-program
-                    nil nil nil
-                    dp-gtags-auto-update-db-flag
-                    "-u" (concat "--single-update=" (gtags-buffer-file-name)))
-      (message "Updating tags(%s)...done" dp-gtags-auto-update-db-flag)))
+      (if (not (dp-in-exe-path-p xgtags-global-program))
+          (message "gtags-auto-update: cannot find tag updater: %s" 
+                   xgtags-global-program)
+        (message "Updating tags(%s)..." dp-gtags-auto-update-db-flag)
+        (call-process xgtags-global-program
+                      nil nil nil
+                      dp-gtags-auto-update-db-flag
+                      "-u" (concat "--single-update=" (gtags-buffer-file-name)))
+        (message "Updating tags(%s)...done" dp-gtags-auto-update-db-flag))))
 
   (defun* dp-xgtags-get-token (&optional
                                (dflt-prompt "xgtags token: ")
