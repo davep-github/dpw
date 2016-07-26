@@ -24,7 +24,7 @@ IOERROR_RC = 1
 def main(argv):
 
     oparser = argparse.ArgumentParser()
-    oparser.add_argument("--debug",
+    oparser.add_argument("--debug", "--dl",
                          dest="debug_level",
                          type=int,
                          default=-1,
@@ -63,7 +63,7 @@ def main(argv):
 if __name__ == "__main__":
     # try:... except: nice for filters.
     try:
-        main(sys.argv)
+        sys.exit(main(sys.argv))
     except IOError:
         # We're quite often a filter reading or writing to a pipe.
         if e.errno == errno.EPIPE:
