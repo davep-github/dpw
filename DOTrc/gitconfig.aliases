@@ -51,10 +51,15 @@
         l11 = log -n 11
         lone5 = log -n 5 --oneline
         loneog11 = log -n 11 --oneline
-        l11 = log -n 11
         lonen = log --oneline -n
+        lol5 = log -n 5 --oneline
+        lolog11 = log -n 11 --oneline
+        l111 = log -n 11 --oneline
+        loln = log --oneline -n
         # Height of laziness: saving -n<space>
         ln = log -n
+        # 2 chars.  No project will ever be late now.
+        logn = log -n
         # These are longer than the actual command to compensate for all of
         # the shorter ones.
         filediffs = log -u        # show changes to a file
@@ -66,6 +71,7 @@
         lns = log --name-status
         lls = log --name-status
         lf = log --name-status
+        lfn = log --name-status -n
         logf = log --name-status
 
         logfull = log --pretty=medium
