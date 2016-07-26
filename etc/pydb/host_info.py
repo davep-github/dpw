@@ -253,7 +253,9 @@ e(
         'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 81x70-0+0',
         'xterm_bg': AMD_ATLR5N4_BG_COLOR,
         'xterm_fg': AMD_ATLR5N4_FG_COLOR,
+        'xterm-ls-colors': opath.join(HOME, '.rc/ls-colors-for-light-bg'),
         'xem_bg_color': AMD_ATLR5N4_BG_COLOR,
+
     },
     ref=[amd_family, OSDB['linux'], default]
 )

@@ -370,6 +370,7 @@ TAGFILES=()
 
 [ -n "$gtags_p" ] && {
     EExec_verbose_msg "gtagging"
+    EExec_verbose_echo_id use_global_id_p
     TAGFILES+=($GTAGFILES)
     (
         # subshell
