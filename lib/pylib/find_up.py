@@ -134,7 +134,7 @@ def main(args):
         if n:
             matches.extend(n)
 
-    print >>sys.stderr, "print_as_path_p:", print_as_path_p
+    # print >>sys.stderr, "print_as_path_p:", print_as_path_p
     if print_results_p and len(matches) > 0:
         if print_as_path_p:
             matches = [opath.dirname(m) for m in matches]
