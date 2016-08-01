@@ -166,7 +166,7 @@ do
       continue
   }
 
-  if [ -n "${REPLY}" ]
+  if [ -n "${REPLY}" -o "${REPLY}" = '-' ]
   then
       REPLY=$(echo "$REPLY" | sed -rn 's/(-m *)?(.*)/\2/p')
       commit_opt="-m \"${REPLY}\""
