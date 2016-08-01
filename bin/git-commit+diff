@@ -140,7 +140,7 @@ do
   while [ -z "${done_p}" ]
   do
     done_p=t
-    read -e -p "Commit file [y/n/q/r/<msg>|'']? "
+    read -e -p "Commit file [y/n|s/q/r[evert]/<msg>|''|-]? "
     [ "$?" = 0 ] || {
         echo
         [ "$REPLY" = "" ] && {
@@ -156,7 +156,7 @@ do
         [nNsS]) answer=n; break;;
         [qQ]) exit 0;;
         [rRcC]) answer=r; break;;
-        "") commit_msg=;;       # fire up editor.
+        ""|-) commit_msg=;;       # fire up editor.
         *)  commit_msg="${REPLY}";;
     esac
   done
