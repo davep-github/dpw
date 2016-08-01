@@ -166,7 +166,6 @@ do
       continue
   }
 
-set -x
   if [ -n "${commit_msg}" -o "${commit_msg}" = '-' ]
   then
       REPLY=$(echo "$REPLY" | sed -rn 's/(-m *)?(.*)/\2/p')
