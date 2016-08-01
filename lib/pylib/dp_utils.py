@@ -529,7 +529,8 @@ def process_gopath(args=None):
     if not xfiles:
         print >>sys.stderr, "No go files. Exiting."
         sys.exit(1)
-    xfiles.reverse()
+    # Keep most specific files last so values may be overridden.
+    #print >>sys.stderr, "xfiles>{}<".format(xfiles)
     return xfiles, names
 
 def cheesy_memoized_file(
