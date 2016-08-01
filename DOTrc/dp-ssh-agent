@@ -55,7 +55,7 @@ dp_ssh_add_keys()
 }
 
 # Really start or connect to ssh agent
-dp_ssh_start_agent()
+dp_ssh_start_agent0()
 {
 #set -x
 # Until I fix this whole concept.
@@ -78,53 +78,70 @@ dp_ssh_start_agent()
 #what-was-wrong-before?     fi
 #what-was-wrong-before?     return 0
 
-    {
-        date
-        env | fgrep SSH
-        echo_id DP_SSH_AGENT_RC
-        # See if there's a running agent to which we are attached.
-        dp_ssh_add_keys && {
-            echo "Using existing agent."
-            return 0
-        }
+    date
+    env | fgrep SSH
+    echo_id DP_SSH_AGENT_RC
+    # See if there's a running agent to which we are attached.
+    dp_ssh_add_keys && {
+        echo "Added keys to existing agent."
+        return 0
+    }
 
-        # See if we can attach to one started elsewhere.
-        [ -e "${DP_SSH_AGENT_RC}" ] && {
-            # Use last set of agent variables.
-            echo "--- ${DP_SSH_AGENT_RC} ---"
-            cat "${DP_SSH_AGENT_RC}"
-            echo "--- ${DP_SSH_AGENT_RC} ---"
-            source "${DP_SSH_AGENT_RC}" || {
-                echo "Error sourcing ${DP_SSH_AGENT_RC}"
-                return 3
-            }
+    # See if we can attach to one we started elsewhere.
+    [ -e "${DP_SSH_AGENT_RC}" ] && {
+        # Use last set of agent variables.
+        echo "--- ${DP_SSH_AGENT_RC} ---"
+        cat "${DP_SSH_AGENT_RC}"
+        echo "--- ${DP_SSH_AGENT_RC} ---"
+        source "${DP_SSH_AGENT_RC}" || {
+            echo "Error sourcing ${DP_SSH_AGENT_RC}: $?"
+            return 3
+        }
+        
+        # See if the agent be still alive
+        if prog-with-pid ssh-agent "${SSH_AGENT_PID}"
+        then
             # Try to add keys.
             dp_ssh_add_keys && {
-                echo "Reconnecting to existing agent."
+                echo "Reconnected to existing agent."
                 return 0
             }
-        }
-        echo "Trying to start new agent"
-        # There isn't an agent already running that we can use, neither
-        # configured in this shell nor one whose configuration info is in the
-        # "$DP_SSH_AGENT_RC"
-        # So start one and save the configuration variables.
-        ssh-agent | \fgrep -v echo >| "${DP_SSH_AGENT_RC}"
-        # and set them.
-        source "${DP_SSH_AGENT_RC}" || {
-            echo "Error sourcing ${DP_SSH_AGENT_RC} from new agent."
-            return 4
-        }
-        # If we can't set the keys, we're doomed.
-        # We'll pass on the key command rc whatever it is.
-        dp_ssh_add_keys
-        local rc="$?"
-        if [ "${rc}" != 0 ]
-        then
-            echo "Error adding keys to new agent."
+            echo "Could not add keys to existing agent: $?"
+        else
+            echo "Could not find a running agent: $?"
         fi
-        return "${rc}"
-    } >| "${DP_SSH_AGENT_RC_LOG}" 2>&1
+    }
+    echo "Trying to start new agent"
+    # There isn't an agent already running that we can use, neither
+    # configured in this shell nor one whose configuration info is in the
+    # "$DP_SSH_AGENT_RC"
+    # So start one and save the configuration variables.
+    ssh-agent | \fgrep -v echo >| "${DP_SSH_AGENT_RC}"
+    # and set them.
+    source "${DP_SSH_AGENT_RC}" || {
+        echo "Error sourcing ${DP_SSH_AGENT_RC} from new agent."
+        return 4
+    }
+    # If we can't set the keys, we're doomed.
+    # We'll pass on the key command rc whatever it is.
+    dp_ssh_add_keys
+    local rc="$?"
+    if [ "${rc}" != 0 ]
+    then
+        echo "Error adding keys to new agent."
+        echo "Killing ${SSH_AGENT_PID}"
+        kill "${SSH_AGENT_PID}"
+    fi
+    return "${rc}"
+}
+
+dp_ssh_start_agent()
+{
+    {
+set -x
+        dp_ssh_start_agent0 "$@"
+set +x
+    } |& tee "${DP_SSH_AGENT_RC_LOG}" > /dev/null
 }
 
 [ -n "${runme-}" -o "$(basename -- $0)" = dp-ssh-agent ] && {
