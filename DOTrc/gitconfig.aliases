@@ -42,8 +42,12 @@
         sno = status -uno
         ss = status -s
 
-        ldf = log --decorate=full -n 5
-        ld = log --decorate -n 5
+        ldf = log --decorate=full
+        ldf5 = log --decorate=full -n 5
+        ldfn = log --decorate=full -n
+        ld = log --decorate
+        ld5 = log --decorate -n 5
+        ldn = log --decorate -n
         log5 = log -n 5
         l1 = log -n 1
         l5 = log -n 5
@@ -135,7 +139,8 @@
         dtp4v = difftool --tool=p4diff
         dtp4 = difftool --tool=p4diff
         hist = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-        h = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+        h = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+        h5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         hn = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short -n
         h20 = log -n 20 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
