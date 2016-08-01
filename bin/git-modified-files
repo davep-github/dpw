@@ -134,9 +134,15 @@ elif true_p "${filter_mode_p}"
 then
     cat
 else
+    if (("${#optv[@]}" > 0))
+    then
+        set -- "${optv[@]}"
+    else
+        set --
+    fi
     # short status and skip untracked files.
     EExec git status -s -uno ${status_opts}
 fi \
     | EExec sed -rn 's/(^[[:space:]]+M )(.*)$/\2/p' \
-    | EExec file-relativizer "${optv[@]}" \
+    | EExec file-relativizer "$@" \
     | EExec normpath
