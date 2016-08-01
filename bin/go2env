@@ -19,8 +19,6 @@ debug = 0
 ELISP_OUTPUT_HANDLER_FLAGS = "elisp output handler flags"
 ELISP_EMIT_SETENV = "elisp output setenv"
 
-GO_DICTIONARY_FILE = opath.join(os.environ["HOME"], "droppings")
-
 PERMANENT_PREFIX = ""
 PREFIX = ""
 HOME = os.environ['HOME']
@@ -41,7 +39,8 @@ DEFAULT_SERIALIZED_FILE = dp_utils.make_db_file_name(
     DEFAULT_SERIALIZED_FILE_NAME)
 DEFAULT_DICT_FILE = DEFAULT_SERIALIZED_FILE + DEFAULT_DICT_EXT
 
-KEEP_DICT_UPDATED = "KEEP_DICT_UPDATED"
+KEEP_DICT_UPDATED_P = "KEEP_DICT_UPDATED_P"
+FORCE_DICT_UPDATED_P = "FORCE_DICT_UPDATED_P"
 
 MATCH_TYPE_LITERAL_DICT = "MATCH_TYPE_LITERAL_DICT"
 MATCH_TYPE_LITERAL_ENV = "MATCH_TYPE_LITERAL_ENV"
@@ -88,8 +87,27 @@ class Keyword_option_t(object):
     def __repr__(self):
         return self.__str__()
 
-def keep_dict_updated():
-    return Evil_globals.get(KEEP_DICT_UPDATED, True)
+def keep_dict_updated_p():
+    ret = Evil_globals.get(KEEP_DICT_UPDATED_P, True)
+    #print >>sys.stderr, "keep_dict_updated_p:", ret
+    return ret
+
+def set_keep_dict_updated_p(val=True):
+    if val is None:
+        val = not keep_dict_updated_p()
+    Evil_globals[KEEP_DICT_UPDATED_P] = val
+    return val
+
+def force_dict_updated_p():
+    ret = Evil_globals.get(FORCE_DICT_UPDATED_P, False)
+    #print >>sys.stderr, "force_dict_updated_p:", ret
+    return ret
+
+def set_force_dict_updated_p(val=True):
+    if val is None:
+        val = not force_dict_updated_p()
+    Evil_globals[FORCE_DICT_UPDATED_P] = val
+    return val
 
 #
 # aliases[name] = (val,
@@ -393,7 +411,8 @@ aliases>%s<""", line, selector, aliases)
             if last != '/':
                 last = ''
             # Clean up value and terminate with a '/' if one was present
-            # before.  This makes it more convient to use in emacs.
+            # before.  A trailing / makes it more convient to use in emacs.
+            # But we only preserve it, not add it.
             val = os.path.normpath(val) + last
             val = re.sub('^'+UGLY_HOME, HOME, val)
             # Make URLs work.
@@ -418,9 +437,9 @@ aliases>%s<""", line, selector, aliases)
 #####################################################################
 def expand_file(file, selector, aliases):
     """Expand all aliases in a given file."""
-    #print >>sys.stderr, "Processing file:", file, ", selector:", selector
+    #print "# Processing file:", file, ", selector:", selector
     try:
-        f = open(file)
+        fobj = open(file)
     except IOError, e:
         if ignore_file_not_found:
             return
@@ -432,8 +451,7 @@ def expand_file(file, selector, aliases):
         return
     global PREFIX
     PREFIX = PERMANENT_PREFIX
-    lines = f.readlines()
-    for line in lines:
+    for line in fobj:
         dp_io.dprintf('!!file: %s, line>%s<\n', file, line[:-1])
         # Comment line?  ; # and (for now only at BOL) //
         if re.search("^\s*(//|[;#])", line):
@@ -445,7 +463,7 @@ def expand_file(file, selector, aliases):
             continue
 
         expand_alias(line, selector, aliases, file)
-
+    fobj.close()
 
 #####################################################################
 def dump_dict(dict, name='dict', ostream=sys.stdout):
@@ -491,7 +509,8 @@ def expand_files(files, selector):
 #####################################################################
 def init_aliases(args, selector_regexp,
                  serialized_file=DEFAULT_SERIALIZED_FILE,
-                 dict_file=None):
+                 dict_file=None,
+                 force_update_p=False):
     #
     # find the go path
     # The gopath looks like this:
@@ -515,11 +534,17 @@ def init_aliases(args, selector_regexp,
         if dict_file is not False:
             if not dict_file:
                 dict_file = DEFAULT_DICT_FILE
-            if keep_dict_updated() or force_update_p:
+            if (keep_dict_updated_p()
+                or force_update_p
+                or force_dict_updated_p()):
                 # print >>sys.stderr, "updating? dict."
                 newest, _, _ = dp_utils.newest_file(go_files + [dict_file])
                 # print >>sys.stderr, "newest>{}<".format(newest)
-                if newest != dict_file:
+                dp_io.cdebug(1, "newest>{}<\n", newest)
+
+                if ((newest != dict_file)
+                    or force_update_p
+                    or force_dict_updated_p()):
                     #print >>sys.stderr, "writing dict."
                     write_dict(args, dict_file)
             try:
@@ -527,18 +552,24 @@ def init_aliases(args, selector_regexp,
                 if Get_aliases():
                     return
             except AttributeError, err:
+                # Sometimes the file is hosed.  Still trying to figure out why.
+                # This doesn't really help.
+                # Is it due to multiple shells starting at once?
                 # This right, without looping BS?
-                print >>sys.stderr, "Exception `{}' reading dict file>{}<".format(err, dict_file)
+                print >>sys.stderr, \
+                      "Exception `{}' reading dict file>{}<".format(err, dict_file)
                 pyc_file = "%sc" % (dict_file,)
                 print >>sys.stderr, "pyc_file>%s<" % (pyc_file)
                 os.system("rm -f %s" % (pyc_file,))
                 if keep_looping == 1:
                     break
-                keep_looping = keep_looping -1
+                keep_looping = keep_looping - 1
                 print >>sys.stderr, "   removed file and retrying."
                 continue
             except Exception, err:
-                print >>sys.stderr, "Exception `{}' reading dict file>{}<, trying pickle".format(err, dict_file)
+                print >>sys.stderr, \
+                "Exception `{}' reading dict file>{}<, trying pickle".format(err,
+                                                                             dict_file)
 
         # Try for something pickled.
         if serialized_file is not False:
@@ -560,8 +591,9 @@ def init_aliases(args, selector_regexp,
 
     # Slurp it out of the .go[.*] files.
     # It should be saved later.
+    #print "# Expanding go files."
     Set_aliases(expand_files(go_files, selector_regexp))
-##     print >>sys.stderr, "expanded files>%s<." %(go_files,)
+    #print >>sys.stderr, "expanded files>%s<." %(go_files,)
 
 #####################################################################
 def serialize_aliases(args, serialized_file=DEFAULT_SERIALIZED_FILE):
@@ -725,7 +757,7 @@ if __name__ == "__main__":
     suffix = ""
     selector = SELECTOR_ENV
     grep_regexps = []
-    opts, args = getopt.getopt(sys.argv[1:], 'efvdlLs:Eq:g:G:m:M:S:pP:a')
+    opts, args = getopt.getopt(sys.argv[1:], 'efvdlLs:Eq:g:G:m:M:S:pP:aF')
     handler_keyword_args = {}
     serialize_aliases_p = False
     serialized_file_name = DEFAULT_SERIALIZED_FILE_NAME
@@ -777,6 +809,8 @@ if __name__ == "__main__":
             serialized_file_name = v
         elif opt == '-a':
             write_dict_p = True
+        elif opt == '-F':
+            set_force_dict_updated_p(True)
 
     serialized_file = opath.join(os.environ["HOME"], "var", "db",
                                  serialized_file_name)
