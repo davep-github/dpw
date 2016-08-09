@@ -384,14 +384,14 @@ def get_debug_level():
     return debug_level
 
 ###############################################################
-def set_debug_level(level, enable_p=False,
-                    disable_p=False):
+def set_debug_level(level, enable_debugging_p=False,
+                    disable_debugging_p=False):
     global debug_level
     old_level = get_debug_level()
     debug_level = level
-    if enable_p:
+    if enable_debugging_p:
         debug_on()
-    if disable_p:
+    if disable_debugging_p:
         debug_off()
     return old_level
 
@@ -403,14 +403,14 @@ def dec_debug_level(delta=1, floor=0):
     return debug_level
 
 ###############################################################
-def inc_debug_level(delta=1, limit=None, enable_p=False,
-                    disable_p=False):
+def inc_debug_level(delta=1, limit=None, enable_debugging_p=False,
+                    disable_debugging_p=False):
     new_level = debug_level = delta
     if limit is None or new_level < limit:
         level = new_level
     else:
         level = limit
-    set_debug_level(new_level, enable_p=enable_p)
+    set_debug_level(new_level, enable_debugging_p=enable_debugging_p)
     return debug_level
 
 ###############################################################
@@ -419,23 +419,24 @@ def set_debug_mask(mask):
     debug_mask = mask
 
 ###############################################################
-def debug_on(level=None, enable_p=False, disable_p=False):
+def debug_on(level=None, enable_debugging_p=False,
+             disable_debugging_p=False):
     set_debug(True)
     if level is not None:
-        set_debug_level(level, enable_p=enable_p,
-                        disable_p=disable_p)
+        set_debug_level(level, enable_debugging_p=enable_debugging_p,
+                        disable_debugging_p=disable_debugging_p)
 
 ###############################################################
 def get_verbose_level():
     return verbose_level
 
 ###############################################################
-def set_verbose_level(level, enable_p=True):
+def set_verbose_level(level, enable_debugging_p=True):
     global verbose_level
     old_level = get_verbose_level()
     verbose_level = level
-    if enable_p is not None:
-        set_vprint(enable_p)
+    if enable_debugging_p is not None:
+        set_vprint(enable_debugging_p)
     return old_level
     #print 'verbose_level:', verbose_level, 'level:', level
 
@@ -453,9 +454,9 @@ def eprint_on():
     set_eprint(1)
 
 ###############################################################
-def set_vprint(enable_p=True):
+def set_vprint(enable_debugging_p=True):
     global f_vprint
-    f_vprint = enable_p
+    f_vprint = enable_debugging_p
 
 ###############################################################
 def YOPP():
@@ -618,7 +619,7 @@ if Have_subprocess_module_p:
                              stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                              stderr=subprocess.STDOUT, close_fds=True)
         ret = p.stdout.read()            # Joined w/stderr.
-        if nuke_newline_p:
+        if nuke_newline_p and ret[-1] == '\n':
             ret = ret[:-1]
         return ret
 
@@ -637,7 +638,7 @@ if Have_subprocess_module_p:
 else:
     def bq(cmd, nuke_newline_p=False):
         ret = os.popen(cmd).read()
-        if nuke_newline_p:
+        if nuke_newline_p and ret[-1] == '\n':
             ret = ret[:-1]
         return ret
 
