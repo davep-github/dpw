@@ -255,7 +255,7 @@ e(
         'xterm_fg': AMD_ATLR5N4_FG_COLOR,
         'xterm-ls-colors': opath.join(HOME, '.rc/ls-colors-for-light-bg'),
         'xem_bg_color': AMD_ATLR5N4_BG_COLOR,
-
+        'xem_bg_color': "grey80",
     },
     ref=[amd_family, OSDB['linux'], default]
 )
