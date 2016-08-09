@@ -1,7 +1,7 @@
 """utils.py
 Some helpful utility functions."""
 
-import os, sys, string, stat, pprint, types, re, math
+import os, sys, string, stat, pprint, types, re, math, types
 opath = os.path
 
 class DP_UTILS_RT_Exception(RuntimeError):
@@ -657,7 +657,6 @@ class Nop_zero_t(object):
 #
 # Some simple network translations.
 #
-
 def dotted_to_bin(dotted_str, dot="."):
     """xxx.xxx.xxx.xxx to uint32"""
     xs = dotted_str.split(dot)
@@ -684,12 +683,14 @@ def dotted_to_bin(dotted_str, dot="."):
         octet_num -= 1
     return uint32
 
+########################################################################
 def dotted_to_bits(dotted_str, sep=False, sep_str=" ", width=8, dot="."):
     uint32 = dotted_to_bin(dotted_str, dot=dot)
     if uint32 is None:
         return None
     return cbin(uint32, sep=sep, sep_str=sep_str, width=width)
 
+########################################################################
 def bin_to_dotted(uint32, dot):
     """32 bit unsigned integet to dotted notation."""
     parts = []
@@ -699,18 +700,38 @@ def bin_to_dotted(uint32, dot):
         uint32 = uint32 >> 8
     return dot.join(parts)
 
+########################################################################
 def realpwd():
     return opath.realpath(opath.curdir)
 
+########################################################################
 def extend_list_from_path(list_in, path_in, sep=":"):
     if path_in:
         list_in.extend(path_in.split(sep))
     return list_in
 
+########################################################################
 def extend_list_from_env_path(list_in, env_name, sep=":", def_env=None):
     env_val = os.environ.get(env_name, def_env)
     return extend_list_from_path(list_in, env_val, sep=sep)
 
+########################################################################
+def list_from_path_like_lines(lines, sep=None, stringize_p=False):
+    # If sep != None assume each line may be a path.
+    if not sep:
+        return lines
+    ret = []
+    for l in lines:
+        if type(l) == types.StringType:
+            extend_list_from_path(ret, l, sep)
+        elif stringize_p:
+            ret.append(str(l))
+        else:
+            ret.append(l)
+
+    return ret
+
+########################################################################
 def list_from_fobj_lines(fobj, sep=None):
     # If sep != None assume each line may be a path.
     lines = []
@@ -718,13 +739,9 @@ def list_from_fobj_lines(fobj, sep=None):
         if line[-1] == '\n':
             line = line[:-1]
         lines.append(line)
-    if not sep:
-        return lines
-    ret = []
-    for l in lines:
-        extend_list_from_path(ret, l, sep)
-    return ret
+    return list_from_path_like_lines(lines, sep=sep)
 
+########################################################################
 def list_from_file_lines(file_name, sep=None):
     try:
         fobj = open(file_name)
@@ -734,6 +751,7 @@ def list_from_file_lines(file_name, sep=None):
     fobj.close()
     return ret
 
+########################################################################
 def match_a_regexp(regexp_list, string):
     for r in regexp_list:
         m = re.search(r, string)
