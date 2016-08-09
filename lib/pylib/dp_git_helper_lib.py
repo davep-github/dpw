@@ -28,3 +28,7 @@ def git_dotgit():
         dg = dg[:-1]
     return dg
     
+def git_oneline_log(commit):
+    log_cmd = "git log -n 1 --oneline {}".format(commit)
+    msg = dp_io.bq(log_cmd, nuke_newline_p=True)
+    return msg
