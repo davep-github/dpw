@@ -28,6 +28,7 @@
         rem = remote
 
 	br = branch
+        brv = branch -v
         current-branch = rev-parse --abbrev-ref=strict HEAD
         cbr = rev-parse --abbrev-ref=strict HEAD
         cob = checkout -b
