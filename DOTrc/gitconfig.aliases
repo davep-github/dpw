@@ -28,6 +28,7 @@
         rem = remote
 
 	br = branch
+        brv = branch -v
         current-branch = rev-parse --abbrev-ref=strict HEAD
         cbr = rev-parse --abbrev-ref=strict HEAD
         cob = checkout -b
@@ -58,8 +59,13 @@
         lonen = log --oneline -n
         lol5 = log -n 5 --oneline
         lolog11 = log -n 11 --oneline
-        l111 = log -n 11 --oneline
         loln = log --oneline -n
+        lo5 = log -n 5 --oneline
+        lo11 = log -n 11 --oneline
+        lon = log --oneline -n
+#        l111 = log -n 11 --oneline
+#        l15 = log -n 5 --oneline
+#        l1n = log --oneline -n
         # Height of laziness: saving -n<space>
         ln = log -n
         # 2 chars.  No project will ever be late now.
@@ -141,7 +147,7 @@
         hist = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-        hn = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short -n
+        hn = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short -n
         h20 = log -n 20 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h11 = log -n 11 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
@@ -160,4 +166,4 @@
 
 # reset
         unstage = reset HEAD    # remove files from index (tracking)
-        
+        minus = reset HEAD

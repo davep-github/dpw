@@ -102,12 +102,12 @@ def stringize_list(lst):
     return ['%s' % (x,) for x in lst]
 
 ########################################################################
-def stringized_join(lst, sep=None):     # get string.join()'s default sep
+def stringized_join(lst, sep=' '):     # get string.join()'s default sep
     return string.join(stringize_list(lst), sep)
 
 ########################################################################
-def list_to_indented_string(lst, indent_len=2, indent_str=" "):
-    return stringized_join(lst, "\n" + indent_str * indent_len)
+def list_to_indented_string(lst, indent_len=2, indent_str=" ", sep='\n'):
+    return stringized_join(lst, sep + indent_str * indent_len)
 
 ########################################################################
 def stringize_args(*args):
