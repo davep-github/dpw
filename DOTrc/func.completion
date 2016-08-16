@@ -1,0 +1,48 @@
+# source me.
+
+gnu_global_complete()
+{
+        local cur
+        cur=${COMP_WORDS[COMP_CWORD]}
+        COMPREPLY=($(global -c $cur))
+}
+complete -F gnu_global_complete global
+
+dp_sp_complete()
+{
+        local cur
+        cur=${COMP_WORDS[COMP_CWORD]}
+        COMPREPLY=($(compgen -c $cur))
+}
+complete -F dp_sp_complete sp
+
+dp_ctags_etags_expand()
+{
+    local cur="$1"
+    local tag_file
+    tag_file=$(find-up TAGS-tags)
+    if [ -n "${tag_file}" ]
+        then
+        COMPREPLY=($(\egrep "^$cur" "${tag_file}"))
+        return
+    fi
+
+    tag_file=$(find-up TAGS)
+    if [ -n "${tag_file}" ]
+        then
+#set -x
+        COMPREPLY=($(get-ex-etags-tags "${tag_file}" | \egrep "^$cur"))
+#set +x
+        return
+    fi
+    return 1
+}
+
+dp_ctags_etags_complete()
+{
+        local cur
+        cur=${COMP_WORDS[COMP_CWORD]}
+        dp_ctags_etags_expand "${cur}"
+}
+
+true
