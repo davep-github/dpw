@@ -8,7 +8,7 @@ D_one=${1-}
 gitted_p()
 {
     local file="$1"
-    git mv -n "$f" some-file-or-another
+    git mv -n "$file" some-file-or-another
 }
 
 gitted_p_quiet()
