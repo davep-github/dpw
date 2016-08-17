@@ -1,12 +1,24 @@
 (require 'vc)
 
-(defun dp-add-amd-c-style ()
+(defun dp-select-amd-c-style ()
   "Set up C/C++ style."
   (interactive)
-  (setq dp-default-c-style-name "amd-c-style")
-  (c-add-style "amd-c-style" dp-kernel-c-style t))
+  (cond
+   ((string-match "^cz" (dp-short-hostname))
+;;    (setq dp-default-c-style-name "amd-c-style")
+    (setq dp-current-c-style-name "amd-c-style"))
+   ((string-match "^atl" (dp-short-hostname))
+    (setq dp-current-c-style-name "ptb-c-style"))
+   (t (setq dp-current-c-style-name dp-default-c-style-name))))
 
-;;Meh.
+(dp-select-amd-c-style)
+
+(defun dp-add-amd-c-style ()
+  (interactive)
+  (dp-select-amd-c-style)
+  (c-set-style dp-current-c-style-name))
+
+;; This was a recommended way to do this.  Is it really necessary? It was hacked in quickly.
 (add-hook 'c-mode-common-hook (lambda ()
                                 (dp-add-amd-c-style)
                                 ;; Some files use this and I can't find it.
