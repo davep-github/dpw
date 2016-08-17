@@ -8197,7 +8197,7 @@ I'm over stretching it to find it anywhere."
 (defun dp-embedded-lisp-close-string (&optional prefix)
   "Create a string which introduces an embedded lisp string"
   (setq-ifnil prefix dp-embedded-lisp-prefix)
-  (concat (and-stringp prefix "") ")"))
+  (concat ")" (and-stringp prefix "")))
 
 (defun dp-mk-tag-delimiters (tag)
   (cons (format "<%s>" tag)
@@ -8274,8 +8274,8 @@ Use prefix-arg to prompt for a different TAG."
          (end (cdr be))
          (tag (dp-guess-tag-delimiters (line-beginning-position)
                                        (line-end-position))))
-    (if tag
-        (dp-eval-tagged-lisp tag beg end))))
+    (when tag
+      (dp-eval-tagged-lisp tag beg end))))
 
 (defvar dp-embedded-lisp-eval@point-prefix-arg nil
   "Holds copy of prefix arg when dp-embedded-lisp-eval@point was called.
@@ -8349,8 +8349,8 @@ search."
 
 (defun dp-embedded-lisp-eval@point (&optional no-delimitter)
   "Eval an embedded lisp string.
-An embedded lisp string is delimited by dp-embedded-lisp-open-string and
-dp-embedded-lisp-close-string. In addition the string can be tagged so that
+An embedded lisp string is delimited by `dp-embedded-lisp-open-string' and
+`dp-embedded-lisp-close-string'. In addition the string can be tagged so that
 it can be referred to in other embedded strings."
   (interactive "P")
   (setq dp-embedded-lisp-eval@point-prefix-arg current-prefix-arg)
