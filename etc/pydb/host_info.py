@@ -244,9 +244,14 @@ AMD_ATLR5N4_FG_COLOR = 'white'
 ##AMD_ATLR5N4_BG_COLOR = 'rgb:d2/d0/b0'
 AMD_ATLR5N4_BG_COLOR = 'rgb:2F/19/3A'
 
+# Atlanta has a farm of VMs we use.
+# I should be using one at a time, so the variables. in general don't need to
+# be host specific.
 e(
     kef='host',
     dat={
+        # This pattern could be relaced a bit.
+        # atl is an abbreviation in ~/.ssh/config.
         'host-pattern': '^(atl|atlr5n4-[0-9]+)$',
         'family': 'amd_family',
         'comment': 'A work machine.',
