@@ -56,11 +56,11 @@ else
     while (($# > 0))
     do
       case "$1" in
-          --sym|--symbol|--cs|-s|--function) shift; arg="${1}"; field_num=0;;
+          --sym|--symbol|--cs|-s|--function|--func) shift; arg="${1}"; field_num=0;;
           --global|--def|--definition|--global-def|--global-definition) shift; arg="${1}"; field_num=1;;
           --called|--called-by) shift; arg="${1}"; field_num=2;;
           --calling|--callers|--calls) shift; arg="${1}"; field_num=3;;
-          --raw) POST_PROCESSOR=post_raw;;
+          --raw|--no-post|--post-nada|--nada-post) POST_PROCESSOR=post_raw;;
           --format|--gcc|--grep) POST_PROCESSOR=post_format;;
           -t|--text|--str|--string|--text-string|--text-str|--txt) shift; arg="${1}"; field_num=4;;
           --change|--change-text|--change-txt) field_num=5;;  # This may require more work.

@@ -59,8 +59,8 @@ do
 
   if vsetp "${diff_tool}"
   then
-      git difftool --tool="${diff_tool}" "$rev" "$file"
+      git difftool --tool="${diff_tool}" "$rev" -- "$file"
   else
-      git diff "$rev" "$file"
+      git diff "$rev" -- "$file"
   fi
 done

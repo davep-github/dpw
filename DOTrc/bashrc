@@ -867,6 +867,10 @@ unset post_bashrc_command
 # Clear any resijule boulders... um, debug settings.
 dp_set_x_fini
 
+[ -n "${DP_BASHRC_SOURCE_ME_LAST}" ] && {
+    source "${DP_BASHRC_SOURCE_ME_LAST}"
+}
+
 # It should be benign in other cases, but it's vital that it be exported.
 export LD_LIBRARY_PATH
 unset EExecProgName

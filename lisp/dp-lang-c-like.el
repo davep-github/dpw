@@ -71,6 +71,11 @@
   (require 'cc-langs)
   (require 'cc-cmds)
   (require 'cc-engine))
+
+;; Define styles after `cc-mode' is loaded because it seems to clear its
+;; style alist (at least) which makes the styles become undefined.
+(require 'dp-c-like-styles)
+
 (dp-define-my-map-prefixes c-mode-map)
 (dp-define-my-map-prefixes c++-mode-map)
 
@@ -2508,7 +2513,10 @@ is done.")
   (dp-lang-new-file-template (or rest-o-hack-line 
                                  (concat  "c-file-style: "
                                           "\"" 
-                                          dp-default-c-style-name
+                                          (or
+                                           (dp-val-if-boundp dp-current-c-style-name)
+                                           (dp-val-if-boundp dp-default-c-style-name)
+                                           "UNDEFINED-C-STYLE")
                                           "\""))
                              (or any-mode-line-p current-prefix-arg)
                              mode))
