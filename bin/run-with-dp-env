@@ -1,10 +1,10 @@
 #!/bin/bash
-
+#set -x
 realpath=$(realpath $0)
 progname=$(basename $realpath)
 bindir=$(dirname $realpath)
 
-l_HOME="/home/davep"
+l_HOME="$HOME"
 l_HOME_LOG_DIR="$l_HOME/log/$progname.d"
 [[ -d $l_HOME_LOG_DIR ]] || mkdir $l_HOME_LOG_DIR || exit 3
 log_base="$l_HOME_LOG_DIR/$progname"
@@ -43,8 +43,7 @@ fi
     $l_HOME/bin.Linux.i686/eko "$@"
     $l_HOME/bin.Linux.i686/eko $@
     # Save "$@" in a way that preserves the existing tokenization.
-    dat=("$@")                      # Save "$@"
-    # set -- "${dat[@]}"               # Use saved "$@". Quotes are REQUIRED.
+    dat=("$@")                  # Save "$@"
     $l_HOME/bin.Linux.i686/eko "${dat[@]}" ${dat[@]}
     echo '${dat[@]}'">${dat[@]}<"
     # Bullshit KDE apps run from the panel get a shitty environment.
@@ -68,12 +67,13 @@ fi
     [[ -z "$DP_SETUP_ENV_ONLY" ]] && {
         echo "running "'${dat[@]}'">${dat[@]}<"
         echo "running "'${dat[@]}'">${dat[@]}<" 1>&2
-        "${dat[@]}"
     }
 
     echo "=== finish: $(date) ================================"
     echo "====finish: $(date) ================================" 1>&2
-    
+
 } >> $log_file_out 2>> $log_file_err
+
+"${dat[@]}"
 
 ###exec $dollar_at
