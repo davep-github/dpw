@@ -22,7 +22,7 @@ dp_ctags_etags_expand()
     local tag_file
     tag_file=$(find-up TAGS-tags)
     if [ -n "${tag_file}" ]
-        then
+    then
         COMPREPLY=($(\egrep "^$cur" "${tag_file}"))
         return
     fi
