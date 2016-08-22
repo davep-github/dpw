@@ -91,13 +91,18 @@ Usage_error()
 ########################################################################
 
 : ${PS1_title_prefix:='[MF]'}
-: ${PS1_prefix:='[MF]'}
-: ${FG:=yellow}
-: ${BG:=blue}
-: ${DP_BASHRC_SOURCE_ME_LAST:=$HOME/bin.amd/dp-cbwa_init.bash}
-
 export PS1_title_prefix
+: ${PS1_prefix:='[MF]'}
 export PS1_prefix
+: ${DP_BASHRC_SOURCE_ME_LAST:=$HOME/bin.amd/dp-cbwa_init.bash}
 export DP_BASHRC_SOURCE_ME_LAST
 
-dpxx -B "${BG}" -F "${FG}"
+: ${FG:=yellow}
+: ${BG:=blue}
+
+if [ -z "$*" ]
+then
+    dpxx -B "${BG}" -F "${FG}" nscreen uFlex-dev
+else
+    bash
+fi
