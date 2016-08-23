@@ -5,7 +5,6 @@ Ee|davep|             ${HOME}/
 #|bin| is very important.
 Ee|bin|               ${HOME}/bin/
 Ee|yokel|             ${davep}yokel/
-E|y|                  ${davep}yokel/
 Ee|bree|              ${davep}bree/
 Ee|daveplog|log|      ${davep}log/
 Ee|resume|            ${davep}jobs/resume/
@@ -231,7 +230,6 @@ Ee|dok|         ${davep}/doc/
 Ee|bfd2t|       /bfd2/tmp/
 Ee|atidvr|      /bfd2/tmp/ati/
 Ee|bft2|        /bfd2/tmp/
-Ee|wrk|         ${davep}/work/
 Ee|ptmp|        /bfd2/var/tmp/portage/
 Ee|x11|        ${davep}/issues/x11/
 Ee|initd|inid|  /etc/init.d/
