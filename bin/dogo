@@ -84,6 +84,7 @@ case "$1" in
 esac
 
 # see if dest is set as an environment variable
+unset y
 true_p "$show_dir_p" || eval y=\$$c 
 case "$y" in
     ""|\$*)     # dest is not an envvar: look it up in the go database
