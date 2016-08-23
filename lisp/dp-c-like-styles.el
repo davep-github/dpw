@@ -100,7 +100,7 @@
 (c-add-style "ptb-c-style" dp-basic-c-style)
 
 ;; `defvar' only sets if void.
-(defvar dp-default-c-style-name "dp-basic-c-style")
+(defvar dp-default-c-style-name "basic-c-style")
 (defvar dp-default-c-style dp-basic-c-style)
 
 (defconst meduseld-c-style
