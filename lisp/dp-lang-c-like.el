@@ -1173,13 +1173,17 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
         (ding)
         nil))))
 
+(defvar dp-c-mode-l-p nil
+  "Do or don't add magic ; instead of l when following \).")
+
 (defun dp-c-mode-l (&optional arg)
   "Change )<ws*>l to )<same-ws>; since it is so likely to be a mistake.
 ARG, if non-nil \(interactively the prefix-arg\) says to act normally.  NB:
 ARG will be used by the original `self-insert-command' and so will act as a
 repeat count.  Use prefix arg with value 1 to override AI and get a single ?l."
   (interactive "P")
-  (if (or arg
+  (if (or (not dp-c-mode-l-p)
+          arg
           (dp-in-a-c*-comment)
           (not (dp-looking-back-at ")\\s-*")))
       (call-interactively 'self-insert-command)
