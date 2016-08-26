@@ -2046,6 +2046,12 @@ using the mouse."
              (not dp-cscope-db-update-required-p)
              (not (file-writable-p database-file))
              (not (file-writable-p (file-name-directory database-file)))
+             ;; gtags-cscope shared the database with gtags which already
+             ;; does updating properly by always using the existing
+             ;; cscope.files.
+             ;;@todo XXX Do this in a better way; don't just use the raw
+             ;;program name.
+             (string= "gtags-cscope" cscope-program)
              cscope-do-not-update-database)
             (setq options (cons "-d" options))
           (setq dp-cscope-db-update-required-p nil))
