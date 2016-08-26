@@ -27,6 +27,21 @@ unset eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
 
+# davep specific code -------------8><------------------
+
+#mutually exclusive with real EExec# EExec=
+#mutually exclusive with real EExec# no_exec_p=
+#mutually exclusive with real EExec# Non_EExecer()
+#mutually exclusive with real EExec# {
+#mutually exclusive with real EExec#     echo "{-} $@" 1>&2
+#mutually exclusive with real EExec# }
+
+#mutually exclusive with real EExec# Verbose_EExecer()
+#mutually exclusive with real EExec# {
+#mutually exclusive with real EExec#     echo "{+} $@"
+#mutually exclusive with real EExec#     "$@"
+#mutually exclusive with real EExec# }
+
 trap_exit_msg=
 
 # Useful traps
@@ -90,19 +105,8 @@ Usage_error()
 # template end.
 ########################################################################
 
-: ${PS1_title_prefix:='[MF]'}
-export PS1_title_prefix
-: ${PS1_prefix:='[MF]'}
-export PS1_prefix
-: ${DP_BASHRC_SOURCE_ME_LAST:=$HOME/bin.amd/dp-cbwa_init.bash}
-export DP_BASHRC_SOURCE_ME_LAST
-
-: ${FG:=yellow}
-: ${BG:=blue}
-
-if [ -z "$*" ]
-then
-    dpxx -B "${BG}" -F "${FG}" nscreen uFlex-dev
-else
-    bash
-fi
+dev_dir=${1-"mf-$(dp-std-date)"}
+EExec mkdir -p "${dev_dir}"
+cd "${dev_dir}"
+EExec source "${HOME}/bin.amd/dp-cbwa_init.bash"
+EExec p4_mkwa -codeline microflex

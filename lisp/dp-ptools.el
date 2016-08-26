@@ -150,8 +150,8 @@ that we're under a directory named work."
     ;; Annoyingly, this could change whenever I change gtags tagging backend.
     ;; With `native', cscope can do references.
     ;; ex-ctags and uctags can't, but can do other things better.
-    (define-key map [(control ?c) ?s ?S] 'cscope-find-this-symbol)
-    (define-key map [(control ?c) ?s ?s] 'dp-tag-find-with-idutils)
+    (define-key map [(control ?c) ?s ?s] 'cscope-find-this-symbol)
+    (define-key map [(control ?c) ?s ?S] 'dp-tag-find-with-idutils)
 
     (define-key map [(control ?c) ?s ?T] 'cscope-tell-user-about-directory)
     (define-key map [(control ?c) ?s ?W] 'cscope-tell-user-about-directory)
@@ -679,6 +679,12 @@ gtags discovery."
         (call-process xgtags-global-program
                       nil nil nil
                       dp-gtags-auto-update-db-flag
+                      (if dp-gtags-auto-update-db-flag
+                          "-L"
+                        "--rgg-nop")
+                      (if dp-gtags-auto-update-db-flag
+                          "cscope.files"
+                        "--rgg-nop")
                       "-u" (concat "--single-update=" (gtags-buffer-file-name)))
         (message "Updating tags(%s)...done" dp-gtags-auto-update-db-flag))))
 

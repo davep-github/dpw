@@ -254,13 +254,14 @@ e(
         'host-pattern': '^(atl|atlr5n4-[0-9]+)$',
         'family': 'amd_family',
         'comment': 'A work machine.',
-        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 180x72-0+0',
+        # Height when nx is in "fit to window" mode.
+        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 180x74-0+0',
         'xterm_bg': AMD_ATLR5N4_BG_COLOR,
         'xterm_fg': AMD_ATLR5N4_FG_COLOR,
         ### 'xterm-ls-colors': opath.join(HOME, '.rc/ls-colors-for-light-bg'),
         'xem_bg_color': AMD_ATLR5N4_BG_COLOR,
         'xem_bg_color': "grey80",
-        'project': 'nmi',
+        'project': "nmi-ptb",
     },
     ref=[amd_family, OSDB['linux'], default]
 )
