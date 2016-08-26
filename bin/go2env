@@ -151,8 +151,9 @@ def set_force_dict_updated_p(val=True):
 #dp_io.eprintf('HOME>%s<, UGLY_HOME>%s<', HOME, UGLY_HOME)
 
 #####################################################################
-def handle_env_var(fmt, name, open_quote,val, close_quote, **kw_args):
+def handle_env_var(fmt, name, open_quote, val, close_quote, **kw_args):
     flags = kw_args.get(ELISP_OUTPUT_HANDLER_FLAGS, None)
+    ## @todo XXX unused
     emit_setenv_p = False
     if flags:
         emit_setenv_p = flags.val()
@@ -170,10 +171,13 @@ def handle_sh(name, alias_item, **kw_args):
     # B. elisp setenv calls
     quote_char = kw_args.get("quote_char",
                              Evil_globals.get("quote_char", '"'))
-    handle_env_var('%s=%s%s%s; export %s;',
-                   name,
-                   quote_char, val, quote_char,
-                   **kw_args)
+    handle_env_var(
+        fmt='%s=%s%s%s; export %s;',
+        name=name,
+        open_quote=quote_char,
+        val=val,
+        close_quote=quote_char,
+        **kw_args)
 
 #####################################################################
 def handle_csh(name, alias_item, **kw_args):
@@ -184,7 +188,12 @@ def handle_csh(name, alias_item, **kw_args):
     # B. elisp setenv calls
     # The format to handle_env_var needs to take 3 parameters.
     # We just suck the 3rd into a comment.
-    handle_env_var('setenv %s "%s"; # %s\n', name, val, **kw_args)
+    ## @todo XXX This won't work.
+    handle_env_var(
+        fmt='setenv %s "%s"; # %s\n',
+        name=name,
+        val=val,
+        **kw_args)
 
 #####################################################################
 def emacs_pre(**kw_args):
@@ -680,6 +689,7 @@ def go2env(args, handlers_type, selector, handler_keyword_args,
 #    print "args>%s<, handlers_type>%s<, selector>%s<, handler_keyword_args>%s<, grep_regexps>%s<" \
 #          % (args, handlers_type, selector, handler_keyword_args,
 #             grep_regexps)
+    dp_io.cdebug(1, "handlers_type?{}<\n", handlers_type)
     handlers = get_handlers(handlers_type)
     handle, handle_pre, handle_post, selector_regexp = handlers[selector]
     if type(selector_regexp) == types.StringType:
