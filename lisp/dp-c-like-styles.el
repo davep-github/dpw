@@ -69,7 +69,7 @@
     (dp-use-space-before-tab-font-lock-p           . nil)
     (dp-use-too-many-spaces-font-p                 . nil)
     (dp-use-ugly-ass-pointer-style-p               . nil)
-    (c-tab-always-indent           . nil)
+    (c-tab-always-indent           . t)
     (c-basic-offset                . 4)
     (c-comment-only-line-offset    . 0)
     (c-cleanup-list                . (scope-operator
