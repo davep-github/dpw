@@ -679,6 +679,12 @@ gtags discovery."
         (call-process xgtags-global-program
                       nil nil nil
                       dp-gtags-auto-update-db-flag
+                      (if dp-gtags-auto-update-db-flag
+                          "-L"
+                        "--rgg-nop")
+                      (if dp-gtags-auto-update-db-flag
+                          "cscope.files"
+                        "--rgg-nop")
                       "-u" (concat "--single-update=" (gtags-buffer-file-name)))
         (message "Updating tags(%s)...done" dp-gtags-auto-update-db-flag))))
 
