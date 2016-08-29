@@ -81,13 +81,8 @@ EExec_verbose_echo_id rc_dirs
 chmod_index_files()
 {
     local mod="$1"; shift
-
-    for f in $index_files
-    do
-      [ -e "$f" ] && {
-          chmod "$mod" "$f"
-      }
-    done
+    op-on-individual-files chmod "${mod}" -- $index_files
+    true
 }
 
 # main_machine="excuses-and-accusations"
@@ -317,8 +312,10 @@ EExec_verbose_echo_id all_index_files index_files
 
 if vsetp "$clean"
 then
-    chmod_index_files "u+w"
-    EExec -y rm -f $index_files || {
+    EExec chmod_index_files "u+w"
+    # This was EExec -y ...
+    # And I can't recall why.
+    EExec rm -f $index_files || {
         echo "rm of index files>$index_files<, failed."
         exit
     } 1>&2
@@ -385,7 +382,7 @@ else
     chmod_index_files a+w
 fi
     
-echo "$PWD:
-$(ls -l ${all_index_files})"
+echo "$PWD:"
+op-on-individual-files ls -l -- ${all_index_files}
 
 echo "index-code done: $(date)."

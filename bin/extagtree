@@ -405,18 +405,17 @@ vsetp "$cscope_p" && {
     cscope_tree "$FILES_FILE" &
 }
 
-EExec_verbose_msg "$(ls -l $FILES_FILE)"
-EExec_verbose_msg "$(wc -l $FILES_FILE)"
+EExecVerbose_p && {
+    EExec op-on-individual-files ls -l -- ${FILES_FILE}
+    EExec op-on-individual-files wc -l -- ${FILES_FILE}
+}
 
 echo "waiting for procs to complete..."
 wait
 
-EExec_verbose_msg "$(ls -l $FILES_FILE)"
-EExec_verbose_msg "$(wc -l $FILES_FILE)"
+EExecVerbose_p && {
+    EExec op-on-individual-files ls -l -- ${FILES_FILE}
+    EExec op-on-individual-files wc -l -- ${FILES_FILE}
+}
 
-if vsetp "$SUDO"
-then
-    EExec $SUDO chown $(id -u) "${TAGFILES[@]}"
-else
-    true
-fi
+EExec op-on-individual-files $SUDO chown $(id -u) -- "${TAGFILES[@]}"
