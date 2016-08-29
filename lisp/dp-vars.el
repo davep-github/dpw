@@ -286,6 +286,15 @@ These should be regexp quoted."
   :group 'dp-vars
   :type '(repeat string))
 
+(defcustom dp-cscope-program "gtags-cscope"
+  "*The pathname of the cscope executable to use."
+  :type 'string
+  :group 'cscope)
+
+(defvar dp-using-gtags-cscope-p 
+  (string= dp-cscope-program "gtags-cscope")
+  "Um, well, are, we..., um... like using gtags-cscope?")
+
 (defcustom dp-ssh-host-name-completion-list '()
   "*List of common hostnames provided for your completing pleasure.
 Elemental Format: \(host-name . plist-or-t)
