@@ -382,18 +382,6 @@ E|mbsmd|       /home/davep/eMail/mbsunk/working-copy/Maildir/
 E|w|wrk|     ${pamc}
 #############################################################################
 
-### There *must* be 3 octothorpes, e.g. "^###" in order for g -a to work.
-### New entries are added after this mess and should occasional be moved
-### above which is "A nice place to bring your kids up."
-### @todo Fix this.
-###
-### Local Variables: ***
-### tab-width: 2 ***
-### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***
-### indent-tabs-mode: nil ***
-### comment-start: "#" ***
-### comment-end: "" ***
-### End: ***
 Ee|pamcM|       /home/davep/work/vanu/sandboxen/perf-anal/montserrat/code/Montserrat/
 Ee|pamperf|       /home/davep/work/vanu/sandboxen/perf-anal/montserrat/code/Montserrat/phys/perf/
 Ee|codeinc|       /home/davep/work/vanu/code/c++/include/
@@ -408,3 +396,17 @@ Ee|vtbin|       /opt/intel/vtune/bin/
 Ee|vtunedoc|vtdoc|       /opt/intel/vtune/doc/
 E|csp|       /home/davep/lisp/contrib/site-packages/
 Ee|lispcsp|       /home/davep/lisp/contrib/site-packages/
+
+### There *must* be 3 octothorpes, e.g. "^###" in order for g -a to work.
+### New entries are added after this mess and should occasional be moved
+### above which is "A nice place to bring your kids up."
+### @todo Fix this.
+###
+### Local Variables: ***
+### tab-width: 2 ***
+### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***
+### indent-tabs-mode: nil ***
+### comment-start: "#" ***
+### comment-end: "" ***
+### End: ***
+
