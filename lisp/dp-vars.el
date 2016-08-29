@@ -211,6 +211,11 @@ nil --> use builtin image of chuck."
   :type '(choice (const :tag "Builtin (chuckie)" nil)
 		 (file :must-match t :tag "pixmap file")))
 
+(defcustom dp-use-buffer-endicator-p t
+  "*Put something special to indICATE the END of the buffer."
+  :group 'dp-vars
+  :type 'boolean)
+
 (defcustom dp-cleanup-buffers-mode-list
   '(help-mode
     completion-list-mode
