@@ -355,7 +355,8 @@ For now this must be < the error col.")
 (defface dp-default-line-too-long-error-face
   '((((class color)
       (background light))
-     (:background "gainsboro")))
+;;     (:background "gainsboro")))
+     (:background "lightgrey" :bold nil)))
   "Face for buffer lines which have gotten too long."
   :group 'faces
   :group 'dp-vars)
@@ -363,7 +364,8 @@ For now this must be < the error col.")
 (defface dp-default-line-too-long-warning-face
   '((((class color)
       (background light))
-     (:background "aliceblue")))
+;;     (:background "aliceblue")))
+     (:background "lightgrey" :bold nil)))
   "Face for buffer lines which are getting too long."
   :group 'faces
   :group 'dp-vars)
@@ -432,7 +434,9 @@ the warning zone logic (or bag it.) Using brute force.")
 
 (defface dp-trailing-whitespace-face
   '((((class color) (background light)) 
-     (:background "aliceblue" :bold nil))) 
+;;     (:background "aliceblue" :bold nil))) 
+;;     (:background "gainsboro" :bold nil)))
+     (:background "lightgrey" :bold nil)))
   "Face for buffer lines which have trailing whitespace."
   :group 'faces
   :group 'dp-vars)
