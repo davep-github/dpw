@@ -22,6 +22,7 @@ do
   ${EEXEC_SHIFT}
 done
 EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
 #export eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
@@ -104,14 +105,8 @@ Usage_error()
 # template end.
 ########################################################################
 
-caller="${1}"
-shift
-prog="${1}"
-shift
-
-EExec_verbose_echo_id caller
-EExec_verbose_echo_id prog
-EExec_verbose_msg "prog>$(sp ${prog})"
-real_prog=$(sp "${prog}" | fgrep -v "${caller}" | head -1)
-
-EExec exec "${real_prog}" "$@"
+dev_dir=${1-"mf-$(dp-std-date)"}
+EExec mkdir -p "${dev_dir}"
+cd "${dev_dir}"
+EExec source "${HOME}/bin.amd/dp-cbwa_init.bash"
+EExec p4_mkwa -codeline microflex

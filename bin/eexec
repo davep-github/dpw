@@ -146,7 +146,7 @@ EExecNoExport()
     export EExecExporter=""
 }
 
-EExecDashN ()
+EExecDashN()
 {
     if [ "${1-}" == "-k" ]
     then
@@ -182,7 +182,7 @@ EExecDashV_p()
 }
 
 # Should be named something like EExecSetVerbose (EExec_set_verbose)
-EExecVerbose ()
+EExecVerbose()
 {
     if [ -z "${1-}" ]
     then
@@ -201,7 +201,7 @@ EExecVerbose ()
     ${EExecExporter} EExecDash_opts="$EExecDash_opts $EExecDashV_opt"
 }
 
-EExecVerbose_k ()
+EExecVerbose_k()
 {
     EExecVerbose -k "$@"
 }
@@ -266,14 +266,14 @@ EExec_verbose_echo_id()
     EExec_verbose_msg "$prefix$msg$suffix"
 }
 
-EExecQuiet ()
+EExecQuiet()
 {
     EExecEcho=
     ${EExecExporter} EExecDashQ_opt="-q"
 }
 
 
-EExecDefErrorReporter ()
+EExecDefErrorReporter()
 {
     rc=$1
     shift
@@ -368,6 +368,8 @@ EExec()
               eexecShowPrefix="+"
               eexecEcho=EExecStandardErr_eko
               ;;
+          -v|--verbose) EExecVerbose;;
+          -|--verbose-k) EExecVerbose_k;;
           -c|-k|--keep-going|--no-exit|--error-ok|--ignore-errors) eexecContinue=t
               ;;
           -C|-0|--fake-success|--return-zero|--rose) eexecContinue=t

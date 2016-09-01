@@ -108,4 +108,4 @@ Usage_error()
 : ${sort_field:=1}
 
 echo "$@" >> ~/tmp/lid-log
-EExec run-real-prog "lid" "$@" | EExec sort -k "${sort_field}"
+EExec run-real-prog "$0" "lid" "$@" | EExec sort -k "${sort_field}"

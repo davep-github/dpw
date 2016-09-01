@@ -22,6 +22,7 @@ do
   ${EEXEC_SHIFT}
 done
 EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
 #export eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
@@ -104,14 +105,53 @@ Usage_error()
 # template end.
 ########################################################################
 
-caller="${1}"
-shift
-prog="${1}"
+# Offset a little into the window so a slight breeze won't move the focus.
+: ${X_COORD:=16}
+: ${Y_COORD:=9}
+
+# Usage variable usage:
+Usage_args_info=""
+Usage_synopsis="Move mouse pointer to window.
+"
+# Using ) after the args makes copy & paste between here and the
+# case statement easier.
+Usage_details="${EExec_parse_usage}
+-x) Window relative x coordinate.
+-y) Window relative y coordinate.
+"
+# Example of arg parsing.
+option_str="x:X:y:Y:"
+long_options=(
+"x:" "X:" "x-coord:"
+"y:" "Y:" "y-coord:"
+)
+source dp-getopt+.sh || exit 1
+while (($# > 0))
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support: -n -v -q, etc. q.v. ~/bin/eexec
+      # Done by EExec_parse and friends.
+
+      # Program options.
+      -x|-X|--x-coord) shift; X_COORD="${1}";;
+      -y|-Y|--y-coord) shift; Y_COORD="${1}";;
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      # getopt will barf about unknown options.
+      # Here we barf about known options that we have forgotten to handle.
+      *) echo 1>&2 "Unhandled option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+# The following is needed only when args are required.
+[ "$*" = "" ] && Usage
+
+window_pat="${1}"
 shift
 
-EExec_verbose_echo_id caller
-EExec_verbose_echo_id prog
-EExec_verbose_msg "prog>$(sp ${prog})"
-real_prog=$(sp "${prog}" | fgrep -v "${caller}" | head -1)
-
-EExec exec "${real_prog}" "$@"
+window_id=$(xdotool search --name "${window_pat}")
+EExec xdotool mousemove --window "${window_id}" "${X_COORD}" "${Y_COORD}"
+EExec xdotool windowfocus --sync "${window_id}"

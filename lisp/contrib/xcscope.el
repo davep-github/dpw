@@ -722,7 +722,8 @@ for this to work."
   :group 'cscope)
 
 
-(defcustom cscope-program (or (getenv "DP_CSCOPE_PROGRAM")
+(defcustom cscope-program (or (bound-and-true-p 
+                               dp-cscope-program)
                               "cscope") ; "cscope"
   "*The pathname of the cscope executable to use."
   :type 'string
@@ -2046,6 +2047,12 @@ using the mouse."
              (not dp-cscope-db-update-required-p)
              (not (file-writable-p database-file))
              (not (file-writable-p (file-name-directory database-file)))
+             ;; gtags-cscope shared the database with gtags which already
+             ;; does updating properly by always using the existing
+             ;; cscope.files.
+             ;;@todo XXX Do this in a better way; don't just use the raw
+             ;;program name.
+             (dp-cscope-do-not-update-database)
              cscope-do-not-update-database)
             (setq options (cons "-d" options))
           (setq dp-cscope-db-update-required-p nil))

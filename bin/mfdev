@@ -22,24 +22,10 @@ do
   ${EEXEC_SHIFT}
 done
 EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
 #export eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
-
-# davep specific code -------------8><------------------
-
-#mutually exclusive with real EExec# EExec=
-#mutually exclusive with real EExec# no_exec_p=
-#mutually exclusive with real EExec# Non_EExecer()
-#mutually exclusive with real EExec# {
-#mutually exclusive with real EExec#     echo "{-} $@" 1>&2
-#mutually exclusive with real EExec# }
-
-#mutually exclusive with real EExec# Verbose_EExecer()
-#mutually exclusive with real EExec# {
-#mutually exclusive with real EExec#     echo "{+} $@"
-#mutually exclusive with real EExec#     "$@"
-#mutually exclusive with real EExec# }
 
 trap_exit_msg=
 
@@ -104,14 +90,19 @@ Usage_error()
 # template end.
 ########################################################################
 
-caller="${1}"
-shift
-prog="${1}"
-shift
+: ${PS1_title_prefix:='[MF]'}
+export PS1_title_prefix
+: ${PS1_prefix:='[MF]'}
+export PS1_prefix
+: ${DP_BASHRC_SOURCE_ME_LAST:=$HOME/bin.amd/dp-cbwa_init.bash}
+export DP_BASHRC_SOURCE_ME_LAST
 
-EExec_verbose_echo_id caller
-EExec_verbose_echo_id prog
-EExec_verbose_msg "prog>$(sp ${prog})"
-real_prog=$(sp "${prog}" | fgrep -v "${caller}" | head -1)
+: ${FG:=yellow}
+: ${BG:=blue}
 
-EExec exec "${real_prog}" "$@"
+if [ -z "$*" ]
+then
+    dpxx -B "${BG}" -F "${FG}" nscreen uFlex-dev
+else
+    bash
+fi

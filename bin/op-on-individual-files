@@ -22,6 +22,7 @@ do
   ${EEXEC_SHIFT}
 done
 EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
 #export eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
@@ -104,14 +105,29 @@ Usage_error()
 # template end.
 ########################################################################
 
-caller="${1}"
-shift
-prog="${1}"
-shift
+found_dd_p=
+non_files=()
+while (($# > 0))
+do
+  if [ "${1}" == '--' ]
+  then
+      shift
+      found_dd_p=t
+      break
+  fi
+  non_files+=("${1}")
+  shift
+done
 
-EExec_verbose_echo_id caller
-EExec_verbose_echo_id prog
-EExec_verbose_msg "prog>$(sp ${prog})"
-real_prog=$(sp "${prog}" | fgrep -v "${caller}" | head -1)
+[ -z "${found_dd_p}" ] && {
+    echo "No -- found."
+    exit 1
+} 1>&2
 
-EExec exec "${real_prog}" "$@"
+for f in "$@"
+do
+  [ -e "${f}" ] && {
+      EExec "${non_files[@]}" "${f}"
+  }
+done
+true

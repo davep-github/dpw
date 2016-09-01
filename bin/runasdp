@@ -1,0 +1,9 @@
+#!/bin/bash
+unset SHELL
+
+argses=("$@")
+source $HOME/.bashrc
+
+export SHELL="$(sp -1 bash)"
+
+exec "${argses[@]}"

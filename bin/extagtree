@@ -65,6 +65,8 @@ cscope_tree()
     local files_file="$1"
     local cs="${DP_CSCOPE_PROGRAM-$(sp -1 cscope)}"
 
+    echo "YYYYYYYYYYYYYAAAAAAAAAAAAAAAAAAAAAAA!"
+exit 99
     vunsetp $cs && cs=$(sp -1 dp-cscope)
     if vunsetp $cs
     then
@@ -121,7 +123,7 @@ EExec_verbose_echo_id DP_CODE_INDEX_FINDER_WORK_FILE
 : ${ctags_p=}
 : ${gtags_p=t}      # By default, only this tagger now that it seems to work.
 : ${gtags_opts=}
-: ${gtags_tagger=}
+: ${gtags_tagger=gtags}
 
 SYSTEM_INCLUDES=
 ###
@@ -370,6 +372,7 @@ TAGFILES=()
 
 [ -n "$gtags_p" ] && {
     EExec_verbose_msg "gtagging"
+    EExec_verbose_echo_id use_global_id_p
     TAGFILES+=($GTAGFILES)
     (
         # subshell
@@ -380,10 +383,10 @@ TAGFILES=()
             dp_echo2 "Trying --idutils with gtags again."
         else
             idutils_opt=""
-            # Makes gtags just plain not work? G* files are empty.
+            # Made gtags just plain not work? G* files are empty.
             dp_echo2 "forcing --idutils for gtags off."
         fi 
-        EExec gtags ${idutils_opt} --file "${FILES_FILE}" ${gtags_opts}
+        EExec "${gtags_tagger}" ${idutils_opt} --file "${FILES_FILE}" ${gtags_opts}
     ) &
 }
 
@@ -402,18 +405,17 @@ vsetp "$cscope_p" && {
     cscope_tree "$FILES_FILE" &
 }
 
-EExec_verbose_msg "$(ls -l $FILES_FILE)"
-EExec_verbose_msg "$(wc -l $FILES_FILE)"
+EExecVerbose_p && {
+    EExec op-on-individual-files ls -l -- ${FILES_FILE}
+    EExec op-on-individual-files wc -l -- ${FILES_FILE}
+}
 
 echo "waiting for procs to complete..."
 wait
 
-EExec_verbose_msg "$(ls -l $FILES_FILE)"
-EExec_verbose_msg "$(wc -l $FILES_FILE)"
+EExecVerbose_p && {
+    EExec op-on-individual-files ls -l -- ${FILES_FILE}
+    EExec op-on-individual-files wc -l -- ${FILES_FILE}
+}
 
-if vsetp "$SUDO"
-then
-    EExec $SUDO chown $(id -u) "${TAGFILES[@]}"
-else
-    true
-fi
+EExec op-on-individual-files $SUDO chown $(id -u) -- "${TAGFILES[@]}"

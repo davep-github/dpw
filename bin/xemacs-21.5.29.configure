@@ -80,6 +80,7 @@ fi
 # the lib64 library is needed to build on the o-xterm-* machines at
 # nVIDIA
 # --x-libraries=/usr/X11R6/lib64 \
+#    --x-libraries=/usr/lib64    \
 #
 ${DS_CONFIGURE} \
     ${FUCKEDUP_CONFIG} \
@@ -108,7 +109,8 @@ ${DS_CONFIGURE} \
     ${athena_opt}               \
     --enable-toolbars=no        \
     --with-xim=no               \
-    --x-libraries=/usr/lib64    \
+    --with-ldflags=/home/dpanarit/local/build/xemacs-21.5.34  \
+    --x-libraries=/home/dpanarit/local/build/xemacs-21.5.34  \
     --enable-pdump
 
 rc=$?

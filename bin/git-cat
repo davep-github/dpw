@@ -23,7 +23,7 @@ do
   ${EEXEC_SHIFT}
 done
 EExec_verbose_msg $(echo_id eexec_program)
-unset eexec_program
+### PASS on args: unset eexec_program
 #export eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
@@ -106,7 +106,7 @@ Usage_error()
 # template end.
 ########################################################################
 
-git_diff_or_cat()
+git_cat()
 {
     # git show eb8e6983cb0871dde0194f9768bf67d89c76d3ff:$(git rev-parse --git-dir)/dpu-mmap.c
     local commit="$1"; shift
@@ -149,5 +149,5 @@ do
 #  echo_id2 commit
 #  echo_id2 f
 #  exit 99
-  EExec -y git_diff_or_cat "$commit" "$f"
+  EExec -y git_cat "$commit" "$f"
 done

@@ -47,6 +47,7 @@ GRTAGS
 GSYMS
 GTAGS
 TAGS
+ID
 ctags
 etags
 tags
@@ -54,6 +55,7 @@ cscope.files
 cscope.in.out
 cscope.out
 cscope.po.out
+make.out
 
 *.log.gz
 *.log.bz2

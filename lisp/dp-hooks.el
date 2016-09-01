@@ -6,114 +6,7 @@
 
 ;; historical variety of styles: see svn, < rev 2013. 
 
-(defconst dp-basic-c-style
-  '(
-    (dp-c-using-kernel-style-p                     . nil)
-    (dp-c-like-mode-default-indent-tabs-mode       . nil)
-    (dp-lang-use-c-new-file-template-p             . t)
-    (dp-trailing-whitespace-use-trailing-ws-font-p . t)
-    (dp-use-space-before-tab-font-lock-p           . t)
-    (dp-use-too-many-spaces-font-p                 . t)
-    (dp-use-ugly-ass-pointer-style-p               . nil)
-    (c-tab-always-indent           . t)
-    (c-basic-offset                . 4)
-    (c-comment-only-line-offset    . 0)
-    (c-cleanup-list                . (scope-operator
-				      empty-defun-braces
-				      defun-close-semi
-				      list-close-comma
-                                      brace-else-brace
-                                      brace-elseif-brace
-				      knr-open-brace)) ; my own addition
-    (c-offsets-alist               . ((arglist-intro     . +)
-				      (substatement-open . 0)
-				      (inline-open       . 0)
-				      (cpp-macro-cont    . +)
-				      (access-label      . /)
-				      (case-label        . +)))
-    (c-hanging-semi&comma-criteria dp-c-semi&comma-nada)
-    (c-echo-syntactic-information-p . nil)
-    (c-indent-comments-syntactically-p . t)
-    (c-hanging-colons-alist         . ((member-init-intro . (before))))
-    )
-  "Basic C Programming Style")
-(c-add-style "basic-c-style" dp-basic-c-style t)
-
-(defconst meduseld-c-style
-  '((c-tab-always-indent           . t)
-    (c-basic-offset                . 4)
-    (c-comment-only-line-offset    . 0)
-    (c-cleanup-list                . (scope-operator
-				      empty-defun-braces
-				      defun-close-semi
-				      list-close-comma
-                                      brace-else-brace
-                                      brace-elseif-brace
-				      knr-open-brace)) ; my own addition
-    (c-offsets-alist               . ((arglist-intro     . +)
-				      (substatement-open . 0)
-				      (inline-open       . 0)
-				      (cpp-macro-cont    . +)
-				      (access-label      . /)
-				      (case-label        . +)))
-    (c-hanging-semi&comma-criteria dp-c-semi&comma-nada)
-    (c-echo-syntactic-information-p . nil)
-    (c-indent-comments-syntactically-p . t)
-    (c-hanging-colons-alist         . ((member-init-intro . (before))))
-    )
-  "MEDUSELD C Programming Style")
-(c-add-style "meduseld-c-style" meduseld-c-style t)
-
-(unless (bound-and-true-p dp-default-c-style-name)
-  (defvar dp-default-c-style-name "meduseld-c-style"))
-
-(defun meduseld-style ()
-  "Set up home (Meduseld.net) C style."
-  (interactive)
-  (c-set-style "meduseld-c-style"))
-
-(defcustom dp-default-c-style 
-  (symbol-value (intern-soft dp-default-c-style-name))
-  "*Default C[++] style."
-  :group 'dp-vars
-  :type 'symbol)
-
-(defun dp-cc-mode-activate-style (&optional style-name)
-  "Set up a C/C++ style. Use the default by default."
-  (interactive)
-  (c-set-style (or style-name dp-default-c-style-name)) t)
-
-(setq c-default-style `((other . ,dp-default-c-style-name)
-                        ;;(other . "meduseld-c-style")
-                        (java-mode . "java") ))
-
-(dp-deflocal current-project-c++-mode-style nil
-  "*Variable set via File Variables to indicate the current c-mode style")
-
-(dp-deflocal current-project-c++-mode-style-name nil
-  "*Variable set via File Variables to indicate the current c-mode style name")
-
-;;; A bit of history.
-;; (defun ll-style ()
-;;   "Set up ll C/C++ style."
-;;   (interactive)
-;;   (c-set-style "ll-c-style"))
-
-;; (defun av2-style ()
-;;   "Set up avalanche 2 C style."
-;;   (interactive)
-;;   (c-set-style "av2-c-style"))
-
-;; (defun crl-style ()
-;;   "Set up crl C style."
-;;   (interactive)
-;;   (c-set-style "crl-c-style"))
-
-;; (defun vanu-style ()
-;;   "Set up Vanu C style."
-;;   (interactive)
-;;   (c-set-style "vanu-c-style"))
-;;
+(add-hook 'find-file-hooks 'dp-add-default-buffer-endicator)
 
 (defcustom dp-global-master-cleanup-whitespace-p t
   "Control whitespace cleanup off everywhere.
@@ -462,7 +355,8 @@ For now this must be < the error col.")
 (defface dp-default-line-too-long-error-face
   '((((class color)
       (background light))
-     (:background "gainsboro")))
+;;     (:background "gainsboro")))
+     (:background "lightgrey" :bold nil)))
   "Face for buffer lines which have gotten too long."
   :group 'faces
   :group 'dp-vars)
@@ -470,7 +364,8 @@ For now this must be < the error col.")
 (defface dp-default-line-too-long-warning-face
   '((((class color)
       (background light))
-     (:background "aliceblue")))
+;;     (:background "aliceblue")))
+     (:background "lightgrey" :bold nil)))
   "Face for buffer lines which are getting too long."
   :group 'faces
   :group 'dp-vars)
@@ -539,7 +434,9 @@ the warning zone logic (or bag it.) Using brute force.")
 
 (defface dp-trailing-whitespace-face
   '((((class color) (background light)) 
-     (:background "aliceblue" :bold nil))) 
+;;     (:background "aliceblue" :bold nil))) 
+;;     (:background "gainsboro" :bold nil)))
+     (:background "lightgrey" :bold nil)))
   "Face for buffer lines which have trailing whitespace."
   :group 'faces
   :group 'dp-vars)
@@ -1258,7 +1155,7 @@ See `dp-parenthesize-region-paren-list'")
   ;; They set this to "# " This makes doxygen comments ("##") not look like
   ;; Python comments.
   ;; ## forces comment to line up @ comment col.
-  (setq comment-start "#")
+;;   (setq comment-start "#")
   (local-set-key [tab] 'dp-python-indent-command)
   (local-set-key [(meta \;)] 'dp-py-indent-for-comment)
   (local-set-key [(meta ?`)] 'comint-previous-matching-input-from-input)
@@ -1271,8 +1168,8 @@ See `dp-parenthesize-region-paren-list'")
   (local-set-key [(meta return)] 'dp-py-open-newline)
   (local-set-key [(control meta ?p)] 'py-beginning-of-def-or-class)
   (local-set-key "\C-c!" 'dp-python-shell)
-  (local-set-key [(meta s)] 'dp-py-insert-self?)
-  (local-set-key [(meta q)] 'dp-fill-paragraph-or-region-with-no-prefix)
+  (local-set-key [(meta ?s)] 'dp-py-insert-self?)
+  (local-set-key [(meta ?q)] 'dp-fill-paragraph-or-region-with-no-prefix)
   (dp-add-line-too-long-font 'python-font-lock-keywords)
   (setq dp-cleanup-whitespace-p t)
   ;; @todo XXX conditionalize this properly

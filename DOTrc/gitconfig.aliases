@@ -28,6 +28,7 @@
         rem = remote
 
 	br = branch
+        brv = branch -v
         current-branch = rev-parse --abbrev-ref=strict HEAD
         cbr = rev-parse --abbrev-ref=strict HEAD
         cob = checkout -b
@@ -42,8 +43,12 @@
         sno = status -uno
         ss = status -s
 
-        ldf = log --decorate=full -n 5
-        ld = log --decorate -n 5
+        ldf = log --decorate=full
+        ldf5 = log --decorate=full -n 5
+        ldfn = log --decorate=full -n
+        ld = log --decorate
+        ld5 = log --decorate -n 5
+        ldn = log --decorate -n
         log5 = log -n 5
         l1 = log -n 1
         l5 = log -n 5
@@ -51,10 +56,21 @@
         l11 = log -n 11
         lone5 = log -n 5 --oneline
         loneog11 = log -n 11 --oneline
-        l11 = log -n 11
         lonen = log --oneline -n
+        lol = log --oneline
+        lol5 = log -n 5 --oneline
+        lolog11 = log -n 11 --oneline
+        loln = log --oneline -n
+        lo5 = log -n 5 --oneline
+        lo11 = log -n 11 --oneline
+        lon = log --oneline -n
+#        l111 = log -n 11 --oneline
+#        l15 = log -n 5 --oneline
+#        l1n = log --oneline -n
         # Height of laziness: saving -n<space>
         ln = log -n
+        # 2 chars.  No project will ever be late now.
+        logn = log -n
         # These are longer than the actual command to compensate for all of
         # the shorter ones.
         filediffs = log -u        # show changes to a file
@@ -66,6 +82,7 @@
         lns = log --name-status
         lls = log --name-status
         lf = log --name-status
+        lfn = log --name-status -n
         logf = log --name-status
 
         logfull = log --pretty=medium
@@ -129,8 +146,9 @@
         dtp4v = difftool --tool=p4diff
         dtp4 = difftool --tool=p4diff
         hist = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-        h = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-        hn = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short -n
+        h = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+        h5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+        hn = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short -n
         h20 = log -n 20 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h11 = log -n 11 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
@@ -149,4 +167,4 @@
 
 # reset
         unstage = reset HEAD    # remove files from index (tracking)
-        
+        minus = reset HEAD

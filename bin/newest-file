@@ -61,10 +61,11 @@ list_files()
 : ${filesOnly="t"}
 : ${basename_p=""}
 : ${realpath_p=""}
+: ${no_prepend_pwd_p=}
 
 # see the man page of getopt for inadequacies.
 
-option_str='n:drDo0123456789l:cpbRf'
+option_str='n:drDo0123456789l:cpbRfN/'
 q=$(getopt -o "$option_str" -- "$@")
 eval set -- "$q"
 R=1
@@ -87,6 +88,8 @@ do
         -f) filesOnly=t; dirsOnly=;;
         -b) basename_p=t;;
         -R) realpath_p=t;;
+	-N) no_prepend_pwd_p=t;;
+        -/) force_prepend_pwd_p=t; no_prepend_pwd_p=;;
 	--) shift ; break;;
 	*)
 	    echo 1>&2 "$progname: Unsupported option>$1<";
@@ -110,7 +113,14 @@ for arg in "$@"
 do
   tnth=$nth
   cd $arg
-  dir=$(pwd)
+  if [ -n "${no_prepend_pwd_p}" ]
+  then
+      dir=
+      dir_sep=
+  else
+      dir=$(pwd)
+      dir_sep="/"
+  fi
     # ls -t1 | head -n4 | tail -n1
   while :
   do
@@ -132,7 +142,12 @@ do
     fi
     break
   done
-  filename=$dir/$newest
+  if [[ "${newest}" =~ ^/ ]] && [ -z "${force_prepend_pwd_p}" ]
+  then
+      dir=
+      dir_sep=
+  fi
+  filename="${dir}${dir_sep}${newest}"
   if true_p "${realpath_p}"
   then
       realpath "${filename}"
