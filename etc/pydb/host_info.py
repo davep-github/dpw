@@ -268,7 +268,7 @@ CZ_FP4_BG_COLOR = 'rgb:24/00/68'
 e(
     kef='host',
     dat={
-        'host-pattern': 'cz-fp4',
+        'host-pattern': '^cz',
         'family': 'amd_family',
         'comment': 'A BETTONG Carrizo dev system (on my desk).',
         'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 180x74-0+0',
