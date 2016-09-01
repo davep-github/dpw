@@ -593,6 +593,7 @@ w/tags, cscope, etc.")
    ("/\\.rc/[^/]+$" . shell-script-mode)
    ("\\.jxt$" . dp-journal-mode)        ; dp Journal files.
    ("\\.g$" . antlr-mode)
+   ("Makefile\\(\\.in\\)?\\.?[0-9]*" . makefile-mode)
    ))
 
 ;; Try alternative to suck-ass `sh-mode' "Shell-script" ksh-mode sucks,
