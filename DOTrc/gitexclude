@@ -26,6 +26,9 @@ gmon.out
 /DOTrc/*.work
 .#*#
 
+# Some kind NFS [temp] files that sometimes stick around.
+.nfs[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]*
+
 # Hidey holes
 JUNK/
 HIDE/
