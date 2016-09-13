@@ -660,8 +660,9 @@ We say: \" p is a pointer to char\", not
        'call-interactively 'c-indent-command)
       ;; Add other things to try here. We will stop after the first non-nil
       ;; return.
-      (and-boundp dp-c-using-kernel-style-p
-        (dp-kernel-style-var-name-align))
+      (when (bound-and-true-p dp-c-using-kernel-style-p)
+        (dp-kernel-style-var-name-align)
+        t)
       ;; default.
       (c-indent-command)))
 
