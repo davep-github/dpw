@@ -108,7 +108,7 @@ Usage_error()
 packages=(meld
 realpath
 git
-git-extra
+git-extras
 make
 wmctrl
 vnc4server
