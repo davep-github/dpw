@@ -5,9 +5,19 @@ set -u
 progname="$(basename $0)"
 source eexec
 
+# Have to do this vs having another program call us with --mv because of the
+# script-x and eexec options which need to come first after the progname.
+# And I'm getting tired of passing options via the environment.  Not sure
+# which is worse.
+
+[ "${progname}" = "parallel-mv" ] && {
+    progname="parallel-mv"
+    final_cmd=mv
+}
+
 Usage()
 {
-    echo "Usage: cp-parallel src-files... dest-root
+    echo "Usage: ${progname} src-files... dest-root
 Copy src-files to dest-root keeping the path elements.
 I.e. replace / with dest-root.
 All directories are created as needed."
@@ -21,9 +31,17 @@ All directories are created as needed."
 : ${dest=}
 : ${dash_i=-i}
 : ${mkdirs_only_p=}
+: ${final_cmd:=cp}
 
 std_options=""
-option_str="nvqwIid"
+option_str="nvqwIidmc"
+long_options=(
+    "cp" "copy"
+    "mv" "move"
+    "mkdir" "mkdirs-only"
+    "interactive"
+    "no-dash-i" "no-interactive"
+)
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -33,9 +51,10 @@ do
       -v) VERBOSE="echo $progname: "; EExecVerbose;;
       -q) VERBOSE=":"; EExecQuiet;;
       -w) dest=~/tmp/wtctts;;
-      -I) dash_i=;;
-      -i) dash_i=-i;;
-      -d) mkdirs_only_p=t;;
+      -I|--no-dash-i|no-interactive) dash_i=;;
+      -i|--interactive) dash_i=-i;;
+      -d|mkdir|mkdirs-only) mkdirs_only_p=t;;
+      -m|--mv|--move) final_cmd=mv; mkdirs_only_p=;;
       --) shift ; break ;;
       *) 
       echo 1>&2 "Unsupported option>$1<";
@@ -75,5 +94,5 @@ do
   tdest="$dest$dname"
   EExec mkdir -p "$tdest"
   [ -n "$mkdirs_only_p" ] && continue
-  EExec cp $dash_i "$f" "$tdest"
+  EExec "${final_cmd}" $dash_i "$f" "$tdest"
 done
