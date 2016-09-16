@@ -16,7 +16,7 @@
 (defun dp-add-amd-c-style ()
   (interactive)
   (dp-select-amd-c-style)
-  (c-set-style dp-current-c-style-name))
+  (c-set-style "dp-kernel-c-style"))
 
 ;; This was a recommended way to do this.  Is it really necessary? It was hacked in quickly.
 (add-hook 'c-mode-common-hook (lambda ()
