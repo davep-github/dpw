@@ -81,7 +81,7 @@ go_file()
     echo $HOME/.go${ext}
 }
 
-grep_for_dirname()
+egrep_for_dirname()
 {
     {
         local pat=""
