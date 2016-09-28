@@ -44,3 +44,14 @@ Ee|obmenu|                   ${obconf}/menu.xml
 Ee|cscopedbroot|             000-cscope-db-root
 Ee|csdb|                     ${cscopedbroot}
 Ee|ipystartup|ipyup|ipyrc|   ${HOME}/.config/ipython/profile_default/startup/
+
+### 
+### Local Variables: ***
+### indent-tabs-mode: nil ***
+### folded-file: t ***
+### folding-internal-margins: nil ***
+### comment-start: "# " ***
+### comment-end: "" ***
+### block-comment-end: "" ***
+### fill-column: 9999 ***
+### End: ***

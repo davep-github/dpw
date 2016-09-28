@@ -53,3 +53,14 @@ Ee|pcapsrc|       /home/davep/work/dpu/local/build/pcap-stuff/libpcap-1.7.4/
 Ee|dpusnortsrc|snortsrc|snsrc|       /home/davep/work/dpu/snort/src/
 Ee|daqosrc|       /home/davep/work/dpu/local/build/pcap-stuff/daq-2.0.6/os-daq-modules/
 Ee|savefile|       /home/davep/work/dpu/local/build/pcap-stuff/libpcap-1.7.4/
+
+### 
+### Local Variables: ***
+### indent-tabs-mode: nil ***
+### folded-file: t ***
+### folding-internal-margins: nil ***
+### comment-start: "# " ***
+### comment-end: "" ***
+### block-comment-end: "" ***
+### fill-column: 9999 ***
+### End: ***

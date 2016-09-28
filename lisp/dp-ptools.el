@@ -123,6 +123,9 @@ that we're under a directory named work."
         (setq ad-return-value (buffer-substring (mark) (point)))
       ad-do-it))
 
+  (defun dp-cscope-do-not-update-database ()
+    dp-using-gtags-cscope-p)
+
   (defun dp-cscope-list-entry-hook ()
     (define-key cscope-list-entry-keymap "i" 'dp-tag-find-with-idutils-bury-first))
   (add-hook 'cscope-list-entry-hook 'dp-cscope-list-entry-hook)

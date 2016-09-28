@@ -6,6 +6,8 @@
 
 ;; historical variety of styles: see svn, < rev 2013. 
 
+(add-hook 'find-file-hooks 'dp-add-default-buffer-endicator)
+
 (defcustom dp-global-master-cleanup-whitespace-p t
   "Control whitespace cleanup off everywhere.
 If this is a non-nil list, don't disable if it contains the current major
@@ -353,7 +355,8 @@ For now this must be < the error col.")
 (defface dp-default-line-too-long-error-face
   '((((class color)
       (background light))
-     (:background "gainsboro")))
+;;     (:background "gainsboro")))
+     (:background "lightgrey" :bold nil)))
   "Face for buffer lines which have gotten too long."
   :group 'faces
   :group 'dp-vars)
@@ -361,7 +364,8 @@ For now this must be < the error col.")
 (defface dp-default-line-too-long-warning-face
   '((((class color)
       (background light))
-     (:background "aliceblue")))
+;;     (:background "aliceblue")))
+     (:background "lightgrey" :bold nil)))
   "Face for buffer lines which are getting too long."
   :group 'faces
   :group 'dp-vars)
@@ -430,7 +434,9 @@ the warning zone logic (or bag it.) Using brute force.")
 
 (defface dp-trailing-whitespace-face
   '((((class color) (background light)) 
-     (:background "aliceblue" :bold nil))) 
+;;     (:background "aliceblue" :bold nil))) 
+;;     (:background "gainsboro" :bold nil)))
+     (:background "lightgrey" :bold nil)))
   "Face for buffer lines which have trailing whitespace."
   :group 'faces
   :group 'dp-vars)
@@ -1149,7 +1155,7 @@ See `dp-parenthesize-region-paren-list'")
   ;; They set this to "# " This makes doxygen comments ("##") not look like
   ;; Python comments.
   ;; ## forces comment to line up @ comment col.
-  (setq comment-start "#")
+;;   (setq comment-start "#")
   (local-set-key [tab] 'dp-python-indent-command)
   (local-set-key [(meta \;)] 'dp-py-indent-for-comment)
   (local-set-key [(meta ?`)] 'comint-previous-matching-input-from-input)
@@ -1162,8 +1168,8 @@ See `dp-parenthesize-region-paren-list'")
   (local-set-key [(meta return)] 'dp-py-open-newline)
   (local-set-key [(control meta ?p)] 'py-beginning-of-def-or-class)
   (local-set-key "\C-c!" 'dp-python-shell)
-  (local-set-key [(meta s)] 'dp-py-insert-self?)
-  (local-set-key [(meta q)] 'dp-fill-paragraph-or-region-with-no-prefix)
+  (local-set-key [(meta ?s)] 'dp-py-insert-self?)
+  (local-set-key [(meta ?q)] 'dp-fill-paragraph-or-region-with-no-prefix)
   (dp-add-line-too-long-font 'python-font-lock-keywords)
   (setq dp-cleanup-whitespace-p t)
   ;; @todo XXX conditionalize this properly

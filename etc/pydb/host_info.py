@@ -234,6 +234,8 @@ amd_family = e(
         'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
         #'xem_bg_color': AMD_BG_COLOR,
         'command-line-mailer': 'mutt', # Must support mail(1) args.
+        'dpxx-auto-opts-auto1': '-g 124x31+86+0',
+        'dpxx-auto-opts-auto2': '-g 124x31+86+513',
  },
     # These are searched in the order given.
     ref=[OSDB['linux'], default]
@@ -305,8 +307,6 @@ e(
         'xterm_bg': NMI_TEST_BOX_BG_COLOR,
         'xterm_fg': NMI_TEST_BOX_FG_COLOR,
         ### 'xterm-ls-colors': LIGHT_BG_LS_COLORS,
-        'dpxx-auto-opts-auto1': '-g 124x31+86+0',
-        'dpxx-auto-opts-auto2': '-g 124x31+86+513',
     },
     ref=[amd_family, OSDB['linux'], default]
 )

@@ -746,11 +746,22 @@ source_bash_completion_code()
     local BASH_COMPLETION
     local bc_type
     local bc
-    for bc_dir in /etc /etc/profile.d $HOME/etc $HOME/.rc
+    for bc_dir in /etc /etc/ /etc/bash_completion.d /etc/profile.d $HOME/etc $HOME/.rc
     do
       # Allow specific files to be specified.
-      [ -d "$bc_dir" ] || continue
-      for bc in ${bc_dir}/bash[-._]completion.sh
+      [ -d "${bc_dir}" ] || continue
+      [ -e "${bc_dir}" ] || continue
+      bcs=${bc_dir}/bash[-._]completion.sh
+      bcdirs=$(echo ${bc_dir}/bash[-._]completion.d)
+      for bcd in ${bcdirs}
+      do
+        dp_rc_logger "Examine>${bcd}<"
+        [ -e "${bcd}" ] || continue
+        bds=$(echo $bcs ${bcd}/*)
+        bcs="${bcs} ${bds}"
+      done
+
+      for bc in ${bcs}
       do
         dp_rc_logger "source_bash_completion_code: trying >$bc<"
         [ -f "$bc" ] || continue

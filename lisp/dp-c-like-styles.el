@@ -64,7 +64,7 @@
   (dmessage "in linux-c-mode.")
   (interactive)
   (c-mode)
-  (c-set-style "dp-kernel-c-style"))
+  (c-set-style "dp-kernel-c-style" t))
 
 (defconst dp-basic-c-style
   '(

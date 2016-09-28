@@ -105,67 +105,29 @@ Usage_error()
 # template end.
 ########################################################################
 
-packages=(meld
-realpath
-git
-git-extras
-make
-wmctrl
-vnc4server
-ctags
-gcc
-g++
-openssh-server
-dump
-openssl
-libssl-dev
-libcurl4-openssl-dev
-gcolor2
-libncurses5
-libncurses5-dbg
-libncurses5-dev
-ncurses-base
-ncurses-bin
-ncurses-doc
-ncurses-examples
-ncurses-term
-ncurses-hexedit
-figlet
-screen
-cscope
-vim
-diffuse
-gitk
-xorg-dev
-mpd
-msmtp
-mutt
-lsscsi
-xclip
-firefox
-thunderbird
-pcregrep
-)
-
-num_pkgs="${#packages[@]}"
-pkg_num=1
-
-for p in "${packages[@]}"
+found_dd_p=
+non_files=()
+while (($# > 0))
 do
-  EExec_verbose_msg "Installing ${pkg_num} of ${num_pkgs}"
-  EExec sudo apt-get --assume-yes install "${p}"
-  ((++pkg_num))
+  if [ "${1}" == '--' ]
+  then
+      shift
+      found_dd_p=t
+      break
+  fi
+  non_files+=("${1}")
+  shift
 done
 
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
+[ -z "${found_dd_p}" ] && {
+    echo "No -- found."
+    exit 1
+} 1>&2
+
+for f in "$@"
+do
+  [ -e "${f}" ] && {
+      EExec "${non_files[@]}" "${f}"
+  }
+done
+true

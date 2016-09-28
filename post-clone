@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -u
 
 # Use "real" symlinks on Windwoes/cygwin.
@@ -8,9 +7,10 @@ set -u
 export CYGWIN="winsymlinks:nativestrict"
 
 EZEC=
+
 : ${default_parent:=dpw}
 : ${default_repo:=dpw/dpw}
-: ${repo:="${default_parent}/$(basename ${PWD})";;
+: ${repo:="${default_parent}/$(basename ${PWD})"}
 while (($# > 0 ))
 do
     case "$1" in

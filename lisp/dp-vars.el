@@ -211,6 +211,11 @@ nil --> use builtin image of chuck."
   :type '(choice (const :tag "Builtin (chuckie)" nil)
 		 (file :must-match t :tag "pixmap file")))
 
+(defcustom dp-use-buffer-endicator-p t
+  "*Put something special to indICATE the END of the buffer."
+  :group 'dp-vars
+  :type 'boolean)
+
 (defcustom dp-cleanup-buffers-mode-list
   '(help-mode
     completion-list-mode
@@ -285,6 +290,15 @@ nil --> use builtin image of chuck."
 These should be regexp quoted."
   :group 'dp-vars
   :type '(repeat string))
+
+(defcustom dp-cscope-program "gtags-cscope"
+  "*The pathname of the cscope executable to use."
+  :type 'string
+  :group 'cscope)
+
+(defvar dp-using-gtags-cscope-p 
+  (string= dp-cscope-program "gtags-cscope")
+  "Um, well, are, we..., um... like using gtags-cscope?")
 
 (defcustom dp-ssh-host-name-completion-list '()
   "*List of common hostnames provided for your completing pleasure.

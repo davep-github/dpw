@@ -518,6 +518,17 @@ string containing their values."
   "Whitespace chars including newline regexp, 0 or more.")
 
 
+(defvar dp-typical-hack-vars-block "### 
+### Local Variables: ***
+### indent-tabs-mode: nil ***
+### folded-file: t ***
+### folding-internal-margins: nil ***
+### comment-start: \"# \" ***
+### comment-end: \"\" ***
+### block-comment-end: \"\" ***
+### fill-column: 9999 ***
+### End: ***
+")
 (defsubst dp-order-cons (cons &optional lessp)
   "Return CONS' elements ordered in some way as determined by LESSP.
 LESSP defaults to less-than ('<)."
@@ -2041,17 +2052,18 @@ E.g. ;; commented out by dp-comment-out-sexp;"
                              (read-from-minibuffer "Comment start: " "# ")))
          (comment-start (or (dp-build-co-comment-start comment-tag
                                                        comment-start0)))
-         (ce (or block-comment-end comment-end))
+         (ce (cond
+              ;; known rest of line comments
+              ;; (comment-end is "")
+              ((or
+                (string-match
+                 "\\(//\\|[;#]\\)+\\s-*" comment-start))
+               "")
+              (block-comment-end)
+              (comment-end)))
          (comment-end (concat (or (and ce
                                        (not (string-equal ce ""))
                                        ce)
-                                  (cond
-                                   ;; known rest of line comments
-                                   ;; (comment-end is "")
-                                   ((or 
-                                     (string-equal comment-start "#")
-                                     (string-equal comment-start ";"))
-                                    ""))
                                   (if we-set-comment-start nil "")
                                   (read-from-minibuffer "Comment end: " "")
                                   "")
@@ -10244,6 +10256,9 @@ and for setting up a buffers mode (`dp-set-auto-mode')."
 ;; New style for hooks:  Add the hooking to the dp-post-dpmacs-hook so
 ;; we don't run into any void vars/functions.
 (add-hook 'dp-post-dpmacs-hook (lambda ()
+                                 (when (bound-and-true-p dp-use-buffer-endicator-p)
+                                   (add-hook 'find-file-hooks 
+                                             'dp-add-default-buffer-endicator))
                                  (add-hook 'find-file-hooks 
                                            'dp-find-file-hooks)
                                  (add-hook 'write-file-hooks 

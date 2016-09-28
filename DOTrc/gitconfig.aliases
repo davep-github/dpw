@@ -44,6 +44,7 @@
         ss = status -s
 
         ldf = log --decorate=full
+        logf = log --decorate=full
         ldf5 = log --decorate=full -n 5
         ldfn = log --decorate=full -n
         ld = log --decorate
@@ -83,7 +84,6 @@
         lls = log --name-status
         lf = log --name-status
         lfn = log --name-status -n
-        logf = log --name-status
 
         logfull = log --pretty=medium
         logmed = log --pretty=medium
