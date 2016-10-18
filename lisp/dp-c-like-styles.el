@@ -4,6 +4,12 @@
 
 ;; See actual defvar statements.
 
+;;
+;; Transferred from dp-hooks.el
+;; Styles have changed a lot over the years.
+;; Check git history or svn (if repo can be found) or rcs home dir backup
+;; archive.
+;;
 (defconst dp-kernel-c-style
   '(
     (dp-c-using-kernel-style-p                     . t)

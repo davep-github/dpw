@@ -172,16 +172,16 @@ Make it buffer local since there can be >1 minibuffers.")
   ;; Optionally mark the default selection for easy deletion
   ;;  (as long as pending-delete-mode is on)
   (if (and dp-enable-minibuffer-marking
-	   (boundp 'dp-minibuffer-mark-line-p)
-	   dp-minibuffer-mark-line-p)
+           (boundp 'dp-minibuffer-mark-line-p)
+           dp-minibuffer-mark-line-p)
       (let ((pt (point)))
-	(beginning-of-line)
-	(dp-set-mark)
-	(dmessage "point: %s, pt: %s" (point) pt)
-	(goto-char pt)
-	(zmacs-make-extent-for-region (cons (point-marker t)
-					    (mark-marker t)))
-	))
+        (beginning-of-line)
+        (dp-set-mark)
+        (dmessage "point: %s, pt: %s" (point) pt)
+        (goto-char pt)
+        (zmacs-make-extent-for-region (cons (point-marker t)
+                                            (mark-marker t)))
+        ))
   ;;(dmessage "dp-minibuffer-setup-hook")
 )
 
@@ -293,8 +293,8 @@ _str: looks too much like string
   "Convert a list of words/regexps into a keyword matching pattern."
   ;; cannot use regexp-opt since we can have regexps in the list.
   (concat "\\<\\("
-	  (dp-regexp-concat list)
-	  "\\)\\>"))
+          (dp-regexp-concat list)
+          "\\)\\>"))
 
 ;;retire; (defvar dp-debug-like-patterns-orig
 ;;retire;   (concat (regexp-opt `("tmp_cout" "tmp_cerr" "tmp_v_stream" "tmp_d_stream"
@@ -590,32 +590,32 @@ original state and then applies changes. This is good... sometimes."
     ;;;;;;;  VERY, VERY STALE ~~~~ ;;;;;;;;;;;;;;
     
     (setq c-font-lock-keywords-3
-	  ;;
-	  ;; FSFMacs case.  They still haven't fixed the regexps to match
-	  ;; funtion/macro names that include underscores.
-	  ;; modified from c-...-2 to add support for \\s_
-	  ;; in identifier names.  I'd like to just modify \\sw to be
-	  ;; \\(\\sw\\|\\s_\\), but a couple of re's are moved to different
-	  ;; match indexes when an un-parenthesized \sw is parenthesized to add
-	  ;; the \s_
-	  ;; XXX -- can add shy grouping parens around \\sw
-	  ;; NOPE. shy grouping is XEmacs only.
-	  '(("^\\(\\(\\sw\\|\\s_\\)+\\)[ 	]*(" 1 font-lock-function-name-face)
-	    ("^#[ 	]*error[ 	]+\\(.+\\)" 1 font-lock-warning-face prepend)
-	    ("^#[ 	]*\\(import\\|include\\)[ 	]+\\(<[^>\"\n]*>?\\)" 
-	     2 font-lock-string-face)
-	    ("^#[ 	]*define[ 	]+\\(\\(\\sw\\|\\s_\\)+\\)(" 
-	     1 font-lock-function-name-face)
-	    ("^#[ 	]*\\(elif\\|if\\)\\>"
-	     ("\\<\\(defined\\)\\>[ 	]*(?\\(\\(\\sw\\|\\s_\\)+\\)?" nil nil
-	      (1 font-lock-reference-face)
-	      (2 font-lock-variable-name-face nil t)))
-	    ("^#[ 	]*\\(\\(\\sw\\|\\s_\\)+\\)\\>[ 	]*\\(\\(\\sw\\|\\s_\\)+\\)?"
-	     (1 font-lock-reference-face)
-	     (3 font-lock-variable-name-face nil t))
-	    (eval cons
-		  (dp-mk-font-lock-type-re
-		   (cons
+          ;;
+          ;; FSFMacs case.  They still haven't fixed the regexps to match
+          ;; funtion/macro names that include underscores.
+          ;; modified from c-...-2 to add support for \\s_
+          ;; in identifier names.  I'd like to just modify \\sw to be
+          ;; \\(\\sw\\|\\s_\\), but a couple of re's are moved to different
+          ;; match indexes when an un-parenthesized \sw is parenthesized to add
+          ;; the \s_
+          ;; XXX -- can add shy grouping parens around \\sw
+          ;; NOPE. shy grouping is XEmacs only.
+          '(("^\\(\\(\\sw\\|\\s_\\)+\\)[ 	]*(" 1 font-lock-function-name-face)
+            ("^#[ 	]*error[ 	]+\\(.+\\)" 1 font-lock-warning-face prepend)
+            ("^#[ 	]*\\(import\\|include\\)[ 	]+\\(<[^>\"\n]*>?\\)" 
+             2 font-lock-string-face)
+            ("^#[ 	]*define[ 	]+\\(\\(\\sw\\|\\s_\\)+\\)(" 
+             1 font-lock-function-name-face)
+            ("^#[ 	]*\\(elif\\|if\\)\\>"
+             ("\\<\\(defined\\)\\>[ 	]*(?\\(\\(\\sw\\|\\s_\\)+\\)?" nil nil
+              (1 font-lock-reference-face)
+              (2 font-lock-variable-name-face nil t)))
+            ("^#[ 	]*\\(\\(\\sw\\|\\s_\\)+\\)\\>[ 	]*\\(\\(\\sw\\|\\s_\\)+\\)?"
+             (1 font-lock-reference-face)
+             (3 font-lock-variable-name-face nil t))
+            (eval cons
+                  (dp-mk-font-lock-type-re
+                   (cons
                     (concat
                      "auto\\|c\\(har\\|onst\\)\\|double\\|e\\(num\\|xtern\\)"
                      "\\|float\\|int\\|long\\|register"
@@ -623,23 +623,23 @@ original state and then applies changes. This is good... sometimes."
                      "\\|typedef\\|typename\\|un\\(ion\\|signed\\)"
                      "\\|vo\\(id\\|latile\\)")
                     dp-c-font-lock-extra-types))
-		  'font-lock-type-face)
-	    (concat "\\<\\(break\\|continue\\|do\\|else\\|for\\|if\\|return"
+                  'font-lock-type-face)
+            (concat "\\<\\(break\\|continue\\|do\\|else\\|for\\|if\\|return"
                     "\\|switch\\|while\\)\\>")
-	    ("\\<\\(case\\|goto\\)\\>[ 	]*\\(-?\\(\\sw\\|\\s_\\)+\\)?"
-	     (1 font-lock-keyword-face)
-	     (2 font-lock-reference-face nil t))
-	    (":"
-	     ("^[ 	]*\\(\\(\\sw\\|\\s_\\)+\\)[ 	]*:"
-	      (beginning-of-line)
-	      (end-of-line)
-	      (1 font-lock-reference-face)))))
+            ("\\<\\(case\\|goto\\)\\>[ 	]*\\(-?\\(\\sw\\|\\s_\\)+\\)?"
+             (1 font-lock-keyword-face)
+             (2 font-lock-reference-face nil t))
+            (":"
+             ("^[ 	]*\\(\\(\\sw\\|\\s_\\)+\\)[ 	]*:"
+              (beginning-of-line)
+              (end-of-line)
+              (1 font-lock-reference-face)))))
 ))
 
 (when dp-fontify-p
-  (add-hook 'dp-post-dpmacs-hook 'dp-muck-with-fontification))
+    (add-hook 'dp-post-dpmacs-hook 'dp-muck-with-fontification))
 
-;; ;;(brace-list-close . after)
+  ;; ;;(brace-list-close . after)
 (defvar dp-hanging-brace-alist '((brace-list-close . ignore))
   "My hanging braces values.  We will edit or append to
 c-hanging-braces-alist based upon these values.")
@@ -656,8 +656,8 @@ c-hanging-braces-alist based upon these values.")
                                    (use-too-long-face-p
                                     (dp-val-if-boundp
                                      dp-global-c*-use-too-long-face))
-                                    (use-too-long-warning-face-p
-                                     (dp-val-if-boundp
+                                   (use-too-long-warning-face-p
+                                    (dp-val-if-boundp
                                      dp-global-c*-use-too-long-warning-face)))
   (interactive)
   (dmessage "in dp-c-like-add-extra-faces")
@@ -859,7 +859,7 @@ tab setting, font or phase of the moon."
   (dp-update-alist 'c-hanging-braces-alist dp-hanging-brace-alist)
   ;; @todo -- see if I can do this programmatically.
   (if (eq major-mode 'pike-mode)
-      ()				; no I-menu support
+      ()                                ; no I-menu support
     (imenu-add-to-menubar "IM-cc"))
   (dmessage "Apply mode-transparent check to ALL buffers.")
   (when (and (buffer-name)
@@ -950,28 +950,28 @@ part of a longer name."
           (case-fold-search nil))
       ;; no changes to comments
       (save-excursion
-	(backward-word)
-	;; don't do it if the previous token is already qualified or
-	;; if the character triggering expansion (usually punctuation
-	;; or whitespace) implies the token is going to be part of a
-	;; longer token (e.g. we expand vector but not vector_of_pointers)
-	(unless (save-excursion
-		  (or
-		   (save-excursion
-		     (beginning-of-line)
-		     (looking-at "\\s-*\\#\\s-*"))
-		   ;; if we move back at all, that means there are
-		   ;; other identifier type chars and in this case
-		   ;; we assume that the abbrev is part of an
-		   ;; identifier (like name_string)
-		   (< (skip-chars-backward "[a-zA-Z_:]") 0)
-		   (looking-at namespace-qual)
+        (backward-word)
+        ;; don't do it if the previous token is already qualified or
+        ;; if the character triggering expansion (usually punctuation
+        ;; or whitespace) implies the token is going to be part of a
+        ;; longer token (e.g. we expand vector but not vector_of_pointers)
+        (unless (save-excursion
+                  (or
+                   (save-excursion
+                     (beginning-of-line)
+                     (looking-at "\\s-*\\#\\s-*"))
+                   ;; if we move back at all, that means there are
+                   ;; other identifier type chars and in this case
+                   ;; we assume that the abbrev is part of an
+                   ;; identifier (like name_string)
+                   (< (skip-chars-backward "[a-zA-Z_:]") 0)
+                   (looking-at namespace-qual)
                    (eq last-command 'dp-c++-mode-undo)
-		   ;; memq so we can check for other chars easily.
-		   (memq last-command-char '(?_ ?.))))
+                   ;; memq so we can check for other chars easily.
+                   (memq last-command-char '(?_ ?.))))
           ;;Allows for easy undoing of name space insertion.
           (undo-boundary)
-	  (insert namespace-qual)
+          (insert namespace-qual)
           (setq dp-c++-mode-last-event (copy-event last-command-event))
           (setq this-command 'dp-maybe-add-c++-namespace_was_added))))))
 
@@ -992,7 +992,7 @@ part of a longer name."
           (dispatch-event dp-c++-mode-last-event)
           (deallocate-event dp-c++-mode-last-event) ;Hasten event reclamation.
           (setq dp-c++-mode-last-event nil)
-	  (dmessage "Can `unexpand-abbrev' help?  Need to set up some vars in my exapnsion routine.")))
+          (dmessage "Can `unexpand-abbrev' help?  Need to set up some vars in my exapnsion routine.")))
     (call-interactively 'undo)))
 
 (defun dp-c++-mode-define-abbrevs ()
@@ -1001,7 +1001,7 @@ part of a longer name."
          (lambda (arg)
            (define-abbrev local-abbrev-table arg arg 
              'dp-maybe-add-c++-namespace)))
-	dp-c++-std-elements))
+        dp-c++-std-elements))
 
 (defun dp-string-match-no-fold (regexp string &optional fold-p)
   (with-case-folded fold-p
@@ -1476,7 +1476,7 @@ isearch while the region is active to locate the end of the region."
 
 (defun dp-display-time-hook ()
   (if (and mail
-	   (not dp-time-mail-has-dung))
+           (not dp-time-mail-has-dung))
       ;; since this func is intended to beep, ensure the beeper is
       ;; on. 
       ;; ??? Have var the visible-bell is set to here.
@@ -1484,17 +1484,17 @@ isearch while the region is active to locate the end of the region."
       ;; but since I did this so my laptop would beep 
       ;; on new mail, set to nil it is.
       (let ((visible-bell nil))
-	(ding)
-	;;(dmessage "ding, t-ing dung")
-	(setq dp-time-mail-has-dung t)
-	(setq frame-title-format (concat dp-mail-present-string
-					 dp-frame-title-format)))
+        (ding)
+        ;;(dmessage "ding, t-ing dung")
+        (setq dp-time-mail-has-dung t)
+        (setq frame-title-format (concat dp-mail-present-string
+                                         dp-frame-title-format)))
     ;;(dmessage "%s-ing dung" mail)
     (setq dp-time-mail-has-dung mail)
     (setq frame-title-format
-	  (if mail 
-	      (concat dp-mail-present-string dp-frame-title-format)
-	    dp-frame-title-format))
+          (if mail 
+              (concat dp-mail-present-string dp-frame-title-format)
+            dp-frame-title-format))
     ))
 
 (defadvice manual-entry (after dp-advised-manual-entry act)
@@ -1509,10 +1509,9 @@ faces had different sizes."
   "Invoke `manual-entry' on the cross-reference at point."
   (interactive)
   (let* ((extent (car (extents-at (point) nil 'manual-entry)))
-	 (expr (or (and extent
+         (expr (or (and extent
                         (or (get extent 'man) 'manual-entry))
                    'manual-entry)))
-               
     (dp-push-go-back "dp-Manual-follow-xref-at-point")
     (if (symbolp expr)
         (call-interactively expr)
