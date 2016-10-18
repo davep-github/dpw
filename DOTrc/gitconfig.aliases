@@ -27,6 +27,8 @@
 
         rem = remote
 
+        shbr = show-branch
+        sb = show-branch
 	br = branch
         brv = branch -v
         current-branch = rev-parse --abbrev-ref=strict HEAD
@@ -138,9 +140,13 @@
         
         cpick = cherry-pick
 
+        # If command is disabled in config (e.g. I don't want to push
+        # accidentally on the amdgpu tree.)
+        fpush = push
+
 # Graphical diff tool employer/environment de jure
         dtgraphical = difftool --tool=diffuse
-        dtdejour = difftool --tool=diffuse
+        dtdejour = difftool --tool=meld
         dtg = difftool --tool=meld
 
         dtp4v = difftool --tool=p4diff
@@ -165,6 +171,8 @@
         amend = commit --amend
         rank = shortlog -sn --no-merges
 
-# reset
-        unstage = reset HEAD    # remove files from index (tracking)
+        # remove files from index (tracking).  Changes remain in working dir.
+        unstage = reset HEAD
+        # Add puts you there and minus is negative add.  Ha.
         minus = reset HEAD
+        sub = reset HEAD

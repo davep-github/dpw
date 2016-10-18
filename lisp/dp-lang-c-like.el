@@ -1704,7 +1704,7 @@ Current annotations are:
          ;; Function call?
          ((memq syntax 
                 '(statement statement-block-intro defun-block-intro 
-                  statement-case-intro
+                  statement-case-intro defun-open
                   arglist-cont-nonempty substatement stream-op))  
           (dp-c-fill-statement))
          ;; Function definition?
@@ -1713,7 +1713,7 @@ Current annotations are:
              func-decl-cont))
           (dp-c-format-func-decl))
          ;; Other.
-         (t (ding) (message "dp-c-fill-paragraph, syntax: %s" syntax)
+         (t (ding) (message "dp-c-fill-paragraph is confused, syntax: %s" syntax)
             (call-interactively 'c-fill-paragraph)))))))
 (defalias 'cfp 'dp-c-fill-paragraph)
 

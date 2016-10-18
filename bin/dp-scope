@@ -72,6 +72,7 @@ else
           -i|--including|--include|--inc|-h|--includes) field_num=8;;
           --find-up|--fup) find_up_p=t;;
           --use-dot|--dot-only|--no-find-up) find_up_p=;;
+          --reformat) POST_PROCESSOR=cscope-reformat;;
           # for convenience, let us do a global completion here.
           -c|--complete) shift; global-complete "$@"; exit;;
           --) shift; break;;
@@ -81,6 +82,7 @@ else
     done
 fi
 
+EExec_verbose_echo_id POST_PROCESSOR
 # ((${#db_files[@]-0} == 0)) || vsetp "${find_up_p}" || {
 #     # look for a cscope db above us.
 #     EExec_verbose_msg "finding up"

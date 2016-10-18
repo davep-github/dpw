@@ -128,12 +128,19 @@
   "MEDUSELD C Programming Style")
 (c-add-style "meduseld-c-style" meduseld-c-style)
 
+(defcustom dp-default-c-style 
+  (symbol-value (intern-soft dp-default-c-style-name))
+  "*Default C[++] style."
+  :group 'dp-vars
+  :type 'symbol)
+
 (defun dp-c-add-default-style (&optional name style)
   (interactive)
+  (dmessage "dp-c-add-default-style, name>%s< style>%s<" name style)
   (when name
     (setq dp-default-c-style-name name))
   (when style
-    (setq dp-default-c-style-name style))
+    (setq dp-default-c-style style))
   (c-add-style dp-default-c-style-name dp-default-c-style t))
 
 (defun meduseld-style ()
@@ -141,15 +148,10 @@
   (interactive)
   (c-set-style "meduseld-c-style"))
 
-(defcustom dp-default-c-style 
-  (symbol-value (intern-soft dp-default-c-style-name))
-  "*Default C[++] style."
-  :group 'dp-vars
-  :type 'symbol)
-
 (defun dp-cc-mode-activate-style (&optional style-name)
   "Set up a C/C++ style. Use the default by default."
   (interactive)
+  (dmessage "in dp-cc-mode-activate-style, style-name>%s<" style-name)
   (c-set-style (or style-name dp-default-c-style-name)) t)
 
 (setq c-default-style `((other . ,dp-default-c-style-name)

@@ -1,16 +1,134 @@
 #!/usr/bin/env bash
 #set -x
-progname=$(basename "$0")
 source script-x
+progname="$(basename $0)"
 source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
 
-eexec_program=$(EExec_parse "$@")
 for op in $eexec_program
 do
   $op
-  shift
+  ${EEXEC_SHIFT}
 done
+EExec_verbose_msg $(echo_id eexec_program)
 unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+# davep specific code -------------8><------------------
+
+#mutually exclusive with real EExec# EExec=
+#mutually exclusive with real EExec# no_exec_p=
+#mutually exclusive with real EExec# Non_EExecer()
+#mutually exclusive with real EExec# {
+#mutually exclusive with real EExec#     echo "{-} $@" 1>&2
+#mutually exclusive with real EExec# }
+
+#mutually exclusive with real EExec# Verbose_EExecer()
+#mutually exclusive with real EExec# {
+#mutually exclusive with real EExec#     echo "{+} $@"
+#mutually exclusive with real EExec#     "$@"
+#mutually exclusive with real EExec# }
+
+trap_exit_msg=
+DP_TEMP_FILES=
+
+dp_mktemp()
+{
+    local file_name="${1}"; shift
+    local template="${2-}";
+    [ -z "${template-}" ] && {
+        template=$(echo "${file_name}" \
+            | awk '{ printf("%s%s", substr($1, 0, 5), "XXXXX" ) }')
+    }
+    local temp_file=$(mktemp -t "${template}") || {
+        echo "Cannot make tmp file."
+        exit 1
+    } 1>&2
+    DP_TEMP_FILES="${DP_TEMP_FILES} ${temp_file}"
+    echo "${temp_file}"
+}
+
+cleanup()
+{
+    {
+        #echo "in cleanup: $@"
+        #echo_id DP_TEMP_FILES
+        [ -n "${DP_TEMP_FILES-}" ] && {
+            rm -f ${DP_TEMP_FILES}
+        }
+    } 1>&2 
+}
+
+# Useful traps
+on_exit()
+{
+    {
+        #echo "in on_exit: $?"
+        local rc="$?"
+        local signum="${1-}"; shift
+        #echo "on_exit: rc: $rc; ${trap_exit_msg}"
+        cleanup on_exit
+    } 1>&2
+}
+trap 'on_exit' 0
+
+on_error()
+{
+    {
+        #echo "in on_error: $?"
+        local rc="${1-}"; shift
+        #echo 1>&2 "on_error: rc: $rc; ${trap_exit_msg}"
+        trap '' 0
+        cleanup on_error
+    } 1>&2
+}
+#trap 'on_error' ERR
+
+sig_exit ()
+{
+    {
+        local sig_num=$1; shift
+        echo
+        echo "sig_exit, sig_num: $sig_num"
+        exit 1
+    } 1>&2
+}
+
+# for sig in 2 3 4 5 6 7 8 15
+# do
+#     trap "sig_exit $sig" $sig
+# done
+
+display_stderr()
+{
+    echo 1>&2 "$progname: $@"
+}
+
+status_msg()
+{
+    display_stderr "$@"
+}
+
+fatal_error()
+{
+    local error="${1}"
+    shift
+    display_stderr "$@"
+    exit "${error}"
+}
+
+Usage_error()
+{
+    fatal_error 1 "$@"
+}
 
 qdat=($(getopt -o "$option_str" -- "$@"))
 
@@ -18,7 +136,6 @@ qdat=($(getopt -o "$option_str" -- "$@"))
 std_options=""  # None. "" will not be replaced by default. Only unset will.
 option_str="v"
 : ${GREPPER:=egrep}
-
 
 Usage()
 {
@@ -91,4 +208,19 @@ rc_list=$(find_files | sort | uniq)
 EExec_verbose_msg "searching: $rc_list
 ---"
 
-EExec $GREPPER -n "$@" $rc_list /dev/null
+stderr_file=$(dp_mktemp "rcgrep")
+EExec_verbose_echo_id stderr_file
+stdout_file=$(dp_mktemp "rcgrep")
+EExec_verbose_echo_id stdout_file
+
+DP_TEMP_FILES="${stderr_file} ${stdout_file}"
+EExec_verbose_echo_id DP_TEMP_FILES
+
+EExec -k $GREPPER -n "$@" $rc_list /dev/null >"${stdout_file}" 2>"${stderr_file}" || {
+    cat "${stderr_file}"
+    #cleanup error
+    exit 1
+} 1>&2
+
+cat "${stdout_file}"
+#cleanup last

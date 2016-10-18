@@ -493,13 +493,13 @@
      dp-manual)
     (("md" "metadata" "meta-data" "meta data")
      dp-manual)
-    (("ccs" "const char *" "const std::string &")
+    (("ccs" "const char* " "const std::string & ")
      dp-manual)
-    (("cus" "const unsigned char *")
+    (("cus" "const unsigned char* ")
      dp-manual)
-    (("vccs" "virtual const char *" "virtual const std::string &")
+    (("vccs" "virtual const char* " "virtual const std::string & ")
      dp-manual)
-    (("css" "const std::string &" "std::string &" "const char *" 
+    (("css" "const std::string& " "std::string& " "const char* " 
       "const std::string " "std::string ")
      dp-manual)
     (("less" "std::less")

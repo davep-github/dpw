@@ -6,7 +6,7 @@
   (cond
    ((string-match "^cz" (dp-short-hostname))
 ;;    (setq dp-default-c-style-name "amd-c-style")
-    (setq dp-current-c-style-name "amd-c-style"))
+    (setq dp-current-c-style-name "dp-kernel-c-style"))
    ((string-match "^atl" (dp-short-hostname))
     (setq dp-current-c-style-name "ptb-c-style"))
    (t (setq dp-current-c-style-name dp-default-c-style-name))))
@@ -15,18 +15,24 @@
 
 (defun dp-add-amd-c-style ()
   (interactive)
+  (dmessage "dp-add-amd-c-style")
   (dp-select-amd-c-style)
-  (c-set-style "dp-kernel-c-style"))
+  (dp-c-add-default-style))
 
-;; This was a recommended way to do this.  Is it really necessary? It was hacked in quickly.
-(add-hook 'c-mode-common-hook (lambda ()
-                                (dp-add-amd-c-style)
-                                ;; Some files use this and I can't find it.
-                                (defalias 'linux-c-mode 'c-mode)
-                                (dp-define-local-keys
-                                 '(
-                                   [tab] dp-c*-electric-tab
-                                   [? ] dp-c*-electric-space))))
+(defun dp-amd-c-mode-common-hook ()
+  (interactive)
+  (dmessage "dp-amd-c-mode-common-hook")
+  (dp-add-amd-c-style)
+;;   ;; Some files use this and I can't find it.
+;;   (defalias 'linux-c-mode 'c-mode)
+  (dp-define-local-keys
+   '(
+     [tab] dp-c*-electric-tab
+     [? ] dp-c*-electric-space)))
+
+;; This was a recommended way to do this.  Is it really necessary? It was
+;; hacked in quickly.
+(add-hook 'c-mode-common-hook 'dp-amd-c-mode-common-hook)
 
 ;; Make it so that we `align' properly:
 ;; struct moo

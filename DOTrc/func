@@ -722,6 +722,7 @@ export -f do_src_control
 export SP_BIN=$HOME/bin/sp
 export SVN_BIN=$($SP_BIN -1 svn)
 unalias svn >/dev/null 2>&1
+true
 svn ()
 {
     # Add some new command words that are implemented by me.  They have their
@@ -1173,6 +1174,25 @@ githh()
 gith()
 {
     githh "" "$@"
+}
+
+git () {
+    [ "${1-}" = '-x' ] && {
+        set -x
+        shift
+    }
+
+    local dpmessage=$(command git config --get $1.dpmessage 2>/dev/null)
+    [ -n "${dpmessage-}" ] && {
+        echo "${dpmessage}"
+    }
+
+    local disabled=$(command git config --bool $1.disabled 2>/dev/null)
+    if ${disabled:-false} ; then
+        echo "The $1 command is intentionally disabled in git config." >&2
+        return 1
+    fi
+    command git "$@"
 }
 
 # Nag, nag, nag.

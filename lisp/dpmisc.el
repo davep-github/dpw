@@ -7611,7 +7611,7 @@ If region is active, set width to that of the longest line in the region."
 (defvar dp-sfh-to-compile-win-height 4
   "*The part of the frame height used for the compile window.")
 
-(defvar dp-sfh-height 72
+(defvar dp-sfh-height 74
   "*Initial frame height.")
 
 (defun dp-set-frame-height (&optional height frame)
