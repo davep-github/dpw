@@ -31,6 +31,12 @@ tail_dash_n_1()
     tail -n1
 }
 
+usage()
+{    
+    echo "Please provide a relative revision number or a <commit>."
+    exit ${1-1}
+}
+
 tailer=tail_dash_n_1
 
 nths=()
@@ -58,9 +64,17 @@ done
 # ${#db_files[@]-0}
 if ((${#nths[@]-0} == 0))
 then
-    echo "Please provide a relative revision number."
-    exit 0
-fi 2>&1
+    if ! x=$(git rev-parse "${1}")
+    then
+        {
+            echo "I don't understand ${1}"
+            usage
+        } 1>&2
+    else
+        echo "${x}" 
+        exit 0
+    fi
+fi 
 
 file="${1-}"
 shift;
