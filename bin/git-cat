@@ -138,7 +138,7 @@ do
       EExec_verbose_echo_id nth f
       if [ -n "${nth}" ]
       then
-          commit=$(git-nth-rev "$nth" "$f")
+          commit=$(EExec git-nth-rev "$nth" "$f")
       fi
       EExec_verbose_echo_id commit
       [ -z "${commit}" ] && {
