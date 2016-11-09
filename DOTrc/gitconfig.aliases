@@ -108,15 +108,6 @@
         FETCH = fetch
         difffh = diff FETCH_HEAD
         dfh = diff FETCH_HEAD
-        dtmeld = difftool --tool=meld
-        dtm = difftool --tool=meld
-        dtdiffuse = difftool --tool=diffuse
-        dtd = difftool --tool=diffuse
-        dtecdiff = difftool --tool=ec-diff
-        dte = difftool --tool=ec-diff
-        dtec = difftool --tool=ec-diff
-        dtecmerge = difftool --tool=ec-merge
-        dtem = difftool --tool=ec-merge
         pull = pull --ff-only
         # q.v. Zoot
         pulljustpull = pull
@@ -137,7 +128,7 @@
 
         cpc = cherry-pick --continue
         rebc = rebase --continue
-        
+
         cpick = cherry-pick
 
         # If command is disabled in config (e.g. I don't want to push
@@ -149,8 +140,25 @@
         dtdejour = difftool --tool=meld
         dtg = difftool --tool=meld
 
+# diff tools
         dtp4v = difftool --tool=p4diff
         dtp4 = difftool --tool=p4diff
+        dtmeld = difftool --tool=meld
+        dtm = difftool --tool=meld
+        dtdiffuse = difftool --tool=diffuse
+        dtd = difftool --tool=diffuse
+        dtecdiff = difftool --tool=ec-diff
+        dte = difftool --tool=ec-diff
+        dtec = difftool --tool=ec-diff
+        dtecmerge = difftool --tool=ec-merge
+        dtem = difftool --tool=ec-merge
+
+#merge tools        
+        p4m = mergetool --tool=p4merge
+        mtp4m = mergetool --tool=p4merge
+        p4merge = mergetool --tool=p4merge
+        mtp4merge = mergetool --tool=p4merge
+
         hist = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
@@ -162,8 +170,9 @@
         dotgit = rev-parse --git-dir
         gdir = rev-parse --git-dir
         # there is now a git alias command, but 'tis called alias.
-	#aliases = config --get-regexp ^alias\\.
-        aliases = alias
+        # but it comes in a separate package and may not be installed.
+	aliases = config --get-regexp ^alias\\.
+        #aliases = alias
         
         # Reset to *previous* commit.
 	undo-commit = reset --soft HEAD^

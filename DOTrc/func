@@ -777,7 +777,7 @@ do_sed_path()
     # NO /, since it is a common dir sep char ;->
     local K_delim_chars_sed_regexp='(.*?)([!|])'
     local K_blah_backref=2
-    local verbose DEBUG pat delim
+    local verbose DEBUG pat delim path_to_sed
     local delim_set_by_option=
     local delim=
     local trailing_opts=
@@ -787,12 +787,14 @@ do_sed_path()
           ---D) set -x; DEBUG=t;;
           ---v) verbose=t;;
           ---dp-do-sed-path-delim) delim_set_by_option=t; shift; delim=$1;;
+          ---path-to-sed) shift; path_to_sed=$1;;
           ---trailing-opts) shift; trailing_opts=$1;;
           *) break;;
       esac
       shift
     done
     pat="$1"
+    path_to_sed=${path_to_sed-$PWD}
     if [[ -z "$delim" ]]; then
 	delim=$(echo "$pat" | \
 	  sed -nre \
@@ -804,7 +806,7 @@ do_sed_path()
     esac
     pat="${pat}${trailing_opts}"
     [[ -n "$verbose" ]] && set -x
-    echo "$PWD" | sed --regexp-extended -e "$pat"
+    echo "$path_to_sed" | sed --regexp-extended -e "$pat"
     [ -n "$verbose" -o -n "$DEBUG" ] && set +x
 }
 export -f do_sed_path
@@ -1144,6 +1146,8 @@ git_change_sandbox()
             esac
         }
         git checkout "$@"
+        git stash list
+        echo "??? You may want to consider reindexing the code."
     fi
 }
 export -f git_change_sandbox

@@ -941,10 +941,11 @@ FUNC must take two args, beginning and end buffer positions."
   (interactive "*")
   (dp-operate-on-entire-line 'kill-region))
 
-(defun dp-delete-entire-line ()
+(defun dp-delete-entire-line (count)
   "Delete the entire line, ala A-D in Slick."
-  (interactive "*")
-  (dp-operate-on-entire-line 'delete-region))
+  (interactive "*_p")
+  (loop repeat count do 
+    (dp-operate-on-entire-line 'delete-region)))
 
 (defun dp-mark-line-if-no-mark (&optional text-only-p no-newline-p)
   "Mark the entire line if no mark is currently set.
@@ -14249,6 +14250,10 @@ it. Whitespace diffs are easy to ignore during reviews"
 (defun dp-whitespace-cleanup-current-line-default-pred ()
   (and (buffer-modified-p)
        (or (dp-whitespace-following-a-cleanup-command-p)
+           (save-excursion
+             (beginning-of-line)
+             (re-search-forward dp-trailing-whitespace-regexp
+                                (line-end-position) t))
            (dp-blank-line-p))))
 
 (dp-deflocal dp-whitespace-cleanup-current-line-pred 

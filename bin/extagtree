@@ -356,6 +356,8 @@ TAGFILES=()
         # subshell
         etags_opt="-e"
         tagtree "$FILES_FILE" "$TAGFILE"
+        echo "tagtree(etags) done."
+
     ) &
 }
 
@@ -367,6 +369,7 @@ TAGFILES=()
         # subshell
         etags_opt=""
         tagtree "$FILES_FILE" "$TAGFILE"
+        echo "tagtree(ctags) done."
     ) &
 }
 
@@ -387,6 +390,7 @@ TAGFILES=()
             dp_echo2 "forcing --idutils for gtags off."
         fi 
         EExec "${gtags_tagger}" ${idutils_opt} --file "${FILES_FILE}" ${gtags_opts}
+        echo "${gtags_tagger} done."
     ) &
 }
 
@@ -397,12 +401,18 @@ then
     exit 88
     prunes=$(untagged-dirs $argses)
     EExec_verbose_echo_id prunes
-    EExec mkid $prunes &
+    (
+        EExec mkid $prunes
+        echo "mkid done."
+    ) &
 fi
 
 vsetp "$cscope_p" && {
     EExec_verbose_msg "cscoping"
-    cscope_tree "$FILES_FILE" &
+    (
+        cscope_tree "$FILES_FILE"
+        echo "cscope_tree done."
+    ) &
 }
 
 EExecVerbose_p && {

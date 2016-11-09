@@ -108,5 +108,5 @@ Usage_error()
 dev_dir=${1-"mf-$(dp-std-date)"}
 EExec mkdir -p "${dev_dir}"
 cd "${dev_dir}"
-EExec source "${HOME}/bin.amd/dp-cbwa_init.bash"
+EExec source "$HOME/bin.amd/dp-cbwa_init.bash"
 EExec p4_mkwa -codeline microflex

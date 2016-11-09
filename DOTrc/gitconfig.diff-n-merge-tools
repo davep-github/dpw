@@ -4,14 +4,16 @@
 	trustExitCode = false
 	keepBackup = true
 
+[mergetool "ec-merge"]
+	cmd = ec-merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+	keepTemporaries = false
+	keepBackup = true
+
 [difftool "p4diff"]
 	cmd = p4diff.git $LOCAL $REMOTE
 
 [difftool "ec-diff"]
 	cmd = ec-diff -w $LOCAL $REMOTE
-
-[difftool "ec-merge"]
-	cmd = ec-merge -w $LOCAL $REMOTE
 
 #[difftool "meld"]
 #	cmd = meld $LOCAL $REMOTE

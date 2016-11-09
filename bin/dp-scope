@@ -36,6 +36,7 @@ unset eexec_program
 
 : ${EXTAGTREE_DASH_Q:=}
 : ${POST_PROCESSOR:=compile_mode_ify}
+: ${POST_PATH:=post_realpath}
 : ${DP_CSCOPE_PROGRAM-cscope}
 field_num=0
 arg=${1-}
@@ -66,6 +67,8 @@ else
           --change|--change-text|--change-txt) field_num=5;;  # This may require more work.
           --egrep|--grep|--regexp|--re) shift; arg="${1}"; field_num=6;;
           --file) shift; arg="${1}"; field_num=7;;
+          --realpath|--real-path|--rp) POST_PATH=post_realpath;;
+          --relpath|--rel-path|--raw-path|--rawp|--relp) POST_PATH=post_rawpath;;
           --db-file) shift; db_files=("${1}");;
           --add-db-file) shift; db_files+=("${1}");;
           -a|--all-db-files) db_files=( $(index-locations) );;
@@ -114,12 +117,32 @@ post_raw()
     cat
 }
 
+post_realpath()
+{
+    realpath "$@"
+}
+
+post_rawpath()
+{
+    echo "$@"
+}
+
 compile_mode_ify()
 {
     # Convert output to a form that compile mode can use:
     # <path-name>:<line-num> <line-text>
     # Sigh. No $<fnum0>...$<fnumN>.
-    awk '{printf "%s:%d\t ", $1, $3; $1=$2=$3=""; print $0}'
+    while read
+    do
+      set -- $REPLY
+      echo -n $($POST_PATH "$1"):"$3	"
+      shift
+      d2="$1"
+      shift
+      shift
+      echo "$@"
+    done
+    #awk '{printf "%s:%d\t ", $1, $3; $1=$2=$3=""; print $0}'
 }
 
 for db_file in "${db_files[@]}"

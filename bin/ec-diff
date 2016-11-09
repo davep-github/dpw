@@ -21,6 +21,12 @@ done
 # Or export eexec_program to propagate eexec info to a called program.
 export eexec_program
 
+EExec_verbose_msg "$>$@<"
+EExec_verbose_echo_id BASE
+EExec_verbose_echo_id LOCAL
+EExec_verbose_echo_id REMOTE
+EExec_verbose_echo_id MERGED
+
 # ec [-w] first second
 
 wait_opt=
