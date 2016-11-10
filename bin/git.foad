@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+do_git () {
+    local disabled=$(command git config --bool $1.disabled 2>/dev/null)
+    if ${disabled:-false} ; then
+        echo "The $1 command is intentionally disabled" >&2
+        return 1
+    fi
+    command git "$@"
+}
+
+do_git "$@"
+
+
