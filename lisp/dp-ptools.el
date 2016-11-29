@@ -112,6 +112,23 @@ that we're under a directory named work."
   (other-window-finder)
   (name))
 
+(defun dp-cscope-next-file (&optional arg)
+  (interactive)
+  (loop repeat (or arg 1) do
+    (unless (re-search-forward "^\\*\\*\\*\\s-+\\S-+:$" nil t)
+      (dmessage "No more files.")
+      (ding)
+      (return nil)))
+  t)
+
+(defun dp-cscope-prev-file (&optional arg)
+  (interactive)
+  (loop repeat (or arg 1) do
+    (unless (re-search-backward "^\\*\\*\\*\\s-+\\S-+:$" nil t)
+      (dmessage "Already on first file.")
+      (ding)
+      (return nil)))
+  t)
 ;; 
 ;; -C ignore case.
 ;; ????? (setq cscope-command-args '("-C"))
@@ -238,6 +255,8 @@ that we're under a directory named work."
                         [?1] cscope-select-entry-one-window
                         [(tab)] cscope-next-symbol
                         [(control ?i)] cscope-next-symbol
+                        [(meta right)] dp-cscope-next-file
+                        [(meta left)] dp-cscope-prev-file
                         [?d] cscope-find-global-definition)))
     
     (add-hook 'cscope-minor-mode-hooks 'dp-cscope-minor-mode-hook)
