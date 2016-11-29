@@ -105,21 +105,41 @@ Usage_error()
 # template end.
 ########################################################################
 
+#echo "@>$@<"
 optv=()
 filter_mode_p=
+S=-s
 status_opts=
+type=()
+UOPT=
+UNO=
+#echo_id type
 while (($# > 0))
 do
   case "${1}" in
       -p|--filter) filter_mode_p=t;;
-      --uno) status_opts="-uno ${status_opts}";;
+      --added|-a|--new) type+=("A");;
+      -m|--modified|--changed) type+=("M");;
+      --untracked|-ut) type+=('\?\?');;
+      --type|-t) shift; type+=("${1}");;
       --) shift; break;;
       *) optv+=("${1}");;
   esac
   shift
 done
 
+#echo_id type
+: ${type:=M}
+#echo_id type
+
 args=("$@")
+
+if (("${#type[@]}" > 0))
+then
+    type=$(add-to-path-like.py -s\| "${type[@]}")
+else
+    type=
+fi
 
 (("${#args[@]}" > 0)) && set -- "${args[@]}"
 
@@ -141,8 +161,8 @@ else
         set --
     fi
     # short status and skip untracked files.
-    EExec git status -s -uno ${status_opts}
+    EExec git status -s ${UNO} ${status_opts}
 fi \
-    | EExec sed -rn 's/(^[[:space:]]+M )(.*)$/\2/p' \
+    | EExec sed -rn "s/(^[[:space:]]*${type}[[:space:]]+)(.*)$/\2/p" \
     | EExec file-relativizer "$@" \
     | EExec normpath
