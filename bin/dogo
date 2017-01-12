@@ -68,7 +68,7 @@ do
 done
 
 argWas="$1"
-two="$2"
+two="${2-}"
 
 case "$two" in
     ""|/*) ;;
