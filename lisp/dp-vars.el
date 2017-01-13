@@ -270,7 +270,7 @@ nil --> use builtin image of chuck."
   :group 'dp-vars
   :type 'boolean)
 
-(defcustom dp-spell-programs '("aspell" "ispell")
+(defcustom dp-spell-programs '("aspell" "ispell" "hunspell")
   "*Candidate programs for spelling.  Checked in order."
   :group 'dp-vars
   :type '(repeat string))
