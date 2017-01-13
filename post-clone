@@ -8,15 +8,17 @@ export CYGWIN="winsymlinks:nativestrict"
 
 EZEC=
 
+:${existing_link_action:=}
 : ${default_parent:=dpw}
 : ${default_repo:=dpw/dpw}
-: ${repo:="${default_parent}/$(basename ${PWD})"}
+
 while (($# > 0 ))
 do
     case "$1" in
         -n) EZEC="echo - ";;
         -r|--repo) shift; repo="$1";;
         -d|--default-repo) repo="${default_repo}";;
+        -.|--here|--dpw-dot|--dot) repo=$(basename ${PWD});;
 	-x)  set -x;;
 	--) shift; break;;
         *) break;;
@@ -24,10 +26,16 @@ do
     shift
 done
 
+: ${repo:="${default_parent}/$(basename ${PWD})"}
+
+echo "1: repo>${repo}<"
+
 case "${repo}" in
     /*) repo=$(./dp-realpath -R ${HOME} ${repo});;
     *) ;;
 esac
+
+echo "2: repo>${repo}<"
 
 : ${reporc:=${repo}/.rc}
 
@@ -36,11 +44,39 @@ cd "${HOME}" || {
     exit 1
 } 1>&2
 
+safe_ln()
+{
+    local src="${1}"; shift
+    local dest="${1}"; shift
+    {
+        [ -e "${dest}" -o -L "${dest}" ] && {
+            echo "Problem in safe_ln ${src} ${dest}"
+        }
+        [ -e "${dest}" ] && {
+            [ -L "${dest}" ] || {
+                echo "${dest} exists and is not a symlink.  "
+                return 1
+            }
+            echo "${dest} exists and is a symlink."
+            if [ "${existing_link_action}" = "replace" ]
+            then
+                echo "  \`-Removing and remaking link."
+                ${EZEC} rm -f "${ln_dir}"
+            else
+                echo "  \`-Leaving link alone."
+                return 0
+            fi
+        }
+    } 1>&2
+
+    ${EZEC} ln -s "${src}" "${dest}"
+}
+          
 ln_dotrc()
 {
     for fuckyou in "$@"
     do
-	${EZEC} ln -s ".rc/${fuckyou}" ".${fuckyou}"
+	safe_ln ".rc/${fuckyou}" ".${fuckyou}"
     done
 }
 
@@ -48,16 +84,18 @@ repo_ln()
 {
     for eatshit in "$@"
     do
-        ${EZEC} ln -s "${repo}/${eatshit}" .
+      local src="${repo}/${eatshit}"
+      local dest=$(basename "${src}")
+        safe_ln "${repo}/${eatshit}" "${dest}"
     done
 }
 
 cd "${HOME}"
-${EZEC} ln -s "${repo}/DOTrc" .rc
+safe_ln "${repo}/DOTrc" .rc
 
 # This should be compatible with exuberant-ctags since universal-ctags is the
 # resurrection of exuberant-ctags.
-${EZEC} ln -s ".rc/universal-ctags.conf" .ctags
+safe_ln ".rc/universal-ctags.conf" .ctags
 
 repo_ln \
     bin \
@@ -76,7 +114,6 @@ ln_dotrc \
 	gitconfig \
 	gitexclude \
 	go \
-	go.emacs \
 	inputrc \
 	lessrc \
 	muttrc \
@@ -104,8 +141,8 @@ SYS_BASH_COMPLETION_DIR=/usr/share/bash-completion
             echo 1>&2 "Could not cd to ${BASH_COMPLETION_DIR}"
             exit 1
         }
-        ${EZEC} ln -s "${SYS_BASH_COMPLETION_DIR}"/* .
-        ${EZEC} ln -s "../.rc/DOTbash_completions.d"/* .
+        safe_ln "${SYS_BASH_COMPLETION_DIR}"/* .
+        safe_ln "../.rc/DOTbash_completions.d"/* .
     ) || {
         echo 1>&2 "Could not perform all bash completion setup operations."
         exit 1
@@ -121,12 +158,12 @@ do
 	[ -e "${oem_file_name}" ] || {
 	    ${EZEC} mv "${f}" "${oem_file_name}"
 	}
-	${EZEC} ln -s .rc/bashrc $f
+	safe_ln .rc/bashrc $f
 done
 
-${EZEC} ln -s lisp .xemacs
-${EZEC} ln -s .rc/procmailrc.vilya .procmailrc
-${EZEC} ln -s lisp/Makefile .
+safe_ln lisp .xemacs
+safe_ln .rc/procmailrc.vilya .procmailrc
+safe_ln lisp/Makefile .
 ${EZEC} mkdir var
 ${EZEC} mkdir var/log
 ${EZEC} mkdir log
@@ -135,7 +172,7 @@ ${EZEC} mkdir log
         ${EZEC} mkdir {boot,kde,login-rc,xemacs,shell-sessions}
         ${EZEC} mkdir auto-rotate-c5-50K
         ${EZEC} mkdir shell-sessions/home/dpanarit/log/shell-sessions
-	${EZEC} ln -s auto-rotate-c5-50K procmail
+	safe_ln auto-rotate-c5-50K procmail
 )
 ${EZEC} mkdir -p "log/auto-rotate-c10-50K"
 ${EZEC} mkdir ipc
@@ -160,13 +197,16 @@ do
 done
 
 echo 'Other new Linux installation actions:
+0) If a *buntu installation, run newbuntu-pkgs.
 1) samba: I need to find the old instructions for this.
 2) kernel core pattern: 
    To /etc/sysctl.conf, add: kernel.core_pattern = %e-p:%p,u:%u,s:%s,t:%t.CR
-3) in ~/bin/src: [automate this]
-   1) gcc eko.cpp ../eko
-   2) gcc utmpdump.c ../utmpdump
-   +) gcc $f ../$(basename .c|.cpp|???)
+3) in ~/bin/src, make
+4) In ~/.config/openbox:
+  4.1) ln -s ~/.rc/openbox-rc.xml to lubuntu-rc.xml
+  4.2) ln -s lubuntu-rc.xml rc.xml
+5) Use [Menu-thing-on-left]->Preferences->Default applications for LXSession
+   to set up default applications for LXSession.
 '
 
 echo "TODO! Try to link ~/.rc/xxx.<host> and then ~/.rc/xxx into ~"
