@@ -84,11 +84,9 @@ def main(argv):
         car_elements = nargv[0].split(sep)
         cdr_elements = nargv[1:]
 
-    for i in range(car_elements.count('')):
-        car_elements.remove('')
+    car_elements = [ e for e in car_elements if e ]
 
-    for i in range(cdr_elements.count('')):
-        cdr_elements.remove('')
+    cdr_elements = [ e for e in cdr_elements if e ]
 
     # remove duplicates of elements in car from cdr
     for d in car_elements:
