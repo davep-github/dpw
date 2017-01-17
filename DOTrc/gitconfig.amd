@@ -1,0 +1,24 @@
+[include]
+        path = ~/.rc/gitconfig
+
+[init]
+	templatedir = /home/dpanarit/.git_template
+
+# AMD brahma/gerrit specific
+[user]
+        name = David Panariti
+	email = David.Panariti@amd.com
+
+[url "ssh://gerritgitmaster/"]
+	pushInsteadOf = ssh://gerritgit/
+
+[review "git.amd.com:8080"]
+        username = dpanarit
+        uploadtopic = true
+
+[review "atlvgits01.amd.com:8888"]
+        username = dpanarit
+        uploadtopic = true
+        
+[color]
+	ui = auto
