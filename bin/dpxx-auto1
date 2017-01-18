@@ -106,6 +106,6 @@ Usage_error()
 ########################################################################
 
 : ${GEOMETRY:=132x37+86+0}
-: ${NAME:=auto1}
+: ${DP_AUTO_NAME:=auto1}
 
-/home/dpanarit/bin/ubuntu-sucks dpxx -g "${GEOMETRY}" nscreen "${NAME}"
+/home/dpanarit/bin/ubuntu-sucks dpxx -g "${GEOMETRY}" nscreen "${DP_AUTO_NAME}"
