@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 
+# set -x
 # yes, $*. -c wants one arg, despite the man page's assertion.
 # @todo XXX sucks for complex args. Must be fixed.
-exec bash --login -c "$*" &
+
+rp=$(realpath "/bin/sh")
+
+case "${rp}" in
+    *bash*) exec "$@" &;;
+    *) exec bash --login -c "$*" &;;
+esac
+
+# How does this get here?
+#echo "$0: failed to exec $@".
 
