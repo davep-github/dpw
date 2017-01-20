@@ -3,15 +3,13 @@
 # WAS: xx since late 80s. Now dpxx due to name clash @ nVIDIA.
 # More convenient way to start up an xterm with my preferences.
 # Has shorter option names for lazy typists.
-# Also will get default xterm characteristics from hosts database 
+# Also will get default xterm characteristics from hosts database
 # (M-x dp-visit-host-info).
 # -h host option allows xterm to have characteristics of [remote] host instead of
 #  the current host.  Useful for differentiating xterms connected to
 #  other hosts (see xrl)
 #
 source script-x
-
-eko "$@"
 
 set -u
 
@@ -22,6 +20,7 @@ extra_options=
 xterm_bin=
 : ${login_shell_p=t}
 : ${just_show=}
+: ${show_too_p=}
 window="@$(hostname)"
 host=
 
@@ -58,7 +57,7 @@ set -u
 #
 # Shorter params are easier for klutzy typists.
 #
-all_options="st:f:g:n:F:B:h:Nx:w:o:L"
+all_options="st:f:g:n:F:B:h:Nx:w:o:LV"
 #set -- ) getopt $all_options "$@" )
 # New style getopt... fixes ugly quoting problems.
 q=$(getopt -o "$all_options" -- "$@")
@@ -78,6 +77,7 @@ do
 	-s) amper= ;;
 	-h) host="-h $2"; shift ;;
 	-N) just_show=y;;
+        -V) show_too_p=t;;
 	-o) extra_options="$extra_options $2"; shift ;;
 	-x) xterm_bin=$2; shift;;
         -w) window=$2; shift;;
@@ -201,7 +201,9 @@ vunsetp "$login_shell_p" && {
     options=$(echo "$options" | sed s/-ls//g)
 }
 
-eval echo $EXEC $xterm_bin $name $geometry $options $font $bg $fg $exe $amper
+[ -n "${show_too_p}" ] && {
+    eval echo $EXEC $xterm_bin $name $geometry $options $font $bg $fg $exe $amper
+}
 eval $EXEC $xterm_bin $name $geometry $options $font $bg $fg $exe $amper
 
 #exec $term $geometry -fat -sl 2500 -ls -font $font -bg "#e0ffff" $exe &
