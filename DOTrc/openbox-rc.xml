@@ -293,32 +293,40 @@
       </action>
     </keybind>
     <!-- Keybindings for window switching with the arrow keys -->
-    <keybind key="W-S-Right">
+    <keybind key="S-W-Right">
       <action name="DirectionalCycleWindows">
         <direction>right</direction>
       </action>
     </keybind>
-    <keybind key="W-S-Left">
+    <keybind key="S-W-Left">
       <action name="DirectionalCycleWindows">
         <direction>left</direction>
       </action>
     </keybind>
-    <keybind key="W-S-Up">
+    <keybind key="S-W-Up">
       <action name="DirectionalCycleWindows">
         <direction>up</direction>
       </action>
     </keybind>
-    <keybind key="W-S-Down">
+    <keybind key="S-W-Down">
       <action name="DirectionalCycleWindows">
         <direction>down</direction>
       </action>
     </keybind>
     <!-- davep bindings -->
-    <keybind key="W-F12">
+    <keybind key="S-W-F12">
       <action name="Restart"/>
     </keybind>
+    <keybind key="S-W-x">
+      <action name="Execute">
+        <startupnotify><enabled>true</enabled>
+          <name>dpxx</name>
+        </startupnotify>
+        <command>dpxx</command>
+      </action>
+    </keybind>
     <!-- Select and raise emacs editing server. -->
-    <keybind key="W-S-e">
+    <keybind key="S-W-e">
       <action name="Execute">
         <command>wmctrl -a "Serv/XEmacs@"</command>
       </action>
@@ -345,6 +353,14 @@
     <keybind key="W-p">
       <action name="Execute">
         <command>wmctrl -a "~ : python"</command>
+      </action>
+    </keybind>
+    <keybind key="S-W-p">
+      <action name="Execute">
+        <startupnotify><enabled>true</enabled>
+          <name>xipython</name>
+        </startupnotify>
+        <command>dpxx</command>
       </action>
     </keybind>
     <!-- Select and raise the window under the pointer. -->
