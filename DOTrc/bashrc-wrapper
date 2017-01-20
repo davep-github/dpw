@@ -1,0 +1,6 @@
+# we can use this to turn on debugging and capture it, etc, etc...
+{
+    echo "====== $(date) ======="
+    source "$HOME/.rc/bashrc"
+    echo "====== $(date) ======="
+} >| /home/dpanarit/bashrc.log 2>&1
