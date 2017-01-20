@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
+#set -x
 
-# set -x
-# yes, $*. -c wants one arg, despite the man page's assertion.
-# @todo XXX sucks for complex args. Must be fixed.
+# e.g. /bin/bash -c 'eko "$@"' dummy '[[[' "$@" ']]]' 'a  b'
+# [0]>eko<
+# [1]>[[[<
+# [2]>eko<
+# [3]>ls<
+# [4]>-l<
+# [5]>/<
+# [6]>]]]<
+# [7]>a  b<
 
-rp=$(realpath "/bin/sh")
+prog="$1" # will be $0 to bash -c command
+shift
 
-case "${rp}" in
-    *bash*) exec "$@" &;;
-    *) exec bash --login -c "$*" &;;
-esac
-
-# How does this get here?
-#echo "$0: failed to exec $@".
-
+/bin/bash --login -c "${prog}"\ '"$@"' "${prog}" "$@"
