@@ -37,7 +37,7 @@ unset eexec_program
 : ${EXTAGTREE_DASH_Q:=}
 : ${POST_PROCESSOR:=compile_mode_ify}
 : ${POST_PATH:=post_realpath}
-: ${DP_CSCOPE_PROGRAM-cscope}
+: ${DP_CSCOPE_PROGRAM:=cscope}
 field_num=0
 arg=${1-}
 

@@ -358,6 +358,18 @@
         <wrap>yes</wrap>
       </action>
     </keybind>
+    <keybind key="C-W-Up">
+      <action name="DesktopUp">
+        <dialog>no</dialog>
+        <wrap>yes</wrap>
+      </action>
+    </keybind>
+    <keybind key="C-W-Down">
+      <action name="DesktopDown">
+        <dialog>no</dialog>
+        <wrap>yes</wrap>
+      </action>
+    </keybind>
     <keybind key="S-A-Left">
       <action name="SendToDesktopLeft">
         <dialog>no</dialog>

@@ -357,7 +357,6 @@ TAGFILES=()
         etags_opt="-e"
         tagtree "$FILES_FILE" "$TAGFILE"
         echo "tagtree(etags) done."
-
     ) &
 }
 
