@@ -177,30 +177,6 @@
   <keyboard>
     <chainQuitKey>C-g</chainQuitKey>
     <!-- Keybindings for desktop switching -->
-    <keybind key="C-A-Left">
-      <action name="GoToDesktop">
-        <to>left</to>
-        <wrap>yes</wrap>
-      </action>
-    </keybind>
-    <keybind key="C-A-Right">
-      <action name="GoToDesktop">
-        <to>right</to>
-        <wrap>yes</wrap>
-      </action>
-    </keybind>
-    <keybind key="C-A-Up">
-      <action name="GoToDesktop">
-        <to>up</to>
-        <wrap>yes</wrap>
-      </action>
-    </keybind>
-    <keybind key="C-A-Down">
-      <action name="GoToDesktop">
-        <to>down</to>
-        <wrap>yes</wrap>
-      </action>
-    </keybind>
     <keybind key="S-A-Left">
       <action name="SendToDesktop">
         <to>left</to>
@@ -378,18 +354,6 @@
     </keybind>
     <keybind key="W-Right">
       <action name="DesktopRight">
-        <dialog>no</dialog>
-        <wrap>yes</wrap>
-      </action>
-    </keybind>
-    <keybind key="C-W-Up">
-      <action name="DesktopUp">
-        <dialog>no</dialog>
-        <wrap>yes</wrap>
-      </action>
-    </keybind>
-    <keybind key="C-W-Down">
-      <action name="DesktopDown">
         <dialog>no</dialog>
         <wrap>yes</wrap>
       </action>
