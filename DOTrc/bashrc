@@ -3,7 +3,7 @@
 # NB: all non-bash code is old, crufty and untested in a long time.
 # Suppress any other means of enabling this.  NB: may break some stuff.
 #set +x
-set -x
+#set -x
 #echo "PS1:0>$PS1<"
 #echo "\$0>$0<"
 #echo "\$@>$@<"
@@ -12,12 +12,6 @@ set -x
 #echo "dp_NH:-1>$dp_NH<"
 # $@ is unset when called for a new/login shell.
 #echo "@>$@<"
-
-#{
-    #echo_id DP_ENV_INTERACTIVE
-    #echo_id BASH_COMPLETION_COMPAT_DIR
-    #echo_id DP_SOURCED_BASH_COMPLETION_FILES
-#} >| ~/bubba
 
 #echo "LC>${LC_DP_YES_DP_ENV_P}<"
 #echo "LC_DP_NO_DP_ENV_P>$LC_DP_NO_DP_ENV_P<"
@@ -734,11 +728,12 @@ source_bash_completion_code()
 {
     [ -n "$BASH_COMPLETION_COMPAT_DIR" ] && return
 
-    # Try possible completion setup scripts before loading the myself.
+    # Try possible completion setup scripts before loading them myself.
     for script in /etc/bash_completion /usr/share/bash-completion/bash_completion
     do
       [ -e "${script}" ] && {
           source "${script}"
+          DP_SOURCED_BASH_COMPLETION_FILES="${script}"/
           return 0
       }
     done
@@ -788,18 +783,13 @@ source_bash_completion_code()
                     bc_type=local;;
         esac
         DP_SOURCED_BASH_COMPLETION_FILES="$bc:$bc_type;$DP_SOURCED_BASH_COMPLETION_FILES"
-        echo "0:DP_SOURCED_BASH_COMPLETION_FILES>$DP_SOURCED_BASH_COMPLETION_FILES<" >> ~/bubba
+#        echo "0:DP_SOURCED_BASH_COMPLETION_FILES>$DP_SOURCED_BASH_COMPLETION_FILES<" >> ~/bubba
         return 0
       done
     done
     return 1
 }
 
-{
-    echo_id DP_ENV_INTERACTIVE
-    echo_id BASH_COMPLETION_COMPAT_DIR
-    echo_id DP_SOURCED_BASH_COMPLETION_FILES
-} >> ~/bubba
 [ "$DP_ENV_INTERACTIVE" = 'y' ] && {
     source $HOME/.rc/dp-ssh-agent
     dp_ssh_run_agent_p && dp_ssh_start_agent
@@ -811,14 +801,15 @@ source_bash_completion_code()
     [ -z "$BASH_COMPLETION_COMPAT_DIR" \
       -a \
       -z "${DP_SOURCED_BASH_COMPLETION_FILES}" ] && {
-        source_bash_completion_code /etc /etc/ /etc/bash_completion.d /etc/profile.d || \
+        source_bash_completion_code /etc /etc/ /etc/bash_completion.d /etc/profile.d \
+        || \
         source_bash_completion_code $HOME/etc $HOME/.rc
-        echo "1:DP_SOURCED_BASH_COMPLETION_FILES>$DP_SOURCED_BASH_COMPLETION_FILES<" >> ~/bubba
+#        echo "1:DP_SOURCED_BASH_COMPLETION_FILES>$DP_SOURCED_BASH_COMPLETION_FILES<" >> ~/bubba
         readonly DP_SOURCED_BASH_COMPLETION_FILES
     }
     ##dp_rc_logger "sourcing extras: $(expand_source_list $RC_DIR/extra_bash_completion_code "" $locale_rcs)"
     ##source_list $RC_DIR/extra_bash_completion_code "" $locale_rcs
-    echo "2:DP_SOURCED_BASH_COMPLETION_FILES>$DP_SOURCED_BASH_COMPLETION_FILES<" >> ~/bubba
+#    echo "2:DP_SOURCED_BASH_COMPLETION_FILES>$DP_SOURCED_BASH_COMPLETION_FILES<" >> ~/bubba
 }
 
 # arbitrary command to run when executing or sourcing.

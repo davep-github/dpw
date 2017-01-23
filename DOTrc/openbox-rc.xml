@@ -15,7 +15,7 @@
     <focusLast>yes</focusLast>
     <!-- focus the last used window when changing desktops, instead of the one
        under the mouse pointer. when followMouse is enabled -->
-    <underMouse>yes</underMouse>
+    <underMouse>no</underMouse>
     <!-- move focus under the mouse, even when the mouse is not moving -->
     <focusDelay>200</focusDelay>
     <!-- when followMouse is enabled, the mouse must be inside the window for
@@ -319,7 +319,8 @@
     </keybind>
     <keybind key="S-W-x">
       <action name="Execute">
-        <startupnotify><enabled>true</enabled>
+        <startupnotify>
+          <enabled>true</enabled>
           <name>dpxx</name>
         </startupnotify>
         <command>dpxx</command>
@@ -357,7 +358,8 @@
     </keybind>
     <keybind key="S-W-p">
       <action name="Execute">
-        <startupnotify><enabled>true</enabled>
+        <startupnotify>
+          <enabled>true</enabled>
           <name>xipython</name>
         </startupnotify>
         <command>dpxx</command>
