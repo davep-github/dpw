@@ -341,6 +341,14 @@
         <command>dpxx</command>
       </action>
     </keybind>
+    <keybind key="W-1">
+      <action name="Execute"><command>wmctrl -a "::auto1"</command>
+      </action>
+    </keybind>
+    <keybind key="W-2">
+      <action name="Execute"><command>wmctrl -a "::auto2"</command>
+      </action>
+    </keybind>
     <!-- Select and raise the window under the pointer. -->
     <keybind key="W-period">
       <action name="Focus"/>
