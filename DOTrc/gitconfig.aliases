@@ -26,6 +26,7 @@
         undo-all = reset --hard
 
         rem = remote
+        remv = remote -v
 
         shbr = show-branch
         sb = show-branch
