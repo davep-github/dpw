@@ -317,7 +317,7 @@
     <!-- Select and raise a web browser (att: firefox) window. -->
     <keybind key="W-w">
       <action name="Execute">
-        <command>wmctrl -a "Mozilla Firefox"</command>
+        <command>wmctrl -a " - Chromium"</command>
       </action>
     </keybind>
     <!-- Select and raise an email client window. Thunderbird, ATT. -->
@@ -342,11 +342,13 @@
       </action>
     </keybind>
     <keybind key="W-1">
-      <action name="Execute"><command>wmctrl -a "::auto1"</command>
+      <action name="Execute">
+        <command>wmctrl -a "::auto1"</command>
       </action>
     </keybind>
     <keybind key="W-2">
-      <action name="Execute"><command>wmctrl -a "::auto2"</command>
+      <action name="Execute">
+        <command>wmctrl -a "::auto2"</command>
       </action>
     </keybind>
     <!-- Select and raise the window under the pointer. -->

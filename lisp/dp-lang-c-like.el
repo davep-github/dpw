@@ -661,8 +661,7 @@ We say: \" p is a pointer to char\", not
       ;; Add other things to try here. We will stop after the first non-nil
       ;; return.
       (when (bound-and-true-p dp-c-using-kernel-style-p)
-        (dp-kernel-style-var-name-align)
-        t)
+        (dp-kernel-style-var-name-align))
       ;; default.
       (c-indent-command)))
 
@@ -1654,11 +1653,12 @@ Handle those cases appropriately."
 Current annotations are:
 @arg if comment is in the arglist."
   (interactive "*P")
-  (if (dp-region-active-p)
-      (call-interactively 'dp-lineup-comments)
-    (if dp-c*-insert-doxy-cmd-p
-        (dp-c*-insert-doxy-comment)
-      (dp-indent-for-comment arg))))
+  (let ((comment-start (concat comment-start "dp: ")))
+    (if (dp-region-active-p)
+        (call-interactively 'dp-lineup-comments)
+      (if dp-c*-insert-doxy-cmd-p
+          (dp-c*-insert-doxy-comment)
+        (dp-indent-for-comment arg)))))
 
 (defun dp-c-statement-syntax ()
   (interactive)                         ; For testing

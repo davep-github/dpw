@@ -4105,7 +4105,7 @@ other: other is value of initial contents."
   "Comment out region if mark is active, else do a normal indent-for-comment.
 With optional ARG (interactively with prefix-arg) eq '-, remove any comment
 on the line with `kill-comment`.
-If ARG is a positive non-nil and and not '- not < 0 align the comment with
+If ARG is a positive non-nil and and not '- align the comment with
 the one on the previous line."
   (interactive "*P")
   ;;(dmessage "dmap>%s<" (dp-mark-active-p))
@@ -14791,8 +14791,18 @@ Return elements of L1 when element of L2 are nil or \"\", i.e. no trailing separ
                     l2))
           l1))
 
+(defun dp-set-window-dedicated-p (&optional arg)
+  "Sorry, but the default for a `set' defun should not be to unset the indicated state.
+JFC."
+  (interactive "P")
+  (set-window-dedicated-p (dp-get-buffer-window) (not arg)))
+
+(dp-defaliases 'dp-swd 'swd 'dp-set-window-dedicated-p)
+
 ;;;;; <:functions: add-new-ones-above|new functions:>
-;;;
+;;; add new functions here
+;;; add new functions above
+;;; above there be functions.
 ;;;
 ;;; @todo Write a loop which advises functions with simple push go back 
 ;;; commands.  

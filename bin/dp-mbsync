@@ -8,15 +8,8 @@ progname=$(basename $0)
 : ${RC_BASE:=$HOME/.rc/mbsyncrc}
 : ${CHANNEL:=main}
 : ${MBS_OPTS:="--verbose --debug"}
-: ${DP_LOG:="/home/davep/log"}
-: ${LOG_FILE:=$DP_LOG/$progname.log}
-
-progname=$(basename $0)
-
-: ${RC_BASE:=$HOME/.rc/mbsyncrc}
-: ${CHANNEL:=main}
-: ${MBS_OPTS:="--verbose --debug"}
-: ${LOG_FILE:=$DP_LOG/$progname.d/$progname.log}
+: ${DP_LOG_DIR:="$HOME/var/log"}
+: ${LOG_FILE:=$DP_LOG_DIR/$progname.log}
 
 [ -d "$(dirname $LOG_FILE)" ] || mkdir $(dirname $LOG_FILE)
 

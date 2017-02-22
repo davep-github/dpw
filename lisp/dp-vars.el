@@ -291,6 +291,23 @@ These should be regexp quoted."
   :group 'dp-vars
   :type '(repeat string))
 
+(defcustom dp-gtags-cscope-findstring-options-env-var-name "GLOBAL_FS_OPTS"
+  "*The environment variable name to pass opts to  gtags-cscope findstring()."
+  :type 'string
+  :group 'cscope)
+
+(defcustom dp-gtags-cscope-case-insensitive-strings-p t
+  "*Should we look for case insensitive strings when using gtags-cscope?"
+  :type 'boolean
+  :group 'cscope)
+
+(defcustom dp-gtags-cscope-GLOBAL_FS_OPTS 
+  (and dp-gtags-cscope-case-insensitive-strings-p
+       "--ignore-case")
+  "*Default args to pass opts to gtags-cscope findstring()."
+  :type 'string
+  :group 'cscope)
+
 (defcustom dp-cscope-program "gtags-cscope"
   "*The pathname of the cscope executable to use."
   :type 'string

@@ -25,7 +25,7 @@ done
 
 
 : ${vfile:=/dev/null}
-: ${LOG_FILE:=$HOME/log/archive-home.log}
+: ${LOG_FILE:=${dplog}/archive-home.log}
 
 (
     echo "$progname: START: $(date)"

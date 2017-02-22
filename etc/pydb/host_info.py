@@ -268,12 +268,12 @@ e(
     ref=[amd_family, OSDB['linux'], default]
 )
 
-CZ_FP4_FG_COLOR = 'white'
 # #BAC1D1
 #CZ_FP4_BG_COLOR = 'rgb:ba/c1/d1'
-CZ_FP4_BG_COLOR = 'rgb:24/00/68'
 #CZ_FP4_BG_COLOR = 'rgb:57/a2/71'
 #CZ_FP4_BG_COLOR = 'rgb:C7/E3/D2'
+CZ_FP4_FG_COLOR = 'white'
+CZ_FP4_BG_COLOR = 'rgb:00/32/3D'
 
 e(
     kef='host',
@@ -291,8 +291,9 @@ e(
 )
 
 # #E8FBF8
-NMI_TEST_BOX_FG_COLOR = 'white'
-NMI_TEST_BOX_BG_COLOR = 'rgb:00/32/3D'
+BW57_FG_COLOR = 'white'
+BW57_BG_COLOR = 'rgb:24/00/68'
+
 e(
     kef='host',
     dat={
@@ -301,11 +302,11 @@ e(
         'comment': """A big ol' server box under my desk for NMI work.""",
         #'xem_opts': '-geometry 88x64-0+0',
         'xem_opts': ('-eval (dp-2-v-or-h-windows-keep-geometry) '
-                     + '-geometry 180x64-0+0'),
+                     + '-geometry 180x74-0+0'),
         'main_macs_opts': '-eval (dp-start-editing-server)',
 ###        'main_macs_opts': '-eval (progn (dp-start-editing-server) (dp-main-rc+2w))',
-        'xterm_bg': NMI_TEST_BOX_BG_COLOR,
-        'xterm_fg': NMI_TEST_BOX_FG_COLOR,
+        'xterm_bg': BW57_BG_COLOR,
+        'xterm_fg': BW57_FG_COLOR,
         ### 'xterm-ls-colors': LIGHT_BG_LS_COLORS,
     },
     ref=[amd_family, OSDB['linux'], default]

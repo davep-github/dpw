@@ -2301,7 +2301,6 @@ changed."
 (add-hook 'lisp-interaction-mode-hook 'dp-lisp-interaction-mode-hook)
 (add-hook 'emacs-lisp-mode-hook 'dp-emacs-lisp-mode-hook)
 (add-hook 'minibuffer-setup-hook 'dp-minibuffer-setup-hook)
-(add-hook 'c-mode-common-hook 'dp-c-like-mode-common-hook)
 (add-hook 'c++-mode-hook 'dp-c++-mode-hook)
 (add-hook 'buffer-menu-mode-hook 'dp-buffer-menu-mode-hook)
 (add-hook 'text-mode-hook 'dp-text-mode-hook)

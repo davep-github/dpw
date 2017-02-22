@@ -1,8 +1,8 @@
 #!/bin/bash
 . script-x
 progname=$(basename "$0")
-log_file_so=${DP_LOG:-$HOME/log}/kde/$progname.stdout
-log_file_se=${DP_LOG:-$HOME/log}/kde/$progname.stderr
+log_file_so=${DP_LOG_DIR:-$HOME/var/log}/kde/$progname.stdout
+log_file_se=${DP_LOG_DIR:-$HOME/var/log}/kde/$progname.stderr
 HOME_BASE="$HOME"
 : ${KDM_ARGS:=-error /dev/null}
 dash_n=

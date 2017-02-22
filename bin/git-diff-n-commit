@@ -135,12 +135,12 @@ do
   answer=
   commit_opt=
   echo "file: ${file}"
-  EExec -y git ${git_args} "${differ}" ${diff_opts} "${file}"
+  EExec -y git ${git_args} "${differ}" ${diff_opts} "${file}" >/dev/null 2>&1 &
   done_p=
   while [ -z "${done_p}" ]
   do
     done_p=t
-    read -e -p "Commit file [y/n|s/q/r[evert]/<msg>|''|-]? "
+    read -e -p "Commit file [y/n|s/q/r[evert]/e/<1 line msg>|''|-]? "
     [ "$?" = 0 ] || {
         echo
         [ "$REPLY" = "" ] && {

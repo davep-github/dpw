@@ -128,26 +128,26 @@ ln_dotrc \
 
 #
 # Reference all of the bash_completion code.
-BASH_COMPLETION_DIR=.bash_completion.d
-RC_BASH_COMPLETION_DIR=.rc/DOTbash_completions.d
-SYS_BASH_COMPLETION_DIR=/usr/share/bash-completion
-[ -d "${SYS_BASH_COMPLETION_DIR}" ] && {
-    # This doesn't allow us to put new completion scripts in the standard
-    # completion location.  ln -s "${SYS_BASH_COMPLETION_DIR}"
-    # "${BASH_COMPLETION_DIR}"
-    mkdir -p "${BASH_COMPLETION_DIR}"
-    (
-        cd "${BASH_COMPLETION_DIR}" || {
-            echo 1>&2 "Could not cd to ${BASH_COMPLETION_DIR}"
-            exit 1
-        }
-        safe_ln "${SYS_BASH_COMPLETION_DIR}"/* .
-        safe_ln "../.rc/DOTbash_completions.d"/* .
-    ) || {
-        echo 1>&2 "Could not perform all bash completion setup operations."
-        exit 1
-    }
-}
+#BASH_COMPLETION_DIR=.bash_completion.d
+#RC_BASH_COMPLETION_DIR=.rc/DOTbash_completions.d
+#SYS_BASH_COMPLETION_DIR=/usr/share/bash-completion
+#[ -d "${SYS_BASH_COMPLETION_DIR}" ] && {
+    ## This doesn't allow us to put new completion scripts in the standard
+    ## completion location.  ln -s "${SYS_BASH_COMPLETION_DIR}"
+    ## "${BASH_COMPLETION_DIR}"
+    #mkdir -p "${BASH_COMPLETION_DIR}"
+    #(
+        #cd "${BASH_COMPLETION_DIR}" || {
+            #echo 1>&2 "Could not cd to ${BASH_COMPLETION_DIR}"
+            #exit 1
+        #}
+        #safe_ln "${SYS_BASH_COMPLETION_DIR}"/* .
+        #safe_ln "../.rc/DOTbash_completions.d"/* .
+    #) || {
+        #echo 1>&2 "Could not perform all bash completion setup operations."
+        #exit 1
+    #}
+#}
 
 OEM_DIR="${HOME}/.oem-dot-files"
 mkdir -p "${OEM_DIR}"
@@ -163,18 +163,18 @@ done
 
 safe_ln lisp .xemacs
 safe_ln .rc/procmailrc.vilya .procmailrc
-safe_ln lisp/Makefile .
-${EZEC} mkdir var
-${EZEC} mkdir var/log
-${EZEC} mkdir log
+safe_ln lisp/Makefile Makefile
+${EZEC} mkdir -p var/log
+# @todo XXX deprecate ~/log
+safe_ln var/log log
 (
 	cd log
         ${EZEC} mkdir {boot,kde,login-rc,xemacs,shell-sessions}
         ${EZEC} mkdir auto-rotate-c5-50K
-        ${EZEC} mkdir shell-sessions/home/dpanarit/log/shell-sessions
+        ${EZEC} mkdir -p shell-sessions/home/dpanarit/log/shell-sessions
 	safe_ln auto-rotate-c5-50K procmail
 )
-${EZEC} mkdir -p "log/auto-rotate-c10-50K"
+${EZEC} mkdir -p "var/log/auto-rotate-c10-50K"
 ${EZEC} mkdir ipc
 ${EZEC} mkdir tmp
 ${EZEC} mkdir .screen
@@ -207,6 +207,10 @@ echo 'Other new Linux installation actions:
   4.2) ln -s lubuntu-rc.xml rc.xml
 5) Use [Menu-thing-on-left]->Preferences->Default applications for LXSession
    to set up default applications for LXSession.
+6) If using LXDE, et. al., change the keyboard input methods Next Input
+   Method mapping from C-<space> to something else because that collides with
+   XEmacs\' C-SPC (dp-expand-abbrev).
+7) Any location dependent stuff? E.g. ~/bin.<place-of-work>
 '
 
 echo "TODO! Try to link ~/.rc/xxx.<host> and then ~/.rc/xxx into ~"

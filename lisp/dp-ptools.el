@@ -4,6 +4,9 @@
 
 (dmessage "Loading dp-ptools...")
 
+(defvar dp-reveng-symbol-hist nil
+  "History for reverse engineering symbol names.")
+
 (define-error 'dp-*TAGS-aborted
   "Badness in the guts of the (too) deeply nested *TAGS stuff." 
   'error)
@@ -134,6 +137,11 @@ that we're under a directory named work."
 ;; ????? (setq cscope-command-args '("-C"))
 (defun dp-setup-cscope ()
   (interactive)
+
+  (when dp-gtags-cscope-case-insensitive-strings-p
+    (setenv dp-gtags-cscope-findstring-options-env-var-name
+            dp-gtags-cscope-GLOBAL_FS_OPTS))
+
   (defadvice cscope-extract-symbol-at-cursor 
     (around dp-cscope-extract-symbol-at-cursor activate)
     (if (dp-mark-active-p)
