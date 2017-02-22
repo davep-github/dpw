@@ -6,7 +6,7 @@ Ee|davep|             ${HOME}/
 Ee|bin|               ${HOME}/bin/
 Ee|yokel|             ${davep}yokel/
 Ee|bree|              ${davep}bree/
-Ee|daveplog|log|      ${davep}log/
+Ee|daveplog|log|      ${davep}/var/log/
 Ee|resume|            ${davep}jobs/resume/
 Ee|webpage|           ${davep}devel/web-page/
 Ee|tt|                ${davep}work/sandbox/Talisman/bin/
