@@ -2426,7 +2426,9 @@ file."
 	    ;; Always prompt for symbol in dired mode.
 	    (eq major-mode 'dired-mode)
 	    )
-	(setq sym (read-from-minibuffer prompt sym))
+	(setq sym (read-from-minibuffer prompt sym
+                                        nil nil 
+                                        'dp-reveng-symbol-hist))
       sym)
     ))
 
