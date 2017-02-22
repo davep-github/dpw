@@ -21,4 +21,4 @@
         uploadtopic = true
         
 [color]
-	ui = auto
+        path = ~/.rc/gitconfig.colors.darkbg
