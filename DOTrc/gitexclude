@@ -58,6 +58,7 @@ cscope.files
 cscope.in.out
 cscope.out
 cscope.po.out
+index-code.stat
 make.out
 
 *.log.gz
