@@ -5,13 +5,18 @@
   (interactive)
   (cond
    ((string-match "^cz" (dp-short-hostname))
-;;    (setq dp-default-c-style-name "amd-c-style")
-    (setq dp-current-c-style-name "dp-kernel-c-style"))
+    (setq dp-current-c-style dp-kernel-c-style
+          dp-current-c-style-name "dp-kernel-c-style"))
    ((string-match "^atl" (dp-short-hostname))
-    (setq dp-current-c-style-name "ptb-c-style"))
-   (t (setq dp-current-c-style-name dp-default-c-style-name))))
+    (setq dp-current-c-style ptb-c-style
+          dp-current-c-style-name "ptb-c-style"))
+   ((string-match "brahma/ec/linux/" buffer-file-truename)
+    (setq dp-current-c-style dp-kernel-c-style
+          dp-current-c-style-name "dp-kernel-c-style"))
+   (t (setq dp-current-c-style dp-default-c-style
+            dp-current-c-style-name dp-default-c-style-name))))
 
-(dp-select-amd-c-style)
+;;;(dp-select-amd-c-style)
 
 (defun dp-add-amd-c-style ()
   (interactive)
@@ -23,6 +28,8 @@
   (interactive)
   (dmessage "dp-amd-c-mode-common-hook")
   (dp-add-amd-c-style)
+  (c-add-style dp-current-c-style-name dp-current-c-style t)
+
 ;;   ;; Some files use this and I can't find it.
 ;;   (defalias 'linux-c-mode 'c-mode)
   (dp-define-local-keys
@@ -141,6 +148,10 @@
          )))
 
 (setq auto-mode-alist (cons '("\\.cl$" . c-mode) auto-mode-alist))
+
+(defvar bookmark-default-file
+  (dp-nuke-newline (shell-command-to-string
+                    "mk-persistent-dropping-name.sh hiq-emacs.bmk")))
 
 ;; (setq dp-<type>*-regexp-list
 ;;       (dp-add-to-list

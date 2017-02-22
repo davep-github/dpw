@@ -289,6 +289,12 @@ intolerable delays to files not in perforce."
 (defvar dp-loaded-spec-macsen '()
   "A list of all of the spec-macs files we loaded. Most specific to least.")
 
+;;
+;; We put this here because (at least) the amd c-mode-hook needs to run
+;; before the "meister" c-mode-common-hook
+;;
+(add-hook 'c-mode-common-hook 'dp-c-like-mode-common-hook)
+
 (defun dp-load-spec-macs (spec-macs)
   "Possibly load a more specific .emacs type startup file."
   ;;(message "spec-macs>%s<" spec-macs)
@@ -992,11 +998,14 @@ This can be callable.")
 (defun dp-setup-bookmarks ()
   (interactive)
   (add-hook 'bookmark-load-hook 'dp-bookmark-load-hook)
-  (require 'bookmark)
-  (setq bookmark-save-flag 1)
-  (setq bookmark-default-file
+
+  ;; `defvar' so we can set it elsewhere like a spec-macs.
+  (defvar bookmark-default-file
         (dp-nuke-newline (shell-command-to-string
                           "mk-persistent-dropping-name.sh emacs.bmk")))
+ 
+  (require 'bookmark)
+  (setq bookmark-save-flag 1)
   (defun dp-bookmark-mk-location-str (bookmark &optional no-history)
     "Insert the name of the file associated with BOOKMARK.
 Optional second arg NO-HISTORY means don't record this in the
