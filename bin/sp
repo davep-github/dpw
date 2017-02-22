@@ -5,11 +5,13 @@ $func_name = "";                # This will use -X to get args, too.
 $cmd = 0;
 $cmd_args = "";
 $num_to_print = -1;
+$num_to_skip = 0;
 $capture_output_p = 1;
 $sudo = "";
 $look_in_cwd = 0;
 $files_only_p = 1;
 $quiet_p = 0;                   # Just return status.
+$debug_level = 0;
 
 sub usage {
     printf("usage: sp [-{0-9}+] [-l[l]] [-r] [-L] [-S] [-X cmd [args]] [-x cmd] file...\n");
@@ -33,6 +35,22 @@ while (($opt, $opt_arg) = ($ARGV[0] =~ /^-(\S)(\S*)/)) {
       $num_to_print = $opt_arg;
     } else {
       $num_to_print = $ARGV[1];
+      shift(@ARGV);
+    }
+  } elsif ($opt eq "s" || $opt eq "N") {
+    printf("opt>$opt<, opt_arg>$opt_arg<\n") if ($debug_level);
+    if (! ($opt_arg eq "")) {
+      $num_to_skip = $opt_arg;
+    } else {
+      $num_to_skip = $ARGV[1];
+      shift(@ARGV);
+    }
+    $num_to_print = 1 if ($opt eq "N");
+  } elsif ($opt eq "D") {
+    if (! ($opt_arg eq "")) {
+      $debug_level = $opt_arg;
+    } else {
+      $debug_level = $ARGV[1];
       shift(@ARGV);
     }
   } elsif ($opt eq "l") {
@@ -104,8 +122,10 @@ while (($opt, $opt_arg) = ($ARGV[0] =~ /^-(\S)(\S*)/)) {
   last if ($opt eq "-");
 }
 
-#printf("cmd>$cmd<, cmd_args>$cmd_args<\n");
-#printf("func_name>$func_name<, cmd_args>$cmd_args<\n");
+printf("cmd>$cmd<, cmd_args>$cmd_args<\n") if ($debug_level);
+printf("func_name>$func_name<, cmd_args>$cmd_args<\n") if ($debug_level);
+printf("num_to_skip>$num_to_skip<\n") if ($debug_level);
+printf("num_to_print>$num_to_print<\n") if ($debug_level);
 
 die "cmd_args given without a cmd or func-name.\n" if ($cmd_args && !$cmd && !$func_name);
 
@@ -122,7 +142,7 @@ foreach $arg (@ARGV) {
     $targ="$pathEl/$arg";
     #print "0, targ>$targ<\n";
     @targlist = glob($targ);
-    #printf("targlist>%s<\n", join("\n", @targlist));
+    printf("targlist>%s<\n", join("\n", @targlist)) if ($debug_level > 2);
     foreach $targ (@targlist) {
       #print "1, targ>$targ<\n";
       next if ($files_only_p && -d $targ);
@@ -131,6 +151,10 @@ foreach $arg (@ARGV) {
         eval("&$func_name(\"real: \", \$cmd_args);");
       } elsif (-x $targ) {
         exit(0) if $quiet_p;
+        if ($num_to_skip > 0) {
+          --$num_to_skip;
+          next;
+        }
         ++$num_printed if $num_to_print >= 0;
         if ($cmd) {
           $qmd = sprintf("%s %s %s%s%s", $sudo, $cmd,
