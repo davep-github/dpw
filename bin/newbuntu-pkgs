@@ -145,6 +145,7 @@ xclip
 firefox
 thunderbird
 pcregrep
+nfs-common
 )
 
 num_pkgs="${#packages[@]}"
