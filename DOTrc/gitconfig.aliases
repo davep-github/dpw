@@ -140,6 +140,7 @@
         # Won't work because git only looks for aliases if the command isn't a builtin.
         # See the function named git().
         fpush = push
+        pushf = push
 
 # Graphical diff tool employer/environment de jure
         dtgraphical = difftool --tool=diffuse
