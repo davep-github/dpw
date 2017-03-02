@@ -414,7 +414,8 @@ case $HOSTNAME in
 	: ${WORK_ZONE:=$($HOST_INFO -n '-' work-zone)}
 
         # Project stuff:
-        : ${PROJECT:=$($HOST_INFO -n '-' project)}
+        : ${PROJECT:=$($HOST_INFO -n '' project)}
+        test -z "${PROJECT-}" && PROJECT='-'
 	;;
 esac
 export FAMILY
@@ -424,7 +425,7 @@ export PROJECT
 
 # least specific to most so we can override things.
 export locale_rcs_fields=".OSName .FAMILY_ZONE .FAMILY .HOSTNAME .PROJECT .var .early" # .$WORK_ZONE"
-export locale_rcs=".$OSName .$FAMILY_ZONE .$FAMILY .$HOSTNAME .$PROJECT .var .early" # .$WORK_ZONE"
+export locale_rcs=".$OSName .$FAMILY_ZONE .$FAMILY .$HOSTNAME $PROJECT .var .early" # .$WORK_ZONE"
 : ${pre_rcs:=$($HOST_INFO -n '' locale_pre)}
 : ${post_rcs:=$($HOST_INFO -n '' locale_post)}
 locale_rcs="$pre_rcs $locale_rcs $post_rcs"
@@ -893,4 +894,5 @@ dp_set_x_fini
 export LD_LIBRARY_PATH
 unset EExecProgName
 unset DP_BASHRC_IN_PROGRESS
+
 true
