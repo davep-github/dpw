@@ -15,6 +15,8 @@ dp_sp_complete()
         COMPREPLY=($(compgen -c $cur))
 }
 complete -F dp_sp_complete sp
+complete -F dp_sp_complete run-iff
+complete -F dp_sp_complete xit
 
 dp_ctags_etags_expand()
 {
