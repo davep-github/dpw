@@ -108,7 +108,7 @@ Usage_error()
 M=${M-$PWD}
 if [ -z "${KDIR-}" ]
 then
-    KDIR=/home/dpanarit/work/ras/edc/brahma/ec/kgd/linux/
+    KDIR="/home/dpanarit/work/ras.local/edc/brahma/ec/linux/"
     echo "Using hardcoded kernel dir (KDIR):
 >${KDIR}<
   Please set in, say, ~/.rc/env.<PROJECT>"
