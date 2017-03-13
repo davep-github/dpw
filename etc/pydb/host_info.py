@@ -273,17 +273,20 @@ e(
 #CZ_FP4_BG_COLOR = 'rgb:57/a2/71'
 #CZ_FP4_BG_COLOR = 'rgb:C7/E3/D2'
 CZ_FP4_FG_COLOR = 'white'
-CZ_FP4_BG_COLOR = 'rgb:00/32/3D'
+CZ_FP4_BG_COLOR = 'rgb:24/00/68'
+
+PRIMARY_BOX_FG_COLOR = CZ_FP4_FG_COLOR
+PRIMARY_BOX_BG_COLOR = CZ_FP4_BG_COLOR
 
 e(
     kef='host',
     dat={
-        'host-pattern': 'cz',
+        'host-pattern': '^(cz-fp4-bdc|cz)$',
         'family': 'amd_family',
         'comment': 'A BETTONG Carrizo dev system (on my desk).',
         'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 180x74-0+0',
-        'xterm_bg': CZ_FP4_BG_COLOR,
-        'xterm_fg': CZ_FP4_FG_COLOR,
+        'xterm_bg': PRIMARY_BOX_BG_COLOR,
+        'xterm_fg': PRIMARY_BOX_FG_COLOR,
         'xem_bg_color': "grey80",
         'project': 'brahma',
  },
@@ -292,7 +295,7 @@ e(
 
 # #E8FBF8
 BW57_FG_COLOR = 'white'
-BW57_BG_COLOR = 'rgb:24/00/68'
+BW57_BG_COLOR = 'rgb:00/32/3D'
 
 e(
     kef='host',
@@ -307,6 +310,28 @@ e(
 ###        'main_macs_opts': '-eval (progn (dp-start-editing-server) (dp-main-rc+2w))',
         'xterm_bg': BW57_BG_COLOR,
         'xterm_fg': BW57_FG_COLOR,
+        ### 'xterm-ls-colors': LIGHT_BG_LS_COLORS,
+    },
+    ref=[amd_family, OSDB['linux'], default]
+)
+
+# #E8FBF8
+CZ_ALFA_FG_COLOR = 'white'
+CZ_ALFA_BG_COLOR = 'rgb:00/32/3D'
+
+e(
+    kef='host',
+    dat={
+        'host-pattern': 'cz-alfa',
+        'family': 'amd_family',
+        'comment': """A big ol' server box under my desk for NMI work.""",
+        #'xem_opts': '-geometry 88x64-0+0',
+        'xem_opts': ('-eval (dp-2-v-or-h-windows-keep-geometry) '
+                     + '-geometry 180x74-0+0'),
+        'main_macs_opts': '-eval (dp-start-editing-server)',
+###        'main_macs_opts': '-eval (progn (dp-start-editing-server) (dp-main-rc+2w))',
+        'xterm_bg': CZ_ALFA_BG_COLOR,
+        'xterm_fg': CZ_ALFA_FG_COLOR,
         ### 'xterm-ls-colors': LIGHT_BG_LS_COLORS,
     },
     ref=[amd_family, OSDB['linux'], default]
