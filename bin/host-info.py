@@ -94,6 +94,7 @@ def match_family_by_host(host):
     node_name = host_db.get(dppydb.famDB_to_node_name(), None)
     if node_name:
         famDB = node_name.get_item('db')
+
         # check for exact matches first.
         for (field_name, cmp_fun) in (("host", strcmp),
                                       ("host-pattern", re.search),
