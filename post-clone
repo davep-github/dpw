@@ -44,6 +44,8 @@ cd "${HOME}" || {
     exit 1
 } 1>&2
 
+echo "Putting links in $(pwd)"
+
 safe_ln()
 {
     local src="${1}"; shift
@@ -209,7 +211,7 @@ echo 'Other new Linux installation actions:
    to set up default applications for LXSession.
 6) If using LXDE, et. al., change the keyboard input methods Next Input
    Method mapping from C-<space> to something else because that collides with
-   XEmacs\' C-SPC (dp-expand-abbrev).
+   XEmacs C-SPC (dp-expand-abbrev).
 7) Any location dependent stuff? E.g. ~/bin.<place-of-work>
 '
 
