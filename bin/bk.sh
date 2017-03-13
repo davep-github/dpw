@@ -26,10 +26,10 @@ fail_file=/tmp/bk.sh.banner-FAIL.$$
 stat_files="$ok_file $fail_file"
 # make: clean, kernel, modules_install, install
 all_actions="ckmi"
-: ${action_list_all="clean build_kernel modules modules_install install"}
-: ${action_list_bk="build_kernel modules modules_install install"}
-# Useful default for kernel dev.
 : ${action_list_dev="modules modules_install install"}
+: ${action_list_bk="build_kernel modules ${action_list_dev}"}
+: ${action_list_all="clean ${action_list_bk}"}
+# Useful default for kernel dev.
 : ${action_list=${action_list_dev}}
 : ${what_am_i_doing_p=}
 #echo "0: actions>$actions<"
