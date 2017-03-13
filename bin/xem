@@ -48,7 +48,7 @@ do_renice=
 : ${set_sandbox_p=}
 
 case "$prog" in
-    xem) prefix='xem';;
+    xem|xem-logger) prefix='xem';;
     lem) prefix='lem';;
     xemrn|xemhp) prefix='xem'; do_renice=t;;
     *) echo 1>&2 "Unsupported program name>$prog<"; exit 1;;
