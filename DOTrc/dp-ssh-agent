@@ -78,6 +78,11 @@ dp_ssh_start_agent0()
 #what-was-wrong-before?     fi
 #what-was-wrong-before?     return 0
 
+    if [ "$1" = '-x' ]
+    then
+        set -x
+        shift
+    fi
     date
     env | fgrep SSH
     echo_id DP_SSH_AGENT_RC
@@ -137,11 +142,8 @@ dp_ssh_start_agent0()
 
 dp_ssh_start_agent()
 {
-    {
-set -x
         dp_ssh_start_agent0 "$@"
-set +x
-    } |& tee "${DP_SSH_AGENT_RC_LOG}" > /dev/null
+	envgrep SSH
 }
 
 [ -n "${runme-}" -o "$(basename -- $0)" = dp-ssh-agent ] && {
