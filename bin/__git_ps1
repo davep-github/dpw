@@ -1,6 +1,10 @@
 # Source me.
 __git_ps1 () 
 { 
+    [ "${1-}" = '-x' ] && {
+        shift
+        set -x
+    }
     local g="$(__gitdir)";
     if [ -n "$g" ]; then
         local r;
