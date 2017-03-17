@@ -8,6 +8,16 @@
 [user]
         name = David Panariti
 	email = David.Panariti@amd.com
+#	name = Just A. Guy
+#	email = just.a.guy@meduseld.net
+
+[sendemail]
+# e.g.        smtpserver = smtp.mail.com
+        smtpserver = atlsmtp10.amd.com
+# e.g.        smtpuser = john.due
+        smtpuser = david.panariti
+        smtp-encryption=tls
+        confirm = auto
 
 [url "ssh://gerritgitmaster/"]
 	pushInsteadOf = ssh://gerritgit/
@@ -19,6 +29,20 @@
 [review "atlvgits01.amd.com:8888"]
         username = dpanarit
         uploadtopic = true
-        
+
 [color]
         path = ~/.rc/gitconfig.colors.darkbg
+
+[commit]
+	template = /home/dpanarit/.rc/work/commit-template.txt
+
+[push]
+	disabled = true
+        query = true
+        disablemsg = Prevent careless pushes to brahma repo.
+        msg = hello, werld.
+[pull]
+	disabled = true
+        
+[format]
+	signoff = true
