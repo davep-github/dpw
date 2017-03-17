@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+alias real_locate='/etc/alternatives/locate'

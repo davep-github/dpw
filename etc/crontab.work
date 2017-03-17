@@ -1,0 +1,5 @@
+# use /bin/bash to run commands, instead of the default /bin/sh
+SHELL=/bin/bash
+
+# run five minutes after 2am, every day
+5 2 * * *  $HOME/bin.amd/amd-index-edc-linux >> $HOME/var/log/auto-rotate-c10-50K/cron.log 2>&1
