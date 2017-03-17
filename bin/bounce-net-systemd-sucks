@@ -1,0 +1,4 @@
+#!/bin/sh
+set -x
+if=${1-eth0}
+sudo ifdown "${if}" && sudo ifup "${if}"
