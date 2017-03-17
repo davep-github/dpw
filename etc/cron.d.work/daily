@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+# $Id: daily,v 1.61 2007/08/28 08:20:12 davep Exp $
+#set -x
+
+. $HOME/etc/crontab.rc
+
+clean-droppings
+
+# HUGE, plus some dirs are foolishly make with to high permissions
+# I sure hope *I* didn't write the comment above this line.
+# echo "Index ports:"		# indexes are getting a bit large
+# Also, not needed under linux, is done w/eupdate, used by
+# index-ports $init_opt 2>&1
+# @todo Add pkg/deb/etc index/db updates here.
+
+#
+# @todo check mod time on parent dir and don't rebuild if there are no changes.
+# or make in temp area, cmp and copy only if different.
+#
+#echo "Make Robin's pic dir"
+#mk-html-dir.pl /usr/local/www/data/daughter/pics > /usr/local/www/data/daughter/pics/dir.html 2>&1
+
+#echo "Update GNU Cash Stock Prices"
+#gnc-prices ~/finances/p2k 2>&1
+# gnucash --add-price-quotes ~/finances/p2k
+
+export ETC=$HOME/etc
+
+# rotate personal log files...
+echo "Rotate logs..."
+dp-rotate-logs
+echo '...done'
+echo ""
+
+
+#echo "Remake playlists..."
+#mk-album-playlists.py /media/audio/music
+
+# clear pan's cache
+echo 'Clear pan cache...'
+cp -f ~/etc/Pan.template ~/.gnome/Pan
+
+# and clear firefox's
+#echo 'Clear ff cache...'
+#clrff
+
+echo 'Clear mplayer cache...'
+clrmp
+
+echo "******* SKIPPING: Index MH dirs:"
+#index-mail $init_opt 2>&1
+#echo "done."
+#echo ""
+
+
+echo "******* SKIPPING: Index notes:"
+#index-notes $init_opt 2>&1
+#echo "done."
+#echo ""
+
+
+echo "******* SKIPPING: Update locdb for music files:"
+#update-mp3db
+#echo "done."
+#echo ""
+
+echo ""
+echo "daily done."
+echo "==========================="
+
+
