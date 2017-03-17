@@ -398,6 +398,6 @@ build_kernel()
 }
 
 build_kernel 2>&1 | tee -a $bk_log
-echo "BK done"
+echo "BK done."
 
 #/home/davep/bin.Linux.i686/lcursive
