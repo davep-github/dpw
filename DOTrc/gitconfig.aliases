@@ -108,8 +108,9 @@
         # I keep "thinking" ahead to the next command.
         FETCH = fetch
         difffh = diff FETCH_HEAD
+        dFH = diff FETCH_HEAD
         dfh = diff FETCH_HEAD
-        pullf = pull --ff-only
+        pullff = pull --ff-only
         # q.v. Zoot
         pulljustpull = pull
         pjpull = pull
