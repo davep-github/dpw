@@ -23,25 +23,6 @@ do
 done
 EExec_verbose_msg $(echo_id eexec_program)
 unset eexec_program
-#export eexec_program
-# Or export eexec_program to propagate eexec info to a called program.
-# export eexec_program
-
-# davep specific code -------------8><------------------
-
-#mutually exclusive with real EExec# EExec=
-#mutually exclusive with real EExec# no_exec_p=
-#mutually exclusive with real EExec# Non_EExecer()
-#mutually exclusive with real EExec# {
-#mutually exclusive with real EExec#     echo "{-} $@" 1>&2
-#mutually exclusive with real EExec# }
-
-#mutually exclusive with real EExec# Verbose_EExecer()
-#mutually exclusive with real EExec# {
-#mutually exclusive with real EExec#     echo "{+} $@"
-#mutually exclusive with real EExec#     "$@"
-#mutually exclusive with real EExec# }
-
 trap_exit_msg=
 
 # Useful traps
@@ -107,6 +88,7 @@ Usage_error()
 
 : ${filter_regexp:=$HOME}
 : ${filter_fun:=egrep_filter}
+: ${exec_p=}
 
 # Usage variable usage:
 Usage_args_info=" -[a] <progname>"
@@ -120,10 +102,11 @@ Usage_details="${EExec_parse_usage}
 {-f|--fre|--filter-regexp} <filter_regexp>) Ignore these matches, def: ${filter_regexp}.
 "
 # Example of arg parsing.
-option_str="af:"
+option_str="af:re"
 long_options=(
     "any" "first"
     "filter_regexp:"
+    "exec" "run"
 )
 source dp-getopt+.sh || exit 1
 while (($# > 0))
@@ -139,6 +122,7 @@ do
 
       # Help!
       --help) Usage; exit 0;;
+      --exec|-e|--run|-r) exec_p=t;;
       --) shift ; break ;;
       # getopt will barf about unknown options.
       # Here we barf about known options that we have forgotten to handle.
@@ -165,10 +149,19 @@ EExec_verbose_echo_id filter_fun
 prog="${1}"
 real_prog=$(sp "${prog}" | "${filter_fun}" | head -n 1)
 EExec_verbose_echo_id real_prog
+EExec_verbose_msg "@>$@<"
 if [ -z "${real_prog}" ]
 then
     false
 else
-    echo "${real_prog}"
-    true
+    if [ -n "${exec_p}" ]
+    then
+        shift
+        EExec exec "${real_prog}" "$@"
+        EExecDashN_p || echo 1>&2 "HTF did I get here?"
+        exit 13
+    else
+        echo "${real_prog}"
+        true
+    fi
 fi
