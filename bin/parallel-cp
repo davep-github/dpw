@@ -89,9 +89,11 @@ do
       continue
   fi
   dname=$(dirname "$f")
+  EExec_verbose_echo_id f dname
   fname=$(basename "$f")
   dname=$(abs_is_dir "$dname")
   tdest="$dest$dname"
+  EExec_verbose_echo_id dname fname tdest
   EExec mkdir -p "$tdest"
   [ -n "$mkdirs_only_p" ] && continue
   EExec "${final_cmd}" $dash_i "$f" "$tdest"
