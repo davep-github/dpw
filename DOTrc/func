@@ -1180,23 +1180,44 @@ gith()
     githh "" "$@"
 }
 
-git () {
+git() {
     [ "${1-}" = '-x' ] && {
         set -x
         shift
     }
 
-    local dpmessage=$(command git config --get $1.dpmessage 2>/dev/null)
-    [ -n "${dpmessage-}" ] && {
-        echo "${dpmessage}"
-    }
-
+    local rc=0
+    local msg=$(command git config --get $1.msg 2>/dev/null)
     local disabled=$(command git config --bool $1.disabled 2>/dev/null)
+    local query_p=$(command git config --bool $1.query_p 2>/dev/null)
+
     if ${disabled:-false} ; then
         echo "The $1 command is intentionally disabled in git config." >&2
-        return 1
+        rc=1
+        if ${query_p:-false}
+        then
+            while :
+            do
+              read -e -p "Perform the command anyway [y/N]?"
+              case "$REPLY" in
+                  [yY1t]) rc=0;;
+                  [nN0]|"") rc=1;;
+                  *) continue;;
+              esac
+            done
+         fi
     fi
-    command git "$@"
+    if ((rc == 0))
+    then
+        command git "$@"
+        rc=$?
+    fi
+
+    [ -n "${msg-}" ] && {
+        echo "$1.msg: $msg"
+    }
+
+    return $rc
 }
 
 # Nag, nag, nag.
