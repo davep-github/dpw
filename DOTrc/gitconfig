@@ -15,3 +15,6 @@
 
 [push]
 	disabled = false
+
+[commit]
+        checkbranch = true
