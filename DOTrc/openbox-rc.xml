@@ -295,10 +295,6 @@
     </keybind>
     <keybind key="S-W-x">
       <action name="Execute">
-        <startupnotify>
-          <enabled>true</enabled>
-          <name>dpxx</name>
-        </startupnotify>
         <command>dpxx</command>
       </action>
     </keybind>
@@ -326,6 +322,12 @@
         <command>wmctrl -a "Mozilla Thunderbird"</command>
       </action>
     </keybind>
+    <!-- run skippy-xd, an expose like window selector. -->
+    <keybind key="W-s">
+      <action name="Execute">
+        <command>skippy-xd</command>
+      </action>
+    </keybind>
     <!-- Select and raise an IPython window. -->
     <keybind key="W-p">
       <action name="Execute">
@@ -334,11 +336,7 @@
     </keybind>
     <keybind key="S-W-p">
       <action name="Execute">
-        <startupnotify>
-          <enabled>true</enabled>
-          <name>xipython</name>
-        </startupnotify>
-        <command>dpxx</command>
+        <command>xipython</command>
       </action>
     </keybind>
     <keybind key="W-1">
