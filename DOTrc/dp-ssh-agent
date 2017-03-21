@@ -83,6 +83,11 @@ dp_ssh_start_agent0()
         set -x
         shift
     fi
+
+    # allows us to see if dumb-ass bash decided to run us in a
+    # sub-{shell|process} which, of course, prevents the outside world from
+    # seeing important changes.
+    eval export ${XXX_ARG_VAL}=${XXX_ARG_VAL}
     date
     env | fgrep SSH
     echo_id DP_SSH_AGENT_RC
@@ -142,8 +147,17 @@ dp_ssh_start_agent0()
 
 dp_ssh_start_agent()
 {
-        dp_ssh_start_agent0 "$@"
-	envgrep SSH
+    local dashx_p=
+    [ "${1}" = "-x" ] && {
+        shift
+        dashx_p=t
+        set -x
+    }
+    export XXX_ARG_VAL=dp_SSH_start_agent0_${SECONDS}
+    dp_ssh_start_agent0 "$@" >/dev/null 2>&1
+    unset XXX_ARG_VAL
+    
+    [ -n "${dashx_p}" ] && envgrep SSH
 }
 
 [ -n "${runme-}" -o "$(basename -- $0)" = dp-ssh-agent ] && {
