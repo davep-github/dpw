@@ -18,7 +18,7 @@ Ee|etc|               ${HOME}etc/
 Ee|crond|             ${etc}cron.d/
 Ee|crontab|           ${etc}crontab
 Ee|tmp|               ${HOME}tmp/
-Ee|rc|                ${HOME}.rc/
+Ee|rc|                ${HOME}/.rc/
 Ee|patches|           ${HOME}patches/
 Ee|wdylan|            ${HOME}work/dylan/
 Ee|x7|                ${HOME}work-xfer/exp07/
