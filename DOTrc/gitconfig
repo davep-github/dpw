@@ -17,6 +17,6 @@
 	disabled = false
 
 [commit]
-        checkbranch = true
-	disabled = true
-        dpmessage = TEST TEST TEST TEST.
+    checkbranch = true
+	disabled = false
+    dpmessage = TEST TEST TEST TEST.
