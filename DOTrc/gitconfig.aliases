@@ -60,17 +60,14 @@
         l11 = log -n 11
         lone5 = log -n 5 --oneline
         loneog11 = log -n 11 --oneline
-        lonen = log --oneline -n
         lol = log --oneline
         lol5 = log -n 5 --oneline
         lolog11 = log -n 11 --oneline
-        loln = log --oneline -n
         lo5 = log -n 5 --oneline
         lo11 = log -n 11 --oneline
         lon = log --oneline -n
-#        l111 = log -n 11 --oneline
-#        l15 = log -n 5 --oneline
-#        l1n = log --oneline -n
+        lon5 = log -n 5 --oneline
+        lon11 = log -n 11 --oneline
         # Height of laziness: saving -n<space>
         ln = log -n
         # 2 chars.  No project will ever be late now.
