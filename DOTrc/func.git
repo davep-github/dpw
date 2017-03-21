@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+# should be sourced, but the shebang tells us and emacs what's up
+
+git_p()
+{
+    __gitdir
+}
+
+git_change_sandbox()
+{
+    # `chdir' with no args means to show us where we are.
+    if [ -z "$*" ]
+    then
+        git branch
+    else
+        # Prevent braino of using gcd instead of cd if arg is a dir.
+        [ -d "${1}" ] && {
+            read -e -p "${1} is a dir. Continue [y/N]? "
+            case "${REPLY}" in
+                [yY]) ;;
+                ""|[Nn]) echo 1>&2 "Bailing."; return 1;;
+            esac
+        }
+        git checkout "$@"
+        git stash list
+        echo "??? You may want to consider reindexing the code."
+    fi
+}
+export -f git_change_sandbox
+alias gcd="git_change_sandbox"
+alias gsb="git_change_sandbox"
+
+githh()
+{
+    local dash_n
+    if [ -z "${1-}" ]
+    then
+        dash_n=-0               # Everything
+    else
+        dash_n="$1"
+    fi
+    shift
+    # Since I cannot figure out how to stop git using ^H for bolding, I'll
+    # filter it myself.
+    # Doesn't use ^H in all xemacs windows and I don't know why.
+    if inside_emacs_p
+    then
+        git help "$@" | ul -t dumb | head -n "$dash_n"
+    else
+        git help "$@"
+    fi
+}
+
+gith()
+{
+    githh "" "$@"
+}
+
+git() 
+{
+    [ "${1-}" = '-x' ] && {
+        set -x
+        shift
+    }
+
+    local rc=0
+    local msg=$(command git config --get $1.msg 2>/dev/null)
+    local disabled=$(command git config --bool $1.disabled 2>/dev/null)
+    local query_p=$(command git config --bool $1.query_p 2>/dev/null)
+
+    if ${disabled:-false} ; then
+        echo "The $1 command is intentionally disabled in git config." >&2
+        rc=1
+        if ${query_p:-false}
+        then
+            while :
+            do
+              read -e -p "Perform the command anyway [y/N]?"
+              case "$REPLY" in
+                  [yY1t]) rc=0;;
+                  [nN0]|"") rc=1;;
+                  *) continue;;
+              esac
+            done
+         fi
+    fi
+    
+    case "${rc}" in
+        0) command git "$@"
+           rc=$?
+           ;;
+    esac
+
+    [ -n "${msg-}" ] && {
+        echo "$1.msg: $msg"
+    }
+
+    return $rc
+}
+
