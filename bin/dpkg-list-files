@@ -108,5 +108,5 @@ Usage_error()
 for pkg in "${@}"
 do
   echo "=== files in ${pkg} ==========="
-  EExec dpkg-query -L git-flow|less
+  EExec dpkg-query -L "${pkg}" | less
 done
