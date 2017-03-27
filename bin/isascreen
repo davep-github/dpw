@@ -21,6 +21,7 @@ while (($# > 0))
 do
   case "$1" in
       -q) quiet_p=y;;
+      -v) quiet_p=;;
       --env|--check-env|--use-env) use_env_p=t;;
       --args|--no-env|--no-check-env|--no-use-env) use_env_p=;;
       --) shift; break;;
