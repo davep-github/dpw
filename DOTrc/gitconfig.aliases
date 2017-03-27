@@ -135,10 +135,12 @@
         # NB: you cannot disable git commands by making aliases that do nothing.
         # e.g.:
         # push = FOAD
-        # Won't work because git only looks for aliases if the command isn't a builtin.
+        # Won't work because git only looks for aliases if the command isn't
+        # matched as a builtin.
         # See the function named git().
         fpush = push
         pushf = push
+        jfp = push
 
 # Graphical diff tool employer/environment de jure
         dtgraphical = difftool --tool=diffuse
