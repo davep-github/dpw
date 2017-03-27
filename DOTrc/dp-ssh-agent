@@ -89,8 +89,8 @@ dp_ssh_start_agent0()
     # seeing important changes.
     eval export ${XXX_ARG_VAL}=${XXX_ARG_VAL}
     date
-    env | fgrep SSH
-    echo_id DP_SSH_AGENT_RC
+    #env | fgrep SSH
+    #echo_id DP_SSH_AGENT_RC
     # See if there's a running agent to which we are attached.
     dp_ssh_add_keys && {
         echo "Added keys to existing agent."
@@ -156,7 +156,7 @@ dp_ssh_start_agent()
     export XXX_ARG_VAL=dp_SSH_start_agent0_${SECONDS}
     dp_ssh_start_agent0 "$@" >/dev/null 2>&1
     unset XXX_ARG_VAL
-    
+
     [ -n "${dashx_p}" ] && envgrep SSH
 }
 
