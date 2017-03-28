@@ -3,9 +3,9 @@
 #source script-x
 #set -x
 # These were clobbering each other across hosts.
-DP_SSH_AGENT_RC="$HOME/.ssh/acmds.$HOSTNAME"
-DP_SSH_AGENT_RC_STDERR="${DP_SSH_AGENT_RC}.stderr"
-DP_SSH_AGENT_RC_LOG="${DP_SSH_AGENT_RC}.log"
+: ${DP_SSH_AGENT_RC="$HOME/.ssh/acmds.$HOSTNAME"}
+: ${DP_SSH_AGENT_RC_STDERR="${DP_SSH_AGENT_RC}.stderr"}
+: ${DP_SSH_AGENT_RC_LOG="${DP_SSH_AGENT_RC}.log"}
 export DP_SSH_AGENT_RC_umask=0077
 export DP_SSH_AGENT_RC_STDERR_umask=${DP_SSH_AGENT_RC_umask}
 
@@ -58,6 +58,7 @@ dp_ssh_add_keys()
 dp_ssh_start_agent0()
 {
 #set -x
+    echo "$(date): begin dp_ssh_start_agent0(). PID: $$, BASHPID: ${BASHPID}."
 # Until I fix this whole concept.
 #what-was-wrong-before?     [ -z "${SSH_AGENT_PID}" ] && {
 #what-was-wrong-before?         eval $(ssh-agent)
@@ -87,66 +88,74 @@ dp_ssh_start_agent0()
     # allows us to see if dumb-ass bash decided to run us in a
     # sub-{shell|process} which, of course, prevents the outside world from
     # seeing important changes.
-    eval export ${XXX_ARG_VAL}=${XXX_ARG_VAL}
+    eval XXX_ARG_VAL="${XXX_ARG_VAL}.$$"
+    export XXX_ARG_VAL
+    echo_id XXX_ARG_VAL
     date
-    #env | fgrep SSH
-    #echo_id DP_SSH_AGENT_RC
-    # See if there's a running agent to which we are attached.
-    dp_ssh_add_keys && {
-        echo "Added keys to existing agent."
+    env | fgrep SSH
+    echo_id DP_SSH_AGENT_RC
+    echo "$(date): See if there's a running agent to which we are attached."
+    if dp_ssh_add_keys
+    then
+        echo "$(date): Added keys to existing agent."
         return 0
-    }
+    else
+        echo "$(date): Could not add keys to an existing agent, rc: $?"
+    fi
 
-    # See if we can attach to one we started elsewhere.
+    echo "$(date): See if we can attach to one we started elsewhere."
     [ -e "${DP_SSH_AGENT_RC}" ] && {
         # Use last set of agent variables.
-        echo "--- ${DP_SSH_AGENT_RC} ---"
+        echo "$(date): --- ${DP_SSH_AGENT_RC} ---"
         cat "${DP_SSH_AGENT_RC}"
         echo "--- ${DP_SSH_AGENT_RC} ---"
         source "${DP_SSH_AGENT_RC}" || {
-            echo "Error sourcing ${DP_SSH_AGENT_RC}: $?"
+            echo "$(date): Error sourcing ${DP_SSH_AGENT_RC}: $?"
             return 3
         }
         
-        # See if the agent be still alive
+        echo "$(date): See if the agent be still alive."
         if prog-with-pid ssh-agent "${SSH_AGENT_PID}"
         then
-            # Try to add keys.
+            echo "$(date): Try to add keys to existing agent."
             dp_ssh_add_keys && {
-                echo "Reconnected to existing agent."
+                echo "$(date): Reconnected to existing agent."
                 return 0
             }
-            echo "Could not add keys to existing agent: $?"
+            echo "$(date): Could not add keys to existing agent: $?"
         else
-            echo "Could not find a running agent: $?"
+            echo "$(date): Could not find a running agent: $?"
         fi
     }
-    echo "Trying to start new agent"
     # There isn't an agent already running that we can use, neither
     # configured in this shell nor one whose configuration info is in the
     # "$DP_SSH_AGENT_RC"
     # So start one and save the configuration variables.
+    echo "$(date): Trying to start new agent"
     ssh-agent | \fgrep -v echo >| "${DP_SSH_AGENT_RC}"
     # and set them.
     source "${DP_SSH_AGENT_RC}" || {
-        echo "Error sourcing ${DP_SSH_AGENT_RC} from new agent."
+        echo "$(date): Error sourcing ${DP_SSH_AGENT_RC} from new agent."
         return 4
     }
     # If we can't set the keys, we're doomed.
     # We'll pass on the key command rc whatever it is.
+    echo "$(date): See if we can add keys to our new agent."
     dp_ssh_add_keys
     local rc="$?"
     if [ "${rc}" != 0 ]
     then
-        echo "Error adding keys to new agent."
-        echo "Killing ${SSH_AGENT_PID}"
+        echo "$(date): Error adding keys to new agent."
+        echo "$(date): Killing ${SSH_AGENT_PID}"
         kill "${SSH_AGENT_PID}"
     fi
+    echo "$(date): Added keys, returning rc: ${rc}"
     return "${rc}"
 }
 
 dp_ssh_start_agent()
 {
+    #echo "$(date): begin dp_ssh_start_agent(). PID: $$, BASHPID: ${BASHPID}."
     local dashx_p=
     [ "${1}" = "-x" ] && {
         shift
@@ -154,8 +163,8 @@ dp_ssh_start_agent()
         set -x
     }
     export XXX_ARG_VAL=dp_SSH_start_agent0_${SECONDS}
-    dp_ssh_start_agent0 "$@" >/dev/null 2>&1
-    unset XXX_ARG_VAL
+    dp_ssh_start_agent0 "$@" >| "${DP_SSH_AGENT_RC_LOG}" 2>&1
+#    unset XXX_ARG_VAL
 
     [ -n "${dashx_p}" ] && envgrep SSH
 }
