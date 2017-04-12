@@ -1275,3 +1275,4 @@ dp_mk_log_file()
 }
 
 dp_source_rc $HOME/.rc/func.completion
+dp_source_rc $HOME/.rc/func.git
