@@ -26,11 +26,11 @@ fail_file=/tmp/bk.sh.banner-FAIL.$$
 stat_files="$ok_file $fail_file"
 # make: clean, kernel, modules_install, install
 all_actions="ckmi"
-: ${action_list_dev="modules modules_install install"}
-: ${action_list_bk="build_kernel ${action_list_dev}"}
+: ${action_list_modules="modules modules_install"}
+: ${action_list_bk="build_kernel ${action_list_modules} install"}
 : ${action_list_all="clean ${action_list_bk}"}
 # Useful default for kernel dev.
-: ${action_list=${action_list_dev}}
+: ${action_list=${action_list_modules}}
 : ${what_am_i_doing_p=}
 #echo "0: actions>$actions<"
 #echo "1: actions>$actions<"
@@ -99,7 +99,7 @@ do
       --make) genkernel_p=; shift; break;;
       --genk*) genkernel_p=t; break;;
       --all) action_list="${action_list_all}";;
-      --dev) action_list="${action_list_dev}";;
+      --dev|--mod|--mods|--modules) action_list="${action_list_modules}";;
       --mii) action_list="modules_install install";;
       --bk) action_list="${action_list_bk}";;
       --) break;;
@@ -121,7 +121,7 @@ do
                   M) action_list=modules_install;;
                   m) action_list=modules;;
                   a) action_list="${action_list_all}";;
-                  d) action_list="${action_list_dev}";;
+                  d) action_list="${action_list_modules}";;
                   *) action_list="$action_list $(canonicalize $op)";;
               esac
             done
@@ -398,6 +398,6 @@ build_kernel()
 }
 
 build_kernel 2>&1 | tee -a $bk_log
-echo "BK done."
+echo "BK done: $(date)"
 
 #/home/davep/bin.Linux.i686/lcursive
