@@ -1,51 +1,51 @@
 # @todo  Make a func like emacs_remote(sybil) which will generate the proper
 # @todo  emacs syntax for a remote file (eg tramp or efs or ange)
 
-Ee|davep|             ${HOME}/
+Ee|davep|             ${davep}/
 #|bin| is very important.
-Ee|bin|               ${HOME}/bin/
-Ee|yokel|             ${HOME}yokel/
-Ee|bree|              ${HOME}bree/
-Ee|daveplog|log|      ${HOME}/var/log/
-Ee|resume|            ${HOME}jobs/resume/
-Ee|webpage|           ${HOME}devel/web-page/
-Ee|tt|                ${HOME}work/sandbox/Talisman/bin/
-Ee|deco|              /slice6/yokel${HOME}.sawfish/themes/deco/
-Ee|work|              ${HOME}work/
-Ee|memleak|ml|        ${HOME}work/tmp-ccmalloc-test/tstreams-sb/tstreams
-Ee|notes|             ${HOME}notes/
-Ee|etc|               ${HOME}etc/
+Ee|bin|               ${davep}/bin/
+Ee|yokel|             ${davep}yokel/
+Ee|bree|              ${davep}bree/
+Ee|daveplog|log|      ${davep}/var/log/
+Ee|resume|            ${davep}jobs/resume/
+Ee|webpage|           ${davep}devel/web-page/
+Ee|tt|                ${davep}work/sandbox/Talisman/bin/
+Ee|deco|              /slice6/yokel${davep}.sawfish/themes/deco/
+Ee|work|              ${davep}work/
+Ee|memleak|ml|        ${davep}work/tmp-ccmalloc-test/tstreams-sb/tstreams
+Ee|notes|             ${davep}notes/
+Ee|etc|               ${davep}etc/
 Ee|crond|             ${etc}cron.d/
 Ee|crontab|           ${etc}crontab
-Ee|tmp|               ${HOME}tmp/
-Ee|rc|                ${HOME}/.rc/
-Ee|patches|           ${HOME}patches/
-Ee|wdylan|            ${HOME}work/dylan/
-Ee|x7|                ${HOME}work-xfer/exp07/
-Ee|wx|                ${HOME}work-xfer/
-Ee|kdecfg|kdec|       ${HOME}.kde/share/config/
-Ee|icons|             ${HOME}icons/
-Ee|kdesh|             ${HOME}.kde/share/
-Ee|stuff|             ${HOME}stuff/
-Ee|kderc|             ${HOME}.kde/share/config/
-Ee|mp3db|             ${HOME}stuff/indices/mp3-db/
-Ee|indices|           ${HOME}stuff/indices/
-Ee|dptmp|htmp|tmp|    ${HOME}tmp/
-Ee|kdecfg|            ${HOME}.kde3.3/share/config/
-Ee|taxes|             ${HOME}finances/taxes/
-Ee|merge|             ${HOME}tmp/merge/
-Ee|dumped|            ${HOME}patches/xemacs/dumped/
-Ee|merge|             ${HOME}tmp/merge/
-Ee|rblib|             ${HOME}lib/rblib/
-E|inb|                ${HOME}inb/
-Ee|rsvp|              ${HOME}work/ll/rsvp/
-E|tj|                 ${HOME}work/ll/rsvp/test-jig/
-E|r2|                 ${HOME}work/ll/rsvp/RSVP2/
-E|rtj|                ${HOME}work/ll/rsvp/RSVP2/src/clients/unix/
-Ee|inb|               ${HOME}inb/
-Ee|tsat|              ${HOME}work/ll/tsat/
-E|ipr2|               ${HOME}work/ll/rsvp/research/iproute2-2.6.11/
-Ee|inbox|             ${HOME}MH/inbox/
+Ee|tmp|               ${davep}tmp/
+Ee|rc|                ${davep}/.rc/
+Ee|patches|           ${davep}patches/
+Ee|wdylan|            ${davep}work/dylan/
+Ee|x7|                ${davep}work-xfer/exp07/
+Ee|wx|                ${davep}work-xfer/
+Ee|kdecfg|kdec|       ${davep}.kde/share/config/
+Ee|icons|             ${davep}icons/
+Ee|kdesh|             ${davep}.kde/share/
+Ee|stuff|             ${davep}stuff/
+Ee|kderc|             ${davep}.kde/share/config/
+Ee|mp3db|             ${davep}stuff/indices/mp3-db/
+Ee|indices|           ${davep}stuff/indices/
+Ee|dptmp|htmp|tmp|    ${davep}tmp/
+Ee|kdecfg|            ${davep}.kde3.3/share/config/
+Ee|taxes|             ${davep}finances/taxes/
+Ee|merge|             ${davep}tmp/merge/
+Ee|dumped|            ${davep}patches/xemacs/dumped/
+Ee|merge|             ${davep}tmp/merge/
+Ee|rblib|             ${davep}lib/rblib/
+E|inb|                ${davep}inb/
+Ee|rsvp|              ${davep}work/ll/rsvp/
+E|tj|                 ${davep}work/ll/rsvp/test-jig/
+E|r2|                 ${davep}work/ll/rsvp/RSVP2/
+E|rtj|                ${davep}work/ll/rsvp/RSVP2/src/clients/unix/
+Ee|inb|               ${davep}inb/
+Ee|tsat|              ${davep}work/ll/tsat/
+E|ipr2|               ${davep}work/ll/rsvp/research/iproute2-2.6.11/
+Ee|inbox|             ${davep}MH/inbox/
 #############################################################################
 E|svnother|svno|      ${SVNOTHER}/
 E|svnwork|svnw|       ${SVNWORK}/
@@ -118,7 +118,7 @@ Ee|bld|               /sundry/build/
 Ee|xemb|              ${bld}xemacs/xemacs-${xemver}/
 Ee|xbld|              ${bld}xemacs-${xemver}/
 Ee|mewb|              ${bld}mew/cvs/mew/
-Ee|dl|                ${HOME}/Downloads/
+Ee|dl|                ${davep}/Downloads/
 Ee|wdl|dlw|           ${dl}windwoes/
 Ee|dlk|               ${dl}kde/
 Ee|dlki|              ${dl}kde/icons/
@@ -222,20 +222,20 @@ E|dp2|sdp|                      ${sundrydavep}
 E|doc2|d2|                      ${sundrydavep}doc/
 #############################################################################
 Ee|mpdd|        /var/tmp/portage/media-sound/mpd-0.12.2/work/mpd-0.12.2/
-Ee|lllisp|      ${HOME}/lisp.d/to-ll/lisp/
-Ee|l|           ${HOME}/lisp/
-Ee|play|        ${HOME}/play/
-Ee|cedet|       ${HOME}/lisp/contrib/cedet/
-Ee|dok|         ${HOME}/doc/
+Ee|lllisp|      ${davep}/lisp.d/to-ll/lisp/
+Ee|l|           ${davep}/lisp/
+Ee|play|        ${davep}/play/
+Ee|cedet|       ${davep}/lisp/contrib/cedet/
+Ee|dok|         ${davep}/doc/
 Ee|bfd2t|       /bfd2/tmp/
 Ee|atidvr|      /bfd2/tmp/ati/
 Ee|bft2|        /bfd2/tmp/
 Ee|ptmp|        /bfd2/var/tmp/portage/
-Ee|x11|        ${HOME}/issues/x11/
+Ee|x11|        ${davep}/issues/x11/
 Ee|initd|inid|  /etc/init.d/
 Ee|inid|        /etc/init.d/
 Ee|ulptg|       /bfd2/usr/local/portage/
-Ee|sap|         ${HOME}/work/ll/sapient/
+Ee|sap|         ${davep}/work/ll/sapient/
 E|pud|          /usr/portage/profiles/use.desc
 E|puld|         /usr/portage/profiles/use.local.desc
 Ee|bft|         /bfd/tmp/
@@ -258,10 +258,10 @@ Ee|foadyall|            eff-oh-ay-dee-y-all
 Ee|theskway|            gmafb
 #############################################################################
 Ee|dfx|                   /bfd2/usr/local/portage/layman/desktop-effects/
-Ee|kdeconfig|kconf|kcfg|  ${HOME}/.kde/share/config/
+Ee|kdeconfig|kconf|kcfg|  ${davep}/.kde/share/config/
 Ee|kdecompizrc|kczrc|     ${kdeconfig}compizrc
 Ee|rbutil|       /usr/portage/tmp/portage/dev-util/rbutil-9999/work/rbutil-9999/rbutil/rbutilqt/
-Ee|ffoxcfg|       ${HOME}/.mozilla/firefox/adi7ooz7.KDE/
+Ee|ffoxcfg|       ${davep}/.mozilla/firefox/adi7ooz7.KDE/
 Ee|run3|       /tmp/run3/
 Ee|bglfiles|       /collections/indices/beagle/davep/beagle/
 Ee|mairixdoc|       /usr/share/doc/mairix-0.21/
@@ -271,19 +271,19 @@ Ee|xorglog0|         /var/log/Xorg.0.log
 Ee|xorglog|          ${xorglog0}
 E|xol0|x0l|xol|      ${xorglog0}
 
-Ee|vmmail|       ${HOME}/eMail/vm.el/
-Ee|vmfolders|       ${HOME}/eMail/vm.el/folders/
-Ee|vmicache|       ${HOME}/eMail/vm.el/IMAP-cache/
-Ee|vmimapcache|       ${HOME}/eMail/vm.el/IMAP-cache/
-Ee|xebacs|       ${HOME}/droppings/editors/xemacs/xebacs.d/
-Ee|xemacsautosaves|       ${HOME}/droppings/editors/xemacs/auto-saves.d/
-Ee|asaves|       ${HOME}/droppings/editors/xemacs/auto-saves.d/
+Ee|vmmail|       ${davep}/eMail/vm.el/
+Ee|vmfolders|       ${davep}/eMail/vm.el/folders/
+Ee|vmicache|       ${davep}/eMail/vm.el/IMAP-cache/
+Ee|vmimapcache|       ${davep}/eMail/vm.el/IMAP-cache/
+Ee|xebacs|       ${davep}/droppings/editors/xemacs/xebacs.d/
+Ee|xemacsautosaves|       ${davep}/droppings/editors/xemacs/auto-saves.d/
+Ee|asaves|       ${davep}/droppings/editors/xemacs/auto-saves.d/
 Ee|mbsunk|       /collections/mail/davep/mbsunk/
 Ee|mbsyncdirs|       /collections/mail/davep/mbsunk/
 E|mbs|       /collections/mail/davep/mbsunk/
 Ee|upkb|       /usr/portage/kde-base/
 
-Ee|xf86|       ${HOME}xf86
+Ee|xf86|       ${davep}xf86
 
 ### There *must* be 3 octothorpes, e.g. "^###" in order for g -a to work.
 ### New entries are added after this mess and should occasionally be moved
@@ -292,35 +292,35 @@ Ee|xf86|       ${HOME}xf86
 ###
 Ee|kdebase|       /usr/portage/kde-base/
 Ee|kdeb|       /usr/portage/kde-base/
-Ee|MH|       ${HOME}/MH/
-E|sp|       ${HOME}/MH/singlepower/
+Ee|MH|       ${davep}/MH/
+E|sp|       ${davep}/MH/singlepower/
 Ee|envd|       /etc/env.d/
 Ee|bashcomp|       /usr/share/bash-completion/
-E|wip|       ${HOME}/work-is-play/
-Ee|wiph|wipinc|       ${HOME}/work-is-play/include/
+E|wip|       ${davep}/work-is-play/
+Ee|wiph|wipinc|       ${davep}/work-is-play/include/
 E|usd|       /usr/share/doc/
-Ee|wips|       ${HOME}/work-is-play/src/
-Ee|wipsrc|       ${HOME}/work-is-play/src/
-Ee|wipi|       ${HOME}/work-is-play/
-Ee|xdrop|       ${HOME}/droppings/editors/xemacs/
-Ee|edrop|       ${HOME}/droppings/editors/
+Ee|wips|       ${davep}/work-is-play/src/
+Ee|wipsrc|       ${davep}/work-is-play/src/
+Ee|wipi|       ${davep}/work-is-play/
+Ee|xdrop|       ${davep}/droppings/editors/xemacs/
+Ee|edrop|       ${davep}/droppings/editors/
 # Added Sun Oct 19 12:21:31 EDT 2014
 Ee|vlmpd|       /var/lib/mpd/
 # Added Wed Nov 26 15:56:42 EST 2014
-Ee|worksk|       ${HOME}/work/skaion/
+Ee|worksk|       ${davep}/work/skaion/
 # Added Wed Nov 26 15:56:48 EST 2014
-Ee|skwork|       ${HOME}/work/skaion/
+Ee|skwork|       ${davep}/work/skaion/
 # Added Thu Nov 27 11:55:03 EST 2014
 Ee|yokeldavep|ydavep|ydp|davepy|       .
 # Added Wed Dec 17 16:45:03 EST 2014
-Ee|ta2|       ${HOME}/work/skaion/ta2-scaling/
+Ee|ta2|       ${davep}/work/skaion/ta2-scaling/
 # Added Sat Apr 25 10:22:27 EDT 2015
 Ee|mpdm|       /var/lib/mpd/music/mvsik/
 # Added Sat Apr 25 10:22:31 EDT 2015
 Ee|mpdmvsik|       /var/lib/mpd/music/mvsik/
 Ee|gitrepos|       /mathoms/git-repos/
-Ee|local|       ${HOME}/local/
-Ee|loc|       ${HOME}/local/
+Ee|local|       ${davep}/local/
+Ee|loc|       ${davep}/local/
 ### Local Variables: ***
 ### tab-width: 2 ***
 ### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***

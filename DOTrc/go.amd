@@ -160,7 +160,11 @@ Ee|as46|            amd-staging-4.6
 Ee|as47|            amd-staging-4.7
 Ee|as48|            amd-staging-4.8
 Ee|as49|            amd-staging-4.9
+Ee|dpas49|          dp-amd-staging-4.9
+Ee|das49|           dp-amd-staging-4.9
 Ee|ash49|           amd-staging-hybrid-4.9
+Ee|dpash49|         dp-amd-staging-hybrid-4.9
+Ee|dash49|          dp-amd-staging-hybrid-4.9
 Ee|edcamdgpu|edcv8|edcagpu|       ${brahmalinux}/drivers/gpu/drm/amd/amdgpu/
 Ee|gfxip|       /proj/ras_arch/Users/dpanarit/Perforce/svvp4p01_1677/dpanarit_BDC-L7-DPANARI/gfxip/
 Ee|gfx8|       /proj/ras_arch/Users/dpanarit/Perforce/svvp4p01_1677/dpanarit_BDC-L7-DPANARI/gfxip/gfx8/
