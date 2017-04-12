@@ -1,5 +1,5 @@
 # Dumbassery:
-# (currently, as of git 1.5.6.1) non-git alias are executed from the top-level dir of a repo
+# (currently, as of git 1.5.6.1) non-git aliases are executed from the top-level dir of a repo
 [alias]
 	co = checkout
         # See which alias sticks and remove the rest.
@@ -45,6 +45,7 @@
 	s = status
         sno = status -uno
         ss = status -s
+        rp = rev-parse
 
         ldf = log --decorate=full
         logf = log --decorate=full
@@ -111,6 +112,8 @@
         # q.v. Zoot
         pulljustpull = pull
         pjpull = pull
+        # force pull or [just] fucking pull [already]
+        fpull = pull
         pjp = pull
         fdr = fetch --dry-run
         fetch-n = fetch --dry-run
