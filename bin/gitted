@@ -3,6 +3,8 @@
 source script-x
 set -u
 
+progname=$(basename $0)
+
 D_one=${1-}
 
 gitted_p()
@@ -47,7 +49,8 @@ gitted_p_file()
     fi
 }
 
-git_fun="gitted_p_normal"
+: ${git_fun="gitted_p_normal"}
+: ${quiet_p=}
 
 
 # Parse command line.
@@ -78,7 +81,8 @@ for i in "$@"; do
     case "$1" in
         -f) git_fun="gitted_p_file";;
         -d) git_fun="gitted_p_debug";;
-        -q) git_fun="gitted_p_quiet";;
+        -q) git_fun="gitted_p_quiet"
+            quiet_p=t;;
         --) shift; break;;
     esac
     shift
@@ -87,6 +91,13 @@ done
 at_least_one_fail=0
 for f in "$@"
 do
+  [ -e "$f" ] || {
+      at_least_one_fail=1
+      [ -z "${quiet_p}" ] && {
+          echo "$progname: $f does not exist."
+      } 1>&2
+      continue
+  }
   "$git_fun" "$f" || at_least_one_fail=1
 done
 
