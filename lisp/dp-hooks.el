@@ -731,6 +731,14 @@ c-hanging-braces-alist based upon these values.")
 (dp-set-mode-local-value 'dp-open-newline-func 'dp-c-open-newline
                          dp-c-like-modes)
 
+(defun dp-c-beginning-of-defun-0-real-bof ()
+  (interactive)
+  (dp-c-beginning-of-defun 1 'real-bof))
+
+(defun dp-c-end-of-defun-0-real-bof ()
+  (interactive)
+  (dp-c-end-of-defun 1 'real-bof))
+
 (defun dp-after-load-cc-mode ()     ;<:cc-after-load|bind-c*-keys|setup c* :>
   (interactive)
   ;; NB! Don't put per buffer vars, etc, here.
@@ -761,14 +769,11 @@ c-hanging-braces-alist based upon these values.")
     (define-key map [(meta ?a)] 'dp-toggle-mark)
     (define-key map [(meta ?A)] 'dp-mark-to-end-of-line)
     (define-key map [tab] 'dp-c-indent-command)
-    (define-key map [(meta left)] (kb-lambda 
-                                      (dp-c-beginning-of-defun 1 'real-bof)))
+    (define-key map [(meta left)] 'dp-c-beginning-of-defun-0-real-bof)
+    (define-key map [(meta right)] 'dp-c-end-of-defun-0-real-bof)
     (define-key map [(control ?x) (control left)] 'dp-c-beginning-of-defun)
     (define-key map [(control ?x) left] 'dp-c-show-class-name)
     (define-key map [(control ?x) (control right)] 'dp-c-end-of-defun)
-    (define-key map [(meta right)] 
-      (kb-lambda
-          (dp-c-end-of-defun 1 'real-bof)))
     (define-key map [(control ?x) right] 
       (kb-lambda
           (let ((p (point)))
@@ -1657,7 +1662,7 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
                (not (dp-match-a-regexp file-name dp-known-temp-file-re-list))
                (string-match "/te?mp/" file-name)
                (equal (point-min) (point-max)))
-      (dp-ding-and-message "Could be a remote temp file.")))
+      (dp-ding-and-message "Empty file. Could be a remote temp file.")))
   (switch-to-buffer (current-buffer))
   ;; (dp-raise-and-focus-frame)
   (local-set-key "\C-c\C-c" 'dp-gnuserv-edit))
