@@ -1,13 +1,25 @@
 #!/bin/sh
 
+set -x
+: ${modprobe_p=}
+
 case "$(hostname)" in
     vilya) element="/home/davep";;
-    *) element="/home/dpanarit";;
+    *) element="/home/dpanarit"
+       modprobe_p=t;;
 esac
 
-PATH="${PATH}:${element}"
-export PATH
+LOG_NAME="${element}/var/log/junk/fldm.log"
 
-sudo $(dirname $0)/lightdm-stopper
-sleep 1
-sudo $(dirname $0)/lightdm-starter
+{
+    echo "LOG_NAME>${LOG_NAME}<"
+
+    PATH="${PATH}:${element}/bin"
+    export PATH
+
+    [ -n "${modprobe_p}" ] && sudo modprobe -v amdgpu
+
+    sudo $(dirname $0)/lightdm-stopper
+    sleep 1
+    sudo $(dirname $0)/lightdm-starter
+} |& tee "${LOG_NAME}"
