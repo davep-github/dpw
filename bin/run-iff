@@ -113,6 +113,7 @@ default_progname()
 {
     # Fucking non-greedy never does what I want it to.
     # I really want it to stop as early as possible, leaving the ./- in \2
+    # I'm sure it's me.
     echo $(basename $prog) | sed -rn 's/(.*?)([.-]?iff)/\1/p'
 }
 
