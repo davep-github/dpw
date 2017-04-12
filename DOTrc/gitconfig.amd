@@ -40,7 +40,7 @@
 	disabled = true
         query = true
         disablemsg = Prevent careless pushes to brahma repo.
-        msg = hello, werld.
+        msg = You meant `stash [push]' didn't you?
 [pull]
 	disabled = true
         
