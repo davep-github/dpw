@@ -138,7 +138,7 @@
 
         (
          "^/proj/ras_arch/ras/edc/brahma/ec/kgd/"
-         ("/proj/ras_arch/ras/edc/brahma/ec/kgd/linux/drivers/gpu/drm")
+         ("/proj/ras_arch/ras/edc/brahma/ec/kgd/linux/drivers/gpu/drm/amd")
          t
          ;; These will get stale, but the stuff we'll be looking for will be
          ;; under more up-to-date dbs.
