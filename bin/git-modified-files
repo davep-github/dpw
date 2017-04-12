@@ -158,8 +158,9 @@ else
     then
         set -- "${optv[@]}"
     else
-        set --
+:        set --
     fi
+    echo 1>&2 "@>$@<@"
     # short status and skip untracked files.
     EExec git status -s ${UNO} ${status_opts}
 fi \
