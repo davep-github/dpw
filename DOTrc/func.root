@@ -242,7 +242,7 @@ page_tail()
         # Deduct 2 for my prompt.
         lines=$((${LINES:-25} - 2))
     fi
-    
+
     tail -n "${lines}" "$@"
 }
 
@@ -251,13 +251,13 @@ page_of_history()
     local lines
     if [[ -z "$*" ]]; then
         local lines=$((${LINES:-25} - 2))
-
-    elif [[ "$1" =~ ^[0-9]+$ ]]
+    elif [[ "$1" =~ ^-?[0-9]+$ ]]
     then
         lines="$1"
-
+        [[ "$1" =~ ^- ]] && lines=$(echo "$1" | cut -c 2-)
+        shift
     else
-        # What is this?
+        # Don't know what they want.  Pass it on to fc.
         fc "$@"
         return 1
     fi
