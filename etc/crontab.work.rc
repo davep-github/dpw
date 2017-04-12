@@ -6,7 +6,7 @@
 
 export progname=`basename $0`
 
-if [ -z "$DP_BASHRC_COMPLETE" ]
+if [ -z "${DP_BASHRC_COMPLETE-}" ]
 then
     rcfile="$HOME/.bashrc"
     [ -f $rcfile ] && {
