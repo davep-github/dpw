@@ -34,10 +34,15 @@ fi
 dp_no_dp_env_p_file="$HOME/ipc/dp-no-dp-env-p_${HOSTNAME}"
 #ls -l "${dp_no_dp_env_p_file}"
 
-if [ -z "${LC_DP_YES_DP_ENV_P}" ]
+if [ -z "${LC_DP_YES_DP_ENV_P-}" ]
 then
     [ -e "${dp_no_dp_env_p_file}" -o -n "$LC_DP_NO_DP_ENV_P" ] && {
-        source "$HOME/.rc/env.pristine"
+        if [ -s "${dp_no_dp_env_p_file}" ]
+        then
+            source "${dp_no_dp_env_p_file}"
+        else
+            source "$HOME/.rc/env.pristine"
+        fi
         PS1='\u@\h:\w\n[prim]\!> '
         return 0
     }
