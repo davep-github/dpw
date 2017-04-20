@@ -6,22 +6,39 @@ git_p()
     __gitdir
 }
 
+git_isa_rev()
+{
+    git rev-parse "$@" >/dev/null 2>&1
+}
+
 git_change_sandbox()
 {
+    local rev="${1-}"; shift
+
     # `chdir' with no args means to show us where we are.
-    if [ -z "$*" ]
+    if [ -z "${rev}" ]
     then
         git branch
     else
         # Prevent braino of using gcd instead of cd if arg is a dir.
-        [ -d "${1}" ] && {
-            read -e -p "${1} is a dir. Continue [y/N]? "
+        [ -d "${rev}" ] && {
+            read -e -p "${rev} is a dir. Continue [y/N]? "
             case "${REPLY}" in
                 [yY]) ;;
                 ""|[Nn]) echo 1>&2 "Bailing."; return 1;;
             esac
         }
-        git checkout "$@"
+        if ! git_isa_rev "${rev}"
+        then
+            # Not a rev.  See if it's an abbrev.
+            if ! rev=$(dogo "${rev}")
+            then
+                echo "Cannot make heads nor tails of >${rev}<"
+                return 1
+            fi
+        fi
+            
+        git checkout "${rev}" "$@"
         git stash list
         echo "??? You may want to consider reindexing the code."
     fi
@@ -98,3 +115,4 @@ git()
     return $rc
 }
 
+true
