@@ -55,18 +55,21 @@
         ld5 = log --decorate -n 5
         ldn = log --decorate -n
         log5 = log -n 5
-        l1 = log -n 1
         l5 = log -n 5
         log11 = log -n 11
         l11 = log -n 11
         lone5 = log -n 5 --oneline
         loneog11 = log -n 11 --oneline
         lol = log --oneline
+        l1 = log --oneline
+        l1l = log --oneline
+        lone = log --oneline
         lol5 = log -n 5 --oneline
         lolog11 = log -n 11 --oneline
         lo5 = log -n 5 --oneline
         lo11 = log -n 11 --oneline
         lon = log --oneline -n
+        l1n = log --oneline -n
         lon5 = log -n 5 --oneline
         lon11 = log -n 11 --oneline
         # Height of laziness: saving -n<space>
