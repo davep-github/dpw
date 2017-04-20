@@ -105,6 +105,16 @@ Usage_error()
 # template end.
 ########################################################################
 
+: ${filter:=cat}
+
+if [ "$TERM" = "emacs" ]
+then
+    # Emacs shell buffers sometimes get confused/out of sync with ANSI colors.
+    # To prevent a WTF moment -- which I just had -- Emacs still colorizes
+    # the lines in the buffer, including compiler errors.
+    filter=dumbo
+fi
+
 M=${M-$PWD}
 if [ -z "${KDIR-}" ]
 then
@@ -119,4 +129,4 @@ fi 1>&2
     exit 1
 } 1>&2
 
-EExec bash -c "/usr/bin/make -C $KDIR M=${M} $@"
+EExec bash -c "/usr/bin/make -C $KDIR M=${M} $@" |& "${filter}"
