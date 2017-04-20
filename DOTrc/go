@@ -1,24 +1,25 @@
 # ${HOME} is special in that it does not end with a /
-Ee|elm|			${HOME}/.elm/
-Ee|jobs|		${HOME}/jobs/
-Ee|ssh|			${HOME}/.ssh/
-Ee|pine|		${HOME}/pine/
-Ee|ppp|			${HOME}/.ppp/
+Ee|davep|               ${HOME}
+Ee|elm|			${davep}/.elm/
+Ee|jobs|		${davep}/jobs/
+Ee|ssh|			${davep}/.ssh/
+Ee|pine|		${davep}/pine/
+Ee|ppp|			${davep}/.ppp/
 Ee|ulb|			/usr/local/bin/
-Ee|yokel|               ${HOME}/yokel/
+Ee|yokel|               ${davep}/yokel/
 Ee|yokelbin|yb|         ${yokel}bin/
 Ee|yokelsbin|ysb|       ${yokel}sbin/
 Ee|yokeletc|ye|         ${yokel}etc/
 Ee|yokellib|yl|         ${yokel}lib/
 q|noway|		no-way-we-see-this-since-selector-is-q
-Ee|pdb|			${HOME}/etc/pdb/
-Ee|pydb|		${HOME}/etc/pydb/
-Ee|doc|			${HOME}/doc/
-Ee|inb|                 ${HOME}/inb/
-E|rc|                   ${HOME}/.rc/
-Ee|bin|			${HOME}/bin/
-Ee|lisp|		${HOME}/lisp/
-Ee|dpbuild|dpbld|       ${HOME}/davep/build/
+Ee|pdb|			${davep}/etc/pdb/
+Ee|pydb|		${davep}/etc/pydb/
+Ee|doc|			${davep}/doc/
+Ee|inb|                 ${davep}/inb/
+E|rc|                   ${davep}/.rc/
+Ee|bin|			${davep}/bin/
+Ee|lisp|		${davep}/lisp/
+Ee|dpbuild|dpbld|       ${davep}/davep/build/
 Ee|usdoc|usd|           /usr/share/doc/
 
 #E|elisponly|           a test which should not match because of comment
@@ -33,17 +34,17 @@ Ee|testA|testB|testC| 	value-for-testABC
 
 # dpw git dir (dpw/dpw) is visited *FAR* more often than dpw (dpw), so remove
 # dpwg and just use dpw for what was dpwg.
-Ee|dpwgit|dpwg|              ${HOME}/dpw/dpw/
+Ee|dpwgit|dpwg|              ${davep}/dpw/dpw/
 Ee|dpworld|dpw|              ${dpwgit}
 Ee|dpwbuild|dpwbld|dpwbld|   ${dpworld}build/
-Ee|dpylib|                   ${HOME}/lib/pylib/
-Ee|lubuntuconf|lubconf|      ${HOME}/.config/lxsession/Lubuntu/
-Ee|obconf|                   ${HOME}/.config/openbox/
+Ee|dpylib|                   ${davep}/lib/pylib/
+Ee|lubuntuconf|lubconf|      ${davep}/.config/lxsession/Lubuntu/
+Ee|obconf|                   ${davep}/.config/openbox/
 Ee|obrc|                     ${obconf}/rc.xml
 Ee|obmenu|                   ${obconf}/menu.xml
 Ee|cscopedbroot|             000-cscope-db-root
 Ee|csdb|                     ${cscopedbroot}
-Ee|ipystartup|ipyup|ipyrc|   ${HOME}/.config/ipython/profile_default/startup/
+Ee|ipystartup|ipyup|ipyrc|   ${davep}/.config/ipython/profile_default/startup/
 
 ### 
 ### Local Variables: ***
