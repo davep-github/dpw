@@ -30,6 +30,10 @@
 # (freebsd machine at home). Each host family entry refs the default
 # entry so that all necessary vars are present.
 
+# I had a strange spontaneous reboot, and suddenly this old version was back.
+# A copy make on Apr 22 is actually newer than this file date Apr 28.
+# WTF?! O!?
+
 # import class defs for entries and databases
 import dppydb
 #db=dbt
