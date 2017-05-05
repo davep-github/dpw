@@ -17,6 +17,13 @@
 	disabled = false
 
 [commit]
-    checkbranch = true
-	disabled = false
-    dpmessage = TEST TEST TEST TEST.
+        checkbranch = true
+        disabled = false
+        dpmessage = TEST TEST TEST TEST.
+
+[sendemail]
+        # smtp specifics in ~/.msmtprc
+        smtpServer = "/usr/bin/msmtp"
+        aliasesFile = ~/.sendmail.aliases
+        aliasFileType = sendmail
+
