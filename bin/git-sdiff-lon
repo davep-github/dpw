@@ -1,0 +1,176 @@
+#!/usr/bin/env bash
+########################################################################
+#
+# template begin.
+
+# davep specific code -------------8><------------------
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+# davep specific code -------------8><------------------
+
+#mutually exclusive with real EExec# EExec=
+#mutually exclusive with real EExec# no_exec_p=
+#mutually exclusive with real EExec# Non_EExecer()
+#mutually exclusive with real EExec# {
+#mutually exclusive with real EExec#     echo "{-} $@" 1>&2
+#mutually exclusive with real EExec# }
+
+#mutually exclusive with real EExec# Verbose_EExecer()
+#mutually exclusive with real EExec# {
+#mutually exclusive with real EExec#     echo "{+} $@"
+#mutually exclusive with real EExec#     "$@"
+#mutually exclusive with real EExec# }
+
+trap_exit_msg=
+DP_TEMP_FILES=
+
+dp_mktemp()
+{
+    local file_name="${1}"; shift
+    local template="${2-}";
+    [ -z "${template-}" ] && {
+        template=$(echo "${file_name}" \
+            | awk '{ printf("%s%s", $1, "XXXXX" ) }')
+    }
+    local temp_file=$(mktemp -t "${template}") || {
+        echo "Cannot make tmp file."
+        exit 1
+    } 1>&2
+    DP_TEMP_FILES="${DP_TEMP_FILES} ${temp_file}"
+    echo "${temp_file}"
+}
+
+cleanup_after_sig()
+{
+    {
+        #echo "in cleanup: $@"
+        #echo_id DP_TEMP_FILES
+        [ -n "${DP_TEMP_FILES-}" ] && {
+            rm -f ${DP_TEMP_FILES}
+        }
+    } 1>&2
+}
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    EExec_verbose_msg "on_exit: rc: $rc; ${trap_exit_msg}"
+    cleanup_after_sig
+}
+
+trap 'on_exit' 0
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_error: rc: $rc; ${trap_exit_msg}"
+    cleanup_after_sig
+    trap '' 0
+}
+# trap 'on_error' ERR
+
+sig_exit ()
+{
+    {
+        local sig_num=$1; shift
+        echo
+        echo "sig_exit, sig_num: $sig_num"
+        cleanup_after_sig
+        exit 1
+    } 1>&2
+}
+
+# for sig in 2 3 4 5 6 7 8 15
+# do
+#     trap "sig_exit $sig" $sig
+# done
+
+display_stderr()
+{
+    echo 1>&2 "$progname: $@"
+}
+
+status_msg()
+{
+    display_stderr "$@"
+}
+
+fatal_error()
+{
+    local error="${1}"
+    shift
+    display_stderr "$@"
+    exit "${error}"
+}
+
+Usage_error()
+{
+    fatal_error 1 "$@"
+}
+
+run_git_cmd()
+{
+    local commit="${1}"
+    shift
+    local tmp_file="${1}"
+    shift
+    local git_cmd="${1}"
+    shift
+
+    EExec_verbose_echo_id tmp_file
+    EExec_verbose_echo_id git_cmd
+    # Use tee so we can eexec it.
+    EExec ${git_cmd} "$@" "${commit}" | EExec tee "${tmp_file}" >/dev/null  
+}
+#
+# template end.
+########################################################################
+: ${git_cmd:=git lon}
+: ${git_args:=}
+
+left_commit="${1}"
+shift
+right_commit="${1}"
+shift
+
+left_tmp_file=$(dp_mktemp "${progname}-left-")
+EExec_verbose_echo_id left_tmp_file
+right_tmp_file=$(dp_mktemp "${progname}-right-")
+EExec_verbose_echo_id right_tmp_file
+
+trap "rm -f ${left_tmp_file} ${right_tmp_file}" 0
+
+EExec -y run_git_cmd "${left_commit}" "${left_tmp_file}" "${git_cmd}" "$@"
+EExec -y run_git_cmd "${right_commit}" "${right_tmp_file}" "${git_cmd}" "$@"
+
+diff >& /dev/null -q "${left_tmp_file}" "${right_tmp_file}" && {
+    echo "Outputs are identical."
+    exit 0
+}
+
+sdiff --minimal "${left_tmp_file}" "${right_tmp_file}"
