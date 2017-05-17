@@ -2,14 +2,14 @@
 # $Id: dogo,v 1.4 2005/02/09 09:20:09 davep Exp $
 #set -x
 
-. script-x 
+. script-x
 
 SHIFT=shift
-
+do_dirname=t
 fini()
 {
     o_val="$*$two"
-    [ -f "${o_val}" ] && o_val=$(dirname "${o_val}")
+    [ -n "${do_dirname}" ] && [ -f "${o_val}" ] && o_val=$(dirname "${o_val}")
     echo $o_val
     # All of our lookup attempts failed.
     [ "$o_val" = "$argWas" ] && exit 1
@@ -62,6 +62,7 @@ do
   case "$1" in
       -l) show_dir_p="t"; SHIFT=: ;;
       -L) shift; fini $(go_lookup "$1"); exit;;
+      --no-dirname|--nd) do_dirname=;;
       *) break;;
   esac
   shift
