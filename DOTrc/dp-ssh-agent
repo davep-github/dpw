@@ -2,6 +2,7 @@
 
 #source script-x
 #set -x
+#set -e
 # These were clobbering each other across hosts.
 : ${DP_SSH_AGENT_RC="$HOME/.ssh/acmds.$HOSTNAME"}
 : ${DP_SSH_AGENT_RC_STDERR="${DP_SSH_AGENT_RC}.stderr"}
@@ -28,6 +29,8 @@ dp_ssh_add_default_keys()
 {
     ssh-add -l > /dev/null 2>&1
     local rc=$?
+    echo "$(date): dp_ssh_add_default_keys(): rc: $rc"
+
     case "$rc" in
          # Some keys have been added. We won't do an ssh-add to get all
          # because that will require us to re-enter any existing keys'
@@ -88,9 +91,9 @@ dp_ssh_start_agent0()
     # allows us to see if dumb-ass bash decided to run us in a
     # sub-{shell|process} which, of course, prevents the outside world from
     # seeing important changes.
-    eval XXX_ARG_VAL="${XXX_ARG_VAL}.$$"
-    export XXX_ARG_VAL
-    echo_id XXX_ARG_VAL
+    #eval XXX_ARG_VAL="${XXX_ARG_VAL}.$$"
+    #export XXX_ARG_VAL
+    #echo_id XXX_ARG_VAL
     date
     env | fgrep SSH
     echo_id DP_SSH_AGENT_RC
@@ -100,6 +103,10 @@ dp_ssh_start_agent0()
         echo "$(date): Added keys to existing agent."
         return 0
     else
+#        if [ "$?" = 1 ]
+#        then
+#            return 11
+#        fi
         echo "$(date): Could not add keys to an existing agent, rc: $?"
     fi
 
@@ -162,8 +169,17 @@ dp_ssh_start_agent()
         dashx_p=t
         set -x
     }
-    export XXX_ARG_VAL=dp_SSH_start_agent0_${SECONDS}
-    dp_ssh_start_agent0 "$@" >| "${DP_SSH_AGENT_RC_LOG}" 2>&1
+    #export XXX_ARG_VAL=dp_SSH_start_agent0_${SECONDS}
+    
+    while :
+    do
+      dp_ssh_start_agent0 "$@" >| "${DP_SSH_AGENT_RC_LOG}" 2>&1
+      [ "$?" = 11 ] && {
+          echo "EAGAIN, iteratin'..."
+          continue
+      } 1>&2
+      break
+    done
 #    unset XXX_ARG_VAL
 
     [ -n "${dashx_p}" ] && envgrep SSH
