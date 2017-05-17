@@ -1,0 +1,33 @@
+# Example for a system wide configuration file
+
+# A system wide configuration file is optional.
+# If it exists, it usually defines a default account.
+# This allows msmtp to be used like /usr/sbin/sendmail.
+
+# The SMTP smarthost.
+account amd
+host atlsmtp10.amd.com
+port 25
+from david.panariti@amd.com
+user panarit
+password  QTPi'''3!415 
+#'
+auth off
+
+# Construct envelope-from addresses of the form "user@oursite.example".
+#auto_from on
+maildomain amd.com
+domain amd.com
+
+#tls_trust_file /etc/ssl/certs/ca-certificates.crt
+#tls on
+tls_starttls on
+tls_certcheck off
+
+# Syslog logging with facility LOG_MAIL instead of the default LOG_USER.
+syslog LOG_MAIL
+# Use this till debugged.
+logfile /tmp/msmtp.log.amd
+aliases /home/dpanarit/.sendmail.aliases
+#
+account default : amd
