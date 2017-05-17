@@ -118,7 +118,7 @@ fi
 M=${M-$PWD}
 if [ -z "${KDIR-}" ]
 then
-    KDIR="$(dogo edclinux)"
+    KDIR="$(dogo brahmalinux)"
     echo "Using hardcoded kernel dir (KDIR):
 >${KDIR}<
   Please set in, say, ~/.rc/env.<PROJECT>"
