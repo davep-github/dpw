@@ -145,30 +145,96 @@ run_git_cmd()
     EExec_verbose_echo_id tmp_file
     EExec_verbose_echo_id git_cmd
     # Use tee so we can eexec it.
-    EExec ${git_cmd} "$@" "${commit}" | EExec tee "${tmp_file}" >/dev/null  
+    EExec ${git_cmd} "$@" "${commit}" | EExec tee "${tmp_file}" >/dev/null
 }
 #
 # template end.
 ########################################################################
-: ${git_cmd:=git lon}
+: ${git_cmd:=git log --oneline}
 : ${git_args:=}
+: ${silent_p=}
+: ${show_diff_always_p=}
+: ${num_lines_right:=33}
+: ${num_lines_left:=33}
 
-left_commit="${1}"
+# Usage variable usage:
+Usage_args_info=" Diff one line log messages twixt two branches."
+Usage_synopsis="
+[options] commit1 commit2
+"
+# Using ) after the args makes copy & paste between here and the
+# case statement easier.
+Usage_details="${EExec_parse_usage}
+-d) Show lon output even if identical.
+-s) Be silent and exit with diff status.
+"
+# Example of arg parsing.
+option_str="dsl:N:r:n:"
+long_options=(
+    "diff-output" "do"
+    "silent" "rc-only" "status"
+    "num-lines:"
+    "nr:" "nl:"
+)
+source dp-getopt+.sh || exit 1
+while (($# > 0))
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support: -n -v -q, etc. q.v. ~/bin/eexec
+      # Done by EExec_parse and friends.
+
+      # Program options.
+      -s|--silent|--rc-only|--status) silent_p=t;;
+      -d|--diff-only|--do) show_diff_always_p=t;;
+      -l|-N|--num-lines) shift; num_lines_left="${1}"; num_lines_right="${1}";;
+      --nr|-r) shift; num_lines_right="${1}";;
+      --nl|-l) shift; num_lines_left="${1}";;
+
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      # getopt will barf about unknown options.
+      # Here we barf about known options that we have forgotten to handle.
+      *) echo 1>&2 "Unhandled option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+# The following is needed only when args are required.
+[ "$*" = "" ] && Usage
+
+left_commit="${1-}"
+[ "${left_commit}" = "." ] && left_commit=HEAD
 shift
-right_commit="${1}"
-shift
+right_commit="${1-}"
+if [ "${right_commit}" = "." ]
+then
+    right_commit=HEAD
+    shift
+elif [ -z "${right_commit}" ]
+then
+    right_commit=HEAD
+else
+    shift
+fi
 
 left_tmp_file=$(dp_mktemp "${progname}-left-")
 EExec_verbose_echo_id left_tmp_file
 right_tmp_file=$(dp_mktemp "${progname}-right-")
 EExec_verbose_echo_id right_tmp_file
 
-trap "rm -f ${left_tmp_file} ${right_tmp_file}" 0
+#trap "rm -f ${left_tmp_file} ${right_tmp_file}" 0
 
-EExec -y run_git_cmd "${left_commit}" "${left_tmp_file}" "${git_cmd}" "$@"
-EExec -y run_git_cmd "${right_commit}" "${right_tmp_file}" "${git_cmd}" "$@"
+EExec -y run_git_cmd "${left_commit}" "${left_tmp_file}" "${git_cmd}" -n "${num_lines_left}" "$@"
+EExec -y run_git_cmd "${right_commit}" "${right_tmp_file}" "${git_cmd}" -n "${num_lines_right}" "$@"
 
-diff >& /dev/null -q "${left_tmp_file}" "${right_tmp_file}" && {
+diff >& /dev/null -q "${left_tmp_file}" "${right_tmp_file}"
+rc="$?"
+
+[ -n "${silent_p}" ] && exit "${rc}"
+
+[ -z "${show_diff_always_p}" ] && ((rc == 0)) && {
     echo "Outputs are identical."
     exit 0
 }
