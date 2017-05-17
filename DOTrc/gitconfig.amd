@@ -11,14 +11,6 @@
 #	name = Just A. Guy
 #	email = just.a.guy@meduseld.net
 
-[sendemail]
-# e.g.        smtpserver = smtp.mail.com
-        smtpserver = atlsmtp10.amd.com
-# e.g.        smtpuser = john.due
-        smtpuser = david.panariti
-        smtp-encryption=tls
-        confirm = auto
-
 [url "ssh://gerritgitmaster/"]
 	pushInsteadOf = ssh://gerritgit/
 
@@ -36,13 +28,86 @@
 [commit]
 	template = /home/dpanarit/.rc/work/commit-template.txt
 
-[push]
-	disabled = true
-        query = true
-        disablemsg = Prevent careless pushes to brahma repo.
-        msg = You meant `stash [push]' didn't you?
 [pull]
 	disabled = true
         
 [format]
 	signoff = true
+
+[push]
+	disabled = true
+        query = true
+        disablemsg = Prevent careless pushes to brahma repo.
+        msg = "You meant `stash [push]' didn't you?"
+
+########################################################################
+# Tom's *working* example.
+# [sendemail]
+#         smtpServer = smtp.office365.com
+#         smtpencryption = tls
+#         smtpserverport = 587
+#         smtpUser = tstdenis@amd.com
+#         smtpPass = <password>
+#         to = amd-gfx@lists.freedesktop.org
+
+# [sendemail]
+#         # smtp specifics in ~/.msmtprc.amd.office365
+#         smtpServer = /usr/bin/msmtp
+#         smtpserveroption = -d
+#         smtpserveroption = --file=/home/dpanarit/.rc/msmtprc.amd.office365
+#         aliasesFile = ~/.sendmail.aliases
+#         aliasFileType = sendmail
+
+[sendemail]
+        smtpServer = atlsmtp10.amd.com
+        smtpserverport = 25
+        smtpencryption = tls
+        smtpsslcertpath =
+        smtpUser = dpanarit
+        smtpPass = QTPi'''3!415
+#'
+
+# [sendemail]
+#           # smtp specifics in ~/.msmtprc.amd
+#           smtpServer = /usr/bin/msmtp
+#           #smtpserveroption = -d
+#           smtpserveroption = --file=/home/dpanarit/.rc/msmtprc.amd.amd
+#           aliasesFile = ~/.sendmail.aliases
+#           aliasFileType = sendmail
+
+# [sendemail]
+#         smtpServer = smtp.office365.com
+#         smtpserverport = 25
+#         smtpencryption = tls
+#         smtpUser = dpanarit@amd.com
+#         smtpPass = QTPi'''3!415
+# #'
+
+# [sendemail]
+#         smtpServer = smtp.office365.com
+#         smtpencryption = starttls
+#         smtpserverport = 587
+#         smtpUser = dpanarit@amd.com
+
+# [sendemail]
+#         smtpServer = smtp.office365.com
+#         smtpencryption = tls_starttls
+#         smtpserverport = 587
+#         smtpUser = dpanarit@amd.com
+
+# [sendemail]
+#         # smtp specifics in ~/.msmtprc.amd.office365
+#         smtpServer = /usr/bin/msmtp
+#         aliasesFile = ~/.sendmail.aliases
+#         aliasFileType = sendmail
+
+# [sendemail]
+#         # smtp specifics in ~/.rc/msmtprc.gmail
+#         smtpServer = /usr/bin/msmtp
+#         smtpUser = dpanarit@amd.com
+#         smtpserveroption = -d
+#         #smtpserveroption = --file=/home/dpanarit/.rc/msmtprc.amd.gmail
+#         smtpserveroption = --file=/home/dpanarit/.rc/msmtprc.amd.office365
+#         from = david.panariti@amd.com
+#         aliasesFile = ~/.sendmail.aliases
+#         aliasFileType = sendmail

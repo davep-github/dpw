@@ -24,6 +24,7 @@
 [sendemail]
         # smtp specifics in ~/.msmtprc
         smtpServer = "/usr/bin/msmtp"
+
         aliasesFile = ~/.sendmail.aliases
         aliasFileType = sendmail
 
