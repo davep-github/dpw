@@ -660,7 +660,7 @@ We say: \" p is a pointer to char\", not
        'call-interactively 'c-indent-command)
       ;; Add other things to try here. We will stop after the first non-nil
       ;; return.
-      (when (bound-and-true-p dp-c-using-kernel-style-p)
+      (when (bound-and-true-p dp-use-stupid-kernel-indentation-p)
         (dp-kernel-style-var-name-align))
       ;; default.
       (c-indent-command)))
@@ -1736,13 +1736,14 @@ Current annotations are:
   (replace-in-string (replace-in-string string "^[0-9]" repl-str)
                      "[^0-9A-Za-z_]" repl-str))
 
-(defun* dp-dot-h-reinclusion-protection (dont-comment-endif-p
-                                         &key
-                                         (comment t)
-                                         (prefix "")
-                                         (suffix "_INCLUDED")
-                                         (format-str "%s%s%s")
-                                         formatter)
+(defun* dp-dot-h-reinclusion-protection0 (dont-comment-endif-p
+                                          &key
+                                          (comment t)
+                                          (prefix "")
+                                          (suffix "_INCLUDED")
+                                          (format-str "%s%s%s")
+                                          (say-dot-p t)
+                                          formatter)
   "Add reinclusion protection sequence to a header file.
 The sequence looks like this:
 #ifndef xx
@@ -1780,7 +1781,7 @@ Otherwise, the sequence begins at \(point-min) and ends at \(point-max)."
         (setq ifdef-start (point))
 	(insert def-name "\n")
 	(insert def-name "\n\n")
-	(dp-c-namify-region ifdef-start (point) 'say-dot)
+	(dp-c-namify-region ifdef-start (point) say-dot-p)
 	(goto-char ifdef-start)
 	(setq comment-text
 	      (if (and comment comment-endif-p)
@@ -1805,6 +1806,24 @@ Otherwise, the sequence begins at \(point-min) and ends at \(point-max)."
     (goto-char old-pos)
     (forward-line -1))
   (dmessage "@todo: Delete any existing ifdef lines first."))
+(dp-safe-alias 'idef0 'dp-dot-h-reinclusion-protection0)
+
+(defun dp-dot-h-reinclusion-protection-kernel ()
+  (interactive)
+  (dp-dot-h-reinclusion-protection0 t
+                                    :comment nil
+                                    :prefix "__"
+                                    :suffix "__"
+                                    :format-str "%s%s%s"
+                                    :say-dot-p nil
+                                    :formatter nil))
+(dp-safe-alias 'kidef 'dp-dot-h-reinclusion-protection-kernel)
+
+(defun dp-dot-h-reinclusion-protection ()
+  (interactive)
+  (if dp-c-using-kernel-style-p
+      (dp-dot-h-reinclusion-protection-kernel)
+    (dp-dot-h-reinclusion-protection)))
 (dp-safe-alias 'idef 'dp-dot-h-reinclusion-protection)
 
 (defun dp-insert-fc (fc-file)

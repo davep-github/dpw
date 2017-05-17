@@ -834,7 +834,7 @@ c-hanging-braces-alist based upon these values.")
   :group 'dp-whitespace-vars
   :type 'boolean)
 
-(defcustom dp-c-like-mode-default-indent-tabs-mode t
+(defcustom dp-c-like-mode-default-indent-tabs-mode-p t
   "How should we treat indentation: with chars or tabs.
 kernel coding style be damned, indentation and tabs are two different things.
 Also, spaces will *always* result in the same indentation size, regardless of
@@ -857,7 +857,8 @@ tab setting, font or phase of the moon."
   (c-toggle-auto-state 1)               ;set c-auto-newline
   (dp-turn-off-auto-fill)
   (setq dp-cleanup-whitespace-p dp-default-c-like-mode-cleanup-whitespace-p)
-  (setq indent-tabs-mode dp-c-like-mode-default-indent-tabs-mode
+  (setq indent-tabs-mode dp-c-like-mode-default-indent-tabs-mode-p
+        c-tab-always-indent (not dp-use-stupid-kernel-indentation-p)
         c-recognize-knr-p nil
         dp-insert-tempo-comment-func 'dp-c-insert-tempo-comment)
 
