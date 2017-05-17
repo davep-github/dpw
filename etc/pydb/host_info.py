@@ -30,10 +30,6 @@
 # (freebsd machine at home). Each host family entry refs the default
 # entry so that all necessary vars are present.
 
-# I had a strange spontaneous reboot, and suddenly this old version was back.
-# A copy make on Apr 22 is actually newer than this file date Apr 28.
-# WTF?! O!?
-
 # import class defs for entries and databases
 import dppydb
 #db=dbt
@@ -276,11 +272,29 @@ e(
 #CZ_FP4_BG_COLOR = 'rgb:ba/c1/d1'
 #CZ_FP4_BG_COLOR = 'rgb:57/a2/71'
 #CZ_FP4_BG_COLOR = 'rgb:C7/E3/D2'
-CZ_FP4_FG_COLOR = 'white'
-CZ_FP4_BG_COLOR = 'rgb:24/00/68'
 
-PRIMARY_BOX_FG_COLOR = CZ_FP4_FG_COLOR
-PRIMARY_BOX_BG_COLOR = CZ_FP4_BG_COLOR
+PRIMARY_BOX_FG_COLOR = 'white'
+PRIMARY_BOX_BG_COLOR = 'rgb:24/00/68'
+
+e(
+    kef='host',
+    dat={
+        'host-pattern': '^xerxes$',
+        'family': 'amd_family',
+        'comment': 'A BETTONG Carrizo dev system (on my desk).',
+        'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 180x74-0+0',
+        'xterm_bg': PRIMARY_BOX_BG_COLOR,
+        'xterm_fg': PRIMARY_BOX_FG_COLOR,
+        'xem_bg_color': "grey80",
+        'project': 'brahma',
+ },
+    ref=[amd_family, OSDB['linux'], default]
+)
+
+#CZ_FP4_FG_COLOR = 'white'
+#CZ_FP4_BG_COLOR = 'rgb:12/00/32'
+CZ_FP4_FG_COLOR = 'darkblue'
+CZ_FP4_BG_COLOR = 'rgb:ff/ef/d1'
 
 e(
     kef='host',
@@ -289,8 +303,8 @@ e(
         'family': 'amd_family',
         'comment': 'A BETTONG Carrizo dev system (on my desk).',
         'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 180x74-0+0',
-        'xterm_bg': PRIMARY_BOX_BG_COLOR,
-        'xterm_fg': PRIMARY_BOX_FG_COLOR,
+        'xterm_bg': CZ_FP4_BG_COLOR,
+        'xterm_fg': CZ_FP4_FG_COLOR,
         'xem_bg_color': "grey80",
         'project': 'brahma',
  },
