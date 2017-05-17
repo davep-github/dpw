@@ -59,7 +59,7 @@ excluded_files_file_template=$(normpath "${DP_TMPDIR-$TMP}/extagtree.excluded-fi
 : ${EXCLUDED_FILES_FILE:=$(mktemp "${excluded_files_file_template}")}
 # .c .h .cxx .py .java etc.
 # NB! .cl is for OpenCL files, used at AMD.  It is C-like.
-: ${INTERESTING_FILES:="[chly](xx|pp)?|h-py|cs|cc|hh|py|pm|pl|java|[Ss]|asm|ASM|nasm|NASM|cl"}
+: ${INTERESTING_FILES:="[chly](xx|pp)?|h-py|cs|cc|hh|py|pm|pl|java|[Ss]|asm|ASM|nasm|NASM|cl|p(er)?l"}
 vsetp "${SITE_INTERESTING_SRC_FILE_REGEXP-}" && {
     INTERESTING_FILES="${INTERESTING_FILES}|${SITE_INTERESTING_SRC_FILE_REGEXP}"
 }
@@ -82,7 +82,7 @@ EExec_verbose_msg "Read various ignore files like, .(cvs|git)ignore, ~/.gitexclu
 ./.git/info/exclude, etc, and make a sed expression to ignore them.
 NB: most are globs, not regexps.
 Excludes are sed -r regexps"
-: ${EXCLUDES:='-e /(doxygen|html|doc|dist-build|retired|^,|,$|^HIDE\.|\.HIDE$|^HIDE^|^[jJ][uU][nN][kK]$|cscope-db-root|,novc$|,NOVC$|[.-]TMP($|.)|\.merged?|(^|\/)q\..*(\.[ch](\+\+)?$)|(^|\/)q[0-9]?\..?$)/d'}
+: ${EXCLUDES:='-e /(doxygen|html|doc|dist-build|retired|^,|,$|\.olde\.|[.-][Nn][Oo]?-?[Ii]?[Nn]?[Dd][Ee]?[Xx]|^HIDE\.|\.HIDE$|^HIDE^|^[jJ][uU][nN][kK]$|cscope-db-root|,novc$|,NOVC$|[.-]TMP($|.)|\.merged?|(^|\/)q\..*(\.[ch](\+\+)?$)|(^|\/)q[0-9]?\..?$)/d'}
 : ${files_to_cat=""}
 : ${only_cat_files=""}
 : ${relative_opt=}
