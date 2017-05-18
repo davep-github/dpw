@@ -1,0 +1,29 @@
+source ~/.mutt-aliases
+my_hdr X-Attribution: davep
+set alias_file = ~/.mutt-aliases
+set attribution  = "On %d, %n wrote:"
+set record = sent
+set move = no
+set hostname = xerxes
+set mbox_type = Maildir
+set folder = imaps://atlimap10.amd.com
+set sort = reverse-date-received
+set sort_aux = reverse-date-received
+set tmpdir=~/tmp                 # Temporary files aren't stored in public places.
+
+set history=1000                 # Number of lines of history in memory
+set history_file=~tmp/.mutt-history
+set save_history=1000            # Number of lines of history in file
+
+set reverse_name
+set from=david.panariti@amd.com
+
+# Oh, wow, the colors...
+source ~/.mutt-colors
+
+alternative_order text/plain text/html
+auto_view text/html
+
+set sendmail="/usr/bin/msmtp"
+#set from=davep@meduseld.net
+
