@@ -126,7 +126,8 @@ ln_dotrc \
         exrc \
 	bash_logout \
         go.home \
-        mailrc
+        mailrc \
+        ipython
 
 #
 # Reference all of the bash_completion code.
