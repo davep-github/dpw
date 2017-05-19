@@ -69,7 +69,7 @@
         lo5 = log -n 5 --oneline
         lo11 = log -n 11 --oneline
         lo12 = log -n 12 --oneline
-        lon = log --oneline -n
+        #lon = log --oneline -n
         l1n = log --oneline -n
         lon5 = log -n 5 --oneline
         lon11 = log -n 11 --oneline
@@ -85,6 +85,8 @@
 
         # See what sticks.
         logfiles = log --name-status
+        lognames = log --name-status
+        lnames = log --name status
         lfiles = log --name-status
         lns = log --name-status
         lls = log --name-status
@@ -174,7 +176,7 @@
         p4merge = mergetool --tool=p4merge
         mtp4merge = mergetool --tool=p4merge
 
-        hist = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+        hist5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         hn = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short -n
