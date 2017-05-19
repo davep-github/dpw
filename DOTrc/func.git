@@ -81,10 +81,15 @@ git()
     }
 
     local rc=0
+    local check_op=$(command git config --get $1.msg 2>/dev/null)
     local msg=$(command git config --get $1.msg 2>/dev/null)
     local disabled=$(command git config --bool $1.disabled 2>/dev/null)
     local query_p=$(command git config --bool $1.query_p 2>/dev/null)
 
+    [ -n "${check_op}" ] && {
+        type -t "${check_op}" 1>/dev/null 2>&1 && return 0
+    }
+            
     if ${disabled:-false} ; then
         echo "The $1 command is intentionally disabled in git config." >&2
         rc=1
