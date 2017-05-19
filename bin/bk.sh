@@ -34,6 +34,10 @@ all_actions="ckmi"
 : ${what_am_i_doing_p=}
 #echo "0: actions>$actions<"
 #echo "1: actions>$actions<"
+NUM_CPUS=$(num-cpus)
+NUM_JOBS=$((NUM_CPUS - 1))
+MAKE_OPTIONS="-j${NUM_JOBS}"
+MAKE_CMD="make ${MAKE_OPTIONS}"
 dash_n=
 mk_header_p=t
 if [ "$HOST" = "vilya" ] 
@@ -291,7 +295,9 @@ mk_target()
         target_name="~kernel~"
         target=
     fi
-    echo "***** making: ${target_name}..." && do_cmd $sudo make ${target} || {
+    echo "***** making: ${target_name}..." \
+        && \
+        do_cmd $sudo ${MAKE_CMD} ${target} || {
         echo 1>&2 "***** make ${target_name} failed, \$?: $?"
         exit 1
     }
