@@ -3,7 +3,7 @@
 # davep's standard new Python file template.
 #
 
-import os, sys
+import os, sys, errno
 import argparse
 import dp_io
 
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     # try:... except: nice for filters.
     try:
         sys.exit(main(sys.argv))
-    except IOError:
+    except IOError, e:
         # We're quite often a filter reading or writing to a pipe.
         if e.errno == errno.EPIPE:
             # Ya see, the colon looks like a broken pipe, heh, heh.
