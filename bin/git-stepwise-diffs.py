@@ -4,7 +4,7 @@
 # davep's standard new Python file template.
 #
 
-import os, sys
+import os, sys, errno
 import argparse
 import dp_io, dp_utils, dp_sequences
 import dp_git_helper_lib
@@ -39,11 +39,11 @@ def process_input_fobj(fobj, app_args):
             break
         left_commits.append(commit_list[i])
         right_commits.append(commit_list[i+1])
-    dp_io.cdebug(2, "\nleft:\n%s",
+    print "WTGDFF?"
+    dp_io.cdebug(2, "\nleft:\n%s\n<<<<<<<<<<<",
                  dp_sequences.list_to_indented_string(left_commits, 0))
     dp_io.cdebug(2, "\nright:\n%s",
                  dp_sequences.list_to_indented_string(right_commits, 0))
-
     for i in range(len(left_commits)):
         l = left_commits[i].split()[0]
         r = right_commits[i].split()[0]
@@ -53,10 +53,9 @@ def process_input_fobj(fobj, app_args):
                                            dp_sequences.stringized_join(
                                                app_args.files_to_diff))
         if app_args.show_commit_p:
-            print "===================================="
-            print "Prev: {}: {}".format(
-                l,
-                dp_sequences.stringized_join(left_commits[i].split()[1:]))
+            dp_io.printf("====================================\n")
+            dp_io.printf("Prev: %s: %s\n", l,
+                         dp_sequences.stringized_join(left_commits[i].split()[1:]))
             print "Curr: {}: {}".format(
                 r,
                 dp_sequences.stringized_join(right_commits[i].split()[1:]))
@@ -76,6 +75,9 @@ def process_input_fobj(fobj, app_args):
             # So <return> --> y.
             if ans not in "yY":
                 continue
+        print "app_args.dry_run_p:", app_args.dry_run_p
+        sys.exit(99)
+
         if app_args.dry_run_p:
             print "{}{}".format("{-}", command)
             continue
@@ -149,6 +151,7 @@ def main(argv):
     oparser.add_argument("non_option_args", nargs="*")
 
     app_args = oparser.parse_args()
+
     if app_args.quiet_p:
         print "I am being quiet."
     if app_args.debug_level >= 0:
@@ -178,8 +181,9 @@ if __name__ == "__main__":
     # try:... except: nice for filters.
     try:
         sys.exit(main(sys.argv))
-    except IOError:
+    except IOError, e:
         # We're quite often a filter reading or writing to a pipe.
+        dp_io.cdebug(1, "e: %s, e.errno: %s\n", e, e.errno)
         if e.errno == errno.EPIPE:
             # Ya see, the colon looks like a broken pipe, heh, heh.
             # : |
