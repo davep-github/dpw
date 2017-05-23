@@ -5,11 +5,12 @@
 . script-x
 
 SHIFT=shift
-do_dirname=t
+do_dirname_p=t
+eval_name_p=t
 fini()
 {
     o_val="$*$two"
-    [ -n "${do_dirname}" ] && [ -f "${o_val}" ] && o_val=$(dirname "${o_val}")
+    [ -n "${do_dirname_p}" ] && [ -f "${o_val}" ] && o_val=$(dirname "${o_val}")
     echo $o_val
     # All of our lookup attempts failed.
     [ "$o_val" = "$argWas" ] && exit 1
@@ -62,7 +63,8 @@ do
   case "$1" in
       -l) show_dir_p="t"; SHIFT=: ;;
       -L) shift; fini $(go_lookup "$1"); exit;;
-      --no-dirname|--nd) do_dirname=;;
+      -n|--no-eval|--ne) eval_name_p=;;
+      --no-dirname|--nd) do_dirname_p=;;
       *) break;;
   esac
   shift
