@@ -403,7 +403,8 @@ build_kernel()
 
 }
 
-build_kernel 2>&1 | tee -a $bk_log
+error_regexp="segfault|segmentation|internal|error: "
+build_kernel 2>&1 | teeker -si 1 --error-grep "${error_regexp}" -a $bk_log
 echo "BK done: $(date)"
 
 #/home/davep/bin.Linux.i686/lcursive
