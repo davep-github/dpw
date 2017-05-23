@@ -106,6 +106,11 @@
     "C-a C-s | RET M-a C-s | <left> M-o C-e RET Ee|__SB_rel| 12*SPC ${ M-y }"
     " C-a 3*<right>")))
 
+(defalias 'dp-git-send-email-compose-prep
+  (read-kbd-macro
+   (concat "<C-prior> C-s in- repl <down> <right> M-a <C-next> <left>"
+           " C-a <C-right> 2*<right> C-x r k C-r Sub <end>")))
+
 ;;;;;;; end of kbd macros ;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
