@@ -375,21 +375,21 @@ def get_handlers(shell_type=None):
 
 
 #####################################################################
-def expand_alias(line, selector, aliases, file_name):
+def expand_alias(line, selector, aliases, file_name, line_num):
     """Expand an alias line."""
     #(l, val) = string.split(line)
     # format: abc|a1|a2|<ws+>value
     m = re.search("(\S+)\s+(.+)$", line)
-    dp_io.dprintf("""expand_alias: line>%s<
+    dp_io.dprintf("""expand_alias: %d, line>%s<
 selector>%s<
-aliases>%s<""", line, selector, aliases)
+aliases>%s<""", line_num, line, selector, aliases)
     if m:
         dp_io.debug("m.groups()>%s<\n", m.groups())
 
     if not m:
         if line[-1] == "\n":
             line = line[:-1]
-        dp_io.eprintf("input line has bad format\n>%s<\n", line)
+        dp_io.eprintf("input line %d has bad format\n>%s<\n", line_num, line)
         return
 
     # format of the first part of a line:
@@ -460,7 +460,9 @@ def expand_file(file, selector, aliases):
         return
     global PREFIX
     PREFIX = PERMANENT_PREFIX
+    line_num = 0
     for line in fobj:
+        line_num = line_num + 1
         dp_io.dprintf('!!file: %s, line>%s<\n', file, line[:-1])
         # Comment line?  ; # and (for now only at BOL) //
         if re.search("^\s*(//|[;#])", line):
@@ -471,7 +473,7 @@ def expand_file(file, selector, aliases):
             # Catches "", too
             continue
 
-        expand_alias(line, selector, aliases, file)
+        expand_alias(line, selector, aliases, file, line_num)
     fobj.close()
 
 #####################################################################
