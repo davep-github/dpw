@@ -122,9 +122,9 @@ case $shell_name in
 	export command_oriented_history=y # bash
 	export cmdhist=y
         shopt -s no_empty_cmd_completion checkhash checkwinsize \
-            extglob histreedit histappend hostcomplete cdable_vars
+            extglob histreedit histappend hostcomplete
         # Wouldn't like to cd to the wrong dir and wreak havoc.
-        shopt -u cdspell
+        shopt -u cdspell cdable_vars
         # These are relatively new and there's a box here @ vanu that has an
         # old enough shell to barf, e.g. 2.05b(1)-release
         maybe_shopt gnu_errfmt -s gnu_errfmt
@@ -249,4 +249,8 @@ export LC_COLLATE=C
 
 export DP_CODE_INDEX_FINDER_FILE=cscope.files
 export DP_CODE_INDEX_FINDER_WORK_FILE=${DP_CODE_INDEX_FINDER_FILE}.work
+
+# Unconditionally add this.  verify path will hack it out if it's not there.
+export PATH=$(dp_add_to_path_iff "$PATH" "/opt/p4v/bin")
+
 true
