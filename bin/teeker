@@ -639,6 +639,11 @@ if __name__ == "__main__":
                          dest="sample_lines_tick_prefix", default="th-line>",
                          action=Ctor_arg_action,
                          help="Prefix for sampled lines.")
+    oparser.add_argument("--no-sample-prefix", "--no-sample-lines-prefix",
+                         "--nsp", "--nslp",
+                         dest="sample_lines_tick_prefix", default="th-line>",
+                         action="store_false",
+                         help="Prefix for sampled lines.")
     oparser.add_argument("--no-clobber", "--o-excl", "--oexcl",
                          dest="no_clobber_p", default=False,
                          action="store_true",
@@ -793,7 +798,7 @@ Implies Char_ticker_t.""")
                          dest="tick_interval",
                          type=eval_with_units,
                          action=App_arg_action_DOTS,
-                         help="Like --dots + tick interval.")
+                         help="Like --dots, but tick interval is the argument.")
     oparser.add_argument("-t", "--twiddle",
                          dest="twiddle_chars", type=int,
                          action=Ctor_arg_action_twiddle,
@@ -831,6 +836,7 @@ Split line into chars and feed to ticker.""")
                          action="store_const",
                          help="Convenience option for finding common testgen errors. This should be modified to make it more flexible and less nvidia specific. Maybe an environment variable  --log-errors-regexp.")
     oparser.add_argument("--grep-errors", "--errors", "--error-regexps",
+                         "--error-grep",
                          "--ere", "--egrep", "--err-grep",
                          dest="error_regexp_patterns",
                          action="append", default=[],
