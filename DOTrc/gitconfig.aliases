@@ -175,6 +175,8 @@
         mtp4m = mergetool --tool=p4merge
         p4merge = mergetool --tool=p4merge
         mtp4merge = mergetool --tool=p4merge
+        mtmeld = mergetool --tool=meld
+        mtm = mergetool --tool=meld
 
         hist5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
