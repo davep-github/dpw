@@ -14,6 +14,8 @@ def main(argv):
             continue
 
     for arg in args:
+        if arg == "2b":
+            continue
         print dp_utils.numWithUnits(arg, base10_p)
 
 if __name__ == "__main__":
