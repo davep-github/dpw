@@ -345,14 +345,15 @@ def system (command, msg=True, exit_p=True, exit_code=1, debug_p=False,
     return False
 
 
-def nWithUnits(s, allow_fractions_p=False, powers_of_two_p=True, base=None):
+def nWithUnits(s, powers_of_two_p=True, allow_fractions_p=False, base=None):
+    print "powers_of_two_p:", powers_of_two_p
     if base is None:
          if powers_of_two_p:
              base = 1024
          else:
              base = 1000
     s = "%s" % (s,)
-    m = re.search("^(\d+(\.\d+)?)\s*([kKmMgGtT]?)$", s)
+    m = re.search("^(\d+(\.\d+)?)\s*([dDcCkKmMgGtT]?)$", s)
     if not m:
         print >>sys.stderr, "Warning: numWithUnits: no match for>%s<." % (s,)
         return 0                   # Or should it be an error with no digits?
@@ -362,15 +363,22 @@ def nWithUnits(s, allow_fractions_p=False, powers_of_two_p=True, base=None):
     suffix = m.group(3)
     if suffix:
         suffix = suffix.lower()
-        exp = {'k': 1, 'm': 2, 'g': 3, 't': 4}[suffix]
+        if suffix in 'dc':
+            base = 10
+            exp = {'d': 1, 'c': 2}[suffix]
+        else:
+            exp = {'k': 1, 'm': 2, 'g': 3, 't': 4}[suffix]
     else:
         exp = 0
     mult = math.pow(base, exp)
     val = n * mult
     if not allow_fractions_p:
         val = int(val)
+        print "0: val: %s, type(%s): %s" % (val, val, type(val))
+    print "1: val: %s, type(%s): %s" % (val, val, type(val))
     return val
 numWithUnits = nWithUnits
+eval_with_units = nWithUnits
 
 import string, os, sys, re, math
 
