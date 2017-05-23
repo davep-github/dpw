@@ -13,8 +13,12 @@ git_isa_rev()
 
 git_change_sandbox()
 {
-    local rev="${1-}"; shift
+    [ "${1}" == "-x" ] && {
+        set -x
+        shift
+    }
 
+    local rev="${1-}"; shift
     # `chdir' with no args means to show us where we are.
     if [ -z "${rev}" ]
     then
