@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+: ${start_date='2017-01-01'}
+# Add vars for other params.  The current set, however is nice because it
+# actually stops the animations so you can see what's up.
+
+gource \
+    -1280x720 \
+    -s 0.000001 \
+    --max-file-lag 0.1 \
+    --auto-skip-seconds 0.25 \
+    --hide progress,filenames,dirnames,usernames \
+    --date-format "%Y-%m-%d %H:%M:%S" \
+    --user-scale 4 \
+    --file-idle-time 0 \
+    --start-date "${start_date}" \
+    --max-user-speed 0.10 \
+    --user-friction 1 \
+    --disable-auto-rotate
