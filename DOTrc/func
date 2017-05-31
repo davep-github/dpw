@@ -1274,5 +1274,38 @@ dp_mk_log_file()
     echo "${path_name}"
 }
 
+nix_ccache()
+{
+    [ "${1-}" = "-x" ] && set -x
+    local echo_path_p=
+    local keep_path_p=
+    while (($# > 0))
+    do
+      case "$1" in
+          --echo) echo_path_p=t;;
+          --keep) keep_path_p=t;;
+      esac
+      shift
+    done
+    unset CXX CC CCACHE_DIR
+    local ccache_path_element='/usr/lib/ccache'
+    local tpath=$(pathadd2.py -d "$PATH" "${ccache_path_element}")
+
+#     [ "${tpath}" = "${PATH}" ] && {
+#         echo "Did not find ccache_path_element>${ccache_path_element}<"
+#         echo "PATH is unchanged."
+#         return 1
+#     } 1>&2
+#     [ -z "${tpath}" ] && {
+#         echo "tpath is empty."
+#         echo "PATH is unchanged..."
+#     } 1>&2
+
+    [ -z "${keep_path_p}" ] && [ -n "${tpath}" ] && PATH="${tpath}"
+    [ -n "${echo_path_p}" ] && echo "${PATH}"
+    
+    return 0
+}
+
 dp_source_rc $HOME/.rc/func.completion
 dp_source_rc $HOME/.rc/func.git
