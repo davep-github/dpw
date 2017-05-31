@@ -187,9 +187,9 @@ do
       # Program options.
       -s|--silent|--rc-only|--status) silent_p=t;;
       -d|--diff-only|--do) show_diff_always_p=t;;
-      -l|-N|--num-lines) shift; num_lines_left="${1}"; num_lines_right="${1}";;
-      --nr|-r) shift; num_lines_right="${1}";;
-      --nl|-l) shift; num_lines_left="${1}";;
+      -l|-N|--num-lines|--nl) shift; num_lines_left="${1}"; num_lines_right="${1}";;
+      --nr|--nrl|-r) shift; num_lines_right="${1}";;
+      --nl|--nll|-l) shift; num_lines_left="${1}";;
 
       # Help!
       --help) Usage; exit 0;;
