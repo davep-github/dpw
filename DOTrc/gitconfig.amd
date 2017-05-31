@@ -58,14 +58,14 @@
 #         aliasesFile = ~/.sendmail.aliases
 #         aliasFileType = sendmail
 
-[sendemail]
-        smtpServer = atlsmtp10.amd.com
-        smtpserverport = 25
-        smtpencryption = tls
-        smtpsslcertpath =
-        smtpUser = dpanarit
-        smtpPass = QTPi'''3!415
-#'
+# [sendemail]
+#         smtpServer = atlsmtp10.amd.com
+#         smtpserverport = 25
+#         smtpencryption = tls
+#         smtpsslcertpath =
+#         smtpUser = dpanarit
+#         smtpPass = QTPi'''3!415
+# #'
 
 # [sendemail]
 #           # smtp specifics in ~/.msmtprc.amd
@@ -75,13 +75,13 @@
 #           aliasesFile = ~/.sendmail.aliases
 #           aliasFileType = sendmail
 
-# [sendemail]
-#         smtpServer = smtp.office365.com
-#         smtpserverport = 25
-#         smtpencryption = tls
-#         smtpUser = dpanarit@amd.com
-#         smtpPass = QTPi'''3!415
-# #'
+[sendemail]
+        smtpServer = smtp.office365.com
+        smtpserverport = 25
+        smtpencryption = tls
+        smtpUser = dpanarit@amd.com
+        smtpPass = QTPi'''3!415
+#'
 
 # [sendemail]
 #         smtpServer = smtp.office365.com
