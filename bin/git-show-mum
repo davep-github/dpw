@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+br=${1-HEAD}
+
+br_name=$(git rev-parse --abbrev-ref HEAD)
+
+git show-branch -a 2>/dev/null \
+| grep '\*' \
+| grep -v "${br_name}" \
+| head -n1 \
+| sed 's/.*\[\(.*\)\].*/\1/' \
+| sed 's/[\^~].*//'
