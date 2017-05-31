@@ -108,7 +108,10 @@ Usage_error()
 packages=(meld
 realpath
 git
+gitk
+git-gui
 git-extras
+git-email
 make
 wmctrl
 vnc4server
@@ -135,7 +138,6 @@ screen
 cscope
 vim
 diffuse
-gitk
 xorg-dev
 mpd
 msmtp
