@@ -135,6 +135,8 @@ Usage_error()
 
 run_git_cmd()
 {
+    local name="${1}"
+    shift
     local commit="${1}"
     shift
     local tmp_file="${1}"
@@ -142,10 +144,14 @@ run_git_cmd()
     local git_cmd="${1}"
     shift
 
+    EExec_verbose_echo_id name
     EExec_verbose_echo_id tmp_file
     EExec_verbose_echo_id git_cmd
     # Use tee so we can eexec it.
-    EExec ${git_cmd} "$@" "${commit}" | EExec tee "${tmp_file}" >/dev/null
+    {
+        echo "====== branch name: ${name}"
+        EExec ${git_cmd} "$@" "${commit}" 
+    } | EExec tee "${tmp_file}" >/dev/null
 }
 #
 # template end.
@@ -226,8 +232,20 @@ EExec_verbose_echo_id right_tmp_file
 
 #trap "rm -f ${left_tmp_file} ${right_tmp_file}" 0
 
-EExec -y run_git_cmd "${left_commit}" "${left_tmp_file}" "${git_cmd}" -n "${num_lines_left}" "$@"
-EExec -y run_git_cmd "${right_commit}" "${right_tmp_file}" "${git_cmd}" -n "${num_lines_right}" "$@"
+EExec -y run_git_cmd \
+    "${left_commit}" \
+    "${left_commit}" \
+    "${left_tmp_file}" \
+    "${git_cmd}" \
+    -n "${num_lines_left}" \
+    "$@"
+EExec -y run_git_cmd \
+    "${right_commit}" \
+    "${right_commit}" \
+    "${right_tmp_file}" \
+    "${git_cmd}" \
+    -n "${num_lines_right}" \
+    "$@"
 
 diff >& /dev/null -q "${left_tmp_file}" "${right_tmp_file}"
 rc="$?"
