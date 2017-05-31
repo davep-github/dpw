@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+br_name=$(git rev-parse --abbrev-ref HEAD)
+
+#| teeker -d -i1 --quiet --pipe-mode \
+git show-branch -a 2>/dev/null \
+| fgrep '\*' \
+| fgrep -v "${br_name}" \
+| head -n1 \
+| sed 's/.*\[\(.*\)\].*/\1/' \
+| sed 's/[\^~].*//'
