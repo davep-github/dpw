@@ -1,10 +1,10 @@
 [merge]
     tool = meld
 
-[mergetool "meld"]
-    # Choose one of these 2 lines (not both!) explained below.
-    cmd = meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"
-    cmd = meld "$LOCAL" "$BASE" "$REMOTE" --output "$MERGED"
+#[mergetool "meld"]
+#    # Choose one of these 2 lines (not both!) explained below.
+#    cmd = meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"
+#    cmd = meld "$LOCAL" "$BASE" "$REMOTE" --output "$MERGED"
 
 [mergetool "p4merge"]
 	cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
@@ -28,3 +28,21 @@
 
 [difftool "diffuse"]
         cmd = diffuse $LOCAL $REMOTE
+
+[difftool "meld"]
+	path = /usr/bin/meld
+	cmd = '/usr/bin/meld' $LOCAL $REMOTE
+
+[mergetool "Meld"]
+	path = /usr/bin/meld
+	cmd = '/usr/bin/meld' $BASE $LOCAL $REMOTE $MERGED
+	trustExitCode = false
+
+[merge]
+	tool = Meld
+
+[mergetool]
+	keepBackup = false
+
+[imerge]
+	editmergemessages = true
