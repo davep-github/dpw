@@ -112,6 +112,11 @@ git_track_remote_branch()
     EExec git branch --track "${@}"
 }
 
+git_one_line_logs()
+{
+    EExec git lon "$@"
+}
+
 : ${remote_branch_op:=git_track_remote_branch}
 
 if [ -z "$*" ]
