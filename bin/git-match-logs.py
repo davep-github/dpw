@@ -45,24 +45,29 @@ def zip_lines(l1, l2):
     
 def read_lines(file_name):
     lines = []
-    dp_io.ldebug(2, "reading>%s<\n", file_name)
-    for l in open(file_name).readlines():
+    input_lines = open(file_name).readlines()
+    dp_io.ldebug(2, "reading>%s<, lines: %s\n",
+                 file_name, len(input_lines))
+    line_num = 0
+    for l in input_lines:
+        #dp_io.cdebug(5, "%3d>%s<\n", line_num, l)
         if l[-1] in "\n\r":
             l = l[:-1]
         lines.append(l)
+        line_num = line_num + 1
 
     return lines
 
 def dump_lines(lines, title=None):
     if title:
-        dp_io.printf("%s:\n", title)
+        dp_io.printf("dumping lines: %s:\n", title or "Untitled")
 
     line_num = 0
     for l in lines:
         dp_io.printf("%3d>%s<\n", line_num, l)
         line_num = line_num + 1
     if line_num > 0:
-        dp_io.printf("=================\n")
+        dp_io.printf("end of %s=================\n", title or "Untitled")
 
 def main(argv):
     oparser = argparse.ArgumentParser()
@@ -103,7 +108,10 @@ def main(argv):
 
     input_files = app_args.input_files
     left_lines = read_lines(input_files[0])
+    dp_io.cdebug(5, "len(left_lines): %d\n", len(left_lines))
+
     right_lines = read_lines(input_files[1])
+    dp_io.cdebug(5, "len(right): %d\n", len(right_lines))
 #    dump_lines(left_lines, "left")
 #    dump_lines(right_lines, "right")
 
