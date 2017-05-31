@@ -37,6 +37,7 @@ class Ticker_t(object):
                  timestamp_p=False,
                  elapsed_timestamp_p=False,
                  timestamp_separator_string=": ",
+                 quiet_p=False,
                  grand_total_p=True):
         self.tick_interval = tick_interval
         self.increment = increment
@@ -46,6 +47,7 @@ class Ticker_t(object):
         self.init_count = init_count
         self.printor = printor
         self.ostream = ostream
+        self.quiet_p = quiet_p
         self.grand_total_p = grand_total_p
         self.tick_show_units_p = tick_show_units_p
         self.max_output_units_before_newline = max_output_units_before_newline
@@ -61,6 +63,8 @@ class Ticker_t(object):
         # Keep last as it will use variables that need to have already been
         # defined.
         self.reset_counter()
+        #print >>sys.stderr, "A: ostream:", self.ostream
+
 
     def twiddling_p(self):
         return False
@@ -73,7 +77,7 @@ class Ticker_t(object):
 
     def reset_counter(self):
         self.counter = self.init_count
-        if self.init_string:
+        if self.init_string and not self.quiet_p:
             self.do_printor(self, "%s", self.init_string)
             # print >>sys.stderr, "reset_counter: self.output_line_len: %d" % (self.output_line_len, )
         self.sep_string = ""
@@ -116,16 +120,18 @@ class Ticker_t(object):
         # Line breaks (newlines) happen here.
         output_str = "%s%s%s%s" % (self.sep_string, tick_prefix,
                                    ts_string, tick)
+        #print >>sys.stderr, "ostream: %s", ostream
         self.do_printor(self, "%s", output_str, ticker_ostream=ostream)
         self.sep_string = self.comma
 
     def fini(self, force_grand_total_p=False, reason=""):
         self.flush()
-        if force_grand_total_p or self.grand_total_p:
-            print "\n%sTotal: %s %s" % (reason,
-                                        self.counter,
-                                        dp_utils.pluralize(self.unit_name,
-                                                           self.counter))
+        if not self.quiet_p:
+            if force_grand_total_p or self.grand_total_p:
+                print "\n%sTotal: %s %s" % (reason,
+                                            self.counter,
+                                            dp_utils.pluralize(self.unit_name,
+                                                               self.counter))
 
     def tick_not_ready(self):
         pass
@@ -191,6 +197,7 @@ class Char_ticker_t(Ticker_t):
                  max_output_line_len_before_newline=False,
                  max_output_units_before_exit=False,
                  tick_show_units_p=False,
+                 quiet_p=False,
                  printor=Ticker_printf):
         super(Char_ticker_t, self).__init__(
             tick_interval=tick_interval,
@@ -204,6 +211,7 @@ class Char_ticker_t(Ticker_t):
             ostream=ostream,
             unit_name=unit_name,
             tick_show_units_p=tick_show_units_p,
+            quiet_p=quiet_p,
             printor=printor)
         self.tick_char = tick_char
 
@@ -258,6 +266,7 @@ class Twiddle_ticker_t(Ticker_t):
                  unit_name="line",
                  max_output_units_before_newline=False,
                  max_output_units_before_exit=False,
+                 quiet_p=False,
                  comma="", init_count=0, printor=Ticker_printf):
         super(Twiddle_ticker_t, self).__init__(tick_interval=tick_interval,
                                                increment=increment,
@@ -267,6 +276,7 @@ class Twiddle_ticker_t(Ticker_t):
                                                init_count=init_count,
                                                max_output_units_before_exit=False,
                                                unit_name=unit_name,
+                                               quiet_p=quiet_p,
                                                printor=printor)
 ###        print "twiddle_chars>%s<, type(twiddle_chars): %s" % (twiddle_chars, type(twiddle_chars))
         if (type(twiddle_chars) == types.IntType):
