@@ -346,7 +346,7 @@ def system (command, msg=True, exit_p=True, exit_code=1, debug_p=False,
 
 
 def nWithUnits(s, powers_of_two_p=True, allow_fractions_p=False, base=None):
-    print "powers_of_two_p:", powers_of_two_p
+    #print "powers_of_two_p:", powers_of_two_p
     if base is None:
          if powers_of_two_p:
              base = 1024
@@ -374,8 +374,8 @@ def nWithUnits(s, powers_of_two_p=True, allow_fractions_p=False, base=None):
     val = n * mult
     if not allow_fractions_p:
         val = int(val)
-        print "0: val: %s, type(%s): %s" % (val, val, type(val))
-    print "1: val: %s, type(%s): %s" % (val, val, type(val))
+        #print "0: val: %s, type(%s): %s" % (val, val, type(val))
+    #print "1: val: %s, type(%s): %s" % (val, val, type(val))
     return val
 numWithUnits = nWithUnits
 eval_with_units = nWithUnits
