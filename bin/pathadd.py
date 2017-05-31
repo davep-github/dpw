@@ -52,6 +52,11 @@ def main(argv):
                          default=":",
                          type=str,
                          help="What to separate path elements with.")
+    oparser.add_argument("-d", "--delete", "--remove",
+                         dest="delete",
+                         default=None,
+                         type=str,
+                         help="Delete this element.")
     oparser.add_argument("-S", "--separate-with-spaces",
                          dest="separate_with_spaces_p",
                          default=False,
@@ -89,13 +94,15 @@ def main(argv):
     cdr_elements = [ e for e in cdr_elements if e ]
 
     # remove duplicates of elements in car from cdr
-    for d in car_elements:
-        if d in cdr_elements:
-            cdr_elements.remove(d)
+    for d in cdr_elements:
+        if d in car_elements:
+            car_elements.remove(d)
 
     print sep.join(car_elements + cdr_elements)
 
 if __name__ == "__main__":
+    print >>sys.stderr, "DON'T USE THIS, USE pathadd2.py"
+    sys.exit(1)
     # try:... except: nice for filters.
     try:
         main(sys.argv)
