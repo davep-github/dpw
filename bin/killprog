@@ -126,7 +126,7 @@ while ($line = <PS>) {
   foreach $prog (@ARGV) {
     if ($prog =~ m!^\d+$!) {
       if (!$possible_pids[$prog]) {
-	warn "******* prog is >$prog<, did you mean `kill $prog'? *******\n";
+	warn "******* prog is a number >$prog<, did you mean `kill $prog'? *******\n";
 	$possible_pids[$prog] = 1;
       }
     }
