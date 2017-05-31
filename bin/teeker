@@ -80,7 +80,7 @@ TICKER_COUNT_FORMAT = ("{:"
                        + TICKER_COUNT_JUSTIFICATION
                        + str(TICKER_COUNT_WIDTH)
                        + "}")
-
+#dp_io.printf("TICKER_COUNT_FORMAT>%s<\n", TICKER_COUNT_FORMAT)
 REGEXP_LIST_ORDER = ("grep", "hgrep", "wgrep", "egrep", "xgrep")
 
 All_output_streams = []
@@ -637,7 +637,7 @@ if __name__ == "__main__":
                          help="Tick with every input line.")
     oparser.add_argument("-S", "--sample-lines-prefix",
                          dest="sample_lines_tick_prefix", default="th-line>",
-                         action=Ctor_arg_action,
+                         #action=Ctor_arg_action,
                          help="Prefix for sampled lines.")
     oparser.add_argument("--no-sample-prefix", "--no-sample-lines-prefix",
                          "--nsp", "--nslp",
@@ -988,6 +988,10 @@ Split line into chars and feed to ticker.""")
     except AttributeError:
         tee_p = False
 
+    quiet_p = app_args.quiet_p
+    if quiet_p:
+        app_args.preamble_p = False
+
     if app_args.preamble_p:
         print "Start time: {}".format(time.ctime())
 
@@ -1023,17 +1027,16 @@ Split line into chars and feed to ticker.""")
         dp_io.eprintf("One or more log file names are required.\n")
         sys.exit(1)
 
-#    if app_args.unbuffered_out_p:
-#        dp_io.unbuffer_a_file(sys.stdout)
+        #    if app_args.unbuffered_out_p:
+        #        dp_io.unbuffer_a_file(sys.stdout)
 
-    sample_ostream = dp_io.Unbuffered_file_duck(sys.stdout)
     compressed_file_next_flush = 0
     compressed_file_flush_period = app_args.compressed_file_flush_period
 
     for a in output_files:
         dp_io.cdebug(2,"log file name>%s<\n", a)
         a = a + file_suffix
-        if not app_args.quiet_p:
+        if not quiet_p:
             compression_message = ""
             if compress_p:
                 compression_message = ", compression level: %d" % \
@@ -1079,9 +1082,13 @@ Split line into chars and feed to ticker.""")
     if Ctor_arg_dict.get("max_output_line_len_before_newline", False) == 0:
         Ctor_arg_dict["max_output_line_len_before_newline"] = os.environ.get("COLUMNS", 80)
 
+    Ctor_arg_dict["quiet_p"] = quiet_p
+
     if pipe_mode_p:
         Ctor_arg_dict["ostream"] = sys.stderr
+        sample_ostream = dp_io.Unbuffered_file_duck(sys.stderr)
     else:
+        sample_ostream = dp_io.Unbuffered_file_duck(sys.stdout)
         Ctor_arg_dict["ostream"] = ostream
     if app_args.sample_ALL_lines_tick_p:
         app_args.tick_interval = 1
@@ -1104,6 +1111,7 @@ Split line into chars and feed to ticker.""")
             else:
                 nth =  "%sth " % (tick_interval,)
 
+            Ctor_arg_dict["max_output_line_len_before_newline"] = False
             Ctor_arg_dict["init_string"] = "Sampling every %sline\n" % (nth,)
             Ctor_arg_dict["unit_name"] = 'line'
             Ctor_arg_dict["comma"] = ""     # Line will end with newline.
@@ -1246,6 +1254,7 @@ Split line into chars and feed to ticker.""")
                 #else:
                 #    tick = None
                 tick = None
+
                 ticker(tick=tick)
         else:
             tick_prefix = ""
@@ -1257,8 +1266,11 @@ Split line into chars and feed to ticker.""")
             else:
                 # Let the ticker class do what it will.
                 tick = None
+            dp_io.cdebug(4, "Calling ticker, tick>%s<, tick_prefix>%s<\n",
+                         tick, tick_prefix)
             ticker(tick=tick, tick_prefix=tick_prefix,
                    ostream=sample_ostream)
+            dp_io.cdebug(4, "Back from ticker\n")
         line_number += 1
     print
     if app_args.preamble_p:
