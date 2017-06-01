@@ -6,8 +6,9 @@ patches: gpugfxpatches
 allgroups: gpu, gfx, brahma
 allg: allgroups
 davep: davep.amd@meduseld.net
-dpamd: david.panariti@amd.com
-dpwork: david.panariti@amd.com
+dpanarit: david.panariti@amd.com
+dpamd: dpanarit
+dpwork: dpanarit
 
 t1: xxx@yyy
 t2: zzz@aaa
