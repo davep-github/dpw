@@ -4,5 +4,5 @@
 
 
 locate "$@" | while read; do 
-    [[ -d "$REPLY" ]] && echo "$REPLY" 
+    test "${type_opt}" "$REPLY" && echo "$REPLY" 
 done
