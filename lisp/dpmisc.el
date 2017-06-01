@@ -108,8 +108,9 @@
 
 (defalias 'dp-git-send-email-compose-prep
   (read-kbd-macro
-   (concat "<C-prior> C-s in- repl <down> <right> M-a <C-next> <left>"
-           " C-a <C-right> 2*<right> C-x r k C-r Sub <end>")))
+   (concat "<C-prior> ESC C-s ^ GIT: SPC \\[PATCH SPC 1/"
+           " <home> M-a <C-next> <left> C-a 5*<right> C-x r k"
+           " ESC C-r ^ Subject: <end>")))
 
 ;;;;;;; end of kbd macros ;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
