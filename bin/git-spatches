@@ -106,7 +106,8 @@ Usage_error()
 ########################################################################
 
 : ${to_list=}
-: {dry_run=}
+: ${dry_run=}
+: ${smtp_debug:=0}
 : ${compose:=--compose}
 : ${validate:=--validate}
 
@@ -118,6 +119,13 @@ do
   #EExec_verbose_echo_id --msg first: to_list
   case "$1" in
       --dry-run|--dr|-p|--pretend) dry_run=--dry-run;;
+      --compose) compose=--compose;;
+      --validate) validate:=--validate;;
+      --smtp-debug) shift; smtp_debug="${1}";;
+      --no-dry-run|--no-dr|-no-p|--no-pretend) dry_run=;;
+      --no-compose) compose=;;
+      --validate) validate:=--no-validate;;
+      --no-smtp-debug) smtp_debug="0";;
       --) shift; break;;
       *) to_list="${to_list}${to_sep}${1}"; to_sep=',';;
   esac
@@ -135,7 +143,7 @@ errs=0
         echo "To list is empty."
         ((++errs))
     }
-    if [ -z "$@" ]
+    if [ -z "$*" ]
     then
         echo "Patch list is empty."
         ((++errs))
@@ -155,5 +163,15 @@ errs=0
     }
 } 1>&2
 
-: ${to:=-to ${to_list}}
-EExec git send-email ${dry_run} ${validate} ${compose} ${to} "$@"
+: ${to:=--to=${to_list}}
+test -n "${smtp_debug}" && {
+    smtp_debug="--smtp-debug=${smtp_debug}"
+}
+
+EExec git send-email \
+    ${dry_run} \
+    ${smtp_debug} \
+    ${validate} \
+    ${compose} \
+    ${to} \
+    "$@"
