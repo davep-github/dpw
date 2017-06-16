@@ -23,6 +23,9 @@
 [difftool "ec-diff"]
 	cmd = ec-diff -w $LOCAL $REMOTE
 
+[difftool "s-diff"]
+	cmd = sdiff --suppress-common-lines $LOCAL $REMOTE
+
 #[difftool "meld"]
 #	cmd = meld $LOCAL $REMOTE
 
