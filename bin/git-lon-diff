@@ -135,6 +135,8 @@ Usage_error()
 
 run_git_cmd()
 {
+    local silent_p="${1}"
+    shift
     local name="${1}"
     shift
     local commit="${1}"
@@ -149,7 +151,10 @@ run_git_cmd()
     EExec_verbose_echo_id git_cmd
     # Use tee so we can eexec it.
     {
-        echo "====== branch name: ${name}"
+        # For silent, we only care about a match, and
+        # the name will pretty much ensure a
+        # mismatch.
+        [ -z "${silent_p}" ] && echo "====== branch name: ${name}"
         EExec ${git_cmd} "$@" "${commit}" 
     } | EExec tee "${tmp_file}" >/dev/null
 }
@@ -193,7 +198,7 @@ do
       # Program options.
       -s|--silent|--rc-only|--status) silent_p=t;;
       -d|--diff-only|--do) show_diff_always_p=t;;
-      -l|-N|--num-lines|--nl) shift; num_lines_left="${1}"; num_lines_right="${1}";;
+      -l|-N|--num-lines|--numl) shift; num_lines_left="${1}"; num_lines_right="${1}";;
       --nr|--nrl|-r) shift; num_lines_right="${1}";;
       --nl|--nll|-l) shift; num_lines_left="${1}";;
 
@@ -233,6 +238,7 @@ EExec_verbose_echo_id right_tmp_file
 #trap "rm -f ${left_tmp_file} ${right_tmp_file}" 0
 
 EExec -y run_git_cmd \
+    "${silent_p}" \
     "${left_commit}" \
     "${left_commit}" \
     "${left_tmp_file}" \
@@ -240,6 +246,7 @@ EExec -y run_git_cmd \
     -n "${num_lines_left}" \
     "$@"
 EExec -y run_git_cmd \
+    "${silent_p}" \
     "${right_commit}" \
     "${right_commit}" \
     "${right_tmp_file}" \
