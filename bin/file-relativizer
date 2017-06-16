@@ -3,9 +3,12 @@
 #
 # template begin.
 
+#echo 1>&2 "before everything, @>$@<"
+
 # davep specific code -------------8><------------------
 source script-x
 set -u
+#set -x
 progname="$(basename $0)"
 source eexec
 if vsetp "${eexec_program-}"    # Did the caller provide a program?
@@ -22,7 +25,7 @@ do
   ${EEXEC_SHIFT}
 done
 EExec_verbose_msg $(echo_id eexec_program)
-unset eexec_program
+#unset eexec_program
 #export eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
@@ -105,7 +108,8 @@ Usage_error()
 # template end.
 ########################################################################
 
-: ${post_processor_processor:=absolutizer}
+: ${post_processor_processor:=relativizer}
+: ${relative_to:=$PWD}
 
 #e.g.# # Usage variable usage:
 Usage_args_info=" git args to 'git status'"
@@ -129,18 +133,20 @@ long_options=(
 )
 
 source dp-getopt+.sh || exit 1
+EExec_verbose_msg "before arg loop, @>$@<"
 while (($# > 0))
 do
   # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  EExec_verbose_msg "arg loop 1>${1}<"
   case $1 in
       # eexec support: -n -v -q, etc. q.v. ~/bin/eexec
       # Done by EExec_parse and friends.
-
       # Program options.
       -r|--rel|--relative) post_processor_processor=relativizer;;
       -a|-l|--abs|--absolute|--pwd) post_processor_processor=absolutizer;;
       -R|--rp|--real|--realpath) post_processor_processor=realpathalizer;;
       -p|--pass-thru|--passthru|--pt|--nada) post_processor_processor=passthrualizer;;
+      --relative-to) shift; relative_to="${1}";;
       --XXX);;
       # Help!
       --help) Usage; exit 0;;
@@ -152,6 +158,7 @@ do
     esac
     shift
 done
+EExec_verbose_echo_id post_processor_processor
 
 # > git status -s
 #  M bin/dp-getopt+.sh
@@ -161,7 +168,17 @@ done
 relativizer()
 {
     EExec_verbose_echo_id PWD
-    EExec dp-realpath -r "$@"
+    if type -a realpath >& /dev/null
+    then
+        EExec realpath --relative-to="${relative_to}" "$@"
+    else
+        # This version is almost, but not quite, entirely unlike the real
+        # realpath.  It needs tons of work; it was just meant to be a
+        # stand-in for
+        # realpath <file>
+        # Use at your own peril.
+        EExec dp-realpath -r "$@"
+    fi
 }
 
 absolutizer()
@@ -189,6 +206,7 @@ post_processor()
     done
 }
 
+EExec_verbose_echo_id post_processor_processor
 EExec_verbose_echo_id PWD
 if (($# > 0))
 then
