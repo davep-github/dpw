@@ -4,6 +4,11 @@
 # Find a client for emacs, send command, defaulting to edit.
 #set -x
 
+if ! type davep_env_p >/dev/null 2>&1; then
+    source $HOME/.bashrc
+    export PATH=$(pathadd -p "$PATH" "$dirname")
+fi
+
 source script-x
 progname="$(basename $0)"
 source eexec
@@ -40,9 +45,10 @@ extra_editing_host_msg=
 
 now=$(date)
 {
-    echo ">> ${now} ========================================================================"
+    echo ">> ${now} ======================================================"
     echo "-1>$0<-1"
     eko "$@"
+    echo "PATH>${PATH}<"
 } >> $LOG_FILE
 
 echo '--' >> $LOG_FILE
@@ -308,12 +314,12 @@ have_sawfish=$?
 
 #EExec_verbose_msg "args>${args[@]}<"
 EExecDashV_p && echo_id one_file
-#set -x
 if [ "${#args[@]}" = 0 ]
 then
     process_file
 else
     set -- "${args[@]}"
+    eko "@>$@<" >> $LOG_FILE
     for file in "$@"
     do
       #echo_id file
@@ -331,7 +337,7 @@ else
 fi
 
 {
-    echo "<< ${now} ========================================================================"
+    echo "<< ${now} ======================================================"
 } >> $LOG_FILE
 
 exit 0
