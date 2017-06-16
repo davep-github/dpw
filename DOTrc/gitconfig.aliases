@@ -24,6 +24,11 @@
         undo-dirty = reset --hard
         undirty = reset --hard
         undo-all = reset --hard
+        # Reset to *previous* commit.
+	undo-commit = reset --soft HEAD^
+	uncommit = reset --soft HEAD^
+	decommit = reset --soft HEAD^
+        amend = commit --amend
 
         rem = remote
         remv = remote -v
@@ -139,6 +144,7 @@
         rebc = rebase --continue
 
         cpick = cherry-pick
+        cp = cherry-pick
 
         # If command is disabled in config (e.g. I don't want to push
         # accidentally on the amdgpu tree.)
@@ -169,6 +175,8 @@
         dtec = difftool --tool=ec-diff
         dtecmerge = difftool --tool=ec-merge
         dtem = difftool --tool=ec-merge
+        dtsd = difftool --tool=s-diff
+        sdiff = difftool --tool=s-diff
 
 #merge tools        
         p4m = mergetool --tool=p4merge
@@ -177,6 +185,8 @@
         mtp4merge = mergetool --tool=p4merge
         mtmeld = mergetool --tool=meld
         mtm = mergetool --tool=meld
+        mtdiffuse = mergetool --tool=diffuse
+        mtd = mergetool --tool=diffuse
 
         hist5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
@@ -186,6 +196,11 @@
         h5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h11 = log -n 11 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+        hist-anon = log --pretty=format:\"%h %ad | %s%d\" --graph --date=short
+        hista = log --pretty=format:\"%h %ad | %s%d\" --graph --date=short
+        hist-narrow = log --pretty=format:\"%h %ad | %<(40,trunc)%s%d\" --graph --date=short
+        hist-slim = log --pretty=format:\"%h %ad | %<(40,trunc)%s%d\" --graph --date=short
+        hists = log --pretty=format:\"%h %ad | %<(40,trunc)%s%d\" --graph --date=short
         dotgit = rev-parse --git-dir
         gdir = rev-parse --git-dir
         # there is now a git alias command, but 'tis called alias.
@@ -196,10 +211,6 @@
         submit-patches = send-email --validate --compose
         spatches = send-email --validate --compose
         spatch = send-email --validate --compose
-        # Reset to *previous* commit.
-	undo-commit = reset --soft HEAD^
-	uncommit = reset --soft HEAD^
-        amend = commit --amend
         rank = shortlog -sn --no-merges
 
         # remove files from index (tracking).  Changes remain in working dir.
