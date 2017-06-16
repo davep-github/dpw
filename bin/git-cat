@@ -119,13 +119,38 @@ git_cat()
 }
 
 nth=
+output_file=
+auto_output_file=
+output_filter=just_cat
+
+while (($# > 0))
+do
+  case "${1}" in
+    -o|--auto-name) auto_output_file=t;;
+    -O|--set-name) shift; output_file="${1}";;
+    --) shift; break;;
+    *) break;;
+  esac
+  shift
+done
+
 commit="$1"; shift
 EExec_verbose_echo_id commit
+
 case "$commit" in
     -n*|-[0-9]*|--oldest|--original|--initial|--earliest) nth="${commit}"; commit=;;
     *);;
 esac
 
+cat_to()
+{
+    cat > "$output_file"
+}
+
+just_cat()
+{
+    cat
+}
 
 [ -z "$*" ] && {
     echo 1>&2 "Usage: git-cat [commit|-n[0-9]+|-[0-9]+|--oldest|--original|--earliest] file+"
@@ -149,5 +174,13 @@ do
 #  echo_id2 commit
 #  echo_id2 f
 #  exit 99
-  EExec -y git_cat "$commit" "$f"
+
+  if [ -n "${auto_output_file}" ]
+  then
+      short_sha=$(git lon 1 "${commit}" | awk '{print $1}')
+      output_filter=cat_to
+      output_file=$(instr-before-ext.py "${f}" "${short_sha}")
+  fi
+  [ -n "${output_file}" ] && echo "Writing to >${output_file}<"
+  EExec -y git_cat "$commit" "$f" | "${output_filter}"
 done
