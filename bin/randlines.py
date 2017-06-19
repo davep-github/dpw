@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-### Time-stamp: <12/09/08 13:31:00 davep>
+### Time-stamp: <17/06/19 11:40:35 dpanarit>
 #############################################################################
 ## @package 
 ##
@@ -23,38 +23,61 @@ class FPrintor(Printor):
     def __call__(self, fmt, *args, **kw_args):
         filo = kw_args.get("filo", self.filo)
         return filo.write(fmt % args)
-        
+
 
 def fprintf(f, fmt, *args):
     f.write(fmt % args)
 
 def printf(fmt, *args):
+    if not args:
+        args = []
+        args.append(fmt)
+        fmt = "%s"
     fprintf(sys.stdout, fmt, *args)
-    
-def deal_em(l, random_range_fun=None, handlor=None):
+
+def deal_em(l, random_range_fun=None):
     ret = []
     if not random_range_fun:
         random_range_fun = random.Random().randrange
-    llen = len(l)
-    while llen > 0:
-	if llen == 1:
-	    r = 0
-	else:
-	    r = random_range_fun(0, llen)
-        print >>sys.stderr,  "r:", r, "llen:", llen
-        i = l[r]
-        if handlor:
-            handlor(i)
-        ret.append(i)
-        del l[r]
-        llen -= 1
-    ret.extend(l)
-    return ret
+    random.shuffle(l)
+    return l
 
-def print_em(l, printor=printf):
-    deal_em(l, handlor=printor)
+def print_em(lines, printor=printf, *printor_args):
+    for l in lines:
+        #print >>sys.stderr, "[%s]" % (l[0:-1],)
+        printor(l)
 
-def main(files_or_names):
+def main(argv):
+    import getopt
+    seed = None
+    interleave_p = False
+    ofile = sys.stdout
+    all_lines = []
+    limit = None
+
+    opt_string = "s:il:"
+    opts, args = getopt.getopt(argv[1:], opt_string)
+    for o, v in opts:
+        #if o == '-<option-letter>':
+        #    # Handle opt
+        #    continue
+        if o == '-s':
+            seed = eval(v)
+            continue
+        if o == '-i':                   # Interleaved.
+            interleave_p = True
+            continue
+        if o == '-l':
+            limit = eval(v)
+            continue
+        #print >>sys.stderr, "Unhandled option>%s<" % (o,)
+        sys.exit(1)
+
+    files_or_names = args
+    #print >>sys.stderr, "seed:", seed, ", files_or_names:", files_or_names
+
+    random.seed(seed)
+
     if len(files_or_names) == 0:
         files_or_names = [sys.stdin]
 
@@ -67,10 +90,19 @@ def main(files_or_names):
             close_p = False
 
         l = fo.readlines()
+        if limit:
+            l = l[0:limit]
         if close_p:
             fo.close()
-
-        print_em(l)
+        if interleave_p:
+            all_lines.extend(l)
+        else:
+            for l0 in l:
+                l0 = l0[0:-1]
+                #print >>sys.stderr, ">%s<" % (l0,)
+            print_em(deal_em(l))
+    if interleave_p:
+        print_em(deal_em(all_lines))
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main(sys.argv)
