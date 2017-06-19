@@ -116,6 +116,7 @@ UNO=
 #echo_id type
 while (($# > 0))
 do
+  EExec_verbose_msg "1>${1}<"
   case "${1}" in
       -p|--filter) filter_mode_p=t;;
       --added|-a|--new) type+=("A");;
@@ -141,9 +142,17 @@ else
     type=
 fi
 
-(("${#args[@]}" > 0)) && set -- "${args[@]}"
+if (("${#optv[@]}" > 0))
+then
+    set -- "${optv[@]}"
+else
+    : set --
+fi
 
-if (("${#args[@]}" > 0))
+(("${#args[@]}" > 0)) && set -- "${args[@]}"
+EExec_verbose_msg "0: @>$@<@"
+
+if false && (("${#args[@]}" > 0))
 then
     # very simple testing.
     for a in "${args[@]}"
@@ -154,15 +163,10 @@ elif true_p "${filter_mode_p}"
 then
     cat
 else
-    if (("${#optv[@]}" > 0))
-    then
-        set -- "${optv[@]}"
-    else
-:        set --
-    fi
-    echo 1>&2 "@>$@<@"
+    EExec_verbose_msg "1: @>$@<@"
     # short status and skip untracked files.
     EExec git status -s ${UNO} ${status_opts}
+    EExec_verbose_msg "1: @>$@<@"
 fi \
     | EExec sed -rn "s/(^[[:space:]]*${type}[[:space:]]+)(.*)$/\2/p" \
     | EExec file-relativizer "$@" \
