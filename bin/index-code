@@ -29,6 +29,7 @@ set -u
 midix=
 vsetp ${PROJECT-} && midix=.${PROJECT}
 
+: ${status_file=${progname}.stat}
 : ${RC_FILE_OVERRIDE=}
 : ${RC_FILE_NAMES=".../DOTindex-code.rc .../DOTindex-code${midix}.rc"}
 : ${RC_EXTRA_FILE_NAMES=}
@@ -313,7 +314,7 @@ then
     EExec chmod_index_files "u+w"
     # This was EExec -y ...
     # And I can't recall why.
-    EExec rm -f $index_files || {
+    EExec rm -f $index_files ${status_file} || {
         echo "rm of index files>$index_files<, failed."
         exit
     } 1>&2
@@ -356,17 +357,19 @@ They should work off the same set of files."
     fi
 }
 
-: ${status_file=${progname}.stat}
-
 {
     echo "Start time: $(date)"
     echo "Indexing methods:"
     dump_indexing_methods
-    git_dir=$(git rev-parse --git-dir 2>/dev/null) && {
+    git_dir=$(git rev-parse --git-dir 2>/dev/null)
+    if [ -n "${git_dir}" ]
+    then
         echo "Tree is gitted: ${git_dir}"
         echo "  Current branch: $(git-current-branch)"
         echo "  Latest log entry: $(git log -n1 --oneline HEAD)"
-    }
+    else
+        echo "Tree is NOT gitted."
+    fi
     echo
 } | tee "${status_file}"
 
