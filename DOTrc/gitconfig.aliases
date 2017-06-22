@@ -178,7 +178,7 @@
         dtsd = difftool --tool=s-diff
         sdiff = difftool --tool=s-diff
 
-#merge tools        
+# merge tools        
         p4m = mergetool --tool=p4merge
         mtp4m = mergetool --tool=p4merge
         p4merge = mergetool --tool=p4merge
@@ -187,6 +187,8 @@
         mtm = mergetool --tool=meld
         mtdiffuse = mergetool --tool=diffuse
         mtd = mergetool --tool=diffuse
+        mtec = mergetool --tool=ec-merge
+        ecm = mergetool --tool=ec-merge
 
         hist5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
