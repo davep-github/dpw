@@ -40,12 +40,10 @@
 	path = /usr/bin/meld
 	cmd = '/usr/bin/meld' $BASE $LOCAL $REMOTE $MERGED
 	trustExitCode = false
+	keepBackup = false
 
 [merge]
 	tool = Meld
-
-[mergetool]
-	keepBackup = false
 
 [imerge]
 	editmergemessages = true
