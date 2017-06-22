@@ -116,8 +116,8 @@ EExec_verbose_echo_id DP_NON_STANDARD_LOC_DBS
 
 for p in ${DP_NON_STANDARD_LOC_DBS}
 do
-  p=$(realpath "${p}")
-  pwd=$(realpath "${PWD}")
+  p=$(realpath "${p}")/
+  pwd=$(realpath "${PWD}")/
   EExec_verbose_echo_id pwd
   EExec_verbose_echo_id p
   oops=
