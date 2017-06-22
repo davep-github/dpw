@@ -279,9 +279,9 @@ PRIMARY_BOX_BG_COLOR = 'rgb:24/00/68'
 e(
     kef='host',
     dat={
-        'host-pattern': '^xerxes$',
+        'host-pattern': '^yyz$',
         'family': 'amd_family',
-        'comment': 'A BETTONG Carrizo dev system (on my desk).',
+        'comment': 'A FX-8370 8-core machine.  Muh main axe.',
         'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 180x74-0+0',
         'xterm_bg': PRIMARY_BOX_BG_COLOR,
         'xterm_fg': PRIMARY_BOX_FG_COLOR,
