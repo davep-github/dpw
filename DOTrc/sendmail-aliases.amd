@@ -9,6 +9,7 @@ davep: davep.amd@meduseld.net
 dpanarit: david.panariti@amd.com
 dpamd: dpanarit
 dpwork: dpanarit
+dps: dpanarit dpamd dpwork
 
 t1: xxx@yyy
 t2: zzz@aaa
