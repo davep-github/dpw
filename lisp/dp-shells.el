@@ -332,6 +332,10 @@ No regexps allowed. This will be processed by `regexp-opt'")
                                        "gcc"
                                        "g++"
                                        "diff"
+                                       "sdiff"
+                                       "diff3"
+                                       "meld"
+                                       "diffuse"
                                        "grep"
                                        "egrep"
                                        "fgrep"
@@ -410,6 +414,7 @@ not destined to be saved.  ")
 
 (defun dp-shells-save-buffer-p ()
   (and dp-shells-save-buffer-flag-p
+       (buffer-file-name)
        (not (dp-match-a-regexp (buffer-file-name)
                                dp-shells-files-to-not-save))))
 
