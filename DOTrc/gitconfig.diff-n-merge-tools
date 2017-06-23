@@ -7,13 +7,20 @@
 #    cmd = meld "$LOCAL" "$BASE" "$REMOTE" --output "$MERGED"
 
 [mergetool "p4merge"]
-	cmd = p4merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+	# I like the old on the left because things tend to advance to the
+	# right.
+	cmd = p4merge "$BASE" "$REMOTE" "$LOCAL" "$MERGED"
 	keepTemporaries = false
 	trustExitCode = false
 	keepBackup = true
 
 [mergetool "ec-merge"]
-	cmd = ec-merge "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+	cmd = ec-merge -w "$LOCAL" "$REMOTE"
+	keepTemporaries = false
+	keepBackup = true
+
+[mergetool "ec-merge3"]
+	cmd = ec-merge3 -w "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
 	keepTemporaries = false
 	keepBackup = true
 

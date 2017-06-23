@@ -2,7 +2,7 @@
 
 # For merge, args: --merge BASE LOCAL REMOTE
 
-echo "@>$@<"
+#echo "@>$@<"
 source script-x
 set -u
 progname="$(basename $0)"
@@ -24,32 +24,34 @@ done
 # Or export eexec_program to propagate eexec info to a called program.
 export eexec_program
 
-set -x
+#set -x
 
 # ec [-w] first second
 
 wait_opt=
-: ${ediff_func=ediff-files}
+# : ${ediff_func=ediff-files}
 : ${merge_p=}
-
+: ${eval_this:=diff}
 while (($# > 0))
 do
   case "$1" in
       -q|--no-wait) wait_opt=;;
       -w|--wait) wait_opt='-w';;
-      --merge) ediff_func="ediff-merge"; merge_p=t;;
+      --diff|-d) eval_this='diff';;
+      --merge) eval_this='merge';;
+      --merge3|--m3|--merge-with-ancestor) eval_this='merge3';;
       -u) ;; # This is often left over from a regular diff command. Ignore it.
       *) break;;
   esac
   shift
 done
 
-BASE="${1-}"
-LOCAL="${2-}"
-REMOTE="${3-}"
+LOCAL="${1-}"
+REMOTE="${2-}"
+BASE="${3-}"
 #echo "#>$#<"
 
-if [ -n "${merge_p}" ]
+if [ "${eval_this}" = "merge3" ]
 then
     (($# != 4)) && {
             echo "Three file names are needed: BASE LOCAL REMOTE"
@@ -61,17 +63,26 @@ then
         } 1>&2
 fi
 
-BASE=$(realpath "${BASE}")
-LOCAL=$(realpath "${LOCAL}")
+[ -n "${LOCAL}" ] && LOCAL=$(realpath "${LOCAL}")
+[ -n "${REMOTE}" ] && REMOTE=$(realpath "${REMOTE}")
+[ -n "${BASE}" ] && BASE=$(realpath "${BASE}")
+
 diff_lisp="(ediff-files \"$BASE\" \"$LOCAL\")"
 merge_lisp="(ediff-merge-files-with-ancestor \"$REMOTE\" \"$LOCAL\" \"$BASE\")"
 
-case "${ediff_func}" in
-    ediff-diff|ediff-files) eval_lisp="${diff_lisp}";;
-    ediff-merge) eval_lisp="${merge_lisp}";;
-    *) echo 1>&2 "unsupported ediff_func>${ediff_func}<"
-       exit 1;;
-esac
+declare -A EVAL_THIS
+EVAL_THIS[diff]="(ediff-files \"$REMOTE\" \"$LOCAL\")"
+EVAL_THIS[merge]="(ediff-merge-files \"$REMOTE\" \"$LOCAL\")"
+EVAL_THIS[merge3]="(ediff-merge-files-with-ancestor \"$REMOTE\" \"$LOCAL\" \"$BASE\")"
+
+eval_lisp=${EVAL_THIS[$eval_this]}
+
+# case "${ediff_func}" in
+#     ediff-diff|ediff-files) eval_lisp="${diff_lisp}";;
+#     ediff-merge) eval_lisp="${merge_lisp}";;
+#     *) echo 1>&2 "unsupported ediff_func>${ediff_func}<"
+#        exit 1;;
+# esac
 
 # Fix this to use some kind of ipc so the wait actually works.
 #
@@ -83,6 +94,8 @@ esac
 # -w here prevents the use of -q (don't wait) flag to gnuclient.
 # -eval (gnuclient) doesn't seem to work with -q
 #
+
+# This only works if the server is up.
 EExec attempt-to-raise-emacs
 EExec ec -w -e "${eval_lisp}"
 if vsetp "${wait_opt}" && ! EExecDashN_p

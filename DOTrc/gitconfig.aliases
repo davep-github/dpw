@@ -161,6 +161,7 @@
 # Graphical diff tool employer/environment de jure
         dtgraphical = difftool --tool=diffuse
         dtdejour = difftool --tool=meld
+        dtdj = difftool --tool=meld
         dtg = difftool --tool=meld
 
 # diff tools
@@ -174,6 +175,7 @@
         dte = difftool --tool=ec-diff
         dtec = difftool --tool=ec-diff
         dtecmerge = difftool --tool=ec-merge
+        dtecm = difftool --tool=ec-merge
         dtem = difftool --tool=ec-merge
         dtsd = difftool --tool=s-diff
         sdiff = difftool --tool=s-diff
@@ -187,8 +189,11 @@
         mtm = mergetool --tool=meld
         mtdiffuse = mergetool --tool=diffuse
         mtd = mergetool --tool=diffuse
+
         mtec = mergetool --tool=ec-merge
         ecm = mergetool --tool=ec-merge
+        mtec3 = mergetool --tool=ec-merge3
+        ecm3 = mergetool --tool=ec-merge3
 
         hist5 = log -n 5 --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
         h = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short

@@ -13,7 +13,10 @@ source script-x
 progname="$(basename $0)"
 source eexec
 
-eexec_program=$(EExec_parse "$@")
+# Defer to any passed in "program"
+[ -z "${eexec_program-}" ] && {
+    eexec_program=$(EExec_parse "$@")
+}
 for op in $eexec_program
 do
   $op
