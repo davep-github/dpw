@@ -110,6 +110,7 @@ Usage_error()
 : ${smtp_debug:=0}
 : ${compose:=--compose}
 : ${validate:=--validate}
+: ${checkpatch:=t}
 
 to_sep=
 while (($# > 0))
@@ -119,6 +120,8 @@ do
   #EExec_verbose_echo_id --msg first: to_list
   case "$1" in
       --dry-run|--dr|-p|--pretend) dry_run=--dry-run;;
+      --checkpatch|--cp) checkpatch=t;;
+      --no-checkpatch|--no-cp) checkpatch=;;
       --compose) compose=--compose;;
       --validate) validate:=--validate;;
       --smtp-debug) shift; smtp_debug="${1}";;
@@ -167,6 +170,22 @@ errs=0
 test -n "${smtp_debug}" && {
     smtp_debug="--smtp-debug=${smtp_debug}"
 }
+
+if false && [ -n "${checkpatch}" ]
+then
+    script_dir=$(git dotgit)/../scripts || {
+        echo "Cannot cd to scripts dir."
+        exit 1
+    } 2>&1
+
+    for f in "$@"
+    do
+      $script_dir/checkpatch.pl "$f" || {
+          echo "checkpatch.pl failed on file>$f<"
+          exit 1
+      }
+    done
+fi
 
 EExec git send-email \
     ${dry_run} \
