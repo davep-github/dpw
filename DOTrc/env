@@ -250,7 +250,13 @@ export LC_COLLATE=C
 export DP_CODE_INDEX_FINDER_FILE=cscope.files
 export DP_CODE_INDEX_FINDER_WORK_FILE=${DP_CODE_INDEX_FINDER_FILE}.work
 
-# Unconditionally add this.  verify path will hack it out if it's not there.
-export PATH=$(dp_add_to_path_iff "$PATH" "/opt/p4v/bin")
+# Unconditionally add these.  verify path will hack them out if they're not
+# there.
+PATH=$(dp_add_to_path_iff \
+    "$PATH" \
+    "/opt/perforce/bin" \
+    "/opt/p4/bin" \
+    "/opt/p4v/bin" \
+    "/opt/GitEye/GitEye")
 
 true
