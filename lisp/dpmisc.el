@@ -5158,7 +5158,7 @@ you've added enough info for set-auto-mode to figure it out.."
     (set-auto-mode))
   (normal-mode)				;read the file vars, if any
   (turn-on-font-lock)
-  (dp-found-file-setup))
+  (dp-setup-found-file))
 
 (defalias 'sam 'dp-set-auto-mode)
 
@@ -10238,7 +10238,7 @@ This is useful for giving gnuclient & co more control over the editing process."
   "A one shot hook to call on the next found file.
 This is useful for giving gnuclient & co more control over the editing process.")
 
-(defun dp-found-file-setup ()
+(defun dp-setup-found-file ()
   "Perform actions on a `new'ly found file.
 Suitable for a find file hook (`dp-find-file-hooks')
 and for setting up a buffers mode (`dp-set-auto-mode')."
@@ -10255,7 +10255,7 @@ and for setting up a buffers mode (`dp-set-auto-mode')."
   (interactive)
   ;;(dp-make-local-keymap-extent)
   ;; Make RO before colorizing, so RO colors will be used.
-  (dp-found-file-setup)
+  (dp-setup-found-file)
   (dp-restore-file-state (current-buffer)))
 
 (defun dp-stealth-time-stamp ()
