@@ -190,7 +190,7 @@ class Grep_list_t(dp_object):
                       timestamp_p=None, force_match_p=False):
         ret = True
         Match_types[self.d_description] = self.d_indicator_char
-        self.d_matching_lines.append((line, line_number))
+        self.d_matching_lines.append((line, line_number, match_object))
         self.d_num_matches += 1
         self.print_matches(match=(line, line_number), ostream=ostream,
                            timestamp_p=timestamp_p)
@@ -229,7 +229,7 @@ class Grep_list_t(dp_object):
                         ("%s matches: %s\n" % (self.d_description,
                                                len(matching_lines))),
                         ("Num matching lines: %s\n" % (len(matching_lines),))]
-        for lt in  header_lines + matching_lines:
+        for lt in header_lines + matching_lines:
             if type(lt) == types.TupleType:
                 num = TICKER_COUNT_FORMAT.format(lt[1])
                 format = "Matching line[{}]: {}>{}<\n".format(
