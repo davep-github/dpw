@@ -179,7 +179,7 @@ class Grep_list_t(dp_object):
         for regexp in regexps:
             self.d_compiled_regexps.append(re.compile(regexp))
 
-    def max_matches_handler(self, line, line_number):
+    def max_matches_handler(self, line, line_number, match_objects):
         fmt = "{} Max matches handler, line: >{}<, line_number: {}"
         print >>self.d_ostream, fmt.format(self.d_description,
                                            line, line_number)
@@ -190,10 +190,10 @@ class Grep_list_t(dp_object):
                       timestamp_p=None, force_match_p=False):
         ret = True
         Match_types[self.d_description] = self.d_indicator_char
-        self.d_matching_lines.append((line, line_number, match_object))
+        match_record = (line, line_number, match_object)
+        self.d_matching_lines.append(match_record)
         self.d_num_matches += 1
-        self.print_matches(match=(line, line_number), ostream=ostream,
-                           timestamp_p=timestamp_p)
+        self.print_matches(match_record, ostream=ostream, timestamp_p=timestamp_p)
 
         if self.d_match_action:
             self.print_action(dp_io.bq("{} {}".format(self.d_match_action,
@@ -203,7 +203,7 @@ class Grep_list_t(dp_object):
              (self.d_num_matches > self.d_max_matches))
             or
             force_match_p):
-            ret = self.max_matches_handler(line, line_number)
+            ret = self.max_matches_handler(match_record)
         return ret
 
     def match(self, line, line_number, ostream=None, timestamp_p=None):
@@ -253,7 +253,7 @@ class Grep_list_t(dp_object):
             return
         if timestamp_p == None:
             timestamp_p = self.d_timestamp_p
-        for line, line_number in matches:
+        for line, line_number, _ in matches:
             display_match(ostream, line, line_number,
                           prefix="\n" + self.d_match_prefix,
                           suffix=self.d_match_suffix + "\n",
