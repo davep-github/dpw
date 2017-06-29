@@ -6,7 +6,7 @@
 
 # AMD brahma/gerrit specific
 [user]
-        name = David Panariti
+	name = David Panariti
 	email = David.Panariti@amd.com
 #	name = Just A. Guy
 #	email = just.a.guy@meduseld.net
@@ -111,3 +111,9 @@
 #         from = david.panariti@amd.com
 #         aliasesFile = ~/.sendmail.aliases
 #         aliasFileType = sendmail
+[diff]
+	tool = meld
+[merge]
+	tool = meld
+[gui]
+	editor = ec
