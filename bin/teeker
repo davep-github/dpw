@@ -186,11 +186,11 @@ class Grep_list_t(dp_object):
 
         return False
 
-    def match_handler(self, match_object, line, line_number, ostream=None,
+    def match_handler(self, regexp, line, line_number, ostream=None,
                       timestamp_p=None, force_match_p=False):
         ret = True
         Match_types[self.d_description] = self.d_indicator_char
-        match_record = (line, line_number, match_object)
+        match_record = (line, line_number, regexp)
         self.d_matching_lines.append(match_record)
         self.d_num_matches += 1
         self.print_matches(match_record, ostream=ostream, timestamp_p=timestamp_p)
@@ -215,7 +215,7 @@ class Grep_list_t(dp_object):
         for regexp in self.d_compiled_regexps:
             m = regexp.search(line)
             if m:
-                rets.append(self.match_handler(m, line, line_number,
+                rets.append(self.match_handler(regexp, line, line_number,
                                                ostream, timestamp_p))
         return rets
 
@@ -229,16 +229,22 @@ class Grep_list_t(dp_object):
                         ("%s matches: %s\n" % (self.d_description,
                                                len(matching_lines))),
                         ("Num matching lines: %s\n" % (len(matching_lines),))]
+        regexp_string = ""
         for lt in header_lines + matching_lines:
             if type(lt) == types.TupleType:
+                if app_args.verbose_match_summary_p:
+                    print >>sys.stderr, "type(lt[2]):", type(lt[2])
+                    regexp_string = "  Matching regexp: " + lt[2].pattern
+                else:
+                    regexp_string = ""
                 num = TICKER_COUNT_FORMAT.format(lt[1])
-                format = "Matching line[{}]: {}>{}<\n".format(
-                    self.d_indicator_char, num, "{}")
-##                 print "format>{}<".format(format)
+                format = "Matching line[{}]: {}>{}<\n{}".format(
+                    self.d_indicator_char, num, "{}", regexp_string)
                 s = lt[0]
             else:
                 format = "{}"
                 s = lt
+                regexp_string = ""
             for o in all_output_streams:
                 o.write(format.format(s))
 
@@ -941,6 +947,11 @@ Split line into chars and feed to ticker.""")
                          dest="match_summary_p", default=True,
                          action="store_false",
                          help="Don't show all grep matches at end of run.")
+    oparser.add_argument("--verbose-grep-summary", "--verbose-match-summary",
+                         "--vgs", "--vms",
+                         dest="verbose_match_summary_p", default=False,
+                         action="store_true",
+                         help="Show all grep matches and regexps at end of run.")
     oparser.add_argument("--buffered-logs", "--buf", '--bl',
                          dest="unbuffered_logs_p", default=True,
                          action="store_false")
