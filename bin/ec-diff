@@ -40,6 +40,7 @@ do
       --diff|-d) eval_this='diff';;
       --merge) eval_this='merge';;
       --merge3|--m3|--merge-with-ancestor) eval_this='merge3';;
+      --patch) eval_this='patch';;
       -u) ;; # This is often left over from a regular diff command. Ignore it.
       *) break;;
   esac
@@ -67,13 +68,11 @@ fi
 [ -n "${REMOTE}" ] && REMOTE=$(realpath "${REMOTE}")
 [ -n "${BASE}" ] && BASE=$(realpath "${BASE}")
 
-diff_lisp="(ediff-files \"$BASE\" \"$LOCAL\")"
-merge_lisp="(ediff-merge-files-with-ancestor \"$REMOTE\" \"$LOCAL\" \"$BASE\")"
-
 declare -A EVAL_THIS
 EVAL_THIS[diff]="(ediff-files \"$REMOTE\" \"$LOCAL\")"
 EVAL_THIS[merge]="(ediff-merge-files \"$REMOTE\" \"$LOCAL\")"
 EVAL_THIS[merge3]="(ediff-merge-files-with-ancestor \"$REMOTE\" \"$LOCAL\" \"$BASE\")"
+EVAL_THIS[patch]="(ediff-patch-file)"
 
 eval_lisp=${EVAL_THIS[$eval_this]}
 
