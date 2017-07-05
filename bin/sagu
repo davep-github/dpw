@@ -1,0 +1,13 @@
+#!/bin/sh
+
+sagu()
+{
+    sudo apt-get remove "$@"
+}
+
+if [ "$1" = "---y" ]
+then
+    yes | sagu "$@"
+else
+    sagu "$@"
+fi
