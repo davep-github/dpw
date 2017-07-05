@@ -1,0 +1,29 @@
+--- find.c.OEM	2017-04-21 23:31:42.725908045 -0400
++++ find.c	2017-04-21 23:31:42.785908046 -0400
+@@ -107,11 +107,25 @@
+  * [display.c]
+  *
+  * {"Find this", "text string",                    findstring},
++ *
++ * findstring_test_string
++ * FINDSTRING_TEST_STRINg
+  */
++static const char* findstring_options = "";
++static const char* findstring_options_env_var_name = "GLOBAL_FS_OPTS";
+ char *
+ findstring(char *pattern)
+ {
+-	snprintf(comline, sizeof(comline), "%s -g --literal %s > %s", common(), quote_shell(pattern), temp1);
++        {
++		const char* fs_env_var = getenv(findstring_options_env_var_name);
++		if (fs_env_var) {
++                    findstring_options = fs_env_var;
++                }
++        }
++
++	snprintf(comline, sizeof(comline),
++		"%s -g --literal %s %s > %s", common(), findstring_options,
++		quote_shell(pattern), temp1);
+ 	if (system(comline) != 0)
+ 		return FAILED;
+ 	return NULL;
