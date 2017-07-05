@@ -1081,6 +1081,9 @@ minibuffer history list `bookmark-history'."
 (when (paths-file-readable-directory-p dp-site-package-info)
   (add-to-list dp-info-path-var dp-site-package-info))
 
+(when (paths-file-readable-directory-p dp-local-package-info)
+  (add-to-list dp-info-path-var dp-local-package-info))
+
 (autoload 'follow-mode "follow"
   "Synchronize windows showing the same buffer, minor mode." t)
 

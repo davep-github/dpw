@@ -4580,6 +4580,10 @@ Interpret buffer contents by calling `less' on the buffer's file."
 
 (defvar dp-contrib-site-packages (expand-file-name 
                                   "~/lisp/contrib/site-packages")
+  "My contrib site packages root.")
+
+(defvar dp-local-package-info (expand-file-name 
+                                "~/local/share/info")
   "My local site packages root.")
 
 (defun dp-mk-site-package-dir (&rest names)
