@@ -1,5 +1,8 @@
 #!/bin/bash
-
+#
+# Return hash of nth *different* version of file.
+# E.g. if the file changed 10 commits ago, then that is the first (n = 1)
+# diff. 5 Before that would be 2.
 source script-x
 set -u
 progname="$(basename $0)"
