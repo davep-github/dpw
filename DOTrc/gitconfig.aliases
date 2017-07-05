@@ -172,6 +172,7 @@
         dtdiffuse = difftool --tool=diffuse
         dtd = difftool --tool=diffuse
         dtecdiff = difftool --tool=ec-diff
+        ec-diff = difftool --tool=ec-diff
         dte = difftool --tool=ec-diff
         dtec = difftool --tool=ec-diff
         dtecmerge = difftool --tool=ec-merge
