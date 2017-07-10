@@ -52,7 +52,7 @@ tagtree()
     local files_file="$1"; shift
     local tag_file=${1-$TAGFILE}
     EExec_verbose_msg "tagtree() $(echo_id eexec_program)"
-    eval EExec $SUDO $EXCTAGS $inheritance_opt $etags_opt -L "$files_file" \
+    eval EExec $SUDO $EXCTAGS --verbose $inheritance_opt $etags_opt -L "$files_file" \
       --links=no -o $tag_file \
       $h_OPT $langmap $full_member_names "$py_props" 
       "$nv_spec_files" \
@@ -238,7 +238,13 @@ EXCLUDED_FILES_FILE_OPT=
 }
 
 # wha...
-for tag_prog in exctags ctags-exuberant exuberant-ctags ctags dp-last-resort-ctags
+
+tag_progs='exctags
+    universal-ctags ctags-universal
+    exuberant-ctags ctags-exuberant
+    ctags
+    dp-last-resort-ctags'
+for tag_prog in ${tag_progs}
 do
     EXCTAGS=$(sp -1 $tag_prog)
     [ -n "$EXCTAGS" ] && {
@@ -274,7 +280,7 @@ else
     # tell tagger that .inl files are headers.
     h_OPT='-h +.inl'
     langmap='--langmap=c++:+.inl.tcc.h-py'
-    full_member_names='--extra=+q'
+    full_member_names='--extras=+qr'
     py1="'--regex-python=/[ \t]*([_A-Za-z][_A-Za-z0-9]*)[ \t]*=[ \t]*property/\1/'"
     py2="'--regex-python=/^([A-Z_][A-Z0-9_]).*=/\1/'"
     py_props="$py1 $py2"
@@ -355,7 +361,7 @@ TAGFILES=()
     (
         # subshell
         etags_opt="-e"
-        tagtree "$FILES_FILE" "$TAGFILE"
+        EExec tagtree "$FILES_FILE" "$TAGFILE"
         echo "tagtree(etags) done."
     ) &
 }
@@ -367,7 +373,7 @@ TAGFILES=()
     (
         # subshell
         etags_opt=""
-        tagtree "$FILES_FILE" "$TAGFILE"
+        EExec tagtree "$FILES_FILE" "$TAGFILE"
         echo "tagtree(ctags) done."
     ) &
 }

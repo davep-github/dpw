@@ -62,7 +62,7 @@ then
 else
     h_OPT='-h +.inl'
     langmap='--langmap=c++:+.inl.tcc'
-    full_member_names='--extra=+q'
+    full_member_names='--extras=+q'
 fi
 
 argses="$@"

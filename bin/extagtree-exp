@@ -118,7 +118,7 @@ else
     # tell tagger that .inl files are headers.
     h_OPT='-h +.inl'
     langmap='--langmap=c++:+.inl.tcc'
-    full_member_names='--extra=+q'
+    full_member_names='--extras=+q'
     py1="'--regex-python=/[ \t]*([_A-Za-z][_A-Za-z0-9]*)[ \t]*=[ \t]*property/\1/'"
     py2="'--regex-python=/^([A-Z_][A-Z0-9_]).*=/\1/'"
     py_props="$py1 $py2"
