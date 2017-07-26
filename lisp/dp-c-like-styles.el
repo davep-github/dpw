@@ -13,7 +13,7 @@
 (defconst dp-kernel-c-style
   '(
     (dp-c-using-kernel-style-p                     . t)
-    (dp-use-stupid-kernel-indentation-p            . nil)
+    (dp-use-stupid-kernel-struct-indentation-p     . nil)
     (dp-c-like-mode-default-indent-tabs-mode-p     . t)
     (dp-lang-use-c-new-file-template-p             . nil)
     (dp-trailing-whitespace-use-trailing-ws-font-p . t)
@@ -66,12 +66,12 @@
   (interactive)
   (c-mode)
   (c-set-style "dp-kernel-c-style" t)
-  (setq c-tab-always-indent (not dp-use-stupid-kernel-indentation-p)))
+  (setq c-tab-always-indent (not dp-use-stupid-kernel-struct-indentation-p)))
 
 (defconst dp-basic-c-style
   '(
     (dp-c-using-kernel-style-p                     . nil)
-    (dp-use-stupid-kernel-indentation-p            . nil)
+    (dp-use-stupid-kernel-struct-indentation-p     . nil)
     (dp-c-like-mode-default-indent-tabs-mode-p     . nil)
     (dp-lang-use-c-new-file-template-p             . t)
     (dp-trailing-whitespace-use-trailing-ws-font-p . t)
