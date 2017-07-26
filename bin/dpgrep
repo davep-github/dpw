@@ -84,7 +84,7 @@ do
       -q) VERBOSE=":"; EExecQuiet;;
 
 # Program options.
-      -l) PS_O_FMT=$PS_O_LONG_FMT;;
+      -l) PS_ARGS="$PS_ARGS $PS_O_LONG_FMT";;
       # We need a known format to put the pid in a known place.
       -p) printer=out_pid; NO_HDR=t; #PS_O_FMT=$PS_O_LONG_FMT;
           #PS_ARGS="-ww x $PS_O_LONG_FMT"
