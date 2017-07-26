@@ -858,7 +858,7 @@ tab setting, font or phase of the moon."
   (dp-turn-off-auto-fill)
   (setq dp-cleanup-whitespace-p dp-default-c-like-mode-cleanup-whitespace-p)
   (setq indent-tabs-mode dp-c-like-mode-default-indent-tabs-mode-p
-        c-tab-always-indent (not dp-use-stupid-kernel-indentation-p)
+        c-tab-always-indent (not dp-use-stupid-kernel-struct-indentation-p)
         c-recognize-knr-p nil
         dp-insert-tempo-comment-func 'dp-c-insert-tempo-comment)
 
