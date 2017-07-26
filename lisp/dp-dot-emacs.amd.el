@@ -4,7 +4,8 @@
   "Set up C/C++ style."
   (interactive)
   (cond
-   ((string-match "^\\(cz\\|xerxes$\\)" (dp-short-hostname))
+   ;; Main development boxen, so I needs the kernel mode.
+   ((string-match "^\\(cz\\|xerxes$\\|yyz\\)" (dp-short-hostname))
     (setq dp-current-c-style dp-kernel-c-style
           dp-current-c-style-name "dp-kernel-c-style"))
    ((string-match "^atl" (dp-short-hostname))
