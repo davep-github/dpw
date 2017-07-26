@@ -5,6 +5,8 @@
 source script-x
 $DP_SCRIPT_X_DASH_X_OFF
 
+ORIG_ARGS=("$@")
+
 MOTD=/etc/motd
 [ -w "${MOTD}" ] || {
     MOTD=/dev/null
@@ -221,6 +223,7 @@ fi
 write_log_header()
 {
     echo "Build begins: ${timestamp}:
+ORIG_ARGS: ${ORIG_ARGS[@]}
 id:
 $(id)
 in PWD:
