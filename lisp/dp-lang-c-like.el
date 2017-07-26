@@ -660,7 +660,7 @@ We say: \" p is a pointer to char\", not
        'call-interactively 'c-indent-command)
       ;; Add other things to try here. We will stop after the first non-nil
       ;; return.
-      (when (bound-and-true-p dp-use-stupid-kernel-indentation-p)
+      (when (bound-and-true-p dp-use-stupid-kernel-struct-indentation-p)
         (dp-kernel-style-var-name-align))
       ;; default.
       (c-indent-command)))
@@ -673,6 +673,7 @@ struct kernel_mode_sucks {
   int                        I_am_a_stupid_indentation_style;
   char*<tab>---------------->stupid_var_name;
 *Very* hackish.
+See also `dp-use-stupid-kernel-struct-indentation-p' which can disable it?
 "
   (interactive)
   ;;@todo XXX Breaks if first tab takes us past the type...name indentation.
