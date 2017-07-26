@@ -296,15 +296,20 @@ These should be regexp quoted."
   :type 'string
   :group 'cscope)
 
-(defcustom dp-gtags-cscope-case-insensitive-strings-p t
-  "*Should we look for case insensitive strings when using gtags-cscope?"
+(defcustom dp-gtags-cscope-ignore-case-strings-p t
+  "*Should we ignore case searching for strings when using gtags-cscope?"
   :type 'boolean
   :group 'cscope)
 
-(defcustom dp-gtags-cscope-GLOBAL_FS_OPTS 
-  (and dp-gtags-cscope-case-insensitive-strings-p
-       "--ignore-case")
-  "*Default args to pass opts to gtags-cscope findstring()."
+(defcustom dp-gtags-cscope-gtags-ignore-case-option "--ignore-case"
+  "*Option to tell GNU global gtags to ignore case when searching for strings."
+  :type 'string
+  :group 'cscope)
+
+(defcustom dp-gtags-cscope-GTAGS_FS_OPTS 
+  (and dp-gtags-cscope-ignore-case-strings-p
+       dp-gtags-cscope-gtags-ignore-case-option)
+  "*Default args to pass opts to gtags-cscope findstring() via env var."
   :type 'string
   :group 'cscope)
 

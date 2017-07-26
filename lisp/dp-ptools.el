@@ -132,15 +132,36 @@ that we're under a directory named work."
       (ding)
       (return nil)))
   t)
+
+(defun dp-gtags-set-cscope-ignore-case (ignore-case-p)
+  (let (enval stat_str)
+    (if ignore-case-p
+        (setq enval dp-gtags-cscope-gtags-ignore-case-option
+              stat_str "ignore")
+      (setq enval ""
+            stat_str "respect"))
+    (dmessage "gtags will %s case" stat_str)))
+
+(defun dp-gtags-cscope-ignore-case ()
+  (interactive)
+  (dp-gtags-set-cscope-ignore-case t))
+
+(dp-defaliases 'gic 'gtic 'gtci 'dp-gtags-cscope-ignore-case)
+
+(defun dp-gtags-cscope-respect-case ()
+  (interactive)
+  (dp-gtags-set-cscope-ignore-case nil))
+
+(dp-defaliases 'grc 'gtrc 'gtcs 'gtnic 'dp-gtags-cscope-no-ignore-case 
+               'dp-gtags-cscope-respect-case)
+
 ;; 
 ;; -C ignore case.
 ;; ????? (setq cscope-command-args '("-C"))
 (defun dp-setup-cscope ()
   (interactive)
 
-  (when dp-gtags-cscope-case-insensitive-strings-p
-    (setenv dp-gtags-cscope-findstring-options-env-var-name
-            dp-gtags-cscope-GLOBAL_FS_OPTS))
+  (dp-gtags-set-cscope-ignore-case dp-gtags-cscope-ignore-case-strings-p)
 
   (defadvice cscope-extract-symbol-at-cursor 
     (around dp-cscope-extract-symbol-at-cursor activate)
