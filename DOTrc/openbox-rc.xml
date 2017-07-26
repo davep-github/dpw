@@ -339,6 +339,17 @@
         <command>xipython</command>
       </action>
     </keybind>
+    <!-- Select and raise a galculator. -->
+    <keybind key="W-g">
+      <action name="Execute">
+        <command>wmctrl -a "galculator"</command>
+      </action>
+    </keybind>
+    <keybind key="S-W-g">
+      <action name="Execute">
+        <command>galculator</command>
+      </action>
+    </keybind>
     <keybind key="W-1">
       <action name="Execute">
         <command>wmctrl -a "::auto1"</command>
