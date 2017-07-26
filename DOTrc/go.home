@@ -53,6 +53,7 @@ E|svnworkll|svnll|    ${SVNWORKLL}/
 #############################################################################
 Ee|varlog|vlog|       /var/log/
 Ee|messages|msgs|vlm| ${varlog}messages
+Ee|syslog|slog|vls|   ${varlog}syslog
 #############################################################################
 Ee|yokeletc|          ${yokel}etc/
 Ee|uye|yetc|          ${yokeletc}
