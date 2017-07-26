@@ -265,3 +265,5 @@ rc="$?"
 }
 
 sdiff --minimal "${left_tmp_file}" "${right_tmp_file}"
+rm -f "${left_tmp_file}"
+rm -f "${right_tmp_file}"
