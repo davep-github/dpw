@@ -84,4 +84,24 @@ Usage_error()
 # template ends.
 ########################################################################
 
-EExec mount -o rw "$@"
+case "${progname}" in
+    mount-rw) remount_type=rw;;
+    mount-ro) remount_type=ro;;
+esac
+
+case "${1-}" in
+    -r|--ro) remount_type=ro; shift;;
+    -w|--rw) remount_type=rw; shift;;
+esac
+
+: ${remount_type:=rw}
+
+(($# == 0)) && {
+    echo "${progname}: Please specify some drives."
+    exit 1
+} 1>&2
+
+for drv in "$@"
+do
+  EExec sudo mount -o remount,"${remount_type}" "$@"
+done
