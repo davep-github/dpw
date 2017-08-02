@@ -90,7 +90,7 @@ esac
 unset y
 true_p "$show_dir_p" || eval y=\$$c 
 case "$y" in
-    ""|\$*)     # dest is not an envvar: look it up in the go database
+    ""|\$*|[0-9]*)     # dest is not an envvar: look it up in the go database
     case "$c" in
         back|b) fini ${GoBack-$HOME} ;;
         "") fini . ; exit ;;
