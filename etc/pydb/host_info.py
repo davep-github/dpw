@@ -291,6 +291,24 @@ e(
     ref=[amd_family, OSDB['linux'], default]
 )
 
+EXP_BOX_FG_COLOR = 'white'
+EXP_BOX_BG_COLOR = 'rgb:14/00/28'
+
+e(
+    kef='host',
+    dat={
+        'host-pattern': '^yyz-exp$',
+        'family': 'amd_family',
+        'comment': 'A FX-8370 8-core machine.  Muh main axe.',
+        'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 180x74-0+0',
+        'xterm_bg': EXP_BOX_BG_COLOR,
+        'xterm_fg': EXP_BOX_FG_COLOR,
+        'xem_bg_color': "grey80",
+        'project': 'brahma',
+ },
+    ref=[amd_family, OSDB['linux'], default]
+)
+
 #CZ_FP4_FG_COLOR = 'white'
 #CZ_FP4_BG_COLOR = 'rgb:12/00/32'
 CZ_FP4_FG_COLOR = 'darkblue'
