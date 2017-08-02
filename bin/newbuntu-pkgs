@@ -146,8 +146,14 @@ lsscsi
 xclip
 firefox
 thunderbird
+chromium-browser
 pcregrep
 nfs-common
+xterm
+tree
+rcs
+curl
+libreoffice
 )
 
 num_pkgs="${#packages[@]}"
