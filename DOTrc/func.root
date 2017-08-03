@@ -377,6 +377,7 @@ export -f pathff
 # Copped from GIT shell on Windwoes.
 export dp_sourcing=t
 source $HOME/bin/__git_ps1
+export -f __git_ps1
 #pending above __git_ps1 () 
 #pending above { 
 #pending above     local g="$(__gitdir)";
