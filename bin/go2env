@@ -295,7 +295,7 @@ def permanent_prefix_handler(name, val, **kw_args):
 
 
 #####################################################################
-def environment_var_handler(shell):
+def get_environment_var_handler(shell):
     """Figure out what shell we are using so we can select
     the proper environment setting handler."""
     b = os.environ.get("BASH", False)
@@ -346,7 +346,7 @@ def get_handlers(shell_type=None):
                  None,
                  SELECTOR_EMACS),
              SELECTOR_ENV:
-             environment_var_handler(shell_type) + (SELECTOR_ENV,),
+             get_environment_var_handler(shell_type) + (SELECTOR_ENV,),
              SELECTOR_PREFIX:
              (
                  prefix_handler,
@@ -659,6 +659,13 @@ def read_dict(dict_file=None):
     z = imp.load_module("alias_file_aliases", fobj, p, d)
     fobj.close()
     return z.aliases
+#####################################################################
+def valid_env_var_name(name):
+    """This is a an embarrassing HACK to get around the fact that a bug crept
+    in that causes everything to be exported."""
+    dp_io.cdebug(2, "name>{}<\n", name)
+
+    return name and name[0] not in "0123456789"
 
 #####################################################################
 def process_aliases(handle, handler_keyword_args,
@@ -674,10 +681,13 @@ def process_aliases(handle, handler_keyword_args,
     keys.sort()
     for regexp in grep_regexps:
         for k in keys:
+            alias_item = aliases[k]
+            if not valid_env_var_name(k):
+                continue
             kw_args = handler_keyword_args
             aliases[k]["regexp"] = regexp
             #print >>sys.stderr, "kw_args:", kw_args
-            handle(k, aliases[k], **kw_args)
+            handle(k, alias_item, **kw_args)
 
     if handle_post:
         handle_post(aliases, keys)
