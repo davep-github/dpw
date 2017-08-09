@@ -1,22 +1,41 @@
 #!/bin/bash
 
+# Display the hostname of the box running the server.
+
 source script-x
 set -u
 progname="$(basename $0)"
 
-# /etc/vnc/Xvnc-core :30
+# process name example from ps: /etc/vnc/Xvnc-core :30
 
-PROC_NAME="/etc/vnc/Xvnc-core"
+PROC_NAME="Xvnc-core|Xtightvnc"
+server_proc_pattern="s!(.*)($PROC_NAME )(:[[:digit:]]{1,3})(.*)!\3!p"
+#echo_id server_proc_pattern
+servers=($(dpgrep "$PROC_NAME" | all-but 1 \
+          | sed -rn "${server_proc_pattern}"))
 
-x=$(pgrep "$PROC_NAME" | sed -rn "s!(.*)($PROC_NAME )(:[[:digit:]]{2,3})(.*)!\3!p")
-
-set -- $x
-if (($# > 1))
-then
-    echo "More than one vnc servers running. Choose on by hand."
-    echo "$x"
+[ "${#servers[@]}" == 0 ] && {
+    echo "No ${PROC_NAME} servers found."
     exit 1
+}
+
+which_server=0
+if (("${#servers[@]}" > 1))
+then
+    if -z "$1"
+    then
+        echo "More than one vnc server running. 
+Choose one by specifying a 0-based numeric parameter (array index)."
+        echo "$@"
+        exit 1
+    fi
+    case "$1" in
+        -[0-9]) which_server="${1##-}";;
+        [0-9]) which_server="${1}";;
+        *) echo 1>&2 "Server selector isn't a numeric index."
+           exit 1;;
+    esac
 fi
 
-echo "$HOSTNAME$x"
+echo "$HOSTNAME${servers[$which_server]-0}"
 exit 0
