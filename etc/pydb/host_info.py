@@ -283,6 +283,8 @@ e(
         'family': 'amd_family',
         'comment': 'A FX-8370 8-core machine.  Muh main axe.',
         'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 180x74-0+0',
+        # Not particularly attractive.
+#        """xem-xft-font""": '''"Inconsolata-12"''',
         'xterm_bg': PRIMARY_BOX_BG_COLOR,
         'xterm_fg': PRIMARY_BOX_FG_COLOR,
         'xem_bg_color': "grey80",
