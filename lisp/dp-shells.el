@@ -982,6 +982,8 @@ Or both.")
       (ansi-color-for-comint-mode-off))))
   
 ;;;###autoload
+(make-variable-buffer-local 'comint-buffer-maximum-size)
+;;;###autoload
 (defun* dp-shell-mode-hook (&optional (variant dp-default-variant))
   "Sets up shell mode specific options."
   (interactive)
@@ -1004,9 +1006,7 @@ Or both.")
     do (add-hook (dp-sls variant '-output-filter-functions)
                  hook nil t))
 
-    (setq comint-buffer-maximum-size 
-          (* 4 1024)
-          ))
+    (dp-set-shell-max-lines t))
   
   ;; something wipes this out after the call to comint-mode-hook and here,
   ;; so we do it again.
@@ -1223,7 +1223,8 @@ command position."
 (dp-deflocal dp-shell-output-line-count 0
   "Number of lines ouput by the current command.")
 
-(dp-deflocal dp-shell-output-max-lines-default (* 3 163830)
+;;; (dp-deflocal dp-shell-output-max-lines-default (* 3 163830)
+(dp-deflocal dp-shell-output-max-lines-default 8192
   "Maximum number of lines which is kept in each shell buffer.
 XXX @todo Limiter should be modified to handle lines.")
 
@@ -2874,21 +2875,21 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 ;;         (with-current-buffer (process-buffer proc)
 ;;           (dp-restrict-buffer-growth max-size max-percentage))))))
 
-(defun dp-file-size-limiting-process-filter (proc string original-filter
-                                             max-size &optional max-percentage)
-  "A process filter which limits the size of the process output buffer.
-PROC is the process, STRING is the string to filter, ORIGINAL-FILTER is the
-filter that would normally be called, MAX-SIZE is the maximum size in chars
-and MAX-PERCENTAGE is the percentage of MAX-SIZE is the desired number of
-chars that that will remain after the oldest output has been deleted.
-If MAX-SIZE is nil, do not limit the size.
-MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
-  (save-excursion
-      (when max-size
-        (with-current-buffer (process-buffer proc)
-          (dp-restrict-buffer-growth max-size max-percentage))))
-  (when original-filter
-    (funcall original-filter proc string)))
+;; (defun dp-file-size-limiting-process-filter (proc string original-filter
+;;                                              max-size &optional max-percentage)
+;;   "A process filter which limits the size of the process output buffer.
+;; PROC is the process, STRING is the string to filter, ORIGINAL-FILTER is the
+;; filter that would normally be called, MAX-SIZE is the maximum size in chars
+;; and MAX-PERCENTAGE is the percentage of MAX-SIZE is the desired number of
+;; chars that that will remain after the oldest output has been deleted.
+;; If MAX-SIZE is nil, do not limit the size.
+;; MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
+;;   (save-excursion
+;;       (when max-size
+;;         (with-current-buffer (process-buffer proc)
+;;           (dp-restrict-buffer-growth max-size max-percentage))))
+;;   (when original-filter
+;;     (funcall original-filter proc string)))
 
 (defun dp-gdb-filter (proc string)
   (gdb-filter proc string))

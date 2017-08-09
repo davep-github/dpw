@@ -731,7 +731,9 @@ And their failure occurs way too often."
                
                ;; WAG: just use this set of functions.
          ;;;;;(comint-output-filter-functions nil)
-               
+
+               ;; @todo XXX Why is this in in a let?  It seems like I'd want
+               ;; the world to know the new value.
                (comint-output-filter-functions
                 (append comint-output-filter-functions
                         '(ansi-color-filter-apply
