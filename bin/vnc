@@ -36,8 +36,13 @@ they are in a screen session when they are in fact not."
     done
 fi
 
+extra_options=()
+sharedness="-alwaysshared"
+
 case "${1-}" in
     -l|--l|-ls|--ls) shift; ls "$@" ~/.vnc/*.pid; exit 0;;
+    -alwaysshared|-s|-shared) sharedness="-alwaysshared";;
+    -nevershared|-ns|-nshared) sharedness="-nevershared";;
     *) ;;
 esac
 
@@ -48,4 +53,4 @@ esac
 : ${DP_VNC_GEOMETRY="1904x1144"}
 : ${VNC_SERVER=vncserver}
 
-EExec "${VNC_SERVER}" -geometry ${DP_VNC_GEOMETRY} -depth 24 "$@"
+EExec "${VNC_SERVER}" -geometry ${DP_VNC_GEOMETRY} -depth 24 ${sharedness} "${extra_options[@]}" "$@"
