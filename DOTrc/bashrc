@@ -430,7 +430,7 @@ export PROJECT
 
 # least specific to most so we can override things.
 export locale_rcs_fields=".OSName .FAMILY_ZONE .FAMILY .HOSTNAME .PROJECT .var .early" # .$WORK_ZONE"
-export locale_rcs=".$OSName .$FAMILY_ZONE .$FAMILY .$HOSTNAME $PROJECT .var .early" # .$WORK_ZONE"
+export locale_rcs=".$OSName .$FAMILY_ZONE .$FAMILY .$HOSTNAME .$PROJECT .var .early" # .$WORK_ZONE"
 : ${pre_rcs:=$($HOST_INFO -n '' locale_pre)}
 : ${post_rcs:=$($HOST_INFO -n '' locale_post)}
 locale_rcs="$pre_rcs $locale_rcs $post_rcs"
