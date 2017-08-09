@@ -532,6 +532,10 @@ def init_aliases(args, selector_regexp,
     # dogo stops at the first match, and this produces the same effect.
     #
 
+#    if selector_regexp == '.*':
+#        dp_io.debug("init_aliases(): selector_regexp is >{}<\n", selector_regexp)
+#        print HAHAHAHAHAHAH
+
     if Get_aliases():
         return
 
@@ -608,6 +612,7 @@ def init_aliases(args, selector_regexp,
 
 #####################################################################
 def serialize_aliases(args, serialized_file=DEFAULT_SERIALIZED_FILE):
+    dp_io.cdebug(1, "in serialize_aliases()\n")
     init_aliases(args, ".*", False)
     if serialized_file is None:
         alias_pickle = pickle.dumps(Get_aliases())
@@ -619,6 +624,7 @@ def serialize_aliases(args, serialized_file=DEFAULT_SERIALIZED_FILE):
 
 #####################################################################
 def read_aliases(serialized_file=DEFAULT_SERIALIZED_FILE):
+    dp_io.cdebug(1, "in read_aliases()\n")
     fobj = open(serialized_file, "r")
     ret = pickle.load(fobj)
     fobj.close()
@@ -626,12 +632,14 @@ def read_aliases(serialized_file=DEFAULT_SERIALIZED_FILE):
 
 #####################################################################
 def write_dict(args, dict_file=None):
+    dp_io.cdebug(1, "in write_dict()\n")
     if not dict_file:
         return
     dname, fname = opath.split(dict_file)
     #print >>debug_file, "dict_file: {}, dname: {}, fname: {}".format(dict_file, dname, fname)
     if not opath.exists(dict_file):
         dp_utils.mkpath(dname)
+    dp_io.cdebug(1, "in write_dict() calling init_aliases()\n")
     init_aliases(args, ".*", False, False)
     fobj = open(dict_file, "w")
     beauty = pprint.pformat(Get_aliases(), indent=4, width=80, depth=None)
@@ -642,6 +650,7 @@ def write_dict(args, dict_file=None):
 
 #####################################################################
 def read_dict(dict_file=None):
+    dp_io.cdebug(1, "in read_dict()\n")
     import imp
     if not dict_file:
         dict_file = DEFAULT_DICT_FILE
@@ -663,7 +672,7 @@ def read_dict(dict_file=None):
 def valid_env_var_name(name):
     """This is a an embarrassing HACK to get around the fact that a bug crept
     in that causes everything to be exported."""
-    dp_io.cdebug(2, "name>{}<\n", name)
+    dp_io.cdebug(2, "valid_env_var_name(): name>{}<\n", name)
 
     return name and name[0] not in "0123456789"
 
@@ -672,16 +681,19 @@ def process_aliases(handle, handler_keyword_args,
                     handle_pre, handle_post,
                     aliases=Get_aliases(),
                     grep_regexps=None, ostream=sys.stdout):
+    dp_io.cdebug(1, "in process_aliases()\n")
     handler_keyword_args["ostream"] = ostream
     if handle_pre:
         handle_pre(**handler_keyword_args)
     if not grep_regexps:
+        dp_io.cdebug(1, "in process_aliases() setting grep_regexps to .*\n")
         grep_regexps = (".*",)
     keys = aliases.keys()
     keys.sort()
     for regexp in grep_regexps:
         for k in keys:
             alias_item = aliases[k]
+            dp_io.cdebug(2, "process_aliases(): alias_item>{}<\n", alias_item)
             if not valid_env_var_name(k):
                 continue
             kw_args = handler_keyword_args
@@ -698,10 +710,13 @@ def go2env(args, handlers_type, selector, handler_keyword_args,
            ostream=sys.stdout):
     """Simple entry-point tailored to command line interface."""
 
-#    print "args>%s<, handlers_type>%s<, selector>%s<, handler_keyword_args>%s<, grep_regexps>%s<" \
-#          % (args, handlers_type, selector, handler_keyword_args,
-#             grep_regexps)
-    dp_io.cdebug(1, "handlers_type?{}<\n", handlers_type)
+    dp_io.cdebug(1, "in go2env()\n")
+
+    dp_io.cdebug(2, "args>%s<, handlers_type>%s<, selector>%s<, "
+                  "handler_keyword_args>%s<, grep_regexps>%s<",
+                  args, handlers_type, selector, handler_keyword_args,
+                  grep_regexps)
+    dp_io.cdebug(1, "handlers_type>{}<\n", handlers_type)
     handlers = get_handlers(handlers_type)
     handle, handle_pre, handle_post, selector_regexp = handlers[selector]
     if type(selector_regexp) == types.StringType:
@@ -721,55 +736,6 @@ def go2env(args, handlers_type, selector, handler_keyword_args,
                     grep_regexps=grep_regexps,
                     ostream=ostream)
 
-####################################################################
-def simple_lookup(abbrev_regexp, try_environment_p=True,
-                  selector=SELECTOR_ENV,
-                  match_type=MATCH_TYPE_ANY,
-                  serialized_file=DEFAULT_SERIALIZED_FILE):
-    # Regexps with metacharacters probably won't be found.
-    ## @todo XXX Make an environment grep?
-
-    init_aliases(args=[], selector_regexp=".*")
-    if match_type in (MATCH_TYPE_LITERAL_DICT, MATCH_TYPE_ANY):
-        ret = Get_aliases().get(abbrev_regexp)
-        if ret:
-##             print >>sys.stderr, "hit"
-            return ret["val"]
-        elif not MATCH_TYPE_ANY:
-            return None
-##
-## Using the environment should be a clear win, but oddly it turns out to
-## usually be slower.
-## The environment is also the most likely to be out of date.
-## So, let's skip it.
-        
-##     if match_type in (MATCH_TYPE_LITERAL_ENV, MATCH_TYPE_ANY):
-##         v = os.environ.get(abbrev_regexp)
-##         if v:
-##             # Make sure this is fully expanded. Ordering problems can leave
-##             # unexpanded variables in values.
-##             print >>sys.stderr, "ENV>{}<".format(abbrev_regexp)
-##             return v
-##         elif not MATCH_TYPE_ANY:
-##             return None
-
-    if match_type in (MATCH_TYPE_REGEXP_LINE, MATCH_TYPE_ANY):
-        abbrev_regexp = "^" + abbrev_regexp + "$"
-    output = StringIO.StringIO()
-    go2env(args=[], handlers_type="grep", selector=selector,
-           handler_keyword_args={},
-           grep_regexps=(abbrev_regexp,),
-           serialized_file=serialized_file,
-           ostream=output)
-    return output.getvalue().strip()
-
-##needed? def simple_env_lookup(abbrev_regexp, try_environment_p=True,
-##needed?                       line_match_p=False):
-##needed?     return simple_lookup(abbrev_regexp=abbrev_regexp,
-##needed?                          try_environment_p=try_environment_p,
-##needed?                          line_match_p=line_match_p,
-##needed?                          selector=SELECTOR_ENV)
-               
 #####################################################################
 #####################################################################
 if __name__ == "__main__":
@@ -793,7 +759,7 @@ if __name__ == "__main__":
             verbose += 1
         elif opt == '-d':
             debug += 1
-            dp_io.debug_on()
+            dp_io.debug_on(debug)
         elif opt == "-l":               # Simple listing
             selector = SELECTOR_SIMPLE_LIST
         elif opt == "-L":          # Simple listing with file names displayed
