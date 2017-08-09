@@ -116,7 +116,13 @@ then
 fi
 
 M=${M-$PWD}
-if [ -z "${KDIR-}" ]
+if [ "${KDIR-}" = "--" ]
+then
+    KDIR=$(dirname $(find-up Kbuild))
+    echo "Using found kernel dir (KDIR):
+>${KDIR}<
+  Lazy, aren't we?"
+elif [ -z "${KDIR-}" ]
 then
     KDIR="$(dogo brahmalinux)"
     echo "Using hardcoded kernel dir (KDIR):
@@ -125,7 +131,7 @@ then
 fi 1>&2
 
 [ -d "${KDIR}" ] || {
-    echo "KDIR>${KDIR}< does not exist."
+    echo "KDIR>${KDIR}< does not exist or isn't a dir."
     exit 1
 } 1>&2
 
