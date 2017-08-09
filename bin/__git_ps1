@@ -1,5 +1,7 @@
 # Source me.
-type -t __git_ps1 >/dev/null 2>&1 && {
+gtype=$(type -t __git_ps1) || return "B0rk3d"
+
+[ "${gtype}" = "function" ] && {
      return 0
 }
 __git_ps1 () 
