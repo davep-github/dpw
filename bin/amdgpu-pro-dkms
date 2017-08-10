@@ -1,0 +1,149 @@
+#!/usr/bin/env bash
+########################################################################
+#
+# template begin.
+
+# davep specific code -------------8><------------------
+source script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+# davep specific code -------------8><------------------
+
+#mutually exclusive with real EExec# EExec=
+#mutually exclusive with real EExec# no_exec_p=
+#mutually exclusive with real EExec# Non_EExecer()
+#mutually exclusive with real EExec# {
+#mutually exclusive with real EExec#     echo "{-} $@" 1>&2
+#mutually exclusive with real EExec# }
+
+#mutually exclusive with real EExec# Verbose_EExecer()
+#mutually exclusive with real EExec# {
+#mutually exclusive with real EExec#     echo "{+} $@"
+#mutually exclusive with real EExec#     "$@"
+#mutually exclusive with real EExec# }
+
+trap_exit_msg=
+
+# Useful traps
+on_exit()
+{
+    local rc="$?"
+    local signum="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+}
+# trap 'on_exit' 0
+
+on_error()
+{
+    local rc="${1-}"; shift
+
+    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+    trap '' 0
+}
+# trap 'on_error' ERR
+
+sig_exit ()
+{
+    {
+        local sig_num=$1; shift
+        echo
+        echo "sig_exit, sig_num: $sig_num"
+        exit 1
+    } 1>&2
+}
+
+# for sig in 2 3 4 5 6 7 8 15
+# do
+#     trap "sig_exit $sig" $sig
+# done
+
+display_stderr()
+{
+    echo 1>&2 "$progname: $@"
+}
+
+status_msg()
+{
+    display_stderr "$@"
+}
+
+fatal_error()
+{
+    local error="${1}"
+    shift
+    display_stderr "$@"
+    exit "${error}"
+}
+
+Usage_error()
+{
+    fatal_error 1 "$@"
+}
+
+#
+# template end.
+########################################################################
+
+# an older version 17.30-458935
+: ${PROVER:=17.40-464874}
+#PROVER=17.30-458935
+: ${DNAME:=amdgpu-pro}
+
+EExec sudo apt dist-upgrade
+EExec uname -a
+EExec cat /etc/os-release
+EExec sudo apt install dkms
+
+EExec dpkg -l | EExec grep linux-headers
+EExec dpkg -l | EExec grep linux-image
+
+EExec wget http://atlaptyum.amd.com/ubuntu/dists/xenial/staging/${DNAME}/a/${DNAME}-core_${PROVER}_all.deb
+EExec wget http://atlaptyum.amd.com/ubuntu/dists/xenial/staging/${DNAME}/a/${DNAME}-dkms_${PROVER}_all.deb
+
+EExec sudo dpkg -i ./${DNAME}-core_${PROVER}_all.deb
+EExec sudo dpkg -i ./${DNAME}-dkms_${PROVER}_all.deb
+
+EExec sudo dkms remove amdgpu/${PROVER} --all
+EExec sudo dkms add amdgpu/${PROVER}
+EExec dkms status
+
+EExec read -p "Edit a file, say /usr/src/amdgpu-17.40-464874/amd/amdgpu/gfx_v9_0.c,
+and add a printk with a YOPP! in it.  You can use ~/tmp/gfx_v9_0.c-17.40.patch.
+Press <Enter> when you are done."
+
+EExec sudo dkms build amdgpu/${PROVER}
+EExec dkms status
+
+EExec sudo dkms install amdgpu/${PROVER}
+EExec dkms status
+
+echo 'Reboot now: sudo shutdown -r now
+
+After reboot [load driver if needed] do
+$ dmesg | fgrep YOPP
+
+'
+
+
+
