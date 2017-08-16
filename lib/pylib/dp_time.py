@@ -223,8 +223,8 @@ def month_num_to_name(num):
         raise ValueError
     return month_abbrevs[num]
 
-############################################################                
-def std_timestamp(time_tuple=None, replace_colons_p=True,
+############################################################
+def std_timestamp(time_tuple=None, replace_colons_p=True, next_p=True,
                   replace_colons_with=".", date_time_separator="T"):
     # Are they serious? You can't pass None in order to get the default
     # behavior for time tuple?
@@ -232,7 +232,14 @@ def std_timestamp(time_tuple=None, replace_colons_p=True,
     if time_tuple:
         stamp = time.strftime(format_string, time_tuple)
     else:
-        stamp = time.strftime(format_string)
+        first_time = int(time.time())
+        current_time = int(time.time())
+        if next_p:
+            while first_time == current_time:
+                time.sleep(0.1)
+                current_time = int(time.time())
+
+        stamp = time.strftime(format_string, time.localtime(current_time))
     if replace_colons_p:
         stamp = stamp.replace(":", replace_colons_with)
     return stamp
