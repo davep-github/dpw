@@ -5,12 +5,15 @@ date_str=$(date --iso-8601=seconds)
 : ${prefix=}
 : ${ext=}
 : ${sep=}
+: ${next_stamp_p=}
 
 while (($# > 0))
 do
   case "$1" in
       -c|--colons|--use-colons) use_colons_p=t;;
       -p|--prefix) shift; prefix="${1}";;
+      -n|--next) next_stamp_p=t;;
+      -N|--curent) next_stamp_p=;;
       -e|--ext) shift ext="${1}";;
       --) shift;;
       *) break;;
