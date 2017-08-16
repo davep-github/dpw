@@ -86,5 +86,17 @@ make.out
 etc/AMD/
 
 # Leftovers from p4merge.
-# We may want to add additional extension 
+# We may want to add additional extension
 *.[ch].orig
+
+# kernel droppings
+*.ko
+.*.o.cmd
+*.ko.cmd
+.*.o.cmd
+
+*.mod.c
+modules.order
+amdkcl.mod.c
+symbols.c
+amdkfd.mod.c
