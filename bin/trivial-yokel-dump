@@ -5,6 +5,7 @@ source script-x
 : ${dump_fses:=/yokel}
 : ${dump_dir:=%}
 : ${EZEC:=eexec}
+: ${COMPRESSION_LEVEL=7}
 
 # e.g.
 # dump_dir=/bfd2/dumps/ddd dump_fses='/mathoms /yokel /' EExec trivial-yokel-dump 0
@@ -49,6 +50,11 @@ case "$lvl" in
     *) lvl="-$lvl";;
 esac
 
+case "${COMPRESSION_LEVEL}" in
+    -|0|"") compression_opt=;;
+    *) compression_opt="-j${COMPRESSION_LEVEL}";;
+esac
+
 eko "@>$@<"
 # XXX ??? Override or (pre|ap)pend?
 #vsetp $* && dump_fses="$@"
@@ -75,5 +81,5 @@ do
       *) name=$(echo $dump_fs | sed -r -e 's,^//*,,' -e 's,/,%,g')
   esac
   echo "PWD>$PWD<" 
-  ${EZEC} dump $lvl -f ${dump_dir}/${name}-on-${date_stamp}.lvl${lvl}.dump -j7 -u "$@" ${dump_fs}
+  ${EZEC} dump $lvl -f ${dump_dir}/${name}-on-${date_stamp}.lvl${lvl}.dump ${compression_opt} -u "$@" ${dump_fs}
 done
