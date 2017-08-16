@@ -106,10 +106,30 @@ Usage_error()
 ########################################################################
 
 # an older version 17.30-458935
-: ${PROVER:=17.40-464874}
-#PROVER=17.30-458935
-: ${DNAME:=amdgpu-pro}
+: ${DEFAULT_PRO_VER:=17.30-465015}
+: ${PRO_VER_1740:=17.40-464874}
+: ${PRO_VER_1730:=$DEFAULT_PRO_VER}
+: ${PRO_VER:=$PRO_VER_1730}
+: ${CURRENT_PRO_VER:=}
+: ${PRO_NAME:=amdgpu-pro}
+: ${DIST_SITE:=http://atlaptyum.amd.com}
+: ${DIST_DIR:=/ubuntu/dists/xenial/releases/${PRO_NAME}/a}
 
+echo_id CURRENT_PRO_VER
+if [ -z "${CURRENT_PRO_VER}" ]
+then
+    # sample output: amdgpu-pro, 17.30-465015, 4.10.0-30-generic, x86_64: installed
+    CURRENT_PRO_VER=$(dkms status "${PRO_NAME}" | \
+        sed -rn "s/(${PRO_NAME})(,[[:space:]]+)([^,]+)(.*)(installed$)/\3/p")
+    echo_id CURRENT_PRO_VER
+    [ -z "${CURRENT_PRO_VER}" ] && {
+        echo "INFO: Canna find CURRENT_PRO_VER"
+    }
+else
+    CURRENT_PRO_VER="${PRO_VER}"
+fi
+
+[ "${PRO_VER}" = '-' ] && PRO_VER="${DEFAULT_PRO_VER}"
 EExec sudo apt dist-upgrade
 EExec uname -a
 EExec cat /etc/os-release
@@ -118,24 +138,24 @@ EExec sudo apt install dkms
 EExec dpkg -l | EExec grep linux-headers
 EExec dpkg -l | EExec grep linux-image
 
-EExec wget http://atlaptyum.amd.com/ubuntu/dists/xenial/staging/${DNAME}/a/${DNAME}-core_${PROVER}_all.deb
-EExec wget http://atlaptyum.amd.com/ubuntu/dists/xenial/staging/${DNAME}/a/${DNAME}-dkms_${PROVER}_all.deb
+EExec wget ${DIST_SITE}${DIST_DIR}/${PRO_NAME}-core_${PRO_VER}_all.deb
+EExec wget ${DIST_SITE}${DIST_DIR}/${PRO_NAME}-dkms_${PRO_VER}_all.deb
 
-EExec sudo dpkg -i ./${DNAME}-core_${PROVER}_all.deb
-EExec sudo dpkg -i ./${DNAME}-dkms_${PROVER}_all.deb
+EExec sudo dpkg -i ./${PRO_NAME}-core_${PRO_VER}_all.deb
+EExec sudo dpkg -i ./${PRO_NAME}-dkms_${PRO_VER}_all.deb
 
-EExec sudo dkms remove amdgpu/${PROVER} --all
-EExec sudo dkms add amdgpu/${PROVER}
+EExec sudo dkms remove amdgpu/${PRO_VER} --all
+EExec sudo dkms add amdgpu/${PRO_VER}
 EExec dkms status
 
 EExec read -p "Edit a file, say /usr/src/amdgpu-17.40-464874/amd/amdgpu/gfx_v9_0.c,
 and add a printk with a YOPP! in it.  You can use ~/tmp/gfx_v9_0.c-17.40.patch.
 Press <Enter> when you are done."
 
-EExec sudo dkms build amdgpu/${PROVER}
+EExec sudo dkms build amdgpu/${PRO_VER}
 EExec dkms status
 
-EExec sudo dkms install amdgpu/${PROVER}
+EExec sudo dkms install amdgpu/${PRO_VER}
 EExec dkms status
 
 echo 'Reboot now: sudo shutdown -r now
