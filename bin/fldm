@@ -12,6 +12,7 @@ esac
 LOG_NAME="${element}/var/log/junk/fldm.log"
 
 {
+    cd $USER
     echo "LOG_NAME>${LOG_NAME}<"
 
     PATH="${PATH}:${element}/bin"
