@@ -1030,7 +1030,7 @@ Split line into chars and feed to ticker.""")
         open_mode = "a"
 
     if app_args.timestamp_log_file_names_p:
-        file_suffix = "." + dp_time.std_timestamp()
+        file_suffix = "." + dp_time.std_timestamp(next_p=True)
     file_suffix += app_args.U_extension
 
     dp_io.cdebug(1, "output_files>%s<\n", output_files)
