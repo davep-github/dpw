@@ -1,0 +1,1 @@
+for f in /mnt/root1/etc/*.OEM; do dirname=$(dirname $f); dest=$(basename $f .OEM); src=$dirname/$dest; [ -e $dest.OEM ] || { echo "$dest has no OEM backup file." ; continue; } ; echo "cat $src >> $dest"; done
