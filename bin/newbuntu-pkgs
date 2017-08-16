@@ -123,7 +123,10 @@ git-email
 git-extras
 git-gui
 gitk
+gparted
 gpm
+ipython
+ipython-doc
 libcurl4-openssl-dev
 libncurses5
 libncurses5-dbg
@@ -169,15 +172,25 @@ do
   ((++pkg_num))
 done
 
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
-echo "FUCK DASH!!!"
+echo 'Some suggestions, if I may so bold:
+GUI grub customizer:
+sudo add-apt-repository ppa:danielrichter2007/grub-customizer
+sudo apt-get update
+sagi grub-customizer
+'
+suck_me=$(readlink /bin/sh)
+if [ "${suck_me}" = "dash" ]
+then
+    echo "FUCK DASH!!!
+FUCK DASH!!!
+FUCK DASH!!!
+FUCK DASH!!!
+FUCK DASH!!!
+FUCK DASH!!!
+FUCK DASH!!!
+FUCK DASH!!!
+FUCK DASH!!!
+FUCK DASH!!!
+FUCK DASH!!!
+FUCK DASH!!!"
+fi
