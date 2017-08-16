@@ -23,10 +23,15 @@
 # !<@todo XXX Make a bunch of abbrevs that expand to "useful" vary-ables:
 # e.g. ndx expands to DP_NO_DASH_X
 
+set_dash_x()
+{
+    export PS4=${1-'${BASH_SOURCE}@${LINENO}(${FUNCNAME[0]}): '}
+    set -x
+}
 
 # Pass this as an environment variable to debug our self.
 : ${DP_DEBUG_SCRIPT_X_ITSELF=} # Make -u happy.
-[ -n "$DP_DEBUG_SCRIPT_X_ITSELF" ] && set -x
+[ -n "$DP_DEBUG_SCRIPT_X_ITSELF" ] && set_dash_x
 
 DP_SCRIPT_X_PRISTINE_DOLLAR1="${1-}"
 DP_SCRIPT_X_PRISTINE_AT=("$@")
@@ -114,7 +119,7 @@ if [ -z "$DP_NO_DASH_X" ]; then
     then
         # -xq means to only activate the other, quiet, debug features.
         # All this, simply for the following ~99% of the time.
-        set -x
+        set_dash_x
         if [ -z "$DP_SCRIPT_X_DEBUG_INITIATOR_N" ]; then
             # We've just activated the -x stuff
             DP_SCRIPT_X_DEBUG_INITIATOR=()
