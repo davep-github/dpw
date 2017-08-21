@@ -46,6 +46,7 @@ class CTOR_t:
         self.info = "I am the key of the appropriate ticker constructor."
 
 
+Use_error_indicators_p = True
 Match_types = {}
 
 DEFAULT_ERROR_INDICATOR = "!"
@@ -92,7 +93,7 @@ timestamp_width = len("2013-05-16T18.37.54")
 CTOR = CTOR_t()
 
 def make_sample_tick_prefix():
-    if len(Match_types):
+    if len(Match_types) and app_args.Use_error_indicators_p:
         match_indicators = Match_types.values()
         match_indicators.sort()
         return "".join(match_indicators) + DEFAULT_MATCH_INDICATOR_TERMINATOR
@@ -109,7 +110,7 @@ def make_sample_tick(sample_lines_tick_prefix,
     tick += (sample_lines_tick_prefix or "") + input_line
     tick_prefix = make_sample_tick_prefix()
     return tick, tick_prefix
-    
+
 def display_match(ostream, line, line_number, prefix="", suffix="",
                   timestamp_p=False):
     if timestamp_p:
@@ -382,6 +383,8 @@ def Catlike_setup(namespace):
     setattr(namespace, "tick_interval", 1)
     setattr(namespace, "sample_lines_tick_prefix", False)
     setattr(namespace, "tee_p", True)
+    setattr(namespace, "Use_error_indicators_p", False)
+    setattr(namespace, "quiet_p", True)
 
 def eval_with_units(num, allow_fractions_p=False):
     if (num == "-1"):
@@ -449,7 +452,7 @@ class Ctor_arg_action_dots(Ctor_arg_action_char):
     def __call__(self, parser, namespace, values, option_string=None):
         Ctor_arg_action_char.__call__(self, parser, namespace, ".",
                                       option_string=option_string)
-    
+
 class Ctor_arg_action_char_and_char_wise(Ctor_arg_action_char):
     def __call__(self, parser, namespace, values, option_string=None):
         Ctor_arg_action_char.__call__(self, parser, namespace, values,
@@ -586,7 +589,7 @@ def fini_streams(output_streams=All_output_streams):
             fobj.close()
             if app_args.write_protect_p:
                 os.chmod(fobj.name, stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH);
-                
+
 
 if __name__ == "__main__":
     import optparse
@@ -892,7 +895,7 @@ Split line into chars and feed to ticker.""")
                                               None),
                          action="store_const",
                          help="Convenience option for finding common testgen errors. Perhaps change the value of this to an envvar to make it more flexible.  --log-errors-regexp.")
-    oparser.add_argument("--go", "--grep-ostream", "--grep-ofile", "--reo",
+    oparser.add_argument("--go", "--grep-ostream", "--grep-ofile", "--reo", "--gopt",
                          "--regexp-ostream", "--re-ostream", "--match-ofile",
                          dest="match_ostream",
                          default=None,
@@ -952,6 +955,18 @@ Split line into chars and feed to ticker.""")
                          dest="verbose_match_summary_p", default=False,
                          action="store_true",
                          help="Show all grep matches and regexps at end of run.")
+
+    oparser.add_argument("--use-error-indicators", "--uie", "--indicate-errors", "--show-error-prefix",
+                         dest="Use_error_indicators_p", default=True,
+                         action="store_true",
+                         help=("Show the error indicator prefix when sampling lines."))
+
+    oparser.add_argument("--no-use-error-indicators", "--nuie",
+                         "--no-indicate-errors", "--no-show-error-prefix",
+                         dest="Use_error_indicators_p", default=True,
+                         action="store_false",
+                         help=("Do not show the error indicator prefix when sampling lines."))
+
     oparser.add_argument("--buffered-logs", "--buf", '--bl',
                          dest="unbuffered_logs_p", default=True,
                          action="store_false")
@@ -1255,7 +1270,7 @@ Split line into chars and feed to ticker.""")
             num_matching_lines = num_matching_lines + re_list.num_matches()
         if big_break:
             break
-            
+
         if char_wise_p:
             # Iterate for each char in the line.
             for c in input_line:
