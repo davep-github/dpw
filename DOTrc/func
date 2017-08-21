@@ -849,11 +849,30 @@ hist_grep()
     local hist_file_dir=$(dirname "$HISTFILE")
     local hist_file_glob="$hist_file_dir/*"
     local hist_files=$(echo $hist_file_glob)
+    local directories_opt=recurse
+    while (($# > 0))
+    do
+      case "$1" in
+          --no-recurse|--nr|--ignore-dirs|--id) directories_opt=ignore;;
+          --read-dirs|--rd) directories_opt=read;;
+          --recurse) directories_opt=recurse;;
+          --) shift; break;;
+          *) break;;
+      esac
+      shift
+    done
     [ "$hist_files" == "$hist_files_glob" ] && {
-            # No expansion of glob --> no files of interest.
-            hist_files=
-    }
-    $DP_HIST_GREP_GREPPER "$@" $hist_files /dev/null # All history files.
+        echo "No files in hist dir>${hist_file_dir}<"
+        return 1
+    } 1>&2
+    # Well, boil my britches.  GNU continues its assault on the Unix Way of
+    # small programs and pipes by adding a --recursive option.  I suppose it
+    # makes sense since one of the motivations was lack of memory making
+    # small programs essential.  Perhaps review man pages more often?  But my
+    # memory is so,,, what's the word? Perfect.  That's it: perfect. So I
+    # rarely need to RTFM.
+    "${DP_HIST_GREP_GREPPER}" --directories="${directories_opt}" --with-filename \
+        "$@" $hist_files        # All history files
     history | $DP_HIST_GREP_GREPPER "$@" # Current history.
 #CO#     hist_cat "#" | ${DP_HIST_GREP_GREPPER:=egrep} $hist_files
 }
