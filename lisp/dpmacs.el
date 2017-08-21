@@ -777,6 +777,8 @@ stuff in the current *Python* session."
   (when dp-prefer-ipython-shell-p
     (dp-setup-ipython-shell)))
 
+(dp-setup-ipython-shell)
+
 ;;;;###autoload
 ;(let ((hm-el '("\\.hs$" . hugs-mode)))
 ;  (unless (member hm-el auto-mode-alist)
