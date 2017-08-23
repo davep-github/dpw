@@ -389,6 +389,7 @@ Bind any keys in KEYS via `dp-define-keys'."
                           [right] 'dp-shift-windows
                           [(control ?\\)] 'align
                           [(control ?m)] 'dp-mark-up-to-string
+                          [(meta ?o)] 'dp-copy-for-clipboard-paste
 
                           ;; <:add-new-ccd-bindings:>
                           )          ; Close paren for `dp-define-key-submap'

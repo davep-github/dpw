@@ -1097,6 +1097,13 @@ Perform PRE-OP immediately before and POST-OP immediately after calling func.
     (when deactivate-mark-p
       (dp-deactivate-mark))))
 
+(defun dp-copy-for-clipboard-paste ()
+  "Copy in such a way that app outside XEmacs can Alt-insert them.
+For some reason, I need to copy it `dp-kill-ring-save' and then reselect it."
+  (interactive)
+  (dp-kill-ring-save nil)
+  (exchange-point-and-mark))
+
 (defun dp-kill-ring-save (&optional append-p)
   "Copy the current region to the kill ring if mark is set,
 the current line otherwise.
@@ -1104,7 +1111,9 @@ If APPEND-P if set (with prefix arg interactively) append the newly
 copied text.
 @todo Try to recognize a full line copy and then insert that at BOL when yank'd."
   (interactive "P")
-  (dp-kill-or-copy 'copy-region-as-kill append-p 'dp-pwn-sel))
+  (if (eq append-p '-)
+      (dp-copy-for-clipboard-paste)
+    (dp-kill-or-copy 'copy-region-as-kill append-p 'dp-pwn-sel)))
 
 (defun dp-mark-and-kill-ring-save (&optional start end append-p)
   "Activate the region spanned by START and END and copy it as kill.
