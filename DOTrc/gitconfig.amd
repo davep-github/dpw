@@ -39,6 +39,7 @@
 	disabled = true
         query = true
         disablemsg = Prevent careless pushes to brahma repo.
+        checkop = true
         msg = "You meant `stash [push]' didn't you?"
 
 ########################################################################
@@ -81,8 +82,8 @@
         smtpserverport = 25
         smtpencryption = tls
         smtpUser = dpanarit@amd.com
-        smtpPass = QTPi'''3!415
-#'
+        smtpPass = 3!415,./QTPi
+#
 
 # [sendemail]
 #         smtpServer = smtp.office365.com
