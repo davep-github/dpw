@@ -316,6 +316,11 @@
         <command>wmctrl -a " - Chromium"</command>
       </action>
     </keybind>
+    <keybind key="S-W-w">
+      <action name="Execute">
+        <command>chromium-browser</command>
+      </action>
+    </keybind>
     <!-- Select and raise an email client window. Thunderbird, ATT. -->
     <keybind key="W-m">
       <action name="Execute">
