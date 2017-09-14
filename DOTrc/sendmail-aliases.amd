@@ -1,4 +1,4 @@
-gpu: gpudriversupport@amd.com
+gpu: gpudriverdevsupport@amd.com
 gfx: amd-gfx@lists.freedesktop.org
 brahma: brahma_sw_dev
 gpugfxpatches: gpu, gfx
