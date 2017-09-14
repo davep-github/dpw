@@ -178,9 +178,11 @@
         ec-diff = difftool --tool=ec-diff
         dte = difftool --tool=ec-diff
         dtec = difftool --tool=ec-diff
+        # ??? why difftool with merge tools?
         dtecmerge = difftool --tool=ec-merge
         dtecm = difftool --tool=ec-merge
         dtem = difftool --tool=ec-merge
+        # ???
         dtsd = difftool --tool=s-diff
         sdiff = difftool --tool=s-diff
 
