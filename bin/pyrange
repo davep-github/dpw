@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os, types
+import sys, os, types, dp_io, utils
 opath = os.path
 
 # Provide the functionality of the Python range() function:
@@ -9,11 +9,10 @@ opath = os.path
 def usage(progname, ofile=sys.stdout):
     ofile.write("%s: Usage [start] stop [step]\n  Generate a stream of numbers like the Python range() function.\n" % progname)
 
-def pbinary(number, print_base_p):
+def pbinary(number, print_base_p, width=0):
     if print_base_p:
         sys.stdout.write("0b")
-    sys.stdout.write("(0x)%x", number)
-        
+    sys.stdout.write(utils.cbin(number, width))
 
 def main(argv):
     progname = opath.basename(argv[0])
@@ -23,7 +22,7 @@ def main(argv):
                      16: ("%x", "0x"),
                      }
     import getopt
-    opt_string = "b:pf:eR:s:oc"
+    opt_string = "B:Bpf:eR:s:OcdD:xo8b2"
     opts, args = getopt.getopt(argv[1:], opt_string)
     base = 10
     print_format = None
@@ -32,10 +31,20 @@ def main(argv):
     rangeStream = None
     closeStream = False
     separator = '\n'
+    debug_level = 0
     for o, v in opts:
         #print "o:", o, "v:", v
-        if o == '-b':
+        if o == '-B':
             base = eval(v)
+            continue
+        if o in ('-b', '-2'):
+            base = 2
+            continue
+        if o in ('-o', '-8'):
+            base = 8
+            continue
+        if o in ('-x'):
+            base = 16
             continue
         if o == '-p':
             print_base_p = True
@@ -46,7 +55,7 @@ def main(argv):
         if o in ('-e'):
             rangeStream = sys.stderr
             continue
-        if o in ('-o'):
+        if o in ('-O'):
             rangeStream = sys.stdout
             continue
         if o == '-R':
@@ -58,14 +67,26 @@ def main(argv):
             continue
         if o == '-c':
             separator = ', '
+            continue
+        if o == '-d':
+            debug_level = debug_level + 1
+            continue
+        if o == '-D':
+            debug_level = eval(v)
+            continue
 
-    #print "print_base_p:", print_base_p
+        if debug_level != 0:
+            dp_io.set_debug_level(debug_level, enable_debugging_p=True)
+
     if not print_format:
-        base_fmt, base_prefix = print_formats[base]
+        pfb = print_formats[base]
+        base_fmt, base_prefix = pfb
         if not print_base_p:
             base_prefix = ""
-        print_format = "%s%s" % (base_prefix, base_fmt)
-        #print "print_format>%s<" % print_format
+        if type(base_fmt) == types.StringType:
+            print_format = "%s%s" % (base_prefix, base_fmt)
+        else:
+            print_format = base_fmt
 
     start = 0
     step = 1
