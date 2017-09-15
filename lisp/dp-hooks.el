@@ -1701,7 +1701,10 @@ Before visiting means after the command completes."
 (defvar dp-bind-xcscope-keys-p t
   "Pretty self-explanatory?")
 
-(defun dp-default-make-cscope-database-regexps-fun ()
+(defun* dp-default-make-cscope-database-regexps-fun (&optional
+                                                     ignore-env-p
+                                                     db-locations
+                                                     (hierarchical-search-p t))
   "Set a default value for `cscope-database-regexps'.
 This sets the value that will cause cscope to (in the words of cscope):
   \"In the case of \"( t )\", this specifies that the search is to use the
