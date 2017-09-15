@@ -144,10 +144,10 @@ Ee|mi|          /sundry/build/xemacs/xemacs-${xemver}/
 Ee|hr|          /sundry/build/xemacs/xemacs-${xemver}/
 Ee|ut1|         /sundry/build/UnrealTournament/
 Ee|ut|          /sundry/build/UT2003/2225/
-Ee|x6|          ${wx}exp06-static/
-Ee|x9|          ${wx}exp09/
-Ee|x8|          ${wx}exp08/
-Ee|x9a|         ${wx}exp09a/
+Ee|wx6|          ${wx}exp06-static/
+Ee|wx9|          ${wx}exp09/
+Ee|wx8|          ${wx}exp08/
+Ee|wx9a|         ${wx}exp09a/
 Ee|sa|          /sundry/to-be-archived
 Ee|distros|     /sundry/distros/
 Ee|pdist|       /usr/ports/distfiles/
