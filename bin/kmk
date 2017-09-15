@@ -118,10 +118,9 @@ fi
 M=${M-$PWD}
 if [ "${KDIR-}" = "--" ]
 then
-    KDIR=$(dirname $(find-up Kbuild))
+    KDIR=$(lktop)
     echo "Using found kernel dir (KDIR):
->${KDIR}<
-  Lazy, aren't we?"
+>${KDIR}<"
 elif [ -z "${KDIR-}" ]
 then
     KDIR="$(dogo brahmalinux)"
