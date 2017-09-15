@@ -983,6 +983,18 @@ Split line into chars and feed to ticker.""")
                          dest="tick_on_match", default=False,
                          action="store_true",
                          help="Do a tick operation when a match is detected.")
+    oparser.add_argument("--max-console-output-lines", "--coml",
+                         "--max-printed-lines", "--mpl",
+                         "--max-lines", "--maxl", "--ml",
+                         default=False, # No limit.
+                         type=eval_with_units,
+                         help="Limit lines printed to screen. 0 --> none, False --> infinity - 1")
+    oparser.add_argument("--max-console-output-chars", "--coms",
+                         "--max-printed-chars", "--mpc",
+                         "--max-chars", "--maxc", "--mc",
+                         default=False, # No limit.
+                         type=eval_with_units,
+                         help="Limit chars printed to screen. 0 --> none, False --> infinity - 1. Use this with normal ticks, since there is essentially only one line, unless maxk line length is used.")
 
     # tee(1) compatibility.
     oparser.add_argument("-a", "--append",
@@ -992,9 +1004,10 @@ Split line into chars and feed to ticker.""")
 
     oparser.add_argument("output_files", nargs="*")
 
-    # End of args. Args end.
+    # <:end of args:>
+    # <:args end:>.
 
-    # Parse args.
+    # <:parse args:>
     app_args = oparser.parse_args()
 
     output_files = app_args.output_files
@@ -1013,6 +1026,13 @@ Split line into chars and feed to ticker.""")
         tee_p = app_args.tee_p
     except AttributeError:
         tee_p = False
+
+    max_console_output_lines = app_args.max_console_output_lines
+    if max_console_output_lines < 0:
+        max_console_output_lines = False
+    max_console_output_chars = app_args.max_console_output_chars
+    if max_console_output_chars < 0:
+        max_console_output_chars = False
 
     quiet_p = app_args.quiet_p
     if quiet_p:
@@ -1059,6 +1079,7 @@ Split line into chars and feed to ticker.""")
     compressed_file_next_flush = 0
     compressed_file_flush_period = app_args.compressed_file_flush_period
 
+    ## <:create-output-streams:>
     for a in output_files:
         dp_io.cdebug(2,"log file name>%s<\n", a)
         a = a + file_suffix
@@ -1113,9 +1134,11 @@ Split line into chars and feed to ticker.""")
     if pipe_mode_p:
         Ctor_arg_dict["ostream"] = sys.stderr
         sample_ostream = dp_io.Unbuffered_file_duck(sys.stderr)
+        warning_ostream = dp_io.Unbuffered_file_duck(sys.stdout)
     else:
-        sample_ostream = dp_io.Unbuffered_file_duck(sys.stdout)
         Ctor_arg_dict["ostream"] = ostream
+        sample_ostream = dp_io.Unbuffered_file_duck(sys.stdout)
+        warning_ostream = dp_io.Unbuffered_file_duck(sys.stderr)
     if app_args.sample_ALL_lines_tick_p:
         app_args.tick_interval = 1
         app_args.sample_lines_tick_p = True
@@ -1209,7 +1232,10 @@ Split line into chars and feed to ticker.""")
     max_output_bytes_before_exit = app_args.max_output_bytes_before_exit
     trailing_line_prefix = ""
     on_borrowed_time_p = False
-    while True:                         # <:main-loop:>
+    ## <:main-loop:>
+    num_lines = 0
+    num_chars = 0
+    while True:
         readline_failed_p = False
         input_line = ""
         try:
@@ -1244,6 +1270,7 @@ Split line into chars and feed to ticker.""")
                 dp_sequences.maybe_add_to_list(output_streams, sys.stdout)
             num_trailing_lines -= 1
         input_line = trailing_line_prefix + input_line
+        ## <:write-to-output-files:>
         for o in output_streams:
             # Since this was motivated by a disk space issue, count *all*
             # writes.
@@ -1271,6 +1298,21 @@ Split line into chars and feed to ticker.""")
         if big_break:
             break
 
+        if (max_console_output_lines is not False
+            and
+            num_lines >= max_console_output_lines):
+            if num_lines == max_console_output_lines:
+                dp_io.fprintf(warning_ostream, "*** Hit max output lines.\n")
+                num_lines += 1
+            continue
+
+        if (max_console_output_chars is not False
+            and num_chars >= max_console_output_chars):
+            if num_chars == max_console_output_chars:
+                dp_io.fprintf(warning_ostream, "*** Hit max output chars.\n")
+                num_chars += 1
+            continue
+        
         if char_wise_p:
             # Iterate for each char in the line.
             for c in input_line:
@@ -1280,7 +1322,7 @@ Split line into chars and feed to ticker.""")
                 #else:
                 #    tick = None
                 tick = None
-
+                num_chars = num_chars + 1
                 ticker(tick=tick)
         else:
             tick_prefix = ""
@@ -1297,6 +1339,7 @@ Split line into chars and feed to ticker.""")
             ticker(tick=tick, tick_prefix=tick_prefix,
                    ostream=sample_ostream)
             dp_io.cdebug(4, "Back from ticker\n")
+            num_lines = num_lines + 1
         line_number += 1
     print
     if app_args.preamble_p:
