@@ -331,6 +331,7 @@ No regexps allowed. This will be processed by `regexp-opt'")
                                        "cc"
                                        "gcc"
                                        "g++"
+                                       "cpp"
                                        "diff"
                                        "sdiff"
                                        "diff3"
