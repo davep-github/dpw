@@ -57,6 +57,8 @@ ${EExecExporter} EExecContinue=
 ${EExecExporter} EExecDashN_opt=
 ${EExecExporter} EExecDashV_opt=
 ${EExecExporter} EExecDash_opts=
+${EExecExporter} EExecPopupStatus=
+${EExecExporter} EExecPopper=xmessage
 
 EExec_parse_usage="-n) Show what would happen but don't do it. [eexec]
 -v) Be verbose about it. [eexec]
@@ -275,7 +277,7 @@ EExecQuiet()
 
 EExecDefErrorReporter()
 {
-    rc=$1
+    local rc=$1
     shift
     eMsg="$EExecProgName(EExec): ERROR: `date`, rc: $rc
 \`$*' failed ${EExecMsg-}"
@@ -308,7 +310,7 @@ EExecStdoutStderrEcho()
 # die with status passed in
 EEdie0()
 {
-    rc=$1
+    local rc=$1
     shift
     EExecDefErrorReporter $rc $*
     exit $rc
@@ -317,7 +319,7 @@ EEdie0()
 # die with status from last command
 EEdie()
 {
-    rc=$?
+    local rc=$?
     EEdie0 $rc "$@"
 }
 
@@ -389,6 +391,8 @@ EExec()
                              make_command_p=t;;
           --cmd-cd|--sh-cd) command_cd_cmd="cd $PWD";;
           --cmd-cd:|--sh-cd:) shift; command_cd_cmd="${1}";;
+          --status-banner) status_banner_p=t;;
+          --no-status-banner) status_banner_p=;;
           -tcsh) executor=EExec_start_tcsh
                  ;;
           -*) EEdie0 1 "Bad option passed to EExec()"
@@ -421,6 +425,7 @@ $@" >| "${command_file_name}"
     # $eexecEcho is a command to do our echoing
     [ -n "$eexecEcho" ] && "$eexecEcho" "${eexecShowPrefix}""$@"
     # run the command
+    local rc=0
     if [ -z "$eexecShowOnly" ]
     then
 	$executor "$@" || {
@@ -441,6 +446,16 @@ $@" >| "${command_file_name}"
 	#echo "$@"
 	$EExecShowCommand "${eexecShowPrefix}$@"
     fi
+    [ -n "${status_banner_p-}" ] && {
+        if ((rc != 0))
+        then
+            banner "$EExecProgName: FAIL: $rc." | "${EExecPopper}" -file -
+        else
+            banner "$EExecProgName: PASS." | "${EExecPopper}" -file -
+        fi
+        raise-window "${EExecPopper}"
+    }
+
     return 0
 }
 
