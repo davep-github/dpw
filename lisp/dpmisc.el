@@ -1100,7 +1100,7 @@ Perform PRE-OP immediately before and POST-OP immediately after calling func.
 (defun dp-copy-for-clipboard-paste ()
   "Copy in such a way that app outside XEmacs can Alt-insert them.
 For some reason, I need to copy it `dp-kill-ring-save' and then reselect it."
-  (interactive)
+  (interactive "_")
   (dp-kill-ring-save nil)
   (exchange-point-and-mark))
 
