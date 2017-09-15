@@ -118,41 +118,41 @@
 
 ;; Auto updating (of gtags) works poorly with multiple databases.
 ;; Avoid having multiple databases in a single path.
-(setq cscope-database-regexps
-      '(
-        ;; Only search the big dbs if we're in their directory.
-        (
-         "^/proj/ras_arch/ras/edc/brahma/ec/kgd/linux$"
-         ("/proj/ras_arch/ras/edc/brahma/ec/kgd/linux")
-         t)
+;;use simple hier search (setq cscope-database-regexps
+;;use simple hier search       '(
+;;use simple hier search         ;; Only search the big dbs if we're in their directory.
+;;use simple hier search         (
+;;use simple hier search          "^/proj/ras_arch/ras/edc/brahma/ec/kgd/linux$"
+;;use simple hier search          ("/proj/ras_arch/ras/edc/brahma/ec/kgd/linux")
+;;use simple hier search          t)
 
-        (
-         "^/proj/ras_arch/ras/edc/brahma/ec$"
-         ("/proj/ras_arch/ras/edc/brahma/ec")
-         t)
+;;use simple hier search         (
+;;use simple hier search          "^/proj/ras_arch/ras/edc/brahma/ec$"
+;;use simple hier search          ("/proj/ras_arch/ras/edc/brahma/ec")
+;;use simple hier search          t)
 
-        (
-         "^/proj/ras_arch/ras/edc/brahma/ec/drm"
-         ("/proj/ras_arch/ras/edc/brahma/ec/drm")
-         (t)
-         t)
+;;use simple hier search         (
+;;use simple hier search          "^/proj/ras_arch/ras/edc/brahma/ec/drm"
+;;use simple hier search          ("/proj/ras_arch/ras/edc/brahma/ec/drm")
+;;use simple hier search          (t)
+;;use simple hier search          t)
 
-        (
-         "^/proj/ras_arch/ras/edc/brahma/ec/kgd/"
-         ("/proj/ras_arch/ras/edc/brahma/ec/kgd/linux/drivers/gpu/drm/amd")
-         t
-         ;; These will get stale, but the stuff we'll be looking for will be
-         ;; under more up-to-date dbs.
-         ("/proj/ras_arch/ras/edc/brahma/ec/kgd/linux")
-         t
-         ("/proj/ras_arch/ras/edc/brahma/ec")
-         )))
+;;use simple hier search         (
+;;use simple hier search          "^/proj/ras_arch/ras/edc/brahma/ec/kgd/"
+;;use simple hier search          ("/proj/ras_arch/ras/edc/brahma/ec/kgd/linux/drivers/gpu/drm/amd")
+;;use simple hier search          t
+;;use simple hier search          ;; These will get stale, but the stuff we'll be looking for will be
+;;use simple hier search          ;; under more up-to-date dbs.
+;;use simple hier search          ("/proj/ras_arch/ras/edc/brahma/ec/kgd/linux")
+;;use simple hier search          t
+;;use simple hier search          ("/proj/ras_arch/ras/edc/brahma/ec")
+;;use simple hier search          )))
 
 (setq auto-mode-alist (cons '("\\.cl$" . c-mode) auto-mode-alist))
 
 (defvar bookmark-default-file
   (dp-nuke-newline (shell-command-to-string
-                    "mk-persistent-dropping-name.sh hiq-emacs.bmk")))
+                    "mk-persistent-dropping-name.sh --use-project-as-prefix emacs.bmk")))
 
 ;; (setq dp-<type>*-regexp-list
 ;;       (dp-add-to-list
