@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# Originally written to create bash history files.  Hence the default values.
 source script-x
 set -u
 progname="$(basename $0)"
@@ -45,11 +47,28 @@ on_error()
 : ${creat_p=t}
 : ${persist_p=}
 : ${mkdir_only_p=}
+: ${use_project_as_a_prefix=}
+: ${prefix=}
+
 persist=
 true_p "${persist_p}" && persist=persist/
+
+while (($# > 0))
+do
+  case "${1}" in
+      --use-project-as-a-suffix|--projsuff|--ups)
+    echo_id PROJECT
+            prefix="${PROJECT-brahma}"; prefix=".${prefix}";;
+      --prefix) shift; prefix="${1}";;
+      --) shift; break;;
+      *) break;;
+  esac
+  shift
+done
+
 
 dir_name="$HOME/droppings/${persist}${DOT}${1-bash-history}"
 true_p "${creat_p}" || true_p "${mkdir_only_p}" && mkdir -p "${dir_name}"
 true_p "${mkdir_only_p}" && exit
-name="${dir_name}/${HOSTNAME}"
+name="${dir_name}/${HOSTNAME}${prefix}"
 echo "${name}"
