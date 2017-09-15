@@ -497,6 +497,8 @@
      dp-manual)
     (("cus" "const unsigned char* ")
      dp-manual)
+    ((("08x" "x80" "x8" "8x") "0x%08x")
+     dp-manual)
     (("vccs" "virtual const char* " "virtual const std::string & ")
      dp-manual)
     (("css" "const std::string& " "std::string& " "const char* " 
