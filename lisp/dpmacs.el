@@ -1010,7 +1010,7 @@ This can be callable.")
   ;; `defvar' so we can set it elsewhere like a spec-macs.
   (defvar bookmark-default-file
         (dp-nuke-newline (shell-command-to-string
-                          "mk-persistent-dropping-name.sh emacs.bmk")))
+                          "mk-persistent-dropping-name.sh --use-project-as-a-suffix emacs.bmk")))
  
   (require 'bookmark)
   (setq bookmark-save-flag 1)
@@ -1042,6 +1042,10 @@ minibuffer history list `bookmark-history'."
   (if (bookmark-bmenu-check-position)
       (let ((bmrk (bookmark-bmenu-bookmark)))
         (message (dp-bookmark-mk-location-str bmrk)))))
+
+  ;; Make sure a bookmark file exists and has the correct format.  This must
+  ;; be in the bookmark code, but Ah canna find it.
+  (bookmark-write-file bookmark-default-file)
 
 )
 
