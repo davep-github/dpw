@@ -14,8 +14,28 @@ unset eexec_program
 
 : ${annotation=}
 : ${run_cmd_p=}
+: ${notifier:=send_mail}
 RC=-
 : ${mail_to:=${EMAIL_YOPP_ADDR-}}
+: ${popper:=xmessage}           # Any replacement must be compatible w/xmessage.
+
+send_mail()
+{
+    local msg="${1}"; shift
+    send-mail-command-line.sh -s "${prefix}${annotation}YOPP! ${msg}" "${EMAIL_YOPP_ADDR}"
+}
+
+popup()
+{
+    local msg="${1}"; shift
+    xmessage "${msg}"
+}
+
+banner_popup()
+{
+    local msg="${1}"; shift
+    banner "$progname: ${msg}." | "${popper}" -file -
+}
 
 while (($# > 0))
 do
@@ -25,11 +45,14 @@ do
       --run|--exec|--eval|--cmd) run_cmd_p=t;;
       --rc|--RC) shift; RC="${1}";;
       --mail-to|--mailto|--addr|--yoppee) shift; mail_to="${1}";;
+      --popup) notifier=popup;;
+      --banner) notifier=banner_popup;;
       --) shift; break;;
       *) break;
   esac
   shift
 done
+
 
 [ -z "${mail_to}" ] && {
     echo "I need an email addr to send to.
@@ -63,4 +86,4 @@ msg="$progname: in ${PWD}: ${type}$@"
 {
     echo "On $(date)"
     echo "${msg}"
-} | EExec send-mail-command-line.sh -s "${prefix}${annotation}YOPP! ${msg}" "${EMAIL_YOPP_ADDR}"
+} | EExec ${notifier} "${msg}"
