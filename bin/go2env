@@ -151,8 +151,11 @@ def set_force_dict_updated_p(val=True):
 #dp_io.eprintf('HOME>%s<, UGLY_HOME>%s<', HOME, UGLY_HOME)
 
 #####################################################################
-def handle_env_var(fmt, name, open_quote, val, close_quote, **kw_args):
+def handle_env_var(fmt, name, open_quote, val, close_quote,
+                   **kw_args):
     flags = kw_args.get(ELISP_OUTPUT_HANDLER_FLAGS, None)
+    unset_var_p = kw_args.get("unset_var_p", False)
+
     ## @todo XXX unused
     emit_setenv_p = False
     if flags:
@@ -171,13 +174,21 @@ def handle_sh(name, alias_item, **kw_args):
     # B. elisp setenv calls
     quote_char = kw_args.get("quote_char",
                              Evil_globals.get("quote_char", '"'))
-    handle_env_var(
-        fmt='%s=%s%s%s; export %s;',
-        name=name,
-        open_quote=quote_char,
-        val=val,
-        close_quote=quote_char,
-        **kw_args)
+
+    unset_var_p = kw_args.get("unset_var_p", False)
+    unset_var_first_p = kw_args.get("unset_var_first_p", False)
+    if unset_var_p or unset_var_first_p:
+        fmt = "unset %s\n"
+        dp_io.printf("unset %s\n", name)
+    if not unset_var_p:
+        fmt='%s=%s%s%s; export %s;'
+        handle_env_var(
+            fmt=fmt,
+            name=name,
+            open_quote=quote_char,
+            val=val,
+            close_quote=quote_char,
+            **kw_args)
 
 #####################################################################
 def handle_csh(name, alias_item, **kw_args):
@@ -745,11 +756,13 @@ if __name__ == "__main__":
     suffix = ""
     selector = SELECTOR_ENV
     grep_regexps = []
-    opts, args = getopt.getopt(sys.argv[1:], 'efvdlLs:Eq:g:G:m:M:S:pP:aF')
+    opts, args = getopt.getopt(sys.argv[1:], 'efvdlLs:Eq:g:G:m:M:S:pP:aFuUr')
     handler_keyword_args = {}
     serialize_aliases_p = False
     serialized_file_name = DEFAULT_SERIALIZED_FILE_NAME
     write_dict_p = False
+    force_read_file = True
+    ## @todo XXX Change this to a real arg parser.
     for opt, val in opts:
         if opt == '-e':
             selector = SELECTOR_EMACS
@@ -799,6 +812,13 @@ if __name__ == "__main__":
             write_dict_p = True
         elif opt == '-F':
             set_force_dict_updated_p(True)
+        elif opt == '-u':
+            handler_keyword_args["unset_var_first_p"] = True
+        elif opt == '-U':
+            handler_keyword_args["unset_var_p"] = True
+        elif opt == '-r':
+            force_read_file = True
+
 
     serialized_file = opath.join(os.environ["HOME"], "var", "db",
                                  serialized_file_name)
