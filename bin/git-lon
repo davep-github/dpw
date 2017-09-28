@@ -107,7 +107,8 @@ Usage_error()
 
 
 # 2 lines for my baroque prompt.
-: ${def_lines:=$((${LINES:-25}))}
+#: ${def_lines:=$((${LINES:-25}))}
+: ${def_lines:=$((7 * 3 / 2))}
 def_lines=$((def_lines * 2 / 3))
 : ${lines:=${def_lines}}
 n=
@@ -125,4 +126,4 @@ pager=
     n="${lines}"
 }
 
-git ${pager} log --oneline -n "${n}" "$@"
+EExec git ${pager} log --oneline -n "${n}" "$@"
