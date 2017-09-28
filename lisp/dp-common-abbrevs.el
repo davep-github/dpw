@@ -586,6 +586,8 @@
     ((("ob1" "obo" "OBO" "OB1" "off-by-one" "off by one") 
       'circular) 
      dp-manual)
+    (("sagi" "sudo apt install " "sudo apt-get install ")
+     dp-manual)
     ))
 ;; We could just use the non-void-ness of dp-common-abbrevs, but I
 ;; like suspenders with my belt.
