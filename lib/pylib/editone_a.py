@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import dp_io
 from Tkinter import *
 
 class EditOne(Toplevel):
