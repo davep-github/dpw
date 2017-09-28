@@ -516,7 +516,14 @@ running_as_root_p()
 
 add_to_sudo_bash_env()
 {
-    running_as_root_p || echo "$@" >> "$sudo_bash_env"
+    running_as_root_p || {
+        for x in "$@"
+        do
+          fgrep -q "${x}" "$sudo_bash_env" || {
+              echo "$@" >> "$sudo_bash_env"
+          }
+        done
+    }
 }
 
 dp_setup_prompt()
