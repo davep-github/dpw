@@ -2,7 +2,7 @@
 # $Id: xlist,v 1.8 2004/10/20 08:20:06 davep Exp $
 
 from Tkinter import *
-import re, sys, getopt, string
+import re, sys, getopt, string, dp_io
 import editone_a
 
 DEF_font = 'arial 14'
@@ -16,6 +16,7 @@ class XLister(Frame):
 	self.exit_req = 0	# 'semaphore' that we want to exit
 	self.create_widgets()
 	self.pack(fill=BOTH, expand=TRUE) # pack now so we can play with
+        self.exit_rc = 0
 	# the widget before its filled
 	self.fill_listbox()
 	for k in "xXqQDd":
@@ -26,7 +27,7 @@ class XLister(Frame):
 	self.master.title("xlist " + title_anno)
 
     def exit(self):
-	sys.exit(1)
+	sys.exit(self.exit_rc)
 		
     def dump_event(self, event):
 	print `event`
@@ -72,7 +73,8 @@ class XLister(Frame):
 
     def do_edit_entry(self):
 	item_num = self.listbox.index('active')
-	# print "i", item_num, "size", self.listbox.size()
+	dp_io.cdebug(1, "item_num: {}, size: {}\n",
+                     item_num, self.listbox.size())
 	curselection = self.listbox.curselection()
 	if item_num == self.listbox.size() - 1:
 	    new = 1
@@ -82,8 +84,9 @@ class XLister(Frame):
 	    s = self.listbox.get('active')
 
 	e = editone_a.EditOne(self, default=s, prompt='', title='Edit Item')
+        dp_io.cdebug(1, "e: {}\n", e)
 	s = e.go()
-	# print 's:', s
+	dp_io.cdebug(1, "s: {}\n", s)
 	if s:
 	    self.listbox.delete(item_num)
 	    self.listbox.insert(item_num, s)
@@ -203,7 +206,9 @@ class XLister(Frame):
 #
 sel_mode = EXTENDED
 if __name__ == "__main__":
-    options, args = getopt.getopt(sys.argv[1:], 'sef:w')
+    debug_level = 0
+    verbose_level = 0
+    options, args = getopt.getopt(sys.argv[1:], 'sef:wdD:vV:')
     for o, v in options:
         # print 'o>%s<, v>%s<' % (o, v)
         if o == '-s':
@@ -218,7 +223,26 @@ if __name__ == "__main__":
         if o == '-w':
             split_on_spaces = 1
             continue
+        if o == '-d':
+            debug_level = debug_level + 1
+            continue
+        if o == '-D':
+            debug_level = eval(v)
+            continue
+        if o == '-v':
+            verbose_level = verbose_level + 1
+            continue
+        if o == '-V':
+            verbose_level = eval(v)
+            continue
 
+    if debug_level >= 0:
+        dp_io.set_debug_level(debug_level, enable_debugging_p=True)
+    if verbose_level > 0:
+        dp_io.set_verbose_level(verbose, enable=True)
+
+    dp_io.cdebug(1, "debug_level: {}\n", debug_level)
     app = XLister()
     app.mainloop()
+    sys.exit(0)
     
