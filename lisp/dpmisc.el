@@ -1153,10 +1153,14 @@ the newly copied text."
 (defun dp-op-other-window (num op &rest args)
   "Perform OP on ARGS NUM `other-window's away."
   (interactive)
-  (let ((num (or num 1)))
-    (other-window num)
-    (apply op args)
-    (other-window (- num))))
+  (setq-ifnil num 1)
+  (condition-case nil
+      (progn
+        (other-window num)
+        (apply op args))
+    (error
+     (dingm "op %s on win failed." op)))
+  (other-window (- num)))
 
 (defun dp-scroll-up-down (&optional nlines half-page-p up-down)
   "Scroll screen down 1 line or 1/2 page."
