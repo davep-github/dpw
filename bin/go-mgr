@@ -177,6 +177,12 @@ dump_go_files()
 }
 
 opts="x:a:A:d:lef:g:GE:hws"
+Usage()
+{
+    echo 1>&2 "$progname: getopt opts: ${opts}"
+    exit 1
+}
+
 q=$(getopt -o "$opts" -- "$@")
 [ $? != 0 ] && Usage
 eval set -- "$q" 
