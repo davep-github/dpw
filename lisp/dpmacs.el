@@ -528,8 +528,8 @@ this but when I edit it, I get it in (shudder) Perl mode.")
            (append (list suffix-regexp) extra-suffix-regexp))))
 
 (defun* dp-mk-mode-transparent-r/o-regexp (extension &optional
-                                          extra-suffix-regexp
-                                          (dot "."))
+                                           extra-suffix-regexp
+                                           (dot "."))
   (dp-mk-mode-transparent-regexp extension
                                  dp-default-mode-transparent-r/o-suffix-regexp
                                  extra-suffix-regexp
