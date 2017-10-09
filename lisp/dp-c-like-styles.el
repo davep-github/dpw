@@ -13,6 +13,7 @@
 (defconst dp-kernel-c-style
   '(
     (dp-c-using-kernel-style-p                     . t)
+    (dp-c-indent-for-comment-prefix                . "")
     (dp-use-stupid-kernel-struct-indentation-p     . nil)
     (dp-c-like-mode-default-indent-tabs-mode-p     . t)
     (dp-lang-use-c-new-file-template-p             . nil)
@@ -71,6 +72,7 @@
 (defconst dp-basic-c-style
   '(
     (dp-c-using-kernel-style-p                     . nil)
+    (dp-c-indent-for-comment-prefix                . "dp: ")
     (dp-use-stupid-kernel-struct-indentation-p     . nil)
     (dp-c-like-mode-default-indent-tabs-mode-p     . nil)
     (dp-lang-use-c-new-file-template-p             . t)
