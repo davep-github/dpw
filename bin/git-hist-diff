@@ -64,7 +64,7 @@ revs=
 
 EExec -y git-nth-rev --all --file-last "$@" | while read
 do
-#   echo_id REPLY
+  EExec_verbose_echo_id REPLY
   set -- ${REPLY}
   echo "=============================================================================
 ======================= file: $2
