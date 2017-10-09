@@ -118,7 +118,7 @@ maybe_set()
 case $shell_name in
     bash)
 	#export history_control=ignoreboth # bash
-	export HISTIGNORE="ignoreboth"
+	export HISTCONTROL="ignoreboth"
 	export command_oriented_history=y # bash
 	export cmdhist=y
         shopt -s no_empty_cmd_completion checkhash checkwinsize \
