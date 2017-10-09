@@ -1654,7 +1654,7 @@ Handle those cases appropriately."
 Current annotations are:
 @arg if comment is in the arglist."
   (interactive "*P")
-  (let ((comment-start (concat comment-start "dp: ")))
+  (let ((comment-start (concat comment-start dp-c-indent-for-comment-prefix)))
     (if (dp-region-active-p)
         (call-interactively 'dp-lineup-comments)
       (if dp-c*-insert-doxy-cmd-p
