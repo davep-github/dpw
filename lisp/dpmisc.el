@@ -8858,12 +8858,12 @@ Can be called directly or by an abbrev's hook.
 Periodically, the list of files, windows, etc are saved so that context can
 be restored later. When we start up, the current context file is copied so
 that it becomes the previous context. In general, that is what we are
-interested because it represents the previous context. By doing it this way,
-we have a context even if we exit in an unpleasant manner. This is better
-than counting on our exit hook saving to the previous context. We need 2
-context files because as soon as we begin operating, we begin writing to the
-current context file, which will obliterate the previous one. This is bad if
-we do some work before we decide to recover a previous context.  Context
+interested in because it represents the previous context. By doing it this
+way, we have a context even if we exit in an unpleasant manner. This is
+better than counting on our exit hook saving to the previous context. We need
+2 context files because as soon as we begin operating, we begin writing to
+the current context file, which will obliterate the previous one. This is bad
+if we do some work before we decide to recover a previous context.  Context
 files are host specific, so if we move to another machine, we may want to
 recover the context from the previous machine. This function allows us to
 specify a specific context file so we can get context from another machine.
@@ -13196,9 +13196,6 @@ value that may be nil, like dp-singlular-write-restricted-regexp."
 (defvar dp-detect-read-only-file-hook nil
   "Hook to determine if a file should be read only.")
 
-(defvar dp-implied-read-only-filename-regexp-list nil
-  "File names matching this become read only.")
-
 (defun* dp-file-name-implies-readonly0-p (filename 
                                           &optional regexp-in 
                                           (mode-local-list-p t)
@@ -13214,7 +13211,7 @@ MODE-LOCAL-LIST-P allows restricting regexps on a per-mode basis."
                                 'dp-implied-read-only-filename-regexp-list))
                           (unless mode-local-list-only-p
                             (append dp-implied-read-only-filename-regexp-list
-                                    regexp-in)))
+                                    (dp-listify-thing regexp-in))))
        (< 0 (length (match-string 0 filename)))))
 
 (defun* dp-file-name-implies-readonly-p (filename
@@ -14025,7 +14022,8 @@ values must be passed in as stings."
   (interactive "sRegexp: ")
   (when clear-list-p
     (setq dp-implied-read-only-filename-regexp-list nil))
-  (add-to-list 'dp-implied-read-only-filename-regexp-list regexp))
+  (when regexp
+    (add-to-list 'dp-implied-read-only-filename-regexp-list regexp)))
 
 (defun dp-delete-force-read-only-regexp (regexp)
   "Delete a regexp from the list of regexps which determine if a file is read only."
