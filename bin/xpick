@@ -9,7 +9,7 @@ DEF_font = 'arial 14'
 split_on_spaces = 0
 
 class XLister(Frame):
-    def __init__(self, master=None):
+    def __init__(self, master=None, allow_new_item_p=True):
 	Frame.__init__(self, master)
 	self.title("")
 	self.sel_desel = 's'	# does <Return> sel or desel?
@@ -17,10 +17,14 @@ class XLister(Frame):
 	self.create_widgets()
 	self.pack(fill=BOTH, expand=TRUE) # pack now so we can play with
         self.exit_rc = 0
+        self.allow_new_item_p = allow_new_item_p
 	# the widget before its filled
-	self.fill_listbox()
+	self.fill_listbox(allow_new_item_p)
 	for k in "xXqQDd":
 	    self.bind_all("<Alt-%c>" % k,
+			  self.emit_and_exit_event)
+	for k in "xXqQDd":
+	    self.bind_all("<Control-%c>" % k,
 			  self.emit_and_exit_event)
 
     def title(self, title_anno):
@@ -179,7 +183,7 @@ class XLister(Frame):
 	self.create_scrollbox()
         self.listbox_take_focus()
 
-    def fill_listbox(self):
+    def fill_listbox(self, allow_new_item_p=True):
 	if not sys.stdin.isatty():
 	    self.title("reading...")
 	    while 1:
@@ -198,7 +202,8 @@ class XLister(Frame):
                 for line in llist:
                     self.listbox.insert(END, line)
 		self.listbox.update()
-	    self.listbox.insert(END, '*** NEW ***')
+            if allow_new_item_p:
+                self.listbox.insert(END, '*** NEW ***')
 	self.title("ready.")
 
 #
@@ -208,7 +213,8 @@ sel_mode = EXTENDED
 if __name__ == "__main__":
     debug_level = 0
     verbose_level = 0
-    options, args = getopt.getopt(sys.argv[1:], 'sef:wdD:vV:')
+    allow_new_item_p = True
+    options, args = getopt.getopt(sys.argv[1:], 'nsef:wdD:vV:')
     for o, v in options:
         # print 'o>%s<, v>%s<' % (o, v)
         if o == '-s':
@@ -235,6 +241,9 @@ if __name__ == "__main__":
         if o == '-V':
             verbose_level = eval(v)
             continue
+        if o == '-n':
+            allow_new_item_p = False
+            continue
 
     if debug_level >= 0:
         dp_io.set_debug_level(debug_level, enable_debugging_p=True)
@@ -242,7 +251,7 @@ if __name__ == "__main__":
         dp_io.set_verbose_level(verbose, enable=True)
 
     dp_io.cdebug(1, "debug_level: {}\n", debug_level)
-    app = XLister()
+    app = XLister(allow_new_item_p=allow_new_item_p)
     app.mainloop()
     sys.exit(0)
     
