@@ -346,7 +346,10 @@ def system (command, msg=True, exit_p=True, exit_code=1, debug_p=False,
 
 
 def nWithUnits(s, powers_of_two_p=True, allow_fractions_p=False, base=None):
+    #print "s:", s
     #print "powers_of_two_p:", powers_of_two_p
+    #print "allow_fractions_p:", allow_fractions_p
+    #print "base:", base
     if base is None:
          if powers_of_two_p:
              base = 1024
