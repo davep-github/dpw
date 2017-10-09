@@ -248,6 +248,15 @@
         </finalactions>
       </action>
     </keybind>
+    <!-- Keybindings for window switching w/o raising them. -->
+    <keybind key="S-A-Tab">
+      <action name="NextWindow">
+        <finalactions>
+          <action name="Focus"/>
+          <action name="Unshade"/>
+        </finalactions>
+      </action>
+    </keybind>
     <keybind key="A-S-Tab">
       <action name="PreviousWindow">
         <finalactions>
