@@ -179,8 +179,9 @@ do
   then
       short_sha=$(git lon 1 "${commit}" | awk '{print $1}')
       output_filter=cat_to
-      output_file=$(instr-before-ext.py "${f}" "${short_sha}")
+#      output_file=$(instr-before-ext.py "${f}" "${short_sha}")
+      output_file="${f}-gitrev-${short_sha}"
   fi
-  [ -n "${output_file}" ] && echo "Writing to >${output_file}<"
+  [ -n "${output_file}" ] && echo "Writing to ${output_file}"
   EExec -y git_cat "$commit" "$f" | "${output_filter}"
 done
