@@ -105,6 +105,9 @@ Usage_error()
 # template end.
 ########################################################################
 
+: ${files=}
+: ${nopkgs=}
+
 packages=(
 ccache
 chromium-browser
@@ -162,15 +165,47 @@ xorg-dev
 xterm
 )
 
+EExec_verbose_msg "0: len(packages): ${#packages[@]}"
+if [ -n "${nopkgs}" ]
+then
+    packages=()
+fi
+
+EExec_verbose_msg "1: len(packages): ${#packages[@]}"
+
 num_pkgs="${#packages[@]}"
 pkg_num=1
 
-for p in "${packages[@]}"
-do
-  EExec_verbose_msg "Installing ${pkg_num} of ${num_pkgs}"
-  EExec sudo apt-get --assume-yes install "${p}"
-  ((++pkg_num))
-done
+((num_pkgs > 0)) && {
+    for p in ${packages[@]}
+    do
+      EExec_verbose_msg "Installing ${pkg_num} of ${num_pkgs}"
+      EExec sudo apt-get --assume-yes install "${p}"
+      ((++pkg_num))
+    done
+}
+
+# e.g.
+# From a existing installation, list the packages explicitly installed:
+# apt-mark showmanual > apt-mark.showmanual.out
+# Reinstall [elsewhere].
+# files=apt-mark.showmanual.out newbuntu-pkgs -v
+if [ -n "${files}" ]
+then
+    for file in "${files}"
+    do
+      EExec_verbose_echo_id file
+      num_pkgs="$(wc -l $file)"
+      pkg_num=0
+      cat "${file}" | while read
+      do
+        p="${REPLY}"
+        EExec_verbose_msg "Installing ${pkg_num} of ${num_pkgs}"
+        EExec sudo apt-get --assume-yes install "${p}"
+        ((++pkg_num))
+      done
+    done
+fi
 
 echo 'Some suggestions, if I may so bold:
 GUI grub customizer:
