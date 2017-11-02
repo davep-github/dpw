@@ -1,16 +1,14 @@
-gpu: gpudriverdevsupport@amd.com
-gfx: amd-gfx@lists.freedesktop.org
+amdgpu: gpudriverdevsupport@amd.com
+gpu: amdgpu
+amdgfx: amd-gfx@lists.freedesktop.org
 brahma: brahma_sw_dev
-gpugfxpatches: gpu, gfx
+gpugfxpatches: gpu, amdgfx
 patches: gpugfxpatches
-allgroups: gpu, gfx, brahma
+allgroups: gpu, amdgfx, brahma
 allg: allgroups
 davep: davep.amd@meduseld.net
 dpanarit: david.panariti@amd.com
+dp: david.panariti@amd.com
 dpamd: dpanarit
 dpwork: dpanarit
-dps: dpanarit dpamd dpwork
-
-t1: xxx@yyy
-t2: zzz@aaa
-tall: t1, t2
+dps: dpanarit, davep
