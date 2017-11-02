@@ -23,6 +23,7 @@ bk_log="$log_dir/bk.out-$build_dir.$timestamp"
 bwk_log="$log_dir/bwk.out-$build_dir.$timestamp"
 : ${bk_serial_num_file:=bk-serial-num}
 : ${serialize_kernels_p=}
+: ${xyopp_p=}
 ok_file=/tmp/bk.sh.banner-OK.$$
 fail_file=/tmp/bk.sh.banner-FAIL.$$
 stat_files="$ok_file $fail_file"
@@ -108,6 +109,8 @@ do
       --dev|--mod|--mods|--modules) action_list="${action_list_modules}";;
       --mii) action_list="modules_install install";;
       --bk) action_list="${action_list_bk}";;
+      --xyopp|--yopp|--xy) xyopp_p=t;;
+      --no-xyopp|--no-yopp|--no-xy) xyopp_p=;;
       --) break;;
       -*)
             # Nukes leading `-' from the option.
@@ -378,8 +381,14 @@ build_kernel()
     if [ "$rc" = '0' ]
     then
         cat $ok_file
+        [ -n "${xyopp_p-}" ] && {
+            cat "${ok_file}" | xyopp -
+        }
     else
         cat $fail_file
+        [ -n "${xyopp_p-}" ] && {
+            cat "${fail_file}" | xyopp -
+        }
         bk_done="!FAILED! $bk_done FAILED!"
         echo "rc: $rc"
     fi
