@@ -122,12 +122,14 @@ nth=
 output_file=
 auto_output_file=
 output_filter=just_cat
+verbose=0
 
 while (($# > 0))
 do
   case "${1}" in
     -o|--auto-name) auto_output_file=t;;
-    -O|--set-name) shift; output_file="${1}";;
+    -O|-c|--set-name|--cp) shift; output_file="${1}";;
+    --v|--verbose) ((++verbose));;
     --) shift; break;;
     *) break;;
   esac
@@ -163,7 +165,7 @@ do
       EExec_verbose_echo_id nth f
       if [ -n "${nth}" ]
       then
-          commit=$(EExec git-nth-rev "$nth" "$f")
+          commit=$(git-nth-rev "$nth" "$f")
       fi
       EExec_verbose_echo_id commit
       [ -z "${commit}" ] && {
