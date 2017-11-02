@@ -92,7 +92,6 @@ then
     fi
 fi
 
-
 for nth in "${nths[@]}"
 do
   vsetp "${sep}" && echo "${nth} ${sep}"
@@ -103,7 +102,16 @@ do
           *) tailer=cat;;
       esac
       revs=$(git rev-list "$base_rev" "$file" | $tailer)
-  else
+   else
+      # We need to check if we're asking for a revision that does not exist.
+      num_revs=$(git rev-list "$base_rev" "$file" | wc -l)
+      EExec_verbose_echo_id num_revs
+      EExec_verbose_echo_id nth
+      if ((nth >= num_revs))
+      then
+          echo 1>&2 "File >$file< only has ${base_rev} plus $((num_revs - 1)) revs."
+          exit 1
+      fi
       revs=$(git rev-list --max-count=${max_count} --skip="$nth" "$base_rev" "$file")
   fi
 
