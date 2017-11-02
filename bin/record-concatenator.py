@@ -46,6 +46,8 @@ This makes the results usable in a variety of applications."""
             total_line = line
         else:
             total_line = line
+    if total_line:
+        lines.append(line)
     if opened_p:
         fop.close()
     return lines
