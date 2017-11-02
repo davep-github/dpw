@@ -35,7 +35,7 @@ LOG_FILE="$HOME/log/xemacs/ec-log-file.log"
 : ${known_servers:=gnuserv}
 : ${known_clients:="gnuclient emacsclient"}
 : ${known_text_mode_editors:="vim vi nvi nano pico"}
-: ${eh=$(find_best_editing_host)}
+: ${editing_host=$(find_best_editing_host)}
 : ${client=}
 : ${raise_and_focus_p=t}
 : ${quiet_p=}
@@ -128,15 +128,15 @@ process_file ()
     # Choose a local server over a remote one.
     if ! local_server_p
     then
-        if vsetp "$eh"
+        if vsetp "$editing_host"
         then
-            editing_host_opt="-h $eh"
+            editing_host_opt="-h $editing_host"
             sb_name=$(find_best_editing_host sandbox-name)
             local extra=
             vsetp "${sb_name}" && {
                 extra=", sandbox: ${sb_name}"
             }
-            editing_host_msg="editing on host: ${eh}${extra}"
+            editing_host_msg="editing on host: ${editing_host}${extra}"
         else
             problem="Editing server not found"
             and=" AND "
@@ -204,6 +204,7 @@ process_file ()
             echo "$editing_host_msg"
         fi
     fi
+    # Why did I not use an array?
     EExecDashV_p && vsetp "$extra_editing_host_msg" && echo "$extra_editing_host_msg"
     vsetp "${client}" && set -- "${client}"
     vsetp "${editing_host_opt}" && set -- "$@" ${editing_host_opt}
