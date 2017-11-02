@@ -349,8 +349,13 @@ case "$PATH" in
 esac
 
 # need this here so host-info, et.al. work
-export PYTHONPATH=$(dp_add_to_path_iff -p "${PYTHONPATH-}" "$HOME/lib/pylib" \
-    "${PYTHONPATH-}" "${PYTHONPATH_PRE-}")
+# pylib is my junk, ~/local/lib/python is an alternate installation dir.
+export PYTHONPATH=$(dp_add_to_path_iff -p \
+    "${PYTHONPATH-}" \
+    "$HOME/lib/pylib" \
+    "$HOME/local/lib/python" \
+    "${PYTHONPATH-}" \
+    "${PYTHONPATH_PRE-}")
 PYTHONPATH=$(dp_add_to_path_iff "${PYTHONPATH-}" "$PATH:${PYTHONPATH_POST-}")
 PYTHONPATH=$(path-verify -d "${PYTHONPATH-}")
 
@@ -673,7 +678,8 @@ case $- in
             root) emph='\[\033[01;31m\]'
                   emph2='\[\033[01;31m\]'
                   #emph2=""
-                  PS1_terminator='##'"${norm}"
+                  #PS1_terminator='#'"${norm}"
+                  PS1_terminator='$'"${norm}"
                   # Gaping security hole to allow me to pass variables to a
                   # sudo'd shell.
                   # All this bullshit just to get matching prompt stuff.
