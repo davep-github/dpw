@@ -48,7 +48,7 @@ def main(argv):
 
     # ...
 
-    # For non-option args
+    # For non-option args, first arg is name that goes into app_args.
     oparser.add_argument("non_option_args_like_file_names, etc.", nargs="*")
 
     app_args = oparser.parse_args()
