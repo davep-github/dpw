@@ -2603,7 +2603,7 @@ it for something \"speshul\".
             dp-prefer-independent-frames-p t
             other-window-p nil
             dp-shell-buffer-save-file-name (dp-transformed-save-buffer-file-name
-                                            dp-default-save-buffer-contents-dir
+                                            dp-default-save-shell-buffer-contents-dir
                                             'dp-shellify-shell-name))
 
       (dp-shells-set-most-recently-created-shell sh-buffer 'shell)
@@ -3332,7 +3332,7 @@ ARG == 0    --> New `dp-gdb-naught' session."
 (defvar dp-default-shellify-replacement-str ""
   "Use this string by default when cleaning up a string to be used as a file name.")
 
-(defvar dp-default-save-buffer-contents-dir "$HOME/log/shell-sessions/"
+(defvar dp-default-save-shell-buffer-contents-dir "$HOME/log/shell-sessions/"
   "Where do the files go by default.  Will be created including any missing parents.")
 
 (dp-deflocal dp-shell-buffer-save-file-name nil

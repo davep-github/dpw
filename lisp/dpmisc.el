@@ -360,7 +360,7 @@ Anything else non-nil is assumed to be a quoting function.
 WILL change number of groups unless shy-p is non-nil"
   (when quote-p
     (setq first (and first (regexp-quote first))
-          last (and last (regexp-quote) last)))
+          last (and last (regexp-quote last))))
   (if (and first last)
       (format "\\(%s%s\\)\\|%s" (if shy-p "?:" "") first last)
     (or first last)))
@@ -370,7 +370,7 @@ WILL change number of groups unless shy-p is non-nil"
 WILL change number of groups unless shy-p is non-nil"
   (when quote-p
     (setq first (and first (regexp-quote first))
-          last (and last (regexp-quote) last)))
+          last (and last (regexp-quote last))))
   (if (and first last)
       (format "%s\\|\\(%s%s\\)" first (if shy-p "?:" "") last)
     (or first last)))
@@ -13018,7 +13018,7 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
                                  (end (point-max))
                                  (file-name-sticky-p t)
                                  (confirm-save-p 'ask)
-                                 (dir dp-default-save-buffer-contents-dir) 
+                                 (dir dp-default-save-shell-buffer-contents-dir) 
                                  (name-transformer 'dp-shellify-shell-name)
                                  (append-p t)
                                  (transformer-args '())
@@ -14023,7 +14023,8 @@ values must be passed in as stings."
   (when clear-list-p
     (setq dp-implied-read-only-filename-regexp-list nil))
   (when regexp
-    (add-to-list 'dp-implied-read-only-filename-regexp-list regexp)))
+    (dp-add-list-to-list 'dp-implied-read-only-filename-regexp-list 
+                         (dp-listify-thing regexp))))
 
 (defun dp-delete-force-read-only-regexp (regexp)
   "Delete a regexp from the list of regexps which determine if a file is read only."
