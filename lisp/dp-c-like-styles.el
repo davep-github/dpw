@@ -23,7 +23,7 @@
     (dp-use-ugly-ass-pointer-style-p               . t)
     (c-insert-tab-function                         . dp-phys-tab)
     ;; see `c-indent-command'
-    (c-tab-always-indent                           . nil)
+    (c-tab-always-indent                           . t)
     (c-basic-offset                                . 8)
     (c-comment-only-line-offset                    . 0)
 
