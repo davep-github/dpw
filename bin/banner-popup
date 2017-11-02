@@ -78,6 +78,9 @@ sig_exit ()
 #     trap "sig_exit $sig" $sig
 # done
 
+: ${input_file:=-}
+: ${text_source=banner_from_argv}
+
 display_stderr()
 {
     echo 1>&2 "$progname: $@"
@@ -101,10 +104,25 @@ Usage_error()
     fatal_error 1 "$@"
 }
 
+banner_from_argv()
+{
+    EExec banner "$@"
+}
+
+from_file()
+{
+    EExec cat "$@"
+}
+
+if [ "${1-}" = '-' ]
+then
+    text_source=from_file
+fi
+
 #
 # template end.
 ########################################################################
 
 : ${buttons=}
 
-banner "$@" | xmessage ${buttons} -file -
+EExec "${text_source}" "$@" | EExec xmessage ${buttons} -file -
