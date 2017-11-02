@@ -42,6 +42,19 @@ def main(argv):
                          default=False,
                          action="store_true",
                          help="Do not print informative messages.")
+    oparser.add_argument("-e",
+                         dest="format_str", default="%s",
+                         action="store_const",
+                         const="%e",
+                         help="Output format string for sci not.")
+    oparser.add_argument("-E",
+                         dest="format_str", const="%E",
+                         action="store_const",
+                         help="Output format string for SCI NOT.")
+    oparser.add_argument("-f", "--fmt-str", "--format-str",
+                         dest="format_str",
+                         help="Arbitrary output format string.")
+
 ##e.g.     oparser.add_argument("--app-action", "--aa",
 ##e.g.                          dest="app_action_stuff", default=[],
 ##e.g.                          action=App_arg_action,
@@ -61,7 +74,7 @@ def main(argv):
         dp_io.set_verbose_level(app_args.verbose_level, enable=True)
 
     for expr in app_args.exprs:
-        print eval(expr)
+        print app_args.format_str % eval(expr)
 
 if __name__ == "__main__":
     # try:... except: nice for filters.
