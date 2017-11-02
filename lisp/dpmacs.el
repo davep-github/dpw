@@ -493,6 +493,7 @@ the init files.")
           "\\|stale\\|bad\\|b0rked\\|broken?\\|hosed\\|fubar"
           "\\|STALE\\|BAD\\|B[O0]RKED\\|BROKEN?\\|HOSED\\|FUBAR"
           "\\|davep\\|" (user-login-name)
+          "\\|gitrev-[0-9a-fA-F]+"
           "\\|noindex\\|NOINDEX\\|noidx\\|NOIDX"
           ;; Perforce uses .original.[0-9]+ to save modified files.  I, too,
           ;; like to copy a file to a .orig before hacking it up, although
@@ -687,7 +688,8 @@ And their failure occurs way too often."
   (let ((an-ipython-command (executable-find "ipython")))
     (when an-ipython-command
       (setq ipython-command an-ipython-command)
-      (setq py-python-command-args '("--no-autoindent" "--colors" "NoColor"))
+      (setq py-python-command-args '("--no-autoindent" 
+                                     "--colors=NoColor"))
       (dp-optionally-require 'ipython)
 
       ;; The string sent to ipython to query for all possible completions. I
@@ -699,7 +701,6 @@ And their failure occurs way too often."
       (setq ipython-completion-command-string
             "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 
-      (setq py-python-command-args '("--no-autoindent" "--colors" "NoColor"))
       (when (featurep 'ipython)
         (defun dp-ipython-complete-collector (string)
           "This was a lambda in `ipython-complete', but I've broken it out to
