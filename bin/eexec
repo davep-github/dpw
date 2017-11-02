@@ -245,8 +245,8 @@ EExec_verbose_echo_id()
     do
       #echo 1>&2 "ONE>$1<"
       case "$1" in
-          --prefix|--msg) shift; prefix="${1}";;
-          --suffix) shift; suffix="${1}";;
+          --prefix|--msg|--pre|--txt) shift; prefix="${1}";;
+          --suffix|--suff|--suf) shift; suffix="${1}";;
           --sep) shift; sep2="${1}";;
           --sep-nl|--sep-newline) sep2='
 ';;
@@ -343,6 +343,7 @@ EExec_background()
     "$@" &
 }
 
+# <:eexec:>
 EExec()
 {
     # @todo XXX Is it worth it to do a full getopt?
