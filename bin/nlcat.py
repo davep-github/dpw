@@ -22,29 +22,36 @@ IOERROR_RC = 1
 ##e.g.         setattr(namespace, self.dest, regexps)
 ##e.g.         setattr(namespace, "highlight_grep_matches_p", True) 
 
-def process_file(file_name):
-    escaped_newline = "\\\n"
-    fop = open(file_name)
+def process_file(file_name, continuation_pattern = "\\", sep=''):
+    if type(file_name) == type(""):
+        fop = open(file_name)
+        close_p = True
+    else:
+        fop = file_name
+        close_p = False
     concat_p = False
     total_line = ''
     lines = []
     for line in fop:
         dp_io.cdebug(2, "raw line>%s<\n", line)
+        line = str.rstrip(line, '\n')
+        dp_io.cdebug(2, "stripped>%s<\n", line)
 
-        enewline_p = line[-2:] == escaped_newline
-        if enewline_p:
-            line = line[:-2]
-            
+        continued_line = line[-1:] == continuation_pattern
+        if continued_line:
+            line = line[:-1]
+            dp_io.cdebug(2, "continued_line?line>%s<\n", line)
+
         if concat_p:
             dp_io.cdebug(1, "1,concat_p is True, line>%s<\n", line)
             dp_io.cdebug(1, "1.1,concat_p is True, total_line>%s<\n", total_line)
-            total_line = total_line + line
+            total_line = total_line + sep + line
             dp_io.cdebug(1, "2,concat_p is True, total_line>%s<\n", total_line)
         else:
             dp_io.cdebug(1, "3,concat_p is False, line>%s<\n", line)
             total_line = line
             dp_io.cdebug(1, "4,concat_p is False, total_line>%s<\n", total_line)
-        if enewline_p:
+        if continued_line:
             dp_io.cdebug(1, "5,escaped_newline, line>%s<\n", line)
             #total_line = total_line + line[:-2]
             dp_io.cdebug(1, "6,escaped_newline, total_line>%s<\n", total_line)
@@ -57,7 +64,8 @@ def process_file(file_name):
 #            total_line = total_line[:-1]
         lines.append(total_line)
         total_line = ""
-    fop.close()
+    if close_p:
+        fop.close()
     return lines
 
 
@@ -100,12 +108,14 @@ def main(argv):
         dp_io.set_verbose_level(app_args.verbose_level, enable=True)
 
     file_names = app_args.file_names
-
+    if not file_names:
+        file_names = (sys.stdin,)
     for file_name in file_names:
         lines = process_file(file_name)
         for l in lines:
             dp_io.cdebug(4, "line>%s<\n", l)
-            dp_io.undebug("%s", l)
+            # dp_io.undebug("%s", l)
+            dp_io.printf("%s\n", l)
 
 if __name__ == "__main__":
     # try:... except: nice for filters.
