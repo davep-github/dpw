@@ -1,7 +1,7 @@
 """utils.py
 Some helpful utility functions."""
 
-import os, sys, string, stat, pprint, types, re, math, types
+import os, sys, string, stat, pprint, types, re, math, types, pdb
 opath = os.path
 
 class DP_UTILS_RT_Exception(RuntimeError):
@@ -743,6 +743,32 @@ def list_from_path_like_lines(lines, sep=None, stringize_p=False):
     return ret
 
 ########################################################################
+numeric_types = {
+    types.IntType: int,
+    types.FloatType: float,
+    types.LongType: long,
+    types.ComplexType: complex,
+    }
+
+########################################################################
+def numeric_p(num):
+    if type(num) in numeric_types:
+        for t in numeric_types:
+            if t == type(num):
+                return t
+    return False
+
+######################################################################## def
+def defang_num(num):
+    return_type = numeric_p(num) or type(0.0)
+    num = str(num)
+    num = re.sub("\s+|,", "", num)
+    num.replace(' ', '')
+    num = return_type(num)
+    return num
+
+    
+########################################################################
 def list_from_fobj_lines(fobj, sep=None):
     # If sep != None assume each line may be a path.
     lines = []
@@ -751,6 +777,97 @@ def list_from_fobj_lines(fobj, sep=None):
             line = line[:-1]
         lines.append(line)
     return list_from_path_like_lines(lines, sep=sep)
+
+p10_symbolic_info = {
+    0:   ("", ""),
+    1:   ("deca",  1, "DA"),
+    2:   ("hecto", 2, "H"),
+    3:   ("kilo", 3, "K"),
+    6:   ("mega", 6, "M"),
+    9:   ("giga", 9, "G"),
+    12:  ("tera", 12, "T"),
+    15:  ("peta", 15, "P"),
+    18:  ("exa", 18, "E"),
+    21:  ("zetta", 21, "Z"),
+    24:  ("yotta", 24, "Y"),
+    -1:  ("deci", -1, "d"),
+    -2:  ("centi", -2, "c"),
+    -3:  ("milli", -3, "m"),
+    -6:  ("micro", -6, "u"),
+    -9:  ("nano", -9, "n"),
+    -12: ("pico", -12, "p"),
+    -15: ("femto", -15, "f"),
+    -18: ("atto", -18, "a"),
+    -21: ("zepto", -21, "z"),
+    -24: ("yotto", -24, "y"),
+    }
+
+p10_prefix = 0
+p10_power = 1
+p10_symbol = 2
+
+########################################################################
+def p10_symbolic_abbrev(num, name_type=p10_symbol, num_is_exponent=False):
+    if type(num) == type(""):
+        num = eval(num)
+    if not num_is_exponent:
+        num = int(math.log10(num))
+    #print "num:", num
+    symfo = p10_symbolic_info.get(num)
+    if not symfo:
+        symfo = "<10^{}>".format(num)
+    else:
+        try:
+            symfo = symfo[name_type]
+        except IndexError:
+            symfo = "bad name_type: {}".format(name_type)
+    return symfo
+
+########################################################################
+# Stolen from: https://stackoverflow.com/users/748858/mgilson
+# As it, this will return (n < 1) 10^(higher power)
+# e.g. .203e-03 vs 203e-6
+## def eng_notation_str(x, symbolic_units_p=False):
+##     x = defang_num(x)
+##     y = abs(x)
+##     exponent = int(math.log10(y))
+##     eng_exponent = exponent - exponent%3
+##     z = y/10**eng_exponent
+##     sign = '-' if x < 0 else ''
+##     eng_sign = '-' if eng_exponent < 0 else ''
+##     if not symbolic_units_p:
+##         suffix = 'e' + eng_sign+"%02d" % abs(eng_exponent)
+##     else:
+##         suffix = p10_symbolic_abbrev(eng_exponent, p10_symbol,
+##                                      num_is_exponent)
+##     return (sign + str(z) + suffix)
+## to_eng_not = eng_notation_str
+## eng_not = eng_notation_str
+
+def eng_notation_str(x, m_digits=3, symbolic_units_p=False):
+    x = defang_num(x)
+    if x == 0:
+        return "0e00"
+    abs_x = float(abs(x))
+    exponent = int(math.log10(abs_x))
+    eng_exponent = exponent - exponent % 3
+    m = abs_x / (10 ** eng_exponent)
+    #print >>sys.stderr, "%04d\n" % (m,)
+    if m < 1:
+        # Don't allow a fractional m
+        # Turn 0.123eX into 123e(X-3)
+        m = m * (10 ** 3)               # "shift" m
+        eng_exponent = eng_exponent - 3 # adjust exp
+    sign = '-' if x < 0 else ''
+    eng_sign = '-' if eng_exponent < 0 else ''
+    if not symbolic_units_p:
+        suffix = 'e' + eng_sign+"%02d" % abs(eng_exponent)
+    else:
+        suffix = p10_symbolic_abbrev(eng_exponent, p10_symbol,
+                                     num_is_exponent)
+    return (sign + str(m) + suffix)
+to_eng_not = eng_notation_str
+eng_not = eng_notation_str
 
 ########################################################################
 def list_from_file_lines(file_name, sep=None):
@@ -769,6 +886,12 @@ def match_a_regexp(regexp_list, string):
         if m:
             return m
     return None
+
+K1K = 1024
+K1M = K1K * K1K
+K1G = K1M * K1K
+K32B = (1 << 32)
+K64B = (1 << 64)
 
 ########################################################################
 if __name__ == "__main__":
