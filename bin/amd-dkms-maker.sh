@@ -49,10 +49,10 @@ nuke_all()
 while (($# > 0))
 do
   case "$1" in
-      --stat-all) stat_fun=stat_all; stat_exit=exit;;
-      --nuke-all) nuke_fun=nuke_all; nuke_exit=exit;;
-      --stat|stat-1st|stat-first) stat_fun=stat_all; stat_exit=true;;
-      --nuke|--nuke-1st|--nuke-first) nuke_fun=nuke_all; nuke_exit=true;;
+      --just-stat|--stat-all|--sjs) stat_fun=stat_all; stat_exit=exit;;
+      --just-nuke|--nuke-all|--njn) nuke_fun=nuke_all; nuke_exit=exit;;
+      --and-stat|--stat|--stat-1st|stat-first) stat_fun=stat_all; stat_exit=true;;
+      --and-nuke|--nuke|--nuke-1st|--nuke-first|--njn) nuke_fun=nuke_all; nuke_exit=true;;
       --remove) remove_p=t;;
       --no-remove) remove_p=;;
       --) shift; break;;
