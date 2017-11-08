@@ -68,6 +68,9 @@ become atomic if we have to."""
     settor(new_level)
     return old_level
 
+def debug_p(level):
+    return f_debug and ((debug_level >= level) or (level is True))
+
 def pop_level(stack):
     new_level = stack.pop()
     return new_level
@@ -125,6 +128,15 @@ if (os.environ.get('TERM')
         BOLD = os.popen('tput bold').read()
         SOUT = os.popen('tput bold').read()
         NORM = os.popen('tput rmso').read()
+
+def mk_debug_prefix(leader):
+    return "{}{}".format(leader, debug_leader_sep)
+
+def mk_debug_leader(level, leader=debug_leader):
+    return '%s[%02s]' % (leader, level)
+
+def mk_debug_leader_prefix(level, leader=debug_leader):
+    return mk_debug_prefix(mk_debug_leader(level, leader=leader))
 
 ###############################################################
 def hilight_match(dat, rex, pre=SOUT, post=NORM):
@@ -217,7 +229,7 @@ def do_debug(fmt, leader, args, **kw_args):
         return lprint(v_debug_files, leader+debug_leader_sep, fmt)
 
 def do_ldebug(level, fmt, leader, *args):
-    if (debug_level >= level):
+    if debug_p(level):
         do_debug(fmt, leader, *args)
 
 ###############################################################
@@ -241,8 +253,8 @@ def cdebug(level, fmt, *args):
     #print "debug_level:", debug_level, "level:", level
     #print "debug_level >= level:", (debug_level >= level)
     # NB: True == 1, but 1 is not True
-    if (debug_level >= level) or (level is True):
-        do_debug(fmt, '%s[%02s]' % (debug_leader, level), args)
+    if debug_p(level):
+        do_debug(fmt, mk_debug_leader(level, debug_leader), args)
 
 ldebug = cdebug                         # alias, level debug
 ldprintf = cdebug
@@ -264,6 +276,11 @@ def ctracef(level, fmt, *args):
     #print "vc:level>%s<, fmt>%s<, args>%s<" % (level, fmt, args)
     return clprintf(level, v_vprint_files, vprint_leader, fmt, *args)
 ctprintf = ctracef
+
+###############################################################
+def undebug(fmt, *args):
+    if not debug_p(0):
+        debug(fmt, *args)
 
 ###############################################################
 def debug_mask_exact_set(mask):
@@ -350,7 +367,10 @@ def kwexactdebug(keys, fmt, *args):      # keyword debug
 
 ###############################################################
 def debug_exec(level, func, *args, **keys):
-    if f_debug and (debug_level >= level):
+    if not keys:
+        keys = {}
+    keys["prefix"] = mk_debug_leader_prefix(level)
+    if debug_p(level):
         func(*args, **keys)
 
 ###############################################################

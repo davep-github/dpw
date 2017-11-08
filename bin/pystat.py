@@ -7,8 +7,7 @@
 import os, sys, errno
 import argparse
 import dp_io, dp_utils
-import statistics
-import decimal
+import statistics, decimal, numpy
 
 debug_file = sys.stderr
 verbose_file = sys.stderr
@@ -26,6 +25,40 @@ IOERROR_RC = 1
 
 def num_samples(samples):
     return len(samples)
+
+def compute_histogram(a, bins=10):
+    ret = numpy.histogram(a, bins=bins)
+    return ret[0]
+
+def display_histogram(hist):
+    for n in hist:
+        s = n * '*'
+        print s
+
+##            (statistics.mean, "pys_mean"),
+##            (statistics.stdev, "pys_stdev"),
+##            (statistics.median, "pys_median"),
+
+def pys_histogram(samples, bins=10, max=0, delta=0, min=0, *args):
+    h = compute_histogram(samples, bins=bins)
+    display_histogram(h)
+
+def pys_max(samples, *args, **keys):
+    dp_io.cdebug(1, "args>%s<\n", args)
+    dp_io.cdebug(1, "keys>%s<\n", keys)
+    return max(samples)
+
+def pys_min(samples, *args, **keys):
+    return min(samples)
+
+def pys_mean(samples, *args, **keys):
+    return statistics.mean(samples)
+
+def pys_stdev(samples, *args, **keys):
+    return statistics.stdev(samples)
+
+def pys_median(samples, *args, **keys):
+    return statistics.median(samples)
 
 def main(argv):
 
@@ -57,6 +90,11 @@ def main(argv):
                          default=True,
                          action="store_false",
                          help="Don't display output in engineering notation.")
+    oparser.add_argument("--and-histogram", "--ah",
+                         dest="and_histogram_p",
+                         default=False,
+                         action="store_true",
+                         help="Don't display output in engineering notation.")
 ##e.g.     oparser.add_argument("--app-action", "--aa",
 ##e.g.                          dest="app_action_stuff", default=[],
 ##e.g.                          action=App_arg_action,
@@ -75,21 +113,22 @@ def main(argv):
     if app_args.verbose_level > 0:
         dp_io.set_verbose_level(app_args.verbose_level, enable=True)
 
-    ops = ((max, "max"),
-           (statistics.mean, "mean"),
-           (statistics.stdev, "stdev"),
-           (statistics.median, "median"),
-           (min, "min"),
+    ops = ((pys_max, "max"),
+           (pys_mean, "mean"),
+           (pys_stdev, "stdev"),
+           (pys_median, "median"),
+           (pys_min, "min"),
            )
+
+    if app_args.and_histogram_p:
+        ops = ops + ((pys_histogram, "histogram"),)
+
+    dp_io.cdebug(3, "ops: %s\n", ops)
+
     instrm = sys.stdin
 
     samples = []
-    while True:
-        s = instrm.readline()
-        s = s[:-1]
-        if not s:
-            dp_io.cdebug(1, "empty line EOF.\n")
-            break
+    for s in instrm:
         samples.append(eval(s))
         dp_io.cdebug(1, "%d: s>%s<\n", len(samples)-1, s)
 
@@ -99,20 +138,31 @@ def main(argv):
     if len(samples) == 0:
         print >>sys.stderr, "No samples, exiting."
         return 1
-        
+
+    maxv = pys_max(samples)
+    minv = pys_min(samples)
+    delta_max_min = maxv - minv
+    args = []
+    keys = {"max": maxv,
+            "min": minv,
+            "bins": 10,
+            "delta": delta_max_min}
     for op, name in ops:
-        dp_io.cdebug(1, "calling op>%s<, len(samples): %s\n", op, len(samples))
-        x = op(samples)
+        dp_io.cdebug(1, "calling op>%s<, name>%s<, len(samples): %s\n",
+                     op, name, len(samples))
+        x = op(samples, *args, **keys)
         dp_io.cdebug(1, "performed op>%s<, result: %s\n", op, x)
         if name:
             fmt = "%s: %s\n"
         else:
             fmt = "%s%s\n"
-        if app_args.engineering_notation_p:
-            x = dp_utils.eng_notation_str(x)
-        dp_io.printf(fmt, name, x)
+        if x is not None:
+            if app_args.engineering_notation_p:
+                dp_io.cdebug(4, "x: %s\n", x)
+                x = dp_utils.eng_notation_str(x)
+            dp_io.printf(fmt, name, x)
     dp_io.printf("delta(max, min): %s\n",
-                 dp_utils.eng_notation_str(max(samples) - min(samples)))
+                 dp_utils.eng_notation_str(delta_max_min))
 
 if __name__ == "__main__":
     # try:... except: nice for filters.
