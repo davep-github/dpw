@@ -155,7 +155,9 @@
                     "mk-persistent-dropping-name.sh --use-project-as-prefix emacs.bmk")))
 
 ;; For now, make my old dev area RO.
-(dp-add-force-read-only-regexp "/ras.local/edc/brahma/ec")
+(dp-add-force-read-only-regexp 
+ '("/ras.local/edc/brahma/ec"
+   "/releases.amd-17\\.40/linux"))
 
 ;; (setq dp-<type>*-regexp-list
 ;;       (dp-add-to-list
