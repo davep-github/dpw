@@ -34,6 +34,29 @@ export base_rev
 nth=${1-}
 shift
 
+loop_guts()
+{
+    local file="${1-}"
+    shift
+    local rev=$(git-nth-rev "$nth" "$file")
+    EExec_verbose_echo_id rev
+    if [ -z "$rev" ]
+    then
+        echo "$file has no ${nth}${th} previous rev."
+        continue
+    fi 1>&2
+
+  # sha1 is fixed length so putting it first lines things up.
+    EExec_verbose_msg "sha1: ${rev} file: ${file}"
+
+    if vsetp "${diff_tool}"
+    then
+        EExec git difftool --tool="${diff_tool}" "$rev" -- "$file"
+    else
+        EExec git diff "$rev" -- "$file"
+    fi
+}
+
 if [ "$nth" = 1 ]
 then
     th="st"
@@ -45,22 +68,13 @@ else
         th="th"
     fi
 fi
-for file in "$@"
-do
-  rev=$(git-nth-rev "$nth" "$file")
-  if [ -z "$rev" ]
-  then
-      echo "$file has no ${nth}${th} previous rev."
-      continue
-  fi 1>&2
-  
-  # sha1 is fixed length so putting it first lines things up.
-  EExec_verbose_msg "sha1: ${rev} file: ${file}"
 
-  if vsetp "${diff_tool}"
-  then
-      git difftool --tool="${diff_tool}" "$rev" -- "$file"
-  else
-      git diff "$rev" -- "$file"
-  fi
-done
+if [ "$*" = "" ]
+then
+    loop_guts "HEAD"
+else
+    for file in "$@"
+    do
+      loop_guts "${file}"
+    done
+fi
