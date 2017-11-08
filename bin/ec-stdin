@@ -106,18 +106,27 @@ Usage_error()
 ########################################################################
 : ${output_file_name=}
 : ${editor=ec}
-: ${nuke_file_p=}
+: ${nuke_file_p=t}
+: ${mktemp_pattern="emacs-stdin-$USER.XXXXXXX"}
+
 # Usage variable usage:
-Usage_args_info=" -o|-t) <temp-file-name>. Default is mktemp(1)
---tmpfile|--tempfile) see -o."
-Usage_synopsis=""
+Usage_args_info=" -o|-t) <temp-file-name>. Default is to use mktemp(1)
+--tmpfile|--tempfile) see -o.
+-w|--wait|--sync) Use ec-w to have the command wait until file is closed.
+--nuke|--rm|--del|--dispose|--clean) Remove temp file after reading.
+--keep) Don't remove the temp file.
+"
+Usage_synopsis="Allow Emacs to edit stdin."
 # Using ) after the args makes copy & paste between here and the
 # case statement easier.
-Usage_details="Allow Emacs to edit stdin.
+Usage_details="
+Requires the use of a temporary file. The default is to use:
+mktemp(1) ${mktemp_pattern}
+There are optional things you can do with it.
 "
 # Example of arg parsing.
 option_str="o:t:w"
-long_options=("tmpfile" "tempfile"
+long_options=("tmpfile:" "tempfile:"
 "wait" "sync"
 "nuke" "rm" "del")
 source dp-getopt+.sh || exit 1
@@ -130,8 +139,8 @@ do
 
       # Program options.
       -o|-t|--tempfile|--tmpfile) shift; output_file_name="${1}";;
-      -w|--wait|--sync) nuke_file_p=t; editor="ec-w";;
-      --nuke|--rm|--del) nuke_file_p=t;;
+      -w|--wait|--sync) editor="ec-w";;
+      --nuke|--rm|--del|--dispose|--clean) nuke_file_p=t;;
       --keep) nuke_file_p=;;
 
       # Help!
@@ -146,7 +155,7 @@ do
 done
 
 [ -z "${output_file_name}" ] && {
-    output_file_name=$(mktemp emacs-stdin-$USER.XXXXXXX --tmpdir) || {
+    output_file_name=$(mktemp "${mktemp_pattern}" --tmpdir) || {
         echo "mktemp(1) failed, rc: $?."
         exit 1
     } 1>&2
@@ -164,7 +173,7 @@ EExec "${editor}" "${output_file_name}"
 
 [ -n "${nuke_file_p}" ] && {
     rm -f "${output_file_name}" || {
-        echo "mktemp(1) failed, rc: $?."
+        echo "rm ${output_file_name} failed, rc: $?."
         exit 1
     } 1>&2
 }      
