@@ -1,0 +1,179 @@
+#!/bin/bash
+#
+# Move some stuff over there, and make links so that it still looks like it's
+# here.
+source script-x
+progname="$(basename $0)"
+source eexec
+
+: ${cp_opts:="-irPp"}
+: ${ln_opts:=""}
+: ${ln_name_transform=""}
+: ${suffix=""}
+: ${HIDEY_HOLE="HIDE"}
+: ${hide_op:=hide_op_mv}
+
+#e.g.# # Usage variable usage:
+Usage_args_info=" src dst"
+Usage_synopsis="cp src to dst, hide original src dir and  symlink dst to src.
+Effectively: cp src dst; mv src <HIDE>; ln -s dst src
+"
+Usage_details="-n -- Show what would happen but don't do it. [eexec]
+-v -- Be verbose about it. [eexec]
+-q -- Anti-verbose. [eexec]
+
+-p <prefix> -- Prefix link name with <prefix>
+-r|-d -- Move src to dst/<src-with-no-dot> and ln dst/<src-with-no-dot> src.
+         Used to move dot files to my dotfile [.rc] dir.
+"
+# Example of arg parsing.
+option_str="nvqp:rd:s:"
+source dp-getopt+.sh
+for i in "$@"
+do
+  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  case $1 in
+      # eexec support
+      -n) EXEC=echo; EExecDashN;; # Don't actually execute stuff
+      -v) VERBOSE="echo $progname: "; EExecVerbose;;
+      -q) VERBOSE=":"; EExecQuiet;;
+
+      # Program options.
+      -p) shift; ln_name_transform=$1;;
+      -s) shift; suffix="${1}";;
+      -r|-d) ln_name_transform='s/^(\.)(.*)$/\2/';;
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      *) echo 1>&2 "Unsupported option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+
+hide_op_mv()
+{
+    local src="${1}"; shift
+
+    EExec mv "${src}" "${HIDEY_HOLE}"
+}
+
+hide_op_rm()
+{
+    local src="${1}"; shift
+
+    # For such a potentially disastrous operation, let's be as safe as
+    # possible and remove my (the) traditional -f.
+    EExec rm -r "${1}"
+}
+
+cp_one()
+{
+    #eko "$@"
+
+    local src="$1"; shift
+    local dst="$1"; shift
+    local link_name="$1"; shift
+    local suffix="${1}"; shift
+    local hide_op="${1}"; shift
+    local sep="/"
+
+    src=$(normpath "$src")
+    dst=$(normpath "$dst")
+    link_name=$(normpath "$link_name")"${suffix}"
+    realpath_src=$(realpath "$src")
+    EExec_verbose_msg "realpath_src>$realpath_src<"
+
+    realpath_dst=$(realpath "$dst")
+    EExec_verbose_msg "realpath_dst>$realpath_dst<"
+
+    if [ "$realpath_src" == "$realpath_dst" ]; then
+        echo "realpath of src [$realpath_src]
+  is the same as
+  dst [$realpath_dst]"
+        if [ -L "$src" ]; then
+            echo "src[$realpath_src] is already a
+  link to dst[$realpath_dst].
+  Senior moment? Did you already do this?"
+        fi
+        exit 1
+    fi 1>&2
+
+    [ -e "$src" ] || {
+        echo "src[$src] does not exist."
+        exit 1
+    } 1>&2
+    local link_target="${dst}${sep}${link_name}"
+    EExec_verbose_echo_id link_target
+    if [ -e "$link_target" ]
+    then
+        # This isn't quite right because the following ops result in errors
+        # that don't make sense because we are in a mode where there may be
+        # an error and yet it doesn't matter because we aren't doing anything
+        # anyway.
+        if false && EExecDashN_p
+        then
+            echo "Link target[$link_target] exists."
+        else
+            read -e -p "Link target[$link_target] exists.  Continue[y/N]? "
+            case "$REPLY" in
+                [Yy]) ;;
+                *) echo 1>&2 "Exiting."; exit 1;;
+            esac
+        fi
+    fi
+    if [ -L "$src" ]
+    then
+        read -e -p "src is a link.  Is this what you really want[y/N]? "
+        case "$REPLY" in
+            [Yy]) ;;
+            *) echo 1>&2 "Exiting."; exit 1;;
+        esac
+    fi
+
+    # ln syntax: mv src link-name
+    # ln syntax: mv src... dir
+    # cp-ln .mozilla-crap /bfd3/davep HIDE   # will go into /bfd3/davep/.mozilla-crap
+    #       src       link-name       src-hidey-hole
+    # cp .mozilla-crap /bfd3/davep HIDE
+    # mv .mozilla-crap HIDE
+    # ln -s /bfd3/davep/mozilla-crap .mozilla-crap
+    #          full-src             link-name
+    EExec cp ${cp_opts} "${src}" "${dst}" \
+      && "${hide_op}" "${src}" \
+      && EExec ln -s ${ln_opts} "${link_target}" "${src}"
+}
+
+argv=("$@")
+argc="$#"
+((argc < 2)) && {
+    Usage "Not enough args provided."
+    exit 1
+} 1>&2
+
+
+src="${1}"; shift
+dst="${1}"; shift
+
+(($# > 0)) && {
+    if [[ "${1}" =~ ^--(NUKE|REMOVE|DELETE)$ ]]
+    then
+        hide_op=hide_op_rm
+    else
+        hide_op=hide_op_mv
+        HIDEY_HOLE="${1-HIDE}"
+    fi
+    shift
+}
+
+#eko "$@"
+
+if [ -n "$ln_name_transform" ]
+then
+    link_name=$(echo "$src" | sed -r "$ln_name_transform")
+else
+    link_name="$src"
+fi
+
+cp_one "$src" "${dst}" "$link_name" "${suffix}" "${hide_op}"
+
