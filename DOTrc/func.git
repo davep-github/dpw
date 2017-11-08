@@ -110,7 +110,7 @@ git()
         then
             while :
             do
-              read -e -p "${func}Perform the command anyway [y/N]?"
+              read -e -p "${func}Perform the command anyway [y/N]? "
               case "$REPLY" in
                   [yY1t]) rc=0; break;;
                   [nN0]|"") rc=1; break;;
