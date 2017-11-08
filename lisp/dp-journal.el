@@ -1825,6 +1825,7 @@ Also will use prefix-arg as default NUM-MONTHS."
 (defalias 'cx0 'dpj-new-topic)          ;cx -- Context switch, same window.
 ;;;###autoload
 (defalias 'cx. 'dpj-new-topic)          ;cx -- Context switch, same window.
+(defalias 'cxd 'dpj-new-topic)          ;cx -- Context switch, same window.
 
 ;;;###autoload
 (defalias 'nt 'dpj-new-topic-other-window) ;nt -- new topic
