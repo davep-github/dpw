@@ -29,7 +29,7 @@ continuation_regexp)
 ##e.g.         regexps = getattr(namespace, self.dest)
 ##e.g.         regexps.append(values)
 ##e.g.         setattr(namespace, self.dest, regexps)
-##e.g.setattr(namespace, "highlight_grep_matches_p", True)
+##e.g.         setattr(namespace, "highlight_grep_matches_p", True)
 
 def process_file(file_name,
                  continuation_regexp=NEWLINE_CONTINUATION_REGEXP,
