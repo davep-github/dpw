@@ -59,7 +59,7 @@ def extend_list(l, new):
 
 ########################################################################
 def append_to_dict_of_lists(hash, key, item):
-    '''Convenience function that handles adding a list item to a hash item
+    '''Convenience function that handles adding a list item to a hash *ITEM*
     (which is a list) when the hash[key] item does not exist.'''
     try:
         hash[key].append(item)
@@ -69,7 +69,7 @@ append_to_hash_of_lists  = append_to_dict_of_lists
 
 ########################################################################
 def extend_dict_of_lists(dict, key, items):
-    '''Convenience function that handles adding a list item to a hash item
+    '''Convenience function that handles adding a list item to a hash *ITEM*
     (which is a list) when the hash[key] item does not exist.'''
     try:
         dict[key].extend(items)
