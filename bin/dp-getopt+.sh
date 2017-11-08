@@ -122,9 +122,8 @@ running_as_script && {
 #
 
 #e.g.# # Usage variable usage:
-#e.g.# Usage_args_info=" Lookit the names!"
-#e.g.# Usage_synopsis="Manky Scottish git.
-#e.g.# They'll do you up a treat!"
+#e.g.# Usage_args_info=" Usage_args_info"
+#e.g.# Usage_synopsis="Usage_synopsis: Clean FS with sudo rm -rf /"
 #e.g.# # Using ) after the args makes copy & paste between here and the
 #e.g.# # case statement easier.
 #e.g.# Usage_details="${EExec_parse_usage}
