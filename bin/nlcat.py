@@ -4,7 +4,7 @@
 # davep's standard new Python file template.
 #
 
-import os, sys, errno
+import os, sys, errno, re
 import argparse
 import dp_io
 
@@ -12,17 +12,31 @@ debug_file = sys.stderr
 verbose_file = sys.stderr
 warning_file = sys.stderr
 
+NEWLINE_CONTINUATION_REGEXP = "\\\\$"
+
 BROKEN_PIPE_RC = 1
 IOERROR_RC = 1
+
+def dump_cont_pat(continuation_regexp, *args, **keys):
+    prefix = keys["prefix"]
+    dp_io.printf("%scontinuation_regexp>%s<\n", prefix,
+continuation_regexp)
+    for c in continuation_regexp:
+        dp_io.printf("%sc>%s<\n", prefix, c)
 
 ##e.g. class App_arg_action(argparse.Action):
 ##e.g.     def __call__(self, parser, namespace, values, option_string=None):
 ##e.g.         regexps = getattr(namespace, self.dest)
 ##e.g.         regexps.append(values)
 ##e.g.         setattr(namespace, self.dest, regexps)
-##e.g.         setattr(namespace, "highlight_grep_matches_p", True) 
+##e.g.setattr(namespace, "highlight_grep_matches_p", True)
 
-def process_file(file_name, continuation_pattern = "\\", sep=''):
+def process_file(file_name,
+                 continuation_regexp=NEWLINE_CONTINUATION_REGEXP,
+                 sep='',
+                 nuke_regexp=None):
+
+    dp_io.debug_exec(1, dump_cont_pat, continuation_regexp)
     if type(file_name) == type(""):
         fop = open(file_name)
         close_p = True
@@ -32,36 +46,39 @@ def process_file(file_name, continuation_pattern = "\\", sep=''):
     concat_p = False
     total_line = ''
     lines = []
-    for line in fop:
-        dp_io.cdebug(2, "raw line>%s<\n", line)
-        line = str.rstrip(line, '\n')
-        dp_io.cdebug(2, "stripped>%s<\n", line)
+    if type(continuation_regexp) == type(""):
+        continuation_regexp = re.compile(continuation_regexp)
 
-        continued_line = line[-1:] == continuation_pattern
+    for line in fop:
+        dp_io.cdebug(3, "raw line>%s<\n", line)
+        line = str.rstrip(line, '\n')
+        dp_io.cdebug(3, "stripped>%s<\n", line)
+
+        continued_line = continuation_regexp.search(line)
         if continued_line:
-            line = line[:-1]
-            dp_io.cdebug(2, "continued_line?line>%s<\n", line)
+            line = continuation_regexp.sub("", line)
+            dp_io.cdebug(3, "continued_line?line>%s<\n", line)
 
         if concat_p:
-            dp_io.cdebug(1, "1,concat_p is True, line>%s<\n", line)
+            dp_io.cdebug(2, "1,concat_p is True, line>%s<\n", line)
             dp_io.cdebug(1, "1.1,concat_p is True, total_line>%s<\n", total_line)
+            if nuke_regexp:
+                # use ^ to nuke a prefix.
+                continuation_regexp.sub("", line)
             total_line = total_line + sep + line
-            dp_io.cdebug(1, "2,concat_p is True, total_line>%s<\n", total_line)
+            dp_io.cdebug(2, "2,concat_p is True, total_line>%s<\n", total_line)
         else:
-            dp_io.cdebug(1, "3,concat_p is False, line>%s<\n", line)
+            dp_io.cdebug(2, "3,concat_p is False, line>%s<\n", line)
             total_line = line
-            dp_io.cdebug(1, "4,concat_p is False, total_line>%s<\n", total_line)
+            dp_io.cdebug(2, "4,concat_p is False, total_line>%s<\n", total_line)
         if continued_line:
-            dp_io.cdebug(1, "5,escaped_newline, line>%s<\n", line)
-            #total_line = total_line + line[:-2]
-            dp_io.cdebug(1, "6,escaped_newline, total_line>%s<\n", total_line)
+            dp_io.cdebug(2, "5,escaped_newline, line>%s<\n", line)
+            dp_io.cdebug(2, "6,escaped_newline, total_line>%s<\n", total_line)
             concat_p = True
             continue
         else:
             concat_p = False
-        dp_io.cdebug(1, "7,final, total_line>%s<\n", total_line)
-#        if (len(total_line) > 0) and total_line[-1] == "\n":
-#            total_line = total_line[:-1]
+        dp_io.cdebug(2, "7,final, total_line>%s<\n", total_line)
         lines.append(total_line)
         total_line = ""
     if close_p:
@@ -84,6 +101,16 @@ def main(argv):
                          default=-1,
                          help="Set verbose/trace level. Use with, e.g. "
                          "dp_io.ctracef(<n>, fmt [, ...])")
+    oparser.add_argument("-c", "--continuation-pat", "--cp",
+                         dest="continuation_regexp",
+                         type=str,
+                         default=NEWLINE_CONTINUATION_REGEXP,
+                         help="Continuation indicator")
+    oparser.add_argument("-s", "--sep", "--separator",
+                         dest="separator",
+                         type=str,
+                         default="",
+                         help="Separate continuations with this.")
     oparser.add_argument("-q", "--quiet",
                          dest="quiet_p",
                          default=False,
@@ -111,9 +138,11 @@ def main(argv):
     if not file_names:
         file_names = (sys.stdin,)
     for file_name in file_names:
-        lines = process_file(file_name)
+        lines = process_file(file_name,
+                             continuation_regexp=app_args.continuation_regexp,
+                             sep=app_args.separator)
         for l in lines:
-            dp_io.cdebug(4, "line>%s<\n", l)
+            dp_io.cdebug(5, "line>%s<\n", l)
             # dp_io.undebug("%s", l)
             dp_io.printf("%s\n", l)
 
@@ -130,4 +159,3 @@ if __name__ == "__main__":
             sys.exit(BROKEN_PIPE_RC)
         print >>sys.stderr, "IOError>%s<" % (e,)
         sys.exit(IOERROR_RC)
-
