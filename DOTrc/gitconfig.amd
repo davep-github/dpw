@@ -31,13 +31,13 @@
 
 [pull]
 	disabled = true
+        query = true
         
 [format]
 	signoff = true
 
 [push]
 	disabled = true
-        query = true
         disablemsg = Prevent careless pushes to brahma repo.
         checkop = true
         msg = "You meant `stash [push]' didn't you?"
