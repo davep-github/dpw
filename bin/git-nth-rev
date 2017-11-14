@@ -109,7 +109,7 @@ do
       EExec_verbose_echo_id nth
       if ((nth >= num_revs))
       then
-          echo 1>&2 "File >$file< only has ${base_rev} plus $((num_revs - 1)) revs."
+          echo 1>&2 "File >$file< has only ${base_rev} and $((num_revs - 1)) other revs."
           exit 1
       fi
       revs=$(git rev-list --max-count=${max_count} --skip="$nth" "$base_rev" "$file")
