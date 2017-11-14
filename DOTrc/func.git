@@ -119,7 +119,7 @@ git()
             done
          fi
     fi
-    
+
     case "${rc}" in
         0) command git "${cmd}" "$@"
            rc=$?
