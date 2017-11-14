@@ -123,13 +123,14 @@ output_file=
 auto_output_file=
 output_filter=just_cat
 verbose=0
+show_rev_p=
 
 while (($# > 0))
 do
   case "${1}" in
     -o|--auto-name) auto_output_file=t;;
     -O|-c|--set-name|--cp) shift; output_file="${1}";;
-    --v|--verbose) ((++verbose));;
+    -r) show_rev_p=t;;
     --) shift; break;;
     *) break;;
   esac
@@ -151,13 +152,14 @@ cat_to()
 
 just_cat()
 {
-    cat
+    EExec cat
 }
 
 [ -z "$*" ] && {
     echo 1>&2 "Usage: git-cat [commit|-n[0-9]+|-[0-9]+|--oldest|--original|--earliest] file+"
     exit 1
 }
+
 for f in "$@"
 do
   if [ -n "$nth" ]
@@ -173,9 +175,8 @@ do
           exit 1
       } 2>& 1
   fi
-#  echo_id2 commit
-#  echo_id2 f
-#  exit 99
+
+  [ -n "${show_rev_p}" ] && git rev-parse "${commit}"
 
   if [ -n "${auto_output_file}" ]
   then
