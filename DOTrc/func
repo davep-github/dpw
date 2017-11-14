@@ -868,9 +868,10 @@ hist_grep()
     # Well, boil my britches.  GNU continues its assault on the Unix Way of
     # small programs and pipes by adding a --recursive option.  I suppose it
     # makes sense since one of the motivations was lack of memory making
-    # small programs essential.  Perhaps review man pages more often?  But my
-    # memory is so,,, what's the word? Perfect.  That's it: perfect. So I
-    # rarely need to RTFM.
+    # small programs essential, and this is the case no more.  Perhaps review
+    # man pages more often?  But my memory is so,,, what's the word? Perfect.
+    # That's it: perfect. One may go so far as to say I have a GMOAT.  So I
+    # rarely need to [not] RTFM.
     "${DP_HIST_GREP_GREPPER}" --directories="${directories_opt}" --with-filename \
         "$@" $hist_files        # All history files
     history | $DP_HIST_GREP_GREPPER "$@" # Current history.
@@ -891,6 +892,13 @@ hist_ggrep()
 {
     DP_HIST_GREP_GREPPER=grep hist_grep "$@"
 }
+
+hist_emacs()
+{
+    hist_grep ".*" | ec-stdin
+}
+
+alias hemacs='hist_emacs'
 
 export -f hist_grep hist_ggrep hist_fgrep hist_egrep
 
