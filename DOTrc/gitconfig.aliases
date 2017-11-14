@@ -235,3 +235,10 @@
         # Date of a particular rev/commit.
         # Use rev-date ... <FILE> | tail -n1 to see when a file was added.
         rev-date = log --oneline --date=iso-strict -n1 --format='%ad %h \"%s\"'
+
+        gpupush = push origin HEAD:refs/for/master
+        gerritpush = push origin HEAD:refs/for/master
+        amdpush = push origin HEAD:refs/for/master
+        pushgpu = push origin HEAD:refs/for/master
+        pushgerrit = push origin HEAD:refs/for/master
+        pushamd = push origin HEAD:refs/for/master
