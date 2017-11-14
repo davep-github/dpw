@@ -127,22 +127,22 @@ then
         echo 1>&2 "No branch given and current branch cannot be found. Exiting."
         exit 1
     fi
-    read -p "No branch specified.  Use current branch [${current_branch}](y/N)? "
+    read -p "No branch specified.  Use current branch [${current_branch}](Y/n)? "
     case "${REPLY}" in
-        [yYt1]) branch="${current_branch}";;
+        ""|[yYt1]) branch="${current_branch}";;
         *) echo "Exiting."; exit 0;;
     esac
 fi
 
 set -- git fpush "${@}" "${remote}" "${branch}"
 
-eko "$@"
-echo "$@"
+#eko "$@"
+#echo "$@"
 
 [ -n  "${ask}" ] && {
-    read -p "Run command: $* (y/N)? "
+    read -p "Run command: $* (Y/n)? "
     case "${REPLY}" in
-        [yYt1]) branch="${current_branch}";;
+        ""|[yYt1]) branch="${current_branch}";;
         *) echo "Exiting."; exit 0;;
     esac
 }
