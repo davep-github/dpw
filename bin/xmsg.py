@@ -35,11 +35,12 @@ class Application(Frame):
 			    self.master.title(val)
 			else:
 			    self.usage()
-		
+
 	def create_widgets(self):
 	    self.message = Message(self, 
-				   text=string.joinfields(self.args, ''))
-	    self.message.pack()
+				   text=string.joinfields(self.args, ' '))
+	    self.message.pack(side=TOP, expand=TRUE, fill=BOTH)
+	    self.pack(side=TOP, expand=TRUE, fill=BOTH)
 
 #
 ###################################
