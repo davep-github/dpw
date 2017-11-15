@@ -115,7 +115,7 @@ errno_emit___not()
 # This matches the old/original behavior.
 # I don't know if anyone out there relies on this, though.
 # If not, then desc or name would be better.
-errno_emitter=errno_emit_match	
+errno_emitter=errno_emit_match
 
 # Set variable defaults that can be changed via command line options.
 # e.g.: flag=
@@ -142,7 +142,7 @@ Usage_details="-n name only.
 "
 
 # The real meat...
-option_str="nstdvpNxX:hm+e"
+option_str="nstdvpNxX:hm+er"
 long_options=(
     desc
     verbose-emitter verbose
@@ -151,7 +151,8 @@ long_options=(
     hex 0x 16
     negate
     abs
-    errno-files show-errno-files
+    errno-files show-errno-files senf enf
+    set-exit-code set-return-code rc ec
 )
 #echo "0:DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT>$DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT<"
 $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDOUT "0:@>$@<"
@@ -167,7 +168,8 @@ for i in "$@"; do
 	-v|--verbose-emitter|--verbose) errno_emitter=errno_emit_verbose;;
 	-t|--terse) if vunsetp $terse_p; then terse_p=t; else terse_p=; fi ; ;;
 	-p|--pristine) errno_emitter=errno_emit_pristine_args;;
-        -x) return_exit_code_p=t;
+        -r|--set-exit-code|--set-return-code|--rc|--ec) 
+            return_exit_code_p=t;
             return_exit_code_index=1
             errno_emitter=errno_emit___not;;
         -X) return_exit_code_p=t;
@@ -176,7 +178,7 @@ for i in "$@"; do
         -h|--hex|--0x|--16) use_hex_p=t;;
         -m|--negate) make_negative_p=t;;
         -+|--abs) make_positive_p=t;;
-        -e|--errno-files|--show-errno-files)
+        -e|--errno-files|--show-errno-files|--senf|--enf)
              echo "${ERRNO_FILES}"
              exit 0;;
         --) shift; break;;
