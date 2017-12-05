@@ -124,15 +124,15 @@ def state_fun_find_open(state):
             if state.d_match_num >= state.d_nth:
                 state.d_found_open_re_p = True
                 break
-    print "+O: ========================================================================"
+    #print "+O: ========================================================================"
     if state.d_found_open_re_p:
         state.d_line_handler(state, line)
 
-    state.d_nth = 1                      # We want to process each open regexp.
     if state.d_found_open_re_p:
         state.change_state_fun(state_fun_found_open_regexp)
     else:
         state.change_state_fun(state_fun_open_eof)
+    state.d_nth = 1                      # We want to process each open regexp.
     return state
 
 ########################################################################
@@ -147,7 +147,8 @@ def raise_EOFError(state, message):
 
 ########################################################################
 def state_fun_open_eof(state):
-    raise_EOFError("Cannot find {}th opening regexp.".format(state.d_nth))
+    s = "Cannot find opening regexp."
+    raise EOFError(s)
 
 ########################################################################
 def state_fun_cat_from_offset(state):
@@ -174,7 +175,7 @@ def state_fun_find_close(state):
         dp_io.cdebug(1, "close(): offset: %d, line>%s<\n", state.fop_tell(),
                      line[:-1])
 
-    print "-C: ========================================================================"
+#    print "-C: ========================================================================"
 
     if found_close_re:
         if (state.EOF_ONLY and not state.EOF_FOR_CLOSE_OK):
@@ -290,6 +291,16 @@ def main(argv):
                          default=False,
                          action="store_false",
                          help="EOF need not be the end of the region.")
+    oparser.add_argument("--delimit", "--wrap"
+                         dest="delimit_p",
+                         default=False,
+                         action="store_true",
+                         help="Wrap regions in delimiters.")
+    oparser.add_argument("--no-delimit", "--no-wrap"
+                         dest="delimit_p",
+                         default=False,
+                         action="store_false",
+                         help="Wrap regions in delimiters.")
     oparser.add_argument("--nth-open-bracket", "--nth",
                          dest="nth_open_bracket",
                          type=int,
@@ -358,6 +369,8 @@ if __name__ == "__main__":
             sys.exit(BROKEN_PIPE_RC)
         print >>sys.stderr, "IOError>%s<" % (e,)
         sys.exit(IOERROR_RC)
+    except EOFError:
+        sys.exit(0)
 #    except Exception, e:
 #        print >>sys.stderr, "Exception: e: {}".format(e)
 #        sys.exit(1)
