@@ -30,11 +30,11 @@ class HappyException(Exception):
         self.d_args = args
         self.d_kw_args = kw_args
 
-####################################################################################
+##############################################################################
 def print_line(state, line):
     state.d_out_file.write(line)
 
-####################################################################################
+##############################################################################
 class State_data_t(object):
     def __init__(self, file_name, nth, open_regexp, close_regexp,
                  state_fun,
@@ -45,8 +45,9 @@ class State_data_t(object):
         self.d_file_name = file_name
         self.d_nth = nth
         self.d_open_regexp = dp_utils.re_compile_with_case_convention(open_regexp)
-        if close_regexp is not None:
-            self.d_close_regexp = dp_utils.re_compile_with_case_convention(close_regexp)
+        if close_regexp is None:
+            close_regexp = ".*"
+        self.d_close_regexp = dp_utils.re_compile_with_case_convention(close_regexp)
         self.d_state_fun = state_fun
         self.d_app_args = app_args
         self.d_line_handler = line_handler
@@ -140,7 +141,7 @@ class State_data_t(object):
             dp_io.cdebug(3, "crank(): about to run state fun: {}\n", self.d_state_fun)
             self.d_state_fun(self)
 
-#####################################################################################
+##############################################################################
 def cat_from_offset(state):
     if dp_io.verbose_p(4):
         pre = "cat>"
@@ -179,11 +180,11 @@ def print_open_delimiter(state):
 def print_close_delimiter(state):
     print_delimiter(state, "-C: ")
 
-####################################################################################
+##############################################################################
 def state_fun_nop(state):
     return state
 
-####################################################################################
+##############################################################################
 def state_fun_find_open(state):
     state.d_fop
     open_cre = state.d_open_regexp
@@ -215,7 +216,7 @@ def state_fun_find_open(state):
                          state.fop_tell(), line[:-1])
             
     if state.d_found_open_re_p and state.delimit_p:
-        print_open_delimiter()
+        print_open_delimiter(state)
     if state.d_found_open_re_p:
         state.d_line_handler(state, line)
 
@@ -226,17 +227,17 @@ def state_fun_find_open(state):
     state.d_nth = 1 # We want to process each open regexp after skipping the first <n>
     return state
 
-####################################################################################
+##############################################################################
 def state_fun_found_open_regexp(state):
     state.change_state_fun(state_fun_find_close)
     return state
 
-#####################################################################################
+##############################################################################
 def raise_EOFError(state, message):
     state.d_error_msg = message
     raise EOFError(state.d_error_msg)
 
-#####################################################################################
+##############################################################################
 def state_fun_open_eof(state):
     if state.matches():
         cat_from_offset(state)
@@ -244,7 +245,7 @@ def state_fun_open_eof(state):
     else:
         raise_EOFError("Hit EOF without finding any opening regexps.")
 
-#####################################################################################
+##############################################################################
 def state_fun_find_close(state):
     fop = state.d_fop
     close_cre = state.d_close_regexp
@@ -264,7 +265,7 @@ def state_fun_find_close(state):
                      state.fop_tell(), line[:-1])
 
     if state.delimit_p:
-        print_close_delimiter()
+        print_close_delimiter(state)
 
     if found_close_re:
         if (state.EOF_ONLY and not state.EOF_FOR_CLOSE_OK):
@@ -277,7 +278,7 @@ def state_fun_find_close(state):
         state.change_state_fun(state_fun_close_eof)
     return state
 
-#####################################################################################
+##############################################################################
 def state_fun_close_eof(state):
     close_fop(state)
     if (not state.EOF_FOR_CLOSE_OK):
@@ -285,20 +286,20 @@ def state_fun_close_eof(state):
     state.stop()
     return state
 
-#####################################################################################
+##############################################################################
 def state_fun_found_close(state):
     if state.EOF_FOR_CLOSE_OK:
         cat_from_offset(state)
     else:
         state.change_state_fun(state_fun_find_open)
 
-#####################################################################################
+##############################################################################
 def close_fop(state):
     if state.d_close_p:
         state.d_fop.close()
         state.d_close_p = False
 
-#####################################################################################
+##############################################################################
 def open_fop(state, fop_or_name):
     if type(fop_or_name) == type(""):
         close_p = True
@@ -307,7 +308,7 @@ def open_fop(state, fop_or_name):
         state.d_close_p = False
         state.d_fop = file
 
-######################################################################################
+###############################################################################
 def handle_file(file, app_args):
     nth = app_args.nth_open_bracket
     dp_io.cdebug(2, "open_regexp>%s<\n", app_args.open_regexp)
@@ -330,7 +331,7 @@ def handle_file(file, app_args):
     if app_args.trace_on_exit_p:
         state.state_trace()
 
-######################################################################################
+###############################################################################
 def main(argv):
 
     oparser = argparse.ArgumentParser()
@@ -380,7 +381,7 @@ def main(argv):
                          dest="EOF_ONLY",
                          default=False,
                          action="store_false",
-                         help="EOF need not be the end of the region.")
+                         help="Turn off EOF_ONLY.")
     oparser.add_argument("--delimit", "--wrap",
                          dest="delimit_p",
                          default=False,
@@ -401,7 +402,11 @@ def main(argv):
                          default=False,
                          action="store_false",
                          help="Show mismatching line when looking for open regexp.")
-
+    oparser.add_argument("-l", "--show-last-only", "--last",
+                         dest="show_last_only_p",
+                         default=False,
+                         action="store_true",
+                         help="Only show the last open regexp to EOF.")
     oparser.add_argument("--nth-open-bracket", "--nth",
                          dest="nth_open_bracket",
                          type=int,
