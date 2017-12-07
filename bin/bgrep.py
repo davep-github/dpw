@@ -24,6 +24,7 @@ DONE_STATE = "DONE, Just, DONE!"
 ##e.g.         setattr(namespace, self.dest, regexps)
 ##e.g.setattr(namespace, "highlight_grep_matches_p", True)
 
+##############################################################################
 class HappyException(Exception):
     def __init__(self, *args, **kw_args):
         Exception.__init__(self, *args)
@@ -32,16 +33,17 @@ class HappyException(Exception):
 
 ##############################################################################
 def print_line(state, line):
-    state.d_out_file.write(line)
+    state.d_output_file.write(line)
 
 ##############################################################################
 class State_data_t(object):
     def __init__(self, file_name, nth, open_regexp, close_regexp,
                  state_fun,
                  app_args,
+                 fop = None,
                  line_handler=print_line,
                  end_state=DONE_STATE,
-                 out_file=sys.stderr):
+                 output_file=sys.stdout):
         self.d_file_name = file_name
         self.d_nth = nth
         self.d_open_regexp = dp_utils.re_compile_with_case_convention(open_regexp)
@@ -50,10 +52,10 @@ class State_data_t(object):
         self.d_close_regexp = dp_utils.re_compile_with_case_convention(close_regexp)
         self.d_state_fun = state_fun
         self.d_app_args = app_args
+        self.d_fop = fop
         self.d_line_handler = line_handler
         self.d_end_state = end_state
-        self.d_out_file = out_file
-        self.d_fop = None
+        self.d_output_file = output_file
 
         # <:non-argument-vars:>
         self.d_close_p = False
@@ -63,14 +65,17 @@ class State_data_t(object):
         self.d_match_num = 0
         self.d_run_p = True
         self.d_most_recent_open_regexp_match_offset = None
-        self.open_fop()
+        self.open_fop(close_and_reopen_p=True)
 
-    ##################################################################################
+    ##############################################################################
     # Yarr, beware, ye be fer sure, or ye'll be brought down by thar collisions.
     def __getattr__(self, name):
         return getattr(self.d_app_args, name)
 
+    ##############################################################################
     def open_fop(self, close_and_reopen_p=False):
+        dp_io.cdebug(1, "open_fop(), self.d_file_name>{}<\n", self.d_file_name)
+        dp_io.cdebug(1, "open_fop(), self.d_fop>{}<\n", self.d_fop)
         fop = self.d_fop
         if fop and not fop.closed:
             if close_and_reopen_p:
@@ -79,28 +84,41 @@ class State_data_t(object):
                 raise RuntimeError("Attempting to open already opened file.")
         fop = open(self.d_file_name)
         self.d_fop = fop
-            
+
+    ##############################################################################
+    def close_fop(state):
+        if state.d_close_p:
+            state.d_fop.close()
+            state.d_close_p = False
+
+    ##############################################################################
     def count_match(self):
         self.d_match_num += 1
 
+    ##############################################################################
     def matches(self):
         return self.d_match_num
 
+    ##############################################################################
     def fop_tell(self):
         return self.d_fop.tell()
 
+    ##############################################################################
     def fop_seek(self, offset):
         return self.d_fop.seek(offset)
 
+    ##############################################################################
     def fop_seek_match(self):
         off = self.d_most_recent_open_regexp_match_offset
         if off is None:
             state.die(exception=ValueError("No seek matches"))
         return self.fop_seek(self.d_most_recent_open_regexp_match_offset)
 
+    ##############################################################################
     def fop_readline(self):
         return self.d_fop.readline()
 
+    ##############################################################################
     def change_state_fun(self, new_fun):
         dp_io.cdebug(3, "Change state from: {} to {}\n",
                      self.d_state_fun, new_fun)
@@ -108,6 +126,7 @@ class State_data_t(object):
         self.d_fun_change_list.append(self.d_state_fun)
 #        dp_io.cdebug_exec(5, self.state_trace)
 
+    ##############################################################################
     def state_trace(self):
         i = 0
         dp_io.printf("State trace:\n")
@@ -115,34 +134,41 @@ class State_data_t(object):
             print "{}: {}".format(i, fun)
             i += 1
 
+    ##############################################################################
     def __call__(self):
-        return self.state_fun(self)
+        return self.d_state_fun(self)
 
+    ##############################################################################
     def die(self, message="", exception=None):
         if message:
             raise Exception(message)
         else:
             raise exception
-    
+
+    ##############################################################################
     def in_end_state(self):
         dp_io.cdebug(2, "end_state(): state_fun: %s\nend_state: %s\n",
                      self.d_state_fun, self.d_end_state)
         return self.d_state_fun == self.d_end_state
 
+    ##############################################################################
     def run_p(self):
         return self.d_run_p and not self.in_end_state()
 
+    ##############################################################################
     def stop(self):
         self.change_state_fun(DONE_STATE)
         self.d_run_p = False
 
+    ##############################################################################
     def crank(self):
         while self.run_p():
             dp_io.cdebug(3, "crank(): about to run state fun: {}\n", self.d_state_fun)
-            self.d_state_fun(self)
+            self()
 
 ##############################################################################
 def cat_from_offset(state):
+    dp_io.cdebug(1, "enter cat_from_offset()\n")
     if dp_io.verbose_p(4):
         pre = "cat>"
         suf = "<cat\n"
@@ -244,12 +270,13 @@ def state_fun_open_eof(state):
         state.stop()
     else:
         raise_EOFError("Hit EOF without finding any opening regexps.")
+    return state
 
 ##############################################################################
 def state_fun_find_close(state):
     fop = state.d_fop
     close_cre = state.d_close_regexp
-    state.d_found_close_re = False
+    found_close_re = False
 
     while True:
         line = state.fop_readline()
@@ -261,7 +288,7 @@ def state_fun_find_close(state):
                 found_close_re = True
                 break
 
-        dp_io.cdebug(1, "state_fun_find_close(): offset: %d, line>%s<\n",
+        dp_io.cdebug(2, "state_fun_find_close(): offset: %d, line>%s<\n",
                      state.fop_tell(), line[:-1])
 
     if state.delimit_p:
@@ -269,8 +296,10 @@ def state_fun_find_close(state):
 
     if found_close_re:
         if (state.EOF_ONLY and not state.EOF_FOR_CLOSE_OK):
+            dp_io.cdebug(1, "state_fun_find_close(), found_close_re EOF_ONLY and not EOF_FOR_CLOSE_OK\n")
             state.change_state_fun(state_fun_close_eof)
         else:
+            dp_io.cdebug(1, "state_fun_find_close(), found_close_re not EOF_ONLY or EOF_FOR_CLOSE_OK\n")
             state.change_state_fun(state_fun_found_close)
     elif state.EOF_FOR_CLOSE_OK:
         state.change_state_fun(state_fun_found_close)
@@ -280,7 +309,7 @@ def state_fun_find_close(state):
 
 ##############################################################################
 def state_fun_close_eof(state):
-    close_fop(state)
+    state.close_fop()
     if (not state.EOF_FOR_CLOSE_OK):
         raise_EOFError("Cannot find close regexp.")
     state.stop()
@@ -292,21 +321,7 @@ def state_fun_found_close(state):
         cat_from_offset(state)
     else:
         state.change_state_fun(state_fun_find_open)
-
-##############################################################################
-def close_fop(state):
-    if state.d_close_p:
-        state.d_fop.close()
-        state.d_close_p = False
-
-##############################################################################
-def open_fop(state, fop_or_name):
-    if type(fop_or_name) == type(""):
-        close_p = True
-        state.d_fop = open(file)
-    else:
-        state.d_close_p = False
-        state.d_fop = file
+    return state
 
 ###############################################################################
 def handle_file(file, app_args):
@@ -324,8 +339,14 @@ def handle_file(file, app_args):
         close_cre = close_regexp
     found_nth = False
 
+    if type(file) is not type(""):
+        fop = file
+        file = fop.name
+    else:
+        fop = None
+
     state = State_data_t(file, nth, open_regexp, close_regexp, state_fun_find_open,
-                         app_args)
+                         app_args, fop=fop, output_file=app_args.output_file)
     dp_io.cdebug(3, "state: %s\n", state)
     state.crank()
     if app_args.trace_on_exit_p:
@@ -372,7 +393,7 @@ def main(argv):
                          default=True,
                          action="store_false",
                          help="EOF is an error whilst searching for the close regexp")
-    oparser.add_argument("--eo", "--EO", "--eof-only",
+    oparser.add_argument("--eo", "--EO", "--eof-only", "--last",
                          dest="EOF_ONLY",
                          default=False,
                          action="store_true",
@@ -402,11 +423,6 @@ def main(argv):
                          default=False,
                          action="store_false",
                          help="Show mismatching line when looking for open regexp.")
-    oparser.add_argument("-l", "--show-last-only", "--last",
-                         dest="show_last_only_p",
-                         default=False,
-                         action="store_true",
-                         help="Only show the last open regexp to EOF.")
     oparser.add_argument("--nth-open-bracket", "--nth",
                          dest="nth_open_bracket",
                          type=int,
@@ -417,13 +433,23 @@ def main(argv):
                          type=str,
                          default=None,  # Cannot be none
                          help="Regexp of opening bracket.")
-
     oparser.add_argument("-c", "--cre", "--ere", "--eregexp",
                          dest="close_regexp",
                          type=str,
                          default=None,  # None --> close is open.
                          help="Regexp of closing bracket.")
-    
+    oparser.add_argument("--out", "--ofile", "--output-file",
+                         dest="output_file",
+                         type=str,
+                         default=sys.stdout,
+                         help="Where do we show output?.")
+    oparser.add_argument("-s", "--seq-out", "--seq-ofile", "--seq-output-file",
+                         "--serialize-out", "--serialize-ofile",
+                         "--serialize-output-file",
+                         dest="seq_output_file_p",
+                         default=False,
+                         action="store_true",
+                         help="Create serialized output file names if output-file is a filename.")
 
 ##e.g.     oparser.add_argument("--app-action", "--aa",
 ##e.g.                          dest="app_action_stuff", default=[],
@@ -453,14 +479,20 @@ def main(argv):
             raise ValueError("Close regex required in this context. See EOF options.")
     elif app_args.EOF_ONLY:
         raise ValueError("Close regex not allowed in this context. See EOF options.")
-            
-    fileses = app_args.fileses
-    if (fileses):
-        for file in fileses:
-            handle_file(file, app_args)
-    else:
-        handle_file(sys.stdio, app_args)
-            
+    output_file = app_args.output_file
+    if type(output_file) == type(""):
+        if app_args.seq_output_file_p:
+            output_file = dp_io.serialize_file_name(output_file)
+    dp_io.cdebug(1, "output_file>{}<\n", output_file)
+    with open(output_file) as ofile:
+        app_args.output_file = ofile
+        fileses = app_args.fileses
+        if (fileses):
+            for file in fileses:
+                with open(file) as fop:
+                    handle_file(fop, app_args)
+        else:
+            handle_file(sys.stdio, app_args)
 
 if __name__ == "__main__":
     # try:... except: nice for filters.
