@@ -40,7 +40,6 @@ class State_data_t(object):
     def __init__(self, file_name, nth, open_regexp, close_regexp,
                  state_fun,
                  app_args,
-                 fop = None,
                  line_handler=print_line,
                  end_state=DONE_STATE,
                  output_file=sys.stdout):
@@ -52,7 +51,8 @@ class State_data_t(object):
         self.d_close_regexp = dp_utils.re_compile_with_case_convention(close_regexp)
         self.d_state_fun = state_fun
         self.d_app_args = app_args
-        self.d_fop = fop
+        self.d_input_fop = None
+        self.d_input_fop_close_p = True
         self.d_line_handler = line_handler
         self.d_end_state = end_state
         self.d_output_file = output_file
@@ -65,7 +65,7 @@ class State_data_t(object):
         self.d_match_num = 0
         self.d_run_p = True
         self.d_most_recent_open_regexp_match_offset = None
-        self.open_fop(close_and_reopen_p=True)
+        self.open_input_fop(close_and_reopen_p=True)
 
     ##############################################################################
     # Yarr, beware, ye be fer sure, or ye'll be brought down by thar collisions.
@@ -74,22 +74,23 @@ class State_data_t(object):
         return getattr(self.d_app_args, name)
 
     ##############################################################################
-    def open_fop(self, close_and_reopen_p=False):
-        dp_io.cdebug(1, "open_fop(), self.d_file_name>{}<\n", self.d_file_name)
-        dp_io.cdebug(1, "open_fop(), self.d_fop>{}<\n", self.d_fop)
-        fop = self.d_fop
-        if fop and not fop.closed:
+    def open_input_fop(self, close_and_reopen_p=False):
+        dp_io.cdebug(1, "open_input_fop(), self.d_file_name>{}<\n", self.d_file_name)
+        dp_io.cdebug(1, "open_input_fop(), self.d_input_fop>{}<\n", self.d_input_fop)
+        input_fop = self.d_input_fop
+        if input_fop and not input_fop.closed:
             if close_and_reopen_p:
-                fop.close()
+                input_fop.close()
             else:
                 raise RuntimeError("Attempting to open already opened file.")
-        fop = open(self.d_file_name)
-        self.d_fop = fop
+        dp_io.cdebug(1, "open_input_fop(), self.d_file_name>{}<\n", self.d_file_name)
+        input_fop = open(self.d_file_name)
+        self.d_input_fop = input_fop
 
     ##############################################################################
-    def close_fop(state):
+    def close_input_fop(state):
         if state.d_close_p:
-            state.d_fop.close()
+            state.d_input_fop.close()
             state.d_close_p = False
 
     ##############################################################################
@@ -101,23 +102,23 @@ class State_data_t(object):
         return self.d_match_num
 
     ##############################################################################
-    def fop_tell(self):
-        return self.d_fop.tell()
+    def input_fop_tell(self):
+        return self.d_input_fop.tell()
 
     ##############################################################################
-    def fop_seek(self, offset):
-        return self.d_fop.seek(offset)
+    def input_fop_seek(self, offset):
+        return self.d_input_fop.seek(offset)
 
     ##############################################################################
-    def fop_seek_match(self):
+    def input_fop_seek_match(self):
         off = self.d_most_recent_open_regexp_match_offset
         if off is None:
             state.die(exception=ValueError("No seek matches"))
-        return self.fop_seek(self.d_most_recent_open_regexp_match_offset)
+        return self.input_fop_seek(self.d_most_recent_open_regexp_match_offset)
 
     ##############################################################################
-    def fop_readline(self):
-        return self.d_fop.readline()
+    def input_fop_readline(self):
+        return self.d_input_fop.readline()
 
     ##############################################################################
     def change_state_fun(self, new_fun):
@@ -177,12 +178,12 @@ def cat_from_offset(state):
     else:
         pre = ""
         suf = ""
-    state.open_fop(state)
-    state.fop_seek_match()
+    state.open_input_fop(state)
+    state.input_fop_seek_match()
     if state.delimit_p:
         print_open_delimiter(state)
     while True:
-        line = state.fop_readline()
+        line = state.input_fop_readline()
         if not line:
             break
         if pre:
@@ -214,21 +215,20 @@ def state_fun_nop(state):
 
 ##############################################################################
 def state_fun_find_open(state):
-    state.d_fop
     open_cre = state.d_open_regexp
     state.d_found_open_re_p = False
     read_from = 0
-    #for line in state.d_fop:
+    #for line in state.d_input_fop:
     while True:
-        offset = state.fop_tell()
-        line = state.fop_readline()
+        offset = state.input_fop_tell()
+        line = state.input_fop_readline()
         if not line:
             break
-        dp_io.cdebug(4, "line@%s>%s<\n", state.fop_tell(), line[:-1])
+        dp_io.cdebug(4, "line@%s>%s<\n", state.input_fop_tell(), line[:-1])
         if open_cre.search(line):
             state.count_match()
             dp_io.cdebug(1, "state_fun_find_open(): match@offset: %d, line>%s<\n",
-                         state.fop_tell(), line[:-1])
+                         state.input_fop_tell(), line[:-1])
             ## @todo XXX Handle search for "LAST" open regexp match.
             if state.LAST_ONLY:
                 dp_io.cdebug(2, "LAST_ONLY, skipping match.\n")
@@ -237,11 +237,11 @@ def state_fun_find_open(state):
 
             if state.d_match_num >= state.d_nth:
                 state.d_found_open_re_p = True
-                state.d_most_recent_open_regexp_match_offset = state.fop_tell()
+                state.d_most_recent_open_regexp_match_offset = state.input_fop_tell()
                 break
         elif state.show_misses_p:
             dp_io.printf("open(): miss@offset: %d, line>%s<\n",
-                         state.fop_tell(), line[:-1])
+                         state.input_fop_tell(), line[:-1])
             
     if state.d_found_open_re_p and state.delimit_p:
         print_open_delimiter(state)
@@ -276,12 +276,12 @@ def state_fun_open_eof(state):
 
 ##############################################################################
 def state_fun_find_close(state):
-    fop = state.d_fop
+    input_fop = state.d_input_fop
     close_cre = state.d_close_regexp
     found_close_re = False
 
     while True:
-        line = state.fop_readline()
+        line = state.input_fop_readline()
         if not line:
             break
         if not state.LAST_ONLY:
@@ -291,7 +291,7 @@ def state_fun_find_close(state):
                 break
 
         dp_io.cdebug(2, "state_fun_find_close(): offset: %d, line>%s<\n",
-                     state.fop_tell(), line[:-1])
+                     state.input_fop_tell(), line[:-1])
 
     if found_close_re:
         state.change_state_fun(state_fun_found_close)
@@ -315,7 +315,7 @@ def state_fun_found_close(state):
 
 ###############################################################################
 def state_fun_eof(state):
-    state.close_fop()
+    state.close_input_fop()
     state.stop()
     return state
 
@@ -335,14 +335,8 @@ def handle_file(file, app_args):
         close_cre = close_regexp
     found_nth = False
 
-    if type(file) is not type(""):
-        fop = file
-        file = fop.name
-    else:
-        fop = None
-
     state = State_data_t(file, nth, open_regexp, close_regexp, state_fun_find_open,
-                         app_args, fop=fop, output_file=app_args.output_file)
+                         app_args, output_file=app_args.output_file)
     dp_io.cdebug(3, "state: %s\n", state)
     state.crank()
     if app_args.trace_on_exit_p:
@@ -414,6 +408,11 @@ def main(argv):
                          default=False,
                          action="store_true",
                          help="Show mismatching line when looking for open regexp.")
+    oparser.add_argument("--no-fclose", "--nfc",
+                         dest="input_fop_close_p",
+                         default=True,
+                         action="store_false",
+                         help="Should the input file be closed twixt brackets.")
     oparser.add_argument("--no-show-misses", "--no-sm", "--nsm",
                          dest="show_misses_p",
                          default=False,
@@ -446,6 +445,7 @@ def main(argv):
                          default=False,
                          action="store_true",
                          help="Create serialized output file names if output-file is a filename.")
+    ## last option
 
 ##e.g.     oparser.add_argument("--app-action", "--aa",
 ##e.g.                          dest="app_action_stuff", default=[],
@@ -480,18 +480,14 @@ def main(argv):
         if app_args.seq_output_file_p:
             output_file = dp_io.serialize_file_name(output_file)
     dp_io.cdebug(1, "output_file>{}<\n", output_file)
+
     if type(output_file) == type(""):
         output_file = open(output_file)
 
     with output_file as ofile:
         app_args.output_file = ofile
-        fileses = app_args.fileses
-        if (fileses):
-            for file in fileses:
-                with open(file) as fop:
-                    handle_file(fop, app_args)
-        else:
-            handle_file(sys.stdio, app_args)
+        for file in app_args.fileses:
+            handle_file(file, app_args)
 
 if __name__ == "__main__":
     # try:... except: nice for filters.
