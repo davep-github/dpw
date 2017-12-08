@@ -190,8 +190,8 @@ def cat_from_offset(state):
             line = line[:-1]
         state.d_line_handler(state, pre + line + suf)
 
-    if state.delimit_p:
-        print_close_delimiter(state)
+#    if state.delimit_p:
+#        print_close_delimiter(state)
 
     state.change_state_fun(DONE_STATE)
 
@@ -199,7 +199,8 @@ def cat_from_offset(state):
 
 ##############################################################################
 def print_delimiter(state, prefix):
-    state.d_line_handler(state, prefix + ("=" * 44) + '\n')
+    num = 44 - len(prefix)
+    state.d_line_handler(state, prefix + ("=" * num) + '\n')
 
 ##############################################################################
 def print_open_delimiter(state):
@@ -208,6 +209,10 @@ def print_open_delimiter(state):
 ##############################################################################
 def print_close_delimiter(state):
     print_delimiter(state, "-C: ")
+
+##############################################################################
+def print_eof_delimiter(state):
+    print_delimiter(state, "-EOF: ")
 
 ##############################################################################
 def state_fun_nop(state):
@@ -269,6 +274,7 @@ def raise_EOFError(state, message):
 def state_fun_open_eof(state):
     if state.matches():
         cat_from_offset(state)
+        print_eof_delimiter(state)
         state.stop()
     else:
         raise_EOFError("Hit EOF without finding any opening regexps.")
@@ -305,6 +311,8 @@ def state_fun_find_close(state):
 def state_fun_close_eof(state):
     if not state.EOF_FOR_CLOSE_OK:
         raise_EOFError("Hit EOF scanning for close regexp.\n")
+    else:
+        print_eof_delimiter(state)
     state.change_state_fun(state_fun_eof)
     return state
 
@@ -388,11 +396,23 @@ def main(argv):
                          default=False,
                          action="store_true",
                          help="EOF must be the end of the region.")
-    oparser.add_argument("-neo", "--no-eof-only", "--no-eo",
+    oparser.add_argument("--neo", "--no-eof-only", "--no-eo",
+                         "--nlo", "--no-last-only", "--no-last", "--no-lo",
                          dest="LAST_ONLY",
                          default=False,
                          action="store_false",
                          help="Turn off LAST_ONLY.")
+    oparser.add_argument("-force-eof-only", "--force-last-eof-only", "--flo", "--feo",
+                         dest="FORCE_LAST_ONLY",
+                         default=True,
+                         action="store_true",
+                         help="Force LAST_ONLY.")
+    oparser.add_argument("-no-force-eof-only", "--no-force-last-eof-only", "--nflo",
+                         "--nflo", "--nfeo",
+                         dest="FORCE_LAST_ONLY",
+                         default=True,
+                         action="store_false",
+                         help="don't force LAST_ONLY.")
     oparser.add_argument("--delimit", "--wrap",
                          dest="delimit_p",
                          default=False,
@@ -468,12 +488,18 @@ def main(argv):
 
     if app_args.open_regexp is None:
             raise ValueError("Opening regexp must be specified.")
+
+    dp_io.cdebug(1, "LAST_ONLY>{}<, FORCE_LAST_ONLY>{}<, close_regexp>{}<\n",
+                 app_args.EOF_FOR_CLOSE_OK,
+                 app_args.LAST_ONLY,
+                 app_args.FORCE_LAST_ONLY)
+
     if app_args.close_regexp is None:
         if app_args.EOF_FOR_CLOSE_OK or app_args.LAST_ONLY:
             pass
         else:
             raise ValueError("Close regex required in this context. See EOF options.")
-    elif app_args.LAST_ONLY:
+    elif app_args.LAST_ONLY and not app_args.FORCE_LAST_ONLY:
         raise ValueError("Close regex not allowed in this context. See EOF options.")
     output_file = app_args.output_file
     if type(output_file) == type(""):
