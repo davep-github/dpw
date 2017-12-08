@@ -47,7 +47,7 @@ class State_data_t(object):
         self.d_nth = nth
         self.d_open_regexp = dp_utils.re_compile_with_case_convention(open_regexp)
         if close_regexp is None:
-            close_regexp = ".*"
+            close_regexp = "$^"
         self.d_close_regexp = dp_utils.re_compile_with_case_convention(close_regexp)
         self.d_state_fun = state_fun
         self.d_app_args = app_args
@@ -70,7 +70,7 @@ class State_data_t(object):
     ##############################################################################
     # Yarr, beware, ye be fer sure, or ye'll be brought down by thar collisions.
     def __getattr__(self, name):
-        dp_io.cdebug(1, "__getattr__({})\n", name)
+        dp_io.cdebug(7, "__getattr__({})\n", name)
         return getattr(self.d_app_args, name)
 
     ##############################################################################
@@ -131,6 +131,7 @@ class State_data_t(object):
     ##############################################################################
     def state_trace(self):
         i = 0
+        dp_io.printf("match_num: {}\n", self.d_match_num)
         dp_io.printf("State trace:\n")
         for fun in self.d_fun_change_list:
             print "{}: {}".format(i, fun)
@@ -386,7 +387,7 @@ def main(argv):
                          default=True,
                          action="store_true",
                          help="EOF counts as hitting the close regexp")
-    oparser.add_argument("-C", "--no-eof-on-close-ok", "--no-eof-ok",
+    oparser.add_argument("-C", "--no-eof-on-close-ok", "--no-eof-ok", "--neok",
                          dest="EOF_FOR_CLOSE_OK",
                          default=True,
                          action="store_false",
@@ -511,6 +512,7 @@ def main(argv):
         output_file = open(output_file)
 
     with output_file as ofile:
+        dp_io.cdebug(1, "ofile>{}<\n", ofile)
         app_args.output_file = ofile
         for file in app_args.fileses:
             handle_file(file, app_args)
