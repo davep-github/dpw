@@ -70,6 +70,7 @@ class State_data_t(object):
     ##############################################################################
     # Yarr, beware, ye be fer sure, or ye'll be brought down by thar collisions.
     def __getattr__(self, name):
+        dp_io.cdebug(1, "__getattr__({})\n", name)
         return getattr(self.d_app_args, name)
 
     ##############################################################################
@@ -163,7 +164,8 @@ class State_data_t(object):
     ##############################################################################
     def crank(self):
         while self.run_p():
-            dp_io.cdebug(3, "crank(): about to run state fun: {}\n", self.d_state_fun)
+            dp_io.cdebug(3, "crank(): about to run state fun: {}\n",
+                         self.d_state_fun)
             self()
 
 ##############################################################################
@@ -228,8 +230,8 @@ def state_fun_find_open(state):
             dp_io.cdebug(1, "state_fun_find_open(): match@offset: %d, line>%s<\n",
                          state.fop_tell(), line[:-1])
             ## @todo XXX Handle search for "LAST" open regexp match.
-            if state.EOF_ONLY:
-                dp_io.cdebug(2, "EOF_ONLY, skipping match.\n")
+            if state.LAST_ONLY:
+                dp_io.cdebug(2, "LAST_ONLY, skipping match.\n")
                 state.d_most_recent_open_regexp_match_offset = offset
                 continue
 
@@ -282,7 +284,7 @@ def state_fun_find_close(state):
         line = state.fop_readline()
         if not line:
             break
-        if not state.EOF_ONLY:
+        if not state.LAST_ONLY:
             state.d_line_handler(state, line)
             if close_cre.search(line):
                 found_close_re = True
@@ -291,36 +293,30 @@ def state_fun_find_close(state):
         dp_io.cdebug(2, "state_fun_find_close(): offset: %d, line>%s<\n",
                      state.fop_tell(), line[:-1])
 
-    if state.delimit_p:
-        print_close_delimiter(state)
-
     if found_close_re:
-        if (state.EOF_ONLY and not state.EOF_FOR_CLOSE_OK):
-            dp_io.cdebug(1, "state_fun_find_close(), found_close_re EOF_ONLY and not EOF_FOR_CLOSE_OK\n")
-            state.change_state_fun(state_fun_close_eof)
-        else:
-            dp_io.cdebug(1, "state_fun_find_close(), found_close_re not EOF_ONLY or EOF_FOR_CLOSE_OK\n")
-            state.change_state_fun(state_fun_found_close)
-    elif state.EOF_FOR_CLOSE_OK:
         state.change_state_fun(state_fun_found_close)
+        if state.delimit_p:
+            print_close_delimiter(state)
     else:
         state.change_state_fun(state_fun_close_eof)
     return state
 
 ##############################################################################
 def state_fun_close_eof(state):
-    state.close_fop()
-    if (not state.EOF_FOR_CLOSE_OK):
-        raise_EOFError("Cannot find close regexp.")
-    state.stop()
+    if not state.EOF_FOR_CLOSE_OK:
+        raise_EOFError("Hit EOF scanning for close regexp.\n")
+    state.change_state_fun(state_fun_eof)
     return state
 
 ##############################################################################
 def state_fun_found_close(state):
-    if state.EOF_FOR_CLOSE_OK:
-        cat_from_offset(state)
-    else:
-        state.change_state_fun(state_fun_find_open)
+    state.change_state_fun(state_fun_find_open)
+    return state
+
+###############################################################################
+def state_fun_eof(state):
+    state.close_fop()
+    state.stop()
     return state
 
 ###############################################################################
@@ -394,15 +390,15 @@ def main(argv):
                          action="store_false",
                          help="EOF is an error whilst searching for the close regexp")
     oparser.add_argument("--eo", "--EO", "--eof-only", "--last",
-                         dest="EOF_ONLY",
+                         dest="LAST_ONLY",
                          default=False,
                          action="store_true",
                          help="EOF must be the end of the region.")
     oparser.add_argument("-neo", "--no-eof-only", "--no-eo",
-                         dest="EOF_ONLY",
+                         dest="LAST_ONLY",
                          default=False,
                          action="store_false",
-                         help="Turn off EOF_ONLY.")
+                         help="Turn off LAST_ONLY.")
     oparser.add_argument("--delimit", "--wrap",
                          dest="delimit_p",
                          default=False,
@@ -473,18 +469,21 @@ def main(argv):
     if app_args.open_regexp is None:
             raise ValueError("Opening regexp must be specified.")
     if app_args.close_regexp is None:
-        if app_args.EOF_FOR_CLOSE_OK or app_args.EOF_ONLY:
+        if app_args.EOF_FOR_CLOSE_OK or app_args.LAST_ONLY:
             pass
         else:
             raise ValueError("Close regex required in this context. See EOF options.")
-    elif app_args.EOF_ONLY:
+    elif app_args.LAST_ONLY:
         raise ValueError("Close regex not allowed in this context. See EOF options.")
     output_file = app_args.output_file
     if type(output_file) == type(""):
         if app_args.seq_output_file_p:
             output_file = dp_io.serialize_file_name(output_file)
     dp_io.cdebug(1, "output_file>{}<\n", output_file)
-    with open(output_file) as ofile:
+    if type(output_file) == type(""):
+        output_file = open(output_file)
+
+    with output_file as ofile:
         app_args.output_file = ofile
         fileses = app_args.fileses
         if (fileses):
