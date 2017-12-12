@@ -5,6 +5,7 @@
 #
 
 import os, sys, errno, re
+import fileinput
 import argparse
 import dp_io, dp_utils
 
@@ -25,7 +26,7 @@ DONE_STATE = "DONE, Just, DONE!"
 ##e.g.setattr(namespace, "highlight_grep_matches_p", True)
 
 ##############################################################################
-class HappyException(Exception):
+class BgrepException(Exception):
     def __init__(self, *args, **kw_args):
         Exception.__init__(self, *args)
         self.d_args = args
@@ -66,6 +67,7 @@ class State_data_t(object):
         self.d_run_p = True
         self.d_most_recent_open_regexp_match_offset = None
         self.open_input_fop(close_and_reopen_p=True)
+        self.d_offset = -1
 
     ##############################################################################
     # Yarr, beware, ye be fer sure, or ye'll be brought down by thar collisions.
@@ -113,7 +115,7 @@ class State_data_t(object):
     def input_fop_seek_match(self):
         off = self.d_most_recent_open_regexp_match_offset
         if off is None:
-            state.die(exception=ValueError("No seek matches"))
+            state.FOAD(exception=ValueError("No seek matches"))
         return self.input_fop_seek(self.d_most_recent_open_regexp_match_offset)
 
     ##############################################################################
@@ -142,7 +144,7 @@ class State_data_t(object):
         return self.d_state_fun(self)
 
     ##############################################################################
-    def die(self, message="", exception=None):
+    def FOAD(self, message="", exception=None):
         if message:
             raise Exception(message)
         else:
@@ -172,7 +174,6 @@ class State_data_t(object):
 
 ##############################################################################
 def cat_from_offset(state):
-    dp_io.cdebug(1, "enter cat_from_offset()\n")
     if dp_io.verbose_p(4):
         pre = "cat>"
         suf = "<cat\n"
@@ -201,7 +202,8 @@ def cat_from_offset(state):
 ##############################################################################
 def print_delimiter(state, prefix):
     num = 44 - len(prefix)
-    state.d_line_handler(state, prefix + ("=" * num) + '\n')
+    state.d_line_handler(state, prefix + "offset: {} ".format(state.d_offset)
+                         + ("=" * num) + '\n')
 
 ##############################################################################
 def print_open_delimiter(state):
@@ -227,6 +229,7 @@ def state_fun_find_open(state):
     #for line in state.d_input_fop:
     while True:
         offset = state.input_fop_tell()
+        state.d_offset = offset
         line = state.input_fop_readline()
         if not line:
             break
@@ -278,7 +281,7 @@ def state_fun_open_eof(state):
         print_eof_delimiter(state)
         state.stop()
     else:
-        raise_EOFError("Hit EOF without finding any opening regexps.")
+        raise_EOFError(state, "Reached EOF without finding any opening regexps.")
     return state
 
 ##############################################################################
@@ -311,7 +314,7 @@ def state_fun_find_close(state):
 ##############################################################################
 def state_fun_close_eof(state):
     if not state.EOF_FOR_CLOSE_OK:
-        raise_EOFError("Hit EOF scanning for close regexp.\n")
+        raise_EOFError(state, "Reached EOF scanning for close regexp.\n")
     else:
         print_eof_delimiter(state)
     state.change_state_fun(state_fun_eof)
@@ -353,7 +356,6 @@ def handle_file(file, app_args):
 
 ###############################################################################
 def main(argv):
-
     oparser = argparse.ArgumentParser()
     oparser.add_argument("--debug", "--dl",
                          dest="debug_level",
@@ -366,7 +368,7 @@ def main(argv):
                          type=int,
                          default=-1,
                          help="Set verbose/trace level. Use with, e.g. "
-                         "dp_io.ctracef(<n>, fmt [, ...])")
+                         "dp_io.cdebug(<n>, fmt [, ...])")
     oparser.add_argument("-q", "--quiet",
                          dest="quiet_p",
                          default=False,
@@ -505,11 +507,15 @@ def main(argv):
     output_file = app_args.output_file
     if type(output_file) == type(""):
         if app_args.seq_output_file_p:
-            output_file = dp_io.serialize_file_name(output_file)
-    dp_io.cdebug(1, "output_file>{}<\n", output_file)
-
-    if type(output_file) == type(""):
-        output_file = open(output_file)
+            _, output_file = dp_io.serialize_file_name(output_file,
+                                                       fdopen_mode='w',
+                                                       open_extra_mode=os.O_RDWR,
+                                                       return_opened_p=True)
+            dp_io.cdebug(1, "serialized output_file>{}<\n", output_file)
+        else:
+            dp_io.cdebug(1, "Opening output_file>{}<\n", output_file)
+            output_file = dp_io.os_open(output_file,
+                                        os.O_EXCL | os.O_CREAT | os.O_RDWR)
 
     with output_file as ofile:
         dp_io.cdebug(1, "ofile>{}<\n", ofile)
@@ -529,10 +535,13 @@ if __name__ == "__main__":
             print >>sys.stderr, ":Broken PIPE:"
             sys.exit(BROKEN_PIPE_RC)
         print >>sys.stderr, "IOError>%s<" % (e,)
+        raise
         sys.exit(IOERROR_RC)
-    except EOFError:
-        sys.exit(0)
-#    except Exception, e:
-#        print >>sys.stderr, "Exception: e: {}".format(e)
-#        sys.exit(1)
+    except EOFError, e:
+        dp_io.cdebug(1, "In EOF exception>{}<\n", e)
+        dp_io.eprintf("EOFError: {}\n", e)
+        sys.exit(1)
+    #except Exception, e:
+        print >>sys.stderr, "Exception: e: {}".format(e)
+        sys.exit(1)
 
