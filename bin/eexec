@@ -375,6 +375,7 @@ EExec()
           -|--verbose-k) EExecVerbose_k;;
           -c|-k|--keep-going|--no-exit|--error-ok|--ignore-errors) eexecContinue=t
               ;;
+          # Also skips any error reporting in case of failure.
           -C|-0|--fake-success|--return-zero|--rose) eexecContinue=t
               fake_success_p=y
               ;;
@@ -394,9 +395,9 @@ EExec()
           --cmd-cd:|--sh-cd:) shift; command_cd_cmd="${1}";;
           --status-banner) status_banner_p=t;;
           --no-status-banner) status_banner_p=;;
-          -tcsh) executor=EExec_start_tcsh
-                 ;;
-          -*) EEdie0 1 "Bad option passed to EExec()"
+          -tcsh) executor=EExec_start_tcsh;;
+          --debug) set -x;;
+          -*) EEdie0 1 "Bad option passed to EExec(): $1"
                  ;;
          *) break;;
       esac
