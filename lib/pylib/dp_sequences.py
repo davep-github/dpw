@@ -251,12 +251,30 @@ def add_to_list_iff_uniq(in_list, element):
 
 maybe_add_to_list = add_to_list_iff_uniq
 
+########################################################################
 def add_uniq_list_items_to_list(in_list, add_from_list):
     for element in add_from_list:
         add_to_list_iff_uniq(in_list, element)
 
 maybe_add_list_to_list = add_uniq_list_items_to_list
 
+########################################################################
+def dict_items_matching_regexp(d, regexp):
+    ret = []
+    cre = re.compile(regexp)
+    for k, i in d.items():
+        m = cre.search(k)
+        if m:
+            ret.append((k, i))
+    return ret
+
+########################################################################
+def pop_peek(l):
+    if l:
+        return l[len(l)-1]
+    return None
+
+########################################################################
 def move_from_list(from_list, str, regexp_p=False, start=0, end=True,
                    remove_prefix_p=False, return_prefix=""):
     pred = None
