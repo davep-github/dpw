@@ -114,24 +114,93 @@ git_track_remote_branch()
 
 git_one_line_logs()
 {
-    EExec git lon "$@"
+    EExec git lon "${@}"
 }
 
-: ${remote_branch_op:=git_track_remote_branch}
+git_grep_file()
+{
+    local branch="${1}"; shift
+    local file="${1}"; shift
+    local x=
+    # "${@}" are args to grep (easier to parse this way).
+    x=$(EExec -0 git nth-cat "${branch}" "${file}" \
+      | EExec egrep "${@}") && {
+        echo "Match: ${branch}/${file}: ${x}"
+    }
+    return 0
+}
 
-if [ -z "$*" ]
+git_cat_file()
+{
+    local branch="${1}"; shift
+    local file="${1}"; shift
+    EExec -0 git nth-cat "${branch}" "${file}"
+}
+
+: ${branch_op:=git_track_remote_branch}
+: ${this_program_verbose:=}
+
+ # Usage variable usage:
+ Usage_args_info=" Usage_args_info"
+ Usage_synopsis="Usage_synopsis: Clean FS with sudo rm -rf /"
+ # Using ) after the args makes copy & paste between here and the
+ # case statement easier.
+ Usage_details="${EExec_parse_usage}
+ "
+ # Example of arg parsing.
+ option_str="glfc"
+ long_options=(
+     "grep"
+     "one-line-logs" "lon"
+     "track"
+     "cat"
+     "vv"
+ )
+ source dp-getopt+.sh || exit 1
+ while (($# > 0))
+ do
+   # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+   case $1 in
+       # eexec support: -n -v -q, etc. q.v. ~/bin/eexec
+       # Done by EExec_parse and friends.
+
+       # Program options.
+       -g|--grep) branch_op=git_grep_file;;
+       -1|--one-line-logs|--lon) branch_op=git_one_line_logs;;
+       -t|--track) branch_op=git_track_remote_branch;;
+       -c|--cat) branch_op=git_cat_file;;
+       --vv) this_program_verbose=t;;
+
+       # Help!
+       --help) Usage; exit 0;;
+       --) shift ; break ;;
+       # getopt will barf about unknown options.
+       # Here we barf about known options that we have forgotten to handle.
+       *) echo 1>&2 "Unhandled option>$1<"
+          exit 1;;
+     esac
+     shift
+ done
+ # The following is needed only when args are required.
+ [ "$*" = "" ] && Usage
+
+
+if [ "${1}" = '--' ]
 then
+    branches=("${@}")
+    branch_source="command line branches"
+else
     branches=($(git branch -a | grep remotes | egrep -v 'HEAD|master|upstream'))
     branch_source="git's remote branches"
-else
-    branches=("$@")
-    branch_source="command line branches"
 fi
 
 EExecVerbose_p && echo 1>&2 "${branch_source}" ">${branches[@]}<"
 
 for branch in "${branches[@]}"
  do
+  [ -n "${this_program_verbose}" ] && {
+      echo "Processing: ${branch}"
+  }
   # op function must use some form of EExec to prevent execution.
-  EExec -y "${remote_branch_op}" "${branch}"
+  EExec -y "${branch_op}" "${branch}" "${@}"
 done
