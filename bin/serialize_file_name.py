@@ -22,24 +22,6 @@ IOERROR_RC = 1
 ##e.g.         setattr(namespace, self.dest, regexps)
 ##e.g.         setattr(namespace, "highlight_grep_matches_p", True) 
 
-def serialize_one(file_name, num_tries):
-    dp_io.cdebug(1, "file_name>{}<\n", file_name)
-    non_ext, ext = os.path.splitext(file_name)
-    file_format = "{}{}{}".format(non_ext, "{}", ext)
-    for attempt in [""] + [ ".%d" % (x,) for x in range(num_tries) ]:
-        try_name = file_format.format(attempt)
-        dp_io.cdebug(1, "try_name>{}<, non_ext>{}<, ext>{}<\n",
-                     try_name, non_ext, ext)
-        try:
-            fd = os.open(try_name, os.O_EXCL | os.O_CREAT)
-        except OSError:                 # ? Make this more precise?
-            continue
-        os.close(fd)
-        print try_name
-        return 0
-
-    return 1
-
 def main(argv):
 
     oparser = argparse.ArgumentParser()
@@ -88,10 +70,11 @@ def main(argv):
     num_tries = app_args.num_tries
     num_failures = 0
     for file_name in app_args.file_names:
-        rc = serialize_one(file_name, num_tries)
+        rc = dp_io.serialize_file_name(file_name, num_tries)
         if rc != 0:
             num_failures += 1
-            dp_io.eprintf("Error serializing {}, {} times\n", file_name, num_tries)
+            dp_io.eprintf("Error serializing {}: num_tries: {} \n",
+                          file_name, num_tries)
     if num_failures != 0:
         dp_io.eprintf("Some files could not be serialized.\n")
 
