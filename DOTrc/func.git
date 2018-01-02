@@ -92,6 +92,7 @@ git()
     local disablemsg=$(command git config --get ${cmd}.disablemsg 2>/dev/null)
     local disabled=$(command git config --bool ${cmd}.disabled 2>/dev/null)
     local query=$(command git config --bool ${cmd}.query 2>/dev/null)
+    local yes_p=
 
     [ -n "${func}checkop}" ] && {
         type -t "${checkop}" 1>/dev/null 2>&1 && {
@@ -101,6 +102,7 @@ git()
             } 1>&2
         }
     }
+
 
     if ${disabled:-false} ; then
         echo "${func}The ${cmd} command is intentionally disabled in git config." >&2
@@ -112,8 +114,8 @@ git()
             do
               read -e -p "${func}Perform the command anyway [y/N]? "
               case "$REPLY" in
-                  [yY1t]) rc=0; break;;
-                  [nN0]|"") rc=1; break;;
+                  [yY1t]) yes_p=t; rc=0; break;;
+                  [nN0]|"") yes_p=; rc=1; break;;
                   *) continue;;
               esac
             done
