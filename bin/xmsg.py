@@ -17,10 +17,16 @@ class Application(Frame):
 		for key in 'qQxX':
 		    self.bind_all('<KeyPress-%c>' % key,
 				  self.quit_event)
-		    self.bind_all('<Alt-%c>' % key,
-				  self.quit_event)
+		for key in '1oOYyTt':
+		    self.bind_all('<KeyPress-%c>' % key,
+				  self.ok_event)
 
 	def quit_event(self, event):
+            print "quit"
+	    self.quit()
+
+	def ok_event(self, event):
+            print "ok"
 	    self.quit()
 
 	def usage(self):
