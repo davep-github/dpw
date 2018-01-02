@@ -141,7 +141,7 @@ make
 meld
 mpd
 msmtp
-mutt
+#mutt
 ncurses-base
 ncurses-bin
 ncurses-doc
@@ -165,6 +165,8 @@ xorg-dev
 xterm
 )
 
+something_was_installed=
+
 EExec_verbose_msg "0: len(packages): ${#packages[@]}"
 if [ -n "${nopkgs}" ]
 then
@@ -177,8 +179,25 @@ num_pkgs="${#packages[@]}"
 pkg_num=1
 
 ((num_pkgs > 0)) && {
+    something_was_installed=t
     for p in ${packages[@]}
     do
+      echo "Installing ${pkg_num} of ${num_pkgs}" > /tmp/newbubtu-pkgs
+
+      EExec_verbose_msg "Installing ${pkg_num} of ${num_pkgs}"
+      EExec sudo apt-get --assume-yes install "${p}"
+      ((++pkg_num))
+    done
+}
+
+install_from_stream()
+{
+    local pkg_num=0
+    local num_pkgs="${1-???}"; shift
+
+    while read
+    do
+      p="${REPLY}"
       EExec_verbose_msg "Installing ${pkg_num} of ${num_pkgs}"
       EExec sudo apt-get --assume-yes install "${p}"
       ((++pkg_num))
@@ -192,20 +211,20 @@ pkg_num=1
 # files=apt-mark.showmanual.out newbuntu-pkgs -v
 if [ -n "${files}" ]
 then
+    something_was_installed=t
     for file in "${files}"
     do
       EExec_verbose_echo_id file
       num_pkgs="$(wc -l $file)"
       pkg_num=0
-      cat "${file}" | while read
-      do
-        p="${REPLY}"
-        EExec_verbose_msg "Installing ${pkg_num} of ${num_pkgs}"
-        EExec sudo apt-get --assume-yes install "${p}"
-        ((++pkg_num))
-      done
+      cat "${file}" | install_from_stream "${num_pkgs}"
     done
 fi
+
+isatty >& /dev/null || {
+    EExec_verbose_msg "tryin' stdin"
+    install_from_stream "stdin"
+}
 
 echo 'Some suggestions, if I may so bold:
 GUI grub customizer:
