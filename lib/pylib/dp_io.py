@@ -283,18 +283,18 @@ def undebug(fmt, *args):
         debug(fmt, *args)
 
 ###############################################################
-def debug_mask_exact_set(mask):
-    return mask ==  debug_mask
+def debug_mask_exact_set_p(mask):
+    return mask == debug_mask
 
-def debug_mask_all_set(mask):
+def debug_mask_all_set_p(mask):
     return (mask & debug_mask) == mask
 
-def debug_mask_any_set(mask):
+def debug_mask_any_set_p(mask):
     return mask & debug_mask
 
 
 def fdebug(mask, fmt, *args):           # flag debug
-    if debug_mask_any_set(mask):
+    if debug_mask_any_set_p(mask):
         do_debug(fmt, '%s[0x%x]' % (debug_leader, mask), args)
 
 mdebug = fdebug                         # alias, mask debug
@@ -366,13 +366,13 @@ def kwexactdebug(keys, fmt, *args):      # keyword debug
     do_kwdebug(debug_keyword_exact_set_p, keys, fmt, args)
 
 ###############################################################
-def debug_exec(level, func, *args, **keys):
+def cdebug_exec(level, func, *args, **keys):
     if not keys:
         keys = {}
     keys["prefix"] = mk_debug_leader_prefix(level)
     if debug_p(level):
         func(*args, **keys)
-
+debug_exec = cdebug_exec                # Defecated,
 ###############################################################
 def verbose_p(level):
     return f_vprint and (verbose_level >= level or level == True)
@@ -786,6 +786,11 @@ def sprintf_called_from(fmt, *args, **keys):
 def printf_called_from(fmt, *args):
     printf('%s\n', do_sprintf_called_from(4, fmt, *args))
 
+def print_enter_function(pre="", post="", fop=sys.stderr):
+    if type(fop) == type(""):
+        fop = open(fop, 'w')
+    s = "Enter: {}{}{}".format(pre, dp_utils.function_name(level), post)
+
 ########################################################################
 def file_len(fil):
     stat = os.stat(fil.fileno())
@@ -925,9 +930,60 @@ def parse_args(argv, only_our_domain_p=True):
 
 
     return argv
+
 #############################################################################
+# Return an ending based on number;
+# 1st, 2nd, 3rd, 4th, 5th...
 
+Suffix_stndrdth = [ "th", "st", "nd", "rd", "th",
+                    "th", "th", "th", "th", "th",
+                    "th", "th", "th", "th" ]
 
+def stndrdth(num):
+    suffix = "WTF!?"
+    if num < 14:
+        index = num
+    else:
+        index = num % 10
+    suffix = Suffix_stndrdth[index]
+    return "{}".format(suffix)
+
+nth_number_suffix = stndrdth
+
+#############################################################################
+def serialize_file_name(file_name, num_tries=50,
+                        fdopen_mode='r',
+                        fdopen_extra_mode='',
+                        open_mode=(os.O_EXCL | os.O_CREAT),
+                        open_extra_mode=0,
+                        return_opened_p=False):
+    cdebug(1, "file_name>{}<\n", file_name)
+    non_ext, ext = os.path.splitext(file_name)
+    file_format = "{}{}{}".format(non_ext, "{}", ext)
+    for attempt in [""] + [ ".%d" % (x,) for x in range(num_tries) ]:
+        try_name = file_format.format(attempt)
+        cdebug(1, "try_name>{}<, non_ext>{}<, ext>{}<\n",
+                     try_name, non_ext, ext)
+        try:
+            fd = os.open(try_name, open_mode | open_extra_mode)
+        except OSError:   # ? Make this more specific to the expected errors?
+            continue
+        if return_opened_p:
+            mode = fdopen_mode + fdopen_extra_mode
+            return (try_name, os.fdopen(fd, mode))
+
+        os.close(fd)
+        cdebug(1, "return: try_name)>{}<\n", try_name)
+        print try_name
+        return (try_name, None)
+
+    return None
+
+def os_open(file_name, os_mode):
+    """Use os.open so we can use the os flags."""
+    cdebug(1, "file_name>%s<, os_mode: 0x%x\n", file_name, os_mode)
+    fd = os.open(file_name, os_mode)
+    return os.fdopen(fd)
 
 #############################################################################
 #############################################################################
