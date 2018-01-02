@@ -306,13 +306,6 @@ These should be regexp quoted."
   :type 'string
   :group 'cscope)
 
-(defcustom dp-gtags-cscope-GTAGS_FS_OPTS 
-  (and dp-gtags-cscope-ignore-case-strings-p
-       dp-gtags-cscope-gtags-ignore-case-option)
-  "*Default args to pass opts to gtags-cscope findstring() via env var."
-  :type 'string
-  :group 'cscope)
-
 (defcustom dp-cscope-program "gtags-cscope"
   "*The pathname of the cscope executable to use."
   :type 'string
