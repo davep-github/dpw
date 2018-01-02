@@ -27,7 +27,7 @@ unset eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
 
-all_options="CNPRVacdghlm:npqr:svz"
+all_options="CNPRVacdghlm:npqr:svzi"
 ln_s_p=
 MV_CMD=
 MV_OPTS=
@@ -53,7 +53,6 @@ ropt=-r
 zippit=
 substitute_opt=
 first_arg_is_not_regexp=
-dash_n_prefix='[-n]: '
 # Ignore any iffy renames.
 paranoid_p="auto_exit"
 Usage()
@@ -91,11 +90,18 @@ risky_p()
 
 WHINE()
 {
-    [ -z "${dash_n}" ] && {
+    EExecDashN_p || {
         echo 1>&2 "$@"
     }
 }
-    
+
+if [ EExecDashN_p ]
+then
+    echo 'EExecDashN_p is true'
+else
+    echo 'EExecDashN_p is false'
+fi
+
 if [ "$1" = "-G" ]
 then
     shift
@@ -115,7 +121,7 @@ else
     do
 	case $1 in
             -R) ropt=;;
-	    -n) skip_if_dest_exists_p=y; verbose=1; dash_n=y;;
+#	    -n) skip_if_dest_exists_p=y; verbose=1; dash_n=y;;
             -N) dash_n_prefix=""; skip_if_dest_exists_p=y; verbose=1; dash_n=y;;
 	    -q) query=y;;
 	    -v) verbose=1;;
@@ -133,6 +139,7 @@ else
             -z) zippit=t;;
                 # Make regexp an option as well.
             -r) sed_expr="$2"; shift;;
+            -i) dash_i='-i';;
             -h) Usage; exit 0;;
 	    --) shift ; break ;;
 	    *) 
@@ -145,7 +152,7 @@ fi
 
 pristine_args=("$@")
 
-[[ -n "$paranoid_p" && -n "$dash_n" ]] && {
+[[ -n "$paranoid_p" ]] && EExecDashN_p && {
     #echo "Clearing paranoid since we aren't doing anything anyway."
     paranoid_p=""
 } 1>&2
@@ -204,26 +211,18 @@ sed_renamer()
 	*) skip_if_dest_exists_p=y;;
 	esac
     fi
-    [[ "$verbose" == 1 && -z "$dash_n" ]] && eval $ECHO $cmd
+    EExecDashN_p && eval $ECHO $cmd
     # file exists ?
     if [ -f "$newname" ]
     then
         if [ -n "$skip_if_dest_exists_p" ]
         then
             [ -z "$zippit" ] && echo 1>&2 "dest($newname) exists. skipping."
-        elif [ -n "$dash_n" ]
-        then
-            eval echo "${dash_n_prefix}${cmd}"
         else
-            eval $cmd
+            EExec eval $cmd
         fi
     else
-        if [ -n "$dash_n" ]
-        then
-            eval echo "${dash_n_prefix}${cmd}"
-        else
-            eval $cmd
-        fi
+        EExec eval $cmd
     fi
 }
 
