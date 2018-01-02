@@ -983,7 +983,7 @@ part of a longer name."
 
 (defvar dp-c++-mode-last-event nil)
 (defun dp-c++-mode-undo (&optional arg)
-  "If last-command cause a C++ name space to be added, undo that, else just undo."
+  "If last-command caused a C++ name space to be added, undo that, else just undo."
   (interactive "P")
   ;;(dmessage "last-command>%s<" last-command)
   (if (and (eq last-command 'dp-maybe-add-c++-namespace_was_added)
