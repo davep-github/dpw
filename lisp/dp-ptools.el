@@ -134,12 +134,17 @@ that we're under a directory named work."
   t)
 
 (defun dp-gtags-set-cscope-ignore-case (ignore-case-p)
-  (let (enval stat_str)
+  (let (enval stat_str clr-p)
     (if ignore-case-p
         (setq enval dp-gtags-cscope-gtags-ignore-case-option
-              stat_str "ignore")
-      (setq enval ""
-            stat_str "respect"))
+              stat_str "ignore"
+              clr-p nil)
+      (setq enval "squawk!"
+            stat_str "respect"
+            clr-p t))
+    (setenv dp-gtags-cscope-findstring-options-env-var-name
+            enval
+            clr-p)
     (dmessage "gtags will %s case" stat_str)))
 
 (defun dp-gtags-cscope-ignore-case ()
@@ -509,7 +514,7 @@ Oddly, it doesn't handle structs.")
 ;; fsf wants nil t to go to the next tag,
 ;; xemacs wants nil nil ""
 ;;(global-set-key [(control ?.)] (kb-lambda (find-tag nil (not (dp-xemacs-p)))))
-;; When gtagsing, this will be it's prefix.
+;; When gtagsing, this will be its prefix.
 
 (dp-deflocal dp-gtags-suggested-key-mapping t
   "Does this buffer want gtags key mappings?")
