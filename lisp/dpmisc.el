@@ -8864,10 +8864,11 @@ better than counting on our exit hook saving to the previous context. We need
 2 context files because as soon as we begin operating, we begin writing to
 the current context file, which will obliterate the previous one. This is bad
 if we do some work before we decide to recover a previous context.  Context
-files are host specific, so if we move to another machine, we may want to
-recover the context from the previous machine. This function allows us to
-specify a specific context file so we can get context from another machine.
-@todo XXX ??? Keep n previous contexts?"
+files are host specific, which allows us to keep the contexts separate. If we
+move to another machine, we may want to recover the context from the previous
+machine. This function allows us to specify a specific context file so we can
+get context from another machine.  @
+todo XXX ??? Keep <n> previous contexts?"
     (interactive "P")
     (cond 
      ((not file-flag) (dp-recover-context-from-file saveconf-file-name-prev))
@@ -8898,7 +8899,7 @@ specify a specific context file so we can get context from another machine.
     do (add-hook hook 'dp-save-context)))
 
 ;;
-;; // Add new macros
+;; // Add new macros here.
 ;;
 
 ;;;
@@ -9098,7 +9099,7 @@ If OBA is nil, use `obarray'."
   (save-excursion
     (when (and (not (looking-at "\\<"))
                (or (not (looking-at "\\b\\|\\s-"))
-              (dp-looking-back-at "\\S-")))
+                   (dp-looking-back-at "\\S-")))
       (backward-word))
     (point)))
   
@@ -11132,6 +11133,7 @@ I'm not sure what modes are affected."
                               "class"
                               "try"
                               "except"
+                              "with"
                               "finally")))
 
 (defun dp-trim-spaces (str &optional start-p end-p)
