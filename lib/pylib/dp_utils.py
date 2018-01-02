@@ -228,10 +228,12 @@ def pbinh(val, field_width=4, sep_str=" ", sep=False):
     print string.join(cbinh(val, field_width=field_width,
                             sep_str=sep_str, sep=sep), '\n')
 
+########################################################################
 def file_len(file):
     stat_buf = os.stat(file)
     return stat_buf[stat.ST_SIZE]
 
+########################################################################
 def bq(cmd, hack_newline=True):
     """bq(cmd) : backquote cmd as in the shell's `cmd`.
     Return the output as a string."""
@@ -244,6 +246,7 @@ def bq(cmd, hack_newline=True):
         ret = ret[:-1]
     return ret
 
+########################################################################
 def repr_dict(id, od):
     '''Convert a dict to a dict containing reprs of each element.'''
     if od:
@@ -254,6 +257,27 @@ def repr_dict(id, od):
     for k in id.keys():
         od[k] = `id[k]`
     return od
+
+########################################################################
+def binstr_to_int(num):
+    print "type(num): %s, num: %s" % (type(num), num)
+    if type(num) == type(''):
+        num = eval(num)
+    num = abs(int(num))
+    ret = []
+    while num > 0:
+        hdigit = num & 0x0f
+        num = num >> 4
+        ret.append(hdigit)
+    ret.reverse()
+    return ret
+
+########################################################################
+def int_list_to_num(numbers, base=10):
+    ret = 0
+    for n in numbers:
+        ret = ret * base + n
+    return ret
 
 #
 # called from a file tree walk
@@ -274,6 +298,7 @@ def find_leaf_dirs_func(data, dirname, fnames):
             return                      # not a leaf, it contains a dir
     leaf_dirs.append(dirname)
 
+########################################################################
 def find_leaf_dirs(root):
     leaves = []
     if root[0] != '/':
@@ -284,13 +309,16 @@ def find_leaf_dirs(root):
 
     return leaves
 
+########################################################################
 def function_name(levels=1):
     '''Version specific?????'''
     return sys._getframe(levels).f_code.co_name
 
+########################################################################
 def py_lineno(levels=1):
     return sys._getframe(levels).f_lineno
 
+########################################################################
 # I couldn't find something like this anywhere, but I'm sure it exists.
 def find_file_in_path(filename, path=sys.path):
     ospath = os.path
@@ -302,6 +330,7 @@ def find_file_in_path(filename, path=sys.path):
             return tname
     return None
 
+########################################################################
 def prune_dict(d):
     #pprint.pprint(d)
     for k, v in d.items():
