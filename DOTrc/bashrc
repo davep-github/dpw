@@ -503,9 +503,9 @@ then
 fi 1>&2
 
 # add our path to python's list of where to look for imports.
-#duped from above. export PYTHONPATH=$(dp_add_to_path_iff "$PYTHONPATH" "$PATH:$PYTHONPATH_POST")
-#duped from above. PYTHONPATH=$(dp_add_to_path_iff -p "$PYTHONPATH" "$PYTHONPATH_PRE")
-#duped from above. PYTHONPATH=$(path-verify -d "$PYTHONPATH")
+export PYTHONPATH=$(dp_add_to_path_iff "$PYTHONPATH" "$PATH:$PYTHONPATH_POST")
+PYTHONPATH=$(dp_add_to_path_iff -p "$PYTHONPATH" "$PYTHONPATH_PRE")
+PYTHONPATH=$(path-verify -d "$PYTHONPATH")
 
 if tty -s
 then
