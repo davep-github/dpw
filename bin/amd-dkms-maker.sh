@@ -42,10 +42,72 @@ nuke_all()
     EExec sudo dkms remove amdgpu-pro/$PRO_VER --all
 }
 
+zenity_popper()
+{
+    local rc="${1}"; shift
+    local this_rc=88
+
+    if EExecDashN_p
+    then
+        zenity --error --text DEBUG
+        this_rc="1"
+    elif ((rc == 0))
+    then
+        ok_label=Reboot
+        cancel_label=Continue
+        zenity --question --text "${progname}: Success" \
+            --default-cancel \
+            --ok-label "Reboot" \
+            --cancel-label "Continue"
+        this_rc="$?"
+    else
+        zenity --error --text Failure
+        this_rc="1"
+    fi
+    return "${this_rc}"
+}
+
+xmessage_popper()
+{
+    local rc="${1}"; shift
+    local buttnum
+    local stat
+    local buttons
+
+    #       101, 102
+    buttons="OK, reboot"
+    fail_buttons="OK"           # Keep same button number for OK.
+    popups=${DISPLAY-}
+    if [ -n "${popups}" ]
+    then
+        EExec_verbose_echo_id --pre 1st rc
+        if EExecDashN_p
+        then
+            stat="DEBUG"
+            buttons="${fail_buttons}"
+        elif ((rc != 0))
+        then
+            stat="FAIL"
+            buttons="${fail_buttons}"
+        else
+            stat="SUCCESS"
+        fi
+        banner "$progname: ${stat}." | "${popper}"
+        buttnum=$?
+
+        raise-window "${popper}" "$rc"
+    fi
+    EExec_verbose_echo_id buttnum
+
+    xmessage -center -buttons "${buttons}" -file -
+    buttnum=$?
+    return $((buttnum == 102))
+}
+
 : ${remove_p=t}
 : ${install_p=t}
 : ${popups=${DISPLAY-}}
-: ${popper:=xmessage}           # Any replacement must be compatible w/xmessage.
+: ${popper:=zenity_popper}   # Any replacement must be compatible w/xmessage.
 while (($# > 0))
 do
   case "$1" in
@@ -53,8 +115,10 @@ do
       --just-nuke|--nuke-all|--njn) nuke_fun=nuke_all; nuke_exit=exit;;
       --and-stat|--stat|--stat-1st|stat-first) stat_fun=stat_all; stat_exit=true;;
       --and-nuke|--nuke|--nuke-1st|--nuke-first|--njn) nuke_fun=nuke_all; nuke_exit=true;;
-      --remove) remove_p=t;;
-      --no-remove) remove_p=;;
+      --xmessage|--xm) popper=xmessage_popper;;
+      -z|--zenity|--zm|--zmsg|--zmessage) popper=zenity_popper;;
+      --remove|--rm) remove_p=t;;
+      --no-remove|--nrm|--keep) remove_p=;;
       --) shift; break;;
       *) break;;
    esac
@@ -69,8 +133,8 @@ $nuke_exit
 if [ -n "${remove_p}" ]
 then
     status=$(sudo dkms status amdgpu-pro/$PRO_VER -k $(uname -r)) 
-    echo "status>$status<"
-    echo "${status}" | EExec sed -rn "s/(amdgpu-pro, ${PRO_VER}: )(.*)$/\2/p"
+    EExec_verbose_echo_id status
+    echo "${status}" | EExec -y sed -rn "s/(amdgpu-pro, ${PRO_VER}: )(.*)$/\2/p"
 
     EExec_verbose_echo_id status
     remove_p=
@@ -83,7 +147,7 @@ then
     esac
     if [ -n "${remove_p}" ]
     then
-        echo "${status}"
+        EExec_verbose_echo_id status
         echo "Removing."
         # Man does this whole thing suck.  Accretion by too quick hacks from
         # a "simple" helper function.
@@ -102,46 +166,24 @@ then
 else
     echo "Removal not requested."
 fi
-rc=0
+
+rc=${1-1}
 if [ -n "$install_p" ]
 then
     EExec --no-exit sudo dkms install amdgpu-pro/$PRO_VER -k $(uname -r)
     rc=$?
-    EExec_verbose_echo_id --pre 0th rc
+    EExec_verbose_echo_id --pre 0th- rc
     ((rc != 0)) && {
         EExec cat /var/lib/dkms/amdgpu-pro/17.30-464532/build/make.log
     }
 
-    buttnum=
-    #        101   ,102
-    buttons="OK, reboot"
-    fail_buttons="OK"               # Keep same button number for OK.
-    popups=${DISPLAY-}
-    if [ -n "${popups}" ]
-    then
-        EExec_verbose_echo_id --pre 1st rc
-        if EExecDashN_p
-        then
-            stat="DEBUG"
-            buttons="${fail_buttons}"
-        elif ((rc != 0))
-        then
-            stat="FAIL"
-            buttons="${fail_buttons}"
-        else
-            stat="SUCCESS"
-        fi
-        banner "$progname: ${stat}." | "${popper}" -buttons "${buttons}" -file -
-        buttnum=$?
-    
-        raise-window "${popper}"
-    fi
-
-    EExec_verbose_echo_id buttnum
-
-    [ "${buttnum}" = 102 ] && REBOOT=t
+    EExec_verbose_echo_id popper rc
+    EExec -y --no-errors "${popper}" "${rc}"
+    rc="$?"
+    EExec_verbose_echo_id --pre "popper rc:" rc
 fi
 
-((rc == 0)) && [ -n "${REBOOT-}" ] && sudo shutdown -r now
+EExec_verbose_echo_id --pre 2nd rc
+((rc == 0)) && sudo shutdown -r now
 
 exit $rc
