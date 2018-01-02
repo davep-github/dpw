@@ -54,12 +54,6 @@ go_lookup()
 
 for o in "$@"
 do
-  # change to an existing dir with the arg's name.
-  # @todo XXX This can be a PITA.  Do I really want it?
-  [ -d "${o}" ] && {
-      echo "${o}"
-      exit 0
-  }
   case "$1" in
       -l) show_dir_p="t"; SHIFT=: ;;
       -L) shift; fini $(go_lookup "$1"); exit;;
