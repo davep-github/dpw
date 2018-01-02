@@ -193,7 +193,7 @@ class FileTreeWalker:
 
             dp_io.fdebug(DEBUG_SHOW_ALL_DIRS, 'nf: %3d, cwd>%s<\n',
                          len(files), cwd)
-            if dp_io.debug_mask_exact_set(DEBUG_SHOW_ALL_FILES_SORTED):
+            if dp_io.debug_mask_exact_set_p(DEBUG_SHOW_ALL_FILES_SORTED):
                 dp_io.eYOPPf('debug_mask: 0x%04x, AFS: 0x%04x\n',
                              dp_io.debug_mask, DEBUG_SHOW_ALL_FILES_SORTED)
                 files.sort()
