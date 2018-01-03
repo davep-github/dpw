@@ -501,7 +501,9 @@ Otherwise non-nil."
   ;; 2nd (add clozer), 
   ;; 3rd (just eol, newline, indent)
   ;; ? repeat
-  (state states)                        ; `car' is state
+  ;; FSF doesn't seem to like referencing previously initialized slots.  let
+  ;; vs let*
+  (state '(add-sep add-clozer add-newline)) ; `car' is state
   ;; Where we added the junk.
   (add-here nil)
   ;; Where we were when we started.

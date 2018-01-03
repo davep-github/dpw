@@ -72,7 +72,7 @@ FROM inherits `dp-time-hours-from' default value (q.v)."
   (interactive "FFile: \nsmessage: \nP")
   (with-current-buffer (get-buffer-create (or tmp-buf
                                               " *dp Log Buffer*"))
-    (erase-buffer)
+    (dp-erase-buffer)
     (insert message)
     (append-to-file (point-min) (point-max) 
                     (or log-file-name dp-def-time-log-file-name))

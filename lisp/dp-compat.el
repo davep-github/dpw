@@ -5,6 +5,8 @@
 ;;; current platform.
 ;;;
 
+(message "dp-compat loading...")
+
 ;;
 ;; load up the proper set of compat cruft.
 ;;
@@ -16,3 +18,4 @@
 ;;;
 ;;;
 (provide 'dp-compat)
+(message "dp-compat loading...done")

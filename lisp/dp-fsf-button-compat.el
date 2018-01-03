@@ -20,6 +20,7 @@ mouse event is used.
 If there's no button at POS, do nothing and return nil, otherwise
 return t."
   (interactive
+   (message "IN push-button!!!")
    (list (if (integerp last-command-event) (point) last-command-event)))
   (if (and (not (integerp pos)) (eventp pos))
       ;; POS is a mouse event; switch to the proper window/buffer

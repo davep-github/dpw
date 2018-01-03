@@ -327,9 +327,7 @@
    ;;;;;;;;;;;;;;;;;
            ;; pre-preprocessor constructs.
            ((dp-in-cpp-construct-p)
-            (save-excursion
-              (beginning-of-line)
-              (dp-c-indent-command))
+            (dp-c-indent-command)
             (dmessage "cob: cpp statement.")
             (setf (dp-cob-state-t-last-sub-command dp-cob-state) 'cpp-stmt)
             t)

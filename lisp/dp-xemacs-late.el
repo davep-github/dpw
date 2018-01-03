@@ -242,7 +242,7 @@ Turn off if on-off < 0 (e.g. C-u - interactively)"
 	(list (cons modeline-buffer-id-left-extent
 		    (cons 10 (list
 			      (list 'line-number-mode "L%l")
-			      (list 'column-number-mode " C%c"))))
+			      (list 'column-number-mode "C%c"))))
 	      " "
 	      (list 24 (list modeline-buffer-id-right-extent "%b"))))
   " "

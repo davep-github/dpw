@@ -1,46 +1,20 @@
 (require 'vc)
 
-(defun dp-select-amd-c-style ()
+(defun dp-add-amd-c-style ()
   "Set up C/C++ style."
   (interactive)
-  (cond
-   ;; Main development boxen, so I needs the kernel mode.
-   ((string-match "^\\(cz\\|xerxes$\\|yyz\\)" (dp-short-hostname))
-    (setq dp-current-c-style dp-kernel-c-style
-          dp-current-c-style-name "dp-kernel-c-style"))
-   ((string-match "^atl" (dp-short-hostname))
-    (setq dp-current-c-style ptb-c-style
-          dp-current-c-style-name "ptb-c-style"))
-   ((string-match "brahma/ec/linux/" buffer-file-truename)
-    (setq dp-current-c-style dp-kernel-c-style
-          dp-current-c-style-name "dp-kernel-c-style"))
-   (t (setq dp-current-c-style dp-default-c-style
-            dp-current-c-style-name dp-default-c-style-name))))
+  (setq dp-default-c-style-name "amd-c-style")
+  (c-add-style "amd-c-style" dp-kernel-c-style t))
 
-;;;(dp-select-amd-c-style)
-
-(defun dp-add-amd-c-style ()
-  (interactive)
-  (dmessage "dp-add-amd-c-style")
-  (dp-select-amd-c-style)
-  (dp-c-add-default-style))
-
-(defun dp-amd-c-mode-common-hook ()
-  (interactive)
-  (dmessage "dp-amd-c-mode-common-hook")
-  (dp-add-amd-c-style)
-  (c-add-style dp-current-c-style-name dp-current-c-style t)
-
-;;   ;; Some files use this and I can't find it.
-;;   (defalias 'linux-c-mode 'c-mode)
-  (dp-define-local-keys
-   '(
-     [tab] dp-c*-electric-tab
-     [? ] dp-c*-electric-space)))
-
-;; This was a recommended way to do this.  Is it really necessary? It was
-;; hacked in quickly.
-(add-hook 'c-mode-common-hook 'dp-amd-c-mode-common-hook)
+;;Meh.
+(add-hook 'c-mode-common-hook (lambda ()
+                                (dp-add-amd-c-style)
+                                ;; Some files use this and I can't find it.
+                                (defalias 'linux-c-mode 'c-mode)
+                                (dp-define-local-keys
+                                 '(
+                                   [tab] dp-c*-electric-tab
+                                   [? ] dp-c*-electric-space))))
 
 ;; Make it so that we `align' properly:
 ;; struct moo
@@ -116,74 +90,34 @@
 ;;          ("/proj/ras_arch/ras/edc/brahma/ec")
 ;;          )))
 
-;; Auto updating (of gtags) works poorly with multiple databases.
+;; Auto updating (of gtags) sucks with multiple databases.
 ;; Avoid having multiple databases in a single path.
-;;use simple hier search (setq cscope-database-regexps
-;;use simple hier search       '(
-;;use simple hier search         ;; Only search the big dbs if we're in their directory.
-;;use simple hier search         (
-;;use simple hier search          "^/proj/ras_arch/ras/edc/brahma/ec/kgd/linux$"
-;;use simple hier search          ("/proj/ras_arch/ras/edc/brahma/ec/kgd/linux")
-;;use simple hier search          t)
+(setq cscope-database-regexps
+      '(
+        ;; Only search the big dbs if we're in their directories.
+        (
+         "^/proj/ras_arch/ras/edc/brahma/ec/linux$"
+         ("/proj/ras_arch/ras/edc/brahma/ec/linux")
+         t)
 
-;;use simple hier search         (
-;;use simple hier search          "^/proj/ras_arch/ras/edc/brahma/ec$"
-;;use simple hier search          ("/proj/ras_arch/ras/edc/brahma/ec")
-;;use simple hier search          t)
+        (
+         "^/proj/ras_arch/ras/edc/brahma/ec$"
+         ("/proj/ras_arch/ras/edc/brahma/ec")
+         t)
 
-;;use simple hier search         (
-;;use simple hier search          "^/proj/ras_arch/ras/edc/brahma/ec/drm"
-;;use simple hier search          ("/proj/ras_arch/ras/edc/brahma/ec/drm")
-;;use simple hier search          (t)
-;;use simple hier search          t)
+        (
+         "^/proj/ras_arch/ras/edc/brahma/ec/drm"
+         ("/proj/ras_arch/ras/edc/brahma/ec/drm")
+         (t)
+         t)
 
-;;use simple hier search         (
-;;use simple hier search          "^/proj/ras_arch/ras/edc/brahma/ec/kgd/"
-;;use simple hier search          ("/proj/ras_arch/ras/edc/brahma/ec/kgd/linux/drivers/gpu/drm/amd")
-;;use simple hier search          t
-;;use simple hier search          ;; These will get stale, but the stuff we'll be looking for will be
-;;use simple hier search          ;; under more up-to-date dbs.
-;;use simple hier search          ("/proj/ras_arch/ras/edc/brahma/ec/kgd/linux")
-;;use simple hier search          t
-;;use simple hier search          ("/proj/ras_arch/ras/edc/brahma/ec")
-;;use simple hier search          )))
-
-(setq auto-mode-alist (cons '("\\.cl$" . c-mode) auto-mode-alist))
-
-(defvar bookmark-default-file
-  (dp-nuke-newline (shell-command-to-string
-                    "mk-persistent-dropping-name.sh --use-project-as-prefix emacs.bmk")))
-
-;; For now, make my old dev area RO.
-(dp-add-force-read-only-regexp 
- '("/ras.local/edc/brahma/ec"
-   "/releases.amd-17\\.40/linux"))
-
-;; (setq dp-<type>*-regexp-list
-;;       (dp-add-to-list
-;;        'dp-<type>*-regexp-list
-;;        (concat
-;;         "struct\\s-+"
-;;         "\\("
-;;         "amdgpu_device"
-;;         "\\|amdgpu_ring"
-;;         "\\|amdgpu_ib"
-;;         "\\|amdgpu_irq_src_funcs"
-;;         "\\|amdgpu_ring_funcs"
-;;         "\\|amd_ip_funcs"
-;;         "\\|amdgpu_irq_src"
-;;         "\\|amdgpu_iv_entry"
-;;         "\\|drm_device"
-;;         "\\|device"
-;;         "\\|device_attribute"
-;;         "\\|amdgpu_gds_reg_offset"
-;;         "\\|fence"
-;;         "\\|reg32_counter_name_map"
-;;         "\\|pid"
-;;         "\\|task_struct"
-;;         "\\|edc_dump_count_info_t"
-;;         "\\|amdgpu_cu_info"
-;;         "\\|dentry"
-;;         "\\|file_operations"
-;;         "\\|debug_file_info"
-;;         "\\)")))
+        (
+         "^/proj/ras_arch/ras/edc/brahma/ec/"
+         ("/proj/ras_arch/ras/edc/brahma/ec/linux/drivers/gpu/drm")
+         t
+         ;; These will get stale, but the stuff we'll be looking for will be
+         ;; under more up-to-date dbs.
+         ("/proj/ras_arch/ras/edc/brahma/ec/linux")
+         t
+         ("/proj/ras_arch/ras/edc/brahma/ec")
+         )))

@@ -1,3 +1,5 @@
+(message "dp-faces loading...")
+
 (defface dp-cifdef-face0
   '((((class color) (background light)) 
      (:background "paleturquoise3"))) 
@@ -307,7 +309,7 @@
 
 (defface dp-journal-embedded-lisp-face
   '((((class color) (background light)) 
-     (:foreground "royalblue"))) 
+     (:foreground "slategray3"))) 
   "Face for embedded lisp expressions."
   :group 'faces
   :group 'dp-vars)
@@ -464,3 +466,4 @@ Editing commands:
       (toggle-read-only 1))))
 
 (provide 'dp-faces)
+(message "dp-faces loaded...")

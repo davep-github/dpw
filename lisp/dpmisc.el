@@ -3,7 +3,7 @@
 ;;;
 ;;; Misc elisp code.
 ;;;
-(message "dpmisc.el...")
+(message "dpmisc.el loading...")
 (require 'advice)
 (require 'ispell)
 (require 'comint)
@@ -106,14 +106,6 @@
     "C-a C-s | RET M-a C-s | <left> M-o C-e RET Ee|__SB_rel| 12*SPC ${ M-y }"
     " C-a 3*<right>")))
 
-(defalias 'dp-git-send-email-compose-prep
-  (read-kbd-macro
-   (concat "<C-prior> ESC C-s ^ GIT: SPC \\[PATCH SPC 1/"
-           " <home> M-a <C-next> <left> C-a 5*<right> C-x r k"
-           " ESC C-r ^ Subject: <end>")))
-(defalias 'dpgsmail 'dp-git-send-email-compose-prep)
-(defalias 'gsmail 'dp-git-send-email-compose-prep)
-
 ;;;;;;; end of kbd macros ;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -168,6 +160,16 @@ beginnings and ends."
 (defun dp-insert-isearch-string ()
   (interactive)
   (insert isearch-string))
+
+;; It seems like later versions of FSF Emacs are trying to break
+;; compatibility w/ XEmacs (and older versions of themselves) as much as
+;; possible.
+;; Still, this is kind of like something I'd write.
+(defun dp-erase-buffer (&optional buf)
+  (if (not buf)
+      (erase-buffer)
+    (with-current-buffer buf
+      (erase-buffer))))
 
 (defsubst dp-buffer-syntactic-context (&rest rest)
   (save-match-data (apply 'buffer-syntactic-context rest)))
@@ -360,7 +362,7 @@ Anything else non-nil is assumed to be a quoting function.
 WILL change number of groups unless shy-p is non-nil"
   (when quote-p
     (setq first (and first (regexp-quote first))
-          last (and last (regexp-quote last))))
+          last (and last (regexp-quote) last)))
   (if (and first last)
       (format "\\(%s%s\\)\\|%s" (if shy-p "?:" "") first last)
     (or first last)))
@@ -370,7 +372,7 @@ WILL change number of groups unless shy-p is non-nil"
 WILL change number of groups unless shy-p is non-nil"
   (when quote-p
     (setq first (and first (regexp-quote first))
-          last (and last (regexp-quote last))))
+          last (and last (regexp-quote) last)))
   (if (and first last)
       (format "%s\\|\\(%s%s\\)" first (if shy-p "?:" "") last)
     (or first last)))
@@ -526,17 +528,6 @@ string containing their values."
   "Whitespace chars including newline regexp, 0 or more.")
 
 
-(defvar dp-typical-hack-vars-block "### 
-### Local Variables: ***
-### indent-tabs-mode: nil ***
-### folded-file: t ***
-### folding-internal-margins: nil ***
-### comment-start: \"# \" ***
-### comment-end: \"\" ***
-### block-comment-end: \"\" ***
-### fill-column: 9999 ***
-### End: ***
-")
 (defsubst dp-order-cons (cons &optional lessp)
   "Return CONS' elements ordered in some way as determined by LESSP.
 LESSP defaults to less-than ('<)."
@@ -803,7 +794,7 @@ examining all of the message calls."
     (when (if (numberp dp-message-no-echo-sync-p)
               (= (mod dp-message-no-echo-num dp-message-no-echo-sync-p) 0)
             dp-message-no-echo-sync-p)
-      (let ((buf-win (get-buffer-window dp-message-buffer-name t)))
+      (let ((buf-win (dp-get-buffer-window dp-message-buffer-name t)))
         (when buf-win
           (recenter nil buf-win)
           ;;(redisplay-frame)
@@ -920,7 +911,7 @@ non-white space on the line."
 (defun dp-mark-line (&optional text-only-p no-newline-p from-pos)
   "Mark the line point is on, leaving mark at bol and point at eol, as
 determined by dp-line-boundaries."
-  (interactive "_P")
+  (interactive "P")                     ; fsf - fix "_"
   (let ((region (dp-line-boundaries text-only-p no-newline-p from-pos)))
     (dp-set-mark (car region))
     (goto-char (cdr region))))
@@ -949,11 +940,10 @@ FUNC must take two args, beginning and end buffer positions."
   (interactive "*")
   (dp-operate-on-entire-line 'kill-region))
 
-(defun dp-delete-entire-line (count)
+(defun dp-delete-entire-line ()
   "Delete the entire line, ala A-D in Slick."
-  (interactive "*_p")
-  (loop repeat count do 
-    (dp-operate-on-entire-line 'delete-region)))
+  (interactive "*")
+  (dp-operate-on-entire-line 'delete-region))
 
 (defun dp-mark-line-if-no-mark (&optional text-only-p no-newline-p)
   "Mark the entire line if no mark is currently set.
@@ -1078,8 +1068,7 @@ If region is not active, default gettor is `symbol-near-point'."
                          text-props)
   "Call FUNC on the region if active, the current line otherwise.
 If APPEND-P is non-nil, append the affected text.
-Perform PRE-OP immediately before and POST-OP immediately after calling func.
-@todo Try to recognize a full line copy and then insert that at BOL when yank'd."
+Perform PRE-OP immediately before and POST-OP immediately after calling func."
   (progn
     (save-excursion
       (dp-mark-line-if-no-mark)
@@ -1097,23 +1086,13 @@ Perform PRE-OP immediately before and POST-OP immediately after calling func.
     (when deactivate-mark-p
       (dp-deactivate-mark))))
 
-(defun dp-copy-for-clipboard-paste ()
-  "Copy in such a way that app outside XEmacs can Alt-insert them.
-For some reason, I need to copy it `dp-kill-ring-save' and then reselect it."
-  (interactive "_")
-  (dp-kill-ring-save nil)
-  (exchange-point-and-mark))
-
 (defun dp-kill-ring-save (&optional append-p)
   "Copy the current region to the kill ring if mark is set,
 the current line otherwise.
 If APPEND-P if set (with prefix arg interactively) append the newly
-copied text.
-@todo Try to recognize a full line copy and then insert that at BOL when yank'd."
+copied text."
   (interactive "P")
-  (if (eq append-p '-)
-      (dp-copy-for-clipboard-paste)
-    (dp-kill-or-copy 'copy-region-as-kill append-p 'dp-pwn-sel)))
+  (dp-kill-or-copy 'copy-region-as-kill append-p 'dp-pwn-sel))
 
 (defun dp-mark-and-kill-ring-save (&optional start end append-p)
   "Activate the region spanned by START and END and copy it as kill.
@@ -1153,18 +1132,14 @@ the newly copied text."
 (defun dp-op-other-window (num op &rest args)
   "Perform OP on ARGS NUM `other-window's away."
   (interactive)
-  (setq-ifnil num 1)
-  (condition-case nil
-      (progn
-        (other-window num)
-        (apply op args))
-    (error
-     (dingm "op %s on win failed." op)))
-  (other-window (- num)))
+  (let ((num (or num 1)))
+    (other-window num)
+    (apply op args)
+    (other-window (- num))))
 
 (defun dp-scroll-up-down (&optional nlines half-page-p up-down)
   "Scroll screen down 1 line or 1/2 page."
-  (interactive "_P")
+  (interactive "P")                     ; fsf - fix "_"
 
   (let* ((lines (if (or (eq current-prefix-arg '-)
                         half-page-p)
@@ -1183,35 +1158,44 @@ the newly copied text."
       (recenter '(4)))))
 
 (defun dp-scroll-up (&optional num half-page-p)
-  (interactive "_p")
+  (interactive "p")                     ; fsf - fix "_"
   (dp-scroll-up-down num half-page-p 'up))
 (put 'dp-scroll-up 'isearch-command t)
 
 (defun dp-scroll-down (&optional num half-page-p)
-  (interactive "_p")
+  (interactive "p")                     ; fsf - fix "_"
   (dp-scroll-up-down num half-page-p 'down))
 (put 'dp-scroll-down 'isearch-command t)
 
 (defun dp-scroll-up-other-window (&optional num)
-  (interactive "_p")
+  (interactive "p")                     ; fsf - fix "_"
   (dp-op-other-window nil 'dp-scroll-up))
 ;;  (dp-scroll-up-down num nil 'up 'other-window))
 (put 'dp-scroll-up-other-window 'isearch-command t)
 
 (defun dp-scroll-down-other-window (&optional num)
-  (interactive "_p")
+  (interactive "p")                     ; fsf - fix "_"
   (dp-op-other-window nil 'dp-scroll-down))
 ;;  (dp-scroll-up-down num nil 'down 'other-window))
 (put 'dp-scroll-down-other-window 'isearch-command t)
 
+(global-set-key [(control up)] 'dp-scroll-down)
+(global-set-key [(control down)] 'dp-scroll-up)
+(global-set-key [(control meta up)] 'dp-scroll-down-other-window)
+(global-set-key [(control meta down)] 'dp-scroll-up-other-window)
+(global-set-key [(control kp-up)] 'dp-scroll-down)
+(global-set-key [(control kp-down)] 'dp-scroll-up)
+(global-set-key [(control meta kp-up)] 'dp-scroll-down-other-window)
+(global-set-key [(control meta kp-down)] 'dp-scroll-up-other-window)
+
 ;; .if, etc, are for Berkley makefiles.
 ;; Makepp uses just ifdef. I don't know if it must be in column 0.
 (defvar dp-ifx-re-alist
-  '((dp-if .    "[ 	]*[.#]?[ 	]*if") ; gets #if, #ifdef and #endif.
-    (dp-else .  "[ 	]*[.#]?[ 	]*else")
-    (dp-elif .  "[ 	]*[.#]?[ 	]*elif") ; ignored by the hideif stuff.
-    (dp-endif . "[ 	]*[.#]?[ 	]*endif")
-    (dp-fi    . "[ 	]*[.#]?[ 	]*fi")
+  '((dp-if .    "[ 	]*[.#][ 	]*if") ; gets #if, #ifdef and #endif.
+    (dp-else .  "[ 	]*[.#][ 	]*else")
+    (dp-elif .  "[ 	]*[.#][ 	]*elif") ; ignored by the hideif stuff.
+    (dp-endif . "[ 	]*[.#][ 	]*endif")
+    (dp-fi    . "[ 	]*[.#][ 	]*fi")
 ;;@todo;     (dp-ss-do    . "[ 	]*do")
 ;;@todo;     (dp-ss-done  . "[ 	]*done")
 ;;@todo;     (dp-ss-if    . "[ 	]*if")
@@ -1249,7 +1233,7 @@ Return nil of not on a supported directive."
 Also, if on a CPP conditional directive, find complementary part:
 {if[xx]|else|elif} -> endif, endif -> if[xx].
 Inspired by `vi-find-matching-paren'."
-  (interactive "_")
+  (interactive)                         ; fsf - fix "_"
   (let (ifdef-item)
     ;;(dmessage "0, st>%s<" (syntax-table))
     ;;(dmessage "0, %s" (char-syntax ?<))
@@ -1280,14 +1264,15 @@ Inspired by `vi-find-matching-paren'."
 ;; if this isn't done, then the char-syntax with dp-matching-<-syntax-table
 ;; as syntax-table isn't correct.
 ;; ??? What does char-syntax do?
-(message "%s" (char-syntax ?< dp-matching-<-syntax-table))
+(with-syntax-table dp-matching-<-syntax-table
+  (message "%s" (char-syntax ?<)))
 
 (defun dp-find-matching-paren-including-<0 (unbalanced-ok-p)
   "Find and goto matching paren, including ?< and ?>.
 We need to modify the syntax table to make this work.  But since that can
 cause too many other side effects, we only do it for the duration of the
 matching operation and only if we are on a ?< or ?>."
-  (interactive "_")
+  (interactive)                         ; fsf - fix "_"
   (with-syntax-table (if (looking-at "[<>]") 
                          dp-matching-<-syntax-table
                        (syntax-table))
@@ -1306,7 +1291,7 @@ matching operation and only if we are on a ?< or ?>."
 
 (defun dp-find-matching-paren-including-< (&optional unbalanced-ok-p)
   "Find a matching \"paren\", which here inclues ?< and ?>"
-  (interactive "_P")
+  (interactive "P")                     ; fsf - fix "_"
   (condition-case err-data
       (dp-find-matching-paren-including-<0 unbalanced-ok-p)
     ;; err-data: (syntax-error Unbalanced parentheses)
@@ -1317,7 +1302,7 @@ matching operation and only if we are on a ?< or ?>."
 
 (defun dp-find-closing-paren-pos (&optional unbalanced-ok-p)
   "Find a matching \"paren\", which here includes [], {}, <>"
-  (interactive "_P")
+  (interactive "P")                     ; fsf - fix "_"
   (condition-case err-data
       ;;(dp-find-matching-paren-including-<0 unbalanced-ok-p)
       ;; `forward-sexp' is better at rejecting bogus matches, e.g. "(" --> "}"
@@ -1332,7 +1317,7 @@ matching operation and only if we are on a ?< or ?>."
     (t (apply 'error err-data))))
 
 (defun dp-goto-closing-paren-pos (&rest rest)
-  (interactive "_P")
+  (interactive "P")                     ; fsf - fix "_"
   (goto-char (apply 'dp-find-closing-paren-pos rest)))
 
 (defalias 'dp-find-matching-paren 'dp-find-matching-paren-including-<)
@@ -1550,7 +1535,7 @@ Returns the buffer created."
   "Toggle the mark activation state. MARK-TO-EOL-P say to mark to end of line.
 This is just a shortcut to `dp-mark-to-end-of-line'. There's no good way to
 pass args to it because we use the prefix arg."
-  (interactive "_P")
+  (interactive "P")                     ; fsf - fix "_"
   (if mark-to-eol-p
       (dp-mark-to-end-of-line)
     (if (dp-mark-active-p)
@@ -1710,7 +1695,7 @@ Pass t for `open-newline-func' to get the basic open below behavior."
                        ;; eol, nl, indent operation.
                        ;; !<@todo XXX Try to undo any misguided changes made
                        ;; before we bailed out.
-                       (condition-case nil
+                       (condition-case appease-byte-compiler
                            (progn
                              (undo-boundary)
                              (funcall open-newline-func arg))
@@ -1726,12 +1711,12 @@ Pass t for `open-newline-func' to get the basic open below behavior."
     concat (format "\\%d" i)))
 
 (defun* dp-open-above (&optional open-newline-p)
-  "Newline before current line. Try to be clever if OPEN-NEWLINE-P is non-nil."
+  "Newline before current line."
   (interactive (list (not current-prefix-arg)))
-  (unless (and open-newline-p
-               (when (equal (forward-line -1) 0)
-                 (dp-open-newline)
-                 t))
+  (if open-newline-p
+      (progn
+        (forward-line -1)
+        (dp-open-newline))
     (beginning-of-line)
     (if (dp-in-c)
         (c-context-line-break)
@@ -1743,7 +1728,7 @@ Pass t for `open-newline-func' to get the basic open below behavior."
   "Goto beginning of buffer, quickly, and
 remember where we were in bookmarks: tbbm* and gbbm* and
 on the go back ring."
-  (interactive "_P")
+  (interactive "P")                     ; fsf - fix "_"
   (unless no-save-pos-p
     (dp-push-go-back "dp-beginning-of-buffer"))
   (goto-char (point-min)))
@@ -1802,13 +1787,6 @@ Motivated by abstraction of `dp-indent-line-and-move-down'."
   ;; `this-command' would not be an indent function.
   (when new-this-command
     (setq this-command new-this-command)))
-
-(defun dp-reindent-line ()
-  (interactive)
-  (unless (dp-empty-line-p)
-    (dp-cleanup-line)
-    (unless (dp-empty-line-p)
-      (dp-press-tab-key))))
 ;;
 ;; A bunch of these often works better than indent-region.
 ;; I've seen indent-region get confused and make mistakes,
@@ -1831,12 +1809,13 @@ Tidying includes: re `indent-for-comment' and fixing up white space."
           ;; Not operating on an empty line is useful because it doesn't
           ;; cause the buffer to be modified. Otherwise, the tab + remove
           ;; trailing white space modifies the buffer.
-          (dp-reindent-line)
+          (unless (dp-empty-line-p)
+            (dp-press-tab-key))
           (unless (or (Cu--p)
                       dp-il&md-dont-fix-comments-p)
             (dp-with-saved-point nil
               (dp-fix-comment)))
-          ))
+          (dp-cleanup-line)))
        t
        'preserve-column
        'forward-line)))
@@ -1931,7 +1910,7 @@ from simple.el"
   "Divide frame height by this to get new line for top of screen.")
 
 (defun dp-center-to-top (&optional arg recursing-p)
-  (interactive "_P")
+  (interactive "P")                     ; fsf - fix "_"
   (if (and (not (eq arg '-))
            (or (memq last-command 
                     '(dp-center-to-top dp-center-to-bottom
@@ -1969,7 +1948,7 @@ from simple.el"
 (put 'dp-center-to-top 'isearch-command t)
 
 (defun dp-center-to-top-other-window (&optional arg recursing-p)
-  (interactive "_P")
+  (interactive "P")                     ; fsf - fix "_"
   (dp-op-other-window nil 'call-interactively 'dp-center-to-top))
 
 (put 'dp-center-to-top-other-window 'isearch-command t)
@@ -1997,7 +1976,7 @@ if FROM-BEGINNING-P, mark entire line. Leaves cursor @ end-of-region.
 By default, if we're @ end of line, mark to beginning.  Many 
 \"manual macros\" end up @ eol or otherwise find it convenient to mark the 
 preceding line."
-  (interactive "_P")
+  (interactive "P")                     ; fsf - fix "_"
   (let ((region (dp-bound-rest-of-line :from-beginning-p from-beginning-p
                                        :no-newline-p no-newline-p
                                        :all-if-@-eolp all-if-@-eolp)))
@@ -2005,7 +1984,7 @@ preceding line."
     (goto-char (cdr region))))
 
 (defun dp-mark-up-to-string0 (arg str &optional end-of-match-p)
-  (interactive "_p\nsMark up to str: ")
+  (interactive "p\nsMark up to str: ")  ; fsf - fix "_"
   (if (string= str "")
       (dp-mark-to-end-of-line)
     (dp-set-mark (point))
@@ -2017,11 +1996,11 @@ preceding line."
         (point)))))
 
 (defun dp-mark-up-to-string (arg str)
-  (interactive "_p\nsMark up to str: ")
+  (interactive "p\nsMark up to str: ")  ; fsf - fix "_"
   (dp-mark-up-to-string0 arg str nil))
 
 (defun dp-mark-up-to-string-end (arg str)
-  (interactive "_p\nsMark up to str: ")
+  (interactive "p\nsMark up to str: ")  ; fsf - fix "_"
   (dp-mark-up-to-string0 arg str 'end-of-match-p))
 
 (defun dp-copy-to-end-of-line (&optional beginning include-newline)
@@ -2074,18 +2053,17 @@ E.g. ;; commented out by dp-comment-out-sexp;"
                              (read-from-minibuffer "Comment start: " "# ")))
          (comment-start (or (dp-build-co-comment-start comment-tag
                                                        comment-start0)))
-         (ce (cond
-              ;; known rest of line comments
-              ;; (comment-end is "")
-              ((or
-                (string-match
-                 "\\(//\\|[;#]\\)+\\s-*" comment-start))
-               "")
-              (block-comment-end)
-              (comment-end)))
+         (ce (or block-comment-end comment-end))
          (comment-end (concat (or (and ce
                                        (not (string-equal ce ""))
                                        ce)
+                                  (cond
+                                   ;; known rest of line comments
+                                   ;; (comment-end is "")
+                                   ((or 
+                                     (string-equal comment-start "#")
+                                     (string-equal comment-start ";"))
+                                    ""))
                                   (if we-set-comment-start nil "")
                                   (read-from-minibuffer "Comment end: " "")
                                   "")
@@ -2324,11 +2302,13 @@ Used and set by \\[io] and used by \\[io-region].")
 
 (defun dp-simple-C-uncomment (s &optional open-repl close-repl)
   (interactive)
-  (replace-in-string (replace-in-string s 
-                                        "/\\*" 
-                                        (or open-repl "/."))
-                     "\\*/" 
-                     (or close-repl "./")))
+  (replace-regexp-in-string
+   "\\*/"
+   (or close-repl "./")
+   (replace-regexp-in-string
+    "/\\*"
+    (or open-repl "/.")
+    s)))
 
 (defun fo (beg end)
   (interactive "r")
@@ -2674,9 +2654,8 @@ spaces and tabs as generated by `indent-to'."
   (dotimes (i num)
     (insert "\t")))
 
-(defun dp-nuke-nearby-whitespace (&optional backwards-too-p)
-  "Delete all whitespace after point up to next non-white char.
-With BACKWARDS-TOO-P, nuke white space before `point'."
+(defun dw (&optional backwards-too-p)
+  "Delete all whitespace after point up to next non-white char."
   (interactive "*")
   (if backwards-too-p
       (skip-chars-backward dp-ws))
@@ -2686,10 +2665,10 @@ With BACKWARDS-TOO-P, nuke white space before `point'."
 (defun dp-one-tab (&optional just-forwards-p)
   "Convert all ws to a single tab."
   (interactive "*P")
-  (dp-nuke-nearby-whitespace (not just-forwards-p))
+  (dw (not just-forwards-p))
   (insert "\t"))
 ;;  (dp-tabdent))
-(dp-defaliases '1t 'ot 'dp-tab...just-tab 'dp-one-tab)
+(dp-defaliases '1t 'ot 'dp-one-tab)
 
 (defstruct dp-parenthesize-region-info
   (first "I'm first")
@@ -4126,7 +4105,7 @@ other: other is value of initial contents."
   "Comment out region if mark is active, else do a normal indent-for-comment.
 With optional ARG (interactively with prefix-arg) eq '-, remove any comment
 on the line with `kill-comment`.
-If ARG is a positive non-nil and and not '- align the comment with
+If ARG is a positive non-nil and and not '- not < 0 align the comment with
 the one on the previous line."
   (interactive "*P")
   ;;(dmessage "dmap>%s<" (dp-mark-active-p))
@@ -4392,7 +4371,7 @@ happen.")
 If ARG is '- discard the top entry.
 Otherwise, if ARG is non-nil, move forward thru the ring.
 !<@todo make C-u0, C-0 prefix go forward and discard."
-  (interactive "_P")
+  (interactive "P")                     ; fsf - fix "_"
   (if (ring-empty-p dp-go-back-ring)
       (message "Go back ring is empty.")
     (if (and arg
@@ -4513,7 +4492,25 @@ Also allows BUFFER to be nil and will then use `current-buffer'.
 Uses `get-buffer' to get the buffer."
   (when buffer
     (setq buffer (get-buffer buffer)))  ; Let "names" work, too.
-  (get-buffer-window (or buffer (current-buffer)) frames devices))
+  (if (dp-xemacs-p)
+      (get-buffer-window (or buffer (current-buffer)) frames devices)
+    (get-buffer-window (or buffer (current-buffer)) frames)))
+
+(defun dp-optionally-require (feature &optional file-name)
+  "Wrap `require' in condition-case to allow us to
+continue in the case of an error.
+Prints a warning if anything goes wrong.  Useful for trying to load
+features which may have missing dependencies, etc.
+Return t if successful, nil otherwise."
+  (interactive)
+  (condition-case error-info
+      (progn
+	(require feature file-name)
+	t)
+    (error 
+     (message "**** Problem in (require %s %s): %s" 
+	      feature file-name error-info)
+     nil)))
 
 (defface dp-less-bg-face
   '((((class color) (background light)) 
@@ -4590,41 +4587,6 @@ Interpret buffer contents by calling `less' on the buffer's file."
   (if (buffer-modified-p)
       (error "Buffer is modified: please save or revert the buffer first."))
   (less (buffer-file-name) (buffer-name) 'unlessl))
-
-(defvar dp-contrib-site-packages (expand-file-name 
-                                  "~/lisp/contrib/site-packages")
-  "My contrib site packages root.")
-
-(defvar dp-local-package-info (expand-file-name 
-                                "~/local/share/info")
-  "My local site packages root.")
-
-(defun dp-mk-site-package-dir (&rest names)
-  (expand-file-name (paths-construct-path 
-                     (cons dp-contrib-site-packages names))))
-
-(defvar dp-site-package-info (dp-mk-site-package-dir "info")
-  "My local site packages info root.")
-
-(defvar dp-site-package-lisp (dp-mk-site-package-dir "lisp")
-  "My local site packages lisp root.")
-
-(defun dp-mk-site-package-lisp-dir (&rest names)
-  (expand-file-name (paths-construct-path (cons dp-site-package-lisp names))))
-
-(defvar dp-contrib-package-root "~/lisp/contrib")
-
-(defun dp-mk-contrib-subdir (&rest subdir-components)
-  (expand-file-name (paths-construct-path
-                     (cons dp-contrib-package-root subdir-components))))
-                    
-(defun dp-mk-contrib-pkg-child (&rest pkg-names)
-  (expand-file-name (paths-construct-path  
-                     (cons dp-contrib-site-packages pkg-names))))
-
-(defun dp-mk-contrib-site-pkg-child (&rest pkg-names)
-  (expand-file-name (paths-construct-path  
-                     (cons dp-contrib-site-packages pkg-names))))
 
 ;;; ??? emacs days??? (defvar dp-hyperbole-dir "/usr/yokel/share/emacs/site-lisp/hyperbole")
 (defvar dp-hyperbole-dir 
@@ -5078,9 +5040,8 @@ Here, first means the car of the list."
 ;; {f -> defuns, l -> lines, s -> statements, S -> sentences, ...} and
 ;; other units that emacs understands.
 (defun dp-goto-line (line-or-bm &optional nada) ;<:dgl|goto line:>
-  "Goto line, char pos or bookmark. Saves current position on go-back first.
-Append \"c\" to LINE-OR-BM or prefix with [=.#] to use it as a point value vs
-a line number."
+  "Save current position on go-back stack, then goto line or bookmark.
+\[0-9]+c ==> goto that char."
   (interactive (dp-get-bm-interactive 
                 (format "line# (or w/suffix: c -> char) or bm (%s): " 
                         dp-goto-line-last-destination)
@@ -5127,7 +5088,7 @@ the size of the ring gets the same item as zero, but doesn't trigger
 the bug.
 Also, it seems to me that if interprogram-paste-function is non-nil,
 then yank never returns anything else but the clipboard text.
-Calling with \C-0 as prefix arg yields original ARG-as-nil behavior."
+Calling with C-0 as prefix arg yields original ARG-as-nil behavior."
   (interactive "*P")
   (when (and (not (Cu--p))
              (> 0 (prefix-numeric-value arg)))
@@ -5175,7 +5136,7 @@ you've added enough info for set-auto-mode to figure it out.."
     (set-auto-mode))
   (normal-mode)				;read the file vars, if any
   (turn-on-font-lock)
-  (dp-setup-found-file))
+  (dp-found-file-setup))
 
 (defalias 'sam 'dp-set-auto-mode)
 
@@ -5316,7 +5277,7 @@ to see if it's alive as well."
   "Start up an editing server.  Try for gnuserv, then server.
 This is a func so it can specified on the command line as something to run or
 not."
-  (condition-case nil
+  (condition-case appease-byte-compiler
       (progn
 	(require 'gnuserv)
 	(message "using gnuserv")
@@ -5985,10 +5946,6 @@ When beginning a sequence, (point) is saved.  This can be pushed onto
 	(dp-push-go-back (or reason "dp-push-go-back&apply") pmarker))
     (error (message "%s" (car-safe (cdr error))))))
 
-(defun dp-push-go-back&apply-rest (reason func &rest r)
-  (interactive)
-  (dp-push-go-back&apply reason func r))
-
 (defun dp-find-function ()
   "Add some useful stuff wrapped about `find-function'."
   (interactive)
@@ -6339,7 +6296,7 @@ matching ones."
           nil)))))
 
 (defun dp-goto-next-dp-extent-from-point (arg)
-  (interactive "_P")
+  (interactive "P")                     ; fsf - fix "_"
   (let ((extent (dp-next-dp-extent-from-point arg))
         col)
     (when extent
@@ -7196,7 +7153,7 @@ QUIT-KEYS, if neq t, are added to this map."
   (dp-toggle-read-only 1)
   (let ((inhibit-read-only t)
 	rc)
-    (erase-buffer)
+    (dp-erase-buffer)
     (goto-char (point-min))
     (cond
      ((stringp fill-func) (insert fill-func))
@@ -7637,7 +7594,7 @@ If region is active, set width to that of the longest line in the region."
 (defvar dp-sfh-to-compile-win-height 4
   "*The part of the frame height used for the compile window.")
 
-(defvar dp-sfh-height 74
+(defvar dp-sfh-height 72
   "*Initial frame height.")
 
 (defun dp-set-frame-height (&optional height frame)
@@ -7685,22 +7642,13 @@ If region is active, set width to that of the longest line in the region."
   (interactive)
   (mark-whole-buffer)
   (sfw-fit-region))
-
-(defun dp-up/down-with-wrap-non-empty (arg upper-downer &optional args)
-  (interactive "p")
-  (apply upper-downer arg args)
-  (let (line-num)
-        (while (and (not (equal line-num (line-number)))
-                    (dp-empty-line-p))
-          (apply upper-downer arg args)
-          (setq line-num (line-number)))))
       
 (defun dp-up-with-wrap (arg &optional command args)
   (interactive "p")
   ;;(dmessage "arg>%s<" arg)
   (let ((col (current-column)))
     (setq this-command 'previous-line)
-    (condition-case nil
+    (condition-case appease-byte-compiler
 	(previous-line arg)
       (error 
        (let ((wrap-lines (- (line-number) arg))
@@ -7715,7 +7663,7 @@ If region is active, set width to that of the longest line in the region."
   ;;(dmessage "arg>%s<" arg)
   (let ((col (current-column)))
     (setq this-command 'next-line)
-    (condition-case nil
+    (condition-case appease-byte-compiler
 	(next-line arg)
       (error 
        (let* ((max-lines (line-number (point-max)))
@@ -7724,14 +7672,6 @@ If region is active, set width to that of the longest line in the region."
 	 (move-to-column col)))))
   (if command
       (apply command args)))
-
-(defun dp-up-with-wrap-non-empty (arg &rest rest)
-  (interactive "p")
-  (apply 'dp-up/down-with-wrap-non-empty arg 'dp-up-with-wrap rest))
-
-(defun dp-down-with-wrap-non-empty (arg &rest rest)
-  (interactive "p")
-  (apply 'dp-up/down-with-wrap-non-empty arg 'dp-down-with-wrap rest))
 
 ;; useful in mew-draft-mode, since the fill results in the citation being
 ;; the fill prefix.
@@ -7934,7 +7874,7 @@ Visit /file/name and then goto <linenum>."
                                        ffap-filename
                                      name-in))))
            line-num-part)
-      (if (string-match "\\(.*\\)[@:]\\([=.]?[0-9][0-9]*[cp]?\\)?$" working-filename)
+      (if (string-match "\\(.*\\)[@:]\\([0-9][0-9]*\\)?$" working-filename)
           (setq filename-part (match-string 1 working-filename)
                 line-num-part (match-string 2 working-filename))
         (setq filename-part working-filename))
@@ -7947,7 +7887,6 @@ Visit /file/name and then goto <linenum>."
   (let* ((ffap-info (dp-ffap-file-finder2-0 name-in))
          (filename-part (car ffap-info))
          (line-num-part (cadr ffap-info)))
-    (dp-push-go-back "dp-ffap-file-finder2-0: starting file.")
     (funcall finder filename-part)
     (when (and line-num-part
                (file-exists-p filename-part)
@@ -7956,7 +7895,7 @@ Visit /file/name and then goto <linenum>."
                                      line-num filename-part))))
       (if (find-buffer-visiting filename-part)
           (dp-push-go-back "dp-ffap-file-finder2"))
-      (dp-goto-line line-num-part))))
+      (goto-line (string-to-int line-num-part)))))
 
 (defun dp-ffap-file-finder2 (&optional name-in)
   (interactive)
@@ -8235,7 +8174,7 @@ I'm over stretching it to find it anywhere."
 (defun dp-embedded-lisp-close-string (&optional prefix)
   "Create a string which introduces an embedded lisp string"
   (setq-ifnil prefix dp-embedded-lisp-prefix)
-  (concat ")" (and-stringp prefix "")))
+  (concat (and-stringp prefix "") ")"))
 
 (defun dp-mk-tag-delimiters (tag)
   (cons (format "<%s>" tag)
@@ -8312,8 +8251,8 @@ Use prefix-arg to prompt for a different TAG."
          (end (cdr be))
          (tag (dp-guess-tag-delimiters (line-beginning-position)
                                        (line-end-position))))
-    (when tag
-      (dp-eval-tagged-lisp tag beg end))))
+    (if tag
+        (dp-eval-tagged-lisp tag beg end))))
 
 (defvar dp-embedded-lisp-eval@point-prefix-arg nil
   "Holds copy of prefix arg when dp-embedded-lisp-eval@point was called.
@@ -8387,8 +8326,8 @@ search."
 
 (defun dp-embedded-lisp-eval@point (&optional no-delimitter)
   "Eval an embedded lisp string.
-An embedded lisp string is delimited by `dp-embedded-lisp-open-string' and
-`dp-embedded-lisp-close-string'. In addition the string can be tagged so that
+An embedded lisp string is delimited by dp-embedded-lisp-open-string and
+dp-embedded-lisp-close-string. In addition the string can be tagged so that
 it can be referred to in other embedded strings."
   (interactive "P")
   (setq dp-embedded-lisp-eval@point-prefix-arg current-prefix-arg)
@@ -8856,19 +8795,16 @@ Can be called directly or by an abbrev's hook.
   (defun dp-recover-context (&optional file-flag)
     "Recover our file context.
 Periodically, the list of files, windows, etc are saved so that context can
-be restored later. When we start up, the current context file is copied so
-that it becomes the previous context. In general, that is what we are
-interested in because it represents the previous context. By doing it this
-way, we have a context even if we exit in an unpleasant manner. This is
-better than counting on our exit hook saving to the previous context. We need
-2 context files because as soon as we begin operating, we begin writing to
-the current context file, which will obliterate the previous one. This is bad
-if we do some work before we decide to recover a previous context.  Context
-files are host specific, which allows us to keep the contexts separate. If we
-move to another machine, we may want to recover the context from the previous
-machine. This function allows us to specify a specific context file so we can
-get context from another machine.  @
-todo XXX ??? Keep <n> previous contexts?"
+be restored. When we start up, the current context file is copied so that it
+becomes the previous context. In general, that is what we are interested
+because it represents the previous context. By doing it this way, we have a
+context even if we exit in an unpleasant manner. This is better than counting
+on our exit hook saving to the previous context. We need 2 context files
+because as soon as we begin operating, we begin writing to the current
+context file, which will obliterate the previous one. Context files are host
+specific, so if we move to another machine, we may want to recover the
+context from the previous machine. This function allows us to specify a
+specific context file so we can get context from another machine."
     (interactive "P")
     (cond 
      ((not file-flag) (dp-recover-context-from-file saveconf-file-name-prev))
@@ -8899,7 +8835,7 @@ todo XXX ??? Keep <n> previous contexts?"
     do (add-hook hook 'dp-save-context)))
 
 ;;
-;; // Add new macros here.
+;; // Add new macros
 ;;
 
 ;;;
@@ -9034,37 +8970,39 @@ If OBA is nil, use `obarray'."
   "Convenience func for IPython mode"
   (other-window 1))
 
-(defadvice mouse-track (around dp-mouse-track activate)
-  "dp-push-go-back advised `mouse-track'."
-  (interactive "e")  
-  (let* (text
-         (event (ad-get-arg 0))
-         (e-window (event-buffer event))
-         (c-window (current-buffer))
-         (e-point (event-point event))
-         (c-point (point)))
+(if (dp-xemacs-p)
+    (defadvice mouse-track (around dp-mouse-track activate)
+      "dp-push-go-back advised `mouse-track'."
+      (interactive "e")
+      (let* (text
+             (event (ad-get-arg 0))
+             (e-window (event-buffer event))
+             (c-window (current-buffer))
+             (e-point (event-point event))
+             (c-point (point)))
 ;     (dmessage "event: %s" event)
 ;     (dmessage "e-window: %s, c-window: %s" e-window c-window)
 ;     (dmessage "e-point: %s, c-point: %s" e-point c-point)
 ;     (dmessage "w-diff: %s, p-diff: %s" (not (equal e-window c-window))
 ;               (> (abs (- (or e-point 0) (or c-point 0)))
 ;                  dp-go-back-min-distance))
-    (when (or (not (equal e-window c-window))  ; In different window?
-              (> (abs (- (or e-point 0) (or c-point 0)))
-                 dp-go-back-min-distance)) ; Far enough away?
-      (dmessage "squeak!")
-      (dp-push-go-back "advised mouse-track"))
-    ad-do-it
-    (when (and (eq (event-button event) 2)
-               (not (eq c-point (point))))
-      (setq text (buffer-substring c-point (point)))
-      (when (and text kill-ring 
-                 (not (string= text (current-kill (length kill-ring) t))))
-        ;;(dmessage "kill-new>%s<" text)
-        (kill-new text)))))
+        (when (or (not (equal e-window c-window)) ; In different window?
+                  (> (abs (- (or e-point 0) (or c-point 0)))
+                     dp-go-back-min-distance)) ; Far enough away?
+          (dmessage "squeak!")
+          (dp-push-go-back "advised mouse-track"))
+        ad-do-it
+        (when (and (eq (event-button event) 2)
+                   (not (eq c-point (point))))
+          (setq text (buffer-substring c-point (point)))
+          (when (and text kill-ring
+                     (not (string= text (current-kill (length kill-ring) t))))
+            ;;(dmessage "kill-new>%s<" text)
+            (kill-new text)))))
+)
 
 (defun dp-beginning-of-def-or-class (&optional no-class-precedence-p visible-p)
-  (interactive "_P")
+  (interactive "P")                     ; fsf - fix "_"
   (let ((opoint (point-marker))
         (re (concat "^\\(" (if nil
                                "\\s-*"
@@ -9099,7 +9037,7 @@ If OBA is nil, use `obarray'."
   (save-excursion
     (when (and (not (looking-at "\\<"))
                (or (not (looking-at "\\b\\|\\s-"))
-                   (dp-looking-back-at "\\S-")))
+              (dp-looking-back-at "\\S-")))
       (backward-word))
     (point)))
   
@@ -9746,9 +9684,8 @@ A bookmark, in this context, is:
                             )))
     (when insertion-buffer
       (with-current-buffer insertion-buffer
-        (unless (dp-empty-line-p)
-          (end-of-line)
-          (newline))
+        (end-of-line)
+        (newline)
         (insert bm-string)
         (end-of-line)
         (dp-maybe-set-window-point)
@@ -9857,7 +9794,7 @@ split.")
     (when delete-other-windows-p
       (delete-other-windows))
     ;; Set up the new window pattern.
-    (let ((skip-these-windows (list (get-buffer-window (current-buffer))))
+    (let ((skip-these-windows (list (dp-get-buffer-window (current-buffer))))
           (win-list (window-list))
           (buf-list (buffer-list)))
       (loop for op in op-list
@@ -9906,20 +9843,16 @@ split.")
 (defun dp-getenv-numeric(var-name)
   (interactive "sEnv var name: ")
   (let ((val (getenv var-name)))
-    (when (and val
-               (not (string= "" val))
-               (not (string= "-" val)))
+    (when val
       (string-to-int val))))
 
 (defvar dp-monitor-orientation "_PORTRAIT")
 
 (defun dp-get-frame-dimension (env-var-name &optional vertical-or-horizontal)
-  (or
-   (dp-getenv-numeric (format "DP_XEM_FRAME_%s%s" env-var-name 
-                              (or vertical-or-horizontal
-                                  (or (getenv "DP_XEM_MONITOR_ORIENTATION"))
-                                  dp-monitor-orientation)))
-   (dp-getenv-numeric (format "DP_XEM_FRAME_%s" env-var-name))))
+  (dp-getenv-numeric (format "DP_XEM_FRAME_%s%s" env-var-name 
+                     (or vertical-or-horizontal
+                         (or (getenv "DP_XEM_MONITOR_ORIENTATION"))
+                             dp-monitor-orientation))))
 
 ;; 
 ;; | |, | - one window
@@ -9982,7 +9915,7 @@ If wide enough: | | |, otherwise: |-|"
                        (other-window -1))
                      nil))
                      
-(dp-defaliases '|- '|: '1:2 '1,2 '1x2 '1+2 '1|2 'dp-1x2 'dp-1+2-wins)
+(dp-defaliases '|- '|: '1:2 '1x2 '1+2 '1|2 'dp-1x2 'dp-1+2-wins)
 
 (defun dp-2+1-wins ()
   "Set up a 1+2 window arrangement: |-| |"
@@ -9990,7 +9923,7 @@ If wide enough: | | |, otherwise: |-|"
   (dp-layout-windows '(split-window-horizontally
                        split-window-vertically)))
                      
-(dp-defaliases '2:1 '2,1 '2|1 'dp-2+1 '2x1 '2+1 '>| 'dp-2+1-wins)
+(dp-defaliases '2:1 '2|1 'dp-2+1 '2x1 '2+1 '>| 'dp-2+1-wins)
 
 (defun dp-2-over-1-wins ()
   "|-|
@@ -10087,12 +10020,12 @@ I like this for keeping a frame on each desktop.")
 (defun* dp-display-buffer-if-visible (buffer &optional (norecord t))
   (interactive "Bbuffer name? ")
   (when (dp-buffer-live-p buffer)
-    (let* ((buf-win (get-buffer-window buffer t))
+    (let* ((buf-win (dp-get-buffer-window buffer t))
            (buf-name (if (stringp buffer)
                          buffer
                        (buffer-name buffer)))
            (buf-frame (and buf-win (window-frame buf-win)))
-           (orig-frame (window-frame (get-buffer-window (current-buffer))))
+           (orig-frame (window-frame (dp-get-buffer-window (current-buffer))))
            (same-frame-p (eq buf-frame orig-frame)))
       (when (and buf-win 
                  (or same-frame-p
@@ -10140,7 +10073,7 @@ current window."
                (not (or not-this-window-p override-frame shrink-to-fit 
                         other-window-p)))
           (switch-to-buffer buffer)
-        (let* ((orig-frame (window-frame (get-buffer-window (current-buffer))))
+        (let* ((orig-frame (window-frame (dp-get-buffer-window (current-buffer))))
                (one-window-p (one-window-p 'NOMINIBUFFER))
                (pop-up-frames (and one-window-p
                                    (dp-pop-up-frame-p)
@@ -10207,7 +10140,7 @@ basically the union of the args to `find-file-noselect' and
 			  (read-coding-system "Coding system: "))
 		     t))
   (let ((buf (get-buffer (file-name-nondirectory file-name))))
-    (if (and buf (get-buffer-window buf))
+    (if (and buf (dp-get-buffer-window buf))
         (switch-to-buffer-other-window buf))
     (if t ;; codesys
         ;; Punt if one of the optional variables are set, since I don't know
@@ -10256,7 +10189,7 @@ This is useful for giving gnuclient & co more control over the editing process."
   "A one shot hook to call on the next found file.
 This is useful for giving gnuclient & co more control over the editing process.")
 
-(defun dp-setup-found-file ()
+(defun dp-found-file-setup ()
   "Perform actions on a `new'ly found file.
 Suitable for a find file hook (`dp-find-file-hooks')
 and for setting up a buffers mode (`dp-set-auto-mode')."
@@ -10273,7 +10206,7 @@ and for setting up a buffers mode (`dp-set-auto-mode')."
   (interactive)
   ;;(dp-make-local-keymap-extent)
   ;; Make RO before colorizing, so RO colors will be used.
-  (dp-setup-found-file)
+  (dp-found-file-setup)
   (dp-restore-file-state (current-buffer)))
 
 (defun dp-stealth-time-stamp ()
@@ -10283,9 +10216,6 @@ and for setting up a buffers mode (`dp-set-auto-mode')."
 ;; New style for hooks:  Add the hooking to the dp-post-dpmacs-hook so
 ;; we don't run into any void vars/functions.
 (add-hook 'dp-post-dpmacs-hook (lambda ()
-                                 (when (bound-and-true-p dp-use-buffer-endicator-p)
-                                   (add-hook 'find-file-hooks 
-                                             'dp-add-default-buffer-endicator))
                                  (add-hook 'find-file-hooks 
                                            'dp-find-file-hooks)
                                  (add-hook 'write-file-hooks 
@@ -10479,19 +10409,19 @@ Ignore repeated requests to set the same properties. Idempotentize."
   "Keymap active in one of my hidden regions. The region is read-only.")
 
 (dp-define-keys dp-hidden-region-keymap
-                '(?U dp-unhide-region
-                  ?u dp-unhide-region
-                  ?/ dp-unhide-region
-                  ?- dp-unhide-region
-                  ?\' dp-unhide-region
-                  ?V dp-unhide-region
-                  ?v dp-unhide-region
-                  ?S dp-unhide-region
-                  ?s dp-unhide-region
+                '([?U] dp-unhide-region
+                  [?u] dp-unhide-region
+                  [?/] dp-unhide-region
+                  [?-] dp-unhide-region
+                  [?\'] dp-unhide-region
+                  [?V] dp-unhide-region
+                  [?v] dp-unhide-region
+                  [?S] dp-unhide-region
+                  [?s] dp-unhide-region
                   ;; This needs to be on the glyph itself.
                   ;;[button2] dp-unhide-region
-                  ?R dp-unhide-region
-                  ?r dp-unhide-region))
+                  [?R] dp-unhide-region
+                  [?r] dp-unhide-region))
 
 (defun* dp-hide-region (&optional from to 
                         (keymap dp-hidden-region-keymap ) &rest props)
@@ -10512,15 +10442,15 @@ Sort of \"Yes, he said invisibling\"."
   (dp-unextent-region (dp-make-highlight-region-extent-id "dp-hidden")))
 (dp-defaliases 'dp-unhide-region 'dur 'dsr 'dv 'dp-show-region)
 
-(defun dp-log-base-b (num &optional base)
+(defun dp-log-base-b (base num)
   (interactive)
-  (/ (log num) (log (or base 2))))
+  (/ (log num) (log base)))
 
 (defun dp-num-C-u (&optional prefix-arg)
   (interactive "P")
   (setq-ifnil prefix-arg current-prefix-arg)
   (and (listp prefix-arg)        ; Ensure it's a list ==> true C-u vs C-<num>
-       (truncate (dp-log-base-b (prefix-numeric-value prefix-arg) 4))))
+       (truncate (dp-log-base-b 4 (prefix-numeric-value prefix-arg)))))
 
 (defun* nCu-p (&optional num-C-u prefix-arg (op 'eq))
   "Return non-nil if number of C-us in `current-prefix-arg' == NUM-C-U.
@@ -10587,53 +10517,46 @@ The return value is the result of `memq' on MEMQ-LIST"
 
 (defun* dp-one-window++ (&optional (arg 1))
   "Toggle between one window and previously saved window configurations.
-Saves window configurations in registers. Default is reg `\(int-to-char ARG\)'
-If ARG is <, save configuration to abs(ARG) and make a single window.
-this case.
+Saves window configurations in registers. Default is reg `\(int-to-char 1\)'
 @todo ??? Save last used register as default?"
-  (interactive "_p")
+  (interactive "p")                     ; fsf - fix "_"
   (let* ((force-set-p (< arg 0))
          (arg (if current-prefix-arg (abs arg) dp-one-window++-last-register))
          (reg (int-to-char arg))
          (reg-val (car-safe (get-register reg))))
-    ;; Do we have a single window and a possible previous window configuration?
-    (if (and reg-val
-             (one-window-p 'nomini)
-             (not force-set-p))
-        (if (window-configuration-p reg-val)
-            (progn
-              ;; Yep, yep, switch to that configuration.
-              (set-window-configuration reg-val)
-              (unless (eq arg 1)
-                (message 
-                 "Used window configuration in register %s (0%o, %d, 0x%x)" 
-                 reg arg arg arg)))
-          (ding)
-          (message "register %s does not contain a window configuration."
-                   reg))
-      ;; else ...
-      (if (and (or t (/= 1 reg))        ; !<@todo XXX ??? or t ???
-               reg-val
-               (not (window-configuration-p reg-val))
-               (not (y-or-n-p 
-                     (format 
-                      "Reg %s isn't empty and isn't a win cfg; Continue? "
-                      reg))))
-          (message "Not setting window configuration.")
-        ;; Save configuration and make current window the only one.
-        (window-configuration-to-register reg)
-        (setq dp-one-window++-last-register arg)
-        (unless (eq arg 1)
-          (message "Saved window configuration to register %s (0%o, %d, 0x%x)"
-           reg arg arg arg))
-        (delete-other-windows)))))
+      (if (and reg-val 
+               (one-window-p 'nomini)
+               (not force-set-p))
+          (if (window-configuration-p reg-val)
+              (progn
+                (set-window-configuration reg-val)
+                (unless (eq arg 1)
+                  (message "Used window config in register %s (0%o, %d, 0x%x)" 
+                           reg arg arg arg)))
+            (ding)
+            (message "register %s does not contain a window configuration."
+                     reg))
+        (if (and (or t (/= 1 reg))      ; !<@todo XXX ??? or t ???
+                 reg-val
+                 (not (window-configuration-p reg-val))
+                 (not (y-or-n-p 
+                       (format 
+                        "Reg %s isn't empty and isn't a win cfg; Continue? "
+                        reg))))
+            (message "Not setting window config.")
+          (window-configuration-to-register reg)
+          (setq dp-one-window++-last-register arg)
+          (unless (eq arg 1)
+            (message "Saved window config to register %s (0%o, %d, 0x%x)" 
+                     reg arg arg arg))
+          (delete-other-windows)))))
 (put 'dp-one-window++ 'isearch-command t)
 
 
 (defun dp-get-file-owner (file-name)
   "Get a file's owner"
   (interactive "fFile name? ")
-  (dp-nuke-newline (shell-command-to-string
+  (dp-nuke-newline (shell-command-to-string 
                     (format dp-get-file-owner-program file-name))))
 
 (defun dp-user-owns-this-file-p (&optional file-name user-name)
@@ -10706,7 +10629,7 @@ MINIBUF says to include minibuffer windows."
 (defun dp-rotate-windows (&optional to-vertical-set)
   "Convert a horizontal(vertical) set of windows into the 
 equivalent vertically(horizontally) split set."
-  (interactive "_P")
+  (interactive "P")                     ; fsf - fix "_"
   (let* ((split-func (if (or to-vertical-set
                              (= (frame-width) (window-width)))
                          'split-window-horizontally
@@ -10758,7 +10681,7 @@ equivalent vertically(horizontally) split set."
        (or (or pop-up-wins pop-up-windows)
            ;; t if (not frame) , else frame
            ;; t --> check all frames
-           (and (not (get-buffer-window buf which-frames))
+           (and (not (dp-get-buffer-window buf which-frames))
                 (dp-multiple-windows-on-frame-p)))))
 
 (defvar dp-likes-pop-up-windows t
@@ -10781,7 +10704,7 @@ another frame."
        (not (dp-max-preferred-frames-opened-p))
        (or pop-up-frames
            (and (dp-one-frame-p device)
-                ;;(not (get-buffer-window buf t))
+                ;;(not (dp-get-buffer-window buf t))
                 (< (frame-width) dp-2w-frame-width)))))
 
 (defun dp-first-buf-besides (&optional buf)
@@ -10881,7 +10804,7 @@ when the command was issued?")
 
 (defun dp-shift-windows (num)
   "Move each buffer into its NUM-th next window."
-  (interactive "_p")
+  (interactive "p")                     ; fsf - fix "_"
   (let ((dir (if (< num 0) 'left 'right)))
     (loop repeat num do
       (dp-shift-windows-0 dir))))
@@ -11072,17 +10995,15 @@ when the command was issued?")
 (defun dp-serialized-name (prefix format &rest rest)
   (interactive)
   (let ((el (assoc prefix dp-serialized-name-alist))
-        n 
-        new-el)
+        n)
     (if el
         (setq n (incf (cadr el)))
-      (setq n 0))
-    (dp-add-or-update-alist 'dp-serialized-name-alist
-                            prefix (list
-                                    n
-                                    'rest: rest 
-                                    'maj-mode: (major-mode-str)
-                                    'bufname: (buffer-name)))
+      (setq n 0
+            dp-serialized-name-alist (cons (list prefix n 
+                                                 'rest: rest 
+                                                 'maj-mode: (major-mode-str)
+                                                 'bufname: (buffer-name))
+                                           dp-serialized-name-alist)))
     (format (or format "%s%s") prefix n)))
 
 (defun dp-buffer-syntactic-context-hack-around (&optional buffer)
@@ -11133,7 +11054,6 @@ I'm not sure what modes are affected."
                               "class"
                               "try"
                               "except"
-                              "with"
                               "finally")))
 
 (defun dp-trim-spaces (str &optional start-p end-p)
@@ -11526,7 +11446,7 @@ Sometimes quoted lists are easier to make when most/all elements are quoted."
                                             (fmt "%s %s:%s") (pos (point)))
   (interactive "P")
   (kill-new (message 
-             (dp-mk-breakpoint-command (not perm-p) :fmt fmt :pos pos))))
+             (dp-mk-breakpoint-command (not tmp-p) :fmt fmt :pos pos))))
 
 
 ;;
@@ -11612,7 +11532,7 @@ FLOATING POINT(tm):  When close is good enough!."
       (dp-turn-off-newbuf-hilighting) 
     (dp-turn-on-newbuf-hilighting)))
 
-(add-hook 'dp-post-dpmacs-hook 'dp-turn-on-newbuf-hilighting)
+;; fsf - has mo one shot hook, which this needs. ;;(add-hook 'dp-post-dpmacs-hook 'dp-turn-on-newbuf-hilighting)
 
 (defun dp-fix-cmd-hook-stuff ()
   (interactive)
@@ -11866,13 +11786,11 @@ An `undo-boundary' is done before the template is used."
   "Set up a buffer as a Python language buffer.
 Inserts `dp-python-new-file-template-file' by default."
   (interactive)
-  (when (and buffer-file-name
-             (not (string-match dp-ipython-temp-file-re buffer-file-name))
-    (let ((comment-start "###"))
-      (dp-script-it "python" t
-                    :comment-start comment-start
-                    :template 'dp-insert-new-file-template
-                    :template-args (list dp-python-new-file-template-file))))))
+  (let ((comment-start "###"))
+    (dp-script-it "python" t
+                  :comment-start comment-start
+                  :template 'dp-insert-new-file-template
+                  :template-args (list dp-python-new-file-template-file))))
 
 
 (defun* dp-get-buffer-local-value (&optional var buffer 
@@ -12023,12 +11941,12 @@ hook? A minus is needing to use a special accessor.
   (eval-print-last-sexp))
 
 (defun dp-isa-face-p (face)
-  (condition-case nil
+  (condition-case appease-byte-compiler
       (or (facep face) (find-face face))
     (t nil)))
 
 (defun dp-what-cursor-position (&optional no-highlight-p)
-  (interactive "_P")
+  (interactive "P")                     ; fsf - fix "_"
   (call-interactively 'what-cursor-position)
   (unless no-highlight-p
     (dp-highlight-point-until-next-command)))
@@ -12116,7 +12034,7 @@ Uses way too much inside info."
   (call-interactively 'id-select-thing))
 
 (defun dp-id-select-and-copy-thing ()
-  (interactive "_")
+  (interactive)                         ; fsf - fix "_"
   ;; `id-select-thing' expands selection if mark is active; doesn't use
   ;; last-command.  So we just call it and copy it.
   (if (eq last-command 'dp-id-select-and-copy-thing)
@@ -12542,8 +12460,8 @@ width is 8, then the number of chars to get to column 8 is 1 (the TAB)."
       (- (point) (line-beginning-position)))))
 
 (defun dp-non-empty-string (str)
-  "Returns non-nil (STR) if STR is a str that is not \"\".
-This is different than a nil \"string\" or a pure whitespace string."
+  "Returns non-nil (str) if str is a str that is not \"\".
+This is different than a nil \"string\"."
   (and str (stringp str)
        (not (string= "" str))
        str))
@@ -12572,7 +12490,7 @@ This is different than a nil \"string\" or a pure whitespace string."
   (interactive)
   (if (dp-buffer-process-live-p buffer)
       (call-interactively proc-live-func)
-    (let ((win (get-buffer-window buffer)))
+    (let ((win (dp-get-buffer-window buffer)))
       ;; `kill-buffer-and-window' prompts.
       (dp-kill-buffer buffer)
       (delete-window win))))
@@ -12724,7 +12642,8 @@ Assumes frame is in assumed configuration."
           (when (< buf-lines (frame-width))
             (set-frame-height (selected-frame) buf-lines)))))))
 
-(when (bound-and-true-p dp-use-timeclock-p)
+(when (and (dp-xemacs-p)
+           (bound-and-true-p dp-use-timeclock-p))
   (error "AHHHHHHHHHHHHHHHHH!!!!!!!!!!!!!!!!!")
   (require 'dp-timeclock))
 
@@ -12850,7 +12769,7 @@ when explicitly requested \(see 1st conditional\) since last-command will
 never eq this command.")
 
 (defun dp-save-buffer (&optional args)
-  (interactive "_p")
+  (interactive "p")                     ; fsf - fix "_"
   ;; `save-buffer' uses prefix arg, so call it with `current-prefix-arg' so
   ;; it can do the special actions requested.
   ;; Buffer local override.
@@ -13020,7 +12939,7 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
                                  (end (point-max))
                                  (file-name-sticky-p t)
                                  (confirm-save-p 'ask)
-                                 (dir dp-default-save-shell-buffer-contents-dir) 
+                                 (dir dp-default-save-buffer-contents-dir) 
                                  (name-transformer 'dp-shellify-shell-name)
                                  (append-p t)
                                  (transformer-args '())
@@ -13198,6 +13117,9 @@ value that may be nil, like dp-singlular-write-restricted-regexp."
 (defvar dp-detect-read-only-file-hook nil
   "Hook to determine if a file should be read only.")
 
+(defvar dp-implied-read-only-filename-regexp-list nil
+  "File names matching this become read only.")
+
 (defun* dp-file-name-implies-readonly0-p (filename 
                                           &optional regexp-in 
                                           (mode-local-list-p t)
@@ -13213,7 +13135,7 @@ MODE-LOCAL-LIST-P allows restricting regexps on a per-mode basis."
                                 'dp-implied-read-only-filename-regexp-list))
                           (unless mode-local-list-only-p
                             (append dp-implied-read-only-filename-regexp-list
-                                    (dp-listify-thing regexp-in))))
+                                    regexp-in)))
        (< 0 (length (match-string 0 filename)))))
 
 (defun* dp-file-name-implies-readonly-p (filename
@@ -13508,13 +13430,13 @@ find-file\(-at-point) and then, if it fails, this function??"
                        file-name))
 
 ;; hyperbole/oobrowser locations and vars
-;;(defvar dp-oo-browser-dir (dp-mk-site-package-lisp-dir "oo-browser")
-;;  "oo-browser's home.")
+(defvar dp-oo-browser-dir (dp-mk-site-package-lisp-dir "oo-browser")
+  "oo-browser's home.")
 
 (defun dp-setup-ootags ()
   "Set up ootags source browsing system."
   (interactive)
-;;  (add-to-list 'load-path dp-oo-browser-dir) 
+  (add-to-list 'load-path dp-oo-browser-dir) 
   ;;;(add-to-list 'load-path (concat dp-oo-browser-dir "/hypb"))
   (load "br-start")
   (global-set-key "\C-c\C-o" 'oo-browser))
@@ -13847,14 +13769,10 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
         (call-interactively fun)
       (funcall fun file-name))))
 
-;; (defun dp-looking-at-whitespace-violation ()
-;;   (or (car-safe
-;;        (dp-extents-at-with-prop 'face '(blah . dp-trailing-whitespace-face)))
-;;       (looking-at dp-whitespace-violation-regexp)))
-
 (defun dp-looking-at-whitespace-violation ()
-  (save-excursion
-    (re-search-forward dp-whitespace-violation-regexp nil t)))
+  (or (car-safe
+       (dp-extents-at-with-prop 'face '(blah . dp-trailing-whitespace-face)))
+      (looking-at dp-trailing-whitespace-regexp)))
 
 ;; (defun dp-whitespace-next-violation ()
 ;;   (interactive)
@@ -13862,8 +13780,7 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
 ;;     (dp-goto-next-matching-extent 'face '(t . whitespace-highlight-face))
 ;;     (when (= start (point))
 ;;       (message "No more whitespace violations."))))
-
-(defun dp-whitespace-next-violation0 ()
+(defun dp-whitespace-next-violation ()
   "Replacement for whitespace package's function."
   (interactive)
   ;; Search for the evil regexp. An older implementation searched for the
@@ -13873,30 +13790,15 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
   ;; that logic everywhere will be bad.
   ;; The fact that fontifying is largely based on regular expressions means
   ;; using the WSV regexp won't cause cats to live with dogs and vice-versa.
-  (when (dp-looking-at-whitespace-violation)
-    (goto-char (match-beginning 0))
-    t))
-
-(defun dp-whitespace-next-violation ()
-  "Replacement for whitespace package's function."
-  (interactive)
-  (let ((start (point)))
-    ;; Did we not move?
-    (when (and (dp-whitespace-next-violation0)
-               (= (point) start))
-        (progn
-          ;; Go to end of the current violation.
-          (goto-char (match-end 0))
-          ;; And try again.
-          (dp-whitespace-next-violation0)))
-    (dp-looking-at-whitespace-violation)))
+  (when (re-search-forward dp-trailing-whitespace-regexp nil t)
+    (goto-char (match-beginning 0))))
 
 (defun dp-whitespace-cleanup-line ()
   "Clean up trailing whitespace on the current line. Uses my whitespace hack."
   (interactive)
   (save-excursion
     (beginning-of-line)
-    (when (re-search-forward dp-whitespace-violation-regexp 
+    (when (re-search-forward dp-trailing-whitespace-regexp 
                              (line-end-position) t)
       (replace-match ""))))
 
@@ -14024,9 +13926,7 @@ values must be passed in as stings."
   (interactive "sRegexp: ")
   (when clear-list-p
     (setq dp-implied-read-only-filename-regexp-list nil))
-  (when regexp
-    (dp-add-list-to-list 'dp-implied-read-only-filename-regexp-list 
-                         (dp-listify-thing regexp))))
+  (add-to-list 'dp-implied-read-only-filename-regexp-list regexp))
 
 (defun dp-delete-force-read-only-regexp (regexp)
   "Delete a regexp from the list of regexps which determine if a file is read only."
@@ -14225,7 +14125,6 @@ See `dp-shell-*TAGS-changers' rant. "
   '(dp-open-newline
     dp-open-above
     dp-c-context-line-break
-    dp-c-close-brace
     dp-py-open-newline
     py-newline-and-indent)
   "*Clean up whitespace after executing one of these commands.
@@ -14236,7 +14135,7 @@ been used in buffers in the given mode."
   :type '(repeat (symbol :tag "Whitespace cleanup afters")))
 
 
-(defcustom dp-whitespace-cleanup-when-modified-p nil
+(defcustom dp-whitespace-cleanup-when-modified-p t
   "Should we clean up whitespace if the buffer has ever been modified?
 I want to avoid inadvertent modifications if I'm browsing through a file that
 isn't \"mine\". However, if it has already been modified, then go for
@@ -14273,25 +14172,16 @@ it. Whitespace diffs are easy to ignore during reviews"
              (memq last-command 
                    dp-whitespace-cleanup-after-these-commands)))))
 
-(defun dp-whitespace-cleanup-current-line-default-pred ()
-  (and (buffer-modified-p)
-       (or (dp-whitespace-following-a-cleanup-command-p)
-           (save-excursion
-             (beginning-of-line)
-             (re-search-forward dp-trailing-whitespace-regexp
-                                (line-end-position) t))
-           (dp-blank-line-p))))
-
 (dp-deflocal dp-whitespace-cleanup-current-line-pred 
-    'dp-whitespace-cleanup-current-line-default-pred
+    'dp-whitespace-following-a-cleanup-command-p
 "Should we clean up the current *line*?
 Predicate used to tell us whether or not the current line qualifies for
 whitespace eradication.")
 
 (defun dp-next-line (count &optional cleanup-current-line-pred)
   "Add trailing white space removal functionality."
-  (interactive "_p")
-  (if (not (dp-cleanup-whitespace-on-next-line-p))
+  (interactive "p")                     ; fsf - fix "_"
+  (if (not (dp-cleanup-whitespace-p))
       (progn
         (call-interactively 'next-line)
         (setq this-command 'next-line))
@@ -14311,6 +14201,17 @@ whitespace eradication.")
                                    'next-line)
           (next-line 1)
           (setq this-command 'next-line))))))
+(global-set-key [kp-down] 'dp-next-line)   ; q.v. dp-cleanup-whitespace-p
+(global-set-key [down] 'dp-next-line)   ; q.v. dp-cleanup-whitespace-p
+
+;; WRT key mappings above.
+;; Over-complexity has its downsides.  E.g. when things go south to the pear
+;; orchards, certain keys just plain don't work depending on where the error
+;; occurs.
+;; For really funky keys, ones with many dependencies,
+;; define the keys only after the requirements are in place.
+;; We could just put all [non-trivial] key defs in a post dpmacs hook.
+
 
 (defun dp-fast-replace-regexp-region (regexp replacement &optional beg end)
   "Do a fast regexp replace as recommended in the doc for `replace-regexp."
@@ -14335,7 +14236,7 @@ whitespace eradication.")
   (let ((git-man-page (concat "git-" topic)))
     (funcall (if other-window-p '2man 'manual-entry)
              git-man-page)))
-(dp-defaliases 'gith 'githelp 'gitman 'gman 'dp-git-manual-entry)
+(dp-defaliases 'gith 'githelp 'gitman 'dp-git-manual-entry)
 
 (defun dp-git-manual-entry-other-window (topic &optional other-window-p)
   (interactive "sgit help on: \nP")
@@ -14536,7 +14437,7 @@ something.")
               dp-p4-stupid-hack-saved-sb sb)
         (dp-maybe-expand-p4-location file sb)))))
 
-(defun dp-get-buffer-file-name-info (&optional kill-name-p buffer)
+(defun dp-show-buffer-file-name (&optional kill-name-p buffer)
   "Show the BUFFER or current-buffer's file name in echo area.
 KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
   (interactive "P")
@@ -14553,27 +14454,13 @@ KILL-NAME-P \(prefix-arg) says to put the name onto the kill ring."
               (setq name (file-name-directory buffer-file-truename)
                     name-type "buffer-dir-truename")
               (kill-new name))))))
-    (cons name name-type)))
-
-(defun dp-get-buffer-file-name (&optional kill-name-p buffer)
-  (interactive "P")
-  (car (dp-get-buffer-file-name-info kill-name-p buffer)))
-
-(defun dp-get-buffer-dir-name (&optional kill-name-p buffer)
-  (interactive "P")
-  (let ((filename (dp-get-buffer-file-name kill-name-p buffer)))
-    (when filename
-      (file-name-directory filename))))
-
-(defun dp-show-buffer-file-name (&optional kill-name-p buffer)
-  (interactive "P")
-  (let ((name-name-type (dp-get-buffer-file-name-info kill-name-p buffer)))
     (message "%s%s: %s"
              (if kill-name-p
                  "Copied "
                "")
-             (cdr name-name-type)
-             (car name-name-type))))
+             name-type
+             name)))
+
 
 (defun dp-grep-buffers (regexp &optional buffer-filename-regexp)
   "Search for REGEXP in all buffers matching BUFFER-FILENAME-REGEXP.
@@ -14756,6 +14643,7 @@ them. Q.v. `unfuck-gz'"
       (text-mode)
     (auto-fill-mode 0)))
 
+
 (defun dp-hide-single-ifdef (&optional hide-directives-p)
   "Mark and hide the ifdef @ point."
   (interactive "P")
@@ -14794,41 +14682,8 @@ them. Q.v. `unfuck-gz'"
     (message "tramping>%s<" file-name)
     (find-file file-name)))
 
-(defun dp-last-column-on-line ()
-  (dp-column-at (line-end-position)))
-
-;; Originally designed for (dirnames X basenames)
-;; e.g. '("." "..") X '("include" "h")
-;; -->
-;; '("./include ./h" "../include ../h")
-;; Where originally "include" and "h" were final subdirs, but that isn't a
-;; requirement.
-(defun* dp-cross-cat-string-lists (l1 l2
-                                   &optional
-                                   (sep0 "/" ))
-  "Cross product of concatenation of elements of L1 SEP L2.
-Return elements of L1 when element of L2 are nil or \"\", i.e. no trailing separators"
-  (mapcan (lambda (d)
-            (mapcar (lambda (f)
-                      (if (and f
-                               (string= f ""))
-                          d
-                        (concat d sep0 f)))
-                    l2))
-          l1))
-
-(defun dp-set-window-dedicated-p (&optional arg)
-  "Sorry, but the default for a `set' defun should not be to unset the indicated state.
-JFC."
-  (interactive "P")
-  (set-window-dedicated-p (dp-get-buffer-window) (not arg)))
-
-(dp-defaliases 'dp-swd 'swd 'dp-set-window-dedicated-p)
-
 ;;;;; <:functions: add-new-ones-above|new functions:>
-;;; add new functions here
-;;; add new functions above
-;;; above there be functions.
+;;;
 ;;;
 ;;; @todo Write a loop which advises functions with simple push go back 
 ;;; commands.  

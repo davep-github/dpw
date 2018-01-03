@@ -722,9 +722,7 @@ for this to work."
   :group 'cscope)
 
 
-(defcustom cscope-program (or (bound-and-true-p 
-                               dp-cscope-program)
-                              "cscope") ; "cscope"
+(defcustom cscope-program "cscope"
   "*The pathname of the cscope executable to use."
   :type 'string
   :group 'cscope)
@@ -1191,36 +1189,35 @@ directory should begin.")
     nil
   (setq cscope:map (make-sparse-keymap))
   ;; The following line corresponds to be beginning of the "Cscope" menu.
-;;nuke ASAP   (define-key cscope:map "\C-css" 'cscope-find-this-symbol)
-;;nuke ASAP   (define-key cscope:map "\C-csd" 'cscope-find-global-definition)
-;;nuke ASAP   (define-key cscope:map "\C-csg" 'cscope-find-global-definition)
-;;nuke ASAP   (define-key cscope:map "\C-csG" 'cscope-find-global-definition-no-prompting)
-;;nuke ASAP   (define-key cscope:map "\C-csc" 'cscope-find-functions-calling-this-function)
-;;nuke ASAP   (define-key cscope:map "\C-csC" 'cscope-find-called-functions)
-;;nuke ASAP   (define-key cscope:map "\C-cst" 'cscope-find-this-text-string)
-;;nuke ASAP   (define-key cscope:map "\C-cse" 'cscope-find-egrep-pattern)
-;;nuke ASAP   (define-key cscope:map "\C-csf" 'cscope-find-this-file)
-;;nuke ASAP   (define-key cscope:map "\C-csi" 'cscope-find-files-including-file)
-;;nuke ASAP   ;; --- (The '---' indicates that this line corresponds to a menu separator.)
-;;nuke ASAP   (define-key cscope:map "\C-csb" 'cscope-display-buffer)
-;;nuke ASAP   (define-key cscope:map "\C-csB" 'cscope-display-buffer-toggle)
-;;nuke ASAP   (define-key cscope:map "\C-csn" 'cscope-next-symbol)
-;;nuke ASAP   (define-key cscope:map "\C-csN" 'cscope-next-file)
-;;nuke ASAP   (define-key cscope:map "\C-csp" 'cscope-prev-symbol)
-;;nuke ASAP   (define-key cscope:map "\C-csP" 'cscope-prev-file)
-;;nuke ASAP   (define-key cscope:map "\C-csu" 'cscope-pop-mark)
-;;nuke ASAP   ;; ---
-;;nuke ASAP   (define-key cscope:map "\C-csa" 'cscope-set-initial-directory)
-;;nuke ASAP   (define-key cscope:map "\C-csA" 'cscope-unset-initial-directory)
-;;nuke ASAP   ;; ---
-;;nuke ASAP   (define-key cscope:map "\C-csL" 'cscope-create-list-of-files-to-index)
-;;nuke ASAP   (define-key cscope:map "\C-csI" 'cscope-index-files)
-;;nuke ASAP   (define-key cscope:map "\C-csE" 'cscope-edit-list-of-files-to-index)
-;;nuke ASAP   (define-key cscope:map "\C-csW" 'cscope-tell-user-about-directory)
-;;nuke ASAP   (define-key cscope:map "\C-csS" 'cscope-tell-user-about-directory)
-;;nuke ASAP   (define-key cscope:map "\C-csT" 'cscope-tell-user-about-directory)
-;;nuke ASAP   (define-key cscope:map "\C-csD" 'cscope-dired-directory)
-)
+  (define-key cscope:map "\C-css" 'cscope-find-this-symbol)
+  (define-key cscope:map "\C-csd" 'cscope-find-global-definition)
+  (define-key cscope:map "\C-csg" 'cscope-find-global-definition)
+  (define-key cscope:map "\C-csG" 'cscope-find-global-definition-no-prompting)
+  (define-key cscope:map "\C-csc" 'cscope-find-functions-calling-this-function)
+  (define-key cscope:map "\C-csC" 'cscope-find-called-functions)
+  (define-key cscope:map "\C-cst" 'cscope-find-this-text-string)
+  (define-key cscope:map "\C-cse" 'cscope-find-egrep-pattern)
+  (define-key cscope:map "\C-csf" 'cscope-find-this-file)
+  (define-key cscope:map "\C-csi" 'cscope-find-files-including-file)
+  ;; --- (The '---' indicates that this line corresponds to a menu separator.)
+  (define-key cscope:map "\C-csb" 'cscope-display-buffer)
+  (define-key cscope:map "\C-csB" 'cscope-display-buffer-toggle)
+  (define-key cscope:map "\C-csn" 'cscope-next-symbol)
+  (define-key cscope:map "\C-csN" 'cscope-next-file)
+  (define-key cscope:map "\C-csp" 'cscope-prev-symbol)
+  (define-key cscope:map "\C-csP" 'cscope-prev-file)
+  (define-key cscope:map "\C-csu" 'cscope-pop-mark)
+  ;; ---
+  (define-key cscope:map "\C-csa" 'cscope-set-initial-directory)
+  (define-key cscope:map "\C-csA" 'cscope-unset-initial-directory)
+  ;; ---
+  (define-key cscope:map "\C-csL" 'cscope-create-list-of-files-to-index)
+  (define-key cscope:map "\C-csI" 'cscope-index-files)
+  (define-key cscope:map "\C-csE" 'cscope-edit-list-of-files-to-index)
+  (define-key cscope:map "\C-csW" 'cscope-tell-user-about-directory)
+  (define-key cscope:map "\C-csS" 'cscope-tell-user-about-directory)
+  (define-key cscope:map "\C-csT" 'cscope-tell-user-about-directory)
+  (define-key cscope:map "\C-csD" 'cscope-dired-directory))
   ;; The previous line corresponds to be end of the "Cscope" menu.
 
 (easy-menu-define cscope:menu
@@ -2043,19 +2040,10 @@ using the mouse."
 
 	;; The database file and the directory containing the database file
 	;; must both be writable.
-	(if (or
-             (not dp-cscope-db-update-required-p)
-             (not (file-writable-p database-file))
-             (not (file-writable-p (file-name-directory database-file)))
-             ;; gtags-cscope shared the database with gtags which already
-             ;; does updating properly by always using the existing
-             ;; cscope.files.
-             ;;@todo XXX Do this in a better way; don't just use the raw
-             ;;program name.
-             (dp-cscope-do-not-update-database)
-             cscope-do-not-update-database)
-            (setq options (cons "-d" options))
-          (setq dp-cscope-db-update-required-p nil))
+	(if (or (not (file-writable-p database-file))
+		(not (file-writable-p (file-name-directory database-file)))
+		cscope-do-not-update-database)
+	    (setq options (cons "-d" options)))
         (setq options (cons cscope-directory options))
         (setq options (cons "-P" options))
 	(goto-char (point-max))
@@ -2091,8 +2079,6 @@ using the mouse."
 	      (setq cscope-process-output nil
 		    cscope-last-file nil
 		    )
-              (dmessage "default-directory>%s<" default-directory)
-              (dmessage "cscope: %s %s %s %s %s" cscope-program nil outbuf t options)
 	      (setq cscope-process
 		    (apply 'start-process "cscope" outbuf
 			   cscope-program options))
@@ -2426,9 +2412,7 @@ file."
 	    ;; Always prompt for symbol in dired mode.
 	    (eq major-mode 'dired-mode)
 	    )
-	(setq sym (read-from-minibuffer prompt sym
-                                        nil nil 
-                                        'dp-reveng-symbol-hist))
+	(setq sym (read-from-minibuffer prompt sym))
       sym)
     ))
 

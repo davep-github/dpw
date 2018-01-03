@@ -305,7 +305,7 @@ list in my DP-STYLE-ABBREV format (q.v.)"
                                             make-command0)))
            (status
             (progn
-              (erase-buffer obuf)
+              (dp-erase-buffer obuf)
               ;; 99% from shell-command just so I can get the effin' status.
               ;; What did I miss?
               (call-process shell-file-name 
@@ -863,11 +863,11 @@ table.")
   ;; Add some special abbrevs.
   ;; This needs to be done after the tables have been created
   (define-abbrev dp-manual-abbrev-table "xdrop" 
-    (concat dp-xemacs-droppings "/"))
+    (concat dp-emacs-droppings "/"))
   (define-abbrev dp-manual-abbrev-table "edrop" 
     (concat dp-editor-droppings "/"))
-  (define-abbrev dp-manual-abbrev-table "xebac" 
-    (concat dp-backup-droppings "/"))
+  (define-abbrev dp-manual-abbrev-table "xebacs" 
+    (concat dp-ebacs-droppings "/"))
   (define-abbrev dp-manual-abbrev-table "asave" 
     (concat dp-auto-save-droppings "/"))
   )

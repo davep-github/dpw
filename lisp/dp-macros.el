@@ -1,4 +1,4 @@
-(message "Loading dp-macros...")
+(message "dp-macros.el loading...")
 
 (defvar dp-macros-obarray (make-vector 32 0)
   "We intern generated symbol names used in macros here.")
@@ -24,7 +24,7 @@
   "Should a previously defined alias be considered an error or warning?")
 
 (eval-when-compile
-  (load "bytecomp-runtime")
+;;fsf;;  (load "bytecomp-runtime")
 
   (defmacro dp-activate-mark ()
     ())
@@ -197,7 +197,7 @@ it as a string."
                             " *dp-with-all-output-to-string*"))
       (dp-toggle-read-only 0)
       (buffer-disable-undo (current-buffer))
-      (erase-buffer)
+      (dp-erase-buffer)
       (unwind-protect
           (progn
             (let ((standard-output (current-buffer)))
@@ -391,29 +391,6 @@ VAR must be a symbol."
           ,func-docstr
           (if ,var
               (apply (quote message) (concat ,prefix-str fmt) args))))))
-  
-  (defmacro dp-current-error-function-advisor (fun next-thing 
-                                               &optional next-thing-arg)
-    (let* ((efunc (eval fun))
-           (next-thing-arg (or (eval next-thing-arg) efunc))
-           (enext-thing (eval next-thing)))
-      `(defadvice ,efunc
-        (before next-error-function-stuff activate)
-        (dp-set-current-error-function ,next-thing
-                                       nil
-                                       (quote ,next-thing-arg)))))
-  
-  (defmacro dp-current-error-function-advisor-after (fun next-thing
-                                               &optional next-thing-arg)
-    (let* ((efunc (eval fun))
-           (next-thing-arg (or (eval next-thing-arg) efunc))
-           (enext-thing (eval next-thing)))
-      `(defadvice ,efunc
-        (after next-error-function-stuff-after activate)
-        (dp-set-current-error-function ,next-thing
-                                       nil
-                                       (quote ,next-thing-arg)))))
-
 )
 
 ;; There is some *very* bizzare parenthesis closing problem up there.
@@ -691,5 +668,5 @@ FORMS complete."
 
 (provide 'dp-macros)
 
-(message "Loading dp-macros...done")
+(message "dp-macros.el loaded.")
 

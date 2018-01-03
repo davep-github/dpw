@@ -51,7 +51,7 @@
 
 (define-abbrev-table 'dpj-topic-abbrev-table '())
 
-(defvar dpj-any-AI-regexp "[ 	]*?[?!@$]+\\([ 	]+\\|$\\)")
+(defvar dpj-any-AI-regexp "[ 	]*?[?!@$]+[ 	]+")
 ;;(defvar dpj-any-AI-todo-regexp "[ 	]*\\([!@]+\\|\\?\\?\\?\\?*\\)[ 	]+")
 (defvar dpj-any-AI-todo-regexp 
   "\\(^\\?+\\|[ 	]*\\([!@]+\\|\\?\\?\\?\\?*\\)\\)[ 	]+")
@@ -254,39 +254,39 @@ This way we can get alternating colors on journal mode structure in the text:
    ;; parts of the line. They are essentially background. This allows any
    ;; specific things (like the function face) to work w/o specifically
    ;; prepending it. Even though it is done that way below at this time.
-   (cons "^[ 	]*!!!+\\( .*$\\|$\\)" 'dp-journal-high-problem-face)
-   (cons "^[ 	]*!!\\( .*$\\|$\\)" 'dp-journal-medium-problem-face)
-   (cons "^[ 	]*!\\( .*$\\|$\\)" 'dp-journal-low-problem-face)
+   (cons "^[ 	]*!!!+ .*$" 'dp-journal-high-problem-face)
+   (cons "^[ 	]*!! .*$" 'dp-journal-medium-problem-face)
+   (cons "^[ 	]*! .*$" 'dp-journal-low-problem-face)
 
-   (cons "^[ 	]*@@@+\\( .*$\\|$\\)" 'dp-journal-high-todo-face)
-   (cons "^[ 	]*@@\\( .*$\\|$\\)" 'dp-journal-medium-todo-face)
-   (cons "^[ 	]*@\\( .*$\\|$\\)" 'dp-journal-low-todo-face)
+   (cons "^[ 	]*@@@+ .*$" 'dp-journal-high-todo-face)
+   (cons "^[ 	]*@@ .*$" 'dp-journal-medium-todo-face)
+   (cons "^[ 	]*@ .*$" 'dp-journal-low-todo-face)
 
-   (cons "^[ 	]*\\?\\?\\?+\\( .*$\\|$\\)" 'dp-journal-high-question-face)
-   (cons "^[ 	]*\\?\\?\\( .*$\\|$\\)" 'dp-journal-medium-question-face)
-   (cons "^[ 	]*\\?\\( .*$\\|$\\)" 'dp-journal-low-question-face)
+   (cons "^[ 	]*\\?\\?\\?+ .*$" 'dp-journal-high-question-face)
+   (cons "^[ 	]*\\?\\? .*$" 'dp-journal-medium-question-face)
+   (cons "^[ 	]*\\? .*$" 'dp-journal-low-question-face)
    ;; what was I doing here???   
    ;; (cons "\\?+[^?].*\\?\\?*" (list 0 'dp-journal-low-question-face 'keep))
 
-   (cons "^[ 	]*\\$\\$\\$+\\( .*$\\|$\\)" 'dp-journal-high-info-face)
-   (cons "^[ 	]*\\$\\$\\( .*$\\|$\\)" 'dp-journal-medium-info-face)
-   (cons "^[ 	]*\\$\\( .*$\\|$\\)" 'dp-journal-low-info-face)
-   (cons "^[ 	]*[Ff][Yy][Ii]:?\\( .*$\\|$\\)" 'dp-journal-medium-info-face)
-   (cons "^[ 	]*>>>>+\\( .*$\\|$\\)" 'dp-journal-extra-emphasis-face)
-   (cons "^[ 	]*>>>\\( .*$\\|$\\)" 'dp-journal-high-info-face)
-   (cons "^[ 	]*>>\\( .*$\\|$\\)" 'dp-journal-medium-info-face)
-   (cons "^[ 	]*>\\( .*$\\|$\\)" 'dp-journal-low-info-face)
-   (cons "^[ 	]*\\+\\+\\++\\( .*$\\|$\\)" 'dp-journal-high-attention-face)
-   (cons "^[ 	]*\\+\\+\\( .*$\\|$\\)" 'dp-journal-medium-attention-face)
-   (cons "^[ 	]*\\+\\( .*$\\|$\\)" 'dp-journal-low-attention-face)
-   (cons "^[ 	]*\\*\\*\\*+\\( .*$\\|$\\)" 'dp-journal-high-attention-face)
-   (cons "^[ 	]*\\*\\*\\( .*$\\|$\\)" 'dp-journal-medium-attention-face)
-   (cons "^[ 	]*\\*\\( .*$\\|$\\)" 'dp-journal-low-attention-face)
+   (cons "^[ 	]*\\$\\$\\$+ .*$" 'dp-journal-high-info-face)
+   (cons "^[ 	]*\\$\\$ .*$" 'dp-journal-medium-info-face)
+   (cons "^[ 	]*\\$ .*$" 'dp-journal-low-info-face)
+   (cons "^[ 	]*[Ff][Yy][Ii]:? .*$" 'dp-journal-medium-info-face)
+   (cons "^[ 	]*>>>>+ .*$" 'dp-journal-extra-emphasis-face)
+   (cons "^[ 	]*>>> .*$" 'dp-journal-high-info-face)
+   (cons "^[ 	]*>> .*$" 'dp-journal-medium-info-face)
+   (cons "^[ 	]*> .*$" 'dp-journal-low-info-face)
+   (cons "^[ 	]*\\+\\+\\++ .*$" 'dp-journal-high-attention-face)
+   (cons "^[ 	]*\\+\\+ .*$" 'dp-journal-medium-attention-face)
+   (cons "^[ 	]*\\+ .*$" 'dp-journal-low-attention-face)
+   (cons "^[ 	]*\\*\\*\\*+ .*$" 'dp-journal-high-attention-face)
+   (cons "^[ 	]*\\*\\* .*$" 'dp-journal-medium-attention-face)
+   (cons "^[ 	]*\\* .*$" 'dp-journal-low-attention-face)
    ;; e.g. (fyi: I have a eg --> e.g. abbrev)
    (cons "^[ 	]*[Ee]\\.?[Gg][.:]?\\(\\s-+\\|:\\).*$" 
          'dp-journal-high-example-face)
    ;; n.b. (fyi: I have an abbrev for nb --> N.B.)
-   (cons "^[ 	]*[nN]\\.?[Bb]\\.?\\( .*$\\|$\\)" 'dp-journal-extra-emphasis-face)
+   (cons "^[ 	]*[nN]\\.?[Bb]\\.? .*$" 'dp-journal-extra-emphasis-face)
 
    ;; plain timestamps
    (cons (dpj-mk-topic-re "") 'dp-journal-timestamp-face)
@@ -355,7 +355,7 @@ This way we can get alternating colors on journal mode structure in the text:
 	  (list 1 'dp-journal-deemphasized-face t)
 	  (list 2 'dp-journal-deemphasized-face t)
 	  (list 3 'dp-journal-deemphasized-face nil)))
-   (cons "^[ 	]*--+\\( .*$\\|$\\)" 'dp-journal-deemphasized-face)
+   (cons "^[ 	]*--+ .*$" 'dp-journal-deemphasized-face)
 
    ;; Alternating colors based on a numeric prefix.
    ;; E.g. 
@@ -1140,7 +1140,7 @@ on disk."
 
     (when (or (not (equal dpj-last-written-topic-list dpj-topic-list))
 	      dpj-abbrev-list-modified-p)
-      (erase-buffer)
+      (dp-erase-buffer)
       (insert ";; -*-emacs-lisp-*-\n")
       (insert dpj-topic-file-id-magic "\n")
       (let ((standard-output (current-buffer)))
@@ -1323,13 +1323,13 @@ non-nil otherwise get the current list topics."
 
 (defvar dpj-view-topic-keymap nil)
 (setq dpj-view-topic-keymap (make-keymap))
-(define-key dpj-view-topic-keymap "\C-m" 'dpj-view-topic-visit-real-topic)
-(define-key dpj-view-topic-keymap "v" 'dpj-view-topic-visit-real-topic)
+(define-key dpj-view-topic-keymap [(ctrl) ?m] 'dpj-view-topic-visit-real-topic)
+(define-key dpj-view-topic-keymap [?v] 'dpj-view-topic-visit-real-topic)
 (define-key dpj-view-topic-keymap [(meta ?.)] 'dpj-view-topic-visit-real-topic)
-(define-key dpj-view-topic-keymap "q" 'kill-this-buffer)
-(define-key dpj-view-topic-keymap "Q" 'kill-this-buffer)
-(define-key dpj-view-topic-keymap "x" 'kill-this-buffer)
-(define-key dpj-view-topic-keymap "X" 'kill-this-buffer)
+(define-key dpj-view-topic-keymap [?q] 'kill-this-buffer)
+(define-key dpj-view-topic-keymap [?Q] 'kill-this-buffer)
+(define-key dpj-view-topic-keymap [?x] 'kill-this-buffer)
+(define-key dpj-view-topic-keymap [?X] 'kill-this-buffer)
 
 (defun dpj-switch-to-view-buf (&optional view-buffer)
     (switch-to-buffer (or view-buffer dpj-view-topic-buffer-name))
@@ -1357,7 +1357,7 @@ The buf is read-only.  It uses the following keymap:
     (with-current-buffer buffer
       (when init-buffer-p
 	(toggle-read-only 0)
-	(erase-buffer))
+	(dp-erase-buffer))
 
       ;; do we want to do this for buffers w/no matches?
       (dpj-new-topic0 :topic (format "*** Journal File: %s" jfile-name) 
@@ -1437,7 +1437,7 @@ returning."
     
     (with-current-buffer view-buffer
       (toggle-read-only 0)
-      (erase-buffer)
+      (dp-erase-buffer)
       (dpj-new-topic0 :topic 
                       (format "*** Visiting topic %s, from the last %d months" 
 			      topic-re number-of-months)
@@ -1825,7 +1825,6 @@ Also will use prefix-arg as default NUM-MONTHS."
 (defalias 'cx0 'dpj-new-topic)          ;cx -- Context switch, same window.
 ;;;###autoload
 (defalias 'cx. 'dpj-new-topic)          ;cx -- Context switch, same window.
-(defalias 'cxd 'dpj-new-topic)          ;cx -- Context switch, same window.
 
 ;;;###autoload
 (defalias 'nt 'dpj-new-topic-other-window) ;nt -- new topic
@@ -2286,7 +2285,7 @@ The string is in my embedded lisp format."
       ;; sort them
       (sort topics 'dpj-topic-record-less-p)
       ;; remove current file contents.
-      (erase-buffer)
+      (dp-erase-buffer)
       ;; insert all records.  This results in a reformatting of
       ;; any old records by resulting a a single newline bewteen
       ;; records.  ?? Or are trailing newlines retained in each record?
@@ -2803,24 +2802,14 @@ RETURN buffer that was visiting the journal, or nil."
 ;;;###autoload
 (defalias 'dj2 'dp-journal2)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;###autoload
-;;;(defalias 'dj1 'dp-journal)
-
+;;;###autoload
+(defalias 'dj1 'dp-journal)
+;;;###autoload
+(defalias 'dj0 'dp-journal)
 ;;;###autoload
 (defalias 'dj. 'dp-journal)
-
 ;;;###autoload
 (defalias 'djd 'dp-journal)
-
-;;;###autoload
-(defun dp-journal-one-window ()
-  "Journal in a single window."
-  (interactive)
-  (dp-one-window++ -1)
-  (dp-journal))
-
-;;;###autoload
-(dp-defaliases 'dj1 'dj0 'djone 'djo 'dp-journal-one-window)
 
 ;;;###autoload
 (defun dpj-visit-other-journal-file (file-name &optional other-window-p)
@@ -3023,7 +3012,6 @@ exist to move from one topic record to the next or previous.
   (make-local-hook 'after-save-hook)
   (add-hook 'after-save-hook (function 
 			      (lambda ()
-                                (dpj-set-current-journal-file (buffer-file-name))
 				(dpj-merge-all-topics nil 'write-em)))
 	    nil 'local)
 

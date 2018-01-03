@@ -15,7 +15,7 @@
 ;; we're consing, so last will be first.
 (defvar dp-init.el-load-path-dirs
   (list (expand-file-name "~/lisp/contrib")
-        (expand-file-name "~/lisp/contrib/emacs-jabber")
+        ;; (expand-file-name "~/lisp/contrib/emacs-jabber")
         (expand-file-name "~/lisp"))
   "Initial dirs to add to load path.")
 

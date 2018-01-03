@@ -516,7 +516,7 @@ This makes us less incompatible with some FSF-centric packages such as CEDET.")
     (semantic-load-enable-all-exuberent-ctags-support)
     ;; The `condition-case'-casing is done somewhere in the Semantic doc or
     ;; code.
-    (condition-case nil
+    (condition-case appease-byte-compiler
         (progn
           (dmessage "dss: 0")
           (global-semantic-highlight-edits-mode 1)  ; Do I like this?

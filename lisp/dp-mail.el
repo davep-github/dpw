@@ -422,10 +422,12 @@ e.g. :suffix."
 				     accept-str)))))
 	    (progn
 	      (message "Replacing From: case #2")
-	      (dp-replace-From: (replace-in-string mail-default-reply-to
-						  dp-mail-extract-addr-regexp
-						  (concat "<" accept-str ">")
-						  'literal)))
+	      (dp-replace-From: 
+               (replace-regexp-in-string
+                dp-mail-extract-addr-regexp
+                (concat "<" accept-str ">")
+                 mail-default-reply-to
+                nil 'LITERAL)))
 	  (dmessage "was-to is nil."))))))
 
 (defun dp-mail-remove-sig (&optional keep-separator)

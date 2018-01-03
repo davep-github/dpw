@@ -202,7 +202,7 @@ If 'no-exit-p, then rotate the ring and refresh the buffer and don't exit.")
   (format "%s for: %s" prefix (or buf-name (buffer-name))))
 
 (defun dp-sel2:window (&optional buffer)
-  (get-buffer-window dp-sel2:buffer))
+  (dp-get-buffer-window dp-sel2:buffer))
 
 (defun dp-sel2:target-buffer ()
   (if (and dp-sel2:target-marker
@@ -316,7 +316,7 @@ dp-sel2 uses these bindings:
 ;    (dp-toggle-read-only 0 nil)		; in case this is a re-entry
 
 ;    (goto-char (point-min))
-;    (erase-buffer)
+;    (dp-erase-buffer)
 
     (dp-sel2:adjust-window-size (length item-list))
 
@@ -593,7 +593,7 @@ the item is displayed."
       
       (dp-toggle-read-only 0 nil)
 
-      (erase-buffer)
+      (dp-erase-buffer)
       (goto-char (point-min))
       ;;
       ;; Stuff all list items into the list buffer.

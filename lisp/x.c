@@ -46,24 +46,6 @@ int      		*ixnay;
 
 #include "x.h"
 
-int func_o_many_and_long_parameters(
-	int a,
-	const char* p,
-	uint32_t uthreetwo,
-	char cha_cha_cha_cha_cha_cha_cha_cha_cha_cha_cha,
-	unsigned long long_long__long__long__long__long__long)
-{
-	return 0;
-}
-
-void f_caller(void)
-{
-	int x = func_o_many_and_long(1000000,
-				     "hi, guy, I'm a longish string", 'q',
-				     0x1001001000101010010);
-}
-
-
 /*xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwweeee
 /* aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa vvvvvvvvvvvvvvvvvvvvvvvveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrrrrrrrrrrrrrrrrrrrrrrrrryyyyyyyyyyyyyyyyyyyyyy loooooooooooooooonnnnnnnnnnnnnnnnnnnngggggggggggggggggggg lllllllllllllllllllliiiiiiiiiiiiiiiiiiiiiiiiinnnnnnnnnnnnnnnnnnnnneeeeeeeeeeeeeeeeee */
 

@@ -5,9 +5,12 @@
 ;;; early in the startup sequence.
 ;;;
 
+(message "dp-fsf-early loading...")
+
+;;(defvar directory-sep-char ?/)
+;;(require 'setup-paths))
 ;; need this to automagically use font-lock-mode everywhere.
 (global-font-lock-mode t)
-
 
 (defconst dp-info-path-var 'Info-default-directory-list
   "Info dir list var we want to add our info dirs to.")
@@ -19,3 +22,5 @@
 ;;;
 ;;;
 (provide 'dp-fsf-early)
+(message "dp-fsf-early loading...done")
+

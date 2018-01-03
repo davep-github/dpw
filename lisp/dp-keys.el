@@ -4,8 +4,6 @@
 ;;; My general/global keybindings.
 ;;;
 
-(message "Loading dp-keys...")
-
 ;;
 ;; use, e.g., (read-kbd-macro "C-c C-a")
 ;; to show key sequences.
@@ -168,16 +166,6 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [delete] 'dp-delete)
 (global-set-key [(control ?d)] 'dp-delete)
 ;; New versions, less goop.
-(global-set-key [(control up)] 'dp-scroll-down)
-(global-set-key [(control down)] 'dp-scroll-up)
-(global-set-key [(control meta up)] 'dp-scroll-down-other-window)
-(global-set-key [(control meta down)] 'dp-scroll-up-other-window)
-(global-set-key [down] 'dp-next-line)   ; q.v. dp-cleanup-whitespace-p
-(global-set-key [(control kp-up)] 'dp-scroll-down)
-(global-set-key [(control kp-down)] 'dp-scroll-up)
-(global-set-key [(control meta kp-up)] 'dp-scroll-down-other-window)
-(global-set-key [(control meta kp-down)] 'dp-scroll-up-other-window)
-(global-set-key [kp-down] 'dp-next-line)   ; q.v. dp-cleanup-whitespace-p
 
 ;; I don't use the extra junk in my versions.
 ;; Ah, but I can't tag 'em as isearch-commands this way.
@@ -320,9 +308,8 @@ Bind any keys in KEYS via `dp-define-keys'."
 ;; major-mode'ed temp buffers.
 (defun dp-keys-define-init-submaps ()
   ;; Beginning to use C-cC-d as dp-* command prefix.
-  ;; Prefer C-cd prefix.  Defecate C-cC-d prefix.
   ;; dp prefixed keys; dp keys prefix; dp key prefix
-  ;; <:dp-keys|dpkeys|dp keys|ccd-map|cccd-map|dp-map:>
+  ;; <:dp-keys|dpkeys|dp keys:>
   (makunbound 'dp-Ccd-map)
   (defconst dp-Ccd-map
     (dp-define-key-submap 'dp-kb-prefix global-map
@@ -389,7 +376,6 @@ Bind any keys in KEYS via `dp-define-keys'."
                           [right] 'dp-shift-windows
                           [(control ?\\)] 'align
                           [(control ?m)] 'dp-mark-up-to-string
-                          [(meta ?o)] 'dp-copy-for-clipboard-paste
 
                           ;; <:add-new-ccd-bindings:>
                           )          ; Close paren for `dp-define-key-submap'
@@ -568,27 +554,25 @@ already in there.")
                           [?0] (kb-lambda
                                    (error "Use \C-dj1 my boy!."))
                           [?l] 'dpj-kill-link
-                          [?J] 'dpj-'dpj-edit-journal-file)
+                          [?J] 'dpj-edit-journal-file)
     ;; <:cdd map journal bindings:>
     "Keymap for my journal commands.")
-
-  ;; Tags related.
+  
   (defconst dp-tag-system-map
     (dp-define-key-submap 'dp-journal-prefix dp-Ccd-map
                           [?t]
-                          [?I] 'gtags-find-with-idutils
-                          [?P] 'gtags-find-file
                           [?b] 'dp-visit-gtags-select-buffer
-                          [?d] 'dp-tag-find
-                          [?f] 'gtags-parse-file
-                          [?g] 'dp-tag-find-with-grep
                           [?h] 'gtags-display-browser
-                          [?i] 'dp-tag-find-with-idutils
-                          [?r] 'dp-tag-find-rtag
+                          [?P] 'gtags-find-file
+                          [?f] 'gtags-parse-file
+                          [?g] 'gtags-find-with-grep
+                          [?I] 'gtags-find-with-idutils
                           [?s] 'gtags-find-symbol
-                          [?t] 'dp-tag-find
-                          [?u] 'dp-gtags-update-file
+                          [?r] 'gtags-find-rtag
+                          [?t] 'gtags-find-tag
+                          [?d] 'gtags-find-tag
                           [?v] 'gtags-visit-rootdir
+                          [?u] 'dp-gtags-update-file
                           )
     ;; <:cdd map journal bindings:>
     "Keymap for my tag system commands.")
@@ -601,7 +585,7 @@ already in there.")
                           [?w]
                           ;; Yeah, I should do a buncha submaps, but I won't.
                           ;; Nope.  I refuse. Not gun duit.  Read my lips: "No
-                          ;; new mapses."
+                          ;; new mapses.
                           ;; Some of these bindings are longer than some
                           ;; abbreviated commands
                           [(control next)] 'dp-eob-all-windows
@@ -705,7 +689,7 @@ already in there.")
 (global-set-key [(control ?c) (control ?z)] 
   (kb-lambda 
       (dp-kb-binding-moved arg 'dp-python-shell)))
-(global-set-key [(control meta ?n)] 
+(global-set-key [(control meta n)] 
   (kb-lambda
       (dp-goto-next-dp-extent-from-point '(4))))
 (global-set-key [(meta ?Q)] 'align)
@@ -773,11 +757,11 @@ This is NOT idempotent, so we skip if KEY-SEQ and NEW-DEF are bound."
   ;; M-<digit> set bm if unset, goto bm otherwise
   (global-set-key (format "\e%d" digit)
     `(lambda () 
-        (interactive "_") (dp-set-or-goto-bm ,digit :reset nil)))
+        (interactive) (dp-set-or-goto-bm ,digit :reset nil)))  ; restore "_" functionality--fsf
   ;; unconditionally set bm
   (global-set-key (read-kbd-macro (format "C-M-%d" digit))
     `(lambda () 
-        (interactive "_") (dp-set-or-goto-bm ,digit :reset t))))
+        (interactive) (dp-set-or-goto-bm ,digit :reset t))))  ; restore "_" functionality--fsf
 
 (dolist (key '(1 2 3 4 5 6 7 8))
   (dp-def-bm-key key))
@@ -803,4 +787,3 @@ This is NOT idempotent, so we skip if KEY-SEQ and NEW-DEF are bound."
 
 
 (provide 'dp-keys)
-(message "Loading dp-keys...done")

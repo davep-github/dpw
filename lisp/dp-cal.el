@@ -114,7 +114,7 @@
 				     start-year end-year))
 	(buf-name (generate-new-buffer-name "*pcal-output*")))
     (switch-to-buffer buf-name)
-    (erase-buffer)
+    (dp-erase-buffer)
     (dolist (diary-entry appts)
       (let ((date (third diary-entry))
 	    (appt (second diary-entry)))
@@ -157,7 +157,7 @@ notifications to be given via messages in a pop-up frame."
   (let ()
     (save-excursion
       (set-buffer (get-buffer-create appt-buffer-name))
-      (erase-buffer)
+      (dp-erase-buffer)
       ;; set the mode-line of the pop-up window
       (setq modeline-format 
             (concat "-------------------- Appointment "

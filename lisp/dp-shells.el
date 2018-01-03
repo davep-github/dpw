@@ -327,16 +327,10 @@ No regexps allowed. This will be processed by `regexp-opt'")
                                        "nvmk"
                                        "t_make"
                                        "apmake"
-                                       "kmk"  ; Make .o, .ko, etc in kernel tree.
                                        "cc"
                                        "gcc"
                                        "g++"
-                                       "cpp"
                                        "diff"
-                                       "sdiff"
-                                       "diff3"
-                                       "meld"
-                                       "diffuse"
                                        "grep"
                                        "egrep"
                                        "fgrep"
@@ -388,7 +382,7 @@ g++: Why does it act exactly the same in spite of my changes?
     (save-some-buffers)))
 
 (defun dp-shell-dirty-buffer-cmd-p (str)
-  "Is STR a command which should see the contents modified buffers? message.
+  "Is STR a command which should see the contents modified buffers?
 Examples are things like make, cc, etc. We would like these commands to
 operate on the most current file contents."
   (string-match dp-shell-dirty-buffer-cmds str))
@@ -415,7 +409,6 @@ not destined to be saved.  ")
 
 (defun dp-shells-save-buffer-p ()
   (and dp-shells-save-buffer-flag-p
-       (buffer-file-name)
        (not (dp-match-a-regexp (buffer-file-name)
                                dp-shells-files-to-not-save))))
 
@@ -429,7 +422,6 @@ not destined to be saved.  ")
            (cons (regexp-opt '("code-indexer"
                                "udstags"
                                "cscope"
-                               "gtags"
                                "index-code"
                                "index-me-code"
                                "index-all-me-trees"
@@ -983,8 +975,6 @@ Or both.")
       (ansi-color-for-comint-mode-off))))
   
 ;;;###autoload
-(make-variable-buffer-local 'comint-buffer-maximum-size)
-;;;###autoload
 (defun* dp-shell-mode-hook (&optional (variant dp-default-variant))
   "Sets up shell mode specific options."
   (interactive)
@@ -1007,7 +997,9 @@ Or both.")
     do (add-hook (dp-sls variant '-output-filter-functions)
                  hook nil t))
 
-    (dp-set-shell-max-lines t))
+    (setq comint-buffer-maximum-size 
+          (* 4 1024)
+          ))
   
   ;; something wipes this out after the call to comint-mode-hook and here,
   ;; so we do it again.
@@ -1190,11 +1182,11 @@ command position."
      :colors dp-highlight-point-other-window-faces)))
 
 (defun dp-shell-goto-prev-cmd-pos (&optional arg)
-  (interactive "_P")
+  (interactive "P")                     ;"_" - fsf
   (dp-shell-goto-cmd-pos arg 'backwards))
 
 (defun dp-shell-goto-next-cmd-pos (&optional arg)
-  (interactive "_P")
+  (interactive "_")                     ;"_" fsf
   (dp-shell-goto-cmd-pos arg 'forwards))
 
 (defun dp-shell-adjust-command-positions (delta)
@@ -1224,8 +1216,7 @@ command position."
 (dp-deflocal dp-shell-output-line-count 0
   "Number of lines ouput by the current command.")
 
-;;; (dp-deflocal dp-shell-output-max-lines-default (* 3 163830)
-(dp-deflocal dp-shell-output-max-lines-default 8192
+(dp-deflocal dp-shell-output-max-lines-default (* 3 163830)
   "Maximum number of lines which is kept in each shell buffer.
 XXX @todo Limiter should be modified to handle lines.")
 
@@ -1252,7 +1243,7 @@ This allows us to do our fancy stuff and still call the correct sender.")
                           (current-buffer)
                         (get-buffer "*shell*")))
            (shell-proc (get-buffer-process shell-buf))
-           (shell-win (get-buffer-window shell-buf)))
+           (shell-win (dp-get-buffer-window shell-buf)))
       (dp-send-export-command "COLUMNS"
                               (format "%s"
                                       (or cols
@@ -1917,7 +1908,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
                    (y-or-n-p "Save contents first? "))
               save-contents-p)
       (dp-save-shell-buffer))
-    (erase-buffer)
+    (dp-erase-buffer)
     (when fake-cmd-p
       (funcall dp-shell-type-enter-func
 	       (dp-shell-buffer-type (buffer-name)))) ;; get us a prompt
@@ -2148,27 +2139,27 @@ handled right."
         (call-interactively 'term)
       (term prog-name))))
 
-;;;###autoload
-(defun dp-cterm ()
-  (interactive)
-  (call-interactively 'dp-start-term)
-  (term-char-mode)
-  (dp-maybe-add-compilation-minor-mode)
-  (dp-term-mode-common-keys)
-  (term-line-mode)
-  (dp-term-mode-common-keys)
-  (add-hook 'post-command-hook 'dp-term-set-mode-from-pos))
+;;;###autoload -- OBSOLETE, REMOVE
+;;DooMed (defun dp-cterm ()
+;;DooMed   (interactive)
+;;DooMed   (call-interactively 'dp-start-term)
+;;DooMed   (term-char-mode)
+;;DooMed   (dp-maybe-add-compilation-minor-mode)
+;;DooMed   (dp-term-mode-common-keys)
+;;DooMed   (term-line-mode)
+;;DooMed   (dp-term-mode-common-keys)
+;;DooMed   (add-hook 'post-command-hook 'dp-term-set-mode-from-pos))
 
-;;;###autoload
-(defun dp-lterm ()
-  (interactive)
-  (call-interactively 'dp-start-term)
-  (term-line-mode)
-  (dp-maybe-add-compilation-minor-mode)
-  (dp-term-mode-common-keys)
-  (dp-shell-line-mode-bindings 'term 'bind-up-n-down)
-  (local-set-key "\t" 'term-dynamic-complete)
-  (remove-hook 'post-command-hook 'dp-term-set-mode-from-pos))
+;;DooMed ;;;###autoload -- OBSOLETE, REMOVE
+;;DooMed (defun dp-lterm ()
+;;DooMed   (interactive)
+;;DooMed   (call-interactively 'dp-start-term)
+;;DooMed   (term-line-mode)
+;;DooMed   (dp-maybe-add-compilation-minor-mode)
+;;DooMed   (dp-term-mode-common-keys)
+;;DooMed   (dp-shell-line-mode-bindings 'term 'bind-up-n-down)
+;;DooMed   (local-set-key "\t" 'term-dynamic-complete)
+;;DooMed   (remove-hook 'post-command-hook 'dp-term-set-mode-from-pos))
 
 
 (defun dp-shell-process-xdir (arg)
@@ -2603,7 +2594,7 @@ it for something \"speshul\".
             dp-prefer-independent-frames-p t
             other-window-p nil
             dp-shell-buffer-save-file-name (dp-transformed-save-buffer-file-name
-                                            dp-default-save-shell-buffer-contents-dir
+                                            dp-default-save-buffer-contents-dir
                                             'dp-shellify-shell-name))
 
       (dp-shells-set-most-recently-created-shell sh-buffer 'shell)
@@ -2689,7 +2680,7 @@ displayed."
                           (current-buffer)
                         (get-buffer "*shell*")))
            (shell-proc (get-buffer-process shell-buf))
-           (shell-win (get-buffer-window shell-buf))
+           (shell-win (dp-get-buffer-window shell-buf))
            (echo "")
            (args (if (not (string= args ""))
                      (concat " " args)
@@ -2697,7 +2688,7 @@ displayed."
            ;; Space --> Don't put command in the history.  Well, we do want
            ;; the rest of the line and I don't want to lose that.
            ;; 
-           (cmd (format "export COLUMNS=%s LINES=%s ; %s%s"
+           (cmd (format "COLUMNS=%s LINES=%s %s%s"
                         (or cols
                             (- (window-width shell-win) 5))
                         (or lines
@@ -2809,7 +2800,7 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 ;;(defvar dp-locale-rcs-regexp (dp-))
 
 (defun dp-gdb-scroll-down-source-buffer (num)
-  (interactive "_p")
+  (interactive "p")                    ; fsf - fix "_"
   (let ((buffer (and gdb-arrow-extent
                      (extent-object gdb-arrow-extent)))
         window)
@@ -2876,21 +2867,21 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 ;;         (with-current-buffer (process-buffer proc)
 ;;           (dp-restrict-buffer-growth max-size max-percentage))))))
 
-;; (defun dp-file-size-limiting-process-filter (proc string original-filter
-;;                                              max-size &optional max-percentage)
-;;   "A process filter which limits the size of the process output buffer.
-;; PROC is the process, STRING is the string to filter, ORIGINAL-FILTER is the
-;; filter that would normally be called, MAX-SIZE is the maximum size in chars
-;; and MAX-PERCENTAGE is the percentage of MAX-SIZE is the desired number of
-;; chars that that will remain after the oldest output has been deleted.
-;; If MAX-SIZE is nil, do not limit the size.
-;; MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
-;;   (save-excursion
-;;       (when max-size
-;;         (with-current-buffer (process-buffer proc)
-;;           (dp-restrict-buffer-growth max-size max-percentage))))
-;;   (when original-filter
-;;     (funcall original-filter proc string)))
+(defun dp-file-size-limiting-process-filter (proc string original-filter
+                                             max-size &optional max-percentage)
+  "A process filter which limits the size of the process output buffer.
+PROC is the process, STRING is the string to filter, ORIGINAL-FILTER is the
+filter that would normally be called, MAX-SIZE is the maximum size in chars
+and MAX-PERCENTAGE is the percentage of MAX-SIZE is the desired number of
+chars that that will remain after the oldest output has been deleted.
+If MAX-SIZE is nil, do not limit the size.
+MAX-PERCENTAGE's default is determined in `dp-restrict-buffer-growth'."
+  (save-excursion
+      (when max-size
+        (with-current-buffer (process-buffer proc)
+          (dp-restrict-buffer-growth max-size max-percentage))))
+  (when original-filter
+    (funcall original-filter proc string)))
 
 (defun dp-gdb-filter (proc string)
   (gdb-filter proc string))
@@ -3332,7 +3323,7 @@ ARG == 0    --> New `dp-gdb-naught' session."
 (defvar dp-default-shellify-replacement-str ""
   "Use this string by default when cleaning up a string to be used as a file name.")
 
-(defvar dp-default-save-shell-buffer-contents-dir "$HOME/log/shell-sessions/"
+(defvar dp-default-save-buffer-contents-dir "$HOME/log/shell-sessions/"
   "Where do the files go by default.  Will be created including any missing parents.")
 
 (dp-deflocal dp-shell-buffer-save-file-name nil

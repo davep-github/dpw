@@ -6,7 +6,85 @@
 
 ;; historical variety of styles: see svn, < rev 2013. 
 
-(add-hook 'find-file-hooks 'dp-add-default-buffer-endicator)
+(defconst meduseld-c-style
+  '((c-tab-always-indent           . t)
+    (c-basic-offset                . 4)
+    (c-comment-only-line-offset    . 0)
+    (c-cleanup-list                . (scope-operator
+				      empty-defun-braces
+				      defun-close-semi
+				      list-close-comma
+                                      brace-else-brace
+                                      brace-elseif-brace
+				      knr-open-brace)) ; my own addition
+    (c-offsets-alist               . ((arglist-intro     . +)
+				      (substatement-open . 0)
+				      (inline-open       . 0)
+				      (cpp-macro-cont    . +)
+				      (access-label      . /)
+				      (case-label        . +)))
+    (c-hanging-semi&comma-criteria dp-c-semi&comma-nada)
+    (c-echo-syntactic-information-p . nil)
+    (c-indent-comments-syntactically-p . t)
+    (c-hanging-colons-alist         . ((member-init-intro . (before))))
+    )
+  "MEDUSELD C Programming Style")
+
+(defun dp-medueld-c-style ()
+  "Set up C/C++ style."
+  (interactive)
+  (c-add-style "meduseld-c-style" meduseld-c-style t))
+
+(unless (bound-and-true-p dp-default-c-style-name)
+  (defvar dp-default-c-style-name "meduseld-c-style"))
+
+(defun meduseld-style ()
+  "Set up home (Meduseld.net) C style."
+  (interactive)
+  (c-set-style "meduseld-c-style"))
+
+(defcustom dp-default-c-style 
+  (symbol-value (intern-soft dp-default-c-style-name))
+  "*Default C[++] style."
+  :group 'dp-vars
+  :type 'symbol)
+
+(defun dp-cc-mode-activate-style (&optional style-name)
+  "Set up a C/C++ style. Use the default by default."
+  (interactive)
+  (c-set-style (or style-name dp-default-c-style-name)) t)
+
+(setq c-default-style `((other . ,dp-default-c-style-name)
+                        ;;(other . "meduseld-c-style")
+                        (java-mode . "java") ))
+
+(dp-deflocal current-project-c++-mode-style nil
+  "*Variable set via File Variables to indicate the current c-mode style")
+
+(dp-deflocal current-project-c++-mode-style-name nil
+  "*Variable set via File Variables to indicate the current c-mode style name")
+
+;;; A bit of history.
+;; (defun ll-style ()
+;;   "Set up ll C/C++ style."
+;;   (interactive)
+;;   (c-set-style "ll-c-style"))
+
+;; (defun av2-style ()
+;;   "Set up avalanche 2 C style."
+;;   (interactive)
+;;   (c-set-style "av2-c-style"))
+
+;; (defun crl-style ()
+;;   "Set up crl C style."
+;;   (interactive)
+;;   (c-set-style "crl-c-style"))
+
+;; (defun vanu-style ()
+;;   "Set up Vanu C style."
+;;   (interactive)
+;;   (c-set-style "vanu-c-style"))
+;;
 
 (defcustom dp-global-master-cleanup-whitespace-p t
   "Control whitespace cleanup off everywhere.
@@ -22,15 +100,7 @@ mode."
 
 (dp-deflocal dp-cleanup-whitespace-p nil
   "Should trailing whitespace be cleaned up in this buffer?
-Values:
-nil      - NO.
-t        - Just do it(tm)
-eol-only - Only clean lines when cursor it at the end of a line.
-           This makes it easy to leave the whitespace alone.
-@todo XXX better to default to t or eol-only?")
-
-(dp-deflocal dp-cleanup-whitespace-on-next-line-p t
-  "Should trailing whitespace be cleaned up in this buffer on `next-line?
+In particular, should `dp-next-line' do it?
 Values:
 nil      - NO.
 t        - Just do it(tm)
@@ -41,15 +111,6 @@ eol-only - Only clean lines when cursor it at the end of a line.
 (defun dp-cleanup-whitespace-p ()
   "Do we wish to be anal about whitespace?"
   (when dp-global-master-cleanup-whitespace-p
-    (cond
-     ((and (listp dp-global-master-cleanup-whitespace-p)
-           (memq major-mode dp-global-master-cleanup-whitespace-p)))
-     (dp-cleanup-whitespace-p))))
-
-(defun dp-cleanup-whitespace-on-next-line-p ()
-  "Do we wish to be really anal about whitespace?"
-  (when (and dp-global-master-cleanup-whitespace-p
-             dp-cleanup-whitespace-on-next-line-p)
     (cond
      ((and (listp dp-global-master-cleanup-whitespace-p)
            (memq major-mode dp-global-master-cleanup-whitespace-p)))
@@ -136,9 +197,9 @@ Make it buffer local since there can be >1 minibuffers.")
     (define-key map [(control ?p)] 'previous-complete-history-element)
     (define-key map [(meta ?p)] 'dp-parenthesize-region)
     (define-key map [(control ?n)] 'next-complete-history-element)
-    (define-key map [(control ?m)] 'dp-minibuffer-grab-region)  ; <mini>buffer
-    (define-key map [(meta ?g)] 'dp-minibuffer-grab-region) ; grab
-    (define-key map [(meta ?s)] 'dp-minibuffer-grab-region) ; snag
+;;is this breaking fsf?     (define-key map [(control ?m)] 'dp-minibuffer-grab-region)  ; <mini>buffer
+;;is this breaking fsf?     (define-key map [(meta ?g)] 'dp-minibuffer-grab-region) ; grab
+;;is this breaking fsf?     (define-key map [(meta ?s)] 'dp-minibuffer-grab-region) ; snag
     (define-key map [(meta ?')] 'dp-copy-char-to-minibuf)  ; quote
     (define-key map [(control tab)] 'lisp-complete-symbol)
     (define-key map [(meta ?=)] (kb-lambda 
@@ -155,7 +216,8 @@ Make it buffer local since there can be >1 minibuffers.")
     (when (memq this-command '(eval-expression edebug-eval-expression))
       (define-key map [tab] 'lisp-complete-symbol))
     (define-key map [(meta ?o)] 'dp-kill-ring-save)
-
+;;remove if unneeded.;     (dp-minibuffer-abbrevs-post-hook)
+    
     ;; M-e `find-file' M-w `save-buffer' don't make sense in a minibuffer so we
     ;; use them to grab a path name from the current *sh* window.  We put the
     ;; function on both so that a simple repeat key press gives us a nice
@@ -172,20 +234,20 @@ Make it buffer local since there can be >1 minibuffers.")
   ;; Optionally mark the default selection for easy deletion
   ;;  (as long as pending-delete-mode is on)
   (if (and dp-enable-minibuffer-marking
-           (boundp 'dp-minibuffer-mark-line-p)
-           dp-minibuffer-mark-line-p)
+	   (boundp 'dp-minibuffer-mark-line-p)
+	   dp-minibuffer-mark-line-p)
       (let ((pt (point)))
-        (beginning-of-line)
-        (dp-set-mark)
-        (dmessage "point: %s, pt: %s" (point) pt)
-        (goto-char pt)
-        (zmacs-make-extent-for-region (cons (point-marker t)
-                                            (mark-marker t)))
-        ))
+	(beginning-of-line)
+	(dp-set-mark)
+	(dmessage "point: %s, pt: %s" (point) pt)
+	(goto-char pt)
+	(zmacs-make-extent-for-region (cons (point-marker t)
+					    (mark-marker t)))
+	))
   ;;(dmessage "dp-minibuffer-setup-hook")
 )
 
-(load "dp-buffer-menu")
+(require 'dp-buffer-menu)
 
 (defun dp-kill-emacs-hook ()
   "Do my finalization procedures when xemacs exits."
@@ -293,8 +355,8 @@ _str: looks too much like string
   "Convert a list of words/regexps into a keyword matching pattern."
   ;; cannot use regexp-opt since we can have regexps in the list.
   (concat "\\<\\("
-          (dp-regexp-concat list)
-          "\\)\\>"))
+	  (dp-regexp-concat list)
+	  "\\)\\>"))
 
 ;;retire; (defvar dp-debug-like-patterns-orig
 ;;retire;   (concat (regexp-opt `("tmp_cout" "tmp_cerr" "tmp_v_stream" "tmp_d_stream"
@@ -345,28 +407,26 @@ For C/C++ source code.")
 (defun dp-mk-c*-debug-like-patterns ()
   (dp-mk-debug-like-patterns dp-c*-debug-like-patterns))
 
-(dp-deflocal dp-line-too-long-error-column 80
-  "Become enraged (new face) when going beyond this column.")
-
 (dp-deflocal dp-line-too-long-warning-column 77
   "Begin complaining (new face) when going beyond this column.
 For now this must be < the error col.")
 
-(defface dp-default-line-too-long-error-face
+(dp-deflocal dp-line-too-long-error-column 80
+  "Become enraged (new face) when going beyond this column.")
+
+(defface dp-default-line-way-too-long-face
   '((((class color)
       (background light))
-     (:background "gainsboro")))
-;;     (:background "lightgrey" :bold nil)))
-  "Face for buffer lines which have gotten too long."
+     (:background "aliceblue")))
+  "Face for buffer lines which get too long."
   :group 'faces
   :group 'dp-vars)
 
-(defface dp-default-line-too-long-warning-face
+(defface dp-default-line-too-long-face
   '((((class color)
       (background light))
-;;     (:background "aliceblue")))
-     (:background "lightgrey" :bold nil)))
-  "Face for buffer lines which are getting too long."
+     (:background "gainsboro")))
+  "Face for buffer lines which getting too long."
   :group 'faces
   :group 'dp-vars)
 
@@ -381,13 +441,13 @@ For now this must be < the error col.")
                   0
 ;; !<@todo XXX make this handle warning-col >= error-col. (if < 0) 0
                   warning-zone-len)
-          (list 2 'dp-default-line-too-long-warning-face 'append)
-          (list 3 'dp-default-line-too-long-error-face 'append)))
+          (list 2 'dp-default-line-too-long-face 'append)
+          (list 3 'dp-default-line-way-too-long-face 'append)))
   "Font-lock component to highlight lines that are too long.
 NB This is broken when real tabs are used, since they count as one char as
 far the regexp is concerned.")
 
-(defvar dp-font-lock-line-too-long-error-element-for-tabs
+(defvar dp-font-lock-line-too-long-element-for-tabs
   (list
    (format
     "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
@@ -400,43 +460,20 @@ far the regexp is concerned.")
         (format ".\\{%d\\}" rem))))
    (list
     2                                  ; line tail
-    'dp-default-line-too-long-error-face
+    'dp-default-line-too-long-face
    'append))
-  "As above, but works with tabs.")
 
-(defvar dp-font-lock-line-too-long-warning-element-for-tabs
-  (list
-   (format
-    "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
-    tab-width
-    (1- tab-width)
-    (/ dp-line-too-long-warning-column tab-width)
-    (let ((rem (% dp-line-too-long-warning-column tab-width)))
-      (if (zerop rem)
-          ""
-        (format ".\\{%d\\}" rem))))
-   (list
-    2                                  ; line tail
-    'dp-default-line-too-long-warning-face
-   'append))
-  "As above, but handles the warning zone.")
+  "As above, but works with tabs; however, there is no warning zone yet.")
 
-(defvar dp-font-lock-line-too-long-error-element
-  dp-font-lock-line-too-long-error-element-for-tabs
-  "NB: Add mechanism for selecting (tabs or no), or make one element that
-  works for both.")
-
-(defvar dp-font-lock-line-too-long-warning-element
-  dp-font-lock-line-too-long-warning-element-for-tabs
+(defvar dp-font-lock-line-too-long-element
+  dp-font-lock-line-too-long-element-for-tabs
   "NB: Add mechanism for selecting, or make one element that works for both.
 The tabs version will work w/o tabs but I need to figure out how to handle
-the warning zone logic (or bag it.) Using brute force.")
+the warning zone logic (or bag it.)")
 
 (defface dp-trailing-whitespace-face
   '((((class color) (background light)) 
-;;     (:background "aliceblue" :bold nil))) 
-;;     (:background "gainsboro" :bold nil)))
-     (:background "lightgrey" :bold nil)))
+     (:background "aquamarine" :bold nil))) 
   "Face for buffer lines which have trailing whitespace."
   :group 'faces
   :group 'dp-vars)
@@ -461,13 +498,6 @@ the warning zone logic (or bag it.) Using brute force.")
   :group 'dp-whitespace-vars
   :type 'string)
 
-(defcustom dp-too-many-spaces-in-a-row-regexp " \\{8,80\\}"
-  "Sometimes (although it may be fixed) AMD/Kernel c*-mode starts up without
-  forcing the use of tabs.  Hopefully this will slap me in the face about it
-  so the spatse-Nazis don't get me. "
-  :group 'dp-whitespace-vars :type
-  'string)
-
 (defcustom dp-trailing-whitespace-use-trailing-ws-font-p nil
   "Highlight trailing white space with its own font? Yay!"
   :group 'dp-whitespace-vars
@@ -486,23 +516,6 @@ the warning zone logic (or bag it.) Using brute force.")
   (list dp-space-before-tab-regexp 0 'dp-trailing-whitespace-face 'prepend)
   "A font-lock element to pick out trailing whitespace.")
 
-(defvar dp-too-many-spaces-in-a-row-font-lock-element
-  (list dp-too-many-spaces-in-a-row-regexp
-        0 
-        'dp-trailing-whitespace-face 'prepend)
-  "A font-lock element to pick out too many spaces in a row.")
-
-(defcustom dp-use-too-many-spaces-font-p nil
-  "Highlight too many spaces in a row (missing tabs)?"
-  :group 'dp-whitespace-vars
-  :type 'boolean)
-
-
-(defvar dp-whitespace-violation-regexp
-  (dp-regexp-concat (list dp-trailing-whitespace-regexp
-                          dp-space-before-tab-regexp
-                          dp-too-many-spaces-in-a-row-regexp)))
-                      
 (defun dp-blah-blah (save-sym)
   (append (symbol-value save-sym)
           list-o-keys))
@@ -562,7 +575,7 @@ original state and then applies changes. This is good... sometimes."
     (loop for v in font-lock-var-syms do
       (make-variable-buffer-local v)))
   (dp-add-font-patterns-old font-lock-var-syms
-                            dp-font-lock-line-too-long-error-element))
+                            dp-font-lock-line-too-long-element))
 
 (defun* dp-add-line-too-long-font (font-lock-var-syms
                                    &key (buffer-local-p t))
@@ -572,8 +585,7 @@ original state and then applies changes. This is good... sometimes."
   (interactive "Smode's font lock var? ")
   (dp-add-font-patterns font-lock-var-syms
                         buffer-local-p
-                        (list dp-font-lock-line-too-long-error-element
-                              dp-font-lock-line-too-long-warning-element)))
+                        (list dp-font-lock-line-too-long-element)))
 
 (defun dp-muck-with-fontification ()
   ;; Reset things to original state.
@@ -581,7 +593,6 @@ original state and then applies changes. This is good... sometimes."
 ;   (dp-save-orig-n-set-new 'c++-font-lock-keywords-3 c++-font-lock-keywords-3)
 ;   (setq c-font-lock-keywords-3 dp-orig-c-font-lock-keywords-3)
   ;; fix up the loudest setting.
-  (dmessage "in dp-muck-with-fontification")
   (if (dp-xemacs-p)
       ;; All font junk is now done in the cc-mode's `eval-after-load'
       ()                                
@@ -590,32 +601,32 @@ original state and then applies changes. This is good... sometimes."
     ;;;;;;;  VERY, VERY STALE ~~~~ ;;;;;;;;;;;;;;
     
     (setq c-font-lock-keywords-3
-          ;;
-          ;; FSFMacs case.  They still haven't fixed the regexps to match
-          ;; funtion/macro names that include underscores.
-          ;; modified from c-...-2 to add support for \\s_
-          ;; in identifier names.  I'd like to just modify \\sw to be
-          ;; \\(\\sw\\|\\s_\\), but a couple of re's are moved to different
-          ;; match indexes when an un-parenthesized \sw is parenthesized to add
-          ;; the \s_
-          ;; XXX -- can add shy grouping parens around \\sw
-          ;; NOPE. shy grouping is XEmacs only.
-          '(("^\\(\\(\\sw\\|\\s_\\)+\\)[ 	]*(" 1 font-lock-function-name-face)
-            ("^#[ 	]*error[ 	]+\\(.+\\)" 1 font-lock-warning-face prepend)
-            ("^#[ 	]*\\(import\\|include\\)[ 	]+\\(<[^>\"\n]*>?\\)" 
-             2 font-lock-string-face)
-            ("^#[ 	]*define[ 	]+\\(\\(\\sw\\|\\s_\\)+\\)(" 
-             1 font-lock-function-name-face)
-            ("^#[ 	]*\\(elif\\|if\\)\\>"
-             ("\\<\\(defined\\)\\>[ 	]*(?\\(\\(\\sw\\|\\s_\\)+\\)?" nil nil
-              (1 font-lock-reference-face)
-              (2 font-lock-variable-name-face nil t)))
-            ("^#[ 	]*\\(\\(\\sw\\|\\s_\\)+\\)\\>[ 	]*\\(\\(\\sw\\|\\s_\\)+\\)?"
-             (1 font-lock-reference-face)
-             (3 font-lock-variable-name-face nil t))
-            (eval cons
-                  (dp-mk-font-lock-type-re
-                   (cons
+	  ;;
+	  ;; FSFMacs case.  They still haven't fixed the regexps to match
+	  ;; funtion/macro names that include underscores.
+	  ;; modified from c-...-2 to add support for \\s_
+	  ;; in identifier names.  I'd like to just modify \\sw to be
+	  ;; \\(\\sw\\|\\s_\\), but a couple of re's are moved to different
+	  ;; match indexes when an un-parenthesized \sw is parenthesized to add
+	  ;; the \s_
+	  ;; XXX -- can add shy grouping parens around \\sw
+	  ;; NOPE. shy grouping is XEmacs only.
+	  '(("^\\(\\(\\sw\\|\\s_\\)+\\)[ 	]*(" 1 font-lock-function-name-face)
+	    ("^#[ 	]*error[ 	]+\\(.+\\)" 1 font-lock-warning-face prepend)
+	    ("^#[ 	]*\\(import\\|include\\)[ 	]+\\(<[^>\"\n]*>?\\)" 
+	     2 font-lock-string-face)
+	    ("^#[ 	]*define[ 	]+\\(\\(\\sw\\|\\s_\\)+\\)(" 
+	     1 font-lock-function-name-face)
+	    ("^#[ 	]*\\(elif\\|if\\)\\>"
+	     ("\\<\\(defined\\)\\>[ 	]*(?\\(\\(\\sw\\|\\s_\\)+\\)?" nil nil
+	      (1 font-lock-reference-face)
+	      (2 font-lock-variable-name-face nil t)))
+	    ("^#[ 	]*\\(\\(\\sw\\|\\s_\\)+\\)\\>[ 	]*\\(\\(\\sw\\|\\s_\\)+\\)?"
+	     (1 font-lock-reference-face)
+	     (3 font-lock-variable-name-face nil t))
+	    (eval cons
+		  (dp-mk-font-lock-type-re
+		   (cons
                     (concat
                      "auto\\|c\\(har\\|onst\\)\\|double\\|e\\(num\\|xtern\\)"
                      "\\|float\\|int\\|long\\|register"
@@ -623,23 +634,23 @@ original state and then applies changes. This is good... sometimes."
                      "\\|typedef\\|typename\\|un\\(ion\\|signed\\)"
                      "\\|vo\\(id\\|latile\\)")
                     dp-c-font-lock-extra-types))
-                  'font-lock-type-face)
-            (concat "\\<\\(break\\|continue\\|do\\|else\\|for\\|if\\|return"
+		  'font-lock-type-face)
+	    (concat "\\<\\(break\\|continue\\|do\\|else\\|for\\|if\\|return"
                     "\\|switch\\|while\\)\\>")
-            ("\\<\\(case\\|goto\\)\\>[ 	]*\\(-?\\(\\sw\\|\\s_\\)+\\)?"
-             (1 font-lock-keyword-face)
-             (2 font-lock-reference-face nil t))
-            (":"
-             ("^[ 	]*\\(\\(\\sw\\|\\s_\\)+\\)[ 	]*:"
-              (beginning-of-line)
-              (end-of-line)
-              (1 font-lock-reference-face)))))
+	    ("\\<\\(case\\|goto\\)\\>[ 	]*\\(-?\\(\\sw\\|\\s_\\)+\\)?"
+	     (1 font-lock-keyword-face)
+	     (2 font-lock-reference-face nil t))
+	    (":"
+	     ("^[ 	]*\\(\\(\\sw\\|\\s_\\)+\\)[ 	]*:"
+	      (beginning-of-line)
+	      (end-of-line)
+	      (1 font-lock-reference-face)))))
 ))
 
 (when dp-fontify-p
-    (add-hook 'dp-post-dpmacs-hook 'dp-muck-with-fontification))
+  (add-hook 'dp-post-dpmacs-hook 'dp-muck-with-fontification))
 
-  ;; ;;(brace-list-close . after)
+;; ;;(brace-list-close . after)
 (defvar dp-hanging-brace-alist '((brace-list-close . ignore))
   "My hanging braces values.  We will edit or append to
 c-hanging-braces-alist based upon these values.")
@@ -649,34 +660,19 @@ c-hanging-braces-alist based upon these values.")
                                    (buffer-local-p nil)
                                    (use-trailing-ws-font-p
                                     dp-trailing-whitespace-use-trailing-ws-font-p)
-                                   (use-too-many-spaces-font-p
-                                    dp-use-too-many-spaces-font-p)
-                                   (use-space-before-tab-font-p
-                                    dp-use-space-before-tab-font-lock-p)
                                    (use-too-long-face-p
                                     (dp-val-if-boundp
-                                     dp-global-c*-use-too-long-face))
-                                   (use-too-long-warning-face-p
-                                    (dp-val-if-boundp
-                                     dp-global-c*-use-too-long-warning-face)))
+                                     dp-global-c*-use-too-long-face)))
   (interactive)
-  (dmessage "in dp-c-like-add-extra-faces")
-  (dmessage "in dp-c-like-add-extra-faces: dp-twsp: %s, utlf: %s, utlwf: %s"
-            dp-trailing-whitespace-use-trailing-ws-font-p
-            use-too-long-face-p use-too-long-warning-face-p)
   (let ((extras
          (delq nil
                (list
-                (when use-trailing-ws-font-p
+                (when dp-trailing-whitespace-use-trailing-ws-font-p
                   dp-trailing-whitespace-font-lock-element)
                 (when use-too-long-face-p
-                  dp-font-lock-line-too-long-error-element)
-                (when use-too-long-warning-face-p
-                  dp-font-lock-line-too-long-warning-element)
-                (when use-space-before-tab-font-p
+                  dp-font-lock-line-too-long-element)
+                (when dp-use-space-before-tab-font-lock-p
                   dp-space-before-tab-font-lock-element)
-                (when use-too-many-spaces-font-p
-                  dp-too-many-spaces-in-a-row-font-lock-element)
                 (cons
                  (dp-mk-font-lock-type-re dp-c-font-lock-extra-types)
                  font-lock-type-face)
@@ -696,17 +692,16 @@ c-hanging-braces-alist based upon these values.")
                               (buffer-local-p nil)
                               (use-trailing-ws-font-p
                                dp-trailing-whitespace-use-trailing-ws-font-p)
-                              (dp-use-too-long-face-p
+                              (use-too-long-face-p
                                (dp-val-if-boundp
                                 dp-global-c*-use-too-long-face)))
-  (dmessage "in dp-c++-add-extra-faces")
   (dp-c-like-add-extra-faces
    '(c++-font-lock-keywords-3
      c++-font-lock-keywords-2
      c++-font-lock-keywords-1)
    :buffer-local-p buffer-local-p
    :use-trailing-ws-font-p use-trailing-ws-font-p
-   :use-too-long-face-p dp-use-too-long-face-p))
+   :use-too-long-face-p use-too-long-face-p))
 
 (defun* dp-c-add-extra-faces (&key
                               (buffer-local-p nil)
@@ -715,7 +710,6 @@ c-hanging-braces-alist based upon these values.")
                               (use-too-long-face-p
                                (dp-val-if-boundp
                                 dp-global-c*-use-too-long-face)))
-  (dmessage "in dp-c-add-extra-faces")
   (dp-c-like-add-extra-faces
    '(c-font-lock-keywords-3
      c-font-lock-keywords-2
@@ -731,14 +725,6 @@ c-hanging-braces-alist based upon these values.")
 (dp-set-mode-local-value 'dp-open-newline-func 'dp-c-open-newline
                          dp-c-like-modes)
 
-(defun dp-c-beginning-of-defun-0-real-bof ()
-  (interactive)
-  (dp-c-beginning-of-defun 1 'real-bof))
-
-(defun dp-c-end-of-defun-0-real-bof ()
-  (interactive)
-  (dp-c-end-of-defun 1 'real-bof))
-
 (defun dp-after-load-cc-mode ()     ;<:cc-after-load|bind-c*-keys|setup c* :>
   (interactive)
   ;; NB! Don't put per buffer vars, etc, here.
@@ -753,8 +739,8 @@ c-hanging-braces-alist based upon these values.")
                    "PERSONAL-default")
                (or (and (boundp 'current-project-c++-mode-style)
                         current-project-c++-mode-style)
-                   dp-default-c-style)
-               t)
+                   dp-default-c-style))
+
   ;;  (define-key map [(control c) d (meta /)] 'dp-c++-mk-protection-section)
   ;;  (define-key map [(control c) d / ] 'dp-c++-goto-protection-section)
   (define-key dp-Ccd-map [(meta /)]  'dp-c++-mk-protection-section)
@@ -769,11 +755,14 @@ c-hanging-braces-alist based upon these values.")
     (define-key map [(meta ?a)] 'dp-toggle-mark)
     (define-key map [(meta ?A)] 'dp-mark-to-end-of-line)
     (define-key map [tab] 'dp-c-indent-command)
-    (define-key map [(meta left)] 'dp-c-beginning-of-defun-0-real-bof)
-    (define-key map [(meta right)] 'dp-c-end-of-defun-0-real-bof)
+    (define-key map [(meta left)] (kb-lambda 
+                                      (dp-c-beginning-of-defun 1 'real-bof)))
     (define-key map [(control ?x) (control left)] 'dp-c-beginning-of-defun)
     (define-key map [(control ?x) left] 'dp-c-show-class-name)
     (define-key map [(control ?x) (control right)] 'dp-c-end-of-defun)
+    (define-key map [(meta right)] 
+      (kb-lambda
+          (dp-c-end-of-defun 1 'real-bof)))
     (define-key map [(control ?x) right] 
       (kb-lambda
           (let ((p (point)))
@@ -807,9 +796,7 @@ c-hanging-braces-alist based upon these values.")
     (define-key map [(control \;)] (kb-lambda (dp-c-open-newline 'colon)))
     (define-key map [(control meta return)] (kb-lambda 
                                                 (dp-c-open-newline 'colon)))
-    ;; Why just straight c-mode?
-    ;; @todo XXX For some reason, things go blammo if these defines are moved
-    ;; outside of the loop. dp-mk-extern-proto is claimed to be void.
+    
     ;;??(define-key map "\C-cdfd" 'dp-c-format-func-decl)
     (define-key dp-c-mode-map "d" 'dp-c-format-func-decl)
     ;;??(define-key map "\C-cdfc" 'dp-c-format-func-call)
@@ -823,8 +810,12 @@ c-hanging-braces-alist based upon these values.")
     
     ;; 'C-;'
     (define-key map [(control 59)] (kb-lambda (insert ";" )))
-    )
-)
+    ))
+
+(defun dp-gtags-p ()
+  (or (featurep 'gtags )
+      (and (fboundp 'gtags-mode)
+           (dmessage "not featurep 'gtags, but gtags-mode defined."))))
 
 (eval-after-load "cc-mode"
   (dp-after-load-cc-mode))
@@ -834,7 +825,7 @@ c-hanging-braces-alist based upon these values.")
   :group 'dp-whitespace-vars
   :type 'boolean)
 
-(defcustom dp-c-like-mode-default-indent-tabs-mode-p t
+(defcustom dp-c-like-mode-default-indent-tabs-mode nil
   "How should we treat indentation: with chars or tabs.
 kernel coding style be damned, indentation and tabs are two different things.
 Also, spaces will *always* result in the same indentation size, regardless of
@@ -842,10 +833,10 @@ tab setting, font or phase of the moon."
   :group 'dp-vars
   :type 'boolean)
 
+
 (defun dp-c-like-mode-common-hook ()
   "Sets up personal C/C++ mode options."
   (interactive)
-  (dmessage "in dp-c-like-mode-common-hook")
   ;;
   ;;(message "in dp-c-like-mode-common-hook")
   ;; c-mode turns this on to get some keyword expansion, but it 
@@ -857,15 +848,14 @@ tab setting, font or phase of the moon."
   (c-toggle-auto-state 1)               ;set c-auto-newline
   (dp-turn-off-auto-fill)
   (setq dp-cleanup-whitespace-p dp-default-c-like-mode-cleanup-whitespace-p)
-  (setq indent-tabs-mode dp-c-like-mode-default-indent-tabs-mode-p
-        c-tab-always-indent (not dp-use-stupid-kernel-struct-indentation-p)
+  (setq indent-tabs-mode dp-c-like-mode-default-indent-tabs-mode
         c-recognize-knr-p nil
         dp-insert-tempo-comment-func 'dp-c-insert-tempo-comment)
 
   (dp-update-alist 'c-hanging-braces-alist dp-hanging-brace-alist)
   ;; @todo -- see if I can do this programmatically.
   (if (eq major-mode 'pike-mode)
-      ()                                ; no I-menu support
+      ()				; no I-menu support
     (imenu-add-to-menubar "IM-cc"))
   (dmessage "Apply mode-transparent check to ALL buffers.")
   (when (and (buffer-name)
@@ -876,14 +866,9 @@ tab setting, font or phase of the moon."
                       "\\)")))
     (ding)                              ; !<@todo XXX 
     (toggle-read-only 1))
-  ;; xor modes?
   (when (dp-gtags-p)
     (gtags-mode 1))
-  (when (dp-xgtags-p)
-    (xgtags-mode 1))
   (dp-auto-it?)
-  (dp-global-set-tags-keys)
-
   (progn
     (c-setup-filladapt)
     (filladapt-mode 1)
@@ -956,34 +941,34 @@ part of a longer name."
           (case-fold-search nil))
       ;; no changes to comments
       (save-excursion
-        (backward-word)
-        ;; don't do it if the previous token is already qualified or
-        ;; if the character triggering expansion (usually punctuation
-        ;; or whitespace) implies the token is going to be part of a
-        ;; longer token (e.g. we expand vector but not vector_of_pointers)
-        (unless (save-excursion
-                  (or
-                   (save-excursion
-                     (beginning-of-line)
-                     (looking-at "\\s-*\\#\\s-*"))
-                   ;; if we move back at all, that means there are
-                   ;; other identifier type chars and in this case
-                   ;; we assume that the abbrev is part of an
-                   ;; identifier (like name_string)
-                   (< (skip-chars-backward "[a-zA-Z_:]") 0)
-                   (looking-at namespace-qual)
+	(backward-word)
+	;; don't do it if the previous token is already qualified or
+	;; if the character triggering expansion (usually punctuation
+	;; or whitespace) implies the token is going to be part of a
+	;; longer token (e.g. we expand vector but not vector_of_pointers)
+	(unless (save-excursion
+		  (or
+		   (save-excursion
+		     (beginning-of-line)
+		     (looking-at "\\s-*\\#\\s-*"))
+		   ;; if we move back at all, that means there are
+		   ;; other identifier type chars and in this case
+		   ;; we assume that the abbrev is part of an
+		   ;; identifier (like name_string)
+		   (< (skip-chars-backward "[a-zA-Z_:]") 0)
+		   (looking-at namespace-qual)
                    (eq last-command 'dp-c++-mode-undo)
-                   ;; memq so we can check for other chars easily.
-                   (memq last-command-char '(?_ ?.))))
+		   ;; memq so we can check for other chars easily.
+		   (memq last-command-char '(?_ ?.))))
           ;;Allows for easy undoing of name space insertion.
           (undo-boundary)
-          (insert namespace-qual)
+	  (insert namespace-qual)
           (setq dp-c++-mode-last-event (copy-event last-command-event))
           (setq this-command 'dp-maybe-add-c++-namespace_was_added))))))
 
 (defvar dp-c++-mode-last-event nil)
 (defun dp-c++-mode-undo (&optional arg)
-  "If last-command caused a C++ name space to be added, undo that, else just undo."
+  "If last-command cause a C++ name space to be added, undo that, else just undo."
   (interactive "P")
   ;;(dmessage "last-command>%s<" last-command)
   (if (and (eq last-command 'dp-maybe-add-c++-namespace_was_added)
@@ -998,7 +983,7 @@ part of a longer name."
           (dispatch-event dp-c++-mode-last-event)
           (deallocate-event dp-c++-mode-last-event) ;Hasten event reclamation.
           (setq dp-c++-mode-last-event nil)
-          (dmessage "Can `unexpand-abbrev' help?  Need to set up some vars in my exapnsion routine.")))
+	  (dmessage "Can `unexpand-abbrev' help?  Need to set up some vars in my exapnsion routine.")))
     (call-interactively 'undo)))
 
 (defun dp-c++-mode-define-abbrevs ()
@@ -1007,7 +992,7 @@ part of a longer name."
          (lambda (arg)
            (define-abbrev local-abbrev-table arg arg 
              'dp-maybe-add-c++-namespace)))
-        dp-c++-std-elements))
+	dp-c++-std-elements))
 
 (defun dp-string-match-no-fold (regexp string &optional fold-p)
   (with-case-folded fold-p
@@ -1081,7 +1066,7 @@ main(
 ;;?point?;               (window-point (get-buffer-window (current-buffer))))
     (set-buffer-modified-p nil)
     (dp-push-go-back "c++ boiler plate" (1- (point-max)))
-    (set-window-point (get-buffer-window (current-buffer))
+    (set-window-point (dp-get-buffer-window (current-buffer))
                       (1- (point-max)))
 ;;?point?;     (dmessage "A: buf: %s, p: %s, pmin: %s, pmax: %s win point: %s"
 ;;?point?;               (current-buffer) (point) (point-min) (point-max)
@@ -1161,7 +1146,7 @@ See `dp-parenthesize-region-paren-list'")
   ;; They set this to "# " This makes doxygen comments ("##") not look like
   ;; Python comments.
   ;; ## forces comment to line up @ comment col.
-;;   (setq comment-start "#")
+  (setq comment-start "#")
   (local-set-key [tab] 'dp-python-indent-command)
   (local-set-key [(meta \;)] 'dp-py-indent-for-comment)
   (local-set-key [(meta ?`)] 'comint-previous-matching-input-from-input)
@@ -1174,8 +1159,8 @@ See `dp-parenthesize-region-paren-list'")
   (local-set-key [(meta return)] 'dp-py-open-newline)
   (local-set-key [(control meta ?p)] 'py-beginning-of-def-or-class)
   (local-set-key "\C-c!" 'dp-python-shell)
-  (local-set-key [(meta ?s)] 'dp-py-insert-self?)
-  (local-set-key [(meta ?q)] 'dp-fill-paragraph-or-region-with-no-prefix)
+  (local-set-key [(meta s)] 'dp-py-insert-self?)
+  (local-set-key [(meta q)] 'dp-fill-paragraph-or-region-with-no-prefix)
   (dp-add-line-too-long-font 'python-font-lock-keywords)
   (setq dp-cleanup-whitespace-p t)
   ;; @todo XXX conditionalize this properly
@@ -1482,7 +1467,7 @@ isearch while the region is active to locate the end of the region."
 
 (defun dp-display-time-hook ()
   (if (and mail
-           (not dp-time-mail-has-dung))
+	   (not dp-time-mail-has-dung))
       ;; since this func is intended to beep, ensure the beeper is
       ;; on. 
       ;; ??? Have var the visible-bell is set to here.
@@ -1490,17 +1475,17 @@ isearch while the region is active to locate the end of the region."
       ;; but since I did this so my laptop would beep 
       ;; on new mail, set to nil it is.
       (let ((visible-bell nil))
-        (ding)
-        ;;(dmessage "ding, t-ing dung")
-        (setq dp-time-mail-has-dung t)
-        (setq frame-title-format (concat dp-mail-present-string
-                                         dp-frame-title-format)))
+	(ding)
+	;;(dmessage "ding, t-ing dung")
+	(setq dp-time-mail-has-dung t)
+	(setq frame-title-format (concat dp-mail-present-string
+					 dp-frame-title-format)))
     ;;(dmessage "%s-ing dung" mail)
     (setq dp-time-mail-has-dung mail)
     (setq frame-title-format
-          (if mail 
-              (concat dp-mail-present-string dp-frame-title-format)
-            dp-frame-title-format))
+	  (if mail 
+	      (concat dp-mail-present-string dp-frame-title-format)
+	    dp-frame-title-format))
     ))
 
 (defadvice manual-entry (after dp-advised-manual-entry act)
@@ -1515,9 +1500,10 @@ faces had different sizes."
   "Invoke `manual-entry' on the cross-reference at point."
   (interactive)
   (let* ((extent (car (extents-at (point) nil 'manual-entry)))
-         (expr (or (and extent
+	 (expr (or (and extent
                         (or (get extent 'man) 'manual-entry))
                    'manual-entry)))
+               
     (dp-push-go-back "dp-Manual-follow-xref-at-point")
     (if (symbolp expr)
         (call-interactively expr)
@@ -1660,35 +1646,34 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
     ;; client and server. Things which like to edit temp files in temp dirs
     ;; don't work.
     (when (and file-name
-               (not (dp-match-a-regexp file-name dp-known-temp-file-re-list))
                (string-match "/te?mp/" file-name)
                (equal (point-min) (point-max)))
-      (dp-ding-and-message "Empty file. Could be a remote temp file.")))
+      (dp-ding-and-message "Could be a remote temp file.")))
   (switch-to-buffer (current-buffer))
   ;; (dp-raise-and-focus-frame)
   (local-set-key "\C-c\C-c" 'dp-gnuserv-edit))
 
-(when (dp-optionally-require 'igrep)
-  (defadvice igrep (after dp-igrep activate)
-    "Do a `dp-push-go-back' before we visit the matches returned by `igrep'.
-Before visiting means after the command completes because the sequence is:
-1) igrep
-2) examine list
-3) M-n for next match or goto a match by hand.
-This means pushing a go back works after the command is just fine.
-If we did it before, then an error in igrep would leave a kind of useless
-place on the go back stack.
-Wow: That's over commenting."
-    (dp-push-go-back "advised igrep"))
+;;is this hosing emacs? (when (dp-optionally-require 'igrep)
+;;is this hosing emacs?   (defadvice igrep (after dp-igrep activate)
+;;is this hosing emacs?     "Do a `dp-push-go-back' before we visit the matches returned by `igrep'.
+;;is this hosing emacs? Before visiting means after the command completes because the sequence is:
+;;is this hosing emacs? 1) igrep
+;;is this hosing emacs? 2) examine list
+;;is this hosing emacs? 3) M-n for next match or goto a match by hand.
+;;is this hosing emacs? This means pushing a go back works after the command is just fine.
+;;is this hosing emacs? If we did it before, then an error in igrep would leave a kind of useless
+;;is this hosing emacs? place on the go back stack.
+;;is this hosing emacs? Wow: That's over commenting."
+;;is this hosing emacs?     (dp-push-go-back "advised igrep"))
   
-  (defvar dp-orig-igrep-regex-default igrep-regex-default
-    "Original value of `igrep-regex-default'.")
+;;is this hosing emacs?   (defvar dp-orig-igrep-regex-default igrep-regex-default
+;;is this hosing emacs?     "Original value of `igrep-regex-default'.")
 
-  (setq igrep-regex-default 
-        (function 
-         (lambda ()
-           (dp-get--as-string--region-or... 
-            :gettor dp-orig-igrep-regex-default)))))
+;;is this hosing emacs?   (setq igrep-regex-default 
+;;is this hosing emacs?         (function 
+;;is this hosing emacs?          (lambda ()
+;;is this hosing emacs?            (dp-get--as-string--region-or... 
+;;is this hosing emacs?             :gettor dp-orig-igrep-regex-default)))))
 
 (defadvice grep (after dp-grep activate)
   "Do a dp-push-go-back before we go finding the matches returned by `grep'.
@@ -1701,10 +1686,7 @@ Before visiting means after the command completes."
 (defvar dp-bind-xcscope-keys-p t
   "Pretty self-explanatory?")
 
-(defun* dp-default-make-cscope-database-regexps-fun (&optional
-                                                     ignore-env-p
-                                                     db-locations
-                                                     (hierarchical-search-p t))
+(defun dp-default-make-cscope-database-regexps-fun ()
   "Set a default value for `cscope-database-regexps'.
 This sets the value that will cause cscope to (in the words of cscope):
   \"In the case of \"( t )\", this specifies that the search is to use the
@@ -1743,6 +1725,210 @@ Use of 'unset allows the legitimate value of nil to be used.")
 ;; We can use `dp-cscope-set-cscope-database-regexps' for that.
 (setq-if-unbound cscope-database-regexps
                  (funcall dp-make-cscope-database-regexps-fun))
+
+;; 
+;; -C ignore case.
+;; ????? (setq cscope-command-args '("-C"))
+(defun dp-setup-cscope ()
+  (interactive)
+  (defadvice cscope-extract-symbol-at-cursor 
+    (around dp-cscope-extract-symbol-at-cursor activate)
+    (if (dp-mark-active-p)
+        (setq ad-return-value (buffer-substring (mark) (point)))
+      ad-do-it))
+
+  (defun dp-cscope-select-entry-this-window ()
+    "Visit the current entry in the cscope buffer window."
+    (interactive)
+    (cscope-select-entry-specified-window (selected-window)))
+
+  (defun dp-bind-xcscope-keys (&optional map)
+    (interactive "Smap? ")
+    (setq-ifnil map global-map)
+    ;;
+    (define-key map [f5]  'cscope-find-this-symbol)
+    (define-key map [f6]  'cscope-find-global-definition)
+    (define-key map "\C-css" 'cscope-find-this-symbol)
+    (define-key map "\C-csd" 'cscope-find-global-definition)
+    (define-key map "\C-csg" 'cscope-find-global-definition)
+    (define-key map "\C-csG" 'cscope-find-global-definition-no-prompting)
+    (define-key map "\C-csc" 'cscope-find-functions-calling-this-function)
+    (define-key map "\C-csC" 'cscope-find-called-functions)
+    (define-key map "\C-cst" 'cscope-find-this-text-string)
+    (define-key map "\C-cse" 'cscope-find-egrep-pattern)
+    (define-key map "\C-csf" 'cscope-find-this-file)
+    (define-key map "\C-csi" 'cscope-find-files-including-file)
+    ;; --- (The '---' indicates that this line corresponds to a menu separator.)
+    (define-key map "\C-csb" 'cscope-display-buffer)
+    (define-key map "\C-csB" 'cscope-display-buffer-toggle)
+    (define-key map "\C-csn" 'cscope-next-symbol)
+    (define-key map "\C-csN" 'cscope-next-file)
+    (define-key map "\C-csp" 'cscope-prev-symbol)
+    (define-key map "\C-csP" 'cscope-prev-file)
+    (define-key map "\C-csu" 'cscope-pop-mark)
+    ;; ---
+    (define-key map "\C-csa" 'cscope-set-initial-directory)
+    (define-key map "\C-csA" 'cscope-unset-initial-directory)
+    ;; ---
+    (define-key map "\C-csL" 'cscope-create-list-of-files-to-index)
+    (define-key map "\C-csI" 'cscope-index-files)
+    (define-key map "\C-csE" 'cscope-edit-list-of-files-to-index)
+    (define-key map "\C-csW" 'cscope-tell-user-about-directory)
+    (define-key map "\C-csS" 'cscope-tell-user-about-directory)
+    (define-key map "\C-csT" 'cscope-tell-user-about-directory)
+    (define-key map "\C-csD" 'cscope-dired-directory)
+    ;; The previous line corresponds to be end of the "Cscope" menu.
+    ;; ---
+    ;; 'o' is Buffer-menu-other-window, 'o' is dired-find-file-other-window
+    ;; etc. So I'm moving some keys:
+    )
+  ;;
+  ;; Make xcscope bindings global
+  ;; ??? Do this only in c-mode-common-hook?
+  ;;
+  (defun dp-bind-xcscope-fkeys (&optional map)
+    (interactive "Smap? ")
+    (setq-ifnil map global-map)
+    (define-key map [(control f3)] 'cscope-set-initial-directory)
+    (define-key map [(control f4)] 'cscope-unset-initial-directory)
+    (define-key map [(control f5)] 'cscope-find-this-symbol)
+    (define-key map [(control f6)] 'cscope-find-global-definition)
+    (define-key map [(control f7)] 'cscope-find-global-definition-no-prompting)
+    (define-key map [(control f8)] 'cscope-pop-mark)
+    (define-key map [(control f9)] 'cscope-next-symbol)
+    (define-key map [(control f10)] 'cscope-next-file)
+    (define-key map [(control f11)] 'cscope-prev-symbol)
+    (define-key map [(control f12)] 'cscope-prev-file)
+    (define-key map [(meta f9)] 'cscope-display-buffer)
+    (define-key map [(meta f10)] 'cscope-display-buffer-toggle))
+  
+  (defvar dp-cscope-current-dir-only-regexps nil
+    "The value for `cscope-database-regexps' that will cause us to search the
+    current directory only.
+??? Maybe should be '(t) ??? As per `cscope-database-regexps' doc?")
+
+  (defun dp-cscope-force-current-dir-only (&optional restore-p)
+    (interactive "P")
+    (if restore-p
+        (dp-cscope-set-cscope-database-regexps 'reset)
+      (setq cscope-database-regexps dp-cscope-current-dir-only-regexps)))
+  (dp-defaliases 'dp-cscope-. 'dp-cscope. 'dp-cscope-force-current-dir-only)
+
+  (when (dp-optionally-require 'xcscope)
+    ;; defun dp-cscope-minor-mode-hook Something in some files can cause the
+    ;; permuted style index (-q) to fail to find things. Currently, there is
+    ;; something in the src tree @ nv that causes this.
+    (setq cscope-perverted-index-option dp-cscope-perverted-index-option
+          cscope-edit-single-match nil)
+    (defun dp-cscope-minor-mode-hook ()
+      (interactive)
+      (define-key cscope-list-entry-keymap [(meta ?-)] 
+        (kb-lambda (dp-func-or-kill-buffer 
+                    'cscope-bury-buffer)))
+      (dp-define-keys cscope-list-entry-keymap 
+                      '("." dp-cscope-select-entry-this-window
+                        "v" cscope-show-entry-other-window
+                        "o" cscope-select-entry-other-window
+                        [return] cscope-select-entry-other-window
+                        " " cscope-select-entry-one-window
+                        "1" cscope-select-entry-one-window
+                        [(tab)] cscope-next-symbol
+                        "\C-i" cscope-next-symbol
+                        "d" cscope-find-global-definition)))
+    
+    (add-hook 'cscope-minor-mode-hooks 'dp-cscope-minor-mode-hook)
+    ;; defun cs
+    (defun dp-cscope-buffer (&optional no-select)
+      "Switch to cscope results buffer, if it exists."
+      (interactive)
+      (if (setq b (get-buffer cscope-output-buffer-name))
+          (if no-select
+              (set-buffer b)
+            (dp-display-buffer-select b))
+        (message "No cscope results buffer yet.")))
+    (defalias 'cs 'dp-cscope-buffer)
+
+    (when-and-boundp dp-bind-xcscope-keys-p
+      (dp-bind-xcscope-keys))
+    (when-and-boundp dp-bind-xcscope-fkeys-p
+      (dp-bind-xcscope-fkeys))
+    
+    (defadvice cscope-prompt-for-symbol (before dp-cscope-push-gb activate)
+      "Push go back before doing a cscope operation.
+This seems to be a fairly common routine that is run before most commands.
+It gives us a common point to save our position before going off after a
+cscope discovery.
+*** Look at new xcscope.el. It has some mark stack capability now."
+      (dp-push-go-back "go-back advised cscope-prompt-for-symbol"))
+    
+    (defadvice  cscope-next-symbol 
+      (before dp-advised-cscope-next-symbol activate)
+      (dp-set-current-error-function 'dp-cscope-next-thing
+                                     nil
+                                     'cscope-next-symbol))
+    
+    (defadvice  cscope-next-file (before dp-advised-cscope-next-file activate)
+      (dp-set-current-error-function 'dp-cscope-next-thing 
+                                     nil 
+                                     'cscope-next-file))
+    
+    (defadvice  cscope-prev-symbol 
+      (before dp-advised-cscope-prev-symbol activate)
+      (dp-set-current-error-function 'dp-cscope-next-thing
+                                     nil
+                                     'cscope-prev-symbol))
+    
+    (defadvice  cscope-prev-file (before dp-advised-cscope-prev-file activate)
+      (dp-set-current-error-function 'dp-cscope-next-thing
+                                     nil
+                                     'cscope-prev-file))
+    
+    ;;!<@todo Do I want to do this? It doesn't cause a current window change,
+    ;;but it is a common action and ?is? logically similar to the others.
+    ;; Right now, it has a problem in that it unconditionally sets the error
+    ;; function to cscope-next-symbol rather than what it was that preceded
+    ;; it.
+    ;; There is a problem when this is used directly from the cscope buffer.
+    ;; The value is not set there and so will retain the previous value which
+    ;; may be nil or unset.
+    (defadvice  cscope-show-entry-other-window 
+      (before dp-advised-cscope-prev-file activate)
+      (dp-set-current-error-function 'dp-cscope-next-thing
+                                     nil
+                                     'cscope-next-symbol))
+    
+    (defadvice  cscope-select-entry-other-window 
+      (before dp-advised-cscope-prev-file activate)
+      (dp-set-current-error-function 'dp-cscope-next-thing
+                                    nil
+                                    'cscope-next-symbol)))
+  (defvar dp-def-work-dir (dp-mk-pathname (getenv "HOME") "work"))
+  (defvar dp-def-cscope-db-dir-name "def-cscope.d")
+  (defvar dp-def-work-cscope-db-dir-name
+    (dp-mk-pathname dp-def-work-dir dp-def-cscope-db-dir-name))
+  (defvar dp-def-home-cscope-db-dir-name 
+    (dp-mk-pathname (getenv "HOME") dp-def-cscope-db-dir-name))
+;; This is a poorly documented, convolutedly implemented bizarre variable and
+;; in general boggles my mind and confuzes the hell out of me... and yet
+;; seems so simple.  All I want to do is to search upward from the current
+;; dir for the database. If nothing is found, then I'd like to access a
+;; default db.  So, if I'm in a work dir, I'll get the most specific
+;; db. Otherwise (say in ~), I'll get some default db (say my current
+;; project's current sandbox's db.)
+;;   (setq cscope-database-regexps
+;;         `(
+;;           ( ,(concat "^" dp-def-work-dir)
+;;             ( t )
+;;             t
+;;             ( ,dp-def-work-cscope-db-dir-name ("-d"))
+;;             t)
+;;           ( ".*"
+;;             t
+;;             ( ,dp-def-home-cscope-db-dir-name ("-d"))
+;;             t)
+;;           ))
+  )
+
 
 (defadvice recover-file (before dp-recover-file-with-default activate)
   "Use current buffer's file name as a default."
@@ -1996,17 +2182,17 @@ and then business as usual."
   ;; Being in the same window, and hence doing nothing is orders of orders of
   ;; magnitude more common than other conditions.  So check it early and
   ;; quickly, even tho using repeated code.
-  (if (and (eq (get-buffer-window (current-buffer))
+  (if (and (eq (dp-get-buffer-window (current-buffer))
                (symbol-value that))
            ;; More function calls... but it is better because we don't muck
            ;; with storage and increase the need for gc because we keep
            ;; overwriting *this.  But we are dealing with the same object
            ;; (hence `eq') so gc may be irrelevant.
-           (not (eq (get-buffer-window (current-buffer))
+           (not (eq (dp-get-buffer-window (current-buffer))
                     (symbol-value this))))
-      (set this (get-buffer-window (current-buffer)))
+      (set this (dp-get-buffer-window (current-buffer)))
     (let* ((this-buf (current-buffer))
-           (this-win (get-buffer-window this-buf))
+           (this-win (dp-get-buffer-window this-buf))
            (excluded-p (and dp-highlight-buffer-excluded-enabled-p
                             (or (dp-highlight-window-excluded-p this-win)
                                 (dp-highlight-buffer-excluded-p this-buf)))))
@@ -2109,9 +2295,10 @@ and then business as usual."
       (dp-show-variable-value (ad-get-arg 0))
     ad-do-it))
 
-(defadvice set-frame-width (before dp-advised-set-frame-width activate)
-  ;; 4 from "M-x "
-  (setq icomplete-prospects-length (-(frame-width) 4)))
+(when (dp-xemacs-p)
+  (defadvice set-frame-width (before dp-advised-set-frame-width activate)
+    ;; 4 from "M-x "
+    (setq icomplete-prospects-length (-(frame-width) 4))))
 
 (when (fboundp 'savehist-autosave)
   (defadvice savehist-autosave (around dp-savehist-autosave activate)
@@ -2120,7 +2307,7 @@ and then business as usual."
     ;; simple test code shows unwind-protect prevents debug-on-error from
     ;; entering the debugger.  So lets just turn it off.
     ;; 'praps due to hook context?
-    (condition-case nil
+    (condition-case appease-byte-compiler
         (let ((debug-on-error nil))
           ad-do-it)
       (dmessage "savehist-autosave barfed... imagine that.")
@@ -2246,35 +2433,16 @@ changed."
             (buffer-name) beg end))
 
 (defun dp-bookmark-bmenu-mode-hook ()
-  (local-set-key [return] 'bookmark-bmenu-other-window)
-  (local-set-key [?.] 'bookmark-bmenu-this-window)
-  (local-set-key [?v] 'bookmark-bmenu-switch-other-window)
-  (local-set-key [?w] 'dp-bookmark-bmenu-locate)
-  (local-set-key [(control ?o)] (kb-lambda
-                                    (dp-one-window++ -1)
-                                    (bookmark-bmenu-select))))
-
-(defun dp-bookmark-load-hook ()
-  (global-set-key [(control ?c) ?b] 'bookmark-map)
-
-  ;; C-cbb is easy typin'
-  (define-key bookmark-map "b" 'bookmark-set)
-  ;; This is more betterer.
-  ;;    <big-gold-letters>"I have the best words.</big-gold-letters>"
-  ;; -- DD (aka) DT
-  (define-key bookmark-map "f" 'dp-bookmark-insert-location)
-  )
+  (local-set-key [return] 'bookmark-bmenu-other-window))
 
 (defun dp-asm-mode-hook()
   (interactive)
   (setq comment-start "@"
         comment-end ""
-        block-comment-start "/* "
+        block-comment-start "/*"
         block-comment-end "*/"))
 
-(defadvice jka-compr-insert-file-contents 
-  (after dp-advised-jka-compr-insert-file-contents act)
-  (dp-set-unmodified))
+(add-hook 'bookmark-bmenu-mode-hook 'dp-bookmark-bmenu-mode-hook)
 
 ;; I'm trending away from advice, since I've seen code that really rapes it
 ;; (I'm looking at you, ECB)
@@ -2283,7 +2451,6 @@ changed."
 
 ;; Moved from dpmacs.el. They were grouped like this right after dp-hooks was
 ;; required.  They belong here.
-(add-hook 'bookmark-bmenu-mode-hook 'dp-bookmark-bmenu-mode-hook)
 (add-hook 'comint-mode-hook 'dp-comint-mode-hook)
 (add-hook 'shell-mode-hook 'dp-shell-mode-hook)
 (add-hook 'telnet-mode-hook 'dp-telnet-mode-hook)
@@ -2310,6 +2477,7 @@ changed."
 (add-hook 'lisp-interaction-mode-hook 'dp-lisp-interaction-mode-hook)
 (add-hook 'emacs-lisp-mode-hook 'dp-emacs-lisp-mode-hook)
 (add-hook 'minibuffer-setup-hook 'dp-minibuffer-setup-hook)
+(add-hook 'c-mode-common-hook 'dp-c-like-mode-common-hook)
 (add-hook 'c++-mode-hook 'dp-c++-mode-hook)
 (add-hook 'buffer-menu-mode-hook 'dp-buffer-menu-mode-hook)
 (add-hook 'text-mode-hook 'dp-text-mode-hook)
