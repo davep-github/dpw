@@ -7080,11 +7080,13 @@ Is this a good idea?"
   (interactive "P")
   (let ((text (dp-with-all-output-to-string
 	       (insert-selection))))
-    (when (and (string-match "" text)
+    (when (and (string-match "
+" text)
 	       (or (ding) t)
 	       (or (not prompt-if-^Ms)
 		   (y-or-n-p "^Ms in text; dedosify")))
-      (setq text (replace-in-string text "" "" 'literal))
+      (setq text (replace-in-string text "
+" "" 'literal))
       (message "dedos'd"))
     (push-mark (point))
     (unless no-insert-p
@@ -11532,12 +11534,14 @@ FLOATING POINT(tm):  When close is good enough!."
       (dp-turn-off-newbuf-hilighting) 
     (dp-turn-on-newbuf-hilighting)))
 
-;; fsf - has mo one shot hook, which this needs. ;;(add-hook 'dp-post-dpmacs-hook 'dp-turn-on-newbuf-hilighting)
+(if (dp-xemacs-p)
+    (add-hook 'dp-post-dpmacs-hook 'dp-turn-on-newbuf-hilighting))
 
 (defun dp-fix-cmd-hook-stuff ()
   (interactive)
   (dp-turn-on-newbuf-hilighting)
-  (paren-activate))
+  (if (dp-xemacs-p)
+      (paren-activate)))
 
 (dp-safe-alias 'dpfch 'dp-fix-cmd-hook-stuff)
 

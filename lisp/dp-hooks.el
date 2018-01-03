@@ -2282,8 +2282,10 @@ and then business as usual."
 ;; Gotta pull this in so we're defined *after* they are.
 (require 'calc)
 
-(defun window-edges (&rest who-cares?)
-  )
+(if (dp-xemacs-p)
+    (defun window-edges (&rest who-cares?)
+      ))
+
 (defun calc-delete-windows-keep (&rest bufs)
   (pop-window-configuration))
 
