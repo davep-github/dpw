@@ -326,12 +326,13 @@ Gets the buffer as input.")
                              (princ "***" output) (prin1 e output)))
                           (set-buffer output)
                           (goto-char (point-max)))))
-		 (put-nonduplicable-text-property this-buffer-line-start
-						  (point)
-						  'buffer-name name)
-		 (put-nonduplicable-text-property this-buffer-line-start
-						  (point)
-						  'highlight t)
+		 ;; put-nonduplicable-text-property isn't in FSF-land.
+		 (put-text-property this-buffer-line-start
+                                    (point)
+                                    'buffer-name name)
+		 (put-text-property this-buffer-line-start
+                                    (point)
+                                    'highlight t)
                  (insert ?\n)))))
       
       (Buffer-menu-mode)

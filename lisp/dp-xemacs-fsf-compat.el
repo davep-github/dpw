@@ -100,6 +100,9 @@ be deactivated when doing a beginning|end followed by an end|beginning."
 
 (defalias 'find-tag-interactive 'find-tag-tag)
 
+(defsubst dp-local-variable-p (symbol buffer &optional after-set)
+  (local-variable-p symbol buffer after-set))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Nicked from Emacs.
 

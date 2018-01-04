@@ -1160,24 +1160,24 @@ the newly copied text."
 (defun dp-scroll-up (&optional num half-page-p)
   (interactive "p")                     ; fsf - fix "_"
   (dp-scroll-up-down num half-page-p 'up))
-(put 'dp-scroll-up 'isearch-command t)
+(put 'dp-scroll-up isearch-continues t)
 
 (defun dp-scroll-down (&optional num half-page-p)
   (interactive "p")                     ; fsf - fix "_"
   (dp-scroll-up-down num half-page-p 'down))
-(put 'dp-scroll-down 'isearch-command t)
+(put 'dp-scroll-down isearch-continues t)
 
 (defun dp-scroll-up-other-window (&optional num)
   (interactive "p")                     ; fsf - fix "_"
   (dp-op-other-window nil 'dp-scroll-up))
 ;;  (dp-scroll-up-down num nil 'up 'other-window))
-(put 'dp-scroll-up-other-window 'isearch-command t)
+(put 'dp-scroll-up-other-window isearch-continues t)
 
 (defun dp-scroll-down-other-window (&optional num)
   (interactive "p")                     ; fsf - fix "_"
   (dp-op-other-window nil 'dp-scroll-down))
 ;;  (dp-scroll-up-down num nil 'down 'other-window))
-(put 'dp-scroll-down-other-window 'isearch-command t)
+(put 'dp-scroll-down-other-window isearch-continues t)
 
 (global-set-key [(control up)] 'dp-scroll-down)
 (global-set-key [(control down)] 'dp-scroll-up)
@@ -1895,8 +1895,8 @@ from simple.el"
                     (prefix-numeric-value arg)
                   0)))
       (recenter line))))
-(put 'dp-point-to-top 'isearch-command t)
-(put 'recenter 'isearch-command t)
+(put 'dp-point-to-top isearch-continues t)
+(put 'recenter isearch-continues t)
 
 (defun dp-point-to-bottom (arg)
   "Scroll the current window so that the line containing point is at the bottom of the window."
@@ -1904,7 +1904,7 @@ from simple.el"
   (if (eq arg '-)
       (dp-point-to-top)
     (recenter (- (window-displayed-height) 1))))
-(put 'dp-point-to-bottom 'isearch-command t)
+(put 'dp-point-to-bottom isearch-continues t)
 
 (defvar dp-center-to-top-divisor 2
   "Divide frame height by this to get new line for top of screen.")
@@ -1945,13 +1945,13 @@ from simple.el"
       (setq this-command (if going-down 
                              'dp-center-to-bottom
                            'dp-center-to-top)))))
-(put 'dp-center-to-top 'isearch-command t)
+(put 'dp-center-to-top isearch-continues t)
 
 (defun dp-center-to-top-other-window (&optional arg recursing-p)
   (interactive "P")                     ; fsf - fix "_"
   (dp-op-other-window nil 'call-interactively 'dp-center-to-top))
 
-(put 'dp-center-to-top-other-window 'isearch-command t)
+(put 'dp-center-to-top-other-window isearch-continues t)
 
 (defun* dp-bound-rest-of-line (&key from-beginning-p (no-newline-p t) 
                                all-if-@-eolp text-only-p
@@ -4430,7 +4430,7 @@ Otherwise, if ARG is non-nil, move forward thru the ring.
             (setq pop-it (y-or-n-p "Discard marker?"))))
         (if pop-it
             (dp-pop-go-back-ring 0))))))
-(put 'dp-pop-go-back 'isearch-command t)
+(put 'dp-pop-go-back isearch-continues t)
 
 (defun dp-go-fwd ()
   (interactive)
@@ -10178,10 +10178,12 @@ basically the union of the args to `find-file-noselect' and
                                    
 (defun dp-colorize-found-file-buffer ()
   "Set a buffer's color after the file has been loaded into it."
-  (dp-remove-file-state-colorization)
-  ;;(dmessage-todo "Name the colors in my palette!!!")
-  (dp-colorize-buffer-if-readonly nil t)
-  (dp-colorize-buffer-if-remote nil t))
+  (if (not (dp-xemacs-p))
+      (message "dp-colorize-found-file-buffer: no colorization yet.")
+    (dp-remove-file-state-colorization)
+    ;;(dmessage-todo "Name the colors in my palette!!!")
+    (dp-colorize-buffer-if-readonly nil t)
+    (dp-colorize-buffer-if-remote nil t)))
 
 (defvar dp-found-file-pre-hook nil
   "A one shot hook to call on the next found file.
@@ -10524,7 +10526,9 @@ Saves window configurations in registers. Default is reg `\(int-to-char 1\)'
   (interactive "p")                     ; fsf - fix "_"
   (let* ((force-set-p (< arg 0))
          (arg (if current-prefix-arg (abs arg) dp-one-window++-last-register))
-         (reg (int-to-char arg))
+         (reg (if (dp-xemacs-p)
+                  (int-to-char arg)
+                arg))
          (reg-val (car-safe (get-register reg))))
       (if (and reg-val 
                (one-window-p 'nomini)
@@ -10552,7 +10556,7 @@ Saves window configurations in registers. Default is reg `\(int-to-char 1\)'
             (message "Saved window config to register %s (0%o, %d, 0x%x)" 
                      reg arg arg arg))
           (delete-other-windows)))))
-(put 'dp-one-window++ 'isearch-command t)
+(put 'dp-one-window++ isearch-continues t)
 
 
 (defun dp-get-file-owner (file-name)
@@ -10654,7 +10658,7 @@ equivalent vertically(horizontally) split set."
       (other-window 1)
       (setq buf-list (cdr buf-list)))))
 
-(put 'dp-rotate-windows 'isearch-command t)
+(put 'dp-rotate-windows isearch-continues t)
 
 (defun dp-num-frames (&optional device)
   "How many frames are currently open on DEVICE or current device?"
@@ -10861,8 +10865,8 @@ when the command was issued?")
                 (dp-add-to-history 'variable-history var-sym))
               (message "%s%s%s: %s%s%s" 
                        var-sym
-                       (if (local-variable-p var-sym (current-buffer) 
-                                             'AFTER-SET)
+                       (if (dp-local-variable-p var-sym (current-buffer) 
+                                                'AFTER-SET)
                            " [buf-local]"
                          "")
                        (if fun-too

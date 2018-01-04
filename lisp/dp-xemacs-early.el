@@ -92,13 +92,6 @@
 ;;rem-after-fsf       version-control t
 ;;rem-after-fsf       kept-new-versions 7)
 
-(defvar dp-remote-file-regexp (concat 
-                   "@.*:"               ; efs/ange-ftp syntax
-                   "\\|"
-                   "/\\[")              ; tramp syntax
-  "Regular expression that, when matched against a file name, tells us if the
-  file is remote or no.")
-
 (defvar dp-remote-file-colorization-info
   `(,dp-remote-file-regexp . dp-remote-buffer-face)
   "Remote file recognition regexp and default color")

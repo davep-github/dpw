@@ -195,6 +195,17 @@ in the and-statement.  This is a clean way to avoid such warnings.  See also
 (defsubst redisplay-frame (&rest r)
   (message "Need `redisplay-frame' fnctionality"))
 
+(defsubst dp-local-variable-p (symbol buffer &optional after-set)
+  (local-variable-p symbol buffer))
+
+(defun minibuffer-keyboard-quit ()
+  (interactive)
+  ;;(exit-minibuffer)
+  ;;(keyboard-quit)
+  (keyboard-escape-quit)
+
+  )
+
 ;;
 ;; set up a titlebar format.  Various window things will look for this in
 ;; order to jump to the main emacs window.

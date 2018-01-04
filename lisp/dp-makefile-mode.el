@@ -35,7 +35,7 @@ See `dp-parenthesize-region-paren-list'")
 
 (defun dp-makefile-mode-hook ()
   "Set up makefile-mode *my* way."
-  (if (local-variable-p 'compile-command (current-buffer))
+  (if (dp-local-variable-p 'compile-command (current-buffer))
       () ;; already there, do nothing
     (make-local-variable 'compile-command)
     (setq-default compile-command 
@@ -77,6 +77,6 @@ See `dp-parenthesize-region-paren-list'")
 	  (concat hif-ifx-regexp "\\|" 
 		  hif-else-regexp "\\|" hif-endif-regexp)))
     (dp-find-matching-paren dp-makefile-mode-ifx-re-alist)))
-(put 'dp-makefile-mode-find-matching-paren 'isearch-command t)
+(put 'dp-makefile-mode-find-matching-paren isearch-continues t)
 
 (provide 'dp-makefile-mode)

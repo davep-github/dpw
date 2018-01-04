@@ -17,8 +17,14 @@
   (or (featurep 'xemacs)
       (featurep 'sxemacs)))
 
-(if (not (dp-xemacs-p))
-    (setq custom-file (expand-file-name "~/lisp/fsf-custom.el")))
+(if (dp-xemacs-p)
+    (progn
+      (setq custom-file (expand-file-name "~/lisp/custom.el"))
+      (setq isearch-continues 'isearch-command)
+      )
+  (setq isearch-continues 'isearch-scroll)
+  (setq custom-file (expand-file-name "~/lisp/fsf-custom.el"))
+  (load custom-file))
 
 (eval-when-compile
   (require 'cl)
@@ -1096,40 +1102,16 @@ This can be callable.")
 ;;; undefined/void errors.
 (message "dpmacs.el: dp-post-dpmacs-hook, running: %s..." dp-post-dpmacs-hook)
 
-;; 1-by-1 for debugging
-
-(message "buffer-name>%s<" (buffer-name))
-
-(insert (make-string 43 ?A) "\n")
-(insert (make-string 43 ?B) "\n")
-(insert (make-string 43 ?C) "\n")
-(insert (make-string 43 ?D) "\n")
-(insert (make-string 43 ?E) "\n")
-(insert (make-string 43 ?F) "\n")
-
-(switch-to-buffer "*BUBBA*")
-
-(goto-char (point-max))
 (message "point: %s, point-max: %s" (point) (point-max))
 (let ((l dp-post-dpmacs-hook)
       hook)
   (while l
     (setq hook (car l)
           l (cdr l))
-    (message "About to run hook>%s<" hook)
     (run-hook-with-args (quote hook))
-    (message "Back from hook>%s<" hook)
-    (message "buffer-name>%s<" (buffer-name))
-    (insert (make-string 43 ?X) "\n")
-    (insert (make-string 43 ?X) "\n")
-    (insert (make-string 43 ?X) "\n")
-    (insert (make-string 43 ?X) "\n")
     (goto-char (point-max))
-    (message "point: %s, point-max: %s" (point) (point-max))
-    (message "about to try (previous-line)")
-    (previous-line 1)))
+    ))
 
-;;(run-hooks 'dp-post-dpmacs-hook)
 (message "dpmacs.el: dp-post-dpmacs-hook, FINISHED.")
 
 (add-hook 'kill-emacs-hook 'dp-kill-emacs-hook)

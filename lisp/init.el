@@ -1,6 +1,13 @@
 ;; -*-emacs-lisp-*-
 ;; $Id: init.el,v 1.3 2002/07/28 04:45:06 davep Exp $
 
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (message "in init.el")
 ;; no blah, blah, blah.
 (setq inhibit-startup-message t)

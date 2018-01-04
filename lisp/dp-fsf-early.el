@@ -18,6 +18,16 @@
 (defun dp-set-font-lock-defaults (mode-symbol defaults)
   (setq font-lock-defaults defaults))
 
+(defun dp-colorize-buffer-if-readonly (&optional color uncolorize-if-rw-p)
+  "XXX!!! Need to recast my colorization in Emacs' overlays, etc."
+  (interactive "P")
+  (message "dp-colorize-buffer-if-readonly: no colorization yet."))
+
+(defun dp-colorize-buffer-if-remote (&optional color buf)
+  "XXX!!! Need to recast my colorization in Emacs' overlays, etc."
+  (interactive "P")
+  (message "dp-colorize-buffer-if-remote: no colorization yet."))
+
 ;;;
 ;;;
 ;;;

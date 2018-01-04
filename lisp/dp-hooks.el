@@ -1262,7 +1262,7 @@ Arr... beware the hooks! "
     (dp-define-buffer-local-keys '([(control ?x) (control ?d) ?x] dp-eol-and-eval
                                    [(control meta ?j)] dp-eol-and-eval
                                    [(meta ?w)] dp-you-cant-save-you-silly)))
-  (local-set-key [(meta ?\ )] 'dp-select-thing)
+  (local-set-key [(meta space)] 'dp-select-thing)
   (local-set-key [(meta ?-)] 'dp-bury-or-kill-buffer))
 
 (defvar dp-lisp-modes-parenthesize-region-paren-list
@@ -1321,7 +1321,7 @@ See `dp-parenthesize-region-paren-list'")
   "Copy current value of `isearch-string' as kill."
   (interactive)
   (kill-new isearch-string))
-(put 'dp-copy-isearch-string-as-kill 'isearch-command t)
+(put 'dp-copy-isearch-string-as-kill isearch-continues t)
 
 (defun dp-insert-isearch-string ()
   (interactive)
@@ -1335,7 +1335,7 @@ doc to `isearch-mode's doc string.  But we don't need to patch before dumping."
   (interactive)
   (interactive)
   (isearch-yank 'forward-char))
-(put 'dp-isearch-yank-char 'isearch-command t)
+(put 'dp-isearch-yank-char isearch-continues t)
 
 
 (defun dp-isearch-mode-hook ()

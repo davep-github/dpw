@@ -417,7 +417,7 @@ of reset."
     (when (and status-msg
                (not quiet-p))
       (message "%s" status-msg))))
-(put 'dp-set-or-goto-bm 'isearch-command t)
+(put 'dp-set-or-goto-bm isearch-continues t)
 
 
 (defalias 'gb 'dp-set-or-goto-bm)
