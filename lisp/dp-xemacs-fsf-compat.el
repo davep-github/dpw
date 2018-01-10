@@ -86,6 +86,17 @@ be deactivated when doing a beginning|end followed by an end|beginning."
       (define-key map (make-string 1 i) filling)
       (setq i (1+ i)))))
 
+(defun dp-re-search-forward (regexp &optional limit noerror count buffer)
+  (interactive)
+  (re-search-forward regexp limit noerror count buffer))
+
+(defun isearch-yank-char (&optional arg)
+  (isearch-yank 'forward-char))
+
+(autoload 'eldoc-doc "eldoc" "Display function doc in echo area." t)
+
+(defun dp-elisp-eldoc-doc (&optional insert-template-p)
+  (eldoc-doc insert-template-p))
 
 ; (unless (fboundp 'read-event)
 ;   ;; Look at what pcomplete does :(cfl "../yokel/lib/xemacs/xemacs-packages/lisp/pcomplete/pcomplete.el" 34334 "^(if (fboundp 'read-event)"):
@@ -102,6 +113,28 @@ be deactivated when doing a beginning|end followed by an end|beginning."
 
 (defsubst dp-local-variable-p (symbol buffer &optional after-set)
   (local-variable-p symbol buffer after-set))
+
+;; fsf `yank' does this (now?)
+;; I should keep track of the things I missed or that they've
+;; rediscovered since I schisim'd from fsf to xemacs.
+(defun dp-x-insert-selection (prompt-if-^Ms &optional no-insert-p)
+  "Insert the current X Window selection at point, and put text into kill ring."
+  (interactive "P")
+  (let ((text (dp-with-all-output-to-string
+	       (insert-selection))))
+    (when (and (string-match "
+" text)
+	       (or (ding) t)
+	       (or (not prompt-if-^Ms)
+		   (y-or-n-p "^Ms in text; dedosify")))
+      (setq text (replace-in-string text "
+" "" 'literal))
+      (message "dedos'd"))
+    (push-mark (point))
+    (unless no-insert-p
+      (insert text))
+    (setq this-command 'yank)
+    (kill-new text)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Nicked from Emacs.

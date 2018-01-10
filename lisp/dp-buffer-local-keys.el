@@ -9,6 +9,12 @@
 
 (dp-deflocal dp-blm-buf-local-keymap nil)
 
+(defun dp-buffer-local-keymaps-p ()
+  t)
+
+(defun dp-buffer-local-keymap-p ()
+  dp-blm-buf-local-keymap)
+
 (defun dp-blm-get-or-create-buf-local-keymap ()
   (or dp-blm-buf-local-keymap
       (setq dp-blm-buf-local-keymap
@@ -17,7 +23,6 @@
 		  (copy-keymap (current-local-map)))
 	     (make-sparse-keymap (format "BLM: %s" 
                                          (buffer-file-name)))))))
-	   
 
 (defun dp-define-buffer-local-keys (keys &optional buffer protect-bindings-p)
   (interactive)

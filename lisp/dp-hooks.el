@@ -181,7 +181,6 @@ Make it buffer local since there can be >1 minibuffers.")
     ;; set up standard history keys: up and down arrows.
     (define-key map [up] 'previous-history-element)
     (define-key map [down] 'next-history-element)
-    ;;(define-key map [(control space)]  'expand-abbrev)
     (define-key map [(control space)]  'dp-expand-abbrev)
     (define-key map [(meta ?-)] 'minibuffer-keyboard-quit)
     (define-key map [(meta ?`)] 'previous-complete-history-element)
@@ -197,26 +196,30 @@ Make it buffer local since there can be >1 minibuffers.")
     (define-key map [(control ?p)] 'previous-complete-history-element)
     (define-key map [(meta ?p)] 'dp-parenthesize-region)
     (define-key map [(control ?n)] 'next-complete-history-element)
-;;is this breaking fsf?     (define-key map [(control ?m)] 'dp-minibuffer-grab-region)  ; <mini>buffer
-;;is this breaking fsf?     (define-key map [(meta ?g)] 'dp-minibuffer-grab-region) ; grab
-;;is this breaking fsf?     (define-key map [(meta ?s)] 'dp-minibuffer-grab-region) ; snag
+;; fsf    (define-key map [(control ?m)] 'dp-minibuffer-grab-region)  ; <mini>buffer
+;; fsf    (define-key map [(meta ?g)] 'dp-minibuffer-grab-region) ; grab
+;; fs    (define-key map [(meta ?s)] 'dp-minibuffer-grab-region) ; snag
     (define-key map [(meta ?')] 'dp-copy-char-to-minibuf)  ; quote
-    (define-key map [(control tab)] 'lisp-complete-symbol)
+    (if (or nil (dp-xemacs-p))            ; FSF XXX FIXME!
+        (define-key map [(control tab)] 'lisp-complete-symbol)
+      (define-key map [(control tab)] 'completion-at-point))
     (define-key map [(meta ?=)] (kb-lambda 
                                    (enqueue-eval-event 
                                     'eval
                                     (nth (1- (prefix-numeric-value arg))
                                          command-history))
                                    (top-level)))
-    ;; Grabbing the region "normally" doesn't work in minibuffer.
+    ;; Grabbing the region "normally" doesn't work in the minibuffer.
     ;;!<@todo See if I can mod one of my region grabbers (AND try to merge the
     ;;two) to handle things in minibuffer-mode.
     (define-key map [(meta ?9)] (kb-lambda
                                    (dp-insert-parentheses nil)))
     (when (memq this-command '(eval-expression edebug-eval-expression))
-      (define-key map [tab] 'lisp-complete-symbol))
+      (if (or nil (dp-xemacs-p))            ; FSF XXX FIXME!
+          (define-key map [tab] 'lisp-complete-symbol)
+        (define-key map [tab] 'completion-at-point)))
     (define-key map [(meta ?o)] 'dp-kill-ring-save)
-;;remove if unneeded.;     (dp-minibuffer-abbrevs-post-hook)
+    ;;restore if needed.;     (dp-minibuffer-abbrevs-post-hook)
     
     ;; M-e `find-file' M-w `save-buffer' don't make sense in a minibuffer so we
     ;; use them to grab a path name from the current *sh* window.  We put the
@@ -1201,8 +1204,6 @@ Also leave the region active."
 ;   (dmessage "ADVISED py-beginning-of-def-or-class")
 ;   (dp-push-go-back "advised py-beginning-of-def-or-class"))
 
-(autoload 'eldoc-doc "eldoc" "Display function doc in echo area." t)
-
 (defun dp-you-cant-save-you-silly (&optional force-inhibit-p quiet-p)
   "Too much SpongeBob! NIL --> can save; non-nil --> can't.
 Arr... beware the hooks! "
@@ -1236,10 +1237,13 @@ Arr... beware the hooks! "
   (interactive)
   ;; experiment to see if I like this.
   ;;(turn-on-eldoc-mode)  ; too intrusive
-  (local-set-key [(control tab)] 'lisp-complete-symbol)
+  (if (dp-xemacs-p)
+      (local-set-key [(control tab)] 'lisp-complete-symbol)
+    (local-set-key [(control tab)] 'completion-at-point))
+    
   (local-set-key [(meta backspace)] 'dp-delete-word-forward)
   ;; eldoc on demand.
-  (local-set-key [(control ?/)] 'eldoc-doc)
+  (local-set-key [(control ?/)] 'dp-elisp-eldoc-doc)
   (local-set-key [(control meta return)] (kb-lambda (end-of-line)
                                              (eval-print-last-sexp)))
   (local-set-key [(meta left)] 'dp-beginning-of-defun)
@@ -1262,7 +1266,7 @@ Arr... beware the hooks! "
     (dp-define-buffer-local-keys '([(control ?x) (control ?d) ?x] dp-eol-and-eval
                                    [(control meta ?j)] dp-eol-and-eval
                                    [(meta ?w)] dp-you-cant-save-you-silly)))
-  (local-set-key [(meta space)] 'dp-select-thing)
+  (local-set-key [(meta space)] 'dp-id-select-thing)  ;fsf was dp-select-thing.
   (local-set-key [(meta ?-)] 'dp-bury-or-kill-buffer))
 
 (defvar dp-lisp-modes-parenthesize-region-paren-list
@@ -1334,7 +1338,7 @@ This is moved from a patch to isearch.el, so we lose the ability to add our
 doc to `isearch-mode's doc string.  But we don't need to patch before dumping."
   (interactive)
   (interactive)
-  (isearch-yank 'forward-char))
+  (isearch-yank-char))
 (put 'dp-isearch-yank-char isearch-continues t)
 
 
@@ -1358,15 +1362,19 @@ isearch while the region is active to locate the end of the region."
             dp-isearch-mark-at-start (region-beginning)));; (point)) ;; was (mark)
     ;; M-p is set to `dp-parenthesize-region' in `dp-minibuffer-setup-hook'.
     (define-key is-mode-map "\C-p" 'isearch-ring-retreat)
-    (define-key is-mode-map "\C-n" 'isearch-ring-retreat)
+    (define-key is-mode-map "\C-n" 'isearch-ring-advance)
     (dp-push-go-back "dp-isearch-mode-hook"))
   (let ((map minibuffer-local-isearch-map))
     (define-key map [(meta ?')] 'dp-copy-char-to-minibuf)
     ;; Keep compatibility w/ other standard hist keys.
 ;;CO;     (define-key map [up] 'isearch-ring-retreat)
 ;;CO;     (define-key map [down] 'isearch-ring-advance)
-    (define-key map [(control ?p)] 'isearch-ring-retreat-edit)
-    (define-key map [(control ?n)] 'isearch-ring-advance-edit)))
+    (if (dp-xemacs-p)
+        (progn
+          (define-key map [(control ?p)] 'isearch-ring-retreat)
+          (define-key map [(control ?n)] 'isearch-ring-advance))
+      (define-key map [(control ?p)] 'previous-history-element)
+      (define-key map [(control ?n)] 'next-history-element))))
 
 ;;
 ;; I went to a lot of trouble to do this, and the above talks about it a bit.
@@ -1388,7 +1396,7 @@ isearch while the region is active to locate the end of the region."
     (local-set-key "f" 'describe-function-at-point)
     (local-set-key "F" 'find-function-at-point))
   (local-set-key [kp-add] 'dp-kill-ring-save)
-  (local-set-key [(control ?/)] 'eldoc-doc))
+  (local-set-key [(control ?/)] 'dp-elisp-eldoc-doc))
 
 (defun dp-hyper-apropos-mode-hook ()
   (interactive)
@@ -2444,6 +2452,10 @@ changed."
         block-comment-start "/*"
         block-comment-end "*/"))
 
+(defun dp-ibuffer-hook ()
+  (interactive)
+  (local-set-key [(meta ?w)] 'ibuffer-do-save))
+
 (add-hook 'bookmark-bmenu-mode-hook 'dp-bookmark-bmenu-mode-hook)
 
 ;; I'm trending away from advice, since I've seen code that really rapes it
@@ -2492,6 +2504,7 @@ changed."
 (add-hook 'Manual-mode-hook 'dp-manual-mode-hook)
 (add-hook 'sh-mode-hook 'dp-sh-mode-hook)
 (add-hook 'asm-mode-hook 'dp-asm-mode-hook)
+(add-hook 'ibuffer-hook 'dp-ibuffer-hook)
 ;; <:add-new-`add-hooks'-up-there:>
 ;; put new hooks up there ^
 

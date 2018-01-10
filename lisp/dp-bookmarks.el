@@ -331,6 +331,7 @@ of reset."
                            "")
                          bm-name))
          (status-msg "")
+	 (entre-line (line-number (point)))
          (bm-ro-p (and bm (dp-bm-prop-get bm 'bm-ro-p))))
     (when (and bm
                (eq last-command 'dp-set-or-goto-bm)
@@ -353,13 +354,15 @@ of reset."
 	  ;; (message (format "going to %d" pos))
 	  (setq status-msg 
                 (concat status-msg (format 
-                                    "went %s to %s @ %s"
+                                    "Went %s to %s, from Line=%s to %s"
                                     (cond
                                      ((< pos (point)) "back")
                                      ((> pos (point)) "forward")
                                      ((= pos (point)) "Nowhere")
                                      (t "Who knows where?"))
-                                    bm-msg (dp-bm-pos-str bm))))
+                                    bm-msg
+				    entre-line
+				    (dp-bm-pos-str bm))))
 	  (dp-push-go-back "dp-set-or-goto-bm")
 	  (goto-char pos)
 	  (dp-set-zmacs-region-stays t))

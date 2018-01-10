@@ -8,7 +8,7 @@
 ;;
 ;; add some stuff to the shell fontifications
 
-(require 'ssh)
+(dp-optionally-require 'ssh)
 
 (defvar dp-default-variant 'comint
   "Variant is comint vs term modes.
@@ -175,7 +175,8 @@ prompt.  We don't want to stomp on them.")
     (when (string-match regexp str)
       (let ((s (match-string 1 str)))
         (when (string-match "^\\([^ 	
-]+\\)" s)
+
+]+\\)" s)
           ;; Just set it, no sense in comparing to see if it changed.
           (setq default-directory 
                 (expand-file-name
@@ -750,8 +751,8 @@ Called when shell, inferior-lisp-process, etc. are entered."
     ;; I get bizarre behavior.  Is it my odd setup?  Bad config?  Sunspots?
     ;; I see 'pcomplete duplicated in `shell-dynamic-complete-functions' and in
     ;; `comint-dynamic-complete-functions', which may be the problem...
-    (require 'pcomplete)
-    (pcomplete-shell-setup)
+    (when (dp-optionally-require 'pcomplete)
+      (pcomplete-shell-setup))
     ;; So I remove any dupes after the first occurrence.
     (dp-nuniqify-lists '(shell-dynamic-complete-functions 
                          comint-dynamic-complete-functions)))
@@ -956,24 +957,25 @@ Or both.")
 
 (defun* dp-maybe-add-ansi-color (&optional force-it-p (filter-it-p t))
   (interactive)
-  (if (or force-it-p
-          (bound-and-true-p dp-wants-ansi-color-p))
-      (progn
-        (require 'ansi-color)
-        (setq dp-wants-ansi-color-p t)
-        (ansi-color-for-comint-mode-on)
-        ;; Cheesy hack to replace the nigh invisible green face used for
-        ;; executables.
-        (aset ansi-color-map 32 font-lock-string-face)
-        ;; The cyan face for symbolic links sucks, too.
-        (aset ansi-color-map 36 'dp-journal-extra-emphasis-face))
-    (if filter-it-p
-        ;; Filters any ANSI color escape sequences from output.
-        ;; Can be useful if some program insists on emitting ANSI color codes.
-        (ansi-color-for-comint-mode-filter)
-      ;; Turns the mode off.  Do nothing with anything.
-      (ansi-color-for-comint-mode-off))))
-  
+)
+;;fix for fsf   (let ((want-it-p (or force-it-p
+;;fix for fsf                        (bound-and-true-p dp-wants-ansi-color-p))))
+;;fix for fsf     (if (and want-it-p (dp-optionally-require 'ansi-color))
+;;fix for fsf         (progn
+;;fix for fsf           (setq dp-wants-ansi-color-p t)
+;;fix for fsf           (ansi-color-for-comint-mode-on)
+;;fix for fsf           ;; Cheesy hack to replace the nigh invisible green face used for
+;;fix for fsf           ;; executables.
+;;fix for fsf           (aset ansi-color-map 32 font-lock-string-face)
+;;fix for fsf           ;; The cyan face for symbolic links sucks, too.
+;;fix for fsf           (aset ansi-color-map 36 'dp-journal-extra-emphasis-face))
+;;fix for fsf       (if filter-it-p
+;;fix for fsf           ;; Filters any ANSI color escape sequences from output.  Can be
+;;fix for fsf           ;; useful if some program insists on emitting ANSI color codes.
+;;fix for fsf           (ansi-color-for-comint-mode-filter)
+;;fix for fsf         ;; Turns the mode off.  Do nothing with anything.
+;;fix for fsf         (ansi-color-for-comint-mode-off))))))
+
 ;;;###autoload
 (defun* dp-shell-mode-hook (&optional (variant dp-default-variant))
   "Sets up shell mode specific options."
@@ -1408,7 +1410,7 @@ CURRENT-BINDING is saved in the buffer local variable
   ;;!<@todo This can be a call to `dp-define-keys' since keymap is provided.
   (dp-define-keys
    ;; nil says to define keys as buffer local.
-   (if (dp-v2-buffer-local-keymaps-p)
+   (if (dp-buffer-local-keymaps-p)
        nil
      keymap)
    (list "\C-m" (if (dp-isa-shell-enter-func-lambda-p new-binding)
@@ -1832,7 +1834,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
      "\C-d" dp-shell-delchar-or-quit
      [(control backspace)] dp-ipython-backward-delete-word)))
 
-(require 'gdb)
+(dp-optionally-require 'gdb)
 
 (defvar dp-gdb-buffer-name nil
   "Latest gdb shell we've started.")
@@ -2139,29 +2141,6 @@ handled right."
         (call-interactively 'term)
       (term prog-name))))
 
-;;;###autoload -- OBSOLETE, REMOVE
-;;DooMed (defun dp-cterm ()
-;;DooMed   (interactive)
-;;DooMed   (call-interactively 'dp-start-term)
-;;DooMed   (term-char-mode)
-;;DooMed   (dp-maybe-add-compilation-minor-mode)
-;;DooMed   (dp-term-mode-common-keys)
-;;DooMed   (term-line-mode)
-;;DooMed   (dp-term-mode-common-keys)
-;;DooMed   (add-hook 'post-command-hook 'dp-term-set-mode-from-pos))
-
-;;DooMed ;;;###autoload -- OBSOLETE, REMOVE
-;;DooMed (defun dp-lterm ()
-;;DooMed   (interactive)
-;;DooMed   (call-interactively 'dp-start-term)
-;;DooMed   (term-line-mode)
-;;DooMed   (dp-maybe-add-compilation-minor-mode)
-;;DooMed   (dp-term-mode-common-keys)
-;;DooMed   (dp-shell-line-mode-bindings 'term 'bind-up-n-down)
-;;DooMed   (local-set-key "\t" 'term-dynamic-complete)
-;;DooMed   (remove-hook 'post-command-hook 'dp-term-set-mode-from-pos))
-
-
 (defun dp-shell-process-xdir (arg)
   "Let the dir tracking stuff track my xdir command.
 It's getting to the point, though, that I should just do a `dirs' after 
@@ -2233,9 +2212,9 @@ Xemacs's view of the pwd often gets confuzed."
 (dp-deflocal dp-shell-isa-shell-buf-p nil
   "Is this a shell buffer?  This is a list of symbols which ID the buffer.")
 
-(defsubst* dp-shell-buffer-p (&optional buffer 
-                              pred
-                              pred-args)
+(defun dp-shell-buffer-p (&optional buffer 
+				    pred
+				    pred-args)
   (with-current-buffer (or buffer (current-buffer))
     (setq-ifnil pred dp-shell-isa-shell-buf-p)
     (dp-apply-or-value pred pred-args)))
@@ -3244,8 +3223,8 @@ ARG == 0    --> New `dp-gdb-naught' session."
                 (read-file-name "Run gdb on file: ")
                 (when current-prefix-arg
                   (read-file-name "Name of corefile: "))))
-  (require 'ssh)
-  (require 'gdb)
+  (dp-optionally-require 'ssh)
+  (dp-optionally-require 'gdb)
   (let* ((buffer nil)
          (args (ssh-parse-words ssh-args))
          ;;(process-connection-type ssh-process-connection-type)

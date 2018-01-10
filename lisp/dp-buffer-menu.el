@@ -34,9 +34,12 @@ as the predicate args passed to `list-buffers-internal'.")
   (interactive)
   (dp-buffer-menu dp-buffer-menu-invocation-arg))
 
+;; Try to modify emacs' list buffer stuff to my preferences.
 (defun dp-list-buffers (&optional arg)
   (interactive "P")
-  (dp-buffer-menu (not arg) 'list-buffers))
+  (if (not (dp-xemacs-p))
+      (message "`dp-list-buffers' not ready for FSF time.")
+    (dp-buffer-menu (not arg) 'list-buffers)))
 
 (defun* dp-buffer-menu (&optional arg (listing-function 'buffer-menu))
   "Invert the arg to buffer-menu so that ARG is required

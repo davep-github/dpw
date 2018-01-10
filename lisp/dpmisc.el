@@ -3041,7 +3041,8 @@ Use another binding? Running out of prefix arg interpretations."
         ;;at the wrong spot.
         (if (and (string= pre "(")
                  (dp-in-c))
-            (let ((last-command-char ?\())
+            (let ((last-command-char ?\()
+		  (last-command-event ?\()) ;FSF
               (c-electric-paren nil))
           (insert pre))
         (goto-char end)
@@ -5562,7 +5563,9 @@ LESSER-GLOBS-TOO-P says to grep files in `dp-lgrep-lesser-globs' as well. "
   (save-some-buffers)
   (grep command-args))
 
-(dp-defaliases 'lgrep 'dp-grep-lisp-files)
+;;  FSF has an lgrep command.  I usually only use lg<RET>[rep] anyway, only
+;;  having lg in both 'macs keeps the reflexes happy.
+(dp-defaliases 'lg 'dp-grep-lisp-files)
 
 (defvar dp-cedet-grep-find-history '())
 (defvar dp-cedet-grep-find-dir "/home/davep/lisp/contrib/site-packages/cedet/")
@@ -7075,25 +7078,6 @@ Is this a good idea?"
 " end t)
       (replace-match "" nil t))))
 
-(defun dp-x-insert-selection (prompt-if-^Ms &optional no-insert-p)
-  "Insert the current X Window selection at point, and put text into kill ring."
-  (interactive "P")
-  (let ((text (dp-with-all-output-to-string
-	       (insert-selection))))
-    (when (and (string-match "
-" text)
-	       (or (ding) t)
-	       (or (not prompt-if-^Ms)
-		   (y-or-n-p "^Ms in text; dedosify")))
-      (setq text (replace-in-string text "
-" "" 'literal))
-      (message "dedos'd"))
-    (push-mark (point))
-    (unless no-insert-p
-      (insert text))
-    (setq this-command 'yank)
-    (kill-new text)))
-
 (defun dp-x-copy-to-kill-selection (prompt-if-^Ms)
   (interactive "P")
   (dp-x-insert-selection prompt-if-^Ms 'no-insert-p))
@@ -8026,10 +8010,7 @@ This makes point very visible."
   (remove-hook 'pre-command-hook (cdr dp-unhighlight-hook-one-shot-lambda))
   (setq dp-unhighlight-hook-one-shot-lambda nil))
 
-(defun* dp-highlight-point-until-next-command (&key point colors)
-  "Highlight the line on which point resides using `dp-highlight-point'.
-The highlight will be removed after the next command."
-  (interactive)
+(defun* dp-highlight-point-until-next-command-guts (&key point colors)
   ;; Previous hook hasn't fired yet. E.g. switch-buffer, switch-buffer back
   ;; to back.
   (when dp-unhighlight-hook-one-shot-lambda
@@ -8040,6 +8021,14 @@ The highlight will be removed after the next command."
         (cons (dp-highlight-point :pos point :colors colors)
               (car (add-one-shot-hook 'pre-command-hook 
                                       'dp-unhilight-point-hook)))))
+
+(defun* dp-highlight-point-until-next-command (&key point colors)
+  "Highlight the line on which point resides using `dp-highlight-point'.
+The highlight will be removed after the next command."
+  (interactive)
+  (if (dp-xemacs-p)
+      (dp-highlight-point-until-next-command-guts)
+    ))
 
 (defun* dp-unhighlight-point (&key (pos (point)) (buffer (current-buffer))
                               (id-prop dp-highlight-point-id-prop)
@@ -12024,7 +12013,7 @@ I'm sure I've missed an already existing function that does this."
 (defun dp-make-local-hooks (hooks &optional buffer)
   (with-current-buffer (or buffer (current-buffer))
     (loop for hook in hooks
-      do (make-local-hook hook))))
+      do (dp-make-local-hook hook))))
 
 (defun ascii ()
   (interactive)
@@ -12599,7 +12588,6 @@ Actually until `forward-line' goes nowhere."
   (interactive "p")
   (dp-slide-window 'right arg))
 (dp-safe-alias 'dp-slide-window-right 'dp-slide-window-next)
-
 
 (defun dp-slide-window-left (arg)
   (interactive "p")

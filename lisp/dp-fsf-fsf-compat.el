@@ -22,6 +22,16 @@
 (defmacro dp-set-zmacs-region-stays (arg)
   ())
 
+(defun keymap-name (keymap)
+  (keymap-prompt keymap))
+
+(defun set-keymap-name (map name)
+  )
+
+(defun isearch-yank (&optional arg)
+  (interactive)
+  (isearch-yank-char arg))
+
 (defalias 'ffap-host-to-path 'ffap-host-to-filename)
 
 ;;; Try to find common way to do this.  It's hacked from XEmacs' lisp code.
@@ -56,6 +66,20 @@ to EXPAND-FILE-NAME."
     (if expand-directory
 	(expand-file-name path expand-directory)
       path)))
+
+(defun dp-elisp-eldoc-doc (&optional insert-template)
+  "Display simple help summary in echo area on demand.
+If INSERT-TEMPLATE is non-nil (interactively with prefix arg) then insert a
+function template at point.
+@todo can we add possibility of specifying what to get help on?"
+  (interactive "P")
+  (let ((eldoc-documentation-function 'elisp-eldoc-documentation-function)
+        (doc (funcall eldoc-documentation-function)))
+    (if insert-template
+	(eldoc-insert-elisp-func-template doc)
+      (eldoc-message "%s"
+		     (or doc 
+			 (format "No doc for `%s'" (eldoc-current-symbol)))))))
 
 (defsubst dp-mmm-in-any-subregion-p (&rest r)
   nil)
@@ -202,10 +226,91 @@ in the and-statement.  This is a clean way to avoid such warnings.  See also
   (interactive)
   ;;(exit-minibuffer)
   ;;(keyboard-quit)
-  (keyboard-escape-quit)
+  (keyboard-escape-quit))
 
-  )
+(defun symbol-near-point ()
+  (interactive)
+  (symbol-at-point))
 
+(defmacro save-window-excursion/mapping (&rest body)
+  `(save-window-excursion ,@body))
+
+(defun map-plist (mp-function plist)
+  "Map FUNCTION (a function of two args) over each key/value pair in PLIST.
+Return a list of the results."
+  (let (result)
+    (while plist
+      (push (funcall mp-function (car plist) (cadr plist)) result)
+      (setq plist (cddr plist)))
+    (nreverse result)))
+
+(defun append-expand-filename (file-string string)
+  "Append STRING to FILE-STRING differently depending on whether STRING
+is a username (~string), an environment variable ($string),
+or a filename (/string).  The resultant string is returned with the
+environment variable or username expanded and resolved to indicate
+whether it is a file(/result) or a directory (/result/)."
+  (let ((file
+	 (cond ((string-match "\\([~$]\\)\\([^~$/]*\\)$" file-string)
+		(cond ((string= (substring file-string
+					   (match-beginning 1)
+					   (match-end 1)) "~")
+		       (concat (substring file-string 0 (match-end 1))
+			       string))
+		      (t (substitute-in-file-name
+			  (concat (substring file-string 0 (match-end 1))
+				  string)))))
+	       (t (concat (file-name-directory
+			   (substitute-in-file-name file-string)) string))))
+	result)
+
+    (cond ((stringp (setq result (and (file-exists-p (expand-file-name file))
+				      (read-file-name-internal
+				       (condition-case nil
+					   (expand-file-name file)
+					 (error file))
+				       "" nil))))
+	   result)
+	  (t file))))
+
+(defun line-number (&optional pos)
+  (line-number-at-pos pos))
+
+(defun abbrev-string-to-be-defined (arg)
+  "Return the string for which an abbrev will be defined.
+ARG is the argument to `add-global-abbrev' or `add-mode-abbrev'."
+  (if (and (not arg) (region-active-p)) (setq arg 0)
+    (setq arg (prefix-numeric-value arg)))
+  (and (>= arg 0)
+       (buffer-substring
+	(point)
+	(if (= arg 0) (mark)
+	  (save-excursion (backward-word arg) (point))))))
+
+
+(defun dp-x-insert-selection (prompt-if-^Ms &optional no-insert-p)
+  "Insert the current X Window selection at point, and put text into kill ring."
+  (interactive "P")
+  (let ((text (dp-with-all-output-to-string
+	       (yank))))
+    (when (and (string-match "
+" text)
+	       (or (ding) t)
+	       (or (not prompt-if-^Ms)
+		   (y-or-n-p "^Ms in text; dedosify")))
+      (setq text (replace-in-string text "
+" "" 'literal))
+      (message "dedos'd"))
+    (push-mark (point))
+    (unless no-insert-p
+      (insert text))
+    (setq this-command 'yank)
+    (kill-new text)))
+
+(defun dp-re-search-forward (regexp &optional limit noerror count buffer)
+  (interactive)
+  (with-current-buffer (or buffer (current-buffer))
+    (re-search-forward regexp limit noerror count)))
 ;;
 ;; set up a titlebar format.  Various window things will look for this in
 ;; order to jump to the main emacs window.

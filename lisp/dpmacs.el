@@ -428,7 +428,7 @@ the init files.")
 (defvar dp-auto-mode-alist-additions
   '()
   "All of my additions in one place. This allows me to restore the original
-  mode is I want to and then re-apply my changes.")
+  mode if I want to and then re-apply my changes.")
 
 (defun dp-add-auto-mode-alist-additions ()
   (dp-add-list-to-list 'auto-mode-alist dp-auto-mode-alist-additions))
@@ -449,7 +449,7 @@ the init files.")
   (regexp-opt '(
    "wip" "exp" "dev" "WIP" "EXP" "DEV" "hack" "HACK" "play" "PLAY"
    "emerged" "merged" "emerge" "merge"))
-"In development, works in progress, being developed.")
+"In development, work in progress, being developed.")
 
 ;; !<@todo XXX things like save-2 don't work, but save2 do. The [] expr is
 ;; suspect.
@@ -571,7 +571,6 @@ w/tags, cscope, etc.")
    ;; @todo XXX revist blanket application of sh mode.
    ("/\\.rc/[^/]+$" . shell-script-mode)
    ("\\.jxt$" . dp-journal-mode)        ; dp Journal files.
-   ("\\.g$" . antlr-mode)
    ))
 
 ;; Try alternative to suck-ass `sh-mode' "Shell-script" ksh-mode sucks,
@@ -581,7 +580,6 @@ w/tags, cscope, etc.")
 
 
 (dp-add-to-list 'folding-mode-marks-alist '(dp-journal-mode "{{{" "}}}"))
-
 
 ;; pull in multiple major mode stuff if available.
 (when (and (dp-xemacs-p)
@@ -649,6 +647,7 @@ And their failure occurs way too often."
   t)
 (autoload 'dylan-mode "dylan-mode" "Dylan language editing mode.")
 (require 'auto-dp-autoloads)
+(dp-optionally-require 'rust-mode)
 
 ;; add our python mode hook here, so we can interoperate with ipython.el
 ;; If there's no ipython.el then we're still ok.
@@ -750,7 +749,7 @@ And their failure occurs way too often."
 ;  (unless (member hm-el auto-mode-alist)
 ;    (setq auto-mode-alist (cons hm-el auto-mode-alist))))
 
-(if (file-readable-p "custom-load.el")
+(if (and (dp-xemacs-p) (file-readable-p "custom-load.el"))
     (load "custom-load"))
 
 (defalias 'with-saved-match-data 'save-match-data)
@@ -1118,5 +1117,19 @@ This can be callable.")
 
 (setq dp-ding-backtrace-p nil)
 (ad-unadvise 'ding)
+
+;; Some of the methods of binding are very fucked up.
+;; E.g. these fail
+;; (global-set-key [(meta space)] 'dp-id-select-thing)
+;; (global-set-key [(control space)] 'dp-expand-abbrev)
+;; But these work.  Seems limited. E.g. I've seen it with
+;; {control,meta} X {space,tab}
+(define-key esc-map " " 'dp-id-select-thing)
+(define-key global-map [?\C- ] 'dp-expand-abbrev)
+
+(describe-key-briefly [(control ? )])
+(describe-key-briefly [(meta ? )])
+(describe-key-briefly [(control space)])
+(describe-key-briefly [(meta space)])
 
 (message "dpmacs.el... finished.")
