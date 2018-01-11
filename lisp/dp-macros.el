@@ -662,7 +662,7 @@ FORMS complete."
        (get 'defvar 'lisp-indent-function))
 
 
-;;; // ///// <:macros new up there:>
+;;; // ///// <:macros new above me:>
 
 )  
 

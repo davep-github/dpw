@@ -90,7 +90,7 @@ be deactivated when doing a beginning|end followed by an end|beginning."
   (interactive)
   (re-search-forward regexp limit noerror count buffer))
 
-(defun isearch-yank-char (&optional arg)
+(defun dp-isearch-yank-char (&optional arg)
   (isearch-yank 'forward-char))
 
 (autoload 'eldoc-doc "eldoc" "Display function doc in echo area." t)

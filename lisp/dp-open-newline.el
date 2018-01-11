@@ -280,7 +280,7 @@
            ;; Add ; after return.
            ;; p is where we started.
            ((save-excursion 
-              (c-beginning-of-statement)
+              (dp-c-beginning-of-statement)
               (dp-c-open-after-any-kw '("return" "break")))
             (dmessage "cob: add ;")
             (setf (dp-cob-state-t-last-sub-command dp-cob-state) 'add-semi-kw)

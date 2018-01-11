@@ -14,6 +14,15 @@
     (load "dp-xemacs-fsf-compat.el")
   (load "dp-fsf-fsf-compat.el"))
 
+;;
+;; I could basically put the then in the xemacs compat file and the
+;; else in the fsf, but I'm getting tired of so many little
+;; differences.  Especially when dealing with gratuitous fsf changes.
+;; This still beats putting similar code everwhar.
+(defun dp-completion-at-point ()
+  (if (dp-xemacs-p)
+      (lisp-complete-symbol)
+    (completion-at-point)))
 ;;;
 ;;;
 ;;;

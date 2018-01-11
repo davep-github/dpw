@@ -1382,16 +1382,16 @@ Like function calls they look.")
           "\\)")
   "Keywords that have statement blocks, {..} after them.")
 
-(defun dp-c-beginning-of-statement ()
+(defun dp-c-beginning-of-statement (&optional count)
   "`c-beginning-of-statement' can leave us in previous cpp code. Move out of it.
 Also, it will move backwards into a closed class (ie has a };)."
-  (interactive)
+  (interactive "p")
   (if (dp-in-cpp-construct-p)
       ;; If we are already on a cpp line, then don't move off of it.
       (beginning-of-line)
     (let ((class-state (dp-c++-in-class-p))
           (pos (point)))
-      (c-beginning-of-statement)
+      (call-interactively 'c-beginning-of-statement)
       (cond 
        ((not (eq class-state (dp-c++-in-class-p) ))
         ;; We backed into a class.  This is bad.
@@ -1469,7 +1469,8 @@ newline."
   (save-match-data
     (when (dp-in-c)
       (setq-ifnil c-syntax (dp-c-get-syntactic-region c-syntax-ignore-list))
-      (or (memq (buffer-syntactic-context) '(comment block-comment))
+      ;; Need to reconcile differences twixt versions of cc-mode.
+      (or (memq ;; (buffer-syntactic-context) '(comment block-comment))
           (memq c-syntax dp-c-comment-syntax-list)
           (c-got-face-at (point) '(font-lock-comment-face))
           (save-excursion 

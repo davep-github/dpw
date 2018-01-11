@@ -34,7 +34,7 @@ is currently inside.
 Use cc-mode syntax to find the limits."
   (interactive)
   ;;
-  (c-beginning-of-statement)
+  (dp-c-beginning-of-statement)
   (set-mark (point))
   ;; find the end of the def... the matching close paren after
   ;; the first open paren

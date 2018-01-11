@@ -1144,7 +1144,7 @@ on disk."
       (insert ";; -*-emacs-lisp-*-\n")
       (insert dpj-topic-file-id-magic "\n")
       (let ((standard-output (current-buffer)))
-	(pprint `(setq dpj-topic-list (quote ,dpj-topic-list))))
+	(pp `(setq dpj-topic-list (quote ,dpj-topic-list))))
       (insert "\n; topic abbrevs\n")
       (insert-abbrev-table-description 'dpj-topic-abbrev-table)
       (set-buffer-modified-p t)

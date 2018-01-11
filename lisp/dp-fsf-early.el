@@ -37,7 +37,13 @@
   (shell-dirtrack-mode t)
   (setq dirtrackp nil))
 
-(message "save-place-file>%s<" save-place-file)
+(defun dp-home-and-kill-line ()
+  "There's a bug where my delete entire line spills over into read-only text."
+  (interactive)
+  (beginning-of-line)
+  (dp-delete-to-end-of-line))
+
+(message "Before: save-place-file>%s<" save-place-file)
 (defconst save-place-file
   (format "~/.emacs.d/emacs-places.%s" (dp-short-hostname))
   "When editing on multiple machines, it's nice to qualify them with the
@@ -45,9 +51,9 @@
 executable code, often a format with some function calls, often
 `dp-short-hostname'.  Hooks to funcalls should be an option for
 the value of some/many/most/all customizable variables.")
+(message "After: save-place-file>%s<" save-place-file)
 ;;;
 ;;;
 ;;;
 (provide 'dp-fsf-early)
 (message "dp-fsf-early loading...done")
-

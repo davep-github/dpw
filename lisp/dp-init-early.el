@@ -35,7 +35,7 @@
   (expand-file-name (paths-construct-path  
                      (cons dp-contrib-site-packages pkg-names))))
 
-;;(dp-add-contrib-subdir-to-load-path "xemacs-for-FSF")
+(dp-add-contrib-subdir-to-load-path "xemacs.el-for-fsf-compat")
 
 (defun dp-timestamp-string (&optional time new-style-p)
   "Return a consistently formatted and sensibly sortable and succinct timestamp string."
@@ -69,6 +69,26 @@ Some are ephemeral and some are longer term."
   (when (not (file-directory-p subdir))
     (warn "dropping dir >%s< isn't." subdir ))
   subdir)
+
+;; pending-delete-mode causes typed text to replace a selection,
+;; rather than append -- standard behavior under all window systems
+;; nowadays. (copped from sample.init.el)
+(when (fboundp 'pending-delete-mode)
+  (pending-delete-mode 1)
+  ;; kill the modeline display this mode
+  (setq pending-delete-modeline-string " pD"))
+
+;; The LOCAL arg to `add-hook' is interpreted differently in Emacs and
+;; XEmacs.  In Emacs we don't need to call `make-local-hook' first.
+;; It's harmless, though, so the main purpose of this alias is to shut
+;; up the byte compiler.
+;; Stolen from Emacs Gnus
+(defalias 'dp-make-local-hook (if (featurep 'xemacs)
+                               'make-local-hook
+                               'ignore))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; VARIABLES
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq dp-editor-droppings (expand-file-name "~/droppings/editors")
       dp-emacs-droppings (concat dp-editor-droppings "/emacs")

@@ -1988,8 +1988,7 @@ preceding line."
   (if (string= str "")
       (dp-mark-to-end-of-line)
     (dp-set-mark (point))
-    (with-interactive-search-caps-disable-folding
-        str nil
+    (with-interactive-search-caps-disable-folding str nil
       (when (search-forward str nil t arg)
         (unless end-of-match-p
           (backward-char (length str)))
@@ -3041,6 +3040,7 @@ Use another binding? Running out of prefix arg interpretations."
         ;;at the wrong spot.
         (if (and (string= pre "(")
                  (dp-in-c))
+            ;; Just set 'em both
             (let ((last-command-char ?\()
 		  (last-command-event ?\()) ;FSF
               (c-electric-paren nil))
@@ -6625,10 +6625,12 @@ with prop if set else 'dp-extent."
   "Remove all of my colors in the region. 
 The region is determined by `dp-region-or...'."
   (interactive)
-  (dp-unextent-region (or region-id 'dp-colorized-region) 
-                      beg end nil 'line-p)
-  (unless preserve-current-color-p
-    (setq dp-colorize-region-default-color-index 0)))
+  (if (not (dp-xemacs-p))
+      (message "dp-uncolorize-region: no colorization yet in FSF.")
+    (dp-unextent-region (or region-id 'dp-colorized-region)
+                        beg end nil 'line-p)
+    (unless preserve-current-color-p
+      (setq dp-colorize-region-default-color-index 0))))
 
 ;; C-u --> prompt for shrink-wrap and roll colors
 ;; current-prefix-arg < 0 --> color and prompt
@@ -10168,7 +10170,7 @@ basically the union of the args to `find-file-noselect' and
 (defun dp-colorize-found-file-buffer ()
   "Set a buffer's color after the file has been loaded into it."
   (if (not (dp-xemacs-p))
-      (message "dp-colorize-found-file-buffer: no colorization yet.")
+      (message "dp-colorize-found-file-buffer: no colorization yet in FSF.")
     (dp-remove-file-state-colorization)
     ;;(dmessage-todo "Name the colors in my palette!!!")
     (dp-colorize-buffer-if-readonly nil t)

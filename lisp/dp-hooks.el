@@ -198,11 +198,9 @@ Make it buffer local since there can be >1 minibuffers.")
     (define-key map [(control ?n)] 'next-complete-history-element)
 ;; fsf    (define-key map [(control ?m)] 'dp-minibuffer-grab-region)  ; <mini>buffer
 ;; fsf    (define-key map [(meta ?g)] 'dp-minibuffer-grab-region) ; grab
-;; fs    (define-key map [(meta ?s)] 'dp-minibuffer-grab-region) ; snag
+;; fsf    (define-key map [(meta ?s)] 'dp-minibuffer-grab-region) ; snag
     (define-key map [(meta ?')] 'dp-copy-char-to-minibuf)  ; quote
-    (if (or nil (dp-xemacs-p))            ; FSF XXX FIXME!
-        (define-key map [(control tab)] 'lisp-complete-symbol)
-      (define-key map [(control tab)] 'completion-at-point))
+    (define-key map [(control tab)] 'dp-completion-at-point)
     (define-key map [(meta ?=)] (kb-lambda 
                                    (enqueue-eval-event 
                                     'eval
@@ -215,9 +213,7 @@ Make it buffer local since there can be >1 minibuffers.")
     (define-key map [(meta ?9)] (kb-lambda
                                    (dp-insert-parentheses nil)))
     (when (memq this-command '(eval-expression edebug-eval-expression))
-      (if (or nil (dp-xemacs-p))            ; FSF XXX FIXME!
-          (define-key map [tab] 'lisp-complete-symbol)
-        (define-key map [tab] 'completion-at-point)))
+      (define-key map [tab] 'dp-completion-at-point))
     (define-key map [(meta ?o)] 'dp-kill-ring-save)
     ;;restore if needed.;     (dp-minibuffer-abbrevs-post-hook)
     
@@ -1204,6 +1200,8 @@ Also leave the region active."
 ;   (dmessage "ADVISED py-beginning-of-def-or-class")
 ;   (dp-push-go-back "advised py-beginning-of-def-or-class"))
 
+(autoload 'eldoc-doc "eldoc" "Display function doc in echo area." t)
+
 (defun dp-you-cant-save-you-silly (&optional force-inhibit-p quiet-p)
   "Too much SpongeBob! NIL --> can save; non-nil --> can't.
 Arr... beware the hooks! "
@@ -1237,10 +1235,8 @@ Arr... beware the hooks! "
   (interactive)
   ;; experiment to see if I like this.
   ;;(turn-on-eldoc-mode)  ; too intrusive
-  (if (dp-xemacs-p)
-      (local-set-key [(control tab)] 'lisp-complete-symbol)
-    (local-set-key [(control tab)] 'completion-at-point))
-    
+  (local-set-key [(control tab)] 'dp-completion-at-point)
+
   (local-set-key [(meta backspace)] 'dp-delete-word-forward)
   ;; eldoc on demand.
   (local-set-key [(control ?/)] 'dp-elisp-eldoc-doc)
@@ -1331,16 +1327,6 @@ See `dp-parenthesize-region-paren-list'")
   (interactive)
   (insert isearch-string))
 (defalias 'diis 'dp-insert-isearch-string)
-
-(defun dp-isearch-yank-char ()
-  "Yank next char \(@ \(point))into the search string.
-This is moved from a patch to isearch.el, so we lose the ability to add our
-doc to `isearch-mode's doc string.  But we don't need to patch before dumping."
-  (interactive)
-  (interactive)
-  (isearch-yank-char))
-(put 'dp-isearch-yank-char isearch-continues t)
-
 
 (defun dp-isearch-mode-hook ()
   "Save point on the go back stack and save the region activation status.

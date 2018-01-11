@@ -784,7 +784,7 @@ Otherwise don't write it."
             (format ";;; File: %s\n" abbrev-file)
             (dp-mk-timestamp ";;; Last saved: " "")
             dp-abbrev-shared-comment-block)
-    (pprint `(defconst ,abbrev-list (quote ,(symbol-value abbrev-list)))
+    (pp `(defconst ,abbrev-list (quote ,(symbol-value abbrev-list)))
 	    (current-buffer))
     (insert ";; We could just use the non-void-ness of dp-common-abbrevs, but I
 ;; like suspenders with my belt.

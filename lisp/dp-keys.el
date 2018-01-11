@@ -144,8 +144,11 @@ Bind any keys in KEYS via `dp-define-keys'."
 ;;(global-set-key "\C-z" 'dp-lterm)
 
 ;; Tag keys now defined in dp-ptools.el
-				 
-(global-set-key [(meta ?b)] 'dp-buffer-menu)
+
+(if (dp-xemacs-p)				 
+    (global-set-key [(meta ?b)] 'dp-buffer-menu)
+  (global-set-key [(meta ?b)] 'ibuffer))
+
 (global-set-key [(control x) (control b)] 'dp-list-buffers)
 (global-set-key [(meta ?h)] 'help-command)
 (global-set-key [(meta h) (meta k)] 'dp-ff-key)
@@ -199,7 +202,7 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(meta ?n)] 'dp-next-error)
 (global-set-key [(meta insert)] 'dp-sel2:paste)
 (global-set-key [(control meta y)] 'dp-sel2:paste)
-(global-set-key [(control meta space)] 'dp-one-space)
+(global-set-key [(shift meta space)] 'dp-one-space)
 
 ;;; retrain...
 ;;;(global-set-key [(control return)] 'join-line)
@@ -225,11 +228,11 @@ Bind any keys in KEYS via `dp-define-keys'."
 
 ;;(global-set-key [(control meta ?g] 'dp-sel2:bm)
 
-(defvar dp-select-thing (if (fboundp 'id-select-thing)
-                            'dp-id-select-thing
-                          'dp-mark-sexp)
-  "How we select sexps...  Or better.")
-(fset 'dp-select-thing dp-select-thing)
+;fsf-- remove after testing. (defvar dp-select-thing (if (fboundp 'id-select-thing)
+;fsf-- remove after testing.                             'dp-id-select-thing
+;fsf-- remove after testing.                           'dp-mark-sexp)
+;fsf-- remove after testing.   "How we select sexps...  Or better.")
+;fsf-- remove after testing. (fset 'dp-select-thing dp-select-thing)
 
 (global-set-key [(shift tab)] 'dp-indent-line-and-move-down)
 (global-set-key [(meta shift tab)] 'dp-delete-indentation-and-move-down)
@@ -245,10 +248,7 @@ Bind any keys in KEYS via `dp-define-keys'."
 ;; this works better with more X progs, aterm in particular.
 (global-set-key [(shift insert)] 'dp-x-insert-selection)
 (global-set-key [(meta ?m)] 'back-to-indentation)
-(global-set-key [(meta space)] 'dp-select-thing) 
-;; I've never really used it.  Give it a less comfortable binding and free up
-;; a more comfortable one.
-(global-set-key [(control meta space)] 'just-one-space)
+;; (global-set-key [(meta space)] 'dp-id-select-thing) fsf -- moved to end of dpmacs
 
 ; (global-set-key [(control meta m)] (if (fboundp 'id-select-thing)
 ; 					   'id-select-thing

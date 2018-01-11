@@ -23,12 +23,13 @@
   ())
 
 (defun keymap-name (keymap)
+"A tremendously bogus, dangerous and offensive hack.  Mildly better than nothing."
   (keymap-prompt keymap))
 
 (defun set-keymap-name (map name)
-  )
+  (message "No `set-keymap-name' functionality."))
 
-(defun isearch-yank (&optional arg)
+(defun dp-isearch-yank (&optional arg)
   (interactive)
   (isearch-yank-char arg))
 
@@ -308,9 +309,22 @@ ARG is the argument to `add-global-abbrev' or `add-mode-abbrev'."
     (kill-new text)))
 
 (defun dp-re-search-forward (regexp &optional limit noerror count buffer)
+  "FSF's `re-search-forward' doesn't have a buffer parameter."
   (interactive)
   (with-current-buffer (or buffer (current-buffer))
     (re-search-forward regexp limit noerror count)))
+
+(defun replace-in-string (which from-str to-str &optional literal)
+  (replace-regexp-in-string from-str to-str which nil literal))
+
+;; #### we need a coherent scheme for indicating compatibility info,
+;; so that it can be programmatically retrieved.
+(defun add-local-hook (hook function &optional append)
+  "Add to the local value of HOOK the function FUNCTION.
+You don't need this any more.  It's equivalent to specifying the LOCAL
+argument to `add-hook'."
+  (add-hook hook function append t))
+
 ;;
 ;; set up a titlebar format.  Various window things will look for this in
 ;; order to jump to the main emacs window.

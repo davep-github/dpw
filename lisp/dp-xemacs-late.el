@@ -5,25 +5,6 @@
 ;;; init process.  dpmisc is loaded and available.
 ;;;
 
-(defun dp-x-insert-selection (prompt-if-^Ms &optional no-insert-p)
-  "Insert the current X Window selection at point, and put text into kill ring."
-  (interactive "P")
-  (let ((text (dp-with-all-output-to-string
-	       (insert-selection))))
-    (when (and (string-match "
-" text)
-	       (or (ding) t)
-	       (or (not prompt-if-^Ms)
-		   (y-or-n-p "^Ms in text; dedosify")))
-      (setq text (replace-in-string text "
-" "" 'literal))
-      (message "dedos'd"))
-    (push-mark (point))
-    (unless no-insert-p
-      (insert text))
-    (setq this-command 'yank)
-    (kill-new text)))
-
 (setq tag-table-alist
       '(("/usr/local/lib/xemacs.*/" . "/usr/bree/src/xemacs/current/")
 	("/usr/include/g\\+\\+" . "/usr/include/g\\+\\+/")
@@ -235,6 +216,13 @@ Turn off if on-off < 0 (e.g. C-u - interactively)"
 
 ;; turn off the ridiculous load meter
 (setq display-time-form-list '(date time mail))			
+;; pending-delete-mode causes typed text to replace a selection,
+;; rather than append -- standard behavior under all window systems
+;; nowadays. (copped from sample.init.el)
+(when (fboundp 'pending-delete-mode)
+  (pending-delete-mode 1)
+  ;; kill the modeline display this mode
+  (setq pending-delete-modeline-string " pD"))
 
 (dmessage "xem-late: pre-command-hook>%s<" pre-command-hook)
 
