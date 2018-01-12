@@ -16,10 +16,13 @@
   dp-blm-buf-local-keymap)
 
 (defun dp-blm-get-or-create-buf-local-keymap ()
+  (message "dp-blm-buf-local-keymap: %s" dp-blm-buf-local-keymap)
   (or dp-blm-buf-local-keymap
+      (and (message "dp-blm-buf-local-keymap is nil") nil)
       (setq dp-blm-buf-local-keymap
 	    (or
 	     (and (current-local-map)
+		  (or (message "current-local-map: %s" (current-local-map)) t)
 		  (copy-keymap (current-local-map)))
 	     (make-sparse-keymap (format "BLM: %s" 
                                          (buffer-file-name)))))))
@@ -28,6 +31,7 @@
   (interactive)
   (with-current-buffer (or buffer (current-buffer))
     (let ((keymap (dp-blm-get-or-create-buf-local-keymap)))
+      (message "keymap: %s" keymap)
       (loop for (key def) on keys by 'cddr do
 	    (define-key keymap key def))
       (use-local-map keymap))))

@@ -943,7 +943,12 @@ FUNC must take two args, beginning and end buffer positions."
 (defun dp-delete-entire-line ()
   "Delete the entire line, ala A-D in Slick."
   (interactive "*")
-  (dp-operate-on-entire-line 'delete-region))
+  (if (and (not (dp-xemacs-p))
+	   (dp-minibuffer-p))
+      ;; See def of `dp-home-and-kill-line' for why this hack be needed.
+      (dp-home-and-kill-line)
+    (dp-operate-on-entire-line 'delete-region)))
+
 
 (defun dp-mark-line-if-no-mark (&optional text-only-p no-newline-p)
   "Mark the entire line if no mark is currently set.

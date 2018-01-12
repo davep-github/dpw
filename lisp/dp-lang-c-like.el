@@ -1470,7 +1470,7 @@ newline."
     (when (dp-in-c)
       (setq-ifnil c-syntax (dp-c-get-syntactic-region c-syntax-ignore-list))
       ;; Need to reconcile differences twixt versions of cc-mode.
-      (or (memq ;; (buffer-syntactic-context) '(comment block-comment))
+      (or ;; (memq (buffer-syntactic-context) '(comment block-comment))
           (memq c-syntax dp-c-comment-syntax-list)
           (c-got-face-at (point) '(font-lock-comment-face))
           (save-excursion 

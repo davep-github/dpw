@@ -29,7 +29,7 @@
 (defun set-keymap-name (map name)
   (message "No `set-keymap-name' functionality."))
 
-(defun dp-isearch-yank (&optional arg)
+(defun dp-isearch-yank-char (&optional arg)
   (interactive)
   (isearch-yank-char arg))
 

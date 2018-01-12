@@ -20,6 +20,7 @@
 ;; differences.  Especially when dealing with gratuitous fsf changes.
 ;; This still beats putting similar code everwhar.
 (defun dp-completion-at-point ()
+  (interactive)
   (if (dp-xemacs-p)
       (lisp-complete-symbol)
     (completion-at-point)))
