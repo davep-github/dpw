@@ -1341,6 +1341,8 @@ isearch while the region is active to locate the end of the region."
     (define-key is-mode-map [(control ?.)] 'dp-isearch-yank-char)  
     (define-key is-mode-map [(control ?p)] 'isearch-ring-retreat)
     (define-key is-mode-map [(control ?n)] 'isearch-ring-advance)
+    (define-key is-mode-map "\M-s\C-e" 'isearch-yank-kill)
+    (define-key is-mode-map "\C-y" 'isearch-yank-line)
 ;;    (define-key is-mode-map [up] 'isearch-ring-retreat)
 
     (when (dp-mark-active-p)
@@ -1360,7 +1362,9 @@ isearch while the region is active to locate the end of the region."
           (define-key map [(control ?p)] 'isearch-ring-retreat)
           (define-key map [(control ?n)] 'isearch-ring-advance))
       (define-key map [(control ?p)] 'previous-history-element)
-      (define-key map [(control ?n)] 'next-history-element))))
+      (define-key map [(control ?n)] 'next-history-element)
+      (define-key map "\M-s\C-e" 'isearch-yank-kill)
+      (define-key map "\C-y" 'isearch-yank-line))))
 
 ;;
 ;; I went to a lot of trouble to do this, and the above talks about it a bit.
