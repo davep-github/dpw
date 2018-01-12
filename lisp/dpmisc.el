@@ -5533,12 +5533,7 @@ of the Emacs session."
 
 (defvar dp-lgrep-lesser-globs '("~/.go.emacs" "~/lisp/devel/*.el")
   "Lisp files of less interest.
-@todo make this a defcustom list o' strings.")  
-
-; (defun lgrep-old (&optional regexp)
-;   "Grep my lisp dir."
-;   (interactive)
-;   (dp-dir-grep "~/lisp" "dp*.el custom.el init.el" regexp))
+@todo make this a defcustom list o' strings.")
 
 (defvar dp-grep-history '())
 
