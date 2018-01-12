@@ -27,7 +27,7 @@ KEYS is a list: \(key def key2 def2 ...\)."
   (if kmap
       (loop for (key def) on keys by 'cddr 
         do (define-key kmap key def))     
-    (dp-define-buffer-local-keys keys)))
+    (dp-define-buffer-local-keys keys nil nil "ddk")))
 
 (defun dp-define-local-keys (keys &optional no-error-p)
   "Call `dp-define-keys' passing KEYS using `current-local-map' as KMAP."

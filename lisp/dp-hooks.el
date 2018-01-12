@@ -1261,7 +1261,7 @@ Arr... beware the hooks! "
   (unless (buffer-file-name)
     (dp-define-buffer-local-keys '([(control ?x) (control ?d) ?x] dp-eol-and-eval
                                    [(control meta ?j)] dp-eol-and-eval
-                                   [(meta ?w)] dp-you-cant-save-you-silly)))
+                                   [(meta ?w)] dp-you-cant-save-you-silly) nil nil "dlimh"))
   (local-set-key [(meta space)] 'dp-id-select-thing)  ;fsf was dp-select-thing.
   (local-set-key [(meta ?-)] 'dp-bury-or-kill-buffer))
 
@@ -1448,7 +1448,8 @@ isearch while the region is active to locate the end of the region."
                                  [?D] Info-directory
                                  [?d] Info-top) 
                                nil 
-                               'over-write))
+                               'over-write
+			       "dImh"))
 
 (defvar dp-time-mail-has-dung nil
   "Flag saying bell has rung since new mail has arrived")

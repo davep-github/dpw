@@ -328,7 +328,7 @@ Oddly, it doesn't handle structs.")
        [?1] dp-gtags-select-tag-one-window
        [(meta return)] gtags-select-tag
        [?u] dp-gtags-update-file
-       [?o] gtags-select-tag-other-window)))
+       [?o] gtags-select-tag-other-window) nil nil "dgstow" ))
 
   (defun dp-gtags-select-tag-one-window ()
     (interactive)

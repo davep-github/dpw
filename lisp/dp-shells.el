@@ -686,7 +686,7 @@ dir-tracker has become lost.
                       :empty-line-fun 'dp-shell-delete-line
 ;;                      :end-of-line-fun 'dp-shell-dirs-or-delete-line
                       :end-of-line-fun 'dp-shell-delete-line
-)))))
+))) nil nil "dslmb"))
   
   ;; ??? Why did I do the C-c thing? Testing?
   (local-set-key [(control ?c) (meta ?o)] 'dp-shell-magic-kill-ring-save)
@@ -1832,7 +1832,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
   (dp-define-buffer-local-keys 
    '([(meta return)] dp-end-of-line-and-enter
      "\C-d" dp-shell-delchar-or-quit
-     [(control backspace)] dp-ipython-backward-delete-word)))
+     [(control backspace)] dp-ipython-backward-delete-word) nil nil "dpsh"))
 
 (dp-optionally-require 'gdb)
 
@@ -3193,7 +3193,7 @@ ARG == 0    --> New `dp-gdb-naught' session."
              (list [tab] (lambda () 
                            (interactive)
                            (ding)
-                           (message "No TAB expansion in ssh buffer."))))
+                           (message "No TAB expansion in ssh buffer."))) nil nil "dp-ssh")
             (dp-maybe-read-input-ring)))
         (setq dp-shells-most-recent-ssh-shell
               (setq dp-shells-most-recent-shell 

@@ -183,7 +183,7 @@ How it does it is another matter:  Poorly."
      [(meta return)] ,(kb-lambda 
                           (dp-gnus-topic-select-group t))
      [(control return)] gnus-group-quick-select-group
-     [(control m)] dp-gnus-topic-select-group))
+     [(control m)] dp-gnus-topic-select-group) nil nil "dbgmk")
   ;; Bug quest
   (setq dp-gnus-debug-info0 (cons (list 'blm-ext (dp-blm-get-extent)
                                         'major-mode major-mode
@@ -196,7 +196,7 @@ How it does it is another matter:  Poorly."
   (dp-define-buffer-local-keys '([(meta return)] dp-open-newline
                                  [(meta q)] 
                                  dp-fill-paragraph-or-region-with-no-prefix
-                                 [(control a)] dp-brief-home)))
+                                 [(control a)] dp-brief-home) nil nil "dgmmh"))
 
 (defun dp-gnus-summary-mode-hook ()
   "MY bindings dammit!"
@@ -208,7 +208,7 @@ How it does it is another matter:  Poorly."
      [tab] dp-gnus-summary-toggle-current-thread-expansion
      [(iso-left-tab)] gnus-summary-hide-thread
      [(control o)] dp-one-window++
-     [(meta ?-)] dp-bury-or-kill-buffer))
+     [(meta ?-)] dp-bury-or-kill-buffer) nil nil "dgsmh")
   (gnus-summary-sort-by-date t)
 ;;  (gnus-summary-insert-old-articles 50)
 )

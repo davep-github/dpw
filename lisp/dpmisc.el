@@ -1469,7 +1469,7 @@ Returns the buffer created."
       (dp-define-buffer-local-keys '([(meta ?-)] dp-bury-or-kill-buffer
                                      "\ew" dp-deactivated-key 
                                      "\C-x\C-s" dp-deactivated-key
-                                     "\C-c\C-c" dp-maybe-kill-this-buffer))
+                                     "\C-c\C-c" dp-maybe-kill-this-buffer) nil nil "mt*mb")
       (goto-char (point-max)))
     temp*-buf))
              
@@ -9474,7 +9474,7 @@ Just for informational purposes.")
             (setq dp-mru-make-makefile (buffer-file-name))
             ;;Protect this buffer from unintentional killing
             (dp-define-buffer-local-keys '([(meta ?-)] 
-                                           dp-bury-or-kill-buffer))
+                                           dp-bury-or-kill-buffer) nil nil "dp-make")
             ;; If this is set, then makes in other dirs which have their own
             ;; makefiles will still use this buffer as their base of
             ;; compilations. This can be good or bad, depending on the
@@ -10229,9 +10229,9 @@ and for setting up a buffers mode (`dp-set-auto-mode')."
     (dp-toggle-read-only (if dp-primary-makefile-p 1 0))
     (if dp-primary-makefile-p
         (dp-define-buffer-local-keys '([(meta ?-)] 
-                                       dp-bury-or-kill-buffer))
+                                       dp-bury-or-kill-buffer) nil nil "dspm")
       (dp-define-buffer-local-keys '([(meta ?-)] 
-                                       dp-maybe-kill-this-buffer)))))
+                                       dp-maybe-kill-this-buffer) nil nil "dspm2"))))
 (defalias 'dp-make-primary-makefile 'dp-set-primary-makefile)
 
 (defun 411f (&optional name-regex case-unfold-p)
@@ -10751,7 +10751,7 @@ BROKEN"
     (set-buffer buffer))
   ;; dp-bury-or-kill-buffer
   ;; Redefine (meta -) to not really kill the buffer.
-  (dp-define-buffer-local-keys '([(meta ?-)] dp-bury-or-kill-buffer) buffer))
+  (dp-define-buffer-local-keys '([(meta ?-)] dp-bury-or-kill-buffer) buffer nil "dkp"))
 
 (dp-deflocal dp-use-whence-buffers-p t
   "[?KEEP NIL... system is b0rked.?]
@@ -13452,7 +13452,7 @@ find-file\(-at-point) and then, if it fails, this function??"
   (interactive "P")
   (dp-push-go-back "cxfer")
   (dp-find-file (expand-file-name file-name dir))
-  (dp-define-buffer-local-keys '([(meta ?-)] dp-bury-or-kill-buffer))
+  (dp-define-buffer-local-keys '([(meta ?-)] dp-bury-or-kill-buffer) nil nil "dexf")
   (setq-ifnil timestamp-p (Cup> 1))
   (if (not dp-xfer-section-separator)
       (goto-char (point-max))

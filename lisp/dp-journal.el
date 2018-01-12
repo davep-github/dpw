@@ -1337,7 +1337,7 @@ non-nil otherwise get the current list topics."
     (toggle-read-only 1)
     (dp-journal-mode)
     (setq dpj-non-standard-journal-p t)
-    (dp-define-buffer-local-keys '([(meta ?-)] dp-maybe-kill-this-buffer))
+    (dp-define-buffer-local-keys '([(meta ?-)] dp-maybe-kill-this-buffer) nil nil "dstvb")
     (message "Visit real topic w/C-m, v or M-.; Type q to quit."))
 
 (defun dpj-view-topic-list (topics &optional buf-name-in visit-p 
