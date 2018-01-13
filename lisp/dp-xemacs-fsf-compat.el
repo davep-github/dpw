@@ -136,6 +136,16 @@ be deactivated when doing a beginning|end followed by an end|beginning."
     (setq this-command 'yank)
     (kill-new text)))
 
+(defun dp-push-window-config ()
+  (interactive)
+  (call-interactively 'wconfig-ring-save))
+
+(defun dp-pop-window-config (n)
+  (interactive "p")
+  ;; Real pop vs rotate. The yank pop acts, to me, counter-intuitively.
+  (call-interactively 'wconfig-delete-pop))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Nicked from Emacs.
 

@@ -6,6 +6,7 @@
  '(display-time-mode t)
  '(isearch-allow-scroll t)
  '(isearch-resume-in-command-history t)
+ '(mouse-yank-at-point t)
  '(package-selected-packages
    (quote
     (notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
@@ -18,4 +19,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(rectangle-preview ((t (:inherit region)))))

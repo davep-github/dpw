@@ -325,6 +325,19 @@ You don't need this any more.  It's equivalent to specifying the LOCAL
 argument to `add-hook'."
   (add-hook hook function append t))
 
+(unless (fboundp 'gettext)
+  (defalias 'gettext 'identity))
+
+(defalias 'dp-completion-at-point 'completion-at-point)
+
+(defun dp-push-window-config ()
+  (interactive)
+  )
+
+(defun dp-pop-window-config (n)
+  (interactive "p")
+  )
+
 ;;
 ;; set up a titlebar format.  Various window things will look for this in
 ;; order to jump to the main emacs window.

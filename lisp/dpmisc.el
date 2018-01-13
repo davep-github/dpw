@@ -9732,15 +9732,6 @@ split.")
     when (not (member b l2))
     collect b))
 
-(defun dp-push-window-config ()
-  (interactive)
-  (call-interactively 'wconfig-ring-save))
-
-(defun dp-pop-window-config (n)
-  (interactive "p")
-  ;; Real pop vs rotate. The yank pop acts, to me, counter-intuitively.
-  (call-interactively 'wconfig-delete-pop))
-
 (defun dp-all-window-buffers (&optional win-list frame first-window)
   (mapcar (lambda (win)
             (window-buffer win))
@@ -10810,9 +10801,12 @@ when the command was issued?")
 (defun* dp-read-variable-name (&optional def-prompt prompt history-symbol 
                                confirm-name-p
                                (void-var-format 
-                                "Describe variable (%s is void): "))
+                                "`%s' is void as a variable.  Try again: "))
   (let* ((v (variable-at-point))
          (val (let ((enable-recursive-minibuffers t))
+		(when (and (numberp v)
+			   (= 0 v))
+		  (setq v nil))
                 (if (and v (not confirm-name-p))
                     (format "%s" v)
                   (completing-read
@@ -10820,8 +10814,8 @@ when the command was issued?")
                        (format (or def-prompt 
                                    "Describe variable (default %s): ") 
                                v)
-                     (gettext (or (when void-var-format 
-                                    (format void-var-format 
+                     (gettext (or (when void-var-format
+                                    (format void-var-format
                                             (symbol-near-point)))
                                   prompt "Describe variable: ")))
                    obarray 'boundp t nil (or history-symbol 'variable-history)
@@ -10854,9 +10848,9 @@ when the command was issued?")
                 (kill-new "%s" value))
               (unless no-history-p
                 (dp-add-to-history 'variable-history var-sym))
-              (message "%s%s%s: %s%s%s" 
+              (message "%s%s%s: %s%s%s"
                        var-sym
-                       (if (dp-local-variable-p var-sym (current-buffer) 
+                       (if (dp-local-variable-p var-sym (current-buffer)
                                                 'AFTER-SET)
                            " [buf-local]"
                          "")
@@ -10866,7 +10860,7 @@ when the command was issued?")
                        oq value cq)
               (cons 'ret-val value))
           (if (fun-too)
-              (and (warn "%s is a function: %s" (current-word) 
+              (and (warn "%s is a function: %s" (current-word)
                          (eldoc-get-doc))
                    nil)))))))
 
