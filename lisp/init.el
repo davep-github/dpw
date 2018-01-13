@@ -49,3 +49,4 @@
 
 ;; load the bulk of the init file...
 (load "dpmacs")
+(put 'narrow-to-region 'disabled nil)

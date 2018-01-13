@@ -4,6 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(display-time-mode t)
+ '(global-hl-line-mode nil)
  '(isearch-allow-scroll t)
  '(isearch-resume-in-command-history t)
  '(mouse-yank-at-point t)
@@ -19,4 +20,5 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(rectangle-preview ((t (:inherit region)))))
+ '(rectangle-preview ((t (:inherit region))))
+ '(region ((t (:background "cyan")))))
