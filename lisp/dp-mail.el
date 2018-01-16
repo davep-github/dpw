@@ -218,9 +218,9 @@ Returns everything after the header, the colon and any whitespace."
   (save-excursion
     (dp-beginning-of-buffer)
     (save-match-data
-      (when (re-search-forward hdr-regexp dp-mail-header-end-marker t)
+      (when (dp-re-search-forward hdr-regexp dp-mail-header-end-marker t)
 	(beginning-of-line)
-	(re-search-forward ":\\s-*\\(.*\\)" dp-mail-header-end-marker)
+	(dp-re-search-forward ":\\s-*\\(.*\\)" dp-mail-header-end-marker)
 	(match-string 1)))))
 
 (defun dp-mail-get-@ddr (str)
@@ -279,10 +279,10 @@ Only the first match in hook-alist of recip-string is used.
     ;; @todo should I determine the header end first and use that to
     ;; bound the search.
     (save-match-data
-      (if (re-search-forward hdr-regexp dp-mail-header-end-marker t)
+      (if (dp-re-search-forward hdr-regexp dp-mail-header-end-marker t)
 	  (replace-match (concat hdr-name ": " hdr-val))
 	;; since we couldn't find it, add it at the end of the headers.
-	(if (re-search-forward 
+	(if (dp-re-search-forward 
 	     (or hdr-terminator dp-mail-header-terminator)
 	     dp-mail-header-end-marker t)
 	    (progn
@@ -294,7 +294,7 @@ Only the first match in hook-alist of recip-string is used.
   (save-excursion
     (goto-char (point-min))
     (save-match-data
-      (if (re-search-forward hdr-regexp dp-mail-header-end-marker t)
+      (if (dp-re-search-forward hdr-regexp dp-mail-header-end-marker t)
 	  (dp-delete-entire-line)))))
 
 (defun dp-replace-fcc (val &optional hdr-terminator)
@@ -335,7 +335,7 @@ Subject: Re: *****SPAM***** blah blah blah"
     (dp-beginning-of-buffer)
     (save-match-data
       (let ((case-fold-search t))
-	(when (re-search-forward (concat 
+	(when (dp-re-search-forward (concat 
 				  "^sub\\S-*:.*\\(" 
 				  dp-mail-SPAM-indicator
 				  "\\)")

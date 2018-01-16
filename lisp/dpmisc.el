@@ -119,7 +119,7 @@
   (goto-char offset)
   
   ;;   BUF_SET_PT (buf, np);
-  (re-search-forward ".*" nil t))
+  (dp-re-search-forward ".*" nil t))
   
 
 (defsubst and-listp (list?)
@@ -1877,7 +1877,7 @@ Based (now, loosely) on kill-word from simple.el"
 		(forward-char 1))
 	      (re-search-backward "[^ 	\n]" nil t)
 	      (not (forward-char 1))
-	      (re-search-forward ws opoint t)))
+	      (dp-re-search-forward ws opoint t)))
 	(delete-region (match-beginning 0) (match-end 0))
       ;; if we're not killing white space, kill a word in
       ;; the requested direction.
@@ -2847,7 +2847,7 @@ indices are unchanged.
 ;;             (save-excursion
 ;;               (goto-char beg)
 ;;               (when (and trim-ws-p
-;;                          (re-search-forward ".*?\\(!+\\)$" (line-end-position) t))
+;;                          (dp-re-search-forward ".*?\\(!+\\)$" (line-end-position) t))
 ;;                 (setq end (dp-mk-marker (match-beginning 1) nil t))
 ;;                 (replace-match "" nil nil nil 1)
 ;;                 ;;               (setq end (+ 2 (line-end-position)))
@@ -3027,7 +3027,7 @@ Use another binding? Running out of prefix arg interpretations."
             (save-excursion
               (goto-char beg)
               (when (and trim-ws-p
-                         (re-search-forward ".*?\\(!+\\)$" 
+                         (dp-re-search-forward ".*?\\(!+\\)$" 
                                             (line-end-position) t))
                 (setq end (dp-mk-marker (match-beginning 1) nil t))
                 (replace-match "" nil nil nil 1)
@@ -3045,6 +3045,7 @@ Use another binding? Running out of prefix arg interpretations."
         ;;at the wrong spot.
         (if (and (string= pre "(")
                  (dp-in-c))
+	    ;; last-command-char is in XEmacs and last-command-event is FSF.
             ;; Just set 'em both
             (let ((last-command-char ?\()
 		  (last-command-event ?\()) ;FSF
@@ -3934,7 +3935,7 @@ FORCE-P forces a new datestamp, regardless."
   (interactive "*")
   (goto-char (point-min))
   (let* ((date-stamp (dp-mk-datestamp pre suf))
-	 (found (re-search-forward date-stamp nil t)))
+	 (found (dp-re-search-forward date-stamp nil t)))
     (goto-char (point-max))
     (when (or current-prefix-arg
               force-p
@@ -4722,7 +4723,7 @@ function template at point.
 ;    (dp-push-go-back "dp-goto-file+re")
     (find-file fname)
     (goto-char (point-min))
-    (if (re-search-forward (concat "^" pat "(") nil t)
+    (if (dp-re-search-forward (concat "^" pat "(") nil t)
 	(beginning-of-line)
       (message "Cannot find definition of `%s'" pat)))) 
 
@@ -4788,7 +4789,7 @@ Note the spaces."
     (goto-char 0)
     (let ((ebang (format "%s-*-%s-*-%s" (or cbeg "") md-name (or cend "")))
           (newl "\n"))
-      (if (re-search-forward "-\\*-.*-\\*-\\(\n\\)?" nil t)
+      (if (dp-re-search-forward "-\\*-.*-\\*-\\(\n\\)?" nil t)
           (progn
             (delete-region (match-beginning 0) (match-end 0))
             (unless (match-beginning 1)	; did we del a newline?
@@ -4823,7 +4824,7 @@ Note the spaces."
       (beginning-of-line)
       (hif-ifdef-to-endif)
       (beginning-of-line)
-      (re-search-forward "#\\s-*endif\\(.*\\)$" nil t)
+      (dp-re-search-forward "#\\s-*endif\\(.*\\)$" nil t)
       (delete-region (match-beginning 1) (match-end 1))
       (end-of-line)
       (insert " /* " line " */"))))
@@ -5642,7 +5643,7 @@ It greps through all of my current rc files.")
   (dmessage "sfe: re>%s<" search-re)
   (let ((opoint (point)))
     (goto-char (point-min))
-    (if (re-search-forward search-re nil t)
+    (if (dp-re-search-forward search-re nil t)
         (progn
           (goto-char (match-beginning 1))
           (dp-push-go-back "Found re" 
@@ -5650,7 +5651,7 @@ It greps through all of my current rc files.")
       (goto-char opoint))))
 
 (defun* dp-search-re-with-wrap (regexp &optional point limit error save
-                               (search-fun 're-search-forward))
+                               (search-fun 'dp-re-search-forward))
   "Search forward from point, and then wrap if no match."
   (interactive)
   ;;(dmessage "hi!  who called me?" how-about-a-stack-trace???)
@@ -5664,7 +5665,7 @@ It greps through all of my current rc files.")
               (message "wrapped...")
               (goto-char (point-min))
               ;; Only search up to where we started.
-              (unless (re-search-forward regexp point (not error))      
+              (unless (dp-re-search-forward regexp point (not error))      
                 (message "%s not found." regexp)
                 (goto-char opoint)
                 'not-found)))
@@ -5831,7 +5832,7 @@ Similar here means the same file-name with a user specified completion."
     (unless (looking-at open)
       (re-search-backward open left-limit))
     (setq start (1+ (match-end 0)))
-    (re-search-forward close right-limit)
+    (dp-re-search-forward close right-limit)
     (setq end (1- (match-beginning 0)))
     (buffer-substring start end)))
 
@@ -6705,7 +6706,7 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
                             ;; wrapping may result in artifacts.
                             (cdr match-region) 
                           (end-of-line)
-                          (if (re-search-forward end-regexp nil t)
+                          (if (dp-re-search-forward end-regexp nil t)
                               (progn
                                 (setq pair-matches (1+ pair-matches))
                                 (if shrink-wrap-p
@@ -8122,7 +8123,7 @@ I'm over stretching it to find it anywhere."
                  (not (looking-at (format "%s(" suffix))))
             (forward-char 1))
         (when (and entire-regexp-p
-                   (re-search-forward prefix limit t))
+                   (dp-re-search-forward prefix limit t))
           ;; We should be on the ( after the prefix.  Now, try to find the
           ;; closing paren.
           (if (setq limit (or (and (setq incr 2)
@@ -8135,11 +8136,11 @@ I'm over stretching it to find it anywhere."
                                    nil)
                               (and (setq incr 0)
                                    lazy-bastard-p
-                                   (re-search-forward (concat ")" suffix) 
+                                   (dp-re-search-forward (concat ")" suffix) 
                                                       (line-end-position) t))))
               (incf limit incr)
             (return-from dp-delimit-embedded-lisp (1+ (point))))))
-      (if (not (re-search-forward
+      (if (not (dp-re-search-forward
                 (or regexp
                     (dp-embedded-lisp-regexp-p regexp prefix suffix))
                 limit
@@ -8177,7 +8178,7 @@ I'm over stretching it to find it anywhere."
 ;; Hack to find any lines matching the tag delimited format:
 ;; (progn
 ;;   (if (save-excursion
-;;         (re-search-forward "<\\([^>]*\\)>\\(.*?\\)</\\1>" nil t))
+;;         (dp-re-search-forward "<\\([^>]*\\)>\\(.*?\\)</\\1>" nil t))
 ;;       (dp-all-match-strings)
 ;;     ("No match")))
 
@@ -8191,7 +8192,7 @@ E.g. <a-tag>...</a-tag> --> tag"
     (save-excursion
       (goto-char beg)
       (if (save-excursion
-            (re-search-forward "<\\([^>]*\\)>\\(.*?\\)</\\1>" nil t))
+            (dp-re-search-forward "<\\([^>]*\\)>\\(.*?\\)</\\1>" nil t))
           (match-string 1)))))
 
 (defun* dp-map-tag-delimited-strings (tag operator
@@ -8209,7 +8210,7 @@ Call OPERATOR for each match, sans delimiters."
     (goto-char beg)
     ;; !<@todo XXX Allow sexp to be spread over >1 lines.
     (let ((regexp (format "%s\\(.*\\)%s" opener closer)))
-      (while (re-search-forward regexp end t)
+      (while (dp-re-search-forward regexp end t)
         (apply operator (match-string 1) op-args))))))
 
 (defun* dp-eval-tagged-lisp (tag &optional beg end 
@@ -8334,7 +8335,7 @@ it can be referred to in other embedded strings."
      (if (save-excursion
            (goto-char beg)
            ;; !<@todo XXX use the function to build the :(
-           (re-search-forward (concat ".*"
+           (dp-re-search-forward (concat ".*"
                                        (dp-embedded-lisp-open-string
                                         no-delimitter))
                               (line-end-position) t))
@@ -8951,7 +8952,7 @@ If OBA is nil, use `obarray'."
     (when (re-search-backward bs (point-min) t)
       (forward-char)
       ;;(insert "<<<<<<<<<<<<<<<<<<<")
-      (re-search-forward fs (point-max))
+      (dp-re-search-forward fs (point-max))
       ;;(dmessage "match-string>%s<" (match-string 0))
       (replace-match lines))))
 
@@ -9568,7 +9569,7 @@ Set type of marker to TYPE (see `set-marker-insertion-type')."
 Beginning is the beginning of line of the first matching line and
 end is the end of the last matching line."
   (interactive "sregex: ")
-  (when (re-search-forward regex nil t)
+  (when (dp-re-search-forward regex nil t)
     (cons (if shrink-wrap-p
               (match-beginning 0)
             (line-beginning-position))
@@ -9576,7 +9577,7 @@ end is the end of the last matching line."
               (match-end 0)
             (beginning-of-line)
             (forward-line 1)
-            (while (re-search-forward regex (line-end-position) t)
+            (while (dp-re-search-forward regex (line-end-position) t)
               (forward-line 1))
             (forward-line -1)
             (if shrink-wrap-p
@@ -9586,7 +9587,7 @@ end is the end of the last matching line."
 (defun dp-re-search-forward-not-in-a-string (&rest re-search-args)
   "Search forward using RE-SEARCH-ARGS for a match not in a string."
   (let (mpos)
-    (while (and (setq mpos (apply 're-search-forward re-search-args))
+    (while (and (setq mpos (apply 'dp-re-search-forward re-search-args))
                 (dp-in-a-string)))
     mpos))
 
@@ -9606,9 +9607,9 @@ Returns the ultimate value BEG-END-CONS."
   beg-end-cons)
 
 (defun dp-look-ahead (&rest re-search-fwd-args)
-  "Do a re-search-forward inside a `save-excursion'."
+  "Do a dp-re-search-forward inside a `save-excursion'."
   (save-excursion
-    (apply 're-search-forward re-search-fwd-args)))
+    (apply 'dp-re-search-forward re-search-fwd-args)))
 
 (defun dp-choose-efl-insertion-buffer ()
   "Choose a buffer into which we will insert an external bookmark.
@@ -10232,7 +10233,7 @@ and for setting up a buffers mode (`dp-set-auto-mode')."
         close-paren-pos
         limit)
     (while (eq found-phone nil)
-      (if (not (re-search-forward name-regex))
+      (if (not (dp-re-search-forward name-regex))
           (progn
             (setq found-phone 'fell-off-end)
             nil)
@@ -10244,7 +10245,7 @@ and for setting up a buffers mode (`dp-set-auto-mode')."
                                       (dp-find-matching-paren)))
           (let ((limit close-paren-pos))
             ;; We must needs keep the main number first.
-            (if (not (re-search-forward "phone.*:" limit t))
+            (if (not (dp-re-search-forward "phone.*:" limit t))
                 ;; This entry has no phone number...
                 ;; Keep looking.
                 ;; !<@todo XXX Add 411f-next to pick-up search from the next
@@ -11028,7 +11029,7 @@ I'm not sure what modes are affected."
   (save-excursion
     (goto-char start)
     (save-match-data
-      (while (re-search-forward ":" limit t)
+      (while (dp-re-search-forward ":" limit t)
         (when (and (not (eq (dp-buffer-syntactic-context-hack-around) 'comment))
                    (not (eq (dp-buffer-syntactic-context-hack-around) 'string))
                    (not (looking-at "\\s-*[]]"))) ; Add more chars as needed.
@@ -11114,7 +11115,7 @@ I'm not sure what modes are affected."
   ;;  put one.
   (save-excursion
     (beginning-of-line)
-    (when (re-search-forward dp-py-cleanup-class-re (line-end-position) t)
+    (when (dp-re-search-forward dp-py-cleanup-class-re (line-end-position) t)
       (replace-match (format "\\1 \\2(%s)\\9"
                              (or (dp-non-empty-string (match-string 6)) 
                                  "object"))))))
@@ -11264,7 +11265,7 @@ passing SPECIAL-CHARS."
       ;; predicate) to be propagated.
       )
      (t (when (and (setq something-special-p
-                         (re-search-forward 
+                         (dp-re-search-forward 
                           (concat "^\\s-*"
                                   "\\(\\<\\("
                                   dp-py-block-keywords 
@@ -11378,7 +11379,7 @@ passing SPECIAL-CHARS."
   (save-excursion
     (set-buffer buffer)
     (goto-char pt)
-    (not (re-search-forward "\n" (point-max) t))))
+    (not (dp-re-search-forward "\n" (point-max) t))))
 
 (defun dp-plist-put0 (no-flip-p plist-in &rest props)
   "Just in case some day they turn plists into some fancy hash or something.
@@ -11606,7 +11607,7 @@ If it is indeed a script name <script>-it can be called interactively.")
                       (buffer-name))
     (return-from dp-script-it))
   (goto-char (point-min))
-  (unless (re-search-forward (regexp-quote interpreter) 
+  (unless (dp-re-search-forward (regexp-quote interpreter) 
                              (line-end-position) t)
     (unless (string-match interpreter "^#!")
       (insert "#!"))
@@ -11763,7 +11764,7 @@ An `undo-boundary' is done before the template is used."
                                           "")))))
          (unless (save-excursion
                    (goto-char (point-min))
-                   (re-search-forward hack-regexp nil t))
+                   (dp-re-search-forward hack-regexp nil t))
            (insert hack-string "\n"))
          ;; This needs to be conditionalized so we don't get more'n one.
          (if (bound-and-true-p dp-apel-time-stamp-enabled-p)
@@ -13177,7 +13178,7 @@ KEY-FUNC-LIST looks like \(key def key def...\)."
   (interactive)
   (find-file dp-current-mailer-config-file)
   (when (string= dp-current-mailer-config-file dp-generic-mail-code)
-    (re-search-forward "dp-current-mailer-config-file")
+    (dp-re-search-forward "dp-current-mailer-config-file")
     (dp-ding-and-message 
      "Set your mailer's config file name and re-run %s." this-command)))
 (dp-safe-alias 'emc 'dp-edit-current-mailer-config)
@@ -13363,7 +13364,7 @@ find-file\(-at-point) and then, if it fails, this function??"
   (setq regexp (concat "^\\.??[ %]+? .*?" regexp ".*? \\{2\\}"))
   (beginning-of-line)
   (let ((n-matches 0))
-    (while (re-search-forward regexp nil t)
+    (while (dp-re-search-forward regexp nil t)
       (Buffer-menu-delete)
       (incf n-matches))
     (when kill-immed-p
@@ -13510,7 +13511,7 @@ find-file\(-at-point) and then, if it fails, this function??"
   (insert prefix text suffix)
   (when next-item-search-regexp
     (end-of-line)
-    (if (re-search-forward next-item-search-regexp nil t)
+    (if (dp-re-search-forward next-item-search-regexp nil t)
         ()
       (dp-ding-and-message "No more >%s< items." next-item-search-regexp))))
 
@@ -13573,7 +13574,7 @@ find-file\(-at-point) and then, if it fails, this function??"
     ;;(dmessage "beg: %s, end: %s, start-num: %s, regexp: %s"
     ;;          beg end start-num regexp)
     (goto-char beg)
-    (while (re-search-forward regexp end t)
+    (while (dp-re-search-forward regexp end t)
       (setq new-num (concat open (int-to-string start-num) close)
             new-len (length new-num)
             new-fill-len (- width new-len)
@@ -13630,7 +13631,7 @@ find-file\(-at-point) and then, if it fails, this function??"
     (let ((block-start (line-beginning-position))
           (block-end (save-excursion
                        (end-of-line)
-                       (if (not (re-search-forward limit-text nil t))
+                       (if (not (dp-re-search-forward limit-text nil t))
                            (error (format "Cannot find end of block>%s<."
                                           limit-text))
                          ;;(beginning-of-line)  ; Include newline?
@@ -13782,7 +13783,7 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
   ;; that logic everywhere will be bad.
   ;; The fact that fontifying is largely based on regular expressions means
   ;; using the WSV regexp won't cause cats to live with dogs and vice-versa.
-  (when (re-search-forward dp-trailing-whitespace-regexp nil t)
+  (when (dp-re-search-forward dp-trailing-whitespace-regexp nil t)
     (goto-char (match-beginning 0))))
 
 (defun dp-whitespace-cleanup-line ()
@@ -13790,7 +13791,7 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
   (interactive)
   (save-excursion
     (beginning-of-line)
-    (when (re-search-forward dp-trailing-whitespace-regexp 
+    (when (dp-re-search-forward dp-trailing-whitespace-regexp 
                              (line-end-position) t)
       (replace-match ""))))
 
@@ -13940,7 +13941,7 @@ values must be passed in as stings."
   (setq-ifnil search-from (point-min)
               insert-at (point))
   (unless (dp-do-thither search-from nil
-                         (re-search-forward regexp limit t))
+                         (dp-re-search-forward regexp limit t))
     (goto-char insert-at)
     (insert text)))
 
@@ -14053,7 +14054,7 @@ SRCS = a.c \
          (end-marker (dp-mk-marker (cdr b&e) nil t)))
     (goto-char (car b&e))
     (dmessage "em: %s lep: %s" end-marker (line-end-position))
-    (while (re-search-forward sep end-marker t)
+    (while (dp-re-search-forward sep end-marker t)
       (dmessage "ms>%s<" (match-string 0) end-marker)
       (replace-match replacement)
       (goto-char (match-beginning 0))
@@ -14212,7 +14213,7 @@ whitespace eradication.")
   (let ((be (dp-region-or... beg end)))
     (save-excursion
       (goto-char (car be))
-      (while (re-search-forward regexp (cdr be) t)
+      (while (dp-re-search-forward regexp (cdr be) t)
         (replace-match replacement)))))
 
 (defun dp-dediff-region ()
@@ -14469,7 +14470,7 @@ BUFFER-FILENAME-REGEXP defaults to .*"
                                   (goto-char (point-min))
                                   ;; Make an igrep, etc, like buffer with
                                   ;; all matches and line numbers.
-                                  (when (re-search-forward regexp nil t)
+                                  (when (dp-re-search-forward regexp nil t)
                                     (list (point) buf))))))
                            (dp-choose-buffers-file-names 
                             buffer-filename-regexp)))))
@@ -14546,12 +14547,12 @@ BUFFER-FILENAME-REGEXP defaults to .*"
   (find-file (format status-file-name-format date-str))
   (when (dp-buffer-empty-p)
     (insert-file template-file-name)
-    (while (re-search-forward "@DATE@" nil t)
+    (while (dp-re-search-forward "@DATE@" nil t)
       (replace-match date-str))
-    (while (re-search-forward "@PROJ@" nil t)
+    (while (dp-re-search-forward "@PROJ@" nil t)
       (replace-match project-name))
     (goto-char (point-min))
-    (re-search-forward "0)")
+    (dp-re-search-forward "0)")
     (end-of-line)
     (newline-and-indent)
     (indent-relative)))

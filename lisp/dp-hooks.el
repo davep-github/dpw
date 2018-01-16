@@ -200,7 +200,9 @@ Make it buffer local since there can be >1 minibuffers.")
 ;; fsf    (define-key map [(meta ?g)] 'dp-minibuffer-grab-region) ; grab
 ;; fsf    (define-key map [(meta ?s)] 'dp-minibuffer-grab-region) ; snag
     (define-key map [(meta ?')] 'dp-copy-char-to-minibuf)  ; quote
-    (define-key map [(control tab)] 'dp-completion-at-point)
+    ;;; FSF change 
+    (when (dp-xemacs-p)
+      (define-key map [(control tab)] 'dp-completion-at-point))
     (define-key map [(meta ?=)] (kb-lambda 
                                    (enqueue-eval-event 
                                     'eval
@@ -958,7 +960,7 @@ part of a longer name."
 		   (looking-at namespace-qual)
                    (eq last-command 'dp-c++-mode-undo)
 		   ;; memq so we can check for other chars easily.
-		   (memq last-command-char '(?_ ?.))))
+		   (memq (dp-last-command-char) '(?_ ?.))))
           ;;Allows for easy undoing of name space insertion.
           (undo-boundary)
 	  (insert namespace-qual)
@@ -1533,7 +1535,7 @@ positive. ")
   (interactive "p")
   (let ((case-fold-search nil))
     (while (and (> num 0)
-                (re-search-forward dp-Manual-section-regexp nil t))
+                (dp-re-search-forward dp-Manual-section-regexp nil t))
       (backward-char)
       (decf num))))
 

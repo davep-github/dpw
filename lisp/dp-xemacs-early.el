@@ -151,7 +151,7 @@ The regexp is matched against the buffer name.")
   (dp-colorize-buffer-if 'dp-remote-file-p 
                          (or color 
                              (dp-bmm-get-color-for-buf-name (current-buffer)))))
-  
+
 ;; @todo experimenting with this.
 ;; similar functionality built in now.
 ;(require 'fdb)

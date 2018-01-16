@@ -235,12 +235,15 @@ Bind any keys in KEYS via `dp-define-keys'."
 ;fsf-- remove after testing. (fset 'dp-select-thing dp-select-thing)
 
 (global-set-key [(shift tab)] 'dp-indent-line-and-move-down)
+(global-set-key [(iso-left-tab)] 'dp-indent-line-and-move-down)
+(unless (dp-xemacs-p)
+  (global-set-key [<backtab>] 'dp-indent-line-and-move-down)
+)
 (global-set-key [(meta shift tab)] 'dp-delete-indentation-and-move-down)
-(global-set-key [(control tab)] 'dp-phys-tab)
 ;; @todo XXX C-M-tab conflicts with window manager stuff.
 ;; Move offending WM binding to <Win> key where it belongs.
 (global-set-key [(control meta tab)] 'dp-phys-tab)
-(global-set-key [(iso-left-tab)] 'dp-indent-line-and-move-down)
+(global-set-key [(control tab)] 'dp-phys-tab)
 (global-set-key [(meta iso-left-tab)] 'dp-delete-indentation-and-move-down)
 (global-set-key [(insert)] 'dp-yank)
 (global-set-key [(meta ?y)] 'dp-yank)

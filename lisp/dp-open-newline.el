@@ -189,7 +189,7 @@
                 (and (dp-in-cpp-construct-p)
                      (save-excursion
                        (beginning-of-line)
-                       (re-search-forward "\\\\$" (line-end-position) t))))
+                       (dp-re-search-forward "\\\\$" (line-end-position) t))))
             (dp-c-continue-comment-or-backslash)
             (dmessage "cob: dp-c-continue-comment-or-backslash")
             nil)
@@ -401,7 +401,7 @@
                        (and (not (looking-at (concat "\\s-*"
                                                      (dp-mk-c++-symbol-regexp
                                                       "struct\\|class"))))
-                            (not (re-search-forward
+                            (not (dp-re-search-forward
                                   "\\(^\\s-*#\\s-*[ie]\\)\\|\\([)\\\\:;,.}{*!@#$%^&:|]\\s-*$\\)\\|\\(^\\s-*$\\)"
                                   (line-end-position) t))))
                      (progn
@@ -415,7 +415,7 @@
                    (beginning-of-line)
                    (when (and
                           (save-excursion
-                            (not (re-search-forward
+                            (not (dp-re-search-forward
                                   dp-c-control-keywords
                                   (line-end-position) t)))
                           (save-excursion

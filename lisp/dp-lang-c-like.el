@@ -105,7 +105,7 @@
         (label-regxep "\\<\\(protected\\|private\\|public\\):"))
     (when (looking-at label-regxep)
       (forward-char 1))
-    (if (re-search-forward label-regxep nil t)
+    (if (dp-re-search-forward label-regxep nil t)
         (dp-push-go-back "dp-c++-goto-access-label" p)
       ;; Go back, just in case we moved.  Just go w/o seeing if we moved.
       (goto-char p))))
@@ -121,7 +121,7 @@
         (dp-c++-find-matching-paren)
         (forward-line 1)
         (beginning-of-line))
-    (when (re-search-forward (concat "^\\s-*"
+    (when (dp-re-search-forward (concat "^\\s-*"
                                      (dp-mk-c++-symbol-regexp "struct\\|class")
                                      "\\s-*\\(\\S-+\\)\\s-*")
                              (line-end-position) t)
@@ -298,7 +298,7 @@ Also, leave the region active."
            (dp-c-beginning-of-defun (- arg)))
           ((save-excursion
              (end-of-line)
-             (re-search-forward "^\\s-*{" nil t))
+             (dp-re-search-forward "^\\s-*{" nil t))
            (dp-push-go-back "`forward to { dp-c-end-of-defun'")
            (goto-char (match-end 0)))
           (t (call-interactively 'c-end-of-defun)
@@ -386,7 +386,7 @@ e.g.
 ;;nuke?                          "\\)")))
 ;;nuke?       (when (save-excursion
 ;;nuke?               (beginning-of-line)
-;;nuke?               (re-search-forward regex (line-end-position) t))
+;;nuke?               (dp-re-search-forward regex (line-end-position) t))
 ;;nuke?         (if (not (stringp action))
 ;;nuke?             (funcall action)
 ;;nuke?           (dp-c-end-of-line)
@@ -481,7 +481,7 @@ Other possibilities to ponder...
 Needs to be fixed when subclassing.")
 
 (defun dp-c-looking-at-struct-decl-p (&optional limit noerror count buffer)
-  (re-search-forward dp-c-struct-suffix-regexp limit noerror count buffer))
+  (dp-re-search-forward dp-c-struct-suffix-regexp limit noerror count buffer))
 
 (defun dp-c-looking-back-at-comma-killers-p ()
 "Look backwards for characters which should never be followed by a comma."
@@ -532,12 +532,12 @@ This doesn't suck too much.")
     ;; We can use the selector to make sure that we are always positioned at
     ;; the name we want to change. The following search will always find our
     ;; target..
-    (while (re-search-forward selector-pattern nil t)
+    (while (dp-re-search-forward selector-pattern nil t)
       (when (or (not query-p)
                 (y-or-n-p (format "Hump %s " (match-string 0))))
         (goto-char (match-beginning 0))
         (setq hump-end (dp-mk-marker(match-end 0)))
-        (while (re-search-forward "_\\(.\\)" hump-end t)
+        (while (dp-re-search-forward "_\\(.\\)" hump-end t)
           ;; x_y --> xY
           (replace-match (upcase (match-string 1)))
           (when capitalize-p
@@ -566,7 +566,7 @@ Will miss many cases and do it in comments, too. "
       (goto-char beg)
       (save-excursion
         ;; xY --> x_y
-        (while (re-search-forward "\\([a-z]\\)\\([A-Z]\\)" end t)
+        (while (dp-re-search-forward "\\([a-z]\\)\\([A-Z]\\)" end t)
           (replace-match (concat (match-string 1)
                                  "_"
                                  (downcase (match-string 2))))
@@ -699,7 +699,7 @@ Becomes:
   (interactive "r")
   (save-excursion
     (goto-char begin)
-    (re-search-forward "@\\S-+\\s-+" end t)))
+    (dp-re-search-forward "@\\S-+\\s-+" end t)))
 
 (defun dp-c*-in-doxy-comment (begin end)
   "Are we in a C/C++ comment which includes doxygen directives??"
@@ -827,7 +827,7 @@ aa bb(
           (progn
             (goto-char (match-end 0))
             (end-of-line))
-        (insert " {")
+	(insert " {")
         (newline-and-indent)
         (forward-line -1)
         (dp-c-fix-comment)
@@ -1051,12 +1051,12 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
                                         (dp-c-end-of-defun 1 (quote real-bof))
                                         (line-beginning-position))))
                  (anything-pos (save-excursion
-                                 (when (re-search-forward "[^ 	\n\r]" limit 
+                                 (when (dp-re-search-forward "[^ 	\n\r]" limit 
                                                           t)
                                    (line-beginning-position))))
                  (prot-level-pos (and anything-pos
                                       (save-excursion 
-                                        (when (re-search-forward 
+                                        (when (dp-re-search-forward 
                                                (concat 
                                                 "\\([ \t\n\r]*\\("
                                                 (dp-regexp-concat 
@@ -1414,7 +1414,7 @@ Also, it will move backwards into a closed class (ie has a };)."
   (if dont-skip-eos-junk
       (end-of-line)
     (beginning-of-line)
-    (if (re-search-forward (concat ".*?\\(" dp-c*-junk-after-eos* "\\)$")
+    (if (dp-re-search-forward (concat ".*?\\(" dp-c*-junk-after-eos* "\\)$")
                            (line-end-position) t)
         (goto-char (match-beginning 1))
       (end-of-line))))
@@ -1675,10 +1675,10 @@ Current annotations are:
 	      beg tmp)))
   (goto-char beg)
   (when say-dot
-    (while (re-search-forward "[.]" end t)
+    (while (dp-re-search-forward "[.]" end t)
       (replace-match "_DOT_"))
       (goto-char beg))
-  (while (re-search-forward "[^a-zA-Z0-9_\n]" end t)
+  (while (dp-re-search-forward "[^a-zA-Z0-9_\n]" end t)
     (replace-match "_")))
 
 (defun* dp-c-namify-string (string &optional (repl-str "_"))
@@ -1765,7 +1765,7 @@ XXX: use tempo for this?"
   (beginning-of-line)
   (insert-file fc-file)
   ;; goto cursor position if specified...
-  (when (re-search-forward "<cursor>" nil t)
+  (when (dp-re-search-forward "<cursor>" nil t)
     (replace-match "" nil nil)
     (message "done with %s" fc-file )))
 
@@ -1793,7 +1793,7 @@ XXX: use tempo for this?"
   (interactive "*")
   (insert-file digital-header-file)
   ;; goto cursor position if specified...
-  (when (re-search-forward "<cursor>" nil t)
+  (when (dp-re-search-forward "<cursor>" nil t)
     (replace-match "" nil nil)
     (message "done")))
 
@@ -1869,7 +1869,7 @@ By this I mean if I put a brace in the ``proper'' place (on a line by
 itself, under the keyword) move to K&R's incorrect place (after the
 control construct)"
   (interactive "*P")
-  (if (c-fast-in-literal)               ;(dp-in-a-string)
+  (if (c-in-literal)               ;(dp-in-a-string)
       (insert "{")
     (let ((syntax (dp-c-get-syntactic-region))
           (extra "")
@@ -1896,7 +1896,7 @@ control construct)"
       ;;(dmessage "(= last-command-char ?\{): %s\n" (= last-command-char ?\{))
       (if (and (memq 'knr-open-brace c-cleanup-list)
                (or t c-auto-newline)    ;@todo XXX look into this!
-               (= last-command-char ?\{)
+               (= (dp-last-command-char) ?\{)
                (not (c-in-literal))
                (or (and (eq syntax 'substatement)
                         (re-search-backward "\n[ \t]*{\n?[ \t]*" nil t))
@@ -1928,7 +1928,7 @@ control construct)"
             (and (<= pt (point))
                  (not (looking-at "\\s-*$"))))
       (dp-open-newline)))
-  (setq last-command-char ?\})
+  (setq (dp-last-command-char) ?\})
   (call-interactively 'c-electric-brace))
 
 (defun dp-delimit-func-args (&optional prefix suffix)
@@ -1939,7 +1939,7 @@ control construct)"
     (dp-c-beginning-of-statement)
     (if prefix (insert prefix))
     (let (point mark)
-      (if (re-search-forward "(" nil t)
+      (if (dp-re-search-forward "(" nil t)
           (progn
             (goto-char (match-beginning 0))
             (setq point (point))
@@ -1973,7 +1973,7 @@ control construct)"
         point)  
     (if (and prefix (not (looking-at (regexp-quote prefix))))
         (insert prefix " "))
-    (if (re-search-forward "(" nil t)
+    (if (dp-re-search-forward "(" nil t)
         (progn
           (setq point (goto-char (match-beginning 0)))  ;opening paren
           (when (not (looking-at ";"))
@@ -2035,7 +2035,7 @@ control construct)"
 I like the other things (e.g. cleanups) that are available in auto-newline
 mode but not the new lines themselves.  Hence, this."
   (interactive)
-  (if (eq last-command-char ?\;)
+  (if (eq (last-command-char ?\;))
       'stop
     ;; not a semi, keep trying.
     nil))
@@ -2162,7 +2162,7 @@ g()
     (unless rest-of-statement
       (end-of-line)
       (dp-c-beginning-of-statement))
-    (let* ((beg-end (if (re-search-forward "<<\\|>>" (line-end-position) t)
+    (let* ((beg-end (if (dp-re-search-forward "<<\\|>>" (line-end-position) t)
                         (dp-c-stack-iostream)
                       (if rest-of-statement
                           (dp-c-stack-rest-of-statement)
@@ -2193,7 +2193,7 @@ g()
         (end-of-line))
       (dp-c-beginning-of-statement)
       (setq beg (point))
-      (unless (re-search-forward "(" nil t)
+      (unless (dp-re-search-forward "(" nil t)
         (dp-ding-and-message "No opening paren in `dp-c-delimit-func-decl'.")
         (return-from dp-c-delimit-func-decl))
       ;; See if we moved into a different statement.
@@ -2353,7 +2353,7 @@ is done.")
             ;; to add an opening { if needed.
             (goto-char e)
             (beginning-of-line))
-        (while (re-search-forward ",\\|\\([^:]\\)\\(:\\)\\([^:].*,\\)"
+        (while (dp-re-search-forward ",\\|\\([^:]\\)\\(:\\)\\([^:].*,\\)"
                                   (line-end-position) t)
           ;; Handle constructor initializers.
           (if (string= (match-string 2) ":")
@@ -2373,7 +2373,7 @@ is done.")
                               ;; No match (ie failure) is not an option.
                               (search-forward ")" (line-end-position))))))
       (when (and add-opening-brace-p
-                 (re-search-forward ")" (line-end-position) t))
+                 (dp-re-search-forward ")" (line-end-position) t))
         (setq pos-after-ensured-brace
               (dp-c-ensure-opening-brace :force-newline-after-brace-p nil))))
     (goto-char open-paren-marker)
@@ -2386,7 +2386,7 @@ is done.")
       (c-indent-line))
     (beginning-of-line)
     (when (and (dp-c++-in-class-p)
-               (re-search-forward (format "%s::" (symbol-near-point))
+               (dp-re-search-forward (format "%s::" (symbol-near-point))
                                   (line-end-position) t))
       (dmessage "only remove this class's name")
         ;;;(replace-match "")
@@ -2434,7 +2434,7 @@ is done.")
     (dp-c-format-func-decl)
     (end-of-line)
     (dp-c-beginning-of-statement)
-    (while (not (re-search-forward ")\\s-*\\([;]\\)\\s-*$\\|{" ;??? Only ; ???
+    (while (not (dp-re-search-forward ")\\s-*\\([;]\\)\\s-*$\\|{" ;??? Only ; ???
                                    (line-end-position) t))
       (beginning-of-line)
       (join-line)
@@ -2501,7 +2501,7 @@ is done.")
   (save-match-data
     (save-excursion
       (goto-char start)
-      (or (re-search-forward "^\\s-*//" (line-end-position) t)
+      (or (dp-re-search-forward "^\\s-*//" (line-end-position) t)
           ;; Cheesy!
           (progn
             (goto-char start)

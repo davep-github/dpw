@@ -5,12 +5,14 @@
  ;; If there is more than one, they won't work right.
  '(display-time-mode t)
  '(global-hl-line-mode nil)
+ '(icomplete-mode t)
+ '(icomplete-separator ",")
  '(isearch-allow-scroll t)
  '(isearch-resume-in-command-history t)
  '(mouse-yank-at-point t)
  '(package-selected-packages
    (quote
-    (notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
+    (hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
  '(safe-local-variable-values (quote ((folding-internal-margins) (folded-file . t))))
  '(save-place-mode t)
  '(scroll-bar-mode (quote right))

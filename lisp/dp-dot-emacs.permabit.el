@@ -51,18 +51,18 @@
   (interactive)
   (goto-char (point-min))
   ;; eg Host:	excuses-and-accusations.permabit.com
-  (when (re-search-forward "^Host:.*$" nil t)
+  (when (dp-re-search-forward "^Host:.*$" nil t)
     (dp-kill-entire-line)
     (dp-kill-entire-line))
-  (when (re-search-forward "^\\s-*//spec/\\.\\.\\." nil t)
+  (when (dp-re-search-forward "^\\s-*//spec/\\.\\.\\." nil t)
     (dp-kill-entire-line))
   ;; from   //eng/... //davep-cr/eng/...
   ;; to     //eng/albireo/... //davep-ALB-537/...
   (goto-char (point-min))
-  (when (re-search-forward "//eng/\\.\\.\\." nil t)
+  (when (dp-re-search-forward "//eng/\\.\\.\\." nil t)
     (replace-match "//eng/albireo/..."))
   (goto-char (point-min))
-  (when (re-search-forward " //davep-\\([^/]*\\)/eng/" nil t)
+  (when (dp-re-search-forward " //davep-\\([^/]*\\)/eng/" nil t)
     (replace-match " //davep-\\1/")))
 
 (defvar dp-uds-index-command-regexp "/[^/]* --index.*"
@@ -80,7 +80,7 @@ And just the command name sans path to make the command name more visible.")
   (interactive "P")
   (if backwards-p
       (re-search-backward dp-uds-index-command-regexp nil)
-    (re-search-forward dp-uds-index-command-regexp nil)))
+    (dp-re-search-forward dp-uds-index-command-regexp nil)))
 
 (defun dp-uds-perl-hide-logging ()
   "Hide logging statements ($log->) for clarity.

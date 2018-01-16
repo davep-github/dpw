@@ -88,7 +88,7 @@ be deactivated when doing a beginning|end followed by an end|beginning."
 
 (defun dp-re-search-forward (regexp &optional limit noerror count buffer)
   (interactive)
-  (re-search-forward regexp limit noerror count buffer))
+  (dp-re-search-forward regexp limit noerror count buffer))
 
 (defun dp-isearch-yank-char (&optional arg)
   (isearch-yank 'forward-char))
@@ -146,6 +146,7 @@ be deactivated when doing a beginning|end followed by an end|beginning."
   (call-interactively 'wconfig-delete-pop))
 
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Nicked from Emacs.
 
@@ -159,6 +160,29 @@ be deactivated when doing a beginning|end followed by an end|beginning."
      (if help-xref-following
          (current-buffer)
        (get-buffer-create "*Help*")))))
+
+(defun dp-hl-highlight-one ()
+  "Just highlight the current line.
+Stolen from `global-hl-line-highlight' and removed the `global-hl-line-highlight'
+predicate.  
+XXX @todo It might be better to set that in a `let' and the call the original."
+  (interactive)
+  (unless global-hl-line-overlay
+    (setq global-hl-line-overlay (hl-line-make-overlay))) ; To be moved.
+  (unless (member global-hl-line-overlay global-hl-line-overlays)
+    (push global-hl-line-overlay global-hl-line-overlays))
+  (overlay-put global-hl-line-overlay 'window
+	       (unless global-hl-line-sticky-flag
+		 (selected-window)))
+  (hl-line-move global-hl-line-overlay))
+
+(defun dp-global-hl-line-unhighlight ()
+  "Unhighlight a line.
+XXX @todo Do we want to make it only act on the current line?
+Currently it removes it regardless of the line we're on."
+  (interactive)
+  (when global-hl-line-overlay
+    (delete-overlay global-hl-line-overlay)))
 
 ;;; End nickage.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

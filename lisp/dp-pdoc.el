@@ -38,7 +38,7 @@ Use cc-mode syntax to find the limits."
   (set-mark (point))
   ;; find the end of the def... the matching close paren after
   ;; the first open paren
-  (re-search-forward "(")		; it must be there
+  (dp-re-search-forward "(")		; it must be there
   (goto-char (match-beginning 0))
   (dp-find-matching-paren))
   
@@ -89,7 +89,7 @@ Use cc-mode syntax to find the limits."
 	(save-excursion
 	  (goto-char (point-min))
 	  (save-match-data
-	    (if (re-search-forward 
+	    (if (dp-re-search-forward 
 		 "^\\s-*/?\\*\\s-*pdoc-inc-dir:\\s-*\\([^ 	]+\\)" nil t)
 		(buffer-substring (match-beginning 1) (match-end 1))
 	      nil)))))

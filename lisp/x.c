@@ -26,7 +26,7 @@ int func(int a,
   } else {
       bubba_is_a_good_man();
 }
-
+  FILE *bubba;
 int fuck_fuck_fuck;
 /* Comment */
       /* comment */
@@ -72,6 +72,13 @@ typedef enum anenum_e
   } /*  @todo:debug:REMOVE 2003-08-09T03:14:55  */
 
 
+  while (1) {
+	  if eff(u) {
+			  blah,
+				  
+			  
+	  
+	  
   // a one line comment
 
   a++;				/*  */

@@ -126,7 +126,7 @@ This mode uses tabs, so the line too long regexp fails.")
   (dp4-form-hook-common '(p4-changeset-font-lock-keywords
                           t nil nil backward-paragraph))
   (goto-char (point-min))
-  (re-search-forward "^Description:")
+  (dp-re-search-forward "^Description:")
   (forward-line 1)
   (back-to-indentation)
   (dp-push-go-back "Easy return to change description")
@@ -243,7 +243,7 @@ This mode uses tabs, so the line too long regexp fails.")
   "Deduce the perforce form type based on the header it conveniently inserts."
   (save-excursion
     (goto-char (point-min))
-    (when (re-search-forward 
+    (when (dp-re-search-forward 
            "^# A Perforce \\(Client\\|Change\\) Specification." nil t)
       (match-string 1))))
 
@@ -268,7 +268,7 @@ Things which are edited with ec-p4(dp) which uses this as the value for
   "Nuke the ever painful, veritably unused Host: line."
   (interactive)
   (goto-char (point-min))
-  (when (re-search-forward "^Host:.*$" nil t)
+  (when (dp-re-search-forward "^Host:.*$" nil t)
     (dp-kill-entire-line)
     (dp-kill-entire-line)))
 

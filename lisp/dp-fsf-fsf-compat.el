@@ -328,8 +328,6 @@ argument to `add-hook'."
 (unless (fboundp 'gettext)
   (defalias 'gettext 'identity))
 
-(defalias 'dp-completion-at-point 'completion-at-point)
-
 (defun dp-push-window-config ()
   (interactive)
   )

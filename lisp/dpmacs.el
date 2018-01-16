@@ -629,7 +629,7 @@ And their failure occurs way too often."
     (beginning-of-line)
     (let ((b (point))
           e)
-        (re-search-forward ",")
+        (dp-re-search-forward ",")
         (setq e (1- (point)))
         (buffer-substring b e))))
 

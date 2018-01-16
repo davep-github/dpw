@@ -768,7 +768,7 @@ Otherwise don't write it."
     (set-buffer (find-file-noselect abbrev-file))
     (backup-buffer)
     (goto-char (point-min))
-    (if (re-search-forward 
+    (if (dp-re-search-forward 
          (dp-regexp-concat (list dp-preserve-above-monition
                                  dp-begin-generated-section-declaration)
                            nil

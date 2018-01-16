@@ -557,14 +557,14 @@ Does not insert any text."
     ;; squish the item for display by squeezing all runs of WS to a
     ;; single space (if requested)
     (when squish
-      (while (re-search-forward dp-sel2:squish-space-regexp nil t)
+      (while (dp-re-search-forward dp-sel2:squish-space-regexp nil t)
 	(if use-squish-face
 	    (dp-make-extent (match-beginning 0) (match-end 0) 
 			    'dp-sel2
 			    'face 'dp-sel2:squish-space-face))
 	(replace-match dp-sel2:squish-white-space-string nil nil))
       (goto-char start)
-      (while (re-search-forward dp-sel2:squish-newline-regexp nil t)
+      (while (dp-re-search-forward dp-sel2:squish-newline-regexp nil t)
 	(if use-squish-face
 	    (dp-make-extent (match-beginning 0) (match-end 0) 
 			    'dp-sel2
@@ -690,7 +690,7 @@ item 12."
   (interactive)
   (setq dp-sel2:preserve-index t)
 ;  (message "0i: %S" dp-sel2:index)
-;  (message "0c: %S" last-command-char)
+;  (message "0c: %S" (dp-last-command-char))
 ;  (message "0c2:%S" last-input-char)
 ;  (message "0k: %s" (this-command-keys))
   (setq dp-sel2:index (cons last-input-char dp-sel2:index))
@@ -860,8 +860,8 @@ yank ring."
                                          (equal (event-modifiers 
                                                  last-input-event)
                                                 (list 'meta)))
-                                    (and last-command-char
-                                         (= last-command-char ?Y))))))
+                                    (and (dp-last-command-char)
+                                         (= (dp-last-command-char) ?Y))))))
                       (if region
                           (insert region)
                         ;; not enough... ring will not be rotated correctly

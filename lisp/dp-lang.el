@@ -98,7 +98,7 @@
   (list (dp-mk-marker                   ; Find beginning 
          (save-excursion
            (goto-char (point-min))
-           (if (not (re-search-forward "^#!.*python"
+           (if (not (dp-re-search-forward "^#!.*python"
                                        (line-end-position)
                                        t))
                ;; No interpreter line.  Use `point'
@@ -143,7 +143,7 @@
     (let ((search-fun (or search-fun
                           (if backward-p 
                               're-search-backward 
-                            're-search-forward))))
+                            'dp-re-search-forward))))
       (if (funcall 
            search-fun
            "\\(^def\\s-+\\)\\|\\(^\\s-+\\(def\\s-+\\)\\)\\|\\(^\\s-*class\\)" 
@@ -420,7 +420,7 @@ Otherwise non-nil."
             (point))
         ;; No comment... use last non-blank character
         (beginning-of-line)
-        (when (re-search-forward "\\s-*$" (line-end-position) nil)
+        (when (dp-re-search-forward "\\s-*$" (line-end-position) nil)
           (match-beginning 0))))))
 
 (defun* dp-py-goto-end-of-code (&rest rest &key q &allow-other-keys)

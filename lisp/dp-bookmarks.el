@@ -147,7 +147,7 @@ Add each bookmark-name to the list of bookmarks."
   (save-excursion
     (unless from-point-p
       (goto-char (point-min)))
-    (while (re-search-forward (concat "\\(<:<::>\\)"
+    (while (dp-re-search-forward (concat "\\(<:<::>\\)"
                                       "\\|"
                                       "\\(<:\\s-*\\(.*?\\)\\s-*:>\\)")
                               nil t)

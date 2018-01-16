@@ -28,7 +28,7 @@
 (defun dp-get-next-cpp-cond ()
   "Find and return the next cpp conditional statement"
   (save-match-data
-    (re-search-forward dp-cpp-cond-regexp)
+    (dp-re-search-forward dp-cpp-cond-regexp)
     (match-string 0)))
 
 (defvar dp-colorize-ifdefs-ret nil)

@@ -70,6 +70,16 @@ Some are ephemeral and some are longer term."
     (warn "dropping dir >%s< isn't." subdir ))
   subdir)
 
+;; Nicked from GNU Emacs 25.3.2 (x86_64-pc-linux-gnu, X toolkit, Xaw
+;; scroll bars) of 2018-01-02's
+;; cc-defs.
+(defmacro dp-last-command-char ()
+  ;; The last character just typed.  Note that `last-command-event' exists in
+  ;; both Emacs and XEmacs, but with confusingly different meanings.
+  (if (featurep 'xemacs)
+      'last-command-char
+    'last-command-event))
+
 ;; pending-delete-mode causes typed text to replace a selection,
 ;; rather than append -- standard behavior under all window systems
 ;; nowadays. (copped from sample.init.el)

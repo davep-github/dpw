@@ -186,7 +186,7 @@ e.g. URLs.")
 (defun dpj-alt (limit n max-colors)
   (catch 'done
     (let (n-th)
-      (while (re-search-forward dpj-alt-regexp limit t)
+      (while (dp-re-search-forward dpj-alt-regexp limit t)
         (setq n-th (mod (truncate (string-to-int (match-string 1)))
                         max-colors))
 ;         (dmessage "ms1>%s<, s2i: %s, n: %s, n-th: %s" 
@@ -200,7 +200,7 @@ e.g. URLs.")
 ; (defun dpj-alt (limit n)
 ;   (catch 'done
 ;     (save-excursion
-;       (while (re-search-forward dpj-alt-regexp limit t)
+;       (while (dp-re-search-forward dpj-alt-regexp limit t)
 ; 	(setq l-and-1 (logand (line-number) 1))
 ; 	(if (= n (logand (line-number) 1))
 ; 	    (throw 'done t)))
@@ -642,7 +642,7 @@ RETURNS:
  nil on failure (e.g: no more {files|topics}
  non-nil on success."
   (interactive (dpj-read-topic+skip+count))
-  (if (dpj-goto-topic 're-search-forward 'forward-char 
+  (if (dpj-goto-topic 'dp-re-search-forward 'forward-char 
 		      skip-current topic-re count skip-re)
       (progn
 	;;(dmessage "topic, f>%s<" (dpj-topic-match-string))
@@ -1511,7 +1511,7 @@ the search with the current journal file."
 		 (string= grep-re ".*")))
 	(save-excursion
 	  (dp-beginning-of-buffer)
-	  (while (re-search-forward grep-re nil t)
+	  (while (dp-re-search-forward grep-re nil t)
 	    (dp-make-extent (match-beginning 0) (match-end 0) 
 			    'dpj-view-topic
 			    'face 'dpj-view-grep-hit-face))))
@@ -1915,7 +1915,7 @@ Also will use prefix-arg as default NUM-MONTHS."
 
 (defun dpj-goto-todo-or-ai-forward (&optional topic-re 
 					      skip-current count skip-re)
-  (dpj-goto-todo-or-ai 're-search-forward topic-re
+  (dpj-goto-todo-or-ai 'dp-re-search-forward topic-re
 		       skip-current count skip-re))
 
 (defun dpj-goto-todo-or-ai-backward (&optional topic-re 
@@ -2184,7 +2184,7 @@ The string is in my embedded lisp format."
 	(setq done nil)
 	(goto-char (dpj-topic-info-record-start topic-info))
 	(while (and (not done)
-		    (re-search-forward grep-re 
+		    (dp-re-search-forward grep-re 
 				       (dpj-topic-info-end topic-info) t))
 	  (if just-remember-records 
 	      (setq matching-records (cons topic-info matching-records)
@@ -2243,7 +2243,7 @@ The string is in my embedded lisp format."
       (insert "\n" new "\n"))
     (setq insert-end (point))
     (if (and (re-search-backward "[^ 	\n]" nil t)
-	     (re-search-forward "[ 	\n]+" nil t))
+	     (dp-re-search-forward "[ 	\n]+" nil t))
 	(replace-match "\n\n"))
     ))
 
@@ -2586,7 +2586,7 @@ End is following line with less (or no) indentation."
 	(setq end (point))
 	(catch 'done
 	  (while t
-	    (unless (re-search-forward prefix (line-end-position) t)
+	    (unless (dp-re-search-forward prefix (line-end-position) t)
 	      (throw 'done nil))
 	    ;; space only/empty line???
 	    (if (looking-at "^[ 	]*$")
@@ -2718,7 +2718,7 @@ NO-SUMMARY-P controls whether we insert a summary indicator
     (if query
 	;; use query replace so we get to use all of its features
 	(query-replace-regexp topic-re "\\2")
-      (while (re-search-forward topic-re nil t)
+      (while (dp-re-search-forward topic-re nil t)
 	;; use marker so we go to the right place after deletions
 	;; change char positions.
 	(setq m-end (point-marker))

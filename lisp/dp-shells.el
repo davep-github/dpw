@@ -98,7 +98,7 @@ prompt.  We don't want to stomp on them.")
                         else-func)))
 
 (defun dp-shells-prompt-font-locker (limit)
-  (re-search-forward dp-shells-prompt-font-lock-regexp limit t))
+  (dp-re-search-forward dp-shells-prompt-font-lock-regexp limit t))
 
 (defvar dp-shell-mode-font-lock-keywords
   ;; this font-lock def is basically the shell stuff + the

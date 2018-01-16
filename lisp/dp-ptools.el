@@ -723,7 +723,7 @@ do not indent the newly inserted comment block."
       ;; find the class name
       ;; @todo templates *WILL* break this.
       ;; Apparently not.
-      (re-search-forward 
+      (dp-re-search-forward 
        "^\\s-*\\(enum\\|class\\|struct\\)\\s-+\\(\\S-+?\\)\\s-*\\(:\\|{\\|$\\)"))
     (let ((class-name (match-string 2)))
       (when template-p
@@ -786,13 +786,13 @@ so each mode can have its own logic."
                                 (if dont-stop-at-bol-p
                                     nil
                                   (line-beginning-position)) t))
-    (re-search-forward dp-p4-location-regexp-ext (line-end-position) t)
+    (dp-re-search-forward dp-p4-location-regexp-ext (line-end-position) t)
 ;;     (message "p4 loc: %s, ms0: %s ms1: %s ms2: %s"
 ;;              (match-string 1)
 ;;              (match-string 0)
 ;;              (match-string 1)
 ;;              (match-string 2))
-    ;; `re-search-forward' should return non-nil, but this ensures the proper
+    ;; `dp-re-search-forward' should return non-nil, but this ensures the proper
     ;; return value in case there is ever any code added before the end of
     ;; the `when'
     t))
