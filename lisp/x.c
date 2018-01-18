@@ -61,21 +61,21 @@ blah_t;
 
 typedef enum anenum_e
 {
-  /*
-   * boo, a comment.
-   * and another line in it.
-   * yaya, misplled werdz
-   */
+	/*
+	 * boo, a comment.
+	 * and another line in it.
+	 * yaya, misplled werdz
+	 */
 
-  { /*  @todo:debug:REMOVE 2003-08-09T03:14:55  */
-    yaya();
-  } /*  @todo:debug:REMOVE 2003-08-09T03:14:55  */
+	{		/*  @todo:debug:REMOVE 2003-08-09T03:14:55  */
+		yaya();
+	} /*  @todo:debug:REMOVE 2003-08-09T03:14:55  */
 
 
-  while (1) {
-	  if eff(u) {
-			  blah,
-				  
+	while (1) {
+		if eff(u) {
+				blah,
+
 			  
 	  
 	  

@@ -27,7 +27,7 @@ KEYS is a list: \(key def key2 def2 ...\)."
   (if kmap
       (loop for (key def) on keys by 'cddr 
         do (define-key kmap key def))     
-    (dp-define-buffer-local-keys keys nil nil "ddk")))
+    (dp-define-buffer-local-keys keys nil nil "dp-define-keys")))
 
 (defun dp-define-local-keys (keys &optional no-error-p)
   "Call `dp-define-keys' passing KEYS using `current-local-map' as KMAP."
@@ -237,7 +237,7 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(shift tab)] 'dp-indent-line-and-move-down)
 (global-set-key [(iso-left-tab)] 'dp-indent-line-and-move-down)
 (unless (dp-xemacs-p)
-  (global-set-key [<backtab>] 'dp-indent-line-and-move-down)
+  (global-set-key [backtab] 'dp-indent-line-and-move-down)
 )
 (global-set-key [(meta shift tab)] 'dp-delete-indentation-and-move-down)
 ;; @todo XXX C-M-tab conflicts with window manager stuff.

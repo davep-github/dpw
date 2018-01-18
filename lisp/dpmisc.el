@@ -4902,7 +4902,8 @@ to old-alist-var."
 
 (defun* dp-append-to-alist-list (alist-sym key new-elements
                                  &optional (initial-elements 
-                                            (cdr (assoc key (symbol-value alist-sym)))))
+                                            (cdr (assoc key
+							(symbol-value alist-sym)))))
   "Append NEW-ELEMENTS to ALIST-SYM's KEY value.
 ALIST-SYM's format is: ((k1 kv1 kv2...) (kn kn1 kn2...))."
   (unless (listp new-elements)
