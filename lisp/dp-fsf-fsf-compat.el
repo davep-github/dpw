@@ -341,6 +341,16 @@ argument to `add-hook'."
 I need to look at filtered-frame-list to use device if non-nil."
   (frame-list))
 
+(defun map-extents (&rest r)
+  )
+
+(defun window-displayed-height (&optional window)
+  (window-buffer-height (or window (frame-selected-window))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; Liberated from XEmacs.
 (defun read-function (prompt &optional default-value)
   "Read the name of a function and return as a symbol.
