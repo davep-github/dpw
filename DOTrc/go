@@ -19,6 +19,13 @@ Ee|inb|                 ${davep}/inb/
 E|rc|                   ${davep}/.rc/
 Ee|bin|			${davep}/bin/
 Ee|lisp|		${davep}/lisp/
+Ee|fsffsfcompat|ffc|    ${lisp}/dp-fsf-fsf-compat.el
+Ee|xemacsfsfcompat|xfc| ${lisp}/dp-xemacs-fsf-compat.el
+Ee|greads|       /home/dpanarit/work/log/vg10-ecc/garbage-reads/
+Ee|bldrust|rustbld|       /home/dpanarit/local/build/rust/
+Ee|lispcontrib|lcont|lcon|       /home/dpanarit/lisp/contrib/
+Ee|emlisp|       /home/dpanarit/local/share/emacs/25.3/lisp/
+
 Ee|dpbuild|dpbld|       ${davep}/davep/build/
 Ee|usdoc|usd|           /usr/share/doc/
 
