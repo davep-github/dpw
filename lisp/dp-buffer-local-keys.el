@@ -39,13 +39,11 @@
       (message "keymap: %s" keymap)
       (when keymap
 	(setq dp-bl-keymaps (cons (cons name keymap) dp-bl-keymaps))
-	(if (member name dp-bl-keymap-names)
-	    (message "Skipping map>%s<" name)
-	  (message "Using map>%s<" name)
-	  (setq dp-bl-keymap-names (cons name dp-bl-keymap-names))
-	  (loop for (key def) on keys by 'cddr do
-		(define-key keymap key def))
-	  (use-local-map keymap))))))
+	(message "Using map>%s<" name)
+	(setq dp-bl-keymap-names (cons name dp-bl-keymap-names))
+	(loop for (key def) on keys by 'cddr do
+	      (define-key keymap key def))
+	(use-local-map keymap)))))
 
 (provide 'dp-buffer-local-keys)
 (message "dp-buffer-localkeys loading...done")

@@ -562,7 +562,7 @@ dir-tracker has become lost.
 (defun* dp-shell-line-mode-bindings (&optional (variant dp-default-variant)
                                     (bind-position-aware-keys-p t))
   "Bind some shell-mode keys."
-  (when bind-position-aware-keys-p
+  (when (and nil bind-position-aware-keys-p)
     (dp-define-buffer-local-keys 
      `([(meta ?p)] (lambda ()
                      (interactive)
@@ -2652,7 +2652,7 @@ displayed."
   (when args
     (if (nCu-p)
         (setq args (concat (read-string "Args? " "" nil "") " ")
-              cols (read-number "Cols? " t 78))))
+              cols (dp-read-number "Cols? " t 78))))
   (save-excursion
     (let* ((shell-buf (if (posix-string-match "\\*.*sh\\(ell\\)?.*\\*"
                                               (buffer-name))

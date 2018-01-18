@@ -6649,7 +6649,7 @@ The region is determined by `dp-region-or...'."
          (others (if prompt-for-others
                      (list
                       (progn
-                        (read-number "color index: " 'ints-only 1) ; color
+                        (dp-read-number "color index: " 'ints-only 1) ; color
                         (cond
                          ((not current-prefix-arg) nil)
                          ((eq current-prefix-arg '-) '-)
@@ -7565,7 +7565,7 @@ If region is active, set width to that of the longest line in the region."
   (interactive (list (or
                       (and (dp-mark-active-p)
                            (1+ (car (dp-longest-line-in-region))))
-                      (read-number 
+                      (dp-read-number 
                        (format 
                         "width(current: %s; previous: %s; 0 for max: %s): "
                         (frame-width)
@@ -7588,7 +7588,7 @@ If region is active, set width to that of the longest line in the region."
   "*Initial frame height.")
 
 (defun dp-set-frame-height (&optional height frame)
-  (interactive (list (read-number 
+  (interactive (list (dp-read-number 
                        (format "height(current: %s; default: %s): " 
                                (frame-height) dp-sfh-height )
                        'ints-only (format "%s" dp-sfh-height))))
@@ -10040,8 +10040,14 @@ current window."
                                               (lambda (buf)
                                                 (bury-buffer)))))
 
-(dp-deflocal dp-simple-buffer-select-p t
+(dp-deflocal dp-simple-buffer-select-p 'trivial
   "Do we want to use the A.S. routine to guess what window we want our buffer to display in or do it simply?")
+
+;fsf -- how to handle dis buf (defun dp-display-buffer-select (buffer &optional not-this-window-p 
+;fsf -- how to handle dis buf 					override-frame shrink-to-fit
+;fsf -- how to handle dis buf 					other-window-p)
+;fsf -- how to handle dis buf   (display-buffer--maybe-pop-up-frame-or-window buffer 
+  
 
 (defun dp-display-buffer-select (buffer &optional not-this-window-p 
                                  override-frame shrink-to-fit other-window-p)
@@ -10055,9 +10061,10 @@ current window."
        ;; here screws that up, so force it here.
        ;; But do try if the call has specified anything "extra."
        (dp-display-buffer-if-visible buffer))
-      (if (and dp-simple-buffer-select-p
-               (not (or not-this-window-p override-frame shrink-to-fit 
-                        other-window-p)))
+      (if (or (eq dp-simple-buffer-select-p 'trivial)
+	      (and dp-simple-buffer-select-p
+		   (not (or not-this-window-p override-frame shrink-to-fit 
+			    other-window-p))))
           (switch-to-buffer buffer)
         (let* ((orig-frame (window-frame (dp-get-buffer-window (current-buffer))))
                (one-window-p (one-window-p 'NOMINIBUFFER))
@@ -13288,10 +13295,10 @@ find-file\(-at-point) and then, if it fails, this function??"
                 ;; DEST-COL
                 (cond 
                  ((Cu--p)
-                  (read-number "dest col: "))
+                  (dp-read-number "dest col: "))
                  ((dp-region-active-p)
                   'compute)
-                (t (read-number "dest col: ")))))
+                (t (dp-read-number "dest col: ")))))
   (dp-mark-line-if-no-mark)
   (let ((compute-dest-col-p (eq dest-col 'compute))
         beg-end num-repeats)

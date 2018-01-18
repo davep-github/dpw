@@ -336,6 +336,37 @@ argument to `add-hook'."
   (interactive "p")
   )
 
+(defun device-frame-list (&optional device)
+  "XEmacs predicates on device.
+I need to look at filtered-frame-list to use device if non-nil."
+  (frame-list))
+
+;; Liberated from XEmacs.
+(defun read-function (prompt &optional default-value)
+  "Read the name of a function and return as a symbol.
+Prompts with PROMPT. By default, return DEFAULT-VALUE."
+  (intern (completing-read prompt obarray 'fboundp t nil
+			   'function-history default-value)))
+(defun dp-read-number (prompt &optional integers-only default-value)
+  "Read a number from the minibuffer, prompting with PROMPT.
+If optional second argument INTEGERS-ONLY is non-nil, accept
+ only integer input.
+If DEFAULT-VALUE is non-nil, return that if user enters an empty
+ line."
+  (let ((pred (if integers-only 'integerp 'numberp))
+	num)
+    (while (not (funcall pred num))
+      (setq num (condition-case ()
+		    (let ((minibuffer-completion-table nil))
+		      (read-from-minibuffer
+		       prompt (if num (prin1-to-string num)) nil t
+		       nil nil default-value))
+		  (input-error nil)
+		  (invalid-read-syntax nil)
+		  (end-of-file nil)))
+      (or (funcall pred num) (beep)))
+    num))
+
 ;;
 ;; set up a titlebar format.  Various window things will look for this in
 ;; order to jump to the main emacs window.

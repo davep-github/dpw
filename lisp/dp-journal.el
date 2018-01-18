@@ -631,7 +631,7 @@ Vals besides topic-re are mainly for debugging."
 	(when (>= prefix-val 16)
 	  (setq skip-current (y-or-n-p "skip current "))
 	  (when (>= prefix-val 64)
-	    (setq count (read-number "num: " t 1))
+	    (setq count (dp-read-number "num: " t 1))
 	    (when (>= prefix-val 256)
 	      (setq skip-re (read-from-minibuffer "skip-re: ")))))))
     (list topic-re skip-current count skip-re)))
@@ -1393,8 +1393,8 @@ The buf is read-only.  It uses the following keymap:
 			    "")
 			  ": ")))
     (delq nil (list
-	       (read-number n-prompt 'integers-only 
-                            (or num-default 1))
+	       (dp-read-number n-prompt 'integers-only 
+			       (or num-default 1))
                (unless no-re1
                  (dpj-read-topic))
                (if get-re2
@@ -1565,7 +1565,8 @@ Also will use prefix-arg as default NUM-MONTHS."
 
 (defun dpj-view-todos (number-of-months)
   "View all todos in preceding NUMBER-OF-MONTHS files in a view-buf."
-  (interactive (list (read-number "Number of months(1): " 'integers-only "1")))
+  (interactive (list (dp-read-number
+		      "Number of months(1): " 'integers-only "1")))
   (let ((topic-re "n/a"))		;remove use of topic-re in view code
     (dpj-view-topics number-of-months 
 		     'dpj-find-todos-for-view-topic
@@ -3009,7 +3010,7 @@ exist to move from one topic record to the next or previous.
 			     '(dp-journal-mode-font-lock-keywords t))
   (font-lock-set-defaults)
   
-  (make-local-hook 'after-save-hook)
+  (dp-make-local-hook 'after-save-hook)
   (add-hook 'after-save-hook (function 
 			      (lambda ()
 				(dpj-merge-all-topics nil 'write-em)))

@@ -187,22 +187,19 @@ Make it buffer local since there can be >1 minibuffers.")
     ;; This is `dp-tag-pop' but it can be a reflexive response to an
     ;; inadvertent `dp-tag-find'.
     (define-key map [(meta ?,)] 'minibuffer-keyboard-quit)
-;   (dmessage "current-keymaps>%s<\nminibuffer-local-isearch-map>%s<" 
-;             (current-keymaps) minibuffer-local-isearch-map)
-;   (dmessage "equal?>%s<, major-mode>%s<\nminor-mode-alist>%s<" 
-;             (equal (car (current-keymaps))
-;                    minibuffer-local-isearch-map)
-;             major-mode minor-mode-alist)
     (define-key map [(control ?p)] 'previous-complete-history-element)
     (define-key map [(meta ?p)] 'dp-parenthesize-region)
     (define-key map [(control ?n)] 'next-complete-history-element)
-;; fsf    (define-key map [(control ?m)] 'dp-minibuffer-grab-region)  ; <mini>buffer
-;; fsf    (define-key map [(meta ?g)] 'dp-minibuffer-grab-region) ; grab
-;; fsf    (define-key map [(meta ?s)] 'dp-minibuffer-grab-region) ; snag
+;;; fsf no like v
+    ;; (define-key map [(control ?m)] 'dp-minibuffer-grab-region)  ; <mini>buffer
+    ;; (define-key map [(meta ?g)] 'dp-minibuffer-grab-region) ; grab
+    ;; (define-key map [(meta ?s)] 'dp-minibuffer-grab-region) ; snag
+;;; fsf no like ^
     (define-key map [(meta ?')] 'dp-copy-char-to-minibuf)  ; quote
     ;;; FSF change 
-    (when (dp-xemacs-p)
-      (define-key map [(control tab)] 'dp-completion-at-point))
+    (if (dp-xemacs-p)
+	(define-key map [(control tab)] 'dp-completion-at-point)
+      (define-key map [tab] 'minibuffer-complete))
     (define-key map [(meta ?=)] (kb-lambda 
                                    (enqueue-eval-event 
                                     'eval

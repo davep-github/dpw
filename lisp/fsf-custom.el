@@ -13,7 +13,11 @@
  '(package-selected-packages
    (quote
     (hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
- '(safe-local-variable-values (quote ((folding-internal-margins) (folded-file . t))))
+ '(safe-local-variable-values
+   (quote
+    ((block-comment-end . "")
+     (folding-internal-margins)
+     (folded-file . t))))
  '(save-place-mode t)
  '(scroll-bar-mode (quote right))
  '(show-paren-mode t))
