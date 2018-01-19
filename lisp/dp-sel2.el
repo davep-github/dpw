@@ -861,6 +861,7 @@ yank ring."
                                                  last-input-event)
                                                 (list 'meta)))
                                     (and (dp-last-command-char)
+					 (characterp (dp-last-command-char))
                                          (= (dp-last-command-char) ?Y))))))
                       (if region
                           (insert region)

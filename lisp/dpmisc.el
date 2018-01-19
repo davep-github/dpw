@@ -10040,7 +10040,7 @@ current window."
                                               (lambda (buf)
                                                 (bury-buffer)))))
 
-(dp-deflocal dp-simple-buffer-select-p 'trivial
+(dp-deflocal dp-simple-buffer-select-p 'bypass
   "Do we want to use the A.S. routine to guess what window we want our buffer to display in or do it simply?")
 
 ;fsf -- how to handle dis buf (defun dp-display-buffer-select (buffer &optional not-this-window-p 
@@ -10061,11 +10061,13 @@ current window."
        ;; here screws that up, so force it here.
        ;; But do try if the call has specified anything "extra."
        (dp-display-buffer-if-visible buffer))
-      (if (or (eq dp-simple-buffer-select-p 'trivial)
+      (if (or (eq dp-simple-buffer-select-p 'bypass)
 	      (and dp-simple-buffer-select-p
 		   (not (or not-this-window-p override-frame shrink-to-fit 
 			    other-window-p))))
-          (switch-to-buffer buffer)
+	  (if other-window-p
+	      (switch-to-buffer-other-window)
+	    (switch-to-buffer buffer))
         (let* ((orig-frame (window-frame (dp-get-buffer-window (current-buffer))))
                (one-window-p (one-window-p 'NOMINIBUFFER))
                (pop-up-frames (and one-window-p

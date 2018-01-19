@@ -347,6 +347,16 @@ I need to look at filtered-frame-list to use device if non-nil."
 (defun window-displayed-height (&optional window)
   (window-buffer-height (or window (frame-selected-window))))
 
+;; Copped from `gnus-key-press-event-p'.
+;;(defun key-press-event-p (x)
+;;  (numberp x))
+(defun key-press-event-p (x)
+  (not (mouse-event-p x)))
+
+;; X v FSF events, keys, etc, have diverged lots.
+(defun event-key (ev)
+  ev)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
