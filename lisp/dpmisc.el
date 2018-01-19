@@ -10066,7 +10066,7 @@ current window."
 		   (not (or not-this-window-p override-frame shrink-to-fit 
 			    other-window-p))))
 	  (if other-window-p
-	      (switch-to-buffer-other-window)
+	      (switch-to-buffer-other-window buffer)
 	    (switch-to-buffer buffer))
         (let* ((orig-frame (window-frame (dp-get-buffer-window (current-buffer))))
                (one-window-p (one-window-p 'NOMINIBUFFER))

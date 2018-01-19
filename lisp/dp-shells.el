@@ -685,8 +685,8 @@ dir-tracker has become lost.
 ;;                      :empty-line-fun 'dirs
                       :empty-line-fun 'dp-shell-delete-line
 ;;                      :end-of-line-fun 'dp-shell-dirs-or-delete-line
-                      :end-of-line-fun 'dp-shell-delete-line
-))) nil nil "dp-shell-line-mode-bindings"))
+                      :end-of-line-fun 'dp-shell-delete-line)))
+     nil nil "dp-shell-line-mode-bindings"))
   
   ;; ??? Why did I do the C-c thing? Testing?
   (local-set-key [(control ?c) (meta ?o)] 'dp-shell-magic-kill-ring-save)
