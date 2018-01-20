@@ -1260,7 +1260,8 @@ Arr... beware the hooks! "
   (unless (buffer-file-name)
     (dp-define-buffer-local-keys '([(control ?x) (control ?d) ?x] dp-eol-and-eval
                                    [(control meta ?j)] dp-eol-and-eval
-                                   [(meta ?w)] dp-you-cant-save-you-silly) nil nil "dlimh"))
+                                   [(meta ?w)] dp-you-cant-save-you-silly) 
+                                 nil nil nil "dlimh"))
   (local-set-key [(meta space)] 'dp-id-select-thing)  ;fsf was dp-select-thing.
   (local-set-key [(meta ?-)] 'dp-bury-or-kill-buffer))
 
@@ -1442,15 +1443,17 @@ isearch while the region is active to locate the end of the region."
 (defalias 'dir 'dired)
 
 (defun dp-Info-mode-hook ()
-  (dp-define-buffer-local-keys '([(meta ?-)] (kb-lambda 
-                                                 (dp-func-or-kill-buffer 
-                                                  Info-last))
+  (dp-define-buffer-local-keys '([(meta ?-)] 
+                                 (kb-lambda 
+                                     (dp-func-or-kill-buffer 
+                                      Info-last))
                                  [(?/)] isearch-forward
                                  [(shift tab)] Info-prev-reference
                                  [(iso-left-tab)] Info-prev-reference
                                  [?D] Info-directory
                                  [?d] Info-top) 
-                               nil 
+                               nil
+			       nil
                                'over-write
 			       "dImh"))
 
@@ -2444,7 +2447,7 @@ changed."
 
 (defun dp-ibuffer-hook ()
   (interactive)
-  (local-set-key [(meta ?w)] 'ibuffer-do-save))
+  (local-set-key [(meta ?w)] 'dp-ibuffer-do-save))
 
 (add-hook 'bookmark-bmenu-mode-hook 'dp-bookmark-bmenu-mode-hook)
 

@@ -375,7 +375,8 @@ list in my DP-STYLE-ABBREV format (q.v.)"
            file-name)
   (dp-define-buffer-local-keys '("\C-X\#" dp-save-and-redefine-abbrevs
                                  [(meta control x)] dp-save-and-redefine-abbrevs
-                                 "\C-c\C-c" dp-save-and-redefine-abbrevs) nil nil "edit ECF")
+                                 "\C-c\C-c" dp-save-and-redefine-abbrevs)
+			       nil nil nil "edit ECF")
   (message "Use %s or %s to save and redefine abbrevs."
            (key-description [(control x) ?#]) 
            (key-description "\C-c\C-c")))

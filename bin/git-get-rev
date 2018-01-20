@@ -109,4 +109,4 @@ rev="${1}"
 shift
 filename="${1}"
 shift
-EExec git-cat "$@" "${1}" "${2}" >| "${filename}-gitrev-${rev}"
+EExec git-nth-cat "$@" "${1}" "${2}" >| "${filename}-gitrev-${rev}"

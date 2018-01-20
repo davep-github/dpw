@@ -116,5 +116,5 @@ for rev in "$@"
 do 
   echo -n '**rev info: '
   EExec git lon -n1 "${rev}"
-  EExec git-cat "${rev}" "${filename}"
+  EExec git-nth-cat "${rev}" "${filename}"
  done

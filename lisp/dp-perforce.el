@@ -106,7 +106,7 @@ This mode uses tabs, so the line too long regexp fails.")
   (filladapt-mode 0)
   (make-variable-buffer-local 'tab-stop-list)
   (setq tab-stop-list '(8 10))
-  (dp-define-buffer-local-keys'([tab] tab-to-tab-stop) nil nil "p4si")
+  (dp-define-buffer-local-keys '([tab] tab-to-tab-stop) nil nil nil "p4si")
   (setq left-margin 8
 	fill-column 74
 	indent-tabs-mode t
@@ -166,7 +166,8 @@ This mode uses tabs, so the line too long regexp fails.")
   (with-current-buffer (or (dp-get-buffer p4-output-buffer-name)
                            (current-buffer))
     (dp-define-buffer-local-keys '([(control ?c) (control ?c)]
-                                   dp4-restore-windows-and-frames) nil nil "dp4bsk")
+                                   dp4-restore-windows-and-frames)
+				 nil nil nil "dp4bsk")
     (when (and (not just-map-control-C-p)
                buffer-read-only)
       (dp-define-buffer-local-keys '([?q]
@@ -174,7 +175,8 @@ This mode uses tabs, so the line too long regexp fails.")
                                      [?x]
                                      dp4-restore-windows-and-frames
                                      [?-]
-                                     dp4-restore-windows-and-frames) nil nil "dp4bsk2"))))
+                                     dp4-restore-windows-and-frames) 
+                                   nil nil nil "dp4bsk2"))))
 
 (defun dp4-save-windows-and-frames ()
   "p4 only saves window config."

@@ -24,6 +24,13 @@
   (if (dp-xemacs-p)
       (lisp-complete-symbol)
     (completion-at-point)))
+
+(if (dp-xemacs-p)
+    (progn
+      (defalias 'dp-completion-at-point 'comint-dynamic-complete))
+  (defalias 'dp-completion-at-point 'completion-at-point))
+  
+      
 ;;;
 ;;;
 ;;;

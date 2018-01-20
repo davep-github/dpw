@@ -57,7 +57,8 @@ info in the popped up frame."
     (dp-define-buffer-local-keys '("\C-c\C-c" dp-appt-dismiss-appt
                                    "Q" dp-appt-dismiss-appt
                                    "X" dp-appt-dismiss-appt
-                                   "C" dp-appt-dismiss-appt) nil nil "dafa")))
+                                   "C" dp-appt-dismiss-appt)
+				 nil nil nil "dafa")))
 
 (defun dp-appt-add-appt (appt)
   (apply 'appt-add appt)
@@ -143,7 +144,8 @@ Returns appt-list so it can be squirreled away if needed."
       (dp-define-buffer-local-keys '("\C-c\C-c" dp-appt-dismiss-appt
                                      "Q" dp-appt-dismiss-appt
                                      "X" dp-appt-dismiss-appt
-                                     "C" dp-appt-dismiss-appt) nil nil "dadw")
+                                     "C" dp-appt-dismiss-appt)
+				   nil nil nil "dadw")
       (when (setq zombie (dp-appt-last-reminder-p min-to-appt))
         (dp-appt-zombify-buffer zombie))
       (set-buffer-dedicated-frame (current-buffer) frame)

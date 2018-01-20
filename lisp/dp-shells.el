@@ -311,11 +311,9 @@ No regexps allowed. This will be processed by `regexp-opt'")
                      vc-cmd vc-cmd))
    (list (regexp-opt dp-shell-vc-commit-cmds))))
    
-
 (defvar dp-shell-vc-commit-cmd-regexp
   (dp-concat-regexps-grouped dp-shell-vc-commit-cmd-regexps)
   "All regexes in one \\|'d string.")
-
 
 (defun dp-shell-vc-commit-p (str)
     (or (posix-string-match dp-shell-vc-commit-cmd-regexp str)
@@ -543,7 +541,7 @@ dir-tracker has become lost.
 @todo ??? Just do a `dirs' after every change?"
   (interactive)
   (if (and (eobp)
-           (eq last-command 'comint-dynamic-complete))
+           (eq last-command 'dp-comint-dynamic-complete))
       (dp-shell-resync-dirs)
     (dp-shell-delete-line)))
 
@@ -562,8 +560,8 @@ dir-tracker has become lost.
 (defun* dp-shell-line-mode-bindings (&optional (variant dp-default-variant)
                                     (bind-position-aware-keys-p t))
   "Bind some shell-mode keys."
-  (when (and nil bind-position-aware-keys-p)
-    (dp-define-buffer-local-keys 
+  (when  bind-position-aware-keys-p
+    (dp-define-buffer-local-keys
      `([(meta ?p)] (lambda ()
                      (interactive)
                      (dp-shell-xxx-input
@@ -686,7 +684,7 @@ dir-tracker has become lost.
                       :empty-line-fun 'dp-shell-delete-line
 ;;                      :end-of-line-fun 'dp-shell-dirs-or-delete-line
                       :end-of-line-fun 'dp-shell-delete-line)))
-     nil nil "dp-shell-line-mode-bindings"))
+     nil nil nil "dp-shell-line-mode-bindings"))
   
   ;; ??? Why did I do the C-c thing? Testing?
   (local-set-key [(control ?c) (meta ?o)] 'dp-shell-magic-kill-ring-save)
@@ -710,7 +708,7 @@ dir-tracker has become lost.
 (defun dp-shell-bind-common-keys ()
   "Bind common shell keys."
   (interactive)
-  ;; moved to dp-shell-mode-hook;(local-set-key "\t" 'comint-dynamic-complete)
+  ;; moved to dp-shell-mode-hook;(local-set-key "\t" 'dp-comint-dynamic-complete)
   (local-set-key "\en" 'bury-buffer)
   (local-set-key [(control up)] 'dp-scroll-down)
   (local-set-key [(control down)] 'dp-scroll-up)
@@ -750,12 +748,12 @@ Called when shell, inferior-lisp-process, etc. are entered."
     ;; Add programmable completion to the command line completion process.
     ;; I get bizarre behavior.  Is it my odd setup?  Bad config?  Sunspots?
     ;; I see 'pcomplete duplicated in `shell-dynamic-complete-functions' and in
-    ;; `comint-dynamic-complete-functions', which may be the problem...
+    ;; `dp-comint-dynamic-complete-functions', which may be the problem...
     (when (dp-optionally-require 'pcomplete)
       (pcomplete-shell-setup))
     ;; So I remove any dupes after the first occurrence.
     (dp-nuniqify-lists '(shell-dynamic-complete-functions 
-                         comint-dynamic-complete-functions)))
+                         dp-comint-dynamic-complete-functions)))
   (dp-add-lookfor-hooks variant)
   ;;;@todo NEEDED??? (setq local-abbrev-table dp-shell-mode-abbrev-table)
   ;;(make-local-variable 'font-lock-defaults)
@@ -982,7 +980,7 @@ Or both.")
   (interactive)
   (if-boundp 'semantic-mrub-push-disable-p
       (setq semantic-mrub-push-disable-p t))
-  (local-set-key "\t" 'comint-dynamic-complete)
+  (local-set-key "\t" 'dp-comint-dynamic-complete)
   (setq font-lock-defaults nil
         font-lock-keywords nil)
   ;;(dmessage "enter dp-shell-mode-hook, current-buffer: %s" (current-buffer))
@@ -1188,7 +1186,7 @@ command position."
   (dp-shell-goto-cmd-pos arg 'backwards))
 
 (defun dp-shell-goto-next-cmd-pos (&optional arg)
-  (interactive "_")                     ;"_" fsf
+  (interactive "")                     ;"_" fsf
   (dp-shell-goto-cmd-pos arg 'forwards))
 
 (defun dp-shell-adjust-command-positions (delta)
@@ -1257,6 +1255,10 @@ This allows us to do our fancy stuff and still call the correct sender.")
                                           (/ (* 4 (window-displayed-height)) 5)))
                               shell-proc))))
 
+(dp-deflocal dp-shell-first-command-p t
+  "For some reason, in FSF Emacs, there is a problem adding compilation mode.
+If it runs \"too soon\", then the keymap is hosed.  This is a major hack.")
+
 (defun* dp-shell-send-input (variant
                              &key 
                              (dp-ef-before-pmark-func 
@@ -1266,12 +1268,17 @@ This allows us to do our fancy stuff and still call the correct sender.")
 Then invoke original key binding if there was one, else try to call
 xxx-send-input as a last resort."
   (interactive)
+
+  (unless dp-shell-first-command-p
+    (dp-maybe-add-compilation-minor-mode)
+    (setq dp-shell-first-command-p t))
+
   ;; if we are above the prompt, or in a grep or compilation
   ;; buffer, then act like this is a goto-error request
-;;; trying shell-mode w/o setting RET as a magic key
+  ;;; trying shell-mode w/o setting RET as a magic key
   ;; seems like some kind of magic is needed, since I want 
   ;; send-input after prompt and something like C-m before.
-  ;;!<@todo can this be done more cleanly? 
+  ;;!<@todo can this be done more cleanly?
   (if (and dp-ef-before-pmark-func ; Set to nil to bypass this functionality.
            (or (dp-grep-like-buffer-p (major-mode-str))
                (not (fboundp (dp-sls variant '-after-pmark-p)))
@@ -1343,9 +1350,9 @@ xxx-send-input as a last resort."
 (defun dp-add-compilation-minor-mode (buf)
   "Add in compilation minor mode to current or specified buffer."
   (save-excursion
-    (if buf
-	(set-buffer buf))
-    (compilation-minor-mode 1)
+    (when buf
+      (set-buffer buf))
+    ;; FSF -- hoses Emacs' shell mode. --(compilation-minor-mode 1)
     (dp-define-compilation-mode-like-keys)))
 
 (defun dp-shells-parse-error-region (beg end &optional reuse-last-parse)
@@ -1367,7 +1374,9 @@ the last parsed region, then don't perform a parse."
       (goto-char beg)
       (setq dp-shell-last-parse-start beg
 	    dp-shell-last-parse-end end)
-      (compile-reinitialize-errors t))))
+      (if (dp-xemacs-p)
+	  (compile-reinitialize-errors t)
+	(compilation-parse-errors beg end)))))
 
 (dp-deflocal dp-shell-original-enter-binding nil
   "The original binding on the enter like key.")
@@ -1832,7 +1841,8 @@ first file that is `dp-file-readable-p' is used.  Also sets
   (dp-define-buffer-local-keys 
    '([(meta return)] dp-end-of-line-and-enter
      "\C-d" dp-shell-delchar-or-quit
-     [(control backspace)] dp-ipython-backward-delete-word) nil nil "dpsh"))
+     [(control backspace)] dp-ipython-backward-delete-word) 
+   nil nil nil "dpsh"))
 
 (dp-optionally-require 'gdb)
 
@@ -2405,7 +2415,7 @@ It isn't pretty."
     (goto-char (point-max))
     (set-marker pmark (point))))
 
-(defvar dp-shells-shell-num-fmt "/%04s" ; <:shell prompt numeric id part:>
+(defvar dp-shells-shell-num-fmt "/%04d" ; <:shell prompt numeric id part:>
   "Note, many characters ef-up comint stuff, most seem to have to do with
   it's finding the end of the prompt.  Two in particular: > and #")
 
@@ -3193,7 +3203,8 @@ ARG == 0    --> New `dp-gdb-naught' session."
              (list [tab] (lambda () 
                            (interactive)
                            (ding)
-                           (message "No TAB expansion in ssh buffer."))) nil nil "dp-ssh")
+                           (message "No TAB expansion in ssh buffer."))) 
+             nil nil nil "dp-ssh")
             (dp-maybe-read-input-ring)))
         (setq dp-shells-most-recent-ssh-shell
               (setq dp-shells-most-recent-shell 
