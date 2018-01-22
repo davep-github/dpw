@@ -312,8 +312,8 @@ If BUFFER is non-nil, get the most local key map from BUFFER."
     
     (save-excursion
       (let ((kmap (cond
-                   (copy-p (copy-keymap keymap))
                    ((not keymap) (make-sparse-keymap))
+                   (copy-p (copy-keymap keymap))
                    ((not dp-blm-map) (make-sparse-keymap))
                    (t keymap))))
         (when name-it-p
