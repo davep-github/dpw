@@ -19,6 +19,11 @@
 (defconst dp-info-path-var 'Info-default-directory-list
   "Info dir list var we want to add our info dirs to.")
 
+;;
+;; FSF Emacs puts font lock into buffer local `font-lock-defaults'
+;; Which is then, somehow, put into the various buffer local font lock
+;; variables.
+;; 
 (defun dp-set-font-lock-defaults (mode-symbol defaults)
   (setq font-lock-defaults defaults))
 
