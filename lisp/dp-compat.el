@@ -19,18 +19,30 @@
 ;; else in the fsf, but I'm getting tired of so many little
 ;; differences.  Especially when dealing with gratuitous fsf changes.
 ;; This still beats putting similar code everwhar.
-(defun dp-completion-at-point ()
-  (interactive)
-  (if (dp-xemacs-p)
-      (lisp-complete-symbol)
-    (completion-at-point)))
+; fsf - (defun dp-completion-at-point ()
+; fsf -   (interactive)
+; fsf -   (if (dp-xemacs-p)
+; fsf -       (lisp-complete-symbol)
+; fsf -     (completion-at-point)))
+
+;; I need to have one dp-.*-completion-.* for every case.
+;; Easier to make everything global or handle in mode hooks.
+
 
 (if (dp-xemacs-p)
     (progn
-      (defalias 'dp-completion-at-point 'comint-dynamic-complete))
-  (defalias 'dp-completion-at-point 'completion-at-point))
+      (defalias 'dp-completion-at-point 'comint-dynamic-complete)
+      (defalias 'dp-comint-dynamic-complete 'comint-dynamic-complete)
+      (defalias 'dp-minibuffer-complete 'minibuffer-complete)
+      (defalias 'dp-lisp-completion-at-point 'lisp-complete-symbol)
+)
   
-      
+  (defalias 'dp-completion-at-point 'completion-at-point)
+  (defalias 'dp-comint-dynamic-complete 'completion-at-point)
+  (defalias 'dp-minibuffer-complete 'minibuffer-complete)
+  (defalias 'dp-lisp-completion-at-point 'completion-at-point)
+)
+
 ;;;
 ;;;
 ;;;
