@@ -966,7 +966,6 @@ This can be callable.")
   (define-abbrev dp-minibuffer-abbrev-table "wd" "wd"
     'dp-rsh-expand-replace-cwd))
 
-
 (require 'dp-ilisp)
 
 ;; turn flyspell on everywhere for certain major modes
@@ -1089,6 +1088,8 @@ This can be callable.")
 
 (when dp-wants-emms-p
   (require 'dp-emms))
+
+(dp-set-frame-title-format)
 
 ;;;;;;;
 
