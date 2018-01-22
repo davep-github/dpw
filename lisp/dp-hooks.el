@@ -198,7 +198,7 @@ Make it buffer local since there can be >1 minibuffers.")
     (define-key map [(meta ?')] 'dp-copy-char-to-minibuf)  ; quote
     ;;; FSF change 
     (if (dp-xemacs-p)
-	(define-key map [(control tab)] 'dp-completion-at-point)
+	(define-key map [(control tab)] 'dp-minibuffer-complete)
       (define-key map [tab] 'minibuffer-complete))
     (define-key map [(meta ?=)] (kb-lambda 
                                    (enqueue-eval-event 
@@ -1134,8 +1134,8 @@ See `dp-parenthesize-region-paren-list'")
   (setq dp-il&md-dont-fix-comments-p t)
   (progn
     (filladapt-mode)
-    (dmessage "Added filladapt-mode to python hookL 2012-02-10T14:14:39"))
-  (setq-ifnil dp-orig-python-tab-binding (key-binding [tab]))
+    (dmessage "Added filladapt-mode to python hook 2012-02-10T14:14:39"))
+  (setq-ifnil dp-orig-python-tab-binding (kbd "TAB"))
   (make-variable-buffer-local 'block-comment-start)
   (setq dp-insert-tempo-comment-func 'dp-py-insert-tempo-doxy-comment
         block-comment-start (concat py-block-comment-prefix " ")
@@ -1234,7 +1234,7 @@ Arr... beware the hooks! "
   (interactive)
   ;; experiment to see if I like this.
   ;;(turn-on-eldoc-mode)  ; too intrusive
-  (local-set-key [(control tab)] 'dp-completion-at-point)
+  (local-set-key [(control tab)] 'dp-lisp-completion-at-point)
 
   (local-set-key [(meta backspace)] 'dp-delete-word-forward)
   ;; eldoc on demand.
