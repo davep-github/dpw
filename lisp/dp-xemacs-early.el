@@ -112,6 +112,9 @@ The regexp is matched against the buffer name.")
 (defconst dp-info-path-var 'Info-directory-list
   "Info dir list var we want to add our info dirs to.")
 
+;;
+;; XEmacs puts font lock info on the mode symbol. Kewl.
+;; 
 (defun dp-set-font-lock-defaults (mode-symbol defaults)
   (put mode-symbol 'font-lock-defaults defaults))
 
