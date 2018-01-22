@@ -759,7 +759,7 @@ Called when shell, inferior-lisp-process, etc. are entered."
   ;;(make-local-variable 'font-lock-defaults)
   ;;(setq font-lock-defaults '(dp-shell-mode-font-lock-keywords t))
   ;;(font-lock-set-defaults)
-  (put 'shell-mode 'font-lock-defaults '(dp-shell-mode-font-lock-keywords t))
+  (dp-set-font-lock-defaults 'shell-mode '(dp-shell-mode-font-lock-keywords t))
   (local-set-key [(control ?x)(control ?c)] 'dp-shell-create-next-shell-buffer)
   (local-set-key [(control ?x)(control ?n)] 'dp-shell-switch-to-next-buffer)
   (local-set-key [(control ?x)(control ?p)] 'dp-shell-switch-to-prev-buffer)
@@ -1269,9 +1269,9 @@ Then invoke original key binding if there was one, else try to call
 xxx-send-input as a last resort."
   (interactive)
 
-  (unless dp-shell-first-command-p
+  (when dp-shell-first-command-p
     (dp-maybe-add-compilation-minor-mode)
-    (setq dp-shell-first-command-p t))
+    (setq dp-shell-first-command-p nil))
 
   ;; if we are above the prompt, or in a grep or compilation
   ;; buffer, then act like this is a goto-error request
@@ -1352,7 +1352,7 @@ xxx-send-input as a last resort."
   (save-excursion
     (when buf
       (set-buffer buf))
-    ;; FSF -- hoses Emacs' shell mode. --(compilation-minor-mode 1)
+    (compilation-shell-minor-mode 1)
     (dp-define-compilation-mode-like-keys)))
 
 (defun dp-shells-parse-error-region (beg end &optional reuse-last-parse)
