@@ -217,8 +217,9 @@ in the and-statement.  This is a clean way to avoid such warnings.  See also
         unbound-value)
     (symbol-value symbol)))
 
-(defsubst redisplay-frame (&rest r)
-  (message "Need `redisplay-frame' fnctionality"))
+(defun redisplay-frame (&optional frame no-preempt)
+  ;; FSF uses not the no-preempt parameter.
+  (redraw-frame frame))
 
 (defsubst dp-local-variable-p (symbol buffer &optional after-set)
   (local-variable-p symbol buffer))
@@ -392,7 +393,8 @@ If DEFAULT-VALUE is non-nil, return that if user enters an empty
 ;; order to jump to the main emacs window.
 ;; @todo XXX Fix this.  There is no equivalent in current FSF.  Need to change
 ;; how I make a title.
-(defconst dp-frame-title-format (format "%%S@%s: %%f" (dp-short-hostname))
+(defconst dp-frame-title-format (format "-%s@%s: %%f"
+					invocation-name system-name)
   "*Base frame title format.")
 
 (require 'cus-edit)
