@@ -317,7 +317,7 @@ This way we can get alternating colors on journal mode structure in the text:
 
    (cons "\\([ 	]\\|^\\)\\(\\?[^?].*?\\?\\)" 
 	 (list 2 'dp-journal-low-question-face 'prepend)) ; ?huh?
-   
+
    ;; [?.....?] unsure editorial change
    (cons "\\([ 	]\\|^\\)\\(\\[\\?.+?\\?\\]\\)"
          (list 2 'dp-journal-emphasis-face 'prepend)) 
@@ -343,7 +343,7 @@ This way we can get alternating colors on journal mode structure in the text:
    ;; no need to dim these out, just remove highlight
    (cons "^[ 	]*~[?!@].*$" 'dp-journal-cancelled-action-item-face)
    (cons "^[ 	]*=[?!@].*$" 'dp-journal-completed-action-item-face)
-   
+
    (cons dpj-embedded-lisp-regexp 
          (list 0 'dp-journal-embedded-lisp-face t))
 
@@ -370,7 +370,7 @@ This way we can get alternating colors on journal mode structure in the text:
 ;          (list 3 'dp-journal-low-question-face t))
    (cons "\\(^.*?\\) \\(# .*\\)$"
          (list 2 'dp-journal-low-question-face t))
-        
+
    (cons "^[ 	]*[0-9][0-9]*)" 
          (list 0 'dp-journal-medium-question-face t))
 
