@@ -129,7 +129,8 @@ We currently don't support all of the `write-region' options."
 ;; handler: op>insert-file-contents<, rest>(/sudo-edit#/tmp/root-write-file t nil nil nil)<
 ;; (insert-file-contents FILENAME &optional VISIT START END REPLACE)
 ;; NB: this is *not* called when reading a dir w/dired
-(defun dp-sudo-edit-insert-file-contents (op file-name &rest rest)
+(defun dp-sudo-edit-insert-file-contents (op file-name
+					     &optional visit beg end replace)
   "Provide the `insert-file-contents' functionality.
 Not all options are supported."
   (let ((opoint (point))
@@ -142,9 +143,11 @@ Not all options are supported."
     ;;(when visit
     ;; @todo remove when satisfied that this 
     ;;       2003-06-15T01:21:28
-    (unless (eq visit (nth 0 rest))
-      (ding)(ding)(ding)(ding)(ding)(ding)(ding)
-      (error "You don't really unnerstand insert-file-contents!!!"))
+    ;; I don't unnerstand what myself was doing when it added this
+    ;; [in]sanity check.
+    ;WTF? is this needed? (unless (eq visit (nth 0 rest))
+    ;WTF? is this needed?   (ding)(ding)(ding)(ding)(ding)(ding)(ding)
+    ;WTF? is this needed?   (error "You don't really unnerstand insert-file-contents!!!"))
 
     (when (nth 0 rest)
       (setq buffer-file-name file-name)
@@ -227,6 +230,8 @@ current."
 	   (visiting-buffer (find-buffer-visiting file-name))
 	   (handler-entry (dp-sudo-edit-mk-handler-alist-entry file-name)))
       (add-to-list 'file-name-handler-alist handler-entry)
+      ;; tramp also does this:
+      ;;   (put 'tramp-file-name-handler 'safe-magic t)
       (if visiting-buffer 
 	  (let (point)
 	    (switch-to-buffer visiting-buffer)
