@@ -84,9 +84,12 @@
   "Write the requested region into the specified file.
 We currently don't support all of the `write-region' options."
   (let (cp-command
-        (num-to-write (- end start))
-        write-len
-	rc)
+	write-len
+	rc
+        (num-to-write (if (numberp start)
+			  (- end start)
+			(setq start 1)
+			(buffer-size))))
     (dmessage "wreg: s: %s, e: %s, fn>%s<, rest>%s<" start end file-name rest)
     ;; truncate the file before writing
     (dp-sudo-edit-copy-file 'cp "/dev/null" file-name)
@@ -190,13 +193,19 @@ Not all options are supported."
 	(inhibit-file-name-handlers (list 'dp-sudo-edit-handler-fn))
 	(inhibit-file-name-operation op)
 	ret)
-    (setq ret
-	  (if handler
-	      (progn
-		;;(dmessage "handling")
-		(apply (cdr handler) op rest))
-	    ;;(dmessage "default")
-	    (apply op rest)))
+    (condition-case err
+	(progn
+	  (setq ret
+		(if handler
+		    (progn
+		      ;;(dmessage "handling")
+		      (apply (cdr handler) op rest))
+		  ;;(dmessage "default")
+		  (apply op rest))))
+      (t
+       (dmessage "%shandler: op>%s<, rest>%s<" dp-sudo-edit-handler-depth op rest)
+       (dmessage "handler: op>%s<, rest>%s<" op rest)
+       (message ">%s<" err)))
 
     ;;(dmessage "%shandler: op>%s< ret>%s<" 
     ;;	      (replace-in-string dp-sudo-edit-handler-depth "\\+" "-") op ret)
