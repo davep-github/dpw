@@ -6998,7 +6998,7 @@ LIMIT, otherwise, has a buffer pos that is the limit."
                             ;; list before this function is called.
                             ;; Uses 1 based indexing.
                             ;; Handle case of empty command-history.
-                            (if (> (length command-history) 1 ) 
+                            (if (> (length command-history) 1)
                                 2
                               1))))
 
@@ -11660,7 +11660,7 @@ If it is indeed a script name <script>-it can be called interactively.")
 
 (defcustom dp-sh-new-file-template-file 
   (expand-file-name "~/bin/templates/sh-template.sh")
-  "A file to stuff into each new Python file created with `shit'
+  "A file to stuff into each new shell script file created with `shit'
 or a list: \(function args).
 An `undo-boundary' is done before the template is used."
   :group 'dp-vars
@@ -11668,7 +11668,7 @@ An `undo-boundary' is done before the template is used."
 
 (defcustom dp-bash-new-file-template-file 
   (expand-file-name "~/bin/templates/bash-template.sh")
-  "A file to stuff into each new Python file created with `shit'
+  "A file to stuff into each new bash script file created with `bashit'
 or a list: \(function args).
 An `undo-boundary' is done before the template is used."
   :group 'dp-vars
@@ -12179,7 +12179,7 @@ spec-macsen are used for the completion list."
     ;; sh-mode.
     ;;;(bash-mode "/bin/bash" nil)
     (perl-mode i-name "perl" env-p run-with-/usr/bin/env-p))
-  "Association List keyed by major mode symbol.
+  "Association List keyed by major mode symbol. Shebang is now a misnomer.
 Items are a list: 
 \(key plist\)
 Where plist has elements:
@@ -14723,7 +14723,7 @@ them. Q.v. `unfuck-gz'"
 
 (require 'dp-abbrev)
 (require 'dp-bookmarks)
-(when (bound-and-true-p dp-wants-cedet-et-al-p)
+(when (bound-and-true-p dp-wants-xemacs-cedet-hacks-et-al-p)
   (require 'dp-cedet-hacks))
 ;; FSF change, restore to: (require 'dp-buffer-local-keys)
 (require 'dp-blm-keys)
