@@ -13,6 +13,7 @@
  '(icomplete-mode t)
  '(icomplete-separator ",")
  '(isearch-allow-scroll t)
+ '(isearch-lazy-highlight t)
  '(isearch-resume-in-command-history t)
  '(mouse-yank-at-point t)
  '(package-selected-packages
@@ -32,6 +33,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(cursor ((t (:background "blue3"))))
+ '(isearch ((t (:background "blue" :foreground "white"))))
  '(mode-line ((t (:background "SlateGray1" :foreground "black" :box (:line-width -1 :style released-button)))))
  '(mode-line-inactive ((t (:inherit mode-line :background "azure1" :foreground "grey20" :box (:line-width -1 :color "grey75") :weight light))))
  '(rectangle-preview ((t (:inherit region))))
