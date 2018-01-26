@@ -390,28 +390,28 @@ Look at `face-list'.  grep for \"dp-.*\" ??")
   :group 'dp-vars 
   :type '(repeat directory))
 
-(defcustom dp-wants-cedet-et-al-p nil
+(defcustom dp-wants-xemacs-cedet-hacks-et-al-p nil
   "*Which parts of the CEDET package do I want?
-One symbol per part to be enabled."
-  :type 'boolean
-  :group 'dp-vars)
+One symbol per part to be enabled.
+Used by XEmacs, which needs many, many fugly hacks."
+  :group 'dp-vars
+  :type '(repeat (symbol :tag "CEDET component")))
 
-(defcustom dp-activate-semantic-et-al-at-startup-p (and 
-                                                    (memq 'semantic 
-                                                          dp-wants-cedet-et-al-p)
-                                                    t)
-  
-                                                    
+(defcustom dp-activate-semantic-et-al-at-startup-p
+  (and 
+   (memq 'semantic 
+	 dp-wants-xemacs-cedet-hacks-et-al-p)
+   t)
   "*Do I want to activate the CEDET package when XEmacs starts?
 Since it's XEmacs support is a bit lacking, I often want to make hacks before
 it loads."
   :type 'boolean
   :group 'dp-vars)
 
-(defcustom dp-activate-ede-at-startup-p (and (memq 'ede dp-wants-cedet-et-al-p)
-                                             t)
+(defcustom dp-activate-ede-at-startup-p
+  (and (memq 'ede dp-wants-xemacs-cedet-hacks-et-al-p) t)
   "*Do I want to activate the EDE package when XEmacs starts?
-Since it's XEmacs support is a bit lacking, I often want to make hacks before
+Since its XEmacs support is a bit lacking, I often want to make hacks before
 it loads."
   :type 'boolean
   :group 'dp-vars)
