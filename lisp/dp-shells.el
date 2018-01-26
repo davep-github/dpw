@@ -168,7 +168,7 @@ prompt.  We don't want to stomp on them.")
 ;; Current prompt style: NO / @ end
 ;; dpanariti@o-xterm-34:/home/scratch.dpanariti_t124/sb2/hw/hw
 (defun dp-shell-lookfor-dir-change (str)
-  ;;(dmessage "dir-change, str>%s<" str)
+  (dmessage "dir-change, str>%s<" str)
   (let ((regexp (format "^%s@%s:\\([~/].*[^/]$\\)"
                         (user-login-name) (dp-short-hostname))))
     ;;(message "regexp>%s<" regexp)
@@ -346,6 +346,7 @@ No regexps allowed. This will be processed by `regexp-opt'")
                                        "lem"
                                        "gits"
                                        "gitstat"
+				       "gitsno"
                                        "autoreconf"
                                        "aclocal"
                                        "autoconf"
