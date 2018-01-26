@@ -182,7 +182,7 @@ def rank_main1(argv):
             argv.remove(arg)
             continue
 
-    print >>sys.stderr, "argv>%s<" % (argv,)
+    ###print >>sys.stderr, "argv>%s<" % (argv,)
     #@todo XXX We should do this in every db searched.
     #@todo XXX Why was it commented out?
     #@todo XXX Pass an update flag to run_globals_over_path()?  This way we
