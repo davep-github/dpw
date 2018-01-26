@@ -2,7 +2,8 @@
 
 (defun dp-ibuffer-do-and-update (op &rest op-args)
   "Do an ibuffer operation and then refresh the buffer."
-  (apply op op-args))
+  (apply op op-args)
+  (ibuffer-update))
 
 (defun dp-ibuffer-do-save ()
   "Save and then refresh the buffer."
@@ -18,4 +19,5 @@ should be of the form `#x...' where `x' is not a blank or a tab, and
   :type 'string
   :group 'python)
 
+(provide 'dp-fsf)
 (message "dp-fsf-early loading...done.")
