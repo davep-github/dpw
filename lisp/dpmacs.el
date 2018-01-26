@@ -24,6 +24,7 @@
       )
   (setq isearch-continues 'isearch-scroll)
   (setq custom-file (expand-file-name "~/lisp/fsf-custom.el"))
+  (require 'dp-fsf)
   (load custom-file))
 
 (eval-when-compile
@@ -992,48 +993,45 @@ This can be callable.")
 
 ;; Do these more like at run-time vs load-time.
 ;; This hook is run at the end of dpmacs.el
-(add-hook 'dp-post-dpmacs-hook
-          (lambda ()
-            (require 'dp-faces)))
-(add-hook 'dp-post-dpmacs-hook
-          (lambda ()
-            (require 'dp-ptools)))
-(add-hook 'dp-post-dpmacs-hook
-          (lambda ()
-            (add-hook 'isearch-mode-hook 'dp-isearch-mode-hook)))
-(add-hook 'dp-post-dpmacs-hook
-          (lambda ()
-            (add-hook 'isearch-mode-end-hook 'dp-isearch-mode-end-hook)))
-            ;; @todo autoload-ify the main entry points.
-(add-hook 'dp-post-dpmacs-hook
-          (lambda ()
-            (require 'dp-hooks)))
-(add-hook 'dp-post-dpmacs-hook
-          (lambda ()
-            'dp-setup-cscope))
-(add-hook 'dp-post-dpmacs-hook
-          (lambda ()
-            (if (dp-xemacs-p)
-                (paren-activate))
-            ))
+;comparing to single lambda, below. (add-hook 'dp-post-dpmacs-hook
+;comparing to single lambda, below.           (lambda ()
+;comparing to single lambda, below.             (require 'dp-faces)))
+;comparing to single lambda, below. (add-hook 'dp-post-dpmacs-hook
+;comparing to single lambda, below.           (lambda ()
+;comparing to single lambda, below.             (require 'dp-ptools)))
+;comparing to single lambda, below. (add-hook 'dp-post-dpmacs-hook
+;comparing to single lambda, below.           (lambda ()
+;comparing to single lambda, below.             (add-hook 'isearch-mode-hook 'dp-isearch-mode-hook)))
+;comparing to single lambda, below. (add-hook 'dp-post-dpmacs-hook
+;comparing to single lambda, below.           (lambda ()
+;comparing to single lambda, below.             (add-hook 'isearch-mode-end-hook 'dp-isearch-mode-end-hook)))
+;comparing to single lambda, below.             ;; @todo autoload-ify the main entry points.
+;comparing to single lambda, below. (add-hook 'dp-post-dpmacs-hook
+;comparing to single lambda, below.           (lambda ()
+;comparing to single lambda, below.             (require 'dp-hooks)))
+;comparing to single lambda, below. (add-hook 'dp-post-dpmacs-hook
+;comparing to single lambda, below.           (lambda ()
+;comparing to single lambda, below.             'dp-setup-cscope))
+;comparing to single lambda, below. (if (dp-xemacs-p)
+;comparing to single lambda, below.     (add-hook 'dp-post-dpmacs-hook 'paren-activate))
 
 ;; Do these more like at run-time vs load-time.
 ;; This hook is run at the end of dpmacs.el
-;;debuggin' (add-hook 'dp-post-dpmacs-hook
-;;debuggin'           (function 
-;;debuggin'            (lambda ()
-;;debuggin'              ;;;(require 'psvn) ; Just let vc take care of everything?
-;;debuggin'              (require 'dp-faces)
-;;debuggin'              (require 'dp-ptools)
-;;debuggin'              (add-hook 'isearch-mode-hook 'dp-isearch-mode-hook)
-;;debuggin'              (add-hook 'isearch-mode-end-hook 'dp-isearch-mode-end-hook)
-;;debuggin'              ;; @todo autoload-ify the main entry points.
-;;debuggin'              (require 'dp-hooks)
-;;debuggin'              (dp-setup-cscope)
-             
-;;debuggin'              (if (dp-xemacs-p)
-;;debuggin'                  (paren-activate))
-;;debuggin'              )))
+(add-hook 'dp-post-dpmacs-hook
+          (function
+           (lambda ()
+;;;(require 'psvn) ; Just let vc take care of everything?
+             (require 'dp-faces)
+             (require 'dp-ptools)
+             (add-hook 'isearch-mode-hook 'dp-isearch-mode-hook)
+             (add-hook 'isearch-mode-end-hook 'dp-isearch-mode-end-hook)
+             ;; @todo autoload-ify the main entry points.
+             (require 'dp-hooks)
+             (dp-setup-cscope)
+
+             (if (dp-xemacs-p)
+                 (paren-activate))
+             )))
 
 (when (paths-file-readable-directory-p dp-site-package-info)
   (add-to-list dp-info-path-var dp-site-package-info))
