@@ -141,6 +141,8 @@ Some are ephemeral and some are longer term."
       auto-save-interval 2000
       backup-directory-alist (list (cons "." dp-ebacs-droppings))
       backup-by-copying-when-linked t
+      backup-by-copying t
+      delete-old-versions t
       version-control t
       kept-new-versions 7)
 
