@@ -1,7 +1,9 @@
 history.*
 # For safety, don't use .emacs.
 # Maybe this file should be renamed.
-#.emacs_dpanariti.*
+#.emacs_dpanarit.*
 #.emacs_davep.*
 .emacs_*.*
 /devel/
+/bug-tmp/
+emacs-places*
