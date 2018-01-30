@@ -19,11 +19,11 @@
 
 (if (dp-xemacs-p)
     (progn
-      (setq custom-file (expand-file-name "~/lisp/custom.el"))
+      (setq custom-file (dp-lisp-subdir "custom.el"))
       (setq isearch-continues 'isearch-command)
       )
   (setq isearch-continues 'isearch-scroll)
-  (setq custom-file (expand-file-name "~/lisp/fsf-custom.el"))
+  (setq custom-file (dp-lisp-subdir "fsf-custom.el"))
   (require 'dp-fsf)
   (load custom-file))
 
@@ -241,14 +241,6 @@ way.")
   "Only hosts which match this regexp will be allowed to be advertised as
 editing servers via `dp-editing-server-ipc-file'.")
 
-(when dp-use-xgtags-p 
-  (dp-optionally-require 'xgtags))
-(defun dp-xgtags-p ()
-  (and dp-use-xgtags-p
-       (or (featurep 'xgtags )
-           (and (fboundp 'xgtags-mode)
-                (dmessage "not featurep 'gtags, but gtags-mode defined.")))))
-
 (when dp-use-gtags-p 
   (dp-optionally-require 'gtags))
 (defun dp-gtags-p ()
@@ -271,6 +263,14 @@ editing servers via `dp-editing-server-ipc-file'.")
 ;;
 ;; Now we can do my kinds of things...
 ;; 
+
+(when dp-use-xgtags-p 
+  (dp-optionally-require 'xgtags))
+(defun dp-xgtags-p ()
+  (and dp-use-xgtags-p
+       (or (featurep 'xgtags )
+           (and (fboundp 'xgtags-mode)
+                (dmessage "not featurep 'gtags, but gtags-mode defined.")))))
 
 ;; I like it on by default, but it is painfully slow over low bandwidth
 ;; links, so I set it up here and let it be overridden in a spec-macs.
@@ -364,7 +364,8 @@ the init files.")
 (setq w3m-quick-start nil)		; tell w3m to prompt for an url
 (add-hook 'w3m-mode-hook 'dp-w3m-mode-hook)
 (autoload 'namazu "namazu" nil t)
-(toggle-auto-compression 1)
+(when (dp-xemacs-p)
+  (toggle-auto-compression 1))
 (setq browse-url-browser-function 'browse-url-opera)
 (dmessage "browse-url-browser-function: %s" browse-url-browser-function)
 
@@ -692,8 +693,8 @@ And their failure occurs way too often."
 
 ;; add our python mode hook here, so we can interoperate with ipython.el
 ;; If there's no ipython.el then we're still ok.
-(require 'python-mode)
-(add-hook 'py-shell-hook 'dp-py-shell-hook)
+;; fsf needs a python mode (require 'python-mode)
+;; fsf (add-hook 'py-shell-hook 'dp-py-shell-hook)
 
 (defun dp-setup-ipython-shell()
   "Setup my ipython shell."

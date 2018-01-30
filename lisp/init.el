@@ -32,7 +32,7 @@
 (defvar dp-init.el-load-path-dirs
   (list (dp-lisp-subdir "contrib")
         (dp-lisp-subdir "contrib/emacs-jabber")
-        (expand-file-name "~/lisp"))
+        dp-lisp-dir)
   "Initial dirs to add to load path.")
 
 ;; We're getting dupes:
@@ -52,7 +52,9 @@
 ;; Old-sk00l loop... don't count on cl being loaded yet.
 (let ((l dp-init.el-load-path-dirs))
   (while l
+    (message "l>%s<" l)
     (add-to-list 'load-path (car l))
+    (message "load-path>%s<" load-path)
     (setq l (cdr l))))
 
 ;; load the bulk of the init file...

@@ -1,7 +1,6 @@
 (message "dp-init-early loading...")
 
-(defvar dp-contrib-site-packages (expand-file-name 
-                                  "~/lisp/contrib/site-packages")
+(defvar dp-contrib-site-packages (dp-lisp-subdir "contrib/site-packages")
   "My local site packages root.")
 
 (defun dp-mk-site-package-dir (&rest names)
@@ -17,7 +16,7 @@
 (defun dp-mk-site-package-lisp-dir (&rest names)
   (expand-file-name (paths-construct-path (cons dp-site-package-lisp names))))
 
-(defvar dp-contrib-package-root "~/lisp/contrib")
+(defvar dp-contrib-package-root (dp-lisp-subdir "contrib"))
 
 (defun dp-mk-contrib-subdir (&rest subdir-components)
   (expand-file-name (paths-construct-path

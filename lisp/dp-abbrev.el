@@ -865,8 +865,9 @@ table.")
                       dp-manual-abbrev-table))
   ;; Add some special abbrevs.
   ;; This needs to be done after the tables have been created
-  (define-abbrev dp-manual-abbrev-table "xdrop" 
-    (concat dp-xemacs-droppings "/"))
+  (when (dp-xemacs-p)
+    (define-abbrev dp-manual-abbrev-table "xdrop" 
+      (concat dp-xemacs-droppings "/")))
   (define-abbrev dp-manual-abbrev-table "edrop" 
     (concat dp-editor-droppings "/"))
   (define-abbrev dp-manual-abbrev-table "xebacs" 

@@ -5835,7 +5835,7 @@ Similar here means the same file-name with a user specified completion."
 (defun dpmisc ()
   "Edit dpmisc.el"
   (interactive)
-  (find-file "~/lisp/dpmisc.el"))
+  (find-file (dp-lisp-subdir "dpmisc.el")))
 (defalias 'dp-misc 'dpmisc)
 
 (defun dpmisc2 ()
@@ -8852,7 +8852,8 @@ Can be called directly or by an abbrev's hook.
 ;;                                       (concat "." (dp-current-sandbox-name))
 ;;                                     ""))
         saveconf-file-name-prev (concat saveconf-file-name ".prev"))
-
+  (message "saveconf-file-name>%s<, saveconf-file-name-prev>%s<"
+           saveconf-file-name saveconf-file-name-prev)
   ;; Keep the data from the last save so it won't be overwritten as current
   ;; data are written.
   (when (file-exists-p saveconf-file-name)
@@ -9107,7 +9108,7 @@ If OBA is nil, use `obarray'."
       (when (and text kill-ring 
                  (not (string= text (current-kill (length kill-ring) t))))
         ;;(dmessage "kill-new>%s<" text)
-        (kill-new text)))))
+        (kill-new text))))))
 
 (defun dp-beginning-of-def-or-class (&optional no-class-precedence-p visible-p)
   (interactive "P")                     ; fsf - fix "_"
@@ -10029,7 +10030,7 @@ If wide enough: | | |, otherwise: |-|"
                        (other-window -1))
                      nil))
                      
-(dp-defaliases '|- '|: '1:2 '1,2 '1x2 '1+2 '1|2 'dp-1x2 'dp-1+2-wins)
+(dp-defaliases '|- '|: '1:2 '1x2 '1+2 '1|2 'dp-1x2 'dp-1+2-wins)
 
 (defun dp-2+1-wins ()
   "Set up a 1+2 window arrangement: |-| |"
@@ -10037,7 +10038,7 @@ If wide enough: | | |, otherwise: |-|"
   (dp-layout-windows '(split-window-horizontally
                        split-window-vertically)))
                      
-(dp-defaliases '2:1 '2,1 '2|1 'dp-2+1 '2x1 '2+1 '>| 'dp-2+1-wins)
+(dp-defaliases '2:1 '2|1 'dp-2+1 '2x1 '2+1 '>| 'dp-2+1-wins)
 
 (defun dp-2-over-1-wins ()
   "|-|

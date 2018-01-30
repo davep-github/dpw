@@ -753,7 +753,10 @@ c-hanging-braces-alist based upon these values.")
                (or (and (boundp 'current-project-c++-mode-style)
                         current-project-c++-mode-style)
                    dp-default-c-style)
-               t)
+               ;; FSF tries to set this style to the current buffer (*scratch*)
+               ;; during init and fails "Buffer *scratch* is not CC-Mode buffer"
+               ;; Till resolved, x --> t, f --> nil
+               (dp-xemacs-p))
   ;;  (define-key map [(control c) d (meta /)] 'dp-c++-mk-protection-section)
   ;;  (define-key map [(control c) d / ] 'dp-c++-goto-protection-section)
   (define-key dp-Ccd-map [(meta /)]  'dp-c++-mk-protection-section)

@@ -900,6 +900,11 @@ gtags discovery."
 ;;needs work     (dp-beginning-of-buffer)
 ;;needs work     (xgtags--find-tag-near-point))
 
+  (defvar icky-directory-from-which-we-are-tag-searching nil
+    "Whither did we come from to visit the tag.
+Why I did do this? Is `dp-push-go-back' inadequate in some way?
+If so, a stack of these may help.")
+
   (defun dp-xgtags-setup-next-error ()
     (defadvice xgtags--find-with (before dp-xgtags-go-back-stuff activate)
       "Push go back before doing an xgtags operation.
