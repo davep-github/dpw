@@ -17,7 +17,7 @@
 		       "/usr/local/lib/xemacs-21.4.15/info"
 		       "/usr/local/lib/xemacs-21.5-b16/info"
 		       "/usr/local/lib/xemacs/xemacs-packages/info"
-                       "~/lisp/contrib/info"
+                       (dp-lisp-subdir "contrib/info")
 		       "/usr/share/info"))
 
 ;; fits the hp5l

@@ -6,6 +6,7 @@
 ;;; This is loaded before dp-misc, so it cannot use anything provided
 ;;; there.
 ;;; 
+(message "Loading dp-xemacs-early...")
 
 ;;rem-after-fsf (defun dp-timestamp-string (&optional time new-style-p)
 ;;rem-after-fsf   "Return a consistently formatted and sensibly sortable and succinct timestamp string."
@@ -43,7 +44,7 @@
 
 ;;rem-after-fsf (setq dp-editor-droppings (expand-file-name "~/droppings/editors")
 ;;rem-after-fsf       dp-emacs-droppings (concat dp-editor-droppings "/emacs")
-;;rem-after-fsf       dp-emacs-droppings (dp-mk-dropping-dir "ebacs")
+;;rem-after-fsf       dp-backup-droppings (dp-mk-dropping-dir "ebacs")
 ;;rem-after-fsf       dp-auto-save-droppings (dp-mk-dropping-dir
 ;;rem-after-fsf                               "/session-auto-saves.d/"
 ;;rem-after-fsf                               'leave-it-alone))

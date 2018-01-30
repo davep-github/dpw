@@ -92,7 +92,7 @@
   "Abbrev table used in minibuffer.")
 
 (defvar dp-common-abbrev-file-name 
-  (expand-file-name "~/lisp/dp-common-abbrevs.el")
+  (expand-file-name (dp-lisp-subdir "dp-common-abbrevs.el"))
   "File name in which common abbrevs reside.")
 
 (defvar dp-common-abbrev-file-names (list dp-common-abbrev-file-name)
@@ -346,6 +346,8 @@ list in my DP-STYLE-ABBREV format (q.v.)"
 	     (if (file-readable-p file)
 		 (load file))))
 	  dp-abbrev-files)
+  ;; Set the current instance's lisp dir (X or FSF).
+  (define-abbrev dp-go-abbrev-table "lisp" dp-lisp-dir nil 1)
 
   ;;
   ;; Pull in any hard-coded, standard emacs type abbrev tables.
@@ -864,7 +866,7 @@ table.")
   ;; Add some special abbrevs.
   ;; This needs to be done after the tables have been created
   (define-abbrev dp-manual-abbrev-table "xdrop" 
-    (concat dp-emacs-droppings "/"))
+    (concat dp-xemacs-droppings "/"))
   (define-abbrev dp-manual-abbrev-table "edrop" 
     (concat dp-editor-droppings "/"))
   (define-abbrev dp-manual-abbrev-table "xebacs" 

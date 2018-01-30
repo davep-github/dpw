@@ -4,6 +4,8 @@
 ;;; My general/global keybindings.
 ;;;
 
+(message "Loading dp-keys...")
+
 ;;
 ;; use, e.g., (read-kbd-macro "C-c C-a")
 ;; to show key sequences.
@@ -144,11 +146,8 @@ Bind any keys in KEYS via `dp-define-keys'."
 ;;(global-set-key "\C-z" 'dp-lterm)
 
 ;; Tag keys now defined in dp-ptools.el
-
-(if (dp-xemacs-p)				 
-    (global-set-key [(meta ?b)] 'dp-buffer-menu)
-  (global-set-key [(meta ?b)] 'ibuffer))
-
+				 
+(global-set-key [(meta ?b)] 'dp-buffer-menu)
 (global-set-key [(control x) (control b)] 'dp-list-buffers)
 (global-set-key [(meta ?h)] 'help-command)
 (global-set-key [(meta h) (meta k)] 'dp-ff-key)
@@ -169,6 +168,16 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [delete] 'dp-delete)
 (global-set-key [(control ?d)] 'dp-delete)
 ;; New versions, less goop.
+(global-set-key [(control up)] 'dp-scroll-down)
+(global-set-key [(control down)] 'dp-scroll-up)
+(global-set-key [(control meta up)] 'dp-scroll-down-other-window)
+(global-set-key [(control meta down)] 'dp-scroll-up-other-window)
+(global-set-key [down] 'dp-next-line)   ; q.v. dp-cleanup-whitespace-p
+(global-set-key [(control kp-up)] 'dp-scroll-down)
+(global-set-key [(control kp-down)] 'dp-scroll-up)
+(global-set-key [(control meta kp-up)] 'dp-scroll-down-other-window)
+(global-set-key [(control meta kp-down)] 'dp-scroll-up-other-window)
+(global-set-key [kp-down] 'dp-next-line)   ; q.v. dp-cleanup-whitespace-p
 
 ;; I don't use the extra junk in my versions.
 ;; Ah, but I can't tag 'em as isearch-commands this way.
@@ -240,10 +249,11 @@ Bind any keys in KEYS via `dp-define-keys'."
   (global-set-key [backtab] 'dp-indent-line-and-move-down)
 )
 (global-set-key [(meta shift tab)] 'dp-delete-indentation-and-move-down)
+(global-set-key [(control tab)] 'dp-phys-tab)
 ;; @todo XXX C-M-tab conflicts with window manager stuff.
 ;; Move offending WM binding to <Win> key where it belongs.
 (global-set-key [(control meta tab)] 'dp-phys-tab)
-(global-set-key [(control tab)] 'dp-phys-tab)
+(global-set-key [(iso-left-tab)] 'dp-indent-line-and-move-down)
 (global-set-key [(meta iso-left-tab)] 'dp-delete-indentation-and-move-down)
 (global-set-key [(insert)] 'dp-yank)
 (global-set-key [(meta ?y)] 'dp-yank)
@@ -251,7 +261,10 @@ Bind any keys in KEYS via `dp-define-keys'."
 ;; this works better with more X progs, aterm in particular.
 (global-set-key [(shift insert)] 'dp-x-insert-selection)
 (global-set-key [(meta ?m)] 'back-to-indentation)
-;; (global-set-key [(meta space)] 'dp-id-select-thing) fsf -- moved to end of dpmacs
+(global-set-key [(meta space)] 'dp-select-thing) 
+;; I've never really used it.  Give it a less comfortable binding and free up
+;; a more comfortable one.
+(global-set-key [(control meta space)] 'just-one-space)
 
 ; (global-set-key [(control meta m)] (if (fboundp 'id-select-thing)
 ; 					   'id-select-thing
@@ -311,8 +324,9 @@ Bind any keys in KEYS via `dp-define-keys'."
 ;; major-mode'ed temp buffers.
 (defun dp-keys-define-init-submaps ()
   ;; Beginning to use C-cC-d as dp-* command prefix.
+  ;; Prefer C-cd prefix.  Defecate C-cC-d prefix.
   ;; dp prefixed keys; dp keys prefix; dp key prefix
-  ;; <:dp-keys|dpkeys|dp keys:>
+  ;; <:dp-keys|dpkeys|dp keys|ccd-map|cccd-map|dp-map:>
   (makunbound 'dp-Ccd-map)
   (defconst dp-Ccd-map
     (dp-define-key-submap 'dp-kb-prefix global-map
@@ -379,6 +393,7 @@ Bind any keys in KEYS via `dp-define-keys'."
                           [right] 'dp-shift-windows
                           [(control ?\\)] 'align
                           [(control ?m)] 'dp-mark-up-to-string
+                          [(meta ?o)] 'dp-copy-for-clipboard-paste
 
                           ;; <:add-new-ccd-bindings:>
                           )          ; Close paren for `dp-define-key-submap'
@@ -560,20 +575,23 @@ already in there.")
                           [?J] 'dpj-edit-journal-file)
     ;; <:cdd map journal bindings:>
     "Keymap for my journal commands.")
-  
+
+  ;; Tags related.
   (defconst dp-tag-system-map
     (dp-define-key-submap 'dp-journal-prefix dp-Ccd-map
                           [?t]
-                          [?b] 'dp-visit-gtags-select-buffer
-                          [?h] 'gtags-display-browser
-                          [?P] 'gtags-find-file
-                          [?f] 'gtags-parse-file
-                          [?g] 'gtags-find-with-grep
                           [?I] 'gtags-find-with-idutils
+                          [?P] 'gtags-find-file
+                          [?b] 'dp-visit-gtags-select-buffer
+                          [?d] 'dp-tag-find
+                          [?f] 'gtags-parse-file
+                          [?g] 'dp-tag-find-with-grep
+                          [?h] 'gtags-display-browser
+                          [?i] 'dp-tag-find-with-idutils
+                          [?r] 'dp-tag-find-rtag
                           [?s] 'gtags-find-symbol
-                          [?r] 'gtags-find-rtag
-                          [?t] 'gtags-find-tag
-                          [?d] 'gtags-find-tag
+                          [?t] 'dp-tag-find
+                          [?u] 'dp-gtags-update-file
                           [?v] 'gtags-visit-rootdir
                           [?u] 'dp-gtags-update-file
                           )
@@ -588,7 +606,7 @@ already in there.")
                           [?w]
                           ;; Yeah, I should do a buncha submaps, but I won't.
                           ;; Nope.  I refuse. Not gun duit.  Read my lips: "No
-                          ;; new mapses.
+                          ;; new mapses."
                           ;; Some of these bindings are longer than some
                           ;; abbreviated commands
                           [(control next)] 'dp-eob-all-windows
@@ -692,7 +710,7 @@ already in there.")
 (global-set-key [(control ?c) (control ?z)] 
   (kb-lambda 
       (dp-kb-binding-moved arg 'dp-python-shell)))
-(global-set-key [(control meta n)] 
+(global-set-key [(control meta ?n)] 
   (kb-lambda
       (dp-goto-next-dp-extent-from-point '(4))))
 (global-set-key [(meta ?Q)] 'align)
@@ -790,3 +808,4 @@ This is NOT idempotent, so we skip if KEY-SEQ and NEW-DEF are bound."
 
 
 (provide 'dp-keys)
+(message "Loading dp-keys...done")

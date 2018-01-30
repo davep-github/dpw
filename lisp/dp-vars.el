@@ -211,6 +211,11 @@ nil --> use builtin image of chuck."
   :type '(choice (const :tag "Builtin (chuckie)" nil)
 		 (file :must-match t :tag "pixmap file")))
 
+(defcustom dp-use-buffer-endicator-p t
+  "*Put something special to indICATE the END of the buffer."
+  :group 'dp-vars
+  :type 'boolean)
+
 (defcustom dp-cleanup-buffers-mode-list
   '(help-mode
     completion-list-mode
@@ -265,7 +270,7 @@ nil --> use builtin image of chuck."
   :group 'dp-vars
   :type 'boolean)
 
-(defcustom dp-spell-programs '("aspell" "ispell")
+(defcustom dp-spell-programs '("aspell" "ispell" "hunspell")
   "*Candidate programs for spelling.  Checked in order."
   :group 'dp-vars
   :type '(repeat string))
@@ -285,6 +290,30 @@ nil --> use builtin image of chuck."
 These should be regexp quoted."
   :group 'dp-vars
   :type '(repeat string))
+
+(defcustom dp-gtags-cscope-findstring-options-env-var-name "GLOBAL_FS_OPTS"
+  "*The environment variable name to pass opts to  gtags-cscope findstring()."
+  :type 'string
+  :group 'cscope)
+
+(defcustom dp-gtags-cscope-ignore-case-strings-p t
+  "*Should we ignore case searching for strings when using gtags-cscope?"
+  :type 'boolean
+  :group 'cscope)
+
+(defcustom dp-gtags-cscope-gtags-ignore-case-option "--ignore-case"
+  "*Option to tell GNU global gtags to ignore case when searching for strings."
+  :type 'string
+  :group 'cscope)
+
+(defcustom dp-cscope-program "gtags-cscope"
+  "*The pathname of the cscope executable to use."
+  :type 'string
+  :group 'cscope)
+
+(defvar dp-using-gtags-cscope-p 
+  (string= dp-cscope-program "gtags-cscope")
+  "Um, well, are, we..., um... like using gtags-cscope?")
 
 (defcustom dp-ssh-host-name-completion-list '()
   "*List of common hostnames provided for your completing pleasure.
@@ -318,7 +347,12 @@ against the list of regexps."
   :group 'dp-vars
   :type 'boolean)
 
-(defcustom dp-use-gtags-p t
+(defcustom dp-use-xgtags-p t
+  "*A rose is a rose."
+  :group 'dp-vars
+  :type 'boolean)
+
+(defcustom dp-use-gtags-p (not dp-use-xgtags-p)
   "*A rose is a rose."
   :group 'dp-vars
   :type 'boolean)
@@ -454,6 +488,11 @@ For now (2010-05-22T08:26:49) I'm just using the symbols corresponding to the Em
   :type 'boolean
   :group 'dp-vars)
 
+(defcustom dp-global-c*-use-too-long-warning-face nil
+  "*Use a special face to highlight overlong as they are about to become overlong."
+  :type 'boolean
+  :group 'dp-vars)
+
 (defcustom dp-c-add-nl-after-open-paren-default-p t
   "*Should a newline be added after the open parenthesis of a function definition?. 
 This provided for uniform parameter indentation and maximum space for each
@@ -499,7 +538,15 @@ other-window functions to select it. Perhaps there's... another way."
   :group 'dp-vars
   :type 'integer)
 
-;; <:new vars go here:>
+;; @todo XXX FSF - ify this.
+(defcustom dp-frame-title-format (format "%%S@%s: %%f" (dp-short-hostname))
+  "*Base frame title format.
+ Set up a titlebar format.  Various window things will look for this
+in order to jump to the main emacs window."
+  :group 'dp-vars
+  :type 'string)
+
+;; <:vars go here:>
 (provide 'dp-vars)
 ;;
 ;;

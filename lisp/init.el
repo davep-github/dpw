@@ -13,6 +13,14 @@
 ;; no blah, blah, blah.
 (setq inhibit-startup-message t)
 
+(defvar dp-lisp-dir
+  (if (featurep 'xemacs)
+      (expand-file-name "~/xlisp")
+    (expand-file-name "~/flisp")))
+
+(defun dp-lisp-subdir (sub &rest args)
+  (expand-file-name (apply 'format sub args) dp-lisp-dir))
+
 ;; for debuggin'...
 (setq dp-orig-load-path load-path)
 
@@ -22,8 +30,8 @@
 ;; so we can get to my lisp files
 ;; we're consing, so last will be first.
 (defvar dp-init.el-load-path-dirs
-  (list (expand-file-name "~/lisp/contrib")
-        ;; (expand-file-name "~/lisp/contrib/emacs-jabber")
+  (list (dp-lisp-subdir "contrib")
+        (dp-lisp-subdir "contrib/emacs-jabber")
         (expand-file-name "~/lisp"))
   "Initial dirs to add to load path.")
 

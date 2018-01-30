@@ -33,7 +33,7 @@
                                  "/usr/share/info"
                                  "/usr/yokel/info"
                                  "/usr/yokel/sawmill-cvs/info"
-                                 "~/lisp/contrib/info"))
+                                 (dp-lisp-subdir "contrib/info")
                               "dir")))
                      
 ;; fits the hp5l

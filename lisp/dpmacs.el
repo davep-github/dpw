@@ -73,6 +73,15 @@ Then deletes this new configuration from the ring."
                                            (concat "realpath " dp-$HOME)) 0 -1)
   "The `realpath(1)' of the aforementioned $HOME variable.")
 
+(defvar dp-ipython-temp-file-re "ipython_edit_.*\\.py$"
+  "Name ipython uses when %edit'ing something.")
+
+(defvar dp-known-temp-file-re-list 
+  (list 
+   dp-ipython-temp-file-re)
+  "List of known temp file regexps, so `dp-gnuserv-visit-hook' doesn't muse about 
+its temp-ness.")
+
 ;;; Dummy hooks: Define these here so that when I make changes that
 ;;; break everything, I can exit w/o having these defuns be unbound
 ;;; and causing errors.  I guess I should really look at doing some
@@ -232,7 +241,24 @@ way.")
   "Only hosts which match this regexp will be allowed to be advertised as
 editing servers via `dp-editing-server-ipc-file'.")
 
+(when dp-use-xgtags-p 
+  (dp-optionally-require 'xgtags))
+(defun dp-xgtags-p ()
+  (and dp-use-xgtags-p
+       (or (featurep 'xgtags )
+           (and (fboundp 'xgtags-mode)
+                (dmessage "not featurep 'gtags, but gtags-mode defined.")))))
 
+(when dp-use-gtags-p 
+  (dp-optionally-require 'gtags))
+(defun dp-gtags-p ()
+  (and dp-use-gtags-p
+       (or (featurep 'gtags )
+           (and (fboundp 'gtags-mode)
+                (dmessage "not featurep 'gtags, but gtags-mode defined.")))))
+
+;; Load these first so I can navigate somewhat better when I hose another rc
+;; file.
 (require 'dp-keys) ;; my highly unstandard keybindings.
 (require 'dpmisc)
 (require 'dp-lang)
@@ -275,10 +301,16 @@ intolerable delays to files not in perforce."
 (defvar dp-loaded-spec-macsen '()
   "A list of all of the spec-macs files we loaded. Most specific to least.")
 
+;;
+;; We put this here because (at least) the amd c-mode-hook needs to run
+;; before the "meister" c-mode-common-hook
+;;
+(add-hook 'c-mode-common-hook 'dp-c-like-mode-common-hook)
+
 (defun dp-load-spec-macs (spec-macs)
   "Possibly load a more specific .emacs type startup file."
   ;;(message "spec-macs>%s<" spec-macs)
-  (setq spec-macs (format "~/lisp/dp-dot-emacs%s.el" spec-macs))
+  (setq spec-macs (dp-lisp-subdir "dp-dot-emacs%s.el" spec-macs))
   ;;(message "spec-macs>%s<" spec-macs)
   (when (file-readable-p spec-macs)
 	;;(message "loading>%s<" spec-macs)
@@ -332,7 +364,7 @@ the init files.")
 (setq w3m-quick-start nil)		; tell w3m to prompt for an url
 (add-hook 'w3m-mode-hook 'dp-w3m-mode-hook)
 (autoload 'namazu "namazu" nil t)
-(auto-compression-mode)
+(toggle-auto-compression 1)
 (setq browse-url-browser-function 'browse-url-opera)
 (dmessage "browse-url-browser-function: %s" browse-url-browser-function)
 
@@ -347,8 +379,10 @@ the init files.")
 ;;fsf;;;   (define-key gtags-mode-map 'button2 'gtags-pop-stack)
 ;;fsf;;;   (define-key gtags-mode-map 'button3 'gtags-find-tag-by-event)
   (define-key gtags-mode-map [(meta ?.)] 'dp-tag-find)
+  (define-key gtags-mode-map [(meta ?>)] 'gtags-find-rtag)
   (define-key gtags-mode-map [(control meta ?.)] 'dp-tag-find-other-window)
   (define-key gtags-mode-map [(meta ?,)] 'dp-tag-pop)
+  (define-key gtags-mode-map [(control meta ?,)] 'dp-tag-pop-other-win)
   (defconst gtags-global-command "ranking-global-gtags.py")
 )
  ;; @todo put defaults here:
@@ -368,9 +402,10 @@ the init files.")
 
 (when (dp-optionally-require 'savehist nil)
   ;; This isn't in all versions of savehist.
-  (condition-case appease-byte-compiler
+  (condition-case badness
       (dp-funcall-if 'savehist-mode (1))
-    (t (warn "`savehist-mode' failed." )))
+    (t (warn "`savehist-mode' failed." )
+       (message "badness: %s" badness)))
   
   ;; The kill-ring needs to have the kill-ring-yank-pointer set.
   (setq-ifnil kill-ring-yank-pointer kill-ring)
@@ -414,7 +449,9 @@ the init files.")
                              wconfig-names
                              dp-killed-file-states
                              dp-recently-killed-files
-                             ;; <:new vars variables to save:>
+                             gtags-buffer-stack
+                             killed-rectangle
+                             ;; <:add new vars variables to save here:>
                              ))
       (message "added `savehist' vars."))))
 
@@ -429,7 +466,7 @@ the init files.")
 (defvar dp-auto-mode-alist-additions
   '()
   "All of my additions in one place. This allows me to restore the original
-  mode if I want to and then re-apply my changes.")
+  mode is I want to and then re-apply my changes.")
 
 (defun dp-add-auto-mode-alist-additions ()
   (dp-add-list-to-list 'auto-mode-alist dp-auto-mode-alist-additions))
@@ -450,7 +487,7 @@ the init files.")
   (regexp-opt '(
    "wip" "exp" "dev" "WIP" "EXP" "DEV" "hack" "HACK" "play" "PLAY"
    "emerged" "merged" "emerge" "merge"))
-"In development, work in progress, being developed.")
+"In development, works in progress, being developed.")
 
 ;; !<@todo XXX things like save-2 don't work, but save2 do. The [] expr is
 ;; suspect.
@@ -462,17 +499,19 @@ the init files.")
           "\\|KEEP\\|keep"
           "\\|REFERENCE\\|reference"
           ;; Stuff being hidden from version control
-          "\\|novc\\|junk"
-          "\\|NOVC\\|JUNK"
+          "\\(\\|,novc\\|,junk\\|,nogit\\|.,,\\|,.*,\\)$"
+          "\\|,NOVC\\|,JUNK\\|,NOGIT"
           ;; Old but broken or out-of-date.
           "\\|stale\\|bad\\|b0rked\\|broken?\\|hosed\\|fubar"
           "\\|STALE\\|BAD\\|B[O0]RKED\\|BROKEN?\\|HOSED\\|FUBAR"
+          "\\|davep\\|" (user-login-name)
+          "\\|gitrev-[0-9a-fA-F]+"
+          "\\|noindex\\|NOINDEX\\|noidx\\|NOIDX"
           ;; Perforce uses .original.[0-9]+ to save modified files.  I, too,
           ;; like to copy a file to a .orig before hacking it up, although
           ;; I've come to use RCS instead.
-          "\\|merged?\\|obs\\|olde?\\|orig\\(inal\\)?"
-          "\\|MERGED?\\|OBS\\|OLDE?\\|ORIG\\(INAL\\)?")
-          
+          "\\|obs\\|olde?\\|orig\\(inal\\)?\\|OEM\\|oem"
+          "\\|OBS\\|OLDE?\\|ORIG\\(INAL\\)?")
   "Read only part of dp-default-mode-transparent-suffix-regexp (q.v.)")
 
 (defvar dp-default-mode-transparent-suffix-regexp
@@ -572,6 +611,7 @@ w/tags, cscope, etc.")
    ;; @todo XXX revist blanket application of sh mode.
    ("/\\.rc/[^/]+$" . shell-script-mode)
    ("\\.jxt$" . dp-journal-mode)        ; dp Journal files.
+   ("Makefile\\(\\.in\\)?\\.?[0-9]*" . makefile-mode)
    ))
 
 ;; Try alternative to suck-ass `sh-mode' "Shell-script" ksh-mode sucks,
@@ -652,12 +692,16 @@ And their failure occurs way too often."
 
 ;; add our python mode hook here, so we can interoperate with ipython.el
 ;; If there's no ipython.el then we're still ok.
-(if (dp-optionally-require 'python)
-    (message "Using FSF pythom[-mode]")
-  (add-hook 'py-shell-hook 'dp-py-shell-hook)
-  (when dp-prefer-ipython-shell-p
-    (when (setq ipython-command (executable-find "ipython"))
-      (setq py-python-command-args '("--no-autoindent" "--colors" "NoColor"))
+(require 'python-mode)
+(add-hook 'py-shell-hook 'dp-py-shell-hook)
+
+(defun dp-setup-ipython-shell()
+  "Setup my ipython shell."
+  (let ((an-ipython-command (executable-find "ipython")))
+    (when an-ipython-command
+      (setq ipython-command an-ipython-command)
+      (setq py-python-command-args '("--no-autoindent" 
+                                     "--colors=NoColor"))
       (dp-optionally-require 'ipython)
 
       ;; The string sent to ipython to query for all possible completions. I
@@ -665,7 +709,7 @@ And their failure occurs way too often."
       ;; the command string."
       ;; for older IPythons
       ;;    (setq ipython-completion-command-string
-      ;;          "print ';'.join(__IP.Completer.all_completions('%s'))\n")
+      ;;"print ';'.join(__IP.Completer.all_completions('%s'))\n")
       (setq ipython-completion-command-string
             "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 
@@ -673,10 +717,10 @@ And their failure occurs way too often."
       (when (featurep 'ipython)
         (defun dp-ipython-complete-collector (string)
           "This was a lambda in `ipython-complete', but I've broken it out to
-        look for a bug which causes, sometimes, the list of completions to be
-        printed in the *Python* buffer rather than in a completion
-        buffer. It's intermittent and repeating the command will eventually
-        get it to work."
+look for a bug which causes, sometimes, the list of completions to be
+printed in the *Python* buffer rather than in a completion
+buffer. It's intermittent and repeating the command will eventually
+get it to work."
           ;;(message (format "DEBUG filtering: %s" string))
           (setq ugly-return (concat ugly-return string))
           (delete-region comint-last-output-start
@@ -684,7 +728,7 @@ And their failure occurs way too often."
 
         (defun ipython-complete ()
           "Try to complete the python symbol before point. Only knows about the
-        stuff in the current *Python* session."
+stuff in the current *Python* session."
           (interactive)
           (let* ((ugly-return nil)
                  (sep ";")
@@ -706,6 +750,8 @@ And their failure occurs way too often."
                  ;; WAG: just use this set of functions.
          ;;;;;(comint-output-filter-functions nil)
 
+                 ;; @todo XXX Why is this in in a let?  It seems like I'd want
+                 ;; the world to know the new value.
                  (comint-output-filter-functions
                   (append comint-output-filter-functions
                           '(ansi-color-filter-apply
@@ -737,13 +783,15 @@ And their failure occurs way too often."
                    (with-output-to-temp-buffer "*Python Completions*"
                      (display-completion-list
                       (all-completions pattern completion-table)))
-                   (message "Making completion list...%s" "done")))))
+                   (message "Making completion list...%s" "done")))))))))
 
-        ))))
+(defun dp-setup-python-shell ()
+  "Setup python shell.  Choose ipython if preferred."
+  (interactive)
+  (when dp-prefer-ipython-shell-p
+    (dp-setup-ipython-shell)))
 
-;; 500K took forever to build completion table.
-;; as does 50K
-(setq etags-auto-build-completion-table-max (* 50 1024))
+(dp-setup-ipython-shell)
 
 ;;;;###autoload
 ;(let ((hm-el '("\\.hs$" . hugs-mode)))
@@ -969,6 +1017,56 @@ This can be callable.")
 
 (require 'dp-ilisp)
 
+;; This needs to be done before we're required because the hook is called
+;; just before the file exits.
+(defun dp-setup-bookmarks ()
+  (interactive)
+  (add-hook 'bookmark-load-hook 'dp-bookmark-load-hook)
+
+  ;; `defvar' so we can set it elsewhere like a spec-macs.
+  (defvar bookmark-default-file
+        (dp-nuke-newline (shell-command-to-string
+                          "mk-persistent-dropping-name.sh --use-project-as-a-suffix emacs.bmk")))
+ 
+  (require 'bookmark)
+  (setq bookmark-save-flag 1)
+  (defun dp-bookmark-mk-location-str (bookmark &optional no-history)
+    "Insert the name of the file associated with BOOKMARK.
+Optional second arg NO-HISTORY means don't record this in the
+minibuffer history list `bookmark-history'."
+    (interactive (bookmark-completing-read "Insert bookmark location"))
+    (or no-history (bookmark-maybe-historicize-string bookmark))
+    (let ((start (point)))
+      (prog1
+          ;; *Return this line*
+          (format "%s:%sc"
+                          (bookmark-location bookmark)
+                          (bookmark-get-position bookmark))
+        (if window-system
+            (put-text-property start
+                               (save-excursion (re-search-backward
+                                                "[^ \t]")
+                                               (1+ (point)))
+                               'mouse-face 'highlight)))))
+  (defun dp-bookmark-insert-location (&rest r)
+    (interactive)
+    (insert (call-interactively 'dp-bookmark-mk-location-str)))
+
+  (defun dp-bookmark-bmenu-locate ()
+  "Display location of this bookmark.  Displays in the minibuffer."
+  (interactive)
+  (if (bookmark-bmenu-check-position)
+      (let ((bmrk (bookmark-bmenu-bookmark)))
+        (message (dp-bookmark-mk-location-str bmrk)))))
+
+  ;; Make sure a bookmark file exists and has the correct format.  This must
+  ;; be in the bookmark code, but Ah canna find it.
+  (bookmark-write-file bookmark-default-file)
+
+)
+
+(add-hook 'dp-post-dpmacs-hook 'dp-setup-bookmarks)
+
 ;; turn flyspell on everywhere for certain major modes
 ;; (see dp-flyspell.el :: dp-flyspell-hooks)
 (dp-flyspell-setup)
@@ -991,29 +1089,7 @@ This can be callable.")
 (setq search-ring-max 64
       regexp-search-ring-max 64)
 
-;; Do these more like at run-time vs load-time.
-;; This hook is run at the end of dpmacs.el
-;comparing to single lambda, below. (add-hook 'dp-post-dpmacs-hook
-;comparing to single lambda, below.           (lambda ()
-;comparing to single lambda, below.             (require 'dp-faces)))
-;comparing to single lambda, below. (add-hook 'dp-post-dpmacs-hook
-;comparing to single lambda, below.           (lambda ()
-;comparing to single lambda, below.             (require 'dp-ptools)))
-;comparing to single lambda, below. (add-hook 'dp-post-dpmacs-hook
-;comparing to single lambda, below.           (lambda ()
-;comparing to single lambda, below.             (add-hook 'isearch-mode-hook 'dp-isearch-mode-hook)))
-;comparing to single lambda, below. (add-hook 'dp-post-dpmacs-hook
-;comparing to single lambda, below.           (lambda ()
-;comparing to single lambda, below.             (add-hook 'isearch-mode-end-hook 'dp-isearch-mode-end-hook)))
-;comparing to single lambda, below.             ;; @todo autoload-ify the main entry points.
-;comparing to single lambda, below. (add-hook 'dp-post-dpmacs-hook
-;comparing to single lambda, below.           (lambda ()
-;comparing to single lambda, below.             (require 'dp-hooks)))
-;comparing to single lambda, below. (add-hook 'dp-post-dpmacs-hook
-;comparing to single lambda, below.           (lambda ()
-;comparing to single lambda, below.             'dp-setup-cscope))
-;comparing to single lambda, below. (if (dp-xemacs-p)
-;comparing to single lambda, below.     (add-hook 'dp-post-dpmacs-hook 'paren-activate))
+(dp-set-frame-title-format)
 
 ;; Do these more like at run-time vs load-time.
 ;; This hook is run at the end of dpmacs.el
@@ -1028,13 +1104,15 @@ This can be callable.")
              ;; @todo autoload-ify the main entry points.
              (require 'dp-hooks)
              (dp-setup-cscope)
-
              (if (dp-xemacs-p)
                  (paren-activate))
              )))
 
 (when (paths-file-readable-directory-p dp-site-package-info)
   (add-to-list dp-info-path-var dp-site-package-info))
+
+(when (paths-file-readable-directory-p dp-local-package-info)
+  (add-to-list dp-info-path-var dp-local-package-info))
 
 (autoload 'follow-mode "follow"
   "Synchronize windows showing the same buffer, minor mode." t)
@@ -1065,6 +1143,10 @@ This can be callable.")
        "\\(\\([Oo]ld \\|[Bb]ad \\|[Nn]ew \\|^\\)?[Pp]assword\\|pass[ _-]?phrase\\):?\\s-*\\'"
        "\\|"
        "\\(Enter passphrase for.*: \\)"
+       "\\|"
+       "\\(Password for .*\\)"
+       "\\|"
+       "\\(Bad passphrase, try again for.*:\\)"
        "\\|"
        "\\(Enter password.*:\\s-+\\)"
        "\\|"

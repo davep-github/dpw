@@ -1,4 +1,4 @@
-(add-to-list 'load-path (expand-file-name "~davep/lisp/contrib"))
+(add-to-list 'load-path (dp-lisp-subdir "contrib"))
 (add-to-list 'load-path default-directory)
 (require 'dp-macros)
 (defun* dp-define-my-map-prefixes (&optional (map global-map))

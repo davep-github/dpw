@@ -2,7 +2,10 @@
 ;;; Programming tools
 ;;;
 
-(dmessage "loading dp-ptools.el...")
+(dmessage "Loading dp-ptools...")
+
+(defvar dp-reveng-symbol-hist nil
+  "History for reverse engineering symbol names.")
 
 (define-error 'dp-*TAGS-aborted
   "Badness in the guts of the (too) deeply nested *TAGS stuff." 
@@ -61,8 +64,8 @@
 The name appearing first in FILE-NAMES will win in the case of a tie.  We'll
 \(apply FINAL-PRED MAX-STRING FINAL-PRED-ARGS\) to the final candidate.  We
 want to prevent things like running into \"~/TAGS\" when looking for files
-in, say, \"~/work/some/important/stuff\", so by default I make sure that
-we're under a directory named work."
+in, say, \"~/work/some/important/stuff\", so by default FINAL_PRED makes sure
+that we're under a directory named work."
   (setq-ifnil start-dir default-directory)
   (let* ((path-lists (mapcar 
                       (function 
@@ -89,7 +92,7 @@ we're under a directory named work."
                           (or (member max dp-ok-tags-files)
                               (and 
                                (y-or-n-p (format 
-                                          "Doesn't look workish: %s; accept? "
+                                          "That doesn't sound workish to me: %s; accept? "
                                           max))
                                (add-to-list 'dp-ok-tags-files max)))))))
         max
@@ -111,6 +114,281 @@ we're under a directory named work."
   (returner)
   (other-window-finder)
   (name))
+
+(defun dp-cscope-next-file (&optional arg)
+  (interactive)
+  (loop repeat (or arg 1) do
+    (unless (re-search-forward "^\\*\\*\\*\\s-+\\S-+:$" nil t)
+      (dmessage "No more files.")
+      (ding)
+      (return nil)))
+  t)
+
+(defun dp-cscope-prev-file (&optional arg)
+  (interactive)
+  (loop repeat (or arg 1) do
+    (unless (re-search-backward "^\\*\\*\\*\\s-+\\S-+:$" nil t)
+      (dmessage "Already on first file.")
+      (ding)
+      (return nil)))
+  t)
+
+(defun dp-gtags-set-cscope-ignore-case (ignore-case-p)
+  (let (enval stat_str clr-p)
+    (if ignore-case-p
+        (setq enval dp-gtags-cscope-gtags-ignore-case-option
+              stat_str "ignore"
+              clr-p nil)
+      (setq enval "squawk!"
+            stat_str "respect"
+            clr-p t))
+    (setenv dp-gtags-cscope-findstring-options-env-var-name
+            enval
+            clr-p)
+    (dmessage "gtags will %s case" stat_str)))
+
+(defun dp-gtags-cscope-ignore-case ()
+  (interactive)
+  (dp-gtags-set-cscope-ignore-case t))
+
+(dp-defaliases 'gic 'gtic 'gtci 'dp-gtags-cscope-ignore-case)
+
+(defun dp-gtags-cscope-respect-case ()
+  (interactive)
+  (dp-gtags-set-cscope-ignore-case nil))
+
+(dp-defaliases 'grc 'gtrc 'gtcs 'gtnic 'dp-gtags-cscope-no-ignore-case 
+               'dp-gtags-cscope-respect-case)
+
+;; 
+;; -C ignore case.
+;; ????? (setq cscope-command-args '("-C"))
+(defun dp-setup-cscope ()
+  (interactive)
+
+  (dp-gtags-set-cscope-ignore-case dp-gtags-cscope-ignore-case-strings-p)
+
+  (defadvice cscope-extract-symbol-at-cursor 
+    (around dp-cscope-extract-symbol-at-cursor activate)
+    (if (dp-mark-active-p)
+        (setq ad-return-value (buffer-substring (mark) (point)))
+      ad-do-it))
+
+  (defun dp-cscope-do-not-update-database ()
+    dp-using-gtags-cscope-p)
+
+  (defun dp-cscope-list-entry-hook ()
+    (define-key cscope-list-entry-keymap "i" 'dp-tag-find-with-idutils-bury-first))
+  (add-hook 'cscope-list-entry-hook 'dp-cscope-list-entry-hook)
+
+  (defun dp-cscope-select-entry-this-window ()
+    "Visit the current entry in the cscope buffer window."
+    (interactive)
+    (cscope-select-entry-specified-window (selected-window)))
+
+  (defun dp-bind-xcscope-keys (&optional map)
+    (interactive "Smap? ")
+    (setq-ifnil map global-map)
+    ;;
+    (define-key map [f5]  'cscope-find-this-symbol)
+    (define-key map [f6]  'cscope-find-global-definition)
+    (define-key map [(control ?c) ?s ?A] 'cscope-unset-initial-directory)
+    (define-key map [(control ?c) ?s ?B] 'cscope-display-buffer-toggle)
+    (define-key map [(control ?c) ?s ?C] 'cscope-find-called-functions)
+    (define-key map [(control ?c) ?s ?D] 'cscope-dired-directory)
+    (define-key map [(control ?c) ?s ?E] 'cscope-edit-list-of-files-to-index)
+    (define-key map [(control ?c) ?s ?G] 'cscope-find-global-definition-no-prompting)
+    (define-key map [(control ?c) ?s ?L] 'cscope-create-list-of-files-to-index)
+    (define-key map [(control ?c) ?s ?N] 'cscope-next-file)
+    (define-key map [(control ?c) ?s ?P] 'cscope-prev-file)
+    ;; Annoyingly, this could change whenever I change gtags tagging backend.
+    ;; With `native', cscope can do references.
+    ;; ex-ctags and uctags can't, but can do other things better.
+    (define-key map [(control ?c) ?s ?s] 'cscope-find-this-symbol)
+    (define-key map [(control ?c) ?s ?S] 'dp-tag-find-with-idutils)
+
+    (define-key map [(control ?c) ?s ?T] 'cscope-tell-user-about-directory)
+    (define-key map [(control ?c) ?s ?W] 'cscope-tell-user-about-directory)
+    (define-key map [(control ?c) ?s ?a] 'cscope-set-initial-directory)
+    (define-key map [(control ?c) ?s ?b] 'cscope-display-buffer)
+    (define-key map [(control ?c) ?s ?c] 'cscope-find-functions-calling-this-function)
+    (define-key map [(control ?c) ?s ?d] 'cscope-find-global-definition)
+    (define-key map [(control ?c) ?s ?e] 'cscope-find-egrep-pattern)
+    (define-key map [(control ?c) ?s ?f] 'cscope-find-this-file)
+    (define-key map [(control ?c) ?s ?g] 'cscope-find-global-definition)
+    (define-key map [(control ?c) ?s ?i] 'dp-tag-find-with-idutils)
+    (define-key map [(control ?c) ?s ?n] 'cscope-next-symbol)
+    (define-key map [(control ?c) ?s ?p] 'cscope-prev-symbol)
+    (define-key map [(control ?c) ?s ?t] 'cscope-find-this-text-string)
+    (define-key map [(control ?c) ?s ?u] 'cscope-pop-mark)
+    (global-set-key [(control ?c) ?s ?I] 'cscope-find-files-including-file)
+    ;; The previous line corresponds to be end of the "Cscope" menu.
+    ;; ---
+    ;; 'o' is Buffer-menu-other-window, 'o' is dired-find-file-other-window
+    ;; etc. So I'm moving some keys:
+    )
+  ;;
+  ;; Make xcscope bindings global
+  ;; ??? Do this only in c-mode-common-hook?
+  ;;
+  (defun dp-bind-xcscope-fkeys (&optional map)
+    (interactive "Smap? ")
+    (setq-ifnil map global-map)
+    (define-key map [(control f3)] 'cscope-set-initial-directory)
+    (define-key map [(control f4)] 'cscope-unset-initial-directory)
+    (define-key map [(control f5)] 'cscope-find-this-symbol)
+    (define-key map [(control f6)] 'cscope-find-global-definition)
+    (define-key map [(control f7)] 'cscope-find-global-definition-no-prompting)
+    (define-key map [(control f8)] 'cscope-pop-mark)
+    (define-key map [(control f9)] 'cscope-next-symbol)
+    (define-key map [(control f10)] 'cscope-next-file)
+    (define-key map [(control f11)] 'cscope-prev-symbol)
+    (define-key map [(control f12)] 'cscope-prev-file)
+    (define-key map [(meta f9)] 'cscope-display-buffer)
+    (define-key map [(meta f10)] 'cscope-display-buffer-toggle))
+  
+  (defvar dp-cscope-current-dir-only-regexps nil
+    "The value for `cscope-database-regexps' that will cause us to search the
+    current directory only.
+??? Maybe should be '(t) ??? As per `cscope-database-regexps' doc?")
+  (defvar dp-cscope-db-update-required-p nil)
+
+  (defun dp-cscope-minor-mode-p ()
+    "Return non-nil if `cscope-minor-mode' is in effect."
+    (assq 'cscope-minor-mode minor-mode-map-alist))
+
+  (defun dp-cscope-set-db-update-required ()
+    (setq dp-cscope-db-update-required-p
+          (and (dp-in-c)
+               (dp-cscope-minor-mode-p))))
+
+  (defun dp-cscope-force-current-dir-only (&optional restore-p)
+    (interactive "P")
+    (if restore-p
+        (dp-cscope-set-cscope-database-regexps 'reset)
+      (setq cscope-database-regexps dp-cscope-current-dir-only-regexps)))
+  (dp-defaliases 'dp-cscope-. 'dp-cscope. 'dp-cscope-force-current-dir-only)
+
+  (when (dp-optionally-require 'xcscope)
+    ;; defun dp-cscope-minor-mode-hook Something in some files can cause the
+    ;; permuted style index (-q) to fail to find things. Currently, there is
+    ;; something in the src tree @ nv that causes this.
+    (setq cscope-perverted-index-option dp-cscope-perverted-index-option
+          cscope-edit-single-match nil)
+    (defun dp-cscope-minor-mode-hook ()
+      (interactive)
+      (define-key cscope-list-entry-keymap [(meta ?-)] 
+        (kb-lambda (dp-func-or-kill-buffer 
+                    'cscope-bury-buffer)))
+      (dp-define-keys cscope-list-entry-keymap 
+                      '([?.] dp-cscope-select-entry-this-window
+                        [?v] cscope-show-entry-other-window
+                        [?o] cscope-select-entry-other-window
+                        [return] cscope-select-entry-other-window
+                        [? ] cscope-select-entry-one-window
+                        [?1] cscope-select-entry-one-window
+                        [(tab)] cscope-next-symbol
+                        [(control ?i)] cscope-next-symbol
+                        [(meta right)] dp-cscope-next-file
+                        [(meta left)] dp-cscope-prev-file
+                        [?d] cscope-find-global-definition)))
+    
+    (add-hook 'cscope-minor-mode-hooks 'dp-cscope-minor-mode-hook)
+    ;; @todo XXX This should actually DO SOMETHING... it's only acting as a
+    ;; predicate.
+    (add-hook 'after-save-hook 'dp-cscope-set-db-update-required)
+
+    ;; defun cs
+    (defun dp-cscope-buffer (&optional no-select)
+      "Switch to cscope results buffer, if it exists."
+      (interactive)
+      (if (setq b (get-buffer cscope-output-buffer-name))
+          (if no-select
+              (set-buffer b)
+            (dp-display-buffer-select b))
+        (message "No cscope results buffer yet.")))
+    (defalias 'cs 'dp-cscope-buffer)
+
+    (when-and-boundp dp-bind-xcscope-keys-p
+      (dp-bind-xcscope-keys))
+    (when-and-boundp dp-bind-xcscope-fkeys-p
+      (dp-bind-xcscope-fkeys))
+    
+    (defadvice cscope-prompt-for-symbol (before dp-cscope-push-gb activate)
+      "Push go back before doing a cscope operation.
+This seems to be a fairly common routine that is run before most commands.
+It gives us a common point to save our position before going off after a
+cscope discovery.
+*** Look at new xcscope.el. It has some mark stack capability now."
+      (dp-push-go-back "go-back advised cscope-prompt-for-symbol"))
+    
+    (defadvice  cscope-next-symbol 
+      (before dp-advised-cscope-next-symbol activate)
+      (dp-set-current-error-function 'dp-cscope-next-thing
+                                     nil
+                                     'cscope-next-symbol))
+    
+    (defadvice  cscope-next-file (before dp-advised-cscope-next-file activate)
+      (dp-set-current-error-function 'dp-cscope-next-thing 
+                                     nil 
+                                     'cscope-next-file))
+    
+    (defadvice  cscope-prev-symbol 
+      (before dp-advised-cscope-prev-symbol activate)
+      (dp-set-current-error-function 'dp-cscope-next-thing
+                                     nil
+                                     'cscope-prev-symbol))
+    
+    (defadvice  cscope-prev-file (before dp-advised-cscope-prev-file activate)
+      (dp-set-current-error-function 'dp-cscope-next-thing
+                                     nil
+                                     'cscope-prev-file))
+    
+    ;;!<@todo Do I want to do this? It doesn't cause a current window change,
+    ;;but it is a common action and ?is? logically similar to the others.
+    ;; Right now, it has a problem in that it unconditionally sets the error
+    ;; function to cscope-next-symbol rather than what it was that preceded
+    ;; it.
+    ;; There is a problem when this is used directly from the cscope buffer.
+    ;; The value is not set there and so will retain the previous value which
+    ;; may be nil or unset.
+    (defadvice  cscope-show-entry-other-window 
+      (before dp-advised-cscope-prev-file activate)
+      (dp-set-current-error-function 'dp-cscope-next-thing
+                                     nil
+                                     'cscope-next-symbol))
+    
+    (defadvice  cscope-select-entry-other-window 
+      (before dp-advised-cscope-prev-file activate)
+      (dp-set-current-error-function 'dp-cscope-next-thing
+                                    nil
+                                    'cscope-next-symbol)))
+  (defvar dp-def-work-dir (dp-mk-pathname (getenv "HOME") "work"))
+  (defvar dp-def-cscope-db-dir-name "def-cscope.d")
+  (defvar dp-def-work-cscope-db-dir-name
+    (dp-mk-pathname dp-def-work-dir dp-def-cscope-db-dir-name))
+  (defvar dp-def-home-cscope-db-dir-name 
+    (dp-mk-pathname (getenv "HOME") dp-def-cscope-db-dir-name))
+;; This is a poorly documented, convolutedly implemented bizarre variable and
+;; in general boggles my mind and confuzes the hell out of me... and yet
+;; seems so simple.  All I want to do is to search upward from the current
+;; dir for the database. If nothing is found, then I'd like to access a
+;; default db.  So, if I'm in a work dir, I'll get the most specific
+;; db. Otherwise (say in ~), I'll get some default db (say my current
+;; project's current sandbox's db.)
+;;   (setq cscope-database-regexps
+;;         `(
+;;           ( ,(concat "^" dp-def-work-dir)
+;;             ( t )
+;;             t
+;;             ( ,dp-def-work-cscope-db-dir-name ("-d"))
+;;             t)
+;;           ( ".*"
+;;             t
+;;             ( ,dp-def-home-cscope-db-dir-name ("-d"))
+;;             t)
+;;           ))
+  )
 
 ;; XXX @todo remove regular tags if
 ;; 1) gtags proves better
@@ -284,15 +562,26 @@ Oddly, it doesn't handle structs.")
 ;; fsf wants nil t to go to the next tag,
 ;; xemacs wants nil nil ""
 ;;(global-set-key [(control ?.)] (kb-lambda (find-tag nil (not (dp-xemacs-p)))))
-;; When gtagsing, this will be it's prefix.
+;; When gtagsing, this will be its prefix.
 
 (dp-deflocal dp-gtags-suggested-key-mapping t
   "Does this buffer want gtags key mappings?")
+(dp-deflocal dp-gtags-ripped-off-completor-args "--rgg-all-dbs"
+  "Mer stuff to mak compler do teh rite things.")
+(dp-deflocal dp-gtags-auto-update-extra-args nil
+  "Extry stuff to send when askin fer to flobal to date the bases.")
+;; [sic]
 
-;; XXX @todo Fix this to use a real predicate.
-(when t ;;(dp-gtags-p)
+;;
+;; We make xgtags use this.
+(when (or (dp-gtags-p) (dp-xgtags-p))
   (make-variable-buffer-local 'gtags-auto-update)
   (setq-default gtags-auto-update nil)
+  (make-variable-buffer-local 'dp-gtags-auto-update-db-flag)
+  ;; It's kind of slow (in the 4.4 linux kernel tree anyway) to update all of
+  ;; the dbs up to the root.  So we just do the one for the dir we're in,
+  ;; which should be the dir of the file we're saving.
+  (setq-default dp-gtags-auto-update-db-flag "--rgg-one-db")
   (defun dp-gtags-update-file ()
     (interactive)
     (let ((gtags-mode t)
@@ -300,23 +589,71 @@ Oddly, it doesn't handle structs.")
       (message "gtags updating...")
       (gtags-auto-update)
       (message "done.")))
-  (defalias 'guf 'dp-gtags-update-file)
+
+  (global-set-key [(meta ?W)] 'dp-gtags-save-buffer-and-update-all-dbs)
+
+  (defun dp-gtags-save-buffer-and-update-all-dbs (&optional args)
+    (interactive)
+    (let ((dp-gtags-auto-update-db-flag "--rgg-all-dbs"))
+      (call-interactively 'save-buffer)))
+
+  (defun dp-gtags-ripped-off-completor (patteren &optional predicate code)
+    "Needs to rip off more!"
+    (interactive (list (dp-prompt-with-symbol-near-point-as-default
+                        "Symbol to complete")))
+    ;;(gtags-completing 'bubba patteren nil t))
+
+    (let ((complete-list (make-vector 511 0))
+          options)
+      (when patteren
+          (setq options (list patteren)))
+      (with-temp-buffer
+        (apply 'call-process "global" nil t nil "-c" options)
+        (goto-char (point-min))
+        (while (re-search-forward xgtags--symbol-regexp nil t)
+          (intern (match-string-no-properties 0) complete-list)))
+      (cond ((eq code nil)
+             (try-completion string complete-list predicate))
+            ((eq code t)
+             (all-completions string complete-list predicate))
+            ((eq code 'lambda)
+             (if (intern-soft string complete-list) t nil)))))
+
+  (defun dp-gtags-completing-read-completor (string predicate meh)
+    ;;(dmessage "string>%s<, predicate>%s<, meh>%s<" string predicate meh)
+    (dp-gtags-ripped-off-completor string predicate meh))
+
+  (defalias 'guf 'dp-gtags-update-file))
+
+(when (dp-gtags-p)
+
+  (defun dp-gtags-current-token ()
+    (if (dp-mark-active-p)
+        (buffer-substring (mark) (point))
+      (gtags-current-token)))
 
   (defun dp-gtags-select-tag-other-window ()
     (interactive)
     (dp-push-go-back&call-interactively
      'gtags-select-tag-other-window
-     nil nil "dp-gtags-select-mode-hook"))
+     nil nil "dp-gtags-select-tag-other-window"))
   
   (defun dp-gtags-select-mode-hook ()
     (dp-define-buffer-local-keys
      `([return] dp-gtags-select-tag-other-window
        [(meta ?-)] dp-bury-or-kill-buffer
-       [?h] gtags-display-browser
+       [(meta return)] gtags-select-tag
+       [?.] gtags-select-tag
+       [?1] dp-gtags-select-tag-one-window
+       [?=] gtags-select-tag
+       [?i] gtags-find-with-idutils
        [?P] gtags-find-file
+       [?d] gtags-find-tag
        [?f] gtags-parse-file
        [?g] gtags-find-with-grep
-       [?I] gtags-find-with-idutils
+       [?h] gtags-display-browser
+       [?o] gtags-select-tag-other-window
+       [?r] gtags-find-rtag
        [?s] gtags-find-symbol
        [?r] gtags-find-rtag
        [?t] gtags-find-tag
@@ -325,6 +662,10 @@ Oddly, it doesn't handle structs.")
        [?.] gtags-select-tag
        [?=] gtags-select-tag
        [space] dp-gtags-select-tag-one-window
+       [up] ,(kb-lambda
+                (call-interactively 'dp-up-with-wrap-non-empty))
+       [down] ,(kb-lambda 
+                  (call-interactively 'dp-down-with-wrap-non-empty))
        [?1] dp-gtags-select-tag-one-window
        [(meta return)] gtags-select-tag
        [?u] dp-gtags-update-file
@@ -346,8 +687,381 @@ Oddly, it doesn't handle structs.")
               (switch-to-buffer-other-window buf)
             (switch-to-buffer buf))
         (dp-ding-and-message "No gtags select buffers."))))
+
+  (defun dp-gtags-setup-next-error ()
+    (interactive)
+    (defadvice gtags-goto-tag (before auto-go-back-stuff activate)
+      "Push go back before doing a gtags operation.
+This seems to be a fairly common routine that is run before most commands.
+It gives us a common point to save our position before going off after a
+gtags discovery."
+      (dp-push-go-back "go-back advised gtags-goto-tag"))
+
+    (dp-current-error-function-advisor 
+     'dp-gtags-select-tag-one-window
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'dp-gtags-select-tag-other-window
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-with-idutils
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-with-grep
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-with-file
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-tag
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-symbol
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-find-rtag
+     'dp-gtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'gtags-select-tag
+     'dp-gtags-next-thing)
+
+    (defun dp-gtags-next-thing (&optional func)
+      (interactive "P")
+      ;; Don't set the next error function here.
+      ;; Only let it be set when the functions are called directly.
+      (let ((dp-dont-set-latest-function t))
+        (dp-visit-gtags-select-buffer 'other-window)
+        (dp-down-with-wrap-non-empty 1)
+        (gtags-select-tag-other-window)
+        ;; (call-interactively func)
+        ))
+    )
+
+  (dp-gtags-setup-next-error)
+
   (add-hook 'gtags-select-mode-hook 'dp-gtags-select-mode-hook))
 
+(when (dp-xgtags-p)
+  (make-variable-buffer-local 'xgtags-update-db)
+  ;; Need this (or something like it) to 1) handle C++ scopy things (::) and
+  ;; 2) make sure that the entire word is grabbed.  For completion purposes.
+  ;;(setq xgtags--symbol-regexp "^[~A-Za-z_]\\([A-Za-z_0-9.]\\(::\\)?\\)*")
+
+  (setq-default xgtags-update-db nil)
+  (setq xgtags-goto-tag 'unique)
+  (defun dp-xgtags-update-file ()
+    (interactive)
+    (let ((xgtags-mode t)
+          (xgtags-update-db t))
+      (message "xgtags updating...")
+      (xgtags--update-db xgtags-rootdir)
+      (message "done.")))
+  (defalias 'guf 'dp-xgtags-update-file)
+
+  ;;
+  ;; Ganked from gtags.el to make xgtags less sucky.  xgtags has a better
+  ;; display of hits.  May be better to move display code to gtags.
+
+  (defcustom gtags-auto-update nil
+    "*If non-nil, tag files are updated whenever a file is saved."
+    :type 'boolean
+    :group 'gtags)
+
+  ;;
+  ;; Invoked on saving a file.
+  ;;
+  (defun gtags-buffer-file-name ()
+    ;; real gtags-buffer-file-name has tramp awareness.
+    buffer-file-truename)
+
+  (defun gtags-auto-update ()
+    (when (and xgtags-mode gtags-auto-update buffer-file-name)
+      (if (not (dp-in-exe-path-p xgtags-global-program))
+          (message "gtags-auto-update: cannot find tag updater: %s" 
+                   xgtags-global-program)
+        (message "Updating tags(%s)..." dp-gtags-auto-update-db-flag)
+        (call-process xgtags-global-program
+                      nil nil nil
+                      dp-gtags-auto-update-db-flag
+                      (if dp-gtags-auto-update-db-flag
+                          "-L"
+                        "--rgg-nop")
+                      (if dp-gtags-auto-update-db-flag
+                          "cscope.files"
+                        "--rgg-nop")
+                      "-u" (concat "--single-update=" (gtags-buffer-file-name)))
+        (message "Updating tags(%s)...done" dp-gtags-auto-update-db-flag))))
+
+  (defun* dp-xgtags-get-token (&optional
+                               (dflt-prompt "xgtags token: ")
+                               (get-token 'xgtags--token-at-point)
+                               (history xgtags--history-list))
+    (interactive)
+    (let* ((tagname (funcall get-token))
+           (prompt (if tagname
+                       (concat dflt-prompt " (default " tagname ") ")
+                     (concat dflt-prompt " "))))
+      (completing-read prompt xgtags--completition-table
+                       nil nil nil history tagname)))
+
+  (defun dp-xgtags-find-tag-other-window ()
+    (interactive)
+    (let ((tagname (dp-xgtags-get-token "other window token: "))
+          (xgtags-goto-tag 'always))
+      ;;(other-window 1)
+      (xgtags--goto-tag tagname)))
+
+  (defun dp-xgtags-select-selected-tag-other-window (&optional tag)
+    (interactive)
+    (xgtags--select-and-follow-tag tag))
+
+  (defun dp-xgtags-select-selected-tag-other-window-cmd ()
+    "Works only in select buffer."
+    (interactive)
+    (let ((tag (xgtags--find-tag-near-point)))
+      (other-window 1)
+      (dp-push-go-back&apply-rest
+       "dp-xgtags-select-selected-tag-other-window-cmd-v2"
+       'dp-xgtags-select-selected-tag-other-window
+       tag)))
+
+  (defun dp-xgtags-select-mode-hook ()
+    (dp-define-buffer-local-keys
+     `([return] dp-xgtags-select-selected-tag-other-window-cmd
+       [(meta ?-)] dp-bury-or-kill-buffer
+       [(meta return)] gtags-select-tag
+       [?.] xgtags-select-tag-near-point
+       [?1] dp-xgtags-select-tag-one-window
+       [?=] xgtags-select-tag-near-point
+       [?i] xgtags-find-with-idutils
+       [?P] xgtags-find-file
+       [?d] xgtags-find-tag
+       [?f] xgtags-parse-file
+       [?g] xgtags-find-with-grep
+       [?h] xgtags-display-browser
+       [?o] dp-xgtags-select-selected-tag-other-window-cmd
+       [?q] bury-buffer
+       [?r] xgtags-find-rtag
+       [?s] xgtags-find-symbol
+       [?t] xgtags-find-tag
+       [?u] dp-xgtags-update-file
+       [?v] xgtags-visit-rootdir
+       [space] dp-xgtags-select-tag-one-window
+       [up] ,(kb-lambda
+                 (call-interactively 'dp-up-with-wrap-non-empty))
+       [down] ,(kb-lambda
+                   (call-interactively 'dp-down-with-wrap-non-empty)))))
+
+  (defun dp-xgtags-mode-hook ()
+    (if xgtags-mode
+        (add-hook 'after-save-hook 'gtags-auto-update)
+      (remove-hook 'after-save-hook 'gtags-auto-update)))
+  (add-hook 'xgtags-mode-hook 'dp-xgtags-mode-hook)
+
+  (defun dp-xgtags-select-tag-one-window ()
+    (interactive)
+    (xgtags-select-tag-near-point)
+    (dp-one-window++))
+
+  (defun dp-xgtags-next-thing (func)
+    (interactive)
+    ;; Don't set the next error function here.
+    ;; Only let it be set when the functions are called directly.
+    (let ((dp-dont-set-latest-function t))
+      (if (bobp (xgtags--get-buffer))
+          (progn 
+            (setq xgtags--selected-tag (xgtags--find-tag-near-point))
+            (call-interactively 'dp-xgtags-select-selected-tag-other-window-cmd))
+        (call-interactively func)
+        (display-buffer (xgtags--get-buffer) t))))
+
+  (defun dp-visit-xgtags-select-buffer (&optional other-window-p)
+    (interactive "P")
+    (let ((buf (dp-get-buffer (car-safe (dp-choose-buffers-by-major-mode
+                                         'xgtags-select-mode))
+                              'nil-if-nil)))
+      (if buf
+          (if other-window-p
+              (switch-to-buffer-other-window buf)
+            (switch-to-buffer buf))
+        (dp-ding-and-message "No xgtags select buffers."))))
+
+;;needs work   (defun dp-xgtags--find-with (&rest r)
+;;needs work     (interactive)
+;;needs work     (call-interactively 'xgtags--find-with)
+;;needs work     (dp-beginning-of-buffer)
+;;needs work     (xgtags--find-tag-near-point))
+
+  (defun dp-xgtags-setup-next-error ()
+    (defadvice xgtags--find-with (before dp-xgtags-go-back-stuff activate)
+      "Push go back before doing an xgtags operation.
+This seems to be a fairly common routine that is run before most commands.
+It gives us a common point to save our position before going off after a
+xgtags discovery.
+*** Look at new xcscope.el. It has some mark stack capability now."
+      (setq icky-directory-from-which-we-are-tag-searching
+            (dp-get-buffer-dir-name))
+      (dp-push-go-back "go-back advised xgtags--find-with"))
+
+    ;; Start with next error function setup so we can M-n immediately after a
+    ;; search operation.
+;;needs work     (dp-current-error-function-advisor-after
+;;needs work      'xgtags--find-with
+;;needs work      'dp-xgtags--find-with)
+
+    (dp-current-error-function-advisor 
+     'xgtags-find-with-idutils
+     'dp-xgtags-next-thing
+     'xgtags-select-next-tag)
+
+    (dp-current-error-function-advisor 
+     'xgtags-find-with-grep
+     'dp-xgtags-next-thing
+     'xgtags-select-next-tag)
+    
+    (dp-current-error-function-advisor 
+     'xgtags-select-next-tag
+     'dp-xgtags-next-thing)
+
+    (dp-current-error-function-advisor 
+     'xgtags-select-prev-tag
+     'dp-xgtags-next-thing)
+    
+    (dp-current-error-function-advisor 
+     'xgtags-switch-to-buffer-other-window
+     'dp-xgtags-next-thing
+     'xgtags-select-next-tag)
+
+    (dp-current-error-function-advisor 
+     'xgtags-select-tag-near-point
+     'dp-xgtags-next-thing
+     'xgtags-select-next-tag)
+
+    (dp-current-error-function-advisor 
+     'xgtags-select-tag-by-event
+     'dp-xgtags-next-thing
+     'xgtags-select-next-tag)
+    )
+
+  (dp-xgtags-setup-next-error)
+
+  (add-hook 'xgtags-select-mode-hook 'dp-xgtags-select-mode-hook))
+
+(defun dp-tag-find-old (&rest r)
+  (interactive)
+  (call-interactively (dp-*TAGS-handler-finder (dp-get-*TAGS-handler))))
+
+(defun dp-tag-find (&rest r)
+  (interactive)
+  (cond
+   ((looking-at "(")
+    (dp-eval-naked-embedded-lisp))
+   ((looking-at ":(")
+    (dp-eval-embedded-lisp-region))
+   ((dp-xgtags-p)
+    (call-interactively 'xgtags-find-tag))
+   ((dp-gtags-p)
+    (call-interactively 'gtags-find-tag))
+   (t
+    (error "No tag finder."))))
+
+(defun dp-tag-find-rtag (&rest r)
+  (interactive)
+  (cond
+   ((dp-xgtags-p)
+    (call-interactively 'xgtags-find-rtag))
+   ((dp-gtags-p)
+    (call-interactively 'gtags-find-rtag))
+   (t
+    (error "No tag finder."))))
+
+(defun dp-tag-find-with-grep (&rest r)
+  (interactive)
+  (cond
+   ((dp-xgtags-p)
+    (call-interactively 'xgtags-find-with-grep))
+   ((dp-gtags-p)
+    (call-interactively 'gtags-find-with-grep))
+   (t
+    (error "No tag grep finder."))))
+
+(defun dp-tag-find-with-idutils (&rest r)
+  (interactive)
+  (cond
+   ((dp-xgtags-p)
+    (call-interactively 'xgtags-find-with-idutils))
+   ((dp-gtags-p)
+    (call-interactively 'gtags-find-with-idutils))
+   (t
+    (error "No tag idutils finder."))))
+
+(defun dp-tag-find-with-idutils-bury-first ()
+  (interactive)
+  (let ((window (dp-get-buffer-window)))
+    (dp-tag-find-with-idutils)
+    (delete-window window))
+)
+
+;;   (condition-case err
+;;       (let ((handler-list (dp-get-*TAGS-handler-list)))
+;;         (if handler-list
+;;             (dp-*TAGS-try-handler-funcs handler-list
+;;                                         'dp-*TAGS-handler-finder)
+;;           (dp-ding-and-message "No handlers/tag files found.")))
+;;     ('dp-*TAGS-aborted 
+;;      (ding)
+;;      (message "Tag op aborted: %s" err))))
+
+(defun dp-tag-pop-old (&rest r)
+  (interactive)
+  (call-interactively (dp-*TAGS-handler-returner (dp-get-*TAGS-handler))))
+
+(defun dp-tag-pop (&rest r)
+  (interactive)
+  (cond
+   ((dp-xgtags-p)
+    (call-interactively 'xgtags-pop-stack))
+   ((dp-gtags-p)
+    (call-interactively 'gtags-pop-stack))
+   (t
+    (error "No tag popper."))))
+
+(defun dp-tag-pop-other-win ()
+  (interactive)
+  (gtags-pop-stack t))
+
+(defun dp-tag-find-other-window (&rest r)
+  (interactive)
+  (cond
+   ((dp-xgtags-p)
+    (call-interactively 'dp-xgtags-find-tag-other-window))
+   ((dp-gtags-p)
+    (call-interactively 'gtags-find-tag-other-window))
+   (t
+    (error "No find tag other window."))))
+
+(defun dp-global-set-tags-keys ()
+  (global-set-key [(meta ?.)] 'dp-tag-find)
+  (global-set-key [(control ?x) (control ?.)]
+    (kb-lambda
+        (let ((current-prefix-arg '(4)))
+          (call-interactively 'dp-tag-find))))
+  (global-set-key [(control meta ?.)] 'dp-tag-find-other-window)
+  (global-set-key [(meta ?,)] 'dp-tag-pop) ; "\e,"
+  (global-set-key [(control meta ?,)] 'dp-tag-pop-other-win))
+
+;;;
+;;; end *tags support
+;;; begin hide ifdef support
+;;;
 (defvar dp-wants-hide-ifdef-p nil
   "Do I want the hide ifdef package activated?")
 
@@ -386,6 +1100,20 @@ NAME is a short name associated by hideif with the list of defs."
   (if dp-hide-ifdef-configure-function
       (funcall dp-hide-ifdef-configure-function)
     (message "No hide-ifdef configure function configured.")))
+
+(defun dp-show-if1 ()
+  "Set up hide-ifdef to show all #if 1 code. Activates the mode.
+Mostly used for the side effect of hiding #if 0.
+It does hide everything else, but that can be controlled by, duh, 
+defining other constants.
+@todo XXX Make a function to [un]define symbol @ point."
+  (interactive)
+  (hide-ifdef-mode 1)
+  (hide-ifdef-define '\1)
+  (hide-ifdefs))
+
+;; Not really hide if0, but kind of.
+(dp-defaliases 'dp-hide-if0 'hif0 'dp-show-if1)
 
 ;;
 ;; Give the ability to prevent writing to certain directory trees.
@@ -722,7 +1450,7 @@ do not indent the newly inserted comment block."
     (save-excursion
       (beginning-of-line)
       ;; find the class name
-      ;; @todo C++ <templates> *WILL* break this.
+      ;; @todo templates *WILL* break this.
       ;; Apparently not.
       (dp-re-search-forward 
        "^\\s-*\\(enum\\|class\\|struct\\)\\s-+\\(\\S-+?\\)\\s-*\\(:\\|{\\|$\\)"))
@@ -818,4 +1546,4 @@ so each mode can have its own logic."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (provide 'dp-ptools)
-(dmessage "done loading dp-ptools.el...")
+(dmessage "Loading dp-ptools...done")

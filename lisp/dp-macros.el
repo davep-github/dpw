@@ -391,6 +391,29 @@ VAR must be a symbol."
           ,func-docstr
           (if ,var
               (apply (quote message) (concat ,prefix-str fmt) args))))))
+  
+  (defmacro dp-current-error-function-advisor (fun next-thing 
+                                               &optional next-thing-arg)
+    (let* ((efunc (eval fun))
+           (next-thing-arg (or (eval next-thing-arg) efunc))
+           (enext-thing (eval next-thing)))
+      `(defadvice ,efunc
+        (before next-error-function-stuff activate)
+        (dp-set-current-error-function ,next-thing
+                                       nil
+                                       (quote ,next-thing-arg)))))
+  
+  (defmacro dp-current-error-function-advisor-after (fun next-thing
+                                               &optional next-thing-arg)
+    (let* ((efunc (eval fun))
+           (next-thing-arg (or (eval next-thing-arg) efunc))
+           (enext-thing (eval next-thing)))
+      `(defadvice ,efunc
+        (after next-error-function-stuff-after activate)
+        (dp-set-current-error-function ,next-thing
+                                       nil
+                                       (quote ,next-thing-arg)))))
+
 )
 
 ;; There is some *very* bizzare parenthesis closing problem up there.
@@ -662,7 +685,7 @@ FORMS complete."
        (get 'defvar 'lisp-indent-function))
 
 
-;;; // ///// <:macros new above me:>
+;;; // ///// <:macros new up there, above me:>
 
 )  
 

@@ -15,7 +15,7 @@
   ;; Prevent it fucking up a selection.
   (dp-set-zmacs-region-stays t))
 ;; Prevent it fucking up an isearch
-(put 'dp-putty-f15-bullshit isearch-continues t)
+(put 'dp-putty-f15-bullshit 'isearch-command t)
 
 (global-set-key [f15] 'dp-putty-f15-bullshit)
 (global-set-key [(meta f15)] 'dp-putty-f15-bullshit)

@@ -309,7 +309,7 @@
 
 (defface dp-journal-embedded-lisp-face
   '((((class color) (background light)) 
-     (:foreground "slategray3"))) 
+     (:foreground "royalblue"))) 
   "Face for embedded lisp expressions."
   :group 'faces
   :group 'dp-vars)

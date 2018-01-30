@@ -71,6 +71,11 @@
   (require 'cc-langs)
   (require 'cc-cmds)
   (require 'cc-engine))
+
+;; Define styles after `cc-mode' is loaded because it seems to clear its
+;; style alist (at least) which makes the styles become undefined.
+(require 'dp-c-like-styles)
+
 (dp-define-my-map-prefixes c-mode-map)
 (dp-define-my-map-prefixes c++-mode-map)
 
@@ -576,36 +581,64 @@ Will miss many cases and do it in comments, too. "
 
 (dp-defaliases 'dp-kill-camel 'dp-fix-symbol 'kill-camel 'kamel 
                'dpkc 'dp-c-camel-to-classic)
+
+(defvar dp-c-type-list 
+  '("auto" "char" "const" "double" "float" "int" "long" "register" "short" 
+    "signed" "struct" "union" "unsigned" "void" "volatile" "mutable" "bool"
+    "byte" "FILE"
+    "int8" "int16" "int32" "int64")
+"List of keywords that imply types.
+Using both uint16 and int16 break the regexp when this list is passed to 
+`regexp-opt'. Same for 32 and 64.
+int8 and uint8 seem to work together.
+A simple `dp-looking-back-at' using `dp-<type>*-regexp' returns nil.
+!<@todo XXX try a simple regexp join rather than opt?")
+
+(defvar dp-<type>*-regexp-list-init
+  (list
+   (concat "\\(?:"
+           "\\("
+           "\\("
+           "[a-zA-Z_][a-zA-Z_0-9]*_[tase]"
+           "\\|"
+           "\\(?:\\(?:struct\\|class\\)\\s-+[a-zA-Z_][a-zA-Z0-9_]*\\)"
+           (if dp-c-type-list
+               (concat "\\|" (regexp-opt dp-c-type-list 'paren))
+             "")
+           (if dp-c*-additional-type-list
+               (concat "\\|" (regexp-opt dp-c*-additional-type-list 'paren))
+             "")
+           "\\)"
+           "\\s-*"
+           "\\)"
+           "\\("
+           "\\*"
+           "\\s-*"
+           "\\)"
+           "\\)"
+           ))
+  "Default list of regexp strings that describe types.")
+
+(defvar dp-<type>*-regexp-list nil
+  "A list of regexp strings that describe types.")
+
 (defvar dp-<type>*-regexp-memo nil)
+
 (defun dp-<type>*-regexp ()
   (setq dp-<type>*-regexp-memo
-        (concat "\\("
-                "\\("
-                "[a-zA-Z_][a-zA-Z_0-9]*_[tase]"
-                "\\|"
-                "\\(?:\\(?:struct\\|class\\)\\s-+[a-zA-Z_][a-zA-Z0-9_]*\\)"
-                (if dp-c-type-list
-                    (concat "\\|" (regexp-opt dp-c-type-list 'paren))
-                  "")
-                (if dp-c*-additional-type-list
-                    (concat "\\|" (regexp-opt dp-c*-additional-type-list 'paren))
-                  "")
-                "\\)"
-                "\\s-*"
-                "\\)"
-                "\\("
-                "\\*"
-                "\\s-*"
-                "\\)"
-                )))
+        (dp-regexp-concat
+         (append dp-<type>*-regexp-list
+                 dp-<type>*-regexp-list-init))))
 
 (defun dp-c*-make-ugly-pointer-decl (post-func &rest post-func-args)
   "Convert proper code, to improper, eg: char* p --> char *p.
 We say: \" p is a pointer to char\", not 
 \"p is a variable which when dereferenced is a char.\""
   (interactive)
-  (when (dp-looking-back-at (or dp-<type>*-regexp-memo
-                                (dp-<type>*-regexp)))
+  (when (and dp-use-ugly-ass-pointer-style-p
+             (dp-looking-back-at (or dp-<type>*-regexp-memo
+                                (dp-<type>*-regexp))))
+    (dmessage (dp-all-match-strings-string))
     (replace-match "\\1")
     (apply post-func post-func-args)
     (insert "*")
@@ -627,15 +660,25 @@ We say: \" p is a pointer to char\", not
        'call-interactively 'c-indent-command)
       ;; Add other things to try here. We will stop after the first non-nil
       ;; return.
-      (and-boundp dp-c-using-kernel-style-p
+      (when (bound-and-true-p dp-use-stupid-kernel-struct-indentation-p)
         (dp-kernel-style-var-name-align))
       ;; default.
       (c-indent-command)))
 
 (defun dp-kernel-style-var-name-align ()
+  "Do a indentation tab or tab over to the preceding line's variable name.
+<tab>--->if (kernel_mode_sucks)
+struct kernel_mode_sucks {
+  some_longish_type_name_t   x;
+  int                        I_am_a_stupid_indentation_style;
+  char*<tab>---------------->stupid_var_name;
+*Very* hackish.
+See also `dp-use-stupid-kernel-struct-indentation-p' which can disable it?
+"
   (interactive)
   ;;@todo XXX Breaks if first tab takes us past the type...name indentation.
-  (unless (dp-in-indentation-p)
+  (unless (or (dp-in-indentation-p)
+              (not (eolp)))
     (let ((next-char (dp-get-char-previous-line))
           (did-something-p nil))
       ;; tab past the preceding variable type.
@@ -1131,13 +1174,17 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
         (ding)
         nil))))
 
+(defvar dp-c-mode-l-p nil
+  "Do or don't add magic ; instead of l when following \).")
+
 (defun dp-c-mode-l (&optional arg)
   "Change )<ws*>l to )<same-ws>; since it is so likely to be a mistake.
 ARG, if non-nil \(interactively the prefix-arg\) says to act normally.  NB:
 ARG will be used by the original `self-insert-command' and so will act as a
 repeat count.  Use prefix arg with value 1 to override AI and get a single ?l."
   (interactive "P")
-  (if (or arg
+  (if (or (not dp-c-mode-l-p)
+          arg
           (dp-in-a-c*-comment)
           (not (dp-looking-back-at ")\\s-*")))
       (call-interactively 'self-insert-command)
@@ -1233,9 +1280,8 @@ terminate and eol/nl+indent."
   ;; No open paren of any kind
   "\\(%s\\s_\\|\\sw\\)*\\(%s::\\)?\\(%s\\s_\\|\\sw\\)+")
 
-(defvar dp-c++-symbol-regexp (replace-regexp-in-string 
-                              "%s" "" 
-                              dp-c++-symbol-regexp-guts))
+(defvar dp-c++-symbol-regexp (replace-in-string dp-c++-symbol-regexp-guts
+                                                "%s" ""))
 
 (defvar dp-c++-symbol-shy-regexp (replace-regexp-in-string
                                   "%s" "?:" dp-c++-symbol-regexp-guts 
@@ -1313,9 +1359,15 @@ See `dp-c*-junk-after-eos*'."
                (not (dp-looking-back-at "[-,:\\&;+=|.!@#$%^*(_/?]\\s-*"))))
         (dp-open-newline)
       (call-interactively 'c-context-line-break)
-      (if (and (member syntactic-region dp-c-add-comma-@-bol-of-regions)
+      (cond 
+       ((and (member syntactic-region dp-c-add-comma-@-bol-of-regions)
                (dp-looking-back-at "^\\s-*"))
-          (insert ",")))))
+        (insert ","))
+       ((and (dp-in-a-c-/**/-comment)
+             (looking-at "\\s-*\\*/")
+             (dp-looking-back-at "^\\s-*\\*\\s-*"))
+        (delete-region (match-beginning 0) (match-end 0))
+        (dp-c*-electric-tab))))))
 
 (defun dp-c-mark-current-token ()
   (interactive)                         ; restore "_" functionality--fsf
@@ -1382,16 +1434,16 @@ Like function calls they look.")
           "\\)")
   "Keywords that have statement blocks, {..} after them.")
 
-(defun dp-c-beginning-of-statement (&optional count)
+(defun dp-c-beginning-of-statement ()
   "`c-beginning-of-statement' can leave us in previous cpp code. Move out of it.
 Also, it will move backwards into a closed class (ie has a };)."
-  (interactive "p")
+  (interactive)
   (if (dp-in-cpp-construct-p)
       ;; If we are already on a cpp line, then don't move off of it.
       (beginning-of-line)
     (let ((class-state (dp-c++-in-class-p))
           (pos (point)))
-      (call-interactively 'c-beginning-of-statement)
+      (c-beginning-of-statement)
       (cond 
        ((not (eq class-state (dp-c++-in-class-p) ))
         ;; We backed into a class.  This is bad.
@@ -1539,18 +1591,6 @@ a comment add a comment prefix to the line."
 (defvar dp-c-control-keywords-bounded 
   (concat "\\<" dp-c-control-keywords "\\>"))
 
-(defvar dp-c-type-list 
-  '("auto" "char" "const" "double" "float" "int" "long" "register" "short" 
-    "signed" "struct" "union" "unsigned" "void" "volatile" "mutable" "bool"
-    "byte" "FILE"
-    "int8" "int16" "int32" "int64")
-"List of keywords that imply types.
-Using both uint16 and int16 break the regexp when this list is passed to 
-`regexp-opt'. Same for 32 and 64.
-int8 and uint8 seem to work together.
-A simple `dp-looking-back-at' using `dp-<type>*-regexp' returns nil.
-!<@todo XXX try a simple regexp join rather than opt?")
-
 (defvar dp-c-function-type-decl-re
     (concat
      "\\(?:"
@@ -1616,21 +1656,35 @@ Handle those cases appropriately."
 Current annotations are:
 @arg if comment is in the arglist."
   (interactive "*P")
-  (if (dp-region-active-p)
-      (call-interactively 'dp-lineup-comments)
-    (if dp-c*-insert-doxy-cmd-p
-        (dp-c*-insert-doxy-comment)
-      (dp-indent-for-comment arg))))
+  (let ((comment-start (concat comment-start dp-c-indent-for-comment-prefix)))
+    (if (dp-region-active-p)
+        (call-interactively 'dp-lineup-comments)
+      (if dp-c*-insert-doxy-cmd-p
+          (dp-c*-insert-doxy-comment)
+        (dp-indent-for-comment arg)))))
+
+(defun dp-c-statement-syntax ()
+  (interactive)                         ; For testing
+  (let ((region (dp-mark-active-p)))
+    (save-excursion
+      (if region
+          (progn
+            (goto-char (car region))
+            (end-of-line))
+        (dp-c-beginning-of-statement))
+      (dp-c-get-syntactic-region))))
 
 (defun* dp-c-fill-paragraph (&optional arg)
   "Fill according to C/C++ syntactical context."
   (interactive "*P")
   (let* ((region (dp-mark-active-p))
          (beg-end-list (and region (dp-region-boundaries-ordered-list)))
-         (syntax (save-excursion
-                   (when region (goto-char (car region)))
-                   (end-of-line)
-                   (dp-c-get-syntactic-region))))
+         (syntax (dp-c-statement-syntax)))
+;;does the above work better                  (save-excursion
+;;does the above work better                    (when region 
+;;does the above work better                      (goto-char (car region)))
+;;does the above work better                    (end-of-line)
+;;does the above work better                    (dp-c-get-syntactic-region))))
     (when (and region
                (apply 'dp-c*-in-doxy-comment beg-end-list))
       (apply 'dp-c*-align beg-end-list)
@@ -1650,6 +1704,12 @@ Current annotations are:
             (c-fill-paragraph)))
          ((memq syntax '(member-init-intro))
           (dp-c-fill-statement nil 'rest-of-statement))
+         ;; Function call?
+         ((memq syntax 
+                '(statement statement-block-intro defun-block-intro 
+                  statement-case-intro defun-open
+                  arglist-cont-nonempty substatement stream-op))  
+          (dp-c-fill-statement))
          ;; Function definition?
          ((dp-c-in-syntactic-region 
            '(topmost-intro topmost-intro-cont arglist-intro arglist-cont
@@ -1662,7 +1722,7 @@ Current annotations are:
                   arglist-cont-nonempty substatement stream-op))  
           (dp-c-fill-statement))
          ;; Other.
-         (t (ding) (message "dp-c-fill-paragraph, syntax: %s" syntax)
+         (t (ding) (message "dp-c-fill-paragraph is confused, syntax: %s" syntax)
             (call-interactively 'c-fill-paragraph)))))))
 (defalias 'cfp 'dp-c-fill-paragraph)
 
@@ -1682,18 +1742,17 @@ Current annotations are:
     (replace-match "_")))
 
 (defun* dp-c-namify-string (string &optional (repl-str "_"))
-  (replace-regexp-in-string 
-   "[^0-9A-Za-z_]"
-   repl-str
-   (replace-regexp-in-string "^[0-9]" repl-str string)))
+  (replace-in-string (replace-in-string string "^[0-9]" repl-str)
+                     "[^0-9A-Za-z_]" repl-str))
 
-(defun* dp-dot-h-reinclusion-protection (dont-comment-endif-p
-                                         &key
-                                         (comment t)
-                                         (prefix "")
-                                         (suffix "_INCLUDED")
-                                         (format-str "%s%s%s")
-                                         formatter)
+(defun* dp-dot-h-reinclusion-protection0 (dont-comment-endif-p
+                                          &key
+                                          (comment t)
+                                          (prefix "")
+                                          (suffix "_INCLUDED")
+                                          (format-str "%s%s%s")
+                                          (say-dot-p t)
+                                          formatter)
   "Add reinclusion protection sequence to a header file.
 The sequence looks like this:
 #ifndef xx
@@ -1731,7 +1790,7 @@ Otherwise, the sequence begins at \(point-min) and ends at \(point-max)."
         (setq ifdef-start (point))
 	(insert def-name "\n")
 	(insert def-name "\n\n")
-	(dp-c-namify-region ifdef-start (point) 'say-dot)
+	(dp-c-namify-region ifdef-start (point) say-dot-p)
 	(goto-char ifdef-start)
 	(setq comment-text
 	      (if (and comment comment-endif-p)
@@ -1756,6 +1815,24 @@ Otherwise, the sequence begins at \(point-min) and ends at \(point-max)."
     (goto-char old-pos)
     (forward-line -1))
   (dmessage "@todo: Delete any existing ifdef lines first."))
+(dp-safe-alias 'idef0 'dp-dot-h-reinclusion-protection0)
+
+(defun dp-dot-h-reinclusion-protection-kernel ()
+  (interactive)
+  (dp-dot-h-reinclusion-protection0 t
+                                    :comment nil
+                                    :prefix "__"
+                                    :suffix "__"
+                                    :format-str "%s%s%s"
+                                    :say-dot-p nil
+                                    :formatter nil))
+(dp-safe-alias 'kidef 'dp-dot-h-reinclusion-protection-kernel)
+
+(defun dp-dot-h-reinclusion-protection ()
+  (interactive)
+  (if dp-c-using-kernel-style-p
+      (dp-dot-h-reinclusion-protection-kernel)
+    (dp-dot-h-reinclusion-protection)))
 (dp-safe-alias 'idef 'dp-dot-h-reinclusion-protection)
 
 (defun dp-insert-fc (fc-file)
@@ -1889,6 +1966,7 @@ control construct)"
       ;; with a single { and then do a newline and indent.
       (unless (and reindent-p
                    (not (dp-looking-back-at "\s-+" (line-beginning-position))))
+        ;; Sure wish I'd'a commented this. WTF a spatse?
         (insert " "))
       (c-electric-brace reindent-p)
       (setq here (point))
@@ -1896,7 +1974,7 @@ control construct)"
       ;;(dmessage "(= last-command-char ?\{): %s\n" (= last-command-char ?\{))
       (if (and (memq 'knr-open-brace c-cleanup-list)
                (or t c-auto-newline)    ;@todo XXX look into this!
-               (= (dp-last-command-char) ?\{)
+               (= last-command-char ?\{)
                (not (c-in-literal))
                (or (and (eq syntax 'substatement)
                         (re-search-backward "\n[ \t]*{\n?[ \t]*" nil t))
@@ -1928,7 +2006,7 @@ control construct)"
             (and (<= pt (point))
                  (not (looking-at "\\s-*$"))))
       (dp-open-newline)))
-  (setq (dp-last-command-char) ?\})
+  (setq last-command-char ?\})
   (call-interactively 'c-electric-brace))
 
 (defun dp-delimit-func-args (&optional prefix suffix)
@@ -2035,7 +2113,7 @@ control construct)"
 I like the other things (e.g. cleanups) that are available in auto-newline
 mode but not the new lines themselves.  Hence, this."
   (interactive)
-  (if (eq (last-command-char ?\;))
+  (if (eq last-command-char ?\;)
       'stop
     ;; not a semi, keep trying.
     nil))
@@ -2072,9 +2150,9 @@ the boundaries region if it is active."
                               before-p after-first-p
                               beg end
                               minimal-indentation-p)
-  "Split statement at split-at-regexp, before regexp else before if before-p non nil.
+  "Split statement at SPLIT-AT-REGEXP, before regexp else before if BEFORE-P non nil.
 BEFORE-P says to split like we do in a c-tor initialization list, 
-with commas first:
+that is with commas first:
 C::C(
   int a,
   char* b,
@@ -2139,7 +2217,7 @@ arg per line, although that is implied by the name of the function.
 
 (defalias 'csi 'dp-c-stack-iostream)
 
-(defvar dp-c-fill-statement-minimal-indentation-p t
+(dp-deflocal dp-c-fill-statement-minimal-indentation-p 'auto
   "Stack statements:
 g()
 {
@@ -2153,11 +2231,15 @@ g()
                              max-line-len 
                              rest-of-statement 
                              beg 
-                             end 
+                             end
                              (minimal-indentation-p 
                               dp-c-fill-statement-minimal-indentation-p))
   (interactive)
-  (dmessage "HANDLE spaces after opening (")
+  (dmessage "TODO: HANDLE spaces after opening (")
+  (when (eq minimal-indentation-p 'auto)
+    (setq minimal-indentation-p 
+          (dp-looking-back-at (concat "^" dp-ws-regexp*))))
+
   (save-excursion
     (unless rest-of-statement
       (end-of-line)
@@ -2176,8 +2258,7 @@ g()
         ;; Pack things into maximally filled lines.
         (while (< (line-end-position) end)
           (join-line)
-          (unless (<= (- (line-end-position) (line-beginning-position))
-                      max-line-len)
+          (when (> (dp-last-column-on-line) max-line-len)
             (c-context-line-break)))))))
 
 (defalias 'cfs 'dp-c-fill-statement)
@@ -2465,7 +2546,10 @@ is done.")
   (dp-lang-new-file-template (or rest-o-hack-line 
                                  (concat  "c-file-style: "
                                           "\"" 
-                                          dp-default-c-style-name
+                                          (or
+                                           (dp-val-if-boundp dp-current-c-style-name)
+                                           (dp-val-if-boundp dp-default-c-style-name)
+                                           "UNDEFINED-C-STYLE")
                                           "\""))
                              (or any-mode-line-p current-prefix-arg)
                              mode))

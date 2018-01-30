@@ -38,11 +38,7 @@
     (c-hanging-colons-alist         . ((member-init-intro . (before))))
     )
   "LRL C Programming Style")
-
-(defun dp-lrl-c-style ()
-  "Set up LRL C/C++ style."
-  (interactive)
-  (c-add-style "lrl-c-style" lrl-c-style t))
+(c-add-style "lrl-c-style" lrl-c-style t)
 
 (unless (bound-and-true-p dp-default-c-style-name)
   (defvar dp-default-c-style-name "lrl-c-style"))

@@ -116,7 +116,8 @@
  '(w3m-use-toolbar nil)
  '(whitespace-check-spacetab-whitespace nil)
  '(whitespace-rescan-timer-time nil)
- '(whitespace-silent t))
+ '(whitespace-silent t)
+ '(xgtags-overwrite-global-bindings nil))
 (custom-set-faces
  '(bold ((t (:bold t))) t)
  '(buffers-tab ((t (:foreground "darkblue" :background "lightsteelblue" :bold t))) t)

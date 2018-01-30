@@ -51,7 +51,7 @@
 
 (define-abbrev-table 'dpj-topic-abbrev-table '())
 
-(defvar dpj-any-AI-regexp "[ 	]*?[?!@$]+[ 	]+")
+(defvar dpj-any-AI-regexp "[ 	]*?[?!@$]+\\([ 	]+\\|$\\)")
 ;;(defvar dpj-any-AI-todo-regexp "[ 	]*\\([!@]+\\|\\?\\?\\?\\?*\\)[ 	]+")
 (defvar dpj-any-AI-todo-regexp 
   "\\(^\\?+\\|[ 	]*\\([!@]+\\|\\?\\?\\?\\?*\\)\\)[ 	]+")
@@ -254,39 +254,39 @@ This way we can get alternating colors on journal mode structure in the text:
    ;; parts of the line. They are essentially background. This allows any
    ;; specific things (like the function face) to work w/o specifically
    ;; prepending it. Even though it is done that way below at this time.
-   (cons "^[ 	]*!!!+ .*$" 'dp-journal-high-problem-face)
-   (cons "^[ 	]*!! .*$" 'dp-journal-medium-problem-face)
-   (cons "^[ 	]*! .*$" 'dp-journal-low-problem-face)
+   (cons "^[ 	]*!!!+\\( .*$\\|$\\)" 'dp-journal-high-problem-face)
+   (cons "^[ 	]*!!\\( .*$\\|$\\)" 'dp-journal-medium-problem-face)
+   (cons "^[ 	]*!\\( .*$\\|$\\)" 'dp-journal-low-problem-face)
 
-   (cons "^[ 	]*@@@+ .*$" 'dp-journal-high-todo-face)
-   (cons "^[ 	]*@@ .*$" 'dp-journal-medium-todo-face)
-   (cons "^[ 	]*@ .*$" 'dp-journal-low-todo-face)
+   (cons "^[ 	]*@@@+\\( .*$\\|$\\)" 'dp-journal-high-todo-face)
+   (cons "^[ 	]*@@\\( .*$\\|$\\)" 'dp-journal-medium-todo-face)
+   (cons "^[ 	]*@\\( .*$\\|$\\)" 'dp-journal-low-todo-face)
 
-   (cons "^[ 	]*\\?\\?\\?+ .*$" 'dp-journal-high-question-face)
-   (cons "^[ 	]*\\?\\? .*$" 'dp-journal-medium-question-face)
-   (cons "^[ 	]*\\? .*$" 'dp-journal-low-question-face)
+   (cons "^[ 	]*\\?\\?\\?+\\( .*$\\|$\\)" 'dp-journal-high-question-face)
+   (cons "^[ 	]*\\?\\?\\( .*$\\|$\\)" 'dp-journal-medium-question-face)
+   (cons "^[ 	]*\\?\\( .*$\\|$\\)" 'dp-journal-low-question-face)
    ;; what was I doing here???   
    ;; (cons "\\?+[^?].*\\?\\?*" (list 0 'dp-journal-low-question-face 'keep))
 
-   (cons "^[ 	]*\\$\\$\\$+ .*$" 'dp-journal-high-info-face)
-   (cons "^[ 	]*\\$\\$ .*$" 'dp-journal-medium-info-face)
-   (cons "^[ 	]*\\$ .*$" 'dp-journal-low-info-face)
-   (cons "^[ 	]*[Ff][Yy][Ii]:? .*$" 'dp-journal-medium-info-face)
-   (cons "^[ 	]*>>>>+ .*$" 'dp-journal-extra-emphasis-face)
-   (cons "^[ 	]*>>> .*$" 'dp-journal-high-info-face)
-   (cons "^[ 	]*>> .*$" 'dp-journal-medium-info-face)
-   (cons "^[ 	]*> .*$" 'dp-journal-low-info-face)
-   (cons "^[ 	]*\\+\\+\\++ .*$" 'dp-journal-high-attention-face)
-   (cons "^[ 	]*\\+\\+ .*$" 'dp-journal-medium-attention-face)
-   (cons "^[ 	]*\\+ .*$" 'dp-journal-low-attention-face)
-   (cons "^[ 	]*\\*\\*\\*+ .*$" 'dp-journal-high-attention-face)
-   (cons "^[ 	]*\\*\\* .*$" 'dp-journal-medium-attention-face)
-   (cons "^[ 	]*\\* .*$" 'dp-journal-low-attention-face)
+   (cons "^[ 	]*\\$\\$\\$+\\( .*$\\|$\\)" 'dp-journal-high-info-face)
+   (cons "^[ 	]*\\$\\$\\( .*$\\|$\\)" 'dp-journal-medium-info-face)
+   (cons "^[ 	]*\\$\\( .*$\\|$\\)" 'dp-journal-low-info-face)
+   (cons "^[ 	]*[Ff][Yy][Ii]:?\\( .*$\\|$\\)" 'dp-journal-medium-info-face)
+   (cons "^[ 	]*>>>>+\\( .*$\\|$\\)" 'dp-journal-extra-emphasis-face)
+   (cons "^[ 	]*>>>\\( .*$\\|$\\)" 'dp-journal-high-info-face)
+   (cons "^[ 	]*>>\\( .*$\\|$\\)" 'dp-journal-medium-info-face)
+   (cons "^[ 	]*>\\( .*$\\|$\\)" 'dp-journal-low-info-face)
+   (cons "^[ 	]*\\+\\+\\++\\( .*$\\|$\\)" 'dp-journal-high-attention-face)
+   (cons "^[ 	]*\\+\\+\\( .*$\\|$\\)" 'dp-journal-medium-attention-face)
+   (cons "^[ 	]*\\+\\( .*$\\|$\\)" 'dp-journal-low-attention-face)
+   (cons "^[ 	]*\\*\\*\\*+\\( .*$\\|$\\)" 'dp-journal-high-attention-face)
+   (cons "^[ 	]*\\*\\*\\( .*$\\|$\\)" 'dp-journal-medium-attention-face)
+   (cons "^[ 	]*\\*\\( .*$\\|$\\)" 'dp-journal-low-attention-face)
    ;; e.g. (fyi: I have a eg --> e.g. abbrev)
    (cons "^[ 	]*[Ee]\\.?[Gg][.:]?\\(\\s-+\\|:\\).*$" 
          'dp-journal-high-example-face)
    ;; n.b. (fyi: I have an abbrev for nb --> N.B.)
-   (cons "^[ 	]*[nN]\\.?[Bb]\\.? .*$" 'dp-journal-extra-emphasis-face)
+   (cons "^[ 	]*[nN]\\.?[Bb]\\.?\\( .*$\\|$\\)" 'dp-journal-extra-emphasis-face)
 
    ;; plain timestamps
    (cons (dpj-mk-topic-re "") 'dp-journal-timestamp-face)
@@ -355,7 +355,7 @@ This way we can get alternating colors on journal mode structure in the text:
 	  (list 1 'dp-journal-deemphasized-face t)
 	  (list 2 'dp-journal-deemphasized-face t)
 	  (list 3 'dp-journal-deemphasized-face nil)))
-   (cons "^[ 	]*--+ .*$" 'dp-journal-deemphasized-face)
+   (cons "^[ 	]*--+\\( .*$\\|$\\)" 'dp-journal-deemphasized-face)
 
    ;; Alternating colors based on a numeric prefix.
    ;; E.g. 
@@ -1827,6 +1827,7 @@ Also will use prefix-arg as default NUM-MONTHS."
 (defalias 'cx0 'dpj-new-topic)          ;cx -- Context switch, same window.
 ;;;###autoload
 (defalias 'cx. 'dpj-new-topic)          ;cx -- Context switch, same window.
+(defalias 'cxd 'dpj-new-topic)          ;cx -- Context switch, same window.
 
 ;;;###autoload
 (defalias 'nt 'dpj-new-topic-other-window) ;nt -- new topic
@@ -2814,6 +2815,16 @@ RETURN buffer that was visiting the journal, or nil."
 (defalias 'djd 'dp-journal)
 
 ;;;###autoload
+(defun dp-journal-one-window ()
+  "Journal in a single window."
+  (interactive)
+  (dp-one-window++ -1)
+  (dp-journal))
+
+;;;###autoload
+(dp-defaliases 'dj1 'dj0 'djone 'djo 'dp-journal-one-window)
+
+;;;###autoload
 (defun dpj-visit-other-journal-file (file-name &optional other-window-p)
   "Visit FILE-NAME as journal and make it sticky to the current buffer.
 This kind of allows us to use a journal file with a non-standard name."
@@ -3014,6 +3025,7 @@ exist to move from one topic record to the next or previous.
   (dp-make-local-hook 'after-save-hook)
   (add-hook 'after-save-hook (function 
 			      (lambda ()
+                                (dpj-set-current-journal-file (buffer-file-name))
 				(dpj-merge-all-topics nil 'write-em)))
 	    nil 'local)
 

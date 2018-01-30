@@ -450,7 +450,7 @@
       "set and" "logical and" "intersection")
      dp-manual)
     ((("ch" "sf" "srcs" "chc")
-      "*.h *.cpp *.c" "*.h *.cpp" "*.[ch]*")
+      "*.h" "*.cpp" "*.c" "*.h "*.cpp" "*.[ch]*")
      dp-manual)
     ((("ech" "esf" "esrcs" "echc")
       "\\.[ch]")
@@ -479,6 +479,8 @@
      dp-manual)
     (("mem" "memory")
      dp-manual)
+    (("sb" "*scratch*")
+     dp-manual)
     (("shmem" "shared memory")
      dp-manual)
     (("proc" "process" "processor")
@@ -491,13 +493,15 @@
      dp-manual)
     (("md" "metadata" "meta-data" "meta data")
      dp-manual)
-    (("ccs" "const char *" "const std::string &")
+    (("ccs" "const char* " "const std::string & ")
      dp-manual)
-    (("cus" "const unsigned char *")
+    (("cus" "const unsigned char* ")
      dp-manual)
-    (("vccs" "virtual const char *" "virtual const std::string &")
+    ((("08x" "x80" "x8" "8x") "0x%08x")
      dp-manual)
-    (("css" "const std::string &" "std::string &" "const char *" 
+    (("vccs" "virtual const char* " "virtual const std::string & ")
+     dp-manual)
+    (("css" "const std::string& " "std::string& " "const char* " 
       "const std::string " "std::string ")
      dp-manual)
     (("less" "std::less")
@@ -524,20 +528,20 @@
     (("faf" "find . -type f -print0 | xargs -r0 "
       "find . -type f -print0 | xargs -r0 egrep ")
      dp-manual)
-    (("faff" "find . -type f -print0 | xargs -r0 fgrep "
+    (("faff" "find . -type f -print0 | xargs -r0 fgrep -n "
       ;;Usually it's fgrep or egrep.
       ;;"find . -type f -print0 | xargs -r0 grep "
-      "find . -type f -print0 | xargs -r0 egrep ")
+      "find . -type f -print0 | xargs -r0 egrep -n ")
      dp-manual)
-    (("fafe" "find . -type f -print0 | xargs -r0 egrep "
+    (("fafe" "find . -type f -print0 | xargs -r0 egrep -n "
       ;;Usually it's fgrep or egrep.
       ;;"find . -type f -print0 | xargs -r0 grep "
-      "find . -type f -print0 | xargs -r0 fgrep ")
+      "find . -type f -print0 | xargs -r0 fgrep -n ")
      dp-manual)
     (("fasf" "find . -type f \\( -name '*.cpp' -o -name '*.h' \\)  -print0 | xargs -r0 fgrep -ni "
       ;;Usually it's fgrep or egrep.
       ;;"find . -type f -print0 | xargs -r0 grep "
-      "find . -type f -print0 | xargs -r0 egrep ")
+      "find . -type f -print0 | xargs -r0 egrep -ni ")
      dp-manual)
     (("cttoi" "come to think of it")
      dp-manual)
@@ -581,6 +585,8 @@
      dp-manual)
     ((("ob1" "obo" "OBO" "OB1" "off-by-one" "off by one") 
       'circular) 
+     dp-manual)
+    (("sagi" "sudo apt install " "sudo apt-get install ")
      dp-manual)
     ))
 ;; We could just use the non-void-ness of dp-common-abbrevs, but I

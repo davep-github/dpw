@@ -70,7 +70,7 @@ refiles if in `+inbox' and forwards if in `+spamcan'.")
 			"       /")
   "List of strings making up the baroque signature's prefix.")
 
-(defconst dp-generic-mail-code "~/lisp/dp-mail.el"
+(defconst dp-generic-mail-code (dp-lisp-subdir "dp-mail.el")
   "This file, basically.")
 
 (defconst dp-current-mailer-config-file dp-generic-mail-code
@@ -100,7 +100,7 @@ refiles if in `+inbox' and forwards if in `+spamcan'.")
   )
  ('vm
   (require 'vm)
-  (setq dp-current-mailer-config-file "~/lisp/dp-dot-vm.el")
+  (setq dp-current-mailer-config-file (dp-lisp-subdir "dp-dot-vm.el"))
   (global-set-key [(control c) r] 'vm)
   (global-set-key [(control x) m] 'vm-mail))
 )
@@ -422,12 +422,10 @@ e.g. :suffix."
 				     accept-str)))))
 	    (progn
 	      (message "Replacing From: case #2")
-	      (dp-replace-From: 
-               (replace-regexp-in-string
-                dp-mail-extract-addr-regexp
-                (concat "<" accept-str ">")
-                 mail-default-reply-to
-                nil 'LITERAL)))
+	      (dp-replace-From: (replace-in-string mail-default-reply-to
+						  dp-mail-extract-addr-regexp
+						  (concat "<" accept-str ">")
+						  'literal)))
 	  (dmessage "was-to is nil."))))))
 
 (defun dp-mail-remove-sig (&optional keep-separator)

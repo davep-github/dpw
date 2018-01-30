@@ -84,7 +84,8 @@
     ".* does not belong to a gnuserv client$"
     "^set-fill-column requires an explicit argument$"
     "^Don't know where `.*' is defined"
-
+    "Buffer not visiting a file or directory"
+    "Mismatched #ifdef #endif pair"
     
     ;;XEmacs
     "^No preceding item in "
@@ -155,6 +156,8 @@
     "^No more entries containing "
     "No more tag marks on stack"
     "Buffer has no associated tag tables"
+    "The beginning of the \\*xgtags\\* buffer has been reached"
+    "The tags stack is empty"
     
     ;; BBDB
     "^no previous record$"
