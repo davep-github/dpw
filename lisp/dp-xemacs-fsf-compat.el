@@ -146,6 +146,8 @@ be deactivated when doing a beginning|end followed by an end|beginning."
   (call-interactively 'wconfig-delete-pop))
 
 
+(defalias 'bobp 'dp-bobp)
+(defalias 'eobp 'dp-eobp)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Nicked from Emacs.

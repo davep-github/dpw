@@ -363,6 +363,16 @@ Hence the compat function which isn't needed.  Bailiff, whack his
 pee-pee. "
   (window-list frame minibuf window))
 
+(defun dp-bobp (&optional buffer)
+  "FSF don't use a BUFFER parameter."
+  (with-current-buffer (or buffer (current-buffer))
+    (bobp)))
+
+(defun dp-eobp (&optional buffer)
+  "FSF don't use a BUFFER parameter."
+  (with-current-buffer (or buffer (current-buffer))
+    (eobp)))
+
 ;; Copped from `gnus-key-press-event-p'.
 ;;(defun key-press-event-p (x)
 ;;  (numberp x))

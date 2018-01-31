@@ -10,8 +10,10 @@
  '(custom-enabled-themes (quote (adwaita)))
  '(display-time-mode t)
  '(global-hl-line-mode nil)
- '(icomplete-mode t)
+ '(icomplete-mode nil)
  '(icomplete-separator ",")
+ '(ido-mode (quote both) nil (ido))
+ '(ido-use-filename-at-point (quote guess))
  '(isearch-allow-scroll t)
  '(isearch-lazy-highlight t)
  '(isearch-resume-in-command-history t)
@@ -32,7 +34,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(beacon-fallback-background ((t (:background "dark blue"))))
  '(cursor ((t (:background "blue3"))))
+ '(ido-only-match ((t (:foreground "ForestGreen" :weight bold))))
  '(isearch ((t (:background "blue" :foreground "white"))))
  '(mode-line ((t (:background "SlateGray1" :foreground "black" :box (:line-width -1 :style released-button)))))
  '(mode-line-inactive ((t (:inherit mode-line :background "azure1" :foreground "grey20" :box (:line-width -1 :color "grey75") :weight light))))

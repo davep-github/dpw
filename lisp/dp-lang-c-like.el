@@ -2034,7 +2034,7 @@ control construct)"
   (when (and (not dir-set-p)
              (eq '- current-prefix-arg))
     (setq direction 'up))
-  (unless (eobp)
+  (unless (dp-eobp)
     (forward-char))
   ;; Move up until we're IN the decl
   (while (not (dp-c-in-syntactic-region '(arglist-cont arglist-intro 
@@ -2070,7 +2070,7 @@ control construct)"
                    (if (< (point) (point-max))
                        (forward-char)))
             (t (goto-char bof)
-               (unless (bobp)
+               (unless (dp-bobp)
                  (backward-char 1)))))
       (message "*** No open paren in definition."))))
 
@@ -2479,7 +2479,7 @@ is done.")
 ;                (equal close-paren-marker (point)))
 ;       (forward-line 1))
     (goto-char close-paren-marker)
-    (unless (eobp) (forward-char 1))
+    (unless (dp-eobp) (forward-char 1))
     (when is-decl-p
       ;; Terminate the statement.
       (dp-c-terminate-function-stmt "\n")

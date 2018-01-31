@@ -876,7 +876,7 @@ gtags discovery."
     ;; Don't set the next error function here.
     ;; Only let it be set when the functions are called directly.
     (let ((dp-dont-set-latest-function t))
-      (if (bobp (xgtags--get-buffer))
+      (if (dp-bobp (xgtags--get-buffer))
           (progn 
             (setq xgtags--selected-tag (xgtags--find-tag-near-point))
             (call-interactively 'dp-xgtags-select-selected-tag-other-window-cmd))

@@ -93,7 +93,7 @@ prompt.  We don't want to stomp on them.")
                                  (if-func 'process-send-eof)
                                  (else-func 'delete-char arg))
   (interactive "p")
-  (call-interactively (if (and (eobp) (dp-comint-at-pmark-p))
+  (call-interactively (if (and (dp-eobp) (dp-comint-at-pmark-p))
                           if-func
                         else-func)))
 
@@ -513,7 +513,7 @@ result in `this-command' being set properly. "
                     (= pmark pt (point-max)))
                empty-line-fun)
               ((and end-of-line-fun
-                    (eobp))
+                    (dp-eobp))
                end-of-line-fun)
               ((not pmark) before-pmark-fun)
               ((= pmark pt) at-pmark-fun)
@@ -548,7 +548,7 @@ It is usually after a failed TAB expansion that it becomes apparent that the
 dir-tracker has become lost.  
 @todo ??? Just do a `dirs' after every change?"
   (interactive)
-  (if (and (eobp)
+  (if (and (dp-eobp)
            (eq last-command 'dp-comint-dynamic-complete))
       (dp-shell-resync-dirs)
     (dp-shell-delete-line)))

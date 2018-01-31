@@ -844,7 +844,7 @@ examining all of the message calls."
 ;;exp; 	  (skip-chars-backward dp-ws bol)
 ;;exp; 	;; if we're not at EOF, include this line's newline
 ;;exp; 	(if (not (or no-newline-p
-;;exp;                      (eobp)))
+;;exp;                      (dp-eobp)))
 ;;exp; 	    (forward-char 1)
 ;;exp; 	  ;; we're deleting the last line in the file, so we want to
 ;;exp; 	  ;; delete the newline from the preceeding line, otherwise we
@@ -882,7 +882,7 @@ non-white space on the line."
       (cond
        ;; if we're not at EOF, include this line's newline
        ((not (or no-newline-p
-                 (eobp)))
+                 (dp-eobp)))
         (forward-char 1))
        ((and (not no-newline-p) (> bol (point-min)))
         ;; if we can backup, do so.
@@ -1911,7 +1911,7 @@ Based (now, loosely) on kill-word from simple.el"
 	 ;; match ws up to where we started
 	 ;; use that match data to delete.
 	 (and (< arg 0)
-	      (not (bobp))
+	      (not (dp-bobp))
 	      (not (backward-char 1))	; return nil when successful (always?)
 	      (if (looking-at ws)
 		  t
@@ -7258,7 +7258,7 @@ QUIT-KEYS, if neq t, are added to this map."
                                       (lambda (key)
                                         (define-key kmap key 
                                           'dp-simple-viewer-exit)
-                                        (format "%c" key)))
+                                        (format "%s" key)))
                                      quit-keys
                                      ", ")))
       (use-local-map kmap)
@@ -7616,7 +7616,7 @@ Use BEG END if given, else (mark) (point)."
       (save-excursion
         (goto-char reg-beg)
         (beginning-of-line)
-        (while (and (not (eobp)) 
+        (while (and (not (dp-eobp)) 
                     (< (point) reg-end))
           (setq len (- (line-end-position) (line-beginning-position)))
           (if (> len max)
@@ -8062,7 +8062,7 @@ This makes point very visible."
       (setq pos (point)))
     (setq bol (line-beginning-position)
           eol (line-end-position)
-          pp (+ pos (if (eobp) 0 1))
+          pp (+ pos (if (dp-eobp) 0 1))
           exts (when (buffer-live-p buffer)
                  (with-current-buffer buffer
                    (list 
@@ -9827,11 +9827,6 @@ A bookmark, in this context, is:
 
 (defun dp-primary-frame-width ()
   (frame-width (dp-primary-frame)))
-
-(defvar dp-2w-frame-width 174
-  "Default frame width for 2w -- 2 vertical windows 80 columns wide.  
-Also used by split window advice to determine when to force a horizontal
-split.")
 
 ;; I cannot believe I really need to write this. I must've missed it.
 ;; And I did indeed: CL function `member-if'
@@ -12482,7 +12477,7 @@ By default, the startup frame is set to be the primary frame."
          (end (dp-mk-marker (save-excursion 
                               (goto-char (cdr region))
                               (if (bolp)
-                                  (if (bobp)
+                                  (if (dp-bobp)
                                       (cdr region)
                                     (1- (cdr region)))
                                 (line-end-position)))))
@@ -13603,7 +13598,7 @@ find-file\(-at-point) and then, if it fails, this function??"
     (search-forward dp-xfer-section-separator nil t)
     (beginning-of-line)
     (when add-new-p
-      (unless (bobp)
+      (unless (dp-bobp)
         (previous-line 1))
       (beginning-of-line)
       ;;(newline)

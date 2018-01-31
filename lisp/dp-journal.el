@@ -2466,7 +2466,7 @@ SKIP-CURRENT-P says to not count the current AI when looking backwards."
   (save-excursion
     (beginning-of-line)
     (if (and skip-current-p (looking-at dpj-any-AI-regexp@bol)
-             (not (bobp)))
+             (not (dp-bobp)))
         (progn
           (forward-char -1)
           (beginning-of-line))
@@ -2597,7 +2597,7 @@ End is following line with less (or no) indentation."
 	    ;; try to move down a line
 	    (if (= (forward-line 1) 1)
 		(throw 'done nil))
-	    (if (eobp)
+	    (if (dp-eobp)
 		(throw 'done nil))
 	    (beginning-of-line))))
       (beginning-of-line)

@@ -72,7 +72,7 @@ defined by the gid-command variable."
 (defun word-around-point ()
   "Return the word around the point as a string."
   (save-excursion
-    (if (not (eobp))
+    (if (not (dp-eobp))
 	(forward-char 1))
     (forward-word -1)
     (forward-word 1)
