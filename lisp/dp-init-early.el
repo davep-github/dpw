@@ -9,6 +9,7 @@
 
 (defvar dp-site-package-info (dp-mk-site-package-dir "info")
   "My local site packages info root.")
+(message "dp-site-package-info>%s<" dp-site-package-info)
 
 (defvar dp-site-package-lisp (dp-mk-site-package-dir "lisp")
   "My local site packages lisp root.")

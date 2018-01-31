@@ -355,6 +355,14 @@ I need to look at filtered-frame-list to use device if non-nil."
 (defun window-displayed-height (&optional window)
   (window-buffer-height (or window (frame-selected-window))))
 
+(defun dp-window-list (&optional frame minibuf window)
+  "Fake window-list for fsf.
+Dumb-fuxking-ass saveconf.el defined it's own window-list (FUCK!
+function that had different parameters and was causing an error.
+Hence the compat function which isn't needed.  Bailiff, whack his
+pee-pee. "
+  (window-list frame minibuf window))
+
 ;; Copped from `gnus-key-press-event-p'.
 ;;(defun key-press-event-p (x)
 ;;  (numberp x))

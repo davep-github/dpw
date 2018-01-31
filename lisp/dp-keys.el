@@ -146,8 +146,11 @@ Bind any keys in KEYS via `dp-define-keys'."
 ;;(global-set-key "\C-z" 'dp-lterm)
 
 ;; Tag keys now defined in dp-ptools.el
-				 
-(global-set-key [(meta ?b)] 'dp-buffer-menu)
+
+(if (dp-xemacs-p)				 
+    (global-set-key [(meta ?b)] 'dp-buffer-menu)
+  (global-set-key [(meta ?b)] 'ibuffer))
+
 (global-set-key [(control x) (control b)] 'dp-list-buffers)
 (global-set-key [(meta ?h)] 'help-command)
 (global-set-key [(meta h) (meta k)] 'dp-ff-key)

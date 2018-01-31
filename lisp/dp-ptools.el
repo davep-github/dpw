@@ -1455,7 +1455,7 @@ do not indent the newly inserted comment block."
     (save-excursion
       (beginning-of-line)
       ;; find the class name
-      ;; @todo templates *WILL* break this.
+      ;; @todo C++ <templates> *WILL* break this.
       ;; Apparently not.
       (dp-re-search-forward 
        "^\\s-*\\(enum\\|class\\|struct\\)\\s-+\\(\\S-+?\\)\\s-*\\(:\\|{\\|$\\)"))

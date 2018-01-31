@@ -109,7 +109,7 @@
  '(vm-imap-server-list '("imap-ssl:imap.vanu.com:993:inbox:login:davep:pwds-suck")
 )
  '(vm-index-file-suffix ".vm-folder-index-file")
- '(vm-init-file "~/flisp/dp-dot-vm.el")
+ '(vm-init-file (dp-lisp-subdir "dp-dot-vm.el"))
  '(vm-keep-crash-boxes "~/eMail/vm.el/crash-boxes")
  '(vm-preferences-file "~/flisp/dp-dot-vm.preferences")
  '(vm-primary-inbox "imap-ssl:imap.vanu.com:993:INBOX:login:davep:pwds-suck")

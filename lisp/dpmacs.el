@@ -511,8 +511,10 @@ the init files.")
           ;; Perforce uses .original.[0-9]+ to save modified files.  I, too,
           ;; like to copy a file to a .orig before hacking it up, although
           ;; I've come to use RCS instead.
-          "\\|obs\\|olde?\\|orig\\(inal\\)?\\|OEM\\|oem"
-          "\\|OBS\\|OLDE?\\|ORIG\\(INAL\\)?")
+          "\\|merged?\\|obs\\|olde?\\|orig\\(inal\\)?"
+          "\\|MERGED?\\|OBS\\|OLDE?\\|ORIG\\(INAL\\)?"
+	  "\\|OEM\\|oem")
+          
   "Read only part of dp-default-mode-transparent-suffix-regexp (q.v.)")
 
 (defvar dp-default-mode-transparent-suffix-regexp

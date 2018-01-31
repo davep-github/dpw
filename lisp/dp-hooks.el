@@ -6,7 +6,7 @@
 
 ;; historical variety of styles: see svn, < rev 2013. 
 
-(add-hook 'find-file-hooks 'dp-add-default-buffer-endicator)
+;;(add-hook 'find-file-hooks 'dp-add-default-buffer-endicator)
 
 (defcustom dp-global-master-cleanup-whitespace-p t
   "Control whitespace cleanup off everywhere.
@@ -22,6 +22,7 @@ mode."
 
 (dp-deflocal dp-cleanup-whitespace-p nil
   "Should trailing whitespace be cleaned up in this buffer?
+In particular, should `dp-next-line' do it?
 Values:
 nil      - NO.
 t        - Just do it(tm)
@@ -776,6 +777,9 @@ c-hanging-braces-alist based upon these values.")
     (define-key map [(control ?x) (control left)] 'dp-c-beginning-of-defun)
     (define-key map [(control ?x) left] 'dp-c-show-class-name)
     (define-key map [(control ?x) (control right)] 'dp-c-end-of-defun)
+    (define-key map [(meta right)] 
+      (kb-lambda
+          (dp-c-end-of-defun 1 'real-bof)))
     (define-key map [(control ?x) right] 
       (kb-lambda
           (let ((p (point)))
@@ -1841,7 +1845,7 @@ Use of 'unset allows the legitimate value of nil to be used.")
                          (not (active-minibuffer-window))
                          (not (dp-tall-enough-for-2-windows-p))
                          (dp-wide-enough-for-2-windows-p)
-                         (= (length (window-list)) 1)
+                         (= (length (dp-window-list)) 1)
                          (not size)     ; Skip action if a size is specified.
                          (not dp-called-by-split-vertically)))
     (setq dp-called-by-split-vertically nil

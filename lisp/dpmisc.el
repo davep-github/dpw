@@ -4653,9 +4653,6 @@ Interpret buffer contents by calling `less' on the buffer's file."
   (expand-file-name (paths-construct-path 
                      (cons dp-contrib-site-packages names))))
 
-(defvar dp-site-package-info (dp-mk-site-package-dir "info")
-  "My local site packages info root.")
-
 (defvar dp-site-package-lisp (dp-mk-site-package-dir "lisp")
   "My local site packages lisp root.")
 
@@ -9863,7 +9860,7 @@ split.")
   (mapcar (lambda (win)
             (window-buffer win))
           (or win-list
-              (window-list frame 'no-minibuffers first-window))))
+              (dp-window-list frame 'no-minibuffers first-window))))
 
 (defun dp-non-window-buffers (&optional buf-list win-list)
   (setq-ifnil buf-list (buffer-list)
@@ -9876,8 +9873,8 @@ split.")
                                skip-these-windows)
   "Distribute the buffers, 1 per window until no more buffers."
   (setq-ifnil buf-list (buffer-list)
-              win-list (window-list frame 'no-minibuffers
-                                    first-window))
+              win-list (dp-window-list frame 'no-minibuffers
+                                       first-window))
   (let* ((buf-list (dp-list-subtract buf-list priority-buffers))
          (all-buffers (append priority-buffers buf-list)))
     (loop for w in win-list
@@ -9906,7 +9903,7 @@ split.")
       (delete-other-windows))
     ;; Set up the new window pattern.
     (let ((skip-these-windows (list (dp-get-buffer-window (current-buffer))))
-          (win-list (window-list))
+          (win-list (dp-window-list))
           (buf-list (buffer-list)))
       (loop for op in op-list
         do (let (op-args)
@@ -10093,7 +10090,7 @@ If wide enough: | | |, otherwise: |-|"
 (defun dp-multiple-windows-on-frame-p (&optional frame)
   "Return non-nil if FRAME currently has more than one window in it."
   (interactive)
-  (> (length (window-list frame 'dont-count-minibuf)) 1))
+  (> (length (dp-window-list frame 'dont-count-minibuf)) 1))
 
 ;;(defadvice display-buffer (around dp-display-buffer activate)
   ;;(let* ((buf (ad-get-arg 0))
@@ -10655,7 +10652,9 @@ this case.
   (interactive "p")                     ; fsf - fix "_"
   (let* ((force-set-p (< arg 0))
          (arg (if current-prefix-arg (abs arg) dp-one-window++-last-register))
-         (reg (int-to-char arg))
+         (reg (if (dp-xemacs-p)
+                  (int-to-char arg)
+                arg))
          (reg-val (car-safe (get-register reg))))
     ;; Do we have a single window and a possible previous window configuration?
     (if (and reg-val
@@ -10732,7 +10731,7 @@ FILENAME defaults to the name of the current buffer or
 There is something going on that makes the windows resize themselves
 in a very bizarre fashion."
   (interactive)
-  (let* ((win-list (window-list nil 'no-minibufs-at-all))
+  (let* ((win-list (dp-window-list nil 'no-minibufs-at-all))
          (num-wins (length win-list))
          (total-cols (apply '+ (mapcar (function
                                         (lambda (w)
@@ -10762,7 +10761,7 @@ MINIBUF says to include minibuffer windows."
                    ;;; Now it looks like below is better.
                    (window-point win)
                    )))
-          (or win-list (window-list frame minibuf window))))
+          (or win-list (dp-window-list frame minibuf window))))
 
 (defun dp-rotate-windows (&optional to-vertical-set)
   "Convert a horizontal(vertical) set of windows into the 
@@ -10772,7 +10771,7 @@ equivalent vertically(horizontally) split set."
                              (= (frame-width) (window-width)))
                          'split-window-horizontally
                        'split-window-vertically))
-         (win-list (window-list nil 'no-minibufs-at-all))
+         (win-list (dp-window-list nil 'no-minibufs-at-all))
          (num-wins (length win-list))
          (buf-list (dp-get-win-list-buffers win-list nil 'no-minibufs-at-all)))
     (delete-other-windows)
@@ -10926,7 +10925,7 @@ when the command was issued?")
 (defun dp-shift-windows-0 (dir)
   "Move each buffer into its next window."
   (let* ((win-list (dp-non-dedicated-win-list 
-                    (window-list nil 'no-minibufs-at-all)))
+                    (dp-window-list nil 'no-minibufs-at-all)))
          (win-list (if (eq dir 'left) 
                        (reverse win-list) 
                      win-list))
@@ -11589,7 +11588,7 @@ Sometimes quoted lists are easier to make when most/all elements are quoted."
                                             (fmt "%s %s:%s") (pos (point)))
   (interactive "P")
   (kill-new (message 
-             (dp-mk-breakpoint-command (not perm-p) :fmt fmt :pos pos))))
+             (dp-mk-breakpoint-command (not tmp-p) :fmt fmt :pos pos))))
 
 
 ;;
@@ -12645,7 +12644,7 @@ This is different than a nil \"string\" or a pure whitespace string."
 (defun dp-canonical-window-list (&optional frame minibuf window)
   "I think it returns a window list beginning with the current window."
   (interactive)
-  (let* ((first-win (or window (car (window-list frame minibuf window))))
+  (let* ((first-win (or window (car (dp-window-list frame minibuf window))))
          (win-list (list first-win))
          (win nil))
     (if (equal first-win (setq win (next-window first-win)))
@@ -13560,7 +13559,7 @@ find-file\(-at-point) and then, if it fails, this function??"
       ret)))
 
 (defun dp-n-windows-p (num &optional frame minibuf window)
-  (= num (length (window-list frame minibuf window))))
+  (= num (length (dp-window-list frame minibuf window))))
 
 (defun dp-switch-to-buffer-other-window-if->1-windows-showing (buffer)
   (interactive "bBuffer: ")
@@ -14140,7 +14139,7 @@ changed their writability, changing the [git] version information, etc."
 Clumsy but effective method."
   (interactive)
   (let ((win-num 0)
-        (win-list (window-list nil 'no-minibufs-at-all)))
+        (win-list (dp-window-list nil 'no-minibufs-at-all)))
     (loop for win in win-list
       do
       (dp-op-other-window win-num 'end-of-buffer)
