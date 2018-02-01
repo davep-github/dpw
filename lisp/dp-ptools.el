@@ -323,7 +323,7 @@ cscope discovery.
       (dp-push-go-back "go-back advised cscope-prompt-for-symbol"))
     
     (defadvice  cscope-next-symbol 
-      (before dp-advised-cscope-next-symbol activate)
+	(before dp-advised-cscope-next-symbol activate)
       (dp-set-current-error-function 'dp-cscope-next-thing
                                      nil
                                      'cscope-next-symbol))
@@ -334,7 +334,7 @@ cscope discovery.
                                      'cscope-next-file))
     
     (defadvice  cscope-prev-symbol 
-      (before dp-advised-cscope-prev-symbol activate)
+	(before dp-advised-cscope-prev-symbol activate)
       (dp-set-current-error-function 'dp-cscope-next-thing
                                      nil
                                      'cscope-prev-symbol))
@@ -359,7 +359,7 @@ cscope discovery.
                                      'cscope-next-symbol))
     
     (defadvice  cscope-select-entry-other-window 
-      (before dp-advised-cscope-prev-file activate)
+	(before dp-advised-cscope-prev-file activate)
       (dp-set-current-error-function 'dp-cscope-next-thing
                                     nil
                                     'cscope-next-symbol)))
@@ -697,7 +697,7 @@ It gives us a common point to save our position before going off after a
 gtags discovery."
       (dp-push-go-back "go-back advised gtags-goto-tag"))
 
-    (dp-current-error-function-advisor 
+    (dp-current-error-function-advisor
      'dp-gtags-select-tag-one-window
      'dp-gtags-next-thing)
 
@@ -828,6 +828,9 @@ gtags discovery."
     (interactive)
     (let ((tag (xgtags--find-tag-near-point)))
       (other-window 1)
+      (dp-set-current-error-function 'dp-xgtags-next-thing
+				     nil
+				     'xgtags-select-next-tag)
       (dp-push-go-back&apply-rest
        "dp-xgtags-select-selected-tag-other-window-cmd-v2"
        'dp-xgtags-select-selected-tag-other-window
@@ -931,11 +934,11 @@ xgtags discovery.
      'xgtags-find-with-grep
      'dp-xgtags-next-thing
      'xgtags-select-next-tag)
-    
-    (dp-current-error-function-advisor 
+
+    (dp-current-error-function-advisor
      'xgtags-select-next-tag
      'dp-xgtags-next-thing)
-
+    
     (dp-current-error-function-advisor 
      'xgtags-select-prev-tag
      'dp-xgtags-next-thing)
@@ -945,11 +948,11 @@ xgtags discovery.
      'dp-xgtags-next-thing
      'xgtags-select-next-tag)
 
-    (dp-current-error-function-advisor 
+    (dp-current-error-function-advisor
      'xgtags-select-tag-near-point
      'dp-xgtags-next-thing
      'xgtags-select-next-tag)
-
+       
     (dp-current-error-function-advisor 
      'xgtags-select-tag-by-event
      'dp-xgtags-next-thing

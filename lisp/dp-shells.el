@@ -1598,6 +1598,7 @@ are kept in the cdr of a cons, e.g. (cons 'args-are-my-cdr real-args).  If
 
 ;;;###autoload
 (defun dp-set-compile-like-mode-error-function ()
+  (interactive)
   (dp-set-current-error-function 'dp-do-next-compile-like-error nil))
 
 ;;;###autoload      
@@ -1696,6 +1697,7 @@ that a new command has been sent since the last parse."
   )
 
 (defadvice compile-goto-error (after dp-advised-compile-goto-error activate)
+  (dp-set-compile-like-mode-error-function)
   (dp-highlight-point-until-next-command))
                               
 (defun dp-error-parse-point-to-end (&optional force-reparse-p)

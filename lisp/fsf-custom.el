@@ -7,12 +7,13 @@
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
+ '(beacon-mode t)
  '(custom-enabled-themes (quote (adwaita)))
  '(display-time-mode t)
  '(global-hl-line-mode nil)
  '(icomplete-mode nil)
  '(icomplete-separator ",")
- '(ido-mode (quote both) 1 (ido))
+ '(ido-mode (quote both) nil (ido))
  '(ido-use-filename-at-point (quote guess))
  '(isearch-allow-scroll t)
  '(isearch-lazy-highlight t)
@@ -23,7 +24,8 @@
     (hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
  '(safe-local-variable-values
    (quote
-    ((block-comment-end . "")
+    ((c-font-lock-extra-types "FILE" "bool" "language" "linebuffer" "fdesc" "node" "regexp")
+     (block-comment-end . "")
      (folding-internal-margins)
      (folded-file . t))))
  '(save-place-mode t)
@@ -34,7 +36,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(beacon-fallback-background ((t (:background "dark blue"))))
+ '(beacon-fallback-background ((t (:background "DodgerBlue3"))))
  '(cursor ((t (:background "blue3"))))
  '(ido-only-match ((t (:foreground "ForestGreen" :weight bold))))
  '(isearch ((t (:background "blue" :foreground "white"))))

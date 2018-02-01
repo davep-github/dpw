@@ -1711,6 +1711,7 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
 (defadvice grep (after dp-grep activate)
   "Do a dp-push-go-back before we go finding the matches returned by `grep'.
 Before visiting means after the command completes."
+  (dp-set-compile-like-mode-error-function)
   (dp-push-go-back "advised grep"))
 
 (defvar dp-bind-xcscope-fkeys-p t
@@ -1937,6 +1938,12 @@ and then business as usual."
         (setq this-command nil))
     (dp-push-go-back "`dp-end-of-defun'")
     (call-interactively 'end-of-defun)))
+
+(defun dp-compilation-start-hook (&optional proc)
+  "Setup error handling when compile start. PROC is always passed.
+It was made optional so it can be M-x 'd if \(eq when) things get hosed."
+  (interactive)
+  (dp-set-compile-like-mode-error-function))
 
 (defun dp-sh-mode-hook ()
   (interactive)
@@ -2351,6 +2358,7 @@ changed."
 (add-hook 'sh-mode-hook 'dp-sh-mode-hook)
 (add-hook 'asm-mode-hook 'dp-asm-mode-hook)
 (add-hook 'ibuffer-hook 'dp-ibuffer-hook)
+(add-hook 'compilation-start-hook 'dp-compilation-start-hook)
 ;; <:add-new-`add-hooks'-up-there:>
 ;; put new hooks up there ^
 
