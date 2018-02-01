@@ -942,7 +942,9 @@ This can be callable.")
   (when (funcall pred buffer-file-name)
     (setq file-precious-flag t)))
 
-(icomplete-mode)
+(when (dp-xemacs-p)
+  ;; FSF has other option[s].
+  (icomplete-mode))
 
 ;;;
 ;;; Best remote file access protocol I've seen so far.

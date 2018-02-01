@@ -12,7 +12,7 @@
  '(global-hl-line-mode nil)
  '(icomplete-mode nil)
  '(icomplete-separator ",")
- '(ido-mode (quote both) nil (ido))
+ '(ido-mode (quote both) 1 (ido))
  '(ido-use-filename-at-point (quote guess))
  '(isearch-allow-scroll t)
  '(isearch-lazy-highlight t)

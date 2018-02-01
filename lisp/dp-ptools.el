@@ -7,9 +7,9 @@
 (defvar dp-reveng-symbol-hist nil
   "History for reverse engineering symbol names.")
 
-(define-error 'dp-*TAGS-aborted
-  "Badness in the guts of the (too) deeply nested *TAGS stuff." 
-  'error)
+;ressurect or remove (define-error 'dp-*TAGS-aborted
+;ressurect or remove   "Badness in the guts of the (too) deeply nested *TAGS stuff." 
+;ressurect or remove   'error)
 
 ;;(dp-setup-hyperbole)
 ;;(autoload 'smart-ancestor-tag-files "hmouse-tag")
@@ -56,64 +56,64 @@
 
 (defvar dp-ok-tags-files '())
 
-(defun* dp-find-nearest-*-file (file-names &optional start-dir
-                                (final-pred 'dp-in-a-work-dir-p)
-                                (final-pred-args '())
-                                (ask-if-pred-fails-p t))
-  "Find closest file in FILE-NAMES up in the dir tree.
-The name appearing first in FILE-NAMES will win in the case of a tie.  We'll
-\(apply FINAL-PRED MAX-STRING FINAL-PRED-ARGS\) to the final candidate.  We
-want to prevent things like running into \"~/TAGS\" when looking for files
-in, say, \"~/work/some/important/stuff\", so by default FINAL_PRED makes sure
-that we're under a directory named work."
-  (setq-ifnil start-dir default-directory)
-  (let* ((path-lists (mapcar 
-                      (function 
-                       (lambda (tf-name)
-                         ;; Using this has no TAG file requirements, so it
-                         ;; can look up the tree for any file.
-                         (smart-ancestor-tag-files start-dir tf-name)))
-                      file-names))
-         (max-lens (mapcar
-                    (function
-                     (lambda (path-list)
-                       (dp-longest-delimited-string-len path-list)))
-                    path-lists))
-         (i-of-max (dp-index-of-max max-lens))
-         (max-len (nth i-of-max max-lens))
-         (max (if (and i-of-max
-                       (>= i-of-max 0))
-                  (car (last (nth i-of-max path-lists)))
-                nil)))
-    (if (and max
-             (or (not final-pred)
-                 (or (apply final-pred max final-pred-args)
-                     (and ask-if-pred-fails-p
-                          (or (member max dp-ok-tags-files)
-                              (and 
-                               (y-or-n-p (format 
-                                          "That doesn't sound workish to me: %s; accept? "
-                                          max))
-                               (add-to-list 'dp-ok-tags-files max)))))))
-        max
-      nil)))
+;ressurect or remove (defun* dp-find-nearest-*-file (file-names &optional start-dir
+;ressurect or remove                                 (final-pred 'dp-in-a-work-dir-p)
+;ressurect or remove                                 (final-pred-args '())
+;ressurect or remove                                 (ask-if-pred-fails-p t))
+;ressurect or remove   "Find closest file in FILE-NAMES up in the dir tree.
+;ressurect or remove The name appearing first in FILE-NAMES will win in the case of a tie.  We'll
+;ressurect or remove \(apply FINAL-PRED MAX-STRING FINAL-PRED-ARGS\) to the final candidate.  We
+;ressurect or remove want to prevent things like running into \"~/TAGS\" when looking for files
+;ressurect or remove in, say, \"~/work/some/important/stuff\", so by default FINAL_PRED makes sure
+;ressurect or remove that we're under a directory named work."
+;ressurect or remove   (setq-ifnil start-dir default-directory)
+;ressurect or remove   (let* ((path-lists (mapcar 
+;ressurect or remove                       (function 
+;ressurect or remove                        (lambda (tf-name)
+;ressurect or remove                          ;; Using this has no TAG file requirements, so it
+;ressurect or remove                          ;; can look up the tree for any file.
+;ressurect or remove                          (smart-ancestor-tag-files start-dir tf-name)))
+;ressurect or remove                       file-names))
+;ressurect or remove          (max-lens (mapcar
+;ressurect or remove                     (function
+;ressurect or remove                      (lambda (path-list)
+;ressurect or remove                        (dp-longest-delimited-string-len path-list)))
+;ressurect or remove                     path-lists))
+;ressurect or remove          (i-of-max (dp-index-of-max max-lens))
+;ressurect or remove          (max-len (nth i-of-max max-lens))
+;ressurect or remove          (max (if (and i-of-max
+;ressurect or remove                        (>= i-of-max 0))
+;ressurect or remove                   (car (last (nth i-of-max path-lists)))
+;ressurect or remove                 nil)))
+;ressurect or remove     (if (and max
+;ressurect or remove              (or (not final-pred)
+;ressurect or remove                  (or (apply final-pred max final-pred-args)
+;ressurect or remove                      (and ask-if-pred-fails-p
+;ressurect or remove                           (or (member max dp-ok-tags-files)
+;ressurect or remove                               (and 
+;ressurect or remove                                (y-or-n-p (format 
+;ressurect or remove                                           "That doesn't sound workish to me: %s; accept? "
+;ressurect or remove                                           max))
+;ressurect or remove                                (add-to-list 'dp-ok-tags-files max)))))))
+;ressurect or remove         max
+;ressurect or remove       nil)))
 
-(defun* dp-find-nearest-*-files (file-names &optional start-dir
-                                 (final-pred 'dp-in-a-work-dir-p)
-                                 (final-pred-args '()))
-  (delq nil (mapcar (function
-                     (lambda (file-name)
-                       (apply 'dp-find-nearest-*-file (list file-name)
-                              start-dir
-                              final-pred
-                              final-pred-args)))
-                    file-names)))
+;ressurect or remove (defun* dp-find-nearest-*-files (file-names &optional start-dir
+;ressurect or remove                                  (final-pred 'dp-in-a-work-dir-p)
+;ressurect or remove                                  (final-pred-args '()))
+;ressurect or remove   (delq nil (mapcar (function
+;ressurect or remove                      (lambda (file-name)
+;ressurect or remove                        (apply 'dp-find-nearest-*-file (list file-name)
+;ressurect or remove                               start-dir
+;ressurect or remove                               final-pred
+;ressurect or remove                               final-pred-args)))
+;ressurect or remove                     file-names)))
 
-(defstruct dp-*TAGS-handler
-  (finder)
-  (returner)
-  (other-window-finder)
-  (name))
+;ressurect or remove (defstruct dp-*TAGS-handler
+;ressurect or remove   (finder)
+;ressurect or remove   (returner)
+;ressurect or remove   (other-window-finder)
+;ressurect or remove   (name))
 
 (defun dp-cscope-next-file (&optional arg)
   (interactive)
@@ -390,139 +390,139 @@ cscope discovery.
 ;;           ))
   )
 
-;; XXX @todo remove regular tags if
-;; 1) gtags proves better
-;; 2) gtags is installed
-;; In general, verify existence of tag chaser.
-(defvar dp-*TAGS-handlers
-  (list
-   (list "GTAGS" (make-dp-*TAGS-handler
-                  :finder 'gtags-find-tag
-                  :returner 'gtags-pop-stack
-                  :other-window-finder 'gtags-find-tag-other-window
-                  :name "gtags")
-         )
-   (list "TAGS" (make-dp-*TAGS-handler 
-                 :finder 'find-tag 
-                 :returner 'pop-tag-mark 
-                 :other-window-finder 'find-tag-other-window
-                 :name "tags")))
-  "Tags commands for given tag systems.")
+;ressurect or remove ;; XXX @todo remove regular tags if
+;ressurect or remove ;; 1) gtags proves better
+;ressurect or remove ;; 2) gtags is installed
+;ressurect or remove ;; In general, verify existence of tag chaser.
+;ressurect or remove (defvar dp-*TAGS-handlers
+;ressurect or remove   (list
+;ressurect or remove    (list "GTAGS" (make-dp-*TAGS-handler
+;ressurect or remove                   :finder 'gtags-find-tag
+;ressurect or remove                   :returner 'gtags-pop-stack
+;ressurect or remove                   :other-window-finder 'gtags-find-tag-other-window
+;ressurect or remove                   :name "gtags")
+;ressurect or remove          )
+;ressurect or remove    (list "TAGS" (make-dp-*TAGS-handler 
+;ressurect or remove                  :finder 'find-tag 
+;ressurect or remove                  :returner 'pop-tag-mark 
+;ressurect or remove                  :other-window-finder 'find-tag-other-window
+;ressurect or remove                  :name "tags")))
+;ressurect or remove   "Tags commands for given tag systems.")
 
-;; Let the handlers register themselves and their tag file names.
-;; This lets us enable/disable in one place.
-(defvar dp-default-*TAGS-file-names '("GTAGS" "TAGS")
-  "In order of preference.
-Either GTAGS/Global sucks big-time or I'm too stupid to use it rightly.  It
-never seems to find what I need and (minor point) doesn't clean up after
-itself when it can't find what is needed.
-E.g. Exuberant ctags + `find-tag' given Vector::Iterate finds:
-class VectorSink : public Sprockit::Sink1<Frame<int> >
-...
-  void Iterate()
+;ressurect or remove ;; Let the handlers register themselves and their tag file names.
+;ressurect or remove ;; This lets us enable/disable in one place.
+;ressurect or remove (defvar dp-default-*TAGS-file-names '("GTAGS" "TAGS")
+;ressurect or remove   "In order of preference.
+;ressurect or remove Either GTAGS/Global sucks big-time or I'm too stupid to use it rightly.  It
+;ressurect or remove never seems to find what I need and (minor point) doesn't clean up after
+;ressurect or remove itself when it can't find what is needed.
+;ressurect or remove E.g. Exuberant ctags + `find-tag' given Vector::Iterate finds:
+;ressurect or remove class VectorSink : public Sprockit::Sink1<Frame<int> >
+;ressurect or remove ...
+;ressurect or remove   void Iterate()
 
-Whereas Global can't even find Vector.
-It can't be this bad, I must be missing something.
-By default, gtags doesn't look in .h files C++ features.
-Oddly, it doesn't handle structs.")
+;ressurect or remove Whereas Global can't even find Vector.
+;ressurect or remove It can't be this bad, I must be missing something.
+;ressurect or remove By default, gtags doesn't look in .h files C++ features.
+;ressurect or remove Oddly, it doesn't handle structs.")
 
-(defun dp-find-nearest-*TAGS-file-path (&optional tag-file-names start-dir)
-  (dp-find-nearest-*-file (or tag-file-names dp-default-*TAGS-file-names)
-                          start-dir))
+;ressurect or remove (defun dp-find-nearest-*TAGS-file-path (&optional tag-file-names start-dir)
+;ressurect or remove   (dp-find-nearest-*-file (or tag-file-names dp-default-*TAGS-file-names)
+;ressurect or remove                           start-dir))
 
-(defun dp-find-nearest-*TAGS-file (&optional tag-file-names start-dir)
-  (let ((tag-file (dp-find-nearest-*TAGS-file-path tag-file-names 
-                                                   start-dir)))
-    (when tag-file
-      (file-name-nondirectory tag-file))))
+;ressurect or remove (defun dp-find-nearest-*TAGS-file (&optional tag-file-names start-dir)
+;ressurect or remove   (let ((tag-file (dp-find-nearest-*TAGS-file-path tag-file-names 
+;ressurect or remove                                                    start-dir)))
+;ressurect or remove     (when tag-file
+;ressurect or remove       (file-name-nondirectory tag-file))))
 
-(defun dp-get-*TAGS-handler (&optional tag-file-names start-dir)
-  (let ((tag-file (dp-find-nearest-*TAGS-file tag-file-names start-dir)))
-    (when tag-file
-      (cadr (assoc (dp-find-nearest-*TAGS-file tag-file-names start-dir)
-                   dp-*TAGS-handlers)))))
+;ressurect or remove (defun dp-get-*TAGS-handler (&optional tag-file-names start-dir)
+;ressurect or remove   (let ((tag-file (dp-find-nearest-*TAGS-file tag-file-names start-dir)))
+;ressurect or remove     (when tag-file
+;ressurect or remove       (cadr (assoc (dp-find-nearest-*TAGS-file tag-file-names start-dir)
+;ressurect or remove                    dp-*TAGS-handlers)))))
 
-(defun* dp-get-*TAGS-handler-list (&optional 
-                                   (tag-file-names dp-default-*TAGS-file-names)
-                                   start-dir)
-  "Create a list of tag handlers based on current dir and existing tag files."
-  (delq nil (mapcar (function
-                     (lambda (tag-file-name)
-                       (funcall 'dp-get-*TAGS-handler (list tag-file-name)
-                                start-dir)))
-                    tag-file-names)))
+;ressurect or remove (defun* dp-get-*TAGS-handler-list (&optional 
+;ressurect or remove                                    (tag-file-names dp-default-*TAGS-file-names)
+;ressurect or remove                                    start-dir)
+;ressurect or remove   "Create a list of tag handlers based on current dir and existing tag files."
+;ressurect or remove   (delq nil (mapcar (function
+;ressurect or remove                      (lambda (tag-file-name)
+;ressurect or remove                        (funcall 'dp-get-*TAGS-handler (list tag-file-name)
+;ressurect or remove                                 start-dir)))
+;ressurect or remove                     tag-file-names)))
 
-(defvar dp-*TAGS-stack '()
-  "I need to remember how a tag was found so I can pop it off the right stack.")
+;ressurect or remove (defvar dp-*TAGS-stack '()
+;ressurect or remove   "I need to remember how a tag was found so I can pop it off the right stack.")
 
-(defun dp-*TAGS-push-handler (handler)
-  (push handler dp-*TAGS-stack))
+;ressurect or remove (defun dp-*TAGS-push-handler (handler)
+;ressurect or remove   (push handler dp-*TAGS-stack))
 
-(defun dp-*TAGS-pop-handler ()
-  (pop dp-*TAGS-stack))
+;ressurect or remove (defun dp-*TAGS-pop-handler ()
+;ressurect or remove   (pop dp-*TAGS-stack))
 
-(defun dp-*TAGS-try-handler-funcs (handlers gettor)
-  (interactive)
-  (loop for handler in handlers
-    do (let ((start-pos (point-marker))
-             (start-buffer (current-buffer))
-             (bol (dp-mk-marker (line-beginning-position)))
-             (eol (dp-mk-marker (line-end-position)))
-             new-pos)
-         (condition-case err
-             (progn
-               ;; Try the handler. If it succeeds, then we'll push a
-               ;; corresponding handler entry onto our old stack. This is
-               ;; used to return from a tag in a handler specific fashion.
-               ;; We need to know if the gettor succeeded in order for this
-               ;; to work. GLOBAL/GTAGS makes this hard.
-               (message "Trying: %s" (dp-*TAGS-handler-name handler))
-               (call-interactively (funcall gettor handler))
-               ;; gtags is a pain in the ass.  It moves point to the
-               ;; beginning of the current symbol and leaves it there. This
-               ;; makes it look like a tag was found.  A partial workaround
-               ;; is to see if we've moved off the current line.  This will
-               ;; break when we try to find a symbol that is defined on the
-               ;; current line, which is basically a braino.
-               ;; FUCK gtags for now.
-               ;; gtags seems to be fixed. By default, .h files are treated
-               ;; as C only and are not examined for C++ constructs. Oddly,
-               ;; structs don't work wither
-;;               (dp-*TAGS-push-handler handler)
-;;               (return))
-               (setq new-pos (point-marker))
-               ;; Compensate for gtags.el's bogus moving of point even if it
-               ;; cannot find the tag, and only push the (return)handler if
-               ;; we've moved to a different line.
-               (when (or (not (equal start-buffer (current-buffer)))
-                         ;; Inconvenient, but failure leaves us at point if
-                         ;; we enter an unfindable tag name on a blank line.
-                         (= (point) (start-pos))
-                         (< new-pos bol)
-                         (> new-pos eol))
-                 ;; When gtags goes to the gtags buffer, we lose the ability
-                 ;; to return to original spot, so hack till time:
-                 (dp-push-go-back "Hack in dp-tags stuff.")
-                 (dp-*TAGS-push-handler handler)
-                 (return))
-               (dp-ding-and-message "%s didn't take us anywhere with the tag."
-                                    (dp-*TAGS-handler-name handler)))
-           (t (dmessage "Caught condition: %s in dp-*TAGS-try-handler-funcs"
-                        err))))))
+;ressurect or remove (defun dp-*TAGS-try-handler-funcs (handlers gettor)
+;ressurect or remove   (interactive)
+;ressurect or remove   (loop for handler in handlers
+;ressurect or remove     do (let ((start-pos (point-marker))
+;ressurect or remove              (start-buffer (current-buffer))
+;ressurect or remove              (bol (dp-mk-marker (line-beginning-position)))
+;ressurect or remove              (eol (dp-mk-marker (line-end-position)))
+;ressurect or remove              new-pos)
+;ressurect or remove          (condition-case err
+;ressurect or remove              (progn
+;ressurect or remove                ;; Try the handler. If it succeeds, then we'll push a
+;ressurect or remove                ;; corresponding handler entry onto our old stack. This is
+;ressurect or remove                ;; used to return from a tag in a handler specific fashion.
+;ressurect or remove                ;; We need to know if the gettor succeeded in order for this
+;ressurect or remove                ;; to work. GLOBAL/GTAGS makes this hard.
+;ressurect or remove                (message "Trying: %s" (dp-*TAGS-handler-name handler))
+;ressurect or remove                (call-interactively (funcall gettor handler))
+;ressurect or remove                ;; gtags is a pain in the ass.  It moves point to the
+;ressurect or remove                ;; beginning of the current symbol and leaves it there. This
+;ressurect or remove                ;; makes it look like a tag was found.  A partial workaround
+;ressurect or remove                ;; is to see if we've moved off the current line.  This will
+;ressurect or remove                ;; break when we try to find a symbol that is defined on the
+;ressurect or remove                ;; current line, which is basically a braino.
+;ressurect or remove                ;; FUCK gtags for now.
+;ressurect or remove                ;; gtags seems to be fixed. By default, .h files are treated
+;ressurect or remove                ;; as C only and are not examined for C++ constructs. Oddly,
+;ressurect or remove                ;; structs don't work wither
+;ressurect or remove ;;               (dp-*TAGS-push-handler handler)
+;ressurect or remove ;;               (return))
+;ressurect or remove                (setq new-pos (point-marker))
+;ressurect or remove                ;; Compensate for gtags.el's bogus moving of point even if it
+;ressurect or remove                ;; cannot find the tag, and only push the (return)handler if
+;ressurect or remove                ;; we've moved to a different line.
+;ressurect or remove                (when (or (not (equal start-buffer (current-buffer)))
+;ressurect or remove                          ;; Inconvenient, but failure leaves us at point if
+;ressurect or remove                          ;; we enter an unfindable tag name on a blank line.
+;ressurect or remove                          (= (point) (start-pos))
+;ressurect or remove                          (< new-pos bol)
+;ressurect or remove                          (> new-pos eol))
+;ressurect or remove                  ;; When gtags goes to the gtags buffer, we lose the ability
+;ressurect or remove                  ;; to return to original spot, so hack till time:
+;ressurect or remove                  (dp-push-go-back "Hack in dp-tags stuff.")
+;ressurect or remove                  (dp-*TAGS-push-handler handler)
+;ressurect or remove                  (return))
+;ressurect or remove                (dp-ding-and-message "%s didn't take us anywhere with the tag."
+;ressurect or remove                                     (dp-*TAGS-handler-name handler)))
+;ressurect or remove            (t (dmessage "Caught condition: %s in dp-*TAGS-try-handler-funcs"
+;ressurect or remove                         err))))))
 
-(defun dp-tag-find-old (&rest r)
-  (interactive)
-  (call-interactively (dp-*TAGS-handler-finder (dp-get-*TAGS-handler))))
+;ressurect or remove (defun dp-tag-find-old (&rest r)
+;ressurect or remove   (interactive)
+;ressurect or remove   (call-interactively (dp-*TAGS-handler-finder (dp-get-*TAGS-handler))))
 
-(defun dp-tag-find (&rest r)
-  (interactive)
-  (cond
-   ((looking-at "(")
-    (dp-eval-naked-embedded-lisp))
-   ((looking-at ":(")
-    (dp-eval-embedded-lisp-region))
-   (t
-    (call-interactively 'gtags-find-tag))))
+;ressurect or remove (defun dp-tag-find (&rest r)
+;ressurect or remove   (interactive)
+;ressurect or remove   (cond
+;ressurect or remove    ((looking-at "(")
+;ressurect or remove     (dp-eval-naked-embedded-lisp))
+;ressurect or remove    ((looking-at ":(")
+;ressurect or remove     (dp-eval-embedded-lisp-region))
+;ressurect or remove    (t
+;ressurect or remove     (call-interactively 'gtags-find-tag))))
 
 ;;   (condition-case err
 ;;       (let ((handler-list (dp-get-*TAGS-handler-list)))
@@ -534,17 +534,17 @@ Oddly, it doesn't handle structs.")
 ;;      (ding)
 ;;      (message "Tag op aborted: %s" err))))
 
-(defun dp-tag-pop-old (&rest r)
-  (interactive)
-  (call-interactively (dp-*TAGS-handler-returner (dp-get-*TAGS-handler))))
+;ressurect or remove (defun dp-tag-pop-old (&rest r)
+;ressurect or remove   (interactive)
+;ressurect or remove   (call-interactively (dp-*TAGS-handler-returner (dp-get-*TAGS-handler))))
 
-(defun dp-tag-pop (&rest r)
-  (interactive)
-  (call-interactively 'gtags-pop-stack))
-;;   (let ((handler (dp-*TAGS-pop-handler)))
-;;     (if handler
-;;         (call-interactively (dp-*TAGS-handler-returner handler))
-;;       (dp-ding-and-message "No tags on dp tag stack."))))
+;ressurect or remove (defun dp-tag-pop (&rest r)
+;ressurect or remove   (interactive)
+;ressurect or remove   (call-interactively 'gtags-pop-stack))
+;ressurect or remove ;;   (let ((handler (dp-*TAGS-pop-handler)))
+;ressurect or remove ;;     (if handler
+;ressurect or remove ;;         (call-interactively (dp-*TAGS-handler-returner handler))
+;ressurect or remove ;;       (dp-ding-and-message "No tags on dp tag stack."))))
 
 (defun dp-tag-find-other-window (&rest r)
   (interactive)
