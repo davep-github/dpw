@@ -1350,13 +1350,12 @@ See `dp-parenthesize-region-paren-list'")
   (insert isearch-string))
 (defalias 'diis 'dp-insert-isearch-string)
 
-(defun dp-isearch-yank-char ()
+(defun dp-isearch-yank-char (&optional arg)
   "Yank next char \(@ \(point))into the search string.
 This is moved from a patch to isearch.el, so we lose the ability to add our
 doc to `isearch-mode's doc string.  But we don't need to patch before dumping."
   (interactive)
-  (interactive)
-  (isearch-yank 'forward-char))
+  (dp-isearch-yank-char))
 (put 'dp-isearch-yank-char 'isearch-command t)
 
 

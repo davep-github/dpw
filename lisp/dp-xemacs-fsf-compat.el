@@ -149,6 +149,10 @@ be deactivated when doing a beginning|end followed by an end|beginning."
 (defalias 'bobp 'dp-bobp)
 (defalias 'eobp 'dp-eobp)
 
+(defun dp-isearch-yank-char (&optional arg)
+  (interactive)
+  (isearch-yank 'forward-char))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Nicked from Emacs.
 
