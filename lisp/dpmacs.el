@@ -41,10 +41,12 @@
 (make-variable-buffer-local 'backup-inhibited)
 
 ;; I need to require this because it inits its name ring to a funky value.
-;;fsf;;(require 'wconfig)
+(require 'wconfig)
+;; I've stolen the code from XEmacs.  There may be another non-specific version
+;; "out there."
 ;; Also, annoyingly, its public and apparently meant to be used by clients is
 ;; a defconst, not defvar. Admittedly, those are two fucked up names.
-;;ok with default?; (setq wconfig-ring-max 16) ; def 10... is it enough?
+;; ok with default?; (setq wconfig-ring-max 16) ; def 10... is it enough?
 ;; This function is b0rked in the source here @ intel on chele
 ;; so we fix it:
 (defun wconfig-delete-pop ()

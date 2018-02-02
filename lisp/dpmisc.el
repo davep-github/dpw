@@ -9842,15 +9842,6 @@ A bookmark, in this context, is:
     when (not (member b l2))
     collect b))
 
-(defun dp-push-window-config ()
-  (interactive)
-  (call-interactively 'wconfig-ring-save))
-
-(defun dp-pop-window-config (n)
-  (interactive "p")
-  ;; Real pop vs rotate. The yank pop acts, to me, counter-intuitively.
-  (call-interactively 'wconfig-delete-pop))
-
 (defun dp-all-window-buffers (&optional win-list frame first-window)
   (mapcar (lambda (win)
             (window-buffer win))
@@ -10161,8 +10152,9 @@ current window."
                                               (lambda (buf)
                                                 (bury-buffer)))))
 
-(dp-deflocal dp-simple-buffer-select-p t
-  "Do we want to use the A.S. routine to guess what window we want our buffer to display in or do it simply?")
+(dp-deflocal dp-simple-buffer-select-p 'bypass
+  "Do we want to use the A.S. routine to guess what window we
+want our buffer to display in or do it simply?")
 
 ;fsf -- how to handle disp buf (defun dp-display-buffer-select (buffer &optional not-this-window-p 
 ;fsf -- how to handle disp buf 					override-frame shrink-to-fit

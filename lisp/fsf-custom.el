@@ -7,6 +7,7 @@
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
+ '(beacon-blink-when-focused t)
  '(beacon-mode t)
  '(custom-enabled-themes (quote (adwaita)))
  '(display-time-mode t)

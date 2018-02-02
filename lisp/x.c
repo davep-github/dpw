@@ -4,7 +4,7 @@
  * llkjslkjd
  */
 
-
+// 0O1l([{}])
 float f = 0.0;
 typedef zuzz xxx;
 // recommend
