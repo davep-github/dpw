@@ -12,17 +12,19 @@
  '(custom-enabled-themes (quote (adwaita)))
  '(display-time-mode t)
  '(global-hl-line-mode nil)
- '(icomplete-mode nil)
+ '(icomplete-mode t)
  '(icomplete-separator ",")
- '(ido-mode (quote both) nil (ido))
+ '(ido-mode nil nil (ido))
  '(ido-use-filename-at-point (quote guess))
  '(isearch-allow-scroll t)
- '(isearch-lazy-highlight t)
+ '(isearch-lazy-highlight nil)
  '(isearch-resume-in-command-history t)
+ '(ispell-lazy-highlight nil)
  '(mouse-yank-at-point t)
  '(package-selected-packages
    (quote
     (hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
+ '(query-replace-lazy-highlight nil)
  '(safe-local-variable-values
    (quote
     ((c-font-lock-extra-types "FILE" "bool" "language" "linebuffer" "fdesc" "node" "regexp")
