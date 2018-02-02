@@ -385,6 +385,9 @@ pee-pee. "
 
 (defalias 'dp-isearch-yank-char 'isearch-yank-char)
 
+(defun gnuserv-start (&rest r)
+  )
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -423,6 +426,29 @@ If DEFAULT-VALUE is non-nil, return that if user enters an empty
 (defconst dp-frame-title-format (format "-%s@%s: %%f"
 					invocation-name system-name)
   "*Base frame title format.")
+
+(defun dp-hl-highlight-one ()
+  "Just highlight the current line.
+Stolen from `global-hl-line-highlight' and removed the `global-hl-line-highlight'
+predicate.  
+XXX @todo It might be better to set that in a `let' and the call the original."
+  (interactive)
+  (unless global-hl-line-overlay
+    (setq global-hl-line-overlay (hl-line-make-overlay))) ; To be moved.
+  (unless (member global-hl-line-overlay global-hl-line-overlays)
+    (push global-hl-line-overlay global-hl-line-overlays))
+  (overlay-put global-hl-line-overlay 'window
+	       (unless global-hl-line-sticky-flag
+		 (selected-window)))
+  (hl-line-move global-hl-line-overlay))
+
+(defun dp-hl-unhighlight-one ()
+  "Unhighlight a line.
+XXX @todo Do we want to make it only act on the current line?
+Currently it removes it regardless of the line we're on."
+  (interactive)
+  (when global-hl-line-overlay
+    (delete-overlay global-hl-line-overlay)))
 
 (require 'cus-edit)
 (defsubst custom-face-get-spec (face)
