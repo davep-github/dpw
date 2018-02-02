@@ -21,6 +21,7 @@
  '(isearch-resume-in-command-history t)
  '(ispell-lazy-highlight nil)
  '(mouse-yank-at-point t)
+ '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
    (quote
     (hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
