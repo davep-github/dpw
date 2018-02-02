@@ -377,7 +377,9 @@ Bind any keys in KEYS via `dp-define-keys'."
                           [(meta ?u)] 'dp-undo-till-unmodified
                           [(meta ?x)] 'repeat-complex-command
                           [(shift tab)] 'dp-goto-next-dp-extent-from-point
-                          [?e] 'dp-extents-at
+                          [?e] (if (dp-xemacs-p)
+				   'dp-extents-at
+				 'describe-text-properties)
                           [?G] 'dp-set-or-goto-bm
                           [?`] 'dp-bq-rest-of-line
                           [?f] 'dp-show-buffer-file-name
