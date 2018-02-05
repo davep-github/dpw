@@ -2988,8 +2988,7 @@ exist to move from one topic record to the next or previous.
   (dpj-define-key [(control meta ?n)] (kb-lambda
                                           (dpj-next-journal-command nil nil)))
   (dpj-define-key [(control meta ?p)] (kb-lambda
-			     (dpj-next-journal-file -1 nil)))
-
+					  (dpj-next-journal-file -1 nil)))
   (dpj-define-key "\C-c\C-n" 'dpj-new-topic)
   (dpj-define-key "\C-c\C-r" (kb-lambda 
 			      (dpj-re-process-topics 

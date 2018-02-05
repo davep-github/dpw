@@ -109,6 +109,16 @@ then
     {
 #        source ${DP_RC_DIR}/grep-functions
         grep_options="-n --color=never"
+        alias zgrep="zgrep -n --color=never"
+        alias bzgrep="bzgrep -n --color=never"
+	alias lzgrep="lzgrep -n --color=never"
+	alias lzegrep="lzegrep -n --color=never"
+	alias lzfgrep="lzfgrep -n --color=never"
+	alias xzgrep="xzgrep -n --color=never"
+	alias xzegrep="xzegrep -n --color=never"
+	alias xzfgrep="xzfgrep -n --color=never"
+	alias pcregrep="pcregrep -n --color=never"
+
 #        alias grep="grep -n --color=never"
 #        alias egrep="egrep -n --color=never"
 #        alias fgrep="fgrep -n --color=never"

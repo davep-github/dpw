@@ -8,6 +8,13 @@
 ;;; 
 (message "Loading dp-xemacs-early...")
 
+(setq gutter-buffers-tab-enabled nil)
+(defconst dp-info-path-var 'Info-directory-list
+  "Info dir list var we want to add our info dirs to.")
+
+(defun dp-set-font-lock-defaults (mode-symbol defaults)
+  (put mode-symbol 'font-lock-defaults defaults))
+
 ;;rem-after-fsf (defun dp-timestamp-string (&optional time new-style-p)
 ;;rem-after-fsf   "Return a consistently formatted and sensibly sortable and succinct timestamp string."
 ;;rem-after-fsf   (interactive)
@@ -108,17 +115,9 @@
 A list of cons cells, where each cons cell is \(regexp . face\).
 The regexp is matched against the buffer name.")
 
-(setq gutter-buffers-tab-enabled nil)
-
-(defconst dp-info-path-var 'Info-directory-list
-  "Info dir list var we want to add our info dirs to.")
-
 ;;
 ;; XEmacs puts font lock info on the mode symbol. Kewl.
 ;; 
-(defun dp-set-font-lock-defaults (mode-symbol defaults)
-  (put mode-symbol 'font-lock-defaults defaults))
-
 (defun dp-colorize-buffer-if (pred color &optional else-uncolorize-p
                               pred-args beg end)
   "Colourize the current buffer if PRED is non-nil."
