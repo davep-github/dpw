@@ -169,7 +169,28 @@ Use BEGIN and END as the limits of the extent."
                     'dp-end nil)))
 
 (defun dp-low-level-server-start (&optional leave-dead inhibit-prompt)
-  (gnuserv leave-dead inhibit-prompt))
+  (gnuserv leave-dead inhibit-prompt)
+;;
+;; Try for more feature filled gnuserv and fall back
+;; to the regular server if gnuserv is not available.
+;; gnuserv is always available when I build my own XEmacs.
+;;
+(defun dp-start-server (&optional leave-or-make-dead-p)
+  "Start up an editing server.  Try for gnuserv, then server.
+This is a func so it can specified on the command line as something to run or
+not."
+  (condition-case appease-byte-compiler
+      (progn
+	(require 'server)
+	(message "using server")
+	(let ((frame (dp-current-frame)))
+          (if (gnuserv-start leave-or-make-dead-p)
+              t                         ; Deeniiiiiiied!
+            (setq gnuserv-frame frame)
+            nil)))
+    (error (unless (in-windwoes)
+	     (message "using regular server")
+	     (server-start)))))
   
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Nicked from Emacs.

@@ -42,7 +42,7 @@ Find and modify or insert an fcc header into the current buffer."
   "Set up mail mode *my* way :-)"
   (mail-abbrevs-setup)
   ;; @todo... try it on since the global abbrev table only has typos in it.
-  (abbrev-mode 1))
+  (abbrev-mode 0))		     ; We use mah MFing abbrevs, MFer.
 
 (defun dp-mh-letter-mode-hook ()
   "Append separator and signature file (mh-signature-file-name)

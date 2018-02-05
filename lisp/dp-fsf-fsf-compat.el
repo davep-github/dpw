@@ -326,7 +326,7 @@ ARG is the argument to `add-global-abbrev' or `add-mode-abbrev'."
   (replace-regexp-in-string from-str to-str which nil literal))
 
 ;; #### we need a coherent scheme for indicating compatibility info,
-;; so that it can be programmatically retrieved.
+;; so that it can be pro grammatically retrieved.
 (defun add-local-hook (hook function &optional append)
   "Add to the local value of HOOK the function FUNCTION.
 You don't need this any more.  It's equivalent to specifying the LOCAL
@@ -388,6 +388,16 @@ pee-pee. "
 (defun gnuserv-start (&rest r)
   )
 
+(defun dp-set-text-color (tag face &optional begin end detachable-p 
+			      start-open-p end-open-p)
+  "Set a region's background color to FACE.
+Identify the extent w/TAG.
+Use BEGIN and END as the limits of the extent."
+  )
+
+(defun dp-low-level-server-start (&optional leave-dead inhibit-prompt)
+  (server-start leave-dead inhibit-prompt))
+  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

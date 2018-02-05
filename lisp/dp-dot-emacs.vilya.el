@@ -24,16 +24,16 @@
                                (file-truename dir-name))
                              (dp-filter-dirs-by-file
                               (paths-directories-which-exist
-                               '("/usr/info"
-                                 "/usr/local/info"
-                                 "/usr/local/lib/xemacs-21.4.15/info"
-                                 "/usr/local/lib/xemacs-21.5-b16/info"
-                                 "/usr/local/lib/xemacs/xemacs-packages/info"
-                                 "/usr/local/share/info"
-                                 "/usr/share/info"
-                                 "/usr/yokel/info"
-                                 "/usr/yokel/sawmill-cvs/info"
-                                 (dp-lisp-subdir "contrib/info")
+                               (list "/usr/info"
+                                     "/usr/local/info"
+                                     "/usr/local/lib/xemacs-21.4.15/info"
+                                     "/usr/local/lib/xemacs-21.5-b16/info"
+                                     "/usr/local/lib/xemacs/xemacs-packages/info"
+                                     "/usr/local/share/info"
+                                     "/usr/share/info"
+                                     "/usr/yokel/info"
+                                     "/usr/yokel/sawmill-cvs/info"
+                                     (dp-lisp-subdir "contrib/info")))
                               "dir")))
                      
 ;; fits the hp5l

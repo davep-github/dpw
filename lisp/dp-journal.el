@@ -3040,7 +3040,7 @@ exist to move from one topic record to the next or previous.
   ;; abbrevs in ~/.abbrev_defs --> ~/lisp/dp-abbrev-defs.el
   ;; @todo... try it on since the global abbrev table only has typos
   ;; corrections in it.
-  (abbrev-mode 1)
+  (abbrev-mode 0)		     ; We use mah MFing abbrevs, MFer.
 
   (setq auto-save-interval 42
         auto-save-timeout 30

@@ -2,24 +2,28 @@
 ;; $Id: init.el,v 1.3 2002/07/28 04:45:06 davep Exp $
 
 
-(when (featurep 'emacs)
-  ;; Added by Package.el.  This must come before configurations of
-  ;; installed packages.  Don't delete this line.  If you don't want it,
-  ;; just comment it out by adding a semicolon to the start of the line.
-  ;; You may delete these explanatory comments.
-  (package-initialize))
-
-(message "in init.el")
-;; no blah, blah, blah.
-(setq inhibit-startup-message t)
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
 
 (defvar dp-lisp-dir
   (if (featurep 'xemacs)
       (expand-file-name "~/xlisp")
     (expand-file-name "~/flisp")))
 
+(add-to-list 'load-path dp-lisp-dir)
+
 (defun dp-lisp-subdir (sub &rest args)
   (expand-file-name (apply 'format sub args) dp-lisp-dir))
+
+(when (featurep 'emacs)
+  (require 'fsf-init))
+
+(message "in init.el")
+;; no blah, blah, blah.
+(setq inhibit-startup-message t)
 
 ;; for debuggin'...
 (setq dp-orig-load-path load-path)

@@ -287,7 +287,7 @@ Can be set after the first prompting.")
 (defun dp-shell-lookfor-editing-server-command (str)
   (interactive)
   (when (and (string-match dp-editing-server-cmd-regexp str)
-             (not (dp-gnuserv-running-p))
+             (not (dp-server-running-p))
              (not (string-match 
                    dp-editing-server-cmd-regexp-exceptions
                    str))

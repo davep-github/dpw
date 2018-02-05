@@ -32,8 +32,8 @@ LOG_FILE="$HOME/log/xemacs/ec-log-file.log"
 : ${ask_about_text_mode:=${ask_if_no_display}}
 # The known_* vars are searched in order, so that can be used to specify a
 # preference order.
-: ${known_servers:=gnuserv}
-: ${known_clients:="gnuclient emacsclient"}
+: ${known_servers:=gnuserv} # Emacs runs its server in lisp, so we can't detect it.
+: ${known_clients:="emacsclient gnuserv"}
 : ${known_text_mode_editors:="vim vi nvi nano pico"}
 : ${editing_host=$(find_best_editing_host)}
 : ${client=}
@@ -64,7 +64,18 @@ Usage()
 
 local_server_p()
 {
-    findprog -s ${known_servers}
+    for p in ${known_servers}
+    do
+	if findprog -s "${p}"
+	then
+	    echo "${p}"
+	    return 0
+	fi
+    done
+
+    echo 1>&2 "Cannot find a server.
+We'll try Emacs."
+    return 1
 }
 
 #
@@ -298,11 +309,6 @@ fi
 case "$client" in
     emacsclient)
 	nowait_opt='--no-wait'
-	if [ -n "$eval_opt" ]
-	then
-	    echo 1>&2 "cannot use eval arg with $client"
-	    exit 1
-	fi
 	;;
     gnuclient)
 	nowait_opt='-q'

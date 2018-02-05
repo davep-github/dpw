@@ -202,7 +202,7 @@ Shouldn't really set this unless something breaks.")
   ;;(mail-abbrevs-setup)
   ;; turn off auto abbrev expansion, which the above turns on.
   ;; @todo... try it on since the global abbrev table only has typos in it.
-  (abbrev-mode 1)
+  (abbrev-mode 0)		  ; We use mah MFing abbrevs, MFer.
   ;;(dmessage "buf>%s<" (buffer-name))
   (setq dp-mail-is-a-reply-p (memq this-command 
 				   '(dp-mew-summary-reply 

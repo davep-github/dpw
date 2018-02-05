@@ -48,15 +48,6 @@
   (beginning-of-line)
   (dp-delete-to-end-of-line))
 
-(message "Before: save-place-file>%s<" save-place-file)
-(defconst save-place-file
-  (format "~/.emacs.d/emacs-places.%s" (dp-short-hostname))
-  "When editing on multiple machines, it's nice to qualify them with the
- hostname on which certain resources are being used.  This tends to require
-executable code, often a format with some function calls, often
-`dp-short-hostname'.  Hooks to funcalls should be an option for
-the value of some/many/most/all customizable variables.")
-(message "After: save-place-file>%s<" save-place-file)
 ;;;
 ;;;
 ;;;

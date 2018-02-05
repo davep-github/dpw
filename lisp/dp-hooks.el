@@ -230,7 +230,7 @@ QUOTE-IT-P says to quote the regexp so special chars aren't."
   (dp-turn-on-auto-fill)
   (setq indent-tabs-mode nil)
   ;; @todo... try it on since the global abbrev table only has typos in it.
-  (abbrev-mode 1)
+  (abbrev-mode 0)		     ; We use mah MFing abbrevs, MFer.
   ;; ICK!
   (cond
    ;; NB: This only runs when the diary file is first loaded.
@@ -859,8 +859,8 @@ tab setting, font or phase of the moon."
   ;; when I don't want them to.
   ;; maybe I should only use them when I'm in an appropriate mode.
   ;; @todo... try it on since the global abbrev table only has typos in it.
-  (abbrev-mode 1)
-  (c-toggle-auto-state 1)               ;set c-auto-newline
+  (abbrev-mode 0)		     ; We use mah MFing abbrevs, MFer.
+  (c-toggle-auto-state 1)	     ;set c-auto-newline
   (dp-turn-off-auto-fill)
   (setq dp-cleanup-whitespace-p dp-default-c-like-mode-cleanup-whitespace-p)
   (setq indent-tabs-mode dp-c-like-mode-default-indent-tabs-mode-p
@@ -1054,7 +1054,7 @@ main(
   "My C++ mode hook"
   (interactive)
   ;; try this again, w/some expansions like: cout --> std::cout
-  (abbrev-mode 1)
+  (abbrev-mode 0)			; We use mah MFing abbrevs, MFer.
   ;; add the std:: namespace qualifier to a bunch of things.
   ;; may want to tweak this list
   (dp-c++-mode-define-abbrevs)
