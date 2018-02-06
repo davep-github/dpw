@@ -81,7 +81,9 @@ Use '(nil) for field name to set it to nil."
   (when (eq server-fate 'kill-all-p)
     ;; emacs w/existing server won't know its server is dead... not a real
     ;; problem?
-    (shell-command (format "dpkillprog -q %s" gnuserv-program)))
+    ;; Also, I can't find a way to kill the server.
+    (when (dp-xemacs-p)
+      (shell-command (format "dpkillprog -q %s" gnuserv-program))))
   (dmessage "dp-kill-editing-server")
   (dp-finalize-editing-server 'rm-ipc-if-ours))
 
@@ -119,7 +121,7 @@ not."
   (dmessage "dp-finalize-editing-server, rm-flag: %s" rm-flag)
   (dp-set-frame-title-format :force-no-server-p t)
   (when (or (memq rm-flag '(rm))
-            (dp-gnuserv-running-p))
+            (dp-server-running-p))
     ;; The title formatter uses `dp-gnuserv-running-p' so it can mistakenly
     ;; set the server indication in the title.
     (dp-rm-editing-server-ipc-file)))
@@ -148,7 +150,7 @@ start a new one."
     ;; Allow time for the server to die if there is another one running.
     (sit-for 0.5) ;
     (let ((host-name (dp-short-hostname)))
-      (when (and (dp-gnuserv-running-p)
+      (when (and (dp-server-running-p)
                  (or (dmessage "server is running") t)
                  (string-match dp-edting-server-valid-host-regexp
                                host-name))

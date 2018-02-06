@@ -9,6 +9,9 @@ if ! type davep_env_p >/dev/null 2>&1; then
     export PATH=$(pathadd -p "$PATH" "$dirname")
 fi
 
+# Needs must be a numeric return code.
+TRY_FSF_EMACS=67
+
 source script-x
 progname="$(basename $0)"
 source eexec
@@ -73,9 +76,9 @@ local_server_p()
 	fi
     done
 
-    echo 1>&2 "Cannot find a server.
-We'll try Emacs."
-    return 1
+#    echo 1>&2 "Cannot find a running XEmacs server.
+#We'll try Emacs."
+    return ${TRY_FSF_EMACS}
 }
 
 #
@@ -137,11 +140,21 @@ process_file ()
     local problem=
     local and=
     # Choose a local server over a remote one.
-    if ! local_server_p
+    local_server_p
+    local rc=$?
+    EExec_verbose_echo_id rc
+    if [ "$rc" = 0 -o "$rc" = ${TRY_FSF_EMACS} ]
     then
-        if vsetp "$editing_host"
+	if [ "$rc" = ${TRY_FSF_EMACS} ]
+	then
+	   editing_host_opt=
+	   raise_emacs_pattern="Serv/Emacs@"
+	   EExec_verbose_echo_id raise_emacs_pattern
+        elif vsetp "$editing_host"
         then
-            editing_host_opt="-h $editing_host"
+	    editing_host_opt="-h $editing_host"
+	    raise_emacs_pattern="Serv/XEmacs@"
+	    EExec_verbose_echo_id raise_emacs_pattern
             sb_name=$(find_best_editing_host sandbox-name)
             local extra=
             vsetp "${sb_name}" && {
@@ -201,8 +214,8 @@ process_file ()
                 quiet_arg='--be-quiet'
             else
                 quiet_arg=
-            fi
-            EExec attempt-to-raise-emacs ${quiet_arg}
+            fi			# raise_emacs_pattern
+            EExec attempt-to-raise-emacs ${raise_emacs_pattern}
         }
     }
 
@@ -225,7 +238,6 @@ process_file ()
     vsetp "${file}" && set -- "$@" "${file}"
     EExecDashV_p && eko "$@"
 
-    #EExec $client $editing_host_opt $nowait_opt $eval_opt "$opts" \"$file\"
     EExec "$@"
 }
 

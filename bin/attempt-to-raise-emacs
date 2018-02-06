@@ -12,6 +12,8 @@ do
 done
 unset eexec_program
 
+wmctrl_pattern=${1-Serv/XEmacs@}
+
 #
 # if we're running sawfish, then raise emacs, too.
 # raise first, since sometimes emacs'll prompt for things
@@ -37,7 +39,7 @@ unset eexec_program
 
 if type wmctrl >/dev/null 2>&1
 then
-    wmctrl -a "Serv/XEmacs@"
+    wmctrl -a "${wmctrl_pattern}"
 else
     # This doesn't work in my AMD vdi sessions.
     # Perhaps due the way I had to build xemacs?

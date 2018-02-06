@@ -397,7 +397,7 @@ Use BEGIN and END as the limits of the extent."
 
 (defun dp-low-level-server-start (&optional leave-dead inhibit-prompt)
   (server-start leave-dead inhibit-prompt))
-  
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -433,8 +433,9 @@ If DEFAULT-VALUE is non-nil, return that if user enters an empty
 ;; order to jump to the main emacs window.
 ;; @todo XXX Fix this.  There is no equivalent in current FSF.  Need to change
 ;; how I make a title.
-(defconst dp-frame-title-format (format "-%s@%s: %%f"
-					invocation-name system-name)
+(defconst dp-frame-title-format (format
+				 "%s@%s: %%f"
+				 (upcase-initials invocation-name) system-name)
   "*Base frame title format.")
 
 (defun dp-hl-highlight-one ()
