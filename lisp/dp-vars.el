@@ -538,14 +538,6 @@ other-window functions to select it. Perhaps there's... another way."
   :group 'dp-vars
   :type 'integer)
 
-;; @todo XXX FSF - ify this.
-(defcustom dp-frame-title-format (format "%%S@%s: %%f" (dp-short-hostname))
-  "*Base frame title format.
- Set up a titlebar format.  Various window things will look for this
-in order to jump to the main emacs window."
-  :group 'dp-vars
-  :type 'string)
-
 (defcustom dp-2w-frame-width 180
   "Default frame width for 2w -- 2 vertical windows 80 columns wide.  
 Also used by split window advice to determine when to force a horizontal

@@ -17,8 +17,6 @@
 (defconst dp-frame-title-format (format "%%S@%s: %%f" (dp-short-hostname))
   "*Base frame title format.")
 
-;;(setq frame-title-format (concat "[No SB] " dp-frame-title-format))
-
 ;; ftp.[ca|us].xemacs.org are faster.
 ;; ca --> /pub/Mirror/xemacs/packages   (@ ualberta)
 ;; us --> 

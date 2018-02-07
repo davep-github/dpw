@@ -29,10 +29,6 @@
 (defun set-keymap-name (map name)
   (message "No `set-keymap-name' functionality."))
 
-(defun dp-isearch-yank-char (&optional arg)
-  (interactive)
-  (isearch-yank-char arg))
-
 (defalias 'ffap-host-to-path 'ffap-host-to-filename)
 
 ;;; Try to find common way to do this.  It's hacked from XEmacs' lisp code.
@@ -434,7 +430,7 @@ If DEFAULT-VALUE is non-nil, return that if user enters an empty
 ;; @todo XXX Fix this.  There is no equivalent in current FSF.  Need to change
 ;; how I make a title.
 (defconst dp-frame-title-format (format
-				 "%s@%s: %%f"
+				 "%s@%s:%%f"
 				 (upcase-initials invocation-name) system-name)
   "*Base frame title format.")
 

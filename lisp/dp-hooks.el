@@ -1350,15 +1350,6 @@ See `dp-parenthesize-region-paren-list'")
   (insert isearch-string))
 (defalias 'diis 'dp-insert-isearch-string)
 
-(defun dp-isearch-yank-char (&optional arg)
-  "Yank next char \(@ \(point))into the search string.
-This is moved from a patch to isearch.el, so we lose the ability to add our
-doc to `isearch-mode's doc string.  But we don't need to patch before dumping."
-  (interactive)
-  (dp-isearch-yank-char))
-(put 'dp-isearch-yank-char 'isearch-command t)
-
-
 (defun dp-isearch-mode-hook ()
   "Save point on the go back stack and save the region activation status.
 We use the region status in the mode-end hook so that we can use an 
@@ -1481,6 +1472,8 @@ isearch while the region is active to locate the end of the region."
                                  [(?/)] isearch-forward
                                  [(shift tab)] Info-prev-reference
                                  [(iso-left-tab)] Info-prev-reference
+				 [?q] Info-history-back
+				 [?Q] Info-exit
                                  [?D] Info-directory
                                  [?d] Info-top) 
                                nil
@@ -1824,46 +1817,46 @@ Use of 'unset allows the legitimate value of nil to be used.")
       (call-interactively 'undo-all-changes)
     ad-do-it))
 
-(defun dp-prefer-horizontal-split ()
-  "Determine if we want a horizontal split when just `split' is requested."
-  t)
+;!needed for FSF (defun dp-prefer-horizontal-split ()
+;!needed for FSF   "Determine if we want a horizontal split when just `split' is requested."
+;!needed for FSF   t)
 
-(defvar dp-called-by-split-vertically nil
-  "Icky hack to allow `split-window-vertically' to work.")
+;!needed for FSF (defvar dp-called-by-split-vertically nil
+;!needed for FSF   "Icky hack to allow `split-window-vertically' to work.")
 
-(defvar dp-called-by-split-horizontally nil
-  "Icky hack to allow `split-window-horizontally' to work.")
+;!needed for FSF (defvar dp-called-by-split-horizontally nil
+;!needed for FSF   "Icky hack to allow `split-window-horizontally' to work.")
 
-(defadvice split-window (before dp-advised-split-window 
-                         (&optional window size horflag) activate)
-  (interactive)
-  ;; Set `horflag' on a per-call basis so it can change dynamically.
-  ;; Only calculate this if we're called as `split-window' itself.
-  (if (not 
-       (or dp-called-by-split-horizontally dp-called-by-split-vertically))
-      (setq horflag (and (dp-prefer-horizontal-split)
-                         (not (active-minibuffer-window))
-                         (not (dp-tall-enough-for-2-windows-p))
-                         (dp-wide-enough-for-2-windows-p)
-                         (= (length (dp-window-list)) 1)
-                         (not size)     ; Skip action if a size is specified.
-                         (not dp-called-by-split-vertically)))
-    (setq dp-called-by-split-vertically nil
-          dp-called-by-split-horizontally nil)))
+;!needed for FSF (defadvice split-window (before dp-advised-split-window 
+;!needed for FSF                          (&optional window size horflag) activate)
+;!needed for FSF   (interactive)
+;!needed for FSF   ;; Set `horflag' on a per-call basis so it can change dynamically.
+;!needed for FSF   ;; Only calculate this if we're called as `split-window' itself.
+;!needed for FSF   (if (not 
+;!needed for FSF        (or dp-called-by-split-horizontally dp-called-by-split-vertically))
+;!needed for FSF       (setq horflag (and (dp-prefer-horizontal-split)
+;!needed for FSF                          (not (active-minibuffer-window))
+;!needed for FSF                          (not (dp-tall-enough-for-2-windows-p))
+;!needed for FSF                          (dp-wide-enough-for-2-windows-p)
+;!needed for FSF                          (= (length (dp-window-list)) 1)
+;!needed for FSF                          (not size)     ; Skip action if a size is specified.
+;!needed for FSF                          (not dp-called-by-split-vertically)))
+;!needed for FSF     (setq dp-called-by-split-vertically nil
+;!needed for FSF           dp-called-by-split-horizontally nil)))
 
-(defadvice split-window-vertically (before 
-                                    dp-advised-split-window-vertically
-                                    (&optional arg)
-                                    activate)
-  (interactive "P")
-  (setq dp-called-by-split-vertically t))
+;!needed for FSF (defadvice split-window-vertically (before 
+;!needed for FSF                                     dp-advised-split-window-vertically
+;!needed for FSF                                     (&optional arg)
+;!needed for FSF                                     activate)
+;!needed for FSF   (interactive "P")
+;!needed for FSF   (setq dp-called-by-split-vertically t))
 
-(defadvice split-window-horizontally (before 
-                                    dp-advised-split-window-horizontally
-                                    (&optional arg)
-                                    activate)
-  (interactive "P")
-  (setq dp-called-by-split-horizontally t))
+;!needed for FSF (defadvice split-window-horizontally (before 
+;!needed for FSF                                     dp-advised-split-window-horizontally
+;!needed for FSF                                     (&optional arg)
+;!needed for FSF                                     activate)
+;!needed for FSF   (interactive "P")
+;!needed for FSF   (setq dp-called-by-split-horizontally t))
 
 (make-variable-buffer-local 'dp-allow-owner-to-eval-p)
 (setq-default dp-allow-owner-to-eval-p t)
