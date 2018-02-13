@@ -1,3 +1,8 @@
+;; XXX @todo make poly-macse, since I tire of it now.
+
+(defun dp-editing-server-ping ()
+  t)
+
 ;; Called before process is killed.
 (defun dp-gnuserv-shutdown-hook ()
   (dmessage "in `dp-gnuserv-shutdown-hook'")
@@ -6,7 +11,11 @@
   ;; always wrong in this case.
   (dp-finalize-editing-server 'rm-ipc-if-ours)) 
 
-(add-hook 'gnuserv-shutdown-hook 'dp-gnuserv-shutdown-hook)
+(if (dp-xemacs-p)
+    (add-hook 'gnuserv-shutdown-hook 'dp-gnuserv-shutdown-hook)
+  ;; No equivalent in Emacs ?!?!?!?
+  ;;(add-hook 'server-shutdown-hook 'dp-gnuserv-shutdown-hook))
+  )
 
 (defvar dp-editor-identification-data '()
   "Anything that might help us ID the correct editor running the server.")
@@ -83,7 +92,7 @@ Use '(nil) for field name to set it to nil."
     ;; problem?
     ;; Also, I can't find a way to kill the server.
     (when (dp-xemacs-p)
-      (shell-command (format "dpkillprog -q %s" gnuserv-program))))
+      (shell-command (format "dpkillprog -q %s" server-program))))
   (dmessage "dp-kill-editing-server")
   (dp-finalize-editing-server 'rm-ipc-if-ours))
 
@@ -105,7 +114,7 @@ not."
 	(let ((frame (dp-current-frame)))
           (if (dp-low-level-server-start leave-or-make-dead-p)
               t                         ; Deeniiiiiiied!
-            (setq gnuserv-frame frame)
+            (setq server-frame frame)
             nil)))
     (error (unless (in-windwoes)
 	     (message "using regular server")
@@ -122,7 +131,7 @@ not."
   (dp-set-frame-title-format :force-no-server-p t)
   (when (or (memq rm-flag '(rm))
             (dp-server-running-p))
-    ;; The title formatter uses `dp-gnuserv-running-p' so it can mistakenly
+    ;; The title formatter uses `dp-server-running-p' so it can mistakenly
     ;; set the server indication in the title.
     (dp-rm-editing-server-ipc-file)))
 
@@ -169,10 +178,14 @@ start a new one."
       "Determine if the editing server process exists and is alive.
 Standard function simply checks that the process is non-nil without checking
 to see if it's alive as well, so we-uns are bettah."
-      (when-and-boundp 'gnuserv-process
-	(eq (process-status gnuserv-process) 'run)))
+      (when-and-boundp 'server-process
+	(eq (process-status server-process) 'run)))
   (defun dp-server-running-p (&optional name)
-    t))
-;;    (dp-server-running-p name)))
+    "Start the editing server.
+I can't find where server.el is loaded, but it seems to be after
+this code runs, so I need to check for its presence before running
+`server-running-p' to avoid an error."
+    (and (featurep 'server)
+	 (server-running-p))))
 
 (provide 'dp-server)
