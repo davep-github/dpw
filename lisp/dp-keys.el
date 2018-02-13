@@ -379,6 +379,12 @@ Bind any keys in KEYS via `dp-define-keys'."
                           [(shift tab)] 'dp-goto-next-dp-extent-from-point
                           [?e] (if (dp-xemacs-p)
 				   'dp-extents-at
+				 (kb-lambda
+					;;; XXX @todo this doesn't work, but 
+					;;; command works by hand.
+				     (text-properties-at (point))))
+                          [?E] (if (dp-xemacs-p)
+				   'dp-extents-at
 				 'describe-text-properties)
                           [?G] 'dp-set-or-goto-bm
                           [?`] 'dp-bq-rest-of-line
