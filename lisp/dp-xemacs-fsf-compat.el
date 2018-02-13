@@ -150,7 +150,7 @@ be deactivated when doing a beginning|end followed by an end|beginning."
   (interactive)
   (isearch-yank 'forward-char))
 
-(defun dp-set-text-color (tag face &optional begin end detachable-p 
+(defun dp-set-text-color (tag face &optional begin end detachable-p
 			      start-open-p end-open-p)
   "Set a region's background color to FACE.
 Identify the extent w/TAG.
@@ -158,12 +158,12 @@ Use BEGIN and END as the limits of the extent."
   ;;(dmessage "b>%s<, e>%s<" begin end)
   (unless (dp-extent-with-property-exists tag begin end)
     (dp-make-extent (or begin (point-min)) (or end (point-max))
-                    tag
-                    'face face
-                    'start-open start-open-p
-                    'end-open end-open-p
-                    'detachable detachable-p
-                    'dp-end nil)))
+		    tag
+		    'face face
+		    'start-open start-open-p
+		    'end-open end-open-p
+		    'detachable detachable-p
+		    'dp-end nil)))
 
 (defun dp-low-level-server-start (&optional leave-dead inhibit-prompt)
   (gnuserv leave-dead inhibit-prompt))
