@@ -322,7 +322,7 @@ ARG is the argument to `add-global-abbrev' or `add-mode-abbrev'."
   (replace-regexp-in-string from-str to-str which nil literal))
 
 ;; #### we need a coherent scheme for indicating compatibility info,
-;; so that it can be pro grammatically retrieved.
+;; so that it can be programmatically retrieved.
 (defun add-local-hook (hook function &optional append)
   "Add to the local value of HOOK the function FUNCTION.
 You don't need this any more.  It's equivalent to specifying the LOCAL
@@ -384,21 +384,86 @@ pee-pee. "
 (defun gnuserv-start (&rest r)
   )
 
+(defun dp-low-level-server-start (&optional leave-dead inhibit-prompt)
+  (server-start leave-dead inhibit-prompt))
+
+;remove when following works. (defun dp-set-text-color (tag face &optional begin end detachable-p 
+;remove when following works. 			      start-open-p end-open-p)
+;remove when following works.   "Set a region's background color to FACE.
+;remove when following works. Identify the extent w/TAG.
+;remove when following works. Use BEGIN and END as the limits of the extent."
+;remove when following works.   (setq-ifnil begin (point-min))
+;remove when following works.   (setq-ifnil end (point-max))
+;remove when following works.   ;; No equivalent of detachable-p that I can find.
+;remove when following works.   ;; XXX @todo Maybe use sticky props for (start|end)-open-p
+;remove when following works.   (set-text-properties begin end (list 'dp-id-tag tag
+;remove when following works. 				       'face face)))
+
 (defun dp-set-text-color (tag face &optional begin end detachable-p 
 			      start-open-p end-open-p)
   "Set a region's background color to FACE.
 Identify the extent w/TAG.
 Use BEGIN and END as the limits of the extent."
-  )
-
-(defun dp-low-level-server-start (&optional leave-dead inhibit-prompt)
-  (server-start leave-dead inhibit-prompt))
+  (let* ((be (if (not (or begin end))
+		 (dp-region-or... :beg begin :end end
+				  :bounder 'rest-or-all-of-line-p)
+	       (cons begin end)))
+	 (begin (car be))
+	 (end (cdr be)))
+    (apply `dp-propertize-region begin end 'dp-colorized-region
+	   (list
+	    'dp-colorized-p t
+	    'set-text-color-tag tag
+	    'face-sym face
+	    ;;'invisible 'dp-colorize-region
+	    'dp-colorized-region-color-num -1
+	    'dp-extent-search-key 'dp-colorized-region
+	    'dp-extent-search-key2 (list 'dp-colorized-region t)))))
+  
+(defun dp-propertize-region (from to id-prop &rest props)
+  "Kind of like XEmacs' extent stuff."
+  (set-text-properties from to
+		       (append (list 'dp-id-prop id-prop
+				     'dp-beginning (dp-mk-marker from nil t)
+				     'dp-end (dp-mk-marker to nil t))
+			       props)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Liberated from XEmacs.
+(defun add-one-shot-hook (hook function &optional append local)
+  "Add to the value of HOOK the one-shot function FUNCTION.
+FUNCTION will automatically be removed from the hook the first time
+after it runs (whether to completion or to an error).
+FUNCTION is not added if already present.
+FUNCTION is added (if necessary) at the beginning of the hook list
+unless the optional argument APPEND is non-nil, in which case
+FUNCTION is added at the end.
+
+HOOK should be a symbol, and FUNCTION may be any valid function.  If
+HOOK is void, it is first set to nil.  If HOOK's value is a single
+function, it is changed to a list of functions.
+
+You can remove this hook yourself using `remove-hook'.
+
+See also `add-hook'."
+  (let ((sym (gensym)))
+    (fset sym `(lambda (&rest args)
+		 (unwind-protect
+		     (apply ',function args)
+		   (remove-hook ',hook ',sym ',local))))
+    (put sym 'one-shot-hook-fun function)
+    (add-hook hook sym append local)))
+
+(defun add-local-one-shot-hook (hook function &optional append)
+  "Add to the local value of HOOK the one-shot function FUNCTION.
+You don't need this any more.  It's equivalent to specifying the LOCAL
+argument to `add-one-shot-hook'."
+  (add-one-shot-hook hook function append t))
+
+
 (defun read-function (prompt &optional default-value)
   "Read the name of a function and return as a symbol.
 Prompts with PROMPT. By default, return DEFAULT-VALUE."
