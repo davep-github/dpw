@@ -44,6 +44,8 @@
  '(save-abbrevs nil)
  '(save-place-mode t)
  '(scroll-bar-mode (quote right))
+ '(shell-cd-regexp "cd|chdir")
+ '(shell-pushd-regexp "pushd|g")
  '(show-paren-mode t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
