@@ -17,7 +17,7 @@
 #log_file=`dp-mk-tmp-file $LOG/xmacs/xem.XXXXXX`
 log_file="$HOME/log/xemacs/xem-run.log"
 {
-    echo "======= $0 ===================================" 
+    echo "======= $0 ==================================="
     date
     echo "@:" "$@"
     echo "pwd: $(pwd)"
@@ -42,6 +42,7 @@ verbose=
 VERBOSE=:
 amper='&'
 do_renice=
+: ${macs:=emacs}
 # This won't work the way I do things now which is to a mnemonic name per SB
 # that changes as things change. E.g. engcpu vs sb2.
 # The sb can be determined from the path, but not the preferred mnemonic.
@@ -58,10 +59,10 @@ esac
 #eko "$@"
 ###set -- $(getopt "dlxp:f:o:nmMvhF" $*)
 # New style getopt... fixes ugly quoting problems.
-all_options="dlxp:f:o:nmMvhF"
+all_options="dlxp:f:o:nmMvhFX"
 q=$(getopt -o "$all_options" -- "$@")
 [ $? != 0 ] && Usage
-eval set -- "$q" 
+eval set -- "$q"
 unset q
 
 for i in $*
@@ -86,6 +87,7 @@ do
         -v) verbose=y; VERBOSE=echo;;
         -F) amper=;;            # Run in foreground.
         -s) set_sandbox_p=;;
+        -X) macs=xemacs;;
 	--) shift; break;;
 	*) echo 1>&2 "Illegal xem option>$1<"; exit 1 ;;
     esac
@@ -106,12 +108,17 @@ vsetp "${set_sandbox_p}" && current_sb=$(dp4-sb-root -S) && {
 
 [ -z "$did_cd" ] && cd $HOME
 
-if [ -z "$XEM_BIN" ]
+if [ -n "${macs}" ]
+then
+    BIN="${macs}"
+elif [ -z "$XEM_BIN" ]
 then
     BIN=$($HOST_INFO -n emacs ${prefix}_bin)
 else
     BIN=$XEM_BIN
 fi
+
+BIN=$(sp "${BIN}")
 
 [ -e "$BIN" ] || {
     echo "xemacs executable>$BIN<, doesn't exist."
