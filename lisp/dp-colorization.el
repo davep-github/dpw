@@ -165,15 +165,15 @@ COLOR_INDEX can be <=0 or '- to indicate invisibility."
                 props (append props (list 'read-only t)))
         (setq face-sym 'face
               face-val face))
-      (setq extent (apply 'dp-make-extent beg end 
-                          'dp-colorized-region
-                          'dp-colorized-p t
-                          face-sym face-val
-                          ;;'invisible 'dp-colorize-region
-                          'dp-colorized-region-color-num arg
-                          'dp-extent-search-key 'dp-colorized-region
-                          'dp-extent-search-key2 (list 'dp-colorized-region arg)
-                          props))
+      ;; (setq extent (apply 'dp-make-extent beg end 'dp-colorized-region
+      (apply `dp-propertize-region beg end 'dp-colorized-region
+	     'dp-colorized-p t
+	     face-sym face-val
+	     ;;'invisible 'dp-colorize-region
+	     'dp-colorized-region-color-num arg
+	     'dp-extent-search-key 'dp-colorized-region
+	     'dp-extent-search-key2 (list 'dp-colorized-region arg)
+	     props)
       (when (and (not no-roll-colors-p)
                  arg ; ARG nil: called w/specific face, so we can't rotate.
                  (not (symbolp arg))    ; Don't roll when a color is passed in.
