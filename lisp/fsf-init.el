@@ -1,5 +1,8 @@
 (require 'package)
 
+;;(message "Before: save-place-loaded: %s, save-place-file>%s<"
+;;	 save-place-loaded save-place-file)
+
 (defconst save-place-file
   (format "~/.emacs.d/emacs-places.%s" (system-name))
   "When editing on multiple machines, it's nice to qualify them with the
@@ -7,7 +10,9 @@
 executable code, often a format with some function calls, often
 `dp-short-hostname'.  Hooks to funcalls should be an option for
 the value of some/many/most/all customizable variables.")
-(message "After: save-place-file>%s<" save-place-file)
+
+;;(message "After: save-place-loaded: %s, save-place-file>%s<"
+;;	 save-place-loaded save-place-file)
 
 ;complete this (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
 ;complete this                     (not (gnutls-available-p))))
