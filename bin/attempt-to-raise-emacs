@@ -12,8 +12,8 @@ do
 done
 unset eexec_program
 
-wmctrl_pattern=${1-Serv/XEmacs@}
-
+wmctrl_pattern=${1-Serv/Emacs@}
+echo_id wmctrl_pattern
 #
 # if we're running sawfish, then raise emacs, too.
 # raise first, since sometimes emacs'll prompt for things
