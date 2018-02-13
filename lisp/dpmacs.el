@@ -61,7 +61,7 @@
 (defvar dp-known-temp-file-re-list 
   (list 
    dp-ipython-temp-file-re)
-  "List of known temp file regexps, so `dp-gnuserv-visit-hook' doesn't muse about 
+  "List of known temp file regexps, so `dp-server-visit-hook' doesn't muse about 
 its temp-ness.")
 
 ;;; Dummy hooks: Define these here so that when I make changes that
