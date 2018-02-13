@@ -8,6 +8,10 @@
 
 ;;(add-hook 'find-file-hooks 'dp-add-default-buffer-endicator)
 
+;;; @todo XXX !!! this needs to be fixed to work with both XEmacs and Emacs.
+;;; A first fix to to handle places where we use server- and predicate based
+;;; on the *macs variant.
+
 (defcustom dp-global-master-cleanup-whitespace-p t
   "Control whitespace cleanup off everywhere.
 If this is a non-nil list, don't disable if it contains the current major
@@ -1613,30 +1617,34 @@ positive. ")
 ;;;(add-hook 'pre-command-hook 'dp-pre-command-hook)
 ;;;(add-hook 'post-command-hook 'dp-post-command-hook)
 
-(dp-deflocal dp-gnuserv-done-function (lambda (&rest ignored)
-                                        (switch-to-buffer nil))
+(dp-deflocal dp-server-done-function (lambda (&rest ignored)
+				       (bury-buffer nil))
   "What shall we do when we are done editing a gnuserv file?
 Default is to switch to a buffer as chosen by `switch-to-buffer'.")
 
-(defun dp-gnuserv-edit (&optional count keep-buffer-p)
-  "Like `gnuserv-edit' except leaves buffer alone rather than killing it.
+;;; This needs to be made FSF/XEmacs compatible.
+(defun dp-server-edit (&optional count keep-buffer-p)
+  "Like `gnuserv-edit''`server-edit' except leaves buffer alone rather than killing it.
 \\[universal-argument] eq `-' or non-nil KEEP-BUFFER-P means to kill the 
 buffer.
 WTF did I do this? I think it had to do with IPython edit buffers.
 In a later version of IPython (1.1.0), the file name is formatted thus:
 /tmp/ipython_edit_<rand-junk>"
   (interactive "P")
-  (let ((gnuserv-done-function dp-gnuserv-done-function))
+  (let ((server-done-function dp-server-done-function))
     (if (not (or keep-buffer-p (Cu--p)))
         ;; Kill
         (setq current-prefix-arg nil
-              gnuserv-done-function 'dp-maybe-kill-buffer)
+              server-done-function 'dp-maybe-kill-buffer)
       (if (and (numberp count)
                (< 0 count))
           ;; Kill count
           (setq current-prefix-arg (abs count)
-            gnuserv-done-function 'dp-maybe-kill-buffer)))
-    (call-interactively 'gnuserv-edit)
+            server-done-function 'dp-maybe-kill-buffer)))
+    (call-interactively
+     (if (dp-xemacs-p)
+	 'gnuserv-edit
+       'server-edit))
     (message "Editing complete.")))
 
 (defun dp-gnuserv-edit-kill-buffer (&optional count)
@@ -1660,9 +1668,11 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
 
 (setq gnuserv-find-file-function 'dp-gnuserv-find-file-function)
 
-(add-hook 'gnuserv-visit-hook 'dp-gnuserv-visit-hook)
+(if (dp-xemacs-p)
+    (add-hook 'gnuserv-visit-hook 'dp-server-visit-hook)
+  (add-hook 'server-visit-hook 'dp-server-visit-hook))
 
-(defun dp-gnuserv-visit-hook ()
+(defun dp-server-visit-hook ()
   (interactive)
   (let ((file-name (buffer-file-name)))
     ;; Warn if we're serving a temp file that is empty.  When working as a
@@ -1676,7 +1686,7 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
       (dp-ding-and-message "Empty file. Could be a remote temp file.")))
   (switch-to-buffer (current-buffer))
   ;; (dp-raise-and-focus-frame)
-  (local-set-key "\C-c\C-c" 'dp-gnuserv-edit))
+  (local-set-key "\C-c\C-c" 'dp-server-edit))
 
 ;;is this hosing emacs? (when (dp-optionally-require 'igrep)
 ;;is this hosing emacs?   (defadvice igrep (after dp-igrep activate)
