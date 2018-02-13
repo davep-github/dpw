@@ -11884,7 +11884,7 @@ FILE-NAME is a string file-name.
 
 (defun dp-cx-file-mode (&optional file-name new-file-hook)
   "Give file in current buffer execute permissions.
-new-file-hook will only be used when calling this as a one-shot hook.  It
+NEW-FILE-HOOK will only be used when calling this as a one-shot hook.  It
 tells the hook function that this file did not exist when this function was
 originally called.  We use this so that we can do things like add files to a
 vc system, etc. When I figure out how to do closure like things."
