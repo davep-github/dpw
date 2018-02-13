@@ -9,9 +9,6 @@ if ! type davep_env_p >/dev/null 2>&1; then
     export PATH=$(pathadd -p "$PATH" "$dirname")
 fi
 
-# Needs must be a numeric return code.
-TRY_FSF_EMACS=67
-
 source script-x
 progname="$(basename $0)"
 source eexec
@@ -36,7 +33,7 @@ LOG_FILE="$HOME/log/xemacs/ec-log-file.log"
 # The known_* vars are searched in order, so that can be used to specify a
 # preference order.
 : ${known_servers:=gnuserv} # Emacs runs its server in lisp, so we can't detect it.
-: ${known_clients:="emacsclient gnuserv"}
+: ${known_clients:="emacsclient gnuclient"}
 : ${known_text_mode_editors:="vim vi nvi nano pico"}
 : ${editing_host=$(find_best_editing_host)}
 : ${client=}
@@ -65,20 +62,29 @@ Usage()
    exit 1
 }
 
-local_server_p()
+determine_local_server_p()
 {
+    #echo "in determine_local_server_p"
     for p in ${known_servers}
     do
-	if findprog -s "${p}"
+	if findprog -s "${p}" && findprog -s xemacs
 	then
-	    echo "${p}"
+	    #echo "${p}"
+            raise_emacs_pattern="Serv/XEmacs@"
+            client=gnuclient
+            nowait_opt=-q
 	    return 0
 	fi
     done
+    if findprog -s emacs && sp -q emacsclient
+    then
+        raise_emacs_pattern="Serv/Emacs@"
+        client=emacsclient
+        nowait_opt=--no-wait
+        return 0
+    fi
 
-#    echo 1>&2 "Cannot find a running XEmacs server.
-#We'll try Emacs."
-    return ${TRY_FSF_EMACS}
+    return 1
 }
 
 #
@@ -98,7 +104,7 @@ find_one_of_these_programs()
     do
       if sp "$1" > /dev/null
       then
-          echo $1
+          echo "one of these programs>$1<" 1>&2
           return 0
       fi
       shift
@@ -125,6 +131,7 @@ text_mode_edit()
 
 process_file ()
 {
+    #echo 'in process_file'
     local opts=""
     if [ -n "${1-}" ]
     then
@@ -140,32 +147,21 @@ process_file ()
     local problem=
     local and=
     # Choose a local server over a remote one.
-    local_server_p
-    local rc=$?
-    EExec_verbose_echo_id rc
-    if [ "$rc" = 0 -o "$rc" = ${TRY_FSF_EMACS} ]
+
+    if ! determine_local_server_p
     then
-	if [ "$rc" = ${TRY_FSF_EMACS} ]
-	then
-	   editing_host_opt=
-	   raise_emacs_pattern="Serv/Emacs@"
-	   EExec_verbose_echo_id raise_emacs_pattern
-        elif vsetp "$editing_host"
-        then
-	    editing_host_opt="-h $editing_host"
-	    raise_emacs_pattern="Serv/XEmacs@"
-	    EExec_verbose_echo_id raise_emacs_pattern
-            sb_name=$(find_best_editing_host sandbox-name)
-            local extra=
-            vsetp "${sb_name}" && {
-                extra=", sandbox: ${sb_name}"
-            }
-            editing_host_msg="editing on host: ${editing_host}${extra}"
-        else
-            problem="Editing server not found"
-            and=" AND "
-       fi
+        editing_host_opt="-h $editing_host"
+        EExec_verbose_echo_id raise_emacs_pattern
+        sb_name=$(find_best_editing_host sandbox-name)
+        local extra=
+        vsetp "${sb_name}" && {
+            extra=", sandbox: ${sb_name}"
+        }
+        editing_host_msg="editing on host: ${editing_host}${extra}"
     else
+        EExec_verbose_msg "Local server"
+        EExec_verbose_echo_id "client"
+        EExec_verbose_echo_id "nowait_opt"
         # Get all host editing info
         editing_host_msg="editing on localhost: $HOST"
         sb_name=$(find_best_editing_host sandbox-name)
@@ -174,6 +170,13 @@ process_file ()
         then
             editing_host_msg="${editing_host_msg}, sandbox: ${sb_name}"
         fi
+        EExec_verbose_echo_id raise_emacs_pattern
+        EExec_verbose_echo_id client
+    fi
+    if [ -z "${client}" ]
+    then
+        problem="Editing server not found"
+        and=" AND "
     fi
 
     if [ -z "${DISPLAY-}" ]
@@ -296,6 +299,7 @@ do
     shift
 done
 
+
 args=("$@")
 
 if [ -n "$CL" ]
@@ -309,27 +313,7 @@ fi
 
 #echo "1>$1<"
 #echo "eval_opt>$eval_opt<"
-if [ -z "$client" ]
-then
-    client=$(find_one_of_these_programs ${known_clients}) || {
-        echo "Cannot find an editing client of $(echo_id known_clients)"
-        exit 1
-    } 1>&2
-    opts=${1-}
-fi
-
-case "$client" in
-    emacsclient)
-	nowait_opt='--no-wait'
-	;;
-    gnuclient)
-	nowait_opt='-q'
-	;;
-    "")
-	echo 1>&2 "Cannot find an emacs client in >${known_clients}<"
-	exit 1
-	;;
-esac
+EExec_verbose_echo_id client
 
 findprog -s sawfish
 have_sawfish=$?
