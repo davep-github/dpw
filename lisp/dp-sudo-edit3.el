@@ -7,9 +7,9 @@
 
 ;;;
 ;;; "Sudo editing" Allow normally un-editable buffers to be edited by
-;;; using sudo to access the files. The basic idea is that we add a
+;;; using sudo to access the files. The basic idea is that we add an
 ;;; entry to the `file-name-handler-alist' for the file we want to
-;;; edit.  This implements methods to allow us to read/write and
+;;; edit.  We implement methods to allow us to read/write and
 ;;; backup (via "sudo mv") files.
 ;;; `insert-file-contents' uses sudo cat to get the file contents.
 ;;; `write-region' uses `call-process-region' to send the region to
@@ -169,6 +169,10 @@ Not all options are supported."
   "Hail yes!"
   t)
 
+;;
+;; HANDLERS
+;; Need to look into handling backups with an sudo assist.
+;;
 (defvar dp-sudo-edit-handler-alist
   '(
     (insert-file-contents    . dp-sudo-edit-insert-file-contents)
