@@ -118,7 +118,7 @@ else
     BIN=$XEM_BIN
 fi
 
-BIN=$(sp "${BIN}")
+BIN=$(sp -1 "${BIN}")
 
 [ -e "$BIN" ] || {
     echo "xemacs executable>$BIN<, doesn't exist."
