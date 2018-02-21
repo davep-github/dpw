@@ -387,18 +387,6 @@ pee-pee. "
 (defun dp-low-level-server-start (&optional leave-dead inhibit-prompt)
   (server-start leave-dead inhibit-prompt))
 
-;remove when following works. (defun dp-set-text-color (tag face &optional begin end detachable-p 
-;remove when following works. 			      start-open-p end-open-p)
-;remove when following works.   "Set a region's background color to FACE.
-;remove when following works. Identify the extent w/TAG.
-;remove when following works. Use BEGIN and END as the limits of the extent."
-;remove when following works.   (setq-ifnil begin (point-min))
-;remove when following works.   (setq-ifnil end (point-max))
-;remove when following works.   ;; No equivalent of detachable-p that I can find.
-;remove when following works.   ;; XXX @todo Maybe use sticky props for (start|end)-open-p
-;remove when following works.   (set-text-properties begin end (list 'dp-id-tag tag
-;remove when following works. 				       'face face)))
-
 (defun dp-set-text-color (tag face &optional begin end detachable-p 
 			      start-open-p end-open-p)
   "Set a region's background color to FACE.
@@ -422,11 +410,19 @@ Use BEGIN and END as the limits of the extent."
   
 (defun dp-propertize-region (from to id-prop &rest props)
   "Kind of like XEmacs' extent stuff."
-  (set-text-properties from to
-		       (append (list 'dp-id-prop id-prop
-				     'dp-beginning (dp-mk-marker from nil t)
-				     'dp-end (dp-mk-marker to nil t))
-			       props)))
+  (with-silent-modifications
+    (set-text-properties from to
+			 ;; Must be first and must be in every dp prop
+			 ;; alist.
+			 (append '(dp-extent t) ; Separated out for emphasis.
+				 (list 'dp-id-prop id-prop
+				       'dp-beginning (dp-mk-marker from nil t)
+				       'dp-end (dp-mk-marker to nil t))
+				 props))))
+
+(defadvice apropos-command (before dp-advice activate)
+  "Invert sense of DO-ALL.  We likes the DO-ALL, precious."
+  (ad-set-arg 1 (not (ad-get-arg 1))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
