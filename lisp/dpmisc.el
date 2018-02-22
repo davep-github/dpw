@@ -9769,7 +9769,7 @@ basically the union of the args to `find-file-noselect' and
     (if t ;; codesys
         ;; Punt if one of the optional variables are set, since I don't know
         ;; what I want to do with them.
-        (find-file file-name codesys wildcards)
+        (dp-find-file file-name codesys wildcards)
       (dp-find-file file-name))))
 
 (defun dp-find-file-other-window (file-name &rest rest)
