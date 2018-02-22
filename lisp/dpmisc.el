@@ -9794,10 +9794,6 @@ basically the union of the args to `find-file-noselect' and
         (dmessage "Forcing %s to be read-only." bfn)
         (toggle-read-only 1)))))
         
-(defun dp-remove-file-state-colorization ()
-  (interactive)
-  (dp-unextent-region (cons 'dp-file-state-colorization t)))
-                                   
 (defun dp-colorize-found-file-buffer ()
   "Set a buffer's color after the file has been loaded into it."
   (if (not (dp-xemacs-p))
