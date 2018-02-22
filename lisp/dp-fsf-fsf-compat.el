@@ -6,6 +6,8 @@
 
 (message "dp-fsf-fsf-compat loading...")
 
+(require 'dp-buffer-bg)
+
 (defsubst dp-mark-active-p ()
   mark-active)
 
@@ -420,6 +422,16 @@ Use BEGIN and END as the limits of the extent."
 				       'dp-end (dp-mk-marker to nil t))
 				 props))))
 
+(defun dp-remove-file-state-colorization (&optional begin end)
+  "Remove file state colorization."
+  (let* ((be (dp-region-or... :beg begin
+			      :end end 
+			      :bounder 'buffer-p))
+	 (begin (car be))
+	 (end (cdr be)))))
+
+(defalias 'dp-set-background-color 'dp-buffer-bg-set-color)
+
 (defadvice apropos-command (before dp-advice activate)
   "Invert sense of DO-ALL.  We likes the DO-ALL, precious."
   (ad-set-arg 1 (not (ad-get-arg 1))))
@@ -459,12 +471,12 @@ You don't need this any more.  It's equivalent to specifying the LOCAL
 argument to `add-one-shot-hook'."
   (add-one-shot-hook hook function append t))
 
-
 (defun read-function (prompt &optional default-value)
   "Read the name of a function and return as a symbol.
 Prompts with PROMPT. By default, return DEFAULT-VALUE."
   (intern (completing-read prompt obarray 'fboundp t nil
 			   'function-history default-value)))
+
 (defun dp-read-number (prompt &optional integers-only default-value)
   "Read a number from the minibuffer, prompting with PROMPT.
 If optional second argument INTEGERS-ONLY is non-nil, accept
