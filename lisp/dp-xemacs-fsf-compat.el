@@ -167,7 +167,11 @@ Use BEGIN and END as the limits of the extent."
 
 (defun dp-low-level-server-start (&optional leave-dead inhibit-prompt)
   (gnuserv leave-dead inhibit-prompt))
-  
+
+(defun dp-remove-file-state-colorization ()
+  (interactive)
+  (dp-unextent-region (cons 'dp-file-state-colorization t)))
+                                   
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Nicked from Emacs.
 
