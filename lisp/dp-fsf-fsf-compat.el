@@ -436,6 +436,10 @@ Use BEGIN and END as the limits of the extent."
   "Invert sense of DO-ALL.  We likes the DO-ALL, precious."
   (ad-set-arg 1 (not (ad-get-arg 1))))
 
+(defun dp-find-file (file-name codesys &optional wildcards)
+  "FSF no take codesys arg."
+  (find-file file-name wildcards))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
