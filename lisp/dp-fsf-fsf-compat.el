@@ -377,7 +377,7 @@ pee-pee. "
 (defun key-press-event-p (x)
   (not (mouse-event-p x)))
 
-;; X v FSF events, keys, etc, have diverged lots.
+;; X v FSF events, keys, etc, have diverged a lot.
 (defun event-key (ev)
   ev)
 
@@ -388,6 +388,18 @@ pee-pee. "
 
 (defun dp-low-level-server-start (&optional leave-dead inhibit-prompt)
   (server-start leave-dead inhibit-prompt))
+
+(defun dp-text-propertize-region (from to id-prop &rest props)
+  "Kind of like XEmacs' extent stuff."
+  (with-silent-modifications
+    (set-text-properties from to
+			 ;; Must be first and must be in every dp prop
+			 ;; alist.
+			 (append '(dp-extent t) ; Separated out for emphasis.
+				 (list 'dp-id-prop id-prop
+				       'dp-beginning (dp-mk-marker from nil t)
+				       'dp-end (dp-mk-marker to nil t))
+				 props))))
 
 (defun dp-set-text-color (tag face &optional begin end detachable-p 
 			      start-open-p end-open-p)
@@ -400,7 +412,7 @@ Use BEGIN and END as the limits of the extent."
 	       (cons begin end)))
 	 (begin (car be))
 	 (end (cdr be)))
-    (apply `dp-propertize-region begin end 'dp-colorized-region
+    (apply `dp-text-propertize-region begin end 'dp-colorized-region
 	   (list
 	    'dp-colorized-p t
 	    'set-text-color-tag tag
@@ -409,26 +421,15 @@ Use BEGIN and END as the limits of the extent."
 	    'dp-colorized-region-color-num -1
 	    'dp-extent-search-key 'dp-colorized-region
 	    'dp-extent-search-key2 (list 'dp-colorized-region t)))))
-  
-(defun dp-propertize-region (from to id-prop &rest props)
-  "Kind of like XEmacs' extent stuff."
-  (with-silent-modifications
-    (set-text-properties from to
-			 ;; Must be first and must be in every dp prop
-			 ;; alist.
-			 (append '(dp-extent t) ; Separated out for emphasis.
-				 (list 'dp-id-prop id-prop
-				       'dp-beginning (dp-mk-marker from nil t)
-				       'dp-end (dp-mk-marker to nil t))
-				 props))))
 
-(defun dp-remove-file-state-colorization (&optional begin end)
-  "Remove file state colorization."
-  (let* ((be (dp-region-or... :beg begin
-			      :end end 
-			      :bounder 'buffer-p))
-	 (begin (car be))
-	 (end (cdr be)))))
+(defun dp-remove-file-state-colorization (&optional pos end)
+  "We ignore begin and end in this version."
+  (let ((overlays (overlays-at (or pos (point)))))
+    (cl-loop for olay in overlays
+	     do
+	     ;; Only delete overlays with prop
+	     ;; (cons 'dp-file-state-colorization t)
+	     (delete-overlay olay))))
 
 (defalias 'dp-set-background-color 'dp-buffer-bg-set-color)
 

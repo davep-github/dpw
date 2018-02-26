@@ -51,42 +51,35 @@
 
 (dp-deflocal-permanent dp-buffer-bg-overlay nil)
 
-(defun* dp-buffer-bg-set-color-guts (color buffer
+(defun* dp-buffer-bg-set-color-guts (bg-face buffer
 					   &key
-					   (widen-p t)
+					   (widenp t)
 					   begin end
-					   bg-face
 					   intangiblep
 					   props
 					   (priority 0))
-  (if (not color)
+  (if (not bg-face)
       (when dp-buffer-bg-overlay
 	(delete-overlay dp-buffer-bg-overlay)
 	(setq dp-buffer-bg-overlay nil))
     (save-restriction
-      (when widen-p
+      (when widenp
 	(widen))
       (setq dp-buffer-bg-overlay
 	    (make-overlay
-	     (or begin (point-min))
-	     (or end (point-max))
-	     nil nil t))
+	     (dp-mk-marker (or begin (point-min)) nil t)
+	     (dp-mk-marker (or end (point-max)) nil t)
+	     buffer nil t))
       ;; Fix-me: Let the overlay have priority 0 which is the
       ;; lowest. Change this to below char properties if this is ever
       ;; allowed in Emacs.
-      (overlay-put dp-buffer-bg-overlay 'priority priority)
-      (let* ((bg-face (or bg-face (list :background color)))
-	     (bg-after (propertize (make-string 10 ?\n)
-				   'face bg-face
-				   'intangible t)))
-	(overlay-put dp-buffer-bg-overlay 'face bg-face)
-	;; This is just confusing, don't use it:
-	;;(overlay-put dp-buffer-bg-overlay 'after-string bg-after)
-	)
-      )))
+      (overlay-put dp-buffer-bg-overlay 'priority priority))))
 
 ;;;###autoload
-(defun dp-buffer-bg-set-color (color buffer &optional begin end)
+(defun* dp-buffer-bg-set-color (color
+				&optional buffer
+				&key begin end (widenp t)
+				&allow-other-keys)
   "Add an overlay with background color COLOR to buffer BUFFER.
 If COLOR is nil remove previously added overlay."
   (interactive
@@ -94,14 +87,16 @@ If COLOR is nil remove previously added overlay."
                       "Background color (empty string to remove): "
                     "Background color: "))
           (color (read-color prompt nil t)))
-     (if (and (stringp color)
-	      (= 0 (length color)))
-	 (setq color nil))
-     (when color
-       (unless (facep color)
-	 (list color (current-buffer))))
-     (dp-buffer-bg-set-color-guts color buffer))))
-
+     (list color))) ;;; buffer begin end widenp)))
+  (setq color
+	(cond
+	 ((null color) nil)
+	 ((and color (facep color) color))
+	 ((dp-non-empty-string color)
+	  (list :background color))
+	 ((not (dp-non-empty-string color)) nil)
+	 (t nil)))
+  (dp-buffer-bg-set-color-guts color buffer :begin begin :end end :widenp t))
 
 (provide 'dp-buffer-bg)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

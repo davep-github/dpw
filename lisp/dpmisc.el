@@ -5728,7 +5728,7 @@ Similar here means the same file-name with a user specified completion."
                                                            " forcibly."))
                    dp-undo-list-copy))))
       (if (not pos)
-          (message "No location found in undo info.")
+          (dp-ding-and-message "No location found in undo info.")
         (goto-char (car pos))
         ;; `dp-last-edit-position' may have had to examine >1 item in order
         ;; to find a position.  So we let it return its next position.  We
@@ -9796,12 +9796,12 @@ basically the union of the args to `find-file-noselect' and
         
 (defun dp-colorize-found-file-buffer ()
   "Set a buffer's color after the file has been loaded into it."
-  (if (not (dp-xemacs-p))
-      (message "dp-colorize-found-file-buffer: no colorization yet in FSF.")
+;;  (if (not (dp-xemacs-p))
+;;      (message "dp-colorize-found-file-buffer: no colorization yet in FSF.")
     (dp-remove-file-state-colorization)
     ;;(dmessage-todo "Name the colors in my palette!!!")
     (dp-colorize-buffer-if-readonly nil t)
-    (dp-colorize-buffer-if-remote nil t)))
+    (dp-colorize-buffer-if-remote nil t))
 
 (defvar dp-found-file-pre-hook nil
   "A one shot hook to call on the next found file.

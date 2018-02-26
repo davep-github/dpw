@@ -27,14 +27,9 @@ The regexp is matched against the buffer name.")
          (beg (car beg.end))
          (end (cdr beg.end)))
     (if (dp-apply-or-value pred pred-args)
-        (dp-colorize-region (or color 'dp-default-read-only-color)
-                            beg end
-                            'no-roll-colors nil
-                            'priority -11 ; This is a background.
-                            ;; The property below says that the underlying
-                            ;; extent is there showing some kind of file
-                            ;; state, like read-only or remote.
-                            'dp-file-state-colorization t)
+	(dp-buffer-bg-set-color (or color 'dp-default-read-only-color)
+				(current-buffer)
+				beg end)
       (when else-uncolorize-p
         (dp-uncolorize-region beg end t)))))
 
@@ -166,7 +161,7 @@ COLOR_INDEX can be <=0 or '- to indicate invisibility."
         (setq face-sym 'face
               face-val face))
       ;; (setq extent (apply 'dp-make-extent beg end 'dp-colorized-region
-      (apply `dp-propertize-region beg end 'dp-colorized-region
+      (apply `dp-text-propertize-region beg end 'dp-colorized-region
 	     'dp-colorized-p t
 	     face-sym face-val
 	     ;;'invisible 'dp-colorize-region

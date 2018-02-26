@@ -18,6 +18,7 @@
  '(custom-enabled-themes (quote (adwaita)))
  '(display-time-mode t)
  '(global-hl-line-mode nil)
+ '(ibuffer-use-other-window t)
  '(icomplete-mode t)
  '(icomplete-separator ",")
  '(ido-mode nil nil (ido))
