@@ -1,5 +1,6 @@
 (message "loading dp-colorization...")
 
+
 (defvar dp-remote-file-colorization-info
   `(,dp-remote-file-regexp . dp-remote-buffer-face)
   "Remote file recognition regexp and default color")
@@ -15,6 +16,10 @@
 A list of cons cells, where each cons cell is \(regexp . face\).
 The regexp is matched against the buffer name.")
 
+(defun dp-overlay-put-props (olay &rest props)
+  (cl-loop for (key val) on props by #'cddr
+	  do
+	  (overlay-put olay key val)))
 ;;
 ;; XEmacs puts font lock info on the mode symbol. Kewl.
 ;; 
@@ -136,7 +141,9 @@ COLOR_INDEX can be <=0 or '- to indicate invisibility."
 (defun dp-colorize-region (color &optional beg end no-roll-colors-p 
                            overwrite-p
                            &rest props)
-  "COLOR can be an integer index or a symbol representing a face."
+  "COLOR can be an integer index or a symbol representing a face.
+This will a low priority background type object unless overridden in
+PROPS."
   (interactive "P")
   (let* ((beg-end (dp-region-or... :bounder 'rest-or-all-of-line-p))
          (beg (or beg (car beg-end)))
