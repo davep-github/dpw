@@ -43,7 +43,7 @@
   (setq dirtrackp nil))
 
 (defun dp-home-and-kill-line ()
-  "There's a bug where my delete entire line spills over into read-only text."
+  "Fix bug where my delete entire line tries to delete read-only text in the minibufer."
   (interactive)
   (beginning-of-line)
   (dp-delete-to-end-of-line))
