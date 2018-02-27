@@ -52,12 +52,12 @@
 (dp-deflocal-permanent dp-buffer-bg-overlay nil)
 
 (defun* dp-buffer-bg-set-color-guts (bg-face buffer
-					   &key
-					   (widenp t)
-					   begin end
-					   intangiblep
-					   props
-					   (priority 0))
+					     &key
+					     (widenp t)
+					     begin end
+					     intangiblep
+					     props
+					     (priority 0))
   (if (not bg-face)
       (when dp-buffer-bg-overlay
 	(delete-overlay dp-buffer-bg-overlay)
@@ -73,8 +73,9 @@
       ;; Fix-me: Let the overlay have priority 0 which is the
       ;; lowest. Change this to below char properties if this is ever
       ;; allowed in Emacs.
-      (overlay-put dp-buffer-bg-overlay 'priority priority))))
-
+      (dp-overlay-put-props dp-buffer-bg-overlay
+			    'priority priority
+			    'face bg-face))))
 ;;;###autoload
 (defun* dp-buffer-bg-set-color (color
 				&optional buffer
@@ -84,8 +85,8 @@
 If COLOR is nil remove previously added overlay."
   (interactive
    (let* ((prompt (if dp-buffer-bg-overlay
-                      "Background color (empty string to remove): "
-                    "Background color: "))
+		      "Background color (empty string to remove): "
+		    "Background color: "))
           (color (read-color prompt nil t)))
      (list color))) ;;; buffer begin end widenp)))
   (setq color
