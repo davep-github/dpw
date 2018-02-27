@@ -105,12 +105,11 @@ Usage_error()
 # template end.
 ########################################################################
 
-set -x
+#set -x
 cscope=$(sp -N1 cscope)
 {
     echo "====== Start: $(date) ======"
     echo "$0: @>$@<"
     echo "====== End: $(date) ======"
-}
->> "${DP_LOG_DIR}/auto-rotate-c5-50K/cscope.log"
+} |& tee -a "${DP_LOG_DIR}/auto-rotate-c5-50K/cscope.log" >& /dev/null
 exec "${cscope}" "$@"
