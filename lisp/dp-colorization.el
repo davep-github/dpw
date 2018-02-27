@@ -1,5 +1,56 @@
 (message "loading dp-colorization...")
 
+(defvar dp-colorization-background-extent-priority -99
+  "Put background waaay back so it stomps on nothing.")
+
+(defvar dp-colorization-extent-properties
+  '(dp-extent t
+    dp-colorized-p t)
+  "These props should go on all of my colorization extents.")
+
+(defun dp-color-to-face (color)
+  "Convert a \"color\" \(string, face, etc\) to a face or NIL."
+  (cond
+   ((null color) nil)
+   ((and color (facep color) color))
+   ((dp-non-empty-string color)
+    (list :background color))
+   ((not (dp-non-empty-string color)) nil)
+   (t nil)))
+
+(defun dp-overlay-put-props (olay prop-list)
+  (when prop-list
+    (cl-loop for (key val) on prop-list by #'cddr
+	     do
+	     (overlay-put olay key val))))
+
+;; (dp-make-extent FROM TO ID-PROP &rest PROPS)
+(cl-defun dp-make-overlay (from to id-prop color buffer
+				&key prop-list
+				bounding-markers
+				front-advance rear-advance)
+  "Make an overlay the way I like and the way I like to make it."
+  (let ((begin (or from (point-min)))
+	(end (or to (point-max)))
+	(default-plist (list id-prop t
+			     'dp-extent t
+			     'dp-source 'dp-make-overlay
+			     'dp-extent-id id-prop
+			     'dp-extent-type id-prop
+			     'face color))
+	olay)
+    (when bounding-markers
+      (cond
+       ((memq bounding-markers '(begin both t))
+	(setq begin (dp-mk-marker begin nil)))
+       ((memq bounding-markers '(end both t))
+	(setq end (dp-mk-marker end nil)))))
+    (setq olay (make-overlay begin end
+			     buffer
+			     front-advance
+	     		     rear-advance))
+    (dp-overlay-put-props olay (append default-plist prop-list))
+    olay))
 
 (defvar dp-remote-file-colorization-info
   `(,dp-remote-file-regexp . dp-remote-buffer-face)
@@ -16,10 +67,6 @@
 A list of cons cells, where each cons cell is \(regexp . face\).
 The regexp is matched against the buffer name.")
 
-(defun dp-overlay-put-props (olay &rest props)
-  (cl-loop for (key val) on props by #'cddr
-	  do
-	  (overlay-put olay key val)))
 ;;
 ;; XEmacs puts font lock info on the mode symbol. Kewl.
 ;; 
@@ -168,14 +215,15 @@ PROPS."
         (setq face-sym 'face
               face-val face))
       ;; (setq extent (apply 'dp-make-extent beg end 'dp-colorized-region
-      (apply `dp-text-propertize-region beg end 'dp-colorized-region
-	     'dp-colorized-p t
-	     face-sym face-val
-	     ;;'invisible 'dp-colorize-region
-	     'dp-colorized-region-color-num arg
-	     'dp-extent-search-key 'dp-colorized-region
-	     'dp-extent-search-key2 (list 'dp-colorized-region arg)
-	     props)
+      (dp-make-overlay beg end 'dp-colorized-region face (current-buffer)
+		       :prop-list
+		       (append
+			(list 'dp-colorized-p t
+			      ;;'invisible 'dp-colorize-region
+			      'dp-colorized-region-color-num arg
+			      'dp-extent-search-key 'dp-colorized-region
+			      'dp-extent-search-key2 (list 'dp-colorized-region arg))
+			props))
       (when (and (not no-roll-colors-p)
                  arg ; ARG nil: called w/specific face, so we can't rotate.
                  (not (symbolp arg))    ; Don't roll when a color is passed in.
@@ -201,7 +249,7 @@ PROPS."
   (interactive "Npriority: \nXpos: ")
   (dp-set-extent-priority arg pos 'dp-colorized-region extents))
 
-(defun dp-uncolorize-region (&optional beg end preserve-current-color-p 
+(defun dp-uncolorize-region (&optional beg end preserve-current-color-index-p 
                              region-id)
   "Remove all of my colors in the region. 
 The region is determined by `dp-region-or...'."
@@ -210,7 +258,7 @@ The region is determined by `dp-region-or...'."
       (message "dp-uncolorize-region: no colorization yet in FSF.")
     (dp-unextent-region (or region-id 'dp-colorized-region)
                         beg end nil 'line-p)
-    (unless preserve-current-color-p
+    (unless preserve-current-color-index-p
       (setq dp-colorize-region-default-color-index 0))))
 
 ;; C-u --> prompt for shrink-wrap and roll colors
