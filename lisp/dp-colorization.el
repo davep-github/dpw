@@ -4,7 +4,7 @@
   "Put background waaay back so it stomps on nothing.")
 
 (defvar dp-colorization-extent-properties
-  '(dp-extent t
+  '(dp-extent-p t
     dp-colorized-p t)
   "These props should go on all of my colorization extents.")
 
@@ -18,6 +18,14 @@
    ((not (dp-non-empty-string color)) nil)
    (t nil)))
 
+(defun dp-get-list-of-colorized-regions(&optional point)
+  "Get the list of overlays (extents) at \(or point (point)."
+  (setq-ifnil point (point))
+  (auto-overlays-in (point) (point)
+		    (list (lambda (prop pval)
+			    (eq pval t))
+			  'dp-colorized-region-p t)))
+  
 (defun dp-overlay-put-props (olay prop-list)
   (when prop-list
     (cl-loop for (key val) on prop-list by #'cddr
@@ -33,7 +41,7 @@
   (let ((begin (or from (point-min)))
 	(end (or to (point-max)))
 	(default-plist (list id-prop t
-			     'dp-extent t
+			     'dp-extent-p t
 			     'dp-source 'dp-make-overlay
 			     'dp-extent-id id-prop
 			     'dp-extent-type id-prop
@@ -163,7 +171,7 @@ COLOR_INDEX can be <=0 or '- to indicate invisibility."
     (cons arg face)))
 
 (defun dp-region-is-colorized (from to)
-  (dp-extent-with-property-exists 'dp-colorized-region from to nil))
+  (dp-extent-with-property-exists 'dp-colorized-region-p from to nil))
 
 (defun dp-colorize-pluck-color (&optional pos)
   "Grab color of colorized region at \(or pos \(point\)\)"
@@ -189,7 +197,7 @@ COLOR_INDEX can be <=0 or '- to indicate invisibility."
                            overwrite-p
                            &rest props)
   "COLOR can be an integer index or a symbol representing a face.
-This will a low priority background type object unless overridden in
+This way a low priority background type object unless overridden in
 PROPS."
   (interactive "P")
   (let* ((beg-end (dp-region-or... :bounder 'rest-or-all-of-line-p))
@@ -215,14 +223,16 @@ PROPS."
         (setq face-sym 'face
               face-val face))
       ;; (setq extent (apply 'dp-make-extent beg end 'dp-colorized-region
-      (dp-make-overlay beg end 'dp-colorized-region face (current-buffer)
+      (dp-make-overlay beg end 'dp-colorized-region-p face (current-buffer)
 		       :prop-list
 		       (append
 			(list 'dp-colorized-p t
+			      'dp-colorized-region-p t ; `region' is generic.
+			      'dp-colorized-overlay-p t ; Specificity useful.
 			      ;;'invisible 'dp-colorize-region
 			      'dp-colorized-region-color-num arg
 			      'dp-extent-search-key 'dp-colorized-region
-			      'dp-extent-search-key2 (list 'dp-colorized-region arg))
+			      'dp-extent-search-key2 (list 'dp-colorized-region-p arg))
 			props))
       (when (and (not no-roll-colors-p)
                  arg ; ARG nil: called w/specific face, so we can't rotate.
@@ -247,7 +257,7 @@ PROPS."
 
 (defun dp-set-colorized-extent-priority (arg &optional pos extents)
   (interactive "Npriority: \nXpos: ")
-  (dp-set-extent-priority arg pos 'dp-colorized-region extents))
+  (dp-set-extent-priority arg pos 'dp-colorized-region-p extents))
 
 (defun dp-uncolorize-region (&optional beg end preserve-current-color-index-p 
                              region-id)
@@ -256,7 +266,7 @@ The region is determined by `dp-region-or...'."
   (interactive)
   (if (not (dp-xemacs-p))
       (message "dp-uncolorize-region: no colorization yet in FSF.")
-    (dp-unextent-region (or region-id 'dp-colorized-region)
+    (dp-unextent-region (or region-id 'dp-colorized-region-p)
                         beg end nil 'line-p)
     (unless preserve-current-color-index-p
       (setq dp-colorize-region-default-color-index 0))))
@@ -409,10 +419,10 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
   search key and the color number."
   (interactive)
   (dp-goto-next-matching-extent 'dp-extent-search-key 
-                                '(unused . dp-colorized-region)))
+                                '(unused . dp-colorized-region-p)))
 (defun dp-set-colorized-extent-priority (arg &optional pos extents)
   (interactive "Npriority: \nXpos: ")
-  (dp-set-extent-priority arg pos 'dp-colorized-region extents))
+  (dp-set-extent-priority arg pos 'dp-colorized-region-p extents))
 
 (defun dp-uncolorize-region (&optional beg end preserve-current-color-p 
                              region-id)
@@ -421,7 +431,7 @@ The region is determined by `dp-region-or...'."
   (interactive)
   (if (not (dp-xemacs-p))
       (message "dp-uncolorize-region: no colorization yet in FSF.")
-    (dp-unextent-region (or region-id 'dp-colorized-region)
+    (dp-unextent-region (or region-id 'dp-colorized-region-p)
                         beg end nil 'line-p)
     (unless preserve-current-color-p
       (setq dp-colorize-region-default-color-index 0))))
@@ -574,7 +584,7 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
   search key and the color number."
   (interactive)
   (dp-goto-next-matching-extent 'dp-extent-search-key 
-                                '(unused . dp-colorized-region)))
+                                '(unused . dp-colorized-region-p)))
 
 (provide 'dp-colorization)
 (message "loading dp-colorization...done")
