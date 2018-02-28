@@ -15,9 +15,11 @@
  '(comint-password-prompt-regexp
    "\\(\\([Oo]ld \\|[Bb]ad \\|[Nn]ew \\|^\\)?[Pp]assword\\|pass[ _-]?phrase\\):?\\s-*\\'\\|\\(Enter passphrase for.*: \\)\\|\\(Password for .*\\)\\|\\(Bad passphrase, try again for.*:\\)\\|\\(Enter password.*:\\s-+\\)\\|\\(\\(\\[sudo\\] \\)?[Pp]assword for .*\\(davep\\||dpanariti?\\|dapanarx.*\\).*:? \\)")
  '(comint-scroll-show-maximum-output nil)
+ '(comment-style (quote extra-line))
  '(custom-enabled-themes (quote (adwaita)))
  '(display-time-mode t)
  '(global-hl-line-mode nil)
+ '(gmm-tool-bar-style (quote gnome))
  '(ibuffer-use-other-window nil)
  '(icomplete-mode t)
  '(icomplete-separator ",")
@@ -31,6 +33,7 @@
  '(kill-ring-max 128)
  '(lazy-highlight-initial-delay 0.1)
  '(lazy-highlight-interval 0)
+ '(menu-bar-mode t)
  '(mouse-yank-at-point t)
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
@@ -48,7 +51,8 @@
  '(scroll-bar-mode (quote right))
  '(shell-cd-regexp "cd|chdir")
  '(shell-pushd-regexp "pushd|g")
- '(show-paren-mode t))
+ '(show-paren-mode t)
+ '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
