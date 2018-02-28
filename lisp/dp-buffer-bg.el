@@ -76,13 +76,12 @@
       (setq dp-buffer-bg-overlay
 	    (dp-make-overlay
 	     begin end
-	     'dp-bg-overlay-p
+	     'dp-background-region-p
 	     bg-face
 	     buffer
 	     :bounding-markers 'both
 	     :prop-list (append (list
 				 'priority priority)
-				 ;;'face bg-face)
 				props)
 	     :front-advance front-advance
 	     :rear-advance rear-advance)))))
