@@ -5931,12 +5931,12 @@ When beginning a sequence, (point) is saved.  This can be pushed onto
 
 (defun dp-make-extent0 (buffer-or-string from to id-prop &rest props)
   "Make an extent.  Give it a property of ID-PROP for easy identification.
-Also give it the property 'dp-extent with value t.
+Also give it the property 'dp-extent-p with value t.
 In addition, add the PLIST from PROPS to the extent."
   (let ((extent (make-extent from to buffer-or-string))
 	(prop-list (append (list id-prop t 
                                  'dp-extent-id id-prop 
-                                 'dp-extent t) 
+                                 'dp-extent-p t) 
                            props)))
     ;; put a unique property on every extent we make for easy,
     ;; positive identification of all of our extents
@@ -5983,7 +5983,7 @@ property name and value to look for."
 ;                                (dp-message-no-echo 
 ;                                 "%s"
 ;                                 (dp-dump-extent-list 
-;                                  (extent-list obj from to nil 'dp-extent t)))
+;                                  (extent-list obj from to nil 'dp-extent-p t)))
                                  ;; @todo ??? keep going and get 'em all?
                                  ;; Why? If the extent is deleted, it's gone.
                                  (throw 'deleted t)
@@ -6004,10 +6004,10 @@ property name and value to look for."
   (apply 'dp-delete-extents-from 
 	 (append (list nil from to) props)))
 
-(defun* dp-clear-all-dp-extents (&key (key-prop 'dp-extent) (key-prop-val t)
-                              obj (from (point-min))
-                              (to (point-max)))
-  "Clear all 'dp-extent type extents."
+(defun* dp-clear-all-dp-extents (&key (key-prop 'dp-extent-p) (key-prop-val t)
+				      obj (from (point-min))
+				      (to (point-max)))
+  "Clear all 'dp-extent-p type extents."
   (dp-delete-extents-from obj from to key-prop))
 
 (defun dp-delete*ALL*extents (&optional from to obj)
@@ -6249,7 +6249,7 @@ matching ones."
                  (point-max) 
                  extent-prop
                  'start-in-region 
-                 'dp-extent t)))
+                 'dp-extent-p t)))
 
 (defun dp-beginning-of-toppest-ext (&optional pos prop prop-val)
   (interactive "d\nSprop? \nXprop-val? ")
@@ -6266,7 +6266,7 @@ matching ones."
   (interactive)
   (setq-ifnil pos (point)
               prop 'dp-extent-search-key
-              prop-val (cons 'unused 'dp-colorized-region))
+              prop-val (cons 'unused 'dp-colorized-region-p))
   (let* ((estart pos) eend at-extents
          (p-val (cdr-safe prop-val))
          (pred (if prop-val
@@ -6310,7 +6310,7 @@ matching ones."
 (defun dp-write-protect-region (beg end)
   (interactive "r")
   (dp-make-extent beg end 'dp-write-protected-region 'read-only t 
-                  'face 'dp-wp-face 'dp-extent t 
+                  'face 'dp-wp-face 'dp-extent-p t 
                   'dp-write-protected-region t 'priority 1))
 (defalias 'dp-ro-region 'dp-write-protect-region)
 
@@ -6393,13 +6393,13 @@ has value \(cdr region-id), then that extent is matched."
 
 (defun dp-set-extent-priority (arg &optional pos prop extents)
   "Put a priority on EXTENTS or the extents at (or POS (point))
-with prop if set else 'dp-extent."
+with prop if set else 'dp-extent-p."
   (interactive "Npriority: \nXpos: ")
   (mapc (function
          (lambda (ext)
            (set-extent-property ext 'priority arg)))
         (or extents 
-            (dp-extents-at-with-prop (or prop 'dp-extent) 
+            (dp-extents-at-with-prop (or prop 'dp-extent-p) 
                                      nil (or pos (point))))))
 
 (defun dp-list-minus-eq (list-in elt-in)
@@ -11437,7 +11437,6 @@ Inserts `dp-python-new-file-template-file' by default."
                     :template 'dp-insert-new-file-template
                     :template-args (list dp-python-new-file-template-file))))))
 
-
 (defun* dp-get-buffer-local-value (&optional var buffer 
                                    &key (pred 'dp-nilop)
                                    (default nil)
@@ -11468,14 +11467,12 @@ Inserts `dp-python-new-file-template-file' by default."
      (t var)
      (nil (error (format "can't figure out what var >%s< is." var))))))
 
-
 (defun dp-get-buffer-local-syntax-table (&optional tab buffer)
   (interactive "ssyntax-table name: \nbbuffer(return for current): ")
   (dp-get-buffer-local-value tab buffer
                              :pred 'syntax-table-p
                              :default 'syntax-table))
                              
-
 (defun* dp-pp-bracketed (value &key (prefix ">") (suffix "<") 
                          (stream standard-output) (newline-p t))
   (princ prefix stream)
