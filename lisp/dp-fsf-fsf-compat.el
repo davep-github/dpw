@@ -395,7 +395,7 @@ pee-pee. "
     (set-text-properties from to
 			 ;; Must be first and must be in every dp prop
 			 ;; alist.
-			 (append '(dp-extent t) ; Separated out for emphasis.
+			 (append '(dp-extent-p t) ; Separated out for emphasis.
 				 (list 'dp-id-prop id-prop
 				       'dp-beginning (dp-mk-marker from nil t)
 				       'dp-end (dp-mk-marker to nil t))
@@ -415,12 +415,13 @@ Use BEGIN and END as the limits of the extent."
     (apply `dp-text-propertize-region begin end 'dp-colorized-region
 	   (list
 	    'dp-colorized-p t
+	    'dp-text-colorized t
 	    'set-text-color-tag tag
 	    'face-sym face
 	    ;;'invisible 'dp-colorize-region
 	    'dp-colorized-region-color-num -1
 	    'dp-extent-search-key 'dp-colorized-region
-	    'dp-extent-search-key2 (list 'dp-colorized-region t)))))
+	    'dp-extent-search-key2 (list 'dp-colorized-region-p t)))))
 
 (defun dp-remove-file-state-colorization (&optional pos end)
   "We ignore begin and end in this version."
@@ -433,7 +434,7 @@ Use BEGIN and END as the limits of the extent."
 
 (defalias 'dp-set-background-color 'dp-buffer-bg-set-color)
 
-(defadvice apropos-command (before dp-advice activate)
+(defadvice apropos (before dp-advice activate)
   "Invert sense of DO-ALL.  We likes the DO-ALL, precious."
   (ad-set-arg 1 (not (ad-get-arg 1))))
 
