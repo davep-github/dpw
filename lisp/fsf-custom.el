@@ -52,6 +52,7 @@
  '(shell-cd-regexp "cd|chdir")
  '(shell-pushd-regexp "pushd|g")
  '(show-paren-mode t)
+ '(show-trailing-whitespace nil)
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
