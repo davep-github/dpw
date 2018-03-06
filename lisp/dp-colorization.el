@@ -18,14 +18,25 @@
    ((not (dp-non-empty-string color)) nil)
    (t nil)))
 
-(defun dp-get-list-of-colorized-regions(&optional point)
+(defun dp-get-list-of-colorized-regions(&optional begin end)
   "Get the list of overlays (extents) at \(or point (point)."
-  (setq-ifnil point (point))
-  (auto-overlays-in (point) (point)
+  (setq-ifnil begin (point))
+  (setq-ifnil end (point))
+  (auto-overlays-in begin end
 		    (list (lambda (prop pval)
+			    (message "prop>%s<, pval>%s<" prop pval)
 			    (eq pval t))
 			  'dp-colorized-region-p t)))
-  
+
+(defun dp-delete-regions (regions)
+  (mapc (function
+	 (lambda (region)
+	   (delete-overlay region)))
+	regions))
+
+(defun dp-delete-colorized-regions (&optional begin end)
+  (dp-delete-regions (dp-get-list-of-colorized-regions begin end)))
+
 (defun dp-overlay-put-props (olay prop-list)
   (when prop-list
     (cl-loop for (key val) on prop-list by #'cddr
