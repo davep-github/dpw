@@ -270,17 +270,43 @@ PROPS."
   (interactive "Npriority: \nXpos: ")
   (dp-set-extent-priority arg pos 'dp-colorized-region-p extents))
 
+(defun* dp-unextent-region (region-id &optional beg end buf-or-string
+				      (region-bounder 'buffer-p)
+				      (verbose-p nil))
+    (interactive "sregion-id(lisp expr): ")
+  ;; Region first.
+  (when verbose-p
+    (message "dp-unextent-region: region-id: %s" region-id))
+  (let* ((check-val-p (consp region-id))
+         (prop (if check-val-p (car region-id) region-id))
+         (prop-val (cdr-safe region-id))
+         (num-deleted 0)
+         (be (dp-region-or... :beg beg :end end :bounder region-bounder))
+	 overlays olay)
+    (when be
+      (setq overlays (overlays-in (car be) (cdr be)))
+      (while overlays
+	(setq olay (car overlays))
+	(when (or (not check-val-p)	; All overlays
+		  (equal prop-val	; Overlays with matching props
+			 (overlay-get olay prop)))
+	  (incf num-deleted)
+	  (when verbose-p
+	    (message "deleting extent>%s<" 
+		     (dp-pretty-format-extent ext "; " nil)))
+	  (delete-overlay olay))
+	(setq overlays (cdr overlays))))))
+      
+
 (defun dp-uncolorize-region (&optional beg end preserve-current-color-index-p 
                              region-id)
   "Remove all of my colors in the region. 
 The region is determined by `dp-region-or...'."
   (interactive)
-  (if (not (dp-xemacs-p))
-      (message "dp-uncolorize-region: no colorization yet in FSF.")
-    (dp-unextent-region (or region-id 'dp-colorized-region-p)
-                        beg end nil 'line-p)
-    (unless preserve-current-color-index-p
-      (setq dp-colorize-region-default-color-index 0))))
+  (dp-unextent-region (or region-id 'dp-colorized-region-p)
+		      beg end nil 'line-p)
+  (unless preserve-current-color-index-p
+    (setq dp-colorize-region-default-color-index 0)))
 
 ;; C-u --> prompt for shrink-wrap and roll colors
 ;; current-prefix-arg < 0 --> color and prompt
@@ -434,18 +460,6 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
 (defun dp-set-colorized-extent-priority (arg &optional pos extents)
   (interactive "Npriority: \nXpos: ")
   (dp-set-extent-priority arg pos 'dp-colorized-region-p extents))
-
-(defun dp-uncolorize-region (&optional beg end preserve-current-color-p 
-                             region-id)
-  "Remove all of my colors in the region. 
-The region is determined by `dp-region-or...'."
-  (interactive)
-  (if (not (dp-xemacs-p))
-      (message "dp-uncolorize-region: no colorization yet in FSF.")
-    (dp-unextent-region (or region-id 'dp-colorized-region-p)
-                        beg end nil 'line-p)
-    (unless preserve-current-color-p
-      (setq dp-colorize-region-default-color-index 0))))
 
 ;; C-u --> prompt for shrink-wrap and roll colors
 ;; current-prefix-arg < 0 --> color and prompt

@@ -8,6 +8,17 @@
 
 (require 'dp-buffer-bg)
 
+;; This wasn't in XEmacs, so I wrote it, then it was so I deleted it,
+;; now it's not in Emacs.  Sigh.
+;; ...or-region is a good idea in many cases.
+(defun dp-fill-paragraph-or-region (arg)
+  "Fill the current region, if it's active; otherwise, fill the paragraph.
+See `fill-paragraph' and `fill-region' for more information."
+  (interactive "*P")
+  (if (dp-mark-active-p)
+      (call-interactively 'fill-region)
+    (call-interactively 'fill-paragraph)))
+
 (defsubst dp-mark-active-p ()
   mark-active)
 

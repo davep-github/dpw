@@ -18,7 +18,7 @@
 (defun dp-lisp-subdir (sub &rest args)
   (expand-file-name (apply 'format sub args) dp-lisp-dir))
 
-(unless (featurep 'emacs)
+(when (featurep 'emacs)
   (require 'fsf-init))
 
 (message "in init.el")

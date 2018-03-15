@@ -9,6 +9,14 @@
     free-vars unresolved unused-vars obsolete or pedantic)
   "All? of the errors the byte compiler can generate.")
 
+;; This wasn't in XEmacs, so I wrote it, then it was so I deleted it,
+;; now it's not in Emacs.  Sigh.
+;; ...or-region is a good idea in many cases.
+(defun dp-fill-paragraph-or-region (arg)
+  "Fill the current region, if it's active; otherwise, fill the paragraph.
+See `fill-paragraph' and `fill-region' for more information."
+  (call-interactively 'fill-paragraph-or-region))
+
 ;;definition changed; (defmacro with-no-warnings (&rest body)
 ;;definition changed;   `(with-byte-compiler-warnings-suppressed dp-all-compiler-warnings
 ;;definition changed;     ,@body))

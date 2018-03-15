@@ -2733,10 +2733,10 @@ NO-SUMMARY-P controls whether we insert a summary indicator
   "Fill region else fill without including topic header."
   (interactive)
   (if (dp-mark-active-p)
-      (call-interactively 'fill-paragraph-or-region)
+      (call-interactively 'dp-fill-paragraph-or-region)
     (let ((paragraph-start (dp-re-concat paragraph-start "^--$"))
 	  (paragraph-separate (dp-re-concat paragraph-separate "^--$")))
-      (call-interactively 'fill-paragraph-or-region))))
+      (call-interactively 'dp-fill-paragraph-or-region))))
 
 (defun dpj-buffer-killed-hook ()
   "See if this buffer is the current-buffer and reset current-buffer if so."
