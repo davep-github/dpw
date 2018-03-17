@@ -12,6 +12,7 @@
 ;;; A first fix to to handle places where we use server- and predicate based
 ;;; on the *macs variant.
 
+(message "dp-hooks loading...")
 (defcustom dp-global-master-cleanup-whitespace-p t
   "Control whitespace cleanup off everywhere.
 If this is a non-nil list, don't disable if it contains the current major
@@ -1162,7 +1163,7 @@ See `dp-parenthesize-region-paren-list'")
   (progn
     (filladapt-mode)
     (dmessage "Added filladapt-mode to python hook 2012-02-10T14:14:39"))
-  (setq-ifnil dp-orig-python-tab-binding (kbd "TAB"))
+  (setq-ifnil dp-orig-python-tab-binding (key-binding (kbd "TAB")))
   (make-variable-buffer-local 'block-comment-start)
   (setq dp-insert-tempo-comment-func 'dp-py-insert-tempo-doxy-comment
         block-comment-start (concat py-block-comment-prefix " ")
@@ -1688,27 +1689,27 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
   ;; (dp-raise-and-focus-frame)
   (local-set-key "\C-c\C-c" 'dp-server-edit))
 
-;;is this hosing emacs? (when (dp-optionally-require 'igrep)
-;;is this hosing emacs?   (defadvice igrep (after dp-igrep activate)
-;;is this hosing emacs?     "Do a `dp-push-go-back' before we visit the matches returned by `igrep'.
-;;is this hosing emacs? Before visiting means after the command completes because the sequence is:
-;;is this hosing emacs? 1) igrep
-;;is this hosing emacs? 2) examine list
-;;is this hosing emacs? 3) M-n for next match or goto a match by hand.
-;;is this hosing emacs? This means pushing a go back works after the command is just fine.
-;;is this hosing emacs? If we did it before, then an error in igrep would leave a kind of useless
-;;is this hosing emacs? place on the go back stack.
-;;is this hosing emacs? Wow: That's over commenting."
-;;is this hosing emacs?     (dp-push-go-back "advised igrep"))
-  
-;;is this hosing emacs?   (defvar dp-orig-igrep-regex-default igrep-regex-default
-;;is this hosing emacs?     "Original value of `igrep-regex-default'.")
+(when (dp-optionally-require 'igrep)
+  (defadvice igrep (after dp-igrep activate)
+    "Do a `dp-push-go-back' before we visit the matches returned by `igrep'.
+ Before visiting means after the command completes because the sequence is:
+ 1) igrep
+ 2) examine list
+ 3) M-n for next match or goto a match by hand.
+ This means pushing a go back works after the command is just fine.
+ If we did it before, then an error in igrep would leave a kind of useless
+ place on the go back stack.
+ Wow: That's over commenting."
+    (dp-push-go-back "advised igrep"))
 
-;;is this hosing emacs?   (setq igrep-regex-default 
-;;is this hosing emacs?         (function 
-;;is this hosing emacs?          (lambda ()
-;;is this hosing emacs?            (dp-get--as-string--region-or... 
-;;is this hosing emacs?             :gettor dp-orig-igrep-regex-default)))))
+  (defvar dp-orig-igrep-regex-default igrep-regex-default
+    "Original value of `igrep-regex-default'.")
+
+  (setq igrep-regex-default
+	(function 
+	 (lambda ()
+	   (dp-get--as-string--region-or... 
+	    :gettor dp-orig-igrep-regex-default)))))
 
 (defadvice grep (after dp-grep activate)
   "Do a dp-push-go-back before we go finding the matches returned by `grep'.
@@ -2215,7 +2216,8 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
   ;; set C-xM-e to what was on M-o
   ;; M-e is open file, so it's kind of mnemonic.
   (dp-bump-key-binding [(meta ?o)] 
-                       'dp-kill-ring-save [(control ?x) (meta e)]))
+                       'dp-kill-ring-save [(control ?x) (meta e)])
+  (local-set-key [(meta -)] 'dp-maybe-kill-this-buffer))
 
 (defun dp-revert-hook ()
   ;; Remove existing colorization. We may want to have a "permanent" flag
@@ -2310,7 +2312,12 @@ changed."
   (interactive)
   (local-set-key [(meta ?w)] 'dp-ibuffer-do-save))
 
-(add-hook 'bookmark-bmenu-mode-hook 'dp-bookmark-bmenu-mode-hook)
+(defun dp-icomplete-minibuffer-setup-hook ()
+  (dp-define-keys
+   icomplete-minibuffer-map
+   (list
+    [(meta return)] 'icomplete-force-complete-and-exit
+    [(meta ?m)] 'minibuffer-force-complete)))
 
 ;; I'm trending away from advice, since I've seen code that really rapes it
 ;; (I'm looking at you, ECB)
@@ -2361,10 +2368,12 @@ changed."
 (add-hook 'asm-mode-hook 'dp-asm-mode-hook)
 (add-hook 'ibuffer-hook 'dp-ibuffer-hook)
 (add-hook 'compilation-start-hook 'dp-compilation-start-hook)
+(add-hook 'icomplete-minibuffer-setup-hook 'dp-icomplete-minibuffer-setup-hook)
 ;; <:add-new-`add-hooks'-up-there:>
 ;; put new hooks up there ^
 
 (provide 'dp-hooks)
+(message "dp-hooks loading...done")
 
 ;; 
 ;; Local variables:
