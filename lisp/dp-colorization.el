@@ -611,5 +611,30 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
   (dp-goto-next-matching-extent 'dp-extent-search-key 
                                 '(unused . dp-colorized-region-p)))
 
+(defun dp-colorize-frame-bg (&optional color)
+  "Set the frame's background color.
+COLOR:
+  prefix == C-u -- prompt for color.
+  prefix == C-0 -- white.
+  nil -- Use default color, if one.
+  str -- Use as color name.
+  face -- use as color face."
+  (interactive "P")
+  (let ((color
+	 (cond
+	  ((Cu-p)
+	   (read-color "Frame background color: " nil t))
+	  ((Cu0p)
+	   "white")
+	  ((eq color nil)
+	   dp-default-background-color)
+	  ((stringp color)
+	   color)
+	  ((facep color)
+	   color)
+	  (t "white"))))		; male conspiracy.
+    (set-background-color color)))
+(dp-defaliases 'cfb 'cfbg 'dp-colorize-frame-bg)
+
 (provide 'dp-colorization)
 (message "loading dp-colorization...done")
