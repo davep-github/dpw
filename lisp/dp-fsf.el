@@ -19,5 +19,19 @@ should be of the form `#x...' where `x' is not a blank or a tab, and
   :type 'string
   :group 'python)
 
+(defun dp-stolen-sudo-edit (&optional arg)
+  "Edit a file as root. With a prefix ARG edit the current file as root
+Will also prompt for a file to visit if currentbuffer is not visiting a file."
+  (interactive "P")
+  (if (or arg (not buffer-file-name))
+      (find-file (concat "/sudo:root@localhost:"
+			 (ido-read-file-name "Find file(as root): ")))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+(defalias 'dse 'dp-stolen-sudo-edit)
+
+(defun dset ()
+  (interactive)
+  (dp-stolen-sudo-edit t))
+
 (provide 'dp-fsf)
 (message "dp-fsf-early loading...done.")
