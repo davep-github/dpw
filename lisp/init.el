@@ -19,7 +19,7 @@
   (expand-file-name (apply 'format sub args) dp-lisp-dir))
 
 (when (featurep 'emacs)
-  (require 'fsf-init))
+  (load-library "fsf-init"))
 
 (message "in init.el")
 ;; no blah, blah, blah.
