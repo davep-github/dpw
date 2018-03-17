@@ -133,7 +133,7 @@ around with edited text.")
 (defun dp-bm-equal (bm name marker plist)
   (and (string= (dp-bm-id bm) name)
        (equal (dp-bm-marker bm) marker)
-       (plists-equal (dp-bm-plist bm) plist)))
+       (dp-plists-equal (dp-bm-plist bm) plist)))
 
 (defun dp-add-to-bm-list (bm-num marker &optional plist)
   (let ((bm (dp-make-bookmark bm-num marker plist)))
