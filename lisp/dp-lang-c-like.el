@@ -1443,7 +1443,7 @@ Also, it will move backwards into a closed class (ie has a };)."
       (beginning-of-line)
     (let ((class-state (dp-c++-in-class-p))
           (pos (point)))
-      (c-beginning-of-statement)
+      (c-beginning-of-statement 1)
       (cond 
        ((not (eq class-state (dp-c++-in-class-p) ))
         ;; We backed into a class.  This is bad.
@@ -1974,7 +1974,7 @@ control construct)"
       ;;(dmessage "(= last-command-char ?\{): %s\n" (= last-command-char ?\{))
       (if (and (memq 'knr-open-brace c-cleanup-list)
                (or t c-auto-newline)    ;@todo XXX look into this!
-               (= last-command-char ?\{)
+               (= (dp-last-command-char) ?\{)
                (not (c-in-literal))
                (or (and (eq syntax 'substatement)
                         (re-search-backward "\n[ \t]*{\n?[ \t]*" nil t))
@@ -2006,7 +2006,8 @@ control construct)"
             (and (<= pt (point))
                  (not (looking-at "\\s-*$"))))
       (dp-open-newline)))
-  (setq last-command-char ?\})
+  (setq last-command-char ?\}
+	last-command-event ?\})
   (call-interactively 'c-electric-brace))
 
 (defun dp-delimit-func-args (&optional prefix suffix)
@@ -2113,7 +2114,7 @@ control construct)"
 I like the other things (e.g. cleanups) that are available in auto-newline
 mode but not the new lines themselves.  Hence, this."
   (interactive)
-  (if (eq last-command-char ?\;)
+  (if (eq (dp-last-command-char) ?\;)
       'stop
     ;; not a semi, keep trying.
     nil))
