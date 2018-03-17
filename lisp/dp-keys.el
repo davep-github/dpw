@@ -25,7 +25,7 @@
 (defun dp-define-keys (kmap keys)
   "Convenience function to bind a list of KEYS to KMAP.
 KMAP is a keymap.
-KEYS is a list: \(key def key2 def2 ...\)."
+KEYS is a LIST: \(key def key2 def2 ...\)."
   (if kmap
       (loop for (key def) on keys by 'cddr 
         do (define-key kmap key def))     
@@ -308,6 +308,7 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key "\C-x\C-p" 'dp-switch-to-previous-buffer)
 (global-set-key [(control meta -)] 'dp-meta-minus-other-window)
 (global-set-key [(control meta ?!)] 'dp-shell-command-in-minibuffer)
+(global-set-key (kbd "C-x g") 'magit-status)
 
 ;;; <:add-new "normal"/global binding:>
 
@@ -380,9 +381,14 @@ Bind any keys in KEYS via `dp-define-keys'."
                           [?e] (if (dp-xemacs-p)
 				   'dp-extents-at
 				 (kb-lambda
-					;;; XXX @todo this doesn't work, but 
-					;;; command works by hand.
-				     (text-properties-at (point))))
+				     ;; XXX @todo this doesn't work, but 
+				     ;; command works by hand.
+				     ;; ?Create a func for this?
+				     ;; Would be nice to overload
+				     ;; `dp-extents-at', with macs
+				     ;; specific versions, but the
+				     ;; signatures are very different.
+				     (message "%s" (text-properties-at (point)))))
                           [?E] (if (dp-xemacs-p)
 				   'dp-extents-at
 				 'describe-text-properties)
@@ -539,9 +545,8 @@ Hopefully [space] is mnemonic.")
                                          (dp-uncolorize-region (point-min) 
                                                                (point-max)
                                                                nil (nCu-p)))
-                          [?p] 'dp-set-colorized-extent-priority
-                          [?a] 'dp-uncolorize-all)
-    ;; <:cdd map colorization bindings:>
+                          [?p] 'dp-set-colorized-extent-priority)
+    ;; <:add newcdd map colorization bindings:>
     "My color mode keys.")
   
   ;;
