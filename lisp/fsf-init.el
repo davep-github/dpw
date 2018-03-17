@@ -1,3 +1,4 @@
+(message "loading fsf-init...")
 (require 'package)
 
 ;; load emacs 24's package system. Add MELPA repository.
@@ -16,6 +17,32 @@ t))
 ;; You may delete these explanatory comments.
 (package-initialize)
 
+(defgroup dp-init-vars nil
+  "My personal customizable variables; needs must be initialized early."
+  :group 'local)
+
+(defcustom dp-default-background-color "azure3"
+  "Current fave, soon to be repulsive, background color"
+  :group 'dp-init-vars
+  :type 'string)
+
+;; initial window settings
+(setq initial-frame-alist
+      `((width . 92)
+	(height . 59)
+	(vertical-scroll-bars . right)
+	(background-color . ,dp-default-background-color)))
+
+;; subsequent window settings
+(setq default-frame-alist
+      `((menu-bar-lines . 1)
+        (tool-bar-lines . 0)
+        (width . 92)
+        (height . 59)
+	(vertical-scroll-bars . right)
+        (background-color . ,dp-default-background-color)))
+
 ;;(require 'magit)
 
 (provide 'fsf-init)
+(message "loading fsf-init...done")
