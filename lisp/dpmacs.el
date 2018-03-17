@@ -1024,6 +1024,30 @@ This can be callable.")
 
 (require 'dp-ilisp)
 
+(defun dp-org-mode-hook ()
+  ;; Restore these in this buffer
+  (message "WH00T!")
+  (local-set-key [(meta up)] 'dp-other-window-up)
+  (local-set-key [(meta kp-up)] 'dp-other-window-up)
+  (local-set-key [(meta down)] 'other-window)
+  (local-set-key [(meta kp-down)] 'other-window)
+  (local-set-key [(control ?<)] 'org-metaup)
+  (local-set-key [(control ?>)] 'org-metadown)
+  (local-set-key [(meta ?-)] 'dp-bury-or-kill-buffer))
+
+(defun dp-setup-org-mode()
+  "Set up org mode my, overly complicated, way."
+  (interactive)
+  (if (dp-optionally-require 'org)
+      (progn
+	(global-set-key [(control ?c) ?l] 'org-store-link)
+	(global-set-key [(control ?c) ?a] 'org-agenda)
+	
+	(setq org-log-done 'time)
+	(add-hook 'org-mode-hook 'dp-org-mode-hook)
+	)
+    (message "org-mode is not available.")))
+
 ;; This needs to be done before we're required because the hook is called
 ;; just before the file exits.
 (defun dp-setup-bookmarks ()
@@ -1214,10 +1238,5 @@ minibuffer history list `bookmark-history'."
 ;; {control,meta} X {space,tab}
 (define-key esc-map " " 'dp-id-select-thing)
 (define-key global-map [?\C- ] 'dp-expand-abbrev)
-
-(describe-key-briefly [(control ? )])
-(describe-key-briefly [(meta ? )])
-(describe-key-briefly [(control space)])
-(describe-key-briefly [(meta space)])
 
 (message "dpmacs.el... finished.")
