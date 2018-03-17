@@ -46,7 +46,7 @@
 		     ((:url . "https://github.com/Malabarba/aggressive-indent-mode")
 		      (:keywords "indent" "lisp" "maint" "tools"))])
  (ahungry-theme .
-		[(1 10 0)
+		[(1 8 0)
 		 ((emacs
 		   (24)))
 		 "Ahungry color theme for Emacs.  Make sure to (load-theme 'ahungry)." tar
@@ -181,7 +181,7 @@
 		      ((:url . "https://github.com/cpitclaudel/compact-docstrings")
 		       (:keywords "convenience" "faces" "lisp" "maint" "c"))])
  (company .
-	  [(0 9 6)
+	  [(0 9 4)
 	   ((emacs
 	     (24 3)))
 	   "Modular text completion framework" tar
@@ -265,7 +265,7 @@
 		((:url . "http://elpa.gnu.org/packages/dbus-codegen.html")
 		 (:keywords "comm" "dbus" "convenience"))])
  (debbugs .
-	  [(0 15)
+	  [(0 14)
 	   ((soap-client
 	     (3 1 1))
 	    (cl-lib
@@ -341,7 +341,7 @@
 	     ((:keywords "killing" "convenience")
 	      (:url . "https://github.com/leoliu/easy-kill"))])
  (ebdb .
-       [(0 4 3)
+       [(0 4 2)
 	((emacs
 	  (25 1))
 	 (cl-lib
@@ -375,13 +375,11 @@
 	     ((:url . "http://elpa.gnu.org/packages/ediprolog.html")
 	      (:keywords "languages" "processes"))])
  (el-search .
-	    [(1 6)
+	    [(1 4 0 17)
 	     ((emacs
 	       (25))
 	      (stream
-	       (2 2 4))
-	      (cl-print
-	       (1 0)))
+	       (2 2 4)))
 	     "Expression based interactive search for Emacs Lisp" tar
 	     ((:keywords "lisp")
 	      (:url . "http://elpa.gnu.org/packages/el-search.html"))])
@@ -430,9 +428,9 @@
 	       ((:keywords "calendar")
 		(:url . "http://elpa.gnu.org/packages/excorporate.html"))])
  (exwm .
-       [(0 17)
+       [(0 16)
 	((xelb
-	  (0 13)))
+	  (0 12)))
 	"Emacs X Window Manager" tar
 	((:keywords "unix")
 	 (:url . "https://github.com/ch11ng/exwm"))])
@@ -469,7 +467,7 @@
 	  ((:url . "https://github.com/leoliu/ggtags")
 	   (:keywords "tools" "convenience"))])
  (gited .
-	[(0 3 4)
+	[(0 3 3)
 	 ((emacs
 	   (24 4))
 	  (cl-lib
@@ -527,7 +525,7 @@
 			      ((:url . "https://github.com/dgutov/highlight-escape-sequences")
 			       (:keywords "convenience"))])
  (hook-helpers .
-	       [(1 1 1)
+	       [(1 1)
 		((emacs
 		  (25 1)))
 		"Anonymous, modifiable hook functions" tar
@@ -584,7 +582,7 @@
 	       ((:url . "http://elpa.gnu.org/packages/jgraph-mode.html")
 		(:keywords "tex" "wp"))])
  (js2-mode .
-	   [(20180301)
+	   [(20170721)
 	    ((emacs
 	      (24 1))
 	     (cl-lib
@@ -690,7 +688,7 @@
 	    ((:url . "http://elpa.gnu.org/packages/midi-kbd.html")
 	     (:keywords "convenience" "hardware" "multimedia"))])
  (mines .
-	[(1 6)
+	[(1 5)
 	 ((emacs
 	   (24 4))
 	  (cl-lib
@@ -710,9 +708,7 @@
 	    (:keywords))])
  (multishell .
 	     [(1 1 5)
-	      ((cl-lib
-		(0 5)))
-	      "Easily use multiple shell buffers, local and remote" tar
+	      nil "Easily use multiple shell buffers, local and remote." tar
 	      ((:keywords "processes")
 	       (:url . "https://github.com/kenmanheimer/EmacsMultishell"))])
  (muse .
@@ -789,7 +785,7 @@
 	     ((:url . "https://github.com/michael-heerdegen/on-screen.el")
 	      (:keywords "convenience"))])
  (org-edna .
-	   [(1 0 -2 6)
+	   [(1 0 -2 4)
 	    ((emacs
 	      (25 1))
 	     (seq
@@ -817,7 +813,7 @@
 	   ((:url . "http://elpa.gnu.org/packages/pabbrev.html")
 	    (:keywords))])
  (paced .
-	[(1 1 3)
+	[(1 0)
 	 ((emacs
 	   (25 1))
 	  (async
@@ -844,20 +840,13 @@
 	 nil "Texas hold 'em poker" single
 	 ((:url . "http://elpa.gnu.org/packages/poker.html")
 	  (:keywords "games"))])
- (posframe .
-	   [(0 1 0)
-	    ((emacs
-	      (26)))
-	    "Pop a posframe (just a frame) at point" single
-	    ((:url . "https://github.com/tumashu/posframe")
-	     (:keywords "tooltip"))])
  (psgml .
 	[(1 3 4)
 	 nil "SGML-editing mode with parsing support" tar
 	 ((:keywords "languages")
 	  (:url . "http://elpa.gnu.org/packages/psgml.html"))])
  (python .
-	 [(0 26 1)
+	 [(0 25 2)
 	  ((emacs
 	    (24 1))
 	   (cl-lib
@@ -880,11 +869,6 @@
 		nil "Colorize color names in buffers" single
 		((:url . "http://elpa.gnu.org/packages/rainbow-mode.html")
 		 (:keywords "faces"))])
- (rbit .
-       [(0 1)
-	nil "Red-black persistent interval trees" single
-	((:url . "http://elpa.gnu.org/packages/rbit.html")
-	 (:keywords "data structures" "binary tree" "intervals"))])
  (rcirc-color .
 	      [(0 3)
 	       nil "color nicks" single
@@ -1006,7 +990,7 @@
 	   ((:url . "https://github.com/Malabarba/spinner.el")
 	    (:keywords "processes" "mode-line"))])
  (sql-indent .
-	     [(1 1)
+	     [(1 0)
 	      nil "Support for indenting code in SQL files." tar
 	      ((:keywords "languages" "sql")
 	       (:url . "http://elpa.gnu.org/packages/sql-indent.html"))])
@@ -1199,7 +1183,7 @@
 	 ((:url . "http://elpa.gnu.org/packages/xclip.html")
 	  (:keywords "convenience" "tools"))])
  (xelb .
-       [(0 13)
+       [(0 12)
 	((emacs
 	  (24 4))
 	 (cl-generic
