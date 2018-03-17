@@ -98,7 +98,7 @@ If COLOR is nil remove previously added overlay."
 		      "Background color (empty string to remove): "
 		    "Background color: "))
           (color (read-color prompt nil t)))
-     (list color))) ;;; buffer begin end widenp)))
+     (list color)))
   (setq color (dp-color-to-face color))
   (dp-buffer-bg-set-color-guts color buffer :begin begin :end end :widenp t))
 
