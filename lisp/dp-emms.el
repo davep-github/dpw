@@ -2,6 +2,8 @@
 
 ;; EMMS setup
 ;; Add the following to your config.
+
+;; NB emms should be a symlink to the real emms-<ver> dir.
 (add-to-list 'load-path (dp-mk-contrib-subdir "emms"))
 (setq emms-directory (expand-file-name "emms-data.d" dp-ephemeral-dir))
 (if (not (dp-optionally-require 'emms-setup))
