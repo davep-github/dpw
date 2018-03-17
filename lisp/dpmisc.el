@@ -3354,19 +3354,19 @@ lisp-interaction mode."
                 dp-current-elisp-devel-dirname
                 (not prompt-p))
            deffile
-         ;; (read-file-name PROMPT &optional DIR DEFAULT MUST-MATCH
+         ;; (dp-read-file-name PROMPT &optional DIR DEFAULT MUST-MATCH
          ;; INITIAL-CONTENTS HISTORY)
          (setq deffile 
                (expand-file-name 
                 (substitute-in-file-name 
-                 (read-file-name (format "Dev file (%s): " 
-                                         (or dp-current-elisp-devel-filename
-                                             dp-default-elisp-devel-file))
-                                 (or dp-current-elisp-devel-dirname 
-                                     dp-default-elisp-devel-dir)
-                                 deffile nil nil
-                                 'dp-elisp-devel-files-history))
-                dp-default-elisp-devel-dir)
+                 (dp-read-file-name (format "Dev file (%s): " 
+					    (or dp-current-elisp-devel-filename
+						dp-default-elisp-devel-file))
+				    (or dp-current-elisp-devel-dirname 
+					dp-default-elisp-devel-dir)
+				    deffile nil nil nil
+				    'dp-elisp-devel-files-history))
+		dp-default-elisp-devel-dir)
                
                ;; if dirname is nil, then we'll continue to use the default
                ;; devel dir.  If the user wants to set a current devel dir,
@@ -4065,9 +4065,9 @@ other: other is value of initial contents."
     (cond
      ((eq 'f symbol-type)
       ;; We want a file-name
-      (apply 'read-file-name prompt (if reader-args
-                                        reader-args
-                                      (list nil nil t))))
+      (apply 'dp-read-file-name prompt (if reader-args
+					   reader-args
+					 (list nil nil t))))
      ((eq 'a symbol-type) (read-function prompt))
      ((eq 'S symbol-type)
       (let (tem (prev-tem default) unbound-p)
@@ -4201,6 +4201,7 @@ the one on the previous line."
 	)
     ;;(message "indent line")
     (when dp-orig-python-tab-binding
+      (setq this-command dp-orig-python-tab-binding)
       (call-interactively dp-orig-python-tab-binding))))
 
 (defun dp-gen-unique-delimitter (text)
@@ -5643,9 +5644,9 @@ Similar here means the same file-name with a user specified completion."
   (interactive)
   (setq-ifnil prompt "file-name: "
               file-name (buffer-file-name))
-  (find-file (read-file-name prompt nil nil nil 
-                             (file-name-sans-extension 
-                              (file-name-nondirectory file-name)))))
+  (find-file (dp-read-file-name prompt nil nil nil
+				(file-name-sans-extension 
+				 (file-name-nondirectory file-name)))))
 
 (defun dp-add-eof-spacing ()
   "Add spacing to EOF to ensure at least one blank line."
@@ -7487,7 +7488,7 @@ Visit /file/name and then goto <linenum>."
    ((not (interactive-p))
     (find-file file-name))
    ((Cu--p 0)                           ; Just call find-file
-    (find-file (read-file-name "dp-ffap[0]: ")))
+    (find-file (dp-read-file-name "dp-ffap[0]: ")))
    ((Cu--p)
     (call-interactively 'dp-search-path))
    ((Cu-p)
@@ -8657,8 +8658,8 @@ on interactiveness, but due to cases like this, I'm trending away from
       (call-interactively
        (if  (let (case-fold-search)
               (looking-at "[A-Z]"))
-           'downcase-region-or-word
-         'capitalize-region-or-word)))
+           'dp-downcase-region-or-word
+         'dp-capitalize-region-or-word)))
       ;; Give 'em point so they can undo the `save-excursion'
     (point)))
 
@@ -9020,7 +9021,7 @@ Just for informational purposes.")
   (interactive "P")
   (let* ((chosen-make-file (when choose-make-file-p
                              (expand-file-name
-                              (read-file-name "Makefile: " nil t nil))))
+                              (dp-read-file-name "Makefile: " nil t nil))))
          (make-command (if (and remake-p dp-mru-make-command)
                            dp-mru-make-command
                          (dp-make-make-command chosen-make-file)))
@@ -9725,7 +9726,7 @@ basically the union of the args to `find-file-noselect' and
 
 (defun dp-find-file-this-window  (file-name &optional codesys wildcards)
   "Find a file in this window unless it is displayed in another."
-  (interactive (list (read-file-name "dp:Find file in this window: ")
+  (interactive (list (dp-read-file-name "dp:Find file in this window: ")
 		     (and current-prefix-arg
 			  (read-coding-system "Coding system: "))
 		     t))
@@ -9740,7 +9741,7 @@ basically the union of the args to `find-file-noselect' and
 
 (defun dp-find-file-other-window (file-name &rest rest)
   "Try to be clever (ARG!) about find a file into another window."
-  (interactive (list (read-file-name "dp:Find file in other window: ")
+  (interactive (list (dp-read-file-name "dp:Find file in other window: ")
 		     (and current-prefix-arg
 			  (read-coding-system "Coding system: "))
 		     t))
@@ -10172,17 +10173,17 @@ FILENAME defaults to the name of the current buffer or
                                          "%s"
                                        "[%s]")))
                  (list
-                  (read-file-name 
-                   (format (concat "File name" fn-def-prompt "? ")
-                           (file-name-nondirectory def-file-name))
-                   nil nil 'must-match)
-                   (read-string 
-                    (format "User name[%s]? " (user-login-name))
-                    nil nil (user-login-name)))))
+		  (dp-read-file-name 
+		   (format (concat "File name" fn-def-prompt "? ")
+			   (file-name-nondirectory def-file-name))
+		   nil nil 'must-match)
+		  (read-string 
+		   (format "User name[%s]? " (user-login-name))
+		   nil nil (user-login-name)))))
   (let ((status (string= (or user-name (user-login-name))
-                         (dp-get-file-owner 
-                          (or file-name 
-                              (buffer-file-name (current-buffer)))))))
+			 (dp-get-file-owner 
+			  (or file-name 
+			      (buffer-file-name (current-buffer)))))))
     (when (interactive-p)
       (message "%s is%s owned by %s." file-name (if status "" " NOT") 
                (or user-name (user-login-name))))
@@ -12565,11 +12566,11 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
         ;; Putting a (y-or-n-p "save
         ;; buffer? ") before getting here is, to me (and this is for me)
         ;; redundant and annoying. C-g or M-u is pretty much as easy as y.
-        (setq file-name (expand-file-name (read-file-name "Save to: "
-                                                          ""
-                                                          file-name
-                                                          nil
-                                                          file-name)))
+	(setq file-name (expand-file-name (dp-read-file-name "Save to: "
+							     ""
+							     file-name
+							     nil
+							     file-name)))
         (write-region start end file-name append-p))
       (when file-name-sticky-p
         (setq dp-save-buffer-contents-file-name file-name)))))
@@ -13813,26 +13814,36 @@ whitespace eradication.")
 (defun dp-next-line (count &optional cleanup-current-line-pred)
   "Add trailing white space removal functionality."
   (interactive "p")                     ; fsf - fix "_"
-  (if (not (dp-cleanup-whitespace-p))
+  ;;; When I've hosed things, this can be broken, so handle it.
+  (condition-case bubba
       (progn
-        (call-interactively 'next-line)
-        (setq this-command 'next-line))
-    (let ((cleanup-current-line-pred 
-           (or cleanup-current-line-pred
-               dp-whitespace-cleanup-current-line-pred)))
-      (when (< count 0)
-        (setq count (- count)
-              cleanup-current-line-pred 'eolp))
-      (loop repeat count do
-        (if (or (and (not buffer-read-only)
-                     (eq (dp-cleanup-whitespace-p) t)
-                     (funcall cleanup-current-line-pred)))
-            (dp-func-and-move-down 'dp-cleanup-line
-                                   t
-                                   'preserve-column
-                                   'next-line)
-          (next-line 1)
-          (setq this-command 'next-line))))))
+	(if (not (dp-cleanup-whitespace-p))
+	    (progn
+	      (call-interactively 'next-line)
+	      (setq this-command 'next-line))
+	  (let ((cleanup-current-line-pred 
+		 (or cleanup-current-line-pred
+		     dp-whitespace-cleanup-current-line-pred)))
+	    (when (< count 0)
+	      (setq count (- count)
+		    cleanup-current-line-pred 'eolp))
+	    (loop repeat count do
+		  (if (or (and (not buffer-read-only)
+			       (eq (dp-cleanup-whitespace-p) t)
+			       (funcall cleanup-current-line-pred)))
+		      (dp-func-and-move-down 'dp-cleanup-line
+					     t
+					     'preserve-column
+					     'next-line)
+		    (next-line 1)
+		    (setq this-command 'next-line))))))
+    (error
+     ;; Fall back to normalcy :-(
+     (global-set-key [kp-down] 'next-line)
+     (global-set-key [down] 'next-line))))
+    
+    
+      
 (global-set-key [kp-down] 'dp-next-line)   ; q.v. dp-cleanup-whitespace-p
 (global-set-key [down] 'dp-next-line)   ; q.v. dp-cleanup-whitespace-p
 

@@ -3026,8 +3026,8 @@ ARG == 0    --> New `dp-gdb-naught' session."
       (let ((dp-gdb-recursing t))
         ;; Let's grab the file name our-self, regardless of interactivity, so
         ;; we can put it into our own history.
-        (setq-ifnil path (read-file-name "Run dp-gdb on file: " nil nil nil nil
-                                         'dp-gdb-file-history))
+        (setq-ifnil path (dp-read-file-name "Run dp-gdb on file: " nil nil nil nil
+					    'dp-gdb-file-history))
         (gdb path corefile)
         (set-process-filter (get-buffer-process (current-buffer))
                             'dp-gdb-filter)))
@@ -3240,9 +3240,9 @@ ARG == 0    --> New `dp-gdb-naught' session."
                 (completing-read "ssh arguments (host-name first): "
                                  dp-ssh-host-name-completion-list
                                  nil nil nil 'dp-ssh-gdb-history)
-                (read-file-name "Run gdb on file: ")
+                (dp-read-file-name "Run gdb on file: ")
                 (when current-prefix-arg
-                  (read-file-name "Name of corefile: "))))
+                  (dp-read-file-name "Name of corefile: "))))
   (dp-optionally-require 'ssh)
   (dp-optionally-require 'gdb)
   (let* ((buffer nil)

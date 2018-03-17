@@ -94,7 +94,7 @@ Use cc-mode syntax to find the limits."
 		(buffer-substring (match-beginning 1) (match-end 1))
 	      nil)))))
     (unless inc-dir
-      (setq inc-dir (read-file-name "inc dir: " "." ".")))
+      (setq inc-dir (dp-read-file-name "inc dir: " "." ".")))
     (save-match-data
       (if (posix-string-match "\\(.*\\)/$" inc-dir)
 	  (match-string 1 inc-dir)
