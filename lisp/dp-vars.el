@@ -545,7 +545,7 @@ split."
   :group 'dp-vars
   :type 'integer)
 
-;; <:vars go here:>
+;; <:new vars go here:>
 (provide 'dp-vars)
 ;;
 ;;
