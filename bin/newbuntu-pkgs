@@ -120,7 +120,6 @@ figlet
 firefox
 g++
 gcc
-gcolor2
 git
 git-email
 git-extras
@@ -129,7 +128,6 @@ gitk
 gparted
 gpm
 ipython
-ipython-doc
 libcurl4-openssl-dev
 libncurses5
 libncurses5-dbg
@@ -163,6 +161,10 @@ wmctrl
 xclip
 xorg-dev
 xterm
+# for Kernel
+bison
+flex
+libelf-dev
 )
 
 something_was_installed=
@@ -232,8 +234,8 @@ sudo add-apt-repository ppa:danielrichter2007/grub-customizer
 sudo apt-get update
 sagi grub-customizer
 '
-suck_me=$(readlink /bin/sh)
-if [ "${suck_me}" = "dash" ]
+bite_me=$(readlink /bin/sh)
+if [ "${bite_me}" = "dash" ]
 then
     echo "FUCK DASH!!!
 FUCK DASH!!!
