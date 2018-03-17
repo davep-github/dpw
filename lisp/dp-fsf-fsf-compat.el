@@ -20,7 +20,9 @@ See `fill-paragraph' and `fill-region' for more information."
     (call-interactively 'fill-paragraph)))
 
 (defsubst dp-mark-active-p ()
-  mark-active)
+  ;; mark-active
+  ;; which is better?
+  (use-region-p))
 
 (defsubst dp-deactivate-mark ()
   (deactivate-mark))
@@ -83,13 +85,13 @@ If INSERT-TEMPLATE is non-nil (interactively with prefix arg) then insert a
 function template at point.
 @todo can we add possibility of specifying what to get help on?"
   (interactive "P")
-  (let ((eldoc-documentation-function 'elisp-eldoc-documentation-function)
-        (doc (funcall eldoc-documentation-function)))
+  (let* ((eldoc-documentation-function 'elisp-eldoc-documentation-function)
+	 (doc (funcall eldoc-documentation-function)))
     (if insert-template
 	(eldoc-insert-elisp-func-template doc)
       (eldoc-message "%s"
-		     (or doc 
-			 (format "No doc for `%s'" (eldoc-current-symbol)))))))
+		     (or doc
+			 (format "No doc for `%s'" (elisp--current-symbol)))))))
 
 (defsubst dp-mmm-in-any-subregion-p (&rest r)
   nil)
@@ -283,7 +285,7 @@ whether it is a file(/result) or a directory (/result/)."
 	result)
 
     (cond ((stringp (setq result (and (file-exists-p (expand-file-name file))
-				      (read-file-name-internal
+				      (dp-read-file-name-internal
 				       (condition-case nil
 					   (expand-file-name file)
 					 (error file))
@@ -458,6 +460,16 @@ Use BEGIN and END as the limits of the extent."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Liberated from XEmacs.
+(defun switch-to-other-buffer (arg)
+  "Switch to the previous buffer.  With a numeric arg, n, switch to the nthmost recent buffer.  With an arg of 0, buries the current buffer at thebottom of the buffer stack."
+  (interactive "p")
+  (if (eq arg 0)
+      (bury-buffer (current-buffer)))
+  (switch-to-buffer
+   (if (<= arg 1)
+       (other-buffer (current-buffer))
+     (nth (1+ arg) (buffer-list)))))
+
 (defun add-one-shot-hook (hook function &optional append local)
   "Add to the value of HOOK the one-shot function FUNCTION.
 FUNCTION will automatically be removed from the hook the first time
@@ -551,5 +563,20 @@ Currently it removes it regardless of the line we're on."
 (defsubst custom-face-get-spec (face)
   (custom-face-get-current-spec face))
 ;;(defalias 'custom-face-get-spec 'custom-face-get-current-spec)
+
+(defun dp-read-file-name (prompt &optional dir default-file-name
+       must-match initial predicate hist-var)
+  "FSF does not have a HIST-VAR parameter."
+  (read-file-name prompt dir default-file-name must-match initial predicate))
+
+(defun dp-plists-equal (pl1 pl2)
+  "Compare plists for EQUALity. List ordering is ignored.
+e.g. \(dp-plist-equal '(p1 v1 p2 v2) '(p2 v2 p1 v1)) is t"
+  (when (and
+	 (and pl1 pl2)
+	 (equal (length pl1) (length pl2)))
+    (cl-loop for (prop val) on pl1 by #'cddr
+	     always (equal (lax-plist-get pl2 prop)
+			   val))))
 
 (message "dp-fsf-fsf-compat loading...done")
