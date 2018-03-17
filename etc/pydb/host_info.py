@@ -251,13 +251,13 @@ AMD_ATLR5N4_BG_COLOR = 'rgb:2F/19/3A'
 e(
     kef='host',
     dat={
-        # This pattern could be relaced a bit.
+        # This pattern could be relaxed a bit.
         # atl is an abbreviation in ~/.ssh/config.
         'host-pattern': '^(atl|atlr5n4-[0-9]+)$',
         'family': 'amd_family',
         'comment': 'A work machine.',
         # Height when nx is in "fit to window" mode.
-        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 180x74-0+0',
+        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 180x66-0+0',
         'xterm_bg': AMD_ATLR5N4_BG_COLOR,
         'xterm_fg': AMD_ATLR5N4_FG_COLOR,
         ### 'xterm-ls-colors': opath.join(HOME, '.rc/ls-colors-for-light-bg'),
@@ -281,8 +281,9 @@ e(
     dat={
         'host-pattern': '^yyz$',
         'family': 'amd_family',
-        'comment': 'A FX-8370 8-core machine.  Muh main axe.',
-        'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 180x74-0+0',
+        'comment': 'An 8 core Ryzen or an 8 core FX-8370, whichever is working.',
+        'xem_opts': ('-eval (dp-2-v-or-h-windows-keep-geometry) '
+                     + '-geometry 180x67+460+0'),
         # Not particularly attractive.
 #        """xem-xft-font""": '''"Inconsolata-12"''',
         'xterm_bg': PRIMARY_BOX_BG_COLOR,
