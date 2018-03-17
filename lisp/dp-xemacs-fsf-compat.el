@@ -179,7 +179,13 @@ Use BEGIN and END as the limits of the extent."
 (defun dp-remove-file-state-colorization ()
   (interactive)
   (dp-unextent-region (cons 'dp-file-state-colorization t)))
-                                   
+
+(defun dp-read-file-name (prompt &optional dir default-file-name
+       must-match initial predicate hist-var)
+  "FSF does not have a HIST-VAR parameter."
+  (read-file-name prompt dir default-file-name must-match initial
+		  predicate hist-var))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Nicked from Emacs.
 

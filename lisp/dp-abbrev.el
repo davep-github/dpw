@@ -419,12 +419,12 @@ list in my DP-STYLE-ABBREV format (q.v.)"
          (go-path (getenv "GOPATH"))
          (go-file (cond
                    ((and current-prefix-arg (interactive-p))
-                    (read-file-name (format "GO file (default %s): " def-file)
-                                    "~/"
-                                    def-file
-                                    nil))
-                   ((and (stringp go-file)) go-file)
-                   (t def-file))))
+		    (dp-read-file-name (format "GO file (default %s): " def-file)
+				       "~/"
+				       def-file
+				       nil))
+		   ((and (stringp go-file)) go-file)
+		   (t def-file))))
     (dp-edit-abbrev-associated-file go-file other-window-p)))
 
 (defalias 'ego 'dp-edit-go-file)
