@@ -218,6 +218,7 @@ libgl1-mesa-dev
 libgl1glx      
 libgl1-glx     
 libgl1-mesa-glx
+ntpdate
 # for Kernel
 #bison
 #flex
