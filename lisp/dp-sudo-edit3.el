@@ -279,8 +279,8 @@ current."
       (set-buffer-modified-p nil)
       (throw 'done nil))))
 
-;;;###autoload
-(defalias 'dse 'dp-sudo-edit)
+;;;;;;;;;;;;;;;###;;;;;;;;;;;autoload
+;;(defalias 'dse 'dp-sudo-edit)
 
 ;;;###autoload
 (defun dp-sudo-edit-this-file ()
@@ -290,10 +290,10 @@ current."
     (dp-sudo-edit (buffer-file-name))
     (goto-char point)))
 
+;;;;;;;;###autoload
+;;;;;(defalias 'dset 'dp-sudo-edit-this-file)
 ;;;###autoload
-(defalias 'dset 'dp-sudo-edit-this-file)
-;;;###autoload
-(defalias 'dse. 'dp-sudo-edit-this-file)
+;;;;;(defalias 'dse. 'dp-sudo-edit-this-file)
 
 ;;;###autoload
 (defun dp-sudo-edit-devert ()
