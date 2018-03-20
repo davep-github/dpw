@@ -13356,7 +13356,7 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
 
 (defun dp-lisp-dir ()
   "Find my lisp dir."
-  (or user-init-directory
+  (or (bound-and-true-p user-init-directory)
       (dp-mk-pathname (getenv "HOME")
                       "lisp")))
 
