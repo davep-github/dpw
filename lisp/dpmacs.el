@@ -692,7 +692,7 @@ And their failure occurs way too often."
 (autoload 'mc-verify "mc-toplev" "Verify the signature of the current buffer."
   t)
 (autoload 'dylan-mode "dylan-mode" "Dylan language editing mode.")
-(require 'auto-dp-autoloads)
+(dp-optionally-require 'auto-dp-autoloads)
 (dp-optionally-require 'rust-mode)
 
 ;; add our python mode hook here, so we can interoperate with ipython.el
