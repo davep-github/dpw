@@ -120,6 +120,7 @@ figlet
 firefox
 g++
 gcc
+gcolor2
 git
 git-email
 git-extras
@@ -128,6 +129,7 @@ gitk
 gparted
 gpm
 ipython
+ipython-doc
 libcurl4-openssl-dev
 libncurses5
 libncurses5-dbg
@@ -139,7 +141,7 @@ make
 meld
 mpd
 msmtp
-#mutt
+mutt
 ncurses-base
 ncurses-bin
 ncurses-doc
@@ -161,10 +163,65 @@ wmctrl
 xclip
 xorg-dev
 xterm
-# for Kernel
+libjpeg-dev
+libtiff-dev
+libgif-dev
+libjpeg-dev
+libgif-dev
+libgif7
+libtiff-dev
+libpng
+libpng12
+figlet
+libpng-dev
+libpng-tools libpng16-16
 bison
 flex
 libelf-dev
+fonts-dejavu-core
+fonts-dejavu-extra
+opensymbol
+fonts-freefont-ttf
+liberation                      
+fonts-liberation                
+fonts-lmodern                   
+fonts-mgopen                    
+fonts-symbola                   
+fonts-ubuntu-font-family-console
+xfonts-base                     
+unifont                         
+scalable                        
+xfonts-scalable                 
+fonts-comfortaa                 
+fonts-fantasque-sans            
+fonts-hack-otf
+fonts-hack-ttf                  
+fonts-inconsolata
+sagi libjpeg-dev
+sagi libtiff-dev
+sagi libgif-dev 
+sagi libxpm-dev
+xaw3dg-dev                      
+libpng16-dev                    
+libgpm-dev                      
+librsvg2-dev                    
+imagemagick                     
+libgpm-dev                      
+libdbus-1-dev libdbus-glib-1-dev
+libfreetype6-dev                
+libpng-dev                      
+libxft-dev                      
+libotf-dev                      
+libdmalloc-dev
+mesa-utils     
+libgl1-mesa-dev
+libgl1glx      
+libgl1-glx     
+libgl1-mesa-glx
+# for Kernel
+#bison
+#flex
+#libelf-dev
 )
 
 something_was_installed=
