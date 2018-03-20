@@ -23,7 +23,7 @@ should be of the form `#x...' where `x' is not a blank or a tab, and
   "Edit a file as root. With a prefix ARG edit the current file as root
 Will also prompt for a file to visit if currentbuffer is not visiting a file."
   (interactive "P")
-  (if (or arg (not buffer-file-name))
+  (if (or (not arg) (not buffer-file-name))
       (find-file (concat "/sudo:root@localhost:"
 			 (ido-read-file-name "Find file(as root): ")))
     (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
@@ -32,6 +32,21 @@ Will also prompt for a file to visit if currentbuffer is not visiting a file."
 (defun dset ()
   (interactive)
   (dp-stolen-sudo-edit t))
+
+(require 'autoload)
+;; "See Emacs' def of generated-autoload-file."
+(make-variable-buffer-local 'generated-autoload-file)
+(setq-default generated-autoload-file
+	      (expand-file-name "auto-dp-autoloads.el"
+				dp-lisp-dir))
+
+
+;; stolen
+(defun dp-update-autoloads ()
+  "Call `update-autoloads-from-directories' on my local lisp directory."
+  (interactive)
+  (update-directory-autoloads (file-name-directory generated-autoload-file))
+  (byte-compile-file generated-autoload-file))
 
 (provide 'dp-fsf)
 (message "dp-fsf-early loading...done.")
