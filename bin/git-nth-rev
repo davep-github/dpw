@@ -65,7 +65,14 @@ do
 done
 
 # ${#db_files[@]-0}
-if ((${#nths[@]-0} == 0))
+
+# if ((${#nths[@]-0} == 0)) Doesn't work with
+# GNU bash, version 4.4.12(1)-release (x86_64-pc-linux-gnu)
+# provided with lubuntu 17.10.
+echo 1>&2 "!nths>${!nths[@]}<"
+eko 1>&2 "${nths[@]}"
+
+if [ -z "${!nths[@]}" ]
 then
     if ! x=$(git rev-parse "${1}")
     then
@@ -104,6 +111,7 @@ do
       revs=$(git rev-list "$base_rev" "$file" | $tailer)
    else
       # We need to check if we're asking for a revision that does not exist.
+      EExec_verbose_echo_id base_rev file
       num_revs=$(git rev-list "$base_rev" "$file" | wc -l)
       EExec_verbose_echo_id num_revs
       EExec_verbose_echo_id nth
