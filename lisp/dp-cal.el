@@ -34,7 +34,7 @@
   (dp-define-buffer-local-keys '("\C-c\C-c" dp-complete-diary-edit
                                  "\C-x#" dp-complete-diary-edit)
 			       nil nil nil "dddfk"))
-  
+
 (defun dp-diary-mode-hook ()
   (interactive)
   (dp-define-diary-file-keys))
