@@ -2220,7 +2220,9 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
   ;; M-e is open file, so it's kind of mnemonic.
   (dp-bump-key-binding [(meta ?o)] 
                        'dp-kill-ring-save [(control ?x) (meta e)])
-  (local-set-key [(meta -)] 'dp-maybe-kill-this-buffer))
+  (dp-local-set-keys
+   '([(meta -)] dp-maybe-kill-this-buffer
+     [?v] dp-diff-mode-goto-vc-dir)))
 
 (defun dp-revert-hook ()
   ;; Remove existing colorization. We may want to have a "permanent" flag
@@ -2281,24 +2283,26 @@ changed."
             (buffer-name) beg end))
 
 (defun dp-bookmark-bmenu-mode-hook ()
-  (local-set-key [return] 'bookmark-bmenu-other-window)
-  (local-set-key [?.] 'bookmark-bmenu-this-window)
-  (local-set-key [?v] 'bookmark-bmenu-switch-other-window)
-  (local-set-key [?w] 'dp-bookmark-bmenu-locate)
-  (local-set-key [(control ?o)] (kb-lambda
-                                    (dp-one-window++ -1)
-                                    (bookmark-bmenu-select))))
+  (dp-define-local-keys
+   '(
+     [return] bookmark-bmenu-other-window
+     [?.] bookmark-bmenu-this-window
+     [?v] bookmark-bmenu-switch-other-window
+     [?w] dp-bookmark-bmenu-locate
+     [(control ?o)] (kb-lambda
+			(dp-one-window++ -1)
+			(bookmark-bmenu-select))))
+  )
 
 (defun dp-bookmark-load-hook ()
   (global-set-key [(control ?c) ?b] 'bookmark-map)
-
-  ;; C-cbb is easy typin'
-  (define-key bookmark-map "b" 'bookmark-set)
-  ;; This is more betterer.
-  ;;    <big-gold-letters>"I have the best words.</big-gold-letters>"
-  ;; -- DD (aka) DT
-  (define-key bookmark-map "f" 'dp-bookmark-insert-location)
-  )
+  ;; C-cbb is easy typin', right Sarah?
+  (dp-define-local-keys
+   '([?b] bookmark-set
+     ;; This is more betterer.
+     ;;    <big-gold-letters>"I have the best words.</big-gold-letters>"
+     ;; -- DD (aka) DT
+     [?f] dp-bookmark-insert-location)))
 
 (defun dp-asm-mode-hook()
   (interactive)
@@ -2316,11 +2320,22 @@ changed."
   (local-set-key [(meta ?w)] 'dp-ibuffer-do-save))
 
 (defun dp-icomplete-minibuffer-setup-hook ()
-  (dp-define-keys
-   icomplete-minibuffer-map
-   (list
-    [(meta return)] 'icomplete-force-complete-and-exit
-    [(meta ?m)] 'minibuffer-force-complete)))
+  (dp-define-local-keys
+   '(
+     [(meta return)] icomplete-force-complete-and-exit
+     [(meta ?m)] minibuffer-force-complete)))
+
+(defun dp-apropos-mode-hook ()
+  (dp-define-local-keys
+   '(
+     [?v] dp-find-variable
+     [?f] dp-find-function)))
+
+(defun dp-vc-dir-mode-hook ()
+  (dp-define-local-keys
+   '(
+     [?/] dp-vc-dir-find-next-edited
+     [?.] dp-vc-dir-find-next-edited)))
 
 ;; I'm trending away from advice, since I've seen code that really rapes it
 ;; (I'm looking at you, ECB)
@@ -2362,7 +2377,6 @@ changed."
 (add-hook 'text-mode-hook 'dp-text-mode-hook)
 (add-hook 'help-mode-hook 'dp-help-mode-hook)
 (add-hook 'hyper-apropos-mode-hook 'dp-hyper-apropos-mode-hook)
-
 (add-hook 'dired-setup-keys-hook 'dp-dired-setup-keys-hook)
 (add-hook 'dired-mode-hook 'dp-dired-mode-hook)
 (add-hook 'Info-mode-hook 'dp-Info-mode-hook)
@@ -2372,6 +2386,10 @@ changed."
 (add-hook 'ibuffer-hook 'dp-ibuffer-hook)
 (add-hook 'compilation-start-hook 'dp-compilation-start-hook)
 (add-hook 'icomplete-minibuffer-setup-hook 'dp-icomplete-minibuffer-setup-hook)
+(add-hook 'magit-mode-setup-hook 'dp-magit-mode-setup-hook)
+(add-hook 'apropos-mode-hook 'dp-apropos-mode-hook)
+(add-hook 'vc-dir-mode-hook 'dp-vc-dir-mode-hook)
+
 ;; <:add-new-`add-hooks'-up-there:>
 ;; put new hooks up there ^
 
