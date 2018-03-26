@@ -27,7 +27,7 @@
     ;; Undo that which `emms-all' does that I like not.
     ;; ??? Better to call `emms-all' and undo what I don't want?
     ;; Or copy and trim `emms-all'.
-      
+
     (emms-mode-line-blank)
     (emms-lyrics 0)
     (emms-playing-time 0)
