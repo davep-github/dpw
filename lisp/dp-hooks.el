@@ -2200,13 +2200,6 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
 
 ;;(require 'dp-perforce)
 
-(defadvice vc-diff (around dp-vc-advice activate)
-  (dp-push-window-config)
-  (dp-offer-to-start-editing-server)
-  ad-do-it
-  (local-set-key [(control ?c) (control ?c)] 
-                 'dp-kill-buffer-and-pop-window-config))
-
 (defadvice cperl-electric-delete (around perl-crap activate)
   (if (dp-region-active-p)
       (delete-region (mark) (point))
