@@ -2590,7 +2590,7 @@ E.g.
 
 (defun xxx ()
   (interactive)
-  (if (dp-region-active-p)
+  (if (dp-mark-active-p)
       (dp-io-xxx)
     ;; The doxygen element syntax is different when it comes after a line vs
     ;; before it.
@@ -3486,6 +3486,17 @@ Optional prefix arg instructs us to force the output into a file."
 (defun rcs-head ()
   (interactive "*")
   (dp-vc-head dp-rcs-headers))
+
+(defun dp-vc-dir-find-next-edited (&optional do-not-wrap-p)
+  (interactive)
+  (if (re-search-forward "\\s-edited\\s-" nil t 1)
+      (message "Found one.")
+    (dp-ding-and-message "No more `edited' entries%s."
+			 (if do-not-wrap-p
+			     ""
+			   ". Wrapping to top"))
+    (unless do-not-wrap-p
+      (goto-char (point-min)))))
 
 ;;
 (defun scan-re-list (target match-list)
@@ -8652,16 +8663,26 @@ on interactiveness, but due to cases like this, I'm trending away from
 (defun dp-toggle-capitalization (num-words)
   "Toggle case of character at the beginning of the current NUM-WORDS words."
   (interactive "*p")
-  (save-excursion
-    (dp-goto-capitalize-position-point)
-    (with-narrow-to-region (point) (1+ (point))
-      (call-interactively
-       (if  (let (case-fold-search)
-              (looking-at "[A-Z]"))
-           'dp-downcase-region-or-word
-         'dp-capitalize-region-or-word)))
-      ;; Give 'em point so they can undo the `save-excursion'
-    (point)))
+  (let ((under-dash (and (looking-at "[_-]")
+			 (match-string 0))))
+    (save-excursion
+      (cond
+       ;; Do I like swapping - and _?
+       ((equal under-dash "_")
+	(replace-match "-"))
+       ((equal under-dash "-")
+	(replace-match "_"))
+       (t
+	(dp-goto-capitalize-position-point)
+	(with-narrow-to-region (point) (1+ (point))
+	  (funcall
+	   (if  (let (case-fold-search)
+		  (looking-at "[A-Z]"))
+	       'downcase-dwim
+	     'capitalize-dwim)
+	   num-words))
+	;; Give 'em point so they can undo the `save-excursion'
+	(point))))))
 
 (defadvice join-line (before dp-join-line activate)
   "Invert sense of arg  since I prefer joining next line to current."
@@ -9504,7 +9525,7 @@ If wide enough: | | |, otherwise: |-|"
   (dp-layout-windows '(split-window-horizontally
                        split-window-vertically)))
                      
-(dp-defaliases '2:1 '2|1 'dp-2+1 '2x1 '2+1 '>| 'dp-2+1-wins)
+(dp-defaliases '2:1 '2|1 'dp-2+1 '2x1 '2+1 '>| '-| 'dp-2+1-wins)
 
 (defun dp-2-over-1-wins ()
   "|-|
