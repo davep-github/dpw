@@ -175,7 +175,8 @@ prompt.  We don't want to stomp on them.")
     (when (string-match regexp str)
       (let ((s (match-string 1 str)))
         (when (string-match "^\\([^ 	
-]+\\)" s)
+
+]+\\)" s)
           ;; Just set it, no sense in comparing to see if it changed.
           (setq default-directory 
                 (expand-file-name
@@ -373,7 +374,7 @@ No regexps allowed. This will be processed by `regexp-opt'")
                    dp-shell-vc-commit-cmd-regexps)
            nil 'one-around-all-p)
           "\\(\\s-+\\|$\\)")
-  "Commands that may want to have modified buffers saved before running.
+  "Commands which may want to have modified buffers saved before running.
 Commands that might want to use files in buffers. Shit that would piss us off
 when we realized that we didn't use the latest modifications.
 svn: Oh, shit. I did a commit w/older file!
