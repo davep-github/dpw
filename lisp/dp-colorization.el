@@ -51,12 +51,14 @@
   "Make an overlay the way I like and the way I like to make it."
   (let ((begin (or from (point-min)))
 	(end (or to (point-max)))
-	(default-plist (list id-prop t
-			     'dp-extent-p t
-			     'dp-source 'dp-make-overlay
-			     'dp-extent-id id-prop
-			     'dp-extent-type id-prop
-			     'face color))
+	;; These are required to make things work. prop-list will be
+	;; appended.
+	(required-plist (list id-prop t
+			      'dp-extent-p t
+			      'dp-source 'dp-make-overlay
+			      'dp-extent-id id-prop
+			      'dp-extent-type id-prop
+			      'face color))
 	olay)
     (when bounding-markers
       (cond
@@ -68,7 +70,7 @@
 			     buffer
 			     front-advance
 	     		     rear-advance))
-    (dp-overlay-put-props olay (append default-plist prop-list))
+    (dp-overlay-put-props olay (append required-plist prop-list))
     olay))
 
 (defvar dp-remote-file-colorization-info
