@@ -4,6 +4,8 @@
  * llkjslkjd
  */
 
+#define MAX headroom;
+
 // 0O1l([{}])
 float f = 0.0;
 typedef zuzz xxx;
@@ -285,11 +287,12 @@ dddd
 x(void)
 {}
 
-
-
-
-
-
+int j(
+    x i)
+{
+    if (x) {
+    }
+}
 
 /*
 ************************************************************************
