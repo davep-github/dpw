@@ -1084,16 +1084,15 @@ minibuffer history list `bookmark-history'."
     (insert (call-interactively 'dp-bookmark-mk-location-str)))
 
   (defun dp-bookmark-bmenu-locate ()
-  "Display location of this bookmark.  Displays in the minibuffer."
-  (interactive)
-  (if (bookmark-bmenu-check-position)
-      (let ((bmrk (bookmark-bmenu-bookmark)))
-        (message (dp-bookmark-mk-location-str bmrk)))))
+    "Display location of this bookmark.  Displays in the minibuffer."
+    (interactive)
+    (if (bookmark-bmenu-check-position)
+	(let ((bmrk (bookmark-bmenu-bookmark)))
+	  (message (dp-bookmark-mk-location-str bmrk)))))
 
   ;; Make sure a bookmark file exists and has the correct format.  This must
   ;; be in the bookmark code, but Ah canna find it.
   (bookmark-write-file bookmark-default-file)
-
 )
 
 (add-hook 'dp-post-dpmacs-hook 'dp-setup-bookmarks)
@@ -1219,7 +1218,9 @@ minibuffer history list `bookmark-history'."
   (while l
     (setq hook (car l)
           l (cdr l))
+    ;;(message "running hook: %s" hook)
     (run-hook-with-args (quote hook))
+    ;;(message "finished hook: %s" hook)
     (goto-char (point-max))
     ))
 
