@@ -22,22 +22,28 @@
 
 (require 'dp-deps)
 
-(defun dp-define-keys (kmap keys)
-  "Convenience function to bind a list of KEYS to KMAP.
+(defun dp-define-keys (kmap list-o-keys)
+  "Convenience function to bind a list of LIST-O-KEYS to KMAP.
 KMAP is a keymap.
-KEYS is a LIST: \(key def key2 def2 ...\)."
+LIST-O-KEYS is a LIST: \(key def key2 def2 ...\)."
   (if kmap
-      (loop for (key def) on keys by 'cddr 
+      (loop for (key def) on list-o-keys by 'cddr 
         do (define-key kmap key def))     
-    (dp-define-buffer-local-keys keys nil nil nil "dp-define-keys")))
+    (dp-define-buffer-local-keys list-o-keys nil nil nil "dp-define-keys")))
 
-(defun dp-define-local-keys (keys &optional no-error-p)
-  "Call `dp-define-keys' passing KEYS using `current-local-map' as KMAP."
-  (if (current-local-map)
-      (dp-define-keys (current-local-map) keys)
-    (unless no-error-p
-      (error 'invalid-argument "No local keymap is defined."))))
-  
+(defun dp-define-local-keys (list-o-keys &optional no-error-p)
+  "Call `dp-define-keys' passing LIST-O-KEYS using `current-local-map' as KMAP."
+  (let ((local-map (current-local-map)))
+    (unless local-map
+      ;; XXX @todo rearrange stuff so this isn't called outside of the
+      ;; hook's buffer.
+      (dmessage "dp-define-local-keys: local map is nil... creating new one.")
+      (use-local-map (setq local-map (make-sparse-keymap))))
+    (if local-map
+	(dp-define-keys local-map list-o-keys)
+      (unless no-error-p
+	(error "No local keymap is defined.")))))
+
 ;; Takes the place of:
 ;;reference; (define-prefix-command 'dp-kb-prefix t)
 ;;reference; (defvar dp-Ccd-map (symbol-function 'dp-kb-prefix)
