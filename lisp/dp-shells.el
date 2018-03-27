@@ -176,7 +176,7 @@ prompt.  We don't want to stomp on them.")
       (let ((s (match-string 1 str)))
         (when (string-match "^\\([^ 	
 
-]+\\)" s)
+]+\\)" s)
           ;; Just set it, no sense in comparing to see if it changed.
           (setq default-directory 
                 (expand-file-name
