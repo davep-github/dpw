@@ -1456,6 +1456,7 @@ isearch while the region is active to locate the end of the region."
   "Setup dired's key binding *my* way."
   (local-set-key "r" 'dired-do-rename)
   (local-set-key "b" 'dp-dired-sudo-edit)
+  (local-set-key [(control ?x) (control ?q)] 'wdired-change-to-wdired-mode)
   )
 
 (defun dp-dired-mode-hook ()
