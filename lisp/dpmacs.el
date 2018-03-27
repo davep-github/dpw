@@ -1133,6 +1133,7 @@ minibuffer history list `bookmark-history'."
              (add-hook 'isearch-mode-end-hook 'dp-isearch-mode-end-hook)
              ;; @todo autoload-ify the main entry points.
              (require 'dp-hooks)
+	     (require 'dp-vc)
              (dp-setup-cscope)
              (if (dp-xemacs-p)
                  (paren-activate))
