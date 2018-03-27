@@ -63,7 +63,8 @@
  '(show-paren-mode t)
  '(show-trailing-whitespace nil)
  '(timeclock-mode-line-display nil)
- '(tool-bar-mode nil))
+ '(tool-bar-mode nil)
+ '(wdired-allow-to-change-permissions t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
