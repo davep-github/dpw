@@ -23,30 +23,32 @@ go_lookup()
     gPath=${GOPATH-$HOME/.go}
     oldIFS=$IFS
     IFS=":"
-    for pathEl in $gPath # search all files in the GOPATH
+    for pathEl in $gPath	# search all files in the GOPATH
     do
-      [ -f "$pathEl" ] && {
-          IFS=$oldIFS
-          # When -m1 is used, the fgrep can exit before the egrep resulting
-          # in a pipe error.
-          true_p "${show_dir_opt}" && {
-              show_dir_opt="--label ${pathEl}"
-          }
-          tmp=$(egrep -v '^[[:space:]]*[;#]' $pathEl 2>/dev/null | fgrep -m1 $show_dir_opt "|$c|") && {
-              #echo "*>$*<" 1>&2
-              set -- $tmp
-              #echo "*>$*<" 1>&2
-              $SHIFT
-              #{
-                  #echo "*>$*<"
-                  #echo_id cs
-              #} 1>&2
-              x=$(eval echo \$$cs)
-              [ "$x" = '$' ] && x=
-              echo $(normpath "$*${x}")
-              return
-          }
-      }
+	[ -f "$pathEl" ] && {
+	    # echo 1>&2 "pathEl>${pathEl}<"
+	    IFS=$oldIFS
+	    # When -m1 is used, the fgrep can exit before the egrep resulting
+	    # in a pipe error.
+	    true_p "${show_dir_p}" && {
+		show_dir_opt="--label=${pathEl} -H"
+		# echo 1>&2 "show_dir_opt>${show_dir_opt}<"
+	    }
+	    tmp=$(egrep -v '^[[:space:]]*[;#]' $pathEl 2>/dev/null | fgrep -m1 $show_dir_opt "|$c|") && {
+		#echo "*>$*<" 1>&2
+		set -- $tmp
+		#echo "*>$*<" 1>&2
+		$SHIFT
+		#{
+		#echo "*>$*<"
+		#echo_id cs
+		#} 1>&2
+		x=$(eval echo \$$cs)
+		[ "$x" = '$' ] && x=
+		echo $(normpath "$*${x}")
+		return
+	    }
+	}
     done
     IFS=$oldIFS
     echo "$argWas"
@@ -54,14 +56,14 @@ go_lookup()
 
 for o in "$@"
 do
-  case "$1" in
-      -l) show_dir_p="t"; SHIFT=: ;;
-      -L) shift; fini $(go_lookup "$1"); exit;;
-      -n|--no-eval|--ne) eval_name_p=;;
-      --no-dirname|--nd) do_dirname_p=;;
-      *) break;;
-  esac
-  shift
+    case "$1" in
+	-l) show_dir_p="t"; SHIFT=: ;;
+	-L) shift; fini $(go_lookup "$1"); exit;;
+	-n|--no-eval|--ne) eval_name_p=;;
+	--no-dirname|--nd) do_dirname_p=;;
+	*) break;;
+    esac
+    shift
 done
 
 argWas="$1"
@@ -75,22 +77,21 @@ esac
 case "$1" in
     /*)  fini "$1"; exit 0;;
     */*) c=$(echo "$1" | sed -n 's!^\([^/]*\).*$!\1!p')
-         cs=$(echo "$1" | sed -n 's!^[^/]*/*\(.*\)$!\1!p')
-         ;;
+	 cs=$(echo "$1" | sed -n 's!^[^/]*/*\(.*\)$!\1!p')
+	 ;;
     *) c="$1"; cs='';;
 esac
 
 # see if dest is set as an environment variable
 unset y
-true_p "$show_dir_p" || eval y=\$$c 
+true_p "$show_dir_p" || eval y=\$$c
 case "$y" in
-    ""|\$*|[0-9]*)     # dest is not an envvar: look it up in the go database
-    case "$c" in
-        back|b) fini ${GoBack-$HOME} ;;
-        "") fini . ; exit ;;
-        *) fini $(go_lookup "$c") ;;
-    esac ;;
+    ""|\$*|[0-9]*) # dest is not an envvar: look it up in the go database
+	case "$c" in
+	    back|b) fini ${GoBack-$HOME} ;;
+	    "") fini . ; exit ;;
+	    *) fini $(go_lookup "$c") ;;
+	esac ;;
 
     *) eval fini "$y$cs" ; exit ;;
 esac
-
