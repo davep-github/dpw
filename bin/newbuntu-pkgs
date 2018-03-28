@@ -219,10 +219,11 @@ libgl1glx
 libgl1-glx     
 libgl1-mesa-glx
 ntpdate
-# for Kernel
-#bison
-#flex
-#libelf-dev
+meson
+# for building Kernel
+bison
+flex
+libelf-dev
 )
 
 something_was_installed=
