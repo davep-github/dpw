@@ -5778,8 +5778,10 @@ Similar here means the same file-name with a user specified completion."
 (defvar dp-consecutive-key-command-initial-point nil
   "The value of (point) when the command sequence began.")
 
-(defun dp-consecutive-key-command (cmd-cursor cmd-list consecutive-command
-                                       &optional recursing-p)
+(defun dp-consecutive-key-command (cmd-cursor cmd-list
+					      &optional
+					      consecutive-command
+					      recursing-p)
   "Execute a command that changes based on the number of consecutive keystrokes that has invoked it.
 CMD-CURSOR: Initial item in the list, usually the beginning. Should this be
 optiona and default to CMD-LIST?
@@ -5794,6 +5796,7 @@ When beginning a sequence, (point) is saved.  This can be pushed onto
   (interactive)
   ;;  (dmessage "last-command>%s<, recursing-p>%s<" last-command recursing-p)
   (dp-set-zmacs-region-stays t)
+  (setq-ifnil consecutive-command this-command)
   ;; is the command sequence continuing or beginning?
   (if (or (eq last-command consecutive-command)
           recursing-p)
@@ -5815,10 +5818,11 @@ When beginning a sequence, (point) is saved.  This can be pushed onto
                                     cmd-list consecutive-command
                                     'RECURSING-P)))))
 (defvar dp-brief-home-command-list
-  '(beginning-of-line
+  '(back-to-indentation
+    beginning-of-line
     (lambda () (move-to-window-line 0))
-    (lambda () 
-      (dp-push-go-back "home^3" dp-consecutive-key-command-initial-point)
+    (lambda ()
+      (dp-push-go-back "home-BOB" dp-consecutive-key-command-initial-point)
       (dp-beginning-of-buffer 'no-save-pos)))
   "Commands to run based on number of consecutive keys pressed.")
 
@@ -5827,7 +5831,7 @@ When beginning a sequence, (point) is saved.  This can be pushed onto
   key-sequence command.")
 
 (defun dp-brief-home ()
-  "Go bol, bow, bof."
+  "Go back-to-indentation, bol, bow, bof."
   (interactive)
   (dp-consecutive-key-command 'dp-brief-home-command-ptr
 			      dp-brief-home-command-list

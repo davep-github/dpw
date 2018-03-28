@@ -2041,8 +2041,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
   "Go bocl, bol, bow, bof."
   (interactive)
   (dp-consecutive-key-command 'dp-shell-home-command-ptr
-			      dp-shell-home-command-list
-			      'dp-shell-home))
+			      dp-shell-home-command-list))
 
 (defvar dp-latest-py-shell-buffer nil
   "Newest buffer created by `dp-python-shell'.")

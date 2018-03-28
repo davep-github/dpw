@@ -2676,10 +2676,11 @@ NO-SUMMARY-P controls whether we insert a summary indicator
 
 ;;!<@todo We really only need one of these.
 (defvar dp-journal-home-command-list 
-  `(beginning-of-line
+  `(back-to-indentation
+    beginning-of-line
     dpj-goto-topic-backward-with-file-wrap
     ,(lambda () (move-to-window-line 0))
-    ,(lambda () 
+    ,(lambda ()
        (dp-push-go-back "dpj-home" dp-consecutive-key-command-initial-point)
        (dp-beginning-of-buffer 'no-save-pos)))
   "Commands to run based on number of consecutive keys pressed.")
@@ -2703,11 +2704,10 @@ NO-SUMMARY-P controls whether we insert a summary indicator
                          dpj-topic-to-dir-map)))
 
 (defun dp-journal-home ()
-  "Go bol, botopic, bow, bof."
+  "Go bt-indentation, bol, botopic, bow, bof."
   (interactive)
   (dp-consecutive-key-command 'dp-journal-home-command-ptr
-			      dp-journal-home-command-list
-			      'dp-journal-home))
+			      dp-journal-home-command-list))
 
 (defun dpj-tidy-topic-ends (&optional query)
   (interactive "P")
