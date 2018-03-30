@@ -920,8 +920,8 @@ This can be callable.")
 ;; Put some things in their own frames...
 (add-to-list 'special-display-regexps "^\\*P4.*\\*$")
 
-;; configure Emacs' mail subsystem...
-;;(require 'dp-mail)
+;; configure an Emacs mail subsystem...
+(require 'dp-mail)
 
 (require 'dp-makefile-mode)
 
