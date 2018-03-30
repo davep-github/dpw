@@ -5492,7 +5492,7 @@ LESSER-GLOBS-TOO-P says to grep files in `dp-lgrep-lesser-globs' as well. "
 
 ;;  FSF has an lgrep command.  I usually only use lg<RET>[rep] anyway, only
 ;;  having lg in both 'macs keeps the reflexes happy.
-(dp-defaliases 'lg 'dp-grep-lisp-files)
+(dp-defaliases 'lg 'dp-lg 'dplg 'dp-grep-lisp-files)
 
 (defvar dp-cedet-grep-find-history '())
 (defvar dp-cedet-grep-find-dir (dp-lisp-subdir "contrib/site-packages/cedet/"))
