@@ -10,8 +10,8 @@
 
 (defvar dp-lisp-dir
   (if (featurep 'xemacs)
-      (expand-file-name "~/xlisp")
-    (expand-file-name "~/flisp")))
+      (expand-file-name "~/xlisp/")
+    (expand-file-name "~/flisp/")))
 
 (add-to-list 'load-path dp-lisp-dir)
 
@@ -34,9 +34,11 @@
 ;; so we can get to my lisp files
 ;; we're consing, so last will be first.
 (defvar dp-init.el-load-path-dirs
-  (list (dp-lisp-subdir "contrib")
-        (dp-lisp-subdir "contrib/emacs-jabber")
-        dp-lisp-dir)
+  (list
+   "/usr/share/emacs/site-lisp/mu4e"
+   (dp-lisp-subdir "contrib")
+   (dp-lisp-subdir "contrib/emacs-jabber")
+   dp-lisp-dir)
   "Initial dirs to add to load path.")
 
 ;; We're getting dupes:
