@@ -11,8 +11,9 @@ for sig in 0 2 3 4 5 6 7 8 15
 do
   trap "sig_handler $sig; exit $sig" $sig
 done
-
+# e.g. telnet smtp.office365.com 143
+: ${MAIL_HOST:=smtp.office365.com:143}
 temp_file=$(mktemp -p "$HOME/tmp" dp_mbsync_XXXXXXX)
 dd if=/dev/urandom of="$temp_file" bs=$BS count=1 1>/dev/null 2>&1
-stunnel -R "$temp_file" -W -c -r mail.vanu.com:993
+stunnel -R "$temp_file" -W -c -r "${MAIL_HOST}"
 
