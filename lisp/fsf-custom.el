@@ -47,7 +47,7 @@
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
    (quote
-    (flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
+    (nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
  '(query-replace-lazy-highlight nil)
  '(safe-local-variable-values
    (quote
@@ -58,10 +58,19 @@
  '(save-abbrevs nil)
  '(save-place-mode t)
  '(scroll-bar-mode (quote right))
+ '(send-mail-function (quote smtpmail-send-it))
  '(shell-cd-regexp "cd|chdir")
  '(shell-pushd-regexp "pushd|g")
  '(show-paren-mode t)
  '(show-trailing-whitespace nil)
+ '(smtpmail-debug-info t)
+ '(smtpmail-default-smtp-server "smtp.office365.com")
+ '(smtpmail-local-domain "outlook365.com")
+ '(smtpmail-sendto-domain "amd.com")
+ '(smtpmail-smtp-server "smtp.office365.com")
+ '(smtpmail-smtp-service 25)
+ '(smtpmail-smtp-user "David.Panariti")
+ '(smtpmail-stream-type (quote ssl))
  '(timeclock-mode-line-display nil)
  '(tool-bar-mode nil)
  '(wdired-allow-to-change-permissions t))
