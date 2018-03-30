@@ -1422,7 +1422,7 @@ isearch while the region is active to locate the end of the region."
   (interactive)
   (define-key hyper-apropos-help-map [tab] 'help-next-symbol)
   (local-set-key [tab] 'help-next-symbol)
-  (local-set-key [?l] 'lgrep)
+  (local-set-key [?l] 'dp-grep-lisp-files) ; lgrep in x, but lgrep is used in fsf.
   (local-set-key [?p] 'hyper-apropos-last-help))
 
 (defun dp-w3m-view-previous-page (&optional exit)
@@ -2319,11 +2319,14 @@ changed."
      [(meta return)] icomplete-force-complete-and-exit
      [(meta ?m)] minibuffer-force-complete)))
 
+;; FSF apropos, sucks massively compared to XEmacs' hyper-apropos.
 (defun dp-apropos-mode-hook ()
   (dp-define-local-keys
    '(
      [?v] dp-find-variable
-     [?f] dp-find-function)))
+     [?f] dp-find-function
+     [?a] apropos-command
+     [?l] dp-grep-lisp-files)))
 
 (defun dp-vc-dir-mode-hook ()
   (dp-define-local-keys
@@ -2331,6 +2334,22 @@ changed."
      [?/] dp-vc-dir-find-next-edited
      [?.] dp-vc-dir-find-next-edited)))
 
+(defun dp-mu4e-view-mode-hook ()
+  (dp-define-local-keys
+   '(
+     [(meta up)] dp-other-window-up
+     [(meta down)] other-window)))
+
+(defun dp-mu4e-headers-mode-hook ()
+  (dp-define-local-keys
+   '(
+     ;; Swap current keys: r (mark for refile) and R (reply)
+     [?r] mu4e-compose-reply
+     [?R] mu4e-headers-mark-for-refile
+     [(meta up)] dp-other-window-up
+     [(meta down)] other-window)))
+
+;; <:add hook functions here aka hooks:>
 ;; I'm trending away from advice, since I've seen code that really rapes it
 ;; (I'm looking at you, ECB)
 ;;CO; (defadvice find-function-on-key (before dp-find-function-on-key activate)
@@ -2383,6 +2402,8 @@ changed."
 (add-hook 'magit-mode-setup-hook 'dp-magit-mode-setup-hook)
 (add-hook 'apropos-mode-hook 'dp-apropos-mode-hook)
 (add-hook 'vc-dir-mode-hook 'dp-vc-dir-mode-hook)
+(add-hook 'mu4e-view-mode-hook 'dp-mu4e-view-mode-hook)
+(add-hook 'mu4e-headers-mode-hook 'dp-mu4e-headers-mode-hook)
 
 ;; <:add-new-`add-hooks'-up-there:>
 ;; put new hooks up there ^
