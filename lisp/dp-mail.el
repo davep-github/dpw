@@ -80,30 +80,35 @@ refiles if in `+inbox' and forwards if in `+spamcan'.")
 ;; A good spec-macs variable.
 ;;(setq-ifnil-or-unbound dp-mailer 'gnus)
 (case dp-mailer
-;;Mew's emacs only;  ((and (eq dp-mailer 'mew)
-;;Mew's emacs only;        (not (string< emacs-version "20.7.1"))) 
-;;Mew's emacs only;   ;; try for mew mailer package.  An error will
-;;Mew's emacs only;   ;; cause condition-case to yield nil, causing a 
-;;Mew's emacs only;   ;; load of mhe.
-;;Mew's emacs only;   (load "dp-mew"))
- ;; for now, only other mailer is mhe and that is the
- ;; default, too, so return nil which causes the
- ;; default to be loaded.
- ('gnus
-  ;; This is a pretty safe default... it's quite popular... despite great
-  ;; suckage as a mailer.
-  (setq dp-mailer 'gnus)
-  (global-set-key [(control c) r] 'gnus)
-  (global-set-key [(control x) m] 'gnus-msg-mail)
-  ;; This works better if called before gnus is started.  Need to fix that.
-  ;;(require 'dp-dot-gnus)
+  ((and (eq dp-mailer 'mew)
+	(not (string< emacs-version "20.7.1")))
+   ;; try for mew mailer package.  An error will
+   ;; cause condition-case to yield nil, causing a
+   ;; load of mhe.
+   (load "dp-mew"))
+  ;; for now, only other mailer is mhe and that is the
+  ;; default, too, so return nil which causes the
+  ;; default to be loaded.
+  ('gnus
+   ;; This is a pretty safe default... it's quite popular... despite great
+   ;; suckage as a mailer.
+   (global-set-key [(control ?c) ?r] 'gnus)
+   (global-set-key [(control ?x) ?m] 'gnus-msg-mail)
+   ;; This works better if called before gnus is started.  Need to fix that.
+   ;;(require 'dp-dot-gnus)
+   )
+  ('mu4e
+   (require 'mu4e)
+   (global-set-key [(control ?c) ?r] 'mu4e)
+   (global-set-key [(control ?x) ?m] 'mu4e-compose-new)
+   (mu4e-update-mail-and-index nil)
+   )
+  ('vm
+   (require 'vm)
+   (setq dp-current-mailer-config-file (dp-lisp-subdir "dp-dot-vm.el"))
+   (global-set-key [(control ?c) ?r] 'vm)
+   (global-set-key [(control ?x) ?m] 'vm-mail))
   )
- ('vm
-  (require 'vm)
-  (setq dp-current-mailer-config-file (dp-lisp-subdir "dp-dot-vm.el"))
-  (global-set-key [(control c) r] 'vm)
-  (global-set-key [(control x) m] 'vm-mail))
-)
 
 (if (and (boundp 'dp-mailer-setup)
 	 dp-mailer-setup)
