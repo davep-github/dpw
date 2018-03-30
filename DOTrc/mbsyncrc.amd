@@ -1,20 +1,26 @@
-# my default username, if different from the local username
-#User me
-Port	143
-#Box	INBOX
-# don't download messages larger than 200K bytes
-MaxSize	200000
-# Needed to work w/Exchange 2003 and office365.
+IMAPAccount work
+Host smtp.office365.com
+User dpanarit@amd.com
+##PassCmd "pass mail/work-gpg" # @todo XXX SET THIS UP?
+Pass 3!415|||QTPi
+UseIMAPS yes
+CertificateFile /etc/ssl/certs/ca-certificates.crt
 PipelineDepth 1
-###
-### work mailbox
-###
 
-Mailbox ~/work/Mailbox
-Host	smtp.office365.com
-Pass	3!415|||QtPi
-# define a shortcut so I can just use "isync work" from the command line
-Alias	work
-# don't auto expunge messages in this box (overridden by -e on command line)
-Delete no
-Expunge no
+IMAPStore work-remote
+Account work
+
+MaildirStore work-local
+Path ~/mail/work/
+Inbox ~/mail/work/Inbox
+
+Channel work
+Master :work-remote:
+Slave :work-local:
+# Include everything
+Patterns "INBOX" "*"
+# Automatically create missing mailboxes, both locally and on the server
+Create Both
+Sync All
+# Save the synchronization state files in the relevant directory
+SyncState *
