@@ -25,7 +25,8 @@ other   --> form to be eval'd
             (e.g. '(dp-insert-cmd-sig \"fortune\" \"-s\"))"
   :group 'dp-vars)
 
-(defcustom dp-mailer 'vm
+;; look into dp-mail for other options or to create options.
+(defcustom dp-mailer 'mu4e
   "*Whom art thyne mailur?"
   :group 'dp-vars
   :type 'symbol)
