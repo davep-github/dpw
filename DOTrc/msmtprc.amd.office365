@@ -10,12 +10,13 @@ host smtp.office365.com
 port 587
 from dpanarit@amd.com
 user dpanarit@amd.com
-password  QTPi'''3!415
-# '
+password  3!415|||QTPi
 #auth on
+auth login
+#auth ntlm login
 
 # Construct envelope-from addresses of the form "user@oursite.example".
-#auto_from on
+auto_from on
 maildomain amd.com
 domain amd.com
 
