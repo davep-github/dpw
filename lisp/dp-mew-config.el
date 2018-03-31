@@ -206,6 +206,19 @@ Format is a list of these:
             mew-refile-guess-alist 
             `(("To:\\|Cc:\\|From:" (,dp-homeys . "+personal"))
               ,work-rule)))
+
+     ((equal dp-mew-case "amd")
+      (setq mew-fcc "+sent_mail"
+            mew-mailbox-type 'imap
+            mew-smtp-server "llpost"
+            mew-imap-server "llpop"
+            mew-user "davep"
+            mew-mail-domain "ll.mit.edu"
+            mew-mail-domain-list '("amd.com")
+            mew-mail-address-list '("^david.panariti@amd.com$")
+            
+            mew-refile-guess-alist 
+            ))
      ;;
      ;; hopefully useful defaults
      (t
