@@ -7508,7 +7508,9 @@ Visit /file/name and then goto <linenum>."
     (call-interactively 'dp-search-path))
    ((Cu-p)
     (dp-with-prefix-arg nil
-      (call-interactively dp-file-finder-other-window)))
+      ;;(call-interactively dp-file-finder-other-window)
+      ;; See if this proves more useful
+      (ffap-alternate-file)))
    ;; Here's where we should add our crap.
    (t (call-interactively dp-file-finder)))
 ;;   (dp-restore-file-state)
