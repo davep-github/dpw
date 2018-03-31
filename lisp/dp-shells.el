@@ -1890,21 +1890,22 @@ first file that is `dp-file-readable-p' is used.  Also sets
 ;;;###autoload
 (defun dp-gdb-mode-hook ()              ;<:gdb:>
   "Set up my gdb shell mode fiddle-faddle."
-  (interactive)
-  (dmessage "in dp-gdb-mode-hook")
-  (dp-specialized-shell-setup (list
-                               (format 
-                                "/home/davep/droppings/persist/gdb_history/%s"
-                                (dp-short-hostname)))
-                              'bind-enter
-                              :keymap (current-local-map)
-                              :dp-ef-before-pmark-func nil)
-  (define-key c++-mode-map [(control ?x)(control space)] 'dp-gdb-run-to-here)
-  (define-key c-mode-map [(control ?x)(control space)] 'dp-gdb-run-to-here)
-  (local-set-key [(control meta down)] 'dp-gdb-scroll-up-source-buffer)
-  (local-set-key [(control meta up)] 'dp-gdb-scroll-down-source-buffer)
-;   (setq dp-wants-ansi-color-p nil)
   )
+;needs fsf debugging   (interactive)
+;needs fsf debugging   (dmessage "in dp-gdb-mode-hook")
+;needs fsf debugging   (dp-specialized-shell-setup (list
+;needs fsf debugging                                (format 
+;needs fsf debugging                                 "/home/davep/droppings/persist/gdb_history/%s"
+;needs fsf debugging                                 (dp-short-hostname)))
+;needs fsf debugging                               'bind-enter
+;needs fsf debugging                               :keymap (current-local-map)
+;needs fsf debugging                               :dp-ef-before-pmark-func nil)
+;needs fsf debugging   (define-key c++-mode-map [(control ?x)(control space)] 'dp-gdb-run-to-here)
+;needs fsf debugging   (define-key c-mode-map [(control ?x)(control space)] 'dp-gdb-run-to-here)
+;needs fsf debugging   (local-set-key [(control meta down)] 'dp-gdb-scroll-up-source-buffer)
+;needs fsf debugging   (local-set-key [(control meta up)] 'dp-gdb-scroll-down-source-buffer)
+;needs fsf debugging ;   (setq dp-wants-ansi-color-p nil)
+;needs fsf debugging   )
 
 
 (defsubst dp-shell-reset-parse-info ()
@@ -3054,12 +3055,12 @@ ARG == 0    --> New `dp-gdb-naught' session."
   (interactive)
   (dp-gdb nil nil nil t))
 
-(defadvice gdb (around dp-advised-gdb activate)
-  (dmessage "YOPP!")
-  (if (and (not dp-gdb-recursing)
-           (y-or-n-p "Wouldn't prefer dp-gdb? "))
-      (call-interactively 'dp-gdb)
-    ad-do-it))
+;needs fsf debugging (defadvice gdb (around dp-advised-gdb activate)
+;needs fsf debugging   (dmessage "YOPP!")
+;needs fsf debugging   (if (and (not dp-gdb-recursing)
+;needs fsf debugging            (y-or-n-p "Wouldn't prefer dp-gdb? "))
+;needs fsf debugging       (call-interactively 'dp-gdb)
+;needs fsf debugging     ad-do-it))
 
 (defun gdb-with-pid (file pid)
   "Same as `gdb-with-core' but say pid for less confusion."
