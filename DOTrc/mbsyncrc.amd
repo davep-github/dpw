@@ -1,22 +1,22 @@
-IMAPAccount work
+IMAPAccount amd
 Host smtp.office365.com
 User dpanarit@amd.com
-##PassCmd "pass mail/work-gpg" # @todo XXX SET THIS UP?
+##PassCmd "pass mail/amd-gpg" # @todo XXX SET THIS UP?
 Pass 3!415|||QTPi
 UseIMAPS yes
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 PipelineDepth 1
 
-IMAPStore work-remote
-Account work
+IMAPStore amd-remote
+Account amd
 
-MaildirStore work-local
-Path ~/mail/work/
-Inbox ~/mail/work/Inbox
+MaildirStore amd-local
+Path ~/Maildir/amd/
+Inbox ~/Maildir/amd/Inbox
 
-Channel work
-Master :work-remote:
-Slave :work-local:
+Channel amd
+Master :amd-remote:
+Slave :amd-local:
 # Include everything
 Patterns "INBOX" "*"
 # Automatically create missing mailboxes, both locally and on the server
