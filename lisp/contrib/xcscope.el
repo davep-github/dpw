@@ -865,13 +865,16 @@ be removed by quitting the cscope buffer."
                                    'beg (line-beginning-position)
                                    'end (line-end-position)
                                    'buf (current-buffer)
-                                   'pid xcscope-arrow-id))))))
+                                   'pid xcscope-arrow-id))
+	extent))))
 
 (defun xcscope-unhighlight-line ()
   (interactive)
   (when (plist-get xcscope-arrow-plist 'ext)
-    (delete-extent (plist-get xcscope-arrow-plist 'ext)))
-  (setq xcscope-arrow-plist '()))
+    (dp-uncolorize-region (plist-get xcscope-arrow-plist 'beg)
+			  (plist-get xcscope-arrow-plist 'end)
+			  t)		; t --> preserve color index.
+    (setq xcscope-arrow-plist '())))
 
 (defun xcscope-unhighlight-line-old ()
   (interactive)
