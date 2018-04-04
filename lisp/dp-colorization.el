@@ -1,6 +1,6 @@
 (message "loading dp-colorization...")
 
-(defvar dp-colorization-background-extent-priority -99
+(defvar dp-colorization-background-extent-priority 0
   "Put background waaay back so it stomps on nothing.")
 
 (defvar dp-colorization-extent-properties
@@ -131,7 +131,7 @@ The regexp is matched against the buffer name.")
 (dp-deflocal-permanent dp-colorize-region-default-color-index 0
   "Name says it all.")
 
-(dp-deflocal-permanent dp-colorize-region-default-priority 7
+(dp-deflocal-permanent dp-colorize-region-default-priority 100
   "Name says it all.")
 
 (defvar dp-colorize-region-roll-colors t
@@ -236,17 +236,18 @@ PROPS."
         (setq face-sym 'face
               face-val face))
       ;; (setq extent (apply 'dp-make-extent beg end 'dp-colorized-region
-      (dp-make-overlay beg end 'dp-colorized-region-p face (current-buffer)
-		       :prop-list
-		       (append
-			(list 'dp-colorized-p t
-			      'dp-colorized-region-p t ; `region' is generic.
-			      'dp-colorized-overlay-p t ; Specificity useful.
-			      ;;'invisible 'dp-colorize-region
-			      'dp-colorized-region-color-num arg
-			      'dp-extent-search-key 'dp-colorized-region
-			      'dp-extent-search-key2 (list 'dp-colorized-region-p arg))
-			props))
+      (setq extent
+	    (dp-make-overlay beg end 'dp-colorized-region-p face (current-buffer)
+			     :prop-list
+			     (append
+			      (list 'dp-colorized-p t
+				    'dp-colorized-region-p t ; `region' is generic.
+				    'dp-colorized-overlay-p t ; Specificity useful.
+				    ;;'invisible 'dp-colorize-region
+				    'dp-colorized-region-color-num arg
+				    'dp-extent-search-key 'dp-colorized-region
+				    'dp-extent-search-key2 (list 'dp-colorized-region-p arg))
+			props)))
       (when (and (not no-roll-colors-p)
                  arg ; ARG nil: called w/specific face, so we can't rotate.
                  (not (symbolp arg))    ; Don't roll when a color is passed in.
