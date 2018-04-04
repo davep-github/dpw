@@ -220,10 +220,18 @@ libgl1-glx
 libgl1-mesa-glx
 ntpdate
 meson
+# Emacs
+xaw3dg-dev
+otf-freefont
+libotf-dev
+mu4e
+# Mail
+isync
 # for building Kernel
 bison
 flex
 libelf-dev
+# <:new packages:>
 )
 
 something_was_installed=
