@@ -25,7 +25,8 @@ tls_trust_file /etc/ssl/certs/ca-certificates.crt
 #tls_crl_file ~/.tls-crls
 
 # syslog LOG_MAIL
-logfile /tmp/msmtp.amd.office365.log
+# Any way to access $HOME?
+logfile /home/dpanarit/var/log/msmtp/msmtp.log
 
 # Accounts
 account amd
