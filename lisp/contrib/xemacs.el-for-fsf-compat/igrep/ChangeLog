@@ -1,0 +1,110 @@
+2007-12-17  Norbert Koch  <viteno@xemacs.org>
+
+	* Makefile (VERSION): XEmacs package 1.16 released.
+
+2007-12-17  Mike Sperber  <mike@xemacs.org>
+
+	* igrep.el (igrep-find-use-xargs): Cater to the case where we have
+	GNU find, but no xargs -e.  (Mac OS X, for example.)
+
+2007-08-22  Norbert Koch  <viteno@xemacs.org>
+
+	* Makefile (VERSION): XEmacs package 1.15 released.
+
+2007-08-21  Mike Sperber  <mike@xemacs.org>
+
+	* igrep.el (igrep-find-prune-clause): Add .hg and .git to the list
+	of ignored directories.
+
+2007-08-21  Mike Sperber  <mike@xemacs.org>
+
+	* igrep.el: Synch with igrep 2.113.
+
+2005-12-05  Norbert Koch  <viteno@xemacs.org>
+
+	* Makefile (VERSION): XEmacs package 1.14 released.
+
+2005-12-04  Yoichi NAKAYAMA <yoichi@geiin.org>
+
+	* igrep.el (igrep-find-use-xargs): Don't blindly assume everything
+	except Mac OS X works.
+
+2004-07-19  Norbert Koch  <viteno@xemacs.org>
+
+	* Makefile (VERSION): XEmacs package 1.13 released.
+
+2004-07-17  Mike Sperber  <mike@xemacs.org>
+
+	* igrep.el: Synch with igrep 2.111.
+
+2003-10-31  Norbert Koch  <viteno@xemacs.org>
+
+	* Makefile (VERSION): XEmacs package 1.12 released.
+
+2003-09-29  Norbert Koch  <viteno@xemacs.org>
+
+	* Makefile (VERSION): XEmacs package 1.11 released.
+
+2003-09-24  Mike Sperber  <mike@xemacs.org>
+
+	* igrep.el (igrep-find-use-xargs): Don't assume xargs behaves
+	GNU-like if find does.
+	* igrep.el (igrep-find-prune-clause): Prune .svn directories.
+
+2003-03-30  Steve Youngs  <youngs@xemacs.org>
+
+	* Makefile (EARLY_GENERATED_LISP): Revert previous change.
+
+2003-03-22  Steve Youngs  <youngs@xemacs.org>
+
+	* Makefile (EARLY_GENERATED_LISP): Explicitly set so we don't try
+	to build custom-loads, this package doesn't have any.
+
+2003-03-09  Ben Wing  <ben@xemacs.org>
+
+	* Makefile:
+	Delete explicit compile:: and binkit: rules.
+
+2002-11-29  Ben Wing  <ben@xemacs.org>
+
+	* .cvsignore: Remove files now handled automatically by CVS.
+	* Makefile: Use `compile' instead of hard-coded `all'.
+
+2002-10-29  Rendhalver [Peter Brown]  <rendhalver@xemacs.org>
+
+	* Makefile (VERSION): XEmacs package 1.10 released.
+
+2002-10-15  Ville Skyttä  <scop@xemacs.org>
+
+	* Makefile (srckit): Remove.
+
+2002-10-14  Ville Skyttä  <scop@xemacs.org>
+
+	* igrep.el (igrep-read-expression): Fix arg count to
+	read-from-minibuffer on XEmacs < 21.4.
+	Convert various comments to doc strings.
+
+2002-08-13  Rendhalver [Peter Brown]  <rendhalver@xemacs.org>
+
+	* Makefile (VERSION): XEmacs package 1.09 released.
+
+2002-08-12  Steve Youngs  <youngs@xemacs.org>
+
+	* Sync to upstream version 2.95.
+
+	* Makefile (all): Build autoloads first.
+	(REQUIRES): Add efs.
+	(AUTHOR_VERSION): Bump to 2.95.
+
+1998-08-11  SL Baur  <steve@altair.xemacs.org>
+
+	* igrep.el-2.83.
+
+1998-01-24  SL Baur  <steve@altair.xemacs.org>
+
+	* Makefile (VERSION): Update to package standard 1.0.
+	* package-info.in: Ditto.
+
+1998-01-11  SL Baur  <steve@altair.xemacs.org>
+
+	* Makefile: Created.
