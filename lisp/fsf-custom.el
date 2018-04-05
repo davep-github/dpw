@@ -10,11 +10,16 @@
  '(apropos-do-all t)
  '(beacon-blink-when-focused t)
  '(beacon-mode t)
+ '(comint-buffer-maximum-size 8192)
+ '(comint-input-autoexpand t)
  '(comint-input-ignoredups t)
+ '(comint-input-ring-size 5120)
+ '(comint-mode-hook (quote (dp-comint-mode-hook)))
  '(comint-move-point-for-output nil)
  '(comint-password-prompt-regexp
-   "\\(\\([Oo]ld \\|[Bb]ad \\|[Nn]ew \\|^\\)?[Pp]assword\\|pass[ _-]?phrase\\):?\\s-*\\'\\|\\(Enter passphrase for.*: \\)\\|\\(Password for .*\\)\\|\\(Bad passphrase, try again for.*:\\)\\|\\(Enter password.*:\\s-+\\)\\|\\(\\(\\[sudo\\] \\)?[Pp]assword for .*\\(davep\\||dpanariti?\\|dapanarx.*\\).*:? \\)")
+   "\\(\\([Oo]ld \\|[Bb]ad \\|[Nn]ew \\|^\\)?[Pp]assword\\|pass[ _-]?phrase\\):?\\s-*\\'\\|\\(Enter passphrase for.*: \\)\\|\\(Password for .*\\)\\|\\(Bad passphrase, try again for.*:\\)\\|\\(Enter password.*:\\s-+\\)\\|\\(\\(\\[sudo\\] \\)?[Pp]assword for .*\\(davep\\||d?panariti?\\|dapanarx.*\\).*:? \\)")
  '(comint-scroll-show-maximum-output t)
+ '(comint-use-prompt-regexp t)
  '(comment-style (quote extra-line))
  '(custom-enabled-themes (quote (bubba)))
  '(custom-safe-themes
@@ -38,15 +43,14 @@
  '(kill-ring-max 128)
  '(lazy-highlight-initial-delay 0.1)
  '(lazy-highlight-interval 0)
- '(mail-host-address "yyz")
- '(menu-bar-mode t)
+ '(mail-host-address "amd.com")
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(minibuffer-prompt-properties
    (quote
     (read-only t cursor-intangible t face minibuffer-prompt)))
  '(mouse-yank-at-point t)
  '(mu4e-get-mail-command "mbsync.amd")
- '(org-agenda-files (quote ("/home2/dpanarit/org/x.org")))
+ '(org-agenda-files (quote ("/home/dpanarit/org/amd.org")))
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
    (quote
@@ -62,8 +66,9 @@
  '(save-place-mode t)
  '(scroll-bar-mode (quote right))
  '(send-mail-function (quote smtpmail-send-it))
- '(sendmail-program "/usr/bin/msmtp")
+ '(sendmail-program "/home/dpanarit/bin/dp-msmtp")
  '(shell-cd-regexp "cd|chdir|g")
+ '(shell-input-autoexpand t)
  '(shell-pushd-regexp "pushd|g")
  '(show-paren-mode t)
  '(show-trailing-whitespace nil)
