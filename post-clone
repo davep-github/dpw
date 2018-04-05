@@ -176,6 +176,7 @@ safe_ln var/log log
         ${EZEC} mkdir auto-rotate-c5-50K
         ${EZEC} mkdir -p shell-sessions/home/dpanarit/log/shell-sessions
 	safe_ln auto-rotate-c5-50K procmail
+	safe_ln auto-rotate-c5-50K msmtp
 )
 ${EZEC} mkdir -p "var/log/auto-rotate-c10-50K"
 ${EZEC} mkdir ipc
