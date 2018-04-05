@@ -352,7 +352,6 @@ intolerable delays to files not in perforce."
     (setq dp-my-mail-address-format (format "\"%s\" <%s%%s@%s>" 
 					dp-mail-fullname 
 					dp-mail-user dp-mail-domain)))
-(setq user-mail-address nil)            ; Let it be derived from other vars.
 ;(format dp-my-mail-address-format ""))
 
 (defvar dp-initial-frame-height nil
