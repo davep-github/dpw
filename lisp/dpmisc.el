@@ -5453,8 +5453,8 @@ of the Emacs session."
 
 (defvar dp-lgrep-globs (list
                         (concat dp-lisp-dir "/dp*.el")
-                        (dp-lisp-subdir "custom.el")
-                        (dp-lisp-subdir "init.el"))
+                        (dp-lisp-subdir "*custom.el")
+                        (dp-lisp-subdir "*init.el"))
   "Lisp files of most interest.
 @todo make this a defcustom list o' strings.")
 
