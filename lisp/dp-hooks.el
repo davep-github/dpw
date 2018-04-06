@@ -2331,23 +2331,12 @@ changed."
 (defun dp-vc-dir-mode-hook ()
   (dp-define-local-keys
    '(
+     [(control ?o)] 'dp-one-window++
      [?/] dp-vc-dir-find-next-edited
      [?.] dp-vc-dir-find-next-edited)))
 
-(defun dp-mu4e-view-mode-hook ()
-  (dp-define-local-keys
-   '(
-     [(meta up)] dp-other-window-up
-     [(meta down)] other-window)))
-
-(defun dp-mu4e-headers-mode-hook ()
-  (dp-define-local-keys
-   '(
-     ;; Swap current keys: r (mark for refile) and R (reply)
-     [?r] mu4e-compose-reply
-     [?R] mu4e-headers-mark-for-refile
-     [(meta up)] dp-other-window-up
-     [(meta down)] other-window)))
+(defun dp-magit-mode-setup-hook ()
+  )
 
 ;; <:add hook functions here aka hooks:>
 ;; I'm trending away from advice, since I've seen code that really rapes it
