@@ -98,10 +98,8 @@ refiles if in `+inbox' and forwards if in `+spamcan'.")
    ;;(require 'dp-dot-gnus)
    )
   ('mu4e
-   (require 'mu4e)
-   (global-set-key [(control ?c) ?r] 'mu4e)
-   (global-set-key [(control ?x) ?m] 'mu4e-compose-new)
-   (mu4e-update-mail-and-index nil)
+   (require 'dp-mu4e)
+   (dp-setup-mu4e)
    )
   ('vm
    (require 'vm)
