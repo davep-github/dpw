@@ -6,7 +6,13 @@
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
-(package-initialize)
+;; This is done in fsf-init.el.  I *moved* it there, but it came back.
+;;      |
+;;     ---
+;;      |
+;;      |
+;; No undead code!
+;;(package-initialize)
 
 (defvar dp-lisp-dir
   (if (featurep 'xemacs)
