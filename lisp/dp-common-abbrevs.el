@@ -595,8 +595,30 @@
      ((("sagi" "sudo apt install " "sudo apt-get install ")
        'circular)
       dp-manual)
-    (("sagi" "sudo apt install " "sudo apt-get install ")
-     dp-manual)
+     ((("sagi" "sudo apt install " "sudo apt-get install ")
+       'circular)
+      dp-manual)
+     ;; Some mu4e mailbox names.
+     ;; Expansion no work.
+     ;; Need to hack the function mu4e uses to read MB names
+     (("amba" "/Amd/Archive") dp-manual)
+     (("ambC" "/Amd/Calendar") dp-manual)
+     (("ambk" "/Amd/Clutter") dp-manual)
+     (("ambc" "/Amd/Contacts") dp-manual)
+     (("ambch" "/Amd/Conversation History") dp-manual)
+     (("ambdi" "/Amd/Deleted Items") dp-manual)
+     (("ambd" "/Amd/Drafts") dp-manual)
+     (("ambi" "/Amd/Inbox") dp-manual)
+     (("ambj" "/Amd/Journal") dp-manual)
+     (("ambJ" "/Amd/Junk Email") dp-manual)
+     (("ambn" "/Amd/Notes") dp-manual)
+     (("ambo" "/Amd/Outbox") dp-manual)
+     (("ambr" "/Amd/RSS Subscriptions") dp-manual)
+     (("ambs" "/Amd/Sent") dp-manual)
+     (("ambsi" "/Amd/Sent Items") dp-manual)
+     (("ambS" "/Amd/Sync Issues") dp-manual)
+     (("ambt" "/Amd/Tasks") dp-manual)
+     (("amb" "/Amd/") dp-manual)
     ))
 ;; We could just use the non-void-ness of dp-common-abbrevs, but I
 ;; like suspenders with my belt.
