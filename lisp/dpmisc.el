@@ -8026,7 +8026,7 @@ This is meant to be used thus:
     (untabify (point-min) (point-max))))
 
 (defun dp-copy-rectangle-as-killed (start end)
-  (interactive "*r")
+  (interactive "r")
   (setq killed-rectangle (extract-rectangle start end)))
 
 (defun dp-untabify-string (str)
@@ -13126,8 +13126,10 @@ find-file\(-at-point) and then, if it fails, this function??"
 (defun dp-move-too-long-comment-above-current-line ()
   (interactive)
   (beginning-of-line)
-  (indent-for-comment)
-  (backward-char (length comment-start))
+  (indent-for-comment)		       ; Move to where the comment is.
+  (goto-char (car (dp-looking-back-at
+		   (concat (regexp-quote comment-start)
+			   "\\s-*"))))
   (kill-line)
   (dp-cleanup-line)
   (dp-open-above t)
@@ -13138,7 +13140,8 @@ find-file\(-at-point) and then, if it fails, this function??"
   ;; at this time: 2012-02-24T09:04:54 WTF was I thinking up there?
   (insert " ")       ; Needed for some modes. Does the wrong thing in others.
   (indent-for-comment)
-  (dp-call-function-on-key [(meta ?q)]))
+  ;; @todo XXX FSF -- need to fix comment fill style.
+  (dp-call-function-on-key [(meta ?q)])) ; Fill comment with commenty goodness.
 
 (dp-defaliases 'mtlcu 'dp-move-comment-up 
                'dp-move-too-long-comment-above-current-line)
