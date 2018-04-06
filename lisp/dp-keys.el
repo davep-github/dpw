@@ -705,8 +705,11 @@ already in there.")
                             [kp-up] 'emms-player-mpd-previous
                             [kp-down] 'emms-player-mpd-next
                             [?i] 'emms-player-mpd-show
-                            [?S] 'emms-player-mpd-stop
-                            [?s] 'emms-player-mpd-start
+			    ;; stopping is more urgent for
+			    ;; me since I hate for music to
+			    ;; miss my ears.
+			    [?s] 'emms-player-mpd-stop 
+                            [?S] 'emms-player-mpd-start
                             [?r] 'dp-emms-random-album
                             ;; <: dp music player bindings :>
                             )
