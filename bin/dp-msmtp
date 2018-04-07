@@ -107,7 +107,7 @@ Usage_error()
 # Need to resurrect log rotator.
 : ${logfile:=$HOME/var/log/msmtp/msmtp.log}
 : ${msmtp_bin:=$(sp -1 msmtp)}
-: ${debug_opt:=} ###--debug}
+: ${debug_opt:=--debug}
 : ${just_msmtp:=}
 
 [ -n "${just_msmtp}" ] && {

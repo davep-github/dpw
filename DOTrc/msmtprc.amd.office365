@@ -60,12 +60,12 @@ user dpanarit@amd.com
 # which command to use to decrypt it. This is usually used with GnuPG, as in
 # this example. Usually gpg-agent will ask once for the decryption password.
 #passwordeval gpg2 --no-tty -q -d ~/.msmtp-password.gpg
+passwordeval gpg2 -q --for-your-eyes-only --no-tty -d ~/.gnupg/smtp.office365.com.pwd.gpg
 
 # Password method 3: Store the password directly in this file. Usually it is not
 # a good idea to store passwords in plain text files. If you do it anyway, at
 # least make sure that this file can only be read by yourself.
 #password secret123
-password 3!415|||QTPi
 
 # Password method 4: Store the password in ~/.netrc. This method is probably not
 # relevant anymore.

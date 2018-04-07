@@ -65,6 +65,11 @@ refiles if in `+inbox' and forwards if in `+spamcan'.")
   :type '(repeat (cons (string :tag "Recipient regexp")
 		       (function :tag "Hook func"))))
 
+(defcustom dp-mail-use-auth-p t
+  "*Use authorization, currently with `secrets'?"
+  :group 'dp-vars
+  :type 'boolean)
+
 (defvar dp-sig-prefix '("       /"
 			"davep (|)"
 			"       /")
@@ -75,6 +80,17 @@ refiles if in `+inbox' and forwards if in `+spamcan'.")
 
 (defconst dp-current-mailer-config-file dp-generic-mail-code
   "The config file for the current default mailer I'm using.")
+
+(when dp-mail-use-auth-p
+  (require 'secrets)
+  ;; `auth-sources' set via customize.
+  ;; And I quote, "Eew, I'm not gonna use customize."
+  ;; He a man!
+  ;; Me a man, too. A lazy (efficient) one.
+  ;; (setq message-send-mail-function 'smtpmail-send-it
+  ;;     smtpmail-smtp-server "smtp.office365.com"
+  ;;     smtpmail-smtp-service 587) <<<< 25 works as well.
+  )
 ;;
 ;; load up the best mailer we can...
 ;; A good spec-macs variable.

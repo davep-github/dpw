@@ -8,6 +8,8 @@
   (mu4e-update-mail-and-index 'run-in-background)
   (global-set-key [(control ?c) ?r] 'mu4e)
   (global-set-key [(control ?x) ?m] 'mu4e-compose-new)
+  ;; No fucking shift keys.
+  (define-key mu4e-main-mode-map [?u] 'mu4e-update-mail-and-index)
   )
 
 (defun dp-setup-mu4e (&optional quiet)
