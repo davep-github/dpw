@@ -220,6 +220,8 @@ libgl1-glx
 libgl1-mesa-glx
 ntpdate
 meson
+xpdf
+evince
 # Emacs
 xaw3dg-dev
 otf-freefont
