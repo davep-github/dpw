@@ -2331,7 +2331,9 @@ changed."
 (defun dp-vc-dir-mode-hook ()
   (dp-define-local-keys
    '(
-     [(control ?o)] 'dp-one-window++
+     [(control down)] dp-scroll-up
+     [(control up)] dp-scroll-down
+     [(control ?o)] dp-one-window++
      [?/] dp-vc-dir-find-next-edited
      [?.] dp-vc-dir-find-next-edited)))
 
