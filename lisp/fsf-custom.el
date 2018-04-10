@@ -8,6 +8,9 @@
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
  '(apropos-do-all t)
+ '(auth-sources
+   (quote
+    ("secrets:Login" "~/.authinfo" "~/.authinfo.gpg" "~/.netrc")))
  '(beacon-blink-when-focused t)
  '(beacon-mode t)
  '(comint-buffer-maximum-size 8192)
@@ -18,7 +21,7 @@
  '(comint-move-point-for-output nil)
  '(comint-password-prompt-regexp
    "\\(\\([Oo]ld \\|[Bb]ad \\|[Nn]ew \\|^\\)?[Pp]assword\\|pass[ _-]?phrase\\):?\\s-*\\'\\|\\(Enter passphrase for.*: \\)\\|\\(Password for .*\\)\\|\\(Bad passphrase, try again for.*:\\)\\|\\(Enter password.*:\\s-+\\)\\|\\(\\(\\[sudo\\] \\)?[Pp]assword for .*\\(davep\\||d?panariti?\\|dapanarx.*\\).*:? \\)")
- '(comint-scroll-show-maximum-output t)
+ '(comint-scroll-show-maximum-output nil)
  '(comint-use-prompt-regexp t)
  '(comment-style (quote extra-line))
  '(custom-enabled-themes (quote (bubba)))
@@ -54,7 +57,7 @@
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
    (quote
-    (nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
+    (ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
  '(query-replace-lazy-highlight nil)
  '(safe-local-variable-values
    (quote
