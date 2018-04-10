@@ -4,7 +4,7 @@
 ;;; set up supercite
 ;;;
 
-(setq mail-yank-prefix ">")
+(setq mail-yank-prefix "> ")
 (setq mail-yank-ignored-headers ":")
 (add-hook 'mail-citation-hook 'sc-cite-original)
 ;; do this thru customize now
