@@ -1,0 +1,2 @@
+overlay-buffer
+  Function: Return the buffer OVERLAY belongs to.

@@ -1,0 +1,20 @@
+# This is the list of trusted keys.  Comment lines, like this one, as
+# well as empty lines are ignored.  Lines have a length limit but this
+# is not a serious limitation as the format of the entries is fixed and
+# checked by gpg-agent.  A non-comment line starts with optional white
+# space, followed by the SHA-1 fingerpint in hex, followed by a flag
+# which may be one of 'P', 'S' or '*' and optionally followed by a list of
+# other flags.  The fingerprint may be prefixed with a '!' to mark the
+# key as not trusted.  You should give the gpg-agent a HUP or run the
+# command "gpgconf --reload gpg-agent" after changing this file.
+
+
+# Include the default trust list
+include-default
+
+
+# CN=CA Cert Signing Authority
+# OU=http:\x2f\x2fwww.cacert.org
+# O=Root CA
+# EMail=support@cacert.org
+13:5C:EC:36:F4:9C:B8:E9:3B:1A:B2:70:CD:80:88:46:76:CE:8F:33 S relax
