@@ -89,13 +89,17 @@ refiles if in `+inbox' and forwards if in `+spamcan'.")
   ;; Me a man, too. A lazy (efficient) one.
   ;; (setq message-send-mail-function 'smtpmail-send-it
   ;;     smtpmail-smtp-server "smtp.office365.com"
-  ;;     smtpmail-smtp-service 587) <<<< 25 works as well.
+  ;;     smtpmail-smtp-service 587) <==-- 25 works as well.
   )
 ;;
 ;; load up the best mailer we can...
 ;; A good spec-macs variable.
 ;;(setq-ifnil-or-unbound dp-mailer 'gnus)
 (case dp-mailer
+  ('mu4e
+   (require 'dp-mu4e)
+   (dp-setup-mu4e)
+   )
   ((and (eq dp-mailer 'mew)
 	(not (string< emacs-version "20.7.1")))
    ;; try for mew mailer package.  An error will
@@ -112,10 +116,6 @@ refiles if in `+inbox' and forwards if in `+spamcan'.")
    (global-set-key [(control ?x) ?m] 'gnus-msg-mail)
    ;; This works better if called before gnus is started.  Need to fix that.
    ;;(require 'dp-dot-gnus)
-   )
-  ('mu4e
-   (require 'dp-mu4e)
-   (dp-setup-mu4e)
    )
   ('vm
    (require 'vm)
