@@ -807,6 +807,8 @@ stuff in the current *Python* session."
 
 (defalias 'with-saved-match-data 'save-match-data)
 
+(dp-defaliases 'cvar 'customize-variable)
+
 ;;
 ;; autoload some template functions
 (autoload 'tempo-template-dppydb-fam "dp-templates" 
