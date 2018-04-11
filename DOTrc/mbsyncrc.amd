@@ -2,7 +2,7 @@ IMAPAccount amd
 Host smtp.office365.com
 User dpanarit@amd.com
 PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.gnupg/smtp.office365.com.pwd.gpg"
-##Pass Not Password
+##Pass Not-Password
 UseIMAPS yes
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 PipelineDepth 1
