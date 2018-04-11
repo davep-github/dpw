@@ -2323,8 +2323,10 @@ changed."
 (defun dp-apropos-mode-hook ()
   (dp-define-local-keys
    '(
-     [?v] dp-find-variable
-     [?f] dp-find-function
+     [?v] dp-find-variable-other-window
+     [?f] dp-find-function-other-window
+     [?V] dp-find-variable
+     [?F] dp-find-function
      [?a] apropos-command
      [?l] dp-grep-lisp-files)))
 
