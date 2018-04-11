@@ -294,18 +294,22 @@ e(
     ref=[amd_family, OSDB['linux'], default]
 )
 
-EXP_BOX_FG_COLOR = 'white'
-EXP_BOX_BG_COLOR = 'rgb:14/00/28'
-
+XERXES_FG_COLOR = 'white'
+#XERXES_BG_COLOR = 'rgb:14/00/28'
+#XERXES_BG_COLOR = 'rgb:46/00/8C'
+#XERXES_BG_COLOR = 'rgb:96/70/3F'
+#XERXES_BG_COLOR = 'rgb:51/00/10'
+#XERXES_BG_COLOR = 'rgb:46/00/0A'
+XERXES_BG_COLOR = 'rgb:2E/00/07'
 e(
     kef='host',
     dat={
-        'host-pattern': '^yyz-exp$',
+        'host-pattern': '^xerxes$',
         'family': 'amd_family',
-        'comment': 'A FX-8370 8-core machine.  Muh main axe.',
+        'comment': 'An? FX-8370 8-core machine.  Test box.',
         'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 180x74-0+0',
-        'xterm_bg': EXP_BOX_BG_COLOR,
-        'xterm_fg': EXP_BOX_FG_COLOR,
+        'xterm_bg': XERXES_BG_COLOR,
+        'xterm_fg': XERXES_FG_COLOR,
         'xem_bg_color': "grey80",
         'project': 'brahma',
  },
