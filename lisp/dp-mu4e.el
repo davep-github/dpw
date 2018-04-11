@@ -4,9 +4,6 @@
 ;; mu4e is a mailer that uses mu.
 ;;
 
-(defvar dp-mu4e-initial-bookarks mu4e-bookmarks
-  "Keep the original value so I can reinit when playing with new bookmarks.")
-
 (defun dp-mu4e-add-bookmarks (&optional resetp)
   "Add my queries (bookmarks) to the list used by mu4e.
 These will show up in the main mu4e screen."
@@ -23,13 +20,22 @@ These will show up in the main mu4e screen."
 			 )))
 
 (defun dp-setup-mu4e0 ()
-  (mu4e-update-mail-and-index 'run-in-background)
+  (defvar dp-mu4e-initial-bookarks mu4e-bookmarks
+    "Keep the original value so I can reinit when playing with new bookmarks.")
+  (if (boundp 'RESTORE-im=experimenting)
+      (mu4e-update-mail-and-index 'run-in-background)
+    (message "RESTORE `mu4e-update-mail-and-index'"))
   (global-set-key [(control ?c) ?r] 'mu4e)
   (global-set-key [(control ?x) ?m] 'mu4e-compose-new)
   ;; No fucking shift keys.
   (define-key mu4e-main-mode-map [?u] 'mu4e-update-mail-and-index)
   (dp-mu4e-add-bookmarks)
   )
+
+(defun dp-mu4e-reset-bookmarks ()
+  "Return the list of bookmarks to pristine state."
+  (interactive)
+  (setq mu4e-bookmarks dp-mu4e-initial-bookarks))
 
 (defun dp-setup-mu4e (&optional quiet)
   (if (dp-optionally-require 'mu4e)
