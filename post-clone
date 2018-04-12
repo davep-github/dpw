@@ -39,7 +39,7 @@ echo "2: repo>${repo}<"
 
 : ${reporc:=${repo}/.rc}
 
-cd "${HOME}" || {
+${EZEC} cd "${HOME}" || {
     echo "Cannot cd to home>${HOME}<"
     exit 1
 } 1>&2
