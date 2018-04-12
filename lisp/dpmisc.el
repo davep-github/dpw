@@ -5895,22 +5895,23 @@ When beginning a sequence, (point) is saved.  This can be pushed onto
 ; Consistency w/other functions which can use other windows.
 (dp-defaliases 'ff0 'ff. 'ff 'dp-find-function) 
 
-(defun dp-find-function2 ()
+(defun dp-find-function-other-window ()
   "Push a go-back and then `find-function-other-window'."
   (interactive)
   (dp-push-go-back&call-interactively 'find-function-other-window 
                                       nil nil "ff2"))
-(dp-defaliases 'ff2 'dp-find-function2)
+(dp-defaliases 'ff2 'dp-find-function-other-window)
 
 (defun dp-find-variable ()
   (interactive)
   (dp-push-go-back&call-interactively 'find-variable nil nil "fv"))
 (dp-defaliases 'fv 'fv. 'fv1 'fv0 'fv-same  'dp-find-variable)
 
-(defun fv2 ()
+(defun dp-find-variable-other-window ()
   (interactive)
   (dp-push-go-back&call-interactively 'find-variable-other-window 
                                       nil nil "fv2"))
+(defalias 'fv2 'dp-find-variable-other-window)
 
 (defun dp-ff-key (key &optional same-window-p)
   "Do a `find-function-on-key' but with my kind of window prefs."

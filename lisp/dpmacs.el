@@ -916,7 +916,7 @@ This can be callable.")
       parens-require-spaces nil
       truncate-partial-width-windows nil
       focus-follows-mouse t
-)
+      )
 
 ;; Put some things in their own frames...
 (add-to-list 'special-display-regexps "^\\*P4.*\\*$")

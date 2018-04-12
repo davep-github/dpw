@@ -52,6 +52,7 @@
    (quote
     (read-only t cursor-intangible t face minibuffer-prompt)))
  '(mouse-yank-at-point t)
+ '(mu4e-attachment-dir "/home/dpanarit/Downloads")
  '(mu4e-get-mail-command "mbsync.amd")
  '(org-agenda-files (quote ("/home/dpanarit/org/amd.org")))
  '(org-insert-mode-line-in-empty-file t)
