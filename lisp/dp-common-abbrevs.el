@@ -598,6 +598,8 @@
      ((("sagi" "sudo apt install " "sudo apt-get install ")
        'circular)
       dp-manual)
+     ((("fh" "FETCH_HEAD") 'circular) dp-manual)
+
      ;; Some mu4e mailbox names.
      ;; Expansion no work.
      ;; Need to hack the function mu4e uses to read MB names
