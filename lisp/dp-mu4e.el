@@ -63,4 +63,13 @@ These will show up in the main mu4e screen."
      [(meta up)] dp-other-window-up
      [(meta down)] other-window)))
 
+(defun dp-mu4e-get-mail-and-display-recent ()
+  (interactive)
+  (mu4e)
+  (mu4e-update-mail-and-index nil)
+  ;; Sorry to hard-code, but this exists only as a hard coded
+  ;; expression in a list definition.
+  (mu4e-headers-search "date:today..now"))
+(defalias 'nm 'dp-mu4e-get-mail-and-display-recent)
+
 (provide 'dp-mu4e)
