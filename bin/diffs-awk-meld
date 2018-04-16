@@ -118,7 +118,7 @@ usage()
 
 here="${1-}"
 [ -z "${here}" ] && usage here
-there="${2}"
+there="${2-}"
 [ -z "${there}" ] && usage there
 
 # do a recursive diff, select the ones with diffs and feed them to meld.
