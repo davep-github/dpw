@@ -309,9 +309,9 @@
         (message "No cscope results buffer yet.")))
     (defalias 'cs 'dp-cscope-buffer)
 
-    (when-and-boundp dp-bind-xcscope-keys-p
+    (when-and-boundp 'dp-bind-xcscope-keys-p
       (dp-bind-xcscope-keys))
-    (when-and-boundp dp-bind-xcscope-fkeys-p
+    (when-and-boundp 'dp-bind-xcscope-fkeys-p
       (dp-bind-xcscope-fkeys))
     
     (defadvice cscope-prompt-for-symbol (before dp-cscope-push-gb activate)
