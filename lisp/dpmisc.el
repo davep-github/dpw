@@ -5370,12 +5370,14 @@ command-line argument to XEmacs, e.g. -eval \(dp-main-rc)."
   (message "dp-main-rc()...finished."))
 
 (defun dp-main-rc+2w (&optional height width)
+  (message "dp-main-rc+2w()...")
   (dp-main-rc)
   (when width
     (setq dp-sfw-width width))
   (when height
     (setq dp-sfh-height height))
-  (dp-2-v-or-h-windows nil height width))
+  (dp-2-v-or-h-windows nil height width)
+  (message "dp-main-rc+2w()...finished."))
 
 ;;;??? why did I add this here?  (dp-run-post-dpmacs-hooks))
 ;;; For one thing, it fixed the window config that was set in the hook var
