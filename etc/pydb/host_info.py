@@ -282,9 +282,10 @@ e(
         'host-pattern': '^yyz$',
         'family': 'amd_family',
         'comment': 'An 8 core Ryzen or an 8 core FX-8370, whichever is working.',
-        'xem_opts': ('-eval (dp-2-v-or-h-windows-keep-geometry) '
-                     + '-geometry 180x67+460+0'),
+        #'xem_opts': ('-eval (dp-2-v-or-h-windows-keep-geometry) '
+#             + '-geometry 180x67+460+0'),
         # Not particularly attractive.
+        'main_macs_opts': '-eval (progn (dp-start-editing-server) (dp-main-rc+2w))',
         """xem-xft-font""": '''"Inconsolata-12"''',
         'xterm_bg': PRIMARY_BOX_BG_COLOR,
         'xterm_fg': PRIMARY_BOX_FG_COLOR,
@@ -371,8 +372,8 @@ e(
         #'xem_opts': '-geometry 88x64-0+0',
         'xem_opts': ('-eval (dp-2-v-or-h-windows-keep-geometry) '
                      + '-geometry 180x74-0+0'),
-        'main_macs_opts': '-eval (dp-start-editing-server)',
-###        'main_macs_opts': '-eval (progn (dp-start-editing-server) (dp-main-rc+2w))',
+        ###'main_macs_opts': '-eval (dp-start-editing-server)',
+        'main_macs_opts': '-eval (progn (dp-start-editing-server) (dp-main-rc+2w))',
         'xterm_bg': CZ_ALFA_BG_COLOR,
         'xterm_fg': CZ_ALFA_FG_COLOR,
         ### 'xterm-ls-colors': LIGHT_BG_LS_COLORS,
@@ -439,6 +440,7 @@ e(
         #    'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
         'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
         'xem_opts': '-eval (dp-2-v-or-h-windows) -geometry  81x69-1+0',
+        'main_macs_opts': '-eval (dp-main-rc+2w)',
         #'xem_font': '-*-Terminus-medium-r-*-*-*-120-*-*-*-*-iso8859-*',
         # magically changed from 120 being right to 160 being right.
         # update of terminus font?
