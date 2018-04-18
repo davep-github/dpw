@@ -14,6 +14,7 @@
 ;; No undead code!
 ;;(package-initialize)
 
+(message "init.el...")
 (defvar dp-lisp-dir
   (if (featurep 'xemacs)
       (expand-file-name "~/xlisp/")
@@ -41,7 +42,11 @@
 ;; we're consing, so last will be first.
 (defvar dp-init.el-load-path-dirs
   (list
-   "/usr/share/emacs/site-lisp/mu4e"
+   ;; Move amd location to home.
+   ;; Just keep them both, but give preference to my home.
+   ;; If there are problems, predicate them
+   "/home/davep/local/share/emacs/site-lisp/mu4e" ; home
+   "/usr/share/emacs/site-lisp/mu4e"	; amd
    (dp-lisp-subdir "contrib")
    (dp-lisp-subdir "contrib/emacs-jabber")
    dp-lisp-dir)
@@ -72,3 +77,5 @@
 ;; load the bulk of the init file...
 (load "dpmacs")
 (put 'narrow-to-region 'disabled nil)
+
+(message "init.el...done")
