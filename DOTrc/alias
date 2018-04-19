@@ -106,11 +106,11 @@ then
     # ??? (\d+:)? and/or (^.*?:)?
     : ${dp_emacs_grep_options:="-n --with-filename --color=never --directories=skip"}
     export dp_emacs_grep_options
-    echo_id dp_emacs_grep_options
+    ###echo_id dp_emacs_grep_options
     dp_emacs_dash_n_greps()
     {
 #        source ${DP_RC_DIR}/grep-functions
-	echo 1>&2 "in dp_emacs_dash_n_greps()"; echo_id dp_emacs_grep_options
+	###echo 1>&2 "in dp_emacs_dash_n_greps()"; echo_id dp_emacs_grep_options
 	local grep_options="${dp_emacs_grep_options}"
         alias zgrep="zgrep ${grep_options}"
         alias bzgrep="bzgrep ${grep_options}"
