@@ -186,6 +186,29 @@ Use BEGIN and END as the limits of the extent."
   (read-file-name prompt dir default-file-name must-match initial
 		  predicate hist-var))
 
+(defun dp-switch-to-next-buffer ()
+  "Pick a next buffer in some way. It should always be the one I want. 
+No matter what. A DWIM-ish thing."
+  (interactive)
+  ;; For now, combine switch-to-next-buffer[-in-group]?
+  ;; Next in group, next.
+  (if (eq current-prefix-arg '-)
+      (switch-to-next-buffer 1)
+    (call-interactively 'switch-to-next-buffer-in-group)))
+
+(defun dp-switch-to-previous-buffer ()
+  "Pick a previous buffer in some way. It should always be the one I want. 
+No matter what. A DWIM-ish thing."
+  (interactive)
+  ;; For now, combine switch-to-next-buffer[-in-group]?
+  ;; Next in group, next.
+  (if (eq current-prefix-arg '-)
+      (switch-to-next-buffer -1)
+    (call-interactively 'switch-to-next-buffer-in-group)))
+
+(global-set-key [(control ?x) (control right)] 'dp-switch-to-next-buffer)
+(global-set-key [(control ?y) (control left)] 'dp-switch-to-previous-buffer)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Nicked from Emacs.
 
