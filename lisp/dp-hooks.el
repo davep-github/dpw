@@ -1705,6 +1705,9 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
   (defvar dp-orig-igrep-regex-default igrep-regex-default
     "Original value of `igrep-regex-default'.")
 
+  (igrep-define zgrep)		; M-x zgrep
+  (igrep-find-define zgrep)	; M-x zgrep-find
+
   (setq igrep-regex-default
 	(function 
 	 (lambda ()
