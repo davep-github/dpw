@@ -32,7 +32,7 @@
                                     (- (funcall width style details details-width)
 				       (if details (1+ details-width) 0)))
                             cnt unit)))
-                'face 'magit-log-date)))))))
+                'face 'magit-log-date))))))
 
 (provide 'dp-magit)
 
