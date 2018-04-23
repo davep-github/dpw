@@ -72,6 +72,13 @@
 
 (defvar dp-edit-parallel-tramp-file-default-location "/[cz-fp4-bdc]")
 
+(setq mail-host-address "amd.com"
+      mu4e-get-mail-command "mbsync.amd"
+      org-agenda-files (quote ("/home/dpanarit/org/amd.org"))
+      smtpmail-sendto-domain "amd.com"
+      smtpmail-smtp-server "smtp.office365.com"
+      user-mail-address "david.panariti@amd.com")
+
 ;; Keep in sync w/ ~/bin.amd/amd-index-edc-linux
 ;; (setq cscope-database-regexps
 ;;       '(
