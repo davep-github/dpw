@@ -4,12 +4,17 @@
 ;;; local settings that vary from host to host
 ;;;
 
-(setq                                   ;dp-mail-domain-work "vanu.com"
-      dp-mail-fullname "David A. Panariti"
-      dp-mail-user "davep"      
+(setq dp-mail-fullname "David A. Panariti"
+      dp-mail-user "davep"
       dp-mail-domain "meduseld.net"
       dp-mail-user "davep"
-      dp-mail-outgoing-host "outgoing.verizon.net")
+      dp-mail-outgoing-host "outgoing.verizon.net"
+      mail-host-address "meduseld.net"
+      mu4e-get-mail-command "mbsync.vilya"
+      org-agenda-files (quote ("/home/davep/org/davep.org"))
+      smtpmail-sendto-domain "meduseld.net"
+      smtpmail-smtp-server "smtp.verizon.net"
+      user-mail-address "davep@meduseld.net")
 
 (defconst dp-vm-default-imap-folder
   "imap:vilya:143:INBOX:login:davep:bioshok"
