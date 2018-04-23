@@ -46,15 +46,12 @@
  '(kill-ring-max 128)
  '(lazy-highlight-initial-delay 0.1)
  '(lazy-highlight-interval 0)
- '(mail-host-address "amd.com")
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(minibuffer-prompt-properties
    (quote
     (read-only t cursor-intangible t face minibuffer-prompt)))
  '(mouse-yank-at-point t)
  '(mu4e-attachment-dir "/home/dpanarit/Downloads")
- '(mu4e-get-mail-command "mbsync.amd")
- '(org-agenda-files (quote ("/home/dpanarit/org/amd.org")))
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
    (quote
@@ -80,14 +77,11 @@
  '(smtpmail-debug-verb t)
  '(smtpmail-local-domain nil)
  '(smtpmail-queue-index-file "sendmail-q-index")
- '(smtpmail-sendto-domain "amd.com")
- '(smtpmail-smtp-server "smtp.office365.com")
  '(smtpmail-smtp-service 25)
  '(smtpmail-smtp-user nil)
  '(smtpmail-stream-type nil)
  '(timeclock-mode-line-display nil)
  '(tool-bar-mode nil)
- '(user-mail-address "david.panariti@amd.com")
  '(wdired-allow-to-change-permissions t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
