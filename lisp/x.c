@@ -22,6 +22,10 @@ int func(int a,
          int b,
          char *c)
 {
+ 	/* this is bp. a variable. The " * " is a motherfucking ugly
+	 * and stupid way to declare a point.  This way too long line
+	 * was after the decl until I ran `
+	 * dp-move-too-long-comment-above-current-line */
   byte * bp;
   if (a) {
     func(++a, b/2, c);
