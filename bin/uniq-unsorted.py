@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-### Time-stamp: <08/03/23 00:03:35 davep>
+### Time-stamp: <2018-04-23 16:01:59 dpanarit>
 #############################################################################
 ## @package 
 ##
@@ -9,7 +9,13 @@ all = []
 uniq = []
 
 def uniq(all):
-    
+    pass
 
-
-
+if __name__ == "__main__":
+    print "I"
+    print "    CAN'T"
+    print "        DO"
+    print "            THAT"
+    print "                YET."
+    print "(Should me a SMOT, though)"
+    sys.exit(1)
