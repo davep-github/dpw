@@ -7,3 +7,4 @@ history.*
 /devel/
 /bug-tmp/
 emacs-places*
+/elpa/
