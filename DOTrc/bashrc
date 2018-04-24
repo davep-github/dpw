@@ -504,8 +504,6 @@ fi 1>&2
 
 # add our path to python's list of where to look for imports.
 export PYTHONPATH=$(dp_add_to_path_iff "$PYTHONPATH" "$PATH:$PYTHONPATH_POST")
-PYTHONPATH=$(dp_add_to_path_iff -p "$PYTHONPATH" "$PYTHONPATH_PRE")
-PYTHONPATH=$(path-verify -d "$PYTHONPATH")
 
 if tty -s
 then
@@ -678,8 +676,7 @@ case $- in
             root) emph='\[\033[01;31m\]'
                   emph2='\[\033[01;31m\]'
                   #emph2=""
-                  #PS1_terminator='#'"${norm}"
-                  PS1_terminator='$'"${norm}"
+                  PS1_terminator='##'"${norm}"
                   # Gaping security hole to allow me to pass variables to a
                   # sudo'd shell.
                   # All this bullshit just to get matching prompt stuff.
