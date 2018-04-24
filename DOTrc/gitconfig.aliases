@@ -242,3 +242,8 @@
         pushgpu = push origin HEAD:refs/for/master
         pushgerrit = push origin HEAD:refs/for/master
         pushamd = push origin HEAD:refs/for/master
+
+        emptytree = git hash-object -t tree –stdin < /dev/null
+        etree = git hash-object -t tree –stdin < /dev/null
+        tree0 = git hash-object -t tree –stdin < /dev/null
+
