@@ -135,6 +135,14 @@ case $shell_name in
 	export HISTFILESIZE=10000
         export HISTTIMEFORMAT="%FT%T "
         export HISTFILE=$(mk-persistent-dropping-name.sh bash_history)
+        #################################
+        # This doesn't work because we load in the base HISTFILE for the
+        # HOST, so up arrow, etc, work; but h, hgrep, etc use the new hist
+        # file name.
+        #[ -n "${dp_emacs_shell_num}" ] && {
+        #    HISTFILE="${HISTFILE}.emacs_shell.${dp_emacs_shell_num}"
+        #}
+        #################################
 esac
 
 # Setup vars pointing to the host at which we are typing.
