@@ -104,24 +104,27 @@ then
     # unset vars are.
     #!<@todo make standard util to parse a ^.*?:\d+:.*$ out of grep matches.
     # ??? (\d+:)? and/or (^.*?:)?
-    : ${dp_emacs_grep_options:-"-n --with-filename"}
+    : ${dp_emacs_grep_options:="-n --with-filename --color=never --directories=skip"}
+    export dp_emacs_grep_options
+    ###echo_id dp_emacs_grep_options
     dp_emacs_dash_n_greps()
     {
 #        source ${DP_RC_DIR}/grep-functions
-        grep_options="-n --color=never"
-        alias zgrep="zgrep -n --color=never"
-        alias bzgrep="bzgrep -n --color=never"
-	alias lzgrep="lzgrep -n --color=never"
-	alias lzegrep="lzegrep -n --color=never"
-	alias lzfgrep="lzfgrep -n --color=never"
-	alias xzgrep="xzgrep -n --color=never"
-	alias xzegrep="xzegrep -n --color=never"
-	alias xzfgrep="xzfgrep -n --color=never"
-	alias pcregrep="pcregrep -n --color=never"
+	###echo 1>&2 "in dp_emacs_dash_n_greps()"; echo_id dp_emacs_grep_options
+	local grep_options="${dp_emacs_grep_options}"
+        alias zgrep="zgrep ${grep_options}"
+        alias bzgrep="bzgrep ${grep_options}"
+	alias lzgrep="lzgrep ${grep_options}"
+	alias lzegrep="lzegrep ${grep_options}"
+	alias lzfgrep="lzfgrep ${grep_options}"
+	alias xzgrep="xzgrep ${grep_options}"
+	alias xzegrep="xzegrep ${grep_options}"
+	alias xzfgrep="xzfgrep ${grep_options}"
+	alias pcregrep="pcregrep ${grep_options}"
 
-#        alias grep="grep -n --color=never"
-#        alias egrep="egrep -n --color=never"
-#        alias fgrep="fgrep -n --color=never"
+#        alias grep="grep ${grep_options}"
+#        alias egrep="egrep ${grep_options}"
+#        alias fgrep="fgrep ${grep_options}"
     }
     export -f dp_emacs_dash_n_greps
 
@@ -295,7 +298,7 @@ alias mex=me-expand-dest
 alias dp4-meld='dp4-diff --meld'
 # p4 diff with diff(1); just diff(1)
 alias p4dd='p4diffdiff'
-alias sandbox_root_dir='/home/dpanariti/lib/pylib/tree_root_relativity.py --find-root'
+alias sandbox_root_dir="/home/${HOME}/lib/pylib/tree_root_relativity.py --find-root"
 alias sbroot=sandbox_root_dir
 alias treeroot=sandbox_root_dir
 alias sb-root=sandbox_root_dir
@@ -304,9 +307,14 @@ alias tree-root=sandbox_root_dir
 alias myvncs='ls -l ~/.vnc/*.pid'
 
 ## grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
-alias grep="grep --color=never $grep_options"
-alias egrep="grep -E $grep_options"
-alias fgrep="grep -F $grep_options"
+## This sucks so much because I used a simple grep to eliminate the grep
+## being used by dpgrep from the output.  Now it'll be more complex and
+## I'll stay up nights worring when it will change again and screw me over. Again.
+## Sigh.
+
+alias grep="grep --directories=skip --color=never $grep_options"
+alias egrep="grep --directories=skip -E $grep_options"
+alias fgrep="grep --directories=skip -F $grep_options"
 
 alias sagi='sudo apt-get install'
 

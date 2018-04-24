@@ -1,6 +1,7 @@
 #!/bin/bash
 
-. script-x
+source  script-x
+
 # echo "!!!!!!!!!!!!!!!!!xtitle: $*!!!!!!!!!!!!!!!!!!!!!" >/dev/tty
 if dp-xterm-like-p; then
     echo -n ']2;'$*'' >/dev/tty

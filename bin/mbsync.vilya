@@ -22,8 +22,8 @@ do
   ${EEXEC_SHIFT}
 done
 EExec_verbose_msg $(echo_id eexec_program)
-#unset eexec_program
-export eexec_program
+unset eexec_program
+#export eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
 
@@ -105,69 +105,5 @@ Usage_error()
 # template end.
 ########################################################################
 
-#echo "@>$@<"
-optv=()
-filter_mode_p=
-S=-s
-status_opts=
-type=()
-UOPT=
-UNO=
-#echo_id type
-while (($# > 0))
-do
-  EExec_verbose_msg "1>${1}<"
-  case "${1}" in
-      -p|--filter) filter_mode_p=t;;
-      --added|-a|--new) type+=("A");;
-      -m|--modified|--changed) type+=("M");;
-      --untracked|-ut) type+=('\?\?');;
-      --type|-t) shift; type+=("${1}");;
-      --) shift; break;;
-      *) optv+=("${1}");;
-  esac
-  shift
-done
-
-#echo_id type
-: ${type:=M}
-#echo_id type
-
-args=("$@")
-
-if (("${#type[@]}" > 0))
-then
-    type=$(add-to-path-like.py -s\| "${type[@]}")
-else
-    type=
-fi
-
-if (("${#optv[@]}" > 0))
-then
-    set -- "${optv[@]}"
-else
-    : set --
-fi
-
-(("${#args[@]}" > 0)) && set -- "${args[@]}"
-EExec_verbose_msg "0: @>$@<@"
-
-if [ -n "${simple_test-}"] && (("${#args[@]}" > 0))
-then
-    # very simple testing.
-    for a in "${args[@]}"
-    do
-      echo "$a"
-    done
-elif true_p "${filter_mode_p}"
-then
-    cat
-else
-    EExec_verbose_msg "1: @>$@<@"
-    # short status and skip untracked files.
-    EExec git status -s ${UNO} ${status_opts}
-    EExec_verbose_msg "1: @>$@<@"
-fi \
-    | EExec sed -rn "s/(^[[:space:]]*${type}[[:space:]]+)(.*)$/\2/p" \
-    | EExec file-relativizer "$@" \
-    | EExec normpath
+: ${account:=${1-vilya}}
+EExec mbsync ${account}

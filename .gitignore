@@ -2,5 +2,13 @@ bak.d
 bin.skaion
 lisp-*.tar.bz2
 lisp-*.tar.gz
-
 q
+history.*
+# For safety, don't use .emacs.
+# Maybe this file should be renamed.
+#.emacs_dpanarit.*
+#.emacs_davep.*
+.emacs_*.*
+/devel/
+/bug-tmp/
+emacs-places*

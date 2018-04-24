@@ -109,6 +109,7 @@ Usage_error()
 : ${nopkgs=}
 
 packages=(
+bison
 ccache
 chromium-browser
 cscope
@@ -116,8 +117,24 @@ ctags
 curl
 diffuse
 dump
+evince
+figlet
 figlet
 firefox
+flex
+fonts-comfortaa                 
+fonts-dejavu-core
+fonts-dejavu-extra
+fonts-fantasque-sans            
+fonts-freefont-ttf
+fonts-hack-otf
+fonts-hack-ttf                  
+fonts-inconsolata
+fonts-liberation                
+fonts-lmodern                   
+fonts-mgopen                    
+fonts-symbola                   
+fonts-ubuntu-font-family-console
 g++
 gcc
 gcolor2
@@ -128,17 +145,47 @@ git-gui
 gitk
 gparted
 gpm
+imagemagick                     
 ipython
 ipython-doc
 libcurl4-openssl-dev
+libdbus-1-dev libdbus-glib-1-dev
+libdmalloc-dev
+libelf-dev
+liberation                      
+libfreetype6-dev                
+libgif-dev
+libgif-dev
+libgif7
+libgl1-glx     
+libgl1-mesa-dev
+libgl1-mesa-glx
+libgl1glx      
+libgpm-dev                      
+libgpm-dev                      
+libjpeg-dev
+libjpeg-dev
 libncurses5
 libncurses5-dbg
 libncurses5-dev
+libotf-dev                      
+libpng
+libpng-dev
+libpng-dev                      
+libpng-tools libpng16-16
+libpng12
+libpng16-dev                    
 libreoffice
+librsvg2-dev                    
 libssl-dev
+libtiff-dev
+libtiff-dev
+libxft-dev                      
 lsscsi
 make
 meld
+mesa-utils     
+meson
 mpd
 msmtp
 mutt
@@ -149,85 +196,39 @@ ncurses-examples
 ncurses-hexedit
 ncurses-term
 nfs-common
+ntpdate
 openssh-server
 openssl
+opensymbol
 pcregrep
 rcs
 realpath
+sagi libgif-dev 
+sagi libjpeg-dev
+sagi libtiff-dev
+sagi libxpm-dev
+scalable                        
 screen
 thunderbird
 tree
+unifont                         
 vim
 vnc4server
 wmctrl
-xclip
-xorg-dev
-xterm
-libjpeg-dev
-libtiff-dev
-libgif-dev
-libjpeg-dev
-libgif-dev
-libgif7
-libtiff-dev
-libpng
-libpng12
-figlet
-libpng-dev
-libpng-tools libpng16-16
-bison
-flex
-libelf-dev
-fonts-dejavu-core
-fonts-dejavu-extra
-opensymbol
-fonts-freefont-ttf
-liberation                      
-fonts-liberation                
-fonts-lmodern                   
-fonts-mgopen                    
-fonts-symbola                   
-fonts-ubuntu-font-family-console
-xfonts-base                     
-unifont                         
-scalable                        
-xfonts-scalable                 
-fonts-comfortaa                 
-fonts-fantasque-sans            
-fonts-hack-otf
-fonts-hack-ttf                  
-fonts-inconsolata
-sagi libjpeg-dev
-sagi libtiff-dev
-sagi libgif-dev 
-sagi libxpm-dev
 xaw3dg-dev                      
-libpng16-dev                    
-libgpm-dev                      
-librsvg2-dev                    
-imagemagick                     
-libgpm-dev                      
-libdbus-1-dev libdbus-glib-1-dev
-libfreetype6-dev                
-libpng-dev                      
-libxft-dev                      
-libotf-dev                      
-libdmalloc-dev
-mesa-utils     
-libgl1-mesa-dev
-libgl1glx      
-libgl1-glx     
-libgl1-mesa-glx
-ntpdate
-meson
+xclip
+xfonts-base                     
+xfonts-scalable                 
+xorg-dev
 xpdf
-evince
+xterm
 # Emacs
 xaw3dg-dev
 otf-freefont
 libotf-dev
-mu4e
+pcregrep
 # Mail
+mu4e
 isync
 # for building Kernel
 bison

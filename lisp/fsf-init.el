@@ -42,7 +42,7 @@ t))
 	(vertical-scroll-bars . right)
         (background-color . ,dp-default-background-color)))
 
-;;(require 'magit)
+(require 'dp-magit)
 
 (provide 'fsf-init)
 (message "loading fsf-init...done")

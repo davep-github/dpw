@@ -2342,9 +2342,6 @@ changed."
      [?/] dp-vc-dir-find-next-edited
      [?.] dp-vc-dir-find-next-edited)))
 
-(defun dp-magit-mode-setup-hook ()
-  )
-
 ;; <:add hook functions here aka hooks:>
 ;; I'm trending away from advice, since I've seen code that really rapes it
 ;; (I'm looking at you, ECB)

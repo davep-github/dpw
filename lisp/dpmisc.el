@@ -5370,12 +5370,14 @@ command-line argument to XEmacs, e.g. -eval \(dp-main-rc)."
   (message "dp-main-rc()...finished."))
 
 (defun dp-main-rc+2w (&optional height width)
+  (message "dp-main-rc+2w()...")
   (dp-main-rc)
   (when width
     (setq dp-sfw-width width))
   (when height
     (setq dp-sfh-height height))
-  (dp-2-v-or-h-windows nil height width))
+  (dp-2-v-or-h-windows nil height width)
+  (message "dp-main-rc+2w()...finished."))
 
 ;;;??? why did I add this here?  (dp-run-post-dpmacs-hooks))
 ;;; For one thing, it fixed the window config that was set in the hook var
@@ -13310,26 +13312,6 @@ Eg: per project, major mode, location, name...
 Anything that would make selecting the \"next\" buffer more convenient."
   (interactive)
   )
-
-(defun dp-switch-to-next-buffer ()
-  "Pick a next buffer in some way. It should always be the one I want. 
-No matter what. A DWIM-ish thing."
-  (interactive)
-  ;; For now, combine switch-to-next-buffer[-in-group]?
-  ;; Next in group, next.
-  (if (eq current-prefix-arg '-)
-      (switch-to-next-buffer 1)
-    (call-interactively 'switch-to-next-buffer-in-group)))
-
-(defun dp-switch-to-previous-buffer ()
-  "Pick a previous buffer in some way. It should always be the one I want. 
-No matter what. A DWIM-ish thing."
-  (interactive)
-  ;; For now, combine switch-to-next-buffer[-in-group]?
-  ;; Next in group, next.
-  (if (eq current-prefix-arg '-)
-      (switch-to-next-buffer -1)
-    (call-interactively 'switch-to-next-buffer-in-group)))
 
 (defvar dp-ssh-home-node "VILYA")
 
