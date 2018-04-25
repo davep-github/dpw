@@ -94,6 +94,8 @@ alias ls1=lsl
 #set -x
 
 grep_opts=
+: ${dp_grep_options:="--with-filename --directories=skip"}
+
 if inside_emacs_p
 then
     # --with-filename puts:
@@ -104,9 +106,9 @@ then
     # unset vars are.
     #!<@todo make standard util to parse a ^.*?:\d+:.*$ out of grep matches.
     # ??? (\d+:)? and/or (^.*?:)?
-    : ${dp_emacs_grep_options:="-n --with-filename --color=never --directories=skip"}
+    : ${dp_emacs_grep_options:="-n --color=never ${dp_grep_options}"}
     export dp_emacs_grep_options
-    ###echo_id dp_emacs_grep_options
+    #echo "dp_emacs_grep_options>$dp_emacs_grep_options<"
     dp_emacs_dash_n_greps()
     {
 #        source ${DP_RC_DIR}/grep-functions
@@ -121,10 +123,9 @@ then
 	alias xzegrep="xzegrep ${grep_options}"
 	alias xzfgrep="xzfgrep ${grep_options}"
 	alias pcregrep="pcregrep ${grep_options}"
-
-#        alias grep="grep ${grep_options}"
-#        alias egrep="egrep ${grep_options}"
-#        alias fgrep="fgrep ${grep_options}"
+	alias grep="grep $grep_options"
+	alias egrep="grep --directories=skip -E $grep_options"
+	alias fgrep="grep --directories=skip -F $grep_options"
     }
     export -f dp_emacs_dash_n_greps
 
@@ -183,6 +184,11 @@ then
     alias lslr='ls -1tr'        # xemacs makes a decent less.
 # ?? WTF??    alias lssz='kwa_LSL_COLOR="--color=never" lssz'
 
+else
+    #echo "dp_grep_options>$dp_grep_options<"
+    alias grep="grep $dp_grep_options"
+    alias egrep="grep -E $dp_grep_options"
+    alias fgrep="grep -F $dp_grep_options"
 fi
 
 alias npg=port-grep
@@ -311,10 +317,6 @@ alias myvncs='ls -l ~/.vnc/*.pid'
 ## being used by dpgrep from the output.  Now it'll be more complex and
 ## I'll stay up nights worring when it will change again and screw me over. Again.
 ## Sigh.
-
-alias grep="grep --directories=skip --color=never $grep_options"
-alias egrep="grep --directories=skip -E $grep_options"
-alias fgrep="grep --directories=skip -F $grep_options"
 
 alias sagi='sudo apt-get install'
 
