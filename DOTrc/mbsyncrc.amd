@@ -24,3 +24,30 @@ Create Both
 Sync All
 # Save the synchronization state files in the relevant directory
 SyncState *
+
+IMAPAccount vilya
+Host smtp.verizon.net
+User dpanarit@vilya.com
+PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.gnupg/smtp.verizon.net.pwd.gpg"
+##Pass Not-Password
+UseIMAPS yes
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+PipelineDepth 1
+
+IMAPStore vilya-remote
+Account vilya
+
+MaildirStore vilya-local
+Path ~/Maildir/vilya/
+Inbox ~/Maildir/vilya/Inbox
+
+Channel vilya
+Master :vilya-remote:
+Slave :vilya-local:
+# Include everything
+Patterns "INBOX" "*"
+# Automatically create missing mailboxes, both locally and on the server
+Create Both
+Sync All
+# Save the synchronization state files in the relevant directory
+SyncState *
