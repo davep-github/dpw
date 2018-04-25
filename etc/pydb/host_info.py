@@ -285,7 +285,7 @@ e(
         #'xem_opts': ('-eval (dp-2-v-or-h-windows-keep-geometry) '
 #             + '-geometry 180x67+460+0'),
         # Not particularly attractive.
-        'main_macs_opts': '-eval (progn (dp-start-editing-server) (dp-main-rc+2w))',
+        'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         """xem-xft-font""": '''"Inconsolata-12"''',
         'xterm_bg': PRIMARY_BOX_BG_COLOR,
         'xterm_fg': PRIMARY_BOX_FG_COLOR,
@@ -373,7 +373,7 @@ e(
         'xem_opts': ('-eval (dp-2-v-or-h-windows-keep-geometry) '
                      + '-geometry 180x74-0+0'),
         ###'main_macs_opts': '-eval (dp-start-editing-server)',
-        'main_macs_opts': '-eval (progn (dp-start-editing-server) (dp-main-rc+2w))',
+        'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         'xterm_bg': CZ_ALFA_BG_COLOR,
         'xterm_fg': CZ_ALFA_FG_COLOR,
         ### 'xterm-ls-colors': LIGHT_BG_LS_COLORS,
