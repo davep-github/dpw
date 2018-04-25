@@ -192,8 +192,11 @@ fi
 [ -n "$PRE_CMD" ] && eval "$PRE_CMD"
 cmd_args="$OPTS $BG_COLOR $MAIN_MACS_RC $aaa $emacs_opts"
 $VERBOSE echo exec $BIN $cmd_args
-[ -n "$verbose" ] && eko exec $BIN $cmd
-
+[ -n "$verbose" ] && {
+    eko exec $BIN $cmd
+    echo exec $BIN $cmd
+}
+    
 unset IMASCREENINSTANCE DP_MY_SCREEN_NAME
 
 export LANG=C
