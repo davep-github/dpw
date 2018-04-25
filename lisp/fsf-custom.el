@@ -64,7 +64,7 @@
      (folding-internal-margins)
      (folded-file . t))))
  '(save-abbrevs nil)
- '(save-place-mode t)
+ '(save-place-mode nil)
  '(scroll-bar-mode (quote right))
  '(send-mail-function (quote smtpmail-send-it))
  '(sendmail-program "/home/dpanarit/bin/dp-msmtp")
