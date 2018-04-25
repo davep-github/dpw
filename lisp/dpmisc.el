@@ -975,8 +975,10 @@ If TEXT-ONLY-P is non-nil, then shrink-wrap the mark aound just the
 first and last non-white space on the line."
   (interactive "P")
   (unless (dp-mark-active-p)
+    (dp-set-zmacs-region-stays t)
     (dp-mark-line text-only-p no-newline-p)
-    (dp-set-zmacs-region-stays t)))
+    ;; t means that we marked the line.
+    t))
 
 ;; (defun* dp-rest-or-all-of-line (&optional (text-only-p t) (no-newline-p t) 
 ;;                                 from-pos shrink-wrap-p
@@ -1093,10 +1095,11 @@ If region is not active, default gettor is `symbol-near-point'."
   "Call FUNC on the region if active, the current line otherwise.
 If APPEND-P is non-nil, append the affected text.
 Perform PRE-OP immediately before and POST-OP immediately after calling func.
-@todo Try to recognize a full line copy and then insert that at BOL when yank'd."
-  (progn
-    (save-excursion
-      (dp-mark-line-if-no-mark)
+@todo Try to recognize a full line copy and then insert that at BOL when yank'd.
+@ Use text properies \('entire-line-p . t\)"
+  (save-excursion
+    (let ((entire-line-p
+	   (dp-mark-line-if-no-mark)))
       (dp-activate-mark)
       (if append-p
 	  (append-next-kill))
@@ -1105,7 +1108,7 @@ Perform PRE-OP immediately before and POST-OP immediately after calling func.
 
       ;;(dmessage "f>%s<, m>%s<, p>%s<" func (mark) (point))
       (funcall func (region-beginning) (region-end))
-      
+
       (if post-op
 	  (funcall post-op)))
     (when deactivate-mark-p
@@ -5378,6 +5381,12 @@ command-line argument to XEmacs, e.g. -eval \(dp-main-rc)."
     (setq dp-sfh-height height))
   (dp-2-v-or-h-windows nil height width)
   (message "dp-main-rc+2w()...finished."))
+
+(defun dp-main-rc+2w+server (&optional height width)
+  (message "dp-main-rc+2w()...")
+  (dp-main-rc+2w)
+  (dp-start-editing-server)
+  (message "dp-main-rc+2w()...done"))
 
 ;;;??? why did I add this here?  (dp-run-post-dpmacs-hooks))
 ;;; For one thing, it fixed the window config that was set in the hook var
