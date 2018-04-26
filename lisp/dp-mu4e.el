@@ -19,18 +19,29 @@ These will show up in the main mu4e screen."
 			 ("from:writer" "From Tim" ?T)
 			 )))
 
+(defun dp-mu4e-bind-keys ()
+  (interactive)
+  (dp-define-local-keys
+   '(
+     ;; No fucking shift keys for common functions.
+     [?u] mu4e-update-mail-and-index
+     [?q] bury-buffer
+     [?Q] mu4e~headers-quit-buffer
+     [(meta ?-)] bury-buffer  ; Make bury or mu4e~headers-quit-buffer.
+     )))
+
 (defun dp-setup-mu4e0 ()
+  (interactive)				; for when I hack on it.
   (defvar dp-mu4e-initial-bookarks mu4e-bookmarks
     "Keep the original value so I can reinit when playing with new bookmarks.")
+  ;; @todo XXX do I like running in the background?
   (if (boundp 'RESTORE-im=experimenting)
       (mu4e-update-mail-and-index 'run-in-background)
     (message "RESTORE `mu4e-update-mail-and-index'"))
   (global-set-key [(control ?c) ?r] 'mu4e)
   (global-set-key [(control ?x) ?m] 'mu4e-compose-new)
-  ;; No fucking shift keys.
-  (define-key mu4e-main-mode-map [?u] 'mu4e-update-mail-and-index)
-  (dp-mu4e-add-bookmarks)
-  )
+  (dp-mu4e-bind-keys)
+  (dp-mu4e-add-bookmarks))
 
 (defun dp-mu4e-reset-bookmarks ()
   "Return the list of bookmarks to pristine state."
@@ -50,6 +61,9 @@ These will show up in the main mu4e screen."
      ;; They must be real refileophiles.
      [?r] mu4e-compose-reply
      [?R] mu4e-headers-mark-for-refile
+     [?q] bury-buffer
+     [?Q] mu4e~headers-quit-buffer
+     [(meta ?-)] bury-buffer
      [(meta up)] dp-other-window-up
      [(meta down)] other-window)))
 
@@ -60,6 +74,9 @@ These will show up in the main mu4e screen."
      ;; They must be real refileophiles.
      [?r] mu4e-compose-reply
      [?R] mu4e-headers-mark-for-refile
+     [?q] bury-buffer
+     [?Q] mu4e~headers-quit-buffer
+     [(meta ?-)] bury-buffer
      [(meta up)] dp-other-window-up
      [(meta down)] other-window)))
 
