@@ -33,6 +33,9 @@
 ;; ??? Try using 'invalid-operation?  But how to specify the exact error?
 ;;
 ;; In the following, the string can be used to ignore this error.
+;;
+;; Just smoosh all errors, Emacs and XEmacs.  No sense in figuring out:
+;; Emacs only, XEmacs only or both.
 
 (defconst dp-debug-ignored-errors
   '(beginning-of-line
