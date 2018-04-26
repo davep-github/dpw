@@ -2894,6 +2894,11 @@ This kind of allows us to use a journal file with a non-standard name."
 (defvar dp-journal-mode-post-hook nil
   "Call these hook functions after all other journal mode code.")
 
+(defun dp-journal-mode-pre-hook ()
+  (local-set-key [(meta ?-)] 'dp-bury-or-kill-buffer))
+
+(add-hook 'dp-journal-mode-pre-hook 'dp-journal-mode-pre-hook)
+
 ;;; real dp-journal-mode function defined here:
 (define-derived-mode dp-journal-mode text-mode "Jrn" ;; "Journal"
   "Major mode for editing journals.
