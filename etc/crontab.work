@@ -9,7 +9,7 @@
 DP_CRON_JOB=true
 SHELL=/bin/bash
 PATH=/etc:/bin:/sbin:/usr/bin:/usr/sbin:/home/dpanarit/bin:/usr/local/bin:/usr/yokel/bin:/usr/yokel/sbin:/usr/X11R6/bin:/usr/bree/sbin:/usr/bree/bin
-MAILTO=dpanarit.cron@meduseld.net
+MAILTO=david.panariti@amd.com
 
 #
 #minute	hour	mday	month	wday	command
