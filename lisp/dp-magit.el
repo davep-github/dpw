@@ -8,6 +8,12 @@
 (defun dp-magit-mode-setup-hook ()
   )
 
+;;
+;; Sometimes the original version works.
+;; Dunno why.
+;; Repo state/contents?
+;; version.
+;;
 (defun magit-log-format-margin (author date)
   (-when-let (option (magit-margin-option))
     (-let [(_ style width details details-width)
