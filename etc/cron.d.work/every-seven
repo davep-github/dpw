@@ -3,22 +3,4 @@
 
 . $HOME/etc/crontab.rc
 
-###
-### Was fated to failure from day one.
-###dp-mbsync
-###
-### Mr. Atoz will help us.
-
-cd $ETC_BIN_DIR
-$ETC_BIN_DIR/wan-ip-changed-p
-
-{
-    # Until I learn (HA!) where the nepomuk stuff is started,
-    # and nice it there,  I'll renice it here.
-    # How embarrassing.
-    #  nepo-renice > /dev/null
-    # I always forget:
-    ##xem-renicer
-    prog-renicer -p -20 mpd
-    mbsync-and-mu-index
-} >/dev/null 2>&1
+mbsync-and-mu-index
