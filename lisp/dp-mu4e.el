@@ -19,15 +19,21 @@ These will show up in the main mu4e screen."
 			 ("from:writer" "From Tim" ?T)
 			 )))
 
-(defun dp-mu4e-bind-keys ()
+;; Couldn't figure out how to quote this as a kb-lambda inside the
+;; `dp-define-local-keys' arg list.
+(defun dp-mu4e-bury-or-exit ()
+  (interactive)
+  (dp-func-or-kill-buffer 'bury-buffer 'mu4e-quit))
+
+(defun dp-mu4e-setup-bind-keys ()
   (interactive)
   (dp-define-local-keys
-   '(
+   `(
      ;; No fucking shift keys for common functions.
      [?u] mu4e-update-mail-and-index
-     [?q] bury-buffer
-     [?Q] mu4e~headers-quit-buffer
-     [(meta ?-)] bury-buffer  ; Make bury or mu4e~headers-quit-buffer.
+     [?q] dp-mu4e-bury-or-exit
+     [?Q] mu4e-quit
+     [(meta ?-)] dp-mu4e-bury-or-exit
      )))
 
 (defun dp-setup-mu4e0 ()
@@ -40,7 +46,7 @@ These will show up in the main mu4e screen."
     (message "RESTORE `mu4e-update-mail-and-index'"))
   (global-set-key [(control ?c) ?r] 'mu4e)
   (global-set-key [(control ?x) ?m] 'mu4e-compose-new)
-  (dp-mu4e-bind-keys)
+  (dp-mu4e-setup-bind-keys)
   (dp-mu4e-add-bookmarks))
 
 (defun dp-mu4e-reset-bookmarks ()
@@ -61,9 +67,9 @@ These will show up in the main mu4e screen."
      ;; They must be real refileophiles.
      [?r] mu4e-compose-reply
      [?R] mu4e-headers-mark-for-refile
-     [?q] bury-buffer
+     [?q] dp-bury-or-kill-buffer
      [?Q] mu4e~headers-quit-buffer
-     [(meta ?-)] bury-buffer
+     [(meta ?-)] dp-bury-or-kill-buffer
      [(meta up)] dp-other-window-up
      [(meta down)] other-window)))
 
@@ -74,9 +80,9 @@ These will show up in the main mu4e screen."
      ;; They must be real refileophiles.
      [?r] mu4e-compose-reply
      [?R] mu4e-headers-mark-for-refile
-     [?q] bury-buffer
+     [?q] dp-bury-or-kill-buffer
      [?Q] mu4e~headers-quit-buffer
-     [(meta ?-)] bury-buffer
+     [(meta ?-)] dp-bury-or-kill-buffer
      [(meta up)] dp-other-window-up
      [(meta down)] other-window)))
 
