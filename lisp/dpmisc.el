@@ -5830,8 +5830,13 @@ When beginning a sequence, (point) is saved.  This can be pushed onto
                                     cmd-list consecutive-command
                                     'RECURSING-P)))))
 (defvar dp-brief-home-command-list
-  '(back-to-indentation
+  '(
+    ;; I like these two, but I'm sooo accustomed to C-a being bol.
+    ;; But it's nice to get to indentation, too.
+    ;; The thing is which order yields POLA.
     beginning-of-line
+    back-to-indentation
+    
     (lambda () (move-to-window-line 0))
     (lambda ()
       (dp-push-go-back "home-BOB" dp-consecutive-key-command-initial-point)
