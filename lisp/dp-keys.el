@@ -773,12 +773,12 @@ TODO: add prompting for functions analogous to `local-set-key' et.al."
   (let ((defn (key-binding old-key-seq)))
     (local-set-key new-key-seq defn)))
 
-(defun dp-bump-key-binding (key-seq new-def new-seq &optional keymap)
+(defun dp-bump-key-binding (key-seq new-def new-seq &optional keymap noisyp)
   "Copy binding for KEY-SEQ to NEW-SEQ and then bind KEY-SEQ to NEW-DEF.
 This is NOT idempotent, so we skip if KEY-SEQ and NEW-DEF are bound."
   ;; Don't do this if new-seq and new-def are already bound.
   (setq-ifnil keymap (current-local-map))
-  (if (equal new-def (key-binding key-seq))
+  (if (and noisyp (equal new-def (key-binding key-seq)))
       (message "new-def(%s) is already on key-seq(%s)"
                new-def key-seq)
     (dp-copy-key-binding key-seq new-seq)
