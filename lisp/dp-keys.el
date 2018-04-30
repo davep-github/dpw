@@ -302,6 +302,9 @@ Bind any keys in KEYS via `dp-define-keys'."
                               (other-window 1)
                             (call-interactively 'info)))
 (global-set-key [(control h) ?i] 'dp-info)
+(global-set-key [(control h) (control l)] (kb-lambda
+					      (info "elisp")))
+
 ;;(global-set-key [(control x) 4 h (control m)] '2man)
 (global-set-key "\C-x4h\C-m" '2man)
 ;;(global-set-key "\C-=" 'dp-what-cursor-position)
