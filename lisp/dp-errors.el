@@ -89,7 +89,7 @@
     "^Don't know where `.*' is defined"
     "Buffer not visiting a file or directory"
     "Mismatched #ifdef #endif pair"
-    
+    "Window .* too small for splitting"
     ;;XEmacs
     "^No preceding item in "
     "^No following item in "
