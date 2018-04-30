@@ -4,3 +4,4 @@
 . $HOME/etc/crontab.rc
 
 mbsync-and-mu-index
+echo "$0: $(date)" >| $HOME/var/log/crontab-every-seven
