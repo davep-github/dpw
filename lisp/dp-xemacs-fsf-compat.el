@@ -206,6 +206,43 @@ No matter what. A DWIM-ish thing."
       (switch-to-next-buffer -1)
     (call-interactively 'switch-to-next-buffer-in-group)))
 
+;;
+;; Moved here since it didn't work in Emacs.
+;; However, I eventually recalled Emacs' always uses another window.
+;;
+(defun 2man (topic &optional arg silent)
+  "Display a man page in another window."
+  (interactive (list (let ((default (symbol-near-point)))
+                       (read-string
+                        (if (equal default "") "Manual entry: "
+			  (concat "Manual entry: (default " default ") "))
+			nil 
+                        (and-boundp 
+                            'Manual-page-minibuffer-history
+                            'Manual-page-minibuffer-history)
+                        default))
+                     (prefix-numeric-value current-prefix-arg)))
+  (let ((obuf (current-buffer)))
+    (if (one-window-p 'NOMINIBUFFER)
+        (split-window))
+    (save-excursion
+      (with-selected-window (next-window)
+        (manual-entry topic arg)))))
+
+;;
+;; Modified for Emacs (the XEmacs function failed in Emacs)
+;; until I recalled that their man always uses another window.
+;; This should be verified under XEmacs.
+;; (defun 2man ()
+;;   "`manual-entry' in a different window."
+;;   (interactive)
+;;   (let ()
+;;     (if (one-window-p 'NOMINIBUFFER)
+;; 	(split-window))
+;;     (other-window 1)
+;;     (with-selected-window (next-window)
+;;       (call-interactively 'man))))
+
 (global-set-key [(control ?x) (control right)] 'dp-switch-to-next-buffer)
 (global-set-key [(control ?y) (control left)] 'dp-switch-to-previous-buffer)
 
