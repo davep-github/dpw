@@ -4762,25 +4762,6 @@ function template at point.
     (message "%s" (or doc 
 		      (format "No doc for `%s'" (eldoc-current-symbol)))))))
 
-(defun 2man (topic &optional arg silent)
-  "Display a man page in another window."
-  (interactive (list (let ((default (symbol-near-point)))
-                       (read-string
-                        (if (equal default "") "Manual entry: "
-			  (concat "Manual entry: (default " default ") "))
-			nil 
-                        (and-boundp 
-                            'Manual-page-minibuffer-history
-                            'Manual-page-minibuffer-history)
-                        default))
-                     (prefix-numeric-value current-prefix-arg)))
-  (let ((obuf (current-buffer)))
-    (if (one-window-p 'NOMINIBUFFER)
-        (split-window))
-    (save-excursion
-      (with-selected-window (next-window)
-        (manual-entry topic arg)))))
-
 (defun auctex-setup ()
   (interactive)
   (require 'tex-site)
