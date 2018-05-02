@@ -124,8 +124,12 @@
     
     ;; info
     "^Node has no Previous$"
-    "^No \".*\" in index$"
-    "^This is the first Info node you looked at$"    
+    ;; Seriously? What kind of fucking rivalry is this?
+    ;; The again, ' takes no quoting.
+    "^No \".*\" in index$"		; XEmacs.
+    "^No '.*' in index"			; Emacs.
+    "^This is the first Info node you looked at$"
+
     ;; imenu
     "^No items suitable for an index found in this buffer\\.$"
     "^The mode \".*\" does not take full advantage of imenu\\.el yet\\.$"
