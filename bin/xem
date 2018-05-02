@@ -19,8 +19,9 @@ log_file="$HOME/log/xemacs/xem-run.log"
 {
     echo "======= $0 ==================================="
     date
-    echo "@:" "$@"
-    echo "pwd: $(pwd)"
+    echo "@>$@<"
+    echo "pwd>$(pwd)<"
+    echo "PWD>$PWD<"
     echo "PATH>$PATH<"
     echo "USER>$USER<"
     echo "HOST>$HOST<"
@@ -207,8 +208,13 @@ niceness="-20"
 nice_cmd="sudo nice -n $niceness"
 renice_cmd="sudo renice -n $niceness"
 cmd='$BIN ${font_arg}  '${FONT_SET_EXPR[@]}' $cmd_args'
-if [ "$just_show" != 'y' ]
+if [ "$just_show" = 'y' ]
 then
+    # why this ?echo $BIN $font_arg $cmd_args 2>&1 | tee --append $log_file
+    # instead of the below?
+    eval echo $cmd 2>&1 | tee --append $log_file
+    eval eko $cmd 2>&1 | tee --append $log_file
+else
     #echo "dir>$PWD<"
     set -v
     #eval exec $cmd  >> $log_file 2>&1 $amper
@@ -216,12 +222,7 @@ then
     eval $cmd  >> $log_file 2>&1 $amper
     xem_pid=$!
     if vsetp "$amper" && vsetp "$do_renice"
-    then 
+    then
         $renice_cmd -p $xem_pid
     fi
-else
-    # why this ?echo $BIN $font_arg $cmd_args 2>&1 | tee --append $log_file
-    # instead of the below?
-    eval echo $cmd 2>&1 | tee --append $log_file
-    eval eko $cmd 2>&1 | tee --append $log_file
 fi
