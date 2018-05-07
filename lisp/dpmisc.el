@@ -546,6 +546,10 @@ string containing their values."
 ### fill-column: 9999 ***
 ### End: ***
 ")
+
+;; Some VNC setups need this to since Alt is sent instead of Meta.
+(setq x-alt-keysym 'meta)
+
 (defsubst dp-order-cons (cons &optional lessp)
   "Return CONS' elements ordered in some way as determined by LESSP.
 LESSP defaults to less-than ('<)."
