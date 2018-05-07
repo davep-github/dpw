@@ -86,6 +86,8 @@
         ln = log -n
         # 2 chars.  No project will ever be late now.
         logn = log -n
+	logc = log --color
+	clog = log --color
         # These are longer than the actual command to compensate for all of
         # the shorter ones.
         filediffs = log -u        # show changes to a file
