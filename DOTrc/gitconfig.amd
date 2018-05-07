@@ -32,6 +32,12 @@
 [pull]
 	disabled = true
         query = true
+
+[reset]
+	disabled = true
+	query = true
+	disablemsg = This command can overwrite uncommitted changes. \
+Consider rebase, or co and branch -M
         
 [format]
 	signoff = true
