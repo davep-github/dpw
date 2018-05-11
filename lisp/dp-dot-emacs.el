@@ -12,8 +12,5 @@
 			(expand-file-name ".xemacs" "~")))
 
 (load-file user-init-file)
-(dmessage "post user-init-file: tramp-auto-save-directory>%s<" tramp-auto-save-directory)
-
 (load-file custom-file)
-(dmessage "post custom-file: tramp-auto-save-directory>%s<" tramp-auto-save-directory)
 
