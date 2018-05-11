@@ -95,6 +95,17 @@ function template at point.
 		     (or doc
 			 (format "No doc for `%s'" (elisp--current-symbol)))))))
 
+(defun eldoc-insert-elisp-func-template (doc)
+  "Insert function template extracted from an eldoc help message."
+  (interactive "*")
+  (message "%s" doc)
+  (if (not doc)
+      (error "could not find doc.")
+    (if (string-match "[^(]*(\\(.*\\))[^)]*" doc)
+	(save-excursion
+	  (insert (substring doc (match-beginning 1) (match-end 1)) ")"))
+      (message "Cannot find args, none?"))))
+
 (defsubst dp-mmm-in-any-subregion-p (&rest r)
   nil)
 
