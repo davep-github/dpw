@@ -9319,7 +9319,7 @@ A bookmark, in this context, is:
                 bm-string))))
 
 (defun dp-simple-quote-escape (s)
-  (replace-in-string s "\"" "\\\""))
+  (replace-in-string s "\"" "\\\"" t))
 
 ;;; DUMMY
 (defun dp-setup-indentation-colorization (&rest r)
