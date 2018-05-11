@@ -1722,7 +1722,7 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
 
 (defadvice grep (after dp-grep activate)
   "Do a dp-push-go-back before we go finding the matches returned by `grep'.
-Before visiting means after the command completes."
+Before visiting means after this command completes."
   (dp-set-compile-like-mode-error-function)
   (dp-push-go-back "advised grep"))
 
