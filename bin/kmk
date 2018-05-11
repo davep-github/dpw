@@ -123,7 +123,7 @@ then
 >${KDIR}<"
 elif [ -z "${KDIR-}" ]
 then
-    KDIR="$(dogo brahmalinux)"
+    KDIR="$(dogo linuxdevroot)"
     echo "Using hardcoded kernel dir (KDIR):
 >${KDIR}<
   Please set in, say, ~/.rc/env.<PROJECT>"
