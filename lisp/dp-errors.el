@@ -164,12 +164,16 @@
     "No more tag marks on stack"
     "Buffer has no associated tag tables"
     "The beginning of the \\*xgtags\\* buffer has been reached"
-    "The tags stack is empty"
     
     ;; BBDB
     "^no previous record$"
     "^no next record$"
-    
+
+    ;; Magit
+    "No next section"
+    "No previous section"
+    "^Already staged$"
+
     ;; copied from emacs
     "^No possible abbreviation preceding point$"
     file-supersession
@@ -235,8 +239,9 @@
     ;; directories on the dirstack.
     "^No such directory: "
     
-    ;; cscope errors
+    ;; Reveng errors
     "^There is no unique cscope database directory!$"
+    "The tags stack is empty"
     )
   "*My list of ignored signals.  These will not cause an entry into the
 debugger if encountered when `debug-on-error' is non-nil.
