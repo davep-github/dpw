@@ -1693,6 +1693,12 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
   ;; (dp-raise-and-focus-frame)
   (local-set-key "\C-c\C-c" 'dp-server-edit))
 
+(defun dp-grep-setup-hook ()
+  (dp-local-set-keys
+   '([(control ?o)] dp-one-window++
+     [?o] compilation-display-error
+     ))) 
+
 (when (dp-optionally-require 'igrep)
   (defadvice igrep (after dp-igrep activate)
     "Do a `dp-push-go-back' before we visit the matches returned by `igrep'.
