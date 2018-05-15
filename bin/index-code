@@ -29,7 +29,7 @@ set -u
 midix=
 vsetp ${PROJECT-} && midix=.${PROJECT}
 
-: ${status_file=${progname}.stat}
+: ${status_file=${USER}-${progname}.status}
 : ${RC_FILE_OVERRIDE=}
 : ${RC_FILE_NAMES=".../DOTindex-code.rc .../DOTindex-code${midix}.rc"}
 : ${RC_EXTRA_FILE_NAMES=}
