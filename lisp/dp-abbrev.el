@@ -870,7 +870,7 @@ table.")
       (concat dp-xemacs-droppings "/")))
   (define-abbrev dp-manual-abbrev-table "edrop" 
     (concat dp-editor-droppings "/"))
-  (define-abbrev dp-manual-abbrev-table "xebacs" 
+  (define-abbrev dp-manual-abbrev-table "ebacs"
     (concat dp-ebacs-droppings "/"))
   (define-abbrev dp-manual-abbrev-table "asave" 
     (concat dp-auto-save-droppings "/"))
