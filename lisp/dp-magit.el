@@ -10,7 +10,8 @@
 
 (defun dp-magit-mode-hook ()
   (interactive)
-  (local-set-key [?=] 'magit-diff-dwim))
+  (dp-local-set-keys
+   '([?=] magit-diff-dwim)))
 
 (add-hook 'magit-mode-hook 'dp-magit-mode-hook)
 
