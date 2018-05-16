@@ -210,7 +210,7 @@ e(
     ref=[home_family, OSDB['linux'], default]
 )
 
-AMD_XEM_GEOMETRY = '-geometry 81x70-0+0'
+AMD_XEM_GEOMETRY = '-geometry 81x66-0+0'
 AMD_BG_COLOR = 'rgb:0/33/60'
 AMD_FG_COLOR = 'white'
 amd_family = e(
