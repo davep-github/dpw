@@ -9466,8 +9466,8 @@ A bookmark, in this context, is:
    (dp-getenv-numeric (format "DP_XEM_FRAME_%s" env-var-name))))
 
 ;; 
-;; | |, | - one window
-;; |-|, : - two horizontal
+;; | |, |  - one window
+;; |-|, :  - two horizontal
 ;; |||, || - two vertical
 ;; 
 (defun dp-2-v-or-h-windows (&optional horizontal-p frame-width height)
