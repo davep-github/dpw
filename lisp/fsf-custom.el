@@ -65,7 +65,7 @@
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
    (quote
-    (racer ac-ispell ac-clang ac-capf ac-c-headers helm-codesearch codesearch helm contextual org-journal org-jira openwith magit ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
+    (iregister isearch-symbol-at-point jbeans-theme jazz-theme jumpc jump-tree kaolin-themes labburn-theme lines-at-once line-up-words liso-theme confluence racer ac-ispell ac-clang ac-capf ac-c-headers helm-codesearch codesearch helm contextual org-journal org-jira openwith magit ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
  '(query-replace-lazy-highlight nil)
  '(safe-local-variable-values
    (quote
