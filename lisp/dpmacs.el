@@ -266,13 +266,23 @@ editing servers via `dp-editing-server-ipc-file'.")
 ;; Now we can do my kinds of things...
 ;; 
 
+;; in XEmacs (only?)
 (when dp-use-xgtags-p 
   (dp-optionally-require 'xgtags))
 (defun dp-xgtags-p ()
   (and dp-use-xgtags-p
        (or (featurep 'xgtags )
            (and (fboundp 'xgtags-mode)
-                (dmessage "not featurep 'gtags, but gtags-mode defined.")))))
+                (dmessage "not featurep 'xgtags, but xgtags-mode defined.")))))
+
+;; In Emacs (only?)
+(when dp-use-ggtags-p 
+  (dp-optionally-require 'ggtags))
+(defun dp-ggtags-p ()
+  (and dp-use-ggtags-p
+       (or (featurep 'ggtags )
+           (and (fboundp 'ggtags-mode)
+                (dmessage "not featurep 'ggtags, but ggtags-mode defined.")))))
 
 ;; I like it on by default, but it is painfully slow over low bandwidth
 ;; links, so I set it up here and let it be overridden in a spec-macs.

@@ -358,6 +358,13 @@ against the list of regexps."
   :group 'dp-vars
   :type 'boolean)
 
+;; Needs must make it work.  Seems to interact poorly with my stuff.
+;; Advices?
+(defcustom dp-use-ggtags-p nil
+  "*A rose is a rose."
+  :group 'dp-vars
+  :type 'boolean)
+
 (defcustom dp-use-etags-p nil
   "*A rose is a rose."
   :group 'dp-vars
