@@ -1474,10 +1474,7 @@ isearch while the region is active to locate the end of the region."
 (defalias 'dir 'dired)
 
 (defun dp-Info-mode-hook ()
-  (dp-define-buffer-local-keys '([(meta ?-)] 
-                                 (kb-lambda 
-                                     (dp-func-or-kill-buffer 
-                                      Info-last))
+  (dp-define-buffer-local-keys '([(meta ?-)] dp-bury-or-kill-buffer
                                  [(?/)] isearch-forward
                                  [(shift tab)] Info-prev-reference
                                  [(iso-left-tab)] Info-prev-reference
