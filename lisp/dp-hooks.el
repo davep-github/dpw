@@ -1927,8 +1927,8 @@ Use of 'unset allows the legitimate value of nil to be used.")
 ;;; Used by way too many commands to be advised.
 (defun dp-beginning-of-defun (&optional arg)
   "If preceeding command was `end-of-defun' do a go-back.
-Otherwise maintain region activation, push-go-back and then 
-business as usual."
+Otherwise push-go-back and then business as usual.
+In all cases maintain region activation."
   (interactive "p")
   (dp-set-zmacs-region-stays t)
   (if (eq last-command 'dp-end-of-defun)
