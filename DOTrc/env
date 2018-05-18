@@ -1,3 +1,5 @@
+#!/bin/bash
+# shebang gets us the right major mode.
 # common env items
 
 # This is needed for the new idiom of using the Python idiom of
@@ -160,7 +162,10 @@ then
     export TERMINFO=$HOME/.terminfo
     export DP_HIST_GREP_GREPPER=egrep
     export GIT_PAGER=cat
+    export GREP_DASH_N=-n
     LESS="-MM -X --ignore-case"
+else
+    export GREP_DASH_N=
 fi
 
 MAILDIR="$HOME/Maildir"
@@ -257,6 +262,9 @@ PATH=$(dp_add_to_path_iff \
     "/opt/perforce/bin" \
     "/opt/p4/bin" \
     "/opt/p4v/bin" \
+    "$HOME/local/opt/perforce/bin" \
+    "$HOME/opt/p4/bin" \
+    "$HOME/opt/p4v/bin" \
     "/opt/GitEye/GitEye")
 
 true
