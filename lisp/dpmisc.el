@@ -9319,7 +9319,7 @@ A bookmark, in this context, is:
                 bm-string))))
 
 (defun dp-simple-quote-escape (s)
-  (replace-in-string s "\"" "\\\"" t))
+  (replace-in-string s "\"" "\\\""))
 
 ;;; DUMMY
 (defun dp-setup-indentation-colorization (&rest r)
@@ -14379,6 +14379,11 @@ Return elements of L1 when element of L2 are nil or \"\", i.e. no trailing separ
 JFC."
   (interactive "P")
   (set-window-dedicated-p (dp-get-buffer-window) (not arg)))
+
+(defsubst eli ()
+  "Emacs Lisp Info.  Visit Emacs Lisp Info node."
+  (interactive)
+  (info "elisp"))
 
 (defsubst eli ()
   "Emacs Lisp Info.  Visit Emacs Lisp Info node."
