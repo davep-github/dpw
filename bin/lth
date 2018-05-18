@@ -11,4 +11,6 @@ else
     nlines="$((${LINES:-24} - 2))"
 fi
 
-kwa_LTL_NUM_LINES=$nlines PAGER="head" ltl "$@"
+kwa_LTL_NUM_LINES=$nlines PAGER="head" \
+		 ltl ${DP_SCRIPT_X_DEBUG_OPT} \
+		 "$@"
