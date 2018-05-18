@@ -6836,7 +6836,7 @@ QUIT-KEYS, if neq t, are added to this map."
 
 (defun dp-regexp-dequote (str)
   "Very simplistic quoted regexp dequoter."
-  (replace-in-string str "\\\\" ""))
+  (replace-in-string str "\"" "\\\"" t))
 
 (defun clhs ()
   (interactive)
@@ -9319,7 +9319,7 @@ A bookmark, in this context, is:
                 bm-string))))
 
 (defun dp-simple-quote-escape (s)
-  (replace-in-string s "\"" "\\\"" t))
+  (replace-in-string s "\"" "\\\""))
 
 ;;; DUMMY
 (defun dp-setup-indentation-colorization (&rest r)
@@ -14381,6 +14381,11 @@ JFC."
   (set-window-dedicated-p (dp-get-buffer-window) (not arg)))
 
 (dp-defaliases 'dp-swd 'swd 'dp-set-window-dedicated-p)
+
+(defsubst eli ()
+  "Emacs Lisp Info.  Visit Emacs Lisp Info node."
+  (interactive)
+  (info "elisp"))
 
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;; add new functions here
