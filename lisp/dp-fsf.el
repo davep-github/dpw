@@ -1,14 +1,14 @@
-(message "dp-fsf-early loading...")
-
-(defun dp-ibuffer-do-and-update (op &rest op-args)
-  "Do an ibuffer operation and then refresh the buffer."
-  (apply op op-args)
-  (ibuffer-update))
+(message "dp-fsf loading...")
 
 (defun dp-ibuffer-do-save ()
   "Save and then refresh the buffer."
   (interactive)
-  (dp-ibuffer-do-and-update 'ibuffer-do-save))
+  (ibuffer-mark-forward nil nil 1)
+  (ibuffer-do-save)
+  (previous-line)
+  (ibuffer-unmark-forward nil nil 1)
+  (previous-line)
+  (call-interactively 'ibuffer-update))
 
 (defcustom py-block-comment-prefix "##"
   "*String used by \\[comment-region] to comment out a block of code.
@@ -52,4 +52,4 @@ current buffer is not visiting a file."
   (byte-compile-file generated-autoload-file))
 
 (provide 'dp-fsf)
-(message "dp-fsf-early loading...done.")
+(message "dp-fsf loading...done.")
