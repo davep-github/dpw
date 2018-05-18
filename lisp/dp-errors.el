@@ -145,6 +145,9 @@
     ;; (X|SG)ML mode
     "No previous element in .* element$"
 
+    ;; magit
+    "^Already unstaged$"
+
     ;; etags
     "^No tags table in use!  Use .* to select one\\.$"
     "^There is no default tag$"
