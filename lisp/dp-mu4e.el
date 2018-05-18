@@ -46,8 +46,10 @@ These will show up in the main mu4e screen."
     (message "RESTORE `mu4e-update-mail-and-index'"))
   (global-set-key [(control ?c) ?r] 'mu4e)
   (global-set-key [(control ?x) ?m] 'mu4e-compose-new)
+  ;; We don't want no steenkin' shift keys!
   (dp-mu4e-setup-bind-keys)
-  (dp-mu4e-add-bookmarks))
+  (dp-mu4e-add-bookmarks)
+  )
 
 (defun dp-mu4e-reset-bookmarks ()
   "Return the list of bookmarks to pristine state."
