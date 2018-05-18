@@ -1341,10 +1341,9 @@ See `dp-parenthesize-region-paren-list'")
   (dp-elisp-mode-common-hook)
   (dp-add-line-too-long-font 'lisp-font-lock-keywords-2 :buffer-local-p t))
 
-(defvar dp-isearch-mark-active-p nil
+(defvar dp-isearch-region-active-at-search-start-p nil
   "Remembers whether the region was active when isearch started.")
-
-(defvar dp-isearch-mark-at-start nil
+(defvar dp-isearch-region-beginning-at-search-start nil
   "Remembers mark in order to restore it if region was active when search started.")
 
 (defun dp-copy-isearch-string-as-kill ()
@@ -1376,8 +1375,8 @@ isearch while the region is active to locate the end of the region."
 ;;    (define-key is-mode-map [up] 'isearch-ring-retreat)
 
     (when (dp-mark-active-p)
-      (setq dp-isearch-mark-active-p t
-            dp-isearch-mark-at-start (region-beginning)));; (point)) ;; was (mark)
+      (setq dp-isearch-region-active-at-search-start-p t
+	    dp-isearch-region-beginning-at-search-start (region-beginning)))
     ;; M-p is set to `dp-parenthesize-region' in `dp-minibuffer-setup-hook'.
     (define-key is-mode-map "\C-p" 'isearch-ring-retreat)
     (define-key is-mode-map "\C-n" 'isearch-ring-advance)
@@ -1404,10 +1403,10 @@ isearch while the region is active to locate the end of the region."
 ;; cases, but it is unexpected and surprising. The same effect can be gotten
 ;; by deactivating the mark, reactivating it and then doing the isearch.
 (defun dp-isearch-mode-end-hook ()
-  (when dp-isearch-mark-active-p
-    (setq dp-isearch-mark-active-p nil)
-    (dp-set-mark dp-isearch-mark-at-start)
-    (setq dp-isearch-mark-at-start nil)))
+  (when dp-isearch-region-active-at-search-start-p
+    (setq dp-isearch-region-active-at-search-start-p nil)
+    (dp-set-mark dp-isearch-region-beginning-at-search-start)
+    (setq dp-isearch-region-beginning-at-search-start nil)))
 
 (defun dp-help-mode-hook ()
   "Set up help-mode *my* way."
