@@ -44,9 +44,10 @@ while (($# > 0))
 do
   case "$1" in
     -x|--xxdiff) P4DIFF=xxdiff;;
-    --diffor|differ) shift; P4DIFF="${2}";;
+    --diffor|--differ) shift; P4DIFF="${2}";;
     --diff) export P4DIFF=diff;;
     --meld) export P4DIFF=meld;;
+    -d|--diffuse) export P4DIFF=meld;;
     -n|--many|--gt-one) loop_and_ask_p=t;;
     --opened|--all) diff_all_opened; exit;;
     --) shift; break;;
