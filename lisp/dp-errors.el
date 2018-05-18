@@ -48,7 +48,7 @@
     file-locked
     search-failed
     folder-empty
-    end-of-folder                       ; vm-* error.
+    end-of-folder			; vm-* error.
     dp-vm-IMAP-data-modification-disabled
     "Keyboard macro terminated by a command ringing the bell$"
     "No cross references in this node"
@@ -90,6 +90,8 @@
     "Buffer not visiting a file or directory"
     "Mismatched #ifdef #endif pair"
     "Window .* too small for splitting"
+    "Buffer #<killed buffer> has been killed; use ‘g’ to update"
+
     ;;XEmacs
     "^No preceding item in "
     "^No following item in "
