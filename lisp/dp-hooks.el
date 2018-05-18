@@ -1473,22 +1473,19 @@ isearch while the region is active to locate the end of the region."
 
 (defalias 'dir 'dired)
 
+(defun dp-Info-last-key ()
+  (interactive)
+  (dp-func-or-kill-buffer 'Info-last))
+
 (defun dp-Info-mode-hook ()
-  (dp-define-buffer-local-keys '([(meta ?-)] 
-                                 (kb-lambda 
-                                     (dp-func-or-kill-buffer 
-                                      Info-last))
-                                 [(?/)] isearch-forward
-                                 [(shift tab)] Info-prev-reference
-                                 [(iso-left-tab)] Info-prev-reference
-				 [?q] Info-history-back
-				 [?Q] Info-exit
-                                 [?D] Info-directory
-                                 [?d] Info-top) 
-                               nil
-			       nil
-                               'over-write
-			       "dImh"))
+  (dp-define-local-keys `([(meta ?-)] dp-Info-last-key
+			  [(?/)] isearch-forward
+			  [(shift tab)] Info-prev-reference
+			  [(iso-left-tab)] Info-prev-reference
+			  [?q] Info-history-back
+			  [?Q] Info-exit
+			  [?D] Info-directory
+			  [?d] Info-top)))
 
 (defvar dp-time-mail-has-dung nil
   "Flag saying bell has rung since new mail has arrived")
