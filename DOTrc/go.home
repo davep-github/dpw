@@ -331,10 +331,14 @@ Ee|mpdm|       /var/lib/mpd/music/mvsik/
 # Added Sat Apr 25 10:22:31 EDT 2015
 Ee|mpdmvsik|       /var/lib/mpd/music/mvsik/
 Ee|gitrepos|       /mathoms/git-repos/
-Ee|local|       ${davep}/local/
-Ee|loc|       ${davep}/local/
+Ee|local|          ${davep}/local/
+Ee|loc|            ${davep}/local/
+Ee|linuxtoamdgpu|  drivers/gpu/drm/amd/amdgpu
+Ee|ltogpu|ltoa|l27|l28|l29| ${linuxtoamdgpu}
 Ee|amdlinux|worklinux|    /home/davep/work/amd/amdgpu/kernel-git/linux
-E|wl|al|                  ${amdlinux}
+Ee|wak|wal|wl|al|          ${amdlinux}
+Ee|waka|wala|wla|ala|      ${amdlinux}/${linuxtoamdgpu}
+Ee|
 ### Local Variables: ***
 ### tab-width: 2 ***
 ### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***
