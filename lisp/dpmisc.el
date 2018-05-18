@@ -6837,7 +6837,7 @@ QUIT-KEYS, if neq t, are added to this map."
 
 (defun dp-regexp-dequote (str)
   "Very simplistic quoted regexp dequoter."
-  (replace-in-string str "\\\\" ""))
+  (replace-in-string str "\"" "\\\"" t))
 
 (defun clhs ()
   (interactive)
@@ -14381,7 +14381,10 @@ JFC."
   (interactive "P")
   (set-window-dedicated-p (dp-get-buffer-window) (not arg)))
 
-(dp-defaliases 'dp-swd 'swd 'dp-set-window-dedicated-p)
+(defsubst eli ()
+  "Emacs Lisp Info.  Visit Emacs Lisp Info node."
+  (interactive)
+  (info "elisp"))
 
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;; add new functions here
@@ -14403,6 +14406,7 @@ JFC."
 ;;;;; <:simple defadvice definitions: add-new-ones-above:>
 (require 'dp-ephemeral)
 
+(dp-defaliases 'dp-swd 'swd 'dp-set-window-dedicated-p)
 (dp-defaliases 'mkdir 'md 'make-directory)
 (dp-defaliases 'rep-re 'repre 'repr 'rerep 'replace-regexp)
 (dp-defaliases 'rep-str 'repstr 'str-rep 'strrep 'reps 'srep 'replace-string)
