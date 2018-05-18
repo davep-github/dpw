@@ -1,1 +1,3 @@
-Good signature from 474F05837FBDEF9B GNU ELPA Signing Agent <elpasign@elpa.gnu.org> (trust undefined) created at 2018-05-18T05:10:02-0400 using DSA
+<<<<<<< variant A
+Good signature from 474F05837FBDEF9B GNU ELPA Signing Agent <elpasign@elpa.gnu.org> (trust undefined) created at 2018-05-17T05:10:02-0400 using DSA>>>>>>> variant B
+Good signature from 474F05837FBDEF9B GNU ELPA Signing Agent <elpasign@elpa.gnu.org> (trust undefined) created at 2018-05-18T05:10:02-0400 using DSA======= end
