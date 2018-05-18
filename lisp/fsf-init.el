@@ -30,8 +30,7 @@ t))
 (setq initial-frame-alist
       `((width . 92)
 	(height . 59)
-	(vertical-scroll-bars . right)
-	(background-color . ,dp-default-background-color)))
+	(vertical-scroll-bars . right)))
 
 ;; subsequent window settings
 (setq default-frame-alist
