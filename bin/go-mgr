@@ -98,7 +98,7 @@ egrep_for_dirname()
             shift
             pat="$1"
         fi
-        EExec go2env -L | EExec -0 egrep "$pat" 
+        EExec go2env -L | EExec -0 egrep ${GREP_DASH_N-} "$pat"
     } | sort | uniq
 }
 
@@ -136,7 +136,7 @@ delete_item()
     }
 
     # why use sed like this? sed "/|${name}|/d" < $(go_file) > $tmp || exit
-    fgrep -v "|${name}|" < $(go_file) > $tmp || {
+    fgrep ${GREP_DASH_N-} -v "|${name}|" < $(go_file) > $tmp || {
 	rc=$?
 	echo 1>&2 "Failed to fgrep |${name}| from $(go_file)."
 	exit $rc
@@ -259,7 +259,7 @@ echo 1>&2 "Check len and offer to clear \`e' flag if too short."
 echo_id tmp_gfile
             gfile=$(go_file)
             emacs_locals_re='^#.* (\*\*\*|)[[:space:]]*$'
-            egrep -v "${emacs_locals_re}" "${gfile}" >| "${tmp_gfile}"
+            egrep ${GREP_DASH_N-} -v "${emacs_locals_re}" "${gfile}" >| "${tmp_gfile}"
 	    name=$(echo "|$name|" | sed -r 's/\|+/\|/g')
 	    line="${flags}${name}       $val"
 	    echo "$line >> $gfile"
@@ -307,7 +307,7 @@ echo_id tmp_gfile
 
 	-g)
             shift
-	    egrep "$@" $GOPATH_WITH_SPACES /dev/null
+	    egrep ${GREP_DASH_N-} "$@" $GOPATH_WITH_SPACES /dev/null
 	    exit $?
 	    ;;
 
