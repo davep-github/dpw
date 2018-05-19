@@ -1,18 +1,19 @@
-;;; challenger-deep-theme.el --- challenger-deep Theme
+;;; dp-challenger-deep-theme.el --- dp-challenger-deep Theme
+;; Stolen (err leveraged) by dp.
 
 ;; Author: MaxSt
 ;; Version: 0.0.2
 ;; Package-Version: 20180223.644
 ;; Package-Requires: ((emacs "24"))
-;; URL: https://github.com/challenger-deep-theme/emacs
+;; URL: https://github.com/dp-challenger-deep-theme/emacs
 
 ;;; Commentary:
 ;; A dark color theme for Emacs
 
 ;;; Code:
 
-(deftheme challenger-deep
-  "challenger-deep theme")
+(deftheme dp-challenger-deep
+  "dp-challenger-deep theme")
 
 (let ((ct '((class color) (min-colors 89)))
       (c '((class color) (min-colors 257)))
@@ -152,26 +153,26 @@
          )
 
     (custom-theme-set-faces
-     'challenger-deep
-     `(challenger-deep-default
+     'dp-challenger-deep
+     `(dp-challenger-deep-default
        ((,c (:inherit default :background ,bg))
         (,ct (:inherit default :background ,ct-bg))
         ))
-     `(challenger-deep-hl-line
+     `(dp-challenger-deep-hl-line
        ((,c (:background ,current-line))
         (,ct (:background ,ct-current-line))))
 
-     `(challenger-deep-linum
+     `(dp-challenger-deep-linum
        ((,c (:inherit linum :background ,bg))
         (,ct (:inherit linum :background ,ct-bg))))
-     `(challenger-deep-minibuffer-active ((,c (:background ,bg))
+     `(dp-challenger-deep-minibuffer-active ((,c (:background ,bg))
                                           (,ct (:background ,ct-bg))))
-     `(challenger-deep-nlinum-highlight  ((,c (:foreground ,linum-hl-fg :bold nil))
+     `(dp-challenger-deep-nlinum-highlight  ((,c (:foreground ,linum-hl-fg :bold nil))
                                           (,ct (:foreground ,ct-linum-hl-fg :bold nil))))
-     `(challenger-deep-flycheck-error    ((,c (:underline nil :foreground ,black :background ,red))))
-     `(challenger-deep-flycheck-warning  ((,c (:underline nil :foreground ,black :background ,yellow))
+     `(dp-challenger-deep-flycheck-error    ((,c (:underline nil :foreground ,black :background ,red))))
+     `(dp-challenger-deep-flycheck-warning  ((,c (:underline nil :foreground ,black :background ,yellow))
                                           (,ct (:underline nil :foreground ,black :background ,yellow))))
-     `(challenger-deep-flycheck-info     ((,c (:underline nil :foreground ,black :background ,green))))
+     `(dp-challenger-deep-flycheck-info     ((,c (:underline nil :foreground ,black :background ,green))))
      ;; Base
      `(bold                   ((,c (:weight ,(if bold 'bold 'normal) :color ,white))
                                (,ct (:weight ,(if bold 'bold 'normal) :color ,white))))
@@ -262,21 +263,21 @@
                                     (,ct (:foreground ,ct-modeline-fg-inactive :background ,ct-modeline-bg-inactive))))
      `(header-line                 ((,c (:inherit mode-line))
                                     (,ct (:inherit mode-line))))
-     `(challenger-deep-modeline-buffer-path       ((,c (:foreground ,cyan :bold ,bold))
+     `(dp-challenger-deep-modeline-buffer-path       ((,c (:foreground ,cyan :bold ,bold))
                                                    (,ct (:foreground ,ct-cyan :bold ,bold))))
-     `(challenger-deep-modeline-buffer-project    ((,c (:foreground ,fg))
+     `(dp-challenger-deep-modeline-buffer-project    ((,c (:foreground ,fg))
                                                    (,ct (:foreground ,ct-fg))))
-     `(challenger-deep-modeline-buffer-modified   ((,c (:foreground ,red))
+     `(dp-challenger-deep-modeline-buffer-modified   ((,c (:foreground ,red))
                                                    (,ct (:foreground ,ct-red))))
-     `(challenger-deep-modeline-buffer-major-mode ((,c (:foreground ,blue :bold ,bold))
+     `(dp-challenger-deep-modeline-buffer-major-mode ((,c (:foreground ,blue :bold ,bold))
                                                    (,ct (:foreground ,ct-blue :bold ,bold))))
-     `(challenger-deep-modeline-highlight     ((,c (:foreground ,blue))
+     `(dp-challenger-deep-modeline-highlight     ((,c (:foreground ,blue))
                                                (,ct (:foreground ,ct-blue))))
-     `(challenger-deep-modeline-panel         ((,c (:foreground ,black :background ,blue))
+     `(dp-challenger-deep-modeline-panel         ((,c (:foreground ,black :background ,blue))
                                                (,ct (:foreground ,ct-black :background ,ct-blue))))
-     `(challenger-deep-modeline-bar           ((,c (:background ,blue))
+     `(dp-challenger-deep-modeline-bar           ((,c (:background ,blue))
                                                (,ct (:background ,ct-blue))))
-     `(challenger-deep-modeline-eldoc-bar     ((,c (:background ,yellow))
+     `(dp-challenger-deep-modeline-eldoc-bar     ((,c (:background ,yellow))
                                                (,ct (:background ,ct-yellow))))
 
      ;;nlinum-relative
@@ -826,5 +827,5 @@
   (add-to-list 'custom-theme-load-path
                (file-name-as-directory (file-name-directory load-file-name))))
 
-(provide-theme 'challenger-deep)
-;;; challenger-deep-theme.el ends here
+(provide-theme 'dp-challenger-deep)
+;;; dp-challenger-deep-theme.el ends here
