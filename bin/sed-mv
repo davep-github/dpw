@@ -106,49 +106,48 @@ if [ "$1" = "-G" ]
 then
     shift
     verbose=1;
-else
-    q=$(getopt -o "$all_options" -- "$@")
-    [ $? != 0 ] && {
-        Usage
-        exit 1
-    }
-    eval set -- "$q"
-    unset q
-    #eko "$@"
-
-    #eko "$@"
-    for i in "$@"
-    do
-	case $1 in
-            -R) ropt=;;
-#	    -n) skip_if_dest_exists_p=y; verbose=1; dash_n=y;;
-            -N) dash_n_prefix=""; skip_if_dest_exists_p=y; verbose=1; dash_n=y;;
-	    -q) query=y;;
-	    -v) verbose=1;;
-	    -V) verbose=1; ECHO=eko;;
-            -d) : $((++verbose));;
-            -m) MV_CMD=$2; shift;;
-            -l) MV_CMD=ln; MV_OPTS='-s';;
-            -c) show_cmds=y;;
-            -C) show_cmds=;;
-            -a) skip_if_dest_exists_p=y;;
-            -s) show_cmds=y; dash_i=''; dash_dash=''; MV_CMD='svn mv';;
-            -g) show_cmds=y; dash_i=''; dash_dash=''; MV_CMD='git mv';;
-            -p) paranoid_p=;;
-            -P) paranoid_p="auto_exit";;
-            -z) zippit=t;;
-                # Make regexp an option as well.
-            -r) sed_expr="$2"; shift;;
-            -i) dash_i='-i';;
-            -h) Usage; exit 0;;
-	    --) shift ; break ;;
-	    *) 
-		echo 1>&2 "Unsupported option>$1<";
-		exit 1 ;;
-	esac
-	shift
-    done
 fi
+q=$(getopt -o "$all_options" -- "$@")
+[ $? != 0 ] && {
+    Usage
+    exit 1
+}
+eval set -- "$q"
+unset q
+#eko "$@"
+
+#eko "$@"
+for i in "$@"
+do
+    case $1 in
+	-R) ropt=;;
+	#	    -n) skip_if_dest_exists_p=y; verbose=1; dash_n=y;;
+	-N) dash_n_prefix=""; skip_if_dest_exists_p=y; verbose=1; dash_n=y;;
+	-q) query=y;;
+	-v) verbose=1;;
+	-V) verbose=1; ECHO=eko;;
+	-d) : $((++verbose));;
+	-m) MV_CMD=$2; shift;;
+	-l) MV_CMD=ln; MV_OPTS='-s';;
+	-c) show_cmds=y;;
+	-C) show_cmds=;;
+	-a) skip_if_dest_exists_p=y;;
+	-s) show_cmds=y; dash_i=''; dash_dash=''; MV_CMD='svn mv';;
+	-g) show_cmds=y; dash_i=''; dash_dash=''; MV_CMD='git mv';;
+	-p) paranoid_p=;;
+	-P) paranoid_p="auto_exit";;
+	-z) zippit=t;;
+	# Make regexp an option as well.
+	-r) sed_expr="$2"; shift;;
+	-i) dash_i='-i';;
+	-h) Usage; exit 0;;
+	--) shift ; break ;;
+	*)
+	    echo 1>&2 "Unsupported option>$1<";
+	    exit 1 ;;
+    esac
+    shift
+done
 
 pristine_args=("$@")
 
