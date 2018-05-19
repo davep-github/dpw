@@ -7,3 +7,9 @@ history.*
 /devel/
 /bug-tmp/
 emacs-places*
+bak.d
+bin.skaion
+lisp-*.tar.bz2
+lisp-*.tar.gz
+
+### ??? Ignore elpa tree in .gitignore.  Is this a good idea???
