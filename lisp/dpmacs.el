@@ -23,7 +23,8 @@
       (setq isearch-continues 'isearch-command)
       )
   (setq isearch-continues 'isearch-scroll)
-  (setq custom-file (dp-lisp-subdir "fsf-custom.el"))
+  (setq custom-file (dp-lisp-subdir
+		     (format "fsf-custom.%s.el" (dp-short-hostname))))
   (require 'dp-fsf)
   (load custom-file))
 
