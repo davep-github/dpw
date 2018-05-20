@@ -2314,9 +2314,17 @@ changed."
   (after dp-advised-jka-compr-insert-file-contents act)
   (dp-set-unmodified))
 
+(defun dp-ibuffer-bind-keys ()
+  (interactive)
+  (dp-local-set-keys
+   '([(meta ?w)] dp-ibuffer-do-save
+     [(up)] ibuffer-backward-line
+     [(down)] ibuffer-forward-line)
+   ))
+
 (defun dp-ibuffer-hook ()
   (interactive)
-  (local-set-key [(meta ?w)] 'dp-ibuffer-do-save))
+  (dp-ibuffer-bind-keys))
 
 (defun dp-icomplete-minibuffer-setup-hook ()
   (dp-define-local-keys
