@@ -148,14 +148,6 @@ This should be set by the emacs specific code.")
   "Return non-nil if frame \(or \(selected-frame)) is the primary frame."
   (equal (dp-primary-frame) (or frame (selected-frame))))
 
-(defun dp-short-hostname ()
-  (or (getenv "HOST")
-      (car (split-string-by-char 
-	    (or (getenv "HOSTNAME")
-                (shell-command-to-string "hostname")
-		"unknown-host")
-	    ?.))))
-
 ;;is this used/needed? (defvar dp-kill-emacs-hook '()
 ;;is this used/needed?   "List of things to do during exit.")
 

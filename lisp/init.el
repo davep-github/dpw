@@ -25,6 +25,14 @@
 (defun dp-lisp-subdir (sub &rest args)
   (expand-file-name (apply 'format sub args) dp-lisp-dir))
 
+(defun dp-short-hostname ()
+  (or (getenv "HOST")
+      (car (split-string-by-char 
+	    (or (getenv "HOSTNAME")
+                (shell-command-to-string "hostname")
+		"unknown-host")
+	    ?.))))
+
 (when (featurep 'emacs)
   (load-library "fsf-init"))
 
