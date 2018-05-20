@@ -28,7 +28,7 @@
       (ct-grey        "#eeeeee")
       (grey-d         "#a6b3cc")
       (ct-grey-d      "#b2b2b2")
-      (grey-dd        "#565575")
+      (grey-dd        "#9696A8")
       (ct-grey-dd     "#808080")
       (grey-ddd       "#2b2942")
       (ct-grey-ddd    "#3a3a3a")
@@ -97,7 +97,7 @@
          ;; mode line
          (modeline-fg    grey)
          (modeline-fg-l  blue)
-         (modeline-bg    black)
+         (modeline-bg    "#002EA8")
          (modeline-bg-l  blue)
          (modeline-fg-inactive grey-dd)
          (modeline-bg-inactive black)
