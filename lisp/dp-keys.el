@@ -771,10 +771,10 @@ TODO: add prompting for functions analogous to `local-set-key' et.al."
       (global-set-key (car seq) new)
       (message "binding %s to %s" (car seq) new))))
 
-(defun dp-copy-key-binding (old-key-seq new-key-seq)
-  "Find definition on OLD-KEY-SEQ and put on NEW-KEY-SEQ."
-  (let ((defn (key-binding old-key-seq)))
-    (local-set-key new-key-seq defn)))
+(defun dp-copy-key-binding (src-key-seq dst-key-seq)
+  "Find definition of SRC-KEY-SEQ and put on DST-KEY-SEQ."
+  (let ((defn (key-binding src-key-seq)))
+    (local-set-key dst-key-seq defn)))
 
 (defun dp-bump-key-binding (key-seq new-def new-seq &optional keymap noisyp)
   "Copy binding for KEY-SEQ to NEW-SEQ and then bind KEY-SEQ to NEW-DEF.
