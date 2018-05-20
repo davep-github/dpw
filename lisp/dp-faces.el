@@ -387,7 +387,11 @@
 
 (defface dp-default-read-only-color
   '(
-    (((class color)) :background "mistyrose"))
+    (((class color)
+      (background dark))
+     (:background "#270000"))
+    (((class color) (background light))
+     (:background "mistyrose")))
   "*We colourize read only buffers so we can more easily recognize them.
 !<@todo This needs reworking.  I need to rework my whole colour system.
 Using numbers all over the place is BS.  Need names and a colour mapping if
