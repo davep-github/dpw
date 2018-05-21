@@ -154,9 +154,6 @@
     ;; (X|SG)ML mode
     "No previous element in .* element$"
 
-    ;; magit
-    "^Already unstaged$"
-
     ;; etags
     "^No tags table in use!  Use .* to select one\\.$"
     "^There is no default tag$"
@@ -178,6 +175,8 @@
     "No next section"
     "No previous section"
     "^Already staged$"
+    "^Already unstaged$"
+
     "^Change is already in the working tree$"
     "^There is no thing at point that could be visited$"
 
@@ -185,6 +184,7 @@
     "^No possible abbreviation preceding point$"
     file-supersession
     "^Cannot switch buffers in a dedicated window$"
+    "^No customizable group, face, or option matching (.*)$"
     ;; ediff errors
     "^Errors in diff output. Diff output is in "
     "^Hmm... I don't see an Ediff command around here...$"
