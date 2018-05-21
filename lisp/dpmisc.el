@@ -14392,6 +14392,11 @@ JFC."
   (interactive)
   (info "elisp"))
 
+(defsubst eli ()
+  "Emacs Lisp Info.  Visit Emacs Lisp Info node."
+  (interactive)
+  (info "elisp"))
+
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;; add new functions here
 ;;; add new functions above
