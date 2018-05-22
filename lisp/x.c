@@ -81,11 +81,12 @@ typedef enum anenum_e
 	while (1) {
 		if eff(u) {
 				blah,
-
+/* eveel trailing whaatspace */
 			  
 	  
 	  
-  // a one line comment
+// End 'o eveel.
+// a one line comment
 
   a++;				/*  */
 
