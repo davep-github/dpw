@@ -5130,7 +5130,7 @@ Here, first means the car of the list."
 (defun dp-goto-line (line-or-bm &optional nada) ;<:dgl|goto line:>
   "Goto line, char pos or bookmark. Saves current position on go-back first.
 Append \"c\" to LINE-OR-BM or prefix with [=.#] to use it as a point value vs
-a line number."
+a line number.  Prefix w/+ or - to do a relative line jump."
   (interactive (dp-get-bm-interactive 
                 (format "line# (or w/suffix: c -> char) or bm (%s): " 
                         dp-goto-line-last-destination)
@@ -5150,6 +5150,8 @@ a line number."
       (goto-char (string-to-int (match-string 1 line-or-bm))))
      ((string-match "^[0-9]" line-or-bm) 
       (goto-line (string-to-int line-or-bm)))
+     ((string-match "[+-][0-9]" line-or-bm)
+      (goto-line (+ (line-number) (string-to-int line-or-bm))))
      (t (dp-set-or-goto-bm (if (string-match "\\([>/:]\\)\\([0-9]+\\)" 
                                              line-or-bm)
                                (match-string 2 line-or-bm) 
