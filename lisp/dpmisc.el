@@ -5360,14 +5360,14 @@ command-line argument to XEmacs, e.g. -eval \(dp-main-rc)."
   (message "dp-main-rc()...finished."))
 
 (defun dp-main-rc+2w (&optional height width)
-  (message "dp-main-rc+2w()...")
+  (message "dp-main-rc+2w(), h: %s, w: %s..." height width)
   (dp-main-rc)
   (when width
     (setq dp-sfw-width width))
   (when height
     (setq dp-sfh-height height))
   (dp-2-v-or-h-windows nil height width)
-  (message "dp-main-rc+2w()...finished."))
+  (message "dp-main-rc+2w(), h: %s, w: %s...done" height width))
 
 (defun dp-main-rc+2w+server (&optional height width)
   (message "dp-main-rc+2w()...")
