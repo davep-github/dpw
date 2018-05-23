@@ -38,7 +38,7 @@
 	query = true
 	disablemsg = This command can overwrite uncommitted changes. \
 Consider rebase, or co and branch -M
-        
+
 [format]
 	signoff = true
 
@@ -88,7 +88,7 @@ Consider rebase, or co and branch -M
         smtpserverport = 25
         smtpencryption = tls
         smtpUser = dpanarit@amd.com
-        smtpPass = 3!415|||QTPi
+        smtpPass = QTPi---3!415
 #
 
 # [sendemail]
