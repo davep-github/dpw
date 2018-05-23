@@ -33,6 +33,7 @@ gmon.out
 JUNK/
 HIDE/
 KEEP/
+# .../tmp usually isn't.
 TMP/
 NOSCM/
 SCMNO/
@@ -85,6 +86,8 @@ make.out
 ===-cscope-db-root.*.c
 +++-cscope-db-root.*.c
 etc/AMD/
+# * is the user name.  We can use a * or add entries user by user.
+*-index-code.status
 
 # Leftovers from p4merge.
 # We may want to add additional extensions.
