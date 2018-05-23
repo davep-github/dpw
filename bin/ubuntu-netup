@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Defaults for yyz [ as of: 2018-05-23T15:08:46 ]
+: ${dev:=enp30s0}
+: ${ip:=10.234.230.4}
+: ${gw:=10.234.231.254} 	# bdc-3n-windows-gw.amd.com
+
+sudo ifconfig "${dev}" up "${ip}"
+sudo route add "${ip}" gw "${gw}" "${dev}"
+sudo route add default gw "${gw}"
