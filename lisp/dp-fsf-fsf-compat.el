@@ -468,6 +468,20 @@ Use BEGIN and END as the limits of the extent."
   "FSF no take codesys arg."
   (find-file file-name wildcards))
 
+;; From FSF Emacs' syntax.el. I am happy.
+(defun buffer-syntactic-context (&optional buffer)
+  "Syntactic context at point in BUFFER.
+Either of `string', `comment' or nil.
+This is an XEmacs compatibility function."
+  (with-current-buffer (or buffer (current-buffer))
+    (syntax-ppss-context (syntax-ppss))))
+
+(defun buffer-syntactic-context-depth (&optional buffer)
+  "Syntactic parenthesis depth at point in BUFFER.
+This is an XEmacs compatibility function."
+  (with-current-buffer (or buffer (current-buffer))
+    (syntax-ppss-depth (syntax-ppss))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
