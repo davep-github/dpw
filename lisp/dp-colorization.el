@@ -82,7 +82,10 @@
 ;;    ("\\[" . dp-sudo-edit-bg-face)
     ("Man\\( apropos\\)?: " . font-lock-string-face)
     ("<dse>" . dp-sudo-edit-bg-face)
-    ("\\*ssh-" . dp-remote-buffer-face)
+    ("\\*ssh-" . dp-remote-buffer-face)	; XEmacs
+    (,(if (boundp 'dp-remote-file-regexp)
+	 dp-remote-file-regexp
+       "$^") . dp-remote-buffer-face)
     ("\\*Python\\*" . font-lock-variable-name-face))
   "Alist used to map buffer-name to display face.
 A list of cons cells, where each cons cell is \(regexp . face\).
