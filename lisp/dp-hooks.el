@@ -26,7 +26,14 @@ mode."
   :group 'dp-whitespace-vars
   :type 'boolean)
 
-(defcustom dp-global-master-cleanup-whitespace-pred-fun nil
+
+(defun dp-cleanup-whitespace-mode-pred (&optional list-o-modes mode)
+  (setq-ifnil list-o-modes dp-global-master-cleanup-whitespace-p)
+  (when (and list-o-modes(listp list-o-modes))
+    (memq (or mode major-mode) list-o-modes)))
+
+(defcustom dp-global-master-cleanup-whitespace-pred-fun
+  'dp-cleanup-whitespace-mode-pred
   "Call through this to determine if we want to clean up whitespace."
   :group 'dp-whitespace-vars
   :type 'function)
@@ -54,8 +61,8 @@ eol-only - Only clean lines when cursor it at the end of a line.
   "Do we wish to be anal about whitespace?"
   (when dp-global-master-cleanup-whitespace-p
     (cond
-     ((and (listp dp-global-master-cleanup-whitespace-p)
-           (memq major-mode dp-global-master-cleanup-whitespace-p)))
+     ((eq dp-global-master-cleanup-whitespace-p t))
+     ((dp-funcall-if dp-global-master-cleanup-whitespace-pred-fun nil))
      (dp-cleanup-whitespace-p))))
 
 (defun dp-cleanup-whitespace-on-next-line-p ()
@@ -253,7 +260,7 @@ QUOTE-IT-P says to quote the regexp so special chars aren't."
      (format "^%s%s$" 
              (file-name-nondirectory (regexp-quote diary-file))
              "\\(<[0-9]*>\\)?"))
-    (dmessage "diary file!")
+    (dmessage "diary file>%s<" diary-file)
     (dp-define-diary-file-keys)))
 
 ;;  (message "dp-text-mode-hook")
@@ -381,19 +388,20 @@ For now this must be < the error col.")
   :group 'faces
   :group 'dp-vars)
 
+;; !<@todo XXX make this handle warning-col >= error-col. (if < 0) 0
 (defvar dp-font-lock-line-too-long-element-no-tabs
   ;; +1 'cause column number starts at zero.
   (let ((warning-zone-len (- dp-line-too-long-error-column
                              dp-line-too-long-warning-column
                              1)))
     ;;               +-- 1 -------+  +-- 2 ---------+  +- 3 +
-    (list (format "\\(^.\\{%d\\}\\)\\(.\\{%d,%d\\}\\)\\(.*\\)$"
-                  dp-line-too-long-warning-column
-                  0
-;; !<@todo XXX make this handle warning-col >= error-col. (if < 0) 0
-                  warning-zone-len)
+    (list
+     (list (format "\\(^.\\{%d\\}\\)\\(.\\{%d,%d\\}\\)\\(.*\\)$"
+	     dp-line-too-long-warning-column
+	     0
+	     warning-zone-len)
           (list 2 'dp-default-line-too-long-warning-face 'append)
-          (list 3 'dp-default-line-too-long-error-face 'append)))
+          (list 3 'dp-default-line-too-long-error-face 'append))))
   "Font-lock component to highlight lines that are too long.
 NB This is broken when real tabs are used, since they count as one char as
 far the regexp is concerned.")
@@ -1483,7 +1491,7 @@ isearch while the region is active to locate the end of the region."
   (dp-func-or-kill-buffer 'Info-last))
 
 (defun dp-Info-mode-hook ()
-  (dp-define-local-keys `([(meta ?-)] dp-Info-last-key
+  (dp-define-local-keys `([(meta ?-)] dp-bury-or-kill-buffer
 			  [(?/)] isearch-forward
 			  [(shift tab)] Info-prev-reference
 			  [(iso-left-tab)] Info-prev-reference
