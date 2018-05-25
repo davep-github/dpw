@@ -16,7 +16,7 @@
 ;; Nice convention to put key bindings for modes alone in a function.
 ;; <clutch-pearls-on-soap-box>Wah! Name space pollution!</clutch-pearls-on-soap-box>
 ;; Make modification and application easier.
-(defun dp-git-rebase-bind-keys ()
+(defun dp-magit-rebase-bind-keys ()
   (dp-define-local-keys '(
 			  [(meta down)] other-window
 			  [(meta up)] dp-other-window-up
@@ -24,21 +24,21 @@
 			  [(shift up)] git-rebase-move-line-up
 			  ;; git-rebase-kill-lines does one line.
 			  ;; we do one by default, else does prefix-arg lines.
-			  [?k] dp-git-rebase-kill-lines
+			  [?k] dp-magit-rebase-kill-lines
 			  ;; Buffer is RO, so
 			  ;; `dp-delete-to-end-of-line' can't be used,
 			  ;; so remap it.  We are essentially killing
 			  ;; the line.
-			  [(meta ?k)] dp-git-rebase-kill-lines
+			  [(meta ?k)] dp-magit-rebase-kill-lines
 			  )
 			))
 
 (add-hook 'magit-mode-hook 'dp-magit-mode-hook)
 
-(defun dp-git-rebase-mode-hook ()
-  (dp-git-rebase-bind-keys)		; YAY! More keymaps broken.
+(defun dp-magit-rebase-mode-hook ()
+  (dp-magit-rebase-bind-keys)		; YAY! More keymaps broken.
   )
-(add-hook 'git-rebase-mode-hook 'dp-git-rebase-mode-hook)
+(add-hook 'git-rebase-mode-hook 'dp-magit-rebase-mode-hook)
 
 ;;
 ;; Sometimes the original version works.
@@ -46,7 +46,7 @@
 ;; Repo state/contents?
 ;; version.
 ;;
-(defun dp-git-rebase-kill-lines (&optional num-lines)
+(defun dp-magit-rebase-kill-lines (&optional num-lines)
   "Call `git-rebase-kill-lines' NUM-LINES times.
 If NUM-LINES:
 region active -- lines in region.
