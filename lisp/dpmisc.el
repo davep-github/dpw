@@ -7171,7 +7171,7 @@ If region is active, set width to that of the longest line in the region."
 
 (defalias 'sfw 'dp-set-frame-width)
 
-(defvar dp-sfh-to-compile-win-height 4
+(defvar dp-sfh-to-compile-win-height-divisor 4
   "*The part of the frame height used for the compile window.")
 
 (defvar dp-sfh-height 72
@@ -7194,7 +7194,7 @@ If region is active, set width to that of the longest line in the region."
        (or frame (selected-frame))
        (setq dp-sfh-height height))
       (setq compilation-window-height (/ (frame-height frame)
-                                         dp-sfh-to-compile-win-height)))))
+                                         dp-sfh-to-compile-win-height-divisor)))))
 
 (defalias 'sfh 'dp-set-frame-height)
 
@@ -13845,8 +13845,8 @@ whitespace eradication.")
 	      (setq count (- count)
 		    cleanup-current-line-pred 'eolp))
 	    (loop repeat count do
-		  (if (or (and (not buffer-read-only)
-			       (eq (dp-cleanup-whitespace-p) t)
+		  (if (or (eq (dp-cleanup-whitespace-p) t)
+			  (and (not buffer-read-only)
 			       (funcall cleanup-current-line-pred)))
 		      (dp-func-and-move-down 'dp-cleanup-line
 					     t
@@ -13856,9 +13856,13 @@ whitespace eradication.")
 		    (setq this-command 'next-line))))))
     (error
      ;; Fall back to normalcy :-(
-     (global-set-key [kp-down] 'next-line)
-     (global-set-key [down] 'next-line))))
-    
+     )))
+;; Many "OK" errors, like end-of-buffer, should not remap the keys.
+     ;fires too often (dp-ding-and-message "dp-next-line: error, bubba>%s<" bubba)
+     ;fires too often (dp-ding-and-message "dp-next-line: Falling back to `next-line'.")
+     ;fires too often (global-set-key [kp-down] 'next-line)
+     ;fires too often (global-set-key [down] 'next-line))))
+
     
       
 (global-set-key [kp-down] 'dp-next-line)   ; q.v. dp-cleanup-whitespace-p
@@ -13896,7 +13900,7 @@ whitespace eradication.")
   (let ((git-man-page (concat "git-" topic)))
     (funcall (if other-window-p '2man 'manual-entry)
              git-man-page)))
-(dp-defaliases 'gith 'githelp 'gitman 'gman 'dp-git-manual-entry)
+(dp-defaliases 'hgit 'gith 'githelp 'gitman 'gman 'dp-git-manual-entry)
 
 (defun dp-git-manual-entry-other-window (topic &optional other-window-p)
   (interactive "sgit help on: \nP")
