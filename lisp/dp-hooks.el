@@ -13,8 +13,14 @@
 ;;; on the *macs variant.
 
 (message "dp-hooks loading...")
-(defcustom dp-global-master-cleanup-whitespace-p t
-  "Control whitespace cleanup off everywhere.
+
+;; We could just use a buffer local set in the mode-hook.
+(defcustom dp-global-master-cleanup-whitespace-p
+  '(c-mode
+    c++-mode
+    sh-mode
+    emacs-lisp-mode)
+  "control whitespace cleanup off everywhere.
 If this is a non-nil list, don't disable if it contains the current major
 mode."
   :group 'dp-whitespace-vars
