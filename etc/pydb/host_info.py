@@ -210,7 +210,9 @@ e(
     ref=[home_family, OSDB['linux'], default]
 )
 
-AMD_XEM_GEOMETRY = '-geometry 81x66-0+0'
+# This is for RictyDiminishedDiscord-13, which hopefully I can emsmallen
+# once I have my new eyes.
+AMD_XEM_GEOMETRY = '-geometry 81x63-0+0'
 AMD_BG_COLOR = 'rgb:0/33/60'
 AMD_FG_COLOR = 'white'
 amd_family = e(
@@ -279,14 +281,15 @@ PRIMARY_BOX_BG_COLOR = 'rgb:24/00/68'
 e(
     kef='host',
     dat={
-        'host-pattern': '^yyz$',
-        'family': 'amd_family',
-        'comment': 'An 8 core Ryzen or an 8 core FX-8370, whichever is working.',
-        #'xem_opts': ('-eval (dp-2-v-or-h-windows-keep-geometry) '
-#             + '-geometry 180x67+460+0'),
-        # Not particularly attractive.
+'host-pattern': '^yyz$',
+'family': 'amd_family',
+'comment': 'An 8 core Ryzen or an 8 core FX-8370, whichever is working.',
+#'xem_opts': ('-eval (dp-2-v-or-h-windows-keep-geometry) '
+#+ '-geometry 180x67+460+0'),
+# Not particularly attractive.
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
-        """xem-xft-font""": '''"Inconsolata-12"''',
+        ###"""xem-xft-font""": '''"Inconsolata-12"''',
+        """xem-xft-font""": '''"RictyDiminishedDiscord-13"''',
         'xterm_bg': PRIMARY_BOX_BG_COLOR,
         'xterm_fg': PRIMARY_BOX_FG_COLOR,
         'xxem_bg_color': "grey80", # Need to have fsf and xem parameters.
@@ -311,7 +314,8 @@ e(
         'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 180x74-0+0',
         'xterm_bg': XERXES_BG_COLOR,
         'xterm_fg': XERXES_FG_COLOR,
-        'xem_bg_color': "grey80",
+        'xxem_bg_color': "grey80",
+        """xem-xft-font""": '''"RictyDiminishedDiscord-13"''',
         'project': 'brahma',
  },
     ref=[amd_family, OSDB['linux'], default]
@@ -331,7 +335,8 @@ e(
         'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 180x74-0+0',
         'xterm_bg': CZ_FP4_BG_COLOR,
         'xterm_fg': CZ_FP4_FG_COLOR,
-        'xem_bg_color': "grey80",
+        'xxem_bg_color': "grey80",
+        """xem-xft-font""": '''"RictyDiminishedDiscord-13"''',
         'project': 'brahma',
  },
     ref=[amd_family, OSDB['linux'], default]
