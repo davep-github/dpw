@@ -125,20 +125,6 @@ to have buffer-menu show non-file buffers."
 ;;'default-list-buffers-identification)
 (setq-default list-buffers-identification 'dp-list-buffers-identification)
 
-(defface dp-remote-buffer-face
-  '((((class color) (background light)) 
-     (:background "lightblue"))) 
-  "Face for file that is being edited remotely on another host."  
-  :group 'faces 
-  :group 'dp-vars)
-
-(defface dp-server-buffer-face
-  '((((class color) (background light)) 
-     (:background "hotpink"))) 
-  "Face for gnuserv buffers."
-  :group 'faces
-  :group 'dp-vars)
-
 (setq list-buffers-header-line
       (concat " MR Buffer                     Size  Mode         File\n"
 	      " -- ------                     ----  ----         ----\n"))

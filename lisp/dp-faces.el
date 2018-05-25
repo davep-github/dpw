@@ -380,10 +380,37 @@
 
 (defface dp-debug-like-face
   '(
-    (((class color)) :foreground "blue" :bold t))
-  "Face for debug like lines."
+    (((class color)
+      (background dark))
+     (:foreground "VioletRed"))
+    (((class color) (background light))
+     (:foreground "blue")))
+  "Face for debug like lines, e.g. @todo, XXX, ..."
   :group 'faces
   :group 'dp-vars)
+
+(defface dp-remote-buffer-face
+  '(
+    (((class color)
+      (background dark))
+     (:background "#1B2D61"))
+    (((class color) (background light))
+     (:background "lightblue")))
+  "Face for file that is being edited remotely on another host."
+  :group 'faces
+  :group 'dp-vars)
+
+(defface dp-server-buffer-face
+  '(
+    (((class color)
+      (background dark))
+     (:background "DarkCyan"))
+    (((class color) (background light))
+     (:background "HotPink")))
+  "Face for gnuserv buffers."
+  :group 'faces
+  :group 'dp-vars)
+
 
 (defface dp-default-read-only-color
   '(
