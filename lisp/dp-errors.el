@@ -74,6 +74,8 @@
     "^This buffer cannot use `imenu-default-create-index-function'$"
     "^No \\(earlier\\|later\\) matching history item$"
     "^No more grep hits"
+    "^Moved past last grep hit$"
+    "^No grep hit here$"
     "man .* not found"
     "Listing directory failed"
     "\"No entries containing .*\""
@@ -106,6 +108,7 @@
     "^Empty input ring$"
     "^No history$"
     "^Not found$";; Too common?
+    "No error here"	       ; Actually from next-error
 ;;    "^Current buffer has no process$"
     
     ;; dabbrev
