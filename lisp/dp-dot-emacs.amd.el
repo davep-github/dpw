@@ -161,6 +161,8 @@
   (dp-nuke-newline (shell-command-to-string
                     "mk-persistent-dropping-name.sh --use-project-as-prefix emacs.bmk")))
 
+(defconst dp-sfh-height 63)
+
 ;; For now, make my old dev area RO.
 (dp-add-force-read-only-regexp 
  '("/ras.local/edc/brahma/ec"
