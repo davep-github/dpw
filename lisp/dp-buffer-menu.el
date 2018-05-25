@@ -184,8 +184,7 @@ The regexp is matched against the buffer name.")
 Gets the buffer as input.")
 
 (defvar dp-bmm-minor-mode-faces
-  (if (dp-xemacs-p)
-      '((gnuserv-minor-mode . dp-server-buffer-face)))
+  '((gnuserv-minor-mode . dp-server-buffer-face))
   "Faces to colorize mode field according active minor modes.")
 
 (defun dp-bmm-add-minor-mode-faces (buffer begin end)
