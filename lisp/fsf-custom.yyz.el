@@ -103,7 +103,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(beacon-fallback-background ((t (:background "DodgerBlue3"))))
- '(cursor ((t (:background "pale green"))))
+ '(cursor ((t nil)))
  '(dp-trailing-whitespace-face ((t (:background "light coral" :foreground "black" :weight normal))))
  '(isearch ((t (:background "medium spring green" :foreground "#100e23" :weight bold))))
  '(lazy-highlight ((t (:background "#65b2ff" :foreground "black"))))
