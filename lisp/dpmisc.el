@@ -8421,7 +8421,8 @@ todo XXX ??? Keep <n> previous contexts?"
     (cond 
      ((not file-flag) (dp-recover-context-from-file saveconf-file-name-prev))
      ((Cu0p) (dp-recover-context-from-file saveconf-file-name))
-     (t (call-interactively 'dp-recover-context-from-file))))
+     (t (call-interactively 'dp-recover-context-from-file)))
+    (ibuffer))
 
   (dp-defaliases 'where-was-i 'wwi 'dp-recover-context)
   
