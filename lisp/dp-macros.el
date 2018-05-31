@@ -543,7 +543,7 @@ NO extra parameters can be passed to `call-interactively'.  See
   (defmacro dp-lambda-p (definition)
     ;; Stolen from advice
     ;;"non-nil if DEFINITION is a lambda expression."
-    `(eq (car-safe ,definition)) 'lambda)
+    `(eq (car-safe ,definition) 'lambda))
 
   (defmacro dp-with-saved-point (var &rest forms)
     "Lightweight version of `save-excursion'. Save point and execute FORMS.
