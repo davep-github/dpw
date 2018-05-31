@@ -952,10 +952,6 @@ This can be callable.")
   ;; FSF has other option[s].
   (icomplete-mode))
 
-
-(defvar dp-remote-file-regexp ""
-  "Regexp to recognize.")
-
 ;;;
 ;;; Best remote file access protocol I've seen so far.
 ;;;
@@ -972,17 +968,10 @@ This can be callable.")
   
   (when (dp-optionally-require 'tramp)
     (make-local-variable 'file-precious-flag)  
-    (add-hook 'find-file-hooks 'dp-mk-remote-files-precious)
-    (dmessage "1:tramp-auto-save-directory>%s<" tramp-auto-save-directory))
-  
-  (setq dp-remote-file-regexp
-	(if (dp-xemacs-p)
-	    (concat
-	     "@.*:"				; efs/ange-ftp syntax
-	     "\\|"
-	     "/\\[")				; tramp syntax
-	  tramp-file-name-regexp-unified))
-  )
+    (add-hook 'find-file-hooks 'dp-mk-remote-files-precious))
+  (dmessage "1:tramp-auto-save-directory>%s<" tramp-auto-save-directory)
+
+)
 (add-hook 'dp-post-dpmacs-hook 'dp-setup-tramp)
 
 ;; let's see if this works well.
