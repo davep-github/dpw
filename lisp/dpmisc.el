@@ -5333,6 +5333,10 @@ you've added enough info for set-auto-mode to figure it out.."
 	interprogram-cut-function 
          dp-save-dp-disable-interprogram-cut-function))
 
+(defun dp-snuggle-frame-in-upper-right (&optional frame x y)
+  (interactive)
+  (set-frame-position frame (or x -1) (or y 0)))
+
 (defun dp-laptop-rc ()
   "Set up things for the laptop."
   (interactive)
@@ -5344,7 +5348,7 @@ you've added enough info for set-auto-mode to figure it out.."
 	      (function
                (lambda ()
                  (y-or-n-p "Really exit(windows [key] sucks)?")))))
-    (message "dp-laptop-rc()...finished"))
+  (message "dp-laptop-rc()...finished"))
 
 (defun dp-main-rc ()
   "Set us up as a primary emacs: run editing server and activate appointments.
@@ -5357,6 +5361,8 @@ command-line argument to XEmacs, e.g. -eval \(dp-main-rc)."
   (dp-activate-appts)
   (dp-appt-initialize)
   ;; the -geometry arg doesn't work quite right under kde.
+  (unless (bound-and-true-p dp-do-not-snuggle-frame-in-upper-right-p)
+    (dp-snuggle-frame-in-upper-right))
   (message "dp-main-rc()...finished."))
 
 (defun dp-main-rc+2w (&optional height width)
@@ -7048,7 +7054,6 @@ BUF-OR-NAME-OR-NIL may be nil, a buffer or a buffer name."
   (interactive)
   (dp-func-or-kill-buffer 'bury-buffer nil ;`kill-this-buffer' is the default.
                           nil nil kill-pred-func))
-
 
 (defun dp-bury-or-kill-process-buffer-0 (&optional buffer)
   (dp-bury-or-kill-buffer (function
