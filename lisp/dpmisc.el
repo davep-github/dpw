@@ -14399,15 +14399,10 @@ JFC."
   (interactive)
   (info "elisp"))
 
-(defsubst eli ()
-  "Emacs Lisp Info.  Visit Emacs Lisp Info node."
+(defsubst magi ()
+  "Magit Info.  Visit Magit's Info node."
   (interactive)
-  (info "elisp"))
-
-(defsubst eli ()
-  "Emacs Lisp Info.  Visit Emacs Lisp Info node."
-  (interactive)
-  (info "elisp"))
+  (info "magit"))
 
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;; add new functions here
