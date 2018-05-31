@@ -719,13 +719,14 @@ c-hanging-braces-alist based upon these values.")
                                (dp-val-if-boundp
                                 dp-global-c*-use-too-long-face)))
   (dmessage "in dp-c++-add-extra-faces")
-  (dp-c-like-add-extra-faces
-   '(c++-font-lock-keywords-3
-     c++-font-lock-keywords-2
-     c++-font-lock-keywords-1)
-   :buffer-local-p buffer-local-p
-   :use-trailing-ws-font-p use-trailing-ws-font-p
-   :use-too-long-face-p dp-use-too-long-face-p))
+  (when (bound-and-true-p dp-use-c++-add-extra-faces-p)
+    (dp-c-like-add-extra-faces
+     '(c++-font-lock-keywords-3
+       c++-font-lock-keywords-2
+       c++-font-lock-keywords-1)
+     :buffer-local-p buffer-local-p
+     :use-trailing-ws-font-p use-trailing-ws-font-p
+     :use-too-long-face-p dp-use-too-long-face-p)))
 
 (defun* dp-c-add-extra-faces (&key
                               (buffer-local-p nil)
@@ -735,13 +736,14 @@ c-hanging-braces-alist based upon these values.")
                                (dp-val-if-boundp
                                 dp-global-c*-use-too-long-face)))
   (dmessage "in dp-c-add-extra-faces")
-  (dp-c-like-add-extra-faces
-   '(c-font-lock-keywords-3
-     c-font-lock-keywords-2
-     c-font-lock-keywords-1)
-   :buffer-local-p buffer-local-p
-   :use-trailing-ws-font-p use-trailing-ws-font-p
-   :use-too-long-face-p use-too-long-face-p))
+  (when (bound-and-true-p dp-use-c-add-extra-faces-p)
+    (dp-c-like-add-extra-faces
+     '(c-font-lock-keywords-3
+       c-font-lock-keywords-2
+       c-font-lock-keywords-1)
+     :buffer-local-p buffer-local-p
+     :use-trailing-ws-font-p use-trailing-ws-font-p
+     :use-too-long-face-p use-too-long-face-p)))
 
 (defvar dp-c-like-modes '(c++-mode c-mode)
   "This list holds the modes that can benefit, att, from `dp-open-newline'.")
@@ -1373,16 +1375,17 @@ See `dp-parenthesize-region-paren-list'")
 
 (defun dp-isearch-mode-hook ()
   "Save point on the go back stack and save the region activation status.
-We use the region status in the mode-end hook so that we can use an 
+We use the region status in the mode-end hook so that we can use an
 isearch while the region is active to locate the end of the region."
   (let ((is-mode-map isearch-mode-map))
     (dp-set-zmacs-region-stays t)
     (define-key is-mode-map [(meta ?')] 'dp-copy-isearch-string-as-kill)
-    (define-key is-mode-map [(meta ?o)] (kb-lambda 
+    (define-key is-mode-map [(meta ?o)] (kb-lambda
                                             (kill-new isearch-string)))
-    (define-key is-mode-map [(control \')] 'dp-isearch-yank-char)  
-    (define-key is-mode-map [(control ?.)] 'dp-isearch-yank-char)  
-    (define-key is-mode-map [(control ?p)] 'isearch-ring-retreat)
+    (define-key is-mode-map [(control \')] 'dp-isearch-yank-char)
+    (define-key is-mode-map [(control ?.)] 'dp-isearch-yank-char)
+    (define-key is-mode-map [(control ?p)] 'isearch-ring-retreat) ; Emacs
+    (define-key is-mode-map [(meta ?p)] 'isearch-ring-retreat)	  ; XEmacs
     (define-key is-mode-map [(control ?n)] 'isearch-ring-advance)
     (define-key is-mode-map "\M-s\C-e" 'isearch-yank-kill)
     (define-key is-mode-map "\C-y" 'isearch-yank-line)
