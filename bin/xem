@@ -60,7 +60,7 @@ esac
 #eko "$@"
 ###set -- $(getopt "dlxp:f:o:nmMvhF" $*)
 # New style getopt... fixes ugly quoting problems.
-all_options="dlxp:f:o:nmMvhFX"
+all_options="dlxp:f:o:nmMvhFXV:"
 q=$(getopt -o "$all_options" -- "$@")
 [ $? != 0 ] && Usage
 eval set -- "$q"
@@ -89,6 +89,7 @@ do
         -F) amper=;;            # Run in foreground.
         -s) set_sandbox_p=;;
         -X) macs=xemacs;;
+	-V) shift; macs_ver="${1}";;
 	--) shift; break;;
 	*) echo 1>&2 "Illegal xem option>$1<"; exit 1 ;;
     esac
@@ -118,6 +119,9 @@ then
 else
     BIN=$XEM_BIN
 fi
+
+BIN="${BIN}${macs_ver}"
+echo 1>&2 "BIN>${BIN}<"
 
 BIN=$(sp -1 "${BIN}")
 
