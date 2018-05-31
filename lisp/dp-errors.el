@@ -179,9 +179,9 @@
     "No previous section"
     "^Already staged$"
     "^Already unstaged$"
-
     "^Change is already in the working tree$"
     "^There is no thing at point that could be visited$"
+    "^There is no thing at point that could be deleted$"
 
     ;; copied from emacs
     "^No possible abbreviation preceding point$"
