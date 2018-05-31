@@ -79,9 +79,9 @@ do
 	-l) prefix='lem';;
 	-x) prefix='xem';;
         -r) prefix='xem'; do_renice=t;;
-	-o) x_offset=$2; shift;;
-	-p) prefix="$2"; shift;;
-	-f) font="$2"; shift;;
+	-o) shift; x_offset="${1}";;
+	-p) shift; prefix="${1}";;
+	-f) shift; font="${1}";;
 	-n) just_show=y;;
 	-m) main_macs=y;;	# force startup of appointments and server
 	-M) main_macs=n;;       # prevent startup of appointments and server
