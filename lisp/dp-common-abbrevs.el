@@ -599,6 +599,8 @@
        'circular)
       dp-manual)
      ((("fh" "FETCH_HEAD") 'circular) dp-manual)
+     ((("dup" "dupe" "duplicate") 'circular) dp-manual)
+     ((("dups" "dupes" "duplicates") 'circular) dp-manual)
 
      ;; Some mu4e mailbox names.
      ;; Expansion no work.
