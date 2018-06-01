@@ -22,6 +22,8 @@
 
 (add-to-list 'load-path dp-lisp-dir)
 
+(set-frame-font "RictyDiminishedDiscord-13")
+
 (defun dp-lisp-subdir (sub &rest args)
   (expand-file-name (apply 'format sub args) dp-lisp-dir))
 
