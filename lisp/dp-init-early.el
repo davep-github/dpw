@@ -146,13 +146,13 @@ Some are ephemeral and some are longer term."
       version-control t
       kept-new-versions 7)
 
- (defvar dp-remote-file-regexp
-   (if (dp-xemacs-p)
-       (concat
-	"@.*:"				; efs/ange-ftp syntax
-	"\\|"
-	"/\\[")				; tramp syntax
-     tramp-file-name-regexp-unified)
+(defvar dp-remote-file-regexp
+  (if (dp-xemacs-p)
+      (concat
+       "@.*:"				; efs/ange-ftp syntax
+       "\\|"
+       "/\\[")				; tramp syntax
+    tramp-file-name-regexp-unified)
   "Regular expression that, when matched against a file name, tells us if the
   file is remote or no.")
 
