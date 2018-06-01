@@ -172,7 +172,7 @@ PRE_CMD=$($HOST_INFO -n '' ${prefix}_pre_cmd)
 }
 XEM_XFT_FONT=$($HOST_INFO -n '' 'xem-xft-font')
 vsetp $XEM_XFT_FONT && {
-    FONT_SET_EXPR=("-eval" "'" "(set-default-font $XEM_XFT_FONT)" "'")
+    FONT_SET_EXPR=("-eval" "'" "(set-frame-font $XEM_XFT_FONT)" "'")
     font=
     font_arg=
 #    echo "[0]>${FONT_SET_EXPR[0]}<"
