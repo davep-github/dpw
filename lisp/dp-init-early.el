@@ -151,8 +151,9 @@ Some are ephemeral and some are longer term."
       (concat
        "@.*:"				; efs/ange-ftp syntax
        "\\|"
-       "/\\[")				; tramp syntax
-    tramp-file-name-regexp-unified)
+       "/\\[")				; tramp syntax [olde... update]
+    ;; This regexp is only used if we can't use `tramp-tramp-file-p'
+    tramp-file-name-regexp)
   "Regular expression that, when matched against a file name, tells us if the
   file is remote or no.")
 
