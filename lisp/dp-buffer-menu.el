@@ -158,9 +158,10 @@ to have buffer-menu show non-file buffers."
 Gets the buffer as input.")
 
 (defface dp-buffer-menu-comint-face
-  '((((class color) (background light)) 
-     (:foreground "forestgreen" :bold))) 
-  "Face for mode: `comint-mode'."
+  '(
+    (((class color) (background light)) (:foreground "forestgreen"))
+    (((class color) (background dark)) (:foreground "forestgreen")))
+  "Face for `comint-mode' buffers in dp-gmm-mode."
   :group 'faces
   :group 'dp-vars)
 
