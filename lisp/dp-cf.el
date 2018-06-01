@@ -351,7 +351,7 @@ Eg, via `hack-local-variables', hook, magic.")
 
 (dp-add-corresponding-file-pair "dpmisc.el" "dpmacs.el")
 
-(defun dp-add-corresponding-file file-name ()
+(defun dp-add-corresponding-file (file-name)
   "Make a correspondence between this file and another FILE-NAME."
   (dp-add-corresponding-file-pair (file-name-nondirectory buffer-file-truename)
                                   file-name))
