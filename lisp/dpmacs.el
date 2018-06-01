@@ -925,7 +925,8 @@ This can be callable.")
 (add-to-list 'special-display-regexps "^\\*P4.*\\*$")
 
 ;; configure an Emacs mail subsystem...
-(require 'dp-mail)
+(when (bound-and-true-p dp-use-dp-mail-p)
+  (require 'dp-mail))
 
 (require 'dp-makefile-mode)
 
