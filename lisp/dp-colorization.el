@@ -77,7 +77,7 @@
   `(,dp-remote-file-regexp . dp-remote-buffer-face)
   "Remote file recognition regexp and default color")
 
-(defvar dp-bmm-buffer-name-colorization-alist 
+(defvar dp-bmm-buffer-name-colorization-alist
   `(,dp-remote-file-colorization-info
 ;;    ("\\[" . dp-sudo-edit-bg-face)
     ("Man\\( apropos\\)?: " . font-lock-string-face)
