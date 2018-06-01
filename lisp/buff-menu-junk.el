@@ -2,7 +2,7 @@
 ;; To create a file, visit it with <open> and enter text in its buffer.
 
 (require 'igrep)
-igrep
+
 (defvar dp-remote-file-colorization-info
   `(,dp-remote-file-regexp . dp-remote-buffer-face)
   "Remote file recognition regexp and default color")
