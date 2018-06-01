@@ -289,7 +289,8 @@ e(
 # Not particularly attractive.
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         ###"""xem-xft-font""": '''"Inconsolata-12"''',
-        """xem-xft-font""": '''"RictyDiminishedDiscord-13"''',
+        ## emacs-27 has probmles with evaling stuff in xem.
+        ##"""xem-xft-font""": '''"RictyDiminishedDiscord-13"''',
         'xterm_bg': PRIMARY_BOX_BG_COLOR,
         'xterm_fg': PRIMARY_BOX_FG_COLOR,
         'xxem_bg_color': "grey80", # Need to have fsf and xem parameters.
