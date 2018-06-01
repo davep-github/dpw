@@ -188,4 +188,12 @@ this code runs, so I need to check for its presence before running
     (and (featurep 'server)
 	 (server-running-p))))
 
+(defun dp-restart-server ()
+  (interactive)
+  (message "Caught %S; restarting server" last-input-event)
+  (dp-stop-editing-server)
+  (dp-start-editing-server))
+
+(define-key special-event-map [sigusr1] 'dp-restart-server)
+
 (provide 'dp-server)
