@@ -8170,7 +8170,9 @@ e.g. efs: /davep@sybil:/home/davep/.bashrc.
   (let ((fname (if (stringp file-name)
 		   file-name
 		 (or (buffer-file-name) ""))))
-    (string-match dp-remote-file-regexp fname)))
+    (if-and-fboundp 'tramp-tramp-file-p
+	(tramp-tramp-file-p fname)
+      (string-match dp-remote-file-regexp fname))))
 
 (defun dp-not-remote-file-p (&optional file-name)
   (not (dp-remote-file-p file-name)))
