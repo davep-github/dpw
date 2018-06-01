@@ -69,10 +69,10 @@ done
 # if ((${#nths[@]-0} == 0)) Doesn't work with
 # GNU bash, version 4.4.12(1)-release (x86_64-pc-linux-gnu)
 # provided with lubuntu 17.10.
-echo 1>&2 "!nths>${!nths[@]}<"
-eko 1>&2 "${nths[@]}"
+#echo 1>&2 "!nths>${!nths[@]}<"
+#eko 1>&2 "${nths[@]}"
 
-if [ -z "${!nths[@]}" ]
+if [ "${#nths[@]}" -eq 0 ]
 then
     if ! x=$(git rev-parse "${1}")
     then
