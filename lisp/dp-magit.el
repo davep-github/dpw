@@ -11,7 +11,13 @@
 (defun dp-magit-mode-hook ()
   (interactive)
   (dp-local-set-keys
-   '([?=] magit-diff-dwim)))
+   '(
+     [?=] magit-diff-dwim
+     [(meta return)] magit-section-toggle
+     [(meta left)] magit-section-backward
+     [(meta right)] magit-section-forward
+     )
+   ))
 
 ;; Nice convention to put key bindings for modes alone in a function.
 ;; <clutch-pearls-on-soap-box>Wah! Name space pollution!</clutch-pearls-on-soap-box>
@@ -24,7 +30,6 @@
 			  [(shift up)] git-rebase-move-line-up
 			  ;; git-rebase-kill-lines does one line.
 			  ;; we do one by default, else does prefix-arg lines.
-			  [?k] dp-magit-rebase-kill-lines
 			  ;; Buffer is RO, so
 			  ;; `dp-delete-to-end-of-line' can't be used,
 			  ;; so remap it.  We are essentially killing
