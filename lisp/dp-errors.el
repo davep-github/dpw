@@ -182,6 +182,7 @@
     "^Change is already in the working tree$"
     "^There is no thing at point that could be visited$"
     "^There is no thing at point that could be deleted$"
+    "^Don’t kill this buffer.  Instead cancel using C-c C-k$"
 
     ;; copied from emacs
     "^No possible abbreviation preceding point$"
