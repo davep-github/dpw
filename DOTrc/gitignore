@@ -51,6 +51,8 @@ NOTAG
 RCS/
 CVS/
 .svn/
+*_LOCAL_*
+*_REMOTE_*
 
 # My core file pattern
 *.CR
