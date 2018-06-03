@@ -88,6 +88,17 @@ dp_ssh_start_agent0()
         shift
     fi
 
+    [ -n "${SSH_AGENT_PID}" ] && {
+	if dpgrep "[[:space:]]*${SSH_AGENT_PID}[[:space:]]"
+	then
+	    dp_ssh_add_keys || {
+		echo "ssh-add failed, rc: $?"
+		return 1
+	    } 1>&2
+	fi
+	echo "Attached to agent, pid: ${SSH_AGENT_PID}"
+	return 0
+    }
     # allows us to see if dumb-ass bash decided to run us in a
     # sub-{shell|process} which, of course, prevents the outside world from
     # seeing important changes.
