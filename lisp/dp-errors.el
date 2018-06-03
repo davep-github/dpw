@@ -169,7 +169,7 @@
     "No more tag marks on stack"
     "Buffer has no associated tag tables"
     "The beginning of the \\*xgtags\\* buffer has been reached"
-
+    
     ;; BBDB
     "^no previous record$"
     "^no next record$"
@@ -188,7 +188,6 @@
     file-supersession
     "^Cannot switch buffers in a dedicated window$"
     "^No customizable group, face, or option matching (.*)$"
-    "^You can’t edit this part of the Custom buffer$"
     ;; ediff errors
     "^Errors in diff output. Diff output is in "
     "^Hmm... I don't see an Ediff command around here...$"
