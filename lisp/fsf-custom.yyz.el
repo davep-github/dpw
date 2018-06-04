@@ -63,6 +63,7 @@
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
    '(sphinx-doc fuzzy full-ack ack-menu ag ibuffer-tramp challenger-deep-theme abyss-theme nova-theme magit ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring))
+ '(package-user-dir "~/.emacs.d/elpa.yyz.d")
  '(query-replace-lazy-highlight nil)
  '(safe-local-variable-values
    '((c-font-lock-extra-types "FILE" "bool" "language" "linebuffer" "fdesc" "node" "regexp")
@@ -100,6 +101,9 @@
  '(beacon-fallback-background ((t (:background "DodgerBlue3"))))
  '(cursor ((t nil)))
  '(dp-trailing-whitespace-face ((t (:background "light coral" :foreground "black" :weight normal))))
+ '(ediff-even-diff-Ancestor ((t (:background "Grey" :foreground "black"))))
+ '(ediff-fine-diff-Ancestor ((t (:background "#009591" :foreground "black"))))
+ '(ediff-odd-diff-Ancestor ((t (:background "gray40" :foreground "black"))))
  '(isearch ((t (:background "medium spring green" :foreground "#100e23" :weight bold))))
  '(lazy-highlight ((t (:background "#65b2ff" :foreground "black"))))
  '(rectangle-preview ((t (:inherit region))))
