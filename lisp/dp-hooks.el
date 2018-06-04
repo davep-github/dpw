@@ -1498,7 +1498,10 @@ isearch while the region is active to locate the end of the region."
 			  [(?/)] isearch-forward
 			  [(shift tab)] Info-prev-reference
 			  [(iso-left-tab)] Info-prev-reference
-			  [?q] Info-history-back
+			  [?q] ,(kb-lambda
+				    (if Info-history
+					(Info-history-back)
+				      (dp-bury-or-kill-buffer)))
 			  [?Q] Info-exit
 			  [?D] Info-directory
 			  [?d] Info-top)))
