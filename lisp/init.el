@@ -27,18 +27,29 @@
 (defun dp-lisp-subdir (sub &rest args)
   (expand-file-name (apply 'format sub args) dp-lisp-dir))
 
+(defun dp-hostname (&optional default)
+  "Get a hostname, whatever the system gives us."
+  (or (getenv "HOSTNAME")
+      (shell-command-to-string "hostname")
+      (or default "***LOCALHOST***")))
+
 (defun dp-short-hostname ()
   (or (getenv "HOST")
-      (car (split-string-by-char 
-	    (or (getenv "HOSTNAME")
-                (shell-command-to-string "hostname")
-		"unknown-host")
+      (car (split-string-by-char
+	    (dp-hostname)
 	    ?.))))
+
+(defun dp-hostify-name (format-str)
+  "Add a host specific part to a name."
+  (format format-str (dp-short-hostname)))
+
+(defun dp-userfy-name (format-str)
+  "Add a user specific part to a name."
+  (format format-str (user-login-name)))
 
 (when (featurep 'emacs)
   (load-library "fsf-init"))
 
-(message "in init.el")
 ;; no blah, blah, blah.
 (setq inhibit-startup-message t)
 
