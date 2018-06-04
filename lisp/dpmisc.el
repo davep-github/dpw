@@ -3290,13 +3290,13 @@ lisp-interaction mode."
   (interactive)
   (dp-view-buffer "*Backtrace*" same-window-p))
 
-(dp-defaliases 'bt 'bt2 'bt-other 'dp-backtrace-buffer)
+(dp-defaliases 'btb 'btb2 'btb-other 'dp-backtrace-buffer)
 
 (defsubst dp-backtrace-buffer-same-window ()
   "Go to *Backtrace* buffer in this window."
   (interactive)
   (bt 'same-window-p))
-(dp-defaliases 'bt0 'bt. 'bt1 'dp-backtrace-buffer-same-window)
+(dp-defaliases 'btb0 'btb. 'btb1 'btbd 'dp-backtrace-buffer-same-window)
 
 (defun mbm ()
   "Mark beginning of set of output."
