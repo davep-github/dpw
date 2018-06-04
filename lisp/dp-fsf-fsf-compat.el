@@ -482,6 +482,7 @@ This is an XEmacs compatibility function."
   (with-current-buffer (or buffer (current-buffer))
     (syntax-ppss-depth (syntax-ppss))))
 
+(defalias 'string-to-int 'string-to-number)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
