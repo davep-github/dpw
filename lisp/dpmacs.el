@@ -35,6 +35,8 @@
   (load "cl-macs")
   (require 'dp-macros))
 
+(require 'dp-magit)
+
 ;; Not sure why this isn't buffer local by default.
 ;; quote:
 ;; This variable is intended for use by making it local to a buffer.
