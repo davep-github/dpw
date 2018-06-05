@@ -292,7 +292,7 @@ echo_id tmp_gfile
 	    ;;
 
 	-e)	
-	    edit "$GEDITOR"
+	    edit "${GEDITOR-$EDITOR}"
 	    shift
 	    ;;	
 
