@@ -12,7 +12,8 @@
 ;;      |
 ;;      |
 ;; No undead code!
-;;(package-initialize)
+(if (version< emacs-version "27.0.0")
+    (package-initialize))
 
 (message "init.el...")
 (defvar dp-lisp-dir
