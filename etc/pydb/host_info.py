@@ -75,6 +75,7 @@ default = dppydb.Entry({
     'ctl': 'rx',
     #
     'fsf_xem_bin': 'emacs',
+    'xem_version': "",
     #'xem_bin': '/usr/local/bin/xemacs',
     'xem_bin': opath.join(HOME_LOCAL_BIN, "xemacs"),
     'lem_bin': opath.join(HOME_LOCAL_BIN, "xemacs"),
@@ -291,6 +292,7 @@ e(
         ###"""xem-xft-font""": '''"Inconsolata-12"''',
         ## emacs-27 has probmles with evaling stuff in xem.
         ##"""xem-xft-font""": '''"RictyDiminishedDiscord-13"''',
+        'xem_version': "-26.1.50",
         'xterm_bg': PRIMARY_BOX_BG_COLOR,
         'xterm_fg': PRIMARY_BOX_FG_COLOR,
         'xxem_bg_color': "grey80", # Need to have fsf and xem parameters.
