@@ -48,6 +48,7 @@ do_renice=
 # that changes as things change. E.g. engcpu vs sb2.
 # The sb can be determined from the path, but not the preferred mnemonic.
 : ${set_sandbox_p=}
+macs_ver=$($HOST_INFO -n '' xem_version)
 
 case "$prog" in
     xem|xem-logger) prefix='xem';;
