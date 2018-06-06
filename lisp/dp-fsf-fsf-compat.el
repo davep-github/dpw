@@ -91,9 +91,10 @@ function template at point.
 	 (doc (funcall eldoc-documentation-function)))
     (if insert-template
 	(eldoc-insert-elisp-func-template doc)
-      (eldoc-message "%s"
-		     (or doc
-			 (format "No doc for `%s'" (elisp--current-symbol)))))))
+      (eldoc-message (format "%s"
+			     (or doc
+				 (format "No doc for `%s'"
+					 (elisp--current-symbol))))))))
 
 (defun eldoc-insert-elisp-func-template (doc)
   "Insert function template extracted from an eldoc help message."
