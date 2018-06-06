@@ -8,7 +8,7 @@
   "History for reverse engineering symbol names.")
 
 ;ressurect or remove (define-error 'dp-*TAGS-aborted
-;ressurect or remove   "Badness in the guts of the (too) deeply nested *TAGS stuff." 
+;ressurect or remove   "Badness in the guts of the (too) deeply nested *TAGS stuff."
 ;ressurect or remove   'error)
 
 ;;(dp-setup-hyperbole)
@@ -50,7 +50,7 @@
   "This must be in a path name for the path name to be considered a work path
   name.")
 
-(defun* dp-in-a-work-dir-p (path-name &optional 
+(defun* dp-in-a-work-dir-p (path-name &optional
                            (work-root-dir dp-default-work-root-pattern))
   (string-match work-root-dir path-name))
 
@@ -67,8 +67,8 @@
 ;ressurect or remove in, say, \"~/work/some/important/stuff\", so by default FINAL_PRED makes sure
 ;ressurect or remove that we're under a directory named work."
 ;ressurect or remove   (setq-ifnil start-dir default-directory)
-;ressurect or remove   (let* ((path-lists (mapcar 
-;ressurect or remove                       (function 
+;ressurect or remove   (let* ((path-lists (mapcar
+;ressurect or remove(function
 ;ressurect or remove                        (lambda (tf-name)
 ;ressurect or remove                          ;; Using this has no TAG file requirements, so it
 ;ressurect or remove                          ;; can look up the tree for any file.
@@ -90,8 +90,8 @@
 ;ressurect or remove                  (or (apply final-pred max final-pred-args)
 ;ressurect or remove                      (and ask-if-pred-fails-p
 ;ressurect or remove                           (or (member max dp-ok-tags-files)
-;ressurect or remove                               (and 
-;ressurect or remove                                (y-or-n-p (format 
+;ressurect or remove                               (and
+;ressurect or remove                                (y-or-n-p (format
 ;ressurect or remove                                           "That doesn't sound workish to me: %s; accept? "
 ;ressurect or remove                                           max))
 ;ressurect or remove                                (add-to-list 'dp-ok-tags-files max)))))))
@@ -157,10 +157,10 @@
   (interactive)
   (dp-gtags-set-cscope-ignore-case nil))
 
-(dp-defaliases 'grc 'gtrc 'gtcs 'gtnic 'dp-gtags-cscope-no-ignore-case 
+(dp-defaliases 'grc 'gtrc 'gtcs 'gtnic 'dp-gtags-cscope-no-ignore-case
                'dp-gtags-cscope-respect-case)
 
-;; 
+;;
 ;; -C ignore case.
 ;; ????? (setq cscope-command-args '("-C"))
 (defun dp-setup-cscope ()
@@ -168,11 +168,14 @@
 
   (dp-gtags-set-cscope-ignore-case dp-gtags-cscope-ignore-case-strings-p)
 
-  (defadvice cscope-extract-symbol-at-cursor 
+  (defadvice cscope-extract-symbol-at-cursor
     (around dp-cscope-extract-symbol-at-cursor activate)
     (if (dp-mark-active-p)
         (setq ad-return-value (buffer-substring (mark) (point)))
       ad-do-it))
+
+  (when dp-using-gtags-cscope-p
+    (setq cscope-program dp-cscope-program))
 
   (defun dp-cscope-do-not-update-database ()
     dp-using-gtags-cscope-p)
@@ -246,7 +249,7 @@
     (define-key map [(control f12)] 'cscope-prev-file)
     (define-key map [(meta f9)] 'cscope-display-buffer)
     (define-key map [(meta f10)] 'cscope-display-buffer-toggle))
-  
+
   (defvar dp-cscope-current-dir-only-regexps nil
     "The value for `cscope-database-regexps' that will cause us to search the
     current directory only.
@@ -277,10 +280,10 @@
           cscope-edit-single-match nil)
     (defun dp-cscope-minor-mode-hook ()
       (interactive)
-      (define-key cscope-list-entry-keymap [(meta ?-)] 
-        (kb-lambda (dp-func-or-kill-buffer 
+      (define-key cscope-list-entry-keymap [(meta ?-)]
+        (kb-lambda (dp-func-or-kill-buffer
                     'cscope-bury-buffer)))
-      (dp-define-keys cscope-list-entry-keymap 
+      (dp-define-keys cscope-list-entry-keymap
                       '([?.] dp-cscope-select-entry-this-window
                         [?v] cscope-show-entry-other-window
                         [?o] cscope-select-entry-other-window
@@ -292,7 +295,7 @@
                         [(meta right)] dp-cscope-next-file
                         [(meta left)] dp-cscope-prev-file
                         [?d] cscope-find-global-definition)))
-    
+
     (add-hook 'cscope-minor-mode-hooks 'dp-cscope-minor-mode-hook)
     ;; @todo XXX This should actually DO SOMETHING... it's only acting as a
     ;; predicate.
@@ -313,7 +316,7 @@
       (dp-bind-xcscope-keys))
     (when-and-boundp 'dp-bind-xcscope-fkeys-p
       (dp-bind-xcscope-fkeys))
-    
+
     (defadvice cscope-prompt-for-symbol (before dp-cscope-push-gb activate)
       "Push go back before doing a cscope operation.
 This seems to be a fairly common routine that is run before most commands.
@@ -321,29 +324,29 @@ It gives us a common point to save our position before going off after a
 cscope discovery.
 *** Look at new xcscope.el. It has some mark stack capability now."
       (dp-push-go-back "go-back advised cscope-prompt-for-symbol"))
-    
-    (defadvice  cscope-next-symbol 
+
+    (defadvice  cscope-next-symbol
 	(before dp-advised-cscope-next-symbol activate)
       (dp-set-current-error-function 'dp-cscope-next-thing
                                      nil
                                      'cscope-next-symbol))
-    
+
     (defadvice  cscope-next-file (before dp-advised-cscope-next-file activate)
-      (dp-set-current-error-function 'dp-cscope-next-thing 
-                                     nil 
+      (dp-set-current-error-function 'dp-cscope-next-thing
+                                     nil
                                      'cscope-next-file))
-    
-    (defadvice  cscope-prev-symbol 
+
+    (defadvice  cscope-prev-symbol
 	(before dp-advised-cscope-prev-symbol activate)
       (dp-set-current-error-function 'dp-cscope-next-thing
                                      nil
                                      'cscope-prev-symbol))
-    
+
     (defadvice  cscope-prev-file (before dp-advised-cscope-prev-file activate)
       (dp-set-current-error-function 'dp-cscope-next-thing
                                      nil
                                      'cscope-prev-file))
-    
+
     ;;!<@todo Do I want to do this? It doesn't cause a current window change,
     ;;but it is a common action and ?is? logically similar to the others.
     ;; Right now, it has a problem in that it unconditionally sets the error
@@ -352,13 +355,13 @@ cscope discovery.
     ;; There is a problem when this is used directly from the cscope buffer.
     ;; The value is not set there and so will retain the previous value which
     ;; may be nil or unset.
-    (defadvice  cscope-show-entry-other-window 
+    (defadvice  cscope-show-entry-other-window
       (before dp-advised-cscope-prev-file activate)
       (dp-set-current-error-function 'dp-cscope-next-thing
                                      nil
                                      'cscope-next-symbol))
-    
-    (defadvice  cscope-select-entry-other-window 
+
+    (defadvice  cscope-select-entry-other-window
 	(before dp-advised-cscope-prev-file activate)
       (dp-set-current-error-function 'dp-cscope-next-thing
                                     nil
@@ -367,7 +370,7 @@ cscope discovery.
   (defvar dp-def-cscope-db-dir-name "def-cscope.d")
   (defvar dp-def-work-cscope-db-dir-name
     (dp-mk-pathname dp-def-work-dir dp-def-cscope-db-dir-name))
-  (defvar dp-def-home-cscope-db-dir-name 
+  (defvar dp-def-home-cscope-db-dir-name
     (dp-mk-pathname (getenv "HOME") dp-def-cscope-db-dir-name))
 ;; This is a poorly documented, convolutedly implemented bizarre variable and
 ;; in general boggles my mind and confuzes the hell out of me... and yet
@@ -402,9 +405,9 @@ cscope discovery.
 ;ressurect or remove                   :other-window-finder 'gtags-find-tag-other-window
 ;ressurect or remove                   :name "gtags")
 ;ressurect or remove          )
-;ressurect or remove    (list "TAGS" (make-dp-*TAGS-handler 
-;ressurect or remove                  :finder 'find-tag 
-;ressurect or remove                  :returner 'pop-tag-mark 
+;ressurect or remove    (list "TAGS" (make-dp-*TAGS-handler
+;ressurect or remove                  :finder 'find-tag
+;ressurect or remove                  :returner 'pop-tag-mark
 ;ressurect or remove                  :other-window-finder 'find-tag-other-window
 ;ressurect or remove                  :name "tags")))
 ;ressurect or remove   "Tags commands for given tag systems.")
@@ -431,7 +434,7 @@ cscope discovery.
 ;ressurect or remove                           start-dir))
 
 ;ressurect or remove (defun dp-find-nearest-*TAGS-file (&optional tag-file-names start-dir)
-;ressurect or remove   (let ((tag-file (dp-find-nearest-*TAGS-file-path tag-file-names 
+;ressurect or remove   (let ((tag-file (dp-find-nearest-*TAGS-file-path tag-file-names
 ;ressurect or remove                                                    start-dir)))
 ;ressurect or remove     (when tag-file
 ;ressurect or remove       (file-name-nondirectory tag-file))))
@@ -442,7 +445,7 @@ cscope discovery.
 ;ressurect or remove       (cadr (assoc (dp-find-nearest-*TAGS-file tag-file-names start-dir)
 ;ressurect or remove                    dp-*TAGS-handlers)))))
 
-;ressurect or remove (defun* dp-get-*TAGS-handler-list (&optional 
+;ressurect or remove (defun* dp-get-*TAGS-handler-list (&optional
 ;ressurect or remove                                    (tag-file-names dp-default-*TAGS-file-names)
 ;ressurect or remove                                    start-dir)
 ;ressurect or remove   "Create a list of tag handlers based on current dir and existing tag files."
@@ -530,7 +533,7 @@ cscope discovery.
 ;;             (dp-*TAGS-try-handler-funcs handler-list
 ;;                                         'dp-*TAGS-handler-finder)
 ;;           (dp-ding-and-message "No handlers/tag files found.")))
-;;     ('dp-*TAGS-aborted 
+;;     ('dp-*TAGS-aborted
 ;;      (ding)
 ;;      (message "Tag op aborted: %s" err))))
 
@@ -549,11 +552,11 @@ cscope discovery.
 (defun dp-tag-find-other-window (&rest r)
   (interactive)
   (call-interactively 'gtags-find-tag-other-window))
-;;   (call-interactively (dp-*TAGS-handler-other-window-finder 
+;;   (call-interactively (dp-*TAGS-handler-other-window-finder
 ;;                        (dp-get-*TAGS-handler))))
 (global-set-key [(meta ?.)] 'dp-tag-find)
 (global-set-key [(control ?x) (control ?.)]
-  (kb-lambda 
+  (kb-lambda
       (let ((current-prefix-arg '(4)))
         (call-interactively 'dp-tag-find))))
 (global-set-key [(control meta ?.)] 'dp-tag-find-other-window)
@@ -637,7 +640,7 @@ cscope discovery.
     (dp-push-go-back&call-interactively
      'gtags-select-tag-other-window
      nil nil "dp-gtags-select-tag-other-window"))
-  
+
   (defun dp-gtags-select-mode-hook ()
     (dp-define-buffer-local-keys
      `([return] dp-gtags-select-tag-other-window
@@ -664,12 +667,12 @@ cscope discovery.
        [space] dp-gtags-select-tag-one-window
        [up] ,(kb-lambda
                 (call-interactively 'dp-up-with-wrap-non-empty))
-       [down] ,(kb-lambda 
+       [down] ,(kb-lambda
                   (call-interactively 'dp-down-with-wrap-non-empty))
        [?1] dp-gtags-select-tag-one-window
        [(meta return)] gtags-select-tag
        [?u] dp-gtags-update-file
-       [?o] gtags-select-tag-other-window) 
+       [?o] gtags-select-tag-other-window)
      nil nil nil "dgstow" ))
 
   (defun dp-gtags-select-tag-one-window ()
@@ -701,35 +704,35 @@ gtags discovery."
      'dp-gtags-select-tag-one-window
      'dp-gtags-next-thing)
 
-    (dp-current-error-function-advisor 
+    (dp-current-error-function-advisor
      'dp-gtags-select-tag-other-window
      'dp-gtags-next-thing)
 
-    (dp-current-error-function-advisor 
+    (dp-current-error-function-advisor
      'gtags-find-with-idutils
      'dp-gtags-next-thing)
 
-    (dp-current-error-function-advisor 
+    (dp-current-error-function-advisor
      'gtags-find-with-grep
      'dp-gtags-next-thing)
 
-    (dp-current-error-function-advisor 
+    (dp-current-error-function-advisor
      'gtags-find-with-file
      'dp-gtags-next-thing)
 
-    (dp-current-error-function-advisor 
+    (dp-current-error-function-advisor
      'gtags-find-tag
      'dp-gtags-next-thing)
 
-    (dp-current-error-function-advisor 
+    (dp-current-error-function-advisor
      'gtags-find-symbol
      'dp-gtags-next-thing)
 
-    (dp-current-error-function-advisor 
+    (dp-current-error-function-advisor
      'gtags-find-rtag
      'dp-gtags-next-thing)
 
-    (dp-current-error-function-advisor 
+    (dp-current-error-function-advisor
      'gtags-select-tag
      'dp-gtags-next-thing)
 
@@ -785,7 +788,7 @@ gtags discovery."
   (defun gtags-auto-update ()
     (when (and xgtags-mode gtags-auto-update buffer-file-name)
       (if (not (dp-in-exe-path-p xgtags-global-program))
-          (message "gtags-auto-update: cannot find tag updater: %s" 
+          (message "gtags-auto-update: cannot find tag updater: %s"
                    xgtags-global-program)
         (message "Updating tags(%s)..." dp-gtags-auto-update-db-flag)
         (call-process xgtags-global-program
@@ -880,7 +883,7 @@ gtags discovery."
     ;; Only let it be set when the functions are called directly.
     (let ((dp-dont-set-latest-function t))
       (if (dp-bobp (xgtags--get-buffer))
-          (progn 
+          (progn
             (setq xgtags--selected-tag (xgtags--find-tag-near-point))
             (call-interactively 'dp-xgtags-select-selected-tag-other-window-cmd))
         (call-interactively func)
@@ -925,12 +928,12 @@ xgtags discovery.
 ;;needs work      'xgtags--find-with
 ;;needs work      'dp-xgtags--find-with)
 
-    (dp-current-error-function-advisor 
+    (dp-current-error-function-advisor
      'xgtags-find-with-idutils
      'dp-xgtags-next-thing
      'xgtags-select-next-tag)
 
-    (dp-current-error-function-advisor 
+    (dp-current-error-function-advisor
      'xgtags-find-with-grep
      'dp-xgtags-next-thing
      'xgtags-select-next-tag)
@@ -938,12 +941,12 @@ xgtags discovery.
     (dp-current-error-function-advisor
      'xgtags-select-next-tag
      'dp-xgtags-next-thing)
-    
-    (dp-current-error-function-advisor 
+
+    (dp-current-error-function-advisor
      'xgtags-select-prev-tag
      'dp-xgtags-next-thing)
-    
-    (dp-current-error-function-advisor 
+
+    (dp-current-error-function-advisor
      'xgtags-switch-to-buffer-other-window
      'dp-xgtags-next-thing
      'xgtags-select-next-tag)
@@ -952,8 +955,8 @@ xgtags discovery.
      'xgtags-select-tag-near-point
      'dp-xgtags-next-thing
      'xgtags-select-next-tag)
-       
-    (dp-current-error-function-advisor 
+
+    (dp-current-error-function-advisor
      'xgtags-select-tag-by-event
      'dp-xgtags-next-thing
      'xgtags-select-next-tag)
@@ -1024,7 +1027,7 @@ xgtags discovery.
 ;;             (dp-*TAGS-try-handler-funcs handler-list
 ;;                                         'dp-*TAGS-handler-finder)
 ;;           (dp-ding-and-message "No handlers/tag files found.")))
-;;     ('dp-*TAGS-aborted 
+;;     ('dp-*TAGS-aborted
 ;;      (ding)
 ;;      (message "Tag op aborted: %s" err))))
 
@@ -1083,7 +1086,7 @@ xgtags discovery.
     "Define/undef a list of #define names.
 DEFLIST is a list of pairs (defname operation).
 DEFNAME is the constant name, e.g. DEBUG is in #ifdef DEBUG
-OPERATION is called with the defname as a parameter. Some useful values are 
+OPERATION is called with the defname as a parameter. Some useful values are
 `hide-ifdef-define' and `hide-ifdef-undef' to define or undefine defname
 respectively.
 NAME is a short name associated by hideif with the list of defs."
@@ -1103,7 +1106,7 @@ NAME is a short name associated by hideif with the list of defs."
 ;;needs finished   (defun dp-hide-ifdef-mode-hook ()
 ;;needs finished     (local-set-key [?d] 'dp-hide-ifdef-define))
 ;;needs finished   (add-hook 'hide-ifdef-mode-hook 'dp-hide-ifdef-mode-hook)
-  
+
   (message "Configuring hide-ifdef...")
   (if dp-hide-ifdef-configure-function
       (funcall dp-hide-ifdef-configure-function)
@@ -1112,7 +1115,7 @@ NAME is a short name associated by hideif with the list of defs."
 (defun dp-show-if1 ()
   "Set up hide-ifdef to show all #if 1 code. Activates the mode.
 Mostly used for the side effect of hiding #if 0.
-It does hide everything else, but that can be controlled by, duh, 
+It does hide everything else, but that can be controlled by, duh,
 defining other constants.
 @todo XXX Make a function to [un]define symbol @ point."
   (interactive)
@@ -1133,7 +1136,7 @@ defining other constants.
 ;; (defun dp-set-singlular-write-restricted-regexp (regexp)
 ;;   (interactive "sRegexp: ")
 ;;   (setq dp-implied-read-only-filename-regexp-list
-;;         (delete dp-singlular-write-restricted-regexp 
+;;         (delete dp-singlular-write-restricted-regexp
 ;;                 dp-implied-read-only-filename-regexp-list)
 ;;         dp-implied-read-only-filename-regexp-list
 ;;         (cons regexp dp-implied-read-only-filename-regexp-list)
@@ -1143,11 +1146,11 @@ defining other constants.
 
 (defun dp-me-expand-dest0 (abbrev &optional sb)
   (let ((ret (dp-nuke-newline
-              (shell-command-to-string 
+              (shell-command-to-string
                (format "me-expand-dest %s %s %s" ;;;;;; 2>/dev/null"
                        (or dp-me-expand-dest-pne-opt
                            "")
-                       abbrev (or sb 
+                       abbrev (or sb
                                   ;;(dp-current-sandbox-name)
                                   ""))))))
     (if (string= ret "")
@@ -1258,7 +1261,7 @@ Returns nil if there is no current sandbox."
        dp-current-sandbox-name-private name
        dp-current-sandbox-path-private path
        dp-current-sandbox-regexp-private regexp)))
-  (dp-update-editor-identification-data 
+  (dp-update-editor-identification-data
    :sandbox-name (dp-current-sandbox-name)
    :update-our-data-p t))
 
@@ -1300,7 +1303,7 @@ the current sandbox is used for defaults, etc."
           (dp-set-sandbox-name-and-regexp
            (file-name-nondirectory (directory-file-name
                                     (file-name-directory
-                                     (directory-file-name 
+                                     (directory-file-name
                                       sandbox))))
            sandbox
            'set-default)
@@ -1328,7 +1331,7 @@ the current sandbox is used for defaults, etc."
       (message "Current sandbox cleared."))))
 
 (dp-safe-aliases 'dp-ssb 'dpsb 'dpssb 'dp-set-sandbox)
-  
+
 
 (defun dp-sandbox-read-only-p (filename)
   "Determine if a file is in a readonly sandbox.
@@ -1344,7 +1347,7 @@ if there is no current one set."
   ;; If in current sb and current sb RO
   ;; no sb --> not-RO
   (when
-      (and 
+      (and
        (dp-current-sandbox-regexp)
        (dp-sandbox-file-p filename)
        (or
@@ -1366,7 +1369,7 @@ if there is no current one set."
 ;;; Tempo comment support.
 ;;;
 
-;;finish-me (defvar dp-c-doxy-comment-introduction 
+;;finish-me (defvar dp-c-doxy-comment-introduction
 ;;finish-me   (format "/*%s*/" (make-string (- fill-column 4) ?*))
 ;;finish-me   "First line of a doxy commment.
 ;;finish-me XXX @todo This should be dynamically computed based on the current indent.")
@@ -1401,7 +1404,7 @@ if there is no current one set."
  * @brief " (P "brief desc: " desc nil) > "
  */" > % >)
   "Elements of a C/C++ file comment template")
-          
+
 (tempo-define-template "doxy-c-class-member-comment"
 		        doxy-c-class-member-comment-elements)
 (tempo-define-template "doxy-c-function-comment"
@@ -1411,7 +1414,7 @@ if there is no current one set."
 (tempo-define-template "doxy-c-file-comment"
 		        doxy-c-file-comment-elements)
 
-(defun dp-insert-tempo-template-comment (template-func &optional 
+(defun dp-insert-tempo-template-comment (template-func &optional
                                          no-indent no-bol indent-to
                                          beginning-of-statement)
   "Use TEMPLATE-FUNC to add a comment. Typically a tempo template.
@@ -1425,7 +1428,7 @@ do not indent the newly inserted comment block."
       (end-of-line)
       (if (dp-in-c)
           (dp-c-beginning-of-statement)))
-  
+
   ;; '% in tempo handles adding a newline
   ;;   (if (not (looking-at "^\\s-*$"))
   ;;      (save-excursion (insert "\n")))
@@ -1440,18 +1443,18 @@ do not indent the newly inserted comment block."
 (defun dp-c-tempo-insert-member-comment (&optional no-indent)
   "Add a tempo class function comment."
   (interactive "*")
-  (dp-insert-tempo-template-comment 
+  (dp-insert-tempo-template-comment
    'tempo-template-doxy-c-class-member-comment no-indent))
 (dp-defaliases 'tcfc 'tcmc 'dp-c-tempo-insert-member-comment)
 
 (defun dp-c-tempo-insert-function-comment (&optional no-indent)
   "Add a tempo function comment."
   (interactive "*")
-  (dp-insert-tempo-template-comment 
+  (dp-insert-tempo-template-comment
    'tempo-template-doxy-c-function-comment no-indent))
 (defalias 'tfc0 'dp-c-tempo-insert-function-comment)
 
-(defun* dp-c-insert-class-comment (&optional beginning-of-statement 
+(defun* dp-c-insert-class-comment (&optional beginning-of-statement
                                    template-p)
   "Insert a tempo class comment, using the class name from the current line."
   (save-match-data
@@ -1460,13 +1463,13 @@ do not indent the newly inserted comment block."
       ;; find the class name
       ;; @todo C++ <templates> *WILL* break this.
       ;; Apparently not.
-      (dp-re-search-forward 
+      (dp-re-search-forward
        "^\\s-*\\(enum\\|class\\|struct\\)\\s-+\\(\\S-+?\\)\\s-*\\(:\\|{\\|$\\)"))
     (let ((class-name (match-string 2)))
       (when template-p
         (setq class-name (format "%s <template>" class-name)))
       ;;(tempo-template-doxy-c-class-comment)
-      (dp-insert-tempo-template-comment 
+      (dp-insert-tempo-template-comment
        'tempo-template-doxy-c-class-comment nil
        nil nil (or beginning-of-statement
                    (match-beginning 0)))
@@ -1476,7 +1479,7 @@ do not indent the newly inserted comment block."
 (defun dp-c-tempo-insert-file-comment (&optional no-indent)
   "Add a tempo file comment."
   (interactive "*")
-  (dp-insert-tempo-template-comment 
+  (dp-insert-tempo-template-comment
    'tempo-template-doxy-c-file-comment no-indent))
 (dp-defaliases 'cifc 'ifc 'tifc 'dp-c-tempo-insert-file-comment)
 
