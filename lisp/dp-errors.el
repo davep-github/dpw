@@ -93,6 +93,7 @@
     "Mismatched #ifdef #endif pair"
     "Window .* too small for splitting"
     "Buffer #<killed buffer> has been killed; use ‘g’ to update"
+    "^End of history; no default available$"
 
     ;;XEmacs
     "^No preceding item in "
@@ -102,7 +103,7 @@
     "^No selection or cut buffer available$"
     "Selection aborted"
     "^Quit$"                            ; Tossed by Semantic/Senator.
-    
+
     ;; comint
     "^Not at command line$"
     "^Empty input ring$"
@@ -110,23 +111,23 @@
     "^Not found$";; Too common?
     "No error here"	       ; Actually from next-error
 ;;    "^Current buffer has no process$"
-    
+
     ;; dabbrev
     "^No dynamic expansion for \".*\" found\\.$"
     "^No further dynamic expansions? for .* found\\.?$"
     "^No dynamic expansion for"
-    
+
     ;; Completion
     (concat "^To complete, the point must be after a symbol at "
             "least [0-9]* character long\\.$")
     "^The string \".*\" is too short to be saved as a completion\\.$"
-    
+
     ;; Compile
     "^No more errors\\( yet\\|\\)$"
-    
+
     ;; Gnus
     "^NNTP: Connection closed\\.$"
-    
+
     ;; info
     "^Node has no Previous$"
     ;; Seriously? What kind of fucking rivalry is this?
@@ -138,22 +139,22 @@
     ;; imenu
     "^No items suitable for an index found in this buffer\\.$"
     "^The mode \".*\" does not take full advantage of imenu\\.el yet\\.$"
-    
+
     ;; ispell
     "^No word found to check!$"
-    
+
     ;; dictionary
     "^No match for .* with strategy"
     ;; mh-e
     "^Cursor not pointing to message$"
     "^There is no other window$"
-    
+
     ;; man
     "^No manpage [0-9]* found$"
 
     ;; folding-mode
     "^Outside all folds$"
-    
+
     ;; (X|SG)ML mode
     "No previous element in .* element$"
 
@@ -169,7 +170,7 @@
     "No more tag marks on stack"
     "Buffer has no associated tag tables"
     "The beginning of the \\*xgtags\\* buffer has been reached"
-    
+
     ;; BBDB
     "^no previous record$"
     "^no next record$"
@@ -239,17 +240,17 @@
     "^The end of the .* buffer has been reached$"
     "^Marker has no buffer$"
     "^No mark set in this buffer$"
-    
+
     ;; recover-file
     "^Auto-save file .* not current$"
-    
+
     ;; edebug* errors:
     "[^ ]*edebug(error"
-    
+
     ;; shell-resync-dirs will cause this if there are non-existent
     ;; directories on the dirstack.
     "^No such directory: "
-    
+
     ;; Reveng errors
     "^There is no unique cscope database directory!$"
     "The tags stack is empty"
