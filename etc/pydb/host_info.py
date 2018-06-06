@@ -282,17 +282,23 @@ PRIMARY_BOX_BG_COLOR = 'rgb:24/00/68'
 e(
     kef='host',
     dat={
-'host-pattern': '^yyz$',
-'family': 'amd_family',
-'comment': 'An 8 core Ryzen or an 8 core FX-8370, whichever is working.',
-#'xem_opts': ('-eval (dp-2-v-or-h-windows-keep-geometry) '
-#+ '-geometry 180x67+460+0'),
-# Not particularly attractive.
+        'host-pattern': '^yyz$',
+        'family': 'amd_family',
+        'comment': 'Main dev box. Ryzen 8-core.  Not for testing, in general, unless absolutely necessary.',
+        #'xem_opts': ('-eval (dp-2-v-or-h-windows-keep-geometry) '
+        #+ '-geometry 180x67+460+0'),
+        # Not particularly attractive.
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         ###"""xem-xft-font""": '''"Inconsolata-12"''',
         ## emacs-27 has probmles with evaling stuff in xem.
         ##"""xem-xft-font""": '''"RictyDiminishedDiscord-13"''',
-        'xem_version': "-26.1.50",
+        ## 26 and 27 are buggy [ at this time: 2018-06-05T11:37:59 ]
+        ## Both are broken, at least, in `ffap-other-window` very stupidly.
+        ## Worse that I'd do.
+        ## @todo XXX Win-e doesn't work with a -<version> and
+        ## wmctrl(1) doesn't handle wildcards.  Probably need a script
+        ## to find and expand on my own.
+        'xem_version': "", #"-26.1.50",
         'xterm_bg': PRIMARY_BOX_BG_COLOR,
         'xterm_fg': PRIMARY_BOX_FG_COLOR,
         'xxem_bg_color': "grey80", # Need to have fsf and xem parameters.
