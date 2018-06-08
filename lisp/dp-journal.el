@@ -2897,6 +2897,12 @@ This kind of allows us to use a journal file with a non-standard name."
 (defun dp-journal-mode-pre-hook ()
   (local-set-key [(meta ?-)] 'dp-bury-or-kill-buffer))
 
+(defun dp-journal-setup-font-lock ()
+  ;; oh, wow, the COLORS.
+  (dp-set-font-lock-defaults 'dp-journal-mode
+			     '(dp-journal-mode-font-lock-keywords t))
+  (font-lock-set-defaults))
+
 (add-hook 'dp-journal-mode-pre-hook 'dp-journal-mode-pre-hook)
 
 ;;; real dp-journal-mode function defined here:
@@ -2925,6 +2931,7 @@ exist to move from one topic record to the next or previous.
   ;; am not using it correctly, esp in relation to filladapt.
   (auto-fill-mode -1)
 
+  (dp-journal-setup-font-lock)
   ;;
   ;; this make line up/down movement commands skip over invisible
   ;; text.  It is said to slow things down.  if it is too slow, we can
@@ -3020,11 +3027,6 @@ exist to move from one topic record to the next or previous.
   (dpj-add-menu-item "Grep and view hits..." 'dpj-grep-and-view-hits)
   (dpj-add-menu-item "View open todos..." 'dpj-view-todos)
   (dpj-add-menu-item "Kill old journal buffers " 'dpj-tidy-journals)
-  
-  ;; oh, wow, the COLORS.
-  (dp-set-font-lock-defaults 'dp-journal-mode 
-			     '(dp-journal-mode-font-lock-keywords t))
-  (font-lock-set-defaults)
   
   (dp-make-local-hook 'after-save-hook)
   (add-hook 'after-save-hook (function 
