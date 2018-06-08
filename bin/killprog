@@ -29,11 +29,10 @@ else
 
 $arg0 = $ARGV[0];
 
-if ($arg0 =~ /^-(\d{1,2})/)
+if ($arg0 =~ /^-((\d{1,2})|(SIG.*))/)
 {
   $siggie = $1;
   shift(@ARGV);
-
 }
 elsif ($arg0 =~ '-[sq]')
 {
