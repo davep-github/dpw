@@ -6333,13 +6333,15 @@ matching ones."
 (defun dp-in-write-protected-region (&optional pos)
   "Determine if POS (def point) is in a write protected region."
   (dp-extents-at-with-prop 'dp-write-protected-region nil pos))
-  
+
+;; @todo XXX merge wp-region and wp-buffer-or-region using
+;; dp-region-or... using 'buffer-p
 (defun dp-write-protect-region (beg end)
   (interactive "r")
   (dp-make-extent beg end 'dp-write-protected-region 'read-only t 
                   'face 'dp-wp-face 'dp-extent-p t 
                   'dp-write-protected-region t 'priority 1))
-(defalias 'dp-ro-region 'dp-write-protect-region)
+(dp-defaliases 'dp-wp 'dp-wp-region 'dp-ro-region 'dp-write-protect-region)
 
 (defun dp-wp-buffer-or-region ()
   (interactive)
