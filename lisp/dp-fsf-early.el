@@ -25,7 +25,7 @@
 ;; variables.
 ;; 
 (defun dp-set-font-lock-defaults (mode-symbol defaults)
-  (setq font-lock-defaults defaults))
+  (set (make-local-variable 'font-lock-defaults) defaults))
 
 (defun dp-colorize-buffer-if-readonly (&optional color uncolorize-if-rw-p)
   "XXX!!! Need to recast my colorization in Emacs' overlays, etc."
