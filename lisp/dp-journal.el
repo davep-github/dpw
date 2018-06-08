@@ -244,6 +244,7 @@ This way we can get alternating colors on journal mode structure in the text:
   (dpj-alt limit 1 2))
 
 ;; see `font-lock-keywords' for format of this variable
+;; <:fonts|fontlock|keywords:>
 (defvar dp-journal-mode-font-lock-keywords  ;<:font lock keywords:>
   (list
    ;; ?? Add whitespace after prefix?
@@ -254,54 +255,54 @@ This way we can get alternating colors on journal mode structure in the text:
    ;; parts of the line. They are essentially background. This allows any
    ;; specific things (like the function face) to work w/o specifically
    ;; prepending it. Even though it is done that way below at this time.
-   (cons "^[ 	]*!!!+\\( .*$\\|$\\)" 'dp-journal-high-problem-face)
-   (cons "^[ 	]*!!\\( .*$\\|$\\)" 'dp-journal-medium-problem-face)
-   (cons "^[ 	]*!\\( .*$\\|$\\)" 'dp-journal-low-problem-face)
+   (cons "^[ 	]*!!!+\\( .*$\\|$\\)" ''dp-journal-high-problem-face)
+   (cons "^[ 	]*!!\\( .*$\\|$\\)" ''dp-journal-medium-problem-face)
+   (cons "^[ 	]*!\\( .*$\\|$\\)" ''dp-journal-low-problem-face)
 
-   (cons "^[ 	]*@@@+\\( .*$\\|$\\)" 'dp-journal-high-todo-face)
-   (cons "^[ 	]*@@\\( .*$\\|$\\)" 'dp-journal-medium-todo-face)
-   (cons "^[ 	]*@\\( .*$\\|$\\)" 'dp-journal-low-todo-face)
+   (cons "^[ 	]*@@@+\\( .*$\\|$\\)" ''dp-journal-high-todo-face)
+   (cons "^[ 	]*@@\\( .*$\\|$\\)" ''dp-journal-medium-todo-face)
+   (cons "^[ 	]*@\\( .*$\\|$\\)" ''dp-journal-low-todo-face)
 
-   (cons "^[ 	]*\\?\\?\\?+\\( .*$\\|$\\)" 'dp-journal-high-question-face)
-   (cons "^[ 	]*\\?\\?\\( .*$\\|$\\)" 'dp-journal-medium-question-face)
-   (cons "^[ 	]*\\?\\( .*$\\|$\\)" 'dp-journal-low-question-face)
+   (cons "^[ 	]*\\?\\?\\?+\\( .*$\\|$\\)" ''dp-journal-high-question-face)
+   (cons "^[ 	]*\\?\\?\\( .*$\\|$\\)" ''dp-journal-medium-question-face)
+   (cons "^[ 	]*\\?\\( .*$\\|$\\)" '''dp-journal-low-question-face)
    ;; what was I doing here???   
-   ;; (cons "\\?+[^?].*\\?\\?*" (list 0 'dp-journal-low-question-face 'keep))
+   ;; (cons "\\?+[^?].*\\?\\?*" (list 0 ''dp-journal-low-question-face ''keep))
 
-   (cons "^[ 	]*\\$\\$\\$+\\( .*$\\|$\\)" 'dp-journal-high-info-face)
-   (cons "^[ 	]*\\$\\$\\( .*$\\|$\\)" 'dp-journal-medium-info-face)
-   (cons "^[ 	]*\\$\\( .*$\\|$\\)" 'dp-journal-low-info-face)
-   (cons "^[ 	]*[Ff][Yy][Ii]:?\\( .*$\\|$\\)" 'dp-journal-medium-info-face)
-   (cons "^[ 	]*>>>>+\\( .*$\\|$\\)" 'dp-journal-extra-emphasis-face)
-   (cons "^[ 	]*>>>\\( .*$\\|$\\)" 'dp-journal-high-info-face)
-   (cons "^[ 	]*>>\\( .*$\\|$\\)" 'dp-journal-medium-info-face)
-   (cons "^[ 	]*>\\( .*$\\|$\\)" 'dp-journal-low-info-face)
-   (cons "^[ 	]*\\+\\+\\++\\( .*$\\|$\\)" 'dp-journal-high-attention-face)
-   (cons "^[ 	]*\\+\\+\\( .*$\\|$\\)" 'dp-journal-medium-attention-face)
-   (cons "^[ 	]*\\+\\( .*$\\|$\\)" 'dp-journal-low-attention-face)
-   (cons "^[ 	]*\\*\\*\\*+\\( .*$\\|$\\)" 'dp-journal-high-attention-face)
-   (cons "^[ 	]*\\*\\*\\( .*$\\|$\\)" 'dp-journal-medium-attention-face)
-   (cons "^[ 	]*\\*\\( .*$\\|$\\)" 'dp-journal-low-attention-face)
+   (cons "^[ 	]*\\$\\$\\$+\\( .*$\\|$\\)" ''dp-journal-high-info-face)
+   (cons "^[ 	]*\\$\\$\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
+   (cons "^[ 	]*\\$\\( .*$\\|$\\)" ''dp-journal-low-info-face)
+   (cons "^[ 	]*[Ff][Yy][Ii]:?\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
+   (cons "^[ 	]*>>>>+\\( .*$\\|$\\)" ''dp-journal-extra-emphasis-face)
+   (cons "^[ 	]*>>>\\( .*$\\|$\\)" ''dp-journal-high-info-face)
+   (cons "^[ 	]*>>\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
+   (cons "^[ 	]*>\\( .*$\\|$\\)" ''dp-journal-low-info-face)
+   (cons "^[ 	]*\\+\\+\\++\\( .*$\\|$\\)" ''dp-journal-high-attention-face)
+   (cons "^[ 	]*\\+\\+\\( .*$\\|$\\)" ''dp-journal-medium-attention-face)
+   (cons "^[ 	]*\\+\\( .*$\\|$\\)" ''dp-journal-low-attention-face)
+   (cons "^[ 	]*\\*\\*\\*+\\( .*$\\|$\\)" ''dp-journal-high-attention-face)
+   (cons "^[ 	]*\\*\\*\\( .*$\\|$\\)" ''dp-journal-medium-attention-face)
+   (cons "^[ 	]*\\*\\( .*$\\|$\\)" ''dp-journal-low-attention-face)
    ;; e.g. (fyi: I have a eg --> e.g. abbrev)
    (cons "^[ 	]*[Ee]\\.?[Gg][.:]?\\(\\s-+\\|:\\).*$" 
-         'dp-journal-high-example-face)
+         ''dp-journal-high-example-face)
    ;; n.b. (fyi: I have an abbrev for nb --> N.B.)
-   (cons "^[ 	]*[nN]\\.?[Bb]\\.?\\( .*$\\|$\\)" 'dp-journal-extra-emphasis-face)
+   (cons "^[ 	]*[nN]\\.?[Bb]\\.?\\( .*$\\|$\\)" ''dp-journal-extra-emphasis-face)
 
    ;; plain timestamps
-   (cons (dpj-mk-topic-re "") 'dp-journal-timestamp-face)
+   (cons (dpj-mk-topic-re "") ''dp-journal-timestamp-face)
    ;; datestamps
-   (cons dpj-datestamp-re 'dp-journal-datestamp-face)
+   (cons dpj-datestamp-re ''dp-journal-datestamp-face)
    ;; topics
    (list (dpj-mk-topic-re) 
-	 (list 0 'dp-journal-topic-stamp-face)
-	 (list 1 'dp-journal-topic-face t))
+	 (list 0 ''dp-journal-topic-stamp-face)
+	 (list 1 ''dp-journal-topic-face t))
    ;; todos
    (list (dpj-mk-topic-re dpj-todo-re)
-	 (list 1 'dp-journal-todo-face t))
+	 (list 1 ''dp-journal-todo-face t))
    ;; done todos
    (list (dpj-mk-topic-re dpj-done-re)
-	 (list 0 'dp-journal-done-face t))
+	 (list 0 ''dp-journal-done-face t))
 
 
    ;; Why did I do two? 1) Topic type. 2) embedded.
@@ -2900,8 +2901,7 @@ This kind of allows us to use a journal file with a non-standard name."
 (defun dp-journal-setup-font-lock ()
   ;; oh, wow, the COLORS.
   (dp-set-font-lock-defaults 'dp-journal-mode
-			     '(dp-journal-mode-font-lock-keywords t))
-  (font-lock-set-defaults))
+			     '(dp-journal-mode-font-lock-keywords t)))
 
 (add-hook 'dp-journal-mode-pre-hook 'dp-journal-mode-pre-hook)
 
