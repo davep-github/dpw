@@ -67,12 +67,13 @@
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
    (quote
-    (sphinx-doc fuzzy full-ack ack-menu ag ibuffer-tramp challenger-deep-theme abyss-theme nova-theme magit ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
+    (celestial-mode-line cargo all-the-icons-dired achievements ac-etags minimap markdown-mode+ markdown-mode sphinx-doc fuzzy full-ack ack-menu ag ibuffer-tramp challenger-deep-theme abyss-theme nova-theme magit ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
  '(package-user-dir "~/.emacs.d/elpa.yyz.d")
  '(query-replace-lazy-highlight nil)
  '(safe-local-variable-values
    (quote
-    ((c-font-lock-extra-types "FILE" "bool" "language" "linebuffer" "fdesc" "node" "regexp")
+    ((mmm-global-classes)
+     (c-font-lock-extra-types "FILE" "bool" "language" "linebuffer" "fdesc" "node" "regexp")
      (block-comment-end . "")
      (folding-internal-margins)
      (folded-file . t))))
