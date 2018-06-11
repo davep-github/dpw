@@ -6373,7 +6373,7 @@ matching ones."
 ;; 2) Pass in a flag which forces whole file.
 ;; r* rw, ro
 ;; w* wr, wp
-(dp-defaliases 'dp-ro-buffer 'dp-wp-buffer 
+(dp-defaliases 'dp-ro-buffer 'dp-wp-buffer
                'dp-r*-bor 'dp-w*-bor 'dp-wp-buffer-or-region)
 
 (defun dp-rw-region (&optional beg end)
