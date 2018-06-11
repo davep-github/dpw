@@ -112,15 +112,14 @@ function template at point.
 
 ;;; This is what I get for committing myself meself to a "proprietary"
 ;;; subsystem, i.e. extents (which are so much better.)
-(defsubst make-extent (&rest r)
-  (message "change make-extent to something FSF-ish"))
-(defsubst set-extent-properties (&rest r)
-  (message "change set-extent-properties to something FSF-ish"))
+;; (defsubst make-extent (&rest r)
+;;   (message "change make-extent to something FSF-ish"))
+;; (defsubst set-extent-properties (&rest r)
+;;   (message "change set-extent-properties to something FSF-ish"))
 (defun map-extents (&rest r)
   (message "change map-extents to something FSF-ish"))
-(defun delete-extent (&rest r)
-  (message "change delete-extent to something FSF-ish"))
 
+(defalias 'delete-extent 'delete-overlay)
 
 ;; EEEEEEEEVIL hack.  We need to create our own byte-compilation
 ;; method so that the proper variables are bound while compilation
@@ -373,9 +372,6 @@ argument to `add-hook'."
   "XEmacs predicates on device.
 I need to look at filtered-frame-list to use device if non-nil."
   (frame-list))
-
-(defun map-extents (&rest r)
-  )
 
 (defun window-displayed-height (&optional window)
   (window-buffer-height (or window (frame-selected-window))))
