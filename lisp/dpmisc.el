@@ -13572,8 +13572,9 @@ values must be passed in as stings."
     (message "%s" num))
   num)
 
-(defun dp-add-force-read-only-regexp (regexp &optional clear-list-p)
-  "Add a regexp to the list of regexps which determine if a file is read only."
+(defun dp-add-force-read-only-regexp (regexps &optional clear-list-p)
+  "Add a [list of] regexp[s] to the list of RO'ing regexps.
+If a file matches one of the regexps it is made read only."
   (interactive "sRegexp: ")
   (when clear-list-p
     (setq dp-implied-read-only-filename-regexp-list nil))
