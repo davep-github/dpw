@@ -168,6 +168,7 @@
  '("/proj/ras_arch/ras/edc/brahma/"
    "/ras.local/edc/brahma/ec"
    "/ras.nfs/edc/brahma/ec"
+   "/tmp-for-edc-code/"
    "/releases.amd-17\\.40/linux"))
 
 ;; (setq dp-<type>*-regexp-list
