@@ -5959,6 +5959,21 @@ When beginning a sequence, (point) is saved.  This can be pushed onto
 ;; e for eye which sounds like i which starts info.
 (global-set-key [(control h) (control e)] 'info1)
 
+;; From XEmacs.
+;; `make-extent' is a built-in function
+;;   -- loaded from "/home/dpanarit/local/build/xemacs-21.5.34/src/extents.c"
+;; (make-extent FROM TO &optional BUFFER-OR-STRING)
+
+;; Documentation:
+;; Make an extent for the range [FROM, TO) in BUFFER-OR-STRING.
+;; BUFFER-OR-STRING defaults to the current buffer.  Insertions at point
+;; TO will be outside of the extent; insertions at FROM will be inside the
+;; extent, causing the extent to grow. (This is the same way that markers
+;; behave.) You can change the behavior of insertions at the endpoints
+;; using `set-extent-property'.  The extent is initially detached if both
+;; FROM and TO are nil, and in this case BUFFER-OR-STRING defaults to nil,
+;; meaning the extent is in no buffer and no string.
+
 (defun dp-make-extent0 (buffer-or-string from to id-prop &rest props)
   "Make an extent.  Give it a property of ID-PROP for easy identification.
 Also give it the property 'dp-extent-p with value t.
