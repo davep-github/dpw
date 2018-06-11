@@ -13593,9 +13593,9 @@ If a file matches one of the regexps it is made read only."
   (interactive "sRegexp: ")
   (when clear-list-p
     (setq dp-implied-read-only-filename-regexp-list nil))
-  (when regexp
+  (when regexps
     (dp-add-list-to-list 'dp-implied-read-only-filename-regexp-list 
-                         (dp-listify-thing regexp))))
+                         (dp-listify-thing regexps))))
 
 (defun dp-delete-force-read-only-regexp (regexp)
   "Delete a regexp from the list of regexps which determine if a file is read only."
