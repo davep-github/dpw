@@ -1341,8 +1341,8 @@ modification to the wrong file when several sandboxes \(NOT good but
 necessary) are in play.  For additional safety, all sandboxes are read only
 if there is no current one set."
   (setq filename (expand-file-name filename))
-  (dmessage "dp-sandbox-read-only-p, filename>%s<" filename)
-  (dmessage "dp-sandbox-read-only-p, regexp>%s<" (dp-current-sandbox-regexp))
+  ;;(dmessage "dp-sandbox-read-only-p, filename>%s<" filename)
+  ;;(dmessage "dp-sandbox-read-only-p, regexp>%s<" (dp-current-sandbox-regexp))
   ;; If in another sb (in sb and not in current sb)
   ;; If in current sb and current sb RO
   ;; no sb --> not-RO
@@ -1354,7 +1354,7 @@ if there is no current one set."
         (dp-read-only-sandbox-p filename)
         (not (dp-current-sandbox-file-p filename))
         (dp-current-sandbox-read-only-p)))
-    (message "!!! File not in current sandbox: %s" filename)
+    ;;(message "!!! File not in current sandbox: %s" filename)
     t))
 
 (add-hook 'dp-detect-read-only-file-hook 'dp-sandbox-read-only-p)
