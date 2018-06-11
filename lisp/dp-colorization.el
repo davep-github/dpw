@@ -37,17 +37,28 @@
 (defun dp-delete-colorized-regions (&optional begin end)
   (dp-delete-regions (dp-get-list-of-colorized-regions begin end)))
 
+;; From XEmacs
+;; (set-extent-property EXTENT PROPERTY VALUE)
+(defun dp-overlay-put-prop (olay prop val)
+  (overlay-put olay prop val))
+
+(defalias 'set-extent-property 'dp-overlay-put-property)
+
+;; From XEmacs
+;; (set-extent-properties EXTENT PLIST)
 (defun dp-overlay-put-props (olay prop-list)
   (when prop-list
     (cl-loop for (key val) on prop-list by #'cddr
 	     do
-	     (overlay-put olay key val))))
+	     (dp-overlay-put-prop olay key val))))
+
+(defalias 'set-extent-properties 'dp-overlay-put-props)
 
 ;; (dp-make-extent FROM TO ID-PROP &rest PROPS)
-(cl-defun dp-make-overlay (from to id-prop color buffer
-				&key prop-list
-				bounding-markers
-				front-advance rear-advance)
+(cl-defun dp-make-color-overlay (from to id-prop color buffer
+				      &key prop-list
+				      bounding-markers
+				      front-advance rear-advance)
   "Make an overlay the way I like and the way I like to make it."
   (let ((begin (or from (point-min)))
 	(end (or to (point-max)))
@@ -55,7 +66,7 @@
 	;; appended.
 	(required-plist (list id-prop t
 			      'dp-extent-p t
-			      'dp-source 'dp-make-overlay
+			      'dp-source 'dp-make-color-overlay
 			      'dp-extent-id id-prop
 			      'dp-extent-type id-prop
 			      'face color))
@@ -72,6 +83,22 @@
 	     		     rear-advance))
     (dp-overlay-put-props olay (append required-plist prop-list))
     olay))
+
+;; `make-extent' is a built-in function
+;;   -- loaded from "/home/dpanarit/local/build/xemacs-21.5.34/src/extents.c"
+;; (make-extent FROM TO &optional BUFFER-OR-STRING)
+
+;; Documentation:
+;; Make an extent for the range [FROM, TO) in BUFFER-OR-STRING.
+;; BUFFER-OR-STRING defaults to the current buffer.  Insertions at point
+;; TO will be outside of the extent; insertions at FROM will be inside the
+;; extent, causing the extent to grow. (This is the same way that markers
+;; behave.) You can change the behavior of insertions at the endpoints
+;; using `set-extent-property'.  The extent is initially detached if both
+;; FROM and TO are nil, and in this case BUFFER-OR-STRING defaults to nil,
+;; meaning the extent is in no buffer and no string.
+
+(defalias 'make-extent 'make-overlay)
 
 (defvar dp-remote-file-colorization-info
   `(,dp-remote-file-regexp . dp-remote-buffer-face)
@@ -240,22 +267,23 @@ PROPS."
               face-val face))
       ;; (setq extent (apply 'dp-make-extent beg end 'dp-colorized-region
       (setq extent
-	    (dp-make-overlay beg end 'dp-colorized-region-p face (current-buffer)
-			     :prop-list
-			     (append
-			      (list 'dp-colorized-p t
-				    'dp-colorized-region-p t ; `region' is generic.
-				    'dp-colorized-overlay-p t ; Specificity useful.
-				    ;;'invisible 'dp-colorize-region
-				    'dp-colorized-region-color-num arg
-				    'dp-extent-search-key 'dp-colorized-region
-				    'dp-extent-search-key2 (list 'dp-colorized-region-p arg))
-			props)))
+	    (dp-make-color-overlay
+	     beg end 'dp-colorized-region-p face (current-buffer)
+	     :prop-list
+	     (append
+	      (list 'dp-colorized-p t
+		    'dp-colorized-region-p t  ; `region' is generic.
+		    'dp-colorized-overlay-p t ; Specificity useful.
+		    ;;'invisible 'dp-colorize-region
+		    'dp-colorized-region-color-num arg
+		    'dp-extent-search-key 'dp-colorized-region
+		    'dp-extent-search-key2 (list 'dp-colorized-region-p arg))
+	      props)))
       (when (and (not no-roll-colors-p)
-                 arg ; ARG nil: called w/specific face, so we can't rotate.
-                 (not (symbolp arg))    ; Don't roll when a color is passed in.
-                 dp-colorize-region-roll-colors)
-        (dp-colorize-roll-colors)))
+		 arg ; ARG nil: called w/specific face, so we can't rotate.
+		 (not (symbolp arg)) ; Don't roll when a color is passed in.
+		 dp-colorize-region-roll-colors)
+	(dp-colorize-roll-colors)))
     extent))
 
 (defun dp-colorize-region-line-by-line (beg end color)
