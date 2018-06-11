@@ -9803,9 +9803,9 @@ basically the union of the args to `find-file-noselect' and
     ;; Force expansion since find-file-use-truenames may not be.
     (let ((bfn (expand-file-name buffer-file-name)))
       (when (dp-file-name-implies-readonly-p bfn)
-        (dmessage "Forcing %s to be read-only." bfn)
+        (message "Forcing %s to be read-only." bfn)
         (toggle-read-only 1)))))
-        
+
 (defun dp-colorize-found-file-buffer ()
   "Set a buffer's color after the file has been loaded into it."
     (dp-remove-file-state-colorization)
