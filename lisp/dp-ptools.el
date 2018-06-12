@@ -629,7 +629,6 @@ cscope discovery.
   (defalias 'guf 'dp-gtags-update-file))
 
 (when (dp-gtags-p)
-
   (defun dp-gtags-current-token ()
     (if (dp-mark-active-p)
         (buffer-substring (mark) (point))
