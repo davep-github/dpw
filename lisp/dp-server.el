@@ -194,6 +194,7 @@ this code runs, so I need to check for its presence before running
   (dp-stop-editing-server)
   (dp-start-editing-server))
 
-(define-key special-event-map [sigusr1] 'dp-restart-server)
+(unless (dp-xemacs-p)
+  (define-key special-event-map [sigusr1] 'dp-restart-server))
 
 (provide 'dp-server)
