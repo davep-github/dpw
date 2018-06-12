@@ -92,6 +92,7 @@ else: NUM-LINES lines.
   (save-excursion ; May not work depending on how the collapsing works.
     (magit-jump-to-untracked)
     (call-interactively 'magit-section-hide)))
+(dp-defaliases 'dmhu 'mhut 'hut 'dp-magit-hide-untracked)
 
 ;; This hack isn't needed at work.
 ;; And now tis not need at home.
