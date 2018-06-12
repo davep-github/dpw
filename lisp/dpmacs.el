@@ -35,8 +35,6 @@
   (load "cl-macs")
   (require 'dp-macros))
 
-(require 'dp-magit)
-
 ;; Not sure why this isn't buffer local by default.
 ;; quote:
 ;; This variable is intended for use by making it local to a buffer.
@@ -238,14 +236,6 @@ way.")
   "Only hosts which match this regexp will be allowed to be advertised as
 editing servers via `dp-editing-server-ipc-file'.")
 
-(when dp-use-gtags-p 
-  (dp-optionally-require 'gtags))
-(defun dp-gtags-p ()
-  (and dp-use-gtags-p
-       (or (featurep 'gtags )
-           (and (fboundp 'gtags-mode)
-                (dmessage "not featurep 'gtags, but gtags-mode defined.")))))
-
 ;; Load these first so I can navigate somewhat better when I hose another rc
 ;; file.
 (require 'dp-keys) ;; my highly unstandard keybindings.
@@ -259,11 +249,15 @@ editing servers via `dp-editing-server-ipc-file'.")
 
 ;;
 ;; Now we can do my kinds of things...
-;; 
+;;
+
+(unless (dp-xemacs-p)
+  (require 'dp-magit))
 
 ;; in XEmacs (only?)
-(when dp-use-xgtags-p 
+(when dp-use-xgtags-p
   (dp-optionally-require 'xgtags))
+
 (defun dp-xgtags-p ()
   (and dp-use-xgtags-p
        (or (featurep 'xgtags )
@@ -278,6 +272,15 @@ editing servers via `dp-editing-server-ipc-file'.")
        (or (featurep 'ggtags )
            (and (fboundp 'ggtags-mode)
                 (dmessage "not featurep 'ggtags, but ggtags-mode defined.")))))
+(when dp-use-gtags-p
+  (dp-optionally-require 'gtags))
+(defun dp-gtags-p ()
+  (and dp-use-gtags-p
+       (or (featurep 'gtags )
+           (and (fboundp 'gtags-mode)
+                (dmessage "not featurep 'gtags, but gtags-mode defined.")))))
+
+;; Load these first so I can navigate somewhat better when I hose another rc
 
 ;; I like it on by default, but it is painfully slow over low bandwidth
 ;; links, so I set it up here and let it be overridden in a spec-macs.
