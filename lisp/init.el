@@ -12,14 +12,16 @@
 ;;      |
 ;;      |
 ;; No undead code!
-(if (version< emacs-version "27.0.0")
-    (package-initialize))
 
 (message "init.el...")
+
 (defvar dp-lisp-dir
   (if (featurep 'xemacs)
       (expand-file-name "~/xlisp/")
     (expand-file-name "~/flisp/")))
+(unless (featurep 'xemacs)
+  (if (version< emacs-version "27.0.0")
+      (package-initialize)))
 
 (add-to-list 'load-path dp-lisp-dir)
 
