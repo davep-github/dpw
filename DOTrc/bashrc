@@ -250,7 +250,6 @@ dp_add_to_path_iff()
 }
 export -f dp_add_to_path_iff
 
-export PKG_CONFIG_PATH=$(dp_add_to_path_iff $PKG_CONFIG_PATH "$HOME/bree/lib/pkgconfig")
 export RC_DIR=$HOME/.rc
 export OSName=$(uname -s)	# our current os
 export Arch=$(uname -m)		# our current architecture
@@ -281,7 +280,6 @@ then
     # OSF1 doesn't understand rxvt, but rxvt understands xterm. 
     export TERM=xterm
 fi
-
 
 # Pull in some useful functions. func has a dependency on PATH???
 . $RC_DIR/func
@@ -476,6 +474,8 @@ source_list -l $RC_DIR/alias "" $locale_rcs .work
     locale_rcs=$(dp_add_to_path_iff -S "$locale_rcs" ${EXTRA_RCS})
 }
 unset EXTRA_RCS
+
+export PKG_CONFIG_PATH=$(dp_add_to_path_iff $PKG_CONFIG_PATH "$HOME/local/lib/pkgconfig")
 
 # do this after host specific env is run to ensure . is first.
 # . in path is unwise.

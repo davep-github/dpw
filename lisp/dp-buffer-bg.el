@@ -74,7 +74,7 @@
       (when widenp
 	(widen))
       (setq dp-buffer-bg-overlay
-	    (dp-make-overlay
+	    (dp-make-color-overlay
 	     begin end
 	     'dp-background-region-p
 	     bg-face

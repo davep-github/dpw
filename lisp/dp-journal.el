@@ -3,7 +3,7 @@
 ;; ========================
 ;; Saturday January 12 2002
 ;; --
-;; 
+;;
 ;; Timestamp:
 ;; ========================
 ;; 2002-01-12T10:52:25
@@ -42,19 +42,19 @@
 (defvar dpj-private-topic-str "&")
 (defvar dpj-private-topic-re0 (format "^%s.*" dpj-private-topic-str))
 
-(defvar dpj-private-topic-re (format "\\(%s\\|%s\\|%s%s\\)" 
-				     dpj-todo-re dpj-done-re 
+(defvar dpj-private-topic-re (format "\\(%s\\|%s\\|%s%s\\)"
+				     dpj-todo-re dpj-done-re
 				     dpj-private-topic-re0
-                                     dpj-private-topic-re-extra))
+				     dpj-private-topic-re-extra))
 
 ;;;(defvar dpj-bullet-regexp (concat dp-ws-regexp* (regexp-quote "$.+!@)))
 
 (define-abbrev-table 'dpj-topic-abbrev-table '())
 
-(defvar dpj-any-AI-regexp "[ 	]*?[?!@$]+\\([ 	]+\\|$\\)")
-;;(defvar dpj-any-AI-todo-regexp "[ 	]*\\([!@]+\\|\\?\\?\\?\\?*\\)[ 	]+")
-(defvar dpj-any-AI-todo-regexp 
-  "\\(^\\?+\\|[ 	]*\\([!@]+\\|\\?\\?\\?\\?*\\)\\)[ 	]+")
+(defvar dpj-any-AI-regexp "[	 ]*?[?!@$]+\\([	 ]+\\|$\\)")
+;;(defvar dpj-any-AI-todo-regexp "[	 ]*\\([!@]+\\|\\?\\?\\?\\?*\\)[	 ]+")
+(defvar dpj-any-AI-todo-regexp
+  "\\(^\\?+\\|[		]*\\([!@]+\\|\\?\\?\\?\\?*\\)\\)[	 ]+")
 (defvar dpj-any-AI-regexp@bol (concat "^" dpj-any-AI-regexp)
   "Regexp to find AI at beginning of line.")
 (defvar dpj-any-AI-todo-regexp@bol (concat "^" dpj-any-AI-todo-regexp)
@@ -86,8 +86,8 @@ positives, but funky enough to minimize them.")
   "Separator which comes before local variables hack section.")
 
 (dp-set-mode-local-value 'dp-local-variables-hack-separator
-                         dpj-local-variables-hack-separator
-                         'dp-journal-mode)
+			 dpj-local-variables-hack-separator
+			 'dp-journal-mode)
 
 (defun dp-journal-mode-indent-according-to-mode ()
   "Indent line so it ends up 1 dpj tab under past the previous line's."
@@ -122,9 +122,9 @@ positives, but funky enough to minimize them.")
   :type 'string
   :group 'dp-vars)
 
-(defcustom dp-journal-invisible-text-glyph-file (and (featurep 'xpm) 
-                                                     nil)
-  "*File from which to make the `invisible-text-glyph'.  
+(defcustom dp-journal-invisible-text-glyph-file (and (featurep 'xpm)
+						     nil)
+  "*File from which to make the `invisible-text-glyph'.
 nil says to use the default builtin image."
   :type '(file :must-match t)
   :group 'dp-vars)
@@ -135,7 +135,7 @@ nil says to use the default builtin image."
   :group 'dp-vars)
 
 (defcustom dp-journal-use-invisible-text-glyph-p (and (featurep 'xpm)
-                                                      t)
+						      t)
   "*Flag telling whether or not to use our own value for
 `invisible-text-glyph'."
   :type 'boolean
@@ -156,14 +156,14 @@ nil says to use the default builtin image."
   :type 'integer
   :group 'dp-vars)
 
-(defvar dpj-info-regexps0 (regexp-opt '("http://" "https://" "ftp://" 
+(defvar dpj-info-regexps0 (regexp-opt '("http://" "https://" "ftp://"
 				       "gopher://" "mailto:" "telnet://"
 				       "www." "ftp.")
 				     'wrap-in-parens)
   "Regexp to represent information-like patterns,
 e.g. URLs.")
 
-(defvar dpj-topic-to-file-map 
+(defvar dpj-topic-to-file-map
   '(("\\(\\.\\|^\\)politics\\(\\.\\|$\\)" "daily-private")
     ("\\.*" "daily"))
   "Map a topic name to a topic specific file name")
@@ -172,58 +172,58 @@ e.g. URLs.")
   "Create a topic specific note file name.
 !<@todo XXX allow the name-base to include a dir."
   (let* ((name-base (cadr (dp-assoc-regexp topic dpj-topic-to-file-map))))
-    (dp-make-dated-note-file-name name-base 
-                                  :extension ".jxt"
-                                  :note-base-dir (dpj-base-dir-name topic))))
+    (dp-make-dated-note-file-name name-base
+				  :extension ".jxt"
+				  :note-base-dir (dpj-base-dir-name topic))))
 
-(defvar dpj-info-regexps (concat dpj-info-regexps0 "[^ 	
+(defvar dpj-info-regexps (concat dpj-info-regexps0 "[^
 ]*"))
 
-(defvar dpj-alt-regexp "^[ 	]*\\(!*[0-9]+[.a-zA-Z0-9]*\\)[].:|!)].*$")
-;;;(defvar dpj-alt-regexp "^[ 	]*|.*$")
-;;;(defvar dpj-alt-regexp "^\\([ 	]*| .*\\|[0-9][0-9]*) .*\\)$")
+(defvar dpj-alt-regexp "^[	 ]*\\(!*[0-9]+[.a-zA-Z0-9]*\\)[].:|!)].*$")
+;;;(defvar dpj-alt-regexp "^[	 ]*|.*$")
+;;;(defvar dpj-alt-regexp "^\\([	 ]*| .*\\|[0-9][0-9]*) .*\\)$")
 
 (defun dpj-alt (limit n max-colors)
   (catch 'done
     (let (n-th)
       (while (dp-re-search-forward dpj-alt-regexp limit t)
-        (setq n-th (mod (truncate (string-to-int (match-string 1)))
-                        max-colors))
-;         (dmessage "ms1>%s<, s2i: %s, n: %s, n-th: %s" 
-;                   (match-string 1) 
+	(setq n-th (mod (truncate (string-to-int (match-string 1)))
+			max-colors))
+;         (dmessage "ms1>%s<, s2i: %s, n: %s, n-th: %s"
+;                   (match-string 1)
 ;                   (string-to-int (match-string 1))
 ;                   n n-th)
-        (if (= n-th n)
-            (throw 'done t))))
+	(if (= n-th n)
+	    (throw 'done t))))
     nil))
 
 ; (defun dpj-alt (limit n)
 ;   (catch 'done
 ;     (save-excursion
 ;       (while (dp-re-search-forward dpj-alt-regexp limit t)
-; 	(setq l-and-1 (logand (line-number) 1))
-; 	(if (= n (logand (line-number) 1))
-; 	    (throw 'done t)))
+;	(setq l-and-1 (logand (line-number) 1))
+;	(if (= n (logand (line-number) 1))
+;	    (throw 'done t)))
 ;       (set-match-data nil))))
 
 (when (featurep 'filladapt)
   ;; This was in dpmacs.el, but it doesn't really belong there unless there
   ;; was some dependency or some such issues.
-  (defvar dpj-filladapt-token-table-additions 
-    '(("[!?@$]+[ 	]" dpj-action-item)
-      ("\\(~~\\|==\\)>[ 	]" dpj-action-item-resolution))
+  (defvar dpj-filladapt-token-table-additions
+    '(("[!?@$]+[	 ]" dpj-action-item)
+      ("\\(~~\\|==\\)>[		]" dpj-action-item-resolution))
     "Things I'd like filladapt to know about.
 This associates a regexp with a symbol name. The symbol names are used by
 `fill-adapt-token-match-table'.")
-  (dp-add-list-to-list 'filladapt-token-table 
-                       dpj-filladapt-token-table-additions)
+  (dp-add-list-to-list 'filladapt-token-table
+		       dpj-filladapt-token-table-additions)
 
   (defvar dpj-filladapt-token-match-table-additions
     '((dpj-action-item dpj-action-item)
       (dpj-action-item-resolution dpj-action-item-resolution))
     "Inform filladapt about my journal mode tokens.")
-  (dp-add-list-to-list 'filladapt-token-match-table 
-                       dpj-filladapt-token-match-table-additions))
+  (dp-add-list-to-list 'filladapt-token-match-table
+		       dpj-filladapt-token-match-table-additions))
 
 (defun dpj-alt-0 (limit)
   "Helps to determine if chars in a sequence can be considered even.
@@ -255,46 +255,46 @@ This way we can get alternating colors on journal mode structure in the text:
    ;; parts of the line. They are essentially background. This allows any
    ;; specific things (like the function face) to work w/o specifically
    ;; prepending it. Even though it is done that way below at this time.
-   (cons "^[ 	]*!!!+\\( .*$\\|$\\)" ''dp-journal-high-problem-face)
-   (cons "^[ 	]*!!\\( .*$\\|$\\)" ''dp-journal-medium-problem-face)
-   (cons "^[ 	]*!\\( .*$\\|$\\)" ''dp-journal-low-problem-face)
+   (cons "^[	 ]*!!!+\\( .*$\\|$\\)" ''dp-journal-high-problem-face)
+   (cons "^[	 ]*!!\\( .*$\\|$\\)" ''dp-journal-medium-problem-face)
+   (cons "^[	 ]*!\\( .*$\\|$\\)" ''dp-journal-low-problem-face)
 
-   (cons "^[ 	]*@@@+\\( .*$\\|$\\)" ''dp-journal-high-todo-face)
-   (cons "^[ 	]*@@\\( .*$\\|$\\)" ''dp-journal-medium-todo-face)
-   (cons "^[ 	]*@\\( .*$\\|$\\)" ''dp-journal-low-todo-face)
+   (cons "^[	 ]*@@@+\\( .*$\\|$\\)" ''dp-journal-high-todo-face)
+   (cons "^[	 ]*@@\\( .*$\\|$\\)" ''dp-journal-medium-todo-face)
+   (cons "^[	 ]*@\\( .*$\\|$\\)" ''dp-journal-low-todo-face)
 
-   (cons "^[ 	]*\\?\\?\\?+\\( .*$\\|$\\)" ''dp-journal-high-question-face)
-   (cons "^[ 	]*\\?\\?\\( .*$\\|$\\)" ''dp-journal-medium-question-face)
-   (cons "^[ 	]*\\?\\( .*$\\|$\\)" '''dp-journal-low-question-face)
-   ;; what was I doing here???   
+   (cons "^[	 ]*\\?\\?\\?+\\( .*$\\|$\\)" ''dp-journal-high-question-face)
+   (cons "^[	 ]*\\?\\?\\( .*$\\|$\\)" ''dp-journal-medium-question-face)
+   (cons "^[	 ]*\\?\\( .*$\\|$\\)" '''dp-journal-low-question-face)
+   ;; what was I doing here???
    ;; (cons "\\?+[^?].*\\?\\?*" (list 0 ''dp-journal-low-question-face ''keep))
 
-   (cons "^[ 	]*\\$\\$\\$+\\( .*$\\|$\\)" ''dp-journal-high-info-face)
-   (cons "^[ 	]*\\$\\$\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
-   (cons "^[ 	]*\\$\\( .*$\\|$\\)" ''dp-journal-low-info-face)
-   (cons "^[ 	]*[Ff][Yy][Ii]:?\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
-   (cons "^[ 	]*>>>>+\\( .*$\\|$\\)" ''dp-journal-extra-emphasis-face)
-   (cons "^[ 	]*>>>\\( .*$\\|$\\)" ''dp-journal-high-info-face)
-   (cons "^[ 	]*>>\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
-   (cons "^[ 	]*>\\( .*$\\|$\\)" ''dp-journal-low-info-face)
-   (cons "^[ 	]*\\+\\+\\++\\( .*$\\|$\\)" ''dp-journal-high-attention-face)
-   (cons "^[ 	]*\\+\\+\\( .*$\\|$\\)" ''dp-journal-medium-attention-face)
-   (cons "^[ 	]*\\+\\( .*$\\|$\\)" ''dp-journal-low-attention-face)
-   (cons "^[ 	]*\\*\\*\\*+\\( .*$\\|$\\)" ''dp-journal-high-attention-face)
-   (cons "^[ 	]*\\*\\*\\( .*$\\|$\\)" ''dp-journal-medium-attention-face)
-   (cons "^[ 	]*\\*\\( .*$\\|$\\)" ''dp-journal-low-attention-face)
+   (cons "^[	 ]*\\$\\$\\$+\\( .*$\\|$\\)" ''dp-journal-high-info-face)
+   (cons "^[	 ]*\\$\\$\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
+   (cons "^[	 ]*\\$\\( .*$\\|$\\)" ''dp-journal-low-info-face)
+   (cons "^[	 ]*[Ff][Yy][Ii]:?\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
+   (cons "^[	 ]*>>>>+\\( .*$\\|$\\)" ''dp-journal-extra-emphasis-face)
+   (cons "^[	 ]*>>>\\( .*$\\|$\\)" ''dp-journal-high-info-face)
+   (cons "^[	 ]*>>\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
+   (cons "^[	 ]*>\\( .*$\\|$\\)" ''dp-journal-low-info-face)
+   (cons "^[	 ]*\\+\\+\\++\\( .*$\\|$\\)" ''dp-journal-high-attention-face)
+   (cons "^[	 ]*\\+\\+\\( .*$\\|$\\)" ''dp-journal-medium-attention-face)
+   (cons "^[	 ]*\\+\\( .*$\\|$\\)" ''dp-journal-low-attention-face)
+   (cons "^[	 ]*\\*\\*\\*+\\( .*$\\|$\\)" ''dp-journal-high-attention-face)
+   (cons "^[	 ]*\\*\\*\\( .*$\\|$\\)" ''dp-journal-medium-attention-face)
+   (cons "^[	 ]*\\*\\( .*$\\|$\\)" ''dp-journal-low-attention-face)
    ;; e.g. (fyi: I have a eg --> e.g. abbrev)
-   (cons "^[ 	]*[Ee]\\.?[Gg][.:]?\\(\\s-+\\|:\\).*$" 
-         ''dp-journal-high-example-face)
+   (cons "^[	 ]*[Ee]\\.?[Gg][.:]?\\(\\s-+\\|:\\).*$"
+	 ''dp-journal-high-example-face)
    ;; n.b. (fyi: I have an abbrev for nb --> N.B.)
-   (cons "^[ 	]*[nN]\\.?[Bb]\\.?\\( .*$\\|$\\)" ''dp-journal-extra-emphasis-face)
+   (cons "^[	 ]*[nN]\\.?[Bb]\\.?\\( .*$\\|$\\)" ''dp-journal-extra-emphasis-face)
 
    ;; plain timestamps
    (cons (dpj-mk-topic-re "") ''dp-journal-timestamp-face)
    ;; datestamps
    (cons dpj-datestamp-re ''dp-journal-datestamp-face)
    ;; topics
-   (list (dpj-mk-topic-re) 
+   (list (dpj-mk-topic-re)
 	 (list 0 ''dp-journal-topic-stamp-face)
 	 (list 1 ''dp-journal-topic-face t))
    ;; todos
@@ -307,21 +307,21 @@ This way we can get alternating colors on journal mode structure in the text:
 
    ;; Why did I do two? 1) Topic type. 2) embedded.
    ;; example, e.g.
-   (cons "\\((e.g[^)]*)\\)" (list 1 'dp-journal-high-example-face t))
+   (cons "\\((e.g[^)]*)\\)" (list 1 ''dp-journal-high-example-face t))
 
-   (cons dpj-info-regexps 'dp-journal-medium-info-face)
+   (cons dpj-info-regexps ''dp-journal-medium-info-face)
 
-   (cons "\\([ 	]\\|^\\)\\(\\*\\*.+?\\*\\*\\)" ; extra **emphasis**
-	 (list 2 'dp-journal-extra-emphasis-face 'prepend))
-   (cons "\\([ 	]\\|^\\)\\(\\*.+?\\*\\)" 
-	 (list 2 'dp-journal-emphasis-face 'prepend)) ; *emphasis*
+   (cons "\\([	 ]\\|^\\)\\(\\*\\*.+?\\*\\*\\)" ; extra **emphasis**
+	 (list 2 ''dp-journal-extra-emphasis-face ''prepend))
+   (cons "\\([	 ]\\|^\\)\\(\\*.+?\\*\\)"
+	 (list 2 ''dp-journal-emphasis-face ''prepend)) ; *emphasis*
 
-   (cons "\\([ 	]\\|^\\)\\(\\?[^?].*?\\?\\)" 
-	 (list 2 'dp-journal-low-question-face 'prepend)) ; ?huh?
+   (cons "\\([	 ]\\|^\\)\\(\\?[^?].*?\\?\\)"
+	 (list 2 ''dp-journal-low-question-face ''prepend)) ; ?huh?
 
    ;; [?.....?] unsure editorial change
-   (cons "\\([ 	]\\|^\\)\\(\\[\\?.+?\\?\\]\\)"
-         (list 2 'dp-journal-emphasis-face 'prepend)) 
+   (cons "\\([	 ]\\|^\\)\\(\\[\\?.+?\\?\\]\\)"
+	 (list 2 ''dp-journal-emphasis-face ''prepend))
 
    ;; add extra emphasis to a line.
    ;; this allows us, e.g., to emphasize a particular item in a list.
@@ -329,53 +329,53 @@ This way we can get alternating colors on journal mode structure in the text:
    ;; whereas the preceding text face is not overridden.
    (cons "\\(^[^=~].*?\\)\\(<<<<<*\\|\\?\\?\\?\\?\\?*\\|!!!!!*\\|WTF\\|\\^\\^\\^\\^\\^*\\)\\(.*\\)$"
 	 (list
-	  (list 1 'dp-journal-extra-emphasis-face nil)
-	  (list 2 'dp-journal-extra-emphasis-face t)
-	  (list 3 'dp-journal-extra-emphasis-face nil)))
+	  (list 1 ''dp-journal-extra-emphasis-face nil)
+	  (list 2 ''dp-journal-extra-emphasis-face t)
+	  (list 3 ''dp-journal-extra-emphasis-face nil)))
 
    (cons "`\\([^'`
-]+\\)'" (list 1 'dp-journal-quote-face t)) ; `quote'
-   (list "\\([a-zA-Z_]\\([0-9a-zA-Z_.-]\\|-\>\\|::\\)*\\)(\\(.*?\\))" 
-	 (list 1 'dp-journal-function-face t)
-	 (list 3 'dp-journal-function-args-face t)) ; functions
+]+\\)'" (list 1 ''dp-journal-quote-face t)) ; `quote'
+   (list "\\([a-zA-Z_]\\([0-9a-zA-Z_.-]\\|-\>\\|::\\)*\\)(\\(.*?\\))"
+	 (list 1 ''dp-journal-function-face t)
+	 (list 3 ''dp-journal-function-args-face t)) ; functions
 
    (cons (concat "=======" dpj-timestamp-re0 "=======")
-	 'dp-journal-topic-stamp-face)
+	 ''dp-journal-topic-stamp-face)
    ;; no need to dim these out, just remove highlight
-   (cons "^[ 	]*~[?!@].*$" 'dp-journal-cancelled-action-item-face)
-   (cons "^[ 	]*=[?!@].*$" 'dp-journal-completed-action-item-face)
+   (cons "^[	 ]*~[?!@].*$" ''dp-journal-cancelled-action-item-face)
+   (cons "^[	 ]*=[?!@].*$" ''dp-journal-completed-action-item-face)
 
-   (cons dpj-embedded-lisp-regexp 
-         (list 0 'dp-journal-embedded-lisp-face t))
+   (cons dpj-embedded-lisp-regexp
+	 (list 0 ''dp-journal-embedded-lisp-face t))
 
    ;; deemphasize a line
    ;; text after /s will not be dimmed
    ;; C++ type comment * 2 (////...) but affects the preceding text.
    (cons "\\(^.*?\\)\\(/////*\\)\\(.*\\)$"
 	 (list
-	  (list 1 'dp-journal-deemphasized-face t)
-	  (list 2 'dp-journal-deemphasized-face t)
-	  (list 3 'dp-journal-deemphasized-face nil)))
-   (cons "^[ 	]*--+\\( .*$\\|$\\)" 'dp-journal-deemphasized-face)
+	  (list 1 ''dp-journal-deemphasized-face t)
+	  (list 2 ''dp-journal-deemphasized-face t)
+	  (list 3 ''dp-journal-deemphasized-face nil)))
+   (cons "^[	 ]*--+\\( .*$\\|$\\)" ''dp-journal-deemphasized-face)
 
    ;; Alternating colors based on a numeric prefix.
-   ;; E.g. 
+   ;; E.g.
    ;; 1) sjdhjsdh     <<<< color 1
    ;; 2) not sjdhjsdh <<<< color 2
    ;; 3) yadda        <<<< color 1
-   (cons 'dpj-alt-0 (list 0 'dp-journal-alt-0-face 'prepend))
-   (cons 'dpj-alt-1 (list 0 'dp-journal-alt-1-face 'prepend))
+   (cons ''dpj-alt-0 (list 0 ''dp-journal-alt-0-face ''prepend))
+   (cons ''dpj-alt-1 (list 0 ''dp-journal-alt-1-face ''prepend))
 
    ;; Shell type comment face
 ;    (cons "\\(^[^=~].*?\\)\\(.*?\\) \\(# .*\\)$"
-;          (list 3 'dp-journal-low-question-face t))
+;          (list 3 ''dp-journal-low-question-face t))
    (cons "\\(^.*?\\) \\(# .*\\)$"
-         (list 2 'dp-journal-low-question-face t))
+	 (list 2 ''dp-journal-low-question-face t))
 
-   (cons "^[ 	]*[0-9][0-9]*)" 
-         (list 0 'dp-journal-medium-question-face t))
+   (cons "^[	 ]*[0-9][0-9]*)"
+	 (list 0 ''dp-journal-medium-question-face t))
 
-   ) 
+   )
   "Journal mode font lock keywords")
 
 ;;
@@ -408,7 +408,7 @@ Otherwise, it uses the topic of the current item.")
   "re-match-{forward|backeard} subexpression which holds the topic string.")
 
 (defvar dpj-current-journal-file nil
-  "*Current journal file. This can be global or buffer-local.  
+  "*Current journal file. This can be global or buffer-local.
 A particular journal can be made sticky. This means that the sticky file will
 be used instead of the computed newest journal file. Making a journal sticky
 makes this variable become buffer local.  If it is made default, then the
@@ -434,13 +434,13 @@ for example, a project notes file can be used.")
       (setq-default dpj-current-journal-file file-name)))
   (setq dpj-current-journal-file file-name)
   (message "New %s%scurrent journal file: %s"
-           (if sticky-p
-               "sticky "
-             "")
-           (if default-p
-               "default "
-             "")
-           dpj-current-journal-file))
+	   (if sticky-p
+	       "sticky "
+	     "")
+	   (if default-p
+	       "default "
+	     "")
+	   dpj-current-journal-file))
 
 (defun dpj-unstick-current-journal-file ()
   (dpj-set-current-journal-file nil 'un t))
@@ -464,7 +464,7 @@ for example, a project notes file can be used.")
   (dpj-stick-journal-file (buffer-file-name) unstick-p default-p))
 
 (dp-defaliases 'dpj-stick 'dpj-scfj 'dpj-sjf 'sjf 'snf 'dpj-make-sticky
-               'dpj-stick-current-journal-file)
+	       'dpj-stick-current-journal-file)
 
 
 (defsubst dpj-restore-match-data (&optional data)
@@ -473,7 +473,7 @@ for example, a project notes file can be used.")
 
 (defsubst dpj-set-match-data (&optional data)
   "Set DATA or current global match data into our saved match data."
-  (setq dpj-saved-match-data 
+  (setq dpj-saved-match-data
 	(if (or (eq data nil)
 		(listp data))
 	    data
@@ -489,15 +489,15 @@ for example, a project notes file can be used.")
 
 (defsubst* dpj-topic-match-beginning (&optional num (no-marker-p t))
   (dpj-restore-match-data)
-  (dp-mk-buffer-position (match-beginning 
-                          (or num dpj-topic-subexp))
-                         (not no-marker-p)))
+  (dp-mk-buffer-position (match-beginning
+			  (or num dpj-topic-subexp))
+			 (not no-marker-p)))
 
 (defsubst* dpj-topic-match-end (&optional num (no-marker-p t))
   (dpj-restore-match-data)
-  (dp-mk-buffer-position (match-end 
-                          (or num dpj-topic-subexp))
-                         (not no-marker-p)))
+  (dp-mk-buffer-position (match-end
+			  (or num dpj-topic-subexp))
+			 (not no-marker-p)))
 
 (defsubst dpj-topic-match-timestamp ()
   "Return point of the timstamp part of a topic after finding a topic"
@@ -505,7 +505,7 @@ for example, a project notes file can be used.")
 
 (defun dpj-is-a-journal-p (file-name)
   (string-match "\\(^\\|/\\)daily-.*.jxt$"  file-name))
-  
+
 (defun dpj-is-private-topic-p (topic)
   (and (> (length topic) 0)
        (string= dpj-private-topic-str
@@ -523,15 +523,15 @@ This variable is used to identify things like view bufs.")
   (concat dpj-private-topic-str topic))
 
 (defun dpj-match-message (m)
-  (message "ms0>%s<, ms0>%s<" 
+  (message "ms0>%s<, ms0>%s<"
 	   (dpj-topic-match-string) (dpj-topic-match-string))
-  (message "ms0>%s<, ms0>%s<" 
+  (message "ms0>%s<, ms0>%s<"
 	   (dpj-topic-match-string) (dpj-topic-match-string)))
 
 (defun dpj-highlight-region (from to op)
   "Highlight a region according to OP."
   (dp-highlight-region from to op 'dp-journal
-                       'dp-journal-selected-face 'dp-journal-unselected-face))
+		       'dp-journal-selected-face 'dp-journal-unselected-face))
 
 (defun dpj-show-buffer ()
   "Remove all highlighting extents from the buffer."
@@ -554,14 +554,14 @@ This variable is used to identify things like view bufs.")
 (defsubst dpj-get-current-timestamp-pos ()
   (when (dpj-goto-current-topic-start)
     (- (point) dp-timestamp-len 1)))
-  
+
 (defun dpj-get-current-timestamp ()
   "Pluck the timestamp from the current topic.
 Return CONS (ts-text . ts-position)."
   (save-excursion
     (let ((ts-start (dpj-get-current-timestamp-pos)))
       (when ts-start
-        (cons (buffer-substring ts-start (1- (point))) ts-start)))))
+	(cons (buffer-substring ts-start (1- (point))) ts-start)))))
 
 (defun dpj-find-topic (searchf movef skip-current &optional topic-re count
 			       skip-re)
@@ -586,7 +586,7 @@ Does not affect point.  Use `dpj-goto-topic' to move to a new topic."
 	  ;; did we find the target topic?
 	  ;(dmessage "top>%s<, top-re>%s<, skip-re>%s<" topic topic-re skip-re)
 	  (if (and topic-matches
-		   (not (dp-mmm-in-any-subregion-p 
+		   (not (dp-mmm-in-any-subregion-p
 			 (dpj-topic-match-beginning 0)))
 		   (or (not skip-re)
 		       (not (funcall skip-func skip-re topic))))
@@ -608,9 +608,9 @@ Does not affect point.  Use `dpj-goto-topic' to move to a new topic."
 			       skip-re)
   "Find a matching topic and go there."
   ;;(message "find topic: %s" topic-re)
-  (let ((ret (dpj-find-topic searchf movef skip-current topic-re 
+  (let ((ret (dpj-find-topic searchf movef skip-current topic-re
 			     count skip-re)))
-    (if ret 
+    (if ret
 	(goto-char (dpj-topic-match-beginning)))
     ret))
 
@@ -622,7 +622,7 @@ The number of \\[universal-argument]'s  tells which to prompt for:
 3 --> 2 + count
 4 --> 3 + skip-re
 Vals besides topic-re are mainly for debugging."
-  (let ((prefix-val (and current-prefix-arg 
+  (let ((prefix-val (and current-prefix-arg
 			 (prefix-numeric-value current-prefix-arg)))
 	topic-re skip-current count skip-re)
     (when prefix-val
@@ -636,14 +636,14 @@ Vals besides topic-re are mainly for debugging."
 	    (when (>= prefix-val 256)
 	      (setq skip-re (read-from-minibuffer "skip-re: ")))))))
     (list topic-re skip-current count skip-re)))
-  
+
 (defun dpj-goto-topic-forward (&optional topic-re skip-current count skip-re)
   "Move forward to the next topic.
 RETURNS:
  nil on failure (e.g: no more {files|topics}
  non-nil on success."
   (interactive (dpj-read-topic+skip+count))
-  (if (dpj-goto-topic 'dp-re-search-forward 'forward-char 
+  (if (dpj-goto-topic 'dp-re-search-forward 'forward-char
 		      skip-current topic-re count skip-re)
       (progn
 	;;(dmessage "topic, f>%s<" (dpj-topic-match-string))
@@ -655,7 +655,7 @@ RETURNS:
 (defun dpj-goto-topic-backward (&optional topic-re skip-current count skip-re)
   "Move backwards to the previous topic."
   (interactive (dpj-read-topic+skip+count))
-  (if (dpj-goto-topic 're-search-backward 'backward-char 
+  (if (dpj-goto-topic 're-search-backward 'backward-char
 		      skip-current topic-re count skip-re)
       (progn
 	;;(dmessage "topic, b>%s<" (dpj-topic-match-string))
@@ -668,13 +668,13 @@ RETURNS:
     (goto-char (point-min)) ; or start of next
     ))
 
-(defun dpj-move-with-file-wrap (move-func file-delta &optional topic-re 
+(defun dpj-move-with-file-wrap (move-func file-delta &optional topic-re
 					  skip-current count skip-re)
   "Move to the next/prev topic, moving into the next/prev file as needed."
   (interactive)
-  (let* ((buf (current-buffer)) 
+  (let* ((buf (current-buffer))
 	 (obuf buf)
-	 (pos (point)) 
+	 (pos (point))
 	 (opos pos)
 	 (start-month-num (dp-date-to-month-num))
 	 (do-range-checking t)
@@ -689,7 +689,7 @@ RETURNS:
     (save-excursion
       (setq found-one
 	    (catch 'done
-	      (while (not (funcall move-func topic-re skip-current count 
+	      (while (not (funcall move-func topic-re skip-current count
 				   skip-re))
 		;;(dmessage "trying %s buf" file-delta)
 
@@ -713,13 +713,13 @@ RETURNS:
 		(setq month-diff (abs (- start-month-num cur-month-num)))
 		(when (and do-range-checking
 			   (> month-diff dpj-file-wrap-limit))
-		  (message 
+		  (message
 		   "No more notes: file history limit exceeded(files scanned: %s, max: %s)."
 		   month-diff dpj-file-wrap-limit)
 		  (ding)
 		  (throw 'done nil))
 
-		(unless (setq new-file-name 
+		(unless (setq new-file-name
 			      (dpj-next-journal-file file-delta 'must-exist
 						     old-file-name))
 		  (message "No more notes: no more note files for topic `%s'."
@@ -741,12 +741,12 @@ RETURNS:
 ;	(dp-push-go-back marker))
       (unless (eq buf obuf)
 	(ding)
-	(message "wrapped to new file: %s (topic: %s)" 
+	(message "wrapped to new file: %s (topic: %s)"
 		 (car new-file-name) topic-re)))
     (switch-to-buffer buf)
     (goto-char pos)))
 
-(defun dpj-goto-topic-backward-with-file-wrap (&optional topic-re 
+(defun dpj-goto-topic-backward-with-file-wrap (&optional topic-re
 							 skip-current count
 							 skip-re)
   "Move backward to the previous topic, moving into the previous file when appropriate."
@@ -754,12 +754,12 @@ RETURNS:
   (let ((topic (or topic-re dpj-show-topic-topic)))
     (when dpj-show-topic-topic
       (message "using show topic `%s'" dpj-show-topic-topic))
-    (dpj-move-with-file-wrap 'dpj-goto-topic-backward -1 
+    (dpj-move-with-file-wrap 'dpj-goto-topic-backward -1
 			     topic
 			     skip-current count skip-re))
   (dp-set-zmacs-region-stays t))
 
-(defun dpj-goto-topic-forward-with-file-wrap (&optional topic-re 
+(defun dpj-goto-topic-forward-with-file-wrap (&optional topic-re
 							skip-current count
 							skip-re)
   "Move forward to the next topic, moving into the next file when appropriate."
@@ -777,9 +777,9 @@ RETURNS:
   (interactive)
   (if topic-re
       (setq dpj-next-in-topic-topic topic-re))
-  (let ((topic (or dpj-next-in-topic-topic 
+  (let ((topic (or dpj-next-in-topic-topic
 		   (concat "^" (car (dpj-current-topic-or-todo)) "$"))))
-    (message "move in %s topic `%s'" 
+    (message "move in %s topic `%s'"
 	     (if dpj-next-in-topic-topic "persistent" "")
 	     topic)
     (dpj-move-with-file-wrap move-func file-delta topic))
@@ -821,7 +821,7 @@ next topic that matches the current topic."
 
 (defun dpj-find-todo (direction set-topic)
   "Find the prev todo in the files."
-  (cond 
+  (cond
    ((or (equal set-topic '(4))		; 1 C-u
 	(eq set-topic 'set-topic))
     (setq dpj-next-in-topic-topic (dpj-read-topic)))
@@ -866,9 +866,9 @@ Each list element is a list:
     ;; return list (list-of-matching-topics list-of-unmatching-topics)
     (if (not topic-re)
 	(setq topic-re ".*"))
-    (let ((not-done t) 
+    (let ((not-done t)
 	  matching-list unmatching-list match-or-not
-	  last-entry topic-start rec-start topic skip) 
+	  last-entry topic-start rec-start topic skip)
       ;;(dmessage "dpj-find-topics: topic-re>%s<" topic-re)
       (while not-done
 	;;(dmessage "loop start")
@@ -879,13 +879,13 @@ Each list element is a list:
 	(setq skip (and skip-re
 			(and topic
 			     (string-match skip-re topic))))
-	(if (and (not skip) 
+	(if (and (not skip)
 		 not-done)
 	    (setq rec-start (dpj-topic-match-beginning 0)
 		  topic-start (dpj-topic-match-beginning))
 	  (setq rec-start (dp-mk-marker (1+ (point-max)))
 		topic-start nil))
-	;;(dmessage "not-done>%s< skip>%s< rec-start>%s< mtop>%s<" 
+	;;(dmessage "not-done>%s< skip>%s< rec-start>%s< mtop>%s<"
 	;;	  not-done skip rec-start topic)
 	(when (and last-entry
 		   (or (not skip)
@@ -893,17 +893,17 @@ Each list element is a list:
 	  ;; handle stuff from previous itertion
 	  ;;(dmessage "finish last-entry>%s<" last-entry)
 	  ;; end of previous rec is beginning of next-1
-	  (setq last-entry 
+	  (setq last-entry
 		(append last-entry (list (1- rec-start))))
-          (unless no-markers-p
-            (setq last-entry (list (nth 0 last-entry)
-                                   (dp-mk-marker (nth 1 last-entry))
-                                   (dp-mk-marker (nth 2 last-entry))
-                                   (dp-mk-marker (nth 3 last-entry)))))
+	  (unless no-markers-p
+	    (setq last-entry (list (nth 0 last-entry)
+				   (dp-mk-marker (nth 1 last-entry))
+				   (dp-mk-marker (nth 2 last-entry))
+				   (dp-mk-marker (nth 3 last-entry)))))
 	  (if match-or-not
-	      (setq matching-list (append matching-list 
+	      (setq matching-list (append matching-list
 					  (list last-entry)))
-	    (setq unmatching-list (append unmatching-list 
+	    (setq unmatching-list (append unmatching-list
 					  (list last-entry))))
 	  ;;(dmessage "ml>%s<, uml>%s<" matching-list unmatching-list)
 	  )
@@ -913,8 +913,8 @@ Each list element is a list:
 	  ;; set up stuff for next iteration
 	  (setq match-or-not (string-match topic-re topic))
 	  ;;(dmessage "m-or-n>%s<" match-or-not)
-	  (setq last-entry (list topic 
-				 rec-start 
+	  (setq last-entry (list topic
+				 rec-start
 				 topic-start)))
 	)
       ;;(dmessage "F:ml>%s<, uml>%s<" matching-list unmatching-list)
@@ -924,33 +924,33 @@ Each list element is a list:
 (defun dpj-kill-topic-record (start end op)
   (funcall op start end))
 
-(defun dpj-process-topics (topic-re match-op others-op keep-others 
+(defun dpj-process-topics (topic-re match-op others-op keep-others
 				    &optional skip-re no-contig)
   "Process items matching TOPIC-RE.  Process matching entries with
 MATCH-OP, non-matching entries with OTHERS-OP.  KEEP-OTHERS if
 non-nil says to not reset all highlighting before proceeding."
-  (setq dpj-last-process-topics-args 
+  (setq dpj-last-process-topics-args
 	(list topic-re match-op others-op keep-others skip-re no-contig))
   (if keep-others
       ;; merge the new regexp with the existing one.
-      (setq dpj-next-in-topic-topic 
+      (setq dpj-next-in-topic-topic
 	    (dp-re-concat dpj-next-in-topic-topic topic-re))
     (setq dpj-next-in-topic-topic topic-re))
   ;; partition topics into matching and unmatching lists
   (let* ((lists (dpj-find-topics dpj-next-in-topic-topic nil skip-re))
 	 (match-list (car lists))
 	 (other-list (cdr lists))
-         ;; @todo XXX factor something like this out.
-         (processor (if (memq match-op '(delete-region kill-region))
-                        'dpj-kill-topic-record
-                      'dpj-highlight-region)))
+	 ;; @todo XXX factor something like this out.
+	 (processor (if (memq match-op '(delete-region kill-region))
+			'dpj-kill-topic-record
+		      'dpj-highlight-region)))
 
     ;; apply match op to matching list
     (dolist (topic-info match-list)
       ;;(dmessage "show, topic-info>%s<" topic-info)
       (funcall processor (dpj-topic-info-record-start topic-info)
-               (dpj-topic-info-end topic-info)
-               match-op))
+	       (dpj-topic-info-end topic-info)
+	       match-op))
 
     ;; process contiguous unmatching topics as a unit.
     ;; this makes the hidden stuff appear as a single instance of
@@ -1066,15 +1066,15 @@ Also, will create the topic file if it does not exist."
   (let ((fmod (file-attributes dpj-topic-file)))
     (unless fmod
       ;; no file... create it
-      ;; 
+      ;;
       (dpj-write-topic-file)
       (setq fmod (file-attributes dpj-topic-file)))
     (nth 5 fmod)))
 
 (defun dpj-topic-file-newer (&optional than-time)
   "Determine if the topic file has changed since we last read it."
-  (not (equal (dpj-topic-file-mod-time) 
-	      (or than-time 
+  (not (equal (dpj-topic-file-mod-time)
+	      (or than-time
 		  dpj-topic-list-read-time))))
 
 ;; grabbed from etags.el
@@ -1094,10 +1094,10 @@ on disk."
     ;; Here, the specificity is good since we're ID'in the file.
     (goto-line 2)
     (if (or (search-forward dpj-topic-file-id-magic (line-end-position) t)
-            (and (search-forward dpj-topic-file-id-magic-OLDE 
-                                 (line-end-position) t)
-                 (dp-ding-and-message "Found old topic file ID line.")))
-        (eval-region (point-min) (point-max))
+	    (and (search-forward dpj-topic-file-id-magic-OLDE
+				 (line-end-position) t)
+		 (dp-ding-and-message "Found old topic file ID line.")))
+	(eval-region (point-min) (point-max))
       (dp-ding-and-message "Not eval'ing topic file."))))
 
 (defun dpj-get-topic-file-list ()
@@ -1117,7 +1117,7 @@ on disk."
 
 (defun dpj-topic-date< (s1 s2)
   (string< (plist-get (cdr s1) 'last-update:)
-           (plist-get (cdr s2) 'last-update:)))
+	   (plist-get (cdr s2) 'last-update:)))
 
 (defun dpj-write-topic-file ()
   "Save the topic-list into the topic file."
@@ -1125,16 +1125,16 @@ on disk."
     ;;(dmessage "lwl>%s<" dpj-last-written-topic-list)
     ;;(dmessage " tl>%s<" dpj-topic-list)
     (dpj-visit-topic-file)
-    (setq dpj-topic-list (delq nil 
-                               (mapcar 
-                                (function
-                                 (lambda (el)
-                                   ;;(dmessage "el>%s<" el)
-                                   (if (string-match dpj-private-topic-re 
-                                                     (car el))
-                                       nil
-                                     el)))
-                                dpj-topic-list)))
+    (setq dpj-topic-list (delq nil
+			       (mapcar
+				(function
+				 (lambda (el)
+				   ;;(dmessage "el>%s<" el)
+				   (if (string-match dpj-private-topic-re
+						     (car el))
+				       nil
+				     el)))
+				dpj-topic-list)))
 ;;    (setq dpj-topic-list (delq nil dpj-topic-list))
     (if dp-journal-sort-topics-p
 	(setq dpj-topic-list (sort dpj-topic-list 'dpj-topic<)))
@@ -1152,9 +1152,9 @@ on disk."
       (write-region (point-min) (point) dpj-topic-file nil 1)
       (set-buffer-auto-saved)
       (set-buffer-modified-p nil)
-      (if (buffer-file-name) 
+      (if (buffer-file-name)
 	  (set-visited-file-modtime))
-      
+
       ;; this should be OK due to the way we add elements to the topic list.
       (setq dpj-last-written-topic-list dpj-topic-list)
       (setq dpj-abbrev-list-modified-p nil)
@@ -1165,24 +1165,24 @@ on disk."
 Merges topics from the global topic-file as well as any found in the
 current file.  If WRITE-EM is non-nil, write the list to the topic-file."
   (interactive)
-  (let ((local-list (or list 
+  (let ((local-list (or list
 			(car (dpj-find-topics)))))
     (dpj-get-topic-file-list)
     ;; grab just the topics from the find-topics list.
     ;; save the topics as a list of lists '(("topic1") ("topic2")...))
     ;; since completing read wants to use the car of each list
     ;; element.
-    ;; add *all* topics to the topic-list, including todos and 
+    ;; add *all* topics to the topic-list, including todos and
     ;; local topics.  Filter the latter two from the write list
-    (mapcar (function 
+    (mapcar (function
 	     (lambda (el)
 	       ;;(dmessage "el>%s<" el)
 	       (let* ((key (car el))
 		      (topic (list key)))
 		 ;; this needs to compare only CARs < not true anymore.
-		 (dp-add-item-or-update-alist 'dpj-topic-list topic 
-                                              :update-p 'rem-add 
-                                              :keep-old-if-nil-p t)
+		 (dp-add-item-or-update-alist 'dpj-topic-list topic
+					      :update-p 'rem-add
+					      :keep-old-if-nil-p t)
 		 (if (string-match dpj-private-topic-re key)
 		     nil
 		   topic))))
@@ -1205,7 +1205,7 @@ current file.  If WRITE-EM is non-nil, write the list to the topic-file."
   "Name of topic viewing buffer.")
 
 (defun* dpj-read-topic (&optional topics-in topic-re req-match no-def-topic
-                        (prompt-format-string "topic%s: "))
+			(prompt-format-string "topic%s: "))
   "Read topic[/re] from minibuffer.
 REQ-MATCH means user must select from the available choices."
   ;; must call `dpj-mk-topic-completion-list' first since it
@@ -1215,13 +1215,13 @@ REQ-MATCH means user must select from the available choices."
 	 (dp-minibuffer-mark-line-p t))
     (completing-read (format prompt-format-string (if req-match "" "/re"))
 		     topics
-		     nil req-match 
-		     (if no-def-topic () 
+		     nil req-match
+		     (if no-def-topic ()
 		       (or topic-re
 			   (dpj-current-topic nil 'no-quote)))
 		     'dpj-topic-history)))
 
-(defsubst dpj-get-topic-interactive (&optional topics topic-re req-match 
+(defsubst dpj-get-topic-interactive (&optional topics topic-re req-match
 					       no-def-topic)
   "Get a topic name, interactively with completion.  Use TOPICS if
 non-nil otherwise get the current list topics."
@@ -1255,18 +1255,18 @@ non-nil otherwise get the current list topics."
       (setq topic (dpj-make-private-topic topic)))
   (unless topic
     (setq topic (car (dpj-get-topic-interactive))))
-  (unless (or 
+  (unless (or
 	   no-spaced-append-p
 	   (dpj-no-spaced-append-p))
     (dp-set-eof-spacing 2 (dpj-new-topic-insertion-point)))
   (when (not (string= topic ""))
     ;; @todo make new, full ts if date is different.
     (if nil ;; (equal topic (dpj-current-topic nil 'no-re-quote))
-        ;; short timestamps don't work well when there are many within a single
-        ;; record.  This makes it hard to jump back to a particular point that
-        ;; was significant enough to be marked with a cxc.  Another ?better? 
-        ;; solution is to include short topics in the topic scans.
-        (dpj-short-timestamp)
+	;; short timestamps don't work well when there are many within a single
+	;; record.  This makes it hard to jump back to a particular point that
+	;; was significant enough to be marked with a cxc.  Another ?better?
+	;; solution is to include short topics in the topic scans.
+	(dpj-short-timestamp)
       (dp-timestamp nil nil topic 'v2))
     (dpj-update-topic-list topic)
     (insert "\n")
@@ -1277,15 +1277,15 @@ non-nil otherwise get the current list topics."
   "Remove the given topic from the topic list."
   (interactive (list (dpj-read-topic)))
   (remove-alist 'dpj-topic-list
-                (or (and (eq topic 'current-topic-p)
-                         (current-topic))
-                    topic)))
+		(or (and (eq topic 'current-topic-p)
+			 (current-topic))
+		    topic)))
 (dp-defaliases 'dpj-kill-topic 'dpj-nuke-topic 'dpj-delete-topic
-               'dpj-rm-topic 
-               'kill-topic 'nuke-topic 'delete-topic
-               'rm-topic
-               'dpj-remove-topic)
-   
+	       'dpj-rm-topic
+	       'kill-topic 'nuke-topic 'delete-topic
+	       'rm-topic
+	       'dpj-remove-topic)
+
 (defun dpj-get-and-insert-topic ()
   (interactive)
   (insert (dpj-read-topic)))
@@ -1308,7 +1308,7 @@ non-nil otherwise get the current list topics."
 (defalias 'dpj-repl-topic 'dpj-get-and-replace-current-topic)
 
 (defun dpj-extract-a-record (record-info buffer)
-  (buffer-substring 
+  (buffer-substring
    (dpj-topic-info-record-start record-info)
    (dpj-topic-info-end record-info)
    buffer))
@@ -1339,10 +1339,10 @@ non-nil otherwise get the current list topics."
     (dp-journal-mode)
     (setq dpj-non-standard-journal-p t)
     (dp-define-buffer-local-keys '([(meta ?-)] dp-maybe-kill-this-buffer)
-                                 nil nil nil "dstvb")
+				 nil nil nil "dstvb")
     (message "Visit real topic w/C-m, v or M-.; Type q to quit."))
 
-(defun dpj-view-topic-list (topics &optional buf-name-in visit-p 
+(defun dpj-view-topic-list (topics &optional buf-name-in visit-p
 				   init-buffer-p src-buffer)
   "View a list of topics in a view-buf.
 The buf is read-only.  It uses the following keymap:
@@ -1362,8 +1362,8 @@ The buf is read-only.  It uses the following keymap:
 	(dp-erase-buffer))
 
       ;; do we want to do this for buffers w/no matches?
-      (dpj-new-topic0 :topic (format "*** Journal File: %s" jfile-name) 
-		      :no-spaced-append-p nil 
+      (dpj-new-topic0 :topic (format "*** Journal File: %s" jfile-name)
+		      :no-spaced-append-p nil
 		      :private-p 'dpj-private-topic-re)
       (insert "\n")
       (dolist (topic-info topics)
@@ -1373,7 +1373,7 @@ The buf is read-only.  It uses the following keymap:
 	(dp-make-extent new-start new-end
 			'dpj-view-topic
 			'dpj-source-file source-file
-			'dpj-source-start (dpj-topic-info-topic-start 
+			'dpj-source-start (dpj-topic-info-topic-start
 					   topic-info)
 			'keymap dpj-view-topic-keymap)
 	(insert "\n")
@@ -1390,19 +1390,19 @@ The buf is read-only.  It uses the following keymap:
   (interactive)
   (setq-ifnil num-prompt "Number")
   (let ((n-prompt (concat num-prompt
-			  (if num-default 
+			  (if num-default
 			      (format "(%d)" num-default)
 			    "")
 			  ": ")))
     (delq nil (list
-	       (dp-read-number n-prompt 'integers-only 
+	       (dp-read-number n-prompt 'integers-only
 			       (or num-default 1))
-               (unless no-re1
-                 (dpj-read-topic))
-               (if get-re2
-                   (read-string get-re2)
-                 nil)
-               ))))
+	       (unless no-re1
+		 (dpj-read-topic))
+	       (if get-re2
+		   (read-string get-re2)
+		 nil)
+	       ))))
 
 (defun dpj-create-view-buf (buf-name)
   (let ((buf (get-buffer-create buf-name)))
@@ -1436,16 +1436,16 @@ returning."
 	 tlist
 	 already-loaded
 	 jfile)
-    
+
     (with-current-buffer view-buffer
       (toggle-read-only 0)
       (dp-erase-buffer)
-      (dpj-new-topic0 :topic 
-                      (format "*** Visiting topic %s, from the last %d months" 
+      (dpj-new-topic0 :topic
+		      (format "*** Visiting topic %s, from the last %d months"
 			      topic-re number-of-months)
 		      :no-spaced-append-p nil
 		      :private-p 'dpj-make-topic-private))
-    
+
     (dotimes (n number-of-months)
       (setq jfile (dpj-month-num-to-journal-name jmon))
       (setq jmon (1+ jmon))
@@ -1460,8 +1460,8 @@ returning."
       )
 
     (with-current-buffer view-buffer
-      (dpj-new-topic0 :topic 
-       (format "*** End of topics matching %s, from the last %d months" 
+      (dpj-new-topic0 :topic
+       (format "*** End of topics matching %s, from the last %d months"
 	       topic-re number-of-months)
        :no-spaced-append-p nil
        :private-p 'dpj-make-topic-private))
@@ -1475,20 +1475,20 @@ returning."
 (defun dpj-view-topic-history (number-of-months topic-re)
   "View all topics in preceding NUMBER-OF-MONTHS files matching TOPIC-RE in a view-buf."
   (interactive (dpj-read-num-and-topic "Number of months" nil 1))
-  (dpj-view-topics number-of-months 
+  (dpj-view-topics number-of-months
 		   'dpj-find-for-view-topic
 		   (list topic-re)))
 
 (defun dpj-insert-sticky-variables-hack ()
   "Create a local variables hack block that make a journal sticky when it loads."
   (interactive)
-  (dp-insert-local-variables-hack 
+  (dp-insert-local-variables-hack
    '("eval: (dpj-stick-current-journal-file)")))
 
 ;;;###autoload
-(defun* dpj-grep-and-view-hits (number-of-months topic-re grep-re 
-                                &optional 
-                                (continue-from-last-p nil cflp-set-p))
+(defun* dpj-grep-and-view-hits (number-of-months topic-re grep-re
+				&optional
+				(continue-from-last-p nil cflp-set-p))
   "Grep topics for regexp and view in view buf.
 Search NUMBER-OF-MONTHS files back in time.
 Search topics matching TOPIC-RE for GREP-RE.
@@ -1497,24 +1497,24 @@ START-WITH-CURRENT-JOURNAL-P \(interactively the prefix-arg) says to start
 the search with the current journal file."
   (interactive (dpj-read-num-and-topic "Number of months" "grep expr: "))
   (let ((x-args (list grep-re topic-re nil 'just-remember-records))
-        (rewind-p (if cflp-set-p 
-                        continue-from-last-p 
-                      (not current-prefix-arg))))
+	(rewind-p (if cflp-set-p
+			continue-from-last-p
+		      (not current-prefix-arg))))
     (when rewind-p
       (dpj-tidy-journals-keep))
-    (dpj-view-topics number-of-months 
+    (dpj-view-topics number-of-months
 		     'dpj-grep-bodies
 		     x-args
 		     'dont-visit)
     (set-buffer dpj-view-topic-buffer-name)
     ;; switch to view buffer and highlight all the matches.
     (if (not (or (string= grep-re "")
-                 (string= grep-re ".")
+		 (string= grep-re ".")
 		 (string= grep-re ".*")))
 	(save-excursion
 	  (dp-beginning-of-buffer)
 	  (while (dp-re-search-forward grep-re nil t)
-	    (dp-make-extent (match-beginning 0) (match-end 0) 
+	    (dp-make-extent (match-beginning 0) (match-end 0)
 			    'dpj-view-topic
 			    'face 'dpj-view-grep-hit-face))))
     (dpj-switch-to-view-buf)))
@@ -1532,8 +1532,8 @@ the search with the current journal file."
   "List all records matching TOPIC-RE for NUM-MONTHS.
 Simple front end w/1 less parameter.
 Also will use prefix-arg as default NUM-MONTHS."
-  (interactive (dpj-read-num-and-topic 
-		"Num-months" 
+  (interactive (dpj-read-num-and-topic
+		"Num-months"
 		nil
 		(setq x890 (prefix-numeric-value current-prefix-arg))
 		))
@@ -1559,8 +1559,8 @@ Also will use prefix-arg as default NUM-MONTHS."
 	(setq rec-bounds (dpj-current-record-boundaries))
 	(message "rec-bounds>%s<" rec-bounds)
 	;;topic-info:: (topic-string record-start topic-start record-end)
-	(setq rec-list (cons 
-			(cons "topic-not-used" rec-bounds) 
+	(setq rec-list (cons
+			(cons "topic-not-used" rec-bounds)
 			rec-list))
 	(goto-char (nth 2 rec-bounds))))
     (nreverse rec-list)))
@@ -1570,7 +1570,7 @@ Also will use prefix-arg as default NUM-MONTHS."
   (interactive (list (dp-read-number
 		      "Number of months(1): " 'integers-only "1")))
   (let ((topic-re "n/a"))		;remove use of topic-re in view code
-    (dpj-view-topics number-of-months 
+    (dpj-view-topics number-of-months
 		     'dpj-find-todos-for-view-topic
 		     nil)))
 
@@ -1583,27 +1583,27 @@ Also will use prefix-arg as default NUM-MONTHS."
   "Search topics in topic list for regexp.  Present results in a buffer."
   (interactive "sTopic re: ")
   (let* ((key-map (make-keymap)))
-    (define-key key-map [return] (kb-lambda 
-                                   (let ((topic (dp-copy-to-end-of-line
-                                                 'from-beginning)))
-                                     (kill-this-buffer)
-                                     topic)))
+    (define-key key-map [return] (kb-lambda
+				   (let ((topic (dp-copy-to-end-of-line
+						 'from-beginning)))
+				     (kill-this-buffer)
+				     topic)))
     (dp-simple-viewer "*grep topics*"
-                      (function 
-                       (lambda () ;fill func
-                         (dpj-insert-matching-topics topic-re)))
-                      nil               ;QUIT-KEYS 
-                      nil               ;Q-KEY-COMMAND 
-                      key-map)          ;KEY-MAP
+		      (function
+		       (lambda () ;fill func
+			 (dpj-insert-matching-topics topic-re)))
+		      nil               ;QUIT-KEYS
+		      nil               ;Q-KEY-COMMAND
+		      key-map)          ;KEY-MAP
     ))
 (defalias 'dpj-grep-topics 'dpj-grep-topic-list)
-		    
+
 ;;;###autoload
 (defun dpj-tidy-journals (&optional dont-delete-p)
   "Kill all but the most recent journal buffers."
   (interactive "P")
   (let (latest-journal-buffer
-        (latest-journal (dpj-latest-note-file-name)))
+	(latest-journal (dpj-latest-note-file-name)))
     (if (not dont-delete-p)
 	(dolist (buf (buffer-list))
 	  (set-buffer buf)
@@ -1616,7 +1616,7 @@ Also will use prefix-arg as default NUM-MONTHS."
 	      (message "killing %s" (buffer-file-name buf))
 	      (kill-buffer buf)))))
     (if (setq latest-journal-buffer (find-buffer-visiting latest-journal))
-        (switch-to-buffer latest-journal-buffer)
+	(switch-to-buffer latest-journal-buffer)
       (dp-journal nil nil 'visit-latest)
       (dpj-set-current-journal-file latest-journal))
     (dp-push-go-back "dpj-tidy-journals")
@@ -1645,13 +1645,13 @@ Also will use prefix-arg as default NUM-MONTHS."
 	    (append-expand-filename (concat dp-note-base-dir "/") file-name)))
   (dp-push-go-back "dpj-chase-link")
   (if (dpj-is-a-journal-p file-name)
-      (dpj-edit-journal-file file-name 
-			     'must-exist 
+      (dpj-edit-journal-file file-name
+			     'must-exist
 			     dp-embedded-lisp-eval@point-prefix-arg)
     (apply (if current-prefix-arg
-               'find-file
-             'find-file-other-window)
-           (list file-name)))
+	       'find-file
+	     'find-file-other-window)
+	   (list file-name)))
   (dp-sticky-goto-char offset)
   (when (and date-string (not (string= date-string ""))
 	     (dpj-is-a-journal-p file-name))
@@ -1666,7 +1666,7 @@ Also will use prefix-arg as default NUM-MONTHS."
     (if (dpj-pos-in-current-record-p offset)
 	(goto-char offset))))
 
-;;; @todo make view-topic-file-list.  
+;;; @todo make view-topic-file-list.
 
 ;;; @todo make functions to build topic lists: date ranges, n back from
 ;;; current.
@@ -1684,7 +1684,7 @@ Also will use prefix-arg as default NUM-MONTHS."
 	      (/ (* (or dp-initial-frame-height (frame-height))
 		    (car frac))
 		 (cdr frac))))))
-		
+
 (defun dpj-age-string (&optional length)
   (interactive)
   (let ((timestamp (dpj-get-current-timestamp)))
@@ -1732,11 +1732,11 @@ Also will use prefix-arg as default NUM-MONTHS."
   (save-excursion
     (goto-char (point-max))
     (if (re-search-backward (regexp-quote (dp-mk-local-variables-hack-header))
-                            nil t)
-        (progn
-          (while (re-search-backward "^;" nil t)
-            )
-          (point))
+			    nil t)
+	(progn
+	  (while (re-search-backward "^;" nil t)
+	    )
+	  (point))
       (point-max))))
 
 (defun dpj-visit-appropriate-journal-file (topic dir-name)
@@ -1746,7 +1746,7 @@ Also will use prefix-arg as default NUM-MONTHS."
   ;; 3) as before.
   ;; Let's see if the topic should live in another file.
   (unless (string= (dpj-current-journal-file)
-                   (dpj-latest-note-file-name topic dir-name))
+		   (dpj-latest-note-file-name topic dir-name))
     ;; !<@todo XXX Make a `dp-journal-noselect'.
     (dp-journal other-win-p nil 'visit-latest topic)))
 
@@ -1762,12 +1762,12 @@ Also will use prefix-arg as default NUM-MONTHS."
 
 ;;;###autoload
 (defun* dpj-new-topic (&key topic no-spaced-append-p
-                      link-too-p is-a-clone-p
-                      other-win-p dir-name)
+		      link-too-p is-a-clone-p
+		      other-win-p dir-name)
   "Insert a new topic item.  Completion is allowed from the list of known topics."
   (interactive)
   (dp-push-go-back "dpj-new-topic")
-  (let (vbuf 
+  (let (vbuf
 	cur-topic
 	(file-name (buffer-file-name))
 	offset
@@ -1783,7 +1783,7 @@ Also will use prefix-arg as default NUM-MONTHS."
 		cur-topic (dpj-current-topic nil 'no-quote)
 		context-info (car timestamp-info)))
       (setq context-info ""))
-    
+
     ;; links to journals and non-journals need an offset.
     (setq offset (point))
 
@@ -1800,22 +1800,22 @@ Also will use prefix-arg as default NUM-MONTHS."
 		 (or
 		  (not (string= file-name (buffer-file-name)))
 		  (dpj-auto-link-by-distance-p offset new-record-pos))))
-        (prog1
-            ;; This link is ???
-            (dpj-insert-link file-name offset context-info)
-          ;;(dp-add-bookmark-extent file-name offset context-info)
-          )
+	(prog1
+	    ;; This link is ???
+	    (dpj-insert-link file-name offset context-info)
+	  ;;(dp-add-bookmark-extent file-name offset context-info)
+	  )
       )))
 
 ;;;###autoload
-(defun* dpj-new-topic-other-window (&key topic no-spaced-append-p 
-                                    link-too-p is-a-clone-p)
+(defun* dpj-new-topic-other-window (&key topic no-spaced-append-p
+				    link-too-p is-a-clone-p)
   (interactive)
-  (dpj-new-topic :topic topic 
-                 :no-spaced-append-p no-spaced-append-p 
-                 :link-too-p link-too-p 
-                 :is-a-clone-p is-a-clone-p
-                 :other-win-p 'other-win))
+  (dpj-new-topic :topic topic
+		 :no-spaced-append-p no-spaced-append-p
+		 :link-too-p link-too-p
+		 :is-a-clone-p is-a-clone-p
+		 :other-win-p 'other-win))
 
 
 ;;;###autoload
@@ -1833,7 +1833,7 @@ Also will use prefix-arg as default NUM-MONTHS."
 ;;;###autoload
 (defalias 'nt 'dpj-new-topic-other-window) ;nt -- new topic
 ;;;###autoload
-(defalias 'ntc 'dpj-clone-topic) ; cx-clone, cx-continue 
+(defalias 'ntc 'dpj-clone-topic) ; cx-clone, cx-continue
 ;;;###autoload
 (defalias 'nt2 'dpj-new-topic-other-window) ;nt -- new topic
 ;;;###autoload
@@ -1895,7 +1895,7 @@ Also will use prefix-arg as default NUM-MONTHS."
 				      dpj-any-AI-todo-regexp@bol
 				      (dpj-mk-topic-re dpj-todo-re)))
 
-(defun dpj-goto-todo-or-ai (search-func &optional topic-re 
+(defun dpj-goto-todo-or-ai (search-func &optional topic-re
 					skip-current count skip-re)
   (catch 'done
     (let ((opoint (point)))
@@ -1907,22 +1907,22 @@ Also will use prefix-arg as default NUM-MONTHS."
 		       (eq opoint (match-beginning 0)))
 		  (setq skip-current nil)
 		(when (or (not dpj-next-in-topic-topic)
-			  (and (message 
+			  (and (message
 				"Only looking in topics matching: %s"
 				dpj-next-in-topic-topic)
 			       nil)
 			  (string-match dpj-next-in-topic-topic
-					(dpj-current-topic 
+					(dpj-current-topic
 					 nil 'dont-quote-regexp)))
 		(throw 'done (match-beginning 0))))))
 	))))
 
-(defun dpj-goto-todo-or-ai-forward (&optional topic-re 
+(defun dpj-goto-todo-or-ai-forward (&optional topic-re
 					      skip-current count skip-re)
   (dpj-goto-todo-or-ai 'dp-re-search-forward topic-re
 		       skip-current count skip-re))
 
-(defun dpj-goto-todo-or-ai-backward (&optional topic-re 
+(defun dpj-goto-todo-or-ai-backward (&optional topic-re
 					       skip-current count skip-re)
   (dpj-goto-todo-or-ai 're-search-backward topic-re
 		       skip-current count skip-re))
@@ -1980,7 +1980,7 @@ Side effect is that dpj-match-data is set."
 	(regexp-quote (dpj-topic-match-string))
       (dpj-topic-match-string))))
 
-(defun dpj-current-topic-boundaries (&optional skip-re no-quote 
+(defun dpj-current-topic-boundaries (&optional skip-re no-quote
 					       entire-record-p)
   "Return the current topic's boundaries: (START . END).
 Same params as `dpj-current-topic' +
@@ -2025,24 +2025,24 @@ spanned."
       nil)))				;;; ????????
 
 ;;;###autoload
-(defun dpj-clone-topic (&optional link-too-p insert-this-text 
-                        link-forward-also-p)
+(defun dpj-clone-topic (&optional link-too-p insert-this-text
+			link-forward-also-p)
   "Clone the current topic with a new timestamp.
 NB: previous topic means the previous SAME topic.
 LINK-TOO-P, if non-nil says to link to the previous topic.
-LINK-TOO-P, if nil will make a link to the previous topic if it is 
+LINK-TOO-P, if nil will make a link to the previous topic if it is
 \"far enough away.\"
 INSERT-THIS-TEXT is text to insert after the topic is inserted.
-Allows for an indication of time flow within a continuing topic or 
+Allows for an indication of time flow within a continuing topic or
 continuation of a topic at a later time."
   (interactive "P")
   (let ((topic (dpj-current-topic dpj-todo/done-re 'no-quote))
 	(current-prefix-arg nil)) ;bleaghhhh dpj-no-spaced-append-p uses this
     (if (not (string= topic ""))
-        (dpj-new-topic :topic topic 
-                       :no-spaced-append-p nil 
-                       :link-too-p link-too-p 
-                       :is-a-clone-p 'is-a-clone-p)
+	(dpj-new-topic :topic topic
+		       :no-spaced-append-p nil
+		       :link-too-p link-too-p
+		       :is-a-clone-p 'is-a-clone-p)
       (dp-set-eof-spacing 2 (dpj-new-topic-insertion-point)))
     (when insert-this-text
       (insert insert-this-text "\n"))))
@@ -2061,26 +2061,26 @@ continuation of a topic at a later time."
 (defun cxl ()
   (interactive)
   (let (current-prefix-arg)		;bleaggh!!
-    (dpj-new-topic :topic nil 
-                   :no-spaced-append-p nil 
-                   :link-too-p 'link-too-p)))
-    
+    (dpj-new-topic :topic nil
+		   :no-spaced-append-p nil
+		   :link-too-p 'link-too-p)))
+
 ;;;###autoload
 (defun* dpj-mk-external-bookmark (&optional (pos (point))
-                                  (file-or-buf (current-buffer)))
+				  (file-or-buf (current-buffer)))
   "Make link a topic @ (or POS (point)) in (or FILE-OR-BUF (current bufer))."
 
-  ;; 
+  ;;
   (interactive)
   (let ((boundaries (dp-region-or-line-boundaries)))
-    (dpj-clone-topic 'link-too-p (buffer-substring (car boundaries) 
-                                                 (cdr boundaries)))))
+    (dpj-clone-topic 'link-too-p (buffer-substring (car boundaries)
+						 (cdr boundaries)))))
 
 (defun dpj-current-topic-or-todo ()
-  "Get the topic currently under point.  
+  "Get the topic currently under point.
 If the topic looks like a todo \(matches `dpj-todo-re'\) then return a
 wildcard todo string. This allows us to sit on a todo and find all of
-the others easily.  See also `dpj-next-todo'.  
+the others easily.  See also `dpj-next-todo'.
 Returns a cons: (topic . is-a-todo-p)"
   (let ((topic (dpj-current-topic dpj-done-re)))
     ;;(dmessage "tot-topic>%s<" topic)
@@ -2093,7 +2093,7 @@ Returns a cons: (topic . is-a-todo-p)"
 See `dpj-process-topics' for meaning of KEEP-OTHERS."
   (let* ((l (dpj-current-topic-or-todo))
 	 (skip-todos (not (cdr l))))
-    (funcall func (concat "^" (car l) "$") 
+    (funcall func (concat "^" (car l) "$")
 	     keep-others skip-todos)))
 
 (defun dpj-highlight-current (&optional keep-others)
@@ -2118,17 +2118,17 @@ See `dpj-process-topics' for meaning of KEEP-OTHERS."
 ;  (interactive (dpj-get-topic-interactive nil nil t))
 ;  (insert dpj-link-left-delim topic dpj-link-right-delim))
 
-(defun* dpj-make-link-string0 (file-name offset timestamp 
-                              &optional (delimitter ":"))
+(defun* dpj-make-link-string0 (file-name offset timestamp
+			      &optional (delimitter ":"))
   "Create a dp-journal link to FILE-NAME @ OFFSET including TIMESTAMP.
 The string is in my embedded lisp format."
   (if (dpj-is-a-journal-p file-name)
       (setq file-name (file-name-nondirectory file-name)))
   ;; Make string I can extract and `eval'.
   (format "%s(dpj-chase-link \"%s\" %s \"%s\")%s\n"
-          delimitter
+	  delimitter
 	  file-name offset timestamp
-          delimitter))
+	  delimitter))
 
 (defun dpj-make-link-string ()
   (let ((file-name (buffer-file-name))
@@ -2156,8 +2156,8 @@ The string is in my embedded lisp format."
 ;   (interactive)
 ;   (unless link
 ;     (save-excursion
-;       (setq link (dp-bracketed-buffer-substring 
-; 		  dpj-link-left-delim dpj-link-right-delim))))
+;       (setq link (dp-bracketed-buffer-substring
+;		  dpj-link-left-delim dpj-link-right-delim))))
 ;   (dp-push-go-back "dpj-goto-link")
 ;   (dpj-goto-topic-backward link))
 
@@ -2167,7 +2167,7 @@ The string is in my embedded lisp format."
 (defvar dpj-grep-cursor nil
   "Cursor into list of points from the last grep operation.")
 
-(defun dpj-grep-bodies (grep-re &optional topic-re skip-re 
+(defun dpj-grep-bodies (grep-re &optional topic-re skip-re
 			       just-remember-records)
   "Grep the bodies of the selected topic records."
   (interactive "sgrep-re: ")
@@ -2176,7 +2176,7 @@ The string is in my embedded lisp format."
     (if (> (prefix-numeric-value current-prefix-arg) 4)
 	(setq just-remember-records t)))
   (setq topic-re (or topic-re
-		     (or dpj-next-in-topic-topic 
+		     (or dpj-next-in-topic-topic
 			 (concat "^" (car (dpj-current-topic-or-todo)) "$"))))
   (save-excursion
     (let ((matching-topics (car (dpj-find-topics topic-re nil skip-re)))
@@ -2188,14 +2188,14 @@ The string is in my embedded lisp format."
 	(setq done nil)
 	(goto-char (dpj-topic-info-record-start topic-info))
 	(while (and (not done)
-		    (dp-re-search-forward grep-re 
+		    (dp-re-search-forward grep-re
 				       (dpj-topic-info-end topic-info) t))
-	  (if just-remember-records 
+	  (if just-remember-records
 	      (setq matching-records (cons topic-info matching-records)
 		    done t)
-	    (setq dpj-grep-addrs 
+	    (setq dpj-grep-addrs
 		  (cons (match-beginning 0) dpj-grep-addrs)))))
-      
+
       (if just-remember-records
 	  (nreverse matching-records)	; return val fur this case
 	(setq dpj-grep-addrs (nreverse dpj-grep-addrs)
@@ -2234,7 +2234,7 @@ The string is in my embedded lisp format."
     (setq new-timestamp (match-string 0 new))
     (catch 'done
       (while topics
-	;;(dmessage ">%s< >%s<" new-timestamp 
+	;;(dmessage ">%s< >%s<" new-timestamp
 	;;    (dpj-topic-info-timestamp (car topics)))
 	(when (dpj-topic-date-less-p new-timestamp
 				   (dpj-topic-info-timestamp (car topics)))
@@ -2246,18 +2246,18 @@ The string is in my embedded lisp format."
       (goto-char (point-max))
       (insert "\n" new "\n"))
     (setq insert-end (point))
-    (if (and (re-search-backward "[^ 	\n]" nil t)
-	     (dp-re-search-forward "[ 	\n]+" nil t))
+    (if (and (re-search-backward "[^	\n]" nil t)
+	     (dp-re-search-forward "[	\n]+" nil t))
 	(replace-match "\n\n"))
     ))
 
 (defun dpj-extract-records (topic-list)
   "Return list of records extracted from the file using the list of topic-info items."
-  (mapcar 
-   (function 
+  (mapcar
+   (function
     (lambda (info)
       (buffer-substring (dpj-topic-info-record-start info)
-                        (dpj-topic-info-end info))))
+			(dpj-topic-info-end info))))
    topic-list))				; ??? @todo was topics?
 
 (defun dpj-insert-topics-sorted (topics-str)
@@ -2271,17 +2271,17 @@ The string is in my embedded lisp format."
       (setq topics (car (dpj-find-topics)))
       ;;(dmessage "topics>%s<" topics)
       (setq new-topics (dpj-extract-records topics)))
-    
+
     (if (< (length new-topics) 5)
 	(progn
 	  ;; this can work better for a merging in a few records
 	  ;; insert each topic to its sorted place.
 	  ;; this is an easy but *incredibly* slow way to do this.
-	  (mapcar (function 
-                   (lambda (rec)
-                     (dpj-insert-topic-sorted rec)))
+	  (mapcar (function
+		   (lambda (rec)
+		     (dpj-insert-topic-sorted rec)))
 		  new-topics))
-      ;; get current file's topics into a list of strings 
+      ;; get current file's topics into a list of strings
       (setq topics (car (dpj-find-topics)))
       (setq old-topics (dpj-extract-records topics))
       ;; combine lists of topic strings
@@ -2293,13 +2293,13 @@ The string is in my embedded lisp format."
       ;; insert all records.  This results in a reformatting of
       ;; any old records by resulting a a single newline bewteen
       ;; records.  ?? Or are trailing newlines retained in each record?
-      (mapcar (function 
-               (lambda (rec)
-                 (insert rec "\n")))
+      (mapcar (function
+	       (lambda (rec)
+		 (insert rec "\n")))
 	      topics))))
 
 (defun dpj-insert (&optional dont-insert-sorted)
-  "Insert into a journal.  
+  "Insert into a journal.
 If `current-kill' is a topicstamp, insert into sorted place in file.
 In this case, `current-kill' must be a single topic item."
   (interactive)
@@ -2332,10 +2332,10 @@ In this case, `current-kill' must be a single topic item."
   "Construct a journal file's name."
   (expand-file-name
    (dp-make-dated-note-file-name "daily" :extension ".jxt" :year-first-p t
-                                 :amon month :ayear year
-                                 :note-base-dir 
-                                 (or dir-name
-                                     (dpj-base-dir-name topic)))))
+				 :amon month :ayear year
+				 :note-base-dir
+				 (or dir-name
+				     (dpj-base-dir-name topic)))))
 
 (defun dpj-latest-note-file-name (&optional topic dir-name)
    (dpj-make-journal-name nil nil topic dir-name))
@@ -2347,14 +2347,14 @@ In this case, `current-kill' must be a single topic item."
   (if (not (file-exists-p fname))
       (cond
        ((eq missing-file-action 'keep-looking)
-        'keep-looking)        
+	'keep-looking)
        ((or t (eq missing-file-action 'must-exist))
-        (message "%s doesn't exist." fname)
-        (ding)
-        nil))
+	(message "%s doesn't exist." fname)
+	(ding)
+	nil))
     ;; File exists!
     (if other-win-p
-        (find-file-other-window fname)
+	(find-file-other-window fname)
       (find-file fname))
     (dpj-set-current-journal-file (expand-file-name fname))
     ;; do this here or hook set-buffer.
@@ -2374,7 +2374,7 @@ In this case, `current-kill' must be a single topic item."
 
 (defun dpj-journal-name-to-month-num (&optional fname)
   "Convert a journal file's name to a month number."
-  (let* ((jfile (file-name-sans-extension 
+  (let* ((jfile (file-name-sans-extension
 		 (file-name-nondirectory (or fname buffer-file-name))))
 	 (parts (split-string jfile "-"))
 	 (year  (string-to-int (nth 1 parts)))
@@ -2385,42 +2385,42 @@ In this case, `current-kill' must be a single topic item."
   "Convert a month-num to a journal file's name."
   (let ((month (1+ (mod month-num 12)))
 	(year (/ month-num 12)))
-    (dpj-make-journal-name month year nil 
-                           (or jname-in
-                               (file-name-directory (or jname-in
-                                                        buffer-file-name))))))
+    (dpj-make-journal-name month year nil
+			   (or jname-in
+			       (file-name-directory (or jname-in
+							buffer-file-name))))))
 
 (defun dpj-next-journal-file (&optional incr missing-file-action jname-in)
   "Move to the next/prev journal file, timewise.
 INCR should be 1 or -1.
 Returns nil on failure, else
 CONS of file-name and flag indicating whether we had to load the file."
-  (interactive (list (string-to-int 
+  (interactive (list (string-to-int
 		      (completing-read "incr: " '(("1") ("-1")) nil t "-1"))))
   (if (not (buffer-file-name))
       (progn
 	(message "No %s file for this buffer." (if (< 0 incr)
 						   "prev"
 						 "next"))
-						   
+
 	nil)
     (let* ((jmon (+ (dpj-journal-name-to-month-num jname-in) (or incr -1)))
 	   (new-name (dpj-month-num-to-journal-name jmon))
 	   (already-loaded (get-file-buffer (expand-file-name new-name)))
 	   (got-file (dpj-edit-journal-file new-name missing-file-action)))
-      (cond 
+      (cond
        ((eq got-file 'keep-looking)
-        (dpj-next-journal-file incr missing-file-action buffer-file-name))
+	(dpj-next-journal-file incr missing-file-action buffer-file-name))
        (got-file
-        (when (not already-loaded)
-          (dpj-position-point-in-new-file incr))
-        (cons got-file (not already-loaded)))
+	(when (not already-loaded)
+	  (dpj-position-point-in-new-file incr))
+	(cons got-file (not already-loaded)))
        (t nil)))))
 
 (defalias 'dpjn 'dpj-next-journal-file)
 (defalias 'dpjnf 'dpj-next-journal-file)
 
-;(defvar dpj-menu       
+;(defvar dpj-menu
 ;  '("Journal")
 ;  "*Menu for Journal mode.")
 
@@ -2441,7 +2441,7 @@ CONS of file-name and flag indicating whether we had to load the file."
     (unless prev-item
       (setq dpj-menu (nconc dpj-menu (list menu-item))))))
 
-(defun dpj-define-key-and-add-to-menu (keys def menu-text 
+(defun dpj-define-key-and-add-to-menu (keys def menu-text
 					    &optional keymap menu-def)
   "Bind command to key and add to menu."
   (dpj-define-key keys def keymap)
@@ -2453,12 +2453,12 @@ CONS of file-name and flag indicating whether we had to load the file."
   (interactive)
   (easy-menu-add dpj-menu))
 
-;; 
+;;
 ;;(defun dpj-find-bullet-backwards)
 ;; No hardcoded regexp.
 ;;
 
-;;!<@todo Make defun* and change no-error-p to default to t 
+;;!<@todo Make defun* and change no-error-p to default to t
 (defun dpj-find-action-item-backwards (&optional no-error-p skip-current-p)
   "Find the previous action item, returning its position or nil if not found.
 NO-ERROR-P says no previous item is OK.
@@ -2467,83 +2467,83 @@ SKIP-CURRENT-P says to not count the current AI when looking backwards."
   (save-excursion
     (beginning-of-line)
     (if (and skip-current-p (looking-at dpj-any-AI-regexp@bol)
-             (not (dp-bobp)))
-        (progn
-          (forward-char -1)
-          (beginning-of-line))
+	     (not (dp-bobp)))
+	(progn
+	  (forward-char -1)
+	  (beginning-of-line))
       (end-of-line))
     ;; Force no-error-p to be t or nil, since any other value changes the
     ;; semantics of the search.
     (re-search-backward dpj-any-AI-regexp@bol nil (to-bool no-error-p))))
-  
-(defun* dpj-operate-on-AI-backwards (&key (no-error-p t) skip-current-p 
-                                     push-go-back-p operator)
+
+(defun* dpj-operate-on-AI-backwards (&key (no-error-p t) skip-current-p
+				     push-go-back-p operator)
   (interactive)
   (let ((p (dpj-find-action-item-backwards no-error-p skip-current-p)))
     (when p
       (funcall operator p))))
 
-(defun* dpj-goto-action-item-backwards (&optional (no-error-p t) 
-                                        (skip-current-p t)
-                                        push-go-back-p)
+(defun* dpj-goto-action-item-backwards (&optional (no-error-p t)
+					(skip-current-p t)
+					push-go-back-p)
   (interactive)
   (let ((p (point)))
-    (when (and (dpj-operate-on-AI-backwards :no-error-p no-error-p 
-                                            :skip-current-p skip-current-p
-                                            :operator 'goto-char)
-               push-go-back-p)
+    (when (and (dpj-operate-on-AI-backwards :no-error-p no-error-p
+					    :skip-current-p skip-current-p
+					    :operator 'goto-char)
+	       push-go-back-p)
       (dp-push-go-back "dpj-goto-action-item-backwards" p))))
 
 (defun dpj-get-prev-AI-indentation ()
   (interactive)
   (dpj-operate-on-AI-backwards :no-error-p t
-                               :skip-current-p nil
-                               :operator (function
-                                          (lambda (point)
-                                            (save-excursion
-                                              (goto-char point)
-                                              (current-indentation))))))
+			       :skip-current-p nil
+			       :operator (function
+					  (lambda (point)
+					    (save-excursion
+					      (goto-char point)
+					      (current-indentation))))))
 
 (defun dpj-outdent-section ()
   "Outdent current line to the level of the previous section."
   (interactive)
   (let ((c (dpj-get-prev-AI-indentation))
-        (pmark (dp-mk-marker)))
+	(pmark (dp-mk-marker)))
     (when c
       (save-excursion
-        (beginning-of-line)
-        (indent-to c)
-        (save-match-data
-          (when (looking-at dp-ws-regexp+)
-            (replace-match "")))))))
+	(beginning-of-line)
+	(indent-to c)
+	(save-match-data
+	  (when (looking-at dp-ws-regexp+)
+	    (replace-match "")))))))
 (defalias 'dpj-dedent-section 'dpj-outdent-section)
 (defalias 'dpj-back-dent-section 'dpj-outdent-section)
 
-;;!<@todo merge this code and span action item? 
+;;!<@todo merge this code and span action item?
 (defun dpj-outdent (&optional num-levels)
   (interactive "p")
   (when (> (current-indentation 0))
     (let* ((initial-pos (point))
-           (limit (save-excursion
-                    (goto-char (car (dpj-current-topic-boundaries)))
-                    (forward-line 2)
-                    (point)))
-           current-indent-column
-           (our-indent-column (current-indentation))
-           (parent-indentation
-            (catch 'up
-              (while t
-                (forward-line -1)
-                (beginning-of-line)
-                (when (not (looking-at "^\\s-*$"))
-                  (when (< (point) limit)
-                    (throw 'up nil))
-                  (when (< (current-indentation) our-indent-column)
-                    (throw 'up (current-indentation))))))))
+	   (limit (save-excursion
+		    (goto-char (car (dpj-current-topic-boundaries)))
+		    (forward-line 2)
+		    (point)))
+	   current-indent-column
+	   (our-indent-column (current-indentation))
+	   (parent-indentation
+	    (catch 'up
+	      (while t
+		(forward-line -1)
+		(beginning-of-line)
+		(when (not (looking-at "^\\s-*$"))
+		  (when (< (point) limit)
+		    (throw 'up nil))
+		  (when (< (current-indentation) our-indent-column)
+		    (throw 'up (current-indentation))))))))
       (goto-char initial-pos)           ; Starting line
       (if parent-indentation
-          ;; Leaves us @ end of indentation.
-          (indent-line-to parent-indentation)))))
+	  ;; Leaves us @ end of indentation.
+	  (indent-line-to parent-indentation)))))
 (defalias 'dpj-dedent 'dpj-outdent)
 (defalias 'dpj-back-dent 'dpj-outdent)
 
@@ -2551,7 +2551,7 @@ SKIP-CURRENT-P says to not count the current AI when looking backwards."
   "Delete the previous word or level of indentation depending on context.
 We outdent if we're looking back at white space."
   (interactive)
-  (call-interactively 
+  (call-interactively
    (if (dp-looking-back-at dp-ws-regexp+)
        'dpj-outdent
      'dp-backward-delete-word)))
@@ -2560,7 +2560,7 @@ We outdent if we're looking back at white space."
   "Delete the previous word or level of indentation depending on context.
 We outdent if we're looking back at white space."
   (interactive)
-  (call-interactively 
+  (call-interactively
    (if (dp-looking-back-at (concat "^" dp-ws-regexp+))
        'dpj-outdent-section
      'dp-backward-delete-word)))
@@ -2573,17 +2573,17 @@ End is following line with less (or no) indentation."
     (let (begin prefix
 		(end (save-excursion
 		       (beginning-of-line)
-		       (if (looking-at "^[ 	]*$")
+		       (if (looking-at "^[	 ]*$")
 			   (point)
 			 nil))))
       (when (or (not span-forward-p) end)
-        (dpj-goto-action-item-backwards))
+	(dpj-goto-action-item-backwards))
       (setq begin (point))
       (if end
 	  ;; end is already set
-	  (goto-char end)		
+	  (goto-char end)
 	;; find first lesser-indented or empty line
-	(setq prefix 
+	(setq prefix
 	      (concat "^" (filladapt-convert-to-spaces (match-string 0))))
 	(forward-line 1)
 	(beginning-of-line)
@@ -2593,7 +2593,7 @@ End is following line with less (or no) indentation."
 	    (unless (dp-re-search-forward prefix (line-end-position) t)
 	      (throw 'done nil))
 	    ;; space only/empty line???
-	    (if (looking-at "^[ 	]*$")
+	    (if (looking-at "^[		]*$")
 		(throw 'done nil))
 	    ;; try to move down a line
 	    (if (= (forward-line 1) 1)
@@ -2616,7 +2616,7 @@ End is following line with less (or no) indentation."
 
 (defun dpj-resolve-action-item (&optional resolution-char timestamp-p
 					  no-summary-p
-                                          resolve-forward-p)
+					  resolve-forward-p)
   "Resolve an action item by marking it completed or cancelled.
 RESOLUTION-CHAR is ?= or ?~ indicating completed or cancelled.  If nil,
 then determine RC based upon current-prefix arg \(interactively\).
@@ -2628,11 +2628,11 @@ NO-SUMMARY-P controls whether we insert a summary indicator
   (unless resolution-char
     (setq resolution-char (if (and (interactive-p) current-prefix-arg) "~" "="
 			      "=")))
-  (let ((region (or (dp-mark-active-p) 
-                    (dpj-span-action-item resolve-forward-p))))
+  (let ((region (or (dp-mark-active-p)
+		    (dpj-span-action-item resolve-forward-p))))
     ;; the entire AI is marked.
     (goto-char (car region))
-    (let ((prefix (make-string (skip-chars-forward "[ 	]") ? )))
+    (let ((prefix (make-string (skip-chars-forward "[	 ]") ? )))
       (insert resolution-char)
       (unless no-summary-p
 	(goto-char (cdr region))
@@ -2646,11 +2646,11 @@ NO-SUMMARY-P controls whether we insert a summary indicator
 
 (defun dpj-electric-resolve-action-item (resolution-char &optional timestamp-p)
   (interactive)
-  (if (and (dp-looking-back-at "^[ 	]*" t) 
+  (if (and (dp-looking-back-at "^[	 ]*" t)
 	   (looking-at dpj-any-AI-regexp))
-      (dpj-resolve-action-item resolution-char 
-                               (or timestamp-p current-prefix-arg)
-                               nil t)
+      (dpj-resolve-action-item resolution-char
+			       (or timestamp-p current-prefix-arg)
+			       nil t)
     (call-interactively 'self-insert-command)))
 
 (defun dpj-electric- ()
@@ -2676,7 +2676,7 @@ NO-SUMMARY-P controls whether we insert a summary indicator
 				  (dpj-read-topic))))
 
 ;;!<@todo We really only need one of these.
-(defvar dp-journal-home-command-list 
+(defvar dp-journal-home-command-list
   `(back-to-indentation
     beginning-of-line
     dpj-goto-topic-backward-with-file-wrap
@@ -2692,7 +2692,7 @@ NO-SUMMARY-P controls whether we insert a summary indicator
 (defvar dpj-def-note-base-dir-key "///"
   "The key used to match the default note-base-dir in the topic->dir map.")
 
-(defvar dpj-topic-to-dir-map-default-entry    
+(defvar dpj-topic-to-dir-map-default-entry
   (list dpj-def-note-base-dir-key dp-note-base-dir)
   "Default topic --> directory mapping entry.")
 
@@ -2701,8 +2701,8 @@ NO-SUMMARY-P controls whether we insert a summary indicator
 (add-to-list 'dpj-topic-to-dir-map dpj-topic-to-dir-map-default-entry)
 
 (defun dpj-base-dir-name (&optional topic)
-  (cadr (dp-assoc-regexp (or topic dpj-def-note-base-dir-key) 
-                         dpj-topic-to-dir-map)))
+  (cadr (dp-assoc-regexp (or topic dpj-def-note-base-dir-key)
+			 dpj-topic-to-dir-map)))
 
 (defun dp-journal-home ()
   "Go bt-indentation, bol, botopic, bow, bof."
@@ -2714,7 +2714,7 @@ NO-SUMMARY-P controls whether we insert a summary indicator
   (interactive "P")
   (let ((topic-re (concat "\\(\n\n*?\\)"
 			  "\\("
-			  "\n\n" 
+			  "\n\n"
 			  (substring (dpj-mk-topic-re) 1)
 			  "\\)"
 			  ))
@@ -2758,7 +2758,7 @@ NO-SUMMARY-P controls whether we insert a summary indicator
 ;      (dp-end-of-buffer)))
 
 (defun* dpj-next-journal-command (&optional latest-journal-p
-                                  (keep-looking-p 'keep-looking))
+				  (keep-looking-p 'keep-looking))
   (interactive "P")
   (if latest-journal-p
       (dp-journal nil nil 'visit-latest)
@@ -2781,10 +2781,10 @@ RETURN buffer that was visiting the journal, or nil."
 ;    (setq goto-eof current-prefix-arg))
 
   (when (or (not (dpj-current-journal-file))
-            (and (not (dpj-journal-file-sticky-p))
-                 visit-latest))
+	    (and (not (dpj-journal-file-sticky-p))
+		 visit-latest))
     (dpj-set-current-journal-file (dpj-latest-note-file-name topic)))
-  
+
   (let ((visiting-buffer (find-buffer-visiting (dpj-current-journal-file))))
     (if other-win-p
 	(dp-find-file-other-window (dpj-current-journal-file))
@@ -2844,16 +2844,16 @@ This kind of allows us to use a journal file with a non-standard name."
     "Journal menubar button.")
   (defvar dpj-menu-button-added nil
     "Non nil if we've already added the menu-button.")
-  
+
   ;; @todo Add to tools menu?
-  ;;  (defvar dp-mew-menu-button 
+  ;;  (defvar dp-mew-menu-button
   ;;    (vconcat ["%_Read Mail (Mew)"] dp-mew-menubutton-guts)
   ;;    "Mew internet menu button.")
-  
+
   ;; add to Tools->Internet menu
   ;;  (add-menu-button '("Tools" "Internet") dp-mew-menu-button
   ;;		   "Read Mail 1 (VM)...")
-  
+
   ;; add to menu-bar
   (unless dpj-menu-button-added
     (add-menu-button nil dpj-menubar-button nil default-menubar)
@@ -2881,13 +2881,13 @@ This kind of allows us to use a journal file with a non-standard name."
   ;; ??? This could be nice... why did I stop doing it?
   ;;(make-variable-buffer-local 'invisible-text-glyph)
   (cond
-   (dp-journal-invisible-text-glyph-string 
-    (dp-set-buffer-invisible-text-glyph 
+   (dp-journal-invisible-text-glyph-string
+    (dp-set-buffer-invisible-text-glyph
      `[string :data ,dp-journal-invisible-text-glyph-string]))
    (dp-journal-use-invisible-text-glyph-p
-    (dp-set-buffer-invisible-text-glyph 
-     (dp-setup-invisible-glyph dp-journal-invisible-text-glyph-file 
-                               dp-journal-invisible-text-glyph-color)))))
+    (dp-set-buffer-invisible-text-glyph
+     (dp-setup-invisible-glyph dp-journal-invisible-text-glyph-file
+			       dp-journal-invisible-text-glyph-color)))))
 
 (defvar dp-journal-mode-pre-hook nil
   "Call these hook functions before all other journal mode code.")
@@ -2920,13 +2920,13 @@ exist to move from one topic record to the next or previous.
 \\{dp-journal-mode-map}"
 
   (run-hooks 'dp-journal-mode-pre-hook)
-  
+
   ;;(dmessage "ENTER: dp-journal-mode")
 
   ;; We make these variables buffer local and lower 'em into the paranoid zone.
   (setq auto-save-interval 200
-        auto-save-timeout 30)
-  
+	auto-save-timeout 30)
+
   ;; Text mode turns this on, and it does many things I don't like. Perhaps I
   ;; am not using it correctly, esp in relation to filladapt.
   (auto-fill-mode -1)
@@ -2955,19 +2955,19 @@ exist to move from one topic record to the next or previous.
   (dpj-add-menu-item "Prev in topic..." 'dpj-prev-in-topic-menu-command)
   (dpj-define-key-and-add-to-menu "\C-n" 'dpj-next-in-topic "Next in topic")
   (dpj-add-menu-item "Next in topic..." 'dpj-next-in-topic-menu-command)
-  (dpj-define-key-and-add-to-menu [(meta left)] 
+  (dpj-define-key-and-add-to-menu [(meta left)]
 				  'dpj-goto-topic-backward-with-file-wrap
 				  "Prev topic")
-  (dpj-define-key-and-add-to-menu [(meta right)] 
-				  'dpj-goto-topic-forward-with-file-wrap 
+  (dpj-define-key-and-add-to-menu [(meta right)]
+				  'dpj-goto-topic-forward-with-file-wrap
 				  "Next topic")
   (dpj-define-key-and-add-to-menu "\C-cn" 'dpj-new-topic "Insert new topic")
-  (dpj-define-key-and-add-to-menu [(control meta ?')] 'dpj-clone-topic 
+  (dpj-define-key-and-add-to-menu [(control meta ?')] 'dpj-clone-topic
 				  "Clone current topic")
   (dpj-define-key-and-add-to-menu "\C-ch" 'dpj-highlight-topic
 				  "Highlight topic")
-  (dpj-define-key-and-add-to-menu "\C-c\C-s" 
-                                  'dpj-show-topic-command "Show topic")
+  (dpj-define-key-and-add-to-menu "\C-c\C-s"
+				  'dpj-show-topic-command "Show topic")
   (dpj-add-menu-item "Show current topic" 'dpj-show-current)
 
   ;; use outline mode's show-all binding.
@@ -2977,11 +2977,11 @@ exist to move from one topic record to the next or previous.
   (dpj-define-key-and-add-to-menu "\C-cdd" 'dpj-todo-done "Complete todo")
   (dpj-define-key-and-add-to-menu "\C-c\C-t" 'dpj-prev-todo "Goto prev todo")
   (dpj-define-key-and-add-to-menu "\C-c\C-v" 'dpj-next-todo "Goto next todo")
-  (dpj-define-key-and-add-to-menu "\C-c\C-d" 'dpj-todo-cancelled 
+  (dpj-define-key-and-add-to-menu "\C-c\C-d" 'dpj-todo-cancelled
 				  "Cancel todo")
-  (dpj-define-key-and-add-to-menu "\C-cp" 'dpj-pretty-timestamp 
+  (dpj-define-key-and-add-to-menu "\C-cp" 'dpj-pretty-timestamp
 				  "Show topic time")
-  (dpj-define-key-and-add-to-menu "\C-c\C-p" 'dpj-set-next-in-topic-topic 
+  (dpj-define-key-and-add-to-menu "\C-c\C-p" 'dpj-set-next-in-topic-topic
 				 "Set persistent topic")
   (dpj-define-key-and-add-to-menu [(meta ?,)] 'dp-pop-go-back "Go back")
   (dpj-define-key-and-add-to-menu "\C-cl" 'dpj-insert-link "Insert link")
@@ -2998,12 +2998,12 @@ exist to move from one topic record to the next or previous.
   ;; Since I write add so many lisp ideas/tasks/questions/...
   (dpj-define-key [(control tab)] 'lisp-complete-symbol)
   (dpj-define-key [(control meta ?n)] (kb-lambda
-                                          (dpj-next-journal-command nil nil)))
+					  (dpj-next-journal-command nil nil)))
   (dpj-define-key [(control meta ?p)] (kb-lambda
 					  (dpj-next-journal-file -1 nil)))
   (dpj-define-key "\C-c\C-n" 'dpj-new-topic)
-  (dpj-define-key "\C-c\C-r" (kb-lambda 
-			      (dpj-re-process-topics 
+  (dpj-define-key "\C-c\C-r" (kb-lambda
+			      (dpj-re-process-topics
 			       dpj-last-process-topics-args)))
   (dpj-define-key "-" 'dpj-electric-)	;keep this since it is unshifted
   (dpj-define-key "~" 'dpj-electric-)
@@ -3014,29 +3014,29 @@ exist to move from one topic record to the next or previous.
   (dpj-define-key [(control space)] 'dp-expand-abbrev)
   (dpj-define-key [(control a)] 'dp-journal-home)
   (dpj-define-key [(meta tab)] 'dpj-outdent-section)
-  (dpj-define-key [(control backspace)] 
-                  'dpj-outdent-section-or-backward-delete-word)
+  (dpj-define-key [(control backspace)]
+		  'dpj-outdent-section-or-backward-delete-word)
 
   ;; menu only
-  (dpj-add-menu-item "Replace current topic..." 
+  (dpj-add-menu-item "Replace current topic..."
 		     'dpj-get-and-replace-current-topic)
-  (dpj-add-menu-item "View topic history..." 
+  (dpj-add-menu-item "View topic history..."
 		     'dpj-view-topic-history)
   (dpj-add-menu-item "Grep bodies..." 'dpj-grep-bodies)
   (dpj-add-menu-item "Next grep hit" 'dpj-grep-next)
   (dpj-add-menu-item "Grep and view hits..." 'dpj-grep-and-view-hits)
   (dpj-add-menu-item "View open todos..." 'dpj-view-todos)
   (dpj-add-menu-item "Kill old journal buffers " 'dpj-tidy-journals)
-  
+
   (dp-make-local-hook 'after-save-hook)
-  (add-hook 'after-save-hook (function 
+  (add-hook 'after-save-hook (function
 			      (lambda ()
-                                (dpj-set-current-journal-file (buffer-file-name))
+				(dpj-set-current-journal-file (buffer-file-name))
 				(dpj-merge-all-topics nil 'write-em)))
 	    nil 'local)
 
   (add-local-hook 'kill-buffer-hook 'dpj-buffer-killed-hook)
-  
+
   (dpj-hook-set-buffer)
   (dpj-add-menubar-menu)
   (setq mode-popup-menu dpj-menu)
@@ -3050,8 +3050,8 @@ exist to move from one topic record to the next or previous.
   (abbrev-mode 0)		     ; We use mah MFing abbrevs, MFer.
 
   (setq auto-save-interval 42
-        auto-save-timeout 30
-        comment-start "; ")
+	auto-save-timeout 30
+	comment-start "; ")
 
 
   ;; now that we have auto-save-timeout, let's crank this up

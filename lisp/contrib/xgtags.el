@@ -280,7 +280,7 @@ killed!"
   :type 'string
   :group 'xgtags)
 
-(defcustom xgtags-global-program-args '()
+(defcustom xgtags-global-program-args '("-i")
   "*`global' executable's args."
   :type '(repeat string)
   :group 'xgtags)
@@ -1030,7 +1030,7 @@ for each tag."
        (let ((xgtags-rootdir (and dir (file-name-as-directory dir))))
          (with-xgtags-environment
           (with-temp-buffer
-            (call-process xgtags-global-program nil t nil "-c")
+            (call-process xgtags-global-program nil t nil "-c" "-i")
             (goto-char (point-min))
             (while (re-search-forward xgtags--symbol-regexp nil t)
               (intern (match-string-no-properties 0) xgtags--completition-table)
