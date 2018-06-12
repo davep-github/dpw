@@ -113,8 +113,8 @@
 
 (defface dp-journal-done-face
   '(
-    (((class color)) background light) (:foreground "thistle4")
-    (((class color)) background demon) (:foreground "thistle4"))
+    (((class color) (background light)) (:foreground "thistle4"))
+    (((class color) (background dark)) (:foreground "thistle4")))
   "Face for completed or cancelled todos in `dp-journal-mode'."
   :group 'faces
   :group 'dp-vars)
@@ -257,8 +257,8 @@
 
 (defface dp-journal-emphasis-face
   '(
-    (((class color)) :bold t)
-    (((class color)) :bold t))
+    (((class color)) (:bold t))
+    (((class color)) (:bold t)))
   "Face for emphasized items in 'dp-journal-mode'."
   :group 'faces
   :group 'dp-vars)
@@ -327,14 +327,19 @@
   :group 'faces
   :group 'dp-vars)
 
+;;  '((((class color)) :foreground "darkgreen" :bold t))
 (defface dp-journal-high-example-face
-  '((((class color)) :foreground "darkgreen" :bold t))
-  "Face for high priority example lines in `dp-journal-mode'."
+  '(
+    (((class color) (background light)) (:foreground "darkgreen" :bold t))
+    (((class color) (background dark)) (:foreground "darkgreen" :bold t)))
+    "Face for high priority example lines in `dp-journal-mode'."
   :group 'faces
   :group 'dp-vars)
 
 (defface dp-journal-embedded-lisp-face
-  '((((class color)) :foreground "royalblue"))
+  '(
+    (((class color) (background light)) (:foreground "royalblue"))
+    (((class color) (background dark)) (:foreground "royalblue")))
   "Face for embedded lisp expressions."
   :group 'faces
   :group 'dp-vars)
