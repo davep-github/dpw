@@ -14215,13 +14215,14 @@ BUFFER-FILENAME-REGEXP defaults to .*"
 (defun* dp-make-frame-title-format (&key server-running-p force-no-server-p)
   (format "%s%s"
           (if (and (not force-no-server-p)
-                   (or server-running-p 
+		   (or server-running-p
                        (dp-server-running-p)))
               "Serv/"
-            "")
+            "/")
           dp-frame-title-format))
 
 (defun dp-set-frame-title-format (&rest r)
+  (interactive)
   (setq frame-title-format 
         (apply 'dp-make-frame-title-format r))
   (redisplay-frame))
