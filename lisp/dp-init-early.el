@@ -102,6 +102,7 @@ Some are ephemeral and some are longer term."
 
 (setq dp-editor-droppings (expand-file-name "~/droppings/editors")
       dp-emacs-droppings (concat dp-editor-droppings "/emacs")
+      dp-xemacs-droppings (concat dp-editor-droppings "/xemacs")
       dp-ebacs-droppings (dp-mk-dropping-dir "ebacs")
       dp-auto-save-droppings (dp-mk-dropping-dir
                               "/session-auto-saves.d/"
