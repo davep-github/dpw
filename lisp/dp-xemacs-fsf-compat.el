@@ -4,6 +4,7 @@
 ;;; Compatibility functions when in xemacs.
 ;;;
 
+(defalias 'cl-defun 'defun*)
 (defvar dp-all-compiler-warnings
   '(redefine callargs subr-callargs
     free-vars unresolved unused-vars obsolete or pedantic)
@@ -244,7 +245,7 @@ No matter what. A DWIM-ish thing."
 ;;       (call-interactively 'man))))
 
 (global-set-key [(control ?x) (control right)] 'dp-switch-to-next-buffer)
-(global-set-key [(control ?y) (control left)] 'dp-switch-to-previous-buffer)
+(global-set-key [(control ?x) (control left)] 'dp-switch-to-previous-buffer)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Nicked from Emacs.
