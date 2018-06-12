@@ -454,7 +454,7 @@ e(
         #    'xterm_opts': """'-sb -sl 1024 -ls +si -sk'""",
         'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
         'xem_opts': '-eval (dp-2-v-or-h-windows) -geometry  81x69-1+0',
-        'main_macs_opts': '-eval (dp-main-rc+2w)',
+        'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         #'xem_font': '-*-Terminus-medium-r-*-*-*-120-*-*-*-*-iso8859-*',
         # magically changed from 120 being right to 160 being right.
         # update of terminus font?
