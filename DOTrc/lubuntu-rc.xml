@@ -307,6 +307,12 @@
         <command>ubuntu-sucks dpxx</command>
       </action>
     </keybind>
+    <!-- mvsik player. -->
+    <keybind key="S-W-a">
+      <action name="Execute">
+        <command>ubuntu-sucks ario</command>
+      </action>
+    </keybind>
     <!-- Select and raise an Emacs editing server. -->
     <keybind key="S-W-e">
       <action name="Execute">
@@ -314,9 +320,11 @@
       </action>
     </keybind>
     <!-- Select and raise an Emacs window. -->
+    <!-- The name is delimited and allows us to distinguish twixt XEmacs and
+         Emacs. -->
     <keybind key="W-e">
       <action name="Execute">
-        <command>wmctrl -a "Emacs@"</command>
+        <command>wmctrl -a "/Emacs@"</command>
       </action>
     </keybind>
     <!-- Select and raise XEmacs editing server. -->
