@@ -80,7 +80,7 @@
      (:foreground "lightblue")))
   "Face for buffer endicator glyph."
   :group 'faces
-  :group 'dp-vars)
+  :group 'dp-faces)
 
 
 (defvar dp-endicator-face 'dp-default-endicator-face)

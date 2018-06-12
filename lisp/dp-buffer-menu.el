@@ -163,7 +163,7 @@ Gets the buffer as input.")
     (((class color) (background dark)) (:foreground "forestgreen")))
   "Face for `comint-mode' buffers in dp-gmm-mode."
   :group 'faces
-  :group 'dp-vars)
+  :group 'dp-faces)
 
 (require 'dired)
 (defvar dp-bmm-mode-name-colorization-alist 

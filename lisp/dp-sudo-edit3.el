@@ -28,7 +28,7 @@
      (:background "pink"))) 
   "Face for file being sudo edited."
   :group 'faces
-  :group 'dp-vars)
+  :group 'dp-faces)
 
 (defcustom dp-sudo-edit-sudoer "sudo"
   "*A command which allows a user to execute a command as another user

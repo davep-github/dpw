@@ -72,21 +72,21 @@
      (:background "paleturquoise"))) 
   "Face (background) for squished runs of tabs and spaces."
   :group 'faces
-  :group 'dp-vars)
+  :group 'dp-faces)
 
 (defface dp-sel2:squish-newline-face
   '((((class color) (background light)) 
      (:background "lightblue3"))) 
   "Face (background) for squished runs of newlines."
   :group 'faces
-  :group 'dp-vars)
+  :group 'dp-faces)
 
 (defface dp-sel2:viewer-bg-face
   '((((class color) (background light)) 
      (:background "aliceblue"))) 
   "Face (background) for item being viewed."
   :group 'faces
-  :group 'dp-vars)
+  :group 'dp-faces)
 
 (defvar dp-sel2:mode-hook nil
   "Hooks to call just before dp-sel2:mode finishes.")

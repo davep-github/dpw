@@ -29,7 +29,7 @@ Should be a color which nearly blends into background."
      (:foreground "red"))) 
   "Face for root prompt."
   :group 'faces
-  :group 'dp-vars)
+  :group 'dp-faces)
 
 (copy-face 'dp-journal-high-example-face 'dp-shells-prompt-id-face)
 (copy-face 'dp-journal-extra-emphasis-face 'dp-shells-prompt-path-face)

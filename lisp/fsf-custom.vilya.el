@@ -96,18 +96,24 @@
  '(tags-revert-without-query t)
  '(timeclock-mode-line-display nil)
  '(tool-bar-mode nil)
- '(wdired-allow-to-change-permissions t))
+ '(wdired-allow-to-change-permissions t)
+ '(whitespace-line-column 72)
+ '(whitespace-style
+   (quote
+    (face trailing tabs spaces lines-tail newline empty indentation space-after-tab space-before-tab space-mark tab-mark newline-mark))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:background nil))))
  '(beacon-fallback-background ((t (:background "DodgerBlue3"))))
- '(cursor ((t nil)))
- '(dp-trailing-whitespace-face ((t (:background "light coral" :weight normal))))
+ '(cursor ((t (:background "gold"))))
+ '(ediff-even-diff-Ancestor ((t (:background "Grey" :foreground "black"))))
+ '(ediff-fine-diff-Ancestor ((t (:background "#009591" :foreground "black"))))
+ '(ediff-odd-diff-Ancestor ((t (:background "gray40" :foreground "black"))))
  '(isearch ((t (:background "medium spring green" :foreground "#100e23" :weight bold))))
  '(lazy-highlight ((t (:background "#65b2ff" :foreground "black"))))
  '(rectangle-preview ((t (:inherit region))))
- '(region ((t (:background "royal blue"))))
- '(trailing-whitespace ((t nil))))
-
+ '(region ((t (:background "turquoise2" :foreground "black" :box (:line-width 2 :color "grey75" :style released-button) :weight bold))))
+ '(trailing-whitespace ((t (:background "light cyan")))))

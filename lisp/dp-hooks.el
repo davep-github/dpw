@@ -377,7 +377,7 @@ For now this must be < the error col.")
 ;;     (:background "lightgrey" :bold nil)))
   "Face for buffer lines which have gotten too long."
   :group 'faces
-  :group 'dp-vars)
+  :group 'dp-faces)
 
 (defface dp-default-line-too-long-warning-face
   '((((class color)
@@ -386,7 +386,7 @@ For now this must be < the error col.")
      (:background "lightgrey" :bold nil)))
   "Face for buffer lines which are getting too long."
   :group 'faces
-  :group 'dp-vars)
+  :group 'dp-faces)
 
 ;; !<@todo XXX make this handle warning-col >= error-col. (if < 0) 0
 (defvar dp-font-lock-line-too-long-element-no-tabs
@@ -458,7 +458,7 @@ the warning zone logic (or bag it.) Using brute force.")
      (:background "lightgrey" :bold nil)))
   "Face for buffer lines which have trailing whitespace."
   :group 'faces
-  :group 'dp-vars)
+  :group 'dp-faces)
 
 (defcustom dp-trailing-whitespace-regexp "\\s-+$"
   "Regular expression to detect that most egregious of all programming

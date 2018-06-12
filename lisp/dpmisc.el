@@ -4595,14 +4595,14 @@ Return t if successful, nil otherwise."
      (:background "linen"))) 
   "Face for file being less viewed."
   :group 'faces
-  :group 'dp-vars)
+  :group 'dp-faces)
 
 (defface dp-wp-face
   '((((class color) (background light)) 
      (:background "lightsalmon2"))) 
   "Face for write protected regions. A write protected *file* may be colored differently."
   :group 'faces
-  :group 'dp-vars)
+  :group 'dp-faces)
 
 (defun less (file-name &optional buffer-name q-key-command program)
   "``Less'' a file.  

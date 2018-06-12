@@ -453,7 +453,7 @@ So, out with the SPAS and load 'em all."
     (custom-face-get-spec 'dp-journal-embedded-lisp-face)
     "Needed by cedet::senator."
     :group 'faces
-    :group 'dp-vars)
+    :group 'dp-faces)
   (let ((s-path (or semantic-path (dp-mk-cedet-child "semantic"))))
     (defadvice custom-autoload (before dp-ad-custom-autoload 
                                 (sym ld 
