@@ -31,7 +31,7 @@ add_foi_regexp()
         FILES_OF_INTEREST[${#FILES_OF_INTEREST[@]}]="$pat"
     done
     #echo 1>&2 "A: FOI>${FILES_OF_INTEREST[@]}<"
-}                  
+}
 
 add_filter_regexp()
 {
@@ -59,7 +59,7 @@ excluded_files_file_template=$(normpath "${DP_TMPDIR-$TMP}/extagtree.excluded-fi
 : ${EXCLUDED_FILES_FILE:=$(mktemp "${excluded_files_file_template}")}
 # .c .h .cxx .py .java etc.
 # NB! .cl is for OpenCL files, used at AMD.  It is C-like.
-: ${INTERESTING_FILES:="[chly](xx|pp)?|h-py|cs|cc|hh|py|pm|pl|java|[Ss]|asm|ASM|nasm|NASM|cl|p(er)?l|el|rs"}
+: ${INTERESTING_FILES:="[chly](xx|pp)?|h-py|cs|rs|cc|hh|py|pm|pl|java|[Ss]|asm|ASM|nasm|NASM|cl|p(er)?l|el|rs"}
 vsetp "${SITE_INTERESTING_SRC_FILE_REGEXP-}" && {
     INTERESTING_FILES="${INTERESTING_FILES}|${SITE_INTERESTING_SRC_FILE_REGEXP}"
 }
