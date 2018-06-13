@@ -339,7 +339,7 @@ compound regexp to match a list of specific strings."
                               (incf i)
                               ;; Must be last as it is our return value.
                               (format "[%s]%s<" i s))))
-             list-o-strings (or sep " "))
+             (delq nil list-o-strings) (or sep " "))
             (if (stringp append-one-p) 
                 append-one-p
               (if append-one-p sep "")))))
