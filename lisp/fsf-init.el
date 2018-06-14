@@ -1,9 +1,7 @@
 (message "loading fsf-init...")
 
-(require 'package)
-
-(setq package-user-dir (locate-user-emacs-file
-			(dp-hostify-name "elpa.%s.d")))
+;; (setq package-user-dir (locate-user-emacs-file
+;; 			(dp-hostify-name "elpa.%s.d")))
 
 ;; load emacs 24's package system. Add MELPA repository.
 (when (>= emacs-major-version 24)
