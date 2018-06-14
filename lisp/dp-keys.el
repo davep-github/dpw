@@ -318,6 +318,7 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key (kbd "C-x g") 'magit-status)
 
 ;;; <:add-new "normal"/global binding:>
+(global-set-key [(meta ?q)] 'dp-fill-paragraph-or-region)
 
 ;; Beginning to use C-cj as journal command prefix.
 ;; Prefer C-dj below.
