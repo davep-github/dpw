@@ -21,10 +21,17 @@ done
 EExec_verbose_msg $(echo_id eexec_program)
 unset eexec_program
 
-[ "$*" = "" ] && {
-    echo "Usage: ${progname} nth files..."
+Usage()
+{
+    echo "Usage: ${progname} <nth> files...
+Run diff on files and their <nth> previous change, not simply HEAD~<nth>."
+}
+
+if (($# == 0))
+then
+    Usage 1>&2
     exit 1
-} 1>&2
+fi
 
 : ${base_rev=HEAD}
 : ${diff_tool=}
