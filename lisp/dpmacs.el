@@ -252,6 +252,7 @@ editing servers via `dp-editing-server-ipc-file'.")
 ;;
 
 (unless (dp-xemacs-p)
+  (dp-optionally-require 'edebug-x)
   (require 'dp-magit))
 
 ;; in XEmacs (only?)
