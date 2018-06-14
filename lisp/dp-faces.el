@@ -3,7 +3,7 @@
 (defface dp-cifdef-face0
   '(
     (((class color) (background light)) (:background "paleturquoise3"))
-    (((class color) (background dark)) (:background "paleturquoise3")))
+    (((class color) (background dark)) (:foreground "black" :background "paleturquoise3")))
   "Colorized ifdef face"
   :group 'faces
   :group 'dp-faces)
@@ -11,7 +11,7 @@
 (defface dp-cifdef-face1
   '(
     (((class color) (background light)) (:background "plum"))
-    (((class color) (background dark)) (:background "plum")))
+    (((class color) (background dark)) (:foreground "black" :background "plum")))
   "Colorized ifdef face"
   :group 'faces
   :group 'dp-faces)
@@ -19,7 +19,7 @@
 (defface dp-cifdef-face2
   '(
     (((class color) (background light)) (:background "lightgreen"))
-    (((class color) (background dark)) (:background "lightgreen")))
+    (((class color) (background dark)) (:foreground "black" :background "lightgreen")))
   "Colorized ifdef face"
   :group 'faces
   :group 'dp-faces)
@@ -27,7 +27,7 @@
 (defface dp-cifdef-face3
   '(
     (((class color) (background light)) (:background "mistyrose2"))
-    (((class color) (background dark)) (:background "mistyrose2")))
+    (((class color) (background dark)) (:foreground "black" :background "mistyrose2")))
   "Colorized ifdef face"
   :group 'faces
   :group 'dp-faces)
@@ -35,7 +35,7 @@
 (defface dp-cifdef-face4
   '(
     (((class color) (background light)) (:background "cornflowerblue"))
-    (((class color) (background dark)) (:background "cornflowerblue")))
+    (((class color) (background dark)) (:foreground "black" :background "cornflowerblue")))
   "Colorized ifdef face"
   :group 'faces
   :group 'dp-faces)
@@ -43,7 +43,7 @@
 (defface dp-cifdef-face5
   '(
     (((class color) (background light)) (:background "rosybrown"))
-    (((class color) (background dark)) (:background "rosybrown")))
+    (((class color) (background dark)) (:foreground "black" :background "rosybrown")))
   "Colorized ifdef face"
   :group 'faces
   :group 'dp-faces)
@@ -51,7 +51,7 @@
 (defface dp-cifdef-face6
   '(
     (((class color) (background light)) (:background "darkseagreen"))
-    (((class color) (background dark)) (:background "darkseagreen")))
+    (((class color) (background dark)) (:foreground "black" :background "darkseagreen")))
   "Colorized ifdef face"
   :group 'faces
   :group 'dp-faces)
@@ -64,7 +64,7 @@
 (defface dp-journal-selected-face
   '(
     (((class color) (background light)) (:background "paleturquoise1"))
-    (((class color) (background dark)) (:background "paleturquoise1")))
+    (((class color) (background dark)) (:foreground "black" :background "paleturquoise1")))
   "Face for selected topic in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
@@ -80,7 +80,8 @@
 (defface dp-journal-topic-face
   '(
     (((class color) (background light)) (:foreground "slateblue"))
-    (((class color) (background dark)) (:foreground "slateblue")))
+    (((class color) (background dark))
+     (:foreground "bookmark-menu-heading" :bold t)))
   "Face for topics in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
@@ -88,7 +89,7 @@
 (defface dp-journal-topic-stamp-face
   '(
     (((class color) (background light)) (:foreground "slateblue1"))
-    (((class color) (background light)) (:foreground "slateblue1")))
+    (((class color) (background light)) (:foreground "slateblue1" :bold t)))
   "Face for topics in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
@@ -202,7 +203,7 @@
 (defface dp-journal-medium-info-face
   '(
     (((class color) (background light)) (:foreground "darkgreen"))
-    (((class color) (background dark)) (:foreground "darkgreen")))
+    (((class color) (background dark)) (:foreground "darkgreen" :bold t)))
   "Face for medium priority info lines in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
@@ -304,7 +305,7 @@
 (defface dpj-view-grep-hit-face
   '(
     (((class color) (background light)) (:background "palegreen"))
-    (((class color) (background dark)) (:background "palegreen")))
+    (((class color) (background dark)) (:foreground "black" :background "palegreen")))
   "Face for grep hits in view grep hits buffer."
   :group 'faces
   :group 'dp-faces)
@@ -327,11 +328,10 @@
   :group 'faces
   :group 'dp-faces)
 
-;;  '((((class color)) :foreground "darkgreen" :bold t))
 (defface dp-journal-high-example-face
   '(
     (((class color) (background light)) (:foreground "darkgreen" :bold t))
-    (((class color) (background dark)) (:foreground "darkgreen" :bold t)))
+    (((class color) (background dark)) (:foreground "green" :bold t)))
     "Face for high priority example lines in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
@@ -347,7 +347,7 @@
 (defface dp-journal-alt-0-face
   '(
     (((class color) (background light)) (:background "thistle"))
-    (((class color) (background dark)) (:background "thistle")))
+    (((class color) (background dark)) (:foreground "black" :background "thistle")))
   "Face for even alternation lines."
   :group 'faces
   :group 'dp-faces)
@@ -355,7 +355,7 @@
 (defface dp-journal-alt-1-face
   '(
     (((class color) (background light)) (:background "lavender"))
-    (((class color) (background dark)) (:background "lavender")))
+    (((class color) (background dark)) (:foreground "black" :background "lavender")))
   "Face for odd alternation lines."
   :group 'faces
   :group 'dp-faces)
@@ -363,7 +363,7 @@
 (defface dp-highlight-point-before-face
   '(
     (((class color) (background light)) (:background "plum"))
-    (((class color) (background dark)) (:background "plum")))
+    (((class color) (background dark)) (:foreground "black" :background "plum")))
   "Face before point."
   :group 'faces
   :group 'dp-faces)
@@ -371,7 +371,7 @@
 (defface dp-highlight-point-after-face
   '(
     (((class color) (background light)) (:background "plum"))
-    (((class color) (background dark)) (:background "plum")))
+    (((class color) (background dark)) (:foreground "black" :background "plum")))
   "Face after point."
   :group 'faces
   :group 'dp-faces)
@@ -379,7 +379,7 @@
 (defface dp-highlight-point-face
   '(
     (((class color) (background light)) (:background "green"))
-    (((class color) (background dark)) (:background "green")))
+    (((class color) (background dark)) (:foreground "black" :background "green")))
   "Face for point."
   :group 'faces
   :group 'dp-faces)
@@ -387,7 +387,7 @@
 (defface dp-highlight-point-other-window-before-face
   '(
     (((class color) (background light)) (:background "DarkSeaGreen2" :bold t))
-    (((class color) (background dark)) (:background "DarkSeaGreen2" :bold t)))
+    (((class color) (background dark)) (:foreground "black" :background "DarkSeaGreen2" :bold t)))
   "Face before point."
   :group 'faces
   :group 'dp-faces)
@@ -395,7 +395,7 @@
 (defface dp-highlight-point-other-window-at-face
   '(
     (((class color) (background light)) (:background "SeaGreen1" :bold t))
-    (((class color) (background dark)) (:background "SeaGreen1" :bold t)))
+    (((class color) (background dark)) (:foreground "black" :background "SeaGreen1" :bold t)))
   "Face for point."
   :group 'faces
   :group 'dp-faces)
@@ -403,7 +403,7 @@
 (defface dp-highlight-point-other-window-after-face
   '(
     (((class color) (background light)) (:background "SeaGreen1" :bold t))
-    (((class color) (background dark)) (:background "SeaGreen1" :bold t)))
+    (((class color) (background dark)) (:foreground "black" :background "SeaGreen1" :bold t)))
   "Face after point."
   :group 'faces
   :group 'dp-faces)
