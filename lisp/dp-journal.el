@@ -258,6 +258,9 @@ This way we can get alternating colors on journal mode structure in the text:
    (cons "^[	 ]*!!!+\\( .*$\\|$\\)" ''dp-journal-high-problem-face)
    (cons "^[	 ]*!!\\( .*$\\|$\\)" ''dp-journal-medium-problem-face)
    (cons "^[	 ]*!\\( .*$\\|$\\)" ''dp-journal-low-problem-face)
+   ;; d'oh doh
+   (cons "^[	 ]*D'OH!*\\( .*$\\|$\\)" ''dp-journal-high-problem-face)
+   (cons "^[	 ]*d'oh!*\\( .*$\\|$\\)" ''dp-journal-medium-problem-face)
 
    (cons "^[	 ]*@@@+\\( .*$\\|$\\)" ''dp-journal-high-todo-face)
    (cons "^[	 ]*@@\\( .*$\\|$\\)" ''dp-journal-medium-todo-face)
@@ -271,7 +274,6 @@ This way we can get alternating colors on journal mode structure in the text:
 
    (cons "^[	 ]*\\$\\$\\$+\\( .*$\\|$\\)" ''dp-journal-high-info-face)
    (cons "^[	 ]*\\$\\$\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
-   (cons "^[	 ]*\\$\\( .*$\\|$\\)" ''dp-journal-low-info-face)
    (cons "^[	 ]*[Ff][Yy][Ii]:?\\( .*$\\|$\\)" ''dp-journal-medium-info-face)
    (cons "^[	 ]*>>>>+\\( .*$\\|$\\)" ''dp-journal-extra-emphasis-face)
    (cons "^[	 ]*>>>\\( .*$\\|$\\)" ''dp-journal-high-info-face)
@@ -283,11 +285,12 @@ This way we can get alternating colors on journal mode structure in the text:
    (cons "^[	 ]*\\*\\*\\*+\\( .*$\\|$\\)" ''dp-journal-high-attention-face)
    (cons "^[	 ]*\\*\\*\\( .*$\\|$\\)" ''dp-journal-medium-attention-face)
    (cons "^[	 ]*\\*\\( .*$\\|$\\)" ''dp-journal-low-attention-face)
+   (cons "^[	 ]*\\$\\( .*$\\|$\\)" ''dp-journal-high-example-face)
    ;; e.g. (fyi: I have a eg --> e.g. abbrev)
    (cons "^[	 ]*[Ee]\\.?[Gg][.:]?\\(\\s-+\\|:\\).*$"
 	 ''dp-journal-high-example-face)
    ;; n.b. (fyi: I have an abbrev for nb --> N.B.)
-   (cons "^[	 ]*[nN]\\.?[Bb]\\.?\\( .*$\\|$\\)" ''dp-journal-extra-emphasis-face)
+   (cons "^[	 ]*[nN]\\.?[Bb][.:]?\\( .*$\\|$\\)" ''dp-journal-extra-emphasis-face)
 
    ;; plain timestamps
    (cons (dpj-mk-topic-re "") ''dp-journal-timestamp-face)
