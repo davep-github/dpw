@@ -312,16 +312,18 @@ Always return the value from NEW-VAR-VALUE."
                        prefix-one-p number-strings-p
                        string-pre-proc)
   "Join LIST-O-STRINGS separated with SEP.  SEP defaults to a space.
+Actually, the list can contain anything that can be `format'd
+with %s, except for nil which is explicitly removed with `remq'.
 APPEND-ONE-P, if non-nil, says to append one SEP to the result.
 PREFIX-ONE-P same kind of thing with a prefix.
-append and pre are reversed for historical reasons.
+APPEND-ONE-P and PREFIX-ONE-P are reversed for historical reasons.
 NUMBER-STRINGS-P, if non-nil, says to prefix each string with an ordinal number.
 If \(numberp NUMBER-STRINGS-P\), then NUMBER-STRINGS-P is the first ordinal.
 If NUMBER-STRINGS-P is a string then convert to an int first.
 STRING-PRE-PROC if non-nil is a function that is applied to each string
 before it is joined. A useful example is `regexp-quote' when making a
 compound regexp to match a list of specific strings."
-  (let ((i (1- (cond 
+  (let ((i (1- (cond
             ((numberp number-strings-p) number-strings-p)
             ((stringp number-strings-p) (string-to-int number-strings-p))
             (t 0))))
@@ -339,7 +341,7 @@ compound regexp to match a list of specific strings."
                               (incf i)
                               ;; Must be last as it is our return value.
                               (format "[%s]%s<" i s))))
-             (delq nil list-o-strings) (or sep " "))
+             (remq nil list-o-strings) (or sep " "))
             (if (stringp append-one-p) 
                 append-one-p
               (if append-one-p sep "")))))
@@ -13863,7 +13865,8 @@ whitespace eradication.")
   ;;; When I've hosed things, this can be broken, so handle it.
   (condition-case bubba
       (progn
-	(if (not (dp-cleanup-whitespace-p))
+	(if (or (not (dp-cleanup-whitespace-p))
+		buffer-read-only)
 	    (progn
 	      (call-interactively 'next-line)
 	      (setq this-command 'next-line))
@@ -13884,6 +13887,7 @@ whitespace eradication.")
 		    (next-line 1)
 		    (setq this-command 'next-line))))))
     (error
+     (message "dp-next-line(): caught error: %s" bubba)
      ;; Fall back to normalcy :-(
      )))
 ;; Many "OK" errors, like end-of-buffer, should not remap the keys.
