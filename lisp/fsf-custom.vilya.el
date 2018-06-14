@@ -49,8 +49,6 @@
  '(ispell-lazy-highlight nil)
  '(kill-do-not-save-duplicates t)
  '(kill-ring-max 128)
- '(lazy-highlight-initial-delay 0.1)
- '(lazy-highlight-interval 0)
  '(magit-auto-revert-mode nil)
  '(magit-commit-arguments (quote ("--signoff")))
  '(magit-pull-arguments (quote ("--rebase")))
@@ -67,8 +65,7 @@
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
    (quote
-    (challenger-deep-theme abyss-theme nova-theme magit ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
- '(query-replace-lazy-highlight nil)
+    (zlc bash-completion edebug-x bar-cursor zoom-window zoom ztree markup-faces markdown-preview-mode markdown-mode+ markdown-mode flymd challenger-deep-theme abyss-theme nova-theme magit ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
  '(safe-local-variable-values
    (quote
     ((c-font-lock-extra-types "FILE" "bool" "language" "linebuffer" "fdesc" "node" "regexp")
