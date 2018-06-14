@@ -125,12 +125,24 @@ output_filter=just_cat
 verbose=0
 show_rev_p=
 
+Usage()
+{
+    echo "Usage: ${progname} [options...] <nth> files...
+Cat the <nth> previous *change* to files, not simply HEAD~<nth>."
+}
+
+if (($# == 0))
+then
+    Usage 1>&2
+    exit 1
+fi
 while (($# > 0))
 do
   case "${1}" in
     -o|--auto-name) auto_output_file=t;;
     -O|-c|--set-name|--cp) shift; output_file="${1}";;
     -r) show_rev_p=t;;
+    -h|--help) Usage; exit 0;;
     --) shift; break;;
     *) break;;
   esac
