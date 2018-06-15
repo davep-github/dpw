@@ -434,6 +434,8 @@
      dp-manual)
     (("ooo" "out of order")
      dp-manual)
+    (("compat" "compatible")
+     dp-manual)
     (("lgtm" "looks good to me")
      dp-manual)
     (("combo" "combination")
