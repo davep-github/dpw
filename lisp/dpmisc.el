@@ -6749,7 +6749,7 @@ Is this a good idea?"
       (buffer-substring (region-beginning) (region-end))
     nil))
 
-(defconst dp-simple-viewer-def-quit-keys '(?q ?Q ?x ?X ))
+(defconst dp-simple-viewer-def-quit-keys '([?q] [?Q] [?x] [?X]))
 
 (dp-deflocal dp-simple-viewer-exit-func nil
   "Function to call when the viewer exits.")
