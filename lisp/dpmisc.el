@@ -5339,8 +5339,14 @@ you've added enough info for set-auto-mode to figure it out.."
          dp-save-dp-disable-interprogram-cut-function))
 
 (defun dp-snuggle-frame-in-upper-right (&optional frame x y)
+  "Doesn't work when \"-eval'd\" from the command line.
+Usta, but not anymore."
   (interactive)
-  (set-frame-position frame (or x -1) (or y 0)))
+  ;; Messages must be different or the logger merges them so it seems
+  ;; that it only adds "done" so we never see the first message.
+  ;;;(message "+snuggling(x: %s, y: %s)..." x y)
+  (set-frame-position frame (or x -1) (or y 0))
+  ;;;(message "-snuggling(x: %s, y: %s)...done" x y))
 
 (defun dp-laptop-rc ()
   "Set up things for the laptop."
@@ -5367,7 +5373,8 @@ command-line argument to XEmacs, e.g. -eval \(dp-main-rc)."
   (dp-appt-initialize)
   ;; the -geometry arg doesn't work quite right under kde.
   (unless (bound-and-true-p dp-do-not-snuggle-frame-in-upper-right-p)
-    (dp-snuggle-frame-in-upper-right))
+    (dp-snuggle-frame-in-upper-right)
+    (message "snuggling...finished."))
   (message "dp-main-rc()...finished."))
 
 (defun dp-main-rc+2w (&optional height width)
@@ -5381,10 +5388,10 @@ command-line argument to XEmacs, e.g. -eval \(dp-main-rc)."
   (message "dp-main-rc+2w(), h: %s, w: %s...done" height width))
 
 (defun dp-main-rc+2w+server (&optional height width)
-  (message "dp-main-rc+2w()...")
+  (message "dp-main-rc+2w+server()...")
   (dp-main-rc+2w)
   (dp-start-editing-server)
-  (message "dp-main-rc+2w()...done"))
+  (message "dp-main-rc+2w+server()...done"))
 
 ;;;??? why did I add this here?  (dp-run-post-dpmacs-hooks))
 ;;; For one thing, it fixed the window config that was set in the hook var
