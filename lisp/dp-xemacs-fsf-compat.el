@@ -3,6 +3,7 @@
 ;;;
 ;;; Compatibility functions when in xemacs.
 ;;;
+(message "+loading dp-xemacs-fsf-compat.el...")
 
 (defalias 'cl-defun 'defun*)
 (defvar dp-all-compiler-warnings
@@ -269,3 +270,4 @@ No matter what. A DWIM-ish thing."
 
 ;; Want to set this font in elisp somehow
 ;; Font -*-courier-medium-r-*-*-*-140-*-*-*-*-iso8859-*
+(message "-loading dp-xemacs-fsf-compat.el...done")
