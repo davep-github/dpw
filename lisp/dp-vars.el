@@ -117,7 +117,8 @@ Username of email account"
 ;; this is unused when mew is used.
 (defcustom dp-fcc-alist '((nil ("to") "sent_mail"))
   "*Regexps for determining which folder gets the fcc."
-  :group 'dp-vars)
+  :group 'dp-vars
+  :type 'list)
 
 ;;
 ;; mostly unneeded with mew
@@ -386,15 +387,15 @@ Things are looking better with this (quite nice, readable and legible) font:
 ;;; These are just symbols.
 ;;; We define and get definitions of faces later.
 ;;; 
-(defvar dp-colorize-region-faces
-  '(dp-cifdef-face0 
-    dp-cifdef-face1 
+(defcustom dp-colorize-region-faces
+  '(dp-cifdef-face0
+    dp-cifdef-face1
     dp-cifdef-face3
-    dp-cifdef-face5 
-    dp-journal-function-args-face    
+    dp-cifdef-face5
+    dp-journal-function-args-face
     dp-journal-medium-example-face
     dp-journal-high-example-face
-    dp-journal-selected-face 
+    dp-journal-selected-face
     dp-journal-topic-face dp-journal-topic-stamp-face
     dp-journal-timestamp-face dp-journal-datestamp-face
     dpj-view-grep-hit-face
@@ -411,12 +412,19 @@ Things are looking better with this (quite nice, readable and legible) font:
     dp-journal-embedded-lisp-face dp-journal-alt-0-face
     dp-journal-alt-1-face
     dp-journal-unselected-face
-    dp-cifdef-face2 
-    dp-cifdef-face4 
+    dp-cifdef-face2
+    dp-cifdef-face4
     dp-cifdef-face6)
   "List of faces to use when highlighting regions.
 @todo Is there any way to extract these names from the defface data?
-Look at `face-list'.  grep for \"dp-.*\" ??")
+Look at `face-list'.  grep for \"dp-.*\" ??"
+  :group 'dp-faces
+  :type '(repeat face))
+
+(defcustom dp-faces-regexp "dpj?-.*face"
+  "Regexp to recognize my faces."
+  :group 'dp-faces
+  :type 'regexp)
 
 ;;;
 ;;; CEDET package activation control <:cedet:>
