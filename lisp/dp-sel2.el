@@ -812,7 +812,7 @@ we started.  The strings are in the same order that a series of
                          (lambda () 
                            (insert text)))
                         ;; additional ('add) quit-keys
-                        '(add ?v ?V)
+                        '(add [?v] [?V])
                         ;; q-key-command
                         (kb-lambda ()
                           ;; Preserve config from view buffer local var.
