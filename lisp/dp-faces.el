@@ -507,35 +507,5 @@ when changing windows.")
   "Default face list for dp-highlight-point for current line in `other-window'
 when finding next error.")
 
-;;;###autoload
-(defun dp-all-dp*-faces ()
-  (delq nil (mapcar (function
-                     (lambda (face-sym)
-                       (and (string-match "^dp[j]?-" (format "%s" face-sym))
-                            face-sym)))
-                    (face-list))))
-
-;;;###autoload
-(defun dp-edit-faces ()
-  "Alter face characteristics by editing a list of defined faces.
-Pops up a buffer containing a list of defined faces.
-
-WARNING: the changes you may perform with this function are no longer
-saved. The prefered way to modify faces is now to use `customize-face'. If you
-want to specify particular X font names for faces, please do so in your
-.XDefaults file.
-
-Editing commands:
-
-\\{edit-faces-mode-map}"
-  (interactive)
-  (let ((faces (dp-all-dp*-faces)))
-    (flet ((face-list (&rest rest)
-             faces)
-           (edit-faces-mode ()))
-      (edit-faces)
-      (set-buffer-modified-p nil)
-      (toggle-read-only 1))))
-
 (provide 'dp-faces)
 (message "dp-faces loaded...")
