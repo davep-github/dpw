@@ -231,6 +231,35 @@ No matter what. A DWIM-ish thing."
       (with-selected-window (next-window)
         (manual-entry topic arg)))))
 
+;;;###autoload
+(defun dp-all-dp*-faces ()
+  (delq nil (mapcar (function
+                     (lambda (face-sym)
+                       (and (string-match "^dp[j]?-" (format "%s" face-sym))
+                            face-sym)))
+                    (face-list))))
+
+(defun dp-edit-faces ()
+  "Alter face characteristics by editing a list of defined faces.
+Pops up a buffer containing a list of defined faces.
+
+WARNING: the changes you may perform with this function are no longer
+saved. The prefered way to modify faces is now to use `customize-face'. If you
+want to specify particular X font names for faces, please do so in your
+.XDefaults file.
+
+Editing commands:
+
+\\{edit-faces-mode-map}"
+  (interactive)
+  (let ((faces (dp-all-dp*-faces)))
+    (flet ((face-list (&rest rest)
+             faces)
+           (edit-faces-mode ()))
+      (edit-faces)
+      (set-buffer-modified-p nil)
+      (toggle-read-only 1))))
+
 ;;
 ;; Modified for Emacs (the XEmacs function failed in Emacs)
 ;; until I recalled that their man always uses another window.
