@@ -93,9 +93,9 @@
 ;; Old-sk00l loop... don't count on cl being loaded yet.
 (let ((l dp-init.el-load-path-dirs))
   (while l
-    (message "l>%s<" l)
+    ;; (message "l>%s<" l)
     (add-to-list 'load-path (car l))
-    (message "load-path>%s<" load-path)
+    ;; (message "load-path>%s<" load-path)
     (setq l (cdr l))))
 
 ;; load the bulk of the init file...
