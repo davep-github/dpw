@@ -1,5 +1,9 @@
 (message "dp-faces loading...")
 
+(defgroup dp-faces nil
+  "My personal customizable faces."
+  :group 'local)
+
 (defface dp-cifdef-face0
   '(
     (((class color) (background light)) (:background "paleturquoise3"))
