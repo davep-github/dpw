@@ -307,6 +307,12 @@
         <command>ubuntu-sucks dpxx</command>
       </action>
     </keybind>
+    <!-- Set pointer speed, until I learn how to make udev do it. -->
+    <keybind key="C-W-x">
+      <action name="Execute">
+        <command>ubuntu-sucks xset m 20/30 10</command>
+      </action>
+    </keybind>
     <!-- mvsik player. -->
     <keybind key="S-W-a">
       <action name="Execute">
@@ -325,6 +331,12 @@
     <keybind key="W-e">
       <action name="Execute">
         <command>wmctrl -a "/Emacs@"</command>
+      </action>
+    </keybind>
+    <!-- Create an Emacs window. -->
+    <keybind key="C-W-e">
+      <action name="Execute">
+        <command>ubuntu-sucks xem</command>
       </action>
     </keybind>
     <!-- Select and raise XEmacs editing server. -->
