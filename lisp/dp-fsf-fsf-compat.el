@@ -604,4 +604,10 @@ e.g. \(dp-plist-equal '(p1 v1 p2 v2) '(p2 v2 p1 v1)) is t"
 	     always (equal (lax-plist-get pl2 prop)
 			   val))))
 
+(defun dp-edit-faces (&optional regexp)
+  "Edit my faces, or faces specified by REGEXP."
+  (interactive (list (and current-prefix-arg
+                          (read-regexp "List faces matching regexp"))))
+  (list-faces-display (or regexp dp-faces-regexp)))
+
 (message "dp-fsf-fsf-compat loading...done")
