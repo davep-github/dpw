@@ -223,7 +223,7 @@
 (defface dp-journal-low-attention-face
   '(
     (((class color) (background light)) (:foreground "black" :bold t))
-    (((class color) (background dark)) (:foreground "black" :bold t)))
+    (((class color) (background dark)) (:foreground "grey99" :bold t)))
   "Face for low question lines in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
