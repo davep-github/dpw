@@ -117,7 +117,8 @@ pager=
 [ -n "${1-}" ] && {
     case "${1}" in
         [0-9]*) n="${1}"; shift;;
-        *);;
+	--) shift; break;;
+        *) break;;
     esac
 }
 
