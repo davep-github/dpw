@@ -13904,10 +13904,11 @@ whitespace eradication.")
      ;fires too often (global-set-key [kp-down] 'next-line)
      ;fires too often (global-set-key [down] 'next-line))))
 
-    
-      
-(global-set-key [kp-down] 'dp-next-line)   ; q.v. dp-cleanup-whitespace-p
-(global-set-key [down] 'dp-next-line)   ; q.v. dp-cleanup-whitespace-p
+(add-hook 'dp-post-dpmacs-hook
+	  (lambda ()
+	    (global-set-key [kp-down] 'dp-next-line) ; q.v. dp-cleanup-whitespace-p
+	    (global-set-key [down] 'dp-next-line) ; q.v. dp-cleanup-whitespace-p
+	    ))
 
 ;; WRT key mappings above.
 ;; Over-complexity has its downsides.  E.g. when things go south to the pear
