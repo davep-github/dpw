@@ -241,6 +241,7 @@
     "^The end of the .* buffer has been reached$"
     "^Marker has no buffer$"
     "^No mark set in this buffer$"
+    "^The mark is not set now, so there is no region$"
 
     ;; recover-file
     "^Auto-save file .* not current$"
