@@ -52,6 +52,7 @@ NOTAG
 RCS/
 CVS/
 .svn/
+# magit's names.  I think.  Some kind of git merge names.
 *_LOCAL_*
 *_REMOTE_*
 
@@ -94,6 +95,7 @@ etc/AMD/
 
 # Leftovers from p4merge.
 # We may want to add additional extensions.
+# Like all of the read only extensions in *macs.
 *.[ch].orig
 
 # kernel droppings
