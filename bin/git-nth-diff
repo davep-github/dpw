@@ -24,7 +24,7 @@ unset eexec_program
 Usage()
 {
     echo "Usage: ${progname} <nth> files...
-Run diff on files and their <nth> previous change, not simply HEAD~<nth>."
+Run diff on files and their <nth> previous *change*, not simply HEAD~<nth>."
 }
 
 if (($# == 0))
