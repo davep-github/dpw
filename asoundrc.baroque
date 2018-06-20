@@ -1,0 +1,256 @@
+pcm.!default {
+  type hw
+  # card2
+  card S2                       # Experimental... looking bad so far.
+  device 0
+}
+ctl.!default {
+  type hw
+  # card2
+  card S2                       # Experimental
+}
+
+pcm.ALC889_analog {
+  type hw
+  card 0
+  device 0
+}
+
+pcm.ALC889_digital {
+  type hw
+  card 0
+  device 1
+}
+
+pcm.usb_audio {
+  type hw
+  # card2
+  card S2                       # Experimental
+  # device 0                    # Experimental
+}
+
+ctl.usb_audio {
+  type hw
+  # card2
+  card S2                       # Experimental
+  # device 0                    # Experimental
+}
+
+pcm.def_audio {
+  type hw
+  card usb_audio
+}
+
+ctl.def_audio {
+  type hw
+  card usb_audio
+}
+
+pcm.def_plug {
+  type plug
+  slave.pcm def_audio
+}
+
+pcm.dmixplug {
+  type plug
+  slave.pcm "dmixer"
+}
+
+pcm.dmixer {
+  type dmix
+  ipc_key 1234
+  slave {
+    pcm "hw:2,0"
+    period_size 1024
+    buffer_size 4096
+    rate 44100
+  }
+}
+
+pcm.mono_L_plus_R_div_2 {
+  type route
+  slave.pcm "plughw:2,0";
+  slave.channels 2
+  ttable {
+    0.0 0.5
+    0.1 0.5
+    1.0 0.5
+    1.1 0.5
+  }
+}
+
+#
+# see: https://forums.gentoo.org/viewtopic-t-719273-start-0.htm
+#
+#
+# controls[]:
+# Lowpass-filter-cut-frequency: Lowpass-filter-cut-frequency
+#    flags: readable, writable, controllable
+#    Float. Range:             300 -            2000 
+#           Default:             725 
+#
+# Feeding-level       : Feeding-level
+#    flags: readable, writable, controllable
+#    Float. Range:               1 -              15 
+#           Default:             4.5 
+#
+# 1) 700 Hz, 4.5 dB - default.
+#   This setting is closest to the virtual speaker placement with azimuth 30
+#   degrees and the removal of about 3 meters, while listening by headphones.
+# 2) 700 Hz, 6 dB - most popular.
+#   This setting is close to the parameters of a Chu Moy's crossfeeder.
+# 3) 650 Hz, 9.5 dB - making the smallest changes in the original signal only for relaxing listening by headphones
+#   This setting is close to the parameters of a crossfeeder implemented in Jan Meier's CORDA amplifiers.
+#   controls [ 700 10 ]
+
+# Default 
+pcm.crossfeed_725_4_5 {
+  type plug
+  slave.pcm "ladspa_725_4_5"
+}
+
+pcm.ladspa_725_4_5 {
+  type ladspa
+  slave.pcm "plughw:2,0";
+  path "/usr/lib/ladspa";
+  plugins [
+    {
+      label bs2b
+      input {
+        controls [ 725 4.5 ]
+      }
+    }
+ ]
+}
+
+# "Relaxing"
+pcm.crossfeed_650_9_5 {
+  type plug
+  slave.pcm "ladspa_650_9_5"
+}
+
+pcm.ladspa_650_9_5 {
+  type ladspa
+  slave.pcm "plughw:2,0";
+  path "/usr/lib/ladspa";
+  plugins [
+    {
+      label bs2b
+      input {
+        controls [ 650 9.5 ]
+      }
+    }
+ ]
+}
+
+# Similar to Meier CORDA.
+pcm.crossfeed_700_10 {
+  type plug
+  slave.pcm "ladspa_700_10"
+}
+
+pcm.ladspa_700_10 {
+  type ladspa
+  slave.pcm "plughw:2,0";
+  path "/usr/lib/ladspa";
+  plugins [
+    {
+      label bs2b
+      input {
+        controls [ 700 10 ]
+      }
+    }
+ ]
+}
+
+# CMoy like
+pcm.crossfeed_700_6 {
+  type plug
+  slave.pcm "ladspa_700_6"
+}
+
+pcm.ladspa_700_6 {
+  type ladspa
+  slave.pcm "plughw:2,0";
+  path "/usr/lib/ladspa";
+  plugins [
+    {
+      label bs2b
+      input {
+        controls [ 700 6 ]
+      }
+    }
+ ]
+}
+
+# Some misc values...
+pcm.crossfeed_1200_4_5 {
+  type plug
+  slave.pcm "ladspa_1200_4_5"
+}
+
+pcm.ladspa_1200_4_5 {
+  type ladspa
+  slave.pcm "plughw:2,0";
+  path "/usr/lib/ladspa";
+  plugins [
+    {
+      label bs2b
+      input {
+        controls [ 1200 4.5 ]
+      }
+    }
+ ]
+}
+
+pcm.crossfeed_725_7_5 {
+  type plug
+  slave.pcm "ladspa_725_7_5"
+}
+
+pcm.ladspa_725_7_5 {
+  type ladspa
+  slave.pcm "plughw:2,0";
+  path "/usr/lib/ladspa";
+  plugins [
+    {
+      label bs2b
+      input {
+        controls [ 725 5 ]
+      }
+    }
+ ]
+}
+
+pcm.crossfeed_1200_7_5 {
+  type plug
+  slave.pcm "ladspa_1200_7_5"
+}
+
+pcm.ladspa_1200_7_5 {
+  type ladspa
+  slave.pcm "plughw:2,0";
+  path "/usr/lib/ladspa";
+  plugins [
+    {
+      label bs2b
+      input {
+        controls [ 1200 7.5 ]
+      }
+    }
+ ]
+}
+
+pcm.ladspa_dmix {
+  type ladspa
+  slave.pcm "dmixplug"
+  path "/usr/lib/ladspa";
+  plugins [
+    {
+      label bs2b
+      input {
+        controls [ 725 4.5 ]
+      }
+    }
+  ]
+}
