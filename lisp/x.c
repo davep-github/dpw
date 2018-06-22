@@ -5,6 +5,10 @@
  */
 
 #define MAX headroom;
+const char* s = "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj";
+
+const char* s2 = "FIXME:";
+// FIXME:
 
 // 0O1l([{}])
 float f = 0.0;
@@ -51,9 +55,10 @@ int      		*ixnay;
  */
 
 #include "x.h"
-
-/*xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwweeee
-/* aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa vvvvvvvvvvvvvvvvvvvvvvvveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrrrrrrrrrrrrrrrrrrrrrrrrryyyyyyyyyyyyyyyyyyyyyy loooooooooooooooonnnnnnnnnnnnnnnnnnnngggggggggggggggggggg lllllllllllllllllllliiiiiiiiiiiiiiiiiiiiiiiiinnnnnnnnnnnnnnnnnnnnneeeeeeeeeeeeeeeeee */
+int Xand;
+/*xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwweee */
+/* aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa vvvvvvvvvvvvvvvvvvvvvvvveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrrrrrrrrrrrrrrrrrrrrrrrrryyyyyyyyyyyyyyyyyyyyyy loooooooooooooooonnnnnnn
+nnnnnnnnnnnnngggggggggggggggggggg lllllllllllllllllllliiiiiiiiiiiiiiiiiiiiiiiiinnnnnnnnnnnnnnnnnnnnneeeeeeeeeeeeeeeeee */
 
 {	/* XXX - debug code:REMOVE 2001-09-23T13:06:42 */
 
@@ -64,7 +69,16 @@ typedef struct blah_s
     bool z = false;
 }
 blah_t;
-
+/****************************************************************************************************
+ * fixme:
+ * FIXMEx:
+ * WTF?
+ * and
+ * Xand
+ */
+and
+	or
+	not
 typedef enum anenum_e
 {
 	/*
@@ -251,10 +265,11 @@ funyun123(
     printf("HA!\n");
 }
 
+/* FIXME: */
 
 /*
 ************************************************************************
-*
+****************************************************************************************************
 * see x.h#an_underscored_func
 *
 ************************************************************************
