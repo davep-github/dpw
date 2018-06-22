@@ -11421,7 +11421,11 @@ An `undo-boundary' is done before the template is used."
   ;;(regexp-quote hack-format-string)
   ;; E.g. /* -*- mode: c++; c-file-style: "crl-c-style" -*- */
   (let* ((hack-format-string "%s-*- mode: %s;%s-*-%s")
-         (mode (or mode mode-name (error "No mode name!")))
+	 ;; Emacs: stolen from cc-mode's `c-update-modeline'
+	 (bare-mode-name (if (string-match "\\(^[^/]*\\)/" mode-name)
+			     (match-string 1 mode-name)
+			   mode-name))
+         (mode (or mode bare-mode-name (error "No mode name!")))
          ;; Regexp to check for an existing mode line.
          (hack-regexp (if any-mode-line-p
                           ;; Here we consider *any* hack with a "mode:" in to
@@ -13864,8 +13868,8 @@ it. Whitespace diffs are easy to ignore during reviews"
 (dp-deflocal dp-whitespace-cleanup-current-line-pred 
     'dp-whitespace-cleanup-current-line-default-pred
 "Should we clean up the current *line*?
-Predicate used to tell us whether or not the current line qualifies for
-whitespace eradication.")
+Predicate is used to tell us whether or not the current line
+qualifies for whitespace eradication.")
 
 (defun dp-next-line (count &optional cleanup-current-line-pred)
   "Add trailing white space removal functionality."
