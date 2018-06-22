@@ -363,25 +363,29 @@ For C/C++ source code.")
 (defun dp-mk-c*-debug-like-patterns ()
   (dp-mk-debug-like-patterns dp-c*-debug-like-patterns))
 
-(dp-deflocal dp-line-too-long-error-column 80
-  "Become enraged (new face) when going beyond this column.")
-
 (dp-deflocal dp-line-too-long-warning-column 77
-  "Begin complaining (new face) when going beyond this column.
+  "*Become annoyed (new face) when going beyond this column.
 For now this must be < the error col.")
+
+(dp-deflocal dp-line-too-long-error-column 80
+  "*Become enraged (new face) when going beyond this column.")
 
 (defface dp-default-line-too-long-error-face
   '(
-    (((class color) (background light)) (:background "gainsboro"))
-    (((class color) (background dark)) (:foreground "green")))
+    (((class color) (background light))
+     (:background "blue" :foreground "white"))
+    (((class color) (background dark))
+     (:background "gainsboro" :foreground "black")))
   "Face for buffer lines which have gotten too long."
   :group 'faces
   :group 'dp-faces)
 
 (defface dp-default-line-too-long-warning-face
   '(
-    (((class color) (background light)) (:background "gainsboro"))
-    (((class color) (background dark)) (:foreground "lightgreen")))
+    (((class color) (background light))
+     (:background "lightgrey" :bold nil))
+    (((class color) (background dark))
+     (:background "lightgrey" :bold nil)))
   "Face for buffer lines which are getting too long."
   :group 'faces
   :group 'dp-faces)
@@ -393,34 +397,24 @@ For now this must be < the error col.")
                              dp-line-too-long-warning-column
                              1)))
     ;;               +-- 1 -------+  +-- 2 ---------+  +- 3 +
-    (list
-     (list (format "\\(^.\\{%d\\}\\)\\(.\\{%d,%d\\}\\)\\(.*\\)$"
-	     dp-line-too-long-warning-column
-	     0
-	     warning-zone-len)
-          (list 2 'dp-default-line-too-long-warning-face 'append)
-          (list 3 'dp-default-line-too-long-error-face 'append))))
+(defvar dp-font-lock-line-too-long-error-element
+  `(
+    ,(format
+      "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
+      tab-width
+      (1- tab-width)
+      (/ dp-line-too-long-error-column tab-width)
+      (let ((rem (% dp-line-too-long-error-column tab-width)))
+	(if (zerop rem)
+	    ""
+	  (format ".\\{%d\\}" rem))))
+    '(
+     2                                  ; line tail
+     'dp-default-line-too-long-error-face
+     'append))
   "Font-lock component to highlight lines that are too long.
-NB This is broken when real tabs are used, since they count as one char as
-far the regexp is concerned.")
-
-(defvar dp-font-lock-line-too-long-error-element-tabs
-  (list
-   (format
-    "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
-    tab-width
-    (1- tab-width)
-    (/ dp-line-too-long-error-column tab-width)
-    (let ((rem (% dp-line-too-long-error-column tab-width)))
-      (if (zerop rem)
-          ""
-        (format ".\\{%d\\}" rem))))
-   (list
-    2                                  ; line tail
-    'dp-default-line-too-long-error-face
-   'append))
-  "As above, but works with tabs.
-@todo XXX Seems to work with spaces, too.  But make \"sure, sure, sure\".")
+Regexp and font-lock-keywords element.
+Works with tabs.")
 
 (defvar dp-font-lock-line-too-long-warning-element-tabs
   (list
@@ -439,8 +433,8 @@ far the regexp is concerned.")
    'append))
   "As above, but handles the warning zone.")
 
-(defvar dp-font-lock-line-too-long-error-element
-  dp-font-lock-line-too-long-error-element-tabs
+(defvar dp-font-lock-line-too-long-error-default-element
+  dp-font-lock-line-too-long-error-element
   "NB: Add mechanism for selecting (tabs or no), or make one element that
   works for both.")
 
@@ -543,8 +537,8 @@ state and then applies changes. This is good... sometimes."
 This function uses a mechanism which restores a variable to its original
 state and then applies changes. This is good... sometimes."
   ;; Icky... the lambda uses variables from the current environment.
-  (dp-listify-thing list-o-modes)
-  (dp-listify-thing list-o-keys)
+  (setq list-o-modes (dp-listify-thing list-o-modes)
+	lost-o-keys (dp-listify-thing list-o-keys))
   (loop for mode in list-o-modes do
     (progn
       (when buffer-local-p
@@ -580,18 +574,20 @@ original state and then applies changes. This is good... sometimes."
     (loop for v in font-lock-var-syms do
       (make-variable-buffer-local v)))
   (dp-add-font-patterns-old font-lock-var-syms
-                            dp-font-lock-line-too-long-error-element))
+                            dp-font-lock-line-too-long-error-default-element))
 
 (defun* dp-add-line-too-long-font (font-lock-var-syms
                                    &key (buffer-local-p t))
   "WARNING: This function uses `dp-add-font-patterns' which resets the fonts.
-`dp-add-font-patterns' uses a mechanism which restores a variable to its
-original state and then applies changes. This is good... sometimes."
+This makes adding the element idempotent.
+`dp-add-font-patterns' uses a mechanism which restores a variable
+to its original state (when it is called for the first time) and
+then applies changes. This is good... sometimes."
   (interactive "Smode's font lock var? ")
   (dp-add-font-patterns font-lock-var-syms
-                        buffer-local-p
-                        (list dp-font-lock-line-too-long-error-element
-                              dp-font-lock-line-too-long-warning-element)))
+			buffer-local-p
+			(list dp-font-lock-line-too-long-error-default-element
+			      dp-font-lock-line-too-long-warning-element)))
 
 (defun dp-muck-with-fontification ()
   ;; Reset things to original state.
@@ -665,6 +661,7 @@ c-hanging-braces-alist based upon these values.")
 (defun* dp-c-like-add-extra-faces (list-o-modes
                                    &key
                                    (buffer-local-p nil)
+				   (set-em-p t)
                                    (use-trailing-ws-font-p
                                     dp-trailing-whitespace-use-trailing-ws-font-p)
                                    (use-too-many-spaces-font-p
@@ -688,7 +685,7 @@ c-hanging-braces-alist based upon these values.")
                 (when use-trailing-ws-font-p
                   dp-trailing-whitespace-font-lock-element)
                 (when use-too-long-face-p
-                  dp-font-lock-line-too-long-error-element)
+                  dp-font-lock-line-too-long-error-default-element)
                 (when use-too-long-warning-face-p
                   dp-font-lock-line-too-long-warning-element)
                 (when use-space-before-tab-font-p
@@ -708,15 +705,20 @@ c-hanging-braces-alist based upon these values.")
     ;; makes reinitializing cleaner.
     (dp-add-font-patterns list-o-modes
                           buffer-local-p
-                          extras)))
+                          extras))
+  (when set-em-p
+    (dp-set-font-lock-defaults 'c-mode '(dp-c-mode-l t))))
 
+;; @todo XXX Make this a proper variable.
+(dp-deflocal dp-use-c++-add-extra-faces-p t)
 (defun* dp-c++-add-extra-faces (&key
-                              (buffer-local-p nil)
-                              (use-trailing-ws-font-p
-                               dp-trailing-whitespace-use-trailing-ws-font-p)
-                              (dp-use-too-long-face-p
-                               (dp-val-if-boundp
-                                dp-global-c*-use-too-long-face)))
+				(buffer-local-p nil)
+				(set-em-p t)
+				(use-trailing-ws-font-p
+				 dp-trailing-whitespace-use-trailing-ws-font-p)
+				(dp-use-too-long-face-p
+				 (dp-val-if-boundp
+				  dp-global-c*-use-too-long-face)))
   (dmessage "in dp-c++-add-extra-faces")
   (when (bound-and-true-p dp-use-c++-add-extra-faces-p)
     (dp-c-like-add-extra-faces
@@ -724,9 +726,12 @@ c-hanging-braces-alist based upon these values.")
        c++-font-lock-keywords-2
        c++-font-lock-keywords-1)
      :buffer-local-p buffer-local-p
+     :set-em-p set-em-p
      :use-trailing-ws-font-p use-trailing-ws-font-p
      :use-too-long-face-p dp-use-too-long-face-p)))
 
+;; @todo XXX Make this a proper variable.
+(dp-deflocal dp-use-c-add-extra-faces-p t)
 (defun* dp-c-add-extra-faces (&key
                               (buffer-local-p nil)
                               (use-trailing-ws-font-p
@@ -1713,6 +1718,9 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
    '([(control ?o)] dp-one-window++
      [?o] compilation-display-error
      ))) 
+
+;;; Wishful thinking.
+;;;(add-hook 'grep-setup-hook 'dp-grep-setup-hook)
 
 (when (dp-optionally-require 'igrep)
   (defadvice igrep (after dp-igrep activate)
