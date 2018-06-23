@@ -706,7 +706,7 @@ c-hanging-braces-alist based upon these values.")
     (dp-add-font-patterns list-o-modes
                           buffer-local-p
                           extras))
-  (when set-em-p
+  (when (and nil set-em-p)
     (dp-set-font-lock-defaults 'c-mode '(dp-c-mode-l t))))
 
 ;; @todo XXX Make this a proper variable.
