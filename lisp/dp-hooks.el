@@ -417,8 +417,8 @@ Regexp and font-lock-keywords element.
 Works with tabs.")
 
 (defvar dp-font-lock-line-too-long-warning-element-tabs
-  (list
-   (format
+  `(
+   ,(format
     "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
     tab-width
     (1- tab-width)
@@ -427,10 +427,9 @@ Works with tabs.")
       (if (zerop rem)
           ""
         (format ".\\{%d\\}" rem))))
-   (list
-    2                                  ; line tail
-    'dp-default-line-too-long-warning-face
-   'append))
+   2					; line tail
+   'dp-default-line-too-long-warning-face
+   'append)
   "As above, but handles the warning zone.")
 
 (defvar dp-font-lock-line-too-long-error-default-element
@@ -533,7 +532,7 @@ state and then applies changes. This is good... sometimes."
                                          ))))))
 
 (defun dp-add-font-patterns (list-o-modes buffer-local-p list-o-keys)
-  "Add the keyword patterns in LIST-O-KEYS to each mode in LIST-O-MODES.
+  "Add the font-lock keywords in LIST-O-KEYS to each mode in LIST-O-MODES.
 This function uses a mechanism which restores a variable to its original
 state and then applies changes. This is good... sometimes."
   ;; Icky... the lambda uses variables from the current environment.
@@ -677,37 +676,37 @@ c-hanging-braces-alist based upon these values.")
   (interactive)
   (dmessage "in dp-c-like-add-extra-faces")
   (dmessage "in dp-c-like-add-extra-faces: dp-twsp: %s, utlf: %s, utlwf: %s"
-            dp-trailing-whitespace-use-trailing-ws-font-p
-            use-too-long-face-p use-too-long-warning-face-p)
+	    dp-trailing-whitespace-use-trailing-ws-font-p
+	    use-too-long-face-p use-too-long-warning-face-p)
   (let ((extras
-         (delq nil
-               (list
-                (when use-trailing-ws-font-p
-                  dp-trailing-whitespace-font-lock-element)
-                (when use-too-long-face-p
-                  dp-font-lock-line-too-long-error-default-element)
-                (when use-too-long-warning-face-p
-                  dp-font-lock-line-too-long-warning-element)
-                (when use-space-before-tab-font-p
-                  dp-space-before-tab-font-lock-element)
-                (when use-too-many-spaces-font-p
-                  dp-too-many-spaces-in-a-row-font-lock-element)
-                (cons
-                 (dp-mk-font-lock-type-re dp-c-font-lock-extra-types)
-                 font-lock-type-face)
-                (cons (dp-mk-c*-debug-like-patterns)
-                      ;; ??? Which is better; just the match or the whole
-                      ;;     line?
-                      (list 1 'dp-debug-like-face t))))))
+	 (delq nil
+	       (list
+		(when use-trailing-ws-font-p
+		  dp-trailing-whitespace-font-lock-element)
+		(when use-too-long-face-p
+		  dp-font-lock-line-too-long-error-default-element)
+		(when use-too-long-warning-face-p
+		  dp-font-lock-line-too-long-warning-element)
+		(when use-space-before-tab-font-p
+		  dp-space-before-tab-font-lock-element)
+		(when use-too-many-spaces-font-p
+		  dp-too-many-spaces-in-a-row-font-lock-element)
+		(cons
+		 (dp-mk-font-lock-type-re dp-c-font-lock-extra-types)
+		 font-lock-type-face)
+		(cons (dp-mk-c*-debug-like-patterns)
+		      ;; ??? Which is better; just the match or the whole
+		      ;;     line?
+		      (list 1 'dp-debug-like-face t))))))
     ;;
     ;; Add some extra types to the xemacs gaudy setting.  Rebuild the
     ;; list each time rather than adding to the existing value.  This
     ;; makes reinitializing cleaner.
     (dp-add-font-patterns list-o-modes
-                          buffer-local-p
-                          extras))
-  (when (and nil set-em-p)
-    (dp-set-font-lock-defaults 'c-mode '(dp-c-mode-l t))))
+			  buffer-local-p
+			  extras)
+    (when (and nil set-em-p)
+      (dp-set-font-lock-defaults 'c-mode '(extra t)))))
 
 ;; @todo XXX Make this a proper variable.
 (dp-deflocal dp-use-c++-add-extra-faces-p t)
