@@ -268,7 +268,7 @@ This way we can get alternating colors on journal mode structure in the text:
 
    (cons "^[	 ]*\\?\\?\\?+\\( .*$\\|$\\)" ''dp-journal-high-question-face)
    (cons "^[	 ]*\\?\\?\\( .*$\\|$\\)" ''dp-journal-medium-question-face)
-   (cons "^[	 ]*\\?\\( .*$\\|$\\)" '''dp-journal-low-question-face)
+   (cons "^[	 ]*\\?\\( .*$\\|$\\)" ''dp-journal-low-question-face)
    ;; what was I doing here???
    ;; (cons "\\?+[^?].*\\?\\?*" (list 0 ''dp-journal-low-question-face ''keep))
 
@@ -2801,6 +2801,7 @@ RETURN buffer that was visiting the journal, or nil."
 ;;;###autoload
 (defun dp-journal2 ()
   (interactive)
+  (dp-journal-start-font-locking)
   (dp-journal 'other-win-p))
 
 ;;;###autoload
@@ -2906,6 +2907,13 @@ This kind of allows us to use a journal file with a non-standard name."
   (dp-set-font-lock-defaults 'dp-journal-mode
 			     '(dp-journal-mode-font-lock-keywords t)))
 
+(defun dp-journal-start-font-locking ()
+    (dp-journal-setup-font-lock)
+    (font-lock-add-keywords
+     nil
+     (list dp-font-lock-line-too-long-error-element-tabs)
+     t))
+
 (add-hook 'dp-journal-mode-pre-hook 'dp-journal-mode-pre-hook)
 
 ;;; real dp-journal-mode function defined here:
@@ -2934,7 +2942,7 @@ exist to move from one topic record to the next or previous.
   ;; am not using it correctly, esp in relation to filladapt.
   (auto-fill-mode -1)
 
-  (dp-journal-setup-font-lock)
+  (dp-journal-start-font-locking)
   ;;
   ;; this make line up/down movement commands skip over invisible
   ;; text.  It is said to slow things down.  if it is too slow, we can
