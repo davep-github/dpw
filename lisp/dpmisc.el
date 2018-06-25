@@ -3320,7 +3320,8 @@ lisp-interaction mode."
 (defvar dp-current-elisp-devel-dirname nil
   "Last elisp devel directory name visited.")
 
-(defconst dp-default-elisp-devel-file "elisp-devel.el"
+(defconst dp-default-elisp-devel-file
+  (format "elisp-devel.%s.el" (dp-short-hostname))
   "*File in which to do elisp development and noodling.")
 
 (defconst dp-default-elisp-devel-dir (expand-file-name "devel" dp-lisp-dir)
