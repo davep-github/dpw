@@ -42,6 +42,7 @@
         brva = branch -a -v
         current-branch = rev-parse --abbrev-ref=strict HEAD
         cbr = rev-parse --abbrev-ref=strict HEAD
+        cbrr = symbolic-ref HEAD
         cob = checkout -b
         newbr = checkout -b
         newbranch = checkout -b
@@ -114,7 +115,7 @@
         dno = diff --name-only
         # (currently, as of git 1.5.6.1) non-git alias are executed from the
         # top-level dir of a repo
-        # The final dash is so that arguments start with $1, not with $0. 
+        # The final dash is so that arguments start with $1, not with $0.
         diffnp = !sh -c 'git --no-pager diff "$@"'
         dnp = !sh -c 'git --no-pager diff "$@"'
         diffcat = !sh -c 'git --no-pager diff "$@"'
@@ -189,7 +190,7 @@
         dtsd = difftool --tool=s-diff
         sdiff = difftool --tool=s-diff
 
-# merge tools        
+# merge tools
         p4m = mergetool --tool=p4merge
         mtp4m = mergetool --tool=p4merge
         p4merge = mergetool --tool=p4merge
