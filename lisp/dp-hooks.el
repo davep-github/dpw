@@ -371,25 +371,23 @@ For C/C++ source code.")
 For now this must be < the error col.")
 
 (defface dp-default-line-too-long-error-face
-  '((((class color)
-      (background light))
-     (:background "gainsboro")))
-;;     (:background "lightgrey" :bold nil)))
+  '(
+    (((class color) (background light)) (:background "gainsboro"))
+    (((class color) (background dark)) (:foreground "green")))
   "Face for buffer lines which have gotten too long."
   :group 'faces
   :group 'dp-faces)
 
 (defface dp-default-line-too-long-warning-face
-  '((((class color)
-      (background light))
-;;     (:background "aliceblue")))
-     (:background "lightgrey" :bold nil)))
+  '(
+    (((class color) (background light)) (:background "gainsboro"))
+    (((class color) (background dark)) (:foreground "lightgreen")))
   "Face for buffer lines which are getting too long."
   :group 'faces
   :group 'dp-faces)
 
 ;; !<@todo XXX make this handle warning-col >= error-col. (if < 0) 0
-(defvar dp-font-lock-line-too-long-element-no-tabs
+(defvar dp-font-lock-line-too-long-error-element-no-tabs
   ;; +1 'cause column number starts at zero.
   (let ((warning-zone-len (- dp-line-too-long-error-column
                              dp-line-too-long-warning-column
@@ -406,7 +404,7 @@ For now this must be < the error col.")
 NB This is broken when real tabs are used, since they count as one char as
 far the regexp is concerned.")
 
-(defvar dp-font-lock-line-too-long-error-element-for-tabs
+(defvar dp-font-lock-line-too-long-error-element-tabs
   (list
    (format
     "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
@@ -421,9 +419,10 @@ far the regexp is concerned.")
     2                                  ; line tail
     'dp-default-line-too-long-error-face
    'append))
-  "As above, but works with tabs.")
+  "As above, but works with tabs.
+@todo XXX Seems to work with spaces, too.  But make \"sure, sure, sure\".")
 
-(defvar dp-font-lock-line-too-long-warning-element-for-tabs
+(defvar dp-font-lock-line-too-long-warning-element-tabs
   (list
    (format
     "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
@@ -441,12 +440,12 @@ far the regexp is concerned.")
   "As above, but handles the warning zone.")
 
 (defvar dp-font-lock-line-too-long-error-element
-  dp-font-lock-line-too-long-error-element-for-tabs
+  dp-font-lock-line-too-long-error-element-tabs
   "NB: Add mechanism for selecting (tabs or no), or make one element that
   works for both.")
 
 (defvar dp-font-lock-line-too-long-warning-element
-  dp-font-lock-line-too-long-warning-element-for-tabs
+  dp-font-lock-line-too-long-warning-element-tabs
   "NB: Add mechanism for selecting, or make one element that works for both.
 The tabs version will work w/o tabs but I need to figure out how to handle
 the warning zone logic (or bag it.) Using brute force.")
