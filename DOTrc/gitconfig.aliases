@@ -193,6 +193,7 @@
 # merge tools
         p4m = mergetool --tool=p4merge
         mtp4m = mergetool --tool=p4merge
+        mtp4 = mergetool --tool=p4merge
         p4merge = mergetool --tool=p4merge
         mtp4merge = mergetool --tool=p4merge
         mtmeld = mergetool --tool=meld
