@@ -28,7 +28,7 @@ int func(int a,
 	 * dp-move-too-long-comment-above-current-line */
   byte * bp;
   if (a) {
-    func(++a, b/2, c);
+    func(++a, b/2, c);        
   } else {
       bubba_is_a_good_man();
 }
@@ -80,7 +80,7 @@ typedef enum anenum_e
 
 	while (1) {
 		if eff(u) {
-				blah,
+				blah,    
 /* eveel trailing whaatspace */
 			  
 	  
