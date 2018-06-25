@@ -5348,7 +5348,8 @@ Usta, but not anymore."
   ;; that it only adds "done" so we never see the first message.
   ;;;(message "+snuggling(x: %s, y: %s)..." x y)
   (set-frame-position frame (or x -1) (or y 0))
-  ;;;(message "-snuggling(x: %s, y: %s)...done" x y))
+  ;;;(message "-snuggling(x: %s, y: %s)...done" x y)
+  )
 
 (defun dp-laptop-rc ()
   "Set up things for the laptop."
