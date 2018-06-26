@@ -391,7 +391,7 @@ For now this must be < the error col.")
   :group 'dp-faces)
 
 ;; !<@todo XXX make this handle warning-col >= error-col. (if < 0) 0
-(defvar dp-font-lock-line-too-long-error-element-no-tabs
+(defvar dp-font-lock-line-too-long-error-element
   ;; +1 'cause column number starts at zero.
   (let ((warning-zone-len (- dp-line-too-long-error-column
                              dp-line-too-long-warning-column
