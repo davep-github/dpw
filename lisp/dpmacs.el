@@ -837,6 +837,8 @@ stuff in the current *Python* session."
 (defalias 'cl-pp 'cl-prettyprint)
 (defalias 'cl-pe 'cl-prettyexpand)
 (defalias 'cl-px 'cl-prettyexpand)
+(defalias 'cmz 'customize)
+(defalias 'cmzv 'customize-variable)
 
 (when (and dp-use-ffap-p
            (dp-optionally-require 'ffap))
