@@ -56,6 +56,7 @@
       (ct-green       "#5fffaf")
       (green-d        "#62d196")
       (ct-green-d     "#5fd787")
+      (very-dark-blue "#000042")
       )
 
 
@@ -214,7 +215,8 @@
                                (,ct (:background ,ct-blue-d :foreground ,ct-white))))
      `(match                  ((,c (:foreground ,green :background ,black :bold ,bold))
                                (,ct (:foreground ,ct-green :background ,ct-black :bold ,bold))))
-     `(trailing-whitespace    ((t (:background "navy" :strike-through t))))
+     `(trailing-whitespace    ((,c (:background ,very-dark-blue :strike-through t))
+                               (,ct (:background ,ct-red-d))))
      `(vertical-border        ((,c (:foreground ,vertical-bar :background ,vertical-bar))
                                (,ct (:foreground ,ct-vertical-bar :background ,ct-vertical-bar))))
      `(show-paren-match       ((,c (:background ,blue-d :foreground ,black))
