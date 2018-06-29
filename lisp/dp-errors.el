@@ -186,6 +186,7 @@
     "^Don’t kill this buffer.  Instead cancel using C-c C-k$"
     "^Abort$"				; A bit short, but...
     "^Nothing staged (or unstaged)$"
+    "^\\S-+ isn’t bound to any action$"
 
     ;; copied from emacs
     "^No possible abbreviation preceding point$"
