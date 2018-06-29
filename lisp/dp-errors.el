@@ -185,6 +185,7 @@
     "^There is no thing at point that could be deleted$"
     "^Don’t kill this buffer.  Instead cancel using C-c C-k$"
     "^Abort$"				; A bit short, but...
+    "^\\S-+ isn’t bound to any action$"
 
     ;; copied from emacs
     "^No possible abbreviation preceding point$"
