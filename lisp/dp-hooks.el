@@ -523,7 +523,7 @@ state and then applies changes. This is good... sometimes."
   (loop for mode in list-o-modes do
     (dp-save-orig-n-set-new mode
                             (function (lambda (save-sym)
-					(append 
+					(append
                                          (symbol-value save-sym)
                                          list-o-keys
                                          ))))))
