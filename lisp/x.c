@@ -4,9 +4,14 @@
  * llkjslkjd
  */
 
+#error blah
 #define MAX headroom;
 const char* s = "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj";
 
+// *****************************************************************************|
+// **********************************************************************************|
+
+// ***********************************************************************************
 const char* s2 = "FIXME:";
 // FIXME:
 
@@ -22,6 +27,8 @@ typedef zuzz xxx;
  * blah.
  */
 
+/* This is a line that is a comment, but has a line that is too long so that we can test our line too long stuff.
+ * */
 int func(int a,
          int b,
          char *c)
@@ -111,7 +118,9 @@ typedef enum anenum_e
   /* comment */
   /* comment */
 
-
+  a_call_to_a_function_that_has_a_name_that_is_farrr_toooo_loooooong_so_we_can_see_how_the_line_too_long_works(a);
+  a_call(to_a_function_with_a_parameter_that__has_a_name_that_is_farrr_toooo_loooooong_so_we_can_see_how_the_line_too_long_works(a);
+)
 }
 anenum_t;
 
