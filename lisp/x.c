@@ -12,7 +12,7 @@ const char* s = "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
 // **********************************************************************************|
 // We can see the effects on | very easily so we'll use them: ||||||||||||||||||||
 // How about / vs oblique |? Do they look to similar?         ////////////////////
-// Looks okish. but the split | helps.
+// Looks okish. and the split | helps.
 // ***********************************************************************************
 const char* s2 = "FIXME:";
 // FIXME:
@@ -28,7 +28,7 @@ typedef zuzz xxx;
  * this file blah blah
  * blah.
  */
-//									   xxxxxxxxx
+//								             xxxxxxxxx
 /* This is a line that is a comment, but has a line that is too long so that we can test our line too long stuff.
  * */
 int func(int a,
