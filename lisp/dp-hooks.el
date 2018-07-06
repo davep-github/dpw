@@ -370,71 +370,72 @@ For now this must be < the error col.")
 (dp-deflocal dp-line-too-long-error-column 80
   "*Become enraged (new face) when going beyond this column.")
 
-(defface dp-default-line-too-long-error-face
-  '(
-    (((class color) (background light))
-     (:background "blue" :foreground "white"))
-    (((class color) (background dark))
-     (:background "gainsboro" :foreground "black")))
-  "Face for buffer lines which have gotten too long."
-  :group 'faces
-  :group 'dp-faces)
-
 (defface dp-default-line-too-long-warning-face
   '(
-    (((class color) (background light))
-     (:background "lightgrey" :bold nil))
-    (((class color) (background dark))
-     (:background "lightgrey" :bold nil)))
-  "Face for buffer lines which are getting too long."
+  (((class color) (background light))
+   (:background "blue" :foreground "white"))
+  (t (:inherit warning :background)))
+  "Face for buffer lines which are setting too long."
   :group 'faces
   :group 'dp-faces)
 
-(defvar dp-font-lock-line-too-long-error-element
-  `(
-    ,(format
-      "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
-      tab-width
-      (1- tab-width)
-      (/ dp-line-too-long-error-column tab-width)
-      (let ((rem (% dp-line-too-long-error-column tab-width)))
-	(if (zerop rem)
-	    ""
-	  (format ".\\{%d\\}" rem))))
-    (list
-     2                                  ; line tail
-     'dp-default-line-too-long-error-face
-     'append))
-  "Font-lock component to highlight lines that are too long.
+(defface dp-default-line-too-long-error-face
+  '(
+  (((class color) (background light))
+   (:inherit dp-default-line-too-long-warning-face
+	     :slant oblique :weight bold))
+  (t (:inherit dp-default-line-too-long-warning-face
+	       :slant oblique :weight bold)))
+  "Face for buffer lines which are too long."
+  :group 'faces
+  :group 'dp-faces)
+
+(progn
+  (defvar dp-font-lock-line-too-long-error-element
+    `(
+      ,(format
+	"^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
+	tab-width
+	(1- tab-width)
+	(/ dp-line-too-long-error-column tab-width)
+	(let ((rem (% dp-line-too-long-error-column tab-width)))
+	  (if (zerop rem)
+	      ""
+	    (format ".\\{%d\\}" rem))))
+      2					; line tail
+      'dp-default-line-too-long-error-face
+      prepend)
+    "Font-lock component to highlight lines that are too long.
 Regexp and font-lock-keywords element.
 Works with tabs.")
 
-(defvar dp-font-lock-line-too-long-warning-element-tabs
-  `(
-   ,(format
-    "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
-    tab-width
-    (1- tab-width)
-    (/ dp-line-too-long-warning-column tab-width)
-    (let ((rem (% dp-line-too-long-warning-column tab-width)))
-      (if (zerop rem)
-          ""
-        (format ".\\{%d\\}" rem))))
-   2					; line tail
-   'dp-default-line-too-long-warning-face
-   'append)
-  "As above, but handles the warning zone.")
+  (defvar dp-font-lock-line-too-long-warning-element-tabs
+    `(
+      ,(format
+	"^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
+	tab-width
+	(1- tab-width)
+	(/ dp-line-too-long-warning-column tab-width)
+	(let ((rem (% dp-line-too-long-warning-column tab-width)))
+	  (if (zerop rem)
+	      ""
+	    (format ".\\{%d\\}" rem))))
+      2					; line tail
+      'dp-default-line-too-long-warning-face
+      prepend)
+    "As above, but handles the warning zone.")
 
-(defvar dp-font-lock-line-too-long-error-default-element
-  dp-font-lock-line-too-long-error-element
-  "NB: Add mechanism for selecting (tabs or no), or make one element that
+  (defvar dp-font-lock-line-too-long-error-default-element
+    dp-font-lock-line-too-long-error-element
+    "NB: Add mechanism for selecting (tabs or no), or make one element that
   works for both.")
 
-(defvar dp-font-lock-line-too-long-warning-element
-  dp-font-lock-line-too-long-warning-element-tabs
-  "NB: Add mechanism for selecting, or make one element that works for both.
+  (defvar dp-font-lock-line-too-long-warning-element
+    dp-font-lock-line-too-long-warning-element-tabs
+    "NB: Add mechanism for selecting, or make one element that works for both.
 The tabs version will work w/o tabs but I need to figure out how to handle
 the warning zone logic (or bag it.) Using brute force.")
+  )
 
 (defface dp-trailing-whitespace-face
   '((((class color) (background light)) 
@@ -517,9 +518,9 @@ This function uses a mechanism which restores a variable to its original
 state and then applies changes. This is good... sometimes."
   ;; Icky... the lambda uses variables from the current environment.
   (loop for mode in list-o-modes do
-    (dp-save-orig-n-set-new mode 
+    (dp-save-orig-n-set-new mode
                             (function (lambda (save-sym)
-                                        (append 
+(append 
                                          (symbol-value save-sym)
                                          list-o-keys
                                          ))))))
@@ -590,7 +591,7 @@ then applies changes. This is good... sometimes."
   (dmessage "in dp-muck-with-fontification")
   (if (dp-xemacs-p)
       ;; All font junk is now done in the cc-mode's `eval-after-load'
-      ()                                
+      ()
 
     ;;;;;;;;;;;;;;;;; FSF emacs ;;;;;;;;;;;;;;;;;
     ;;;;;;;  VERY, VERY STALE ~~~~ ;;;;;;;;;;;;;;
@@ -2275,21 +2276,15 @@ changed."
 
 ;; Dum, dee, dum, dum, dada, do, dum... PERL SUCKS! dee, dum, dum...
 (defun dp-cperl-mode-hook ()
+  (message "Sigh. :-( Boo fucking hoo,  In cp-perl-mode-hook.")
   (setq dp-il&md-dont-fix-comments-p t) ; cperl sucks at this.
   (substitute-key-definition 'cperl-indent-for-comment
                              'dp-cperl-indent-comments-fucking-correctly
                              cperl-mode-map)
-  ;; This resets the font lock vars to the point where I first futzed with
-  ;; them before adding the new element.
   (dp-add-line-too-long-font '(perl-font-lock-keywords
                                perl-font-lock-keywords-1
                                perl-font-lock-keywords-2))
-  (setq dp-cleanup-whitespace-p t)
-  (dp-add-to-font-patterns '(perl-font-lock-keywords
-                             perl-font-lock-keywords-1
-                             perl-font-lock-keywords-2)
-                            ;; @todo XXX conditionalize this properly dp-trailing-whitespace-font-lock-element
-                           ))
+  (setq dp-cleanup-whitespace-p t))
 
 (defun dp-first-change-hook ()
   (dmessage "in dp-first-change-hook"))
