@@ -65,6 +65,7 @@
     "^Changes to be undone are outside visible portion of buffer$"
     "^No undo information in this buffer$"
     "^No further undo information$"
+    "^Point neither on reference nor in menu item description$"
     "^Save not confirmed$"
     "^Recover-file cancelled\\.$"
     "^Attempt to save to a file which you aren't allowed to write$"
@@ -258,6 +259,10 @@
     ;; Reveng errors
     "^There is no unique cscope database directory!$"
     "The tags stack is empty"
+
+    ;; <:new-errors:>
+    "^There are unsaved changes$"
+    "^Attempt to perform action on inactive widget$"
     )
   "*My list of ignored signals.  These will not cause an entry into the
 debugger if encountered when `debug-on-error' is non-nil.
