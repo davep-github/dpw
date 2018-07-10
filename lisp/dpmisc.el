@@ -1567,7 +1567,9 @@ Returns the buffer created."
                          (concat message " ")
                        "") 
                      key-msg mode-msg))))
-        
+
+(defalias 'dp-disabled-key 'dp-deactivated-key)
+
 (defun dp-deactivate-key (key &optional message)
   (interactive (list (setq key (read-key-sequence "disable key: "))
                      ;; We can't pass this message since elisp has no closures.
@@ -1579,7 +1581,9 @@ Returns the buffer created."
   (global-set-key key (kb-lambda
                           (dp-deactivated-key)))
   (message "deactivated key: %s" (key-description key)))
-  
+
+(defalias 'dp-disable-key 'dp-deactivate-key)
+
 (defun dp-toggle-mark (&optional mark-to-eol-p)
   "Toggle the mark activation state. MARK-TO-EOL-P say to mark to end of line.
 This is just a shortcut to `dp-mark-to-end-of-line'. There's no good way to
