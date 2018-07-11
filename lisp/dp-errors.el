@@ -77,6 +77,7 @@
     "^No more grep hits"
     "^Moved past last grep hit$"
     "^No grep hit here$"
+    "^The tags stack is empty$"
     "man .* not found"
     "Listing directory failed"
     "\"No entries containing .*\""
