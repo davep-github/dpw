@@ -56,7 +56,7 @@
         rp = rev-parse
 
         ldf = log --decorate=full
-        logf = log --decorate=full
+        flog = log --decorate=full
         ldf5 = log --decorate=full -n 5
         ldfn = log --decorate=full -n
         ld = log --decorate
@@ -90,6 +90,7 @@
 	clog = log --color
         # These are longer than the actual command to compensate for all of
         # the shorter ones.
+        logf = log -u             # show changes to a file
         filediffs = log -u        # show changes to a file
         filepatches = log -u      # show changes to a file
 
