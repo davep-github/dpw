@@ -363,7 +363,7 @@ For C/C++ source code.")
 (defun dp-mk-c*-debug-like-patterns ()
   (dp-mk-debug-like-patterns dp-c*-debug-like-patterns))
 
-(dp-deflocal dp-line-too-long-warning-column 77
+(dp-deflocal dp-line-too-long-warning-column 74
   "*Become annoyed (new face) when going beyond this column.
 For now this must be < the error col.")
 
@@ -375,7 +375,7 @@ For now this must be < the error col.")
   (((class color) (background light))
    (:background "blue" :foreground "white"))
   (t (:inherit warning :background)))
-  "Face for buffer lines which are setting too long."
+  "Face for buffer lines which are becoming too long."
   :group 'faces
   :group 'dp-faces)
 
@@ -390,6 +390,7 @@ For now this must be < the error col.")
   :group 'faces
   :group 'dp-faces)
 
+<<<<<<< HEAD
 ;; ;; !<@todo XXX make this handle warning-col >= error-col. (if < 0) 0
 ;; (defvar dp-font-lock-line-too-long-error-element
 ;;   ;; +1 'cause column number starts at zero.
@@ -397,52 +398,48 @@ For now this must be < the error col.")
 ;;                              dp-line-too-long-warning-column
 ;;                              1)))
     ;;               +-- 1 -------+  +-- 2 ---------+  +- 3 +
-(progn
-  (defvar dp-font-lock-line-too-long-error-element
-    `(
-      ,(format
-	"^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
-	tab-width
-	(1- tab-width)
-	(/ dp-line-too-long-error-column tab-width)
-	(let ((rem (% dp-line-too-long-error-column tab-width)))
-	  (if (zerop rem)
-	      ""
-	    (format ".\\{%d\\}" rem))))
-      2					; line tail
-      'dp-default-line-too-long-error-face
-      prepend)
-    "Font-lock component to highlight lines that are too long.
+(defvar dp-font-lock-line-too-long-error-element
+  `(
+    ,(format
+      "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
+      tab-width
+      (1- tab-width)
+      (/ dp-line-too-long-error-column tab-width)
+      (let ((rem (% dp-line-too-long-error-column tab-width)))
+	(if (zerop rem)
+	    ""
+	  (format ".\\{%d\\}" rem))))
+    2					; line tail
+    'dp-default-line-too-long-error-face
+    prepend)
+  "Font-lock component to highlight lines that are too long.
 Regexp and font-lock-keywords element.
 Works with tabs.")
 
-  (defvar dp-font-lock-line-too-long-warning-element-tabs
-    `(
-      ,(format
-	"^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
-	tab-width
-	(1- tab-width)
-	(/ dp-line-too-long-warning-column tab-width)
-	(let ((rem (% dp-line-too-long-warning-column tab-width)))
-	  (if (zerop rem)
-	      ""
-	    (format ".\\{%d\\}" rem))))
-      2					; line tail
-      'dp-default-line-too-long-warning-face
-      prepend)
-    "As above, but handles the warning zone.")
+;; @todo XXX Make len of warning area (- error-len warning-len)
+(defvar dp-font-lock-line-too-long-warning-element
+  `(
+    ,(format
+      "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
+      tab-width
+      (1- tab-width)
+      (/ dp-line-too-long-warning-column tab-width)
+      (let ((rem (% dp-line-too-long-warning-column tab-width)))
+	(if (zerop rem)
+	    ""
+	  (format ".\\{%d\\}" rem))))
+    2					; line tail
+    'dp-default-line-too-long-warning-face
+    prepend)
+  "As above, but handles the warning zone.")
 
-  (defvar dp-font-lock-line-too-long-error-default-element
+(defvar dp-font-lock-line-too-long-error-default-element
     dp-font-lock-line-too-long-error-element
-    "NB: Add mechanism for selecting (tabs or no), or make one element that
-  works for both.")
+    "Font lock element to fontify line which are too long.")
 
-  (defvar dp-font-lock-line-too-long-warning-element
-    dp-font-lock-line-too-long-warning-element-tabs
-    "NB: Add mechanism for selecting, or make one element that works for both.
-The tabs version will work w/o tabs but I need to figure out how to handle
-the warning zone logic (or bag it.) Using brute force.")
-  )
+(defvar dp-font-lock-line-too-long-warning-default-element
+  dp-font-lock-line-too-long-warning-element
+  "Font lock element to fontify line which are becoming too long.")
 
 (defface dp-trailing-whitespace-face
   '((((class color) (background light)) 
@@ -495,13 +492,13 @@ the warning zone logic (or bag it.) Using brute force.")
   :type 'boolean)
 
 (defvar dp-space-before-tab-font-lock-element
-  (list dp-space-before-tab-regexp 0 'dp-trailing-whitespace-face 'prepend)
+  '(dp-space-before-tab-regexp 0 'dp-trailing-whitespace-face 'prepend)
   "A font-lock element to pick out trailing whitespace.")
 
 (defvar dp-too-many-spaces-in-a-row-font-lock-element
-  (list dp-too-many-spaces-in-a-row-regexp
-        0 
-        'dp-trailing-whitespace-face 'prepend)
+  '(dp-too-many-spaces-in-a-row-regexp
+    0
+    'dp-trailing-whitespace-face 'prepend)
   "A font-lock element to pick out too many spaces in a row.")
 
 (defcustom dp-use-too-many-spaces-font-p nil
@@ -527,7 +524,7 @@ state and then applies changes. This is good... sometimes."
   (loop for mode in list-o-modes do
     (dp-save-orig-n-set-new mode
                             (function (lambda (save-sym)
-(append 
+					(append 
                                          (symbol-value save-sym)
                                          list-o-keys
                                          ))))))
@@ -587,7 +584,7 @@ then applies changes. This is good... sometimes."
   (dp-add-font-patterns font-lock-var-syms
 			buffer-local-p
 			(list dp-font-lock-line-too-long-error-default-element
-			      dp-font-lock-line-too-long-warning-element)))
+			      dp-font-lock-line-too-long-warning-default-element)))
 
 (defun dp-muck-with-fontification ()
   ;; Reset things to original state.
@@ -709,7 +706,7 @@ c-hanging-braces-alist based upon these values.")
     (when (and nil set-em-p)
       (dp-set-font-lock-defaults 'c-mode '(extra t)))))
 
-;; @todo XXX Make this a proper variable.
+;; @todo XXX Make this a defcustom.
 (dp-deflocal dp-use-c++-add-extra-faces-p t)
 (defun* dp-c++-add-extra-faces (&key
 				(buffer-local-p nil)
@@ -730,7 +727,7 @@ c-hanging-braces-alist based upon these values.")
      :use-trailing-ws-font-p use-trailing-ws-font-p
      :use-too-long-face-p dp-use-too-long-face-p)))
 
-;; @todo XXX Make this a proper variable.
+;; @todo XXX Make this a defcustom.
 (dp-deflocal dp-use-c-add-extra-faces-p t)
 (defun* dp-c-add-extra-faces (&key
                               (buffer-local-p nil)
