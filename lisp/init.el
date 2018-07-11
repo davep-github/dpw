@@ -25,6 +25,8 @@
 
 (add-to-list 'load-path dp-lisp-dir)
 
+;; @todo XXX A default.  Make it a more common one, like a lucida or
+;; some such.
 (set-frame-font "RictyDiminishedDiscord-13")
 
 (defun dp-lisp-subdir (sub &rest args)
