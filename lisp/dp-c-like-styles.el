@@ -18,7 +18,8 @@
     (dp-c-like-mode-default-indent-tabs-mode-p     . t)
     (dp-c-fill-statement-minimal-indentation-p     . nil)
     (dp-lang-use-c-new-file-template-p             . nil)
-    (dp-trailing-whitespace-use-trailing-ws-font-p . t)
+    ;; Mine is out-of-date and FSF Emacs has one.
+    (dp-trailing-whitespace-use-trailing-ws-font-p . nil)
     (dp-use-space-before-tab-font-lock-p           . t)
     (dp-use-too-many-spaces-font-p                 . t)
     (dp-use-ugly-ass-pointer-style-p               . t)
