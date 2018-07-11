@@ -363,7 +363,7 @@ For C/C++ source code.")
 (defun dp-mk-c*-debug-like-patterns ()
   (dp-mk-debug-like-patterns dp-c*-debug-like-patterns))
 
-(dp-deflocal dp-line-too-long-warning-column 77
+(dp-deflocal dp-line-too-long-warning-column 72
   "*Become annoyed (new face) when going beyond this column.
 For now this must be < the error col.")
 
@@ -390,52 +390,50 @@ For now this must be < the error col.")
   :group 'faces
   :group 'dp-faces)
 
-(progn
-  (defvar dp-font-lock-line-too-long-error-element
-    `(
-      ,(format
-	"^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
-	tab-width
-	(1- tab-width)
-	(/ dp-line-too-long-error-column tab-width)
-	(let ((rem (% dp-line-too-long-error-column tab-width)))
-	  (if (zerop rem)
-	      ""
-	    (format ".\\{%d\\}" rem))))
-      2					; line tail
-      'dp-default-line-too-long-error-face
-      prepend)
-    "Font-lock component to highlight lines that are too long.
+(defvar dp-font-lock-line-too-long-error-element
+  `(
+    ,(format
+      "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
+      tab-width
+      (1- tab-width)
+      (/ dp-line-too-long-error-column tab-width)
+      (let ((rem (% dp-line-too-long-error-column tab-width)))
+	(if (zerop rem)
+	    ""
+	  (format ".\\{%d\\}" rem))))
+    2					; line tail
+    'dp-default-line-too-long-error-face
+    prepend)
+  "Font-lock component to highlight lines that are too long.
 Regexp and font-lock-keywords element.
 Works with tabs.")
 
-  (defvar dp-font-lock-line-too-long-warning-element-tabs
-    `(
-      ,(format
-	"^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
-	tab-width
-	(1- tab-width)
-	(/ dp-line-too-long-warning-column tab-width)
-	(let ((rem (% dp-line-too-long-warning-column tab-width)))
-	  (if (zerop rem)
-	      ""
-	    (format ".\\{%d\\}" rem))))
-      2					; line tail
-      'dp-default-line-too-long-warning-face
-      prepend)
-    "As above, but handles the warning zone.")
+(defvar dp-font-lock-line-too-long-warning-element-tabs
+  `(
+    ,(format
+      "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
+      tab-width
+      (1- tab-width)
+      (/ dp-line-too-long-warning-column tab-width)
+      (let ((rem (% dp-line-too-long-warning-column tab-width)))
+	(if (zerop rem)
+	    ""
+	  (format ".\\{%d\\}" rem))))
+    2					; line tail
+    'dp-default-line-too-long-warning-face
+    prepend)
+  "As above, but handles the warning zone.")
 
-  (defvar dp-font-lock-line-too-long-error-default-element
-    dp-font-lock-line-too-long-error-element
-    "NB: Add mechanism for selecting (tabs or no), or make one element that
+(defvar dp-font-lock-line-too-long-error-default-element
+  dp-font-lock-line-too-long-error-element
+  "NB: Add mechanism for selecting (tabs or no), or make one element that
   works for both.")
 
-  (defvar dp-font-lock-line-too-long-warning-element
-    dp-font-lock-line-too-long-warning-element-tabs
-    "NB: Add mechanism for selecting, or make one element that works for both.
+(defvar dp-font-lock-line-too-long-warning-element
+  dp-font-lock-line-too-long-warning-element-tabs
+  "NB: Add mechanism for selecting, or make one element that works for both.
 The tabs version will work w/o tabs but I need to figure out how to handle
 the warning zone logic (or bag it.) Using brute force.")
-  )
 
 (defface dp-trailing-whitespace-face
   '((((class color) (background light)) 
