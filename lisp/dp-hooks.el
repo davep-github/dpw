@@ -331,6 +331,7 @@ _str: looks too much like string
 (defvar dp-debug-like-patterns
   (concat (regexp-opt `("@tmp@" "@dbg@" "@rmv@" "@mark@" "WTF"
                         "@todo"))
+			"OMFG" "FIXME" "RESTORE" "UNDO"
           "\\|"
           "N[.]?B[.]?!*\\([^a-zA-Z_0-9]\\|$\\)\\|<<<<<?\\|"
           "XXXX*!*\\|!!!!*\\|\\?\\?\\?\\?*!*")
@@ -701,7 +702,7 @@ c-hanging-braces-alist based upon these values.")
 		(cons (dp-mk-c*-debug-like-patterns)
 		      ;; ??? Which is better; just the match or the whole
 		      ;;     line?
-		      (list 1 'dp-debug-like-face t))))))
+		      '(1 'dp-debug-like-face t))))))
     ;;
     ;; Add some extra types to the xemacs gaudy setting.  Rebuild the
     ;; list each time rather than adding to the existing value.  This
