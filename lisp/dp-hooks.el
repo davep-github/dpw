@@ -390,7 +390,6 @@ For now this must be < the error col.")
   :group 'faces
   :group 'dp-faces)
 
-<<<<<<< HEAD
 ;; ;; !<@todo XXX make this handle warning-col >= error-col. (if < 0) 0
 ;; (defvar dp-font-lock-line-too-long-error-element
 ;;   ;; +1 'cause column number starts at zero.
