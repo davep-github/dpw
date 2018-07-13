@@ -12,7 +12,7 @@ const char* s = "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
 // **********************************************************************************|
 // We can see the effects on | very easily so we'll use them: ||||||||||||||||||||
 // How about / vs oblique |? Do they look to similar?         ////////////////////
-// Looks okish. and the split | helps.
+// Looks okish. and the split | (with RictyDiminishedDiscord) helps.
 // ***********************************************************************************
 const char* s2 = "FIXME:";
 // FIXME:
