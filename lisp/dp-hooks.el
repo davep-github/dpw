@@ -396,7 +396,7 @@ For now this must be < the error col.")
 ;;   (let ((warning-zone-len (- dp-line-too-long-error-column
 ;;                              dp-line-too-long-warning-column
 ;;                              1)))
-    ;;               +-- 1 -------+  +-- 2 ---------+  +- 3 +
+;;    ;;               +-- 1 -------+  +-- 2 ---------+  +- 3 +
 (defvar dp-font-lock-line-too-long-error-element
   `(
     ,(format
