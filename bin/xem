@@ -35,7 +35,7 @@ log_file="$HOME/log/xemacs/xem-run.log"
 
 
 prog=`basename $0`
-
+debug_init_opt='--debug-init'
 font="$XEM_FONT"
 x_offset=0
 main_macs=y
@@ -91,7 +91,7 @@ do
         -s) set_sandbox_p=;;
         -X) macs=xemacs;;
 	-V) shift; macs_ver="${1}";;
-	-D) debug_init_opt='--debug-init';;
+	-D) debug_init_opt=;;
 	--) shift; break;;
 	*) echo 1>&2 "Illegal xem option>$1<"; exit 1 ;;
     esac
