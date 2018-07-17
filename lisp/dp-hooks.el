@@ -419,14 +419,21 @@ Works with tabs.")
 (defvar dp-font-lock-line-too-long-warning-element
   `(
     ,(format
-      "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(.+\\)$"
+      "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(%s\\)$"
       tab-width
       (1- tab-width)
       (/ dp-line-too-long-warning-column tab-width)
       (let ((rem (% dp-line-too-long-warning-column tab-width)))
 	(if (zerop rem)
 	    ""
-	  (format ".\\{%d\\}" rem))))
+	  (format ".\\{%d\\}" rem)))
+      (let ((warning-zone-len (- dp-line-too-long-error-column
+				 dp-line-too-long-warning-column)))
+
+	;; (format ".\\{1,%d\\}" warning-zone-len)
+	".+"
+	))
+
     2					; line tail
     'dp-default-line-too-long-warning-face
     prepend)
