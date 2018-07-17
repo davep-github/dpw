@@ -145,8 +145,10 @@ CRL_BG_COLOR = 'rgb:cb/d9/ee'       #cbd9ee # looks very nice w/golden colors
 # HOME_BG_COLOR = 'rgb:f3/eb/e1'          # F6EADE # light yellow
 # for Ag/silver/mithril color scheme
 #HOME_BG_COLOR = 'rgb:Fc/Fc/Fe'
-HOME_BG_COLOR = 'rgb:CA/CA/F0'
-HOME_FG_COLOR = 'rgb:2f/06/5e'
+## HOME_BG_COLOR = 'rgb:CA/CA/F0'
+## HOME_FG_COLOR = 'rgb:2f/06/5e'
+HOME_BG_COLOR = 'rgb:00/43/82'
+HOME_FG_COLOR = 'white'
 REDNET_BG_COLOR = 'LavenderBlush1'      # reddish for rednet.
 VANU_BG_COLOR = 'rgb:cb/d9/ee'       #cbd9ee # looks very nice w/golden colors
 VANU_FG_COLOR = 'black'

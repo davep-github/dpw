@@ -249,14 +249,14 @@ do
 		exit 1
 	    }
             [[ -n "$flags_set_p" ]] && {
-echo 1>&2 "Check len and offer to clear \`e' flag if too short."
+                echo 1>&2 "Check len and offer to clear \`e' flag if too short."
 	    }
             case "$flags" in
                 *e*) flags=$(check_name_len "$name" "$flags");;
                 *);;
             esac
             tmp_gfile=$(mktemp "$HOME/tmp/${progname}-XXXXXX")
-echo_id tmp_gfile
+            echo_id tmp_gfile
             gfile=$(go_file)
             emacs_locals_re='^#.* (\*\*\*|)[[:space:]]*$'
             egrep ${GREP_DASH_N-} -v "${emacs_locals_re}" "${gfile}" >| "${tmp_gfile}"

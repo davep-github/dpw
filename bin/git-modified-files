@@ -152,7 +152,8 @@ fi
 (("${#args[@]}" > 0)) && set -- "${args[@]}"
 EExec_verbose_msg "0: @>$@<@"
 
-if [ -n "${simple_test-}"] && (("${#args[@]}" > 0))
+# Make testing an option
+if false && [ -n "${simple_test-}" ]  && (("${#args[@]}" > 0))
 then
     # very simple testing.
     for a in "${args[@]}"

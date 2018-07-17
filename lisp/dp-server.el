@@ -188,13 +188,23 @@ this code runs, so I need to check for its presence before running
     (and (featurep 'server)
 	 (server-running-p))))
 
-(defun dp-restart-server ()
+(defun dp-sig-toggle-server ()
   (interactive)
-  (message "Caught %S; restarting server" last-input-event)
-  (dp-stop-editing-server)
-  (dp-start-editing-server))
+  (message "Caught %S; toggling server active state."
+	   last-input-event)
+  (message "Current server state: %s." (if (dp-server-running-p)
+					  "running"
+					"stopped"))
+  (if (dp-server-running-p)
+      (dp-stop-editing-server)
+    (dp-start-editing-server))
+
+    (message "Current server state: %s." (if (dp-server-running-p)
+					  "running"
+					"stopped"))
+)
 
 (unless (dp-xemacs-p)
-  (define-key special-event-map [sigusr1] 'dp-restart-server))
+  (define-key special-event-map [sigusr1] 'dp-sig-toggle-server))
 
 (provide 'dp-server)

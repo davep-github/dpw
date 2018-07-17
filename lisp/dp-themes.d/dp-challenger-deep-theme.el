@@ -56,7 +56,7 @@
       (ct-green       "#5fffaf")
       (green-d        "#62d196")
       (ct-green-d     "#5fd787")
-      (very-dark-blue "#00002a")
+      (very-dark-blue "#000042")
       )
 
 

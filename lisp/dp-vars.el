@@ -505,13 +505,15 @@ For now (2010-05-22T08:26:49) I'm just using the symbols corresponding to the Em
   :group 'dp-vars)
 
 (defcustom dp-global-c*-use-too-long-warning-face t
-  "*Use a special face to highlight overlong as they are about to become overlong."
+  "*Use a special face to highlight lines as they are about to become
+overlong."
   :type 'boolean
   :group 'dp-vars)
 
 (defcustom dp-c-add-nl-after-open-paren-default-p t
-  "*Should a newline be added after the open parenthesis of a function definition?. 
-This provided for uniform parameter indentation and maximum space for each
+  "*Should a newline be added after the open parenthesis of a function 
+definition?.
+This provides for uniform parameter indentation and maximum space for each
 parameter. e.g
 t:
 int some_descriptive_function_name(

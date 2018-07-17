@@ -138,15 +138,18 @@ Ee|ulelisp|       ${uls}emacs/21.2/lisp/
 Ee|ultkinter|     ${uls}python/tkinter/
 Ee|ulnoatun|      ${uls}apps/noatun/
 
-Ee|dplocal|dpl|                   ${HOME}/local
-Ee|dplocaletc|dpletx|             ${dplocal}/etc/
-Ee|dplocallib|dpllib|             ${dplocal}/lib/
-Ee|dplocalshare|dpls|             ${dplocal}/share/
-Ee|dplocaldoculsd|dpldoc|         ${dpls}doc/
-Ee|dplocalexamples|dplex|dpleg|   ${dpls}examples/
-Ee|dplocallisp|dpll|              ${dpls}emacs/25.3/lisp
-Ee|tkinter|                       ${dpls}python/tkinter/
-Ee|noatun|                        ${dpls}apps/noatun/
+Ee|dplocal|dpl|                     ${HOME}/local
+Ee|dplocaletc|dpletx|               ${dplocal}/etc/
+Ee|dplocallib|dpllib|               ${dplocal}/lib/
+Ee|dplocalshare|locshare|locs|dpls| ${dplocal}/share/
+Ee|dplocalshareemacs|dple|          ${dplocalahare}/emacs/
+Ee|emacscurrentversion|             25.3
+Ee|dplocalsharecurrentemacs|dplce|  ${dplocalahareemacs}/${emacscurrentversion}
+Ee|dplocaldoculsd|dpldoc|           ${dpls}doc/
+Ee|dplocalexamples|dplex|dpleg|     ${dpls}examples/
+Ee|dplocallisp|dpll|                ${dpls}emacs/25.3/lisp
+Ee|tkinter|                         ${dpls}python/tkinter/
+Ee|noatun|                          ${dpls}apps/noatun/
 
 Ee|apache|      ${ule}apache/
 Ee|cur|         /usr/tmp2/2dlaplace-v2.debugging/

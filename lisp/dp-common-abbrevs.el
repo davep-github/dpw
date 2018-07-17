@@ -600,6 +600,8 @@
      ((("sagi" "sudo apt install " "sudo apt-get install ")
        'circular)
       dp-manual)
+     ((("got" "git") 'circular) dp-manual)
+     ((("get" "git") 'circular) dp-manual)
      ((("fh" "FETCH_HEAD") 'circular) dp-manual)
      ((("dup" "dupe" "duplicate") 'circular) dp-manual)
      ((("dups" "dupes" "duplicates") 'circular) dp-manual)

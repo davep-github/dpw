@@ -304,7 +304,7 @@ alias mex=me-expand-dest
 alias dp4-meld='dp4-diff --meld'
 # p4 diff with diff(1); just diff(1)
 alias p4dd='p4diffdiff'
-alias sandbox_root_dir="/home/${HOME}/lib/pylib/tree_root_relativity.py --find-root"
+alias sandbox_root_dir="/${HOME}/lib/pylib/tree_root_relativity.py --find-root"
 alias sbroot=sandbox_root_dir
 alias treeroot=sandbox_root_dir
 alias sb-root=sandbox_root_dir

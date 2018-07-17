@@ -4,7 +4,6 @@ history.*
 #.emacs_dpanarit.*
 #.emacs_davep.*
 .emacs_*.*
-/devel/
 /bug-tmp/
 emacs-places*
 /elpa/

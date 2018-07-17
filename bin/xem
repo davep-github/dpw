@@ -35,7 +35,7 @@ log_file="$HOME/log/xemacs/xem-run.log"
 
 
 prog=`basename $0`
-
+debug_init_opt='--debug-init'
 font="$XEM_FONT"
 x_offset=0
 main_macs=y
@@ -61,7 +61,7 @@ esac
 #eko "$@"
 ###set -- $(getopt "dlxp:f:o:nmMvhF" $*)
 # New style getopt... fixes ugly quoting problems.
-all_options="dlxp:f:o:nmMvhFXV:"
+all_options="dlxp:f:o:nmMvhFXV:D"
 q=$(getopt -o "$all_options" -- "$@")
 [ $? != 0 ] && Usage
 eval set -- "$q"
@@ -91,6 +91,7 @@ do
         -s) set_sandbox_p=;;
         -X) macs=xemacs;;
 	-V) shift; macs_ver="${1}";;
+	-D) debug_init_opt=;;
 	--) shift; break;;
 	*) echo 1>&2 "Illegal xem option>$1<"; exit 1 ;;
     esac
@@ -196,7 +197,7 @@ fi
 
     
 [ -n "$PRE_CMD" ] && eval "$PRE_CMD"
-cmd_args="$OPTS $BG_COLOR $MAIN_MACS_RC $aaa $emacs_opts"
+cmd_args="$OPTS $BG_COLOR $MAIN_MACS_RC $aaa $emacs_opts $debug_init_opt"
 $VERBOSE echo exec $BIN $cmd_args
 [ -n "$verbose" ] && {
     eko exec $BIN $cmd
