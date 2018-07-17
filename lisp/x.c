@@ -6,12 +6,13 @@
 
 #error blah
 #define MAX headroom;
-const char* s = "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj";
+const char* s = "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj";
 
-// *****************************************************************************|
-// **********************************************************************************|
+// *****************************************************************************
+// **********************************************************************************
 // We can see the effects on | very easily so we'll use them: ||||||||||||||||||||
 // How about / vs oblique |? Do they look to similar?         ////////////////////
+// how about !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Looks okish. and the split | (with RictyDiminishedDiscord) helps.
 // ***********************************************************************************
 const char* s2 = "FIXME:";
@@ -22,14 +23,14 @@ float f = 0.0;
 typedef zuzz xxx;
 // recommend
 // block-comment-start
-/* * this file is used for testing c-mode things.
+/* * this file is used for testing c-mode things.   
  *
  * Fuck this.
  * this file blah blah
  * blah.
  */
 //								             xxxxxxxxx
-/* This is a line that is a comment, but has a line that is too long so that we can test our line too long stuff.
+/* This is a line that is a comment, but has a line that is too long so that we||/can test our line too long stuff.
  * */
 int func(int a,
          int b,
@@ -41,7 +42,8 @@ int func(int a,
 	 * dp-move-too-long-comment-above-current-line */
   byte * bp;
   if (a) {
-    func(++a, b/2, c);        
+      func(++a, b/2, c);    v     
+      func(++a, b/2, c);        
   } else {
       bubba_is_a_good_man();
 }
