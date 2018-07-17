@@ -226,7 +226,7 @@ amd_family = e(
         'DTE': 'kde',
         'main_macs_opts': '-eval (dp-main-rc+2w)',
         'xem_opts': '-eval (dp-2-v-or-h-windows) ' + AMD_XEM_GEOMETRY,
-        #    "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
+        "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
         "xem_font": "",
         'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
         'work-zone': 'amd',
@@ -285,8 +285,8 @@ e(
         'host-pattern': '^yyz$',
         'family': 'amd_family',
         'comment': 'Main dev box. Ryzen 8-core.  Not for testing, in general, unless absolutely necessary.',
-        #'xem_opts': ('-eval (dp-2-v-or-h-windows-keep-geometry) '
-        #+ '-geometry 180x67+460+0'),
+        'xem_opts': ('-eval (dp-2-v-or-h-windows) '
+                     + '-geometry 180x67+460+0'),
         # Not particularly attractive.
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         ###"""xem-xft-font""": '''"Inconsolata-12"''',
@@ -320,11 +320,12 @@ e(
         'host-pattern': '^xerxes$',
         'family': 'amd_family',
         'comment': 'An? FX-8370 8-core machine.  Test box.',
-        'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 180x74-0+0',
+        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 180x74-0+0',
+        'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         'xterm_bg': XERXES_BG_COLOR,
         'xterm_fg': XERXES_FG_COLOR,
         'xxem_bg_color': "grey80",
-        """xem-xft-font""": '''"RictyDiminishedDiscord-13"''',
+        ###"""xem-xft-font""": '''"RictyDiminishedDiscord-13"''',
         'project': 'brahma',
  },
     ref=[amd_family, OSDB['linux'], default]
@@ -341,7 +342,7 @@ e(
         'host-pattern': '^(cz-fp4-bdc|cz)$',
         'family': 'amd_family',
         'comment': 'A BETTONG Carrizo dev system (on my desk).',
-        'xem_opts': '-eval (dp-2-v-or-h-windows-keep-geometry) ' + '-geometry 180x74-0+0',
+        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 180x74-0+0',
         'xterm_bg': CZ_FP4_BG_COLOR,
         'xterm_fg': CZ_FP4_FG_COLOR,
         'xxem_bg_color': "grey80",
@@ -362,7 +363,7 @@ e(
         'family': 'amd_family',
         'comment': """A big ol' server box under my desk for NMI work.""",
         #'xem_opts': '-geometry 88x64-0+0',
-        'xem_opts': ('-eval (dp-2-v-or-h-windows-keep-geometry) '
+        'xem_opts': ('-eval (dp-2-v-or-h-windows) '
                      + '-geometry 180x74-0+0'),
         'main_macs_opts': '-eval (dp-start-editing-server)',
 ###        'main_macs_opts': '-eval (progn (dp-start-editing-server) (dp-main-rc+2w))',
@@ -384,7 +385,7 @@ e(
         'family': 'amd_family',
         'comment': """A big ol' server box under my desk for NMI work.""",
         #'xem_opts': '-geometry 88x64-0+0',
-        'xem_opts': ('-eval (dp-2-v-or-h-windows-keep-geometry) '
+        'xem_opts': ('-eval (dp-2-v-or-h-windows) '
                      + '-geometry 180x74-0+0'),
         ###'main_macs_opts': '-eval (dp-start-editing-server)',
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
