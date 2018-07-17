@@ -27,7 +27,9 @@
 
 ;; @todo XXX A default.  Make it a more common one, like a lucida or
 ;; some such.
+;;(message "Setting frame font...")
 (set-frame-font "RictyDiminishedDiscord-13")
+;;(message "Setting frame font...done")
 
 (defun dp-lisp-subdir (sub &rest args)
   (expand-file-name (apply 'format sub args) dp-lisp-dir))
