@@ -3211,7 +3211,7 @@ Use another binding? Running out of prefix arg interpretations."
       buf)))
 
 (defun dp-find-or-create-sb (&optional same-buffer-p)
-  "Switch to existing or make a new scratch buffer in 
+  "Switch to existing or make a new scratch buffer in
 lisp-interaction mode."
   (interactive "P")
   ;; goes to existing one if there, otherwise creates one with the right
@@ -3276,15 +3276,19 @@ lisp-interaction mode."
     (with-current-buffer buf-or-name
       (funcall post-hook))))
 
-(defun dp-display-message-buffer (&optional same-window-p tallest-window-p)
+(defun dp-display-sys-buffer (buf-name &optional same-window-p tallest-window-p)
   "Display the message buffer, defaulting to another window."
-  (interactive "P")
-  (dp-view-buffer dp-message-buffer-name 
-                  same-window-p 
+  (dp-view-buffer buf-name
+		  same-window-p
                   (function
                    (lambda ()
                      (local-set-key [(meta ?-)] 'dp-bury-or-kill-buffer)))
                   'follow-output))
+
+(defun dp-display-message-buffer (&optional same-window-p tallest-window-p)
+  (interactive "P")
+  (dp-display-sys-buffer dp-message-buffer-name same-window-p
+			 tallest-window-p))
 
 (dp-defaliases 'mb 'mb2 'mb-other 'dp-display-message-buffer)
 
@@ -3295,12 +3299,27 @@ lisp-interaction mode."
 
 (dp-defaliases 'mbd 'mb0 'mb. 'mb1 'dp-display-message-buffer-same-window)
 
-(defun dp-backtrace-buffer (&optional same-window-p)
-  "Go to *Backtrace* buffer."
-  (interactive)
-  (dp-view-buffer "*Backtrace*" same-window-p))
+(defun dp-display-warning-buffer (&optional same-window-p tallest-window-p)
+  "Display the message buffer in window predicated by SAME-WINDOW-P."
+  (interactive "P")
+  (dp-display-sys-buffer dp-warning-buffer-name same-window-p
+			 tallest-window-p))
 
-(dp-defaliases 'btb 'btb2 'btb-other 'dp-backtrace-buffer)
+(dp-defaliases 'wb 'wb2 'wb-other 'dp-display-warning-buffer)
+
+(defun dp-display-warning-buffer-same-window ()
+  "Display the message buffer in this window."
+  (interactive)
+  (dp-display-message-buffer 'same-window))
+
+(dp-defaliases 'wbd 'wb0 'wb. 'wb1 'dp-display-message-buffer-same-window)
+
+(defun dp-display-backtrace-buffer (&optional same-window-p tallest-window-p)
+  "Go to *Backtrace* buffer."
+  (interactive "P")
+  (dp-display-sys-buffer "*Backtrace*" same-window-p tallest-window-p))
+
+(dp-defaliases 'btb 'btb2 'btb-other 'dp-display-backtrace-buffer)
 
 (defsubst dp-backtrace-buffer-same-window ()
   "Go to *Backtrace* buffer in this window."
