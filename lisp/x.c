@@ -6,7 +6,10 @@
 
 #error blah
 #define MAX headroom;
-const char* s = "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj";
+const char* s = "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj";
+
+// *****************************************************************************|
+// **********************************************************************************|
 
 // *****************************************************************************
 // **********************************************************************************
@@ -282,7 +285,11 @@ funyun123(
 
 /*
 ************************************************************************
+* spaces
+*                                                                            wwweee...
 ****************************************************************************************************
+* tabs, spaces, stars...
+*									     *******
 * see x.h#an_underscored_func
 *
 ************************************************************************
@@ -295,6 +302,8 @@ an_underscored_func()
 //=====================================================================
 // NB
 // WTF??
+// @rmv@
+// debug_stream << "OMFG!";
 // !<@todo XXX
 #define a_big_one (x)				\
     {						\

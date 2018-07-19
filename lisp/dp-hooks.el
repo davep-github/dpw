@@ -70,8 +70,9 @@ eol-only - Only clean lines when cursor it at the end of a line.
   (when (and dp-global-master-cleanup-whitespace-p
              dp-cleanup-whitespace-on-next-line-p)
     (cond
+     ((eq dp-global-master-cleanup-whitespace-p t))
      ((and (listp dp-global-master-cleanup-whitespace-p)
-           (memq major-mode dp-global-master-cleanup-whitespace-p)))
+	   (memq major-mode dp-global-master-cleanup-whitespace-p)))
      (dp-cleanup-whitespace-p))))
 
 (defvar dp-enable-minibuffer-marking nil
@@ -330,6 +331,7 @@ _str: looks too much like string
 
 (defvar dp-debug-like-patterns
   (concat (regexp-opt `("@tmp@" "@dbg@" "@rmv@" "@mark@" "WTF"
+			"OMFG" "FIXME" "RESTORE" "UNDO"
                         "@todo"))
           "\\|"
           "N[.]?B[.]?!*\\([^a-zA-Z_0-9]\\|$\\)\\|<<<<<?\\|"
@@ -448,8 +450,8 @@ Works with tabs.")
   "Font lock element to fontify line which are becoming too long.")
 
 (defface dp-trailing-whitespace-face
-  '((((class color) (background light)) 
-;;     (:background "aliceblue" :bold nil))) 
+  '((((class color) (background light))
+     ;;     (:background "aliceblue" :bold nil)))
 ;;     (:background "gainsboro" :bold nil)))
      (:background "lightgrey" :bold nil)))
   "Face for buffer lines which have trailing whitespace."
@@ -685,8 +687,6 @@ c-hanging-braces-alist based upon these values.")
   (let ((extras
 	 (delq nil
 	       (list
-		(when use-trailing-ws-font-p
-		  dp-trailing-whitespace-font-lock-element)
 		(when use-too-long-face-p
 		  dp-font-lock-line-too-long-error-default-element)
 		(when use-too-long-warning-face-p
@@ -701,7 +701,7 @@ c-hanging-braces-alist based upon these values.")
 		(cons (dp-mk-c*-debug-like-patterns)
 		      ;; ??? Which is better; just the match or the whole
 		      ;;     line?
-		      (list 1 'dp-debug-like-face t))))))
+		      '(1 'dp-debug-like-face t))))))
     ;;
     ;; Add some extra types to the xemacs gaudy setting.  Rebuild the
     ;; list each time rather than adding to the existing value.  This

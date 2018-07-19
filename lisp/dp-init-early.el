@@ -62,9 +62,10 @@ Some are ephemeral and some are longer term."
   (setq subdir (concat dp-emacs-droppings subdir))
   (when (and create-p
              (not (file-directory-p subdir)))
-    (message "Creating editor dropping dir: $s..." subdir)
+    ;;;(message "Create editor dropping dir: %s..." subdir)
     (make-directory subdir)
-    (message "Creating editor dropping dir: $s...done." subdir))
+    ;;;(message "Create editor dropping dir: %s...done." subdir)
+)
   ;; Warn if not there either way.
   (when (not (file-directory-p subdir))
     (warn "dropping dir >%s< isn't." subdir ))

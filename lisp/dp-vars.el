@@ -505,7 +505,7 @@ For now (2010-05-22T08:26:49) I'm just using the symbols corresponding to the Em
   :group 'dp-vars)
 
 (defcustom dp-global-c*-use-too-long-warning-face t
-  "*Use a special face to highlight overlong as they are about to become 
+  "*Use a special face to highlight lines as they are about to become
 overlong."
   :type 'boolean
   :group 'dp-vars)

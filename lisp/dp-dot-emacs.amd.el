@@ -1,5 +1,9 @@
 (require 'vc)
 
+;; Bigger font till my eyes get fixed.
+(set-frame-font "RictyDiminishedDiscord-15")
+
+
 (defun dp-select-amd-c-style ()
   "Set up C/C++ style."
   (interactive)

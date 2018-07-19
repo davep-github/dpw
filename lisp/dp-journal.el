@@ -2908,11 +2908,8 @@ This kind of allows us to use a journal file with a non-standard name."
 			     '(dp-journal-mode-font-lock-keywords t)))
 
 (defun dp-journal-start-font-locking ()
-    (dp-journal-setup-font-lock)
-    (font-lock-add-keywords
-     nil
-     (list dp-font-lock-line-too-long-error-element-tabs)
-     t))
+  (dp-journal-setup-font-lock)
+  (dp-add-line-too-long-font '(dp-journal-mode-font-lock-keywords)))
 
 (add-hook 'dp-journal-mode-pre-hook 'dp-journal-mode-pre-hook)
 
