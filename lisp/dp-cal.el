@@ -20,8 +20,11 @@
 ;; fancy display is *REQUIRED* to make included files work.
 (add-hook 'diary-display-hook 'fancy-diary-display)
 (add-hook 'list-diary-entries-hook 'include-other-diary-files)
-(add-hook 'mark-diary-entries-hook 'mark-included-diary-files)
+(if (dp-xemacs-p)
+    (add-hook 'mark-diary-entries-hook 'mark-included-diary-files)
+  (add-hook 'mark-diary-entries-hook 'diary-mark-included-diary-files))
 (add-hook 'appt-make-list-hook 'appt-included-diary-entries)
+
 ;; want sort to run after everything else
 (add-hook 'list-diary-entries-hook 'sort-diary-entries 'APPEND)
 
@@ -38,6 +41,12 @@
 (defun dp-diary-mode-hook ()
   (interactive)
   (dp-define-diary-file-keys))
+
+(defun dp-file-name-prefix-function (diary-file-name)
+  (format "%s.%s-%s"
+	  (or (getenv "FAMILY") (dp-short-hostname))
+	  (user-real-login-name)
+	  diary-file-name))
 
 (add-hook 'diary-mode-hook 'dp-diary-mode-hook)
 
