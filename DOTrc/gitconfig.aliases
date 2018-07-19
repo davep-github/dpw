@@ -39,7 +39,9 @@
         brv = branch -v
         bra = branch -a
         brav = branch -a -v
+        bravv = branch -avv
         brva = branch -a -v
+        brvva = branch -avv
         current-branch = rev-parse --abbrev-ref=strict HEAD
         cbr = rev-parse --abbrev-ref=strict HEAD
         cbrr = symbolic-ref HEAD
