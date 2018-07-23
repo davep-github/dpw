@@ -331,7 +331,7 @@ _str: looks too much like string
 
 (defvar dp-debug-like-patterns
   (concat (regexp-opt `("@tmp@" "@dbg@" "@rmv@" "@mark@" "WTF"
-			"OMFG" "FIXME" "RESTORE" "UNDO"
+			"XXX" "OMFG" "FIXME" "RESTORE" "UNDO"
                         "@todo"))
           "\\|"
           "N[.]?B[.]?!*\\([^a-zA-Z_0-9]\\|$\\)\\|<<<<<?\\|"
@@ -687,6 +687,8 @@ c-hanging-braces-alist based upon these values.")
   (let ((extras
 	 (delq nil
 	       (list
+		(when use-trailing-ws-font-p
+		  dp-trailing-whitespace-font-lock-element)
 		(when use-too-long-face-p
 		  dp-font-lock-line-too-long-error-default-element)
 		(when use-too-long-warning-face-p
