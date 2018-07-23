@@ -14470,6 +14470,12 @@ JFC."
   (interactive)
   (info "magit"))
 
+(defun xerdim ()
+  (interactive)
+  (sfw 164)
+  (sfh 42)
+  (set-frame-position nil 24 0))
+
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;; add new functions here
 ;;; add new functions above
