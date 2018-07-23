@@ -14,6 +14,7 @@
  '(beacon-blink-when-focused t)
  '(beacon-color "medium sea green")
  '(beacon-mode t)
+ '(calendar-today-marker (quote calendar-today))
  '(comint-buffer-maximum-size 8192)
  '(comint-input-autoexpand t)
  '(comint-input-ignoredups t)
@@ -112,7 +113,9 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:background nil))))
  '(beacon-fallback-background ((t (:background "DodgerBlue3"))))
+ '(calendar-today ((t (:foreground "gold" :box (:line-width 1 :color "gold") :weight bold))))
  '(cursor ((t (:background "gold"))))
+ '(diary ((t (:foreground "pale green" :weight bold))))
  '(dp-trailing-whitespace-face ((t (:background "light coral" :foreground "black" :weight normal))))
  '(ediff-even-diff-Ancestor ((t (:background "Grey" :foreground "black"))))
  '(ediff-fine-diff-Ancestor ((t (:background "#009591" :foreground "black"))))
