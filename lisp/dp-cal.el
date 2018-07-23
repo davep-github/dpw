@@ -3,7 +3,11 @@
 (defun dp-calendar-load-hook ()
   "Set up calendar mode with my preferences."
   (interactive)
-  (setq mark-diary-entries-in-calendar t)
+  (if (dp-xemacs-p)
+      (setq mark-diary-entries-in-calendar t)
+    ;; flag? Flag? FLAG?  WTFUWT? Methinks they misspelled "-p".
+    (setq calendar-mark-diary-entries-flag t))
+  (add-hook 'calendar-today-visible-hook 'calendar-mark-today)
   ;; define-key is the recommended method vs local-set-key.
   (define-key calendar-mode-map [(meta left)] 'calendar-backward-month)
   (define-key calendar-mode-map [(meta right)] 'calendar-forward-month)
@@ -20,6 +24,7 @@
 ;; fancy display is *REQUIRED* to make included files work.
 (add-hook 'diary-display-hook 'fancy-diary-display)
 (add-hook 'list-diary-entries-hook 'include-other-diary-files)
+;; @todo XXX Alias one to the other.
 (if (dp-xemacs-p)
     (add-hook 'mark-diary-entries-hook 'mark-included-diary-files)
   (add-hook 'mark-diary-entries-hook 'diary-mark-included-diary-files))
@@ -41,12 +46,6 @@
 (defun dp-diary-mode-hook ()
   (interactive)
   (dp-define-diary-file-keys))
-
-(defun dp-file-name-prefix-function (diary-file-name)
-  (format "%s.%s-%s"
-	  (or (getenv "FAMILY") (dp-short-hostname))
-	  (user-real-login-name)
-	  diary-file-name))
 
 (add-hook 'diary-mode-hook 'dp-diary-mode-hook)
 
