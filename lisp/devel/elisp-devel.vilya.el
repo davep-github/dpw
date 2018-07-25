@@ -549,3 +549,9 @@ jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
 \\)*\\(.\\{0,68\\}\\)\\(.*\\)\\(?:
 ;\\|
 \\(.+\\)\\)?"
+
+========================
+Tuesday July 17 2018
+--
+error: patch failed: lisp/dpmacs.el:62
+error: lisp/dpmacs.el: patch does not apply
