@@ -3218,7 +3218,7 @@ lisp-interaction mode."
   ;; mode.
   (let ((scratch-buffer (dp-find-or-create-sb-guts)))
     (if same-buffer-p
-        (switch-to-buffer scratch-buffer)
+	(switch-to-buffer scratch-buffer)
       (switch-to-buffer-other-window scratch-buffer))))
 (dp-defaliases 'sbo 'sb 'dp-find-or-create-sb)
 
