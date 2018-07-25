@@ -112,10 +112,13 @@ its temp-ness.")
                                      (if (dp-xemacs-p)
                                          " *Message-Log*" ;XEmacs
                                        "*Messages*")) ;FSF
-                                   
-  "*The name of the message buffer.  
-Man, can't these guys agree on *ANYTHING*?  
+  "*The name of the message buffer.
+Man, can't these guys agree on *ANYTHING*?
 This should be set by the emacs specific code.")
+
+(defvar dp-warning-buffer-name "*Warnings*"
+  "*The name of the buffer warning messages (duh).
+It's the same (!!) on both macsen! And by the same, I mean not different.")
 
 (defvar dp-ding-backtrace-p t
   "Show a traceback when `ding' is called.  Useful for debugging init stuff.")
