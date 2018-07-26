@@ -1,0 +1,5 @@
+! Remap Super_L to Super.
+! Tigervnc sends Super_L for the Windwoes key.
+! This will very probably fuck up a system that does not do this.
+remove mod4 = Super_L
+add mod4 = Super_L
