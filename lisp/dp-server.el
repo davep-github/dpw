@@ -171,7 +171,8 @@ start a new one."
         (dp-set-frame-title-format)
         (dp-creat-editing-server-ipc-file)))))
   
-(dp-defaliases 'gserv 'xserver 'eserver 'gnuserve 'dp-start-editing-server)
+(dp-defaliases 'dpss 'dpses 'gserv 'xserver 'eserver 'gnuserve
+	       'dp-start-editing-server)
 
 (if (dp-xemacs-p)
     (defun dp-server-running-p (&optional name)
