@@ -3,8 +3,23 @@
 #
 #set -x
 source script-x
-source eexec
 dpcheck
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
 
 : ${NO_HDR:=}
 : ${PS_ALL_OPT:=-A}
@@ -24,7 +39,8 @@ dpcheck
 : ${PS_ARGS="$PS_ALL_OPT $PS_WIDTH $PS_OPTIONS $PS_O_FMT"}
 
 : ${GREPPER:='egrep'}
-: ${GREPPAT:=[ef]?grep(( -.)+)?}
+##: ${GREP_CMD_FILTER_PAT:=[ef]?grep(( -.)+)?}
+: ${GREP_CMD_FILTER_PAT:="[0-9]+:[0-9]+ /bin/sh /bin/${GREPPER}"}
 : ${PGREP:=$0}
 
 out_line()
@@ -66,13 +82,14 @@ Usage_details="Options:
 -t -- Restrict matches to the current tty.
 -T <tty> Restrict matches to the specified <tty>
 -i -- Case insensitive grep.
+-G -- Do not filter the grep command (debug).
 EExec Options:
 -n -- Show what would happen but don't do it.
 -v -- Be verbose about it.
 -q -- Anti-verbose.
 "
 # Example of arg parsing.
-option_str="nvqpPuUwWcCo:htT:li"
+option_str="nvqpPuUwWcCo:htT:liG"
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -101,6 +118,7 @@ do
           } 1>&2 ;;
       -T) shift; tty="${1}";;
       -i) GREP_ARGS="${GREP_ARGS} -i";;
+      -G) GREP_CMD_FILTER_PAT="$^";;
       -h) Usage; exit 0;;
       --) shift ; break ;;
       *) echo 1>&2 "Unsupported option>$1<";
@@ -131,8 +149,10 @@ fi
 #IFS='|'
 got_one=""
 
-#echo_id2 PS_ARGS
-EExec $PS $PS_ARGS | EExec $GREPPER ${GREP_ARGS} "$@" | sort | uniq | egrep -v "[[:space:]]+$GREPPAT | $PGREP" | \
+EExec_verbose_echo_id PS_ARGS
+EExec_verbose_echo_id GREP_CMD_FILTER_PAT
+
+EExec $PS $PS_ARGS | EExec $GREPPER ${GREP_ARGS} "$@" | sort | uniq | egrep -v "[[:space:]]+${GREP_CMD_FILTER_PAT} | $PGREP" | \
   while :; do
     # eof
     read || {
