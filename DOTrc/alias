@@ -312,6 +312,8 @@ alias tree-root=sandbox_root_dir
 
 alias myvncs='ls -l ~/.vnc/*.pid'
 
+alias gpg='dp-gpg-fe'
+
 ## grep: warning: GREP_OPTIONS is deprecated; please use an alias or script
 ## This sucks so much because I used a simple grep to eliminate the grep
 ## being used by dpgrep from the output.  Now it'll be more complex and
