@@ -97,6 +97,7 @@
     "Buffer #<killed buffer> has been killed; use ‘g’ to update"
     "^End of history; no default available$"
     "^Locate: no match for .* in database$"
+    "^No file on this line$"
     ;;XEmacs
     "^No preceding item in "
     "^No following item in "
