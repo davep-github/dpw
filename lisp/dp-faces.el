@@ -65,6 +65,22 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defface dp-journal-function-face
+  '(
+    (((class color) (background light)) (:bold t))
+    (((class color) (background dark)) (:bold t)))
+  "Face for functions in `dp-journal-mode'."
+  :group 'faces
+  :group 'dp-faces)
+
+(defface dp-journal-function-args-face
+  '(
+    (((class color) (background light)) (:foreground "blue"))
+    (((class color) (background dark)) (:foreground "blue")))
+  "Face for function args in `dp-journal-mode'."
+  :group 'faces
+  :group 'dp-faces)
+
 (defface dp-journal-selected-face
   '(
     (((class color) (background light)) (:background "paleturquoise1"))
@@ -127,7 +143,7 @@
 (defface dp-journal-low-problem-face
   '(
     (((class color) (background light)) (:foreground "darkred"))
-    (((class color) (background dark)) (:foreground "darkred")))
+    (((class color) (background dark)) (:inherit font-lock-keyword-face)))
   "Face for low priority problem lines in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
@@ -143,7 +159,8 @@
 (defface dp-journal-high-problem-face
   '(
     (((class color) (background light)) (:foreground "red" :bold t))
-    (((class color) (background dark)) (:foreground "red" :bold t)))
+    (((class color) (background dark))
+     (:inherit dp-journal-medium-problem-face :bold t)))
   "Face for high priority problem lines in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
@@ -151,7 +168,7 @@
 (defface dp-journal-low-question-face
   '(
     (((class color) (background light)) (:foreground "blue"))
-    (((class color) (background dark)) (:foreground "blue")))
+    (((class color) (background dark)) (:foreground "royal blue")))
   "Face for low question lines in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
@@ -159,7 +176,8 @@
 (defface dp-journal-medium-question-face
   '(
     (((class color) (background light)) (:foreground "blue" :bold t))
-    (((class color) (background dark)) (:foreground "blue" :bold t)))
+    (((class color) (background dark))
+     (:inherit dp-journal-low-question-face :bold t)))
   "Face for medium question lines in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
@@ -175,7 +193,8 @@
 (defface dp-journal-low-todo-face
   '(
     (((class color) (background light)) (:foreground "darkred"))
-    (((class color) (background dark)) (:foreground "darkred")))
+    (((class color) (background dark))
+     (:inherit dp-journal-low-problem-face)))
   "Face for low priority todo lines in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
@@ -183,7 +202,8 @@
 (defface dp-journal-medium-todo-face
   '(
     (((class color) (background light)) (:foreground "red"))
-    (((class color) (background dark)) (:foreground "red")))
+    (((class color) (background dark))
+     (:inherit dp-journal-medium-problem-face)))
   "Face for medium priority todo lines in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
@@ -191,7 +211,8 @@
 (defface dp-journal-high-todo-face
   '(
     (((class color) (background light)) (:foreground "red" :bold t))
-    (((class color) (background dark)) (:foreground "red" :bold t)))
+    (((class color) (background dark))
+     (:inherit dp-journal-high-problem-face)))
   "Face for high priority todo lines in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
@@ -207,7 +228,7 @@
 (defface dp-journal-medium-info-face
   '(
     (((class color) (background light)) (:foreground "darkgreen"))
-    (((class color) (background dark)) (:foreground "darkgreen" :bold t)))
+    (((class color) (background dark)) (:foreground "green")))
   "Face for medium priority info lines in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
@@ -215,7 +236,7 @@
 (defface dp-journal-high-info-face
   '(
     (((class color) (background light)) (:foreground "darkgreen" :bold t))
-    (((class color) (background dark)) (:foreground "darkgreen" :bold t)))
+    (((class color) (background dark)) (:foreground "green" :bold t)))
   "Face for high priority info lines in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
@@ -223,7 +244,8 @@
 (defface dp-journal-low-attention-face
   '(
     (((class color) (background light)) (:foreground "black" :bold t))
-    (((class color) (background dark)) (:foreground "grey99" :bold t)))
+;;;    (((class color) (background dark)) (:foreground "grey99" :bold t)))
+    (((class color) (background dark)) (:inherit dp-journal-function-face)))
   "Face for low question lines in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
@@ -231,7 +253,7 @@
 (defface dp-journal-medium-attention-face
   '(
     (((class color) (background light)) (:foreground "blue" :bold t))
-    (((class color) (background dark)) (:foreground "blue" :bold t)))
+    (((class color) (background dark)) (:foreground "grey99" :bold t)))
   "Face for medium question lines in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
@@ -286,23 +308,7 @@
 
 (defface dp-journal-quote-face
   (custom-face-get-spec font-lock-reference-face)
-  "Face for functions in `dp-journal-mode'."
-  :group 'faces
-  :group 'dp-faces)
-
-(defface dp-journal-function-face
-  '(
-    (((class color) (background light)) (:bold t))
-    (((class color) (background dark)) (:bold t)))
-  "Face for functions in `dp-journal-mode'."
-  :group 'faces
-  :group 'dp-faces)
-
-(defface dp-journal-function-args-face
-  '(
-    (((class color) (background light)) (:foreground "blue"))
-    (((class color) (background dark)) (:foreground "blue")))
-  "Face for function args in `dp-journal-mode'."
+  "Face for quote in `dp-journal-mode'."
   :group 'faces
   :group 'dp-faces)
 
@@ -375,7 +381,8 @@
 (defface dp-highlight-point-after-face
   '(
     (((class color) (background light)) (:background "plum"))
-    (((class color) (background dark)) (:foreground "black" :background "plum")))
+    (((class color) (background dark))
+     (:foreground "black" :background "plum")))
   "Face after point."
   :group 'faces
   :group 'dp-faces)
@@ -383,7 +390,8 @@
 (defface dp-highlight-point-face
   '(
     (((class color) (background light)) (:background "green"))
-    (((class color) (background dark)) (:foreground "black" :background "green")))
+    (((class color) (background dark))
+     (:foreground "black" :background "green")))
   "Face for point."
   :group 'faces
   :group 'dp-faces)
@@ -391,7 +399,8 @@
 (defface dp-highlight-point-other-window-before-face
   '(
     (((class color) (background light)) (:background "DarkSeaGreen2" :bold t))
-    (((class color) (background dark)) (:foreground "black" :background "DarkSeaGreen2" :bold t)))
+    (((class color) (background dark))
+     (:foreground "black" :background "DarkSeaGreen2" :bold t)))
   "Face before point."
   :group 'faces
   :group 'dp-faces)
@@ -399,7 +408,8 @@
 (defface dp-highlight-point-other-window-at-face
   '(
     (((class color) (background light)) (:background "SeaGreen1" :bold t))
-    (((class color) (background dark)) (:foreground "black" :background "SeaGreen1" :bold t)))
+    (((class color) (background dark))
+     (:foreground "black" :background "SeaGreen1" :bold t)))
   "Face for point."
   :group 'faces
   :group 'dp-faces)
