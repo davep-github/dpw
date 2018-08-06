@@ -11300,22 +11300,25 @@ the minibuffer."
 ;;;           (insert template)
 ;;;           'add-junk)))))
 
-(defvar dp-script-buffers-to-ignore-regexp "^\*\\| "
-  "Buffers usually not associated with a file.  
+(defvar dp-script-buffers-to-ignore-regexp "^\\(\\*\\| \\)"`
+  "Buffers usually not associated with a file.
 If it is indeed a script name <script>-it can be called interactively.")
 
 (defun* dp-script-it (interpreter
                       run-with-/usr/bin/env-p
                       &key
-                      (make-executable-p t) 
+		      forcep
+		      (make-executable-p t)
                       comment-start
                       (add-to-svn-p 'check)
-                      template 
+		      template
                       template-args
                       (add-shebang-p t))
   (interactive "sinterpreter: \nP")
-  (when (string-match dp-script-buffers-to-ignore-regexp
-                      (buffer-name))
+  (when (and (not (called-interactively-p))
+	     (not forcep)
+	     (string-match dp-script-buffers-to-ignore-regexp
+			   (buffer-name)))
     (return-from dp-script-it))
   (goto-char (point-min))
   (unless (dp-re-search-forward (regexp-quote interpreter) 
@@ -11345,8 +11348,9 @@ If it is indeed a script name <script>-it can be called interactively.")
                                               template-args))
                added-junk-p))
       (insert "\n")
-      (previous-line 1)))                  ; Don't want to be on the [EOF] line
-  (when make-executable-p
+      (previous-line 1)))	  ; Don't want to be on the [EOF] line
+  (when (and buffer-file-name
+	     make-executable-p)
     (dp-cx-file-mode))
   (dp-push-go-back (format "dp-script-it %s" interpreter) (- (point-max) 1))
   ;; Let the user quit without having to muck about with undos or
@@ -11866,7 +11870,7 @@ spec-macsen are used for the completion list."
               file-name)))
 (defalias 'esm 'dp-edit-spec-macs)
 
-(defvar dp-major-mode-to-shebang
+(defvar dp-major-mode-to-shebang-map
   ;; Symbol for key, plist for value
   '((python-mode it pyit)
     (sh-mode it bashit)
@@ -11896,7 +11900,7 @@ Where plist has elements:
 (defun dp-auto-it ()
   "Automagically determine what interpreter we should put in the shebang."
   (interactive)
-  (let ((info-plist (cdr (assoc major-mode dp-major-mode-to-shebang))))
+  (let ((info-plist (cdr (assoc major-mode dp-major-mode-to-shebang-map))))
     (undo-boundary)
     (if info-plist
         (if (plist-get info-plist 'it)
