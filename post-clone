@@ -114,7 +114,7 @@ ln_dotrc \
 	alias \
 	gdbinit \
 	gitconfig \
-	gitexclude \
+	gitignore \
 	go \
 	inputrc \
 	lessrc \
