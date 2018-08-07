@@ -346,6 +346,8 @@ Ee|locbld|       /home/davep/local/build/
 Ee|sddpw|dpwsd|udpw|dpwu|       /mnt/ultra/repos/dpww.git/
 Ee|udpw|sddpw|       /mnt/ultra/repos/dpw.git/
 Ee|rustfuse|rufuse|       /home/davep/local/build/rust-fuse/
+E|gpg|       /home/davep/.gnupg/
+Ee|gnupg|       /home/davep/.gnupg/
 ### Local Variables: ***
 ### tab-width: 2 ***
 ### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***
