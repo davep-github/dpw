@@ -189,7 +189,8 @@ this code runs, so I need to check for its presence before running
     (and (featurep 'server)
 	 (server-running-p))))
 
-(defun dp-sig-toggle-server ()
+(defun dp-signal-toggle-server ()
+  "Toggle state of server when SIGUSR1 is caught. On -> off -> on..."
   (interactive)
   (message "Caught %S; toggling server active state."
 	   last-input-event)
@@ -206,6 +207,6 @@ this code runs, so I need to check for its presence before running
 )
 
 (unless (dp-xemacs-p)
-  (define-key special-event-map [sigusr1] 'dp-sig-toggle-server))
+  (define-key special-event-map [sigusr1] 'dp-signal-toggle-server))
 
 (provide 'dp-server)
