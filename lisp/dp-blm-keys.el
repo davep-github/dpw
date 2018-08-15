@@ -175,7 +175,7 @@ PROTECT-BINDINGS-P controls if bindings can be overridden by this function."
     "List which tells us how to get our buffer local key map.")
   
   (defvar dp-blm-modeline-string " BLm"
-    "Mode line string to show our \"minor mode\" is active.")
+    "Mode line string to show our Buffer Local keymap mode is active.")
   
   (defun dp-blm-get-map ()
     "Returns CONS: (keymap . settor-function).
