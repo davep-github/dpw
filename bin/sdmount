@@ -27,21 +27,6 @@ unset eexec_program
 # Or export eexec_program to propagate eexec info to a called program.
 # export eexec_program
 
-# davep specific code -------------8><------------------
-
-#mutually exclusive with real EExec# EExec=
-#mutually exclusive with real EExec# no_exec_p=
-#mutually exclusive with real EExec# Non_EExecer()
-#mutually exclusive with real EExec# {
-#mutually exclusive with real EExec#     echo "{-} $@" 1>&2
-#mutually exclusive with real EExec# }
-
-#mutually exclusive with real EExec# Verbose_EExecer()
-#mutually exclusive with real EExec# {
-#mutually exclusive with real EExec#     echo "{+} $@"
-#mutually exclusive with real EExec#     "$@"
-#mutually exclusive with real EExec# }
-
 trap_exit_msg=
 
 # Useful traps
@@ -105,6 +90,6 @@ Usage_error()
 # template end.
 ########################################################################
 
-: ${pattern:=${1-/dev/sd}}
+: ${dev_pattern:=${1-/dev/sd}}
 
-EExec mount | EExec egrep "${pattern}"
+EExec mount | EExec egrep "${dev_pattern}"
