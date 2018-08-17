@@ -98,7 +98,7 @@ egrep_for_dirname()
             shift
             pat="$1"
         fi
-        EExec go2env -L | EExec -0 egrep ${GREP_DASH_N-} "$pat"
+        EExec -k go2env -L | EExec -k -0 egrep ${GREP_DASH_N-} "$pat"
     } | sort | uniq
 }
 
@@ -107,9 +107,10 @@ grep_for_pwdname()
     {
         # Look for various versions of the current directory name.
         pat=":($PWD|$(pwd)|$(realpath .))/ "
+	EExec_verbose_echo_id pat
         #echo "pat>$pat<"
-        EExec -y -0 egrep_for_dirname "" "$pat"
-    } | sort | uniq
+        EExec -k -y -0 egrep_for_dirname "" "$pat"
+    } | tee q | sort | uniq
 }
 
 # Not yet. Search for sandbox relative name
@@ -268,7 +269,7 @@ do
             }
 	    echo "$line" >> "${tmp_gfile}"
 #             echo >> "${tmp_gfile}"
-            egrep "${emacs_locals_re}" "${gfile}" >> "${tmp_gfile}"
+            \egrep "${emacs_locals_re}" "${gfile}" >> "${tmp_gfile}"
             yes y | cp "${tmp_gfile}" "${gfile}" || {
                 echo "cp ${tmp_gfile} ${gfile} failed."
                 rm -f "${tmp_gfile}"
