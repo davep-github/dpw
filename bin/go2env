@@ -400,7 +400,13 @@ aliases>%s<""", line_num, line, selector, aliases)
     if not m:
         if line[-1] == "\n":
             line = line[:-1]
-        dp_io.eprintf("input line %d has bad format\n>%s<\n", line_num, line)
+        if file_name:
+            name_msg = "{}: ".format(file_name)
+        else:
+            name_msg = ""
+
+        dp_io.eprintf("input line %s%d has bad format\n>%s<\n",
+                      name_msg, line_num, line)
         return
 
     # format of the first part of a line:
