@@ -605,6 +605,9 @@
      ((("fh" "FETCH_HEAD") 'circular) dp-manual)
      ((("dup" "dupe" "duplicate") 'circular) dp-manual)
      ((("dups" "dupes" "duplicates") 'circular) dp-manual)
+     ((("stderr" "/proc/self/fd/2" "1>&2") 'circular) dp-manual)
+     ((("stdout" "/proc/self/fd/1") 'circular) dp-manual)
+     ((("stdin" "/proc/self/fd/0") 'circular) dp-manual)
 
      ;; Some mu4e mailbox names.
      ;; Expansion no work.
