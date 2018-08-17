@@ -500,7 +500,7 @@ Works with tabs.")
   :type 'boolean)
 
 (defvar dp-space-before-tab-font-lock-element
-  '(dp-space-before-tab-regexp 0 'dp-trailing-whitespace-face 'prepend)
+  (list dp-space-before-tab-regexp 0 'dp-trailing-whitespace-face 'prepend)
   "A font-lock element to pick out trailing whitespace.")
 
 (defvar dp-too-many-spaces-in-a-row-font-lock-element
