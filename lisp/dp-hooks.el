@@ -663,6 +663,9 @@ then applies changes. This is good... sometimes."
   "My hanging braces values.  We will edit or append to
 c-hanging-braces-alist based upon these values.")
 
+;; things like `dp-use-too-many-spaces-font-p' are disabled because the fontifier says:
+;; (jit-lock-function 66587)
+;;   signaled (void-function dp-too-many-spaces-in-a-row-regexp)
 (defun* dp-c-like-add-extra-faces (list-o-modes
                                    &key
                                    (buffer-local-p nil)
