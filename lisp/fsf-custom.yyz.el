@@ -126,5 +126,4 @@
  '(isearch ((t (:background "medium spring green" :foreground "#100e23" :weight bold))))
  '(lazy-highlight ((t (:background "#65b2ff" :foreground "black"))))
  '(rectangle-preview ((t (:inherit region))))
- '(region ((t (:background "turquoise2" :foreground "black" :box (:line-width 2 :color "grey75" :style released-button) :weight bold))))
- '(trailing-whitespace ((t (:background "#000042" :strike-through nil :underline (:color foreground-color :style wave))))))
+ '(region ((t (:background "turquoise2" :foreground "black" :box (:line-width 2 :color "grey75" :style released-button) :weight bold)))))
