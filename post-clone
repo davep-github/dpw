@@ -62,7 +62,7 @@ safe_ln()
             echo "${dest} exists and is a symlink."
             if [ "${existing_link_action}" = "replace" ]
             then
-                echo "  \`-Removing and remaking link."
+                echo "  \`-Removing and will remake link."
                 ${EZEC} rm -f "${ln_dir}"
             else
                 echo "  \`-Leaving link alone."
@@ -127,7 +127,8 @@ ln_dotrc \
 	bash_logout \
         go.home \
         mailrc \
-        ipython
+        ipython \
+	password-store
 
 #
 # Reference all of the bash_completion code.
