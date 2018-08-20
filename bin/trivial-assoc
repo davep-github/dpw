@@ -29,7 +29,16 @@ sep=
 while (($# > 0))
 do
   field_name="${1}"
-  val=$(cat "${file_name}" | EExec sed -rn "s/(.*)(${field_name})( \. \")([a-zA-Z_0-9-]*)(.*)/\4/p")
+    #ORIGvvvv -- fails on pid because it isn't in quotes.
+    #val=$(cat "${file_name}" | EExec sed -rn "s/(.*)(${field_name})( \. \")([a-zA-Z_0-9-]*)(.*)/\4/p")
+    # Hack to make pids work, but not robust.
+    val=$(cat "${file_name}" | EExec sed -rn "s/(.*)(${field_name})( \. \"?)([a-zA-Z_0-9-]*)(.*)/\4/p")
+
+    # Last digit of pid is in another match sub-expression.
+    #val=$(cat "${file_name}" | EExec sed -rn "s/(.*)(${field_name})( \. (([0-9]+)|\")([a-zA-Z_0-9-]+))(.*)/\5/p")
+
+    # trying to delineate sub-exp matches.
+    val=$(cat "${file_name}" | EExec sed -rn "s/(.*)(${field_name})( \. (([0-9]+)|\"([a-zA-Z_0-9-]+)))(.*)/\5/p")
   ret="${ret}${sep}${val}"
   sep=" "
   shift
