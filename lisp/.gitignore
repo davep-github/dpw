@@ -6,4 +6,6 @@ history.*
 .emacs_*.*
 /bug-tmp/
 emacs-places*
+places
 /elpa/
+
