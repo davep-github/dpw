@@ -14464,12 +14464,17 @@ JFC."
   (interactive "P")
   (set-window-dedicated-p (dp-get-buffer-window) (not arg)))
 
-(defsubst eli ()
+(defun eli ()
   "Emacs Lisp Info.  Visit Emacs Lisp Info node."
   (interactive)
   (info "elisp"))
 
-(defsubst magi ()
+(defun emi ()
+  "Emacs Info.  Visit Emacs Info node."
+  (interactive)
+  (info "emacs"))
+
+(defun magi ()
   "Magit Info.  Visit Magit's Info node."
   (interactive)
   (info "magit"))
