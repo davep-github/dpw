@@ -1825,6 +1825,8 @@ Motivated by abstraction of `dp-indent-line-and-move-down'."
   ;; `preserve-column-p' vs not results in some very different behavior, the
   ;; details of which I cannot remember. I just know that each case had
   ;; suck-ass problems.
+  ;; FSF: See doc for `next-line' to see how it, `line-move-visual'
+  ;; and `goal-column' interact.  NB: `forward-line' always seems to use physical (not visual) lines.
   (let ((goal-column goal-column))
     (unless preserve-column-p 
       (setq goal-column (current-column)))
