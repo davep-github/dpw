@@ -14,6 +14,7 @@
  '(beacon-blink-when-focused t)
  '(beacon-color "medium sea green")
  '(beacon-mode t)
+ '(calendar-mark-holidays-flag t)
  '(calendar-today-marker (quote calendar-today))
  '(comint-buffer-maximum-size 8192)
  '(comint-input-autoexpand t)
@@ -104,6 +105,7 @@
  '(tags-revert-without-query t)
  '(timeclock-mode-line-display nil)
  '(tool-bar-mode nil)
+ '(vc-follow-symlinks t)
  '(wdired-allow-to-change-permissions t)
  '(whitespace-line-column 72)
  '(whitespace-style

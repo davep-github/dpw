@@ -110,12 +110,6 @@ function template at point.
 (defsubst dp-mmm-in-any-subregion-p (&rest r)
   nil)
 
-;;; This is what I get for committing myself meself to a "proprietary"
-;;; subsystem, i.e. extents (which are so much better.)
-;; (defsubst make-extent (&rest r)
-;;   (message "change make-extent to something FSF-ish"))
-;; (defsubst set-extent-properties (&rest r)
-;;   (message "change set-extent-properties to something FSF-ish"))
 (defun map-extents (&rest r)
   (message "change map-extents to something FSF-ish"))
 
@@ -257,8 +251,6 @@ in the and-statement.  This is a clean way to avoid such warnings.  See also
 
 (defun minibuffer-keyboard-quit ()
   (interactive)
-  ;;(exit-minibuffer)
-  ;;(keyboard-quit)
   (keyboard-escape-quit))
 
 (defun symbol-near-point ()
@@ -395,8 +387,6 @@ pee-pee. "
     (eobp)))
 
 ;; Copped from `gnus-key-press-event-p'.
-;;(defun key-press-event-p (x)
-;;  (numberp x))
 (defun key-press-event-p (x)
   (not (mouse-event-p x)))
 
@@ -452,14 +442,9 @@ Use BEGIN and END as the limits of the extent."
     (cl-loop for olay in overlays
 	     do
 	     ;; Only delete overlays with prop
-	     ;; (cons 'dp-file-state-colorization t)
 	     (delete-overlay olay))))
 
 (defalias 'dp-set-background-color 'dp-buffer-bg-set-color)
-
-(defadvice apropos (before dp-advice activate)
-  "Invert sense of DO-ALL.  We likes the DO-ALL, precious."
-  (ad-set-arg 1 (not (ad-get-arg 1))))
 
 (defun dp-find-file (file-name codesys &optional wildcards)
   "FSF no take codesys arg."
@@ -587,7 +572,6 @@ Currently it removes it regardless of the line we're on."
 (require 'cus-edit)
 (defsubst custom-face-get-spec (face)
   (custom-face-get-current-spec face))
-;;(defalias 'custom-face-get-spec 'custom-face-get-current-spec)
 
 (defun dp-read-file-name (prompt &optional dir default-file-name
        must-match initial predicate hist-var)
@@ -616,7 +600,4 @@ Name is old and from the XEmacs days and is used for compatibility."
   (interactive)
   (apply 'appt-activate r))
   
-;;(add-hook 'appt-make-list-hook 'dp-appt-initialize)
-
-
 (message "dp-fsf-fsf-compat loading...done")

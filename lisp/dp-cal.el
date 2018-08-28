@@ -8,6 +8,9 @@
     ;; flag? Flag? FLAG?  WTFUWT? Methinks they misspelled "-p".
     (setq calendar-mark-diary-entries-flag t))
   (add-hook 'calendar-today-visible-hook 'calendar-mark-today)
+  (add-hook 'calendar-update-mode-line ‘calendar-move-hook)
+  (add-hook 'calendar-move-hook (lambda () (diary-view-entries 1)))
+
   ;; define-key is the recommended method vs local-set-key.
   (define-key calendar-mode-map [(meta left)] 'calendar-backward-month)
   (define-key calendar-mode-map [(meta right)] 'calendar-forward-month)
@@ -65,7 +68,8 @@
   (dp-appt-initialize))
 
 (add-hook 'diary-hook 'dp-diary-hook)
-(defvar dp-diary-hook-active nil)
+(defvar dp-diary-hook-active-p nil
+  "Provide exclusive access to appt initialization.")
 (defun dp-diary-hook ()
   "Setup diary mode my way."
   (interactive)
@@ -73,10 +77,10 @@
   ;ensure that new appointments are activated, since it is called BEFORE
   ;changes to the diary.  However it may catch some oversights.
   ;In the calendar, for convenience, M-d is defined as `dp-appt-initialize'.
-  (unless dp-diary-hook-active
-    (setq dp-diary-hook-active t)
+  (unless dp-diary-hook-active-p
+    (setq dp-diary-hook-active-p t)
     (dp-appt-initialize)
-    (setq dp-diary-hook-active nil)))
+    (setq dp-diary-hook-active-p nil)))
 ;
 ; dp-appt-initialize loads the diary file, so this doesn't quite work.
 ;(defun dp-diary-kill-buffer-hook ()
