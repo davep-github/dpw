@@ -610,4 +610,13 @@ e.g. \(dp-plist-equal '(p1 v1 p2 v2) '(p2 v2 p1 v1)) is t"
                           (read-regexp "List faces matching regexp"))))
   (list-faces-display (or regexp dp-faces-regexp)))
 
+(defun dp-appt-initialize (&rest r)
+  "An interactive function for [re]initializing the appointment list.
+Name is old and from the XEmacs days and is used for compatibility."
+  (interactive)
+  (apply 'appt-activate r))
+  
+;;(add-hook 'appt-make-list-hook 'dp-appt-initialize)
+
+
 (message "dp-fsf-fsf-compat loading...done")

@@ -15,20 +15,6 @@ non-diary-file appts.")
   (or (bound-and-true-p dp-use-new-appt-code-p)
       (not (fboundp 'appt-frame-announce))))
 
-(defun dp-appt-initialize ()
-  "An interactive function for [re]initializing the appointment list."
-  (interactive)
-  ;; Some substantial (and fatal to me) changes were made 1998 <= yr <= 2007.
-  ;; eg, `appt-initialize' is an alias of `appt-activate', but old
-  ;; appt-initialize did unconditional activation and took no param.
-  ;; This is common and should work in all cases
-  (if (dp-use-v2-appt-stuff-p)
-      (appt-check t)
-    (appt-check))
-  (run-hooks 'dp-appt-creation-hooks))
-
-;;(add-hook 'appt-make-list-hook 'dp-appt-initialize)
-
 (dp-deflocal dp-appt-frame-appt nil
   "Appt that lives in this frame.")
 
