@@ -277,6 +277,21 @@ Editing commands:
 (global-set-key [(control ?x) (control right)] 'dp-switch-to-next-buffer)
 (global-set-key [(control ?x) (control left)] 'dp-switch-to-previous-buffer)
 
+(defun dp-appt-initialize (&rest r)
+  "An interactive function for [re]initializing the appointment list."
+  (interactive)
+  ;; Some substantial (and fatal to me) changes were made
+  ;; 1998 <= yr <= 2007.
+  ;; eg, `appt-initialize' is an alias of `appt-activate', but old
+  ;; appt-initialize did unconditional activation and took no param.
+  ;; This is common and should work in all cases
+  (if (dp-use-v2-appt-stuff-p)
+      (appt-check t)
+    (appt-check))
+  (run-hooks 'dp-appt-creation-hooks))
+
+;;(add-hook 'appt-make-list-hook 'dp-appt-initialize)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Nicked from Emacs.
 

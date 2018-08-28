@@ -1,5 +1,12 @@
 (message "dp-fsf loading...")
 
+(setq isearch-continues 'isearch-scroll
+      custom-file (dp-lisp-subdir
+		   (format "fsf-custom.%s.el" (dp-short-hostname)))
+      apropos-do-all t
+      )
+(load custom-file)
+
 (defun dp-ibuffer-do-save ()
   "Save and then refresh the buffer."
   (interactive)
