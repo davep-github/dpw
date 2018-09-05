@@ -1,7 +1,8 @@
 IMAPAccount amd
 Host smtp.office365.com
 User dpanarit@amd.com
-PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.gnupg/smtp.office365.com.pwd.gpg"
+#PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.gnupg/smtp.office365.com.pwd.gpg"
+PassCmd "pass amd/smtp.office365.com
 ##Pass Not-Password
 UseIMAPS yes
 CertificateFile /etc/ssl/certs/ca-certificates.crt
@@ -28,7 +29,8 @@ SyncState *
 IMAPAccount vilya
 Host smtp.verizon.net
 User dpanarit@vilya.com
-PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.gnupg/smtp.verizon.net.pwd.gpg"
+#PassCmd "gpg2 -q --for-your-eyes-only --no-tty -d ~/.gnupg/smtp.verizon.net.pwd.gpg"
+PassCmd "pass dpw/smtp.verizon.net"
 ##Pass Not-Password
 UseIMAPS yes
 CertificateFile /etc/ssl/certs/ca-certificates.crt
