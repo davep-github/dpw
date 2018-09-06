@@ -12,6 +12,7 @@ do
 done
 unset eexec_program
 
+: ${LOG_DIR:=$DP_LOG_DIR/debug/go-mgr}
 DEFAULT_SB_SUFFIX="__SB_rel"
 ENV_NAME_MIN_LEN=4
 flags='Ee'
@@ -110,7 +111,7 @@ grep_for_pwdname()
 	EExec_verbose_echo_id pat
         #echo "pat>$pat<"
         EExec -k -y -0 egrep_for_dirname "" "$pat"
-    } | tee q | sort | uniq
+    } | tee "${LOG_DIR}" | sort | uniq
 }
 
 # Not yet. Search for sandbox relative name
