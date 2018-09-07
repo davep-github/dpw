@@ -127,8 +127,16 @@ show_rev_p=
 
 Usage()
 {
-    echo "Usage: ${progname} [options...] <nth> files...
-Cat the <nth> previous *change* to files, not simply HEAD~<nth>."
+    echo "Usage: ${progname} [commit|-n[0-9]+|-[0-9]+|--oldest|--original|--earliest] files...
+For -n<nth> and -<nth> cat the <nth>  previous *change* to files..., not simply HEAD~<nth>.
+<nth> == 0 is current in working dir.
+E.g. if x.c was modified in HEAD~4 and HEAD~8 then
+-0 --> current working copy
+-1 --> HEAD~4
+-2 --> HEAD~9
+Otherwise cat the indicated commit of files...
+[This may be doable by git directly, but I wrote this (poorly) before
+I looked.]"
 }
 
 if (($# == 0))
@@ -185,7 +193,7 @@ do
       [ -z "${commit}" ] && {
           echo "Cannot find commit for >${nth}<"
           exit 1
-      } 2>& 1
+      } 1>&2
   fi
 
   [ -n "${show_rev_p}" ] && git rev-parse "${commit}"
