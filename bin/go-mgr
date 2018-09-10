@@ -13,6 +13,7 @@ done
 unset eexec_program
 
 : ${LOG_DIR:=$DP_LOG_DIR/debug/go-mgr}
+: ${GREP_DASH_I=}
 DEFAULT_SB_SUFFIX="__SB_rel"
 ENV_NAME_MIN_LEN=4
 flags='Ee'
@@ -99,7 +100,7 @@ egrep_for_dirname()
             shift
             pat="$1"
         fi
-        EExec -k go2env -L | EExec -k -0 egrep ${GREP_DASH_N-} "$pat"
+        EExec -k go2env -L | EExec -k -0 egrep ${GREP_DASH_I-} "$pat"
     } | sort | uniq
 }
 
@@ -137,8 +138,10 @@ delete_item()
 	exit $rc
     }
 
-    # why use sed like this? sed "/|${name}|/d" < $(go_file) > $tmp || exit
-    fgrep ${GREP_DASH_N-} -v "|${name}|" < $(go_file) > $tmp || {
+    # q: why use sed like this? sed "/|${name}|/d" < $(go_file) > $tmp || exit
+    # a: To override the value?  A bug of /d only deletes the match,
+    # tho.  Yes, M-x man sed is too hard.
+    fgrep ${GREP_DASH_I-} -v "|${name}|" < $(go_file) > $tmp || {
 	rc=$?
 	echo 1>&2 "Failed to fgrep |${name}| from $(go_file)."
 	exit $rc
@@ -261,7 +264,8 @@ do
             echo_id tmp_gfile
             gfile=$(go_file)
             emacs_locals_re='^#.* (\*\*\*|)[[:space:]]*$'
-            egrep ${GREP_DASH_N-} -v "${emacs_locals_re}" "${gfile}" >| "${tmp_gfile}"
+	    EExec_verbose_echo_id GREP_DASH_I
+            EExec egrep ${GREP_DASH_I-} -v "${emacs_locals_re}" "${gfile}" >| "${tmp_gfile}"
 	    name=$(echo "|$name|" | sed -r 's/\|+/\|/g')
 	    line="${flags}${name}       $val"
 	    echo "$line >> $gfile"
@@ -270,7 +274,9 @@ do
             }
 	    echo "$line" >> "${tmp_gfile}"
 #             echo >> "${tmp_gfile}"
-            \egrep "${emacs_locals_re}" "${gfile}" >> "${tmp_gfile}"
+	    # Can't use eexec here because we get an error if there are no emacs locals.
+	    # I need to add a way to accept an arbitrary list of return codes.
+	    egrep "${emacs_locals_re}" "${gfile}" >> "${tmp_gfile}"
             yes y | cp "${tmp_gfile}" "${gfile}" || {
                 echo "cp ${tmp_gfile} ${gfile} failed."
                 rm -f "${tmp_gfile}"
@@ -309,7 +315,7 @@ do
 
 	-g)
             shift
-	    egrep ${GREP_DASH_N-} "$@" $GOPATH_WITH_SPACES /dev/null
+	    egrep ${GREP_DASH_I-} "$@" $GOPATH_WITH_SPACES /dev/null
 	    exit $?
 	    ;;
 
