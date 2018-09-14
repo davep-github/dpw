@@ -8,7 +8,7 @@
     ;; flag? Flag? FLAG?  WTFUWT? Methinks they misspelled "-p".
     (setq calendar-mark-diary-entries-flag t))
   (add-hook 'calendar-today-visible-hook 'calendar-mark-today)
-  (add-hook 'calendar-update-mode-line ‘calendar-move-hook)
+  (add-hook 'calendar-move-hook 'calendar-update-mode-line)
   (add-hook 'calendar-move-hook (lambda () (diary-view-entries 1)))
 
   ;; define-key is the recommended method vs local-set-key.
