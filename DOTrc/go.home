@@ -1,7 +1,7 @@
 # @todo  Make a func like emacs_remote(sybil) which will generate the proper
 # @todo  emacs syntax for a remote file (eg tramp or efs or ange)
 
-Ee|davep|             ${davep}/
+Ee|davep|             ${HOME}/
 #|bin| is very important.
 Ee|bin|               ${davep}/bin/
 Ee|yokel|             ${davep}yokel/
@@ -327,7 +327,7 @@ Ee|worksk|       ${davep}/work/skaion/
 # Added Wed Nov 26 15:56:48 EST 2014
 Ee|skwork|       ${davep}/work/skaion/
 # Added Thu Nov 27 11:55:03 EST 2014
-Ee|yokeldavep|ydavep|ydp|davepy|       .
+Ee|yokeldavep|ydavep|ydp|davepy|       ${davep}/yokel/
 # Added Wed Dec 17 16:45:03 EST 2014
 Ee|ta2|       ${davep}/work/skaion/ta2-scaling/
 # Added Sat Apr 25 10:22:27 EDT 2015
@@ -339,17 +339,18 @@ Ee|local|          ${davep}/local/
 Ee|loc|            ${davep}/local/
 Ee|linuxtoamdgpu|  drivers/gpu/drm/amd/amdgpu
 Ee|ltogpu|ltoa|l27|l28|l29| ${linuxtoamdgpu}
-Ee|amdlinux|worklinux|    /home/davep/work/amd/amdgpu/kernel-git/linux
+Ee|amdlinux|worklinux|    ${davep}/work/amd/amdgpu/kernel-git/linux
 Ee|wak|wal|wl|al|          ${amdlinux}
 Ee|waka|wala|wla|ala|      ${amdlinux}/${linuxtoamdgpu}
-Ee|locbld|       /home/davep/local/build/
+Ee|locbld|       ${davep}/local/build/
 Ee|sddpw|dpwsd|udpw|dpwu|       /mnt/ultra/repos/dpww.git/
 Ee|udpw|sddpw|       /mnt/ultra/repos/dpw.git/
-Ee|rustfuse|rufuse|       /home/davep/local/build/rust-fuse/
-E|gpg|       /home/davep/.gnupg/
-Ee|gnupg|       /home/davep/.gnupg/
-Ee|passs|pwds|       /home/davep/.password-store/
+Ee|rustfuse|rufuse|       ${davep}/local/build/rust-fuse/
+E|gpg|       ${davep}/.gnupg/
+Ee|gnupg|       ${davep}/.gnupg/
+Ee|passs|pwds|pws|       ${davep}/.password-store/
 Ee|incoming|       /media/audio/mvsik/incoming/
+Ee|dpcd|           ${davep}/lisp/dp-themes.d/dp-challenger-deep-theme.el
 ### Local Variables: ***
 ### tab-width: 2 ***
 ### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***
