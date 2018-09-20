@@ -72,12 +72,12 @@ Usage_synopsis="Create list of files from shuffled list of albums:
 # Using ) after the args makes copy & paste between here and the
 # case statement easier.
 Usage_details="${EExec_parse_usage}
---cat|--out|--list) Put list on stdout
+--cat|--out|--list) Put list on stdout [default]
 --mpc-add|--add|--queue) Queue/add to mpd current playlist
--z|--zap|--clear|--empty|--mt|--no-append) Clear existing playlist first.
+-z|--zap|--clear|--empty|--mt|--no-append|--nuke) Clear existing playlist first.
 -a|--append) Do not clear existing playlist.
---num-albums|--num) Number of albums to use.
--j|--just-album-names|--just-albums|--album-names|--jan) Guess...
+--num-albums|--num|--na) Number of albums to use.
+-j|--just-album-names|--just-albums|--album-names|--jan|--an) Just show the album names.
 -p <playlist> |--playlist <playlist>) Put list into <playlist>.
 "
 
@@ -86,10 +86,11 @@ option_str="zajp:"
 long_options=(
     "cat" "out" "list"
     "mpc-add" "add" "queue"
-    "zap" "clear" "empty" "mt"
+    "zap" "clear" "empty" "mt" "no-append" "nuke"
     "append"
-    "num-albums:" "num:"
+    "num-albums:" "num:" "na:"
     "all"
+    "just-album-names" "just-albums" "album-names" "jan" "an"
     "pl:" "play-list:" "playlist:"
 )
 
@@ -104,13 +105,12 @@ do
       # Program options.
       --cat|--out|--list) handler=cat_handler;;
       --mpc-add|--add|--queue) handler=mpc_add_handler;;
-      -z|--zap|--clear|--empty|--mt|--no-append) clear_p=true;;
+      -z|--zap|--clear|--empty|--mt|--no-append|--nuke) clear_p=true;;
       -a|--append) clear_p=false;;
-      --num-albums|--num) shift; num="${1}";;
-      -j|--just-album-names|--just-albums|--album-names|--jan) just_album_names_p=true;;
+      --num-albums|--num|--na) shift; num="${1}";;
+      -j|--just-album-names|--just-albums|--album-names|--jan|--an) just_album_names_p=true;;
       -p|--pl|--play-list|--playlist) shift; playlist="${1}"; handler=playlist_handler;;
-      -a|--all) num=-0;;
-
+      -a|--all) num=0;;
 
       # Help!
       --help) Usage; exit 0;;
@@ -125,7 +125,7 @@ done
 
 : ${handler:=cat_handler}
 : ${clear_p=true}
-: ${num=-0}
+: ${num=-0}			# Not a typo.  We want -0.
 : ${just_album_names_p=false}
 
 cat_handler()
@@ -155,6 +155,15 @@ EExecDashN_p && handler=cat_handler
     clear_p=false
 }
 "${clear_p}" && EExec mpc clear
+# This will give you the list of albums in the current playlist (aka
+# queue).
+# mpc -f '%album%' playlist | sort | uniq
+# It returns the album name for each song in the playlist.  We need to
+# sort because there may be different songs from the same album in
+# different places, abd there may be dupes of entire albums.
+# | sort | uniq handles all of that.
+# We can use this list to shuffle the current playlist.
+# Use a named function to do one or the other.
 mpc list album | shuf | head -n "${num}" | while read
 do
   if "${just_album_names_p}"
