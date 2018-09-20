@@ -121,4 +121,4 @@
  '(lazy-highlight ((t (:background "#65b2ff" :foreground "black"))))
  '(rectangle-preview ((t (:inherit region))))
  '(region ((t (:background "turquoise2" :foreground "black" :box (:line-width 2 :color "grey75" :style released-button) :weight bold))))
- '(trailing-whitespace ((t (:background "midnight blue" :strike-through t)))))
+ '(trailing-whitespace ((t (:background "midnight blue" :strike-through nil :underline (:color "magenta" :style wave))))))
