@@ -10207,7 +10207,7 @@ The return value is the result of `memq' on MEMQ-LIST"
 (defun* dp-one-window++ (&optional (arg 1))
   "Toggle between one window and previously saved window configurations.
 Saves window configurations in registers. Default is reg `\(int-to-char ARG\)'
-If ARG is <, save configuration to abs(ARG) and make a single window.
+If ARG is < 0, save configuration to abs(ARG) and make a single window.
 this case.
 @todo ??? Save last used register as default?
 @todo ??? Create a `dp-one-other-window++'.  Mod this?  
