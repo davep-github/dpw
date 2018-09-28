@@ -343,6 +343,7 @@ Ee|amdlinux|worklinux|    ${davep}/work/amd/amdgpu/kernel-git/linux
 Ee|wak|wal|wl|al|          ${amdlinux}
 Ee|waka|wala|wla|ala|      ${amdlinux}/${linuxtoamdgpu}
 Ee|locbld|       ${davep}/local/build/
+Ee|locbin|       ${davep}/local/bin/
 Ee|sddpw|dpwsd|udpw|dpwu|       /mnt/ultra/repos/dpww.git/
 Ee|udpw|sddpw|       /mnt/ultra/repos/dpw.git/
 Ee|rustfuse|rufuse|       ${davep}/local/build/rust-fuse/
