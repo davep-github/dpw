@@ -66,6 +66,8 @@ Ee|eddrop|                   ${droppings}/editors/
 Ee|hi|                       /home/dpanarit/etc/pydb/
 Ee|emacsdropping|edrop|      ${droppings}/editors/emacs/
 Ee|xemacsdropping|xedrop|    ${droppings}/editors/xemacs/
+Ee|originmaster|origmas|origm|omaster|omas| origin/master
+Ee|masto|morigin|morig|      ${originmaster}
 
 ### 
 ### Local Variables: ***
