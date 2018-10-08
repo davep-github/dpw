@@ -89,7 +89,7 @@ Usage_error()
 # template end.
 ########################################################################
 
-: ${PGREP_REGEXP:=}
+: ${DPGREP_REGEXP:=}
 : ${raise_p=}
 
 while (($# > 0))
@@ -120,9 +120,9 @@ default_progname()
 run_iff_fun()
 {
     # Run prog if we fail to find it.
-    if [ -n "${PGREP_REGEXP}" ]; then
+    if [ -n "${DPGREP_REGEXP}" ]; then
         # 0 --> fail, n --> num matches 
-        NO_HDR=t EExec -y pgrep $DP_SCRIPT_X_DEBUG_OPT "${PGREP_REGEXP}" \
+        NO_HDR=t EExec -y dpgrep $DP_SCRIPT_X_DEBUG_OPT "${DPGREP_REGEXP}" \
                  | fgrep -vq "$0" &&  exit 1
         true
     else
