@@ -357,7 +357,7 @@
     <!-- Select and raise an XEmacs window. -->
     <keybind key="W-z">
       <action name="Execute">
-        <command>wmctrl -a "XEmacs@"</command>
+        <command>vmg</command>
       </action>
     </keybind>
     <!-- Select and raise a web browser (att: firefox) window. -->
