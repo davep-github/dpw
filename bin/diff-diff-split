@@ -5,7 +5,7 @@ set -u
 progname="$(basename $0)"
 
 : ${prefix:=}
-: ${prefix_separator:=" "}
+: ${separator:=" "}
 : ${exec_p:=}
 
 # change a diff [-q] difference line into a more useful form.
@@ -45,7 +45,7 @@ do
   case $1 in
       -p|--prefix) shift; prefix="$1";;
       -e|-x|--exec) exec_p=t;;
-      --separator|--prefix-separator|--prefix-suffix|-s) shift; separator="$1";;
+      -s|--separator|--prefix-separator|--prefix-suffix) shift; separator="$1";;
       --) break;;
       *) exit 1;;
   esac
