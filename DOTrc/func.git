@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
-# should be sourced, but the shebang tells us and emacs what's up
+# should be sourced, but the shebang tells us and emacs what mode to use.
+
+: ${DP_GIT_BIN:=git}		# Let path find it by default.
+
+git_run_command()
+{
+    if ! type "${DP_GIT_BIN}" >/dev/null 2>&1
+    then
+	echo "\$DP_GIT_BIN>${DP_GIT_BIN}< is not executable."
+	return 1
+    fi 1>&2
+    command "${DP_GIT_BIN}" "$@"
+}
 
 git_p()
 {
@@ -8,7 +20,7 @@ git_p()
 
 git_isa_rev()
 {
-    git rev-parse "$@" >/dev/null 2>&1
+    git_run_command rev-parse "$@" >/dev/null 2>&1
 }
 
 git_change_sandbox()
@@ -22,7 +34,7 @@ git_change_sandbox()
     # `chdir' with no args means to show us where we are.
     if [ -z "${rev}" ]
     then
-        git branch
+        git_run_command branch
     else
         # Prevent braino of using gcd instead of cd if arg is a dir.
         [ -d "${rev}" ] && {
@@ -41,9 +53,9 @@ git_change_sandbox()
                 return 1
             fi
         fi
-            
-        git checkout "${rev}" "$@"
-        git stash list
+
+        git_run_command checkout "${rev}" "$@"
+        git_run_command stash list
         echo "??? You may want to consider reindexing the code."
     fi
 }
@@ -66,9 +78,9 @@ githh()
     # Doesn't use ^H in all xemacs windows and I don't know why.
     if inside_emacs_p
     then
-        git help "$@" | ul -t dumb | head -n "$dash_n"
+        git_run_command help "$@" | ul -t dumb | head -n "$dash_n"
     else
-        git help "$@"
+        git_run_command help "$@"
     fi
 }
 
@@ -79,19 +91,27 @@ gith()
 
 git() 
 {
-    [ "${1-}" = '-x' ] && {
+    #set -x
+    [ -n "${DP_GIT_DEBUG-}" ] && {
+	set -x
+    }
+    if [ "${1-}" = '-x' ]
+    then
         set -x
         shift
-    }
+    elif [ "${DP_GIT_DEBUG-}" ]
+    then
+	set -x
+    fi
 
     local func="git(): "
     local cmd=${1}; shift
     local rc=0
-    local checkop=$(command git config --get ${cmd}.checkop 2>/dev/null)
-    local msg=$(command git config --get ${cmd}.msg 2>/dev/null)
-    local disablemsg=$(command git config --get ${cmd}.disablemsg 2>/dev/null)
-    local disabled=$(command git config --bool ${cmd}.disabled 2>/dev/null)
-    local query=$(command git config --bool ${cmd}.query 2>/dev/null)
+    local checkop=$(git_run_command config --get ${cmd}.checkop 2>/dev/null)
+    local msg=$(git_run_command config --get ${cmd}.msg 2>/dev/null)
+    local disablemsg=$(git_run_command config --get ${cmd}.disablemsg 2>/dev/null)
+    local disabled=$(git_run_command config --bool ${cmd}.disabled 2>/dev/null)
+    local query=$(git_run_command config --bool ${cmd}.query 2>/dev/null)
     local yes_p=
 
     [ -n "${func}checkop}" ] && {
@@ -123,7 +143,7 @@ git()
     fi
 
     case "${rc}" in
-        0) command git "${cmd}" "$@"
+        0) git_run_command "${cmd}" "$@"
            rc=$?
            ;;
     esac
