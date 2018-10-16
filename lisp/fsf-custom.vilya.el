@@ -48,6 +48,7 @@
  '(icomplete-separator ",")
  '(ido-mode nil nil (ido))
  '(ido-use-filename-at-point (quote guess))
+ '(indent-tabs-mode nil)
  '(isearch-allow-scroll t)
  '(isearch-lazy-highlight t)
  '(isearch-resume-in-command-history t)
@@ -101,6 +102,7 @@
  '(tags-revert-without-query t)
  '(timeclock-mode-line-display nil)
  '(tool-bar-mode nil)
+ '(vc-follow-symlinks nil)
  '(wdired-allow-to-change-permissions t)
  '(whitespace-line-column 72)
  '(whitespace-style
@@ -120,5 +122,5 @@
  '(isearch ((t (:background "medium spring green" :foreground "#100e23" :weight bold))))
  '(lazy-highlight ((t (:background "#65b2ff" :foreground "black"))))
  '(rectangle-preview ((t (:inherit region))))
- '(region ((t (:background "turquoise2" :foreground "black" :box (:line-width 2 :color "grey75" :style released-button) :weight bold))))
+ '(region ((t (:background "turquoise2" :foreground "black" :box (:line-width 1 :color "black" :style pressed-button) :weight bold))))
  '(trailing-whitespace ((t (:background "midnight blue" :strike-through nil :underline (:color "magenta" :style wave))))))

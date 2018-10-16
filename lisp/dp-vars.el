@@ -11,7 +11,7 @@
   "My personal customizable variables."
   :group 'local)
 
-(defgroup dp-whitespace-vars nil
+(defgroup dp-trailing-whitespace-vars nil
   "My vars dealing with whitespace."
   :group 'dp-vars)
 

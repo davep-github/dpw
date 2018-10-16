@@ -438,8 +438,8 @@ Forms in BODY can use /CWD/."
   (put 'dp-when-rsh-cwd 'lisp-indent-function lisp-body-indent)
 
   (defmacro dp-funcall-if  (func func-args &rest else-body)
-    "`funcall' FUNC with unquoted list FUNC-ARGS if FUNC is bound and a function,
-otherwise do ELSE.
+    "`funcall' FUNC with list FUNC-ARGS if FUNC is bound and a function,
+otherwise do ELSE-BODY.
 E.g.
 \(dp-funcall-if 'good-things 
     \(puppy-dogs rainbows)

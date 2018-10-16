@@ -15,7 +15,7 @@
 (message "dp-hooks loading...")
 
 ;; We could just use a buffer local set in the mode-hook.
-(defcustom dp-global-master-cleanup-whitespace-p
+(defcustom dp-global-master-cleanup-trailing-whitespace-p
   '(c-mode
     c++-mode
     sh-mode
@@ -23,22 +23,22 @@
   "control whitespace cleanup off everywhere.
 If this is a non-nil list, don't disable if it contains the current major
 mode."
-  :group 'dp-whitespace-vars
+  :group 'dp-trailing-whitespace-vars
   :type 'boolean)
 
 
-(defun dp-cleanup-whitespace-mode-pred (&optional list-o-modes mode)
-  (setq-ifnil list-o-modes dp-global-master-cleanup-whitespace-p)
-  (when (and list-o-modes(listp list-o-modes))
+(defun dp-cleanup-trailing-whitespace-mode-pred (&optional list-o-modes mode)
+  (setq-ifnil list-o-modes dp-global-master-cleanup-trailing-whitespace-p)
+  (when (and list-o-modes (listp list-o-modes))
     (memq (or mode major-mode) list-o-modes)))
 
-(defcustom dp-global-master-cleanup-whitespace-pred-fun
-  'dp-cleanup-whitespace-mode-pred
+(defcustom dp-global-master-cleanup-trailing-whitespace-pred-fun
+  'dp-cleanup-trailing-whitespace-mode-pred
   "Call through this to determine if we want to clean up whitespace."
-  :group 'dp-whitespace-vars
+  :group 'dp-trailing-whitespace-vars
   :type 'function)
 
-(dp-deflocal dp-cleanup-whitespace-p nil
+(dp-deflocal dp-cleanup-trailing-whitespace-p nil
   "Should trailing whitespace be cleaned up in this buffer?
 In particular, should `dp-next-line' do it?
 Values:
@@ -48,7 +48,7 @@ eol-only - Only clean lines when cursor it at the end of a line.
            This makes it easy to leave the whitespace alone.
 @todo XXX better to default to t or eol-only?")
 
-(dp-deflocal dp-cleanup-whitespace-on-next-line-p t
+(dp-deflocal dp-cleanup-trailing-whitespace-on-next-line-p t
   "Should trailing whitespace be cleaned up in this buffer on `next-line?
 Values:
 nil      - NO.
@@ -57,30 +57,26 @@ eol-only - Only clean lines when cursor it at the end of a line.
            This makes it easy to leave the whitespace alone.
 @todo XXX better to default to t or eol-only?")
 
-(defun dp-cleanup-whitespace-p ()
+(defun dp-cleanup-trailing-whitespace-p ()
   "Do we wish to be anal about whitespace?"
-  (when dp-global-master-cleanup-whitespace-p
-    (cond
-     ((eq dp-global-master-cleanup-whitespace-p t))
-     ((dp-funcall-if dp-global-master-cleanup-whitespace-pred-fun nil))
-     (dp-cleanup-whitespace-p))))
+  (and dp-global-master-cleanup-trailing-whitespace-p
+       (cond
+	((eq dp-global-master-cleanup-trailing-whitespace-p t))
+	((dp-funcall-if
+             dp-global-master-cleanup-trailing-whitespace-pred-fun nil))
+	(dp-cleanup-trailing-whitespace-p))))
 
-(defun dp-cleanup-whitespace-on-next-line-p ()
+(defun dp-cleanup-trailing-whitespace-on-next-line-p ()
   "Do we wish to be really anal about whitespace?"
-  (when (and dp-global-master-cleanup-whitespace-p
-             dp-cleanup-whitespace-on-next-line-p)
-    (cond
-     ((eq dp-global-master-cleanup-whitespace-p t))
-     ((and (listp dp-global-master-cleanup-whitespace-p)
-	   (memq major-mode dp-global-master-cleanup-whitespace-p)))
-     (dp-cleanup-whitespace-p))))
+  (and dp-cleanup-trailing-whitespace-on-next-line-p
+       (dp-cleanup-trailing-whitespace-p)))
 
 (defvar dp-enable-minibuffer-marking nil
   "Prevents any minibuffer marking from happening.")
 
 (defun dp-minibuffer-abbrevs-post-hook ()
   "Init/refresh minibuffer's local abbrev table."
-  (setq local-abbrev-table 
+  (setq local-abbrev-table
         (dp-find-abbrev-table '(dp-minibuffer-abbrev-table))))
 
 (defun dp-region-not-in-minibuf ()
@@ -465,7 +461,7 @@ Works with tabs.")
   hideous violator of that most sacred of all things, the trailing whitespace
   free line. We must spare no effort to return our files to the most holy of
   all states. And don't get me stahted on macros. MACROS BAAAAAD, grrrrr!"
-  :group 'dp-whitespace-vars
+  :group 'dp-trailing-whitespace-vars
   :type 'string)
 
 (defcustom dp-space-before-tab-regexp " +[\t]"
@@ -475,19 +471,19 @@ Works with tabs.")
   hideous violator of that most sacred of all things, the trailing whitespace
   free line. We must spare no effort to return our files to the most holy of
   all states. And don't get me stahted on macros. MACROS BAAAAAD, grrrrr!"
-  :group 'dp-whitespace-vars
+  :group 'dp-trailing-whitespace-vars
   :type 'string)
 
 (defcustom dp-too-many-spaces-in-a-row-regexp " \\{8,80\\}"
   "Sometimes (although it may be fixed) AMD/Kernel c*-mode starts up without
   forcing the use of tabs.  Hopefully this will slap me in the face about it
   so the spatse-Nazis don't get me. "
-  :group 'dp-whitespace-vars :type
+  :group 'dp-trailing-whitespace-vars :type
   'string)
 
 (defcustom dp-trailing-whitespace-use-trailing-ws-font-p nil
   "Highlight trailing white space with its own font? Yay!"
-  :group 'dp-whitespace-vars
+  :group 'dp-trailing-whitespace-vars
   :type 'boolean)
 
 (defvar dp-trailing-whitespace-font-lock-element
@@ -496,7 +492,7 @@ Works with tabs.")
 
 (defcustom dp-use-space-before-tab-font-lock-p nil
   "Highlight space before tab sequence. Kernel coding standard no-no!"
-  :group 'dp-whitespace-vars
+  :group 'dp-trailing-whitespace-vars
   :type 'boolean)
 
 (defvar dp-space-before-tab-font-lock-element
@@ -511,15 +507,19 @@ Works with tabs.")
 
 (defcustom dp-use-too-many-spaces-font-p nil
   "Highlight too many spaces in a row (missing tabs)?"
-  :group 'dp-whitespace-vars
+  :group 'dp-trailing-whitespace-vars
   :type 'boolean)
 
+(defvar dp-whitespace-violation-rulettes
+  (list (cons dp-trailing-whitespace-regexp 'dp-t)
+        (cons dp-space-before-tab-regexp 'dp-t)
+        (cons dp-too-many-spaces-in-a-row-regexp (lambda ()
+                                                   indent-tabs-mode))
+        ))
 
-(defvar dp-whitespace-violation-regexp
-  (dp-regexp-concat (list dp-trailing-whitespace-regexp
-                          dp-space-before-tab-regexp
-                          dp-too-many-spaces-in-a-row-regexp)))
-                      
+(defun dp-whitespace-violation-regexp ()
+  (dp-regexp-concat dp-whitespace-violation-regexps))
+
 (defun dp-blah-blah (save-sym)
   (append (symbol-value save-sym)
           list-o-keys))
@@ -868,9 +868,9 @@ c-hanging-braces-alist based upon these values.")
 (eval-after-load "cc-mode"
   (dp-after-load-cc-mode))
 
-(defcustom dp-default-c-like-mode-cleanup-whitespace-p t
+(defcustom dp-default-c-like-mode-cleanup-trailing-whitespace-p t
   "Turn it all on or off for all C like modes here."
-  :group 'dp-whitespace-vars
+  :group 'dp-trailing-whitespace-vars
   :type 'boolean)
 
 (defcustom dp-c-like-mode-default-indent-tabs-mode-p t
@@ -896,8 +896,9 @@ tab setting, font or phase of the moon."
   (c-toggle-auto-state 1)	     ;set c-auto-newline
   (dp-turn-off-auto-fill)
   (setq show-trailing-whitespace t)
-  (setq dp-cleanup-whitespace-p dp-default-c-like-mode-cleanup-whitespace-p)
-  (setq indent-tabs-mode dp-c-like-mode-default-indent-tabs-mode-p
+  (setq dp-trailing-cleanup-whitespace-p
+        dp-default-c-like-mode-cleanup-whitespace-p
+        indent-tabs-mode dp-c-like-mode-default-indent-tabs-mode-p
         c-tab-always-indent (not dp-use-stupid-kernel-struct-indentation-p)
         c-recognize-knr-p nil
         dp-insert-tempo-comment-func 'dp-c-insert-tempo-comment)
@@ -1138,7 +1139,7 @@ main(
   "Set up ruby-mode *my* way."
   (interactive)
   (dp-add-line-too-long-font 'ruby-font-lock-keywords)
-  (setq dp-cleanup-whitespace-p t)
+  (setq dp-trailing-cleanup-whitespace-p t)
   (local-set-key [(meta right)] 'ruby-end-of-block)
   (local-set-key [(meta left)] 'dp-beginning-of-def-or-class)
   (dp-auto-it?))
@@ -1219,7 +1220,7 @@ See `dp-parenthesize-region-paren-list'")
   (local-set-key [(meta s)] 'dp-py-insert-self?)
   (local-set-key [(meta q)] 'dp-fill-paragraph-or-region-with-no-prefix)
   (dp-add-line-too-long-font 'python-font-lock-keywords)
-  (setq dp-cleanup-whitespace-p t)
+  (setq dp-cleanup-trailing-whitespace-p t)
   ;; @todo XXX conditionalize this properly
   ;; dp-trailing-whitespace-font-lock-element
 
@@ -1995,7 +1996,7 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
 (defun dp-sh-mode-hook ()
   (interactive)
   (local-set-key [(meta left)] 'beginning-of-defun)
-  (setq dp-cleanup-whitespace-p t)
+  (setq dp-trailing-cleanup-whitespace-p t)
   (dp-add-line-too-long-font '(sh-font-lock-keywords
                                sh-font-lock-keywords-1
                                sh-font-lock-keywords-2))
@@ -2299,7 +2300,7 @@ changed."
   (dp-add-line-too-long-font '(perl-font-lock-keywords
                                perl-font-lock-keywords-1
                                perl-font-lock-keywords-2))
-  (setq dp-cleanup-whitespace-p t))
+  (setq dp-cleanup-trailing-whitespace-p t))
 
 (defun dp-first-change-hook ()
   (dmessage "in dp-first-change-hook"))

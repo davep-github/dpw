@@ -2947,7 +2947,7 @@ exist to move from one topic record to the next or previous.
   (make-local-variable 'line-move-ignore-invisible)
   (setq line-move-ignore-invisible t)
 
-  (dp-set-indent/tab-style0)
+  (dp-set-tab-width-to-tiny-spaces)
   (dpj-setup-invisibility)
 
   (dpj-merge-all-topics nil 'write-merged-list)

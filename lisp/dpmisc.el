@@ -481,12 +481,13 @@ string containing their values."
   (interactive)
   "Return nil.  Ignore REST. This is essentially a NOP."
   nil)
-(defalias 'dp-nilop 'dp-nop-nil)
+(dp-defaliases 'dp-false 'dpnil 'dp-nil 'dp-nop-nil)
 
-(defun dp-nop-t (&rest rest)
-  (interactive)
-  "Return t.  Ignore REST. This is essentially a NOP."
+(defun dp-nop-true (&rest r)
+  "Return t. Nice for predicate functions.
+Better than (or (eq pred t) (funcall pred))."
   t)
+(dp-defaliases 'dp-true 'dpt 'dp-t 'dp-non-nil 'dp-nop-t 'dp-nop-true)
 
 ;;;
 ;;; <: white space whitespace recognitions regexp :>
@@ -1374,12 +1375,6 @@ matching operation and only if we are on a ?< or ?>."
   (save-excursion
     (and (dp-find-matching-paren unbalanced-ok-p)
          (point))))
-
-(defun dp-true (&rest r)
-  "Return t. Nice for predicate functions.
-Better than (or (eq pred t) (funcall pred))."
-  t)
-(dp-defaliases 'dpt 'dp-t 'dp-non-nil 'dp-true)
 
 (defun* dp-mk-completion-list (list &key (pred 'dp-true) pred-args
                                ctor ctor-args
@@ -7555,7 +7550,8 @@ Visit /file/name and then goto <linenum>."
                                      line-num filename-part))))
       (if (find-buffer-visiting filename-part)
           (dp-push-go-back "dp-ffap-file-finder2"))
-      (dp-goto-line line-num-part))))
+      (dp-goto-line line-num-part)))
+  (current-buffer))
 
 (defun dp-ffap-file-finder2 (&optional name-in)
   (interactive)
@@ -10664,6 +10660,10 @@ when the command was issued?")
   "Return non-nil if BUF.POS is in a string."
   (eq 'string (dp-buffer-syntactic-context buf)))
 
+(defun dp-in-a-comment (&optional buf)
+  "Return non-nil if BUF.POS is in a string."
+  (eq 'comment (dp-buffer-syntactic-context buf)))
+
 (defvar dp-xemacs-start-stamp-str "' started: xemacs'"
   "String in log file telling us that this is an xemacs startup time stamp.")
 
@@ -11264,7 +11264,7 @@ the minibuffer."
     (goto-char goto-pos))
   (insert-file file-name))
 
-(defun dp-add-new-file-template (&optional template &optional template-args)
+(defun dp-add-new-file-template (&optional template template-args)
   (interactive "\sname: ")
   ;; template can be a simple string or a list:
   ;; \(function args).
@@ -13325,7 +13325,7 @@ find-file\(-at-point) and then, if it fails, this function??"
   (let ((ws (get-buffer-window-list (dp-get-buffer buffer) t)))
     (and (consp ws) (window-minibuffer-p (car ws)))))
 
-(defun dp-set-indent/tab-style0 ()
+(defun dp-set-tab-width-to-tiny-spaces ()
   ;; tab stuff: just use spaces, make 'em small
   (make-variable-buffer-local 'tab-stop-list)
   (setq indent-tabs-mode nil
@@ -13465,9 +13465,9 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
         (call-interactively fun)
       (funcall fun file-name))))
 
-(defun dp-looking-at-whitespace-violation ()
+(defun dp-find-whitespace-violation ()
   (save-excursion
-    (re-search-forward dp-whitespace-violation-regexp nil t)))
+    (re-search-forward (dp-whitespace-violation-regexp) nil t)))
 
 ;; (defun dp-whitespace-next-violation ()
 ;;   (interactive)
@@ -13486,7 +13486,7 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
   ;; that logic everywhere will be bad.
   ;; The fact that fontifying is largely based on regular expressions means
   ;; using the WSV regexp won't cause cats to live with dogs and vice-versa.
-  (when (dp-looking-at-whitespace-violation)
+  (when (dp-find-whitespace-violation)
     (goto-char (match-beginning 0))
     t))
 
@@ -13502,22 +13502,23 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
           (goto-char (match-end 0))
           ;; And try again.
           (dp-whitespace-next-violation0)))
-    (dp-looking-at-whitespace-violation)))
+    (dp-find-whitespace-violation)))
 
-(defun dp-whitespace-cleanup-line ()
+(defun dp-trailing-whitespace-cleanup-line ()
   "Clean up trailing whitespace on the current line. Uses my whitespace hack."
   (interactive)
   (save-excursion
     (beginning-of-line)
-    (when (dp-re-search-forward dp-whitespace-violation-regexp 
-                             (line-end-position) t)
-      (replace-match ""))))
+    (while (dp-re-search-forward (dp-whitespace-violation-regexp)
+                                 (line-end-position) t)
+      (unless (dp-in-a-comment)
+        (replace-match "")))))
 
 (defun dp-whitespace-next-and-cleanup (&optional ask-per-line-p)
   (interactive "P")
   (let ((start (point)))
     (dp-whitespace-next-violation)
-    (if (and (or (dp-looking-at-whitespace-violation)
+    (if (and (or (dp-find-whitespace-violation)
                  (not (= start (point))))
              (or (not ask-per-line-p)   ; Don't even ask.
                  (or (y-or-n-p "Clean up this line?") ; Yes?
@@ -13544,7 +13545,7 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
         (last-pt nil))
     (while (or first-p
                (not (= (point) last-pt)))
-      (setq first-p (dp-looking-at-whitespace-violation)
+      (setq first-p (dp-find-whitespace-violation)
             last-pt (point))
       (incf num)
       (dp-whitespace-next-and-cleanup ask-per-line-p))
@@ -13566,12 +13567,12 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
       (whitespace-cleanup))))
 
 (defun dp-cleanup-line ()
-  "Clean up line, what ever that means. For now, it's whitespace.
+  "Clean up line, what ever that means. For now, it's trailing whitespace.
 Add/move other things here.
 !<@todo XXX Make this just delete my trailing WS extent.
-I'm trying to stop using whitespace due to massive suckage. Which may be due
-to me or my other packages like flyspell which seems to be involved in the
-command hook errors."
+I'm trying to stop using whitespace due to massive suckage. Which
+may be due to me or my other packages like flyspell which seems
+to be involved in the command hook errors."
   (dp-whitespace-cleanup-line))
 
 (defun dp-apply-function-on-key (key-seq args)
@@ -13835,7 +13836,7 @@ See `dp-shell-*TAGS-changers' rant. "
              (delete-file file-name))
            (message status-msg)))))
 
-(defcustom dp-whitespace-cleanup-after-these-commands 
+(defcustom dp-trailing-whitespace-cleanup-after-these-commands
   '(dp-open-newline
     dp-open-above
     dp-c-context-line-break
@@ -13843,36 +13844,37 @@ See `dp-shell-*TAGS-changers' rant. "
     dp-py-open-newline
     py-newline-and-indent)
   "*Clean up whitespace after executing one of these commands.
-We'll lump everything together rather than using buffer local or mode
-specific lists. This should be ok because mode specific commands should have
-been used in buffers in the given mode."
-  :group 'dp-whitespace-vars
+We'll lump everything together rather than using buffer local or
+mode specific lists. This should be ok because mode specific
+commands should have been used in buffers in the given mode."
+  :group 'dp-trailing-whitespace-vars
   :type '(repeat (symbol :tag "Whitespace cleanup afters")))
 
 
-(defcustom dp-whitespace-cleanup-when-modified-p nil
+(defcustom dp-trailing-whitespace-cleanup-when-modified-p nil
   "Should we clean up whitespace if the buffer has ever been modified?
 I want to avoid inadvertent modifications if I'm browsing through a file that
 isn't \"mine\". However, if it has already been modified, then go for
 it. Whitespace diffs are easy to ignore during reviews"
-  :group 'dp-whitespace-vars
+  :group 'dp-trailing-whitespace-vars
   :type 'boolean)
 
-(dp-deflocal dp-white-space-cleanup-disabled-in-this-buffer-p nil
+(dp-deflocal dp-trailing-whitespace-cleanup-disabled-in-this-buffer-p nil
   "Per-buffer disablement.")
 
-(defun dp-disable-whitespace-cleanup (&optional arg)
-  (dp-toggle-var arg 'dp-white-space-cleanup-disabled-in-this-buffer-p))
+(defun dp-disable-trailing-whitespace-cleanup (&optional arg)
+  (dp-toggle-var
+   arg
+   'dp-trailing-whitespace-cleanup-disabled-in-this-buffer-p))
 
-(dp-defaliases 'dp-disable-ws-cleanup 'disable-ws-cleanup
-               'dwsc
+(dp-defaliases 'dp-disable-ws-cleanup 'disable-ws-cleanup 'dwsc
                'dp-disable-whitespace-cleanup)
 
-(defun dp-whitespace-following-a-cleanup-command-p ()
+(defun dp-trailing-whitespace-following-a-cleanup-command-p ()
   "What the name says."
   (let ((tmp last-command))
-    (and (not dp-white-space-cleanup-disabled-in-this-buffer-p)
-         (or (and dp-whitespace-cleanup-when-modified-p
+    (and (not dp-trailing-whitespace-cleanup-disabled-in-this-buffer-p)
+         (or (and dp-trailing-whitespace-cleanup-when-modified-p
                   ;; We can miss cleanups with my rabid saving (e.g. M-ret,
                   ;; M-w). However it might be better than changing
                   ;; everything.
@@ -13884,53 +13886,70 @@ it. Whitespace diffs are easy to ignore during reviews"
                   ;; tick count to be non-zero (usually 5)
                   ;;(buffer-modified-tick)
                   )
-             (memq last-command 
-                   dp-whitespace-cleanup-after-these-commands)))))
+             (memq last-command
+                   dp-trailing-whitespace-cleanup-after-these-commands)))))
 
-(defun dp-whitespace-cleanup-current-line-default-pred ()
+(defun dp-trailing-whitespace-cleanup-current-line-default-pred ()
   (and (buffer-modified-p)
-       (or (dp-whitespace-following-a-cleanup-command-p)
+       (or (dp-trailing-whitespace-following-a-cleanup-command-p)
            (save-excursion
              (beginning-of-line)
              (re-search-forward dp-trailing-whitespace-regexp
                                 (line-end-position) t))
            (dp-blank-line-p))))
 
-(dp-deflocal dp-whitespace-cleanup-current-line-pred 
-    'dp-whitespace-cleanup-current-line-default-pred
+(dp-deflocal dp-trailing-whitespace-cleanup-current-line-pred
+    'dp-trailing-whitespace-cleanup-current-line-default-pred
 "Should we clean up the current *line*?
 Predicate is used to tell us whether or not the current line
 qualifies for whitespace eradication.")
 
+(dp-deflocal dp-next-line-pre-func 'dp-cleanup-line
+  "`dp-next-line' uses `dp-func-and-move-down'.  This is said func.")
+
+(dp-deflocal dp-next-line-move-down-func 'next-line
+  "`dp-next-line' uses `dp-func-and-move-down'.  This does the move-down part.")
+
 (defun dp-next-line (count &optional cleanup-current-line-pred)
-  "Add trailing white space removal functionality."
+  "Add trailing white space removal functionality.
+COUNT < 0 --> CLEANUP-CURRENT-LINE-PRED is `eolp'."
   (interactive "p")                     ; fsf - fix "_"
   ;;; When I've hosed things, this can be broken, so handle it.
   (condition-case bubba
       (progn
-	(if (or (not (dp-cleanup-whitespace-p))
+	(if (or (not (dp-cleanup-trailing-whitespace-p))
 		buffer-read-only)
 	    (progn
+	      ;; Don't want to, or can't, make mods to buffer.
 	      (call-interactively 'next-line)
 	      (setq this-command 'next-line))
-	  (let ((cleanup-current-line-pred 
+	  (let ((cleanup-current-line-pred
 		 (or cleanup-current-line-pred
-		     dp-whitespace-cleanup-current-line-pred)))
+                     dp-trailing-whitespace-cleanup-current-line-pred
+		     'dp-cleanup-trailing-whitespace-on-next-line-p)))
 	    (when (< count 0)
 	      (setq count (- count)
 		    cleanup-current-line-pred 'eolp))
 	    (loop repeat count do
-		  (if (or (eq (dp-cleanup-whitespace-p) t)
-			  (and (not buffer-read-only)
+		  (if (and (not buffer-read-only)
+			   ;; Unconditional?
+			   (or (eq (dp-cleanup-trailing-whitespace-p) t)
 			       (funcall cleanup-current-line-pred)))
-		      (dp-func-and-move-down 'dp-cleanup-line
+		      (dp-func-and-move-down dp-next-line-pre-func
 					     t
 					     'preserve-column
-					     'next-line)
-		    (next-line 1)
+					     dp-next-line-move-down-func)
+		    (funcall dp-next-line-move-down-func 1)
 		    (setq this-command 'next-line))))))
     (error
      (message "dp-next-line(): caught error: %s" bubba)
+     ;; Do something useful.  We could fret every little detail in
+     ;; order to be sure we only do a single `next-line' depending on
+     ;; where we failed, but let's just do one and then we can move up
+     ;; if we end up doing two.  Doing two is infinitely better than
+     ;; doing 0 and having to play games to get to the next line.
+     (call-interactively 'next-line)
+     (setq this-command 'next-line)
      ;; Fall back to normalcy :-(
      )))
 ;; Many "OK" errors, like end-of-buffer, should not remap the keys.
@@ -13941,8 +13960,9 @@ qualifies for whitespace eradication.")
 
 (add-hook 'dp-post-dpmacs-hook
 	  (lambda ()
-	    (global-set-key [kp-down] 'dp-next-line) ; q.v. dp-cleanup-whitespace-p
-	    (global-set-key [down] 'dp-next-line) ; q.v. dp-cleanup-whitespace-p
+            ;; q.v. dp-cleanup-whitespace-p
+	    (global-set-key [kp-down] 'dp-next-line)
+	    (global-set-key [down] 'dp-next-line)
 	    ))
 
 ;; WRT key mappings above.

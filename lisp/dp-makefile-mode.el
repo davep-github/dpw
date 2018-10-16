@@ -47,7 +47,7 @@ See `dp-parenthesize-region-paren-list'")
                           " "))
                   
     (message "compile command: %s" compile-command))
-  (setq dp-cleanup-whitespace-p t)
+  (setq dp-cleanup-trailing-whitespace-p t)
   (dp-save-orig-n-set-new 'makefile-font-lock-keywords 
                           'dp-append-to-list-symbol nil
                           ;; (list dp-trailing-whitespace-font-lock-element)
