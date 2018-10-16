@@ -82,14 +82,14 @@ Usage_details="${EExec_parse_usage}
 "
 
 # Example of arg parsing.
-option_str="zajp:"
+option_str="zcajp:NA"
 long_options=(
-    "cat" "out" "list"
+    "cat" "out" "list" "view"
     "mpc-add" "add" "queue"
     "zap" "clear" "empty" "mt" "no-append" "nuke"
     "append"
     "num-albums:" "num:" "na:"
-    "all"
+    "all" "every-album" "all-albums"
     "just-album-names" "just-albums" "album-names" "jan" "an"
     "pl:" "play-list:" "playlist:"
 )
@@ -103,14 +103,16 @@ do
       # Done by EExec_parse and friends.
 
       # Program options.
-      --cat|--out|--list) handler=cat_handler;;
-      --mpc-add|--add|--queue) handler=mpc_add_handler;;
-      -z|--zap|--clear|--empty|--mt|--no-append|--nuke) clear_p=true;;
-      -a|--append) clear_p=false;;
+      -N|--cat|--out|--list|--view) handler=cat_handler; clear_p=false;;
+      --mpc-add|--add|--queue) handler=mpc_add_handler; clear_p=true;;
+      -z|-c|--zap|--clear|--empty|--mt|--no-append|--nuke) clear_p=true;;
+      -a|--append) clear_p=false; handler=mpc_add_handler;;
       --num-albums|--num|--na) shift; num="${1}";;
-      -j|--just-album-names|--just-albums|--album-names|--jan|--an) just_album_names_p=true;;
-      -p|--pl|--play-list|--playlist) shift; playlist="${1}"; handler=playlist_handler;;
-      -a|--all) num=0;;
+      -j|--just-album-names|--just-albums|--album-names|--jan|--an)
+	  just_album_names_p=true; clear_p=false;;
+      -p|--pl|--play-list|--playlist)
+	  shift; playlist="${1}"; handler=playlist_handler; clear_p=false;;
+      -A|--all|--every-album|--all-albums) num=0;;
 
       # Help!
       --help) Usage; exit 0;;
@@ -145,11 +147,16 @@ mpc_add_handler()
         echo "{-} mpc add..."
         cat
     else
-        EExec mpc add
+	while read
+	do
+		EExec mpc add "${REPLY}"
+	done
     fi
 }
 
-EExecDashN_p && handler=cat_handler
+EExecDashN_p && {
+    clear_p=false
+}
 
 [ "${handler}" = "mpc_add_handler" ] || {
     clear_p=false
@@ -172,4 +179,5 @@ do
   else
       mpc search album "${REPLY}" | "${handler}"
   fi
+  mpc playlist
 done
