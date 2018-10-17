@@ -13931,13 +13931,15 @@ qualifies for whitespace eradication.")
 		    (setq this-command 'next-line))))))
     (error
      (message "dp-next-line(): caught error: %s" bubba)
-     ;; Fall back to normalcy :-(
+     ;; Fall back to some kind of normalcy :-(, or at least
+     ;; do something useful.  We could fret every little detail in
+     ;; order to be sure we only do a single `next-line' depending on
+     ;; where we failed, but let's just do one and then we can move up
+     ;; if we end up doing two.  Doing two is infinitely better than
+     ;; doing 0 and having to play games to get to the next line.
+     (call-interactively 'next-line)
+     (setq this-command 'next-line)
      )))
-;; Many "OK" errors, like end-of-buffer, should not remap the keys.
-     ;fires too often (dp-ding-and-message "dp-next-line: error, bubba>%s<" bubba)
-     ;fires too often (dp-ding-and-message "dp-next-line: Falling back to `next-line'.")
-     ;fires too often (global-set-key [kp-down] 'next-line)
-     ;fires too often (global-set-key [down] 'next-line))))
 
 (add-hook 'dp-post-dpmacs-hook
 	  (lambda ()
