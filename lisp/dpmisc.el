@@ -13973,6 +13973,12 @@ qualifies for whitespace eradication.")
     (save-excursion)
     (apply 'dp-fast-replace-regexp-region "^\\(\\s-*\\)[+-]" "" region)
     (apply 'c-indent-region region)))
+(dp-defaliases 'dpddr
+	       'dp-remove-diff-markup 'dprdm
+	       'dp-delete-diff-markup 'dpddm
+	       'dp-kill-diff-markup 'dpkdm
+	       'dp-clean-diff-markup 'dpcdm
+	       'dp-dediff-region)
 
 (defun dp-git-manual-entry (topic &optional other-window-p)
   (interactive "sgit help on: \nP")
