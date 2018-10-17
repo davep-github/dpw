@@ -13909,6 +13909,7 @@ qualifies for whitespace eradication.")
   (condition-case bubba
       (progn
 	(if (or (not (dp-cleanup-whitespace-p))
+		(not (buffer-modified-p))
 		buffer-read-only)
 	    (progn
 	      (call-interactively 'next-line)
