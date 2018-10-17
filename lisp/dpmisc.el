@@ -13904,8 +13904,8 @@ qualifies for whitespace eradication.")
 
 (defun dp-next-line (count &optional cleanup-current-line-pred)
   "Add trailing white space removal functionality."
-  (interactive "p")                     ; fsf - fix "_"
-  ;;; When I've hosed things, this can be broken, so handle it.
+  (interactive "p")			; fsf - fix "_"
+  ;; When I've hosed things, this can be broken, so handle it.
   (condition-case bubba
       (progn
 	(if (or (not (dp-cleanup-whitespace-p))
