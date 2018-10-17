@@ -3673,7 +3673,7 @@ Leaves region active."
     (goto-char beg)
     (unless (bolp)
       (error "region does not start at left margin."))
-    (goto-char end)
+;    (goto-char end)
 ;     (if (/= end (line-beginning-position))
 ;         (error "region does not end at left margin."))
     (goto-char beg)
