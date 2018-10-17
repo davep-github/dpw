@@ -13914,7 +13914,7 @@ qualifies for whitespace eradication.")
 	    (progn
 	      (call-interactively 'next-line)
 	      (setq this-command 'next-line))
-	  (let ((cleanup-current-line-pred 
+	  (let ((cleanup-current-line-pred
 		 (or cleanup-current-line-pred
 		     dp-whitespace-cleanup-current-line-pred)))
 	    (when (< count 0)
