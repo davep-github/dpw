@@ -13973,7 +13973,7 @@ qualifies for whitespace eradication.")
   (let ((region (dp-region-or...as-list)))
     (save-excursion)
     (apply 'dp-fast-replace-regexp-region "^\\(\\s-*\\)[+-]" "" region)
-    (apply 'c-indent-region region)))
+    (apply 'indent-region region)))
 (dp-defaliases 'dpddr
 	       'dp-remove-diff-markup 'dprdm
 	       'dp-delete-diff-markup 'dpddm
