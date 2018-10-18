@@ -23,23 +23,24 @@
 ;; <clutch-pearls-on-soap-box>Wah! Name space pollution!</clutch-pearls-on-soap-box>
 ;; Make modification and application easier.
 (defun dp-magit-rebase-bind-keys ()
-  (dp-define-local-keys '(
-			  [(meta down)] other-window
-			  [(meta up)] dp-other-window-up
-			  [(shift down)] git-rebase-move-line-down
-			  [(shift up)] git-rebase-move-line-up
-			  ;; git-rebase-kill-lines does one line.
-			  ;; we do one by default, else does prefix-arg lines.
-			  ;; Buffer is RO, so
-			  ;; `dp-delete-to-end-of-line' can't be used,
-			  ;; so remap it.  We are essentially killing
-			  ;; the line.
-			  [(meta ?k)] dp-magit-rebase-kill-lines
-			  [(meta return)] magit-section-toggle
-			  [(meta left)] magit-section-backward
-			  [(meta right)] magit-section-forward
-			  )
-			))
+  (dp-define-local-keys
+   '(
+     [(meta down)] other-window
+     [(meta up)] dp-other-window-up
+     [(shift down)] git-rebase-move-line-down
+     [(shift up)] git-rebase-move-line-up
+     ;; git-rebase-kill-lines does one line.
+     ;; we do one by default, else does prefix-arg lines.
+     ;; Buffer is RO, so
+     ;; `dp-delete-to-end-of-line' can't be used,
+     ;; so remap it.  We are essentially killing
+     ;; the line.
+     [(meta ?k)] dp-magit-rebase-kill-lines
+     [(meta return)] magit-section-toggle
+     [(meta left)] magit-section-backward
+     [(meta right)] magit-section-forward
+     )
+   ))
 
 (add-hook 'magit-mode-hook 'dp-magit-mode-hook)
 
@@ -93,34 +94,6 @@ else: NUM-LINES lines.
     (magit-jump-to-untracked)
     (call-interactively 'magit-section-hide)))
 (dp-defaliases 'dmhu 'mhut 'hut 'dp-magit-hide-untracked)
-
-;; This hack isn't needed at work.
-;; And now tis not need at home.
-;; (defun magit-log-format-margin (author date)
-;;   (-when-let (option (magit-margin-option))
-;;     (-let [(_ style width details details-width)
-;;            (or magit-buffer-margin
-;;                (symbol-value option))]
-;;       (magit-make-margin-overlay
-;;        (concat (and details
-;;                     (concat (propertize (truncate-string-to-width
-;;                                          (or author "")
-;;                                          details-width
-;;                                          nil ?\s (make-string 1 magit-ellipsis))
-;;                                         'face 'magit-log-author)
-;;                             " "))
-;;                (propertize
-;;                 (if (stringp style)
-;;                     (format-time-string
-;;                      style
-;;                      (seconds-to-time (string-to-number date)))
-;;                   (-let* ((abbr (eq style 'age-abbreviated))
-;;                           ((cnt unit) (magit--age date abbr)))
-;;                     (format (format (if abbr "%%2i%%-%ic" "%%2i %%-%is")
-;;                                     (- (funcall width style details details-width)
-;; 				       (if details (1+ details-width) 0)))
-;;                             cnt unit)))
-;;                 'face 'magit-log-date))))))
 
 (provide 'dp-magit)
 
