@@ -42,29 +42,39 @@
 
 (defconst dp-sel2-arrow-id 'dp-sel2-arrow-id)
 
-(dp-defcustom-local dp-sel2:squish-white-space-string " "
-  "*String into which we squish runs of WS."
-  :group 'dp-vars
-  :type 'string)
-
 ;;;
 ;;; global vals... individual callers (like dp-sel-2paste) can have
 ;;; their own custom vars or use this.
 ;;;
-(dp-defcustom-local dp-sel2:squish-white-space t
-  "*Controls squishing of white space into `dp-sel2:squish-white-space-string'"
+(dp-defcustom-local dp-sel2:squish-whitespace-p t
+  "*Controls squishing of white space into `dp-sel2:squish-whitespace-string'"
   :group 'dp-vars
   :type 'boolean)
 
-(dp-defcustom-local dp-sel2:use-squish-face t
-  "*Controls whether or not we apply the `dp-sel2:use-squish-face' to squished runs of white space."
+;; Using `dp-delete*ALL*extents' hasn't been ported to FSF Emacs yet.
+(dp-defcustom-local dp-sel2:use-squish-whitespace-face-p (dp-xemacs-p)
+  "*Controls whether or not we apply the `dp-sel2:use-squish-whitespace-face-p' to squished runs of white space."
   :group 'dp-vars
   :type 'boolean)
+
+(dp-defcustom-local dp-sel2:elipsis (decode-char 'ucs #x2026)
+  "*Character used to replace runs of whitespace or truncated pasties."
+  :group 'dp-vars
+  :type 'character)
+
+(dp-defcustom-local dp-sel2:squish-whitespace-string
+    (if dp-sel2:use-squish-whitespace-face-p
+	" "
+      (make-string 1 dp-sel2:elipsis))
+  "*String into which we squish runs of WS."
+  :group 'dp-vars
+  :type 'string)
 
 (dp-defcustom-local dp-sel2:item-trunc-len 512
-  "*Controls whether or not we truncate items in the ssel buffer."
+  "*Controls whether and to what len we truncate items in the ssel buffer."
   :group 'dp-vars
   :type 'integer)
+
 ;;;
 
 (defface dp-sel2:squish-space-face
@@ -268,7 +278,7 @@ INSERTOR is called to insert and format each item.  It is passed the
 item to insert (at point) and INSERTOR-ARGS.
 INSERTOR-ARGS is a list of args to pass to INSERTOR.
 If INSERTOR is nil, then it defaults to: `dp-sel2:insert-line' with
-args dp-sel2:squish-white-space, dp-sel2:use-squish-face and 
+args dp-sel2:squish-whitespace-p, dp-sel2:use-squish-whitespace-face-p and 
 dp-sel2:item-trunc-len.
 
 RETURNS a cons cell (0_based_index . item) corresponding to the
@@ -304,8 +314,8 @@ dp-sel2 uses these bindings:
 
     (unless insertor
       (setq insertor 'dp-sel2:insert-line
-	    insertor-args (list dp-sel2:squish-white-space 
-				dp-sel2:use-squish-face
+	    insertor-args (list dp-sel2:squish-whitespace-p
+				dp-sel2:use-squish-whitespace-face-p
 				dp-sel2:item-trunc-len)))
     (when (> (window-height) (* 2 dp-sel2:window-height))
       (split-window-vertically))
@@ -380,26 +390,33 @@ dp-sel2 uses these bindings:
     (if (buffer-live-p t-buf)
         (progn
           (switch-to-buffer t-buf)
-          
+
           ;; try to restore everything as it was.
-          
+
           ;; save the current cursor position in the target buffer.
           ;; it may have moved since target-marker was set.
           ;;(setq t-new-pos (point))
-          
+
           (unless no-exit-p
             (set-window-configuration window-config))
-          
+
           ;;
           ;; `current-window-configuration' does NOT save point in the
           ;; current buffer, so we need to explicitly go back to where we
           ;; started.
           (when t-go
               (goto-char t-pos))
-          
+	  ;; This used to be, and needs to be again, in the command loop.
+	  ;; To make this more correcter -- if we don't add it back into
+	  ;; the command loop, we needs must handle errors.
+	  ;; Hack around this for now.
+	  ;; (dp-unhighlight-point :pos this-is-where :id-prop dp-sel2-arrow-id)
+	  (dp-unextent-region dp-sel2-arrow-id
+			      (line-beginning-position)
+			      (line-end-position))
           (if fun
               (funcall fun region t-item t-rotate-only-p)))
-      
+
       (message (format "%s: target buffer `%s' is gone." t-mode-name t-name))
       (ding))))
 
@@ -535,41 +552,54 @@ Does not insert any text."
 
 ;;
 ;; @todo make squish faces args
-(defun dp-sel2:insert-line (item &optional squish use-squish-face trunc-len)
+(defun dp-sel2:insert-line (item &optional squish use-squish-face-p trunc-len)
   "Insert and format the ITEM into the listing buffer."
   ;; remove all extens from the items for display since things like
   ;; a read-only extent can hose things.
   ;; NB: this means that regions selected and inserted from the sel-buf will
   ;;  not have the original text's properties.
   ;;  Using view-item will allow text props to be retained.
-  (dp-delete*ALL*extents nil nil item)
-  (let ((start (point)))
+  (when (bound-and-true-p dp-sel2:delete*ALL*extents-p)
+    (dp-delete*ALL*extents nil nil item))
+  (let ((start (point))
+	(use-squish-face-p (cond
+			    ((not use-squish-face-p))
+			    ((eq use-squish-face-p t
+				 dp-sel2:use-squish-whitespace-face-p))
+			    (t use-squish-face-p))))
     (when (and trunc-len
 	       (> (length item) trunc-len))
-      (setq item (concat (substring item 0 trunc-len)
-			 "<<truncated>>"))
-      (when use-squish-face
-	(dp-make-extent0 item trunc-len (length item) 'dp-sel2 
-			 'duplicable t
-			 'face 'dp-sel2:squish-newline-face)))
+      (if dp-sel2:squish-whitespace-string
+	  (setq item (truncate-string-to-width
+		      item trunc-len nil nil
+		      dp-sel2:squish-whitespace-string))
+	(setq item (concat (substring item 0 trunc-len)
+			 "<<truncated>>")))
+      (when (and use-squish-face-p
+		 dp-sel2:use-squish-whitespace-face-p
+	    (dp-make-extent0 item trunc-len (length item) 'dp-sel2
+			     'duplicable t
+			     'face 'dp-sel2:squish-newline-face))))
     (insert item)
     (goto-char start)
     ;; squish the item for display by squeezing all runs of WS to a
     ;; single space (if requested)
     (when squish
       (while (dp-re-search-forward dp-sel2:squish-space-regexp nil t)
-	(if use-squish-face
+	(if use-squish-face-p
 	    (dp-make-extent (match-beginning 0) (match-end 0) 
 			    'dp-sel2
 			    'face 'dp-sel2:squish-space-face))
-	(replace-match dp-sel2:squish-white-space-string nil nil))
+	(replace-match dp-sel2:squish-whitespace-string nil nil))
       (goto-char start)
       (while (dp-re-search-forward dp-sel2:squish-newline-regexp nil t)
-	(if use-squish-face
+	(if use-squish-face-p
+	    ;; @todo XXX Find something else besides the ellipsis to
+	    ;; denote newlines.
 	    (dp-make-extent (match-beginning 0) (match-end 0) 
 			    'dp-sel2
 			    'face 'dp-sel2:squish-newline-face))
-	(replace-match dp-sel2:squish-white-space-string nil nil))
+	(replace-match dp-sel2:squish-whitespace-string nil nil))
       ))
   (goto-char (point-max)))
 
@@ -577,7 +607,7 @@ Does not insert any text."
   "List all of the items in the item-list in buffer named buf-name.
 BUF-NAME is the name of the temporary buffer.
 SQUISH is a flag telling the system to compress runs of whitespace into
-a single copy of dp-sel2:squish-white-space-string.
+a single copy of dp-sel2:squish-whitespace-string.
 ITEM-LIST is the list of items to be selected from.  If the item is a list,
 then the car of the list is displayed in the selection buffer, otherwise
 the item is displayed."
@@ -834,7 +864,7 @@ yank ring."
   (interactive "P")
   (if goto-embedded-p
       (dp-sel3:bm)
-    (let ()                             ;(sel-item)
+    (let () ;(sel-item)
       (if (not kill-ring)
           (message "Nothing in kill-ring.")
         (dp-rehighlight-point :id-prop dp-sel2-arrow-id)
