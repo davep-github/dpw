@@ -8,7 +8,7 @@
 (defun dp-magit-mode-setup-hook ()
   )
 
-(defun dp-magit-mode-hook ()
+(defun dp-magit-mode-bind-keys ()
   (interactive)
   (dp-local-set-keys
    '(
@@ -18,6 +18,10 @@
      [(meta right)] magit-section-forward
      )
    ))
+
+(defun dp-magit-mode-hook ()
+  (interactive)
+  (dp-magit-mode-bind-keys))
 
 ;; Nice convention to put key bindings for modes alone in a function.
 ;; <clutch-pearls-on-soap-box>Wah! Name space pollution!</clutch-pearls-on-soap-box>
@@ -49,6 +53,21 @@
   )
 (add-hook 'git-rebase-mode-hook 'dp-magit-rebase-mode-hook)
 
+(defun dp-git-commit-setup-bind-keys ()
+  (interactive)
+  (dp-define-keys
+   git-commit-mode-map
+   '(
+     [(meta ?p)] dp-parenthesize-region
+     [(control ?x) (control ?p)] git-commit-prev-message
+     [(control ?x) (control ?n)] git-commit-next-message
+     )))
+
+(defun dp-git-commit-setup-hook ()
+  (interactive)
+  (dp-git-commit-setup-bind-keys))
+
+(add-hook 'git-commit-setup-hook 'dp-git-commit-setup-hook)
 ;;
 ;; Sometimes the original version works.
 ;; Dunno why.
