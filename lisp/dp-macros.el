@@ -214,7 +214,11 @@ it as a string."
             docstring "(buffer-local)"))
     `(progn 
       (defcustom ,symbol ,value ,docstring ,@args)
-      (make-variable-buffer-local ',symbol)))
+      (make-variable-buffer-local ',symbol)
+      ;; @todo XXX Should we predicate this on interactive evaluation?
+      ;; @todo Is a custom value `defconst' or `defvar'?
+      (unless custom-dont-initialize
+	(setq-default ,symbol ,value))))
   (put 'dp-defcustom-local 'lisp-indent-function lisp-body-indent)
 
   (defmacro dp-deflocal (name init-val &optional docstring)
