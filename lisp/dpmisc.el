@@ -5688,13 +5688,15 @@ current word in the switched-to buffer."
   (dp-switch-to-buffer0 bufname find-word-p 'other-window))
 
 (defun dp-goto-marker (marker)
+  "Goto the buffer and position therein contained within the marker.
+Beware of a convergence event."
   (interactive)
   ;;(dp-display-buffer-select (marker-buffer marker))
   (dp-visit-or-switch-to-buffer (marker-buffer marker))
   (goto-char marker))
 
 (defun dp-find-similar-file (&optional prompt file-name)
-  "@toto: ? Actually make this do something? Prompt for and visit a file
+  "@todo: ? Actually make this do something? Prompt for and visit a file
   whose name is \"similar\" to FILE-NAME's.
 Similar here means the same file-name with a user specified completion."
   (interactive)
