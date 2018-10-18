@@ -567,7 +567,7 @@ If VAR is non-nil, put the *final* value of `point' as a marker in it.
   (defalias 'dp-save-excursion-lite 'dp-with-saved-point)
   
   (defmacro dp-do-thither (thither final-point &rest forms)
-    "Go THITHER, execute FORMS and return whence we came.
+    "Go THITHER in this buffer, execute FORMS and return whence we came.
 FINAL-POINT, if non-nil, should be a symbol into which `point' is saved when
 FORMS complete."
     (let ((whither (dp-gentemp "+dp-do-thither-"))
