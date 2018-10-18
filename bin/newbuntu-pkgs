@@ -122,18 +122,18 @@ figlet
 figlet
 firefox
 flex
-fonts-comfortaa                 
+fonts-comfortaa
 fonts-dejavu-core
 fonts-dejavu-extra
-fonts-fantasque-sans            
+fonts-fantasque-sans
 fonts-freefont-ttf
 fonts-hack-otf
-fonts-hack-ttf                  
+fonts-hack-ttf
 fonts-inconsolata
-fonts-liberation                
-fonts-lmodern                   
-fonts-mgopen                    
-fonts-symbola                   
+fonts-liberation
+fonts-lmodern
+fonts-mgopen
+fonts-symbola
 fonts-ubuntu-font-family-console
 g++
 gcc
@@ -145,46 +145,46 @@ git-gui
 gitk
 gparted
 gpm
-imagemagick                     
+imagemagick
 ipython
 ipython-doc
 libcurl4-openssl-dev
 libdbus-1-dev libdbus-glib-1-dev
 libdmalloc-dev
 libelf-dev
-liberation                      
-libfreetype6-dev                
+liberation
+libfreetype6-dev
 libgif-dev
 libgif-dev
 libgif7
-libgl1-glx     
+libgl1-glx
 libgl1-mesa-dev
 libgl1-mesa-glx
-libgl1glx      
-libgpm-dev                      
-libgpm-dev                      
+libgl1glx
+libgpm-dev
+libgpm-dev
 libjpeg-dev
 libjpeg-dev
 libncurses5
 libncurses5-dbg
 libncurses5-dev
-libotf-dev                      
+libotf-dev
 libpng
 libpng-dev
-libpng-dev                      
+libpng-dev
 libpng16-16
 libpng12
-libpng16-dev                    
+libpng16-dev
 libreoffice
-librsvg2-dev                    
+librsvg2-dev
 libssl-dev
 libtiff-dev
 libtiff-dev
-libxft-dev                      
+libxft-dev
 lsscsi
 make
 meld
-mesa-utils     
+mesa-utils
 meson
 mpd
 msmtp
@@ -203,22 +203,22 @@ opensymbol
 pcregrep
 rcs
 realpath
-sagi libgif-dev 
+sagi libgif-dev
 sagi libjpeg-dev
 sagi libtiff-dev
 sagi libxpm-dev
-scalable                        
+scalable
 screen
 thunderbird
 tree
-unifont                         
+unifont
 vim
 vnc4server
 wmctrl
-xaw3dg-dev                      
+xaw3dg-dev
 xclip
-xfonts-base                     
-xfonts-scalable                 
+xfonts-base
+xfonts-scalable
 xorg-dev
 xpdf
 xterm
@@ -240,6 +240,11 @@ bison
 flex
 libelf-dev
 dc
+w3m
+links
+lynx
+elinks
+links2
 # <:new packages:>
 )
 
