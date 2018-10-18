@@ -172,7 +172,7 @@ libotf-dev
 libpng
 libpng-dev
 libpng-dev                      
-libpng-tools libpng16-16
+libpng16-16
 libpng12
 libpng16-dev                    
 libreoffice
@@ -227,6 +227,11 @@ xaw3dg-dev
 otf-freefont
 libotf-dev
 pcregrep
+autotools
+texinfo
+gnutls-bin
+libgnutls-dev
+fonts-ricty-diminished
 # Mail
 mu4e
 isync
@@ -258,7 +263,7 @@ pkg_num=1
       echo "Installing ${pkg_num} of ${num_pkgs}" > /tmp/newbubtu-pkgs
 
       EExec_verbose_msg "Installing ${pkg_num} of ${num_pkgs}"
-      EExec sudo apt-get --assume-yes install "${p}"
+      EExec -k sudo apt-get --assume-yes install "${p}"
       ((++pkg_num))
     done
 }
