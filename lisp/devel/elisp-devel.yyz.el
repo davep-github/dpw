@@ -549,3 +549,56 @@ jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
 \\)*\\(.\\{0,68\\}\\)\\(.*\\)\\(?:
 ;\\|
 \\(.+\\)\\)?"
+
+========================
+Thursday October 18 2018
+--
+(defun check-prop (prop pval)
+  (princf "prop>%s<, pval>%s<"
+	  prop pval)
+  (eq prop pval))
+
+
+(defun map-extents (function
+		    &optional object from to maparg flags property value)
+  (setq-ifnil object (current-buffer)
+	      from (cond
+		    ((overlayp object) (overlay-start))
+		    ((stringp object) 0)
+		    ((bufferp object)
+		     (with-current-buffer object
+		       (point-min)))
+		    (t (error "Unsupported object type: %s" object)))
+	      to (cond
+		    ((overlayp object) (overlay-end))
+		    ((stringp object) (1- (length object)))
+		    ((bufferp object)
+		     (with-current-buffer object
+		       (point-max)))
+		    (t (error "Unsupported object type: %s" object))))
+  (with-current-buffer (or object (current-buffer))
+    (auto-overlays-in from to
+		      (when property
+			(list 'eq property value)
+			))))
+
+dp-extent-id         dp-colorized-region-p
+(map-extents nil (dp-get-buffer "daily-2018-10.jxt")
+	     nil nil nil nil 'dp-extent-id 'dp-colorized-region-p)
+(#<overlay from 1684 to 1824 in daily-2018-10.jxt>
+	   #<overlay from 2398 to 2474 in daily-2018-10.jxt>
+	   #<overlay from 2632 to 2658 in daily-2018-10.jxt>
+	   #<overlay from 2715 to 2720 in daily-2018-10.jxt>)
+
+(#<overlay from 1684 to 1824 in daily-2018-10.jxt>
+ #<overlay from 2715 to 2720 in daily-2018-10.jxt>)
+
+(#<overlay from 1684 to 1824 in daily-2018-10.jxt>
+	   #<overlay from 1961 to 2183 in daily-2018-10.jxt>
+	   #<overlay from 2715 to 2720 in daily-2018-10.jxt>)
+
+
+
+prop>dp-journal-medium-example-face<, pval>t<
+prop>dp-cifdef-face5<, pval>t<
+
