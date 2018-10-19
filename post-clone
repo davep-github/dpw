@@ -154,7 +154,7 @@ ln_dotrc \
 #}
 
 OEM_DIR="${HOME}/.oem-dot-files"
-mkdir -p "${OEM_DIR}"
+${EZEC} mkdir -p "${OEM_DIR}"
 for f in .bash_login .bashrc .bash_profile
 do
 	[ -h "${f}" ] && continue
@@ -166,6 +166,7 @@ do
 done
 
 safe_ln lisp .xemacs
+safe_ln lisp .emacs.d
 safe_ln .rc/procmailrc.vilya .procmailrc
 safe_ln lisp/Makefile Makefile
 ${EZEC} mkdir -p var/log
