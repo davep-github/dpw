@@ -114,8 +114,30 @@ function template at point.
 (defsubst dp-mmm-in-any-subregion-p (&rest r)
   nil)
 
-(defun map-extents (&rest r)
-  (message "change map-extents to something FSF-ish"))
+(defun map-extents (function
+		    &optional object from to maparg flags property value)
+  "Try to fake XEmacs' `map-extents'."
+  (setq-ifnil object (current-buffer)
+	      from (cond
+		    ((overlayp object) (overlay-start))
+		    ((stringp object) 0)
+		    ((bufferp object)
+		     (with-current-buffer object
+		       (point-min)))
+		    (t (error "Unsupported object type: %s" object)))
+	      to (cond
+		    ((overlayp object) (overlay-end))
+		    ((stringp object) (1- (length object)))
+		    ((bufferp object)
+		     (with-current-buffer object
+		       (point-max)))
+		    (t (error "Unsupported object type: %s" object))))
+  ;; @todo XXX Handle other kinds of objects.
+  (with-current-buffer (or object (current-buffer))
+    (auto-overlays-in from to
+		      (when property
+			(list 'eq property value)
+			))))
 
 (defalias 'delete-extent 'delete-overlay)
 
