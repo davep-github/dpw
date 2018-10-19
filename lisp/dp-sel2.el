@@ -229,7 +229,7 @@ process began.")
   "Current list of items from which the selection will be made.")
 
 ;; only compress >1 space, >0 other white chars
-(defvar dp-sel2:squish-space-regexp "  \\( *\\|[\t]*\\)\\|[\t][\t]*"
+(defvar dp-sel2:squish-whitespace-regexp "[ \t]\\{2,\\}"
   "Regexp to identify squishable runs of whitespace.")
 (defvar dp-sel2:squish-newline-regexp "[\n]+"
   "Regexp to identify squishable runs of whitespace.")
@@ -631,7 +631,7 @@ Does not insert any text."
     ;; squish the item for display by squeezing all runs of WS to a
     ;; single space (if requested)
     (when squish-p
-      (while (dp-re-search-forward dp-sel2:squish-space-regexp nil t)
+      (while (dp-re-search-forward dp-sel2:squish-whitespace-regexp nil t)
 	(if use-squish-face-p
 	    (dp-make-extent (match-beginning 0) (match-end 0)
 			    'dp-sel2
