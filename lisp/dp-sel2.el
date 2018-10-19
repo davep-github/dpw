@@ -46,8 +46,16 @@
 ;;; global vals... individual callers (like dp-sel-2paste) can have
 ;;; their own custom vars or use this.
 ;;;
+
+
 (dp-defcustom-local dp-sel2:squish-whitespace-p t
   "*Controls squishing of white space into `dp-sel2:squish-whitespace-string'"
+  :group 'dp-vars
+  :type 'boolean)
+
+(dp-defcustom-local dp-sel2:use-unicode-p (not (not (bound-and-true-p
+					   unicode-category-table)))
+  "*Hard to believe, but this tells us to use, I believe, Unicode."
   :group 'dp-vars
   :type 'boolean)
 
@@ -57,16 +65,34 @@
   :group 'dp-vars
   :type 'boolean)
 
-(dp-defcustom-local dp-sel2:elipsis (decode-char 'ucs #x2026)
-  "*Character used to replace runs of whitespace or truncated pasties."
+(dp-defcustom-local dp-sel2:ellipsis (decode-char 'ucs #x2026)
+  "*Character used to indicate truncated for display pasties"
+  :group 'dp-vars
+  :type 'character)
+
+(dp-defcustom-local dp-sel2:newline-glyph (decode-char 'ucs #x21b5)
+  "*Character used to replace newlines."
+  :group 'dp-vars
+  :type 'character)
+
+(dp-defcustom-local dp-sel2:white-square (decode-char 'ucs #x25a1)
+  "*Character used to replace newlines."
   :group 'dp-vars
   :type 'character)
 
 (dp-defcustom-local dp-sel2:squish-whitespace-string
-    (if dp-sel2:use-squish-whitespace-face-p
-	" "
-      (make-string 1 dp-sel2:elipsis))
-  "*String into which we squish runs of WS."
+    (if dp-sel2:use-unicode-p
+	(make-string 1 dp-sel2:white-square)
+      " ")
+  "*String into which we squish runs of WS sans newlines."
+  :group 'dp-vars
+  :type 'string)
+
+(dp-defcustom-local dp-sel2:squish-newline-string
+    (if dp-sel2:use-unicode-p
+	(make-string 1 dp-sel2:newline-glyph)
+      " ")
+  "*String into which we squish runs of newlines."
   :group 'dp-vars
   :type 'string)
 
@@ -75,9 +101,23 @@
   :group 'dp-vars
   :type 'integer)
 
+;; @todo XXX if we can't make this work, remove `t'
+(dp-defcustom-local dp-sel2:use-truncation-face-p (or t (dp-xemacs-p))
+  "*Controls whether or not we apply `dp-sel2:truncation-face'."
+  :group 'dp-vars
+  :type 'boolean)
+
+(dp-defcustom-local dp-sel2:truncation-string
+    (if dp-sel2:use-unicode-p
+	(make-string 1 dp-sel2:ellipsis)
+      "<<truncated>>")		 ; @todo XXX fix if XEmacs has Unicode
+  "*String which indicates a line has been truncated."
+  :group 'dp-vars
+  :type 'string)
+
 ;;;
 
-(defface dp-sel2:squish-space-face
+(defface dp-sel2:squish-whitespace-face
   '((((class color) (background light)) 
      (:background "paleturquoise"))) 
   "Face (background) for squished runs of tabs and spaces."
@@ -88,6 +128,13 @@
   '((((class color) (background light)) 
      (:background "lightblue3"))) 
   "Face (background) for squished runs of newlines."
+  :group 'faces
+  :group 'dp-faces)
+
+(defface dp-sel2:truncation-face
+  '((((class color) (background light))
+     (:background "lightblue3")))
+  "Face (background) for truncation indicator face."
   :group 'faces
   :group 'dp-faces)
 
@@ -552,7 +599,7 @@ Does not insert any text."
 
 ;;
 ;; @todo make squish faces args
-(defun dp-sel2:insert-line (item &optional squish use-squish-face-p trunc-len)
+(defun dp-sel2:insert-line (item &optional squish-p use-squish-face-p trunc-len)
   "Insert and format the ITEM into the listing buffer."
   ;; remove all extens from the items for display since things like
   ;; a read-only extent can hose things.
@@ -562,44 +609,41 @@ Does not insert any text."
   (when (bound-and-true-p dp-sel2:delete*ALL*extents-p)
     (dp-delete*ALL*extents nil nil item))
   (let ((start (point))
+	(truncate-p (and trunc-len
+			 (> (length item) trunc-len)))
 	(use-squish-face-p (cond
 			    ((not use-squish-face-p))
-			    ((eq use-squish-face-p t
-				 dp-sel2:use-squish-whitespace-face-p))
+			    ((eq use-squish-face-p t)
+			     dp-sel2:use-squish-whitespace-face-p)
 			    (t use-squish-face-p))))
-    (when (and trunc-len
-	       (> (length item) trunc-len))
-      (if dp-sel2:squish-whitespace-string
-	  (setq item (truncate-string-to-width
-		      item trunc-len nil nil
-		      dp-sel2:squish-whitespace-string))
-	(setq item (concat (substring item 0 trunc-len)
-			 "<<truncated>>")))
-      (when (and use-squish-face-p
-		 dp-sel2:use-squish-whitespace-face-p
-	    (dp-make-extent0 item trunc-len (length item) 'dp-sel2
-			     'duplicable t
-			     'face 'dp-sel2:squish-newline-face))))
+    (when truncate-p
+      (setq item (truncate-string-to-width
+		  item trunc-len nil nil
+		  dp-sel2:truncation-string)))
     (insert item)
+    (when (and truncate-p
+	       use-squish-face-p
+	       dp-sel2:use-truncation-face-p)
+      (dp-make-extent start trunc-len
+		      'dp-sel2
+		      'face 'dp-sel2:truncation-face))
     (goto-char start)
     ;; squish the item for display by squeezing all runs of WS to a
     ;; single space (if requested)
-    (when squish
+    (when squish-p
       (while (dp-re-search-forward dp-sel2:squish-space-regexp nil t)
 	(if use-squish-face-p
-	    (dp-make-extent (match-beginning 0) (match-end 0) 
+	    (dp-make-extent (match-beginning 0) (match-end 0)
 			    'dp-sel2
-			    'face 'dp-sel2:squish-space-face))
+			    'face 'dp-sel2:squish-whitespace-face))
 	(replace-match dp-sel2:squish-whitespace-string nil nil))
       (goto-char start)
       (while (dp-re-search-forward dp-sel2:squish-newline-regexp nil t)
 	(if use-squish-face-p
-	    ;; @todo XXX Find something else besides the ellipsis to
-	    ;; denote newlines.
-	    (dp-make-extent (match-beginning 0) (match-end 0) 
+	    (dp-make-extent (match-beginning 0) (match-end 0)
 			    'dp-sel2
 			    'face 'dp-sel2:squish-newline-face))
-	(replace-match dp-sel2:squish-whitespace-string nil nil))
+	(replace-match dp-sel2:squish-newline-string nil nil))
       ))
   (goto-char (point-max)))
 

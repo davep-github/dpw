@@ -24,7 +24,6 @@
   (setq-ifnil end (point))
   (auto-overlays-in begin end
 		    (list (lambda (prop pval)
-			    (message "prop>%s<, pval>%s<" prop pval)
 			    (eq pval t))
 			  'dp-colorized-region-p t)))
 
@@ -41,6 +40,18 @@
 ;; (set-extent-property EXTENT PROPERTY VALUE)
 (defun dp-overlay-put-prop (olay prop val)
   (overlay-put olay prop val))
+
+(defun dp-overlay-get-prop (olay prop)
+  (overlay-get olay prop))
+
+(defun extent-properties (ext)
+  (overlay-properties ext))
+
+(defun extent-property (ext prop &optional default)
+  (let ((props (extent-properties ext)))
+    (if (plist-member props prop)
+	(dp-overlay-get-prop ext prop)
+      default)))
 
 (defalias 'set-extent-property 'dp-overlay-put-property)
 
@@ -323,7 +334,7 @@ PROPS."
 	(setq olay (car overlays))
 	(when (or (not check-val-p)	; All overlays
 		  (equal prop-val	; Overlays with matching props
-			 (overlay-get olay prop)))
+			 (extent-property olay prop)))
 	  (incf num-deleted)
 	  (when verbose-p
 	    (message "deleting extent>%s<" 
