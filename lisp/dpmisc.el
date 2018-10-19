@@ -7557,7 +7557,8 @@ Visit /file/name and then goto <linenum>."
                                      line-num filename-part))))
       (if (find-buffer-visiting filename-part)
           (dp-push-go-back "dp-ffap-file-finder2"))
-      (dp-goto-line line-num-part))))
+      (dp-goto-line line-num-part)))
+  (current-buffer))
 
 (defun dp-ffap-file-finder2 (&optional name-in)
   (interactive)
