@@ -348,7 +348,7 @@ e(
         'xterm_bg': CZ_FP4_BG_COLOR,
         'xterm_fg': CZ_FP4_FG_COLOR,
         'xxem_bg_color': "grey80",
-        """xem-xft-font""": '''"RictyDiminishedDiscord-13"''',
+        ###"""xem-xft-font""": '''"RictyDiminishedDiscord-13"''',
         'project': 'brahma',
  },
     ref=[amd_family, OSDB['linux'], default]
