@@ -555,3 +555,35 @@ Tuesday July 17 2018
 --
 error: patch failed: lisp/dpmacs.el:62
 error: lisp/dpmacs.el: patch does not apply
+
+========================
+Monday October 15 2018
+--
+(defvar dp-whitespace-violation-rulettes
+  (list (cons dp-trailing-whitespace-regexp 'dp-t)
+        (cons dp-space-before-tab-regexp 'dp-t)
+        (cons dp-too-many-spaces-in-a-row-regexp (lambda ()
+                                                   indent-tabs-mode))
+        ))
+dp-whitespace-violation-rulettes
+
+(mapcar (lambda (z)
+          (if (funcall (cdr z))
+              (car z)
+            "NONONONONONONO!"))
+        dp-whitespace-violation-rulettes)
+("\\s-+$" " +[	]" "NONONONONONONO!")
+
+
+(mapconcat (lambda (z)
+             (if (funcall (cdr z))
+                 (car z)
+               nil))
+           dp-whitespace-violation-rulettes
+           "\\|")
+"\\s-+$\\| +[	]\\|"
+
+"\\s-+$\\| +[	]\\|"
+
+"\\s-+$\\ +[	]\\"
+
