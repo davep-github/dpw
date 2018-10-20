@@ -602,3 +602,54 @@ dp-extent-id         dp-colorized-region-p
 prop>dp-journal-medium-example-face<, pval>t<
 prop>dp-cifdef-face5<, pval>t<
 
+
+========================
+Friday October 19 2018
+--
+
+(truncate-string-to-width
+ "YAYAYAYAYAYAYAYAYAYYA" 19 nil nil
+ "<<truncated>>")
+"YAYAYA<<truncated>>"
+
+"YAYAYAYAYAYAYAYAYAYYA"
+
+"YAYAYAYAYAYAYAYAYAYYA"
+
+"YAYAYAYAYAYAYAYAYAYYA"
+
+"YAYAYAYAYAY…"
+
+(decode-char 'ucs #x0020)
+32
+(make-string 1 (decode-char 'ucs #x25a1))
+"□"
+
+(make-string 1 (decode-char 'ucs #x21b5))
+"↵"
+
+(make-stringw3m
+links
+lynx
+elinks
+links2
+ 1 (decode-char 'ucs #x25ab))
+"▫"
+
+
+
+" "
+
+(make-string 1 dp-sel2:white-square)
+"□"
+
+"□"
+
+
+x21b5
+(bound-and-true-p unicode-category-table)
+
+	      from (cond
+		    ((overlayp object) (overlay-start))
+		    ((stringp object) 0)
+		    (t (error "Unsupported object type: %s" object)))
