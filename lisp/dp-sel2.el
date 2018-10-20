@@ -118,15 +118,15 @@
 ;;;
 
 (defface dp-sel2:squish-whitespace-face
-  '((((class color) (background light)) 
-     (:background "paleturquoise"))) 
+  '((((class color) (background light))
+     (:background "paleturquoise")))
   "Face (background) for squished runs of tabs and spaces."
   :group 'faces
   :group 'dp-faces)
 
 (defface dp-sel2:squish-newline-face
-  '((((class color) (background light)) 
-     (:background "lightblue3"))) 
+  '((((class color) (background light))
+     (:background "lightblue3")))
   "Face (background) for squished runs of newlines."
   :group 'faces
   :group 'dp-faces)
@@ -139,8 +139,8 @@
   :group 'dp-faces)
 
 (defface dp-sel2:viewer-bg-face
-  '((((class color) (background light)) 
-     (:background "aliceblue"))) 
+  '((((class color) (background light))
+     (:background "aliceblue")))
   "Face (background) for item being viewed."
   :group 'faces
   :group 'dp-faces)
@@ -152,7 +152,7 @@
   "Hook to call after sel-mode is set up.
 This is unique per caller so different users can have different
 functions called, e.g. to set up usage-specific key bindings.")
-  
+
 (dp-deflocal-permanent dp-sel2:buffer nil
   "Buffer in which selection is taking place.")
 
@@ -199,7 +199,7 @@ numeric input is under weigh.")
 ;;;
 ;;; callbacks
 ;;; each one gets the current item: a cons (index . item)
-;;; 
+;;;
 (dp-deflocal-permanent dp-sel2:sel-func nil
   "Function to call when an item is selected.")
 
@@ -212,7 +212,7 @@ numeric input is under weigh.")
   "Args passed to `dp-sel2:insertor'.")
 
 ;;;
-;;; Target buffer information.  
+;;; Target buffer information.
 ;;; The target buffer is the buffer that was current when the
 ;;; selection process began.
 ;;;
@@ -273,13 +273,13 @@ If 'no-exit-p, then rotate the ring and refresh the buffer and don't exit.")
 
 (defun dp-sel2:adjust-window-size (num-items)
   ;; set window's initial size
-  (let ((desired-height (min dp-sel2:window-height 
+  (let ((desired-height (min dp-sel2:window-height
 			     ;(/ (window-displayed-height) 2)
 			     (+ num-items 2)))
 	;; ?? window-height seems incorrect at this point if there
 	;;    already was a second window.
 	;; ? or is it that window-displayed-height isn't updated yet.
-	(lines-used-by-decorations (- (window-height) 
+	(lines-used-by-decorations (- (window-height)
 				      (window-displayed-height))))
 ;    (dmessage "wdh: %d, wh: %d, dh: %d, lbd: %d"
 ;	      (window-displayed-height)
@@ -289,15 +289,15 @@ If 'no-exit-p, then rotate the ring and refresh the buffer and don't exit.")
 			  )
 		       ;lines-used-by-decorations
 		       1))		; compensate for bad height estimates
-                                        ; "it needs this to make it go"
+; "it needs this to make it go"
     )
   )
 
 (defun dp-sel2:refresh ()
   (interactive)
   (setq dp-sel2:item-list (funcall dp-sel2:item-list-generator))
-  (let ((buf (dp-sel2:items dp-sel2:sel-buf-name dp-sel2:insertor 
-			    dp-sel2:insertor-args 
+  (let ((buf (dp-sel2:items dp-sel2:sel-buf-name dp-sel2:insertor
+			    dp-sel2:insertor-args
 			    dp-sel2:item-list)))
     (dp-sel2:adjust-window-size (length dp-sel2:item-list))
     buf))
@@ -325,7 +325,7 @@ INSERTOR is called to insert and format each item.  It is passed the
 item to insert (at point) and INSERTOR-ARGS.
 INSERTOR-ARGS is a list of args to pass to INSERTOR.
 If INSERTOR is nil, then it defaults to: `dp-sel2:insert-line' with
-args dp-sel2:squish-whitespace-p, dp-sel2:use-squish-whitespace-face-p and 
+args dp-sel2:squish-whitespace-p, dp-sel2:use-squish-whitespace-face-p and
 dp-sel2:item-trunc-len.
 
 RETURNS a cons cell (0_based_index . item) corresponding to the
@@ -341,7 +341,7 @@ selection and cancellation keys.
 Calls value of `dp-sel2:mode-hook' on entry if non-nil.
 
 dp-sel2 uses these bindings:
-\\{dp-sel2:mode-map}" 
+\\{dp-sel2:mode-map}"
   (interactive)
 
   (if (eq major-mode 'dp-sel2:mode)
@@ -366,9 +366,9 @@ dp-sel2 uses these bindings:
 				dp-sel2:item-trunc-len)))
     (when (> (window-height) (* 2 dp-sel2:window-height))
       (split-window-vertically))
-      
 
-    (switch-to-buffer-other-window 
+
+    (switch-to-buffer-other-window
      (dp-sel2:items buf-name insertor insertor-args item-list))
 ;    (dp-toggle-read-only 0 nil)		; in case this is a re-entry
 
@@ -382,7 +382,7 @@ dp-sel2 uses these bindings:
     ;; some are saved for when we'll add the ability to refresh
     ;;  the selection buffer.
     ;;
-    ;;!<@todo MAKE THIS AN EFFIN' struct!!!!!! 
+    ;;!<@todo MAKE THIS AN EFFIN' struct!!!!!!
     (setq dp-sel2:sel-func sel-func
 	  dp-sel2:cancel-func cancel-func
 	  dp-sel2:item-list-generator item-list-generator
@@ -407,16 +407,16 @@ dp-sel2 uses these bindings:
 
 (put 'dp-sel2:mode 'mode-class 'special)
 
-(defun* dp-sel2:reset-to-orig-buffer (fun item 
-                                      &key no-exit-p kill-current-buffer-p)
+(defun* dp-sel2:reset-to-orig-buffer (fun item
+&key no-exit-p kill-current-buffer-p)
   "Propogate variables from listing buffer to current invokation buffer."
   (interactive)
   (let ((doomed (current-buffer))
-        (t-rotate-only-p dp-sel2:rotate-only-p)
-        (t-name dp-sel2:target-buffer-name)
-        (t-buf (marker-buffer dp-sel2:target-marker))
-        (t-pos (marker-position dp-sel2:target-marker))
-        (t-go dp-sel2:goto-target-original-point)
+(t-rotate-only-p dp-sel2:rotate-only-p)
+(t-name dp-sel2:target-buffer-name)
+(t-buf (marker-buffer dp-sel2:target-marker))
+(t-pos (marker-position dp-sel2:target-marker))
+(t-go dp-sel2:goto-target-original-point)
 	(t-mode-name mode-name)
 	(window-config dp-sel2:window-config)
 	(region (dp-maybe-get-region))
@@ -435,24 +435,24 @@ dp-sel2 uses these bindings:
       (setq t-new-pos (point)))
 
     (if (buffer-live-p t-buf)
-        (progn
-          (switch-to-buffer t-buf)
+(progn
+(switch-to-buffer t-buf)
 
-          ;; try to restore everything as it was.
+;; try to restore everything as it was.
 
-          ;; save the current cursor position in the target buffer.
-          ;; it may have moved since target-marker was set.
-          ;;(setq t-new-pos (point))
+;; save the current cursor position in the target buffer.
+;; it may have moved since target-marker was set.
+;;(setq t-new-pos (point))
 
-          (unless no-exit-p
-            (set-window-configuration window-config))
+(unless no-exit-p
+(set-window-configuration window-config))
 
-          ;;
-          ;; `current-window-configuration' does NOT save point in the
-          ;; current buffer, so we need to explicitly go back to where we
-          ;; started.
-          (when t-go
-              (goto-char t-pos))
+;;
+;; `current-window-configuration' does NOT save point in the
+;; current buffer, so we need to explicitly go back to where we
+;; started.
+(when t-go
+(goto-char t-pos))
 	  ;; This used to be, and needs to be again, in the command loop.
 	  ;; To make this more correcter -- if we don't add it back into
 	  ;; the command loop, we needs must handle errors.
@@ -461,8 +461,8 @@ dp-sel2 uses these bindings:
 	  (dp-unextent-region dp-sel2-arrow-id
 			      (line-beginning-position)
 			      (line-end-position))
-          (if fun
-              (funcall fun region t-item t-rotate-only-p)))
+(if fun
+(funcall fun region t-item t-rotate-only-p)))
 
       (message (format "%s: target buffer `%s' is gone." t-mode-name t-name))
       (ding))))
@@ -477,7 +477,7 @@ dp-sel2 uses these bindings:
 Each possible item is listed.
 Letters do not insert themselves; instead, they are commands.
 \\<dp-sel2:mode-map>
-\\[keyboard-quit] or \\[dp-sel2:quit] -- exit buffer menu, returning to previous window and buffer configuration.  
+\\[keyboard-quit] or \\[dp-sel2:quit] -- exit buffer menu, returning to previous window and buffer configuration.
 If the very first character typed is a space, it also has this effect.
 \\[dp-sel2:select] -- select item of line point is on.
 
@@ -516,13 +516,13 @@ Entry to this mode via command dp-sel2:list calls the value of
     (define-key map [?Y] 'dp-sel2:select)
     (define-key map [?y] 'dp-sel2:select)
     (define-key map [?g] 'dp-sel2:refresh)
-    (define-key map [?f] (kb-lambda (set-window-configuration 
-                                     dp-sel2:initial-sel2-window-config)))
+    (define-key map [?f] (kb-lambda (set-window-configuration
+dp-sel2:initial-sel2-window-config)))
     (if (dp-xemacs-p)
-	(define-key map [button2] 'dp-sel2:mouse-select)	
+	(define-key map [button2] 'dp-sel2:mouse-select)
       (define-key map [mouse-2] 'dp-sel2:mouse-select))
     (define-key map [(meta insert)] 'dp-sel2:select)
-    
+
     (let ((i ?0))
       (while (<= i ?9)
 	(define-key map (char-to-string i) 'dp-sel2:digit-argument)
@@ -559,22 +559,22 @@ Entry to this mode via command dp-sel2:list calls the value of
   "Leave select item mode after calling FUN."
   (interactive)
   ;; save the values we need since they will vanish with the buffer
-  (dp-sel2:reset-to-orig-buffer fun item 
-                                :no-exit-p no-exit-p 
-                                :kill-current-buffer-p t)
+  (dp-sel2:reset-to-orig-buffer fun item
+:no-exit-p no-exit-p
+:kill-current-buffer-p t)
   (unless no-exit-p
     (dp-sel2:exit)))
 
 (defun dp-sel2:select (&optional current-item)
-  "Select the current item.  
+  "Select the current item.
 Calls selection callback, if non-nil, then exits mode."
   (interactive)
   (dp-sel2:done dp-sel2:sel-func (or current-item
-                                     (dp-sel2:current-item)))
+(dp-sel2:current-item)))
   (setq this-command 'yank))
 
 (defun dp-sel2:cancel ()
-  "Cancel the current item.  
+  "Cancel the current item.
 Calls cancel callback, if non-nil, then exits mode."
   (interactive)
   (dp-sel2:done dp-sel2:cancel-func nil))
@@ -655,16 +655,16 @@ a single copy of dp-sel2:squish-whitespace-string.
 ITEM-LIST is the list of items to be selected from.  If the item is a list,
 then the car of the list is displayed in the selection buffer, otherwise
 the item is displayed."
-  
+
   ;; (message (format "buf-name>%s<, items>%s<" buf-name item-list))
   (save-excursion
     (let (el l
 	     (sel-buf (get-buffer-create buf-name)))
       (set-buffer sel-buf)
-      
+
       (setq dp-sel2:items-offset-list nil
 	    dp-sel2:items-num-offsets 0)
-      
+
       (dp-toggle-read-only 0 nil)
 
       (dp-erase-buffer)
@@ -682,24 +682,24 @@ the item is displayed."
 	      l  (cdr l))
 	(if (listp el)
 	    (setq el (car el)))
-	(setq dp-sel2:items-offset-list 
+	(setq dp-sel2:items-offset-list
 	      (cons (point) dp-sel2:items-offset-list))
 	(insert (format "%3d%s" dp-sel2:items-num-offsets "|"))
 	(apply insertor el insertor-args)
 	(insert "\n")
-	(setq dp-sel2:items-num-offsets 
+	(setq dp-sel2:items-num-offsets
 	      (+ 1 dp-sel2:items-num-offsets))
 	)
       ;; nuke trailing '\n' added in dp-sel2:insert-line
-      (setq dp-sel2:items-offset-list 
+      (setq dp-sel2:items-offset-list
 	    (nreverse dp-sel2:items-offset-list))
       (when (> (1- (point-max )) 0)
-        (delete-region (- (point-max) 1) (point-max)))
+(delete-region (- (point-max) 1) (point-max)))
       sel-buf
       )))
 
 (defun dp-sel2:off-to-index (&optional off)
-  "Convert offset in buffer to index used to select 
+  "Convert offset in buffer to index used to select
 the desired item."
   (unless off
     (setq off (point)))
@@ -736,11 +736,11 @@ Elispomancer."
   ;; There is.
   (1+ (string-to-int (apply 'string (reverse dp-sel2:index)))))
 ;;leveled up!;   (let ((i 0)
-;;leveled up!;  	(l (reverse dp-sel2:index)))
+;;leveled up!;(l (reverse dp-sel2:index)))
 ;;leveled up!;     (while l
 ;;leveled up!;       (setq i (+
-;;leveled up!;  	       (* i 10)
-;;leveled up!;  	       (- (car l) ?0)))
+;;leveled up!;       (* i 10)
+;;leveled up!;       (- (car l) ?0)))
 ;;leveled up!;       (setq l (cdr l)))
 ;;leveled up!;     i))
 
@@ -759,7 +759,7 @@ Return t if index was out of range, else nil."
 (defun dp-sel2:digit-argument ()
   "Accumulate an index in dp-sel2:index and move to
 item currently selected.
-E.g. typing `1' `2' will send us to item 1 and then to 
+E.g. typing `1' `2' will send us to item 1 and then to
 item 12."
   (interactive)
   (setq dp-sel2:preserve-index t)
@@ -768,7 +768,7 @@ item 12."
 ;  (message "0c2:%S" last-input-char)
 ;  (message "0k: %s" (this-command-keys))
   (setq dp-sel2:index (cons last-input-char dp-sel2:index))
-  
+
 ;  (message "1i: %S" dp-sel2:index)
   ;; the call will fail if the new index is too big.  If so, we remove the
   ;; offending digit from the list.
@@ -780,7 +780,7 @@ item 12."
 and move to the resulting item.  An empty list gets us to
 item 0."
   (interactive)
-;  (message "in bs, i: %S, pi: %S" dp-sel2:index 
+;  (message "in bs, i: %S, pi: %S" dp-sel2:index
 ;	   dp-sel2:preserve-index)
   (if dp-sel2:index
       (progn
@@ -801,12 +801,12 @@ item 0."
   "Make the section window no taller than this.
 We try to shrink-wrap the window, but if it is too big then we use
 this as an upper size limit.
-However, if the main window is very short (i.e. less than 2x this value, 
+However, if the main window is very short (i.e. less than 2x this value,
 then make the height 1/2 of the current frame height."
   :group 'dp-vars
   :type 'integer)
 
-  
+
 (defun dp-sel2:list-pastes ()
   "Create a list of all the paste buffers in the kill-ring.
 Start at the current yank position and go until we get back to where
@@ -834,12 +834,12 @@ we started.  The strings are in the same order that a series of
   "Insert current item but do not exit sel-mode."
   (interactive)
   (let ((text (or (dp-maybe-get-region)
-                  (cdr (or item (dp-sel2:current-item))))))
+(cdr (or item (dp-sel2:current-item))))))
     (setq dp-sel2:target-marker
-          (dp-sel2:with-target-buffer
-              (insert text)
-              (dp-rehighlight-point :id-prop dp-sel2-arrow-id)
-            (point-marker)))
+(dp-sel2:with-target-buffer
+(insert text)
+(dp-rehighlight-point :id-prop dp-sel2-arrow-id)
+(point-marker)))
     (if add-to-kill-ring
 	(kill-new text))))
 
@@ -855,14 +855,14 @@ we started.  The strings are in the same order that a series of
 	 (target-marker dp-sel2:target-marker)
 	 (item-list dp-sel2:item-list)
 	 (items-offset-list dp-sel2:items-offset-list)
-         (copyor `(lambda ()
-                    (interactive)
-                    (dp-sel2-paste:copy-no-exit nil 
-                                                (quote ,t-item))))
-         (selector `(lambda ()
-                      (interactive)
-                      (kill-this-buffer)
-                      (dp-sel2:select (quote ,t-item)))))
+(copyor `(lambda ()
+(interactive)
+(dp-sel2-paste:copy-no-exit nil
+(quote ,t-item))))
+(selector `(lambda ()
+(interactive)
+(kill-this-buffer)
+(dp-sel2:select (quote ,t-item)))))
     (define-key key-map [?c] copyor)
     (define-key key-map [?C] copyor)
     (define-key key-map [?k] copyor)
@@ -880,24 +880,24 @@ we started.  The strings are in the same order that a series of
     (with-current-buffer view-buf
       (setq dp-sel2:target-marker target-marker))
     (let ((window-config (current-window-configuration)))
-      (dp-simple-viewer view-buf 
-                        ;; fill func
-                        (function
-                         (lambda () 
-                           (insert text)))
-                        ;; additional ('add) quit-keys
-                        '(add [?v] [?V])
-                        ;; q-key-command
-                        (kb-lambda ()
-                          ;; Preserve config from view buffer local var.
-                          (let ((window-config 
-                                 dp-simple-viewer-exit-func-args))
-                            (kill-this-buffer)
-                            (apply 'set-window-configuration 
-                                   window-config)))
-                        key-map
-                        'dp-sel2:viewer-bg-face
-                        window-config))))
+      (dp-simple-viewer view-buf
+;; fill func
+(function
+(lambda ()
+(insert text)))
+;; additional ('add) quit-keys
+'(add [?v] [?V])
+;; q-key-command
+(kb-lambda ()
+;; Preserve config from view buffer local var.
+(let ((window-config
+dp-simple-viewer-exit-func-args))
+(kill-this-buffer)
+(apply 'set-window-configuration
+window-config)))
+key-map
+'dp-sel2:viewer-bg-face
+window-config))))
 
 ;; selected callback
 (defun dp-sel2:select-callback (region sel-item &optional rotate-only-p)
@@ -910,9 +910,9 @@ we started.  The strings are in the same order that a series of
 	(do-not-rotate
 	 (and (not rotate-only-p)
 	      (or (and (key-press-event-p last-input-event)
-		       (eq (event-key last-input-event) 
+		       (eq (event-key last-input-event)
 			   'insert)
-		       (equal (event-modifiers 
+		       (equal (event-modifiers
 			       last-input-event)
 			      (list 'meta)))
 		  (and (dp-last-command-char)
@@ -942,17 +942,17 @@ we started.  The strings are in the same order that a series of
 		      (car (dp-sel2:current-item)))
 		     (dp-sel2:refresh)))
   (local-set-key [?c] (kb-lambda
-			  (dp-sel2-paste:copy-no-exit 
+			  (dp-sel2-paste:copy-no-exit
 			   'copy)))
   (local-set-key [?k] (kb-lambda
 			  (dp-sel2-paste:copy-no-exit '
 			   copy)))
   (local-set-key [?C] (kb-lambda
-			  (dp-sel2-paste:copy-no-exit 
+			  (dp-sel2-paste:copy-no-exit
 			   'copy)
 			  (dp-sel2:exit-mode)))
   (local-set-key [?K] (kb-lambda
-			  (dp-sel2-paste:copy-no-exit 
+			  (dp-sel2-paste:copy-no-exit
 			   'copy)
 			  (dp-sel2:exit-mode)))
   (local-set-key [?o] 'dp-sel2-paste:view-item)
@@ -968,22 +968,17 @@ yank ring."
       (dp-sel3:bm)
     (let () ;(sel-item)
       (if (not kill-ring)
-          (message "Nothing in kill-ring.")
-        (dp-rehighlight-point :id-prop dp-sel2-arrow-id)
-        (dp-sel2 "*pasties*"            ;Buffer name prefix.
-
-                 ;; Item generator function
-                 'dp-sel2:list-pastes
-
-                 ;; Function to apply when an item has been selected.
-                 'dp-sel2:select-callback
-
-                 ;; Function to apply when the operation has been cancelled.
+(message "Nothing in kill-ring.")
+(dp-rehighlight-point :id-prop dp-sel2-arrow-id)
+(dp-sel2 "*pasties*";Buffer name prefix.
+;; Item generator function
+'dp-sel2:list-pastes
+;; Function to apply when an item has been selected.
+'dp-sel2:select-callback
+;; Function to apply when the operation has been cancelled.
 		 'dp-sel2:cancel-callback
-
-                 ;; post-mode-hook
+;; post-mode-hook
 		 'dp-sel2:post-mode-callback
-		 
 		 )))
     (setq this-command 'yank)))
 
@@ -992,14 +987,14 @@ yank ring."
     (mapcar
      (function
       (lambda (name)
-        (setq bm (dp-bm-find name))
-        ;;format: (bookmark-name . marker)
-        (dp-goto-bm bm)
-        ;; grab line from bm location
-        (setq line (buffer-substring
-                    (progn (beginning-of-line) (point))
-                    (progn (end-of-line) (point))))
-        (cons (format "`%s'%s" name  line) name)))
+(setq bm (dp-bm-find name))
+;;format: (bookmark-name . marker)
+(dp-goto-bm bm)
+;; grab line from bm location
+(setq line (buffer-substring
+(progn (beginning-of-line) (point))
+(progn (end-of-line) (point))))
+(cons (format "`%s'%s" name  line) name)))
      (dp-bm-names 'sortem))))
 
 ;;;###autoload
@@ -1009,14 +1004,14 @@ yank ring."
   (unless ignore-embedded-bookmarks-p
       (dp-scan-for-embedded-bookmarks))
   (if dp-bm-list
-      (dp-sel2 "*bookies*" 
+      (dp-sel2 "*bookies*"
 	       ;; item list generator
 	       'dp-sel2:list-bookmarks
-               ;; selected callback
-	       (function 
-                (lambda (region sel-item &optional rotate-only-p)
-                  (if sel-item
-                      (dp-set-or-goto-bm (cdr (cdr sel-item))))))
+;; selected callback
+	       (function
+(lambda (region sel-item &optional rotate-only-p)
+(if sel-item
+(dp-set-or-goto-bm (cdr (cdr sel-item))))))
 		 ;;; cancel/quit callback
 	       nil)
     (message "No bookmarks.")))
