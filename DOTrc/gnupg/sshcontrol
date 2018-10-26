@@ -9,3 +9,6 @@
 # caching TTL in seconds, and another optional field for arbitrary
 # flags.   Prepend the keygrip with an '!' mark to disable it.
 
+# RSA key added on: 2018-10-23 15:18:29
+# MD5 Fingerprint:  84:1b:0e:5b:b2:53:e9:fc:e9:c8:60:a5:4f:f8:9d:52
+3145190518A6FCB7FCB448A5609B1BF03E586318 0
