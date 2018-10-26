@@ -1,5 +1,10 @@
 #!/bin/sh
 
+#
+# fldm(dp) -- Force Light Desktop Manager
+# Force as in kill it then restart it.
+# Also optionally modprobe(8)s amdgpu driver.
+#
 set -x
 : ${modprobe_p=}
 
@@ -10,6 +15,9 @@ case "$(hostname)" in
 esac
 
 LOG_NAME="${element}/var/log/junk/fldm.log"
+
+# this is not propagated into the window session.
+export SET_IN_fldm=true
 
 {
     cd $USER
