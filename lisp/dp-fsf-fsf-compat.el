@@ -143,6 +143,17 @@ function template at point.
 
 (defalias 'delete-extent 'delete-overlay)
 
+;;
+;; Copied directly from XEmacs.
+;;
+(defun sorted-key-descriptions (keys &optional separator)
+  "Sort and separate the key descriptions for KEYS.
+The sorting is done by length (shortest bindings first), and the bindings
+are separated with SEPARATOR (\", \" by default)."
+  (mapconcat 'key-description
+             (sort* keys #'< :key #'length)
+             (or separator ", ")))
+
 ;; EEEEEEEEVIL hack.  We need to create our own byte-compilation
 ;; method so that the proper variables are bound while compilation
 ;; takes place (which is when the warnings get noticed and batched
