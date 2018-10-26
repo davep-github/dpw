@@ -55,7 +55,8 @@ E|svnworkll|svnll|    ${SVNWORKLL}/
 Ee|varlog|vlog|               /var/log/
 Ee|messages|msgs|vlm|         ${varlog}messages
 Ee|syslog|slog|vls|           ${varlog}syslog
-Ee|xorglog|xorg0|x0rg|xlog|   ${varlog}Xorg.0.log
+Ee|xorglog|                   ${varlog}Xorg.0.log
+Ee|xorg0|x0rg|xlog|vlx|xvl    ${xorglog}
 #############################################################################
 Ee|yokeletc|          ${yokel}etc/
 Ee|uye|yetc|          ${yokeletc}
