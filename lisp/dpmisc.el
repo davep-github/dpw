@@ -2090,7 +2090,7 @@ manual `dp-mark-to-end-of-line' -- C-c d C-k -- followed by a
 ;; my old code is in odds'n'ends.
 ;;
 
-(defun dp-toggle-kb-macro-def ()
+(defun dp-toggle-kbd-macro-def ()
   "Toggle keyboard macro definition."
   (interactive)
   (if defining-kbd-macro

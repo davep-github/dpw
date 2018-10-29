@@ -197,11 +197,10 @@ Bind any keys in KEYS via `dp-define-keys'."
 ;;reassigned;                                         (dp-scroll-down nil 'half-page-p)))
 ;;reassigned; (global-set-key [(control meta down)] (kb-lambda 
 ;;reassigned;                                           (dp-scroll-up nil 'half-page-p)))
-;; dipshit belkin kvm doesn't pass f7!
-(global-set-key [f6] 'dp-toggle-kb-macro-def)
-(global-set-key [f7] 'dp-toggle-kb-macro-def)
-(global-set-key [f8] 'call-last-kbd-macro)
-(global-set-key [f9] 'call-last-kbd-macro)
+;; dipshit belkin kvm doesn't pass f7!  Don't use one any more, but
+;; for the record.
+(global-set-key [f7] 'dp-toggle-kbd-macro-def)
+(global-set-key [f8] 'dp-call-last-kbd-macro)
 (global-set-key [(meta ?[)] 'dp-find-matching-paren)
 (global-set-key [(meta ?])] 'dp-pop-go-back)
 (global-set-key [(control meta ?])] 'dp-goto-last-edit)
