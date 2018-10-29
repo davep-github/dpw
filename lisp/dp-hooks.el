@@ -515,11 +515,14 @@ Works with tabs.")
   :type 'boolean)
 
 
-(defvar dp-whitespace-violation-regexp
-  (dp-regexp-concat (list dp-trailing-whitespace-regexp
-                          dp-space-before-tab-regexp
-                          dp-too-many-spaces-in-a-row-regexp)))
-                      
+(defun dp-whitespace-violation-regexp (&optional tabs-mode-p)
+  (dp-regexp-concat (delq nil
+			  (list dp-trailing-whitespace-regexp
+				(when tabs-mode-p
+				  dp-space-before-tab-regexp)
+				(when tabs-mode-p
+				  dp-too-many-spaces-in-a-row-regexp)))))
+
 (defun dp-blah-blah (save-sym)
   (append (symbol-value save-sym)
           list-o-keys))

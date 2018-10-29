@@ -13470,7 +13470,7 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
 
 (defun dp-looking-at-whitespace-violation ()
   (save-excursion
-    (re-search-forward dp-whitespace-violation-regexp nil t)))
+    (re-search-forward (dp-whitespace-violation-regexp) nil t)))
 
 ;; (defun dp-whitespace-next-violation ()
 ;;   (interactive)
@@ -13512,8 +13512,8 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
   (interactive)
   (save-excursion
     (beginning-of-line)
-    (when (dp-re-search-forward dp-whitespace-violation-regexp 
-                             (line-end-position) t)
+    (when (dp-re-search-forward (dp-whitespace-violation-regexp)
+				(line-end-position) t)
       (replace-match ""))))
 
 (defun dp-whitespace-next-and-cleanup (&optional ask-per-line-p)
