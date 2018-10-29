@@ -11277,8 +11277,8 @@ the minibuffer."
     (goto-char goto-pos))
   (insert-file file-name))
 
-(defun dp-add-new-file-template (&optional template &optional template-args)
-  (interactive "\sname: ")
+(defun dp-add-new-file-template (template &optional template-args)
+  (interactive "\stemplate name: ")
   ;; template can be a simple string or a list:
   ;; \(function args).
   (cond
