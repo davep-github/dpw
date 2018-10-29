@@ -2097,6 +2097,15 @@ manual `dp-mark-to-end-of-line' -- C-c d C-k -- followed by a
       (end-kbd-macro)
     (start-kbd-macro nil)))
 
+(defun dp-call-last-kbd-macro (&optional PREFIX LOOPFUNC)
+  "Call last kbd macro, making sure one is not being defined."
+  (interactive)
+  (if defining-kbd-macro
+      (when (y-or-n-p "Defining a macro;  End and call it? ")
+	(end-kbd-macro)
+	(call-interactively 'call-last-kbd-macro))
+    (call-interactively 'call-last-kbd-macro)))
+
 (defun* dp-comment-out-region (&optional sexp-p (comment-comment-text "")
                                comment-tag
                                bracket-p)
