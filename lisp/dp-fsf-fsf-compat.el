@@ -356,14 +356,14 @@ ARG is the argument to `add-global-abbrev' or `add-mode-abbrev'."
   "Insert the current X Window selection at point, and put text into kill ring."
   (interactive "P")
   (let ((text (dp-with-all-output-to-string
-	       (yank))))
-    (when (and (string-match "
-" text)
+	       (if (dp-xemacs-p)
+		   (yank)
+		 (insert-for-yank (gui-get-primary-selection))))))
+    (when (and (string-match "" text)
 	       (or (ding) t)
 	       (or (not prompt-if-^Ms)
 		   (y-or-n-p "^Ms in text; dedosify")))
-      (setq text (replace-in-string text "
-" "" 'literal))
+      (setq text (replace-in-string text "" "" 'literal))
       (message "dedos'd"))
     (push-mark (point))
     (unless no-insert-p
