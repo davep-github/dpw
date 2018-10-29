@@ -6675,7 +6675,8 @@ LIMIT, otherwise, has a buffer pos that is the limit."
                             ;; seems to be put onto the `command-history'
                             ;; list before this function is called.
                             ;; Uses 1 based indexing.
-                            ;; Handle case of empty command-history.
+                            ;; Handle case of command-history which is
+                            ;; too small.
                             (if (> (length command-history) 1)
                                 2
                               1))))
