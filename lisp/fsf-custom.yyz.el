@@ -126,6 +126,6 @@
  '(ediff-fine-diff-Ancestor ((t (:background "#009591" :foreground "black"))))
  '(ediff-odd-diff-Ancestor ((t (:background "gray40" :foreground "black"))))
  '(isearch ((t (:background "medium spring green" :foreground "#100e23" :weight bold))))
- '(lazy-highlight ((t (:background "#65b2ff" :foreground "black"))))
+ '(lazy-highlight ((t (:background "#4592df" :foreground "black"))))
  '(rectangle-preview ((t (:inherit region))))
- '(region ((t (:background "turquoise2" :foreground "black" :box (:line-width 2 :color "grey75" :style released-button) :weight bold)))))
+ '(region ((t (:background "turquoise2" :foreground "black" :box (:line-width 1 :color "midnight blue") :weight bold)))))
