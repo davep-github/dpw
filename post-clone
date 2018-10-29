@@ -174,7 +174,7 @@ ${EZEC} mkdir -p var/log
 safe_ln var/log log
 (
 	cd log
-        ${EZEC} mkdir {boot,kde,login-rc,xemacs,shell-sessions}
+        ${EZEC} mkdir {boot,kde,login-rc,xemacs,shell-sessions,X11}
         ${EZEC} mkdir auto-rotate-c5-50K
         ${EZEC} mkdir -p shell-sessions/home/dpanarit/log/shell-sessions
 	safe_ln auto-rotate-c5-50K procmail
