@@ -6,3 +6,7 @@
 [include]
         path = ~/.rc/gitconfig.davep
 
+[gui]
+	fontdiff = -family \"Ricty Diminished Discord\" -size 12 -weight normal -slant roman -underline 0 -overstrike 0
+	warndetachedcommit = true
+	displayuntracked = false
