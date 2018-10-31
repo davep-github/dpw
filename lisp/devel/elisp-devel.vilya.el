@@ -587,3 +587,7 @@ dp-whitespace-violation-rulettes
 
 "\\s-+$\\ +[	]\\"
 
+(defun dset2 (&optional file-name)
+  (interactive "Gfile-name: ")
+  (find-file file-name)
+  (dset))
