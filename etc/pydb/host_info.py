@@ -89,7 +89,7 @@ default = dppydb.Entry({
     #'xem_font': '''-*-Lucida Console-medium-r-*-*-*-100-*-*-*-*-*-*''',
     #'xem_font': '''-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*''',
     #'xem_font': '''Font -*-Proggycleansz-medium-r-*-*-*-100-*-*-*-*-*-*''',
-    'xem_font': '''-*-fixed-medium-r-*-*-*-140-*-*-*-*-iso8859-*''',
+    ###'xem_font': '''-*-fixed-medium-r-*-*-*-140-*-*-*-*-iso8859-*''',
 
     # this looks better on XFree86 under cygwin.
     'lem_font': '''-*-Fixed-medium-r-*-*-*-120-*-*-*-*-iso8859-*''',
@@ -471,11 +471,11 @@ e(
         #'xem_font': '-*-bitstream vera sans mono-*-r-*-*-*-120-*-*-*-*-*-*',
         #'xem_font': '-b&h-lucidatypewriter-medium-*-*-*-*-100-*-*-*-*-*-*',
         # Vera got very high marks in a legibility survey.
-        "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
+        ###"xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
         # I am playing with --with-xft. Font selection is "better" and really sucks.
         # Font menu is fucked, but this works:
         # (set-default-font "Inconsolata-12")
-        """xem-xft-font""": '''"RictyDiminishedDiscord-13"''',
+        ####"""xem-xft-font""": '''"RictyDiminishedDiscord-13"''',
 
         # NB! using the version number can cause extreme weirdness with fonts!
         'tunnel-ip': '16.11.64.97',
