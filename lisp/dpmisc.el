@@ -1833,7 +1833,11 @@ Motivated by abstraction of `dp-indent-line-and-move-down'."
     (when (or (eq pred t)
               (funcall pred))
       (apply func func-args))
+    ;; We need more that a simple `next-line' when we're in the Emacs
+    ;; mode where wrapped lines can be `next-line'd to.
+    (end-of-line)
     (next-line 1)
+    (back-to-indentation)
     )
 
   ;; python-mode does different things if the previous command was an indent
