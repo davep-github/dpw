@@ -315,7 +315,9 @@ XERXES_FG_COLOR = 'white'
 #XERXES_BG_COLOR = 'rgb:96/70/3F'
 #XERXES_BG_COLOR = 'rgb:51/00/10'
 #XERXES_BG_COLOR = 'rgb:46/00/0A'
-XERXES_BG_COLOR = 'rgb:2E/00/07'
+#XERXES_BG_COLOR = 'rgb:2E/00/07'
+XERXES_BG_COLOR = 'rgb:00/31/23'
+# #044633
 e(
     kef='host',
     dat={
