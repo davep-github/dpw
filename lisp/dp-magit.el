@@ -114,6 +114,11 @@ else: NUM-LINES lines.
     (call-interactively 'magit-section-hide)))
 (dp-defaliases 'dmhu 'mhut 'hut 'dp-magit-hide-untracked)
 
+(global-set-key [(control ?x) (control ?g)]
+		(kb-lambda ()
+		    (setq current-prefix-arg (not current-prefix-arg))
+		    (call-interactively 'magit-status)))
+
 (provide 'dp-magit)
 
 (message "load dp-magit()... done.")
