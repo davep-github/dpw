@@ -11,7 +11,7 @@ set -x
 case "$(hostname)" in
     vilya) element="/home/davep";;
     *) element="/home/dpanarit"
-       modprobe_p=t;;
+       : ${modprobe_p=t};;
 esac
 
 LOG_NAME="${element}/var/log/junk/fldm.log"
@@ -20,7 +20,7 @@ LOG_NAME="${element}/var/log/junk/fldm.log"
 export SET_IN_fldm=true
 
 {
-    cd $USER
+    eval cd ~$USER
     echo "LOG_NAME>${LOG_NAME}<"
 
     PATH="${PATH}:${element}/bin"
