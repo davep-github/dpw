@@ -13,6 +13,7 @@ done
 unset eexec_program
 
 : ${LOG_DIR:=$DP_LOG_DIR/debug/go-mgr}
+EExec -y mkdir -p $(dirname "${LOG_DIR}")
 : ${GREP_DASH_I=}
 DEFAULT_SB_SUFFIX="__SB_rel"
 ENV_NAME_MIN_LEN=4
