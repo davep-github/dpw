@@ -43,10 +43,16 @@ current buffer is not visiting a file."
 				 nil
 				 nil
 				 default-directory)))))
-(defalias 'dse 'dp-stolen-sudo-edit)
+(defalias 'dse-tramp 'dp-stolen-sudo-edit)
+
+(defun dse (&optional file-name)
+  "Edit a file as root.  The stolen one above is slow when using completion."
+  (interactive "Gfile name: ")
+  (find-file file-name)
+  (dset))    ; this op is fast since we know the name and we're local.
 
 (defun dset ()
-  "Sudo edit the file in the current buffer."
+  "`dse this' sudo edit the file in the current buffer."
   (interactive)
   (dp-stolen-sudo-edit 'dse-this-buffer))
 
