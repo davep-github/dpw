@@ -316,11 +316,11 @@ XERXES_FG_COLOR = 'white'
 #XERXES_BG_COLOR = 'rgb:51/00/10'
 #XERXES_BG_COLOR = 'rgb:46/00/0A'
 #XERXES_BG_COLOR = 'rgb:2E/00/07'
-<<<<<<< variant A
-XERXES_BG_COLOR = 'rgb:01/1a/13'
->>>>>>> variant B
+<<<<<<< HEAD
 XERXES_BG_COLOR = 'rgb:00/31/23'
-======= end
+=======
+XERXES_BG_COLOR = 'rgb:01/1a/13'
+>>>>>>> 1462c9eb... New bg color for xerxes.  It looks faaabuulous!
 # #044633
 e(
     kef='host',
