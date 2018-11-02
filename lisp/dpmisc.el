@@ -1254,8 +1254,9 @@ the newly copied text."
 ;;@todo;     (dp-ss-esac  . "[ 	]*esac")
     )
   "An alist of regexps to find and identify CPP conditional directives.
-Should work for if/else in Berkley makefiles.  Should work for shell scripts
-as long as they're formatted with the if,else,elif,fi agin the left margin.")
+Should work for if/else in Berkley makefiles.  Should work for
+shell scripts as long as they're formatted with the
+if,else,elif,fi agin the left margin, as per \\[back-to-indentation].")
 
 (defun dp-get-ifdef-item (&optional re-alist)
   "Identify the CPP conditional directive on the current line.
