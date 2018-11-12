@@ -105,6 +105,45 @@ Usage_error()
 # template end.
 ########################################################################
 
+: ${pre_suffix=}
+
+# Usage variable usage:
+Usage_args_info=" Usage_args_info"
+Usage_synopsis="Usage_synopsis: Clean FS with sudo rm -rf /"
+# Using ) after the args makes copy & paste between here and the
+# case statement easier.
+Usage_details="${EExec_parse_usage}
+-o) flag o
+-O <val>) set Option to <val>
+"
+# Example of arg parsing.
+option_str="p:"
+long_options=("pre-suffix:"  "ps:")
+
+source dp-getopt+.sh || exit 1
+while (($# > 0))
+do
+  # do. e.g.  shift; $OPTION_ARG=$1;; # to process options with arguments.
+  case $1 in
+      # eexec support: -n -v -q, etc. q.v. ~/bin/eexec
+      # Done by EExec_parse and friends.
+
+      # Program options.
+      -p|--ps|--pre-suffix) shift; pre_suffix="${1}";;
+
+      # Help!
+      --help) Usage; exit 0;;
+      --) shift ; break ;;
+      # getopt will barf about unknown options.
+      # Here we barf about known options that we have forgotten to handle.
+      *) echo 1>&2 "Unhandled option>$1<"
+         exit 1;;
+    esac
+    shift
+done
+# The following is needed only when args are required.
+[ "$*" = "" ] && Usage
+
 argses=("$@")
 num_argses=${#argses[@]}
 dest=${argses[$((num_argses - 1))]}
@@ -117,12 +156,19 @@ time_stamp=$(dp-std-timestamp)
 EExec_verbose_echo_id num_argses
 EExec_verbose_echo_id dest
 EExec_verbose_msg "argses[@]>${argses[@]}<"
+if [ -n "${pre_suffix}" ]
+then
+    ps="-${pre_suffix}"
+else
+    ps=''
+fi
+
 while ((i < num_argses))
 do
     EExec_verbose_echo_id i
     file=${argses[i]}
     EExec_verbose_msg "argses[$i]>${argses[i]}<"
-    dest_file="${dest}/$(basename ${file})-${time_stamp}"
+    dest_file="${dest}/$(basename ${file})${ps}-${time_stamp}"
     EExec cp "${file}" "${dest_file}"
     ((++i))
 done
