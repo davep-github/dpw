@@ -332,9 +332,21 @@
       </action>
     </keybind>
     <!-- Select and raise a web browser (att: firefox) window. -->
+    <!-- NB: run-iff uses findprog(dp1) to find the executable, so it
+         looks "intelligently" only at the program field of the ps
+         command. Basically: in the correct field 
+         [[:space:]][^[[:space:]][[:space:]]
+         E.g. we can differentiate (yay me!):
+         PID TTY      STAT   TIME COMMAND
+         979  ?        Ss     0:00 /usr/sbin/sshd -D
+         5109 ?        Ss     0:00 /usr/bin/ssh-agent -s
+         Run findprog, thus: findprog [-r] [-n] progname_as_in_ps
+         -r ==> raise window, 
+         -n ==> case insensitive substring of X Window *title*
+    -->
     <keybind key="W-w">
       <action name="Execute">
-        <command>run-iff -x -r -n Chromium chromium-browser</command>
+        <command>run-iff -r -n Chromium chromium-browser</command>
       </action>
     </keybind>
     <!-- Select and raise an email client window. Thunderbird, ATT. -->
@@ -343,16 +355,10 @@
         <command>wmctrl -a "Mozilla Thunderbird"</command>
       </action>
     </keybind>
-    <!-- run skippy-xd, an expose like window selector. -->
-    <keybind key="W-s">
-      <action name="Execute">
-        <command>skippy-xd</command>
-      </action>
-    </keybind>
     <!-- Select and raise an IPython window. -->
     <keybind key="W-p">
       <action name="Execute">
-        <command>wmctrl -a "~ : python"</command>
+        <command>run-iff -r -n "IPython:" "ipython"</command>
       </action>
     </keybind>
     <keybind key="S-W-p">
@@ -363,12 +369,18 @@
     <!-- Select and raise a galculator. -->
     <keybind key="W-g">
       <action name="Execute">
-        <command>wmctrl -a "galculator"</command>
+        <command>run-iff -r -n galculator galculator</command>
       </action>
     </keybind>
     <keybind key="S-W-g">
       <action name="Execute">
         <command>galculator</command>
+      </action>
+    </keybind>
+    <!-- run skippy-xd, an expose like window selector. -->
+    <keybind key="W-s">
+      <action name="Execute">
+        <command>skippy-xd</command>
       </action>
     </keybind>
     <keybind key="W-1">
