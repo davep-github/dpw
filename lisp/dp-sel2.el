@@ -843,6 +843,11 @@ we started.  The strings are in the same order that a series of
     (if add-to-kill-ring
 	(kill-new text))))
 
+(defun dp-sel2-paste:undo-target-buffer ()
+  (interactive)
+  (dp-sel2:with-target-buffer
+      (undo)))
+
 (defun dp-sel2-paste:view-item ()
   "View the entire current item in a buffer of its own."
   (interactive)
@@ -933,30 +938,31 @@ we started.  The strings are in the same order that a series of
   (dp-unhighlight-point :id-prop dp-sel2-arrow-id))
 
 (defun dp-sel2:post-mode-callback ()
-  (local-set-key [?r] (kb-lambda
-			  (let ((dp-sel2:rotate-only-p t))
-			    (dp-sel2:select))))
-  (local-set-key [?R]
-		 (kb-lambda
-		     (current-kill
-		      (car (dp-sel2:current-item)))
-		     (dp-sel2:refresh)))
-  (local-set-key [?c] (kb-lambda
-			  (dp-sel2-paste:copy-no-exit
-			   'copy)))
-  (local-set-key [?k] (kb-lambda
-			  (dp-sel2-paste:copy-no-exit '
-			   copy)))
-  (local-set-key [?C] (kb-lambda
-			  (dp-sel2-paste:copy-no-exit
-			   'copy)
-			  (dp-sel2:exit-mode)))
-  (local-set-key [?K] (kb-lambda
-			  (dp-sel2-paste:copy-no-exit
-			   'copy)
-			  (dp-sel2:exit-mode)))
-  (local-set-key [?o] 'dp-sel2-paste:view-item)
-  (local-set-key [?v] 'dp-sel2-paste:view-item))
+  (dp-define-local-keys
+   `(
+     [?r] ,(kb-lambda
+	      (let ((dp-sel2:rotate-only-p t))
+		(dp-sel2:select)))
+     [?R] ,(kb-lambda
+	      (current-kill (car (dp-sel2:current-item)))
+	      (dp-sel2:refresh))
+     [?c] ,(kb-lambda
+	      (dp-sel2-paste:copy-no-exit 'copy))
+     [?k] ,(kb-lambda
+	      (dp-sel2-paste:copy-no-exit 'copy))
+     [?C] ,(kb-lambda
+	      (dp-sel2-paste:copy-no-exit 'copy)
+	      (dp-sel2:exit-mode))
+     [?K] ,(kb-lambda
+	      (dp-sel2-paste:copy-no-exit 'copy)
+	      (dp-sel2:exit-mode))
+     [?o] dp-sel2-paste:view-item
+     [?v] dp-sel2-paste:view-item
+     [?u] dp-sel2-paste:undo-target-buffer
+     [(meta ?u)] dp-sel2-paste:undo-target-buffer
+     )
+   )
+)
 
 ;;;###autoload
 (defun dp-sel2:paste (&optional goto-embedded-p)
