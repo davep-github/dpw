@@ -141,7 +141,7 @@ The regexp is matched against the buffer name.")
          (beg (car beg.end))
          (end (cdr beg.end)))
     (if (dp-apply-or-value pred pred-args)
-	(dp-buffer-bg-set-color (or color 'dp-default-read-only-color)
+	(dp-buffer-bg-set-color (or color 'dp-default-read-only-face)
 				(current-buffer)
 				beg end)
       (when else-uncolorize-p
@@ -154,7 +154,7 @@ The regexp is matched against the buffer name.")
   (interactive "P")
   (dp-colorize-buffer-if buffer-read-only 
                          (or color 
-                             'dp-default-read-only-color)
+                             'dp-default-read-only-face)
                          uncolorize-if-rw-p))
 
 (defun dp-colorize-buffer-if-remote (&optional color buf)

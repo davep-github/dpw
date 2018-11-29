@@ -27,7 +27,7 @@ The regexp is matched against the buffer name.")
          (beg (car beg.end))
          (end (cdr beg.end)))
     (if (dp-apply-or-value pred pred-args)
-        (dp-colorize-region (or color 'dp-default-read-only-color)
+        (dp-colorize-region (or color 'dp-default-read-only-face)
                             beg end
                             'no-roll-colors nil
                             'priority -11 ; This is a background.
@@ -45,7 +45,7 @@ The regexp is matched against the buffer name.")
   (interactive "P")
   (dp-colorize-buffer-if buffer-read-only 
                          (or color 
-                             'dp-default-read-only-color)
+                             'dp-default-read-only-face)
                          uncolorize-if-rw-p))
 
 (defun dp-colorize-buffer-if-remote (&optional color buf)

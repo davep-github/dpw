@@ -474,7 +474,7 @@
   :group 'dp-faces)
 
 
-(defface dp-default-read-only-color
+(defface dp-default-read-only-face
   '(
     (((class color)
       (background dark))
