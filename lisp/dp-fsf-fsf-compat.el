@@ -23,10 +23,12 @@ See `fill-paragraph' and `fill-region' for more information."
       (call-interactively 'fill-region)
     (call-interactively 'fill-paragraph)))
 
-;nuke if aliases work. (defsubst dp-mark-active-p ()
-;nuke if aliases work.   ;; mark-active
-;nuke if aliases work.   ;; which is better?
-;nuke if aliases work.   (use-region-p))
+(defun dp-mark-active-p (&optional dont-count-outside-minibuffer-p)
+  "Emulate fsf emacs' transient mark activation w/zmacs-regions"
+  (and (use-region-p)
+       (cons (region-beginning) (region-end))))
+
+(defalias 'dp-region-active-p 'dp-mark-active-p)
 
 (dp-defaliases 'dp-mark-active-p 'dp-region-active-p 'use-region-p)
 
