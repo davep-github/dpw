@@ -3,6 +3,8 @@
 ;;; --------------------- Begin generated section ----------------------
 ;;; Everything in this file from the beginning of the previous line to the
 ;;; end of file will be deleted.
+;;; !!!!!!!!! I have no idea why I said that. !!!!!!!!!!
+;;; !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ;;;
 ;;; File: /home/dapanarx/lisp/dp-common-abbrevs.el
 ;;; Last saved: 2012-08-22T18:02:02
@@ -452,7 +454,7 @@
       "set and" "logical and" "intersection")
      dp-manual)
     ((("ch" "sf" "srcs" "chc")
-      "*.h" "*.cpp" "*.c" "*.h" "*.cpp" "*.[ch]*")
+      "*.[ch]" "*.[ch]*" "*.h" "*.cpp" "*.c" "*.h" "*.cpp")
      dp-manual)
     ((("ech" "esf" "esrcs" "echc")
       "\\.[ch]")
@@ -603,6 +605,9 @@
      ((("got" "git") 'circular) dp-manual)
      ((("get" "git") 'circular) dp-manual)
      ((("fh" "FETCH_HEAD") 'circular) dp-manual)
+     ;; Plurals seem to make sense as they are.
+     ((("iter" "iteration" "iterations" "iters" "iterations")
+       'circular) dp-manual)
      ((("dup" "dupe" "duplicate") 'circular) dp-manual)
      ((("dups" "dupes" "duplicates") 'circular) dp-manual)
      ((("stderr" "/proc/self/fd/2" "1>&2") 'circular) dp-manual)
