@@ -103,7 +103,7 @@ do
   shift
 done
 
-prog="$1"
+prog="${1}"		  # Cheap error checking.  This should be set.
 shift
 pname=$(basename "${prog}")
 
