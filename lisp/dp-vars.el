@@ -421,7 +421,7 @@ Look at `face-list'.  grep for \"dp-.*\" ??"
   :group 'dp-faces
   :type '(repeat face))
 
-(defcustom dp-faces-regexp "dpj?-.*face"
+(defcustom dp-faces-regexp "dpj?-.*\\(face\\|color\\)"
   "Regexp to recognize my faces."
   :group 'dp-faces
   :type 'regexp)
@@ -562,6 +562,24 @@ Also used by split window advice to determine when to force a horizontal
 split."
   :group 'dp-vars
   :type 'integer)
+
+(defcustom dp-dse-buffer-suffix-format "<dse/%d>"
+  "Used to add identifying suffix to buffer name.
+Can see it in the ibuffer and mode line, although the BG color tells us, too."
+  :group 'dp-vars
+  :type 'string)
+
+(defcustom dp-dse-buffer-suffix-regexp "<dse/[0-9]+>"
+  "How to ID a dse buffer name.
+We need to add digits if we are dse'ing >1 file/buffer with the same name."
+  :group 'dp-vars
+  :type 'string)
+
+(defcustom dp-dc-evaluator "dc"
+  "Program to use to evaluate an RPN string.
+dc(1) is assumed so anything else used needs must be compatible."
+  :group 'dp-vars
+  :type 'string)
 
 ;; <:new vars go here:>
 (provide 'dp-vars)
