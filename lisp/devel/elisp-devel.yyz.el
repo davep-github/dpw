@@ -653,3 +653,263 @@ x21b5
 		    ((overlayp object) (overlay-start))
 		    ((stringp object) 0)
 		    (t (error "Unsupported object type: %s" object)))
+
+========================
+Friday November 02 2018
+--
+
+;shipped (defun dp-tag-find-other-window (&rest r)
+;shipped   (interactive)
+;shipped   (cond
+;shipped    ((dp-xgtags-p)
+;shipped     (call-interactively 'dp-xgtags-find-tag-other-window))
+;shipped    ((dp-gtags-p)
+;shipped     (call-interactively 'gtags-find-tag-other-window))
+;shipped    (t
+;shipped     (error "No find tag other window."))))
+
+;shipped (defun dp-xgtags-find-tag-other-window (&optional num-windows-next)
+;shipped   (interactive "p")
+;shipped   (let ((xgtags-goto-tag 'always)
+;shipped 	(start-buffer (current-buffer))
+;shipped 	(tag-buffer (progn
+;shipped 		      (xgtags-find-tag)
+;shipped 		      (current-buffer))))
+;shipped     ;; for some reason (probably due to my misunderstanding of the
+;shipped     ;; function) `save-excursion' doesn't save the buffer, and we're
+;shipped     ;; left in the buffer containing the tag.  So we go back here.
+;shipped     ;; I'm sure this is over complicated and inefficient, but it works.
+;shipped     ;; So there.
+;shipped     (switch-to-buffer start-buffer)
+;shipped     (when (not (equal tag-buffer (current-buffer)))
+;shipped       (switch-to-buffer-other-window tag-buffer))))
+
+
+========================
+Tuesday November 06 2018
+--
+(progn
+  (add-hook 'python-mode-hook 'jedi:setup)
+  (setq jedi:complete-on-dot t)                 ; optional
+  (jedi:install-server))
+
+========================
+Tuesday November 06 2018
+--
+(defun dp-setup-jedi ()
+  (interactive)
+  ;; Standard Jedi.el setting
+  ;; (add-hook 'python-mode-hook 'jedi:setup)
+  ;; If auto-completion is all you need, you can call this function
+  ;; instead of `jedi:setup'
+  (add-hook 'python-mode-hook 'jedi:ac-setup)
+  (setq jedi:complete-on-dot t)
+  (autoload 'jedi:setup "jedi" nil t))
+
+
+;; Type:
+;;     M-x package-install RET jedi RET
+;;     M-x jedi:install-server RET
+;; Then open Python file.
+
+========================
+Monday November 12 2018
+--
+(defun gtags-auto-update ()
+  (when (and xgtags-mode gtags-auto-update buffer-file-name)
+    (if (not (dp-in-exe-path-p xgtags-global-program))
+        (dmessage "gtags-auto-update: cannot find tag updater: %s"
+                 xgtags-global-program)
+      (dmessage "Updating tags(%s)..." dp-gtags-auto-update-db-flag)
+      (call-process xgtags-global-program
+                    nil nil nil
+                    dp-gtags-auto-update-db-flag
+                    (if dp-gtags-auto-update-db-flag
+                        "-L"
+                      "--rgg-nop")
+                    (if dp-gtags-auto-update-db-flag
+                        "cscope.files"
+                      "--rgg-nop")
+                    "-u" (concat "--single-update="
+				 (expand-file-name (gtags-buffer-file-name))))
+      (dmessage "Updating tags(%s)...done" dp-gtags-auto-update-db-flag))))
+
+(cl-pe '(defvar-local bubba 'aa))
+
+(progn
+  (defvar bubba 'aa nil)
+  (make-variable-buffer-local 'bubba))
+
+(cl-pe '(dp-deflocal bubba 'aa))
+
+(progn
+  (defvar bubba 'aa "Undocumented. (dp-deflocal)")
+  (make-variable-buffer-local 'bubba)
+  (setq-default bubba 'aa))nil
+
+
+
+========================
+Tuesday November 20 2018
+--
+(defun lsrc (dirname &optional switches)
+  (interactive (dired-read-dir-and-switches ""))
+  (pop-to-buffer-same-window
+   (dired-noselect (paths-construct-path (list dirname "*.[ch]"))
+		   switches)))
+lsrc
+
+lsrc
+
+
+
+
+========================
+Wednesday November 21 2018
+--
+
+1 2 3 ++p = 6
+
+
+6
+========================
+Monday November 26 2018
+--
+
+(frame-parameter nil 'name)
+"Serv/Emacs@yyz:/home/dpanarit/dpw/dpw/lisp/devel/elisp-devel.yyz.el"
+(princf "%s" (selected-frame))
+#<frame Serv/Emacs@yyz:/home/dpanarit/dpw/dpw/lisp/devel/elisp-devel.yyz.el 0x13651f0>
+nil
+(dp-get-orig-value 'appt-disp-window-function)
+appt-disp-window
+
+(dp-get-orig-value 'appt-delete-window-function)
+
+(setq keep-appt-disp-window-function appt-disp-window-function)
+
+
+(dp-fsf-appt-disp-frame 3 "Date" "Howdy, frame2.")
+(funcall appt-disp-window-function 3 "Date" "Howdy, frame3.")
+
+
+ 
+========================
+Tuesday November 27 2018
+--
+
+(cl-pe '(defun pcomplete/git ()
+  "Completion for `git'"
+  ;; Completion for the command argument.
+  (pcomplete-here* pcmpl-git-commands)
+  ;; complete files/dirs forever if the command is `add' or `rm'
+  (cond
+   ((pcomplete-match (regexp-opt '("add" "rm")) 1)
+    (while (pcomplete-here (pcomplete-entries))))
+   ;; provide branch completion for the command `checkout'.
+   ((pcomplete-match (regexp-opt '("checkout" "co") 1))
+    (pcomplete-here* (pcmpl-git-get-refs "heads")))))
+)
+
+;; (defalias 'pcomplete/git
+;;   (function
+;;    (lambda nil
+
+(defun pcomplete/git ()
+    "Completion for `git'"
+  (pcomplete--here (function (lambda nil pcmpl-git-commands)) nil t nil)
+  (cond ((pcomplete-match (regexp-opt '("add" "rm")) 1)
+	 (while (pcomplete--here (function
+				  (lambda nil (pcomplete-entries)))
+				 nil
+				 nil
+				 nil)))
+	((pcomplete-match (regexp-opt '("checkout" "co") 1))
+	 (pcomplete--here (function
+			   (lambda nil (pcmpl-git-get-refs "heads")))
+			  nil
+			  t
+			  nil))))))
+
+
+
+
+========================
+Thursday November 29 2018
+--
+
+;olde orig. (defun dp-delete-word-forward (arg)
+;olde orig.   "Delete characters forward until encountering the end of a word.
+;olde orig. With argument, do this that many times.  Main change is to allow a
+;olde orig. sequence of white-space at point to be deleted with this command.
+;olde orig. Based (now, loosely) on kill-word from simple.el"
+;olde orig.   (interactive "*p")
+;olde orig.   ;; XXX look at skip-chars-forward/backward
+;olde orig.   (let ((ws "\\(\\s-\\|\n\\)+")
+;olde orig. 	(opoint (point)))
+;olde orig.     (if (or
+;olde orig. 	 ;; kill forward, sitting on white space.  kill using match
+;olde orig. 	 ;; data from looking-at
+;olde orig. 	 (and (> arg 0)
+;olde orig. 	      (looking-at ws))
+;olde orig. 	 ;; kill backwards.
+;olde orig. 	 ;; move back a char (if possible).
+;olde orig. 	 ;; if on whitespace, continue
+;olde orig. 	 ;;  else return to where we were
+;olde orig. 	 ;; go back to non-whitespace
+;olde orig. 	 ;; match ws up to where we started
+					;olde orig. 	 ;; use that match data to delete.
+;olde orig. 	 (and (< arg 0)
+;olde orig. 	      (not (dp-bobp))
+;olde orig. 	      (not (backward-char 1))	; return nil when successful (always?)
+;olde orig. 	      (if (looking-at ws)
+;olde orig. 		  t
+;olde orig. 		(forward-char 1))
+;olde orig. 	      (re-search-backward "[^ 	\n]" nil t)
+;olde orig. 	      (not (forward-char 1))
+;olde orig. 	      (dp-re-search-forward ws opoint t)))
+;olde orig. 	(delete-region (match-beginning 0) (match-end 0))
+;olde orig.       ;; if we're not killing white space, kill a word in
+;olde orig.       ;; the requested direction.
+;olde orig.       (delete-region (point) (progn (forward-word arg) (point))))))
+
+
+
+
+========================
+Friday November 30 2018
+--
+(defun dp-delete-word-forward (arg)
+  "Delete characters forward until encountering the end of a word.
+With argument, do this that many times.  Main change is to allow a
+sequence of white-space at point to be deleted with this command.
+Based (now, loosely) on kill-word from simple.el"
+  (interactive "*p")
+  ;; XXX look at skip-chars-forward/backward
+  (let ((ws "\\(\\s-\\|\n\\)+")
+	(opoint (point)))
+    (if (or
+	 ;; kill forward, sitting on white space.  kill using match
+	 ;; data from looking-at
+	 (and (> arg 0)
+	      (dp-looking-at ws))
+	 ;; kill backwards.
+	 ;; move back a char (if possible).
+	 ;; if on whitespace, continue
+	 ;;  else return to where we were
+	 ;; go back to non-whitespace
+	 ;; match ws up to where we started
+	 ;; use that match data to delete.
+	 (and (< arg 0)
+	      (not (dp-bobp))
+	      (not (backward-char 1)) ; return nil when successful (always?)
+	      (if (dp-looking-at ws)
+		  t
+		(forward-char 1))
+	      (re-search-backward "[^ 	\n]" nil t)
+	      (not (forward-char 1))
+	      (dp-re-search-forward ws opoint t)))
+	(delete-region (match-beginning 0) (match-end 0))
+      ;; if we're not killing white space, kill a word in
+      ;; the requested direction.
+      (delete-region (point) (progn (forward-word arg) (point))))))
