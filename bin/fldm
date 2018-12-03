@@ -11,13 +11,17 @@ set -x
 case "$(hostname)" in
     vilya) element="/home/davep";;
     *) element="/home/dpanarit"
-       : ${modprobe_p=t};;
+       : ${modprobe_p:=true};;
 esac
 
 LOG_NAME="${element}/var/log/junk/fldm.log"
 
 # this is not propagated into the window session.
 export SET_IN_fldm=true
+case "${1-}" in
+    -[1yYt]|[1yYt]) modprobe_t=true;  shift;;
+    -[0nN]|[0nN]) modprobe_t=false; shift;;
+esac
 
 {
     eval cd ~$USER
@@ -26,7 +30,7 @@ export SET_IN_fldm=true
     PATH="${PATH}:${element}/bin"
     export PATH
 
-    [ -n "${modprobe_p}" ] && sudo modprobe -v amdgpu
+    "${modprobe_p}" && sudo modprobe -v amdgpu
 
     sudo $(dirname $0)/lightdm-stopper
     sleep 1
