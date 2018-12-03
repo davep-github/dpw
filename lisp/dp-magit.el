@@ -27,6 +27,7 @@
 ;; <clutch-pearls-on-soap-box>Wah! Name space pollution!</clutch-pearls-on-soap-box>
 ;; Make modification and application easier.
 (defun dp-magit-rebase-bind-keys ()
+  (interactive)
   (dp-define-local-keys
    '(
      [(meta down)] other-window
@@ -44,6 +45,7 @@
      [(meta left)] magit-section-backward
      [(meta right)] magit-section-forward
      [(tab)] git-rebase-show-or-scroll-up
+     [(meta ?d)] git-rebase-kill-line
      )
    ))
 
@@ -114,6 +116,16 @@ else: NUM-LINES lines.
     (magit-jump-to-untracked)
     (call-interactively 'magit-section-hide)))
 (dp-defaliases 'dmhu 'mhut 'hut 'dp-magit-hide-untracked)
+
+(defun dp-magit-found-file-hook ()
+  "Matched (cond)itions must return non-nil."
+  (let ((bfn (expand-file-name buffer-file-name)))
+    (cond
+     ;; Yummy! Hard coding.
+     ((string-match "\\(^\\|/\\)COMMIT_EDITMSG$" bfn)
+      (goto-char (point-min))
+      (message "dp-magit-found-file-hook: point: %s" (point)))
+     (t nil))))
 
 (global-set-key [(control ?x) (control ?g)]
 		(kb-lambda ()
