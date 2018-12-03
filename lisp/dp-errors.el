@@ -190,6 +190,7 @@
     "^Abort$"				; A bit short, but...
     "^Nothing staged (or unstaged)$"
     "^\\S-+ isn’t bound to any action$"
+    "Nothing selected"
 
     ;; copied from emacs
     "^No possible abbreviation preceding point$"
@@ -247,7 +248,7 @@
     "^Marker has no buffer$"
     "^No mark set in this buffer$"
     "^The mark is not set now, so there is no region$"
-
+    "^Too few elements on stack$"
     ;; recover-file
     "^Auto-save file .* not current$"
 
