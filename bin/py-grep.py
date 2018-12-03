@@ -17,7 +17,7 @@ def grep_for_regexp(f, regexp, last_line=None, reuse_line_p=False):
         if m:
             return (l, m)
     return None
-    
+
 def grep_file(file_name, regexps, name=None):
     if type(file_name) == types.FileType:
         f = file_name
@@ -45,7 +45,7 @@ def grep_files(file_names, regexps):
     else:
         for f in file_names:
             grep_file(f, regexps)
-        
+
 if __name__ == "__main__":
     regexps = []
     re_options = ""
@@ -62,7 +62,6 @@ if __name__ == "__main__":
         if opt == '-R':
             reuse_line_p = True
             continue
-        
         if opt == '-i':
             re_options += "i"
             continue
@@ -90,4 +89,3 @@ if __name__ == "__main__":
             continue
         # <: add new options here :>
     grep_files(args, regexps)
-
