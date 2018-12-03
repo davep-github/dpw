@@ -1,3 +1,5 @@
+# -*- mode: conf -*-
+
 [include]
         path = ~/.rc/gitconfig
 
@@ -47,6 +49,10 @@ Consider rebase, or co and branch -M
         disablemsg = Prevent careless pushes to brahma repo.
         checkop = true
         msg = "You meant `stash [push]' didn't you?"
+
+[credential "ssh://gerritgit:/brahma/"]
+	username = dpanarit
+	helper = pass amd
 
 ########################################################################
 # Tom's *working* example.
