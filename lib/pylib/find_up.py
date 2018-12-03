@@ -87,7 +87,8 @@ def main(args):
     # colon separated (if > 1 and print_results_p) path of dirs in which
     # found file(s) exist(s).
     print_as_path_p = False
-    opts, args = getopt.getopt(sys.argv[1:], 'hs:S:pP:arAqd')
+    do_ls_l_p = False
+    opts, args = getopt.getopt(sys.argv[1:], 'hs:S:pP:arAqdl')
     for o, v in opts:
         if o == '-q':
             # Just produce a return code.
@@ -123,6 +124,9 @@ def main(args):
         if o == '-d':
             Dirs_too_p = False
             continue
+        if o == '-l':
+            do_ls_l_p = True
+            continue
 
     num_not_found = 0
     matches = []
@@ -142,7 +146,12 @@ def main(args):
         else:
             sep = "\n"
         match_string = sep.join(matches)
-        print match_string
+        if do_ls_l_p:
+            arg_string = " ".join([canonicalize_path(s) for s in matches])
+            #print >>sys.stderr, "arg_string>%s<" % arg_string
+            os.system("ls {} {}".format('-l', arg_string))
+        else:
+            print match_string
 
     return num_not_found
 
