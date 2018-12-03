@@ -37,12 +37,14 @@ unset eexec_program
 : ${EXTAGTREE_DASH_Q:=}
 : ${POST_PROCESSOR:=compile_mode_ify}
 : ${POST_PATH:=post_realpath}
-: ${DP_CSCOPE_PROGRAM:=cscope}
+###: ${DP_CSCOPE_PROGRAM:=cscope}
+: ${DP_CSCOPE_PROGRAM:=gtags-cscope}
 field_num=0
 arg=${1-}
 
 : ${find_up_p=t}
 : ${db_files=()}
+: ${ignore_case_opt=}
 
 : ${DP_CODE_INDEX_FINDER_FILE=cscope.*}
 
@@ -77,6 +79,7 @@ else
           --reformat) POST_PROCESSOR=cscope-reformat;;
           # for convenience, let us do a global completion here.
           -c|--complete) shift; global-complete "$@"; exit;;
+	  -C) ignore_case_opt=-C;;
           --) shift; break;;
           *) break;;
       esac
@@ -152,7 +155,10 @@ do
   # -f reffile doesn't work with gtags-cscope,
   # so we'll visit all of the dirs.
   pushd $(dirname "${db_file}") >& /dev/null
-  EExec -0 "${DP_CSCOPE_PROGRAM}" -d ${EXTAGTREE_DASH_Q} \
-    -L -"${field_num}" "$@" | EExec "${POST_PROCESSOR}"
+  EExec -0 "${DP_CSCOPE_PROGRAM}" \
+	-d ${EXTAGTREE_DASH_Q} \
+	${ignore_case_opt} \
+	-L -"${field_num}" "$@" \
+      | EExec "${POST_PROCESSOR}"
   popd >& /dev/null
 done  
