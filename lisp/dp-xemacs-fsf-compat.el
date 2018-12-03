@@ -147,7 +147,7 @@ be deactivated when doing a beginning|end followed by an end|beginning."
   (interactive)
   (call-interactively 'wconfig-ring-save))
 
-(defun dp-pop-window-config (n)
+(defun dp-pop-window-configuration (n)
   (interactive "p")
   ;; Real pop vs rotate. The yank pop acts, to me, counter-intuitively.
   (call-interactively 'wconfig-delete-pop))
@@ -289,6 +289,9 @@ Editing commands:
       (appt-check t)
     (appt-check))
   (run-hooks 'dp-appt-creation-hooks))
+
+(defun python-nav-beginning-of-statement ()
+  (py-point 'bos))
 
 ;;(add-hook 'appt-make-list-hook 'dp-appt-initialize)
 
