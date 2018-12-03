@@ -1,711 +1,475 @@
-;;; DO NOT MODIFY THIS FILE -*- coding: raw-text-unix -*-
-;;;###coding system: raw-text-unix
-(if (featurep 'auto-dp-autoloads) (error "Feature auto-dp-autoloads already loaded"))
+;;; auto-dp-autoloads.el --- automatically extracted autoloads
+;;
+;;; Code:
+
 
-;;;### (autoloads nil "../lisp/dp-buffer-bg" "../../../../../home/dpanarit/lisp/dp-buffer-bg.el"
-;;;;;;  "a9fc3507647a1b8ddf6f93b4bf10b649")
-;;; Generated autoloads from ../../../../../home/dpanarit/lisp/dp-buffer-bg.el
+;;;### (autoloads "actual autoloads are elsewhere" "bubba-theme"
+;;;;;;  "../../../flisp/bubba-theme.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/bubba-theme.el
 
-(autoload 'dp-buffer-bg-set-color "../lisp/dp-buffer-bg" "\
-Add an overlay with background color COLOR to buffer BUFFER.
-If COLOR is nil remove previously added overlay.
-
-\(fn COLOR &optional BUFFER &key BEGIN END (widenp t) &allow-other-keys)" t nil)
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "bubba-theme" '("bubba")))
 
 ;;;***
 
-;;;### (autoloads nil "../lisp/dp-colorize-ifdefs" "../../../../../home/dpanarit/lisp/dp-colorize-ifdefs.el"
+;;;### (autoloads "actual autoloads are elsewhere" "davep1-theme"
+;;;;;;  "../../../flisp/davep1-theme.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/davep1-theme.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "davep1-theme" '("davep1")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "default-list-buffers-identification"
+;;;;;;  "../../../flisp/default-list-buffers-identification.el" (0
+;;;;;;  0 0 0))
+;;; Generated autoloads from ../../../flisp/default-list-buffers-identification.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "default-list-buffers-identification" '("default-list-buffers-identification")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-abbrev" "../../../flisp/dp-abbrev.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-abbrev.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-abbrev" '("deftma" "dp-" "ego")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-abbrev-defs"
+;;;;;;  "../../../flisp/dp-abbrev-defs.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-abbrev-defs.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-abbrev-defs" '("dp-abbrev-mode-alist")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-adwaita0-theme"
+;;;;;;  "../../../flisp/dp-adwaita0-theme.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-adwaita0-theme.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-adwaita0-theme" '("dp-adwaita0")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-appt" "../../../flisp/dp-appt.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-appt.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-appt" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-blm-keys"
+;;;;;;  "../../../flisp/dp-blm-keys.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-blm-keys.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-blm-keys" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-bookmarks"
+;;;;;;  "../../../flisp/dp-bookmarks.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-bookmarks.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-bookmarks" '("dp-" "bm-list-sans-prop")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-buffer-bg"
+;;;;;;  "../../../flisp/dp-buffer-bg.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-buffer-bg.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-buffer-bg" '("dp-buffer-bg-set-color")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-buffer-local-keys"
+;;;;;;  "../../../flisp/dp-buffer-local-keys.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-buffer-local-keys.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-buffer-local-keys" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-buffer-menu"
+;;;;;;  "../../../flisp/dp-buffer-menu.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-buffer-menu.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-buffer-menu" '("list-buffers-" "dp-" "buffers-menu-predicate")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-c-like-styles"
+;;;;;;  "../../../flisp/dp-c-like-styles.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-c-like-styles.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-c-like-styles" '("dp-" "meduseld-" "linux-c-mode")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-cal" "../../../flisp/dp-cal.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-cal.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-cal" '("appt-" "dp-" "cal")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-cedet-hacks"
+;;;;;;  "../../../flisp/dp-cedet-hacks.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-cedet-hacks.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-cedet-hacks" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-cf" "../../../flisp/dp-cf.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-cf.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-cf" '("ecf" "ecof" "dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-colorization"
+;;;;;;  "../../../flisp/dp-colorization.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-colorization.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-colorization" '("dcbr" "make-extent" "set-extent-propert" "extent-propert")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-colorization-xemacs"
+;;;;;;  "../../../flisp/dp-colorization-xemacs.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-colorization-xemacs.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-colorization-xemacs" '("dcbr")))
+
+;;;***
+
+;;;### (autoloads nil "dp-colorize-ifdefs" "../../../flisp/dp-colorize-ifdefs.el"
 ;;;;;;  "9feca494c3c7c1203d08fdf4b748482a")
-;;; Generated autoloads from ../../../../../home/dpanarit/lisp/dp-colorize-ifdefs.el
-
-(autoload 'dp-uncolorize-ifdefs "../lisp/dp-colorize-ifdefs" "\
-
-
-\(fn &optional BEGIN END)" t nil)
-
-(autoload 'dp-colorize-ifdefs "../lisp/dp-colorize-ifdefs" "\
-Colorize parts of ifdef.
-
-\(fn &optional COLORIZE-NESTED)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "../lisp/dp-debug" "../../../../../home/dpanarit/lisp/dp-debug.el"
-;;;;;;  "6c7998d695a940fd102bbe08b3f4bbc1")
-;;; Generated autoloads from ../../../../../home/dpanarit/lisp/dp-debug.el
-
-(autoload 'dp-hook-message "../lisp/dp-debug" "\
-
-
-\(fn)" t nil)
-
-(autoload 'dp-hook-insert "../lisp/dp-debug" "\
-
-
-\(fn)" t nil)
-
-(autoload 'dp-unhook-message "../lisp/dp-debug" "\
-
-
-\(fn)" t nil)
-
-(autoload 'dp-unhook-insert "../lisp/dp-debug" "\
-
-
-\(fn)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "../lisp/dp-faces" "../../../../../home/dpanarit/lisp/dp-faces.el"
-;;;;;;  "06b13daced2567c95ba7776fcef8d510")
-;;; Generated autoloads from ../../../../../home/dpanarit/lisp/dp-faces.el
-
-(autoload 'dp-all-dp*-faces "../lisp/dp-faces" "\
-
-
-\(fn)" nil nil)
-
-(autoload 'dp-edit-faces "../lisp/dp-faces" "\
-Alter face characteristics by editing a list of defined faces.
-Pops up a buffer containing a list of defined faces.
-
-WARNING: the changes you may perform with this function are no longer
-saved. The prefered way to modify faces is now to use `customize-face'. If you
-want to specify particular X font names for faces, please do so in your
-.XDefaults file.
-
-Editing commands:
-
-\\{edit-faces-mode-map}
-
-\(fn)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "../lisp/dp-flyspell" "../../../../../home/dpanarit/lisp/dp-flyspell.el"
-;;;;;;  "02de9034a584439d3ec663228ec73262")
-;;; Generated autoloads from ../../../../../home/dpanarit/lisp/dp-flyspell.el
-
-(autoload 'dp-flyspell-setup0 "../lisp/dp-flyspell" "\
-
-
-\(fn HOOK-LIST DEFAULT-MODE-FUNC &optional FORCE)" t nil)
-
-(autoload 'dp-flyspell-setup "../lisp/dp-flyspell" "\
-
-
-\(fn &optional FORCE)" t nil)
-
-(autoload 'dp-flyspell-prog-setup "../lisp/dp-flyspell" "\
-
-
-\(fn)" t nil)
-
-(autoload 'dp-flyspell-prog-mode "../lisp/dp-flyspell" "\
-Put a buffer into `flyspell-prog-mode', with persistent-highlight OFF.
-PERSISTENT-HIGHLIGHT-P says to turn on persistent-highlight.
-
-\(fn &optional PERSISTENT-HIGHLIGHT-P)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "../lisp/dp-id-utils" "../../../../../home/dpanarit/lisp/dp-id-utils.el"
-;;;;;;  "f3dd03ad2b563844eb3e6772ea30b295")
-;;; Generated autoloads from ../../../../../home/dpanarit/lisp/dp-id-utils.el
-
-(autoload 'gid "../lisp/dp-id-utils" "\
-Run gid, with user-specified ARGS, and collect output in a buffer.
-While gid runs asynchronously, you can use the \\[next-error] command to
-find the text that gid hits refer to. The command actually run is
-defined by the gid-command variable.
-
-\(fn ARGS)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "../lisp/dp-journal" "../../../../../home/dpanarit/lisp/dp-journal.el"
-;;;;;;  "d4ef8ad675d7960a7637a7b3b67fa275")
-;;; Generated autoloads from ../../../../../home/dpanarit/lisp/dp-journal.el
-
-(autoload 'dpj-stick-journal-file "../lisp/dp-journal" "\
-Ass/2 way to make non-standard journal files a little less unusable.
-
-\(fn &optional FILE-NAME UNSTICK-P DEFAULT-P)" nil nil)
-
-(autoload 'dpj-stick-current-journal-file "../lisp/dp-journal" "\
-Ass/2 way to make non-standard journal files a little less unusable.
-
-\(fn &optional UNSTICK-P DEFAULT-P)" t nil)
-
-(autoload 'dpj-grep-and-view-hits "../lisp/dp-journal" "\
-Grep topics for regexp and view in view buf.
-Search NUMBER-OF-MONTHS files back in time.
-Search topics matching TOPIC-RE for GREP-RE.
-View all records with matches in a view buf.
-START-WITH-CURRENT-JOURNAL-P (interactively the prefix-arg) says to start
-the search with the current journal file.
-
-\(fn NUMBER-OF-MONTHS TOPIC-RE GREP-RE &optional (continue-from-last-p nil cflp-set-p))" t nil)
-
-(defalias 'gv 'dpj-grep-and-view-hits)
-
-(defalias 'dg 'dpj-grep-and-view-hits)
-
-(defalias 'jg 'dpj-grep-and-view-hits)
-
-(defalias 'dpj-grep 'dpj-grep-and-view-hits)
-
-(autoload 'dpj-tidy-journals "../lisp/dp-journal" "\
-Kill all but the most recent journal buffers.
-
-\(fn &optional DONT-DELETE-P)" t nil)
-
-(autoload 'dpj-tidy-journals-keep "../lisp/dp-journal" "\
-
-
-\(fn)" t nil)
-
-(autoload 'dpj-chase-link "../lisp/dp-journal" "\
-Follow a link to another note.
- !<@todo XXX Make this put the BM in the most recent journal.
-
-\(fn FILE-NAME OFFSET DATE-STRING)" nil nil)
-
-(autoload 'dp-add-elisp-journal-entry "../lisp/dp-journal" "\
-
-
-\(fn)" t nil)
-
-(dp-safe-alias 'ee 'dp-add-elisp-journal-entry)
-
-(autoload 'dpj-new-topic "../lisp/dp-journal" "\
-Insert a new topic item.  Completion is allowed from the list of known topics.
-
-\(fn &key TOPIC NO-SPACED-APPEND-P LINK-TOO-P IS-A-CLONE-P OTHER-WIN-P DIR-NAME)" t nil)
-
-(autoload 'dpj-new-topic-other-window "../lisp/dp-journal" "\
-
-
-\(fn &key TOPIC NO-SPACED-APPEND-P LINK-TOO-P IS-A-CLONE-P)" t nil)
-
-(defalias 'cx 'dpj-new-topic-other-window)
-
-(defalias 'cx2 'dpj-new-topic-other-window)
-
-(defalias 'cx1 'dpj-new-topic)
-
-(defalias 'cx0 'dpj-new-topic)
-
-(defalias 'cx\. 'dpj-new-topic)
-
-(defalias 'nt 'dpj-new-topic-other-window)
-
-(defalias 'ntc 'dpj-clone-topic)
-
-(defalias 'nt2 'dpj-new-topic-other-window)
-
-(defalias 'nt1 'dpj-new-topic)
-
-(defalias 'nt0 'dpj-new-topic)
-
-(autoload 'dpj-goto-end-of-journal "../lisp/dp-journal" "\
-
-
-\(fn)" t nil)
-
-(defalias 'eoj 'dpj-goto-end-of-journal)
-
-(autoload 'dpj-clone-topic "../lisp/dp-journal" "\
-Clone the current topic with a new timestamp.
-NB: previous topic means the previous SAME topic.
-LINK-TOO-P, if non-nil says to link to the previous topic.
-LINK-TOO-P, if nil will make a link to the previous topic if it is 
-\"far enough away.\"
-INSERT-THIS-TEXT is text to insert after the topic is inserted.
-Allows for an indication of time flow within a continuing topic or 
-continuation of a topic at a later time.
-
-\(fn &optional LINK-TOO-P INSERT-THIS-TEXT LINK-FORWARD-ALSO-P)" t nil)
-
-(defalias 'cxc 'dpj-clone-topic)
-
-(autoload 'dpj-clone-topic-and-link "../lisp/dp-journal" "\
-Clone topic and force link to previous topic regardless of distance.
-
-\(fn)" t nil)
-
-(autoload 'cxl "../lisp/dp-journal" "\
-
-
-\(fn)" t nil)
-
-(autoload 'dpj-mk-external-bookmark "../lisp/dp-journal" "\
-Make link a topic @ (or POS (point)) in (or FILE-OR-BUF (current bufer)).
-
-\(fn &optional (pos (point)) (file-or-buf (current-buffer)))" t nil)
-
-(autoload 'dpj-edit-journal-file "../lisp/dp-journal" "\
-Edit the journal file.
-
-\(fn FNAME &optional MISSING-FILE-ACTION OTHER-WIN-P)" t nil)
-
-(autoload 'dp-journal "../lisp/dp-journal" "\
-Visit a journal file.
-If `dpj-current-journal-file' is non-nil, visit that file, otherwise
-visit the journal for the current date and set `dpj-current-journal-file'.
-OTHER-WIN-P says visit in other window.
-GOTO-EOF says go to end of file.
-VISIT-LATEST says visit the current journal even if
-`dpj-current-journal-file' is non-nil.
-RETURN buffer that was visiting the journal, or nil.
-
-\(fn &optional OTHER-WIN-P GOTO-EOF VISIT-LATEST TOPIC)" t nil)
-
-(autoload 'dp-journal2 "../lisp/dp-journal" "\
-
-
-\(fn)" t nil)
-
-(defalias 'dj 'dp-journal2)
-
-(defalias 'dj2 'dp-journal2)
-
-(defalias 'dj1 'dp-journal)
-
-(defalias 'dj0 'dp-journal)
-
-(defalias 'dj\. 'dp-journal)
-
-(defalias 'djd 'dp-journal)
-
-(autoload 'dp-journal-one-window "../lisp/dp-journal" "\
-Journal in a single window.
-
-\(fn)" t nil)
-
-(dp-defaliases 'dj1 'dj0 'djone 'djo 'dp-journal-one-window)
-
-(autoload 'dpj-visit-other-journal-file "../lisp/dp-journal" "\
-Visit FILE-NAME as journal and make it sticky to the current buffer.
-This kind of allows us to use a journal file with a non-standard name.
-
-\(fn FILE-NAME &optional OTHER-WINDOW-P)" t nil)
-
-(when (dp-xemacs-p) (defvar dpj-menubutton-guts [dp-journal :active (fboundp 'dp-journal)] "Menu button to activate journal.") (defvar dpj-menubar-button (vconcat ["Dj"] dpj-menubutton-guts) "Journal menubar button.") (defvar dpj-menu-button-added nil "Non nil if we've already added the menu-button.") (unless dpj-menu-button-added (add-menu-button nil dpj-menubar-button nil default-menubar) (setq dpj-menu-button-added t)))
-
-(autoload 'dp-journal-mode "../lisp/dp-journal" "\
-Major mode for editing journals.
-
-\(fn)" t nil)
-
-(autoload 'dpj-setup-invisibility "../lisp/dp-journal" "\
-Make a nice glyph for invisible text regions.
-
-\(fn)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "../lisp/dp-sel2" "../../../../../home/dpanarit/lisp/dp-sel2.el"
-;;;;;;  "f0baf803530861a8adede7a722067477")
-;;; Generated autoloads from ../../../../../home/dpanarit/lisp/dp-sel2.el
-
-(autoload 'dp-sel2:paste "../lisp/dp-sel2" "\
-Select the item to paste from a list.
-Rotate kill list so that the selected kill-text is at the head of the
-yank ring.
-
-\(fn &optional GOTO-EMBEDDED-P)" t nil)
-
-(autoload 'dp-sel2:bm "../lisp/dp-sel2" "\
-Select a bookmark to which to jump.
-
-\(fn &optional IGNORE-EMBEDDED-BOOKMARKS-P)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "../lisp/dp-shells" "../../../../../home/dpanarit/lisp/dp-shells.el"
-;;;;;;  "a787772a031990b8a4e0f9c3bb226198")
-;;; Generated autoloads from ../../../../../home/dpanarit/lisp/dp-shells.el
-
-(defvar shell-uninteresting-face 'shell-uninteresting-face "\
-Face for shell output which is uninteresting.
-Should be a color which nearly blends into background.")
-
-(custom-autoload 'shell-uninteresting-face "../lisp/dp-shells" t)
-
-(autoload 'dp-shells-mk-prompt-font-lock-regexp "../lisp/dp-shells" "\
-
-
-\(fn &optional REGEXP-LIST)" nil nil)
-
-(defvar dp-shells-prompt-font-lock-regexp "^\\([0-9]+\\)\\(/\\(?:[0-9]+\\|spayshul\\)\\)\\([#>]\\|\\(<[0-9]*>\\)?\\)" "\
-*Regular expression to match my shell prompt.  Used for font locking.
-For my multi-line prompt, this is second line.  For most prompts, this will
-be the only line.  Some shells, like IPython's, already colorize their
-prompt.  We don't want to stomp on them.")
-
-(eval-after-load "shell" '(progn (setq shell-prompt-pattern-for-font-lock dp-shells-prompt-font-lock-regexp)))
-
-(autoload 'dp-comint-mode-hook "../lisp/dp-shells" "\
-Sets up personal comint mode options.
-Called when shell, inferior-lisp-process, etc. are entered.
-
-\(fn &optional (variant dp-default-variant))" t nil)
-
-(autoload 'dp-shell-mode-hook "../lisp/dp-shells" "\
-Sets up shell mode specific options.
-
-\(fn &optional (variant dp-default-variant))" t nil)
-
-(autoload 'dp-telnet-mode-hook "../lisp/dp-shells" "\
-Sets up telnet mode specific options.
-
-\(fn)" nil nil)
-
-(autoload 'dp-compilation-mode-hook "../lisp/dp-shells" "\
-
-
-\(fn)" nil nil)
-
-(autoload 'dp-set-current-error-function "../lisp/dp-shells" "\
-
-
-\(fn FUNC USE-NO-ARGS-P &rest ARGS)" t nil)
-
-(autoload 'dp-reset-current-error-function "../lisp/dp-shells" "\
-
-
-\(fn)" t nil)
-
-(autoload 'dp-set-compile-like-mode-error-function "../lisp/dp-shells" "\
-
-
-\(fn)" t nil)
-
-(autoload 'dp-next-error "../lisp/dp-shells" "\
-Find next error in shell buffer.
-This key is globally bound.  It does special things only if it is
-invoked inside a shell type buffer.  In this case, it ensures the
-buffer is in compilation minor-mode and reparses errors if it detects
-that a new command has been sent since the last parse.
-KILL-BUFFER-FIRST-P says to kill the current buffer first. Useful when
-examining a bunch of hits in a bunch of files to prevent ending up with tons
-of open files.
-NB! KILL-BUFFER-FIRST-P does not work. Don't use it. Seriously.
-
-\(fn &optional KILL-BUFFER-FIRST-P)" t nil)
-
-(autoload 'dp-cscope-next-thing "../lisp/dp-shells" "\
-
-
-\(fn FUNC)" t nil)
-
-(autoload 'dp-shell-goto-this-error "../lisp/dp-shells" "\
-Goto the error at point in the shell buffer.  
-This has the fortunate side effect of setting 
-things up so that dp-next-error (\\[dp-next-error]) 
-picks up right after the error we just visited.
-We use this instead of just `compile-goto-error' so that
-we can goto errors anywhere in the buffer, especially 
-earlier in the buffer. `compile-goto-error' has a 
-very (too) forward looking view of parsing error buffers.
-
-\(fn &optional FORCE-REPARSE-P)" t nil)
-
-(autoload 'dp-py-shell-hook "../lisp/dp-shells" "\
-Set up my python shell mode fiddle-faddle.
-
-\(fn)" t nil)
-
-(autoload 'dp-gdb-mode-hook "../lisp/dp-shells" "\
-Set up my gdb shell mode fiddle-faddle.
-
-\(fn)" t nil)
-
-(autoload 'dp-ssh-mode-hook "../lisp/dp-shells" "\
-Set up my ssh shell mode fiddle-faddle.
-
-\(fn)" t nil)
-
-(autoload 'dp-python-shell "../lisp/dp-shells" "\
-Start up python shell and then run my shell-mode-hook since they
-set the key-map after the hook has run.
-
-\(fn &optional ARGS)" t nil)
-
-(defalias 'dpy 'dp-python-shell)
-
-(defsubst dp-python-shell-this-window (&optional args) "\
-Try to put the shell in the current window." (interactive "P") (dp-python-shell) (dp-slide-window-right 1))
-
-(defalias 'dpyd 'dp-python-shell-this-window)
-
-(defalias 'dpy\. 'dp-python-shell-this-window)
-
-(defalias 'dpy0 'dp-python-shell-this-window)
-
-(autoload 'dp-start-term "../lisp/dp-shells" "\
-Start up a terminal session, but first set the coding system so eols are 
-handled right.
-
-\(fn PROMPT-FOR-SHELL-PROGRAM-P)" t nil)
-
-(autoload 'dp-shell0 "../lisp/dp-shells" "\
-Open/visit a shell buffer.
-First shell is numbered 1 by default. 0 is too far away from the others. Save
-it for something \"speshul\".
- ARG is numberp:
- ARG is >= 0: switch to that numbered shell.
- ARG is < 0: switch to shell buffer<(abs ARG)>
- ARG memq `dp-shells-primary-shell-names' shell<0> in other window.
-
-\(fn &optional ARG &key OTHER-WINDOW-P NAME OTHER-FRAME-P)" t nil)
-
-(autoload 'dp-shell "../lisp/dp-shells" "\
-
-
-\(fn &optional ARG &key OTHER-WINDOW-P NAME OTHER-FRAME-P)" t nil)
-
-(autoload 'dp-shell-other-window "../lisp/dp-shells" "\
-
-
-\(fn &optional ARG)" t nil)
-
-(defvar dp-gdb-file-history 'nil "\
-Files on which we've run `dp-gdb'.")
-
-(autoload 'dp-tack-on-gdb-mode "../lisp/dp-shells" "\
-Major hack to change a shell buffer which is running gdb into a gdb-mode buffer.
-
-\(fn &optional BUFFER-OR-NAME NEW-BUFFER-NAME)" t nil)
-
-(autoload 'dp-gdb-naught "../lisp/dp-shells" "\
-Run gdb on nothing. 
-Useful for creating a gdb session from which you can attach to another
-running process.
-
-\(fn &optional NAME)" t nil)
-
-(autoload 'dp-gdb "../lisp/dp-shells" "\
-Extension to gdb that:
-. Prefers the most recently used buffer if its process is still live,
-. Else it asks for a buffer using a completion list of other gdb buffers,
-. Else (or if nothing selected above) it starts a new gdb session.
-ARG == nil  --> Use most recent session
-ARG == '(4) --> Prompt for buffer
-ARG == '-   --> Create new session
-ARG == 0    --> New `dp-gdb-naught' session.
-
-\(fn &optional INTERACTIVE-ONLY-ARG PATH COREFILE USE-MOST-RECENT-P NEW-P PROMPT-P OTHER-WINDOW-P FORCE-INTERACTIVE-P)" t nil)
-
-(autoload 'dp-gdb-other-window "../lisp/dp-shells" "\
-
-
-\(fn &rest R)" t nil)
-
-(autoload 'dp-ssh "../lisp/dp-shells" "\
-Find/create a shell buf, an existing ssh buf or create a ssh buf.
-
-\(fn &optional SHELL-ID)" t nil)
-
-(autoload 'dp-ssh-gdb "../lisp/dp-shells" "\
-
-
-\(fn SSH-ARGS PATH &optional COREFILE)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "../lisp/dp-sudo-edit3" "../../../../../home/dpanarit/lisp/dp-sudo-edit3.el"
-;;;;;;  "35f98361101a5ce960caf21d2590f10a")
-;;; Generated autoloads from ../../../../../home/dpanarit/lisp/dp-sudo-edit3.el
-
-(defvar dp-sudo-edit-load-hook nil "\
-List of functions to be called after the we're loaded.")
-
-(custom-autoload 'dp-sudo-edit-load-hook "../lisp/dp-sudo-edit3" t)
-
-(defface dp-sudo-edit-bg-face '((((class color) (background light)) (:background "pink"))) "\
-Face for file being sudo edited." :group (quote faces) :group (quote dp-vars))
-
-(autoload 'dp-sudo-edit "../lisp/dp-sudo-edit3" "\
-Edit a file by using sudo to cat the file into a buffer and sudo to cp the edited file over the original.
-
-\(fn ORIG-FILE-NAME)" t nil)
-
-(autoload 'dp-sudo-edit-this-file "../lisp/dp-sudo-edit3" "\
-Edit the current buffer w/sudo edit.
-
-\(fn)" t nil)
-
-(autoload 'dp-sudo-edit-devert "../lisp/dp-sudo-edit3" "\
-Stop sudo-editing this file.  Edit it normally.
-
-\(fn)" t nil)
-
-(dp-defaliases 'ddse 'dedse 'dsed 'devert 'dp-sudo-edit-devert)
-
-(autoload 'dp-dired-sudo-edit "../lisp/dp-sudo-edit3" "\
-In dired, sudo the file named on this line.
-
-\(fn)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "../lisp/dp-templates" "../../../../../home/dpanarit/lisp/dp-templates.el"
-;;;;;;  "0f0538726e5c3a777f66fdb91eb04bbe")
-;;; Generated autoloads from ../../../../../home/dpanarit/lisp/dp-templates.el
-
-(autoload 'dp-pb-new-entry "../lisp/dp-templates" "\
-
-
-\(fn)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "dp-buffer-bg" "../../../../../home/dpanarit/flisp/dp-buffer-bg.el"
-;;;;;;  "a9fc3507647a1b8ddf6f93b4bf10b649")
-;;; Generated autoloads from ../../../../../home/dpanarit/flisp/dp-buffer-bg.el
-
-(autoload 'dp-buffer-bg-set-color "dp-buffer-bg" "\
-Add an overlay with background color COLOR to buffer BUFFER.
-If COLOR is nil remove previously added overlay.
-
-\(fn COLOR &optional BUFFER &key BEGIN END (widenp t) &allow-other-keys)" t nil)
-
-;;;***
-
-;;;### (autoloads nil "dp-colorize-ifdefs" "../../../../../home/dpanarit/flisp/dp-colorize-ifdefs.el"
-;;;;;;  "9feca494c3c7c1203d08fdf4b748482a")
-;;; Generated autoloads from ../../../../../home/dpanarit/flisp/dp-colorize-ifdefs.el
+;;; Generated autoloads from ../../../flisp/dp-colorize-ifdefs.el
 
 (autoload 'dp-uncolorize-ifdefs "dp-colorize-ifdefs" "\
-
-
-\(fn &optional BEGIN END)" t nil)
+\n\n(fn &optional BEGIN END)" t nil)
 
 (autoload 'dp-colorize-ifdefs "dp-colorize-ifdefs" "\
-Colorize parts of ifdef.
+Colorize parts of ifdef.\n\n(fn &optional COLORIZE-NESTED)" t nil)
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-colorize-ifdefs"
+;;;;;;  "../../../flisp/dp-colorize-ifdefs.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-colorize-ifdefs.el
 
-\(fn &optional COLORIZE-NESTED)" t nil)
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-colorize-ifdefs" '("dp-")))
+
+;;;***
 
 ;;;***
 
-;;;### (autoloads nil "dp-debug" "../../../../../home/dpanarit/flisp/dp-debug.el"
-;;;;;;  "6c7998d695a940fd102bbe08b3f4bbc1")
-;;; Generated autoloads from ../../../../../home/dpanarit/flisp/dp-debug.el
+;;;### (autoloads "actual autoloads are elsewhere" "dp-common-abbrevs"
+;;;;;;  "../../../flisp/dp-common-abbrevs.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-common-abbrevs.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-common-abbrevs" '("dp-common-abbrevs")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-common-abbrevs-orig"
+;;;;;;  "../../../flisp/dp-common-abbrevs-orig.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-common-abbrevs-orig.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-common-abbrevs-orig" '("dp-common-abbrevs")))
+
+;;;***
+
+;;;### (autoloads nil "dp-debug" "../../../flisp/dp-debug.el" "6c7998d695a940fd102bbe08b3f4bbc1")
+;;; Generated autoloads from ../../../flisp/dp-debug.el
 
 (autoload 'dp-hook-message "dp-debug" "\
-
-
-\(fn)" t nil)
+\n\n(fn)" t nil)
 
 (autoload 'dp-hook-insert "dp-debug" "\
-
-
-\(fn)" t nil)
+\n\n(fn)" t nil)
 
 (autoload 'dp-unhook-message "dp-debug" "\
-
-
-\(fn)" t nil)
+\n\n(fn)" t nil)
 
 (autoload 'dp-unhook-insert "dp-debug" "\
+\n\n(fn)" t nil)
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-debug" "../../../flisp/dp-debug.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-debug.el
 
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-debug" '("dp-")))
 
-\(fn)" t nil)
+;;;***
 
 ;;;***
 
-;;;### (autoloads nil "dp-faces" "../../../../../home/dpanarit/flisp/dp-faces.el"
-;;;;;;  "06b13daced2567c95ba7776fcef8d510")
-;;; Generated autoloads from ../../../../../home/dpanarit/flisp/dp-faces.el
+;;;### (autoloads "actual autoloads are elsewhere" "dp-deps" "../../../flisp/dp-deps.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-deps.el
 
-(autoload 'dp-all-dp*-faces "dp-faces" "\
-
-
-\(fn)" nil nil)
-
-(autoload 'dp-edit-faces "dp-faces" "\
-Alter face characteristics by editing a list of defined faces.
-Pops up a buffer containing a list of defined faces.
-
-WARNING: the changes you may perform with this function are no longer
-saved. The prefered way to modify faces is now to use `customize-face'. If you
-want to specify particular X font names for faces, please do so in your
-.XDefaults file.
-
-Editing commands:
-
-\\{edit-faces-mode-map}
-
-\(fn)" t nil)
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-deps" '("dp-define-my-map-prefixes")))
 
 ;;;***
 
-;;;### (autoloads nil "dp-flyspell" "../../../../../home/dpanarit/flisp/dp-flyspell.el"
+;;;### (autoloads "actual autoloads are elsewhere" "dp-dict" "../../../flisp/dp-dict.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-dict.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-dict" '("dp-dictionary-mode-hook" "dsd" "dld")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-dot-emacs.amd"
+;;;;;;  "../../../flisp/dp-dot-emacs.amd.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-dot-emacs.amd.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-dot-emacs.amd" '("dp-" "bookmark-default-file")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-dot-emacs.chele"
+;;;;;;  "../../../flisp/dp-dot-emacs.chele.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-dot-emacs.chele.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-dot-emacs.chele" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-dot-emacs.grape01"
+;;;;;;  "../../../flisp/dp-dot-emacs.grape01.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-dot-emacs.grape01.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-dot-emacs.grape01" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-dot-emacs.intel"
+;;;;;;  "../../../flisp/dp-dot-emacs.intel.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-dot-emacs.intel.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-dot-emacs.intel" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-dot-emacs.lrl"
+;;;;;;  "../../../flisp/dp-dot-emacs.lrl.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-dot-emacs.lrl.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-dot-emacs.lrl" '("dp-default-c-style-name" "lrl-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-dot-emacs.nvidia"
+;;;;;;  "../../../flisp/dp-dot-emacs.nvidia.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-dot-emacs.nvidia.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-dot-emacs.nvidia" '("rde" "dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-dot-emacs.permabit"
+;;;;;;  "../../../flisp/dp-dot-emacs.permabit.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-dot-emacs.permabit.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-dot-emacs.permabit" '("dpj-private-topic-re-extra" "dp-" "permabit-c-style")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-dot-emacs.skaion"
+;;;;;;  "../../../flisp/dp-dot-emacs.skaion.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-dot-emacs.skaion.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-dot-emacs.skaion" '("dp-default-c-style-name" "skaion-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-dot-emacs.vanu"
+;;;;;;  "../../../flisp/dp-dot-emacs.vanu.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-dot-emacs.vanu.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-dot-emacs.vanu" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-dot-emacs.vilya"
+;;;;;;  "../../../flisp/dp-dot-emacs.vilya.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-dot-emacs.vilya.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-dot-emacs.vilya" '("wip" "dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-dot-gnus"
+;;;;;;  "../../../flisp/dp-dot-gnus.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-dot-gnus.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-dot-gnus" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-dot-mew" "../../../flisp/dp-dot-mew.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-dot-mew.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-dot-mew" '("dp-" "rfh" "pick-spam")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-dot-vm" "../../../flisp/dp-dot-vm.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-dot-vm.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-dot-vm" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-emms" "../../../flisp/dp-emms.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-emms.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-emms" '("dp-emms-playlist-mode-go")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-ephemeral"
+;;;;;;  "../../../flisp/dp-ephemeral.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-ephemeral.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-ephemeral" '("meds" "dp-meds-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-errors" "../../../flisp/dp-errors.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-errors.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-errors" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-faces" "../../../flisp/dp-faces.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-faces.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-faces" '("dp-")))
+
+;;;***
+
+;;;### (autoloads nil "dp-flyspell" "../../../flisp/dp-flyspell.el"
 ;;;;;;  "02de9034a584439d3ec663228ec73262")
-;;; Generated autoloads from ../../../../../home/dpanarit/flisp/dp-flyspell.el
+;;; Generated autoloads from ../../../flisp/dp-flyspell.el
 
 (autoload 'dp-flyspell-setup0 "dp-flyspell" "\
-
-
-\(fn HOOK-LIST DEFAULT-MODE-FUNC &optional FORCE)" t nil)
+\n\n(fn HOOK-LIST DEFAULT-MODE-FUNC &optional FORCE)" t nil)
 
 (autoload 'dp-flyspell-setup "dp-flyspell" "\
-
-
-\(fn &optional FORCE)" t nil)
+\n\n(fn &optional FORCE)" t nil)
 
 (autoload 'dp-flyspell-prog-setup "dp-flyspell" "\
-
-
-\(fn)" t nil)
+\n\n(fn)" t nil)
 
 (autoload 'dp-flyspell-prog-mode "dp-flyspell" "\
-Put a buffer into `flyspell-prog-mode', with persistent-highlight OFF.
-PERSISTENT-HIGHLIGHT-P says to turn on persistent-highlight.
+Put a buffer into `flyspell-prog-mode', with persistent-highlight OFF.\nPERSISTENT-HIGHLIGHT-P says to turn on persistent-highlight.\n\n(fn &optional PERSISTENT-HIGHLIGHT-P)" t nil)
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-flyspell"
+;;;;;;  "../../../flisp/dp-flyspell.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-flyspell.el
 
-\(fn &optional PERSISTENT-HIGHLIGHT-P)" t nil)
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-flyspell" '("dp-flyspell-")))
+
+;;;***
 
 ;;;***
 
-;;;### (autoloads nil "dp-id-utils" "../../../../../home/dpanarit/flisp/dp-id-utils.el"
+;;;### (autoloads "actual autoloads are elsewhere" "dp-fsf" "../../../flisp/dp-fsf.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-fsf.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-fsf" '("dse" "dp-" "py-block-comment-prefix")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-fsf-button-compat"
+;;;;;;  "../../../flisp/dp-fsf-button-compat.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-fsf-button-compat.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-fsf-button-compat" '("button-" "push-button")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-fsf-early"
+;;;;;;  "../../../flisp/dp-fsf-early.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-fsf-early.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-fsf-early" '("dp-" "remassoc")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-fsf-fsf-compat"
+;;;;;;  "../../../flisp/dp-fsf-fsf-compat.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-fsf-fsf-compat.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-fsf-fsf-compat" '("dp-" "custom-face-get-spec" "redisplay-frame" "replace-in-string" "read-function" "and-" "append-expand-filename" "abbrev-string-to-be-defined" "add-" "set-keymap-name" "sorted-key-descriptions" "symbol-" "save-window-excursion/mapping" "string-to-int" "switch-to-other-buffer" "buffer-syntactic-context" "gnuserv-start" "eldoc-insert-elisp-func-template" "event-key" "key" "when-" "line-number" "minibuffer-keyboard-quit" "map-" "valid-plist-p" "if-" "paths-" "ffap-host-to-path")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-hooks" "../../../flisp/dp-hooks.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-hooks.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-hooks" '("dp-" "calc-delete-windows-keep" "font-lock-")))
+
+;;;***
+
+;;;### (autoloads nil "dp-id-utils" "../../../flisp/dp-id-utils.el"
 ;;;;;;  "f3dd03ad2b563844eb3e6772ea30b295")
-;;; Generated autoloads from ../../../../../home/dpanarit/flisp/dp-id-utils.el
+;;; Generated autoloads from ../../../flisp/dp-id-utils.el
 
 (autoload 'gid "dp-id-utils" "\
-Run gid, with user-specified ARGS, and collect output in a buffer.
-While gid runs asynchronously, you can use the \\[next-error] command to
-find the text that gid hits refer to. The command actually run is
-defined by the gid-command variable.
+Run gid, with user-specified ARGS, and collect output in a buffer.\nWhile gid runs asynchronously, you can use the \\[next-error] command to\nfind the text that gid hits refer to. The command actually run is\ndefined by the gid-command variable.\n\n(fn ARGS)" t nil)
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-id-utils"
+;;;;;;  "../../../flisp/dp-id-utils.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-id-utils.el
 
-\(fn ARGS)" t nil)
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-id-utils" '("word-around-point" "dp-" "gid-command")))
+
+;;;***
 
 ;;;***
 
-;;;### (autoloads nil "dp-journal" "../../../../../home/dpanarit/flisp/dp-journal.el"
-;;;;;;  "d4ef8ad675d7960a7637a7b3b67fa275")
-;;; Generated autoloads from ../../../../../home/dpanarit/flisp/dp-journal.el
+;;;### (autoloads "actual autoloads are elsewhere" "dp-init-early"
+;;;;;;  "../../../flisp/dp-init-early.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-init-early.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-init-early" '("dp-")))
+
+;;;***
+
+;;;### (autoloads nil "dp-journal" "../../../flisp/dp-journal.el"
+;;;;;;  "6b0105974b8a69dd51b55ae431bc952b")
+;;; Generated autoloads from ../../../flisp/dp-journal.el
+
+(autoload 'dpj-current-journal-file "dp-journal" "\
+\n\n(fn)" nil nil)
 
 (autoload 'dpj-stick-journal-file "dp-journal" "\
-Ass/2 way to make non-standard journal files a little less unusable.
-
-\(fn &optional FILE-NAME UNSTICK-P DEFAULT-P)" nil nil)
+Ass/2 way to make non-standard journal files a little less unusable.\n\n(fn &optional FILE-NAME UNSTICK-P DEFAULT-P)" nil nil)
 
 (autoload 'dpj-stick-current-journal-file "dp-journal" "\
-Ass/2 way to make non-standard journal files a little less unusable.
+Ass/2 way to make non-standard journal files a little less unusable.\n\n(fn &optional UNSTICK-P DEFAULT-P)" t nil)
 
-\(fn &optional UNSTICK-P DEFAULT-P)" t nil)
+(autoload 'dpj-highlight-region "dp-journal" "\
+Highlight a region according to OP.\n\n(fn FROM TO OP)" nil nil)
 
 (autoload 'dpj-grep-and-view-hits "dp-journal" "\
-Grep topics for regexp and view in view buf.
-Search NUMBER-OF-MONTHS files back in time.
-Search topics matching TOPIC-RE for GREP-RE.
-View all records with matches in a view buf.
-START-WITH-CURRENT-JOURNAL-P (interactively the prefix-arg) says to start
-the search with the current journal file.
-
-\(fn NUMBER-OF-MONTHS TOPIC-RE GREP-RE &optional (continue-from-last-p nil cflp-set-p))" t nil)
+Grep topics for regexp and view in view buf.\nSearch NUMBER-OF-MONTHS files back in time.\nSearch topics matching TOPIC-RE for GREP-RE.\nView all records with matches in a view buf.\nSTART-WITH-CURRENT-JOURNAL-P (interactively the prefix-arg) says to start\nthe search with the current journal file.\n\n(fn NUMBER-OF-MONTHS TOPIC-RE GREP-RE &optional (continue-from-last-p nil cflp-set-p))" t nil)
 
 (defalias 'gv 'dpj-grep-and-view-hits)
 
@@ -716,37 +480,24 @@ the search with the current journal file.
 (defalias 'dpj-grep 'dpj-grep-and-view-hits)
 
 (autoload 'dpj-tidy-journals "dp-journal" "\
-Kill all but the most recent journal buffers.
-
-\(fn &optional DONT-DELETE-P)" t nil)
+Kill all but the most recent journal buffers.\n\n(fn &optional DONT-DELETE-P)" t nil)
 
 (autoload 'dpj-tidy-journals-keep "dp-journal" "\
-
-
-\(fn)" t nil)
+\n\n(fn)" t nil)
 
 (autoload 'dpj-chase-link "dp-journal" "\
-Follow a link to another note.
- !<@todo XXX Make this put the BM in the most recent journal.
-
-\(fn FILE-NAME OFFSET DATE-STRING)" nil nil)
+Follow a link to another note.\n !<@todo XXX Make this put the BM in the most recent journal.\n\n(fn FILE-NAME OFFSET DATE-STRING)" nil nil)
 
 (autoload 'dp-add-elisp-journal-entry "dp-journal" "\
-
-
-\(fn)" t nil)
+\n\n(fn)" t nil)
 
 (dp-safe-alias 'ee 'dp-add-elisp-journal-entry)
 
 (autoload 'dpj-new-topic "dp-journal" "\
-Insert a new topic item.  Completion is allowed from the list of known topics.
-
-\(fn &key TOPIC NO-SPACED-APPEND-P LINK-TOO-P IS-A-CLONE-P OTHER-WIN-P DIR-NAME)" t nil)
+Insert a new topic item.  Completion is allowed from the list of known topics.\n\n(fn &key TOPIC NO-SPACED-APPEND-P LINK-TOO-P IS-A-CLONE-P OTHER-WIN-P DIR-NAME)" t nil)
 
 (autoload 'dpj-new-topic-other-window "dp-journal" "\
-
-
-\(fn &key TOPIC NO-SPACED-APPEND-P LINK-TOO-P IS-A-CLONE-P)" t nil)
+\n\n(fn &key TOPIC NO-SPACED-APPEND-P LINK-TOO-P IS-A-CLONE-P)" t nil)
 
 (defalias 'cx 'dpj-new-topic-other-window)
 
@@ -769,62 +520,32 @@ Insert a new topic item.  Completion is allowed from the list of known topics.
 (defalias 'nt0 'dpj-new-topic)
 
 (autoload 'dpj-goto-end-of-journal "dp-journal" "\
-
-
-\(fn)" t nil)
+\n\n(fn)" t nil)
 
 (defalias 'eoj 'dpj-goto-end-of-journal)
 
 (autoload 'dpj-clone-topic "dp-journal" "\
-Clone the current topic with a new timestamp.
-NB: previous topic means the previous SAME topic.
-LINK-TOO-P, if non-nil says to link to the previous topic.
-LINK-TOO-P, if nil will make a link to the previous topic if it is 
-\"far enough away.\"
-INSERT-THIS-TEXT is text to insert after the topic is inserted.
-Allows for an indication of time flow within a continuing topic or 
-continuation of a topic at a later time.
-
-\(fn &optional LINK-TOO-P INSERT-THIS-TEXT LINK-FORWARD-ALSO-P)" t nil)
+Clone the current topic with a new timestamp.\nNB: previous topic means the previous SAME topic.\nLINK-TOO-P, if non-nil says to link to the previous topic.\nLINK-TOO-P, if nil will make a link to the previous topic if it is\n\"far enough away.\"\nINSERT-THIS-TEXT is text to insert after the topic is inserted.\nAllows for an indication of time flow within a continuing topic or\ncontinuation of a topic at a later time.\n\n(fn &optional LINK-TOO-P INSERT-THIS-TEXT LINK-FORWARD-ALSO-P)" t nil)
 
 (defalias 'cxc 'dpj-clone-topic)
 
 (autoload 'dpj-clone-topic-and-link "dp-journal" "\
-Clone topic and force link to previous topic regardless of distance.
-
-\(fn)" t nil)
+Clone topic and force link to previous topic regardless of distance.\n\n(fn)" t nil)
 
 (autoload 'cxl "dp-journal" "\
-
-
-\(fn)" t nil)
+\n\n(fn)" t nil)
 
 (autoload 'dpj-mk-external-bookmark "dp-journal" "\
-Make link a topic @ (or POS (point)) in (or FILE-OR-BUF (current bufer)).
-
-\(fn &optional (pos (point)) (file-or-buf (current-buffer)))" t nil)
+Make link a topic @ (or POS (point)) in (or FILE-OR-BUF (current bufer)).\n\n(fn &optional (pos (point)) (file-or-buf (current-buffer)))" t nil)
 
 (autoload 'dpj-edit-journal-file "dp-journal" "\
-Edit the journal file.
-
-\(fn FNAME &optional MISSING-FILE-ACTION OTHER-WIN-P)" t nil)
+Edit the journal file.\n\n(fn FNAME &optional MISSING-FILE-ACTION OTHER-WIN-P)" t nil)
 
 (autoload 'dp-journal "dp-journal" "\
-Visit a journal file.
-If `dpj-current-journal-file' is non-nil, visit that file, otherwise
-visit the journal for the current date and set `dpj-current-journal-file'.
-OTHER-WIN-P says visit in other window.
-GOTO-EOF says go to end of file.
-VISIT-LATEST says visit the current journal even if
-`dpj-current-journal-file' is non-nil.
-RETURN buffer that was visiting the journal, or nil.
-
-\(fn &optional OTHER-WIN-P GOTO-EOF VISIT-LATEST TOPIC)" t nil)
+Visit a journal file.\nIf `dpj-current-journal-file' is non-nil, visit that file, otherwise\nvisit the journal for the current date and set `dpj-current-journal-file'.\nOTHER-WIN-P says visit in other window.\nGOTO-EOF says go to end of file.\nVISIT-LATEST says visit the current journal even if\n`dpj-current-journal-file' is non-nil.\nRETURN buffer that was visiting the journal, or nil.\n\n(fn &optional OTHER-WIN-P GOTO-EOF VISIT-LATEST TOPIC)" t nil)
 
 (autoload 'dp-journal2 "dp-journal" "\
-
-
-\(fn)" t nil)
+\n\n(fn)" t nil)
 
 (defalias 'dj 'dp-journal2)
 
@@ -839,159 +560,259 @@ RETURN buffer that was visiting the journal, or nil.
 (defalias 'djd 'dp-journal)
 
 (autoload 'dp-journal-one-window "dp-journal" "\
-Journal in a single window.
-
-\(fn)" t nil)
+Journal in a single window.\n\n(fn)" t nil)
 
 (dp-defaliases 'dj1 'dj0 'djone 'djo 'dp-journal-one-window)
 
 (autoload 'dpj-visit-other-journal-file "dp-journal" "\
-Visit FILE-NAME as journal and make it sticky to the current buffer.
-This kind of allows us to use a journal file with a non-standard name.
-
-\(fn FILE-NAME &optional OTHER-WINDOW-P)" t nil)
+Visit FILE-NAME as journal and make it sticky to the current buffer.\nThis kind of allows us to use a journal file with a non-standard name.\n\n(fn FILE-NAME &optional OTHER-WINDOW-P)" t nil)
 
 (when (dp-xemacs-p) (defvar dpj-menubutton-guts [dp-journal :active (fboundp 'dp-journal)] "Menu button to activate journal.") (defvar dpj-menubar-button (vconcat ["Dj"] dpj-menubutton-guts) "Journal menubar button.") (defvar dpj-menu-button-added nil "Non nil if we've already added the menu-button.") (unless dpj-menu-button-added (add-menu-button nil dpj-menubar-button nil default-menubar) (setq dpj-menu-button-added t)))
 
 (autoload 'dp-journal-mode "dp-journal" "\
-Major mode for editing journals.
-
-\(fn)" t nil)
+Major mode for editing journals.\n\n(fn)" t nil)
 
 (autoload 'dpj-setup-invisibility "dp-journal" "\
-Make a nice glyph for invisible text regions.
+Make a nice glyph for invisible text regions.\n\n(fn)" t nil)
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-journal" "../../../flisp/dp-journal.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-journal.el
 
-\(fn)" t nil)
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-journal" '("cxd" "cxcl")))
+
+;;;***
 
 ;;;***
 
-;;;### (autoloads nil "dp-sel2" "../../../../../home/dpanarit/flisp/dp-sel2.el"
-;;;;;;  "f0baf803530861a8adede7a722067477")
-;;; Generated autoloads from ../../../../../home/dpanarit/flisp/dp-sel2.el
+;;;### (autoloads "actual autoloads are elsewhere" "dp-keys" "../../../flisp/dp-keys.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-keys.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-keys" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-lang" "../../../flisp/dp-lang.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-lang.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-lang" '("doxy-py-" "dp-" "py-point")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-lang-c-like"
+;;;;;;  "../../../flisp/dp-lang-c-like.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-lang-c-like.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-lang-c-like" '("data" "is-c++-one-line-comment" "q.v." "one-hump")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-macros" "../../../flisp/dp-macros.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-macros.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-macros" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-magit" "../../../flisp/dp-magit.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-magit.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-magit" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-mail" "../../../flisp/dp-mail.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-mail.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-mail" '("dis" "dp-" "xspam")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-makefile-mode"
+;;;;;;  "../../../flisp/dp-makefile-mode.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-makefile-mode.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-makefile-mode" '("dp-makefile-mode-" "make")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-mew" "../../../flisp/dp-mew.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-mew.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-mew" '("dp-mew")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-mew-config"
+;;;;;;  "../../../flisp/dp-mew-config.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-mew-config.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-mew-config" '("dpmc-setq-tmp-name" "dp-mew-config-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-mhe" "../../../flisp/dp-mhe.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-mhe.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-mhe" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-mmm" "../../../flisp/dp-mmm.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-mmm.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-mmm" '("dp-mmm-" "amm")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-mu4e" "../../../flisp/dp-mu4e.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-mu4e.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-mu4e" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-open-newline"
+;;;;;;  "../../../flisp/dp-open-newline.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-open-newline.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-open-newline" '("dp-c")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-pdoc" "../../../flisp/dp-pdoc.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-pdoc.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-pdoc" '("pd-" "pdil")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-perforce"
+;;;;;;  "../../../flisp/dp-perforce.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-perforce.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-perforce" '("dp-" "dp4-" "p4-" "p4p")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-portage" "../../../flisp/dp-portage.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-portage.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-portage" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-ptools" "../../../flisp/dp-ptools.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-ptools.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-ptools" '("doxy-c-" "dp-" "tfc0" "smart-ancestor-tag-files")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-regexp" "../../../flisp/dp-regexp.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-regexp.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-regexp" '("dp-")))
+
+;;;***
+
+;;;### (autoloads nil "dp-sel2" "../../../flisp/dp-sel2.el" "8bc093784a872d18d47611c8274ba41c")
+;;; Generated autoloads from ../../../flisp/dp-sel2.el
 
 (autoload 'dp-sel2:paste "dp-sel2" "\
-Select the item to paste from a list.
-Rotate kill list so that the selected kill-text is at the head of the
-yank ring.
-
-\(fn &optional GOTO-EMBEDDED-P)" t nil)
+Select the item to paste from a list.\nRotate kill list so that the selected kill-text is at the head of the\nyank ring.\n\n(fn &optional GOTO-EMBEDDED-P)" t nil)
 
 (autoload 'dp-sel2:bm "dp-sel2" "\
-Select a bookmark to which to jump.
+Select a bookmark to which to jump.\n\n(fn &optional IGNORE-EMBEDDED-BOOKMARKS-P)" t nil)
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-sel2" "../../../flisp/dp-sel2.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-sel2.el
 
-\(fn &optional IGNORE-EMBEDDED-BOOKMARKS-P)" t nil)
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-sel2" '("dp-sel2")))
+
+;;;***
 
 ;;;***
 
-;;;### (autoloads nil "dp-shells" "../../../../../home/dpanarit/flisp/dp-shells.el"
-;;;;;;  "a787772a031990b8a4e0f9c3bb226198")
-;;; Generated autoloads from ../../../../../home/dpanarit/flisp/dp-shells.el
+;;;### (autoloads "actual autoloads are elsewhere" "dp-server" "../../../flisp/dp-server.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-server.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-server" '("dp-")))
+
+;;;***
+
+;;;### (autoloads nil "dp-shells" "../../../flisp/dp-shells.el" "3a4aedca183d40f520732aebefaed542")
+;;; Generated autoloads from ../../../flisp/dp-shells.el
 
 (defvar shell-uninteresting-face 'shell-uninteresting-face "\
-Face for shell output which is uninteresting.
-Should be a color which nearly blends into background.")
+Face for shell output which is uninteresting.\nShould be a color which nearly blends into background.")
 
 (custom-autoload 'shell-uninteresting-face "dp-shells" t)
 
 (autoload 'dp-shells-mk-prompt-font-lock-regexp "dp-shells" "\
-
-
-\(fn &optional REGEXP-LIST)" nil nil)
+\n\n(fn &optional REGEXP-LIST)" nil nil)
 
 (defvar dp-shells-prompt-font-lock-regexp "^\\([0-9]+\\)\\(/\\(?:[0-9]+\\|spayshul\\)\\)\\([#>]\\|\\(<[0-9]*>\\)?\\)" "\
-*Regular expression to match my shell prompt.  Used for font locking.
-For my multi-line prompt, this is second line.  For most prompts, this will
-be the only line.  Some shells, like IPython's, already colorize their
-prompt.  We don't want to stomp on them.")
+*Regular expression to match my shell prompt.  Used for font locking.\nFor my multi-line prompt, this is second line.  For most prompts, this will\nbe the only line.  Some shells, like IPython's, already colorize their\nprompt.  We don't want to stomp on them.")
 
 (eval-after-load "shell" '(progn (setq shell-prompt-pattern-for-font-lock dp-shells-prompt-font-lock-regexp)))
 
 (autoload 'dp-comint-mode-hook "dp-shells" "\
-Sets up personal comint mode options.
-Called when shell, inferior-lisp-process, etc. are entered.
-
-\(fn &optional (variant dp-default-variant))" t nil)
+Sets up personal comint mode options.\nCalled when shell, inferior-lisp-process, etc. are entered.\n\n(fn &optional (variant dp-default-variant))" t nil)
 
 (autoload 'dp-shell-mode-hook "dp-shells" "\
-Sets up shell mode specific options.
-
-\(fn &optional (variant dp-default-variant))" t nil)
+Sets up shell mode specific options.\n\n(fn &optional (variant dp-default-variant))" t nil)
 
 (autoload 'dp-telnet-mode-hook "dp-shells" "\
-Sets up telnet mode specific options.
-
-\(fn)" nil nil)
+Sets up telnet mode specific options.\n\n(fn)" nil nil)
 
 (autoload 'dp-compilation-mode-hook "dp-shells" "\
-
-
-\(fn)" nil nil)
+\n\n(fn)" nil nil)
 
 (autoload 'dp-set-current-error-function "dp-shells" "\
-
-
-\(fn FUNC USE-NO-ARGS-P &rest ARGS)" t nil)
+\n\n(fn FUNC USE-NO-ARGS-P &rest ARGS)" t nil)
 
 (autoload 'dp-reset-current-error-function "dp-shells" "\
-
-
-\(fn)" t nil)
+\n\n(fn)" t nil)
 
 (autoload 'dp-set-compile-like-mode-error-function "dp-shells" "\
-
-
-\(fn)" t nil)
+\n\n(fn)" t nil)
 
 (autoload 'dp-next-error "dp-shells" "\
-Find next error in shell buffer.
-This key is globally bound.  It does special things only if it is
-invoked inside a shell type buffer.  In this case, it ensures the
-buffer is in compilation minor-mode and reparses errors if it detects
-that a new command has been sent since the last parse.
-KILL-BUFFER-FIRST-P says to kill the current buffer first. Useful when
-examining a bunch of hits in a bunch of files to prevent ending up with tons
-of open files.
-NB! KILL-BUFFER-FIRST-P does not work. Don't use it. Seriously.
-
-\(fn &optional KILL-BUFFER-FIRST-P)" t nil)
+Find next error in shell buffer.\nThis key is globally bound.  It does special things only if it is\ninvoked inside a shell type buffer.  In this case, it ensures the\nbuffer is in compilation minor-mode and reparses errors if it detects\nthat a new command has been sent since the last parse.\nKILL-BUFFER-FIRST-P says to kill the current buffer first. Useful when\nexamining a bunch of hits in a bunch of files to prevent ending up with tons\nof open files.\nNB! KILL-BUFFER-FIRST-P does not work. Don't use it. Seriously.\n\n(fn &optional KILL-BUFFER-FIRST-P)" t nil)
 
 (autoload 'dp-cscope-next-thing "dp-shells" "\
-
-
-\(fn FUNC)" t nil)
+\n\n(fn FUNC)" t nil)
 
 (autoload 'dp-shell-goto-this-error "dp-shells" "\
-Goto the error at point in the shell buffer.  
-This has the fortunate side effect of setting 
-things up so that dp-next-error (\\[dp-next-error]) 
-picks up right after the error we just visited.
-We use this instead of just `compile-goto-error' so that
-we can goto errors anywhere in the buffer, especially 
-earlier in the buffer. `compile-goto-error' has a 
-very (too) forward looking view of parsing error buffers.
-
-\(fn &optional FORCE-REPARSE-P)" t nil)
+Goto the error at point in the shell buffer.  \nThis has the fortunate side effect of setting \nthings up so that dp-next-error (\\[dp-next-error]) \npicks up right after the error we just visited.\nWe use this instead of just `compile-goto-error' so that\nwe can goto errors anywhere in the buffer, especially \nearlier in the buffer. `compile-goto-error' has a \nvery (too) forward looking view of parsing error buffers.\n\n(fn &optional FORCE-REPARSE-P)" t nil)
 
 (autoload 'dp-py-shell-hook "dp-shells" "\
-Set up my python shell mode fiddle-faddle.
-
-\(fn)" t nil)
+Set up my python shell mode fiddle-faddle.\n\n(fn)" t nil)
 
 (autoload 'dp-gdb-mode-hook "dp-shells" "\
-Set up my gdb shell mode fiddle-faddle.
-
-\(fn)" t nil)
+Set up my gdb shell mode fiddle-faddle.\n\n(fn)" nil nil)
 
 (autoload 'dp-ssh-mode-hook "dp-shells" "\
-Set up my ssh shell mode fiddle-faddle.
-
-\(fn)" t nil)
+Set up my ssh shell mode fiddle-faddle.\n\n(fn)" t nil)
 
 (autoload 'dp-python-shell "dp-shells" "\
-Start up python shell and then run my shell-mode-hook since they
-set the key-map after the hook has run.
-
-\(fn &optional ARGS)" t nil)
+Start up python shell and then run my shell-mode-hook since they\nset the key-map after the hook has run.\n\n(fn &optional ARGS)" t nil)
 
 (defalias 'dpy 'dp-python-shell)
 
@@ -1005,79 +826,51 @@ Try to put the shell in the current window." (interactive "P") (dp-python-shell)
 (defalias 'dpy0 'dp-python-shell-this-window)
 
 (autoload 'dp-start-term "dp-shells" "\
-Start up a terminal session, but first set the coding system so eols are 
-handled right.
-
-\(fn PROMPT-FOR-SHELL-PROGRAM-P)" t nil)
+Start up a terminal session, but first set the coding system so eols are \nhandled right.\n\n(fn PROMPT-FOR-SHELL-PROGRAM-P)" t nil)
 
 (autoload 'dp-shell0 "dp-shells" "\
-Open/visit a shell buffer.
-First shell is numbered 1 by default. 0 is too far away from the others. Save
-it for something \"speshul\".
- ARG is numberp:
- ARG is >= 0: switch to that numbered shell.
- ARG is < 0: switch to shell buffer<(abs ARG)>
- ARG memq `dp-shells-primary-shell-names' shell<0> in other window.
-
-\(fn &optional ARG &key OTHER-WINDOW-P NAME OTHER-FRAME-P)" t nil)
+Open/visit a shell buffer.\nFirst shell is numbered 1 by default. 0 is too far away from the others. Save\nit for something \"speshul\".\n ARG is numberp:\n ARG is >= 0: switch to that numbered shell.\n ARG is < 0: switch to shell buffer<(abs ARG)>\n ARG memq `dp-shells-primary-shell-names' shell<0> in other window.\n\n(fn &optional ARG &key OTHER-WINDOW-P NAME OTHER-FRAME-P)" t nil)
 
 (autoload 'dp-shell "dp-shells" "\
-
-
-\(fn &optional ARG &key OTHER-WINDOW-P NAME OTHER-FRAME-P)" t nil)
+\n\n(fn &optional ARG &key OTHER-WINDOW-P NAME OTHER-FRAME-P)" t nil)
 
 (autoload 'dp-shell-other-window "dp-shells" "\
-
-
-\(fn &optional ARG)" t nil)
+\n\n(fn &optional ARG)" t nil)
 
 (defvar dp-gdb-file-history 'nil "\
 Files on which we've run `dp-gdb'.")
 
 (autoload 'dp-tack-on-gdb-mode "dp-shells" "\
-Major hack to change a shell buffer which is running gdb into a gdb-mode buffer.
-
-\(fn &optional BUFFER-OR-NAME NEW-BUFFER-NAME)" t nil)
+Major hack to change a shell buffer which is running gdb into a gdb-mode buffer.\n\n(fn &optional BUFFER-OR-NAME NEW-BUFFER-NAME)" t nil)
 
 (autoload 'dp-gdb-naught "dp-shells" "\
-Run gdb on nothing. 
-Useful for creating a gdb session from which you can attach to another
-running process.
-
-\(fn &optional NAME)" t nil)
+Run gdb on nothing. \nUseful for creating a gdb session from which you can attach to another\nrunning process.\n\n(fn &optional NAME)" t nil)
 
 (autoload 'dp-gdb "dp-shells" "\
-Extension to gdb that:
-. Prefers the most recently used buffer if its process is still live,
-. Else it asks for a buffer using a completion list of other gdb buffers,
-. Else (or if nothing selected above) it starts a new gdb session.
-ARG == nil  --> Use most recent session
-ARG == '(4) --> Prompt for buffer
-ARG == '-   --> Create new session
-ARG == 0    --> New `dp-gdb-naught' session.
-
-\(fn &optional INTERACTIVE-ONLY-ARG PATH COREFILE USE-MOST-RECENT-P NEW-P PROMPT-P OTHER-WINDOW-P FORCE-INTERACTIVE-P)" t nil)
+Extension to gdb that:\n. Prefers the most recently used buffer if its process is still live,\n. Else it asks for a buffer using a completion list of other gdb buffers,\n. Else (or if nothing selected above) it starts a new gdb session.\nARG == nil  --> Use most recent session\nARG == '(4) --> Prompt for buffer\nARG == '-   --> Create new session\nARG == 0    --> New `dp-gdb-naught' session.\n\n(fn &optional INTERACTIVE-ONLY-ARG PATH COREFILE USE-MOST-RECENT-P NEW-P PROMPT-P OTHER-WINDOW-P FORCE-INTERACTIVE-P)" t nil)
 
 (autoload 'dp-gdb-other-window "dp-shells" "\
-
-
-\(fn &rest R)" t nil)
+\n\n(fn &rest R)" t nil)
 
 (autoload 'dp-ssh "dp-shells" "\
-Find/create a shell buf, an existing ssh buf or create a ssh buf.
-
-\(fn &optional SHELL-ID)" t nil)
+Find/create a shell buf, an existing ssh buf or create a ssh buf.\n\n(fn &optional SHELL-ID)" t nil)
 
 (autoload 'dp-ssh-gdb "dp-shells" "\
+\n\n(fn SSH-ARGS PATH &optional COREFILE)" t nil)
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-shells" "../../../flisp/dp-shells.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-shells.el
 
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-shells" '("dpy-reload" "dp-" "gdb-with-pid")))
 
-\(fn SSH-ARGS PATH &optional COREFILE)" t nil)
+;;;***
 
 ;;;***
 
-;;;### (autoloads nil "dp-sudo-edit3" "../../../../../home/dpanarit/flisp/dp-sudo-edit3.el"
-;;;;;;  "35f98361101a5ce960caf21d2590f10a")
-;;; Generated autoloads from ../../../../../home/dpanarit/flisp/dp-sudo-edit3.el
+;;;### (autoloads nil "dp-sudo-edit3" "../../../flisp/dp-sudo-edit3.el"
+;;;;;;  "2a5c157c7131eb769d50a69b66a3110c")
+;;; Generated autoloads from ../../../flisp/dp-sudo-edit3.el
 
 (defvar dp-sudo-edit-load-hook nil "\
 List of functions to be called after the we're loaded.")
@@ -1085,196 +878,263 @@ List of functions to be called after the we're loaded.")
 (custom-autoload 'dp-sudo-edit-load-hook "dp-sudo-edit3" t)
 
 (defface dp-sudo-edit-bg-face '((((class color) (background light)) (:background "pink"))) "\
-Face for file being sudo edited." :group (quote faces) :group (quote dp-vars))
+Face for file being sudo edited." :group (quote faces) :group (quote dp-faces))
 
 (autoload 'dp-sudo-edit "dp-sudo-edit3" "\
-Edit a file by using sudo to cat the file into a buffer and sudo to cp the edited file over the original.
-
-\(fn ORIG-FILE-NAME)" t nil)
+Edit a file by using sudo to cat the file into a buffer and sudo to cp the edited file over the original.\n\n(fn ORIG-FILE-NAME)" t nil)
 
 (autoload 'dp-sudo-edit-this-file "dp-sudo-edit3" "\
-Edit the current buffer w/sudo edit.
-
-\(fn)" t nil)
+Edit the current buffer w/sudo edit.\n\n(fn)" t nil)
 
 (autoload 'dp-sudo-edit-devert "dp-sudo-edit3" "\
-Stop sudo-editing this file.  Edit it normally.
-
-\(fn)" t nil)
+Stop sudo-editing this file.  Edit it normally.\n\n(fn)" t nil)
 
 (dp-defaliases 'ddse 'dedse 'dsed 'devert 'dp-sudo-edit-devert)
 
 (autoload 'dp-dired-sudo-edit "dp-sudo-edit3" "\
-In dired, sudo the file named on this line.
+In dired, sudo the file named on this line.\n\n(fn)" t nil)
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-sudo-edit3"
+;;;;;;  "../../../flisp/dp-sudo-edit3.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-sudo-edit3.el
 
-\(fn)" t nil)
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-sudo-edit3" '("dp-sudo-")))
+
+;;;***
 
 ;;;***
 
-;;;### (autoloads nil "dp-templates" "../../../../../home/dpanarit/flisp/dp-templates.el"
+;;;### (autoloads nil "dp-templates" "../../../flisp/dp-templates.el"
 ;;;;;;  "0f0538726e5c3a777f66fdb91eb04bbe")
-;;; Generated autoloads from ../../../../../home/dpanarit/flisp/dp-templates.el
+;;; Generated autoloads from ../../../flisp/dp-templates.el
 
 (autoload 'dp-pb-new-entry "dp-templates" "\
+\n\n(fn)" t nil)
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-templates"
+;;;;;;  "../../../flisp/dp-templates.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-templates.el
 
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-templates" '("dpfe" "dphe" "dp-" "dppbe")))
 
-\(fn)" t nil)
+;;;***
 
 ;;;***
 
-;;;### (autoloads nil nil ("../../../../../home/dpanarit/flisp/auto-dp-autoloads.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/bubba-theme.el" "../../../../../home/dpanarit/flisp/buff-menu-junk.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/custom.amd.el" "../../../../../home/dpanarit/flisp/custom.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/custom.intel.el" "../../../../../home/dpanarit/flisp/custom.lrl.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/custom.other.el" "../../../../../home/dpanarit/flisp/custom.permabit.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/custom.skaion.el" "../../../../../home/dpanarit/flisp/custom.vanu.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/custom.vilya.el" "../../../../../home/dpanarit/flisp/davep1-theme.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/default-list-buffers-identification.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-abbrev-defs.el" "../../../../../home/dpanarit/flisp/dp-abbrev.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-adwaita0-theme.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-appt.el" "../../../../../home/dpanarit/flisp/dp-blm-keys.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-bookmarks.el" "../../../../../home/dpanarit/flisp/dp-buffer-bg.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-buffer-local-keys.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-buffer-menu.el" "../../../../../home/dpanarit/flisp/dp-c-like-styles.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-cal.el" "../../../../../home/dpanarit/flisp/dp-cedet-hacks.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-cf.el" "../../../../../home/dpanarit/flisp/dp-colorization-xemacs.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-colorization.el" "../../../../../home/dpanarit/flisp/dp-colorize-ifdefs.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-common-abbrevs-orig.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-common-abbrevs.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-compat.el" "../../../../../home/dpanarit/flisp/dp-debug.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-deps.el" "../../../../../home/dpanarit/flisp/dp-dict.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-emacs.HOME_BOX_0.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-emacs.amd.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-emacs.baloo.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-emacs.chele.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-emacs.el" "../../../../../home/dpanarit/flisp/dp-dot-emacs.grape01.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-emacs.hob.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-emacs.huan.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-emacs.intel.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-emacs.lrl.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-emacs.nvidia.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-emacs.permabit.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-emacs.sam.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-emacs.skaion.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-emacs.sybil.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-emacs.vanu.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-emacs.vilya.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-gnus.el" "../../../../../home/dpanarit/flisp/dp-dot-mew.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-dot-vm.el" "../../../../../home/dpanarit/flisp/dp-emms.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-ephemeral.el" "../../../../../home/dpanarit/flisp/dp-errors.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-faces.el" "../../../../../home/dpanarit/flisp/dp-flyspell.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-fsf-button-compat.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-fsf-early.el" "../../../../../home/dpanarit/flisp/dp-fsf-fsf-compat.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-fsf.el" "../../../../../home/dpanarit/flisp/dp-hooks.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-id-utils.el" "../../../../../home/dpanarit/flisp/dp-ilisp.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-init-early.el" "../../../../../home/dpanarit/flisp/dp-journal.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-keys.el" "../../../../../home/dpanarit/flisp/dp-lang-c-like.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-lang.el" "../../../../../home/dpanarit/flisp/dp-macros.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-mail.el" "../../../../../home/dpanarit/flisp/dp-makefile-mode.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-mew-config.el" "../../../../../home/dpanarit/flisp/dp-mew.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-mhe.el" "../../../../../home/dpanarit/flisp/dp-mmm.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-new-mew.el" "../../../../../home/dpanarit/flisp/dp-open-newline.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-org.el" "../../../../../home/dpanarit/flisp/dp-patches-for-testing.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-pdoc.el" "../../../../../home/dpanarit/flisp/dp-perforce.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-portage.el" "../../../../../home/dpanarit/flisp/dp-ptools.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-regexp.el" "../../../../../home/dpanarit/flisp/dp-sel2.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-server.el" "../../../../../home/dpanarit/flisp/dp-shells.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-sudo-edit3.el" "../../../../../home/dpanarit/flisp/dp-supercite.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-templates.el" "../../../../../home/dpanarit/flisp/dp-time.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-timeclock.el" "../../../../../home/dpanarit/flisp/dp-vars.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-vc.el" "../../../../../home/dpanarit/flisp/dp-xemacs-buffer-local-keys.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-xemacs-colorization.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-xemacs-early.el" "../../../../../home/dpanarit/flisp/dp-xemacs-extents.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-xemacs-fsf-compat.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp-xemacs-late.el" "../../../../../home/dpanarit/flisp/dp0-theme.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dp1-theme.el" "../../../../../home/dpanarit/flisp/dpmacs.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/dpmisc.el" "../../../../../home/dpanarit/flisp/fsf-custom-dp-colorize-broken-due-to-dark-themes-because-my-faces-declare-light-backgrounds.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/fsf-custom-dp-colorize-old-works-with-light-themes.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/fsf-custom-from-work+home-changes-that-effed-things-up.tmp.flisp.10.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/fsf-custom.el" "../../../../../home/dpanarit/flisp/fsf-init.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/hdr.el" "../../../../../home/dpanarit/flisp/init.el"
-;;;;;;  "../../../../../home/dpanarit/flisp/public-dot-mew.el" "../../../../../home/dpanarit/flisp/srecode-map.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/bubba-theme.el" "../../../../../home/dpanarit/lisp/buff-menu-junk.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/custom.amd.el" "../../../../../home/dpanarit/lisp/custom.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/custom.intel.el" "../../../../../home/dpanarit/lisp/custom.lrl.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/custom.other.el" "../../../../../home/dpanarit/lisp/custom.permabit.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/custom.skaion.el" "../../../../../home/dpanarit/lisp/custom.vanu.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/custom.vilya.el" "../../../../../home/dpanarit/lisp/davep1-theme.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/default-list-buffers-identification.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-abbrev-defs.el" "../../../../../home/dpanarit/lisp/dp-abbrev.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-adwaita0-theme.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-appt.el" "../../../../../home/dpanarit/lisp/dp-blm-keys.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-bookmarks.el" "../../../../../home/dpanarit/lisp/dp-buffer-bg.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-buffer-bg.el" "../../../../../home/dpanarit/lisp/dp-buffer-bg.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-buffer-local-keys.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-buffer-menu.el" "../../../../../home/dpanarit/lisp/dp-c-like-styles.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-cal.el" "../../../../../home/dpanarit/lisp/dp-cedet-hacks.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-cf.el" "../../../../../home/dpanarit/lisp/dp-colorization-xemacs.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-colorization.el" "../../../../../home/dpanarit/lisp/dp-colorize-ifdefs.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-colorize-ifdefs.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-colorize-ifdefs.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-common-abbrevs-orig.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-common-abbrevs.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-compat.el" "../../../../../home/dpanarit/lisp/dp-debug.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-debug.el" "../../../../../home/dpanarit/lisp/dp-debug.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-deps.el" "../../../../../home/dpanarit/lisp/dp-dict.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-dot-emacs.HOME_BOX_0.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-dot-emacs.amd.el" "../../../../../home/dpanarit/lisp/dp-dot-emacs.baloo.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-dot-emacs.chele.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-dot-emacs.el" "../../../../../home/dpanarit/lisp/dp-dot-emacs.grape01.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-dot-emacs.hob.el" "../../../../../home/dpanarit/lisp/dp-dot-emacs.huan.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-dot-emacs.intel.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-dot-emacs.lrl.el" "../../../../../home/dpanarit/lisp/dp-dot-emacs.nvidia.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-dot-emacs.permabit.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-dot-emacs.sam.el" "../../../../../home/dpanarit/lisp/dp-dot-emacs.skaion.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-dot-emacs.sybil.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-dot-emacs.vanu.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-dot-emacs.vilya.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-dot-gnus.el" "../../../../../home/dpanarit/lisp/dp-dot-mew.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-dot-vm.el" "../../../../../home/dpanarit/lisp/dp-emms.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-ephemeral.el" "../../../../../home/dpanarit/lisp/dp-errors.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-faces.el" "../../../../../home/dpanarit/lisp/dp-faces.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-faces.el" "../../../../../home/dpanarit/lisp/dp-flyspell.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-flyspell.el" "../../../../../home/dpanarit/lisp/dp-flyspell.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-fsf-button-compat.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-fsf-early.el" "../../../../../home/dpanarit/lisp/dp-fsf-fsf-compat.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-hooks.el" "../../../../../home/dpanarit/lisp/dp-id-utils.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-id-utils.el" "../../../../../home/dpanarit/lisp/dp-id-utils.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-ilisp.el" "../../../../../home/dpanarit/lisp/dp-init-early.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-journal.el" "../../../../../home/dpanarit/lisp/dp-journal.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-journal.el" "../../../../../home/dpanarit/lisp/dp-keys.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-lang-c-like.el" "../../../../../home/dpanarit/lisp/dp-lang.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-macros.el" "../../../../../home/dpanarit/lisp/dp-mail.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-makefile-mode.el" "../../../../../home/dpanarit/lisp/dp-mew-config.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-mew.el" "../../../../../home/dpanarit/lisp/dp-mhe.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-mmm.el" "../../../../../home/dpanarit/lisp/dp-new-mew.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-open-newline.el" "../../../../../home/dpanarit/lisp/dp-org.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-patches-for-testing.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-pdoc.el" "../../../../../home/dpanarit/lisp/dp-perforce.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-portage.el" "../../../../../home/dpanarit/lisp/dp-ptools.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-regexp.el" "../../../../../home/dpanarit/lisp/dp-sel2.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-sel2.el" "../../../../../home/dpanarit/lisp/dp-sel2.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-server.el" "../../../../../home/dpanarit/lisp/dp-shells.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-shells.el" "../../../../../home/dpanarit/lisp/dp-shells.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-sudo-edit3.el" "../../../../../home/dpanarit/lisp/dp-sudo-edit3.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-sudo-edit3.el" "../../../../../home/dpanarit/lisp/dp-supercite.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-templates.el" "../../../../../home/dpanarit/lisp/dp-templates.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-templates.el" "../../../../../home/dpanarit/lisp/dp-time.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-timeclock.el" "../../../../../home/dpanarit/lisp/dp-vars.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-vc.el" "../../../../../home/dpanarit/lisp/dp-xemacs-buffer-local-keys.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-xemacs-colorization.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-xemacs-early.el" "../../../../../home/dpanarit/lisp/dp-xemacs-extents.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-xemacs-fsf-compat.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp-xemacs-late.el" "../../../../../home/dpanarit/lisp/dp0-theme.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dp1-theme.el" "../../../../../home/dpanarit/lisp/dpmacs.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/dpmisc.el" "../../../../../home/dpanarit/lisp/fsf-custom-dp-colorize-broken-due-to-dark-themes-because-my-faces-declare-light-backgrounds.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/fsf-custom-dp-colorize-old-works-with-light-themes.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/fsf-custom-from-work+home-changes-that-effed-things-up.tmp.flisp.10.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/fsf-custom.el" "../../../../../home/dpanarit/lisp/fsf-init.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/hdr.el" "../../../../../home/dpanarit/lisp/init.el"
-;;;;;;  "../../../../../home/dpanarit/lisp/public-dot-mew.el" "../../../../../home/dpanarit/lisp/srecode-map.el")
-;;;;;;  (23217 36939 625472 889000))
+;;;### (autoloads "actual autoloads are elsewhere" "dp-time" "../../../flisp/dp-time.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-time.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-time" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-timeclock"
+;;;;;;  "../../../flisp/dp-timeclock.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-timeclock.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-timeclock" '("dp-" "timeclock-generate-report")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-vars" "../../../flisp/dp-vars.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-vars.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-vars" '("digital-header-file" "dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-vc" "../../../flisp/dp-vc.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-vc.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-vc" '("dp-diff-mode-goto-vc-dir")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-xemacs-buffer-local-keys"
+;;;;;;  "../../../flisp/dp-xemacs-buffer-local-keys.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-xemacs-buffer-local-keys.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-xemacs-buffer-local-keys" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-xemacs-colorization"
+;;;;;;  "../../../flisp/dp-xemacs-colorization.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-xemacs-colorization.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-xemacs-colorization" '("dcbr")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-xemacs-early"
+;;;;;;  "../../../flisp/dp-xemacs-early.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-xemacs-early.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-xemacs-early" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-xemacs-extents"
+;;;;;;  "../../../flisp/dp-xemacs-extents.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-xemacs-extents.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-xemacs-extents" '("dp-unextent-region")))
+
+;;;***
+
+;;;### (autoloads nil "dp-xemacs-fsf-compat" "../../../flisp/dp-xemacs-fsf-compat.el"
+;;;;;;  "b8615aee926058b5d374cb0c55c5964e")
+;;; Generated autoloads from ../../../flisp/dp-xemacs-fsf-compat.el
+
+(autoload 'dp-all-dp*-faces "dp-xemacs-fsf-compat" "\
+\n\n(fn)" nil nil)
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-xemacs-fsf-compat"
+;;;;;;  "../../../flisp/dp-xemacs-fsf-compat.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-xemacs-fsf-compat.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-xemacs-fsf-compat" '("define-mail-abbrev" "dp-" "2man" "eobp" "bobp" "find-tag-interactive" "line-" "mail-abbrevs-setup" "transient-mark-mode" "cl-defun")))
+
+;;;***
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp-xemacs-late"
+;;;;;;  "../../../flisp/dp-xemacs-late.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp-xemacs-late.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp-xemacs-late" '("dp-" "mail-beep")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp0-theme" "../../../flisp/dp0-theme.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp0-theme.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp0-theme" '("dp0")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dp1-theme" "../../../flisp/dp1-theme.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dp1-theme.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dp1-theme" '("dp1")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dpmacs" "../../../flisp/dpmacs.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dpmacs.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dpmacs" '("dpj-private-topic-re-extra" "dp-" "comint-input-ring-size" "cl-p" "cmz" "pbtemp" "hosttemp" "file-of-tag" "famtemp" "wconfig-delete-pop" "with-saved-match-data" "appt-msg-countdown-list" "ediff-auto-refine-limit" "to-bool")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "dpmisc" "../../../flisp/dpmisc.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/dpmisc.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "dpmisc" '("xmessage" "xxx" "xerdim" "message-nl" "mbm" "ehand" "exp" "esm" "eli" "emi" "daily" "de-dos" "dhr" "raw-itest" "rmm" "row" "auctex-setup" "ascii" "and-" "sb-" "scan-re-list" "staff" "sam" "ssh-home" "wanted" "work" "wtf" "wwxfer" "ctmp" "cabbrev" "cxfer" "other-window1" "orig-tabify" "opdoc" "odoc" "princf" "perlit" "portage-man" "bmc" "bashit" "__shit" "Cu0p" "Cu-" "nil" "needed" "nng" "nmg" "npg" "nCu-p" "411f" "2up-buffer" "less" "labbrev" "key-id" "ick" "itest" "gsmail" "gdb" "google" "vpw" "tmpc" "todo" "trunc" "fv2" "unlessl" "use" "hab" "hi2" "hyperb:dir")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "fsf-init" "../../../flisp/fsf-init.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/fsf-init.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "fsf-init" '("dp-default-background-color")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "init" "../../../flisp/init.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/init.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "init" '("dp-")))
+
+;;;***
+
+;;;### (autoloads "actual autoloads are elsewhere" "public-dot-mew"
+;;;;;;  "../../../flisp/public-dot-mew.el" (0 0 0 0))
+;;; Generated autoloads from ../../../flisp/public-dot-mew.el
+
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "public-dot-mew" '("dp-")))
+
+;;;***
+
+;;;### (autoloads nil nil ("../../../flisp/auto-dp-autoloads.el"
+;;;;;;  "../../../flisp/bubba-theme.el" "../../../flisp/buff-menu-junk.el"
+;;;;;;  "../../../flisp/custom.amd.el" "../../../flisp/custom.el"
+;;;;;;  "../../../flisp/custom.intel.el" "../../../flisp/custom.lrl.el"
+;;;;;;  "../../../flisp/custom.other.el" "../../../flisp/custom.permabit.el"
+;;;;;;  "../../../flisp/custom.skaion.el" "../../../flisp/custom.vanu.el"
+;;;;;;  "../../../flisp/custom.vilya.el" "../../../flisp/davep1-theme.el"
+;;;;;;  "../../../flisp/default-list-buffers-identification.el" "../../../flisp/dp-abbrev-defs.el"
+;;;;;;  "../../../flisp/dp-abbrev.el" "../../../flisp/dp-adwaita0-theme.el"
+;;;;;;  "../../../flisp/dp-appt.el" "../../../flisp/dp-blm-keys.el"
+;;;;;;  "../../../flisp/dp-bookmarks.el" "../../../flisp/dp-buffer-bg.el"
+;;;;;;  "../../../flisp/dp-buffer-local-keys.el" "../../../flisp/dp-buffer-menu.el"
+;;;;;;  "../../../flisp/dp-c-like-styles.el" "../../../flisp/dp-cal.el"
+;;;;;;  "../../../flisp/dp-cedet-hacks.el" "../../../flisp/dp-cf.el"
+;;;;;;  "../../../flisp/dp-colorization-xemacs.el" "../../../flisp/dp-colorization.el"
+;;;;;;  "../../../flisp/dp-colorize-ifdefs.el" "../../../flisp/dp-common-abbrevs-orig.el"
+;;;;;;  "../../../flisp/dp-common-abbrevs.el" "../../../flisp/dp-compat.el"
+;;;;;;  "../../../flisp/dp-debug.el" "../../../flisp/dp-deps.el"
+;;;;;;  "../../../flisp/dp-dict.el" "../../../flisp/dp-dot-emacs.HOME_BOX_0.el"
+;;;;;;  "../../../flisp/dp-dot-emacs.amd.el" "../../../flisp/dp-dot-emacs.baloo.el"
+;;;;;;  "../../../flisp/dp-dot-emacs.chele.el" "../../../flisp/dp-dot-emacs.el"
+;;;;;;  "../../../flisp/dp-dot-emacs.grape01.el" "../../../flisp/dp-dot-emacs.hob.el"
+;;;;;;  "../../../flisp/dp-dot-emacs.huan.el" "../../../flisp/dp-dot-emacs.intel.el"
+;;;;;;  "../../../flisp/dp-dot-emacs.lrl.el" "../../../flisp/dp-dot-emacs.nvidia.el"
+;;;;;;  "../../../flisp/dp-dot-emacs.permabit.el" "../../../flisp/dp-dot-emacs.sam.el"
+;;;;;;  "../../../flisp/dp-dot-emacs.skaion.el" "../../../flisp/dp-dot-emacs.sybil.el"
+;;;;;;  "../../../flisp/dp-dot-emacs.vanu.el" "../../../flisp/dp-dot-emacs.vilya.el"
+;;;;;;  "../../../flisp/dp-dot-gnus.el" "../../../flisp/dp-dot-mew.el"
+;;;;;;  "../../../flisp/dp-dot-vm.el" "../../../flisp/dp-emms.el"
+;;;;;;  "../../../flisp/dp-ephemeral.el" "../../../flisp/dp-errors.el"
+;;;;;;  "../../../flisp/dp-faces.el" "../../../flisp/dp-flyspell.el"
+;;;;;;  "../../../flisp/dp-fsf-button-compat.el" "../../../flisp/dp-fsf-early.el"
+;;;;;;  "../../../flisp/dp-fsf-fsf-compat.el" "../../../flisp/dp-fsf.el"
+;;;;;;  "../../../flisp/dp-hooks.el" "../../../flisp/dp-id-utils.el"
+;;;;;;  "../../../flisp/dp-ilisp.el" "../../../flisp/dp-init-early.el"
+;;;;;;  "../../../flisp/dp-journal.el" "../../../flisp/dp-keys.el"
+;;;;;;  "../../../flisp/dp-lang-c-like.el" "../../../flisp/dp-lang.el"
+;;;;;;  "../../../flisp/dp-macros.el" "../../../flisp/dp-magit.el"
+;;;;;;  "../../../flisp/dp-mail.el" "../../../flisp/dp-makefile-mode.el"
+;;;;;;  "../../../flisp/dp-mew-config.el" "../../../flisp/dp-mew.el"
+;;;;;;  "../../../flisp/dp-mhe.el" "../../../flisp/dp-mmm.el" "../../../flisp/dp-mu4e.el"
+;;;;;;  "../../../flisp/dp-new-mew.el" "../../../flisp/dp-open-newline.el"
+;;;;;;  "../../../flisp/dp-org.el" "../../../flisp/dp-patches-for-testing.el"
+;;;;;;  "../../../flisp/dp-pdoc.el" "../../../flisp/dp-perforce.el"
+;;;;;;  "../../../flisp/dp-portage.el" "../../../flisp/dp-ptools.el"
+;;;;;;  "../../../flisp/dp-regexp.el" "../../../flisp/dp-sel2.el"
+;;;;;;  "../../../flisp/dp-server.el" "../../../flisp/dp-shells.el"
+;;;;;;  "../../../flisp/dp-sudo-edit3.el" "../../../flisp/dp-supercite.el"
+;;;;;;  "../../../flisp/dp-templates.el" "../../../flisp/dp-time.el"
+;;;;;;  "../../../flisp/dp-timeclock.el" "../../../flisp/dp-vars.el"
+;;;;;;  "../../../flisp/dp-vc.el" "../../../flisp/dp-xemacs-buffer-local-keys.el"
+;;;;;;  "../../../flisp/dp-xemacs-colorization.el" "../../../flisp/dp-xemacs-early.el"
+;;;;;;  "../../../flisp/dp-xemacs-extents.el" "../../../flisp/dp-xemacs-fsf-compat.el"
+;;;;;;  "../../../flisp/dp-xemacs-late.el" "../../../flisp/dp0-theme.el"
+;;;;;;  "../../../flisp/dp1-theme.el" "../../../flisp/dpmacs.el"
+;;;;;;  "../../../flisp/dpmisc.el" "../../../flisp/fsf-custom.cz-fp4-bdc.el"
+;;;;;;  "../../../flisp/fsf-custom.vilya.el" "../../../flisp/fsf-custom.xerxes.el"
+;;;;;;  "../../../flisp/fsf-custom.yyz.el" "../../../flisp/fsf-init.el"
+;;;;;;  "../../../flisp/hdr.el" "../../../flisp/init.el" "../../../flisp/loaddefs.el"
+;;;;;;  "../../../flisp/public-dot-mew.el" "../../../flisp/srecode-map.el"
+;;;;;;  "../../../flisp/x.el") (0 0 0 0))
 
 ;;;***
 
 (provide 'auto-dp-autoloads)
+;; Local Variables:
+;; version-control: never
+;; no-byte-compile: t
+;; no-update-autoloads: t
+;; coding: utf-8
+;; End:
+;;; auto-dp-autoloads.el ends here
