@@ -21,7 +21,10 @@ See `fill-paragraph' and `fill-region' for more information."
   (interactive "*P")
   (if (dp-mark-active-p)
       (call-interactively 'fill-region)
-    (call-interactively 'fill-paragraph)))
+    (save-restriction
+      (when (Cu-memq '(- 0))
+	(narrow-to-region (line-beginning-position) (point-max)))
+      (call-interactively 'fill-paragraph))))
 
 (defun dp-mark-active-p (&optional dont-count-outside-minibuffer-p)
   "Emulate fsf emacs' transient mark activation w/zmacs-regions"
@@ -51,6 +54,11 @@ See `fill-paragraph' and `fill-region' for more information."
 
 (defun set-keymap-name (map name)
   (message "No `set-keymap-name' functionality."))
+
+;; stolen from: mmmode, was: easy-mmode-set-keymap-parents
+(defun dp-set-keymap-parents (m parents)
+  (set-keymap-parent
+   m (if (cdr parents) (make-composed-keymap parents) (car parents))))
 
 (defalias 'ffap-host-to-path 'ffap-host-to-filename)
 
@@ -393,12 +401,18 @@ argument to `add-hook'."
 (unless (fboundp 'gettext)
   (defalias 'gettext 'identity))
 
-(defun dp-push-window-config ()
-  (interactive)
-  )
+(defvar dp-window-config-stack nil
+  "FSF has no way to push a window config so we do the work onto this stack.")
 
-(defun dp-pop-window-config (n)
+(defun dp-push-window-configuration ()
+  (interactive)
+  (push (current-window-configuration) dp-window-config-stack)
+  )
+(defalias 'dp-push-window-config 'dp-push-window-configuration)
+
+(defun dp-pop-window-configuration (n)
   (interactive "p")
+  (pop dp-window-config-stack)
   )
 
 (defun device-frame-list (&optional device)
@@ -640,5 +654,41 @@ e.g. \(dp-plist-equal '(p1 v1 p2 v2) '(p2 v2 p1 v1)) is t"
 Name is old and from the XEmacs days and is used for compatibility."
   (interactive)
   (apply 'appt-activate r))
+
+(defun dp-appt-initialize-on ()
+  "Activate the appointment timer system."
+  (interactive)
+  (dp-appt-initialize 1))
+
+(defsubst py-point (position)
+  "Returns the value of point at certain commonly referenced POSITIONs.
+POSITION can be one of the following symbols:
+
+  bol  -- beginning of line
+  eol  -- end of line
+  bod  -- beginning of def or class
+  eod  -- end of def or class
+  bob  -- beginning of buffer
+  eob  -- end of buffer
+  boi  -- back to indentation
+  bos  -- beginning of statement
+
+This function does not modify point or mark."
+  (let ((here (point)))
+    (cond
+     ((eq position 'bol) (beginning-of-line))
+     ((eq position 'eol) (end-of-line))
+     ((eq position 'bod) (py-beginning-of-def-or-class 'either))
+     ((eq position 'eod) (py-end-of-def-or-class 'either))
+     ;; Kind of funny, I know, but useful for py-up-exception.
+     ((eq position 'bob) (goto-char (point-min)))
+     ((eq position 'eob) (goto-char (point-max)))
+     ((eq position 'boi) (back-to-indentation))
+     ((eq position 'bos) (py-goto-initial-line))
+     (t (error "Unknown buffer position requested: %s" position))
+     )
+    (prog1
+        (point)
+      (goto-char here))))
   
 (message "dp-fsf-fsf-compat loading...done")
