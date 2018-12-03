@@ -18,8 +18,9 @@ except NameError:
         LOG_FILE_NAME = None
         log_file = dp_io.Null_dev_t()
 
-Rgg_log_file_name = os.environ.get("rgg_log_file_name",
-                                   None)
+Rgg_log_file_name = (os.environ.get("rgg_log_file_name", None)
+                     or
+                     os.environ.get("rgglfn"))
 #Rgg_log_file_name = 'rgg.log'
 
 def setup_logging(log_file_name=None):
