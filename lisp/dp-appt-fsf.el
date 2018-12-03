@@ -34,6 +34,10 @@ Use &rest beacuse:
     (apply (dp-get-orig-value 'appt-disp-window-function)
 	   args)
     (appt-select-lowest-window)
+;;    (goto-char (point-min))
+;;    (insert "+++++++\n")
+;;    (goto-char (point-max))
+;;    (insert "-------\n")
     (delete-other-windows)
     (dp-shrink-wrap-frame)
     (raise-frame frame)))
@@ -56,3 +60,9 @@ Use &rest beacuse:
 	(when dp-fsf-appt-frame
 	  (dmessage "dp-fsf-appt-frame is non-nil."))
 	))))
+
+(defun dp-appt-setup ()
+  (interactive)
+  (dp-insinuate-appt-frame-code))
+
+(provide 'dp-appt-fsf)
