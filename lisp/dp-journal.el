@@ -422,6 +422,7 @@ buffer will go into that notes file.
 A non-standard (latest date-wise) file can be made the default as well, so,
 for example, a project notes file can be used.")
 
+;;;###autoload
 (defun dpj-current-journal-file ()
   ;; !<@todo XXX FOR NOW!
   dpj-current-journal-file)
@@ -531,6 +532,7 @@ This variable is used to identify things like view bufs.")
   (message "ms0>%s<, ms0>%s<"
 	   (dpj-topic-match-string) (dpj-topic-match-string)))
 
+;;;###autoload
 (defun dpj-highlight-region (from to op)
   "Highlight a region according to OP."
   (dp-highlight-region from to op 'dp-journal
@@ -2931,10 +2933,6 @@ exist to move from one topic record to the next or previous.
 
   ;;(dmessage "ENTER: dp-journal-mode")
 
-  ;; We make these variables buffer local and lower 'em into the paranoid zone.
-  (setq auto-save-interval 200
-	auto-save-timeout 30)
-
   ;; Text mode turns this on, and it does many things I don't like. Perhaps I
   ;; am not using it correctly, esp in relation to filladapt.
   (auto-fill-mode -1)
@@ -3037,10 +3035,11 @@ exist to move from one topic record to the next or previous.
   (dpj-add-menu-item "Kill old journal buffers " 'dpj-tidy-journals)
 
   (dp-make-local-hook 'after-save-hook)
-  (add-hook 'after-save-hook (function
-			      (lambda ()
-				(dpj-set-current-journal-file (buffer-file-name))
-				(dpj-merge-all-topics nil 'write-em)))
+  (add-hook 'after-save-hook
+	    (function
+	     (lambda ()
+	       (dpj-set-current-journal-file (buffer-file-name))
+	       (dpj-merge-all-topics nil 'write-em)))
 	    nil 'local)
 
   (add-local-hook 'kill-buffer-hook 'dpj-buffer-killed-hook)
@@ -3057,13 +3056,10 @@ exist to move from one topic record to the next or previous.
   ;; corrections in it.
   (abbrev-mode 0)		     ; We use mah MFing abbrevs, MFer.
 
-  (setq auto-save-interval 42
-	auto-save-timeout 30
+  ;; We make these variables buffer local and lower 'em into the paranoid zone.
+  (setq auto-save-interval 42		; Input events.
+	auto-save-timeout 24		; Seconds.
 	comment-start "; ")
-
-
-  ;; now that we have auto-save-timeout, let's crank this up
-
 
   ;;(dmessage "EXIT: dj-journal-mode")
 
