@@ -86,7 +86,6 @@
 	     :front-advance front-advance
 	     :rear-advance rear-advance)))))
 
-;;;###autoload
 (defun* dp-buffer-bg-set-color (color
 				&optional buffer
 				&key begin end (widenp t)
