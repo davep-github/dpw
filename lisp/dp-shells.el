@@ -343,6 +343,8 @@ No regexps allowed. This will be processed by `regexp-opt'")
                                        "dotegrep"
                                        "dotjgrep"
                                        "dotgrep"
+				       "pcregrep"
+				       "ag"
                                        "sed"
                                        "gawk"
                                        "nawk"
@@ -358,12 +360,15 @@ No regexps allowed. This will be processed by `regexp-opt'")
                                        "autoconf"
                                        "libtoolize"
                                        "automake"
-                                       "bgme"
-                                       "tgbme"  ; Build multiengine test util.
-                                       "build_gpu_multiengine.pl"
-                                       "index-me-code"
+					;; MaKe and Install amdgpu
+					;; Kernel Object.
+				       "mkiko"
+				       ;; Kernel tree MaKe.  It's an
+				       ;; odd process, worthy of
+				       ;; remembering the incantation
+				       ;; in a shell script.
+				       "kmk"
                                        "index-code"
-                                       "nvrun ness"
                                        "xemacs")))
 ;;                   '("\\(dp-\\)?git\\(\\s-*\\|-\\)\\(cia\\|st\\|diff\\)")
                    ;; Any git looking command.  Better a false + than false -
@@ -995,6 +1000,7 @@ Or both.")
   ;;(dmessage "enter dp-shell-mode-hook, current-buffer: %s" (current-buffer))
   (setq comint-prompt-regexp "^[^#$%>\n]*[#$%>]+ *"
         comint-use-prompt-regexp t)
+  (setq show-trailing-whitespace nil)
   (unless (dp-shell-ignored-buffer-p (buffer-name))
     (dp-maybe-add-compilation-minor-mode)
     ;;(font-lock-set-defaults)
@@ -2500,11 +2506,11 @@ It isn't pretty."
 (defun* dp-shell0 (&optional arg &key other-window-p name other-frame-p)
   "Open/visit a shell buffer.
 First shell is numbered 1 by default. 0 is too far away from the others. Save
-it for something \"speshul\".
+it for something \"spayshul\".
  ARG is numberp:
  ARG is >= 0: switch to that numbered shell.
- ARG is < 0: switch to shell buffer<\(abs ARG)>
- ARG memq `dp-shells-primary-shell-names' shell<0> in other window."
+ ARG is < 0: switch to shell buffer<\(abs ARG)> in another window.
+ ARG memq `dp-shells-primary-shell-names' shell<0> in another window."
   (interactive "P")
   (let* ((specific-buf-requested-p current-prefix-arg)
          (pnv (cond
