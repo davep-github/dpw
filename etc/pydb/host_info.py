@@ -288,7 +288,7 @@ e(
         'family': 'amd_family',
         'comment': 'Main dev box. Ryzen 8-core.  Not for testing, in general, unless absolutely necessary.',
         'xem_opts': ('-eval (dp-2-v-or-h-windows) '
-                     + '-geometry 180x67+460+0'),
+                     + '-geometry 178x59+460+0'),
         # Not particularly attractive.
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         ###"""xem-xft-font""": '''"Inconsolata-12"''',
@@ -316,11 +316,8 @@ XERXES_FG_COLOR = 'white'
 #XERXES_BG_COLOR = 'rgb:51/00/10'
 #XERXES_BG_COLOR = 'rgb:46/00/0A'
 #XERXES_BG_COLOR = 'rgb:2E/00/07'
-<<<<<<< variant A
-XERXES_BG_COLOR = 'rgb:01/1a/13'
->>>>>>> variant B
+#XERXES_BG_COLOR = 'rgb:01/1a/13'
 XERXES_BG_COLOR = 'rgb:00/31/23'
-======= end
 # #044633
 e(
     kef='host',
