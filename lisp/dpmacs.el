@@ -452,7 +452,10 @@ the init files.")
                              svn-status-directory-history
                              command-history
                              ssh-history
-                             kill-ring  ; I can't believe I left this out.
+			     ;; I can't believe I left this out.  I
+			     ;; don't think I did.  I think Emacs
+			     ;; works differently.
+                             kill-ring
                              dp-go-back-ring ; or this
                              search-ring  ; Or these...
                              regexp-search-ring
@@ -1128,8 +1131,8 @@ minibuffer history list `bookmark-history'."
            (lambda ()
              (inf-ruby-keys))))
 
-(setq search-ring-max 64
-      regexp-search-ring-max 64)
+(setq search-ring-max 128
+      regexp-search-ring-max 128)
 
 (dp-set-frame-title-format)
 
@@ -1140,7 +1143,7 @@ minibuffer history list `bookmark-history'."
            (lambda ()
 ;;;(require 'psvn) ; Just let vc take care of everything?
              (require 'dp-faces)
-             (require 'dp-ptools)
+	     (require 'dp-ptools)
              (add-hook 'isearch-mode-hook 'dp-isearch-mode-hook)
              (add-hook 'isearch-mode-end-hook 'dp-isearch-mode-end-hook)
              ;; @todo autoload-ify the main entry points.
