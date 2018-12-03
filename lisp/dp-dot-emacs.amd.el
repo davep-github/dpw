@@ -162,18 +162,27 @@
 (setq auto-mode-alist (cons '("\\.cl$" . c-mode) auto-mode-alist))
 
 (defvar bookmark-default-file
-  (dp-nuke-newline (shell-command-to-string
-                    "mk-persistent-dropping-name.sh --use-project-as-prefix emacs.bmk")))
+  (dp-nuke-newline
+   (shell-command-to-string
+    "mk-persistent-dropping-name.sh --use-project-as-prefix emacs.bmk")))
 
+;;; Max height I can see changed for some reason.  I think it was due
+;;; to amdgpu stopping working.  Mehbe not.  Value when amdgpu runs.
 (defconst dp-sfh-height 63)
+;;; No amdgpu driver.
+(defconst dp-sfh-height 60)
 
 ;; For now, make my old dev area RO.
+;; @todo XXX Skip this if using dset?
 (dp-add-force-read-only-regexp
- '("/proj/ras_arch/ras/edc/brahma/"
+ '("/syslog.*"
+   "/proj/ras_arch/ras/edc/brahma/"
    "/ras.local/edc/brahma/ec"
    "/ras.nfs/edc/brahma/ec"
    "/tmp-for-edc-code/"
-   "/releases.amd-17\\.40/linux"))
+   "/releases.amd-17\\.40/linux"
+   "/tmp-for-edc-code/"
+   ))
 
 ;; (setq dp-<type>*-regexp-list
 ;;       (dp-add-to-list
