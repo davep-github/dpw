@@ -46,15 +46,20 @@ current buffer is not visiting a file."
 (defalias 'dse-tramp 'dp-stolen-sudo-edit)
 
 (defun dse (&optional file-name)
-  "Edit a file as root.  The stolen one above is slow when using completion."
+  "Edit a file as root; `dp sudo edit'.
+The stolen one above is slow when using completion."
   (interactive "Gfile name: ")
   (find-file file-name)
-  (dset))    ; this op is fast since we know the name and we're local.
+  (dset)
+  )    ; this op is fast since we know the name and we're local.
 
 (defun dset ()
   "`dse this' sudo edit the file in the current buffer."
   (interactive)
-  (dp-stolen-sudo-edit 'dse-this-buffer))
+  (dp-stolen-sudo-edit 'dse-this-buffer)
+  (unless (string-match "<dse>\\(<[0-9]+>\\)?$" (buffer-name))
+    (rename-buffer (concat (buffer-name) "<dse>"))
+    (rename-uniquely)))
 
 (require 'autoload)
 ;; "See Emacs' def of generated-autoload-file."
