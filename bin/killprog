@@ -146,9 +146,10 @@ while ($line = <PS>) {
       #printf("basename: ") if ($debug);
     }
 
-    #printf("..........match_name>$match_name<, match_prog>$match_prog<\n") if ($debug);
+    printf("..........match_name>$match_name<, match_prog>$match_prog<\n") if ($debug);
     if ($match_name eq $match_prog) {
       push(@pidList, $pid);
+      printf("pushing match>%s<\n", $match_prog) if ($debug);
     } elsif ($base_name =~ m!^(([ak]|ba)?sh)$!) {
       # See if we're a shell script
       ($scr_pid, $scr_name, $rest) = $line =~ /$scriptNameFinder/o;
