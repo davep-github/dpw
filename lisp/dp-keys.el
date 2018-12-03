@@ -279,8 +279,8 @@ Bind any keys in KEYS via `dp-define-keys'."
 ; 					 'dp-mark-sexp))
 ; I always mark first
 ;;;(global-set-key [(control meta c)] 'dp-copy-sexp)
-;;;(global-set-key [(control meta c)] 'dp-copy-rectangle-as-killed)
-(global-set-key [(control ?x) ?r (meta ?o)] 'dp-copy-rectangle-as-killed)
+;;;(global-set-key [(control meta c)] 'dp-copy-rectangle-as-kill)
+(global-set-key [(control ?x) ?r (meta ?o)] 'dp-copy-rectangle-as-kill)
 (global-set-key [(meta ?c)] 'dp-toggle-capitalization)
 (global-set-key [(meta ?C)] 'dp-change-one-hump)
 
@@ -634,7 +634,7 @@ already in there.")
                           ;; abbreviated commands
                           [(control next)] 'dp-eob-all-windows
                           [(control kp-next)] 'dp-eob-all-windows
-                          [(meta ?n)] 'dp-pop-window-config
+                          [(meta ?n)] 'dp-pop-window-configuration
                           [?s ?r] 'dp-save-wconfig-by-name-or-ring
                           [?s ?n] 'wconfig-add-by-name
                           [?r ?p] (kb-lambda-rest
@@ -642,9 +642,9 @@ already in there.")
                                       (call-interactively
                                        (if (Cu--p)
                                            'wconfig-restore-by-name
-                                         'dp-pop-window-config)))
+                                         'dp-pop-window-configuration)))
                           [?r ?n] 'wconfig-restore-by-name
-                          [?r ?y] 'dp-pop-window-config
+                          [?r ?y] 'dp-pop-window-configuration
                           [?d ?p] 'wconfig-delete-pop
                           [?d ?n] 'wconfig-delete-by-name
                           ;; Bindings for some useful layouts.
