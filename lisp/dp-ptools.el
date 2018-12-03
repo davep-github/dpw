@@ -162,11 +162,13 @@
 
 ;;
 ;; -C ignore case.
-;; ????? (setq cscope-command-args '("-C"))
 (defun dp-setup-cscope ()
   (interactive)
 
+  ;; Make gtags/global ignore case.
   (dp-gtags-set-cscope-ignore-case dp-gtags-cscope-ignore-case-strings-p)
+  ;; Make [gtags-]cscope ignore case.
+  (cscope-caseless)
 
   (defadvice cscope-extract-symbol-at-cursor
     (around dp-cscope-extract-symbol-at-cursor activate)
@@ -551,9 +553,14 @@ cscope discovery.
 
 (defun dp-tag-find-other-window (&rest r)
   (interactive)
-  (call-interactively 'gtags-find-tag-other-window))
-;;   (call-interactively (dp-*TAGS-handler-other-window-finder
-;;                        (dp-get-*TAGS-handler))))
+  (cond
+   ((dp-xgtags-p)
+    (call-interactively 'dp-xgtags-find-tag-other-window))
+   ((dp-gtags-p)
+    (call-interactively 'gtags-find-tag-other-window))
+   (t
+    (error "No find tag other window."))))
+
 (global-set-key [(meta ?.)] 'dp-tag-find)
 (global-set-key [(control ?x) (control ?.)]
   (kb-lambda
@@ -578,8 +585,6 @@ cscope discovery.
 ;;
 ;; We make xgtags use this.
 (when (or (dp-gtags-p) (dp-xgtags-p))
-  (make-variable-buffer-local 'gtags-auto-update)
-  (setq-default gtags-auto-update nil)
   (make-variable-buffer-local 'dp-gtags-auto-update-db-flag)
   ;; It's kind of slow (in the 4.4 linux kernel tree anyway) to update all of
   ;; the dbs up to the root.  So we just do the one for the dir we're in,
@@ -776,6 +781,7 @@ gtags discovery."
     "*If non-nil, tag files are updated whenever a file is saved."
     :type 'boolean
     :group 'gtags)
+  (make-variable-buffer-local 'gtags-auto-update)
 
   ;;
   ;; Invoked on saving a file.
@@ -794,12 +800,13 @@ gtags discovery."
                       nil nil nil
                       dp-gtags-auto-update-db-flag
                       (if dp-gtags-auto-update-db-flag
-                          "-L"
+                          "--file-list"
                         "--rgg-nop")
                       (if dp-gtags-auto-update-db-flag
                           "cscope.files"
                         "--rgg-nop")
-                      "-u" (concat "--single-update=" (gtags-buffer-file-name)))
+                      "-u" (concat "--single-update="
+				   (expand-file-name (gtags-buffer-file-name))))
         (message "Updating tags(%s)...done" dp-gtags-auto-update-db-flag))))
 
   (defun* dp-xgtags-get-token (&optional
@@ -814,12 +821,21 @@ gtags discovery."
       (completing-read prompt xgtags--completition-table
                        nil nil nil history tagname)))
 
-  (defun dp-xgtags-find-tag-other-window ()
-    (interactive)
-    (let ((tagname (dp-xgtags-get-token "other window token: "))
-          (xgtags-goto-tag 'always))
-      ;;(other-window 1)
-      (xgtags--goto-tag tagname)))
+  (defun dp-xgtags-find-tag-other-window (&optional num-windows-next)
+    (interactive "p")
+    (let ((xgtags-goto-tag 'always)
+	  (start-buffer (current-buffer))
+	  (tag-buffer (progn
+			(xgtags-find-tag)
+			(current-buffer))))
+      ;; for some reason (probably due to my misunderstanding of the
+      ;; function) `save-excursion' doesn't save the buffer, and we're
+      ;; left in the buffer containing the tag.  So we go back here.
+      ;; I'm sure this is over complicated and inefficient, but it works.
+      ;; So there.
+      (switch-to-buffer start-buffer)
+      (when (not (equal tag-buffer (current-buffer)))
+	(switch-to-buffer-other-window tag-buffer))))
 
   (defun dp-xgtags-select-selected-tag-other-window (&optional tag)
     (interactive)
@@ -1047,16 +1063,6 @@ xgtags discovery.
 (defun dp-tag-pop-other-win ()
   (interactive)
   (gtags-pop-stack t))
-
-(defun dp-tag-find-other-window (&rest r)
-  (interactive)
-  (cond
-   ((dp-xgtags-p)
-    (call-interactively 'dp-xgtags-find-tag-other-window))
-   ((dp-gtags-p)
-    (call-interactively 'gtags-find-tag-other-window))
-   (t
-    (error "No find tag other window."))))
 
 (defun dp-global-set-tags-keys ()
   (global-set-key [(meta ?.)] 'dp-tag-find)
@@ -1507,6 +1513,15 @@ so each mode can have its own logic."
   (when dp-insert-tempo-comment-func
     (funcall dp-insert-tempo-comment-func no-indent-p)))
 (defalias 'tc 'dp-insert-tempo-comment)
+
+(defun dp-dired-.c-and.h-files (dirname &optional switches)
+  "Basically a KB macro to `dired' .c and .h files."
+  (interactive (dired-read-dir-and-switches ""))
+  (pop-to-buffer-same-window
+   (dired-noselect (paths-construct-path (list dirname "*.[ch]"))
+		   switches)))
+
+(dp-defaliases 'dpch 'dch 'lch 'lsrc 'dsrc 'dp-dired-.c-and.h-files)
 
 ;;;
 ;;; Tempo comment support.
