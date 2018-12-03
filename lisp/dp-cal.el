@@ -17,10 +17,13 @@
   (define-key calendar-mode-map [(control left)] 'calendar-backward-week)
   (define-key calendar-mode-map [(control right)] 'calendar-forward-week)
   (define-key calendar-mode-map [(meta ?a)] 'calendar-set-mark)
-  (define-key calendar-mode-map [(meta ?d)] 'dp-appt-initialize)
-  (define-key calendar-mode-map [(meta ?i)] 'dp-appt-initialize)
+  (define-key calendar-mode-map [(meta ?d)] 'dp-appt-initialize-on)
+  (define-key calendar-mode-map [(meta ?i)] 'dp-appt-initialize-on)
   (define-key calendar-mode-map [return] 'diary-view-entries)
-  (define-key calendar-mode-map [(control meta a)] 'dp-appt-initialize))
+  (define-key calendar-mode-map [(control meta a)] 'dp-appt-initialize-on)
+  (setq show-trailing-whitespace nil)
+  )
+
 (add-hook 'calendar-load-hook 'dp-calendar-load-hook)
 (defalias 'cal 'calendar)
 
@@ -57,7 +60,7 @@
   (interactive)
   (when (buffer-modified-p)
     (save-buffer))
-  (dp-appt-initialize)
+  (dp-appt-initialize-on)
   (if exit-too-p
       (when
           (call-interactively (key-binding [(meta ?-)])))
@@ -65,7 +68,7 @@
 
 (defadvice exit-calendar (before dp-exit-calendar activate)
   "Check for new appointments before exiting."
-  (dp-appt-initialize))
+  (dp-appt-initialize-on))
 
 (add-hook 'diary-hook 'dp-diary-hook)
 (defvar dp-diary-hook-active-p nil
@@ -76,10 +79,10 @@
   ;Make sure any entries are activated.  This by itself is not enough to
   ;ensure that new appointments are activated, since it is called BEFORE
   ;changes to the diary.  However it may catch some oversights.
-  ;In the calendar, for convenience, M-d is defined as `dp-appt-initialize'.
+  ;In the calendar, for convenience, M-d is defined as `dp-appt-initialize-on'.
   (unless dp-diary-hook-active-p
     (setq dp-diary-hook-active-p t)
-    (dp-appt-initialize)
+    (dp-appt-initialize-on)
     (setq dp-diary-hook-active-p nil)))
 ;
 ; dp-appt-initialize loads the diary file, so this doesn't quite work.
