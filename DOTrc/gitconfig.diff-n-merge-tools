@@ -1,3 +1,5 @@
+# -*- mode: conf -*-
+
 [merge]
     tool = meld
 

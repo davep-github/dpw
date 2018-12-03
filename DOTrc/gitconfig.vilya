@@ -1,3 +1,5 @@
+# -*- mode: conf -*-
+
 [include]
         path = ~/.rc/gitconfig
 
