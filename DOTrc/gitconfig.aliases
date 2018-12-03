@@ -1,3 +1,4 @@
+# -*- mode: conf -*-
 # Dumbassery:
 # (currently, as of git 1.5.6.1) non-git aliases are executed from the top-level dir of a repo
 [alias]
@@ -50,10 +51,14 @@
         newbranch = checkout -b
 	ci = commit -s
         cia = commit -a -s
-        commit = commit -s
+        cian = commit -a -s --no-verify
+	cinv = commit -s --no-verify
         real-commit = commit
 	st = status
 	s = status
+	su = status
+	sn = status -unormal
+	sy = status -unormal
         sno = status -uno
         ss = status -s
         rp = rev-parse
@@ -185,6 +190,7 @@
         dtd = difftool --tool=diffuse
         dtecdiff = difftool --tool=ec-diff
         ec-diff = difftool --tool=ec-diff
+        ecdiff = difftool --tool=ec-diff
         dte = difftool --tool=ec-diff
         ecd = difftool --tool=ec-diff
         dtec = difftool --tool=ec-diff
