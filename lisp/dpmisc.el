@@ -11,6 +11,7 @@
 (require 'tempo)
 (require 'compile)
 (require 'time-date)
+(require 'rect)
 
 (require 'dp-vars)
 
@@ -427,7 +428,7 @@ string containing their values."
 (dp-defaliases 'dp-nop-rest 'dp-interactive-identity-rest 'dp-identity-rest)
 
 (defun dp-identity (&rest rest)
-  ;; Remove effects of &rest
+  "Accept arbitrary [number of] arguments, but return first only."
   (interactive)
   (car rest))
 
@@ -1009,19 +1010,23 @@ first and last non-white space on the line."
 (defun dp-preceding-word-bounds ()
   (dp-looking-back-at "\\<.*?\\>"))
 
-(defvar dp-region-function-map 
-  '((line-p               . (dp-line-boundaries))
-    (line-sans-newline-p  . (dp-line-sans-newline-p))
-    (indentation-p        . (dp-indentation-boundaries))
-    (preceding-word-p     . (dp-preceding-word-bounds))
-    (buffer-p             . ((lambda ()
+(defun dp-symbol-at-point-boundaries ()
+  (warn "Write me (and use me please!)"))
+
+(defvar dp-region-function-map
+  '((line-p                . (dp-line-boundaries))
+    (line-sans-newline-p   . (dp-line-sans-newline-p))
+    (indentation-p         . (dp-indentation-boundaries))
+    (preceding-word-p      . (dp-preceding-word-bounds))
+    (buffer-p              . ((lambda ()
                                (cons (point-min) (point-max)))))
-    (rest-of-line-p       . (dp-bound-rest-of-line))
+    (rest-of-line-p        . (dp-bound-rest-of-line))
     (rest-or-all-of-line-p . (dp-rest-or-all-of-line))
-    (text-of-line-p       . (dp-mark-line-if-no-mark t t))
-    (first-extent         . (dp-first-extent-boundaries))
-    (zero-len-p          . ((lambda (&rest unused)
-                              (cons (point) (point)))))
+    (text-of-line-p        . (dp-mark-line-if-no-mark t t))
+    (first-extent          . (dp-first-extent-boundaries))
+    (symbol-at-point      . (dp-symbol-at-point-boundaries))
+    (zero-len-p            . ((lambda (&rest unused)
+				(cons (point) (point)))))
     (rest-of-buffer-p     . (dp-rest-of-buffer-cons)))
   "Map of convenience symbolic args to `dp-region-or...' to functions.
 Format is an alist of: \(symbol . \(function [args...]))  I know, it's the
@@ -1916,34 +1921,32 @@ sequence of white-space at point to be deleted with this command.
 Based (now, loosely) on kill-word from simple.el"
   (interactive "*p")
   ;; XXX look at skip-chars-forward/backward
-  (let ((ws "\\(\\s-\\|\n\\)+")
-	(opoint (point)))
+  (let ((ws "\\(\\s-\\|\n\\|\t\\)+")
+	ws-region
+	(opoint(point)))
     (if (or
-	 ;; kill forward, sitting on white space.  kill using match
-	 ;; data from looking-at
+	 ;; killing forward?
+	 ;; Sitting on white space?
+	 ;; Kill ws using match
+	 ;; data from dp-looking-at
 	 (and (> arg 0)
-	      (looking-at ws))
-	 ;; kill backwards.
-	 ;; move back a char (if possible).
-	 ;; if on whitespace, continue
-	 ;;  else return to where we were
-	 ;; go back to non-whitespace
-	 ;; match ws up to where we started
-	 ;; use that match data to delete.
+	      (setq ws-region (dp-looking-at ws)))
+	 ;; Kill backwards?
+	 ;; If we're looking backward, we need to handle the problem
+	 ;; what `re-search-backward' will end matching the smallest
+	 ;; part of the regexp, which really fucks things up.
+	 ;; Especially * and +
 	 (and (< arg 0)
-	      (not (dp-bobp))
-	      (not (backward-char 1))	; return nil when successful (always?)
-	      (if (looking-at ws)
-		  t
-		(forward-char 1))
-	      (re-search-backward "[^ 	\n]" nil t)
-	      (not (forward-char 1))
-	      (dp-re-search-forward ws opoint t)))
-	(delete-region (match-beginning 0) (match-end 0))
+	      (setq ws-region (dp-looking-back-at ws))
+	      (save-excursion
+		(while (dp-looking-back-at ws)
+		  (forward-char -1))
+		(setq ws-region (cons (point) opoint)))))
+	(delete-region (car ws-region) (cdr ws-region))
       ;; if we're not killing white space, kill a word in
       ;; the requested direction.
       (delete-region (point) (progn (forward-word arg) (point))))))
-  
+
 (defun dp-backward-delete-word (arg)
   "Delete characters backward until encountering the end of a word.
 With argument, do this that many times.  Based on backward-kill-word
@@ -2235,7 +2238,11 @@ E.g. ;; commented out by dp-comment-out-sexp;"
         (newline))
       (let ((mark (dp-mk-marker))
             point-delta)
-        (paren-forward-sexp)
+	(if (dp-xemacs-p)
+	    ;; XEmacs says (said) FSF can't handle quoted parens...
+	    (paren-forward-sexp)
+	  ;; ... but it looks like it can now.
+	  (forward-sexp))
         (setq point-delta
               (cond
                ((looking-at "\\s-*)") -1)
@@ -3461,8 +3468,8 @@ Developing in `*scratch*' can result in lost work."
 
 (defun* ld1 (&key file-name (prompt-p nil prompt-p-p))
   (interactive)
-  (ld file-name :one-window-p t 
-      :prompt-p (if prompt-p-p prompt-p current-prefix-arg)))
+  (dp-lisp-devel file-name :one-window-p t
+		 :prompt-p (if prompt-p-p prompt-p current-prefix-arg)))
 (dp-defaliases 'ldd 'ld. 'ld0 'ld1)
 
 (defun* ld2 (&key file-name (prompt-p nil prompt-p-p))
@@ -4136,9 +4143,10 @@ other: other is value of initial contents."
      ((eq 'S symbol-type)
       (let (tem (prev-tem default) unbound-p)
         ;; This *always* sees the variable via `intern-soft' even when
-        ;; unbound.  I seem to not understand this function, since I've seen
-        ;; this before.
-        (dmessage "fix me!!!")(ding)
+        ;; unbound.  I seem to not understand this function, since
+        ;; I've seen this before.
+        (dmessage "dp-prompt-with-symbol-near-point-as-default: fix me!!!")
+	(ding)
         (while (and (not unbound-p)
                     (not tem))
           (setq tem (completing-read prompt obarray nil require-match-p 
@@ -5412,7 +5420,7 @@ command-line argument to XEmacs, e.g. -eval \(dp-main-rc)."
   (dp-start-editing-server)
   ;; This function is called after dpmacs has completed.
   (dp-activate-appts)
-  (dp-appt-initialize)
+  (dp-appt-initialize-on)
   ;; the -geometry arg doesn't work quite right under kde.
   (unless (bound-and-true-p dp-do-not-snuggle-frame-in-upper-right-p)
     (dp-snuggle-frame-in-upper-right)
@@ -6647,7 +6655,7 @@ IGNORE-CURRENT, if non-nil, says to ignore the value of RESULT-SYM."
 	(set result-sym id-file))
     id-file))
 
-(defun dp-looking-back-at (regexp &optional limit)
+(defun* dp-looking-back-at (regexp &optional limit (noerror t))
   "Return non-nil if point follows directly after regexp.
 LIMIT, if in \(t 'nolimit 'no-limit),  says to search backwards with no limit.
 LIMIT, if nil --> use default of `line-beginning-position'.
@@ -6658,13 +6666,31 @@ LIMIT, otherwise, has a buffer pos that is the limit."
           (limit (cond
                   ((memq limit '(t nolimit no-limit)) nil)
                   (t (or limit (line-beginning-position))))))
-      (and (re-search-backward regexp limit t)
+      (and (re-search-backward regexp limit noerror)
            ;; If found, `match-' `end', `beginning' can be used to delimit
            ;; the regex match.
            (= p (match-end 0))
            ;; Useful, non-nil return
            (cons (match-beginning 0) (match-end 0))))))
 (defalias 'dp-point-follows-regexp 'dp-looking-back-at)
+
+(defun dp-looking-at-with-re-search-params (regexp &optional limit noerror
+						   count buffer)
+  ;; XEmacs' (better) semantics.
+  (let ((p (point)))
+    (with-current-buffer (dp-get-buffer buffer)
+      (with-narrow-to-region (point) (or limit (point-max))
+	(save-excursion
+	  ;; `looking-at' says "... text after point ..."
+	  ;;(forward-char 1)
+	  (when (re-search-forward regexp limit noerror count)
+	    (when (= p (match-beginning 0))
+	      (cons (match-beginning 0) (match-end 0)))))))))
+
+(defun* dp-looking-at (regexp &optional limit (noerror t))
+  "Analog of `dp-looking-back-at'."
+  (interactive "sregexp: ")
+  (dp-looking-at-with-re-search-params regexp limit noerror))
 
 (defun dp-toggle-truncate (&optional arg)
   "Toggle value of `truncate-lines'."
@@ -6979,21 +7005,26 @@ Else `(apply pred pred-args)'."
     (when state
       (goto-char (dp-killed-file-state-point (cdr state))))))
 
-(defun* dp-restore-file-state-old (&optional (buffer (current-buffer)))
-  (let ((state (assoc (file-truename (buffer-file-name buffer))
-                      dp-killed-file-states)))
-    (when state
-      (goto-char (dp-killed-file-state-point (cdr state))))))
+(defcustom dp-file-state-ignore-regexps
+  '("\\(^\\|/\\)COMMIT_EDITMSG$")
+  "*Do not save state for the matching files."
+  :group 'dp-vars
+  :type 'list)
 
 (defun dp-push-killed-file-name (buffer-file-name)
-  "Push the file name onto a stack of kill files' names.
+  "Push the file name onto a stack of killed file names.
 Remove any other copies of the name."
-  ;; Remove any existing copies of this name
-  (setq dp-recently-killed-files 
-        (delete buffer-file-name dp-recently-killed-files))
-  (dp-push-onto-bounded-stack 'dp-recently-killed-files 
-                              buffer-file-name
-                              dp-recently-killed-files-max))
+  ;; Remove any existing copies of this name.
+
+  (setq dp-recently-killed-files
+	(delete buffer-file-name dp-recently-killed-files))
+  ;; Doing this here handles the case where we added a new regexp to
+  ;; be ignored.
+  (unless (dp-match-a-regexp buffer-file-name
+			     dp-file-state-ignore-regexps)
+    (dp-push-onto-bounded-stack 'dp-recently-killed-files
+				buffer-file-name
+				  dp-recently-killed-files-max)))
 
 ;; I just changed from a ring to a stack, and I had to change too much.
 ;; Not having this was one problem.
@@ -7095,12 +7126,13 @@ kill-pred-func forces kill-func-in."
   "Return name of buf, or name if name is the name of a buffer.
 If BUF-OR-NAME is nil, use the current buffer's name."
   (cond
-   ((or (null buf-or-name) 
+   ((or (null buf-or-name)
         (bufferp buf-or-name)) (buffer-name buf-or-name))
    ; Can return nil.  Won't recurse again.
-   ((stringp buf-or-name) buf-or-name)
-   (t (error 'wrong-type-argument 
-             buf-or-name "Neither a buffer nor a name."))))
+   ((and (stringp buf-or-name)
+	 (dp-buffer-live-p buf-or-name))
+    buf-or-name)
+   (t (warn (format "Neither a buffer nor a name>%s<" buf-or-name)))))
 
 (defun* dp-buffer-process-live-p (&optional buffer &key (default-p t))
   "If BUFFER, [def `current-buffer'] has a live process, return it else nil.
@@ -7120,8 +7152,13 @@ BUF-OR-NAME-OR-NIL may be nil, a buffer or a buffer name."
        (or (bufferp buf-or-name-or-nil)
            (stringp buf-or-name-or-nil))
        ;; `get-buffer' works with both names and buffer objects.
-       (buffer-live-p (get-buffer buf-or-name-or-nil))
+       (buffer-live-p (dp-get-buffer buf-or-name-or-nil))
        (get-buffer buf-or-name-or-nil)))
+
+(defun dp-frame-live-p (frame)
+  (and frame
+       (frame-live-p frame)
+       frame))
 
 (defun dp-bury-or-kill-buffer (&optional kill-pred-func)
   "Call `dp-func-or-kill-buffer' with `bury-buffer' and  `kill-this-buffer'."
@@ -7234,14 +7271,16 @@ If region is active, set width to that of the longest line in the region."
   (interactive (list (or
                       (and (dp-mark-active-p)
                            (1+ (car (dp-longest-line-in-region))))
-                      (dp-read-number 
-                       (format 
+                      (dp-read-number
+                       (format
                         "width(current: %s; previous: %s; 0 for max: %s): "
                         (frame-width)
                         dp-last-sfw-width
                         dp-max-frame-width)
                        'ints-only (format "%s" dp-last-sfw-width)))))
   (setq dp-last-sfw-width (frame-width))
+  (when (< width 0)
+    (incf width (frame-width)))
   (set-frame-width (or frame (selected-frame))
                    (setq dp-sfw-width
                          (if (eq width 0)
@@ -7259,7 +7298,7 @@ If region is active, set width to that of the longest line in the region."
 (defun dp-set-frame-height (&optional height frame)
   (interactive (list (dp-read-number 
                        (format "height(current: %s; default: %s): " 
-                               (frame-height) dp-sfh-height )
+                               (frame-height) dp-sfh-height)
                        'ints-only (format "%s" dp-sfh-height))))
   ;;@todo XXX Fix this douche bag way of setting the height.
   (let* ((env-height (dp-get-frame-dimension "HEIGHT"))
@@ -7269,13 +7308,26 @@ If region is active, set width to that of the longest line in the region."
                           env-height)
                      (dp-maybe-str-to-int dp-sfh-height))))
     (when height
-      (set-frame-height
-       (or frame (selected-frame))
-       (setq dp-sfh-height height))
-      (setq compilation-window-height (/ (frame-height frame)
-                                         dp-sfh-to-compile-win-height-divisor)))))
+      (when (< height 0)
+	(incf height (frame-height)))
+      (set-frame-height (or frame (selected-frame))
+			(setq dp-sfh-height height))
+      (setq compilation-window-height
+	    (/ (frame-height frame)
+	       dp-sfh-to-compile-win-height-divisor)))))
 
 (defalias 'sfh 'dp-set-frame-height)
+
+(defun dp-frame-dimensions (&optional copy-as-kill-p frame)
+  (interactive "P")
+  ;; Print in form that -geometry would like.
+  (let ((dimensions (format "%dx%d"
+			    (frame-width frame) (frame-height frame))))
+    (when copy-as-kill-p
+      ((kill-new dimensions)))
+    (message "frame dimensions: %s" dimensions)))
+
+(dp-defaliases 'fdim 'frame-dim 'dp-frame-dimensions)
 
 ;;change args (defun sfw-fit-region (&optional entire-buffer-p)
 ;;change args   (interactive "P")
@@ -7376,15 +7428,17 @@ If region is active, set width to that of the longest line in the region."
   (dp-cons-to-list (apply 'dp-region-boundaries-ordered args-to-passthru)))
 
 (defun* dp-nuke-newline (string &optional (nuke-p t))
-  "Remove newline, if one, @ end of string.
-Extra pred NUKE-P makes this more convenient when called in common circumstances."
+  "Remove newline, if one, @ end of STRING.
+Extra pred NUKE-P makes this more convenient when called in
+common circumstances, e.g. you can propagate a predicate to this
+function to prevent the need of a conditional in the caller."
   (when string
     (if (and (> (length string) 0)
              (string= (substring string -1) "\n")
              nuke-p)
         (substring string 0 -1)
       string)))
-    
+
 ; (defun dp-bq (&optional nuke-command hack-newline)
 ;   "Replace region w/command output using region as command."
 ;   (interactive "*P")
@@ -8110,7 +8164,7 @@ This is meant to be used thus:
 	(fill-region (point-min) (point-max))))
     (untabify (point-min) (point-max))))
 
-(defun dp-copy-rectangle-as-killed (start end)
+(defun dp-copy-rectangle-as-kill (start end)
   (interactive "r")
   (setq killed-rectangle (extract-rectangle start end)))
 
@@ -8412,14 +8466,6 @@ Can be called directly or by an abbrev's hook.
   (interactive)
   ;;^\s-*[^;\n 	].*dmessage
   (dp-grep-lisp-files "^[^;]*dmessage"))
-
-(defun* dp-find-regexp-in-list (regexp list &optional (gettor 'identity))
-  "Try REGEXP on each element of LIST using GETTOR to get the match string from the list item."
-  (catch 'up
-    (save-match-data
-      (dolist (item list)
-	(when (string-match regexp (funcall gettor item))
-	  (throw 'up item))))))
 
 (defun dp-regexp-assoc (key-regexp alist)
   "Return 1st item in ALIST where \(string-match KEY-REGEXP ALIST-key) is true."
@@ -9404,7 +9450,7 @@ A bookmark, in this context, is:
                 bm-string))))
 
 (defun dp-simple-quote-escape (s)
-  (replace-in-string s "\"" "\\\""))
+  (replace-in-string s "\"" "\\\"" t))
 
 ;;; DUMMY
 (defun dp-setup-indentation-colorization (&rest r)
@@ -9817,9 +9863,11 @@ want our buffer to display in or do it simply?")
 If the current window is dedicated AND this variable is non-nil then do a 
 \"find-file-other-window\" kind of action.")
 
-(defun* dp-find-file (file-name &optional &key
+(defun* dp-find-file (file-name
+		      &optional
                      ;; `find-file-noselect' args
-                     nowarn rawfile wildcards
+		      nowarn rawfile wildcards
+		      &key
                      ;; `dp-display-buffer-select' args
                      not-this-window-p override-frame 
                      shrink-to-fit other-window-p
@@ -9897,9 +9945,11 @@ Suitable for a find file hook (`dp-find-file-hooks')
 and for setting up a buffers mode (`dp-set-auto-mode')."
   (dp-funcall-if dp-found-file-pre-hook ())
   (setq dp-found-file-pre-hook nil)
-  (dp-force-read-only-by-file-name-regexp) 
+  (dp-force-read-only-by-file-name-regexp)
   (dp-colorize-found-file-buffer)
   (dp-set-file-group)
+  ;; For things like COMMIT_EDITMSG
+  (dp-magit-found-file-hook)
   (dp-funcall-if dp-found-file-post-hook ())
   (setq dp-found-file-post-hook nil))
 
@@ -10219,54 +10269,71 @@ The return value is the result of `memq' on MEMQ-LIST"
      l1)
     lf))
 
-(defvar dp-one-window++-last-register 1
+(defvar dp-one-window++-default-register 0 ; C-@
+  "Default register used to store a config.")
+
+(defvar dp-one-window++-last-register dp-one-window++-default-register	; C-@
   "Last register used to store a config.")
 
-(defun* dp-one-window++ (&optional (arg 1))
+(defun* dp-one-window++ (&optional other-window-num force-set-p
+				   (reg-num dp-one-window++-last-register))
   "Toggle between one window and previously saved window configurations.
-Saves window configurations in registers. Default is reg `\(int-to-char ARG\)'
-If ARG is < 0, save configuration to abs(ARG) and make a single window.
-this case.
+Saves window configurations in registers. Default is reg
+`\(int-to-char REG-NUM\)'
+If REG-NUM is < 0, save configuration to abs(REG-NUM) and make a
+single window.  this case.
 @todo ??? Save last used register as default?
 @todo ??? Create a `dp-one-other-window++'.  Mod this?  
-Or just `other-window' then call this?"
-  (interactive "p")                     ; fsf - fix "_"
-  (let* ((force-set-p (< arg 0))
-         (arg (if current-prefix-arg (abs arg) dp-one-window++-last-register))
+Or just `other-window' then call this?
+ARG < 0 : force overwrite of win config reg \(abs ARG).  Only current window.
+\(eq ARG '-) : prompt for reg-num.
+* : \(other-window arg) then as before.
+The whole force thing/reg-num has never, ever, ever, been used.
+Call with ESC-: and specify force or add a front-end function."
+  (interactive "P")                     ; fsf - fix "_"
+  (let* ((reg-num (if (Cu--p)
+		      (register-read-with-preview "Enter register number: ")
+		    reg-num))
          (reg (if (dp-xemacs-p)
-                  (int-to-char arg)
-                arg))
+                  (int-to-char reg-num)
+                reg-num))
          (reg-val (car-safe (get-register reg))))
     ;; Do we have a single window and a possible previous window configuration?
+    (if current-prefix-arg
+	(setq other-window-num (prefix-numeric-value current-prefix-arg)))
     (if (and reg-val
              (one-window-p 'nomini)
              (not force-set-p))
+	;; Restore window configuration.
         (if (window-configuration-p reg-val)
             (progn
               ;; Yep, yep, switch to that configuration.
               (set-window-configuration reg-val)
-              (unless (eq arg 1)
-                (message 
-                 "Used window configuration in register %s (0%o, %d, 0x%x)" 
-                 reg arg arg arg)))
+              (unless (eq reg-num dp-one-window++-default-register)
+                (message
+                 "Restored window configuration from register %s (0%o, %d, 0x%x)"
+                 reg reg-num reg-num reg-num)))
           (ding)
           (message "register %s does not contain a window configuration."
                    reg))
       ;; else ...
-      (if (and (or t (/= 1 reg))        ; !<@todo XXX ??? or t ???
+      ;; Save window configuration.
+      ;; !<@todo XXX ??? or t ???
+      (if (and (or t (/= dp-one-window++-default-register reg))
                reg-val
                (not (window-configuration-p reg-val))
-               (not (y-or-n-p 
-                     (format 
-                      "Reg %s isn't empty and isn't a win cfg; Continue? "
-                      reg))))
+               (not (y-or-n-p
+                     (format "Reg %s isn't empty and isn't a win cfg; Continue? "
+			     reg))))
           (message "Not setting window configuration.")
         ;; Save configuration and make current window the only one.
         (window-configuration-to-register reg)
-        (setq dp-one-window++-last-register arg)
-        (unless (eq arg 1)
+	(when (numberp other-window-num)
+	  (other-window other-window-num))
+        (setq dp-one-window++-last-register reg-num)
+        (unless (eq reg-num 1)
           (message "Saved window configuration to register %s (0%o, %d, 0x%x)"
-           reg arg arg arg))
+           reg reg-num reg-num reg-num))
         (delete-other-windows)))))
 (put 'dp-one-window++ isearch-continues t)
 
@@ -10642,21 +10709,43 @@ when the command was issued?")
         (insert " = "))
       (insert results))))
 
-(defun* dp-dc-eval (expr &optional (nuke-newline-p t))
-  (dp-nuke-newline
-   (shell-command-to-string (format "echo '%s%s' | dc" 
-                                    expr
-                                    (if (string-match "p\\s-*$" expr)
-                                        ""
-                                     " p")))
-   nuke-newline-p))
+(defun* dp-dc-eval (expr &optional copy-results-as-kill-p
+			 (nuke-newline-p t))
+  "Evaluate an expression string such as one would type into dc\(1).
+COPY-RESULTS-AS-KILL-P copies raw results to kill-ring.
+NUKE-NEWLINE-P says to remove the newline from the end of the string.
+@todo XXX May want to preserve all old input so previous commands
+and results  are available.  NB: dc wants a `p' command  to print
+the ToS. We canonicalize to a single space followed by a p, i.e. \" p\".
+q.v. `dp-dc-eval-string'."
+  (interactive "sdc command: \nP")
+  (with-temp-buffer
+    (if (string-match "\\s-*p\\s-*$" expr)
+	(setq expr (replace-match "" nil nil expr)))
+    (insert expr " p")
+    (call-shell-region (point-min) (point-max)
+		       dp-dc-evaluator t t)
+    (let ((results (dp-nuke-newline
+		    (buffer-substring (point-min) (point-max))
+		    nuke-newline-p)))
+      (when copy-results-as-kill-p
+	(kill-new results))
+      (dp-nuke-newline results nuke-newline-p))))
 
-(defun* dp-dc-eval-string (expr &optional (nuke-newline-p t))
-  (interactive "\sdc expr: ")
-  (message "%s ==> %s" expr (dp-dc-eval expr nuke-newline-p)))
-(defalias 'dp-rpn-eval 'dp-dc-eval-string)
+(defun* dp-dc-eval-string (expr &optional copy-results-as-kill-p
+				(nuke-newline-p t))
+  "Prompt for a string, feed it to `dp-dc-eval' and echo area the results.
+By default, this uses `dp-dc-evaluator' which defaults to dc\(1)."
+  (interactive "sdc expr: \nP")
+  (let ((results (dp-dc-eval expr copy-results-as-kill-p
+			     nuke-newline-p)))
+    (message "%s ==> %s" expr results)
+    (when copy-results-as-kill-p
+      (kill-new results))))
 
-(defun* dp-dc-eval-region (kill-region-p
+(dp-defaliases 'dp-rpn-eval 'drpn 'dpdc 'ddc 'dp-dc-eval-string)
+
+(defun* dp-dc-eval-region (&optional kill-oregional-text-p
                            &key beg end no-=-p (nuke-newline-p t))
   "Run dc on the region."
   (interactive "P")
@@ -10666,8 +10755,10 @@ when the command was issued?")
 	 (end (cdr region))
          results
          (expr (buffer-substring beg end)))
+    (if kill-oregional-text-p
+	(setq no-=-p t))
     (save-excursion
-      (if kill-region-p
+      (if kill-oregional-text-p
           (progn
             (kill-region beg end)
             (goto-char beg))
@@ -10676,6 +10767,7 @@ when the command was issued?")
       (setq results (dp-dc-eval expr nuke-newline-p))
       (unless no-=-p
         (insert " = "))
+      ;; @todo XXX Leave with result marked?
       (insert results))))
 
 (defun dp-in-a-string (&optional buf)
@@ -10982,10 +11074,11 @@ passing SPECIAL-CHARS."
      ;; distance until we enter code space.
      ((not (dp-in-code-space-p)) 
       'pttthhhhhrrrrrrppppttthhhhh!)
-     ((let ((stat (dp-add-comma-or-close-sexp :beg (py-point 'bos) 
-                                              :end (line-end-position)
-                                              :caller-cmd this-command
-                                              :add-here add-here)))
+     ((let ((stat (dp-add-comma-or-close-sexp
+		   :beg (python-nav-beginning-of-statement)
+		   :end (line-end-position)
+		   :caller-cmd this-command
+		   :add-here add-here)))
         (if (not (eq stat 'force-colon))
             stat
           (beginning-of-line)
@@ -11087,7 +11180,9 @@ passing SPECIAL-CHARS."
     (dp-py-fix-comment)
     (unless no-newline-&-indent-p
       (end-of-line)
-      (py-newline-and-indent)
+      (if (dp-xemacs-p)
+	  (py-newline-and-indent)
+	(newline-and-indent))
       (dp-py-fix-comment))))            ; Fix any hosed comment spacing.
     
     
@@ -12003,15 +12098,17 @@ string's characters.
         (apply 'dp-fake-key-presses (string-to-list k))
       (dispatch-event (make-event 'key-press (list 'key k))))))
 
-(defun dp-delete-frame (&optional frame force)
+(defun dp-delete-frame (&optional forcep frame)
   "Confirm deletion because I use C-x 5 0 too often."
-  (interactive)
-  (if (and dp-confirm-frame-deletion-p
+  (interactive "P")
+  (if (and (not forcep)
+	   dp-confirm-frame-deletion-p
            (or (< (dp-primary-frame-width) dp-2w-frame-width)
                ;; Try to catch special frames like ediff control frame and
                ;; speedbar.  We may want to check a list of frame name
                ;; regexps, too.
                (< (frame-width) 80)
+	       (= (dp-num-frames) 1)
                (dp-primary-frame-p))
            (y-or-n-p "Did you mean to do `other-frame'? "))
       (progn
@@ -12163,12 +12260,6 @@ def __init__(var):
   "I can't believe there's not logical xor... or that they call bitwise xor, et.al. log*"
   ;; The nots of a & b guarantee they are t or nil.
   (not (eq (not a) (not b))))
-
-(defun dp-looking-at-with-re-search-params (regexp &optional limit noerror 
-                                            count buffer)
-  (with-narrow-to-region (point) (or limit (point-max))
-    (looking-at regexp)))
-
 
 (defun dp-column-at (&optional pos)
   "Given a position in a file, determine which column it is in.
@@ -12436,6 +12527,16 @@ because the indentation region need not begin at the bol."
       (forward-char -1)
       (point))))
 
+(defun dp-following-symbol-beginning (&optional pos)
+  (save-excursion
+    (when pos
+      (goto-char pos))
+    (while (not (memq (char-syntax (char-before)) '(?w ?_)))
+      (forward-char 1))
+    (when (char-after)
+      (forward-char 1)
+      (point))))
+
 (defun dp-upcase-preceding-symbol (&optional start)
   "@todo -- upcase region if active."
   (interactive)
@@ -12445,8 +12546,26 @@ because the indentation region need not begin at the bol."
       (when p
         (goto-char p)
         (let ((beg-end (id-select-symbol (point))))
-          (upcase-region (car beg-end) (cdr beg-end))
-          (point))))))
+	  (if beg-end
+	      (progn
+		(upcase-region (car beg-end) (cdr beg-end))
+		(point))
+	    (message "Confused by what's at point.")))))))
+
+(defun dp-upcase-following-symbol (&optional start)
+  "@todo -- upcase region if active."
+  (interactive)
+  (save-excursion
+    (when start (goto-char start))
+    (let ((p (dp-following-symbol-beginning)))
+      (when p
+        (goto-char p)
+        (let ((beg-end (id-select-symbol (point))))
+	  (if beg-end
+	      (progn
+		(upcase-region (car beg-end) (cdr beg-end))
+		(point))
+	    (message "Confused by what's at point.")))))))
 
 (defun dp-upcase-preceding-symbols (&optional num)
   (interactive "p")
@@ -12782,14 +12901,19 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
      (insert-file file-name))))
 
 (defun dp-fmakunbound (&optional function-name)
-  (interactive (list (dp-prompt-with-symbol-near-point-as-default 
+  "Interactive and grabs symbol near point as default."
+  (interactive (list (dp-prompt-with-symbol-near-point-as-default
                       "Victim function:" :symbol-type 'a)))
   (fmakunbound function-name))
 
-(defun dp-makunbound (&optional var-name)
-  (interactive (list (dp-prompt-with-symbol-near-point-as-default 
+(defun* dp-makunbound (&optional var-name (uninternp t) obarray)
+  "Interactive and grabs symbol near point as default.
+@todo XXX Set uninternp to value of `current-prefix-arg'."
+  (interactive (list (dp-prompt-with-symbol-near-point-as-default
                       "Victim variable:" :symbol-type 'S)))
-  (makunbound var-name))
+  (makunbound var-name)
+  (when uninternp
+    (unintern varname obarray)))
 
 (defun* dp-buffer-local-setq (var-sym new-val 
                               &optional (pred 
@@ -12841,6 +12965,18 @@ value that may be nil, like dp-singlular-write-restricted-regexp."
               thereis (and regexp
                            (string-match regexp string)))))
 
+(defun* dp-find-regexp-in-list (regexp list &optional (gettor 'identity))
+  "Try REGEXP on each element of LIST using GETTOR to get the match string from the list item.
+NOT stolen from `ecb-match-regexp-list' although they are
+remarkably similar.  They actually use more fiddle-faddle than I
+do. "
+  (catch 'up
+    (save-match-data
+      (dolist (item list)
+	(when (and regexp
+		   (string-match regexp (funcall gettor item)))
+	  (throw 'up item))))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar dp-detect-read-only-file-hook nil
@@ -12852,10 +12988,14 @@ value that may be nil, like dp-singlular-write-restricted-regexp."
 (defun* dp-file-name-implies-readonly0-p (filename 
                                           &optional regexp-in 
                                           (mode-local-list-p t)
-                                          (mode-local-list-only-p nil))
+                                          (mode-local-list-only-p nil)
+					  (file-truename-p t))
   "Determine if something in a filename implies the file should be read only.
 MODE-LOCAL-LIST-P allows restricting regexps on a per-mode basis."
-  (setq filename (expand-file-name filename))
+  (setq filename0 (expand-file-name filename)
+	filename (if file-truename-p
+		     (file-truename filename0)
+		   filename0))
   (when mode-local-list-only-p
     (setq mode-local-list-p t))
   (and (dp-match-a-regexp filename
@@ -13060,11 +13200,11 @@ find-file\(-at-point) and then, if it fails, this function??"
       (insert (make-string (1- (- dest-col (current-column))) ? ))
       (forward-line))))
 
-(defun dp-get-buffer (buffer-or-name &optional nil-if-nil)
+(defun dp-get-buffer (buffer-or-name &optional nil-if-nil-p)
   "Like `get-buffer' except BUFFER-OR-NAME, if nil returns `current-buffer'."
   (if buffer-or-name
       (get-buffer buffer-or-name)
-    (if nil-if-nil
+    (if nil-if-nil-p
         nil
       (current-buffer))))
 
@@ -13771,7 +13911,7 @@ Some examples are:
 (defun dp-kill-buffer-and-pop-window-config (&optional nth-config)
   (interactive "p")
   (dp-meta-minus)
-  (dp-pop-window-config nth-config))
+  (dp-pop-window-configuration nth-config))
 
 (defun dp-split-and-continue-line0 (&optional sep term replacement 
                                     no-indent-p indent-string)
@@ -14003,7 +14143,7 @@ qualifies for whitespace eradication.")
   (let ((git-man-page (concat "git-" topic)))
     (funcall (if other-window-p '2man 'manual-entry)
              git-man-page)))
-(dp-defaliases 'hgit 'gith 'githelp 'gitman 'gman 'dp-git-manual-entry)
+(dp-defaliases 'hgit 'gith 'githelp 'gitman 'mang 'gman 'dp-git-manual-entry)
 
 (defun dp-git-manual-entry-other-window (topic &optional other-window-p)
   (interactive "sgit help on: \nP")
@@ -14033,7 +14173,7 @@ anything --> |b|
                'dp-duplicate-window-vertically)
 
 (defun dp-3-vertical-windows ()
-  "Display the current buffer in 2 vertical (B over B) windows.
+  "Display the current buffer in 3 vertical (B over B over B) windows.
 anything --> |b|
              |-|
              |b|
@@ -14072,6 +14212,10 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
     (when (and colorize-p
                (not (equal original-read-only buffer-read-only)))
       (dp-colorize-found-file-buffer))))
+(dp-defaliases 'dp-tro 'dptro 'dptogglero 'dptogro
+	       'dp-trw 'dptrw 'dptogglerw 'dptogrw
+	       'dp-toggle-read-write
+	       'dp-toggle-read-only)
 
 ;; Restore Other Window.
 (defsubst row ()
@@ -14089,7 +14233,7 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
           (save-buffers-kill-emacs))
         (message "Good thing I asked, huh?"))
     (when (y-or-n-p "Won't exit when in non-primary frame. Close frame instead? ")
-      (dp-delete-frame nil 'force))))
+      (dp-delete-frame 'force nil))))
 
 (defun dp-kill-emacs-no-hook ()
   (dp-save-buffers-kill-emacs 'dont-run-kill-emacs-hook))
@@ -14512,6 +14656,31 @@ JFC."
   (sfw 164)
   (sfh 42)
   (set-frame-position nil 24 0))
+
+(defun yyzdim ()
+  (interactive)
+  (sfw 164)
+  (sfh 45)
+  (set-frame-position nil 190 0))
+
+(defun yyz-vnc-setup ()
+  "Do any setup specific to vnc on yyz,  Dimensions are currently all we need."
+  (interactive)
+  (yyzdim))
+
+(defun major-mode (&optional buf)
+  (interactive "P")
+  (when (Cu-p)
+    (setq buf (read-buffer "buffer name: " (dp-buffer-name) 'require-match)))
+  (setq buf (dp-get-buffer buf))
+  (with-current-buffer buf
+    (message ">%s<'s major-mode>%s<" (dp-buffer-name buf) major-mode)))
+
+(defun dp-upcase-region (&rest r) ;;>>beg end &optional region-noncontiguous-p)
+  (interactive "r")
+  (warn "Please write and use me! Upcase symbol @ point if no region."))
+
+  (dp-defaliases 'yyzit 'yyzize 'yyzvncsetup 'yyz-vnc-setup)
 
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;; add new functions here
