@@ -440,6 +440,7 @@
   :group 'faces
   :group 'dp-faces)
 
+;; @todo XXX Inherit from some kind of error/warning face.
 (defface dp-debug-like-face
   '(
     (((class color)
