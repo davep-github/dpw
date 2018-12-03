@@ -1,3 +1,4 @@
+# -*- mode: conf -*-
 # This, ideally, can be [include]'d first and things can be added or
 # overridden.
 
