@@ -620,7 +620,6 @@ the line is blank."
         ;; This does the right thing on a blank line.
         (dp-press-tab-key)))))
 
-
 ;;;
 ;;; perl sucks. Perl sucks. perl Sucks. Perl Sucks. PERL sucks. perl SUCKS.
 ;;; PERL SUCKS.
