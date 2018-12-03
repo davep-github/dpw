@@ -1,3 +1,4 @@
 #!/bin/bash
 source script-x
-hexdump -v -e'"%08_ax: " 16/1 "%02x " " | "' -e'16/1 "%_p" "\n"' "$@"
+: ${data_format:=%02x}
+hexdump -v -e'"%08_ax: " 16/1 "'${data_format}' " " | "' -e'16/1 "%_p" "\n"' "$@"
