@@ -4,7 +4,7 @@
 # unset SESSION_MANAGER
 # exec /etc/X11/xinit/xinitrc
 
-[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
+[ -x /etc/vnc/xstartup ] && source /etc/vnc/xstartup
 xres="$HOME/.Xresources"
 [ -r "${xres}" ] && xrdb "${xres}"
 xmodmap=$HOME/.xmodmap
