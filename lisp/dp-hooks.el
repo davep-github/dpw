@@ -365,7 +365,7 @@ For C/C++ source code.")
 (defun dp-mk-c*-debug-like-patterns ()
   (dp-mk-debug-like-patterns dp-c*-debug-like-patterns))
 
-(dp-deflocal dp-line-too-long-warning-column 74
+(dp-deflocal dp-line-too-long-warning-column 73
   "*Become annoyed (new face) when going beyond this column.
 For now this must be < the error col.")
 
@@ -504,9 +504,9 @@ Works with tabs.")
   "A font-lock element to pick out trailing whitespace.")
 
 (defvar dp-too-many-spaces-in-a-row-font-lock-element
-  '(dp-too-many-spaces-in-a-row-regexp
-    0
-    'dp-trailing-whitespace-face 'prepend)
+  (list dp-too-many-spaces-in-a-row-regexp
+	0
+	'dp-trailing-whitespace-face 'prepend)
   "A font-lock element to pick out too many spaces in a row.")
 
 (defcustom dp-use-too-many-spaces-font-p nil
@@ -1749,14 +1749,18 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
   (defvar dp-orig-igrep-regex-default igrep-regex-default
     "Original value of `igrep-regex-default'.")
 
-  (igrep-define zgrep)		; M-x zgrep
-  (igrep-find-define zgrep)	; M-x zgrep-find
+  (igrep-define zgrep)			; M-x zgrep
+  (igrep-find-define zgrep)		; M-x zgrep-find
 
   (setq igrep-regex-default
-	(function 
+	(function
 	 (lambda ()
-	   (dp-get--as-string--region-or... 
-	    :gettor dp-orig-igrep-regex-default)))))
+	   (dp-get--as-string--region-or...
+	    :gettor dp-orig-igrep-regex-default))))
+
+  (put 'igrep-files-default 'c-mode
+       (lambda () "*.[ch]"))
+  )
 
 (defadvice grep (after dp-grep activate)
   "Do a dp-push-go-back before we go finding the matches returned by `grep'.
@@ -1814,7 +1818,10 @@ Use of 'unset allows the legitimate value of nil to be used.")
                  (funcall dp-make-cscope-database-regexps-fun))
 
 (defadvice recover-file (before dp-recover-file-with-default activate)
-  "Use current buffer's file name as a default."
+  "Use current buffer's file name as a default.
+NB: FSF has a function named `recover-this-file' which does this,
+but this works in both FSF and X, and I prefer the way I did it.
+So there."
   (interactive (list (read-buffer "Recover file: " (buffer-file-name)))))
 
 (dp-deflocal dp-query-kill-buffer-p nil
@@ -1996,19 +2003,14 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
   (dp-set-compile-like-mode-error-function))
 
 (defun dp-sh-mode-hook ()
+  "Hook for shell script editing."
   (interactive)
   (local-set-key [(meta left)] 'beginning-of-defun)
   (setq dp-cleanup-whitespace-p t)
   (dp-add-line-too-long-font '(sh-font-lock-keywords
                                sh-font-lock-keywords-1
                                sh-font-lock-keywords-2))
-;;don't add anal trailing ws font   (dp-add-to-font-patterns '(sh-font-lock-keywords
-;;don't add anal trailing ws font                              sh-font-lock-keywords-1
-;;don't add anal trailing ws font                              sh-font-lock-keywords-2)
-;;don't add anal trailing ws font                             ;; @todo XXX conditionalize this properly
-;;don't add anal trailing ws font                             ;; dp-trailing-whitespace-font-lock-element
-;;don't add anal trailing ws font                            )
-
+  ;; Add trailing WS visibility only on highest font lock level?
   (dp-auto-it?))
 
 
@@ -2176,10 +2178,10 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
       ))
 
 (defun calc-delete-windows-keep (&rest bufs)
-  (pop-window-configuration))
+  (dp-pop-window-configuration))
 
 (defadvice calc (before dp-calc activate)
-  (push-window-configuration))
+  (dp-push-window-configuration))
 
 (defadvice describe-variable (around dp-desc-var activate)
   (if (Cu-memq '(0 -))
