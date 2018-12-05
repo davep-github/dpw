@@ -2576,7 +2576,10 @@ it for something \"spayshul\".
             (unless (string-match (regexp-quote fan-buf-name) fav-buf-name)
               (rename-buffer (format "%s%s" fav-buf-name fan-buf-name)))
             (message "Using fav buf: %s" fav-buf0))
-          (dmessage "point: %s, window-point: %s" (point) (window-point)))
+	  (when (not (equal (point) (window-point)))
+	    (dmessage "DIFFERENT points: point: %s, window-point: %s"
+		      (point) (window-point)))
+	  )
       ;; "else"
       ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; EA! ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
       ;; Handle new shell case. We may have a name already.
