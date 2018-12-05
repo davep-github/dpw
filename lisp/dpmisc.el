@@ -759,7 +759,8 @@ We don't use `add-to-list' because we only want to key on KEY."
 (defun dp-dmessage (format &rest rest)
   "A more easily identifiable debugging message name.  
 Use this for debug messages you'll want to remove.  Easier than
-examining all of the message calls."
+examining all of the message calls.
+Sadly, I use this all the time, even for non-debugging/tracing/info messages."
   (apply 'message format rest))
 (defalias 'dmessage 'dp-dmessage)
 
@@ -12981,9 +12982,6 @@ do. "
 
 (defvar dp-detect-read-only-file-hook nil
   "Hook to determine if a file should be read only.")
-
-(defvar dp-implied-read-only-filename-regexp-list nil
-  "File names matching this become read only.")
 
 (defun* dp-file-name-implies-readonly0-p (filename 
                                           &optional regexp-in 
