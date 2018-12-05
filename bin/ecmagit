@@ -1,0 +1,46 @@
+#!/bin/bash
+
+. script-x
+set -u
+progname="$(basename $0)"
+source eexec
+if vsetp "${eexec_program-}"    # Did the caller provide a program?
+then
+    EEXEC_SHIFT=:
+else
+    eexec_program=$(EExec_parse "$@")
+    EEXEC_SHIFT=shift
+fi
+
+for op in $eexec_program
+do
+  $op
+  ${EEXEC_SHIFT}
+done
+EExec_verbose_msg $(echo_id eexec_program)
+unset eexec_program
+#export eexec_program
+# Or export eexec_program to propagate eexec info to a called program.
+# export eexec_program
+
+if [ -n "${1-}" ]
+then
+    dir="${1-}"
+    shift
+else
+    if dir="$(git-dotgit 2>/dev/null)/.."
+    then
+	dir=$(realpath "${dir}")
+    else
+	g "${DP_DEFAULT_GIT_REPO-dpw}" >/dev/null 2>&1
+	if dir="$(git-dotgit 2>/dev/null)/.."
+	then
+	    dir=$(realpath "${dir}")
+	else
+	    # This will allow magit to prompt for a new repo.
+	    dir=
+	fi
+    fi
+fi
+EExec -y echo "(magit-status \"${dir}\")" | EExec ec -E "$@"
+
