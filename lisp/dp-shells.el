@@ -2600,10 +2600,12 @@ it for something \"spayshul\".
        (shell sh-buffer))
       (dp-visit-or-switch-to-buffer sh-buffer switch-window-func)
       ;;
+      ;; Shell sweet home.
       ;; We're in the new shell buffer now.
       ;;
-      (setq dp-shell-num pnv)
-      (setq dp-shell-isa-shell-buf-p '(dp-shell shell)
+      (setq dp-shell-num pnv
+	    show-trailing-whitespace nil
+	    dp-shell-isa-shell-buf-p '(dp-shell shell)
             dp-prefer-independent-frames-p t
             other-window-p nil
             dp-shell-buffer-save-file-name (dp-transformed-save-buffer-file-name
