@@ -621,7 +621,7 @@ tells us, and in a much better way, too."
 (defcustom dp-lgrep-grep-args "-n -i -e"
   "grep program options used by lgrep."
   :group 'dp-vars
-  :type 'string)
+  :type 'character)
 
 ;; @todo XXX Need to fix how multiple buffers sudo editing the same file are
 ;; indicated. :ike the traditional <[0-9]+>.  Fix this accordingly.
@@ -633,7 +633,7 @@ Since FSF uses tramp to sudo edit, we'd like to differentiate
 remote vs dse buffers for ibuffer categorization and
 colorization."
   :group 'dp-vars
-  :type 'string)
+  :type 'character)
 
 (dp-defcustom-local dp-unicode-ellipsis (decode-char 'ucs #x2026)
   "Character used to indicate truncated for display pasties"
@@ -670,7 +670,14 @@ WOW.  Sure is up-to-date."
   "Program to use to evaluate an RPN string.
 dc(1) is assumed so anything else used needs must be compatible."
   :group 'dp-vars
-  :type 'string)
+  :type 'character)
+
+(dp-defcustom-local dp-unicode-blank-symbol (decode-char 'ucs #x2422)
+  "AKA \"substitute blank\", used as a word separator.
+Used in BCDIC, EBCDIC, ASCII-1963 etc. as word separator.
+WOW.  Sure is up-to-date."
+  :group 'dp-vars
+  :type 'character)
 
 ;; <:new vars go here:>
 (provide 'dp-vars)
