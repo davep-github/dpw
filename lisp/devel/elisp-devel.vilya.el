@@ -591,3 +591,46 @@ dp-whitespace-violation-rulettes
   (interactive "Gfile-name: ")
   (find-file file-name)
   (dset))
+
+========================
+Wednesday November 28 2018
+--
+;; (defun ispell--\\w-filter (char)
+;;   "Return CHAR in a string when CHAR doesn't have \"word\" syntax,
+;; nil otherwise.  CHAR must be a character."
+;;   (let ((str (string char)))
+;;     (and
+;;      (not (string-match "\\w" str))
+;;      str)))
+
+(defcustom dp-preferred-filename-char-regexp "[0-9a-zA-Z_.,:%~=-]"
+  "For general cleanup of file names.  A bit over-conservative.
+A set of names should be checked for duplicates after filtering.")
+
+(defun dp-preferred-filename-char (char)
+  "Return CHAR in a string when CHAR doesn't have \"word\" syntax,
+nil otherwise.  CHAR must be a character."
+  (let ((str (string char)))
+    (and
+     (not (string-match "\\w" str))
+     str)))
+
+(defun dp-leftize (&optional movement-type frame-or-window)
+  "Move buffer in the right window to the leftmost window.
+MOVEMENT-TYPE is 'shift|'move|'rotate as per \\[dp-shift-windows]
+or 'slide as per \\[dp-slide-window-left].
+@todo XXX Fix me to use (frame-first-window) as the destination
+      of the right hand buffer rather than just shiifting or sliding."
+  (interactive "P")
+  (setq movement-type (or movement-type
+			  (and current-prefix-arg
+			       'slide)
+			  'shift))
+  (cond
+   ((memq movement-type '(shift move rotate))
+    (dp-shift-windows))
+   ((memq movement-type '(slide))
+    (dp-slide-window-left))
+   (t (dp-shift-windows)))
+  (set-buffer (frame-first-window frame-or-window))
+  (select-current-buffer))
