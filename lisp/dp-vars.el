@@ -328,8 +328,8 @@ A good thing to add to in a spec-macs file."
 
 ;; e.g. "^/home/davep/work/ll/rsvp"
 (defcustom dp-implied-read-only-filename-regexp-list '()
-  "*List of regexps to determine which files are forced to be read only.
-Each new buffer's file name as returned by `expand-file-name' is matched
+  "*Files matching any regexp in this list become read only when visited.
+Each new buffer's file name, as returned by `expand-file-name', is matched
 against the list of regexps."
   :group 'dp-vars
   :type '(repeat string))
