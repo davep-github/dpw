@@ -71,4 +71,3 @@ sig_exit ()
 #RTFM fi
 
 mpc toggle >/dev/null 2>&1
-
