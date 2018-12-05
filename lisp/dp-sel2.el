@@ -61,37 +61,30 @@
   :type 'boolean)
 
 ;; Using `dp-delete*ALL*extents' hasn't been ported to FSF Emacs yet.
-(dp-defcustom-local dp-sel2:use-squish-whitespace-face-p (dp-xemacs-p)
-  "*Controls whether or not we apply the `dp-sel2:use-squish-whitespace-face-p' to squished runs of white space."
+(dp-defcustom-local dp-sel2:delete*ALL*extents-p (dp-xemacs-p)
+  "*Can we use `dp-sel2:delete*ALL*extents' yet?"
   :group 'dp-vars
   :type 'boolean)
 
-(dp-defcustom-local dp-sel2:ellipsis (decode-char 'ucs #x2026)
-  "*Character used to indicate truncated for display pasties"
+(dp-defcustom-local dp-sel2:use-squish-whitespace-face-p
+    dp-sel2:delete*ALL*extents-p
+  "*Controls whether or not we apply the `dp-sel2:squish-whitespace-face' to squished runs of white space."
   :group 'dp-vars
-  :type 'character)
-
-(dp-defcustom-local dp-sel2:newline-glyph (decode-char 'ucs #x21b5)
-  "*Character used to replace newlines."
-  :group 'dp-vars
-  :type 'character)
-
-(dp-defcustom-local dp-sel2:white-square (decode-char 'ucs #x25a1)
-  "*Character used to replace newlines."
-  :group 'dp-vars
-  :type 'character)
+  :type 'boolean)
 
 (dp-defcustom-local dp-sel2:squish-whitespace-string
     (if dp-sel2:use-unicode-p
-	(make-string 1 dp-sel2:white-square)
+	(concat
+	 (make-string 1 dp-unicode-open-box)
+	 (make-string 1 dp-unicode-ellipsis))
       " ")
-  "*String into which we squish runs of WS sans newlines."
+  "*String into which we squish runs of (WS sans newlines)."
   :group 'dp-vars
   :type 'string)
 
 (dp-defcustom-local dp-sel2:squish-newline-string
     (if dp-sel2:use-unicode-p
-	(make-string 1 dp-sel2:newline-glyph)
+	(make-string 1 dp-unicode-newline-glyph)
       " ")
   "*String into which we squish runs of newlines."
   :group 'dp-vars
@@ -110,7 +103,7 @@
 
 (dp-defcustom-local dp-sel2:truncation-string
     (if dp-sel2:use-unicode-p
-	(make-string 1 dp-sel2:ellipsis)
+	(make-string 1 dp-unicode-ellipsis)
       "<<truncated>>")		 ; @todo XXX fix if XEmacs has Unicode
   "*String which indicates a line has been truncated."
   :group 'dp-vars
@@ -599,13 +592,15 @@ Does not insert any text."
 
 ;;
 ;; @todo make squish faces args
-(defun dp-sel2:insert-line (item &optional squish-p use-squish-face-p trunc-len)
+(defun dp-sel2:insert-line (item &optional squish-p use-squish-face-p
+				 trunc-len)
   "Insert and format the ITEM into the listing buffer."
-  ;; remove all extens from the items for display since things like
-  ;; a read-only extent can hose things.
-  ;; NB: this means that regions selected and inserted from the sel-buf will
-  ;;  not have the original text's properties.
-  ;;  Using view-item will allow text props to be retained.
+  ;; remove all extens from the items for display since things like a
+  ;; read-only extent can hose things.  NB: this means that regions
+  ;; selected and inserted from the sel-buf will not have the original
+  ;; text's properties.  Using view-item will allow text props to be
+  ;; retained.  Also, squished runs will not have the original text
+  ;; saved so that qill require getting the text from the view item.
   (when (bound-and-true-p dp-sel2:delete*ALL*extents-p)
     (dp-delete*ALL*extents nil nil item))
   (let ((start (point))
