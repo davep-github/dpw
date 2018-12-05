@@ -175,7 +175,7 @@
 ;; For now, make my old dev area RO.
 ;; @todo XXX Skip this if using dset?
 (dp-add-force-read-only-regexp
- '("/syslog.*"
+ '("\\(^\\|/\\)syslog.*"
    "/proj/ras_arch/ras/edc/brahma/"
    "/ras.local/edc/brahma/ec"
    "/ras.nfs/edc/brahma/ec"
