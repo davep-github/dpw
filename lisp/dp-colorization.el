@@ -57,13 +57,12 @@
 
 ;; From XEmacs
 ;; (set-extent-properties EXTENT PLIST)
-(defun dp-overlay-put-props (olay prop-list)
+(defun set-extent-properties (olay prop-list)
+  "Copped from XEmacs and implemented via Emacs' overlay system."
   (when prop-list
     (cl-loop for (key val) on prop-list by #'cddr
 	     do
 	     (dp-overlay-put-prop olay key val))))
-
-(defalias 'set-extent-properties 'dp-overlay-put-props)
 
 ;; (dp-make-extent FROM TO ID-PROP &rest PROPS)
 (cl-defun dp-make-color-overlay (from to id-prop color buffer
@@ -92,7 +91,7 @@
 			     buffer
 			     front-advance
 	     		     rear-advance))
-    (dp-overlay-put-props olay (append required-plist prop-list))
+    (set-extent-properties olay (append required-plist prop-list))
     olay))
 
 ;; `make-extent' is a built-in function
@@ -296,6 +295,7 @@ PROPS."
 		 (not (symbolp arg)) ; Don't roll when a color is passed in.
 		 dp-colorize-region-roll-colors)
 	(dp-colorize-roll-colors)))
+    (dp-deactivate-mark)
     extent))
 
 (defun dp-colorize-region-line-by-line (beg end color)
