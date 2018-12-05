@@ -19,8 +19,8 @@ LOG_NAME="${element}/var/log/junk/fldm.log"
 # this is not propagated into the window session.
 export SET_IN_fldm=true
 case "${1-}" in
-    -[1yYt]|[1yYt]) modprobe_t=true;  shift;;
-    -[0nN]|[0nN]) modprobe_t=false; shift;;
+    -[1yYt]|[1yYt]) modprobe_p=true;  shift;;
+    -[0nN]|[0nN]) modprobe_p=false; shift;;
 esac
 
 {
