@@ -872,7 +872,13 @@ hist_grep()
     # man pages more often?  But my memory is so,,, what's the word? Perfect.
     # That's it: perfect. One may go so far as to say I have a GMOAT.  So I
     # rarely need to [not] RTFM.
-    "${DP_HIST_GREP_GREPPER}" --directories="${directories_opt}" --with-filename \
+    # For some reason, my history files ($HISTFILE) have non-ascii in them.
+    # Not sure if it's all of them, but hgrep often says: Binary file
+    # /home/dpanarit/.../bash_history/yyz matches.  All of the files should
+    # be text, so I'll just force a -a, since seeing garbage is better than
+    # seeing nothing since at least it's noticeable and the "binary matches"
+    # could be missed.
+    "${DP_HIST_GREP_GREPPER}" -a --directories="${directories_opt}" --with-filename \
         "$@" $hist_files        # All history files
     history | $DP_HIST_GREP_GREPPER "$@" # Current history.
 #CO#     hist_cat "#" | ${DP_HIST_GREP_GREPPER:=egrep} $hist_files
