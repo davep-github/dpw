@@ -88,6 +88,7 @@ def main(args):
     # found file(s) exist(s).
     print_as_path_p = False
     do_ls_l_p = False
+    ls_options = ""
     opts, args = getopt.getopt(sys.argv[1:], 'hs:S:pP:arAqdl')
     for o, v in opts:
         if o == '-q':
@@ -115,10 +116,10 @@ def main(args):
         if o == '-r':
             canonicalize_path = real_canonicalize_path
             continue
-        if o == '-a':
+        if o == '-A':
             canonicalize_path = abs_canonicalize_path
             continue
-        if o == '-A':
+        if o == '-a':
             All_p = True
             continue
         if o == '-d':
@@ -126,6 +127,7 @@ def main(args):
             continue
         if o == '-l':
             do_ls_l_p = True
+            ls_options = "-ltr"
             continue
 
     num_not_found = 0
@@ -149,7 +151,7 @@ def main(args):
         if do_ls_l_p:
             arg_string = " ".join([canonicalize_path(s) for s in matches])
             #print >>sys.stderr, "arg_string>%s<" % arg_string
-            os.system("ls {} {}".format('-l', arg_string))
+            os.system("ls {} {}".format(ls_options, arg_string))
         else:
             print match_string
 
