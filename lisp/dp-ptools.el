@@ -133,6 +133,10 @@
       (return nil)))
   t)
 
+;;
+;; I think there is now an ignore case flag.  If so, use it.  This is a
+;; terrible hack using environment variables and a hacked version of global.
+;;
 (defun dp-gtags-set-cscope-ignore-case (ignore-case-p)
   (let (enval stat_str clr-p)
     (if ignore-case-p
@@ -164,11 +168,6 @@
 ;; -C ignore case.
 (defun dp-setup-cscope ()
   (interactive)
-
-  ;; Make gtags/global ignore case.
-  (dp-gtags-set-cscope-ignore-case dp-gtags-cscope-ignore-case-strings-p)
-  ;; Make [gtags-]cscope ignore case.
-  (cscope-caseless)
 
   (defadvice cscope-extract-symbol-at-cursor
     (around dp-cscope-extract-symbol-at-cursor activate)
@@ -280,6 +279,12 @@
     ;; something in the src tree @ nv that causes this.
     (setq cscope-perverted-index-option dp-cscope-perverted-index-option
           cscope-edit-single-match nil)
+
+  ;; Make gtags/global ignore case.
+  (dp-gtags-set-cscope-ignore-case dp-gtags-cscope-ignore-case-strings-p)
+  ;; Make [gtags-]cscope ignore case. Adds -C
+  (cscope-caseless)
+
     (defun dp-cscope-minor-mode-hook ()
       (interactive)
       (define-key cscope-list-entry-keymap [(meta ?-)]
