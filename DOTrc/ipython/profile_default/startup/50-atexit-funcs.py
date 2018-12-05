@@ -3,10 +3,11 @@ import atexit
 #import readline
 #import rlcompleter
 
-def goodbye(name, adjective):
-    print 'Goodbye, %s, it was %s to meet you.' % (name, adjective)
+# Example of how to do something at exit time.
+#def goodbye(name, adjective):
+#    print 'Goodbye, %s, it was %s to meet you.' % (name, adjective)
 
-atexit.register(goodbye, 'Dave', 'ambiguous')
+#atexit.register(goodbye, 'Dave', 'ambiguous')
 
 # historyPath = os.path.expanduser("~/.pyhistory")
 
