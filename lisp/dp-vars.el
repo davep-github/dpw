@@ -609,17 +609,24 @@ split."
 Can see it in the ibuffer and mode line, although the BG color
 tells us, and in a much better way, too."
   :group 'dp-vars
-  :type 'string)
+  :type 'character)
 
 (defcustom dp-lgrep-grep-program "egrep"
   "grep program used by lgrep."
   :group 'dp-vars
-  :type 'string)
+  :type 'character)
 
 (defcustom dp-lgrep-grep-args "-n -i -e"
   "grep program options used by lgrep."
   :group 'dp-vars
-  :type 'string)
+  :type 'character)
+
+(dp-defcustom-local dp-unicode-blank-symbol (decode-char 'ucs #x2422)
+  "AKA \"substitute blank\", used as a word separator.
+Used in BCDIC, EBCDIC, ASCII-1963 etc. as word separator.
+WOW.  Sure is up-to-date."
+  :group 'dp-vars
+  :type 'character)
 
 ;; @todo XXX Need to fix how multiple buffers sudo editing the same file are
 ;; indicated. :ike the traditional <[0-9]+>.  Fix this accordingly.
