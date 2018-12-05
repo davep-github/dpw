@@ -353,6 +353,8 @@ Ee|gnupg|       ${davep}/.gnupg/
 Ee|passs|pwds|pws|       ${davep}/.password-store/
 Ee|incoming|       /media/audio/mvsik/incoming/
 Ee|dpcd|           ${davep}/lisp/dp-themes.d/dp-challenger-deep-theme.el
+Ee|localemacs26|gitemacs26|lemacs|lem|gmacs|gem|       /home/davep/local/build/emacs-26/
+Ee|stgtut|       /home/davep/tmp/stgit/tutorial/stgit/
 ### Local Variables: ***
 ### tab-width: 2 ***
 ### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***
