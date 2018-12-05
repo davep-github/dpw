@@ -78,12 +78,6 @@
      [(control ?c) ?d ?s ?r] smerge-resolve
      [(control ?c) ?d ?s ?p] smerge-prev
      [(control ?c) ?d ?s ?n] smerge-next
-     [(control meta left)] smerge-prev
-     [(control meta right)] smerge-next
-     [(control meta ?,)] smerge-prev
-     [(control meta ?.)] smerge-next
-     [(control meta ?n)] smerge-next
-     [(control meta ?p)] smerge-prev
      [(control ?c) ?d ?s ?<] smerge-diff-base-upper
      [(control ?c) ?d ?s ?=] smerge-diff-upper-lower
      [(control ?c) ?d ?s ?>] smerge-diff-base-lower

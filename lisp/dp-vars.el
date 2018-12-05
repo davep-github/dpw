@@ -647,6 +647,16 @@ tells us, and in a much better way, too."
   :group 'dp-vars
   :type 'string)
 
+(defcustom dp-lgrep-grep-program "egrep"
+  "grep program used by lgrep."
+  :group 'dp-vars
+  :type 'string)
+
+(defcustom dp-lgrep-grep-args "-n -i -e"
+  "grep program options used by lgrep."
+  :group 'dp-vars
+  :type 'string)
+
 ;; @todo XXX Need to fix how multiple buffers sudo editing the same file are
 ;; indicated. :ike the traditional <[0-9]+>.  Fix this accordingly.
 ;; Don't include `dp-sudo-edit-tramp-local-prefix' because our method may
@@ -662,18 +672,36 @@ We need to add digits if we are dse'ing >1 file/buffer with the same name."
   :group 'dp-vars
   :type 'string)
 
-(defcustom dp-lgrep-grep-program "egrep"
-  "grep program used by lgrep."
-(defcustom dp-dc-evaluator "dc"
-  "Program to use to evaluate an RPN string.
-dc(1) is assumed so anything else used needs must be compatible."
+(dp-defcustom-local dp-unicode-ellipsis (decode-char 'ucs #x2026)
+  "Character used to indicate truncated for display pasties"
   :group 'dp-vars
-  :type 'string)
+  :type 'character)
 
-(defcustom dp-lgrep-grep-args "-n -i -e"
-  "grep program options used by lgrep."
+(dp-defcustom-local dp-unicode-newline-glyph (decode-char 'ucs #x21b5)
+  "Character used to replace newlines."
   :group 'dp-vars
-  :type 'string)
+  :type 'character)
+
+(dp-defcustom-local dp-unicode-open-box (decode-char 'ucs #x2423)
+  "Indicate a space or blank character.
+Looks like the bottom 1/4 of a square: |_| (only much shorter).
+Used in block letter handwriting at least since the 1980s when it
+is necessary to explicitly indicate the number of space
+characters (e.g. when programming with pen and paper). Used in a
+textbook (published 1982, 1984, 1985, 1988 by Springer-Verlag) on
+Modula-2, a programming language where space codes require
+explicit indication. Also used in the keypad silkscreening
+of the Texas Instruments' TI-8x series of graphing calculators.
+Named entity: &blank;"
+  :group 'dp-vars
+  :type 'character)
+
+(dp-defcustom-local dp-unicode-blank-symbol (decode-char 'ucs #x2422)
+  "AKA \"substitute blank\", used as a word separator.
+Used in BCDIC, EBCDIC, ASCII-1963 etc. as word separator.
+WOW.  Sure is up-to-date."
+  :group 'dp-vars
+  :type 'character)
 
 ;; Olde, here for reference.
 ;for ref (defcustom dp-dc-evaluator "dc"
