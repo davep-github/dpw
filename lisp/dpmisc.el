@@ -2075,9 +2075,10 @@ preceding line."
 
 (defun dp-copy-to-end-of-line (&optional beginning include-newline)
   "Copy chars from point to the end of the current line to the kill ring.
-This will *&@^*&^#-ing NOT put the text onto the clipboard.  However, a
-manual `dp-mark-to-end-of-line' -- C-c d C-k -- followed by a
-`dp-kill-ring-save' -- M-o -- does."
+XEmacs: This will *&@^*&^#-ing NOT put the text onto the
+clipboard.  However, a manual `dp-mark-to-end-of-line' -- C-c d
+C-k -- followed by a `dp-kill-ring-save' -- M-o -- does.
+Try a keyboard macro for XEmacs?"
   (interactive "P")
   (save-excursion
     (dp-mark-to-end-of-line beginning (not include-newline))
@@ -10578,7 +10579,7 @@ when the command was issued?")
       (other-window dir))))
 
 (defun dp-shift-windows-0 (dir)
-  "Move each buffer into its next window."
+  "Move each buffer into the next window, with wrap."
   (let* ((win-list (dp-non-dedicated-win-list 
                     (dp-window-list nil 'no-minibufs-at-all)))
          (win-list (if (eq dir 'left) 
@@ -10595,8 +10596,8 @@ when the command was issued?")
       (set-window-buffer w (car b)))
     (dp-other-non-dedicated-window)))
 
-(defun dp-shift-windows (num)
-  "Move each buffer into its NUM-th next window."
+(defun* dp-shift-windows (&optional (num 1))
+  "Move each buffer into the NUM-th next window, with wrap."
   (interactive "p")                     ; fsf - fix "_"
   (let ((dir (if (< num 0) 'left 'right)))
     (loop repeat num do
