@@ -23,6 +23,7 @@ See `fill-paragraph' and `fill-region' for more information."
       (call-interactively 'fill-region)
     (save-restriction
       (when (Cu-memq '(- 0))
+	(setq current-prefix-arg nil)
 	(narrow-to-region (line-beginning-position) (point-max)))
       (call-interactively 'fill-paragraph))))
 
