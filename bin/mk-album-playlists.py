@@ -6,8 +6,11 @@ import os, sys, getopt, re, string, dp_io, getopt
 
 # pick one media lib
 #import media_lib
-import media_lib_dev                    # development lib
-media_lib = media_lib_dev
+if os.environ.get("DPY_MEDIA_LIB_NODEV"):
+    import media_lib
+else:
+    import media_lib_dev                    # development lib
+    media_lib = media_lib_dev
 
 options, args = getopt.getopt(sys.argv[1:], 'vnfFdmpx')
 for o, v in options:
