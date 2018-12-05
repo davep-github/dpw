@@ -666,6 +666,13 @@ WOW.  Sure is up-to-date."
   :group 'dp-vars
   :type 'character)
 
+(dp-defcustom-local dp-unicode-blank-symbol (decode-char 'ucs #x2422)
+  "AKA \"substitute blank\", used as a word separator.
+Used in BCDIC, EBCDIC, ASCII-1963 etc. as word separator.
+WOW.  Sure is up-to-date."
+  :group 'dp-vars
+  :type 'character)
+
 (defcustom dp-dc-evaluator "dc"
   "Program to use to evaluate an RPN string.
 dc(1) is assumed so anything else used needs must be compatible."
