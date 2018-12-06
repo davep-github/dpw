@@ -1928,10 +1928,11 @@ So there."
 
 (defadvice hack-one-local-variable (before dp-hack-one-local-variable activate)
   ;; Allow user to eval things from their own files w/o asking.
-  (when dp-allow-owner-to-eval-p
-    (setq enable-local-eval (dp-user-owns-this-file-p (buffer-file-name))
-          dp-allow-owner-to-eval-p nil)
-    (message "Allowing file's owner to auto eval Local Variables.")))
+  (unless enable-local-eval
+    (setq enable-local-eval (and dp-allow-owner-to-eval-p
+				 (dp-user-owns-this-file-p (buffer-file-name))))
+    (when enable-local-eval
+      (message "Allowing file's owner to auto eval Local Variables."))))
 ; (defadvice eval-defun (around dp-eval-defun activate)
 ;   (dmessage "this-command>%s<" this-command)
 ;   (if (and (nCu-p)
