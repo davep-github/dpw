@@ -11,8 +11,7 @@
   (dp-save-orig-n-set-new 'appt-disp-window-function
 			  (cons 'dp-fsf-appt-disp-frame 'literal))
   (dp-save-orig-n-set-new 'appt-delete-window-function
-			(cons 'dp-fsf-appt-delete-frame 'literal)))
-
+			  (cons 'dp-fsf-appt-delete-frame 'literal)))
 
 (defun dp-fsf-appt-frame-delete-hook (frame)
   "Clear `dp-fsf-appt-frame' when buffer frame is deleted.
