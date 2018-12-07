@@ -365,12 +365,17 @@ For C/C++ source code.")
 (defun dp-mk-c*-debug-like-patterns ()
   (dp-mk-debug-like-patterns dp-c*-debug-like-patterns))
 
-(dp-deflocal dp-line-too-long-warning-column 73
-  "*Become annoyed (new face) when going beyond this column.
-For now this must be < the error col.")
+(dp-deflocal dp-line-too-long-warning-zone-width 6
+  "How many characters get marked with the line-too-long-warning-face.")
 
 (dp-deflocal dp-line-too-long-error-column 80
   "*Become enraged (new face) when going beyond this column.")
+
+(dp-deflocal dp-line-too-long-warning-column
+    (- dp-line-too-long-error-column
+       (or dp-line-too-long-warning-zone-width 0))
+  "*Become annoyed (new face) when going beyond this column.
+For now this must be < the error col. ??? Why ???")
 
 (defface dp-default-line-too-long-warning-face
   '(
