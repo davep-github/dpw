@@ -5559,7 +5559,9 @@ LESSER-GLOBS-TOO-P says to grep files in `dp-lgrep-lesser-globs' as well. "
                 (dp-string-join (append dp-lgrep-globs
                                         (and lesser-globs-too-p
                                              dp-lgrep-lesser-globs)))))
-  (save-some-buffers)
+  (when (dp-xemacs-p)
+    ;; FSF `grep' does this already.
+    (save-some-buffers))
   (grep command-args))
 
 ;;  FSF has an lgrep command.  I usually only use lg<RET>[rep] anyway, only
