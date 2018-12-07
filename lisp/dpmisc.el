@@ -5543,10 +5543,14 @@ LESSER-GLOBS-TOO-P says to grep files in `dp-lgrep-lesser-globs' as well. "
                   (if current-prefix-arg
                       " (and lesser)"
                     ""))
-	  (format "egrep -n -i -e %c%s%c "
-                  ?\'
-                  (dp-get--as-string--region-or...)
-                  ?\')
+	  (let* ((default-search-arg (dp-get--as-string--region-or...))
+		 (dsa-closing (if (string-equal default-search-arg "")
+				  ""
+				"' ")))
+		 (format "egrep -n -i -e %c%s%s"
+			 ?\'
+			 default-search-arg
+			 dsa-closing))
 	  'dp-grep-history)
          current-prefix-arg))
   (setq command-args 
