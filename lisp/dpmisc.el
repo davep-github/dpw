@@ -9906,7 +9906,7 @@ basically the union of the args to `find-file-noselect' and
     (if t ;; codesys
         ;; Punt if one of the optional variables are set, since I don't know
         ;; what I want to do with them.
-        (dp-find-file file-name codesys wildcards)
+        (dp-find-file file-name nil codesys wildcards)
       (dp-find-file file-name))))
 
 (defun dp-find-file-other-window (file-name &rest rest)
@@ -9919,7 +9919,7 @@ basically the union of the args to `find-file-noselect' and
       ;; Punt if one of the optional variables are set, since I don't know
       ;; what I want to do with them.
       (apply 'find-file-other-window file-name rest)
-    (dp-find-file file-name :other-window-p t)))
+    (dp-find-file file-name nil nil nil :other-window-p t)))
 
 (defun dp-force-read-only-by-file-name-regexp ()
   "Make file names matched by `dp-file-name-implies-readonly-p' READ-ONLY."
