@@ -135,3 +135,5 @@ Consider rebase, or co and branch -M
 	fontui = -family \"Ricty Diminished Discord\" -size 16 -weight normal -slant roman -underline 0 -overstrike 0
 	fontdiff = -family \"Ricty Diminished Discord\" -size 16 -weight normal -slant roman -underline 0 -overstrike 0
 	warndetachedcommit = true
+[magit]
+	extension = stgit
