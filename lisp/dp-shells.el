@@ -1568,7 +1568,7 @@ E.g. a compile, igrep or cscope results buffer.")
 
 (defvar dp-current-error-function-args nil
   "List of args to go with `dp-current-error-function'
-In order to allow nil to mean and arg of nil rather than NO args, the args
+In order to allow nil to mean an arg of nil rather than NO args, the args
 are kept in the cdr of a cons, e.g. (cons 'args-are-my-cdr real-args).  If
 `real-args' is a symbol, then there are no args... e.g. we just (funcall
 'fun), else we (apply fun (cdr args-cons)).")
