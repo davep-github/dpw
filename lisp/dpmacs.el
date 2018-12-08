@@ -375,8 +375,6 @@ the init files.")
 (autoload 'namazu "namazu" nil t)
 (when (dp-xemacs-p)
   (toggle-auto-compression 1))
-(setq browse-url-browser-function 'browse-url-opera)
-(dmessage "browse-url-browser-function: %s" browse-url-browser-function)
 
 (cond 
  ((and dp-use-gtags-p 

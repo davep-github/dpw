@@ -14,6 +14,8 @@
  '(beacon-blink-when-focused t)
  '(beacon-color "medium sea green")
  '(beacon-mode t)
+ '(browse-url-browser-function (quote browse-url-chromium))
+ '(browse-url-text-browser "w3m")
  '(cal-tex-diary t)
  '(calendar-holiday-marker (quote holiday))
  '(calendar-mark-holidays-flag t)
