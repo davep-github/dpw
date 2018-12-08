@@ -14144,10 +14144,15 @@ qualifies for whitespace eradication.")
 
 (defun dp-git-manual-entry (topic &optional other-window-p)
   (interactive "sgit help on: \nP")
-  (let ((git-man-page (concat "git-" topic)))
-    (funcall (if other-window-p '2man 'manual-entry)
-             git-man-page)))
+  (let ((man-page (concat "git-" topic)))
+    (funcall (if other-window-p '2man 'manual-entry) man-page)))
 (dp-defaliases 'hgit 'gith 'githelp 'gitman 'mang 'gman 'dp-git-manual-entry)
+
+(defun dp-stgit-manual-entry (topic &optional other-window-p)
+  (interactive "sstgit help on: \nP")
+  (let ((man-page (concat "stg-" topic)))
+    (funcall (if other-window-p '2man 'manual-entry) man-page)))
+(dp-defaliases 'hstg 'stgh 'stghelp 'stgman 'dp-stgit-manual-entry)
 
 (defun dp-git-manual-entry-other-window (topic &optional other-window-p)
   (interactive "sgit help on: \nP")
@@ -14717,6 +14722,7 @@ JFC."
                'rep-req 'repreq 'reprq 'rerepq
                'query-replace-regexp)
 
+(dp-defaliases 'bute 'brtxt 'browse-url-text-emacs)
 ;;;;; <:aliases: add-new-ones-up-there:>
 
 (require 'dp-abbrev)
