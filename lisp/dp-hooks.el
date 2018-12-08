@@ -388,11 +388,10 @@ For now this must be < the error col. ??? Why ???")
 
 (defface dp-default-line-too-long-error-face
   '(
-  (((class color) (background light))
-   (:inherit dp-default-line-too-long-warning-face
-	     :slant oblique :weight bold))
-  (t (:inherit dp-default-line-too-long-warning-face
-	       :slant oblique :weight bold)))
+    (t (:inherit dp-default-line-too-long-warning-face
+		 :slant oblique :weight bold
+		 :strike-through nil
+		 :underline (:color "warning" :style wave))))
   "Face for buffer lines which are too long."
   :group 'faces
   :group 'dp-faces)
