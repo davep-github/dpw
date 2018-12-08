@@ -4,6 +4,7 @@
 (message "load dp-magit()...")
 
 (require 'magit)
+(add-hook 'magit-mode-hook 'magit-stgit-mode)
 
 (defun dp-magit-mode-setup-hook ()
   )
