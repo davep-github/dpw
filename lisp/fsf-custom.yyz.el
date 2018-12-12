@@ -7,7 +7,7 @@
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
- '(apropos-do-all t)
+ '(apropos-do-all t t)
  '(auth-sources
    (quote
     ("secrets:Login" "~/.authinfo" "~/.authinfo.gpg" "~/.netrc")))
@@ -130,6 +130,20 @@
  '(ibuffer-help-buffer-modes
    (quote
     (help-mode apropos-mode Info-mode Info-edit-mode Man-mode)))
+ '(ibuffer-saved-filter-groups
+   (quote
+    (("dp-ibuffer-saved-filter[0]"
+      ("dired"
+       (mode . dired-mode))
+      ("source"
+       (mode . c-mode))
+      ("Python"
+       (mode . python-mode))
+      ("emacs"
+       (or
+	(name . "^\\*scratch\\*$")
+	(name . "^\\*Messages\\*$")
+	(name . "^.*\\.el")))))))
  '(ibuffer-use-other-window nil)
  '(icomplete-mode t)
  '(icomplete-separator ",")
@@ -217,7 +231,7 @@
  '(ediff-fine-diff-Ancestor ((t (:background "#009591" :foreground "black"))))
  '(ediff-odd-diff-Ancestor ((t (:background "gray40" :foreground "black"))))
  '(holiday ((t (:foreground "cornflower blue"))))
- '(isearch ((t (:background "medium spring green" :foreground "#100e23" :weight bold))))
+ '(isearch ((t (:background "medium blue" :foreground "white" :weight bold))))
  '(lazy-highlight ((t (:background "#4592df" :foreground "black"))))
  '(rectangle-preview ((t (:inherit region))))
  '(region ((t (:background "turquoise2" :foreground "black" :box (:line-width 1 :color "midnight blue") :weight bold)))))
