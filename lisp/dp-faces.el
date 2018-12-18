@@ -479,7 +479,7 @@
   '(
     (((class color)
       (background dark))
-     (:background "#270000"))
+     (:background "#1c0000"))
     (((class color) (background light))
      (:background "mistyrose")))
   "*We colourize read only buffers so we can more easily recognize them.
