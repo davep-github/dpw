@@ -600,11 +600,14 @@ If DEFAULT-VALUE is non-nil, return that if user enters an empty
       (setq num (condition-case ()
 		    (let ((minibuffer-completion-table nil))
 		      (read-from-minibuffer
-		       prompt (if num (prin1-to-string num)) nil t
-		       nil nil default-value))
+		       prompt nil nil
+		       t	      ; READ -- see read-from-minibuffer doc.
+		       nil
+		       default-value
+		       nil))
 		  (input-error nil)
 		  (invalid-read-syntax nil)
-		  (end-of-file nil)))
+		  (end-of-file default-value)))
       (or (funcall pred num) (beep)))
     num))
 
