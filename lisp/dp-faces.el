@@ -489,6 +489,18 @@ dealing with indexed colours."
   :group 'faces
   :group 'dp-faces)
 
+;;;###autoload
+(defface dp-sudo-edit-bg-face
+  '(
+    (((class color)
+      (background dark))
+     (:background "DarkCyan"))
+    (((class color) (background light))
+     (:background "pink")))
+  "Face for file being sudo edited."
+  :group 'faces
+  :group 'dp-faces)
+
 (defstruct dp-highlight-point-faces
   before                    ; Face for text before point on the current line.
   at                        ; Face for text at point on the current line.

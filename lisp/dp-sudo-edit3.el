@@ -22,14 +22,6 @@
   :type 'hook
   :group 'dp-hooks)
 
-;;;###autoload
-(defface dp-sudo-edit-bg-face
-  '((((class color) (background light)) 
-     (:background "pink"))) 
-  "Face for file being sudo edited."
-  :group 'faces
-  :group 'dp-faces)
-
 (defcustom dp-sudo-edit-sudoer "sudo"
   "*A command which allows a user to execute a command as another user
   (e.g. root).  At this time there is no support for commands that require
@@ -314,7 +306,7 @@ current."
       (goto-char point))))
 
 ;;;###autoload
-(dp-defaliases 'ddse 'dedse 'dsed 'devert 'dp-sudo-edit-devert)
+(dp-defaliases 'ddse 'dedse 'devert 'dp-sudo-edit-devert) ; 'dsed
 
 ;;;###autoload
 (defun dp-dired-sudo-edit ()
