@@ -98,6 +98,12 @@
     "^End of history; no default available$"
     "^Locate: no match for .* in database$"
     "^No file on this line$"
+    "^Attempt to delete minibuffer or sole ordinary window$"
+    "^Cannot use dp-sel2 in a dp-sel2:mode buffer$"
+    "^File is already being sudo edited$"
+    "^File is not being sudo edited$"
+    "^mew is displeased. Emacs version .* needs must be >= .*[0-9]$"
+    "^Type ’.*’ to collect IMAP folders!$"
     ;;XEmacs
     "^No preceding item in "
     "^No following item in "
@@ -280,10 +286,9 @@ See also `debug-ignored-errors'.")
   (interactive)
   (load-file "dp-errors.el"))
 
-;;  <:eval:>
-;; :(dp-ignore-errors):   ;; <<< eval with C-a C-c d C-e
-
 ;;;
 ;;;
 ;;;
 (provide 'dp-errors)
+;;  <:eval:>
+;; :(dp-ignore-errors):   ;; <<< eval with C-a C-c d C-e
