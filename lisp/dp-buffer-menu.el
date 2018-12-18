@@ -43,10 +43,14 @@ as the predicate args passed to `list-buffers-internal'.")
 
 (defun* dp-buffer-menu (&optional arg (listing-function 'buffer-menu))
   "Invert the arg to buffer-menu so that ARG is required
-to have buffer-menu show non-file buffers."
+to have buffer-menu show non-file buffers.  Most of the buffer
+menu stuff isn't FSF compatible. But this is a generic
+entry point."
   (interactive "P")
-  (setq dp-buffer-menu-invocation-arg arg)
-  (funcall listing-function (not arg)))
+  (if (not (dp-xemacs-p))
+      (call-interactively 'ibuffer)
+    (setq dp-buffer-menu-invocation-arg arg)
+    (funcall listing-function (not arg))))
 
 (defun dp-bmm-visit (&optional one-window)
   (interactive "P")
