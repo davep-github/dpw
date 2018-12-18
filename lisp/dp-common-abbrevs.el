@@ -543,6 +543,11 @@
       ;;"find . -type f -print0 | xargs -r0 grep "
       "find . -type f -print0 | xargs -r0 egrep -n ")
      dp-manual)
+    (("faff" "find . -type f -print0 | xargs -r0 fgrep -n "
+      ;;Usually it's fgrep or egrep.
+      ;;"find . -type f -print0 | xargs -r0 grep "
+      "find . -type f -print0 | xargs -r0 egrep -n ")
+     dp-manual)
     (("fafe" "find . -type f -print0 | xargs -r0 egrep -n "
       ;;Usually it's fgrep or egrep.
       ;;"find . -type f -print0 | xargs -r0 grep "
@@ -552,6 +557,17 @@
       ;;Usually it's fgrep or egrep.
       ;;"find . -type f -print0 | xargs -r0 grep "
       "find . -type f -print0 | xargs -r0 egrep -ni ")
+     dp-manual)
+    ((("tr" "tra" "tramp" "remfile" "remf" "rf") "/ssh:dpanarit@")
+     dp-manual)
+    (("cz" "cz-fp4-bdc")
+     dp-manual)
+    (("xer" "xerxes")
+     dp-manual)
+    ;; Make "/ssh:dpanarit@" a vary-able.
+    ((("rcz" "rz") "/ssh:dpanarit@cz-fp4-bdc:")
+     dp-manual)
+    (("rxer" "/ssh:dpanarit@xerxes:")
      dp-manual)
     (("cttoi" "come to think of it")
      dp-manual)
