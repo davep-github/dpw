@@ -1927,9 +1927,6 @@ So there."
 ;!needed for FSF   (interactive "P")
 ;!needed for FSF   (setq dp-called-by-split-horizontally t))
 
-(make-variable-buffer-local 'dp-allow-owner-to-eval-p)
-(setq-default dp-allow-owner-to-eval-p t)
-
 (defadvice hack-one-local-variable (before dp-hack-one-local-variable activate)
   ;; Allow user to eval things from their own files w/o asking.
   (unless enable-local-eval
@@ -2365,6 +2362,10 @@ changed."
   (interactive)
   (dp-ibuffer-bind-keys))
 
+(defun dp-ibuffer-mode-hook ()
+  (interactive)
+  (ibuffer-switch-to-saved-filter-groups "dp-ibuffer-saved-filter[0]"))
+
 (defun dp-icomplete-minibuffer-setup-hook ()
   (dp-define-local-keys
    '(
@@ -2439,6 +2440,7 @@ changed."
 (add-hook 'sh-mode-hook 'dp-sh-mode-hook)
 (add-hook 'asm-mode-hook 'dp-asm-mode-hook)
 (add-hook 'ibuffer-hook 'dp-ibuffer-hook)
+(add-hook 'ibuffer-mode-hook 'dp-ibuffer-mode-hook)
 (add-hook 'compilation-start-hook 'dp-compilation-start-hook)
 (add-hook 'icomplete-minibuffer-setup-hook 'dp-icomplete-minibuffer-setup-hook)
 (add-hook 'magit-mode-setup-hook 'dp-magit-mode-setup-hook)
