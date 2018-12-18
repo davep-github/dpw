@@ -25,20 +25,6 @@
 
 (add-to-list 'load-path dp-lisp-dir)
 
-;; @todo XXX A default.  Make it a more common one, like a lucida or
-;; some such.
-;;(message "Setting frame font...")
-;; A simple function meant to be easily used when Emacs is started.
-;; Currently doesn't help.  The way xem evolved, it has severe quoting
-;; issues.  It cannot quote host_info options with spaces.  Should rewrite it
-;; all in Python.
-(defun dp-set-frame-font-size (font-size &optional font-name)
-  (set-frame-font (format "%s-%s"
-			  (or font-name "RictyDiminishedDiscord")
-			  font-size)))
-
-(dp-set-frame-font-size "13")
-
 ;;(message "Setting frame font...done")
 
 (defun dp-lisp-subdir (sub &rest args)
