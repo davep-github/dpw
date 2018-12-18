@@ -680,6 +680,16 @@ Name is old and from the XEmacs days and is used for compatibility."
   (interactive)
   (dp-appt-initialize 1))
 
+(defmacro with-string-as-buffer-contents (str &rest body)
+  "With the contents of the current buffer being STR, run BODY.
+Point starts positioned to end of buffer.
+Returns the new contents of the buffer, as modified by BODY.
+The original current buffer is restored afterwards."
+  `(with-temp-buffer
+     (insert ,str)
+     ,@body
+     (buffer-string)))
+
 (defsubst py-point (position)
   "Returns the value of point at certain commonly referenced POSITIONs.
 POSITION can be one of the following symbols:
