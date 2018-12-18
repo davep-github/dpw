@@ -152,6 +152,16 @@ function template at point.
 			      (list 'eq property value)
 			      )))))
 
+;; (extents-at POS &optional OBJECT PROPERTY BEFORE AT-FLAG)
+;; We really don't use any of the args except.  I do a filtering process
+;; elsewhere.
+;; (auto-overlays-at-point &optional POINT PROP-TEST INACTIVE)
+(defun extents-at (pos &optional object property before at-flag)
+  (auto-overlays-at-point pos
+			  (when property
+			    (list 'eq property value))
+			  nil))
+
 (defalias 'delete-extent 'delete-overlay)
 
 ;;
