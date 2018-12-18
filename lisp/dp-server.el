@@ -175,19 +175,21 @@ start a new one."
 	       'dp-start-editing-server)
 
 (if (dp-xemacs-p)
+    ;; XEmacs version.
     (defun dp-server-running-p (&optional name)
       "Determine if the editing server process exists and is alive.
 Standard function simply checks that the process is non-nil without checking
 to see if it's alive as well, so we-uns are bettah."
       (when-and-boundp 'server-process
 	(eq (process-status server-process) 'run)))
+  ;; FSF Emacs version.
   (defun dp-server-running-p (&optional name)
-    "Start the editing server.
+    "See if the Emacs editing server is running.
 I can't find where server.el is loaded, but it seems to be after
 this code runs, so I need to check for its presence before running
 `server-running-p' to avoid an error."
     (and (featurep 'server)
-	 (server-running-p))))
+	 server-process)))
 
 (defun dp-signal-toggle-server ()
   "Toggle state of server when SIGUSR1 is caught. On -> off -> on..."
