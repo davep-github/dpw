@@ -285,12 +285,18 @@ in the and-statement.  This is a clean way to avoid such warnings.  See also
   ;; FSF cares not.
   t)
 
-(defun symbol-value-in-buffer (symbol buffer &optional unbound-value)
+(defun symbol-value-in-buffer (symbol &optional buffer unbound-value)
   (setq-ifnil buffer (current-buffer))
   (with-current-buffer buffer
     (if (not (boundp symbol))
         unbound-value)
     (symbol-value symbol)))
+
+;;
+(defun set-symbol-value-in-buffer (symbol val &optional buffer)
+  (setq-ifnil buffer (current-buffer))
+  (with-current-buffer buffer
+    (set symbol val)))
 
 (defun redisplay-frame (&optional frame no-preempt)
   ;; FSF uses not the no-preempt parameter.
