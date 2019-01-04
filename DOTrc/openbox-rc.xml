@@ -352,7 +352,7 @@
     <!-- Select and raise an email client window. Thunderbird, ATT. -->
     <keybind key="W-m">
       <action name="Execute">
-        <command>wmctrl -a "Mozilla Thunderbird"</command>
+        <command>run-iff -r -n "Thunderbird" "thunderbird"</command>
       </action>
     </keybind>
     <!-- Select and raise an IPython window. -->
