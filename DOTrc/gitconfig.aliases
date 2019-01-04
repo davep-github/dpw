@@ -136,6 +136,10 @@
         dfh = diff FETCH_HEAD
         pullff = pull --ff-only
         pullffo = pull --ff-only
+	rpull = pull --rebase=interactive
+	pullr = pull --rebase=interactive
+	ipull = pull --rebase=interactive
+	pulli = pull --rebase=interactive
         # force pull or [just] fucking pull [already]
         fpull = pull
         # Pull.  Just Pull.
