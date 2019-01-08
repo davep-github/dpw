@@ -1,0 +1,13 @@
+# Use with Kerberos authentication:
+#   ldapsearch <filter>
+#   ldapsearch -Y GSSAPI <filter>
+# Use with simple authentication:
+#   ldapsearch -x -y <password-file> <filter>
+#   secret-tool lookup user 'tiwriter@amd.com' server outlook.office365.com \
+#   | ldapsearch -x -y /dev/stdin <filter>
+URI ldaps://stordcv01.amd.com/
+BASE DC=amd,DC=com
+BINDDN CN=Writer\, Tim,OU=Users,OU=Toronto,DC=amd,DC=com
+TLS_CACERT <certificates-file>
+TLS_REQCERT demand
+SASL_SECPROPS maxssf=256
