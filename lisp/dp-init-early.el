@@ -151,8 +151,13 @@ Some are ephemeral and some are longer term."
 (defvar dp-remote-file-regexp
   (if (dp-xemacs-p)
       (concat
-       "@.*:"				; efs/ange-ftp syntax
+       ;; The trailing [^>] is to prevent matching dse files.  Hopefully,
+       ;; there aren't too many false positives.
+       "/\\(ssh\\):[^@]+@.*[^>]$"
        "\\|"
+       ;; Too loose.
+;;;       "@.*:"				; efs/ange-ftp syntax
+;;;       "\\|"
        "/\\[")				; tramp syntax [olde... update]
     ;; This regexp is only used if we can't use `tramp-tramp-file-p'
     tramp-file-name-regexp)

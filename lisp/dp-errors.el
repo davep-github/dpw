@@ -100,8 +100,10 @@
     "^No file on this line$"
     "^Attempt to delete minibuffer or sole ordinary window$"
     "^Cannot use dp-sel2 in a dp-sel2:mode buffer$"
-    "^File is already being sudo edited$"
+    "^File is already being dp-sudo-edited$"
+    "^File is already being edited by root with tramp$"
     "^File is not being sudo edited$"
+    "^I can't dse a remote file... yet$"
     "^mew is displeased. Emacs version .* needs must be >= .*[0-9]$"
     "^Type ’.*’ to collect IMAP folders!$"
     ;;XEmacs

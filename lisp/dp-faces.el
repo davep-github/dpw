@@ -494,7 +494,7 @@ dealing with indexed colours."
   '(
     (((class color)
       (background dark))
-     (:background "DarkCyan"))
+     (:background "#4f303b"))
     (((class color) (background light))
      (:background "pink")))
   "Face for file being sudo edited."

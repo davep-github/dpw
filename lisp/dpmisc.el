@@ -8295,20 +8295,26 @@ NOW is expected to be in the format returned by `current-time' (q.v.)"
 		 (nth 3 ptime)		; year
 		 nil)))			; Zone
 
-(defun dp-remote-file-p (&optional file-name)
-  "Return non-nil if FILE-NAME indicates a remote file.
-FILE-NAME defaults to `buffer-file-name' if not specified or is nil.
+(defun dp-remote-file-p (&optional name)
+  "Return non-nil if NAME indicates a remote file.
+NAME defaults to `buffer-name' if not specified or is nil.
 e.g. efs: /davep@sybil:/home/davep/.bashrc.
      tramp: /[scp/davep@tc-le5]/home/davep/tsat-bin/tc-le5.in"
   ;; The "" is for buffers with no name.  This forces them 
   ;; to be considered local.  We can revisit this if need be,
   ;; by changing the "" to "@:" which will force remoteness.
-  (let ((fname (if (stringp file-name)
-		   file-name
-		 (or (buffer-file-name) ""))))
-    (if-and-fboundp 'tramp-tramp-file-p
-	(tramp-tramp-file-p fname)
-      (string-match dp-remote-file-regexp fname))))
+  (let ((fname (if (stringp name)
+		   name
+		 ;; For FSF, the file name and the buffer name are very
+		 ;; different:
+		 ;; /ssh:cz-fp4-bdc:/etc/fstab
+		 ;; vs
+		 ;; fstab</ssh:cz-fp4-bdc:>
+		 (or buffer-file-name ""))))
+    (cond
+     ((dp-sudo-editing-file-p fname) nil)
+     (t
+      (string-match dp-remote-file-regexp fname)))))
 
 (defun dp-not-remote-file-p (&optional file-name)
   (not (dp-remote-file-p file-name)))
@@ -9016,7 +9022,7 @@ I like to be more precise in certain cases; such as when deleting things.")
   (interactive "sname regexp: \nP")
   (with-case-folded dp-kill-these-file-buffers-case-fold-search
     (when all-p
-      (concat name-regexp "<[0-9]+>"))
+      (concat name-regexp "\\(\\(<.*>\\)*\\)"))
     (dp-kill-chosen-buffers
      (dp-choose-buffers-file-names
       name-regexp (not skip-dired-buffers-p)))))
@@ -14691,13 +14697,22 @@ JFC."
 
   (dp-defaliases 'yyzit 'yyzize 'yyzvncsetup 'yyz-vnc-setup)
 
+(defun dp-dse-file-p (name)
+  (string-match dp-dse-buffer-id-regexp name))
+
+;; Roll this into the ...-once check???
+(defun dp-sudo-editing-file-p (file-name)
+  (string-match (concat "^"
+			(regexp-quote dp-sudo-edit-tramp-local-prefix))
+		file-name))
+
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;; add new functions here
 ;;; add new functions above
 ;;; above there be functions.
 ;;;
 ;;; @todo Write a loop which advises functions with simple push go back 
-;;; commands.  
+;;; commands.
 
 (defadvice replace-string (before dp-replace-string activate)
   (dp-push-go-back "replace string"))

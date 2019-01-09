@@ -26,40 +26,71 @@ should be of the form `#x...' where `x' is not a blank or a tab, and
   :type 'string
   :group 'python)
 
-(defcustom dp-sudo-edit-tramp-local-prefix "/sudo:root@localhost:"
-  "Used to tell tramp(q.v) to use sudo to open and edit a file.")
+(defvar dp-sudo-editing-file nil)
+
+(defun dp-dse-this-buffer-once (name)
+  (cond
+   ((dp-dse-file-p name)
+    (error "File is already being dp-sudo-edited"))
+   ((dp-sudo-editing-file-p name)
+    (error "File is already being edited by root with tramp"))))
 
 (defun dp-stolen-sudo-edit (&optional dse-this-buffer-p)
   "Edit a file as root. With a prefix or DSE-THIS-BUFFER-P non-nil
 edit the current file as root. Will prompt for a file to visit if
 current buffer is not visiting a file."
   (interactive "P")
-  (let (file-name)
-    (if (and dse-this-buffer-p buffer-file-name)
-	(find-alternate-file (concat dp-sudo-edit-tramp-local-prefix
-				     buffer-file-name))
-      (find-file (read-file-name "Find file(as root): "
-				 dp-sudo-edit-tramp-local-prefix
-				 nil
-				 nil
-				 default-directory)))))
+  (dp-dse-this-buffer-once (buffer-file-name))
+  (if (and dse-this-buffer-p buffer-file-name)
+      (find-alternate-file (concat dp-sudo-edit-tramp-local-prefix
+				   buffer-file-name))
+    (find-file (read-file-name "Find file(as root): "
+			       dp-sudo-edit-tramp-local-prefix
+			       nil
+			       nil
+			       default-directory)))
+  (dp-buffer-bg-set-color 'dp-sudo-edit-bg-face))
+
 (defalias 'dse-tramp 'dp-stolen-sudo-edit)
 
 (defun dse (&optional file-name)
   "Edit a file as root; `dp sudo edit'.
 The stolen one above is slow when using completion."
-  (interactive "Gfile name: ")
+  (interactive "GFind file (as root): ")
+
+  ;; Can't do this because it changes the file name and then we can't tell
+  ;; that we are already sudo editing the file.  Using buffer local vars had
+  ;; wierd problems, but I'll try again.
   (find-file file-name)
+  ;; this op is fast since we know the name and we're local.
   (dset)
-  )    ; this op is fast since we know the name and we're local.
+  )
 
 (defun dset ()
   "`dse this' sudo edit the file in the current buffer."
   (interactive)
+  (when (dp-remote-file-p)
+    (error "I can't dse a remote file... yet"))
   (dp-stolen-sudo-edit 'dse-this-buffer)
   (unless (string-match "<dse>\\(<[0-9]+>\\)?$" (buffer-name))
     (rename-buffer (concat (buffer-name) "<dse>"))
     (rename-uniquely)))
+
+(defun dsed (&optional sudead-buf)
+  "Stop sudo editing this buffer."
+  (interactive)
+  (setq-ifnil sudead-buf (current-buffer))
+  (let ((point (point))
+	(file-to-load (symbol-value-in-buffer
+		       'dp-sudo-editing-file sudead-buf)))
+    (unless file-to-load
+      (error "File is not being sudo edited"))
+    (when (buffer-modified-p)
+      (error "Buffer is modified. Save or revert first."))
+
+    (find-file file-to-load)
+    (set-symbol-value-in-buffer 'dp-sudo-editing-file nil)
+    (kill-buffer sudead-buf)))
 
 (require 'autoload)
 ;; "See Emacs' def of generated-autoload-file."
@@ -67,7 +98,6 @@ The stolen one above is slow when using completion."
 (setq-default generated-autoload-file
 	      (expand-file-name "auto-dp-autoloads.el"
 				dp-lisp-dir))
-
 
 ;; stolen
 (defun dp-update-autoloads ()
