@@ -1,3 +1,19 @@
+## Original from Tim's EMail.
+# # Use with Kerberos authentication:
+# #   ldapsearch <filter>
+# #   ldapsearch -Y GSSAPI <filter>
+# # Use with simple authentication:
+# #   ldapsearch -x -y <password-file> <filter>
+# #   secret-tool lookup user 'tiwriter@amd.com' server outlook.office365.com \
+# #   | ldapsearch -x -y /dev/stdin <filter>
+# URI ldaps://stordcv01.amd.com/
+# BASE DC=amd,DC=com
+# BINDDN CN=Writer\, Tim,OU=Users,OU=Toronto,DC=amd,DC=com
+# TLS_CACERT <certificates-file>
+# TLS_REQCERT demand
+# SASL_SECPROPS maxssf=256
+########################################################################
+
 # Use with Kerberos authentication:
 #   ldapsearch <filter>
 #   ldapsearch -Y GSSAPI <filter>
@@ -5,9 +21,10 @@
 #   ldapsearch -x -y <password-file> <filter>
 #   secret-tool lookup user 'tiwriter@amd.com' server outlook.office365.com \
 #   | ldapsearch -x -y /dev/stdin <filter>
-URI ldaps://stordcv01.amd.com/
+URI ldap://stordcv01.amd.com/ ldaps://stordcv01.amd.com/
 BASE DC=amd,DC=com
-BINDDN CN=Writer\, Tim,OU=Users,OU=Toronto,DC=amd,DC=com
-TLS_CACERT <certificates-file>
+##BINDDN CN=Panariti\, David,OU=Users,OU=BDC,DC=amd,DC=com
+BINDDN CN=Apps_quantumsecure,OU=Users,DC=amd,DC=com
+##TLS_CACERT <certificates-file>
 TLS_REQCERT demand
 SASL_SECPROPS maxssf=256
