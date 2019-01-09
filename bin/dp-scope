@@ -158,7 +158,7 @@ do
   EExec -0 "${DP_CSCOPE_PROGRAM}" \
 	-d ${EXTAGTREE_DASH_Q} \
 	${ignore_case_opt} \
-	-L -"${field_num}" "$@" \
+	-L -"${field_num}" -- "$@" \
       | EExec "${POST_PROCESSOR}"
   popd >& /dev/null
 done  
