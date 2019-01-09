@@ -17,6 +17,27 @@ cleanup_sep='!!!! Do not Forget New Kernel Cleanup (try: new-kernel-fini) !!!!'
 timestamp="$(dp-std-timestamp).$$"
 : ${log_dir:="$PWD/,bk.log,"}
 mkdir -p "${log_dir}" || exit 1
+
+#
+# find the build root.
+#
+[ -d "${linuxdevroot}" ] || {
+    linuxdevroot=$(find-up Documentation) && {
+	linuxdevroot="$(dirname ${linuxdevroot})"
+    }
+}
+
+if test -d "${linuxdevroot}"
+then
+    cd "${linuxdevroot}"
+    test -d Documentation
+fi || {
+   echo 1>&2 "${linuxdevroot} doesn't look like a linux source dir."
+   exit 1
+}
+
+echo "Building in>$(pwd)<"
+
 build_dir=$(basename $(realpath .))
 bw_log="$log_dir/bw.out-$build_dir.$timestamp"
 bk_log="$log_dir/bk.out-$build_dir.$timestamp"
@@ -174,38 +195,61 @@ cleanup()
     rm -f $stat_files
 }
 
-exit_sig()
+print_error()
 {
-    rc=$1
-    cleanup
-    echo -n 1>&2 "
-EXIT: "
+    local rc="${1}"
+    shift
+    echo 1>&2 "print_error: rc>$rc<"
     if [ "$rc" = 0 ]
     then
-    echo 1>&2 "SUCCESS"
+	echo "SUCCESS"
     else
-        echo 1>&2 "FAILURE: $rc"
+        echo -n "FAILURE: "
+	if ((rc > 127))
+	then
+	    echo "SIGNAL: $((rc - 128))"
+	else
+	    echo "rc: $rc"
+	fi
     fi
-    exit $rc
 }
+
+caught_signal()
+{
+    local rc="$?"; shift
+    local exit_msg="${@}"
+
+    # Do this before anything that could possibly fail.
+    cleanup
+    #set -x
+    echo 1>&2 "
+caught_signal: ${exit_msg}"
+    print_error 1>&2 "${rc}"
+    exit "${rc}"
+}
+
+for sig in 2 3 4 5 6 7 8 15
+do
+      trap "caught_signal $sig, $0: sig: $sig, exiting." "${sig}"
+
+  #trap "echo; echo $0: Got sig $sig, exiting.; cleanup; exit $((128+$sig))" \
+  #    $sig
+done
 
 # Useful traps
 on_exit()
 {
     local rc="$?"
-    local signum="${1-}"; shift
+    echo 1>&2 "on_exit: rc>$rc<"
+    local exit_msg="${@}"; shift
 
-    if [ "$rc" = 0 ]
-    then
-    echo 1>&2 "SUCCESS"
-    else
-        echo 1>&2 "FAILURE: $rc"
-    fi
-
-    echo "on_exit: rc: $rc; ${trap_exit_msg}"
+    echo 1>&2 "
+EXIT: rc: $rc; exit_msg>${exit_msg}<"
+    print_error 1>&2 "${rc}"
 }
-trap 'on_exit' 0
-
+###trap 'on_exit' 0
+sig_exit=EXIT
+trap "on_exit $0: sig: ${sig_exit}, exiting." "${sig_exit}"
 
 # Verify each command char.
 #action_set="[$all_actions]"
@@ -253,12 +297,6 @@ this file:'
     fi
 }
 
-for sig in 2 3 4 5 6 7 8 15
-do
-  trap "echo; echo $0: Got sig $sig, exiting.; cleanup; exit $((128+$sig))" \
-      $sig
-done
-
 bk_freebsd()
 {
     USER=theoden make buildkernel
@@ -292,11 +330,20 @@ mk_target()
         sudo=sudo
         shift
     fi
+
+    #missing exit code {
+    #missing exit code 	echo; echo; echo -n "********** "
+    #missing exit code 	read -e -p "Waiting..."
+    #missing exit code 	echo "REPLY>${REPLY}<"
+
+    #missing exit code 	ret="${REPLY:-99}"
+    #missing exit code 	echo "exit ${ret}'ing."; exit "${ret}"
+    #missing exit code } 1>&2
     target="$@"
     target_name="${target}"
     if [ "${target}" = 'kernel' ]
     then
-        # make kernel doesn't do what it used to.  
+        # make kernel doesn't do what it used to.
         # However, make w/o target DTRT.
         target_name="~kernel~"
         target=
