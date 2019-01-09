@@ -288,7 +288,7 @@ e(
         'family': 'amd_family',
         'comment': 'Main dev box. Ryzen 8-core.  Not for testing, in general, unless absolutely necessary.',
         'xem_opts': ('-eval (dp-2-v-or-h-windows) '
-                     + '-geometry 178x59+460+0'),
+                     + '-geometry 180x66+460+0'),
         # Not particularly attractive.
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         ###"""xem-xft-font""": '''"Inconsolata-12"''',
