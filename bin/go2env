@@ -461,11 +461,18 @@ aliases>%s<""", line_num, line, selector, aliases)
                                      "ctl": ctl,
                                      "src_file_name": file_name}
                 except Exception, e:
-                    dp_io.eprintf("Exception: %s\n", e)
+                    dp_io.eprintf("Exception caught in %s(): %s\n",
+                                  dp_utils.function_name(), e)
+                    dp_io.eprintf("line>%s<\n", line)
                     dp_io.eprintf("name>%s<\n", name)
                     dp_io.eprintf("val>%s<\n", val)
                     dp_io.eprintf("Skipping...\n")
-                    # Keep on keepin' on.
+                    ## Keep on keepin' on.
+                    ## @todo XXX Even after an error, we'll use the compiled
+                    ## dictionary which won't repeat the error and it may
+                    ## fall through the cracks.  Should either not save the
+                    ## compiled version or save an error log and print it
+                    ## when we run.
 
 #####################################################################
 def expand_file(file, selector, aliases):
