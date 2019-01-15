@@ -743,7 +743,7 @@ with the previous query results."
                             (unless (eq xgtags-show-paths 'relative)
                               "--absolute")
                             tagname))))
-         (message "global-args>%s<" global-args)
+         (message "xgtags--call-global(): global-args>%s<" global-args)
          (with-xgtags-environment
            (when xgtags-update-db
              (xgtags--update-db xgtags-rootdir))
