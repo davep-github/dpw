@@ -201,6 +201,9 @@ Bind any keys in KEYS via `dp-define-keys'."
 ;; for the record.
 (global-set-key [f7] 'dp-toggle-kbd-macro-def)
 (global-set-key [f8] 'dp-call-last-kbd-macro)
+;; F8 is used by some vnc clients as a menu key.
+(global-set-key [(meta f7)] 'dp-call-last-kbd-macro)
+
 (global-set-key [(meta ?[)] 'dp-find-matching-paren)
 (global-set-key [(meta ?])] 'dp-pop-go-back)
 (global-set-key [(control meta ?])] 'dp-goto-last-edit)
