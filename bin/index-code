@@ -195,12 +195,14 @@ source dp-getopt+.sh
 
 while (($# > 0))
 do
-  # do. e.g.  $OPTION_ARG=$2; shift;; to process options with arguments.
+  # do. e.g.  shift; OPTION_ARG=$2;; to process options with arguments.  Do
+  # shift first so there's a better chance of a following assignment lining
+  # up.
   EExec_verbose_msg "Main option loop, \$1>$1<"
   case $1 in
       -I) iterate_individually_p=t;;
-      --iterate-and-do-dot|-iid) iterate_individually_p=t;
-                                 iterate_and_do_dot_p=t;;
+      --iterate-and-do-dot|--iid|--idd) iterate_individually_p=t;
+					iterate_and_do_dot_p=t;;
       # Don't actually execute stuff
       -V) cscope_indexer_verbose='-v';;
       # -d is really just verbosity
@@ -381,11 +383,11 @@ then
     for d in $dirs
     do
       # Must make sure only one proc writes to each files file.
-      (cd "$d" && do_taggin) &
+      (EExec cd "$d" && EExec do_taggin) &
     done
     wait
 else
-    do_taggin $dirs
+    EExec do_taggin $dirs
 fi
 
 if true_p "${read_only_index_files-}"
