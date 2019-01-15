@@ -77,7 +77,7 @@
     "^No more grep hits"
     "^Moved past last grep hit$"
     "^No grep hit here$"
-    "^The tags stack is empty$"
+    "The tags stack is empty"
     "man .* not found"
     "Listing directory failed"
     "\"No entries containing .*\""
@@ -205,6 +205,7 @@
     file-supersession
     "^Cannot switch buffers in a dedicated window$"
     "^No customizable group, face, or option matching (.*)$"
+    "^You can’t edit this part of the Custom buffer$"
     ;; ediff errors
     "^Errors in diff output. Diff output is in "
     "^Hmm... I don't see an Ediff command around here...$"
