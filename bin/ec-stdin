@@ -107,6 +107,7 @@ Usage_error()
 : ${output_file_name=}
 : ${editor=ec}
 : ${nuke_file_p=t}
+: ${size_check='+1M'}
 : ${mktemp_pattern="emacs-stdin-$USER.XXXXXXX"}
 
 # Usage variable usage:
@@ -125,10 +126,12 @@ mktemp(1) ${mktemp_pattern}
 There are optional things you can do with it.
 "
 # Example of arg parsing.
-option_str="o:t:w"
+option_str="o:t:ws:"
 long_options=("tmpfile:" "tempfile:"
 "wait" "sync"
-"nuke" "rm" "del")
+"nuke" "rm" "del"
+"keep" "preserve"
+"size-check:" "sc:")
 source dp-getopt+.sh || exit 1
 while (($# > 0))
 do
@@ -141,7 +144,8 @@ do
       -o|-t|--tempfile|--tmpfile) shift; output_file_name="${1}";;
       -w|--wait|--sync) editor="ec-w";;
       --nuke|--rm|--del|--dispose|--clean) nuke_file_p=t;;
-      --keep) nuke_file_p=;;
+      --keep|--preserve) nuke_file_p=;;
+      -s|--size-check|--sc) shift; size_check="${1}";;
 
       # Help!
       --help) Usage; exit 0;;
@@ -155,13 +159,27 @@ do
 done
 
 [ -z "${output_file_name}" ] && {
-    output_file_name=$(mktemp "${mktemp_pattern}" --tmpdir) || {
+    output_file_name=$(mktemp "${mktemp_pattern}" --tmpdir="${TMPDIR}") || {
         echo "mktemp(1) failed, rc: $?."
         exit 1
     } 1>&2
 }
 
-if EExecVerbose_p 
+size_check_too_big_p()
+{
+    local sizer="${1}"; shift
+    local file_name="${1}"; shift
+
+    # find $PWD -path $(rp amdgpu_fb.c) -size +10k
+    local result=$(EExec -y find $(realpath "${TMPDIR}") \
+			 -maxdepth 1 \
+        		 -path $(realpath "${file_name}") \
+			 -size "${sizer}" | head -n1)
+    EExec_verbose_echo_id result
+    [ -n "${result}" ]
+}
+
+if false # EExecVerbose_p
 then
     output_file_name="/dev/null"
     echo 1>&2 "Verbose mode; discarding output."
@@ -169,11 +187,33 @@ else
     EExec cat - > "${output_file_name}"
 fi
 
+EExec_verbose_echo_id size_check
+if [ -n "${size_check}" ]
+then
+    size_check_too_big_p "${size_check}" "${output_file_name}" && {
+	EExec_verbose_msg "in too big territory."
+	exec < /dev/tty
+	while :
+	do
+	    EExec_verbose_msg "reading."
+	    size=$(stat --format=%s "${output_file_name}")
+	    read -e -p "File>${output_file_name}< is pretty big (${size_check}, size: ${size}), continue [y/N]? "
+	    EExec_verbose_echo_id REPLY
+	    case ${REPLY} in
+		""|[0nNqQxX]) echo "exiting."; exit 1;;
+		[yY1t]) break;;
+		*) echo "Can't handle ${REPLY}.  Try again.";;
+	    esac
+	done
+    }
+fi
+
 EExec "${editor}" "${output_file_name}"
 
+EExec_verbose_echo_id output_file_name
 [ -n "${nuke_file_p}" ] && {
-    rm -f "${output_file_name}" || {
+    EExec -y rm -f "${output_file_name}" || {
         echo "rm ${output_file_name} failed, rc: $?."
         exit 1
     } 1>&2
-}      
+}
