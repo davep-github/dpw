@@ -70,6 +70,7 @@
         ld = log --decorate
         ld5 = log --decorate -n 5
         ldn = log --decorate -n
+        log1 = log -n 1 --name-status
         log5 = log -n 5
         l5 = log -n 5
         log11 = log -n 11
@@ -110,6 +111,8 @@
         lns = log --name-status
         lls = log --name-status
         lf = log --name-status
+	lf1 = log --name-status -n 1
+        lns1 = log --name-status -n 1
         lfn = log --name-status -n
 
         logfull = log --pretty=medium

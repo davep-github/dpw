@@ -10,6 +10,8 @@
 (autoload 'mew-send "mew" "send mail with mew" nil t)
 (autoload 'mew-user-agent-compose "mew" nil t)
 
+(setq mew-rc-file "dp-dot-mew")
+
 ;;
 ;; some mh mailers like to use the name "draft" for drafts and barf
 ;; if draft is not a plain file.
@@ -24,27 +26,29 @@
 (global-set-key "\C-cr" 'dp-mew)
 (global-set-key "\C-xm" 'mew-send)
 
-;; add us to the internet menu and default menubar
-(defvar dp-mew-menubutton-guts
-  [ mew :active (fboundp 'mew)]
-  "Menu button to activate mew.")
-;;
-;; the button name of `Mew' works out well since it is also the 
-;; name of the menu in the summary buffer, so our button is replaced
-;; with mew's own submenu.  This is the one place where we don't
-;; want or need a Mew button.
-(defvar dp-mew-menubar-button (vconcat ["Mew"] dp-mew-menubutton-guts)
-  "Mew menubar button.")
-(defvar dp-mew-menu-button 
-  (vconcat ["%_Read Mail (Mew)"] dp-mew-menubutton-guts)
-  "Mew internet menu button.")
+(when (dp-xemacs-p)
+  ;; add us to the internet menu and default menubar
+  (defvar dp-mew-menubutton-guts
+    [ mew :active (fboundp 'mew)]
+    "Menu button to activate mew.")
+  ;;
+  ;; the button name of `Mew' works out well since it is also the
+  ;; name of the menu in the summary buffer, so our button is replaced
+  ;; with mew's own submenu.  This is the one place where we don't
+  ;; want or need a Mew button.
+  (defvar dp-mew-menubar-button (vconcat ["Mew"] dp-mew-menubutton-guts)
+    "Mew menubar button.")
+  (defvar dp-mew-menu-button
+    (vconcat ["%_Read Mail (Mew)"] dp-mew-menubutton-guts)
+    "Mew internet menu button.")
 
-;; add to Tools->Internet menu
-(add-menu-button '("Tools" "Internet") dp-mew-menu-button
-		 "Read Mail 1 (VM)...")
+  ;; add to Tools->Internet menu
+  (add-menu-button '("Tools" "Internet") dp-mew-menu-button
+		   "Read Mail 1 (VM)...")
 
-;; add to menu-bar
-(add-menu-button nil dp-mew-menubar-button nil default-menubar)
+  ;; add to menu-bar
+  (add-menu-button nil dp-mew-menubar-button nil default-menubar)
+  )
 
 (setq mew-conf-path "~/MH")
 (setq mew-mail-path "~/MH")

@@ -8,16 +8,7 @@
 
 ;; try to load w3m for inline viewing of html
 ;; this is also used for browsing in emacs, so it is autoloaded elsewhere.
-(condition-case einfo
-    (progn
-      (require 'mew-w3m)
-      ;; @todo do we want to turn this off so selecting spam messages is
-      ;; less risky and time consuming?
-      ;;(setq mew-prog-html '(mew-mime-text/html-w3m nil nil))
-      ;;;;;;;(setq mew-prog-html '(mew-mime-text/html-w3m nil nil))
-      (message "mew-w3m loaded."))
-  (t
-   (message "problem loading mew-w3m>%s<" einfo)))
+(dp-optionally-require 'mew-w3m nil 'verbose)
 
 ;; view images with xli
 (setq mew-prog-image/*-ext "xli")
@@ -376,25 +367,27 @@ mew-prog-grep-opts."
   (local-set-key [(control meta d)] 'dp-mail-fwd-spam)
   (local-set-key [(meta ?-)] 'dp-bury-or-kill-buffer)
 
-  (make-local-variable 'current-menubar)
-  (setq current-menubar (copy-tree current-menubar))
-  (add-menu-button nil 
-		   ["SPAM" dp-mail-fwd-spam 
-		    :active (and 
-			     (fboundp (quote dp-mail-fwd-spam))
-			     dp-mail-fwd-spam-idle)] 
-		   nil current-menubar)
+  ;; @todo XXX See if there's a way to do something like this with FSF.
+  (when (dp-xemacs-p)
+    (make-local-variable 'current-menubar)
+    (setq current-menubar (copy-tree current-menubar))
+    (add-menu-button nil
+		     ["SPAM" dp-mail-fwd-spam
+		      :active (and
+			       (fboundp (quote dp-mail-fwd-spam))
+			       dp-mail-fwd-spam-idle)]
+		     nil current-menubar)
 
-  (add-menu-button nil 
-		   ["Inc" mew-summary-retrieve 
-		    :active (fboundp (quote mew-summary-retrieve))] 
-		   nil current-menubar)
-  (add-menu-button nil 
-		   ["X-Spam" dp-mail-handle-spam
-		    :active (and 
-			     (fboundp (quote dp-mail-handle-spam))
-			     dp-mail-fwd-spam-idle)] 
-		   nil current-menubar)
+    (add-menu-button nil
+		     ["Inc" mew-summary-retrieve
+		      :active (fboundp (quote mew-summary-retrieve))]
+		     nil current-menubar)
+    (add-menu-button nil
+		     ["X-Spam" dp-mail-handle-spam
+		      :active (and
+			       (fboundp (quote dp-mail-handle-spam))
+			       dp-mail-fwd-spam-idle)]
+		     nil current-menubar))
   ;;(message "YOPP!")
   (message "mew-summary-mode-hook done"))
 

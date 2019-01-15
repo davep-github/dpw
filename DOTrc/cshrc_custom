@@ -70,7 +70,7 @@ setenv PATH `addtopath.pl PATH -"$HOME/bin"`
 
 setenv LESSKEY /usr/bin/.lesskey
 setenv LESSOPEN_PROG lesspipe.sh
-setenv LESS "-R -MM -X --ignore-case"
+setenv LESS "--RAW-CONTROL-CHARS --LONG-PROMPT --no-init --ignore-case"
 setenv LESSOPEN "|lesspipe.sh %s"
 setenv PURPOSE '-[tcsh std env]- '
 

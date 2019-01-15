@@ -95,34 +95,43 @@ refiles if in `+inbox' and forwards if in `+spamcan'.")
 ;; load up the best mailer we can...
 ;; A good spec-macs variable.
 ;;(setq-ifnil-or-unbound dp-mailer 'gnus)
-(case dp-mailer
-  ('mu4e
-   (require 'dp-mu4e)
-   (dp-setup-mu4e)
-   )
-  ((and (eq dp-mailer 'mew)
-	(not (string< emacs-version "20.7.1")))
-   ;; try for mew mailer package.  An error will
-   ;; cause condition-case to yield nil, causing a
-   ;; load of mhe.
-   (load "dp-mew"))
-  ;; for now, only other mailer is mhe and that is the
-  ;; default, too, so return nil which causes the
-  ;; default to be loaded.
-  ('gnus
-   ;; This is a pretty safe default... it's quite popular... despite great
-   ;; suckage as a mailer.
-   (global-set-key [(control ?c) ?r] 'gnus)
-   (global-set-key [(control ?x) ?m] 'gnus-msg-mail)
-   ;; This works better if called before gnus is started.  Need to fix that.
-   ;;(require 'dp-dot-gnus)
-   )
-  ('vm
-   (require 'vm)
-   (setq dp-current-mailer-config-file (dp-lisp-subdir "dp-dot-vm.el"))
-   (global-set-key [(control ?c) ?r] 'vm)
-   (global-set-key [(control ?x) ?m] 'vm-mail))
+(defun dp-mail-setup-mailer (&optional mailer)
+  (setq-ifnil mailer dp-mailer)
+  (case dp-mailer
+    ('mu4e
+     (require 'dp-mu4e)
+     (dp-setup-mu4e)
+     )
+    ('mew
+     (let ((min-macs-ver "20.7.1"))
+       (when (string< emacs-version min-macs-ver)
+	 (error "mew is displeased. Emacs version %s needs must be >= %s"
+		emacs-version
+		min-macs-ver)))
+     ;; try for mew mailer package.  An error will
+     ;; cause condition-case to yield nil, causing a
+     ;; load of mhe.
+     (require 'dp-mew)
+     )
+    ;; for now, only other mailer is mhe and that is the
+    ;; default, too, so return nil which causes the
+    ;; default to be loaded.
+    ('gnus
+     ;; This is a pretty safe default... it's quite popular... despite great
+     ;; suckage as a mailer.
+     (global-set-key [(control ?c) ?r] 'gnus)
+     (global-set-key [(control ?x) ?m] 'gnus-msg-mail)
+     ;; This works better if called before gnus is started.  Need to fix that.
+     ;;(require 'dp-dot-gnus)
+     )
+    ('vm
+     (require 'vm)
+     (setq dp-current-mailer-config-file (dp-lisp-subdir "dp-dot-vm.el"))
+     (global-set-key [(control ?c) ?r] 'vm)
+     (global-set-key [(control ?x) ?m] 'vm-mail))
+    )
   )
+(dp-mail-setup-mailer)
 
 (if (and (boundp 'dp-mailer-setup)
 	 dp-mailer-setup)
