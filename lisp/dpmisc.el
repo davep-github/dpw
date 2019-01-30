@@ -6047,7 +6047,9 @@ When beginning a sequence, (point) is saved.  This can be pushed onto
   "Make an extent.  Give it a property of ID-PROP for easy identification.
 Also give it the property 'dp-extent-p with value t.
 In addition, add the PLIST from PROPS to the extent."
-  (let ((extent (make-extent from to buffer-or-string))
+  (let ((extent (make-extent (or from (point-min))
+			     (or to (point-max))
+			     buffer-or-string))
 	(prop-list (append (list id-prop t 
                                  'dp-extent-id id-prop 
                                  'dp-extent-p t) 
