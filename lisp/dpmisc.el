@@ -240,7 +240,6 @@ If you hate things like '1 things fucked up' vs '1 thing...', use this."
 (defun dp-mk-save-orig-symbol-name (sym-name)
   (dp-ify-symbol sym-name "save-orig-n-set-new>"))
 
-
 (defun* dp-save-orig-n-set-new (var-sym new-var-value &optional docstring
                                 &rest new-var-value-args)
   "Save a copy of VAR-SYM's value iff it hasn't already been backed up.
