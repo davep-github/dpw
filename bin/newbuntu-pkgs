@@ -245,6 +245,7 @@ links
 lynx
 elinks
 links2
+ethtool
 # <:new packages:>
 )
 
