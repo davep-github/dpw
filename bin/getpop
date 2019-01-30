@@ -15,13 +15,12 @@
 #export TMPDIR=/home/davep/tmp
 #export TEMPDIR=/home/davep/tmp
 
-: ${getmaildir:=/yokel/yokel/etc/getmail}
-#: ${getmaildir:=/home/davep}
+: ${getmail_dir:=$HOME/.rc}
 : ${getmail_host:=verizon}
 
-#######getmail_dot_rc="${getmaildir}/${getmail_host}.rc"
+#######getmail_dot_rc="${getmail_dir}/${getmail_host}.rc"
 ## Until root drive is fixed.
-getmail_dot_rc="${getmaildir}/${getmail_host}.rc"
+getmail_dot_rc="${getmail_dir}/${getmail_host}.rc"
 
 # The LL VPN disables all other network connections, so we don't check and
 # end up w/tons of error messages.
@@ -34,7 +33,7 @@ else
 	-v \
 	-v \
 	-r "$getmail_dot_rc" \
-	--getmaildir="${getmaildir}" \
+	--getmaildir="${getmail_dir}" \
 	"$@" \
         | tee /dev/tty $HOME/tmp/getpop| egrep -q '^[[:space:]]+0 messages' && {
         exit 2
