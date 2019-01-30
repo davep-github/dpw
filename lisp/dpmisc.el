@@ -221,7 +221,6 @@ If you hate things like '1 things fucked up' vs '1 thing...', use this."
 (defun dp-mk-save-orig-symbol-name (sym-name)
   (dp-ify-symbol sym-name "save-orig-n-set-new>"))
 
-
 (defun* dp-save-orig-n-set-new (var-sym new-var-value &optional docstring
                                 &rest new-var-value-args)
   "Save a copy of VAR-SYM's value iff it hasn't already been backed up.
@@ -266,6 +265,7 @@ Always return the value from NEW-VAR-VALUE.
 
 (dp-defaliases 'dp-fset-preserve 'dp-save-orig-n-set-new)
 
+;;!<@todo need to restore original doc string, too. 
 (defun dp-get-orig-value (var-sym)
   (symbol-value (dp-mk-save-orig-symbol-name var-sym)))
 
@@ -6081,10 +6081,12 @@ When beginning a sequence, (point) is saved.  This can be pushed onto
   "Make an extent.  Give it a property of ID-PROP for easy identification.
 Also give it the property 'dp-extent-p with value t.
 In addition, add the PLIST from PROPS to the extent."
-  (let ((extent (make-extent from to buffer-or-string))
-	(prop-list (append (list id-prop t
-                                 'dp-extent-id id-prop
-                                 'dp-extent-p t)
+  (let ((extent (make-extent (or from (point-min))
+			     (or to (point-max))
+			     buffer-or-string))
+	(prop-list (append (list id-prop t 
+                                 'dp-extent-id id-prop 
+                                 'dp-extent-p t) 
                            props)))
     ;; put a unique property on every extent we make for easy,
     ;; positive identification of all of our extents
@@ -6102,6 +6104,7 @@ In addition, add the PLIST from PROPS to the extent."
     ;;   ;; overlay whose value is the text property object.
     ;;   ;; Actually it's just a (beg, end) thing.
     ;;   )
+    extent
     ))
 
 (defun dp-make-extent (from to id-prop &rest props)
@@ -8347,16 +8350,16 @@ NOW is expected to be in the format returned by `current-time' (q.v.)"
 		 (nth 3 ptime)		; year
 		 nil)))			; Zone
 
-(defun dp-remote-file-p (&optional name)
-  "Return non-nil if NAME indicates a remote file.
-NAME defaults to `buffer-name' if not specified or is nil.
+(defun dp-remote-file-p (&optional file-name)
+  "Return non-nil if FILE-NAME indicates a remote file.
+FILE-NAME defaults to `buffer-file-name' if not specified or is nil.
 e.g. efs: /davep@sybil:/home/davep/.bashrc.
      tramp: /[scp/davep@tc-le5]/home/davep/tsat-bin/tc-le5.in"
   ;; The "" is for buffers with no name.  This forces them 
   ;; to be considered local.  We can revisit this if need be,
   ;; by changing the "" to "@:" which will force remoteness.
-  (let ((fname (if (stringp name)
-		   name
+  (let ((fname (if (stringp file-name)
+		   file-name
 		 ;; For FSF, the file name and the buffer name are very
 		 ;; different:
 		 ;; /ssh:cz-fp4-bdc:/etc/fstab
