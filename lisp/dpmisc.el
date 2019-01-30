@@ -5424,8 +5424,8 @@ Usta, but not anymore."
   ;; Messages must be different or the logger merges them so it seems
   ;; that it only adds "done" so we never see the first message.
   ;;;(message "+snuggling(x: %s, y: %s)..." x y)
-  (set-frame-position frame (or x -1) (or y 0))
-  ;;;(message "-snuggling(x: %s, y: %s)...done" x y)
+  (set-frame-position frame (setq x (or x -1)) (setq y (or y 0)))
+  (message "-snuggling(x: %s, y: %s)...done" x y)
   )
 
 (defun dp-laptop-rc ()
