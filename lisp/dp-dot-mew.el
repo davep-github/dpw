@@ -329,7 +329,7 @@ mew-prog-grep-opts."
   ;; do the grep search on message bodies.
   (mew-summary-search-mark 1))
 
-;; @todo move key-binding into a one-shot hook
+;; @todo move key-bindings into a one-shot hook, or a load hook.
 (defun dp-mew-summary-mode-hook ()
   "Bind keys my way.  These are more compatible with other mailers."
   (interactive)
@@ -342,8 +342,6 @@ mew-prog-grep-opts."
   (local-set-key "\em" (kb-lambda	; M-m for mark w/*
 			 (mew-summary-review)
 			 (mew-summary-next-line)))
-
-					
   (local-set-key "k" 'dp-mew-summary-delete) ; del with no visit of next msg
   (local-set-key "\C-k" 'dp-mew-summary-delete) ; del with no visit of next msg
   (local-set-key "\ek" 'dp-mew-summary-delete) ; del with no visit of next msg
