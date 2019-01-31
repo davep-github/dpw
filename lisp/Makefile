@@ -21,7 +21,7 @@ ppp_files = \
 	/usr/yokel/sbin/named.stop
 
 #	elmaliases 
-	#rhosts 
+#	rhosts 
 dbstuff dbs db myinfo: mailiases \
 	go.emacs \
 	mutt-aliases \
