@@ -158,7 +158,8 @@ Make it buffer local since there can be >1 minibuffers.")
     ;;; FSF change 
     (if (dp-xemacs-p)
 	(define-key map [(control tab)] 'dp-minibuffer-complete)
-      (define-key map [tab] 'minibuffer-complete))
+      (dp-define-key-list map '([tab] minibuffer-complete
+				[(meta up)] switch-to-completions)))
     (define-key map [(meta ?=)] (kb-lambda 
                                    (enqueue-eval-event 
                                     'eval
@@ -1513,17 +1514,16 @@ isearch while the region is active to locate the end of the region."
   (dp-func-or-kill-buffer 'Info-last))
 
 (defun dp-Info-mode-hook ()
-  (dp-define-local-keys `([(meta ?-)] dp-bury-or-kill-buffer
-			  [(?/)] isearch-forward
-			  [(shift tab)] Info-prev-reference
-			  [(iso-left-tab)] Info-prev-reference
-			  [?q] ,(kb-lambda
-				    (if Info-history
-					(Info-history-back)
-				      (dp-bury-or-kill-buffer)))
-			  [?Q] Info-exit
-			  [?D] Info-directory
-			  [?d] Info-top)))
+  (let ((info-top-func (if (dp-xemacs-p)
+			   'Info-top
+			 'Info-top-node)))
+    (dp-define-local-keys `([(meta ?-)] dp-bury-or-kill-buffer
+			    [(?/)] isearch-forward
+			    [(shift tab)] Info-prev-reference
+			    [(iso-left-tab)] Info-prev-reference
+			    [?Q] Info-exit
+			    [?D] Info-directory
+			    [?d] ,info-top-func))))
 
 (defvar dp-time-mail-has-dung nil
   "Flag saying bell has rung since new mail has arrived")

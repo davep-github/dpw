@@ -13023,11 +13023,17 @@ MODE-LOCAL-LIST-P allows restricting regexps on a per-mode basis."
   (or (dp-file-name-implies-readonly0-p filename regexp-in mode-local-list-p)
       (run-hook-with-args 'dp-detect-read-only-file-hook filename)))
 
-(defun dp-local-set-keys (key-func-list)
-  "Do a bunch of `local-set-key' ops @ once.
-KEY-FUNC-LIST looks like \(key def key def...\)."
+(defun dp-define-key-list (map key-func-list)
+  "KEY-FUNC-LIST is a quoted list of '(key func...)."
   (loop for (key def) on key-func-list by 'cddr do
-    (local-set-key key def)))
+	(define-key map key def)))
+
+(defun dp-local-set-keys (key-func-list)
+  "See `dp-define-key-list' for KEY-FUNC-LIST definition."
+  (let ((map (current-local-map)))
+    (unless map
+      (error "dp-local-set-keys: No local key map"))
+    (dp-define-key-list map key-func-list)))
 
 (defun dp-call-pred-or-pred (pred &rest pred-args)
   (if (functionp pred)
