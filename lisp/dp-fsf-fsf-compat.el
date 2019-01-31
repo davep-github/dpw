@@ -536,6 +536,42 @@ This is an XEmacs compatibility function."
   (with-current-buffer (or buffer (current-buffer))
     (syntax-ppss-depth (syntax-ppss))))
 
+;; Stolen.  And hacked.
+;; There is a bug that is triggered when an existing autoloads file or buffer
+;; exists.  Therefore, we make sure neither exists.
+;; Lines like this cause "Invalid time specification" errors:
+;; ;;;### (autoloads nil "dp-colorize-ifdefs" "../../../flisp/dp-colorize-ifdefs.el"
+;; ;;;;;;  "9feca494c3c7c1203d08fdf4b748482a")
+;; ;;;;;;  ----------------------------------
+;; These are OK:
+;; ;;;;;;  "../../../flisp/dp-colorization-xemacs.el" (0 0 0 0))
+;; ;;;;;;                                             ---------
+;; I don't know why they are generated differently. Doesn't seem to be:
+;; 1) File date
+;; 2) File owner/group.
+;;
+(defun* dp-update-autoloads ()
+  "Call `update-autoloads-from-directories' on my local lisp directory."
+  (interactive)
+  (let ((autoloads-buf (dp-get-buffer (file-name-nondirectory
+				       generated-autoload-file))))
+    (when autoloads-buf
+      (when (buffer-modified-p autoloads-buf)
+	(message "Buffer for %s is modified and it's gotta go."
+		 (buffer-file-name autoloads-buf))
+	(return-from dp-update-autoloads nil))
+      (kill-buffer autoloads-buf)))
+  (when (file-exists-p generated-autoload-file)
+    (if (y-or-n-p (format
+		       "Autoload file (%s) exists, and that is bad.  Remove it?"
+		       generated-autoload-file))
+	(delete-file generated-autoload-file)
+      (message "Fine. You deal it.")
+      (return-from dp-update-autoloads nil)))
+  (update-directory-autoloads (file-name-directory generated-autoload-file))
+  (byte-compile-file generated-autoload-file)
+  generated-autoload-file)
+
 (defalias 'string-to-int 'string-to-number)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

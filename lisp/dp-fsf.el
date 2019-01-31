@@ -99,12 +99,5 @@ The stolen one above is slow when using completion."
 	      (expand-file-name "auto-dp-autoloads.el"
 				dp-lisp-dir))
 
-;; stolen
-(defun dp-update-autoloads ()
-  "Call `update-autoloads-from-directories' on my local lisp directory."
-  (interactive)
-  (update-directory-autoloads (file-name-directory generated-autoload-file))
-  (byte-compile-file generated-autoload-file))
-
 (provide 'dp-fsf)
 (message "dp-fsf loading...done.")
