@@ -6,7 +6,7 @@
       (magit-make-margin-overlay
        (concat (and details
                     (concat (propertize (truncate-string-to-width
-                                         (or author "")
+                                         (or AUTHOR "")
                                          details-width
                                          nil ?\s (make-string 1 magit-ellipsis))
                                         'face 'magit-log-author)
@@ -913,3 +913,634 @@ Based (now, loosely) on kill-word from simple.el"
       ;; if we're not killing white space, kill a word in
       ;; the requested direction.
       (delete-region (point) (progn (forward-word arg) (point))))))
+
+========================
+Monday December 10 2018
+--
+(cl-pe
+    '(dp-current-next-error-function-advisor
+     'dp-gtags-select-tag-one-window
+     'dp-gtags-next-thing)
+)
+
+ad-add-advice is an autoloaded compiled Lisp function in ‘advice.el’.
+
+(ad-add-advice FUNCTION ADVICE CLASS POSITION)
+
+Add a piece of ADVICE to FUNCTION’s list of advices in CLASS.
+
+ADVICE has the form (NAME PROTECTED ENABLED DEFINITION), where
+NAME is the advice name; PROTECTED is a flag specifying whether
+to protect against non-local exits; ENABLED is a flag specifying
+whether to initially enable the advice; and DEFINITION has the
+form (advice . LAMBDA), where LAMBDA is a lambda expression.
+
+If FUNCTION already has a piece of advice with the same name,
+then POSITION is ignored, and the old advice is overwritten with
+the new one.
+
+If FUNCTION already has one or more pieces of advice of the
+specified CLASS, then POSITION determines where the new piece
+goes.  POSITION can either be ‘first’, ‘last’ or a number (where
+0 corresponds to ‘first’, and numbers outside the valid range are
+mapped to the closest extremal position).
+
+If FUNCTION was not advised already, its advice info will be
+initialized.  Redefining a piece of advice whose name is part of
+the cache-id will clear the cache.
+
+(defun dp-dummy-to-be-advised ()
+)
+dp-dummy-to-be-advised
+
+;;; (defadvice FUNCTION ARGS &rest BODY)
+(cl-pe
+'(defadvice dp-dummy-to-be-advised (around dp-test-crap activate)
+  (fun1 a1)
+  )
+)
+
+
+(progn
+(ad-add-advice 'dp-dummy-to-be-advised
+	       '(dp-test-crap nil t (advice lambda nil (fun1 a1)))
+	       'around
+	       'nil)
+(ad-activate 'dp-dummy-to-be-advised nil)
+'dp-dummy-to-be-advised)nil
+
+
+
+  ;; (defmacro dp-current-next-error-function-advisor (fun next-thing
+  ;; 							&optional next-thing-arg)
+  ;;   (let* ((efunc (eval fun))
+  ;;          (next-thing-arg (or (eval next-thing-arg) efunc))
+  ;;          (enext-thing (eval next-thing)))
+  ;;     `(defadvice ,efunc
+  ;;       (before next-error-function-stuff activate)
+  ;;       (dp-set-current-error-function ,next-thing
+  ;;                                      nil
+  ;;                                      (quote ,next-thing-arg)))))
+
+
+;advisor (dp-current-next-error-function-advisor
+;advisor  'dp-gtags-select-tag-one-window
+;advisor  'dp-gtags-next-thing)
+
+(cl-pe
+    '(dp-current-next-error-function-advisor
+     'dp-gtags-select-tag-one-window
+     'dp-gtags-next-thing)
+)
+
+(progn
+  (ad-add-advice 'dp-gtags-select-tag-one-window
+		 '(next-error-function-stuff nil t (advice lambda nil (dp-set-current-error-function (quote dp-gtags-next-thing) nil (quote dp-gtags-select-tag-one-window))))
+		 'before
+		 'nil)
+  (ad-activate 'dp-gtags-select-tag-one-window nil)
+  'dp-gtags-select-tag-one-window)
+
+
+
+;;; (ad-add-advice FUNCTION ADVICE CLASS POSITION)
+(progn
+  (ad-add-advice 'dp-gtags-select-tag-one-window
+		 '(next-error-function-stuff nil t (advice lambda nil (dp-set-current-error-function (quote dp-gtags-next-thing) nil (quote dp-gtags-select-tag-one-window))))
+		 'before
+		 'nil)
+  (ad-activate 'dp-gtags-select-tag-one-window nil)
+  'dp-gtags-select-tag-one-window)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defmacro dp-current-error-functions-advisor (before/after
+					      next-fun
+					      next-thing
+					      prev-fun
+					      prev-thing
+					      &optional
+					      next-thing-arg
+					      prev-thing-arg)
+  (let* ((next-efunc (eval next-fun))
+	 (next-thing-arg (or (eval next-thing-arg) next-efunc))
+	 (enext-thing (eval next-thing))
+	 (prev-efunc (eval prev-fun))
+	 (prev-thing-arg (or (eval prev-thing-arg) prev-efunc))
+	 (eprev-thing (eval prev-thing)))
+    `(defadvice ,next-efunc
+	 (,before/after next/prev-error-function-stuff activate)
+       (dp-set-current-next-error-function ,next-thing
+					   nil
+					   (quote ,next-thing-arg)))
+    `(defadvice ,prev-efunc
+	 (,before/after next/prev-error-function-stuff activate)
+       (dp-set-current-prev-error-function ,prev-thing
+					   nil
+					   (quote ,prev-thing-arg)))))
+
+
+
+(defmacro dp-current-error-functions-advisor (before/after
+					      next-fun
+					      next-thing
+					      prev-fun
+					      prev-thing
+					      &optional
+					      next-thing-arg
+					      prev-thing-arg)
+  `(progn
+    (dp-current-next-error-function-advisor
+     ,next-fun
+     ,next-thing
+     ,next-thing-arg)
+
+    (dmessage "pooh-bah")
+
+    (dp-current-prev-error-function-advisor
+      ,prev-fun
+      ,prev-thing
+      ,prev-thing-arg)
+    ))
+
+
+
+(cl-pe
+    '(dp-current-next-error-function-advisor
+     'dp-gtags-select-tag-one-window
+     'dp-gtags-next-thing)
+)
+
+(cl-pe
+'(dp-current-error-functions-advisor
+  before
+  'dp-gtags-select-tag-one-window
+  'dp-gtags-next-thing
+  'dp-gtags-select-tag-one-window
+  'dp-gtags-prev-thing)
+)
+
+
+(progn
+  (progn
+    (ad-add-advice 'dp-gtags-select-tag-one-window
+		   '(next/prev-error-function-stuff nil t (advice lambda nil (dp-set-current-next-error-function (quote dp-gtags-next-thing) nil (quote dp-gtags-select-tag-one-window))))
+		   'before
+		   'nil)
+    (ad-activate 'dp-gtags-select-tag-one-window nil)
+    'dp-gtags-select-tag-one-window)
+  (dmessage "pooh-bah")
+  (progn
+    (ad-add-advice 'dp-gtags-select-tag-one-window
+		   '(next/prev-error-function-stuff nil t (advice lambda nil (dp-set-current-prev-error-function (quote dp-gtags-prev-thing) nil (quote dp-gtags-select-tag-one-window))))
+		   'before
+		   'nil)
+    (ad-activate 'dp-gtags-select-tag-one-window nil)
+    'dp-gtags-select-tag-one-window))nil
+(
+(defun ldkjfldkjf()
+  (uaua)
+  )
+
+"pooh-bah"nil
+))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq ibuffer-saved-filter-groups
+      (quote (("wtfu"
+	       ("source" (mode . c-mode))
+	       ("dired" (mode . dired-mode))
+	       ("perl" (mode . cperl-mode))
+	       ("Python" (mode . python-mode))
+	       ("erc" (mode . erc-mode))
+	       ("planner" (or
+			   (name . "^\\*Calendar\\*$")
+			   (name . "^diary$")
+			   (mode . muse-mode)))
+	       ("emacs" (or
+			 (name . "^\\*scratch\\*$")
+			 (name . "^\\*Messages\\*$")
+			 (name . "/.*\\.el")))
+	       ("gnus" (or
+			(mode . message-mode)
+			(mode . bbdb-mode)
+			(mode . mail-mode)
+			(mode . gnus-group-mode)
+			(mode . gnus-summary-mode)
+			(mode . gnus-article-mode)
+			(name . "^\\.bbdb$")
+			(name . "^\\.newsrc-dribble")))))))
+
+(cl-pp ibuffer-saved-filter-groups)
+
+(("dp-ibuffer-saved-filter[0]" ("source" (mode . c-mode))
+("dired" (mode . dired-mode))
+("perl" (mode . cperl-mode))
+("Python" (mode . python-mode))
+("erc" (mode . erc-mode))
+("planner" (or (name . "^\\*Calendar\\*$")
+	       (name . "^diary$")
+	       (mode . muse-mode)))
+("emacs" (or (name . "^\\*scratch\\*$")
+	     (name . "^\\*Messages\\*$")
+	     (name . "/.*\\.el")))
+("gnus" (or (mode . message-mode)
+	    (mode . bbdb-mode)
+	    (mode . mail-mode)
+	    (mode . gnus-group-mode)
+	    (mode . gnus-summary-mode)
+	    (mode . gnus-article-mode)
+	    (name . "^\\.bbdb$")
+	    (name . "^\\.newsrc-dribble")))))nil
+
+
+
+((("dp-ibuffer-saved-filter[0]" ("dired" (mode . dired-mode))
+   ("source" (mode . c-mode))
+   ("emacs" (or (name . "^\\*scratch\\*$")
+		(name . "^\\*Messages\\*$")
+		(name . "/.*\\.el")))
+   ("Python" (mode . python-mode)))))nil
+
+
+
+(defun ccccjdkljflj()
+)
+(
+
+(assoc "dp-ibuffer-saved-filter[0]" ibuffer-saved-filter-groups)
+nil
+
+
+'(("dp-ibuffer-saved-filter[0]"
+   ("dired" (mode . dired-mode))
+   ("source" (mode . c-mode))
+   ("emacs" (or (name . "^\\*scratch\\*$")
+		(name . "^\\*Messages\\*$")
+		(name . "/.*\\.el")))
+   ("Python" (mode . python-mode))))
+
+
+========================
+Wednesday December 12 2018
+--
+(defun dp-read-number (prompt &optional integers-only default-value)
+  "Read a number from the minibuffer, prompting with PROMPT.
+If optional second argument INTEGERS-ONLY is non-nil, accept
+ only integer input.
+If DEFAULT-VALUE is non-nil, return that if user enters an empty
+ line."
+  (let ((pred (if integers-only 'integerp 'numberp))
+	num)
+    (while (not (funcall pred num))
+      (setq num (let ((minibuffer-completion-table nil))
+		  (read-from-minibuffer
+		   prompt
+		   nil
+		   nil
+		   t			; READ arg.
+		   nil nil default-value)))
+      (or (funcall pred num) (beep)))
+    num))
+
+========================
+Thursday December 13 2018
+--
+(string-match "<dse>\\(<[0-9]+>\\)*" "rpc<dse><2>" )
+3
+
+(setq ibuffer-saved-filter-groups
+      (quote
+       (("dp-ibuffer-saved-filter[0]"
+	 ("dse"
+	  (name . "<dse>\\(<[0-9]+>\\)*"))
+	 ("dired"
+	  (mode . dired-mode))
+	 ("source"
+	  (mode . c-mode))
+	 ("Python!"
+	  (mode . python-mode))
+	 ("Remote"
+	  (name . "^/.[^:]+:[^@]+@[^:]+:"))
+	 ("emacs"
+	  (or
+	   (name . "^\\*scratch\\*$")
+	   (name . "^\\*Messages\\*$")
+	   (name . "^.*\\.el")))))))
+
+
+(case dp-mailer
+    ('mu4e
+     (require 'dp-mu4e)
+     (dp-setup-mu4e)
+     )
+    ('mew
+     ;; try for mew mailer package.  An error will
+     ;; cause condition-case to yield nil, causing a
+     ;; load of mhe.
+     (setq dp-require-mew-done 'notyet)
+     (require 'dp-mew)
+     (setq dp-require-mew-done t)
+     )
+    ;; for now, only other mailer is mhe and that is the
+    ;; default, too, so return nil which causes the
+    ;; default to be loaded.
+    ('gnus
+     ;; This is a pretty safe default... it's quite popular... despite great
+     ;; suckage as a mailer.
+     (global-set-key [(control ?c) ?r] 'gnus)
+     (global-set-key [(control ?x) ?m] 'gnus-msg-mail)
+     ;; This works better if called before gnus is started.  Need to fix that.
+     ;;(require 'dp-dot-gnus)
+     )
+    ('vm
+     (require 'vm)
+     (setq dp-current-mailer-config-file (dp-lisp-subdir "dp-dot-vm.el"))
+     (global-set-key [(control ?c) ?r] 'vm)
+     (global-set-key [(control ?x) ?m] 'vm-mail))
+    )
+
+========================
+Tuesday January 15 2019
+--
+Debugger entered--Lisp error: (error "Invalid time specification")
+  time-less-p("9feca494c3c7c1203d08fdf4b748482a" (23323 15756 447945 551000))
+  update-directory-autoloads("/home/dpanarit/flisp/")
+  dp-update-autoloads()
+  funcall-interactively(dp-update-autoloads)
+  call-interactively(dp-update-autoloads record nil)
+  command-execute(dp-update-autoloads record)
+  execute-extended-command(nil "dp-update-autoloads" nil)
+  funcall-interactively(execute-extended-command nil "dp-update-autoloads" nil)
+  call-interactively(execute-extended-command nil nil)
+  command-execute(execute-extended-command)
+
+bubba-theme.el:
+Result: (nil 1 54930 30101 (23614 5011 111807 308000) (23323 15756 407942 250000) (23323 15756 407942 250000) 4742 "-rw-r--r--" t 29419968 2065)
+
+(nth 5 ' (nil 1 54930 30101 (23614 5011 111807 308000) (23323 15756 407942 250000) (23323 15756 407942 250000) 4742 "-rw-r--r--" t 29419968 2065))
+(23323 15756 407942 250000)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  
+error: "Invalid time specification"
+
+dp-colorize-ifdefs.el:
+  (nil 1 54930 30101 (23614 4287 910078 484000) (23323 15756 447945 551000) (23323 15756 447945 551000) 4775 "-rw-r--r--" t 29360364 2065)
+(nth 5 '  (nil 1 54930 30101 (23614 4287 910078 484000) (23323 15756 447945 551000) (23323 15756 447945 551000) 4775 "-rw-r--r--" t 29360364 2065)
+)
+(23323 15756 447945 551000)
+
+  (nth 5 '(nil 1 54930 30101 (23614 4287 910078 484000) (23323 15756 447945 551000) (23323 15756 447945 551000) 4775 "-rw-r--r--" t 29360364 2065))
+(23323 15756 447945 551000)
+
+========================
+Thursday January 17 2019
+--
+(cl-pe '(define-derived-mode
+  edebug-x-instrumented-function-list-mode tabulated-list-mode "Edebug Instrumented functions"
+  "Major mode for listing instrumented functions"
+  (setq tabulated-list-entries 'edebug-x-list-instrumented-functions)
+  (setq tabulated-list-format
+        [("Instrumented Functions" 50 nil)
+         ("File" 150 nil)])
+  (tabulated-list-init-header))
+)
+
+(progn
+  (defvar edebug-x-instrumented-function-list-mode-hook nil)
+  (if (get 'edebug-x-instrumented-function-list-mode-hook
+	   'variable-documentation)
+      nil
+    (put 'edebug-x-instrumented-function-list-mode-hook
+	 'variable-documentation
+	 "Hook run after entering Edebug Instrumented functions mode.\nNo problems result if this variable is not bound.\n`add-hook' automatically binds it.  (This is true for all hook variables.)"))
+  (if (boundp 'edebug-x-instrumented-function-list-mode-map)
+      nil
+    (put 'edebug-x-instrumented-function-list-mode-map
+	 'definition-name
+	 'edebug-x-instrumented-function-list-mode))
+  (with-no-warnings (defvar edebug-x-instrumented-function-list-mode-map
+		      (make-sparse-keymap)))
+  (if (get 'edebug-x-instrumented-function-list-mode-map
+	   'variable-documentation)
+      nil
+    (put 'edebug-x-instrumented-function-list-mode-map
+	 'variable-documentation
+	 (purecopy "Keymap for `edebug-x-instrumented-function-list-mode'.")))
+  (progn
+    (defvar edebug-x-instrumented-function-list-mode-syntax-table)
+    (if (boundp 'edebug-x-instrumented-function-list-mode-syntax-table)
+	nil
+      (put 'edebug-x-instrumented-function-list-mode-syntax-table
+	   'definition-name
+	   'edebug-x-instrumented-function-list-mode)
+      (defvar edebug-x-instrumented-function-list-mode-syntax-table
+	(make-syntax-table)))
+    (if (get 'edebug-x-instrumented-function-list-mode-syntax-table
+	     'variable-documentation)
+	nil
+      (put 'edebug-x-instrumented-function-list-mode-syntax-table
+	   'variable-documentation
+	   (purecopy "Syntax table for `edebug-x-instrumented-function-list-mode'."))))
+  (progn
+    (defvar edebug-x-instrumented-function-list-mode-abbrev-table)
+    (if (boundp 'edebug-x-instrumented-function-list-mode-abbrev-table)
+	nil
+      (put 'edebug-x-instrumented-function-list-mode-abbrev-table
+	   'definition-name
+	   'edebug-x-instrumented-function-list-mode)
+      (defvar edebug-x-instrumented-function-list-mode-abbrev-table
+	(progn
+	  (define-abbrev-table 'edebug-x-instrumented-function-list-mode-abbrev-table
+	    nil)
+	  edebug-x-instrumented-function-list-mode-abbrev-table)))
+    (if (get 'edebug-x-instrumented-function-list-mode-abbrev-table
+	     'variable-documentation)
+	nil
+      (put 'edebug-x-instrumented-function-list-mode-abbrev-table
+	   'variable-documentation
+	   (purecopy "Abbrev table for `edebug-x-instrumented-function-list-mode'."))))
+  (put 'edebug-x-instrumented-function-list-mode
+       'derived-mode-parent
+       'tabulated-list-mode)
+  nil
+  (defalias 'edebug-x-instrumented-function-list-mode
+    (function
+     (lambda nil
+       "Major mode for listing instrumented functions\n\nIn addition to any hooks its parent mode `tabulated-list-mode' might have run,\nthis mode runs the hook `edebug-x-instrumented-function-list-mode-hook', as the final or penultimate step\nduring initialization.\n\n\\{edebug-x-instrumented-function-list-mode-map}"
+       (interactive)
+       (progn
+	 (make-local-variable 'delay-mode-hooks)
+	 (let ((delay-mode-hooks t))
+	   (tabulated-list-mode)
+	   (setq major-mode 'edebug-x-instrumented-function-list-mode)
+	   (setq mode-name "Edebug Instrumented functions")
+	   (progn
+	     (if (get 'tabulated-list-mode 'mode-class)
+		 (put 'edebug-x-instrumented-function-list-mode
+		      'mode-class
+		      (get 'tabulated-list-mode 'mode-class)))
+	     (if (keymap-parent edebug-x-instrumented-function-list-mode-map)
+		 nil
+	       (set-keymap-parent edebug-x-instrumented-function-list-mode-map
+				  (current-local-map)))
+	     (let ((parent (char-table-parent edebug-x-instrumented-function-list-mode-syntax-table)))
+	       (if (and parent (not (eq parent (standard-syntax-table))))
+		   nil
+		 (set-char-table-parent edebug-x-instrumented-function-list-mode-syntax-table
+					(syntax-table))))
+	     (if (or (abbrev-table-get edebug-x-instrumented-function-list-mode-abbrev-table
+				       :parents)
+		     (eq edebug-x-instrumented-function-list-mode-abbrev-table
+			 local-abbrev-table))
+		 nil
+	       (abbrev-table-put edebug-x-instrumented-function-list-mode-abbrev-table
+				 :parents
+				 (list local-abbrev-table))))
+	   (use-local-map edebug-x-instrumented-function-list-mode-map)
+	   (set-syntax-table edebug-x-instrumented-function-list-mode-syntax-table)
+	   (setq local-abbrev-table edebug-x-instrumented-function-list-mode-abbrev-table)
+	   (setq tabulated-list-entries 'edebug-x-list-instrumented-functions)
+	   (setq tabulated-list-format [("Instrumented Functions" 50 nil) ("File" 150 nil)])
+	   (tabulated-list-init-header)))
+       (run-mode-hooks 'edebug-x-instrumented-function-list-mode-hook)))))nil
+
+
+========================
+Wednesday January 23 2019
+--
+
+(defun
+
+(defmacro dp-loading (&rest body)
+  `(progn
+    (message "loading %s..." (buffer-file-name))
+    ,@body
+    (message "loaded  %s..." (buffer-file-name))))
+(put 'dp-loading 'lisp-indent-function 'dp-loading-indent-function)
+dp-loading-indent-function
+
+22
+
+0
+
+0
+
+(symbol-plist 'cond)
+(byte-compile byte-compile-cond gv-expander #[385 "\203 \301\302\303\"!\203  \304\305\306\307\310\311\312!\313\"\314\315%\"B\207\316\317!\304\305\306\307\320\311\312!\321\"\322\315%\"B\323!\203? \211\202B \324\325!\326\327DD\306\307\330\311\312!\331\"\332\333%\"=\203` \211\202g \334DC\"\266\203\207" [lexical-binding macroexp-small-p dummy #[257 "\300\207" [dummy] 2 "\n\n(fn _)"] cond mapcar make-byte-code 257 "\211A\203 \211@\301\302\303A!\300\"!B\207\302@\300\"\207" vconcat vector [macroexp-unprogn gv-get macroexp-progn] ...] 13 "\n\n(fn DO &rest BRANCHES)"] byte-optimizer byte-optimize-cond edebug-form-spec (&rest (&rest form)))
+
+(symbol-plist 'dp-loading)
+(edebug #<marker at 51041 in elisp-devel.yyz.el> lisp-indent-function 0)
+(defun dp-loading-indent-function (&rest ignored)
+  0)
+dp-loading-indent-function
+
+(dp-loading
+(message "a")
+(defun yagga ()
+  (blah))
+(message "b")
+(message "b")))
+
+(defun)
+(cl-pe
+'(progn
+  (message "loading %s..." (buffer-file-name))
+  (message "a")
+  (message "b")
+  (message "b")
+  (message "loaded  %s..." (buffer-file-name)))nil
+)
+
+(progn
+  (message "loading %s..." (buffer-file-name))
+  (message "a")
+  (message "b")
+  (message "b")
+  (message "loaded  %s..." (buffer-file-name)))nil
+
+
+
+
+(progn
+  (message "loading %s..." (buffer-file-name))
+  (message "a")
+  (message "b")
+  (message "c")
+  (message "loaded  %s..." (buffer-file-name)))
+"loaded  /home/dpanarit/dpw/dpw/lisp/devel/elisp-devel.yyz.el..."
+
+
+
+  
+
+
+
+
+
+    
+  
+	    
+  
+  )
+
+(message "poit2!")
+"poit2!"
+
+
+(defconst dp-original-isearch-string-out-of-window-function
+  (symbol-function 'isearch-string-out-of-window)
+  "Save this so we can still use it in our hack.")
+
+;; (defun isearch-string-out-of-window (isearch-point)
+;;   (message "poit! isearch-point: %s" isearch-point)
+;;   (case (funcall dp-original-isearch-string-out-of-window-function
+;; 		 isearch-point)
+;;     ('above 'below)
+;;     ('below 'above)))
+
+(defun isearch-string-out-of-window (isearch-point)
+  (funcall dp-original-isearch-string-out-of-window-function
+		 isearch-point)
+  (message "poit! isearch-point: %s, isearch-pre-scroll-point: %s"
+	   isearch-point isearch-pre-scroll-point)
+  (message "isearch-overlay: %s" isearch-overlay)
+  (message "isearch-other-end: %s" isearch-other-end)
+  (isearch-dehighlight)
+  nil
+  )
+
+(dp-restore-orig-value 'isearch-string-out-of-window)
+"isearch-string-out-of-window was unbound."
+
+"isearch-string-out-of-window was unbound."
+
+(dp-get-orig-value 'isearch-string-out-of-window)
+"isearch-string-out-of-window was unbound."
+
+"isearch-string-out-of-window was unbound."
+
+
+(dp-remove-orig-n-unbind-new 'isearch-string-out-of-window)
+dp-save-orig-n-set-new>isearch-string-out-of-window
+
+dp-save-orig-n-set-new>isearch-string-out-of-window
+
+dp-save-orig-n-set-new>isearch-string-out-of-window
+
+(isearch-string-out-of-window 99)
+nil
+
+nil
+
+nil
+
+nil
+
+
+========================
+Friday January 25 2019
+--
+;;;;;;;;;;;;;
+
