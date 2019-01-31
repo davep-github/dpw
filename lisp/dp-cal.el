@@ -43,15 +43,17 @@
 (require 'calendar)
 (require 'appt)
 
-(defun dp-define-diary-file-keys ()
+(defun dp-define-diary-keys ()
   (interactive)
   (dp-define-buffer-local-keys '("\C-c\C-c" dp-complete-diary-edit
-                                 "\C-x#" dp-complete-diary-edit)
+                                 "\C-x#" dp-complete-diary-edit
+				 [(meta ?-)] dp-bury-or-kill-buffer
+				 )
 			       nil nil nil "dddfk"))
 
 (defun dp-diary-mode-hook ()
   (interactive)
-  (dp-define-diary-file-keys))
+  (dp-define-diary-keys))
 
 (add-hook 'diary-mode-hook 'dp-diary-mode-hook)
 
