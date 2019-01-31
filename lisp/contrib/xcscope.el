@@ -2082,6 +2082,8 @@ using the mouse."
 	      (setq cscope-process-output nil
 		    cscope-last-file nil
 		    )
+	      (dmessage "start: cscope: %s %s %s %s %s"
+			cscope-program nil outbuf t options)
 	      (setq cscope-process
 		    (apply 'start-process "cscope" outbuf
 			   cscope-program options))
@@ -2093,7 +2095,8 @@ using the mouse."
 		  (setq modeline-process ": Searching ..."))
 	      (setq buffer-read-only t)
 	      )
-          (dmessage "cscope: %s %s %s %s %s" cscope-program nil outbuf t options)
+          (dmessage "call: cscope: %s %s %s %s %s"
+		    cscope-program nil outbuf t options)
 	  (apply 'call-process cscope-program nil outbuf t options)
 	  )
 	t
