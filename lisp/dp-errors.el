@@ -6,14 +6,16 @@
 
 ;; @todo make this `custom'izable
 ;; In the following, the symbol beginning-of-buffer can be ignored.
-;; e.g.: Debugger entered--Lisp error: (beginning-of-buffer[ possible text])
+;; e.g.:
+;; Debugger entered--Lisp error: (beginning-of-buffer[ possible text])
+;; Debugger entered--Lisp error: (search-failed "sata")
+;; Debugger entered--Lisp error: (cl-assertion-failed (context "The tags stack is empty"))
 ;;
-;; e.g.: Debugger entered--Lisp error: (error "Previous command was ...")
-;;
-;;       Debugger entered--Lisp error: (search-failed "sata")
+;; e.g.:
+;; Debugger entered--Lisp error: (error "Previous command was ...")
 ;; Debugger entered--Lisp error: (error "You've already clocked in!")
-;;
 ;; Debugger entered--Lisp error: (error "History is not being recorded in this context")
+
 ;; For:
 ;; Lisp error: (invalid-operation "Keyboard macro terminated by a command ringing the bell")
 ;; can use:
@@ -50,6 +52,7 @@
     folder-empty
     end-of-folder			; vm-* error.
     dp-vm-IMAP-data-modification-disabled
+    cl-assertion-failed
     "Keyboard macro terminated by a command ringing the bell$"
     "No cross references in this node"
     "There is no next link"
