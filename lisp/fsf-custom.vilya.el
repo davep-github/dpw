@@ -56,9 +56,12 @@
  '(kill-ring-max 128)
  '(magit-auto-revert-mode nil)
  '(magit-commit-arguments (quote ("--signoff")))
+ '(magit-diff-paint-whitespace-lines (quote both))
+ '(magit-diff-refine-hunk (quote all))
+ '(magit-diff-refine-ignore-whitespace nil)
  '(magit-diff-section-arguments
    (quote
-    ("--function-context" "--ignore-all-space" "--diff-algorithm=patience")))
+    ("--function-context" "-M" "--diff-algorithm=patience")))
  '(magit-pull-arguments (quote ("--rebase")))
  '(magit-rebase-arguments (quote ("--interactive")))
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
