@@ -2392,6 +2392,13 @@ changed."
      [?/] dp-vc-dir-find-next-edited
      [?.] dp-vc-dir-find-next-edited)))
 
+(defun dp-Custom-mode-hook ()
+  (interactive)
+  (dp-define-local-keys
+   '(
+     [?l] Custom-buffer-done))
+  )
+
 ;; <:add hook functions here aka hooks:>
 ;; I'm trending away from advice, since I've seen code that really rapes it
 ;; (I'm looking at you, ECB)
@@ -2448,6 +2455,7 @@ changed."
 (add-hook 'vc-dir-mode-hook 'dp-vc-dir-mode-hook)
 (add-hook 'mu4e-view-mode-hook 'dp-mu4e-view-mode-hook)
 (add-hook 'mu4e-headers-mode-hook 'dp-mu4e-headers-mode-hook)
+(add-hook 'Custom-mode-hook 'dp-Custom-mode-hook)
 
 ;; <:add-new-`add-hooks'-up-there:>
 ;; put new hooks up there ^
