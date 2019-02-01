@@ -1753,6 +1753,8 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
   (defvar dp-orig-igrep-regex-default igrep-regex-default
     "Original value of `igrep-regex-default'.")
 
+  (defalias 'ig 'igrep)			; Just think of the savings!
+
   (igrep-define zgrep)			; M-x zgrep
   (igrep-find-define zgrep)		; M-x zgrep-find
 
@@ -1764,7 +1766,7 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
 
   (put 'igrep-files-default 'c-mode
        (lambda () "*.[ch]"))
-  )
+  )					; End of `dp-optionally-require'.
 
 (defadvice grep (after dp-grep activate)
   "Do a dp-push-go-back before we go finding the matches returned by `grep'.
