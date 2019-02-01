@@ -29,7 +29,7 @@ DEFAULT_EXCLUDE_FILE_REGEXPS = [
     #EXCLUDE_DIRS_WITH_THIS_FILE, EXCLUDE_TREES_WITH_THIS_FILE,
     '^CVS.adm$', '^Rcslog$', '^cvslog\..*$',
     '^etags$', '^ETAGS$',
-    '^gtags$', '^GTAGS$',
+    '^gtags$', '^GTAGS$', '^GPATH$', '^GRTAGS$',
     '^tags$', '^TAGS$',
     '.*~$', '^#.*', '^\.#.*', '^,.*',
     '.*\.bak$', '.*\.BAK$',
