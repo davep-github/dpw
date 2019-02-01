@@ -411,6 +411,9 @@
      dp-manual global)
     ((("lib" "libs")
       "library" "libraries"))
+    ;; sc to be "current SCM specific?"
+    ((("sc" "gc" "scmconf" "gitconf")	; scm conflict/git conflict
+      "^<<<<<<< HEAD$" "^=======$" "^>>>>>>>\\.$"))
     ((("oaoo" "OaOO" "OAOO")
       "OaOO" "Once and Only Once" "Once and only once" "once and only once"))
     (("buncha" "bunch of")
