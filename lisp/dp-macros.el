@@ -76,7 +76,6 @@ If DOCSTRING is a cons, then the car holds a string that consists of flags to
          ,@body)))
   (put 'kb-lambda-new 'lisp-indent-function lisp-body-indent)
 
-
   (defmacro kb-warning (docstring &optional message)
     (unless message
       (setq message docstring
@@ -85,17 +84,16 @@ If DOCSTRING is a cons, then the car holds a string that consists of flags to
       ,docstring
       (error "kb-warning: %s" ,message)))
 
-
   (defmacro dp-defvar-sym (name init-val &optional docstring)
     (setq docstring (or (eval docstring) "dp-defvar-sym"))
     `(defvar ,(eval name) ,init-val ,docstring))
   (put 'dp-defvar-sym 'lisp-indent-function lisp-body-indent)
-                   
+
 ;   (defmacro dp-save-n-set-var (var-name var-new-val &optional docstring)
 ;     (let ((docstring (or docstring
 ;                          (format "Original value of `%s'." var-name))))
-;       (list 'progn 
-;             (list 'defvar (dp-ify-symbol var-name) 
+;       (list 'progn
+;             (list 'defvar (dp-ify-symbol var-name)
 ;                   `(and (boundp (quote ,var-name)) ,var-name) docstring)
 ;             (list 'setq var-name var-new-val))))
 ;   (put 'dp-save-n-set-var 'lisp-indent-function lisp-body-indent)
@@ -107,9 +105,7 @@ If DOCSTRING is a cons, then the car holds a string that consists of flags to
         (set-buffer (dp-sel2:target-buffer))
         (goto-char point)
         ,@forms)))
-
   (put 'dp-sel2:with-target-buffer 'lisp-indent-function lisp-body-indent)
-
 
   (defmacro with-narrow-to-region (beg end &rest body)
     "Execute BODY after doing a `narrow-to-region' over BEG END."
