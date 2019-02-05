@@ -104,7 +104,7 @@ if inside_emacs_p
 then
     # --with-filename puts:
     # 1) filename: in front of the match if it's in a file.
-    # 2) (standard input) if it's, well, guess.
+    # 2) (standard input) if it's, well, you guess.
     # They'll both take the same amount of parsing and the compile code to
     # find/goto the location works. `-' allows "" to not be replaced.  Only
     # unset vars are.
@@ -333,4 +333,9 @@ alias nocolor='ul -t dumb'
 
 alias hinfo='host-info.py'
 alias dpmailer='send-mail-command-line.sh'
+alias dpclm=dpmailer
+
+# @todo XXX predicate this on gpg doing ssh.
+alias sshauthsock='gpgconf --list-dirs agent-ssh-socket'
+alias expauthsock='export SSH_AUTH_SOCK="$(sshauthsock)"'
 true
