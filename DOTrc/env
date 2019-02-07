@@ -23,7 +23,10 @@ export PAGER=less
 export LESSOPEN_PROG='lesspipe-new.sh'
 export LESSOPEN="|${LESSOPEN_PROG} %s"
 # check below for xemac's LESS= override
-export LESS='-R -MM -X --ignore-case'
+# Use more informative option names.
+#export LESS='-R -MM -X --ignore-case'
+export LESS="--RAW-CONTROL-CHARS --LONG-PROMPT --no-init --ignore-case"
+
 export NAME="David A. Panariti"
 export PCAL_DIR=$HOME/etc
 export PCAL_OPTS="-m -n /7"
@@ -163,7 +166,13 @@ then
     export DP_HIST_GREP_GREPPER=egrep
     export GIT_PAGER=cat
     export GREP_DASH_N=-n
-    LESS="-MM -X --ignore-case"
+    # Do not use the --RAW-CONTROL-CHARS (-R) option unless Emacs is
+    # configured to handle the ANSI color sequences.
+    # Why did I not export this?  There is a problem either way. If the new
+    # value is exported, and I open, say, an xterm, it won't handle colors
+    # properly.  If it's not exported, then a shell buffer subshell will get
+    # the RAW option.
+    LESS="--LONG-PROMPT --no-init --ignore-case"
 else
     export GREP_DASH_N=
 fi

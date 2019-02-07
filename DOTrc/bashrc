@@ -52,13 +52,13 @@ export DP_RC_LIST_OTHERS="$HOME/.rc/bashrc"
 
 . $HOME/.rc/func.early
 # Define setenv to work like export so we can just copy in .cshrc stuff
-setenv () 
+setenv ()
 {
     eval "export $1='$2'"
 }
 
 # If, e.g., I run "bash" in a tcsh, SHELL remains tcsh.
-# Even though the parent shell is tcsh, this file is only run by a bash 
+# Even though the parent shell is tcsh, this file is only run by a bash
 # and some things it calls (e.g. go2env) use SHELL.
 #export SHELL=bash
 export INPUTRC=$HOME/.inputrc
@@ -151,7 +151,16 @@ dp_ssh_run_agent_p()
 {
     false
 }
-    
+
+# ubuntu now runs gpg-agent in a user-mode systemd (damn its eyes) and puts
+# the socket in /run/user/<uid>/gnupg/S.gpg-agent.ssh This has lots of
+# problems, as documented on the web, so I may use one of the procedures to
+# fuck systemd and go back to the past, Luddite that I am.
+dp_gpg_use_home_socket_p()
+{
+    false
+}
+
 cut_and_run_host_p()
 {
     pbit_farm_machine_p "$@"
@@ -229,7 +238,7 @@ fi
 
 export SP_BIN="$HOME/yokel/bin/sp"
 dp_suggest 'Fix settings of "orig" vars to only be iff NULL???'
-dp_suggest "Or collect 'em in an array?" 
+dp_suggest "Or collect 'em in an array?"
 dp_suggest 'Factor out ALL interactive fiddle-faddle and skip unless interactive.'
 
 # Only set if NULL when "" actually has meaning.
@@ -277,7 +286,7 @@ then
     export TERM=vt100
 elif [ "$TERM" = "rxvt" -a "$OSName" = "OSF1" ]
 then
-    # OSF1 doesn't understand rxvt, but rxvt understands xterm. 
+    # OSF1 doesn't understand rxvt, but rxvt understands xterm.
     export TERM=xterm
 fi
 
@@ -414,7 +423,7 @@ case $HOSTNAME in
     # syntax errors... it is ULTRIX!
     # just bail here.  all we use quabbin for is inc'ing
     # mh mail.
-    quabbin*) 
+    quabbin*)
 	;;
     *)
 	: ${FAMILY:=$(host-family)}
@@ -482,7 +491,7 @@ export PKG_CONFIG_PATH=$(dp_add_to_path_iff $PKG_CONFIG_PATH "$HOME/local/lib/pk
 #export PATH=$(dp_add_to_path_iff -p "$PATH" .)
 
 # optionally add YOKEL bins set by any of the env files
-[ -n "${YOKEL_SBIN-}" ] && PATH="$YOKEL_SBIN:$PATH" 
+[ -n "${YOKEL_SBIN-}" ] && PATH="$YOKEL_SBIN:$PATH"
 [ -n "${YOKEL_BIN-}"  ] && PATH="$YOKEL_BIN:$PATH"
 # remove non-existent dirs from path
 ###PATH=$(dp-fix-kde-order.py)
@@ -610,7 +619,7 @@ case $- in
         DP_ENV_INTERACTIVE=y
 	dp-stty			# set tty mode
 	fortune_path="/usr/games/fortune"
-	#[ "$OSName" = "FreeBSD" ] && 
+	#[ "$OSName" = "FreeBSD" ] &&
         fortune_option=-a
 	for i in $fortune_path
 	do
@@ -667,7 +676,7 @@ case $- in
 		    typeset +x IMASCREENINSTANCE # Remove export attribute.
                     alias exit="echo 1>&2 I\'m a screen... use \\\\exit or ^XK '(kapital K)' to really exit."
                     ;;
-		*)  
+		*)
 		    ignoreeof=2;;
 		esac
 	esac
@@ -727,7 +736,7 @@ cd ~				# go home
 # if so we stay in the nice ~ version that bash gives us.
 # otherwise we go back to where we were.
 # /bin/pwd will return an ugly absolute pathname.  We see if our shell
-# inherited the same ugly path.  If so, we are home and we can 
+# inherited the same ugly path.  If so, we are home and we can
 # use the pretty home path.
 # (sometimes I scare myself)
 [ "$old_cwd" != "`/bin/pwd`" ] && cd "$old_cwd"
@@ -807,8 +816,18 @@ source_bash_completion_code()
 }
 
 [ "$DP_ENV_INTERACTIVE" = 'y' ] && {
-    source $HOME/.rc/dp-ssh-agent
-    dp_ssh_run_agent_p && dp_ssh_start_agent
+    if dp_ssh_run_agent_p
+    then
+	source $HOME/.rc/dp-ssh-agent
+	dp_ssh_start_agent
+    elif dp_gpg_use_home_socket_p
+    then
+	# The following may work in all cases:
+	# gpgconf --list-dirs agent-ssh-socket
+	export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
+	#echo "SSH_AUTH_SOCK>${SSH_AUTH_SOCK}<"
+    fi
+
     ## Run completion explicitly if we're in the odd situation described above
     ## in the definition of `source_bash_completion_code'.
     ## `BASH_COMPLETION_COMPAT_DIR' is used (at least) by lubuntu by the
@@ -820,12 +839,8 @@ source_bash_completion_code()
         source_bash_completion_code /etc /etc/ /etc/bash_completion.d /etc/profile.d \
         || \
         source_bash_completion_code $HOME/etc $HOME/.rc
-#        echo "1:DP_SOURCED_BASH_COMPLETION_FILES>$DP_SOURCED_BASH_COMPLETION_FILES<" >> ~/bubba
         readonly DP_SOURCED_BASH_COMPLETION_FILES
     }
-    ##dp_rc_logger "sourcing extras: $(expand_source_list $RC_DIR/extra_bash_completion_code "" $locale_rcs)"
-    ##source_list $RC_DIR/extra_bash_completion_code "" $locale_rcs
-#    echo "2:DP_SOURCED_BASH_COMPLETION_FILES>$DP_SOURCED_BASH_COMPLETION_FILES<" >> ~/bubba
 }
 
 # arbitrary command to run when executing or sourcing.
@@ -853,7 +868,7 @@ esac
 #echo >> ~/tmp/dp-path "PATH>${PATH}<"
 #echo >> ~/tmp/dp-path
 do_go2env
-#type python >> ~/tmp/dp-path 
+#type python >> ~/tmp/dp-path
 #echo "PS1:1>$PS1<"
 #echo "dp_NH:0>$dp_NH<"
 # !!! What the Motherfucking what??!?!?
