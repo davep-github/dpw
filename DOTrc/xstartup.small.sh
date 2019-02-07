@@ -10,6 +10,9 @@ xres="$HOME/.Xresources"
 xmodmap=$HOME/.xmodmap
 [ -r "${xmodmap}" ] && xmodmap "${xmodmap}"
 xsetroot -solid grey
-vncconfig -iconic &
+if cbprog=$(find-bin autocutsel xcutsel vncconfig)
+then
+    xit "$cbprog"
+fi
 x-terminal-emulator --geometry=80x24+10+10 -l --title="$VNCDESKTOP Desktop" &
 x-window-manager &
