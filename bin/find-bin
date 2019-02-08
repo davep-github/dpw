@@ -7,7 +7,8 @@ Usage()
     echo "Not enough args.
 Usage: [-a] some-program...
 Find first program in the list that is in first in your path.
--a says to return the name as it appears in the arg list."
+-a says to return the name as it appears in the arg list as opposed to the
+ full found path as return by sp(dp)."
 }
 
 UsageErr()
