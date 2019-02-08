@@ -1057,13 +1057,18 @@ xgtags discovery.
 
 (defun dp-tag-pop (&rest r)
   (interactive)
-  (cond
-   ((dp-xgtags-p)
-    (call-interactively 'xgtags-pop-stack))
-   ((dp-gtags-p)
-    (call-interactively 'gtags-pop-stack))
-   (t
-    (error "No tag popper."))))
+  ;; `cl--assertion-failed' (at least) calls the effing debugger di-rectally
+  ;; and in this case I'd like it to act like I've added the error to the In
+  ;; `cl--assertion-failed' -- and everywhere else I hope - errors are still
+  ;; signaled.  `debug-ignored-errors'
+  (let ((debug-on-error nil))
+    (cond
+     ((dp-xgtags-p)
+      (call-interactively 'xgtags-pop-stack))
+     ((dp-gtags-p)
+      (call-interactively 'gtags-pop-stack))
+     (t
+      (error "No tag popper.")))))
 
 (defun dp-tag-pop-other-win ()
   (interactive)
