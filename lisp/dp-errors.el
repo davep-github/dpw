@@ -9,6 +9,7 @@
 ;; e.g.:
 ;; Debugger entered--Lisp error: (beginning-of-buffer[ possible text])
 ;; Debugger entered--Lisp error: (search-failed "sata")
+;; Debugger entered--Lisp error: (user-error "Canceled")
 ;; Debugger entered--Lisp error: (cl-assertion-failed (context "The tags stack is empty"))
 ;;
 ;; e.g.:
