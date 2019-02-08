@@ -31,18 +31,21 @@ t))
   :group 'dp-init-vars
   :type 'string)
 
+(defvar dp-initial-frame-width 180)
+(defvar dp-initial-frame-height 66)
+
 ;; initial window settings
 (setq initial-frame-alist
-      `((width . 92)
-	(height . 59)
+      `((width . ,dp-initial-frame-width)
+	(height . ,dp-initial-frame-height)
 	(vertical-scroll-bars . right)))
 
 ;; subsequent window settings
 (setq default-frame-alist
       `((menu-bar-lines . 1)
         (tool-bar-lines . 0)
-        (width . 92)
-        (height . 59)
+        (width . ,dp-initial-frame-width)
+        (height . ,dp-initial-frame-height)
 	(vertical-scroll-bars . right)
         (background-color . ,dp-default-background-color)))
 
