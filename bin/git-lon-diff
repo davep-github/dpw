@@ -165,8 +165,11 @@ run_git_cmd()
 : ${git_args:=}
 : ${silent_p=}
 : ${show_diff_always_p=}
-: ${num_lines_right:=33}
-: ${num_lines_left:=33}
+: ${junk_lines=4}
+: ${num_lines_right:=${LINES-((33 + junk_lines))}}
+: ${num_lines_left:=${LINES-((33 + junk_lines))}}
+((num_lines_right -= junk_lines))
+((num_lines_left -= junk_lines))
 
 # Usage variable usage:
 Usage_args_info=" Diff one line log messages twixt two branches."
