@@ -334,23 +334,23 @@ cscope discovery.
 
     (defadvice  cscope-next-symbol
 	(before dp-advised-cscope-next-symbol activate)
-      (dp-set-current-error-function 'dp-cscope-next-thing
+      (dp-set-current-next-error-function 'dp-cscope-next-thing
                                      nil
                                      'cscope-next-symbol))
 
     (defadvice  cscope-next-file (before dp-advised-cscope-next-file activate)
-      (dp-set-current-error-function 'dp-cscope-next-thing
+      (dp-set-current-next-error-function 'dp-cscope-next-thing
                                      nil
                                      'cscope-next-file))
 
     (defadvice  cscope-prev-symbol
 	(before dp-advised-cscope-prev-symbol activate)
-      (dp-set-current-error-function 'dp-cscope-next-thing
+      (dp-set-current-next-error-function 'dp-cscope-next-thing
                                      nil
                                      'cscope-prev-symbol))
 
     (defadvice  cscope-prev-file (before dp-advised-cscope-prev-file activate)
-      (dp-set-current-error-function 'dp-cscope-next-thing
+      (dp-set-current-next-error-function 'dp-cscope-next-thing
                                      nil
                                      'cscope-prev-file))
 
@@ -364,13 +364,13 @@ cscope discovery.
     ;; may be nil or unset.
     (defadvice  cscope-show-entry-other-window
       (before dp-advised-cscope-prev-file activate)
-      (dp-set-current-error-function 'dp-cscope-next-thing
+      (dp-set-current-next-error-function 'dp-cscope-next-thing
                                      nil
                                      'cscope-next-symbol))
 
     (defadvice  cscope-select-entry-other-window
 	(before dp-advised-cscope-prev-file activate)
-      (dp-set-current-error-function 'dp-cscope-next-thing
+      (dp-set-current-next-error-function 'dp-cscope-next-thing
                                     nil
                                     'cscope-next-symbol)))
   (defvar dp-def-work-dir (dp-mk-pathname (getenv "HOME") "work"))
@@ -709,39 +709,39 @@ It gives us a common point to save our position before going off after a
 gtags discovery."
       (dp-push-go-back "go-back advised gtags-goto-tag"))
 
-    (dp-current-error-function-advisor
+    (dp-current-next-error-function-advisor
      'dp-gtags-select-tag-one-window
      'dp-gtags-next-thing)
 
-    (dp-current-error-function-advisor
+    (dp-current-next-error-function-advisor
      'dp-gtags-select-tag-other-window
      'dp-gtags-next-thing)
 
-    (dp-current-error-function-advisor
+    (dp-current-next-error-function-advisor
      'gtags-find-with-idutils
      'dp-gtags-next-thing)
 
-    (dp-current-error-function-advisor
+    (dp-current-next-error-function-advisor
      'gtags-find-with-grep
      'dp-gtags-next-thing)
 
-    (dp-current-error-function-advisor
+    (dp-current-next-error-function-advisor
      'gtags-find-with-file
      'dp-gtags-next-thing)
 
-    (dp-current-error-function-advisor
+    (dp-current-next-error-function-advisor
      'gtags-find-tag
      'dp-gtags-next-thing)
 
-    (dp-current-error-function-advisor
+    (dp-current-next-error-function-advisor
      'gtags-find-symbol
      'dp-gtags-next-thing)
 
-    (dp-current-error-function-advisor
+    (dp-current-next-error-function-advisor
      'gtags-find-rtag
      'dp-gtags-next-thing)
 
-    (dp-current-error-function-advisor
+    (dp-current-next-error-function-advisor
      'gtags-select-tag
      'dp-gtags-next-thing)
 
@@ -851,7 +851,7 @@ gtags discovery."
     (interactive)
     (let ((tag (xgtags--find-tag-near-point)))
       (other-window 1)
-      (dp-set-current-error-function 'dp-xgtags-next-thing
+      (dp-set-current-next-error-function 'dp-xgtags-next-thing
 				     nil
 				     'xgtags-select-next-tag)
       (dp-push-go-back&apply-rest
@@ -944,39 +944,39 @@ xgtags discovery.
 
     ;; Start with next error function setup so we can M-n immediately after a
     ;; search operation.
-;;needs work     (dp-current-error-function-advisor-after
+;;needs work     (dp-current-next-error-function-advisor-after
 ;;needs work      'xgtags--find-with
 ;;needs work      'dp-xgtags--find-with)
 
-    (dp-current-error-function-advisor
+    (dp-current-next-error-function-advisor
      'xgtags-find-with-idutils
      'dp-xgtags-next-thing
      'xgtags-select-next-tag)
 
-    (dp-current-error-function-advisor
+    (dp-current-next-error-function-advisor
      'xgtags-find-with-grep
      'dp-xgtags-next-thing
      'xgtags-select-next-tag)
 
-    (dp-current-error-function-advisor
+    (dp-current-next-error-function-advisor
      'xgtags-select-next-tag
      'dp-xgtags-next-thing)
 
-    (dp-current-error-function-advisor
+    (dp-current-next-error-function-advisor
      'xgtags-select-prev-tag
      'dp-xgtags-next-thing)
 
-    (dp-current-error-function-advisor
+    (dp-current-next-error-function-advisor
      'xgtags-switch-to-buffer-other-window
      'dp-xgtags-next-thing
      'xgtags-select-next-tag)
 
-    (dp-current-error-function-advisor
+    (dp-current-next-error-function-advisor
      'xgtags-select-tag-near-point
      'dp-xgtags-next-thing
      'xgtags-select-next-tag)
 
-    (dp-current-error-function-advisor
+    (dp-current-next-error-function-advisor
      'xgtags-select-tag-by-event
      'dp-xgtags-next-thing
      'xgtags-select-next-tag)
