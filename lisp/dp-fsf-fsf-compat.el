@@ -536,6 +536,8 @@ This is an XEmacs compatibility function."
   (with-current-buffer (or buffer (current-buffer))
     (syntax-ppss-depth (syntax-ppss))))
 
+(defalias 'describe-function-at-point 'describe-function)
+
 ;; Stolen.  And hacked.
 ;; There is a bug that is triggered when an existing autoloads file or buffer
 ;; exists.  Therefore, we make sure neither exists.
