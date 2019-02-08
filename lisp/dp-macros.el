@@ -685,6 +685,19 @@ FORMS complete."
   (put 'dp-refvar 'lisp-indent-function
        (get 'defvar 'lisp-indent-function))
 
+  (defun dp-loading-indent-function (&rest ignored)
+    0)
+  ;;
+  ;; Wrap a file's contents in loading...done messages.
+  ;; We need an indent of 0 (`dp-loading-indent-function') because Emacs
+  ;; doesn't want to eval defuns unless they're in column 0.  There is a
+  ;; so-called option to override this but it no work.
+  (defmacro dp-loading (&rest body)
+    `(progn
+       (message "loading %s..." (buffer-file-name))
+       ,@body
+       (message "loaded  %s..." (buffer-file-name))))
+  (put 'dp-loading 'lisp-indent-function 'dp-loading-indent-function)
 
 ;;; // ///// <:macros new up there, above me:>
 
