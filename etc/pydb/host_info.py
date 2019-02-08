@@ -228,7 +228,7 @@ amd_family = e(
         'DTE': 'kde',
         'main_macs_opts': '-eval (dp-main-rc+2w)',
         'xem_opts': '-eval (dp-2-v-or-h-windows) ' + AMD_XEM_GEOMETRY,
-        "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
+        ###"xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
         "xem_font": "",
         'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
         'work-zone': 'amd',
