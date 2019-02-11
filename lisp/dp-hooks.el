@@ -378,8 +378,7 @@ The characters get marked with the line-too-long-warning-face.")
     (- dp-line-too-long-error-column
        (or dp-line-too-long-warning-zone-width 0))
   "*Become annoyed (new face) when going beyond this column.
-This must be < the error col.
-XXX @todo derive this from the wrap column.  Will need to be per-mode.")
+For now this must be < the error col. ??? Why ???")
 
 (defface dp-default-line-too-long-warning-face
   '(
@@ -1310,7 +1309,6 @@ Arr... beware the hooks! "
    '(
      [(control tab)] dp-lisp-completion-at-point
      [(meta backspace)] dp-delete-word-forward
-
      [(control ?/)] dp-elisp-eldoc-doc ;; eldoc on demand.
      [(control meta return)] (kb-lambda (end-of-line
 					 (eval-print-last-sexp)))
