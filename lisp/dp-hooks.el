@@ -1449,12 +1449,13 @@ isearch while the region is active to locate the end of the region."
 
 (defun dp-help-mode-hook ()
   "Set up help-mode *my* way."
-  (when (dp-xemacs-p)
-    ;; make f & F parallel v & V
-    (local-set-key "f" 'describe-function-at-point)
-    (local-set-key "F" 'find-function-at-point))
-  (local-set-key [kp-add] 'dp-kill-ring-save)
-  (local-set-key [(control ?/)] 'dp-elisp-eldoc-doc))
+  (dp-local-set-keys
+   '(
+     [?f] describe-function-at-point
+     [?F] find-function-at-point
+     [(shift tab)] backward-button
+     [kp-add] dp-kill-ring-save
+     [(control ?/)] dp-elisp-eldoc-doc)))
 
 (defun dp-hyper-apropos-mode-hook ()
   (interactive)
