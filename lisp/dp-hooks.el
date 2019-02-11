@@ -1301,24 +1301,26 @@ Arr... beware the hooks! "
   (interactive)
   ;; experiment to see if I like this.
   ;;(turn-on-eldoc-mode)  ; too intrusive
-  (local-set-key [(control tab)] 'dp-lisp-completion-at-point)
-  (local-set-key [(meta backspace)] 'dp-delete-word-forward)
-  ;; eldoc on demand.
-  (local-set-key [(control ?/)] 'dp-elisp-eldoc-doc)
-  (local-set-key [(control meta return)] (kb-lambda (end-of-line)
-                                             (eval-print-last-sexp)))
-  (local-set-key [(meta left)] 'dp-beginning-of-defun)
-  (local-set-key [(meta right)] 'dp-end-of-defun)
-  (local-set-key [(control meta x)] 'dp-eval-defun-or-region)
-  (local-set-key [(meta s)] 'dp-upcase-preceding-symbol)
-  ;; Change `:' syntax so that :keyword-prefix<M-/> will complete on prefix.
-  ()
+  (dp-local-set-keys
+   '(
+     [(control tab)] dp-lisp-completion-at-point
+     [(meta backspace)] dp-delete-word-forward
 
+     [(control ?/)] dp-elisp-eldoc-doc ;; eldoc on demand.
+     [(control meta return)] (kb-lambda (end-of-line
+					 (eval-print-last-sexp)))
+     [(meta left)] dp-beginning-of-defun
+     [(meta right)] dp-end-of-defun
+     [(control meta x)] dp-eval-defun-or-region
+     [(meta s)] dp-upcase-preceding-symbol
+     [(control ?x) (meta space)] edebug-x-modify-breakpoint-wrapper
+     [(control ?|)] edebug-x-modify-breakpoint-wrapper
+     [(control ?x) space] rectangle-mark-mode
+     ))
+  ;; @todo XXX Change `:' syntax so that :keyword-prefix<M-/> will complete on prefix.
   ;; What the GDMFFF? Why the spaces?
-;;   (setq comment-start "; "
-;;         block-comment-start ";; ")
-  
-  ;;;;;;;;move to dp-flyspell (dp-flyspell-prog-mode)
+  ;;   (setq comment-start "; "
+  ;;         block-comment-start ";; ")
   )
 
 (defun dp-lisp-interaction-mode-hook ()
