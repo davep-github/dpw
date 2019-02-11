@@ -155,7 +155,7 @@ Make it buffer local since there can be >1 minibuffers.")
     ;; (define-key map [(meta ?s)] 'dp-minibuffer-grab-region) ; snag
 ;;; fsf no like ^
     (define-key map [(meta ?')] 'dp-copy-char-to-minibuf)  ; quote
-    ;;; FSF change 
+    ;;; FSF change
     (if (dp-xemacs-p)
 	(define-key map [(control tab)] 'dp-minibuffer-complete)
       (dp-define-key-list map '([tab] minibuffer-complete
