@@ -367,7 +367,8 @@ For C/C++ source code.")
   (dp-mk-debug-like-patterns dp-c*-debug-like-patterns))
 
 (dp-deflocal dp-line-too-long-warning-zone-width 6
-  "How wide the warning zone is: where len is OK, but line is colorized.
+  "How wide the warning zone is: where len is still OK, but line is
+colorized as an indication that you're getting _Close_To_the_Edge_.
 The characters get marked with the line-too-long-warning-face.")
 
 (dp-deflocal dp-line-too-long-error-column 80
@@ -2394,10 +2395,11 @@ changed."
      [?.] dp-vc-dir-find-next-edited)))
 
 (defun dp-Custom-mode-hook ()
+  (interactive)
   (dp-define-local-keys
    '(
-     [?l] Custom-buffer-done
-     )))
+     [?l] Custom-buffer-done))
+  )
 
 ;; <:add hook functions here aka hooks:>
 ;; I'm trending away from advice, since I've seen code that really rapes it
