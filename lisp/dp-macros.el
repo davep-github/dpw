@@ -391,29 +391,79 @@ VAR must be a symbol."
           ,func-docstr
           (if ,var
               (apply (quote message) (concat ,prefix-str fmt) args))))))
-  
-  (defmacro dp-current-error-function-advisor (fun next-thing 
-                                               &optional next-thing-arg)
+
+  (defmacro dp-current-error-functions-advisor (before/after
+						next-fun
+						next-thing
+						prev-fun
+						prev-thing
+						&optional
+						next-thing-arg
+						prev-thing-arg)
+    (let* ((next-efunc (eval next-fun))
+           (next-thing-arg (or (eval next-thing-arg) next-efunc))
+           (enext-thing (eval next-thing))
+	   (prev-efunc (eval prev-fun))
+           (prev-thing-arg (or (eval prev-thing-arg) prev-efunc))
+           (eprev-thing (eval prev-thing)))
+      `(defadvice ,next-efunc
+	   (,before/after next/prev-error-function-stuff activate)
+	 (dp-set-current-next-error-function ,next-thing
+					     nil
+					     (quote ,next-thing-arg)))
+      `(defadvice ,prev-efunc
+	   (,before/after next/prev-error-function-stuff activate)
+	 (dp-set-current-prev-error-function ,prev-thing
+					     nil
+					     (quote ,prev-thing-arg)))))
+
+  (defmacro dp-current-next-error-function-advisor (fun
+						    next-thing
+						    &optional next-thing-arg)
     (let* ((efunc (eval fun))
            (next-thing-arg (or (eval next-thing-arg) efunc))
            (enext-thing (eval next-thing)))
       `(defadvice ,efunc
-        (before next-error-function-stuff activate)
-        (dp-set-current-error-function ,next-thing
-                                       nil
-                                       (quote ,next-thing-arg)))))
-  
-  (defmacro dp-current-error-function-advisor-after (fun
-						     next-thing
-						     &optional next-thing-arg)
+        (before next/prev-error-function-stuff activate)
+        (dp-set-current-next-error-function ,next-thing
+					    nil
+					    (quote ,next-thing-arg)))))
+
+  (defmacro dp-current-next-error-function-advisor-after (fun
+						    next-thing
+						    &optional next-thing-arg)
     (let* ((efunc (eval fun))
            (next-thing-arg (or (eval next-thing-arg) efunc))
            (enext-thing (eval next-thing)))
       `(defadvice ,efunc
-        (after next-error-function-stuff-after activate)
-        (dp-set-current-error-function ,next-thing
-                                       nil
-                                       (quote ,next-thing-arg)))))
+	   (before next/prev-error-function-stuff activate)
+	 (dp-set-current-next-error-function ,next-thing
+					     nil
+					     (quote ,next-thing-arg)))))
+
+    (defmacro dp-current-prev-error-function-advisor (fun
+						      prev-thing
+						      &optional prev-thing-arg)
+    (let* ((efunc (eval fun))
+           (prev-thing-arg (or (eval prev-thing-arg) efunc))
+           (eprev-thing (eval prev-thing)))
+      `(defadvice ,efunc
+        (before next/prev-error-function-stuff activate)
+        (dp-set-current-prev-error-function ,prev-thing
+					    nil
+					    (quote ,prev-thing-arg)))))
+
+    (defmacro dp-current-prev-error-function-advisor-after (fun
+							    prev-thing
+							    &optional prev-thing-arg)
+    (let* ((efunc (eval fun))
+           (prev-thing-arg (or (eval prev-thing-arg) efunc))
+           (eprev-thing (eval prev-thing)))
+      `(defadvice ,efunc
+        (after next/prev-error-function-stuff activate)
+        (dp-set-current-prev-error-function ,prev-thing
+					    nil
+					    (quote ,prev-thing-arg)))))
 
 )
 

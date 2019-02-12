@@ -1544,3 +1544,30 @@ Friday January 25 2019
 --
 ;;;;;;;;;;;;;
 
+
+========================
+Monday February 11 2019
+--
+;; This buffer is for text that is not saved, and for Lisp evaluation.
+;; To create a file, visit it with <open> and enter text in its buffer.
+
+(defun isearch-string-out-of-window (isearch-point)
+  ;; @todo XXX As a less terrible hack, when we move out of the window,
+  ;; exit `isearch-mode'.
+(message "isearch-point: %s" isearch-point)
+
+  (message))
+  ;FIXME (let ((ab-bel (funcall dp-original-isearch-string-out-of-window-function
+  ;FIXME 			 isearch-point)))
+  ;FIXME   (if ab-bel
+  ;FIXME 	;; We left the window.
+  ;FIXME 	;; exit isearch mode.
+  ;FIXME 	;; Works much better, but the cursor goes to the beginning of the
+  ;FIXME 	;; line.  However, unexpectedly and quite happily, the searched for
+  ;FIXME 	;; string remains highlighted.  I have no idea why, since the
+  ;FIXME 	;; `isearch-exit' should, well, exit the search.
+  ;FIXME 	(progn
+  ;FIXME 	  (message "exiting, point: %s" (point))
+  ;FIXME 	  (isearch-exit))
+  ;FIXME     (message "NOT exiting, point: %s" (point)))
+  ;FIXME   ab-bel))
