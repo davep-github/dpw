@@ -25,9 +25,19 @@ other   --> form to be eval'd
             (e.g. '(dp-insert-cmd-sig \"fortune\" \"-s\"))"
   :group 'dp-vars)
 
+;; dp-use-dp-mail-p
+(defcustom dp-use-dp-mail-p t
+  "*Do I want to use Emacs' email facilities.
+Sure is nice to edit an email in a real editor."
+  :group 'dp-vars
+  :type 'boolean)
+
 ;; look into dp-mail for other options or to create options.
-(defcustom dp-mailer 'mu4e
-  "*Whom art thyne mailur?"
+(defcustom dp-mailer 'mew
+  "*Whom art thyne mailur?
+See dp-mail.el, line \"(case dp-mailer\"
+Choices [ as of: 2018-12-13T16:07:52 ]:
+\'(mu4e mew gnus vm)."
   :group 'dp-vars
   :type 'symbol)
 
@@ -40,6 +50,8 @@ other   --> form to be eval'd
   "*Should the user be allowed to automatically eval his own Local Variables?"
   :group 'dp-vars
   :type 'boolean)
+(make-variable-buffer-local 'dp-allow-owner-to-eval-p)
+(setq-default dp-allow-owner-to-eval-p t)
 
 (defcustom dp-mailer-setup nil
   "*Func to call for additional mailer setup."
@@ -280,6 +292,8 @@ nil --> use builtin image of chuck."
 (defcustom dp-code-indexer-data-files 
   '("TAGS" 
     "tags" 
+    "ETAGS" 
+    "etags"
     "cscope.files"
     "cscope.out"
     "cscope.in.out"
@@ -563,23 +577,46 @@ split."
   :group 'dp-vars
   :type 'integer)
 
-(defcustom dp-dse-buffer-suffix-format "<dse/%d>"
+(defcustom dp-sudo-edit-tramp-local-prefix "/sudo:root@localhost:"
+  "Used to tell tramp(q.v) to use sudo to open and edit a file."
+  :group 'dp-vars
+  :type 'string)
+
+(defcustom dp-dse-buffer-suffix-format "<dse><%d>"
   "Used to add identifying suffix to buffer name.
-Can see it in the ibuffer and mode line, although the BG color tells us, too."
+Can see it in the ibuffer and mode line, although the BG color
+tells us, and in a much better way, too."
   :group 'dp-vars
   :type 'string)
 
-(defcustom dp-dse-buffer-suffix-regexp "<dse/[0-9]+>"
-  "How to ID a dse buffer name.
-We need to add digits if we are dse'ing >1 file/buffer with the same name."
+;; @todo XXX Need to fix how multiple buffers sudo editing the same file are
+;; indicated. :ike the traditional <[0-9]+>.  Fix this accordingly.
+;; Don't include `dp-sudo-edit-tramp-local-prefix' because our method may
+;; change, but the prefix should remain constant.
+(defcustom dp-dse-buffer-id-regexp "<dse>\\(<[0-9]+>\\)*$"
+  "Used to recognize dse buffers. q.v. `dp-dse-buffer-suffix-format'.
+Since FSF uses tramp to sudo edit, we'd like to differentiate
+remote vs dse buffers for ibuffer categorization and
+colorization."
   :group 'dp-vars
   :type 'string)
 
-(defcustom dp-dc-evaluator "dc"
-  "Program to use to evaluate an RPN string.
-dc(1) is assumed so anything else used needs must be compatible."
+(defcustom dp-lgrep-grep-program "egrep"
+  "grep program used by lgrep."
   :group 'dp-vars
   :type 'string)
+
+(defcustom dp-lgrep-grep-args "-n -i -e"
+  "grep program options used by lgrep."
+  :group 'dp-vars
+  :type 'string)
+
+;; Olde, here for reference.
+;for ref (defcustom dp-dc-evaluator "dc"
+;for ref   "Program to use to evaluate an RPN string.
+;for ref dc(1) is assumed so anything else used needs must be compatible."
+;for ref   :group 'dp-vars
+;for ref   :type 'string)
 
 ;; <:new vars go here:>
 (provide 'dp-vars)
