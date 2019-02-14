@@ -429,6 +429,11 @@ string containing their values."
 (dp-defaliases 'dp-nop-rest 'dp-interactive-identity-rest 'dp-identity-rest)
 
 (defun dp-identity (&rest rest)
+(defun dp-dump-arg-info (arg)
+  (dmessage "arg>%s<, current-prefix-arg>%s<, prefix-numeric-value>%s<"
+	    arg current-prefix-arg (prefix-numeric-value current-prefix-arg))
+  arg)
+
   "Accept arbitrary [number of] arguments, but return first only."
   (interactive)
   (car rest))
@@ -442,27 +447,27 @@ string containing their values."
 
 (defun dp-interactive-default-optional-arg (&optional arg)
   (interactive "p")
-  (dmessage "arg>%s<" arg)
+  (dp-dump-arg-info arg)
   arg)
 
 (defun dp-show-interactive--P-optional (&optional arg)
   (interactive "P")
-  (message "arg>%s<" arg)
+  (dp-dump-arg-info arg)
   arg)
 
 (defun dp-show-interactive--P-required (arg)
   (interactive "P")
-  (message "arg>%s<" arg)
+  (dp-dump-arg-info arg)
   arg)
 
 (defun dp-show-interactive--p-optional (&optional arg)
   (interactive "p")
-  (message "arg>%s<" arg)
+  (dp-dump-arg-info arg)
   arg)
 
 (defun dp-show-interactive--p-required (arg)
   (interactive "p")
-  (message "arg>%s<" arg)
+  (dp-dump-arg-info arg)
   arg)
 
 (defun dp-interactive-info-P-arg (&optional arg)
