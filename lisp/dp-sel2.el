@@ -545,9 +545,6 @@ Entry to this mode via command dp-sel2:list calls the value of
     (define-key map [?H] 'describe-mode)
     (setq dp-sel2:mode-map map)))
 
-(defun dp-sel2:exit ()
-  (interactive))
-
 (defun dp-sel2:current-item ()
   "Return cons of current item's index and value."
   (let* ((ret-index (dp-sel2:off-to-index))
@@ -561,9 +558,7 @@ Entry to this mode via command dp-sel2:list calls the value of
   ;; save the values we need since they will vanish with the buffer
   (dp-sel2:reset-to-orig-buffer sel-func item
 				:no-exit-p no-exit-p
-				:kill-current-buffer-p t)
-  (unless no-exit-p
-    (dp-sel2:exit)))
+				:kill-current-buffer-p t))
 
 (defun dp-sel2:select (&optional current-item)
   "Select the current item.
