@@ -268,8 +268,8 @@ Always return the value from NEW-VAR-VALUE.
 (defun dp-get-orig-value (var-sym)
   (symbol-value (dp-mk-save-orig-symbol-name var-sym)))
 
-(defun dp-restore-orig-value (var-sym)
-  (set var-sym (dp-get-orig-value var-sym)))
+(defun dp-remove-orig-n-unbind-new (var-sym)
+  (makunbound (dp-mk-save-orig-symbol-name var-sym)))
 
 (defun format? (fmt &optional args)
   (if args
