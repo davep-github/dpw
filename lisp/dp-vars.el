@@ -499,7 +499,9 @@ it loads."
 (defcustom dp-emms-player-names
   '(emms-player-mpd)
   "*Which music player(s) should emms use?
-For now (2010-05-22T08:26:49) I'm just using the symbols corresponding to the Emms support files so I can just `require' them in a loop. "
+For now (2010-05-22T08:26:49) I'm just using the symbols
+corresponding to the Emms support files so I can just `require'
+them in a loop."
   :type '(repeat (symbol :tag "Emms player name"))
   :group 'dp-vars)
 
@@ -555,7 +557,7 @@ t:
 int some_descriptive_function_name(
   int a,
   const char* some_string_for_some_arcane_purpose_which_is_too_complex,
-  Some_arcane_type_t& for_some_even_more arcane_purpose)
+  Some_arcane_type_t& for_some_even_more_arcane_purpose)
 {
   blah()
 Lovely, isn't it?
@@ -609,24 +611,17 @@ split."
 Can see it in the ibuffer and mode line, although the BG color
 tells us, and in a much better way, too."
   :group 'dp-vars
-  :type 'character)
+  :type 'string)
 
 (defcustom dp-lgrep-grep-program "egrep"
   "grep program used by lgrep."
   :group 'dp-vars
-  :type 'character)
+  :type 'string)
 
 (defcustom dp-lgrep-grep-args "-n -i -e"
   "grep program options used by lgrep."
   :group 'dp-vars
-  :type 'character)
-
-(dp-defcustom-local dp-unicode-blank-symbol (decode-char 'ucs #x2422)
-  "AKA \"substitute blank\", used as a word separator.
-Used in BCDIC, EBCDIC, ASCII-1963 etc. as word separator.
-WOW.  Sure is up-to-date."
-  :group 'dp-vars
-  :type 'character)
+  :type 'string)
 
 ;; @todo XXX Need to fix how multiple buffers sudo editing the same file are
 ;; indicated. :ike the traditional <[0-9]+>.  Fix this accordingly.
@@ -671,12 +666,11 @@ WOW.  Sure is up-to-date."
   :group 'dp-vars
   :type 'character)
 
-;; Olde, here for reference.
-;for ref (defcustom dp-dc-evaluator "dc"
-;for ref   "Program to use to evaluate an RPN string.
-;for ref dc(1) is assumed so anything else used needs must be compatible."
-;for ref   :group 'dp-vars
-;for ref   :type 'string)
+(defcustom dp-dc-evaluator "dc"
+  "Program to use to evaluate an RPN string.
+dc(1) is assumed so anything else used needs must be compatible."
+  :group 'dp-vars
+  :type 'string)
 
 ;; <:new vars go here:>
 (provide 'dp-vars)
