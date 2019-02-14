@@ -50,7 +50,7 @@ Consider rebase, or co and branch -M
         checkop = true
         msg = "You meant `stash [push]' didn't you?"
 
-[credential "ssh://gerritgit:/brahma/"]
+[credential "ssh://gerritgit"]
 	username = dpanarit
 	helper = pass amd
 
