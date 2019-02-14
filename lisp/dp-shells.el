@@ -1562,12 +1562,12 @@ return t if we are in a shell type buffer, false otherwise."
       (message "not shell type buf")
       nil)))
 
-(defvar dp-current-error-function 'dp-do-next-compile-like-error
+(defvar dp-current-next-error-function 'dp-do-next-compile-like-error
   "Most recently called function for which we'd like to use \\[dp-next-error] to go to the next result.
 E.g. a compile, igrep or cscope results buffer.")
 
-(defvar dp-current-error-function-args nil
-  "List of args to go with `dp-current-error-function'
+(defvar dp-current-next-error-function-args nil
+  "List of args to go with `dp-current-next-error-function'
 In order to allow nil to mean an arg of nil rather than NO args, the args
 are kept in the cdr of a cons, e.g. (cons 'args-are-my-cdr real-args).  If
 `real-args' is a symbol, then there are no args... e.g. we just (funcall
@@ -1589,27 +1589,27 @@ are kept in the cdr of a cons, e.g. (cons 'args-are-my-cdr real-args).  If
 ;;finish later;   (interactive)
 ;;finish later;   (dp-set-compile-like-mode-error-function)
 ;;finish later;   (dp-shell-goto-this-error t))
-  
-;;;###autoload      
-(defun dp-set-current-error-function (func use-no-args-p &rest args)
+
+;;;###autoload
+(defun dp-set-current-next-error-function (func use-no-args-p &rest args)
   (interactive)
   (unless dp-dont-set-latest-function
-    (setq dp-current-error-function func
-          dp-current-error-function-args 
+    (setq dp-current-next-error-function func
+          dp-current-next-error-function-args
           (cons 'args-are-my-cdr (or use-no-args-p args)))))
 
 ;;;###autoload
 (defun dp-reset-current-error-function ()
   (interactive)
-  (dp-set-current-error-function nil nil))
+  (dp-set-current-next-error-function nil nil))
 
 ;;;###autoload
 (defun dp-set-compile-like-mode-error-function ()
   (interactive)
-  (dp-set-current-error-function 'dp-do-next-compile-like-error nil))
+  (dp-set-current-next-error-function 'dp-do-next-compile-like-error nil))
 
-;;;###autoload      
-(defun dp-next-error (&optional kill-buffer-first-p)
+;;;###autoload
+(defun dp-next-error (&optional DONT-USE-ME!kill-buffer-first-p)
   "Find next error in shell buffer.
 This key is globally bound.  It does special things only if it is
 invoked inside a shell type buffer.  In this case, it ensures the
@@ -1620,7 +1620,7 @@ examining a bunch of hits in a bunch of files to prevent ending up with tons
 of open files.
 NB! KILL-BUFFER-FIRST-P does not work. Don't use it. Seriously."
   (interactive "P")
-  (if (let ((bss (buffer-substring (line-beginning-position) 
+  (if (let ((bss (buffer-substring (line-beginning-position)
                                    (line-end-position))))
                                         ;(dmessage "1: bss>%s<" bss)
         (string-match "grep\\s-+finish"
@@ -1631,18 +1631,19 @@ NB! KILL-BUFFER-FIRST-P does not work. Don't use it. Seriously."
       (dp-push-go-back "Going to next error"))
     (let ((starting-point (point-marker))
           (starting-buffer (current-buffer))
-          (args (cdr dp-current-error-function-args)))
+          (args (cdr dp-current-next-error-function-args)))
       (if (symbolp args)
-          (funcall dp-current-error-function)
-        (apply dp-current-error-function args))
-      (when (and kill-buffer-first-p
+          (funcall dp-current-next-error-function)
+        (apply dp-current-next-error-function
+	       args))
+      (when (and DONT-USE-ME!kill-buffer-first-p
                  (not (equal (current-buffer) starting-buffer)))
         (with-current-buffer starting-buffer
           (dp-meta-minus)))
       (when (not (equal starting-point (point-marker)))
         (dp-highlight-point-until-next-command
          :colors dp-next-error-other-buffer-faces)))))
-  
+
 (defvar dp-dont-set-latest-function nil)
 
 ;;;###autoload
