@@ -18,10 +18,7 @@
       (featurep 'sxemacs)))
 
 (if (dp-xemacs-p)
-    (progn
-      (setq custom-file (dp-lisp-subdir "custom.el"))
-      (setq isearch-continues 'isearch-command)
-      )
+    (require dp-xemacs)
   (require 'dp-fsf))
 
 (eval-when-compile
@@ -30,6 +27,31 @@
     (require 'cl-lib))
   (load "cl-macs")
   (require 'dp-macros))
+
+;; @todo XXX A default.  Make it a more common one, like a lucida or
+;; some such.
+;;(message "Setting frame font...")
+;; A simple function meant to be easily used when Emacs is started.
+;; Currently doesn't help.  The way xem evolved, it has severe quoting
+;; issues.  It cannot quote host_info options with spaces.  Should rewrite it
+;; all in Python.
+(defvar dp-set-frame-font-size-default 13)
+(defvar dp-set-frame-font-size-current dp-set-frame-font-size-default)
+(defun dp-set-frame-font-size (&optional font-size font-name)
+  (interactive "P")
+  (setq-ifnil font-name "RictyDiminishedDiscord"
+	      font-size (if current-prefix-arg
+			    current-prefix-arg
+			  (read-number
+			   (format "Enter font %s's size (current: %s): "
+				   font-name dp-set-frame-font-size-current)
+			   dp-set-frame-font-size-default)))
+  (let ((frame-font (format "%s-%s" font-name (prefix-numeric-value
+					       font-size))))
+    (message "Setting frame font to: %s" frame-font)
+    (setq dp-set-frame-font-size-current font-size)
+    (set-frame-font frame-font)))
+(dp-defaliases 'sfs 'sffs 'dp-set-frame-font-size)
 
 ;; Not sure why this isn't buffer local by default.
 ;; quote:
@@ -44,7 +66,7 @@
 ;; functions.
 ;; grep -v "-dp" 
 ;; will get lots
-(global-set-key "\eu" 'undo)
+(global-set-key [(meta ?u)] 'undo)
 
 (defvar dp-$HOME (getenv "HOME")
   "Convenience for future reference.")
@@ -933,7 +955,7 @@ This can be callable.")
 (add-to-list 'special-display-regexps "^\\*P4.*\\*$")
 
 ;; configure an Emacs mail subsystem...
-(when (bound-and-true-p dp-use-dp-mail-p)
+(when (and nil (bound-and-true-p dp-use-dp-mail-p))
   (require 'dp-mail))
 
 (require 'dp-makefile-mode)
