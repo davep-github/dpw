@@ -346,7 +346,7 @@ dp-sel2 uses these bindings:
   (interactive)
 
   (if (eq major-mode 'dp-sel2:mode)
-      (error "Cannot use dp-sel2:mode in a dp-sel2:mode buffer"))
+      (error "Cannot use dp-sel2 in a dp-sel2:mode buffer"))
   (let ((pop-up-windows t)
 	special-display-buffer-names
 	special-display-regexps
@@ -408,7 +408,7 @@ dp-sel2 uses these bindings:
 
 (put 'dp-sel2:mode 'mode-class 'special)
 
-(defun* dp-sel2:reset-to-orig-buffer (fun item
+(defun* dp-sel2:reset-to-orig-buffer (sel-func item
 					  &key no-exit-p kill-current-buffer-p)
   "Propogate variables from listing buffer to current invokation buffer."
   (interactive)
@@ -462,8 +462,8 @@ dp-sel2 uses these bindings:
 	  (dp-unextent-region dp-sel2-arrow-id
 			      (line-beginning-position)
 			      (line-end-position))
-	  (if fun
-	      (funcall fun region t-item t-rotate-only-p)))
+	  (if sel-func
+	      (funcall sel-func region t-item t-rotate-only-p)))
 
       (message (format "%s: target buffer `%s' is gone." t-mode-name t-name))
       (ding))))
@@ -555,11 +555,11 @@ Entry to this mode via command dp-sel2:list calls the value of
     ;;(dmessage "ret-index: %d" ret-index)
     (cons ret-index ret-val)))
 
-(defun dp-sel2:done (fun item &optional no-exit-p)
-  "Leave select item mode after calling FUN."
+(defun dp-sel2:done (sel-func item &optional no-exit-p)
+  "Leave select item mode after calling SEL-FUNC."
   (interactive)
   ;; save the values we need since they will vanish with the buffer
-  (dp-sel2:reset-to-orig-buffer fun item
+  (dp-sel2:reset-to-orig-buffer sel-func item
 				:no-exit-p no-exit-p
 				:kill-current-buffer-p t)
   (unless no-exit-p
