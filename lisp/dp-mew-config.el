@@ -9,7 +9,7 @@
 (defcustom dp-mew-config-From:-rewrite-alist
   nil
   "Alist of suffixes to add to the From: address based on other mail headers.
-Format is a list of these: 
+Format is a list of these:
    '(header-selection-regexp (header-value-regexp . suffix-string)"
   :group 'dp-vars
   :type mew-custom-type-of-guess-alist)
@@ -45,12 +45,19 @@ Format is a list of these:
 
 (defun dp-mew-config-internal-set-config ()
   (interactive)
-  
-  (defvar dp-homeys (dp-string-join 
+
+  ;; @todo XXX Get name from $HOST or host-info or ...
+  (unless (boundp 'dp-mew-case)
+    (message "dp-mew-case is void, using default.  Set it somewhere like: %s"
+	     dp-most-specific-spec-macs)
+    ;; Make non-void.
+    (setq dp-mew-case nil))
+
+  (defvar dp-homeys (dp-string-join
 		     '(;;;;;;;;;;"panariti" "davep"
-		       "filko" "mel@digital\\.net" "thayer" 
-		       "be_unique@" "gouge" "buchner" "woodruff" 
-		       "dake" "page_lee" "leep@" "grotefend" 
+		       "filko" "mel@digital\\.net" "thayer"
+		       "be_unique@" "gouge" "buchner" "woodruff"
+		       "dake" "page_lee" "leep@" "grotefend"
 		       "borzner" "mattison" "gillono" "jfg"
 		       "kuris" "shep"
 		       "lepper" "ghofrani" "auld" "mattisjo@") "\\|"))
