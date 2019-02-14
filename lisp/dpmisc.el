@@ -225,12 +225,14 @@ If you hate things like '1 things fucked up' vs '1 thing...', use this."
                                 &rest new-var-value-args)
   "Save a copy of VAR-SYM's value iff it hasn't already been backed up.
 Set VAR-SYM's value according to NEW-VAR-VALUE.
-NEW-VAR-VALUE can be a variable or \(functionp).  If \(functionp), then it is 
+NEW-VAR-VALUE can be a variable or \(functionp).  If \(functionp), then it is
 applied to NEW-VAR-VALUE-ARGS.
-If NEW-VAR-VALUE is a cons, then the cdr tells us what it is.  
+If NEW-VAR-VALUE is a cons, then the car gives the value and the
+cdr gives the type/tag.
 Currently only 'literal is defined.  This allows a way to quote a
 NEW-VAR-VALUE that is functionp but that we don't want to be applied.
-Always return the value from NEW-VAR-VALUE."
+Always return the value from NEW-VAR-VALUE.
+@todo XXX Should do this in its own obarray."
   ;; Simple dp-orig- prefix is too likely to have been done somewhere by hand.
   ;; !<@todo XXX put in own namespace
   (let ((save-sym (dp-mk-save-orig-symbol-name var-sym)))
@@ -263,7 +265,6 @@ Always return the value from NEW-VAR-VALUE."
 
 (dp-defaliases 'dp-fset-preserve 'dp-save-orig-n-set-new)
 
-;;!<@todo need to restore original doc string, too. 
 (defun dp-get-orig-value (var-sym)
   (symbol-value (dp-mk-save-orig-symbol-name var-sym)))
 
@@ -2135,6 +2136,41 @@ E.g. ;; commented out by dp-comment-out-sexp;"
          (ce (cond
               ;; known rest of line comments
               ;; (comment-end is "")
+;; Some VNC clients use F8 as the menu key.
+;; Give easy access to `dp-call-last-kbd-macro'
+;; See which one sticks.
+(dp-defaliases 'f8 'dpf8 'df8 'clkm 'ckm 'dp-call-last-kbd-macro)
+
+;; Some VNC clients use F8 as the menu key.
+;; Give easy access to `dp-call-last-kbd-macro'
+;; See which one sticks.
+(dp-defaliases 'f8 'dpf8 'df8 'clkm 'ckm 'dp-call-last-kbd-macro)
+
+;; Some VNC clients use F8 as the menu key.
+;; Give easy access to `dp-call-last-kbd-macro'
+;; See which one sticks.
+(dp-defaliases 'f8 'dpf8 'df8 'clkm 'ckm 'dp-call-last-kbd-macro)
+
+;; Some VNC clients use F8 as the menu key.
+;; Give easy access to `dp-call-last-kbd-macro'
+;; See which one sticks.
+(dp-defaliases 'f8 'dpf8 'df8 'clkm 'ckm 'dp-call-last-kbd-macro)
+
+;; Some VNC clients use F8 as the menu key.
+;; Give easy access to `dp-call-last-kbd-macro'
+;; See which one sticks.
+(dp-defaliases 'f8 'dpf8 'df8 'clkm 'ckm 'dp-call-last-kbd-macro)
+
+;; Some VNC clients use F8 as the menu key.
+;; Give easy access to `dp-call-last-kbd-macro'
+;; See which one sticks.
+(dp-defaliases 'f8 'dpf8 'df8 'clkm 'ckm 'dp-call-last-kbd-macro)
+
+;; Some VNC clients use F8 as the menu key.
+;; Give easy access to `dp-call-last-kbd-macro'
+;; See which one sticks.
+(dp-defaliases 'f8 'dpf8 'df8 'clkm 'ckm 'dp-call-last-kbd-macro)
+
               ((or
                 (string-match
                  "\\(//\\|[;#]\\)+\\s-*" comment-start))
