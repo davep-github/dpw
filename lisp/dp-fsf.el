@@ -1,5 +1,7 @@
 (message "dp-fsf loading...")
 
+;; FSF code.  Port to xemacs if needed.
+
 (setq isearch-continues 'isearch-scroll
       custom-file (dp-lisp-subdir
 		   (format "fsf-custom.%s.el" (dp-short-hostname)))
@@ -98,6 +100,16 @@ The stolen one above is slow when using completion."
 (setq-default generated-autoload-file
 	      (expand-file-name "auto-dp-autoloads.el"
 				dp-lisp-dir))
+
+(defun dp-describe-text-properties (num-chars-to-move
+				    &optional output-buffer buffer)
+  (interactive "P")
+  (if (not num-chars-to-move)
+      (call-interactively 'describe-text-properties)
+    (save-excursion
+      (goto-char (+ (point) (prefix-numeric-value num-chars-to-move)))
+      (describe-text-properties (point) output-buffer buffer))
+    (message "May not include dynamic properties, e.g. paren match"))))
 
 (provide 'dp-fsf)
 (message "dp-fsf loading...done.")
