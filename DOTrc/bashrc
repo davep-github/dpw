@@ -336,7 +336,8 @@ export PATH=$(dp_add_to_path_iff -p "$PATH" \
 export PATH=$(dp_add_to_path_iff "$PATH" \
     /usr/bin/mh \
     /usr/bin/X11 \
-    /usr/X11R6/bin)
+    /usr/X11R6/bin \
+    /opt/p4v*/bin)
 
 unset arch_bin
 

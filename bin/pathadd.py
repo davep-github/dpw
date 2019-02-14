@@ -102,6 +102,8 @@ def main(argv):
 
 if __name__ == "__main__":
     print >>sys.stderr, "DON'T USE THIS, USE pathadd2.py"
+    # Return the current path so assignments don't end up clearing the PATH.
+    print "{}".format(sys.argv[1])
     sys.exit(1)
     # try:... except: nice for filters.
     try:

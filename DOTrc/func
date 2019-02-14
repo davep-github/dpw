@@ -1125,20 +1125,28 @@ scrn_root_bash()
     screen sudo -E $NAMER IMASCREENINSTANCE=yes bash
 }
 
+add_ps1_prefix()
+{
+    local prefix1="${1-}"; shift
+    local title_prefix="${1-$prefix1}";
+    local full_prefix1="(${prefix1})"
+    local full_title_prefix="(${title_prefix})"
+    case "$PS1_prefix" in
+        *"${full_prefix1}"*) ;;
+        *) PS1_prefix="${full_prefix1}$PS1_prefix";;
+    esac
+    case "$PS1_title_prefix" in
+        *"${full_title_prefix}"*) ;;
+        *) PS1_title_prefix="-${full_title_prefix}-$PS1_title_prefix";;
+    esac
+}
+
 nh()
 {
     export dp_NH=y
     HISTFILE=
     vunsetp $dp_NH_PS1_prefix && dp_NH_PS1_prefix=$PS1_prefix
-    case "$PS1_prefix" in
-        *"(nh)"*) ;;
-        *) PS1_prefix="(nh)$PS1_prefix";;
-    esac
-    case "$PS1_title_prefix" in
-        *"(NH)"*) ;;
-        *) PS1_title_prefix="-(NH)-$PS1_title_prefix";;
-    esac
-
+    add_ps1_prefix nh NH
 }
 export -f nh
 
