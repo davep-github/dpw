@@ -25,6 +25,7 @@ Format is a list of these:
 
 (defvar dp-mew-config-From:-suffix-obarray (make-vector 32 0)
   "Obarray for holding generated symbols used by my mail From: rewriting rules.")
+
 (defun dp-mew-config-clear-obarray ()
   (setq dp-mew-config-From:-suffix-obarray (make-vector 32 0)))
 
@@ -61,21 +62,21 @@ Format is a list of these:
 		       "borzner" "mattison" "gillono" "jfg"
 		       "kuris" "shep"
 		       "lepper" "ghofrani" "auld" "mattisjo@") "\\|"))
-  
+
   (let ((etailers (dp-string-join '("amazon.com" "buy.com" "mwave.com"
 				    "enpc.com" "directron.com" "tccomputers"
 				    "googlegear.com") "\\|"))
-	(ipaq-rule '("To:\\|Cc:\\|From:" 
+	(ipaq-rule '("To:\\|Cc:\\|From:"
 		     ("lwesson@pce2000.com" . "+ipaq")))
 	(mew-rule '("To:\\|Cc:\\|From:"
 		    ("@mew.org" . "+mew")))
-	(work-rule '("To:" 
+	(work-rule '("To:"
 		     ("@ll.mit.edu"
 		      . "+work")))
 	(spam-rule `("To:\\|Cc:"
-		     ("uce@ftc\\.gov\\|419\\.fcd@usss\\.treas\\.gov" . 
+		     ("uce@ftc\\.gov\\|419\\.fcd@usss\\.treas\\.gov" .
 		      ,dp-mew-no-fcc))))
-    
+
     ;;
     ;; not everything I want to customize on a per-host basis is
     ;; available as a mew-config-alist key, so instead of configuring
@@ -98,7 +99,7 @@ Format is a list of these:
 	    mew-prog-grep (or (executable-find "agrep") "grep")
 	    dp-mew-prog-agrep-opts '("-l" "-e") ; not a mew-config-alist key
 	    ;; not a mew-config-alist key
-	    mew-refile-guess-alist 
+	    mew-refile-guess-alist
 	    `(("To:\\|Cc:\\|From:" (,dp-homeys . "+oldgang"))
 	      ,ipaq-rule
 	      ,mew-rule
@@ -112,56 +113,56 @@ Format is a list of these:
 	      ("From:" ("vanguardmail@" . "+invest"))
 	      ("Subject:" ("test" . "+tests")))
 	    dp-mew-config-From:-rewrite-alist
-	    `(("To:\\|Cc:" ("xemacs" . 
+	    `(("To:\\|Cc:" ("xemacs" .
 			    ,(dpmc-setq-tmp-name '(:suffix ".xemacs"))))
-	      ("To:\\|Cc:" ("freebsd" . 
+	      ("To:\\|Cc:" ("freebsd" .
 			    ,(dpmc-setq-tmp-name '(:suffix ".freebsd"))))
-	      ("To:\\|Cc:" ("mew" . 
+	      ("To:\\|Cc:" ("mew" .
 			    ,(dpmc-setq-tmp-name '(:suffix ".mew"))))
-	      ("To:\\|Cc:" ("sawfish" . 
+	      ("To:\\|Cc:" ("sawfish" .
 			    ,(dpmc-setq-tmp-name '(:suffix ".sawfish"))))
-	      ("To:\\|Cc:" ("amazon.com" . 
+	      ("To:\\|Cc:" ("amazon.com" .
 			    ,(dpmc-setq-tmp-name '(:suffix ".amazon"))))
-	      ("To:\\|Cc:" ("buy.com" . 
+	      ("To:\\|Cc:" ("buy.com" .
 			    ,(dpmc-setq-tmp-name '(:suffix ".buy.com"))))
-	      ("To:\\|Cc:" ("chelmervalve" . 
+	      ("To:\\|Cc:" ("chelmervalve" .
 			    ,(dpmc-setq-tmp-name '(:suffix ".cvc"))))
-	      ("To:\\|Cc:" ("uce@ftc.gov" . 
+	      ("To:\\|Cc:" ("uce@ftc.gov" .
 			    ,(dpmc-setq-tmp-name '(:suffix ".uce"))))
-	      ("To:\\|Cc:" ("2k3\\|2003" . 
-			    ,(dpmc-setq-tmp-name '(:user 
+	      ("To:\\|Cc:" ("2k3\\|2003" .
+			    ,(dpmc-setq-tmp-name '(:user
 						   "chicxulub"
 						   :fullname ""))))
-	      ("To:\\|Cc:" ("jobs\\|katz\\|bob@rail.com\\|@tadresources.com" . 
-			    ,(dpmc-setq-tmp-name '(:user 
+	      ("To:\\|Cc:" ("jobs\\|katz\\|bob@rail.com\\|@tadresources.com" .
+			    ,(dpmc-setq-tmp-name '(:user
 						   "panariti"
-						   :domain 
+						   :domain
 						   "verizon.net"))))
-	      ("Subject:" ("job" . 
-                           ,(dpmc-setq-tmp-name '(:user 
-                                                  "panariti"
-                                                  :domain 
-                                                  "verizon.net"))))
-	      ("To:\\|Cc:" (,dp-homeys . 
-			    ,(dpmc-setq-tmp-name '(:user 
+	      ("Subject:" ("job" .
+			   ,(dpmc-setq-tmp-name '(:user
+						  "panariti"
+						  :domain
+						  "verizon.net"))))
+	      ("To:\\|Cc:" (,dp-homeys .
+			    ,(dpmc-setq-tmp-name '(:user
 						   "davep"
-						   :domain 
+						   :domain
 						   "crickhollow.org"))))
-              ("To:\\|Cc:" ("@mikemorton" . 
-			    ,(dpmc-setq-tmp-name '(:user 
+	      ("To:\\|Cc:" ("@mikemorton" .
+			    ,(dpmc-setq-tmp-name '(:user
 						   "davep"
-						   :domain 
+						   :domain
 						   "withywindle.org"))))
-	      ("To:\\|Cc:" ("classmates.com" . 
-			    ,(dpmc-setq-tmp-name '(:suffix 
+	      ("To:\\|Cc:" ("classmates.com" .
+			    ,(dpmc-setq-tmp-name '(:suffix
 						   ".classmates"))))
 	      ("To:\\|Cc:" ("sonicfoundry.com" .
-			    ,(dpmc-setq-tmp-name '(:user 
+			    ,(dpmc-setq-tmp-name '(:user
 				"annoying.and.intrusive.registrations"))))
-	      ("To:" ("@crickhollow.org" . 
-		      ,(dpmc-setq-tmp-name '(:user 
+	      ("To:" ("@crickhollow.org" .
+		      ,(dpmc-setq-tmp-name '(:user
 					     "davep"
-					     :domain 
+					     :domain
 					     "crickhollow.org"))))
 	))
 ;    (if (not (boundp 'mew-mail-address-list))
@@ -180,62 +181,61 @@ Format is a list of these:
      ;; to allow relaying.
      ;; crl.dec.com
      ;; compaq.com
-     
+
      ((equal dp-mew-case "work-crl")
       (setq mew-fcc "+sent_mail"
-            mew-mailbox-type 'mbox
-            mew-mbox-command "rinc"
-            mew-mbox-command-arg nil
-            mew-user "David.Panariti"
-            mew-mail-domain "HP.Com"
-            mew-mail-domain-list '("HP.Com")
-            mew-mail-address-list '("^davep@crl.dec.com$"
-                                    "^david.panariti@compaq.com$"
-                                    "^david.panariti@hp.com$"
-                                    "^CRLFullTimeStaff@Compaq.Com$")
-            
-            mew-refile-guess-alist 
-            `(("To:\\|Cc:\\|From:" (,dp-homeys . "+personal"))
-              ("From:" ("kishore\\|ramachandran" . "+stampede"))
-              ,ipaq-rule
-              ,work-rule)))
-     
+	    mew-mailbox-type 'mbox
+	    mew-mbox-command "rinc"
+	    mew-mbox-command-arg nil
+	    mew-user "David.Panariti"
+	    mew-mail-domain "HP.Com"
+	    mew-mail-domain-list '("HP.Com")
+	    mew-mail-address-list '("^davep@crl.dec.com$"
+				    "^david.panariti@compaq.com$"
+				    "^david.panariti@hp.com$"
+				    "^CRLFullTimeStaff@Compaq.Com$")
+
+	    mew-refile-guess-alist
+	    `(("To:\\|Cc:\\|From:" (,dp-homeys . "+personal"))
+	      ("From:" ("kishore\\|ramachandran" . "+stampede"))
+	      ,ipaq-rule
+	      ,work-rule)))
+
      ((equal dp-mew-case "ll")
       (setq mew-fcc "+sent_mail"
-            mew-mailbox-type 'imap
-            mew-smtp-server "llpost"
-            mew-imap-server "llpop"
-            mew-user "davep"
-            mew-mail-domain "ll.mit.edu"
-            mew-mail-domain-list '("ll.mit.edu")
-            mew-mail-address-list '("^davep@ll.mit.edu$")
-            
-            mew-refile-guess-alist 
-            `(("To:\\|Cc:\\|From:" (,dp-homeys . "+personal"))
-              ,work-rule)))
+	    mew-mailbox-type 'imap
+	    mew-smtp-server "llpost"
+	    mew-imap-server "llpop"
+	    mew-user "davep"
+	    mew-mail-domain "ll.mit.edu"
+	    mew-mail-domain-list '("ll.mit.edu")
+	    mew-mail-address-list '("^davep@ll.mit.edu$")
+
+	    mew-refile-guess-alist
+	    `(("To:\\|Cc:\\|From:" (,dp-homeys . "+personal"))
+	      ,work-rule)))
 
      ((equal dp-mew-case "amd")
       (setq mew-fcc "+sent_mail"
-            mew-mailbox-type 'imap
-            mew-smtp-server "llpost"
-            mew-imap-server "llpop"
-            mew-user "davep"
-            mew-mail-domain "ll.mit.edu"
-            mew-mail-domain-list '("amd.com")
-            mew-mail-address-list '("^david.panariti@amd.com$")
-            
-            mew-refile-guess-alist 
-            ))
+	    mew-mailbox-type 'imap
+	    ;; mew-smtp-server "atlsmtp10.amd.com"
+	    mew-smtp-server "smtp.office365.com"
+	    mew-imap-server "outlook.office365.com"
+	    mew-user "dpanarit"
+	    mew-mail-domain "amd.com"
+	    mew-mail-domain-list '("amd.com")
+	    mew-mail-address-list '("^david.panariti@amd.com$")
+	    ))
      ;;
      ;; hopefully useful defaults
      (t
       (message "*** Using default mew configuration!!!!!!!!!!!!")
       (ding)
       (setq mew-fcc "+sent_mail"
-            mew-mailbox-type 'mbox
-            mew-mbox-command "inc"
-            mew-mbox-command-arg nil
-            mew-mail-domain-list '("meduseld.net"))))))
+	    mew-mailbox-type 'mbox
+	    mew-mbox-command "inc"
+	    mew-mbox-command-arg nil
+	    mew-mail-domain-list '("meduseld.net"))))))
 
 
 (defun dp-mew-config-set-config (&optional force-retain-p)
