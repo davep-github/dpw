@@ -368,7 +368,6 @@ dp-sel2 uses these bindings:
     (when (> (window-height) (* 2 dp-sel2:window-height))
       (split-window-vertically))
 
-
     (switch-to-buffer-other-window
      (dp-sel2:items buf-name insertor insertor-args item-list))
 ;;;    (dp-toggle-read-only 0 nil)		; in case this is a re-entry
@@ -824,12 +823,16 @@ we started.  The strings are in the same order that a series of
     ;; reverse list for return
     (nreverse ret-list)))
 
+(defun dp-sel2-paste:get-item-text (&optional item)
+  (dp-get--as-string--region-or...
+   :bounder nil
+   :default (cdr (or item (dp-sel2:current-item)))))
+
 ;; called w/sel-buf active
 (defun dp-sel2-paste:copy-no-exit (&optional add-to-kill-ring item)
   "Insert current item but do not exit sel-mode."
   (interactive)
-  (let ((text (or (dp-maybe-get-region)
-		  (cdr (or item (dp-sel2:current-item))))))
+  (let ((text (dp-sel2-paste:get-item-text item)))
     (setq dp-sel2:target-marker
 	  (dp-sel2:with-target-buffer
 	      (insert text)
@@ -923,8 +926,8 @@ we started.  The strings are in the same order that a series of
       ;; not enough... ring will not be rotated correctly
       ;; if another sel buf has inserted and rotated
       ;; kill-ring
-      (unless rotate-only-p
-	(insert (cdr sel-item)))
+      (if (not rotate-only-p)
+	  (insert (cdr sel-item)))
       (current-kill (car sel-item) do-not-rotate)))
   (setq this-command 'yank))
 
@@ -936,21 +939,22 @@ we started.  The strings are in the same order that a series of
   (dp-define-local-keys
    `(
      [?r] ,(kb-lambda
-	      (let ((dp-sel2:rotate-only-p t))
+	      (let ((dp-sel2:rotate-only-p 'no-exit-p))
 		(dp-sel2:select)))
      [?R] ,(kb-lambda
-	      (current-kill (car (dp-sel2:current-item)))
-	      (dp-sel2:refresh))
+	      (let ((dp-sel2:rotate-only-p t))
+		(dp-sel2:select)))
      [?c] ,(kb-lambda
 	      (dp-sel2-paste:copy-no-exit 'copy))
      [?k] ,(kb-lambda
 	      (dp-sel2-paste:copy-no-exit 'copy))
      [?C] ,(kb-lambda
-	      (dp-sel2-paste:copy-no-exit 'copy)
-	      (dp-sel2:exit-mode))
+	      (dp-sel2-paste:copy-no-exit 'copy))
      [?K] ,(kb-lambda
-	      (dp-sel2-paste:copy-no-exit 'copy)
-	      (dp-sel2:exit-mode))
+	      (dp-sel2-paste:copy-no-exit 'copy))
+     [(meta ?o)] ,(kb-lambda
+		      (kill-new (dp-sel2-paste:get-item-text)
+				(dp-deactivate-mark)))
      [?o] dp-sel2-paste:view-item
      [?v] dp-sel2-paste:view-item
      [?u] dp-sel2-paste:undo-target-buffer
