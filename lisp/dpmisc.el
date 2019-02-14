@@ -450,12 +450,12 @@ string containing their values."
   (dp-dump-arg-info arg)
   arg)
 
-(defun dp-show-interactive--P-optional (&optional arg)
+(defun dp-show-interactive--P-required (arg)
   (interactive "P")
   (dp-dump-arg-info arg)
   arg)
 
-(defun dp-show-interactive--P-required (arg)
+(defun dp-show-interactive--P-optional (&optional arg)
   (interactive "P")
   (dp-dump-arg-info arg)
   arg)
