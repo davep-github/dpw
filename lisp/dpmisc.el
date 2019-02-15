@@ -829,10 +829,11 @@ examining all of the message calls."
   "Insert a message directly into the message buf w/no copy in echo area. No newline is appended."
   (with-current-buffer dp-message-buffer-name
     (goto-char (point-max))
-    (insert ;;(format "%d>" dp-message-no-echo-num)
-            (apply 'format fmt rest-of-args)
-            ;;(format "<%d" dp-message-no-echo-num)
-            )
+    (let ((inhibit-read-only t))
+      (insert ;;(format "%d>" dp-message-no-echo-num)
+       (apply 'format fmt rest-of-args)
+       ;;(format "<%d" dp-message-no-echo-num)
+       ))
     (goto-char (point-max))
     (incf dp-message-no-echo-num)
     (when (if (numberp dp-message-no-echo-sync-p)
