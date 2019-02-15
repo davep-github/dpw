@@ -240,6 +240,7 @@ If you hate things like '1 things fucked up' vs '1 thing...', use this."
 (defun dp-mk-save-orig-symbol-name (sym-name)
   (dp-ify-symbol sym-name "save-orig-n-set-new>"))
 
+
 (defun* dp-save-orig-n-set-new (var-sym new-var-value &optional docstring
                                 &rest new-var-value-args)
   "Save a copy of VAR-SYM's value iff it hasn't already been backed up.
@@ -14350,6 +14351,10 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
 ;; Restore Other Window.
 (defun dp-restore-other-window ()
   (interactive)
+
+
+
+
   (switch-to-buffer-other-window (other-buffer (current-buffer))))
 
 (dp-defaliases 'row 'dp-restore-other-window)
