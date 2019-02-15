@@ -1094,7 +1094,7 @@ All args are simply passed thru to `dp-mark-region'"
   "Get region or... (see `dp-region-or...') and return it as a string.
 If region is not active, default gettor is `symbol-near-point'."
   (interactive)
-  (let* ((beg-end (apply 'dp-region-or... :bounder 'nada 
+  (let* ((beg-end (apply 'dp-region-or... :bounder 'nada
                          args-for-dp-region-or...))
          ;;(dumby (dmessage "YOPP!, be: %s" beg-end))
          (str (if (consp beg-end)
@@ -2129,7 +2129,7 @@ manual `dp-mark-to-end-of-line' -- C-c d C-k -- followed by a
   "Call last kbd macro, making sure one is not being defined."
   (interactive)
   (if defining-kbd-macro
-      (when (y-or-n-p "Defining a macro;  End and call it? ")
+      (when (y-or-n-p "Defining a macro;  Stop definition and call it? ")
 	(end-kbd-macro)
 	(call-interactively 'call-last-kbd-macro))
     (call-interactively 'call-last-kbd-macro)))
@@ -5446,7 +5446,12 @@ command-line argument to XEmacs, e.g. -eval \(dp-main-rc)."
   ;; This function is called after dpmacs has completed.
   (dp-activate-appts)
   (dp-appt-initialize-on)
-  ;; the -geometry arg doesn't work quite right under kde.
+  ;; The -geometry arg doesn't work quite right under kde.
+  ;; Or maybe it's because something was wrong with setting the font in the
+  ;; very early init phase.  It looks like it didn't take when I broke right
+  ;; after the call to set the font.  Hence the move here.
+  ;; Set it before the snuggle so everything has the final display values.
+  (dp-set-frame-font-size dp-set-frame-font-size-default)
   (unless (bound-and-true-p dp-do-not-snuggle-frame-in-upper-right-p)
     (dp-snuggle-frame-in-upper-right)
     (message "snuggling...finished."))
@@ -5571,10 +5576,12 @@ LESSER-GLOBS-TOO-P says to grep files in `dp-lgrep-lesser-globs' as well. "
 		 (dsa-closing (if (string-equal default-search-arg "")
 				  ""
 				"' ")))
-		 (format "egrep -n -i -e %c%s%s"
-			 ?\'
-			 default-search-arg
-			 dsa-closing))
+	    (format "%s %s %c%s%s"
+		    dp-lgrep-grep-program
+		    dp-lgrep-grep-args
+		    ?\'
+		    default-search-arg
+		    dsa-closing))
 	  'dp-grep-history)
          current-prefix-arg))
   (setq command-args
@@ -5584,7 +5591,7 @@ LESSER-GLOBS-TOO-P says to grep files in `dp-lgrep-lesser-globs' as well. "
                                         (and lesser-globs-too-p
                                              dp-lgrep-lesser-globs)))))
   (when (dp-xemacs-p)
-    ;; FSF `grep' does this already.
+    ;; FSF `grep' does this itself.
     (save-some-buffers))
   (grep command-args))
 
@@ -6079,7 +6086,18 @@ In addition, add the PLIST from PROPS to the extent."
     ;; positive identification of all of our extents
     ;;(dmessage "props>%s<" props)
     (set-extent-properties extent prop-list)
-    extent
+
+    ;; see if there are any properties that need to be handled by text
+    ;; properties, e.g. read-only.
+    ;; Add a plist to the overlay
+    ;; ('text-props (start end text-props))
+    ;; (when read-only-p
+    ;;   ;; we need to make overlapping text properties to do handle the
+    ;;   ;; read-only property.  But we need to attach it to the overlay so that
+    ;;   ;; it gets deleted when the overlay is deleted.  Put a property on the
+    ;;   ;; overlay whose value is the text property object.
+    ;;   ;; Actually it's just a (beg, end) thing.
+    ;;   )
     ))
 
 (defun dp-make-extent (from to id-prop &rest props)
@@ -7075,10 +7093,11 @@ Remove any other copies of the name."
   (interactive)
   (let* ((tmp (dp-get-recently-killed-file-list))
 	 (table (dp-mk-completion-list tmp))
-         (dead-file (completing-read "Resurrect file: " 
-                                table
-                                nil nil nil
-                                'dp-recently-killed-files)))
+	 ;; Use numeric prefix arg to select nth file to operate on.
+	 (dead-file (completing-read "Resurrect file: "
+				     table
+				     nil nil nil
+				     'dp-recently-killed-files)))
     (dmessage "dead-file>%s<" dead-file)
     (when (and dead-file
                (not (string= "" dead-file)))
@@ -7206,7 +7225,8 @@ BUF-OR-NAME-OR-NIL may be nil, a buffer or a buffer name."
                                        (buffer-name buffer)))))))
 
 (defun dp-bury-or-kill-process-buffer (&optional buffer)
-  "Given BUFFER, if it has a live process, bury it, else kill it. nil BUFFER is OK."
+  "Given BUFFER, if it has a live process, bury it, else kill it.
+nil BUFFER is OK."
   (interactive)
   (when buffer
     (setq buffer (get-buffer buffer))
@@ -12882,7 +12902,7 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
          (equal obj []))
     nil)
    (nil nil)                            ; duh.
-   (t t)))
+   (t t)))				;@todo XXX should be nil?
 
 (defvar dp-find-function-after-hook-hist-map 
   '(("^def" . variable-history)
@@ -12958,7 +12978,7 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
                                            (not (equal (symbol-value vsym) 
                                                        new-val))))
                               (new-default nil new-default-set-p))
-  "Make VAR-SYM buffer local if pred is non-nil and either t or a function returing non-nil.
+  "Make VAR-SYM buffer local if PRED is non-nil and either t or a function returing non-nil.
 PRED, if non-nil and not t, takes two arguments: VAR-SYM and NEW-VAL.
 Eitherwise set var-sym's value to new-val.
 If new-default is passed (as predicated by NEW-DEFAULT-SET-P being non-nil)
