@@ -471,12 +471,23 @@ string containing their values."
   (dp-dump-arg-info arg)
   arg)
 
-(defun dp-interactive-info-P-arg (&optional arg)
+(defun dp-interactive-info--P-arg (&optional arg)
   "Show what `\(interactive \"-P\"\)' returns and `current-prefix-arg'."
   (interactive "P")
-  (message "\"P\": argument to function >%s<, current-prefix-arg>%s<" 
-           arg current-prefix-arg))
-(defalias 'raw-itest 'dp-interactive-info-P-arg)
+  (message "\"P\": argument to function >%s<, current-prefix-arg>%s<, prefix-numeric-value: %d"
+           arg
+	   current-prefix-arg
+	   (prefix-numeric-value current-prefix-arg)))
+(defalias 'raw-itest 'dp-interactive-info--P-arg)
+
+(defun dp-interactive-info--p-arg (&optional arg)
+  "Show what interactive returns."
+  (interactive "p")
+  (message "\"p\">%s<, \"P\" (aka current-prefix-arg)>%s<, prefix-numeric-value: %d"
+           arg
+	   current-prefix-arg
+	   (prefix-numeric-value current-prefix-arg)))
+(defalias 'itest 'dp-interactive-info--p-arg)
 
 (defun dp-interactive-info-no-arg (&optional arg)
   "Show what `\(interactive\)' returns and `current-prefix-arg'."
