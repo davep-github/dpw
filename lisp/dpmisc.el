@@ -428,15 +428,15 @@ string containing their values."
   rest)
 (dp-defaliases 'dp-nop-rest 'dp-interactive-identity-rest 'dp-identity-rest)
 
-(defun dp-identity (&rest rest)
 (defun dp-dump-arg-info (arg)
   (dmessage "arg>%s<, current-prefix-arg>%s<, prefix-numeric-value>%s<"
 	    arg current-prefix-arg (prefix-numeric-value current-prefix-arg))
   arg)
 
+(defun dp-identity (&rest rest)
   "Accept arbitrary [number of] arguments, but return first only."
-  (interactive)
   (car rest))
+  (interactive)
 
 (defun dp-nop (&rest r))
 
