@@ -280,6 +280,7 @@
     ;; Reveng errors
     "^There is no unique cscope database directory!$"
     "The tags stack is empty"
+    "^No next conflict$"
 
     ;; <:new-errors|misc-errors:>
     "^There are unsaved changes$"

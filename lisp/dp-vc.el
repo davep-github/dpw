@@ -67,4 +67,26 @@
    ((pcomplete-match (regexp-opt '("checkout" "co") 1))
     (pcomplete-here* (pcmpl-git-get-refs "heads")))))
 
+(defun dp-smerge-mode-hook ()
+  (interactive)
+  (dp-local-set-keys
+   '(
+     [(control ?c) ?d ?s ?a] smerge-keep-all
+     [(control ?c) ?d ?s ?u] smerge-keep-upper
+     [(control ?c) ?d ?s ?l] smerge-keep-lower
+     [(control ?c) ?d ?s ?b] smerge-keep-base
+     [(control ?c) ?d ?s ?r] smerge-resolve
+     [(control ?c) ?d ?s ?p] smerge-prev
+     [(control ?c) ?d ?s ?n] smerge-next
+     [(control meta left)] smerge-prev
+     [(control meta right)] smerge-next
+     [(control meta ?,)] smerge-prev
+     [(control meta ?.)] smerge-next
+     [(control meta ?n)] smerge-next
+     [(control meta ?p)] smerge-prev
+     [(control ?c) ?d ?s ?<] smerge-diff-base-upper
+     [(control ?c) ?d ?s ?=] smerge-diff-upper-lower
+     [(control ?c) ?d ?s ?>] smerge-diff-base-lower
+     ))
+  )
 (provide 'dp-vc)
