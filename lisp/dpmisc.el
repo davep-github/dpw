@@ -444,6 +444,7 @@ string containing their values."
 ;; Fails with simple M-x invocation.
 (defun dp-interactive-required-arg (arg)
   (interactive "p")
+  (dp-dump-arg-info arg)
   arg)
 
 (defun dp-interactive-default-optional-arg (&optional arg)
