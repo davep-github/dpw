@@ -1099,7 +1099,8 @@ If region is not active, default gettor is `symbol-near-point'."
          ;;(dumby (dmessage "YOPP!, be: %s" beg-end))
          (str (if (consp beg-end)
                   (buffer-substring (car beg-end) (cdr beg-end))
-                (apply gettor gettor-args))))
+		(and (not (memq gettor (list nil 'none 'no-get)))
+		     (apply gettor gettor-args)))))
     (or str default)))
 
 
