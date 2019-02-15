@@ -221,6 +221,7 @@ If you hate things like '1 things fucked up' vs '1 thing...', use this."
 (defun dp-mk-save-orig-symbol-name (sym-name)
   (dp-ify-symbol sym-name "save-orig-n-set-new>"))
 
+
 (defun* dp-save-orig-n-set-new (var-sym new-var-value &optional docstring
                                 &rest new-var-value-args)
   "Save a copy of VAR-SYM's value iff it hasn't already been backed up.
@@ -4678,8 +4679,8 @@ Return t if successful, nil otherwise."
       (progn
 	(require feature file-name)
 	t)
-    (error 
-     (message "**** Problem in (require %s %s): %s" 
+    (error
+     (message "**** Problem in (require %s %s): %s"
 	      feature file-name error-info)
      nil)))
 
@@ -5594,9 +5595,9 @@ LESSER-GLOBS-TOO-P says to grep files in `dp-lgrep-lesser-globs' as well. "
 			 dsa-closing))
 	  'dp-grep-history)
          current-prefix-arg))
-  (setq command-args 
-        (format "%s %s" 
-                command-args 
+  (setq command-args
+        (format "%s %s"
+                command-args
                 (dp-string-join (append dp-lgrep-globs
                                         (and lesser-globs-too-p
                                              dp-lgrep-lesser-globs)))))
@@ -6088,9 +6089,9 @@ When beginning a sequence, (point) is saved.  This can be pushed onto
 Also give it the property 'dp-extent-p with value t.
 In addition, add the PLIST from PROPS to the extent."
   (let ((extent (make-extent from to buffer-or-string))
-	(prop-list (append (list id-prop t 
-                                 'dp-extent-id id-prop 
-                                 'dp-extent-p t) 
+	(prop-list (append (list id-prop t
+                                 'dp-extent-id id-prop
+                                 'dp-extent-p t)
                            props)))
     ;; put a unique property on every extent we make for easy,
     ;; positive identification of all of our extents
@@ -6625,7 +6626,7 @@ cell is returned."
   (save-match-data
     (dolist (el regexp-alist nil)
       (when (string-match (format "%s" (car el)) (format "%s" key))
-        (return  el)))))
+        (return el)))))
 
 (defun dp-wildcards-exist (wildcards)
   (let ((matches (file-expand-wildcards wildcards)))
@@ -7097,7 +7098,7 @@ Remove any other copies of the name."
                                 nil nil nil
                                 'dp-recently-killed-files)))
     (dmessage "dead-file>%s<" dead-file)
-    (when (and dead-file 
+    (when (and dead-file
                (not (string= "" dead-file)))
       (find-file dead-file)
       ;; Nuke the file. It'll be added again when killed in a more temporally
@@ -7219,7 +7220,7 @@ BUF-OR-NAME-OR-NIL may be nil, a buffer or a buffer name."
                            (lambda ()
                              (and
                               (not (dp-buffer-process-live-p buffer))
-                              (message "Nuking process buffer (%s)" 
+                              (message "Nuking process buffer (%s)"
                                        (buffer-name buffer)))))))
 
 (defun dp-bury-or-kill-process-buffer (&optional buffer)
@@ -8543,13 +8544,13 @@ Can be called directly or by an abbrev's hook.
   (when (file-exists-p saveconf-file-name)
     (copy-file saveconf-file-name saveconf-file-name-prev
                t t))
-  
+
   (defvar dp-save-context-exclusion-regexp "\\(^/\\[\\)"
     "Regexp of filenames we DON'T want to save. E.g. remote files.")
   (setq save-context-buffer-file-name-predicate
         (function (lambda (file-name)
                     (if (not (and file-name
-                                  (boundp 
+                                  (boundp
                                    'dp-save-context-exclusion-regexp)
                                   dp-save-context-exclusion-regexp))
                         t
@@ -8564,7 +8565,7 @@ Can be called directly or by an abbrev's hook.
         (with-temp-buffer			;since cd changes buffer's cd
           ;; WTF is this cd stuff? `save-context' uses
           ;; `original-working-directory' as save file's directory.
-;;           (cd (if save-in-home-p 
+;;           (cd (if save-in-home-p
 ;;                   (getenv "HOME")
 ;;                 default-directory)
 ;;               )
@@ -8574,15 +8575,15 @@ Can be called directly or by an abbrev's hook.
 
   (defun dp-recover-context-from-file (file-name)
     (interactive (list
-                  (dp-prompt-with-symbol-near-point-as-default 
-                   "Context file:" 
+                  (dp-prompt-with-symbol-near-point-as-default
+                   "Context file:"
                    :symbol-type (cons 'f saveconf-file-name)
                    :reader-args (list "~/" nil t))))
     (let ((saveconf-file-name file-name))
       (message "Recovering context from: %s" file-name)
       (recover-context)))
   (defalias 'wwif 'dp-recover-context-from-file)
-  
+
   (defun dp-recover-context (&optional file-flag)
     "Recover our file context.
 Periodically, the list of files, windows, etc are saved so that context can
@@ -8600,19 +8601,19 @@ machine. This function allows us to specify a specific context file so we can
 get context from another machine.  @
 todo XXX ??? Keep <n> previous contexts?"
     (interactive "P")
-    (cond 
+    (cond
      ((not file-flag) (dp-recover-context-from-file saveconf-file-name-prev))
      ((Cu0p) (dp-recover-context-from-file saveconf-file-name))
      (t (call-interactively 'dp-recover-context-from-file)))
     (ibuffer))
 
   (dp-defaliases 'where-was-i 'wwi 'dp-recover-context)
-  
+
   (defun dp-edit-recover-context-file ()
     (interactive)
     (find-file (saveconf-get-filename)))
   (defalias 'ewwi 'dp-edit-recover-context-file)
-  
+
   ;; A pretty sensible place to save the context.
   ;; Others would be when a file is unvisited (no hook)
   ;; When a file is saved? I save a **LOT**. But this is pretty lightweight.
@@ -14282,6 +14283,10 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
 ;; Restore Other Window.
 (defsubst row ()
   (interactive)
+
+
+
+
   (switch-to-buffer-other-window (other-buffer (current-buffer))))
 
 (defun dp-save-buffers-kill-emacs (&optional run-no-hooks-p)
