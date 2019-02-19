@@ -14727,16 +14727,22 @@ JFC."
   (interactive)
   (info "magit"))
 
+(defun cali ()
+  "Calendar/Diary Info."
+  (interactive)
+  (Info-goto-node "Calendar/Diary"))
+(dp-defaliases 'cdi 'cali)
+
 (defun xerdim ()
   (interactive)
-  (sfw 164)
-  (sfh 42)
+  (dp-set-frame-width 164)
+  (dp-set-frame-height 42)
   (set-frame-position nil 24 0))
 
 (defun yyzdim ()
   (interactive)
-  (sfw 164)
-  (sfh 45)
+  (dp-set-frame-width 164)
+  (dp-set-frame-height 45)
   (set-frame-position nil 190 0))
 
 (defun yyz-vnc-setup ()
