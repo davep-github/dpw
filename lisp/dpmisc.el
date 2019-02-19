@@ -2136,13 +2136,13 @@ manual `dp-mark-to-end-of-line' -- C-c d C-k -- followed by a
 	(call-interactively 'call-last-kbd-macro))
     (call-interactively 'call-last-kbd-macro)))
 
-(defun* dp-comment-out-region (&optional sexp-p (comment-comment-text "")
-                               comment-tag
 ;; Some VNC clients use F8 as the menu key.
 ;; Give easy access to `dp-call-last-kbd-macro'
 ;; See which one sticks.
 (dp-defaliases 'f8 'dpf8 'df8 'clkm 'ckm 'dp-call-last-kbd-macro)
 
+(defun* dp-comment-out-region (&optional sexp-p (comment-comment-text "")
+                               comment-tag
                                bracket-p)
   "Comment out the region if active, else the current line.
 If no comment syntax is defined, prompt for beginning and ending
