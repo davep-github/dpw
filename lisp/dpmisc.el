@@ -12946,7 +12946,7 @@ Use \\[dp-comment-out-with-tag] to specify a tag string.")
 (defun dp-fill-paragraph-or-region-with-no-prefix ()
   (interactive)
   (let ((fill-prefix nil))
-    (call-interactively 'fill-paragraph-or-region)))
+    (call-interactively 'dp-fill-paragraph-or-region)))
 
 (defun dp-kill-ring-save-variable-value (var-name)
   (interactive (list
@@ -14156,7 +14156,7 @@ qualifies for whitespace eradication.")
 		    (next-line 1)
 		    (setq this-command 'next-line))))))
     (error
-     (message "dp-next-line(): caught error: %s" bubba)
+     ;; (message "dp-next-line(): caught error: %s" bubba)
      ;; Fall back to some kind of normalcy :-(, or at least
      ;; do something useful.  We could fret every little detail in
      ;; order to be sure we only do a single `next-line' depending on
@@ -14285,19 +14285,18 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
     (when (and colorize-p
                (not (equal original-read-only buffer-read-only)))
       (dp-colorize-found-file-buffer))))
+
 (dp-defaliases 'dp-tro 'dptro 'dptogglero 'dptogro
 	       'dp-trw 'dptrw 'dptogglerw 'dptogrw
 	       'dp-toggle-read-write
 	       'dp-toggle-read-only)
 
 ;; Restore Other Window.
-(defsubst row ()
+(defun dp-restore-other-window ()
   (interactive)
-
-
-
-
   (switch-to-buffer-other-window (other-buffer (current-buffer))))
+
+(dp-defaliases 'row 'dp-restore-other-window)
 
 (defun dp-save-buffers-kill-emacs (&optional run-no-hooks-p)
   "DUH... Are you sure?"
