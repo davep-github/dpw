@@ -288,6 +288,7 @@
     "Canceled"
     "^File is not under version control$"
     "^No operations specified$"
+    "^Cannot continue rebase with unstaged changes$"
     )
   "*My list of ignored signals.  These will not cause an entry into the
 debugger if encountered when `debug-on-error' is non-nil.

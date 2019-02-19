@@ -1,4 +1,4 @@
-(message "loading fsf-early-init...")
+(message "loading fsf-init...")
 
 ;; (setq package-user-dir (locate-user-emacs-file
 ;; 			(dp-hostify-name "elpa.%s.d")))
@@ -31,63 +31,20 @@ t))
   :group 'dp-init-vars
   :type 'string)
 
-;; Use `dp-set-to-max-vert-frame-height' and check that width is <= max width
-;; using a similar mechanism.
-(defvar dp-initial-frame-width 180)
-(defvar dp-initial-frame-height 66)
-
 ;; initial window settings
-;; @todo XXX Put these in specmacsen.
-;; Possibly put common stuff here. And add to the list in the specmacsen.
 (setq initial-frame-alist
-      `((width . ,dp-initial-frame-width)
-	(height . ,dp-initial-frame-height)
-	(fullscreen . fullheight)
+      `((width . 92)
+	(height . 59)
 	(vertical-scroll-bars . right)))
 
 ;; subsequent window settings
 (setq default-frame-alist
       `((menu-bar-lines . 1)
         (tool-bar-lines . 0)
-        (width . ,dp-initial-frame-width)
-        (height . ,dp-initial-frame-height)
+        (width . 92)
+        (height . 59)
 	(vertical-scroll-bars . right)
-	(fullscreen . fullheight)
         (background-color . ,dp-default-background-color)))
 
-(defconst dp-original-isearch-string-out-of-window-function
-  (symbol-function 'isearch-string-out-of-window)
-  "Save this so we can still use it in our hack.")
-
-(defun dp-unfuck-isearch-scrolling ()
-  "Stop Emacs from preventing search string from scrolling off the screen.
-I *really* *really* *really* hate this.  So I just say, nope,
-we're not off screen.  However, this fucks up and seems to
-activate the mark and mark from the iseatch string to the cursor
-position."
-  (unless (bound-and-true-p
-	   dp-dont-fix-stupid-emacs-refusal-to-scroll-search-string-off-screen-p)
-    (defun isearch-string-out-of-window (isearch-point)
-      ;; @todo XXX As a less terrible hack, when we move out of the window,
-      ;; exit `isearch-mode'.
-      ;; Causing an error here (and in the `post-command-hook') seems to make
-      ;; things less fucked up.
-      (message))))
-  ;FIXME     (when (funcall dp-original-isearch-string-out-of-window-function
-  ;FIXME 		     isearch-point)
-  ;FIXME 	;; We left the window.
-  ;FIXME 	;; exit isearch mode.
-  ;FIXME 	;; Works much better, but the cursor goes to the beginning of the
-  ;FIXME 	;; line.  However, unexpectedly and quite happily, the searched for
-  ;FIXME 	;; string remains highlighted.  I have no idea why, since the
-  ;FIXME 	;; `isearch-exit' should, well, exit the search.
-  ;FIXME 	(isearch-exit)
-  ;FIXME 	)
-  ;FIXME     )
-  ;FIXME   )
-  ;FIXME )
-
-(add-hook 'dp-post-dpmacs-hook 'dp-unfuck-isearch-scrolling)
-
-(provide 'fsf-early-init)
-(message "loading fsf-early-init...done")
+(provide 'fsf-init)
+(message "loading fsf-init...done")
