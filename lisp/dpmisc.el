@@ -4652,7 +4652,7 @@ Uses `get-buffer' to get the buffer."
       (get-buffer-window (or buffer (current-buffer)) frames devices)
     (get-buffer-window (or buffer (current-buffer)) frames)))
 
-(defun dp-optionally-require (feature &optional file-name)
+(defun dp-optionally-require (feature &optional file-name verbose-p)
   "Wrap `require' in condition-case to allow us to
 continue in the case of an error.
 Prints a warning if anything goes wrong.  Useful for trying to load
@@ -4662,6 +4662,8 @@ Return t if successful, nil otherwise."
   (condition-case error-info
       (progn
 	(require feature file-name)
+	(when verbose-p
+	  (message "Optionally loaded feature: %s" feature))
 	t)
     (error
      (message "**** Problem in (require %s %s): %s"
