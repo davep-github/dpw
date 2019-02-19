@@ -10010,6 +10010,7 @@ Suitable for a find file hook (`dp-find-file-hooks')
 and for setting up a buffers mode (`dp-set-auto-mode')."
   (dp-funcall-if dp-found-file-pre-hook ())
   (setq dp-found-file-pre-hook nil)
+  ;; Make RO before colorizing, so RO colors will be used.
   (dp-force-read-only-by-file-name-regexp)
   (dp-colorize-found-file-buffer)
   (dp-set-file-group)
@@ -10022,7 +10023,6 @@ and for setting up a buffers mode (`dp-set-auto-mode')."
   "My hooks added to `find-file-hooks'."
   (interactive)
   ;;(dp-make-local-keymap-extent)
-  ;; Make RO before colorizing, so RO colors will be used.
   (dp-found-file-setup)
   (dp-restore-file-state (current-buffer)))
 
