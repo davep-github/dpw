@@ -1976,14 +1976,14 @@ from simple.el"
   (interactive "*p")
   (dp-delete-word-forward (- arg)))
 
-(defun dp-point-to-top (arg)
+(defun dp-point-to-top (lines-from-window-top)
   "Put line containing point at the top of the window."
   (interactive "P")
   (dp-set-zmacs-region-stays t)
-  (if (eq arg '-)
+  (if (eq lines-from-window-top '-)
       (dp-point-to-bottom nil)
-    (let ((line (if arg
-                    (prefix-numeric-value arg)
+    (let ((line (if lines-from-window-top
+                    (prefix-numeric-value lines-from-window-top)
                   0)))
       (recenter line))))
 (put 'dp-point-to-top isearch-continues t)

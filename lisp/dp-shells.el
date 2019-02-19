@@ -1187,20 +1187,24 @@ command position."
       (setq pos (dp-shell-find-cmd-pos0 dir pos wrap-skips-current))
       finally return pos)))
 
-(defun dp-shell-goto-cmd-pos (arg direction)
+(defun dp-shell-goto-cmd-pos (num-to-move direction)
   (when dp-shell-last-cmds
-    (goto-char 
-     (dp-shell-find-cmd-pos direction (point) arg))
+    (let ((position@top (< num-to-move 0))
+	  (num-to-move (abs num-to-move)))
+      (goto-char
+       (dp-shell-find-cmd-pos direction (point) num-to-move))
+      (when position@top
+	(dp-point-to-top nil)))
     (dp-highlight-point-until-next-command
      :colors dp-highlight-point-other-window-faces)))
 
-(defun dp-shell-goto-prev-cmd-pos (&optional arg)
-  (interactive "P")                     ;"_" - fsf
-  (dp-shell-goto-cmd-pos arg 'backwards))
+(defun dp-shell-goto-prev-cmd-pos (&optional num-to-move)
+  (interactive "p")                     ;"_" - fsf
+  (dp-shell-goto-cmd-pos num-to-move 'backwards))
 
-(defun dp-shell-goto-next-cmd-pos (&optional arg)
-  (interactive "")                     ;"_" fsf
-  (dp-shell-goto-cmd-pos arg 'forwards))
+(defun dp-shell-goto-next-cmd-pos (&optional num-to-move)
+  (interactive "p")                     ;"_" fsf
+  (dp-shell-goto-cmd-pos num-to-move 'forwards))
 
 (defun dp-shell-adjust-command-positions (delta)
   ;;(dmessage "delta: %s" delta)
