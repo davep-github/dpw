@@ -327,6 +327,8 @@
      dp-manual)
     (("ISTR" "I seem to recall")
      dp-manual)
+     (("bi" "built-in" "builtin")
+     dp-manual)
     (("subshell" "sub-shell")
      dp-manual)
     (("ding" "ba DooM!")
