@@ -5446,7 +5446,6 @@ NB: This runs after `dp-post-dpmacs-hook'. It is intended to be invoked as a
 command-line argument to XEmacs, e.g. -eval \(dp-main-rc)."
   (interactive)
   (message "dp-main-rc()...")
-  (dp-start-editing-server)
   ;; This function is called after dpmacs has completed.
   (dp-activate-appts)
   (dp-appt-initialize-on)
