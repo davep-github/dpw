@@ -6943,13 +6943,6 @@ QUIT-KEYS, if neq t, are added to this map."
 	  (dp-set-text-color 'dp-less-bg-extent text-face)))
       (message "Press %s to exit view mode" key-message))))
 
-(defun dp-interactive-info-p-arg (&optional arg)
-  "Show what interactive returns."
-  (interactive "p")
-  (message "\"p\">%s<, \"P\" (aka current-prefix-arg)>%s<" 
-           arg current-prefix-arg))
-(defalias 'itest 'dp-interactive-info-p-arg)
-
 (defun dp-mark-sexp (&optional arg)
   "Do a mark-sexp the way I like it: if on close 'paren' mark the sexp that that 'paren' closes.  Otherwise, mark as usual"
   (interactive "p")
