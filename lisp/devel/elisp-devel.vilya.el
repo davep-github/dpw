@@ -634,3 +634,34 @@ or 'slide as per \\[dp-slide-window-left].
    (t (dp-shift-windows)))
   (set-buffer (frame-first-window frame-or-window))
   (select-current-buffer))
+
+========================
+Monday February 11 2019
+--
+;installed (defun dp-ibuffer-current-filename (&optional must-be-live-p)
+;installed   (interactive "P")
+;installed   (if-let ((buf (ibuffer-current-buffer must-be-live-p)))
+;installed       (buffer-file-name buf)
+;installed     buf))
+
+;installed (defun dp-ibuffer-current-filename-show (&optional must-be-live-p)
+;installed   (interactive "P")
+;installed   (message "%s" (dp-ibuffer-current-filename must-be-live-p)))
+
+;installed (defun dp-ibuffer-current-buffer-name (&optional must-be-live-p)
+;installed   (interactive "P")
+;installed   (if-let ((buf (ibuffer-current-buffer must-be-live-p)))
+;installed       (buffer-name buf)
+;installed     buf))
+
+;installed (defun dp-ibuffer-current-buffer-name-show (&optional must-be-live-p)
+;installed   (interactive "P")
+;installed   (message "%s" (dp-ibuffer-current-buffer-name must-be-live-p)))
+
+========================
+Friday February 15 2019
+--
+(set-face-background 'scroll-bar "red")
+nil
+
+
