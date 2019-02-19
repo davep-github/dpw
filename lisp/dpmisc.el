@@ -7085,19 +7085,23 @@ Remove any other copies of the name."
 (defvar dp-recently-killed-files (dp-init-recently-killed-files)
   "File names of most recently killed buffers.")
 
-(defun* dp-revisit-killed-file (&optional (pred ".*") pred-args)
-  (interactive)
+(defun* dp-revisit-killed-file (&optional just-remove-p (pred ".*") pred-args)
+  "Revisit a killed file.  With PREFIX-ARG, just remove the entry."
+  (interactive "P")
   (let* ((tmp (dp-get-recently-killed-file-list))
 	 (table (dp-mk-completion-list tmp))
 	 ;; Use numeric prefix arg to select nth file to operate on.
-	 (dead-file (completing-read "Resurrect file: "
+	 (dead-file (completing-read (if just-remove-p
+					 "Remove file from list: "
+				       "Resurrect file: ")
 				     table
 				     nil nil nil
 				     'dp-recently-killed-files)))
     (dmessage "dead-file>%s<" dead-file)
     (when (and dead-file
                (not (string= "" dead-file)))
-      (find-file dead-file)
+      (if (not just-remove-p)
+	  (find-file dead-file))
       ;; Nuke the file. It'll be added again when killed in a more temporally
       ;; correct fashion.
       (dp-set-recently-killed-file-list (delete dead-file tmp)))))
