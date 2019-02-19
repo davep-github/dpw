@@ -7,7 +7,7 @@
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
- '(apropos-do-all t t)
+ '(apropos-do-all t)
  '(auth-sources
    (quote
     ("secrets:Login" "~/.authinfo" "~/.authinfo.gpg" "~/.netrc")))
@@ -93,9 +93,10 @@
  '(gtags-select-buffer-single t)
  '(help-selects-help-window nil)
  '(highline-selected-window nil)
+ '(ibuffer-default-sorting-mode (quote alphabetic))
  '(ibuffer-fontification-alist
    (quote
-    ((10 buffer-read-only font-lock-keyword-face)
+    ((10 buffer-read-only ibuffer-locked-buffer)
      (15
       (and buffer-file-name
 	   (string-match ibuffer-compressed-file-name-regexp buffer-file-name))
@@ -123,27 +124,48 @@
 	(quote emacs-lock-mode))
        emacs-lock-mode)
       ibuffer-locked-buffer)
-     (0
-      (string-match "<dse>$"
+     (55
+      (string-match "<dse>\\(<[0-9]+>\\)*$"
 		    (buffer-name))
-      message-header-xheader))))
+      dp-sudo-edit-bg-face)
+     (33
+      (and buffer-file-name
+	   (string-match "^/.[^:]+:\\([^@]+@\\)?[^:]+:" buffer-file-name))
+      dp-remote-buffer-face))))
  '(ibuffer-help-buffer-modes
    (quote
     (help-mode apropos-mode Info-mode Info-edit-mode Man-mode)))
  '(ibuffer-saved-filter-groups
    (quote
     (("dp-ibuffer-saved-filter[0]"
-      ("dired"
-       (mode . dired-mode))
       ("source"
-       (mode . c-mode))
+       (or
+	(mode . c-mode)
+	(mode . c++-mode)))
       ("Python"
        (mode . python-mode))
-      ("emacs"
+      ("elisp"
        (or
-	(name . "^\\*scratch\\*$")
-	(name . "^\\*Messages\\*$")
-	(name . "^.*\\.el")))))))
+	(mode . emacs-lisp-mode)
+	(name . "^.*\\.el\\(\\.gz\\)?$")))
+      ("remote"
+       (filename . "^/.[^:]+:\\([^@]+@\\)?[^:]+:"))
+      ("<dse>"
+       (name . "<dse>\\(<[0-9]+>\\)*$"))
+      ("dired"
+       (mode . dired-mode))
+      ("proc"
+       (or
+	(name . "^\\*\\(.*grep\\|cscope\\|x?g?tags\\)\\*$")
+	(name . "\\(magit\\(-process\\)?\\|\\*shell\\*\\(<[0-9]+>\\)?$\\)")))
+      ("Emacs"
+       (or
+	(mode . lisp-interaction-mode)
+	(name . "^\\*\\(Man .*\\|Mvsik\\|Warnings\\|Compile-Log\\)\\*$")
+	(name . "^\\*\\(Messages\\|Colors\\|Apropos\\|Calendar\\)\\*$")
+	(name . "^\\*\\(Help\\|info\\)\\*$")
+	(name . "^\\*\\(Completions\\|Backtrace\\|Messages\\)\\*$")))))))
+ '(ibuffer-show-empty-filter-groups nil)
  '(ibuffer-use-other-window nil)
  '(icomplete-mode t)
  '(icomplete-separator ",")
@@ -161,6 +183,12 @@
  '(lazy-highlight-interval 0)
  '(magit-auto-revert-mode nil)
  '(magit-commit-arguments (quote ("--signoff")))
+ '(magit-diff-hide-trailing-cr-characters nil)
+ '(magit-diff-highlight-trailing t)
+ '(magit-diff-paint-whitespace t)
+ '(magit-diff-paint-whitespace-lines (quote both))
+ '(magit-diff-refine-hunk (quote all))
+ '(magit-diff-refine-ignore-whitespace nil)
  '(magit-pull-arguments (quote ("--rebase")))
  '(magit-rebase-arguments (quote ("--interactive")))
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
@@ -226,6 +254,8 @@
  '(calendar-today ((t (:foreground "gold" :box (:line-width 1 :color "gold") :weight bold))))
  '(cursor ((t (:background "gold"))))
  '(diary ((t (:foreground "green" :weight bold :width normal))))
+ '(diff-refine-added ((t (:inherit diff-refine-changed :background "#22aa22" :foreground "black"))))
+ '(diff-refine-changed ((t (:background "#aaaa22" :foreground "black"))))
  '(dp-trailing-whitespace-face ((t (:background "light coral" :foreground "black" :weight normal))))
  '(ediff-even-diff-Ancestor ((t (:background "Grey" :foreground "black"))))
  '(ediff-fine-diff-Ancestor ((t (:background "#009591" :foreground "black"))))
@@ -233,5 +263,6 @@
  '(holiday ((t (:foreground "cornflower blue"))))
  '(isearch ((t (:background "medium blue" :foreground "white" :weight bold))))
  '(lazy-highlight ((t (:background "#4592df" :foreground "black"))))
+ '(magit-diff-whitespace-warning ((t (:background "misty rose" :foreground "black" :box (:line-width 1 :color "red")))))
  '(rectangle-preview ((t (:inherit region))))
- '(region ((t (:background "turquoise2" :foreground "black" :box (:line-width 1 :color "midnight blue") :weight bold)))))
+ '(region ((t (:background "#2b284c" :foreground "coral" :weight bold)))))
