@@ -9105,10 +9105,11 @@ Application specific names should be made as explicit as possible."
 (dp-safe-alias 'kbbn 'dp-kill-buffers-by-buffer-name)
 
 
-(defsubst* dp-kill-.el-buffers (&optional (all-p t))
+(defun* dp-kill-.el-buffers (&optional skip-dired-buffers-p (all-p t))
   (interactive "P")
-  (dp-kill-buffers-by-file-name "\\.el$" all-p))
-    
+  (dp-kill-buffers-by-file-name "\\.el\\(\\.gz\\)?$"
+				skip-dired-buffers-p all-p))
+
 ;;being replaced (defun dp-kill-.el-buffers (&optional with-extreme-prejudice-p)
 ;;being replaced   "Kill all of the buffers holding elisp files."
 ;;being replaced   (interactive "P")
