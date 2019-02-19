@@ -6469,7 +6469,7 @@ matching ones."
 ;; dp-region-or... using 'buffer-p
 (defun dp-write-protect-region (beg end)
   (interactive "r")
-  (dp-make-extent beg end 'dp-write-protected-region 'read-only t
+  (dp-make-extent beg end 'dp-write-protected-region 'read-only "HANDS OFF!"
 		  'face 'dp-wp-face 'dp-extent-p t
                   'dp-write-protected-region t 'priority 1))
 (dp-defaliases 'dp-wp 'dp-wp-region 'dp-ro-region 'dp-write-protect-region)
