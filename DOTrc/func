@@ -1340,5 +1340,14 @@ nix_ccache()
     return 0
 }
 
+go2rc()
+{
+    eval $(go2env)
+    if inside_emacs_p
+    then
+	echo 1>&2 "*** You may want to: M-x dp-abbrevs"
+    fi
+}
+
 dp_source_rc $HOME/.rc/func.completion
 dp_source_rc $HOME/.rc/func.git

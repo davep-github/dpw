@@ -201,7 +201,6 @@ alias npg=port-grep
 alias nmg=mgrep
 ###alias isascreen='isascreen "$IMASCREENINSTANCE" "$ignoreeof"'
 alias imascreen=isascreen
-alias go2rc='eval $(go2env)'
 alias evalgo2env="go2rc"
 alias evalgo2="go2rc"
 alias hl='history | $PAGER'
