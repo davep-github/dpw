@@ -7393,7 +7393,7 @@ If region is active, set width to that of the longest line in the region."
 ;;change args         (mark-whole-buffer)
 ;;change args       (dp-mark-line-if-no-mark))
 ;;change args     (let ((ll (min dp-max-frame-width (1+ (car (dp-longest-line-in-region))))))
-;;change args       (sfw ll)
+;;change args       (dp-set-frame-width ll)
 ;;change args       (message "new width: %s" ll))))
 
 (defun sfw-fit-region (&optional pad)
@@ -7403,13 +7403,14 @@ If region is active, set width to that of the longest line in the region."
     (dp-mark-line-if-no-mark)
     (let ((ll (min dp-max-frame-width 
                    (+ pad (car (dp-longest-line-in-region))))))
-      (sfw ll)
+      (dp-set-frame-width ll)
       (message "new width: %s" ll))))
 
-(defsubst sfw-fit-file ()
+(defun sfw-fit-file ()
   (interactive)
   (mark-whole-buffer)
   (sfw-fit-region))
+(defalias 'sfw-fit-buffer 'sfw-fit-file)
 
 (defun dp-up/down-with-wrap-non-empty (arg upper-downer &optional args)
   (interactive "p")
