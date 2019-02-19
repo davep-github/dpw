@@ -7375,10 +7375,16 @@ If region is active, set width to that of the longest line in the region."
   (let ((dimensions (format "%dx%d"
 			    (frame-width frame) (frame-height frame))))
     (when copy-as-kill-p
-      ((kill-new dimensions)))
+      (kill-new dimensions))
     (message "frame dimensions: %s" dimensions)))
 
 (dp-defaliases 'fdim 'frame-dim 'dp-frame-dimensions)
+
+(defun dp-show-frame-font (&optional frame)
+  (interactive)
+  (message "%s" (frame-parameter frame 'font)))
+
+(dp-defaliases 'dpsff 'dpff 'sff 'dp-show-frame-font)
 
 ;;change args (defun sfw-fit-region (&optional entire-buffer-p)
 ;;change args   (interactive "P")
