@@ -62,6 +62,8 @@
 (unless (getenv "EMACS")
   (setenv "EMACS" "t"))
 
+(set-frame-font "RictyDiminishedDiscord-13")
+
 ;; Make file that holds every keybinding that points to real xemacs
 ;; functions.
 ;; grep -v "-dp" 
