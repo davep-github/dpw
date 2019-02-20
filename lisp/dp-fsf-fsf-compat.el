@@ -486,7 +486,7 @@ pee-pee. "
 				       'dp-end (dp-mk-marker to nil t))
 				 props))))
 
-(defun dp-set-text-color (tag face &optional begin end detachable-p 
+(defun dp-set-text-color (tag face &optional begin end detachable-p
 			      start-open-p end-open-p)
   "Set a region's background color to FACE.
 Identify the extent w/TAG.
@@ -662,7 +662,7 @@ If DEFAULT-VALUE is non-nil, return that if user enters an empty
 (defun dp-hl-highlight-one ()
   "Just highlight the current line.
 Stolen from `global-hl-line-highlight' and removed the `global-hl-line-highlight'
-predicate.  
+predicate.
 XXX @todo It might be better to set that in a `let' and the call the original."
   (interactive)
   (unless global-hl-line-overlay
@@ -758,5 +758,11 @@ This function does not modify point or mark."
     (prog1
         (point)
       (goto-char here))))
-  
+
+(setq message-log-max 2048)
+
+(defun message-nl (fmt &rest args)
+  (let ((message-log-max nil))
+    (apply 'message fmt args)))
+
 (message "dp-fsf-fsf-compat loading...done")
