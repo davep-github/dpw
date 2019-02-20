@@ -1934,6 +1934,9 @@ So there."
 ;!needed for FSF   (interactive "P")
 ;!needed for FSF   (setq dp-called-by-split-horizontally t))
 
+(make-variable-buffer-local 'dp-allow-owner-to-eval-p)
+(setq-default dp-allow-owner-to-eval-p t)
+
 (defadvice hack-one-local-variable (before dp-hack-one-local-variable activate)
   ;; Allow user to eval things from their own files w/o asking.
   (unless enable-local-eval
