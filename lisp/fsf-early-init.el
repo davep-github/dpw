@@ -1,4 +1,4 @@
-(message "loading fsf-init...")
+(message "loading fsf-early-init...")
 
 ;; (setq package-user-dir (locate-user-emacs-file
 ;; 			(dp-hostify-name "elpa.%s.d")))
@@ -83,5 +83,5 @@ position."
 
 (add-hook 'dp-post-dpmacs-hook 'dp-unfuck-isearch-scrolling)
 
-(provide 'fsf-init)
-(message "loading fsf-init...done")
+(provide 'fsf-early-init)
+(message "loading fsf-early-init...done")

@@ -51,7 +51,7 @@
   (format format-str (user-login-name)))
 
 (when (featurep 'emacs)
-  (load-library "fsf-init"))
+  (load-library "fsf-early-init"))
 
 ;; no blah, blah, blah.
 (setq inhibit-startup-message t)
