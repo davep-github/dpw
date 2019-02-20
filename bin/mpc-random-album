@@ -64,6 +64,7 @@ sig_exit ()
 append_p=false
 post_op=play
 num=1
+: ${aski:=false}
 
 # Usage variable usage:
 Usage_args_info=" [-a|--append|-A|--no-append|--play|--no-play]"
@@ -76,7 +77,7 @@ Usage_details="${EExec_parse_usage}
 --no-play) Don't issue play command.
 "
 # Example of arg parsing.
-option_str="aApPs"
+option_str="aApPsQ"
 long_options=(
     "append"
     "no-append"
@@ -85,6 +86,7 @@ long_options=(
     "stop"
     "nop"
     "num-albums:" "num:"
+    "ask"
 )
 source dp-getopt+.sh || exit 1
 while (($# > 0))
@@ -97,11 +99,12 @@ do
       # Program options.
       -a|--append) append_p=true;;
       -A|--no-append) append_p=false;;
-      -P|--play) post_op=play;;
-      -p|--no-play) post_op=stop;;
+      -p|--play) post_op=play;;
+      -P|--no-play) post_op=stop;;
       -s|--stop) post_op=stop;;
       --nop) post_op=;;
       --num-albums|--num) shift; num="${1}";;
+      -Q|--ask) ask=true;;
 
       # Help!
       --help) Usage; exit 0;;
@@ -117,9 +120,33 @@ done
 EExec mpc stop
 #$append_p || EExec mpc clear
 #mpc search album "$(mpc list album | shuf -n1)" | EExec mpc add
-mk-mpd-shuffled-album-playlist \
-  "${DP_SCRIPT_X_DEBUG_PROPAGATOR}" \
-  --num "${num}" \
-  --mpc-add \
-  "$@"
-[ -n "${post_op}" ] && EExec mpc "${post_op}"
+while :
+do
+	mk-mpd-shuffled-album-playlist \
+	  "${DP_SCRIPT_X_DEBUG_PROPAGATOR}" \
+	  --num "${num}" \
+	  --mpc-add \
+	  "$@"
+	while "${ask}"
+	do
+		echo
+		echo '======= Shall we play this list?  ======='
+		mpc playlist
+		read -e -p "[p]lay, [s]kip, [q]uit? "
+		case "$REPLY" in
+			p|play) post_op=play;;
+			s|skip) post_op=;;
+			q|quit) exit 0;;
+			*) echo 1>&2 "Confuzed by >${REPLY}, try again."
+				 continue;;
+		esac
+		break
+	done
+	[ -n "${post_op}" ] && {
+		EExec mpc "${post_op}"
+		exit
+	}
+done
+
+:WTF?
+exit 1
