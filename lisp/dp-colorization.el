@@ -215,7 +215,7 @@ COLOR_INDEX can be <=0 or '- to indicate invisibility."
                ((or (and (integerp color)
                          (<= color 0))
                     (eq color '-))
-                'invis)
+                'invisible)
                (t (setq dp-colorize-region-default-color-index
                         (1- color)))))
          (face (cond
