@@ -205,7 +205,7 @@
  '(magit-diff-refine-ignore-whitespace nil)
  '(magit-pull-arguments (quote ("--rebase")))
  '(magit-rebase-arguments (quote ("--interactive")))
- '(message-log-max 2048)
+ '(message-log-max 4094)
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(mingus-mode-line-string-max 60)
  '(minibuffer-prompt-properties
