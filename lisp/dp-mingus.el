@@ -57,6 +57,7 @@ Make a string to use in the mode-line-help-echo for Mingus.
      [?S] dp-mingus-do-play
      [(shift ?s)] mingus-play
      [?r] dp-mingus-random-album
+     [??] dp-mingus-random-album
      ))
   (message "dp-mingus-player-bind-keys completed."))
 

@@ -2,8 +2,6 @@
 
 [merge]
     tool = meld
-    # See if I like it.
-    conflictStyle = diff3
 
 #[mergetool "meld"]
 #    # Choose one of these 2 lines (not both!) explained below.
@@ -40,24 +38,26 @@
 [difftool "s-diff"]
 	cmd = sdiff --suppress-common-lines $LOCAL $REMOTE
 
-#[difftool "meld"]
-#	cmd = meld $LOCAL $REMOTE
+[difftool "meld"]
+	cmd = meld $LOCAL $REMOTE
 
 [difftool "diffuse"]
         cmd = diffuse $LOCAL $REMOTE
 
-[difftool "meld"]
-	path = /usr/bin/meld
-	cmd = '/usr/bin/meld' $LOCAL $REMOTE
+#[difftool "meld"]
+#	path = /usr/bin/meld
+#	cmd = '/usr/bin/meld' $LOCAL $REMOTE
 
-[mergetool "Meld"]
+[mergetool "meld"]
 	path = /usr/bin/meld
-	cmd = '/usr/bin/meld' $BASE $LOCAL $REMOTE $MERGED
+# WTF?	cmd = '/usr/bin/meld' $BASE $LOCAL $REMOTE $MERGED
+#  	cmd = '/usr/bin/meld' $LOCAL $BASE $REMOTE
+  	cmd = '/usr/bin/meld' $LOCAL $MERGED $REMOTE
 	trustExitCode = false
 	keepBackup = false
 
 [merge]
-	tool = Meld
+	tool = meld
 
 [imerge]
 	editmergemessages = true

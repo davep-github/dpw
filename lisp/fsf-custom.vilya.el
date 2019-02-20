@@ -203,6 +203,9 @@
  '(magit-diff-paint-whitespace-lines (quote both))
  '(magit-diff-refine-hunk (quote all))
  '(magit-diff-refine-ignore-whitespace nil)
+ '(magit-diff-section-arguments
+   (quote
+    ("--function-context" "-M" "--diff-algorithm=patience")))
  '(magit-pull-arguments (quote ("--rebase")))
  '(magit-rebase-arguments (quote ("--interactive")))
  '(message-log-max 4094)
@@ -225,6 +228,8 @@
  '(python-shell-interpreter "/usr/bin/ipython")
  '(python-skeleton-autoinsert t)
  '(query-replace-lazy-highlight nil)
+    (magit-stgit mhc outlook mu4e-query-fragments mu4e-conversation mbsync mu4e-alert xkcd git-wip-timemachine git-messenger git-lens git-timemachine discover-my-major discover suggest elpy origami auto-complete-rst undo-tree smartrep visual-fill-column fill-column-indicator column-enforce-mode zlc bash-completion edebug-x bar-cursor zoom-window zoom ztree markup-faces markdown-preview-mode markdown-mode+ markdown-mode flymd challenger-deep-theme abyss-theme nova-theme magit ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
+    (dionysos dad-joke d-mode clean-aindent-mode magit-stgit mhc outlook mu4e-query-fragments mu4e-conversation mbsync mu4e-alert xkcd git-wip-timemachine git-messenger git-lens git-timemachine discover-my-major discover suggest elpy origami auto-complete-rst undo-tree smartrep visual-fill-column fill-column-indicator column-enforce-mode zlc bash-completion edebug-x bar-cursor zoom-window zoom ztree markup-faces markdown-preview-mode markdown-mode+ markdown-mode flymd challenger-deep-theme abyss-theme nova-theme magit ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
  '(safe-local-variable-values
    (quote
     ((mmm-global-classes)
@@ -255,6 +260,7 @@
  '(tool-bar-mode nil)
  '(uniquify-after-kill-buffer-p nil)
  '(vc-follow-symlinks t)
+ '(vc-follow-symlinks nil)
  '(wdired-allow-to-change-permissions t)
  '(whitespace-line-column 72)
  '(whitespace-style
@@ -287,3 +293,8 @@
  '(mingus-playing-face ((t (:background "dark blue" :foreground "spring green" :weight bold))))
  '(rectangle-preview ((t (:inherit region))))
  '(region ((t (:background "#000072" :foreground "red" :weight bold)))))
+ '(region ((t (:background "turquoise2" :foreground "black" :box (:line-width 2 :color "grey75" :style released-button) :weight bold))))
+ '(trailing-whitespace ((t (:background "midnight blue" :strike-through nil :underline (:color "magenta" :style wave))))))
+ '(region ((t (:background "#2b284c" :foreground "coral" :weight bold))))
+ '(trailing-whitespace ((t (:background "midnight blue" :strike-through nil :underline (:color "magenta" :style wave))))))
+
