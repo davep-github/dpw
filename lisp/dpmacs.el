@@ -1032,10 +1032,13 @@ This can be callable.")
   "Convert diary entries to pcal entries." t)
 
 ;;; load late 'macs specific stuff. 
-(when (dp-xemacs-p)
-  (require 'dp-xemacs-late)
-  (dp-setup-invisibility))
-;; no dp-fsf-late
+(if (dp-xemacs-p)
+    (progn
+      (require 'dp-xemacs-late)
+      (dp-setup-invisibility))
+  ;; dp-fsf-late
+  (dp-bump-key-binding (kbd "C-x SPC") 'rectangle-mark-mode (kbd "C-x M-SPC")
+		       global-map))
 
 (defun dp-using-flyspell-p ()
   "Are we using flyspell? We need a spell program and the flyspell feature."
