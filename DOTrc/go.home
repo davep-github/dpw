@@ -143,9 +143,9 @@ Ee|dplocal|dpl|                     ${HOME}/local
 Ee|dplocaletc|dpletx|               ${dplocal}/etc/
 Ee|dplocallib|dpllib|               ${dplocal}/lib/
 Ee|dplocalshare|locshare|locs|dpls| ${dplocal}/share/
-Ee|dplocalshareemacs|dple|          ${dplocalahare}/emacs/
-Ee|emacscurrentversion|             25.3
-Ee|dplocalsharecurrentemacs|dplce|  ${dplocalahareemacs}/${emacscurrentversion}
+Ee|dplocalshareemacs|dple|          ${dplocalshare}/emacs/
+Ee|emacscurrentversion|             26
+Ee|dplocalsharecurrentemacs|dplce|  ${dplocalshareemacs}/${emacscurrentversion}
 Ee|dplocaldoculsd|dpldoc|           ${dpls}doc/
 Ee|dplocalexamples|dplex|dpleg|     ${dpls}examples/
 Ee|dplocallisp|dpll|                ${dpls}emacs/25.3/lisp
@@ -355,6 +355,7 @@ Ee|incoming|       /media/audio/mvsik/incoming/
 Ee|dpcd|           ${davep}/lisp/dp-themes.d/dp-challenger-deep-theme.el
 Ee|localemacs26|gitemacs26|lemacs|lem|gmacs|gem|       /home/davep/local/build/emacs-26/
 Ee|stgtut|       /home/davep/tmp/stgit/tutorial/stgit/
+Ee|gitted|       /home/davep/local/build/gitted/
 ### Local Variables: ***
 ### tab-width: 2 ***
 ### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***
