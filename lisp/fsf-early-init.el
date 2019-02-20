@@ -1,4 +1,4 @@
-(message "loading fsf-init...")
+(message "loading fsf-early-init...")
 
 ;; (setq package-user-dir (locate-user-emacs-file
 ;; 			(dp-hostify-name "elpa.%s.d")))
@@ -46,5 +46,5 @@ t))
 	(vertical-scroll-bars . right)
         (background-color . ,dp-default-background-color)))
 
-(provide 'fsf-init)
-(message "loading fsf-init...done")
+(provide 'fsf-early-init)
+(message "loading fsf-early-init...done")
