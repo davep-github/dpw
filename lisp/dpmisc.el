@@ -13753,6 +13753,7 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
       (replace-match ""))))
 
 (defun dp-whitespace-next-and-cleanup (&optional ask-per-line-p)
+  "Clean up WS violations `point' to EOF. Confirm if ASK-PER-LINE-P is non-nil."
   (interactive "P")
   (let ((start (point)))
     (dp-whitespace-next-violation)
@@ -13765,12 +13766,16 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
         (dp-whitespace-cleanup-line)
       (message "No more violations"))))
 
-(defun dp-whitespace-checker ()
-  (interactive)
-  (beginning-of-buffer)
-  (whitespace-buffer)
-  (beginning-of-buffer)
-  (dp-whitespace-next-violation))
+;;
+;; Emacs doesn't have `whitespace-buffer'.
+;; Add an analog for Emacs
+(when (dp-xemacs-p)
+  (defun dp-whitespace-checker ()
+    (interactive)
+    (beginning-of-buffer)
+    (whitespace-buffer)
+    (beginning-of-buffer)
+    (dp-whitespace-next-violation)))
 
 (defun dp-whitespace-cleanup-line-by-line (&optional ask-per-line-p
                                            goto-beginning-of-buffer-p)
