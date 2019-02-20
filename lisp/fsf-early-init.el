@@ -83,5 +83,5 @@ position."
 
 (add-hook 'dp-post-dpmacs-hook 'dp-unfuck-isearch-scrolling)
 
-(provide 'fsf-init)
-(message "loading fsf-init...done")
+(provide 'fsf-early-init)
+(message "loading fsf-early-init...done")
