@@ -293,6 +293,9 @@ Editing commands:
 (defun python-nav-beginning-of-statement ()
   (py-point 'bos))
 
+(defun message-nl (fmt &rest args)
+  (apply 'lmessage 'no-log fmt args))
+
 ;;(add-hook 'appt-make-list-hook 'dp-appt-initialize)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
