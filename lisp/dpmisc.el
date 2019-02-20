@@ -10215,7 +10215,7 @@ Ignore repeated requests to set the same properties. Idempotentize."
       (apply helper "lowlight" (apply 'list 'face lo-face props))
       )
      
-     ((memq op '(hide invis i))
+     ((memq op '(hide invisible invis i))
       ;; create an extent and mark it as invisible
       ;; identify it as made invisible by this module
       ;; apply 'list appends contents of props into the list
@@ -10239,7 +10239,7 @@ Ignore repeated requests to set the same properties. Idempotentize."
       ;; (dmessage "nop")
       )
      )))
-(defalias 'dphr 'dp-highlight-region)
+(defalias 'dphlr 'dp-highlight-region)
 
 (defvar dp-hidden-region-keymap (make-sparse-keymap "Hidden region keymap.")
   "Keymap active in one of my hidden regions. The region is read-only.")
@@ -10270,7 +10270,7 @@ Sort of \"Yes, he said invisibling\"."
                  (list 'keymap keymap
                        (dp-make-highlight-region-extent-id "dp-hidden") t))))
 
-(defalias 'dhr 'dp-hide-region)
+(dp-defaliases 'dhr 'dphr 'dp-hide-region)
 
 (defun dp-show-region ()
   "Make region visible again.  Goes nicely with `dp-hide-region'."
