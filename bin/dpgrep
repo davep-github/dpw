@@ -27,7 +27,7 @@ EExec_verbose_msg $(echo_id eexec_program)
 # USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
 #9601      3010  0.0  0.0  50980  1728 pts/198  Ss+  Jun19   0:00 /home/dpanariti/yokel/lib/xemacs[K-21.5-b32/x86_64-unknown-linux/gnuserv
 
-: ${PS_O_LONG_FMT="-o user,tty,pid,ppid,pgid,ni,pri,state,psr,policy,cmd,args"}
+: ${PS_O_LONG_FMT="-o user,tty,pid,ppid,pgid,ni,pri,state,psr,policy,cmd"}
 ##: ${PS_O_USER_FMT=" u"}
 : ${PS_O_FMT="$PS_O_DEF_FMT"}
 : ${PS:=ps}
@@ -36,7 +36,11 @@ EExec_verbose_msg $(echo_id eexec_program)
 : ${GREP_COLOR=}
 : ${GREP_ARGS=}
 : ${tty=}
-: ${PS_ARGS="$PS_ALL_OPT $PS_WIDTH $PS_OPTIONS $PS_O_FMT"}
+: ${PS_SHORT_ARGS="$PS_ALL_OPT $PS_WIDTH $PS_OPTIONS $PS_O_FMT"}
+: ${PS_LONG_ARGS="$PS_SHORT_ARGS $PS_O_LONG_FMT"}
+: ${DEF_PS_ARGS="${PS_SHORT_ARGS}"}
+PS_ARGS="${DEF_PS_ARGS}"
+
 
 : ${GREPPER:='egrep'}
 ##: ${GREP_CMD_FILTER_PAT:=[ef]?grep(( -.)+)?}
@@ -69,7 +73,8 @@ printer=out_line
 Usage_args_info=" [options] <regular-expression>"
 Usage_synopsis="Find processes by regular expression."
 Usage_details="Options:
--l -- Long format  .                [$PS_O_LONG_FMT]
+-l -- Long format.                  [$PS_O_LONG_FMT]
+-s -- Short format.		    [$DEF_PS_ARGS]
 -p -- Only show pid.                [$printer]
 -P -- Show entire matched line.
 -w -- Widen display.                [$PS_WIDTH]
@@ -89,7 +94,7 @@ EExec Options:
 -q -- Anti-verbose.
 "
 # Example of arg parsing.
-option_str="nvqpPuUwWcCo:htT:liG"
+option_str="nvqpPuUwWcCo:htT:liGs"
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -101,7 +106,8 @@ do
       -q) VERBOSE=":"; EExecQuiet;;
 
 # Program options.
-      -l) PS_ARGS="$PS_ARGS $PS_O_LONG_FMT";;
+      -l) PS_ARGS="$PS_LONG_ARGS";;
+      -s) PS_ARGS="$PS_SHORT_ARGS";;
       # We need a known format to put the pid in a known place.
       -p) printer=out_pid; NO_HDR=t; #PS_O_FMT=$PS_O_LONG_FMT;
           #PS_ARGS="-ww x $PS_O_LONG_FMT"
@@ -132,6 +138,8 @@ done
     Usage
     exit 1
 } 1>&2
+
+EExec_verbose_echo_id PS PS_ARGS
 
 $DP_SCRIPT_X_DEBUG_ONLY_ECHO_STDERR "NO_HDR>$NO_HDR<"
 if [ -z "$NO_HDR" ]
