@@ -6751,19 +6751,32 @@ LIMIT, otherwise, has a buffer pos that is the limit."
   (dp-toggle-var arg 'truncate-lines))
 (defalias 'trunc 'dp-toggle-truncate)
 
-(defun rcc (arg)
+(defun dp-repeat-complex-command (arg)
+  "Repeat a complex command, skipping the bogus extra stuff in the history.
+XEmacs and Emacs each have differing amounts of junk to skip.
+Emacs `repeat-complex-command' seems to skip junk when called interactively,
+but this works in both 'macsen.
+@todo XXX prevent the rcc command from going onto the history.
+XXX using M-x rcc leaves the `rcc' in the history, but using a
+key sequence doesn't."
   (interactive "p")
-  (repeat-complex-command (if current-prefix-arg  ; User provided arg?
-                              arg
-                            ;; 2 skips this command (our `rcc') since it
-                            ;; seems to be put onto the `command-history'
-                            ;; list before this function is called.
-                            ;; Uses 1 based indexing.
-                            ;; Handle case of command-history which is
-                            ;; too small.
-                            (if (> (length command-history) 1)
-                                2
-                              1))))
+  (let ((num-items-to-skip (if (dp-xemacs-p) 1 2)))
+    (repeat-complex-command
+     (if current-prefix-arg		; User provided arg?
+	 arg
+       ;; 2 skips this command (our `rcc') since it
+       ;; seems to be put onto the `command-history'
+       ;; list before this function is called.
+       ;; It also puts a command akin to:
+       ;; (execute-extended-command nil "repeat-complex-command" "repeat-com")
+       ;; Uses 1 based indexing.
+       ;; Handle case of command-history which is
+       ;; too small.
+       (if (> (length command-history) num-items-to-skip)
+	   (1+ num-items-to-skip)
+	 nil)))))			; Use nil to get default.
+
+(defalias 'rcc 'dp-repeat-complex-command)
 
 (defun dp-next-in-tab-list ()
   (interactive)
