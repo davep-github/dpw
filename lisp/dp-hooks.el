@@ -2393,7 +2393,6 @@ changed."
      [?.] dp-vc-dir-find-next-edited)))
 
 (defun dp-Custom-mode-hook ()
-  (interactive)
   (dp-define-local-keys
    '(
      [?l] Custom-buffer-done
