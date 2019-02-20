@@ -809,16 +809,13 @@ Also does an obnoxious `ding' by default."
     (apply 'dmessage (format "@todo! %s" fmt) args)))
                           
 (defun dmessageX (format &rest rest)
-  "A more easily identifiable debugging message name.  
+  "A more easily identifiable debugging message name.
 Use this for debug messages you'll want to remove.  Easier than
 examining all of the message calls."
   (with-current-buffer dp-message-buffer-name
     (goto-char (point-max))
     (apply 'message format rest)
     (goto-char (point-max))))
-
-(defun message-nl (fmt &rest args)
-  (apply 'lmessage 'no-log fmt args))
 
 (defvar dp-message-no-echo-num 0
   "*Number of times `dp-message-no-echo' has been called.")
