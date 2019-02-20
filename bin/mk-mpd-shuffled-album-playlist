@@ -63,7 +63,8 @@ sig_exit ()
 # template ends.
 ########################################################################
 
-#mpc search album "$(mpc list album | shuf -n1)" | EExec mpc add
+# Genesis:
+# mpc search album "$(mpc list album | shuf -n1)" | EExec mpc add
 
 # Usage variable usage:
 Usage_args_info=""
@@ -73,7 +74,7 @@ Usage_synopsis="Create list of files from shuffled list of albums:
 # case statement easier.
 Usage_details="${EExec_parse_usage}
 --cat|--out|--list) Put list on stdout [default]
---mpc-add|--add|--queue) Queue/add to mpd current playlist
+--mpc-add|--add|--queue|--new) Clear playlist and queue/add new items.
 -z|--zap|--clear|--empty|--mt|--no-append|--nuke) Clear existing playlist first.
 -a|--append) Do not clear existing playlist.
 --num-albums|--num|--na) Number of albums to use.
@@ -81,17 +82,18 @@ Usage_details="${EExec_parse_usage}
 -p <playlist> |--playlist <playlist>) Put list into <playlist>.
 "
 
-# Example of arg parsing.
-option_str="zcajp:NA"
+option_str="zcajp:NAsS"
 long_options=(
     "cat" "out" "list" "view"
-    "mpc-add" "add" "queue"
+    "new" "mpc-add" "add" "queue"
     "zap" "clear" "empty" "mt" "no-append" "nuke"
     "append"
     "num-albums:" "num:" "na:"
     "all" "every-album" "all-albums"
     "just-album-names" "just-albums" "album-names" "jan" "an"
     "pl:" "play-list:" "playlist:"
+    "show-current-playlist" "scpl"
+    "show-playlist" "spl"
 )
 
 source dp-getopt+.sh || exit 1
@@ -104,15 +106,19 @@ do
 
       # Program options.
       -N|--cat|--out|--list|--view) handler=cat_handler; clear_p=false;;
-      --mpc-add|--add|--queue) handler=mpc_add_handler; clear_p=true;;
+      --new|--mpc-add|--add|--queue) handler=mpc_add_handler; clear_p=true;;
+      -a|--append) handler=mpc_add_handler; clear_p=false;;
       -z|-c|--zap|--clear|--empty|--mt|--no-append|--nuke) clear_p=true;;
-      -a|--append) clear_p=false; handler=mpc_add_handler;;
       --num-albums|--num|--na) shift; num="${1}";;
       -j|--just-album-names|--just-albums|--album-names|--jan|--an)
 	  just_album_names_p=true; clear_p=false;;
       -p|--pl|--play-list|--playlist)
 	  shift; playlist="${1}"; handler=playlist_handler; clear_p=false;;
       -A|--all|--every-album|--all-albums) num=0;;
+      -s|--show-playlist|--spl) show_playlist_p=true;;
+      -S|--show-current-playlist|--scpl) echo "Current playlist:";
+                                         EExec mpc playlist;
+                                         exit;;
 
       # Help!
       --help) Usage; exit 0;;
@@ -127,8 +133,9 @@ done
 
 : ${handler:=cat_handler}
 : ${clear_p=true}
-: ${num=-0}			# Not a typo.  We want -0.
+: ${num="-0"}			# Not a typo.  We want "-0".
 : ${just_album_names_p=false}
+: ${show_playlist_p=false}
 
 cat_handler()
 {
@@ -173,11 +180,21 @@ EExecDashN_p && {
 # Use a named function to do one or the other.
 mpc list album | shuf | head -n "${num}" | while read
 do
+  EExec_verbose_echo_id REPLY
   if "${just_album_names_p}"
   then
       echo "${REPLY}"
   else
-      mpc search album "${REPLY}" | "${handler}"
+      EExec mpc search album "${REPLY}" | EExec "${handler}"
   fi
-  mpc playlist
+  EExecDashV_p && {
+      echo "Debug.  Intermediate playlist:"
+      mpc playlist
+  } 1>&2
 done
+
+if "${show_playlist_p}"
+then
+    echo "Resulting playlist:"
+    EExec mpc playlist
+fi
