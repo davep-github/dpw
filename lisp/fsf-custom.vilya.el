@@ -40,6 +40,7 @@
  '(display-time-mode t)
  '(dp-trailing-whitespace-use-trailing-ws-font-p t)
  '(echo-keystrokes 0.1)
+ '(global-cwarn-mode t)
  '(global-eldoc-mode nil)
  '(global-hl-line-mode nil)
  '(gmm-tool-bar-style (quote gnome))
@@ -64,6 +65,7 @@
     ("--function-context" "-M" "--diff-algorithm=patience")))
  '(magit-pull-arguments (quote ("--rebase")))
  '(magit-rebase-arguments (quote ("--interactive")))
+ '(message-log-max 4094)
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(minibuffer-prompt-properties
    (quote
@@ -76,7 +78,7 @@
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
    (quote
-    (magit-stgit mhc outlook mu4e-query-fragments mu4e-conversation mbsync mu4e-alert xkcd git-wip-timemachine git-messenger git-lens git-timemachine discover-my-major discover suggest elpy origami auto-complete-rst undo-tree smartrep visual-fill-column fill-column-indicator column-enforce-mode zlc bash-completion edebug-x bar-cursor zoom-window zoom ztree markup-faces markdown-preview-mode markdown-mode+ markdown-mode flymd challenger-deep-theme abyss-theme nova-theme magit ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
+    (dionysos dad-joke d-mode clean-aindent-mode magit-stgit mhc outlook mu4e-query-fragments mu4e-conversation mbsync mu4e-alert xkcd git-wip-timemachine git-messenger git-lens git-timemachine discover-my-major discover suggest elpy origami auto-complete-rst undo-tree smartrep visual-fill-column fill-column-indicator column-enforce-mode zlc bash-completion edebug-x bar-cursor zoom-window zoom ztree markup-faces markdown-preview-mode markdown-mode+ markdown-mode flymd challenger-deep-theme abyss-theme nova-theme magit ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
  '(safe-local-variable-values
    (quote
     ((c-font-lock-extra-types "FILE" "bool" "language" "linebuffer" "fdesc" "node" "regexp")
@@ -104,6 +106,7 @@
  '(tags-revert-without-query t)
  '(timeclock-mode-line-display nil)
  '(tool-bar-mode nil)
+ '(vc-follow-symlinks nil)
  '(wdired-allow-to-change-permissions t)
  '(whitespace-line-column 72)
  '(whitespace-style
@@ -117,11 +120,14 @@
  '(default ((t (:background nil))))
  '(beacon-fallback-background ((t (:background "DodgerBlue3"))))
  '(cursor ((t (:background "gold"))))
+ '(ediff-current-diff-A ((t (:background "dark slate blue"))))
+ '(ediff-current-diff-B ((t (:background "dark slate blue"))))
+ '(ediff-current-diff-C ((t (:background "dark slate blue"))))
  '(ediff-even-diff-Ancestor ((t (:background "Grey" :foreground "black"))))
  '(ediff-fine-diff-Ancestor ((t (:background "#009591" :foreground "black"))))
  '(ediff-odd-diff-Ancestor ((t (:background "gray40" :foreground "black"))))
  '(isearch ((t (:background "medium spring green" :foreground "#100e23" :weight bold))))
  '(lazy-highlight ((t (:background "#65b2ff" :foreground "black"))))
  '(rectangle-preview ((t (:inherit region))))
- '(region ((t (:background "turquoise2" :foreground "black" :box (:line-width 2 :color "grey75" :style released-button) :weight bold))))
+ '(region ((t (:background "#2b284c" :foreground "coral" :weight bold))))
  '(trailing-whitespace ((t (:background "midnight blue" :strike-through nil :underline (:color "magenta" :style wave))))))

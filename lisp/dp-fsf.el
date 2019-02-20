@@ -2,6 +2,8 @@
 
 ;; FSF code.  Port to xemacs if needed.
 
+(eval-when-compile (require 'subr-x))
+
 (setq isearch-continues 'isearch-scroll
       custom-file (dp-lisp-subdir
 		   (format "fsf-custom.%s.el" (dp-short-hostname)))
@@ -18,6 +20,34 @@
   (ibuffer-unmark-forward nil nil 1)
   (previous-line)
   (call-interactively 'ibuffer-update))
+
+;; (defadvice manual-entry (after dp-advised-manual-entry act)
+
+(defadvice ibuffer-forward-line (after dp-ibuffer-advisements act)
+  (dp-ibuffer-current-filename-show))
+
+(defadvice ibuffer-backward-line (after dp-ibuffer-advisements act)
+  (dp-ibuffer-current-filename-show))
+
+(defun dp-ibuffer-current-filename (&optional must-be-live-p)
+  (interactive "P")
+  (if-let ((buf (ibuffer-current-buffer must-be-live-p)))
+      (buffer-file-name buf)
+    buf))
+
+(defun dp-ibuffer-current-filename-show (&optional must-be-live-p)
+  (interactive "P")
+  (message-nl "%s" (dp-ibuffer-current-filename must-be-live-p)))
+
+(defun dp-ibuffer-current-buffer-name (&optional must-be-live-p)
+  (interactive "P")
+  (if-let ((buf (ibuffer-current-buffer must-be-live-p)))
+      (buffer-name buf)
+    buf))
+
+(defun dp-ibuffer-current-buffer-name-show (&optional must-be-live-p)
+  (interactive "P")
+  (message-nl "%s" (dp-ibuffer-current-buffer-name must-be-live-p)))
 
 (defcustom py-block-comment-prefix "##"
   "*String used by \\[comment-region] to comment out a block of code.
