@@ -25,6 +25,9 @@
 [grep]
         patternType = perl
 
+[include]
+	path = ~/.rc/gitconfig.stgit
+
 # Is there more advicey advice?
 #[advice]
 #  statusHints = false
