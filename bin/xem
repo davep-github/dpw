@@ -43,6 +43,11 @@ verbose=
 VERBOSE=:
 amper='&'
 do_renice=
+did_cd=
+BG_COLOR=
+aaa=
+just_show_p=false
+max_vert_p=true
 : ${macs:=emacs}
 # This won't work the way I do things now which is to a mnemonic name per SB
 # that changes as things change. E.g. engcpu vs sb2.
@@ -59,15 +64,39 @@ esac
 
 # xem [xem-opts] [-- [xemacs-opts]]
 #eko "$@"
-###set -- $(getopt "dlxp:f:o:nmMvhF" $*)
-# New style getopt... fixes ugly quoting problems.
-all_options="dlxp:f:o:nmMvhFXV:D"
-q=$(getopt -o "$all_options" -- "$@")
-[ $? != 0 ] && Usage
-eval set -- "$q"
-unset q
 
-for i in $*
+# Usage variable usage:
+Usage_args_info=" Usage_args_info"
+Usage_synopsis="Start up Emacs with my preferences."
+# Using ) after the args makes copy & paste between here and the
+# case statement easier.
+Usage_details=""
+# Example of arg parsing.
+option_str="dlxp:f:o:nmMvhFXV:D"
+long_options=(
+    "run-dir" "dir"
+    "stay-here" "here"
+    "lem"
+    "xem"
+    "renice"
+    "no-renice"
+    "x-off:" "xoff:"
+    "prefix:"
+    "font:"
+    "main-macs" "mm"
+    "no-main-macs" "no-mm" "nmm"
+    "foreground" "fground"
+    "sandbox"
+    "no-sandbox"
+    "is-xemacs" "use-xemacs" "xemacs" "xem"
+    "is-emacs" "use-emacs" "emacs" "em"
+    "version" "vers" "ver"
+    "debug-init"
+    "no-debug-init"
+)
+
+source dp-getopt+.sh || exit 1
+while (($# > 0))
 do
     case $1 in
 	-d) cd $dir || {
@@ -83,7 +112,7 @@ do
 	-o) shift; x_offset="${1}";;
 	-p) shift; prefix="${1}";;
 	-f) shift; font="${1}";;
-	-n) just_show=y;;
+	-n) just_show_p=true;;
 	-m) main_macs=y;;	# force startup of appointments and server
 	-M) main_macs=n;;       # prevent startup of appointments and server
         -v) verbose=y; VERBOSE=echo;;
@@ -92,6 +121,7 @@ do
         -X) macs=xemacs;;
 	-V) shift; macs_ver="${1}";;
 	-D) debug_init_opt=;;
+
 	--) shift; break;;
 	*) echo 1>&2 "Illegal xem option>$1<"; exit 1 ;;
     esac
@@ -125,6 +155,7 @@ fi
 BIN="${BIN}${macs_ver}"
 echo 1>&2 "BIN>${BIN}<"
 
+JUST_BIN="${BIN}"
 BIN=$(sp -1 "${BIN}")
 
 [ -e "$BIN" ] || {
@@ -214,7 +245,7 @@ niceness="-20"
 nice_cmd="sudo nice -n $niceness"
 renice_cmd="sudo renice -n $niceness"
 cmd='$BIN ${font_arg}  '${FONT_SET_EXPR[@]}' $cmd_args'
-if [ "$just_show" = 'y' ]
+if "${just_show_p}"
 then
     # why this ?echo $BIN $font_arg $cmd_args 2>&1 | tee --append $log_file
     # instead of the below?
@@ -227,6 +258,7 @@ else
     # Why didn't the exec fuck things up?
     eval $cmd  >> $log_file 2>&1 $amper
     xem_pid=$!
+
     if vsetp "$amper" && vsetp "$do_renice"
     then
         $renice_cmd -p $xem_pid
