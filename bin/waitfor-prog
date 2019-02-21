@@ -2,13 +2,41 @@
 
 source script-x
 
-: ${DP_WAITFOR_PROG_SLEEP_TIME:=2}
+: ${DP_WAITFOR_PROG_SLEEP_PERIOD:=2}
+: ${DP_WAITFOR_PROG_TOTAL_WAIT_TIME:=20}
 
-for prog in "$@"; do
-  while :; do
-    findprog "$prog" >/dev/null 2>&1 && break
-    sleep $DP_WAITFOR_PROG_SLEEP_TIME
-  done    
+elapsed_time=0
+verbose2_p=false
+if [ "${1-}" = '-v' ]
+then
+    verbose_p=true
+    shift
+    if [ "${1-}" = '-v' ]
+    then
+	verbose2_p=true
+	shift
+    fi
+else
+    verbose_p=false
+fi
+
+#@todo XXX Make this (or another program) operate on pid as well.
+for prog in "$@"
+do
+    elapsed_time=0
+    while ((elapsed_time < DP_WAITFOR_PROG_TOTAL_WAIT_TIME))
+    do
+	findprog "$prog" >/dev/null 2>&1 && break
+	sleep $DP_WAITFOR_PROG_SLEEP_PERIOD
+	elapsed_time=$((elapsed_time + DP_WAITFOR_PROG_SLEEP_PERIOD))
+    done
+    if ((elapsed_time < DP_WAITFOR_PROG_TOTAL_WAIT_TIME))
+    then
+	"${verbose_p}" && echo "${prog}"
+	exit 0
+    else
+	"${verbose2_p}" && echo 1>&2 "ENOENT: ${prog}"
+    fi
 done
 
-exit 0
+exit 1
