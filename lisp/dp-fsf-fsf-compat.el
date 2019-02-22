@@ -568,7 +568,7 @@ This is an XEmacs compatibility function."
 		       "Autoload file (%s) exists, and that is bad.  Remove it?"
 		       generated-autoload-file))
 	(delete-file generated-autoload-file)
-      (message "Fine. You deal it.")
+      (message "Fine. You deal with it.")
       (return-from dp-update-autoloads nil)))
   (update-directory-autoloads (file-name-directory generated-autoload-file))
   (byte-compile-file generated-autoload-file)
