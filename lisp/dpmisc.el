@@ -14851,6 +14851,10 @@ Of course, I'll forget the name of this function."
                'query-replace-regexp)
 
 (dp-defaliases 'bute 'brtxt 'browse-url-text-emacs)
+;; Allow a save when I accidentally M-x ff vs M-.
+(dp-defaliases 'fftag 'xgtags-find-tag)
+(dp-defaliases 'ffcs 'cscope-find-this-symbol)
+
 ;;;;; <:aliases: add-new-ones-up-there:>
 
 (require 'dp-abbrev)
