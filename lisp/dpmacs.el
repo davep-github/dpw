@@ -1281,4 +1281,5 @@ minibuffer history list `bookmark-history'."
 (define-key esc-map " " 'dp-id-select-thing)
 (define-key global-map [?\C- ] 'dp-expand-abbrev)
 
+(dp-set-max-vert-frame-height)
 (message "dpmacs.el... finished.")

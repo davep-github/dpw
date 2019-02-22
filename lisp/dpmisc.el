@@ -14810,6 +14810,15 @@ some pretty serious modifications to the startup code."
 			 (dp-short-hostname)
 			 max-prop-action)))
 
+(defun dp-add-autoload-directive ()
+  "Insert autoload flag.  I can never remember the string.
+Same with the modeline and local var hacks.
+Of course, I'll forget the name of this function."
+  (interactive)
+  (insert ";;;###autoload\n"))
+
+(dp-defaliases 'dpaal 'aal 'dpaad 'daad 'aad 'dp-add-autoload-directive)
+
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;; add new functions here
 ;;; add new functions above
