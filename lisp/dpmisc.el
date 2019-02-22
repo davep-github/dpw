@@ -14792,6 +14792,24 @@ JFC."
 			(regexp-quote dp-sudo-edit-tramp-local-prefix))
 		file-name))
 
+(defun* dp-set-max-vert-frame-height (&optional frame
+						(max-prop-action "add"))
+  "Set frame height to max as if maximize frame height button has been clicked.
+FRAME is the frame upon which we wish to operate.
+MAX-PROP-ACTION is the wmctrl(1) action.
+This compensates for my constantly fucked up host-info &
+environment variable based height.  It will correct for various
+machines, especially heretofore unknown ones.  However, being
+maximized means that it can't be resized manually.
+It would be nice if I could find out how \"they\" generate the
+title string.  I've been looking for well over an hour.
+I tried to do this in xem(dp) but the timing is uncertain without
+some pretty serious modifications to the startup code."
+  ;; Also want to get the height un-max
+  (shell-command (format "wmctrl -r '/Emacs@%s:' -b %s,maximized_vert"
+			 (dp-short-hostname)
+			 max-prop-action)))
+
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;; add new functions here
 ;;; add new functions above
