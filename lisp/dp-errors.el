@@ -279,6 +279,8 @@
     ;; <:new-errors|misc-errors:>
     "^There are unsaved changes$"
     "^Attempt to perform action on inactive widget$"
+    "Unmatched bracket or quote$"
+    "Canceled"				;(user-error "Canceled")
     )
   "*My list of ignored signals.  These will not cause an entry into the
 debugger if encountered when `debug-on-error' is non-nil.
