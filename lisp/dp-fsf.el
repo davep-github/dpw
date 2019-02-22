@@ -139,7 +139,7 @@ The stolen one above is slow when using completion."
     (save-excursion
       (goto-char (+ (point) (prefix-numeric-value num-chars-to-move)))
       (describe-text-properties (point) output-buffer buffer))
-    (message "May not include dynamic properties, e.g. paren match"))))
+    (message "May not include dynamic properties, e.g. paren match color.")))
 
 (provide 'dp-fsf)
 (message "dp-fsf loading...done.")
