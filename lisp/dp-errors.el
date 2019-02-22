@@ -276,7 +276,7 @@
     "^There is no unique cscope database directory!$"
     "The tags stack is empty"
 
-    ;; <:new-errors:>
+    ;; <:new-errors|misc-errors:>
     "^There are unsaved changes$"
     "^Attempt to perform action on inactive widget$"
     )
