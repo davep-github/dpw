@@ -7,7 +7,7 @@
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
- '(apropos-do-all t)
+ '(apropos-do-all t t)
  '(auth-sources
    (quote
     ("secrets:Login" "~/.authinfo" "~/.authinfo.gpg" "~/.netrc")))
@@ -78,7 +78,7 @@
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
    (quote
-    (dictionary dionysos dad-joke d-mode clean-aindent-mode magit-stgit mhc outlook mu4e-query-fragments mu4e-conversation mbsync mu4e-alert xkcd git-wip-timemachine git-messenger git-lens git-timemachine discover-my-major discover suggest elpy origami auto-complete-rst undo-tree smartrep visual-fill-column fill-column-indicator column-enforce-mode zlc bash-completion edebug-x bar-cursor zoom-window zoom ztree markup-faces markdown-preview-mode markdown-mode+ markdown-mode flymd challenger-deep-theme abyss-theme nova-theme magit ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
+    (dictionary dionysos dad-joke d-mode clean-aindent-mode magit-stgit mhc outlook mu4e-query-fragments mu4e-conversation mbsync mu4e-alert xkcd git-wip-timemachine git-messenger git-lens git-timemachine discover-my-major discover suggest elpy origami auto-complete-rst undo-tree smartrep fill-column-indicator column-enforce-mode zlc bash-completion edebug-x bar-cursor zoom-window zoom ztree markup-faces markdown-preview-mode markdown-mode+ markdown-mode flymd challenger-deep-theme abyss-theme magit ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
  '(safe-local-variable-values
    (quote
     ((c-font-lock-extra-types "FILE" "bool" "language" "linebuffer" "fdesc" "node" "regexp")
