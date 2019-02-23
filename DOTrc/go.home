@@ -19,6 +19,7 @@ Ee|crond|             ${etc}cron.d/
 Ee|crontab|           ${etc}crontab
 Ee|tmp|               ${davep}tmp/
 Ee|rc|                ${davep}/.rc/
+Ee|gitc|              ${rc}/gitconfig
 Ee|bashrc|brc|        ${rc}/bashrc
 Ee|patches|           ${davep}patches/
 Ee|wdylan|            ${davep}work/dylan/
@@ -361,6 +362,7 @@ Ee|gitbld|bldgit|gittedgit|       /home/davep/local/build/gitted/git/
 Ee|ggit|       /home/davep/local/build/gitted/git/
 Ee|bgit|       /home/davep/local/build/gitted/git/
 Ee|gitb|       /home/davep/local/build/gitted/git/
+Ee|gitgit|       /home/davep/local/build/gitted/git/
 ### Local Variables: ***
 ### tab-width: 2 ***
 ### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***

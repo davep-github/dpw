@@ -20,6 +20,7 @@ E|rc|                   ${davep}/.rc/
 Ee|bin|			${davep}/bin/
 Ee|lisp|		${davep}/lisp/
 Ee|dpwlisp|reallisp|realisp|rlisp|wlisp|         ${dpw}/lisp/
+Ee|dpwrc|drc|dotrc|                              ${dpw}/DOTrc
 Ee|fsffsfcompat|ffc|    ${lisp}/dp-fsf-fsf-compat.el
 Ee|xemacsfsfcompat|xfc| ${lisp}/dp-xemacs-fsf-compat.el
 Ee|greads|       /home/dpanarit/work/log/vg10-ecc/garbage-reads/
