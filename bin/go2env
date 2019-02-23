@@ -393,7 +393,7 @@ def expand_alias(line, selector, aliases, file_name, line_num):
     m = re.search("(\S+)\s+(.+)$", line)
     dp_io.dprintf("""expand_alias: %d, line>%s<
 selector>%s<
-aliases>%s<""", line_num, line, selector, aliases)
+aliases>%s<\n""", line_num, line, selector, aliases)
     if m:
         dp_io.debug("m.groups()>%s<\n", m.groups())
 
@@ -425,13 +425,15 @@ aliases>%s<""", line_num, line, selector, aliases)
         # get list of all aliases
         names = l[1:-1]
         val = os.path.expandvars(string.strip(val))
-        #        print "l>%s<, names>%s<, selector>%s<, ctl>%s<" % (l, names, selector, ctl)
+        dp_io.debug("l>%s<, names>%s<, selector>%s<, ctl>%s<, val>%s<\n",
+                    l, names, selector, ctl, val)
 
         # Remember if we were terminated by a '/' since this is done
         # on purpose to make entering dir names easier.
         if not val:
-            dp_io.eprintf("Referencing empty or unset variable: `%s'\n",
+            dp_io.eprintf("""Referencing empty or unset variable: `%s'\n""",
                           var_name)
+            dp_io.eprintf("""line>%s<\n""", line)
         else:
             last = val[-1]
             if last != '/':
