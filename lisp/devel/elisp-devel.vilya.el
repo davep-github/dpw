@@ -665,3 +665,50 @@ Friday February 15 2019
 nil
 
 
+
+========================
+Saturday February 23 2019
+--
+(custom-set-variables
+ '(ibuffer-default-sorting-mode (quote alphabetic))
+ '(ibuffer-fontification-alist
+   (quote
+    ((10 buffer-read-only ibuffer-locked-buffer)
+     (15
+      (and buffer-file-name
+	   (string-match ibuffer-compressed-file-name-regexp buffer-file-name))
+      font-lock-function-name-face)
+     (20
+      (string-match "^*"
+		    (buffer-name))
+      font-lock-constant-face)
+     (25
+      (and
+       (string-match "^ "
+		     (buffer-name))
+       (null buffer-file-name))
+      italic)
+     (30
+      (memq major-mode ibuffer-help-buffer-modes)
+      font-lock-doc-face)
+     (35
+      (derived-mode-p
+       (quote dired-mode))
+      font-lock-function-name-face)
+     (40
+      (and
+       (boundp
+	(quote emacs-lock-mode))
+       emacs-lock-mode)
+      ibuffer-locked-buffer)
+     (55
+      (string-match "<dse>\\(<[0-9]+>\\)*$"
+		    (buffer-name))
+      dp-sudo-edit-bg-face)
+     (33
+      (and buffer-file-name
+	   (string-match "^/.[^:]+:\\([^@]+@\\)?[^:]+:" buffer-file-name))
+      dp-remote-buffer-face))))
+)
+nil
+
