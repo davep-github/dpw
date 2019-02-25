@@ -272,4 +272,4 @@
  '(lazy-highlight ((t (:background "#65b2ff" :foreground "black"))))
  '(magit-diff-whitespace-warning ((t (:background "misty rose" :foreground "black" :box (:line-width 1 :color "red")))))
  '(rectangle-preview ((t (:inherit region))))
- '(region ((t (:background "#3d4451" :foreground "coral" :weight bold)))))
+ '(region ((t (:background "#000072" :foreground "red" :weight bold)))))
