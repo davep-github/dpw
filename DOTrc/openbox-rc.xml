@@ -307,6 +307,16 @@
         <command>ubuntu-sucks dpxx</command>
       </action>
     </keybind>
+    <keybind key="W-Down">
+      <action name="Iconify"/>
+    </keybind>
+    <!-- Set pointer speed, until I learn how to make udev do it. -->
+    <!--
+        Was working with udev, then stopped.  All plumbing and
+        scripts are in place.  Script logs executing, xset q shows
+        proper speed, but no effect on running system.
+    -->
+
     <!-- Select and raise XEmacs editing server. -->
     <keybind key="A-W-x">
       <action name="Execute">
