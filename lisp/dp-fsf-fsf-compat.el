@@ -759,8 +759,6 @@ This function does not modify point or mark."
         (point)
       (goto-char here))))
 
-(setq message-log-max 2048)
-
 (defun message-nl (fmt &rest args)
   (let ((message-log-max nil))
     (apply 'message fmt args)))
