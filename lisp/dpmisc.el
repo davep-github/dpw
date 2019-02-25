@@ -14746,6 +14746,11 @@ JFC."
   (interactive)
   (info "magit"))
 
+(defun trani ()
+  "Magit Info.  Visit Magit's Info node."
+  (interactive)
+  (info "transient"))
+
 (defun cali ()
   "Calendar/Diary Info."
   (interactive)
