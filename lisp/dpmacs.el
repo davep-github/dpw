@@ -1295,5 +1295,9 @@ minibuffer history list `bookmark-history'."
 (define-key esc-map " " 'dp-id-select-thing)
 (define-key global-map [?\C- ] 'dp-expand-abbrev)
 
+<<<<<<< HEAD
 (dp-set-to-max-vert-frame-height)
+=======
+(dp-set-to-max-vert-frame-height nil)
+>>>>>>> Set up the current tty as a suffix for persistent bash_history files.
 (message "dpmacs.el... finished.")

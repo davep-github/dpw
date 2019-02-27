@@ -14853,17 +14853,17 @@ environment variable based height.  It will correct for various
 machines, especially heretofore unknown ones."
   (interactive)
   ;; Max up.  We are now maximized vert and cannot be resized.
-  (set-frame-parameter frame 'fullscreen 'fullheight)
+  (set-frame-parameter nil 'fullscreen 'fullheight)
   ;; Let it happen.
   (sit-for 0.1)
   ;; Grab the maximized height.
-  (let ((height (frame-height frame)))
+  (let ((height (frame-height)))
     ;; Demaximize us.
-    (set-frame-parameter frame 'fullscreen nil)
+    (set-frame-parameter nil 'fullscreen nil)
     ;; Let it happen.
     (sit-for 0.1)
     ;; Set to maximized height, without being maximized.
-    (set-frame-height frame height)))
+    (set-frame-height nil height)))
 
 (defun dp-add-autoload-directive ()
   "Insert autoload flag.  I can never remember the string.
