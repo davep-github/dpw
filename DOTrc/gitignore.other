@@ -51,6 +51,8 @@ NOGIT[.,-]*
 # Oft-modified files with transient contents.
 .csh_history*
 .bash_history*
+.csh-history*
+.bash-history*
 
 # Output type directories.
 doxygen.out
