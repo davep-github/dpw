@@ -2087,9 +2087,10 @@ set the key-map after the hook has run."
     ;; shell buffer, its history is hosed.  So we'll spoof the read and
     ;; capture the file name they want to read and use that as our history
     ;; file and read that AT ZE *RIGHT* TIME!
-    (flet ((comint-read-input-ring (&rest r)
-             (dmessage "in dummy comint-read-input-ring")
-             (setq input-ring-name comint-input-ring-file-name)))
+    (cl-flet ((comint-read-input-ring
+	       (&rest r)
+	       (dmessage "in dummy comint-read-input-ring")
+	       (setq input-ring-name comint-input-ring-file-name)))
       (py-shell args))
     (setq comint-input-ring-file-name input-ring-name))
   ;; This should be done in the Python buffer by `py-shell', but isn't.

@@ -19,6 +19,8 @@ Ee|inb|                 ${davep}/inb/
 E|rc|                   ${davep}/.rc/
 Ee|bin|			${davep}/bin/
 Ee|lisp|		${davep}/lisp/
+E|dpmacs|               ${lisp}/dpmacs.el
+E|dpmisc|               ${lisp}/dpmisc.el
 Ee|dpwlisp|reallisp|realisp|rlisp|wlisp|         ${dpw}/lisp/
 Ee|dpwrc|drc|dotrc|                              ${dpw}/DOTrc
 Ee|fsffsfcompat|ffc|    ${lisp}/dp-fsf-fsf-compat.el

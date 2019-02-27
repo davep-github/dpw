@@ -139,7 +139,8 @@ case $shell_name in
 	export HISTSIZE=5000
 	export HISTFILESIZE=10000
         export HISTTIMEFORMAT="%FT%T "
-        export HISTFILE=$(mk-persistent-dropping-name.sh bash_history)
+	export HISTFILE=$(mk-persistent-dropping-name.sh \
+			      --suffix ".${TTY_SUFFIX}" "bash_history")
         #################################
         # This doesn't work because we load in the base HISTFILE for the
         # HOST, so up arrow, etc, work; but h, hgrep, etc use the new hist

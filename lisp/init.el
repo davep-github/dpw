@@ -25,8 +25,6 @@
 
 (add-to-list 'load-path dp-lisp-dir)
 
-;;(message "Setting frame font...done")
-
 (defun dp-lisp-subdir (sub &rest args)
   (expand-file-name (apply 'format sub args) dp-lisp-dir))
 
