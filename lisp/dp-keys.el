@@ -205,9 +205,9 @@ Bind any keys in KEYS via `dp-define-keys'."
 ;; F8 is used by some vnc clients as a menu key.
 (global-set-key [(meta f7)] 'dp-call-last-kbd-macro)
 
-(global-set-key [(meta ?[)] 'dp-find-matching-paren)
-(global-set-key [(meta ?])] 'dp-pop-go-back)
-(global-set-key [(control meta ?])] 'dp-goto-last-edit)
+(global-set-key [(meta ?\[)] 'dp-find-matching-paren)
+(global-set-key [(meta ?\])] 'dp-pop-go-back)
+(global-set-key [(control meta ?\])] 'dp-goto-last-edit)
 ;;;;;;(global-set-key [(control meta ?\])] 'dp-goto-last-edit)
 (global-set-key [(meta -)] 'dp-maybe-kill-this-buffer)
 (global-set-key [(control -)] 'negative-argument)
@@ -440,7 +440,7 @@ Submaps of this map are defined below.")
                           [?e] 'dp-make-temp-emacs-lisp-mode-buffer
                           [?i] 'dp-make-temp-lisp-interaction-mode-buffer
                           [?*] 'dp-make-temp-*mode-buffer
-                          [??] 'dp-make-temp-*mode-buffer
+                          "?" 'dp-make-temp-*mode-buffer
                           [?.] 'dp-make-temp-*mode-buffer
                           [?=] 'dp-make-temp-*mode-buffer
                           [return] 'dp-make-temp-*mode-buffer
