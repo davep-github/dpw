@@ -40,6 +40,7 @@ t))
 (setq initial-frame-alist
       `((width . ,dp-initial-frame-width)
 	(height . ,dp-initial-frame-height)
+	(fullscreen . fullheight)
 	(vertical-scroll-bars . right)))
 
 ;; subsequent window settings
@@ -49,6 +50,7 @@ t))
         (width . ,dp-initial-frame-width)
         (height . ,dp-initial-frame-height)
 	(vertical-scroll-bars . right)
+	(fullscreen . fullheight)
         (background-color . ,dp-default-background-color)))
 
 (defconst dp-original-isearch-string-out-of-window-function

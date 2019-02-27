@@ -63,6 +63,7 @@ do
             suffix="${PROJECT-brahma}"; suffix=".${suffix}";;
 	--use-project-as-prefix|--projpre|--upp)
             prefix="${PROJECT-brahma}"; prefix="${prefix}.";;
+	--use-tty-as-a-suffix) suffix=".$(tty_as_suffix)";;
 	--prefix) shift; prefix="${1}";;
 	--suffix) shift; suffix="${1}";;
 	--) shift; break;;

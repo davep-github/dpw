@@ -14823,6 +14823,17 @@ machines, especially heretofore unknown ones."
     (sit-for 0.1)
     ;; Set to maximized height, without being maximized.
     (set-frame-height frame height)))
+  (set-frame-parameter nil 'fullscreen 'fullheight)
+  ;; Let it happen.
+  (sit-for 0.1)
+  ;; Grab the maximized height.
+  (let ((height (frame-height)))
+    ;; Demaximize us.
+    (set-frame-parameter nil 'fullscreen nil)
+    ;; Let it happen.
+    (sit-for 0.1)
+    ;; Set to maximized height, without being maximized.
+    (set-frame-height nil height)))
 
 (defun dp-add-autoload-directive ()
   "Insert autoload flag.  I can never remember the string.
