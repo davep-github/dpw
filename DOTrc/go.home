@@ -150,7 +150,8 @@ Ee|emacscurrentversion|             26
 Ee|dplocalsharecurrentemacs|dplce|emsrc26|emsrc|  ${dplocalshareemacs}-${emacscurrentversion}
 Ee|dplocaldoculsd|dpldoc|           ${dpls}doc/
 Ee|dplocalexamples|dplex|dpleg|     ${dpls}examples/
-Ee|dplocallisp|dpll|                ${dpls}emacs/25.3/lisp
+Ee|dplocallisp253|dpll253|          ${dpls}emacs/25.3/lisp
+Ee|dplocallisp|dpll|                ${dpls}emacs/26.1.91/lisp
 Ee|tkinter|                         ${dpls}python/tkinter/
 Ee|noatun|                          ${dpls}apps/noatun/
 
@@ -242,7 +243,7 @@ E|doc2|d2|                      ${sundrydavep}doc/
 #############################################################################
 Ee|mpdd|        /var/tmp/portage/media-sound/mpd-0.12.2/work/mpd-0.12.2/
 Ee|lllisp|      ${davep}/lisp.d/to-ll/lisp/
-Ee|l|           ${davep}/lisp/
+E|l|            ${davep}/lisp/
 Ee|play|        ${davep}/play/
 Ee|cedet|       ${davep}/lisp/contrib/cedet/
 Ee|dok|         ${davep}/doc/
