@@ -6031,13 +6031,13 @@ When beginning a sequence, (point) is saved.  This can be pushed onto
   (dp-push-go-back "dp-ff-key")
   ;; `find-function-on-key' unconditionally uses the other window.
   (let ((o-ffow (symbol-function 'find-function-other-window)))
-    (flet ((find-function-other-window (&rest rest)
-             (if same-window-p
-                 (apply 'find-function rest)
-             (apply o-ffow rest))))
+    (cl-flet ((find-function-other-window (&rest rest)
+					  (if same-window-p
+					      (apply 'find-function rest)
+					    (apply o-ffow rest))))
       (dp-push-go-back "dp-ff-key-->find-function-on-key")
       (find-function-on-key key))))
-             
+
 (defun dp-info (&optional file same-window-p)
   (interactive)
   (let* ((my-Cu* (or (Cu0p)))
@@ -14800,35 +14800,39 @@ JFC."
 (defun dp-wmctrl-shell-command (format-or-command &rest command-args)
   "Doesn't do much more that a simple format, but may someday."
   (interactive "Mwmstrl command: ")
-  (shell-command
-   (apply 'format format-or-command command-args)))
+  (let ((cmd (apply 'format format-or-command command-args)))
+    ;;(dmessage "wmctrl cmd>%s<" cmd)
+    (shell-command cmd)))
 
-(defun* dp-set-max-vert-frame-height (&optional frame)
+(defun* dp-set-to-max-vert-frame-height (&optional frame)
   "Set frame height to max as if maximize frame height button has been clicked.
 FRAME is the frame upon which we wish to operate.
 This compensates for my constantly fucked up host-info &
 environment variable based height.  It will correct for various
 machines, especially heretofore unknown ones."
   (interactive)
-  (let ((curried-command (format "wmctrl -r '/Emacs@%s:' -b %s,maximized_vert"
-				 (dp-short-hostname) "%s"))
-	max-vert-height)
-    (dp-wmctrl-shell-command curried-command "add")
-    (sit-for 0)
-    (setq max-vert-height (frame-height))
-    (dp-wmctrl-shell-command curried-command "remove")
-    (sit-for 0)
-    (dp-set-frame-height max-vert-height)
-    (sit-for 0)))
+  ;; Max up.  We are now maximized vert and cannot be resized.
+  (set-frame-parameter nil 'fullscreen 'fullheight)
+  ;; Let it happen.
+  (sit-for 0.1)
+  ;; Grab the maximized height.
+  (let ((height (frame-height)))
+    ;; Demaximize us.
+    (set-frame-parameter nil 'fullscreen nil)
+    ;; Let it happen.
+    (sit-for 0.1)
+    ;; Set to maximized height, without being maximized.
+    (set-frame-height nil height)))
 
 (defun dp-add-autoload-directive ()
   "Insert autoload flag.  I can never remember the string.
 Same with the modeline and local var hacks.
-Of course, I'll forget the name of this function."
+Of course, I'll forget the name of this function and its aliases, too."
   (interactive)
   (insert ";;;###autoload\n"))
 
-(dp-defaliases 'dpaal 'aal 'dpaad 'daad 'aad 'dp-add-autoload-directive)
+(dp-defaliases 'dpaal 'dpaald 'aald 'aal 'dpaad 'daad 'aad
+	       'dp-add-autoload-directive)
 
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;; add new functions here
