@@ -712,3 +712,80 @@ Saturday February 23 2019
 )
 nil
 
+
+========================
+Tuesday February 26 2019
+--
+(cl-pp default-frame-alist)
+((tool-bar-lines . 0)
+ (menu-bar-lines . 1)
+ (width . 180)
+ (height . 66)
+ (background-color . "#1b182c")
+ (vertical-scroll-bars . right))
+
+(cl-pp initial-frame-alist)
+((width . 180)
+ (height . 66)
+ (vertical-scroll-bars . right))
+
+(setq initial-frame-alist
+      '((width . 180)
+	(height . 66)
+	(fullscreen . fullheight)
+	(vertical-scroll-bars . right)))
+
+(setq default-frame-alist
+      '((tool-bar-lines . 0)
+	(menu-bar-lines . 1)
+	(width . 180)
+	(height . 66)
+	(background-color . "#1b182c")
+	(vertical-scroll-bars . right)))
+((tool-bar-lines . 0) (menu-bar-lines . 1) (width . 180) (height . 66) (background-color . "#808080") (vertical-scroll-bars . right))
+
+
+
+(set-frame-parameter nil 'fullscreen 'fullheight)
+nil
+(frame-parameter nil 'fullscreen)
+fullheight
+(frame-parameter nil 'fullscreen-restore)
+fullheight
+
+
+(set-frame-parameter nil 'fullscreen nil)
+nil
+
+
+(progn
+  (set-frame-parameter nil 'fullscreen 'fullheight)
+  (sit-for 0.1)
+  (let ((height (frame-height)))
+    (set-frame-parameter nil 'fullscreen nil)
+    (sit-for 0.1)
+    (set-frame-height nil (/ height 1))))
+nil
+
+
+(dp-set-to-max-vert-frame-height)
+nil
+
+nil
+
+
+
+
+(toggle-frame-maximized)
+(toggle-frame-fullscreen)
+
+nil
+
+nil
+
+nil
+
+nil
+
+nil
+
