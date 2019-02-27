@@ -213,7 +213,6 @@ export -f dp_bitch dp_suggest dp_BITCH
 # Do this now so we can use my tools.
 export DAVEP_ENVIRONMENT_p=t
 
-
 # (ba)?sh on owls.vanu.com is old.  It canna grok [[, at the least,
 # hence `case' for wild card handling.
 : ${bounce_p=t}
@@ -464,6 +463,19 @@ export HOST_INFO_PATH="
 
 PATH=$(dp_add_to_path_iff -p "$PATH" ${HOST_INFO_PATH})
 
+tty_as_suffix()
+{
+    mytty | sed -rn 's!/dev/!!
+s!/!-!pg'
+}
+export -f tty_as_suffix
+
+if tty -s
+then
+    tty=$(mytty)
+    TTY=${TTY:-$tty}
+    TTY_SUFFIX=$(tty_as_suffix)
+fi
 
 # load locale specific functions
 EXTRA_RCS=''			# list of files other rcs want us to run
@@ -513,13 +525,6 @@ fi 1>&2
 
 # add our path to python's list of where to look for imports.
 export PYTHONPATH=$(dp_add_to_path_iff "$PYTHONPATH" "$PATH:$PYTHONPATH_POST")
-
-if tty -s
-then
-    tty=`mytty`
-    TTY=${TTY:-$tty}
-fi
-
 
 running_as_root_p()
 {
