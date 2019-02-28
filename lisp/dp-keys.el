@@ -769,7 +769,8 @@ already in there.")
 ;;  but only when available.
 (defun dp-replace-binding (old new)
   "Find key sequence for definition OLD and set to NEW definition.
-TODO: add prompting for functions analogous to `local-set-key' et.al."
+TODO: add prompting for functions analogous to `local-set-key' et.al.
+@todo XXX Just call `global-set-key' interactively to get prompting?"
   (let ((seq (where-is-internal old)))
     (when (and seq (fboundp new))
       (global-set-key (car seq) new)
