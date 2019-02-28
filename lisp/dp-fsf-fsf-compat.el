@@ -50,16 +50,22 @@ See `fill-paragraph' and `fill-region' for more information."
   ())
 
 (defun keymap-name (keymap)
-"A tremendously bogus, dangerous and offensive hack.  Mildly better than nothing."
-  (keymap-prompt keymap))
+  "Return the keymap-name."
+  (if (keymapp keymap)
+      (nth 2 map)
+    (error "Not a keymap.")))
 
 (defun set-keymap-name (map name)
-  (message "No `set-keymap-name' functionality."))
+  (if (keymapp keymap)
+      (setcdr (cdr map) (cons name nil))
+    (error "Not a keymap")))
 
 ;; stolen from: mmmode, was: easy-mmode-set-keymap-parents
-(defun dp-set-keymap-parents (m parents)
-  (set-keymap-parent
-   m (if (cdr parents) (make-composed-keymap parents) (car parents))))
+(defun dp-set-keymap-parents (map parents)
+  (set-keymap-parent map
+		     (if (cdr parents)
+			 (make-composed-keymap parents)
+		       (car parents))))
 
 (defalias 'ffap-host-to-path 'ffap-host-to-filename)
 
