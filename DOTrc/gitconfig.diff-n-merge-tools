@@ -30,6 +30,9 @@
 	cmd = p4diff.git $LOCAL $REMOTE
 
 [difftool "ec-diff"]
+	cmd = ec-diff $LOCAL $REMOTE
+
+[difftool "ec-diff-w"]
 	cmd = ec-diff -w $LOCAL $REMOTE
 
 [difftool "s-diff"]
