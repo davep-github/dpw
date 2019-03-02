@@ -1,13 +1,1 @@
-#!/bin/bash
-
-. script-x
-#echo 1>&2 "$0: @>$@<"
-
-[[ "$1" =~ "^((-(h|-help))|)$" ]] && {
-    echo " Edit file in XEmacs via gnuserv with the ec utility and wait for
- the edit to be completed."
-    exit 0
-}
-
-ec -1 -w "$@"
-
+ec-w

@@ -64,7 +64,7 @@ sig_exit ()
 append_p=false
 post_op=play
 num=1
-: ${aski:=false}
+: ${ask:=false}
 
 # Usage variable usage:
 Usage_args_info=" [-a|--append|-A|--no-append|--play|--no-play]"
