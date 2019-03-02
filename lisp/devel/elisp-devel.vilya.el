@@ -789,3 +789,114 @@ nil
 
 nil
 
+
+========================
+Thursday February 28 2019
+--
+(require 'emms)
+emms
+
+(cl-pp ido-common-completion-map)
+
+(keymap (4 . ido-magic-delete-char)
+	(6 . ido-magic-forward-char)
+	(2 . ido-magic-backward-char)
+	(63 . ido-completion-help)
+	(left . ido-prev-match)
+	(right . ido-next-match)
+	(0 . ido-restrict-to-matches)
+	(27 keymap (32 . ido-take-first-match))
+	(67108896 . ido-restrict-to-matches)
+	(26 . ido-undo-merge-work-directory)
+	(20 . ido-toggle-regexp)
+	(67108908 . ido-prev-match)
+	(67108910 . ido-next-match)
+	(19 . ido-next-match)
+	(18 . ido-prev-match)
+	(16 . ido-toggle-prefix)
+	(13 . ido-exit-minibuffer)
+	(10 . ido-select-text)
+	(32 . ido-complete-space)
+	(9 . ido-complete)
+	(5 . ido-edit-input)
+	(3 . ido-toggle-case)
+	(1 . ido-toggle-ignore)
+	keymap
+	(M-up . switch-to-completions)
+	(tab . minibuffer-complete)
+	(14 . next-complete-history-element)
+	(16 . previous-complete-history-element)
+	(C-space . dp-expand-abbrev)
+	(menu-bar keymap
+		  (minibuf "Minibuf"
+			   keymap
+			   (previous menu-item
+				     "Previous History Item"
+				     previous-history-element
+				     :help
+				     "Put previous minibuffer history element in the minibuffer")
+			   (next menu-item
+				 "Next History Item"
+				 next-history-element
+				 :help
+				 "Put next minibuffer history element in the minibuffer")
+			   (isearch-backward menu-item
+					     "Isearch History Backward"
+					     isearch-backward
+					     :help
+					     "Incrementally search minibuffer history backward")
+			   (isearch-forward menu-item
+					    "Isearch History Forward"
+					    isearch-forward
+					    :help
+					    "Incrementally search minibuffer history forward")
+			   (return menu-item
+				   "Enter"
+				   exit-minibuffer
+				   :key-sequence
+				   ""
+				   :help
+				   "Terminate input and exit minibuffer")
+			   (quit menu-item
+				 "Quit"
+				 abort-recursive-edit
+				 :help
+				 "Abort input and exit minibuffer")
+			   "Minibuf"))
+	(10 . exit-minibuffer)
+	(13 . exit-minibuffer)
+	(7 . minibuffer-keyboard-quit)
+	(C-tab . file-cache-minibuffer-complete)
+	(9 . self-insert-command)
+	(XF86Back . previous-history-element)
+	(up . previous-history-element)
+	(prior . previous-history-element)
+	(XF86Forward . next-history-element)
+	(down . next-history-element)
+	(next . next-history-element)
+	(27 keymap
+	    (119 . dp-rsh-cwd-to-minibuffer)
+	    (101 . dp-rsh-cwd-to-minibuffer)
+	    (111 . dp-kill-ring-save)
+	    (57 lambda
+		(&optional arg arg1 arg2 arg3 arg4 arg5)
+		""
+		(interactive "P")
+		(dp-insert-parentheses nil))
+	    (61 lambda
+		(&optional arg arg1 arg2 arg3 arg4 arg5)
+		""
+		(interactive "P")
+		(enqueue-eval-event 'eval
+				    (nth (1- (prefix-numeric-value arg))
+					 command-history))
+		(top-level))
+	    (39 . dp-copy-char-to-minibuf)
+	    (44 . minibuffer-keyboard-quit)
+	    (96 . previous-complete-history-element)
+	    (45 . minibuffer-keyboard-quit)
+	    (114 . previous-matching-history-element)
+	    (115 . next-matching-history-element)
+	    (112 . dp-parenthesize-region)
+	    (110 . next-history-element)))
+
