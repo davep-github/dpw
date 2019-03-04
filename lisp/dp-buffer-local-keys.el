@@ -33,7 +33,7 @@
 
 (defun dp-define-buffer-local-keys (keys &optional buffer protect-bindings-p name)
   (interactive)
-  (message "in dp-define-buffer-local-keys, name>%s<" name)
+  (message "in NEW dp-define-buffer-local-keys, name>%s<" name)
   (with-current-buffer (or buffer (current-buffer))
     (let ((keymap (dp-blm-get-or-create-buf-local-keymap name)))
       (message "keymap: %s" keymap)
