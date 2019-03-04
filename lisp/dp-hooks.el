@@ -2246,16 +2246,6 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
   (make-local-variable 'indent-line-function)
   (setq indent-line-function 'indent-relative))
 
-;;<: emms :>
-(defun dp-emms-playlist-mode-hook ()
-  (local-set-key [space] 'emms-player-mpd-pause)
-  (local-set-key [?p] 'emms-player-mpd-pause)
-  (local-set-key [(meta ?y)] 'emms-playlist-mode-yank)
-  (local-set-key [(control ?y)] 'emms-playlist-mode-yank-pop)
-  (local-set-key [(meta ?u)] 'emms-playlist-mode-undo)
-  (local-set-key [(meta ?n)] 'dp-next-error)
-)
-
 ;;(require 'dp-perforce)
 
 (defadvice cperl-electric-delete (around perl-crap activate)
@@ -2428,7 +2418,6 @@ changed."
 (add-hook 'cperl-mode-hook 'dp-cperl-mode-hook)
 (add-hook 'find-function-after-hook 'dp-find-function-after-hook)
 (add-hook 'outline-mode-hook 'dp-outline-hook)
-(add-hook 'emms-playlist-mode-hook 'dp-emms-playlist-mode-hook)
 (add-hook 'diff-mode-hook 'dp-diff-mode-hook)
 (add-hook 'vc-checkout-hook 'dp-set-auto-mode)
 (add-hook 'after-revert-hook 'dp-after-revert-hook)

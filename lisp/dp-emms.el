@@ -72,7 +72,39 @@
           ;;                    "12345678"
           )
     (add-hook 'emms-player-started-hook 'emms-show))
-    
+
+  ;;<: emms :>
+  (defun dp-emms-playlist-bind-keys ()
+    (interactive)
+    (dp-define-key-list
+     dp-music-player-map
+     `(
+       ;; Different names for the same key are becoming tiresome.
+       [space] emms-player-mpd-pause
+       [? ] emms-player-mpd-pause
+       [?p] emms-player-mpd-pause
+       [?l] emms-playlist-mode
+       [?m] dp-emms-playlist-mode-go
+       [(down)] emms-player-mpd-next
+       [(up)] emms-player-mpd-prev
+       [(kp-down)] emms-player-mpd-next
+       [(kp-up)] emms-player-mpd-prev
+       [?i] emms-player-mpd-show
+       [?s] emms-player-mpd-stop
+       [?S] emms-player-mpd-start
+       [?r] dp-emms-random-album
+       [(meta ?y)] emms-playlist-mode-yank
+       [(control ?y)] emms-playlist-mode-yank-pop
+       [(meta ?u)] emms-playlist-mode-undo
+
+       ;; emms commits the following sin:
+       ;; (define-key map (kbd "M-n") 'emms-playlist-mode-next)
+       [(meta ?n)] dp-next-error
+       )))
+
+  (defun dp-emms-playlist-mode-hook ()
+    (dp-emms-playlist-bind-keys))
+
   (defun dp-emms-random-album (&optional arg)
     "Choose a random album."
     (interactive "P")
