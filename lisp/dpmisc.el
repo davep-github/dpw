@@ -2000,7 +2000,7 @@ from simple.el"
 (defun dp-center-to-top (&optional arg recursing-p)
   (interactive "P")                     ; fsf - fix "_"
   (if (and (not (eq arg '-))
-           (or (memq last-command 
+           (or (memq last-command
                     '(dp-center-to-top dp-center-to-bottom
                       dp-center-to-top-other-window 
                       dp-center-to-bottom-other-window))
@@ -2041,12 +2041,12 @@ from simple.el"
 
 (put 'dp-center-to-top-other-window isearch-continues t)
 
-(defun* dp-bound-rest-of-line (&key from-beginning-p (no-newline-p t) 
+(defun* dp-bound-rest-of-line (&key from-beginning-p (no-newline-p t)
                                all-if-@-eolp text-only-p
                                ignore-eol-punctuation-p)
   "Very minor convenience function."
-  (dp-line-boundaries text-only-p 
-                      no-newline-p 
+  (dp-line-boundaries text-only-p
+                      no-newline-p
                       (if (or from-beginning-p
                               (and (eolp) all-if-@-eolp))
                           (line-beginning-position)

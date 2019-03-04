@@ -1330,7 +1330,7 @@ Arr... beware the hooks! "
   (unless (buffer-file-name)
     (dp-define-buffer-local-keys '([(control ?x) (control ?d) ?x] dp-eol-and-eval
                                    [(control meta ?j)] dp-eol-and-eval
-                                   [(meta ?w)] dp-you-cant-save-you-silly) 
+                                   [(meta ?w)] dp-you-cant-save-you-silly)
                                  nil nil nil "dlimh"))
   (local-set-key [(meta space)] 'dp-id-select-thing)  ;fsf change.x was dp-select-thing.
   (local-set-key [(meta ?-)] 'dp-bury-or-kill-buffer))
