@@ -14,7 +14,7 @@
         ;; Closure really needed.
         ;; I hate `this or that' is broken, with no way tell which or what.
         (ding)
-        (dmessage "The emms system enabled: %s; emms package present: %s."
+        (dmessage "The emms is enabled: %s; emms package present: %s."
                   dp-emms-enable-p (dp-optionally-require 'emms-setup)))
       (defun dp-emms-startup ()
         "Startup stub when emms not present."
@@ -43,17 +43,17 @@
         ;; value of "music_directory" from your MusicPD config.  There are
         ;; additional options available as well, but the defaults should be
         ;; sufficient for most uses.
-        (setq emms-player-mpd-music-directory (concat 
+        (setq emms-player-mpd-music-directory (concat
                                                (getenv "HOME") "/Music/")
               emms-playlist-buffer-name "*Mvsik*")))
-      
+
     ;; You can set `emms-player-mpd-sync-playlist' to nil if your master
     ;; EMMS playlist contains only stored playlists.
-      
+
     ;; If at any time you wish to replace the current EMMS playlist buffer
     ;; with the contents of the MusicPD playlist, type
     ;; M-x emms-player-mpd-connect.
-      
+
     ;; Adjust `emms-player-mpd-server-name' and
     ;; `emms-player-mpd-server-port' to match the location and port of
     ;; your MusicPD server.
@@ -61,7 +61,7 @@
           emms-player-mpd-server-port "6600"
           emms-show-format "Now playing: %s"
           emms-mode-line-mode-line-function nil
-          ;; Put the song name on the title bar only. 
+          ;; Put the song name on the title bar only.
           ;; It's too long for the mode line.
           ;; emms-mode-line-titlebar-function 'emms-mode-line-playlist-current
           emms-mode-line-titlebar-function nil
@@ -81,29 +81,30 @@
                   "")))
       (shell-command-to-string (format "mpc-random-album %s" args))
       (emms-player-mpd-connect)))
-  
+
   (defun dp-emms-startup ()
     "Start up the previously set up emms."
     (dp-emms-setup)
     (add-hook 'emms-playlist-mode-hook 'dp-emms-playlist-mode-hook)
     ;; Turn the mode-line off around our call to `emms-player-mpd-connect'
-    (emms-mode-line 0) 
+    (emms-mode-line 0)
     (emms-player-mpd-connect)
-    (emms-mode-line 1)))                ; "We need this to make it go." )
+    ;; "We need this to make it go." )
+    (emms-mode-line 1))))
 
 ;; Keeping this out here gives us more control and makes debugging a bit
 ;; easier.
 (when dp-wants-emms-started-at-startup-p
   ;; This can hose things if mpd isn't up.
-(condition-case error-info
-    (dp-emms-startup)
-  (error "EMMS had start-up problems. Please try again later." )))
+  (condition-case error-info
+      (dp-emms-startup)
+    (error "EMMS had start-up problems. Please try again later." )))
 
 (defun dp-emms-playlist-mode-go ()
   (interactive)
   (emms-player-mpd-connect)
   (call-interactively 'emms-playlist-mode-go))
-                          
+
 ;;
 ;; These are globally bound emms keys.
 ;; I don't think that global bindings should be context sensitive. So always
