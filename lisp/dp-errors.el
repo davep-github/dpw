@@ -41,6 +41,7 @@
 ;; Emacs only, XEmacs only or both.
 
 (defconst dp-debug-ignored-errors
+  ;; signaled symbols
   '(beginning-of-line
     beginning-of-buffer
     end-of-line
@@ -51,9 +52,13 @@
     file-locked
     search-failed
     folder-empty
-    end-of-folder			; vm-* error.
+    end-of-folder
+    ;; vm-* error.
     dp-vm-IMAP-data-modification-disabled
+    dp-signal-message
     cl-assertion-failed
+
+    "dp-warning: "
     "Keyboard macro terminated by a command ringing the bell$"
     "No cross references in this node"
     "There is no next link"
