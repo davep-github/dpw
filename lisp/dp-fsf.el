@@ -5,8 +5,8 @@
 (eval-when-compile (require 'subr-x))
 
 (setq isearch-continues 'isearch-scroll
-      custom-file (dp-lisp-subdir
-		   (format "fsf-custom.%s.el" (dp-short-hostname)))
+      custom-file (expand-file-name "fsf-custom.el"
+				    (file-name-directory user-init-file))
       apropos-do-all t
       )
 (load custom-file)
