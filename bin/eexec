@@ -85,6 +85,8 @@ EExec_parse()
     # Until I learn how to return a *properly quoted* "$@"
     for i in "$@"
     do
+	#echo 1>&2 "\$1>$1<"
+
       case "$1" in
           -n|--eexec-n) prog="${prog}EExecDashN ";;
           -nk|--nk|--eexec-nk|--eexec-neko) prog="${prog}EExecDashN_k ";;
@@ -92,11 +94,12 @@ EExec_parse()
           -vk|--vk|--eexec-vk) prog="${prog}EExecVerbose_k ";;
           -q|--eexec-q) prog="${prog}EExecQuiet ";;
           --eexec-last-option|--eexec--) shift; break;;
-          --) prog="${prog}EExecNOP"; break;; # Allow user to consume a --
+          --) prog="${prog}break"; break;; # Allow user to consume the --
           *) break;;
       esac
       shift
     done
+    #echo 1>&2 "\$@>$@<"
     echo "$prog"
 }
 
@@ -397,6 +400,7 @@ EExec()
           --no-status-banner) status_banner_p=;;
           -tcsh) executor=EExec_start_tcsh;;
           --debug) set -x;;
+	  --) break;;
           -*) EEdie0 1 "Bad option passed to EExec(): $1"
                  ;;
          *) break;;
