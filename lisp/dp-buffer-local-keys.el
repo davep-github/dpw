@@ -2,9 +2,6 @@
 ;;; Manage buffer local keys.
 ;;; One way really, really sucks.
 
-;;;
-;;; This stuff is *way* better, but it requires my C code hack.
-
 (message "dp-buffer-localkeys loading...")
 
 (setq dp-bl-keymaps '())
@@ -32,6 +29,9 @@
                                          (buffer-file-name)))))))
 
 (defun dp-define-buffer-local-keys (keys &optional buffer protect-bindings-p name)
+  "Create a keymap the is local to the current buffer.
+Make copy of the current local map and override the keys in KEYS.
+This allows us to make temporary changes that don't muck with the local map."
   (interactive)
   (message "in NEW dp-define-buffer-local-keys, name>%s<" name)
   (with-current-buffer (or buffer (current-buffer))
