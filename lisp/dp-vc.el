@@ -83,4 +83,7 @@
      [(control ?c) ?d ?s ?>] smerge-diff-base-lower
      ))
   )
+
+(add-hook 'smerge-mode-hook 'dp-smerge-mode-hook)
+
 (provide 'dp-vc)
