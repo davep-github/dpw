@@ -106,17 +106,17 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(control ?A)] 'dp-copy-to-end-of-line)
 (global-set-key [(control ?x) ?4 (meta ?e)] 'dp-ffap-other-window)
 (global-set-key [(control ?x) ?8 (meta ?e)] (kb-lambda
-                                                (dp-2-vertical-windows-do-cmd
-                                                 'dp-ffap-other-window)))
-(global-set-key [(control ?x) ?8 ?f] (kb-lambda
 					      (dp-2-vertical-windows-do-cmd
 					       'dp-ffap-other-window)))
+(global-set-key [(control ?x) ?8 ?f] (kb-lambda
+				       (dp-2-vertical-windows-do-cmd
+					'dp-ffap-other-window)))
 (global-set-key [(control ?x) ?8 ?b] (kb-lambda
 				       (dp-2-vertical-windows-do-cmd
-					'dp-switch-to-buffer t)))
-(global-set-key [(control ?x)(meta ?=)] 'dp-balance-horizontal-windows)
 (global-set-key [kp-subtract] 'dp-kill-region)
 (global-set-key [(control ?w)] 'dp-kill-region)
+					'dp-switch-to-buffer t)))
+(global-set-key [(control ?x)(meta ?=)] 'dp-balance-horizontal-windows)
 (global-set-key [(control meta ?w)] 'dp-kill-region-append)
 (global-set-key [(control meta ?k)] (kb-lambda
 				      (dp-mark-to-end-of-line)
