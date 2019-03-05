@@ -70,8 +70,10 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(control next)] 'dp-end-of-buffer)
 (global-set-key [(control prior)] 'dp-beginning-of-buffer)
 (global-set-key [(control right)] 'forward-word)
-(global-set-key [(control meta next)] 'dp-other-frame)
-(global-set-key [(control meta prior)] 'dp-other-frame-up)
+(global-set-key [(shift control meta next)] 'dp-other-frame)
+(global-set-key [(shift control meta prior)] 'dp-other-frame-up)
+(global-set-key [(control meta next)] 'dp-other-window-scroll-up-command)
+(global-set-key [(control meta prior)] 'dp-other-window-scroll-down-command)
 
 (global-set-key [kp-end] 'dp-brief-end)
 (global-set-key [kp-home] 'dp-brief-home)
