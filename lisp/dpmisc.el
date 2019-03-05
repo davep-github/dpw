@@ -13128,12 +13128,12 @@ MODE-LOCAL-LIST-P allows restricting regexps on a per-mode basis."
   (loop for (key def) on key-func-list by 'cddr do
 	(define-key map key def)))
 
-(defun dp-local-set-keys (key-func-list)
-  "See `dp-define-key-list' for KEY-FUNC-LIST definition."
+(defun dp-local-set-keys (key/func-list)
+  "See `dp-define-key-list' for KEY/FUNC-LIST definition."
   (let ((map (current-local-map)))
     (unless map
       (error "dp-local-set-keys: No local key map"))
-    (dp-define-key-list map key-func-list)))
+    (dp-define-key-list map key/func-list)))
 
 (defun dp-call-pred-or-pred (pred &rest pred-args)
   (if (functionp pred)
@@ -14180,7 +14180,10 @@ it. Whitespace diffs are easy to ignore during reviews"
 Predicate is used to tell us whether or not the current line
 qualifies for whitespace eradication.")
 
-(defun dp-next-line (count &optional cleanup-current-line-pred)
+(dp-deflocal dp-dp-next-line-wrap-p nil
+  "Do we want to wrap bottom to top in this buffer?")
+
+(defun dp-next-line (count &optional cleanup-current-line-pred wrap-p)
   "Add trailing white space removal functionality."
   (interactive "p")			; fsf - fix "_"
   ;; When I've hosed things, this can be broken, so handle it.
@@ -14216,7 +14219,10 @@ qualifies for whitespace eradication.")
      ;; where we failed, but let's just do one and then we can move up
      ;; if we end up doing two.  Doing two is infinitely better than
      ;; doing 0 and having to play games to get to the next line.
-     (call-interactively 'next-line)
+     (if (and (memq 'end-of-buffer bubba)
+	      (or wrap-p dp-dp-next-line-wrap-p))
+	 (goto-char (point-min))
+       (call-interactively 'next-line))
      (setq this-command 'next-line)
      )))
 
