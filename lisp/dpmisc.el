@@ -3297,7 +3297,7 @@ lisp-interaction mode."
         
 (defvar dp-hyper-apropos-buffer-name "*Hyper Apropos*")
 
-(defun* hab (&optional (other-window-p t))
+(defun* dp-switch-to-hyper-apropos-buffer (&optional (other-window-p t))
   (interactive)
   (when (get-buffer dp-hyper-apropos-buffer-name)
     (funcall
@@ -3337,6 +3337,7 @@ lisp-interaction mode."
   (interactive "P")
   (dp-display-sys-buffer dp-message-buffer-name same-window-p
 			 tallest-window-p))
+(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
 
 (dp-defaliases 'mb 'mb2 'mb-other 'dp-display-message-buffer)
 
