@@ -37,6 +37,8 @@ t))
 (defvar dp-initial-frame-height 66)
 
 ;; initial window settings
+;; @todo XXX Put these in specmacsen.
+;; Possibly put common stuff here. And add to the list in the specmacsen.
 (setq initial-frame-alist
       `((width . ,dp-initial-frame-width)
 	(height . ,dp-initial-frame-height)
