@@ -191,8 +191,8 @@ Bind any keys in KEYS via `dp-define-keys'."
 
 ;; I don't use the extra junk in my versions.
 ;; Ah, but I can't tag 'em as isearch-commands this way.
-; (global-set-key [(control up)] (kb-lambda (scroll-down 1)))
-; (global-set-key [(control down)] (kb-lambda (scroll-up 1)))
+;; (global-set-key [(control up)] (kb-lambda (scroll-down 1)))
+;; (global-set-key [(control down)] (kb-lambda (scroll-up 1)))
 
 ;;reassigned; (global-set-key [(control meta up)] (kb-lambda
 ;;reassigned;                                         (dp-scroll-down nil 'half-page-p)))
