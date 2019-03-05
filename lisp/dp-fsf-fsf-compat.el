@@ -51,14 +51,18 @@ See `fill-paragraph' and `fill-region' for more information."
 
 (defun keymap-name (keymap)
   "Return the keymap-name."
-  (if (keymapp keymap)
-      (nth 2 map)
-    (error "Not a keymap.")))
+  (message "keymap-name: keymap: %s" keymap))
+  ;; (if (keymapp map)
+  ;;     (nth 2 map)
+  ;;   (error "Not a keymap.")))
 
-(defun set-keymap-name (map name)
-  (if (keymapp keymap)
-      (setcdr (cdr map) (cons name nil))
-    (error "Not a keymap")))
+(defun set-keymap-name (keymap name)
+  (message "set-keymap-name: name: %s, keymap: %s" name keymap))
+  ;; (if (keymapp keymap)
+  ;;     (progn
+  ;; 	(message "name: %s, keymap: %s" name keymap)
+  ;;     (setcdr (cdr keymap) (cons name nil)))
+  ;;   (error "Not a keymap")))
 
 ;; stolen from: mmmode, was: easy-mmode-set-keymap-parents
 (defun dp-set-keymap-parents (map parents)
@@ -67,6 +71,7 @@ See `fill-paragraph' and `fill-region' for more information."
 			 (make-composed-keymap parents)
 		       (car parents))))
 
+()
 (defalias 'ffap-host-to-path 'ffap-host-to-filename)
 
 ;;; Try to find common way to do this.  It's hacked from XEmacs' lisp code.
