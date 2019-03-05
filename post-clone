@@ -194,8 +194,11 @@ droppings/editors/xemacs/tramp.d/auto-saves.d \
 droppings/editors/xemacs/xebacs.d \
 droppings/editors/xemacs/ephemeral.d \
 droppings/editors/xemacs/auto-saves.d \
+droppings/editors/xemacs/ephemeral.d \
 droppings/persist/gdb_history \
 droppings/persist/emacs-history"
+
+safe_ln "droppings/editors/xemacs" "droppings/editors/emacs"
 
 for dropping in ${droppings}
 do
