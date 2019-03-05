@@ -185,13 +185,12 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(control meta up)] 'dp-scroll-down-other-window)
 (global-set-key [(control meta down)] 'dp-scroll-up-other-window)
 (global-set-key [down] 'dp-next-line) ; q.v. dp-cleanup-trailing-whitespace-p
+(global-set-key [up] 'dp-previous-line)
 (global-set-key [kp-down] 'dp-next-line) ; q.v. dp-cleanup-trailing-whitespace-p
+(global-set-key [kp-up] 'dp-previous-line)
 (global-set-key [(control kp-up)] 'dp-scroll-down)
-(global-set-key [up] 'dp-previous-line)
-(global-set-key [up] 'dp-previous-line)
 (global-set-key [(control kp-down)] 'dp-scroll-up)
 (global-set-key [(control meta kp-up)] 'dp-scroll-down-other-window)
-(global-set-key [kp-up] 'dp-previous-line)
 (global-set-key [(control meta kp-down)] 'dp-scroll-up-other-window)
 
 ;; I don't use the extra junk in my versions.
