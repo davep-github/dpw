@@ -3338,6 +3338,20 @@ lisp-interaction mode."
   (dp-display-sys-buffer dp-message-buffer-name same-window-p
 			 tallest-window-p))
 (dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
+(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
+(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
+(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
+(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
+(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
+(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
+(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
+(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
+(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
+(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
+(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
+(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
+(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
+(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
 
 (dp-defaliases 'mb 'mb2 'mb-other 'dp-display-message-buffer)
 
