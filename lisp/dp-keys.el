@@ -109,18 +109,18 @@ Bind any keys in KEYS via `dp-define-keys'."
                                                 (dp-2-vertical-windows-do-cmd
                                                  'dp-ffap-other-window)))
 (global-set-key [(control ?x) ?8 ?f] (kb-lambda
-                             (dp-2-vertical-windows-do-cmd
-                              'dp-ffap-other-window)))
+					      (dp-2-vertical-windows-do-cmd
+					       'dp-ffap-other-window)))
 (global-set-key [(control ?x) ?8 ?b] (kb-lambda
-                               (dp-2-vertical-windows-do-cmd
-                                'dp-switch-to-buffer t)))
+				       (dp-2-vertical-windows-do-cmd
+					'dp-switch-to-buffer t)))
 (global-set-key [(control ?x)(meta ?=)] 'dp-balance-horizontal-windows)
 (global-set-key [kp-subtract] 'dp-kill-region)
 (global-set-key [(control ?w)] 'dp-kill-region)
 (global-set-key [(control meta ?w)] 'dp-kill-region-append)
 (global-set-key [(control meta ?k)] (kb-lambda
-                                        (dp-mark-to-end-of-line)
-                                        (dp-kill-region-append)))
+				      (dp-mark-to-end-of-line)
+				      (dp-kill-region-append)))
 (global-set-key [(meta kp-subtract)] 'dp-kill-region-append)
 (global-set-key [(kp-add)] 'dp-kill-ring-save)
 (global-set-key [(control insert)] 'dp-kill-ring-save)
@@ -294,19 +294,19 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [(meta ?9)] 'dp-insert-parentheses)
 (global-set-key [(meta ?0)] 'up-list)
 (global-set-key [(control meta ?0)] (kb-lambda
-                                       (up-list)
-                                       (newline-and-indent)))
+				      (up-list)
+				      (newline-and-indent)))
 
 (global-set-key [(control meta ?9)] 'down-list)
 
 (global-set-key "\C-x4hi" (kb-lambda
-                              (when (one-window-p 'NOMINI)
-                                (split-window))
-                              (other-window 1)
+			    (when (one-window-p 'NOMINI)
+			      (split-window))
+			    (other-window 1)
                             (call-interactively 'info)))
 (global-set-key [(control h) ?i] 'dp-info)
 (global-set-key [(control h) (control l)] (kb-lambda
-					      (info "elisp")))
+					    (info "elisp")))
 
 ;;(global-set-key [(control x) 4 h (control m)] '2man)
 (global-set-key "\C-x4h\C-m" '2man)
@@ -352,16 +352,16 @@ Bind any keys in KEYS via `dp-define-keys'."
 
                           [(control ?b)] 'dp-copy-breakpoint-command-as-kill
                           [(control ?/)] (kb-lambda
-                                             (setq display-buffer-function nil))
+					   (setq display-buffer-function nil))
                           [(control ?f)] 'dp-face-at
                           [(meta ?c)] 'dp-id-select-and-copy-thing
                           [?b] 'dp-point-to-bottom
 
                           [(meta n)] (kb-lambda
-                                         (dp-goto-next-dp-extent-from-point
-                                          '(4)))
+				       (dp-goto-next-dp-extent-from-point
+					'(4)))
                           [tab] (kb-lambda
-                                    (dp-goto-next-dp-extent-from-point '(4)))
+				  (dp-goto-next-dp-extent-from-point '(4)))
 
                           [(control ?p)] 'dp-shell-resync-dirs
                           [(control ?s)] 'dp-find-or-create-sb
@@ -392,14 +392,14 @@ Bind any keys in KEYS via `dp-define-keys'."
                           [?e] (if (dp-xemacs-p)
 				   'dp-extents-at
 				 (kb-lambda
-				     ;; XXX @todo this doesn't work, but
-				     ;; command works by hand.
-				     ;; ?Create a func for this?
-				     ;; Would be nice to overload
-				     ;; `dp-extents-at', with macs
-				     ;; specific versions, but the
-				     ;; signatures are very different.
-				     (message "%s" (text-properties-at (point)))))
+				   ;; XXX @todo this doesn't work, but
+				   ;; command works by hand.
+				   ;; ?Create a func for this?
+				   ;; Would be nice to overload
+				   ;; `dp-extents-at', with macs
+				   ;; specific versions, but the
+				   ;; signatures are very different.
+				   (message "%s" (text-properties-at (point)))))
                           [?E] (if (dp-xemacs-p)
 				   'dp-extents-at
 				 'describe-text-properties)
@@ -451,7 +451,7 @@ Submaps of this map are defined below.")
   ;; <:cdsS map:>
   (defconst dp-ssh-mode-map
     (dp-define-key-submap 'dp-ssh-mode-prefix dp-Ccd-map
-                          [?S]     ; Key in parent map which accesses this map.
+                          [?S]	 ; Key in parent map which accesses this map.
                           ;; Optional list of sequences
                           ;; to define.
                           ;; No relation to above.
@@ -494,7 +494,7 @@ Hopefully [space] is mnemonic.")
   (defconst dp-J-mode-map
     (dp-define-key-submap 'dp-J-mode-prefix dp-Ccd-map
                           ;; Key in parent map which accesses this map.
-                          [?J]     ; Key in parent map which accesses this map.
+                          [?J]	 ; Key in parent map which accesses this map.
                           ;; List of bindings to define in this map.
                           [?a] 'dp-jobs-adl-applied-for
                           [?m] 'dp-jobs-adl-mismatch
@@ -521,14 +521,14 @@ Hopefully [space] is mnemonic.")
                           [?d] 'dp-insert-debugging-code-tag
                           )
     ;; <:cdd map cxx bindings:>
-  "C<xx> mode key map.")
+    "C<xx> mode key map.")
 
   ;;
   ;; Colorization stuff. <:color:>
   ;;
   (defconst dp-color-map
     (dp-define-key-submap 'dp-color-mode-prefix dp-Ccd-map
-                          [?c]     ; Key in parent map which accesses this map.
+                          [?c]	 ; Key in parent map which accesses this map.
                           [?c] 'dp-colorize-region
                           [(control ?c)] 'dp-colorize-pluck-color
                           [?m] 'dp-colorize-matching-lines
@@ -550,12 +550,12 @@ Hopefully [space] is mnemonic.")
                           [?1] 'dp-show-region
                           [(control ? )] 'dp-show-region
                           [?u] (kb-lambda
-                                   (dp-uncolorize-region nil nil
-                                                         (not (nCu-p))))
+				 (dp-uncolorize-region nil nil
+						       (not (nCu-p))))
                           [(meta u)] (kb-lambda
-                                         (dp-uncolorize-region (point-min)
-                                                               (point-max)
-                                                               nil (nCu-p)))
+				       (dp-uncolorize-region (point-min)
+							     (point-max)
+							     nil (nCu-p)))
                           [?p] 'dp-set-colorized-extent-priority)
     ;; <:add newcdd map colorization bindings:>
     "My color mode keys.")
@@ -565,7 +565,7 @@ Hopefully [space] is mnemonic.")
   ;;
   (defconst dp-yank-map
     (dp-define-key-submap 'dp-yank-prefix dp-Ccd-map
-                          [?y]     ; Key in parent map which accesses this map.
+                          [?y]	 ; Key in parent map which accesses this map.
                           [?c] 'dp-insert-cwd
                           [(control ?s)] 'dp-insert-isearch-string)
     ;; <:cdd map yank bindings:>
@@ -597,7 +597,7 @@ already in there.")
                           [?o] 'dpj-outdent
                           [(iso-left-tab)] 'dpj-outdent
                           [?0] (kb-lambda
-                                   (error "Use \C-dj1 my boy!."))
+				 (dp-error-warning "Use \C-dj1 my boy!."))
                           [?l] 'dpj-kill-link
                           [?J] 'dpj-edit-journal-file)
     ;; <:cdd map journal bindings:>
@@ -655,17 +655,17 @@ already in there.")
                           ;; Try to pick some chars that look like or are
                           ;; otherwise mnemonic for the layout.
                           ;; "Point" at the split
-                          [?<] 'dp-2+1-wins  ; |-| |
-                          [?>] 'dp-1+2-wins  ; | |-|
+                          [?<] 'dp-2+1-wins ; |-| |
+                          [?>] 'dp-1+2-wins ; | |-|
                           ;; I hate shifting, and tags does it this way so
                           ;; pthrrrpppthhh!
-                          [?,] 'dp-2+1-wins  ; |-| |
-                          [?.] 'dp-1+2-wins  ; | |-|
+                          [?,] 'dp-2+1-wins ; |-| |
+                          [?.] 'dp-1+2-wins ; | |-|
                           ;; |-|
                           ;; | |
                           [?H] 'dp-2-over-1-wins
-                          [?6] 'dp-2-over-1-wins  ; Shifting sucks.
-                          [?y] 'dp-2-over-1-wins  ; Y has 2 over 1 strokes.
+                          [?6] 'dp-2-over-1-wins ; Shifting sucks.
+                          [?y] 'dp-2-over-1-wins ; Y has 2 over 1 strokes.
                           [?v] 'dp-2-over-1-wins
                           ;; | |
                           ;; |-|
@@ -684,51 +684,81 @@ already in there.")
     ;; <:cdd map window bindings:>
     "Keymap for my window commands.")
 
-    (defconst dp-dict-mode-map
-      (dp-define-key-submap 'dp-dict-mode-prefix dp-Ccd-map
-                            ;; Key in parent map which accesses this map.
-                            [?d]
-                            [?s] 'dictionary-search
-                            [?l] 'dictionary-lookup-definition
-                            [?m] 'dictionary-match-words)
-      ;; <:cdd map dictionary bindings:>
-      "Keymap for dictionary commands.")
+  (defconst dp-dict-mode-map
+    (dp-define-key-submap 'dp-dict-mode-prefix dp-Ccd-map
+			  ;; Key in parent map which accesses this map.
+			  [?d]
+			  [?s] 'dictionary-search
+			  [?l] 'dictionary-lookup-definition
+			  [?m] 'dictionary-match-words)
+    ;; <:cdd map dictionary bindings:>
+    "Keymap for dictionary commands.")
 
-    (defconst dp-music-player-map
-      (dp-define-key-submap 'dp-music-player-prefix dp-Ccd-map
-                            ;; Key in parent map which accesses this map.
-                            [?m]
-                            ;; List of bindings to define in this map.
-                            [space] 'emms-player-mpd-pause
-                            [?m] 'dp-emms-playlist-mode-go
-                            [?l] 'emms-playlist-mode-go
-                            ;; !<@todo XXX Configure emms to use mpd rather
-                            ;; than calling the mpd stuff directly.
-                            [?p] 'emms-player-mpd-pause  ; Really pause/play.
-                            [up] 'emms-player-mpd-previous
-                            [down] 'emms-player-mpd-next
-                            [kp-up] 'emms-player-mpd-previous
-                            [kp-down] 'emms-player-mpd-next
-                            [?i] 'emms-player-mpd-show
-			    ;; stopping is more urgent for
-			    ;; me since I hate for music to
-			    ;; miss my ears.
-			    [?s] 'emms-player-mpd-stop
-                            [?S] 'emms-player-mpd-start
-                            [?r] 'dp-emms-random-album
-                            ;; <: dp music player bindings :>
-                            )
-      "Keymap to control my music player. using MPD as of: 2010-05-21T17:45:13")
+  (defun dp-music-player-map-set-me (functionality)
+    (dp-error-warning "bind [%s] to current music player command: %s"
+		      (key-description (this-command-keys))
+		      functionality))
 
-    ;;template;     <: insert new key submaps here template:>
+  (defconst dp-music-player-map
+    (dp-define-key-submap 'dp-music-player-prefix dp-Ccd-map
+			  ;; Key in parent map which accesses this map.
+			  [?m]
+			  ;; List of bindings to define in this map.
+			  [space] (kb-lambda
+				    (dp-music-player-map-set-me
+				     "play/pause"))
+			  [? ] (kb-lambda
+				    (dp-music-player-map-set-me
+				     "play/pause"))
+			  [?l] (kb-lambda
+				 (dp-music-player-map-set-me
+				  "go to playlist mode"))
+			  [?p] (kb-lambda
+				 (dp-music-player-map-set-me
+				  "pause/play."))
+			  [?m] (kb-lambda
+				 (dp-music-player-map-set-me
+				  "connect and go to playlist mode"))
+			  [up] (kb-lambda
+				 (dp-music-player-map-set-me
+				  "previous track"))
+			  [down] (kb-lambda
+				   (dp-music-player-map-set-me
+				    "next track"))
+			  [kp-up] (kb-lambda
+				    (dp-music-player-map-set-me
+				     "previous track"))
+			  [kp-down] (kb-lambda
+				      (dp-music-player-map-set-me
+				       "next track"))
+			  [?i] (kb-lambda
+				 (dp-music-player-map-set-me
+				  "describe track"))
+			  ;; stopping is more urgent for
+			  ;; me since I hate for music to
+			  ;; miss my ears.
+			  [?s] (kb-lambda
+				 (dp-music-player-map-set-me
+				  "stop"))
+			  [?S] (kb-lambda
+				 (dp-music-player-map-set-me
+				  "start"))
+			  [?r] (kb-lambda
+				 (dp-music-player-map-set-me
+				  "queue random album"))
+			  ;; <: dp music player bindings :>
+			  )
+    "Keymap to control my music player. using MPD as of: 2010-05-21T17:45:13")
 
-;;template;     (defvar dp-<SOME-MODE>-map
-;;template;       (dp-define-key-submap 'dp-SOME-MODE-prefix dp-Ccd-map
-;;template;                             ;; Key in parent map which accesses this map.
-;;template;                             [?<MODE-PREFIX-KEY])
-;;template;       "Keymap for <SOME-MODE> commands.")
+  ;;template;     <: insert new key submaps here template:>
 
-)
+  ;;template;     (defvar dp-<SOME-MODE>-map
+  ;;template;       (dp-define-key-submap 'dp-SOME-MODE-prefix dp-Ccd-map
+  ;;template;                             ;; Key in parent map which accesses this map.
+  ;;template;                             [?<MODE-PREFIX-KEY])
+  ;;template;       "Keymap for <SOME-MODE> commands.")
+
+  )
 
 (dp-keys-define-init-submaps)
 
@@ -738,11 +768,11 @@ already in there.")
 ;;   (kb-lambda
 ;;       (dp-kb-binding-moved arg 'dp-sel2:bm)))
 (global-set-key [(control ?c) (control ?z)]
-  (kb-lambda
-      (dp-kb-binding-moved arg 'dp-python-shell)))
+		(kb-lambda
+		  (dp-kb-binding-moved arg 'dp-python-shell)))
 (global-set-key [(control meta ?n)]
-  (kb-lambda
-      (dp-goto-next-dp-extent-from-point '(4))))
+		(kb-lambda
+		  (dp-goto-next-dp-extent-from-point '(4))))
 (global-set-key [(meta ?Q)] 'align)
 
 ;; ???
@@ -779,7 +809,7 @@ TODO: add prompting for functions analogous to `local-set-key' et.al.
 (defun* dp-copy-key-binding (src-key-seq dst-key-seq
 					 &key (key-setter 'local-set-key))
   "Find definition of SRC-KEY-SEQ and put on DST-KEY-SEQ."
-    (funcall key-binding dst-key-seq (key-binding src-key-seq)))
+  (funcall 'key-binding dst-key-seq (key-binding src-key-seq)))
 
 (defun* dp-copy-global-key-binding (src-key-seq dst-key-seq)
   (dp-copy-key-binding src-key-seq dst-key-seq :key-setter 'global-set-key))
@@ -814,12 +844,12 @@ This is NOT idempotent, so we skip if KEY-SEQ and NEW-DEF are bound."
 (defun dp-def-bm-key (digit)
   ;; M-<digit> set bm if unset, goto bm otherwise
   (global-set-key (format "\e%d" digit)
-    `(lambda ()
-        (interactive) (dp-set-or-goto-bm ,digit :reset nil)))  ; restore "_" functionality--fsf
+		  `(lambda ()
+		     (interactive) (dp-set-or-goto-bm ,digit :reset nil))) ; restore "_" functionality--fsf
   ;; unconditionally set bm
   (global-set-key (read-kbd-macro (format "C-M-%d" digit))
-    `(lambda ()
-        (interactive) (dp-set-or-goto-bm ,digit :reset t))))  ; restore "_" functionality--fsf
+		  `(lambda ()
+		     (interactive) (dp-set-or-goto-bm ,digit :reset t)))) ; restore "_" functionality--fsf
 
 (dolist (key '(1 2 3 4 5 6 7 8))
   (dp-def-bm-key key))
@@ -835,13 +865,13 @@ This is NOT idempotent, so we skip if KEY-SEQ and NEW-DEF are bound."
 (global-set-key [(control ?x) ?4 ?b] 'dp-switch-to-buffer-other-window)
 (add-hook 'dp-post-dpmacs-hook (lambda ()
                                  (global-set-key [(control ?x) (control ?c)]
-                                   (kb-lambda
-                                       (dp-kb-binding-moved
-                                        arg
-                                        'dp-save-buffers-kill-emacs)))
+						 (kb-lambda
+						   (dp-kb-binding-moved
+						    arg
+						    'dp-save-buffers-kill-emacs)))
                                  (global-set-key
-                                     [(control ?x) (control ?C)]
-                                   'dp-save-buffers-kill-emacs)))
+				  [(control ?x) (control ?C)]
+				  'dp-save-buffers-kill-emacs)))
 
 
 (provide 'dp-keys)

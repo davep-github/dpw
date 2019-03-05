@@ -1249,6 +1249,11 @@ minibuffer history list `bookmark-history'."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Run dp-post-dpmacs-hook.  Very, very little (should be made
+      
+      
+      
+      
+      
 ;;; nothing) should be done after this.  We do this last because the
 ;;; hooks use other internal routines and I don't want any
 ;;; undefined/void errors.
