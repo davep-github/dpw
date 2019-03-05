@@ -658,8 +658,8 @@ already in there.")
                           ;; Try to pick some chars that look like or are
                           ;; otherwise mnemonic for the layout.
                           ;; "Point" at the split
-                          [?<] 'dp-2+1-wins ; |-| |
-                          [?>] 'dp-1+2-wins ; | |-|
+                          [?>] 'dp-2+1-wins ; |-| |
+                          [?<] 'dp-1+2-wins ; | |-|
                           ;; I hate shifting, and tags does it this way so
                           ;; pthrrrpppthhh!
                           [?,] 'dp-2+1-wins ; |-| |
