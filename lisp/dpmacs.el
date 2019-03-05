@@ -1238,8 +1238,10 @@ minibuffer history list `bookmark-history'."
 ;;matches everything        "\\(\\(\\[sudo\\] \\)?[Pp]assword for .*"
 ;;matches everything        "\\(davep\\||dpanariti\\|dapanarx.*\\).*:? \\)?"))
 
-(when dp-wants-emms-p
-  (require 'dp-emms))
+(cond
+ ((bound-and-true-p dp-wants-emms-p) (dp-optionally-require 'dp-emms))
+ ((bound-and-true-p dp-wants-mingus-p) (dp-optionally-require 'dp-mingus))
+ (t (message "No music player requested.")))
 
 (dp-set-frame-title-format)
 
