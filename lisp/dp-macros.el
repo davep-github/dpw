@@ -31,7 +31,7 @@
 
   (defmacro kb-lambda (docstring &rest body)
     "Define a lambda suitable for binding to a key.
-Defines an interactive lambda taking 1 optional arg."
+Defines an interactive lambda taking 6 optional args."
     (unless (stringp docstring)
       (setq body (cons docstring body)
             docstring ""))
@@ -40,7 +40,7 @@ Defines an interactive lambda taking 1 optional arg."
        ,docstring
        (interactive "P")
        ,@body))
-  (put 'kb-lambda 'lisp-indent-function lisp-body-indent)
+  (put 'kb-lambda 'lisp-indent-function (get 'lambda 'lisp-indent-function))
 
   (defmacro kb-lambda-rest (docstring &rest body)
     "Define a lambda suitable for binding to a key.
