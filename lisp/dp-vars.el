@@ -483,7 +483,7 @@ it loads."
 ;;;
 ;;; Emms
 ;;;
-(defcustom dp-wants-emms-p t ; XXX @todo change back to: t
+(defcustom dp-wants-emms-p nil
   "*Should the Emacs Multimedia System be enabled?"
   :type 'boolean
   :group 'dp-vars)
