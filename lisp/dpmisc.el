@@ -2053,7 +2053,18 @@ from simple.el"
                           (line-beginning-position)
                         (point))
                       ignore-eol-punctuation-p))
-  
+
+
+(defun dp-other-window-scroll-down-command (&optional num-wins)
+  "Scroll the \"other\" window down."
+  (interactive "P")
+  (dp-op-other-window nil 'call-interactively 'scroll-down-command))
+
+(defun dp-other-window-scroll-up-command (&optional num-wins)
+  "Scroll the \"other\" window up."
+  (interactive "P")
+  (dp-op-other-window nil 'call-interactively 'scroll-up-command))
+
 (defun dp-delete-to-end-of-line ()
   (interactive "*")
   (delete-region (point) (line-end-position)))
