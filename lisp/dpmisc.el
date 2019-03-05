@@ -151,6 +151,25 @@ half-assed."
    ((eq pred-fun nil) nil)
    (t (apply pred-fun pred-args))))
 
+(dp-deflocal dp-dp-previous-line-wrap-p nil
+  "Do we want to wrap top to bottom in this buffer?")
+
+(defun dp-error-warning (fmt &rest args)
+  (error "dp-warning: %s" (apply 'format fmt args)))
+
+;; (previous-line &optional ARG TRY-VSCROLL))
+(defun dp-previous-line (&optional arg try-vscroll wrap-p)
+  (interactive)
+  (condition-case bubba
+      (call-interactively #'previous-line)
+    (error
+     (if (and (memq 'beginning-of-buffer bubba)
+	      (or wrap-p dp-dp-previous-line-wrap-p))
+	 (progn
+	   (goto-char (point-max))
+	   (beginning-of-line))
+       (signal (car bubba) (cdr bubba))))))
+
 (defun dp-cons-to-list (cons)
   "Make a list from a cons: \(list (car CONS) (cdr CONS)). nil begets nil.
 I return many things as conses, especially match and regions 
