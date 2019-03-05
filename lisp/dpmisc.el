@@ -1221,13 +1221,14 @@ the newly copied text."
   "Perform OP on ARGS NUM `other-window's away."
   (interactive)
   (setq-ifnil num 1)
-  (condition-case nil
-      (progn
-        (other-window num)
-        (apply op args))
-    (error
-     (dingm "op %s on win failed." op)))
-  (other-window (- num)))
+  (let ((orig-win (selected-window)))
+    (condition-case fate
+	(progn
+	  (other-window num)
+	  (apply op args))
+      (error
+       (dingm "op %s on win failed. fate: %s" op fate)))
+    (select-window orig-win)))
 
 (defun dp-scroll-up-down (&optional nlines half-page-p up-down)
   "Scroll screen down 1 line or 1/2 page."
