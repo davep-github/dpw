@@ -91,6 +91,10 @@ its temp-ness.")
 ;;; reording and clean up in general.
 (message "dpmacs.el...")
 
+(define-error 'dp-signal-message
+  "Signal an error just for the message.  This is in `debug-ignored-errors'."
+  'user-error)
+
 (define-error 'dp-disabled-function 
   "This function has been disabled for safety reasons." 'invalid-function)
 
@@ -1283,7 +1287,6 @@ minibuffer history list `bookmark-history'."
 ;; {control,meta} X {space,tab}
 (define-key esc-map " " 'dp-id-select-thing)
 (define-key global-map [?\C- ] 'dp-expand-abbrev)
-
 
 (dp-set-to-max-vert-frame-height)
 (message "dpmacs.el... finished.")
