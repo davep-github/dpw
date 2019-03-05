@@ -605,7 +605,7 @@ already in there.")
 
   ;; Tags related.
   (defconst dp-tag-system-map
-    (dp-define-key-submap 'dp-journal-prefix dp-Ccd-map
+    (dp-define-key-submap 'dp-tag-system-prefix dp-Ccd-map
                           [?t]
                           [?I] 'gtags-find-with-idutils
                           [?P] 'gtags-find-file
