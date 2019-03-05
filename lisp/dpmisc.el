@@ -1248,6 +1248,7 @@ the newly copied text."
         (scroll-down lines)
       (move-to-window-line (if (< lines 0) -1 0))
       ;;if arg is consp (e.g. ^U) then there's no erase/redraw
+      ;; FSF: only does the above if arg *is* just C-u.
       (recenter '(4)))))
 
 (defun dp-scroll-up (&optional num half-page-p)
@@ -3336,6 +3337,7 @@ lisp-interaction mode."
      (if other-window-p
          'switch-to-buffer-other-window'
        'switch-to-buffer) (get-buffer dp-hyper-apropos-buffer-name))))
+(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
 
 (defun dp-view-buffer (buf-or-name &optional same-window-p post-hook
                        scroll-with-output-p)
@@ -3369,21 +3371,6 @@ lisp-interaction mode."
   (interactive "P")
   (dp-display-sys-buffer dp-message-buffer-name same-window-p
 			 tallest-window-p))
-(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
-(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
-(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
-(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
-(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
-(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
-(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
-(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
-(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
-(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
-(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
-(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
-(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
-(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
-(dp-defaliases 'hab 'dp-switch-to-hyper-apropos-buffer)
 
 (dp-defaliases 'mb 'mb2 'mb-other 'dp-display-message-buffer)
 
@@ -5778,7 +5765,7 @@ It greps through all of my current rc files.")
 
 (defvar dp-use-OEM-switch-to-buffer-p t
   "Should I use my hacked up \"optimized/DWIM\" buffer switcher or the
-  standard one.")
+  standard (aka working) one.")
 
 (defun dp-switch-to-buffer (bufname &optional find-word-p)
   "Switch to another buffer *my* way.
@@ -14870,17 +14857,6 @@ machines, especially heretofore unknown ones."
     (sit-for 0.1)
     ;; Set to maximized height, without being maximized.
     (set-frame-height frame height)))
-  (set-frame-parameter nil 'fullscreen 'fullheight)
-  ;; Let it happen.
-  (sit-for 0.1)
-  ;; Grab the maximized height.
-  (let ((height (frame-height)))
-    ;; Demaximize us.
-    (set-frame-parameter nil 'fullscreen nil)
-    ;; Let it happen.
-    (sit-for 0.1)
-    ;; Set to maximized height, without being maximized.
-    (set-frame-height nil height)))
 
 (defun dp-add-autoload-directive ()
   "Insert autoload flag.  I can never remember the string.
