@@ -751,7 +751,8 @@ We don't use `add-to-list' because we only want to key on KEY."
                                      (if (keymapp arg)
                                          (use-local-map arg))
                                      (where-is new-keys 'INSERT)
-                                     (buffer-substring))))
+                                     (buffer-substring
+				      (point-min) (point-max)))))
                          (posix-string-match "\\(^.*\\)\\s-*(" desc)
                          (match-string 1 desc))
                      (key-description new-keys)))
