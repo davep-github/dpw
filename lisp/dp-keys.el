@@ -113,10 +113,10 @@ Bind any keys in KEYS via `dp-define-keys'."
 					'dp-ffap-other-window)))
 (global-set-key [(control ?x) ?8 ?b] (kb-lambda
 				       (dp-2-vertical-windows-do-cmd
-(global-set-key [kp-subtract] 'dp-kill-region)
-(global-set-key [(control ?w)] 'dp-kill-region)
 					'dp-switch-to-buffer t)))
 (global-set-key [(control ?x)(meta ?=)] 'dp-balance-horizontal-windows)
+(global-set-key [kp-subtract] 'dp-kill-region)
+(global-set-key [(control ?w)] 'dp-kill-region)
 (global-set-key [(control meta ?w)] 'dp-kill-region-append)
 (global-set-key [(control meta ?k)] (kb-lambda
 				      (dp-mark-to-end-of-line)
@@ -185,8 +185,11 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key [down] 'dp-next-line) ; q.v. dp-cleanup-trailing-whitespace-p
 (global-set-key [kp-down] 'dp-next-line) ; q.v. dp-cleanup-trailing-whitespace-p
 (global-set-key [(control kp-up)] 'dp-scroll-down)
+(global-set-key [up] 'dp-previous-line)
+(global-set-key [up] 'dp-previous-line)
 (global-set-key [(control kp-down)] 'dp-scroll-up)
 (global-set-key [(control meta kp-up)] 'dp-scroll-down-other-window)
+(global-set-key [kp-up] 'dp-previous-line)
 (global-set-key [(control meta kp-down)] 'dp-scroll-up-other-window)
 
 ;; I don't use the extra junk in my versions.
@@ -620,7 +623,6 @@ already in there.")
                           [?t] 'dp-tag-find
                           [?u] 'dp-gtags-update-file
                           [?v] 'gtags-visit-rootdir
-                          [?u] 'dp-gtags-update-file
                           )
     ;; <:cdd map journal bindings:>
     "Keymap for my tag system commands.")
