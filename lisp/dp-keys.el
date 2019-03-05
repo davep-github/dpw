@@ -680,6 +680,7 @@ already in there.")
                           ;; |-|-|
                           [?+] 'dp-2x2-windows
                           [?=] 'dp-2x2-windows  ; unshifted +
+			  [?x] 'dp-2x2-windows
                           [?4] 'dp-2x2-windows
                           [?|] 'dp-duplicate-window-horizontally
                           ;; Kill HIM, Thunder. -- D.LoPan
