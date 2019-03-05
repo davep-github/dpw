@@ -72,7 +72,7 @@
      (start . emms-player-mpd-start)
      (stop . emms-player-mpd-stop)
      (playablep . emms-player-mpd-playable-p)
-     (regex . "\\`http://\\|\\.\\(m3u\\|ogg\\|flac\\|mp3\\|wav\\|mod\\|au\\|aiff\\)\\'")
+     (regex . "\\(\\.\\(m3u\\|pls\\|\\(?:16sv\\|3g[2p]\\|4xm\\|669\\|8svx\\|P00\\|a\\(?:a[3c]\\|c3\\|dx\\|fc\\|if[cf]?\\|law\\|m[dfrs]\\|nim\\|p[ce]\\|sf\\|trac\\|ud\\|v\\(?:m2\\|[is]\\)\\|[luy]\\)\\|b\\(?:ap\\|fi\\)\\|c\\(?:93\\|a[fk]\\|in\\|mv\\|pk\\)\\|d\\(?:00\\|aud\\|bm\\|ct\\|f[fm]\\|ivx\\|s[fm]\\|ts\\|vd?\\|xa\\)\\|eac3\\|f\\(?:ar\\|ilm\\|l\\(?:ac\\|[cilvx]\\)\\)\\|g\\(?:726\\|bs\\|dm\\|sm\\|xf\\|ym\\)\\|h\\(?:es\\|sc\\|tk\\)\\|i\\(?:ff\\|mf\\|ss\\|t\\)\\|kss\\|laa\\|m\\(?:1v\\|2\\(?:ts\\|[tv]\\)\\|4[abv]\\|ad\\|dl\\|ed\\|id\\|j\\(?:2\\|p\\(?:e?g\\)\\)\\|k[av]\\|lp\\|mf?\\|o[dv]\\|p\\(?:eg\\|ga\\|[+1-4cgpu]\\)\\|t[2m]\\|us\\|v[ei]\\|xf\\)\\|n\\(?:c\\|s\\(?:fe\\|[fv]\\)\\|u[tv]\\)\\|o\\(?:g[agmvx]\\|kt\\|m[ag]\\|pus\\)\\|p\\(?:af\\|rg\\|sp\\|v[af]\\)\\|q\\(?:cp\\|t\\)\\|r\\(?:3d\\|a[dmw]\\|l2\\|mvb\\|oq\\|pl\\|vc\\|[am]\\)\\|s\\(?:3m\\|a[2p]\\|d2\\|f\\|hn\\|id\\|mk\\|nd\\|o[ln]\\|p[cx]\\|t[mrx]\\|vx\\|wf\\)\\|t\\(?:ak\\|g[iqv]\\|hp\\|sp?\\|ta\\)\\|u\\(?:lt\\|mx\\|ni\\|v2?\\)\\|v\\(?:b\\|g[mz]\\|id\\|md\\|o[bc]\\|p6\\)\\|w\\(?:64\\|av\\|ebm\\|m[av]\\|s\\(?:aud\\|vga\\)\\|ve?\\)\\|x\\(?:vid\\|[aim]\\)\\)\\)\\'\\)\\|\\(\\`\\(?:Other\\|a\\(?:lsa://\\|vahi\\)\\|cdda://\\|epoll\\|features:\\|gopher://\\|http\\(?:s?://\\)\\|i\\(?:cu\\|notify\\|pv6\\)\\|mms\\(?:[htu]?://\\)\\|nfs://\\|rt\\(?:\\(?:mp[st]?\\|s?p\\)://\\)\\|s\\(?:mb://\\|ystemd\\)\\|tcp\\|un\\)\\)")
      (pause . emms-player-mpd-pause)
      (resume . emms-player-mpd-pause)
      (seek . emms-player-mpd-seek)
@@ -210,6 +210,7 @@
  '(minibuffer-prompt-properties
    (quote
     (read-only t cursor-intangible t face minibuffer-prompt)))
+ '(mouse-avoidance-mode (quote banish) nil (avoid))
  '(mouse-yank-at-point t)
  '(mu4e-attachment-dir "/home/dpanarit/Downloads")
  '(next-error-highlight t)
@@ -219,7 +220,7 @@
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
    (quote
-    (libmpdel emms-state emms-mode-line-cycle emms-mark-ext emms-info-mediainfo emms fwb-cmds dictionary dic-lookup-w3m w3 w3m telephone-line spaceline smart-mode-line-powerline-theme smart-mode-line yahoo-weather svg-mode-line-themes svg-clock minions ergoemacs-status dot-mode mpdel mingus dimmer spotify sudo-edit stgit noaa magit-stgit magit-filenotify flycheck-checkpatch el-patch ein ac-ispell ac-c-headers jedi-direx jedi sly-repl-ansi-color sly-macrostep sly-hello-world sly slime-theme slime passmm pass ivy-pass wanderlust 0xc avy yasnippet yasnippet-snippets c-eldoc bison-mode bash-completion celestial-mode-line all-the-icons-dired achievements ac-etags minimap markdown-mode+ markdown-mode sphinx-doc fuzzy full-ack ack-menu ag ibuffer-tramp challenger-deep-theme abyss-theme nova-theme magit ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
+    (osx-dictionary goldendict dictcc meson-mode libmpdel emms-state emms-mode-line-cycle emms-mark-ext emms-info-mediainfo emms fwb-cmds dictionary dic-lookup-w3m w3 w3m telephone-line spaceline smart-mode-line-powerline-theme smart-mode-line yahoo-weather svg-mode-line-themes svg-clock minions ergoemacs-status dot-mode mpdel mingus dimmer spotify sudo-edit stgit noaa magit-stgit magit-filenotify flycheck-checkpatch el-patch ein ac-ispell ac-c-headers jedi-direx jedi sly-repl-ansi-color sly-macrostep sly-hello-world sly slime-theme slime passmm pass ivy-pass wanderlust 0xc avy yasnippet yasnippet-snippets c-eldoc bison-mode bash-completion celestial-mode-line all-the-icons-dired achievements ac-etags minimap markdown-mode+ markdown-mode sphinx-doc fuzzy full-ack ack-menu ag ibuffer-tramp challenger-deep-theme abyss-theme nova-theme ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
  '(package-user-dir "~/.emacs.d/elpa")
  '(python-shell-interpreter "/usr/bin/ipython")
  '(python-skeleton-autoinsert t)
@@ -282,5 +283,7 @@
  '(isearch ((t (:background "medium spring green" :foreground "#100e23" :weight bold))))
  '(lazy-highlight ((t (:background "#65b2ff" :foreground "black"))))
  '(magit-diff-whitespace-warning ((t (:background "misty rose" :foreground "black" :box (:line-width 1 :color "red")))))
+ '(mingus-album-stale-face ((t (:foreground "PaleVioletRed1"))))
+ '(mingus-playing-face ((t (:foreground "#cac655" :weight ultra-bold))))
  '(rectangle-preview ((t (:inherit region))))
  '(region ((t (:background "#000072" :foreground "red" :weight bold)))))
