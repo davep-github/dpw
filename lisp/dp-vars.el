@@ -481,6 +481,9 @@ it loads."
   :group 'dp-vars)
 
 ;;;
+;;; Mvsik Players
+
+;;;
 ;;; Emms
 ;;;
 (defcustom dp-wants-emms-p nil
@@ -494,10 +497,23 @@ it loads."
   :group 'dp-vars)
 
 (defcustom dp-emms-player-names
-  '(emms-player-mpd) 
-  "*Which music player(s) should emms use? 
+  '(emms-player-mpd)
+  "*Which music player(s) should emms use?
 For now (2010-05-22T08:26:49) I'm just using the symbols corresponding to the Emms support files so I can just `require' them in a loop. "
   :type '(repeat (symbol :tag "Emms player name"))
+  :group 'dp-vars)
+
+;;;
+;;; Mingus
+;;;
+(defcustom dp-wants-mingus-p t
+  "*Should mingus music player be used?"
+  :type 'boolean
+  :group 'dp-vars)
+
+(defcustom dp-wants-mingus-started-at-startup-p t ; ibid t
+  "*Should mingus be started?"
+  :type 'boolean
   :group 'dp-vars)
 
 ;;;
