@@ -22,6 +22,12 @@
 
 (require 'dp-deps)
 
+(defun dp-keymap-set-me (type functionality)
+  (dp-error-warning "bind [%s] to %s%s"
+		    (key-description (this-command-keys))
+		    type
+		    functionality))
+
 (defun dp-define-keys (kmap list-o-keys)
   "Convenience function to bind a list of LIST-O-KEYS to KMAP.
 KMAP is a keymap.
@@ -699,11 +705,10 @@ already in there.")
     "Keymap for dictionary commands.")
 
   (defun dp-music-player-map-set-me (functionality)
-    (dp-error-warning "bind [%s] to current music player command: %s"
-		      (key-description (this-command-keys))
-		      functionality))
+    (interactive)
+    (dp-keymap-set-me "current music player command: " functionality))
 
-  (defconst dp-music-player-map
+    (defconst dp-music-player-map
     (dp-define-key-submap 'dp-music-player-prefix dp-Ccd-map
 			  ;; Key in parent map which accesses this map.
 			  [?m]
