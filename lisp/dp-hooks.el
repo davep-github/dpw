@@ -493,7 +493,9 @@ Works with tabs.")
   'string)
 
 (defcustom dp-trailing-whitespace-use-trailing-ws-font-p nil
-  "Highlight trailing white space with its own font? Yay!"
+  "Highlight trailing white space with its own font? Yay!
+For FSF, I'm using the inbuilt system, controlled by
+`show-trailing-whitespace'."
   :group 'dp-whitespace-vars
   :type 'boolean)
 
