@@ -900,3 +900,180 @@ emms
 	    (112 . dp-parenthesize-region)
 	    (110 . next-history-element)))
 
+
+========================
+Tuesday March 05 2019
+--
+(cl-pe
+'(mingus-define-mpd->mingus mingus-pause
+                           (mingus-minibuffer-feedback 'state)
+                           (mingus-set-NP-mark t)))
+
+(defalias 'mingus-pause
+  (function
+   (lambda (&rest args)
+     (interactive)
+     (apply (function mpd-pause) mpd-inter-conn args)
+     (mingus-minibuffer-feedback 'state)
+     (mingus-set-NP-mark t))))nil
+
+
+
+
+========================
+Wednesday March 06 2019
+--
+(defun ist (x)
+  (eq t x))
+(defun isplay (x)
+  (message "isplay: %s" x)
+  (eq x 'play))
+
+(isplay 'ksjd)
+nil
+
+(pcase 'jdkhfkjdhf ;; (getf (mpd-get-status mpd-inter-conn) 'state)
+  (pred 'isplay (message "IS_PLAY!: %s" pred))
+  ('play (message "PLAY!"))
+  ('pause (message "PAUSE!"))
+  ('stop (message "STOP!"))
+  (none-above (message "NONE of the above: %s" none-above)))
+"IS_PLAY!: jdkhfkjdhf"
+
+"IS_PLAY!"
+
+
+"IS_PLAY!"
+
+"IS_PLAY!"
+
+"NONE of the above: jdkhfkjdhf"
+
+"PLAY!"
+
+"NONE of the above: jdkhfkjdhf"
+
+"IS_PLAY!"
+
+"IS_PLAY!"
+
+(isplay 'xplay)
+nil
+
+t
+
+t
+
+(pcase (getf (mpd-get-status mpd-inter-conn) 'state)
+  (pred 'isplay (message "IS_PLAY!"))
+  ('play (message "PLAY!"))
+  ('pause (message "PAUSE!"))
+  ('stop (message "STOP!")))
+"IS_PLAY!"
+
+
+"STOP!"
+"PLAY!"
+"PAUSE!"
+
+
+(cl-pe
+'(pcase 'jdkhfkjdhf ;; (getf (mpd-get-status mpd-inter-conn) 'state)
+  ((pred isplay) (message "IS_PLAY!: %s" pred))
+  ((or 'x 'play) (message "PLAY!"))
+  ('pause (message "PAUSE!"))
+  ('stop (message "STOP!"))
+  (none-above (message "NONE of the above: %s" none-above)))
+)
+
+(cond ((isplay 'jdkhfkjdhf)
+       (message "IS_PLAY!: %s" pred))
+      ((memq 'jdkhfkjdhf '(play x))
+       (message "PLAY!"))
+      ((eq 'jdkhfkjdhf 'pause)
+       (message "PAUSE!"))
+      ((eq 'jdkhfkjdhf 'stop)
+       (message "STOP!"))
+      (t (let ((none-above 'jdkhfkjdhf))
+	   (message "NONE of the above: %s" none-above))))nil
+
+
+
+(cond ((isplay 'jdkhfkjdhf)
+       (message "IS_PLAY!: %s" pred))
+      ((eq 'jdkhfkjdhf 'play)
+       (message "PLAY!"))
+      ((eq 'jdkhfkjdhf 'pause)
+       (message "PAUSE!"))
+      ((eq 'jdkhfkjdhf 'stop)
+       (message "STOP!"))
+      (t (let ((none-above 'jdkhfkjdhf))
+	   (message "NONE of the above: %s" none-above))))
+"NONE of the above: jdkhfkjdhf"
+
+
+(pcase 'x
+  ((pred isplay) (message "IS_PLAY!"))
+  ((or 'x 'play) (message "PLAY!"))
+  ('pause (message "PAUSE!"))
+  ('stop (message "STOP!"))
+  (none-above (message "NONE of the above: %s" none-above)))
+"PLAY!"
+
+"PAUSE!"
+
+
+(pcase 'pausex
+  ((pred isplay) (message "IS_PLAY!: %s" pred))
+  ((or 'x 'play) (message "PLAY!"))
+  ('pause (message "PAUSE!"))
+  ('stop (message "STOP!"))
+  (none-above (message "NONE of the above: %s" none-above)))
+"NONE of the above: pausex"
+
+"PAUSE!"
+
+
+
+
+
+(let ((pred 'jdkhfkjdhf))
+  'isplay
+  (message "IS_PLAY!: %s" pred))nil
+
+
+(cond ((eq 'jdkhfkjdhf 'play)
+       (message "PLAY!"))
+      ((eq 'jdkhfkjdhf 'pause)
+       (message "PAUSE!"))
+      ((eq 'jdkhfkjdhf 'stop)
+       (message "STOP!"))
+      (t (let ((none-above 'jdkhfkjdhf))
+	   (message "NONE of the above: %s" none-above))))
+
+(cl-pe
+'(defun grok/pcase (obj)
+  (pcase obj
+    ((or                                     ; line 1
+      (and                                   ; line 2
+       (pred stringp)                        ; line 3
+       (pred (string-match                   ; line 4
+	      "^key:\\([[:digit:]]+\\)$"))   ; line 5
+       (app (match-string 1)                 ; line 6
+	    val))                            ; line 7
+      (let val (list "149" 'default)))       ; line 8
+     val)))
+)
+
+(defalias 'grok/pcase
+  (function
+   (lambda (obj)
+     (cond ((not (stringp obj))
+	    (let* ((sym (list "149" 'default)))
+	      (let ((val sym))
+		val)))
+	   ((string-match "^key:\\([[:digit:]]+\\)$" obj)
+	    (let* ((x644 (match-string 1 obj)))
+	      (let ((val x644))
+		val)))
+	   (t (let* ((sym (list "149" 'default))) (let ((val sym)) val)))))))
