@@ -14874,6 +14874,21 @@ Of course, I'll forget the name of this function and its aliases, too."
 (dp-defaliases 'dpaal 'dpaald 'aald 'aal 'dpaad 'daad 'aad
 	       'dp-add-autoload-directive)
 
+(defun dp-mpd-random-album (&optional arg)
+  "Choose a random album."
+  (interactive "P")
+  (let ((args (if arg
+		  (read-from-minibuffer "args: ")
+		"")))
+    (shell-command-to-string (format "mpc-random-album %s" args))))
+
+(defun dp-show-trailing-whitespace (&optional on-off quiet-p)
+  (interactive "P")
+  (dp-toggle-var on-off
+		 'show-trailing-whitespace
+		 (or (not (interactive-p))
+		     quiet-p)))
+
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;; add new functions here
 ;;; add new functions above
