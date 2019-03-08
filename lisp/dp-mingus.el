@@ -52,14 +52,39 @@
      [?p] dp-mingus-do-toggle
      [(shift ?s)] mingus-play
      [?r] dp-mingus-random-album
-     [(meta ?m)] mingus-browse
+     ;; See which one sticks.
+     [(meta ?m)] mingus-browse		; [m]usic.
+     [(meta ?b)] mingus-browse
+     [(meta ?p)] mingus-browse
+     [(meta ?u)] mingus-open-parent
+     [(meta ?,)] mingus-open-parent
      )))
+
+(defalias 'dp-music-playlist-mode-bind-keys 'dp-mingus-playlist-mode-bind-keys)
 
 (defun dp-mingus-playlist-hook ()
   (dp-show-trailing-whitespace -1)
   (dp-mingus-playlist-mode-bind-keys))
 
 (add-hook 'mingus-playlist-hooks 'dp-mingus-playlist-hook)
+
+(defun dp-mingus-browse-mode-bind-keys ()
+  (interactive)
+  (dp-local-set-keys
+   '(
+     [(meta ?u)] mingus-open-parent
+     [(meta ?,)] mingus-open-parent
+     [?l] mingus-open-parent		; As in dired, Info, etc.
+     [(meta ?l)] mingus-load-playlist
+     )))
+
+(defalias 'dp-music-browse-mode-bind-keys 'dp-mingus-browse-mode-bind-keys)
+
+(defun dp-mingus-browse-mode-hook ()
+  (dp-show-trailing-whitespace -1)
+  (dp-mingus-browse-mode-bind-keys))
+
+(add-hook 'mingus-browse-hook 'dp-mingus-browse-hook)
 
 (global-set-key [(control meta ?m)] 'mingus)
 (global-set-key [(control meta ?p)] 'dp-mingus-random-album)
