@@ -12,6 +12,9 @@
 (global-set-key [(control ?h) (control ?c)] 'apropos-command)
 (global-set-key [(control ?h) (control ?v)] 'apropos-variable)
 
+(dp-defaliases 'apvar 'avar 'apropos-variable)
+(dp-defaliases 'apcom 'apcmd 'apropos-command)
+
 ;; This wasn't in XEmacs, so I wrote it, then it was so I deleted it,
 ;; now it's not in Emacs.  Sigh.
 ;; ...or-region is a good idea in many cases.
