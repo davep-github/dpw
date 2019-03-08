@@ -108,11 +108,8 @@
   (defun dp-emms-random-album (&optional arg)
     "Choose and play a random album."
     (interactive "P")
-    (let ((args (if arg
-                    (read-from-minibuffer "args: ")
-                  "")))
-      (shell-command-to-string (format "mpc-random-album %s" args))
-      (emms-player-mpd-connect)))
+    (dp-mpd-random-album)
+    (emms-player-mpd-connect))
 
   (defun dp-emms-startup ()
     "Start up the previously set up emms."
