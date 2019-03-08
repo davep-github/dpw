@@ -74,7 +74,7 @@
     (add-hook 'emms-player-started-hook 'emms-show))
 
   ;;<: emms :>
-  (defun dp-emms-playlist-bind-keys ()
+  (defun dp-emms-player-bind-keys ()
     (interactive)
     (dp-define-key-list
      dp-music-player-map
@@ -103,7 +103,7 @@
        )))
 
   (defun dp-emms-playlist-mode-hook ()
-    (dp-emms-playlist-bind-keys))
+    (dp-emms-player-bind-keys))
 
   (defun dp-emms-random-album (&optional arg)
     "Choose a random album."
