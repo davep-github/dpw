@@ -52,6 +52,7 @@
      [?p] dp-mingus-do-toggle
      [(shift ?s)] mingus-play
      [?r] dp-mingus-random-album
+     [(meta ?m)] mingus-browse
      )))
 
 (defun dp-mingus-playlist-hook ()
@@ -60,5 +61,7 @@
 
 (add-hook 'mingus-playlist-hooks 'dp-mingus-playlist-hook)
 
+(global-set-key [(control meta ?m)] 'mingus)
+(global-set-key [(control meta ?p)] 'dp-mingus-random-album)
 
 (dmessage "...dp-mingus loaded.")
