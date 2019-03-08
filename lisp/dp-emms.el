@@ -106,7 +106,7 @@
     (dp-emms-player-bind-keys))
 
   (defun dp-emms-random-album (&optional arg)
-    "Choose a random album."
+    "Choose and play a random album."
     (interactive "P")
     (let ((args (if arg
                     (read-from-minibuffer "args: ")
