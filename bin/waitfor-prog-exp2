@@ -1,0 +1,24 @@
+#!/bin/bash
+
+source script-x
+
+: ${DP_WAITFOR_PROG_SLEEP_PERIOD:=2}
+: ${DP_WAITFOR_PROG_TOTAL_WAIT_TIME:=20}
+
+elapsed_time=0
+
+#@todo XXX Make this (or another program) operate on pid as well.
+for prog in "$@"
+do
+    elapsed_time=0
+    while ((elapsed_time < DP_WAITFOR_PROG_TOTAL_WAIT_TIME))
+    do
+	findprog "$prog" >/dev/null 2>&1 && break
+	sleep $DP_WAITFOR_PROG_SLEEP_PERIOD
+	elapsed_time=$((elapsed_time + DP_WAITFOR_PROG_SLEEP_PERIOD))
+    done
+    ((elapsed_time < DP_WAITFOR_PROG_TOTAL_WAIT_TIME))
+    exit
+done
+
+exit 0
