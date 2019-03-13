@@ -1252,6 +1252,8 @@ minibuffer history list `bookmark-history'."
  ((bound-and-true-p dp-wants-mingus-p) (dp-optionally-require 'dp-mingus))
  (t (message "No music player requested.")))
 
+(dp-funcall-if 'dp-music-player-bind-keys nil)
+
 (dp-set-frame-title-format)
 
 ;;;;;;;
