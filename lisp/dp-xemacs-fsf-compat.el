@@ -296,7 +296,20 @@ Editing commands:
 (defun message-nl (fmt &rest args)
   (apply 'lmessage 'no-log fmt args))
 
-;;(add-hook 'appt-make-list-hook 'dp-appt-initialize)
+(defun dp-copy-char-to-minibuf ()
+  (interactive)
+  ;; (dp-go-back-top-buffer) wasn't really a good choice. It worked for the
+  ;; case where we were editing an isearch string because I pushed the go
+  ;; back before the isearch started. But in other cases, it just gets the
+  ;; last buffer pushed as a go back.
+  (let ((buffer (or (cadr (buffer-list))
+                    (dp-go-back-top-buffer)))
+        ch)
+    (when buffer
+      (with-current-buffer buffer
+        (setq ch (following-char))
+        (forward-char))
+      (insert-char ch))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Nicked from Emacs.

@@ -1758,20 +1758,12 @@ executing the cond again and again and..."
        (read-from-minibuffer "Num chars to copy: " 4))
     (dp-dupe-n-chars-prev-line arg char)))
 
-(defun dp-copy-char-to-minibuf ()
-  (interactive)
-  ;; (dp-go-back-top-buffer) wasn't really a good choice. It worked for the
-  ;; case where we were editing an isearch string because I pushed the go
-  ;; back before the isearch started. But in other cases, it just gets the
-  ;; last buffer pushed as a go back.
-  (let ((buffer (or (cadr (buffer-list))
-                    (dp-go-back-top-buffer)))
-        ch)
-    (when buffer
-      (with-current-buffer buffer
-        (setq ch (following-char))
-        (forward-char))
-      (insert-char ch))))
+;;
+;; I wrote the `dp-copy-char-to-minibuf' (see dp-xemacs-fsf-compat.el) to
+;; generically pull chars from the current buffer into the minitbuffer.  FSF
+;; did it (AFTER I did) but they use the prefix arg (good) but name it as if
+;; it's isearch only (bad).  So I'll just make it an alias with my old name.
+(defalias 'dp-copy-char-to-minibuf 'isearch-yank-char-in-minibuffer)
 
 (defun dp-open-newline (&optional arg open-newline-func)
   "Add a new line below the current one, ala `o' in vi. Do mucho magick, too.
