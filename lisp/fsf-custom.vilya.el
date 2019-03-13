@@ -7,7 +7,7 @@
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
- '(apropos-do-all t)
+ '(apropos-do-all t t)
  '(auth-sources
    (quote
     ("secrets:Login" "~/.authinfo" "~/.authinfo.gpg" "~/.netrc")))
@@ -211,7 +211,6 @@
  '(minibuffer-prompt-properties
    (quote
     (read-only t cursor-intangible t face minibuffer-prompt)))
- '(mouse-avoidance-mode (quote banish) nil (avoid))
  '(mouse-yank-at-point t)
  '(mu4e-attachment-dir "/home/dpanarit/Downloads")
  '(next-error-highlight t)
@@ -221,7 +220,7 @@
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
    (quote
-    (lua-mode dired-k osx-dictionary goldendict dictcc meson-mode libmpdel emms-state emms-mode-line-cycle emms-mark-ext emms-info-mediainfo emms fwb-cmds dictionary dic-lookup-w3m w3 w3m telephone-line spaceline smart-mode-line-powerline-theme smart-mode-line yahoo-weather svg-mode-line-themes svg-clock minions ergoemacs-status dot-mode mpdel mingus dimmer spotify sudo-edit stgit noaa magit-stgit magit-filenotify flycheck-checkpatch el-patch ein ac-ispell ac-c-headers jedi-direx jedi sly-repl-ansi-color sly-macrostep sly-hello-world sly slime-theme slime passmm pass ivy-pass wanderlust 0xc avy yasnippet yasnippet-snippets c-eldoc bison-mode bash-completion celestial-mode-line all-the-icons-dired achievements ac-etags minimap markdown-mode+ markdown-mode sphinx-doc fuzzy full-ack ack-menu ag ibuffer-tramp challenger-deep-theme abyss-theme nova-theme ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
+    (magit magit-annex magit-find-file magit-gerrit magit-gh-pulls magit-gitflow magit-imerge magit-lfs magit-org-todos magit-todos lua-mode dired-k osx-dictionary goldendict dictcc meson-mode libmpdel emms-state emms-mode-line-cycle emms-mark-ext emms-info-mediainfo emms fwb-cmds dictionary dic-lookup-w3m w3 w3m telephone-line spaceline smart-mode-line-powerline-theme smart-mode-line yahoo-weather svg-mode-line-themes svg-clock minions ergoemacs-status dot-mode mpdel mingus dimmer spotify sudo-edit stgit noaa magit-stgit magit-filenotify flycheck-checkpatch el-patch ein ac-ispell ac-c-headers jedi-direx jedi sly-repl-ansi-color sly-macrostep sly-hello-world sly slime-theme slime passmm pass ivy-pass wanderlust 0xc avy yasnippet yasnippet-snippets c-eldoc bison-mode bash-completion celestial-mode-line all-the-icons-dired achievements ac-etags minimap markdown-mode+ markdown-mode sphinx-doc fuzzy full-ack ack-menu ag ibuffer-tramp challenger-deep-theme ecb thingopt escreen nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
  '(package-user-dir "~/.emacs.d/elpa")
  '(python-shell-interpreter "/usr/bin/ipython")
  '(python-skeleton-autoinsert t)
