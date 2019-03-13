@@ -18,7 +18,6 @@
 (defun dp-alias-eq (symbol newdef)
   (and (fboundp symbol)
        (eq (symbol-function symbol) newdef)))
-  
 
 (defvar dp-unsafe-alias-is-fatal-p nil
   "Should a previously defined alias be considered an error or warning?")
@@ -584,8 +583,7 @@ NO extra parameters can be passed to `call-interactively'.  See
     `(and-boundp ',var-sym (symbol-value ',var-sym)))
 
   (defmacro dp-val-if-fboundp (var-sym)
-    `(or (and-fboundp ',var-sym (symbol-function ',var-sym))
-      (and-fboundp ',var-sym (symbol-function ',var-sym))))
+    `(and-fboundp ',var-sym (symbol-function ',var-sym)))
 
   (defmacro dp-without-undo-in-current-buffer (&rest body)
     `(let* ((buffer-undo-list t))
