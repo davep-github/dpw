@@ -13,7 +13,7 @@
 
 (defgroup dp-whitespace-vars nil
   "My vars dealing with whitespace."
-  :group 'dp-vars)
+  :group 'dp-whitespace-vars)
 
 ;;
 ;; email sig stuff
@@ -513,6 +513,12 @@ For now (2010-05-22T08:26:49) I'm just using the symbols corresponding to the Em
 
 (defcustom dp-wants-mingus-started-at-startup-p t ; ibid t
   "*Should mingus be started?"
+  :type 'boolean
+  :group 'dp-vars)
+
+(defcustom dp-wants-mingus-stay-at-home-p t
+  "*Should we use mingus with no extensions?
+Currently, there are mingus extensions in mingus-stays-home.el"
   :type 'boolean
   :group 'dp-vars)
 
