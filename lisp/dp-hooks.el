@@ -1239,7 +1239,7 @@ See `dp-parenthesize-region-paren-list'")
   (dp-auto-it?)
 
   ;;;;;;;;move to dp-flyspell (dp-flyspell-prog-mode)
-  (message "python mode hook"))
+  (message "python mode hook finished."))
 
 ;;CO; (defadvice py-end-of-def-or-class (before dp-py-eodoc activate)
 ;;CO;   "Make `py-end-of-def-or-class' leave the region active."
