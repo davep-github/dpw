@@ -327,27 +327,30 @@ Ee|edrop|       ${davep}/droppings/editors/
 # Added Sun Oct 19 12:21:31 EDT 2014
 Ee|vlmpd|       /var/lib/mpd/
 # Added Wed Nov 26 15:56:42 EST 2014
-Ee|worksk|       ${davep}/work/skaion/
 # Added Wed Nov 26 15:56:48 EST 2014
-Ee|skwork|       ${davep}/work/skaion/
 # Added Thu Nov 27 11:55:03 EST 2014
 Ee|yokeldavep|ydavep|ydp|davepy|       ${davep}/yokel/
 # Added Wed Dec 17 16:45:03 EST 2014
-Ee|ta2|       ${davep}/work/skaion/ta2-scaling/
 # Added Sat Apr 25 10:22:27 EDT 2015
 Ee|mpdm|       /var/lib/mpd/music/mvsik/
 # Added Sat Apr 25 10:22:31 EDT 2015
-Ee|mpdmvsik|       /var/lib/mpd/music/mvsik/
-Ee|gitrepos|       /mathoms/git-repos/
-Ee|local|          ${davep}/local/
-Ee|loc|            ${davep}/local/
-Ee|linuxtoamdgpu|  drivers/gpu/drm/amd/amdgpu
+Ee|mpdmvsik|                /var/lib/mpd/music/mvsik/
+Ee|gitrepos|                /mathoms/git-repos/
+Ee|local|                   ${davep}/local/
+Ee|loc|                     ${davep}/local/
+Ee|linuxtoamdgpu|ltog|      drivers/gpu/drm/amd/amdgpu
 Ee|ltogpu|ltoa|l27|l28|l29| ${linuxtoamdgpu}
-Ee|amdlinux|worklinux|    ${davep}/work/amd/amdgpu/kernel-git/linux
-Ee|wak|wal|wl|al|          ${amdlinux}
-Ee|waka|wala|wla|ala|      ${amdlinux}/${linuxtoamdgpu}
-Ee|locbld|       ${davep}/local/build/
-Ee|locbin|       ${davep}/local/bin/
+Ee|workamd|                 ${davep}/work/amd
+Ee|workamdgpu|              ${workamd}/amdgpu
+Ee|workamdgpukernelgit|     ${workamdgpu}/kernel-git
+Ee|akgit|akrepository|akrepo| ${workamdgpukernelgit}
+Ee|amdlinux|worklinux|wlinux|alinux|  ${workamdgpukernelgit}/linux
+Ee|wak|wal|wl|al|           ${amdlinux}
+Ee|amdgpu|                  ${amdlinux}/${linuxtoamdgpu}
+Ee|waka|wala|wla|ala|       ${amdgpu}
+E|ras|w|                   ${amdgpu}
+Ee|locbld|                  ${davep}/local/build/
+Ee|locbin|                  ${davep}/local/bin/
 Ee|sddpw|dpwsd|udpw|dpwu|       /mnt/ultra/repos/dpww.git/
 Ee|udpw|sddpw|       /mnt/ultra/repos/dpw.git/
 Ee|rustfuse|rufuse|       ${davep}/local/build/rust-fuse/
@@ -364,6 +367,8 @@ Ee|ggit|       /home/davep/local/build/gitted/git/
 Ee|bgit|       /home/davep/local/build/gitted/git/
 Ee|gitb|       /home/davep/local/build/gitted/git/
 Ee|gitgit|       /home/davep/local/build/gitted/git/
+Ee|amdk|       /home/davep/work/amd/amdgpu/kernel-git/linux/
+Ee|amdl|       /home/davep/work/amd/amdgpu/kernel-git/linux/
 ### Local Variables: ***
 ### tab-width: 2 ***
 ### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***
