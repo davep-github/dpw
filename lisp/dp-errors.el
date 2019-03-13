@@ -287,6 +287,7 @@
     "Unmatched bracket or quote$"
     "Canceled"
     "^File is not under version control$"
+    "^No operations specified$"
     )
   "*My list of ignored signals.  These will not cause an entry into the
 debugger if encountered when `debug-on-error' is non-nil.
