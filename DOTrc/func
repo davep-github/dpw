@@ -1345,7 +1345,7 @@ go2rc()
     eval $(go2env)
     if inside_emacs_p
     then
-	echo 1>&2 "*** You may want to: M-x dp-abbrevs"
+	echo 1>&2 "*** You may also want to: M-x dp-abbrevs"
     fi
 }
 
