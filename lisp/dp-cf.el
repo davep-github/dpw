@@ -348,9 +348,6 @@ Eg, via `hack-local-variables', hook, magic.")
     (unless (member new-pair dp-fixed-corresponding-files)
       (setq dp-fixed-corresponding-files (cons new-pair
                                                dp-fixed-corresponding-files)))))
-
-(dp-add-corresponding-file-pair "dpmisc.el" "dpmacs.el")
-
 (defun dp-add-corresponding-file (file-name)
   "Make a correspondence between this file and another FILE-NAME."
   (dp-add-corresponding-file-pair (file-name-nondirectory buffer-file-truename)

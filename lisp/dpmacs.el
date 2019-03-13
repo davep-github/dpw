@@ -278,6 +278,11 @@ editing servers via `dp-editing-server-ipc-file'.")
 ;; Now we can do my kinds of things...
 ;;
 
+;; To switch between dpmacs.el and dpmisc.el quickly, use
+;; C-x M-b to run the command dp-edit-corresponding-file
+;; Which the following sets up.
+(dp-add-corresponding-file-pair "dpmisc.el" "dpmacs.el")
+
 (unless (dp-xemacs-p)
   (dp-optionally-require 'edebug-x)
   (require 'dp-magit))
