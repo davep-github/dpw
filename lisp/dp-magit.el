@@ -17,6 +17,7 @@
      [(meta return)] magit-section-toggle
      [(meta left)] magit-section-backward
      [(meta right)] magit-section-forward
+     [(meta ?u)] magit-jump-to-untracked
      )
    ))
 
