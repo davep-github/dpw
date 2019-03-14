@@ -6051,6 +6051,11 @@ When beginning a sequence, (point) is saved.  This can be pushed onto
                                       nil nil "fv2"))
 (defalias 'fv2 'dp-find-variable-other-window)
 
+(defadvice find-face-definition (before dp-find-face-definition activate)
+  (dp-push-go-back "find-face-definition"))
+(dp-defaliases 'ffd 'ffd. 'ffd1 'ffd0 'ffd-same  'find-face-definition)
+;; @todo XXX Add make a find-face-definition-other-window.
+
 (defun dp-ff-key (key &optional same-window-p)
   "Do a `find-function-on-key' but with my kind of window prefs."
   (interactive "kFind function on key: \nP")
