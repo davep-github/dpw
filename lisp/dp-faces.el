@@ -413,7 +413,7 @@
   '(
     (((class color) (background light)) (:background "SeaGreen1" :bold t))
     (((class color) (background dark))
-     (:foreground "black" :background "SeaGreen1" :bold t)))
+     (:foreground "black" :background "gold" :bold t)))
   "Face for point."
   :group 'faces
   :group 'dp-faces)
