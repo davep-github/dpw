@@ -2027,7 +2027,6 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
   ;; Add trailing WS visibility only on highest font lock level?
   (dp-auto-it?))
 
-
 (defadvice fill-paragraph-or-region (around dp-fill-paragraph-or-region
                                      activate)
   "Allow prefix args C-0 or C-- to limit filling to the current line and below."
