@@ -390,8 +390,12 @@
 (defface dp-highlight-point-face
   '(
     (((class color) (background light)) (:background "green"))
+    ;; Tried to make background the cursor but didn't work.
+    ;; (((t (:background "gold")))))
+    ;; However, it does do, oddly enough, a nice black background with a gold
+    ;; foreground
     (((class color) (background dark))
-     (:foreground "black" :background "green")))
+     (:foreground "black" :background "gold")))
   "Face for point."
   :group 'faces
   :group 'dp-faces)
