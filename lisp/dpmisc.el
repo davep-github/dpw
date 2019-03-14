@@ -7785,6 +7785,7 @@ The line is highlighted with three faces:
 `dp-highlight-point-before-face'
 `dp-highlight-point-face'
 `dp-highlight-point-after-face'
+that are pulled from a color struct, `colors'.
 This makes point very visible."
   (interactive)
   (let* ((buffer (or (and (markerp pos) 
@@ -7880,9 +7881,7 @@ The highlight will be removed after the next command."
   "Highlight the line on which point resides using `dp-highlight-point'.
 The highlight will be removed after the next command."
   (interactive)
-  (if (dp-xemacs-p)
-      (dp-highlight-point-until-next-command-guts)
-    ))
+  (dp-highlight-point-until-next-command-guts :colors colors))
 
 (defun* dp-unhighlight-point (&key (pos (point)) (buffer (current-buffer))
                               (id-prop dp-highlight-point-id-prop)
@@ -11440,6 +11439,7 @@ FLOATING POINT(tm):  When close is good enough!."
 
 (defun dp-turn-off-newbuf-hilighting ()
   (interactive)
+  ;; This can be unconditional.  `remove-hook' is smart enough.
   (remove-hook 'pre-idle-hook 'dp-pre-cmd-for-highlight-hook)
   (remove-hook 'pre-command-hook 'dp-pre-cmd-for-highlight-hook)
   (remove-hook 'post-command-hook 'dp-post-cmd-for-highlight-hook))
@@ -11460,8 +11460,8 @@ FLOATING POINT(tm):  When close is good enough!."
       (dp-turn-off-newbuf-hilighting) 
     (dp-turn-on-newbuf-hilighting)))
 
-(if (dp-xemacs-p)
-    (add-hook 'dp-post-dpmacs-hook 'dp-turn-on-newbuf-hilighting))
+(when (and-boundp 'dp-highlight-point-in-new-buffer/window-p)
+  (add-hook 'dp-post-dpmacs-hook 'dp-turn-on-newbuf-hilighting))
 
 (defun dp-fix-cmd-hook-stuff ()
   (interactive)
