@@ -4,7 +4,7 @@
 ;;; mode hooks and supporting functions.
 ;;;
 
-;; historical variety of styles: see svn, < rev 2013. 
+;; historical variety of styles: see svn, < rev 2013.
 
 ;;(add-hook 'find-file-hooks 'dp-add-default-buffer-endicator)
 
@@ -80,7 +80,7 @@ eol-only - Only clean lines when cursor it at the end of a line.
 
 (defun dp-minibuffer-abbrevs-post-hook ()
   "Init/refresh minibuffer's local abbrev table."
-  (setq local-abbrev-table 
+  (setq local-abbrev-table
         (dp-find-abbrev-table '(dp-minibuffer-abbrev-table))))
 
 (defun dp-region-not-in-minibuf ()
@@ -122,7 +122,7 @@ Make it buffer local since there can be >1 minibuffers.")
 
 (defun dp-minibuffer-setup-hook ()
   "Sets up personal minibuffer options."
-;;CO;   (dmessage "dp-minibuffer-setup-hook, buf: %s, pre: %s\n bl: %s" 
+;;CO;   (dmessage "dp-minibuffer-setup-hook, buf: %s, pre: %s\n bl: %s"
 ;;CO;             (current-buffer)
 ;;CO;             dp-pre-minibuffer-buffer
 ;;CO;             (buffer-list)
@@ -160,8 +160,8 @@ Make it buffer local since there can be >1 minibuffers.")
 	(define-key map [(control tab)] 'dp-minibuffer-complete)
       (dp-define-key-list map '([tab] minibuffer-complete
 				[(meta up)] switch-to-completions)))
-    (define-key map [(meta ?=)] (kb-lambda 
-                                   (enqueue-eval-event 
+    (define-key map [(meta ?=)] (kb-lambda
+                                   (enqueue-eval-event
                                     'eval
                                     (nth (1- (prefix-numeric-value arg))
                                          command-history))
@@ -188,7 +188,7 @@ Make it buffer local since there can be >1 minibuffers.")
   ;; !!!!!!!!!!!!!!!!!
   ;; NO BINDINGS DOWN HERE!! EXCEPT FOR EXCEPTIONS.
   ;; !!!!!!!!!!!!!!!!!
-  
+
   ;; Optionally mark the default selection for easy deletion
   ;;  (as long as pending-delete-mode is on)
   (if (and dp-enable-minibuffer-marking
@@ -220,9 +220,9 @@ Make it buffer local since there can be >1 minibuffers.")
 (defun dp-match-buffer-name (regexp &optional not-a-regexp-p buffer)
   "RE match the current buffer or BUFFER's name against regexp.
 QUOTE-IT-P says to quote the regexp so special chars aren't."
-  (when regexp 
+  (when regexp
     (let ((buf-name (dp-buffer-name buffer)))
-;       (dp-message-no-echo "regexp>%s<, buf-name>%s<\n" 
+;       (dp-message-no-echo "regexp>%s<, buf-name>%s<\n"
 ;                           (if not-a-regexp-p
 ;                               (regexp-quote regexp)
 ;                             regexp)
@@ -237,12 +237,12 @@ QUOTE-IT-P says to quote the regexp so special chars aren't."
 (defun dp-match-window-buffer (regexp &optional not-a-regexp-p window)
   "RE match the current buffer or BUFFER's name against regexp.
 QUOTE-IT-P says to quote the regexp so special chars aren't."
-  (dp-match-buffer-name regexp not-a-regexp-p 
+  (dp-match-buffer-name regexp not-a-regexp-p
                         (if window
                             (window-buffer window)
                           (current-buffer))))
 
-(eval-after-load "text-mode" 
+(eval-after-load "text-mode"
   (progn (dp-setup-indentation-colorization 'text-mode)))
 
 (defun dp-text-mode-hook ()
@@ -258,8 +258,8 @@ QUOTE-IT-P says to quote the regexp so special chars aren't."
    ;; I'm sure there's a better way to ID diary files,
    ;; especially since they can be renamed.
    ;; If `diary-file' doesn't begin w/ '/' then prepend
-   ((dp-match-buffer-name 
-     (format "^%s%s$" 
+   ((dp-match-buffer-name
+     (format "^%s%s$"
              (file-name-nondirectory (regexp-quote diary-file))
              "\\(<[0-9]*>\\)?"))
     (dmessage "diary file>%s<" diary-file)
@@ -619,7 +619,7 @@ then applies changes. This is good... sometimes."
 
     ;;;;;;;;;;;;;;;;; FSF emacs ;;;;;;;;;;;;;;;;;
     ;;;;;;;  VERY, VERY STALE ~~~~ ;;;;;;;;;;;;;;
-    
+
     (setq c-font-lock-keywords-3
 	  ;;
 	  ;; FSFMacs case.  They still haven't fixed the regexps to match
@@ -633,9 +633,9 @@ then applies changes. This is good... sometimes."
 	  ;; NOPE. shy grouping is XEmacs only.
 	  '(("^\\(\\(\\sw\\|\\s_\\)+\\)[ 	]*(" 1 font-lock-function-name-face)
 	    ("^#[ 	]*error[ 	]+\\(.+\\)" 1 font-lock-warning-face prepend)
-	    ("^#[ 	]*\\(import\\|include\\)[ 	]+\\(<[^>\"\n]*>?\\)" 
+	    ("^#[ 	]*\\(import\\|include\\)[ 	]+\\(<[^>\"\n]*>?\\)"
 	     2 font-lock-string-face)
-	    ("^#[ 	]*define[ 	]+\\(\\(\\sw\\|\\s_\\)+\\)(" 
+	    ("^#[ 	]*define[ 	]+\\(\\(\\sw\\|\\s_\\)+\\)("
 	     1 font-lock-function-name-face)
 	    ("^#[ 	]*\\(elif\\|if\\)\\>"
 	     ("\\<\\(defined\\)\\>[ 	]*(?\\(\\(\\sw\\|\\s_\\)+\\)?" nil nil
@@ -822,10 +822,10 @@ c-hanging-braces-alist based upon these values.")
     (define-key map [(control ?x) (control left)] 'dp-c-beginning-of-defun)
     (define-key map [(control ?x) left] 'dp-c-show-class-name)
     (define-key map [(control ?x) (control right)] 'dp-c-end-of-defun)
-    (define-key map [(meta right)] 
+    (define-key map [(meta right)]
       (kb-lambda
           (dp-c-end-of-defun 1 'real-bof)))
-    (define-key map [(control ?x) right] 
+    (define-key map [(control ?x) right]
       (kb-lambda
           (let ((p (point)))
             (c-beginning-of-defun 1)
@@ -834,7 +834,7 @@ c-hanging-braces-alist based upon these values.")
               (goto-char p)
               (ding)
               (message "Cannot find data section.")))))
-    
+
     (define-key map [(control space)] 'dp-expand-abbrev)
     (define-key map [(control meta ?x)] 'dp-embedded-lisp-eval@point)
     (define-key map [(meta ?j)] 'join-line)
@@ -842,7 +842,7 @@ c-hanging-braces-alist based upon these values.")
     (define-key map [(control meta ?a)] 'mark-defun)
     (define-key map [(meta ?Q)] 'align)
 
-    
+
     ;;
     ;; cc-mode now does much of what I do in dp-c-newline-and-indent in
     ;; c-context-line-break.  For now we bind the cc-mode func to RET
@@ -856,7 +856,7 @@ c-hanging-braces-alist based upon these values.")
     (define-key map [delete] 'dp-delete)
     (define-key map "\C-d" 'dp-delete)
     (define-key map [(control \;)] (kb-lambda (dp-c-open-newline 'colon)))
-    (define-key map [(control meta return)] (kb-lambda 
+    (define-key map [(control meta return)] (kb-lambda
                                                 (dp-c-open-newline 'colon)))
     ;; Why just straight c-mode?
     ;; @todo XXX For some reason, things go blammo if these defines are moved
@@ -866,12 +866,12 @@ c-hanging-braces-alist based upon these values.")
     ;;??(define-key map "\C-cdfc" 'dp-c-format-func-call)
     (define-key dp-c-mode-map "c" 'dp-c-format-func-call)
     (define-key dp-c-mode-map "p" 'dp-mk-extern-proto)
-    
+
     (define-key map [(meta ?q)] 'dp-c-fill-paragraph)
     (define-key map [return] 'dp-c-context-line-break)
     (define-key map [?l] 'dp-c-mode-l)
     (define-key map [(control /)] 'semantic-ia-show-summary)
-    
+
     ;; 'C-;'
     (define-key map [(control 59)] (kb-lambda (insert ";" )))
     )
@@ -899,7 +899,7 @@ tab setting, font or phase of the moon."
   (dmessage "in dp-c-like-mode-common-hook")
   ;;
   ;;(message "in dp-c-like-mode-common-hook")
-  ;; c-mode turns this on to get some keyword expansion, but it 
+  ;; c-mode turns this on to get some keyword expansion, but it
   ;; doesn't work well with my dir abbrevs: they get expanded
   ;; when I don't want them to.
   ;; maybe I should only use them when I'm in an appropriate mode.
@@ -921,12 +921,12 @@ tab setting, font or phase of the moon."
     (imenu-add-to-menubar "IM-cc"))
   (dmessage "Apply mode-transparent check to ALL buffers.")
   (when (and (buffer-name)
-             (dp-file-name-implies-readonly-p 
+             (dp-file-name-implies-readonly-p
               (buffer-name)
               (concat "[.,-]\\("
                       (dp-mk-mode-transparent-r/o-regexp nil)
                       "\\)")))
-    (ding)                              ; !<@todo XXX 
+    (ding)                              ; !<@todo XXX
     (toggle-read-only 1))
   ;; xor modes?
   (when (dp-gtags-p)
@@ -976,7 +976,7 @@ tab setting, font or phase of the moon."
 
 (defcustom dp-c++-std-elements
   '("cout" "cerr" "cin" "clog" "endl" "istream" "ostream"
-    "stringstream" "istringstream" "ostringstream" 
+    "stringstream" "istringstream" "ostringstream"
     "streambuf" "string" "streamsize"
     "vector" "ofstream" "ifstream" "map" "set" "multimap"
     "skipws" "noskipws" "auto_ptr" "queue" "ostream_iterator"
@@ -985,11 +985,11 @@ tab setting, font or phase of the moon."
     "unitbuf"
     )
   "*List of things in the std:: namespace we want to be expanded to
-std::<thing> by abbrev-mode in a C++ buffer.  
-As a special case, undo will, after an expansion, will exactly undo the 
-expansion.  This helps remove the onus of defining things to expand which 
+std::<thing> by abbrev-mode in a C++ buffer.
+As a special case, undo will, after an expansion, will exactly undo the
+expansion.  This helps remove the onus of defining things to expand which
 are too general, e.g. queue."
-  :group 'dp-vars 
+  :group 'dp-vars
   :type '(repeat (string :tag "std:: symbol")))
 
 (dp-deflocal dp-c++-mode-add-namespace-disabled t
@@ -1055,9 +1055,9 @@ part of a longer name."
 
 (defun dp-c++-mode-define-abbrevs ()
   (interactive)
-  (mapc (function 
+  (mapc (function
          (lambda (arg)
-           (define-abbrev local-abbrev-table arg arg 
+           (define-abbrev local-abbrev-table arg arg
              'dp-maybe-add-c++-namespace)))
 	dp-c++-std-elements))
 
@@ -1126,7 +1126,7 @@ main(
           (insert dp-c++-new-source-file-template))
       (dp-apply-if dp-c++-new-include-file-template nil
         (insert dp-c++-new-include-file-template)))
-;;     !<@todo XXX point moves around when visiting files, especially (only?) 
+;;     !<@todo XXX point moves around when visiting files, especially (only?)
 ;;     shell buffers.  WHY!?!?!?!?
 ;;?point?;     (dmessage "B: buf: %s, p: %s, pmin: %s, pmax: %s win point: %s"
 ;;?point?;               (current-buffer) (point) (point-min) (point-max)
@@ -1279,16 +1279,16 @@ Arr... beware the hooks! "
   (unless (and (buffer-file-name)
                (not (dp-save-inhibited-p))
                (not force-inhibit-p))
-    (ding) 
+    (ding)
     (unless quiet-p
-      (message 
+      (message
        "You can't save this buffer, you silly.  But you can write it with %s."
        (sorted-key-descriptions (where-is-internal 'write-file))))
     ;; You CAN'T save, silly.
     t))
 
-(dp-set-mode-local-value 'dp-open-newline-func 
-                         'dp-lisp-interaction-mode-open-newline 
+(dp-set-mode-local-value 'dp-open-newline-func
+                         'dp-lisp-interaction-mode-open-newline
                          'lisp-interaction-mode)
 
 (defun dp-lisp-interaction-mode-open-newline (&optional arg)
@@ -1352,9 +1352,9 @@ Arr... beware the hooks! "
   "Lisp mode's Parenthesizing pairs to try, in order.
 See `dp-parenthesize-region-paren-list'")
 
-(dp-add-mode-paren-list 'emacs-lisp-mode 
+(dp-add-mode-paren-list 'emacs-lisp-mode
                         dp-lisp-modes-parenthesize-region-paren-list)
-(dp-add-mode-paren-list 'lisp-interaction-mode 
+(dp-add-mode-paren-list 'lisp-interaction-mode
                         dp-lisp-modes-parenthesize-region-paren-list)
 
 (defvar dp-perl-mode-parenthesize-region-paren-list
@@ -1374,7 +1374,7 @@ See `dp-parenthesize-region-paren-list'")
   "Perl mode's Parenthesizing pairs to try, in order.
 See `dp-parenthesize-region-paren-list'")
 
-(dp-add-mode-paren-list 'perl-mode 
+(dp-add-mode-paren-list 'perl-mode
                         dp-perl-mode-parenthesize-region-paren-list)
 
 
@@ -1470,10 +1470,10 @@ isearch while the region is active to locate the end of the region."
 
 (defun dp-w3m-view-previous-page (&optional exit)
   (interactive "P")
-  (dp-func-or-kill-buffer 
+  (dp-func-or-kill-buffer
    (function (lambda () (call-interactively 'w3m-view-previous-page)))
    'w3m-quit))
-  
+
 (defun dp-w3m-mode-hook ()
   "Set up w3m-mode my way."
   (interactive)
@@ -1538,17 +1538,17 @@ isearch while the region is active to locate the end of the region."
 ;;;(defcustom dp-mail-present-string "**[\\/]** "
 (defcustom dp-mail-present-string "/\\/\\ "
   "Prepend this string to the window title when mail is present."
-  :group 'dp-vars 
+  :group 'dp-vars
   :type 'string)
 
 (defun dp-display-time-hook ()
   (if (and mail
 	   (not dp-time-mail-has-dung))
       ;; since this func is intended to beep, ensure the beeper is
-      ;; on. 
+      ;; on.
       ;; ??? Have var the visible-bell is set to here.
       ;; may want no beep
-      ;; but since I did this so my laptop would beep 
+      ;; but since I did this so my laptop would beep
       ;; on new mail, set to nil it is.
       (let ((visible-bell nil))
 	(ding)
@@ -1559,7 +1559,7 @@ isearch while the region is active to locate the end of the region."
     ;;(dmessage "%s-ing dung" mail)
     (setq dp-time-mail-has-dung mail)
     (setq frame-title-format
-	  (if mail 
+	  (if mail
 	      (concat dp-mail-present-string dp-frame-title-format)
 	    dp-frame-title-format))
     ))
@@ -1586,10 +1586,10 @@ faces had different sizes."
 
 (defvar dp-Manual-section-regexp "^[0-9_A-Z -]+\\(([0-9]+)\\s-+.*\\)?$"
   "Part of a cheesy to find a man page section.
-@todo XXX do we want the (number), e.g. the title, to be included? 
+@todo XXX do we want the (number), e.g. the title, to be included?
 `\\[dp-beginning-of-buffer]' gets the job done with the possibility of a false
 positive. ")
-                       
+
 
 (defun dp-Manual-previous-section (num)
   "Go to the previous section (NAME, SYNOPSIS, etc)."
@@ -1634,7 +1634,7 @@ positive. ")
 (defsubst dp-pre/post-command-hook (hook-type)
   ;;(dmessage "%s:%s" hook-type this-command)
   ;;(if (eq 'find-function this-command) (dmessage("ff")))
-;   (if (eq 'execute-extended-command this-command) 
+;   (if (eq 'execute-extended-command this-command)
 ;       (dmessage "eec:%s:%s" this-command (get this-command hook-type)))
   (and this-command
        (symbolp this-command)
@@ -1672,7 +1672,7 @@ Default is to switch to a buffer as chosen by `switch-to-buffer'.")
 ;;; This needs to be made FSF/XEmacs compatible.
 (defun dp-server-edit (&optional count keep-buffer-p)
   "Like `gnuserv-edit''`server-edit' except leaves buffer alone rather than killing it.
-\\[universal-argument] eq `-' or non-nil KEEP-BUFFER-P means to kill the 
+\\[universal-argument] eq `-' or non-nil KEEP-BUFFER-P means to kill the
 buffer.
 WTF did I do this? I think it had to do with IPython edit buffers.
 In a later version of IPython (1.1.0), the file name is formatted thus:
@@ -1739,7 +1739,7 @@ solution exists. In this case, the `gnuserv-find-file-function' variable."
   (dp-local-set-keys
    '([(control ?o)] dp-one-window++
      [?o] compilation-display-error
-     ))) 
+     )))
 
 ;;; Wishful thinking.
 ;;;(add-hook 'grep-setup-hook 'dp-grep-setup-hook)
@@ -1798,7 +1798,7 @@ This sets the value that will cause cscope to (in the words of cscope):
   explicitly search using the hierarchical database search either before
   or after other cscope database directories.\""
   '(("^/" (t))))
-  
+
 (defvar dp-make-cscope-database-regexps-fun
   'dp-default-make-cscope-database-regexps-fun
   "Call this to generate an appropriate value for
@@ -1817,9 +1817,9 @@ Use of 'unset allows the legitimate value of nil to be used.")
   (setq cscope-database-regexps
         (if (or (eq dp-cscope-memoized-cscope-database-regexps 'unset)
                 non-memoized-p)
-            (funcall dp-make-cscope-database-regexps-fun 
-                     ignore-env-p 
-                     db-locations 
+            (funcall dp-make-cscope-database-regexps-fun
+                     ignore-env-p
+                     db-locations
                      hierarchical-search-p)
           dp-cscope-memoized-cscope-database-regexps)
         dp-cscope-memoized-cscope-database-regexps cscope-database-regexps))
@@ -1846,8 +1846,8 @@ So there."
   (setq-ifnil arg dp-query-kill-buffer-p)
   (interactive)
   (if (bound-and-true-p dp-query-kill-buffer-p)
-      (let (prompt) 
-        (cond 
+      (let (prompt)
+        (cond
          ((functionp dp-query-kill-buffer-p)
           (return-from dp-kill-buffer-query-function
             (funcall dp-query-kill-buffer-p)))
@@ -1881,7 +1881,7 @@ So there."
   )
 
 ;;
-;; @todo @todo @todo @todo @todo @todo 
+;; @todo @todo @todo @todo @todo @todo
 ;; make into a function of my own
 ;;
 
@@ -1905,12 +1905,12 @@ So there."
 ;!needed for FSF (defvar dp-called-by-split-horizontally nil
 ;!needed for FSF   "Icky hack to allow `split-window-horizontally' to work.")
 
-;!needed for FSF (defadvice split-window (before dp-advised-split-window 
+;!needed for FSF (defadvice split-window (before dp-advised-split-window
 ;!needed for FSF                          (&optional window size horflag) activate)
 ;!needed for FSF   (interactive)
 ;!needed for FSF   ;; Set `horflag' on a per-call basis so it can change dynamically.
 ;!needed for FSF   ;; Only calculate this if we're called as `split-window' itself.
-;!needed for FSF   (if (not 
+;!needed for FSF   (if (not
 ;!needed for FSF        (or dp-called-by-split-horizontally dp-called-by-split-vertically))
 ;!needed for FSF       (setq horflag (and (dp-prefer-horizontal-split)
 ;!needed for FSF                          (not (active-minibuffer-window))
@@ -1922,14 +1922,14 @@ So there."
 ;!needed for FSF     (setq dp-called-by-split-vertically nil
 ;!needed for FSF           dp-called-by-split-horizontally nil)))
 
-;!needed for FSF (defadvice split-window-vertically (before 
+;!needed for FSF (defadvice split-window-vertically (before
 ;!needed for FSF                                     dp-advised-split-window-vertically
 ;!needed for FSF                                     (&optional arg)
 ;!needed for FSF                                     activate)
 ;!needed for FSF   (interactive "P")
 ;!needed for FSF   (setq dp-called-by-split-vertically t))
 
-;!needed for FSF (defadvice split-window-horizontally (before 
+;!needed for FSF (defadvice split-window-horizontally (before
 ;!needed for FSF                                     dp-advised-split-window-horizontally
 ;!needed for FSF                                     (&optional arg)
 ;!needed for FSF                                     activate)
@@ -1999,7 +1999,7 @@ In all cases maintain region activation."
 
 (defun dp-end-of-defun (&optional arg)
   "If preceeding command was `end-of-defun' do a go-back.
-Otherwise maintain region activation, push-go-back 
+Otherwise maintain region activation, push-go-back
 and then business as usual."
   (interactive "p")
   (dp-set-zmacs-region-stays t)
@@ -2028,7 +2028,7 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
   (dp-auto-it?))
 
 
-(defadvice fill-paragraph-or-region (around dp-fill-paragraph-or-region 
+(defadvice fill-paragraph-or-region (around dp-fill-paragraph-or-region
                                      activate)
   "Allow prefix args C-0 or C-- to limit filling to the current line and below."
   (let ((current-prefix-arg current-prefix-arg))
@@ -2044,9 +2044,9 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
 ;    (when (and-boundp 'dp-highlight-in-set-buffer
 ;            dp-highlight-in-other-buffer)
 ;      (dp-unhighlight-point))
-;      
+;
 ;    ad-do-it
-;      
+;
 ;    (when (and-boundp 'dp-highlight-in-set-buffer
 ;            dp-highlight-in-set-buffer)
 ;      (dp-highlight-point-until-next-command)
@@ -2101,20 +2101,20 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
            (excluded-p (and dp-highlight-buffer-excluded-enabled-p
                             (or (dp-highlight-window-excluded-p this-win)
                                 (dp-highlight-buffer-excluded-p this-buf)))))
-      
+
       ;;{{{ Dead but possibly useful debugging code
 ;       (when (and nil
-;                  (not (memq this-command '(self-insert-command other-window 
-;                                            next-line previous-line 
+;                  (not (memq this-command '(self-insert-command other-window
+;                                            next-line previous-line
 ;                                            isearch-forward isearch-backward
 ;                                            scroll-up-command scroll-down-command
-;                                            dp-end-of-buffer 
+;                                            dp-end-of-buffer
 ;                                            dp-beginning-of-buffer
 ;                                            dp-open-newline newline
 ;                                            forward-word backward-word
 ;                                            dp-scroll-up dp-scroll-down
 ;                                            end-of-buffer-other-window
-;                                            forward-char-command 
+;                                            forward-char-command
 ;                                            backward-char-command
 ;                                            delete-backward-char
 ;                                            execute-extended-command))))
@@ -2126,7 +2126,7 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
 ;         (if post
 ;             (dp-message-no-echo "%s" post)))
       ;;}}}
-      
+
       ;;  (dmessage "this: %s, that: %s" (symbol-value this) (symbol-value that))
       ;; If the current window has changed and it's not a "forbidden" window and
       ;; not a "forbidden" buffer, then highlight it.
@@ -2137,19 +2137,19 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
         ;; Do the new window actions:
         ;;(dmessage "HIGH: this-win: %s, that: %s" this-win (symbol-value that))
         (when dp-center-line-on-window-change-p
-          
+
           )
         (dp-highlight-point-until-next-command
          :colors dp-highlight-point-other-window-faces)))))
-  
+
 (defun dp-pre-cmd-for-highlight-hook ()
   "Called to help out the highlighting the current line when changing windows."
-  (dp-pre/post-highlight-helper 'dp-pre-cmd-window 'dp-post-cmd-window 
+  (dp-pre/post-highlight-helper 'dp-pre-cmd-window 'dp-post-cmd-window
                                 "vvvvvvv pre-command-hook =======\n"))
 
 (defun dp-post-cmd-for-highlight-hook ()
   "Called to help out the highlighting the current line when changing windows."
-  (dp-pre/post-highlight-helper 'dp-post-cmd-window 'dp-pre-cmd-window nil 
+  (dp-pre/post-highlight-helper 'dp-post-cmd-window 'dp-pre-cmd-window nil
                                 "^^^^^^^ post-command-hook =======\n"))
 
 ;; Old highlight code in vc.
@@ -2162,11 +2162,11 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
 ; (defvar dp-use-region-as-INITIAL-CONTENTS t
 ;   "*If non-nil, then use region, if active, as `read-from-minibuffer's initia-contents, if not specified.")
 
-; (defadvice read-from-minibuffer (before dp-advised-read-from-minibuffer 
+; (defadvice read-from-minibuffer (before dp-advised-read-from-minibuffer
 ;                                  activate)
 ;     (when (and dp-use-region-as-INITIAL-CONTENTS
 ;                (not (and (symbolp this-command)
-;                          (get this-command 
+;                          (get this-command
 ;                               'dp-DONT-use-region-as-INITIAL-CONTENTS)))
 ;                ;;(not (eq this-command 'execute-extended-command))
 ;                (not (ad-get-arg 1))
@@ -2220,11 +2220,11 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
       (dmessage "savehist-autosave barfed... imagine that.")
       nil)))
 
-(defadvice hyper-apropos-find-function (before dp-hyper-apropos-find-function 
+(defadvice hyper-apropos-find-function (before dp-hyper-apropos-find-function
                                         activate)
   (dp-push-go-back "hyper-apropos-find-function" nil 'allow-dammit-p))
 
-(defadvice hyper-apropos-find-variable (before dp-hyper-apropos-find-function 
+(defadvice hyper-apropos-find-variable (before dp-hyper-apropos-find-function
                                         activate)
   (dp-push-go-back "hyper-apropos-find-variable" nil 'allow-dammit-p))
 
@@ -2243,7 +2243,7 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
   (local-set-key [(meta right)] 'outline-next-visible-heading)
   (local-set-key [(control meta left)] 'outline-up-heading)
   (local-set-key [(control meta right)] 'outline-forward-same-level)
-  
+
   (filladapt-mode 1)
   (make-local-variable 'indent-line-function)
   (setq indent-line-function 'indent-relative))
@@ -2261,7 +2261,7 @@ It was made optional so it can be M-x 'd if \(eq when) things get hosed."
   ;; It's on M-o and that will NOT do.
   ;; set C-xM-e to what was on M-o
   ;; M-e is open file, so it's kind of mnemonic.
-  (dp-bump-key-binding [(meta ?o)] 
+  (dp-bump-key-binding [(meta ?o)]
                        'dp-kill-ring-save [(control ?x) (meta e)])
   (dp-local-set-keys
    '([(meta -)] dp-maybe-kill-this-buffer
@@ -2316,7 +2316,7 @@ changed."
 ;; All kinds of things change, like minibuf, temp files, message buffer, etc.
 ;; Definitely make this a local hook.
 (defun dp-before-change-function (beg end)
-  (dmessage "in dp-before-change-function, buf: %s, beg: %s, end: %s" 
+  (dmessage "in dp-before-change-function, buf: %s, beg: %s, end: %s"
             (buffer-name) beg end))
 
 (defun dp-bookmark-bmenu-mode-hook ()
@@ -2348,7 +2348,7 @@ changed."
         block-comment-start "/* "
         block-comment-end "*/"))
 
-(defadvice jka-compr-insert-file-contents 
+(defadvice jka-compr-insert-file-contents
   (after dp-advised-jka-compr-insert-file-contents act)
   (dp-set-unmodified))
 
@@ -2463,7 +2463,7 @@ changed."
 (provide 'dp-hooks)
 (message "dp-hooks loading...done")
 
-;; 
+;;
 ;; Local variables:
 ;; folded-file: t
 ;; folding-internal-margins: nil
