@@ -93,6 +93,11 @@ Make a string to use in the mode-line-help-echo for Mingus.
      [(meta ?,)] mingus-open-parent
      [?l] mingus-open-parent		; As in dired, Info, etc.
      [(meta ?l)] mingus-load-playlist
+     [(meta return)] mingus-insert
+     [?m] mingus
+     [?p] mingus
+     [(meta ?m)] mingus
+     [(meta ?p)] mingus
      )))
 
 (defalias 'dp-music-browse-mode-bind-keys 'dp-mingus-browse-mode-bind-keys)
