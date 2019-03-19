@@ -27,7 +27,7 @@
 	keepBackup = true
 
 [difftool "p4diff"]
-	cmd = p4diff.git $LOCAL $REMOTE
+	cmd = p4merge $LOCAL $REMOTE
 
 [difftool "ec-diff"]
 	cmd = ec-diff $LOCAL $REMOTE
