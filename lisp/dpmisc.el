@@ -14350,10 +14350,6 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
 ;; Restore Other Window.
 (defun dp-restore-other-window ()
   (interactive)
-
-
-
-
   (switch-to-buffer-other-window (other-buffer (current-buffer))))
 
 (dp-defaliases 'row 'dp-restore-other-window)
