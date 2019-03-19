@@ -100,6 +100,7 @@
         # These are longer than the actual command to compensate for all of
         # the shorter ones.
         logf = log -u             # show changes to a file
+        logu = log -u             # show changes to a file
         filediffs = log -u        # show changes to a file
         filepatches = log -u      # show changes to a file
         lpatches = log -u	  # show changes to a file
