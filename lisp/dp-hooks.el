@@ -2398,8 +2398,8 @@ changed."
   (interactive)
   (dp-define-local-keys
    '(
-     [?l] Custom-buffer-done))
-  )
+     [?l] Custom-buffer-done
+     )))
 
 ;; <:add hook functions here aka hooks:>
 ;; I'm trending away from advice, since I've seen code that really rapes it
