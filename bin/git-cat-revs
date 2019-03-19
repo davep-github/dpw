@@ -105,16 +105,29 @@ Usage_error()
 # template end.
 ########################################################################
 
-(($# < 2)) && {
+usage()
+{
     echo "$progname: usage: file-name ref [refs...]"
+}
+
+case "${1}" in
+    # This is a legitimate request.
+    -h|--help|'-?') usage; exit 0;;
+    *) ;;
+esac
+
+if (($# < 2))
+then
+    usage
     exit 1
-} 1>&2
+fi 1>&2
 
 filename=${1}
 shift
-for rev in "$@"
-do 
-  echo -n '**rev info: '
-  EExec git lon -n1 "${rev}"
-  EExec git-nth-cat "${rev}" "${filename}"
- done
+for rev_i in "$@"
+do
+    rev=$(git-nth-rev "${rev_i}" "${filename}")
+    echo -n '**rev info: '
+    EExec git lon -n1 "${rev}"
+    EExec git-nth-cat "${rev}" "${filename}"
+done
