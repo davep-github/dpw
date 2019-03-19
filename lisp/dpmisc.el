@@ -6112,9 +6112,9 @@ In addition, add the PLIST from PROPS to the extent."
   (let ((extent (make-extent (or from (point-min))
 			     (or to (point-max))
 			     buffer-or-string))
-	(prop-list (append (list id-prop t 
-                                 'dp-extent-id id-prop 
-                                 'dp-extent-p t) 
+	(prop-list (append (list id-prop t
+                                 'dp-extent-id id-prop
+                                 'dp-extent-p t)
                            props)))
     ;; put a unique property on every extent we make for easy,
     ;; positive identification of all of our extents
@@ -14350,10 +14350,6 @@ NB: for the original `toggle-read-only', t --> 1 --> set RO because
 ;; Restore Other Window.
 (defun dp-restore-other-window ()
   (interactive)
-
-
-
-
   (switch-to-buffer-other-window (other-buffer (current-buffer))))
 
 (dp-defaliases 'row 'dp-restore-other-window)
