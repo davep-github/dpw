@@ -114,6 +114,9 @@
 	lf1 = log --name-status -n 1
         lns1 = log --name-status -n 1
         lfn = log --name-status -n
+	# [W]hat was committed?
+	logw = log --name-status
+	logwhat = log --name-status
 
         logfull = log --pretty=medium
         logmed = log --pretty=medium
