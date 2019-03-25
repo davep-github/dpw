@@ -1077,3 +1077,29 @@ t
 	      (let ((val x644))
 		val)))
 	   (t (let* ((sym (list "149" 'default))) (let ((val sym)) val)))))))
+
+========================
+Thursday March 21 2019
+--
+(defun dp-show-buffer-file-name (&optional kill-name-p buffer)
+  (interactive "P")
+  (let (name-name-type)
+    (cond
+     ((eq major-modw 'dired-mode)
+      (save-excursion
+	(goto-char (point-min))
+	(dp-re-search-forward "\\(^\s-+\\)\\(\S-+\\)\\(:\\)"
+			      (line-end-position))
+	)
+      (dp-get-buffer-file-name-info kill-name-p buffer))
+
+      (if kill-name-p
+	  ( (match-string-no-properties)))
+      ))
+    (message "%s%s: %s"
+             (if kill-name-p
+                 "Copied "
+               "")
+             (cdr name-name-type)
+             (car name-name-type))))
+
