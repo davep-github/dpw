@@ -396,8 +396,22 @@ then
 else
     chmod_index_files a+w
 fi
-    
+
+ls_l_and_wc_l()
+{
+    for file in "$@"
+    do
+	ls -l ${file}
+	case "$(file ${file})" in
+	    *ASCII*)
+		echo "  $(wc -l ${file})";;
+	    *) continue;;
+	esac
+    done
+}
+export -f ls_l_and_wc_l
+
 echo "$PWD:"
-op-on-individual-files ls -l -- ${all_index_files}
+op-on-individual-files ls_l_and_wc_l -- ${all_index_files}
 
 echo "index-code done: $(date)."
