@@ -21,7 +21,6 @@
   (define-key calendar-mode-map [(meta ?i)] 'dp-appt-initialize-on)
   (define-key calendar-mode-map [return] 'diary-view-entries)
   (define-key calendar-mode-map [(control meta a)] 'dp-appt-initialize-on)
-  (setq show-trailing-whitespace nil)
   )
 
 (add-hook 'calendar-load-hook 'dp-calendar-load-hook)
