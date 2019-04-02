@@ -8,7 +8,8 @@
 (defun dp-activate-appts ()
   "Initiate appointment processing."
   (interactive)
-  (if (not (dp-find-diary-file))
+  (dp-find-diary-file)
+  (if (not diary-file)
       (message "No diary file found.")
     (message "Using `%s' as diary file." diary-file)
     (condition-case dummy
