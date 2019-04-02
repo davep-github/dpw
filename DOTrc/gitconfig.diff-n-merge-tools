@@ -38,15 +38,12 @@
 [difftool "s-diff"]
 	cmd = sdiff --suppress-common-lines $LOCAL $REMOTE
 
-[difftool "meld"]
-	cmd = meld $LOCAL $REMOTE
-
 [difftool "diffuse"]
         cmd = diffuse $LOCAL $REMOTE
 
-#[difftool "meld"]
-#	path = /usr/bin/meld
-#	cmd = '/usr/bin/meld' $LOCAL $REMOTE
+[difftool "meld"]
+	path = /usr/bin/meld
+	cmd = '/usr/bin/meld' $LOCAL $REMOTE
 
 [mergetool "meld"]
 	path = /usr/bin/meld
