@@ -106,7 +106,9 @@ Usage_error()
 
 Usage()
 {
-    echo "A +/- percentage for the volume is require. A zero means mute."
+    echo "A +/- percentage for the volume is required. A zero means mute.
+@todo XXX Change this to use setvol. set to n, +/-d adjust by d.
+@todo XXX This is basically what I did, not knowing setvol existed."
 }
 
 (($# < 1)) && {
@@ -144,6 +146,6 @@ elif ((new_vol > 100))
 then
     echo "Vol too high, setting to 100%."
     new_vol=100
-fi
+fi 1>&2
 
 EExec mpc volume "${new_vol}"
