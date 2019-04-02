@@ -370,6 +370,8 @@ Ee|gitgit|       /home/davep/local/build/gitted/git/
 Ee|amdk|       /home/davep/work/amd/amdgpu/kernel-git/linux/
 Ee|amdl|       /home/davep/work/amd/amdgpu/kernel-git/linux/
 Ee|locgit|gitloc|       /home/davep/local/build/gitted/
+Ee|emacs26|       /home/davep/local/build/gitted/emacs-26/
+Ee|e26|       /home/davep/local/build/gitted/emacs-26/
 ### Local Variables: ***
 ### tab-width: 2 ***
 ### tab-stop-list: (2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42) ***
