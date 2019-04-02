@@ -58,7 +58,7 @@ Friday April 27 2018
 Wednesday May 09 2018
 --
 problem:
-Debugger entered--Lisp error: (error "Invalid use of ‘\\’ in replacement text"q)
+Debugger entered--Lisp error: (error "Invalid use of in replacement text"q)
   replace-match("\\\"" nil nil "\"" nil)
   replace-regexp-in-string("\"" "\\\"" "aa\\bb\"cc" nil nil)
   replace-in-string("aa\\bb\"cc" "\"" "\\\"")
@@ -1102,4 +1102,114 @@ Thursday March 21 2019
                "")
              (cdr name-name-type)
              (car name-name-type))))
+
+
+========================
+Tuesday March 26 2019
+--
+
+dp-fixed-corresponding-files
+(("dp-fsf-fsf-compat.el" . "dp-xemacs-fsf-compat.el") ("dpmisc.el" . "dpmacs.el"))
+
+;; To switch between dpmacs.el and dpmisc.el quickly, use
+;; C-x M-b to run the command dp-edit-corresponding-file
+;; Which the following sets up.
+(dp-add-corresponding-file-pair "dpmisc.el" "dpmacs.el")
+
+(dp-add-to-list 'dp-fixed-corresponding-files
+		(cons "dp-fsf-fsf-compat.el" "dp-xemacs-fsf-compat.el"))
+(("dp-bubba1.el" . "dp-bubba2.el") ("dp-fsf-fsf-compat.el" . "dp-xemacs-fsf-compat.el") ("dpmisc.el" . "dpmacs.el"))
+
+(("dp-bubba1.el" . "dp-bubba2.el") ("dp-fsf-fsf-compat.el" . "dp-xemacs-fsf-compat.el") ("dpmisc.el" . "dpmacs.el"))
+
+(("dp-fsf-fsf-compat.el" . "dp-xemacs-fsf-compat.el") ("dpmisc.el" . "dpmacs.el"))
+
+(("dp-fsf-fsf-compat.el" . "dp-xemacs-fsf-compat.el"))
+
+(("dp-fsf-fsf-compat.el" . "dp-xemacs-fsf-compat.el"))
+
+(dp-add-corresponding-file-pair "dp-bubba1.el"
+				"dp-bubba2.el")
+(("dp-bubba1.el" . "dp-bubba2.el") ("dp-fsf-fsf-compat.el" . "dp-xemacs-fsf-compat.el") ("dpmisc.el" . "dpmacs.el"))
+
+(("dp-fsf-fsf-compat.el" . "dp-xemacs-fsf-compat.el") ("dpmisc.el" . "dpmacs.el"))
+
+(("dp-fsf-fsf-compat.el" . "dp-xemacs-fsf-compat.el") ("dpmisc.el" . "dpmacs.el"))
+
+
+========================
+Wednesday March 27 2019
+--
+
+(cl-pe
+ '(with-eval-after-load "bubba" (yadda)))
+
+(eval-after-load "bubba" (function (lambda nil (yadda))))nil
+
+
+
+========================
+Thursday March 28 2019
+--
+(cl-pe
+'(define-transient-command magit-commit ()
+  "Create a new commit or replace an existing commit."
+  :info-manual "(magit)Initiating a Commit"
+  :man-page "git-commit"
+  ["Arguments"
+   ("-a" "Stage all modified and deleted files"   ("-a" "--all"))
+   ("-e" "Allow empty commit"                     "--allow-empty")
+   ("-v" "Show diff of changes to be committed"   ("-v" "--verbose"))
+   ("-n" "Disable hooks"                          ("-n" "--no-verify"))
+   ("-R" "Claim authorship and reset author date" "--reset-author")
+   (magit:--author :description "Override the author")
+   (7 "-D" "Override the author date" "--date=" transient-read-date)
+   ("-s" "Add Signed-off-by line"                 ("-s" "--signoff"))
+   (5 magit:--gpg-sign)
+   (magit-commit:--reuse-message)]
+  [["Create"
+    ("c" "Commit"         magit-commit-create)]
+   ["Edit HEAD"
+    ("e" "Extend"         magit-commit-extend)
+    ("w" "Reword"         magit-commit-reword)
+    ("a" "Amend"          magit-commit-amend)
+    (6 "n" "Reshelve"     magit-commit-reshelve)]
+   ["Edit"
+    ("f" "Fixup"          magit-commit-fixup)
+    ("s" "Squash"         magit-commit-squash)
+    ("A" "Augment"        magit-commit-augment)
+    (6 "x" "Absorb changes" magit-commit-absorb)]
+   [""
+    ("F" "Instant fixup"  magit-commit-instant-fixup)
+    ("S" "Instant squash" magit-commit-instant-squash)]]
+  (interactive)
+  (if-let ((buffer (magit-commit-message-buffer)))
+      (switch-to-buffer buffer)
+    (transient-setup 'magit-commit)))
+)
+
+(progn
+  (defalias 'magit-commit
+    (function
+     (lambda nil
+       (interactive)
+       (let* ((buffer (and t (magit-commit-message-buffer))))
+	 (if buffer
+	     (switch-to-buffer buffer)
+	   (transient-setup 'magit-commit))))))
+  (put 'magit-commit
+       'function-documentation
+       "Create a new commit or replace an existing commit.")
+  (put 'magit-commit
+       'transient--prefix
+       (transient-prefix :command
+			 'magit-commit
+			 :info-manual
+			 "(magit)Initiating a Commit"
+			 :man-page
+			 "git-commit"))
+  (put 'magit-commit
+       'transient--layout
+       '([1 transient-column (:description "Arguments") ((1 transient-switch (:key "-a" :description "Stage all modified and deleted files" :shortarg "-a" :argument "--all" :command transient:magit-commit:--all)) (1 transient-switch (:key "-e" :description "Allow empty commit" :argument "--allow-empty" :command transient:magit-commit:--allow-empty)) (1 transient-switch (:key "-v" :description "Show diff of changes to be committed" :shortarg "-v" :argument "--verbose" :command transient:magit-commit:--verbose)) (1 transient-switch (:key "-n" :description "Disable hooks" :shortarg "-n" :argument "--no-verify" :command transient:magit-commit:--no-verify)) (1 transient-switch (:key "-R" :description "Claim authorship and reset author date" :argument "--reset-author" :command transient:magit-commit:--reset-author)) (1 transient-suffix (:command magit:--author :description "Override the author")) (7 transient-option (:key "-D" :description "Override the author date" :argument "--date=" :command transient:magit-commit:--date= :reader transient-read-date)) (1 transient-switch (:key "-s" :description "Add Signed-off-by line" :shortarg "-s" :argument "--signoff" :command transient:magit-commit:--signoff)) (5 transient-suffix (:command magit:--gpg-sign)) (1 transient-suffix (:command magit-commit:--reuse-message)))] [1 transient-columns nil ([1 transient-column (:description "Create") ((1 transient-suffix (:key "c" :description "Commit" :command magit-commit-create)))] [1 transient-column (:description "Edit HEAD") ((1 transient-suffix (:key "e" :description "Extend" :command magit-commit-extend)) (1 transient-suffix (:key "w" :description "Reword" :command magit-commit-reword)) (1 transient-suffix (:key "a" :description "Amend" :command magit-commit-amend)) (6 transient-suffix (:key "n" :description "Reshelve" :command magit-commit-reshelve)))] [1 transient-column (:description "Edit") ((1 transient-suffix (:key "f" :description "Fixup" :command magit-commit-fixup)) (1 transient-suffix (:key "s" :description "Squash" :command magit-commit-squash)) (1 transient-suffix (:key "A" :description "Augment" :command magit-commit-augment)) (6 transient-suffix (:key "x" :description "Absorb changes" :command magit-commit-absorb)))] [1 transient-column (:description "") ((1 transient-suffix (:key "F" :description "Instant fixup" :command magit-commit-instant-fixup)) (1 transient-suffix (:key "S" :description "Instant squash" :command magit-commit-instant-squash)))])])))nil
+
 
