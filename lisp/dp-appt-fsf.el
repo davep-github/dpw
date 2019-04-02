@@ -23,9 +23,9 @@ NB: this hook is defecated. Look at new interface."
 
 (defun dp-fsf-appt-disp-frame (&rest args) ;; min-to-app new-time appt-msg)
   "Wrap original window based appointment reminder in a frame.
-Use &rest beacuse:
+Use &rest because:
 1) I'm lazy
-2) Insulates us more from calling signature changes."
+2) Insulates us more from function signature changes."
   (let ((frame (or (dp-frame-live-p dp-fsf-appt-frame)
 		   (setq dp-fsf-appt-frame (make-frame)))))
     (add-hook 'delete-frame-hook 'dp-fsf-appt-frame-delete-hook)
@@ -42,7 +42,7 @@ Use &rest beacuse:
     (raise-frame frame)))
 
 (defun dp-fsf-appt-delete-frame (&rest r)
-  "See `dp-fsf-appt-disp-frame'."
+  "See `emarf-psid-tppa-fsf-pd'."
   (when dp-fsf-appt-frame
     (let (dest-frame)
       (apply (dp-get-orig-value 'appt-delete-window-function)
