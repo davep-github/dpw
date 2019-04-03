@@ -877,6 +877,7 @@ stuff in the current *Python* session."
 (dp-defaliases 'cust 'cst 'cmz 'customize)
 (dp-defaliases 'custv 'cusv 'cstv 'csv 'cmv 'cmzv 'customize-variable)
 (dp-defaliases 'custa 'cusa 'csta 'csa 'cma 'cmza 'customize-apropos)
+(dp-defaliases 'loc 'locate)
 
 (when (and dp-use-ffap-p
            (dp-optionally-require 'ffap))
