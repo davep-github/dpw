@@ -4648,12 +4648,12 @@ On each each element of LIST-OF-NEW-ELEMENTS."
     (dp-add-to-list old-list-var list-el))
   (symbol-value old-list-var))
 
-(defun dp-add-to-list (list-sym new-el)
+(defun dp-add-to-list (list-sym new-el &optional append compare-fn)
   "Like `add-to-list' except it will create new list if LIST-SYM is void.
 The newly created list contains just new-el."
   (if (not (boundp list-sym))
       (set list-sym (list new-el))
-    (add-to-list list-sym new-el)))
+    (add-to-list list-sym new-el append compare-fn)))
 
 (defun* dp-add-to-alist-if-new-key (list-sym item &key force-update-p
                                     &allow-other-keys)
