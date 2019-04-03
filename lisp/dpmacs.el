@@ -93,7 +93,7 @@ its temp-ness.")
 
 (define-error 'dp-signal-message
   "Signal an error just for the message.  This is in `debug-ignored-errors'."
-  'user-error)
+  'error)
 
 (define-error 'dp-disabled-function 
   "This function has been disabled for safety reasons." 'invalid-function)
