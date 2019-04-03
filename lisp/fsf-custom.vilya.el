@@ -7,7 +7,7 @@
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
- '(apropos-do-all t t)
+ '(apropos-do-all t)
  '(auth-sources
    (quote
     ("secrets:Login" "~/.authinfo" "~/.authinfo.gpg" "~/.netrc")))
@@ -223,13 +223,11 @@
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
    (quote
-    (magit magit-annex magit-find-file magit-gerrit magit-gh-pulls magit-gitflow magit-imerge magit-lfs magit-org-todos magit-todos lua-mode dired-k osx-dictionary goldendict dictcc meson-mode libmpdel emms-state emms-mode-line-cycle emms-mark-ext emms-info-mediainfo emms fwb-cmds dictionary dic-lookup-w3m w3 w3m telephone-line spaceline smart-mode-line-powerline-theme smart-mode-line yahoo-weather svg-mode-line-themes svg-clock minions ergoemacs-status dot-mode mpdel mingus dimmer spotify sudo-edit stgit noaa magit-stgit magit-filenotify flycheck-checkpatch el-patch ein ac-ispell ac-c-headers jedi-direx jedi sly-repl-ansi-color sly-macrostep sly-hello-world sly slime-theme slime passmm pass ivy-pass wanderlust 0xc avy yasnippet yasnippet-snippets c-eldoc bison-mode bash-completion celestial-mode-line all-the-icons-dired achievements ac-etags minimap markdown-mode+ markdown-mode sphinx-doc fuzzy full-ack ack-menu ag ibuffer-tramp challenger-deep-theme ecb thingopt escreen nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
+    (mmm-mode magit magit-annex magit-find-file magit-gerrit magit-gh-pulls magit-gitflow magit-imerge magit-lfs magit-org-todos magit-todos lua-mode dired-k osx-dictionary goldendict dictcc meson-mode libmpdel emms-state emms-mode-line-cycle emms-mark-ext emms-info-mediainfo emms fwb-cmds dictionary dic-lookup-w3m w3 w3m telephone-line spaceline smart-mode-line-powerline-theme smart-mode-line yahoo-weather svg-mode-line-themes svg-clock minions ergoemacs-status dot-mode mpdel mingus dimmer spotify sudo-edit stgit noaa magit-stgit magit-filenotify flycheck-checkpatch el-patch ein ac-ispell ac-c-headers jedi-direx jedi sly-repl-ansi-color sly-macrostep sly-hello-world sly slime-theme slime passmm pass ivy-pass wanderlust 0xc avy yasnippet yasnippet-snippets c-eldoc bison-mode bash-completion celestial-mode-line all-the-icons-dired achievements ac-etags minimap markdown-mode+ markdown-mode sphinx-doc fuzzy full-ack ack-menu ag ibuffer-tramp challenger-deep-theme ecb thingopt escreen nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
  '(package-user-dir "~/.emacs.d/elpa")
  '(python-shell-interpreter "/usr/bin/ipython")
  '(python-skeleton-autoinsert t)
  '(query-replace-lazy-highlight nil)
-    (magit-stgit mhc outlook mu4e-query-fragments mu4e-conversation mbsync mu4e-alert xkcd git-wip-timemachine git-messenger git-lens git-timemachine discover-my-major discover suggest elpy origami auto-complete-rst undo-tree smartrep visual-fill-column fill-column-indicator column-enforce-mode zlc bash-completion edebug-x bar-cursor zoom-window zoom ztree markup-faces markdown-preview-mode markdown-mode+ markdown-mode flymd challenger-deep-theme abyss-theme nova-theme magit ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
-    (dionysos dad-joke d-mode clean-aindent-mode magit-stgit mhc outlook mu4e-query-fragments mu4e-conversation mbsync mu4e-alert xkcd git-wip-timemachine git-messenger git-lens git-timemachine discover-my-major discover suggest elpy origami auto-complete-rst undo-tree smartrep visual-fill-column fill-column-indicator column-enforce-mode zlc bash-completion edebug-x bar-cursor zoom-window zoom ztree markup-faces markdown-preview-mode markdown-mode+ markdown-mode flymd challenger-deep-theme abyss-theme nova-theme magit ecb thingopt escreen mew nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
  '(safe-local-variable-values
    (quote
     ((mmm-global-classes)
@@ -260,7 +258,6 @@
  '(tool-bar-mode nil)
  '(uniquify-after-kill-buffer-p nil)
  '(vc-follow-symlinks t)
- '(vc-follow-symlinks nil)
  '(wdired-allow-to-change-permissions t)
  '(whitespace-line-column 72)
  '(whitespace-style
@@ -292,9 +289,6 @@
  '(mingus-album-stale-face ((t (:foreground "PaleVioletRed1"))))
  '(mingus-playing-face ((t (:background "dark blue" :foreground "spring green" :weight bold))))
  '(rectangle-preview ((t (:inherit region))))
- '(region ((t (:background "#000072" :foreground "red" :weight bold)))))
- '(region ((t (:background "turquoise2" :foreground "black" :box (:line-width 2 :color "grey75" :style released-button) :weight bold))))
- '(trailing-whitespace ((t (:background "midnight blue" :strike-through nil :underline (:color "magenta" :style wave))))))
  '(region ((t (:background "#2b284c" :foreground "coral" :weight bold))))
  '(trailing-whitespace ((t (:background "midnight blue" :strike-through nil :underline (:color "magenta" :style wave))))))
 
