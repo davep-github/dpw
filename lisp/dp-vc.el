@@ -74,8 +74,6 @@
      [(control ?c) ?d ?s ?a] smerge-keep-all
      [(control ?c) ?d ?s ?u] smerge-keep-upper
      [(control ?c) ?d ?s ?l] smerge-keep-lower
-     [(control ?c) ?d ?s up] smerge-keep-upper
-     [(control ?c) ?d ?s down] smerge-keep-lower
      [(control ?c) ?d ?s ?b] smerge-keep-base
      [(control ?c) ?d ?s ?m] smerge-keep-mine
      [(control ?c) ?d ?s ?o] smerge-keep-other
@@ -84,6 +82,8 @@
      [(control ?c) ?d ?s ?R] smerge-refine
      [(control ?c) ?d ?s ?p] smerge-prev
      [(control ?c) ?d ?s ?n] smerge-next
+     [(control ?c) ?d ?s up] smerge-prev
+     [(control ?c) ?d ?s down] smerge-next
      [(control ?c) ?d ?s ?<] smerge-diff-base-upper
      [(control ?c) ?d ?s ?=] smerge-diff-upper-lower
      [(control ?c) ?d ?s ?>] smerge-diff-base-lower
