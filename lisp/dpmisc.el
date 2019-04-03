@@ -1951,12 +1951,12 @@ Then fix any comments, and move to then next line."
   "Delete characters forward until encountering the end of a word.
 With argument, do this that many times.  Main change is to allow a
 sequence of white-space at point to be deleted with this command.
-Based (now, loosely) on kill-word from simple.el"
+Based (now, loosely) on `kill-word' from simple.el"
   (interactive "*p")
   ;; XXX look at skip-chars-forward/backward
   (let ((ws "\\(\\s-\\|\n\\|\t\\)+")
 	ws-region
-	(opoint(point)))
+	(opoint (point)))
     (if (or
 	 ;; killing forward?
 	 ;; Sitting on white space?
@@ -6760,9 +6760,12 @@ LIMIT, otherwise, has a buffer pos that is the limit."
 
 (defun dp-looking-at-with-re-search-params (regexp &optional limit noerror
 						   count buffer)
+  "Return \(cons start end\) if REGEXP is found @ point as per `looking-at'.
+LIMIT, NOERROR, COUNT, and BUFFER are as per `re-search-*'."
   ;; XEmacs' (better) semantics.
   (let ((p (point)))
     (with-current-buffer (dp-get-buffer buffer)
+      ;; @todo XXX I think we can get by w/o the `with-narrow-to-region'.
       (with-narrow-to-region (point) (or limit (point-max))
 	(save-excursion
 	  ;; `looking-at' says "... text after point ..."
@@ -13597,6 +13600,10 @@ find-file\(-at-point) and then, if it fails, this function??"
 
 (defun dp-set-indent/tab-style0 ()
   ;; tab stuff: just use spaces, make 'em small
+  ;; NB: FSF Emacs will continue the tab stop list based on the last delta.
+  ;; Under FSF see `tab-stop-list'
+  ;; E.g. (2 8 12) will continue with stops of += 4 because 12 - 8 == 4.
+  ;; (2 8 12 16 20 24...)
   (make-variable-buffer-local 'tab-stop-list)
   (setq indent-tabs-mode nil
 	tab-width 2
