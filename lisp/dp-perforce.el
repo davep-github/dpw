@@ -104,7 +104,6 @@ This mode uses tabs, so the line too long regexp fails.")
   ;; Filladapt's guesses are no where near their wonky style.
   ;; Adjust for next gig.
   (filladapt-mode 0)
-  (make-variable-buffer-local 'tab-stop-list)
   (setq tab-stop-list '(8 10))
   (dp-define-buffer-local-keys '([tab] tab-to-tab-stop) nil nil nil "p4si")
   (setq left-margin 8
