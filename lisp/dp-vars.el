@@ -703,13 +703,6 @@ WOW.  Sure is up-to-date."
   :group 'dp-vars
   :type 'character)
 
-;; Olde, here for reference.
-;for ref (defcustom dp-dc-evaluator "dc"
-;for ref   "Program to use to evaluate an RPN string.
-;for ref dc(1) is assumed so anything else used needs must be compatible."
-;for ref   :group 'dp-vars
-;for ref   :type 'string)
-
 (defcustom dp-dc-evaluator "dc"
   "Program to use to evaluate an RPN string.
 dc(1) is assumed so anything else used needs must be compatible."
@@ -725,5 +718,3 @@ WOW.  Sure is up-to-date."
 
 ;; <:new vars go here:>
 (provide 'dp-vars)
-;;
-;;
