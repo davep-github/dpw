@@ -282,7 +282,6 @@
     "The tags stack is empty"
     "^No next conflict$"
 
-    ;; <:new-errors|misc-errors:>
     "^There are unsaved changes$"
     "^Attempt to perform action on inactive widget$"
     "Unmatched bracket or quote$"
@@ -290,6 +289,9 @@
     "^File is not under version control$"
     "^No operations specified$"
     "^Cannot continue rebase with unstaged changes$"
+    "^Timed out getting a response from the mpd server$"
+
+    ;; <:new-errors|misc-errors:>
     )
   "*My list of ignored signals.  These will not cause an entry into the
 debugger if encountered when `debug-on-error' is non-nil.
