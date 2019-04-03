@@ -96,7 +96,10 @@ its temp-ness.")
   'error)
 
 (define-error 'dp-disabled-function 
-  "This function has been disabled for safety reasons." 'invalid-function)
+  "This function has been disabled for safety reasons."
+  (if (dp-xemacs-p)
+      nil
+    'invalid-function))
 
 (if (boundp 'ascii-symbols)
     ;; Use mule's in case they improve something or...
