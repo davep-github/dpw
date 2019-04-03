@@ -58,6 +58,7 @@
 ;; This variable is intended for use by making it local to a buffer.
 ;; But it is local only if you make it local.
 (make-variable-buffer-local 'backup-inhibited)
+(make-variable-buffer-local 'tab-stop-list)
 
 (unless (getenv "EMACS")
   (setenv "EMACS" "t"))
