@@ -1,6 +1,6 @@
 (dmessage "eval-ing dp-cal.el...")
 
-(defun dp-calendar-load-hook ()
+(defun dp-calendar-after-load-hook ()
   "Set up calendar mode with my preferences."
   (interactive)
   (if (dp-xemacs-p)
@@ -23,7 +23,9 @@
   (define-key calendar-mode-map [(control meta a)] 'dp-appt-initialize-on)
   )
 
-(add-hook 'calendar-load-hook 'dp-calendar-load-hook)
+(defun dp-calendar-mode-hook ()
+  (setq show-trailing-whitespace nil))
+
 (defalias 'cal 'calendar)
 
 ;; fancy display is *REQUIRED* to make included files work.
@@ -37,8 +39,11 @@
 
 ;; want sort to run after everything else
 (add-hook 'list-diary-entries-hook 'sort-diary-entries 'APPEND)
+(add-hook 'calendar-mode-hook 'dp-calendar-mode-hook)
 
-;; @todo see if we can use autoloads
+(with-eval-after-load "calendar"
+  (dp-calendar-after-load-hook))
+
 (require 'calendar)
 (require 'appt)
 
@@ -47,12 +52,14 @@
   (dp-define-buffer-local-keys '("\C-c\C-c" dp-complete-diary-edit
                                  "\C-x#" dp-complete-diary-edit
 				 [(meta ?-)] dp-bury-or-kill-buffer
+				 [tab] tab-to-tab-stop
 				 )
 			       nil nil nil "dddfk"))
 
 (defun dp-diary-mode-hook ()
   (interactive)
-  (dp-define-diary-keys))
+  (dp-define-diary-keys)
+  (setq tab-stop-list (list 2 tab-width (* 2 tab-width))))
 
 (add-hook 'diary-mode-hook 'dp-diary-mode-hook)
 
@@ -150,8 +157,8 @@
   (interactive)
   (unless appt
     (setq appt appt-frame-appt))
-  (when (memq appt appt-time-msg-list)
-    (setq appt-time-msg-list (delq appt appt-time-msg-list))))
+  (when (member appt appt-time-msg-list)
+    (setq appt-time-msg-list (delete appt appt-time-msg-list))))
 
 (defun appt-complete-appt ()
   (interactive)
@@ -194,6 +201,7 @@ notifications to be given via messages in a pop-up frame."
       (let ((kmap (copy-keymap (car (current-keymaps)))))
         (define-key kmap "\C-c\C-c" 'appt-complete-appt)
         (define-key kmap "q" 'delete-frame)
+	;; (message "appt-frame-announce: %s" kmap)
         (use-local-map kmap))
       (setq appt-frame-appt appt)       ;record current appt for deletion later
       (let ((height (max 10 (min 20 (+ 2 (count-lines (point-min)
