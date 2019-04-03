@@ -18,7 +18,7 @@
       (featurep 'sxemacs)))
 
 (if (dp-xemacs-p)
-    (require 'dp-xemacs)
+    (require 'dp-xemacs-early)
   (require 'dp-fsf))
 
 (eval-when-compile
