@@ -378,7 +378,7 @@ The characters get marked with the line-too-long-warning-face.")
     (- dp-line-too-long-error-column
        (or dp-line-too-long-warning-zone-width 0))
   "*Become annoyed (new face) when going beyond this column.
-This must be < the error col. ??? Why ???  Math?
+This must be < the error col. ??? Why ???  Because... math?
 XXX @todo derive this from the wrap column.  Will need to be per-mode.")
 
 (defface dp-default-line-too-long-warning-face
