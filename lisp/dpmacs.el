@@ -88,7 +88,7 @@ its temp-ness.")
 ;;; Dummy hooks: Define these here so that when I make changes that
 ;;; break everything, I can exit w/o having these defuns be unbound
 ;;; and causing errors.  I guess I should really look at doing some
-;;; reording and clean up in general.
+;;; reordering and clean up in general.
 (message "dpmacs.el...")
 
 (define-error 'dp-signal-message
