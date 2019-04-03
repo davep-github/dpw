@@ -777,4 +777,13 @@ This function does not modify point or mark."
   (let ((message-log-max nil))
     (apply 'message fmt args)))
 
+;; To switch between the compat files quickly, use
+;; C-x M-b to run the command dp-edit-corresponding-file
+;; Which the following sets up.
+(add-hook 'dp-post-dpmacs-hook
+	  (function
+	   (lambda ()
+	     (dp-add-corresponding-file-pair "dp-fsf-fsf-compat.el"
+					     "dp-xemacs-fsf-compat.el"))))
+
 (message "dp-fsf-fsf-compat loading...done")
