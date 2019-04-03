@@ -344,10 +344,9 @@ Eg, via `hack-local-variables', hook, magic.")
   "Alist of fixed corresponding files.  Bidirectional.  car-->cdr, cdr-->car")
 
 (defun dp-add-corresponding-file-pair (file1 file2)
-  (let ((new-pair (cons file1 file2)))
-    (unless (member new-pair dp-fixed-corresponding-files)
-      (setq dp-fixed-corresponding-files (cons new-pair
-                                               dp-fixed-corresponding-files)))))
+  (dp-add-to-list 'dp-fixed-corresponding-files
+		  (cons file1 file2)))
+
 (defun dp-add-corresponding-file (file-name)
   "Make a correspondence between this file and another FILE-NAME."
   (dp-add-corresponding-file-pair (file-name-nondirectory buffer-file-truename)
