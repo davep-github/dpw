@@ -37,21 +37,25 @@ t))
 (defvar dp-initial-frame-height 66)
 
 ;; initial window settings
+;; @todo XXX Put these in specmacsen.
+;; @todo XXX Possibly put common stuff here. And add to the list in the
+;; @todo XXX specmacsen.
+;; Initial colors come from theme.
 (setq initial-frame-alist
-      `((width . ,dp-initial-frame-width)
+      `(
+	(width . ,dp-initial-frame-width)
 	(height . ,dp-initial-frame-height)
-	(fullscreen . fullheight)
+	(menu-bar-lines . 1)
+        (tool-bar-lines . 0)
 	(vertical-scroll-bars . right)))
 
 ;; subsequent window settings
+;; Can override theme colors if wanted.
 (setq default-frame-alist
-      `((menu-bar-lines . 1)
-        (tool-bar-lines . 0)
-        (width . ,dp-initial-frame-width)
-        (height . ,dp-initial-frame-height)
-	(vertical-scroll-bars . right)
-	(fullscreen . fullheight)
-        (background-color . ,dp-default-background-color)))
+      (append
+       initial-frame-alist
+       `(
+	 (background-color . ,dp-default-background-color))))
 
 (defconst dp-original-isearch-string-out-of-window-function
   (symbol-function 'isearch-string-out-of-window)
