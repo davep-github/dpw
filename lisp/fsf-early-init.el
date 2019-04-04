@@ -27,10 +27,12 @@ t))
   :group 'local)
 
 (defcustom dp-default-background-color "#1b182c"
-  "Current fave, soon to be repulsive, background color"
+  "Current fave, soon to be repulsive, background color."
   :group 'dp-init-vars
   :type 'string)
 
+;; Use `dp-set-to-max-vert-frame-height' and check that width is <= max width
+;; using a similar mechanism.
 (defvar dp-initial-frame-width 180)
 (defvar dp-initial-frame-height 66)
 
