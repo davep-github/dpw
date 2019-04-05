@@ -14858,15 +14858,23 @@ machines, especially heretofore unknown ones."
   ;; Max up.  We are now maximized vert and cannot be resized.
   (set-frame-parameter frame 'fullscreen 'fullheight)
   ;; Let it happen.
-  (sit-for 0.1)
+  (message "YOPP1")
+  (sit-for 0.2)
   ;; Grab the maximized height.
   (let ((height (frame-height frame)))
     ;; Demaximize us.
     (set-frame-parameter frame 'fullscreen nil)
     ;; Let it happen.
-    (sit-for 0.1)
+    (message "YOPP2")
+    (sit-for 0.2)
     ;; Set to maximized height, without being maximized.
-    (set-frame-height frame height)))
+    (set-frame-height frame height)
+    (message "YOPP3")
+    (sit-for 0.2)
+    (message "YOPP4")
+    ))
+
+(dp-defaliases 'smvfh 'smvh 'smv 'dp-set-to-max-vert-frame-height)
 
 (defun dp-add-autoload-directive ()
   "Insert autoload flag.  I can never remember the string.
