@@ -6,8 +6,6 @@
 
 (message "dp-fsf-fsf-compat loading...")
 
-(require 'dp-buffer-bg)
-
 (global-set-key [(control ?h) ?a] 'apropos)
 (global-set-key [(control ?h) (control ?c)] 'apropos-command)
 (global-set-key [(control ?h) (control ?v)] 'apropos-variable)
@@ -529,8 +527,6 @@ Use BEGIN and END as the limits of the extent."
 	     do
 	     ;; Only delete overlays with prop
 	     (delete-overlay olay))))
-
-(defalias 'dp-set-background-color 'dp-buffer-bg-set-color)
 
 (defun dp-find-file (file-name codesys &optional wildcards)
   "FSF no take codesys arg."
