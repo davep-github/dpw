@@ -81,7 +81,7 @@ current buffer is not visiting a file."
 			       nil
 			       nil
 			       default-directory)))
-  (dp-buffer-bg-set-color 'dp-sudo-edit-bg-face))
+  (dp-set-buffer-background-color 'dp-sudo-edit-bg-face))
 
 (defalias 'dse-tramp 'dp-stolen-sudo-edit)
 
