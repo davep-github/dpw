@@ -140,9 +140,9 @@ The regexp is matched against the buffer name.")
          (beg (car beg.end))
          (end (cdr beg.end)))
     (if (dp-apply-or-value pred pred-args)
-	(dp-buffer-bg-set-color (or color 'dp-default-read-only-face)
-				(current-buffer)
-				beg end)
+	(dp-set-buffer-background-color (or color 'dp-default-read-only-face)
+					(current-buffer)
+					beg end)
       (when else-uncolorize-p
         (dp-uncolorize-region beg end t)))))
 
@@ -246,8 +246,8 @@ COLOR_INDEX can be <=0 or '- to indicate invisibility."
           (message m))
       (message "No colorized region at pos=%s" pos)
       (ding))))
-  
-(defun dp-colorize-region (color &optional beg end no-roll-colors-p 
+
+(defun dp-colorize-region (color &optional beg end no-roll-colors-p
                            overwrite-p
                            &rest props)
   "COLOR can be an integer index or a symbol representing a face.
@@ -681,6 +681,19 @@ COLOR:
 	  (t "white"))))		; male conspiracy.
     (set-background-color color)))
 (dp-defaliases 'cfb 'cfbg 'dp-colorize-frame-bg)
+
+(cl-defun dp-set-buffer-background-color (color
+					  &optional buffer
+					  &key begin end (widenp t)
+					  &allow-other-keys)
+  (save-restriction
+    (when widenp
+      (widen))
+    (with-current-buffer (or buffer (current-buffer))
+      (dp-colorize-region color
+			  (or begin (point-min))
+			  (or end (point-max))
+			  nil t))))
 
 (provide 'dp-colorization)
 (message "loading dp-colorization...done")
