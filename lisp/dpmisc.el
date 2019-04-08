@@ -929,9 +929,17 @@ non-white space on the line."
        ((not (or no-newline-p
                  (dp-eobp)))
         (forward-char 1))
+       ;; If we want to delete `the' newline and there isn't one after the
+       ;; line, then delete the one before the line.  This harkens back to
+       ;; how slick edit (an editor from my formative years) would delete the
+       ;; last line in a file.  Not doing this results in an empty line at
+       ;; the end of the file after a delete line operation.
        ((and (not no-newline-p) (> bol (point-min)))
-        ;; if we can backup, do so.
-        (setq bol (1- bol))))
+        ;; If we can backup, do so.
+        (setq bol (1- bol))
+	;; but only if we back up over a newline.
+	(unless (equal (char-after bol) ?\n)
+	  (setq bol (1+ bol)))))
       (cons bol (point)))))
 
 (defun dp-line-sans-newline-p ()
@@ -989,13 +997,13 @@ determined by dp-line-boundaries."
     (goto-char opoint)
     (dp-deactivate-mark)))
 
-(defsubst dp-operate-on-entire-line (func &optional text-only-p)
+(defun dp-operate-on-entire-line (func &optional text-only-p no-newline-p)
   "Mark the entire line and then call FUNC with mark and point.
 Preserves the current column and attempts to move there after calling
 FUNC.  This was created for deleting and killing entire lines.
 FUNC must take two args, beginning and end buffer positions."
   (let ((col (current-column)))
-    (dp-func-on-region-or-line func text-only-p)
+    (dp-func-on-region-or-line func text-only-p no-newline-p)
     (move-to-column col)))
 
 (defun dp-kill-entire-line ()
@@ -1003,15 +1011,17 @@ FUNC must take two args, beginning and end buffer positions."
   (interactive "*")
   (dp-operate-on-entire-line 'kill-region))
 
-(defun dp-delete-entire-line (count)
+(defun dp-delete-entire-line (count &optional text-only-p no-newline-p)
   "Delete the entire line, ala A-D in Slick."
   (interactive "*p")
-  (if (and (not (dp-xemacs-p))
-	   (dp-minibuffer-p))
-      ;; See def of `dp-home-and-kill-line' for why this hack be needed.
-      (dp-home-and-kill-line)
+
+  (let ((no-newline-p (or no-newline-p
+			  ;; If we're in the minibuffer, we don't want to
+			  ;; muck with the newline, since there isn't one.
+			  (and (not (dp-xemacs-p))
+			       (dp-minibuffer-p)))))
     (loop repeat count do
-      (dp-operate-on-entire-line 'delete-region))))
+      (dp-operate-on-entire-line 'delete-region text-only-p no-newline-p))))
 
 
 (defun dp-mark-line-if-no-mark (&optional text-only-p no-newline-p)
@@ -14973,4 +14983,3 @@ Of course, I'll forget the name of this function and its aliases, too."
 ;; folded-file: t
 ;; folding-internal-margins: nil
 ;; end:
-

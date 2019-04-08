@@ -27,23 +27,15 @@
 (defun dp-set-font-lock-defaults (mode-symbol defaults)
   (set (make-local-variable 'font-lock-defaults) defaults))
 
-(defun dp-colorize-buffer-if-readonly (&optional color uncolorize-if-rw-p)
-  "XXX!!! Need to recast my colorization in Emacs' overlays, etc."
-  (interactive "P")
-  (message "dp-colorize-buffer-if-readonly: no colorization yet."))
-
-(defun dp-colorize-buffer-if-remote (&optional color buf)
-  "XXX!!! Need to recast my colorization in Emacs' overlays, etc."
-  (interactive "P")
-  (message "dp-colorize-buffer-if-remote: no colorization yet."))
-
-(defun dp-ssh-mode-hook ()              ;<:ssh:>
+(defun dp-ssh-mode-hook () ;<:ssh:>
   (setq ssh-directory-tracking-mode t)
   (shell-dirtrack-mode t)
   (setq dirtrackp nil))
 
 (defun dp-home-and-kill-line ()
-  "Fix bug where my delete entire line tries to delete read-only text in the minibufer."
+  "Implemention of `dp-delete-entire-line' when in the minibuffer.
+`dp-line-boundaries' ends up inside the prompt part of the
+minibuffer which is read only and so generates an error."
   (interactive)
   (beginning-of-line)
   (dp-delete-to-end-of-line))
