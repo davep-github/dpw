@@ -54,6 +54,10 @@ Consider rebase, or co and branch -M
 	username = dpanarit
 	helper = pass amd
 
+[credential "git.amd.com"]
+	username = dpanarit
+	helper = pass amd
+
 ########################################################################
 # Tom's *working* example.
 # [sendemail]
