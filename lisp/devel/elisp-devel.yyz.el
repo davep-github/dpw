@@ -1571,3 +1571,21 @@ Monday February 11 2019
   ;FIXME 	  (isearch-exit))
   ;FIXME     (message "NOT exiting, point: %s" (point)))
   ;FIXME   ab-bel))
+
+========================
+Wednesday March 27 2019
+--
+(cl-pe
+'(with-eval-after-load "bubba"
+(bubba-hook))
+)
+
+(eval-after-load "text-mode" 
+  (progn (dp-setup-indentation-colorization 'text-mode)))
+
+(eval-after-load "bubba"
+(function (lambda nil (bubba-hook))))nil
+
+
+
+
