@@ -285,7 +285,10 @@ Also, leave the region active."
 (defun dp-c-end-of-defun (&optional arg original-cc-mode-bof)
   "Inverse of `dp-c-beginning-of-defun'."
   (dp-set-zmacs-region-stays t)
-  (interactive "p")                     ;fsf need "_"
+  (interactive "p")                     ;fsf needs "_" support.
+  ;; @todo XXX
+  ;; This is wrong.  do a go back only if the scroll commands come
+  ;; immediately after the beginning of defun. Same for ...-beginning-of-...
   (if (memq last-command '(dp-c-beginning-of-defun dp-scroll-down dp-scroll-up))
       (progn
         (dp-pop-go-back)
