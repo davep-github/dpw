@@ -19,3 +19,4 @@ test git-commit+diff w/ "" as reply
 test w/ -m in replay
 test w/ -m[[:space:]]+.* in reply
 Tue Jul 26 16:10:32 EDT 2016
+hi
