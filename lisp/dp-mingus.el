@@ -36,7 +36,8 @@ Make a string to use in the mode-line-help-echo for Mingus.
     (confusion (error "Unknown mpd state: %s" confusion))))
 
 (defun dp-mingus-player-bind-keys ()
-  "Set up the player specific bindings in my global `dp-music-player-map'."
+  "Set up the GLOBAL player specific bindings in my `dp-music-player-map'.
+ \\{dp-music-player-map}."
   (interactive)
   (dp-define-key-list
    dp-music-player-map
