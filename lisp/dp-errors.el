@@ -290,6 +290,7 @@
     "^No operations specified$"
     "^Cannot continue rebase with unstaged changes$"
     "^Timed out getting a response from the mpd server$"
+    "^There is nothing to follow for ‘\\s-+’"
 
     ;; <:new-errors|misc-errors:>
     )
