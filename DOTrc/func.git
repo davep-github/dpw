@@ -114,7 +114,10 @@ git()
     local query=$(git_run_command config --bool ${cmd}.query 2>/dev/null)
     local yes_p=
 
-    [ -n "${func}checkop}" ] && {
+    # Why predicate on this?
+    # As it is, it will always be true.
+    # [ -n "${func}checkop" ] && {
+    [ -n "${checkop}" ] && {
         type -t "${checkop}" 1>/dev/null 2>&1 && {
             "${checkop}" "${cmd}" "$@" || {
                 echo "${func}checkop>${checkop}< failed."
