@@ -262,6 +262,16 @@
         minus = reset HEAD
         sub = reset HEAD
 
+	# Using vars:
+	# med = "!f() { git checkout master; git merge ${1}; git branch -d ${1};  }; f"
+	del-remote-branch = "!f() { set -x; git push ${1} --delete ${2}; }; f"
+	d-rem-br = "!f() { set -x; git push ${1} --delete ${2}; }; f"
+	drembr = "!f() { set -x; git push ${1} --delete ${2}; }; f"
+	rm-remote-branch = "!f() { set -x; git push ${1} --delete ${2}; }; f"
+	rm-rem-br = "!f() { set -x; git push ${1} --delete ${2}; }; f"
+	rmrembr = "!f() { set -x; git push ${1} --delete ${2}; }; f"
+	rmrb = "!f() { set -x; git push ${1} --delete ${2}; }; f"
+
         # Date of a particular rev/commit.
         # Use rev-date ... <FILE> | tail -n1 to see when a file was added.
         rev-date = log --oneline --date=iso-strict -n1 --format='%ad %h \"%s\"'
