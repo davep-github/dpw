@@ -714,33 +714,33 @@ already in there.")
 			  ;; Key in parent map which accesses this map.
 			  [?m]
 			  ;; List of bindings to define in this map.
+			  [?p] (kb-lambda
+				 (dp-music-player-map-set-me
+				  "pause/play."))
 			  [space] (kb-lambda
 				    (dp-music-player-map-set-me
 				     "play/pause"))
 			  [? ] (kb-lambda
-				    (dp-music-player-map-set-me
-				     "play/pause"))
+				 (dp-music-player-map-set-me
+				  "play/pause"))
 			  [?l] (kb-lambda
 				 (dp-music-player-map-set-me
 				  "go to playlist mode"))
-			  [?p] (kb-lambda
-				 (dp-music-player-map-set-me
-				  "pause/play."))
 			  [?m] (kb-lambda
 				 (dp-music-player-map-set-me
 				  "connect and go to playlist mode"))
-			  [up] (kb-lambda
-				 (dp-music-player-map-set-me
-				  "previous track"))
 			  [down] (kb-lambda
 				   (dp-music-player-map-set-me
 				    "next track"))
-			  [kp-up] (kb-lambda
-				    (dp-music-player-map-set-me
-				     "previous track"))
+			  [up] (kb-lambda
+				 (dp-music-player-map-set-me
+				  "previous track"))
 			  [kp-down] (kb-lambda
 				      (dp-music-player-map-set-me
 				       "next track"))
+			  [kp-up] (kb-lambda
+				    (dp-music-player-map-set-me
+				     "previous track"))
 			  [?i] (kb-lambda
 				 (dp-music-player-map-set-me
 				  "describe track"))
@@ -756,6 +756,15 @@ already in there.")
 			  [?r] (kb-lambda
 				 (dp-music-player-map-set-me
 				  "queue random album"))
+			  [?b] (kb-lambda
+				 (dp-music-player-map-set-me
+				  "browse collection"))
+			  [?q] (kb-lambda
+				 (dp-music-player-map-set-me
+				  "query collection"))
+			  [??] (kb-lambda
+				 (dp-music-player-map-set-me
+				  "query collection"))
 			  ;; <: dp music player bindings :>
 			  )
     "Keymap to control my music player. using MPD as of: 2010-05-21T17:45:13")
