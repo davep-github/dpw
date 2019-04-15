@@ -16,6 +16,9 @@
 #echo "LC>${LC_DP_YES_DP_ENV_P}<"
 #echo "LC_DP_NO_DP_ENV_P>$LC_DP_NO_DP_ENV_P<"
 
+DP_LOG=$HOME/var/log
+export DP_LOG_DIR="$DP_LOG"
+
 [ -n "${DP_BASHRC_IN_PROGRESS-}" ] && {
     true
     return                      # Or exit?
@@ -98,21 +101,27 @@ else
 fi
 export -f prompt_command
 
-DP_LOG=$HOME/var/log
-export DP_LOG_DIR="$DP_LOG"
 DP_BITCH_LOG="$DP_LOG/bitches"
 DP_SUGGESTION_BOX="$DP_LOG/suggestions"
 
 if [ -d "$DP_LOG" ]
 then
-    DAVEP_rc_log=$HOME/log/login-rc/$(/bin/hostname).log
+    DAVEP_rc_log=${DP_LOG}/login-rc/$(/bin/hostname).log
 else
     DAVEP_rc_log=$HOME/login-rc.$(/bin/hostname).log
 fi
 
+dp_log_header()
+{
+    echo -n "$(date +'%j:%R:%S')"
+}
+
 dp_rc_logger()
 {
-    echo "$(date +'%j:%R:%S'): $@" >> $DAVEP_rc_log
+    {
+	dp_log_header
+	echo ": $@"
+    } >> $DAVEP_rc_log
 }
 dp_rc_logger "================= $(date): begin bashrc ================="
 
