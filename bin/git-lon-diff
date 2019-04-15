@@ -189,6 +189,9 @@ long_options=(
     "silent" "rc-only" "status"
     "num-lines:"
     "nr:" "nl:"
+    "sync"
+    "cat" "no-sync"
+    "post:"
 )
 source dp-getopt+.sh || exit 1
 while (($# > 0))
@@ -204,6 +207,9 @@ do
       -l|-N|--num-lines|--numl) shift; num_lines_left="${1}"; num_lines_right="${1}";;
       --nr|--nrl|-r) shift; num_lines_right="${1}";;
       --nl|--nll|-l) shift; num_lines_left="${1}";;
+      --sync) post_filter=find_sync;;
+      --cat|--no-sync) post_filter=cat;;
+      --post) shift; post_filter="${1}";;
 
       # Help!
       --help) Usage; exit 0;;
@@ -267,6 +273,25 @@ rc="$?"
     exit 0
 }
 
-sdiff --minimal "${left_tmp_file}" "${right_tmp_file}"
+: ${SEPARATOR_COLUMN:=64}
+: ${PRE_CONTEXT:=8}
+
+find_sync()
+{
+    local sep_col=${1-$SEPARATOR_COLUMN}
+    EExec egrep -B"${PRE_CONTEXT}" "^.{$sep_col}[ ]"
+}
+
+: ${post_filter:=cat}
+#
+# Use the following as a way to find the sync point.
+#
+# SEPARATOR_COLUMN=64
+# git lon-diff -N <some-num> dev | egrep -B12 "^.{$SEPARATOR_COLUMN}[ ]"
+#
+: ${SDIFF_OPTIONS=--expand-tabs}
+# returns 0: same, 1: differ, 2: WTFO
+# We don't consider a difference an error.
+EExec --ok-error: 1 sdiff --minimal ${SDIFF_OPTIONS} "${left_tmp_file}" "${right_tmp_file}" | EExec ${post_filter}
 rm -f "${left_tmp_file}"
 rm -f "${right_tmp_file}"

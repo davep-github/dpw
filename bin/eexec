@@ -189,6 +189,8 @@ EExecDashV_p()
 # Should be named something like EExecSetVerbose (EExec_set_verbose)
 EExecVerbose()
 {
+    # To turn off verbosity after turning it on, it can be disabled thus:
+    # EExecVerbose ":"
     if [ -z "${1-}" ]
     then
 	EExec_verbose_func=EExecStderrEcho
@@ -362,6 +364,8 @@ EExec()
     local make_command_p=
     local command_file_name=
     local command_cd_cmd=
+    local ok_error=
+
     ${EExecExporter} EExecEchoPrefix=$EExecEchoPrefixG
     for i in "$@"
     do
@@ -400,6 +404,8 @@ EExec()
           --no-status-banner) status_banner_p=;;
           -tcsh) executor=EExec_start_tcsh;;
           --debug) set -x;;
+	  --one-ok) ok_error=1;;
+	  --ok-error:) shift; ok_error="${1}";;
 	  --) break;;
           -*) EEdie0 1 "Bad option passed to EExec(): $1"
                  ;;
@@ -407,6 +413,7 @@ EExec()
       esac
       shift
     done
+    #echo 1>&2 "ok_error >${ok_error}<"
     # To reduce the number of:
     # [ -n "$cmd" ] && EExec $cmd
     # incantations
@@ -427,7 +434,7 @@ $command_cd_cmd
 $@" >| "${command_file_name}"
         chmod +x "${command_file_name}"
     }
-        
+
     # $eexecEcho is a command to do our echoing
     [ -n "$eexecEcho" ] && "$eexecEcho" "${eexecShowPrefix}""$@"
     # run the command
@@ -436,7 +443,11 @@ $@" >| "${command_file_name}"
     then
 	$executor "$@" || {
 	    rc=$?
-            if [ -z "$fake_success_p" ]
+	    # Make the ok_error a set ok_errors and check for any match
+	    if [ -n "$ok_error" ] && [ "$ok_error" = "$rc" ]
+	    then
+		rc=0
+            elif [ -z "$fake_success_p" ]
             then
                 [ -n "$eexecErrorReporter" ] && {
                     "$eexecErrorReporter" $rc "$@"

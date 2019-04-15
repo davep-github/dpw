@@ -16,3 +16,10 @@ EExecVerbose
 
 EExec_verbose_msg "Will see this because EExecVerbose was called unconditionally."
 
+EExecVerbose ""
+EExec -k false keep-going
+EExec -k --one-ok false 1 is no error
+EExec -k --ok-error: 2 false 1 is not two
+EExec false just false.
+echo "? is $?"
+EExec_verbose_msg Were they ok?
