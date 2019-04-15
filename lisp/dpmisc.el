@@ -2840,13 +2840,13 @@ With BACKWARDS-TOO-P, nuke white space before `point'."
   '(("(" . ")")                         ; 0
     ("\"" . "\"")                       ; 1
     ("'" . "'")                         ; 2
-    ("{" . "}")                         ; 3
-    ("[" . "]")                         ; 4
-    ("<" . ">")                         ; 5
-    ("<:" . ":>")                       ; 6
-    ("*" . "*")                         ; 7
-    ("`" . "'")                         ; 8
-    ("" . "")                           ; ...last (Undoish)
+    ("`" . "'")                         ; 3
+    ("{" . "}")                         ; 4
+    ("[" . "]")                         ; 5
+    ("<" . ">")                         ; 6
+    ("<:" . ":>")                       ; 7
+    ("*" . "*")                         ; 8
+    ("" . "")                           ; 9 ...last (Undoish)
     )
   "Parenthesizing pairs to try, in order.
 The list is buffer local so the order or the contents can be tailored.
@@ -2882,6 +2882,9 @@ indices are unchanged.
       (goto-char beg)
       (delete-region beg end)
       (insert (nth 0 info)))))
+
+;;
+;; @todo XXX HUGE old version of dp-parenthesize-region-paren-list
 
 ;; (defun* dp-parenthesize-region-old (index &optional (trim-ws-p t)
 ;;                                 &key pre suf
