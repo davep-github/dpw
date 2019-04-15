@@ -1,15 +1,37 @@
 #!/usr/bin/env bash
 # should be sourced, but the shebang tells us and emacs what mode to use.
 
-: ${DP_GIT_BIN:=git}		# Let path find it by default.
+#echo "DP_LOG>${DP_LOG}<"
+
+: ${DP_GIT_BIN=git}		# Let path find it by default.
+: ${DP_GIT_LOG_P=true}
+: ${DP_GIT_LOG_DIR=$DP_LOG_DIR/${DP_GIT_BIN}}
+: ${DP_GIT_LOG_FILE=$DP_GIT_LOG_DIR/commands}
+: ${DP_GIT_LOG_FILE_ERR=${DP_GIT_LOG_FILE}.stderr}
+# echo "DP_GIT_BIN>${DP_GIT_BIN}<"
+# echo "DP_GIT_LOG_P>${DP_GIT_LOG_P}<"
+# echo "DP_GIT_LOG_DIR>${DP_GIT_LOG_DIR}<"
+# echo "DP_GIT_LOG_FILE>${DP_GIT_LOG_FILE}<"
+# echo "DP_GIT_LOG_FILE_ERR>${DP_GIT_LOG_FILE_ERR}<"
+mkdir -p "${DP_GIT_LOG_DIR}"
 
 git_run_command()
 {
+    [ -n "${DP_GIT_LOG_P-}" ] && log_p=true
     if ! type "${DP_GIT_BIN}" >/dev/null 2>&1
     then
 	echo "\$DP_GIT_BIN>${DP_GIT_BIN}< is not executable."
 	return 1
     fi 1>&2
+    if "${log_p}"
+    then
+	dp_log_header
+	{
+	    dp_log_header;
+	    echo
+	} 1>&2
+	echo ": ${DP_GIT_BIN} $@"
+    fi >> "${DP_GIT_LOG_FILE}" 2>> "${DP_GIT_LOG_FILE_ERR}"
     command "${DP_GIT_BIN}" "$@"
 }
 
