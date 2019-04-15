@@ -492,6 +492,11 @@
         <command>mpc-delta-vol mute</command>
       </action>
     </keybind>
+    <keybind key="W-r">
+      <action name="Execute">
+        <command>mpc-random-album</command>
+      </action>
+    </keybind>
   </keyboard>
   <mouse>
     <dragThreshold>1</dragThreshold>
