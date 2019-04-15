@@ -58,8 +58,10 @@ Make a string to use in the mode-line-help-echo for Mingus.
      [?S] dp-mingus-do-play
      [(shift ?s)] mingus-play
      [?r] dp-mingus-random-album
-     [??] dp-mingus-random-album
      [?b] mingus-browse
+     [?q] mingus-query
+     [?Q] mingus-query
+     [??] mingus-query
      ))
   (message "dp-mingus-player-bind-keys completed."))
 
@@ -101,6 +103,7 @@ Make a string to use in the mode-line-help-echo for Mingus.
      [?p] mingus
      [(meta ?m)] mingus
      [(meta ?p)] mingus
+     [?/] mingus-query
      )))
 
 (defalias 'dp-music-browse-mode-bind-keys 'dp-mingus-browse-mode-bind-keys)
