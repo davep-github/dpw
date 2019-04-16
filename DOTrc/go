@@ -43,17 +43,18 @@ Ee|testA|testB|testC| 	value-for-testABC
 #Ee|faff|                find . -type f -print0 | xargs -r0 fgrep 
 #Ee|fafe|                find . -type f -print0 | xargs -r0 egrep
 
-Ee|dpwworld|dpworld|dpw|     ${davep}/dpw/dpw/
-Ee|dpwgit|dpwg|              ${dpxworld}/.git/
-Ee|dpwconfig|dpwcfg|dpwc|    ${dpwgit}/config/
-Ee|dpwbuild|dpwbld|dpwbld|   ${dpworld}build/
-Ee|dpylib|                   ${davep}/lib/pylib/
-Ee|lubuntuconf|lubconf|      ${davep}/.config/lxsession/Lubuntu/
-Ee|obconf|                   ${davep}/.config/openbox/
-Ee|obrc|                     ${obconf}/rc.xml
-Ee|obmenu|                   ${obconf}/menu.xml
-Ee|cscopedbroot|             000-cscope-db-root
-Ee|csdb|                     ${cscopedbroot}
+Ee|dpwworld|dpxworld|dpworld|dpw|     ${davep}/dpw/dpw/
+Ee|dpwgit|dpwg|                       ${dpxworld}/.git/
+Ee|dpwconfig|dpwcfg|dpwc|             ${dpwgit}/config/
+Ee|dpwbuild|dpwbld|dpwbld|            ${dpworld}build/
+Ee|dpylib|                            ${davep}/lib/pylib/
+Ee|lubuntuconf|lubconf|               ${davep}/.config/lxsession/Lubuntu/
+Ee|obconf|                            ${davep}/.config/openbox/
+Ee|obrc|                              ${obconf}/rc.xml
+Ee|obmenu|                            ${obconf}/menu.xml
+Ee|cscopedbroot|                      000-cscope-db-root
+Ee|csdb|                              ${cscopedbroot}
+
 Ee|ipystartup|ipyup|ipyrc|   ${davep}/.config/ipython/profile_default/startup/
 
 Ee|dpvl|                     /home/dpanarit/var/log/
