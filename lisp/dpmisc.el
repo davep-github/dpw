@@ -14888,7 +14888,8 @@ machines, especially heretofore unknown ones."
     (message "YOPP4")
     ))
 
-(dp-defaliases 'mfh 'smvfh 'smvh 'smv 'dmv 'dp-set-to-max-vert-frame-height)
+(dp-defaliases 'mfh 'mvh 'smvfh 'smvh 'smv 'dmv
+	       'dp-set-to-max-vert-frame-height)
 
 (defun dp-add-autoload-directive ()
   "Insert autoload flag.  I can never remember the string.
