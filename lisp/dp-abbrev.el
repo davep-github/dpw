@@ -308,8 +308,8 @@ list in my DP-STYLE-ABBREV format (q.v.)"
               (dp-erase-buffer obuf)
               ;; 99% from shell-command just so I can get the effin' status.
               ;; What did I miss?
-              (call-process shell-file-name 
-                            nil 
+              (call-process shell-file-name
+                            nil
                             obuf
                             nil
                             shell-command-switch make-command)))
@@ -318,7 +318,7 @@ list in my DP-STYLE-ABBREV format (q.v.)"
               (not ok))
           (dp-switch-to-buffer-other-window obuf)
         (kill-buffer obuf))
-      
+
       ;; Does this nuke any useful info in the echo area?
       ;; If so, just try a `ding'.
       ;;(ding)
@@ -335,7 +335,7 @@ list in my DP-STYLE-ABBREV format (q.v.)"
   ;;! @todo XXX eval'ing in this order nukes defs in my files.
 
   ;; Clear the list of my style abbrev tables.
-  
+
   (setq dp-dp-style-abbrev-tables '())
   (loop for f in dp-common-abbrev-file-names do
     (dp-eval-abbrev-file f))
@@ -357,7 +357,8 @@ list in my DP-STYLE-ABBREV format (q.v.)"
                (read-abbrev-file file)
                (setq save-abbrevs nil))))
           dp-emacs-style-abbrev-files)
-  (dp-abbrev-refresh-buffers dp-go-abbrev-table))
+  (dp-abbrev-refresh-buffers dp-go-abbrev-table)
+  (dingmsg "You may want to run go2rc(dp) in shell buffers and other shells"))
 
 (defun dp-save-and-redefine-abbrevs (&optional arg1)
   (interactive "P")
