@@ -623,7 +623,7 @@ LESSP defaults to less-than ('<)."
       (unless ding-first-p
         (ding)))))
 
-(defalias 'dingm 'dp-ding-and-message)
+(dp-defaliases 'dingm 'dingmsg 'msgding 'dp-ding-and-message)
 
 (defun dp-safe-char-to-string (char)
   "Convert CHAR to string.  Just returns CHAR if it already a string."
@@ -14861,6 +14861,7 @@ JFC."
     ;;(dmessage "wmctrl cmd>%s<" cmd)
     (shell-command cmd)))
 
+;; *vertical* height as opposed to...?
 (defun* dp-set-to-max-vert-frame-height (&optional frame)
   "Set frame height to max as if maximize frame height button has been clicked.
 FRAME is the frame upon which we wish to operate.
@@ -14887,7 +14888,7 @@ machines, especially heretofore unknown ones."
     (message "YOPP4")
     ))
 
-(dp-defaliases 'smvfh 'smvh 'smv 'dmv 'dp-set-to-max-vert-frame-height)
+(dp-defaliases 'mfh 'smvfh 'smvh 'smv 'dmv 'dp-set-to-max-vert-frame-height)
 
 (defun dp-add-autoload-directive ()
   "Insert autoload flag.  I can never remember the string.
