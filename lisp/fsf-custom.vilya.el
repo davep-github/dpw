@@ -223,7 +223,7 @@
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
    (quote
-    (enwc emr emaps emacsist-view emacsc emacsagist elpygen elpy elpa-audit elmacro elisp-sandbox elf-mode eldoc-overlay electric-case eide egg eev edebug-x git-wip-timemachine git-timemachine mmm-mode magit magit-annex magit-find-file magit-gerrit magit-gh-pulls magit-gitflow magit-imerge magit-lfs magit-org-todos magit-todos lua-mode dired-k osx-dictionary goldendict dictcc meson-mode libmpdel emms-state emms-mode-line-cycle emms-mark-ext emms-info-mediainfo emms fwb-cmds dictionary dic-lookup-w3m w3 w3m telephone-line spaceline smart-mode-line-powerline-theme smart-mode-line yahoo-weather svg-mode-line-themes svg-clock minions ergoemacs-status dot-mode mpdel mingus dimmer spotify sudo-edit stgit noaa magit-stgit magit-filenotify flycheck-checkpatch el-patch ein ac-ispell ac-c-headers jedi-direx jedi sly-repl-ansi-color sly-macrostep sly-hello-world sly slime-theme slime passmm pass ivy-pass wanderlust 0xc avy yasnippet yasnippet-snippets c-eldoc bison-mode bash-completion celestial-mode-line all-the-icons-dired achievements ac-etags minimap markdown-mode+ markdown-mode sphinx-doc fuzzy full-ack ack-menu ag ibuffer-tramp challenger-deep-theme ecb thingopt escreen nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
+    (ztree vdiff-magit vdiff treemacs-magit treemacs pcmpl-git mo-git-blame magit-tbdiff libgit github-modern-theme github-browse-file gitconfig-mode gitconfig git-attr git browse-kill-ring browse-at-remote enwc emr emaps emacsist-view emacsc emacsagist elpygen elpy elpa-audit elmacro elisp-sandbox elf-mode eldoc-overlay electric-case eide egg eev edebug-x git-wip-timemachine git-timemachine mmm-mode magit magit-annex magit-find-file magit-gerrit magit-gh-pulls magit-gitflow magit-imerge magit-lfs magit-org-todos magit-todos lua-mode dired-k osx-dictionary goldendict dictcc meson-mode libmpdel emms-state emms-mode-line-cycle emms-mark-ext emms-info-mediainfo emms fwb-cmds dictionary dic-lookup-w3m w3 w3m telephone-line spaceline smart-mode-line-powerline-theme smart-mode-line yahoo-weather svg-mode-line-themes svg-clock minions ergoemacs-status dot-mode mpdel mingus dimmer spotify sudo-edit stgit noaa magit-stgit magit-filenotify flycheck-checkpatch el-patch ein ac-ispell ac-c-headers jedi-direx jedi sly-repl-ansi-color sly-macrostep sly-hello-world sly slime-theme slime passmm pass ivy-pass wanderlust 0xc avy yasnippet yasnippet-snippets c-eldoc bison-mode bash-completion celestial-mode-line all-the-icons-dired achievements ac-etags minimap markdown-mode+ markdown-mode sphinx-doc fuzzy full-ack ack-menu ag ibuffer-tramp challenger-deep-theme ecb thingopt escreen nhexl-mode mu-cite mu4e-maildirs-extension mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar diff-hl gited flylisp ggtags json-mode context-coloring)))
  '(package-user-dir "~/.emacs.d/elpa")
  '(python-shell-interpreter "/usr/bin/ipython")
  '(python-skeleton-autoinsert t)
@@ -283,11 +283,12 @@
  '(ediff-fine-diff-Ancestor ((t (:background "#009591" :foreground "black"))))
  '(ediff-odd-diff-Ancestor ((t (:background "gray40" :foreground "black"))))
  '(holiday ((t (:foreground "cornflower blue"))))
- '(isearch ((t (:background "medium spring green" :foreground "#100e23" :weight bold))))
- '(lazy-highlight ((t (:background "#65b2ff" :foreground "black"))))
+ '(isearch ((t (:background "medium blue" :foreground "white" :weight bold))))
+ '(lazy-highlight ((t (:background "DeepSkyBlue4" :foreground "black"))))
  '(magit-diff-whitespace-warning ((t (:background "misty rose" :foreground "black" :box (:line-width 1 :color "red")))))
  '(mingus-album-stale-face ((t (:foreground "PaleVioletRed1"))))
  '(mingus-playing-face ((t (:background "dark blue" :foreground "spring green" :weight bold))))
+ '(popup-isearch-match ((t (:inherit default :background "sky blue" :foreground "black"))))
  '(rectangle-preview ((t (:inherit region))))
  '(region ((t (:background "#2b284c" :foreground "coral" :weight bold))))
  '(trailing-whitespace ((t (:background "midnight blue" :strike-through nil :underline (:color "magenta" :style wave))))))
