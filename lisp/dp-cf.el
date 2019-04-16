@@ -65,16 +65,6 @@
             (if (listp l1) l1 (list l1)))
     olist))
 
-;;del after tested (defun dp-set-cross-to-alist-old (l1 l2)
-;;del after tested   (nreverse
-;;del after tested    (let (olist)
-;;del after tested      (mapcar (lambda (l1e)
-;;del after tested                (mapcar (lambda (l2e)
-;;del after tested                          (setq olist (cons (list l1e l2e) olist)))
-;;del after tested                        l2))
-;;del after tested              (if (listp l1) l1 (list l1)))
-;;del after tested      olist)))
-
 (defun dp-set-cross-to-alist (l1 l2)
   "Cross product of concatenation of elements into an alist."
   (mapcan (lambda (d)
@@ -83,6 +73,7 @@
                     l2))
           l1))
 
+;; @todo XXX There's got to be a [cl] function to do this.
 (defun dp-path-filter (path pred)
   (delq nil
         (mapcar (lambda (p)
@@ -227,7 +218,7 @@ If no counterpart is found, return a completion list suitable and useful for
 handing to a completing read."
   (setq file-name (file-relative-name (or file-name
                                           (buffer-file-name))))
-  (or (dp-fixed-corresponding-file-name file-name) 
+  (or (dp-fixed-corresponding-file-name file-name)
       (let* ((path (file-name-directory file-name))
              (just-name (file-name-sans-extension 
                          (file-name-nondirectory file-name)))
@@ -247,7 +238,7 @@ handing to a completing read."
                 when (file-exists-p fname)
                 return fname
                 ;; We found nothing. Create the most desirable default.
-                finally return (dp-mk-completion-list 
+                finally return (dp-mk-completion-list
                                 (cons (cons
                                        (format new-name-format
                                         ; First existing dir in path.
@@ -356,7 +347,8 @@ Eg, via `hack-local-variables', hook, magic.")
   "Call `dp-find-corresponding-file' using `find-file' for FIND-FILE-FUNC.
 1 C-u says look for symbol at point in the current file, in the new file.
 2 C-u says set dp-ecf-whence-marker to nil.
-3 C-- says return whence we came, if `dp-ecf-whence-marker' is set."
+3 C-- says return whence we came, if `dp-ecf-whence-marker' is set.
+@todo XXX Add a way to allow a choice from all [existing] matches."
   (interactive "P")
   (dmessage "Do a \"find-up\" for include dirs?")
   (if (Cu--p)
