@@ -113,9 +113,11 @@
            " <home> M-a <C-next> <left> C-a 5*<right> C-x r k"
            " ESC C-r ^ Subject: <end>")))
 
-(defalias 'dp-line-up-indents
+(defalias 'dp-line-up-.go-indents
   (read-kbd-macro
    "C-a C-s | SPC RET DEL <M-backspace> TAB <down> C-a"))
+;; These aliases don't [all?] seem to be working.
+(dp-defaliases 'dlugi 'dplgi 'dp-line-up-.go-indents)
 
 ;;;;;;; <:end of kbd macros:> ;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
