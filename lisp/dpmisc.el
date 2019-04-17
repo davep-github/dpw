@@ -2861,8 +2861,10 @@ With BACKWARDS-TOO-P, nuke white space before `point'."
 The list is buffer local so the order or the contents can be tailored.
 @todo: make this an alist so that you can choose the pair without hoping the
 indices are unchanged.
-@todo: Add a way to list the current mode's list, and show the indices.
-@todo: make more mode-local.  get from alist of (mode list) with default")
+@todo XXX Add a way to list the current mode's list, and show the indices.
+@todo XXX make more mode-local.  get from alist of (mode list) with default
+@todo XXX Select pair via completion.  Provide open and close as parameters.
+If just open, find close via list.  Else need to provide both.")
 
 (defun dp-to-end-of-line-cons (&optional from-beginning-p)
   (cons (if from-beginning-p
@@ -11887,7 +11889,8 @@ This is useful for, say, setting `dp-open-newline-func' in multiple languages
 with C type syntax.
 !<@todo XXX Is this better than setting a buffer local var in each mode's
 hook? A minus is needing to use a special accessor.
-!<@todo XXX Would this be better done via properties on the mode name symbol?"
+@todo XXX Would this be better done via properties on the mode name symbol?
+@todo XXX Or put the obarray on the mode symbol for quick access?"
   (setq mode-name-or-sym-list 
         (cond
          ((not mode-name-or-sym-list) (list major-mode))
@@ -11916,6 +11919,10 @@ hook? A minus is needing to use a special accessor.
 
 (defun dp-what-cursor-position (&optional no-highlight-p)
   (interactive "P")                     ; fsf - fix "_"
+  ;; NB: `what-cursor-position' also uses the prefix arg to imply extra
+  ;; details.
+  ;; @todo XXX Should we usurp, say C-- only to apply to `no-highlight-p' and
+  ;; clear the prefix arg if we see it?
   (call-interactively 'what-cursor-position)
   (unless no-highlight-p
     (dp-highlight-point-until-next-command)))
