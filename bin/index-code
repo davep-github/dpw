@@ -171,85 +171,87 @@ iterate_individually_p=
 iterate_and_do_dot=
 
 # x and e were used to toggle their respective options.
-option_str="nvdc:t:g:CTkKVo:Giuf:Is:S:CazhRr"  # <:add new options:>
+option_str="nvdc:t:g:CTkKVo:Giuf:Is:S:CazhRr" # <:add new options:>
 
 long_options=(
-"cscope"
-"no-cscope"
-"gtags"
-"no-gtags"
-"ctags"
-"no-ctags"
-"etags"
-"no-etags"
-"just-cscope"
-"idutils" "--no-idutils"
-"global-idutils" "--no-global-idutils"
-"iterate-and-do-dot" "iid"
-"use-files-file" "uff"
-"nn" "dry-run"
-"gtagslabel:" "gtl:" "gtagger:"
+    "cscope"
+    "no-cscope"
+    "gtags"
+    "no-gtags"
+    "ctags"
+    "no-ctags"
+    "etags"
+    "no-etags"
+    "just-cscope"
+    "parallel"
+    "idutils" "--no-idutils"
+    "global-idutils" "--no-global-idutils"
+    "iterate-and-do-dot" "iid"
+    "use-files-file" "uff"
+    "nn" "dry-run"
+    "gtagslabel:" "gtl:" "gtagger:"
 )
 
 source dp-getopt+.sh
 
 while (($# > 0))
 do
-  # do. e.g.  shift; OPTION_ARG=$2;; to process options with arguments.  Do
-  # shift first so there's a better chance of a following assignment lining
-  # up.
-  EExec_verbose_msg "Main option loop, \$1>$1<"
-  case $1 in
-      -I) iterate_individually_p=t;;
-      --iterate-and-do-dot|--iid|--idd) iterate_individually_p=t;
-					iterate_and_do_dot_p=t;;
-      # Don't actually execute stuff
-      -V) cscope_indexer_verbose='-v';;
-      # -d is really just verbosity
-      -d) EExecVerbose; DEBUG="echo 1>&2 $prog: ";;
-      -t) tflags="$tflags $2"; shift;;
-      -h) tflags="$tflags -h";;
-      -r|--use-files-file|--uff) tflags="$tflags -r"; 
-                                 keep_files_file_p="${DP_CODE_INDEX_FINDER_FILE-cscope.files}";;
-      -g) if [[ "$2" =~ "^--?$" ]]; then 
-             gtflags=""
-          else
-             gtflags="$gtflags $2";
-          fi
-          shift;;
-      -c) ciflags="$ciflags $2"; shift;;
-      -T) tflags="";;
-      -D) ciflags="";;
-      -K) clean="$AND_INDEX";;
-      -k) clean=t;;
-      -C) clean=;;
-      -o) output_dir=$(realpath $2); shift;;
-      -i) SYSTEM_INCLUDES="$DEF_SYSTEM_INCLUDES";;
-      -u) export src_code_finder=uds-files;;
-      -a) set_all_index_methods;;
-      -z) set_all_index_methods; clean=t;;
-      -f) shift; finder_opts="$finder_opts $1";;
-      -s) shift; RC_STOP_DIR=$1;;  # Stop is more likely to change.
-      -S) shift; RC_START_DIR=$1;;  # Stop is more likely to change.
-      -R) shift; tflags="$tflags -R ${1}";;
-      --just-cscope) cscope_p=--just-cscope;;
-      --cscope) cscope_p=--cscope;;
-      --no-cscope) cscope_p=;;
-      --gtags) gtags_p=--gtags;;
-      -G|--no-gtags) gtags_p=;;
-      --ctags) ctags_p=--ctags;;
-      --no-ctags) ctags_p=;;
-      --etags) etags_p=--etags;;
-      --no-etags) etags_p=;;
-      --global-idutils) use_global_id_p=--use_global_id_p;;
-      --no-global-idutils) use_global_id_p=;;
-      --gtagslabel|--gtl|--gtagger) shift; tflags="$tflags --gtagslabel ${1}"
-                                    gtags_tagger="${1}";;
-      --) shift ; break ;;
-      *) 
-      echo 1>&2 "Unsupported option>$1<";
-      Usage
-      exit 1 ;;
+    # do. e.g.  shift; OPTION_ARG=$2;; to process options with arguments.  Do
+    # shift first so there's a better chance of a following assignment lining
+    # up.
+    EExec_verbose_msg "Main option loop, \$1>$1<"
+    case $1 in
+	-I|--parallel) iterate_individually_p=t;;
+	--iterate-and-do-dot|--iid|--idd|--parallel-and-do-dot|--pid|--pdd)
+	    iterate_individually_p=t;
+	    iterate_and_do_dot_p=t;;
+	# Don't actually execute stuff
+	-V) cscope_indexer_verbose='-v';;
+	# -d is really just verbosity
+	-d) EExecVerbose; DEBUG="echo 1>&2 $prog: ";;
+	-t) tflags="$tflags $2"; shift;;
+	-h) tflags="$tflags -h";;
+	-r|--use-files-file|--uff) tflags="$tflags -r";
+                                   keep_files_file_p="${DP_CODE_INDEX_FINDER_FILE-cscope.files}";;
+	-g) if [[ "$2" =~ "^--?$" ]]; then
+		gtflags=""
+            else
+		gtflags="$gtflags $2";
+            fi
+            shift;;
+	-c) ciflags="$ciflags $2"; shift;;
+	-T) tflags="";;
+	-D) ciflags="";;
+	-K) clean="$AND_INDEX";;
+	-k) clean=t;;
+	-C) clean=;;
+	-o) output_dir=$(realpath $2); shift;;
+	-i) SYSTEM_INCLUDES="$DEF_SYSTEM_INCLUDES";;
+	-u) export src_code_finder=uds-files;;
+	-a) set_all_index_methods;;
+	-z) set_all_index_methods; clean=t;;
+	-f) shift; finder_opts="$finder_opts $1";;
+	-s) shift; RC_STOP_DIR=$1;; # Stop is more likely to change.
+	-S) shift; RC_START_DIR=$1;; # Stop is more likely to change.
+	-R) shift; tflags="$tflags -R ${1}";;
+	--just-cscope) cscope_p=--just-cscope;;
+	--cscope) cscope_p=--cscope;;
+	--no-cscope) cscope_p=;;
+	--gtags) gtags_p=--gtags;;
+	-G|--no-gtags) gtags_p=;;
+	--ctags) ctags_p=--ctags;;
+	--no-ctags) ctags_p=;;
+	--etags) etags_p=--etags;;
+	--no-etags) etags_p=;;
+	--global-idutils) use_global_id_p=--use_global_id_p;;
+	--no-global-idutils) use_global_id_p=;;
+	--gtagslabel|--gtl|--gtagger) shift; tflags="$tflags --gtagslabel ${1}"
+                                      gtags_tagger="${1}";;
+	--) shift ; break ;;
+	*)
+	    echo 1>&2 "Unsupported option>$1<";
+	    Usage
+	    exit 1 ;;
     esac
     shift
 done
@@ -260,33 +262,34 @@ done
 dirs="$SYSTEM_INCLUDES $dirs $rc_dirs"
 
 vsetp "$real_paths" && {
-#     ndirs=
-#     for d in $dirs; do
-#         ndirs="$ndirs $(realpath $d)"
-#     done
-#     dirs="$ndirs"
+    #     ndirs=
+    #     for d in $dirs; do
+    #         ndirs="$ndirs $(realpath $d)"
+    #     done
+    #     dirs="$ndirs"
     dirs=$(for d in $dirs; do
                realpath $d
            done)
 }
-EExec_verbose_echo_id dirs 
+EExec_verbose_echo_id dirs
 
 exit_p=
 all_dirs="${dirs}"
 dirs=
 for d in ${all_dirs}
 do
-  [ -e "$d" ] || {
-      continue
-      echo "$d does not exist, ignoring."
-      # Let this be a warning to you. exit_p=1
-  } 1>&2
-  [ -d "$d" ] || {
-      echo "$d is not a dir, ignoring."
-      # Let this be a warning to you. exit_p=1
-      continue
-  } 1>&2
-  dirs="${dirs} ${d}"
+    EExec_verbose_msg "Processing dir: $d"
+    [ -e "$d" ] || {
+	echo "$d does not exist, ignoring."
+	continue
+	# Let this be a warning to you. exit_p=1
+    } 1>&2
+    [ -d "$d" ] || {
+	echo "$d is not a dir, ignoring."
+	# Let this be a warning to you. exit_p=1
+	continue
+    } 1>&2
+    dirs="${dirs} ${d}"
 done
 
 vsetp $exit_p && {
@@ -302,7 +305,7 @@ determine_index_files_to_clean()
     vsetp "$etags_p" || vsetp "${clean}" && index_files="$index_files TAGS"
     vsetp "$gtags_p" || vsetp "${clean}" && index_files="$index_files GTAGS GRTAGS GPATH GSYMS"
     vsetp "use_global_id_p" || vsetp "${clean}" && index_files="$index_files ID"
-# ncscope.out is the temp cscope file. If it exists, it indicates a problem.
+    # ncscope.out is the temp cscope file. If it exists, it indicates a problem.
     vsetp "$cscope_p" || vsetp "${clean}" && index_files="$index_files cscope.* ncscope.out"
     echo "${index_files}"
 }
@@ -343,16 +346,16 @@ do_taggin()
 {
     local dirs="$@"
     echo 1>&2 "This program ($(basename $0)), ${tree_tagger} and cscope-indexer need to be reworked.
-They should work off the same set of files."
+    They should work off the same set of files."
     echo "taggin $dirs"
     EExec -y eval ${tree_tagger} $DP_SCRIPT_X_DEBUG_OPT $EExec_opts \
-       ${ctags_p} \
-       ${etags_p} \
-       ${gtags_p} \
-       ${cscope_p} \
-       ${use_global_id_p} \
-       $tflags \
-       $dirs
+	  ${ctags_p} \
+	  ${etags_p} \
+	  ${gtags_p} \
+	  ${cscope_p} \
+	  ${use_global_id_p} \
+	  $tflags \
+	  $dirs
     if vsetp "$output_dir"
     then
         EExec $MV $index_files "$output_dir"
@@ -375,18 +378,18 @@ They should work off the same set of files."
     echo
 } | tee "${status_file}"
 
-
-
 if vsetp $iterate_individually_p
 then
     # Make individual indices in each specified dir.
     for d in $dirs
     do
-      # Must make sure only one proc writes to each files file.
-      (EExec cd "$d" && EExec do_taggin) &
+	EExec_verbose_msg "Beginning $d tagging in background."
+	# Must make sure only one proc writes to each files file.
+	(EExec -y cd "$d" && EExec -y do_taggin) &
     done
     wait
 else
+    EExec_verbose_msg "Processing ${dirs} sequentially."
     EExec do_taggin $dirs
 fi
 
