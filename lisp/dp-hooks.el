@@ -159,7 +159,7 @@ Make it buffer local since there can be >1 minibuffers.")
     (if (dp-xemacs-p)
 	(define-key map [(control tab)] 'dp-minibuffer-complete)
       (dp-define-key-list map '([tab] minibuffer-complete
-				[(meta up)] switch-to-completions)))
+				[(meta up)] dp-other-window-up)))
     (define-key map [(meta ?=)] (kb-lambda
                                    (enqueue-eval-event
                                     'eval
