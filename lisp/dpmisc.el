@@ -112,10 +112,12 @@
    (concat "<C-prior> ESC C-s ^ GIT: SPC \\[PATCH SPC 1/"
            " <home> M-a <C-next> <left> C-a 5*<right> C-x r k"
            " ESC C-r ^ Subject: <end>")))
-(defalias 'dpgsmail 'dp-git-send-email-compose-prep)
-(defalias 'gsmail 'dp-git-send-email-compose-prep)
 
-;;;;;;; end of kbd macros ;;;;;;;
+(defalias 'dp-line-up-indents
+  (read-kbd-macro
+   "C-a C-s | SPC RET DEL <M-backspace> TAB <down> C-a"))
+
+;;;;;;; <:end of kbd macros:> ;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defsubst dp-sticky-goto-char (offset &optional buffer)
