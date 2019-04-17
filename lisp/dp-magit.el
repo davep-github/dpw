@@ -6,6 +6,20 @@
 (require 'magit)
 (add-hook 'magit-mode-hook 'magit-stgit-mode)
 
+;;
+;; @todo XXX Replace when this is fixed upstream.
+;; For now, it needs to `not' what is assigned to SHOW.
+(defun magit-section-toggle-children (section)
+  "Toggle visibility of bodies of children of the current section."
+  (interactive (list (magit-current-section)))
+  (goto-char (oref section start))
+  (let* ((children (oref section children))
+         (show (not (--any-p (oref it hidden) children))))
+    (dolist (c children)
+      (oset c hidden show)))
+  (magit-section-show section))
+
+
 (defun dp-magit-mode-setup-hook ()
   )
 
@@ -14,7 +28,7 @@
   (dp-local-set-keys
    '(
      [?=] magit-diff-dwim
-     [(meta return)] magit-section-toggle
+     [(meta return)] magit-section-toggle-children
      [(meta left)] magit-section-backward
      [(meta right)] magit-section-forward
      [(meta ?u)] magit-jump-to-untracked
@@ -25,9 +39,9 @@
   (interactive)
   (dp-magit-mode-bind-keys))
 
-;; Nice convention to put key bindings for modes alone in a function.
+;; Nice convention to put key bindings for modes in an interactive function.
 ;; <clutch-pearls-on-soap-box>Wah! Name space pollution!</clutch-pearls-on-soap-box>
-;; Make modification and application easier.
+;; Makes modification and application easier.
 (defun dp-magit-rebase-bind-keys ()
   (interactive)
   (dp-define-local-keys
