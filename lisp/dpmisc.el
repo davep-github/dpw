@@ -2826,6 +2826,11 @@ With BACKWARDS-TOO-P, nuke white space before `point'."
 ;;  (dp-tabdent))
 (dp-defaliases '1t 'ot 'dp-tab...just-tab 'dp-one-tab)
 
+(defun dp-one-space ()
+  (interactive)
+  (delete-horizontal-space)
+  (insert " "))
+
 (defstruct dp-parenthesize-region-info
   (first "I'm first")
   (sticky-p nil)
@@ -13751,11 +13756,6 @@ IP address is kept in environment var named by `dp-ssh-home-node'."
   (or (bound-and-true-p user-init-directory)
       (dp-mk-pathname (getenv "HOME")
                       "lisp")))
-
-(defun dp-one-space ()
-  (interactive)
-  (delete-horizontal-space)
-  (insert " "))
 
 (defun dp-find-file-non-dedicated-window (&optional file-name)
   "Find FILE-NAME in this window if it is not dedicated, else another."
