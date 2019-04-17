@@ -14916,6 +14916,18 @@ Of course, I'll forget the name of this function and its aliases, too."
 		 (or (not (interactive-p))
 		     quiet-p)))
 
+(defun dp-get-n-set (symbol-name new-val)
+  "Return SYMBOL-NAME's original value after setting it to NEW-VAL."
+  (prog1
+      (symbol-value symbol-name)
+    (set symbol-name new-val)))
+
+(defun dp-magit-my-world ()
+  (interactive)
+  (magit-status (expand-file-name "~/dpw/dpw/")))
+
+(dp-defaliases 'dpw 'dpmmw 'mmw 'dp-magit-my-world)
+
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;; add new functions here
 ;;; add new functions above
@@ -14951,6 +14963,8 @@ Of course, I'll forget the name of this function and its aliases, too."
 ;; Allow a save when I accidentally M-x ff vs M-.
 (dp-defaliases 'fftag 'xgtags-find-tag)
 (dp-defaliases 'ffcs 'cscope-find-this-symbol)
+(defalias 'dpgsmail 'dp-git-send-email-compose-prep)
+(defalias 'gsmail 'dp-git-send-email-compose-prep)
 
 ;;;;; <:aliases: add-new-ones-up-there:>
 
