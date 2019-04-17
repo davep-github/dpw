@@ -14944,8 +14944,7 @@ Of course, I'll forget the name of this function and its aliases, too."
 (defun dp-magit-my-world ()
   (interactive)
   (magit-status (expand-file-name "~/dpw/dpw/")))
-
-(dp-defaliases 'dpw 'dpmmw 'mmw 'dp-magit-my-world)
+(dp-defaliases 'dpw 'dpmmw 'gmw 'mwg 'mmw 'dp-magit-my-world)
 
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;; add new functions here
