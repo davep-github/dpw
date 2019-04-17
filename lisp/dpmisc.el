@@ -9523,6 +9523,11 @@ A bookmark, in this context, is:
   (interactive "P")
   (let* ((regexp-prefix "")             ; or "^"
          inserted-p
+	 (eof-handling (or (and (interactive-p)
+				insertion-buffer
+				(integerp insertion-buffer)
+				(dp-get-n-set 'insertion-buffer nil))
+			   1))
          (insertion-buffer 
           (or (and (not (interactive-p)) insertion-buffer)
               ;; Should copy-to-kill-p mean to ONLY copy-to-kill-p ?
@@ -9560,9 +9565,12 @@ A bookmark, in this context, is:
                             )))
     (when insertion-buffer
       (with-current-buffer insertion-buffer
-        (unless (dp-empty-line-p)
-          (end-of-line)
-          (newline))
+        ;; (unless (dp-empty-line-p)
+        ;;   (end-of-line)
+        ;;   (newline))
+	(when (and eof-handling
+		   (> eof-handling 0))
+	  (dp-set-eof-spacing eof-handling))
         (insert bm-string)
         (end-of-line)
         (dp-maybe-set-window-point)
