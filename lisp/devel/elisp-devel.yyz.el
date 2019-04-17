@@ -225,8 +225,8 @@ ffap-other-window
 
 
 (cl-pe '(pcase (save-window-excursion (call-interactively 'ffap))
-    ((or (and (pred bufferp) b) `(,(and (pred bufferp) b) . ,_))
-     (switch-to-buffer-other-window b)))
+	  ((or (and (pred bufferp) b) `(,(and (pred bufferp) b) . ,_))
+	   (switch-to-buffer-other-window b)))
        )
 
 (defun blah ()
@@ -1576,16 +1576,25 @@ Monday February 11 2019
 Wednesday March 27 2019
 --
 (cl-pe
-'(with-eval-after-load "bubba"
-(bubba-hook))
-)
+ '(with-eval-after-load "bubba"
+    (bubba-hook))
+ )
 
 (eval-after-load "text-mode" 
   (progn (dp-setup-indentation-colorization 'text-mode)))
 
 (eval-after-load "bubba"
-(function (lambda nil (bubba-hook))))nil
+  (function (lambda nil (bubba-hook))))nil
 
+========================
+Tuesday April 16 2019
+--
+dp-get-n-set
 
-
+(let* ((v "aaa")
+       (vc v)
+       (v2 (dp-get-n-set 'v 'qqq)))
+  (princf "v>%s<. vc>%s<, v2>%s<" v vc v2))
+v>qqq<. vc>aaa<, v2>aaa<
+nil
 
