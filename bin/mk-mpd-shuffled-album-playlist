@@ -170,7 +170,7 @@ EExecDashN_p && {
 }
 "${clear_p}" && EExec mpc clear
 # This will give you the list of albums in the current playlist (aka
-# queue).
+# queue):
 # mpc -f '%album%' playlist | sort | uniq
 # It returns the album name for each song in the playlist.  We need to
 # sort because there may be different songs from the same album in
