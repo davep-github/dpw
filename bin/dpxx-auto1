@@ -105,8 +105,8 @@ Usage_error()
 # template end.
 ########################################################################
 
-: ${GEOMETRY:=132x37+86+0}
+: ${DP_AUTO1_GEOMETRY:=132x32+86+0}
 : ${DP_AUTO_NAME:=auto1}
 : ${HOME:=/home/dpanarit}
 
-${HOME}/bin/ubuntu-sucks dpxx -g "${GEOMETRY}" nscreen "${DP_AUTO_NAME}"
+${HOME}/bin/ubuntu-sucks dpxx -g "${DP_AUTO1_GEOMETRY}" nscreen "${DP_AUTO_NAME}"
