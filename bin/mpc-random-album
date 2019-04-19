@@ -73,8 +73,8 @@ Usage_synopsis="Select/add a random album to mpd
 # Using ) after the args makes copy & paste between here and the
 # case statement easier.
 Usage_details="${EExec_parse_usage}
--a|--append) Add the random album w/o clearing the playlist first.
---no-play) Don't issue play command.
+-a|--append) Add the random album w/o clearing the MPD playlist first.
+--no-play|--np) Just add the random album. Don't issue play command.
 "
 # Example of arg parsing.
 option_str="aApPsQ"
@@ -82,7 +82,7 @@ long_options=(
     "append"
     "no-append"
     "play"
-    "no-play"
+    "no-play" "np"
     "stop"
     "nop"
     "num-albums:" "num:"
@@ -100,7 +100,7 @@ do
       -a|--append) append_p=true;;
       -A|--no-append) append_p=false;;
       -p|--play) post_op=play;;
-      -P|--no-play) post_op=stop;;
+      -P|--no-play|--np) post_op=stop;;
       -s|--stop) post_op=stop;;
       --nop) post_op=;;
       --num-albums|--num) shift; num="${1}";;
@@ -123,7 +123,7 @@ EExec mpc stop
 while :
 do
 	mk-mpd-shuffled-album-playlist \
-	  "${DP_SCRIPT_X_DEBUG_PROPAGATOR}" \
+	  ${DP_SCRIPT_X_DEBUG_PROPAGATOR} \
 	  --num "${num}" \
 	  --mpc-add \
 	  "$@"
