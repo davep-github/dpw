@@ -1268,16 +1268,22 @@ minibuffer history list `bookmark-history'."
 (message "dpmacs.el: dp-post-dpmacs-hook, running: %s..." dp-post-dpmacs-hook)
 
 (message "point: %s, point-max: %s" (point) (point-max))
-(let ((l dp-post-dpmacs-hook)
-      hook)
-  (while l
-    (setq hook (car l)
-          l (cdr l))
-    ;;(message "running hook: %s" hook)
-    (run-hook-with-args (quote hook))
-    ;;(message "finished hook: %s" hook)
-    (goto-char (point-max))
-    ))
+(defun dp-run-post-dpmacs-hooks ()
+  (let ((l dp-post-dpmacs-hook)
+	hook)
+    (while l
+      (setq hook (car l)
+	    l (cdr l))
+      ;;(message "running hook: %s" hook)
+      (run-hook-with-args (quote hook))
+      ;;(message "finished hook: %s" hook)
+      (goto-char (point-max))
+      )))
+
+;; Uncomment this if we want to debug `dp-post-dpmacs-hook'.
+;; (edebug)
+
+(dp-run-post-dpmacs-hooks)
 
 (message "dpmacs.el: dp-post-dpmacs-hook, FINISHED.")
 
