@@ -988,8 +988,6 @@ This can be callable.")
   (add-hook 'outline-mode-hook 'turn-off-filladapt-mode)
   (setq filladapt-mode-line-string " Fa"))
 
-;;;;;(require 'dp-shells)
-
 (defun dp-mk-remote-files-precious (&optional buffer pred)
   (setq-ifnil buffer (current-buffer)
               pred 'dp-remote-file-p)
