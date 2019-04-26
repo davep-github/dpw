@@ -72,7 +72,10 @@ Make a string to use in the mode-line-help-echo for Mingus.
   (dp-local-set-keys
    '(
      [?p] dp-mingus-do-toggle
+     [? ] dp-mingus-do-toggle
+     [return] dp-mingus-do-toggle
      [(shift ?s)] mingus-play
+     [(meta return)] mingus-play
      [?r] dp-mingus-random-album
      ;; See which one sticks.
      [(meta ?m)] mingus-browse		; [m]usic.
