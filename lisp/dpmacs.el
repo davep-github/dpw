@@ -291,8 +291,7 @@ editing servers via `dp-editing-server-ipc-file'.")
   (dp-optionally-require 'edebug-x)
   (require 'dp-magit))
 
-;; in XEmacs (only?)
-(when dp-use-xgtags-p
+(when dp-use-xgtags-p	  ; @todo XXX change to function or dp-wants-... var.
   (dp-optionally-require 'xgtags))
 
 (defun dp-xgtags-p ()
