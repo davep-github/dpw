@@ -67,23 +67,23 @@
 
 ;; Make file that holds every keybinding that points to real xemacs
 ;; functions.
-;; grep -v "-dp" 
+;; grep -v "-dp"
 ;; will get lots
 (global-set-key [(meta ?u)] 'undo)
 
 (defvar dp-$HOME (getenv "HOME")
   "Convenience for future reference.")
-(defvar dp-$HOME-truename (substring (shell-command-to-string 
+(defvar dp-$HOME-truename (substring (shell-command-to-string
                                            (concat "realpath " dp-$HOME)) 0 -1)
   "The `realpath(1)' of the aforementioned $HOME variable.")
 
 (defvar dp-ipython-temp-file-re "ipython_edit_.*\\.py$"
   "Name ipython uses when %edit'ing something.")
 
-(defvar dp-known-temp-file-re-list 
-  (list 
+(defvar dp-known-temp-file-re-list
+  (list
    dp-ipython-temp-file-re)
-  "List of known temp file regexps, so `dp-server-visit-hook' doesn't muse about 
+  "List of known temp file regexps, so `dp-server-visit-hook' doesn't muse about
 its temp-ness.")
 
 ;;; Dummy hooks: Define these here so that when I make changes that
@@ -96,7 +96,7 @@ its temp-ness.")
   "Signal an error just for the message.  This is in `debug-ignored-errors'."
   'error)
 
-(define-error 'dp-disabled-function 
+(define-error 'dp-disabled-function
   "This function has been disabled for safety reasons."
   (if (dp-xemacs-p)
       nil
@@ -104,7 +104,7 @@ its temp-ness.")
 
 (if (boundp 'ascii-symbols)
     ;; Use mule's in case they improve something or...
-    (progn 
+    (progn
       (defvar dp-ascii-char ascii-char)
       (defvar dp-ascii-space ascii-space)
       (defvar dp-ascii-symbols ascii-symbols)
@@ -122,13 +122,13 @@ its temp-ness.")
   (defvar dp-ascii-alphanumeric "[\60-\71\101-\132\141-\172]"))
 ;; Brittle much?
 ;; And confuzing? Can't remember what it's for. OR why.
-(loop for vname in '("dp-ascii-char" "dp-ascii-space" "dp-ascii-symbols" 
-                     "dp-ascii-numeric" "dp-ascii-English-Upper" 
+(loop for vname in '("dp-ascii-char" "dp-ascii-space" "dp-ascii-symbols"
+                     "dp-ascii-numeric" "dp-ascii-English-Upper"
                      "dp-ascii-English-Lower" "dp-ascii-alphanumeric")
   do
   (let* ((new-name (concat "dp-not-" (substring vname 3)))
          (new-sym (intern new-name))
-         (new-val (concat "[^" 
+         (new-val (concat "[^"
                           (substring (symbol-value (intern-soft vname)) 1))))
     (set new-sym new-val)))
 
@@ -221,7 +221,7 @@ Then deletes this new configuration from the ring."
   (interactive)
   (let ((ring (wconfig-get-ring)))
     (if (ring-empty-p ring)
-	(dmessage 
+	(dmessage
          "(wconfig-delete-pop): Window configuration save ring is empty")
       (set-window-configuration (ring-ref ring 0))
       (ring-remove ring 0))))
@@ -258,7 +258,7 @@ way.")
 (autoload 'c++-mode "cc-mode" "C++ Editing Mode" t)
 (autoload 'c-mode   "cc-mode" "C Editing Mode" t)
 
-(defconst dp-default-sig-source 
+(defconst dp-default-sig-source
   (cons 'expr '(insert (dp-mk-baroque-fortune-sig)))
   "See `dp-insert-sig'.")
 ;;
@@ -301,7 +301,7 @@ editing servers via `dp-editing-server-ipc-file'.")
                 (dmessage "not featurep 'xgtags, but xgtags-mode defined.")))))
 
 ;; In Emacs (only?)
-(when dp-use-ggtags-p 
+(when dp-use-ggtags-p
   (dp-optionally-require 'ggtags))
 (defun dp-ggtags-p ()
   (and dp-use-ggtags-p
@@ -328,7 +328,7 @@ editing servers via `dp-editing-server-ipc-file'.")
 (defun dp-p4-active-here-p (&optional file-name)
   "*Determine if this file needs to be worried about perforce. (Abstract to any SCM).
 Override in spec-macs.
-Allow us to limit perforce checks to certain dirs. At nVIDIA, a simple 
+Allow us to limit perforce checks to certain dirs. At nVIDIA, a simple
 `p4 opened' can take 10+ minutes. Checking all files for p4-ed-ness adds
 intolerable delays to files not in perforce."
   ;; let it be off unless forced on.
@@ -366,7 +366,7 @@ intolerable delays to files not in perforce."
 ;; load any host specific thingies...
 ;; process all of the possible specific init files
 (setq dp-loaded-spec-macsen (nreverse (delq nil (mapcar
-                                                 'dp-load-spec-macs 
+                                                 'dp-load-spec-macs
                                                  (dp-specific-extensions))))
       dp-most-specific-spec-macs (car-safe dp-loaded-spec-macsen))
 
@@ -375,7 +375,7 @@ intolerable delays to files not in perforce."
 ;; derived vars from spec-macs specific stuff
 ;;(setq mail-host-address (format "%s.%s" dp-mail-outgoing-host dp-mail-domain))
 ;; Changes for vm.el
-(setq mail-host-address dp-mail-domain) 
+(setq mail-host-address dp-mail-domain)
 (setq dp-mail-addr (format "%s@%s" dp-mail-user dp-mail-domain))
 
 (eval-and-compile
@@ -393,8 +393,8 @@ intolerable delays to files not in perforce."
 ;; addresses.
 (if (or (not (boundp 'dp-my-mail-address-format))
 	(not dp-my-mail-address-format))
-    (setq dp-my-mail-address-format (format "\"%s\" <%s%%s@%s>" 
-					dp-mail-fullname 
+    (setq dp-my-mail-address-format (format "\"%s\" <%s%%s@%s>"
+					dp-mail-fullname
 					dp-mail-user dp-mail-domain)))
 ;(format dp-my-mail-address-format ""))
 
@@ -412,8 +412,8 @@ the init files.")
 (when (dp-xemacs-p)
   (toggle-auto-compression 1))
 
-(cond 
- ((and dp-use-gtags-p 
+(cond
+ ((and dp-use-gtags-p
        (dp-optionally-require 'gtags))
   (dmessage "gtags'ing, move all init to dp-ptools.el")
   (define-key gtags-select-mode-map [?o] 'gtags-select-tag-other-window)
@@ -435,10 +435,10 @@ the init files.")
 ;; <:savehist stuff | save history | save variables:>
 
 ;; Save it on a per-node basis.
-(setq savehist-file (dp-nuke-newline (shell-command-to-string 
+(setq savehist-file (dp-nuke-newline (shell-command-to-string
                                     "mk-persistent-dropping-name.sh emacs-history")))
-;;(dp-mk-pathname (list (dp-lisp-dir) 
-;;                                          (concat "history." 
+;;(dp-mk-pathname (list (dp-lisp-dir)
+;;                                          (concat "history."
 ;;
 ;;                                                 (dp-short-hostname)))))
 ;; How often we dump out the history.
@@ -450,22 +450,22 @@ the init files.")
       (dp-funcall-if 'savehist-mode (1))
     (t (warn "`savehist-mode' failed." )
        (message "badness: %s" badness)))
-  
+
   ;; The kill-ring needs to have the kill-ring-yank-pointer set.
   (setq-ifnil kill-ring-yank-pointer kill-ring)
-  
+
   ;; Different versions use different variables to hold additional user
   ;; requested variables to save.  Find one.  In the latest version I use,
   ;; `savehist-additional-variables' is the variable to use.
-  (let ((hist-var-sym (loop for v in '(savehist-history-variables 
+  (let ((hist-var-sym (loop for v in '(savehist-history-variables
                                        savehist-additional-variables)
                         when (boundp v) return v)))
     (when hist-var-sym
-      (dp-add-list-to-list hist-var-sym 
+      (dp-add-list-to-list hist-var-sym
                            '(Manual-page-minibuffer-history
                              dired-history
                              dired-regexp-history
-                             dp-colorize-bracketing-regexps-history 
+                             dp-colorize-bracketing-regexps-history
                              dp-gdb-cf-history
                              dp-gdb-sudo-history
                              dp-grep-history
@@ -477,7 +477,7 @@ the init files.")
                              hyper-apropos-face-history
                              hyper-apropos-help-history
                              hyper-apropos-regexp-history
-                             igrep-files-history 
+                             igrep-files-history
                              igrep-regex-history
                              mmm-interactive-history
                              read-envvar-name-history
@@ -520,7 +520,7 @@ the init files.")
 (add-hook 'dp-post-dpmacs-hook 'dp-add-auto-mode-alist-additions)
 
 ;;@todo XXX Use this more often?
-(defun dp-add-to-dp-auto-mode-alist-additions (extension mode 
+(defun dp-add-to-dp-auto-mode-alist-additions (extension mode
                                                &optional add-transparent-p)
   (add-to-list 'dp-auto-mode-alist-additions
                (cons (if add-transparent-p
@@ -560,7 +560,7 @@ the init files.")
           "\\|merged?\\|obs\\|olde?\\|orig\\(inal\\)?"
           "\\|MERGED?\\|OBS\\|OLDE?\\|ORIG\\(INAL\\)?"
 	  "\\|OEM\\|oem")
-          
+
   "Read only part of dp-default-mode-transparent-suffix-regexp (q.v.)")
 
 (defvar dp-default-mode-transparent-suffix-regexp
@@ -578,15 +578,15 @@ So, for example, if I don't want `make check' to look at a work in progress,
 I can name a file why-must-I-be-tortured-by-Perl.pm.wip. *.pm won't match
 this but when I edit it, I get it in (shudder) Perl mode.")
 
-(defun* dp-mk-mode-transparent-regexp (extension &optional 
+(defun* dp-mk-mode-transparent-regexp (extension &optional
         (suffix-regexp dp-default-mode-transparent-suffix-regexp)
         (extra-suffix-regexp nil)
         (dot "."))
   (concat (if extension
-              (concat 
+              (concat
                "\\(" (regexp-quote (concat dot extension)) "\\)")
             "")
-          (dp-regexp-concat 
+          (dp-regexp-concat
            (append (list suffix-regexp) extra-suffix-regexp))))
 
 (defun* dp-mk-mode-transparent-r/o-regexp (extension &optional
@@ -604,7 +604,7 @@ this but when I edit it, I get it in (shudder) Perl mode.")
                                  dp-default-mode-transparent-r/w-suffix-regexp
                                  extra-suffix-regexp
                                  dot))
-  
+
 (defun dp-mk-mode-transparent-auto-mode-alist (mode extensions)
   (mapcar (lambda (ext)
             (cons (dp-mk-mode-transparent-regexp ext) mode))
@@ -613,7 +613,7 @@ this but when I edit it, I get it in (shudder) Perl mode.")
 (defun dp-mk-mode-transparent-alist-from-mode-ext-lists (mode-ext-lists)
   "Pass in `auto-mode-alist' type conses (ext . mode) except that the ext is a string not a regexp."
   (mapcan (lambda (mode-ext-list)
-            (dp-mk-mode-transparent-auto-mode-alist 
+            (dp-mk-mode-transparent-auto-mode-alist
              (car mode-ext-list)        ; mode
              (cdr mode-ext-list)))      ; extension list
           mode-ext-lists))
@@ -682,8 +682,8 @@ w/tags, cscope, etc.")
   (mmm-add-mode-ext-class 'dp-journal-mode "\\.jxt$" 'dp-universal))
 
 (add-to-list 'jka-compr-compression-info-list
-             ["\\.bz2\\(~\\|\\.~[0-9]+~\\)?\\'" 
-              "bzipping" "bzip2" ("-c" "-q") 
+             ["\\.bz2\\(~\\|\\.~[0-9]+~\\)?\\'"
+              "bzipping" "bzip2" ("-c" "-q")
               "unbzipping" "bzip2" ("-c" "-q" "-d") t t])
 
 ;; remove particularly offensive modes.
@@ -749,7 +749,7 @@ And their failure occurs way too often."
   (let ((an-ipython-command (executable-find "ipython")))
     (when an-ipython-command
       (setq ipython-command an-ipython-command)
-      (setq py-python-command-args '("--no-autoindent" 
+      (setq py-python-command-args '("--no-autoindent"
                                      "--colors=NoColor"))
       (dp-optionally-require 'ipython)
 
@@ -856,13 +856,13 @@ stuff in the current *Python* session."
 
 ;;
 ;; autoload some template functions
-(autoload 'tempo-template-dppydb-fam "dp-templates" 
+(autoload 'tempo-template-dppydb-fam "dp-templates"
   "Insert a dppydb family entry with a tempo template." t)
 (defalias 'famtemp 'tempo-template-dppydb-fam)
-(autoload 'tempo-template-dppydb-host "dp-templates" 
+(autoload 'tempo-template-dppydb-host "dp-templates"
   "Insert a dppydb host entry with a tempo template." t)
 (defalias 'hosttemp 'tempo-template-dppydb-host)
-(autoload 'tempo-template-pb-entry "dp-templates" 
+(autoload 'tempo-template-pb-entry "dp-templates"
   "Insert a phonebook entry with a tempo template." t)
 (defalias 'pbtemp 'tempo-template-pb-entry)
 
@@ -903,15 +903,15 @@ stuff in the current *Python* session."
 
   ;; Add some of my favorite places to find included files, or, more
   ;; precisely, any file names in a c/c++ file.
-  ;; Called by by using `ffap-alist' (q.v.). 
+  ;; Called by by using `ffap-alist' (q.v.).
   ;;
-  (dp-add-list-to-list 'ffap-c-path 
-                       '("../include" 
+  (dp-add-list-to-list 'ffap-c-path
+                       '("../include"
                          "../inc"
                          "../h"
                          "../src"))
 
-  (add-to-list 'ffap-alist (cons dp-p4-location-regexp 
+  (add-to-list 'ffap-alist (cons dp-p4-location-regexp
                                  'dp-maybe-expand-p4-location+))
 
   (message "ffapped.")
@@ -923,7 +923,7 @@ stuff in the current *Python* session."
 			 'find-file)
   "Function used to open files.")
 
-(defvar dp-file-finder-other-window 
+(defvar dp-file-finder-other-window
   (if (and dp-use-ffap-p
            (featurep 'ffap))
       'ffap-other-window
@@ -958,7 +958,7 @@ This can be callable.")
       compilation-window-height 10
       default-major-mode 'text-mode
       save-buffer-context t
-      
+
       calendar-latitude 42.3
       calendar-longitude -71.1
       calendar-location-name "Reading, MA"
@@ -1002,17 +1002,17 @@ This can be callable.")
 ;;;
 (defun dp-setup-tramp ()
   (interactive)
-  (setq tramp-persistency-file-name (concat 
-                                     (dp-mk-dropping-dir "/tramp.d" 
-                                                         'no-change) 
+  (setq tramp-persistency-file-name (concat
+                                     (dp-mk-dropping-dir "/tramp.d"
+                                                         'no-change)
                                      "/cache")
-        tramp-auto-save-directory (dp-mk-dropping-dir 
-                                   "/tramp.d/auto-saves.d" 
+        tramp-auto-save-directory (dp-mk-dropping-dir
+                                   "/tramp.d/auto-saves.d"
                                    'no-change))
   (dmessage "0:tramp-auto-save-directory>%s<" tramp-auto-save-directory)
-  
+
   (when (dp-optionally-require 'tramp)
-    (make-local-variable 'file-precious-flag)  
+    (make-local-variable 'file-precious-flag)
     (add-hook 'find-file-hooks 'dp-mk-remote-files-precious))
   (dmessage "1:tramp-auto-save-directory>%s<" tramp-auto-save-directory)
 
@@ -1040,10 +1040,10 @@ This can be callable.")
 ;(when (dp-optionally-require 'highline)
 ;      (highline-mode-on))
 (autoload 'highline-mode "highline" "Turn on current line highlighting." t)
-(autoload 'dp-diary-entries-to-pcal "dp-cal" 
+(autoload 'dp-diary-entries-to-pcal "dp-cal"
   "Convert diary entries to pcal entries." t)
 
-;;; load late 'macs specific stuff. 
+;;; load late 'macs specific stuff.
 (if (dp-xemacs-p)
     (progn
       (require 'dp-xemacs-late)
@@ -1060,7 +1060,7 @@ This can be callable.")
 
 (if-and-boundp 'dp-ispell-program-name
     ;; Use a spec-macs defined variable if there is one and it is non-nil
-    (progn 
+    (progn
       (setq ispell-program-name dp-ispell-program-name)
       (dmessage "Using spec macs spell program: %s" dp-ispell-program-name))
   ;; Else try to find one
@@ -1094,7 +1094,7 @@ This can be callable.")
       (progn
 	(global-set-key [(control ?c) ?l] 'org-store-link)
 	(global-set-key [(control ?c) ?a] 'org-agenda)
-	
+
 	(setq org-log-done 'time)
 	(add-hook 'org-mode-hook 'dp-org-mode-hook)
 	)
@@ -1110,7 +1110,7 @@ This can be callable.")
   (defvar bookmark-default-file
         (dp-nuke-newline (shell-command-to-string
                           "mk-persistent-dropping-name.sh --use-project-as-a-suffix emacs.bmk")))
- 
+
   (require 'bookmark)
   (setq bookmark-save-flag 1)
   (defun dp-bookmark-mk-location-str (bookmark &optional no-history)
@@ -1208,12 +1208,12 @@ minibuffer history list `bookmark-history'."
   "`defvar' allows us to save the original version once, unless eval'd interactively.")
 
 ;; Make the password hider work with some other programs.
-;;till-fixed (loop for prompt in '("Enter passphrase for" 
+;;till-fixed (loop for prompt in '("Enter passphrase for"
 ;;till-fixed                       "Enter password"
 ;;till-fixed                       "[sudo] password for dapanarx")
 ;;till-fixed   do (unless (posix-string-match (concat "^" prompt "$")
 ;;till-fixed               comint-password-prompt-regexp)
-;;till-fixed        (setq comint-password-prompt-regexp 
+;;till-fixed        (setq comint-password-prompt-regexp
 ;;till-fixed              (concat comint-password-prompt-regexp
 ;;till-fixed                      (concat "\\|\\("
 ;;till-fixed                              (regexp-quote prompt)
