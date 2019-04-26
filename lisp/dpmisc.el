@@ -5547,7 +5547,6 @@ of the Emacs session."
   (let ((gdb-command-name (or gdb-cmd dp-gdb52-cmd-name)))
     (call-interactively 'gdb)))
 
-
 (defvar dp-gdb-sudo-history '()
   "History for commands run with `gdb-sudo' or `gdb-cf'.")
 (defvar dp-gdb-sudo-run-dir nil
