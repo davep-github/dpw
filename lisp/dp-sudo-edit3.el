@@ -36,7 +36,7 @@
 (defvar dp-sudo-edit-sudo-password-args '("-S" "-p" "''")
   "How we make sudo read password from stdin.")
 
-(defun dp-sudo-edit-sudo-it (&optional program infile buffer displayp 
+(defun dp-sudo-edit-sudo-it (&optional program infile buffer displayp
                              &rest args-to-sudoer)
   "Front end so we can handle prompting for sudo password."
   ;; Get password if needed.
@@ -45,7 +45,7 @@
   (apply 'call-process (or program dp-sudo-edit-sudoer)
          infile buffer displayp args-to-sudoer)
   (append dp-sudo-edit-sudo-password-args args-to-sudoer))
-  
+
 (defun dp-sudo-edit-mk-handler-alist-entry (file-name)
   "Create an entry for the `file-name-handler-alist'."
   (cons (regexp-quote file-name) 'dp-sudo-edit-handler-fn))
@@ -68,9 +68,9 @@
 ;;+handler: op>write-region<, rest>(1 135 /sudo-edit#/tmp/root-write-file nil t /sudo-edit#/tmp/root-write-file #<coding_system iso-2022-8-unix>)<
 ;;(write-region START END FILENAME &optional APPEND VISIT LOCKNAME CODING-SYSTEM)
 
-; (list start end dp-sudo-edit-sudoer 
-; 			  nil "*dse-debug*" nil 
-; 			  "tee" 
+; (list start end dp-sudo-edit-sudoer
+; 			  nil "*dse-debug*" nil
+; 			  "tee"
 ; 			  (buffer-file-name))
 (defun dp-sudo-edit-write-region (op start end file-name &rest rest)
   "Write the requested region into the specified file.
@@ -89,10 +89,10 @@ We currently don't support all of the `write-region' options."
       (widen)
       (while (> num-to-write 0)
         (setq write-len (min num-to-write 4096))
-        (setq cp-command (list start (+ start write-len) 
-                                dp-sudo-edit-sudoer 
-                                nil "*dse-debug*" nil 
-                                "tee" "-a" 
+        (setq cp-command (list start (+ start write-len)
+                                dp-sudo-edit-sudoer
+                                nil "*dse-debug*" nil
+                                "tee" "-a"
                                 (buffer-file-name)))
         (dmessage "write-len: %d, cp-command>%s<" write-len cp-command)
         (setq rc (apply 'call-process-region cp-command))
@@ -107,11 +107,11 @@ We currently don't support all of the `write-region' options."
 
 (defun dp-sudo-edit-set-file-modes (op file-name mode-bits)
   "Set file modes using 'sudo chmod'."
-  (dp-sudo-edit-sudo-it dp-sudo-edit-sudoer nil nil nil 
-                        "chmod" 
+  (dp-sudo-edit-sudo-it dp-sudo-edit-sudoer nil nil nil
+                        "chmod"
                         (format "%o" mode-bits)
                         file-name))
-    
+
 (defun dp-sudo-edit-common-setup (handler-entry)
   (add-local-hook 'kill-buffer-hook 'dp-sudo-edit-temp-buffer-killed)
   (dp-set-text-color 'dp-sudo-edit-bg-extent 'dp-sudo-edit-bg-face)
@@ -136,7 +136,7 @@ Not all options are supported."
         )
     ;; @todo fix use of visit, take from rest, (nth 0 rest)
     ;;(when visit
-    ;; @todo remove when satisfied that this 
+    ;; @todo remove when satisfied that this
     ;;       2003-06-15T01:21:28
     ;; I don't unnerstand what myself was doing when it added this
     ;; [in]sanity check.
@@ -203,9 +203,9 @@ Not all options are supported."
        (dmessage "handler: op>%s<, rest>%s<" op rest)
        (message ">%s<" err)))
 
-    ;;(dmessage "%shandler: op>%s< ret>%s<" 
+    ;;(dmessage "%shandler: op>%s< ret>%s<"
     ;;	      (replace-in-string dp-sudo-edit-handler-depth "\\+" "-") op ret)
-    (setq dp-sudo-edit-handler-depth 
+    (setq dp-sudo-edit-handler-depth
 	  (substring dp-sudo-edit-handler-depth 0 -1))
 
     ret))
@@ -216,9 +216,9 @@ Not all options are supported."
 (defun dp-sudo-edit-remove-handler-entry (&optional entry)
   (unless entry (setq entry dp-sudo-edit-handler-entry))
   (if entry
-      (setq file-name-handler-alist (delete dp-sudo-edit-handler-entry 
+      (setq file-name-handler-alist (delete dp-sudo-edit-handler-entry
 					    file-name-handler-alist))))
-  
+
 (defun dp-sudo-edit-temp-buffer-killed ()
   "Respond to a sudo-edit buffer being killed.  Delete this buffer's file-name-handler entry.
 This is called as a `kill-buffer-hook', with the condemned buffer
@@ -237,7 +237,7 @@ current."
       (add-to-list 'file-name-handler-alist handler-entry)
       ;; tramp also does this:
       ;;   (put 'tramp-file-name-handler 'safe-magic t)
-      (if visiting-buffer 
+      (if visiting-buffer
 	  (let (point)
 	    (switch-to-buffer visiting-buffer)
 	    (when (buffer-modified-p)
@@ -334,7 +334,7 @@ See `accept-process-output' for details of specifying a timeout.")
     (when (string-match "^[ \n\r\t\v\f\b\a]+" string)
       (setq string (replace-match "" t t string)))
     (process-send-string proc (concat (read-passwd string) "\n"))))
-  
+
 (defun dp-sudo-authentication-sentinel (proc status-msg)
   (unless (eq 'closed (process-status proc))
     (set-process-sentinel proc nil)
@@ -350,12 +350,12 @@ sudoer.")
   "See man 8 sudo."
   (interactive)
   ;; start-process, add `comint-watch-for-password-prompt', wait for exit.
-  ;; if `comint-watch-for-password-prompt' saw a password prompt, 
+  ;; if `comint-watch-for-password-prompt' saw a password prompt,
   ;; it should have handled it.
-  (let ((sudo-proc (apply 'start-process 
+  (let ((sudo-proc (apply 'start-process
                           "sudo authentication"
                           nil
-                          dp-sudo-authentication-command  
+                          dp-sudo-authentication-command
                           dp-sudo-authentication-args))
         pstat)
     (set-process-sentinel sudo-proc 'dp-sudo-authentication-sentinel)
@@ -364,7 +364,7 @@ sudoer.")
           (catch 'dp-sudo-authentication-done
             (while t
               ;; Wait 30 sec for prompt to appear.
-              (if (apply 'accept-process-output 
+              (if (apply 'accept-process-output
                          sudo-proc dp-sudo-authentication-def-timeout)
                   (dmessage "got some input.  Bad passwd?")
                 ;; No output rx'd.  Since we're just waiting for the program to
@@ -372,16 +372,16 @@ sudoer.")
                 ;; output, we'll handle it in the sentinel and that will throw
                 ;; back to us.
                 ;; Kill the sob.
-                (dmessage "Timed out waiting for %s to start up." 
+                (dmessage "Timed out waiting for %s to start up."
                           dp-sudo-authentication-command)
                 (process-send-signal 9 sudo-proc)
-                (error 'process-error 
-                       (format "Timed out waiting for %s to start up." 
+                (error 'process-error
+                       (format "Timed out waiting for %s to start up."
                                dp-sudo-authentication-command))))))
     (if (equal pstat 0)
         ;; This'll get stomped immediately by the file name prompt.
         (message "Validation successful.")
-      (error 'process-error (format "%s: Validation failed: %s" 
+      (error 'process-error (format "%s: Validation failed: %s"
                                     dp-sudo-authentication-command pstat)))))
 
 (defun dp-sudo-authenticate (&rest args)

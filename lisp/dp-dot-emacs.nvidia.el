@@ -87,7 +87,7 @@ tests.")
       (NV_XC hide-ifdef-define))
     "T3D definitions for hide-ifdef-* to show code of interest in ARM .axf
 tests.")
-  
+
   (defvar dp-T3D-hide-ifdef-common-undefs
     '((USE_SW_NVTEST hide-ifdef-undef))
     "We never want these defined. And by never I mean usually.")
@@ -112,7 +112,7 @@ tests.")
     (interactive)
     (dp-hide-ifdefs 't3dso))
   (dp-defaliases 'hif-t3dso 'hifso 'dp-hide-ifdef-for-T3D.so)
-  
+
   (defun dp-hide-ifdef-for-T3D.axf ()
     (interactive)
     (dp-hide-ifdefs 't3daxf))
@@ -135,17 +135,17 @@ tests.")
 
 (add-hook 'dp-post-dpmacs-hook 'dp-nvidia-spec-macs-hook)
 
-;; 
+;;
 ;; Since I cannot add variable hacks to files, I'll do it another way, using
 ;; the auto-mode-alist mechanism.
 ;; XXX @todo ? Should I trim that list? There are many bad matches already.
 ;;
 
-(defvar dp-generic-sandbox-dir-prefix 
+(defvar dp-generic-sandbox-dir-prefix
   "/home/scratch.dpanariti[^/]*/"
   "All nvidia sandboxes will be rooted under dirs of this form.")
 
-(dp-add-list-to-list 
+(dp-add-list-to-list
  'dp-auto-mode-alist-additions
  (list ;; (regexp . func-to-call-when-loaded)
   (cons (format "%s.*/\\(regress_tegra_gpu_multiengine\\|gpu_multiengine_a[rs]2\\)$" dp-generic-sandbox-dir-prefix)
@@ -196,10 +196,10 @@ tests.")
                                           (lambda (loc)
                                             (dmessage "%s." ticker)
                                             (prog1
-                                                (list (dp-me-expand-dest 
+                                                (list (dp-me-expand-dest
                                                        loc sb-name))
                                               (setq ticker
-                                                    (dmessage "%s+" 
+                                                    (dmessage "%s+"
                                                               ticker)))))
                                          locs)))
                       (delete nil (delete '(nil) bubba))))
@@ -210,15 +210,15 @@ tests.")
       'dp-nvidia-make-cscope-database-regexps)
 
 ;; Define per-locale???
-(defun* dp-set-cscope-database-regexps (&optional ignore-env-p 
-                                        db-locations 
+(defun* dp-set-cscope-database-regexps (&optional ignore-env-p
+                                        db-locations
                                         (hierarchical-search-p t))
   (interactive "P")
   (setq cscope-database-regexps
-        (funcall dp-make-cscope-database-regexps-fun 
-                 ignore-env-p db-locations 
+        (funcall dp-make-cscope-database-regexps-fun
+                 ignore-env-p db-locations
                  hierarchical-search-p)))
-  
+
 ;; Factor into function that takes the expander (e.g. dp-me-expand-dest) as a
 ;; parameter.
 (defun dp-nvidia-me-expand-preceding-word (&rest r)
@@ -256,7 +256,7 @@ tests.")
   "-chipargs '-elf_load /home/denver/release/sw/components/mts/1.0/cl28625566/debug_arm/denver/bin/mts.elf@0xe0000000:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/drv/mpcore/t132/ObjLinux_MPCoreXC/boot_page_table.axf:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/override.elf@0xe0000000:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/t132/ObjLinux_MPCoreXC/cpu_surface_write_read.Cortex-A8.axf:/home/scratch.dpanariti_t124_3/sb4/sb4hw/hw/ap_t132/diag/testgen/dp-rtl-tests/top_peatrans_gpurtl-2013-11-21T08.33.48-0800/cpu_surface_write_read/t132/ObjLinux_ARM7TDMIXC/cpu_surface_write_read.ARM7TDMI.axf:' "
   "tip-top-denver.sh 'needed this to make it go.'")
 
-(defvar dp-tgen-elf-load-option 
+(defvar dp-tgen-elf-load-option
   "-chipargs '-elf_load /home/denver/release/sw/components/mts/1.0/cl28625566/debug_arm/denver/bin/mts.elf@0xe0000000:@SB@/hw/ap_t132/drv/mpcore/t132/ObjLinux_MPCoreXC/boot_page_table.axf:@PWD@override.elf@0xe0000000:@PWD@t132/ObjLinux_MPCoreXC/cpu_surface_write_read.Cortex-A8.axf:@PWD@t132/ObjLinux_ARM7TDMIXC/cpu_surface_write_read.ARM7TDMI.axf:' "
   "tip-top-denver.sh 'needs this to make it go.'")
 ;;
@@ -270,7 +270,7 @@ tests.")
 (defun dp-tgen-generate-elf-load-option (&optional s)
   (interactive)
   (setq-ifnil s dp-tgen-elf-load-option)
-   (replace-in-string 
+   (replace-in-string
     (replace-in-string s
                        "@SB@"
                        (dp-current-sandbox-path))

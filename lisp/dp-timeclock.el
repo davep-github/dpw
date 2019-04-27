@@ -230,7 +230,7 @@ HTML-P is non-nil, HTML markup is added."
 (defvar dp-wakeup-idle-itimer nil
   "The itimer we're using for wakeup actions.")
 
-(defconst dp-wakeup-greeting 
+(defconst dp-wakeup-greeting
   "Hello, Dave; I knew you'd be back. Carpe deim?")
 
 (defconst dp-cd-wakeup-confirmation-function 'yes-or-no-p
@@ -275,7 +275,7 @@ string and return non-nil for a yes type response.")
   (when (symbol-value itimer)
     (delete-itimer (symbol-value itimer))
     (set itimer nil)))
-                                      
+
 (defun dp-cd-start-idle-timer (&optional wakeup-time)
   "As in the first time I use xemacs after I wake up.
 Do things like setup meds appointments relative to wake up time."

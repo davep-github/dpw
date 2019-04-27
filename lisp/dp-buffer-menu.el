@@ -15,10 +15,10 @@ Passed to `list-buffers-internal' by `list-buffers-noselect' if non-nil.
 If nil, `list-buffers-noselect' will use \(list files-only\)
 as the predicate args passed to `list-buffers-internal'.")
 
-(defcustom dp-bmm-visible-major-modes 
+(defcustom dp-bmm-visible-major-modes
   '(dired-mode
     debugger-mode
-    Manual-mode 
+    Manual-mode
     w3m-mode
     comint-mode
     ssh-mode
@@ -79,7 +79,7 @@ entry point."
    (dp-bmm-immed-cmd 'dp-unmodify+ro))
 
 (defun dp-buffer-menu-id-file ()
-  (let ((file-name (dp-extent-with-property-exists 'help-echo 
+  (let ((file-name (dp-extent-with-property-exists 'help-echo
 						   (point) (point))))
     (message-nl "%s" (if file-name
                          (car file-name)
@@ -96,19 +96,19 @@ entry point."
   (local-set-key [return] 'dp-bmm-visit)
   (local-set-key [(meta return)] 'Buffer-menu-1-window)
   (local-set-key [(control return)] 'Buffer-menu-1-window)
-  ;; retain behavior that I like (inverted from standard): 
+  ;; retain behavior that I like (inverted from standard):
   ;; no prefix arg --> just files
   ;;    prefix arg --> all buffers
-  (local-set-key [?g] (kb-lambda 
+  (local-set-key [?g] (kb-lambda
 		       (dp-buffer-menu dp-buffer-menu-invocation-arg)))
   (local-set-key [?=] 'Buffer-menu-this-window)
   (local-set-key [?.] 'Buffer-menu-this-window)
   (local-set-key [?D] 'dp-buffer-menu-mark-for-kill-matching-buffers)
   (local-set-key [(meta ?D)] 'dp-buffer-menu-mark-for-kill-matching-buffers)
-  (local-set-key [up] (kb-lambda 
+  (local-set-key [up] (kb-lambda
 			(call-interactively 'dp-up-with-wrap-non-empty)
 			(dp-buffer-menu-id-file)))
-  (local-set-key [down] (kb-lambda 
+  (local-set-key [down] (kb-lambda
 			  (call-interactively 'dp-down-with-wrap-non-empty)
 			  (dp-buffer-menu-id-file)))
   (local-set-key [?v] 'Buffer-menu-switch-other-window)
@@ -140,7 +140,7 @@ entry point."
 ;		     "button2 toggles the buffer's read-only status")
 
 (defun dp-bmm-get-color-for-buf-name (buf &optional colorization-alist)
-  (let ((face (or (cdr-safe (dp-assoc-regexp 
+  (let ((face (or (cdr-safe (dp-assoc-regexp
                              (buffer-name buf)
                              (or colorization-alist
                                  dp-bmm-buffer-name-colorization-alist)))
@@ -148,7 +148,7 @@ entry point."
                   ;; situation where the buffer name didn't work but the file
                   ;; name did. (duh)
                   (and (buffer-file-name buf)
-                       (cdr-safe (dp-assoc-regexp 
+                       (cdr-safe (dp-assoc-regexp
                                   (buffer-file-name buf)
                                   dp-bmm-buffer-name-colorization-alist))))))
     (or face
@@ -170,7 +170,7 @@ Gets the buffer as input.")
   :group 'dp-faces)
 
 (require 'dired)
-(defvar dp-bmm-mode-name-colorization-alist 
+(defvar dp-bmm-mode-name-colorization-alist
   '(("^Dired$" . dired-face-directory)
     ("^Debugger$" . dp-journal-medium-problem-face)
     ("^Manual$" . font-lock-string-face)
@@ -195,7 +195,7 @@ Gets the buffer as input.")
 (defun dp-bmm-add-minor-mode-faces (buffer begin end)
   (loop for (mode-var . face) in dp-bmm-minor-mode-faces
     do (when (buffer-local-value mode-var buffer)
-         (dp-set-text-color 'buff-menu-mode-minor-mode 
+         (dp-set-text-color 'buff-menu-mode-minor-mode
                             face
                             begin end 'detachable t t))))
 
@@ -213,13 +213,13 @@ Gets the buffer as input.")
       (indent-to 29 1)
       (setq p1 (+ 4 (line-beginning-position))
 	    p2 (+ p1 (length (buffer-name cur-buf))))
-      
+
       (end-of-line)
       (setq eob (point))
       (prin1 size output)
       ;; make [@] a var
       (if (setq face (funcall dp-bmm-get-buffer-name-face cur-buf))
-	  (dp-set-text-color 'buff-menu-mode-buffer-face 
+	  (dp-set-text-color 'buff-menu-mode-buffer-face
 			     face p1 p2 'detachable))
       (setq p (point))
       ;; right-justify the size
@@ -254,11 +254,11 @@ Gets the buffer as input.")
         (when (setq face (funcall dp-bmm-get-mode-face cur-buf))
 	  (dp-set-text-color 'buff-menu-mode face p1 p2 'detachable t t))
         (dp-bmm-add-minor-mode-faces cur-buf p1 p2))
-      
+
       (dp-make-extent (line-beginning-position)
 		      (line-end-position)
 		      'dp-buff-menu-buffer-name
-		      'help-echo 
+		      'help-echo
 		      (or file
 			  "No file.")))))
 
@@ -331,7 +331,7 @@ Gets the buffer as input.")
                                     (point)
                                     'highlight t)
                  (insert ?\n)))))
-      
+
       (Buffer-menu-mode)
       (if (not (bufferp current))
           (goto-char current)))))

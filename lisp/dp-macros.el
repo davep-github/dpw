@@ -12,7 +12,7 @@
     do (put var-sym p v)))
 
 (defun dp-aboundp (symbol newdef)
-  (and (functionp symbol) 
+  (and (functionp symbol)
        (fboundp newdef)))
 
 (defun dp-alias-eq (symbol newdef)
@@ -79,7 +79,7 @@ If DOCSTRING is a cons, then the car holds a string that consists of flags to
     (unless message
       (setq message docstring
             docstring "Attach a warning message to a key binding."))
-    `(kb-lambda 
+    `(kb-lambda
       ,docstring
       (error "kb-warning: %s" ,message)))
 
@@ -129,7 +129,7 @@ Otherwise, after the `save-excursion' completes, go to the `point-marker' where
 the `save-excursion' ended up."
     `(let ((point (save-excursion
                     ,@body
-                    (dp-mk-marker)))) 
+                    (dp-mk-marker))))
       (unless (dp-callable-pred ,pred)
         (goto-char point))))
   (put 'dp-conditionally-save-excursion 'lisp-indent-function 1)
@@ -143,8 +143,8 @@ the `save-excursion' ended up."
 ;                ,symbol ,newdef)
 ;       (defalias ,symbol ,newdef)))
 
-;;   (defmacro* dp-safe-alias (symbol newdef 
-;;                             &optional (fatal-p 
+;;   (defmacro* dp-safe-alias (symbol newdef
+;;                             &optional (fatal-p
 ;;                                        (quote dp-unsafe-alias-is-fatal-p)))
 ;;     "Make sure this alias doesn't clobber/shadow something else.
 ;; !<@todo Make this smart enough to not complain (or to complain quietly and
@@ -160,9 +160,9 @@ the `save-excursion' ended up."
 
   (defvar dp-safe-alias-not-fatal-if-interactive-p t
     "What's in a name?  Documentation.")
-  
-  (defmacro* dp-safe-alias (symbol newdef 
-                            &optional (fatal-p 
+
+  (defmacro* dp-safe-alias (symbol newdef
+                            &optional (fatal-p
                                        (quote dp-unsafe-alias-is-fatal-p)))
     "Make sure this alias doesn't clobber/shadow something else.
 However if we are `interactive-p' and
@@ -173,7 +173,7 @@ However if we are `interactive-p' and
               (dmessage "dp-safe-alias: Identical redefinition of %s."
                         ,symbol)
             (dmessage-ding
-             "dp-safe-alias: Allowing redefinition of %s from %s to %s" 
+             "dp-safe-alias: Allowing redefinition of %s from %s to %s"
              ,symbol (symbol-function ,symbol ),newdef)
             (defalias ,symbol ,newdef))
         (funcall (if ,fatal-p 'error 'warn)
@@ -188,7 +188,7 @@ However if we are `interactive-p' and
 it as a string."
     ;; by "William G. Dubuque" <wgd@zurich.ai.mit.edu> w/ mods from Stig
     `(with-current-buffer (get-buffer-create
-                           (generate-new-buffer-name 
+                           (generate-new-buffer-name
                             " *dp-with-all-output-to-string*"))
       (dp-toggle-read-only 0)
       (buffer-disable-undo (current-buffer))
@@ -207,7 +207,7 @@ it as a string."
         (setq docstring (format "%s\n(buffer-local)" docstring))
       (setq args (cons docstring args)
             docstring "(buffer-local)"))
-    `(progn 
+    `(progn
       (defcustom ,symbol ,value ,docstring ,@args)
       (make-variable-buffer-local ',symbol)
       ;; @todo XXX Should we predicate this on interactive evaluation?
@@ -266,12 +266,12 @@ it as a string."
               init-val (car arglist)
               arglist (cdr arglist))
         (setq new-elem `(if (boundp (quote ,arg))
-                         ,arg 
+                         ,arg
                          (setq ,arg ,init-val)))
         (setq result (cons new-elem result)))
       (cons 'progn (reverse result))))
-  
-  ;;!<@todo Be there common code twixt this and -ifnil? 
+
+  ;;!<@todo Be there common code twixt this and -ifnil?
   (defmacro setq-ifnil-or-unbound (&rest arglist)
     "Setup default values for args which are nil or unbound."
     (if (not (= 0 (mod (length arglist) 2)))
@@ -282,7 +282,7 @@ it as a string."
               arglist (cdr arglist)
               init-val (car arglist)
               arglist (cdr arglist))
-        (setq new-elem `(if (and-boundp (quote ,arg) ,arg) 
+        (setq new-elem `(if (and-boundp (quote ,arg) ,arg)
                          ,arg (setq arg ,init-val)))
         (setq result (cons new-elem result)))
       (cons 'progn (reverse result))))
@@ -356,7 +356,7 @@ VAR must be a symbol."
     `(if-and-boundp ,var
       (progn
         ,@body)))
-  (dp-put-pv-list 'when-and-boundp 
+  (dp-put-pv-list 'when-and-boundp
                   '((lisp-indent-hook 1) (lisp-indent-function 1)))
 
   (defmacro unless-and-boundp (var &rest body)
@@ -364,7 +364,7 @@ VAR must be a symbol."
     `(if-and-boundp ,var
       nil
       ,@body))
-  (dp-put-pv-list 'unless-and-boundp 
+  (dp-put-pv-list 'unless-and-boundp
                   '((lisp-indent-hook 1) (lisp-indent-function 1)))
 
   (defmacro if-and-fboundp (fun then &rest else)
@@ -377,7 +377,7 @@ VAR must be a symbol."
   (defmacro def-pkg-dmessage (&optional prefix-in)
     "Define a pkg/file specific dmessage func and control var."
     (let* ((prefix (or prefix-in
-                       (file-name-sans-extension 
+                       (file-name-sans-extension
                         (file-relative-name (buffer-file-name)))))
            (fun (intern (format "%s-dmessage" prefix)))
            (var (intern (format "%s-dmessage-on-p" prefix)))
@@ -477,7 +477,7 @@ VAR must be a symbol."
   (defmacro dp-when-rsh-cwd (&rest body)
     "Execute BODY with the CWD extracted from the nearest shell type buffer.
 /CWD/ is bound to the a string holding the buffer's CWD.
-Execute BODY if /CWD/ is non-nil.  
+Execute BODY if /CWD/ is non-nil.
 Forms in BODY can use /CWD/."
     `(let ((/cwd/ (dp-rsh-cwd)))
       (if /cwd/
@@ -491,7 +491,7 @@ Forms in BODY can use /CWD/."
     "`funcall' FUNC with unquoted list FUNC-ARGS if FUNC is bound and a function,
 otherwise do ELSE.
 E.g.
-\(dp-funcall-if 'good-things 
+\(dp-funcall-if 'good-things
     \(puppy-dogs rainbows)
   \(woe-is-me)
   \(ho-ho-ho-to-the-bottle-I-go))
@@ -508,14 +508,14 @@ Yields:
       (funcall ,func ,@func-args)
       ,@else-body))
   (put 'dp-funcall-if 'lisp-indent-function lisp-body-indent)
-  
+
   (defmacro dp-apply-if (func func-args &rest else-body)
     "Like `dp-funcall-if', but uses `apply'."
     `(if (functionp ,func)
       (apply ,func ,func-args)
       ,@else-body))
   (put 'dp-apply-if 'lisp-indent-function lisp-body-indent)
-  
+
   (defmacro dp-aif-old (if-body &rest else-body)
     "Does this form please you?
 IF-BODY is a list: \(an-fset-var-or-sym REST..). "
@@ -549,9 +549,9 @@ IF-BODY is a list: \(an-fset-var-or-sym REST..). "
     "Apply FUNC to FUNC-ARGS if FUNC is a function, otherwise do ELSE."
     `(if (and (functionp ,func)
               (or (interactive-form ,func)
-                  (error 
+                  (error
                    'invalid-function
-                   (format 
+                   (format
                     "%s is a function, but not an interactive function." ,func))))
       (call-interactively ,func ,@func-args)
       ,@else-body))
@@ -578,7 +578,7 @@ NO extra parameters can be passed to `call-interactively'.  See
   (if (symbolp (eval place))
       `(set ,place ,value)
     `(setf ,place ,value)))
-  
+
   (defmacro dp-val-if-boundp (var-sym)
     `(and-boundp ',var-sym (symbol-value ',var-sym)))
 
@@ -606,11 +606,11 @@ If VAR is non-nil, put the *final* value of `point' as a marker in it.
             ,@forms)
         ,(when var
            `(setq ,var (dp-mk-marker)))
-        (goto-char **%original%point%**))))  
-  (put 'dp-with-saved-point 'lisp-indent-function 
+        (goto-char **%original%point%**))))
+  (put 'dp-with-saved-point 'lisp-indent-function
        (get 'while 'lisp-indent-function))
   (defalias 'dp-save-excursion-lite 'dp-with-saved-point)
-  
+
   (defmacro dp-do-thither (thither final-point &rest forms)
     "Go THITHER in this buffer, execute FORMS and return whence we came.
 FINAL-POINT, if non-nil, should be a symbol into which `point' is saved when
@@ -630,25 +630,25 @@ FORMS complete."
           ,(when final-point
              `(setq ,final-point (point)))
           (goto-char ,whither)))))
-  (put 'dp-do-thither 
+  (put 'dp-do-thither
        'lisp-indent-function (get 'save-excursion 'lisp-indent-function))
-  
+
   (defmacro* dp-defwriteme (name arg-list docstring &rest body &aux args-str)
     ;; Handle docstring cases:
     (setq docstring (concat "WRITE THIS FUNCTION!\n" docstring))
-    (setq args-str (if arg-list 
+    (setq args-str (if arg-list
                        (format "%s" `(,@arg-list))
                      "()"))
     `(defun ,name ,arg-list
       ,docstring
       (interactive)
-      (message "%s: WRITE ME!!!: %s %s" 
+      (message "%s: WRITE ME!!!: %s %s"
                (quote ,name)
                (quote ,name)
                ,args-str)
       ,@body))
   (put 'dp-defwriteme 'lisp-indent-function 'defun)
-  
+
   (defmacro dp-working... (msg enable-p &rest forms)
     (if (not enable-p)
         '()
@@ -664,13 +664,13 @@ FORMS complete."
                               (marker-buffer ,pos)
                             (current-buffer))
       ,@forms))
-  (put 'with-marker-buffer 'lisp-indent-function 
+  (put 'with-marker-buffer 'lisp-indent-function
        (get 'when 'lisp-indent-function))
 
   (defmacro dp-advise-for-go-back (func &optional doc reason)
     "Wrap FUNC with 'before advice that does a `dp-push-go-back'"
     (let* ((doc (or (and doc (eval doc))
-                    (format 
+                    (format
                      "Add 'before advice that first does a `dp-push-go-back.'")))
            (efunc (eval func))
            (advice-name (intern (format "dp-ad-%s" efunc)))
@@ -684,7 +684,7 @@ FORMS complete."
     (unless (stringp docstring)
       (setq forms (cons docstring forms)
             docstring "Too lazy to add doc."))
-    `(function 
+    `(function
       (lambda (,@args)
         ,docstring
         ,@forms)))
@@ -696,7 +696,7 @@ FORMS complete."
       (unless (setf ,list-name (cdr ,list-name))
         (setf ,list-name ,new-list))
       ,list-name))
-  (put 'dp-cycle&setf-list 'lisp-indent-function 
+  (put 'dp-cycle&setf-list 'lisp-indent-function
        (get 'setf 'lisp-indent-function))
 
 
@@ -706,7 +706,7 @@ FORMS complete."
       ,@body))
   (put 'with-case-folded
        'lisp-indent-function (get 'let 'lisp-indent-function))
-  
+
   (defmacro dp-with-prefix-arg (arg &rest body)
     `(let ((current-prefix-arg ,arg))
       ,@body))
@@ -723,7 +723,7 @@ FORMS complete."
 
   (defmacro dp-refvar (name init-val &optional docstring)
   "Force reevaluation of a defvar just like eval'ing in interactive lisp mode."
-  (let ((expr `(defvar 
+  (let ((expr `(defvar
                 ,name
                 ,init-val)))
     (when docstring
@@ -749,7 +749,7 @@ FORMS complete."
 
 ;;; // ///// <:macros new up there, above me:>
 
-)  
+)
 
 (provide 'dp-macros)
 

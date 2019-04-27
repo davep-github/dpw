@@ -35,7 +35,7 @@
      (2 'font-lock-variable-name-face))
     ,dp-font-lock-line-too-long-error-element
     ;; ,dp-trailing-whitespace-font-lock-element
-    ) 
+    )
   "Regexp used to colorize p4-mode changesets.
 This mode uses tabs, so the line too long regexp fails.")
 
@@ -50,7 +50,7 @@ This mode uses tabs, so the line too long regexp fails.")
      (2 'font-lock-variable-name-face))
     ;; Files in ChangeSet
     (
-     ,(format "\\(-?\\)\\(//%s/.*\\)[ \t]+\\(//.*\\)" 
+     ,(format "\\(-?\\)\\(//%s/.*\\)[ \t]+\\(//.*\\)"
               dp-font-lock-depot-prefix-regexp)
      (1 'font-lock-reference-face)
      (2 'font-lock-preprocessor-face)
@@ -72,16 +72,16 @@ This mode uses tabs, so the line too long regexp fails.")
 				      (user-login-name))))
 ; p4-mode-hook to fix common frustrations
 (add-hook 'p4-mode-hook
-          (function 
+          (function
            (lambda ()
              (setq
               ;; Configure backup files
               make-backup-files p4-make-backup-files
-              
+
               ;; Our depot root
-              p4-default-depot-completion-prefix 
-              dp-p4-default-depot-completion-prefix 
-              
+              p4-default-depot-completion-prefix
+              dp-p4-default-depot-completion-prefix
+
               ;; Always follow symlinks to perforce files
               p4-follow-symlinks t
               )
@@ -174,7 +174,7 @@ This mode uses tabs, so the line too long regexp fails.")
                                      [?x]
                                      dp4-restore-windows-and-frames
                                      [?-]
-                                     dp4-restore-windows-and-frames) 
+                                     dp4-restore-windows-and-frames)
                                    nil nil nil "dp4bsk2"))))
 
 (defun dp4-save-windows-and-frames ()
@@ -200,7 +200,7 @@ This mode uses tabs, so the line too long regexp fails.")
            (not (y-or-n-p "File is a symlink, continue?")))
       (progn
         (when (and buffer-file-truename
-                   (not (string= buffer-file-truename 
+                   (not (string= buffer-file-truename
                                  (car kill-ring-yank-pointer)))
           (kill-new buffer-file-truename)))
         (message "Cancelling op on symlink. True name: %s"
@@ -244,7 +244,7 @@ This mode uses tabs, so the line too long regexp fails.")
   "Deduce the perforce form type based on the header it conveniently inserts."
   (save-excursion
     (goto-char (point-min))
-    (when (dp-re-search-forward 
+    (when (dp-re-search-forward
            "^# A Perforce \\(Client\\|Change\\) Specification." nil t)
       (match-string 1))))
 
@@ -258,7 +258,7 @@ This mode uses tabs, so the line too long regexp fails.")
       (funcall hook))))
 
 (defun dp-p4-emacs-client ()
-  "Set up p4 forms we're editing as a server. p4 client, p4 change, ... 
+  "Set up p4 forms we're editing as a server. p4 client, p4 change, ...
 Things which are edited with ec-p4(dp) which uses this as the value for
 `dp-found-file-post-hook'."
   ;; Set up things for the current form type.
@@ -324,7 +324,7 @@ If CHANGE-NUM is C-- or C-0 or C-<less than zero> --> prompt for CHANGE-NUM."
                             current-prefix-arg)))
     (cond
      ((or (null change-num)
-          (and (integerp change-num) 
+          (and (integerp change-num)
                (= change-num 1)))
       (call-interactively 'p4-diff))
      ((and (integerp change-num)

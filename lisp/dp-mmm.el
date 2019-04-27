@@ -39,10 +39,10 @@ since we want to regexp-quote the opening delimitter (?for c++?)."
     )))
 
 ;; completion list.  wants value in car of list item.
-(defvar dp-mmm-add-mm-mode-list '(("c++-mode") ("c-mode") ("text-mode") 
+(defvar dp-mmm-add-mm-mode-list '(("c++-mode") ("c-mode") ("text-mode")
                                   ("python-mode") ("cperl-mode")
 				  ("antlr-mode") ("fundamental-mode") ("shell-script-mode")
-				  ("outline-mode") ("emacs-lisp-mode") ("diff-mode") 
+				  ("outline-mode") ("emacs-lisp-mode") ("diff-mode")
 				  ("haskell-mode") ("makefile-mode")
 				  )
   "Completion list for modes.")
@@ -61,7 +61,7 @@ behavior in the new region."
   (let (rcopy)
     (save-excursion
       (dp-mark-line-if-no-mark)
-      (let ((region (car (io-region (mark) (point) 
+      (let ((region (car (io-region (mark) (point)
                                     (format "{%%%s%%}" mode)
                                     (format "{%%/%s%%}" mode)
                                     'no-complaints))))
@@ -69,7 +69,7 @@ behavior in the new region."
           (setq rcopy region)
           (when (memq mode '(c-mode c++-mode))
             (c-init-language-vars-for mode))
-          (mmm-parse-region (car region) 
+          (mmm-parse-region (car region)
                             (cdr region))
           (setcar rcopy nil)
           (setcdr rcopy nil))))))
@@ -83,10 +83,10 @@ behavior in the new region."
   (dolist (extent (extents-at (or pos (point))) nil)
     (if (get extent 'mmm)
         (return t))))
-		      
+
 (provide 'dp-mmm)
 
-
+
 ;;; Local Variables:
 ;;; mmm-global-classes: nil
 ;;; End:

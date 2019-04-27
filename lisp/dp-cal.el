@@ -102,13 +102,13 @@
 
 (autoload 'cal-tex-list-diary-entries "cal-tex"
   "Generate a list of all diary-entries from absolute date D1 to D2." nil)
-  
+
 (defmacro dp-define-date-function (name docstring &rest body)
   "Macro to generate functions which take convenient date args."
   (unless (stringp docstring)
     (setq body (cons docstring body))
     (setq docstring "Lazy bastard provided no doc."))
-  `(defun ,name (&optional start-month end-month start-year 
+  `(defun ,name (&optional start-month end-month start-year
 			   end-year)
      ,docstring
      (interactive)
@@ -128,13 +128,13 @@
   "Based on code in cal-tex.el"
   (cal-tex-list-diary-entries
    (calendar-absolute-from-gregorian (list start-month 1 start-year))
-   (calendar-absolute-from-gregorian 
-    (list end-month 
+   (calendar-absolute-from-gregorian
+    (list end-month
 	  (calendar-last-day-of-month end-month end-year) end-year))))
 
 (dp-define-date-function dp-diary-entries-to-pcal
   "Convert diary entries to pcal entries."
-  (let ((appts (dp-get-diary-entries start-month end-month 
+  (let ((appts (dp-get-diary-entries start-month end-month
 				     start-year end-year))
 	(buf-name (generate-new-buffer-name "*pcal-output*")))
     (switch-to-buffer buf-name)
@@ -176,14 +176,14 @@
 (make-variable-buffer-local 'appt-frame-appt)
 
 (defun appt-frame-announce (min-to-app appt)
-  "Set appt-announce-method to the name of this function to cause appointment 
+  "Set appt-announce-method to the name of this function to cause appointment
 notifications to be given via messages in a pop-up frame."
   (let ()
     (save-excursion
       (set-buffer (get-buffer-create appt-buffer-name))
       (dp-erase-buffer)
       ;; set the mode-line of the pop-up window
-      (setq modeline-format 
+      (setq modeline-format
             (concat "-------------------- Appointment "
                     (if (eq min-to-app 0)
                         "NOW"
@@ -220,11 +220,11 @@ notifications to be given via messages in a pop-up frame."
             (set-frame-height appt-disp-frame height)
             )
           )
-        ;; make the buffer visible in the frame 
+        ;; make the buffer visible in the frame
         ;; and make the frame visible
         (let ((pop-up-windows nil))
-          (pop-to-buffer (get-buffer appt-buffer-name) 
-                         nil 
+          (pop-to-buffer (get-buffer appt-buffer-name)
+                         nil
                          appt-disp-frame)
           (make-frame-visible appt-disp-frame))
         )
@@ -234,11 +234,11 @@ notifications to be given via messages in a pop-up frame."
 
 ;;;
 ;;; Being reworked...
-;; (defstruct 
+;; (defstruct
 ;;   (dp-split-time-string-struct
-;;    (:constructor dp-cons-split-time-struct (day-name-tla 
-;;                                             month-name-tla 
-;;                                             day-of-month 
+;;    (:constructor dp-cons-split-time-struct (day-name-tla
+;;                                             month-name-tla
+;;                                             day-of-month
 ;;                                             hrs mins secs year)))
 ;;   day-name-tla
 ;;   month-name-tla
@@ -263,10 +263,10 @@ notifications to be given via messages in a pop-up frame."
 ;; (defun* dp-mk-split-time-struct (&optional (time-string (current-time-string)))
 ;;   (apply 'dp-cons-split-time-struct (dp-split-time-string)))
 
-;; (defun* dp-mk-appt-time (&optional 
+;; (defun* dp-mk-appt-time (&optional
 ;;                          time-string (current-time-string) ts-set-p)
 ;;   (let ((ts (dp-mk-split-time-struct)))
-;;     (format "%s:%s" 
+;;     (format "%s:%s"
 ;;             (dp-split-time-string-struct-hrs ts)
 ;;             (dp-split-time-string-struct-mins ts))))
 
@@ -277,23 +277,23 @@ notifications to be given via messages in a pop-up frame."
 ;;                                   (time-string (current-time-string) ts-set-p)
 ;;                                   prompt)
 ;;   (let ((ts (dp-mk-appt-time time-string)))
-;;     (read-from-minibuffer 
+;;     (read-from-minibuffer
 ;;      (or prompt
 ;;          (format
-;;           "Initial appt time (HH:MM[am|pm]) [default(now): %s]: " 
+;;           "Initial appt time (HH:MM[am|pm]) [default(now): %s]: "
 ;;           ts))
-;;      nil nil nil 
+;;      nil nil nil
 ;;      'dp-read-simple-appt-time-hist
 ;;      nil
 ;;      ts)))
 
-;; (defun* dp-get-appt-time (&optional 
+;; (defun* dp-get-appt-time (&optional
 ;;                           (time-string (current-time-string) ts-set-p))
 ;;   (interactive (list (dp-read-simple-appt-time)))
 ;;   (if (interactive-p)
 ;;       time-string
 ;;     (let ((ts (dp-mk-split-time-struct)))
-;;       (format "%s:%s" 
+;;       (format "%s:%s"
 ;;               (dp-split-time-string-struct-hrs ts)
 ;;               (dp-split-time-string-struct-mins ts)))))
 
@@ -306,13 +306,13 @@ notifications to be given via messages in a pop-up frame."
 ;;                (read-number "Number of appts [default: 4]: " t "4"))
 ;;         :msg-fmt-args nil))
 
-;; (defun* dp-add-periodic-appt (msg-fmt period 
-;;                                &key 
-;;                                (time-of-first-appt (dp-mk-appt-time)) 
+;; (defun* dp-add-periodic-appt (msg-fmt period
+;;                                &key
+;;                                (time-of-first-appt (dp-mk-appt-time))
 ;;                                (num 4 num-set-p)
 ;;                                (msg-fmt-args nil))
 ;;   (interactive (dp-read-add-periodic-appt-params))
-;;   (dmessage 
+;;   (dmessage
 ;;    "msg-fmt: %s, period: %s, time-of-first-appt: %s, num: %s, msg-fmt-args: %s"
 ;;    msg-fmt period time-of-first-appt num msg-fmt-args)
 ;;   (loop for x to (1- num)

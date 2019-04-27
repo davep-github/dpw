@@ -27,7 +27,7 @@
 ;; see dp-mail.el
 ;; obsolete
 (setq dp-fcc-alist '(
-	  (("filko" "mel@digital\\.net" "thayer" "be_unique@" 
+	  (("filko" "mel@digital\\.net" "thayer" "be_unique@"
 	    "gouge" "buchner" "woodruff" "dake")
 	   ("to" "cc") "oldgang")
 	  (nil ("to") "sent_mail")))

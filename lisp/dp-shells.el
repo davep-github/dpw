@@ -25,8 +25,8 @@ Should be a color which nearly blends into background."
 (make-face shell-uninteresting-face)
 
 (defface dp-shell-root-prompt-face
-  '((((class color) (background light)) 
-     (:foreground "red"))) 
+  '((((class color) (background light))
+     (:foreground "red")))
   "Face for root prompt."
   :group 'faces
   :group 'dp-faces)
@@ -40,7 +40,7 @@ Should be a color which nearly blends into background."
   :type '(repeat string))
 
 (defcustom dp-ls-front-end-command "run-with-cols-and-lines"
-  "Use this to run an ls type command. This takes care of differences between 
+  "Use this to run an ls type command. This takes care of differences between
 *csh and *sh environment syntax."
   :type 'string
   :group 'dp-vars)
@@ -53,9 +53,9 @@ Should be a color which nearly blends into background."
 ;; dpanariti@sc-xterm-19:/home/scratch.dpanariti_t124_1/sb3/sb3hw/hw/ap_t132
 ;; 5057/0002<1>
 ;; For shell 0 buffer:
-;; 5002/spayshul> 
+;; 5002/spayshul>
 ;;(defconst dp-sh-prompt-regexp "^[0-9]+\\([/<][0-9]+\\)?\\([#>]\\|<[0-9]*>\\)"
-(defconst dp-sh-prompt-regexp 
+(defconst dp-sh-prompt-regexp
   (concat "^[0-9]+"                     ; History number
           "\\("
           "[/<]"                        ; hist num separator.
@@ -67,29 +67,29 @@ Should be a color which nearly blends into background."
 (defconst dp-gdb-prompt-regexp "^(gdb) "
   "For gdb.")
 
-(defvar dp-shells-prompt-font-lock-regexp-list 
+(defvar dp-shells-prompt-font-lock-regexp-list
   (list dp-sh-prompt-regexp dp-gdb-prompt-regexp)
   "`comint'-y \"clients\" can have font locking regexp for its prompt here.")
 
 ;;;###autoload
 (defun dp-shells-mk-prompt-font-lock-regexp (&optional regexp-list)
-  (dp-concat-regexps-grouped (or regexp-list 
+  (dp-concat-regexps-grouped (or regexp-list
                                  dp-shells-prompt-font-lock-regexp-list)))
 
 ;;; Why does autoloading C-z (dp-shell) make this autoload necessary?
 ;;;###autoload
-(defvar dp-shells-prompt-font-lock-regexp 
+(defvar dp-shells-prompt-font-lock-regexp
   "^\\([0-9]+\\)\\(/\\(?:[0-9]+\\|spayshul\\)\\)\\([#>]\\|\\(<[0-9]*>\\)?\\)"
   "*Regular expression to match my shell prompt.  Used for font locking.
 For my multi-line prompt, this is second line.  For most prompts, this will
 be the only line.  Some shells, like IPython's, already colorize their
 prompt.  We don't want to stomp on them.")
 
-(defvar dp-shell-root-prompt-regexp 
+(defvar dp-shell-root-prompt-regexp
   "^[0-9]+## "
   "*Regular expression to match my shell prompt.")
 
-(defun* dp-X-or-Y-at-pmark/eobp (arg &optional 
+(defun* dp-X-or-Y-at-pmark/eobp (arg &optional
                                  (if-func 'process-send-eof)
                                  (else-func 'delete-char arg))
   (interactive "p")
@@ -112,9 +112,9 @@ prompt.  We don't want to stomp on them.")
                                         "@"
                                         (getenv "HOST")
                                         ":"))))
-    (list 
+    (list
      ;; Prompts:
-     ;; user 
+     ;; user
      ;;;;;???(cons 'dp-shells-prompt-font-locker 'shell-prompt-face)
      (cons dp-shells-prompt-font-lock-regexp
            (list (list 1 'shell-prompt-face)
@@ -126,20 +126,20 @@ prompt.  We don't want to stomp on them.")
      ;; The CWD part of my prompt  dp-journal-high-example-face
      ;; This ended up marking tons of stuff wrongly: "^[^@]+?@.*$"
      ;; Certainly the "@"s from ls -F are part of the problem.
-     (cons prompt-line-0 
+     (cons prompt-line-0
            (list (list 1 'dp-shells-prompt-id-face)
                  (list 2 'dp-shells-prompt-path-face)))
-     
+
      ;; grep hits on emacs backup files *~
      '("^[^\n]*~:[0-9]+:.*$" . shell-uninteresting-face)
      ;; compiler warnings
-     '("^[-_.\"A-Za-z0-9/+]+\\(:\\|, line \\)[0-9]+: \\([wW]arning:\\).*$" 
+     '("^[-_.\"A-Za-z0-9/+]+\\(:\\|, line \\)[0-9]+: \\([wW]arning:\\).*$"
        . font-lock-keyword-face)
      ;; greppish -n  hits: a name a colon and a number.
-     '("^[-_.\"A-Za-z0-9/+]+\\(: *\\|, line \\)[0-9]+:.*$" 
+     '("^[-_.\"A-Za-z0-9/+]+\\(: *\\|, line \\)[0-9]+:.*$"
        . font-lock-function-name-face)
      ;; name part of a greppish -n hit.
-     '("\\(^[-_.\"A-Za-z0-9/+]+\\)\\(: *\\|, line \\)[0-9]+" 1 
+     '("\\(^[-_.\"A-Za-z0-9/+]+\\)\\(: *\\|, line \\)[0-9]+" 1
        shell-output-2-face t)
      ;; line number of grep hit
      '("^[-_.\"A-Za-z0-9/+]+\\(: *[0-9]+\\|, line [0-9]+\\)" 1 bold t)
@@ -149,11 +149,11 @@ prompt.  We don't want to stomp on them.")
 
 
 ;;;###autoload
-(eval-after-load "shell" 
+(eval-after-load "shell"
   '(progn
     ;; more specific pattern for my prompt so other output is
     ;; less likely to match
-    (setq shell-prompt-pattern-for-font-lock 
+    (setq shell-prompt-pattern-for-font-lock
           dp-shells-prompt-font-lock-regexp)))
 
 (defun dp-comint-pmark ()
@@ -174,11 +174,11 @@ prompt.  We don't want to stomp on them.")
     ;;(message "regexp>%s<" regexp)
     (when (string-match regexp str)
       (let ((s (match-string 1 str)))
-        (when (string-match "^\\([^ 	
+        (when (string-match "^\\([^
 
 ]+\\)" s)
           ;; Just set it, no sense in comparing to see if it changed.
-          (setq default-directory 
+          (setq default-directory
                 (expand-file-name
                  (concat (match-string 1 s) "/"))))))))
 
@@ -272,7 +272,7 @@ Can be set after the first prompting.")
 (defvar dp-editing-server-cmd-regexp-exceptions
   (concat "^\\s-*\\(.?/?\\)?"
           (dp-concat-regexps-grouped
-           (append 
+           (append
             '("\\(hg\\|gitcia\\)\\s-+.*-m")
             '("\\(hg\\|git\\)\\s-+\\(commit\\|.+\\s-+commit\\s-+\\).*-m")
             ;; diff needs to be here because I use ec-diff which uses emacs.
@@ -284,12 +284,12 @@ Can be set after the first prompting.")
   "Commands that don't end up invoking an editor even though other commands
   that look like them (and are matched by `dp-editing-server-cmd-regexp')
   do.")
- 
+
 (defun dp-shell-lookfor-editing-server-command (str)
   (interactive)
   (when (and (string-match dp-editing-server-cmd-regexp str)
              (not (dp-server-running-p))
-             (not (string-match 
+             (not (string-match
                    dp-editing-server-cmd-regexp-exceptions
                    str))
              (y-or-n-p "Start gnuserv in this X?Emacs instance? "))
@@ -310,7 +310,7 @@ No regexps allowed. This will be processed by `regexp-opt'")
      collect (format "\\s-*\\(%s\\|\\S-*/%s\\).* \\<\\(commit\\|ci\\)\\>"
                      vc-cmd vc-cmd))
    (list (regexp-opt dp-shell-vc-commit-cmds))))
-   
+
 (defvar dp-shell-vc-commit-cmd-regexp
   (dp-concat-regexps-grouped dp-shell-vc-commit-cmd-regexps)
   "All regexes in one \\|'d string.")
@@ -406,11 +406,11 @@ not destined to be saved.  ")
 
 (defun dp-shells-skip-save-buffer (&optional buf)
   (interactive)
-  (set-symbol-value-in-buffer 'dp-shells-save-buffer-flag-p 
+  (set-symbol-value-in-buffer 'dp-shells-save-buffer-flag-p
                               nil
                               (dp-get-buffer buf)))
-  
-(defvar dp-shells-files-to-not-save 
+
+(defvar dp-shells-files-to-not-save
   '("\\.gz$"
     "\\.bz2$"
     "\\.zip$"
@@ -455,7 +455,7 @@ elisp handle it. ")
   (when (string-match dp-shell-*TAGS-changers str)
     (dp-refresh-tags)))
 
-(defvar dp-cd-type-command-regexp 
+(defvar dp-cd-type-command-regexp
   "^[ \t]*\\(g\\s-+\\(\\|gb\\|pd\\)[ \t]*$\\)"
   "My dir changing commands.")
 
@@ -478,7 +478,7 @@ elisp handle it. ")
 ;; dp-shell-like-symbol
 (defsubst dp-sls (variant &rest rest)
   "Return a symbol constructed by the concatenation of VARIANT and REST."
-  (intern 
+  (intern
    (mapconcat (lambda (s)
                 (format "%s" s))
               (cons variant rest)
@@ -506,7 +506,7 @@ Passing a list as a function causes the list to be evaluated and the car of
 the list is then used to set `this-command' variable.  Passing a lambda won't
 result in `this-command' being set properly. "
   (interactive)
-  (let ((fun 
+  (let ((fun
          (if (dp-mark-active-p)
              mark-active-fun
            ;;else
@@ -551,7 +551,7 @@ result in `this-command' being set properly. "
 (defun dp-shell-dirs-or-delete-line ()
   "If at EOCL (== EOB) and last char was a TAB, do a dirs command.
 It is usually after a failed TAB expansion that it becomes apparent that the
-dir-tracker has become lost.  
+dir-tracker has become lost.
 @todo ??? Just do a `dirs' after every change?"
   (interactive)
   (if (and (dp-eobp)
@@ -561,7 +561,7 @@ dir-tracker has become lost.
 
 ;;; (defun dp-shell-parens-or-dirs ()
 ;;;   (interactive)
-;;;   (dp-consecutive-key-command 
+;;;   (dp-consecutive-key-command
 ;;;    (list
 ;;;     (lambda () (dp-shell-resync-dirs))   ; Just `dirs' may be better.
 ;;;     (lambda () (dp-parenthesize-region))
@@ -591,10 +591,10 @@ dir-tracker has become lost.
                         (interactive)
                         (dp-shell-xxx-input
                          ;; at: Regexp match in previous input.
-                         :at-pmark-fun(dp-sls (quote ,variant) 
+                         :at-pmark-fun(dp-sls (quote ,variant)
                                               '-previous-matching-input)
                          ;; after: Regexp match in previous input.
-                         :after-pmark-fun (dp-sls (quote ,variant) 
+                         :after-pmark-fun (dp-sls (quote ,variant)
                                                   '-previous-matching-input)
                          ;; before: up
                          :before-pmark-fun 'isearch-backward
@@ -619,7 +619,7 @@ dir-tracker has become lost.
                          ;; at: next
                          :at-pmark-fun 'next-line
                          ;; after: match next
-                         :after-pmark-fun (dp-sls (quote ,variant) 
+                         :after-pmark-fun (dp-sls (quote ,variant)
                                                   '-next-matching-input-from-input)
                          ;; before: down
                          :before-pmark-fun 'next-line
@@ -677,10 +677,10 @@ dir-tracker has become lost.
                           ;; after: next input
                           :after-pmark-fun 'dp-open-newline
                           ;; before: down
-                          :before-pmark-fun 
-                          'dp-error-force-reparse-point-to-end 
+                          :before-pmark-fun
+                          'dp-error-force-reparse-point-to-end
                           ;; mark active: down
-                          :mark-active-fun 
+                          :mark-active-fun
                           'dp-error-force-reparse-point-to-end))
        [(meta ?d)] (lambda ()
                      (interactive)
@@ -699,11 +699,11 @@ dir-tracker has become lost.
 ;;                      :end-of-line-fun 'dp-shell-dirs-or-delete-line
                       :end-of-line-fun 'dp-shell-delete-line)))
      nil nil nil "dp-shell-line-mode-bindings"))
-  
+
   ;; ??? Why did I do the C-c thing? Testing?
   (local-set-key [(control ?c) (meta ?o)] 'dp-shell-magic-kill-ring-save)
   (local-set-key [(meta ?o)] 'dp-shell-magic-kill-ring-save)
-  
+
   ;; meta ` is already used by OS X
   ;; replace it by something common to both.
   ;;(local-set-key "\e`" (dp-sls variant '-previous-matching-input-from-input))
@@ -713,7 +713,7 @@ dir-tracker has become lost.
   ;;(local-set-key [(control ?z)] 'dp-shell-init-last-cmds)
   (local-set-key [(control space)] 'dp-expand-abbrev)
   ;; take us back from whence we came.
-  ;;   (local-set-key [(control ?z)] (kb-lambda 
+  ;;   (local-set-key [(control ?z)] (kb-lambda
   ;;                           (and (dp-maybe-select-other-frame)
   ;;                                (bury-buffer))))
   ;;(local-set-key [(control ?z)] 'dp-shell-visit-whence)
@@ -750,7 +750,7 @@ dir-tracker has become lost.
                       dp-shell-lookfor-vc-cmd
                       dp-shell-lookfor-editing-server-command
                       dp-shell-lookfor-dirty-buffer-cmds
-                      dp-shell-lookfor-*TAGS-changer) 
+                      dp-shell-lookfor-*TAGS-changer)
     do (add-hook (dp-sls variant '-input-filter-functions)
                  hook nil t)))
 
@@ -766,7 +766,7 @@ Called when shell, inferior-lisp-process, etc. are entered."
     (when (dp-optionally-require 'pcomplete)
       (pcomplete-shell-setup))
     ;; So I remove any dupes after the first occurrence.
-    (dp-nuniqify-lists '(shell-dynamic-complete-functions 
+    (dp-nuniqify-lists '(shell-dynamic-complete-functions
                          dp-comint-dynamic-complete-functions)))
   (dp-add-lookfor-hooks variant)
   ;;;@todo NEEDED??? (setq local-abbrev-table dp-shell-mode-abbrev-table)
@@ -784,11 +784,11 @@ Called when shell, inferior-lisp-process, etc. are entered."
                  (kb-lambda
                      (dp-shell-switch-to-prev-buffer t)))
 
-  (message "dp-shell-common-hook, (major-mode-str)>%s<, bn>%s< done." 
+  (message "dp-shell-common-hook, (major-mode-str)>%s<, bn>%s< done."
 	   (major-mode-str) (buffer-name)))
 
 (defun dp-shell-ignored-buffer-p (&optional name)
-  (posix-string-match 
+  (posix-string-match
    "^\\*\\ftp .*\\*$"
    (or name (buffer-name))))
 
@@ -799,7 +799,7 @@ Called when shell, inferior-lisp-process, etc. are entered."
 
 (defun dp-delimit-command-line ()
   (interactive)
-  (dp-order-cons (cons (save-excursion (comint-bol nil) (point)) 
+  (dp-order-cons (cons (save-excursion (comint-bol nil) (point))
                        (line-end-position))))
 
 (defun* dp-shell-cl-op (&key on-cl-func off-cl-func on-args off-args)
@@ -816,17 +816,17 @@ OFF-CL-FUNC is applied to off-args."
 
 (defun dp-shell-delete-line ()
   (interactive)
-  (dp-shell-cl-op :on-cl-func 'delete-region 
+  (dp-shell-cl-op :on-cl-func 'delete-region
                   :off-cl-func 'dp-delete-entire-line))
 
 (defun dp-shell-kill-line (&optional append-p)
   (interactive)
-  (dp-shell-cl-op :on-cl-func 'kill-region 
+  (dp-shell-cl-op :on-cl-func 'kill-region
                   :off-cl-func 'dp-kill-region :off-args (list append-p)))
 
 (defun dp-shell-kill-ring-save (&optional append-p)
   (interactive)
-  (dp-shell-cl-op :on-cl-func 'kill-ring-save ;;better? 'copy-region-as-kill 
+  (dp-shell-cl-op :on-cl-func 'kill-ring-save ;;better? 'copy-region-as-kill
                   :off-cl-func 'dp-kill-ring-save :off-args (list append-p)))
 
 ; (defun dp-shell-delete-line-old ()
@@ -844,7 +844,7 @@ OFF-CL-FUNC is applied to off-args."
 ;       (dp-kill-region append-p)
 ;     (let ((beg-end (dp-delimit-command-line)))
 ;       (kill-region (car beg-end) (cdr beg-end)))))
-  
+
 (defun dp-remote-buffer-name-to-host (buffer-name)
   "E.g. *rsh-sybil*"
   (string-match "[^-]-\\(.*\\)\\*" buffer-name)
@@ -857,10 +857,10 @@ OFF-CL-FUNC is applied to off-args."
 ;  (if (member (dp-remote-buffer-name-to-host (or buffer-name (buffer-name)))
 ;	      dp-shell-bogus-echoers)
 ;      (setq telnet-remote-echoes nil)))
-  
+
 
 (dp-deflocal dp-shells-favored-shell-other-window-p t
-  "Should going to a preferred buffer do so in another window.  
+  "Should going to a preferred buffer do so in another window.
 My current feeling is that if you've chosen a favored buffer, you may want to
 see it and the favoring buffer.")
 
@@ -884,7 +884,7 @@ being refreshed as the current-buffer."
   (interactive)
   (when reset-p
     (setq dp-shell-mode-abbrev-table nil))
-  (setq dp-shell-mode-abbrev-table 
+  (setq dp-shell-mode-abbrev-table
         (dp-find-abbrev-table '(newest-abbrevs dp-shell-mode-abbrev-table))
         local-abbrev-table dp-shell-mode-abbrev-table))
 
@@ -906,7 +906,7 @@ Called when shell, inferior-lisp-process, etc. are entered."
   (dp-shell-refresh-abbrevs nil 'reset)
   (setq dp-refresh-my-abbrevs-p 'dp-shell-refresh-abbrevs)
   (unless (dp-shell-ignored-buffer-p (buffer-name))
-    (message "dp-comint-mode-hook, (not ignored) (major-mode-str)>%s<, bn>%s<" 
+    (message "dp-comint-mode-hook, (not ignored) (major-mode-str)>%s<, bn>%s<"
              (major-mode-str) (buffer-name))
     (dp-shell-common-hook variant)
     (dp-bind-comint-line-mode-bindings variant)
@@ -942,10 +942,10 @@ Or both.")
 ;;                                 ;; characters.
 ;;                                 (and dp-shell-output-max-lines
 ;;                                      (* 2 dp-shell-output-max-lines))))
-  
+
 (defun dp-set-shell-max-lines (max-lines)
   "Set max lines per shell command output and return it."
-  (interactive 
+  (interactive
    "sMaximum number of output lines per shell (nil or < 0 --> unlimited; 0 --> default; 'fh --> current frame height)? ")
   (when (stringp max-lines)
     (setq max-lines (eval (read max-lines))))
@@ -955,7 +955,7 @@ Or both.")
          ((eq max-lines nil) nil)
          ((numberp max-lines) max-lines)
          (t dp-shell-output-max-lines-default)))
-  (message "dp-shell-output-max-lines set to %s%s" 
+  (message "dp-shell-output-max-lines set to %s%s"
            dp-shell-output-max-lines
            (if (or (not dp-shell-output-max-lines)
                    (< dp-shell-output-max-lines 0))
@@ -964,7 +964,7 @@ Or both.")
   (setq comint-buffer-maximum-size
         dp-shell-output-max-lines))
 
-(dp-defaliases 'sml 'ssml 'dp-shell-set-max-lines 'dp-shells-set-max-lines 
+(dp-defaliases 'sml 'ssml 'dp-shell-set-max-lines 'dp-shells-set-max-lines
                'dp-set-shell-max-lines)
 
 (defun* dp-maybe-add-ansi-color (&optional force-it-p (filter-it-p t))
@@ -1005,7 +1005,7 @@ Or both.")
     (dp-maybe-add-compilation-minor-mode)
     ;;(font-lock-set-defaults)
     (dp-maybe-add-ansi-color)
-    (loop for hook in '(comint-strip-ctrl-m 
+    (loop for hook in '(comint-strip-ctrl-m
                         dp-shell-lookfor-dir-change
                         dp-shell-lookfor-gdb
                         comint-truncate-buffer)
@@ -1013,12 +1013,12 @@ Or both.")
                  hook nil t))
 
     (dp-set-shell-max-lines t))
-  
+
   ;; something wipes this out after the call to comint-mode-hook and here,
   ;; so we do it again.
   (dp-shell-refresh-abbrevs nil 'reset)
   (font-lock-set-defaults)
-  (message "dp-shell-mode-hook, (major-mode-str)>%s<, bn>%s<, done." 
+  (message "dp-shell-mode-hook, (major-mode-str)>%s<, bn>%s<, done."
            (major-mode-str) (buffer-name)))
 
 ;;;###autoload
@@ -1026,7 +1026,7 @@ Or both.")
   "Sets up telnet mode specific options."
   (dp-maybe-add-compilation-minor-mode)
   (dp-maybe-set-telnet-remote-echoes)
-  (message "dp-telnet-mode-hook, (major-mode-str)>%s<, bn>%s<" 
+  (message "dp-telnet-mode-hook, (major-mode-str)>%s<, bn>%s<"
 	   (major-mode-str) (buffer-name)))
 
 (dp-deflocal dp-shell-last-parse-start 0
@@ -1042,14 +1042,14 @@ Or both.")
 (defun dp-shell-set-enter-alist (enter-alist)
   (setq dp-shell-enter-alist enter-alist))
 
-(defvar dp-shell-buffer-modes '(shell-mode ssh-mode gdb-mode comint-mode 
+(defvar dp-shell-buffer-modes '(shell-mode ssh-mode gdb-mode comint-mode
                                 telnet-mode)
   "Modes that act like shells.")
 
 (defvar dp-shell-default-enter-alist '( ;really compilation mode
                                        ("ssh-mode" . comint-send-input)
                                        ("gdb-mode" . comint-send-input)
-                                       ("grep" . compile-goto-error)  
+                                       ("grep" . compile-goto-error)
                                        ("compilation" . compile-goto-error)
                                        ("comint-mode" . comint-send-input))
   "Default action for the enter key in these modes.
@@ -1067,7 +1067,7 @@ New modes should add their defaults as they are created.")
 ;; Let's try it.
 ;;
 (dp-deflocal dp-shell-enter-alist (dp-shell-reset-enter-alist)
-  "ALIST of original bindings of shell-type mode enter-keys. 
+  "ALIST of original bindings of shell-type mode enter-keys.
 Keyed by (major-mode-str)")
 
 (dp-deflocal dp-shell-type-enter-func 'dp-shell-send-input
@@ -1101,13 +1101,13 @@ Keyed by (major-mode-str)")
   (if (not dp-shell-last-cmds)
       nil
     (nth (1- (length dp-shell-last-cmds)) dp-shell-last-cmds)))
- 
+
 (defvar dp-command-pos-list-max nil
   "If non-nil, then this is the maximum number of positions to save in
   the command position list.")
 
 (defun dp-save-last-command-pos (&optional pos)
-  "Add the position of the latest command to the command position list.  
+  "Add the position of the latest command to the command position list.
 This is where we will begin to scan for new errors.  We save multiple
 addresses on a list so we can easily visit earlier commands.  Set to
 POS if specified else to somewhere near point."
@@ -1118,32 +1118,32 @@ POS if specified else to somewhere near point."
   ;; we just use a buffer offset, not a marker... not worth
   ;; the extra resources.  We don't expect to edit the buffer.
   (let (num-to-trim)
-    (setq dp-shell-last-cmds 
-	  (append dp-shell-last-cmds 
+    (setq dp-shell-last-cmds
+	  (append dp-shell-last-cmds
 		  (list (dp-mk-marker (or pos
                                           (save-excursion
                                             (forward-line -1)
                                             (line-beginning-position)))))))
     (if (and dp-command-pos-list-max
-	     (> (setq num-to-trim 
+	     (> (setq num-to-trim
 		      (- (length dp-shell-last-cmds) dp-command-pos-list-max))
 		0))
 	(setq dp-shell-last-cmds (nthcdr num-to-trim dp-shell-last-cmds)))))
 
 (defun dp-shell-find-cmd-pos0 (dir pos &optional wrap-skips-current)
   "Move to previous or next command position.
-DIR is either 'forwards, '+ or 'backwards '- or nil. 
+DIR is either 'forwards, '+ or 'backwards '- or nil.
 WRAP-SKIPS-CURRENT says to skip the current (and as yet unentered)
 command position."
   (catch 'up
     (let* ((pos-list dp-shell-last-cmds)
 	   (index (dp-find-element-containing-pos pos pos-list))
 	   (llen (length pos-list)))
-      
+
       ;;(message "1i: %d pt: %d" index pos)
-      
+
       ;;(message "2i: %d pt: %d, pl: %d" index pos (nth index pos-list))
-      
+
       (cond
        ((memq dir '(backwards -))
 	;; before first position, wrap to end.  end is (point-max) or
@@ -1169,7 +1169,7 @@ command position."
 	(if (>= index llen)
 	    (if (or
 		 wrap-skips-current
-		 (= pos (point-max))) 
+		 (= pos (point-max)))
 		(setq index 0)
 	      (throw 'up (point-max))))))
       (nth index pos-list))))
@@ -1221,7 +1221,7 @@ command position."
   ;; Trim the list and set it.
   (setq dp-shell-last-cmds (dp-shell-trimmed-command-positions before-this)))
 
-(defvar dp-grep-like-buffer-regexp 
+(defvar dp-grep-like-buffer-regexp
   (regexp-opt '("[efi]?grep" "compilation"))
   "Regexp to recognize grep-like buffers.")
 
@@ -1278,8 +1278,8 @@ This allows us to do our fancy stuff and still call the correct sender.")
 If it runs \"too soon\", then the keymap is hosed.  This is a major hack.")
 
 (defun* dp-shell-send-input (variant
-                             &key 
-                             (dp-ef-before-pmark-func 
+                             &key
+                             (dp-ef-before-pmark-func
                               'dp-shell-set-error-func&goto-this-error)
                              &allow-other-keys)
   "MY send input function. Save buffer position of last command sent.
@@ -1294,7 +1294,7 @@ xxx-send-input as a last resort."
   ;; if we are above the prompt, or in a grep or compilation
   ;; buffer, then act like this is a goto-error request
   ;;; trying shell-mode w/o setting RET as a magic key
-  ;; seems like some kind of magic is needed, since I want 
+  ;; seems like some kind of magic is needed, since I want
   ;; send-input after prompt and something like C-m before.
   ;;!<@todo can this be done more cleanly?
   (if (and dp-ef-before-pmark-func ; Set to nil to bypass this functionality.
@@ -1313,21 +1313,21 @@ xxx-send-input as a last resort."
     (setq dp-shell-output-line-count 0)
     ;; try to call the original binding, trying the more specific buffer local
     ;; function variable before the default mode -> func mapping.
-    (call-interactively (or 
-                         (interactive-functionp 
+    (call-interactively (or
+                         (interactive-functionp
                           dp-shell-original-enter-binding)
                          ;; This will always fail with v2 code.
-                         (interactive-functionp 
-                          (cdr (assoc (major-mode-str) 
+                         (interactive-functionp
+                          (cdr (assoc (major-mode-str)
                                       dp-shell-enter-alist)))
-                         (and (message 
-                               "No func assoc w/mode %s, trying defaults." 
+                         (and (message
+                               "No func assoc w/mode %s, trying defaults."
                                (major-mode-str))
                               nil)
                          (interactive-functionp dp-shell-send-input-sender)
-                         (interactive-functionp 
+                         (interactive-functionp
                           (dp-sls variant '-send-input))
-                         (interactive-functionp (default-value 
+                         (interactive-functionp (default-value
                                                   'comint-input-sender))
                          'comint-simple-send))
     ;; You can't say I didn't try.
@@ -1341,13 +1341,13 @@ xxx-send-input as a last resort."
   (dp-set-compile-like-mode-error-function)
   (dp-shell-goto-this-error (not arg)))
 
-(defun* dp-define-compilation-mode-like-keys (&optional 
+(defun* dp-define-compilation-mode-like-keys (&optional
                                               (map compilation-minor-mode-map))
   (define-key dp-s-mode-map [?r] 'dp-error-parse-point-to-end)
   (dp-define-keys map `([(meta ?n)] dp-next-error
                         [(meta ?o)] dp-shell-magic-kill-ring-save
-                        [(control meta return)] 
-                        (kb-lambda 
+                        [(control meta return)]
+                        (kb-lambda
                             (dp-error-parse-point-to-end 'force-reparse))
                         [(control meta ?j)] dp-shell-resync-dirs
                         [(control ?c) (control ?c)]
@@ -1358,7 +1358,7 @@ xxx-send-input as a last resort."
   (dmessage "enter dp-compilation-mode-hook")
   ;; nil makes 'em buffer local.
   (dp-define-compilation-mode-like-keys)
-  (dp-define-keys compilation-mode-map 
+  (dp-define-keys compilation-mode-map
                   '([return] dp-shell-set-error-func&goto-this-error
                     )))
 
@@ -1377,9 +1377,9 @@ xxx-send-input as a last resort."
   "Parse the specified region of a file.
 if REUSE-LAST-PARSE is non-nil and the beg and end are contained within
 the last parsed region, then don't perform a parse."
-  ;;(message "reuse %s, beg: %s, end: %s, dpp: %s, dppe: %s" 
-  ;;	   reuse-last-parse 
-  ;;	   beg end 
+  ;;(message "reuse %s, beg: %s, end: %s, dpp: %s, dppe: %s"
+  ;;	   reuse-last-parse
+  ;;	   beg end
   ;;	   dp-shell-last-parse-start dp-shell-last-parse-end)
   (unless (and reuse-last-parse
 	       (>= beg dp-shell-last-parse-start)
@@ -1399,7 +1399,7 @@ the last parsed region, then don't perform a parse."
 (dp-deflocal dp-shell-original-enter-binding nil
   "The original binding on the enter like key.")
 
-(defun dp-mk-enter-kb-lambda (variant &optional func 
+(defun dp-mk-enter-kb-lambda (variant &optional func
                               &rest enter-func-key-args
                               &allow-other-keys)
   "Make a shell enter key function, curried with FUNC and VARIANT."
@@ -1410,7 +1410,7 @@ the last parsed region, then don't perform a parse."
   (let ((newf (gentemp "dp-sh-enter-")))
     (fset newf `(lambda ()
                   (interactive)
-                  (apply (or (quote ,func) dp-shell-type-enter-func) 
+                  (apply (or (quote ,func) dp-shell-type-enter-func)
                          (quote ,variant) (quote ,enter-func-key-args))))
     (map-plist (lambda (var val)
                  (put newf var val))
@@ -1442,16 +1442,16 @@ CURRENT-BINDING is saved in the buffer local variable
      keymap)
    (list "\C-m" (if (dp-isa-shell-enter-func-lambda-p new-binding)
                     new-binding
-                  (apply 'dp-mk-enter-kb-lambda variant new-binding 
+                  (apply 'dp-mk-enter-kb-lambda variant new-binding
                          enter-function-key-args))))
   (message "  the binding is: %s" (key-binding "\C-m" t)))
 
 (defun* dp-bind-shell-type-enter-key (&rest enter-function-key-args
                                       &key
-                                      (current-binding (key-binding "\C-m" t)) 
-                                      (variant dp-default-variant) 
+                                      (current-binding (key-binding "\C-m" t))
+                                      (variant dp-default-variant)
                                       keymap
-                                      major-mode 
+                                      major-mode
                                       new-binding
                                       &allow-other-keys)
   "Bind our shell mode enter key and save off the original binding
@@ -1464,7 +1464,7 @@ so that we can call it after we do our other stuff."
       (dmessage message)
       (ding))
     (return-from dp-bind-shell-type-enter-key))
-  
+
   ;;
   ;; is key already bound ???
   (if (dp-shell-type-enter-func-p current-binding)
@@ -1495,11 +1495,11 @@ so that we can call it after we do our other stuff."
               (setcdr el current-binding)) ; change this mode's association
           ;; make a new association for this mode.
           (setq dp-shell-enter-alist (cons (cons major-mode-str
-                                                 current-binding) 
+                                                 current-binding)
                                            dp-shell-enter-alist))))
-      (apply 'dp-shell-bind-enter-key keymap 
-             :variant variant 
-             :current-binding current-binding 
+      (apply 'dp-shell-bind-enter-key keymap
+             :variant variant
+             :current-binding current-binding
              :new-binding new-binding
              enter-function-key-args)
       t                                 ; Yes, it's true; we bound the key.
@@ -1508,13 +1508,13 @@ so that we can call it after we do our other stuff."
 (defun dp-comint-type-buffer-p (&optional name)
   "Determine if this is a shell type buffer."
   ;; (string-equal name "*shell*"))
-  (posix-string-match 
-   "^\\*\\([0-9]+\\)?\\([sr]sh-.*\\|telnet-.*\\|Python\\|shell\\|[efi]?grep\\|compilation\\|hugsxxx\\)\\*\\(<[0-9]+>\\)?$" 
+  (posix-string-match
+   "^\\*\\([0-9]+\\)?\\([sr]sh-.*\\|telnet-.*\\|Python\\|shell\\|[efi]?grep\\|compilation\\|hugsxxx\\)\\*\\(<[0-9]+>\\)?$"
    (or name (buffer-name))))
 
 (defun dp-term-type-buffer-p (name)
   "Determine if this is a term type buffer."
-  (posix-string-match 
+  (posix-string-match
    "^\\*\\(terminal\\)\\*$" (or name (buffer-name))))
 
 (defun dp-shell-buffer-type (name)
@@ -1536,8 +1536,8 @@ return t if we are in a shell type buffer, false otherwise."
 
 	  (save-excursion
 	    (set-buffer (current-buffer))
-	    (message "**%s, %s, %s, >%s<, %s**" 
-                     compilation-shell-minor-mode 
+	    (message "**%s, %s, %s, >%s<, %s**"
+                     compilation-shell-minor-mode
 		     compilation-minor-mode
 		     (major-mode-str) 'compilation-mode
 		     (compilation-buffer-p (current-buffer))))
@@ -1546,15 +1546,15 @@ return t if we are in a shell type buffer, false otherwise."
 	      ;; we're not in compilation mode yet
 	      (let ((current-binding (key-binding "\C-m" t)))
 		(message "non compilation-buffer-p")
-		(message "bind and add mode, orig>%s<, mn>%s<" 
+		(message "bind and add mode, orig>%s<, mn>%s<"
 			 current-binding (major-mode-str))
 		(dp-add-compilation-minor-mode (current-buffer))
 		;; M-. is becoming a habit... so the added complexity of
-		;; giving C-m a dual personality is becoming less and 
+		;; giving C-m a dual personality is becoming less and
 		;; less worthwhile.  Make it go away.
 		;; For all cases, to make the mental assoc C-m -> goto-error
 		;; fade.
-		(dp-bind-shell-type-enter-key :current-binding current-binding 
+		(dp-bind-shell-type-enter-key :current-binding current-binding
                                               :variant is-shell-type
                                               :keymap compilation-minor-mode-map)
 		;; this is only needed and correct on the first entry.
@@ -1670,7 +1670,7 @@ that a new command has been sent since the last parse."
   (interactive)
   (when (dp-maybe-add-compilation-minor-mode)
     (setq compilation-last-buffer (current-buffer))
-    (when (or (null (dp-shell-last-cmd-pos)) 
+    (when (or (null (dp-shell-last-cmd-pos))
               (/= (dp-shell-last-cmd-pos) dp-shell-last-parse-start))
       ;; reparse the errors since it looks like we've issued
       ;; a new command since the last parse.
@@ -1683,16 +1683,16 @@ that a new command has been sent since the last parse."
         (goto-char (point-min))
         (dp-save-last-command-pos))
       (dp-shells-parse-error-region (dp-shell-last-cmd-pos) (point-max))))
-  
+
   ;; set things up so that we end up with the source file and
   ;; error listing (*shell*) in separate windows
   ;; q.v. all vars set.
   ;; !<@todo XXX this don't work. why?
   (if (string-match "grep\\s-+finish"
                     (with-current-buffer compilation-last-buffer
-                      (buffer-substring (line-beginning-position) 
+                      (buffer-substring (line-beginning-position)
                                         (line-end-position))
-;;                       (dmessage "2: bss>%s<" (buffer-substring 
+;;                       (dmessage "2: bss>%s<" (buffer-substring
 ;;                                               (line-beginning-position)
 ;;                                               (line-end-position)))
                       ))
@@ -1711,7 +1711,7 @@ that a new command has been sent since the last parse."
 (defadvice compile-goto-error (after dp-advised-compile-goto-error activate)
   (dp-set-compile-like-mode-error-function)
   (dp-highlight-point-until-next-command))
-                              
+
 (defun dp-error-parse-point-to-end (&optional force-reparse-p)
   "Parse errors from point to end of buffer.  We narrow the buf to be
 point to EOB to reduce the amount of parsing that is needed."
@@ -1729,13 +1729,13 @@ point to EOB to reduce the amount of parsing that is needed."
 
 ;;;###autoload
 (defun dp-shell-goto-this-error (&optional force-reparse-p)
-  "Goto the error at point in the shell buffer.  
-This has the fortunate side effect of setting 
-things up so that dp-next-error (\\[dp-next-error]) 
+  "Goto the error at point in the shell buffer.
+This has the fortunate side effect of setting
+things up so that dp-next-error (\\[dp-next-error])
 picks up right after the error we just visited.
 We use this instead of just `compile-goto-error' so that
-we can goto errors anywhere in the buffer, especially 
-earlier in the buffer. `compile-goto-error' has a 
+we can goto errors anywhere in the buffer, especially
+earlier in the buffer. `compile-goto-error' has a
 very (too) forward looking view of parsing error buffers."
   (interactive "P")
   (setq compilation-last-buffer (current-buffer))
@@ -1754,11 +1754,11 @@ very (too) forward looking view of parsing error buffers."
   (incf dp-shell-num-eofs-seen)
   (not
    (if (< dp-shell-num-eofs-seen dp-shell-ignoreeof)
-       (message "Only seen %d of %d EOFs" 
+       (message "Only seen %d of %d EOFs"
                 dp-shell-num-eofs-seen
                 dp-shell-ignoreeof)
      nil)))
-  
+
 (defun dp-shell-quit-or-eof (prompt-regexp quit-string)
   (when (dp-shell-quit-p)
     (if (and (dp-on-last-line-p)
@@ -1767,7 +1767,7 @@ very (too) forward looking view of parsing error buffers."
           (insert quit-string)
           (comint-send-input))
       (comint-send-eof))))
-  
+
 
 (defun dp-shell-delchar-or-quit (arg)
   (interactive "p")
@@ -1800,8 +1800,8 @@ first file that is `dp-file-readable-p' is used.  Also sets
           )
       (when (setq comint-input-ring-file-name
                   (when history-file
-                    (loop for h-file in (if (listp history-file) 
-                                            history-file 
+                    (loop for h-file in (if (listp history-file)
+                                            history-file
                                           (list history-file)) do
                                           (when (dp-file-readable-p h-file)
                                             (return h-file)))))
@@ -1812,10 +1812,10 @@ first file that is `dp-file-readable-p' is used.  Also sets
           (comint-read-input-ring))
         ;; Extra info for debugging... it's non-nil which is all it needs to
         ;; be.
-        (setq dp-input-ring-has-been-read-p (list (current-buffer) 
+        (setq dp-input-ring-has-been-read-p (list (current-buffer)
                                                   history-file))))))
-  
-(defun dp-specialized-shell-setup (&optional history-file hook-type 
+
+(defun dp-specialized-shell-setup (&optional history-file hook-type
                                    &rest bind-args)
   (interactive)
   (dp-maybe-read-input-ring history-file)
@@ -1834,7 +1834,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
 
 (defun dp-py-completion-setup-stolen ()
   (let ((python-process (dp-python-get-process)))
-    (process-send-string 
+    (process-send-string
      python-process
      "from IPython.core.completerlib import module_completion\n")))
 
@@ -1842,11 +1842,11 @@ first file that is `dp-file-readable-p' is used.  Also sets
 ;;;###autoload
 (defun dp-py-shell-hook ()              ;<:psh|pysh:>
   "Set up my python shell mode fiddle-faddle."
-  (interactive) 
+  (interactive)
   (dmessage "in dp-py-shell-hook")
   (make-variable-buffer-local 'dp-wants-ansi-color-p)
   (dp-maybe-add-ansi-color nil)
-  (dp-specialized-shell-setup "~/.ipython/history" 
+  (dp-specialized-shell-setup "~/.ipython/history"
                               'bind-enter
                               ;; these are args to
                               ;; `dp-bind-shell-type-enter-key'
@@ -1859,10 +1859,10 @@ first file that is `dp-file-readable-p' is used.  Also sets
 
   (dp-py-completion-setup-stolen)
 
-  (dp-define-buffer-local-keys 
+  (dp-define-buffer-local-keys
    '([(meta return)] dp-end-of-line-and-enter
      "\C-d" dp-shell-delchar-or-quit
-     [(control backspace)] dp-ipython-backward-delete-word) 
+     [(control backspace)] dp-ipython-backward-delete-word)
    nil nil nil "dpsh"))
 
 (dp-optionally-require 'gdb)
@@ -1905,7 +1905,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
 ;needs fsf debugging   (interactive)
 ;needs fsf debugging   (dmessage "in dp-gdb-mode-hook")
 ;needs fsf debugging   (dp-specialized-shell-setup (list
-;needs fsf debugging                                (format 
+;needs fsf debugging                                (format
 ;needs fsf debugging                                 "/home/davep/droppings/persist/gdb_history/%s"
 ;needs fsf debugging                                 (dp-short-hostname)))
 ;needs fsf debugging                               'bind-enter
@@ -1957,7 +1957,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
   :group 'dp-vars
   :type 'integer)
 
-(defun* dp-clr-shell (erase-buffer-p 
+(defun* dp-clr-shell (erase-buffer-p
                       &optional dont-fake-cmd dont-preserve-input
                       (save-contents-p 'ask))
   (interactive "P")
@@ -1968,7 +1968,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
           ;; 2 clear commands in a row.  so use only prefix arg to wipe
           ;; history
           nil)                          ;see if I like it.
-      (dp-clr-shell0 :fake-cmd-p (not dont-fake-cmd) 
+      (dp-clr-shell0 :fake-cmd-p (not dont-fake-cmd)
                      :preserve-input-p (not dont-preserve-input)
                      :save-contents-p save-contents-p)
     (let (point
@@ -2037,10 +2037,10 @@ first file that is `dp-file-readable-p' is used.  Also sets
     dp-shell-beginning-of-line
     ;;True beginning of line (C-p is previous-line here) unless we're already
     ;;there.
-    dp-beginning-of-line-if-not-bolp 
+    dp-beginning-of-line-if-not-bolp
     (lambda () (move-to-window-line 0))
-    (lambda () 
-      (dp-push-go-back "dp-shell-home^4" 
+    (lambda ()
+      (dp-push-go-back "dp-shell-home^4"
                        dp-consecutive-key-command-initial-point )
       (dp-beginning-of-buffer 'no-save-pos)))
   "Commands to run based on number of consecutive keys pressed.")
@@ -2078,8 +2078,8 @@ set the key-map after the hook has run."
     (when py-buf
       (dp-visit-or-switch-to-buffer py-buf)
       (return-from dp-python-shell)))
-    
-  (let ((dp-real-comint-read-input-ring (symbol-function 
+
+  (let ((dp-real-comint-read-input-ring (symbol-function
                                          'comint-read-input-ring))
         mode-name input-ring-name)
     ;; Fucking ipython's advice for py-shell reads in the history before
@@ -2143,7 +2143,7 @@ set the key-map after the hook has run."
     (if (>= (or pos (point)) (dp-current-pmark-pos))
 	(term-char-mode)
       (term-line-mode))))
-  
+
 (defun dp-term-mode-common-keys ()
   "Set up term mode *my* way"
 
@@ -2155,12 +2155,12 @@ set the key-map after the hook has run."
   (local-set-key "\C-p" 'previous-line)
   (local-set-key "\M-x" 'execute-extended-command)
 
-  (message "dp-term-mode-common-keys, (major-mode-str)>%s<, bn>%s<, map>%s<" 
+  (message "dp-term-mode-common-keys, (major-mode-str)>%s<, bn>%s<, map>%s<"
 	   (major-mode-str) (buffer-name) (current-local-map)))
 
 ;;;###autoload
 (defun dp-start-term (prompt-for-shell-program-p)
-  "Start up a terminal session, but first set the coding system so eols are 
+  "Start up a terminal session, but first set the coding system so eols are
 handled right."
   (interactive "P")
   (let ((coding-system-for-read 'undecided-unix)
@@ -2175,12 +2175,12 @@ handled right."
 
 (defun dp-shell-process-xdir (arg)
   "Let the dir tracking stuff track my xdir command.
-It's getting to the point, though, that I should just do a `dirs' after 
+It's getting to the point, though, that I should just do a `dirs' after
 every dir changing command.
 Especially since this won't work as I don't have the other arg.
 The code which calls the dirtrack other function isn't passing all of the
 args so this can't work."
-  (shell-process-pushd (substring (shell-command-to-string 
+  (shell-process-pushd (substring (shell-command-to-string
                                    (format "sed_path %s" arg)) 0 -1)))
 
 (defun dp-shell-process-go (arg)
@@ -2202,7 +2202,7 @@ Xemacs's view of the pwd often gets confuzed."
   ;; Also we'd need to prevent the shell from getting the original command in
   ;; order to prevent the command being issued twice.  Most of the commands
   ;; are not idempotent the way they are used.
-  (cond 
+  (cond
    ((string-match cmd "\\`gr?\\'") (dp-shell-process-go arg))
    ((string-match cmd "\\`xdir\\'") (dp-shell-process-xdir arg))
    ((string-match cmd "\\`gb\\'")	;swap top two dirstack items
@@ -2244,7 +2244,7 @@ Xemacs's view of the pwd often gets confuzed."
 (dp-deflocal dp-shell-isa-shell-buf-p nil
   "Is this a shell buffer?  This is a list of symbols which ID the buffer.")
 
-(defun dp-shell-buffer-p (&optional buffer 
+(defun dp-shell-buffer-p (&optional buffer
 				    pred
 				    pred-args)
   (with-current-buffer (or buffer (current-buffer))
@@ -2338,17 +2338,17 @@ convenience."
            (regexp (if (eq id 'all)
                        ".*"             ;get 'em all
                      (format (or regexp
-                                 "^\\*\\(shell\\*<%s>\\|ssh-.*%s\\*\\)$") 
+                                 "^\\*\\(shell\\*<%s>\\|ssh-.*%s\\*\\)$")
                              id id)))
-           (buffers (mapcar (function 
+           (buffers (mapcar (function
                              (lambda (buf-name)
                                (cons (buffer-name buf-name) nil)))
-                            (dp-shells-find-matching-shell-buffers nil 
+                            (dp-shells-find-matching-shell-buffers nil
                                                                    regexp))))
-      
+
       (cond
        ((eq 1 (length buffers)) (caar buffers))
-       (buffers (completing-read "choose from shell-buffers? " 
+       (buffers (completing-read "choose from shell-buffers? "
                                  buffers nil must-exist-p))
        (t nil)))))
 
@@ -2363,15 +2363,15 @@ convenience."
                            ".*"         ;get 'em all
                          (format regexp id id))
                      regexp))
-           (buffers (mapcar (function 
+           (buffers (mapcar (function
                              (lambda (buf-name)
                                (cons (buffer-name buf-name) nil)))
-                            (dp-shells-find-matching-shell-buffers nil 
+                            (dp-shells-find-matching-shell-buffers nil
                                                                    regexp))))
-      
+
       (cond
        ((eq 1 (length buffers)) (caar buffers))
-       (buffers (completing-read "choose from shell-buffers? " 
+       (buffers (completing-read "choose from shell-buffers? "
                                  buffers nil must-exist-p))
        (t nil)))))
 
@@ -2405,7 +2405,7 @@ NAME is a buffer or buf-name.  Type is (currently) one of: '(shell ssh)")
   (dp-shells-recent-shell-type dp-shells-most-recent-shell))
 
 (defun dp-shells-set-most-recently-created-shell (&rest rest)
-  (setq dp-shells-most-recently-created-shell 
+  (setq dp-shells-most-recently-created-shell
         (apply 'dp-shells-mk-recent-shell rest)))
 
 (defvar dp-shells-most-recent-ssh-shell nil
@@ -2451,12 +2451,12 @@ It isn't pretty."
   (setq dp-shells-shell-buffer-list
         (delq (current-buffer) dp-shells-shell-buffer-list)))
 
-             
+
 ;;CO;(or (and dp-shells-favored-shell-buffer
-;;CO;         (or (dp-visit-or-switch-to-buffer 
+;;CO;         (or (dp-visit-or-switch-to-buffer
 ;;CO;              dp-shells-favored-shell-buffer) t))
 ;;CO;    (and (dp-buffer-live-p (car-safe dp-shells-most-recent-shell))
-;;CO;         (or (dp-visit-or-switch-to-buffer 
+;;CO;         (or (dp-visit-or-switch-to-buffer
 ;;CO;              (car-safe dp-shells-most-recent-shell)) t))))
 
 (defun dp-shells-set-favored-buffer (name &optional other-window-p buffer)
@@ -2480,7 +2480,7 @@ It isn't pretty."
 
 (defun dp-fav-buf-p (buf)
   (dp-and-consp buf))
-  
+
 (defun dp-shells-favored-shell-buffer-buffer (fav-buf)
   (let ((buf (if (dp-fav-buf-p fav-buf)
                  (car fav-buf)
@@ -2506,7 +2506,7 @@ It isn't pretty."
   "So we can use it later.")
 
 (dp-deflocal dp-shell-num nil
-  "Shell number, the number in the <>s")   
+  "Shell number, the number in the <>s")
 
 ;;;###autoload
 (defun* dp-shell0 (&optional arg &key other-window-p name other-frame-p)
@@ -2529,7 +2529,7 @@ it for something \"spayshul\".
          ;; The fan is the buffer who favors this shell.
          (fan-buf-name (format "<%s>" (buffer-name)))
          (fav-flags (dp-shells-favored-shell-buffer-flags fav-buf0))
-         (other-window-p (or (eq arg '-) 
+         (other-window-p (or (eq arg '-)
                              (and pnv (< pnv 0) (setq pnv (abs pnv)))
                              other-window-p
                              fav-flags
@@ -2547,14 +2547,14 @@ it for something \"spayshul\".
                            (read-from-minibuffer "Shell buffer name: "))
                       (and arg
                            (or (dp-shells-get-shell-buffer-name pnv)
-                               (format "*shell*<%s>" 
+                               (format "*shell*<%s>"
                                        (dp-shells-display-name pnv "%s"))))
                       (and fav-buf0 fav-buf-name)
                       (and pnv
                            (or (dp-shells-get-shell-buffer-name pnv)
-                               (format "*shell*<%s>" 
+                               (format "*shell*<%s>"
                                        (dp-shells-display-name pnv "%s"))))
-                      (and (dp-buffer-live-p 
+                      (and (dp-buffer-live-p
                             (dp-shells-most-recent-shell-buffer)))))
          ;; Is the shell already in existence?
          (existing-shell-p (dp-buffer-live-p sh-name))
@@ -2594,10 +2594,10 @@ it for something \"spayshul\".
       (setenv "PS1_prefix" nil 'UNSET)
       (setenv "PS1_host_suffix"
               (format "%s" (dp-shells-guess-suffix sh-name "")))
-      (setenv "PS1_bang_suff" 
+      (setenv "PS1_bang_suff"
               (dp-shells-display-name pnv dp-shells-shell-num-fmt))
       (setenv "dp_emacs_shell_num" (format "%s" pnv))
-      (save-window-excursion/mapping 
+      (save-window-excursion/mapping
        (shell sh-buffer))
       (dp-visit-or-switch-to-buffer sh-buffer switch-window-func)
       ;;
@@ -2618,11 +2618,11 @@ it for something \"spayshul\".
       ;; new shell (I hope!)
       (add-to-list 'dp-shells-shell-buffer-list sh-buffer)
       (add-local-hook 'kill-buffer-hook 'dp-shells-remove-buffer)
-      (add-local-hook 'kill-buffer-hook 
+      (add-local-hook 'kill-buffer-hook
                       (lambda ()
                         (dp-save-shell-buffer-contents-hook nil t)))
       ;; Set up a filter to prevent a flood of output from hanging us up.
-      (setq dp-original-shell-filter-function 
+      (setq dp-original-shell-filter-function
             (process-filter (dp-get-buffer-process-safe)))
       ;;(set-process-filter (dp-get-buffer-process-safe) 'dp-shell-filter-proc)
 
@@ -2634,7 +2634,7 @@ it for something \"spayshul\".
       ;; the entire buffer. Also, check into the fontifier. It may do evil
       ;; things.
       ;; Saves are currently done with sticky names so this isn't needed.
-      ;;(setq-ifnil dp-save-buffer-contents-file-name 
+      ;;(setq-ifnil dp-save-buffer-contents-file-name
       ;;            (dp-shellify-shell-name (buffer-name)))
       (dmessage "Loading shell input ring")
       (dp-maybe-read-input-ring))))
@@ -2643,7 +2643,7 @@ it for something \"spayshul\".
 (defun* dp-shell (&optional arg &key other-window-p name other-frame-p)
   (interactive "P")
   ;; Don't set the whence buffer when leaving a shell buffer.
-  (let ((whence-buf (unless (dp-shell-buffer-p) 
+  (let ((whence-buf (unless (dp-shell-buffer-p)
                       (current-buffer)))
         shell-buf)
     (if nil ; (equal current-prefix-arg '(4)) ; One plain C-u
@@ -2680,7 +2680,7 @@ it for something \"spayshul\".
   (interactive)                         ;for testing.
   (unless (posix-string-match dp-comint-discard-regexp input)
     (funcall dp-orig-comint-input-sender proc input)))
-    
+
 (defun dp-magic-columns-ls (ls-cmd &optional args cols echo-p lines)
   "Do an ls-like command in the *shell* buffer with COL columns.
 COL defaults the the width of the window in which the first *shell* buffer is
@@ -2703,7 +2703,7 @@ displayed."
                    args))
            ;; Space --> Don't put command in the history.  Well, we do want
            ;; the rest of the line and I don't want to lose that.
-           ;; 
+           ;;
            (cmd (format "export COLUMNS=%s LINES=%s ; %s%s"
                         (or cols
                             (- (window-width shell-win) 5))
@@ -2722,7 +2722,7 @@ displayed."
 ;; dp-ssh (id), host-name = f(id): f is currently a format-string. NEEDS to
 ;; change to a function(id)
 ;; ssh-buf-name = f(fmt-str, id, id): NEEDS to change to be f(host-name, ...)
-;; try: 
+;; try:
 ;; 1) get-buffer(ssh-buf-name)
 ;; 2) find a buffer by regexp, regexp is f(dp-shells-ssh-buf-name-fmt)
 
@@ -2747,7 +2747,7 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
                              (with-current-buffer buf
                                (and-boundp 'ssh-host ssh-host))
                              buf)))))
-              
+
 (defvar dp-gdb-buffer-history '()
   "Gdb buffer name history.")
 
@@ -2773,7 +2773,7 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
 (defun dp-gdb-clear-killed-buffer ()
   (interactive)
   ;; Get all living gdb buffers and make that the current list of gdb buffers.
-  (setq dp-gdb-buffers 
+  (setq dp-gdb-buffers
         (delete (cons (buffer-name) 'dp-gdb)
                 (dp-gdb-get-buffers :dead-or-alive-p nil))))
 
@@ -2784,9 +2784,9 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
   (length (dp-gdb-buffer-completion-list)))
 
 (defun dp-gdb-get-buffer-interactively (&optional use-most-recent-p)
-  (list 
+  (list
    (let ((prompt (if (dp-gdb-most-recent-buffer)
-                     (format "gdb buffer name (default %s): " 
+                     (format "gdb buffer name (default %s): "
                              (dp-gdb-most-recent-buffer))
                    "gdb buffer name: "))
          (completion-list (dp-gdb-buffer-completion-list))
@@ -2800,8 +2800,8 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
                                         :default-p nil))
          most-recent-buffer
        (completing-read  prompt (dp-gdb-buffer-completion-list)
-                         nil nil nil 
-                         'dp-gdb-buffer-history 
+                         nil nil nil
+                         'dp-gdb-buffer-history
                          (dp-gdb-most-recent-buffer))))))
 
 (defun* dp-get-locale-rcs (&optional (env-var-name "locale_rcs"))
@@ -2812,7 +2812,7 @@ cannot be found using `dp-shells-ssh-buf-name-fmt'.")
                  (substring v 1)))
               (split-string rcs)))))
 
-;;!<@todo finish this 
+;;!<@todo finish this
 ;;(defvar dp-locale-rcs-regexp (dp-))
 
 (defun dp-gdb-scroll-down-source-buffer (num)
@@ -2959,15 +2959,15 @@ way.")
 
 (defun dp-tack-on-gdb-mode+ ()
   ;; The ansi-color filter get hosed so we turn it off here.
-  ;; I think this is fixed in dp-tack-on-gdb-mode. 
+  ;; I think this is fixed in dp-tack-on-gdb-mode.
   ;; (ansi-color-for-comint-mode-off)
   (interactive)
   (dp-tack-on-gdb-mode)
   (ansi-color-for-comint-mode-filter))
-  
+
 ;;;###autoload
 (defun dp-gdb-naught (&optional name)
-  "Run gdb on nothing. 
+  "Run gdb on nothing.
 Useful for creating a gdb session from which you can attach to another
 running process."
   (interactive)
@@ -2995,7 +2995,7 @@ running process."
     (gdb-set-buffer)))
 
 ;;;###autoload
-(defun dp-gdb (&optional interactive-only-arg path 
+(defun dp-gdb (&optional interactive-only-arg path
                corefile use-most-recent-p new-p prompt-p
                other-window-p force-interactive-p)
   "Extension to gdb that:
@@ -3026,7 +3026,7 @@ ARG == 0    --> New `dp-gdb-naught' session."
                                    use-most-recent-p)))))
                (if (not (string= buf "-" ))
                    ;; Make sure we're true.
-                   (or (dp-visit-or-switch-to-buffer 
+                   (or (dp-visit-or-switch-to-buffer
                         buf
                         (and other-window-p
                              'switch-to-buffer-other-window)
@@ -3128,7 +3128,7 @@ ARG == 0    --> New `dp-gdb-naught' session."
 (defun dp-bash-history-file-name (&optional host-name extry)
   (setq-ifnil extry "")
   (let ((name (or (getenv "HISTORY")
-                  (dp-nuke-newline (shell-command-to-string 
+                  (dp-nuke-newline (shell-command-to-string
                                     "mk-persistent-dropping-name.sh"))
                   (concat (or (getenv "HOME") "~")
                           "/.bash_history." (or host-name
@@ -3139,11 +3139,11 @@ ARG == 0    --> New `dp-gdb-naught' session."
 (defun dp-ssh (&optional shell-id)
   "Find/create a shell buf, an existing ssh buf or create a ssh buf."
   (interactive "P")
-  
+
   (warn "@todo Use last host as default. Last bunch of hosts in the completion
   list.  Will probably need to join and uniqueify the last hosts and the
   short list of hosts.")
-  
+
   (if (and nil (not shell-id))
       (call-interactively 'ssh)
     (let* ((do-ssh-p (and shell-id (stringp shell-id)))
@@ -3166,7 +3166,7 @@ ARG == 0    --> New `dp-gdb-naught' session."
         ;;!<@todo try without <> first?
         ;; See if a specific ssh buffer exists.
         (setq buf (or (and ssh-buf-name (get-buffer ssh-buf-name))
-                      (dp-regexp-find-buffer 
+                      (dp-regexp-find-buffer
                        (if (functionp 'dp-shells-ssh-buf-name-fmt)
                            (apply dp-shells-ssh-buf-name-fmt shell-id)
                          ssh-buf-regexp))
@@ -3176,10 +3176,10 @@ ARG == 0    --> New `dp-gdb-naught' session."
                            shell-id
                          (format "\\*shell\\*<%s>" shell-id)))))
         (setq isa-shell-buf-p (and buf (dp-shell-buffer-p buf)))
-        (when (and isa-shell-buf-p 
+        (when (and isa-shell-buf-p
                    (not (memq isa-shell-buf-p '(ssh dp-ssh))))
           (ding)
-          (unless (y-or-n-p (format "Non-ssh buffer [%s], go there? " 
+          (unless (y-or-n-p (format "Non-ssh buffer [%s], go there? "
                                     (buffer-name buf)))
             (setq shell-id nil   ; This will make `ssh' prompt for host name.
                   buf nil
@@ -3187,15 +3187,15 @@ ARG == 0    --> New `dp-gdb-naught' session."
         (if buf
             (dp-switch-to-buffer buf)
           (unless do-ssh-p
-            (setq shell-id 
+            (setq shell-id
                   (dp-completing-read "dp-ssh arguments (host-name first): "
                                       dp-ssh-host-name-completion-list
                                       :initial-contents host-name
                                       :history 'ssh-history
                                       :dp-match-ret-fun 'cdar
                                       :dp-no-match-ret-fun 'car)))
-          (if (setq host-info 
-                    (cdr-safe (assoc shell-id 
+          (if (setq host-info
+                    (cdr-safe (assoc shell-id
                                      dp-ssh-host-name-completion-list)))
               (if (and (valid-plist-p host-info)
                        (plist-get host-info 'ip-addr))
@@ -3206,7 +3206,7 @@ ARG == 0    --> New `dp-gdb-naught' session."
           ;; `ssh' returns nil when new or the status of the shell process.
           (unless (dp-ssh-already-running-p (ssh shell-id))
             ;; New ssh buffer.
-            (unless (dp-in-completion-list-p 
+            (unless (dp-in-completion-list-p
                      dp-ssh-host-name-completion-list shell-id)
               (add-to-list 'dp-ssh-host-name-completion-list
                            (cons shell-id t)))
@@ -3215,26 +3215,26 @@ ARG == 0    --> New `dp-gdb-naught' session."
             ;;
             ;; !<@todo We should get this color via host-info.py...
             (add-to-list 'dp-shells-shell-buffer-list (current-buffer))
-            (add-local-hook 'kill-buffer-hook 
+            (add-local-hook 'kill-buffer-hook
                             'dp-save-shell-buffer-contents-hook)
             (add-local-hook 'kill-buffer-hook 'dp-shells-remove-buffer)
             (dp-set-text-color 'dp-ssh-bg-extent 'dp-remote-buffer-face)
             (dp-shells-clear-n-setenv "PS1_prefix" dp-ssh-PS1_prefix)
-            (dp-shells-clear-n-setenv 
+            (dp-shells-clear-n-setenv
              "PS1_host_suffix"
              (format "'%s'" (dp-shells-guess-suffix (buffer-name) "")))
             (setq dp-shell-isa-shell-buf-p '(dp-ssh ssh))
-            (setq comint-input-ring-file-name 
+            (setq comint-input-ring-file-name
                   (dp-bash-history-file-name host-name))
-            (dp-define-buffer-local-keys  
-             (list [tab] (lambda () 
+            (dp-define-buffer-local-keys
+             (list [tab] (lambda ()
                            (interactive)
                            (ding)
-                           (message "No TAB expansion in ssh buffer."))) 
+                           (message "No TAB expansion in ssh buffer.")))
              nil nil nil "dp-ssh")
             (dp-maybe-read-input-ring)))
         (setq dp-shells-most-recent-ssh-shell
-              (setq dp-shells-most-recent-shell 
+              (setq dp-shells-most-recent-shell
                     (cons (current-buffer) 'dp-ssh)))))))
 
 (defun dp-comint-command (proc &rest args)
@@ -3273,10 +3273,10 @@ ARG == 0    --> New `dp-gdb-naught' session."
                           (format "*ssh+gdb-%s*" host)
                         (format "*ssh+gdb-%s@%s*" user host)))
 	 proc)
-    
+
     (and ssh-explicit-args
          (setq args (append ssh-explicit-args args)))
-    
+
     (cond ((null buffer))
 	  ((stringp buffer)
 	   (setq buffer-name buffer))
@@ -3286,11 +3286,11 @@ ARG == 0    --> New `dp-gdb-naught' session."
            (setq buffer-name (format "%s<%d>" buffer-name buffer)))
           (t
            (setq buffer-name (generate-new-buffer-name buffer-name))))
-    
+
     (setq buffer (get-buffer-create buffer-name))
     (set-buffer buffer)
     (pop-to-buffer buffer-name)
-    
+
     (cond
      ((comint-check-proc buffer-name))
      (t
@@ -3299,7 +3299,7 @@ ARG == 0    --> New `dp-gdb-naught' session."
       ;; Set process-mark to point-max in case there is text in the
       ;; buffer from a previous exited process.
       (set-marker (process-mark proc) (point-max))))
-    
+
     (setq path (file-truename (expand-file-name path)))
     (let ((file (file-name-nondirectory path)))
     ;;; already done above (switch-to-buffer (concat "*gdb-" file "*"))
@@ -3332,7 +3332,7 @@ ARG == 0    --> New `dp-gdb-naught' session."
   (defvar dp-shell-hostile-chars
     (concat dp-ws+newline "{}()\\/!@#$^&*;'\"<>?|")
     "Characters that require escaping or other annoyances in the shell.")
-  
+
   (defvar dp-shell-hostile-chars-regexp
     (concat "\\([" dp-shell-hostile-chars "]\\)" "\\|"  "\\(\\|\\[\\|\\]" "]\\)")
     "Detect those bothersome characters."))
@@ -3351,7 +3351,7 @@ ARG == 0    --> New `dp-gdb-naught' session."
 
 (defun dp-shellify-shell-name (name &optional args suffixer)
   (or dp-shell-buffer-save-file-name
-      (let* ((replacement-str (or (car args) 
+      (let* ((replacement-str (or (car args)
                                   dp-default-shellify-replacement-str))
              (new-name (replace-regexp-in-string dp-shell-hostile-chars-regexp
                                                  replacement-str
@@ -3416,7 +3416,7 @@ ARG == 0    --> New `dp-gdb-naught' session."
     (dp-save-shell-buffer-contents :confirm-save-p confirm-save-p)))
 
 (defun dp-save-shell-buffer (&optional ask-p buf)
-  "Save the shell buffer BUF. 
+  "Save the shell buffer BUF.
 The buffer could have useful information from past sessions or record
 procedures that have been partly (0%) remembered."
   (setq-ifnil buf (current-buffer))
@@ -3434,7 +3434,7 @@ procedures that have been partly (0%) remembered."
 (defun dp-save-shell-buffers (&optional ask-not-p)
   (loop for buf in dp-shells-shell-buffer-list do
     (dp-save-shell-buffer buf ask-not-p)))
-  
+
 (defun dp-save-shell-buffers-hook ()
   "Leaves evidence that we're running in `kill-emacs-hook'.
 It would be nice if there was a global `current-hook' or some such."
@@ -3449,12 +3449,12 @@ It would be nice if there was a global `current-hook' or some such."
                         dp-shells-shell-buffer-list)))
     (car (or (and this-buf (cdr this-buf))
              dp-shells-shell-buffer-list))))
-  
+
 (defun dp-shell-cycle-buffers (&optional other-place-p buffer)
   (interactive "P")
   (let ((prefix-arg-val (prefix-numeric-value other-place-p)))
     (funcall
-     (cond 
+     (cond
       ((not other-place-p) 'switch-to-buffer)
       ((>= prefix-arg-val 0)
        'switch-to-buffer-other-window)
@@ -3485,14 +3485,14 @@ Can this really not exist elsewhere?"
 
 (defun dp-shell-buffer-name-less-p (buf1 buf2)
   "Sort the buffers by name in some useful/comsistent manner.
-The auto-generated names are numeric, and I have plans to allow them to be 
-named. formatting with %s will not cause an error for anything 
+The auto-generated names are numeric, and I have plans to allow them to be
+named. formatting with %s will not cause an error for anything
 reasonable: numbers, strings, symbols.
 @todo XXX There will be the classic number sorting issue where 2 is > 100."
   (funcall 'string<
-           (format "%s" 
+           (format "%s"
                    (symbol-value-in-buffer 'dp-shell-num buf1))
-           (format "%s" 
+           (format "%s"
                    (symbol-value-in-buffer 'dp-shell-num buf2))))
 
 (defun dp-shell-buffer-name-greater-or-equal-p (buf1 buf2)
@@ -3500,17 +3500,17 @@ reasonable: numbers, strings, symbols.
 
 (defun dp-shells-next-shell-buf-num ()
   (interactive)
-  (let* ((shell-buffers (sort (dp-shells-find-matching-shell-buffers 
+  (let* ((shell-buffers (sort (dp-shells-find-matching-shell-buffers
                                 nil ".*")
                               'dp-shell-dp-shell-num-greater-or-equal-p))
-         (shell-num (symbol-value-in-buffer 
-                     'dp-shell-num 
+         (shell-num (symbol-value-in-buffer
+                     'dp-shell-num
                      (car shell-buffers))))
     (1+ shell-num)))
 
 (defun dp-next/prev-shell-buffer (next/prev &optional buffer)
   (interactive)
-  (let* ((shell-buffers (sort (dp-shells-find-matching-shell-buffers 
+  (let* ((shell-buffers (sort (dp-shells-find-matching-shell-buffers
                                nil ".*")
                               (if (eq next/prev 'prev)
                                   'dp-shell-dp-shell-num-greater-or-equal-p

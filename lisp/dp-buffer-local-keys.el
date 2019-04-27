@@ -25,7 +25,7 @@
 	     (and (current-local-map)
 		  (or (message "current-local-map: %s" (current-local-map)) t)
 		  (copy-keymap (current-local-map)))
-	     (make-sparse-keymap (format "BLM: %s" 
+	     (make-sparse-keymap (format "BLM: %s"
                                          (buffer-file-name)))))))
 
 (defun dp-define-buffer-local-keys (keys &optional buffer protect-bindings-p name)

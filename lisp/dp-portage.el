@@ -5,8 +5,8 @@
 
 (defun dp-dired-portage-category (category-name &optional local-p)
   (interactive "fPortage category name: \nP")
-  
-  
+
+
   )
 
 (provide 'dp-portage)

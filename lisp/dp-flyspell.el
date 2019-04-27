@@ -11,7 +11,7 @@
   '(text-mode-hook
     )
   "List of hooks to add `flyspell-mode' to."
-  :group 'dp-vars 
+  :group 'dp-vars
   :type '(repeat (symbol :tag "Major mode")))
 
 (defcustom dp-flyspell-prog-hooks
@@ -27,7 +27,7 @@
     )
   "List of hooks to add `flyspell-prog-mode' to.
 Flyspell programming mode only checks spelling in strings and comments."
-  :group 'dp-vars 
+  :group 'dp-vars
   :type '(repeat (symbol :tag "Major mode")))
 
 ;;;###autoload
@@ -92,7 +92,7 @@ Flyspell programming mode only checks spelling in strings and comments."
 ;      (flyspell-auto-correct-previous-word (point))
 ;    (flyspell-auto-correct-word)))
 
-;(define-key flyspell-mode-map flyspell-auto-correct-binding 
+;(define-key flyspell-mode-map flyspell-auto-correct-binding
 ;  'dp-flyspell-auto-correct-word)
 
 

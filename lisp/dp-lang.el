@@ -73,11 +73,11 @@
 ;;;
 ;;; info @todo Make it a struct fer Knuth's sake.
 ;;; <:info structure:>
-;;; (marker@beginning-of-construct 
-;;;  marker@end 
+;;; (marker@beginning-of-construct
+;;;  marker@end
 ;;;  type{class, def, method, prelude}
 ;;;  def-or-class-name-or-"prelude")
-;;; 
+;;;
 
 (defsubst dp-py-def-or-class-begin (info &optional nth)
   (nth (or nth 0) info))
@@ -95,7 +95,7 @@
 
 
 (defun dp-py-delimit-prelude (backward-p search-fun &optional limit)
-  (list (dp-mk-marker                   ; Find beginning 
+  (list (dp-mk-marker                   ; Find beginning
          (save-excursion
            (goto-char (point-min))
            (if (not (dp-re-search-forward "^#!.*python"
@@ -105,7 +105,7 @@
                (point)                  ; Beginning
              ;; In a file with some chars and no newline, NB: There is no
              ;; [BOF] in the file, but there is an [EOF] eof glyph.
-             
+
              ;; e.g. [BOF]hi there[EOF] If point is on any of "hi there" and
              ;; you say `forward-line' it returns 0 and puts point @
              ;; [EOF]-!-.  I don't like this.  It may be because of my EOF
@@ -121,8 +121,8 @@
              )))
         (dp-mk-marker                   ; Find end
          (save-excursion
-           (let ((next-thing-info (dp-py-next-def-or-class 
-                                   nil nil 
+           (let ((next-thing-info (dp-py-next-def-or-class
+                                   nil nil
                                    'dont-call-me-again! limit)))
              ;; If we found something, use it.
              (if next-thing-info
@@ -135,18 +135,18 @@
         'prelude
         "prelude"))
 
-(defun dp-py-next-def-or-class (&optional backward-p search-fun 
+(defun dp-py-next-def-or-class (&optional backward-p search-fun
                                 dont-try-prelude-p limit)
   "SEARCH-FUN must have the same function signature ad re-search-*ward."
   (interactive)
   (save-excursion
     (let ((search-fun (or search-fun
-                          (if backward-p 
-                              're-search-backward 
+                          (if backward-p
+                              're-search-backward
                             'dp-re-search-forward))))
-      (if (funcall 
+      (if (funcall
            search-fun
-           "\\(^def\\s-+\\)\\|\\(^\\s-+\\(def\\s-+\\)\\)\\|\\(^\\s-*class\\)" 
+           "\\(^def\\s-+\\)\\|\\(^\\s-+\\(def\\s-+\\)\\)\\|\\(^\\s-*class\\)"
            limit t)
           (list (dp-mk-marker (save-excursion
                               (goto-char (match-beginning 0))
@@ -168,17 +168,17 @@
                                    limit)
   (interactive)
   (dp-py-next-def-or-class 'backward search-fun dont-try-prelude-p limit))
-  
+
 (defun dp-py-find-next-def-or-class (type &optional other-end-o-match backward)
   (interactive)
   (save-excursion
     ;; computing backward.
     ;; backward
-    ;; 
+    ;;
     (let (info)
       ;; other-end-o-match is needed here so that calling back in has the same
       ;; params. Icky.
-      (while (and (setq info (dp-py-goto-next-def-or-class 
+      (while (and (setq info (dp-py-goto-next-def-or-class
                               other-end-o-match nil backward))
                   (not (eq (dp-py-def-or-class-type info) type))))
       info)))
@@ -225,10 +225,10 @@
 (defun dp-py-looking-at-def-or-class-p ()
   (looking-at "\\s-*\\(class\\|def\\)\\s-+\\([^(:]+\\)"))
 
-  
+
 (defun dp-py-get-def-or-class-name (&optional pos)
   (interactive)
-  (save-excursion 
+  (save-excursion
     (when pos (goto-char pos))
     ;; Works by hand.
     ;; \s-*\(def\|class\)\s-*\(.*?\)\((\|:\)
@@ -242,21 +242,21 @@ keyword.  Normally, we don't check the current line so multiple nearest def
 commands don't get stuck on the current def once we've moved to one.  When
 non-nil we only look forward on the current line, ie. the search limit is
 `line-end-position'."
-  (interactive) 
+  (interactive)
   (let* ((info (or (and check-current-line-p
-                        (dp-py-next-def-or-class 
+                        (dp-py-next-def-or-class
                          nil
                          'dp-looking-at-with-re-search-params
                          'DONT-TRY_PRELUDE
                          (line-end-position)))
                    (dp-py-prev-def-or-class)))
          (def-or-class-name (when info
-                              (dp-py-get-def-or-class-name 
+                              (dp-py-get-def-or-class-name
                                (dp-py-def-or-class-begin info)))))
     (if def-or-class-name
         (append info (list def-or-class-name))
       info)))
-  
+
 (defun dp-py-insert-tempo-comment (begin end type name tempo-func
                                    &optional insert-name)
   (interactive)
@@ -276,8 +276,8 @@ non-nil we only look forward on the current line, ie. the search limit is
     (function  tempo-template-doxy-py-function-comment nil))
 "Map a Python syntactic location to a doxy comment template.")
 
-(defun* dp-py-insert-tempo-doxy-comment (&optional no-indent-p 
-                                         (check-current-line-p 
+(defun* dp-py-insert-tempo-doxy-comment (&optional no-indent-p
+                                         (check-current-line-p
                                           'check-current-line))
   "Insert a Python mode tempo doxygen comment in a syntax sensitive manner."
   (interactive "*P")
@@ -339,8 +339,8 @@ Otherwise non-nil."
   (dp-with-saved-point nil
     (let* ((point (point))
            (bos (py-point 'bos))
-           (closable-p 
-            (not (dp-py-code-text-ends-with-special-char-p 
+           (closable-p
+            (not (dp-py-code-text-ends-with-special-char-p
                   :except ")(")))
            (depth (dp-paren-depth bos (point)))
            (fully-closed-p (= depth 0)))
@@ -398,7 +398,7 @@ Otherwise non-nil."
                                                    :bounder 'line-p
                                                    :bounder-args '(nil t))
     (dp-with-saved-point nil
-      ;;!<@todo should I use py-parse-state here? 
+      ;;!<@todo should I use py-parse-state here?
       (let ((pps (dp-pps beg end)))
         (when pps
           (setq dpv-x pps)
@@ -409,7 +409,7 @@ Otherwise non-nil."
   (let ((pos (apply 'dp-py-comment-start-pos rest)))
     (when pos
       (goto-char pos))))
-  
+
 (defun* dp-py-end-of-code-pos (&rest rest &key q &allow-other-keys)
   (save-excursion
     (let ((p (apply 'dp-py-comment-start-pos rest)))
@@ -428,7 +428,7 @@ Otherwise non-nil."
   (let ((pos (apply 'dp-py-end-of-code-pos rest)))
     (when pos
       (goto-char pos))))
-  
+
 (defun* dp-py-split-block-stmt (&optional pos)
   (when pos
     (goto-char pos))
@@ -441,7 +441,7 @@ Otherwise non-nil."
                   :indent indent
                   :keyword keyword
                   :class-or-def-p (save-match-data
-                                    (string-match dp-py-class-or-def-kw-regexp 
+                                    (string-match dp-py-class-or-def-kw-regexp
                                                   keyword))
                   ;; :block-kw-p (not class-or-def-p)
                   :parens parens
@@ -475,7 +475,7 @@ Otherwise non-nil."
       (setf (dp-py-split-block-stmt-info-block-kw-p info)
             (not (dp-py-split-block-stmt-info-class-or-def-p info)))
       info)))
-    
+
 
 (defun* dp-py-keyword (&optional (point (point)))
   (interactive)
@@ -498,7 +498,7 @@ Otherwise non-nil."
 (defstruct dp-add-comma-or-close-sexp-info
   (states '(add-sep add-clozer add-newline))
   ;; 1st go round (add sep)
-  ;; 2nd (add clozer), 
+  ;; 2nd (add clozer),
   ;; 3rd (just eol, newline, indent)
   ;; ? repeat
   ;; FSF doesn't seem to like referencing previously initialized slots.  let
@@ -537,9 +537,9 @@ Otherwise non-nil."
         (undo)
         (setq beg (dp-add-comma-or-close-sexp-info-beg dp-acocs-info)
               end (dp-add-comma-or-close-sexp-info-end dp-acocs-info)
-              add-here (dp-add-comma-or-close-sexp-info-add-here 
+              add-here (dp-add-comma-or-close-sexp-info-add-here
                         dp-acocs-info))
-        (goto-char (dp-add-comma-or-close-sexp-info-add-here 
+        (goto-char (dp-add-comma-or-close-sexp-info-add-here
                     dp-acocs-info))
         (dp-add-comma-or-close-sexp-info-shift-state dp-acocs-info))
     ;; First go round
@@ -549,11 +549,11 @@ Otherwise non-nil."
            :starting-point (dp-mk-marker (point))
            :beg (dp-mk-marker beg)
            :end (dp-mk-marker end))))
-  
+
   (let* ((depth (dp-paren-depth-save-excursion beg end))
          (num-clozers (if n-clozers-p depth 1))
          (state (or nil ;; Support current-prefix-arg later
-                    (car (dp-add-comma-or-close-sexp-info-state 
+                    (car (dp-add-comma-or-close-sexp-info-state
                           dp-acocs-info))))
          ret)
     (dmessage "Don't do anything if funky chars @ end of line.")
@@ -568,7 +568,7 @@ Otherwise non-nil."
         (setq ret state)
         (case state
           ('add-sep (insert separator))
-          ('add-clozer 
+          ('add-clozer
            (insert (make-string num-clozers clozer))
            (when (dp-py-keyword end)
              (setq ret 'force-colon)))
@@ -587,9 +587,9 @@ Otherwise non-nil."
         if o == '-d':
             debug = debug + 1
             continue
-        
+
     main(sys.argv[1:], sys.argv[0])
-" 
+"
 "*A template for making a main in a Python program since I can never remember
 the fiddly bits.")
 
@@ -623,11 +623,11 @@ the line is blank."
 ;;;
 ;;; perl sucks. Perl sucks. perl Sucks. Perl Sucks. PERL sucks. perl SUCKS.
 ;;; PERL SUCKS.
-;;; 
+;;;
 
 ;; Take a list of perl parameters with a `,' added to the last one (eg $a,
 ;; $b, $c,) and convert it into a vertical list of @param doxygen lines.
-(defalias 'dp-perl-@param-defs 
+(defalias 'dp-perl-@param-defs
   (read-kbd-macro
    "C-a # SPC @param SPC C-d C-s , RET <backspace> RET <M-backspace>"))
 

@@ -14,7 +14,7 @@ This will make a regexp that matches the strings anywhere."
 (defun dp-mk-prefix-match-regexp (str)
   "Call `dp-mk-prefix-match-regexp-' after convering STR to a list o' chars."
   (dp-mk-prefix-match-regexp- (string-to-list str)))
-  
+
 (defun dp-mk-bounded-prefix-match-regexp (str)
   "Make a regexp with `dp-mk-prefix-match-regexp' that only matches STR."
   (concat "^" (dp-mk-prefix-match-regexp str) "$"))
@@ -23,7 +23,7 @@ This will make a regexp that matches the strings anywhere."
   "Return string to make STR match the entire regexp PREFIX.
 E.g. Given PREFIX == `dp-mk-prefix-match-regexp' \"_cls\", and STR == \"_c\",
 return \"ls\".  So STR + new string = \"_cls\"."
-  (when (string-match 
+  (when (string-match
          (dp-mk-bounded-prefix-match-regexp (string-to-list prefix))
          str)
     (let ((matched (match-string 1 str)))

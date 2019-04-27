@@ -142,7 +142,7 @@
   "MEDUSELD C Programming Style")
 (c-add-style "meduseld-c-style" meduseld-c-style)
 
-(defcustom dp-default-c-style 
+(defcustom dp-default-c-style
   (symbol-value (intern-soft dp-default-c-style-name))
   "*Default C[++] style."
   :group 'dp-vars

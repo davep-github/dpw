@@ -15,7 +15,7 @@
 ;;
 ;; some mh mailers like to use the name "draft" for drafts and barf
 ;; if draft is not a plain file.
-;; do this before mew loads since it seems to create the dir early in 
+;; do this before mew loads since it seems to create the dir early in
 ;; the init sequence
 ;; it looks like mew is ensuring only the user can the draft dir or file.
 ;; if a file (or fifo) by the name of draft exists, the mode is set to

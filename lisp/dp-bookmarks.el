@@ -12,14 +12,14 @@
 
 (defun dp-bm-get-extent ()
   (if (dp-extent-with-property-exists 'dp-bm-extent-p)
-      
+
   ))
 
 ;(defun* dp-bm-help-extent-p ((pos (point))
 ;  "Does a bookmark help extent exist @ POS?"
 (dp-defwriteme dp-bm-help-extent-p (pos)
   "Does a bookmark help extent exist @ POS?")
-;  
+;
 (defun dp-bm-process-plist (bm)
   "Process BM's plist; perform any actions indicated."
   (dmessage "finish me!!!")
@@ -35,17 +35,17 @@
 ;               (funcall val)
 ;             (case prop
 ;               (add-help (and val
-;                              (dp-do-thither 
-;				(dp-bm-marker bm) 
+;                              (dp-do-thither
+;				(dp-bm-marker bm)
 ;                                thither
 ;                                (if (dp-extent-with-property-exists)
 ;                                    (dp-
-;                         
+;
 ;                        )
 ;      )
 ;    bm)
 ;)
-(defun* dp-make-bookmark (id marker 
+(defun* dp-make-bookmark (id marker
                           &optional plist (add-help-p t) (colorize-line-p t))
   "Make a bookmark.  NB!  This is NOT an emacs style bookmark!
 This makes a slick-like bookmark on a line in a file.  There is a bookmark
@@ -53,7 +53,7 @@ list per buffer.
 @todo we want to change this to a struct, and this is named compatibly."
 ;;CO;   (list id marker plist)
   (dp-plist-put plist
-                'add-help-p add-help-p 
+                'add-help-p add-help-p
                 'colorize-line-p colorize-line-p)
   (dp-bm-process-plist (make-dp-bm :id id :marker marker :plist plist)))
 
@@ -63,7 +63,7 @@ list per buffer.
   (setq dp-bm-list nil))
 
 (dp-deflocal dp-bm-list nil
-  "Bookmark list. 
+  "Bookmark list.
 ALIST of bookmarks, each entry is (bookmark-name . marker).  We use a
 marker even tho the list is buffer local so that our bookmarks move
 around with edited text.")
@@ -153,18 +153,18 @@ Add each bookmark-name to the list of bookmarks."
                               nil t)
       (setq dp-debug-xxx (dp-all-match-strings-string))
       (if (match-string 1)
-          (dp-set-or-goto-bm 
+          (dp-set-or-goto-bm
            (buffer-substring (line-beginning-position)
                              (line-end-position))
            :reset t
            :plist '(embedded-p t)
            :bm-kind "embedded-line"
-           :bm-marker (dp-mk-marker 
+           :bm-marker (dp-mk-marker
                        (line-beginning-position)))
         (loop for match-string in (save-match-data
-                         (split-string (match-string 2) "|")) 
+                         (split-string (match-string 2) "|"))
           do
-          (dp-set-or-goto-bm match-string 
+          (dp-set-or-goto-bm match-string
                              :reset t
                              :plist '(embedded-p t)
                              :bm-kind "embedded-text"
@@ -172,14 +172,14 @@ Add each bookmark-name to the list of bookmarks."
                              :bm-marker (dp-mk-marker (match-beginning 0))))))))
 
 (defun* dp-bm-list-filter-embedded (&optional (bm-list dp-bm-list))
-  (delq nil (mapcar (function 
+  (delq nil (mapcar (function
                      (lambda (bm)
                        (if (dp-bm-embedded-p bm)
                            nil
                          bm)))
                     bm-list)))
 
-(defun* dp-mk-bm-completion-list (&key ignore-embedded-bookmarks-p 
+(defun* dp-mk-bm-completion-list (&key ignore-embedded-bookmarks-p
                                   from-point-p
                                   (quote t)
                                   (bm-list dp-bm-list))
@@ -191,16 +191,16 @@ Add each bookmark-name to the list of bookmarks."
                             bm)))
           bm-list))
 
-(defun* dp-bm-rebuild-completion-list (&key ignore-embedded-bookmarks-p 
+(defun* dp-bm-rebuild-completion-list (&key ignore-embedded-bookmarks-p
                                        from-point-p
                                        (quote nil)
                                        (bm-list dp-bm-list))
-  (dp-mk-bm-completion-list 
-   :ignore-embedded-bookmarks-p ignore-embedded-bookmarks-p 
+  (dp-mk-bm-completion-list
+   :ignore-embedded-bookmarks-p ignore-embedded-bookmarks-p
    :from-point-p from-point-p
    :quote quote))
 
-  
+
 (defvar dp-get-bm-interactive-history '()
   "A variable by any other name...")
 
@@ -209,7 +209,7 @@ Add each bookmark-name to the list of bookmarks."
 ;   (unless (equal (car-safe dp-get-bm-interactive-history) bm-name)
 ;     (when (or save-empty-p
 ;               (not (string= "")))
-;       (setq dp-get-bm-interactive-history 
+;       (setq dp-get-bm-interactive-history
 ;             (cons bm-name dp-get-bm-interactive-history)))))
 
 (defun* dp-add-to-history (hist-sym string &key allow-dupes-p pred pred-args
@@ -248,7 +248,7 @@ Calling it `dp-add-to-history-if-car-not=' is a bit too much.  Even for me."
   (let* ((bubba dp-get-bm-interactive-history)
          (hist (or (and add-to-history-p 'bubba)
                    t))                  ;t says don't record.
-         (ret (list (completing-read (or prompt "bm id: ") 
+         (ret (list (completing-read (or prompt "bm id: ")
                                      (or completions
                                          (dp-mk-bm-completion-list))
                                      nil nil nil hist)
@@ -279,15 +279,15 @@ Calling it `dp-add-to-history-if-car-not=' is a bit too much.  Even for me."
 (defvar dp-last-bm nil
   "Last bm that we set (?? or got??).")
 
-(defun dp-bm-update (bm bm-name marker bm-props 
+(defun dp-bm-update (bm bm-name marker bm-props
                      &optional bm-list force-update-p)
-  (if (or force-update-p 
+  (if (or force-update-p
             (not (dp-bm-equal bm bm-name marker bm-props)))
       (setcar (dp-bm-member bm-name) (dp-make-bookmark bm-name marker bm-props))
     nil))                               ; Returns nil if no update was done.
-  
+
 (defun* dp-set-or-goto-bm (bm-name
-                           &key reset action-if-non-existent 
+                           &key reset action-if-non-existent
                            (plist nil)
                            (colorize-p t)
                            (verbose-p t)
@@ -296,12 +296,12 @@ Calling it `dp-add-to-history-if-car-not=' is a bit too much.  Even for me."
                            (highlight-line-p nil)
                            (bm-marker nil bm-marker-passed-p))
   "Set or goto a bookmark.
-If the BM-NAME is in the list, goto it, otherwise, 
+If the BM-NAME is in the list, goto it, otherwise,
 set the bookmark to point.
 If RESET is t, then set the bookmark location to point.
 If RESET is nil, then use existence of prefix arg as truth value of reset.
-If RESET is other, then use (not existence of prefix arg) as truth value 
-of reset." 
+If RESET is other, then use (not existence of prefix arg) as truth value
+of reset."
   (interactive (dp-get-bm-interactive-for-get-or-set "_bm name: "))
   ;;(dp-add-to-bm-history bm-name)
 
@@ -313,19 +313,19 @@ of reset."
     (unless (equal reset t)
       (setq reset (not current-prefix-arg))))
 
-  ;;(message (format "bm-name>%s<, reset>%s<, cpa>%s<" bm-name reset 
+  ;;(message (format "bm-name>%s<, reset>%s<, cpa>%s<" bm-name reset
   ;;		   current-prefix-arg))
 
   ;; stringify name
   (setq bm-name (format "%s" bm-name))
-  
+
   (save-match-data
-    ;; `dp-goto-line' uses '<nnn> to mean bookmark # <nnn>. 
+    ;; `dp-goto-line' uses '<nnn> to mean bookmark # <nnn>.
     (string-match "^\\('*\\)?\\(.*\\)$" bm-name)
     (setq bm-name (match-string 2 bm-name)))
   (setq this-command 'dp-set-or-goto-bm)
   (let* ((bm (dp-bm-find bm-name))
-         (bm-msg (format "%sbm `%s'" 
+         (bm-msg (format "%sbm `%s'"
                          (if bm-kind
                              (concat bm-kind " ")
                            "")
@@ -341,19 +341,19 @@ of reset."
                  (y-or-n-p (if bm-ro-p "Unprotect bm? " "Protect bm? ")))
         (setq bm-ro-p (not bm-ro-p))
         (dp-bm-prop-put bm 'bm-ro-p bm-ro-p))
-      (message "bm %s's state is now %s" bm-name 
+      (message "bm %s's state is now %s" bm-name
                (if (dp-bm-prop-get bm 'bm-ro-p) "READ ONLY" "Writable"))
       (return-from dp-set-or-goto-bm))
-    
+
     (setq this-command 'dp-set-or-goto-bm)
-    
+
     (if (and bm (not reset))
 	;; existing bm and no reset requested, go to it.
 	(let ((pos (dp-bm-pos bm))
               old-bm)
 	  ;; (message (format "going to %d" pos))
-	  (setq status-msg 
-                (concat status-msg (format 
+	  (setq status-msg
+                (concat status-msg (format
                                     "Went %s to %s, from Line=%s to %s"
                                     (cond
                                      ((< pos (point)) "back")
@@ -388,21 +388,21 @@ of reset."
             (when (dp-bm-update bm bm-name bm-marker plist)
               (setq status-msg
                     (if (equal (dp-bm-pos-str old-bm)
-                               (dp-pos-str 
+                               (dp-pos-str
                                      (marker-position bm-marker)))
                         nil
-                    (concat status-msg 
+                    (concat status-msg
                             (format "moving %s from %s *to* %s"
                                     bm-msg
                                     (dp-bm-pos-str old-bm)
-                                    (dp-pos-str 
+                                    (dp-pos-str
                                      (marker-position bm-marker))))))))
 	;; otherwise, possibly make a new one
         (if (or (eq action-if-non-existent 'nop)
                 (and (eq action-if-non-existent 'ask)
-                     (not (y-or-n-p 
+                     (not (y-or-n-p
                            (format "No such bm (%s); create it? " bm-name)))))
-            (setq status-msg (format "%s***ignoring non-existent %s " 
+            (setq status-msg (format "%s***ignoring non-existent %s "
                                      status-msg bm-msg))
           (when highlight-line-p
             (dp-colorize-region (if (eq highlight-line-p t)
@@ -412,8 +412,8 @@ of reset."
                 status-msg (concat status-msg (format "created %s at "
                                                       bm-msg)))
           (setq status-msg (concat status-msg (dp-bm-pos-str bm)))))
-      
-;       (message (format "set bm %s to %d" bm-name 
+
+;       (message (format "set bm %s to %d" bm-name
 ;                        (marker-position bm-marker)))
       )
     (setq dp-last-bm bm)
@@ -426,17 +426,17 @@ of reset."
 (defalias 'gb 'dp-set-or-goto-bm)
 
 (defsubst gbh (name &optional color)
-  (interactive (dp-get-bm-interactive 
+  (interactive (dp-get-bm-interactive
                 "Highlighted bm: "
                 :completions (dp-bm-rebuild-completion-list)))
-  (dp-set-or-goto-bm name 
-                     :reset nil 
-                     :action-if-non-existent 'set 
+  (dp-set-or-goto-bm name
+                     :reset nil
+                     :action-if-non-existent 'set
                      :highlight-line-p (or color t)))
 
 (defun dp-bm-list-clear ()
   "Clear the bookmark list.
-Make 'em all point nowhere so we don't continue to update 'em 
+Make 'em all point nowhere so we don't continue to update 'em
 until they get gc'd."
   (interactive)
   (let (bm)

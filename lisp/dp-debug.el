@@ -84,12 +84,12 @@ match data:
 \[13]nil<
 "
   (save-excursion
-    (princ 
+    (princ
      (concat "\n'''\n"
              (dmessage "%s\nmatch data:\n%s\n"
                        (buffer-substring (line-beginning-position)
                                          (line-end-position))
-                       (dp-all-match-strings-string 
+                       (dp-all-match-strings-string
                         :sj-args '("\n" t t t)))
              "'''\npass # NOT the test result!")
      (current-buffer))))

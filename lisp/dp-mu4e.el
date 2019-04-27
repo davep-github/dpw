@@ -61,7 +61,7 @@ These will show up in the main mu4e screen."
       (dp-setup-mu4e0)
     (unless quiet
       (warn "mu4e not available. Now go away before I warn you a second time."))))
-    
+
 (defun dp-mu4e-view-mode-hook ()
   (dp-define-local-keys
    '(

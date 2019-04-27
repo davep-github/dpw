@@ -70,7 +70,7 @@ the normal action is used instead."
       (overlay-start button)
     ;; Must be a text-property button.
     (let ((ext (car (dp-extents-at-with-prop 'button nil button))))
-      (if ext 
+      (if ext
           (extent-start-position ext)
         (point-max)))))
 
@@ -80,7 +80,7 @@ the normal action is used instead."
       (overlay-end button)
     ;; Must be a text-property button.
     (let ((ext (car (dp-extents-at-with-prop 'button nil button))))
-      (if ext 
+      (if ext
           (extent-end-position ext)
         (point-max)))))
 

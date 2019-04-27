@@ -9,7 +9,7 @@
 (add-hook 'mail-citation-hook 'sc-cite-original)
 ;; do this thru customize now
 ;;(setq sc-citation-leader "")
-(setq sc-preferred-attribution-list 
+(setq sc-preferred-attribution-list
       (list "sc-lastchoice" "x-attribution" "sc-consult"
 	    "firstname" "initials" "lastname"))
 
@@ -45,13 +45,13 @@
 ;; add a hook that will make sc prompt us if the attribution has any
 ;; funky characters in it.
 ;;
-(add-hook 'sc-attribs-postselect-hook 
-	  (function 
+(add-hook 'sc-attribs-postselect-hook
+	  (function
            (lambda ()
 	     (setq query-p (or
 			    sc-confirm-always-p
 			    (posix-string-match "[^a-zA-Z]" attribution)))
-             ;;	     (message (format "query-p: %s, sc-: %s" 
+             ;;	     (message (format "query-p: %s, sc-: %s"
              ;;			      query-p sc-confirm-always-p))
 	     )))
 

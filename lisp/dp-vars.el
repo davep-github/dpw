@@ -2,7 +2,7 @@
 ;;; $Id: dp-vars.el,v 1.27 2005/06/13 08:20:07 davep Exp $
 ;;;
 ;;; Configurable variables.
-;;; Defined and initialized here.  
+;;; Defined and initialized here.
 ;;; Can be overridden in one of the spec-macs files or in the
 ;;; custom file.
 ;;;
@@ -76,7 +76,7 @@ Username of email account."
   :group 'dp-vars
   :type 'string)
 
-(defcustom dp-mail-outgoing-host 
+(defcustom dp-mail-outgoing-host
   "*DON'T SET THIS HERE. SET IT IN THE LOCAL SPEC_MACS."
   "*DON'T SET THIS HERE. SET IT IN THE LOCAL SPEC_MACS.
 Username of email account"
@@ -159,7 +159,7 @@ Username of email account"
   :group 'dp-vars
   :type '(file :must-match t))
 
-(defcustom dp-per-dir-abbrev-files 
+(defcustom dp-per-dir-abbrev-files
   '("./.dp-local-abbrevs")              ; Allow local abbrevs per dir.
   "*Local, per-dir abbrev files."
   :group 'dp-vars
@@ -212,7 +212,7 @@ Username of email account"
   :group 'dp-vars
   :type 'string)
 
-(defcustom dp-get-file-owner-program 
+(defcustom dp-get-file-owner-program
   "ls -l %s | awk '{print $3}'"
   "*Program to get the owner of a file."
   :group 'dp-vars
@@ -240,8 +240,8 @@ nil --> use builtin image of chuck."
     Custom
     Info-mode
     debugger-mode)
-  "List of major modes of buffers to be deleted by `dp-cleanup-buffers'."  
-  :group 'dp-vars 
+  "List of major modes of buffers to be deleted by `dp-cleanup-buffers'."
+  :group 'dp-vars
   :type '(repeat (symbol :tag "Major mode")))
 
 (defcustom dp-preferred-web-search-site
@@ -289,10 +289,10 @@ nil --> use builtin image of chuck."
   :group 'dp-vars
   :type '(repeat string))
 
-(defcustom dp-code-indexer-data-files 
-  '("TAGS" 
-    "tags" 
-    "ETAGS" 
+(defcustom dp-code-indexer-data-files
+  '("TAGS"
+    "tags"
+    "ETAGS"
     "etags"
     "cscope.files"
     "cscope.out"
@@ -327,7 +327,7 @@ These should be regexp quoted."
   :type 'string
   :group 'cscope)
 
-(defvar dp-using-gtags-cscope-p 
+(defvar dp-using-gtags-cscope-p
   (string= dp-cscope-program "gtags-cscope")
   "Um, well, are, we..., um... like using gtags-cscope?")
 
@@ -400,7 +400,7 @@ Things are looking better with this (quite nice, readable and legible) font:
 ;;;
 ;;; These are just symbols.
 ;;; We define and get definitions of faces later.
-;;; 
+;;;
 (defcustom dp-colorize-region-faces
   '(dp-cifdef-face0
     dp-cifdef-face1
@@ -446,12 +446,12 @@ Look at `face-list'.  grep for \"dp-.*\" ??"
 
 (defcustom dp-main-project-root nil
   "Needed by CEDET, et. al."
-  :group 'dp-vars 
+  :group 'dp-vars
   :type 'directory)
 
 (defcustom dp-main-project-includes nil
   "Needed by CEDET, et. al."
-  :group 'dp-vars 
+  :group 'dp-vars
   :type '(repeat directory))
 
 (defcustom dp-wants-xemacs-cedet-hacks-et-al-p nil
@@ -462,8 +462,8 @@ Used by XEmacs, which needs many, many fugly hacks."
   :type '(repeat (symbol :tag "CEDET component")))
 
 (defcustom dp-activate-semantic-et-al-at-startup-p
-  (and 
-   (memq 'semantic 
+  (and
+   (memq 'semantic
 	 dp-wants-xemacs-cedet-hacks-et-al-p)
    t)
   "*Do I want to activate the CEDET package when XEmacs starts?
@@ -549,7 +549,7 @@ overlong."
   :group 'dp-vars)
 
 (defcustom dp-c-add-nl-after-open-paren-default-p t
-  "*Should a newline be added after the open parenthesis of a function 
+  "*Should a newline be added after the open parenthesis of a function
 definition?.
 This provides for uniform parameter indentation and maximum space for each
 parameter. e.g
@@ -582,7 +582,7 @@ for compilation errors. In this case, I only want dedicated-ness to prevent
 other-window functions to select it. Perhaps there's... another way."
   :type 'boolean
   :group 'dp-vars)
-  
+
 
 (defcustom dp-default-2-window-min-width 180
   "*Min width to allow splitting into 2 vertical windows."
@@ -595,7 +595,7 @@ other-window functions to select it. Perhaps there's... another way."
   :type 'integer)
 
 (defcustom dp-2w-frame-width 180
-  "Default frame width for 2w -- 2 vertical windows 80 columns wide.  
+  "Default frame width for 2w -- 2 vertical windows 80 columns wide.
 Also used by split window advice to determine when to force a horizontal
 split."
   :group 'dp-vars

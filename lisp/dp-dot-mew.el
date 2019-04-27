@@ -16,7 +16,7 @@
 (defconst dp-mail-header-terminator "^--------$"
   "Regular expression used to find end of mail headers.")
 
-(defconst dp-mew-attachments-header 
+(defconst dp-mew-attachments-header
   "------------------------------ attachments ------------------------------")
 
 (defvar dp-mew-prog-agrep-opts '("-l" "-e")
@@ -58,11 +58,11 @@ Shouldn't really set this unless something breaks.")
 	(if dp-mail-file-vs-forward-p
 	    (progn
 	      (dmessage "refiling message...")
-	      (execute-kbd-macro 
+	      (execute-kbd-macro
 	       (read-kbd-macro (format "o M-d %s RET" dp-mail-spamcan))))
 	  (dmessage "forwarding message...")
 	  (setq dp-mail-fwd-spam-idle nil)
-	  (execute-kbd-macro 
+	  (execute-kbd-macro
 	   (read-kbd-macro "fuce@ftc.gov C-c C-c y <down>"))))))
 
 (defun dp-mew-process-marks-fwd (func &rest func-args)
@@ -131,11 +131,11 @@ Shouldn't really set this unless something breaks.")
 
 ;;
 ;; mhe summary format:
-;; 9619  02/08 lwesson@pce2000.c  Memory test<<Hi David, This is from the new 
+;; 9619  02/08 lwesson@pce2000.c  Memory test<<Hi David, This is from the new
 ;; good enough to copy?  mew has problems displaying body lines in summary.
 ;;(setq mew-scan-form-list
 ;;      '((t (type (5 date) "!!! " (14 from) " |" (0 subj)) 28)))
-(setq mew-summary-form 
+(setq mew-summary-form
       '(type (5 date) " " (14 from) "|" t (30 subj) "|" (0 body)))
 
 (setq mew-use-cursor-mark t)
@@ -174,7 +174,7 @@ Shouldn't really set this unless something breaks.")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Code: hooks, support, etc.
-;; 
+;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun dp-flyspell-mew-draft-mode-p ()
   "Return non-nil if we want to use flyspell at \\(point)."
@@ -195,8 +195,8 @@ Shouldn't really set this unless something breaks.")
   ;; @todo... try it on since the global abbrev table only has typos in it.
   (abbrev-mode 0)		  ; We use mah MFing abbrevs, MFer.
   ;;(dmessage "buf>%s<" (buffer-name))
-  (setq dp-mail-is-a-reply-p (memq this-command 
-				   '(dp-mew-summary-reply 
+  (setq dp-mail-is-a-reply-p (memq this-command
+				   '(dp-mew-summary-reply
 				     dp-mew-summary-reply-with-citation)))
   (if (and (boundp 'dp-email-composition-abbrevs)
 	   dp-email-composition-abbrevs)
@@ -220,7 +220,7 @@ Shouldn't really set this unless something breaks.")
   (or (mew-refile-guess-by-alist) (or def-fcc '("+sent_mail"))))
 
 (defun dp-mew-guess-From:-suffix (&optional def-suf)
-  (or (car-safe (let ((mew-refile-guess-alist 
+  (or (car-safe (let ((mew-refile-guess-alist
 		       dp-mew-config-From:-rewrite-alist))
 		  (mew-refile-guess-by-alist)))
       def-suf))
@@ -234,7 +234,7 @@ Shouldn't really set this unless something breaks.")
       (save-restriction
 	(widen)
 	(goto-char (point-min))
-	(let ((was-to 
+	(let ((was-to
 	       ;; special case... change dp-mail-get-header-value to
 	       ;; use mew's if available, else my simpler one.
 	       (dp-mail-get-@ddr (mew-header-get-value "[Tt][oO]:"))))
@@ -254,13 +254,13 @@ I create a temp unique var interned into a mail specific obarray and return
 its name as a string.  This is then used as the input to this function.  Once
 here, the var is `dereferenced' from its name.  BLECCH!
 The deref'd value is passed to `dp-mail-generate-From:-given-plist'."
-    (dp-mail-generate-From:-given-plist 
+    (dp-mail-generate-From:-given-plist
      (dp-mew-config-get-From:-rewrite-info from-suffix)))
 
 (defun dp-mew-rewrite-From:-header (dont-force-reply)
   (interactive "P")
   ;;(dmessage "dp-mew-rewrite-From:-header, disap>%s<" dp-mail-is-a-reply-p)
-  (let ((dp-mail-is-a-reply-p (or (not dont-force-reply) 
+  (let ((dp-mail-is-a-reply-p (or (not dont-force-reply)
 				  dp-mail-is-a-reply-p)))
     (dp-mail-rewrite-From:-header (dp-mew-guess-From:-suffix))))
 
@@ -283,7 +283,7 @@ Remove any added *****SPAM***** from headers."
     (if (equal fcc-list (list dp-mew-no-fcc))
 	(dp-delete-fcc)
       (dp-replace-fcc fcc-val dp-mail-header-terminator))
-    
+
     (when (and (not dp-mail-skip-rewrite-from)
 	       (not (dp-mew-From:-has-changed)))
       (dp-mew-rewrite-From:-header 'dont-force-reply))
@@ -293,7 +293,7 @@ Remove any added *****SPAM***** from headers."
     (dp-mail-nuke-SPAM-indicator)))
 
 (defun dp-mew-before-cite-hook ()
-  "Before cite hook.  Since mew calls draft mode hook before 
+  "Before cite hook.  Since mew calls draft mode hook before
 inserting cited text when using '\\[mew-summary-reply-with-citation]'
 \(mew-summary-reply-with-citation), the cited text is placed after the
 signature.  This hook positions us to the place that was point-max
@@ -323,7 +323,7 @@ mew-prog-grep-opts."
 		num-mismatches)
 	    0))				; 0 --> exact match
     ;;(message "num-mismatches>%s<" num-mismatches)
-    (setq mew-prog-grep-opts 
+    (setq mew-prog-grep-opts
 	  (cons (format "-%d" num-mismatches) dp-mew-prog-agrep-opts))
     (message "agrep-args>%s<" mew-prog-grep-opts))
   ;; do the grep search on message bodies.
@@ -347,7 +347,7 @@ mew-prog-grep-opts."
   (local-set-key "\ek" 'dp-mew-summary-delete) ; del with no visit of next msg
 
   ; Reply to all...
-  (local-set-key "R" (kb-lambda 
+  (local-set-key "R" (kb-lambda
 		       (setq this-command 'dp-mew-summary-reply)
 		       (dp-mew-summary-reply t)))
 
@@ -396,7 +396,7 @@ mew-prog-grep-opts."
   (define-key dp-Ccd-map "a" 'mew-draft-prepare-attachments)
   (define-key dp-Ccd-map "2" 'mew-attach-copy)
   (local-set-key "\e." 'find-file-at-point))
-  
+
 (defun dp-mew-summary-reply (&optional not-onlytofrom-p)
   "Invert the meaning of \\[universal-argument]
 since I prefer to *not* cc everyone on the
@@ -407,7 +407,7 @@ cc list."
 (defun dp-mew-summary-reply-with-citation (&optional onlytofrom)
   (interactive)
   (call-interactively 'mew-summary-reply-with-citation))
-  
+
 ;; a *much* nicer splash
 ;; doesn't work well, I think it is too large.
 ;;(setq mew-icon-mew "rpasta.png")
@@ -421,7 +421,7 @@ cc list."
   (sc-cite-original)
   ;;(dmessage "dp-mew-cite-hook, buf>%s<" (buffer-name))
   (dp-pop-filladapt-state)
-  
+
   ;; sc leaves it set to the citation header.  This means my replies are
   ;; prefixed with, say, "kath> ", when they're filled.
   ;; Since filladapt can guess the citation's prefix, I set fill-prefix to
@@ -434,7 +434,7 @@ cc list."
 For mew, this may be the beginning of attachements or the end of file."
   (save-excursion
     (goto-char (point-min))
-    (if (search-forward 
+    (if (search-forward
 	 dp-mew-attachments-header nil t)
 	(progn
 	  (beginning-of-line)

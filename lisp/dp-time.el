@@ -35,7 +35,7 @@ I'm sure I'm missing some existing means of doing this."
   (/ (time-to-seconds (time-since time)) 60 60))
 
 (defun dp-hours-since-string (time &optional format-string)
-  (format (or format-string "%3.2f") 
+  (format (or format-string "%3.2f")
           (dp-hours-since time)))
 
 (defun dp-time-to-hours (&optional time-val)
@@ -74,12 +74,12 @@ FROM inherits `dp-time-hours-from' default value (q.v)."
                                               " *dp Log Buffer*"))
     (dp-erase-buffer)
     (insert message)
-    (append-to-file (point-min) (point-max) 
+    (append-to-file (point-min) (point-max)
                     (or log-file-name dp-def-time-log-file-name))
     message))
-  
+
 (defun dp-log-mk-std-time-string (&optional time)
-  (format "%s" 
+  (format "%s"
           (format-time-string dp-std-format-time-string-format
                               (or time (current-time)))))
 
@@ -92,7 +92,7 @@ FROM inherits `dp-time-hours-from' default value (q.v)."
                                            (dp-log-mk-std-time-string time)
 					 "")
 				       message))
-      (dp-log-message-to-file 
+      (dp-log-message-to-file
        (or log-file-name dp-def-time-log-file-name)
        (format "%s -- %s\n" message (current-time-string time))
        (or buf-name " *dp Time Log Buffer*"))
@@ -100,11 +100,11 @@ FROM inherits `dp-time-hours-from' default value (q.v)."
 
 (defun dp-get-first-emacs-start-time-string (&optional start-stamp)
   (interactive)
-  (let ((ts (shell-command-to-string 
+  (let ((ts (shell-command-to-string
             (format "log-time -1 %s -d -"
                     (or "Logical"
 		     start-stamp dp-std-start-stamp)))))
-    (posix-string-match 
+    (posix-string-match
      "\\(\\(Wed\\|Thu\\|Fri\\|Sat\\|Sun\\|Mon\\|Tue\\).*\\) --"
      ts)
     (match-string 1 ts)))
@@ -132,11 +132,11 @@ e.g.: Mon Dec 11 14:48:17 EST 2006 - Mon Dec 11 11:19:27 EST 2006."
   (interactive "stime string1: \nstime string2: ")
   (/ (dp-date-cmd-diff date-string-1 date-string-2) 60 60))
 
-(defun* dp-timevalue-at-time (hrs24 &optional (minutes 0) (seconds 0) 
+(defun* dp-timevalue-at-time (hrs24 &optional (minutes 0) (seconds 0)
                               base-timeval)
   "Return a time value for hrs24:min:sec on the same day as BASE-TIMEVAL.
 The default is to set time to hrs24:0:0."
-  (apply 'encode-time seconds minutes hrs24 
+  (apply 'encode-time seconds minutes hrs24
          (cdddr (decode-time (or base-timeval (current-time))))))
 
 (defun dp-time-val-p (time)
@@ -154,7 +154,7 @@ The default is to set time to hrs24:0:0."
              (time-add from-time (dp-hours-to-time hour))))
            hour-list))
 
-(defun* dp-mk-periodic-time-val-list (num period-FP-hrs &optional 
+(defun* dp-mk-periodic-time-val-list (num period-FP-hrs &optional
                                           from-time (offset 'zero)
                                           include-zeroth-p)
   "List goes from [period-FP-hrs... num * period-FP-hrs...].  I.e. no 0.
@@ -184,7 +184,7 @@ Return a list of time vals offset from FROM-TIME."
     (dp-hours-to-time time-in))
    ((memq time-in '(zero zed nada 0 z zap naught)) dp-time-val-0)
    ((memq time-in '(now n current c = now-default)) (current-time))
-   (t (error (format "dp-*-to-time-val: Can't handle things like %s yet" 
+   (t (error (format "dp-*-to-time-val: Can't handle things like %s yet"
                      time-in)))))
 
 (defun dp-session-length ()
@@ -193,8 +193,8 @@ Return a list of time vals offset from FROM-TIME."
     (message "In: %s, Now: %s, %s."
              st
              (dp-log-mk-std-time-string)
-             (dp-1/4-hours-since-string 
-              st 
+             (dp-1/4-hours-since-string
+              st
               "Total elapsed time: %3.2f (%s) hrs"))))
 
 (provide 'dp-time)

@@ -1,5 +1,5 @@
 ;;;
-;;; 
+;;;
 ;;;
 
 ;; Mew `requires' faces, but faces doesn't do a provide and we fail.

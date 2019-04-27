@@ -4,8 +4,8 @@
 ;;;
 ;;; Originally began as an implementation of "o" command in Vi*.
 ;;;
-;;; The baseline behavior is, loosely: got EOL, mode specific [return] 
-;;; and mode specific 
+;;; The baseline behavior is, loosely: got EOL, mode specific [return]
+;;; and mode specific
 ;;; I have been trying to add intelligence to it so it can do the most useful
 ;;; thing given that I want to create a new line (not a newline).
 ;;; Some examples:
@@ -16,7 +16,7 @@
 ;;; Empty () after a non-class "def"
 ;;; self added after open on def ( if needed. (self) @ end of def-line w/no (
 ;;; And so on.
-;;; 
+;;;
 ;;; A mode specific function can be vectored to via a `dp-model-local'
 ;;; variable named 'dp-open-newline-func. Or a global vector of the same name
 ;;; can be used. They are checked in {mode-local, global} order.
@@ -97,7 +97,7 @@
            ;; Auto append `dp-c-typename-suffix' to typedefs, structs,
            ;; classes, and enums.
            ;;!<@todo Fix this to use the apropos suffix for the given
-           ;;construct.  
+           ;;construct.
            ;; !<@todo Allow consecutive `dp-open-newline' commands
            ;;to cycle through the various suffixes.
            ((progn
@@ -134,7 +134,7 @@
                      :under-score under-score)))
             (when (or repeat-cmd
                       (not std-suffix-present-p))
-              (setq suffix (dp-car&cycle-list 
+              (setq suffix (dp-car&cycle-list
                             (dp-cob-state-t-next-suffix dp-cob-state)
                             dp-c-classname-suffix-list))
               (delete-region (dp-cob-state-t-mod-begin-pos dp-cob-state)
@@ -155,7 +155,7 @@
             (end-of-line)
             (c-context-line-break)
             nil)
-           
+
    ;;;;;;;;;;;;;;;;;
            ((let ((protection-label (save-excursion
                                       (end-of-line)
@@ -165,7 +165,7 @@
                     (dp-c++-comment-protection-section arg)
                     t)
                 nil))
-            (setf (dp-cob-state-t-last-sub-command dp-cob-state) 
+            (setf (dp-cob-state-t-last-sub-command dp-cob-state)
                   'mk-protection-section)
             (dmessage "cob: make protection section")
             nil)
@@ -204,17 +204,17 @@
               (dp-c-replace-statement-end ":"))
             (dmessage "cob: case label")
             t)
- 
+
    ;;;;;;;;;;;;;;;;;
            ;; Add a ':' to C++ constructors
-           ((and arg 
+           ((and arg
                  (dp-c++-in-class-p)
                  (dp-c-indent-command)
                  (dp-c-in-syntactic-region '(arglist-intro arglist-cont
                                              topmost-intro topmost-intro-cont
                                              arglist-cont-nonempty)))
               (end-of-line)
-              (insert "\n: ") 
+              (insert "\n: ")
               (dp-c-indent-command)
               nil)
 
@@ -227,10 +227,10 @@
             (dmessage "cob: auto <<|>>")
             (setf (dp-cob-state-t-last-sub-command dp-cob-state) 'stream-op)
             nil)
-           
+
    ;;;;;;;;;;;;;;;;;
            ;; Clean up function or method:
-           ;; add "(void)" if no args are present.  
+           ;; add "(void)" if no args are present.
            ;; replace () with void
            ;; formats decl if closing paren is in place.
            ((and (save-excursion
@@ -249,7 +249,7 @@
 ;;add stream op above enough?                         (looking-at "\\s-*\\(<<\\|>>\\)")))
                  (not (dp-c-looking-back-at-sans-eos-junk ";\\s-*"
                                                           'from-eol-p))
-;;                  (not (dp-c-looking-back-at-sans-eos-junk "};\\s-*" 
+;;                  (not (dp-c-looking-back-at-sans-eos-junk "};\\s-*"
 ;;                                                           'from-eol-p)
 ;;                       )
                  ;; We *may not* end up wanting to format ourselves as a
@@ -274,18 +274,18 @@
            ((dp-c-looking-back-at-sans-eos-junk "}\\|^\\s-*" t)
             (dmessage "cob: looking back at } or blankness")
             t)                          ; eol/newline/indent.
-           
+
    ;;;;;;;;;;;;;;;;;
            ;;
            ;; Add ; after return.
            ;; p is where we started.
-           ((save-excursion 
+           ((save-excursion
               (dp-c-beginning-of-statement)
               (dp-c-open-after-any-kw '("return" "break")))
             (dmessage "cob: add ;")
             (setf (dp-cob-state-t-last-sub-command dp-cob-state) 'add-semi-kw)
             t)
-           
+
    ;;;;;;;;;;;;;;;;;
            ;; Add { after: if, else if, while, for
            ;; If following a fully parenthesized form.
@@ -295,7 +295,7 @@
                     iswhile-p)
                 (dp-c-beginning-of-statement)
                 (set-match-data nil)
-                (and (or (looking-at (concat "\\s-*" 
+                (and (or (looking-at (concat "\\s-*"
                                              dp-c*-keywords-with-stmt-blocks))
                          ;; `[dp-]c-beginning-of-statement' works oddly with
                          ;; for(;;).  It takes you to the beginning of the
@@ -307,23 +307,23 @@
                          (progn
                            (goto-char starting-point)
                            (beginning-of-line)
-                           (looking-at 
-                            (concat "\\s-*" 
+                           (looking-at
+                            (concat "\\s-*"
                                     dp-c*-keywords-with-stmt-blocks))))
                      (search-forward "(" (line-end-position) t))))
             (goto-char (match-beginning 0))
             ;;(dp-find-matching-paren)
             (if (dp-c-ensure-opening-brace
-                 :block-keyword-p t 
+                 :block-keyword-p t
                  :newline-before-brace-p nil)
                  ;; :regexp-prefix ")"
                 (progn
                   (dmessage "cob: add { to if and friends.")
-                  (setf (dp-cob-state-t-last-sub-command dp-cob-state) 
+                  (setf (dp-cob-state-t-last-sub-command dp-cob-state)
                         'add-statement-block-{)
                   nil)
               t))          ; Didn't to anything special so just eol & indent.
-           
+
    ;;;;;;;;;;;;;;;;;
            ;; pre-preprocessor constructs.
            ((dp-in-cpp-construct-p)
@@ -333,23 +333,23 @@
             (dmessage "cob: cpp statement.")
             (setf (dp-cob-state-t-last-sub-command dp-cob-state) 'cpp-stmt)
             t)
-           
+
    ;;;;;;;;;;;;;;;;;
            ;; Lone else?
            ((save-excursion
               (end-of-line)
-              (dp-c-looking-back-at-sans-eos-junk 
+              (dp-c-looking-back-at-sans-eos-junk
                (concat "\\("
                        (dp-mk-c++-symbol-regexp "else")
                        "\\)"
                        "\\(\\s-*\\)")))
-            (dmessage "matches: %s" (dp-string-join (dp-all-match-strings) 
+            (dmessage "matches: %s" (dp-string-join (dp-all-match-strings)
                                                     "|"))
             (replace-match (format "\\2 {%s\\4"
                                    (if (> (length (match-string 3)) 2)
                                        (substring (match-string 3) 2)
                                      "\\3")))
-;                              (dp-make-n-replacements 
+;                              (dp-make-n-replacements
 ;                               (- (/ (length (match-data)) 2) 3)  ; n
 ;                               3)))
             (setf (dp-cob-state-t-last-sub-command dp-cob-state) 'lone-else)
@@ -409,7 +409,7 @@
                      (progn
                        (dp-c-end-of-line)
                        (or (and (dp-in-c-statement)
-                                (not (dp-looking-back-at-close-paren-p 
+                                (not (dp-looking-back-at-close-paren-p
                                       'final)))
                            (dp-c-in-syntactic-region
                             dp-c-add-comma-@-eol-of-regions))))
@@ -422,8 +422,8 @@
                                   (line-end-position) t)))
                           (save-excursion
                             (dp-c-end-of-line)
-                            (let ((r (not (dp-looking-back-at 
-                                           (concat dp-c-no-comma-after-these 
+                            (let ((r (not (dp-looking-back-at
+                                           (concat dp-c-no-comma-after-these
                                                    "\\(\\s-*$\\)")
                                            nil))))
                               r)))
@@ -432,20 +432,20 @@
             (dmessage "cob: auto ,")
             (setf (dp-cob-state-t-last-sub-command dp-cob-state) 'add-comma)
             t)
-           
+
    ;;;;;;;;;;;;;;;;;
            ;; Terminate function call with ; ? <:cob-semi|cob;:>
            ((dp-c-terminate-function-stmt)
             (dmessage "cob: auto ;")
-            (setf (dp-cob-state-t-last-sub-command dp-cob-state) 
+            (setf (dp-cob-state-t-last-sub-command dp-cob-state)
                   'add-semi-function)
             t)
-           
+
    ;;;;;;;;;;;;;;;;;
            (t
             (dmessage "cob: in default clause")
             ;;; XXX (barfola)
-            ;;; !<@todo XXX (end-of-line) 
+            ;;; !<@todo XXX (end-of-line)
             (dp-c-context-line-break)
             ;; !<@todo XXX "return" 'no-change-p
             nil)))
@@ -461,7 +461,7 @@
                                      l-this-command)
   "Use state info to determine if we're repeating a sub-command.
 Useful for cycling through alternatives."
-  
+
   (and (eq (or l-this-command this-command)
            (or l-last-command last-command))
        (eq (dp-cob-state-t-last-sub-command cob-state) sub-cmd)
@@ -473,7 +473,7 @@ Useful for cycling through alternatives."
   (end-of-line)
   (c-context-line-break)
   (dmessage "cob: continue a comment or backslashed line.")
-  (setf (dp-cob-state-t-last-sub-command dp-cob-state) 
+  (setf (dp-cob-state-t-last-sub-command dp-cob-state)
         'continue-comment-or-backslashed-line)
   nil)
 

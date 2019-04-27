@@ -19,7 +19,7 @@ has value \(cdr region-id), then that extent is matched."
       (mapcar-extents (lambda (ext)     ; Do this...
                         (incf num-deleted)
                         (when verbose-p
-                          (message "deleting extent>%s<" 
+                          (message "deleting extent>%s<"
                                    (dp-pretty-format-extent ext "; " nil)))
                         (delete-extent ext))
                       (lambda (ext)           ; ...if this is non-nil
@@ -30,6 +30,6 @@ has value \(cdr region-id), then that extent is matched."
                       (car be) (cdr be)
                       nil
                       prop))
-    (message "%s %s deleted." num-deleted 
+    (message "%s %s deleted." num-deleted
              (dp-pluralize-num num-deleted nil nil "extent"))))
 

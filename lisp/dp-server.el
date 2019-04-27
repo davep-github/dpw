@@ -9,7 +9,7 @@
   ;; This is also called if a server cannot be started, e.g. because another
   ;; server is running. Forcing finalize to remove the ipc file is almost
   ;; always wrong in this case.
-  (dp-finalize-editing-server 'rm-ipc-if-ours)) 
+  (dp-finalize-editing-server 'rm-ipc-if-ours))
 
 (if (dp-xemacs-p)
     (add-hook 'gnuserv-shutdown-hook 'dp-gnuserv-shutdown-hook)
@@ -51,7 +51,7 @@
     (prin1 dp-editor-identification-data (current-buffer))
     (insert "\n")))
 
-(defun* dp-update-editor-identification-data (&key host-name sandbox-name 
+(defun* dp-update-editor-identification-data (&key host-name sandbox-name
                                               pid update-our-data-p)
   "Update specified fields and optionally write the data.
 Use '(nil) for field name to set it to nil."
@@ -59,29 +59,29 @@ Use '(nil) for field name to set it to nil."
                      (and update-our-data-p
                           (dp-compare-ipc-file)))))
     (when host-name
-      (dp-add-editor-identification-data 'host-name 
+      (dp-add-editor-identification-data 'host-name
                                          (if (listp host-name)
                                              (car host-name)
                                            host-name)))
     (when sandbox-name
-      (dp-add-editor-identification-data 'sandbox-name 
+      (dp-add-editor-identification-data 'sandbox-name
                                          (if (listp sandbox-name)
                                              (car sandbox-name)
                                            sandbox-name)))
     (when pid
-      (dp-add-editor-identification-data 'pid 
+      (dp-add-editor-identification-data 'pid
                                          (if (listp pid)
                                              (car pid)
                                            pid)))
     (when write-p
       (dp-creat-editing-server-ipc-file))))
-  
+
 (defun dp-rm-editing-server-ipc-file (&optional force-p)
   "Remove the ipc file only iff it's ours."
   (when (or force-p
             (dp-compare-ipc-file))
     (shell-command-to-string
-     (format "rm -f %s" 
+     (format "rm -f %s"
              (dp-editing-server-ipc-file)))))
 
 (defun dp-kill-editing-server (&optional server-fate)
@@ -137,12 +137,12 @@ not."
 
 (defun* dp-start-editing-server (&optional server-fate force-serving-p)
   "Start a server to edit files for remote clients.  Prefer `gnuserv'.
-SERVER-FATE (prefix arg) says nuke any existing child server and 
+SERVER-FATE (prefix arg) says nuke any existing child server and
 start a new one."
   (interactive "P")
   (setq server-fate (cond
                      ;; No arg... choose default *my* way.
-                     ((not server-fate) (if (or force-serving-p 
+                     ((not server-fate) (if (or force-serving-p
                                                 (interactive-p))
                                             ;; By hand means to force this
                                             ;; emacs to be a server.
@@ -164,13 +164,13 @@ start a new one."
                  (string-match dp-edting-server-valid-host-regexp
                                host-name))
         ;; Set up newest server advertisement.
-        (dp-update-editor-identification-data 
+        (dp-update-editor-identification-data
          :host-name host-name
          :sandbox-name (or "nil" (dp-current-sandbox-name) "nil")
          :pid (emacs-pid))
         (dp-set-frame-title-format)
         (dp-creat-editing-server-ipc-file)))))
-  
+
 (dp-defaliases 'dpss 'dpses 'gserv 'xserver 'eserver 'gnuserve
 	       'dp-start-editing-server)
 

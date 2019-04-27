@@ -40,7 +40,7 @@
                                      "/usr/yokel/sawmill-cvs/info"
                                      (dp-lisp-subdir "contrib/info")))
                               "dir")))
-                     
+
 ;; fits the hp5l
 (setq lpr-page-header-switches '("-F" "-l" "61"))
 
@@ -48,7 +48,7 @@
 ;; see dp-mail.el
 ;; obsolete
 (setq dp-fcc-alist '(
-	  (("filko" "mel@digital\\.net" "thayer" "be_unique@" 
+	  (("filko" "mel@digital\\.net" "thayer" "be_unique@"
 	    "gouge" "buchner" "woodruff" "dake")
 	   ("to" "cc") "oldgang")
 	  (nil ("to") "sent_mail")))
@@ -72,11 +72,11 @@
 (setq dp-sfh-height 67
       dp-2w-frame-width 170)
 
-(dp-add-list-to-list 
+(dp-add-list-to-list
  'dp-ssh-host-name-completion-list
  '(("vilya" . t) ("tw" . "sentinels.vanu.com")
    ("owls" . "sentinels.vanu.com") ("sentinels" . "sentinels.vanu.com")))
- 
+
 
 ;; this can be different on a per-host basis.  There's now a guesser that
 ;; checks for aspell, then ispell.  And we need to set dp-ispell-program-name
@@ -88,7 +88,7 @@
 (defvar dp-g++-include-dir-base "/usr/lib/gcc/i686-pc-linux-gnu/4.3.3/")
 (defvar dp-g++-include-dirs
   (cons "/usr/include/"
-        (dp-map-prefix 
+        (dp-map-prefix
          dp-g++-include-dir-base
          '(
 ;;""
@@ -133,15 +133,15 @@
 ;;           "include/g++-v4/tr1_impl/"
 ;;           "include/objc/"
 ))))
-  
+
   (defun dp-ede-open-talismon-project ()
     "Just for testing/playing with CEDET..."
   (interactive)
-  (ede-cpp-root-project "talisman" 
+  (ede-cpp-root-project "talisman"
                         :file "/mnt/stuff/davep/work/talisman/talisman/README"
                         :system-include-path dp-g++-include-dirs
-                        :include-path 
-                        (dp-map-prefix 
+                        :include-path
+                        (dp-map-prefix
                          "/Talisman/"
                          '("pod-zed-sa/lib0/include"
                            "pod-zed-sa/include"
@@ -158,14 +158,14 @@
   "/mnt/stuff/davep/work/ts2/tstreams/")
 
 (defun dp-ede-open-ts2-project ()
-  "Just for testing/playing with CEDET.  
+  "Just for testing/playing with CEDET.
 It's a little more challenging than talisman, C++ utilization wize."
   (interactive)
-  (ede-cpp-root-project "ts2" 
-                        :file (concat dp-ts2-project-root 
+  (ede-cpp-root-project "ts2"
+                        :file (concat dp-ts2-project-root
                                       "why-cant-ede-just-use-a-dir-name.cxx")
                         :system-include-path dp-g++-include-dirs
-                        :include-path 
+                        :include-path
                         '("/util_lib/include"
                           "/av2/include")))
 

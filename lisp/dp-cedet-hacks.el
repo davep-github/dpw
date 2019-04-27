@@ -2,7 +2,7 @@
 ;;; !<@todo XXX Move any generic fsf-compat functions to
 ;;; dp-xemacs-fsf-compat.el
 
-(defvar dp-semantic-enabled-file-name-p-pred-list 
+(defvar dp-semantic-enabled-file-name-p-pred-list
   (list (paths-construct-path (list dp-$HOME-truename "projects" ""))
         "/work")
   "List of predicates, any one of which will enable Semantic in a buffer if
@@ -13,7 +13,7 @@ We use default by default style, this overrides it.")
   "An easy way to disable semantic for all non-work dirs."
   (not (dp-in-work-dir-p file-name)))
 
-(defvar dp-semantic-disabled-file-name-p-pred-list 
+(defvar dp-semantic-disabled-file-name-p-pred-list
   '("phonebook.py$"
     (paths-construct-path (list dp-$HOME-tr "bin" "")) ; "" gives trailing /
     (paths-construct-path (list dp-$HOME-tr "etc" ""))
@@ -25,7 +25,7 @@ For now it'll be: if disabled, it's disabled.
 But something like if enabled but not by default then disable.")
 
 
-(defvar dp-semantic-files 
+(defvar dp-semantic-files
   '(semantic-adebug
     semantic-analyze-complete
     semantic-analyze-debug
@@ -88,7 +88,7 @@ But something like if enabled but not by default then disable.")
     semantic-util-modes
     senator))
 
-(defvar dp-semantic-long-distance-runarounds 
+(defvar dp-semantic-long-distance-runarounds
   '(semantic-complete-jump
     semantic-complete-jump-local
     senator-next-tag
@@ -111,7 +111,7 @@ For REASON, see `dp-push-go-back'.")
          (dp-advise-for-go-back (nth 0 m) (nth 1 m) (nth 2 m)))))
 
 (defun* dp-semantic-en/dis-abled-p (pred
-                                    &optional file-name 
+                                    &optional file-name
                                     (verbose-p nil))
   "Return result of PRED applied to FILE-NAME.
 PRED can be:
@@ -132,7 +132,7 @@ OR a list of the above."
          (cond
           ;; Always ON
           ((eq pred t)
-           (prog1 
+           (prog1
                file-name
              (when verbose-p
                (dmessage "Semantic forced %s for %s" verbose-p file-name))))
@@ -140,7 +140,7 @@ OR a list of the above."
           ((stringp pred)
            (string-match pred file-name))
           ;; `dp-semantic-en/dis-abled-file-name-p-pred' can also be a list.
-          ;; Recurse for each element until one returns non-nil or all items 
+          ;; Recurse for each element until one returns non-nil or all items
           ;; have been tested.
           ;; It also handles, indirectly via recursion, the auto-*-alist
           ;; functionality.
@@ -174,12 +174,12 @@ OR a list of the above."
         (msg (format "file-name %s is" file-name)))
     (when verbose-p
       (message "dp-semantic->%s<-abled-p(%s): %s %s."
-               verbose-p file-name 
+               verbose-p file-name
                (if abled? "is" "IS NOT")
                verbose-p))
     abled?))
 
-(defun* dp-semantic-en/dis-abled-file-name-p (&optional file-name 
+(defun* dp-semantic-en/dis-abled-file-name-p (&optional file-name
                                               (verbose-p nil vsetp)
                                               enable-pred disable-pred)
   (setq-ifnil enable-pred dp-semantic-enabled-file-name-p-pred-list
@@ -192,10 +192,10 @@ OR a list of the above."
   ;; So:
   ;; !<@todo XXX No, I don't know what is best so at this time, this seems
   ;; best, but I may wont to evolve it over time hence the todo
-  
+
   (cond
-   (t (dp-semantic-en/dis-abled-p enable-pred file-name 
-                                  (if vsetp 
+   (t (dp-semantic-en/dis-abled-p enable-pred file-name
+                                  (if vsetp
                                       verbose-p
                                     "ENABLED")))
    ((dp-semantic-en/dis-abled-p disable-pred file-name "ERRORERROR1")
@@ -211,7 +211,7 @@ OR a list of the above."
   "Prevent Semantic from working on these files."
   (if (memq dp-cedet-semantic-inhibited-p '(t nil))
       (progn
-        (message "short circuit: (%s): not an EDE project." 
+        (message "short circuit: (%s): not an EDE project."
                  dir-name)
         dp-cedet-semantic-inhibited-p)
     (setq dp-cedet-semantic-inhibited-p
@@ -220,10 +220,10 @@ OR a list of the above."
             (when verbose-p
               (message "enter dp-semantic-inhibit-hook(%s)" buffer-file-truename))
             ;; My routines return an enabled state. (not) --> inhibit state.
-            (let ((ret (not (dp-semantic-en/dis-abled-file-name-p))))  
+            (let ((ret (not (dp-semantic-en/dis-abled-file-name-p))))
               (when verbose-p
                 (if ret                 ; Enabled?
-                    (message "dp-semantic-inhibit-hook returns: %s inhibited." 
+                    (message "dp-semantic-inhibit-hook returns: %s inhibited."
                              ret)
                   ;; Disabled
                   (message "dp-semantic-inhibit-hook returns: %s NOT inhibited."
@@ -243,7 +243,7 @@ OR a list of the above."
   ;;;fixing; (not (dp-work-dir-name-p dir-name)))
   (if (memq dp-cedet-ede-ignored-p '(t nil))
       (progn
-        (message "short circuit: (%s): not an EDE project." 
+        (message "short circuit: (%s): not an EDE project."
                  dir-name)
         dp-cedet-ede-ignored-p
         )
@@ -251,7 +251,7 @@ OR a list of the above."
           (if (not (dp-semantic-en/dis-abled-file-name-p dir-name))
               (progn
                 (setq dp-cedet-ede-ignored-p t)
-              (message "dp-ede-project-ignore-hook(%s): not an EDE project." 
+              (message "dp-ede-project-ignore-hook(%s): not an EDE project."
                        dir-name))
             (setq dp-cedet-ede-ignored-p nil)
             (message "dp-ede-project-ignore-hook(%s): OK." dir-name)
@@ -307,13 +307,13 @@ It's mainly an FSF Emacs tool and can need some XEmacs specific fixes. ")
 (defun dp-add-cedet-to-load-path ()
   (interactive)
   (unless dp-use-def-CEDET-distribution
-    (dp-add-list-to-list 'load-path (paths-find-recursive-load-path 
+    (dp-add-list-to-list 'load-path (paths-find-recursive-load-path
                                      (list dp-cedet-root) 1))))
 ;; --vs--
 ;;CO;     (loop for dir in '("cogre" "common" "ede" "eieio" "semantic" "speedbar" "") do
 ;;CO;       (add-to-list 'load-path (paths-construct-path (list dp-cedet-root dir))))
 ;;CO;     (add-to-list 'load-path "/home/davep/lisp/contrib/ecb")))
-  
+
 (defun dp-setup-semantic ()
   (interactive)
   (dp-setup-cedet)
@@ -380,7 +380,7 @@ It's mainly an FSF Emacs tool and can need some XEmacs specific fixes. ")
 ;;??;         semanticdb-default-file-name "semantic-tag.cache"
 ;;??; 	semanticdb-default-save-directory
 ;;??;         "/home/davep/droppings/editors/xemacs/semanticdb.d"
-;;??;         semantic-decoration-styles 
+;;??;         semantic-decoration-styles
 ;;??;         '(("semantic-decoration-on-includes")
 ;;??;           ("semantic-decoration-on-protected-members" . t)
 ;;??;           ("semantic-decoration-on-private-members" . t)
@@ -455,8 +455,8 @@ So, out with the SPAS and load 'em all."
     :group 'faces
     :group 'dp-faces)
   (let ((s-path (or semantic-path (dp-mk-cedet-child "semantic"))))
-    (defadvice custom-autoload (before dp-ad-custom-autoload 
-                                (sym ld 
+    (defadvice custom-autoload (before dp-ad-custom-autoload
+                                (sym ld
                                      &rest compat-with-fsf)
                                 activate)
       "Make a more FSF compatible version by allowing extra parameters.
@@ -464,14 +464,14 @@ This makes us less incompatible with some FSF-centric packages such as CEDET.")
     ;;
     ;; Semantic calls this via the alias `semantic-make-overlay'
     (defadvice make-extent (before dp-ad-make-extent
-                            (from to 
-                                  &optional buffer-or-string 
+                            (from to
+                                  &optional buffer-or-string
                                   &rest compat-with-fsf)
                             activate)
       "Make a more FSF compatible version by allowing extra parameters.
 This makes us less incompatible with some FSF-centric packages such as CEDET.")
 
-    (defadvice switch-to-buffer-other-window 
+    (defadvice switch-to-buffer-other-window
       (before dp-ad-switch-to-buffer-other-window
        (buffer
         &rest compat-with-fsf)
@@ -481,10 +481,10 @@ This makes us less incompatible with some FSF-centric packages such as CEDET.")
 
     (defun overlay-size (&rest rest)
       (apply 'extent-length rest))
-    
+
     (defun minibufferp (&optional buffer)
       (flyspell-minibuffer-p (or buffer (current-buffer))))
-    
+
     (defun hl-line-mode (&optional arg)
       (highline-local-mode 1))
 
@@ -509,9 +509,9 @@ This makes us less incompatible with some FSF-centric packages such as CEDET.")
     (semantic-load-enable-all-exuberent-ctags-support)
     (global-semantic-highlight-func-mode 1)
     (semantic-load-enable-code-helpers)
-    (semantic-toggle-decoration-style 
+    (semantic-toggle-decoration-style
      "semantic-decoration-on-private-members" t)
-    (semantic-toggle-decoration-style 
+    (semantic-toggle-decoration-style
      "semantic-decoration-on-protected-members" t)
     (semantic-load-enable-all-exuberent-ctags-support)
     ;; The `condition-case'-casing is done somewhere in the Semantic doc or
@@ -531,7 +531,7 @@ This makes us less incompatible with some FSF-centric packages such as CEDET.")
           (dmessage "dss: 4")
           (global-semantic-idle-completions-mode -1)
           (dmessage "dss: 5"))
-      (error 
+      (error
        (warn "Something barfed in dp-semantic-start"))))
   (dp-advise-long-distance-runarounds)
   ;;(define-key km "\C-g" 'abort-recursive-edit)
@@ -558,7 +558,7 @@ This makes us less incompatible with some FSF-centric packages such as CEDET.")
 
 (defun dp-senator-minor-mode-hook ()
   (interactive)
-  (dp-define-keys senator-prefix-map 
+  (dp-define-keys senator-prefix-map
                   '([(meta ?/)] senator-complete-symbol
                     [(meta ?.)] semantic-complete-jump
                     [(control ?/)] semantic-analyze-proto-impl-toggle
@@ -588,7 +588,7 @@ This makes us less incompatible with some FSF-centric packages such as CEDET.")
                          [(meta up)] dp-other-window-up
                          [?q] bury-buffer))))
 
-(add-hook 'dp-post-dpmacs-hook 
+(add-hook 'dp-post-dpmacs-hook
           (lambda ()
             (add-hook 'cogre-mode-hook 'dp-cogre-mode-hook)))
 

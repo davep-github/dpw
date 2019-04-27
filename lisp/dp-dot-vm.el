@@ -83,13 +83,13 @@
      (when (yes-or-no-p (format "Buffer %s is modified; kill anyway? "
                                  (buffer-name buffer)))
        (kill-buffer buffer))))
-   
+
 
 (mail-aliases-setup)
 
 (defun dp-vm-common-edit-message-hook ()
   (dp-local-set-keys (list [(meta ?-)] 'dp-vm-kill-buffer
-                           [(control space)] 
+                           [(control space)]
                            (kb-lambda
                                (dp-expand-apprev 'mail-aliases))))
   (dp-maybe-insert-tame-sig)
@@ -120,7 +120,7 @@ attachments (or much else) yet."
   "This function wants to modify IMAP server data.  That's baaaaad."
    'dp-disabled-function)
 
-(defun* dp-vm-IMAP-data-modification-disabled (&optional datum 
+(defun* dp-vm-IMAP-data-modification-disabled (&optional datum
                                                (args nil args-set-p))
   (if args-set-p
       (error (or datum 'dp-vm-IMAP-data-modification-disabled) args)
@@ -131,8 +131,8 @@ attachments (or much else) yet."
 ;; from a trace of mousing: Virtual --> Create Virtual Folder --> <click on new>
 ;; Creates a temp vm-virtual-folder-alist:
 ;; (
-;;  ("INBOX new" 
-;;   (((get-buffer "INBOX")) 
+;;  ("INBOX new"
+;;   (((get-buffer "INBOX"))
 ;;    (new)))
 ;; )
 
@@ -209,8 +209,8 @@ attachments (or much else) yet."
     `(defadvice ,fsym
       (around ,(intern (format "dp-%s" fsym)) activate)
       (dp-vm-IMAP-data-modification-disabled))))
-  
-(defconst dp-vm-functions-to-disable 
+
+(defconst dp-vm-functions-to-disable
   '(vm-save-message-to-imap-folder)
   "Functions I don't want to let vm execute.  In general, I want NO
   modifications done to the server data.")

@@ -33,7 +33,7 @@ See `fill-paragraph' and `fill-region' for more information."
 ;; (defmacro with-no-warnings (&rest body)
 ;;   `(with-byte-compiler-warnings-suppressed
 ;;     ,@body))
-;; Actually, `with-no-warnings' is now defined, but where? 
+;; Actually, `with-no-warnings' is now defined, but where?
 ;; Don't know where `with-no-warnings' is defined.
 ;;
 ;; I'm colliding with vc-xemacs:
@@ -189,7 +189,7 @@ Use BEGIN and END as the limits of the extent."
 		  predicate hist-var))
 
 (defun dp-switch-to-next-buffer ()
-  "Pick a next buffer in some way. It should always be the one I want. 
+  "Pick a next buffer in some way. It should always be the one I want.
 No matter what. A DWIM-ish thing."
   (interactive)
   ;; For now, combine switch-to-next-buffer[-in-group]?
@@ -199,7 +199,7 @@ No matter what. A DWIM-ish thing."
     (call-interactively 'switch-to-next-buffer-in-group)))
 
 (defun dp-switch-to-previous-buffer ()
-  "Pick a previous buffer in some way. It should always be the one I want. 
+  "Pick a previous buffer in some way. It should always be the one I want.
 No matter what. A DWIM-ish thing."
   (interactive)
   ;; For now, combine switch-to-next-buffer[-in-group]?
@@ -218,8 +218,8 @@ No matter what. A DWIM-ish thing."
                        (read-string
                         (if (equal default "") "Manual entry: "
 			  (concat "Manual entry: (default " default ") "))
-			nil 
-                        (and-boundp 
+			nil
+                        (and-boundp
                             'Manual-page-minibuffer-history
                             'Manual-page-minibuffer-history)
                         default))

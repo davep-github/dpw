@@ -25,7 +25,7 @@
 
 (defun dp-mh-compose-letter-function (to subject cc)
   "Prepare to compose a letter.
-We want to determine where to place our fcc based on the 
+We want to determine where to place our fcc based on the
 TO, SUBJECT and CC.
 Map to and/or cc fields to a list of fcc folders.
 Find and modify or insert an fcc header into the current buffer."
@@ -34,7 +34,7 @@ Find and modify or insert an fcc header into the current buffer."
     (if fcc-list
 	(let ((fcc-val (dp-string-join fcc-list ", ")))
 	  (dp-replace-fcc fcc-val dp-mail-header-terminator)))))
-	  
+
 ;;
 ;; mail mode hook functions
 ;;
@@ -64,8 +64,8 @@ to mail message."
   (local-set-key [(meta ?b)] 'dp-buffer-menu))
 
 (defun dp-rmail ()
-  "Read the last few mail messages.  Since at CRL,  linux is 
-not allowed to mount the mail spool, I need to rsh an inc command 
+  "Read the last few mail messages.  Since at CRL,  linux is
+not allowed to mount the mail spool, I need to rsh an inc command
 on another machine.
 That means mh-rmail doesn't know about the new mail, so I need to do
 an mh-visit-folder into the inbox for the last few messages."

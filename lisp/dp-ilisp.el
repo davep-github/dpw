@@ -114,7 +114,7 @@
 
 ;(setq *cormanlisp-dir* "C:\\CORMAN~1\\CORMAN~1.5\\")
 ;(setq cormanlisp-program
-;      (concat *cormanlisp-dir* "clconsole.exe" 
+;      (concat *cormanlisp-dir* "clconsole.exe"
 ;	       " -image " *cormanlisp-dir* "CormanLisp.img"))
 
 ; (setq lispworks-program
@@ -203,28 +203,28 @@
 ;;; Sample load hook
 
 (add-hook 'ilisp-load-hook
-          (function 
+          (function
            (lambda ()
              ;; Change default key prefix to C-c
              (setq ilisp-*prefix* "\C-c")
-             
+
              ;; Set a keybinding for the COMMON-LISP-HYPERSPEC command
              (defkey-ilisp "" 'common-lisp-hyperspec)
-             
+
              ;; Make sure that you don't keep popping up the 'inferior
              ;; Lisp' buffer window when this is already visible in
              ;; another frame. Actually this variable has more impact
              ;; than that. Watch out.
                                         ; (setq pop-up-frames t)
-             
+
              (message "Running ilisp-load-hook")
              ;; Define LispMachine-like key bindings, too.
                                         ; (ilisp-lispm-bindings) Sample initialization hook.
-             
+
              ;; Set the inferior Lisp directory to the directory of
              ;; the buffer that spawned it on the first prompt.
              (add-hook 'ilisp-init-hook
-                       (function 
+                       (function
                         (lambda ()
                           (default-directory-lisp ilisp-last-buffer))))
              )))

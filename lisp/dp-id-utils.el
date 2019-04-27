@@ -44,7 +44,7 @@
 
 (defun dp-find-id-utils-ID-file (&optional start-dir ignore-current)
   "Find the id-utils' ID file."
-  (dp-find-util-data-file 'dp-ID-file "ID" dp-ID-file-alist start-dir 
+  (dp-find-util-data-file 'dp-ID-file "ID" dp-ID-file-alist start-dir
 			  'ignore-current))
 
 ;;;###autoload
@@ -58,13 +58,13 @@ defined by the gid-command variable."
   (let (compile-command
 	(compilation-error-regexp-alist grep-regexp-alist)
 	(ID-file (dp-find-id-utils-ID-file)) ;@todo ID utils does this already.
-	(compilation-buffer-name-function 
-	 (function 
+	(compilation-buffer-name-function
+	 (function
           (lambda (mode)
             (concat "*" gid-command " " args "*")))))
     ;; For portability to v19, use compile rather than compile-internal.
-    (compile (concat gid-command 
-		     (if ID-file 
+    (compile (concat gid-command
+		     (if ID-file
 			 (concat " --file=" ID-file)
 		       "")
 		     " " args))))

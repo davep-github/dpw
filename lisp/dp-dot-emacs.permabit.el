@@ -73,7 +73,7 @@ And just the command name sans path to make the command name more visible.")
   (interactive)
   (save-excursion
     (goto-char (point-min))
-    (dp-colorize-matching-lines "/[^/]* --index.*" nil nil 
+    (dp-colorize-matching-lines "/[^/]* --index.*" nil nil
                                 :shrink-wrap-p t)))
 
 (defun dp-uds-next-index-command (&optional backwards-p)
@@ -163,12 +163,12 @@ Make language/subsystem dependent?"
          "udsStreamContext" "uint8_t" "utf16_t" "Volume" "volume"
          "VolumeCache" "volumeCache" "BandedStreamDef" "bandedStreamDef"
          "AnyStreamDef" "anyStreamDef" "SimpleStreamDef" "simpleStreamDef"
-         "AliasStreamDef" "aliasStreamDef" 
+         "AliasStreamDef" "aliasStreamDef"
          "ShuffledStreamDef" "shuffledStreamDef"
          "MixedStreamDef" "mixedStreamDef" "AnyStreamDef" "anyStreamDef"
          "BandedStream" "bandedStream"
          "AnyStream" "anyStream" "SimpleStream" "simpleStream"
-         "AliasStream" "aliasStream" 
+         "AliasStream" "aliasStream"
          "ShuffledStream" "shuffledStream"
          "MixedStream" "mixedStream" "AnyStream" "anyStream"
          )
@@ -206,9 +206,9 @@ The ultimate in laziness?"
 ;; convert a my $var = <junk> to
 ;; $log->debug("var>$var<");
 ;; for debugging
-(defalias 'dp-perl-my-var-to-log-debug 
+(defalias 'dp-perl-my-var-to-log-debug
   (read-kbd-macro
-   (concat 
+   (concat
     "C-a <C-right> <right> "
     "2*<C-backspace> $log- > "
     "debug( <right> M-a C-s = "

@@ -19,7 +19,7 @@
 
 ;; ftp.[ca|us].xemacs.org are faster.
 ;; ca --> /pub/Mirror/xemacs/packages   (@ ualberta)
-;; us --> 
+;; us -->
 (setq package-get-remote '("ftp.ca.xemacs.org" "pub/Mirror/xemacs/packages"))
 ;;(setq package-get-remote '(("ftp.xemacs.org" "pub/xemacs/packages")))
 
@@ -42,7 +42,7 @@
   (defun fg ()
     (interactive)
     (dp-push-go-back "fume goto function")
-    (fume-rescan-buffer) 
+    (fume-rescan-buffer)
     (call-interactively 'fume-prompt-function-goto)))
 
 ;;
@@ -75,7 +75,7 @@
   "Add this keymap to the endicator extent as a way to get a most local keymap.")
 
 (defface dp-default-endicator-face
-  '((((class color) (background light)) 
+  '((((class color) (background light))
      (:background "lavender")
      (:foreground "lightblue")))
   "Face for buffer endicator glyph."
@@ -127,7 +127,7 @@ Copped from the XEmacs FAQ."
 
 (defun dp-add-default-buffer-endicator ()
   (interactive)
-  (dp-add-buffer-endicator dp-default-endicator-spec 
+  (dp-add-buffer-endicator dp-default-endicator-spec
                            dp-default-endicator-xpm-file))
 
 (defun dp-add-chuckie-endicator ()
@@ -178,7 +178,7 @@ static char * chuck_xpm[] = {
 \"                         \"};"
                                 ]))
 
-; (setq grep-find-command 
+; (setq grep-find-command
 ;       (replace-in-string grep-find-command "-e" "" 'literal-true))
 
 
@@ -186,7 +186,7 @@ static char * chuck_xpm[] = {
 (display-time)
 
 (defun mail-beep (&optional on-off)
-  "Control mail arrival beep.  
+  "Control mail arrival beep.
 Toggles state with ON-OFF 0 or 1 or interactively w/no argument.
 Turn on  if on-off > 1 (e.g. One C-u interactively)
 Turn off if on-off < 0 (e.g. C-u - interactively)"
@@ -213,7 +213,7 @@ Turn off if on-off < 0 (e.g. C-u - interactively)"
   (mail-beep -1))
 
 ;; turn off the ridiculous load meter
-(setq display-time-form-list '(date time mail))			
+(setq display-time-form-list '(date time mail))
 ;; pending-delete-mode causes typed text to replace a selection,
 ;; rather than append -- standard behavior under all window systems
 ;; nowadays. (copped from sample.init.el)
@@ -229,10 +229,10 @@ Turn off if on-off < 0 (e.g. C-u - interactively)"
  modeline-format
  (list
   ""
-  (if (boundp 'modeline-coding-system) 
+  (if (boundp 'modeline-coding-system)
       (cons 'modeline-coding-system-extent modeline-coding-system)
-    (if (boundp 'modeline-multibyte-status) 
-	'modeline-multibyte-status 
+    (if (boundp 'modeline-multibyte-status)
+	'modeline-multibyte-status
       ""))
 
   (cons modeline-modified-extent 'modeline-modified)

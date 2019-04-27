@@ -4,7 +4,7 @@
 ;;; @ todo... add mode to "properties" and then add to table for that mode.
 ;;; Stems of abbrev tables.  If just a symbol then construct a table name of
 ;;;  <sym>-abbrev-table
-;;; 
+;;;
 (defconst dp-common-abbrevs
   '(
     (("wrt" "with respect to") dp-common)

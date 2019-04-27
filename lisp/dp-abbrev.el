@@ -51,7 +51,7 @@
 ;;; This is a hack to allow a ring of abbrevs to be defined with little effort.
 ;;; This means that '(("a" "b" "c") '=) becomes:
 ;;; (("a" "b" "c") "a" "b" "c") which defines:
-;;; This results in multiple entries: 
+;;; This results in multiple entries:
 ;;; "a" -> '("a" "b" "c")
 ;;; "b" -> '("a" "b" "c")
 ;;; "c" -> '("a" "b" "c")
@@ -72,7 +72,7 @@
 ;;;
 ;;; Come on!  There needs to be the need/ability to use eval'able forms
 ;;; somewhere!
-;;; 
+;;;
 ;;; !<@todo ??? Modify data structures to allow a way to add suffixes
 ;;; programmatically. Eg t for a space? 's for pluralization?
 ;;; !<@todo Automatically generate \"logical\" case mixtures.
@@ -80,7 +80,7 @@
 ;;; C-c C-c (dp-save-and-redefine-abbrevs)
 ;;;
 ;;; This information is common between this abbrev file and dp-abbrev.el
-;;; This is copied to each abbrev file when it is saved, so it can be 
+;;; This is copied to each abbrev file when it is saved, so it can be
 ;;; out of date. I don't know why I don't just put a see dp-abbrev.el comment
 ;;; in these files.
 
@@ -91,7 +91,7 @@
 (defvar dp-minibuffer-abbrev-table nil
   "Abbrev table used in minibuffer.")
 
-(defvar dp-common-abbrev-file-name 
+(defvar dp-common-abbrev-file-name
   (expand-file-name (dp-lisp-subdir "dp-common-abbrevs.el"))
   "File name in which common abbrevs reside.")
 
@@ -129,7 +129,7 @@
 ;;;  <sym>-abbrev-table
 ;;;
 
-(defvar dp-style-abbrevs t 
+(defvar dp-style-abbrevs t
   "This is a list format that I use to allow the same abbrev to be
 added to more than one table.  There are two formats. The first is a
 list of items:
@@ -158,15 +158,15 @@ If so, the `symbol-value' of VAR-SYM is returned."
               val))))
 
 ;; Why did I do this? It's not used.
-(defvar dp-abbrev-sym-table-name-map '() 
-  "Alist for mapping a symbol (as from a dp-style-abbrev) identifying an 
+(defvar dp-abbrev-sym-table-name-map '()
+  "Alist for mapping a symbol (as from a dp-style-abbrev) identifying an
 abbrev-table to an abbrev-table name.")
 
-(defun* dp-abbrev-mk-abbrev-table-name (name-or-sym &optional 
+(defun* dp-abbrev-mk-abbrev-table-name (name-or-sym &optional
                                         (name-formatter "%s-abbrev-table"))
   (or (assoc name-or-sym dp-abbrev-sym-table-name-map)
       (format name-formatter name-or-sym)))
-  
+
 (defun dp-abbrev-mk-mode-abbrev-table-name ()
   (dp-abbrev-mk-abbrev-table-name "dp"
                                   (format "%%s-%s-abbrev-table" major-mode)))
@@ -202,10 +202,10 @@ abbrev-table to an abbrev-table name.")
                 (if (and props  ; type 2
                          ;; Error if no table name.  I
                          ;; mean, come on, throw me a bone.
-                         (not (assert (plist-get table-name 
+                         (not (assert (plist-get table-name
                                                  'table-name)
                                       'SHOW-ARGS)))
-                    (dp-abbrev-mk-abbrev-table-name 
+                    (dp-abbrev-mk-abbrev-table-name
                      (plist-get props 'table-name))
                   (and table-name
                        (symbolp table-name)  ; --> type 1
@@ -224,11 +224,11 @@ Should it be formally defined elsewhere?"))
             (eval `(defconst ,full-table-name ,(make-abbrev-table) ,doc-string))
             (when props
               (put full-table-name 'dp-abbrev-table-plist props)))
-          (setq-ifnil full-table-name-str 
+          (setq-ifnil full-table-name-str
                       (if (and (listp table-name)
-                               (not (assert 
+                               (not (assert
                                      (valid-plist-p table-name))))
-                          (dp-abbrev-mk-abbrev-table-name 
+                          (dp-abbrev-mk-abbrev-table-name
                            (plist-get table-name 'table-name))
                         full-type1-name-str)
                       full-table-name (intern-soft full-table-name-str))
@@ -244,7 +244,7 @@ Should it be formally defined elsewhere?"))
           ;; This alist must be empty before this whole process begins.
           (unless (assoc full-table-name dp-reinitialized-abbrev-table-alist)
             (clear-abbrev-table table)
-            (dp-add-to-alist-if-new-key 'dp-reinitialized-abbrev-table-alist 
+            (dp-add-to-alist-if-new-key 'dp-reinitialized-abbrev-table-alist
                                         (cons full-table-name t)))
           ;;
           ;; There's no sense in having x expand to x. In fact it's confusing
@@ -256,16 +256,16 @@ Should it be formally defined elsewhere?"))
           ;; Can't rotate an empty list. But `define-abbrev' uses nil
           ;; EXPANSION to undefine an abbrev, so we handle the case and let
           ;; the nil go through.
-          (setq filtered-expansions 
+          (setq filtered-expansions
                 (and expansions
-                     (dp-rotate-and-func expansions abbrev-name 
+                     (dp-rotate-and-func expansions abbrev-name
                                          'remove 'missing-ok)))
           ;; Don't define empty expansions.
           (when filtered-expansions
             (define-abbrev table abbrev-name
               (format "%S" filtered-expansions))))))))
 
-(defun* dp-eval-abbrev-file (abbrev-file &optional 
+(defun* dp-eval-abbrev-file (abbrev-file &optional
                              (abbrev-sym 'dp-common-abbrevs))
   "ABBREV-FILE can be a simple file of `define-abbrev' statements or a
 list in my DP-STYLE-ABBREV format (q.v.)"
@@ -282,11 +282,11 @@ list in my DP-STYLE-ABBREV format (q.v.)"
       (dp-redefine-abbrev-table (symbol-value abbrev-sym))
     (makunbound abbrev-sym)))
 
-(defvar dp-emacs-style-abbrev-files 
+(defvar dp-emacs-style-abbrev-files
   '("~/.abbrev_defs" "~/.abbrev-defs")
   "Boring old emacs style abbrev files. Emacs can just load them")
 
-(defun* dp-abbrevs (&optional show-make-output-p (make-p t) 
+(defun* dp-abbrevs (&optional show-make-output-p (make-p t)
                     (save-some-buffers-p t)
                     &key (emacs-style-abbrev-files dp-emacs-style-abbrev-files))
   "Load aliases and abbreviation files listed in `dp-abbrev-files'."
@@ -381,10 +381,10 @@ list in my DP-STYLE-ABBREV format (q.v.)"
                                  "\C-c\C-c" dp-save-and-redefine-abbrevs)
 			       nil nil nil "edit ECF")
   (message "Use %s or %s to save and redefine abbrevs."
-           (key-description [(control x) ?#]) 
+           (key-description [(control x) ?#])
            (key-description "\C-c\C-c")))
 
-(defun* dp-edit-common-abbrevs-file (&optional 
+(defun* dp-edit-common-abbrevs-file (&optional
                                      (abbrev-file dp-common-abbrev-file-name)
                                      (other-window-p t))
   ;;!<@todo prompt for file name, with ABBREV-FILE as default.
@@ -393,8 +393,8 @@ list in my DP-STYLE-ABBREV format (q.v.)"
 (dp-defaliases 'eca 'dca 'dpeca 'dpea 'edpa 'edpca 'ecaf 'decaf 'deca
                'dp-edit-common-abbrevs-file)
 
-(defsubst* dp-edit-common-abbrevs-file-other-window (&optional 
-                                                     (abbrev-file 
+(defsubst* dp-edit-common-abbrevs-file-other-window (&optional
+                                                     (abbrev-file
                                                       dp-common-abbrev-file-name)
                                                      (other-window-p nil))
   (interactive)
@@ -411,11 +411,11 @@ list in my DP-STYLE-ABBREV format (q.v.)"
                   (dp-abbrevs)))
          ;; Ask the go manager for the most specific go file.
          (go-name (shell-command-to-string "go-mgr -G"))
-         (def-file (expand-file-name 
-                    (substring (or (and go-name 
-                                        (not (string= "" go-name)) 
+         (def-file (expand-file-name
+                    (substring (or (and go-name
+                                        (not (string= "" go-name))
                                         go-name)
-                                   "~/.go.home\n") 
+                                   "~/.go.home\n")
                                0 -1)))
          (go-path (getenv "GOPATH"))
          (go-file (cond
@@ -433,25 +433,25 @@ list in my DP-STYLE-ABBREV format (q.v.)"
   (interactive)
   (dp-edit-go-file go-file 'other-window))
 
-(defun* dp-read-abbrev-name-and-expansion (&key 
+(defun* dp-read-abbrev-name-and-expansion (&key
                                            (a-prompt "abbrev-name:")
                                            (a-prompt-prefix "")
-                                           (e-prompt "expansion: ") 
+                                           (e-prompt "expansion: ")
                                            (e-prompt-prefix ""))
-  (list (dp-prompt-with-symbol-near-point-as-default 
+  (list (dp-prompt-with-symbol-near-point-as-default
          (format "%s%s" a-prompt-prefix a-prompt))
         (read-string (format "%s%s" e-prompt e-prompt-prefix))))
 
 
 (defun dp-add-manual-abbrev (abbrev expansion)
     ;;(interactive "sabbrev: \nsexpansion: ")
-    (interactive (dp-read-abbrev-name-and-expansion 
+    (interactive (dp-read-abbrev-name-and-expansion
                   :a-prompt-prefix "manual "))
     (dp-add-abbrev abbrev expansion nil :table-names '(dp-manual)))
 ;;;;???? 0?    (dp-add-abbrev0 abbrev expansion '(dp-manual)))
 
 (defun dp-add-global-abbrev (abbrev expansion)
-    (interactive (dp-read-abbrev-name-and-expansion 
+    (interactive (dp-read-abbrev-name-and-expansion
                   :a-prompt-prefix "auto "))
     (dp-add-abbrev abbrev expansion nil :table-names '(global)))
 ;;;;???? 0?    (dp-add-abbrev0 abbrev expansion '(global)))
@@ -500,17 +500,17 @@ abbrev is expanded.")
 
 (defvar dp-work-rel-abbrev-key-string ";")
 
-(defvar dp-work-rel-abbrev-regexp 
+(defvar dp-work-rel-abbrev-regexp
   ;;"\\(^\\|[^a-zA-Z0-9]\\)\\([^a-zA-Z0-9]*\\)"
   "\\(^\\|[ /]\\)\\([^ /]*\\)"
   "The abbrev must be in match string 2.")
 
 (defun dp-get-work-rel-abbrev ()
   (interactive)
-  (or (dp-get-special-abbrev dp-work-rel-abbrev-key-string 
+  (or (dp-get-special-abbrev dp-work-rel-abbrev-key-string
                              "\\(/work/\\)\\([^/]+?/[^/]+?\\)"
                              "/")
-      (dp-get-special-abbrev dp-work-rel-abbrev-key-string 
+      (dp-get-special-abbrev dp-work-rel-abbrev-key-string
                              dp-work-rel-abbrev-regexp
                              ",")))
 
@@ -522,9 +522,9 @@ abbrev is expanded.")
       (setq beg (nth 0 abbrev-data)
             end (nth 1 abbrev-data)
             abbrev-strings (nth 2 abbrev-data)
-            expansion (dp-nuke-newline 
-                       (shell-command-to-string 
-                        (format "dogo_work_rel %s" 
+            expansion (dp-nuke-newline
+                       (shell-command-to-string
+                        (format "dogo_work_rel %s"
                                 (dp-string-join abbrev-strings " ")))))
       (delete-region beg end)
       (insert expansion)
@@ -532,11 +532,11 @@ abbrev is expanded.")
 
 ;; Just get the whole string and let me-expand-dest sort it out.
 (defun dp-get-sandbox-rel-abbrev ()
-  (when (dp-looking-back-at 
-         (concat 
+  (when (dp-looking-back-at
+         (concat
           "\\(?:/\\| \\|^\\)"
           ;;"\\(?:[^a-zA-Z]\\|^\\)"
-;;          "\\(\\(//\\|[ ,]\\)\\([^, 
+;;          "\\(\\(//\\|[ ,]\\)\\([^,
 ;;	]+\\)\\([, ][a-zA-Z_0-9]*\\)?[ ,]?\\)"
           "\\(\\(//\\|[ ,]?\\)\\([a-zA-Z_0-9]*"
 	"\\)\\([, ][a-zA-Z_0-9]*\\)?[ ,]?\\)"
@@ -544,7 +544,7 @@ abbrev is expanded.")
     (list (match-beginning 1)
           (match-end 1)
           (match-string 1))))
-  
+
 ;; Expand:
 ;; ,<abbrev>,?                    -- Expand abbrev relative to current sb.
 ;; ,,<abbrev>,<sb>,?              -- Expand abbrev relative to given sb.
@@ -683,7 +683,7 @@ Tried in order given and first match wins."
               (setq dp-expand-abbrev-state nil)
             (backward-delete-char (length abbrev-name))
             ;;(insert (format "from table>%s<\n" table)) format %s will
-            ;; stringify anything. exp can be a symbol.  
+            ;; stringify anything. exp can be a symbol.
             ;; XXX @todo BUG. expansions with spaces need to be quoted
             ;; because the read only returns the first word.  However, if
             ;; they come from the default table (table is nil) then the (read
@@ -724,7 +724,7 @@ Tried in order given and first match wins."
         (dp-funcall-if dp-fallback-expand-abbrev-fun tables)))
     (ding)))
 
-   
+
 (defun dp-expand-apprev (abbrev-symbol)
   (if (and (boundp abbrev-symbol)
            (symbol-value abbrev-symbol))
@@ -735,7 +735,7 @@ Tried in order given and first match wins."
 (defun dp-expand-dir-abbrev (arg &optional abbrev-table)
   "Expand a dir from: abbrev-table or external `dogo' command."
   (interactive)
-  (let ((abbrev-table 
+  (let ((abbrev-table
          (dp-find-abbrev-table '(abbrev-table dp-shell-command-to-list))))
     (or
      (and abbrev-table
@@ -743,7 +743,7 @@ Tried in order given and first match wins."
      (substring (shell-command-to-string (format "dogo %s" arg)) 0 -1)
      arg)))                             ;should never return this
 
-(defun* dp-find-abbrev-table (&optional first-choice-sym 
+(defun* dp-find-abbrev-table (&optional first-choice-sym
                               (default 'dp-go-abbrev-table))
   "Find the best symbol table, checking symbol(s) in FIRST-CHOICE-SYM first.
 return DEFAULT or `dp-go-abbrev-table' as a default.
@@ -761,7 +761,7 @@ return DEFAULT or `dp-go-abbrev-table' as a default.
          (symbol-value default)))))
 
 (defun* dp-save-abbrevs (&key (write-p 'ask)
-                         (abbrev-list 'dp-common-abbrevs) 
+                         (abbrev-list 'dp-common-abbrevs)
                          (abbrev-file (car dp-common-abbrev-file-names)))
   "Create an expression that will regenerate ABBREV-LIST when `eval'd.
 Optionally write it to ABBREV-FILE based on the value of WRITE-P.
@@ -772,7 +772,7 @@ Otherwise don't write it."
     (set-buffer (find-file-noselect abbrev-file))
     (backup-buffer)
     (goto-char (point-min))
-    (if (dp-re-search-forward 
+    (if (dp-re-search-forward
          (dp-regexp-concat (list dp-preserve-above-monition
                                  dp-begin-generated-section-declaration)
                            nil
@@ -807,18 +807,18 @@ Otherwise don't write it."
   "^\\(common\\|manual\\|dp-manual\\|man\\)$"
   "")
 
-(defun* dp-add-abbrev (abbrev expansion 
+(defun* dp-add-abbrev (abbrev expansion
                        &optional query-type-p
                        &key (abbrev-list 'dp-common-abbrevs)
                        (table-names '(dp-manual global))
                        (abbrev-file (car dp-common-abbrev-file-names)))
-  (interactive (dp-read-abbrev-name-and-expansion 
+  (interactive (dp-read-abbrev-name-and-expansion
                 :a-prompt "abbrev-name"))
   (set abbrev-list
        (nconc (and (boundp abbrev-list)
                    (symbol-value abbrev-list))
-              (list (append 
-                     (list (list abbrev expansion)) 
+              (list (append
+                     (list (list abbrev expansion))
                      (or (when (and (interactive-p)
                                     (or table-names
                                         current-prefix-arg))
@@ -827,11 +827,11 @@ Otherwise don't write it."
                                  (targ '()))
                              (loop for table in (split-string types)
                                do (cond
-                                   ((eq 0 (string-match (regexp-quote table) 
+                                   ((eq 0 (string-match (regexp-quote table)
                                                         ""))
                                     (push targ 'global))
-                                   ((eq 0 (string-match 
-                                           (regexp-quote table) 
+                                   ((eq 0 (string-match
+                                           (regexp-quote table)
                                            dp-abbrev-table-types-regexp))
                                     (push targ 'dp-manual))))
                              (message "targ>%s<" targ)))
@@ -853,27 +853,27 @@ Otherwise don't write it."
 (defalias 'deftma 'dp-add-tmp-manual-abbrev)
 
 (dp-deflocal dp-expand-abbrev-default-tables '(nil)
-  "All abbrev tables to check by default.  Use nil for the current default 
+  "All abbrev tables to check by default.  Use nil for the current default
 table.")
 
 (defun dp-init-abbrevs ()
   (dp-abbrevs)				;load my mailiases and abbrevs
   ;; We need this here after this table has been read.
-  (setq-default dp-expand-abbrev-default-tables 
+  (setq-default dp-expand-abbrev-default-tables
                 (list nil ; Default table.
                       dp-tmp-manual-abbrev-table
-                      dp-go-abbrev-table 
+                      dp-go-abbrev-table
                       dp-manual-abbrev-table))
   ;; Add some special abbrevs.
   ;; This needs to be done after the tables have been created
   (when (dp-xemacs-p)
-    (define-abbrev dp-manual-abbrev-table "xdrop" 
+    (define-abbrev dp-manual-abbrev-table "xdrop"
       (concat dp-xemacs-droppings "/")))
-  (define-abbrev dp-manual-abbrev-table "edrop" 
+  (define-abbrev dp-manual-abbrev-table "edrop"
     (concat dp-editor-droppings "/"))
   (define-abbrev dp-manual-abbrev-table "ebacs"
     (concat dp-ebacs-droppings "/"))
-  (define-abbrev dp-manual-abbrev-table "asave" 
+  (define-abbrev dp-manual-abbrev-table "asave"
     (concat dp-auto-save-droppings "/"))
   )
 

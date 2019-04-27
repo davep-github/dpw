@@ -7,7 +7,7 @@
 (vc-load-vc-hooks)  ; This is being added to the Tools->Version Control menu.
 
 
-(dp-add-list-to-list 
+(dp-add-list-to-list
  'dp-auto-mode-alist-additions
  ;; (regexp . func-to-call-when-loaded)
  (list
@@ -75,7 +75,7 @@
           t
           ("/home/davep/work/dpu/local/build/pcap-stuff")
           t
-;; Add back when/if kernel source becomes useful again.    
+;; Add back when/if kernel source becomes useful again.
 ;;          ("/home/davep/work/dpu/external/kernel/linux-3.10.0-229.1.2.el7/")
           )))
 

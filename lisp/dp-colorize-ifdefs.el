@@ -8,18 +8,18 @@
   (concat "^#\\s-*\\("
 	  (regexp-opt keyword-list)
 	  "\\)"))
-  
-(defvar dp-cpp-cond-regexp 
+
+(defvar dp-cpp-cond-regexp
   (dp-gen-cpp-cond-regexp '("if" "ifdef" "ifndef" "else" "elif" "endif"))
   "Regexp to recognize all cpp conditionals.")
 
 (defvar dp-cpp-endif "^#\\s-*endif"
   "Regexp to recognize endif.")
 
-(defvar dp-cpp-if 
+(defvar dp-cpp-if
   (dp-gen-cpp-cond-regexp '("if" "ifdef" "ifndef"))
   "Regexp to recognize ifxxx conditionals.")
-	  
+
 (defvar dp-colorize-ifdefs-colors
   '(dp-cifdef-face0 dp-cifdef-face1 dp-cifdef-face2 dp-cifdef-face3
 		    dp-cifdef-face4 dp-cifdef-face5 dp-cifdef-face6)
@@ -34,9 +34,9 @@
 (defvar dp-colorize-ifdefs-ret nil)
 (defun dp-colorize-ifdefs0 (colors-in &optional colorize-nested)
   "Colorize parts of ifdef."
-  (let (regions 
+  (let (regions
 	(colors colors-in)
-	color start cpp-cond region 
+	color start cpp-cond region
 	sub-colors0 sub-colors
 	dont-rot-colors
 	end-pos)
@@ -64,16 +64,16 @@
 	      ;;  color.
 	      ;; This ensures there will not be any two identicaly
 	      ;;  colored adjacent regions.
-	      ;; It also ensures that the enclosing region all has the 
+	      ;; It also ensures that the enclosing region all has the
 	      ;;  same color
 	      ;;(dmessage "sub-colors>%s<" sub-colors)
-	      (setq colors 
+	      (setq colors
 		    (dp-colorize-ifdefs0 sub-colors colorize-nested))
 	      ;; rotate our color list so that the first color in
 	      ;; the returned list is first.
 	      (setq colors (dp-rotate-to colors-in (car colors))
 		    dont-rot-colors t)
-	      
+
 	      ;;(dmessage "rec colors>%s<" colors)
 	      (beginning-of-line)
 	      (hif-ifdef-to-endif)
@@ -95,7 +95,7 @@
 	      (end-of-line)
 	      (forward-char))
 	    ;; (dp-make-extent start (point) 'dp-cifdef 'face color)
-	    (setq dp-colorize-ifdefs-ret 
+	    (setq dp-colorize-ifdefs-ret
 		  (cons (list estart eend color) dp-colorize-ifdefs-ret)))
 	  ;;(dmessage "mkext: s>%s<, end>%s<, col>%s<" start (point) color)
 
@@ -111,8 +111,8 @@
   (interactive "r")
   (dp-delete-extents (or begin
                          (point-min))
-                     (or end 
-                         (point-max)) 
+                     (or end
+                         (point-max))
                      'dp-cifdef))
 
 ;;;###autoload
@@ -131,7 +131,7 @@
   (let ((extent-num 0))
     (dolist (ext dp-colorize-ifdefs-ret)
       (progn
-;;         (dp-make-extent (nth 0 ext) (nth 1 ext) 
+;;         (dp-make-extent (nth 0 ext) (nth 1 ext)
 ;;                         'dp-cifdef
 ;;                         ;; A common property for all of my colorized regions.
 ;;                         'dp-colorized-p t

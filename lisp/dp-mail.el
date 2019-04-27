@@ -5,15 +5,15 @@
 ;;; First we try for mew, then fall back to mh-e.
 ;;;
 
-(dp-deflocal dp-sig-sep-start-marker nil 
+(dp-deflocal dp-sig-sep-start-marker nil
   "Position of the beginning of an email signature's separator \(e.g. \n--\n).")
-(dp-deflocal dp-sig-sep-end-marker nil 
+(dp-deflocal dp-sig-sep-end-marker nil
   "Position of the end of an email signature's separator \(e.g. \n--\n).")
-(dp-deflocal dp-sig-start-marker nil 
+(dp-deflocal dp-sig-start-marker nil
   "Position of the beginning of an email's signature.")
-(dp-deflocal dp-sig-orig-point-max-marker nil 
+(dp-deflocal dp-sig-orig-point-max-marker nil
   "point-max before we added a sig")
-(dp-deflocal dp-mail-header-end-marker nil 
+(dp-deflocal dp-mail-header-end-marker nil
  "Marker of the end of an email's headers.")
 (dp-deflocal dp-mail-body-end-marker  nil
   "Position of end of mail body.  E.g. in a mew message with attachements,
@@ -34,7 +34,7 @@ this position is the position of the attachment header.")
 forwarding now.  This is an override.  Normally, `dp-mail-upchuck-spam'
 refiles if in `+inbox' and forwards if in `+spamcan'.")
 
-(defvar dp-mail-extract-addr-regexp "<\\(.*\\)>" 
+(defvar dp-mail-extract-addr-regexp "<\\(.*\\)>"
   "Regexp to get basic reply-to addr out of a more elaborate email addr.")
 ;;
 (autoload 'sc-cite-region "supercite" "supercite region citer" t)
@@ -58,7 +58,7 @@ refiles if in `+inbox' and forwards if in `+spamcan'.")
 
 (defcustom dp-mail-per-recipient-hook-alist
   ;; cdr of each element must be a list
-  '( ("uce@ftc\\.gov\\|419\\.fcd@usss\\.treas\\.gov\\|spoof@paypal\\.com" . 
+  '( ("uce@ftc\\.gov\\|419\\.fcd@usss\\.treas\\.gov\\|spoof@paypal\\.com" .
       dp-mail-delete-body))
   "List recipients in need of special processing."
   :group 'dp-vars
@@ -137,7 +137,7 @@ refiles if in `+inbox' and forwards if in `+spamcan'.")
 	 dp-mailer-setup)
      (funcall dp-mailer-setup))
 
-(setq mail-default-headers 
+(setq mail-default-headers
       (format "X-Attribution: davep\nX-Mailer: %sEmacs %s \n"
               (if (dp-xemacs-p)
                   "X"
@@ -197,12 +197,12 @@ refiles if in `+inbox' and forwards if in `+spamcan'.")
 (defconst dp-insert-tame-sig-p t
   "Are we being prim and proper?")
 
-(defun* dp-maybe-insert-tame-sig (&optional (pred dp-insert-tame-sig-p) 
+(defun* dp-maybe-insert-tame-sig (&optional (pred dp-insert-tame-sig-p)
                                   &rest pred-args)
   (dp-maybe-insert-sig (if (apply 'dp-call-pred-or-pred pred pred-args)
                            'dp-insert-tame-sig
                          nil)))         ; nil --> default.
-                         
+
 
 (defun dp-maybe-insert-sig (&optional sig-source insert-not-p insert--not-p)
   "Insert a sig of the desired type."
@@ -217,7 +217,7 @@ refiles if in `+inbox' and forwards if in `+spamcan'.")
           (insert "\n--\n"))
 	(setq dp-sig-sep-end-marker (dp-mk-marker))
 	(setq dp-sig-start-marker (dp-mk-marker))
-	(unless insert-not-p 
+	(unless insert-not-p
           (dp-insert-sig sig-source)))
     (setq dp-sig-orig-point-max-marker nil)))
 
@@ -234,12 +234,12 @@ search to the end of the email."
   dp-mail-header-end-marker)
 
 (defun* dp-mail-in-headers-p (&optional (pos (point)) &rest args)
-  
+
   (dp-with-saved-point nil
     (goto-char pos)
     (dp-apply-if 'dp-mail-spec-in-headers-p args
       (< pos dp-mail-header-end-marker))))
-  
+
 (defun dp-mail-get-header-value (hdr-regexp)
   "Get value of header HDR-REGEXP.
 Returns everything after the header, the colon and any whitespace."
@@ -260,7 +260,7 @@ Returns list of all addrs."
         (if (stringp addrs)
             (list addrs)
           addrs)))))
-; old extraction code	
+; old extraction code
 ;    (string-match "\\([^< ]+@[^>]+\\)" str)
 ;    (match-string 1 str)))
 
@@ -282,7 +282,7 @@ Returns list of all addrs."
 (defun dp-mail-skip-rewrite-from (&optional arg)
   (interactive)
   (dp-toggle-var arg 'dp-mail-skip-rewrite-from))
-    
+
 
 (defun dp-mail-run-per-recipient-hooks (recip-string hook-alist)
   "@todo fix this:
@@ -295,10 +295,10 @@ Only the first match in hook-alist of recip-string is used.
       (unless (listp fun-list)
 	;; make it a list so the dolist works.
 	(setq fun-list (list fun-list)))
-      (dolist (el fun-list nil) 
+      (dolist (el fun-list nil)
 	(funcall el)))))
 
-(defun dp-replace-mail-header (hdr-regexp hdr-name hdr-val 
+(defun dp-replace-mail-header (hdr-regexp hdr-name hdr-val
 					  &optional hdr-terminator)
   "Replace or add a mail header."
   (save-excursion
@@ -310,7 +310,7 @@ Only the first match in hook-alist of recip-string is used.
       (if (dp-re-search-forward hdr-regexp dp-mail-header-end-marker t)
 	  (replace-match (concat hdr-name ": " hdr-val))
 	;; since we couldn't find it, add it at the end of the headers.
-	(if (dp-re-search-forward 
+	(if (dp-re-search-forward
 	     (or hdr-terminator dp-mail-header-terminator)
 	     dp-mail-header-end-marker t)
 	    (progn
@@ -363,8 +363,8 @@ Subject: Re: *****SPAM***** blah blah blah"
     (dp-beginning-of-buffer)
     (save-match-data
       (let ((case-fold-search t))
-	(when (dp-re-search-forward (concat 
-				  "^sub\\S-*:.*\\(" 
+	(when (dp-re-search-forward (concat
+				  "^sub\\S-*:.*\\("
 				  dp-mail-SPAM-indicator
 				  "\\)")
 				 (dp-mail-header-end)
@@ -415,11 +415,11 @@ Use defaults for unspecified elements.
 \[\"fullname\" ]<user[.suffix]@domain>
 The plist elements use the above names prefixed with a `:',
 e.g. :suffix."
-  (format "%s<%s%s@%s>" 
-	  (dp-mail-generate-fullname (plist-get element-plist 
+  (format "%s<%s%s@%s>"
+	  (dp-mail-generate-fullname (plist-get element-plist
 						':fullname)
 				     dp-mail-fullname)
-	  (dp-mail-generate-from-element (plist-get element-plist 
+	  (dp-mail-generate-from-element (plist-get element-plist
 						    ':user)
 					   dp-mail-user)
 	  (dp-mail-generate-from-element (plist-get element-plist
@@ -443,10 +443,10 @@ e.g. :suffix."
 	(if (and was-to
 		 (or (setq accept-str (dp-mail-auto-accept-was-to-p was-to))
 		     (and (not (dp-mail-auto-reject-was-to-p was-to))
-			  (y-or-n-p (format 
+			  (y-or-n-p (format
 				     "Replace %s with %s? "
-				     (dp-mail-old-from 
-				      mail-default-reply-to) 
+				     (dp-mail-old-from
+				      mail-default-reply-to)
 				     accept-str)))))
 	    (progn
 	      (message "Replacing From: case #2")
@@ -457,7 +457,7 @@ e.g. :suffix."
 	  (dmessage "was-to is nil."))))))
 
 (defun dp-mail-remove-sig (&optional keep-separator)
-  (delete-region (if keep-separator 
+  (delete-region (if keep-separator
 		     dp-sig-sep-end-marker
 		   dp-sig-sep-start-marker)
 		 (dp-mail-end-of-body)))
@@ -484,21 +484,21 @@ e.g. :suffix."
 ;; not entirely sig related.
 ;; useful, e.g., for producing this:
 ;       / | Every absurdity has a champion who will defend it.
-;davep (|)| 
-;       / | 
+;davep (|)|
+;       / |
 ;where chars left of the |s are SIG-LEFT, and vice versa
 ;and the |s don't exist.
 ;
 (defun dp-zip-lists-padded (sig-left sig-right right-refiller
-				     &optional 
+				     &optional
 				     max-lines-right
 				     extra-pad wrap-p)
   "Zip lists SIG-LEFT and SIG-RIGHT together.
-Pad lines from SIG-LEFT to all be the same length, 
+Pad lines from SIG-LEFT to all be the same length,
 \(or EXTRA-PAD 8\) greater than the longest line in SIG-LEFT."
   ;; maintain max from sig-left
-  (let* (r-line 
-	 l-line 
+  (let* (r-line
+	 l-line
 	 o-list
 	 l-pad
 	 (too-long t)
@@ -508,7 +508,7 @@ Pad lines from SIG-LEFT to all be the same length,
 	 (right-max (- 80 left-max (or extra-pad 8)))
 	 (l-fill (make-string (1+ left-max) ? )))  ;spaces
     (if wrap-p
-	(setq sig-right 
+	(setq sig-right
 	      (split-string (dp-fill-string sig-right right-max) "[\n]"))
       (while too-long
         (dp-message-no-echo "sig-right>%s<" sig-right)
@@ -526,7 +526,7 @@ Pad lines from SIG-LEFT to all be the same length,
     (setq sig-left (append sig-left (list (make-string (min iters left-max)
 						       ?$))))
     (while (<= (length sig-right) (- (length sig-left) 2))
-      (dp-message-no-echo "lsr>%s<, lsl>%s<" 
+      (dp-message-no-echo "lsr>%s<, lsl>%s<"
                           (length sig-right) (- (length sig-left) 2))
       (setq sig-right (cons "" sig-right)))
     (while (or sig-left sig-right)
@@ -546,7 +546,7 @@ Pad lines from SIG-LEFT to all be the same length,
 
 (defun dp-mk-baroque-fortune-sig ()
   "Make a baroque fortune signature."
-  (dp-string-join (dp-zip-lists-padded dp-sig-prefix 
+  (dp-string-join (dp-zip-lists-padded dp-sig-prefix
 				       (dp-exec-short-fortune)
 				       'dp-exec-short-fortune
 				       dp-baroque-sig-max-lines)
@@ -567,7 +567,7 @@ Pad lines from SIG-LEFT to all be the same length,
 ;; ipaq@handhelds as a to: or cc: --> x as fcc
 ;;
 ;; ((addr1 (mail-hdr-list) list-of-fccs-if-addr1-is-in-a-hdr-in-mail-hdr-list)
-;;  (addr2 (f2a f2b) fcc2a fcc2b)))	
+;;  (addr2 (f2a f2b) fcc2a fcc2b)))
 ;; e.g.:
 ;; (setq fcc-alist '(("addr-to" ("to") "to-fcc1a" "to-fcc1b")
 ;;  ("addr-cc" ("f2a" "cc") "cc-fcc2a" "cc-fcc2b")))
@@ -578,9 +578,9 @@ Pad lines from SIG-LEFT to all be the same length,
 ;;  this will only be used if there is no other fcc folder already
 ;;  selected in the search process
 ;; If you want a folder that is always used, use ".*" as the addr
-;; 
+;;
 (defun dp-map-hdrs-to-fcclist (to subject cc fcc-alist)
-  "We want to determine where to place our fcc(s) based on the 
+  "We want to determine where to place our fcc(s) based on the
 TO, SUBJECT, CC and FCC-ALIST.
 We will return a list of fcc folder names."
   (let (fcc-ret
@@ -589,8 +589,8 @@ We will return a list of fcc folder names."
 	;; stick the passed in hdrs into an alist for quick
 	;; programmatic access
 	;;
-	(hdr-alist (list (cons "to" to) 
-			 (cons "sub" subject) 
+	(hdr-alist (list (cons "to" to)
+			 (cons "sub" subject)
 			 (cons "cc" cc))))
     ;; (message "hdr-alist>%s<" hdr-alist)
     ;; for all entries in fcc-alist
@@ -606,7 +606,7 @@ We will return a list of fcc folder names."
 	(while search-hdrs
 	  (let* ((hdr-name (car search-hdrs)) ; get hdr name
 		 ;; and the value of that header
-		 (hdr-val (cdr (assoc hdr-name hdr-alist)))) 
+		 (hdr-val (cdr (assoc hdr-name hdr-alist))))
 	    ;;(message "hdr-name>%s<" hdr-name)
 	    ;;(message "search-val>%s<" search-val)
 	    ;;(message "hdr-val>%s<" hdr-val)
@@ -630,7 +630,7 @@ We will return a list of fcc folder names."
 	      (if (not fcc-ret)
 		  (setq fcc-ret fcc-folders)))
 	    (setq search-hdrs (cdr search-hdrs)))))
-      
+
       (setq fcc-tmp (cdr fcc-tmp)))
     fcc-ret))
 

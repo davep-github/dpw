@@ -41,7 +41,7 @@ Use cc-mode syntax to find the limits."
   (dp-re-search-forward "(")		; it must be there
   (goto-char (match-beginning 0))
   (dp-find-matching-paren))
-  
+
 
 (defun pd-make-file-ext-pat (ext-list)
   (interactive)
@@ -49,10 +49,10 @@ Use cc-mode syntax to find the limits."
 	  (dp-string-join ext-list "\\|")
 	  "\\)$"))
 
-(defvar pd-src-to-hdr-ext-map 
+(defvar pd-src-to-hdr-ext-map
   (list (cons (pd-make-file-ext-pat '("c")) ".h")
 	(cons (pd-make-file-ext-pat '("cc" "cxx" "c\\+\\+" "C")) ".h")))
-  
+
 (defvar pd-c-or-c++-pat
   (concat "\\(.*\\)\\.\\("
 	  (dp-string-join '("c" "cc" "cxx" "c\\+\\+" "C") "\\|")
@@ -69,7 +69,7 @@ Use cc-mode syntax to find the limits."
     (mapcar (function
 	     (lambda (pat-ext-cons)
 	       (message "pat-ext-cons>%s<" pat-ext-cons)
-	       (message "doing posix-str-match %s %s" 
+	       (message "doing posix-str-match %s %s"
 			(car pat-ext-cons) src-file)
 	       (if (posix-string-match (car pat-ext-cons) src-file)
 		   (progn
@@ -81,15 +81,15 @@ Use cc-mode syntax to find the limits."
 
 (defvar pd-expand-file-name-func 'identity
   "Func to expand a file name")
-  
+
 (defun pd-get-inc-dir ()
   "Determine the include dir for the given file."
   (interactive)
-  (let ((inc-dir 
+  (let ((inc-dir
 	(save-excursion
 	  (goto-char (point-min))
 	  (save-match-data
-	    (if (dp-re-search-forward 
+	    (if (dp-re-search-forward
 		 "^\\s-*/?\\*\\s-*pdoc-inc-dir:\\s-*\\([^ 	]+\\)" nil t)
 		(buffer-substring (match-beginning 1) (match-end 1))
 	      nil)))))
@@ -119,11 +119,11 @@ Use cc-mode syntax to find the limits."
 	      (message "incdir>%s<" incdir)
 	      (message "name>%s<" (substring src-name fn-beg fn-end))
 	      (setq pd-my-hfile (funcall pd-expand-file-name-func
-				 (concat 
+				 (concat
 				  incdir "/"
 				  (file-name-nondirectory
-				   (substring 
-				    src-name 
+				   (substring
+				    src-name
 				    fn-beg
 				    fn-end))
 				  hext))))
@@ -144,7 +144,7 @@ by `pd-find-hfile' a separator (`#') and the function name."
       (fume-scan-buffer)
       (let ((fume-function-name-regexp fume-function-name-regexp))
 	(if (listp fume-function-name-regexp)
-	    (setq fume-function-name-regexp 
+	    (setq fume-function-name-regexp
 		  (car fume-function-name-regexp)))
       (fume-find-next-function-name (current-buffer))
       (setq func (buffer-substring (line-beginning-position) (point))))))
@@ -156,12 +156,12 @@ by `pd-find-hfile' a separator (`#') and the function name."
   "Goto the documenting comment for the function at or after point."
   (interactive)
   (dp-goto-file+re (pd-next-func-link func)))
-    
+
 (defun pd-insert-doc-link (&optional func)
   (interactive)
   (insert (pd-next-func-link func)))
 (defalias 'pdil 'pd-insert-doc-link)
-  
+
 (defun pdf()
   "Add a document to a function."
   (interactive)

@@ -68,18 +68,18 @@
 
 ;; May want this in a project specific .el
 (defalias 'dp-poc-layout1
-  (read-kbd-macro 
+  (read-kbd-macro
    (concat "M-x sbd RET C-o"          ; One window, no shell buffers showing.
            " M-x 2x1 RET C-2 C-z <C-next> <M-down> C-1 C-z" " <C-next>"
            " <M-down> C-0 C-z <C-next>")))
 
 (defalias 'dp-poc-layout2
-  (read-kbd-macro 
+  (read-kbd-macro
    (concat "M-x 2x2 RET C-2 C-z <C-next> <M-down> C-1 C-z" " <C-next>"
            " <M-down> C-3 C-z <C-next> <M-down> C-0 C-z <C-next>")))
 
 (defalias 'dp-poc-layout
-  (read-kbd-macro 
+  (read-kbd-macro
    (concat "C-0 C-z M-- C-1 C-z M-- C-2 C-z M-- M-x 2+1 RET C-2 C-z"
            " <M-down> C-1 C-z <M-down> C-0 C-z")))
 
@@ -89,14 +89,14 @@
 "Common layout w/ %s for specific 3x window config.")
 
 (defalias 'dp-poc-layout-2+1
-  (read-kbd-macro 
+  (read-kbd-macro
    (format dp-poc-layout-format-string "2+1" "down" "down")))
 
 ;; *(&!^@))_!!-ing bs. The window order is different.
 (defalias 'dp-poc-layout-2/1
-  (read-kbd-macro 
+  (read-kbd-macro
    (format dp-poc-layout-format-string "2/1" "up" "up")))
-  
+
 (defun dp-do-a-jk (sym)
   (execute-kbd-macro sym)
   (setq-default dp-shells-favored-shell-buffer "*shell*<0>")
@@ -144,17 +144,17 @@
   "Index code for the current project. Each spec-macs should define/override."
   (interactive)
   (let (cmd
-        (index-root 
-         (car (member-if 'getenv 
+        (index-root
+         (car (member-if 'getenv
                          '("PROJECT_INDEX"
                            "PROJECT_HOME"
                            "PROJECT_ROOT")))))
     (setq index-root
           (if index-root
               (getenv index-root)
-            (read-directory-name 
-             "index root: " 
-             nil 
+            (read-directory-name
+             "index root: "
+             nil
              nil
              t)))
     (when index-root
@@ -165,7 +165,7 @@
       (loop for subsys-root in '("client" "pyagents") do
         (progn
           (setq cmd (concat "cd " index-root "/" subsys-root
-                            " && index-code" 
+                            " && index-code"
                             (if sync-p "" "&")))
           (message "running: %s" cmd)
           (shell-command cmd))))))

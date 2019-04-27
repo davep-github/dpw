@@ -1,6 +1,6 @@
 ;;;
 ;;; XEmacs backwards compatibility file
-;;; $Id: dp-dot-emacs.el,v 1.22 2002/06/24 07:30:12 davep Exp $ 
+;;; $Id: dp-dot-emacs.el,v 1.22 2002/06/24 07:30:12 davep Exp $
 ;;;  ~/.emacs --> dp-dot-emacs.el (this file)
 ;;;
 (message "in dp-dot-emacs.el")

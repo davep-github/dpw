@@ -9,32 +9,32 @@
 ;;;
 
 (defalias 'dp-prepare-to-move-c++-method
-  (read-kbd-macro 
+  (read-kbd-macro
    (concat "C-a M-a C-s ( <left> M-[ <right> M-C-1 <right> M-o"
            " C-s { <left> M-[ <down> <up> C-a C-s } <left> M-[ M-a"
            " M-[ 2*<right> M-C-o C-x C-x DEL <up> C-e ; ")))
 
 (defalias 'dp-move-c++-method-olde
-  (read-kbd-macro 
+  (read-kbd-macro
    (concat "C-a M-a C-s ( <left> M-[ <right> M-C-1 <right> M-o"
            " C-s { <left> M-[ <down> <up> C-a C-s } <left> M-[ M-a"
            " M-[ 2*<right> M-C-o C-x C-x DEL <up> C-e ; C-x 4 M-b <C-next>"
            " <up> C-e RET RET M-y")))
 
 (defalias 'dp-move-c++-method
-  (read-kbd-macro 
+  (read-kbd-macro
    (concat "C-a M-a C-s ( <left> M-[ <right> M-C-1 C-e <right> M-o"
            " C-a C-s { <left> M-[ <down> <up> C-a C-s } <left> M-[ M-a"
            " M-[ 2*<right> M-C-o C-x C-x DEL <up> C-e ; 2*<down> C-x 4 M-b"
            " <C-next> <up> C-e RET RET M-y C-x C-x C-a M-q")))
 
 (defalias 'dp-fix-class-dox
-  (read-kbd-macro 
+  (read-kbd-macro
    (concat "C-a C-s @class RET C-T <up> <C-right> <C-backspace>"
            " class 2*<C-s> RET <C-backspace> brief SPC")))
 
 (defalias 'dp-cpp-remove-inclass-body
-  (read-kbd-macro 
+  (read-kbd-macro
    (concat "C-s ) RET C-s { RET <left> M-a M-[ <right>"
            " DEL <C-backspace> ; <down> C-a")))
 
@@ -53,13 +53,13 @@
   ;; Eg for protection labels. If `:' is added, do another open-newline
   (recurse))
 
-(defvar dp-c-kw-action-list 
+(defvar dp-c-kw-action-list
   (list
-   (make-dp-c-kw-action :keyword-regex "return\\|break" 
-                        :action ";" 
+   (make-dp-c-kw-action :keyword-regex "return\\|break"
+                        :action ";"
                         :recurse nil)
-   (make-dp-c-kw-action :keyword-regex "public\\|private\\|protected" 
-                        :action ":" 
+   (make-dp-c-kw-action :keyword-regex "public\\|private\\|protected"
+                        :action ":"
                         :recurse t)))
 
 (defvar dp-c-symbol-start-chars "a-zA-Z_")
@@ -97,7 +97,7 @@
   (interactive)
   (save-excursion
     (when (and (or (dp-c-beginning-of-current-token)
-                   (progn 
+                   (progn
                      (backward-word)
                      (dp-c-beginning-of-current-token)))
                (looking-at "[A-Z]"))
@@ -114,7 +114,7 @@
         (dp-push-go-back "dp-c++-goto-access-label" p)
       ;; Go back, just in case we moved.  Just go w/o seeing if we moved.
       (goto-char p))))
-                      
+
 (defun dp-c-get-class-name (&optional kill-name-p)
   "Display name of enclosing class/struct in echo area. Works with C structs."
   (interactive "P")
@@ -146,7 +146,7 @@
 ;; Can't use `dp-c-get-syntactic-region'.
 (defun dp-in-cpp-construct-p (&optional current-syntax)
   "!<@todo Convert syntax to string and look for \"^cpp\" ???"
-  (setq current-syntax (dp-flatten-list (or current-syntax 
+  (setq current-syntax (dp-flatten-list (or current-syntax
                                             (c-guess-basic-syntax))
                                         'symbolp))
   (loop for syntax in '(cpp-macro cpp-define-intro)
@@ -162,7 +162,7 @@
                     (throw 'up (dp-in-cpp-construct-p cgbs))))
            (syntax (caar cgbs))
            ;; Syntax classes which can have sub-syntaxes.
-           (sub-syntax-list 
+           (sub-syntax-list
             '(inclass defun-block-intro statement-case-intro))
            sub-syntax)
       ;; Some syntaxes returned are grouped into an enclosing syntax,
@@ -172,7 +172,7 @@
       ;; another eg: ((inclass 395) (topmost-intro 397))
       ;;!<@todo looks like returning car of LAST item in syntax list is what
       ;;we want ???
-      ;; syntactic analysis: ((inclass 3727) 
+      ;; syntactic analysis: ((inclass 3727)
       ;;                      (topmost-intro 9897) (comment-intro))
       ;; Are we in the sub-syntax-list?
       (if (and (memq syntax sub-syntax-list)
@@ -182,19 +182,19 @@
                (setq sub-syntax (caadr cgbs)))
           (throw 'up sub-syntax))
       syntax)))
-      
+
 (defun dp-c-show-syntactic-region (&optional ignore-list)
   (interactive)
-  (message "dp: %s; cbgs: %s" 
+  (message "dp: %s; cbgs: %s"
            (dp-c-get-syntactic-region ignore-list)
            (c-guess-basic-syntax)))
 
-(defun dp-c-in-syntactic-region (syntax-list 
+(defun dp-c-in-syntactic-region (syntax-list
                                  &optional ignore-inclass c-syntax)
   (and (dp-in-c)
-       (member (or c-syntax 
-                   (dp-c-get-syntactic-region 
-                    (and ignore-inclass 
+       (member (or c-syntax
+                   (dp-c-get-syntactic-region
+                    (and ignore-inclass
                          '(inclass))))
                syntax-list)))
 
@@ -207,7 +207,7 @@
     (when bpos
       (save-excursion
         (goto-char bpos)
-        (dp-c-in-syntactic-region '(class-open)))))) 
+        (dp-c-in-syntactic-region '(class-open))))))
 
 (defalias 'dp-in-c++-class-p 'dp-c++-in-class-p)
 
@@ -236,7 +236,7 @@ VERY accurate given my indentation style.")
           (dp-c-end-of-line)))))
 
 (defun dp-c-beginning-of-defun (&optional arg original-cc-mode-bof)
-  "If preceeding command was `c-end-of-defun' do a go-back.  
+  "If preceeding command was `c-end-of-defun' do a go-back.
 If ARG is none of C-0, C-u or t then use `c-beginning-of-defun'.  This will
 call the orginal code and currently that takes us back to the beginning of
 the class, not an inlined defun.  Otherwise use a really cheap but not
@@ -253,7 +253,7 @@ Also, leave the region active."
         (dp-pop-go-back)
         (setq this-command nil))
     ;; May want to change sense of arg to mean plain defun when true.
-    (cond 
+    (cond
      ((or original-cc-mode-bof
           (not (member current-prefix-arg '(0 (4) - t))))
       (dp-push-go-back "`real c-beginning-of-defun'")
@@ -281,7 +281,7 @@ Also, leave the region active."
   (save-excursion
     (apply 'dp-c-beginning-of-defun rest)
     (point)))
-  
+
 (defun dp-c-end-of-defun (&optional arg original-cc-mode-bof)
   "Inverse of `dp-c-beginning-of-defun'."
   (dp-set-zmacs-region-stays t)
@@ -294,14 +294,14 @@ Also, leave the region active."
         (dp-pop-go-back)
         (setq this-command nil))
     ;; May want to change sense of arg to mean plain defun when true.
-    (cond ((or original-cc-mode-bof 
+    (cond ((or original-cc-mode-bof
                (not (member current-prefix-arg '(0 (4) '- t))))
            (dp-push-go-back "`dp-c-end-of-defun'")
            (c-end-of-defun 1)
            ;; if this is called by a `kb-lambda' then we need to make sure
            ;; that the last-command var is currect so the toggling works.
            (setq this-command 'dp-c-end-of-defun))
-          ((and (numberp arg) (< arg 0)) 
+          ((and (numberp arg) (< arg 0))
            (dp-push-go-back "`real c-end-of-defun'")
            (dp-c-beginning-of-defun (- arg)))
           ((save-excursion
@@ -316,14 +316,14 @@ Also, leave the region active."
   "Make a regexp that will match the C++ symbol SYM.
 Using it in `*search*' will, if found, result in (match-data 1) being the
 symbol name.
-QUOTE-P cause SYM to be `regexp-quote'd. 
+QUOTE-P cause SYM to be `regexp-quote'd.
 Of course, you'll need to adjust the number for any preceding regexps."
   (format "\\(?:\\s_\\|\\sw\\)*\\(%s\\)\\(?:\\s_\\|\\sw\\)*"
           (if quote-p
               (regexp-quote sym)
             sym)))
 
-(defun* dp-c-delimit-symbol (&key limit noerror count buffer 
+(defun* dp-c-delimit-symbol (&key limit noerror count buffer
                              (skip-non-symbol-chars t))
   "Assumes you are at the symbol or leading non-symbol chars.
 e.g.
@@ -334,7 +334,7 @@ e.g.
   (let ((ret-list
          (list
           (point)                         ; Starting position. 0
-          (progn 
+          (progn
             (if skip-non-symbol-chars
                 (skip-chars-forward dp-c-non-symbol-start-chars))
             (point))                      ; First symbol char. 1
@@ -353,7 +353,7 @@ e.g.
         (cons (buffer-substring (nth 1 pos-list) (nth 2 pos-list))
               pos-list)))))
 
-(defun* dp-c-looking-at-symbol (sym-name &rest rest &key regexp-p 
+(defun* dp-c-looking-at-symbol (sym-name &rest rest &key regexp-p
                                 &allow-other-keys)
   (interactive)
   (let ((sym-info (dp-c-get-symbol@point)))
@@ -388,8 +388,8 @@ e.g.
 ;;nuke?   (save-excursion
 ;;nuke?     ;; (concat "^\\s-*" (dp-mk-c++-symbol-regexp "return\\|break")))
 ;;nuke?     (let ((action (dp-c-kw-action-action kw-action))
-;;nuke?           (regex (concat "^\\(?:\\s-*\\)\\(" 
-;;nuke?                          (dp-mk-c++-symbol-regexp 
+;;nuke?           (regex (concat "^\\(?:\\s-*\\)\\("
+;;nuke?                          (dp-mk-c++-symbol-regexp
 ;;nuke?                           (dp-c-kw-action-keyword-regexp kw-action))
 ;;nuke?                          "\\)")))
 ;;nuke?       (when (save-excursion
@@ -402,10 +402,10 @@ e.g.
 ;;nuke?             (insert action)))
 ;;nuke?         kw-action))))
 
-;;nuke? (defun* dp-c-action-upon-keyword? (&optional (kw-action-list 
+;;nuke? (defun* dp-c-action-upon-keyword? (&optional (kw-action-list
 ;;nuke?                                               dp-c-kw-action-list))
 ;;nuke?   (if (let ((kw-ret (loop for kw in kw-action-list
-;;nuke?                       if (dp-c-perform-action-upon-keyword kw) 
+;;nuke?                       if (dp-c-perform-action-upon-keyword kw)
 ;;nuke?                       return kw)))
 ;;nuke?         kw-ret)
 ;;nuke?   nil))
@@ -439,12 +439,12 @@ LIMIT-EOL-P: force arg LIMIT to be line end position."
         (and limit
              (goto-char limit))
         (cons 'limit limit))
-       (stay-put-p 
+       (stay-put-p
         (goto-char fpoint)
         (cons 'stay-put fpoint))
        (no-error-p (cons 'error "Ignoring argument errors"))
        (t (error 'invalid-argument))))))
-      
+
 (defun dp-c-fix-comment ()
   "Fix up the location of a comment in a C like language."
   (interactive)
@@ -476,7 +476,7 @@ Other possibilities to ponder...
 (defvar dp-c-struct-suffix-regexp
   (concat "^\\s-*\\(\\(?:struct\\|class\\)\\s-+\\)"
           "\\(\\(\\sw\\|\\s_\\)*?\\)"
-          
+
           "\\(?:\\s-*:"
           "\\s-*"
           "\\(?:\\(public\\|private\\|virtual\\)\\s-*\\)*"
@@ -531,7 +531,7 @@ Uses strict definition of camel case."
   "What to look for when no hump pattern is provided... a language token.
 This doesn't suck too much.")
 
-(defun* dp-hump-region (&optional (selector-pattern dp-default-hump-selector) 
+(defun* dp-hump-region (&optional (selector-pattern dp-default-hump-selector)
                         query-p capitalize-p)
   (interactive "sName: \nP")
   (when (string= "" selector-pattern)
@@ -582,16 +582,16 @@ Will miss many cases and do it in comments, too. "
             (save-excursion
               (dp-c-de-capitalize-symbol))))))))
 
-(dp-defaliases 'dp-kill-camel 'dp-fix-symbol 'kill-camel 'kamel 
+(dp-defaliases 'dp-kill-camel 'dp-fix-symbol 'kill-camel 'kamel
                'dpkc 'dp-c-camel-to-classic)
 
-(defvar dp-c-type-list 
-  '("auto" "char" "const" "double" "float" "int" "long" "register" "short" 
+(defvar dp-c-type-list
+  '("auto" "char" "const" "double" "float" "int" "long" "register" "short"
     "signed" "struct" "union" "unsigned" "void" "volatile" "mutable" "bool"
     "byte" "FILE"
     "int8" "int16" "int32" "int64")
 "List of keywords that imply types.
-Using both uint16 and int16 break the regexp when this list is passed to 
+Using both uint16 and int16 break the regexp when this list is passed to
 `regexp-opt'. Same for 32 and 64.
 int8 and uint8 seem to work together.
 A simple `dp-looking-back-at' using `dp-<type>*-regexp' returns nil.
@@ -635,7 +635,7 @@ A simple `dp-looking-back-at' using `dp-<type>*-regexp' returns nil.
 
 (defun dp-c*-make-ugly-pointer-decl (post-func &rest post-func-args)
   "Convert proper code, to improper, eg: char* p --> char *p.
-We say: \" p is a pointer to char\", not 
+We say: \" p is a pointer to char\", not
 \"p is a variable which when dereferenced is a char.\""
   (interactive)
   (when (and dp-use-ugly-ass-pointer-style-p
@@ -712,7 +712,7 @@ See also `dp-use-stupid-kernel-struct-indentation-p' which can disable it?
 (defun q.v.f (what)
   "q.v. which see. Go and see it."
   (let* ((what-name (concat "q.v.-"
-                           (dp-string-join what "-" 
+                           (dp-string-join what "-"
                                            nil nil nil
                                            (lambda (s)  ; ensure stringiness.
                                              (format "%s" s)))))
@@ -790,7 +790,7 @@ E.g. \"some_var\" --> \"m_some_var(some_var)\"."
              (dp-looking-back-at ":"))
     (insert " ")))
 
-(defvar dp-arglist-syntax-list '(arglist-intro arglist-cont 
+(defvar dp-arglist-syntax-list '(arglist-intro arglist-cont
                                  arglist-cont-nonempty
                                  defun-block-intro
                                  topmost-intro topmost-intro-cont
@@ -901,7 +901,7 @@ Otherwise, nothing."
   (apply 'c-beginning-of-current-token rrr)
   (dp-set-zmacs-region-stays t))
 
-;;(defvar dp-protection-section-id-format 
+;;(defvar dp-protection-section-id-format
 ;;  " ///////////////// <:%s%sdata:> /////////////////"
 ;;  "String to indicate the location of a class's data.")
 
@@ -909,10 +909,10 @@ Otherwise, nothing."
                                          (start-col 4) (end-col)
                                          (section-desc "data"))
   ;; If end-col is nil, `dp-flanked-string' will use `current-fill-column'.
-  
+
   (setq-ifnil start-col (current-column)
               end-col fill-column)
-  ;; It would be better to specify things like "protected data" or 
+  ;; It would be better to specify things like "protected data" or
   ;; "protected code" rather than a vague "protected section."
   (let* ((name (format "<:%s%s%s:>" name prot-level section-desc)))
     (dp-flanked-string name ?* :start start-col :end end-col
@@ -920,8 +920,8 @@ Otherwise, nothing."
 
 (defvar dp-protection-section-id-formatter 'dp-format-protection-section-id)
 
-(defun* dp-c++-make-protection-section-id (&key 
-                                           (prot-level 0) 
+(defun* dp-c++-make-protection-section-id (&key
+                                           (prot-level 0)
                                            (section-desc "data"))
   "Make a data section identifier for the current class."
   (interactive "p")
@@ -929,11 +929,11 @@ Otherwise, nothing."
                   (format "%s: " (cdr (dp-c-get-class-name)))
                 "")))
     (if (functionp dp-protection-section-id-formatter)
-        (funcall dp-protection-section-id-formatter 
+        (funcall dp-protection-section-id-formatter
                  :name name
                  :prot-level (concat (dp-prot-level-name prot-level) " ")
                  :section-desc section-desc)
-      (format dp-protection-section-id-formatter name 
+      (format dp-protection-section-id-formatter name
               (concat (dp-prot-level-name prot-level) " ") section-desc))))
 
 (defvar dp-c++-default-data-protection "private")
@@ -943,7 +943,7 @@ Otherwise, nothing."
 
 (defun dp-prot-level-name (prot-level)
   (if (integerp prot-level)
-      (nth (mod prot-level 
+      (nth (mod prot-level
                 (length dp-c++-class-protection-names))
            dp-c++-class-protection-names)
     prot-level))
@@ -954,8 +954,8 @@ Otherwise, nothing."
 
 (defvar dp-c++-class-protection-level-regexp
   ;;         1  |<---------------------[2]--------------------->|    3
-  (concat "\\(" 
-          (dp-regexp-concat dp-c++-class-protection-names t) 
+  (concat "\\("
+          (dp-regexp-concat dp-c++-class-protection-names t)
           "\\(\\s-*:\\)?\\)"))
 
 (defvar dp-c++-class-protection-label-match-string-index 2
@@ -970,7 +970,7 @@ Otherwise, nothing."
        (save-match-data
          (string-match dp-c++-class-protection-level-regexp name)
          (match-string dp-c++-class-protection-colon-index name))))
-  
+
 (defun dp-c++-class-protection-map-name-to-level (name)
   (and name
        (dp-member*-index name dp-c++-class-protection-names)))
@@ -998,7 +998,7 @@ nil otherwise."
   (when (dp-c++-class-protection-label-p)
    (match-string dp-c++-class-protection-label-match-string-index)))
 
-(defun* dp-c++-comment-protection-section (&optional prompt-for-section-desc 
+(defun* dp-c++-comment-protection-section (&optional prompt-for-section-desc
                                            &key
                                            (section-desc "data"))
   (interactive "P")                     ;fsf - need "_" support
@@ -1036,7 +1036,7 @@ nil otherwise."
 ;; May need to require being at the protection label to avoid many
 ;; annoying syntax searches.
 (defun* dp-c++-mk-protection-section (&key
-                                      (prot-level 
+                                      (prot-level
                                        dp-c++-default-data-protection)
                                       (section-desc "data")
                                       (prompt-for-section-desc nil)
@@ -1051,16 +1051,16 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
   (interactive)
   (when (or current-prefix-arg (null prot-level))
     ;; Don't muck with current-prefix-arg's value
-    (setq prot-level current-prefix-arg 
+    (setq prot-level current-prefix-arg
           prot-level (cond
                       ((numberp prot-level) (dp-prot-level-name prot-level))
                       ((eq '- prot-level) (dp-prot-level-name 0))
                       (t (completing-read
                           ;; prompt
-                          (format "prot-level (default: %s): " 
+                          (format "prot-level (default: %s): "
                                   dp-c++-default-data-protection)
                           ;; table
-                          (dp-mk-completion-list 
+                          (dp-mk-completion-list
                            dp-c++-class-protection-names)
                           nil           ; predicate
                           t             ; require match
@@ -1069,20 +1069,20 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
                           dp-c++-default-data-protection)))))
   (when prompt-for-section-desc
     (let ((default-section-desc "data"))
-      (setq section-desc (completing-read 
+      (setq section-desc (completing-read
                           (format "Section type (%s): " default-section-desc)
                           (dp-mk-completion-list '("data" "code"))
                           nil nil nil nil
                           default-section-desc))))
 
-  (if (not (dp-c++-goto-protection-section 
+  (if (not (dp-c++-goto-protection-section
             :prot-level prot-level
             :section-desc section-desc
-            :missing-ok-p 'missing-ok 
+            :missing-ok-p 'missing-ok
             :stay-put-p stay-put-p))
       (progn
         (dp-c-indent-command)
-        (insert (dp-c++-make-protection-section-id 
+        (insert (dp-c++-make-protection-section-id
                  :prot-level prot-level
                  :section-desc section-desc))
         (when indent-p
@@ -1097,15 +1097,15 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
                                         (dp-c-end-of-defun 1 (quote real-bof))
                                         (line-beginning-position))))
                  (anything-pos (save-excursion
-                                 (when (dp-re-search-forward "[^ 	\n\r]" limit 
+                                 (when (dp-re-search-forward "[^ 	\n\r]" limit
                                                           t)
                                    (line-beginning-position))))
                  (prot-level-pos (and anything-pos
-                                      (save-excursion 
-                                        (when (dp-re-search-forward 
-                                               (concat 
+                                      (save-excursion
+                                        (when (dp-re-search-forward
+                                               (concat
                                                 "\\([ \t\n\r]*\\("
-                                                (dp-regexp-concat 
+                                                (dp-regexp-concat
                                                  dp-c++-class-protection-names)
                                                 "\\)\\s-*:[ \t\n\r]*\\)")
                                                limit t)
@@ -1138,12 +1138,12 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
       (dp-c-newline-and-indent))))
 
 
-(defun* dp-c++-find-protection-section-id (&key prot-level 
+(defun* dp-c++-find-protection-section-id (&key prot-level
                                            stay-put-p
                                            (section-desc "data"))
   (save-excursion
     ;; We need to get the sec-id before we goto the beginning of the function.
-    (let ((sec-id (dp-c++-make-protection-section-id 
+    (let ((sec-id (dp-c++-make-protection-section-id
                    :prot-level prot-level
                    :section-desc section-desc))
           (bof (dp-c-beginning-of-defun-pos 1 'real-bof)))
@@ -1161,7 +1161,7 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
                                         stay-put-p)
   "Goto the current class's data section."
   (interactive "p")
-  (let ((p (dp-c++-find-protection-section-id 
+  (let ((p (dp-c++-find-protection-section-id
             :prot-level prot-level
             :section-desc section-desc
             :stay-put-p stay-put-p)))
@@ -1170,8 +1170,8 @@ prefix arg:  0|- --> private, 1 --> protected, 2 --> public (or none)."
           (dp-push-go-back "dp-c++-goto-protection-section")
           (goto-char p))
       (unless missing-ok-p
-        (message "cannot find: %s" 
-                 (dp-c++-make-protection-section-id 
+        (message "cannot find: %s"
+                 (dp-c++-make-protection-section-id
                   :prot-level prot-level
                   :section-desc section-desc))
         (ding)
@@ -1203,12 +1203,12 @@ repeat count.  Use prefix arg with value 1 to override AI and get a single ?l."
 (defvar dp-c-hard-coded-symbol-char0 "[a-zA-Z_]")
 (defvar dp-c-hard-coded-symbol-char1... "[a-zA-z_0-9]")
 
-(defvar dp-c-hard-coded-symbol-chars (concat dp-c-hard-coded-symbol-char0 
-                                             dp-c-hard-coded-symbol-char1... 
+(defvar dp-c-hard-coded-symbol-chars (concat dp-c-hard-coded-symbol-char0
+                                             dp-c-hard-coded-symbol-char1...
                                              "*")
   "Chars making up a C-language-like symbol.")
 
-(defvar dp-c-hard-coded-symbol-regexp 
+(defvar dp-c-hard-coded-symbol-regexp
   (concat "\\("
           "\\(^\\|\\(^" dp-c-hard-coded-symbol-char1... "\\)\\)"
           "\\(" dp-c-hard-coded-symbol-chars "\\)"
@@ -1218,11 +1218,11 @@ repeat count.  Use prefix arg with value 1 to override AI and get a single ?l."
 
 (defvar dp-c-symbol-regexp "\\(\\([^0-9]\\|^\\)\\(\\sw\\(\\sw\\|\\s_\\)*\\)\\)")
 
-(defvar dp-c-add-comma-@-eol-of-regions 
-  '(brace-list-entry 
+(defvar dp-c-add-comma-@-eol-of-regions
+  '(brace-list-entry
     arglist-intro arglist-cont arglist-cont-nonempty
-    member-init-intro member-init-cont 
-    brace-list-intro brace-list-open brace-list-entry 
+    member-init-intro member-init-cont
+    brace-list-intro brace-list-open brace-list-entry
     statement-case-intro)
   "Syntax regions after which we may want to put a comma.")
 
@@ -1232,7 +1232,7 @@ repeat count.  Use prefix arg with value 1 to override AI and get a single ?l."
     (dp-c-end-of-line)
     ;; Do we want to add "}"?
     (dp-looking-back-at ";")))
-  
+
 (defvar dp-c-statement-syntaxes '(statement)
   "C syntax regions that indicate we're in a statement")
 
@@ -1253,13 +1253,13 @@ terminate and eol/nl+indent."
              (save-excursion
                (dp-c-end-of-line)
                (if anywhere-p
-                   (dp-c-looking-back-at-sans-eos-junk     
+                   (dp-c-looking-back-at-sans-eos-junk
                     "\\(<<\\|>>\\)\\([^=]*\\)")
                  ;; This needs to return <<|>> only if it is the last part
                  ;; of the statement.
                  ;; e.g. cout << a << b <<  // \\s-*\\(comment-regexp\\)?
                  (dmessage "@todo !!! Fix anywhere-p eq nil")
-                 (dp-looking-back-at 
+                 (dp-looking-back-at
                   ;; stream op in \1 rest of match in \2
                   "\\(<<\\|>>\\)\\(\\s-*\\(\\(//.*$\\)\\|$\\)\\)"))))
     (dmessage "mstrings: %s" (dp-all-match-strings-string))
@@ -1287,7 +1287,7 @@ terminate and eol/nl+indent."
                                                 "%s" ""))
 
 (defvar dp-c++-symbol-shy-regexp (replace-regexp-in-string
-                                  "%s" "?:" dp-c++-symbol-regexp-guts 
+                                  "%s" "?:" dp-c++-symbol-regexp-guts
                                   nil 'LITERAL))
 
 (defun dp-c-find-stmt-closing-paren (&optional limit)  ; <:ctcp:>
@@ -1332,11 +1332,11 @@ See `dp-c*-junk-after-eos*'."
 {%<mode-name>%}"
 )
 
-;; 
+;;
 ;; One nvidia style for constructors is to have *leading* commas in the
 ;; initializer list. I can actually see some usefulness, especially when
 ;; having to delete the last, unused, comma.
-;; 
+;;
 ;; This can be contolled crudely by putting the member init syntax symbols in
 ;; the eol list (trailing commas) or the bol list (leading)
 ;; XXX @todo Needs to be conditionalized better.
@@ -1347,14 +1347,14 @@ See `dp-c*-junk-after-eos*'."
   initializer list. I can actually see some usefulness, especially when
   having to delete the last, unused, comma.")
 
-(defvar dp-c-add-comma-@-bol-of-regions 
+(defvar dp-c-add-comma-@-bol-of-regions
   '(member-init-intro member-init-cont)
   "Syntax regions before which we may want to put a comma.")
 
 (defun dp-c-context-line-break ()
   "Do special things at the end of a line."
   (interactive "*")
-  (let ((syntactic-region 
+  (let ((syntactic-region
          (dp-c-get-syntactic-region)))
     (if (and (dp-c-in-syntactic-region dp-c-add-comma-@-eol-of-regions)
              (looking-at "\\s-*$")
@@ -1362,7 +1362,7 @@ See `dp-c*-junk-after-eos*'."
                (not (dp-looking-back-at "[-,:\\&;+=|.!@#$%^*(_/?]\\s-*"))))
         (dp-open-newline)
       (call-interactively 'c-context-line-break)
-      (cond 
+      (cond
        ((and (member syntactic-region dp-c-add-comma-@-bol-of-regions)
                (dp-looking-back-at "^\\s-*"))
         (insert ","))
@@ -1393,7 +1393,7 @@ See `dp-c*-junk-after-eos*'."
   ;; 1  2          3                        4  x
   "\\(\\(\\s-*\\)\\(const\\)?\\(?:\\s-*\\)\\(\\(?:$\\|//\\|/\\*\\|$\\).*\\)?\\)"
 ;;"\\(\\(\\s-*\\)\\(const\\)?\\(?:\\s-*\\)\\(\\(?://\\|/\\*\\|$\\).*\\)\\)$"
-  
+
   "Legal junk that can come after/delimit a statement.
 Match strings (any may be \"\"):
 1: whole thing (same as ms(0)?),
@@ -1404,14 +1404,14 @@ e.g. Looking for \")\" followed by dp-c-junk-after-eos is better than just
 looking for \\s-*.  Also, the junk match can be retained so a replace-match
 could, in this case, use: \";\\1\n\" which would leave comments, etc, in
 place.
-NB: You must count any parenthesized groups in your regexp when using 
+NB: You must count any parenthesized groups in your regexp when using
 functions like ???")
 
 (defvar dp-c*-junk-after-eos+
   ;; 1  2          3                        4  x
   "\\(\\(\\s-*\\)\\(const\\)?\\(?:\\s-*\\)\\(\\(?://\\|/\\*\\).*\\)\\)\n"
 ;;  "\\(\\(\\s-*\\)\\(const\\)?\\(?:\\s-*\\)\\(\\(?://\\|/\\*\\).*\\)\\)$"
-  
+
   "Like `dp-c*-junk-after-eos*' but won't allow an empty match,")
 
 (defvar dp-c*-junk-all 1)               ; Or "".
@@ -1427,11 +1427,11 @@ functions like ???")
 (defvar dp-c*-keywords-needing-parens
   (concat "else\\s-+if\\|"
           (regexp-opt '("for" "if" "while" "switch")))
-  "Keywords that have parenthesized expressions after them.  
+  "Keywords that have parenthesized expressions after them.
 Like function calls they look.")
 
 (defvar dp-c*-keywords-with-stmt-blocks
-  (concat "\\(?:" 
+  (concat "\\(?:"
           "else\\s-+if\\|"
           (regexp-opt '("do" "for" "if" "while" "switch"))
           "\\)")
@@ -1447,7 +1447,7 @@ Also, it will move backwards into a closed class (ie has a };)."
     (let ((class-state (dp-c++-in-class-p))
           (pos (point)))
       (c-beginning-of-statement 1)
-      (cond 
+      (cond
        ((not (eq class-state (dp-c++-in-class-p) ))
         ;; We backed into a class.  This is bad.
         (goto-char pos)
@@ -1487,7 +1487,7 @@ newline."
       (return-from dp-c-terminate-function-stmt)))
   (dp-c-end-of-line)
   ;;;; This helps with multi-line statements, but sucks otherwise.
-  ;;;; (c-end-of-statement) 
+  ;;;; (c-end-of-statement)
   (when (dp-looking-back-at-close-paren-p 'final)
     (replace-match (format "\\1;%s%s" ; 1st %s: The ) and other eol-junk above
                            (if (> (length (match-string (1+ dp-c*-junk-ws))) 1)
@@ -1496,7 +1496,7 @@ newline."
                            trailer-string))
     t)                        ; We still need to do the eol/newline thing.
   )
-  
+
 (defun dp-c-finish-function ()
   (interactive)
   (dp-open-newline)
@@ -1528,7 +1528,7 @@ newline."
       (or ;; (memq (buffer-syntactic-context) '(comment block-comment))
           (memq c-syntax dp-c-comment-syntax-list)
           (c-got-face-at (point) '(font-lock-comment-face))
-          (save-excursion 
+          (save-excursion
             (beginning-of-line)
             (looking-at "^\\s-*//"))
           (and intro-too
@@ -1573,7 +1573,7 @@ a comment add a comment prefix to the line."
   (interactive "*P")
   (if (dp-in-c)
       (let ((syntax-el (dp-c-get-syntactic-region)))
-	(if (and 
+	(if (and
 	     (dp-in-a-c-/**/-comment syntax-el)
 	     (save-excursion
 	       (re-search-backward "\*[ \t]+" nil t))
@@ -1591,7 +1591,7 @@ a comment add a comment prefix to the line."
     (c-electric-slash arg)))
 
 (defvar dp-c-control-keywords "\\(if\\|else\\|while\\|for\\|return\\|do\\)")
-(defvar dp-c-control-keywords-bounded 
+(defvar dp-c-control-keywords-bounded
   (concat "\\<" dp-c-control-keywords "\\>"))
 
 (defvar dp-c-function-type-decl-re
@@ -1684,7 +1684,7 @@ Current annotations are:
          (beg-end-list (and region (dp-region-boundaries-ordered-list)))
          (syntax (dp-c-statement-syntax)))
 ;;does the above work better                  (save-excursion
-;;does the above work better                    (when region 
+;;does the above work better                    (when region
 ;;does the above work better                      (goto-char (car region)))
 ;;does the above work better                    (end-of-line)
 ;;does the above work better                    (dp-c-get-syntactic-region))))
@@ -1700,7 +1700,7 @@ Current annotations are:
           (dp-deactivate-mark))
         (cond
          ;; Comment?
-         ((dp-in-a-c*-comment 'INTRO-TOO syntax) 
+         ((dp-in-a-c*-comment 'INTRO-TOO syntax)
           (if (memq arg '(- 0))
               (with-narrow-to-region (line-beginning-position) (point-max)
                                      (c-fill-paragraph))
@@ -1708,21 +1708,21 @@ Current annotations are:
          ((memq syntax '(member-init-intro))
           (dp-c-fill-statement nil 'rest-of-statement))
          ;; Function call?
-         ((memq syntax 
-                '(statement statement-block-intro defun-block-intro 
+         ((memq syntax
+                '(statement statement-block-intro defun-block-intro
                   statement-case-intro defun-open
-                  arglist-cont-nonempty substatement stream-op))  
+                  arglist-cont-nonempty substatement stream-op))
           (dp-c-fill-statement))
          ;; Function definition?
-         ((dp-c-in-syntactic-region 
+         ((dp-c-in-syntactic-region
            '(topmost-intro topmost-intro-cont arglist-intro arglist-cont
              func-decl-cont))
           (dp-c-format-func-decl))
          ;; Function call?
-         ((memq syntax 
-                '(statement statement-block-intro defun-block-intro 
+         ((memq syntax
+                '(statement statement-block-intro defun-block-intro
                   statement-case-intro
-                  arglist-cont-nonempty substatement stream-op))  
+                  arglist-cont-nonempty substatement stream-op))
           (dp-c-fill-statement))
          ;; Other.
          (t (ding) (message "dp-c-fill-paragraph is confused, syntax: %s" syntax)
@@ -1767,7 +1767,7 @@ The sequence looks like this:
 
 and is inserted around current file based on buffer's filename.
 DONT-COMMENT-ENDIF-P, obtained from the prefix arg when called
-interactively,  says to leave the /* xx */ 
+interactively,  says to leave the /* xx */
 off of the closing #endif
 If the region is active, then the sequence is placed around the region.
 Otherwise, the sequence begins at \(point-min) and ends at \(point-max)."
@@ -1850,7 +1850,7 @@ XXX: use tempo for this?"
     (message "done with %s" fc-file )))
 
 ;;
-;; FE: Make these detect whether we are in a class def or not and insert 
+;; FE: Make these detect whether we are in a class def or not and insert
 ;; proper header
 ;; in c++ && syntax is inclass --> cfc else fc
 ;;
@@ -1898,7 +1898,7 @@ XXX: use tempo for this?"
           ;; try to make the indenter smarter.  I like using TAB to space out
           ;; vars from types, e.g. int  x;
           ;; but it's a pain to indent a line properly.
-          ;; this tries to do an indent if on non-space and tab over if 
+          ;; this tries to do an indent if on non-space and tab over if
           ;; over a space.  But there are times when this is wrong, so I
           ;; punt for now.
           (if (or (not (dp-isa-type-line-p))
@@ -1912,11 +1912,11 @@ XXX: use tempo for this?"
                 (expand-abbrev))
             (if (and (not (eolp))
                      (not (looking-at "[ 	]"))
-                     (save-excursion 
-                       (backward-char) 
+                     (save-excursion
+                       (backward-char)
                        (not (looking-at "[ 	]"))))
                 (backward-word)
-              (delete-region (point) 
+              (delete-region (point)
                              (progn (skip-chars-forward " \t") (point))))
             (dp-tabdent c-basic-offset))))))
 
@@ -1944,7 +1944,7 @@ XXX: use tempo for this?"
         '(member-init-intro member-init-cont)))
 
 (defun dp-c-electric-brace (reindent-p)
-  "Insert a brace \"intelligently.\"  
+  "Insert a brace \"intelligently.\"
 By this I mean if I put a brace in the ``proper'' place (on a line by
 itself, under the keyword) move to K&R's incorrect place (after the
 control construct)"
@@ -1956,7 +1956,7 @@ control construct)"
           here
           mbeg
           mend)
-      
+
       ;; If we're in a C++ member init section and we're using the funky (but
       ;; kind of nice) leading , style, then we clear out the , and then
       ;; proceed .
@@ -1965,7 +1965,7 @@ control construct)"
         (replace-match ""))
       ;;
       ;; basically, let the c-electric-brace command run and then
-      ;; replace the { and all preceding ws (incl newlines) 
+      ;; replace the { and all preceding ws (incl newlines)
       ;; with a single { and then do a newline and indent.
       (unless (and reindent-p
                    (not (dp-looking-back-at "\s-+" (line-beginning-position))))
@@ -2030,7 +2030,7 @@ control construct)"
             (if suffix (insert suffix)))
         (dmessage "*** No open paren found."))
       (list point mark))))
-  
+
 (defun* dp-mk-proto (prefix &key (fill-proto-p t) (direction 'down dir-set-p)
                      &allow-other-keys)
   "Turn a func declaration into a prototype."
@@ -2041,7 +2041,7 @@ control construct)"
   (unless (dp-eobp)
     (forward-char))
   ;; Move up until we're IN the decl
-  (while (not (dp-c-in-syntactic-region '(arglist-cont arglist-intro 
+  (while (not (dp-c-in-syntactic-region '(arglist-cont arglist-intro
                                           topmost-intro-cont)))
     (case direction
       ('down (next-line 1))
@@ -2052,7 +2052,7 @@ control construct)"
 ;     (replace-match "")
 ;     (c-indent-line))
   (let ((bof (point))
-        point)  
+        point)
     (if (and prefix (not (looking-at (regexp-quote prefix))))
         (insert prefix " "))
     (if (dp-re-search-forward "(" nil t)
@@ -2100,7 +2100,7 @@ control construct)"
             (arg (abs arg)))
         (loop for x from 1 to arg do
           (dp-mk-proto prefix rest))))))
-  
+
 (defun dp-mk-extern-proto (arg)
   (interactive "*p")
   (dp-mk-protos arg (if (dp-c++-in-class-p) nil "extern")))
@@ -2150,12 +2150,12 @@ the boundaries region if it is active."
       (beginning-of-line)
       (dp-c-indent-command))))
 
-(defun* dp-c-stack-statement (&key split-at-regexp repl 
+(defun* dp-c-stack-statement (&key split-at-regexp repl
                               before-p after-first-p
                               beg end
                               minimal-indentation-p)
   "Split statement at SPLIT-AT-REGEXP, before regexp else before if BEFORE-P non nil.
-BEFORE-P says to split like we do in a c-tor initialization list, 
+BEFORE-P says to split like we do in a c-tor initialization list,
 that is with commas first:
 C::C(
   int a,
@@ -2169,8 +2169,8 @@ best term, but so it goes. It acts thus:
 afunction(a, b, c)
 becomes:
 afunction(
-    a, 
-    b, 
+    a,
+    b,
     c);
 The indentation is minimal, but nothing in the name implies that there is one
 arg per line, although that is implied by the name of the function.
@@ -2212,10 +2212,10 @@ arg per line, although that is implied by the name of the function.
 
 (defun dp-c-stack-iostream (&optional minimal-indentation-p)
   (interactive "*P")
-  (dp-c-stack-statement 
-   :split-at-regexp "\\s-*\\(<<\\|>>\\)\\s-*" 
-   :repl "\\1 " 
-   :before-p 'before 
+  (dp-c-stack-statement
+   :split-at-regexp "\\s-*\\(<<\\|>>\\)\\s-*"
+   :repl "\\1 "
+   :before-p 'before
    :after-first-p 'after-first
    :minimal-indentation-p minimal-indentation-p))
 
@@ -2231,17 +2231,17 @@ g()
 }"
 )
 
-(defun* dp-c-fill-statement (&optional 
-                             max-line-len 
-                             rest-of-statement 
-                             beg 
+(defun* dp-c-fill-statement (&optional
+                             max-line-len
+                             rest-of-statement
+                             beg
                              end
-                             (minimal-indentation-p 
+                             (minimal-indentation-p
                               dp-c-fill-statement-minimal-indentation-p))
   (interactive)
   (dmessage "TODO: HANDLE spaces after opening (")
   (when (eq minimal-indentation-p 'auto)
-    (setq minimal-indentation-p 
+    (setq minimal-indentation-p
           (dp-looking-back-at (concat "^" dp-ws-regexp*))))
 
   (save-excursion
@@ -2252,8 +2252,8 @@ g()
                         (dp-c-stack-iostream)
                       (if rest-of-statement
                           (dp-c-stack-rest-of-statement)
-                        (dp-c-stack-statement 
-                         :beg beg 
+                        (dp-c-stack-statement
+                         :beg beg
                          :end end
                          :minimal-indentation-p minimal-indentation-p))))
            (end (dp-mk-marker (car (cdr beg-end))))
@@ -2266,7 +2266,7 @@ g()
             (c-context-line-break)))))))
 
 (defalias 'cfs 'dp-c-fill-statement)
-    
+
 
 (defun* dp-c-delimit-func-decl (&optional use-markers-p)
   "Find boundaries of a function definition."
@@ -2356,7 +2356,7 @@ is done.")
 
 ;; Older version here:
 ;; :(cfl "devel/elisp-devel.el" 344636 "^"):
-(defun* dp-c-format-func-decl (&optional 
+(defun* dp-c-format-func-decl (&optional
                                (add-nl-after-open-paren-p
                                 dp-c-add-nl-after-open-paren-default-p)
                                (add-opening-brace-p t)
@@ -2376,7 +2376,7 @@ is done.")
     (end-of-line)
     ;; Don't do anything if we backup into a different syntactic region.
     ;; This is b0rked.
-    ;; 
+    ;;
     ;; -!-function(a,
     ;;          b,
     ;; -!-      c)
@@ -2388,10 +2388,10 @@ is done.")
     ;;-!-     FTCI_message_t* response,
     ;;    {
     ;; M-ret packs waaaay too much junk.
-    ;; !<@todo XXX 
+    ;; !<@todo XXX
     ;; This seems wrong in too many places. I'm removing it and will look for
     ;; a more specific fix to the original problem.
-    ;; at this time: 2012-03-08T12:00:27 
+    ;; at this time: 2012-03-08T12:00:27
     ;; It seems like this is a problem when we move into a new region *after*
     ;; point. Lets try adding that condition.
     ;;(setq syntactic-region (dp-c-get-syntactic-region))
@@ -2512,7 +2512,7 @@ is done.")
 (defun dp-c-format-func-call (&optional max-line-len)
   "Format a C/C++ function call *my* way."
   (interactive "*P")
-  (setq-ifnil max-line-len (dp-c-fill-column 
+  (setq-ifnil max-line-len (dp-c-fill-column
                         (and max-line-len (prefix-numeric-value max-line-len))))
   (undo-boundary)
   (save-excursion
@@ -2523,7 +2523,7 @@ is done.")
                                    (line-end-position) t))
       (beginning-of-line)
       (join-line)
-      (if (<= (- (line-end-position) (line-beginning-position)) 
+      (if (<= (- (line-end-position) (line-beginning-position))
               (dp-c-fill-column max-line-len))
           ()
         (c-context-line-break)))
@@ -2543,13 +2543,13 @@ is done.")
     (message (buffer-substring (car region) (cdr region))))))
 
 
-(defun dp-c-new-file-template (&optional rest-o-hack-line any-mode-line-p 
+(defun dp-c-new-file-template (&optional rest-o-hack-line any-mode-line-p
                                mode)
   (interactive)
   ;; E.g. /* -*- mode: c++; c-file-style: "crl-c-style" -*- */
-  (dp-lang-new-file-template (or rest-o-hack-line 
+  (dp-lang-new-file-template (or rest-o-hack-line
                                  (concat  "c-file-style: "
-                                          "\"" 
+                                          "\""
                                           (or
                                            (dp-val-if-boundp dp-current-c-style-name)
                                            (dp-val-if-boundp dp-default-c-style-name)
@@ -2575,10 +2575,10 @@ is done.")
            (when (noninteractive)
              (save-buffer)
              (kill-buffer))))
-        (dp-choose-buffers 
+        (dp-choose-buffers
          (function
           (lambda (buf &rest unused)
-            (memq (buffer-local-value 'major-mode buf) 
+            (memq (buffer-local-value 'major-mode buf)
                   '(c-mode c++-mode))))))
   (when (noninteractive)
     (kill-emacs)))
@@ -2643,7 +2643,7 @@ reg-exps are anchored at bol."
   (save-excursion
     (dp-c-end-of-line)
     (dp-looking-back-at (concat "^\\s-*"
-                                dp-c-function-type-decl-re 
+                                dp-c-function-type-decl-re
                                 "\\s-*"))))
 
 ;;;

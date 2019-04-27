@@ -27,17 +27,17 @@ non-diary-file appts.")
   (setq dp-appt-frame-appt nil))
 
 (defun dp-appt-frame-announce (min-to-app appt)
-  "Display an appointment notification in a frame.  
-This fixes the original function `appt-frame-announce' 
-by making it display the buffer containing the appointment 
+  "Display an appointment notification in a frame.
+This fixes the original function `appt-frame-announce'
+by making it display the buffer containing the appointment
 info in the popped up frame."
   (dmessage "`dp-appt-frame-announce' called")
   (warn "`dp-appt-frame-announce' called")
   (appt-frame-announce min-to-app appt)
   (setq dp-appt-frame-appt appt)
   (let ((pop-up-windows nil))
-    (pop-to-buffer (get-buffer-create appt-buffer-name) 
-		   nil 
+    (pop-to-buffer (get-buffer-create appt-buffer-name)
+		   nil
 		   appt-disp-frame)
     (make-frame-visible appt-disp-frame)
     (dp-define-buffer-local-keys '("\C-c\C-c" dp-appt-dismiss-appt
@@ -55,7 +55,7 @@ info in the popped up frame."
 Returns appt-list so it can be squirreled away if needed."
   (setq-ifnil adder 'dp-appt-add-appt)
   (prog1
-      (loop for appt in appt-list 
+      (loop for appt in appt-list
         collect (funcall adder appt))
     (appt-check)))
 
@@ -71,24 +71,24 @@ Returns appt-list so it can be squirreled away if needed."
 (defun dp-appt-v2-setup ()
   (dp-deflocal dp-appt-expired-appt-buf nil
     "Has the appointment passed w/o being dismissed?")
-  (defvar dp-appt-expired-appt-buffer-name 
+  (defvar dp-appt-expired-appt-buffer-name
     "******* APPOINTMENT HAS BEEN and GONE *******"
     "Buffer base name for expired appts.")
-  
+
   (defvar dp-appt-current-appts '()
     "List of most current/active appts we are dealing with.")
-  
+
   (defvar dp-appt-frame-we-made nil
     "If we create a new frame below, this is it.")
-  
+
   (defvar dp-appt-zombie-windows '()
     "Reminder windows that haven't been dismissed yet.")
-  
+
   (defun dp-appt-zombie-p (&optional buffer)
     (memq (or buffer (current-buffer)) dp-appt-zombie-windows))
-  
+
   (defun dp-appt-remove-zombie (&optional buffer)
-    (setq dp-appt-zombie-windows (delq (or buffer (current-buffer)) 
+    (setq dp-appt-zombie-windows (delq (or buffer (current-buffer))
                                        dp-appt-zombie-windows)))
 
   (defun dp-appt-zombify-buffer (&optional buffer)
@@ -106,7 +106,7 @@ Returns appt-list so it can be squirreled away if needed."
   (defun dp-appt-last-reminder-p (min-to-app)
     "Somehow we need to be able to detect whether a reminder is the last or not."
     (zerop (string-to-int min-to-app)))
-  
+
   (defun dp-appt-disp-window (min-to-appt time-string appt-text)
     (let ((frame (or (and (eq (next-frame) (selected-frame))
                           (setq dp-appt-frame-we-made (make-frame)))
@@ -138,7 +138,7 @@ Returns appt-list so it can be squirreled away if needed."
       (set-buffer-modified-p nil)
       (dp-toggle-read-only 1)
       (dp-shrink-wrap-frame frame)))
-  
+
   (defun dp-appt-delete-frame-old ()
     (when (and dp-appt-frame-we-made
                (frame-live-p dp-appt-frame-we-made))
@@ -146,7 +146,7 @@ Returns appt-list so it can be squirreled away if needed."
         (delete-frame dp-appt-frame-we-made)
         (setq dp-appt-frame-we-made nil)
         (message "Deleted appointment's alarm frame."))))
-  
+
   (defun dp-appt-delete-frame ()
     (when (and dp-appt-frame-we-made
                (frame-live-p dp-appt-frame-we-made))
@@ -154,7 +154,7 @@ Returns appt-list so it can be squirreled away if needed."
         (delete-frame dp-appt-frame-we-made)
         (setq dp-appt-frame-we-made nil)
         (message "Deleted appointment's alarm frame."))))
-  
+
   (defun dp-appt-delete-window-old (&rest rest)
     (if (dp-appt-zombie-p)
         (progn
@@ -170,7 +170,7 @@ Returns appt-list so it can be squirreled away if needed."
             (dp-appt-remove-zombie)))
       (apply (dp-get-orig-value 'appt-delete-window-function) rest)
       (dp-appt-delete-frame)))
-  
+
   (defun dp-appt-delete-window (&rest rest)
     (apply (dp-get-orig-value 'appt-delete-window-function) rest)
     (dp-appt-delete-frame))
@@ -191,10 +191,10 @@ Returns appt-list so it can be squirreled away if needed."
     (dp-appt-delete-frame)
     (setq dp-appt-frame-appt nil))
 
-  
+
   (dp-save-orig-n-set-new 'appt-disp-window-function
                           (cons 'dp-appt-disp-window 'literal))
-  (dp-save-orig-n-set-new  'appt-delete-window-function 
+  (dp-save-orig-n-set-new  'appt-delete-window-function
                            (cons 'dp-appt-delete-window 'literal)))
 
 
@@ -202,7 +202,7 @@ Returns appt-list so it can be squirreled away if needed."
     (dp-appt-v2-setup)
   (dp-appt-v1-setup))
 
-;; 
+;;
 (defun dp-appt-make-v1-appt (time msg &optional specifier)
   "Make an OLD STYLE/internal appt.el compatible appointment.
 Appts look thus: \(new-appt-time new-appt-message\). See `appt-add'.
@@ -215,7 +215,7 @@ e.g. ((1320) \"10:00pm: test\"."
         (concat new-appt-time " " new-appt-msg) t))
 
 (defun* dp-mk-appt-list (delta-list description
-                         &optional msg-func-arg-list 
+                         &optional msg-func-arg-list
                          (from-time 'zero))
   "DELTA-LIST is list of time differences from FROM-TIME.
 MSG-FUNC is called with the appointment time (in appt time fmt -- HH:MM:SS of
@@ -255,7 +255,7 @@ return the string used to describe the appt."
 
 (defvar dp-neurontin-appt-info nil
   "Saved lists of neurontin appts keyed by args so it can be recreated at will.
-When args change, make new list and remember the new one.  
+When args change, make new list and remember the new one.
 !<@todo Or do we want an alist keyed by creation-args for all invocations?
 This is needed because elisp has no closures which means we can't just define
 a recreator function at creation time using the original creation args.")
@@ -269,7 +269,7 @@ a recreator function at creation time using the original creation args.")
         appt-list))
 
 (defun dp-add-neurontin-appts (&optional keep-old-p)
-  "Re-submit the neurontin appointments.  
+  "Re-submit the neurontin appointments.
 Non-diary appts need to be remade after processing the diary into appts.
 !<@todo Extend this to handle any kind of list like this."
   (interactive)
@@ -277,7 +277,7 @@ Non-diary appts need to be remade after processing the diary into appts.
     (dp-remove-appts dp-current-neurontin-appts))
   (setq dp-current-neurontin-appts
         (dp-add-list-of-appts (and dp-neurontin-appt-info
-                                   (dp-Neurontin-appt-info-appt-list 
+                                   (dp-Neurontin-appt-info-appt-list
                                     dp-neurontin-appt-info)))))
 
 (defun* dp-mk-neurontin-appts0 (num keep-existing-p &optional
@@ -291,11 +291,11 @@ Non-diary appts need to be remade after processing the diary into appts.
                              include-zeroth-p)))
     (unless (and keep-existing-p
                  dp-neurontin-appt-info
-                 (equal creation-args 
-                               (dp-Neurontin-appt-info-creation-args 
+                 (equal creation-args
+                               (dp-Neurontin-appt-info-creation-args
                                 dp-neurontin-appt-info)))
       ;; Changed or new.
-      (setq dp-neurontin-appt-info 
+      (setq dp-neurontin-appt-info
             (make-dp-Neurontin-appt-info
              :creation-args creation-args
              :appt-list (apply 'dp-mk-neurontin-appt-list creation-args)))
@@ -330,11 +330,11 @@ Non-diary appts need to be remade after processing the diary into appts.
     ;; 3x appts 4hrs apart with first defaulted to 10am.
     ;;(warn "Round TO to some 24 hr time... e.g. 1:20pm --> 13 (or 13:30))")
     (dp-mk-neurontin-appts keep-existing-p timeval-of-first))
-  
+
   ;; Set up appts after we're up since windows coming and going during init
   ;; cause problems.
-  (add-hook 'dp-post-dpmacs-hook 
+  (add-hook 'dp-post-dpmacs-hook
             (lambda ()
-              (run-at-time (format "%d sec" appt-display-duration) 
+              (run-at-time (format "%d sec" appt-display-duration)
                            nil 'dp-setup-meds-appts))))
 

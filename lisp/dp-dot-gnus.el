@@ -13,10 +13,10 @@
 ;; lists.  This helps a ton!
 
 ;; Will this work ok with my thread stuff below?
-(setq gnus-summary-thread-gathering-function 
+(setq gnus-summary-thread-gathering-function
       'gnus-gather-threads-by-subject)
 
-(setq gnus-thread-sort-functions 
+(setq gnus-thread-sort-functions
       '(gnus-thread-sort-by-most-recent-date)
       gnus-article-sort-functions
       '(gnus-article-sort-by-date))
@@ -26,7 +26,7 @@
 ;; || (A-FUNCTIONP)
 ;; [and a few more]
 ;; If a match, set some variables...
-;; 
+;;
 (defvar dp-use-gnus-posting-styles-p t
   "Simple switch for using the following styles.")
 
@@ -36,11 +36,11 @@
            `((".*"
               (signature dp-insert-tame-sig))
 ;;dp-tame-sig-source))
-             
-             ((header 
+
+             ((header
                "from"
-               ,(dp-regexp-concat 
-                 '("gouge" "jfg" "gillono" "@meduseld.net" "@crickhollow.org" 
+               ,(dp-regexp-concat
+                 '("gouge" "jfg" "gillono" "@meduseld.net" "@crickhollow.org"
                    "@withywindle.org" "thayer" "mattisjo")))
               (signature dp-maybe-insert-sig)
               ))))
@@ -73,7 +73,7 @@
       ;; The following variable does end with a newline.
       ;; older one: "%d: %U%R%z%B%(%[%-23,23f%]%) %s + newline"
       ;; %U -> status: U --> unread, O --> olde, (plus see Info)
-      ;; %R -> secondary mark (see Info); 
+      ;; %R -> secondary mark (see Info);
       ;; %B -> fancy thread tree (trn style)
       ;; %(.*%) -> .* an extent highlighted with `gnus-mouse-face'
       gnus-summary-line-format "%d: %U%R%B%(%[%-23,23f%]%) %s
@@ -82,7 +82,7 @@
 (defvar dp-gnus-dont-ask-to-send-p nil
   "Don't don't ask?")
 
-;;!<@todo Add a To: sensitive check for sig type here. 
+;;!<@todo Add a To: sensitive check for sig type here.
 (defvar dp-gnus-message-send-query-method
   '(mail
     message-mail-p
@@ -90,7 +90,7 @@
       (or (bound-and-true-p dp-gnus-dont-ask-to-send-p)
           (y-or-n-p "Really send the message? "))))
   "Query to actually send mail.")
-  
+
 (defun dp-gnus-add-message-send-query-method ()
   (dp-save-orig-n-set-new 'message-send-method-alist '(unused . self))
   ;; As you were, maggot!
@@ -99,14 +99,14 @@
   ;; and if we go after that then gnus thinks we're doing a resend.
   ;; This is *very* dependent on the current value of message-send-method-alist.
   (unless (member dp-gnus-message-send-query-method message-send-method-alist)
-    (setq message-send-method-alist 
+    (setq message-send-method-alist
           (list (car (butlast message-send-method-alist))
                 dp-gnus-message-send-query-method
                 (car (last message-send-method-alist))))))
 
 ;; e.g. (mail message-mail-p message-send-via-mail)
 ;; We want the predefined value, too.
-;;CO; (eval-after-load "gnus" 
+;;CO; (eval-after-load "gnus"
 ;;CO;   (dp-add-query-to-send))
 
 (dp-gnus-add-message-send-query-method)
@@ -139,7 +139,7 @@
 ;;@todo work on asap;       '((".*"
 ;;@todo work on asap;          (name "Mark A. Hershberger")
 ;;@todo work on asap;          ("X-URL" "http://mah.everybody.org/"))
-;;@todo work on asap;         ("work" 
+;;@todo work on asap;         ("work"
 ;;@todo work on asap;          (address "mhershb@mcdermott.com"))
 ;;@todo work on asap;         ("everybody.org"
 ;;@todo work on asap;          (address "mah@everybody.org"))))
@@ -150,10 +150,10 @@
   "What more can I say about what it does?
 How it does it is another matter:  Poorly."
   (interactive)
-  (let ((lep-before (progn 
+  (let ((lep-before (progn
                       (gnus-summary-top-thread)
                       (line-end-position)))
-        (lep-after (progn 
+        (lep-after (progn
                      (gnus-summary-show-thread)
                      (gnus-summary-top-thread)
                      (line-end-position))))
@@ -165,22 +165,22 @@ How it does it is another matter:  Poorly."
 
 ;; I can get a buffer in gnus-group-mode w/o having my keys bound
 ;; to my blm extent.
-;; Does this mean my hook isn't being run?  
+;; Does this mean my hook isn't being run?
 ;; IIR, sometimes the buffer is erased, so the extent goes away.
 ;; ??? Erase buffer hook?  Super sticky extents?
-;;!<@todo REMOVE ME 
+;;!<@todo REMOVE ME
 (dp-deflocal dp-gnus-debug-info0 nil
   "Hold debug info until all bugs, everywhere, are fixed.")
 (defvar dp-gnus-debug-info1 nil
   "Hold debug info until all bugs, everywhere, are fixed.")
 
 (defun dp-bind-group-mode-keys ()
-  (dp-define-buffer-local-keys 
+  (dp-define-buffer-local-keys
    `([q] dp-bury-or-kill-gnus-group-buffer
      [(meta ?-)] gnus-group-exit
      [(meta e)] find-file-at-point
      [return] dp-gnus-topic-select-group
-     [(meta return)] ,(kb-lambda 
+     [(meta return)] ,(kb-lambda
                           (dp-gnus-topic-select-group t))
      [(control return)] gnus-group-quick-select-group
      [(control m)] dp-gnus-topic-select-group)
@@ -195,14 +195,14 @@ How it does it is another matter:  Poorly."
 
 (defun dp-gnus-message-mode-hook ()
   (dp-define-buffer-local-keys '([(meta return)] dp-open-newline
-                                 [(meta q)] 
+                                 [(meta q)]
                                  dp-fill-paragraph-or-region-with-no-prefix
                                  [(control a)] dp-brief-home)
 			       nil nil nil "dgmmh"))
 
 (defun dp-gnus-summary-mode-hook ()
   "MY bindings dammit!"
-  (dp-define-buffer-local-keys 
+  (dp-define-buffer-local-keys
    '([(meta down)] other-window
      [(meta up)] dp-other-window-up
      [g] gnus-summary-insert-new-articles
@@ -228,7 +228,7 @@ How it does it is another matter:  Poorly."
 (defun dp-bury-or-kill-gnus-group-buffer (&optional kill-pred-func)
   "Call `dp-func-or-kill-buffer' with `bury-buffer' and  `gnus-group-exit'."
   (interactive)
-  (dp-func-or-kill-buffer 'bury-buffer 
+  (dp-func-or-kill-buffer 'bury-buffer
                           'gnus-group-exit
                           nil nil kill-pred-func))
 
@@ -240,7 +240,7 @@ How it does it is another matter:  Poorly."
   ;; Let C-- mean all.
   (gnus-topic-select-group (cond
                             ((eq arg '-) t)
-                            ((not arg) 
+                            ((not arg)
                              (dp-gnus-default-num-messages-when-selected))
                             (t arg))))
 

@@ -5,7 +5,7 @@
 ;;; early in the startup process.
 ;;; This is loaded before dp-misc, so it cannot use anything provided
 ;;; there.
-;;; 
+;;;
 (message "Loading dp-xemacs-early...")
 
 (setq gutter-buffers-tab-enabled nil)
@@ -19,14 +19,14 @@
 ;;rem-after-fsf   "Return a consistently formatted and sensibly sortable and succinct timestamp string."
 ;;rem-after-fsf   (interactive)
 ;;rem-after-fsf   (let ((fmt (format "%%Y-%%m%s-%%dT%%T"
-;;rem-after-fsf                      (if (or new-style-p 
+;;rem-after-fsf                      (if (or new-style-p
 ;;rem-after-fsf                              (and (interactive-p ) current-prefix-arg))
 ;;rem-after-fsf                          "%b"
 ;;rem-after-fsf                        ""))))
 ;;rem-after-fsf     (format-time-string fmt time)))
 
 ;;
-;;rem-after-fsf (defun* dp-mk-dropping-dir (subdir &optional dont-change-subdir-name-p 
+;;rem-after-fsf (defun* dp-mk-dropping-dir (subdir &optional dont-change-subdir-name-p
 ;;rem-after-fsf                             (create-p t))
 ;;rem-after-fsf   "Make SUBDIR in `dp-emacs-droppings' to hold file droppings.
 ;;rem-after-fsf Things like backup files, auto-saves, etc.

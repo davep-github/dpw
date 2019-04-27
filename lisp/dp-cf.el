@@ -1,11 +1,11 @@
 (defconst dp-c-just-c-source-file-extensions '("c")
   "Real, pure genuine c extensions. Just c. Not Zoot.")
 
-(defconst dp-cxx-source-file-extensions 
+(defconst dp-cxx-source-file-extensions
   '("cpp" "cxx" "cc" "c++" "C" "tcc" "inl" "impl" "tcc")
   "C++ type extensions.")
 
-(defconst dp-c-source-file-extensions 
+(defconst dp-c-source-file-extensions
   (append
    dp-c-just-c-source-file-extensions
    dp-cxx-source-file-extensions)
@@ -14,24 +14,24 @@
 (defconst dp-c-just-c-include-file-extensions '("h")
   "Real, pure genuine h files. Just h. Not Zhoot.")
 
-(defconst dp-cxx-include-file-extensions 
+(defconst dp-cxx-include-file-extensions
   '("hh" "hxx" "h++" "H" "thh" "hpp")
   "Extensions of includes for C++ type files.")
 
 (defconst dp-c-include-file-extensions
-  (append 
+  (append
    dp-c-just-c-include-file-extensions
    dp-cxx-include-file-extensions)
   "All c-like c like header file extensions.")
 
 (defconst dp-c-source-file-extension-regexp
-  (concat "\\." 
+  (concat "\\."
           (dp-regexp-concat dp-c-source-file-extensions 'group-all-p 'quote-p)
           "$")
   "Regexp to recognize c source file names.")
 
 (defconst dp-c-include-file-extension-regexp
-  (concat "\\." 
+  (concat "\\."
           (dp-regexp-concat dp-c-include-file-extensions 'group-all-p 'quote-p)
           "$")
   "Regexp to recognize c include file names.")
@@ -50,8 +50,8 @@
 ;; Easier to play with two negated test chunks that an (if)
 (defun dp-distribute-lists (l1 l2)
   (let (olist)
-    (mapcar (lambda (l1e) 
-              (setq olist 
+    (mapcar (lambda (l1e)
+              (setq olist
                     (cons (list l1e l2) olist)))
             l1)
     olist))
@@ -90,7 +90,7 @@
   "All known -- to me -- c++ extensions.
 And a plain old C extension.")
 
-(defvar dp-c++-include-extensions '("h" "hh" "hxx" "h++" "hpp" "hpp") 
+(defvar dp-c++-include-extensions '("h" "hh" "hxx" "h++" "hpp" "hpp")
   "All known -- to me -- c++ include file extensions")
 
 ;; (dp-cross-cat-string-lists
@@ -99,15 +99,15 @@ And a plain old C extension.")
 
 ;; '("../include" "../h" "./inc" "./include" "./h"
 ;;   "./inc" "../../include" "../../h"
-;;   "../../inc" "../common" "./common" ".") 
+;;   "../../inc" "../common" "./common" ".")
 
 (defvar dp-cf-inc-search-path (dp-cross-cat-string-lists
                                '("." ".." "../..")
                                '("" "include" "h" "common" "inc"))
   "Where to look for a source file's corresponding include file.")
-	
-;; 
-;; @todo XXX 
+
+;;
+;; @todo XXX
 ;; Some stupid layouts have a structure like this:
 ;; include/<some-file>.h
 ;; <some-file>/<some-file>.cpp
@@ -126,7 +126,7 @@ And a plain old C extension.")
   (let ((file-basename
          (file-name-sans-extension
           (file-name-nondirectory file-name))))
-    (mapcar (function 
+    (mapcar (function
              (lambda (path)
                (if (string-match "\\(^\\|[^%]\\)%s" path)
                    (format path file-basename)
@@ -149,24 +149,24 @@ And a plain old C extension.")
   "How to `format' file name parts into a file name.")
 
 (defvar dp-cf-map-to-list
-  (list 
+  (list
    (make-dp-cf-file-info
     :description "c++ src to inc"
     ;; lists are ordered. fcfs.
     :from-ext-list dp-c++-extensions
     :to-ext-list dp-c++-include-extensions
     :to-path dp-cf-inc-search-path
-    :map-to-list (dp-distribute-lists dp-c++-extensions 
+    :map-to-list (dp-distribute-lists dp-c++-extensions
                                       dp-c++-include-extensions)
     :map-to-func nil)
-   
+
    (make-dp-cf-file-info
     :description "c++ inc to src"
     ;; lists are ordered. fcfs.
     :from-ext-list dp-c++-include-extensions
     :to-ext-list dp-c++-extensions
     :to-path dp-cf-src-search-path
-    :map-to-list (dp-distribute-lists dp-c++-include-extensions 
+    :map-to-list (dp-distribute-lists dp-c++-include-extensions
                                       dp-c++-extensions)
     :map-to-func nil))
   "Corresponding file info list. Eg .c -> .h, .h -> .c")
@@ -179,7 +179,7 @@ And a plain old C extension.")
       (when (assoc ext l)
         (return (list (cadr (assoc ext l)) ext fci l))))))
 
-(defun* dp-cross-file-name-and-dirs (file-name ext 
+(defun* dp-cross-file-name-and-dirs (file-name ext
                                      &optional
                                      cf-search-path
                                      (new-name-format dp-cf-default-name-format))
@@ -210,7 +210,7 @@ Every possible extension in every possible dir in PATH."
 (defun* dp-corresponding-file-name (&optional file-name
                     search-path
                     (new-name-format dp-cf-default-name-format))
-  "Find the FILE-NAME's corresponding file based on EXT. 
+  "Find the FILE-NAME's corresponding file based on EXT.
 Primary motivation was: x.c <-->x.h
 It will search `standard' places for a match to FILE-NAME's counterpart.
 
@@ -220,14 +220,14 @@ handing to a completing read."
                                           (buffer-file-name))))
   (or (dp-fixed-corresponding-file-name file-name)
       (let* ((path (file-name-directory file-name))
-             (just-name (file-name-sans-extension 
+             (just-name (file-name-sans-extension
                          (file-name-nondirectory file-name)))
              (ext (file-name-extension file-name))
              (cf-xi (dp-ext-to-cf-info ext)))
         (if cf-xi
             (let* ((cfi (nth 2 cf-xi))
-                   (existing-path (dp-path-filter:existing 
-                                   (or search-path 
+                   (existing-path (dp-path-filter:existing
+                                   (or search-path
                                        (dp-get-file-info-to-path
                                         (dp-cf-file-info-to-path cfi)
                                         file-name))))
@@ -242,7 +242,7 @@ handing to a completing read."
                                 (cons (cons
                                        (format new-name-format
                                         ; First existing dir in path.
-                                               (car existing-path) 
+                                               (car existing-path)
                                                just-name
                                                first-cf-ext)
                                        '<<not-found:try-this-first)
@@ -252,7 +252,7 @@ handing to a completing read."
           nil))))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; ECF code useful for either version.
 ;;;
@@ -281,7 +281,7 @@ Eg, via `hack-local-variables', hook, magic.")
 
 (defun dp-fixed-corresponding-file-name (&optional file-name)
   (or dp-fixed-corresponding-file-names
-      (let* ((file-name (file-name-nondirectory (or file-name 
+      (let* ((file-name (file-name-nondirectory (or file-name
                                                     (buffer-file-name))))
              ;; Non algorithmic correspondence.
              (co-file-a (assoc file-name dp-fixed-corresponding-files))
@@ -289,9 +289,9 @@ Eg, via `hack-local-variables', hook, magic.")
                           (rassoc file-name dp-fixed-corresponding-files))))
         (or (and co-file-a (cdr co-file-a))
             (and co-file-r (car co-file-r))))))
-  
+
 ;; refs 1 def, 2 calls
-(defun* dp-find-corresponding-file (&optional file-name find-file-func 
+(defun* dp-find-corresponding-file (&optional file-name find-file-func
                                     search-re)
   "Edit the corresponding file: *.c-type <--> *.h-type"
   (interactive)
@@ -310,7 +310,7 @@ Eg, via `hack-local-variables', hook, magic.")
           (progn
             (dp-ecf-return-whence)
             (return-from dp-find-corresponding-file))
-        (setq co-file (completing-read 
+        (setq co-file (completing-read
                        "No corresponding file found. File name: "
                        (cdr co-file)    ; completion table
                        nil              ; predicate
@@ -359,10 +359,10 @@ Eg, via `hack-local-variables', hook, magic.")
     (when (nCu-p 2 find-symbol-p)
       (setq dp-ecf-whence-marker nil
             find-symbol-p t))
-    (dp-find-corresponding-file nil 
+    (dp-find-corresponding-file nil
                                 (or find-file-func 'dp-find-file-this-window)
                                 (when find-symbol-p
-                                  (format "\\<\\(%s\\)\\>" 
+                                  (format "\\<\\(%s\\)\\>"
                                           (symbol-near-point))))))
 
 (defalias 'ecf 'dp-edit-corresponding-file)

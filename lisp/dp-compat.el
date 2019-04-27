@@ -36,7 +36,7 @@
       (defalias 'dp-minibuffer-complete 'minibuffer-complete)
       (defalias 'dp-lisp-completion-at-point 'lisp-complete-symbol)
 )
-  
+
   (defalias 'dp-completion-at-point 'completion-at-point)
   (defalias 'dp-comint-dynamic-complete 'completion-at-point)
   (defalias 'dp-minibuffer-complete 'minibuffer-complete)

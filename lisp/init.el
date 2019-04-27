@@ -81,8 +81,8 @@
 ;;    mule-packages/
 ;;    xemacs-packages/
 ;;
-; (setq load-path (delq nil (mapcar 
-;                            (function 
+; (setq load-path (delq nil (mapcar
+;                            (function
 ;                             (lambda (dir)
 ;                               (if (posix-string-match "^/usr/lib/xemacs")
 ;                                   nil

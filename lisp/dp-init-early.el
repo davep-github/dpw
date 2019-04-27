@@ -4,7 +4,7 @@
   "My local site packages root.")
 
 (defun dp-mk-site-package-dir (&rest names)
-  (expand-file-name (paths-construct-path 
+  (expand-file-name (paths-construct-path
                      (cons dp-contrib-site-packages names))))
 
 (defvar dp-site-package-info (dp-mk-site-package-dir "info")
@@ -24,15 +24,15 @@
                      (cons dp-contrib-package-root subdir-components))))
 
 (defun dp-add-contrib-subdir-to-load-path (&rest subdir-components)
-  (add-to-list 'load-path 
+  (add-to-list 'load-path
                (apply 'dp-mk-contrib-subdir subdir-components)))
 
 (defun dp-mk-contrib-pkg-child (&rest pkg-names)
-  (expand-file-name (paths-construct-path  
+  (expand-file-name (paths-construct-path
                      (cons dp-contrib-site-packages pkg-names))))
 
 (defun dp-mk-contrib-site-pkg-child (&rest pkg-names)
-  (expand-file-name (paths-construct-path  
+  (expand-file-name (paths-construct-path
                      (cons dp-contrib-site-packages pkg-names))))
 
 (dp-add-contrib-subdir-to-load-path "xemacs.el-for-fsf-compat")
@@ -41,13 +41,13 @@
   "Return a consistently formatted and sensibly sortable and succinct timestamp string."
   (interactive)
   (let ((fmt (format "%%Y-%%m%s-%%dT%%T"
-                     (if (or new-style-p 
+                     (if (or new-style-p
                              (and (interactive-p ) current-prefix-arg))
                          "%b"
                        ""))))
     (format-time-string fmt time)))
 
-(defun* dp-mk-dropping-dir (subdir &optional dont-change-subdir-name-p 
+(defun* dp-mk-dropping-dir (subdir &optional dont-change-subdir-name-p
                             (create-p t))
   "Make SUBDIR in `dp-emacs-droppings' to hold file droppings.
 Things like backup files, auto-saves, etc.

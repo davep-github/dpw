@@ -130,7 +130,7 @@ The regexp is matched against the buffer name.")
 
 ;;
 ;; XEmacs puts font lock info on the mode symbol. Kewl.
-;; 
+;;
 (defun dp-colorize-buffer-if (pred color &optional else-uncolorize-p
                               pred-args beg end)
   "Colourize the current buffer if PRED is non-nil."
@@ -151,16 +151,16 @@ The regexp is matched against the buffer name.")
 
 (defun dp-colorize-buffer-if-readonly (&optional color uncolorize-if-rw-p)
   (interactive "P")
-  (dp-colorize-buffer-if buffer-read-only 
-                         (or color 
+  (dp-colorize-buffer-if buffer-read-only
+                         (or color
                              'dp-default-read-only-face)
                          uncolorize-if-rw-p))
 
 (defun dp-colorize-buffer-if-remote (&optional color buf)
   "Give buffers holding remote files a distinctive color."
   (interactive "P")
-  (dp-colorize-buffer-if 'dp-remote-file-p 
-                         (or color 
+  (dp-colorize-buffer-if 'dp-remote-file-p
+                         (or color
                              (dp-bmm-get-color-for-buf-name
 			      (current-buffer)))))
 
@@ -232,15 +232,15 @@ COLOR_INDEX can be <=0 or '- to indicate invisibility."
   (interactive "d")
   (let ((ext-list (dp-extents-at-with-prop 'dp-colorized-region-color-num))
         m)
-    (if ext-list 
+    (if ext-list
         (progn
           (setq dp-colorize-region-default-color-index
-                (extent-property (car ext-list) 
+                (extent-property (car ext-list)
                                  'dp-colorized-region-color-num))
-          (setq m (format "Plucked color index %d." 
+          (setq m (format "Plucked color index %d."
                           dp-colorize-region-default-color-index))
           ;; The face doesn't make it to the message area.
-          (dp-make-extent0 m 0 (length m) 'dp-colorized-string 
+          (dp-make-extent0 m 0 (length m) 'dp-colorized-string
                            'face (cdr (dp-get-color-and-face nil))
                            'duplicable t)
           (message m))
@@ -262,13 +262,13 @@ PROPS."
          extent
          (face (cdr color-and-face)))
     ;;(dmessage "beg: %s, end: %s" beg end)
-    (setq overwrite-p (or overwrite-p 
+    (setq overwrite-p (or overwrite-p
                           dp-colorize-region-overwrite-existing-colors-p))
-    (when (or overwrite-p 
+    (when (or overwrite-p
               (not (dp-region-is-colorized beg end)))
       (unless (memq 'priority props)
-        (setq props 
-              (append props 
+        (setq props
+              (append props
                       (list 'priority dp-colorize-region-default-priority))))
       (if (dp-invisible-face-p color-and-face)
           (setq face-sym 'invisible
@@ -300,8 +300,8 @@ PROPS."
 
 (defun dp-colorize-region-line-by-line (beg end color)
   (interactive "r\np")
-  (let ((beginning-of-last-line (save-excursion 
-                                  (goto-char end) 
+  (let ((beginning-of-last-line (save-excursion
+                                  (goto-char end)
                                   (line-end-position))))
   (goto-char beg)
   (while (<= (point) beginning-of-last-line)
@@ -338,15 +338,15 @@ PROPS."
 			 (extent-property olay prop)))
 	  (incf num-deleted)
 	  (when verbose-p
-	    (message "deleting extent>%s<" 
+	    (message "deleting extent>%s<"
 		     (dp-pretty-format-extent ext "; " nil)))
 	  (delete-overlay olay))
 	(setq overlays (cdr overlays))))))
-      
 
-(defun dp-uncolorize-region (&optional beg end preserve-current-color-index-p 
+
+(defun dp-uncolorize-region (&optional beg end preserve-current-color-index-p
                              region-id)
-  "Remove all of my colors in the region. 
+  "Remove all of my colors in the region.
 The region is determined by `dp-region-or...'."
   (interactive)
   (dp-unextent-region (or region-id 'dp-colorized-region-p)
@@ -362,9 +362,9 @@ The region is determined by `dp-region-or...'."
                                  (not (eq current-prefix-arg '-))
                                  (or (< pnv 0)
                                      (listp current-prefix-arg))))
-         (regexp (read-from-minibuffer 
+         (regexp (read-from-minibuffer
                   "regexp: "
-                  nil nil nil 
+                  nil nil nil
                   dp-colorize-bracketing-regexps-history))
          (others (if prompt-for-others
                      (list
@@ -388,11 +388,11 @@ wrapping the match string in ^.* & .*$
 We also make this a global default so I can change it when the mood strikes.")
 
 (defun* dp-colorize-matching-lines (regexp &key
-                                    color 
+                                    color
                                     end-regexp
-                                    (shrink-wrap-p 
+                                    (shrink-wrap-p
                                      dp-colorize-lines-shrink-wrap-p-default)
-                                    roll-colors-p 
+                                    roll-colors-p
                                     non-matching-p
                                     quote-regexp-p
                                     (line-oriented-p t))
@@ -401,7 +401,7 @@ SHRINK-WRAP-P says to only colorize the exact match. Add ^.* && .*$ to get
 the entire line.
 END-REGEXP - If given, colorize all lines from REGEXP to END-REGEXP.
 See `dpcml-get-args' for details of the following:
-COLOR - the color to use. 
+COLOR - the color to use.
 ROLL-COLORS-P - make each match a different color.
 NON-MATCHING-P - ??? Doesn't seem to be used."
   ;; We use `read-from-minibuffer' so we can use our own history list.
@@ -416,7 +416,7 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
     (when quote-regexp-p
       (setq regexp (regexp-quote regexp)))
     (catch 'up
-      (while (setq match-region 
+      (while (setq match-region
                    (dp-match-contiguous-lines regexp shrink-wrap-p))
         (setq num-matches (1+ num-matches))
         (unless first-match
@@ -425,7 +425,7 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
               match-end (if (not end-regexp)
                             ;; Coloring newline has issues, so shrink
                             ;; wrapping may result in artifacts.
-                            (cdr match-region) 
+                            (cdr match-region)
                           (end-of-line)
                           (if (dp-re-search-forward end-regexp nil t)
                               (progn
@@ -434,7 +434,7 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
                                     (match-end 0)
                                   (line-end-position)))
                             (throw 'up nil))))
-        (dp-colorize-region color match-begin match-end (not roll-colors-p) 
+        (dp-colorize-region color match-begin match-end (not roll-colors-p)
                             nil 'dp-func 'dp-colorize-matching-lines
                             'dp-args (list regexp color end-regexp
                                            shrink-wrap-p roll-colors-p))
@@ -453,7 +453,7 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
           (error (format "no matching lines for re: %s" regexp)))
       (dp-push-go-back "dp-colorize-region" starting-point)
       (goto-char first-match)
-      (message "matched %s %s w/regexp: %s" 
+      (message "matched %s %s w/regexp: %s"
                (if end-regexp pair-matches num-matches)
                (if end-regexp "pairs" "lines")
                regexp)
@@ -463,10 +463,10 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
 (defun* dp-colorize-matching-line-sequence (regexps &rest pass-thru-args)
   (interactive)
   (loop for regexp in regexps
-    do (save-excursion 
+    do (save-excursion
          (apply 'dp-colorize-matching-lines regexp pass-thru-args))))
 
-(defun dp-colorize-matching-lines-from-isearch (&optional 
+(defun dp-colorize-matching-lines-from-isearch (&optional
                                                 colorize-each-match-p)
   "Use the last regexp from the last `isearch-\(for\|back\)ward\(-regexp\)?'."
   (interactive "P")
@@ -483,17 +483,17 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
 (defun dp-colorize-bracketing-regexps(color regexp1 regexp2 roll-colors-p)
   "Colorized region [REGEXP1, REGEXP2] with COLOR."
   (interactive (list (prefix-numeric-value current-prefix-arg)
-                     (read-from-minibuffer 
+                     (read-from-minibuffer
                       "beginning regexp: "
                       nil nil nil dp-colorize-bracketing-regexps-history)
-                     (read-from-minibuffer 
+                     (read-from-minibuffer
                       "ending regexp: "
                       nil nil nil dp-colorize-bracketing-regexps-history)
                      (y-or-n-p "roll-colors? ")))
-  (dp-colorize-matching-lines regexp1 
-                              :color color 
-                              :end-regexp regexp2 
-                              :shrink-wrap-p nil 
+  (dp-colorize-matching-lines regexp1
+                              :color color
+                              :end-regexp regexp2
+                              :shrink-wrap-p nil
                               :roll-colors-p roll-colors-p))
 (defalias 'dcbr 'dp-colorize-bracketing-regexps)
 
@@ -501,7 +501,7 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
   "Add ability to specify color. This would require us to use the secondary
   search key and the color number."
   (interactive)
-  (dp-goto-next-matching-extent 'dp-extent-search-key 
+  (dp-goto-next-matching-extent 'dp-extent-search-key
                                 '(unused . dp-colorized-region-p)))
 (defun dp-set-colorized-extent-priority (arg &optional pos extents)
   (interactive "Npriority: \nXpos: ")
@@ -515,9 +515,9 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
                                  (not (eq current-prefix-arg '-))
                                  (or (< pnv 0)
                                      (listp current-prefix-arg))))
-         (regexp (read-from-minibuffer 
+         (regexp (read-from-minibuffer
                   "regexp: "
-                  nil nil nil 
+                  nil nil nil
                   dp-colorize-bracketing-regexps-history))
          (others (if prompt-for-others
                      (list
@@ -541,11 +541,11 @@ wrapping the match string in ^.* & .*$
 We also make this a global default so I can change it when the mood strikes.")
 
 (defun* dp-colorize-matching-lines (regexp &key
-                                    color 
+                                    color
                                     end-regexp
-                                    (shrink-wrap-p 
+                                    (shrink-wrap-p
                                      dp-colorize-lines-shrink-wrap-p-default)
-                                    roll-colors-p 
+                                    roll-colors-p
                                     non-matching-p
                                     quote-regexp-p
                                     (line-oriented-p t))
@@ -554,7 +554,7 @@ SHRINK-WRAP-P says to only colorize the exact match. Add ^.* && .*$ to get
 the entire line.
 END-REGEXP - If given, colorize all lines from REGEXP to END-REGEXP.
 See `dpcml-get-args' for details of the following:
-COLOR - the color to use. 
+COLOR - the color to use.
 ROLL-COLORS-P - make each match a different color.
 NON-MATCHING-P - ??? Doesn't seem to be used."
   ;; We use `read-from-minibuffer' so we can use our own history list.
@@ -569,7 +569,7 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
     (when quote-regexp-p
       (setq regexp (regexp-quote regexp)))
     (catch 'up
-      (while (setq match-region 
+      (while (setq match-region
                    (dp-match-contiguous-lines regexp shrink-wrap-p))
         (setq num-matches (1+ num-matches))
         (unless first-match
@@ -578,7 +578,7 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
               match-end (if (not end-regexp)
                             ;; Coloring newline has issues, so shrink
                             ;; wrapping may result in artifacts.
-                            (cdr match-region) 
+                            (cdr match-region)
                           (end-of-line)
                           (if (dp-re-search-forward end-regexp nil t)
                               (progn
@@ -587,7 +587,7 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
                                     (match-end 0)
                                   (line-end-position)))
                             (throw 'up nil))))
-        (dp-colorize-region color match-begin match-end (not roll-colors-p) 
+        (dp-colorize-region color match-begin match-end (not roll-colors-p)
                             nil 'dp-func 'dp-colorize-matching-lines
                             'dp-args (list regexp color end-regexp
                                            shrink-wrap-p roll-colors-p))
@@ -606,7 +606,7 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
           (error (format "no matching lines for re: %s" regexp)))
       (dp-push-go-back "dp-colorize-region" starting-point)
       (goto-char first-match)
-      (message "matched %s %s w/regexp: %s" 
+      (message "matched %s %s w/regexp: %s"
                (if end-regexp pair-matches num-matches)
                (if end-regexp "pairs" "lines")
                regexp)
@@ -616,10 +616,10 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
 (defun* dp-colorize-matching-line-sequence (regexps &rest pass-thru-args)
   (interactive)
   (loop for regexp in regexps
-    do (save-excursion 
+    do (save-excursion
          (apply 'dp-colorize-matching-lines regexp pass-thru-args))))
 
-(defun dp-colorize-matching-lines-from-isearch (&optional 
+(defun dp-colorize-matching-lines-from-isearch (&optional
                                                 colorize-each-match-p)
   "Use the last regexp from the last `isearch-\(for\|back\)ward\(-regexp\)?'."
   (interactive "P")
@@ -636,17 +636,17 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
 (defun dp-colorize-bracketing-regexps(color regexp1 regexp2 roll-colors-p)
   "Colorized region [REGEXP1, REGEXP2] with COLOR."
   (interactive (list (prefix-numeric-value current-prefix-arg)
-                     (read-from-minibuffer 
+                     (read-from-minibuffer
                       "beginning regexp: "
                       nil nil nil dp-colorize-bracketing-regexps-history)
-                     (read-from-minibuffer 
+                     (read-from-minibuffer
                       "ending regexp: "
                       nil nil nil dp-colorize-bracketing-regexps-history)
                      (y-or-n-p "roll-colors? ")))
-  (dp-colorize-matching-lines regexp1 
-                              :color color 
-                              :end-regexp regexp2 
-                              :shrink-wrap-p nil 
+  (dp-colorize-matching-lines regexp1
+                              :color color
+                              :end-regexp regexp2
+                              :shrink-wrap-p nil
                               :roll-colors-p roll-colors-p))
 (defalias 'dcbr 'dp-colorize-bracketing-regexps)
 
@@ -654,7 +654,7 @@ NON-MATCHING-P - ??? Doesn't seem to be used."
   "Add ability to specify color. This would require us to use the secondary
   search key and the color number."
   (interactive)
-  (dp-goto-next-matching-extent 'dp-extent-search-key 
+  (dp-goto-next-matching-extent 'dp-extent-search-key
                                 '(unused . dp-colorized-region-p)))
 
 (defun dp-colorize-frame-bg (&optional color)

@@ -23,7 +23,7 @@
 ;; FSF Emacs puts font lock info into buffer local var `font-lock-defaults'
 ;; Which is then, somehow, put into the various buffer local font lock
 ;; variables.
-;; 
+;;
 (defun dp-set-font-lock-defaults (mode-symbol defaults)
   (set (make-local-variable 'font-lock-defaults) defaults))
 

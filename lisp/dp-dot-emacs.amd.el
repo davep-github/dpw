@@ -64,7 +64,7 @@
 (require 'align)
 (setcdr
   (assoc 'regexp
-         (assoc 
+         (assoc
           'c-variable-declaration
           align-rules-list))
   (concat "[*&0-9A-Za-z_]>?[&*]*\\(\\s-+[!]*\\)"
