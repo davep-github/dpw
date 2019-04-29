@@ -9,7 +9,7 @@
   (add-to-list
    'package-archives
    ; many packages won't show if using stable
-   ;;'("melpa" . "http://stable.melpa.org/packages/") 
+   ;;'("melpa" . "http://stable.melpa.org/packages/")
    '("melpa" . "http://melpa.org/packages/")
 t))
 

@@ -16,7 +16,7 @@ cc list."
   (interactive)
   (setq dp-mail-is-a-reply-p t)
   (call-interactively 'mew-summary-reply-with-citation))
-  
+
 (defun dp-mew-real-send-hook (&rest rest)
   (dmessage "rsh>%s<" rest)
   (setq dp-mail-is-a-reply-p nil))
@@ -35,14 +35,14 @@ cc list."
       (save-restriction
 	(widen)
 	(goto-char (point-min))
-	(let ((was-to 
+	(let ((was-to
 	       (dp-mail-get-@ddr (dp-mail-get-header-value "^[Tt][oO]:"))))
 	  (dmessage "was-to>%s<" was-to)
 	  was-to))))
 
 (defun dp-mew-rewrite-from-header (dont-force-reply)
   (interactive "P")
-  (let ((dp-mail-is-a-reply-p (or (not dont-force-reply) 
+  (let ((dp-mail-is-a-reply-p (or (not dont-force-reply)
 				  dp-mail-is-a-reply-p)))
     (dp-mail-rewrite-from-header (dp-mew-guess-From:-suffix))))
 
@@ -62,7 +62,7 @@ Remove any SpamAssassin added *****SPAM***** from headers."
 				     dp-mail-per-recipient-hook-alist)
     (dp-mail-nuke-SPAM-indicator)))
 
-(defvar dp-mail-extract-addr-regexp "<\\(.*\\)>" 
+(defvar dp-mail-extract-addr-regexp "<\\(.*\\)>"
   "Regexp to get basic reply-to addr out of a more elaborate email addr.")
 ;;
 
@@ -126,10 +126,10 @@ returned."
 	 (fun-list (cdr hook-rec)))
     (unless (listp fun-list)
       (setq fun-list (list fun-list)))
-    (dolist (el fun-list nil) 
+    (dolist (el fun-list nil)
 	(funcall el))))
 
-(defun dp-replace-mail-header (hdr-regexp hdr-name hdr-val 
+(defun dp-replace-mail-header (hdr-regexp hdr-name hdr-val
 					  &optional hdr-terminator)
   "Replace or add a mail header."
   (save-excursion
@@ -140,7 +140,7 @@ returned."
     (if (re-search-forward hdr-regexp dp-mail-header-end-marker t)
 	(replace-match (concat hdr-name ": " hdr-val))
       ;; since we couldn't find it, att it at the end of the headers.
-      (if (re-search-forward 
+      (if (re-search-forward
 	   (or hdr-terminator dp-mail-header-terminator)
 	       dp-mail-header-end-marker t)
 	  (progn
@@ -166,8 +166,8 @@ Subject: Re: *****SPAM***** blah blah blah"
   (save-excursion
     (dp-beginning-of-buffer)
     (let ((case-fold-search t))
-      (when (re-search-forward (concat 
-				"^sub\\S-*:.*\\(" 
+      (when (re-search-forward (concat
+				"^sub\\S-*:.*\\("
 				dp-mail-SPAM-indicator
 				"\\)")
 			       (dp-mail-header-end)
@@ -192,12 +192,12 @@ Subject: Re: *****SPAM***** blah blah blah"
     "?old-from?"))
 
 (defun dp-mail-generate-from (from-suffix)
-  "Create a From: value given FROM-SUFFIX.  
+  "Create a From: value given FROM-SUFFIX.
 If FROM-SUFFIX begins w/., the it is a suffix and is composited with
 `dp-mail-fullname' and `dp-mail-user'."
   (if (string= (substring from-suffix 0 1) ".")
-      (format "%s <%s%s@%s>" 
-	      dp-mail-fullname dp-mail-user 
+      (format "%s <%s%s@%s>"
+	      dp-mail-fullname dp-mail-user
 	      from-suffix dp-mail-domain)
     (format "<%s@%s>" from-suffix dp-mail-domain)))
 
@@ -209,9 +209,9 @@ If FROM-SUFFIX begins w/., the it is a suffix and is composited with
       (let ((was-to (dp-mail-get-who-message-was-to)))
 	(if (or (dp-mail-auto-accept-was-to-p was-to)
 		(and (not (dp-mail-auto-reject-was-to-p was-to))
-		     (y-or-n-p (format 
+		     (y-or-n-p (format
 				"Replace %s with %s? "
-				(dp-mail-old-from mail-default-reply-to) 
+				(dp-mail-old-from mail-default-reply-to)
 				was-to))))
 	    (dp-replace-from (replace-in-string mail-default-reply-to
 						dp-mail-extract-addr-regexp
@@ -219,8 +219,8 @@ If FROM-SUFFIX begins w/., the it is a suffix and is composited with
 						'literal)))))))
 
 (defun dp-mail-remove-sig (&optional keep-separator)
-  (delete-region (if keep-separator 
-		     dp-sig-start-marker 
+  (delete-region (if keep-separator
+		     dp-sig-start-marker
 		   dp-sig-orig-point-max)
 		 (dp-mail-end-of-body)))
 
@@ -240,7 +240,7 @@ If FROM-SUFFIX begins w/., the it is a suffix and is composited with
 For mew, this may be the beginning of attachements or the end of file."
   (save-excursion
     (goto-char (point-min))
-    (if (search-forward 
+    (if (search-forward
 	 dp-mew-attachments-header nil t)
 	(progn
 	  (beginning-of-line)
@@ -248,13 +248,13 @@ For mew, this may be the beginning of attachements or the end of file."
 	  (point))
       (point-max))))
 
-(defconst dp-mew-attachments-header 
+(defconst dp-mew-attachments-header
   "------------------------------ attachments ------------------------------")
 
 (defcustom dp-From:-suffix-alist
   nil
   "Alist of suffixes to add to the From: address based on other mail headers.
-Format is a list of these: 
+Format is a list of these:
    '(header-selection-regexp (header-value-regexp . suffix-string)"
   :group 'dp-vars
   :type mew-custom-type-of-guess-alist)
