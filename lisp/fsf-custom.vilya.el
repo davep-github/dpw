@@ -275,6 +275,7 @@
  '(diary ((t (:foreground "green" :weight bold :width normal))))
  '(diff-refine-added ((t (:inherit diff-refine-changed :background "#22aa22" :foreground "black"))))
  '(diff-refine-changed ((t (:background "#aaaa22" :foreground "black"))))
+ '(dp-highlight-point-other-window-before-face ((t (:background "medium turquoise" :foreground "black" :weight bold))))
  '(dp-trailing-whitespace-face ((t (:background "light coral" :foreground "black" :weight normal))))
  '(ediff-current-diff-A ((t (:background "darkslateblue"))))
  '(ediff-current-diff-B ((t (:background "darkslateblue"))))
