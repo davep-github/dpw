@@ -533,12 +533,25 @@ string containing their values."
 
 ;;;
 ;;; <: white space whitespace recognitions regexp :>
-
+;;;
+;;;  _   _   ____
+;;; | \ | | | __ )
+;;; |  \| | |  _ \
+;;; | |\  |_| |_) |
+;;; |_| \_(_)____(_)
+;;; Be careful when using strings that end with what looks like
+;;; trailing WS!
+;;; @todo XXX Try to make a smarter recognizer?  Check for being [in] a
+;;; string or a character? constant?
+;;;
 (defvar dp-ws " 	"
   "White space chars sans newline.")
 
 (defvar dp-ws+newline (format "%s
 " dp-ws)
+  "Whitespace chars including newline.")
+
+(defvar dp-ws+cr+newline (format "%s" dp-ws+newline)
   "Whitespace chars including newline.")
 
 (defvar dp-ws-regexp (format "[%s]" dp-ws)
@@ -559,6 +572,15 @@ string containing their values."
 (defvar dp-ws+newline-regexp+ (format "%s+" dp-ws+newline-regexp)
   "Whitespace chars including newline regexp, one or more.")
 
+(defvar dp-ws+cr+newline-regexp (format "[%s]" dp-ws+cr+newline)
+  "Whitespace chars including newline + CR regexp.")
+
+(defvar dp-ws+cr+newline-regexp* (format "%s*" dp-ws+cr+newline-regexp)
+  "Whitespace chars including newline + CR regexp, zero or more.")
+
+(defvar dp-ws+cr+newline-regexp+ (format "%s+" dp-ws+cr+newline-regexp)
+  "Whitespace chars including newline + CR regexp, one or more.")
+
 (defvar dp-ws-regexp-not (format "[^%s]" dp-ws)
   "Non whitespace chars regexp.")
 
@@ -578,6 +600,18 @@ string containing their values."
 
 (defvar dp-ws+newline-regexp*-not (format "[^%s]*"
                                           dp-ws+newline)
+  "Whitespace chars including newline regexp, 0 or more.")
+
+(defvar dp-ws+cr+newline-regexp-not (format "[^%s]"
+                                         dp-ws+cr+newline)
+  "White spacechars including newline regexp, one or more.")
+
+(defvar dp-ws+cr+newline-regexp+-not (format "[^%s]+"
+                                          dp-ws+cr+newline)
+  "Whitespace chars including newline regexp, one or more.")
+
+(defvar dp-ws+cr+newline-regexp*-not (format "[^%s]*"
+                                          dp-ws+cr+newline)
   "Whitespace chars including newline regexp, 0 or more.")
 
 (defvar dp-typical-hack-vars-block "###

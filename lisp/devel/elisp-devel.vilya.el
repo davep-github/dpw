@@ -1213,3 +1213,22 @@ Thursday March 28 2019
        '([1 transient-column (:description "Arguments") ((1 transient-switch (:key "-a" :description "Stage all modified and deleted files" :shortarg "-a" :argument "--all" :command transient:magit-commit:--all)) (1 transient-switch (:key "-e" :description "Allow empty commit" :argument "--allow-empty" :command transient:magit-commit:--allow-empty)) (1 transient-switch (:key "-v" :description "Show diff of changes to be committed" :shortarg "-v" :argument "--verbose" :command transient:magit-commit:--verbose)) (1 transient-switch (:key "-n" :description "Disable hooks" :shortarg "-n" :argument "--no-verify" :command transient:magit-commit:--no-verify)) (1 transient-switch (:key "-R" :description "Claim authorship and reset author date" :argument "--reset-author" :command transient:magit-commit:--reset-author)) (1 transient-suffix (:command magit:--author :description "Override the author")) (7 transient-option (:key "-D" :description "Override the author date" :argument "--date=" :command transient:magit-commit:--date= :reader transient-read-date)) (1 transient-switch (:key "-s" :description "Add Signed-off-by line" :shortarg "-s" :argument "--signoff" :command transient:magit-commit:--signoff)) (5 transient-suffix (:command magit:--gpg-sign)) (1 transient-suffix (:command magit-commit:--reuse-message)))] [1 transient-columns nil ([1 transient-column (:description "Create") ((1 transient-suffix (:key "c" :description "Commit" :command magit-commit-create)))] [1 transient-column (:description "Edit HEAD") ((1 transient-suffix (:key "e" :description "Extend" :command magit-commit-extend)) (1 transient-suffix (:key "w" :description "Reword" :command magit-commit-reword)) (1 transient-suffix (:key "a" :description "Amend" :command magit-commit-amend)) (6 transient-suffix (:key "n" :description "Reshelve" :command magit-commit-reshelve)))] [1 transient-column (:description "Edit") ((1 transient-suffix (:key "f" :description "Fixup" :command magit-commit-fixup)) (1 transient-suffix (:key "s" :description "Squash" :command magit-commit-squash)) (1 transient-suffix (:key "A" :description "Augment" :command magit-commit-augment)) (6 transient-suffix (:key "x" :description "Absorb changes" :command magit-commit-absorb)))] [1 transient-column (:description "") ((1 transient-suffix (:key "F" :description "Instant fixup" :command magit-commit-instant-fixup)) (1 transient-suffix (:key "S" :description "Instant squash" :command magit-commit-instant-squash)))])])))nil
 
 
+
+========================
+Monday April 29 2019
+--
+        (when (string-match
+	       (concat "^\\(" dp-ws+cr+newline-regexp+-not "\\)" s)
+          ;; Just set it, no sense in comparing to see if it changed.
+          (setq default-directory
+
+
+"^\\([^
+
+]+\\)"
+"^\\([^
+
+]+\\)"
+
+
+(concat "^\\(" dp-ws+cr+newline-regexp+-not "\\)" s)

@@ -174,9 +174,8 @@ prompt.  We don't want to stomp on them.")
     ;;(message "regexp>%s<" regexp)
     (when (string-match regexp str)
       (let ((s (match-string 1 str)))
-        (when (string-match "^\\([^
-
-]+\\)" s)
+        (when (string-match
+	       (concat "^\\(" dp-ws+cr+newline-regexp+-not "\\)") s)
           ;; Just set it, no sense in comparing to see if it changed.
           (setq default-directory
                 (expand-file-name
