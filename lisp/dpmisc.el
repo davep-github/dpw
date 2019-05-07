@@ -794,9 +794,20 @@ We don't use `add-to-list' because we only want to key on KEY."
   ;; Return current value.
   (symbol-value alist-var))
 
-(defun* dp-add-item-or-update-alist (alist-var item &rest args
-                                     &key &allow-other-keys)
+(defun* dp-add-to-or-update-alist (alist-var item &rest args
+					       &key &allow-other-keys)
+  "Simple front end to `dp-add-or-update-alist' taking a single item.
+The item is sent piecemeal to `dp-add-or-update-alist' using `car' and `cdr'."
   (apply 'dp-add-or-update-alist alist-var (car item) (cdr item) args))
+
+(defun* dp-add-or-update-alist-with-alist (alist-var from-alist &rest args
+						     &key &allow-other-keys)
+  "Add each item of FROM-ALIST to ALIST-VAR per `'dp-add-to-or-update-alist'."
+  (mapc (function
+	 (lambda (item)
+	   (apply 'dp-add-to-or-update-alist alist-var item args)))
+	from-alist)
+  (symbol-value alist-var))
 
 (defun dp-kb-binding-moved (arg new-keys)
   "Show a message telling to where the old binding has moved."

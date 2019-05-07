@@ -1185,7 +1185,7 @@ current file.  If WRITE-EM is non-nil, write the list to the topic-file."
 	       (let* ((key (car el))
 		      (topic (list key)))
 		 ;; this needs to compare only CARs < not true anymore.
-		 (dp-add-item-or-update-alist 'dpj-topic-list topic
+		 (dp-add-to-or-update-alist 'dpj-topic-list topic
 					      :update-p 'rem-add
 					      :keep-old-if-nil-p t)
 		 (if (string-match dpj-private-topic-re key)
@@ -1238,7 +1238,7 @@ non-nil otherwise get the current list topics."
   (interactive (dpj-get-topic-interactive))
   (let ((topic-l (list topic 'last-update: (dp-timestamp-string))))
     ;; topic list looks: '(("topic" "extra-info, like date") ("top2" "xxx"))
-    (dp-add-item-or-update-alist 'dpj-topic-list topic-l :update-p 'rem-add)))
+    (dp-add-to-or-update-alist 'dpj-topic-list topic-l :update-p 'rem-add)))
 ;;    (dp-add-to-alist-if-new-key 'dpj-topic-list topic-l)))
 
 (defun dpj-short-timestamp ()
