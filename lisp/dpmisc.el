@@ -4700,8 +4700,8 @@ If BOUND is non-nil, then don't let STACK get larger than BOUND."
     (symbol-value stack)))
 
 (defun dp-add-list-to-list (old-list-var list-of-new-elements)
-  "Add each element of NEW-LIST to OLD-LIST-NAME using `add-to-list'.
-On each each element of LIST-OF-NEW-ELEMENTS."
+  "Add each element of LIST-OF-NEW-ELEMENTS to OLD-LIST-VAR.
+Use `dp-add-to-list' on each each element of LIST-OF-NEW-ELEMENTS."
   (dolist (list-el (reverse list-of-new-elements))
     (dp-add-to-list old-list-var list-el))
   (symbol-value old-list-var))
