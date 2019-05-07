@@ -1232,3 +1232,74 @@ Monday April 29 2019
 
 
 (concat "^\\(" dp-ws+cr+newline-regexp+-not "\\)" s)
+
+
+========================
+Tuesday April 30 2019
+--
+
+(read-extended-command)
+(defun qqq (&optional expr)
+  (interactive "Xexpr: ")
+  (princf "expr>%s<" expr)
+  expr)
+
+(setq qqqv (qqq))
+expr>nil<
+nil
+
+
+(setq qqqv (qqq '(c . d)))
+expr>(c . d)<
+(c . d)
+
+qqqv
+(c . d)
+(car qqqv)
+c
+(cdr qqqv)
+d
+
+
+(eval (qqq '(a . b)))
+expr>(a . b)<
+
+
+expr>(a . b)<
+
+expr>(a . b)<
+
+expr>(a . b)<
+(a . b)
+
+expr>(a . b)<
+(a . b)
+
+expr>(a . b)<
+nil
+
+expr>(a . b)<
+nil
+
+
+
+
+(let ((a1 '((a . 1) (b . 2) (c . 4)))
+      (a2 '((aa . 11) (d . 4) (c . 3)))
+      z)
+  (princf "a1>%s<" a1)
+  (princf "a2>%s<" a2)
+  (setq z (dp-add-or-update-alist-with-alist 'a1 a2))
+  (princf "z>%s<" z)
+  (princf "a1>%s<" a1))
+a1>((a . 1) (b . 2) (c . 4))<
+a2>((aa . 11) (d . 4) (c . 3))<
+z>((d . 4) (aa . 11) (a . 1) (b . 2) (c . 3))<
+a1>((d . 4) (aa . 11) (a . 1) (b . 2) (c . 3))<
+nil
+
+
+
+
+
+
