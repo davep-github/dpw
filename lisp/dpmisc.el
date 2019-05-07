@@ -1408,12 +1408,15 @@ Inspired by `vi-find-matching-paren'."
        (t (if ding-p (ding)) nil)))
      (t (if ding-p (ding)) nil))))
 
-(defvar dp-matching-<-syntax-table nil
+(defun dp-make-matching-<-syntax-table ()
+  "Make this a function because functions are better!"
+  (let ((table (make-syntax-table)))
+    (modify-syntax-entry ?< "(>" table)
+    (modify-syntax-entry ?> ")<" table)
+    table))
+
+(defvar dp-matching-<-syntax-table (dp-make-matching-<-syntax-table))
   "Syntax table for matching < and > as parenthentical delimiters.")
-(let ((table (make-syntax-table)))
-  (modify-syntax-entry ?< "(>" table)
-  (modify-syntax-entry ?> ")<" table)
-  (setq dp-matching-<-syntax-table table))
 ;; it needs this to make it go.
 ;; if this isn't done, then the char-syntax with dp-matching-<-syntax-table
 ;; as syntax-table isn't correct.
