@@ -319,6 +319,7 @@ Ee|bashcomp|       /usr/share/bash-completion/
 E|wip|       ${davep}/work-is-play/
 Ee|wiph|wipinc|       ${davep}/work-is-play/include/
 E|usd|       /usr/share/doc/
+E|usp|       /usr/share/pub/
 Ee|wips|       ${davep}/work-is-play/src/
 Ee|wipsrc|       ${davep}/work-is-play/src/
 Ee|wipi|       ${davep}/work-is-play/
