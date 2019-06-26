@@ -91,5 +91,7 @@ Usage_error()
 ########################################################################
 
 : ${dev_pattern:=${1-/dev/sd}}
+: ${cmd:=mount}
+: ${sort_cmd:=cat}
 
-EExec mount | EExec egrep "${dev_pattern}"
+EExec "${cmd}" | EExec -y egrep "${dev_pattern}" | EExec -y ${sort_cmd}
