@@ -2346,7 +2346,7 @@ g()
         (dp-c-indent-command)
         limits))))
 
-(defvar dp-c-format-func-decl-align-p-default nil
+(dp-deflocal dp-c-format-func-decl-align-p-default nil
   "Should the args be lined up with `align'?")
 
 (defconst dp-c-format-func-decl-packed-p nil
