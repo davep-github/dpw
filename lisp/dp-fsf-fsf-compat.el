@@ -396,8 +396,12 @@ ARG is the argument to `add-global-abbrev' or `add-mode-abbrev'."
   (interactive "P")
   (let ((text (dp-with-all-output-to-string
 	       (if (dp-xemacs-p)
+		   ;; Emacs seems to DTRT now.
 		   (yank)
-		 (insert-for-yank (gui-get-primary-selection))))))
+		 ;; (insert-for-yank (gui-get-primary-selection))
+		 ;; Emacs seems to DTRT.
+		 (yank)
+		 ))))
     (when (and (string-match "" text)
 	       (or (ding) t)
 	       (or (not prompt-if-^Ms)
