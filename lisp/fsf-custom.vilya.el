@@ -291,7 +291,7 @@
  '(mingus-playing-face ((t (:background "dark blue" :foreground "spring green" :weight bold))))
  '(popup-isearch-match ((t (:inherit default :background "sky blue" :foreground "black"))))
  '(rectangle-preview ((t (:inherit region))))
- '(region ((t (:background "#2b284c" :foreground "coral" :weight bold))))
+ '(region ((t (:background "#eed4d3" :foreground "#170d0b" :weight bold))))
  '(scroll-bar ((t (:background "azure3" :foreground "light slate blue"))))
  '(trailing-whitespace ((t (:background "midnight blue" :strike-through nil :underline (:color "magenta" :style wave))))))
 
