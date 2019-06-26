@@ -1415,7 +1415,7 @@ Inspired by `vi-find-matching-paren'."
     (modify-syntax-entry ?> ")<" table)
     table))
 
-(defvar dp-matching-<-syntax-table (dp-make-matching-<-syntax-table))
+(defvar dp-matching-<-syntax-table (dp-make-matching-<-syntax-table)
   "Syntax table for matching < and > as parenthentical delimiters.")
 ;; it needs this to make it go.
 ;; if this isn't done, then the char-syntax with dp-matching-<-syntax-table
