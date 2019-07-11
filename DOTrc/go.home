@@ -347,9 +347,9 @@ Ee|workamdgpukernelgit|     ${workamdgpu}/kernel-git
 Ee|akgit|akrepository|akrepo| ${workamdgpukernelgit}
 Ee|amdlinux|worklinux|wlinux|alinux|  ${workamdgpukernelgit}/linux
 Ee|wak|wal|wl|al|           ${amdlinux}
-Ee|amdgpu|                  ${amdlinux}/${linuxtoamdgpu}
-Ee|waka|wala|wla|ala|       ${amdgpu}
-E|ras|w|                   ${amdgpu}
+Ee|amdgpux|                 ${amdlinux}/${linuxtoamdgpu}
+Ee|waka|wala|wla|ala|       ${amdgpux}
+E|ras|w|                   ${amdgpux}
 Ee|locbld|                  ${davep}/local/build/
 Ee|locbin|                  ${davep}/local/bin/
 Ee|sddpw|dpwsd|udpw|dpwu|       /mnt/ultra/repos/dpww.git/
