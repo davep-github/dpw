@@ -183,8 +183,6 @@
  '(ibuffer-use-other-window nil)
  '(icomplete-mode t)
  '(icomplete-separator ",")
- '(ido-mode nil nil (ido))
- '(ido-use-filename-at-point (quote guess))
  '(igrep-case-fold-search t)
  '(ipython-command "/usr/bin/ipython")
  '(isearch-allow-scroll t)
