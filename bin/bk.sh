@@ -476,12 +476,22 @@ build_kernel()
 
 }
 
-error_regexp="segfault|segmentation|internal|error: "
+# This was for finding problems from the Ryzen micro-op cache bug.
+# I've a good Ryzen and this returns too many false positives.
+#error_regexp= "segfault|segmentation|internal|error: "
+error_regexp="segfault: "
+if [ -n "${error_regexp}" ]
+then
+    error_grep_cmd="--error-grep ${error_regexp}"
+else
+    error_grep_cmd=
+fi
+#echo_id error_grep_cmd
 build_kernel 2>&1 | teeker -si 1 \
     --verbose-grep-summary \
-    --error-grep "${error_regexp}" \
+    ${error_grep_cmd} \
     -a \
-    $bk_log
+    ${bk_log}
 echo "BK done: $(date)"
 
 #/home/davep/bin.Linux.i686/lcursive
