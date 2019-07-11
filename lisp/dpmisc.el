@@ -7908,9 +7908,6 @@ This makes point very visible."
 (defvar dp-highlight-in-set-buffer nil
   "if non-nil, highlight the current line in the new buffer.")
 
-(defvar dp-highlight-in-other-window nil
-  "*When non-nil, highlight the current line in the new window.")
-
 (defvar dp-unhighlight-hook-one-shot-lambda nil
   "When new buffer highlighted line: ((extent...) . one-shot-hook)")
 

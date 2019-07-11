@@ -686,6 +686,7 @@ COLOR:
 					  &optional buffer
 					  &key begin end (widenp t)
 					  &allow-other-keys)
+  "Set the color of the background."
   (save-restriction
     (when widenp
       (widen))
@@ -693,7 +694,10 @@ COLOR:
       (dp-colorize-region color
 			  (or begin (point-min))
 			  (or end (point-max))
-			  nil t))))
+			  nil t
+			  ;; Priority needs to be this low so the region
+			  ;; background shows up.
+			  'priority 0))))
 
 (provide 'dp-colorization)
 (message "loading dp-colorization...done")
