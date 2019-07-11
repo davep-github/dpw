@@ -31,3 +31,18 @@
 
 [init]
 	templatedir = /home/dpanarit/.git_template
+
+[diff]
+	tool = meld
+
+[merge]
+	tool = meld
+	summary = true
+	conflictstyle = diff3
+[gui]
+	editor = ec
+	fontui = -family \"Ricty Diminished Discord\" -size 16 -weight normal -slant roman -underline 0 -overstrike 0
+	fontdiff = -family \"Ricty Diminished Discord\" -size 16 -weight normal -slant roman -underline 0 -overstrike 0
+	warndetachedcommit = true
+[magit]
+	extension = stgit
