@@ -100,7 +100,7 @@ alias ls1=lsl
 #set -x
 
 grep_opts=
-: ${dp_grep_options:="--with-filename --directories=skip"}
+: ${dp_grep_options:="--directories=skip"}
 
 if inside_emacs_p
 then
