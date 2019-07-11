@@ -115,7 +115,14 @@ then
     filter=dumbo
 fi
 
+# set, use it.
+# try $linuxdevroot
+# -- look for it
+
+echo_id KDIR
 M=${M-$PWD}
+[ -d "${KDIR-}" ] || KDIR=--
+
 if [ "${KDIR-}" = "--" ]
 then
     KDIR=$(lktop)
@@ -130,7 +137,8 @@ then
 fi 1>&2
 
 [ -d "${KDIR}" ] || {
-    echo "KDIR>${KDIR}< does not exist or isn't a dir."
+    echo "KDIR>${KDIR}< does not exist or isn't a dir.
+I could tell you which, but I won't."
     exit 1
 } 1>&2
 
