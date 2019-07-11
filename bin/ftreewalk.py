@@ -5,6 +5,8 @@ import os, sys, getopt, types, string, re
 import dp_io, dp_sequences
 dp_io.vprint_on()
 
+NEWER_THAN_FILE = None
+OLDER_THAN_FILE = None
 DEF_EXCLUDED_FILES_FILE_OBJ = sys.stdout
 
 FILE_TYPE_EXCL_CMD_SIZE = 2048
@@ -105,6 +107,16 @@ DEFAULT_FILE_TYPE_EXCLUSIONS = [
     ]
 
 FOLLOW_SYMLINKS = False
+
+##########################################
+def check_file_age_p(file):
+    """Is file newer than NEWER_THAN_FILE or older than OLDER_THAN_FILE?
+    Newer is checked before older."""
+    if (NEWER_THAN_FILE):
+        return file_newer_p(NEWER_THAN_FILE, file)
+    elif (OLDER_THAN_FILE):
+        return file_older_p(OLDER_THAN_FILE, file)
+    return True
 
 ##########################################
 def emit_excluded(fmt, *args, **kw_args):
