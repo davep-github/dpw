@@ -247,6 +247,7 @@ elinks
 links2
 ethtool
 pass
+stgit
 # <:new packages:>
 )
 
