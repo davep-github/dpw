@@ -151,7 +151,7 @@ Ee|dplocalsharecurrentemacs|dplce|emsrc26|emsrc|  ${dplocalshareemacs}-${emacscu
 Ee|dplocaldoculsd|dpldoc|           ${dpls}doc/
 Ee|dplocalexamples|dplex|dpleg|     ${dpls}examples/
 Ee|dplocallisp253|dpll253|          ${dpls}emacs/25.3/lisp
-Ee|dplocallisp|dpll|                ${dpls}emacs/26.1.91/lisp
+Ee|dplocallisp|dpll|                ${dpls}emacs/26.2.90/lisp
 Ee|tkinter|                         ${dpls}python/tkinter/
 Ee|noatun|                          ${dpls}apps/noatun/
 

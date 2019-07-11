@@ -218,6 +218,7 @@ e(
 AMD_XEM_GEOMETRY = '-geometry 81x63-0+0'
 AMD_BG_COLOR = 'rgb:0/33/60'
 AMD_FG_COLOR = 'white'
+GEOMETRY_1920x1200 = '-geometry 178x59+460+0'
 amd_family = e(
     kef='family',
     dat={
@@ -284,11 +285,10 @@ PRIMARY_BOX_BG_COLOR = 'rgb:24/00/68'
 e(
     kef='host',
     dat={
-        'host-pattern': '^yyz$',
+        'host-pattern': '^(yyz|xerxes|pablo)$',
         'family': 'amd_family',
         'comment': 'Main dev box. Ryzen 8-core.  Not for testing, in general, unless absolutely necessary.',
-        'xem_opts': ('-eval (dp-2-v-or-h-windows) '
-                     + '-geometry 180x66+460+0'),
+        'xem_opts': ('-eval (dp-2-v-or-h-windows) ' + GEOMETRY_1920x1200),
         # Not particularly attractive.
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         ###"""xem-xft-font""": '''"Inconsolata-12"''',
@@ -322,10 +322,10 @@ XERXES_BG_COLOR = 'rgb:00/31/23'
 e(
     kef='host',
     dat={
-        'host-pattern': '^xerxes$',
+        'host-pattern': '^XXXXXXXXX(xerxes|pablo)$',
         'family': 'amd_family',
         'comment': 'An? FX-8370 8-core machine.  Test box.',
-        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 180x74-0+0',
+        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + GEOMETRY_1920x1200,
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         'xterm_bg': XERXES_BG_COLOR,
         'xterm_fg': XERXES_FG_COLOR,
@@ -390,8 +390,7 @@ e(
         'family': 'amd_family',
         'comment': """A big ol' server box under my desk for NMI work.""",
         #'xem_opts': '-geometry 88x64-0+0',
-        'xem_opts': ('-eval (dp-2-v-or-h-windows) '
-                     + '-geometry 180x74-0+0'),
+        'xem_opts': ('-eval (dp-2-v-or-h-windows) ' + GEOMETRY_1920x1200),
         ###'main_macs_opts': '-eval (dp-start-editing-server)',
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         'xterm_bg': CZ_ALFA_BG_COLOR,

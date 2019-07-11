@@ -5516,11 +5516,12 @@ you've added enough info for set-auto-mode to figure it out.."
   "Doesn't work when \"-eval'd\" from the command line.
 Usta, but not anymore."
   (interactive)
-  ;; Messages must be different or the logger merges them so it seems
-  ;; that it only adds "done" so we never see the first message.
-  ;;;(message "+snuggling(x: %s, y: %s)..." x y)
-  (set-frame-position frame (setq x (or x -1)) (setq y (or y 0)))
-  (message "-snuggling(x: %s, y: %s)...done" x y)
+  (let (x y)
+    ;; Messages must be different or the logger merges them so it seems
+    ;; that it only adds "done" so we never see the first message.
+;;;(message "+snuggling(x: %s, y: %s)..." x y)
+    (set-frame-position frame (setq x (or x -1)) (setq y (or y 0)))
+    (message "-snuggling(x: %s, y: %s)...done" x y))
   )
 
 (defun dp-laptop-rc ()
@@ -9808,7 +9809,7 @@ If wide enough: | | |, otherwise: |-|"
     (split-window-horizontally)))
 (dp-defaliases '2w 'dp-2-vertical-windows 'dp-2-v-or-h-windows)
 
-(defun dp-2-v-or-h-windows-keep-geometry ()
+(defun dp-2-v-or-h-windows-save-geometry ()
   (setq dp-sfw-width (frame-width))
   (setq dp-sfh-height(frame-height)))
 

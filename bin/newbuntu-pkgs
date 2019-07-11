@@ -246,6 +246,7 @@ lynx
 elinks
 links2
 ethtool
+pass
 # <:new packages:>
 )
 

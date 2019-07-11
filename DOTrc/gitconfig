@@ -29,3 +29,5 @@
         aliasesFile = ~/.sendmail.aliases
         aliasFileType = sendmail
 
+[init]
+	templatedir = /home/dpanarit/.git_template

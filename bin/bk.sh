@@ -16,6 +16,10 @@ MOTDer="figlet"
 cleanup_sep='!!!! Do not Forget New Kernel Cleanup (try: new-kernel-fini) !!!!'
 timestamp="$(dp-std-timestamp).$$"
 : ${log_dir:="$PWD/,bk.log,"}
+: ${proscribed_branches_default:=master}
+: ${proscribed_branches_extra:=}
+: ${proscribed_branches:=${proscribed_branches_default} ${proscribed_branches_extra}}
+
 mkdir -p "${log_dir}" || exit 1
 
 #
@@ -291,6 +295,16 @@ git log:'
         echo '#############################################################################
 git branch:'
         git branch
+	current_branch=$(git-raw-branch-names)
+	for b in ${proscribed_branches}
+	do
+	    if [ "$b" = "${current_branch}" ]
+	    then
+		echo 1>&2 "Error, refusing to build proscribed branch ${current_branch}. 
+  Proscribed branches: ${proscribed_branches}"
+		exit 1
+	    fi
+	done
         echo '#############################################################################
 this file:'
         echo $bk_log

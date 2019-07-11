@@ -59,6 +59,8 @@ safe_ln()
                 echo "${dest} exists and is not a symlink.  "
                 return 1
             }
+            # See if link val is what we want to do anyway and
+            # skip silently?  Or print info (vs warning).
             echo "${dest} exists and is a symlink."
             if [ "${existing_link_action}" = "replace" ]
             then
@@ -220,6 +222,19 @@ echo 'Other new Linux installation actions:
    Method mapping from C-<space> to something else because that collides with
    XEmacs C-SPC (dp-expand-abbrev).
 7) Any location dependent stuff? E.g. ~/bin.<place-of-work>
+8) fstab
+
+For driver/kernel dev:
+0) Text mode boot. We want to see the boot process.
+0.1) in /etc/defaults/grub
+#dp: GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+GRUB_CMDLINE_LINUX_DEFAULT="text"
+0.2) Prevent driver from auto loading.
+#dp: GRUB_CMDLINE_LINUX=""
+GRUB_CMDLINE_LINUX="persistent modprobe.blacklist=amdgpu drm.debug=0x00"
+1) Text mode console, no GUI:
+     run ~/bin/text-mode-boot
 '
 
 echo "TODO! Try to link ~/.rc/xxx.<host> and then ~/.rc/xxx into ~"
+
