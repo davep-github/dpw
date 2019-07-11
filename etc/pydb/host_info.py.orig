@@ -89,7 +89,7 @@ default = dppydb.Entry({
     #'xem_font': '''-*-Lucida Console-medium-r-*-*-*-100-*-*-*-*-*-*''',
     #'xem_font': '''-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*''',
     #'xem_font': '''Font -*-Proggycleansz-medium-r-*-*-*-100-*-*-*-*-*-*''',
-    'xem_font': '''-*-fixed-medium-r-*-*-*-140-*-*-*-*-iso8859-*''',
+    ###'xem_font': '''-*-fixed-medium-r-*-*-*-140-*-*-*-*-iso8859-*''',
 
     # this looks better on XFree86 under cygwin.
     'lem_font': '''-*-Fixed-medium-r-*-*-*-120-*-*-*-*-iso8859-*''',
@@ -218,6 +218,7 @@ e(
 AMD_XEM_GEOMETRY = '-geometry 81x63-0+0'
 AMD_BG_COLOR = 'rgb:0/33/60'
 AMD_FG_COLOR = 'white'
+GEOMETRY_1920x1200 = '-geometry 178x59+460+0'
 amd_family = e(
     kef='family',
     dat={
@@ -228,7 +229,7 @@ amd_family = e(
         'DTE': 'kde',
         'main_macs_opts': '-eval (dp-main-rc+2w)',
         'xem_opts': '-eval (dp-2-v-or-h-windows) ' + AMD_XEM_GEOMETRY,
-        "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
+        ###"xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
         "xem_font": "",
         'lem_opts': '-eval (dp-laptop-rc) -geometry 80x72-1+0',
         'work-zone': 'amd',
@@ -284,11 +285,15 @@ PRIMARY_BOX_BG_COLOR = 'rgb:24/00/68'
 e(
     kef='host',
     dat={
-        'host-pattern': '^yyz$',
+        'host-pattern': '^(yyz|xerxes|pablo)$',
         'family': 'amd_family',
         'comment': 'Main dev box. Ryzen 8-core.  Not for testing, in general, unless absolutely necessary.',
+<<<<<<< Updated upstream
         'xem_opts': ('-eval (dp-2-v-or-h-windows) '
-                     + '-geometry 180x67+460+0'),
+                     + '-geometry 180x66+460+0'),
+=======
+        'xem_opts': ('-eval (dp-2-v-or-h-windows) ' + GEOMETRY_1920x1200),
+>>>>>>> Stashed changes
         # Not particularly attractive.
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         ###"""xem-xft-font""": '''"Inconsolata-12"''',
@@ -316,19 +321,16 @@ XERXES_FG_COLOR = 'white'
 #XERXES_BG_COLOR = 'rgb:51/00/10'
 #XERXES_BG_COLOR = 'rgb:46/00/0A'
 #XERXES_BG_COLOR = 'rgb:2E/00/07'
-<<<<<<< HEAD
+#XERXES_BG_COLOR = 'rgb:01/1a/13'
 XERXES_BG_COLOR = 'rgb:00/31/23'
-=======
-XERXES_BG_COLOR = 'rgb:01/1a/13'
->>>>>>> 1462c9eb... New bg color for xerxes.  It looks faaabuulous!
 # #044633
 e(
     kef='host',
     dat={
-        'host-pattern': '^xerxes$',
+        'host-pattern': '^XXXXXXXXX(xerxes|pablo)$',
         'family': 'amd_family',
         'comment': 'An? FX-8370 8-core machine.  Test box.',
-        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + '-geometry 180x74-0+0',
+        'xem_opts': '-eval (dp-2-v-or-h-windows) ' + GEOMETRY_1920x1200,
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         'xterm_bg': XERXES_BG_COLOR,
         'xterm_fg': XERXES_FG_COLOR,
@@ -393,8 +395,7 @@ e(
         'family': 'amd_family',
         'comment': """A big ol' server box under my desk for NMI work.""",
         #'xem_opts': '-geometry 88x64-0+0',
-        'xem_opts': ('-eval (dp-2-v-or-h-windows) '
-                     + '-geometry 180x74-0+0'),
+        'xem_opts': ('-eval (dp-2-v-or-h-windows) ' + GEOMETRY_1920x1200),
         ###'main_macs_opts': '-eval (dp-start-editing-server)',
         'main_macs_opts': '-eval (dp-main-rc+2w+server)',
         'xterm_bg': CZ_ALFA_BG_COLOR,
@@ -474,11 +475,11 @@ e(
         #'xem_font': '-*-bitstream vera sans mono-*-r-*-*-*-120-*-*-*-*-*-*',
         #'xem_font': '-b&h-lucidatypewriter-medium-*-*-*-*-100-*-*-*-*-*-*',
         # Vera got very high marks in a legibility survey.
-        "xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
+        ###"xem_font": "-*-Bitstream Vera Sans Mono-medium-r-*-*-*-100-*-*-*-*-*-*",
         # I am playing with --with-xft. Font selection is "better" and really sucks.
         # Font menu is fucked, but this works:
         # (set-default-font "Inconsolata-12")
-        """xem-xft-font""": '''"RictyDiminishedDiscord-13"''',
+        ####"""xem-xft-font""": '''"RictyDiminishedDiscord-13"''',
 
         # NB! using the version number can cause extreme weirdness with fonts!
         'tunnel-ip': '16.11.64.97',
