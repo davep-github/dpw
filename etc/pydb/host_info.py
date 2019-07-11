@@ -285,7 +285,7 @@ PRIMARY_BOX_BG_COLOR = 'rgb:24/00/68'
 e(
     kef='host',
     dat={
-        'host-pattern': '^(yyz|xerxes|pablo)$',
+        'host-pattern': '^(yyz)$',
         'family': 'amd_family',
         'comment': 'Main dev box. Ryzen 8-core.  Not for testing, in general, unless absolutely necessary.',
         'xem_opts': ('-eval (dp-2-v-or-h-windows) ' + GEOMETRY_1920x1200),
@@ -322,7 +322,7 @@ XERXES_BG_COLOR = 'rgb:00/31/23'
 e(
     kef='host',
     dat={
-        'host-pattern': '^XXXXXXXXX(xerxes|pablo)$',
+        'host-pattern': '^(xerxes|pablo)$',
         'family': 'amd_family',
         'comment': 'An? FX-8370 8-core machine.  Test box.',
         'xem_opts': '-eval (dp-2-v-or-h-windows) ' + GEOMETRY_1920x1200,
