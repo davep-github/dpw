@@ -161,6 +161,11 @@ dp_ssh_run_agent_p()
     false
 }
 
+dp_gpg_run_agent_p()
+{
+    true
+}
+
 # ubuntu now runs gpg-agent in a user-mode systemd (damn its eyes) and puts
 # the socket in /run/user/<uid>/gnupg/S.gpg-agent.ssh This has lots of
 # problems, as documented on the web, so I may use one of the procedures to
@@ -835,12 +840,9 @@ source_bash_completion_code()
     then
 	source $HOME/.rc/dp-ssh-agent
 	dp_ssh_start_agent
-    elif dp_gpg_use_home_socket_p
+    elif dp_gpg_run_agent_p
     then
-	# The following may work in all cases:
-	# gpgconf --list-dirs agent-ssh-socket
-	export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
-	#echo "SSH_AUTH_SOCK>${SSH_AUTH_SOCK}<"
+	export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
     fi
 
     ## Run completion explicitly if we're in the odd situation described above
