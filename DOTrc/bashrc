@@ -170,6 +170,7 @@ dp_gpg_run_agent_p()
 # the socket in /run/user/<uid>/gnupg/S.gpg-agent.ssh This has lots of
 # problems, as documented on the web, so I may use one of the procedures to
 # fuck systemd and go back to the past, Luddite that I am.
+# Maybe it's fixed?  [ as of: 2019-07-19T15:07:58 ]
 dp_gpg_use_home_socket_p()
 {
     false
