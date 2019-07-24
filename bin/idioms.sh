@@ -11,6 +11,13 @@ source script-x
 #############################################################################
 # Load as library or run as a script.
 # Analogous to Python's __main__ check.
+# running_as_script(dp) runs:
+# name_is___main__ ()
+# {
+#     [ -z "${DP_IMPORTING_P-}" ]
+# }
+# Where $DP_IMPORTING_P is normally "" or null and must be set to force the
+# script to act as a library.
 
 if running_as_script
 then
