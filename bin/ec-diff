@@ -54,7 +54,7 @@ BASE="${3-}"
 
 if [ "${eval_this}" = "merge3" ]
 then
-    (($# != 4)) && {
+    (($# != 3)) && {
             echo "Three file names are needed: BASE LOCAL REMOTE"
             echo "@>$@<"
             echo_id BASE
