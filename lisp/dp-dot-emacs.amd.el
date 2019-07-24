@@ -13,7 +13,8 @@
    ((string-match "^atl" (dp-short-hostname))
     (setq dp-current-c-style ptb-c-style
           dp-current-c-style-name "ptb-c-style"))
-   ((string-match "brahma/ec/linux/" buffer-file-truename)
+   ((and buffer-file-truename
+	 (string-match "brahma/ec/linux/" buffer-file-truename))
     (setq dp-current-c-style dp-kernel-c-style
           dp-current-c-style-name "dp-kernel-c-style"))
    (t (setq dp-current-c-style dp-default-c-style
