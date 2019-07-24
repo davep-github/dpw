@@ -131,7 +131,7 @@ dp_ssh_start_agent0()
             echo "$(date): Error sourcing ${DP_SSH_AGENT_RC}: $?"
             return 3
         }
-        
+
         echo "$(date): See if the agent be still alive."
         if prog-with-pid ssh-agent "${SSH_AGENT_PID}"
         then
@@ -181,7 +181,7 @@ dp_ssh_start_agent()
         set -x
     }
     #export XXX_ARG_VAL=dp_SSH_start_agent0_${SECONDS}
-    
+
     while :
     do
       dp_ssh_start_agent0 "$@" >| "${DP_SSH_AGENT_RC_LOG}" 2>&1
