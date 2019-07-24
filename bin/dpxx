@@ -42,18 +42,18 @@ set +u
     case $vval in
 	"")
 	    case $db_val in
-		"-") vval=$default;; 
+		"-") vval=$default;;
 		*) vval=$db_val;;
 	    esac
 	    ;;
 	*)
 	    ;;
     esac
-	
+
     echo $vval
 set -u
 }
-		
+
 #
 # Shorter params are easier for klutzy typists.
 #
@@ -62,7 +62,7 @@ all_options="st:f:g:n:F:B:h:Nx:w:o:LV"
 # New style getopt... fixes ugly quoting problems.
 q=$(getopt -o "$all_options" -- "$@")
 [ $? != 0 ] && Usage
-eval set -- "$q" 
+eval set -- "$q"
 unset q
 
 for i in "$@"
@@ -109,7 +109,7 @@ fg=$(set_var fg ${2-} white)
 # the term runs locally, so get bin for local host
 # other xterm parameters are based on the local host.
 # The font could be considered a remote property for another
-# differentiation, but the syntax is related to the local 
+# differentiation, but the syntax is related to the local
 # term program
 #
 opts=$($HOST_INFO xterm_bin xterm_opts xterm_geometry xterm_font)
@@ -128,7 +128,7 @@ else
     exe=""
 fi
 
-if [ "$name" = "" ] 
+if [ "$name" = "" ]
 then
     if [ "$exe" != "" ]
     then
@@ -151,8 +151,8 @@ then
     font="-fn $font"
 fi
 
-if [ -n "$exe" ] 
-then 
+if [ -n "$exe" ]
+then
     exe="-e $exe"
     options=$(echo "$options" | sed s/-ls//g)
 fi
@@ -163,7 +163,7 @@ then
     then
 	name="-T $name"
     else
-	name="-name $name -T $name"    
+	name="-name $name -T $name"
     fi
 fi
 # Konsole has problems with a name being set and using the xterm sequences
