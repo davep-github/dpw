@@ -7684,22 +7684,22 @@ command."
   (split-string (shell-command-to-string command) (or split-chars "[\n]")))
 
 (defun dp-shell-command-in-minibuffer (command)
-  "Interactive version of `shell-command-to-string' Output goes to minibuffer.
+  "Interactive `shell-command-to-string'.  Output goes to minibuffer.
 ALL trailing white space is nuked.
 Really only useful for commands with 0 or 1 line of output.
 Motivation was the ability to run commands like this \"mpc play\"."
   (interactive (list (read-from-minibuffer "shell cmd> "
-                                       (if (nCu-p)
-                                           ""
-                                         "mpc "))))
+					   (if (nCu-p)
+					       ""
+					     "mpc "))))
   (let ((white-space-stripper (concat "\\(^.*\\)\\("
-                        dp-ws+newline-regexp+
-                        "$\\)"))
+				      dp-ws+newline-regexp+
+				      "$\\)"))
         (shell-output-string (shell-command-to-string command)))
-  (string-match white-space-stripper shell-output-string)
-  ;; Avoid anything in the output which may confuse message's formatting.
-  ;; eg this string: "%s"
-  (message "%s" (match-string 1 shell-output-string))))
+    (string-match white-space-stripper shell-output-string)
+    ;; Avoid anything in the output which may confuse message's formatting.
+    ;; eg this string: "%s"
+    (message "%s" (match-string 1 shell-output-string))))
 
 (defvar dp-ffap-ask-to-goto-line nil
   "What more can I say than the variable name?")
