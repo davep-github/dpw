@@ -5362,8 +5362,8 @@ Calling with C-0 as prefix arg yields original ARG-as-nil behavior."
   (interactive "*P")
   (when (and (not (Cu--p))
              (> 0 (prefix-numeric-value arg)))
-     (previous-line (abs (prefix-numeric-value arg)))
-     (setq arg nil))
+    (previous-line (abs (prefix-numeric-value arg)))
+    (setq arg nil))
   (cond
    ((and (not arg)
          interprogram-paste-function)
@@ -5373,8 +5373,8 @@ Calling with C-0 as prefix arg yields original ARG-as-nil behavior."
     (dp-insert-isearch-string))
    ;; Result is same as default ARG-as-nil behavior.
    ((Cu0p)
-   (setq current-prefix-arg nil)
-   (call-interactively 'yank))
+    (setq current-prefix-arg nil)
+    (call-interactively 'yank))
    ;; original behavior when arg is an integer >0
    (t (call-interactively 'yank)))
   (when (and (not dp-yank-indent-override-p)
