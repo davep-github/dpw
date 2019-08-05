@@ -908,12 +908,14 @@ tab setting, font or phase of the moon."
   (abbrev-mode 0)		     ; We use mah MFing abbrevs, MFer.
   (c-toggle-auto-state 1)	     ;set c-auto-newline
   (dp-turn-off-auto-fill)
-  (setq show-trailing-whitespace t)
-  (setq dp-cleanup-whitespace-p dp-default-c-like-mode-cleanup-whitespace-p)
   (setq indent-tabs-mode dp-c-like-mode-default-indent-tabs-mode-p
         c-tab-always-indent (not dp-use-stupid-kernel-struct-indentation-p)
         c-recognize-knr-p nil
-        dp-insert-tempo-comment-func 'dp-c-insert-tempo-comment)
+        dp-insert-tempo-comment-func 'dp-c-insert-tempo-comment
+	dp-indent-yanked-pred t
+	show-trailing-whitespace t
+	dp-cleanup-whitespace-p dp-default-c-like-mode-cleanup-whitespace-p
+	)
 
   (dp-update-alist 'c-hanging-braces-alist dp-hanging-brace-alist)
   ;; @todo -- see if I can do this programmatically.
