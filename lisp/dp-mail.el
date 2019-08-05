@@ -234,7 +234,6 @@ search to the end of the email."
   dp-mail-header-end-marker)
 
 (defun* dp-mail-in-headers-p (&optional (pos (point)) &rest args)
-
   (dp-with-saved-point nil
     (goto-char pos)
     (dp-apply-if 'dp-mail-spec-in-headers-p args
