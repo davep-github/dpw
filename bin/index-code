@@ -100,7 +100,7 @@ Usage()
    {
        echo "${prog}: usage: [-$all_options]"
    } 1>&2
-   
+
    exit 1
 }
 
@@ -148,14 +148,13 @@ on_off()
     local v
     eval v="\$$var"
     echo -en "${msg}:\t"
-    if [ -n "${v-}" ] 
+    if [ -n "${v-}" ]
     then
         echo " ON"
     else
         echo " off"
     fi
 }
-
 
 dump_indexing_methods()
 {
