@@ -149,11 +149,11 @@ Make it buffer local since there can be >1 minibuffers.")
     (define-key map [(control ?p)] 'previous-complete-history-element)
     (define-key map [(meta ?p)] 'dp-parenthesize-region)
     (define-key map [(control ?n)] 'next-complete-history-element)
-;;; fsf no like v
+;;; fsf no like these bindings vvv
     ;; (define-key map [(control ?m)] 'dp-minibuffer-grab-region)  ; <mini>buffer
     ;; (define-key map [(meta ?g)] 'dp-minibuffer-grab-region) ; grab
     ;; (define-key map [(meta ?s)] 'dp-minibuffer-grab-region) ; snag
-;;; fsf no like ^
+;;; fsf no like these bindings ^^^
     (define-key map [(meta ?')] 'dp-copy-char-to-minibuf)  ; quote
     ;;; FSF change
     (if (dp-xemacs-p)
