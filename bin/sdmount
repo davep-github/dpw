@@ -90,8 +90,15 @@ Usage_error()
 # template end.
 ########################################################################
 
-: ${dev_pattern:=${1-/dev/sd}}
 : ${cmd:=mount}
-: ${sort_cmd:=cat}
+: ${sort_cmd:=sort}
+
+if (($# > 0)) && [ "$1" = -c ]
+then
+    sort_cmd=cat
+    shift
+fi
+
+: ${dev_pattern:=${1-/dev/sd}}
 
 EExec "${cmd}" | EExec -y egrep "${dev_pattern}" | EExec -y ${sort_cmd}
