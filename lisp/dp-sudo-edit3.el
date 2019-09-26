@@ -275,7 +275,7 @@ current."
 ;;(defalias 'dse 'dp-sudo-edit)
 
 ;;;###autoload
-(defun dp-sudo-edit-this-file ()
+(defun dp-sudo-edit-this-file-OLDE ()
   "Edit the current buffer w/sudo edit."
   (interactive)
   (let ((point (point)))
