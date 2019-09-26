@@ -1081,7 +1081,7 @@ first and last non-white space on the line."
   (unless (dp-mark-active-p)
     (dp-set-zmacs-region-stays t)
     (dp-mark-line text-only-p no-newline-p)
-    ;; t means that we marked the line.
+    ;; t means that we marked the [entire] line.
     t))
 
 ;; (defun* dp-rest-or-all-of-line (&optional (text-only-p t) (no-newline-p t)
