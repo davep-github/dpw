@@ -11,6 +11,11 @@
       (expand-file-name "custom.el"
 			(expand-file-name ".xemacs" "~")))
 
+(custom-set-variables
+ '(tramp-default-method "ssh")
+ '(tramp-default-user "SET ME: tramp-default-user")
+ '(tramp-default-host "SET ME: tramp-default-host"))
+
 (load-file user-init-file)
 (load-file custom-file)
 

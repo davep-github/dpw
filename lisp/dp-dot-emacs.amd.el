@@ -183,6 +183,11 @@
    "/tmp-for-edc-code/"
    ))
 
+(custom-set-variables
+ '(tramp-default-method "ssh")
+ '(tramp-default-user "dpanarit")
+ '(tramp-default-host "pablo"))
+
 ;; (setq dp-<type>*-regexp-list
 ;;       (dp-add-to-list
 ;;        'dp-<type>*-regexp-list
