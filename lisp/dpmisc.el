@@ -1063,7 +1063,6 @@ FUNC must take two args, beginning and end buffer positions."
 (defun dp-delete-entire-line (count &optional text-only-p no-newline-p)
   "Delete the entire line, ala A-D in Slick."
   (interactive "*p")
-
   (let ((no-newline-p (or no-newline-p
 			  ;; If we're in the minibuffer, we don't want to
 			  ;; muck with the newline, since there isn't one.
@@ -5347,8 +5346,17 @@ a line number.  Prefix w/+ or - to do a relative line jump."
 ;   "dp-push-go-back advised `dp-goto-line'."
 ;   (dp-push-go-back "advised dp-goto-line"))
 
-(defvar dp-yank-indent-override-p nil
+(dp-deflocal dp-global-yank-indent-override-p nil
   "Force inserts (yanks) to never do indentation after insertion.")
+
+(dp-deflocal dp-indent-yanked-pred nil
+  "Var or callable predicate to determine if we want to indent what we pasted.")
+
+(defun dp-indent-yanked-p (indent-p)
+  "Indent what we just pasted if we want to."
+  (or indent-p
+      (and (not dp-global-yank-indent-override-p)
+	   (dp-callable-pred dp-indent-yanked-pred))))
 
 (defun dp-yank (&optional arg)
   "Hack workaround for bug that cause yanks to be inserted into the kill ring.
@@ -5377,8 +5385,7 @@ Calling with C-0 as prefix arg yields original ARG-as-nil behavior."
     (call-interactively 'yank))
    ;; original behavior when arg is an integer >0
    (t (call-interactively 'yank)))
-  (when (and (not dp-yank-indent-override-p)
-             (dp-in-c))
+  (when (dp-indent-yanked-p)
     (let* ((b-e (dp-region-boundaries-ordered (point) (mark t)))
            (b (car b-e))
            (e (cdr b-e)))
@@ -11820,7 +11827,6 @@ Inserts `dp-python-new-file-template-file' by default."
   (with-current-buffer (if buffer
                            (get-buffer buffer)
                          (current-buffer))
-
     (setq default (dp-apply-if
                       default default-args
                     default))
