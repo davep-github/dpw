@@ -95,10 +95,10 @@ The stolen one above is slow when using completion."
   ;; wierd problems, but I'll try again.
   (find-file file-name)
   ;; this op is fast since we know the name and we're local.
-  (dset)
+  (dp-sudo-edit-this-file)
   )
 
-(defun dset ()
+(defun dp-sudo-edit-this-file ()
   "`dse this' sudo edit the file in the current buffer."
   (interactive)
   (when (dp-remote-file-p)
@@ -107,6 +107,9 @@ The stolen one above is slow when using completion."
   (unless (string-match "<dse>\\(<[0-9]+>\\)?$" (buffer-name))
     (rename-buffer (concat (buffer-name) "<dse>"))
     (rename-uniquely)))
+
+;;; XXX --> fix require order... (dp-defaliases 'dset 'dp-sudo-edit-this-file)
+(defalias 'dset 'dp-sudo-edit-this-file)
 
 (defun dsed (&optional sudead-buf)
   "Stop sudo editing this buffer."
