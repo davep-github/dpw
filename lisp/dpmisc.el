@@ -462,8 +462,6 @@ string containing their values."
   (interactive)
   (car rest))
 
-(defun dp-nop (&rest r))
-
 ;; Fails with simple M-x invocation.
 (defun dp-interactive-required-arg (arg)
   (interactive "p")
@@ -507,10 +505,11 @@ string containing their values."
 (defun dp-interactive-info--p-arg (&optional arg)
   "Show what interactive returns."
   (interactive "p")
-  (message "\"p\">%s<, \"P\" (aka current-prefix-arg)>%s<, prefix-numeric-value: %d"
-           arg
-	   current-prefix-arg
-	   (prefix-numeric-value current-prefix-arg)))
+  (message
+   "\"p\">%s<, \"P\" (aka current-prefix-arg)>%s<, prefix-numeric-value: %d"
+   arg
+   current-prefix-arg
+   (prefix-numeric-value current-prefix-arg)))
 (defalias 'itest 'dp-interactive-info--p-arg)
 
 (defun dp-interactive-info-no-arg (&optional arg)
@@ -520,16 +519,19 @@ string containing their values."
            arg current-prefix-arg))
 (defalias 'nil-itest 'dp-interactive-info-no-arg)
 
+(defun dp-nop (&rest r))
+
 (defun dp-nop-nil (&rest rest)
   (interactive)
   "Return nil.  Ignore REST. This is essentially a NOP."
   nil)
-(defalias 'dp-nilop 'dp-nop-nil)
+(dp-defaliases 'dp-inilop 'dp-nilop 'dp-nop-nil)
 
 (defun dp-nop-t (&rest rest)
   (interactive)
   "Return t.  Ignore REST. This is essentially a NOP."
   t)
+(dp-defaliases 'dp-it-nop 'dp-itnop 'dp-nop-t)
 
 ;;;
 ;;; <: white space whitespace recognitions regexp :>
@@ -1737,7 +1739,8 @@ pass args to it because we use the prefix arg."
 ARG == nil ==> one char,
 ARG == '(4) == C-u ==> word, (C-1 is easy now that >0 --> n words)
 ARG == '(16) == C-uC-u ==> rest of line up to but not including the newline.
-ARG is `charp': copy up to but NOT including char ARG,
+ARG is `charp': (see following dp-dupe... functions) copy up to but NOT 
+                including char ARG.
 ARG is positive: number of words to copy (words turn out to be more common).
 ARG is negative: number of chars to copy.
 ARG is 0: copy up to next space(included) or eol(excluded).
@@ -1807,9 +1810,14 @@ executing the cond again and again and..."
   (dp-dupe-chars-prev-line arg 'word))
 
 (defun dp-dupe-n-chars-prev-line (num arg)
-  "Call dp-copy-char NUM times using ARG as its arg."
+  "Call dp-copy-char NUM times using ARG as its arg.
+@todo XXX This needs to use arg as an end condition.  Num says
+how many chars to copy up to:
+num = 2, arg='.'
+mod1.smod1.utils.add_one_to_num
+mod1.smod1"
   (loop repeat num do
-    (dp-get-char-prev-line arg)
+    (dp-get-char-previous-line arg)
     (insert char))
   (delete-backward-char 1))
 
@@ -2150,7 +2158,7 @@ from simple.el"
 if FROM-BEGINNING-P, mark entire line. Leaves cursor @ end-of-region.
 By default, if we're @ end of line, mark to beginning.  Many
 \"manual macros\" end up @ eol or otherwise find it convenient to mark the
-preceding line."
+preceding part of the line."
   (interactive "P")                     ; fsf - fix "_"
   (let ((region (dp-bound-rest-of-line :from-beginning-p from-beginning-p
                                        :no-newline-p no-newline-p
@@ -5006,24 +5014,25 @@ function template at point.
   (message "using %s" efs-ftp-program-name))
 
 (defun* dp-prompt-string-with-default (prompt &optional default
-                                       &key prompt-args default-args )
+                                       &key prompt-args default-args)
   "Useful for putting a DEFAULT value in a PROMPT string.
 DEFAULT is added like so \"(default: DEFAULT): \"
 not DEFAULT just gets the \": \".
 Note the spaces."
-  (format "%s%s: "
-          (if (functionp prompt)
-              (apply prompt prompt-args)
-            (or prompt ""))
-          (let ((default (cond
-                          ((functionp default)
-                           (apply default default-args))
-                          ((and default (string= "" default))
-                           "\"\"")
-                          (t default))))
-            (if default
-                (format " (default: %s)" default)
-              ""))))
+  (let ((default (dp-stringize default)))
+    (format "%s%s: "
+	    (if (functionp prompt)
+		(apply prompt prompt-args)
+	      (or prompt ""))
+	    (let ((default (cond
+			    ((functionp default)
+			     (apply default default-args))
+			    ((and default (string= "" default))
+			     "\"\"")
+			    (t default))))
+	      (if default
+		  (format " (default: %s)" default)
+		"")))))
 
 (defun dp-insert-ebang (&optional md-name cbeg cend)
   "Add the elisp mode comment to a file"
@@ -8416,7 +8425,7 @@ This is meant to be used thus:
 
 (defun dp-underscore-region-as-title (&optional char)
   (interactive)
-  (dp-underscore-region 1 :char char :as-title-p as-title-p t))
+  (dp-underscore-region 1 :char char :as-title-p 'as-title-p))
 
 (defun dp-hyphenate-region (&optional num-pairs)
   (interactive "p")
@@ -9833,7 +9842,8 @@ If wide enough: | | |, otherwise: |-|"
                        (other-window 2))
                      nil))
 
-(dp-defaliases '2:2 '2x2 '2+2 '2|2 '2/2 '-- '-|- '4w 'dp-2x2-windows)
+(dp-defaliases '2:2 '2x2 '2+2 '2|2 '2/2 '-- '-|- '4w 'w4 'x4 '4x
+	       'dp-2x2-windows)
 
 (defun dp-1+2-wins ()
   "Set up a 1+2 window arrangement: | |-|"
@@ -10520,7 +10530,7 @@ Call with ESC-: and specify force or add a front-end function."
 	(when (numberp other-window-num)
 	  (other-window other-window-num))
         (setq dp-one-window++-last-register reg-num)
-        (unless (eq reg-num 1)
+        (unless (eq reg-num dp-one-window++-default-register)
           (message "Saved window configuration to register %s (0%o, %d, 0x%x)"
            reg reg-num reg-num reg-num))
         (delete-other-windows)))))
@@ -10725,6 +10735,7 @@ BROKEN"
   ;; Redefine (meta -) to not really kill the buffer.
   (dp-define-buffer-local-keys '([(meta ?-)] dp-bury-or-kill-buffer)
                                nil nil nil "dkp"))
+(dp-defaliases 'dp-quit-buffer-protect 'dp-kill-protect)
 
 (dp-deflocal dp-use-whence-buffers-p t
   "[?KEEP NIL... system is b0rked.?]
@@ -12413,43 +12424,45 @@ INITIALIZE-P says to do the common Python __init__() operation:
 def __init__(var):
   var<M-s> ==> self.var = var"
   (interactive "P")
-  (if (let ((pt (dp-mk-marker)))
-        ;; Inside args parens, e.g. def imafunc(-!-
-        ;; OR at the end of what looks like a def:
-        ;; def imgonnabeafunc-!-
-        (when (dp-looking-back-at dp-py-insert-self-re)
-          (if (string= "" (match-string 1))
-              (goto-char pt)
-            (undo-boundary)
-            (when (< 0 (length (match-string 3)))
-              (insert "(self, "))
-            (when (< 0 (length (match-string 2)))
-              (insert "self, ")))
-          t))
-      ()                              ; Everything was done in the predicate.
-    ;; We need the marker to stay in front of the insertion.
-    (let ((pt (dp-mk-marker nil nil t)))
-      (undo-boundary)
-      (dp-backword)
-      (unless (dp-looking-back-at "\\<self\\.")
-        (insert (format "self.%s" dp-py-data-member-prefix)))
-      (goto-char pt)))
-  (when initialize-p
-    (save-excursion
-      (dp-backword)            ; @ self.-!-<prefix>var_name, e.g. self.d_blah
-      ;; Skip past the prefix
-      (forward-char (length dp-py-data-member-prefix))
-      (mark-word)
-      (let ((var-name (dp-get--as-string--region-or...)))
-        (forward-word)
-        (if (looking-at "\\s-*=")
-            (progn
-              (replace-match " =")
-              (unless (looking-at "\\s")
-                (insert " ")))
-          (insert " = "))
-        (insert var-name)))
-    (dp-deactivate-mark)))
+  (let (pt2)
+    (if (let ((pt (dp-mk-marker)))
+	  ;; Inside args parens, e.g. def imafunc(-!-
+	  ;; OR at the end of what looks like a def:
+	  ;; def imgonnabeafunc-!-
+	  (when (dp-looking-back-at dp-py-insert-self-re)
+	    (if (string= "" (match-string 1))
+		(goto-char pt)
+	      (undo-boundary)
+	      (when (< 0 (length (match-string 3)))
+		(insert "(self, "))
+	      (when (< 0 (length (match-string 2)))
+		(insert "self, ")))
+	    t))
+	()	     ; Everything was done in the predicate.
+      ;; We need the marker to stay in front of the insertion.
+      (let ((pt (dp-mk-marker nil nil t)))
+	(undo-boundary)
+;;;(dp-backword)
+;;; In FSF Emacs' Python mode backward word is more like what it is in
+;;; C.  Things like underscores count.
+	(back-to-indentation)
+	(unless (dp-looking-back-at "\\<self\\.")
+	  (insert (format "self.%s" dp-py-data-member-prefix)))
+	(setq pt2 (dp-mk-marker nil nil nil))
+	(goto-char pt)))
+    (when initialize-p
+      (save-excursion
+	(forward-char (length dp-py-data-member-prefix))
+	(dp-set-mark pt2)
+	(let ((var-name (dp-get--as-string--region-or...)))
+	  (if (looking-at "\\s-*=")
+	      (progn
+		(replace-match " =")
+		(unless (looking-at "\\s")
+		  (insert " ")))
+	    (insert " = "))
+	  (insert var-name)))
+      (dp-deactivate-mark))))
 
 (defsubst dp-xor (a b)
   "I can't believe there's not logical xor... or that they call bitwise xor, et.al. log*"
@@ -14065,10 +14078,11 @@ The APPEND-ARG is a list wrapped around the real list to append."
   (append (symbol-value save-sym)
           (car append-arg)))
 
-(defun and-stringp (string &optional if-not)
+(defun or-stringp (string &optional if-not)
   "If STRING is \(stringp), return STRING, otherwise IF-NOT"
   (if (stringp string)
       string
+    (dp-cal)
     if-not))
 
 (defun dp-visit-header-doc ()
@@ -14991,6 +15005,9 @@ Of course, I'll forget the name of this function and its aliases, too."
   (magit-status (expand-file-name "~/dpw/dpw/")))
 (dp-defaliases 'dpw 'dpmmw 'gmw 'mwg 'mmw 'dp-magit-my-world)
 
+(defun dp-stringize (s)
+  "Convert S to a string."
+  (format "%s" s))
 ;;;;; <:functions: add-new-ones-above|new functions:>
 ;;; add new functions here
 ;;; add new functions above
