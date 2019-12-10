@@ -108,6 +108,12 @@ Usage_error()
 : ${files=}
 : ${nopkgs=}
 
+# @todo XXX Formalize this to add repos, etc.
+sudo add-apt-repository ppa:landronimirc/skippy-xd-daily
+# <:new repos above me:>
+
+sudo apt-get update
+
 packages=(
 bison
 ccache
@@ -248,6 +254,7 @@ links2
 ethtool
 pass
 stgit
+skippy-xd
 # <:new packages:>
 )
 
@@ -264,6 +271,7 @@ EExec_verbose_msg "1: len(packages): ${#packages[@]}"
 num_pkgs="${#packages[@]}"
 pkg_num=1
 
+# @todo XXX Make this use install_from_stream.
 ((num_pkgs > 0)) && {
     something_was_installed=t
     for p in ${packages[@]}
