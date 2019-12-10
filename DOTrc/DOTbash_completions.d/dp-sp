@@ -4,7 +4,7 @@ _dp_sp()
 {
     local cur prev words cword
     _init_completion || return
-    
+
     local i
     for (( i=1; i <= COMP_CWORD; i++ )); do
         if [[ ${COMP_WORDS[i]} != -* ]]; then
