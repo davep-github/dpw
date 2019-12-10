@@ -63,6 +63,6 @@ done
 }
 cmd="mplayer -fs $vo_opt $ao_opt $quiet_opt $vf_opt -idx $opts $all_files"
 #eko $cmd
-echo "$cmd"
+echo "cmd>$cmd<"
 exec $cmd
 ###mplayer -fs $vo_opt $ao_opt $quiet_opt -vf eq -idx "$@"
