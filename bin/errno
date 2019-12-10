@@ -6,6 +6,18 @@ progname=$(basename "$0")
 
 errno_dat=("$@")	    # Pristine args.
 source script-x
+source eexec
+
+# Defer to any passed in "program"
+[ -z "${eexec_program-}" ] && {
+    eexec_program=$(EExec_parse "$@")
+}
+for op in $eexec_program
+do
+  $op
+  shift
+done
+unset eexec_program
 
 errno_dat_tarnished0=("$@")
 
@@ -142,7 +154,7 @@ Usage_details="-n name only.
 "
 
 # The real meat...
-option_str="nstdvpNxX:hm+er"
+option_str="nstdvpNxX:hm+erV"
 long_options=(
     desc
     verbose-emitter verbose
@@ -168,7 +180,7 @@ for i in "$@"; do
 	-v|--verbose-emitter|--verbose) errno_emitter=errno_emit_verbose;;
 	-t|--terse) if vunsetp $terse_p; then terse_p=t; else terse_p=; fi ; ;;
 	-p|--pristine) errno_emitter=errno_emit_pristine_args;;
-        -r|--set-exit-code|--set-return-code|--rc|--ec) 
+        -r|--set-exit-code|--set-return-code|--rc|--sec) 
             return_exit_code_p=t;
             return_exit_code_index=1
             errno_emitter=errno_emit___not;;
@@ -180,6 +192,10 @@ for i in "$@"; do
         -+|--abs) make_positive_p=t;;
         -e|--errno-files|--show-errno-files|--senf|--enf)
              echo "${ERRNO_FILES}"
+             exit 0;;
+        -V|--view-errno-files|--venf|--ec)
+	    # ERROR: Need to get the files on the same line.
+             EExec ec "${ERRNO_FILES}"
              exit 0;;
         --) shift; break;;
     esac
