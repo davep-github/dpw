@@ -106,7 +106,7 @@ Usage_error()
 ########################################################################
 
 : ${DP_AUTO1_GEOMETRY:=132x32+86+0}
-: ${DP_AUTO_NAME:=auto1}
+: ${DP_AUTO_NAME:=auto1}; export DP_AUTO_NAME
 : ${HOME:=/home/dpanarit}
 
 ${HOME}/bin/ubuntu-sucks dpxx -g "${DP_AUTO1_GEOMETRY}" nscreen "${DP_AUTO_NAME}"

@@ -105,8 +105,8 @@ Usage_error()
 # template end.
 ########################################################################
 
-: ${DP_AUTO2_GEOMETRY:=132x32+86+520}
-: ${DP_AUTO_NAME:=auto2}
-: ${HOME:=/home/dpanarit}
+: ${DP_AUTO2_GEOMETRY:=132x32+86+520}; export DP_AUTO2_GEOMETRY
+: ${DP_AUTO_NAME:=auto2}; export DP_AUTO_NAME
+: ${HOME:=/home/dpanarit}	# This will hopefully change soon.
 
 ${HOME}/bin/ubuntu-sucks dpxx -g "${DP_AUTO2_GEOMETRY}" nscreen "${DP_AUTO_NAME}"
