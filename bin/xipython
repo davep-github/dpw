@@ -11,8 +11,15 @@ do
   shift
 done
 unset eexec_program
+one=${1-}
+###: ${ipython_bin=${DP_DEF_IPYTHON_BIN-${one-ipython}}}
 
-: ${ipython_bin=ipython}
+: ${ipython_bin=${DP_DEF_IPYTHON_BIN-${1-ipython}}}
 
-dpxx "${ipython_bin}"
+case "${one}" in
+    [0-9]*) ipython_bin="ipython${one}";;
+esac
+
+# @todo XXX Write an analogous ipython(dp) command and use that.
+EExec dpxx "${ipython_bin}"
 
