@@ -121,12 +121,12 @@ Consider rebase, or co and branch -M
 #         aliasFileType = sendmail
 
 # [sendemail]
-#         # smtp specifics in ~/.rc/msmtprc.gmail
-#         smtpServer = /usr/bin/msmtp
-#         smtpUser = dpanarit@amd.com
-#         smtpserveroption = -d
-#         #smtpserveroption = --file=/home/dpanarit/.rc/msmtprc.amd.gmail
-#         smtpserveroption = --file=/home/dpanarit/.rc/msmtprc.amd.office365
-#         from = david.panariti@amd.com
-#         aliasesFile = ~/.sendmail.aliases
-#         aliasFileType = sendmail
+#         # smtp specifics in ~/.rc/msmtprc.amd.gmail
+##         smtpServer = /usr/bin/msmtp
+##         smtpUser = dpanarit@amd.com
+##         smtpserveroption = -d
+##         #smtpserveroption = --file=/home/dpanarit/.rc/msmtprc.amd.gmail
+##         smtpserveroption = --file=/home/dpanarit/.rc/msmtprc.amd.office365
+##         from = david.panariti@amd.com
+##         aliasesFile = ~/.sendmail.aliases
+##         aliasFileType = sendmail
