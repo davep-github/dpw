@@ -57,7 +57,7 @@ def main(argv):
     if app_args.debug_level >= 0:
         dp_io.set_debug_level(app_args.debug_level, enable_debugging_p=True)
     if app_args.verbose_level > 0:
-        dp_io.set_verbose_level(app_args.verbose_level, enable=True)
+        dp_io.set_verbose_level(app_args.verbose_level, enable_debugging_p=True)
 
 
 if __name__ == "__main__":
