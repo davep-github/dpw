@@ -17,6 +17,7 @@ dp_sp_complete()
 complete -F dp_sp_complete sp
 complete -F dp_sp_complete run-iff
 complete -F dp_sp_complete xit
+complete -F dp_sp_complete lessit
 
 dp_ctags_etags_expand()
 {
