@@ -322,7 +322,7 @@ dp_set_x_fini()
 
 prompt_command_errno()
 {
-    if vsetp $dp_verbose_rc_in_prompt_p; then
+    if vsetp ${dp_verbose_rc_in_prompt_p-}; then
         if [ "$1" == 0 ]; then
             echo 0
         else
