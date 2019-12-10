@@ -359,9 +359,16 @@
          -r ==> raise window, 
          -n ==> case insensitive substring of X Window *title*
     -->
+    <!--
+      <keybind key="W-w">
+        <action name="Execute">
+          <command>run-iff -r -n Chromium chromium-browser</command>
+        </action>
+      </keybind>
+      -->
     <keybind key="W-w">
       <action name="Execute">
-        <command>run-iff -r -n Chromium chromium-browser</command>
+        <command>run-iff -r -n "Mozilla Firefox" firefox</command>
       </action>
     </keybind>
     <!-- Select and raise an email client window. Thunderbird, ATT. -->
@@ -373,7 +380,7 @@
     <!-- Select and raise an IPython window. -->
     <keybind key="W-p">
       <action name="Execute">
-        <command>run-iff -r -n "IPython:" "ipython"</command>
+        <command>run-iff -r -n "IPython:" "xipython"</command>
       </action>
     </keybind>
     <keybind key="S-W-p">
