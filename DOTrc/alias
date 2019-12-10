@@ -288,7 +288,7 @@ alias hgci='hg commit'
 alias hgbr='hg branch'
 alias hgl='hg log'
 
-alias go=g
+alias goabbrev=g
 alias cdrp='cd $(rpd)'
 alias gorp='cd $(rpd)'
 alias home_addr='eval echo "\$${DP_HOME_MACHINE}_ADDR"'
