@@ -74,7 +74,7 @@
 (defconst dp-basic-c-style
   '(
     (dp-c-using-kernel-style-p                     . nil)
-    (dp-c-indent-for-comment-prefix                . "dp: ")
+    (dp-c-indent-for-comment-prefix                . "")
     (dp-use-stupid-kernel-struct-indentation-p     . nil)
     (dp-c-like-mode-default-indent-tabs-mode-p     . nil)
     (dp-lang-use-c-new-file-template-p             . t)
@@ -83,6 +83,7 @@
     (dp-use-space-before-tab-font-lock-p           . nil)
     (dp-use-too-many-spaces-font-p                 . nil)
     (dp-use-ugly-ass-pointer-style-p               . nil)
+    (dp-c++-mode-add-namespace-disabled            . nil)
     (c-tab-always-indent           . t)
     (c-basic-offset                . 4)
     (c-comment-only-line-offset    . 0)
