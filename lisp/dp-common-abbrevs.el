@@ -510,7 +510,7 @@
      dp-manual)
     (("md" "metadata" "meta-data" "meta data")
      dp-manual)
-    (("ccs" "const char* " "const std::string & ")
+    (("ccs" "const char* " "const std::string& ")
      dp-manual)
     (("cus" "const unsigned char* ")
      dp-manual)
