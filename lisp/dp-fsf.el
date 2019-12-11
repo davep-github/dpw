@@ -93,6 +93,8 @@ The stolen one above is slow when using completion."
   ;; Can't do this because it changes the file name and then we can't tell
   ;; that we are already sudo editing the file.  Using buffer local vars had
   ;; wierd problems, but I'll try again.
+  ;; @todo XXX THIS is FUCKED.  If we can't read it in the first place, then
+  ;; we fail.
   (find-file file-name)
   ;; this op is fast since we know the name and we're local.
   (dset)
