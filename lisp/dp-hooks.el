@@ -366,15 +366,15 @@ For C/C++ source code.")
 (defun dp-mk-c*-debug-like-patterns ()
   (dp-mk-debug-like-patterns dp-c*-debug-like-patterns))
 
-(dp-deflocal dp-line-too-long-warning-zone-width 6
+(dp-defcustom-local dp-line-too-long-warning-zone-width 2
   "How wide the warning zone is: where len is still OK, but line is
 colorized as an indication that you're getting _Close_To_the_Edge_.
 The characters get marked with the line-too-long-warning-face.")
 
-(dp-deflocal dp-line-too-long-error-column 80
+(dp-defcustom-local dp-line-too-long-error-column 80
   "*Become enraged (new face) when going beyond this column.")
 
-(dp-deflocal dp-line-too-long-warning-column
+(dp-defcustom-local dp-line-too-long-warning-column
     (- dp-line-too-long-error-column
        (or dp-line-too-long-warning-zone-width 0))
   "*Become annoyed (new face) when going beyond this column.
@@ -425,9 +425,8 @@ XXX @todo derive this from the wrap column.  Will need to be per-mode.")
 Regexp and font-lock-keywords element.
 Works with tabs.")
 
-;; @todo XXX Make len of warning area (- error-len warning-len)
-(defvar dp-font-lock-line-too-long-warning-element
-  `(
+(defun dp-font-lock-line-too-long-warning-element ()
+    `(
     ,(format
       "^\\([^\t\n]\\{%s\\}\\|[^\t\n]\\{0,%s\\}\t\\)\\{%d\\}%s\\(%s\\)$"
       tab-width
@@ -446,8 +445,24 @@ Works with tabs.")
 
     2					; line tail
     'dp-default-line-too-long-warning-face
-    prepend)
+    prepend))
+
+;; @todo XXX Make len of warning area (- error-len warning-len)
+(defvar dp-font-lock-line-too-long-warning-element
+  (dp-font-lock-line-too-long-warning-element)
   "As above, but handles the warning zone.")
+
+(defun dp-line-too-long-setup (warning-zone-width error-col)
+  (interactive
+   (list
+    (read-number "warning-zone-width" dp-line-too-long-warning-zone-width)
+    (read-number "error-col" dp-line-too-long-error-column))
+   (setq dp-line-too-long-warning-zone-width warning-zone-width
+	 dp-line-too-long-error-column error-col
+	 dp-line-too-long-warning-column (- dp-line-too-long-error-column
+					    dp-line-too-long-warning-zone-width)
+	 )
+   (dp-font-lock-line-too-long-warning-element)))
 
 (defvar dp-font-lock-line-too-long-error-default-element
     dp-font-lock-line-too-long-error-element
@@ -989,7 +1004,8 @@ tab setting, font or phase of the moon."
 std::<thing> by abbrev-mode in a C++ buffer.
 As a special case, undo will, after an expansion, will exactly undo the
 expansion.  This helps remove the onus of defining things to expand which
-are too general, e.g. queue."
+are too general, e.g. queue.
+N.B. this requires `abbrev-mode'."
   :group 'dp-vars
   :type '(repeat (string :tag "std:: symbol")))
 
@@ -1031,7 +1047,7 @@ part of a longer name."
           ;;Allows for easy undoing of name space insertion.
           (undo-boundary)
 	  (insert namespace-qual)
-          (setq dp-c++-mode-last-event (copy-event last-command-event))
+;;          (setq dp-c++-mode-last-event (copy-event last-command-event))
           (setq this-command 'dp-maybe-add-c++-namespace_was_added))))))
 
 (defvar dp-c++-mode-last-event nil)
@@ -1048,8 +1064,9 @@ part of a longer name."
           ;;(dmessage "dp-c++-mode-last-event>%s<" dp-c++-mode-last-event)
           (goto-char pt)
           (setq pt nil)                 ;Hasten marker reclamation.
-          (dispatch-event dp-c++-mode-last-event)
-          (deallocate-event dp-c++-mode-last-event) ;Hasten event reclamation.
+	  ;; XXX
+;;          (dispatch-event dp-c++-mode-last-event)
+;;          (deallocate-event dp-c++-mode-last-event) ;Hasten event reclamation.
           (setq dp-c++-mode-last-event nil)
 	  (dmessage "Can `unexpand-abbrev' help?  Need to set up some vars in my exapnsion routine.")))
     (call-interactively 'undo)))
@@ -1096,12 +1113,11 @@ main(
 (defalias 'dp-c*-member-init
   (read-kbd-macro "<C-left> M-SPC M-o m) <backspace> _ C-e M-9 M-y C-e ,"))
 
-
 (defun* dp-c++-mode-hook (&optional (insert-template-p t))
   "My C++ mode hook"
   (interactive)
   ;; try this again, w/some expansions like: cout --> std::cout
-  (abbrev-mode 0)			; We use mah MFing abbrevs, MFer.
+  (abbrev-mode 1)  ; Even though we use mah MFing abbrevs, MFer.
   ;; add the std:: namespace qualifier to a bunch of things.
   ;; may want to tweak this list
   (dp-c++-mode-define-abbrevs)
