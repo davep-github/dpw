@@ -1835,7 +1835,9 @@ Otherwise, the sequence begins at \(point-min) and ends at \(point-max)."
   (interactive)
   (if dp-c-using-kernel-style-p
       (dp-dot-h-reinclusion-protection-kernel)
-    (dp-dot-h-reinclusion-protection)))
+    ;; Defaults for `dp-dot-h-reinclusion-protection0' are set up for
+    ;; non-kernel.
+    (dp-dot-h-reinclusion-protection0 t)))
 (dp-safe-alias 'idef 'dp-dot-h-reinclusion-protection)
 
 (defun dp-insert-fc (fc-file)
