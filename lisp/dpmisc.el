@@ -11276,7 +11276,7 @@ passing SPECIAL-CHARS."
       'pttthhhhhrrrrrrppppttthhhhh!)
      ((let ((stat (dp-add-comma-or-close-sexp
 		   :beg (python-nav-beginning-of-statement)
-		   :end (line-end-position)
+		   :end (python-nav-end-of-statement)
 		   :caller-cmd this-command
 		   :add-here add-here)))
         (if (not (eq stat 'force-colon))
@@ -11374,7 +11374,7 @@ passing SPECIAL-CHARS."
             (progn
               (undo-boundary)
               (goto-char colon-pos)
-              (dp-fake-key-presses ?:)) ; (py-electric-colon 1) << didn't work.
+	      (insert ":"))
           (dmessage "figure out when to insert a ,"))))
     ;; Fix regardless since it won't do anything if it's not needed.
     (dp-py-fix-comment)
@@ -11383,7 +11383,8 @@ passing SPECIAL-CHARS."
       (if (dp-xemacs-p)
 	  (py-newline-and-indent)
 	(newline-and-indent))
-      (dp-py-fix-comment))))            ; Fix any hosed comment spacing.
+      ;; Fix any hosed comment spacing.
+      (dp-py-fix-comment))))
 
 
 (defun* dp-func-then-exec-key-binding (func keys &optional func-args)

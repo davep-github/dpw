@@ -766,7 +766,7 @@ This function does not modify point or mark."
      ((eq position 'bob) (goto-char (point-min)))
      ((eq position 'eob) (goto-char (point-max)))
      ((eq position 'boi) (back-to-indentation))
-     ((eq position 'bos) (py-goto-initial-line))
+     ((eq position 'bos) (python-nav-beginning-of-statement))
      (t (error "Unknown buffer position requested: %s" position))
      )
     (prog1
