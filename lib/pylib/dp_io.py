@@ -786,7 +786,7 @@ def sprintf_called_from(fmt, *args, **keys):
 def printf_called_from(fmt, *args):
     printf('%s\n', do_sprintf_called_from(4, fmt, *args))
 
-def print_enter_function(pre="", post="", fop=sys.stderr):
+def print_enter_function(level=1, pre="", post="", fop=sys.stderr):
     if type(fop) == type(""):
         fop = open(fop, 'w')
     s = "Enter: {}{}{}".format(pre, dp_utils.function_name(level), post)
