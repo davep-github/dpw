@@ -1303,3 +1303,25 @@ nil
 
 
 
+
+========================
+Monday December 09 2019
+--
+
+
+(defun dp-py-bound-arg-list ()
+  (interactive)
+  (save-excursion
+    (python-nav-backward-statement)
+    (python-nav-forward-statement)
+    ;; Cannot be at start of keyword, e.g. `def'.
+    (right-char 1)
+    ;; Goto space after keyword.
+    (python-nav-forward-sexp)
+    ;; Move's us to open paren.
+    (python-nav-forward-sexp)
+    (let ((open-paren (point))
+	  (close-paren (progn
+			 (python-nav-forward-sexp)
+			 (point))))
+      (cons open-paren close-paren))))
