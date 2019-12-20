@@ -1,0 +1,7 @@
+drm
+mesa multimedia
+mesa opengl
+
+?? reset ??
+
+llvm - external but look at what our team has contributed.
