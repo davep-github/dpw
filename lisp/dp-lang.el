@@ -3,6 +3,36 @@
 
 ;;-----------------------------------------------------------------------------
 ;;
+;; Generic paren stuff.
+;;
+;;-----------------------------------------------------------------------------
+(defun dp-paren-depth (&optional beg end)
+  "How many unmatched open parens precede END."
+  (interactive)
+  ;; It is, after all, a *functional* language.
+  (let ((beg-end (dp-region-or... :beg beg :end end)))
+    (car (parse-partial-sexp (car beg-end) (cdr beg-end)))))
+
+(defun dp-paren-depth-save-excursion (&rest rest)
+  "`save-excursion' before calling `dp-paren-depth'."
+  (save-excursion
+    (apply 'dp-paren-depth rest)))
+
+(defun dp-region-op (op &optional beg end &rest op-args)
+  "`apply' OP on region as per `dp-open-region-or...' with OP-ARGS as args."
+  (let (beg-end (dp-region-or...))
+    (apply op (car beg-end) (cdr beg-end) op-args)))
+
+(defun* dp-paren-depth-op (op &optional beg end &rest op-args)
+  "`apply' OP to a region with OP-ARGS as args."
+  (apply op (dp-paren-depth beg end) op-args))
+
+(defun dp-paren-depth== (depth &optional beg end)
+  "Does the current paren depth (q.v.) == DEPTH?"
+  (dp-paren-depth-op '= beg end depth))
+
+;;-----------------------------------------------------------------------------
+;;
 ;; Lang: python <:Python|python:>
 ;;
 ;;-----------------------------------------------------------------------------
@@ -300,32 +330,6 @@ non-nil we only look forward on the current line, ie. the search limit is
            (caddr map-info))
         (ding)
         (message "Can't figure out what to do.")))))
-
-
-(defun dp-paren-depth (&optional beg end)
-  "How many unmatched open parens precede END."
-  (interactive)
-  ;; It is, after all, a *functional* language.
-  (let ((beg-end (dp-region-or... :beg beg :end end)))
-    (car (parse-partial-sexp (car beg-end) (cdr beg-end)))))
-
-(defun dp-paren-depth-save-excursion (&rest rest)
-  "`save-excursion' before calling `dp-paren-depth'."
-  (save-excursion
-    (apply 'dp-paren-depth rest)))
-
-(defun dp-region-op (op &optional beg end &rest op-args)
-  "`apply' OP on region as per `dp-open-region-or...' with OP-ARGS as args."
-  (let (beg-end (dp-region-or...))
-    (apply op (car beg-end) (cdr beg-end) op-args)))
-
-(defun* dp-paren-depth-op (op &optional beg end &rest op-args)
-  "`apply' OP to a region with OP-ARGS as args."
-  (apply op (dp-paren-depth beg end) op-args))
-
-(defun dp-paren-depth== (depth &optional beg end)
-  "Does the current paren depth (q.v.) == DEPTH?"
-  (dp-paren-depth-op '= beg end depth))
 
 (defun dp-py-end-of-block-stmt (&optional close-up-p)
   "Are we at the end of a full closed, paren-wise, block statement?
