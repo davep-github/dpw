@@ -285,7 +285,7 @@ EExecDefErrorReporter()
     local rc=$1
     shift
     eMsg="$EExecProgName(EExec): ERROR: `date`, rc: $rc
-\`$*' failed ${EExecMsg-}"
+\`$*' failed. ${EExecMsg-}"
     echo "$eMsg" 1>&2
     [ -n "${EExecRCFile-}" ] && echo "$eMsg" >> $EExecRCFile
     ## Just report the news, don't make it. [ -z "${EExecContinue-}" ] && exit $rc
