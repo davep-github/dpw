@@ -189,6 +189,7 @@
  '(isearch-lazy-highlight t)
  '(isearch-resume-in-command-history t)
  '(ispell-lazy-highlight nil)
+ '(ispell-silently-savep t)
  '(kill-do-not-save-duplicates t)
  '(kill-ring-max 128)
  '(lazy-highlight-initial-delay 0.1)
