@@ -126,15 +126,18 @@ current_vol=$(mpc volume | \
 		  sed -rn 's/(^volume:[[:space:]]{0,2})([0-9]{1,3})(%)/\2/p')
 EExec_verbose_echo_id current_vol
 case "${delta_vol}" in
-    mute) delta_vol=$((0 - current_vol));;
-    =[0-9]*) set -x
+    mute|--mute) delta_vol=$((0 - current_vol));;
+    =[0-9]*) # set -x
 	     # 's/(=)([0-9]{1,3})/\2/'
 	     delta_vol=$(echo "${delta_vol}" | sed -r 's/(=)([0-9]{1,3})/\2/')
 	     EExec_verbose_echo_id delta_vol
 	     delta_vol=$((delta_vol - current_vol))
 	     set +x
 	     ;;
-    *) ;;
+    -|d|-d|v|-v|dec|-dec|--dec) delta_vol=-1;;
+    +|u|-u|^|-^|inc|-inc|--inc) delta_vol=1;;
+    [0-9]*|-[0-9]*) ;;
+    *) EEdie "Unsupported delta volume input >${delta_vol}<";;
 esac
 EExec_verbose_echo_id --msg "New delta_vol for to mute: " delta_vol
 new_vol=$((current_vol + delta_vol))
