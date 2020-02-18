@@ -255,6 +255,8 @@ ethtool
 pass
 stgit
 skippy-xd
+exfat-fuse
+exfat-utils
 # <:new packages:>
 )
 
