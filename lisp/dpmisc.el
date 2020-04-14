@@ -4770,14 +4770,14 @@ Return t if successful, nil otherwise."
 	  (message "Optionally loaded feature: %s" feature))
 	t)
     (error
-     (message "**** Problem in (require %s %s): %s"
+     (message "**** dp: Problem in (require %s %s): %s"
 	      feature file-name error-info)
      nil)))
 
 (defface dp-less-bg-face
   '((((class color) (background light))
      (:background "linen")))
-  "Face for file being less viewed."
+  "Face for file being less(1) viewed."
   :group 'faces
   :group 'dp-faces)
 
