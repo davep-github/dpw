@@ -4,29 +4,33 @@
 #include <string.h>
 #include <err.h>
 
-const char* ECHO_CMD = "./ech0 ";
+const char* PARSE_CMD = "ech0 ";
 int
 cheap_cl_parse(
     const char* s,
     int* argcp,
-    char*** argvp)
+    char*** argvp,
+    const char* parse_cmd)
 {
-    char results[2048];
-    size_t cmd_len = strlen(s) + strlen(ECHO_CMD) + 1;
+    char results[2048];         /* !<@todo XXX Use Konstant */
+    size_t cmd_len = strlen(s) + strlen(PARSE_CMD) + 1;
     char* command = (char*)malloc(cmd_len);
-    strncpy(command, ECHO_CMD, cmd_len);
+    if (!parse_cmd) {
+        parse_cmd = PARSE_CMD;
+    }
+    strncpy(command, parse_cmd, cmd_len);
     strncat(command, s, cmd_len - strlen(command));
     // Run the ech0 command on our string.
-    FILE* popFILE = popen(command, "r");
-    int popfd = fileno(popFILE);
+    FILE* pop_FILE = popen(command, "r");
+    int popfd = fileno(pop_FILE);
 
     char* p = results;
     ssize_t nread;
-    ssize_t totalRead = 0;
-    ssize_t maxToRead = sizeof(results); // Could just use sizeof(results)
-    while((nread = read(popfd, p, maxToRead)) > 0) {
-        totalRead += nread;
-        maxToRead -= nread;
+    ssize_t total_read = 0;
+    ssize_t max_to_read = sizeof(results);
+    while((nread = read(popfd, p, max_to_read)) > 0) {
+        total_read += nread;
+        max_to_read -= nread;
         p += nread;
     }
     if (nread < 0) {
@@ -36,22 +40,22 @@ cheap_cl_parse(
     // Parse the easily pars-able results.
     // It looks like this:
     // <ascii_num_args>\0<argv[0]>\0<argv[1]\0... <argv[ascii_num_args-1]\0
-    int numArgs;
-    sscanf(results, "%d", &numArgs);
+    int num_args;
+    sscanf(results, "%d", &num_args);
     // Allocate an argv
-    char** localArgv;
-    localArgv = (char**)malloc(numArgs * sizeof(localArgv[0]));
+    char** local_argv;
+    local_argv = (char**)malloc(num_args * sizeof(local_argv[0]));
     // Move past the ascii_num_args and its \0
     p = results + strlen(results) + 1;
     int i;
-    for (i=0; i < numArgs; ++i) {
-        localArgv[i] = strdup(p);
+    for (i=0; i < num_args; ++i) {
+        local_argv[i] = strdup(p);
         // past the arg and its \0
         p += strlen(p) + 1;
     }
 
-    *argcp = numArgs;
-    *argvp = localArgv;
+    *argcp = num_args;
+    *argvp = local_argv;
 
     return 0;
 }
@@ -64,23 +68,29 @@ main(
 {
     int nargc;
     char** nargv;
-    int i;
 
+    /* !<@todo XXX Use Konstant */
     char buf[2048];
+
+    /* Make first_arg an argument. */
+    size_t first_arg = 0;
 
     fprintf(stderr, "Enter command line> ");
     while (fgets(buf, sizeof(buf), stdin) != NULL) {
         fflush(stderr);         /* Not strictly necessary. */
         buf[strlen(buf)-1] = '\0';
         printf("buf>%s<\n", buf);
-        if (cheap_cl_parse(buf, &nargc, &nargv)) {
+        /* !<@todo XXX Make parse_cmd an argument. */
+        if (cheap_cl_parse(buf, &nargc, &nargv, NULL)) {
             err(1, " failed: ");
         }
         printf("nargc: %d\n", nargc);
-        for (i = 0; i < nargc; ++i) {
-            printf("%d>%s<\n", i, nargv[i]);
+
+        for (size_t i = first_arg; i < nargc; ++i) {
+            printf("%zd>%s<\n", i, nargv[i]);
         }
         fprintf(stderr, "Enter command line> ");
     }
+    fprintf(stderr, "Exiting.\n");
 }
 #endif
