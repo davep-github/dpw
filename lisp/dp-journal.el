@@ -1766,6 +1766,16 @@ Also will use prefix-arg as default NUM-MONTHS."
 (dp-safe-alias 'ee 'dp-add-elisp-journal-entry)
 
 ;;;###autoload
+(defun dp-add-pain-journal-entry ()
+  (interactive)
+  (dpj-new-topic :topic "pain")
+  (insert "!! \n")
+  (backward-char))
+
+;;;###autoload
+(dp-safe-alias 'pe 'dp-add-pain-journal-entry)
+
+;;;###autoload
 (defun* dpj-new-topic (&key topic no-spaced-append-p
 		      link-too-p is-a-clone-p
 		      other-win-p dir-name)
