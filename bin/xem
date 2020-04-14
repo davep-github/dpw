@@ -240,7 +240,7 @@ unset IMASCREENINSTANCE DP_MY_SCREEN_NAME
 export LANG=C
 unset XMODIFIERS
 
-$VERBOSE echo ">>>>>>>>>>>>>>>>>>>>>>$log_file<<<<<<<<<<<<<<<<<<<<<<"
+$VERBOSE echo ">>>>>>>>>>>>>> log_file>$log_file<<<<<<<<<<<<<<<<<<<<<<"
 niceness="-20"
 nice_cmd="sudo nice -n $niceness"
 renice_cmd="sudo renice -n $niceness"
