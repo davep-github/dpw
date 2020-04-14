@@ -61,6 +61,11 @@ cheap_cl_parse(
 }
 
 #if defined(TEST_MODE) && TEST_MODE
+
+/*
+ * Test and example code.
+ */
+
 int
 main(
     int arg,
