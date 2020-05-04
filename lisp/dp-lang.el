@@ -486,7 +486,13 @@ Otherwise non-nil."
   (save-excursion
     (goto-char (py-point 'bos))
     (if (looking-at (concat
-                     "^\\(\\s-*\\)" ; Leading spaces determine func or method.
+		     ;; @todo XXX Need to keep an eye on this.  I'm assuming
+		     ;; that all class and top level defs are fully left and
+		     ;; indented defs are methods in classes.  All of my
+		     ;; auto-newline stuff is fugly and programmed by a huge,
+		     ;; but non infinite, number of monkeys.  Infinite
+		     ;; monkeys would've been able to produce perfect code.
+                     "\\(^\\s-*\\)?" ; Leading spaces determine func or method.
                      "\\(" dp-py-block-keywords "\\)")) ; Specific keyword.
         (list (match-string 2)          ; Keyword
               ;; Indentation, "" ==> method-p if in class
