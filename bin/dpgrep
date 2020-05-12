@@ -73,28 +73,34 @@ printer=out_line
 Usage_args_info=" [options] <regular-expression>"
 Usage_synopsis="Find processes by regular expression."
 Usage_details="Options:
--l -- Long format.                  [$PS_O_LONG_FMT]
--s -- Short format.		    [$DEF_PS_ARGS]
--p -- Only show pid.                [$printer]
--P -- Show entire matched line.
--w -- Widen display.                [$PS_WIDTH]
--W -- Narrow display.
--u -- Show only user processes.     [$PS_ALL_OPT]
--U -- Show all processes
--c -- Color grep output.            [$GREP_COLOR]
--C -- Do not color grep output.
--o <ps-opt> -- Add a ${PS} option.     [$PS_OPTIONS]
--t -- Restrict matches to the current tty.
+-l) ps(1) Long format.			[$PS_O_LONG_FMT]
+-s) ps(1) Short format.		    	[$DEF_PS_ARGS]
+-p) Only show pid.                	[$printer]
+-P) Show entire matched line.
+-w) Widen display.			[$PS_WIDTH]
+-W) Narrow display.
+-u) Show only user processes.		[$PS_ALL_OPT]
+-U) Show all processes
+-c) Color grep output.			[$GREP_COLOR]
+-C) Do not color grep output.
+-o <ps-opt>) Add a ${PS} option.	[$PS_OPTIONS]
+-t) Restrict matches to the current tty.
 -T <tty> Restrict matches to the specified <tty>
--i -- Case insensitive grep.
--G -- Do not filter the grep command (debug).
+-i) Case insensitive grep.
+-G) Do not filter the grep command (debug).
 EExec Options:
--n -- Show what would happen but don't do it.
--v -- Be verbose about it.
--q -- Anti-verbose.
+-n) Show what would happen but don't do it.
+-v) Be verbose about it.
+-q) Anti-verbose.
+--PSA <a>) Set ps(1) args to <a>.
+--psa <a>) Append <a> to ps args.
 "
 # Example of arg parsing.
 option_str="nvqpPuUwWcCo:htT:liGs"
+long_options=(
+    "psa:"
+    "PSA:"
+)
 source dp-getopt+.sh
 for i in "$@"
 do
@@ -125,6 +131,8 @@ do
       -T) shift; tty="${1}";;
       -i) GREP_ARGS="${GREP_ARGS} -i";;
       -G) GREP_CMD_FILTER_PAT="$^";;
+      --psa) shift; PS_ARGS="${PS_ARGS} ${1}";;
+      --PSA) shift; PS_ARGS="${PS_ARGS}";;
       -h) Usage; exit 0;;
       --) shift ; break ;;
       *) echo 1>&2 "Unsupported option>$1<";
