@@ -1187,6 +1187,7 @@ minibuffer history list `bookmark-history'."
              (dp-setup-cscope)
              (if (dp-xemacs-p)
                  (paren-activate))
+	     (require 'dp-elpy)
              )))
 
 (when (paths-file-readable-directory-p dp-site-package-info)

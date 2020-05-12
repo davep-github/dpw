@@ -1,5 +1,5 @@
 ;;;
-;;; Setup the Emacs List PYthon development environment.
+;;; Setup the Emacs Lisp PYthon development environment.
 (elpy-enable)
 
 (provide 'dp-elpy)
