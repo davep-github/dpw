@@ -5,6 +5,7 @@
 eko: eko.c
 	g++ -o eko eko.c
 
+# Trivial test for the cheap-cl-parser.
 cclpt: cheap-cl-parser.c
 	g++ -DTEST_MODE -o cclt cheap-cl-parser.c
 

@@ -326,7 +326,7 @@ Bind any keys in KEYS via `dp-define-keys'."
 (global-set-key "\C-x5o" 'dp-other-frame)
 (global-set-key "\C-x50" 'dp-delete-frame)
 (global-set-key "\C-x\C-q" 'dp-rw/ro-region)
-;; Like my screen (1 )key sequence.  Kowtow to habits.
+;; Like my screen (1) key sequence.  Kowtow to habits.
 (global-set-key [(control meta -)] 'dp-meta-minus-other-window)
 (global-set-key [(control meta ?!)] 'dp-shell-command-in-minibuffer)
 (global-set-key (kbd "C-x g") 'magit-status)

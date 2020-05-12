@@ -129,6 +129,9 @@ run_iff_fun()
         # findprog returns success if it finds anything.
         findprog -q "${pname}" >/dev/null 2>&1 && {
             [ -n "${raise_p}" ] && {
+		# Ask wmctrl to choose and raise a window based on the window
+		# name, using it's own selection algorithm when there are
+		# multiple windows with the same name.
                 wmctrl -a "${win_name}"
             }
             exit 0

@@ -380,7 +380,16 @@
     <!-- Select and raise an IPython window. -->
     <keybind key="W-p">
       <action name="Execute">
-        <command>run-iff -r -n "IPython:" "xipython"</command>
+        <!--
+             python3 is what ends up being executed when all is said and
+             done.  Instances of Ipython are executed by instances of
+             python.  I haven't made findprog smart enough to find scripts
+             being run by a scripting language.  E.g.
+             /usr/bin/python3 /usr/bin/meld
+             findprog meld or /usr/bin/meld doesn't work.
+             This will be a problem when python3 becomes defecated.
+        -->
+        <command>run-iff -r -n "IPython:" "python3"</command>
       </action>
     </keybind>
     <keybind key="S-W-p">
