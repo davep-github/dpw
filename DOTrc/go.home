@@ -4,6 +4,7 @@
 Ee|davep|             ${HOME}/
 #|bin| is very important.
 Ee|bin|               ${davep}/bin/
+Ee|binsrc|            ${bin}/src/
 Ee|yokel|             ${davep}yokel/
 Ee|bree|              ${davep}bree/
 Ee|daveplog|log|      ${davep}/var/log/
@@ -360,7 +361,7 @@ Ee|gnupg|       ${davep}/.gnupg/
 Ee|passs|pwds|pws|       ${davep}/.password-store/
 Ee|incoming|       /media/audio/mvsik/incoming/
 Ee|dpcd|           ${davep}/lisp/dp-themes.d/dp-challenger-deep-theme.el
-Ee|localemacs26|gitemacs26|lemacs|lem|gmacs|gem|       /home/davep/local/build/emacs-26/
+Ee|localemacs26|gitemacs26|lemacs|lem|gmacs|gem|emgit|    /home/davep/local/build/emacs-26/
 Ee|stgtut|       /home/davep/tmp/stgit/tutorial/stgit/
 Ee|gitted|       /home/davep/local/build/gitted/
 Ee|gitbld|bldgit|gittedgit|       /home/davep/local/build/gitted/git/
