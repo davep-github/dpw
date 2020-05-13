@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
+###
+### Update for Python 3, by forcing it to run under Python2.
 
 import os, sys, string, re, getopt, types, StringIO
 import pprint
