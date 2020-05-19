@@ -1290,6 +1290,16 @@ minibuffer history list `bookmark-history'."
 
 (add-hook 'kill-emacs-hook 'dp-kill-emacs-hook)
 
+;; Add in all of the accumulated info dirs added by the various package setup
+;; routines.  Why is this better than adding to Info-[default-]directory-list
+;; directly.
+;; @todo XXX Using
+;; `Info-default-directory-list' as the value for `dp-info-path-var' is stupid.
+;; Hopefully it made sense to do it this way at the time.
+;; Use our own list so we can leave the original untainted.
+;; This must be kept after the post-dpmacs hook is run.
+(dp-add-list-to-list 'Info-directory-list (symbol-value dp-info-path-var))
+
 (setq dp-ding-backtrace-p nil)
 (ad-unadvise 'ding)
 
