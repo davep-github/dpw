@@ -89,6 +89,8 @@
 ;                                 dir))))))
 
 ;; Old-sk00l loop... don't count on cl being loaded yet.
+;; Do this in a loop vs an append type operation so we can see the path
+;; elements are they are added.
 (let ((l dp-init.el-load-path-dirs))
   (while l
     ;; (message "l>%s<" l)

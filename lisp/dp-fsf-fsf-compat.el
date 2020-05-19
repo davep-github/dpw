@@ -77,7 +77,7 @@ See `fill-paragraph' and `fill-region' for more information."
 
 ;;; Try to find common way to do this.  It's hacked from XEmacs' lisp code.
 (defun paths-directories-which-exist (directories)
-  "Return the directories among DIRECTORIES.
+  "Return the directories (as opposed to files, etc) among DIRECTORIES.
 DIRECTORIES is a list of strings."
   (let ((reverse-directories '()))
     (while directories
