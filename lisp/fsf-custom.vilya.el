@@ -208,6 +208,7 @@
     ("--function-context" "-M" "--diff-algorithm=patience")))
  '(magit-pull-arguments (quote ("--rebase")))
  '(magit-rebase-arguments (quote ("--interactive")))
+ '(magit-section-initial-visibility-alist (quote ((untracked . hide) (stashes . hide))))
  '(message-log-max 4094)
  '(message-send-mail-function (quote message-send-mail-with-sendmail))
  '(mingus-mode-line-string-max 60)
