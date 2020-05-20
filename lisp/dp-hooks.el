@@ -1172,104 +1172,14 @@ main(
   (local-set-key [(meta left)] 'dp-beginning-of-def-or-class)
   (dp-auto-it?))
 
-(defvar dp-orig-python-tab-binding nil
-  "Original binding for the tab key in python mode")
+(defvar dp-use-standard-emacs-python-mode t
+  "Use the python mode defined in python.el.
+This is used in Emacs 24.{3 or 4 or so}.
+[ at this time: 2020-05-20T13:44:45 ] I'm using 26.2.90 built
+from the git repository.")
 
-(defun dp-py-prepend-self. (&optional make-initializer-p)
-  (interactive "P")
-  (let (p m)
-    (save-excursion
-      (backward-word 1)
-      (insert "self.")
-      (setq m (dp-mk-marker))
-      ;; This makes sure we get the whole symbol since we may have issued the
-      ;; command inside it somewhere.
-    (forward-word)
-    (setq p (dp-mk-marker)))
-    (when make-initializer-p
-      (goto-char p)
-      (insert " = " (buffer-substring m p)))))
-
-;;(make-string 3 ?\')
-;;(make-string 3 ?\")
-(defvar dp-python-mode-parenthesize-region-paren-list
-  `(("(" . ")")
-    ("\"" . "\"")
-    ,(cons (make-string 3 ?\") (make-string 3 ?\"))
-    ("'" . "'")
-    ,(cons (make-string 3 ?') (make-string 3 ?'))
-    ("`" . "`")
-    ("{" . "}")
-    ("[" . "]")
-    ("<" . ">")
-    ("<:" . ":>")
-    ("*" . "*")
-    ("`" . "'")
-    ("" . ""))
-  "Python mode's Parenthesizing pairs to try, in order.
-See `dp-parenthesize-region-paren-list'")
-
-
-(dp-add-mode-paren-list 'python-mode
-                        dp-python-mode-parenthesize-region-paren-list)
-
-(defun dp-python-mode-hook ()
-  "Set up python *my* way."
-  (interactive)
-  ;; Python has a problem with my  `dp-fix-comments' function.
-  (setq dp-il&md-dont-fix-comments-p t)
-  (progn
-    (filladapt-mode)
-    (dmessage "Added filladapt-mode to python hook 2012-02-10T14:14:39"))
-  (setq-ifnil dp-orig-python-tab-binding (key-binding (kbd "TAB")))
-  (make-variable-buffer-local 'block-comment-start)
-  (setq dp-insert-tempo-comment-func 'dp-py-insert-tempo-doxy-comment
-        block-comment-start (concat py-block-comment-prefix " ")
-        comment-start "# ")
-  (define-key dp-Ccd-map [(control d)] 'dp-py-insert-tempo-doxy-comment)
-  ;; They set this to "# " This makes doxygen comments ("##") not look like
-  ;; Python comments.
-  ;; ## forces comment to line up @ comment col.
-  (setq comment-start "#")
-  (local-set-key [tab] 'dp-python-indent-command)
-  (local-set-key [(meta \;)] 'dp-py-indent-for-comment)
-  (local-set-key [(meta ?`)] 'comint-previous-matching-input-from-input)
-  (local-set-key "\C-p`" 'comint-previous-matching-input-from-input)
-  (local-set-key [delete] 'dp-delete)
-  (local-set-key "\C-z" 'dp-shell)
-  (local-set-key [(control x) (control left)] 'py-beginning-of-def-or-class)
-  (local-set-key [(meta left)] 'beginning-of-defun)
-  (if (dp-xemacs-p)
-      (local-set-key [(meta right)] 'py-end-of-def-or-class)
-    (local-set-key [(meta right)] 'end-of-defun))
-  (local-set-key [(meta return)] 'dp-py-open-newline)
-  (local-set-key [(control meta ?p)] 'py-beginning-of-def-or-class)
-  (local-set-key "\C-c!" 'dp-python-shell)
-  (local-set-key [(meta s)] 'dp-py-insert-self?)
-  (local-set-key [(meta q)] 'dp-fill-paragraph-or-region-with-no-prefix)
-  (dp-add-line-too-long-font 'python-font-lock-keywords)
-  (setq dp-cleanup-whitespace-p t)
-  ;; @todo XXX conditionalize this properly
-  ;; dp-trailing-whitespace-font-lock-element
-
-  ;; !<@todo XXX Add this to a new file hook?
-  (dp-auto-it?)
-
-  ;;;;;;;;move to dp-flyspell (dp-flyspell-prog-mode)
-  (message "python mode hook finished."))
-
-;;CO; (defadvice py-end-of-def-or-class (before dp-py-eodoc activate)
-;;CO;   "Make `py-end-of-def-or-class' leave the region active."
-;;CO;   (dp-set-zmacs-region-stays t))
-
-(defadvice py-end-of-def-or-class (around dp-py-end-of-def-or-class activate)
-  "If preceeding command was `dp-beginning-of-def-or-class' do a go-back.
-Otherwise business as usual.
-Also leave the region active."
-  (dp-set-zmacs-region-stays t)
-  (if (eq last-command 'dp-beginning-of-def-or-class)
-      (dp-pop-go-back)
-    ad-do-it))
+(add-hook 'dp-post-dpmacs-hook (lambda ()
+				 (require 'dp-python)))
 
 (defadvice ruby-end-of-block (around dp-ruby-end-block activate)
   "If preceeding command was `dp-beginning-of-def-or-class' do a go-back.
@@ -2429,7 +2339,6 @@ changed."
 (add-hook 'shell-mode-hook 'dp-shell-mode-hook)
 (add-hook 'telnet-mode-hook 'dp-telnet-mode-hook)
 (add-hook 'pike-mode-hook 'dp-pike-mode-hook)
-(add-hook 'python-mode-hook 'dp-python-mode-hook)
 (add-hook 'gdb-mode-hook 'dp-gdb-mode-hook)
 (add-hook 'ssh-mode-hook 'dp-ssh-mode-hook)
 (add-hook 'ruby-mode-hook 'dp-ruby-mode-hook)

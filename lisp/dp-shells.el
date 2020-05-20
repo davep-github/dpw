@@ -1825,45 +1825,6 @@ first file that is `dp-file-readable-p' is used.  Also sets
    ((eq hook-type 'bind-enter)
     (apply 'dp-bind-shell-type-enter-key bind-args))))
 
-
-(defun dp-python-get-process ()
-  (or (get-buffer-process (current-buffer))
-                                        ;XXX hack for .py buffers
-      (get-process py-which-bufname)))
-
-(defun dp-py-completion-setup-stolen ()
-  (let ((python-process (dp-python-get-process)))
-    (process-send-string
-     python-process
-     "from IPython.core.completerlib import module_completion\n")))
-
-
-;;;###autoload
-(defun dp-py-shell-hook ()              ;<:psh|pysh:>
-  "Set up my python shell mode fiddle-faddle."
-  (interactive)
-  (dmessage "in dp-py-shell-hook")
-  (make-variable-buffer-local 'dp-wants-ansi-color-p)
-  (dp-maybe-add-ansi-color nil)
-  (dp-specialized-shell-setup "~/.ipython/history"
-                              'bind-enter
-                              ;; these are args to
-                              ;; `dp-bind-shell-type-enter-key'
-                              :keymap py-shell-map
-                              :dp-ef-before-pmark-func nil
-                              ;; ?????? 'dp-ignore-this-mode
-                              )
-  (when (fboundp 'ipython-complete)
-    (local-set-key [tab] 'ipython-complete))
-
-  (dp-py-completion-setup-stolen)
-
-  (dp-define-buffer-local-keys
-   '([(meta return)] dp-end-of-line-and-enter
-     "\C-d" dp-shell-delchar-or-quit
-     [(control backspace)] dp-ipython-backward-delete-word)
-   nil nil nil "dpsh"))
-
 (dp-optionally-require 'gdb)
 
 (defvar dp-gdb-buffer-name nil
@@ -2054,83 +2015,11 @@ first file that is `dp-file-readable-p' is used.  Also sets
   (dp-consecutive-key-command 'dp-shell-home-command-ptr
 			      dp-shell-home-command-list))
 
-(defvar dp-latest-py-shell-buffer nil
-  "Newest buffer created by `dp-python-shell'.")
-
-(dp-deflocal-permanent dp-ima-dpy-buffer-p nil)
-
 (defun dp-ipython-buffer-killed ()
   (dmessage "dp-ipython-buffer-killed")
   (comint-write-input-ring)
   (and (eq (current-buffer) dp-latest-py-shell-buffer)
        (setq dp-latest-py-shell-buffer nil)))
-
-;;;###autoload
-(defun* dp-python-shell (&optional args)
-  "Start up python shell and then run my shell-mode-hook since they
-set the key-map after the hook has run."
-  (interactive "P")
-  ;; Hide history file... we'll manage it oursefs.
-  ;; Hack around for python-mode bug:
-  ;; It, `py-shell', sets mode name before switching to the Python buffer.
-  (let ((py-buf (get-buffer "*Python*")))
-    (when py-buf
-      (dp-visit-or-switch-to-buffer py-buf)
-      (return-from dp-python-shell)))
-
-  (let ((dp-real-comint-read-input-ring (symbol-function
-                                         'comint-read-input-ring))
-        mode-name input-ring-name)
-    ;; Fucking ipython's advice for py-shell reads in the history before
-    ;; switching to the Python shell buffer.  So if, e.g., we're in a regular
-    ;; shell buffer, its history is hosed.  So we'll spoof the read and
-    ;; capture the file name they want to read and use that as our history
-    ;; file and read that AT ZE *RIGHT* TIME!
-    (cl-flet ((comint-read-input-ring
-	       (&rest r)
-	       (dmessage "in dummy comint-read-input-ring")
-	       (setq input-ring-name comint-input-ring-file-name)))
-      (py-shell args))
-    (setq comint-input-ring-file-name input-ring-name))
-  ;; This should be done in the Python buffer by `py-shell', but isn't.
-  (setq mode-name "Python")
-  (setq dp-ima-dpy-buffer-p t)
-  (dp-maybe-read-input-ring)
-  (unless (eq dp-latest-py-shell-buffer (current-buffer))
-    (setq dp-latest-py-shell-buffer (current-buffer))
-    (local-set-key "\C-c\C-b" 'dpy-reload)
-    (dp-py-shell-hook))
-  (add-local-hook 'kill-buffer-hook 'dp-ipython-buffer-killed))
-
-;;;###autoload
-(defalias 'dpy 'dp-python-shell)
-
-;;;###autoload
-(defsubst dp-python-shell-this-window (&optional args)
-  "Try to put the shell in the current window."
-  (interactive "P")
-  (dp-python-shell)
-  ;; This may or may not work, depending on the original window config.
-  (dp-slide-window-right 1))
-
-;;;###autoload
-(defalias 'dpyd 'dp-python-shell-this-window)
-;;;###autoload
-(defalias 'dpy. 'dp-python-shell-this-window)
-;;;###autoload
-(defalias 'dpy0 'dp-python-shell-this-window)
-
-(defun dpy-reload ()
-  (interactive)
-  ;; Kill current buffer if it's a dpy buffer, else the latest one created.
-  (let* ((doomed-buf (if dp-ima-dpy-buffer-p
-                         (current-buffer)
-                       dp-latest-py-shell-buffer))
-         (cwd (buffer-local-value 'default-directory doomed-buf)))
-    (kill-buffer doomed-buf)
-    ;; Start new shell in same directory
-    (cd cwd))
-  (dp-python-shell))
 
 ;;;;;;;;;;;;;;;;;
 ;; term stuff

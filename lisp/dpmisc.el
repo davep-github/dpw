@@ -4394,19 +4394,6 @@ the one on the previous line."
 	 (lpr-switches (list title-command)))
     (lpr-buffer)))
 
-(defun dp-python-indent-command (&optional indent-offset)
-  "Indent region if mark is active, the current line otherwise."
-  (interactive "*P")
-  (if (dp-mark-active-p)
-      (progn
-	(py-indent-region (region-beginning) (region-end) indent-offset)
-	;;(message "indent region")
-	)
-    ;;(message "indent line")
-    (when dp-orig-python-tab-binding
-      (setq this-command dp-orig-python-tab-binding)
-      (call-interactively dp-orig-python-tab-binding))))
-
 (defun dp-gen-unique-delimitter (text)
   "Generate a delimitter that definitely does not match any complete
 line within text.  Text is a bunch of lines separated by newlines."
@@ -11104,46 +11091,6 @@ I'm not sure what modes are affected."
                                                       nil 'end-p)
                                       c-end))))))))
 
-(defun dp-py-fix-comment ()
-  ;; `save-excursion' doesn't work here.
-  ;; ??? marker vs number?
-  (let ((pt (point)))
-    (end-of-line)
-    (when (and (eq (buffer-syntactic-context) 'comment)
-               ;; Don't hose comment only lines.
-               (not (dp-comment-only-line nil nil
-                                          'except-block-comments-p)))
-      (dp-python-indent-command))
-    (goto-char pt)))
-
-(defvar dp-py-cleanup-class-re
-  (concat "^\\s-*\\(class\\)\\s-+\\(\\(\\w\\|\\s_\\)+\\)\\s-*"
-          ;; 4  5
-          "\\(\\((?\\)"
-          "\\s-*"
-          ;; 6  7
-          "\\(\\(\\w\\|\\s_\\)*\\)"
-          "\\s-*"
-          ;; 8
-          "\\()?\\)\\)\\(.*\\)$"))
-
-(defun dp-py-cleanup-class ()
-  (interactive)
-  ;; For some reason, I see `buffer-syntactic-context' getting hosed
-  ;; such that it thinks it's in a string, when it's not.  It seems
-  ;; like some kind of latch-up, since it will do that for a while
-  ;; and then stop.  Going to `point-min' and calling
-  ;; `buffer-syntactic-context' and returning seems to fix it, but...
-  ;;  For now, I'll just make sure there's no colon where I want to
-  ;;  put one.
-  (save-excursion
-    (beginning-of-line)
-    (when (dp-re-search-forward dp-py-cleanup-class-re (line-end-position) t)
-      (replace-match (format "\\1 \\2(%s)\\9"
-                             (or (dp-non-empty-string (match-string 6))
-                                 "object"))))))
-
-
 (defun dp-line-has-comment-p ()
   (dp-with-saved-point nil
     (beginning-of-line)
@@ -11733,14 +11680,6 @@ An `undo-boundary' is done before the template is used."
 ;;replaced below     main(sys.argv)
 
 
-(defcustom dp-python-new-file-template-file
-  (expand-file-name "~/bin/templates/python-template.py")
-  "A file to stuff into each new Python file created with `pyit'
-or a list: \(function args).
-An `undo-boundary' is done before the template is used."
-  :group 'dp-vars
-  :type 'string)
-
 ;;what was this?; (defun dp-lang-new-file-template-any-old-hack-string-matches (&optional
 ;;what was this?;                                                               rest-o-hack-line
 ;;what was this?;                                                               mode)
@@ -11810,18 +11749,6 @@ An `undo-boundary' is done before the template is used."
                      "\n\n"))
          (insert "\n")
          (goto-char (point-max))))
-
-(defun pyit ()
-  "Set up a buffer as a Python language buffer.
-Inserts `dp-python-new-file-template-file' by default."
-  (interactive)
-  (when (and buffer-file-name
-             (not (string-match dp-ipython-temp-file-re buffer-file-name))
-    (let ((comment-start "###"))
-      (dp-script-it "python" t
-                    :comment-start comment-start
-                    :template 'dp-insert-new-file-template
-                    :template-args (list dp-python-new-file-template-file))))))
 
 (defun* dp-get-buffer-local-value (&optional var buffer
                                    &key (pred 'dp-nilop)

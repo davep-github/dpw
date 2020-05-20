@@ -421,7 +421,6 @@ Bind any keys in KEYS via `dp-define-keys'."
                           [?i] 'dp-ifdef-region
                           [?M] 'dp-edit-spec-macs
                           [?n] 'dp-goto-next-dp-extent-from-point
-                          [?p] 'dp-python-shell
                           [?q] 'dp-calc-eval-region
                           [?r] 'dp-rotate-windows
                           [(control ?r)] 'dp-resurrect
@@ -447,7 +446,6 @@ Submaps of this map are defined below.")
                           [?c] 'dp-make-temp-c++-mode-buffer
                           [?t] 'dp-make-temp-text-mode-buffer
                           [?f] 'dp-make-temp-fundie-mode-buffer
-                          [?p] 'dp-make-temp-python-mode-buffer
                           [?e] 'dp-make-temp-emacs-lisp-mode-buffer
                           [?i] 'dp-make-temp-lisp-interaction-mode-buffer
                           [?*] 'dp-make-temp-*mode-buffer
@@ -786,9 +784,6 @@ already in there.")
 ;; (global-set-key [(control ?c) (control ?g)]
 ;;   (kb-lambda
 ;;       (dp-kb-binding-moved arg 'dp-sel2:bm)))
-(global-set-key [(control ?c) (control ?z)]
-		(kb-lambda
-		  (dp-kb-binding-moved arg 'dp-python-shell)))
 (global-set-key [(control meta ?n)]
 		(kb-lambda
 		  (dp-goto-next-dp-extent-from-point '(4))))
