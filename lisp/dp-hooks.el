@@ -1172,14 +1172,14 @@ main(
   (local-set-key [(meta left)] 'dp-beginning-of-def-or-class)
   (dp-auto-it?))
 
-(defvar dp-use-standard-emacs-python-mode t
-  "Use the python mode defined in python.el.
+(defvar dp-use-standard-emacs-python-mode-p t
+  "Use the python-mode defined in python.el.
 This is used in Emacs 24.{3 or 4 or so}.
-[ at this time: 2020-05-20T13:44:45 ] I'm using 26.2.90 built
+// at this time: 2020-05-20T13:44:45 // I'm using 26.2.90 built
 from the git repository.")
 
-(add-hook 'dp-post-dpmacs-hook (lambda ()
-				 (require 'dp-python)))
+(defvar dp-use-elpy-mode-p t
+  "Use the Python IDE Elpy.")
 
 (defadvice ruby-end-of-block (around dp-ruby-end-block activate)
   "If preceeding command was `dp-beginning-of-def-or-class' do a go-back.
