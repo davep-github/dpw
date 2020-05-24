@@ -1,6 +1,10 @@
+;;
+;; This file does, unfortunately, kind of double duty being the overall
+;; Python config space as well as the python-mode stuff.  Since the Python
+;; mode stuff is now in a file called python.el, naming becomes inconsistent.
+;;
 
-(when (bound-and-true-p dp-use-standard-emacs-python-mode)
-
+(when (bound-and-true-p dp-use-standard-emacs-python-mode-p)
   ;; Fancy vars...
   (defcustom dp-python-new-file-template-file
     (expand-file-name "~/bin/templates/python-template.py")
@@ -154,6 +158,8 @@ set the key-map after the hook has run.
     (local-set-key "\C-c!" 'dp-python-shell)
     (local-set-key [(meta s)] 'dp-py-insert-self?)
     (local-set-key [(meta q)] 'dp-fill-paragraph-or-region-with-no-prefix)
+    (local-set-key [(meta up)] 'dp-other-window-up)
+    (local-set-key [(meta down)] 'other-window)
     (dp-add-line-too-long-font 'python-font-lock-keywords)
     (setq dp-cleanup-whitespace-p t)
     ;; @todo XXX conditionalize this properly
@@ -162,8 +168,9 @@ set the key-map after the hook has run.
     ;; !<@todo XXX Add this to a new file hook?
     (dp-auto-it?)
 
-;;;;;;;;move to dp-flyspell (dp-flyspell-prog-mode)
-    (message "python mode hook finished."))
+;;;;;;;;move to dp-flyspell >>>>> (dp-flyspell-prog-mode)
+
+    (message "`dp-python-mode-hook' finished."))
 
   ;;CO; (defadvice py-end-of-def-or-class (before dp-py-eodoc activate)
   ;;CO;   "Make `py-end-of-def-or-class' leave the region active."
@@ -192,21 +199,21 @@ Also leave the region active."
 ;;; Not until I have only Python mode or Python type shell package.
 ;;; For now, assume we have both and leave them both here.
 ;;;
-  (defun dp-python-get-process ()
-    (or (get-buffer-process (current-buffer))
-                                        ;XXX hack for .py buffers
-	(get-process py-which-bufname)))
+  ;needed w/Eply? (defun dp-python-get-process ()
+  ;needed w/Eply?   (or (get-buffer-process (current-buffer))
+  ;needed w/Eply?                                       ;XXX hack for .py buffers
+  ;needed w/Eply? 	(get-process py-which-bufname)))
 
-  ;; Make this a "style" thing (canna thing ova better word)?  Putting the
+  ;; Make this a "style" thing (canna think ova better word)?  Putting the
   ;; hook in the setup file if there is a setup type file.  Otherwise near
   ;; the setup code or function definition.
   (add-hook 'python-mode-hook 'dp-python-mode-hook)
 
-  (defun dp-py-completion-setup-stolen ()
-    (let ((python-process (dp-python-get-process)))
-      (process-send-string
-       python-process
-       "from IPython.core.completerlib import module_completion\n")))
+  ;needed w/Eply? (defun dp-py-completion-setup-stolen ()
+  ;needed w/Eply?   (let ((python-process (dp-python-get-process)))
+  ;needed w/Eply?     (process-send-string
+  ;needed w/Eply?      python-process
+  ;needed w/Eply?      "from IPython.core.completerlib import module_completion\n")))
 
 ;;;###autoload
   (defun dp-py-shell-hook ()		;<:psh|pysh:>
@@ -296,7 +303,11 @@ Inserts `dp-python-new-file-template-file' by default."
                     :template 'dp-insert-new-file-template
                     :template-args (list dp-python-new-file-template-file))))))
 
-  (dp-py-completion-setup-stolen)
+  ;; needed w/Elpy? (dp-py-completion-setup-stolen)
+
+  (message "Completed dp-python.el setup.")
 
   ;; End of 'dp-use-standard-emacs-python-mode
   )
+
+(provide 'dp-python)
