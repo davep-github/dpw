@@ -1187,7 +1187,11 @@ minibuffer history list `bookmark-history'."
              (dp-setup-cscope)
              (if (dp-xemacs-p)
                  (paren-activate))
+
+	     ;; Python stuff...
+	     ;; ?? Is there an ordering requirement?
 	     (require 'dp-elpy)
+	     (require 'dp-python)
              )))
 
 (when (paths-file-readable-directory-p dp-site-package-info)
