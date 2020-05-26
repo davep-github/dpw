@@ -4,7 +4,14 @@
 (message "load dp-magit()...")
 
 (require 'magit)
-(add-hook 'magit-mode-hook 'magit-stgit-mode)
+
+(when (bound-and-true-p dp-use-magit-stgit-mode-p)
+  (defun dp-stgit-manual-entry (topic &optional other-window-p)
+    (interactive "sstgit help on: \nP")
+    (let ((man-page (concat "stg-" topic)))
+      (funcall (if other-window-p '2man 'manual-entry) man-page)))
+  (dp-defaliases 'hstg 'stgh 'stghelp 'stgman 'dp-stgit-manual-entry)
+  (add-hook 'magit-mode-hook 'magit-stgit-mode))
 
 ;;
 ;; @todo XXX Replace when this is fixed upstream.
@@ -134,13 +141,15 @@ else: NUM-LINES lines.
 (dp-defaliases 'dmhu 'mhut 'hut 'dp-magit-hide-untracked)
 
 (defun dp-magit-found-file-hook ()
-  "Matched (cond)itions must return non-nil."
+  "Matched (cond)itions must return non-nil.
+Want to put cursor at the beginning of the buffer, but stuff is
+done after this is called so we end up not at the beginning.  No
+real biggie, since an `undo' gets us there.  For now, at least."
   (let ((bfn (expand-file-name buffer-file-name)))
     (cond
      ;; Yummy! Hard coding.
      ((string-match "\\(^\\|/\\)COMMIT_EDITMSG$" bfn)
-      (goto-char (point-min))
-      (message "dp-magit-found-file-hook: point: %s" (point)))
+      (goto-char (point-min)))
      (t nil))))
 
 (global-set-key [(control ?x) (control ?g)]

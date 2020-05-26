@@ -14294,12 +14294,6 @@ qualifies for whitespace eradication.")
     (funcall (if other-window-p '2man 'manual-entry) man-page)))
 (dp-defaliases 'hgit 'gith 'githelp 'gitman 'mang 'gman 'dp-git-manual-entry)
 
-(defun dp-stgit-manual-entry (topic &optional other-window-p)
-  (interactive "sstgit help on: \nP")
-  (let ((man-page (concat "stg-" topic)))
-    (funcall (if other-window-p '2man 'manual-entry) man-page)))
-(dp-defaliases 'hstg 'stgh 'stghelp 'stgman 'dp-stgit-manual-entry)
-
 (defun dp-git-manual-entry-other-window (topic &optional other-window-p)
   (interactive "sgit help on: \nP")
   (dp-git-manual-entry topic (not other-window-p)))
