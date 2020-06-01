@@ -374,6 +374,18 @@ VAR must be a symbol."
       ,@else))
   (put 'if-and-fboundp 'lisp-indent-function lisp-body-indent)
 
+  (defmacro stringp-and-or (var &rest args)
+    `(if (stringp ,var)
+	 ,var
+       (or ,@args)))
+  (put 'stringp-and-or 'lisp-indent-function lisp-body-indent)
+
+  (defmacro stringp-and-and (var &rest args)
+    `(if (stringp ,var)
+	 ,var
+       (and ,@args)))
+  (put 'stringp-and-and 'lisp-indent-function lisp-body-indent)
+
   (defmacro def-pkg-dmessage (&optional prefix-in)
     "Define a pkg/file specific dmessage func and control var."
     (let* ((prefix (or prefix-in

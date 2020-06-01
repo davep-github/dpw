@@ -8081,12 +8081,12 @@ I'm over stretching it to find it anywhere."
 (defun dp-embedded-lisp-open-string (&optional prefix)
   "Create a string which introduces an embedded lisp string"
   (setq-ifnil prefix dp-embedded-lisp-prefix)
-  (concat (and-stringp prefix "") "("))
+  (concat (stringp-and-or prefix "") "("))
 
 (defun dp-embedded-lisp-close-string (&optional prefix)
   "Create a string which introduces an embedded lisp string"
   (setq-ifnil prefix dp-embedded-lisp-prefix)
-  (concat ")" (and-stringp prefix "")))
+  (concat ")" (stringp-and-or prefix "")))
 
 (defun dp-mk-tag-delimiters (tag)
   (cons (format "<%s>" tag)
