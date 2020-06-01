@@ -1325,3 +1325,71 @@ Monday December 09 2019
 			 (python-nav-forward-sexp)
 			 (point))))
       (cons open-paren close-paren))))
+
+========================
+Thursday May 28 2020
+--
+
+(and-stringp "S" "x")
+"S"
+
+(and-stringp "" "x")
+""
+
+;;
+(defmacro stringp-or-and (var &rest args)
+  `(if (stringp ,var)
+       ,var
+     (and ,@args)))
+stringp-or-and
+
+
+(defmacro stringp-or (var &rest args)
+  `(if (stringp ,var)
+       ,var
+     (or ,@args)))
+stringp-or
+
+(cl-pe '
+ (stringp-or 'N "else" 1 'w "x" '(a))
+ )
+
+(if (stringp 'N) 'N (or "else" 1 'w "x" '(a)))
+"else"
+
+
+
+
+(if (stringp 'N) 'N (or nil nil 'w "x" '(a)))
+w
+
+1
+
+"else"
+
+(if (stringp 'N) 'N (or "else"))nil
+(if 'N 'N (or "else"))nil
+(if "S" "S" (or "else"))nil
+
+(cl-pe '
+ (stringp-or-and 'N "else" 1 'w "x" '(a))
+ )
+
+(if (stringp 'N) 'N (and "else" 1 'w "x" '(a)))nil
+
+
+
+(listp (if (stringp 'N) 'N (and "else" 1 'w "x" '(a))))
+t
+
+(a)
+
+
+
+
+
+(if (stringp 'N) 'N (or "else" 1 'w "x" '(a)))
+
+
+
+

@@ -115,6 +115,9 @@
     "^I can't dse a remote file... yet$"
     "^mew is displeased. Emacs version .* needs must be >= .*[0-9]$"
     "^Type ’.*’ to collect IMAP folders!$"
+    "^Files .* and .* are the same$"
+    ;; `A' and `B' are actual literals in the message.
+    "^Files A and B are the same$"
     ;;XEmacs
     "^No preceding item in "
     "^No following item in "
@@ -291,6 +294,9 @@
     "^Cannot continue rebase with unstaged changes$"
     "^Timed out getting a response from the mpd server$"
     "^There is nothing to follow for ‘[^']+’"
+
+    ;; elpy, python-mode, etc.
+    "^Can’t shift all lines enough$"
 
     ;; <:new-errors|misc-errors:>
     )

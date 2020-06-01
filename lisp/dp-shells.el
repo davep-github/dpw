@@ -1810,7 +1810,7 @@ first file that is `dp-file-readable-p' is used.  Also sets
             (funcall dp-real-comint-read-input-ring)
           (comint-read-input-ring))
         ;; Extra info for debugging... it's non-nil which is all it needs to
-        ;; be.
+        ;; be, but we might as well fill it with potentially useful info.
         (setq dp-input-ring-has-been-read-p (list (current-buffer)
                                                   history-file))))))
 
@@ -2525,6 +2525,7 @@ it for something \"spayshul\".
       ;;(setq-ifnil dp-save-buffer-contents-file-name
       ;;            (dp-shellify-shell-name (buffer-name)))
       (dmessage "Loading shell input ring")
+      (dmessage "HISTFILE>%s<" (getenv "HISTFILE"))
       (dp-maybe-read-input-ring))))
 
 ;;;###autoload

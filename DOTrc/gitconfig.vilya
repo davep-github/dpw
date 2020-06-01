@@ -19,3 +19,5 @@
 [mail "alias"]
 	# E-mail aliases used with the 'mail' command
 	git = git@vger.kernel.org
+[credential]
+	helper = store
