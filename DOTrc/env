@@ -272,6 +272,8 @@ PATH=$(dp_add_to_path_iff \
     "/opt/perforce/bin" \
     "/opt/p4/bin" \
     "/opt/p4v/bin" \
+    "/opt/sublime_merge" \
+    "/opt/GitFiend" \
     "$HOME/local/opt/perforce/bin" \
     "$HOME/opt/p4/bin" \
     "$HOME/opt/p4v/bin" \
