@@ -135,8 +135,8 @@ case "${delta_vol}" in
 	     set +x
 	     ;;
     -|d|-d|v|-v|dec|-dec|--dec) delta_vol=-1;;
-    +|u|-u|^|-^|inc|-inc|--inc) delta_vol=1;;
-    [0-9]*|-[0-9]*) ;;
+    +|u|+u|^|-^|inc|-inc|--inc) delta_vol=1;;
+    [0-9]*|[+-][0-9]*) ;;
     *) EEdie "Unsupported delta volume input >${delta_vol}<";;
 esac
 EExec_verbose_echo_id --msg "New delta_vol for to mute: " delta_vol

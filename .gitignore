@@ -15,3 +15,4 @@ lisp-*.tar.gz
 
 ### ??? Ignore elpa tree in .gitignore.  Is this a good idea???
 /HIDERS/
+/.project
