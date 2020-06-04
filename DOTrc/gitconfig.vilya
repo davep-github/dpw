@@ -10,10 +10,11 @@
 	fontdiff = -family \"Ricty Diminished Discord\" -size 12 -weight normal -slant roman -underline 0 -overstrike 0
 	warndetachedcommit = true
 	displayuntracked = false
+	fontui = -family \"Ricty Diminished Discord\" -size 14 -weight normal -slant roman -underline 0 -overstrike 0
 
 [user]
 	# Default author/committer details (standard GIT variables)
-	name = Dav P
+	name = Sound Chaser
 	email = davep.git@meduseld.net
 
 [mail "alias"]
