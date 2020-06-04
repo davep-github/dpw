@@ -1393,3 +1393,25 @@ t
 
 
 
+
+========================
+Thursday June 04 2020
+--
+(defun xah-python-2to3-current-file ()
+  "Convert current buffer from python 2 to python 3.
+This command calls python3's script 「2to3」.
+URL `http://ergoemacs.org/emacs/elisp_python_2to3.html'
+Version 2016-02-16"
+  (interactive)
+  (let* (
+         (fName (buffer-file-name))
+         (fSuffix (file-name-extension fName)))
+    (when (buffer-modified-p)
+      (save-buffer))
+    (if (or (string-equal fSuffix "py") (string-equal fSuffix "py3"))
+        (progn
+          (shell-command (format "2to3-3.5 -w %s" fName))
+          (revert-buffer  "IGNORE-AUTO" "NOCONFIRM" "PRESERVE-MODES"))
+      (error "file 「%s」 doesn't end in “.py” or “.py3”." fName))))
+xah-python-2to3-current-file
+

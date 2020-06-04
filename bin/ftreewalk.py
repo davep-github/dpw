@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # $Id: ftreewalk.py,v 1.32 2005/06/19 08:20:11 davep Exp $
 
 import os, sys, getopt, types, string, re

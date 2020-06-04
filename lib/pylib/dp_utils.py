@@ -61,7 +61,7 @@ Run shell or cmd in shell"""
         line = os.environ.get('SHELL')
         if not line:
             line = '/bin/sh'
-        print 'Running shell:', line
+        print('Running shell:', line)
     return os.system(line)
 
 
@@ -69,13 +69,13 @@ def sh2(cmd, *args):
     """sh2(cmd, *args)
 debugging func"""
     if os.fork() == 0:
-        print 'in child, cmd:', cmd
+        print('in child, cmd:', cmd)
         os.execvp(cmd, (cmd, ) + args)
     else:
-        print 'parent waiting'
+        print('parent waiting')
         s = os.wait()
-        print 'parent done'
-        print '0x%x, 0x%x' % (s[0], s[1])
+        print('parent done')
+        print('0x%x, 0x%x' % (s[0], s[1]))
         return s
 
 
@@ -89,7 +89,7 @@ No args says to used the last set of args"""
         args = __Last_rc_args__
     for file in args:
         try:
-            execfile(os.path.expanduser(file), __GLOBALS__)
+            exec(compile(open(os.path.expanduser(file)).read(), os.path.expanduser(file), 'exec'), __GLOBALS__)
         except IOError:
             eprint('source: Cannot open>%s<\n', file)
     __Last_rc_args__ = args
@@ -151,15 +151,15 @@ def locate_rc_file(name, path=None):
 def cbin(val, sep=False, sep_str=" ", field_width=4, word_size=32):
     """cbin(val, field_width=0)
 Convert val to a binary string.  Pad to field_width bits if specified."""
-    if type(val) == types.StringType:
+    if type(val) == bytes:
         val = eval(val)
-    if type(field_width) == types.StringType:
+    if type(field_width) == bytes:
         field_width = eval(field_width)
     s = ''
     num_bits = 0
     if field_width and not sep:
         sep = True
-    if (type(sep) == types.IntType) and sep != 1:
+    if (type(sep) == int) and sep != 1:
         field_width = sep
     if word_size is None:
         word_size = field_width
@@ -190,7 +190,7 @@ Convert val to a binary string.  Pad to field_width bits if specified."""
 def pbin(val, field_width=0, sep_str=" ", sep=False):
     """pbin(val, field_width=0)
 Print the binary string of val after calling cbin(q.v.)"""
-    print cbin(val, field_width=field_width, sep_str=sep_str, sep=sep)
+    print(cbin(val, field_width=field_width, sep_str=sep_str, sep=sep))
 
 def cbinh(val, field_width=4, sep_str=" ", sep=False):
     """cbinh(val, field_width=4, sep_str=" ", sep=False)
@@ -225,8 +225,8 @@ def pbinh(val, field_width=4, sep_str=" ", sep=False):
     """print a cbinh string"""
 #    field_width=4                       #####################################
     #print >>debug_out, "field_width: ", field_width, "sep_str: ", sep_str, "sep: ", sep
-    print string.join(cbinh(val, field_width=field_width,
-                            sep_str=sep_str, sep=sep), '\n')
+    print(string.join(cbinh(val, field_width=field_width,
+                            sep_str=sep_str, sep=sep), '\n'))
 
 ########################################################################
 def file_len(file):
@@ -254,13 +254,13 @@ def repr_dict(id, od):
     else:
         od = {}
 
-    for k in id.keys():
-        od[k] = `id[k]`
+    for k in list(id.keys()):
+        od[k] = repr(id[k])
     return od
 
 ########################################################################
 def binstr_to_int(num):
-    print "type(num): %s, num: %s" % (type(num), num)
+    print("type(num): %s, num: %s" % (type(num), num))
     if type(num) == type(''):
         num = eval(num)
     num = abs(int(num))
@@ -333,7 +333,7 @@ def find_file_in_path(filename, path=sys.path):
 ########################################################################
 def prune_dict(d):
     #pprint.pprint(d)
-    for k, v in d.items():
+    for k, v in list(d.items()):
         if not v:
             del d[k]
         elif isinstance(v, dict):
@@ -360,7 +360,7 @@ def system (command, msg=True, exit_p=True, exit_code=1, debug_p=False,
             else:
                 ret = os.system (command)
             return ret
-        except Exception, e:
+        except Exception as e:
             if msg is True:
                 msg = 'error running "%s".\n' % cmd
             if msg:
@@ -387,7 +387,10 @@ def nWithUnits(s, powers_of_two_p=True, allow_fractions_p=False, base=None):
     s = "%s" % (s,)
     m = re.search("^(\d+(\.\d+)?)\s*([dDcCkKmMgGtT]?)$", s)
     if not m:
-        print >>sys.stderr, "Warning: numWithUnits: no match for>%s<." % (s,)
+        # print("Warning: numWithUnits: no match for>%s<.", s, file=sys.stderr)
+        print("No go files. Exiting.", file=sys.stderr)
+
+        
         return 0                   # Or should it be an error with no digits?
     n = float(eval(m.group(1)))
     if not allow_fractions_p:
@@ -455,13 +458,13 @@ def pluralize(name, num, singular="", plural="s"):
 ## 
 def invert_dict(indict):
     outdict = {}
-    for k, v in indict.items():
+    for k, v in list(indict.items()):
         vals = outdict.get(v, [])
         vals.append(k)
         outdict[v] = vals
 
     for k, v in out_dict:
-        print "k:", h, "vals:", v
+        print("k:", h, "vals:", v)
 
 #######################################################################
 ##
@@ -567,7 +570,7 @@ def process_gopath(args=None):
         if opath.exists(f):
             xfiles.append(f)
     if not xfiles:
-        print >>sys.stderr, "No go files. Exiting."
+        print("No go files. Exiting.", file=sys.stderr)
         sys.exit(1)
     # Keep most specific files last so values may be overridden.
     #print >>sys.stderr, "xfiles>{}<".format(xfiles)
@@ -624,13 +627,13 @@ def dotdot_ify_url(url, num_dotdots=0, dotdot_string="", debug=False):
     if not num_dotdots:
         if dotdot_string:
             num_dotdots = len(string.split(os.path.normpath(".."), opath.sep))
-    proto, path = urllib.splittype(url)
-    host, path = urllib.splithost(path)
+    proto, path = urllib.parse.splittype(url)
+    host, path = urllib.parse.splithost(path)
     path = os.path.normpath(path)
     path_elements = string.split(path, opath.sep)
     if debug:
-        print >>sys.stderr, "path_elements:", path_elements
-        print >>sys.stderr, "host:", host
+        print("path_elements:", path_elements, file=sys.stderr)
+        print("host:", host, file=sys.stderr)
     if num_dotdots:
         path_elements = path_elements[:0-num_dotdots]
     return "%s://%s%s" % (proto, host,
@@ -640,7 +643,7 @@ def identity(x):
     return x
 
 def all_substrings(s, first=0, last=None, string_pp=identity):
-    return [ s[first:i+1] for i in xrange(first, last or len(s)) ]
+    return [ s[first:i+1] for i in range(first, last or len(s)) ]
 
 def any_substring(a, s, first=0, last=None, string_pp=string.lower):
     if string_pp == None:
@@ -711,7 +714,7 @@ def dotted_to_bin(dotted_str, dot="."):
         try:
             if x[0] in "0123456789":
                 n = eval(x)
-        except ValueError, e:
+        except ValueError as e:
             dp_io.eprintf("Bad octet>%s<\n", x)
             return None
             
@@ -762,7 +765,7 @@ def list_from_path_like_lines(lines, sep=None, stringize_p=False):
         return lines
     ret = []
     for l in lines:
-        if type(l) == types.StringType:
+        if type(l) == bytes:
             extend_list_from_path(ret, l, sep)
         elif stringize_p:
             ret.append(str(l))
@@ -773,10 +776,10 @@ def list_from_path_like_lines(lines, sep=None, stringize_p=False):
 
 ########################################################################
 numeric_types = {
-    types.IntType: int,
-    types.FloatType: float,
-    types.LongType: long,
-    types.ComplexType: complex,
+    int: int,
+    float: float,
+    int: int,
+    complex: complex,
     }
 
 ########################################################################
@@ -925,6 +928,6 @@ K64B = (1 << 64)
 ########################################################################
 if __name__ == "__main__":
     for a in sys.argv[1:]:
-        print "a>{}<".format(a)
+        print("a>{}<".format(a))
         mkpath(a)
 

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # $Id: dp_io.py,v 1.13 2005/06/15 22:45:16 davep Exp $
 #
 import re, types, os, sys, types, string, select, StringIO
@@ -534,7 +533,7 @@ def set_ofiles(file, flist, append=False):
     if fname:
         try:
             file = open(fname, mode)
-        except Exception, e:
+        except Exception as e:
             sys.stderr.write('could not open %s, e: %s\n' % (fname, e))
             return
     flist.extend(dp_sequences.listify(file))
