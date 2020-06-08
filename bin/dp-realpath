@@ -3,9 +3,9 @@
 import sys, os
 
 def emit_result(result, verbose_p=False):
-    print result,
+    print(result, end=' ')
     if verbose_p:
-        print >>sys.stderr, "dp-realpath, result>%s<" % (result,),
+        print("dp-realpath, result>%s<" % (result,), end=' ', file=sys.stderr)
 
 def relpath_translator(pathname, relpath):
     rp = os.path.relpath(pathname, relpath)
@@ -54,7 +54,7 @@ def main(argv):
             fileName = fileName[0:-1]
             if not fileName:
                 break
-            print >>sys.stderr, "fileName: ", fileName
+            print("fileName: ", fileName, file=sys.stderr)
             rp = translator(fileName, *translator_args)
             result = '%s%s' % (rp, terminator)
             emit_result(result, verbose_p=verbose_p)

@@ -27,13 +27,13 @@ class AliasItem:
         
 def alias_emitter(alias):
     """Simple default emitter for aliases"""
-    print '%s -> "%s" <%s>' % (alias.alias, alias.fullname, alias.addr)
+    print('%s -> "%s" <%s>' % (alias.alias, alias.fullname, alias.addr))
 
 def list_emitter(name, list_of_aliases):
     """Simple default emitter for alias lists"""
-    print name, '=>'
+    print(name, '=>')
     for alias in list_of_aliases:
-        print '  "%s" <%s>' % (alias.fullname, alias.addr)
+        print('  "%s" <%s>' % (alias.fullname, alias.addr))
         
 
 def set_emitters(aliaser, lister):
@@ -52,13 +52,13 @@ set_emitters(alias_emitter, list_emitter)
     
 def print_all():
     """Print all of the aliases and then all of the expanded lists."""
-    keys = aliases.keys()
+    keys = list(aliases.keys())
     if sort_aliases:
         keys.sort()
     for key in keys:
         emit_alias(aliases[key])
 
-    keys = expanded_lists.keys()
+    keys = list(expanded_lists.keys())
     if sort_lists:
         keys.sort()
     for key in keys:
@@ -105,7 +105,7 @@ def expand_mailing_list(db_entry, mlist):
 
 
 def expand_mailing_lists():
-    for name, mlist_tuple in mailing_lists.items():
+    for name, mlist_tuple in list(mailing_lists.items()):
         db_entry = mlist_tuple[0]
         mlist = mlist_tuple[1]
         l = expand_mailing_list(db_entry, mlist)
@@ -143,13 +143,13 @@ def main(database, entry):
     db_entry = AliasDBEntry(alias, fullname, emails)
     alist = string.split(alias, '|')
     for alias in alist:
-        for email_fld, addr in emails.items():
+        for email_fld, addr in list(emails.items()):
             if string.find(addr, ',') >= 0:
                 # this is a list, handle it.
                 mailing_lists[alias] = (db_entry, string.split(addr, ','))
                 if verbose:
-                    print 'encountered list, name:', alias, 'contents:', \
-                          mailing_lists[alias]
+                    print('encountered list, name:', alias, 'contents:', \
+                          mailing_lists[alias])
             else:
                 # regular entry.
                 # grab the email suffix and tack it onto the end of

@@ -48,14 +48,15 @@ def process_input_fobj(fobj, app_args):
         l = left_commits[i].split()[0]
         r = right_commits[i].split()[0]
         command = "git {} {} {} {} {}".format(app_args.git_diff_cmd,
-                                           app_args.git_diff_args,
-                                           l, r,
-                                           dp_sequences.stringized_join(
-                                               app_args.files_to_diff))
+                                              app_args.git_diff_args,
+                                              l, r,
+                                              dp_sequences.stringized_join(
+                                                  app_args.files_to_diff))
         if app_args.show_commit_p:
             dp_io.printf("====================================\n")
             dp_io.printf("Prev: %s: %s\n", l,
-                         dp_sequences.stringized_join(left_commits[i].split()[1:]))
+                         dp_sequences.stringized_join(
+                             left_commits[i].split()[1:]))
             print "Curr: {}: {}".format(
                 r,
                 dp_sequences.stringized_join(right_commits[i].split()[1:]))
@@ -82,7 +83,8 @@ def process_input_fobj(fobj, app_args):
             print "{}{}".format("{-}", command)
             continue
         os.system(command)
-    
+
+
 def main(argv):
 
     oparser = argparse.ArgumentParser()
@@ -138,12 +140,11 @@ def main(argv):
                          default=True,
                          action="store_false",
                          help="Do not show commit's one line summary.")
-                         
 
-##e.g.     oparser.add_argument("--app-action", "--aa",
-##e.g.                          dest="app_action_stuff", default=[],
-##e.g.                          action=App_arg_action,
-##e.g.                          help="Something normal actions can't handle.")
+# e.g.     oparser.add_argument("--app-action", "--aa",
+# e.g.                          dest="app_action_stuff", default=[],
+# e.g.                          action=App_arg_action,
+# e.g.                          help="Something normal actions can't handle.")
 
     # ...
 

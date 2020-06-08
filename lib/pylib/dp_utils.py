@@ -1,7 +1,7 @@
 """utils.py
 Some helpful utility functions."""
 
-import os, sys, string, stat, pprint, types, re, math, types, pdb
+import os, sys, stat, pprint, types, re, math, types, pdb
 opath = os.path
 
 class DP_UTILS_RT_Exception(RuntimeError):
@@ -40,7 +40,7 @@ def run_shell_cmd(cmd, quiet=None, stdout_too=1):
     """run_shell_cmd(cmd, quiet=None, stdout_too=1)
 Run the command cmd via popen.
 stdout_too says to redirect stdout into the pipe also"""
-    if stdout_too and string.find(cmd, '2>&1') < 0:
+    if stdout_too and str.find(cmd, '2>&1') < 0:
         #cmd = '{' + cmd + '; } 2>&1'
         cmd = cmd + ' 2>&1'
     #print 'cmd', cmd
@@ -61,7 +61,7 @@ Run shell or cmd in shell"""
         line = os.environ.get('SHELL')
         if not line:
             line = '/bin/sh'
-        print('Running shell:', line)
+        print('Running shell>{}<'.format(line))
     return os.system(line)
 
 
@@ -69,13 +69,13 @@ def sh2(cmd, *args):
     """sh2(cmd, *args)
 debugging func"""
     if os.fork() == 0:
-        print('in child, cmd:', cmd)
+        print('in child, cmd>{}'.format(cmd))
         os.execvp(cmd, (cmd, ) + args)
     else:
         print('parent waiting')
         s = os.wait()
         print('parent done')
-        print('0x%x, 0x%x' % (s[0], s[1]))
+        print('child: pid: {0:#x}, status: {0:#x}'.format(s[0], s[1]))
         return s
 
 
@@ -127,7 +127,7 @@ Convert popen() close status to string"""
 def locate_rc_file(name, path=None):
     if path == None:
         path = []
-        evar = string.upper(name)
+        evar = str.upper(name)
         if evar[0] == '.':
             evar = evar[1:]
         evalue = os.environ.get(evar)
@@ -148,6 +148,7 @@ def locate_rc_file(name, path=None):
             pass
 
 
+## @todo XXX replace this with some form of "{0:#o}"
 def cbin(val, sep=False, sep_str=" ", field_width=4, word_size=32):
     """cbin(val, field_width=0)
 Convert val to a binary string.  Pad to field_width bits if specified."""
@@ -190,7 +191,8 @@ Convert val to a binary string.  Pad to field_width bits if specified."""
 def pbin(val, field_width=0, sep_str=" ", sep=False):
     """pbin(val, field_width=0)
 Print the binary string of val after calling cbin(q.v.)"""
-    print(cbin(val, field_width=field_width, sep_str=sep_str, sep=sep))
+    print("{}".format(cbin(val, field_width=field_width,
+                           sep_str=sep_str, sep=sep)))
 
 def cbinh(val, field_width=4, sep_str=" ", sep=False):
     """cbinh(val, field_width=4, sep_str=" ", sep=False)
@@ -225,8 +227,8 @@ def pbinh(val, field_width=4, sep_str=" ", sep=False):
     """print a cbinh string"""
 #    field_width=4                       #####################################
     #print >>debug_out, "field_width: ", field_width, "sep_str: ", sep_str, "sep: ", sep
-    print(string.join(cbinh(val, field_width=field_width,
-                            sep_str=sep_str, sep=sep), '\n'))
+    print(str.join(cbinh(val, field_width=field_width,
+                         sep_str=sep_str, sep=sep), '\n'))
 
 ########################################################################
 def file_len(file):
@@ -260,8 +262,8 @@ def repr_dict(id, od):
 
 ########################################################################
 def binstr_to_int(num):
-    print("type(num): %s, num: %s" % (type(num), num))
-    if type(num) == type(''):
+    print("type(num): {}, num: {}" % (type(num), num))
+    if isinstance(num, str):
         num = eval(num)
     num = abs(int(num))
     ret = []
@@ -287,7 +289,7 @@ def find_leaf_dirs_func(data, dirname, fnames):
 
     ##print 'dirname>%s<' % dirname
     dirname = os.path.join(cwd, dirname)
-    dirname = string.replace(dirname, '/./', '/')
+    dirname = str.replace(dirname, '/./', '/')
     ##print 'dirname>%s<' % dirname
 
     ###print "  ", string.join(fnames, "\n  ")
@@ -388,10 +390,11 @@ def nWithUnits(s, powers_of_two_p=True, allow_fractions_p=False, base=None):
     m = re.search("^(\d+(\.\d+)?)\s*([dDcCkKmMgGtT]?)$", s)
     if not m:
         # print("Warning: numWithUnits: no match for>%s<.", s, file=sys.stderr)
-        print("No go files. Exiting.", file=sys.stderr)
-
-        
+        sys.stderr.write("version: {}\n" % sys.version)
+        print("version: {}.".format(sys.version))
+        print("No go files. Exiting.")
         return 0                   # Or should it be an error with no digits?
+
     n = float(eval(m.group(1)))
     if not allow_fractions_p:
         n = int(n)
@@ -414,8 +417,6 @@ def nWithUnits(s, powers_of_two_p=True, allow_fractions_p=False, base=None):
     return val
 numWithUnits = nWithUnits
 eval_with_units = nWithUnits
-
-import string, os, sys, re, math
 
 def nPlusUnits(n, allow_fractions_p=False, powers_of_two_p=True, base=None):
     if n == 0:
@@ -452,10 +453,11 @@ def pluralize(name, num, singular="", plural="s"):
         suffix = plural
     return name + suffix
 
+
 #######################################################################
 ##
 ## @brief Make the values of indict, keys in outdict.
-## 
+##
 def invert_dict(indict):
     outdict = {}
     for k, v in list(indict.items()):
@@ -463,8 +465,9 @@ def invert_dict(indict):
         vals.append(k)
         outdict[v] = vals
 
-    for k, v in out_dict:
-        print("k:", h, "vals:", v)
+    for k, v in outdict:
+        print("key: {}, val: {}".format(k, v))
+
 
 #######################################################################
 ##
@@ -477,6 +480,7 @@ def re_case_convention_flags(regexp_string):
     if regexp_string.islower():
         flags = re.IGNORECASE
     return flags
+
 
 #######################################################################
 ##
@@ -561,7 +565,7 @@ def process_gopath(args=None):
         names.extend(args)
     if not files:
         if os.environ.get('GOPATH'):
-            files = string.split(os.environ.get('GOPATH'), ':')
+            files = str.split(os.environ.get('GOPATH'), ':')
         else:
             # Default fall back.
             files = [os.environ.get('HOME') + '/.go']
@@ -570,7 +574,8 @@ def process_gopath(args=None):
         if opath.exists(f):
             xfiles.append(f)
     if not xfiles:
-        print("No go files. Exiting.", file=sys.stderr)
+        # print("No go files. Exiting.", file=sys.stderr)
+        print("No go files. Exiting.")
         sys.exit(1)
     # Keep most specific files last so values may be overridden.
     #print >>sys.stderr, "xfiles>{}<".format(xfiles)
@@ -626,18 +631,20 @@ def dump_dp_vars(obj, pat="^d_", trailer="=================\n",
 def dotdot_ify_url(url, num_dotdots=0, dotdot_string="", debug=False):
     if not num_dotdots:
         if dotdot_string:
-            num_dotdots = len(string.split(os.path.normpath(".."), opath.sep))
+            num_dotdots = len(str.split(os.path.normpath(".."), opath.sep))
     proto, path = urllib.parse.splittype(url)
     host, path = urllib.parse.splithost(path)
     path = os.path.normpath(path)
-    path_elements = string.split(path, opath.sep)
+    path_elements = str.split(path, opath.sep)
     if debug:
-        print("path_elements:", path_elements, file=sys.stderr)
-        print("host:", host, file=sys.stderr)
+        # print("path_elements:", path_elements, file=sys.stderr)
+        print("path_elements:".format(path_elements))
+        # print("host:", host, file=sys.stderr)
+        print("host: {}".format(host))
     if num_dotdots:
         path_elements = path_elements[:0-num_dotdots]
     return "%s://%s%s" % (proto, host,
-                           string.join(path_elements, opath.sep))
+                           str.join(path_elements, opath.sep))
 
 def identity(x):
     return x
@@ -645,7 +652,7 @@ def identity(x):
 def all_substrings(s, first=0, last=None, string_pp=identity):
     return [ s[first:i+1] for i in range(first, last or len(s)) ]
 
-def any_substring(a, s, first=0, last=None, string_pp=string.lower):
+def any_substring(a, s, first=0, last=None, string_pp=str.lower):
     if string_pp == None:
         string_pp = identity
     return string_pp(a) in all_substrings(string_pp(s), first, last)
@@ -930,4 +937,3 @@ if __name__ == "__main__":
     for a in sys.argv[1:]:
         print("a>{}<".format(a))
         mkpath(a)
-

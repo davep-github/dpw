@@ -1,13 +1,17 @@
 #!/usr/bin/env python
 import sys, os, types
+import dp_io
 
 def quote_line(line, open_quote_char="'", close_quote_char="'"):
     """Separate open & close allow us to do things like '$(' ')'"""
     return open_quote_char + line + close_quote_char
 
 def proc_file(file_obj, proc, ofile=sys.stdout, **kwargs):
+
     while True:
+        # print("proc_file:file_obj>{}<".format(file_obj))
         line = file_obj.readline()
+        # print("proc_file:line>{}<".format(line))
         if not line:
             return
         line = line[0:-1]
@@ -38,9 +42,10 @@ def main(argv):
             ofile = open(v, "a")
             continue
 
-        print >>sys.stderr, "sys.argv[0]: bad option:", o
+        print("sys.argv[0]: bad option:", o, file=sys.stderr)
         sys.exit(1)
 
+    # print("ofile>{}<".format(ofile))
     kwargs["ofile"] = ofile
     if not args:
         # Filter
@@ -49,7 +54,7 @@ def main(argv):
     for arg in args:
         # Handle arg
         close_p = False
-        if type(arg) == types.StringType:
+        if type(arg) in (bytes, str):
             arg = open(arg, "r")
             close_p = True
         proc_file(arg, proc_fun, **kwargs)

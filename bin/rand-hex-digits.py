@@ -5,7 +5,7 @@ import random
 
 def digits(num_digits=1, sep=""):
     ss = []
-    for i in xrange(num_digits):
+    for i in range(num_digits):
         r = random.Random().randrange(0, 15)
         ss.append("%x" % (r,))
     return sep.join(ss)
@@ -16,7 +16,7 @@ class c_constants(object):
 
     def __call__(self, num_constants, sep="\n"):
         ss = []
-        for i in xrange(num_constants):
+        for i in range(num_constants):
             ss.append("0x" + digits(self.d_num_items))
         return sep.join(ss)
 
@@ -36,8 +36,8 @@ def main(argv):
 
     for arg in args:
         n = eval(arg)
-        print generator(n)
-        print
+        print(generator(n))
+        print()
 
 if __name__ == "__main__":
     main(sys.argv)

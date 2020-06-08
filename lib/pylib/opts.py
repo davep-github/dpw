@@ -111,11 +111,11 @@ class Options:
         self._opts = opts
         options = ''
         # make getopt list from opt lists
-        options = map(lambda opt: opt.get_name(), opts)
-        tlist = map(lambda ch: ch[0], options)
+        options = [opt.get_name() for opt in opts]
+        tlist = [ch[0] for ch in options]
         for opt in tlist:
             if tlist.count(opt) > 1:
-                print "%s: Option `%s' is duplicated" % (__name__, opt)
+                print("%s: Option `%s' is duplicated" % (__name__, opt))
                 sys.exit(3)
                 
         options = string.join(options, '')
@@ -135,7 +135,7 @@ class Options:
 
         try:
             options, self.args = getopt.getopt(argv[1:], options)
-        except getopt.GetoptError, e:
+        except getopt.GetoptError as e:
             dp_io.eprintf('getopt failed: %s\n', e)
             if usage:
                 usage()

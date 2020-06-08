@@ -20,7 +20,7 @@ def main(argv):
         elif o == '-c':
             concat_components_p = True
         else:
-            print >>sys.stderr, "WTF? option>{}< is unsupported".format(o)
+            print("WTF? option>{}< is unsupported".format(o), file=sys.stderr)
             sys.exit(1)
 
     if concat_components_p:
@@ -40,7 +40,7 @@ def main(argv):
             # print "op>{}<".format(op)
             p = op(p)
             # print "p>{}<".format(p)
-        print p
+        print(p)
 
 if __name__ == "__main__":
     main(sys.argv)

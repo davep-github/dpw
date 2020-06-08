@@ -4,21 +4,23 @@
 import sys, types, re, string
 import dp_io
 
-listlikes = (types.ListType, types.TupleType)
+listlikes = (list, tuple)
+
 
 ########################################################################
 def is_listlike(var):
     return type(var) in listlikes
 
 def list_p(l):
-    return type(l) == types.ListType
+    return type(l) == list
 
 def tuple_p(t):
-    return type(t) == types.TupleType
+    return type(t) == tuple
 
 def listlike_p(l_or_t):
     """Proper, but slow..."""
     return list_p(l_or_t) or tuple_p(l_or_t)
+
 
 ########################################################################
 def mklist(*args, **keys):
@@ -46,16 +48,19 @@ def mklist(*args, **keys):
     return ret
 listify = mklist
 
+
 ########################################################################
 def mktuple(*args, **keys):
     return tuple(mklist(*args))
 
+
 ########################################################################
 def extend_list(l, new):
-    if type(new) == types.ListType:
+    if type(new) == list:
         l.extend(new)
     else:
         l.append(new)
+
 
 ########################################################################
 def append_to_dict_of_lists(hash, key, item):
@@ -76,46 +81,61 @@ def extend_dict_of_lists(dict, key, items):
     except KeyError:
         dict[key] = items
 
+
 DEBUG_DEL_LIST_ITEMS = 'DEBUG_DEL_LIST_ITEMS'
+
+
 ########################################################################
 def del_list_items(olist, *args, **keys):
     literal = keys.get('literal') or None
     #dp_io.dump_array_of_objects(olist, 'literal: %s, olist:' % literal)
     #dp_io.dump_array_of_objects(args, 'args:')
     for a in args:
-        dp_io.kwdebug(DEBUG_DEL_LIST_ITEMS, 'dli(): a>%s<\n', `a`)
+        dp_io.kwdebug(DEBUG_DEL_LIST_ITEMS, 'dli(): a>%s<\n', repr(a))
         if not literal and is_listlike(a):
             for rma in a:
-                dp_io.kwdebug(DEBUG_DEL_LIST_ITEMS, 'dli(): rma>%s<\n', `rma`)
+                dp_io.kwdebug(DEBUG_DEL_LIST_ITEMS, 'dli(): rma>%s<\n', repr(rma))
                 dp_io.kwdebug(DEBUG_DEL_LIST_ITEMS,
-                              'rma: %s(%s)\n', `olist.remove`, `a`)
+                              'rma: %s(%s)\n', repr(olist.remove), repr(a))
                 olist.remove(rma)
         else:
             dp_io.kwdebug(DEBUG_DEL_LIST_ITEMS,
-                          'rm: %s(%s)\n', `olist.remove`, `a`)
+                          'rm: %s(%s)\n', repr(olist.remove), repr(a))
             olist.remove(a)
+
 
 rm_list_items = del_list_items
 
+
 ########################################################################
 def stringize_list(lst):
-    return ['%s' % (x,) for x in lst]
+    return [str(x) for x in lst]
+
 
 ########################################################################
 def stringized_join(lst, sep=' '):     # get string.join()'s default sep
-    return string.join(stringize_list(lst), sep)
+    return sep.join(stringize_list(lst))
 
-########################################################################
-def list_to_indented_string(lst, indent_len=2, indent_str=" ", sep='\n'):
-    return stringized_join(lst, sep + indent_str * indent_len)
 
 ########################################################################
 def stringize_args(*args):
     return stringize_list(args)
 
+
 ########################################################################
 def stringized_join_args(sep, *args):   # get string.join()'s default sep
     return stringized_join(args, sep)
+
+
+########################################################################
+def mk_bracketed_joined_string(l, sep="]\n[", opener="[", closer="]"):
+    return opener + stringized_join(l, sep) + closer
+
+
+########################################################################
+def list_to_indented_string(lst, indent_len=2, indent_str=" ", sep='\n'):
+    return stringized_join(lst, sep + indent_str * indent_len)
+
 
 ########################################################################
 def list_diff(l1, l2):
@@ -123,11 +143,13 @@ def list_diff(l1, l2):
     but will not be returned.'''
     return [x for x in l1 if x not in l2]
 
+
 ########################################################################
 def iter_list_diff(l1, l2):
     for x in l1:
         if x not in l2:
             yield x
+
 
 ########################################################################
 def list_safe_get(liszt, index, default=None):
@@ -138,6 +160,7 @@ def list_safe_get(liszt, index, default=None):
         raise default("Index out of range: index: %s >= len(liszt): %s"
                       % (index, len(liszt)))
     return default
+
 
 ########################################################################
 def mk_abbrev_regexp(abbrev_pat):
@@ -157,15 +180,16 @@ appear in the pattern.  Old VMS style."""
         closers = closers + ")?"
     return "^" + regexp + closers + "$"
 
+
 ########################################################################
 class Arg_obj_c(object):
     """A namer object: better than x[0] and x[5]"""
     def __init__(self, **kw_args):
-        for k, v in kw_args.items():
+        for k, v in list(kw_args.items()):
             setattr(self, k, v)
 
     def __iter__(self):
-        return [(i[0], i[1]) for i in self.__dict__.items()].__iter__()
+        return [(i[0], i[1]) for i in list(self.__dict__.items())].__iter__()
 
     def items(self):
         return self.items_v
@@ -178,9 +202,9 @@ class Chomped_file(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         # We'll pass the StopIteration exception buck up hill.
-        line = self.d_file_object_iter.next()
+        line = next(self.d_file_object_iter)
         if line:
             if line[-1] == "\n":
                 return line[0:-1]
@@ -188,12 +212,12 @@ class Chomped_file(object):
                 return line
         raise StopIteration
 
+    
 ########################################################################
 def mk_abbrev_map(abbrev_pat_tuples):
     ret = []
     for abbrev_pat, mapped_info in abbrev_pat_tuples:
         ret.append((mk_abbrev_regexp(abbrev_pat), mapped_info))
-        
     pass
 
 
@@ -213,14 +237,17 @@ Return stuff. See `mk_abbrev_regexp' for abbrev_pat format.
         raise KeyError("nothing matches name>%s<" % name)
     return default_stuff
 
+
 ########################################################################
 def uniqify_list(list_in):
     """Return the list such that each element appears only once."""
     d = {}
     for i in list_in:
         d[i] = 1
-    return d.keys()
+    return list(d.keys())
 
+
+########################################################################
 def uniqify_list_ordered(list_in):
     """Return the list such that order is preserved and each element appears
     only once."""
@@ -231,7 +258,8 @@ def uniqify_list_ordered(list_in):
         # print >>sys.stderr, "l>%s<" % (l,)
 
     return l
-        
+
+
 ########################################################################
 def list_intersection(l1, l2):
     """Return intersection of elements in l1 and l2 in no particular order."""
@@ -239,7 +267,7 @@ def list_intersection(l1, l2):
     for le in l1:
         if le in l2:
             ret[le] = 1
-    return ret.keys()
+    return list(ret.keys())
 
 def add_to_list_iff_uniq(in_list, element):
     """Add element to LIST iff ELEMENT is not in LIST."""
@@ -258,21 +286,24 @@ def add_uniq_list_items_to_list(in_list, add_from_list):
 
 maybe_add_list_to_list = add_uniq_list_items_to_list
 
+
 ########################################################################
 def dict_items_matching_regexp(d, regexp):
     ret = []
     cre = re.compile(regexp)
-    for k, i in d.items():
+    for k, i in list(d.items()):
         m = cre.search(k)
         if m:
             ret.append((k, i))
     return ret
+
 
 ########################################################################
 def pop_peek(l):
     if l:
         return l[len(l)-1]
     return None
+
 
 ########################################################################
 def move_from_list(from_list, str, regexp_p=False, start=0, end=True,
@@ -296,21 +327,21 @@ def move_from_list(from_list, str, regexp_p=False, start=0, end=True,
         return ret
     pred = str_pred
 
-    print pred
+    print(pred)
     to_list = []
     remainder_list = []
     str_len = len(str)
     for element in from_list:
-        print "element>%s<, str>%s<, start>%s<, end>%s<" % (element, str, start, end)
+        print(("element>%s<, str>%s<, start>%s<, end>%s<" % (element, str, start, end)))
         if pred(element, str, start, end) != None:
             if remove_prefix_p:
                 if end is True:
                     element_len = len(element)
                 else:
                     element_len = end
-                print "element>%s<, element_len>%s<, start>%s<, str>%s<, str_len>%s<" % (element, element_len, start, str, str_len)
+                print(("element>%s<, element_len>%s<, start>%s<, str>%s<, str_len>%s<" % (element, element_len, start, str, str_len)))
                 element = return_prefix + element[str_len:element_len]
-            print "element>%s<" % (element,)
+            print(("element>%s<" % (element,)))
             to_list.append(element)
         else:
             remainder_list.append(element)

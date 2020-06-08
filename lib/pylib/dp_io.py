@@ -1,7 +1,8 @@
 # $Id: dp_io.py,v 1.13 2005/06/15 22:45:16 davep Exp $
 #
-import re, types, os, sys, types, string, select, StringIO
+import re, types, os, sys, types, string, select, io
 import dp_sequences, dp_utils
+import collections
 Have_subprocess_module_p = False
 try:
     import subprocess
@@ -142,7 +143,7 @@ def hilight_match(dat, rex, pre=SOUT, post=NORM):
     """Highlight substrings of dat which match rex.
 Highlighing is performed by emitting pre, the text to be highlihted, and
 then post."""
-    if type(rex) == types.StringType:
+    if type(rex) == bytes:
         rex = re.compile(rex)
     ostr = ''
     while dat:
@@ -200,7 +201,7 @@ def eprintf(fmt, *args):
 
 ###############################################################
 def printf(fmt, *args):
-    if type(fmt) == types.IntType:
+    if type(fmt) == int:
         if lint:
             warning = 'HEY, you left a level in a printf/PRINTF\n'
             sys.stderr.write(warning)
@@ -525,10 +526,10 @@ def set_ofiles(file, flist, append=False):
         del flist[:]
     mode = 'w'
     fname = ''
-    if (type(file) == types.TupleType):
+    if (type(file) == tuple):
         fname = file[0]
         mode = file[1]
-    elif type(file) == types.StringType:
+    elif type(file) == bytes:
         fname = file
     if fname:
         try:
@@ -591,9 +592,9 @@ def dump_vars(*namelist, **kargs):
     format = ''
     sep = ''
     for name in namelist:
-        if l and l.has_key(name):
+        if l and name in l:
             val = l[name]
-        elif g and g.has_key(name):
+        elif g and name in g:
             val = g[name]
         else:
             name = '?' + name + '?'
@@ -621,7 +622,7 @@ def set_print_leader(s):
 
 ###############################################################
 def print_vars(*namelist, **kargs):
-    print apply(dump_vars, namelist, kargs)
+    print(dump_vars(*namelist, **kargs))
 
 
 ###############################################################
@@ -630,29 +631,31 @@ def print_vars(*namelist, **kargs):
 # The popen family was just fine. IMO, subprocess, in this context, adds
 # nothing. Just recast popen in terms of subprocess.
 if Have_subprocess_module_p:
-    def bq(cmd, nuke_newline_p=False):
+    def bq(cmd, nuke_newline_p=False, text=None):
         """Run a command, capturing stdout and stderr, mixed, into a string.
         Returns that string. CMD is passed straight thru to Popen.  Reads all
         output at once, so beware capturing huge outputs."""
-        p = subprocess.Popen(cmd, shell=True,
-                             stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                             stderr=subprocess.STDOUT, close_fds=True)
-        ret = p.stdout.read()            # Joined w/stderr.
+        p = subprocess.run(cmd, shell=True,
+                           stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT, close_fds=True,
+                           universal_newlines=text)
+        ret = p.stdout          # Joined w/stderr.
         if nuke_newline_p and ret[-1] == '\n':
             ret = ret[:-1]
         return ret
 
     ###############################################################
-    def bq_lines(cmd, nuke_newline_p=False):
+    def bq_lines(cmd, nuke_newline_p=False, text=None):
         """Run a command, capturing stdout and stderr, into 2 lists of
         strings.  Returns those lists.  Reads all output at once, so beware
         capturing huge outputs."""
         p = subprocess.Popen(cmd, shell=True,
                              stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                             stderr=subprocess.STDOUT, close_fds=True)
-        ret = p.stdout.readlines()
+                             stderr=subprocess.STDOUT, close_fds=True,
+                             universal_newlines=text)
+        ret = p.stdout.readlines()  # Joined w/stderr.
         if nuke_newline_p:
-            ret = [ r[:-1] for r in ret ]
+            ret = [r[:-1] for r in ret]
         return ret
 else:
     def bq(cmd, nuke_newline_p=False):
@@ -665,7 +668,7 @@ else:
     def bq_lines(cmd, nuke_newline_p=False):
         ret = os.popen(cmd).readlines()
         if nuke_newline_p:
-            ret = [ r[:-1] for r in ret ]
+            ret = [r[:-1] for r in ret]
         return ret
 
 
@@ -699,7 +702,7 @@ Reads all output at once, so beware capturing huge outputs."""
 ###############################################################
 def file_length(f):
     opened = False
-    if type(f) == types.StringType:
+    if type(f) == bytes:
         f = open(f)
         opened = True
     f.seek(0, 2)
@@ -734,7 +737,7 @@ def dump_array_of_objects(lines, msg='', prefix2='\n>',
     #YOPPf('in dump_array_of_objects(%s, %s)\n', msg, lines)
     olines = []
     for l in lines:
-        olines.append(`l`)
+        olines.append(repr(l))
 
     dump_array_of_lines(olines, msg, prefix2, postfix, separator)
 
@@ -803,18 +806,18 @@ def sed_ish(regexp, replacement, file_names, ofile=None):
     so if YOU want to do it, feel free.
     '''
     rets = []
-    if type(regexp) == types.StringType:
+    if type(regexp) == bytes:
         regexp = re.compile(regexp)
     for fname in file_names:
         ret = []
         for line in open(fname, 'r'):
             if not line:
                 break
-            if callable(regexp):
+            if isinstance(regexp, collections.Callable):
                 line = regexp(line, replacement)
             else:
                 for m in re.finditer(regexp, line):
-                    if callable(replacement):
+                    if isinstance(replacement, collections.Callable):
                         line = replacement(line, regexp, m)
                     else:
                         line = line.replace(m.group(0), replacement)
@@ -930,13 +933,13 @@ def parse_args(argv, only_our_domain_p=True):
 
     return argv
 
+
 #############################################################################
 # Return an ending based on number;
 # 1st, 2nd, 3rd, 4th, 5th...
-
-Suffix_stndrdth = [ "th", "st", "nd", "rd", "th",
+Suffix_stndrdth = ["th", "st", "nd", "rd", "th",
                     "th", "th", "th", "th", "th",
-                    "th", "th", "th", "th" ]
+                    "th", "th", "th", "th"]
 
 def stndrdth(num):
     suffix = "WTF!?"
@@ -959,7 +962,7 @@ def serialize_file_name(file_name, num_tries=50,
     cdebug(1, "file_name>{}<\n", file_name)
     non_ext, ext = os.path.splitext(file_name)
     file_format = "{}{}{}".format(non_ext, "{}", ext)
-    for attempt in [""] + [ ".%d" % (x,) for x in range(num_tries) ]:
+    for attempt in [""] + [".%d" % (x,) for x in range(num_tries)]:
         try_name = file_format.format(attempt)
         cdebug(1, "try_name>{}<, non_ext>{}<, ext>{}<\n",
                      try_name, non_ext, ext)
@@ -973,7 +976,7 @@ def serialize_file_name(file_name, num_tries=50,
 
         os.close(fd)
         cdebug(1, "return: try_name)>{}<\n", try_name)
-        print try_name
+        print(try_name)
         return (try_name, None)
 
     return None
@@ -998,7 +1001,7 @@ if __name__ == "__main__":              # <:main:>
     argv = sys.argv[1:]
     while len(argv) >= 2:
         s = hilight_match(argv[0], argv[1])
-        print '[%s], [%s], [%s]' % (argv[0], argv[1], s)
+        print('[%s], [%s], [%s]' % (argv[0], argv[1], s))
         argv = argv[2:]
 
     v1 = 'I am v1'
@@ -1042,4 +1045,4 @@ if __name__ == "__main__":              # <:main:>
     # bq
     exp='expr 7 \\* 100 + 7 \\* 10 + 7'
     s = bq(exp)
-    print 'bq(%s) >%s<' % (exp, s)
+    print('bq(%s) >%s<' % (exp, s))
