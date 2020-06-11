@@ -7,7 +7,7 @@
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#2d3743" "#ff4242" "#74af68" "#dbdb95" "#34cae2" "#008b8b" "#00ede1" "#e1e1e0"])
- '(apropos-do-all t t)
+ '(apropos-do-all t)
  '(auth-sources
    (quote
     ("secrets:Login" "~/.authinfo" "~/.authinfo.gpg" "~/.netrc")))
@@ -66,6 +66,9 @@
  '(efs-ftp-program-args (quote ("-e" "-i" "-n" "-g" "-v" "-p")))
  '(efs-pty-check-retry-time 60)
  '(efs-send-progress-off t)
+ '(elpy-modules
+   (quote
+    (elpy-module-company elpy-module-eldoc elpy-module-flymake elpy-module-pyvenv elpy-module-highlight-indentation elpy-module-yasnippet elpy-module-sane-defaults)))
  '(elpy-rpc-python-command "python3")
  '(emms-player-mpd
    (quote
@@ -95,6 +98,8 @@
      (end-of-line . exact)
      (dpj-action-item . spaces)
      (dpj-action-item-resolution . spaces))))
+ '(flymake-start-on-flymake-mode nil)
+ '(flymake-start-syntax-check-on-newline nil)
  '(flyspell-duplicate-distance 0)
  '(flyspell-issue-message-flag nil)
  '(flyspell-issue-welcome-flag nil)
@@ -224,7 +229,7 @@
  '(org-insert-mode-line-in-empty-file t)
  '(package-selected-packages
    (quote
-    (pungi deferred python-black py-autopep8 yapfify py-yapf leanote markdown-preview-eww markdown-preview-mode markup markup-faces md-readme mkdown grip-mode grin gh-md flymd rpn-calc corral hiwin magit-stgit ztree vdiff-magit vdiff treemacs-magit treemacs pcmpl-git mo-git-blame magit-tbdiff libgit github-modern-theme github-browse-file gitconfig-mode gitconfig git-attr git browse-kill-ring browse-at-remote enwc emr emaps emacsist-view emacsc emacsagist elpygen elpy elpa-audit elmacro elisp-sandbox elf-mode eldoc-overlay electric-case eide edebug-x git-wip-timemachine git-timemachine mmm-mode magit magit-annex magit-find-file magit-gerrit magit-gh-pulls magit-gitflow magit-imerge magit-lfs magit-org-todos magit-todos lua-mode dired-k osx-dictionary goldendict dictcc meson-mode libmpdel emms-state emms-mode-line-cycle emms-mark-ext emms-info-mediainfo emms fwb-cmds dictionary dic-lookup-w3m w3 w3m telephone-line spaceline smart-mode-line-powerline-theme smart-mode-line yahoo-weather svg-mode-line-themes svg-clock minions ergoemacs-status dot-mode mpdel mingus dimmer spotify sudo-edit stgit noaa magit-filenotify flycheck-checkpatch el-patch ein ac-ispell ac-c-headers jedi-direx jedi sly-repl-ansi-color sly-macrostep sly-hello-world sly slime-theme slime passmm pass ivy-pass wanderlust 0xc yasnippet-snippets c-eldoc bison-mode bash-completion celestial-mode-line all-the-icons-dired achievements ac-etags minimap markdown-mode+ sphinx-doc fuzzy full-ack ack-menu ag ibuffer-tramp ecb thingopt escreen nhexl-mode mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar flylisp ggtags json-mode context-coloring)))
+    (global-tags counsel-gtags company-ctags comment-tags agtags pungi deferred python-black py-autopep8 yapfify py-yapf leanote markdown-preview-eww markdown-preview-mode markup markup-faces md-readme mkdown grip-mode grin gh-md flymd rpn-calc corral hiwin magit-stgit ztree vdiff-magit vdiff treemacs-magit treemacs pcmpl-git mo-git-blame magit-tbdiff libgit github-modern-theme github-browse-file gitconfig-mode gitconfig git-attr git browse-kill-ring browse-at-remote enwc emr emaps emacsist-view emacsc emacsagist elpygen elpy elpa-audit elmacro elisp-sandbox elf-mode eldoc-overlay electric-case eide edebug-x git-wip-timemachine git-timemachine mmm-mode magit magit-annex magit-find-file magit-gerrit magit-gh-pulls magit-gitflow magit-imerge magit-lfs magit-org-todos magit-todos lua-mode dired-k osx-dictionary goldendict dictcc meson-mode libmpdel emms-state emms-mode-line-cycle emms-mark-ext emms-info-mediainfo emms fwb-cmds dictionary dic-lookup-w3m w3 w3m telephone-line spaceline smart-mode-line-powerline-theme smart-mode-line yahoo-weather svg-mode-line-themes svg-clock minions ergoemacs-status dot-mode mpdel mingus dimmer spotify sudo-edit stgit noaa magit-filenotify flycheck-checkpatch el-patch ein ac-ispell ac-c-headers jedi-direx jedi sly-repl-ansi-color sly-macrostep sly-hello-world sly slime-theme slime passmm pass ivy-pass wanderlust 0xc yasnippet-snippets c-eldoc bison-mode bash-completion celestial-mode-line all-the-icons-dired achievements ac-etags minimap markdown-mode+ sphinx-doc fuzzy full-ack ack-menu ag ibuffer-tramp ecb thingopt escreen nhexl-mode mu4e-jump-to-list mu4e-alert flycheck-cstyle flycheck-checkbashisms flymake-cppcheck flycheck-rust flycheck-pos-tip flycheck-cython flymake-python-pyflakes flycheck hyperbole diffview dired-du auto-overlays adjust-parens which-key sed-mode notes-mode on-screen bug-hunter beacon python pinentry metar flylisp ggtags json-mode context-coloring)))
  '(package-user-dir "~/.emacs.d/elpa")
  '(python-shell-interpreter "/usr/bin/ipython")
  '(python-skeleton-autoinsert t)
