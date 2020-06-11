@@ -297,6 +297,7 @@
 
     ;; elpy, python-mode, etc.
     "^Can’t shift all lines enough$"
+    "^No definition found$"
 
     ;; <:new-errors|misc-errors:>
     )

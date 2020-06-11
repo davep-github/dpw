@@ -1415,3 +1415,97 @@ Version 2016-02-16"
       (error "file 「%s」 doesn't end in “.py” or “.py3”." fName))))
 xah-python-2to3-current-file
 
+
+
+========================
+Tuesday June 09 2020
+--
+(cl-pe '
+(defun xgtags--call-global (buffer-dir option tagname)
+  (message "Searching %s ..." tagname)
+  (let ((tags nil))
+    (xgtags--do-in-all-directories
+     buffer-dir
+     (lambda (dir)
+       (when dir
+         (message "Searching %s in %s ..." tagname dir))
+       (let ((xgtags-rootdir (and dir (file-name-as-directory dir)))
+             (global-args (append
+                           (if (nCu-p 2)
+                               '("--rgg-all-matches"))
+                           xgtags-global-program-args
+                           (xgtags--list-sans-nil
+                            "--cxref"
+                            (xgtags--option-string option)
+                            (unless (eq xgtags-show-paths 'relative)
+                              "--absolute")
+                            tagname))))
+         (message "xgtags--call-global(): global-args>%s<" global-args)
+         (with-xgtags-environment
+           (when xgtags-update-db
+             (xgtags--update-db xgtags-rootdir))
+           (with-temp-buffer
+             (if (zerop (apply #'call-process xgtags-global-program nil t nil
+                               global-args))
+                 (setq tags (append tags (xgtags--collect-tags-in-buffer)))
+               (message (buffer-substring (point-min)(1- (point-max))))))))))
+    (message "Searching %s done" tagname)
+    tags))
+
+)
+
+(defalias 'xgtags--call-global
+  (function
+   (lambda (buffer-dir option tagname)
+     (message "Searching %s ..." tagname)
+     (let ((tags nil))
+       (xgtags--do-in-all-directories buffer-dir
+				      (function
+				       (lambda (dir)
+					 (if dir
+					     (progn
+					       (message "Searching %s in %s ..."
+							tagname
+							dir)))
+					 (let ((xgtags-rootdir (and dir
+								    (file-name-as-directory dir)))
+					       (global-args (append (if (nCu-p 2)
+									'("--rgg-all-matches"))
+								    xgtags-global-program-args
+								    (xgtags--list-sans-nil "--cxref"
+											   (xgtags--option-string option)
+											   (if (eq xgtags-show-paths
+												   'relative)
+											       nil
+											     "--absolute")
+											   tagname))))
+					   (message "xgtags--call-global(): global-args>%s<"
+						    global-args)
+					   (let ((process-environment (copy-alist process-environment)))
+					     (if xgtags-rootdir
+						 (progn
+						   (setenv "GTAGSROOT"
+							   xgtags-rootdir)))
+					     (if xgtags-update-db
+						 (progn
+						   (xgtags--update-db xgtags-rootdir)))
+					     (let ((temp-buffer (generate-new-buffer " *temp*")))
+					       (save-current-buffer (set-buffer temp-buffer)
+								    (unwind-protect
+									(progn
+									  (if (= 0
+										 (apply (function call-process)
+											xgtags-global-program
+											nil
+											t
+											nil
+											global-args))
+									      (setq tags (append tags
+												 (xgtags--collect-tags-in-buffer)))
+									    (message (buffer-substring (point-min)
+												       (1- (point-max))))))
+								      (and (buffer-name temp-buffer)
+									   (kill-buffer temp-buffer))))))))))
+       (message "Searching %s done" tagname)
+       tags))))nil
+

@@ -16,6 +16,14 @@
     )
   (add-hook 'elpy-mode-hook 'dp-elpy-mode-hook)
 
+  ;; This needs must be done after flycheck loads?  The doc says set to nil
+  ;; to prevent a timeout, but the custom code complains if it's not int or
+  ;; float.  The code that looks at it definitely cares if it's nil rather
+  ;; than zero.
+  (setq flymake-no-changes-timeout nil)
+  ;; I'd like to make this on a per-buffer basis.  Maybe.
+  (make-variable-buffer-local 'flymake-no-changes-timeout)
+
   (message "Completed dp-elpy.el setup.")
   )
 

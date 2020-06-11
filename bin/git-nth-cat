@@ -115,6 +115,8 @@ git_cat()
     EExec_verbose_echo_id file
     local grf=$(EExec git-relative-filename ${file})
     EExec_verbose_echo_id grf
+    # Would something like the following be better?
+    # git cat-file -p HEAD:lib/pylib/go2env_lib.py
     EExec git show "${commit}:${grf}"
 }
 
