@@ -39,7 +39,7 @@ class Memoizable_regexp_fields_c(Memoizable_c):
         cre = []                        # Closure(ish:-(
         def regexp_parser(line):
             return cre[0].search(line)
-        if type(regexp) == types.StringType:
+        if type(regexp) == bytes:
             cre[0] = re.compile(regexp)
         else:
             cre[0] = regexp
@@ -169,7 +169,7 @@ class Modified_url(object):
         return s
 
 def get_url_from_file(file_obj_or_name):
-    if type(file_obj_or_name) == types.StringType:
+    if type(file_obj_or_name) == bytes:
         opened_p = True
         file_obj = os.popen("svn info %s" % file_obj_or_name)
     else:
@@ -201,7 +201,7 @@ def up_in_url_space(path_name, num_dotdots, dotdot_string):
         if u:
             emsg = None
         else:
-            emsg = "get_url_from_file(%s) failed." % (`rp`, )
+            emsg = "get_url_from_file(%s) failed." % (repr(rp), )
     if u:
         u = dp_utils.dotdot_ify_url(u, num_dotdots, dotdot_string)
     return Modified_url(path_name, u, emsg)

@@ -332,16 +332,19 @@ def move_from_list(from_list, str, regexp_p=False, start=0, end=True,
     remainder_list = []
     str_len = len(str)
     for element in from_list:
-        print(("element>%s<, str>%s<, start>%s<, end>%s<" % (element, str, start, end)))
-        if pred(element, str, start, end) != None:
+        print("element>%s<, str>%s<, start>%s<, end>%s<".format(
+            element, str, start, end))
+        if pred(element, str, start, end) is not None:
             if remove_prefix_p:
                 if end is True:
                     element_len = len(element)
                 else:
                     element_len = end
-                print(("element>%s<, element_len>%s<, start>%s<, str>%s<, str_len>%s<" % (element, element_len, start, str, str_len)))
+                print("element>%s<, element_len>%s<, start>%s<,"
+                      " str>%s<, str_len>%s<".format(element, element_len,
+                                                     start, str, str_len))
                 element = return_prefix + element[str_len:element_len]
-            print(("element>%s<" % (element,)))
+            print("element>{}<".format(element))
             to_list.append(element)
         else:
             remainder_list.append(element)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os, argparse, StringIO
+import sys, os, argparse, io
 import dp_io, find_up, p4_lib
 import go2env_lib
 #from go2env_lib import Alias_item_t
@@ -135,7 +135,7 @@ def expand_dest(current_tree_root, expand_dest_args, input_tree_root,
     input_tree_root = opath.normpath(input_tree_root)
     ctracef(1, "3.0: new_abbrev>{}<\n", new_abbrev)
     ctracef(1, "3.1: input_tree_root>{}<\n", input_tree_root)
-    output = StringIO.StringIO()
+    output = io.StringIO()
     emit_path((input_tree_root, new_abbrev), realpath_p=realpath_p,
               ostream=output)
     return_expansion = output.getvalue().strip()
@@ -152,7 +152,7 @@ def relativize(current_tree_root, name_to_relativize, p4_location_p=False):
     name = opath.normpath(opath.realpath(name_to_relativize))
     ctracef(1, "0, name>{}<\n", name)
     ctracef(1, "0, current_tree_root>{}<\n", current_tree_root)
-    output = StringIO.StringIO()
+    output = io.StringIO()
     p = name.find(current_tree_root)
     ctracef(1, "0, p>{}<\n", p)
 
@@ -371,11 +371,11 @@ def main(argv):
                 s = opath.normpath(s)
                 if app_args.normpath_slash_p:
                     s = s + opath.sep
-            print s
+            print(s)
             sys.exit(0)
         else:
             if app_args.print_non_existent_p:
-                print s
+                print(s)
             dp_io.eprintf("Expansion>{}< doesn't exist.\n", s)
             ctracef(1, "NO GO ON s>{}<\n", s)
             sys.exit(0)
@@ -393,7 +393,7 @@ def main(argv):
     if app_args.name_to_relativize:
         s = relativize(current_tree_root, app_args.name_to_relativize,
                        app_args.p4_location_p)
-        print s
+        print(s)
         sys.exit(0)
 
     name_to_make_absolute = app_args.name_to_make_absolute

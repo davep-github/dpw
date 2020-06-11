@@ -29,8 +29,7 @@ def node_list_to_path_name(node_list, root_path='', sep=None):
         sep = os.path.sep
     if sep == None:
         sep = ''
-    ret = root_path + sep + apply(os.path.join,
-                                  node_list_to_name_list(node_list))
+    ret = root_path + sep + os.path.join(*node_list_to_name_list(node_list))
     return os.path.normpath(ret)
     #return node_list_to_name_lines(node_list, None, os.path.sep)
     
@@ -209,7 +208,7 @@ class DirNode:
         for f in self.file_children:
             fn = f.full_path_name()
             #print 'fpn>%s<\n' % fn
-            print fn
+            print(fn)
         dp_io.cdebug(1, "done d.walk(%s)\n", self.get_name());
 
     def walkl(self, file_visit=None, leaf_visit=None):
@@ -228,7 +227,7 @@ class DirNode:
             dp_io.cdebug(1, "process child(%s)\n", f.get_name())
             fl = f.full_path_list()
             dp_io.cdebug(2, 'fn>%s<\n',
-                         apply(os.path.join, node_list_to_name_list(fl)))
+                         os.path.join(*node_list_to_name_list(fl)))
             file_lists.append(fl)
 
         dp_io.cdebug(2, 'DirNode: len-file_lists: %d\n', len(file_lists))

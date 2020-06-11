@@ -103,9 +103,9 @@ class DateRange:
     def set_days(self, *pargs):
         self.days = []
         for day in pargs:
-            if type(day) == types.IntType:
+            if type(day) == int:
                 daynum = day
-            elif type(day) == types.StringType:
+            elif type(day) == bytes:
                 daynum = dp_time.name_to_daynum(day)
                 if daynum == None:
                     raise 'Unknown day name >%s<' % day
@@ -116,7 +116,7 @@ class DateRange:
             self.days.append(daynum)
             
     ############################################################
-    def next(self):
+    def __next__(self):
         while 1:
             if self.done:
                 return None
@@ -137,7 +137,7 @@ class DateRange:
     def get_seq_mdY(self):
         retl = []
         while 1:
-            ret = self.next()
+            ret = next(self)
             if not ret:
                 break
             retl.append('%s' % ret)
@@ -155,7 +155,7 @@ def gen_seq(start, end, days, texts=[], sep=' '):
     """Generate a sequence of dates and texts"""
     
     dr = DateRange(start, end)
-    apply(dr.set_days, days)
+    dr.set_days(*days)
 
     deb('start: %s\n', dr.start_date)
     deb('end  : %s\n', dr.end_date)
@@ -167,7 +167,7 @@ def gen_seq(start, end, days, texts=[], sep=' '):
 
     outl = []
     while 1:
-        dat = dr.next()
+        dat = next(dr)
         if not dat:
             break
         if textm:
@@ -185,12 +185,12 @@ if __name__ == "__main__":
     texts = []
     
     if len(sys.argv) == 1:
-        print """usage: %s [-t txt...] start-date end-date [day...]
+        print("""usage: %s [-t txt...] start-date end-date [day...]
         
 Generate a sequence of dates from start-date to end-date.
 day... specifies which days of the week to produce.
 -t txt says to add txt to each date produced.  Txts will be cycled through
-round-robin and attached to each date produced.""" % progname
+round-robin and attached to each date produced.""" % progname)
         sys.exit(0)
         
     opts, args = getopt.getopt(sys.argv[1:], 't:')
@@ -201,4 +201,4 @@ round-robin and attached to each date produced.""" % progname
     seq = gen_seq(args[0], args[1], args[2:], texts)
     
     if seq:
-        print string.join(seq, '\n')
+        print(string.join(seq, '\n'))

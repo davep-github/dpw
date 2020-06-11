@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-### Time-stamp: <14/04/02 19:51:07 dpanariti>
+### Time-stamp: <2020-06-09 18:59:42 davep>
 #############################################################################
 ## @package 
 ##
@@ -19,9 +19,9 @@ def iterable_p(obj):
 def try_iter():
     try:
         i2 = iter(2)
-    except Exception, e:
-        print "type(e):", type(e)
-        print "Exception:", e
+    except Exception as e:
+        print("type(e):", type(e))
+        print("Exception:", e)
 
 def inner_flatten_iterables(*iters):
     i = iterable_p(iters)

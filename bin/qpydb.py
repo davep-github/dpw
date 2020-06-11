@@ -27,8 +27,8 @@ def field_printer(database, entry):
         
 def val_printer(database, entry):
     d = entry.ret_fields(options.print_field_pat, options.print_val_pat)
-    for k in d.keys():
-        print d[k]
+    for k in list(d.keys()):
+        print(d[k])
 
 def set_handler(handler_var, handler_func_name, default=None):
     try:
@@ -39,9 +39,9 @@ def set_handler(handler_var, handler_func_name, default=None):
 
     
 def usage():
-    print """Query python databases\noptions:\n"""
+    print("""Query python databases\noptions:\n""")
     try:
-        print opts_help(qopts)
+        print(opts_help(qopts))
     except NameError:
         # options is not defined yet.
         sys.stderr.write('qopts not defined yet.')
@@ -89,7 +89,7 @@ if options.help_req:
     usage()
 
 if options.show_opts:
-    print options.help()
+    print(options.help())
 
 dppydb.prep()
 
@@ -104,8 +104,8 @@ else:
     wilds = options.db_wilds
 
 if options.show_opts:
-    print 'pattern for db selection>%s<' % pat
-    print 'wildcards for db selection>%s<' % wilds
+    print('pattern for db selection>%s<' % pat)
+    print('wildcards for db selection>%s<' % wilds)
 
 if not options.db_dirs:
     options.db_dirs = None
@@ -120,7 +120,7 @@ ents = d.grep_fields(options.field_pat, options.val_pat)
 
 if options.entry_processing_file:
     modname, modext = os.path.splitext(options.entry_processing_file)
-    exec 'import %s' % modname
+    exec('import %s' % modname)
     # required
     entry_processor = sys.modules[modname].main
 

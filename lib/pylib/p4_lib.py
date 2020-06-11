@@ -40,7 +40,7 @@ def reroot(line, sb, verify_p=False):
     sb = dp_utils.normpath_plus(sb)
     newp = line.replace(LOCATION_ROOT, sb)
     if verify_p:
-        print >>sys.stderr, "verify_p not supported."
+        print("verify_p not supported.", file=sys.stderr)
         sys.exit(3)
     return newp
 
@@ -58,7 +58,7 @@ def reroot_command(sb, args, istream=sys.stdin):
     else:
         ret = reroot_iterable(sb, istream)
     for l in ret:
-        print l
+        print(l)
 
 #
 # I'm changing from this to using a flag file to identify the root.

@@ -56,7 +56,7 @@ def famDB_to_node_name():
     return ("famDB", None)
 
 def def_formatter(prefix, field, value, fixes=fixes):
-    # this is almost 2x faster than string.join !
+    # this is almost 2x faster than str.join !
     return "%s%s%s%s%s%s%s" % (fixes.field_pre, prefix,
                                field, fixes.field_post,
                                fixes.value_pre, value, fixes.value_post)
@@ -80,7 +80,7 @@ class PythonDataBase:
          To have an int as key, you'll need to `` into a string.
         Otherwise, use key as a key into keys."""
 
-        if type(key) == types.IntType:
+        if type(key) == int:
             return self.entries[key]
         else: #if self.keys != {}:
             return self.keys[key]
@@ -96,11 +96,11 @@ class PythonDataBase:
 
     ###############################################################
     def dump(self, title=''):
-        print 'dumping db(%s): %s\nvvvvvvvvvvvvvvvvvvvvvvvvvv' % (self, title)
+        print('dumping db(%s): %s\nvvvvvvvvvvvvvvvvvvvvvvvvvv' % (self, title))
         for e in self.entries:
-            print 'e:', e
+            print('e:', e)
             e.dump()
-        print '^^^^^^^^^^^^^^^^^^^^^^^^^^'
+        print('^^^^^^^^^^^^^^^^^^^^^^^^^^')
 
     ###############################################################
     def entries_as_list(self):
@@ -111,11 +111,11 @@ class PythonDataBase:
     
     ###############################################################
     def grep_fields(self, pat=None, vpat=None):
-        if type(pat) == types.StringType:
+        if type(pat) == bytes:
             rex = re.compile(pat)
         else:
             rex = pat
-        if type(vpat) == types.StringType:
+        if type(vpat) == bytes:
             val_rex = re.compile(vpat)
         else:
             val_rex = vpat
@@ -144,7 +144,7 @@ class PythonDataBase:
         in all cases except add(x)."""
 
         if dat == None:
-            if type(key) != types.DictType:
+            if type(key) != dict:
                 raise 'Single arg must be a dictionary'
             dat = key
             key = None
@@ -181,7 +181,7 @@ class Entry:
 
         self.references = []
         self.fields = {}
-        apply(self.add_fields, pargs)
+        self.add_fields(*pargs)
         self.add_fields(kargs)
         self.all_my_refs = []
         # print 'self.fields>%s<' % self.fields
@@ -212,8 +212,8 @@ class Entry:
             l = l + (kargs,)
 
         for d in l:
-            for k in d.keys():
-                for k2 in string.split(k, '|'):
+            for k in list(d.keys()):
+                for k2 in str.split(k, '|'):
                     self.fields[k2] = d[k2]
 
     ###############################################################
@@ -226,11 +226,11 @@ class Entry:
         Return the entry if anything matches.
         Also search the referenced entries"""
 
-        if type(pat) == types.StringType:
+        if type(pat) == bytes:
             field_rex = re.compile(pat)
         else:
             field_rex = pat
-        if type(vpat) == types.StringType:
+        if type(vpat) == bytes:
             val_rex = re.compile(vpat)
         else:
             val_rex = vpat
@@ -239,14 +239,14 @@ class Entry:
         #
         # print '+++++++++++++++++++++++++++'
         # print 'keys:', self.fields.keys()
-        for key in self.fields.keys():
+        for key in list(self.fields.keys()):
             if not field_rex or field_rex.search(key):
                 try:
                     # print 'f>%s< or v>%s<' % (key, self.fields[key])
                     if not val_rex or val_rex.search(self.fields[key]):
                         return self
                 except TypeError:
-                    print '*******keys:', self.fields.keys()
+                    print('*******keys:', list(self.fields.keys()))
                     #print 'Not a string: f>%s< or v>%s<' % (key, self.fields[key])
                     continue
 
@@ -280,11 +280,11 @@ class Entry:
         Pats may be: strings w/regexps, compiled regexps, None
         If None --> match all (hopefully faster than matching .*)"""
 
-        if type(pat) == types.StringType:
+        if type(pat) == bytes:
             field_rex = re.compile(pat)
         else:
             field_rex = pat
-        if type(vpat) == types.StringType:
+        if type(vpat) == bytes:
             val_rex = re.compile(vpat)
         else:
             val_rex = vpat
@@ -294,7 +294,7 @@ class Entry:
 
         for entry in entries:
             #print 'entry, field keys>%s<' % entry.fields.keys()
-            for key in entry.fields.keys():
+            for key in list(entry.fields.keys()):
                 if not field_rex or field_rex.search(key):
                     if not val_rex or val_rex.search(entry.fields[key]):
                         #
@@ -302,7 +302,7 @@ class Entry:
                         # this allows us to override fields since
                         # we scan "top down"
                         #
-                        if not ret.has_key(key):
+                        if key not in ret:
                             ret[key] = entry.fields[key]
 
         #print 'ret, keys>%s<' % ret.keys()
@@ -318,15 +318,15 @@ class Entry:
         formatted by formatter."""
 
         fields = self.ret_fields(pat, vpat)
-        keys = fields.keys()
+        keys = list(fields.keys())
         if sortem:
             keys.sort()
         for field in keys:
             #print 'field>%s<' % field
-            print formatter('', field, fields[field])
+            print(formatter('', field, fields[field]))
 
         if fields:
-            print print_sep
+            print(print_sep)
 
     ###############################################################
     def get_item(self, field, default=None, exception_if_not_found=None):
@@ -359,7 +359,7 @@ class Entry:
 
     ###############################################################
     def dump(self):
-        print 'fields:', `self.fields`
+        print('fields:', repr(self.fields))
 
 
 
@@ -407,13 +407,13 @@ def mk_loclist(localize=None, loclist=None):
     into a locale list."""
     if loclist == None:
         if localize:
-            loclist = string.split(os.getenv('locale_rcs', ''))
-            loclist = map(lambda s: s[1:], loclist)
+            loclist = str.split(os.getenv('locale_rcs', ''))
+            loclist = [s[1:] for s in loclist]
         else:
             loclist = []
     loclist.append('')                  # '' will result in unlocalized name
-    loclist = map(cleanup_locale, loclist)
-    #print 'loclist>%s<' % string.join(loclist, '<, >')
+    loclist = list(map(cleanup_locale, loclist))
+    #print 'loclist>%s<' % str.join(loclist, '<, >')
     return loclist
 
 ###############################################################
@@ -438,7 +438,7 @@ def find_db_file(dbfile, localize=None, loclist=None):
                     ret.append(os.path.normpath(dir+'/'+modname+'.py'))
                 else:
                     continue
-    #print 'returning>%s<' % string.join(ret, ', ')
+    #print 'returning>%s<' % str.join(ret, ', ')
     return ret
 
 ###############################################################
@@ -451,12 +451,12 @@ def load(dirs=None, pat=None, wild=None, verbose=None, localize=None,
     You cannot specify both pat and wild."""
 
     if verbose:
-        print 'wild>%s<, pat>%s<, dirs>%s<' % (wild, pat, dirs)
+        print('wild>%s<, pat>%s<, dirs>%s<' % (wild, pat, dirs))
 
     dirs = get_db_dirs(dirs)
 
     if verbose:
-        print 'wild>%s<, pat>%s<, dirs>%s<' % (wild, pat, dirs)
+        print('wild>%s<, pat>%s<, dirs>%s<' % (wild, pat, dirs))
 
     if wild and pat:
         dp_io.eprintf("Cannot specify both pat and wild.\n")
@@ -465,7 +465,7 @@ def load(dirs=None, pat=None, wild=None, verbose=None, localize=None,
     loclist = mk_loclist(localize, loclist)
 
     if not wild:
-        if type(pat) == types.StringType:
+        if type(pat) == bytes:
             rex = re.compile(pat)
         else:
             rex = pat
@@ -477,7 +477,7 @@ def load(dirs=None, pat=None, wild=None, verbose=None, localize=None,
             for loc in loclist:
                 w2.append(loc + w)
         wild = w2
-        #print 'wild>%s<' % string.join(wild, '<, >')
+        #print 'wild>%s<' % str.join(wild, '<, >')
 
     pandb = PythonDataBase()
     orig_syspath = sys.path
@@ -485,10 +485,10 @@ def load(dirs=None, pat=None, wild=None, verbose=None, localize=None,
         for dir in dirs:
             # force current dir to front of path
             if verbose:
-                print 'check >%s<' % dir
+                print('check >%s<' % dir)
             sys.path = [dir]
             if verbose:
-                print 'loading dbs from:', dir
+                print('loading dbs from:', dir)
             for dbfile in os.listdir(dir):
                 modname, modext = os.path.splitext(dbfile)
                 if modext != '.py':
@@ -498,7 +498,7 @@ def load(dirs=None, pat=None, wild=None, verbose=None, localize=None,
                 if wild:
                     for w in wild:
                         if verbose:
-                            print '**wild check, w:', w, 'modname:', modname
+                            print('**wild check, w:', w, 'modname:', modname)
                         if fnmatch.fnmatch(modname, w):
                             process_file = 1
                             break
@@ -511,16 +511,16 @@ def load(dirs=None, pat=None, wild=None, verbose=None, localize=None,
                     continue
 
                 if verbose:
-                    print 'name:', modname, 'ext:', modext
+                    print('name:', modname, 'ext:', modext)
                 if sys.modules.get(modname):
                     # already loaded
                     continue
                 if verbose:
-                    print 'exec import %s' % modname
-                exec 'import %s' % modname
+                    print('exec import %s' % modname)
+                exec('import %s' % modname)
 
                 if verbose:
-                    print "Joining, modname>%s<" % (modname,)
+                    print("Joining, modname>%s<" % (modname,))
                 pandb.join(sys.modules[modname].DB)
     finally:
         sys.path = orig_syspath

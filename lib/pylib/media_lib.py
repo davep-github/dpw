@@ -43,7 +43,7 @@ ffn_translation_table = ffn_translation_table[:128] + non_ascii
 ########################################################################
 def init():
     if fix_id3:
-        print 'importing ID3'
+        print('importing ID3')
         import ID3
 
         
@@ -73,7 +73,7 @@ def fix_file_name(fname, make_changes=1):
         if no_execute:
             print_status("- " + stat)
             cmd_rc = 0
-            print 'cmd>%s<\n' % cmd
+            print('cmd>%s<\n' % cmd)
         else:
             print_status(">>"+stat+"<<")
             cmd_rc = os.rename(fname, new_fname)
@@ -83,7 +83,7 @@ def fix_file_name(fname, make_changes=1):
         if no_execute:
             print_status("- " + stat)
             cmd_rc = 0
-            print 'cmd>%s<\n' % cmd
+            print('cmd>%s<\n' % cmd)
         else:
             print_status(stat)
             cmd_rc = os.utime(new_fname, None)
@@ -393,4 +393,3 @@ def media_lib_process_mp3_tree(dir):
 
 
 ########################################################################
-

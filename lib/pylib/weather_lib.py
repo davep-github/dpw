@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import os, string, re, sys, getopt, ConfigParser, urllib, ftplib
+import os, string, re, sys, getopt, configparser, urllib.request, urllib.parse, urllib.error, ftplib
 import dp_io
 import types
 
@@ -44,7 +44,7 @@ def process_city(state, city, locations=Locations, perror=None, do_exit=None):
     """process the city entry.
     Get a condition_station, e.g.
     """
-    c=ConfigParser.ConfigParser()
+    c=configparser.ConfigParser()
     c.read(locations)
     l=c.options('US_%s' % state)
     d = {}
@@ -55,7 +55,7 @@ def process_city(state, city, locations=Locations, perror=None, do_exit=None):
         info = string.split(c.get('US_%s' % state, x))
         if city == string.lower(info[0]):
             if verbose:
-                print 'info:', info
+                print('info:', info)
             if info[1] != '-'*len(info[1]):
                 condition_station = info[1]
 
@@ -149,19 +149,19 @@ def current_conditions(condition_station, stat_func=None):
     url = '%s/%s.TXT' % (cond_url, condition_station)
     try:
         if verbose:
-            print 'get>%s<' % url
+            print('get>%s<' % url)
         lines = []
         if stat_func:
             stat_func('get condition data from %s' % url)
         if debug_level:
             dp_io.printf('get condition data from %s\n' % url)
-        u = urllib.urlopen(url)
+        u = urllib.request.urlopen(url)
         lines = u.readlines()
         if debug_level > 1:
             dp_io.debug('Raw condition info>>>>>>>>>>>>\n%s<<<<<<<<<<<\n',
                         string.join(lines, '\n'))
         u.close()
-    except IOError, e:
+    except IOError as e:
         dp_io.eprintf('could not fetch url>%s<, e>%s<\n', url,e)
         pass
 
@@ -200,12 +200,12 @@ def get_forecast(state, zone, stat_func=None):
     try:
         url = zone_url % state
         if verbose:
-            print 'get>%s<' % url
+            print('get>%s<' % url)
         if stat_func:
             stat_func('get forecast from %s' % url)
         if debug_level:
             dp_io.printf('get forecast from %s\n' % url)
-        u = urllib.urlopen(url)
+        u = urllib.request.urlopen(url)
         data = u.read()
         data = string.replace(data, '\r', '')
         f = open('/tmp/weather_lib.forecast.txt', 'w')
@@ -254,7 +254,7 @@ if __name__ == "__main__":
             
     def do_all():
         do_conditions()
-        print '\n'
+        print('\n')
         do_forecast()
 
     def test_cond_format():
@@ -268,7 +268,7 @@ if __name__ == "__main__":
              'xtime': '07:56 PM EST',
              'xdate': 'Jan 16, 2002',
              }
-        print conditions_template % d
+        print(conditions_template % d)
 
 
     def add_func(func, funclist, funcs):

@@ -13,6 +13,7 @@ import find_up, p4_lib
 opath = os.path
 
 # Use [] so we fail messily if there is nothing defined.
+# @todo XXX But WTF just not check?
 WORK_INDEX_DB_LOCS = os.environ.get("WORK_INDEX_DB_LOCS", "")
 
 # Everything will search up to the sandbox root. There is one other known
@@ -92,7 +93,7 @@ def rank_main1(argv):
     for arg in argv:
         try:
             one_db_p, all_matches_p = All_matches_map[arg]
-            print >>sys.stderr, "one_db_p:", one_db_p, ", all_matches_p:", all_matches_p
+            print("one_db_p:", one_db_p, ", all_matches_p:", all_matches_p, file=sys.stderr)
             break
         except KeyError:
             continue
@@ -111,7 +112,7 @@ def rank_main1(argv):
 
     if argv[1] == '-d':
         for d in Database_locations:
-            print "{}".format(opath.dirname(d))
+            print("{}".format(opath.dirname(d)))
         sys.exit(0)
 
     # we need to pass everything to global, verbatim. WHY?
@@ -130,7 +131,7 @@ def rank_main1(argv):
             if line[-1] == '\n':
                 line = line[:-1]
             if line:
-                print line
+                print(line)
         sys.exit(0)
 
     opt_cre = re.compile("--rgg-(.*)$")
@@ -227,7 +228,7 @@ def rank_main1(argv):
                            dp_sequences.list_to_indented_string(lines))
         rgg.log_file.write("output >>>>>>>>>>>>>>\n")
         for line in lines:
-            print line
+            print(line)
             rgg.log_file.write("line>" + line + "<" + "\n")
         rgg.log_file.write("<<<<<<<<<<<<<< output\n")
         rc = 0
@@ -245,11 +246,11 @@ def rank_main(argv):
         rc = rank_main1(argv)
         rgg.log_file.write("All good.\n")
 
-    except Exception, e:
+    except Exception as e:
         rgg.log_file.write("Error.\n")
         rgg.log_file.write("Failed, exception: {}\n".format(e))
-        rgg.log_file.write("sys.exc_type: {}\n".format(sys.exc_type))
-        rgg.log_file.write("sys.exc_value: {}\n".format(sys.exc_value))
+        rgg.log_file.write("sys.exc_type: {}\n".format(sys.exc_info()[0]))
+        rgg.log_file.write("sys.exc_value: {}\n".format(sys.exc_info()[1]))
         rgg.log_file.write("Error.\n")
         rc = 1
     rgg.log_file.close()

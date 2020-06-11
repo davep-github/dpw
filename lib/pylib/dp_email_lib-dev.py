@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-### Time-stamp: <09/11/13 17:14:09 davep>
+### Time-stamp: <2020-06-09 18:59:29 davep>
 #############################################################################
 ## @package 
 ##
@@ -112,7 +112,7 @@ def ANOMALY(kw_args, msg_fmt, *msg_args, **my_kw_args):
         fprintf(ostream, "ANOMALY detected: " + msg_fmt, *msg_args)
 
 def file_obj_name(fo):
-    if type(fo) == types.StringType:
+    if type(fo) == bytes:
         return fo
     if not fo:
         return "!!!no name for file object!!!!"
@@ -134,7 +134,7 @@ def parse_msg_if_needed(file_obj, msg=None, **kw_args):
     if msg:
         return msg
     close_file_p = False
-    if type(file_obj) == types.StringType:
+    if type(file_obj) == bytes:
         file_obj = open(file_obj, "r")
         close_file_p = True
     msg = msg or parse_message(file_obj, **kw_args)
@@ -158,7 +158,7 @@ class Iter_return_c(object):
     def bad(self):
         return not self.ok()
 
-    def __nonzero__(self):
+    def __bool__(self):
         """To implement: `if X:'  `and if not X:' """
         return not not self.success_p
 
@@ -405,7 +405,7 @@ def add_last_header(file_obj, msg=None, **kw_args):
 def print_msg(file_obj, msg=None, ostream=sys.stdout, **kw_args):
     msg = parse_msg_if_needed(file_obj, msg=msg, **kw_args)
     close_p = False
-    if type(ostream) == types.StringType:
+    if type(ostream) == bytes:
         ostream = open(ostream, "w")
         close_p = True
     ostream.write("X-dp-info: -- dp_email_lib.py: Beginning of output.\n")
@@ -451,7 +451,7 @@ def fixup_for_godaddy_catchall(args, **kw_args):
         kw_args.update(GETMAIL_RUNTIME_KW_ARGS)
         process_msgs(args, funcs, **kw_args)
         sys.exit(0)
-    except Exception, e:
+    except Exception as e:
         if kw_args.get("fixup_reraise"):
             raise
         dp_io.reset_eprint_file()
@@ -557,7 +557,7 @@ if __name__ == "__main__":
     # Ick...
     try:
         main(sys.argv)
-    except Exception, e:
+    except Exception as e:
         if GODADDY_FIX_p(sys.argv):
             eprintf("Caught exception in __main__. Exception: %s.", e)
             sys.exit(1)

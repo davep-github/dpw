@@ -117,9 +117,9 @@ class Options:
             if tlist.count(opt) > 1:
                 print("%s: Option `%s' is duplicated" % (__name__, opt))
                 sys.exit(3)
-                
+
         options = string.join(options, '')
-        
+
         # set defaults from lists
         for o in opts:
             v = o.get_default()
@@ -178,4 +178,3 @@ def opts_help(opts):
     for opt in opts:
         output.append('%s\n' % (opt.get_help()))
     return string.join(output, '\n')
-        

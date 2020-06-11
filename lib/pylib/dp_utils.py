@@ -191,8 +191,8 @@ Convert val to a binary string.  Pad to field_width bits if specified."""
 def pbin(val, field_width=0, sep_str=" ", sep=False):
     """pbin(val, field_width=0)
 Print the binary string of val after calling cbin(q.v.)"""
-    print("{}".format(cbin(val, field_width=field_width,
-                           sep_str=sep_str, sep=sep)))
+    print("{}".format(cbin(val, field_width=field_width, sep_str=sep_str,
+                           sep=sep)))
 
 def cbinh(val, field_width=4, sep_str=" ", sep=False):
     """cbinh(val, field_width=4, sep_str=" ", sep=False)
@@ -227,8 +227,8 @@ def pbinh(val, field_width=4, sep_str=" ", sep=False):
     """print a cbinh string"""
 #    field_width=4                       #####################################
     #print >>debug_out, "field_width: ", field_width, "sep_str: ", sep_str, "sep: ", sep
-    print(str.join(cbinh(val, field_width=field_width,
-                         sep_str=sep_str, sep=sep), '\n'))
+    print(str.join(cbinh(val, field_width=field_width, sep_str=sep_str,
+                         sep=sep), '\n'))
 
 ########################################################################
 def file_len(file):

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 import sys, socket, string, os, re
 import dp_io
@@ -114,7 +114,7 @@ def lookup_item(info_item, not_found_string='-', dumper=Def_dumper,
                 wildcard_match=True,
                 dump_all_fields=False):
     if verbose:
-        print 'try >%s< for >%s<' % (host, info_item)
+        print('try >%s< for >%s<' % (host, info_item))
     #
     # find the info for the host.
     # try given, then fqdn
@@ -130,7 +130,7 @@ def lookup_item(info_item, not_found_string='-', dumper=Def_dumper,
                 raise KeyError
             fhost = host + '.' + domain
             if verbose:
-                print 'try fqdn>%s< for >%s<' % (fhost, info_item)
+                print('try fqdn>%s< for >%s<' % (fhost, info_item))
             info = (host_db[fhost],)
         except KeyError:
             # there is no entry for this host.
@@ -148,36 +148,36 @@ def lookup_item(info_item, not_found_string='-', dumper=Def_dumper,
                 domain_host = dppydb.domain_to_node_name(domain)
                 inf = host_db.get(domain_host, None)
                 if verbose:
-                    print 'try domain>%s<, domain_host>%s<' % (domain,
-                                                               domain_host)
-                    print 'info>%s<' % info
+                    print('try domain>%s<, domain_host>%s<' % (domain,
+                                                               domain_host))
+                    print('info>%s<' % info)
                 if inf:
                     rc = RC_OK
                     info.append(inf)
                     if verbose:
-                        print 'domain hit, info>%s<.' % info
+                        print('domain hit, info>%s<.' % info)
                         if verbose > 1:
-                            print '%s' % inf.ret_fields()
+                            print('%s' % inf.ret_fields())
 
             if rc == RC_NO_SUCH_HOST and wildcard_match:
                 rc, info = match_family_by_host(host)
             if rc == RC_NO_SUCH_HOST and locale_search:
                 locale_rcs = os.environ.get('locale_rcs', '')
                 if verbose:
-                    print 'try locale_rcs {%s}' % locale_rcs
+                    print('try locale_rcs {%s}' % locale_rcs)
                     # host_db.dump('a')
                     if verbose > 1:
-                        print "items in host_db.keys"
-                        for k, v in host_db.keys.items():
-                            print 'k>%s<, v>%s<' % (k, v)
+                        print("items in host_db.keys")
+                        for k, v in list(host_db.keys.items()):
+                            print('k>%s<, v>%s<' % (k, v))
 
                 info = []
-                locs = string.split(locale_rcs)
+                locs = str.split(locale_rcs)
                 locs.reverse()          # order most specific first
                 for fam in locs:
                     fam = fam[1:]       # strip . from element
                     if verbose:
-                        print 'fam>%s<' % fam
+                        print('fam>%s<' % fam)
                     if not fam:
                         continue
                     #
@@ -190,38 +190,38 @@ def lookup_item(info_item, not_found_string='-', dumper=Def_dumper,
                     fam_host = dppydb.family_to_node_name(fam)
                     inf = host_db.get(fam_host, None)
                     if verbose:
-                        print 'try fam>%s<, fam_host>%s<' % (fam, fam_host)
-                        print 'info>%s<' % info
+                        print('try fam>%s<, fam_host>%s<' % (fam, fam_host))
+                        print('info>%s<' % info)
                     if inf:
                         rc = RC_OK
                         info.append(inf)
                         if verbose:
-                            print 'fam hit, info>%s<.' % info
+                            print('fam hit, info>%s<.' % info)
                             if verbose > 1:
-                                print '%s' % inf.ret_fields()
+                                print('%s' % inf.ret_fields())
 
             if rc != RC_OK and default_search:
                 #
                 # still no match, try for an overall default record.
                 info = host_db.get(dppydb.default_to_node_name(), None)
                 if verbose:
-                    print 'try uber default'
+                    print('try uber default')
                 if info:
                     info = (info,)
                     if verbose:
-                        print 'uber default hit.'
-                        print 'info>%s<' % info
+                        print('uber default hit.')
+                        print('info>%s<' % info)
                     rc = RC_OK
 
     if verbose:
-        print "rc: %s" % rc
+        print("rc: %s" % rc)
     #
     # found the db entry, now get the requested info
     if rc == RC_OK:
         # find the item
         if dump_all_fields:
             if verbose:
-                print 'Dumping all fields'
+                print('Dumping all fields')
             dump_all(info)
         else:
             for inf in info:
@@ -297,7 +297,7 @@ if not full_host:
 
 if not host or not domain:
     try:
-        i = string.index(full_host, '.')
+        i = str.index(full_host, '.')
         thost = full_host[0:i]
         tdomain = full_host[i+1:]
     except ValueError:

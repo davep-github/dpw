@@ -35,7 +35,7 @@ def setup_logging(log_file_name=None):
         if log_file_name:
             Rgg_log_file_name = log_file_name
         if Rgg_log_file_name:
-            print >>sys.stderr, "Rgg_log_file_name>%s<" % (Rgg_log_file_name,)
+            print("Rgg_log_file_name>%s<" % (Rgg_log_file_name,), file=sys.stderr)
             if Rgg_log_file_name == '--err':
                 log_file = sys.stderr
             elif Rgg_log_file_name == '--out':
@@ -188,8 +188,9 @@ def run_global(argv, start_dir=opath.curdir):
     log_file.write("run_global(): cwd: %s\n"
                        % (opath.realpath(opath.curdir,)))
     cxref_fmt = "-x" in argv
-    log_file.write("run_global()cmdline>%s<\n" % ([GLOBAL_PROGRAM_NAME] + argv[1:]),)
-    glob = subprocess.Popen([GLOBAL_PROGRAM_NAME] + argv[1:], stdout=subprocess.PIPE)
+    log_file.write("run_global(): cmdline>%s<\n" % ([GLOBAL_PROGRAM_NAME] + argv[1:]),)
+    glob = subprocess.Popen([GLOBAL_PROGRAM_NAME] + argv[1:],
+                            stdout=subprocess.PIPE, universal_newlines=True)
     lines = get_lines(glob.stdout, cxref_realpath_p=cxref_fmt,
                       start_dir=start_dir)
     return lines
@@ -274,7 +275,7 @@ def main(argv):
     if lines:
         lines = rank_lines(lines)
         for line in lines:
-            print line
+            print(line)
 
 if __name__ == "__main__":
     main(sys.argv)

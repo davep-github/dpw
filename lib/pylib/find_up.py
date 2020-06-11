@@ -153,10 +153,9 @@ def main(args):
             #print >>sys.stderr, "arg_string>%s<" % arg_string
             os.system("ls {} {}".format(ls_options, arg_string))
         else:
-            print match_string
+            print(match_string)
 
     return num_not_found
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
-

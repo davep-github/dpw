@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import dp_io
-from Tkinter import *
+from tkinter import *
 
 class EditOne(Toplevel):
     def __init__(self, master, default='', prompt='', title=None, modal=None, borderwidth=12):
@@ -69,4 +69,4 @@ class EditOne(Toplevel):
 if __name__ == "__main__":
     e = EditOne(None, 'defffff', 'Well', 'Edit Well')
     s = e.go()
-    print 's:', s
+    print('s:', s)

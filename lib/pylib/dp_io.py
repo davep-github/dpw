@@ -39,6 +39,7 @@ def purge_streams(streams, from_these=None):
             if s in flist:
                 flist.remove(s)
 
+
 DEF_DEBUG_LEADER = 'debug'
 debug_leader = DEF_DEBUG_LEADER
 debug_leader_sep = ': '
@@ -50,13 +51,13 @@ tprint_leader = '+'
 debug_level = -1                        # for cdebug
 debug_mask = 0                          # for fdebug
 debug_keyword_list = []   # like mask, but with items in list vs bits in int.
-debug_keyword_no_header = False # no header before message
-debug_keyword_print_all = False # Print all regardless of keyword. Obey f_debug
-verbose_level = -1                      # for vdebug
+debug_keyword_no_header = False  # no header before message
+debug_keyword_print_all = False  # Print all regardless of keyword. Obey f_debug
+verbose_level = -1               # for vdebug
 verbose_level_stack = []
 
 # Motivating idea: add timestamp to prints
-## @todo XXX Make these lists and apply them in order.
+# @todo XXX Make these lists and apply them in order.
 global_pre_write = dp_utils.Nop_zero_t()
 global_post_write = dp_utils.Nop_zero_t()
 
@@ -68,29 +69,41 @@ become atomic if we have to."""
     settor(new_level)
     return old_level
 
+
+#####################################################################
 def debug_p(level):
     return f_debug and ((debug_level >= level) or (level is True))
 
+
+#####################################################################
 def pop_level(stack):
     new_level = stack.pop()
     return new_level
 
+
+#####################################################################
 def verbose_push_level(new_level):
     return push_level(verbose_level_stack, get_verbose_level,
                       new_level, set_verbose_level)
 
+
+#####################################################################
 def verbose_pop_level():
     return pop_level(verbose_level_stack)
 
+
+#####################################################################
 def fmt_args(fmt, *args):
-    #print >>sys.stderr, "fmt>{}<, args>{}<".format(fmt, args)
+    # print("fmt>{}<, args>{}<".format(fmt, args), file=sys.stdout)
     if not args:
         return fmt
-    ## Try to handle legacy formats.
+    # Try to handle legacy formats.
     if re.search("%[%dsulg]", fmt):
         return fmt % args
     return fmt.format(*args)
 
+
+#####################################################################
 osname = os.uname()[0]
 BOLD = ""
 SOUT = ""
@@ -110,9 +123,9 @@ DP_IO_NO_TERM_INIT_TERMS = ("emacs",)
 # routines that actually use the BOLD, etc, stuff.
 # ??? Put them in a special class and use special attribute access to do the
 # init once when they are needed.
-#Something like terminfo.BOLD is originally defined as self.v_BOLD =
-#os.popen('tput md').read(); return self.v_BOLD but then is redefined to be
-#return self.v_BOLD
+# Something like terminfo.BOLD is originally defined as self.v_BOLD =
+# os.popen('tput md').read(); return self.v_BOLD but then is redefined to be
+# return self.v_BOLD
 # Could use memoizing, but changing func def is quicker to call in future.
 
 if (os.environ.get('TERM')
@@ -129,14 +142,21 @@ if (os.environ.get('TERM')
         SOUT = os.popen('tput bold').read()
         NORM = os.popen('tput rmso').read()
 
+
+#####################################################################
 def mk_debug_prefix(leader):
     return "{}{}".format(leader, debug_leader_sep)
 
+
+#####################################################################
 def mk_debug_leader(level, leader=debug_leader):
     return '%s[%02s]' % (leader, level)
 
+
+#####################################################################
 def mk_debug_leader_prefix(level, leader=debug_leader):
     return mk_debug_prefix(mk_debug_leader(level, leader=leader))
+
 
 ###############################################################
 def hilight_match(dat, rex, pre=SOUT, post=NORM):
@@ -157,6 +177,7 @@ then post."""
         dat = dat[m.end():]
     return ostr
 
+
 ###############################################################
 def lprint(files, leader, s, pre_write=None, post_write=None):
     """print leader + s to each file in <files> flushing each file."""
@@ -174,16 +195,19 @@ def lprint(files, leader, s, pre_write=None, post_write=None):
         file.flush()
     return llen / len(files)
 
+
 ###############################################################
 def lprintf(files, leader, fmt, *args):
     """print leader + s to each file in <files> flushing each file."""
     s = fmt_args(fmt, *args)
     return lprint(files, leader, s)
 
+
 ###############################################################
 def clprintf(level, files, leader, fmt, *args):
     if verbose_p(level):
         return lprintf(files, leader, fmt, *args)
+
 
 ###############################################################
 def sprintf(fmt, *args):
@@ -193,11 +217,13 @@ def sprintf(fmt, *args):
         fmt = fmt % args
     return fmt
 
+
 ###############################################################
 def eprintf(fmt, *args):
     """eprintf - print to stderr or user specified error files."""
     if f_eprint:
         return lprintf(v_eprint_files, eprint_leader, fmt, *args)
+
 
 ###############################################################
 def printf(fmt, *args):
@@ -211,8 +237,10 @@ def printf(fmt, *args):
     if f_print:
         return lprintf(v_print_files, print_leader, fmt, *args)
 
+
 # visible printf for easy location.  Used for very temporary prints.
 PRINTF = printf
+
 
 ###############################################################
 def fprintf(ofiles, fmt, *args):
@@ -222,43 +250,51 @@ def fprintf(ofiles, fmt, *args):
             fmt = fmt % args
         return lprint(ofiles, print_leader, fmt)
 
+
 ###############################################################
 def do_debug(fmt, leader, args, **kw_args):
     if f_debug:
         fmt = fmt_args(fmt, *args)
         return lprint(v_debug_files, leader+debug_leader_sep, fmt)
 
+
+#####################################################################
 def do_ldebug(level, fmt, leader, *args):
     if debug_p(level):
         do_debug(fmt, leader, *args)
+
 
 ###############################################################
 def debug(fmt, *args, **kw_args):
     global debug_leader
     leader = kw_args.get("leader")
     set_leader_p = kw_args.get("set_leader_p")
-    if  leader is None:
+    if leader is None:
         leader = debug_leader
     elif set_leader_p:
         debug_leader = leader
 
     do_debug(fmt, leader, args)
 
+
 dprintf = debug                         # alias
+
 
 ###############################################################
 def cdebug(level, fmt, *args):
     '''conditional debug.
     print if debugging is on AND level >= debug_level'''
-    #print "debug_level:", debug_level, "level:", level
-    #print "debug_level >= level:", (debug_level >= level)
+    # print "debug_level:", debug_level, "level:", level
+    # print "debug_level >= level:", (debug_level >= level)
     # NB: True == 1, but 1 is not True
     if debug_p(level):
         do_debug(fmt, mk_debug_leader(level, debug_leader), args)
 
+
 ldebug = cdebug                         # alias, level debug
 ldprintf = cdebug
 cdprintf = cdebug
+
 
 ###############################################################
 def tracef (fmt, *args):
@@ -269,6 +305,7 @@ def tracef (fmt, *args):
     return lprint(v_tprint_files, tprint_leader, fmt)
 tprintf = tracef
 
+
 ###############################################################
 def ctracef(level, fmt, *args):
     """tracef: conditional trace.
@@ -277,22 +314,29 @@ def ctracef(level, fmt, *args):
     return clprintf(level, v_vprint_files, vprint_leader, fmt, *args)
 ctprintf = ctracef
 
+
 ###############################################################
 def undebug(fmt, *args):
     if not debug_p(0):
         debug(fmt, *args)
 
+
 ###############################################################
 def debug_mask_exact_set_p(mask):
     return mask == debug_mask
 
+
+#####################################################################
 def debug_mask_all_set_p(mask):
     return (mask & debug_mask) == mask
 
+
+#####################################################################
 def debug_mask_any_set_p(mask):
     return mask & debug_mask
 
 
+#####################################################################
 def fdebug(mask, fmt, *args):           # flag debug
     if debug_mask_any_set_p(mask):
         do_debug(fmt, '%s[0x%x]' % (debug_leader, mask), args)
@@ -306,12 +350,18 @@ mdebug = fdebug                         # alias, mask debug
 def set_debug_keyword_list(keys):
     dp_sequences.extend_list(debug_keyword_list, keys)
 
+
+#####################################################################
 def add_debug_keyword(keys):
     dp_sequences.extend_list(debug_keyword_list, keys)
 
+
+#####################################################################
 def rm_debug_keyword(keys):
     dp_sequences.del_list_items(debug_keyword_list, keys)
 
+
+#####################################################################
 def debug_keyword_all_set_p(keys, kw_list=None):
     if keys == True:
         return True
@@ -323,6 +373,8 @@ def debug_keyword_all_set_p(keys, kw_list=None):
             return False
     return True
 
+
+#####################################################################
 def debug_keyword_exact_set_p(keys):
     if keys == True:
         return True
@@ -635,11 +687,12 @@ if Have_subprocess_module_p:
         """Run a command, capturing stdout and stderr, mixed, into a string.
         Returns that string. CMD is passed straight thru to Popen.  Reads all
         output at once, so beware capturing huge outputs."""
-        p = subprocess.run(cmd, shell=True,
-                           stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                           stderr=subprocess.STDOUT, close_fds=True,
-                           universal_newlines=text)
-        ret = p.stdout          # Joined w/stderr.
+
+        p = subprocess.Popen(cmd, shell=True,
+                             stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                             stderr=subprocess.STDOUT, close_fds=True,
+                             universal_newlines=text)
+        ret = p.stdout.read()
         if nuke_newline_p and ret[-1] == '\n':
             ret = ret[:-1]
         return ret
@@ -653,7 +706,7 @@ if Have_subprocess_module_p:
                              stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                              stderr=subprocess.STDOUT, close_fds=True,
                              universal_newlines=text)
-        ret = p.stdout.readlines()  # Joined w/stderr.
+        ret = p.stdout.readlines() # Joined w/stderr.
         if nuke_newline_p:
             ret = [r[:-1] for r in ret]
         return ret
@@ -1001,7 +1054,7 @@ if __name__ == "__main__":              # <:main:>
     argv = sys.argv[1:]
     while len(argv) >= 2:
         s = hilight_match(argv[0], argv[1])
-        print('[%s], [%s], [%s]' % (argv[0], argv[1], s))
+        print('[%s], [%s], [%s]'.format(argv[0], argv[1], s))
         argv = argv[2:]
 
     v1 = 'I am v1'
@@ -1012,17 +1065,17 @@ if __name__ == "__main__":              # <:main:>
                globs=globals())
 
     sys.stderr.write("""You shouldn't see any lines with ``shouldn't be seen'', except this one.\n""")
-    printf("this printf should be seen\n");
+    printf("this printf should be seen\n")
     print_off()
-    printf("this printf shouldn't be seen\n");
+    printf("this printf shouldn't be seen\n")
 
-    eprintf("this eprintf should be seen\n");
+    eprintf("this eprintf should be seen\n")
     eprint_off()
-    eprintf("this eprintf shouldn't be seen\n");
+    eprintf("this eprintf shouldn't be seen\n")
 
-    debug("this debug shouldn't be seen\n");
+    debug("this debug shouldn't be seen\n")
     debug_on()
-    debug("this debug should be seen\n");
+    debug("this debug should be seen\n")
 
     debug_file(('debug-test', 'a'), 1)
     debug('test 2 to debug-test\n')
@@ -1043,6 +1096,6 @@ if __name__ == "__main__":              # <:main:>
     fdebug(0x01, '1: this fdebug should be seen.\n')
 
     # bq
-    exp='expr 7 \\* 100 + 7 \\* 10 + 7'
+    exp = 'expr 7 \\* 100 + 7 \\* 10 + 7'
     s = bq(exp)
-    print('bq(%s) >%s<' % (exp, s))
+    print('bq({}) >{}<'.format(exp, s))

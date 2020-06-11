@@ -74,13 +74,13 @@ def fmt_def_expand(re_str, fmt, separators, func):
     ret = []
 
     for sep in separators:
-        t_fmt = string.replace(fmt, '||', sep)
+        t_fmt = str.replace(fmt, '||', sep)
         #
         # special re chars. need to be escaped in re but not in fmt
         #
         if sep and sep in '.':
             sep = '\\' + sep
-        t_re = string.replace(re_str, '||', sep)
+        t_re = str.replace(re_str, '||', sep)
         dp_io.debug('t_re>%s<, t_fmt>%s<',t_re, t_fmt)
         ret.append((R(t_re), t_fmt, func))
 
@@ -103,7 +103,7 @@ def fmt_def_expand(re_str, fmt, separators, func):
 ############################################################                
 
 # make a list of acceptible date separators
-separators = map(None, '!/-_:,.')
+separators = list('!/-_:,.')
 time_formats = (
     fmt_def_expand('^\d+||\d+||\d\d\d\d$',
                    '%m||%d||%Y',
@@ -161,7 +161,7 @@ def parse_date(time_str, time_for_fill_in=None, tz_adjust=LOCAL):
         dp_io.debug('time_str>%s<, fmt>%s<\n', time_str, fmt)
         try:
             t = time.mktime(time.strptime(time_str, fmt))
-        except ValueError, e:
+        except ValueError as e:
             dp_io.eprintf('mktime(%s, %s) failed.\n', time_str, fmt)
             return None
             
@@ -197,7 +197,7 @@ day_names = (
 
 ############################################################                
 def name_to_daynum(name):
-    tname = string.lower(name)
+    tname = str.lower(name)
     for name_list, daynum in day_names:
         for n in name_list:
             if tname == n:
@@ -256,28 +256,28 @@ if __name__ == '__main__':
 
     if not args:
         args = ['']
-        print 'test read from stdin'
+        print('test read from stdin')
         args = [sys.stdin]
     for f in args:
-        if type(f) == types.StringType:
+        if type(f) == bytes:
             f = open(f)
         while 1:
             t = f.readline()
             if not t:
-                if type(f) == types.StringType:
+                if type(f) == bytes:
                     f.close()
                 break
             if t == '\n':
                 continue
             t = t[0:-1]
-            print 'input line>%s<' % t
+            print('input line>%s<' % t)
             otim = t
             ret = find_time_fmt(t)
             if ret:
                 fmt, func = ret
                 tim = parse_date(t, tz_adjust=GMT)
-                print 't>%s<, tim>%s< -->%s<' % (otim, tim, time.ctime(tim))
+                print('t>{}<, tim>{}< -->{}<'.format(otim, tim,
+                                                     time.ctime(tim)))
             else:
-                print 'unrecognized format>%s<' % otim
-            
-            print '--'
+                print('unrecognized format>%s<' % otim)
+            print('--')

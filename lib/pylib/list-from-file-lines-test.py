@@ -68,7 +68,7 @@ def main(argv):
     app_args = oparser.parse_args()
     files = app_args.non_option_args
     if app_args.quiet_p:
-        print "I am being quiet."
+        print("I am being quiet.")
     if app_args.debug_level >= 0:
         dp_io.set_debug_level(app_args.debug_level, enable_debugging_p=True)
     if app_args.verbose_level > 0:
@@ -99,8 +99,7 @@ if __name__ == "__main__":
         if e.errno == errno.EPIPE:
             # Ya see, the colon looks like a broken pipe, heh, heh.
             # : |
-            print >>sys.stderr, ":Broken PIPE:"
+            print(":Broken PIPE:", file=sys.stderr)
             sys.exit(BROKEN_PIPE_RC)
-        print >>sys.stderr, "IOError>%s<" % (e,)
+        print("IOError>%s<" % (e,), file=sys.stderr)
         sys.exit(IOERROR_RC)
-

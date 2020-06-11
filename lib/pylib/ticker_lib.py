@@ -128,10 +128,10 @@ class Ticker_t(object):
         self.flush()
         if not self.quiet_p:
             if force_grand_total_p or self.grand_total_p:
-                print "\n%sTotal: %s %s" % (reason,
+                print("\n%sTotal: %s %s" % (reason,
                                             self.counter,
                                             dp_utils.pluralize(self.unit_name,
-                                                               self.counter))
+                                                               self.counter)))
 
     def tick_not_ready(self):
         pass
@@ -228,15 +228,15 @@ PREDEF_TWIDDLES = {
 "twiddle4": ("(twiddle4|parens)", ["()", "(.)", "(o)", "(.)",
                                    "[]", "[.]", "[o]", "[.]"]),
 }
-TWIDDLE_NAMES = PREDEF_TWIDDLES.keys()
+TWIDDLE_NAMES = list(PREDEF_TWIDDLES.keys())
 
 def Twiddle_twiddles(ostream=sys.stdout):
     i = 0
     keys = TWIDDLE_NAMES
     keys.sort()
-    print >>ostream, "Use index number or match regexp to select twiddle:"
+    print("Use index number or match regexp to select twiddle:", file=ostream)
     for key in TWIDDLE_NAMES:
-        print >>ostream, "d:", i, "name:", key, "twids:", PREDEF_TWIDDLES[key]
+        print("d:", i, "name:", key, "twids:", PREDEF_TWIDDLES[key], file=ostream)
         i += 1
 
 def nth_twiddle(n):
@@ -279,13 +279,13 @@ class Twiddle_ticker_t(Ticker_t):
                                                quiet_p=quiet_p,
                                                printor=printor)
 ###        print "twiddle_chars>%s<, type(twiddle_chars): %s" % (twiddle_chars, type(twiddle_chars))
-        if (type(twiddle_chars) == types.IntType):
+        if (type(twiddle_chars) == int):
             self.twiddle_chars = nth_twiddle(int(twiddle_chars))
-        elif type(twiddle_chars) in (types.ListType, types.TupleType):
+        elif type(twiddle_chars) in (list, tuple):
             # Mnemonic, [] --> indexing. {} might be better, but not as
             # succinct.
             self.twiddle_chars = nth_twiddle(twiddle_chars[0])
-        elif type(twiddle_chars) == types.StringType:
+        elif type(twiddle_chars) == bytes:
             if len(twiddle_chars) == 1:
                 self.twiddle_chars = nth_twiddle(twiddle_chars[0])
             else:

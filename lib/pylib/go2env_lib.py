@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import os, sys, string, re, getopt, types, StringIO
+import os, sys, string, re, getopt, types, io
 import pprint
-import cPickle as pickle
+import pickle as pickle
 
 import dp_io, dp_sequences, dp_utils
 opath = os.path
@@ -135,9 +135,9 @@ def handle_env_var(fmt, name, open_quote,val, close_quote, **kw_args):
     if flags:
         emit_setenv_p = flags.val()
     if emit_setenv_p:
-        print '(setenv "%s" %s%s%s)' % (name, open_quote, val, close_quote)
+        print('(setenv "%s" %s%s%s)' % (name, open_quote, val, close_quote))
     else:
-        print fmt  % (name, open_quote, val, close_quote, name)
+        print(fmt  % (name, open_quote, val, close_quote, name))
 
 #####################################################################
 def handle_sh(name, alias_item, **kw_args):
@@ -254,13 +254,13 @@ def prefix_handler(name, val, **kw_args):
     """Set a prefix to add to all values."""
     global PREFIX
     PREFIX = val
-    print >>sys.stderr, "PREFIX set to:", PREFIX
+    print("PREFIX set to:", PREFIX, file=sys.stderr)
 
 def permanent_prefix_handler(name, val, **kw_args):
     """Set a prefix to add to all values."""
     global PERMANENT_PREFIX
     PERMANENT_PREFIX = val
-    print >>sys.stderr, "PERMANENT_PREFIX set to:", PERMANENT_PREFIX
+    print("PERMANENT_PREFIX set to:", PERMANENT_PREFIX, file=sys.stderr)
 
 
 #####################################################################
@@ -282,7 +282,7 @@ def list_handler(name, alias_item, **kw_args):
     val = alias_item.get("val")
     ctl = alias_item.get("ctl")
     file_name = alias_item.get("src_file_name")
-    print val, name, file_name, ctl
+    print(val, name, file_name, ctl)
 
 #def handle_sh(name, alias_item, **kw_args):
 #Alias_item_t(val, line=line, selector=selector, ctl=ctl, file_name=file_name)
@@ -292,7 +292,7 @@ def LIST_handler(name, alias_item, **kw_args):
     ctl = alias_item.get("ctl")
     file_name = alias_item.get("src_file_name")
     
-    print "%s:%s" % (file_name,  val), name, file_name, ctl
+    print("%s:%s" % (file_name,  val), name, file_name, ctl)
 
 #
 # handlers map.
@@ -409,13 +409,13 @@ def expand_file(file, selector, aliases):
     #print >>sys.stderr, "Processing file:", file, ", selector:", selector
     try:
         f = open(file)
-    except IOError, e:
+    except IOError as e:
         if ignore_file_not_found:
             return
         else:
             dp_io.eprintf('Cannot open %s, %s\n', file, e)
             return
-    except Exception, e:
+    except Exception as e:
         dp_io.eprintf('Cannot open %s, %s\n', file, e)
         return
     global PREFIX
@@ -437,33 +437,33 @@ def expand_file(file, selector, aliases):
 
 #####################################################################
 def dump_dict(dict, name='dict', ostream=sys.stdout):
-    print >>ostream, name, "= {"
-    keys = dict.keys()
+    print(name, "= {", file=ostream)
+    keys = list(dict.keys())
     keys.sort()
     for k in keys:
         v = dict[k]
-        print >>ostream, "    '{}': {}".format(k, v)
-    print >>ostream, "}"
+        print("    '{}': {}".format(k, v), file=ostream)
+    print("}", file=ostream)
 
 #####################################################################
 def stringify_dict(dict, name="dict"):
-    output = StringIO.StringIO()
+    output = io.StringIO()
     dump_dict(dict, ostream=output)
     return output.getvalue().strip()
 
 #####################################################################
 def argify_dict(dict, ostream=sys.stdout):
-    keys = dict.keys()
+    keys = list(dict.keys())
     keys.sort()
     sep = ''
     for k in keys:
         v = dict[k]
-        print >>ostream, "{}{} = '{}'".format(sep, k, v),
+        print("{}{} = '{}'".format(sep, k, v), end=' ', file=ostream)
         sep = ', '
 
 #####################################################################
 def stringify_argified_dict(dict):
-    output = StringIO.StringIO()
+    output = io.StringIO()
     argify_dict(dict, ostream=output)
     return output.getvalue().strip()
 
@@ -508,8 +508,8 @@ def init_aliases(args, selector_regexp,
             Set_aliases(read_dict(dict_file))
             if Get_aliases():
                 return
-        except Exception, err:
-            print >>sys.stderr, "Exception `{}' reading dict file>{}<, trying pickle".format(err, dict_file)
+        except Exception as err:
+            print("Exception `{}' reading dict file>{}<, trying pickle".format(err, dict_file), file=sys.stderr)
 
     if serialized_file is not False:
         if not serialized_file:
@@ -517,8 +517,8 @@ def init_aliases(args, selector_regexp,
         try:
             Set_aliases(read_aliases(serialized_file))
             return
-        except Exception, err:
-            print >>sys.stderr, "Exception `{}' reading pickle>{}<, falling back to .go file(s)".format(err, dict_file)
+        except Exception as err:
+            print("Exception `{}' reading pickle>{}<, falling back to .go file(s)".format(err, dict_file), file=sys.stderr)
 
     Set_aliases(expand_files(go_files, selector_regexp))
 ##     print >>sys.stderr, "expanded files."
@@ -528,7 +528,7 @@ def serialize_aliases(args, serialized_file=DEFAULT_SERIALIZED_FILE):
     init_aliases(args, ".*", False)
     if serialized_file is None:
         alias_pickle = pickle.dumps(Get_aliases())
-        print >>sys.stderr, 'alias_pickle: {}'.format(alias_pickle)
+        print('alias_pickle: {}'.format(alias_pickle), file=sys.stderr)
     else:
         fobj = open(serialized_file, "w")
         pickle.dump(Get_aliases(), fobj)
@@ -580,7 +580,7 @@ def process_aliases(handle, handler_keyword_args,
         handle_pre(**handler_keyword_args)
     if not grep_regexps:
         grep_regexps = (".*",)
-    keys = aliases.keys()
+    keys = list(aliases.keys())
     keys.sort()
     for regexp in grep_regexps:
         for k in keys:
@@ -603,7 +603,7 @@ def go2env(args, handlers_type, selector, handler_keyword_args,
 #             grep_regexps)
     handlers = get_handlers(handlers_type)
     handle, handle_pre, handle_post, selector_regexp = handlers[selector]
-    if type(selector_regexp) == types.StringType:
+    if type(selector_regexp) == bytes:
         selector_regexp = selector_regexp
         #print >>sys.stderr, "handle>%s<" % handle
 
@@ -654,7 +654,7 @@ def simple_lookup(abbrev_regexp, try_environment_p=True,
 
     if match_type in (MATCH_TYPE_REGEXP_LINE, MATCH_TYPE_ANY):
         abbrev_regexp = "^" + abbrev_regexp + "$"
-    output = StringIO.StringIO()
+    output = io.StringIO()
     go2env(args=[], handlers_type="grep", selector=selector,
            handler_keyword_args={},
            grep_regexps=(abbrev_regexp,),
@@ -747,4 +747,3 @@ if __name__ == "__main__":
            handler_keyword_args=handler_keyword_args,
            serialized_file=serialized_file,
            grep_regexps=grep_regexps)
-

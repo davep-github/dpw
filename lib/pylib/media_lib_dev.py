@@ -5,10 +5,10 @@
 import os, sys, getopt, re, string, dp_io, ID3, stat
 import dir_tree
 
-print "*********************  DEV LIB **********************"
-print "*********************  DEV LIB **********************"
-print "*********************  DEV LIB **********************"
-print "*********************  DEV LIB **********************"
+print("*********************  DEV LIB **********************")
+print("*********************  DEV LIB **********************")
+print("*********************  DEV LIB **********************")
+print("*********************  DEV LIB **********************")
 
 # 00 prefix so they sort first
 playlist_prefix = '00'
@@ -29,7 +29,7 @@ FLAC_MUSIC_EXT = 'flac'
 music_root = FLAC_MUSIC_ROOT
 music_ext = FLAC_MUSIC_EXT
 music_dir = os.path.join(music_root, music_ext)
-print 'musicdir>%s<, ext>%s<\n'
+print('musicdir>%s<, ext>%s<\n')
 hd140_sync_file = os.path.join(music_root, 'h140.mp3.sync')
 
 UNC_music_dir = '//BALOO/music/' + music_ext # converted to backslashes later
@@ -82,7 +82,7 @@ ffn_translation_functions = (all_upper_fix,)
 ########################################################################
 def init():
     if fix_id3:
-        print 'importing ID3'
+        print('importing ID3')
         import ID3
 
         
@@ -144,8 +144,8 @@ def dos_lobotomize_path_list(path_list):
         if execute:
             # ??? check for new_path_name existing already?
             if os.path.exists(old_path_name):
-                print "rename>%s<\nto:\n>%s<\n" % (old_path_name,
-                                                   new_path_name)
+                print("rename>%s<\nto:\n>%s<\n" % (old_path_name,
+                                                   new_path_name))
                 os.rename(old_path_name, new_path_name)
             else:
                 # no frm, we may've been renamed.
@@ -501,4 +501,3 @@ def media_lib_process_music_tree(dir):
 
 
 ########################################################################
-
