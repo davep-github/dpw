@@ -100,19 +100,19 @@
 ## Path to an extra config file to load.
 #  
 #  If specified, load this config file in addition to any other IPython config.
-#c.BaseIPythonApplication.extra_config_file = u''
+#c.BaseIPythonApplication.extra_config_file = ''
 
 ## The name of the IPython directory. This directory is used for logging
 #  configuration (through profiles), history storage, etc. The default is usually
 #  $HOME/.ipython. This option can also be specified through the environment
 #  variable IPYTHONDIR.
-#c.BaseIPythonApplication.ipython_dir = u''
+#c.BaseIPythonApplication.ipython_dir = ''
 
 ## Whether to overwrite existing config files when copying
 #c.BaseIPythonApplication.overwrite = False
 
 ## The IPython profile to use.
-#c.BaseIPythonApplication.profile = u'default'
+#c.BaseIPythonApplication.profile = 'default'
 
 ## Create a massive crash report when IPython encounters what may be an internal
 #  error.  The default is to append a short message to the usual traceback
@@ -165,7 +165,7 @@
 #c.InteractiveShell.automagic = True
 
 ## The part of the banner to be printed before the profile
-#c.InteractiveShell.banner1 = 'Python 2.7.17 (default, Apr 15 2020, 17:20:14) \nType "copyright", "credits" or "license" for more information.\n\nIPython 5.5.0 -- An enhanced Interactive Python.\n?         -> Introduction and overview of IPython\'s features.\n%quickref -> Quick reference.\nhelp      -> Python\'s own help system.\nobject?   -> Details about \'object\', use \'object??\' for extra details.\n'
+#c.InteractiveShell.banner1 = 'Python 3.6.9 (default, Apr 18 2020, 01:56:04) \nType "copyright", "credits" or "license" for more information.\n\nIPython 5.5.0 -- An enhanced Interactive Python.\n?         -> Introduction and overview of IPython\'s features.\n%quickref -> Quick reference.\nhelp      -> Python\'s own help system.\nobject?   -> Details about \'object\', use \'object??\' for extra details.\n'
 
 ## The part of the banner to be printed after the profile
 #c.InteractiveShell.banner2 = ''
@@ -297,7 +297,7 @@
 #c.TerminalInteractiveShell.editing_mode = 'emacs'
 
 ## Set the editor used by IPython (default to $EDITOR/vi/notepad).
-#c.TerminalInteractiveShell.editor = u'ec-w'
+#c.TerminalInteractiveShell.editor = 'ec-w'
 
 ## Enable vi (v) or Emacs (C-X C-E) shortcuts to open an external editor. This is
 #  in addition to the F2 binding, which is always enabled.
@@ -308,7 +308,7 @@
 
 ## The name or class of a Pygments style to use for syntax
 #         highlighting: 
-#  manni, igor, lovelace, xcode, vim, autumn, abap, vs, rrt, native, perldoc, borland, arduino, tango, emacs, friendly, monokai, paraiso-dark, colorful, murphy, bw, pastie, rainbow_dash, algol_nu, paraiso-light, trac, default, algol, fruity
+#  default, emacs, friendly, colorful, autumn, murphy, manni, monokai, perldoc, pastie, borland, trac, native, fruity, bw, vim, vs, tango, rrt, xcode, igor, paraiso-light, paraiso-dark, lovelace, algol, algol_nu, arduino, rainbow_dash, abap
 #c.TerminalInteractiveShell.highlighting_style = traitlets.Undefined
 
 ## Override highlighting format for specific tokens
@@ -377,7 +377,7 @@
 #  
 #  you can also use the specific value `:memory:` (including the colon at both
 #  end but not the back ticks), to avoid creating an history file.
-#c.HistoryAccessor.hist_file = u''
+#c.HistoryAccessor.hist_file = ''
 
 #------------------------------------------------------------------------------
 # HistoryManager(HistoryAccessor) configuration
@@ -406,7 +406,7 @@
 
 ## Set the profile location directly. This overrides the logic used by the
 #  `profile` option.
-#c.ProfileDir.location = u''
+#c.ProfileDir.location = ''
 
 #------------------------------------------------------------------------------
 # BaseFormatter(Configurable) configuration

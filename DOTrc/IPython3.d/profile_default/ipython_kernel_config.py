@@ -25,7 +25,7 @@
 ## Set the kernel's IP address [default localhost]. If the IP address is
 #  something other than localhost, then Consoles on other machines will be able
 #  to connect to the Kernel, so be careful!
-#c.ConnectionFileMixin.ip = u''
+#c.ConnectionFileMixin.ip = ''
 
 ## set the shell (ROUTER) port [default: random]
 #c.ConnectionFileMixin.shell_port = 0
@@ -136,19 +136,19 @@
 ## Path to an extra config file to load.
 #  
 #  If specified, load this config file in addition to any other IPython config.
-#c.BaseIPythonApplication.extra_config_file = u''
+#c.BaseIPythonApplication.extra_config_file = ''
 
 ## The name of the IPython directory. This directory is used for logging
 #  configuration (through profiles), history storage, etc. The default is usually
 #  $HOME/.ipython. This option can also be specified through the environment
 #  variable IPYTHONDIR.
-#c.BaseIPythonApplication.ipython_dir = u''
+#c.BaseIPythonApplication.ipython_dir = ''
 
 ## Whether to overwrite existing config files when copying
 #c.BaseIPythonApplication.overwrite = False
 
 ## The IPython profile to use.
-#c.BaseIPythonApplication.profile = u'default'
+#c.BaseIPythonApplication.profile = 'default'
 
 ## Create a massive crash report when IPython encounters what may be an internal
 #  error.  The default is to append a short message to the usual traceback
@@ -205,7 +205,7 @@
 #------------------------------------------------------------------------------
 
 ## 
-#c.IPythonKernel.help_links = [{'url': 'https://docs.python.org/2.7', 'text': 'Python Reference'}, {'url': 'https://ipython.org/documentation.html', 'text': 'IPython Reference'}, {'url': 'https://docs.scipy.org/doc/numpy/reference/', 'text': 'NumPy Reference'}, {'url': 'https://docs.scipy.org/doc/scipy/reference/', 'text': 'SciPy Reference'}, {'url': 'https://matplotlib.org/contents.html', 'text': 'Matplotlib Reference'}, {'url': 'http://docs.sympy.org/latest/index.html', 'text': 'SymPy Reference'}, {'url': 'https://pandas.pydata.org/pandas-docs/stable/', 'text': 'pandas Reference'}]
+#c.IPythonKernel.help_links = [{'text': 'Python Reference', 'url': 'https://docs.python.org/3.6'}, {'text': 'IPython Reference', 'url': 'https://ipython.org/documentation.html'}, {'text': 'NumPy Reference', 'url': 'https://docs.scipy.org/doc/numpy/reference/'}, {'text': 'SciPy Reference', 'url': 'https://docs.scipy.org/doc/scipy/reference/'}, {'text': 'Matplotlib Reference', 'url': 'https://matplotlib.org/contents.html'}, {'text': 'SymPy Reference', 'url': 'http://docs.sympy.org/latest/index.html'}, {'text': 'pandas Reference', 'url': 'https://pandas.pydata.org/pandas-docs/stable/'}]
 
 ## Set this flag to False to deactivate the use of experimental IPython
 #  completion APIs.
@@ -240,7 +240,7 @@
 #c.InteractiveShell.automagic = True
 
 ## The part of the banner to be printed before the profile
-#c.InteractiveShell.banner1 = 'Python 2.7.17 (default, Apr 15 2020, 17:20:14) \nType "copyright", "credits" or "license" for more information.\n\nIPython 5.5.0 -- An enhanced Interactive Python.\n?         -> Introduction and overview of IPython\'s features.\n%quickref -> Quick reference.\nhelp      -> Python\'s own help system.\nobject?   -> Details about \'object\', use \'object??\' for extra details.\n'
+#c.InteractiveShell.banner1 = 'Python 3.6.9 (default, Apr 18 2020, 01:56:04) \nType "copyright", "credits" or "license" for more information.\n\nIPython 5.5.0 -- An enhanced Interactive Python.\n?         -> Introduction and overview of IPython\'s features.\n%quickref -> Quick reference.\nhelp      -> Python\'s own help system.\nobject?   -> Details about \'object\', use \'object??\' for extra details.\n'
 
 ## The part of the banner to be printed after the profile
 #c.InteractiveShell.banner2 = ''
@@ -374,7 +374,7 @@
 
 ## Set the profile location directly. This overrides the logic used by the
 #  `profile` option.
-#c.ProfileDir.location = u''
+#c.ProfileDir.location = ''
 
 #------------------------------------------------------------------------------
 # Session(Configurable) configuration
@@ -442,7 +442,7 @@
 #c.Session.item_threshold = 64
 
 ## execution key, for signing messages.
-#c.Session.key = ''
+#c.Session.key = b''
 
 ## path to file containing execution key.
 #c.Session.keyfile = ''
@@ -456,7 +456,7 @@
 #c.Session.packer = 'json'
 
 ## The UUID identifying this session.
-#c.Session.session = u''
+#c.Session.session = ''
 
 ## The digest scheme used to construct the message signatures. Must have the form
 #  'hmac-HASH'.
@@ -467,4 +467,4 @@
 #c.Session.unpacker = 'json'
 
 ## Username for the Session. Default is your system username.
-#c.Session.username = u'davep'
+#c.Session.username = 'davep'
