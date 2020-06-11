@@ -16,14 +16,20 @@ unset eexec_program
 # i?python2x is defecated, but still standard on Ubuntu. Let's leap into the
 # future with the latest.
 #
+# @todo XXX Fix the fucking parsing!
 one=${1-}
+#
+# Default to black until I configure IPython for a light background.
+: ${bg_color:=black}
+: ${bg_arg:="-B ${bg_color}"}
 EExec_verbose_echo_id one
 case "${one}" in
-    "") one=ipython3;;
+    "") one=ipython3;;		# @todo XXX Make an envvar or get from shell?
     # Simple aliases for command line.
     2|ipython2|old|olde) one=ipython;;
     # '2' is already handled, but this is clearer (until it breaks things).
     # Should be last when using versions.
+    --nb) bg_arg="";;
     [0-9.-]*) one="ipython${one}";;
 esac
 EExec_verbose_echo_id one
@@ -32,5 +38,5 @@ EExec_verbose_echo_id one
 : ${ipython_bin=${DP_DEF_IPYTHON_BIN-${one-ipython3}}}
 
 # @todo XXX Write an analogous ipython(dp) command and use that.
-EExec dpxx "${ipython_bin}"
+EExec dpxx $bg_arg "${ipython_bin}"
 
