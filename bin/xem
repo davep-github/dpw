@@ -27,6 +27,7 @@ log_file="$HOME/log/xemacs/xem-run.log"
     echo "HOST>$HOST<"
     echo "HOSTNAME>$HOSTNAME<"
     echo "HOST_INFO>$HOST_INFO<"
+    echo "DP_NO_DP_INIT>$DP_NO_DP_INIT<"
     host-info.py -n AHHHHHHHHHHHHHH xem_bg_color
     $HOST_INFO -n AHHHHHHHHHHHHHH xem_bg_color
     sp $HOST_INFO
@@ -49,6 +50,8 @@ aaa=
 just_show_p=false
 max_vert_p=true
 : ${macs:=emacs}
+: ${DP_NO_DP_INIT:=false}
+: ${no_init_p:=${DP_NO_DP_INIT-false}}
 # This won't work the way I do things now which is to a mnemonic name per SB
 # that changes as things change. E.g. engcpu vs sb2.
 # The sb can be determined from the path, but not the preferred mnemonic.
@@ -93,6 +96,7 @@ long_options=(
     "version" "vers" "ver"
     "debug-init"
     "no-debug-init"
+    "no-dp-init" "ndi" "ni"
 )
 
 source dp-getopt+.sh || exit 1
@@ -121,7 +125,7 @@ do
         -X) macs=xemacs;;
 	-V) shift; macs_ver="${1}";;
 	-D) debug_init_opt=;;
-
+	--no-dp-init|--ndi|--ni) no_init_p=true;;
 	--) shift; break;;
 	*) echo 1>&2 "Illegal xem option>$1<"; exit 1 ;;
     esac
@@ -251,8 +255,17 @@ then
     # instead of the below?
     eval echo $cmd 2>&1 | tee --append $log_file
     eval eko $cmd 2>&1 | tee --append $log_file
+    echo 1>&2 "DP_NO_DP_INIT>${DP_NO_DP_INIT}<"
+    echo 1>&2 "no_init_p>${no_init_p}<"
 else
     #echo "dir>$PWD<"
+    if "${no_init_p}" 
+    then
+	export DP_NO_DP_INIT="DP_NO_DP_INIT"
+	echo 1>&2 "Skipping dp init stuff"
+    else
+	unset DP_NO_DP_INIT
+    fi
     set -v
     #eval exec $cmd  >> $log_file 2>&1 $amper
     # Why didn't the exec fuck things up?
