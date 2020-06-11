@@ -31,7 +31,7 @@ main(
                   << l
                   << std::endl;
 #endif                    /* #if 0 */ /* 2014-06-06T19:29:04 by: dpanariti */
-        
+
         std::cout << "l in original base: " << l
                   << " == in hex: "
                   << hexl(l)
