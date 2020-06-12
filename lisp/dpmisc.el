@@ -7459,6 +7459,7 @@ If region is active, set width to that of the longest line in the region."
 (defvar dp-sfh-to-compile-win-height-divisor 4
   "*The part of the frame height used for the compile window.")
 
+;; See `dp-set-frame-height' for ways the height might be overridden.
 (defvar dp-sfh-height 72
   "*Initial frame height.")
 
@@ -7467,7 +7468,10 @@ If region is active, set width to that of the longest line in the region."
                        (format "height(current: %s; default: %s): "
                                (frame-height) dp-sfh-height)
                        'ints-only (format "%s" dp-sfh-height))))
+
   ;;@todo XXX Fix this douche bag way of setting the height.
+  ;; It does have the wonderful advantage of being able to set the height
+  ;; without modifying elisp.
   (let* ((env-height (dp-get-frame-dimension "HEIGHT"))
          (height (or height
                      (and env-height
@@ -14862,6 +14866,7 @@ JFC."
     (shell-command cmd)))
 
 ;; *vertical* height as opposed to...?
+;; See `dp-set-frame-height' for ways the height might be overridden.
 (defun* dp-set-to-max-vert-frame-height (&optional frame)
   "Set frame height to max as if maximize frame height button has been clicked.
 FRAME is the frame upon which we wish to operate.
@@ -14872,20 +14877,25 @@ machines, especially heretofore unknown ones."
   ;; Max up.  We are now maximized vert and cannot be resized.
   (set-frame-parameter frame 'fullscreen 'fullheight)
   ;; Let it happen.
-  (message "YOPP1")
+  (message "YOPP0, `frame-height': %s" (frame-height frame))
+  (redraw-display)
+  (message "YOPP1, `frame-height': %s" (frame-height frame))
   (sit-for 0.2)
+  (message "YOPP1.1, `frame-height': %s" (frame-height frame))
+  (redisplay)
+  (message "YOPP1.2, `frame-height': %s" (frame-height frame))
   ;; Grab the maximized height.
   (let ((height (frame-height frame)))
     ;; Demaximize us.
     (set-frame-parameter frame 'fullscreen nil)
     ;; Let it happen.
-    (message "YOPP2")
+    (message "YOPP2, height: %s, `frame-height': %s" height (frame-height frame))
     (sit-for 0.2)
     ;; Set to maximized height, without being maximized.
     (set-frame-height frame height)
-    (message "YOPP3")
+    (message "YOPP3, height: %s, `frame-height': %s" height (frame-height frame))
     (sit-for 0.2)
-    (message "YOPP4")
+    (message "YOPP4, height: %s, `frame-height': %s" height (frame-height frame))
     ))
 
 (dp-defaliases 'mfh 'mvh 'smvfh 'smvh 'smv 'dmv

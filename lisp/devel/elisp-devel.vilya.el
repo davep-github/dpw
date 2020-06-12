@@ -1509,3 +1509,38 @@ Tuesday June 09 2020
        (message "Searching %s done" tagname)
        tags))))nil
 
+
+========================
+Thursday June 11 2020
+--
+(dp-set-to-max-vert-frame-height)
+"YOPP4, height: 53, ‘frame-height’: 53"
+
+;; start
+YOPP1, ‘frame-height’: 62
+YOPP1.1, ‘frame-height’: 62
+YOPP1.2, ‘frame-height’: 62
+YOPP2, height: 62, ‘frame-height’: 62
+YOPP3, height: 62, ‘frame-height’: 62
+YOPP4, height: 62, ‘frame-height’: 62
+
+;; after resize with mouse, running (dp-set-to-max-vert-frame-height)
+YOPP1, ‘frame-height’: 38
+YOPP1.1, ‘frame-height’: 53
+YOPP1.2, ‘frame-height’: 53
+YOPP2, height: 53, ‘frame-height’: 53
+YOPP3, height: 53, ‘frame-height’: 53
+YOPP4, height: 53, ‘frame-height’: 53
+
+;; resize to bigger than screen
+(dp-set-to-max-vert-frame-height)
+"YOPP4, height: 53, ‘frame-height’: 53"
+
+YOPP1, ‘frame-height’: 77
+YOPP1.1, ‘frame-height’: 53
+YOPP1.2, ‘frame-height’: 53
+YOPP2, height: 53, ‘frame-height’: 53
+YOPP3, height: 53, ‘frame-height’: 53
+YOPP4, height: 53, ‘frame-height’: 53
+
+  (message "YOPP1, `frame-height': %s" (frame-height frame))

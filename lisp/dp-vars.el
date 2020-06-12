@@ -590,14 +590,15 @@ other-window functions to select it. Perhaps there's... another way."
   :type 'integer)
 
 (defcustom dp-default-2-window-min-height 150
-  "*Min height to allow splitting into 2 horizontal windows."
+  "*Min height to allow splitting into 2 horizontal windows.
+See `dp-set-frame-height' for ways the height might be overridden."
   :group 'dp-vars
   :type 'integer)
 
 (defcustom dp-2w-frame-width 180
-  "Default frame width for 2w -- 2 vertical windows 80 columns wide.
-Also used by split window advice to determine when to force a horizontal
-split."
+  "Default frame width for 2w -- 2 vertical windows >= 80 columns wide.
+Also used by split window advice to determine when to choose a horizontal
+split over a vertical one."
   :group 'dp-vars
   :type 'integer)
 

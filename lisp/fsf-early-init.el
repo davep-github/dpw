@@ -33,8 +33,9 @@ t))
 
 ;; Use `dp-set-to-max-vert-frame-height' and check that width is <= max width
 ;; using a similar mechanism.
+;; HUH?  Height or width?
 (defvar dp-initial-frame-width 180)
-(defvar dp-initial-frame-height 66)
+(defvar dp-initial-frame-height 53)
 
 ;; initial window settings
 ;; @todo XXX Put these in specmacsen.

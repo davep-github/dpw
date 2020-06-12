@@ -69,8 +69,9 @@
                                          spec-macs)
                                     (buffer-file-name)))
 
-(setq dp-sfh-height 67
-      dp-2w-frame-width 170)
+;; See `dp-set-frame-height' for ways the height might be overridden.
+(setq dp-sfh-height 53
+      dp-2w-frame-width 180)
 
 (dp-add-list-to-list
  'dp-ssh-host-name-completion-list
