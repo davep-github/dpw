@@ -48,4 +48,9 @@ dp_ctags_etags_complete()
         dp_ctags_etags_expand "${cur}"
 }
 
+# I have a pass routine of my own.  Treat it like pass.
+# I though I had hijacked a completion function for which I had written a
+# front end.  Can't make it work now.
+# complete -o filenames -F _pass cpass
+
 true
