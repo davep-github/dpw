@@ -7354,34 +7354,6 @@ nil BUFFER is OK."
   (interactive)
   (dp-bury-or-kill-process-buffer (current-buffer)))
 
-(defun dp-turn-on-auto-fill ()
-  (if (fboundp 'turn-on-filladapt-mode)
-      (turn-on-filladapt-mode))
-  (turn-on-auto-fill))
-
-(defun dp-turn-off-auto-fill ()
-  (if (fboundp 'turn-off-filladapt-mode)
-      (turn-off-filladapt-mode))
-  (auto-fill-mode 0))
-
-(defvar dp-filladapt-state-stack nil
-  "Stack of filladapt on/off statii")
-
-(defun dp-push-filladapt-state (on-p)
-  (setq dp-filladapt-state-stack
-	(cons filladapt-mode dp-filladapt-state-stack))
-  (if on-p
-      (turn-on-filladapt-mode)
-    (turn-off-filladapt-mode)))
-
-(defun dp-pop-filladapt-state ()
-  (let ((on-p (car dp-filladapt-state-stack)))
-    (setq dp-filladapt-state-stack
-	  (cdr dp-filladapt-state-stack))
-    (if on-p
-	(turn-on-filladapt-mode)
-      (turn-off-filladapt-mode))))
-
 (defun dp-longest-line-in-region (&optional beg end)
   "Return (max-len . line-number-of-max-line) of 1st longest line in region.
 Use BEG END if given, else (mark) (point)."
@@ -10437,6 +10409,7 @@ Most used to check for C-0 as a command flag."
   "See if current-prefix-arg `equal' ARG. ARG defaults to '-"
   (setq-ifnil prefix-arg current-prefix-arg)
   (equal (or arg '-)
+	 ;; Not needed because of setq-ifnil.
          (or prefix-arg current-prefix-arg)))
 
 (defun Cu-numeric-val (&optional prefix-arg)
@@ -13523,7 +13496,8 @@ find-file\(-at-point) and then, if it fails, this function??"
   ;; @todo XXX FSF -- need to fix comment fill style.
   (dp-call-function-on-key [(meta ?q)])) ; Fill comment with commenty goodness.
 
-(dp-defaliases 'mtlcu 'dp-move-comment-up
+(dp-defaliases 'dmcu 'dp-move-comment-up
+	       'mtlcu
                'dp-move-too-long-comment-above-current-line)
 
 (defun* dp-jobs-annotate-dice-listing (text &optional (prefix "** ")
@@ -14898,7 +14872,7 @@ machines, especially heretofore unknown ones."
     (message "YOPP4, height: %s, `frame-height': %s" height (frame-height frame))
     ))
 
-(dp-defaliases 'mfh 'mvh 'smvfh 'smvh 'smv 'dmv
+(dp-defaliases 'mfh 'mvh 'smvfh 'smvh 'smv 'dmv 'sih
 	       'dp-set-to-max-vert-frame-height)
 
 (defun dp-add-autoload-directive ()
