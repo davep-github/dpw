@@ -10,6 +10,7 @@
 ;; savehist-history-variables.
 ;;
 
+;; @todo XXX Where appropriate, look at using autoloads vs loads or requires.
 (require 'advice)
 (defun dp-xemacs-p ()
   "A cheap way of detecting xemacs."
@@ -77,6 +78,8 @@
                                            (concat "realpath " dp-$HOME)) 0 -1)
   "The `realpath(1)' of the aforementioned $HOME variable.")
 
+
+;; @todo XXX Needed with Emacs elpy/IPython?
 (defvar dp-ipython-temp-file-re "ipython_edit_.*\\.py$"
   "Name ipython uses when %edit'ing something.")
 
@@ -741,109 +744,6 @@ And their failure occurs way too often."
 (dp-optionally-require 'auto-dp-autoloads)
 (dp-optionally-require 'rust-mode)
 
-;; add our python mode hook here, so we can interoperate with ipython.el
-;; If there's no ipython.el then we're still ok.
-;; fsf needs a python mode (require 'python-mode)
-;; fsf (add-hook 'py-shell-hook 'dp-py-shell-hook)
-
-(defun dp-setup-ipython-shell()
-  "Setup my ipython shell."
-  (let ((an-ipython-command (executable-find "ipython")))
-    (when an-ipython-command
-      (setq ipython-command an-ipython-command)
-      (setq py-python-command-args '("--no-autoindent"
-                                     "--colors=NoColor"))
-      (dp-optionally-require 'ipython)
-
-      ;; The string sent to ipython to query for all possible completions. I
-      ;; (dp) had to remove the comment (#PYTHON-MODE SILENT) from the end of
-      ;; the command string."
-      ;; for older IPythons
-      ;;    (setq ipython-completion-command-string
-      ;;"print ';'.join(__IP.Completer.all_completions('%s'))\n")
-      (setq ipython-completion-command-string
-            "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
-
-      (setq py-python-command-args '("--no-autoindent" "--colors" "NoColor"))
-      (when (featurep 'ipython)
-        (defun dp-ipython-complete-collector (string)
-          "This was a lambda in `ipython-complete', but I've broken it out to
-look for a bug which causes, sometimes, the list of completions to be
-printed in the *Python* buffer rather than in a completion
-buffer. It's intermittent and repeating the command will eventually
-get it to work."
-          ;;(message (format "DEBUG filtering: %s" string))
-          (setq ugly-return (concat ugly-return string))
-          (delete-region comint-last-output-start
-                         (process-mark (get-buffer-process (current-buffer)))))
-
-        (defun ipython-complete ()
-          "Try to complete the python symbol before point. Only knows about the
-stuff in the current *Python* session."
-          (interactive)
-          (let* ((ugly-return nil)
-                 (sep ";")
-                 (python-process (dp-python-get-process))
-                 ;; XXX currently we go backwards to find the beginning of an
-                 ;; expression part; a more powerful approach in the future
-                 ;; might be to let ipython have the complete line, so that
-                 ;; context can be used to do things like filename completion
-                 ;; etc.
-                 (beg (save-excursion (skip-chars-backward "a-z0-9A-Z_."
-                                                           (point-at-bol))
-                                      (point)))
-                 (end (point))
-                 (pattern (buffer-substring-no-properties beg end))
-                 (completions nil)
-                 (completion-table nil)
-                 completion
-
-                 ;; WAG: just use this set of functions.
-         ;;;;;(comint-output-filter-functions nil)
-
-                 ;; @todo XXX Why is this in in a let?  It seems like I'd want
-                 ;; the world to know the new value.
-                 (comint-output-filter-functions
-                  (append comint-output-filter-functions
-                          '(ansi-color-filter-apply
-                            dp-ipython-complete-collector))))
-            ;;(message (format "#DEBUG pattern: '%s'" pattern))
-            (process-send-string python-process
-                                 (format ipython-completion-command-string
-                                         pattern))
-            (accept-process-output python-process)
-            ;;(message (format "DEBUG return: %s" ugly-return))
-            (setq completions
-                  (let* ((start (1+ (string-match "'" ugly-return)))
-                         (ss (substring ugly-return start))
-                         (end (string-match "'" ss))
-                         (ss2 (substring ss 0 end)))
-                    (split-string ss2 ";")))
-            (setq completion-table (loop for str in completions
-                                     collect (list str nil)))
-            (setq completion (try-completion pattern completion-table))
-            (cond ((eq completion t))
-                  ((null completion)
-                   (message "Can't find completion for \"%s\"" pattern)
-                   (ding))
-                  ((not (string= pattern completion))
-                   (delete-region beg end)
-                   (insert completion))
-                  (t
-                   (message "Making completion list...")
-                   (with-output-to-temp-buffer "*Python Completions*"
-                     (display-completion-list
-                      (all-completions pattern completion-table)))
-                   (message "Making completion list...%s" "done")))))))))
-
-(defun dp-setup-python-shell ()
-  "Setup python shell.  Choose ipython if preferred."
-  (interactive)
-  (when dp-prefer-ipython-shell-p
-    (dp-setup-ipython-shell)))
-
-(dp-setup-ipython-shell)
-
 ;;;;###autoload
 ;(let ((hm-el '("\\.hs$" . hugs-mode)))
 ;  (unless (member hm-el auto-mode-alist)
@@ -977,17 +877,6 @@ This can be callable.")
   (require 'dp-mail))
 
 (require 'dp-makefile-mode)
-
-
-;;; ********************
-;;; "Filladapt is a paragraph filling package.  When it is enabled it
-;;; makes filling (e.g. using M-q) much much smarter about paragraphs
-;;; that are indented and/or are set off with semicolons, dashes, etc."
-;;; (copped from sample.init.el)
-(when (dp-optionally-require 'filladapt)
-  (setq-default filladapt-mode t)
-  (add-hook 'outline-mode-hook 'turn-off-filladapt-mode)
-  (setq filladapt-mode-line-string " Fa"))
 
 (defun dp-mk-remote-files-precious (&optional buffer pred)
   (setq-ifnil buffer (current-buffer)
@@ -1192,6 +1081,7 @@ minibuffer history list `bookmark-history'."
 
 	     ;; Python stuff...
 	     ;; ?? Is there an ordering requirement?
+	     (require 'dp-filladapt)
 	     (require 'dp-elpy)
 	     (require 'dp-python)
              )))
@@ -1318,6 +1208,6 @@ minibuffer history list `bookmark-history'."
 (define-key esc-map " " 'dp-id-select-thing)
 (define-key global-map [?\C- ] 'dp-expand-abbrev)
 
-;; See `dp-set-frame-height' for ways the height might be overridden.
+;; See `dp-set-frame-height' for too many ways the height might be overridden.
 (dp-set-to-max-vert-frame-height)
 (message "dpmacs.el... finished.")
