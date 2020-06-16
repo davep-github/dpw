@@ -136,6 +136,8 @@ The stolen one above is slow when using completion."
 (defun dp-describe-text-properties (num-chars-to-move
 				    &optional output-buffer buffer)
   (interactive "P")
+  ;; @todo XXX Just use "p" and `num-chars-to-move' will work with one but
+  ;; will need to be `car'd out of sequences of (C-u)+.
   (if (not num-chars-to-move)
       (call-interactively 'describe-text-properties)
     (save-excursion
