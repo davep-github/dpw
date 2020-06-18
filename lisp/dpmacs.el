@@ -1209,5 +1209,6 @@ minibuffer history list `bookmark-history'."
 (define-key global-map [?\C- ] 'dp-expand-abbrev)
 
 ;; See `dp-set-frame-height' for too many ways the height might be overridden.
-(dp-set-to-max-vert-frame-height)
+(run-with-idle-timer 2 nil #'dp-set-to-max-vert-frame-height)
+
 (message "dpmacs.el... finished.")

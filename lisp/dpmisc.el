@@ -14851,25 +14851,18 @@ machines, especially heretofore unknown ones."
   ;; Max up.  We are now maximized vert and cannot be resized.
   (set-frame-parameter frame 'fullscreen 'fullheight)
   ;; Let it happen.
-  (message "YOPP0, `frame-height': %s" (frame-height frame))
   (redraw-display)
-  (message "YOPP1, `frame-height': %s" (frame-height frame))
   (sit-for 0.2)
-  (message "YOPP1.1, `frame-height': %s" (frame-height frame))
   (redisplay)
-  (message "YOPP1.2, `frame-height': %s" (frame-height frame))
   ;; Grab the maximized height.
   (let ((height (frame-height frame)))
     ;; Demaximize us.
     (set-frame-parameter frame 'fullscreen nil)
     ;; Let it happen.
-    (message "YOPP2, height: %s, `frame-height': %s" height (frame-height frame))
-    (sit-for 0.2)
+;;    (sit-for 0.2)
     ;; Set to maximized height, without being maximized.
     (set-frame-height frame height)
-    (message "YOPP3, height: %s, `frame-height': %s" height (frame-height frame))
-    (sit-for 0.2)
-    (message "YOPP4, height: %s, `frame-height': %s" height (frame-height frame))
+;;    (sit-for 0.2)
     ))
 
 (dp-defaliases 'mfh 'mvh 'smvfh 'smvh 'smv 'dmv 'sih
