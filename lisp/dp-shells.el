@@ -1825,7 +1825,10 @@ first file that is `dp-file-readable-p' is used.  Also sets
    ((eq hook-type 'bind-enter)
     (apply 'dp-bind-shell-type-enter-key bind-args))))
 
-(dp-optionally-require 'gdb)
+;; @todo XXX This is also required below, inside of a function, so we
+;; probably don't need it here, or we aren't meant to.
+;; Nuke it for now, see how it goes.
+;;(dp-optionally-require 'gdb)
 
 (defvar dp-gdb-buffer-name nil
   "Latest gdb shell we've started.")
