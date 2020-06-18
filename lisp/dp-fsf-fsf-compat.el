@@ -52,13 +52,13 @@ See `fill-paragraph' and `fill-region' for more information."
 
 (defun keymap-name (keymap)
   "Return the keymap-name."
-  (message "keymap-name: keymap: %s" keymap))
+  (message "`keymap-name': keymap: %s" keymap))
   ;; (if (keymapp map)
   ;;     (nth 2 map)
   ;;   (error "Not a keymap.")))
 
 (defun set-keymap-name (keymap name)
-  (message "set-keymap-name: name: %s, keymap: %s" name keymap))
+  (message "`set-keymap-name': name: %s, keymap: %s" name keymap))
   ;; (if (keymapp keymap)
   ;;     (progn
   ;; 	(message "name: %s, keymap: %s" name keymap)
