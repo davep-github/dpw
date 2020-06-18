@@ -1765,3 +1765,246 @@ YOPP4, height: 53, ‘frame-height’: 53
 
 
 
+
+========================
+Wednesday June 17 2020
+--
+(let ((code (concat "import sys\n"
+                    "print(sys.ps1)")))
+  (with-temp-buffer  
+    (let ((code-file (python-shell--save-temp-file code)))
+      (call-process "jupyter-console" code-file '(t nil) nil "-i")
+      (delete-file code-file))
+    (buffer-string)))
+"The Jupyter terminal-based Console.
+
+This launches a Console application inside a terminal.
+
+The Console supports various extra features beyond the traditional single-
+process Terminal IPython shell, such as connecting to an existing ipython
+session, via:
+
+    jupyter console --existing
+
+where the previous session could have been created by another ipython console,
+an ipython qtconsole, or by opening an ipython notebook.
+
+Options
+-------
+
+Arguments that take values are actually convenience aliases to full
+Configurables, whose aliases are listed on the help line. For more information
+on full configurables, see '--help-all'.
+
+--debug
+    set log level to logging.DEBUG (maximize logging output)
+--generate-config
+    generate default config file
+-y
+    Answer yes to any questions instead of prompting.
+--existing
+    Connect to an existing kernel. If no argument specified, guess most recent
+--confirm-exit
+    Set to display confirmation dialog on exit. You can always use 'exit' or
+    'quit', to force a direct exit without any confirmation. This can also
+    be set in the config file by setting
+    `c.JupyterConsoleApp.confirm_exit`.
+--no-confirm-exit
+    Don't prompt the user when exiting. This will terminate the kernel
+    if it is owned by the frontend, and leave it alive if it is external.
+    This can also be set in the config file by setting
+    `c.JupyterConsoleApp.confirm_exit`.
+--simple-prompt
+    Force simple minimal prompt using `raw_input`
+--no-simple-prompt
+    Use a rich interactive prompt with prompt_toolkit
+--log-level=<Enum> (Application.log_level)
+    Default: 30
+    Choices: (0, 10, 20, 30, 40, 50, 'DEBUG', 'INFO', 'WARN', 'ERROR', 'CRITICAL')
+    Set the log level by value or name.
+--config=<Unicode> (JupyterApp.config_file)
+    Default: ''
+    Full path of a config file.
+--ip=<Unicode> (JupyterConsoleApp.ip)
+    Default: ''
+    Set the kernel's IP address [default localhost]. If the IP address is
+    something other than localhost, then Consoles on other machines will be able
+    to connect to the Kernel, so be careful!
+--transport=<CaselessStrEnum> (JupyterConsoleApp.transport)
+    Default: 'tcp'
+    Choices: ['tcp', 'ipc']
+--hb=<Int> (JupyterConsoleApp.hb_port)
+    Default: 0
+    set the heartbeat port [default: random]
+--shell=<Int> (JupyterConsoleApp.shell_port)
+    Default: 0
+    set the shell (ROUTER) port [default: random]
+--iopub=<Int> (JupyterConsoleApp.iopub_port)
+    Default: 0
+    set the iopub (PUB) port [default: random]
+--stdin=<Int> (JupyterConsoleApp.stdin_port)
+    Default: 0
+    set the stdin (ROUTER) port [default: random]
+--existing=<CUnicode> (JupyterConsoleApp.existing)
+    Default: ''
+    Connect to an already running kernel
+-f <Unicode> (JupyterConsoleApp.connection_file)
+    Default: ''
+    JSON file in which to store connection info [default: kernel-<pid>.json]
+    This file will contain the IP, ports, and authentication key needed to
+    connect clients to this kernel. By default, this file will be created in the
+    security dir of the current profile, but can be specified by absolute path.
+--kernel=<Unicode> (JupyterConsoleApp.kernel_name)
+    Default: 'python'
+    The name of the default kernel to start.
+--ssh=<Unicode> (JupyterConsoleApp.sshserver)
+    Default: ''
+    The SSH server to use to connect to the kernel.
+
+To see all available configurables, use `--help-all`
+
+Examples
+--------
+
+    jupyter console # start the ZMQ-based console
+    jupyter console --existing # connect to an existing ipython session
+
+"
+
+""
+
+
+""
+
+
+
+">>> 
+"
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq python-shell-interpreter "jupyter-console")
+
+(defun* python-shell-prompt-detect (&optional
+				    (python-shell-interpreter-interactive-arg
+				     "--simple-prompt"))
+  "Detect prompts for the current `python-shell-interpreter'.
+When prompts can be retrieved successfully from the
+`python-shell-interpreter' run with
+`python-shell-interpreter-interactive-arg', returns a list of
+three elements, where the first two are input prompts and the
+last one is an output prompt.  When no prompts can be detected
+and `python-shell-prompt-detect-failure-warning' is non-nil,
+shows a warning with instructions to avoid hangs and returns nil.
+When `python-shell-prompt-detect-enabled' is nil avoids any
+detection and just returns nil."
+  (when python-shell-prompt-detect-enabled
+    (python-shell-with-environment
+      (let* ((code (concat
+                    "import sys\n"
+                    "ps = [getattr(sys, 'ps%s' % i, '') for i in range(1,4)]\n"
+                    ;; JSON is built manually for compatibility
+                    "ps_json = '\\n[\"%s\", \"%s\", \"%s\"]\\n' % tuple(ps)\n"
+                    "print (ps_json)\n"
+                    "exit\n"))
+;;;;;;;                    "sys.exit(0)\n"))
+             (interpreter python-shell-interpreter)
+             (interpreter-arg python-shell-interpreter-interactive-arg)
+             (output
+              (with-temp-buffer
+                ;; TODO: improve error handling by using
+                ;; `condition-case' and displaying the error message to
+                ;; the user in the no-prompts warning.
+                (ignore-errors
+                  (let ((code-file
+                         ;; Python 2.x on Windows does not handle
+                         ;; carriage returns in unbuffered mode.
+                         (let ((inhibit-eol-conversion (getenv "PYTHONUNBUFFERED")))
+                           (python-shell--save-temp-file code))))
+                    (unwind-protect
+                        ;; Use `process-file' as it is remote-host friendly.
+                        (process-file
+                         interpreter
+                         code-file
+                         '(t nil)
+                         nil
+                         interpreter-arg)
+                      ;; Try to cleanup
+                      (delete-file code-file))))
+                (buffer-string)))
+	     (nnnaaadddaaa (dmessage "output>%s<" output))
+             (prompts
+              (catch 'prompts
+                (dolist (line (split-string output "\n" t))
+                  (let ((res
+                         ;; Check if current line is a valid JSON array
+                         (and (string= (substring line 0 2) "[\"")
+                              (ignore-errors
+                                ;; Return prompts as a list, not vector
+                                (append (json-read-from-string line) nil)))))
+                    ;; The list must contain 3 strings, where the first
+                    ;; is the input prompt, the second is the block
+                    ;; prompt and the last one is the output prompt.  The
+                    ;; input prompt is the only one that can't be empty.
+                    (when (and (= (length res) 3)
+                               (cl-every #'stringp res)
+                               (not (string= (car res) "")))
+                      (throw 'prompts res))))
+                nil)))
+	(dmessage "prompts>%s<" prompts)
+        (when (and (not prompts)
+                   python-shell-prompt-detect-failure-warning)
+          (lwarn
+           '(python python-shell-prompt-regexp)
+           :warning
+           (concat
+            "Python shell prompts cannot be detected.\n"
+            "If your emacs session hangs when starting python shells\n"
+            "recover with `keyboard-quit' and then try fixing the\n"
+            "interactive flag for your interpreter by adjusting the\n"
+            "`python-shell-interpreter-interactive-arg' or add regexps\n"
+            "matching shell prompts in the directory-local friendly vars:\n"
+            "  + `python-shell-prompt-regexp'\n"
+            "  + `python-shell-prompt-block-regexp'\n"
+            "  + `python-shell-prompt-output-regexp'\n"
+            "Or alternatively in:\n"
+            "  + `python-shell-prompt-input-regexps'\n"
+            "  + `python-shell-prompt-output-regexps'")))
+        prompts))))
+
+
+(python-shell-prompt-detect)
+("In : " "...: " "Out: ")
+
+("In : " "...: " "Out: ")
+
+
+
+
+
+
+
+
+
+
+(setq python-shell-interpreter "jupyter"
+      python-shell-interpreter-args "console --simple-prompt"
+      python-shell-prompt-detect-failure-warning nil)
+(add-to-list 'python-shell-completion-native-disabled-interpreters
+             "jupyter")
+("jupyter" "pypy" "ipython")
+
+
+python-shell-interpreter
+"jupyter"
+
+python-shell-interpreter-args
+"console --simple-prompt"
+
+python-shell-prompt-detect-failure-warning
+nil
+
+python-shell-completion-native-disabled-interpreters
+("jupyter" "pypy" "ipython")
+
+
