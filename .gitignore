@@ -12,6 +12,7 @@ bak.d
 bin.skaion
 lisp-*.tar.bz2
 lisp-*.tar.gz
+-TMP.
 
 ### ??? Ignore elpa tree in .gitignore.  Is this a good idea???
 /HIDERS/

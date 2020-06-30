@@ -23,6 +23,8 @@ a.out
 .~lock*
 gmon.out
 core
+# vim? (shudder) swap files.
+.swp
 
 /DOTrc/*.work
 .#*#
