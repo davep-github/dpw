@@ -9,6 +9,7 @@ D_one=${1-}
 
 gitted_p()
 {
+    echo 1>&2 "Make me use: git ls-files --error-unmatch <file>"
     local file="$1"
     git mv -n "$file" some-file-or-another
 }
