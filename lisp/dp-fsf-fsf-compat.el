@@ -777,8 +777,52 @@ This function does not modify point or mark."
   (let ((message-log-max nil))
     (apply 'message fmt args)))
 
+;;
+;; XEmacs does a nice thing by making the cursor change at the end of the
+;; line.  Emacs doesn't do this... UNTIL NOW!  NOW you two can have the
+;; incredible feature for *your* FSF Emacs!  But wait, there's more!
+;;
+(dp-deflocal xemacs-like-eol-cursor-type 'box
+  "What kind of cursor does the EOL faker think we have?
+This prevented -- in the old version -- a call to change the
+frame cursor.  However, changing the frame cursor changed it
+everywhere and didn't respect making the inactive windows'
+cursors hollow.
+@todo XXX Try removing the cached type val since we just set the
+per-buffer cursor-type as a variable.")
+
+(dp-deflocal dp-xemacs-like-eol-cursor-state t
+  "Tracks state the state of the xemacs-like cursor state.
+
+When active, the cursor is a vertical bar when at end of line and unchanged elsewhere.
+non-nil -- enable by adding `dp-xemacs-like-eol-cursor' to `post-command-hook.'
+nil -- disabled by removing `dp-xemacs-like-eol-cursor' from `post-command-hook.' and
+       forcing the cursor back to normal.")
+
+(defun dp-xemacs-like-eol-set-cursor (&optional force-off-p)
+  "`post-command-hook' function that changes cursor state."
+  (if (and (eolp)
+	   (not force-off-p))
+      (setq cursor-type (cons 'bar 6))
+    (setq cursor-type 'box)))
+
+(defun dp-setup-end-of-line-cursor (&optional enable-p)
+  "Setup end of line cursor support."
+  (interactive "P")
+  (dp-toggle-var enable-p 'dp-xemacs-like-eol-cursor-state)
+  (if dp-xemacs-like-eol-cursor-state
+      (add-hook 'post-command-hook 'dp-xemacs-like-eol-set-cursor)
+    (remove-hook 'post-command-hook 'dp-xemacs-like-eol-set-cursor)
+    ;; Do this after removing the hook because a command can fire after we've
+    ;; turned it off, but before we unhook it.
+    (dp-xemacs-like-eol-set-cursor 'force-it-off)))
+
+(add-hook 'dp-post-dpmacs-hook (function
+				(lambda ()
+				  (dp-setup-end-of-line-cursor t))))
+
 ;; To switch between the compat files quickly, use
-;; C-x M-b to run the command dp-edit-corresponding-file
+;; C-x M-b to run the command `dp-edit-corresponding-file'
 ;; Which the following sets up.
 (add-hook 'dp-post-dpmacs-hook
 	  (function
