@@ -211,6 +211,7 @@
     "^Nothing staged (or unstaged)$"
     "^\\S-+ isn’t bound to any action$"
     "Nothing selected"
+    "Don’t kill this buffer #<buffer .*>.  Instead cancel using C-c C-k$"
 
     ;; copied from emacs
     "^No possible abbreviation preceding point$"

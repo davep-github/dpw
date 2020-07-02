@@ -207,6 +207,7 @@ ffap-other-window
      (switch-to-buffer-other-window b)))
 )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (let* ((val (let ((wconfig (current-window-configuration)))
 	      (unwind-protect
 		  (progn
@@ -2007,4 +2008,466 @@ nil
 python-shell-completion-native-disabled-interpreters
 ("jupyter" "pypy" "ipython")
 
+
+
+========================
+Monday June 22 2020
+--
+
+(defun dp-lisp-indent-0 (a b)
+  (dmessage "a: %s, b: %s" a b)
+  0)
+lisp-indent-0
+(put 'dp-loading-require 'lisp-indent-function 'dp-lisp-indent-0)
+
+
+(cl-pe '
+(defmacro dp-unindented-body (docstring &rest body)
+  "Sometimes it's nicer to be non-indented, since some actions get confuzed.
+E.e. things in `dp-macros.el'."
+  (unless (stringp docstring)
+    (setq body (cons docstring body)
+	  docstring ""))
+  `(progn
+     ,@body
+     )
+  )
+)
+
+(defalias 'dp-unindented-body
+  (cons 'macro
+	(function
+	 (lambda (docstring &rest body)
+	   "Sometimes it's nicer to be non-indented, since some actions get confuzed.
+E.e. things in `dp-macros.el'."
+	   (if (stringp docstring)
+	       nil
+	     (setq body (cons docstring body) docstring ""))
+	   (cons 'progn body)))))
+(put 'dp-unindented-body 'lisp-indent-function 'dp-lisp-indent-0)
+
+(cl-pe '
+(dp-unindented-body
+(a)
+(b)
+(c)
+)
+)
+
+(progn
+  (a)
+  (b)
+  (c))nil
+
+
+
+
+
+(cl-pe '
+ (defmacro dp-loading-require (name enable-p &rest body)
+   (let ((msg-prefix (dmessage "require: %s..." name)))
+     (when enable-p
+       `(progn
+	  (dmessage ">%s<<" ,msg-prefix)
+	  ,@body
+	  (dmessage "%sdone." ,msg-prefix)
+	  (provide ',name)
+	  )))
+   )
+)
+
+
+(defalias 'dp-loading-require
+  (cons 'macro
+	(function
+	 (lambda (name enable-p &rest body)
+	   (let ((msg-prefix (dmessage "require: %s..." name)))
+	     (if enable-p
+		 (progn
+		   (cons 'progn
+			 (cons (list 'dmessage ">%s<<" msg-prefix)
+			       (append body
+				       (list (list 'dmessage
+						   "%sdone."
+						   msg-prefix)
+					     (list 'provide
+						   (list 'quote name)))))))))))))nil
+
+
+(cl-pe '
+ (defmacro dp-loading-require (&rest body)
+   (
+(defalias 'dp-loading-require
+  (cons 'macro (function (lambda (&rest body) (progn body)))))
+dp-unindented-body
+`,@body)
+   )
+ )
+
+
+
+(get 'dp-loading-require 'lisp-indent-function)
+(lambda (&rest r) 2)
+
+lisp-indent-0
+
+
+(lambda nil 0)
+
+
+
+(cl-pe '
+ (dp-loading-require bubba t
+		     (setq a 'b)
+		     ))
+
+(progn
+  (dmessage ">%s<<" "require: bubba...")
+  t
+  (setq a 'b)
+  (dmessage "%sdone." "require: bubba...")
+  (provide 'bubba))nil
+
+
+
+(progn
+  (dmessage ">%s<<" "require: bubba...")
+  (setq a 'b)
+  (dmessage "%sdone." "require: bubba...")
+  (provide 'bubba))nil
+
+
+
+(progn
+  (dmessage ">%s<<" "require: bubba...")
+  (setq a 'b)
+  (dmessage "%sdone." "require: bubba...")
+  (provide 'bubba))
+bubba
+()
+
+
+
+(progn
+  (dmessage "%s" "require: bubba...")
+  (setq a 'b)
+  (dmessage "%sdone." "require: bubba...")
+  (provide 'bubba))nil
+
+
+
+(progn
+  (dmessage "%s" "require: bubba...")
+  (setq a 'b)
+  (dmessage "%sdone." "require: bubba...")
+  (provide '"bubba"))nil
+
+
+
+
+(progn
+  (princf "%s" "require: bubba...")
+  (setq a 'b)
+  (princf "in body")
+  (princf "%sdone." "require: bubba..."))
+require: bubba...
+in body
+require: bubba...done.
+nil
+
+require: bubba...
+require: bubba...done.
+nil
+
+"require: bubba...done."
+
+
+
+
+
+(dmessage "%sdone." "require: bubba...")
+"require: bubba...done."
+
+
+
+
+(dmessage "%s" "require: bubba...")
+ (setq a 'b)
+ (dmessage "%sdone." "require: bubba...")
+"require: bubba...done."
+
+(cl-pe '
+ (dp-loading-require
+     bubba3
+     (setq req-test-b 'b)
+     (setq req-test-a 'a)
+     (setq req-test-c 'c)
+     (dmessage "did abc")
+     (setq req-test-d 'd)
+     (setq req-test-e 'e)
+   (setq req-test-f 'f)
+   (dmessage "did def")
+   (setq req-test-g 'g)
+   (dmessage "did g")
+  )
+)
+
+(progn
+  (dmessage ">%s<<" "require: bubba2...")
+  (setq req-test-b 'b)
+  (setq req-test-a 'a)
+  (setq req-test-c 'c)
+  (dmessage "did abc")
+  (setq req-test-d 'd)
+  (setq req-test-e 'e)
+  (setq req-test-f 'f)
+  (dmessage "did def")
+  (setq req-test-g 'g)
+  (dmessage "did g")
+  (dmessage "%sdone." "require: bubba2...")
+  (provide 'bubba2))nil
+
+
+  (dmessage "%sdone." "require: bubba2...")
+
+"require: bubba2...done."
+
+(save-excursion
+  aa
+  aa
+  aa
+  aa
+  )
+(dp-loading-require bubba3
+(setq req-test-b 'b)
+(setq req-test-a 'a)
+(setq req-test-c 'c)
+(dmessage "did abc")
+(setq req-test-d 'd)
+(setq req-test-e 'e)
+(setq req-test-f 'f)
+(dmessage "did def")
+(setq req-test-g 'g)
+(dmessage "did g")
+)
+
+========================
+Tuesday June 23 2020
+--
+
+(cl-pe '
+ (defmacro dp-loading-require (name enable-p &rest body)
+   (let ((msg-prefix (dmessage "require: %s..." name)))
+     (when enable-p
+       `(progn
+	  (dmessage ">%s<<" ,msg-prefix)
+	  ,@body
+	  (dmessage "%sdone." ,msg-prefix)
+	  (provide ',name)
+	  ))))
+ )
+
+(cl-pe '
+(dp-loading-require bubba3 nil
+(setq req-test-b 'b)
+(setq req-test-a 'a)
+(setq req-test-c 'c)
+(dmessage "did abc")
+(setq req-test-d 'd)
+(setq req-test-e 'e)
+(setq req-test-f 'f)
+(dmessage "did def")
+(setq req-test-g 'g)
+(dmessage "did g")
+)
+)
+
+(progn
+  (dmessage ">%s<<" "require: bubba3...")
+  nil
+  (setq req--test-b 'b)
+  (setq req--test-a 'a)
+  (setq req--test-c 'c)
+  (dmessage "did abc")
+  (setq req--test-d 'd)
+  (setq req--test-e 'e)
+  (setq req--test-f 'f)
+  (dmessage "did def")
+  (setq req--test-g 'g)
+  (dmessage "did g")
+  (dmessage "%sdone." "require: bubba3...")
+  (provide 'bubba3))
+bubba3
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+(cl-pe '
+ (defmacro dp-loading-require (name enable-p &rest body)
+   (let ((msg-prefix (dmessage "require: %s..." name))
+	 (ok-enable-values '(t nil enable load require norequire)))
+     (if (not (memq enable-p ok-enable-values))
+	 (error "enable-p no a member of %s", ok-enable-values)
+       (when enable-p
+	 `(progn
+	    (dmessage ">%s<<" ,msg-prefix)
+	    ,@body
+	    (dmessage "%sdone." ,msg-prefix)
+	    (provide ',name)
+	    )))))
+ )
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(cl-pe '
+(dp-loading-require bubba3 'nil
+  (setq req==test==b 'b)
+  (setq req==test==a 'a)
+  (setq req==test==c 'c)
+  (princf "did abc")
+  (setq req==test==d 'd)
+  (setq req==test==e 'e)
+  (setq req==test==f 'f)
+  (princf "did def")
+  (setq req==test==g 'g)
+  (princf "did g")
+)
+)
+
+(defun dp-lisp-indent-0 (a b)
+  (dmessage "a: %s, b: %s" a b)
+  0)
+(put 'dp-loading-require 'lisp-indent-function 'dp-lisp-indent-0)
+
+(defmacro dp-loading-require (name enable-p &rest body)
+  (let ((msg-prefix (dmessage "require: %s..." name)))
+    (when enable-p
+      `(progn
+	 (dmessage "%s" ,msg-prefix)
+	 ,@body
+	 (dmessage "%sdone." ,msg-prefix)
+	 (provide ',name)
+	 ))))
+
+
+(defmacro dp-loading-require (name enable-p &rest body)
+  (princf "enable-p:%s, ,enable-p:%s" enable-p `,enable-p)
+  (let ((msg-prefix (dmessage "require: %s..." name))
+	(ok-enable-values '(t enable enabled load require allow))
+	(nok-enable-values '(nil no-enable no-enabled no-load no-require allow)))
+    (if (not (memq `,enable-p (append ok-enable-values nok-enable-values)))
+	(error "enable-p>%s< not a member of %s" enable-p ok-enable-values)
+      (when (memq `,enable-p ok-enable-values)
+	`(progn
+	   (dmessage "%s" ,msg-prefix)
+	   ,@body
+	   (dmessage "%sdone." ,msg-prefix)
+	   (provide ',name)
+	   )))))
+
+(cl-pe '
+ (kb-warning "aaa" "hi")
+ )
+
+(function
+ (lambda (&optional arg arg1 arg2 arg3 arg4 arg5)
+   "aaa"
+   (interactive "P")
+   (error "kb-warning: %s" "hi")))
+
+(cl-pe '
+ (with-narrow-to-region 1 2
+   (set a 1)
+   (set b 1)
+   )
+ )
+
+(progn
+  (save-restriction (narrow-to-region 1 2) (set a 1) (set b 1)))nil
+
+
+    
+
+========================
+Sunday June 28 2020
+--
+(defalias 'foofoo
+  (defun foofoofun()
+    (interactive)
+    (message "I am foofoo(fun)?")))
+foofoo
+
+(password-read "PWD? ")
+"lkdjfldkjfldkjf"
+
+========================
+2020-06-28T09:45:48
+--
+;;;; Works.
+(modify-frame-parameters nil
+	(list (cons 'cursor-type 'box)))
+nil
+
+;;; Hollow box.
+(modify-frame-parameters nil
+	(list (cons 'cursor-type 'block)))
+nil
+
+;;; Hollow box.
+(modify-frame-parameters nil
+	(list (cons 'cursor-type 'yaya)))
+nil
+Looks like bad cursor-type symbols give a hollow box.
+
+
+
+nil
+
+nil
+
+
+========================
+Monday June 29 2020
+--
+
+;obs (defvar-deflocal xemacs-like-eol-cursor-type 'box)
+;obs (defun dp-xemacs-like-eol-cursor ()
+;obs   (let ((old 'nc))
+;obs     (if (eolp)
+;obs 	(when (not (eq dp-xemacs-like-eol-cursor-type 'bar))
+;obs 	  (setq old dp-xemacs-like-eol-cursor-type
+;obs 		dp-xemacs-like-eol-cursor-type 'bar)
+;obs 	  (modify-frame-parameters nil
+;obs 				   (list (cons 'cursor-type
+;obs 					       (cons
+;obs 						dp-xemacs-like-eol-cursor-type
+;obs 						;;    m|m|m|m
+;obs 						6)))))
+;obs       (when (not (eq dp-xemacs-like-eol-cursor-type 'box))
+;obs 	(setq old dp-xemacs-like-eol-cursor-type
+;obs 	      dp-xemacs-like-eol-cursor-type 'box)
+;obs 	(modify-frame-parameters nil
+;obs 				 (list (cons 'cursor-type
+;obs 					     dp-xemacs-like-eol-cursor-type)))))
+;obs     (cons old dp-xemacs-like-eol-cursor-type)))
+
+
+(defvar-deflocal xemacs-like-eol-cursor-type 'box)
+(defun dp-xemacs-like-eol-cursor ()
+  (let ((old 'nc))
+    (if (eolp)
+	(when (not (eq dp-xemacs-like-eol-cursor-type 'bar))
+	  (setq old dp-xemacs-like-eol-cursor-type
+		dp-xemacs-like-eol-cursor-type 'bar
+		cursor-type (cons
+			     dp-xemacs-like-eol-cursor-type
+			     6)))
+      (when (not (eq dp-xemacs-like-eol-cursor-type 'box))
+	(setq old dp-xemacs-like-eol-cursor-type
+	      dp-xemacs-like-eol-cursor-type 'box
+	      cursor-type dp-xemacs-like-eol-cursor-type)))
+    (cons old dp-xemacs-like-eol-cursor-type)))
 
